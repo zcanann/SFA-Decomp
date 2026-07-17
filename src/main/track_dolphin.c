@@ -1330,46 +1330,42 @@ cont:
     return buf;
 }
 
-void MapBlock_initShaders(GameObject* obj)
+void MapBlock_initShaders(MapBlockData* block)
 {
-    char* sh;
-    int block;
     int i;
     int j;
     int ref;
-    int outerOff;
-    for (i = 0, outerOff = 0; i < *(u8*)((char*)obj + 0xa2); i++)
+    MapShader* sh;
+    for (i = 0; i < block->layerCount; i++)
     {
-        block = *(int*)&obj->anim.modelState + outerOff;
-        for (j = 0; j < *(u8*)(block + 0x41); j++)
+        sh = &block->shaders[i];
+        for (j = 0; j < sh->layerCount; j++)
         {
-            sh = (char*)block + j * 8;
-            ref = *(int*)&((ObjModelState*)sh)->overrideWorldPosY;
+            ref = sh->layers[j].texture;
             if (ref != -1)
             {
-                *(int*)&((ObjModelState*)sh)->overrideWorldPosY = ((int*)*(int*)&obj->anim.hitReactState)[ref];
-                ref = *(u8*)(sh + 0x29);
+                sh->layers[j].texture = ((s32*)block->textures)[ref];
+                ref = sh->layers[j].overrideType;
                 if ((u32)ref != 0u)
                 {
-                    mapTextureOverrideAcquire(*(int*)&((ObjModelState*)sh)->overrideWorldPosY, 0, ref);
+                    mapTextureOverrideAcquire(sh->layers[j].texture, 0, ref);
                 }
             }
             else
             {
-                *(int*)&((ObjModelState*)sh)->overrideWorldPosY = 0;
+                sh->layers[j].texture = 0;
             }
-            *(u8*)(sh + 0x2a) = 0xff;
+            sh->layers[j].scrollMtx = 0xff;
         }
-        ref = *(int*)(block + 0x34);
+        ref = sh->auxTexture;
         if (ref != -1)
         {
-            *(int*)(block + 0x34) = ((int*)*(int*)&obj->anim.hitReactState)[ref];
+            sh->auxTexture = ((s32*)block->textures)[ref];
         }
         else
         {
-            *(int*)(block + 0x34) = 0;
+            sh->auxTexture = 0;
         }
-        outerOff += 0x44;
     }
 }
 

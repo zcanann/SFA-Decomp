@@ -9,9 +9,21 @@
  * track_dolphin.c; unobserved ranges are padded (positional unkNN
  * names, true size unverified - do not take sizeof).
  */
+typedef struct MapShaderLayer
+{
+    s32 texture;
+    u8 unk4;
+    u8 overrideType;
+    u8 scrollMtx;
+    u8 unk7;
+} MapShaderLayer;
+
 typedef struct MapShader
 {
-    u8 pad0[0x3C];
+    u8 pad0[0x24];
+    MapShaderLayer layers[2];
+    s32 auxTexture;
+    u8 pad38[0x3C - 0x38];
     u32 flags;
     u8 pad40;
     u8 layerCount;
@@ -19,6 +31,8 @@ typedef struct MapShader
 } MapShader;
 
 STATIC_ASSERT(sizeof(MapShader) == 0x44);
+STATIC_ASSERT(offsetof(MapShader, layers) == 0x24);
+STATIC_ASSERT(offsetof(MapShader, auxTexture) == 0x34);
 STATIC_ASSERT(offsetof(MapShader, flags) == 0x3C);
 STATIC_ASSERT(offsetof(MapShader, layerCount) == 0x41);
 
