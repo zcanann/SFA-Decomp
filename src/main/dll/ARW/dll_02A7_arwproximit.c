@@ -33,8 +33,6 @@ __declspec(section ".sdata2") f32 lbl_803E71D8 = 0.0f;
 __declspec(section ".sdata2") f32 lbl_803E71DC = 100.0f;
 __declspec(section ".sdata2") f32 lbl_803E71E0 = 127.0f;
 
-#pragma dont_inline on
-
 #define ARWPROXIMIT_HIT_VOLUME_SLOT 5
 
 enum ArwProximitPhase
