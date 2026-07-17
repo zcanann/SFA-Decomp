@@ -21,6 +21,7 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/dll/modgfx.h"
@@ -63,6 +64,19 @@ extern f32 lbl_803DFCB8;
 extern f32 lbl_803DFCBC;
 extern f32 lbl_803DFCC0;
 extern f32 lbl_803DFCC4;
+
+ObjectDescriptor6 lbl_80310A20 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_6_SLOTS,
+    (ObjectDescriptorCallback)Effect6_initialise,
+    (ObjectDescriptorCallback)Effect6_release,
+    NULL,
+    (ObjectDescriptorCallback)Effect6_func03_nop,
+    (ObjectDescriptorCallback)Effect6_func04,
+    (ObjectDescriptorCallback)Effect6_func05,
+};
 
 void Effect6_func03_nop(void)
 {
