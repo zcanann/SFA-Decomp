@@ -1017,6 +1017,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_004B_cameramodeclimb.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_002E_moveLib.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_b8.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/n_attractmode.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0034_titlemenu.c", cflags=cflags_dll_noopt),
             Object(Matching, "main/dll/modanimeflash1.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00AB_projdummy.c", cflags=cflags_dll_noopt),
