@@ -595,29 +595,29 @@ u8 getButtonObjects(void** p)
     return gGameLoopButtonObjectCount;
 }
 #pragma scheduling off
-void removeButtonObject(u32 h)
+void removeButtonObject(u32 object)
 {
-    int* p;
-    int count;
-    int i;
-    int idx;
+    int* buttonObjects;
+    int buttonObjectCount;
+    int objectIndex;
+    int removeIndex;
 
-    idx = -1;
-    i = 0;
-    p = gGameLoopButtonObjects;
-    count = gGameLoopButtonObjectCount;
-    for (; i < count; i++)
+    removeIndex = -1;
+    objectIndex = 0;
+    buttonObjects = gGameLoopButtonObjects;
+    buttonObjectCount = gGameLoopButtonObjectCount;
+    for (; objectIndex < buttonObjectCount; objectIndex++)
     {
-        if (*p == h)
+        if (buttonObjects[0] == object)
         {
-            idx = i;
+            removeIndex = objectIndex;
             break;
         }
-        p++;
+        buttonObjects++;
     }
-    for (i = idx; i < count - 1; i++)
+    for (objectIndex = removeIndex; objectIndex < buttonObjectCount - 1; objectIndex++)
     {
-        gGameLoopButtonObjects[i] = gGameLoopButtonObjects[i + 1];
+        gGameLoopButtonObjects[objectIndex] = gGameLoopButtonObjects[objectIndex + 1];
     }
     gGameLoopButtonObjectCount--;
 }
