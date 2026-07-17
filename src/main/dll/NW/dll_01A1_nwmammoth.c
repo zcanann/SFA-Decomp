@@ -522,7 +522,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                 }
                 {
                     int* o2 = (int*)ObjList_FindObjectById(gNwMammothBushObjectIds[i]);
-                    if ((int*)Player_GetTargetObject(*(int*)&state->playerObject) == o2)
+                    if ((int*)fn_80296118((GameObject*)*(int*)&state->playerObject) == o2)
                     {
                         fn_8014C66C((GameObject*)o2, state->playerObject);
                     }
