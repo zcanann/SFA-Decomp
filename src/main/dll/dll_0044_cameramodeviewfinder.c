@@ -428,11 +428,12 @@ void CameraModeViewfinder_update(s16* obj)
             }
         }
         brightness = 0;
-        if (((CameraObject*)obj)->blendProgress <= lbl_803E17C4)
+        if (((CameraObject*)obj)->blendProgress <= 0.0f)
         {
             brightness = 1;
         }
-        (*gCameraInterface)->getRelativePosition(lbl_803E17C4, (int)obj, &outA, &hitY, &outB, &hitDist, 0);
+        ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
+            (int)obj, &outA, &hitY, &outB, &hitDist, 0.0f, 0);
         if (hitDist < lbl_803E182C)
         {
             obj[1] = 0;
