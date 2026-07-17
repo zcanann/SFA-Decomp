@@ -12,7 +12,7 @@
  * placementData @0x4C, modelInstance @0x50, ... - see
  * objanim_internal.h, layout STATIC_ASSERTed there). The tail below is
  * named from engine-side evidence only:
- *  - 0xB0 u16: anim.c/audio.c/backpack.c (*(u16 *)(obj + 0xb0), 74 sites)
+ *  - 0xB0 u16: object.c/objseq.c/light.c (obj->objectFlags, engine-wide)
  *  - 0xB4 s16: baddieControl.c/object.c/objseq.c
  *  - 0xB8 ptr: the per-class extra state block (BaddieState /
  *    ObjSeqState / GroundBaddieState live here - see baddie_state.h)
