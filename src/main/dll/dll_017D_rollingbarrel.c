@@ -16,6 +16,7 @@
 #include "main/camera.h"
 #include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_descriptor.h"
 typedef struct
 {
     int a, b;
@@ -327,3 +328,20 @@ void RollingBarrel_initialise(void)
 {
     gRollingBarrelExplodingCount = 0x0;
 }
+
+ObjectDescriptor gRollingBarrelObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)RollingBarrel_initialise,
+    (ObjectDescriptorCallback)RollingBarrel_release,
+    0,
+    (ObjectDescriptorCallback)RollingBarrel_init,
+    (ObjectDescriptorCallback)RollingBarrel_update,
+    (ObjectDescriptorCallback)RollingBarrel_hitDetect,
+    (ObjectDescriptorCallback)RollingBarrel_render,
+    (ObjectDescriptorCallback)RollingBarrel_free,
+    (ObjectDescriptorCallback)RollingBarrel_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)RollingBarrel_getExtraSize,
+};

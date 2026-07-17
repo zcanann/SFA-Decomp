@@ -41,6 +41,7 @@
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 #include "main/model_light.h"
+#include "main/object_descriptor.h"
 
 s16 gSpiritDoorLockSpinSpeed = -256;
 s32 gSpiritDoorLockTexScrollSpeed = 40;
@@ -268,3 +269,20 @@ void SpiritDoorLock_release(void)
 void SpiritDoorLock_initialise(void)
 {
 }
+
+ObjectDescriptor gSpiritDoorLockObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SpiritDoorLock_initialise,
+    (ObjectDescriptorCallback)SpiritDoorLock_release,
+    0,
+    (ObjectDescriptorCallback)SpiritDoorLock_init,
+    (ObjectDescriptorCallback)SpiritDoorLock_update,
+    (ObjectDescriptorCallback)SpiritDoorLock_hitDetect,
+    (ObjectDescriptorCallback)SpiritDoorLock_render,
+    (ObjectDescriptorCallback)SpiritDoorLock_free,
+    (ObjectDescriptorCallback)SpiritDoorLock_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)SpiritDoorLock_getExtraSize,
+};

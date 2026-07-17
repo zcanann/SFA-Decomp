@@ -13,6 +13,7 @@
 #include "main/object_api.h"
 #include "main/camera.h"
 #include "main/vecmath.h"
+#include "main/object_descriptor.h"
 
 typedef struct CfMagicWallMapData
 {
@@ -117,3 +118,20 @@ void cfmagicwall_release(void)
 void cfmagicwall_initialise(void)
 {
 }
+
+ObjectDescriptor gCFMagicWallObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)cfmagicwall_initialise,
+    (ObjectDescriptorCallback)cfmagicwall_release,
+    0,
+    (ObjectDescriptorCallback)cfmagicwall_init,
+    (ObjectDescriptorCallback)cfmagicwall_update,
+    (ObjectDescriptorCallback)cfmagicwall_hitDetect,
+    (ObjectDescriptorCallback)cfmagicwall_render,
+    (ObjectDescriptorCallback)cfmagicwall_free,
+    (ObjectDescriptorCallback)cfmagicwall_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)cfmagicwall_getExtraSize,
+};

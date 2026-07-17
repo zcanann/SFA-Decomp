@@ -30,6 +30,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/MMP/dll_017E_mmplevelcontrol.h"
+#include "main/object_descriptor.h"
 
 #define MMPLEVELCONTROL_OBJFLAG_HIDDEN             0x4000
 #define MMPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -234,3 +235,20 @@ void MMP_levelcontrol_release(void)
 void MMP_levelcontrol_initialise(void)
 {
 }
+
+ObjectDescriptor gMMP_levelcontrolObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)MMP_levelcontrol_initialise,
+    (ObjectDescriptorCallback)MMP_levelcontrol_release,
+    0,
+    (ObjectDescriptorCallback)MMP_levelcontrol_init,
+    (ObjectDescriptorCallback)MMP_levelcontrol_update,
+    (ObjectDescriptorCallback)MMP_levelcontrol_hitDetect,
+    (ObjectDescriptorCallback)MMP_levelcontrol_render,
+    (ObjectDescriptorCallback)MMP_levelcontrol_free,
+    (ObjectDescriptorCallback)MMP_levelcontrol_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)MMP_levelcontrol_getExtraSize,
+};

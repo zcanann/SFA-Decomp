@@ -27,6 +27,7 @@
 #include "main/audio/sfx.h"
 #include "main/maketex_timer_api.h"
 #include "main/dll/player_staff_api.h"
+#include "main/object_descriptor.h"
 
 typedef struct CflevelcontrolState
 {
@@ -70,7 +71,14 @@ typedef struct CfLevelControlFlags
 /* CloudRunner Fortress map-event id advanced by the level controller (getMapAct/setMapAct) */
 #define CFLEVELCONTROL_MAP_FORTRESS 0x1d
 
-extern s16 lbl_80323008[];
+s16 lbl_80323008[24] = {
+    GAMEBIT_CFRelated02FC, GAMEBIT_CFRelated02FD, GAMEBIT_CFRelated02FE, GAMEBIT_CFRelated02FF,
+    GAMEBIT_CFRelated0B2A, GAMEBIT_CFRelated0B2B, GAMEBIT_CFRelated0B2C, GAMEBIT_CFRelated0B2D,
+    GAMEBIT_CFRelated0B2E, GAMEBIT_CFRelated0B2F, GAMEBIT_CFRelated0B30, GAMEBIT_CFRelated0B31,
+    GAMEBIT_CFRelated0B6C, GAMEBIT_CFRelated0B32, GAMEBIT_CFRelated0B37, GAMEBIT_CFRelated0B38,
+    GAMEBIT_CFRelated0B39, GAMEBIT_CFRelated0B3A, GAMEBIT_CFRelated0B3B, GAMEBIT_CFRelated0B3C,
+    GAMEBIT_CFRelated0B3D, GAMEBIT_CFRelated0B3E, GAMEBIT_CFRelated0B3F, 0,
+};
 extern f32 lbl_803E43E8;
 const CfTriggerPosTemplate lbl_802C22E8 = {{746.81787109375f, 1309.0f, -16378.33984375f}, 0.0f};
 extern f32 lbl_803E43EC;
@@ -305,3 +313,20 @@ void cflevelcontrol_release(void)
 void cflevelcontrol_initialise(void)
 {
 }
+
+ObjectDescriptor gCFLevelControlObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)cflevelcontrol_initialise,
+    (ObjectDescriptorCallback)cflevelcontrol_release,
+    0,
+    (ObjectDescriptorCallback)cflevelcontrol_init,
+    (ObjectDescriptorCallback)cflevelcontrol_update,
+    (ObjectDescriptorCallback)cflevelcontrol_hitDetect,
+    (ObjectDescriptorCallback)cflevelcontrol_render,
+    (ObjectDescriptorCallback)cflevelcontrol_free,
+    (ObjectDescriptorCallback)cflevelcontrol_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)cflevelcontrol_getExtraSize,
+};
