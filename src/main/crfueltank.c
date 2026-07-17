@@ -4,7 +4,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/crfueltank.h"
 #include "main/proximitymine.h"
-#include "main/dll/DR/dll_024F_ktrexlevel.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 
@@ -164,11 +163,3 @@ ObjectDescriptor gProximityMineObjDescriptor = {
     (ObjectDescriptorCallback)ProximityMine_getObjectTypeId,
     ProximityMine_getExtraSize,
 };
-void* gKtRexLevelObjDescriptor[14] = {(void*)0x00000000,           (void*)0x00000000,       (void*)0x00000000,
-                                      (void*)0x00090000,           KT_RexLevel_initialise,  KT_RexLevel_release,
-                                      (void*)0x00000000,           KT_RexLevel_init,        KT_RexLevel_update,
-                                      KT_RexLevel_hitDetect,       KT_RexLevel_render,      KT_RexLevel_free,
-                                      KT_RexLevel_getObjectTypeId, KT_RexLevel_getExtraSize};
-u8 lbl_8032A510[12] = {0, 8, 0, 14, 0, 16, 0, 17, 0, 16, 0, 17};
-u8 lbl_8032A51C[12] = {59, 196, 155, 166, 59, 68, 155, 166, 59, 68, 155, 166};
-u8 lbl_8032A528[12] = {59, 180, 57, 88, 60, 68, 155, 166, 60, 68, 155, 166};

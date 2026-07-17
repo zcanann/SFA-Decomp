@@ -1774,6 +1774,10 @@ int ktrex_stateHandlerA01(GameObject* obj, KTRexRuntime* runtime)
     return 0;
 }
 
+s16 lbl_8032A510[6] = {8, 14, 16, 17, 16, 17};
+f32 lbl_8032A51C[3] = {0.006f, 0.003f, 0.003f};
+f32 lbl_8032A528[3] = {0.0055f, 0.012f, 0.012f};
+
 f32 gKTRexLaneSpeedMin[3] = {0.0f, 0.025f, 0.025f};
 
 f32 gKTRexLaneSpeedMax[19] = {

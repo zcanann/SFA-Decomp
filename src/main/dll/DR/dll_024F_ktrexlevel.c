@@ -16,6 +16,7 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/object_render.h"
+#include "main/object_descriptor.h"
 #include "main/sky_api.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/DR/dll_024F_ktrexlevel.h"
@@ -125,3 +126,20 @@ void KT_RexLevel_release(void)
 void KT_RexLevel_initialise(void)
 {
 }
+
+ObjectDescriptor gKtRexLevelObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)KT_RexLevel_initialise,
+    (ObjectDescriptorCallback)KT_RexLevel_release,
+    0,
+    (ObjectDescriptorCallback)KT_RexLevel_init,
+    (ObjectDescriptorCallback)KT_RexLevel_update,
+    (ObjectDescriptorCallback)KT_RexLevel_hitDetect,
+    (ObjectDescriptorCallback)KT_RexLevel_render,
+    (ObjectDescriptorCallback)KT_RexLevel_free,
+    (ObjectDescriptorCallback)KT_RexLevel_getObjectTypeId,
+    KT_RexLevel_getExtraSize,
+};

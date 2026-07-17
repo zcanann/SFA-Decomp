@@ -3210,7 +3210,7 @@ main/spellstone.c:
 
 main/crfueltank.c:
 	.text       start:0x80210E8C end:0x802110F8
-	.data       start:0x8032A468 end:0x8032A534
+	.data       start:0x8032A468 end:0x8032A4D8
 
 main/proximitymine_reset.c:
 	.text       start:0x802110F8 end:0x8021122C
@@ -3222,12 +3222,13 @@ main/proximitymine_update.c:
 
 main/dll/DR/dll_024F_ktrexlevel.c:
 	.text       start:0x80211C24 end:0x80211F38
+	.data       start:0x8032A4D8 end:0x8032A510
 	.sbss       start:0x803DDD40 end:0x803DDD48
 
 main/dll/DR/dll_0250_ktrex.c:
 	.text       start:0x80211F38 end:0x80215A3C
 	.rodata     start:0x802C2550 end:0x802C2560
-	.data       start:0x8032A534 end:0x8032A7C0
+	.data       start:0x8032A510 end:0x8032A7C0
 	.sdata      start:0x803DC250 end:0x803DC2A0
 	.sbss       start:0x803DDD48 end:0x803DDD60
 
