@@ -3,6 +3,12 @@
 
 #include "main/game_object.h"
 
+typedef struct PlayerModelChainEntry
+{
+    int* modelIds;
+    int count;
+} PlayerModelChainEntry;
+
 extern void* gPlayerPathObject;
 extern u8 gPlayerSubState;
 extern void* gPlayerSpawnedObjects[];
@@ -28,7 +34,7 @@ extern s16 gPlayerSelectedItem;
 extern int gPlayerStateHandlers[];
 extern int gPlayerDefaultStateHandler;
 extern void* gPlayerChildObject;
-extern int gPlayerModelChainConfig;
+extern PlayerModelChainEntry* gPlayerModelChainConfig;
 extern int gPlayerHeldObject;
 extern f32 gPlayerPartFxParams[];
 extern u8 gPlayerHudVtxBuf[];

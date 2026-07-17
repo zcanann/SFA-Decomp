@@ -18781,6 +18781,9 @@ int Lightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
+PlayerModelChainEntry lbl_803DC660 = {lbl_80332EC0, 5};
+PlayerModelChainEntry* gPlayerModelChainConfig = &lbl_803DC660;
+
 s16 gPlayerMoveSlotData[2464] = {
     0,      0,      0,      210,    0,      20,     0,      20,     0,      20,     266,    2570,   2570,   0,
     15564,  -13107, 0,      0,      16128,  0,      16128,  0,      16230,  26214,  16035,  -10486, -16512, 0,
