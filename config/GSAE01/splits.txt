@@ -1401,6 +1401,7 @@ main/dll/firecrawler.c:
 	.bss        start:0x803AC4A8 end:0x803AC528
 	.sdata      start:0x803DBCE0 end:0x803DBD40
 	.sbss       start:0x803DDA70 end:0x803DDA78
+	.sdata2     start:0x803E2B80 end:0x803E2C0C
 
 main/dll/hagabon_mk2.c:
 	.text       start:0x8015983C end:0x8015A52C
