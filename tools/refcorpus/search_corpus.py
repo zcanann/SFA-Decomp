@@ -130,12 +130,44 @@ def extract_c_function(src: str, sym: str) -> Optional[str]:
 
 # --- search modes -------------------------------------------------------------
 
-def _seq_to_regex(seq: str) -> str:
-    mnems = [m for m in re.split(r"[\s,;]+", seq.strip()) if m]
-    # each mnemonic at a line start, in order, gaps allowed
-    return r"[\s\S]*?".join(r"(?m)^" + re.escape(m).replace(r"\.", r"\.") + r"\b"
-                            if k == 0 else r"^" + re.escape(m) + r"\b"
-                            for k, m in enumerate(mnems))
+def _seq_mnemonics(seq: str) -> List[str]:
+    return [m for m in re.split(r"[\s,;]+", seq.strip()) if m]
+
+
+def _search_seq_func(f: Func, mnems: List[str], flags: int) -> Optional[tuple]:
+    """Earliest in-order match of mnemonics (gaps allowed) over f.insns.
+
+    Linear in len(insns): each instruction advances the sequence at most one step.
+    A regex of lazy '[\\s\\S]*?'-joined anchors backtracks exponentially instead.
+    """
+    rxs = [re.compile(r"^" + re.escape(m) + r"\b", flags) for m in mnems]
+    k = 0
+    first: Optional[int] = None
+    for i, insn in enumerate(f.insns):
+        if rxs[k].match(insn):
+            if k == 0:
+                first = i
+            k += 1
+            if k == len(rxs):
+                return (first, i)
+    return None
+
+
+def _line_span_to_chars(f: Func, lo: int, hi: int) -> tuple:
+    start = sum(len(f.insns[j]) + 1 for j in range(lo))
+    end = start + sum(len(f.insns[j]) + 1 for j in range(lo, hi + 1)) - 1
+    return start, max(start, end)
+
+
+def search_seq(funcs: List[Func], seq: str, flags: int) -> List[tuple]:
+    mnems = _seq_mnemonics(seq)
+    hits = []
+    for f in funcs:
+        span = _search_seq_func(f, mnems, flags)
+        if span:
+            s, e = _line_span_to_chars(f, span[0], span[1])
+            hits.append((f, s, e))
+    return hits
 
 
 def search_asm(funcs: List[Func], pattern: str, flags: int) -> List[tuple]:
@@ -255,11 +287,11 @@ def main():
         ap.error("one of --asm / --seq / --csrc / --stats is required")
 
     flags = re.IGNORECASE if args.ignore_case else 0
-    pattern = args.asm if args.asm else _seq_to_regex(args.seq)
-    if args.seq:
-        flags |= re.MULTILINE
     funcs = load(projects, profiles)
-    hits = search_asm(funcs, pattern, flags)
+    if args.seq:
+        hits = search_seq(funcs, args.seq, flags)
+    else:
+        hits = search_asm(funcs, args.asm, flags)
     print(f"[{len(hits)} hit(s) over {len(funcs)} funcs; profile(s): {args.profile}]")
     for f, s, e in hits[:args.limit]:
         print_asm_hit(f, s, e, args.context, args.show_c)
