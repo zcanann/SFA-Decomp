@@ -43,6 +43,7 @@
 #include "dolphin/gx/GXEnum.h"
 #include "string.h"
 #include "main/sky.h"
+#include "main/resource.h"
 
 CloudActionRuntime lbl_8039AB28;
 
@@ -512,36 +513,32 @@ CloudEnvTbl gCloudActionEnvTbl = {
 };
 
 /* descriptor/ptr table auto 0x8030f7e8-0x8030f86c */
-u32 lbl_8030F7E8[18] = {0x00000000,
-                        0x00000000,
-                        0x00000000,
-                        0x000c0000,
-                        (u32)cloudaction_initialise,
-                        (u32)cloudaction_release,
-                        0x00000000,
-                        (u32)cloudaction_update,
-                        (u32)cloudaction_onMapSetup,
-                        (u32)cloudaction_func05,
-                        (u32)renderClouds,
-                        (u32)cloudaction_free,
-                        (u32)cloudaction_func08_nop,
-                        (u32)cloudaction_func09_nop,
-                        (u32)__end_critical_region,
-                        (u32)__begin_critical_region,
-                        (u32)__kill_critical_regions,
-                        0x00000000};
-u32 lbl_8030F830[15] = {0x00000000,
-                        0x00000000,
-                        0x00000000,
-                        0x000a0000,
-                        (u32)waterfx_initialise,
-                        (u32)waterfx_release,
-                        0x00000000,
-                        (u32)waterfx_run,
-                        (u32)waterfx_func04,
-                        (u32)waterfx_func05,
-                        (u32)waterfx_spawnSplashBurst,
-                        (u32)waterfx_spawnRipple,
-                        (u32)waterfx_func08,
-                        (u32)waterfx_onMapSetup,
-                        (u32)waterfx_setRippleScale};
+ResourceDescriptorCallbacks14 lbl_8030F7E8 = {
+    {0x00000000, 0x00000000, 0x00000000, 0x000c0000},
+    {(ResourceDescriptorCallback)cloudaction_initialise,
+     (ResourceDescriptorCallback)cloudaction_release,
+     0x00000000,
+     (ResourceDescriptorCallback)cloudaction_update,
+     (ResourceDescriptorCallback)cloudaction_onMapSetup,
+     (ResourceDescriptorCallback)cloudaction_func05,
+     (ResourceDescriptorCallback)renderClouds,
+     (ResourceDescriptorCallback)cloudaction_free,
+     (ResourceDescriptorCallback)cloudaction_func08_nop,
+     (ResourceDescriptorCallback)cloudaction_func09_nop,
+     (ResourceDescriptorCallback)__end_critical_region,
+     (ResourceDescriptorCallback)__begin_critical_region,
+     (ResourceDescriptorCallback)__kill_critical_regions,
+     0x00000000}};
+ResourceDescriptorCallbacks11 lbl_8030F830 = {
+    {0x00000000, 0x00000000, 0x00000000, 0x000a0000},
+    {(ResourceDescriptorCallback)waterfx_initialise,
+     (ResourceDescriptorCallback)waterfx_release,
+     0x00000000,
+     (ResourceDescriptorCallback)waterfx_run,
+     (ResourceDescriptorCallback)waterfx_func04,
+     (ResourceDescriptorCallback)waterfx_func05,
+     (ResourceDescriptorCallback)waterfx_spawnSplashBurst,
+     (ResourceDescriptorCallback)waterfx_spawnRipple,
+     (ResourceDescriptorCallback)waterfx_func08,
+     (ResourceDescriptorCallback)waterfx_onMapSetup,
+     (ResourceDescriptorCallback)waterfx_setRippleScale}};

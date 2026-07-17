@@ -27,9 +27,21 @@ typedef struct ResourceDescriptorCallbacks12 {
     ResourceDescriptorCallback callbacks[12];
 } ResourceDescriptorCallbacks12;
 
+typedef struct ResourceDescriptorCallbacks11 {
+    u32 metadata[4];
+    ResourceDescriptorCallback callbacks[11];
+} ResourceDescriptorCallbacks11;
+
+typedef struct ResourceDescriptorCallbacks14 {
+    u32 metadata[4];
+    ResourceDescriptorCallback callbacks[14];
+} ResourceDescriptorCallbacks14;
+
 STATIC_ASSERT(sizeof(ResourceDescriptorCallbacks7) == 0x2C);
 STATIC_ASSERT(sizeof(ResourceDescriptorCallbacks8) == 0x30);
+STATIC_ASSERT(sizeof(ResourceDescriptorCallbacks11) == 0x3C);
 STATIC_ASSERT(sizeof(ResourceDescriptorCallbacks12) == 0x40);
+STATIC_ASSERT(sizeof(ResourceDescriptorCallbacks14) == 0x48);
 
 extern ResourceDescriptor* gResourceDescriptors[];
 extern void* gResourceLoadedHandles[];
