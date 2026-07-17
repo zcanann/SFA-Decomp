@@ -54,9 +54,7 @@ typedef struct
 
 const f32 lbl_803E5060 = 1.0f;
 const f32 lbl_803E5064 = 500.0f;
-#pragma explicit_zero_data on
 const f32 lbl_803E5068 = 0.0f;
-#pragma explicit_zero_data reset
 const f32 lbl_803E506C = 10.0f;
 const f32 lbl_803E5070 = 100.0f;
 const f32 lbl_803E5074 = 0.02f;
