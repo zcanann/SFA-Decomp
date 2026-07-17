@@ -59,33 +59,6 @@ extern f32 lbl_803E4378;
 extern f32 lbl_803E437C;
 extern f32 lbl_803E4380;
 
-extern void cfmagicwall_getExtraSize(void);
-extern void cflevelcontrol_getExtraSize(void);
-
-extern void cfmagicwall_getObjectTypeId(void);
-extern void cflevelcontrol_getObjectTypeId(void);
-
-extern void cfmagicwall_free(void);
-extern void cflevelcontrol_free(void);
-
-extern void cfmagicwall_render(void);
-extern void cflevelcontrol_render(void);
-
-extern void cfmagicwall_hitDetect(void);
-extern void cflevelcontrol_hitDetect(void);
-
-extern void cfmagicwall_update(GameObject*);
-extern void cflevelcontrol_update(GameObject*);
-
-extern void cfmagicwall_init(void);
-extern void cflevelcontrol_init(void);
-
-extern void cfmagicwall_release(void);
-extern void cflevelcontrol_release(void);
-
-extern void cfmagicwall_initialise(void);
-extern void cflevelcontrol_initialise(void);
-
 void explodable_render(void)
 {
 }

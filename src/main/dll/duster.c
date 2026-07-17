@@ -119,7 +119,6 @@ extern const f32 lbl_803E2A88;
 extern const f32 lbl_803E2A8C;
 extern const f32 lbl_803E2A90;
 
-extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 extern int fn_80169EF4(float* src, float* dst, f32 speed, char flag, f32 arc);
 #pragma opt_common_subs off
 void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
@@ -388,7 +387,7 @@ void rachnopInit(u32 unused, int state)
     ((BaddieState*)state)->unk31C = fb;
     ((DusterState*)state)->phaseTimer = lbl_803E2A00;
     ((BaddieState*)state)->seqEntryIndex = 0;
-    ((BaddieState*)state)->inWhirlpoolGroup = 0;
+    ((BaddieState*)state)->userData = 0;
     ((BaddieState*)state)->pathStep = fa;
     return;
 }

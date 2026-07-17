@@ -121,9 +121,6 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 u8 lbl_803DDA79;
 u8 lbl_803DDA78;
 
-extern void renderWhirlpool(void);
-
-
 extern u8 gIceBaddieStateHandlersA[];
 extern u8 gIceBaddieStateHandlersB[];
 extern u8 lbl_8031FDA0[];

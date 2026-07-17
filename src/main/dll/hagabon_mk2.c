@@ -47,10 +47,6 @@
 #include "main/pad_api.h"
 #include "main/dll/dll_0273_firepipe.h"
 
-extern f32 lbl_803DBCE0;
-extern f32 lbl_803DBCE4;
-extern f32 lbl_803DBCE8;
-extern f32 lbl_803DBCEC;
 extern int lbl_803DBCF8[2];
 
 typedef struct CrawlerModelChainList
@@ -60,9 +56,6 @@ typedef struct CrawlerModelChainList
 } CrawlerModelChainList;
 
 STATIC_ASSERT(sizeof(CrawlerModelChainList) == 8);
-
-extern u8 gSnowwormSeqIndexReset[4];
-extern u8 gSnowwormSeqIndexMax[4];
 
 /* group owned by another DLL, queried here */
 #define LANTERNFIREFLY_OBJGROUP          0x30 /* DLL 0x10C lanternfirefly */
@@ -105,23 +98,10 @@ extern f32 lbl_803E2C90;
 extern f32 lbl_803E2C94;
 extern u8 gCrawlerSeqTable[];
 extern void* gCrawlerModelChainIds[];
-extern void* gCrawlerDescriptorTable[];
-extern u8* gCrawlerReactionTables[];
 
 extern f32 lbl_803E2C1C;
 extern f32 lbl_803E2C20;
 extern f32 lbl_803E2C24;
-extern f32 lbl_803E2BA0;
-extern f32 lbl_803E2BA4;
-extern f32 gCrawlerS8Norm127;
-extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
-extern int gCrawlerNearbyObjectBuffer[0x20];
-extern f32 gCrawlerPi;
-extern f32 gCrawlerHalfCircleBams;
-extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
-extern f32 lbl_803DBCE0;
-extern f32 lbl_803DBCE4;
-extern f32 lbl_803DBCEC;
 
 void fn_80157B58(int* obj, u8* state);
 
@@ -139,12 +119,7 @@ extern f32 lbl_803E2C54;
 extern f32 lbl_803E2C38;
 extern f32 lbl_803E2C40;
 extern f32 gCrawlerSfxVolMax127;
-extern f32 lbl_803DBCE8;
-extern f32 gCrawlerHitSfxTimer;
 
-extern u8 gCrawlerSpeedThresholds[];
-extern f32 lbl_803E2BA0;
-extern f32 lbl_803E2BA4;
 extern f32 lbl_803E2C44;
 extern f32 lbl_803E2C4C;
 extern f32 lbl_803E2C5C;

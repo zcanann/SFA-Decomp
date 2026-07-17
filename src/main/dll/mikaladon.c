@@ -21,8 +21,6 @@
 #include "main/frame_timing.h"
 #include "main/voxmaps.h"
 
-extern u8 gMagicPlantSeqEntryTable[8];
-
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
 
 /* DLL-id of the object spawned by fn_80153640 (generic spawn; no cache field /
@@ -39,9 +37,6 @@ extern f32 lbl_803E2894;
 void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
     fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
-extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
-extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
-extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 
 void mikaladon_init(GameObject* obj, int state)
 {
@@ -66,7 +61,7 @@ void mikaladon_init(GameObject* obj, int state)
     *(f32*)(state + 0x328) = obj->anim.localPosY;
     *(f32*)(state + 0x32c) = obj->anim.localPosZ;
     ((BaddieState*)state)->seqEntryIndex = 0;
-    ((BaddieState*)state)->inWhirlpoolGroup = 0;
+    ((BaddieState*)state)->userData = 0;
     *(s16*)(state + 0x338) = 0;
     *(f32*)(state + 0x330) = zero;
     *(f32*)(state + 0x334) = zero;

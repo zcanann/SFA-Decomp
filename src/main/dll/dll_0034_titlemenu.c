@@ -59,7 +59,6 @@ static char sNRarewareReportTag[] = "n_rareware\n";
 
 extern TitleMenuControl* gTitleMenuLinkInterface;
 extern s32 gAttractMovieIdleFrameCount;
-extern u16* gRenderModeObj;
 
 typedef u8 (*TitleMenuShouldShowCreditsRenderFn)(u8* obj);
 
