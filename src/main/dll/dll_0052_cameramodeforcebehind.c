@@ -24,9 +24,11 @@ f32 gCamForceBehindPlacementRadius;
 
 f32 gCamForceBehindOrbitRadius = 40.0f;
 
-extern f32 gCamForceBehindPi;                 /* binary-angle -> radians scale (numerator) */
-extern f32 gCamForceBehindBamsToRadDivisor;   /* binary-angle -> radians divisor (half-circle = 0x8000) */
-extern f32 gCamForceBehindHeightOffset;       /* camera height offset above the target */
+__declspec(section ".sdata2") f32 gCamForceBehindPi = 3.1415927f;
+__declspec(section ".sdata2") f32 gCamForceBehindBamsToRadDivisor = 32768.0f;
+__declspec(section ".sdata2") f32 gCamForceBehindHeightOffset = 37.0f;
+union CamForceBehindConstF32 { f32 f; };
+const union CamForceBehindConstF32 lbl_803E1B0C = { 0.0f };
 extern f32 gCamForceBehindDefaultOrbitRadius; /* default orbit radius (when no override is supplied) */
 extern f32 gCamForceBehindOrbitRadius;        /* orbit radius */
 extern f32 gCamForceBehindActiveHeightOffset; /* active height offset */
@@ -122,6 +124,9 @@ void CameraModeForceBehind_update(u8* obj)
 #pragma opt_common_subs reset
 
 #pragma opt_propagation off
+__declspec(section ".sdata2") f32 gCamForceBehindEaseRate = 0.25f;
+__declspec(section ".sdata2") f32 gCamForceBehindDefaultOrbitRadius = 40.0f;
+
 void CameraModeForceBehind_init(u8* obj, int unused, f32* params)
 {
     CameraObject* camera = (CameraObject*)obj;

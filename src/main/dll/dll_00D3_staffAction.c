@@ -58,11 +58,13 @@ extern float fcos16Precise(int angle);
 extern const f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
 extern f32 lbl_803E3004;
-extern f32 lbl_803E3020;
-extern f32 gStaffActionVelocityDamping;
-extern f32 lbl_803E3028;
-extern f32 lbl_803E302C;
-extern f32 lbl_803E3030;
+__declspec(section ".sdata2") f32 lbl_803E3020 = 100.0f;
+__declspec(section ".sdata2") f32 gStaffActionVelocityDamping = 0.97f;
+__declspec(section ".sdata2") f32 lbl_803E3028 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E302C = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E3030 = 6.0f;
+__declspec(section ".sdata2") f32 gStaffActionBoundsSearchRadius = 1e+06f;
+__declspec(section ".sdata2") f32 lbl_803E3038 = 0.014f;
 
 void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
 {
@@ -861,9 +863,6 @@ extern int lbl_80320360[];
 void* gLandedArwingStateHandlers[6];
 int gStaffActionHitLightParams[6];
 void* gLandedArwingDefaultStateHandler;
-extern f32 gStaffActionBoundsSearchRadius;
-extern f32 lbl_803E3038;
-extern f32 lbl_803E3048;
 
 #pragma fp_contract off
 #pragma opt_common_subs off
@@ -1015,6 +1014,8 @@ void dll_D3_update(int* obj)
 #undef dz
 #pragma opt_common_subs reset
 #pragma fp_contract on
+
+__declspec(section ".sdata2") f32 lbl_803E3048 = 20.0f;
 
 void dll_D3_init(GameObject* obj, int def, int flag)
 {

@@ -5,7 +5,7 @@
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
-extern f32 lbl_803E5058;
+__declspec(section ".sdata2") f32 lbl_803E5058 = 1.0f;
 
 typedef struct GpshScenePlacement
 {

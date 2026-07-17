@@ -64,24 +64,25 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 /* object group this object belongs to */
 #define DLLCB_OBJGROUP 3
 
-extern f32 lbl_803E2E68;
-extern f32 lbl_803E2E6C;
-extern f32 lbl_803E2E70;
-extern f32 lbl_803E2E74;
-extern f32 lbl_803E2E78;
-extern f32 lbl_803E2E9C;
 extern void* gDllCBMoveHandlers[];
 void* gDllCBStateHandlers[6];
 extern u8 lbl_80320008[];
 extern u8 lbl_80320080[];
-extern f32 lbl_803E2E8C;
-extern f32 lbl_803E2E98;
-extern f32 lbl_803E2EA8;
-extern f32 lbl_803E2E7C;
-extern f64 lbl_803E2E80;
-extern f32 lbl_803E2E88;
-extern f32 lbl_803E2E90;
-extern f32 lbl_803E2E94;
+
+union DllCBConstF32 { f32 f; };
+const union DllCBConstF32 lbl_803E2E68 = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803E2E6C = 5e+01f;
+__declspec(section ".sdata2") f32 lbl_803E2E70 = 6e+01f;
+__declspec(section ".sdata2") f32 lbl_803E2E74 = 15.0f;
+__declspec(section ".sdata2") f32 lbl_803E2E78 = 3e+01f;
+__declspec(section ".sdata2") f32 lbl_803E2E7C = 5.0f;
+__declspec(section ".sdata2") f64 lbl_803E2E80 = 0.25;
+__declspec(section ".sdata2") f32 lbl_803E2E88 = 1.1f;
+__declspec(section ".sdata2") f32 lbl_803E2E8C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E2E90 = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E2E94 = 0.075f;
+__declspec(section ".sdata2") f32 lbl_803E2E98 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E2E9C = 0.17f;
 
 extern void* memcpy(void* dst, const void* src, int n);
 extern int Curve_AdvanceAlongPath(int* p, f32 t);
@@ -111,7 +112,7 @@ int fn_801601C4(GameObject* obj, GroundBaddieState* state)
     {
         (*gPlayerInterface)->setState((void*)obj, state, 1);
         routePath = (char*)&sub->routeNav;
-        zero = lbl_803E2E68;
+        zero = lbl_803E2E68.f;
         state->baddie.moveInputX = zero;
         state->baddie.moveInputZ = zero;
         memcpy(routePath, &obj->anim.localPosX, 12);
@@ -124,8 +125,8 @@ int fn_801601C4(GameObject* obj, GroundBaddieState* state)
         if (*(u8*)(routePath + 0x25) == 0)
         {
             (*gPlayerInterface)
-                ->moveTowardPoint((void*)obj, state, *(f32*)(routePath + 0x18), *(f32*)(routePath + 0x20), lbl_803E2E68,
-                                  *(f32*)&lbl_803E2E68, lbl_803E2E70);
+                ->moveTowardPoint((void*)obj, state, *(f32*)(routePath + 0x18), *(f32*)(routePath + 0x20), lbl_803E2E68.f,
+                                  *(f32*)&lbl_803E2E68.f, lbl_803E2E70);
         }
         else
         {
@@ -203,6 +204,9 @@ void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)
 #pragma dont_inline reset
 
 #pragma dont_inline on
+__declspec(section ".sdata2") f32 lbl_803E2EA8 = 2e+01f;
+const union DllCBConstF32 lbl_803E2EAC = { 0.0f };
+
 void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
 {
     char* targetObj;
@@ -467,7 +471,7 @@ void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole on
 int fn_801605A8(short* out, u8* obj)
 {
-    f32 f = lbl_803E2E68;
+    f32 f = lbl_803E2E68.f;
     ((BaddieState*)obj)->animSpeedA = f;
     ((BaddieState*)obj)->animSpeedB = f;
     ((BaddieState*)obj)->physicsActive = 1;
@@ -478,7 +482,7 @@ int fn_801605A8(short* out, u8* obj)
 
 int fn_80160690(short* out, u8* obj)
 {
-    f32 f = lbl_803E2E68;
+    f32 f = lbl_803E2E68.f;
     ((BaddieState*)obj)->animSpeedA = f;
     ((BaddieState*)obj)->animSpeedB = f;
     ((BaddieState*)obj)->moveSpeed = f;
@@ -503,7 +507,7 @@ int fn_8016032C(int* obj, GroundBaddieState* state)
     }
     if (((GameObject*)obj)->anim.velocityY < lbl_803E2E80)
     {
-        f32 fz = lbl_803E2E68;
+        f32 fz = lbl_803E2E68.f;
         ((GameObject*)obj)->anim.velocityY = fz;
         state->baddie.animSpeedA = fz;
         state->baddie.animSpeedC = fz;
@@ -523,7 +527,7 @@ int fn_801605D4(int* obj, GroundBaddieState* def)
     GroundBaddieState* state = ((GameObject*)obj)->extra;
     if ((s8)def->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2E68, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2E68.f, 0);
         *(s8*)&def->baddie.moveDone = 0;
     }
     *(s8*)&def->baddie.physicsActive = 1;

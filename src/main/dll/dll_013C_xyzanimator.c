@@ -55,12 +55,12 @@ typedef struct EdgeVerts
 #define XYZANIMATOR_OBJGROUP 0x51
 
 /* .sdata2 float constants owned by this TU: lbl_803E4000 = 0.0 default;
- * lbl_803E4008 = per-axis offset scale; lbl_803E4018 = per-tick step multiplier;
+ * lbl_803E4008 = per-axis offset scale; lbl_803E4018.f = per-tick step multiplier;
  * lbl_803E4004 value unconfirmed. */
-extern f32 lbl_803E4000;
-extern f32 lbl_803E4004;
-extern f32 lbl_803E4008;
-extern const f32 lbl_803E4018;
+union XyzAnimatorConstF32 { f32 f; };
+const union XyzAnimatorConstF32 lbl_803E4000 = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803E4004 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E4008 = 8.0f;
 
 extern int return0_80060B90(void* blk);
 extern u32 mapBlockFn_80060678(int* block);
@@ -72,7 +72,7 @@ f32 objFn_801948c0(u8* obj, u8 coord)
 
     if (obj == NULL || (state = (XyzAnimatorState*)((GameObject*)obj)->extra, state == NULL))
     {
-        return lbl_803E4000;
+        return lbl_803E4000.f;
     }
     switch (coord)
     {
@@ -89,7 +89,7 @@ f32 objFn_801948c0(u8* obj, u8 coord)
     case 6:
         return state->offsetZ;
     }
-    return lbl_803E4000;
+    return lbl_803E4000.f;
 }
 
 #pragma opt_lifetimes off
@@ -180,7 +180,7 @@ void XyzAnimator_free(GameObject* obj, int flag)
 
     state = (XyzAnimatorState*)(obj)->extra;
     setup = *(XyzAnimatorPlacement**)&(obj)->anim.placementData;
-    zero = lbl_803E4000;
+    zero = lbl_803E4000.f;
     state->offsetX = zero;
     state->offsetY = zero;
     state->offsetZ = zero;
@@ -290,6 +290,8 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
 }
 #pragma opt_loop_invariants reset
 #pragma opt_dead_assignments reset
+
+const union XyzAnimatorConstF32 lbl_803E4018 = { 0.1f };
 
 void XyzAnimator_update(GameObject* obj)
 {
@@ -438,7 +440,7 @@ void XyzAnimator_update(GameObject* obj)
         if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
         {
             ((XyzAnimatorState*)state)->offsetX =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
+                -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
                   ((XyzAnimatorState*)state)->offsetX);
             if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->targetX)
             {
@@ -449,7 +451,7 @@ void XyzAnimator_update(GameObject* obj)
         else
         {
             ((XyzAnimatorState*)state)->offsetX =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
+                lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
                 ((XyzAnimatorState*)state)->offsetX;
             if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->targetX)
             {
@@ -460,7 +462,7 @@ void XyzAnimator_update(GameObject* obj)
         if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
         {
             ((XyzAnimatorState*)state)->offsetY =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
+                -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
                   ((XyzAnimatorState*)state)->offsetY);
             if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->targetY)
             {
@@ -471,7 +473,7 @@ void XyzAnimator_update(GameObject* obj)
         else
         {
             ((XyzAnimatorState*)state)->offsetY =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
+                lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
                 ((XyzAnimatorState*)state)->offsetY;
             if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->targetY)
             {
@@ -482,7 +484,7 @@ void XyzAnimator_update(GameObject* obj)
         if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
         {
             ((XyzAnimatorState*)state)->offsetZ =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
+                -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
                   ((XyzAnimatorState*)state)->offsetZ);
             if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
             {
@@ -493,7 +495,7 @@ void XyzAnimator_update(GameObject* obj)
         else
         {
             ((XyzAnimatorState*)state)->offsetZ =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
+                lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
                 ((XyzAnimatorState*)state)->offsetZ;
             if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
             {
@@ -514,7 +516,7 @@ void XyzAnimator_update(GameObject* obj)
         if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
         {
             ((XyzAnimatorState*)state)->offsetX =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
+                -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
                   ((XyzAnimatorState*)state)->offsetX);
             if (((XyzAnimatorState*)state)->offsetX < (f32)((XyzAnimatorPlacement*)setup)->targetX)
             {
@@ -526,7 +528,7 @@ void XyzAnimator_update(GameObject* obj)
         else
         {
             ((XyzAnimatorState*)state)->offsetX =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
+                lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
                 ((XyzAnimatorState*)state)->offsetX;
             if (((XyzAnimatorState*)state)->offsetX > (f32)((XyzAnimatorPlacement*)setup)->startX)
             {
@@ -538,12 +540,12 @@ void XyzAnimator_update(GameObject* obj)
         if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
         {
             ((XyzAnimatorState*)state)->offsetY =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
+                -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
                   ((XyzAnimatorState*)state)->offsetY);
             if (((XyzAnimatorState*)state)->offsetY < (f32)((XyzAnimatorPlacement*)setup)->targetY)
             {
                 ((XyzAnimatorState*)state)->offsetY =
-                    -(lbl_803E4018 * (f32)(int)((f32)((XyzAnimatorPlacement*)setup)->targetY -
+                    -(lbl_803E4018.f * (f32)(int)((f32)((XyzAnimatorPlacement*)setup)->targetY -
                                                 ((XyzAnimatorState*)state)->offsetY) -
                       (f32)((XyzAnimatorPlacement*)setup)->startY);
             }
@@ -551,7 +553,7 @@ void XyzAnimator_update(GameObject* obj)
         else
         {
             ((XyzAnimatorState*)state)->offsetY =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
+                lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
                 ((XyzAnimatorState*)state)->offsetY;
             if (((XyzAnimatorState*)state)->offsetY > (f32)((XyzAnimatorPlacement*)setup)->startY)
             {
@@ -563,7 +565,7 @@ void XyzAnimator_update(GameObject* obj)
         if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
         {
             ((XyzAnimatorState*)state)->offsetZ =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
+                -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
                   ((XyzAnimatorState*)state)->offsetZ);
             if (((XyzAnimatorState*)state)->offsetZ < (f32)((XyzAnimatorPlacement*)setup)->targetZ)
             {
@@ -575,7 +577,7 @@ void XyzAnimator_update(GameObject* obj)
         else
         {
             ((XyzAnimatorState*)state)->offsetZ =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
+                lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
                 ((XyzAnimatorState*)state)->offsetZ;
             if (((XyzAnimatorState*)state)->offsetZ > (f32)((XyzAnimatorPlacement*)setup)->startZ)
             {
@@ -592,7 +594,7 @@ void XyzAnimator_update(GameObject* obj)
             if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
             {
                 ((XyzAnimatorState*)state)->offsetX =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
+                    -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
                       ((XyzAnimatorState*)state)->offsetX);
                 if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->targetX)
                 {
@@ -603,7 +605,7 @@ void XyzAnimator_update(GameObject* obj)
             else
             {
                 ((XyzAnimatorState*)state)->offsetX =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
+                    lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
                     ((XyzAnimatorState*)state)->offsetX;
                 if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->targetX)
                 {
@@ -614,7 +616,7 @@ void XyzAnimator_update(GameObject* obj)
             if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
             {
                 ((XyzAnimatorState*)state)->offsetY =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
+                    -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
                       ((XyzAnimatorState*)state)->offsetY);
                 if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->targetY)
                 {
@@ -625,7 +627,7 @@ void XyzAnimator_update(GameObject* obj)
             else
             {
                 ((XyzAnimatorState*)state)->offsetY =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
+                    lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
                     ((XyzAnimatorState*)state)->offsetY;
                 if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->targetY)
                 {
@@ -636,7 +638,7 @@ void XyzAnimator_update(GameObject* obj)
             if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
             {
                 ((XyzAnimatorState*)state)->offsetZ =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
+                    -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
                       ((XyzAnimatorState*)state)->offsetZ);
                 if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
                 {
@@ -647,7 +649,7 @@ void XyzAnimator_update(GameObject* obj)
             else
             {
                 ((XyzAnimatorState*)state)->offsetZ =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
+                    lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
                     ((XyzAnimatorState*)state)->offsetZ;
                 if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
                 {
@@ -669,7 +671,7 @@ void XyzAnimator_update(GameObject* obj)
             if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
             {
                 ((XyzAnimatorState*)state)->offsetX =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
+                    lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
                     ((XyzAnimatorState*)state)->offsetX;
                 if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->startX)
                 {
@@ -680,7 +682,7 @@ void XyzAnimator_update(GameObject* obj)
             else
             {
                 ((XyzAnimatorState*)state)->offsetX =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
+                    -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
                       ((XyzAnimatorState*)state)->offsetX);
                 if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->startX)
                 {
@@ -691,7 +693,7 @@ void XyzAnimator_update(GameObject* obj)
             if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
             {
                 ((XyzAnimatorState*)state)->offsetY =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
+                    lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
                     ((XyzAnimatorState*)state)->offsetY;
                 if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->startY)
                 {
@@ -702,7 +704,7 @@ void XyzAnimator_update(GameObject* obj)
             else
             {
                 ((XyzAnimatorState*)state)->offsetY =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
+                    -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
                       ((XyzAnimatorState*)state)->offsetY);
                 if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->startY)
                 {
@@ -713,7 +715,7 @@ void XyzAnimator_update(GameObject* obj)
             if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
             {
                 ((XyzAnimatorState*)state)->offsetZ =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
+                    lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
                     ((XyzAnimatorState*)state)->offsetZ;
                 if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->startZ)
                 {
@@ -724,7 +726,7 @@ void XyzAnimator_update(GameObject* obj)
             else
             {
                 ((XyzAnimatorState*)state)->offsetZ =
-                    -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
+                    -(lbl_803E4018.f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
                       ((XyzAnimatorState*)state)->offsetZ);
                 if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->startZ)
                 {

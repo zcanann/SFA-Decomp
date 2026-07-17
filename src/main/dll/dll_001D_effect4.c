@@ -20,8 +20,6 @@ f32 gEffect4SpawnCyclePhaseSlow = 0.3f;
 f32 gEffect4TickCyclePhaseFast = 0.1f;
 f32 gEffect4TickCyclePhaseSlow = 0.3f;
 
-extern f32 gEffect4Pi;
-extern f32 gEffect4SinPhaseScale;
 
 __declspec(section ".sdata2") f32 lbl_803DFA88 = 0.001f;
 __declspec(section ".sdata2") f32 lbl_803DFA8C = 0.1f;
@@ -120,49 +118,8 @@ ObjectDescriptor6 lbl_803108A0 = {
     (ObjectDescriptorCallback)Effect4_func05,
 };
 
-void Effect4_func03_nop(void)
-{
-}
-
-void Effect4_release(void)
-{
-}
-
-void Effect4_initialise(void)
-{
-}
-
 #pragma scheduling off
 #pragma peephole off
-void Effect4_func05(void)
-{
-    f32 sum;
-    f32 step;
-    sum = gEffect4TickCyclePhaseFast + (step = lbl_803DFA88 * timeDelta);
-    gEffect4TickCyclePhaseFast = sum;
-    if (sum > *(f32*)&lbl_803DFA90)
-    {
-        gEffect4TickCyclePhaseFast = lbl_803DFA8C;
-    }
-    sum = gEffect4TickCyclePhaseSlow + step;
-    gEffect4TickCyclePhaseSlow = sum;
-    if (sum > *(f32*)&lbl_803DFA90)
-    {
-        gEffect4TickCyclePhaseSlow = lbl_803DFA98;
-    }
-    gEffect4SinPhaseCounterA = gEffect4SinPhaseCounterA + framesThisStep * 0x64;
-    if (gEffect4SinPhaseCounterA > 0x7fff)
-    {
-        gEffect4SinPhaseCounterA = 0;
-    }
-    gEffect4SinValueA = mathSinf(gEffect4Pi * (f32)(s16)gEffect4SinPhaseCounterA / gEffect4SinPhaseScale);
-    gEffect4SinPhaseCounterB = gEffect4SinPhaseCounterB + framesThisStep * 0x32;
-    if (gEffect4SinPhaseCounterB > 0x7fff)
-    {
-        gEffect4SinPhaseCounterB = 0;
-    }
-    gEffect4SinValueB = mathSinf(gEffect4Pi * (f32)(s16)gEffect4SinPhaseCounterB / gEffect4SinPhaseScale);
-}
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
@@ -1145,6 +1102,49 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     spawnResult = (*gExpgfxInterface)->spawnEffect(&cfg, -1, effectId, 0);
     return spawnResult;
 }
+
+void Effect4_func05(void)
+{
+    f32 sum;
+    f32 step;
+    sum = gEffect4TickCyclePhaseFast + (step = lbl_803DFA88 * timeDelta);
+    gEffect4TickCyclePhaseFast = sum;
+    if (sum > *(f32*)&lbl_803DFA90)
+    {
+        gEffect4TickCyclePhaseFast = lbl_803DFA8C;
+    }
+    sum = gEffect4TickCyclePhaseSlow + step;
+    gEffect4TickCyclePhaseSlow = sum;
+    if (sum > *(f32*)&lbl_803DFA90)
+    {
+        gEffect4TickCyclePhaseSlow = lbl_803DFA98;
+    }
+    gEffect4SinPhaseCounterA = gEffect4SinPhaseCounterA + framesThisStep * 0x64;
+    if (gEffect4SinPhaseCounterA > 0x7fff)
+    {
+        gEffect4SinPhaseCounterA = 0;
+    }
+    gEffect4SinValueA = mathSinf(3.1415927f * (f32)(s16)gEffect4SinPhaseCounterA / 32768.0f);
+    gEffect4SinPhaseCounterB = gEffect4SinPhaseCounterB + framesThisStep * 0x32;
+    if (gEffect4SinPhaseCounterB > 0x7fff)
+    {
+        gEffect4SinPhaseCounterB = 0;
+    }
+    gEffect4SinValueB = mathSinf(3.1415927f * (f32)(s16)gEffect4SinPhaseCounterB / 32768.0f);
+}
+
+void Effect4_func03_nop(void)
+{
+}
+
+void Effect4_release(void)
+{
+}
+
+void Effect4_initialise(void)
+{
+}
+
 
 #define FILL320()                                                                                                      \
     do                                                                                                                 \

@@ -58,13 +58,15 @@ typedef struct DIMbossspitState
     s32 unk40C;
 } DIMbossspitState;
 
-extern f32 lbl_803E4D44;
-extern f32 lbl_803E4D38;
-extern f32 lbl_803E4D3C;
-extern f32 lbl_803E4D40;
-extern f32 lbl_803E4D48;
-extern f32 gDimBossSpitBurstAlphaScale;
-extern f32 lbl_803E4D50;
+union DimBossSpitConstF32 { f32 f; };
+__declspec(section ".sdata2") f32 lbl_803E4D38 = 0.2f;
+__declspec(section ".sdata2") f32 lbl_803E4D3C = 3.0f;
+__declspec(section ".sdata2") f32 lbl_803E4D40 = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E4D44 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E4D48 = 255.0f;
+__declspec(section ".sdata2") f32 gDimBossSpitBurstAlphaScale = 0.015625f;
+__declspec(section ".sdata2") f32 lbl_803E4D50 = 10.0f;
+const union DimBossSpitConstF32 lbl_803E4D54 = { 0.0f };
 extern f32 gDimBossSpitGravity;
 extern f32 gDimBossSpitVelocityDamping;
 extern f32 lbl_803E4D68;

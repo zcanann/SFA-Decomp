@@ -59,13 +59,15 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 #define TREASURECHEST_SEQEV_STAFFBIT_CLR 3 /* clear StaffFlags b5 */
 #define TREASURECHEST_SEQEV_OPENED       4 /* hide + disable the chest */
 
-extern f32 lbl_803E3C20;
+union TreasureChestConstF32 { f32 f; };
+const union TreasureChestConstF32 lbl_803E3C1C = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803E3C20 = 1.0f;
 int lbl_803DDAE4;
-extern f32 lbl_803E3C24;
+__declspec(section ".sdata2") f32 lbl_803E3C24 = 0.6f;
 const ChestHitParams lbl_802C22B0 = {8, 0xFF, 0xFF, 0x78};
 void* lbl_803DDAE0;
-extern f32 lbl_803E3C28;
-extern f32 lbl_803E3C2C;
+__declspec(section ".sdata2") f32 lbl_803E3C28 = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E3C2C = 0.99f;
 
 #pragma opt_loop_invariants off
 int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)

@@ -45,16 +45,17 @@ void* lbl_803DDAF4; /* per-cell height field */
 void* lbl_803DDAF0; /* per-grid phase table */
 void* lbl_803DDAEC; /* per-cell RGB color field */
 u8 lbl_803DDAE8;    /* live-instance refcount */
-extern f32 lbl_803E3F40;   /* grid step scale */
-extern f32 lbl_803E3F44;   /* 0.0f sentinel / color-split zero */
-extern f32 lbl_803E3F48;   /* wave scale */
-extern f32 lbl_803E3F4C;   /* wave divisor */
-extern f32 lbl_803E3F50;   /* R ramp base */
-extern f32 lbl_803E3F54;   /* R ramp slope */
-extern f32 lbl_803E3F58;   /* G ramp base */
-extern f32 lbl_803E3F5C;   /* G ramp slope */
-extern f32 lbl_803E3F60;   /* B ramp base */
-extern f32 lbl_803E3F64;   /* B ramp slope */
+union WaveAnimatorConstF32 { f32 f; };
+__declspec(section ".sdata2") f32 lbl_803E3F40 = 65536.0f;   /* grid step scale */
+const union WaveAnimatorConstF32 lbl_803E3F44 = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803E3F48 = 3.1415927f;   /* wave scale */
+__declspec(section ".sdata2") f32 lbl_803E3F4C = 32768.0f;   /* wave divisor */
+__declspec(section ".sdata2") f32 lbl_803E3F50 = 190.0f;   /* R ramp base */
+__declspec(section ".sdata2") f32 lbl_803E3F54 = 65.0f;   /* R ramp slope */
+__declspec(section ".sdata2") f32 lbl_803E3F58 = 90.0f;   /* G ramp base */
+__declspec(section ".sdata2") f32 lbl_803E3F5C = 165.0f;   /* G ramp slope */
+__declspec(section ".sdata2") f32 lbl_803E3F60 = 20.0f;   /* B ramp base */
+__declspec(section ".sdata2") f32 lbl_803E3F64 = 235.0f;   /* B ramp slope */
 extern f32 lbl_803E3F70;   /* model scale */
 void fn_801923F8(int* cfgArg);
 
@@ -107,7 +108,7 @@ void fn_801923F8(int* cfgArg)
     y = cfg->originY;
     stepY = (s32)((lbl_803E3F40 * cfg->spanY) / cfg->period);
 
-    initHeight = lbl_803E3F44;
+    initHeight = lbl_803E3F44.f;
     cfg->maxHeight = initHeight;
     cfg->minHeight = initHeight;
 
@@ -150,7 +151,7 @@ void fn_801923F8(int* cfgArg)
         heightIdx = 0;
         x = heightIdx;
         i = heightIdx;
-        colorSplitZero = lbl_803E3F44;
+        colorSplitZero = lbl_803E3F44.f;
         for (; heightIdx < cfg->period; heightIdx++)
         {
             int src[1];
@@ -187,6 +188,9 @@ void fn_801923F8(int* cfgArg)
         }
     }
 }
+
+__declspec(section ".sdata2") f32 lbl_803E3F70 = 1.0f;
+const union WaveAnimatorConstF32 lbl_803E3F74 = { 0.0f };
 
 int waveanimator_getExtraSize(void)
 {

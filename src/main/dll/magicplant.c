@@ -43,21 +43,8 @@ int lbl_803DBCC8[2] = {2, 3};
 #define MAGICPLANT_PARTFX          0x802
 #define MAGICPLANT_HIT_VOLUME_SLOT 0xe
 
-extern const f32 lbl_803E28B0;
-extern f32 lbl_803E28BC;
-extern f32 lbl_803E28D0;
-extern f32 lbl_803E28DC;
-extern f32 lbl_803E28E0;
-extern f32 lbl_803E28E4;
-extern f32 lbl_803E28E8;
 extern f32 lbl_803E286C;
 extern f32 lbl_803E2894;
-extern f32 lbl_803E28B4;
-extern f32 lbl_803E28B8;
-extern f32 lbl_803E28C0;
-extern f32 lbl_803E28C4;
-extern f32 lbl_803E28C8;
-extern f32 lbl_803E28CC;
 extern f32 lbl_803E28F4;
 extern f32 lbl_803E290C;
 extern f32 lbl_803E2910;
@@ -65,8 +52,6 @@ extern f32 lbl_803E2924;
 extern f32 lbl_803E2928;
 extern f32 lbl_803E292C;
 extern f32 lbl_803E2930;
-extern f32 lbl_803E28D4;
-extern f32 lbl_803E28D8;
 extern f32 lbl_803E28F0;
 extern f32 lbl_803E2900;
 extern f32 lbl_803E2904;
@@ -81,6 +66,24 @@ extern f32 lbl_803E294C;
 extern f32 lbl_803E2950;
 extern f32 lbl_803E2954;
 extern f32 lbl_803E2958;
+
+union MagicPlantConstF32 { f32 f; };
+const union MagicPlantConstF32 lbl_803E28B0 = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803E28B4 = 6e+01f;
+__declspec(section ".sdata2") f32 lbl_803E28B8 = 7e+02f;
+__declspec(section ".sdata2") f32 lbl_803E28BC = 1.5f;
+__declspec(section ".sdata2") f32 lbl_803E28C0 = 0.75f;
+__declspec(section ".sdata2") f32 lbl_803E28C4 = 0.15f;
+__declspec(section ".sdata2") f32 lbl_803E28C8 = 3.6e+02f;
+__declspec(section ".sdata2") f32 lbl_803E28CC = 1e+01f;
+__declspec(section ".sdata2") f32 lbl_803E28D0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E28D4 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E28D8 = 25.0f;
+__declspec(section ".sdata2") f32 lbl_803E28DC = 4e+01f;
+__declspec(section ".sdata2") f32 lbl_803E28E0 = 0.02f;
+__declspec(section ".sdata2") f32 lbl_803E28E4 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E28E8 = 0.97f;
+const union MagicPlantConstF32 lbl_803E28EC = { 0.0f };
 void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
     fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
@@ -157,19 +160,19 @@ void fn_80153040(GameObject* obj, int state)
         if (*(f32*)(state + 0x324) > lbl_803E28C8)
         {
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~(u64)0x10000;
-            *(f32*)(state + 0x324) = lbl_803E28B0;
+            *(f32*)(state + 0x324) = lbl_803E28B0.f;
         }
     }
 
     fn_8014CD1C((int)obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
 
     *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
-    if (*(f32*)(state + 0x328) <= lbl_803E28B0)
+    if (*(f32*)(state + 0x328) <= lbl_803E28B0.f)
     {
         *(f32*)(state + 0x328) = lbl_803E28B4;
         Sfx_PlayFromObject((int)obj, SFXTRIG_mn_heart1_c);
     }
-    *(f32*)(state + 0x32c) = lbl_803E28B0;
+    *(f32*)(state + 0x32c) = lbl_803E28B0.f;
 }
 
 void fn_80153248(GameObject* obj, int state)
@@ -217,8 +220,8 @@ void fn_80153248(GameObject* obj, int state)
     if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > lbl_803E28C8)
     {
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-        *(f32*)(state + 0x324) = lbl_803E28B0;
-        *(f32*)(state + 0x32c) = lbl_803E28B0;
+        *(f32*)(state + 0x324) = lbl_803E28B0.f;
+        *(f32*)(state + 0x32c) = lbl_803E28B0.f;
     }
     else
     {
@@ -238,8 +241,8 @@ void fn_80153248(GameObject* obj, int state)
             if (voxmaps_traceIntGrid(gridB, gridA, NULL, &hitOut, 0) == 0)
             {
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-                *(f32*)(state + 0x324) = lbl_803E28B0;
-                *(f32*)(state + 0x32c) = lbl_803E28B0;
+                *(f32*)(state + 0x324) = lbl_803E28B0.f;
+                *(f32*)(state + 0x32c) = lbl_803E28B0.f;
             }
         }
     }
@@ -266,7 +269,7 @@ void vambat_init(GameObject* obj, int state)
     ((BaddieState*)state)->unk318 = pathStepInit;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = initSpeed;
-    zero = lbl_803E28B0;
+    zero = lbl_803E28B0.f;
     *(f32*)(state + 0x324) = zero;
     *(f32*)(state + 0x328) = zero;
     *(f32*)(state + 0x32c) = zero;

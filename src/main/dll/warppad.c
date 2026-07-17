@@ -56,8 +56,9 @@ __declspec(section ".sdata2") f32 lbl_803E3EA4 = 0.75f;
 __declspec(section ".sdata2") f32 lbl_803E3EA8 = 30.0f;
 __declspec(section ".sdata2") f32 lbl_803E3EAC = 110.0f;
 __declspec(section ".sdata2") f32 lbl_803E3EB0 = 0.5f;
-extern f32 gWarpPadTriggerDist;
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
+
+extern f32 gWarpPadTriggerDist;
 
 void warpPadFn_8019042c(GameObject* obj)
 {
@@ -301,3 +302,7 @@ updateTimer:
         state->unk0A = -1;
     }
 }
+
+union WarpPadConstF32 { f32 f; };
+__declspec(section ".sdata2") f32 gWarpPadTriggerDist = 40.0f;
+const union WarpPadConstF32 lbl_803E3EE4 = { 0.0f };

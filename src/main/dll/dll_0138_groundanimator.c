@@ -55,21 +55,15 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 #pragma scheduling on
 #pragma peephole on
-extern f32 lbl_803E3FC4;
-extern const f32 lbl_803E3F98;
-extern const f32 lbl_803E3FB8;
+union GroundAnimatorConstF32 { f32 f; };
+__declspec(section ".sdata2") f32 lbl_803E3F98 = 100.0f;
+const union GroundAnimatorConstF32 lbl_803E3F9C = { 0.0f };
 extern void* mapBlockFn_800606ec(int* obj, int idx);
 extern int mapBlockFn_80060678(void* entry);
 
 extern void fn_800605F0(void* cell, void* out);
 extern void fn_8006058C(void* cell, void* in);
-extern f32 lbl_803E3FA8;
-extern const f32 lbl_803E3FAC;
-extern const f32 lbl_803E3FB0;
-extern const f32 lbl_803E3FB4;
-extern const f32 lbl_803E3FBC;
 extern void fn_801A80F0(GameObject* e, int arg);
-extern const f32 lbl_803E3FC0;
 
 extern int fn_80060688(GameObject* block, int v);
 extern void fn_801A80C4(GameObject* o, f32 x, f32 y, f32 z);
@@ -90,6 +84,15 @@ u8 groundanimator_isFullySunk(int* obj)
 }
 
 #pragma peephole off
+__declspec(section ".sdata2") f32 lbl_803E3FA8 = -20.0f;
+__declspec(section ".sdata2") f32 lbl_803E3FAC = 20.0f;
+const union GroundAnimatorConstF32 lbl_803E3FB0 = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803E3FB4 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E3FB8 = -1.0f;
+__declspec(section ".sdata2") f32 lbl_803E3FBC = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E3FC0 = 640.0f;
+__declspec(section ".sdata2") f32 lbl_803E3FC4 = 1.0f;
+
 f32 groundanimator_setScale(int* obj, int* target)
 {
     int* r31;
@@ -103,7 +106,7 @@ f32 groundanimator_setScale(int* obj, int* target)
     dy = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     if (dy < lbl_803E3FA8 || dy > lbl_803E3FAC)
     {
-        return lbl_803E3FB0;
+        return lbl_803E3FB0.f;
     }
     dx = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
     dz = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
@@ -399,7 +402,7 @@ void groundanimator_update(int* obj)
     {
         return;
     }
-    if (g->sinkDepth > lbl_803E3FB0)
+    if (g->sinkDepth > lbl_803E3FB0.f)
     {
         if ((g->flags & 4) != 0)
         {
@@ -408,9 +411,9 @@ void groundanimator_update(int* obj)
         else if (g->sinkDepth < lbl_803E3F98 * (f32)(u32)((GroundanimatorPlacement*)r20)->maxSinkDepth)
         {
             g->sinkDepth = g->sinkDepth - timeDelta;
-            if (g->sinkDepth < lbl_803E3FB0)
+            if (g->sinkDepth < lbl_803E3FB0.f)
             {
-                g->sinkDepth = lbl_803E3FB0;
+                g->sinkDepth = lbl_803E3FB0.f;
             }
         }
         if (g->sinkDepth != g->lastDepth)
@@ -457,7 +460,7 @@ void groundanimator_update(int* obj)
                     nv = fn_800606DC((int*)block, mid);
                     for (inner = 0, foffVtx = foffEntry, vtx = nv, hoffVtx = hoffEntry; inner < 3; inner++)
                     {
-                        if (*(f32*)((char*)g->falloffBuf + foffVtx) > lbl_803E3FB0)
+                        if (*(f32*)((char*)g->falloffBuf + foffVtx) > lbl_803E3FB0.f)
                         {
                             void* cell = (char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6;
                             fn_800605F0(cell, vbuf);

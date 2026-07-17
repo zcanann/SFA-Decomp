@@ -221,3 +221,8 @@ ObjectDescriptor gIMSpaceThrusterObjDescriptor = {
     (ObjectDescriptorCallback)imspacethruster_getObjectTypeId,
     imspacethruster_getExtraSize,
 };
+
+__declspec(section ".sdata2") f32 gImSpaceThrusterRootMotionScaleKind01 = 0.49f;
+__declspec(section ".sdata2") f32 gImSpaceThrusterRootMotionScaleKind23 = 0.42f;
+__declspec(section ".sdata2") f32 gImSpaceThrusterRootMotionScaleKind56 = 0.58f;
+__declspec(section ".sdata2") f32 gImSpaceThrusterRootMotionScaleKind4 = 0.72f;

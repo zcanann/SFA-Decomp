@@ -43,7 +43,9 @@ typedef struct KaldachomPlacement
 
 #define AGGRO_CHANCE_RANGE 0x63
 
-extern f32 lbl_803E3060; /* 0.0f */
+union CfDoorLightConstF32 { f32 f; };
+const union CfDoorLightConstF32 lbl_803E3060 = { 0.0f };
+const union CfDoorLightConstF32 lbl_803E3064 = { 0.0f };
 extern f32 lbl_803E3078;
 extern f32 lbl_803E307C;
 extern f32 lbl_803E3080;
@@ -62,7 +64,7 @@ int kaldachom_stateHandlerB05(int obj, int baddieState)
     if (((GroundBaddieState*)baddieState)->baddie.controlMode == BADDIE_CONTROL_MODE_PULLUP)
     {
         control->pullupSfxTimer = control->pullupSfxTimer - timeDelta;
-        if (control->pullupSfxTimer <= lbl_803E3060)
+        if (control->pullupSfxTimer <= lbl_803E3060.f)
         {
             ((GroundBaddieState*)baddieState)->baddie.moveDone = 1;
         }
@@ -148,7 +150,7 @@ int kaldachom_stateHandlerB01(int* obj, GroundBaddieState* state)
             control->returnStateTimer = lbl_803E3080;
         }
         timer = control->returnStateTimer;
-        zero = lbl_803E3060;
+        zero = lbl_803E3060.f;
         if (timer != zero)
         {
             control->returnStateTimer = timer - timeDelta;
@@ -176,7 +178,7 @@ int kaldachom_stateHandlerB00(int* obj, GroundBaddieState* state)
     {
         if ((s8)state->baddie.moveJustStartedB != 0)
         {
-            f32 fz = lbl_803E3060;
+            f32 fz = lbl_803E3060.f;
             state->baddie.animSpeedB = fz;
             state->baddie.animSpeedA = fz;
             (*gPlayerInterface)->setState(obj, state, 0);
@@ -198,7 +200,7 @@ int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
     *(u8*)&((GroundBaddieState*)baddieState)->baddie.stateTag = 3;
     ((GroundBaddieState*)baddieState)->baddie.moveSpeed = lbl_803E3084;
     {
-        f32 fz = lbl_803E3060;
+        f32 fz = lbl_803E3060.f;
         ((GroundBaddieState*)baddieState)->baddie.animSpeedA = fz;
         ((GroundBaddieState*)baddieState)->baddie.animSpeedB = fz;
         if (*(char*)&((GroundBaddieState*)baddieState)->baddie.moveJustStartedA != '\0')
@@ -235,7 +237,7 @@ int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
             }
             if (linkedObj != NULL)
             {
-                f32 fz = lbl_803E3060;
+                f32 fz = lbl_803E3060.f;
                 (**(void (**)(char*, f32, f32, f32))(*(int*)(*(int*)(linkedObj + 0x68)) + 0x2c))(linkedObj, fz,
                                                                                                  lbl_803E3078, fz);
             }

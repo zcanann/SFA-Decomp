@@ -36,16 +36,6 @@ extern f32 lbl_803E294C;
 extern f32 lbl_803E2950;
 extern f32 lbl_803E2954;
 extern f32 lbl_803E2958;
-extern f32 lbl_803E2968;
-extern f32 lbl_803E296C;
-extern f32 lbl_803E2970;
-extern f32 lbl_803E2974;
-extern f32 lbl_803E2978;
-extern f32 lbl_803E297C;
-extern f32 lbl_803E2980;
-extern f32 lbl_803E2984;
-extern f32 lbl_803E2988;
-extern f32 lbl_803E298C;
 
 void weevil_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag)
 {
@@ -185,6 +175,17 @@ void fn_80153E0C(GameObject* obj, int state)
         ((BaddieState*)state)->inWhirlpoolGroup--;
     }
 }
+
+__declspec(section ".sdata2") f32 lbl_803E2968 = 3.6e+02f;
+__declspec(section ".sdata2") f32 lbl_803E296C = 0.35f;
+__declspec(section ".sdata2") f32 lbl_803E2970 = 0.375f;
+__declspec(section ".sdata2") f32 lbl_803E2974 = 5e+01f;
+__declspec(section ".sdata2") f32 lbl_803E2978 = 4e+01f;
+__declspec(section ".sdata2") f32 lbl_803E297C = 0.02f;
+__declspec(section ".sdata2") f32 lbl_803E2980 = 0.97f;
+__declspec(section ".sdata2") f32 lbl_803E2984 = 1.5f;
+__declspec(section ".sdata2") f32 lbl_803E2988 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E298C = 6e+01f;
 
 void fn_801540A0(int obj, int state)
 {

@@ -74,7 +74,6 @@ f32 gKaldachomDustSpawnScratch;
 extern void* gKaldaChomStateHandlersB[];
 extern void* gKaldaChomStateHandlersA[];
 void* gKaldachomEffectResource;
-extern f32 lbl_803E3060;
 extern f32 lbl_803E307C;
 extern f32 lbl_803E3078;
 extern f32 lbl_803E308C;
@@ -388,7 +387,7 @@ void kaldachom_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
         switch (obj->unkF4)
         {
         case 0:
-            if (((GroundBaddieState*)state)->glowAlpha != lbl_803E3060)
+            if (((GroundBaddieState*)state)->glowAlpha != lbl_803E3060.f)
             {
                 fn_8003B5E0IntAlphaLegacy(200, 0, 0, (int)((GroundBaddieState*)state)->glowAlpha);
             }
@@ -431,7 +430,7 @@ void kaldachom_update(GameObject* obj)
                 obj, ref, state, 8, 6, 0, 0x26, (double)lbl_803E30C8);
             ((GroundBaddieState*)state)->targetState = 0;
             Sfx_PlayFromObject((int)obj, SFXTRIG_mn_lummy211);
-            ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E3060, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
+            ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E3060.f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
             ((GroundBaddieState*)state)->baddie.moveDone = 0;
             obj->anim.alpha = 0xff;
             *(u8*)&obj->anim.resetHitboxMode =
@@ -452,7 +451,7 @@ void kaldachom_update(GameObject* obj)
             {
                 texture = (int)((CampfireState*)state)->control;
                 ((KaldaChomControl*)texture)->pullupSfxTimer = ((KaldaChomControl*)texture)->pullupSfxTimer - timeDelta;
-                if (((KaldaChomControl*)texture)->pullupSfxTimer <= lbl_803E3060)
+                if (((KaldaChomControl*)texture)->pullupSfxTimer <= lbl_803E3060.f)
                 {
                     Sfx_PlayFromObject((int)obj, SFXTRIG_mn_lummy111);
                     ((KaldaChomControl*)texture)->pullupSfxTimer = (f32)(int)randomGetRange(300, 600);
@@ -487,7 +486,7 @@ void kaldachom_update(GameObject* obj)
                 *(u32*)&((GroundBaddieState*)state)->baddie.targetObj = player;
                 kaldachom_handleAnimEvents(obj, state, state);
                 (*(void (**)(void*, int, double, int))(*(int*)gBaddieControlInterface + 0x2c))(
-                    obj, state, (double)lbl_803E3060, 0xffffffff);
+                    obj, state, (double)lbl_803E3060.f, 0xffffffff);
                 if (((CampfireState*)state)->controlMode != 6)
                 {
                     (*(void (**)(void*, int, double, int))(*(int*)gPlayerInterface + 0x30))(obj, state, (double)timeDelta,
@@ -521,20 +520,20 @@ void kaldachom_init(GameObject* obj, int data, int skip_alloc)
         (int)obj, data, state, 8, 6, 0, initMode, (double)lbl_803E30C8);
     (obj)->animEventCallback = NULL;
     control = ((CampfireState*)state)->control;
-    ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E3060, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
+    ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E3060.f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
     (obj)->anim.currentMoveProgress = lbl_803E307C;
     *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     (*(VtableFn*)((char*)*gPlayerInterface + 0x14))(obj, state, 0);
     *(u16*)&((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E307C;
-    ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E3060;
+    ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E3060.f;
     player = (int)Obj_GetPlayerObject();
     ((CampfireState*)state)->targetObj = player;
     ((GroundBaddieState*)state)->baddie.physicsActive = 0;
     ObjHits_DisableObject((int)obj);
     control->pullupSfxTimer = (f32)(int)randomGetRange(300, 600);
     control->idleAnimTimer = (f32)(int)randomGetRange(0, 499);
-    control->unk3C = lbl_803E3060;
+    control->unk3C = lbl_803E3060.f;
     control->spawnedDustObj = NULL;
     (obj)->objectFlags = (obj)->objectFlags | KALDACHOM_OBJFLAG_HITDETECT_DISABLED;
     (obj)->anim.rootMotionScale = lbl_803E30A0 + (f32)(s32) * (s8*)(data + 0x28) / lbl_803E30A4;

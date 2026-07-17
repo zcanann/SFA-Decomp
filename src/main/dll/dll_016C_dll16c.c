@@ -50,8 +50,13 @@ typedef struct Dll16CChildObjectIdTable
 STATIC_ASSERT(sizeof(Dll16CChildObjectIdTable) == 0xA);
 
 const Dll16CChildObjectIdTable lbl_802C2308 = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
-extern f32 lbl_803E4748;
-extern f32 lbl_803E474C;
+union Dll16cConstF32 { f32 f; };
+const union Dll16cConstF32 lbl_803E4748 = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803E474C = 0.01f;
+extern f32 lbl_803E4758;
+extern f32 lbl_803E475C;
+extern f32 lbl_803E4760;
+extern f32 lbl_803E4764;
 extern f32 lbl_803E4758;
 extern f32 lbl_803E475C;
 extern f32 lbl_803E4760;
@@ -216,7 +221,7 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         extra->snapY = extra->pathPointY;
         extra->snapZ = extra->pathPointZ;
         (*(void (**)(GameObject*, int))(**(int**)((char*)linkedObj + 0x68) + 0x3c))(linkedObj, 2);
-        ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 1);
+        ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748.f, 1);
         if (obj->anim.modelState != NULL)
         {
             obj->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
@@ -345,7 +350,7 @@ void dll_16C_update(GameObject* obj)
         f32 a;
         if (obj->anim.currentMove != 0x100)
         {
-            ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748.f, 0);
         }
         (*(void (**)(GameObject*, f32*))(**(int**)((char*)sub + 0x68) + 0x44))(sub, &blend);
         blend = lbl_803E474C;
@@ -357,9 +362,9 @@ void dll_16C_update(GameObject* obj)
             GameObject* player = Obj_GetPlayerObject();
             fade = Vec_distance(&extra->linkedObj->anim.worldPosX, &player->anim.worldPosX);
             fade = (fade - lbl_803E475C) / lbl_803E4760;
-            if (fade < lbl_803E4748)
+            if (fade < lbl_803E4748.f)
             {
-                fade = lbl_803E4748;
+                fade = lbl_803E4748.f;
             }
             else if (fade > lbl_803E4758)
             {
@@ -399,3 +404,8 @@ ObjectDescriptor lbl_80323740 = {
     (ObjectDescriptorCallback)dll_16C_getObjectTypeId,
     dll_16C_getExtraSize,
 };
+
+__declspec(section ".sdata2") f32 lbl_803E4758 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E475C = 600.0f;
+__declspec(section ".sdata2") f32 lbl_803E4760 = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E4764 = 255.0f;
