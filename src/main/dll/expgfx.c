@@ -2466,13 +2466,13 @@ void expgfx_free2(u32 sourceId)
 #pragma dont_inline on
 void expgfx_free(u32 sourceId)
 {
-    s8* poolActiveCounts;
+    s8* poolActiveCounts[1];
     int slotIndex;
     ExpgfxTableEntry* tableEntry;
-    u32* slotPoolBases;
+    u32* slotPoolBases[1];
     ExpgfxRuntimeDataLayout* runtime;
     int tableIndex;
-    u32* poolSourceIds;
+    u32* poolSourceIds[1];
     int poolIndex;
     ExpgfxSlot* slot;
 
@@ -2483,14 +2483,14 @@ void expgfx_free(u32 sourceId)
     }
 
     poolIndex = 0;
-    slotPoolBases = runtime->slotPoolBases;
-    poolSourceIds = runtime->poolSourceIds;
-    poolActiveCounts = runtime->poolActiveCounts;
+    slotPoolBases[0] = runtime->slotPoolBases;
+    poolSourceIds[0] = runtime->poolSourceIds;
+    poolActiveCounts[0] = runtime->poolActiveCounts;
 
     while (poolIndex < EXPGFX_POOL_COUNT)
     {
-        slot = (ExpgfxSlot*)*slotPoolBases;
-        if (sourceId == *poolSourceIds)
+        slot = (ExpgfxSlot*)*slotPoolBases[0];
+        if (sourceId == *poolSourceIds[0])
         {
             for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
             {
@@ -2501,22 +2501,22 @@ void expgfx_free(u32 sourceId)
                                             (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16);
                     if (tableEntry->sourceId == sourceId)
                     {
-                        expgfxRemove(*slotPoolBases, poolIndex, slotIndex, 0, 1);
+                        expgfxRemove(*slotPoolBases[0], poolIndex, slotIndex, 0, 1);
                     }
                 }
                 slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
-                if (*poolActiveCounts == 0)
+                if (*poolActiveCounts[0] == 0)
                 {
                     gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
                 }
             }
-            *poolSourceIds = 0;
+            *poolSourceIds[0] = 0;
             gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
         }
 
-        slotPoolBases++;
-        poolSourceIds++;
-        poolActiveCounts++;
+        slotPoolBases[0]++;
+        poolSourceIds[0]++;
+        poolActiveCounts[0]++;
         poolIndex++;
     }
 }
