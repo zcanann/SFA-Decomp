@@ -1958,6 +1958,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     int size;
     int dllStateSize;
     int alignedCursor;
+    int j;
 
     seq = *data;
     if (flags & 2)
@@ -2264,14 +2265,14 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if (modelDef->hitVolumeCount != 0)
     {
         obj->hitVolumeBounds = (ObjHitVolumeRuntimeBounds*)roundUpTo4(cursor);
-        i = 0;
-        for (; i < modelDef->hitVolumeCount; i++)
+        j = 0;
+        for (; j < modelDef->hitVolumeCount; j++)
         {
-            obj->hitVolumeBounds[i].flags = modelDef->hitVolumes[i].flags;
-            obj->hitVolumeBounds[i].bounds[0] = modelDef->hitVolumes[i].bounds[0];
-            obj->hitVolumeBounds[i].bounds[3] = modelDef->hitVolumes[i].bounds[3];
-            obj->hitVolumeBounds[i].bounds[1] = modelDef->hitVolumes[i].bounds[1];
-            obj->hitVolumeBounds[i].bounds[2] = modelDef->hitVolumes[i].bounds[2];
+            obj->hitVolumeBounds[j].flags = modelDef->hitVolumes[j].flags;
+            obj->hitVolumeBounds[j].bounds[0] = modelDef->hitVolumes[j].bounds[0];
+            obj->hitVolumeBounds[j].bounds[3] = modelDef->hitVolumes[j].bounds[3];
+            obj->hitVolumeBounds[j].bounds[1] = modelDef->hitVolumes[j].bounds[1];
+            obj->hitVolumeBounds[j].bounds[2] = modelDef->hitVolumes[j].bounds[2];
         }
     }
     obj->parent = parent;
