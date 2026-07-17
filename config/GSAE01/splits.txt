@@ -1399,6 +1399,7 @@ main/dll/duster_wb.c:
 
 main/dll/hoodedzyck.c:
 	.text       start:0x80156D44 end:0x80157988
+	.sdata2     start:0x803E2B18 end:0x803E2B7C
 
 main/dll/firecrawler.c:
 	.text       start:0x80157988 end:0x8015983C
