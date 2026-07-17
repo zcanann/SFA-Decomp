@@ -3873,12 +3873,10 @@ typedef struct
     int a[6];
 } UiMsgBlock;
 
-#pragma opt_common_subs off
 static inline u32 playerLoadPendingHitBits(char* p)
 {
     return *(u32*)p;
 }
-#pragma opt_common_subs reset
 #pragma opt_propagation reset
 
 int playerStateStopAimStaff(int obj, int state)
