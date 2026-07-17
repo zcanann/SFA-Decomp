@@ -77,6 +77,56 @@ def elf_section_size(path: Path, section: str) -> int | None:
     return None
 
 
+def elf_function_symbols(path: Path) -> set[str]:
+    data = path.read_bytes()
+    endian = ">" if data[5] == 2 else "<"
+    section_offset = struct.unpack_from(endian + "I", data, 0x20)[0]
+    entry_size = struct.unpack_from(endian + "H", data, 0x2E)[0]
+    entry_count = struct.unpack_from(endian + "H", data, 0x30)[0]
+    names_index = struct.unpack_from(endian + "H", data, 0x32)[0]
+
+    def header(index: int) -> tuple[int, ...]:
+        offset = section_offset + index * entry_size
+        return struct.unpack_from(endian + "IIIIIIIIII", data, offset)
+
+    names_header = header(names_index)
+    section_names = data[names_header[4] : names_header[4] + names_header[5]]
+    sections: list[tuple[str, tuple[int, ...]]] = []
+    for index in range(entry_count):
+        item = header(index)
+        name_start = item[0]
+        name_end = section_names.find(b"\0", name_start)
+        name = section_names[name_start:name_end].decode("ascii", errors="replace")
+        sections.append((name, item))
+
+    result: set[str] = set()
+    for name, symbols in sections:
+        if name != ".symtab":
+            continue
+        strings_header = sections[symbols[6]][1]
+        strings = data[
+            strings_header[4] : strings_header[4] + strings_header[5]
+        ]
+        for offset in range(symbols[4], symbols[4] + symbols[5], symbols[9]):
+            name_offset, _, _, info, _, _ = struct.unpack_from(
+                endian + "IIIBBH", data, offset
+            )
+            if info & 0xF != 2:
+                continue
+            name_end = strings.find(b"\0", name_offset)
+            result.add(strings[name_offset:name_end].decode("ascii", errors="replace"))
+    return result
+
+
+def retail_function_symbols(version: str, source: str) -> set[str]:
+    asm = ROOT / "build" / version / "asm" / Path(source).with_suffix(".s")
+    if not asm.exists():
+        return set()
+    return set(
+        re.findall(r"^\.fn\s+([^,\s]+)", asm.read_text(encoding="utf-8"), re.MULTILINE)
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("-v", "--version", default="GSAE01")
@@ -88,7 +138,7 @@ def main() -> None:
     args = parser.parse_args()
 
     targets = retail_text_sizes(args.version)
-    rows: list[tuple[int, int, int, str]] = []
+    rows: list[tuple[int, int, int, str, str]] = []
     missing = 0
     for source in matching_sources(args.version):
         target_size = targets.get(source)
@@ -99,12 +149,16 @@ def main() -> None:
         source_size = elf_section_size(obj, ".text") or 0
         overage = source_size - target_size
         if overage > 0 or args.include_nonpositive:
-            rows.append((overage, source_size, target_size, source))
+            source_only = sorted(
+                elf_function_symbols(obj) - retail_function_symbols(args.version, source)
+            )
+            rows.append((overage, source_size, target_size, source, ", ".join(source_only)))
 
     rows.sort(reverse=True)
-    print(f"{'over':>8} {'source':>8} {'target':>8}  unit")
-    for overage, source_size, target_size, source in rows:
-        print(f"{overage:8d} {source_size:8d} {target_size:8d}  {source}")
+    print(f"{'over':>8} {'source':>8} {'target':>8}  unit  [source-only functions]")
+    for overage, source_size, target_size, source, source_only in rows:
+        suffix = f"  [{source_only}]" if source_only else ""
+        print(f"{overage:8d} {source_size:8d} {target_size:8d}  {source}{suffix}")
     if missing:
         print(f"\nSkipped {missing} units without both a built object and .text split.")
 
