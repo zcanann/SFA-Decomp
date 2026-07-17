@@ -1823,7 +1823,7 @@ void ObjSeq_objLoadAnimdata(u8* seq, u8* obj)
     ((ObjSeqState*)seq)->animCount = (s16)(((hdr.size >> 2) - hdr.count) >> 1);
     ((ObjSeqState*)seq)->animEntries = ((ObjSeqState*)seq)->cmds + hdr.count * 4;
 
-    ((ObjSeqState*)seq)->slot = obj[0x1f];
+    *(u8*)&((ObjSeqState*)seq)->slot = obj[0x1f];
     if ((s8)((ObjSeqState*)seq)->slot > -1)
     {
         (base + (s8)((ObjSeqState*)seq)->slot)[0x3b9c] = 0;
