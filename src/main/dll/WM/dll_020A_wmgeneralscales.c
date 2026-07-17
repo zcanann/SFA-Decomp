@@ -19,9 +19,27 @@
 #include "main/obj_link.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/object_descriptor.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/WM/dll_020A_wmgeneralscales.h"
+
+ObjectDescriptor gWM_GeneralScalesObjDescriptor = {
+    0,
+    0,
+    0,
+    0x00090000,
+    (ObjectDescriptorCallback)WM_GeneralScales_initialise,
+    (ObjectDescriptorCallback)WM_GeneralScales_release,
+    0,
+    (ObjectDescriptorCallback)WM_GeneralScales_init,
+    (ObjectDescriptorCallback)WM_GeneralScales_update,
+    (ObjectDescriptorCallback)WM_GeneralScales_hitDetect,
+    (ObjectDescriptorCallback)WM_GeneralScales_render,
+    (ObjectDescriptorCallback)WM_GeneralScales_free,
+    (ObjectDescriptorCallback)WM_GeneralScales_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)WM_GeneralScales_getExtraSize,
+};
 
 /* phase values written by the SeqFn (author comment: 1 = hidden,
    2/3 = slam variants, 0 = idle). SLAM0/SLAM1 are neutral names - the

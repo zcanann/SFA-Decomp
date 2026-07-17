@@ -401,19 +401,3 @@ void WM_LevelControl_initialise(void)
 {
 }
 
-/* descriptor/ptr table auto 0x80328bd0-0x80328c08 */
-u32 gWM_GeneralScalesObjDescriptor[14] = {0x00000000,
-                                          0x00000000,
-                                          0x00000000,
-                                          0x00090000,
-                                          (u32)WM_GeneralScales_initialise,
-                                          (u32)WM_GeneralScales_release,
-                                          0x00000000,
-                                          (u32)WM_GeneralScales_init,
-                                          (u32)WM_GeneralScales_update,
-                                          (u32)WM_GeneralScales_hitDetect,
-                                          (u32)WM_GeneralScales_render,
-                                          (u32)WM_GeneralScales_free,
-                                          (u32)WM_GeneralScales_getObjectTypeId,
-                                          (u32)WM_GeneralScales_getExtraSize};
-
