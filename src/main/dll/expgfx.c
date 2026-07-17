@@ -1641,11 +1641,8 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
         if ((((ExpgfxSourceObject*)sourceObject)->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) ||
             (*poolSourceIds == sourceObject))
         {
-            s64 frameBit;
-
             signedPoolIndex = poolIndex;
-            frameBit = 1 << (signedPoolIndex >> 1);
-            if ((frameBit & gExpgfxTrackedSourceFrameMasks[signedPoolIndex & 1]) != 0)
+            if (((s64)(1 << (signedPoolIndex >> 1)) & gExpgfxTrackedSourceFrameMasks[signedPoolIndex & 1]) != 0)
             {
                 gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_B;
                 if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_A)
