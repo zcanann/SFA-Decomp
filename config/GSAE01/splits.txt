@@ -4648,22 +4648,13 @@ dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.c:
 	.text       start:0x80294BB8 end:0x80295334
-	.data       start:0x80332C78 end:0x80332EF0
+	.data       start:0x80332C78 end:0x80332EC0
 	.sdata2     start:0x803E7E50 end:0x803E7E68
-
-dolphin/TRK_MINNOW_DOLPHIN/msghndlr_tables.c:
-	.data       start:0x80332EF0 end:0x80332F48
-
-dolphin/TRK_MINNOW_DOLPHIN/targimpl_tables.c:
-	.data       start:0x80332F48 end:0x80332F78
-
-dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e_tables.c:
-	.data       start:0x80332F78 end:0x80332FC0
 
 main/dll/player.c:
 	.text       start:0x80295334 end:0x802B8A58
 	.rodata     start:0x802C2B30 end:0x802C2CA8
-	.data       start:0x80332FC0 end:0x80334EE8
+	.data       start:0x80332EC0 end:0x80334EE8
 	.bss        start:0x803DAEF0 end:0x803DB0D0
 	.sdata      start:0x803DC660 end:0x803DC66C
 
