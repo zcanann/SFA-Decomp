@@ -29,29 +29,8 @@ u8 gTumbleweedCollisionPointData[8] = {0x41, 0xC8, 0, 0, 0, 0, 0, 0};
 #define TUMBLEWEED_OBJGROUP 3
 #define TUMBLEWEED_OBJGROUP_SECONDARY 0x31
 
-extern f32 lbl_803E2F60;
-extern f32 lbl_803E2F64;
-extern f32 lbl_803E2F68;
-extern const f32 lbl_803E2F78;
-extern const f32 lbl_803E2F7C;
-extern const f32 lbl_803E2F80;
-extern const f32 lbl_803E2F84;
-extern const f32 lbl_803E2F88;
-extern const f32 lbl_803E2F98;
-extern const f32 lbl_803E2F9C;
 
-extern const f32 lbl_803E2FC8;
-extern const f32 lbl_803E2FCC;
-extern const f32 lbl_803E2FD0;
-extern const f32 lbl_803E2FB4;
 extern u8 gTumbleweedCollisionPoint[0xc];
-extern void fn_80163990(int obj, int aux);
-extern const f32 lbl_803E2FA0;
-extern const f32 lbl_803E2FAC;
-extern const f32 lbl_803E2FB0;
-extern const f32 lbl_803E2FB8;
-extern const f32 lbl_803E2FBC;
-extern const f32 lbl_803E2FC0;
 
 void tumbleweed_updateRollingMotion(GameObject* obj, int state)
 {
@@ -66,7 +45,7 @@ void tumbleweed_updateRollingMotion(GameObject* obj, int state)
     TrackGroundHit** hitList[2];
 
     hitList[0] = 0x0;
-    bestDy = lbl_803E2F78;
+    bestDy = 10000.0f;
     hitCount = hitDetectFn_80065e50(obj, obj->anim.localPosX, obj->anim.localPosY,
                                    obj->anim.localPosZ, hitList, 0, 0);
     for (i = 0, bestHit = 0, hitEntry = hitList[0]; i < hitCount; i++)
@@ -83,29 +62,29 @@ void tumbleweed_updateRollingMotion(GameObject* obj, int state)
         }
         hitEntry = hitEntry + 1;
     }
-    if (obj->anim.velocityX > lbl_803E2F80)
+    if (obj->anim.velocityX > 1.0f)
     {
-        obj->anim.velocityX = lbl_803E2F80;
+        obj->anim.velocityX = 1.0f;
     }
-    else if (obj->anim.velocityX < *(f32*)&lbl_803E2F7C)
+    else if (obj->anim.velocityX < -1.0f)
     {
-        obj->anim.velocityX = *(f32*)&lbl_803E2F7C;
+        obj->anim.velocityX = -1.0f;
     }
-    if (obj->anim.velocityY > lbl_803E2F80)
+    if (obj->anim.velocityY > 1.0f)
     {
-        obj->anim.velocityY = lbl_803E2F80;
+        obj->anim.velocityY = 1.0f;
     }
-    else if (obj->anim.velocityY < lbl_803E2F7C)
+    else if (obj->anim.velocityY < -1.0f)
     {
-        obj->anim.velocityY = lbl_803E2F7C;
+        obj->anim.velocityY = -1.0f;
     }
-    if (obj->anim.velocityZ > lbl_803E2F80)
+    if (obj->anim.velocityZ > 1.0f)
     {
-        obj->anim.velocityZ = lbl_803E2F80;
+        obj->anim.velocityZ = 1.0f;
     }
-    else if (obj->anim.velocityZ < lbl_803E2F7C)
+    else if (obj->anim.velocityZ < -1.0f)
     {
-        obj->anim.velocityZ = lbl_803E2F7C;
+        obj->anim.velocityZ = -1.0f;
     }
     obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
     obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
@@ -115,28 +94,28 @@ void tumbleweed_updateRollingMotion(GameObject* obj, int state)
     *(s16*)obj = (s16)((f32)(int) * (s16*)(state + 0x280) * timeDelta + (f32)(int) * (s16*)obj);
     if (hitList[0] != 0x0)
     {
-        if (obj->anim.localPosY > lbl_803E2F60 + *(float*)hitList[0][bestHit])
+        if (obj->anim.localPosY > 7.0f + *(float*)hitList[0][bestHit])
         {
-            obj->anim.velocityY = obj->anim.velocityY + lbl_803E2F64;
+            obj->anim.velocityY += -0.17f;
         }
         else
         {
-            obj->anim.localPosY = lbl_803E2F60 + *(float*)hitList[0][bestHit];
+            obj->anim.localPosY = 7.0f + *(float*)hitList[0][bestHit];
             if (((short*)obj)[0x23] == 0x3fb)
             {
                 dy = (f32)(int)(uval = randomGetRange(0x8c, 0xb4));
                 dy = (f32) ((BackpackState*)state)->distToTarget / dy;
-                vp = lbl_803E2F84 * obj->anim.velocityY;
+                vp = 0.8f * obj->anim.velocityY;
                 obj->anim.velocityY = -(vp * dy);
             }
             else
             {
                 dy = (f32)(int)(uval = randomGetRange(0x14, 0x28));
                 dy = (f32) ((BackpackState*)state)->distToTarget / dy;
-                vp = lbl_803E2F84 * obj->anim.velocityY;
+                vp = 0.8f * obj->anim.velocityY;
                 obj->anim.velocityY = -(vp * dy);
             }
-            bestHit = (int)(lbl_803E2F88 * obj->anim.velocityY);
+            bestHit = (int)(32.0f * obj->anim.velocityY);
             if (0x7f < bestHit)
             {
                 bestHit = 0x7f;
@@ -168,9 +147,11 @@ int tumbleweed_func0E(GameObject *obj)
 void tumbleweed_render2(int* obj, int targetPos)
 {
     int* state = ((GameObject*)obj)->extra;
+    f32 half;
     ((TumbleweedState*)state)->mode = TUMBLEWEED_PHASE_HOMING;
     *(int*)&((BackpackState*)state)->targetPos = targetPos;
-    ((BackpackState*)state)->speed = timeDelta * lbl_803E2F98;
+    half = 0.5f;
+    ((BackpackState*)state)->speed = timeDelta * half;
     ObjHits_DisableObject((u32)obj);
 }
 
@@ -184,7 +165,7 @@ void tumbleweed_modelMtxFn(GameObject *obj)
         ((TumbleweedState*)state)->effectFlags |= 3;
         if ((obj)->anim.seqId == TUMBLEWEED_TYPE_4)
         {
-            ((BackpackState*)state)->phaseTimer = lbl_803E2F9C;
+            ((BackpackState*)state)->phaseTimer = 30.0f;
         }
     }
 }
@@ -246,7 +227,7 @@ void tumbleweed_free(int* obj)
 
 void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if ((s32)visible >= 1) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2F80);
+    if ((s32)visible >= 1) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 #pragma opt_loop_invariants off
 void tumbleweed_updateStateMachine(GameObject* obj)
@@ -282,7 +263,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                 ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 3);
                 if (obj->anim.seqId == TUMBLEWEED_TYPE_4)
                 {
-                    ((BackpackState*)aux)->phaseTimer = lbl_803E2F9C;
+                    ((BackpackState*)aux)->phaseTimer = 30.0f;
                 }
             }
         }
@@ -298,7 +279,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
             if (tricky != 0 && tricky->anim.seqId == 0x24)
             {
                 f32 ndx, ndz, ndist2;
-                if (dist2 < lbl_803E2FA0)
+                if (dist2 < 30625.0f)
                 {
                     (*(int(**)(int, int, int, int))((char*)*tricky->anim.dll + 0x28))((int)tricky, (int)obj, 0, 1);
                 }
@@ -328,7 +309,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                         f32)dist - 150.0f));
                     obj->anim.velocityZ = obj->anim.velocityZ - dz / (15.0f * ((
                         f32)(u32)((BackpackState*)aux)->distToTarget - 150.0f));
-                    k = lbl_803E2FAC;
+                    k = 728.0f;
                     ((BackpackState*)aux)->recoilVelX = k * obj->anim.velocityX;
                     ((BackpackState*)aux)->recoilVelZ = k * obj->anim.velocityZ;
                     ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 8);
@@ -347,7 +328,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
             tumbleweed_updateRollingMotion(obj, aux);
             (*gPathControlInterface)->advance((void*)obj, (void*)aux, timeDelta);
             ((BackpackState*)aux)->phaseTimer = ((BackpackState*)aux)->phaseTimer - timeDelta;
-            if (((BackpackState*)aux)->phaseTimer < lbl_803E2F68)
+            if (((BackpackState*)aux)->phaseTimer < 0.0f)
             {
                 ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
             }
@@ -361,8 +342,8 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                         ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 3);
                         ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags & ~0x10);
                         ((BackpackState*)aux)->phase = 3;
-                        ((BackpackState*)aux)->growRate = lbl_803E2FB0;
-                        ((BackpackState*)aux)->phaseTimer = lbl_803E2FB4;
+                        ((BackpackState*)aux)->growRate = 300.0f;
+                        ((BackpackState*)aux)->phaseTimer = 1200.0f;
                         Obj_SetActiveModelIndex(obj, 1);
                     }
                     else
@@ -377,11 +358,11 @@ void tumbleweed_updateStateMachine(GameObject* obj)
             f32 dist;
             player = (GameObject*)Obj_GetPlayerObject();
             dist = getXZDistance(&player->anim.worldPosX, &obj->anim.worldPosX);
-            if (dist < lbl_803E2FB8)
+            if (dist < 625.0f)
             {
                 ((BackpackState*)aux)->triggerGameBit = 0x195;
                 ((BackpackState*)aux)->pickupMsgValue = 0;
-                ((BackpackState*)aux)->unk29C = lbl_803E2F98;
+                ((BackpackState*)aux)->unk29C = 0.5f;
                 ObjMsg_SendToObject(player, TUMBLEWEED_MSG_IN_RANGE, (void*)obj, (u32)(aux + 0x298));
                 ((BackpackState*)aux)->phase = 4;
             }
@@ -389,11 +370,11 @@ void tumbleweed_updateStateMachine(GameObject* obj)
             {
                 ((BackpackState*)aux)->growRate = ((BackpackState*)aux)->growRate - timeDelta;
                 ((BackpackState*)aux)->phaseTimer = ((BackpackState*)aux)->phaseTimer - timeDelta;
-                if (((BackpackState*)aux)->phaseTimer < lbl_803E2F68)
+                if (((BackpackState*)aux)->phaseTimer < 0.0f)
                 {
                     ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                 }
-                else if (((BackpackState*)aux)->growRate <= lbl_803E2F68)
+                else if (((BackpackState*)aux)->growRate <= 0.0f)
                 {
                     ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                 }
@@ -406,7 +387,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                     }
                 }
             }
-            fn_80163990((int)obj, aux);
+            ((void (*)(int, int))fn_80163990)((int)obj, aux);
             (*gPathControlInterface)->advance((void*)obj, (void*)aux, timeDelta);
         }
         else if (state == 4)
@@ -432,9 +413,13 @@ void tumbleweed_updateStateMachine(GameObject* obj)
             vx /= d;
             vy /= d;
             vz /= d;
-            ((BackpackState*)aux)->speed = timeDelta * lbl_803E2F98 + ((BackpackState*)aux)->speed;
             {
-                f32 k = lbl_803E2FBC;
+                f32 half;
+                half = 0.5f;
+                ((BackpackState*)aux)->speed = timeDelta * half + ((BackpackState*)aux)->speed;
+            }
+            {
+                f32 k = 0.1f;
                 f32 kv;
                 kv = k * vx;
                 obj->anim.velocityX = kv * ((BackpackState*)aux)->speed;
@@ -449,18 +434,20 @@ void tumbleweed_updateStateMachine(GameObject* obj)
             if (getXZDistance((f32*)&obj->anim.localPosX, ((BackpackState*)aux)->targetPos) > d)
             {
                 f32 ldx, ldy, ldz;
+                f32 half;
                 ldx = (((BackpackState*)aux)->targetPos)[0] - obj->anim.localPosX;
-                obj->anim.localPosX += ldx * lbl_803E2F98;
+                half = 0.5f;
+                obj->anim.localPosX += ldx * half;
                 ldy = (((BackpackState*)aux)->targetPos)[1] - obj->anim.localPosY;
-                obj->anim.localPosY += ldy * lbl_803E2F98;
+                obj->anim.localPosY += ldy * half;
                 ldz = (((BackpackState*)aux)->targetPos)[2] - obj->anim.localPosZ;
-                obj->anim.localPosZ += ldz * lbl_803E2F98;
+                obj->anim.localPosZ += ldz * half;
             }
         }
         else if (state == 7)
         {
             u32 j = 0;
-            f32 k = lbl_803E2FC0;
+            f32 k = 0.95f;
             for (; (s32)(j & 0xffff) < (s32)timeDelta; j = j + 1)
             {
                 obj->anim.rootMotionScale = obj->anim.rootMotionScale * k;
@@ -471,7 +458,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
         }
         else
         {
-            if (((BackpackState*)aux)->growRate <= lbl_803E2F68)
+            if (((BackpackState*)aux)->growRate <= 0.0f)
             {
                 Obj_FreeObject(obj);
             }
@@ -548,13 +535,13 @@ void tumbleweed_updateTargetedStateMachine(GameObject *obj)
             (obj)->anim.velocityX = (obj)->anim.velocityX - dx / (20.0f * dist);
             (obj)->anim.velocityZ = (obj)->anim.velocityZ - dz / (20.0f * (f32)(u32)(
                 (BackpackState*)aux)->distToTarget);
-            k = lbl_803E2FAC;
+            k = 728.0f;
             ((BackpackState*)aux)->recoilVelX = k * (obj)->anim.velocityX;
             ((BackpackState*)aux)->recoilVelZ = k * (obj)->anim.velocityZ;
         }
         else
         {
-            f32 k = lbl_803E2F84;
+            f32 k = 0.8f;
             (obj)->anim.velocityX = -(k * (obj)->anim.velocityX);
             (obj)->anim.velocityZ = -(k * (obj)->anim.velocityZ);
         }
@@ -568,7 +555,7 @@ void tumbleweed_updateTargetedStateMachine(GameObject *obj)
     }
     else
     {
-        if (((BackpackState*)aux)->growRate <= lbl_803E2F68)
+        if (((BackpackState*)aux)->growRate <= 0.0f)
         {
             Obj_FreeObject(obj);
         }
@@ -642,7 +629,7 @@ void tumbleweed_updateEffects(GameObject *obj)
     {
         (obj)->anim.alpha = 0;
         state->mode = TUMBLEWEED_PHASE_DESPAWNING;
-        state->despawnTimer = lbl_803E2FC8;
+        state->despawnTimer = 120.0f;
         ObjHits_DisableObject((u32)obj);
         state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_DESPAWN);
     }
@@ -682,18 +669,18 @@ void tumbleweed_init(GameObject *obj, int defData)
 
     ((BackpackState*)aux)->anchorPosX = (obj)->anim.localPosX;
     ((BackpackState*)aux)->anchorPosZ = (obj)->anim.localPosZ;
-    ((BackpackState*)aux)->triggerRange = (short)(lbl_803E2FCC * *(f32*)(defData + 0x1c));
+    ((BackpackState*)aux)->triggerRange = (short)(2.0f * *(f32*)(defData + 0x1c));
     ((BackpackState*)aux)->variant = *(u8*)(defData + 0x1b);
     ((BackpackState*)aux)->targetScale = (obj)->anim.rootMotionScale;
     ((BackpackState*)aux)->growRate = ((BackpackState*)aux)->targetScale / (f32)(s32)
     randomGetRange(0xc8, 0x1f4);
     *(u32*)&((BackpackState*)aux)->targetObj = 0;
-    (obj)->anim.rootMotionScale = lbl_803E2FD0;
+    (obj)->anim.rootMotionScale = 0.001f;
     (*gPathControlInterface)->init((void*)aux, 0, 0x40000, 1);
     (*gPathControlInterface)->setLocalPointCollision((void*)aux, 1, gTumbleweedCollisionPoint, gTumbleweedCollisionPointData, 8);
     (*gPathControlInterface)->attachObject((void*)obj, (void*)aux);
     ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_GROWING;
-    ((BackpackState*)aux)->phaseTimer = lbl_803E2FB4 + (f32)(s32)
+    ((BackpackState*)aux)->phaseTimer = 1200.0f + (f32)(s32)
     randomGetRange(-0x12c, 0x12c);
     ObjGroup_AddObject((int)obj, TUMBLEWEED_OBJGROUP);
     ObjGroup_AddObject((int)obj, TUMBLEWEED_OBJGROUP_SECONDARY);
