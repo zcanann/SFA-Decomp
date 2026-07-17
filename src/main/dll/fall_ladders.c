@@ -109,7 +109,7 @@ void fn_80154584(GameObject* obj, int state)
     f32 vec[3];
 
     curve = *(RomCurveWalker**)state;
-    ((BaddieState*)state)->inWhirlpoolGroup = 0;
+    ((BaddieState*)state)->userData = 0;
     hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)

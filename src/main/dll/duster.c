@@ -387,7 +387,7 @@ void rachnopInit(u32 unused, int state)
     ((BaddieState*)state)->unk31C = fb;
     ((DusterState*)state)->phaseTimer = lbl_803E2A00;
     ((BaddieState*)state)->seqEntryIndex = 0;
-    ((BaddieState*)state)->inWhirlpoolGroup = 0;
+    ((BaddieState*)state)->userData = 0;
     ((BaddieState*)state)->pathStep = fa;
     return;
 }

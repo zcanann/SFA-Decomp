@@ -121,7 +121,7 @@ void fn_80154870(GameObject* obj, int* state)
                 if ((obj)->anim.currentMoveProgress > 0.5f)
                 {
                     ((FireflyState*)state)->breathTimer = 300.0f;
-                    ((BaddieState*)state)->inWhirlpoolGroup += 1;
+                    ((BaddieState*)state)->userData += 1;
                 }
                 else
                 {
@@ -188,7 +188,7 @@ void fn_80154C24(GameObject* obj, int state)
     ((FireflyState*)state)->anchorY = obj->anim.localPosY;
     randVal = randomGetRange(0, 0xff);
     ((BaddieState*)state)->seqEntryIndex = randVal;
-    ((BaddieState*)state)->inWhirlpoolGroup = 0;
+    ((BaddieState*)state)->userData = 0;
     ((FireflyState*)state)->unk330 = 30.0f;
     randVal = randomGetRange(0x32, 0x4b);
     fval = (f32)(s32)randVal;

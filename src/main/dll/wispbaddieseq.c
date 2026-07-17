@@ -89,7 +89,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     WispEventRow* row;
     u32 sf2;
 
-    sequenceIndex = ((BaddieState*)state)->inWhirlpoolGroup;
+    sequenceIndex = ((BaddieState*)state)->userData;
     sequenceBase = base + sequenceIndex * 0x28;
     eventRows = *(WispEventRow**)(sequenceBase + 0x1444);
     stateFlags = ((BaddieState*)state)->controlFlags;
@@ -128,10 +128,11 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
         {
             if (*(f32*)(state + 0x324) != lbl_803E2740)
             {
+                f32 zero = lbl_803E2740;
                 *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
-                if (*(f32*)(state + 0x324) <= lbl_803E2740)
+                if (*(f32*)(state + 0x324) <= zero)
                 {
-                    *(f32*)(state + 0x324) = lbl_803E2740;
+                    *(f32*)(state + 0x324) = zero;
                 }
                 else
                 {

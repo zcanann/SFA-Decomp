@@ -136,7 +136,7 @@ typedef struct BaddieState {
     s16 turnRate; /* s16 angle units/sec: *yaw += k * (turnRate * timeDelta / speed) */
     u8 unk338[2];
     u8 seqEntryIndex; /* indexes the 16B SeqEntry anim table (entry + i*16), wraps to 1 past the count */
-    u8 inWhirlpoolGroup; /* ObjGroup 80 membership latch */
+    u8 userData; /* ObjGroup 80 membership latch */
     u8 unk33C[0x346 - 0x33C]; /* incl. 0x340: ptr in smallbasket, u32-tested in magicPlant - thin/conflicting, left raw */
     u8 moveDone; /* set when the current move completes; SeqFns chain the next mode off it */
     u8 unk347[2];

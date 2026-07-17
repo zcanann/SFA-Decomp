@@ -79,7 +79,7 @@ checkedKind:
     }
     else if (condV != 0)
     {
-        if (((BaddieState*)state)->inWhirlpoolGroup == 0)
+        if (((BaddieState*)state)->userData == 0)
         {
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x8;
             *(s16*)&((BaddieState*)state)->hitCounter = 0;
@@ -92,7 +92,7 @@ checkedKind:
         *(f32*)(state + 0x324) = lbl_803E2944;
         Baddie_SetMove(obj, state, 4, lbl_803E2948, 0, 3);
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-        ((BaddieState*)state)->inWhirlpoolGroup = 0x3c;
+        ((BaddieState*)state)->userData = 0x3c;
     }
     else
     {
@@ -169,10 +169,10 @@ void fn_80153E0C(GameObject* obj, int state)
         *(f32*)(state + 0x330) = (f32)(s32)rnd;
         Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_25e);
     }
-    ctr = ((BaddieState*)state)->inWhirlpoolGroup;
+    ctr = ((BaddieState*)state)->userData;
     if (ctr != 0)
     {
-        ((BaddieState*)state)->inWhirlpoolGroup--;
+        ((BaddieState*)state)->userData--;
     }
 }
 
@@ -239,9 +239,9 @@ void fn_801540A0(int obj, int state)
     }
     ((GameObject*)obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
     ((GameObject*)obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;
-    if (((BaddieState*)state)->inWhirlpoolGroup != 0)
+    if (((BaddieState*)state)->userData != 0)
     {
-        ((BaddieState*)state)->inWhirlpoolGroup -= 1;
+        ((BaddieState*)state)->userData -= 1;
     }
 }
 
@@ -266,7 +266,7 @@ void fn_801542AC(int unused, u8* state)
     *(f32*)((char*)state + 808) = fc;
     *(f32*)((char*)state + 812) = fc;
     ((BaddieState*)state)->seqEntryIndex = 0;
-    ((BaddieState*)state)->inWhirlpoolGroup = 0;
+    ((BaddieState*)state)->userData = 0;
     *(f32*)((char*)state + 816) = lbl_803E298C;
     ((BaddieState*)state)->pathStep = lbl_803E2958;
 }

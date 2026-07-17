@@ -545,7 +545,7 @@ void fn_80152B90(int* obj, u8* state)
         if (sqrtf(dx * dx + dz * dz) <= lbl_803E2880 * ((BaddieState*)state)->unk2A8)
         {
             ((BaddieState*)state)->seqEntryIndex = 1;
-            ((BaddieState*)state)->inWhirlpoolGroup = 0;
+            ((BaddieState*)state)->userData = 0;
         }
     }
     else if (((BaddieState*)state)->seqEntryIndex == 1)
@@ -557,10 +557,10 @@ void fn_80152B90(int* obj, u8* state)
         }
         else
         {
-            ((BaddieState*)state)->inWhirlpoolGroup = (f32)(u32)((BaddieState*)state)->inWhirlpoolGroup + timeDelta;
-            if (((BaddieState*)state)->inWhirlpoolGroup > 0x64)
+            ((BaddieState*)state)->userData = (f32)(u32)((BaddieState*)state)->userData + timeDelta;
+            if (((BaddieState*)state)->userData > 0x64)
             {
-                ((BaddieState*)state)->inWhirlpoolGroup = 0;
+                ((BaddieState*)state)->userData = 0;
                 if (Obj_IsLoadingLocked() != 0)
                 {
                     u8* setup;

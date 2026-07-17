@@ -388,7 +388,7 @@ void snowworm_update(int* obj, u8* state)
         }
         else if (((GameObject*)obj)->anim.currentMove == 1)
         {
-            int r = randomGetRange(0, ((BaddieState*)state)->inWhirlpoolGroup);
+            int r = randomGetRange(0, ((BaddieState*)state)->userData);
             s16 a = randomGetRange(-0x8000, 0x7fff);
             f32 angle = (gCrawlerPi * a) / gCrawlerHalfCircleBams;
             ((GameObject*)obj)->anim.localPosX =
@@ -435,7 +435,7 @@ void snowworm_applyReactionState(int* obj, int* st)
 void crawler_initVariant(int* obj, int* st)
 {
     ((BaddieState*)st)->speedScale = 60.0f;
-    /* 0x33b: crawler variant selector (shares slot with BaddieState.inWhirlpoolGroup);
+    /* 0x33b: crawler variant selector (shares slot with BaddieState.userData);
      * kept raw - single site, member spelling off u8* st is byte-risky. */
     *((u8*)st + 0x33b) = ((BaddieState*)st)->unk2A8;
     ((BaddieState*)st)->unk2A8 = 160.0f;
