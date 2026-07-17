@@ -79,63 +79,6 @@ extern void fn_8014CD1C(int obj, int state, int c, f32 a, f32 b, int d);
 
 extern void fn_80154328(int obj, int state);
 
-void fn_801540A0(int obj, int state)
-{
-    u8 done;
-
-    *(f32*)(state + 0x32c) = lbl_803E294C;
-    done = 0;
-    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FALL_LADDERS_HIT_VOLUME_SLOT, 1, -1);
-    if (*(void**)(state + 0x340) != 0)
-    {
-        done = 1;
-        *(f32*)(state + 0x324) = lbl_803E2968;
-        *(f32*)(state + 0x32c) = lbl_803E294C;
-        if (((GameObject*)obj)->anim.currentMove != 0)
-        {
-            Baddie_SetMove(obj, state, 2, lbl_803E2958, 0, 3);
-        }
-    }
-    if (((GameObject*)obj)->anim.currentMove != 3)
-    {
-        fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
-                    ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 0x3c, 0);
-    }
-    else
-    {
-        *(f32*)(state + 0x328) -= timeDelta;
-        if (*(f32*)(state + 0x328) <= lbl_803E294C)
-        {
-            done = 1;
-            *(f32*)(state + 0x32c) = lbl_803E2940;
-            *(f32*)(state + 0x324) = lbl_803E2944;
-            Baddie_SetMove(obj, state, 4, lbl_803E2948, 0, 3);
-        }
-    }
-    if (done != 0)
-    {
-        *(u32*)&((BaddieState*)state)->unk2E4 |= (u64)0x10000;
-    }
-    else if (((BaddieState*)state)->seqEntryIndex == 0)
-    {
-        ((BaddieState*)state)->seqEntryIndex = 1;
-        Baddie_SetMove(obj, state, 1, lbl_803E296C, 0, 3);
-    }
-    else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 &&
-             (Baddie_SetMove(obj, state, 3, lbl_803E2970, 0, 3), lbl_803E294C == *(f32*)(state + 0x328)))
-    {
-        *(f32*)(state + 0x328) = lbl_803E2974;
-        fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
-                    ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 1, 0);
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_25d);
-    }
-    ((GameObject*)obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
-    ((GameObject*)obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;
-    if (((BaddieState*)state)->inWhirlpoolGroup != 0)
-    {
-        ((BaddieState*)state)->inWhirlpoolGroup -= 1;
-    }
-}
 
 void fn_80154584(GameObject* obj, int state)
 {
@@ -256,29 +199,3 @@ void Baddie_HandleHitReaction(GameObject* obj, u8* state, int unused, int cmd)
 }
 #pragma peephole reset
 #pragma optimization_level reset
-
-void fn_801542AC(int unused, u8* state)
-{
-    f32 fz;
-    f32 fc;
-    ((BaddieState*)state)->speedScale = lbl_803E2978;
-    ((BaddieState*)state)->unk2E4 = 173;
-    ((BaddieState*)state)->unk308 = lbl_803E297C;
-    ((BaddieState*)state)->animDeltaScale = lbl_803E2954;
-    ((BaddieState*)state)->unk304 = lbl_803E2980;
-    ((BaddieState*)state)->unk320 = 0;
-    fz = lbl_803E2984;
-    *(f32*)&((BaddieState*)state)->eventFlags = fz;
-    ((BaddieState*)state)->unk321 = 7;
-    ((BaddieState*)state)->unk318 = lbl_803E2988;
-    ((BaddieState*)state)->unk322 = 0;
-    ((BaddieState*)state)->unk31C = fz;
-    fc = lbl_803E294C;
-    *(f32*)((char*)state + 804) = fc;
-    *(f32*)((char*)state + 808) = fc;
-    *(f32*)((char*)state + 812) = fc;
-    ((BaddieState*)state)->seqEntryIndex = 0;
-    ((BaddieState*)state)->inWhirlpoolGroup = 0;
-    *(f32*)((char*)state + 816) = lbl_803E298C;
-    ((BaddieState*)state)->pathStep = lbl_803E2958;
-}

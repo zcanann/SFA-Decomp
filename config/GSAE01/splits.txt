@@ -1353,12 +1353,16 @@ main/dll/seqobj11e.c:
 	.sdata2     start:0x803E27F8 end:0x803E2898
 
 main/dll/magicplant.c:
-	.text       start:0x80152EC0 end:0x801540A0
+	.text       start:0x80152EC0 end:0x80153CF8
 	.data       start:0x8031F2D8 end:0x8031F2F8
 	.sdata      start:0x803DBCB8 end:0x803DBCD0
 
+main/dll/weevil.c:
+	.text       start:0x80153CF8 end:0x80154328
+	.sdata2     start:0x803E2960 end:0x803E2968
+
 main/dll/fall_ladders.c:
-	.text       start:0x801540A0 end:0x80154870
+	.text       start:0x80154328 end:0x80154870
 	.sdata      start:0x803DBCD0 end:0x803DBCD8
 
 main/dll/fireflylantern.c:
