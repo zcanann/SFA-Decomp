@@ -524,7 +524,7 @@ main/dll/dll_005D_dll5dfunc0.c:
 
 main/dll/dll_005E_dll5efunc0.c:
 	.text       start:0x800ECE04 end:0x800ED294
-	.data       start:0x80312340 end:0x80313CC0
+	.data       start:0x80312340 end:0x80313C30
 	.sdata2     start:0x803E07C0 end:0x803E07FC
 
 main/dll/dll_005F_dll5ffunc0.c:
@@ -596,6 +596,7 @@ main/dll/dll_006D_dll6dfunc0.c:
 
 main/dll/dll_006E_dll6efunc0.c:
 	.text       start:0x800F0A4C end:0x800F0C9C
+	.data       start:0x80313C30 end:0x80313CC0
 	.sdata2     start:0x803E0A98 end:0x803E0AB4
 
 main/dll/dll_006F_dll6ffunc0.c:
