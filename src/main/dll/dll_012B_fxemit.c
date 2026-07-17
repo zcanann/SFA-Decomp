@@ -22,6 +22,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/object_api.h"
+#include "main/object_descriptor.h"
 #include "main/game_object.h"
 #include "main/debug.h"
 #include "main/dll_000A_expgfx.h"
@@ -478,5 +479,22 @@ void FxEmit_release(void)
 void FxEmit_initialise(void)
 {
 }
+
+ObjectDescriptor gFXEmitObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)FxEmit_initialise,
+    (ObjectDescriptorCallback)FxEmit_release,
+    0,
+    (ObjectDescriptorCallback)FxEmit_init,
+    (ObjectDescriptorCallback)FxEmit_update,
+    (ObjectDescriptorCallback)FxEmit_hitDetect,
+    (ObjectDescriptorCallback)FxEmit_render,
+    (ObjectDescriptorCallback)FxEmit_free,
+    (ObjectDescriptorCallback)FxEmit_getObjectTypeId,
+    FxEmit_getExtraSize,
+};
 
 char sCFTreasSharpyDebugFormat[12] = "%x   %f %f\n\000";

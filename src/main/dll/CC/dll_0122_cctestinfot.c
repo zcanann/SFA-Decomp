@@ -15,7 +15,6 @@
 #include "main/minimap_api.h"
 #include "main/dll/CC/dll_0122_cctestinfot.h"
 #include "main/dll/CF/dll_012A_cfcrate.h"
-#include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/dll/dll_010E_deathseq.h"
 #include "main/dll/dll_0123_fuelcell.h"
 #include "main/dll/dll_0124_deathgas.h"
@@ -147,20 +146,4 @@ ObjectDescriptor gCFCrateObjDescriptor = {
     (ObjectDescriptorCallback)CFCrate_hitDetect, (ObjectDescriptorCallback)CFCrate_render,
     (ObjectDescriptorCallback)CFCrate_free, (ObjectDescriptorCallback)CFCrate_getObjectTypeId,
     CFCrate_getExtraSize,
-};
-ObjectDescriptor gFXEmitObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)FxEmit_initialise,
-    (ObjectDescriptorCallback)FxEmit_release,
-    0,
-    (ObjectDescriptorCallback)FxEmit_init,
-    (ObjectDescriptorCallback)FxEmit_update,
-    (ObjectDescriptorCallback)FxEmit_hitDetect,
-    (ObjectDescriptorCallback)FxEmit_render,
-    (ObjectDescriptorCallback)FxEmit_free,
-    (ObjectDescriptorCallback)FxEmit_getObjectTypeId,
-    FxEmit_getExtraSize,
 };
