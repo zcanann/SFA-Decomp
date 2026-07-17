@@ -1014,10 +1014,10 @@ f32 dll_15_func0B(GameObject* obj, f32 x, f32 baseY, f32 z, f32 height)
 RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll)
 {
     int queryMode;
+    TrackGroundHit** hitPointCursor;
     RomCurvePoint* outPoint;
     int pairCount;
     TrackGroundHit** hitPoints;
-    TrackGroundHit** hitPointCursor;
 
     if ((u32)obj != sCurvesCachedHitObj)
     {
@@ -1039,13 +1039,13 @@ RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, in
         outPoint = sCurvesHitPoints;
         for (pairCount = 0; pairCount < sCurvesCachedHitCount; pairCount++)
         {
-            outPoint[pairCount].x = (*hitPointCursor)->height;
-            outPoint[pairCount].y = (*hitPointCursor)->normalX;
-            outPoint[pairCount].z = (*hitPointCursor)->normalY;
-            outPoint[pairCount].w = (*hitPointCursor)->normalZ;
-            outPoint[pairCount].flags = (u32)(*hitPointCursor)->object;
-            outPoint[pairCount].type = (*hitPointCursor)->surfaceType;
-            hitPointCursor = hitPointCursor + 1;
+            outPoint[pairCount].x = hitPointCursor[0]->height;
+            outPoint[pairCount].y = hitPointCursor[0]->normalX;
+            outPoint[pairCount].z = hitPointCursor[0]->normalY;
+            outPoint[pairCount].w = hitPointCursor[0]->normalZ;
+            outPoint[pairCount].flags = (u32)hitPointCursor[0]->object;
+            outPoint[pairCount].type = hitPointCursor[0]->surfaceType;
+            hitPointCursor++;
         }
     }
     *outCount = sCurvesCachedHitCount;
