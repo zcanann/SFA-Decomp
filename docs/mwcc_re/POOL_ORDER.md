@@ -526,3 +526,82 @@ The pool is exact but `.text` is not, and it is the *coloring*, not the numberin
   values in address order — untested here; this is the "few atoms' placement" gap. `curves_v2.c` (pool
   exact, `.text` 129 diff-lines over 6 fns) and the all-literals baseline (`.text` 12/13, pool in
   func-group order) are the two endpoints.
+
+## ★★ Global-bias-redraw — why flipping a shared-pool unit to Matching moves the DOL
+
+Derived 2026-07-17 against **seqobj11e** (`main/dll/seqobj11e.c`, pool `[0x803E27F8,0x803E2898)`,
+0xA0 = 40 words, all atoms globally-bound `g` in the dtk carve). This is the shape the mission called
+"global-bias-redraw": the unit's `.sdata2` is **byte-identical** to retail in the `.o`, fuzzy reads
+**100.0000**, yet flipping `NonMatching→MatchingFor` **breaks `main.dol`**. There is NOT one mechanism
+here — there are **two independent sub-mechanisms**, and only one of them is a "bias" issue at all.
+
+### The setup (how to recognise the class)
+`seqobj11e` sits in a **dtk-oversplit merge region**: its `.text` (`0x80152040..80152EC0`) is followed
+by `mikaladon` then `magicplant`, and `magicplant`'s carve references atoms **inside** seqobj11e's pool
+(`lbl_803E286C`, `lbl_803E2894`) and inside mikaladon's (`lbl_803E28A0..28A8`). Those cross-carve refs
+are why dtk marks the whole pool `g`(lobal) and why the source **defines** the shared atoms as
+`__declspec(section ".sdata2") f32 lbl_803E28XX = v;` (a named export magicplant/mikaladon can link to,
+resolved by symbols.txt absolutes). **Note:** the READONLY vs WRITABLE `.sdata2` flag is a **red
+herring** — dtk *always* marks the carve `.sdata2` READONLY, and **every** MWCC-compiled `.o` (matched
+siblings included: mikaladon, kooshy, newseqobjgroup) emits `.sdata2` as **WA/writable**. The flag does
+not decide anything.
+
+### Sub-mechanism #1 — mwld dead-strips an UNREFERENCED named `.sdata2` global (FIXABLE)
+seqobj11e's pool holds two adjacent `0.0f` atoms: `lbl_803E2864` (**dead** — 0 relocs from any carve)
+and `lbl_803E2868` (live, 2 refs). When the retail **asm carve** provides the pool, the dead atom
+survives (it is interior to one indivisible section blob). When **our compiled `.o`** provides it, mwld
+**dead-strips the unreferenced named global**: `lbl_803E2864` vanishes, `2868`/`286C` slide up 4 bytes,
+and an 8-aligned bias below re-pads — the linked pool comes out shifted from a **byte-identical `.o`**
+(the classic "objdiff reads 100, DOL moves" trap).
+
+- **Proven deadstrip, not value-coalesce:** giving the dead atom a *unique* value (`123.5f`) still
+  strips it → liveness is the trigger, not duplication.
+- **Proven not the section flag / not `const`:** per-atom `const` leaves the section WA and still
+  strips; all-atom `const` **re-folds** referenced atoms into new anon literals (pool grows 0xA0→0xA8)
+  and *still* comes out WA. matched siblings (mikaladon) are WA with zero dead atoms and link fine.
+- **THE FIX — `#pragma force_active on … reset` around the def block** holding the dead atom (the
+  effect15/dimsnowball idiom). It marks the unreferenced def no-deadstrip; the `.o` stays byte-identical
+  and the linked pool comes out **byte-exact**. Triage rule (from the pool-claim playbook): a **−N**
+  linked-size delta from a byte-identical `.o` = dead-strip ⇒ `force_active` fixes it; a **+N** delta =
+  extra content ⇒ forcing makes it worse.
+
+### Sub-mechanism #2 — the "extra unsigned magic" is a REAL SECOND TU (needs a redraw, not a spelling)
+With #1 fixed, the pool is byte-perfect and the **entire** residual is **exactly two `.text`
+instructions** — both in the trailing function `fn_80152B90`:
+
+```
+retail : lfd f1,-15464(r2)   ; 0x803E2898  (a SECOND unsigned bias, 43300000 00000000)
+ours   : lfd f1,-15592(r2)   ; 0x803E2818  (the unit's first unsigned bias)
+```
+
+The retail carve **imports** `lbl_803E2898` (`*UND*`, an 8-byte ubias living at the very top of the
+*next* unit's pool) and `fn_80152B90` loads from it; every earlier function loads the ubias at
+`0x2818`. **A single TU dedups conversion biases TU-wide, first-creator-wins ([[POOL_ORDER]] rule), so
+one TU can mint the unsigned bias exactly once.** Two ubias atoms therefore **prove two TUs**:
+`gcRobotPatrol_updateWhileFrozen` (mints `0x2818`) and `fn_80152B90` (mints `0x2898`) are in **different
+translation units**. dtk drew the `.text` carve boundary at `0x80152EC0` (mikaladon), but the real TU
+boundary falls **earlier** — `fn_80152B90` (and its inlined signed-conversion ghost that mints the
+`0x2870` sbias, whose emission-vs-pool inversion already flags a group boundary) belong to the
+**mikaladon** TU. Our single compiled TU cannot reproduce the second ubias by any def placement or
+spelling — dedup forbids it. This is exactly the "two compiler magics no def placement can reorder"
+case the pool-claim playbook banked as archaeology; the correct read is **not** "unfixable" but
+**"TU-boundary redraw"** (the arw-quartet / scshgroup class).
+
+**The landing recipe (untested here — costed, not yet executed):** split the carve so
+`fn_80152B90` + its ghost move into a `mikaladon`-group wrapper that `#include`s them ahead of
+`mikaladon.c`, repartition `splits.txt` `.sdata2` at `0x803E2870` (TU-A `[27F8,2870)`, TU-B
+`[2870,28AC)`), keep `seqobj11e.c` (TU-A) ending at `mikaladon_updateWhileFrozen`, and apply the #1
+`force_active` fix in TU-A. Bystander cost is favourable: this region is currently `mikaladon`(complete)
++ `seqobj11e`(NOT complete) = **1 complete**; a successful redraw yields `seqobj11e`(TU-A) +
+`mikaladongroup`(TU-B) = **2 complete** (**+1 unit**, no matched_code/data loss), because TU-B merely
+absorbs the already-matched mikaladon plus the trailing seqobj11e functions.
+
+### The general diagnostic for the class
+1. Flip to Matching; if `main.dol` fails from a **byte-identical `.o`**, dump linked `.sdata2` symbols
+   (`objdump -t main.elf`) and compare atom **addresses** vs the byte layout.
+2. A dead named global that **vanished** (successor atoms slid up) ⇒ **sub-mechanism #1**, fix with
+   `#pragma force_active`.
+3. A residual that is a handful of **bias `lfd`/`lfs` loads** pointing at a **different** bias address
+   than retail (retail imports it `*UND*` from the neighbour's pool) ⇒ **sub-mechanism #2**, a second
+   TU; count the biases (N ubias / M sbias in the carve = N/M distinct minting TUs) and redraw the
+   boundary so the trailing functions mint their own magic.
