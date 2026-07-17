@@ -4,6 +4,7 @@
 #include "main/model_engine.h"
 #include "main/mm.h"
 #include "main/newclouds.h"
+#include "main/objanim_internal.h"
 #include "main/pi_dolphin.h"
 #include "main/render_envfx_api.h"
 #include "main/render_internal.h"
@@ -359,35 +360,31 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
     bufB <<= (bitpos & 0xFFFFFFFF);                                                                                    \
     bitpos += (nb);
 
-void fn_80007F78(u8* anim, u16* dst, u16* out)
+void fn_80007F78(ObjAnimState* anim, s16* dst, s16* out)
 {
-    f32 t = *(f32*)(anim + 0x4);
+    f32 t = anim->framePhase;
     u64 end;
     u64 outPos = (u32)out;
-    int curB = *(u16*)(anim + 0x4c);
-    u64 posA = *(u32*)(anim + 0x2c);
-    u64 tp = *(u32*)(anim + 0x34) + 4;
+    int curB = anim->frameStreamStride;
+    u64 posA = (u32)anim->frameStreamCursor;
+    u64 tp = (u32)anim->moveFrameData + 4;
     u64 bufA;
     u64 bufB;
     s64 tmp;
     s64* q = &tmp;
+    s64 frac;
     u64 bitpos;
     u64 vA;
     u32 addrB;
     u64 maskConst = 0xFFF0;
     int i;
-    union
-    {
-        s64 v;
-        int w[2];
-    } frac;
 
     addrB = posA + curB;
     curB = addrB;
     end = (u32)(dst + 3);
     t = t - floorf(t);
     t = t * lbl_803DE544;
-    frac.v = (int)t;
+    frac = (int)t;
 
     render_copyPackedU64Head(&bufA, posA);
     render_copyPackedU64Tail(&bufA, posA + 7);
@@ -419,7 +416,7 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
             {
                 *q /= 2;
             }
-            tmp = tmp * frac.v;
+            tmp = tmp * frac;
             for (i = 14; i != 0; i--)
             {
                 *q /= 2;
@@ -480,7 +477,7 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
                 vA = bufA >> (tmp & 0xFFFFFFFF);
                 tmp = bufB >> (tmp & 0xFFFFFFFF);
                 tmp = tmp - vA;
-                tmp = tmp * frac.v;
+                tmp = tmp * frac;
                 for (i = 14; i != 0; i--)
                 {
                     *q /= 2;

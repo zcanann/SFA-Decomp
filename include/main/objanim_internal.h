@@ -130,7 +130,9 @@ typedef struct ObjAnimState {
   u16 prevMoveCacheSlot;
   u16 blendCacheSlot;
   u16 prevBlendCacheSlot;
-  u8 pad4c[0x58 - 0x4C];
+  /* Byte distance between adjacent packed frame streams while sampling. */
+  u16 frameStreamStride;
+  u8 pad4e[0x58 - 0x4E];
   u16 eventCountdown;
   u16 eventState;
   u16 prevEventState;
