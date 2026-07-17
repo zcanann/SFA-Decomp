@@ -61,10 +61,8 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/obj_list.h"
 #include "main/obj_trigger.h"
 
-#pragma force_active on
 #define CC_LIGHTFOOT_DIST_SENTINEL 3.40282347e+38f
 #define CC_LIGHTFOOT_TURN_RATE 1024.0f
-#pragma force_active reset
 #include "main/dll/CC/dll_0188_cclightfoot.h"
 #include "main/dll/player_target.h"
 #include "main/gamebits.h"
