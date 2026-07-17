@@ -7,6 +7,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/object_render.h"
+#include "main/object_descriptor.h"
 #include "main/obj_path.h"
 #include "main/obj_group.h"
 #include "main/camera.h"
@@ -1153,3 +1154,34 @@ s16 gSnowBikeHitObjectIdTable[26] = {
 };
 
 int gSnowBikeMountRomListTable[6] = {0x30C60, 0x30C60, 0x30C60, 0xC9E, 0xC9F, 0xCB3};
+
+ObjectDescriptor24 gSnowBikeObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_24_SLOTS,
+    (ObjectDescriptorCallback)SnowBike_initialise,
+    (ObjectDescriptorCallback)SnowBike_release,
+    NULL,
+    (ObjectDescriptorCallback)SnowBike_init,
+    (ObjectDescriptorCallback)SnowBike_update,
+    (ObjectDescriptorCallback)SnowBike_hitDetect,
+    (ObjectDescriptorCallback)SnowBike_render,
+    (ObjectDescriptorCallback)SnowBike_free,
+    (ObjectDescriptorCallback)SnowBike_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)SnowBike_getExtraSize,
+    (ObjectDescriptorCallback)SnowBike_setScale,
+    (ObjectDescriptorCallback)SnowBike_func0B,
+    (ObjectDescriptorCallback)SnowBike_modelMtxFn,
+    (ObjectDescriptorCallback)SnowBike_render2,
+    (ObjectDescriptorCallback)SnowBike_func0E,
+    (ObjectDescriptorCallback)SnowBike_mount,
+    (ObjectDescriptorCallback)SnowBike_getRiderMode,
+    (ObjectDescriptorCallback)SnowBike_setRiderMode,
+    (ObjectDescriptorCallback)SnowBike_func12,
+    (ObjectDescriptorCallback)SnowBike_func13,
+    (ObjectDescriptorCallback)SnowBike_func14,
+    (ObjectDescriptorCallback)SnowBike_resetToRomListPosition,
+    (ObjectDescriptorCallback)SnowBike_func16,
+    (ObjectDescriptorCallback)SnowBike_func17,
+};
