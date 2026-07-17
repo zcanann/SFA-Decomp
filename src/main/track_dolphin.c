@@ -425,7 +425,7 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
 extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1,
                        f32 y1, f32 z1, u8 flags);
-extern u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots,
+extern int hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots,
                              int flagsArg);
 extern int doLotsOfMath(void* a, void* b, f32 f, int c, void* d, int* e, int g, int h, int i, int self);
 
@@ -2823,7 +2823,7 @@ void fn_800659A8(TrackTriangle* triStart, TrackTriangle* triEnd, TrackBlockDescr
 }
 
 #pragma opt_common_subs off
-int fn_800660C8(f32* a, f32* b, f32* c, f32* p, u8 type, f32 f1p, f32 y)
+int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
 {
     f32 d0[3];
     f32 d1[3];
@@ -5425,7 +5425,7 @@ char sTrackHitOverflowError[] = "HIT OVERFLOW\n";
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 #pragma opt_propagation off
-u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots, int flagsArg)
+int hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots, int flagsArg)
 {
     TrackBlockDescriptor* descBase;
     f32 *ep1, *ep2;
@@ -5831,7 +5831,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     svHit[2] = hitpt[2];
                     descSave = desc;
                     found = 1;
-                    if (type == 7)
+                    if ((u8)type == 7)
                     {
                         outp[0] = norm4[0];
                         outp[1] = norm4[1];
@@ -5871,7 +5871,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         cur[2] = cur[2] - offZ;
                     }
                     pen = (norm4[3] + (cur[2] * norm4[2] + (cur[0] * norm4[0] + cur[1] * norm4[1]))) - radius;
-                    fn_800660C8(svWorld, cur, svHit, norm4, type, pen, maxStep);
+                    fn_800660C8(svWorld, cur, svHit, norm4, pen, maxStep, type);
                     if (objmtx != 0)
                     {
                         Matrix_TransformPoint(descSave->currentCollisionMatrix, cur[0], cur[1], cur[2], &cur[0],
