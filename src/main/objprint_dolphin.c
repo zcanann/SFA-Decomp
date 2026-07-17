@@ -1840,6 +1840,7 @@ typedef void (*ObjShadowCb)(int* obj, int* am, f32* wm);
 
 extern f32 gObjBoneMtxBuffer[0xC00];
 
+#pragma opt_dead_assignments off
 void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
 {
     f32 cm[16];
@@ -1906,14 +1907,9 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         if (did != 0)
         {
             int vtx;
-            if (*(u8*)((char*)am + 0x60) != 0)
-            {
-                vtx = ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1];
-            }
-            else
-            {
-                vtx = *(int*)&((ModelFileHeader*)m)->vertices;
-            }
+            vtx = *(u8*)((char*)am + 0x60) != 0
+                ? ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]
+                : *(int*)&((ModelFileHeader*)m)->vertices;
             ObjModel_BlendVertexStreamIntLegacy(
                 gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->jointBlendData,
                 ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
@@ -2088,7 +2084,6 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         }
     }
 }
-#pragma opt_dead_assignments off
 extern u8 gObjGxTexMtxIdTable[12];
 
 void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
