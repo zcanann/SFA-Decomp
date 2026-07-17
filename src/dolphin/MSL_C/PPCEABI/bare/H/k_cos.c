@@ -59,7 +59,7 @@ float __kernel_cos(float y, float x) {
     }
 }
 
-float fn_802924B4(float y, float x) {
+float atan2f(float y, float x) {
     float ax = __fabsf(x);
     float ay = __fabsf(y);
     float r;

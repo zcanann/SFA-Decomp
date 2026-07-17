@@ -3,7 +3,7 @@
 
 
 
-float fn_802924B4(float y, float x);
+float atan2f(float y, float x);
 
 f32 __kernel_cos(f32, f32);
 

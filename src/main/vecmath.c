@@ -165,17 +165,17 @@ int cos16(u16 angle)
 
 int atan2_8002178c(float y, float x)
 {
-    return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
+    return (int)(lbl_803DE7D8 * atan2f(y, x));
 }
 
 int getAngle(float y, float x)
 {
-    return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
+    return (int)(lbl_803DE7D8 * atan2f(y, x));
 }
 
 int atan2i(int y, int x)
 {
-    return (int)(lbl_803DE7D8 * fn_802924B4((f32)y, x));
+    return (int)(lbl_803DE7D8 * atan2f((f32)y, x));
 }
 
 void initRotationMtx(f32* m, f32 a, f32 b, f32 c)

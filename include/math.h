@@ -92,7 +92,7 @@ _MATH_INLINE float cosf(float x)
 {
     return (float)cos((double)x);
 }
-_MATH_INLINE float fn_802924B4(float y, float x)
+_MATH_INLINE float atan2f(float y, float x)
 {
     return (float)atan2((double)y, (double)x);
 }

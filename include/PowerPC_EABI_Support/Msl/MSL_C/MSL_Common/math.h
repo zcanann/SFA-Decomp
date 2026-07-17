@@ -77,7 +77,7 @@ namespace std {
 inline float fabsf(float f) { return fabs(f); }
 inline float abs(float f) { return fabsf(f); }
 inline float fmodf(float x, float y) { return fmod(x, y); }
-inline float fn_802924B4(float y, float x) { return (float)atan2(y, x); }
+inline float atan2f(float y, float x) { return (float)atan2(y, x); }
 inline float sinf(float x) { return sin(x); }
 inline float cosf(float x) { return cos(x); }
 inline float tanf(float x) { return tan(x); }
