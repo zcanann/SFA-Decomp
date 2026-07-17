@@ -468,3 +468,61 @@ The pool is bracketed by a def at each end and holds one ghost in the middle:
   claim `.sdata2 [0x803E46E8, 0x803E4734)`. Pool reproduced **byte-exact**. Gated in an origin
   clean-room on `476b2f4d80`: `main.dol: OK`, complete_units **774 -> 775**, complete_code
   1104044 -> 1105904, matched_data 1173295 -> 1173371 (+76 B = the 0x4C pool), **matched_code FLAT**.
+## ★ `-O0` / `cflags_dll_noopt` numbering is BYTE-IDENTICAL to `-O4,p` — there is no separate `-O0` rule
+
+Everything above was derived under `-O4,p`. The DLL "noopt" units (`cflags_dll_noopt` = `-O4,p`
+**plus** `-opt nopeephole,noschedule`; used by `curves.c`, `voxmaps.c`, `pad.c`, all the `DIM`/`SC`/
+`SH` DLLs, etc.) were suspected to pool by a different, "interleaved" rule. **Probed 2026-07-17
+(`probe/mwboth.sh`, `probe/t1.c`, `probe/dd.c`) — they do NOT.** The `.sdata2` pool is bit-for-bit the
+same under `-O4,p` and under `-O4,p -opt nopeephole,noschedule` for every construct tested:
+
+| probe | `-O4,p` pool | `noopt` pool | verdict |
+|---|---|---|---|
+| `t1.c` (sink `o1=y`; `if`-arm; call-arg; commutative `x*10+11`) | `4 2 3 5 7 6 9 8 11 10` | **identical** | rules 1–4 all hold |
+| `dd.c` (declspec `.sdata2` def `3.0` + a later literal `3.0`) | `3.0(def) 7.0(def) 5.0 3.0 7.0` | **identical** | literal does **not** dedup against a def under either |
+
+The peephole and scheduling passes run **after** constant-pool assignment, so turning them off cannot
+move an atom. Treat the entire document above as the `-O0` rule verbatim: per-function-definition
+groups in source order, TU-wide literal dedup (first creator wins, **never** against a named def),
+bias as group terminator, named defs at their declaration position, and the sink/`IroPropagate`,
+call-argument-last, and `if`/`?:`-arm-before-condition numbering rules. **The `-opt` sub-flags
+(`nopeephole,noschedule,nopropagation,…`) change *`.text`*, not the pool order.**
+
+### The curves "interleave anomaly" is const-defs, not a numbering effect
+`main/curves.c` (pool `[0x803DE658,0x803DE69C)`, 15 atoms) reads as impossible under per-function
+grouping: `Curve_BuildSegmentLengthTable` is the **first** `.text` function and the **only** user of
+`0.1f`, yet `0.1f` pools at slot 9 — *behind* coefficients (`4.0/2.0/3.0/-3.0/-6.0/1/6`) first-used by
+functions 7–11. Resolved by the rules above, no `-O0` magic required:
+
+- The **11 leading atoms** (`0.0, 4.0, 2.0, 3.0, -3.0, -6.0, 1/6, 1.0, 0.5, 0.1, 6.0`) are a
+  **memory-ref const-def block** declared ahead of the first function, so they pool in declaration
+  (= address) order, *before* any function-group literal. `0.1f` is one of these defs, referenced by
+  `BuildSegmentLengthTable` through a forward memory-ref — it is **not** a `BuildSegmentLengthTable`
+  literal, which is the whole reason it is not at slot 1.
+- The **tail** is ordinary per-function-group material appended after the def block:
+  `SampleSegmentPoints`'s int→float conversion **double** (slot 11), then `Curve_AdvanceAlongPath`'s
+  `20.0f` literal (slot 12), then two more defs `-5.0`/`-2.0` (slots 13–14).
+- **Verified end-to-end (`probe/curves_v2.c`):** 11 `__declspec(section ".sdata2") f32 lbl_… = v;`
+  defs at the top (address order) + `#pragma explicit_zero_data on` for the `0.0f` (else it sinks to
+  `.sbss2`) + two bottom defs for `-5.0`/`-2.0` reproduces the retail pool **byte-exact (0x44 B)** on
+  the first compile.
+
+### ★ Open cap on curves `.text` (why the byte-exact pool does not yet LAND)
+The pool is exact but `.text` is not, and it is the *coloring*, not the numbering, that blocks it:
+
+- **`Curve_EvalBezier` genuinely needs the memory-ref** — all-literals (`k = 3.0f`) diverges by ~14
+  instructions because a literal cached in a local is **rematerialised/propagated** at each use, while a
+  memory-ref (`k = lbl_…`) is alias-opaque and stays cached. So Bezier must read a **named symbol**.
+- **`Catmull`/`Hermite`/`BSpline` need LITERAL coloring** — all-literals matches **12/13 functions
+  byte-perfect** (only Bezier off). A plain memory-ref to the def swaps a register pair (e.g. the
+  longer-lived `2.0` vs single-use `4.0` in `Curve_EvalCatmullRom`; `bare-const` fixes the coloring to
+  **0 diff** but emits the def *and* a re-folded literal — two atoms).
+- **The impasse:** a single retail atom (e.g. `3.0`@`0x664`) is read by Bezier (named memory-ref) *and*
+  Catmull (literal coloring). Literals do **not** dedup against defs (probe `dd.c`/`share2.c`), and a
+  memory-ref cannot name a literal anon, so the two cannot be made the same atom by any straight
+  spelling. The remaining route is the **linker-coincidence / ghost** path: keep Bezier on an *extern*
+  shim (resolved by `symbols.txt` to the pooled address) and let the literal-coloring functions'
+  anons land at exactly those addresses via a front-of-file ghost that first-creates the 11 leading
+  values in address order — untested here; this is the "few atoms' placement" gap. `curves_v2.c` (pool
+  exact, `.text` 129 diff-lines over 6 fns) and the all-literals baseline (`.text` 12/13, pool in
+  func-group order) are the two endpoints.
