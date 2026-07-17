@@ -887,7 +887,7 @@ config.libs = [
             Object(NonMatching, "main/newshadows.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "track/intersect.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/maketex.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_000A_expgfx.c"),
+            Object(NonMatching, "main/dll/expgfx.c"),
             Object(NonMatching, "main/dll/dll_000B_dll0b.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_000C_projgfx.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_000D_playershadow.c"),
