@@ -3,7 +3,9 @@
 
 An overage often means the source emits a helper that the retail compiler only
 inlined.  The report cannot expose those target-absent functions because they
-have no retail symbol, so this provides a cheap complementary worklist.
+have no retail symbol, so this provides a cheap complementary worklist.  Every
+candidate still needs a final-link checksum gate: object-local section scores
+can hide relocation or layout dependencies.
 """
 
 from __future__ import annotations
