@@ -274,14 +274,15 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
 void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot)
 {
     ExpgfxRuntimeDataLayout* runtime;
-    u32 activeBit;
-    u32* resources;
+    u32 activeBit[1];
+    u32* resources[1];
     ExpgfxSlot* slot;
     u32 inactiveBitMask;
 
     runtime = EXPGFX_RUNTIME_DATA;
-    activeBit = 1 << slotIndex;
-    if ((activeBit & runtime->poolActiveMasks[poolIndex]) == 0)
+    resources[0] = NULL;
+    activeBit[0] = 1 << slotIndex;
+    if ((activeBit[0] & runtime->poolActiveMasks[poolIndex]) == 0)
     {
         return;
     }
@@ -291,12 +292,12 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
 
     if (skipTextureFree == 0)
     {
-        resources = &runtime->expTab[0].resource;
+        resources[0] = &runtime->expTab[0].resource;
 
-        if (resources[Expgfx_GetSlotTableIndex(slot) * 4] != 0)
+        if (resources[0][Expgfx_GetSlotTableIndex(slot) * 4] != 0)
         {
             gExpgfxTextureFreeInProgress = 1;
-            textureFree((Texture*)(void*)resources[Expgfx_GetSlotTableIndex(slot) * 4]);
+            textureFree((Texture*)(void*)resources[0][Expgfx_GetSlotTableIndex(slot) * 4]);
             gExpgfxTextureFreeInProgress = 0;
         }
 
@@ -308,7 +309,7 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
                 runtime->expTab[tableIndex].refCount--;
                 if (runtime->expTab[tableIndex].refCount == 0)
                 {
-                    resources[tableIndex * 4] = 0;
+                    resources[0][tableIndex * 4] = 0;
                     runtime->expTab[tableIndex].sourceId = 0;
                 }
             }
@@ -327,7 +328,7 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
 
     {
         u32 currentMaskValue = runtime->poolActiveMasks[poolIndex];
-        inactiveBitMask = ~activeBit;
+        inactiveBitMask = ~activeBit[0];
         runtime->poolActiveMasks[poolIndex] = currentMaskValue & inactiveBitMask;
     }
     runtime->poolActiveCounts[poolIndex]--;
