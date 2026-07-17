@@ -105,15 +105,10 @@ extern const f64 lbl_803DED58;
 extern const f64 lbl_803DED60;
 extern const f64 gNewShadowU32ToDoubleBias;
 extern f32 lbl_803DC074;
-extern const f32 lbl_803DFA14;
-extern const f32 lbl_803DFA18;
-extern const f32 lbl_803DFA1C;
-extern const f32 lbl_803DFA20;
-extern const f32 lbl_803DFA2C;
-extern const f32 lbl_803DFA30;
-extern const f32 lbl_803DFA34;
-extern const f32 lbl_803DFA38;
-extern const f32 lbl_803DFA3C;
+extern const f32 lbl_803DED94;
+extern const f32 lbl_803DED98;
+extern const f32 lbl_803DED9C;
+extern const f32 lbl_803DEDA0;
 extern u32 gNewShadowSmallDiskTexture;
 extern char* gNewShadowReflectionTexture;
 extern u32 lbl_803DCF94;
@@ -1279,15 +1274,15 @@ void newshadows_updateFrameState(void)
     scrollDisabled = FUN_800176d0();
     if (scrollDisabled == 0)
     {
-        gNewShadowReflectionScrollX = lbl_803DFA14 * lbl_803DC074 + gNewShadowReflectionScrollX;
-        gNewShadowReflectionScrollY = lbl_803DFA18 * lbl_803DC074 + gNewShadowReflectionScrollY;
-        if (lbl_803DFA1C < gNewShadowReflectionScrollX)
+        gNewShadowReflectionScrollX = lbl_803DED94 * lbl_803DC074 + gNewShadowReflectionScrollX;
+        gNewShadowReflectionScrollY = lbl_803DED98 * lbl_803DC074 + gNewShadowReflectionScrollY;
+        if (lbl_803DED9C < gNewShadowReflectionScrollX)
         {
-            gNewShadowReflectionScrollX = gNewShadowReflectionScrollX - lbl_803DFA1C;
+            gNewShadowReflectionScrollX = gNewShadowReflectionScrollX - lbl_803DED9C;
         }
-        if (lbl_803DFA1C < gNewShadowReflectionScrollY)
+        if (lbl_803DED9C < gNewShadowReflectionScrollY)
         {
-            gNewShadowReflectionScrollY = gNewShadowReflectionScrollY - lbl_803DFA1C;
+            gNewShadowReflectionScrollY = gNewShadowReflectionScrollY - lbl_803DED9C;
         }
     }
     gNewShadowCasterCount = 0;
@@ -1295,7 +1290,7 @@ void newshadows_updateFrameState(void)
     lbl_803DCFA0 = lbl_803DCFA0 + (u16)framesThisStep * 0x28a;
     cvtScratch = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(lbl_803DCFA0)));
     depth = (double)FUN_802947f8();
-    lbl_803DCFA4 = (float)((double)lbl_803DFA20 * depth);
+    lbl_803DCFA4 = (float)((double)lbl_803DEDA0 * depth);
     FUN_800606a8();
     gNewShadowFrameIndex = (char)(gNewShadowFrameIndex + 1) + (char)((gNewShadowFrameIndex + 1) / 3) * -3;
     shadowMapEnabled = FUN_80048094();
@@ -1364,11 +1359,11 @@ void newshadows_buildShadowDirectionTexture(void)
     lbl_803DCFBC = (Texture*)FUN_800537a0(0x100, 0x100, 3, '\0', 0, 0, 0, 1, 1);
     convBiasConst = gNewShadowU32ToDoubleBias;
     encodeScale = lbl_803DEDC0;
-    encodeBias = lbl_803DFA3C;
-    centerOffset = lbl_803DFA2C;
+    encodeBias = lbl_803DEDBC;
+    centerOffset = lbl_803DEDAC;
     y = 0;
     epsilon = (double)lbl_803DED28;
-    falloffLimit = (double)lbl_803DFA38;
+    falloffLimit = (double)lbl_803DEDB8;
     do
     {
         x = 0;
@@ -1390,7 +1385,7 @@ void newshadows_buildShadowDirectionTexture(void)
             intensity = lbl_803DED28;
             if (len <= falloffLimit)
             {
-                intensity = lbl_803DED34 * -(float)((double)lbl_803DED48 * len - (double)lbl_803DFA30) * lbl_803DFA34;
+                intensity = lbl_803DED34 * -(float)((double)lbl_803DED48 * len - (double)lbl_803DEDB0) * lbl_803DEDB4;
             }
             *(u16*)((u8*)lbl_803DCFBC + (y & 3) * 2 + ((int)y >> 2) * 0x20 + (x & 3) * 8 + ((int)x >> 2) * 0x800 + 0x60) =
                 (u16)(int)(encodeScale * (float)(dx / len) * intensity + encodeBias) |
