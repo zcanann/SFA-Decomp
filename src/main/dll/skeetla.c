@@ -615,10 +615,7 @@ int trickyMove(u8* obj, f32* targetPos)
                 }
                 else
                 {
-                    if (td < 0)
-                    {
-                        td = -td;
-                    }
+                    td = td >= 0 ? td : -td;
                     if (td > 0x2000)
                     {
                         animId = 0xb;
@@ -637,10 +634,7 @@ int trickyMove(u8* obj, f32* targetPos)
                 }
                 else
                 {
-                    if (td < 0)
-                    {
-                        td = -td;
-                    }
+                    td = td >= 0 ? td : -td;
                     if (td > 0x2000)
                     {
                         animId = 0xc;
