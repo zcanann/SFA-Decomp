@@ -4,6 +4,7 @@
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/vidlisttables.h"
 #include "main/audio/synth_config.h"
+#include "main/audio/voice_alloc.h"
 
 #pragma exceptions on
 

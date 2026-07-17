@@ -2,6 +2,7 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/vidlisttables.h"
+#include "main/audio/voice_prio.h"
 
 #pragma exceptions on
 

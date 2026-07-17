@@ -1,5 +1,6 @@
 #include "main/audio/synth_job.h"
 #include "main/audio/synth_config.h"
+#include "main/audio/synth_job_init.h"
 
 extern u8 streamCallCnt;
 extern u8 streamCallDelay;

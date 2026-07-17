@@ -4,6 +4,7 @@
 #include "main/audio/inp_ctrl.h"
 #include "main/audio/voice_conv.h"
 #include "main/audio/data_tables.h"
+#include "main/audio/mcmd_setup.h"
 
 #pragma exceptions on
 extern void synthFXCloneMidiSetup(McmdVoiceState* voice, McmdVoiceState* state);

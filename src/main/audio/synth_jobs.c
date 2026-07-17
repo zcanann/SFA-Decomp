@@ -7,6 +7,7 @@
 #include "main/audio/hw_voice_start.h"
 #include "dolphin/os/OSCache.h"
 #include "main/audio/hw_sample.h"
+#include "main/audio/synth_jobs.h"
 
 #pragma exceptions on
 

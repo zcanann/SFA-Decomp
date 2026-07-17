@@ -1,5 +1,6 @@
 #include "main/audio/voice_manage.h"
 #include "main/audio/synth_config.h"
+#include "main/audio/voice_conv.h"
 
 extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
 extern u8 voiceDirectSlots[];

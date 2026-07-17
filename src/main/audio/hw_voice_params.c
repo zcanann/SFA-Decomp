@@ -1,5 +1,6 @@
 #include "main/audio/dsp_voice.h"
 #include "main/audio/dsp_voice_state.h"
+#include "main/audio/hw_voice_params.h"
 
 #define DSP_VOICE_STRIDE                0xf4
 #define DSP_VOICE_PITCH_CHANGE_FLAG     0x8
