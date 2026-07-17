@@ -22,9 +22,7 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 
-#pragma force_active on
 union TargetBlockConstF32 { f32 f; };
-#pragma force_active reset
 extern const union TargetBlockConstF32 lbl_803E6490;
 extern const union TargetBlockConstF32 lbl_803E6494;
 extern const union TargetBlockConstF32 lbl_803E6498;
@@ -125,9 +123,7 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTar
     }
 }
 
-#pragma force_active on
-__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E6488 = { 0.5f };
-#pragma force_active reset
+const union TargetBlockConstF32 lbl_803E6488 = { 0.5f };
 
 void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 {
@@ -275,7 +271,6 @@ static inline int* ZBomb_GetActiveModel(DfpTargetBlockObject* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-#pragma force_active on
 __declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E6490 = { 1.0f };
 __declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E6494 = { -1.0f };
 __declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E6498 = { 0.25f };
@@ -289,12 +284,11 @@ __declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64B4 = { 3
 __declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64B8 = { -242.0f };
 __declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64BC = { 6.0f };
 __declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64C0 = { 20.0f };
-__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64C4 = { 12.0f };
-__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64C8 = { 0.75f };
-__declspec(section ".sdata2") const union TargetBlockConstF32 gTargetBlockMinVertexYSeed = { 10000.0f };
-__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64D0 = { 219.0f };
-__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64D4 = { -158.0f };
-#pragma force_active reset
+const union TargetBlockConstF32 lbl_803E64C4 = { 12.0f };
+const union TargetBlockConstF32 lbl_803E64C8 = { 0.75f };
+const union TargetBlockConstF32 gTargetBlockMinVertexYSeed = { 10000.0f };
+const union TargetBlockConstF32 lbl_803E64D0 = { 219.0f };
+const union TargetBlockConstF32 lbl_803E64D4 = { -158.0f };
 
 void dfptargetblock_update(DfpTargetBlockObject* obj)
 {
