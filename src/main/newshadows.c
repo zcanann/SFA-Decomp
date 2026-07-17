@@ -21,6 +21,7 @@
 #include "main/pi_dolphin.h"
 #include "main/track_dolphin_api.h"
 #include "main/shader_api.h"
+#include "main/track_dolphin.h"
 
 CameraViewSlot* gNewShadowCurrentViewSlot;
 u32 gNewShadowReflectionSmallTexture;
@@ -304,11 +305,6 @@ extern u32 FUN_80040cd0();
 extern int FUN_800537a0();
 extern u32 FUN_8005d00c();
 extern u32 FUN_8005d06c();
-extern u32 FUN_800606a4();
-extern u32 FUN_800606a8();
-extern u32 FUN_80060710();
-extern u16 FUN_80061198();
-extern u32 FUN_80064384();
 extern u32 objAudioFn_8006ef38();
 extern u32 FUN_8006f788();
 extern u32 FUN_8006f790();

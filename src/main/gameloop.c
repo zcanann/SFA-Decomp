@@ -70,6 +70,8 @@ int lbl_803DB42C = 0x16A;
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_0011_screens.h"
 #include "main/voxmaps.h"
+#include "main/dll/FRONT/dll_0032_n_rareware.h"
+#include "main/dll/dll_BC.h"
 
 f32 gGameLoopResetFadeOutTimer;
 void* lbl_803DCAFC;
@@ -132,8 +134,6 @@ s8 frameCountdown;
 s8 hudHiddenFrameCount;
 u8 gGameLoopReloadRequested;
 u8 lbl_803DCA38;
-extern u64 camcontrol_setAButtonIconForTarget();
-extern u64 runLoadingScreens();
 
 void* gameTextGetStr(int textId);
 extern u8 gameState;
@@ -1102,7 +1102,6 @@ void gameTextInitFn_8001a234(void);
 
 extern void videoInit(void* rmode, int arg);
 
-extern void initLoadingScreenTextures(void);
 
 
 

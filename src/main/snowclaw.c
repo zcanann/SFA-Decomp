@@ -21,6 +21,7 @@
 #include "main/maketex_random_api.h"
 #include "main/maketex_timer_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/shader_api.h"
 
 f32 lbl_803DC218 = 1.0f;
 f32 lbl_803DC21C = -15.0f;
@@ -100,7 +101,6 @@ extern u8 gSnowClawMoveTable[];
 extern f32 lbl_803E66EC;
 int gSnowClawDropBombAngle;
 extern void objSeqInitFn_80080078(void* table, int n);
-extern int objUpdateOpacity(int sub);
 extern f32 lbl_803E66F0;
 extern f32 lbl_803E6708;
 extern f32 lbl_803E670C;

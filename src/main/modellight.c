@@ -9,6 +9,7 @@
 #include "main/camera.h"
 #include "main/texture.h"
 #include "main/frame_timing.h"
+#include "dolphin/gx/GXLegacyDecls.h"
 
 int gModelLightNextGXLightId;
 u8 gModelLightUseModelRelativePositions;
@@ -689,7 +690,6 @@ extern void GXLoadLightObjImm(u8* lt_obj, int lightId);
 extern void GXInitLightPos(u8* lt_obj, f32 x, f32 y, f32 z);
 extern void GXInitLightDir(u8* lt_obj, f32 x, f32 y, f32 z);
 extern void GXInitLightAttnK(u8* lt_obj, f32 k0, f32 k1, f32 k2);
-extern void GXSetNumChans(u8 nChans);
 
 void objSetEventName(ModelLightStruct* light, int name)
 {

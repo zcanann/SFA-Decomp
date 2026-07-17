@@ -51,7 +51,6 @@
 #include "main/obj_list.h"
 #include "main/track_dolphin_api.h"
 #include "dolphin/os/OSCache.h"
-extern u32 piRomLoadSection();
 extern char sShaderDebugStrings[];
 #define MAP_BLOCK_LAYER_COUNT 5
 #define FRUSTUM_PLANE_COUNT   5
@@ -70,6 +69,8 @@ extern const f32 gMapBlockWorldSize;
 
 #include "main/object.h"
 #include "track/intersect_api.h"
+#include "main/model.h"
+#include "main/pi_dolphin.h"
 
 int lbl_803DB620 = -1;
 s8 lbl_803DB624[8] = {0, -2, -1, 1, 2, 0, 0, 0};
@@ -124,7 +125,6 @@ extern void* memset(void* p, int v, int n);
 extern int objShouldUnload(char* obj);
 extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
 extern void mapClearBit(int mapId, int bit);
-extern void loadModelAndAnimTabs(void);
 extern s8* gMapLayerCellStates;
 extern int gMapPendingFileFlags;
 extern int* gMapBlockIndexList;
