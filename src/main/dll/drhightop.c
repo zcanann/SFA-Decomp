@@ -111,8 +111,6 @@ extern f32 lbl_803E5C0C;
 extern f32 lbl_803E5C10;
 extern f32 lbl_803E5C14;
 
-extern void SnowBike_resetToRomListPosition();
-
 void fn_801EAE4C(short* obj, int stateRaw)
 {
     f32 tickDir;

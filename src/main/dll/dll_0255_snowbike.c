@@ -151,9 +151,6 @@ extern f32 lbl_803E5BA4;
 extern f32 lbl_803E5BBC;
 extern f32 lbl_803E5BC4;
 extern f32 lbl_803E5C4C;
-extern u32 fn_801EAE4C();
-extern u32 fn_801EB0D4();
-extern u32 fn_801EB634();
 extern Texture* lbl_803DDC60;
 extern char lbl_803284E0[];
 
@@ -162,7 +159,6 @@ extern char lbl_803284E0[];
 extern u32 lbl_803E5AE0;
 extern void* memcpy(void* dst, const void* src, int n);
 extern void Obj_ClearModelSlotIndex(int obj);
-extern void SnowBike_SeqFn();
 extern f32 lbl_803E5AF0;
 extern f32 lbl_803E5B14;
 extern f32 lbl_803E5B1C;
@@ -1001,7 +997,7 @@ void SnowBike_update(GameObject* obj)
     break;
     case 2:
     {
-        fn_801EAE4C((int)obj, state);
+        fn_801EAE4C((short*)obj, (int)state);
         if (((SnowBikeFlags*)(state + 0x428))->b02)
         {
             if (drshackle_updateAttachedPosition(obj, (ShackleSwingState*)state) != 0)
@@ -1138,10 +1134,10 @@ void SnowBike_update(GameObject* obj)
                                   &obj->anim.velocityZ);
             objApplyVelocity((int)obj);
         }
-        fn_801EB0D4((int)obj, state);
+        fn_801EB0D4((int)obj, (int)state);
         drcloudcage_updateEngineFx((int)obj, state, ((SnowBikeState*)state)->distanceScale,
                                    (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->unk430), state + 0x461, 7);
-        fn_801EB634((int)obj, state);
+        fn_801EB634(obj, (int)state);
         obj->anim.rotX = ((SnowBikeState*)state)->yaw;
     }
     break;

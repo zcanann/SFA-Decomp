@@ -5,6 +5,7 @@
 #include "global.h"
 
 #include "main/game_object.h"
+#include "main/objseq.h"
 
 /* Per-object extra state for the rideable SnowBike / CloudRunner bike.
  * Offsets recovered from SnowBike_init/SnowBike_update derefs; the
@@ -158,5 +159,10 @@ STATIC_ASSERT(offsetof(SnowBikeState, unk530) == 0x530);
 STATIC_ASSERT(offsetof(SnowBikeState, haloPitchDrift) == 0x594);
 
 void SnowBike_update(GameObject* obj);
+void SnowBike_resetToRomListPosition(GameObject* obj);
+void fn_801EAE4C(short* obj, int stateRaw);
+void fn_801EB0D4(u32 obj, int stateRaw);
+void fn_801EB634(GameObject* obj, int stateRaw);
+int SnowBike_SeqFn(short* obj, int unused, ObjSeqState* seq);
 
 #endif /* MAIN_DLL_DLL_0255_SNOWBIKE_H_ */
