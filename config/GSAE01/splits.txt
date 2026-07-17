@@ -2404,6 +2404,7 @@ main/dll/DIM/dll_01E6_dimbosscrackpar.c:
 
 main/dll/DIM/dll_01E7_dimbossfire.c:
 	.text       start:0x801C04B8 end:0x801C0A60
+	.sdata2     start:0x803E4DC8 end:0x803E4DD0
 
 main/dll/CC/dll_0174_ccriverflow.c:
 	.text       start:0x801C0A60 end:0x801C0BF8
