@@ -191,6 +191,30 @@ f32 lbl_8030EA58[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
 f32 lbl_8030EA70[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
 f32 lbl_8030EA88[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
 f32 lbl_8030EAA0[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
+char sMemoryCardFileNameString[20] = "Star Fox Adventures";
+
+int cardDeleteFn_8007d99c(void);
+void cardGetMessage(u32* buttons, u32* texts, u32* count);
+void showMemCardError(u8 err);
+
+void* jumptable_8030EACC[14] = {
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x130), (void*)((u8*)cardDeleteFn_8007d99c + 0x158),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x158),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x13C), (void*)((u8*)cardDeleteFn_8007d99c + 0x158),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x118), (void*)((u8*)cardDeleteFn_8007d99c + 0x10C),
+    (void*)((u8*)cardDeleteFn_8007d99c + 0x158), (void*)((u8*)cardDeleteFn_8007d99c + 0x148)};
+void* jumptable_8030EB04[14] = {
+    (void*)((u8*)cardGetMessage + 0x50),  (void*)((u8*)cardGetMessage + 0x64),  (void*)((u8*)cardGetMessage + 0x94),
+    (void*)((u8*)cardGetMessage + 0xC4),  (void*)((u8*)cardGetMessage + 0xF4),  (void*)((u8*)cardGetMessage + 0x124),
+    (void*)((u8*)cardGetMessage + 0x168), (void*)((u8*)cardGetMessage + 0x1AC), (void*)((u8*)cardGetMessage + 0x1DC),
+    (void*)((u8*)cardGetMessage + 0x1E8), (void*)((u8*)cardGetMessage + 0x228), (void*)((u8*)cardGetMessage + 0x258),
+    (void*)((u8*)cardGetMessage + 0x258), (void*)((u8*)cardGetMessage + 0x288)};
+void* jumptable_8030EB3C[7] = {(void*)((u8*)showMemCardError + 0x2C8), (void*)((u8*)showMemCardError + 0x2D4),
+                               (void*)((u8*)showMemCardError + 0x2E8), (void*)((u8*)showMemCardError + 0x2FC),
+                               (void*)((u8*)showMemCardError + 0x318), (void*)((u8*)showMemCardError + 0x33C),
+                               (void*)((u8*)showMemCardError + 0x36C)};
 typedef struct StageCountTable
 {
     u8 count[7];
@@ -287,32 +311,31 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
     tbl = lbl_8030E8B0;
     switch (type)
     {
-    case 0:
+    case 1:
         sfxTab = (u16*)tbl;
         break;
-    case 1:
+    case 3:
         sfxTab = (u16*)(tbl + 0x14);
         break;
-    case 2:
+    case 4:
         sfxTab = (u16*)(tbl + 0x3C);
         break;
-    case 3:
+    case 5:
         sfxTab = (u16*)(tbl + 0x64);
         break;
-    case 4:
+    case 6:
         sfxTab = (u16*)(tbl + 0x50);
         break;
-    case 5:
+    case 8:
         sfxTab = (u16*)(tbl + 0x78);
         break;
-    case 6:
+    case 10:
         sfxTab = (u16*)(tbl + 0x8C);
         break;
-    case 7:
+    case 9:
         sfxTab = (u16*)(tbl + 0xA0);
         break;
-    case 10:
-    case 8:
+    case 7:
         sfxTab = (u16*)(tbl + 0x28);
         break;
     default:
@@ -452,24 +475,23 @@ void* fn_8006F388(u32 i)
     u8* base = lbl_8030E8B0;
     switch (i)
     {
-    case 0:
-        return base;
     case 1:
-        return base + 0x14;
-    case 2:
-        return base + 0x3C;
+        return base;
     case 3:
-        return base + 0x64;
+        return base + 0x14;
     case 4:
-        return base + 0x50;
+        return base + 0x3C;
     case 5:
-        return base + 0x78;
+        return base + 0x64;
     case 6:
-        return base + 0x8C;
-    case 7:
-        return base + 0xA0;
-    case 10:
+        return base + 0x50;
     case 8:
+        return base + 0x78;
+    case 10:
+        return base + 0x8C;
+    case 9:
+        return base + 0xA0;
+    case 7:
         return base + 0x28;
     default:
         return base + 0x28;
