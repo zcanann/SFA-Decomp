@@ -1414,12 +1414,17 @@ main/dll/hagabon_mk2.c:
 main/dll/snowworm.c:
 	.text       start:0x8015A52C end:0x8015AD60
 	.data       start:0x8031FD58 end:0x8031FD80
-	.sdata2     start:0x803E2CB0 end:0x803E2CB8
+	.sdata2     start:0x803E2CB0 end:0x803E2CD8
+
+main/dll/baddiewhirlpool.c:
+	.text       start:0x8015AD60 end:0x8015AF10
+	.sdata2     start:0x803E2CD8 end:0x803E2D00
 
 main/dll/dll_00CA_icebaddie.c:
-	.text       start:0x8015AD60 end:0x8015DAE8
+	.text       start:0x8015AF10 end:0x8015DAE8
 	.data       start:0x8031FD80 end:0x8031FEA8
 	.sbss       start:0x803DDA78 end:0x803DDA80
+	.sdata2     start:0x803E2D00 end:0x803E2DC0
 
 main/dll/dll_00CE_dllce.c:
 	.text       start:0x8015DAE8 end:0x8015F5B0

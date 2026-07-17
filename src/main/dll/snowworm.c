@@ -133,12 +133,6 @@ typedef struct FirepipeSetup
     u8 unk22;          /* 0x22 */
     u8 unk23;          /* 0x23 */
 } FirepipeSetup;
-extern f32 lbl_803E2CC0;
-extern f32 lbl_803E2CC4;
-extern f32 lbl_803E2CC8;
-extern f32 lbl_803E2CCC;
-extern f32 lbl_803E2CD0;
-extern f32 lbl_803E2CD4;
 extern f32 lbl_803E2B18;
 extern f32 lbl_803E2B38;
 extern f32 lbl_803E2B40;
@@ -161,10 +155,8 @@ extern f32 lbl_803E2C94;
 extern u8 gCrawlerSeqTable[];
 extern void* gCrawlerModelChainIds[];
 extern void* gCrawlerDescriptorTable[];
-extern f32 lbl_803E2CBC;
 extern u8* gCrawlerReactionTables[];
 
-extern f32 lbl_803E2CB8;
 extern f32 lbl_803E2C1C;
 extern f32 lbl_803E2C20;
 extern f32 lbl_803E2C24;
@@ -361,11 +353,11 @@ void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int s
     }
     if (((FCVars*)st)->moveTableIndex > 3)
     {
-        Baddie_SetMove((int*)obj, st, 6, lbl_803E2CB8, 0, 0);
+        Baddie_SetMove((int*)obj, st, 6, 0.5f, 0, 0);
     }
     else
     {
-        Baddie_SetMove((int*)obj, st, 5, lbl_803E2CB8, 0, 0);
+        Baddie_SetMove((int*)obj, st, 5, 0.5f, 0, 0);
     }
     r = randomGetRange(0, 3);
     ((BaddieState*)st)->seqEntryIndex = base[r];
@@ -408,7 +400,7 @@ void crawler_playReactionEffects(int* obj, int* st)
     case 4:
         if (((FCVars*)st)->moveEventMask != 0)
         {
-            if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2CBC)
+            if (((GameObject*)obj)->anim.currentMoveProgress < 0.15f)
             {
                 Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_blooplaugh1);
             }
@@ -560,18 +552,18 @@ void snowworm_applyReactionState(int* obj, int* st)
 
 void crawler_initVariant(int* obj, int* st)
 {
-    ((BaddieState*)st)->speedScale = lbl_803E2CC0;
+    ((BaddieState*)st)->speedScale = 60.0f;
     /* 0x33b: crawler variant selector (shares slot with BaddieState.inWhirlpoolGroup);
      * kept raw - single site, member spelling off u8* st is byte-risky. */
     *((u8*)st + 0x33b) = ((BaddieState*)st)->unk2A8;
-    ((BaddieState*)st)->unk2A8 = lbl_803E2CC4;
+    ((BaddieState*)st)->unk2A8 = 160.0f;
     *(u32*)&((BaddieState*)st)->unk2E4 = 0x42003;
-    ((BaddieState*)st)->unk308 = lbl_803E2CC8;
-    ((BaddieState*)st)->animDeltaScale = lbl_803E2CCC;
-    ((BaddieState*)st)->unk304 = lbl_803E2CD0;
+    ((BaddieState*)st)->unk308 = 0.01f;
+    ((BaddieState*)st)->animDeltaScale = 0.006f;
+    ((BaddieState*)st)->unk304 = 0.95f;
     *((u8*)st + 0x320) = 0;
     {
-        f32 d = lbl_803E2CD4;
+        f32 d = 1.0f;
         *(f32*)&((BaddieState*)st)->eventFlags = d;
         *((u8*)st + 0x321) = 0xa;
         ((BaddieState*)st)->unk318 = d;
