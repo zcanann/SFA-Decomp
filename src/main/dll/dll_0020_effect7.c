@@ -17,6 +17,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/dll/modgfx.h"
@@ -79,6 +80,19 @@ extern f32 lbl_803DFD78;
 extern f32 lbl_803DFD7C;
 extern f32 lbl_803DFD80;
 extern f32 lbl_803DFD84;
+
+ObjectDescriptor6 lbl_80310A78 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_6_SLOTS,
+    (ObjectDescriptorCallback)Effect7_initialise,
+    (ObjectDescriptorCallback)Effect7_release,
+    0,
+    (ObjectDescriptorCallback)Effect7_func03_nop,
+    (ObjectDescriptorCallback)Effect7_func04,
+    (ObjectDescriptorCallback)Effect7_func05,
+};
 
 void Effect7_func03_nop(void)
 {

@@ -341,7 +341,7 @@ main/dll/dll_001F_effect6.c:
 
 main/dll/dll_0020_effect7.c:
 	.text       start:0x800BE034 end:0x800BF978
-	.data       start:0x80310AA0 end:0x80310B50
+	.data       start:0x80310A78 end:0x80310B50
 	.sdata      start:0x803DB800 end:0x803DB810
 	.sbss       start:0x803DD380 end:0x803DD390
 
