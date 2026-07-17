@@ -15,6 +15,8 @@
 #include "main/audio/data_tables.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/vid_init.h"
+#include "main/audio/inp_ctrl.h"
+#include "main/audio/hw_keyoff.h"
 
 #pragma exceptions on
 
@@ -102,22 +104,9 @@ typedef struct SynthAuxInfo
 
 typedef void (*SynthAuxCallback)(u8 reason, SynthAuxInfo* info, void* user);
 
-extern u16 inpGetVolume(McmdVoiceState* state);
-extern u16 inpGetPanning(McmdVoiceState* state);
-extern int inpGetSurPanning(McmdVoiceState* state);
-extern u16 inpGetPitchBend(McmdVoiceState* state);
 extern int inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
-extern u16 inpGetDoppler(McmdVoiceState* state);
-extern u16 inpGetModulation(McmdVoiceState* state);
-extern u16 inpGetPedal(McmdVoiceState* state);
-extern u16 inpGetPreAuxA(McmdVoiceState* state);
-extern u16 inpGetReverb(McmdVoiceState* state);
-extern u16 inpGetPreAuxB(McmdVoiceState* state);
-extern u16 inpGetPostAuxB(McmdVoiceState* state);
-extern u16 inpGetTremolo(McmdVoiceState* state);
 extern u16 inpGetAuxA(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
 extern u16 inpGetAuxB(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
-extern s16 sndSin(u32 packed);
 
 extern u32 audioFn_8026f630(u8 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
 extern u32 audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 pan, u8 midi,
@@ -293,7 +282,6 @@ extern u16 voiceScaleSampleRate(u32 rate);
 
 extern void hwSetVolume(u32 voice, u8 table, f32 vol, u32 pan, u32 span, f32 auxa, f32 auxb);
 
-extern void hwKeyOff(u32 voice);
 extern void macSetPedalState(SynthHwVoice* sv, u32 state);
 extern u32 adsrHandleLowPrecision(SynthVoiceAdsr* adsr, u16* start, u16* delta);
 extern u32 adsrRelease(SynthVoiceAdsr* adsr);
@@ -1480,7 +1468,6 @@ extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
 extern void macSetExternalKeyoff(McmdVoiceState* slot);
 extern void macSampleEndNotify(void);
 extern void memset(void* dst, int value, u32 size);
-extern void inpInit(u32 unused);
 extern void macInit(void);
 extern u32 synthMessageCallback;
 

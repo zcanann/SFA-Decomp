@@ -8,6 +8,7 @@
 #include "main/audio/synth_job_queue.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
+#include "main/audio/synth_seq_dispatch.h"
 
 #pragma exceptions on
 
@@ -75,7 +76,6 @@ extern f32 lbl_803E7788;
 extern u8 lbl_803AF550[];
 
 extern u8 synthIsFadeOutActive(u8 idx);
-extern u32 fn_8026E9D0(u8 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
 extern void synthFreeCallback(void* cb);
 extern void synthRecycleVoiceCallbacks(void* song);

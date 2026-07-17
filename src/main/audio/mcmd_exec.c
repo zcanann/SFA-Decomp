@@ -11,7 +11,7 @@
 #include "main/audio/synth_channel_scale.h"
 #include "main/audio/mcmd_wait.h"
 #include "main/audio/synth_config.h"
-extern int mcmdLoop();
+#include "main/audio/mcmd_loop.h"
 extern int macActiveRoot;
 extern int macTimeQueueRoot;
 extern u64 macRealTime;
