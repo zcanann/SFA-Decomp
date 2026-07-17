@@ -4,6 +4,7 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/dll/modgfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
@@ -102,6 +103,19 @@ extern f32 lbl_803DFBBC;
 extern f32 lbl_803DFBC0;
 extern f32 lbl_803DFBC4;
 extern f32 lbl_803DFBC8;
+
+ObjectDescriptor6 lbl_803108A0 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_6_SLOTS,
+    (ObjectDescriptorCallback)Effect4_initialise,
+    (ObjectDescriptorCallback)Effect4_release,
+    NULL,
+    (ObjectDescriptorCallback)Effect4_func03_nop,
+    (ObjectDescriptorCallback)Effect4_func04,
+    (ObjectDescriptorCallback)Effect4_func05,
+};
 
 void Effect4_func03_nop(void)
 {
