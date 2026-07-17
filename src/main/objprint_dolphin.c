@@ -181,7 +181,6 @@ typedef struct ObjModelRenderOp
     u8 pad38[0x3C - 0x38];
     u32 flags;
 } ObjModelRenderOp;
-extern void FUN_80247a7c(f32* m, f32 x, f32 y, f32 z);
 extern s32 gObjLevelLockSlots;
 extern volatile int lbl_803DCC80;
 extern int OSDisableInterrupts(void);
@@ -242,36 +241,17 @@ s32 mapCheckCurBlocks(int v);
 #define OBJPRINT_MODEL_DEF(obj)         (((ObjAnimComponent*)(obj))->modelInstance)
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent*)(obj))->bankIndex)
 
-extern u32 FUN_8001759c();
-extern u32 FUN_800175b0();
-extern void FUN_800175d4(int* light, f32 x, f32 y, f32 z);
-extern u32 FUN_800175fc();
-extern u32 FUN_80017600();
-extern u32 FUN_80017604();
-extern u32 FUN_80017608();
-extern u32 FUN_80017620();
-extern void* FUN_80017624();
-
-extern u32 FUN_80258674();
-extern u32 FUN_80258944();
-extern u32 FUN_80259288();
-extern u32 FUN_8025a2ec();
-extern u32 FUN_8025a454();
-extern u32 FUN_8025be54();
-extern u32 FUN_8025be80();
-extern u32 FUN_8025c1a4();
-extern u32 FUN_8025c224();
-extern u32 FUN_8025c2a8();
-extern u32 FUN_8025c368();
-extern u32 FUN_8025c510();
+extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
+extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
 extern u32 GXSetTevKColorSel();
-extern u32 FUN_8025c5f0();
-extern u32 FUN_8025c65c();
-extern u32 FUN_8025c828();
-extern u32 FUN_8025ca04();
-extern void FUN_8025ca38(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
 extern u32 GXSetBlendMode();
-extern u32 FUN_8025d8c4();
+extern void GXSetTevKColor(int id, ObjGXColor color);
+extern void GXSetNumTexGens(u8 nTexGens);
+extern void GXSetNumTevStages(u8 nStages);
+extern void GXSetNumIndStages(u8 nIndStages);
+extern void GXSetTevOrder(int stage, int coord, int map, int color);
+extern void GXSetTevDirect(int stage);
+extern void GXSetTevSwapMode(int stage, int ras, int tex);
 extern u32 lbl_803DB468;
 extern u32 lbl_803DB470;
 extern u8 lbl_803DCC3D;
@@ -281,55 +261,49 @@ extern f32 lbl_803DEA34;
 
 void objRenderFuzzFn_8003d6f8(void* objArg)
 {
+    ModelLightStruct* renderHandle;
     int obj = (int)objArg;
-    int* renderHandle;
     volatile u32 savedEnvColor;
     int shadowTable;
     int shadowStride;
     int shadowParam;
-    u32 tevColor;
-    u32 ambColor;
-    u32 envColor;
     float mtx[12];
 
     savedEnvColor = lbl_803DE9F0;
-    renderHandle = FUN_80017624(obj, '\0');
+    renderHandle = objCreateLight((void*)obj, '\0');
     if (renderHandle != 0x0)
     {
-        FUN_800175b0((int)renderHandle, 4);
-        FUN_800175d4(renderHandle, lbl_803DEA04, lbl_803DEA34, *(f32*)&lbl_803DEA04);
-        FUN_8001759c((int)renderHandle, 0xff, 0xff, 0xff, 0xff);
-        FUN_80017608(0);
-        FUN_80017600(2, 0, 0);
-        tevColor = lbl_803DB470;
-        FUN_8025a2ec(2, &tevColor);
-        ambColor = lbl_803DB468;
-        FUN_8025a454(2, &ambColor);
-        FUN_800175fc(2, renderHandle, obj);
-        FUN_80017604();
-        FUN_80017620((u32)renderHandle);
+        modelLightStruct_setLightKind(renderHandle, 4);
+        modelLightStruct_setDirection(renderHandle, lbl_803DEA04, lbl_803DEA34, *(f32*)&lbl_803DEA04);
+        modelLightStruct_setDiffuseColor(renderHandle, 0xff, 0xff, 0xff, 0xff);
+        modelLightChannels_reset(0);
+        modelLightChannel_configure(2, 0, 0);
+        GXSetChanAmbColor(2, *(ObjGXColor*)&lbl_803DB470);
+        GXSetChanMatColor(2, *(ObjGXColor*)&lbl_803DB468);
+        modelLightStruct_loadChannelLight(2, (u8*)renderHandle, (u8*)obj);
+        modelLightChannels_applyGXControls();
+        ModelLightStruct_free(renderHandle);
     }
-    envColor = savedEnvColor;
-    FUN_8025c510(0, (u8*)&envColor);
-    FUN_8025c5f0(0, 0x1c);
+    GXSetTevKColor(0, *(ObjGXColor*)&savedEnvColor);
+    GXSetTevKAlphaSel(0, 0x1c);
     GXSetTevKColorSel(0, 0xc);
     newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
-    FUN_8004812c(*(int*)(shadowTable + ((lbl_803DCC44 >> 2) + lbl_803DCC3D * shadowStride) * 4), 0);
-    FUN_80247a7c(mtx, lbl_803DEA38, *(f32*)&lbl_803DEA38, lbl_803DEA1C);
-    FUN_8025d8c4(mtx, 0x40, 0);
-    FUN_80258674(1, 1, 4, 0x3c, 1, 0x40);
-    FUN_8025be80(0);
-    FUN_8025c828(0, 1, 0, 4);
-    FUN_8025c1a4(0, 0xf, 0xf, 0xf, 0xe);
-    FUN_8025c224(0, 7, 4, 5, 7);
-    FUN_8025c65c(0, 0, 0);
-    FUN_8025c2a8(0, 0, 0, 0, 1, 0);
-    FUN_8025c368(0, 0, 0, 3, 1, 0);
-    FUN_8025ca04(1);
-    FUN_8025be54(0);
-    FUN_80258944(2);
-    FUN_80259288(2);
-    FUN_8025ca38(0, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjPrintGXColor*)&lbl_803DB468);
+    selectTexture(*(Texture**)(shadowTable + ((lbl_803DCC44 >> 2) + lbl_803DCC3D * shadowStride) * 4), 0);
+    PSMTXScale(mtx, lbl_803DEA38, *(f32*)&lbl_803DEA38, lbl_803DEA1C);
+    GXLoadTexMtxImm(mtx, 0x40, 0);
+    GXSetTexCoordGen2(1, 1, 4, 0x3c, 1, 0x40);
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 1, 0, 4);
+    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xe);
+    GXSetTevAlphaIn(0, 7, 4, 5, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 3, 1, 0);
+    GXSetNumTevStages(1);
+    GXSetNumIndStages(0);
+    GXSetNumTexGens(2);
+    GXSetCullMode(2);
+    GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjGXColor*)&lbl_803DB468);
     gxSetZModeByteLegacy(1, 3, 0);
     gxSetPeControl_ZCompLocByteLegacy(1);
     GXSetBlendMode(1, 4, 5, 5);
@@ -507,8 +481,6 @@ void objRenderFn_8003d980(u8* obj, int* p2)
 }
 #pragma opt_propagation reset
 
-extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
-extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
 extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
 extern void GXSetNumChans(u8 nChans);
 
@@ -1685,7 +1657,6 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
 #pragma scheduling reset
 
 extern f32 gObjJointMtxTemp[];
-extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
 
 void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
@@ -1799,8 +1770,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         if (gObjGxKColorCache[0] != color[0] || gObjGxKColorCache[1] != color[1] || gObjGxKColorCache[2] != color[2] ||
             gObjGxKColorCache[3] != color[3])
         {
-            u32 kcol = *(u32*)color;
-            GXSetTevKColor(GX_KCOLOR0, &kcol);
+            GXSetTevKColor(GX_KCOLOR0, *(ObjGXColor*)color);
             *(u32*)gObjGxKColorCache = *(u32*)color;
         }
     }
@@ -1854,12 +1824,6 @@ void renderResetFn_8003fc60(void)
     gObjGxKColorCache[1] = 0;
     gObjGxKColorCache[0] = 0;
 }
-extern void GXSetNumTexGens(u8 nTexGens);
-extern void GXSetNumTevStages(u8 nStages);
-extern void GXSetNumIndStages(u8 nIndStages);
-extern void GXSetTevOrder(int stage, int coord, int map, int color);
-extern void GXSetTevDirect(int stage);
-extern void GXSetTevSwapMode(int stage, int ras, int tex);
 typedef void (*ObjShadowCb)(int* obj, int* am, f32* wm);
 
 extern f32 gObjBoneMtxBuffer[0xC00];
