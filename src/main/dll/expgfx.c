@@ -2545,40 +2545,46 @@ static inline void expgfx_clearResourceTable(ExpgfxResourceEntry* resourceEntry,
 void expgfx_resetAllPools(void)
 {
     u16* refCountPtr;
-    u32* poolActiveMasks;
-    s8* poolActiveCounts;
-    s16* poolSlotTypeIds;
-    u32* poolSourceIds;
-    u8* poolFrameFlags;
+    u32* poolActiveMasks[1];
+    s8* poolActiveCounts[1];
+    s16* poolSlotTypeIds[1];
+    u32* poolSourceIds[1];
+    u8* poolFrameFlags[1];
     int resourceIndex;
+    u32 activeBit;
     int poolIndex;
     ExpgfxResourceEntry* resourceEntry;
     ExpgfxTableEntry* tableEntry;
     ExpgfxStaticDataLayout* staticData;
-    u32 activeBit;
-    u32* slotPoolBases;
+    u32* slotPoolBases[1];
     u32 inactiveBitMask;
     int tableIndex;
     ExpgfxRuntimeDataLayout* runtime[1];
     int slotIndex;
     ExpgfxSlot* slot;
     staticData = EXPGFX_STATIC_DATA;
+    slotPoolBases[0] = NULL;
+    poolActiveMasks[0] = NULL;
+    poolActiveCounts[0] = NULL;
+    poolSlotTypeIds[0] = NULL;
+    poolSourceIds[0] = NULL;
+    poolFrameFlags[0] = NULL;
     runtime[0] = EXPGFX_RUNTIME_DATA;
     poolIndex = 0;
-    slotPoolBases = runtime[0]->slotPoolBases;
-    poolActiveMasks = runtime[0]->poolActiveMasks;
-    poolActiveCounts = runtime[0]->poolActiveCounts;
-    poolSlotTypeIds = staticData->poolSlotTypeIds;
-    poolSourceIds = runtime[0]->poolSourceIds;
-    poolFrameFlags = staticData->poolFrameFlags;
+    slotPoolBases[0] = runtime[0]->slotPoolBases;
+    poolActiveMasks[0] = runtime[0]->poolActiveMasks;
+    poolActiveCounts[0] = runtime[0]->poolActiveCounts;
+    poolSlotTypeIds[0] = staticData->poolSlotTypeIds;
+    poolSourceIds[0] = runtime[0]->poolSourceIds;
+    poolFrameFlags[0] = staticData->poolFrameFlags;
 
     while (poolIndex < EXPGFX_POOL_COUNT)
     {
-        slot = (ExpgfxSlot*)*slotPoolBases;
+        slot = (ExpgfxSlot*)*slotPoolBases[0];
         for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
             activeBit = 1 << slotIndex;
-            if ((activeBit & *poolActiveMasks) != 0)
+            if ((activeBit & *poolActiveMasks[0]) != 0)
             {
                 if (((ExpgfxTableEntry*)((u8*)runtime[0]->expTab + Expgfx_GetSlotTableIndex(slot) * 16))->resource != 0)
                 {
@@ -2606,27 +2612,27 @@ void expgfx_resetAllPools(void)
 
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
                 {
-                    u32 currentMaskValue = *poolActiveMasks;
+                    u32 currentMaskValue = *poolActiveMasks[0];
                     inactiveBitMask = ~activeBit;
-                    *poolActiveMasks = currentMaskValue & inactiveBitMask;
+                    *poolActiveMasks[0] = currentMaskValue & inactiveBitMask;
                 }
             }
 
             slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
         }
 
-        *poolActiveCounts = 0;
-        *poolSlotTypeIds = EXPGFX_INVALID_SLOT_TYPE;
-        *poolSourceIds = 0;
-        *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
-        DCFlushRange((void*)*slotPoolBases, EXPGFX_POOL_BYTES);
+        *poolActiveCounts[0] = 0;
+        *poolSlotTypeIds[0] = EXPGFX_INVALID_SLOT_TYPE;
+        *poolSourceIds[0] = 0;
+        *poolFrameFlags[0] = EXPGFX_SOURCE_FRAME_STATE_NONE;
+        DCFlushRange((void*)*slotPoolBases[0], EXPGFX_POOL_BYTES);
 
-        slotPoolBases++;
-        poolActiveMasks++;
-        poolActiveCounts++;
-        poolSlotTypeIds++;
-        poolSourceIds++;
-        poolFrameFlags++;
+        slotPoolBases[0]++;
+        poolActiveMasks[0]++;
+        poolActiveCounts[0]++;
+        poolSlotTypeIds[0]++;
+        poolSourceIds[0]++;
+        poolFrameFlags[0]++;
         poolIndex++;
     }
 
