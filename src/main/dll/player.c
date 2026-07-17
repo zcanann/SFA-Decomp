@@ -4169,20 +4169,24 @@ void fn_8029BC08(GameObject* obj)
 #pragma opt_loop_invariants off
 static inline void Player_ApplyStatusDamage(GameObject* obj, int param)
 {
-    int in2 = *(int*)&obj->extra;
-    s8* pc = *(s8**)((char*)in2 + 0x35c);
-    int v = pc[0];
+    PlayerStatus* pc;
+    PlayerState* in2;
+    int v;
+
+    in2 = obj->extra;
+    pc = (PlayerStatus*)in2->playerStatus;
+    v = pc->health;
     v -= param;
     if (v < 0)
     {
         v = 0;
     }
-    else if (v > pc[1])
+    else if (v > pc->maxHealth)
     {
-        v = pc[1];
+        v = pc->maxHealth;
     }
-    pc[0] = (s8)v;
-    if (**(s8**)((char*)in2 + 0x35c) <= 0)
+    pc->health = (s8)v;
+    if (((PlayerStatus*)in2->playerStatus)->health <= 0)
     {
         playerDie(obj);
     }
