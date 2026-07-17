@@ -1357,9 +1357,13 @@ main/dll/mikaladon.c:
 	.sdata2     start:0x803E28A0 end:0x803E28B0
 
 main/dll/magicplant.c:
-	.text       start:0x80152FA8 end:0x80153CF8
+	.text       start:0x80152FA8 end:0x80153640
 	.data       start:0x8031F2D8 end:0x8031F2F8
 	.sdata      start:0x803DBCB8 end:0x803DBCD0
+
+main/dll/kooshy.c:
+	.text       start:0x80153640 end:0x80153CF8
+	.sdata2     start:0x803E28F0 end:0x803E2900
 
 main/dll/weevil.c:
 	.text       start:0x80153CF8 end:0x80154328
