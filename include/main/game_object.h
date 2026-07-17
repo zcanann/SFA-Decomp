@@ -33,7 +33,10 @@ typedef struct GameObject
     ObjAnimComponent anim;
     u16 objectFlags; /* obj+0xB0 flag word; 9 object families STATIC_ASSERT
         this name (Checkpoint4/CmbSrc/EnemyMushroom/Laser/MagicPlant/...) */
-    u8 unkB2[2];
+    union {
+        u8 unkB2[2];
+        s16 romListBit; /* index in the loaded romlist page's object bitset */
+    };
     s16 seqIndex; /* obj+0xB4 trigger-sequence index (-1 = none, -2 = pending);
         passed to ObjectTriggerInterface.endSequence(seqIndex) */
     u8 unkB6[2];

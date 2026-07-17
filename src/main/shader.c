@@ -122,7 +122,7 @@ extern void* memset(void* p, int v, int n);
     *(s8*)(e + 9) = -128;                                                                                  \
     ((s16*)gShaderMapRomBuffers[2])[(idx + (slot)) << 1] = -1;                                             \
     ((s16*)gShaderMapRomBuffers[2])[((idx + (slot)) << 1) + 1] = -1
-extern int objShouldUnload(char* obj);
+extern int objShouldUnload(GameObject* obj);
 extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
 extern void mapClearBit(int mapId, int bit);
 extern s8* gMapLayerCellStates;
@@ -152,6 +152,14 @@ typedef struct MapCellEnt
     s8 romListIndex;
     s16 unkA;
 } MapCellEnt;
+
+typedef struct MapRomListPage
+{
+    u8 unk00[0x10];
+    u8* loadedObjectBits;
+    u8 unk14[0xC];
+    ObjPlacement* objects;
+} MapRomListPage;
 
 int mapProcessRomList(int slot);
 void doPendingMapLoads(void);
@@ -324,7 +332,7 @@ void mapLoadUnloadObjects(int flag)
 {
     int grpBit;
     u32 bits;
-    char* obj;
+    GameObject* obj;
     int unload;
     s16 count;
     int bit;
@@ -337,7 +345,7 @@ void mapLoadUnloadObjects(int flag)
     s16 list[8];
     s16* idPtr;
     char* base;
-    char* fp;
+    ObjPlacement* fp;
     int* tp;
     u32 cur;
     u32 end;
@@ -380,35 +388,34 @@ void mapLoadUnloadObjects(int flag)
         int* objs = (int*)ObjList_GetObjects(&i, &objCount);
         while (i < objCount)
         {
-            obj = (char*)objs[i];
-            fp = (void*)((GameObject*)obj)->anim.placementData;
+            obj = (GameObject*)objs[i];
+            fp = obj->anim.placement;
             i++;
             unload = 0;
-            if (((GameObject*)obj)->anim.mapEventSlot > -1)
+            if (obj->anim.mapEventSlot > -1)
             {
-                u8 fl = *(u8*)(fp + 4);
+                u8 fl = fp->color[0];
                 if (!(fl & 2))
                 {
                     if (fl & 0x10)
                     {
-                        if (((GameObject*)obj)->anim.classId > -1 && objShouldUnload(obj))
+                        if (obj->anim.classId > -1 && objShouldUnload(obj))
                         {
                             unload = 1;
                         }
-                        else if (((GameObject*)obj)->anim.mapEventSlot < 80 &&
-                                 *(void**)(base + (0x83A8 + ((GameObject*)obj)->anim.mapEventSlot * 4)) == 0)
+                        else if (obj->anim.mapEventSlot < 80 &&
+                                 *(void**)(base + (0x83A8 + obj->anim.mapEventSlot * 4)) == 0)
                         {
                             unload = 1;
                         }
                     }
                     else
                     {
-                        if (((GameObject*)obj)->anim.classId > -1 && objShouldUnload(obj))
+                        if (obj->anim.classId > -1 && objShouldUnload(obj))
                         {
                             unload = 1;
                         }
-                        else if (((GameObject*)obj)->anim.mapEventSlot < 80 &&
-                                 ((GameObject*)obj)->anim.mapEventSlot != gShaderCurMapEventId)
+                        else if (obj->anim.mapEventSlot < 80 && obj->anim.mapEventSlot != gShaderCurMapEventId)
                         {
                             unload = 1;
                         }
@@ -417,19 +424,19 @@ void mapLoadUnloadObjects(int flag)
             }
             if (unload)
             {
-                char* page = *(char**)(base + (0x83A8 + ((GameObject*)obj)->anim.mapEventSlot * 4));
+                MapRomListPage* page = *(MapRomListPage**)(base + (0x83A8 + obj->anim.mapEventSlot * 4));
                 if (page != 0)
                 {
-                    s16 tbit = *(s16*)(obj + 0xB2);
+                    s16 tbit = obj->romListBit;
                     if (tbit >= 0 && tbit >= 0)
                     {
-                        u8* bb = *(u8**)(page + 0x10);
+                        u8* bb = page->loadedObjectBits;
                         *(s8*)&bb[tbit >> 3] = bb[tbit >> 3] & ~(1 << (tbit & 7));
                     }
                 }
-                if (((GameObject*)obj)->anim.seqId == 0x72)
+                if (obj->anim.seqId == 0x72)
                 {
-                    s8 mid = ((GameObject*)obj)->anim.mapEventSlot;
+                    s8 mid = obj->anim.mapEventSlot;
                     s16 j3 = 0;
                     s16* w2 = list;
                     for (j3 = 0; j3 < count; j3++)
@@ -439,7 +446,7 @@ void mapLoadUnloadObjects(int flag)
                         w2++;
                     }
                 }
-                Obj_FreeObject((GameObject*)obj);
+                Obj_FreeObject(obj);
                 i--;
                 objCount--;
             }
@@ -472,13 +479,13 @@ void mapLoadUnloadObjects(int flag)
         {
             if (gShaderCurMapEventId == list[i])
             {
-                char* page = *(char**)(base + (0x83A8 + list[i] * 4));
+                MapRomListPage* page = *(MapRomListPage**)(base + (0x83A8 + list[i] * 4));
                 if (page != 0)
                 {
                     mask = 1;
                     bit = 0;
-                    cur = *(u32*)(page + 0x20);
-                    bp = *(u8**)(page + 0x10);
+                    cur = (u32)page->objects;
+                    bp = page->loadedObjectBits;
                     end = cur + *(int*)(base + (0x4290 + list[i] * 0x8C));
                     while (cur < end)
                     {
@@ -488,11 +495,11 @@ void mapLoadUnloadObjects(int flag)
                             s16 lid = list[i];
                             if (bit >= 0)
                             {
-                                char* pg = *(char**)(base + (0x83A8 + lid * 4));
+                                MapRomListPage* pg = *(MapRomListPage**)(base + (0x83A8 + lid * 4));
                                 int ix2 = bit >> 3;
                                 int msk = 1 << (bit & 7);
-                                *(s8*)(*(int*)(pg + 0x10) + ix2) = *(u8*)(*(int*)(pg + 0x10) + ix2) & ~msk;
-                                *(s8*)(*(int*)(pg + 0x10) + ix2) = *(u8*)(*(int*)(pg + 0x10) + ix2) | msk;
+                                *(s8*)&pg->loadedObjectBits[ix2] = pg->loadedObjectBits[ix2] & ~msk;
+                                *(s8*)&pg->loadedObjectBits[ix2] = pg->loadedObjectBits[ix2] | msk;
                             }
                             Obj_SetupObject((ObjPlacement*)objStart, 1, list[i], bit, NULL);
                         }
@@ -526,12 +533,12 @@ void mapLoadUnloadObjects(int flag)
             int* objs2 = (int*)ObjGroup_GetObjects(6, &objCount);
             for (i = 0; i < objCount; i++)
             {
-                char* obj2 = (char*)objs2[i];
-                u32 mid2 = *(u8*)(obj2 + 0x34);
+                GameObject* obj2 = (GameObject*)objs2[i];
+                u32 mid2 = obj2->anim.pad34;
                 char* page2 = ((char**)(base + 0x83A8))[mid2];
                 if (page2 != 0)
                 {
-                    int lp = *(s8*)(obj2 + 0x35) + 1;
+                    int lp = obj2->anim.transformMatrixIndex + 1;
                     bit = 0;
                     cur = *(u32*)(page2 + 0x20);
                     end = cur + *(int*)(base + (0x4290 + mid2 * 0x8C));
@@ -543,7 +550,7 @@ void mapLoadUnloadObjects(int flag)
                         {
                             if ((bits & 1) && (s8)SaveGame_findTransientMapBit(mid2, grpBit) == -1)
                             {
-                                mapInstantiateObjects(page2, mid2, grpBit, obj2);
+                                mapInstantiateObjects(page2, mid2, grpBit, (char*)obj2);
                             }
                             bits >>= 1;
                             mapClearBit(mid2, grpBit);
@@ -585,7 +592,7 @@ void mapLoadUnloadObjects(int flag)
                                 *(s8*)(*(int*)(pg3 + 0x10) + ix3) = *(u8*)(*(int*)(pg3 + 0x10) + ix3) & ~msk3;
                                 *(s8*)(*(int*)(pg3 + 0x10) + ix3) = *(u8*)(*(int*)(pg3 + 0x10) + ix3) | msk3;
                             }
-                            Obj_SetupObject((ObjPlacement*)cur, 1, mid2, bit, (void*)obj2);
+                            Obj_SetupObject((ObjPlacement*)cur, 1, mid2, bit, obj2);
                         }
                         bit++;
                         cur += *(u8*)(cur + 2) * 4;
