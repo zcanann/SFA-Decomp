@@ -143,7 +143,8 @@ extern f32 lbl_803DF434;
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern f32 gModgfxMotionStep;
 
-s16 dll_0B_func04(ModgfxSpawnContext* st, int z, int c, s16* b, int e, s16* d, int f, void* g);
+s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16* d, int textureAssetId,
+                  void* textureResource);
 
 #define gModgfxSpawnContext (*(ModgfxSpawnContext*)gModgfxSpawnContextStorage)
 s16 dll_0B_func18(void)
@@ -1665,26 +1666,23 @@ void dll_0B_func05(void)
 }
 
 #pragma opt_propagation off
-s16 dll_0B_func04(ModgfxSpawnContext* st, int z, int c, s16* b, int e, s16* d, int f, void* g)
+s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16* d, int textureAssetId,
+                  void* textureResource)
 {
     int base0;
     int total = 0;
-    int found;
-    int i;
+    int i = 0;
+    int found = i;
     int spawnCount;
     int divThresh;
-    int slot;
+    int slot = modgfx_findFreeEffectSlot(gPartfxActiveEffects, found, i);
     f32 fz434;
     f32 fz430;
 
-    i = 0;
-    found = i;
-    slot = modgfx_findFreeEffectSlot(gPartfxActiveEffects, found, i);
     if (slot == -1)
     {
         return 0;
     }
-
     {
         int off;
         off = 0;
@@ -1702,7 +1700,7 @@ s16 dll_0B_func04(ModgfxSpawnContext* st, int z, int c, s16* b, int e, s16* d, i
     base0 = 0;
     if ((st->flags & 0x800) == 0)
     {
-        base0 = (int)(long)((c * 3) << 4) + ((e * 3) << 4);
+        base0 = (int)(long)((e * 3) << 4) + ((c * 3) << 4);
     }
 
     ((PartfxEffectState**)gPartfxActiveEffects)[slot] =
@@ -1773,14 +1771,14 @@ s16 dll_0B_func04(ModgfxSpawnContext* st, int z, int c, s16* b, int e, s16* d, i
 
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource = NULL;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureIsBorrowed = 0;
-    if (g != NULL)
+    if (textureResource != NULL)
     {
-        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource = g;
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource = textureResource;
         ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureIsBorrowed = 1;
     }
-    else if (f != 0)
+    else if (textureAssetId != 0)
     {
-        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource = textureLoadAsset(f);
+        ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource = textureLoadAsset(textureAssetId);
         ((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureIsBorrowed = 0;
     }
 
@@ -1917,11 +1915,11 @@ s16 dll_0B_func04(ModgfxSpawnContext* st, int z, int c, s16* b, int e, s16* d, i
         ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourcePosY = st->posY;
         ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourcePosZ = st->posZ;
     }
-    fz434 = lbl_803DF434;
     fz430 = lbl_803DF430;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->posStepX = fz430;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->posStepY = fz430;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->posStepZ = fz430;
+    fz434 = lbl_803DF434;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[0].cur[0] = fz434;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[0].cur[1] = fz434;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->scaleChannels[0].cur[2] = fz434;
