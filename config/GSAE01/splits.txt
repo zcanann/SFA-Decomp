@@ -1271,6 +1271,7 @@ main/dll/dll_80136a40.c:
 
 main/dll/skeetla.c:
 	.text       start:0x8013939C end:0x8013B368
+	.data       start:0x8031D3EC end:0x8031D46C
 	.sdata      start:0x803DBC40 end:0x803DBC58
 
 main/dll/trickyfollow.c:
