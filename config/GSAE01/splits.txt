@@ -3494,15 +3494,17 @@ main/dll/WC/dll_0297_wctemplebri.c:
 	.data       start:0x8032B398 end:0x8032B3D0
 
 main/dll/WC/dll_0298_wcfloortile.c:
-	.text       start:0x8022A298 end:0x8022B998
+	.text       start:0x8022A298 end:0x8022A670
 	.data       start:0x8032B3D0 end:0x8032B408
+	.sdata2     start:0x803E6E98 end:0x803E6EC8
 
 main/dll/ARW/dll_029A_arwarwing.c:
-	.text       start:0x8022B998 end:0x8022E418
+	.text       start:0x8022A670 end:0x8022E418
 	.rodata     start:0x802C25E8 end:0x802C25F8
 	.data       start:0x8032B408 end:0x8032B604
 	.sdata      start:0x803DC3C8 end:0x803DC3D0
 	.sbss       start:0x803DDD88 end:0x803DDD90
+	.sdata2     start:0x803E6EC8 end:0x803E6EF0
 
 main/dll/dll_029B_arwingandrossstuff.c:
 	.text       start:0x8022E418 end:0x8022EDA4

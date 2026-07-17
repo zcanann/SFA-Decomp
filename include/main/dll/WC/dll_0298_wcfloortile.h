@@ -40,18 +40,6 @@ STATIC_ASSERT(offsetof(WcFloorTileSetup, base.posY) == 0x0C);
 STATIC_ASSERT(offsetof(WcFloorTileSetup, eventId) == 0x1A);
 
 extern ObjectDescriptor gWCFloorTileObjDescriptor;
-extern f32 lbl_8032B4A8[30];
-extern f32 lbl_803E6E98;
-extern f32 lbl_803E6E9C;
-extern f32 lbl_803E6EA4;
-extern f32 lbl_803E6EA8;
-extern f32 lbl_803E6EAC;
-extern f32 lbl_803E6EB0;
-extern f32 lbl_803E6EB4;
-extern f32 lbl_803E6EB8;
-extern f32 lbl_803E6EBC;
-extern f32 lbl_803E6EC8;
-extern f32 lbl_803E6ED4;
 
 int wcfloortile_getExtraSize(void);
 int wcfloortile_getObjectTypeId(void);

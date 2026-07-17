@@ -26,8 +26,7 @@ typedef struct ArwInitCfg
 STATIC_ASSERT(sizeof(ArwInitCfg) == 0x10);
 
 extern GameObject* gArwing;
-extern f32 lbl_803E6ECC;
-extern f32 lbl_803E6ED0;
+extern f32 lbl_8032B4A8[30];
 extern f32 lbl_803E6EF0;
 extern f32 lbl_803E6EF4;
 extern f32 lbl_803E6EF8;
