@@ -781,7 +781,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
                 {
                     if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
                     {
-                        gp[i] |= (u32)(1 << shift);
+                        gp[i] |= 1 << shift;
                     }
                 }
             }
@@ -793,7 +793,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             {
                 if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[idx])
                 {
-                    gp[i] &= ~(u32)(1 << shift);
+                    gp[i] &= ~(1 << shift);
                 }
             }
 
