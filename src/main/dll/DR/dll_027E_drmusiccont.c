@@ -29,20 +29,16 @@
 #include "main/dll/DR/dll_027E_drmusiccont.h"
 #include "main/object_render_legacy.h"
 
-__declspec(section ".sdata2") f32 lbl_803E6BC8 = 1.0f;
-__declspec(section ".sdata2") f32 gDrMusicControlCloudOverridePosX = -15350.0f;
-__declspec(section ".sdata2") f32 gDrMusicControlCloudOverridePosY = -1550.0f;
-__declspec(section ".sdata2") f32 gDrMusicControlCloudOverridePosZ = 10875.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E6BD8 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 gDrMusicControlStingerTimerDuration = 60.0f;
-__declspec(section ".sdata2") f32 gDrMusicControlRestartPointX = -15697.0f;
-__declspec(section ".sdata2") f32 gDrMusicControlRestartPointY = -1501.0f;
-__declspec(section ".sdata2") f32 gDrMusicControlRestartPointZ = 12928.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E6BEC = 0.0f;
-#pragma explicit_zero_data off
+const f32 lbl_803E6BC8 = 1.0f;
+const f32 gDrMusicControlCloudOverridePosX = -15350.0f;
+const f32 gDrMusicControlCloudOverridePosY = -1550.0f;
+const f32 gDrMusicControlCloudOverridePosZ = 10875.0f;
+const f32 lbl_803E6BD8 = 0.0f;
+const f32 gDrMusicControlStingerTimerDuration = 60.0f;
+const f32 gDrMusicControlRestartPointX = -15697.0f;
+const f32 gDrMusicControlRestartPointY = -1501.0f;
+const f32 gDrMusicControlRestartPointZ = 12928.0f;
+const f32 lbl_803E6BEC = 0.0f;
 
 #define DRMUSICCONT_ENVFX_A 0x210
 #define DRMUSICCONT_ENVFX_B 0x20f

@@ -555,10 +555,10 @@ returnFalse:
 }
 
 /* .bss glue 0x803A5CCC-0x803A5F08 */
-OSMessageQueue lbl_803A5CCC[1];
-u8 lbl_803A5CEC[0x34];
-char gPicMenuDvdReadBuffer[0x40];
 AttractMoviePlayer lbl_803A5D60;
+char gPicMenuDvdReadBuffer[0x40];
+u8 lbl_803A5CEC[0x34];
+OSMessageQueue lbl_803A5CCC[1];
 
 /* title-menu text entry tables referenced via extern by dll_0035_saveselectscreen; owned here by link order */
 
