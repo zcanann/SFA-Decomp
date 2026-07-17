@@ -5508,61 +5508,107 @@ int fn_8004B218(void* q_, u32 n_)
 }
 #pragma ppc_unroll_speculative on
 #pragma ppc_unroll_speculative off
-int fn_8004B31C(int* queue, int startNode, int targetPos, int pathId, u8 routeFlags)
+
+typedef struct PathPoint
 {
+    u8 padding[8];
+    f32 position[3];
+} PathPoint;
+
+typedef struct PathSearchNode
+{
+    PathPoint* point;
+    u32 distanceToTarget;
+    u32 routeDistance;
+    u8 parentIndex;
+    u8 childIndex;
+    u8 visited;
+    u8 padding;
+} PathSearchNode;
+
+typedef struct PathHeapEntry
+{
+    u32 priority;
+    u16 nodeIndex;
+    u16 padding;
+} PathHeapEntry;
+
+typedef struct PathSearch
+{
+    PathSearchNode* nodes;
+    PathHeapEntry* heap;
+    PathPoint** path;
+    f32* targetPosition;
+    s32 pathId;
+    u32 reserved14;
+    PathPoint* startPoint;
+    s32 currentNode;
+    s16 nodeCount;
+    s16 heapSize;
+    u32 closestDistance;
+    u8 routeFlags;
+    u8 padding29;
+    s16 pathCount;
+    s16 pathIndex;
+    u16 padding2E;
+} PathSearch;
+
+int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u8 routeFlags)
+{
+    int clearIndex;
     int i;
-    int* node;
+    PathSearchNode* node;
     u32* heap;
     int s;
     u32 pri;
     int parent;
     u16 idx;
-    u16* hh;
+    u16* heapHalves;
     u16 v;
 
-    *(s16*)((char*)queue + 0x22) = 0;
-    *(s16*)((char*)queue + 0x20) = 0;
-    for (i = 0; i < 0xfe; i++)
+    queue->heapSize = 0;
+    queue->nodeCount = 0;
+    for (clearIndex = 0; clearIndex < 0xfe; clearIndex++)
     {
-        *(int*)(queue[1] + i * 8) = 0;
-        *(u8*)(*queue + i * 16 + 0xe) = 0;
+        queue->heap[clearIndex].priority = 0;
+        queue->nodes[clearIndex].visited = 0;
     }
-    queue[6] = startNode;
-    queue[3] = targetPos;
-    queue[4] = pathId;
-    *(u8*)((char*)queue + 0x28) = routeFlags & 1;
-    queue[9] = 10000;
-    s = *(s16*)((char*)queue + 0x20);
+    queue->startPoint = startPoint;
+    queue->targetPosition = targetPosition;
+    queue->pathId = pathId;
+    queue->routeFlags = routeFlags & 1;
+    queue->closestDistance = 10000;
+    s = queue->nodeCount;
     if (s == 0xfe)
     {
         node = NULL;
     }
     else
     {
-        node = (int*)(*queue + (*(s16*)((char*)queue + 0x20))++ * 0x10);
-        *node = startNode;
-        node[2] = 0;
-        *(u8*)(node + 3) = 0xff;
-        node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)queue[3]);
+        node = &queue->nodes[queue->nodeCount++];
+        node->point = startPoint;
+        node->routeDistance = 0;
+        node->parentIndex = 0xff;
+        node->distanceToTarget = (u32)vec3f_distanceSquared(node->point->position, queue->targetPosition);
     }
-    i = node[1] + node[2];
-    heap = (u32*)queue[1];
-    hh = (u16*)queue[1];
-    v = *(s16*)((char*)queue + 0x20) - 1;
-    hh[++(*(s16*)((char*)queue + 0x22)) * 4 + 2] = v;
-    *(u32*)((int)heap + *(s16*)((char*)queue + 0x22) * 8) = -1 - i;
-    i = *(s16*)((char*)queue + 0x22);
+    i = node->distanceToTarget + node->routeDistance;
+    heap = (u32*)queue->heap;
+    heapHalves = (u16*)queue->heap;
+    v = queue->nodeCount - 1;
+    heapHalves[(++queue->heapSize) * 4 + 2] = v;
+    *(u32*)((int)heap + queue->heapSize * 8) = -1 - i;
+    i = queue->heapSize;
     pri = *(u32*)((int)heap + i * 8);
-    idx = hh[i * 4 + 2];
+    idx = heapHalves[i * 4 + 2];
     *heap = -1;
-    while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
+    while (parent = i >> 1, *(u32*)(heapHalves + parent * 4) < pri)
     {
         *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
         *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
         i = parent;
     }
     *(u32*)((int)heap + i * 8) = pri;
-    hh[i * 4 + 2] = idx;
+    heapHalves[i * 4 + 2] = idx;
     return 0;
 }
 
