@@ -382,22 +382,13 @@ int fn_80136A40(int unused, int c)
     return c;
 }
 
+#define debugPrintDrawGlyph fn_80136A40
+
 #pragma optimization_level 3
 int debugPrintDrawRecord(int color, u8* p)
 {
+    u8* start = p;
     u8 c;
-    int w;
-    int x2;
-    int y;
-    int y0;
-    int y1;
-    u32 x0;
-    f32 sc;
-    int rm;
-    u8 red;
-    u8 green;
-    u8 blue;
-    u8 alpha;
     GXColor textColorSource;
     GXColor textColor;
     GXColor positionColor;
@@ -406,10 +397,12 @@ int debugPrintDrawRecord(int color, u8* p)
     GXColor newlineColorSource;
     GXColor wrapColor;
     GXColor wrapColorSource;
-    u8* start = p;
 
     while ((c = *p++) != 0)
     {
+        int w;
+        f32 sc;
+        int rm;
         w = 0;
         switch (c)
         {
@@ -420,6 +413,11 @@ int debugPrintDrawRecord(int color, u8* p)
             gDebugFixedWidthMode = 1;
             break;
         case 0x81:
+        {
+            u8 red;
+            u8 green;
+            u8 blue;
+            u8 alpha;
             red = p[0];
             green = p[1];
             blue = p[2];
@@ -435,13 +433,22 @@ int debugPrintDrawRecord(int color, u8* p)
                 GXSetTevColor(GX_TEVREG0, &textColor);
             }
             break;
+        }
         case 0x87:
+        {
+            u8 biasY;
             gDebugScaleBiasX = p[0];
-            red = p[1];
+            biasY = p[1];
             p += 2;
-            gDebugScaleBiasY = red;
+            gDebugScaleBiasY = biasY;
             break;
+        }
         case 0x85:
+        {
+            u8 red;
+            u8 green;
+            u8 blue;
+            u8 alpha;
             red = p[0];
             green = p[1];
             blue = p[2];
@@ -456,7 +463,14 @@ int debugPrintDrawRecord(int color, u8* p)
                 setTextColorContextOnlyLegacy(color);
             }
             break;
+        }
         case 0x82:
+        {
+            u32 x2;
+            u32 y;
+            u32 x0;
+            u32 y1;
+            u32 y0;
             if (gDebugDrawPass == 0)
             {
                 x2 = debugPrintXpos + 0xa;
@@ -465,15 +479,15 @@ int debugPrintDrawRecord(int color, u8* p)
                 y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
-                    if ((u32)y0 >= 2)
+                    if (y0 >= 2)
                     {
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    y0 = (u32)((f32)(u32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
-                    y1 = (u32)((f32)(u32)y1 * sc);
-                    x0 = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
-                    x2 = (u32)((f32)(u32)x2 * sc);
+                    y0 = y0 * (sc = gDebugScaleX + gDebugScaleBiasX);
+                    y1 = y1 * sc;
+                    x0 = x0 * (sc = gDebugScaleY + gDebugScaleBiasY);
+                    x2 = x2 * sc;
                     positionColorSource.r = gDebugTextColorR;
                     positionColorSource.g = gDebugTextColorG;
                     positionColorSource.b = gDebugTextColorB;
@@ -483,20 +497,27 @@ int debugPrintDrawRecord(int color, u8* p)
                 }
             }
             debugPrintYpos = *p++;
-            debugPrintYpos = (u16)debugPrintYpos | (*p++ << 8);
+            debugPrintYpos = debugPrintYpos | (*p++ << 8);
             debugPrintXpos = *p++;
-            debugPrintXpos = (u16)debugPrintXpos | (*p++ << 8);
+            debugPrintXpos = debugPrintXpos | (*p++ << 8);
             gDebugRectStartY = debugPrintYpos;
             gDebugRectStartX = debugPrintXpos;
             break;
+        }
         case 0x86:
             gDebugTabWidth = *p++;
-            gDebugTabWidth = (u16)gDebugTabWidth | (*p++ << 8);
+            gDebugTabWidth = gDebugTabWidth | (*p++ << 8);
             break;
         case 0x20:
             w = 6;
             break;
         case 0xa:
+        {
+            u32 x2;
+            u32 y;
+            u32 y0;
+            u32 y1;
+            u32 x0;
             if (gDebugDrawPass == 0)
             {
                 x2 = debugPrintXpos + 0xa;
@@ -505,15 +526,15 @@ int debugPrintDrawRecord(int color, u8* p)
                 y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
-                    if ((u32)y0 >= 2)
+                    if (y0 >= 2)
                     {
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    y0 = (u32)((f32)(u32)y0 * (sc = gDebugScaleX + gDebugScaleBiasX));
-                    y1 = (u32)((f32)(u32)y1 * sc);
-                    x0 = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
-                    x2 = (u32)((f32)(u32)x2 * sc);
+                    y0 = y0 * (sc = gDebugScaleX + gDebugScaleBiasX);
+                    y1 = y1 * sc;
+                    x0 = x0 * (sc = gDebugScaleY + gDebugScaleBiasY);
+                    x2 = x2 * sc;
                     newlineColorSource.r = gDebugTextColorR;
                     newlineColorSource.g = gDebugTextColorG;
                     newlineColorSource.b = gDebugTextColorB;
@@ -527,6 +548,7 @@ int debugPrintDrawRecord(int color, u8* p)
             gDebugRectStartY = debugPrintYpos;
             gDebugRectStartX = debugPrintXpos;
             break;
+        }
         case 9:
             rm = debugPrintYpos % gDebugTabWidth;
             if (rm == 0)
@@ -539,7 +561,7 @@ int debugPrintDrawRecord(int color, u8* p)
             }
             break;
         default:
-            w = fn_80136A40(color, c);
+            w = debugPrintDrawGlyph(color, c);
             break;
         }
         if (gDebugFixedWidthMode != 0 && c >= 0x20 && c <= 0x7f)
@@ -547,8 +569,13 @@ int debugPrintDrawRecord(int color, u8* p)
             w = 7;
         }
         debugPrintYpos += w;
-        if ((f32)debugPrintYpos * (sc = gDebugScaleX + gDebugScaleBiasX) > (f32)(int)(gDebugScreenWidth - 0x10))
+        if (debugPrintYpos * (sc = gDebugScaleX + gDebugScaleBiasX) > gDebugScreenWidth - 0x10)
         {
+            u32 x2;
+            u32 y;
+            u32 y0;
+            u32 y1;
+            u32 x0;
             if (gDebugDrawPass == 0)
             {
                 x2 = debugPrintXpos + 0xa;
@@ -557,15 +584,15 @@ int debugPrintDrawRecord(int color, u8* p)
                 y0 = gDebugRectStartY;
                 if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
                 {
-                    if ((u32)y0 >= 2)
+                    if (y0 >= 2)
                     {
                         y0 -= 2;
                     }
                     y1 = y + 2;
-                    y0 = (u32)((f32)(u32)y0 * sc);
-                    y1 = (u32)((f32)(u32)y1 * sc);
-                    x0 = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
-                    x2 = (u32)((f32)(u32)x2 * sc);
+                    y0 = y0 * sc;
+                    y1 = y1 * sc;
+                    x0 = x0 * (sc = gDebugScaleY + gDebugScaleBiasY);
+                    x2 = x2 * sc;
                     wrapColorSource.r = gDebugTextColorR;
                     wrapColorSource.g = gDebugTextColorG;
                     wrapColorSource.b = gDebugTextColorB;
@@ -582,6 +609,7 @@ int debugPrintDrawRecord(int color, u8* p)
     }
     return p - start;
 }
+#undef debugPrintDrawGlyph
 #pragma optimization_level 1
 #pragma peephole on
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
