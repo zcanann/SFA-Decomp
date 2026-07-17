@@ -406,9 +406,9 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                         ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 7);
                     }
                 }
-                fn_80163990((int)obj, aux);
-                (*gPathControlInterface)->advance((void*)obj, (void*)aux, timeDelta);
             }
+            fn_80163990((int)obj, aux);
+            (*gPathControlInterface)->advance((void*)obj, (void*)aux, timeDelta);
         }
         else if (state == 4)
         {
