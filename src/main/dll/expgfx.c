@@ -730,8 +730,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     player = (GameObject*)Obj_GetPlayerObject();
     tricky = (GameObject*)getTrickyObject();
     cache = getCache();
-    gExpgfxPhaseAngleA += (int)(lbl_803DF3C8 * timeDelta);
-    gExpgfxPhaseAngleB += (int)(lbl_803DF3CC * timeDelta);
+    gExpgfxPhaseAngleA += (u16)(lbl_803DF3C8 * timeDelta);
+    gExpgfxPhaseAngleB += (u16)(lbl_803DF3CC * timeDelta);
     sky = getSkyStructField24C();
     getSkyDirection(sky, &camDir[0], &camDir[1], &camDir[2]);
     PSMTXMultVec((void*)Camera_GetViewRotationMatrix(), (void*)camDir, (void*)camDir);
