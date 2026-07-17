@@ -23,13 +23,6 @@ extern f32 lbl_803E3850;
 
 
 extern f32 lbl_803E3854;
-extern f32 lbl_803E3858;
-extern f32 lbl_803E385C;
-extern f32 lbl_803E3870;
-extern f32 lbl_803E3874;
-extern f32 lbl_803E3878;
-extern f32 lbl_803E387C;
-extern f32 lbl_803E3880;
 
 typedef struct Dll14DState
 {
@@ -60,16 +53,6 @@ typedef struct Dll14DPlacement
 STATIC_ASSERT(offsetof(Dll14DPlacement, enableBit) == 0x18);
 STATIC_ASSERT(offsetof(Dll14DPlacement, flags) == 0x23);
 STATIC_ASSERT(sizeof(Dll14DPlacement) == 0x24);
-
-typedef struct MagicPlantBridgeState
-{
-    int childObj;
-    f32 moveProgress;
-    f32 moveStepScale;
-    s16 timer;
-    u8 pad0E;
-    s8 mode;
-} MagicPlantBridgeState;
 
 int dll_FD_getExtraSize(void) { return 0x8; }
 
@@ -215,46 +198,6 @@ void dll_FD_release(void)
 
 void dll_FD_initialise(void)
 {
-}
-
-void magicPlantDropGem(int obj, void* setup, void* stateArg)
-{
-    MagicPlantBridgeState* state;
-    int player;
-    u8* childObj;
-    f32 launchSpeed;
-    int angle;
-
-    state = (MagicPlantBridgeState*)stateArg;
-    player = (int)Obj_GetPlayerObject();
-    Sfx_StopObjectChannel(obj, 0x40);
-
-    childObj = *(u8**)&state->childObj;
-    if ((childObj != NULL) && (*(void**)(childObj + 0xc4) != NULL) &&
-        (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3870))
-    {
-        state->childObj = 0;
-        ObjLink_DetachChild((GameObject*)obj, (int)childObj);
-
-        launchSpeed = (f32)(int)
-        randomGetRange(0x27, 0x2c) / lbl_803E3874;
-        angle = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
-                         ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
-        randomGetRange(((u16)angle) - 0x1000, ((u16)angle) + 0x1000);
-
-        ((GameObject*)childObj)->anim.velocityX =
-            launchSpeed * mathSinf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
-        ((GameObject*)childObj)->anim.velocityZ =
-            launchSpeed * mathCosf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
-        Sfx_PlayFromObject(obj, SFXTRIG_id_5e);
-    }
-
-    if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3858)
-    {
-        state->mode = MAGICPLANT_MODE_FADE_OUT;
-        state->moveStepScale = lbl_803E3880;
-        ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_BURST, lbl_803E385C, 0);
-    }
 }
 
 ObjectDescriptor gDll14DObjDescriptor = {

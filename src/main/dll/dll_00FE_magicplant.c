@@ -30,6 +30,7 @@
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"
@@ -97,6 +98,52 @@ extern f32 gMagicPlantBuzzStopDist;
 
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
+
+extern f32 lbl_803E3870;
+extern f32 lbl_803E3874;
+extern f32 lbl_803E3878;
+extern f32 lbl_803E387C;
+extern f32 lbl_803E3880;
+
+void magicPlantDropGem(int obj, void* setup, void* stateArg)
+{
+    MagicPlantState* state;
+    int player;
+    u8* childObj;
+    f32 launchSpeed;
+    int angle;
+
+    state = (MagicPlantState*)stateArg;
+    player = (int)Obj_GetPlayerObject();
+    Sfx_StopObjectChannel(obj, 0x40);
+
+    childObj = *(u8**)&state->childObject;
+    if ((childObj != NULL) && (*(void**)(childObj + 0xc4) != NULL) &&
+        (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3870))
+    {
+        state->childObject = 0;
+        ObjLink_DetachChild((GameObject*)obj, (int)childObj);
+
+        launchSpeed = (f32)(int)
+        randomGetRange(0x27, 0x2c) / lbl_803E3874;
+        angle = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
+                         ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
+        randomGetRange(((u16)angle) - 0x1000, ((u16)angle) + 0x1000);
+
+        ((GameObject*)childObj)->anim.velocityX =
+            launchSpeed * mathSinf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
+        ((GameObject*)childObj)->anim.velocityZ =
+            launchSpeed * mathCosf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
+        Sfx_PlayFromObject(obj, SFXTRIG_id_5e);
+    }
+
+    if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3858)
+    {
+        state->mode = MAGICPLANT_MODE_FADE_OUT;
+        state->animStepScale = lbl_803E3880;
+        ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_BURST, lbl_803E385C, 0);
+    }
+}
 
 void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, MagicPlantState* stateParam)
 {
@@ -229,6 +276,68 @@ void MagicPlant_spawnChild(GameObject* obj, int objectId)
 }
 #pragma dont_inline reset
 
+int MagicPlant_SeqFn(u8* obj)
+{
+    (*(void (***)(u8*))gCameraInterface)[0x13](obj);
+    return 0;
+}
+
+int MagicPlant_getExtraSize(void)
+{
+    return MAGICPLANT_EXTRA_STATE_BYTES;
+}
+
+u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj)
+{
+    MagicPlantSetup* setup = (MagicPlantSetup*)obj->objAnim.placementData;
+
+    return (setup->modelIndex << MAGICPLANT_OBJECT_TYPE_MODEL_SHIFT) | MAGICPLANT_OBJECT_TYPE_BASE;
+}
+
+void MagicPlant_free(GameObject* obj, int freeChildren)
+{
+    MagicPlantObject* plant;
+    MagicPlantState* state;
+
+    plant = (MagicPlantObject*)obj;
+    state = plant->state;
+    ObjGroup_RemoveObject(obj, MAGICPLANT_OBJGROUP_A);
+    ObjGroup_RemoveObject(obj, MAGICPLANT_OBJGROUP_B);
+    if (plant->childLinkActive != 0)
+    {
+        ObjLink_DetachChild(obj, (int)state->childObject);
+        if (freeChildren == 0)
+        {
+            Obj_FreeObject(state->childObject);
+        }
+    }
+}
+
+void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    MagicPlantObject* plant;
+    MagicPlantState* state;
+    GameObject* child;
+
+    plant = (MagicPlantObject*)obj;
+    state = plant->state;
+    if (visible != 0)
+    {
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3858);
+        child = state->childObject;
+        if (child != NULL)
+        {
+            if (child->ownerObj != NULL)
+            {
+                ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &child->anim.localPosX, &child->anim.localPosY,
+                                              &child->anim.localPosZ, 0);
+            }
+        }
+    }
+}
+
+#pragma dont_inline on
+#pragma opt_common_subs off
 void MagicPlant_update(int obj)
 {
     s32 alpha;
@@ -290,15 +399,15 @@ void MagicPlant_update(int obj)
                 divisor = 100;
             }
             progress /= divisor;
-            if (progress > 1.0f)
+            if (progress > lbl_803E3858)
             {
-                progress = 1.0f;
+                progress = lbl_803E3858;
             }
-            else if (progress < 0.0f)
+            else if (progress < lbl_803E385C)
             {
-                progress = 0.0f;
+                progress = lbl_803E385C;
             }
-            state->animProgress = 1.0f - progress;
+            state->animProgress = lbl_803E3858 - progress;
         }
         if (plant->objAnim.currentMove != MAGICPLANT_MOVE_CLOSED)
         {
@@ -352,66 +461,8 @@ void MagicPlant_update(int obj)
     ObjAnim_AdvanceCurrentMove((int)obj, state->animStepScale, timeDelta, NULL);
 }
 
-int MagicPlant_getExtraSize(void)
-{
-    return MAGICPLANT_EXTRA_STATE_BYTES;
-}
-
-int MagicPlant_SeqFn(u8* obj)
-{
-    (*(void (***)(u8*))gCameraInterface)[0x13](obj);
-    return 0;
-}
-
-u32 MagicPlant_getObjectTypeId(MagicPlantObject* obj)
-{
-    MagicPlantSetup* setup = (MagicPlantSetup*)obj->objAnim.placementData;
-
-    return (setup->modelIndex << MAGICPLANT_OBJECT_TYPE_MODEL_SHIFT) | MAGICPLANT_OBJECT_TYPE_BASE;
-}
-
-void MagicPlant_free(GameObject* obj, int freeChildren)
-{
-    MagicPlantObject* plant;
-    MagicPlantState* state;
-
-    plant = (MagicPlantObject*)obj;
-    state = plant->state;
-    ObjGroup_RemoveObject(obj, MAGICPLANT_OBJGROUP_A);
-    ObjGroup_RemoveObject(obj, MAGICPLANT_OBJGROUP_B);
-    if (plant->childLinkActive != 0)
-    {
-        ObjLink_DetachChild(obj, (int)state->childObject);
-        if (freeChildren == 0)
-        {
-            Obj_FreeObject(state->childObject);
-        }
-    }
-}
-
-void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    MagicPlantObject* plant;
-    MagicPlantState* state;
-    GameObject* child;
-
-    plant = (MagicPlantObject*)obj;
-    state = plant->state;
-    if (visible != 0)
-    {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3858);
-        child = state->childObject;
-        if (child != NULL)
-        {
-            if (child->ownerObj != NULL)
-            {
-                ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &child->anim.localPosX, &child->anim.localPosY,
-                                              &child->anim.localPosZ, 0);
-            }
-        }
-    }
-}
-
+#pragma opt_common_subs reset
+#pragma dont_inline reset
 void MagicPlant_init(GameObject* obj, MagicPlantSetup* setup)
 {
     MagicPlantObject* plant;

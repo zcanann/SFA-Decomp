@@ -1710,13 +1710,14 @@ main/dll/dll_00FC_babycloudrunner.c:
 	.sdata2     start:0x803E3848 end:0x803E3850
 
 main/dll/dll_00FD.c:
-	.text       start:0x8017EF6C end:0x8017F4F4
+	.text       start:0x8017EF6C end:0x8017F334
 	.data       start:0x80321530 end:0x80321568
 
 main/dll/dll_00FE_magicplant.c:
-	.text       start:0x8017F4F4 end:0x8017FF0C
+	.text       start:0x8017F334 end:0x8017FF0C
 	.data       start:0x80321568 end:0x803215A0
 	.sdata      start:0x803DBD98 end:0x803DBDA0
+	.sdata2     start:0x803E3860 end:0x803E3870
 
 main/dll/dll_0100_trickywarp.c:
 	.text       start:0x8017FF0C end:0x8018023C
