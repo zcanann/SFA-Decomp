@@ -21,10 +21,6 @@
 #include "main/vecmath.h"
 #include "main/dll/dll_0027_effect14.h"
 
-#pragma force_active on
-#pragma explicit_zero_data on
-#pragma force_active reset
-
 #define EFFECT_FLAG_HAS_SRC 0x200000
 
 EffectSrcParams gEffect14SharedSrcParams;
