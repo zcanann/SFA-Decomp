@@ -37,6 +37,7 @@
 #include "main/pad.h"
 #include "main/pi_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/shader_api.h"
 
 typedef void (*GXSetZCompLocLegacyFn)(u32 beforeTex);
 typedef void (*GXSetZModeLegacyFn)(u32 compareEnable, int compareFunc, u32 updateEnable);
@@ -145,7 +146,6 @@ extern DepthReadRequest gDepthReadPendingQueue[0x14];
 extern f32 hudMatrix[4][4];
 extern f32 hudScale;
 extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
-extern f32 playerMapOffsetX, playerMapOffsetZ;
 extern f32 lbl_803DEF08, lbl_803DEF20;
 extern double lbl_803DEF10, lbl_803DEF18;
 extern u8 lbl_8030E8B0[];
