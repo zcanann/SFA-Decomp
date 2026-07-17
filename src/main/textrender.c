@@ -1195,7 +1195,7 @@ void translateToDinoLanguage(u8* str)
     }
 }
 #pragma dont_inline off
-#pragma opt_strength_reduction on
+#pragma opt_strength_reduction off
 #pragma opt_unroll_loops on
 #pragma ppc_unroll_instructions_limit 96
 #pragma ppc_unroll_speculative on
@@ -3589,7 +3589,7 @@ void gameTextInitFn_8001c794(void)
 
     tex = textureAlloc(0x10, 0x10, 5, 0, 0, 0, 0, 1, 1);
     gGameTextBoxCornerTexture = tex;
-    dst = (u16*)((u8*)tex + 0x60);
+    dst = (u16*)(tex + 1);
     i = 0;
     y = 0;
     for (; i < 4; i++)
@@ -3660,11 +3660,11 @@ void gameTextInitFn_8001c794(void)
         }
         y += 4;
     }
-    DCFlushRange((u8*)gGameTextBoxCornerTexture + 0x60, 0x200);
+    DCFlushRange(gGameTextBoxCornerTexture + 1, 0x200);
 
     tex = textureAlloc(0x14, 0x14, 5, 0, 0, 0, 0, 1, 1);
     gGameTextBoxEdgeTexture = tex;
-    dst = (u16*)((u8*)tex + 0x60);
+    dst = (u16*)(tex + 1);
     i = 0;
     y = 0;
     for (; i < 5; i++)
@@ -3706,7 +3706,7 @@ void gameTextInitFn_8001c794(void)
         }
         y += 4;
     }
-    DCFlushRange((u8*)gGameTextBoxEdgeTexture + 0x60, 800);
+    DCFlushRange(gGameTextBoxEdgeTexture + 1, 800);
 }
 
 /* .bss block 0x80339980-0x8033AF40 */
