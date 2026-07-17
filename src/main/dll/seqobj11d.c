@@ -52,9 +52,7 @@ extern u32 lbl_8031F280[];
 
 u8 gGroundBaddieAngleSectorOffsets[8] = {1, 4, 4, 3, 3, 5, 5, 1};
 GroundBaddieModelChainDescriptor lbl_803DBC90 = {lbl_8031F280, 4};
-#pragma explicit_zero_data on
 GroundBaddieModelChainDescriptor gGroundBaddieModelChainDesc = {&lbl_803DBC90, 0};
-#pragma explicit_zero_data off
 u16 gGroundBaddieTriggerResponseSeq[4] = {0x4FD, 0x4FE, 0x4FF, 0};
 
 typedef struct
