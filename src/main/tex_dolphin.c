@@ -217,7 +217,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* b
     int texTableB;
     int texTable;
     u8 passCount;
-    int rec;
+    int rec[1];
     int byteBase;
     u32 bits;
     int bitPos;
@@ -237,7 +237,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* b
     bitReader[4] = bitPos + 8;
     /* extract this cursor's 8-bit field (LSB-first: shift out the bits already
      * consumed within the byte, then mask the width) -> bounds-record index */
-    rec = (int)((MapBlockBoundsRec*)*(int*)(blockData + 0x68) + ((bits >> (bitPos & 7)) & 0xff));
+    rec[0] = (int)((MapBlockBoundsRec*)*(int*)(blockData + 0x68) + ((bits >> (bitPos & 7)) & 0xff));
     flags = SHADER_FLAGS(shader);
     if ((flags & 0x4000) != 0)
     {
@@ -271,7 +271,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* b
         }
         indMtx[1][1] = indMtx[0][0];
         GXSetIndTexMtx(GX_ITM_0, (const float (*)[3])indMtx, gTexIndMtxScaleExp);
-        GXCallDisplayList(((MapBlockBoundsRec*)rec)->dlist, (u32)((MapBlockBoundsRec*)rec)->dlistSize);
+        GXCallDisplayList(((MapBlockBoundsRec*)rec[0])->dlist, (u32)((MapBlockBoundsRec*)rec[0])->dlistSize);
     }
 }
 #pragma opt_common_subs reset
