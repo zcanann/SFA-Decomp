@@ -2719,6 +2719,7 @@ main/dll/DIM/dim_boss.c:
 main/dll/SH/dll_01A8_shkillermushroom.c:
 	.text       start:0x801D1BFC end:0x801D286C
 	.data       start:0x80326C78 end:0x80326D20
+	.sdata2     start:0x803E52F8 end:0x803E5354
 
 main/dll/dll_01A9_bombplant.c:
 	.text       start:0x801D286C end:0x801D3378
@@ -3464,6 +3465,7 @@ main/dll/dll_0272_hightop.c:
 	.rodata     start:0x802C2590 end:0x802C25B8
 	.data       start:0x8032AB30 end:0x8032AC58
 	.sbss       start:0x803DDD78 end:0x803DDD80
+	.sdata2     start:0x803E6AA0 end:0x803E6B58
 
 main/dll/DR/dll_026F_drgenerator.c:
 	.text       start:0x8021F34C end:0x8021F8CC
