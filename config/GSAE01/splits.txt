@@ -359,7 +359,7 @@ main/dll/dll_0022_effect9.c:
 
 main/dll/dll_0023_effect10.c:
 	.text       start:0x800C291C end:0x800C4864
-	.data       start:0x80310C88 end:0x80310D1C
+	.data       start:0x80310C60 end:0x80310D1C
 	.bss        start:0x8039C3B0 end:0x8039C3C8
 	.sdata      start:0x803DB830 end:0x803DB840
 	.sbss       start:0x803DD3B0 end:0x803DD3C0

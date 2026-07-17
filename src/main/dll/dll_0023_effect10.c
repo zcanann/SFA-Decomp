@@ -27,6 +27,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0023_effect10.h"
+#include "main/object_descriptor.h"
 
 f32 gEffect10SineValueA;
 f32 gEffect10SineValueB;
@@ -74,6 +75,19 @@ extern f32 lbl_803DFF20;
 extern f32 lbl_803DFF24;
 extern f32 gEffect10Pi;
 extern f32 gEffect10SinePhaseScale;
+
+ObjectDescriptor6 lbl_80310C60 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_6_SLOTS,
+    (ObjectDescriptorCallback)Effect10_initialise,
+    (ObjectDescriptorCallback)Effect10_release,
+    0,
+    (ObjectDescriptorCallback)Effect10_func03_nop,
+    (ObjectDescriptorCallback)Effect10_func04,
+    (ObjectDescriptorCallback)Effect10_func05,
+};
 
 int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByte, f32* extraParam)
 {
