@@ -17,9 +17,7 @@
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_B7.h"
 #include "main/mm.h"
-
-extern BOOL Resource_Release(void* handleSlot);
-extern void* Resource_Acquire(u16 id, int unused);
+#include "main/resource.h"
 
 static inline int camcontrol_findHandlerIndex(u16 actionId)
 {

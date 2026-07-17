@@ -543,12 +543,12 @@ BOOL Resource_Release(void* handleSlot)
     return FALSE;
 }
 
-void* Resource_Acquire(u32 id, int unused)
+void* Resource_Acquire(u16 id, int unused)
 {
     u32 index;
     ResourceDescriptor* descriptor;
 
-    index = id & 0xffff;
+    index = id;
     descriptor = gResourceDescriptors[index];
     if (gResourceRefCounts[index] == 0 && descriptor->acquire != NULL)
     {

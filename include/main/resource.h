@@ -49,7 +49,7 @@ extern void* gResourceLoadedHandles[];
 extern u16 gResourceRefCounts[];
 
 BOOL Resource_Release(void *handleSlot);
-void *Resource_Acquire(u32 id, int unused);
+void *Resource_Acquire(u16 id, int unused);
 void Resource_ResetRefCounts(void);
 
 #endif /* MAIN_RESOURCE_H_ */
