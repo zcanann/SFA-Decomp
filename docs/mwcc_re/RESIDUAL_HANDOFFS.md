@@ -141,3 +141,6 @@ and the ghost-group route (an inlined `static` helper's locals AND its by-value 
 **Payoff if a matching compiler build is ever sourced: k_tan -> 100 (flip) and 6 of trig's 10 sub-100 fns
 -> 100.** trig's remaining gap is then fn_80293C64 (98.75), mathSinf/fn_80293DA4/fn_80293F7C (~99.7, a
 shared `lhz r4,12(r1)`/`lwz r3,8(r1)` vs `lhz r3`/`lwz r0` two-register rotation).
+
+## sky.c: fn_80089A60 improve 34edc7ed7c regressed sibling skyFn_8008a04c (net -0.12 unit)
+The `int c2 -> u8 blendAlpha` param retype (+ skyEntry u8*->SkyLightSlotView*) in fn_80089A60 improved that fn 99.56->99.84 (+0.28) but reordered sky.c's shared .sdata2 anonymous pool, regressing sibling skyFn_8008a04c 99.801->99.402 (-0.40) - net -0.12 for the unit. Caught by churn-mine (same-key gate). The u8 blendAlpha param changes the fn's constant-pool footprint, shifting skyFn_8008a04c's @N pool references in a scoring way (not pure score-neutral rename). If the naming/quality gain is worth it, keep; if the sibling matters more, the param could stay `int` with the rename only (test whether `int blendAlpha` keeps the +0.28 without the pool shift).
