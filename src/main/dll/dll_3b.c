@@ -57,7 +57,7 @@ void AttractMovieAudio_Decode(void* readBufferArg)
 {
     u32* audioFrameSizes;
     AttractMovieReadBuffer* readBuffer;
-    AttractMovieAudioBuffer* audioBuf;
+    AttractMovieAudioBuffer* audioBuf[1];
     u8* audioFrame;
     u32 track;
 
@@ -67,17 +67,17 @@ void AttractMovieAudio_Decode(void* readBufferArg)
     {
         AttractMovieAudioBuffer* received;
         OSReceiveMessage(&lbl_803A4480, &received, OS_MESSAGE_BLOCK);
-        audioBuf = received;
+        audioBuf[0] = received;
     }
     for (track = 0; track < lbl_803A5D60.compInfo.mNumComponents; track++)
     {
         switch (lbl_803A5D60.compInfo.mFrameComp[track])
         {
         case THP_FRAME_COMP_AUDIO:
-            audioBuf->validSample = THPAudioDecode(audioBuf->buffer, audioFrame, 0);
-            audioBuf->curPtr = audioBuf->buffer;
-            audioBuf->frameNumber = readBuffer->frameNumber;
-            OSSendMessage(&lbl_803A4460, audioBuf, OS_MESSAGE_BLOCK);
+            audioBuf[0]->validSample = THPAudioDecode(audioBuf[0]->buffer, audioFrame, 0);
+            audioBuf[0]->curPtr = audioBuf[0]->buffer;
+            audioBuf[0]->frameNumber = readBuffer->frameNumber;
+            OSSendMessage(&lbl_803A4460, audioBuf[0], OS_MESSAGE_BLOCK);
             break;
         }
         audioFrame += *audioFrameSizes;
