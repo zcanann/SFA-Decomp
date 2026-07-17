@@ -55,6 +55,72 @@ The later functions merely *reuse* the atoms (dedup, first creator wins). Read t
 values in order — they are the helper's literals in the helper's own parse order, and they will
 appear as one contiguous inlined cluster somewhere in a caller's body.
 
+## ★ Literal *numbering* order INSIDE one function's group
+
+The group rule above says a function's new literals are appended "in the function's internal codegen
+order". That order is **not** the order the `lfs`/`lfd` instructions come out, and the difference is
+exactly what strands an otherwise-finished pool. The `@NNN` anon-symbol index in a `-drz` dump *is*
+the numbering order — read it directly instead of guessing from emission.
+
+Derived 2026-07-17 by probe (`probe/q*.c`, `probe/w*.c`, `probe/y*.c`, `probe/z*.c`; driver
+`probe/mk.sh`). Four rules, in precedence order:
+
+1. **Across statements: source order** — but if MWCC *sinks* a statement (its result is only consumed
+   later), the numbering follows the **sunk** position, not the written one.
+   `y=2.0f*x; o2=3.0f*x; o3=4.0f*x; o1=y;` pools `3.0, 4.0, 2.0` — `y=2.0f*x` sank to just above
+   `o1=y`, and its literal sank with it.
+2. **Within one statement, no calls: pre-order DFS of the *canonicalised* tree.** Commutative
+   operators put the constant operand first, so `x*3.0f + 2.0f` canonicalises to `2.0f + 3.0f*x` and
+   pools `2.0, 3.0` (this is the doc's old `x * 100000.0f + 20.0f -> 20, 100000` result).
+   Division is not commutative: `(2.0f*x)/3.0f` pools `2.0, 3.0`.
+3. **★ Literals inside a CALL's argument subtree are numbered AFTER every other literal in the same
+   statement**, outermost-first by nesting depth. `ff(2.0f) + 3.0f` pools `3.0, 2.0`;
+   `ff(2.0f)*3.0f + 4.0f` pools `4.0, 3.0, 2.0`; `ff(ff(2.0f)+3.0f)+4.0f` pools `4.0, 3.0, 2.0`.
+4. **`if` / `?:` arms are numbered BEFORE the controlling condition** (then-arm, else-arm, cond).
+   `y=2.0f; if (x>3.0f) y=4.0f;` pools `2.0, 4.0, 3.0` while *emitting* `2.0, 3.0, 4.0` — a genuine
+   inversion of numbering vs emission, confirmed by `@7=2.0, @8=4.0, @9=3.0`.
+
+**⇒ The diagnostic.** An atom that pools *earlier* than an atom it is *emitted after* is not noise and
+not a ghost: rules 3 and 4 are the only two constructs that invert numbering against emission. Read
+which one fits and you have recovered the original statement shape.
+
+### Worked confirmation — effect20 (`dll_002D_effect20.c`, pool `803E0310..04D8`), 2026-07-17
+Retail pools `0.005f, pi, 32768.0f` but **emits** `pi (+0x780), 32768 (+0x7a4), 0.005 (+0x7e0)`.
+Source with a `angle`/`trigVal`/`radius` temp per statement pools `pi, 32768, 0.005` — statements are
+independent, so rule 1 applies and no spelling of the expressions can fix it (all of
+`3.1415927f*(f32)iv/32768.0f`, `(3.1415927f*(f32)iv)/32768.0f`, hoisted `const` locals and decl-inits
+are inert; a `const` local is const-propagated and its literal is created at the *use*, not the decl).
+Rule 3 is the only fit: the angle expression must sit **inside the `mathCosf()` argument** while the
+`0.005f` factor sits outside it, so that `0.005f` numbers first and `pi`/`32768.0f` — as call-argument
+literals — number last, while still *emitting* pi first because the call is evaluated first:
+
+```c
+cfg.velocityX = (0.005f * (f32)(s32)randomGetRange(100, 0x96)) *
+                mathCosf(angle = (3.1415927f * (f32)(s32)intVal) / 32768.0f);
+cfg.velocityY = (0.005f * (f32)(s32)randomGetRange(100, 0x96)) * mathSinf(angle);
+```
+456-byte pool byte-exact, `.text` unchanged at 33024/33024.
+
+## ★ TRAP: objdiff `.text` 100% does NOT mean the linked bytes match (`@sda21`)
+
+`lfs f1, sym@sda21(rX)` is a **relocation** in the `.o`: the base register and displacement fields are
+both zero until `mwld` fills them. Two loads that differ only in *which* `@sda21` symbol they name —
+`.sdata` (r13) vs `.sdata2` (r2), or two different pool atoms — can therefore be scored **100%
+identical** by objdiff and still move the DOL.
+
+effect20 read `.text 100.0000 (33024/33024)` with `gEffect20SpawnScrollA = gEffect20SpawnScrollA +
+0.001f;` **and** with `gEffect20SpawnScrollA += 0.001f;`, yet only the compound form links:
+MWCC canonicalises a commutative `+` constant-first (rule 2), which swaps the two loads —
+
+| | retail / `+=` | `x = x + k` |
+|---|---|---|
+| | `lfs f1, gScrollA@sda21(r13)` | `lfs f1, 0.001@sda21(r2)` |
+| | `lfs f0, 0.001@sda21(r2)` | `lfs f0, gScrollA@sda21(r13)` |
+
+— same `fadds f1,f1,f0`, same fuzzy score, 4 different instructions in the DOL. **A pool claim must be
+gated on `ninja build/GSAE01/ok`, never on the unit's fuzzy percent.** Corollary: use the compound
+form for any accumulator whose RHS mixes the accumulator with a constant.
+
 ## Probe matrix
 
 `H` = `static float helper(int n){float f=(float)n; if(f<0.0f)f=0.0f; if(f>300.0f)f=300.0f; return f*4.0f;}`
@@ -138,6 +204,11 @@ anomaly is exactly this rule.
 
 ## Landed
 
+- **effect20** (`dll_002D_effect20.c`), 2026-07-17: recover `case 0x7a3` as a call-argument shape
+  (rule 3 above) + `+=` on the two scroll accumulators (the `@sda21` trap above) + claim
+  `.sdata2 [0x803E0310, 0x803E04D8)`. Pool reproduced **byte-exact** (456 B). Gated in an origin
+  clean-room on `6e9e1719a4`: `main.dol: OK`, complete_units **800 -> 801**, matched_data_percent
+  97.1592 -> 97.1968, complete_code_percent 43.1365 -> 44.2880, **matched_code FLAT**.
 - **crrockfall** (`dll_016A_crrockfall.c`), 2026-07-17: fn reorder to retail `.text` order
   (byte-neutral) + hoist `crrockfall_isPlayerInRange` (the ghost) above `fn_801ACCFC` + respell all
   11 `extern f32 lbl_803E4*` / `gRockfallGravity` / `gRockfallScaleDivisor` shims to plain literals +
