@@ -50,6 +50,31 @@ typedef struct SkyLight {
 
 STATIC_ASSERT(sizeof(SkyLight) == 0xA4);
 
+/* View of a light slot relative to the start of the sky state block. */
+typedef struct SkyLightSlotView {
+    u8 unk00[0x7C];
+    u8 overrideAmbientR;
+    u8 overrideAmbientG;
+    u8 overrideAmbientB;
+    u8 unk7F[5];
+    u8 scaledAmbientR;
+    u8 scaledAmbientG;
+    u8 scaledAmbientB;
+    u8 unk87[5];
+    u8 lightR;
+    u8 lightG;
+    u8 lightB;
+    u8 unk8F[0x19];
+    f32 overrideDirectionX;
+    f32 overrideDirectionY;
+    f32 overrideDirectionZ;
+} SkyLightSlotView;
+
+STATIC_ASSERT(offsetof(SkyLightSlotView, overrideAmbientR) == 0x7C);
+STATIC_ASSERT(offsetof(SkyLightSlotView, scaledAmbientR) == 0x84);
+STATIC_ASSERT(offsetof(SkyLightSlotView, lightR) == 0x8C);
+STATIC_ASSERT(offsetof(SkyLightSlotView, overrideDirectionX) == 0xA8);
+
 typedef struct SkyState {
     u8 unk00;
     u8 unk01;
