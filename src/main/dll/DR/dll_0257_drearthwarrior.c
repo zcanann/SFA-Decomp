@@ -240,7 +240,6 @@ STATIC_ASSERT(offsetof(EarthWarriorState, sub) == 0xb58);
 typedef struct
 {
     s16 v[5];
-    s16 pad;
 } EWPathRange;
 
 typedef struct
@@ -297,8 +296,8 @@ extern f32 GXIndTexMtxScale1024;
 extern int lbl_803E82D8;
 extern u8 gDREarthWarriorInitData[];
 extern u8 gDREarthWarriorRowIndices[];
-const EWPathRange lbl_802C2CA8 = {{10, 10, 0, 0, 0}, 0};
-const EWPathRange lbl_802C2CB4 = {{20, 20, 0, 0, 0}, 0};
+const EWPathRange lbl_802C2CA8 = {{10, 10, 0, 0, 0}};
+const EWPathRange lbl_802C2CB4 = {{20, 20, 0, 0, 0}};
 const EWColorTbl gDREarthWarriorColors = {
     {{8, 255, 190, 120}, {8, 255, 255, 120}, {8, 180, 240, 255}, {8, 170, 255, 170}}
 };
