@@ -7822,3 +7822,48 @@ tree), gameloop (sibling brute-forcing mainSetBits decl-order in-tree — left u
   stack showing `mtctr` on a big-body counted loop => re-derive flags as O3 + opt_loop_invariants off +
   opt_lifetimes off + fn-scoped unroll suppression. Hunt candidates: sub-100 fns whose target has
   mtctr/bdnz but whose unit/fn pragma context implies O2.
+
+## 2026-07-16 (Opus, corpus researcher) — DEFINITIVE CLOSURE: single-def base/param "wants r31, loses to loop pointer/counter" = WELDED #108
+MISSION: crack the census-dominant residual where target homes a SINGLE-DEF base pointer (or a param) in
+r31 while OUR build lets a MULTI-DEF loop pointer/counter priority-pin r31, or prove no C spelling flips it.
+Tested 3 live banked instances, all pure within-class GPR permutations (T==C length):
+  - gameTextRun (textrender.c) 97.588: target base(gameTextBase)=r31, counter=r26; ours base=r30, first-loop
+    slot-walker=r31. Everything shifts down one from base.
+  - hudDrawButtons (dll_0000_gameui.c) 98.467: target base(lbl_803A87F0)=r31; ours=r30. T=C=1145.
+  - objRenderShadow2 (objprint_dolphin.c) 98.285: param obj2=r31/m=r27 in target; ours obj2=r27/m=r31.
+    Pure r27<->r31 swap. T=C=519.
+
+TESTS RUN (all reverted; baselines restored, verified twice build-idle):
+1. gameTextRun — split the reused multi-def `slot` into per-loop single-def locals (s1/s3) to drop its
+   cross-loop priority so single-def base wins r31. RESULT: 97.588 -> 95.460 (REGRESSED HARD). The target's
+   coloring RELIES on `slot` being ONE multi-def variable across loops; our C already had it right. Proves
+   the base/slot rank is NOT decided by slot's def-multiplicity in a source-controllable way.
+2. hudDrawButtons — moved `u8* base;` decl from late (line ~3424) to FIRST decl. RESULT: 98.467 -> 98.467
+   (INERT). Confirms loop-crossing values color by DEF order, decl-order inert (memory model holds).
+3. objRenderShadow2 — swapped obj2/m parameter positions in signature+fwd-decl+call site. RESULT:
+   98.285 -> 98.308 (+0.023, INCIDENTAL). The core r27<->r31 permutation on obj2/m is UNCHANGED throughout
+   the body; only the two prologue `mr` copies incidentally realigned. Param reorder is register-neutral for
+   the saved-reg POOL (validates cap #126) — it does NOT fix the homing. Reverted (param scramble degrades
+   source plausibility for a non-crack artifact gain).
+
+CORPUS POSITIVE EVIDENCE (why it's uncontrollable, not merely unsolved): the SAME single-def base lands in
+DIFFERENT saved regs across functions from IDENTICAL plain C — no special spelling exists.
+  `search_corpus.py --asm 'addi +r31,r3,0'` / `'addi +r30,r3,0'` (mp4/both_off, our compiler):
+  - THPSimple.c SimpleControl (a fixed global struct, re-materialized `lis;addi` per region): homed in r31
+    in THPSimplePreLoad's inner region AND r30 in its outer region / __THPSimpleDVDCallback — same C, same
+    global, r30 in one place r31 in another, decided purely by surrounding register pressure/priority.
+  - MP4 holds single-def bases in r31 routinely (THPSimpleOpen/LoadStop/PreLoad SimpleControl -> r31) — the
+    shape is ACHIEVABLE, it just falls out of the coloring priority, which is not a source-visible knob.
+
+MECHANISM: base and the loop pointer/counter are structurally identical in our C and the target C (verified:
+base single-def in both, `slot` multi-def in both). The ONLY difference is our Color_Select priority ranks
+the loop-resident value above the base while retail ranks base above it — a compiler-internal tiebreak in
+CIR-ref priority with no source projection. Adding casts / laundering refs / decl reorder / block-split /
+param reorder are all inert-or-regressive (2 confirmed here + extensive prior census in MEMORY.md #108).
+
+VERDICT: the "single-def base/param wants r31, multi-def loop pointer/counter steals it" residual is a
+strict instance of cap **#108 within-class GPR reg-perm** (T==C length => WELDED). Do NOT chase it further
+on any fn matching this signature: pure r30<->r31 (or r27<->r31) base/counter swap with equal instr count.
+Bank on sight. gameTextRun 97.59 / hudDrawButtons 98.47 / objRenderShadow2 98.29 are at ceiling for this
+class; their remaining gap is entirely this welded permutation (hudDrawButtons also carries a #70
+named-vs-anon @174 reloc = score-neutral, and one tail add/addi reassoc inside the same welded web).
