@@ -77,6 +77,8 @@ typedef struct IcicleState
 
 extern void memcpy(void* dst, void* src, int n);
 extern const f32 lbl_803E4BCC;
+extern const f32 lbl_803E4C34;
+extern const f32 lbl_803E4C38;
 extern f32 lbl_803E4C3C;
 extern f32 lbl_803E4C40;
 extern f32 lbl_803E4C48;
@@ -191,11 +193,11 @@ void DIM2icicle_updateBossSequenceEffects(DIMbossObject* obj, DIMbossRuntime* ru
         {
             gDim2IcicleDustFxSource.posX = randomGetRange(-0x19, 0x19);
             gDim2IcicleDustFxSource.posY = randomGetRange(-0x19, 0x19);
-            gDim2IcicleDustFxSource.posZ = -75.0f;
+            gDim2IcicleDustFxSource.posZ = lbl_803E4C34;
             gDIMbossAnimScratchBase[0] =
-                gDim2IcicleDustFxSource.posX / (gDim2IcicleDustFxSource.posZ / 2.0f);
+                gDim2IcicleDustFxSource.posX / (gDim2IcicleDustFxSource.posZ * lbl_803E4C38);
             gDIMbossAnimScratchBase[1] =
-                gDim2IcicleDustFxSource.posY / (gDim2IcicleDustFxSource.posZ / 2.0f);
+                gDim2IcicleDustFxSource.posY / (gDim2IcicleDustFxSource.posZ * lbl_803E4C38);
             gDIMbossAnimScratchBase[2] = lbl_803E4BCC;
             PSMTXMultVec(m, gDIMbossAnimScratchBase, gDIMbossAnimScratchBase);
             ObjPath_GetPointWorldPosition((GameObject*)objIndex, 0xb, &gDim2IcicleDustFxSource.posX,
@@ -734,6 +736,10 @@ IcicleEntry gDim2IcicleMeltEntries[] = {
     {220.0f, 2427}, {20.0f, 2428},  {20.0f, 2429},  {50.0f, 2430},  {150.0f, 2431}, {90.0f, 2432},
 };
 
+/* fill missing .data symbols */
+u8 lbl_80325AA0[0x18] = {0x00, 0x00, 0x01, 0x82, 0x00, 0x00, 0x01, 0x83, 0x00, 0x00, 0x01, 0x84,
+                         0x00, 0x00, 0x01, 0x85, 0x00, 0x00, 0x01, 0x86, 0x00, 0x00, 0x01, 0x87};
+
 int gDim2IcicleSequenceSfx[] = {
     0x17B,
     0x17B,
@@ -747,6 +753,3 @@ u8 gDim2LiftFarMoveChoices[60] = {0, 1, 0, 1, 0, 8, 0, 4, 0, 5, 0, 5, 0, 3, 0, 4
                                   0, 4, 0, 5, 0, 6, 0, 0, 0, 5, 0, 4, 0, 3, 0, 5, 0, 4, 0, 5,
                                   0, 6, 0, 0, 0, 4, 0, 5, 0, 4, 0, 5, 0, 4, 0, 5, 0, 6, 0, 0};
 
-/* fill missing .data symbols */
-u8 lbl_80325AA0[0x18] = {0x00, 0x00, 0x01, 0x82, 0x00, 0x00, 0x01, 0x83, 0x00, 0x00, 0x01, 0x84,
-                         0x00, 0x00, 0x01, 0x85, 0x00, 0x00, 0x01, 0x86, 0x00, 0x00, 0x01, 0x87};

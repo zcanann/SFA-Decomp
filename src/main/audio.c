@@ -156,6 +156,741 @@ u8 gAudioStreamDvdBlockPrepared[0xA0];
 #define AI_STREAM_STOP  0
 #define AI_STREAM_START 1
 
+typedef struct AudioMemHookPair
+{
+    s32 alloc;
+    s32 free;
+} AudioMemHookPair;
+
+extern char sSampleBufferSLoadedCallbackLoadError[];
+extern char sSampleDirectorySLoadedCallbackLoadError[];
+extern char sProjectDataSLoadedCallbackLoadError[];
+extern char sPoolDataSLoadedCallbackLoadError[];
+extern char sSampleBufferMLoadedCallbackLoadError[];
+extern char sSampleDirectoryMLoadedCallbackLoadError[];
+extern char sProjectDataMLoadedCallbackLoadError[];
+extern char sPoolDataMLoadedCallbackLoadError[];
+extern char sStreamsLoadedCallbackLoadError[];
+extern char sSfxTriggersLoadedCallbackLoadError[];
+extern char sMusicTriggersLoadedCallbackLoadError[];
+extern char sMusicTrackNameAmbIngaeRain[];
+extern char sMusicTrackNameAmbMoonlink[];
+extern char sMusicTrackNameAndrossTune[];
+extern char sMusicTrackNameArwingCrash[];
+extern char sMusicTrackNameCCVisit1[];
+extern char sMusicTrackNameDIMCaves[];
+extern char sMusicTrackNameTTHFight[];
+extern char sMusicTrackNameCRFBridge[];
+extern char sMusicTrackNameCRFSuspense[];
+extern char sMusicTrackNameCRFSwim[];
+extern char sMusicTrackNameCRFTreasure[];
+extern char sMusicTrackNameDarkIceLava[];
+extern char sMusicTrackNameKrazoaDocks[];
+extern char sMusicTrackNameKrazoaShrine[];
+extern char sMusicTrackNameLFVSwamp[];
+extern char sMusicTrackNameSlowMotion[];
+extern char sMusicTrackNameAmbLavapits[];
+extern char sMusicTrackNameBackOfCloudrunner[];
+extern char sMusicTrackNameBlizzard[];
+extern char sMusicTrackNameCapeclawSeaside[];
+extern char sMusicTrackNameCaveTrade[];
+extern char sMusicTrackNameCclawCaves[];
+extern char sMusicTrackNameCclawGasroom[];
+extern char sMusicTrackNameCitytombs[];
+extern char sMusicTrackNameCldRnrDungeon[];
+extern char sMusicTrackNameCldRnrTune1[];
+extern char sMusicTrackNameCldRnrWalkabout[];
+extern char sMusicTrackNameCommunicator[];
+extern char sMusicTrackNameCrunDungeon[];
+extern char sMusicTrackNameDarkIceBoss1[];
+extern char sMusicTrackNameDIMCavern[];
+extern char sMusicTrackNameDIMMines[];
+extern char sMusicTrackNameDIMSnow[];
+extern char sMusicTrackNameDIMCnBlt[];
+extern char sMusicTrackNameDownthewell[];
+extern char sMusicTrackNameEwtChase[];
+extern char sMusicTrackNameEwtLink[];
+extern char sMusicTrackNameEwtOutside[];
+extern char sMusicTrackNameGalleonBattle[];
+extern char sMusicTrackNameGalleonDocks[];
+extern char sMusicTrackNameGalleonOutside[];
+extern char sMusicTrackNameGalleonStorm[];
+extern char sMusicTrackNameGreatfoxInt[];
+extern char sMusicTrackNameGuardTheme[];
+extern char sMusicTrackNameIceWalkaround[];
+extern char sMusicTrackNameInsideGalleon[];
+extern char sMusicTrackNameInsideWarlock[];
+extern char sMusicTrackNameKpanomaly[];
+extern char sMusicTrackNameLVFTracking[];
+extern char sMusicTrackNameMammothWalk[];
+extern char sMusicTrackNameMenuPage[];
+extern char sMusicTrackNameMinecaves[];
+extern char sMusicTrackNameMmpassalien[];
+extern char sMusicTrackNameMoundMusic[];
+extern char sMusicTrackNameNewIceRace[];
+extern char sMusicTrackNameNewstorm[];
+extern char sMusicTrackNameNightjungle[];
+extern char sMusicTrackNameOptionsPage[];
+extern char sMusicTrackNamePU1Mysterious[];
+extern char sMusicTrackNamePU2Heroic[];
+extern char sMusicTrackNamePU3Adventure[];
+extern char sMusicTrackNameSeqSwaphol1[];
+extern char sMusicTrackNameSforestday[];
+extern char sMusicTrackNameStarfoxArea6[];
+extern char sMusicTrackNameStarfoxMap[];
+extern char sMusicTrackNameStarfoxRwing1[];
+extern char sMusicTrackNameSwapholNight[];
+extern char sMusicTrackNameSwapstoneCircle[];
+extern char sMusicTrackNameTeleport[];
+extern char sMusicTrackNameTestOfCombat[];
+extern char sMusicTrackNameTestOfFear[];
+extern char sMusicTrackNameTestOfMagic[];
+extern char sMusicTrackNameTestOfSacrifice[];
+extern char sMusicTrackNameTestOfSkill[];
+extern char sMusicTrackNameTestOfStrength[];
+extern char sMusicTrackNameTrexChase[];
+extern char sMusicTrackNameTrexHit[];
+extern char sMusicTrackNameTTHNight[];
+extern char sMusicTrackNameUnderwater[];
+extern char sMusicTrackNameVfpWalkabout[];
+extern char sMusicTrackNameVolcanoFp[];
+extern char sMusicTrackNameWarlockmagic[];
+extern char sMusicTrackNameWcityDay[];
+extern char sMusicTrackNameWindydocks[];
+extern char sMusicTrackNameLFVStrength[];
+extern char sMusicTrackNameWLCChase[];
+extern char sMusicTrackNameWLCCorridors[];
+extern char sMusicTrackNameWLCPuzzle[];
+extern char sMusicTrackNameWLCChambers[];
+extern char sMidiWadLoadedCallbackLoadError[];
+extern char sMidiWadPath[];
+extern u8 gSfxLoopedObjectSoundFlags[0x80];
+extern u16 gSfxLoopedObjectSoundIds[0x80];
+extern u32 gSfxLoopedObjectSoundObjects[0x80];
+
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3);
+void fn_80008EDC(u32 request);
+void fn_80008F38(void* addr, u32 dest, u32 size);
+void fn_80009008(u32 request);
+void sampleBufferSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sampleDirectorySLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void projectDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void poolDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sampleBufferMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sampleDirectoryMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void projectDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void audioLoadTriggerData(void);
+void audioSetSoundMode(int mode, u8 forceFlag);
+void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag);
+void audioStopByMask(int mask);
+void audioReset(void);
+int audioIsResetting(void);
+void audioStopAll(void);
+void audioUpdate(void);
+int audioInit(void);
+u32 audioFlagFn_8000a188(u32 mask);
+void audioFree(void* ptr);
+void* _audioAlloc(u32 size);
+int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third);
+void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void Music_PlayTrackByIndex(int index);
+int return0x64_8000A378(void);
+void streamFn_8000a380(int mask, int mode, int time);
+void Music_Trigger(int id, int arg);
+void Music_Update(void);
+s32 Music_GetActivePriority(void);
+int musicInitMidiWad(void);
+void Music_LoadChannelForTrigger(MusicTrigger* trigger);
+void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger);
+u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
+s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
+s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
+void Sfx_StopAllObjectSounds(void);
+void audioFn_8000b694(u32 value);
+void Sfx_SetObjectSoundsPaused(s32 paused);
+void Sfx_StopObjectChannel(u32 obj, u32 channel);
+void Sfx_StopFromObject(u32 obj, u32 sfxId);
+void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
+void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
+void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
+void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId);
+void Sfx_PlayFromObject(u32 obj, u16 sfxId);
+void Sfx_UpdateObjectSounds(void);
+void Sfx_InitObjectChannels(void);
+void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId);
+int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
+int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f32* outF6, f32* outF7, f32* outF8, int* outI9, int* outI10, int* outI11);
+SfxTrigger* Sfx_FindTrigger(u16 id);
+SfxObjectChannel* Sfx_AllocObjectChannel(int a, int b, double pitch, int c, int d);
+void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
+void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v);
+f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta);
+SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
+void AudioStream_StopAll(void);
+void doNothing_8000CF54(void);
+u32 AudioStream_GetMusicFadeFlagA(void);
+u32 AudioStream_GetMusicFadeFlagB(void);
+u32 AudioStream_GetCurrentId(void);
+u8 AudioStream_IsPreparing(void);
+void AudioStream_SetVolume(u8 volume);
+void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block);
+void AudioStream_StopCurrent(void);
+void fn_8000D0B4(s32 result, DVDCommandBlock* block);
+void AudioStream_CancelPrepared(void);
+void AudioStream_StartPrepared(void);
+int AudioStream_Play(int id, void (*preparedCallback)(void));
+void AudioStream_UpdateFadeTimer(void);
+void AudioStream_SetDefaultVolume(u8 volume);
+void AudioStream_Init(void);
+void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo);
+void AudioStream_PlayAddrCallback(u32 result);
+void Sfx_ClearLoopedObjectSounds(void);
+void Sfx_UpdateLoopedObjectSounds(void);
+void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
+void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
+void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
+void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
+void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
+
+static inline void Music_FreeChannel(MusicChannel* ch)
+{
+    sndSeqStop(ch->seqHandle);
+    mm_free(ch->bankData);
+    ch->field_0 = -1;
+    ch->seqHandle = -1;
+    ch->bankData = NULL;
+    ch->voiceId = 0xff;
+    ch->status = 0;
+    ch->field_12 = 0;
+    ch->field_20 = lbl_803DE560;
+}
+
+static inline int Music_IsTriggerExcluded(int id)
+{
+    switch (id)
+    {
+    case 0x2b:
+    case 0xbd:
+    case 0xeb:
+        return 1;
+    }
+    return 0;
+}
+
+static inline MusicTrigger* Music_FindTriggerById(int id)
+{
+    int i = gMusicTriggersCount;
+    MusicTrigger* trigger = gMusicTriggersData;
+    while (i != 0)
+    {
+        if ((int)trigger->id == id)
+        {
+            return trigger;
+        }
+        trigger++;
+        i--;
+    }
+    return NULL;
+}
+
+static inline MusicChannel* Music_FindFreeChannel(void)
+{
+    MusicChannel* channel = gMusicChannels;
+    int i;
+    for (i = 15; i >= 0; i--)
+    {
+        if (channel->status == 0)
+        {
+            return channel;
+        }
+        channel++;
+    }
+    return NULL;
+}
+
+static inline MusicTrackSlot* Music_FindTrackSlot(int track)
+{
+    MusicTrackSlot* slot = (MusicTrackSlot*)sMusicTrackTable;
+    int i;
+    for (i = 99; i >= 0; i--)
+    {
+        if (slot->id == track)
+        {
+            return slot;
+        }
+        slot++;
+    }
+    return NULL;
+}
+
+static inline MusicChannel* Music_FindActiveChannelForTrack(int track)
+{
+    int i;
+    MusicChannel* ch = (MusicChannel*)(int)gMusicChannels;
+    for (i = 15; i >= 0; i--)
+    {
+        if ((int)ch->field_0 == track)
+        {
+            if (ch->status == 0)
+            {
+            }
+            else if (ch->status == 2)
+            {
+            }
+            else
+            {
+                switch (ch->status)
+                {
+                case 5:
+                    break;
+                default:
+                    return ch;
+                }
+            }
+        }
+        ch++;
+    }
+    return NULL;
+}
+
+
+#pragma dont_inline on
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3)
+{
+    int idx;
+    void* buf;
+    AudioArqRequestEntry* entry;
+    idx = gAudioArqRequestIndex;
+    gAudioArqRequestIndex = idx + 1;
+    entry = &gAudioArqRequests[idx];
+    if (idx + 1 >= 0x10)
+    {
+        gAudioArqRequestIndex = 0;
+    }
+    if ((size & 0x1f) != 0)
+    {
+        size = (size | 0x1f) + 1;
+    }
+    buf = mmAlloc(size, 0, 0);
+    *outBuf = buf;
+    entry->callback = (void (*)(int, int, int))cb;
+    entry->callbackArg1 = cbArg1;
+    entry->callbackArg2 = cbArg2;
+    entry->callbackArg3 = cbArg3;
+    DCFlushRange(buf, size);
+    gAudioArqRequestDone = 0;
+    ARQPostRequest(&entry->request, 0x64, 1, 1, (u32)source, (u32)buf, size, fn_80008EDC);
+}
+#pragma dont_inline reset
+
+void fn_80008EDC(u32 request)
+{
+    int i;
+    AudioArqRequestEntry* p = (AudioArqRequestEntry*)request;
+    AudioArqRequestEntry* e = gAudioArqRequests;
+    for (i = 0; i < 16; i++)
+    {
+        if (p == e)
+        {
+            e->callback(e->callbackArg1, e->callbackArg2, e->callbackArg3);
+            return;
+        }
+        e++;
+    }
+}
+
+#pragma dont_inline on
+void fn_80008F38(void* addr, u32 dest, u32 size)
+{
+    int idx;
+    AudioArqRequestEntry* entry;
+    idx = gAudioArqRequestIndex;
+    gAudioArqRequestIndex = idx + 1;
+    entry = &gAudioArqRequests[idx];
+    if (idx + 1 >= 0x10)
+    {
+        gAudioArqRequestIndex = 0;
+    }
+    if ((size & 0x1f) != 0)
+    {
+        size = (size | 0x1f) + 1;
+    }
+    DCFlushRange(addr, size);
+    gAudioArqRequestDone = 0;
+    ARQPostRequest(&entry->request, 0x64, 0, 1, (u32)addr, dest, size, fn_80009008);
+    while (gAudioArqRequestDone == 0)
+    {
+    }
+}
+#pragma dont_inline reset
+
+void fn_80009008(u32 request)
+{
+    (void)request;
+    gAudioArqRequestDone = 1;
+}
+
+void sampleBufferSLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+{
+    u32 saved;
+    if (status < 0)
+    {
+        OSReport(sSampleBufferSLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_SAMPLE_BUF;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_SAMPLE_BUF;
+    }
+}
+
+void sampleDirectorySLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+{
+    u32 saved;
+    if (status < 0)
+    {
+        OSReport(sSampleDirectorySLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_SAMPLE_DIR;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_SAMPLE_DIR;
+    }
+}
+
+void projectDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+{
+    u32 saved;
+    if (status < 0)
+    {
+        OSReport(sProjectDataSLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_PROJECT;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_PROJECT;
+    }
+}
+
+void poolDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+{
+    u32 saved;
+    if (status < 0)
+    {
+        OSReport(sPoolDataSLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_POOL;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_POOL;
+    }
+}
+
+void sampleBufferMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+{
+    u32 saved;
+    if (status < 0)
+    {
+        OSReport(sSampleBufferMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_SAMPLE_BUF;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_SAMPLE_BUF;
+    }
+}
+
+void sampleDirectoryMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+{
+    u32 saved;
+    if (status < 0)
+    {
+        OSReport(sSampleDirectoryMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_SAMPLE_DIR;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_SAMPLE_DIR;
+    }
+}
+
+void projectDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+{
+    u32 saved;
+    if (status < 0)
+    {
+        OSReport(sProjectDataMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_PROJECT;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_PROJECT;
+    }
+}
+
+static inline SfxObjectChannel* Sfx_FindFreeObjectChannel(void)
+{
+    SfxObjectChannel* ch = (SfxObjectChannel*)(int)gSfxObjectChannels;
+    s32 i;
+    for (i = SFX_OBJECT_CHANNEL_COUNT - 1; i >= 0; i--)
+    {
+        if (ch->handle == (u32)-1)
+        {
+            return ch;
+        }
+        ch++;
+    }
+    return NULL;
+}
+
+SfxObjectChannel* Sfx_AllocObjectChannel(int a, int b, double pitch, int c, int d);
+
+void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+{
+    u32 saved;
+    if (status < 0)
+    {
+        OSReport(sPoolDataMLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_POOL;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_POOL;
+    }
+}
+
+#pragma opt_propagation off
+void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+{
+    u32 saved;
+    if (status < 0)
+    {
+        OSReport(sStreamsLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    }
+    else
+    {
+        StreamEntry* s;
+        int count;
+        int i;
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        {
+            u32 m;
+            u32 f2 = gAudioPendingLoadFlags;
+            m = ~AUDIO_LOAD_STREAMS;
+            gAudioPendingLoadFlags = f2 & m;
+        }
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_STREAMS;
+        s = gStreamsData;
+        count = gStreamsCount;
+        for (i = count; i != 0; i--)
+        {
+            s->flag = 0;
+            s++;
+        }
+    }
+}
+
+#pragma opt_propagation reset
+
+void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+{
+    u32 saved;
+    if (status < 0)
+    {
+        OSReport(sSfxTriggersLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_SFX_TRIGGERS;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_SFX_TRIGGERS;
+    }
+}
+
+void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+{
+    u32 saved;
+    if (status < 0)
+    {
+        OSReport(sMusicTriggersLoadedCallbackLoadError);
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        saved = mmSetFreeDelay(0);
+        mm_free(fileInfo);
+        mmSetFreeDelay(saved);
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_MUSIC_TRIGGERS;
+        gAudioCompletedLoadFlags |= AUDIO_LOAD_MUSIC_TRIGGERS;
+    }
+}
+
+#pragma dont_inline on
+void audioLoadTriggerData(void)
+{
+    char* base = sSampleBufferSLoadedCallbackLoadError;
+    int info;
+    int delay;
+    if (gMusicTriggersData != NULL)
+    {
+        delay = mmSetFreeDelay(0);
+        mm_free(gMusicTriggersData);
+        mm_free(gSfxTriggersData);
+        mm_free(gStreamsData);
+        mmSetFreeDelay(delay);
+    }
+    gAudioPendingLoadFlags |= AUDIO_LOAD_MUSIC_TRIGGERS;
+    gMusicTriggersData = loadFileByPathAsync(base + 0x1b4, &info, 1, musicTriggersLoadedCallback);
+    gMusicTriggersCount = (u32)info >> 4;
+    gAudioPendingLoadFlags |= AUDIO_LOAD_SFX_TRIGGERS;
+    gSfxTriggersData = loadFileByPathAsync(base + 0x1cc, &info, 1, sfxTriggersLoadedCallback);
+    gSfxTriggersCount = (u32)info >> 5;
+    gAudioPendingLoadFlags |= AUDIO_LOAD_STREAMS;
+    gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, streamsLoadedCallback);
+    gStreamsCount = info / sizeof(StreamEntry);
+}
+#pragma dont_inline reset
+
+void audioSetSoundMode(int mode, u8 forceFlag)
+{
+    if (forceFlag == 0)
+    {
+        if (OSGetSoundMode() != 1)
+        {
+            return;
+        }
+    }
+    if ((u8)mode != gAudioSoundMode)
+    {
+        switch ((u8)mode)
+        {
+        case 0:
+            sndOutputMode(1);
+            break;
+        case 1:
+            sndOutputMode(2);
+            break;
+        case 2:
+            sndOutputMode(0);
+            break;
+        case 3:
+            sndOutputMode(1);
+            break;
+        }
+    }
+    if ((((u8)mode == 2) && (gAudioSoundMode != 2)) || (((u8)mode != 2) && (gAudioSoundMode == 2)))
+    {
+        if ((u8)mode == 2)
+        {
+            OSSetSoundMode(0);
+        }
+        else
+        {
+            OSSetSoundMode(1);
+        }
+    }
+    gAudioSoundMode = mode;
+}
+
+void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag)
+{
+    if (musicFlag != 0 || fxFlag != 0)
+    {
+        ((void (*)(int, int, u8, u8))sndMasterVolume)(volume, time, musicFlag, fxFlag);
+    }
+    if (streamFlag != 0)
+    {
+        ((void (*)(int))AudioStream_SetVolume)(volume);
+        ((void (*)(int))AudioStream_SetDefaultVolume)(volume);
+    }
+}
+
 void audioStopByMask(int mask)
 {
     if ((mask & 4) != 0)
@@ -215,6 +950,150 @@ void audioUpdate(void)
     AudioStream_UpdateFadeTimer();
 }
 
+int audioInit(void)
+{
+    char* base = sSampleBufferSLoadedCallbackLoadError;
+    SalHooks hooks;
+    int reverbWork;
+    int delay;
+    int v;
+
+    *(AudioMemHookPair*)&hooks = *(AudioMemHookPair*)&gAudioMemAllocHook;
+    if (!gAudioInitStarted)
+    {
+        gAudioInitStarted = 1;
+        gAudioPendingLoadFlags = 0;
+        gAudioCompletedLoadFlags = 0;
+        testAndSet_onlyUseHeap3(1);
+        if (gAudioHardwareInitialized)
+        {
+            return 1;
+        }
+        gAudioHardwareInitialized = 1;
+        ARInit(gAudioAramBlock, 0xa);
+        ARQInit();
+        AIInit(0);
+        AISetDSPSampleRate(0);
+        sndSetHooks(&hooks);
+        sndInit(0x30, 0x30, 0x18, 1, 1, (void*)0x1000000);
+        sndSetMaxVoices(0x30, 0x18);
+        if (OSGetSoundMode() == 0)
+        {
+            gAudioSoundMode = 2;
+            sndOutputMode(0);
+        }
+        else
+        {
+            gAudioSoundMode = 0;
+            sndOutputMode(1);
+        }
+        gAudioReverbSettings[0x13c] = 0;
+        *(f32*)&gAudioReverbSettings[0x148] = lbl_803DE550;
+        *(f32*)&gAudioReverbSettings[0x150] = lbl_803DE554;
+        *(f32*)&gAudioReverbSettings[0x14c] = lbl_803DE558;
+        *(f32*)&gAudioReverbSettings[0x140] = lbl_803DE558;
+        *(f32*)&gAudioReverbSettings[0x144] = lbl_803DE55C;
+        sndAuxCallbackUpdateSettingsReverbSTD((ReverbState*)gAudioReverbSettings);
+        reverbWork = 0;
+        sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, gAudioReverbSettings, 0xff, 0, 0, 0, 0xff,
+                                     (void*)reverbWork);
+        {
+            if (!sndIsInstalledU32())
+            {
+                OSReport(base + 0x1f8);
+                return 0xff;
+            }
+        }
+        sndVolume(0x7f, 0, 0xff);
+        sndMasterVolume(0x7f, 0x64, 1, 1);
+        Sfx_InitObjectChannels();
+        AudioStream_Init();
+        audioLoadTriggerData();
+        testAndSet_onlyUseHeap3(1);
+        gAudioPendingLoadFlags |= AUDIO_LOAD_M_POOL;
+        gAudioStarfoxMPoolDataHandle =
+            loadFileByPathAsync(base + 0x228, NULL, 0, poolDataMLoadedCallback);
+        gAudioPendingLoadFlags |= AUDIO_LOAD_M_PROJECT;
+        gAudioStarfoxMProjectDataHandle =
+            loadFileByPathAsync(base + 0x23c, NULL, 0, projectDataMLoadedCallback);
+        gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_DIR;
+        gAudioStarfoxMSampleDirectoryHandle =
+            loadFileByPathAsync(base + 0x250, NULL, 0, sampleDirectoryMLoadedCallback);
+        testAndSet_onlyUseHeap3(0);
+        gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_BUF;
+        gAudioStarfoxMSampleBufferHandle =
+            loadFileByPathAsync(base + 0x264, NULL, 0, sampleBufferMLoadedCallback);
+        if (gAudioStarfoxMPoolDataHandle == NULL || gAudioStarfoxMProjectDataHandle == NULL ||
+            gAudioStarfoxMSampleDirectoryHandle == NULL || gAudioStarfoxMSampleBufferHandle == NULL)
+        {
+            return 0xff;
+        }
+        testAndSet_onlyUseHeap3(0);
+    }
+    if (!gAudioMusicGroupReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_M_PROJECT) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_M_SAMPLE_DIR) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_SAMPLE_BUF))
+    {
+        sndPushGroup(gAudioStarfoxMProjectDataHandle, 0, gAudioStarfoxMSampleBufferHandle,
+                     gAudioStarfoxMSampleDirectoryHandle, gAudioStarfoxMPoolDataHandle);
+        delay = mmSetFreeDelay(0);
+        mm_free(gAudioStarfoxMSampleBufferHandle);
+        mmSetFreeDelay(delay);
+        gAudioMusicGroupReady = 1;
+        testAndSet_onlyUseHeap3(1);
+        gAudioPendingLoadFlags |= AUDIO_LOAD_S_POOL;
+        gAudioStarfoxSPoolDataHandle =
+            loadFileByPathAsync(base + 0x278, NULL, 0, poolDataSLoadedCallback);
+        gAudioPendingLoadFlags |= AUDIO_LOAD_S_PROJECT;
+        gAudioStarfoxSProjectDataHandle =
+            loadFileByPathAsync(base + 0x28c, NULL, 0, projectDataSLoadedCallback);
+        gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_DIR;
+        gAudioStarfoxSSampleDirectoryHandle =
+            loadFileByPathAsync(base + 0x2a0, NULL, 0, sampleDirectorySLoadedCallback);
+        testAndSet_onlyUseHeap3(0);
+        gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_BUF;
+        gAudioStarfoxSSampleBufferHandle =
+            loadFileByPathAsync(base + 0x2b4, NULL, 0, sampleBufferSLoadedCallback);
+        if (gAudioStarfoxSPoolDataHandle == NULL || gAudioStarfoxSProjectDataHandle == NULL ||
+            gAudioStarfoxSSampleDirectoryHandle == NULL || gAudioStarfoxSSampleBufferHandle == NULL)
+        {
+            return 0xff;
+        }
+    }
+    if (!gAudioSfxGroupsReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_POOL) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_S_PROJECT) && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_POOL) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_S_SAMPLE_DIR) && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_SAMPLE_BUF))
+    {
+        for (v = 1; v <= 0x37; v++)
+        {
+            if (sndPushGroup(gAudioStarfoxSProjectDataHandle, v, gAudioStarfoxSSampleBufferHandle,
+                             gAudioStarfoxSSampleDirectoryHandle, gAudioStarfoxSPoolDataHandle) == 0)
+            {
+                OSReport(base + 0x2c8, v);
+            }
+        }
+        delay = mmSetFreeDelay(0);
+        mm_free(gAudioStarfoxSSampleBufferHandle);
+        mmSetFreeDelay(delay);
+        gAudioSfxGroupsReady = 1;
+    }
+    if (!gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady)
+    {
+        gAudioReady = musicInitMidiWadU8();
+    }
+    if (gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady &&
+
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_MUSIC_TRIGGERS) &&
+        (gAudioCompletedLoadFlags & AUDIO_LOAD_SFX_TRIGGERS) && (gAudioCompletedLoadFlags & AUDIO_LOAD_STREAMS))
+    {
+        gAudioResetting = 0;
+        gAudioManagedChannelMask = 0x1f;
+        gAudioActiveChannelMask = 0;
+        return 1;
+    }
+    return 0;
+}
+
 #pragma dont_inline on
 u32 audioFlagFn_8000a188(u32 mask)
 {
@@ -237,1561 +1116,6 @@ void* _audioAlloc(u32 size)
     return mmAlloc(size, 0xb, 0);
 }
 
-void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger)
-{
-    MusicSeqStartParams params = gMusicSeqStartParamsDefault;
-
-    if (channel != NULL)
-    {
-        if (channel->status == 5)
-        {
-            mm_free(channel->bankData);
-            channel->field_0 = -1;
-            channel->seqHandle = -1;
-            channel->bankData = NULL;
-            channel->voiceId = 0xff;
-            channel->status = 0;
-            channel->field_12 = 0;
-            channel->field_20 = lbl_803DE560;
-        }
-        else
-        {
-            int seqHandle;
-            int voice;
-            if (trigger->field_6 != -1)
-            {
-                params.field_c = trigger->field_6;
-                params.flags |= 2;
-            }
-            if (trigger->field_c != -1)
-            {
-                voice = trigger->field_c;
-            }
-            else
-            {
-                voice = 0x7f;
-            }
-            params.field_10 = 0;
-            params.field_e = 0;
-            params.flags |= 4;
-            seqHandle = sndSeqPlayEx(bank->field_2, trigger->field_2, channel->bankData, &params, 0);
-            sndSeqVolume(voice, 0x1f4, seqHandle, 0);
-            channel->status = 1;
-            channel->seqHandle = seqHandle;
-            channel->voiceId = synthResolveHandle(seqHandle);
-        }
-    }
-}
-
-int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f32* outF6, f32* outF7, f32* outF8,
-                          int* outI9, int* outI10, int* outI11)
-{
-    int idx;
-    int selector;
-
-    if (trigger == NULL || trigger->f_count == 0)
-    {
-        return 0;
-    }
-
-    selector = randomGetRange(1, trigger->selectRange);
-    if (trigger->id == 0xab)
-    {
-        if (trigger->f_curIdx == 0)
-        {
-            trigger->f_curIdx = 1;
-        }
-        else
-        {
-            trigger->f_curIdx = 0;
-        }
-        idx = trigger->f_curIdx;
-    }
-    else
-    {
-        idx = 0;
-        while (selector > trigger->weights[idx])
-        {
-            selector -= trigger->weights[idx];
-            idx++;
-        }
-        if (trigger->f_curIdx == idx)
-        {
-            idx++;
-            if (idx >= trigger->f_count)
-            {
-                idx = 0;
-            }
-        }
-    }
-    trigger->f_curIdx = idx;
-
-    *outSfxId = trigger->sfxIds[idx];
-    if (*outSfxId == 0)
-    {
-        return 0;
-    }
-
-    {
-        int hi;
-        int vr = trigger->volRand;
-        if ((u32)vr != 0)
-        {
-            hi = trigger->volBase + randomGetRange(0, vr);
-            *outVol = hi - randomGetRange(0, vr);
-        }
-        else
-        {
-            *outVol = trigger->volBase;
-        }
-    }
-    {
-        int pr = trigger->pitchRand;
-        if ((u32)pr != 0)
-        {
-            int hi = trigger->pitchBase + randomGetRange(0, pr);
-            *outF6 = (f32)(hi - randomGetRange(0, pr));
-        }
-        else
-        {
-            *outF6 = (f32)(u32)trigger->pitchBase;
-        }
-    }
-    *outF7 = (f32)(u32)trigger->nearDistanceRaw;
-    *outF8 = (f32)(u32)trigger->farDistanceRaw;
-    *outI9 = gSfxTriggerExtraTable[trigger->e_tableIdx];
-    *outI10 = trigger->e_bit0;
-    *outI11 = trigger->e_bit3;
-    return 1;
-}
-
-#pragma dont_inline on
-SfxTrigger* Sfx_FindTrigger(u16 id)
-{
-    SfxTrigger* low = (SfxTrigger*)gSfxTriggersData;
-    SfxTrigger* high = (SfxTrigger*)gSfxTriggersData + gSfxTriggersCount;
-    int key = id;
-    SfxTriggerCacheEntry* c = &gSfxTriggerLookupCache[key & 0xf];
-
-    if (c->key == key)
-    {
-        return (SfxTrigger*)gSfxTriggersData + c->index;
-    }
-    while (low < high)
-    {
-        SfxTrigger* mid = low + (high - low) / 2;
-        if (mid->id > key)
-        {
-            high = mid;
-        }
-        else if (mid->id < key)
-        {
-            low = mid + 1;
-        }
-        else
-        {
-            c->key = id;
-            c->index = mid - (SfxTrigger*)gSfxTriggersData;
-            return mid;
-        }
-    }
-    return NULL;
-}
-#pragma dont_inline reset
-
-static inline SfxObjectChannel* Sfx_FindFreeObjectChannel(void)
-{
-    SfxObjectChannel* ch = (SfxObjectChannel*)(int)gSfxObjectChannels;
-    s32 i;
-    for (i = SFX_OBJECT_CHANNEL_COUNT - 1; i >= 0; i--)
-    {
-        if (ch->handle == (u32)-1)
-        {
-            return ch;
-        }
-        ch++;
-    }
-    return NULL;
-}
-
-SfxObjectChannel* Sfx_AllocObjectChannel(int a, int b, double pitch, int c, int d);
-
-void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v)
-{
-    f32 ra;
-    f32 x = v[0];
-    f32 y = v[1];
-    f32 z = v[2];
-    f32 ca;
-    f32 rb;
-    f32 cb;
-    f32 rc;
-    f32 cc;
-    f32 sa;
-    f32 sb;
-    f32 sc;
-    f32 t0, t1, A, B, p;
-
-    ra = gAudioPi * angX / gAudioAngleToRadDivisor;
-    ca = mathSinf(ra);
-    rb = gAudioPi * angY / gAudioAngleToRadDivisor;
-    cb = mathSinf(rb);
-    rc = gAudioPi * angZ / gAudioAngleToRadDivisor;
-    cc = mathSinf(rc);
-    sa = mathCosf(ra);
-    sb = mathCosf(rb);
-    sc = mathCosf(rc);
-
-    t0 = x * ca;
-    t1 = z * ca;
-    A = x * sa;
-    p = z * sa;
-    A = A + t1;
-    p = p - t0;
-    t0 = y * cb;
-    t1 = p * cb;
-    B = y * sb;
-    p = p * sb;
-    B = B - t1;
-    p = p + t0;
-    t0 = A * cc;
-    t1 = B * cc;
-    A = A * sc;
-    B = B * sc;
-    A = A - t1;
-    B = B + t0;
-
-    v[0] = A;
-    v[1] = B;
-    v[2] = p;
-}
-
-#pragma dont_inline on
-#pragma opt_common_subs off
-f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
-{
-    f32 v[3];
-    f32 t;
-    double t2;
-    f32* listener;
-    void* player = Obj_GetPlayerObject();
-    void* slot = Camera_GetCurrentViewSlot();
-    int seqNo = getCurSeqNoInt();
-
-    if (player != NULL && seqNo == 0)
-    {
-        listener = &((GameObject*)player)->anim.worldPosX;
-    }
-    else
-    {
-        if (slot == NULL)
-        {
-            goto retDefault;
-        }
-        if (player != NULL)
-        {
-            PSVECSubtract((f32*)((u8*)slot + 0x44), &((GameObject*)player)->anim.worldPosX, v);
-            t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
-            if (lbl_803DE5C0 < (t > lbl_803DE5C8 ? t : lbl_803DE5C8))
-            {
-                t2 = lbl_803DE5C0;
-            }
-            else
-            {
-                t2 = (t > lbl_803DE5C8 ? t : lbl_803DE5C8);
-            }
-            PSVECScale(v, v, t2);
-            PSVECAdd(&((GameObject*)player)->anim.worldPosX, v, v);
-            listener = v;
-        }
-        else
-        {
-            listener = (f32*)((u8*)slot + 0x44);
-        }
-        goto common;
-    retDefault:
-        return lbl_803DE570;
-    }
-common:
-    PSVECSubtract(listener, soundPos, outDelta);
-    return PSVECMag(outDelta);
-}
-#pragma opt_common_subs reset
-#pragma dont_inline reset
-
-void AudioStream_StopAll(void)
-{
-    if (gAudioStreamDvdState != 0)
-    {
-        AISetStreamVolLeft(0);
-        AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(&((AudioDvdStreamContext*)gAudioStreamDvdBlockPrepared)->preparedCommand,
-                                 fn_8000D0B4) == 0)
-        {
-            OSReport(sDvdCancelStreamWarning);
-        }
-        gAudioStreamPreparedId = 0;
-        gAudioStreamPreparingId = 0;
-        gAudioStreamCurrentId = 0;
-        gAudioStreamStartWhenPrepared = 0;
-        gAudioActiveChannelMask = 0;
-        gAudioStreamMusicFadeFlagB = 0;
-        gAudioStreamMusicFadeFlagA = 0;
-    }
-
-    if (gAudioStreamCurrentId != 0)
-    {
-        AISetStreamVolLeft(0);
-        AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync((DVDCommandBlock*)gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
-        {
-            OSReport(sDvdCancelStreamWarning);
-            gAudioStreamPlaying = 0;
-        }
-    }
-    else
-    {
-        gAudioStreamPlaying = 0;
-    }
-
-    gAudioStreamPreparedId = 0;
-    gAudioStreamPreparingId = 0;
-    gAudioStreamCurrentId = 0;
-    gAudioStreamStartWhenPrepared = 0;
-    gAudioActiveChannelMask = 0;
-    gAudioStreamMusicFadeFlagB = 0;
-    gAudioStreamMusicFadeFlagA = 0;
-}
-
-#pragma dont_inline on
-u32 AudioStream_GetMusicFadeFlagA(void)
-{
-    if (gAudioStreamPos > gAudioStreamEndPos)
-    {
-        return 0;
-    }
-    return gAudioStreamMusicFadeFlagA;
-}
-#pragma dont_inline reset
-
-#pragma dont_inline on
-u32 AudioStream_GetMusicFadeFlagB(void)
-{
-    if (gAudioStreamPos > gAudioStreamEndPos)
-    {
-        return 0;
-    }
-    return gAudioStreamMusicFadeFlagB;
-}
-#pragma dont_inline reset
-
-u32 AudioStream_GetCurrentId(void)
-{
-    return gAudioStreamCurrentId;
-}
-
-u8 AudioStream_IsPreparing(void)
-{
-    return gAudioStreamDvdState;
-}
-
-#pragma dont_inline on
-void AudioStream_SetVolume(u8 volume)
-{
-    gAudioStreamVolumeLeft = volume;
-    gAudioStreamVolumeRight = volume;
-    AISetStreamVolLeft(volume);
-    AISetStreamVolRight(volume);
-}
-#pragma dont_inline reset
-
-void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block)
-{
-    (void)block;
-    if (result == 0)
-    {
-        AISetStreamPlayState(AI_STREAM_STOP);
-    }
-    gAudioActiveChannelMask = 0;
-    gAudioStreamPlaying = 0;
-}
-
-void AudioStream_StopCurrent(void)
-{
-    if (gAudioStreamCurrentId != 0)
-    {
-        AISetStreamVolLeft(0);
-        AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync((DVDCommandBlock*)gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
-        {
-            OSReport(sDvdCancelStreamWarning);
-            gAudioStreamPlaying = 0;
-        }
-        gAudioStreamPreparedId = 0;
-        gAudioStreamPreparingId = 0;
-        gAudioStreamCurrentId = 0;
-        gAudioStreamStartWhenPrepared = 0;
-        gAudioActiveChannelMask = 0;
-        gAudioStreamMusicFadeFlagB = 0;
-        gAudioStreamMusicFadeFlagA = 0;
-    }
-    else
-    {
-        gAudioStreamPlaying = 0;
-    }
-}
-
-void fn_8000D0B4(s32 result, DVDCommandBlock* block)
-{
-    (void)result;
-    (void)block;
-    gAudioStreamDvdState = 0;
-}
-
-void AudioStream_CancelPrepared(void)
-{
-    AISetStreamVolLeft(0);
-    AISetStreamVolRight(0);
-    if (DVDCancelStreamAsync(&((AudioDvdStreamContext*)gAudioStreamDvdBlockPrepared)->preparedCommand,
-                             fn_8000D0B4) == 0)
-    {
-        OSReport(sDvdCancelStreamWarning);
-    }
-    gAudioStreamPreparedId = 0;
-    gAudioStreamPreparingId = 0;
-    gAudioStreamCurrentId = 0;
-    gAudioStreamStartWhenPrepared = 0;
-    gAudioActiveChannelMask = 0;
-    gAudioStreamMusicFadeFlagB = 0;
-    gAudioStreamMusicFadeFlagA = 0;
-}
-
-void AudioStream_StartPrepared(void)
-{
-    if (gAudioStreamPreparingId != 0)
-    {
-        gAudioStreamStartWhenPrepared = 1;
-    }
-    else if (gAudioStreamPreparedId != 0)
-    {
-        if (getGameState() == 1)
-        {
-            if (getGameState() == 1)
-            {
-                AISetStreamVolLeft(gAudioStreamVolumeLeft);
-                AISetStreamVolRight(gAudioStreamVolumeRight);
-                AISetStreamPlayState(AI_STREAM_START);
-                gAudioStreamPlaying = 1;
-                gAudioStreamPos = lbl_803DE5D0;
-                gAudioStreamCurrentId = gAudioStreamPreparedId;
-                gAudioStreamPreparedId = 0;
-                gAudioStreamPreparingId = 0;
-                gAudioStreamStartWhenPrepared = 0;
-            }
-            else
-            {
-                gAudioStreamPlaying = 0;
-            }
-        }
-    }
-    else if (gAudioStreamCurrentId == 0)
-    {
-        gAudioStreamMusicFadeFlagB = 0;
-        gAudioStreamMusicFadeFlagA = 0;
-        gAudioStreamStartWhenPrepared = 0;
-        gAudioActiveChannelMask = 0;
-    }
-}
-
-void AudioStream_UpdateFadeTimer(void)
-{
-    if (gAudioStreamCurrentId != 0)
-    {
-        f32 position = gAudioStreamPos;
-        gAudioStreamPos = position + (timeDelta / gAudioStreamFramesPerSecond);
-    }
-    else
-    {
-        gAudioStreamPos = lbl_803DE5D0;
-    }
-}
-
-void AudioStream_SetDefaultVolume(u8 volume)
-{
-    gAudioStreamDefaultVolume = volume;
-}
-
-#pragma dont_inline on
-void AudioStream_Init(void)
-{
-    AISetStreamVolLeft(0);
-    AISetStreamVolRight(0);
-    gAudioStreamCurrentId = 0;
-    gAudioStreamMusicFadeFlagA = 0;
-    gAudioStreamMusicFadeFlagB = 0;
-    gAudioStreamDefaultVolume = 0x7f;
-    gAudioStreamStartWhenPrepared = 0;
-}
-#pragma dont_inline reset
-
-void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo)
-{
-    (void)result;
-    (void)fileInfo;
-    if (getGameState() != 1)
-    {
-        gAudioStreamDvdState = 0;
-        return;
-    }
-    gAudioStreamPreparedId = gAudioStreamPreparingId;
-    gAudioStreamPreparingId = 0;
-    if (gAudioStreamStartWhenPrepared != 0)
-    {
-        if (getGameState() == 1)
-        {
-            AISetStreamVolLeft(gAudioStreamVolumeLeft);
-            AISetStreamVolRight(gAudioStreamVolumeRight);
-            AISetStreamPlayState(AI_STREAM_START);
-            gAudioStreamPlaying = 1;
-            gAudioStreamPos = lbl_803DE5D0;
-            gAudioStreamCurrentId = gAudioStreamPreparedId;
-            gAudioStreamPreparedId = 0;
-            gAudioStreamPreparingId = 0;
-            gAudioStreamStartWhenPrepared = 0;
-        }
-        else
-        {
-            gAudioStreamPlaying = 0;
-        }
-    }
-    else if (gAudioStreamPreparedCallback != NULL)
-    {
-        gAudioStreamPreparedCallback();
-    }
-    gAudioStreamDvdState = 0;
-}
-
-void AudioStream_PlayAddrCallback(u32 result)
-{
-    if ((result & 0xff) == 0)
-    {
-        gAudioStreamPlaying = 0;
-        if (gAudioStreamCurrentId != 0)
-        {
-            AISetStreamVolLeft(0);
-            AISetStreamVolRight(0);
-            gAudioStreamCurrentId = 0;
-            gAudioActiveChannelMask = 0;
-            AISetStreamPlayState(AI_STREAM_STOP);
-            gAudioStreamMusicFadeFlagB = 0;
-            gAudioStreamMusicFadeFlagA = 0;
-        }
-    }
-    gAudioStreamPlayAddrCallbackResult = result;
-    gAudioStreamPlayAddrCallbackDone = 1;
-}
-
-void Sfx_ClearLoopedObjectSounds(void)
-{
-    gSfxLoopedObjectSoundCount = 0;
-}
-
-void Sfx_UpdateLoopedObjectSounds(void)
-{
-    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
-    u8* fp;
-    u32* op;
-    u16* ip;
-    u16 index;
-    s16 i;
-    int index2;
-    u32 obj;
-    int removeSound;
-    u16 sz;
-
-    i = (s16)(gSfxLoopedObjectSoundCount - 1);
-    fp = table->flags + i;
-    op = (u32*)table->objects + i;
-    ip = (u16*)table->ids + i;
-    for (; i >= 0; i--)
-    {
-        removeSound = 0;
-        if (((*fp & SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE) != 0) && ((*fp & SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN) == 0))
-        {
-            removeSound = 1;
-        }
-        obj = *op;
-        if (((obj != 0) && ((((GameObject*)obj)->objectFlags & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)) || removeSound)
-        {
-            Sfx_StopFromObject(obj, *ip);
-            gSfxLoopedObjectSoundCount--;
-            sz = (u16)((gSfxLoopedObjectSoundCount - (index = i)) << 2);
-            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);
-            memmove((u16*)table->ids + index, (u16*)table->ids + index2,
-                    (u16)((gSfxLoopedObjectSoundCount - index) << 1));
-            memmove(table->flags + index, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - index));
-        }
-        else
-        {
-            *fp &= ~SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
-        }
-        fp--;
-        op--;
-        ip--;
-    }
-
-    {
-        s16 i2;
-        u16* ip2;
-        u32* op2;
-        for (i2 = 0, ip2 = table->ids, op2 = table->objects; i2 < gSfxLoopedObjectSoundCount; i2++)
-        {
-            if (Sfx_IsPlayingFromObject(*op2, *ip2) == 0)
-            {
-                Sfx_PlayFromObject(*op2, *ip2);
-            }
-            ip2++;
-            op2++;
-        }
-    }
-}
-
-#pragma opt_loop_invariants reset
-#pragma opt_strength_reduction reset
-#pragma opt_loop_invariants reset
-#pragma opt_strength_reduction reset
-void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
-{
-    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
-    u8* flags = table->flags;
-    s32 count;
-    u16 sameSfxCount;
-    u16* ip;
-    u32* op;
-    u32* objects;
-    u16* ids;
-    s16 j;
-    int found;
-    s16 i;
-
-    count = gSfxLoopedObjectSoundCount;
-    sameSfxCount = 0;
-    i = 0;
-    ids = table->ids;
-    ip = ids;
-    objects = table->objects;
-    op = objects;
-    for (; i < count; i++)
-    {
-        if (sfxId == *ip)
-        {
-            if (limit != 0)
-            {
-                sameSfxCount++;
-            }
-            if (*op == obj)
-            {
-                flags[i] |= SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
-                return;
-            }
-        }
-        ip++;
-        op++;
-    }
-
-    if (sameSfxCount <= limit)
-    {
-        for (j = 0; j < count; j++)
-        {
-            if ((*objects == obj) && (sfxId == *ids))
-            {
-                found = 1;
-                goto checked;
-            }
-            objects++;
-            ids++;
-        }
-        found = 0;
-    checked:
-        if ((found == 0) && (count != sizeof(table->flags)))
-        {
-            table->objects[count] = obj;
-            table->ids[count] = sfxId;
-            flags[count] = 0;
-            gSfxLoopedObjectSoundCount++;
-            Sfx_PlayFromObject(obj, sfxId);
-        }
-    }
-
-    if ((u32)count != gSfxLoopedObjectSoundCount)
-    {
-        flags[count] |= SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
-    }
-}
-
-void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
-{
-    Sfx_KeepAliveLoopedObjectSoundLimited(obj, sfxId, 0);
-}
-
-void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
-{
-    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
-    int index;
-    int index2;
-    s16 i;
-    u32* op;
-    u16 sz;
-
-    i = (s16)(gSfxLoopedObjectSoundCount - 1);
-    op = (u32*)table + i;
-    op += 0x60;
-    for (; i >= 0; i--)
-    {
-        if (*op == obj)
-        {
-            Sfx_StopFromObject(obj, table->ids[i]);
-            gSfxLoopedObjectSoundCount--;
-            sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
-            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);
-            memmove((u16*)table->ids + index, (u16*)table->ids + index2,
-                    (u16)((gSfxLoopedObjectSoundCount - index) << 1));
-            memmove(table->flags + index, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - index));
-            return;
-        }
-        op--;
-    }
-}
-
-void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
-{
-    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
-    u16 sfx16;
-    u32* op;
-    u16* ip;
-    s16 i;
-    int index;
-    int index2;
-    u16 sz;
-
-    i = (s16)(gSfxLoopedObjectSoundCount - 1);
-    op = (u32*)table->objects + i;
-    ip = (u16*)table->ids + i;
-    sfx16 = sfxId;
-    for (; i >= 0; i--)
-    {
-        if (*op == obj && sfx16 == *ip)
-        {
-            gSfxLoopedObjectSoundCount--;
-            sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
-            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);
-            memmove((u16*)table->ids + index, (u16*)table->ids + index2,
-                    (u16)((gSfxLoopedObjectSoundCount - index) << 1));
-            memmove(table->flags + index, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - index));
-            Sfx_StopFromObject(obj, sfxId);
-            return;
-        }
-        op--;
-        ip--;
-    }
-}
-
-void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
-{
-    SfxLoopedObjectSoundTable* table;
-    s16 i;
-    u32* objectIt;
-    u16* idIt;
-    s32 count;
-    int found;
-
-    table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
-    i = 0;
-    objectIt = table->objects;
-    idIt = table->ids;
-    count = gSfxLoopedObjectSoundCount;
-    for (; i < count; i++)
-    {
-        if ((*objectIt == obj) && (sfxId == *idIt))
-        {
-            found = 1;
-            goto checked;
-        }
-        objectIt++;
-        idIt++;
-    }
-    found = 0;
-checked:
-    if ((found == 0) && (count != sizeof(table->flags)))
-    {
-        table->objects[count] = obj;
-        table->ids[count] = sfxId;
-        table->flags[count] = 0;
-        gSfxLoopedObjectSoundCount++;
-        Sfx_PlayFromObject(obj, sfxId);
-    }
-}
-
-int return0x64_8000A378(void)
-{
-    return 0x64;
-}
-
-void doNothing_8000CF54(void)
-{
-}
-
-#pragma dont_inline on
-s32 Music_GetActivePriority(void)
-{
-    return gMusicActivePriority;
-}
-#pragma dont_inline reset
-
-s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel)
-{
-    SfxObjectChannel* objectChannel;
-
-    if (((u8)channel == 0) || (obj == 0))
-    {
-        objectChannel = NULL;
-    }
-    else
-    {
-        objectChannel = Sfx_FindObjectChannel(obj, channel, 0, 0);
-    }
-
-    if (objectChannel != NULL)
-    {
-        return 1;
-    }
-    return 0;
-}
-
-s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
-{
-    SfxObjectChannel* objectChannel;
-
-    if ((u16)sfxId != 0)
-    {
-        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
-    }
-    else
-    {
-        objectChannel = NULL;
-    }
-
-    if (objectChannel != NULL)
-    {
-        return 1;
-    }
-    return 0;
-}
-
-#pragma dont_inline on
-void Sfx_StopAllObjectSounds(void)
-{
-    s32 i;
-    SfxObjectChannel* objectChannel;
-
-    objectChannel = gSfxObjectChannels;
-    i = SFX_OBJECT_CHANNEL_COUNT;
-    while (i-- != 0)
-    {
-        if (objectChannel->handle != (u32)-1)
-        {
-            sndFXKeyOff(objectChannel->handle);
-            objectChannel->handle = (u32)-1;
-        }
-        objectChannel++;
-    }
-}
-#pragma dont_inline reset
-
-void audioFn_8000b694(u32 value)
-{
-    s32 i;
-    SfxObjectChannel* objectChannel;
-
-    objectChannel = gSfxObjectChannels;
-    gSfxGlobalCtrlLevel = (u8)(value * 5);
-    i = SFX_OBJECT_CHANNEL_COUNT - 1;
-    do
-    {
-        if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0))
-        {
-            sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
-        }
-        objectChannel++;
-    } while (i-- != 0);
-}
-
-void Sfx_SetObjectSoundsPaused(s32 paused)
-{
-    u8 pausedByte;
-    s32 i;
-    SfxObjectChannel* objectChannel;
-
-    objectChannel = gSfxObjectChannels;
-    i = SFX_OBJECT_CHANNEL_COUNT - 1;
-    pausedByte = paused;
-
-    do
-    {
-        if (objectChannel->handle != (u32)-1)
-        {
-            if (paused != 0)
-            {
-                sndFXCtrl(objectChannel->handle, 7, 0);
-            }
-            else if (objectChannel->paused != 0)
-            {
-                sndFXCtrl(objectChannel->handle, 7, objectChannel->volume);
-            }
-            objectChannel->paused = pausedByte;
-        }
-        objectChannel++;
-    } while (i-- != 0);
-}
-
-void Sfx_StopObjectChannel(u32 obj, u32 channel)
-{
-    SfxObjectChannel* objectChannel;
-
-    if (((u8)channel == 0) || (obj == 0))
-    {
-        objectChannel = NULL;
-    }
-    else
-    {
-        objectChannel = Sfx_FindObjectChannel(obj, channel, 0, 0);
-    }
-
-    if (objectChannel != NULL)
-    {
-        sndFXKeyOff(objectChannel->handle);
-        objectChannel->handle = (u32)-1;
-    }
-}
-
-void Sfx_StopFromObject(u32 obj, u32 sfxId)
-{
-    SfxObjectChannel* objectChannel;
-
-    if ((u16)sfxId != 0)
-    {
-        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
-    }
-    else
-    {
-        objectChannel = NULL;
-    }
-
-    if (objectChannel != NULL)
-    {
-        sndFXKeyOff(objectChannel->handle);
-        objectChannel->handle = (u32)-1;
-    }
-}
-
-void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale)
-{
-    u8 volumeByte;
-    SfxObjectChannel* objectChannel;
-
-    volumeByte = volume;
-    if (((u8)channel == 0) || (obj == 0))
-    {
-        objectChannel = NULL;
-    }
-    else
-    {
-        objectChannel = Sfx_FindObjectChannel(obj, channel, 0, 2);
-    }
-
-    if (objectChannel != NULL)
-    {
-        if (volumeByte != 0xFE)
-        {
-            u32 ctrlVolume;
-
-            if (volumeByte == 0xFF)
-            {
-                volumeByte = 100;
-            }
-            objectChannel->volume = volumeByte;
-            if (objectChannel->hasPosition != 0)
-            {
-                Sfx_UpdateObjectChannel3D(objectChannel);
-            }
-            else
-            {
-                if (objectChannel->paused != 0)
-                {
-                    ctrlVolume = 0;
-                }
-                else
-                {
-                    ctrlVolume = volumeByte;
-                }
-                ((SndFXCtrlWideFn)sndFXCtrl)(objectChannel->handle, 7, (u8)ctrlVolume);
-            }
-        }
-
-        if (volumeScale < lbl_803DE570)
-        {
-            volumeScale = lbl_803DE570;
-        }
-        if (volumeScale > lbl_803DE574)
-        {
-            volumeScale = lbl_803DE574;
-        }
-        ((SndFXCtrl14WideFn)sndFXCtrl14)(objectChannel->handle, 0x80,
-                                         (s32)(lbl_803DE578 * volumeScale));
-    }
-}
-
-void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
-{
-    u8 volumeByte;
-    SfxObjectChannel* objectChannel;
-
-    volumeByte = volume;
-    if ((u16)sfxId != 0)
-    {
-        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 2);
-    }
-    else
-    {
-        objectChannel = NULL;
-    }
-
-    if (objectChannel != NULL)
-    {
-        if (volumeByte != 0xFE)
-        {
-            u32 ctrlVolume;
-
-            if (volumeByte == 0xFF)
-            {
-                volumeByte = 100;
-            }
-            objectChannel->volume = volumeByte;
-            if (objectChannel->hasPosition != 0)
-            {
-                Sfx_UpdateObjectChannel3D(objectChannel);
-            }
-            else
-            {
-                if (objectChannel->paused != 0)
-                {
-                    ctrlVolume = 0;
-                }
-                else
-                {
-                    ctrlVolume = volumeByte;
-                }
-                ((SndFXCtrlWideFn)sndFXCtrl)(objectChannel->handle, 7, (u8)ctrlVolume);
-            }
-        }
-
-        if (volumeScale < lbl_803DE570)
-        {
-            volumeScale = lbl_803DE570;
-        }
-        if (volumeScale > lbl_803DE574)
-        {
-            volumeScale = lbl_803DE574;
-        }
-        ((SndFXCtrl14WideFn)sndFXCtrl14)(objectChannel->handle, 0x80,
-                                         (s32)(lbl_803DE578 * volumeScale));
-    }
-}
-
-void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
-{
-    void* slot;
-    int level;
-    f32 dist;
-    f32 near;
-    f32 far;
-    f32 volf;
-    f32 delta[3];
-
-    slot = Camera_GetCurrentViewSlot();
-    if (slot == NULL || objectChannel == NULL)
-    {
-        return;
-    }
-    if (!objectChannel->hasPosition)
-    {
-        return;
-    }
-    volf = (f32)(u32)objectChannel->volume;
-    level = volf;
-    near = objectChannel->nearDistance;
-    far = objectChannel->farDistance;
-    dist = Sfx_GetListenerRelativeDistance(&objectChannel->x, delta);
-    if (dist > lbl_803DE598 * far)
-    {
-        sndFXKeyOff(objectChannel->handle);
-        objectChannel->handle = (u32)-1;
-        return;
-    }
-    Sfx_RotateVectorByAngles(0, 0, -*(s16*)((u8*)slot + 0x54), delta);
-    Sfx_RotateVectorByAngles(*(s16*)slot, 0, 0, delta);
-    Sfx_RotateVectorByAngles(0, -*(s16*)((u8*)slot + 0x52), 0, delta);
-    if (dist > lbl_803DE59C)
-    {
-        f32 scale;
-        int pan;
-        int fx;
-
-        if (dist < near)
-        {
-            level = (int)(f64)volf;
-        }
-        else if (dist > far)
-        {
-            level = 1;
-        }
-        else
-        {
-            level = (int)(volf * (lbl_803DE574 - (dist - near) / (far - near)));
-            if (level < 1)
-            {
-                level = 1;
-            }
-            else if ((f32)level > volf)
-            {
-                level = (int)(f64)volf;
-            }
-        }
-        scale = lbl_803DE5A0 / dist;
-        delta[0] = delta[0] * scale;
-        delta[1] = delta[1] * scale;
-        delta[2] = delta[2] * scale;
-        pan = (int)(gSfxPanScale * delta[0] + gSfxPanCenter);
-        if (pan > 0x7f)
-        {
-            pan = 0x7f;
-        }
-        else if (pan < 0)
-        {
-            pan = 0;
-        }
-        fx = (int)(*(f32*)&gSfxPanScale * delta[2] + *(f32*)&gSfxPanCenter);
-        if (fx > 0x7f)
-        {
-            fx = 0x7f;
-        }
-        else if (fx < 0)
-        {
-            fx = 0;
-        }
-        sndFXCtrl(objectChannel->handle, 0xa, (u8)pan);
-        sndFXCtrl(objectChannel->handle, 0x83, (u8)fx);
-        sndFXCtrl(objectChannel->handle, 7, (u8)(objectChannel->paused ? 0 : level));
-    }
-    else
-    {
-        int v;
-        if (objectChannel->paused)
-        {
-            v = 0;
-        }
-        else
-        {
-            v = level;
-        }
-        sndFXCtrl(objectChannel->handle, 7, (u8)v);
-    }
-}
-
-void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
-{
-    u16 outSfxId;
-    u8 vol;
-    f32 pitch;
-    f32 nearDist;
-    f32 farDist;
-    int channelMask;
-    int stealExisting;
-    int globalCtrlDisabled;
-    f32 delta[3];
-    SfxObjectChannel* found;
-    SfxObjectChannel* ch;
-    int tracksObj;
-
-    tracksObj = 0;
-    if (!Sfx_ResolveObjectSfxId((int*)&obj, &sfxId))
-    {
-        return;
-    }
-    if (!Sfx_ReadTriggerParams((SfxTriggerFull*)Sfx_FindTrigger(sfxId), &outSfxId, &vol, &pitch, &nearDist, &farDist,
-                               &channelMask, &stealExisting, &globalCtrlDisabled))
-    {
-        return;
-    }
-    if (obj != 0 && pos == NULL)
-    {
-        pos = &((GameObject*)obj)->anim.worldPosX;
-        tracksObj = 1;
-    }
-    if (pos != NULL)
-    {
-        f32 maxDist = farDist;
-        if (!(Sfx_GetListenerRelativeDistance(pos, delta) <= maxDist))
-        {
-            return;
-        }
-    }
-    if ((u8)channel != 0)
-    {
-        channelMask = (u8)channel;
-    }
-    if (obj != 0 && channelMask != 0)
-    {
-        if ((u8)channelMask == 0 || obj == 0)
-        {
-            found = NULL;
-        }
-        else
-        {
-            found = Sfx_FindObjectChannel(obj, (u8)channelMask, 0, 0);
-        }
-        if (found != NULL)
-        {
-            if (stealExisting == 0)
-            {
-                return;
-            }
-            sndFXKeyOff(found->handle);
-            found->handle = (u32)-1;
-        }
-    }
-    else
-    {
-        if (sfxId != 0)
-        {
-            found = Sfx_FindObjectChannel(obj, 0, sfxId, 1);
-        }
-        else
-        {
-            found = NULL;
-        }
-        if (found != NULL)
-        {
-            if (stealExisting != 0 || (int)gSfxObjectChannelMatchCount == 3)
-            {
-                sndFXKeyOff(found->handle);
-                found->handle = (u32)-1;
-            }
-        }
-    }
-    ch = Sfx_AllocObjectChannel(outSfxId, vol, pitch, 0x40, globalCtrlDisabled);
-    if (ch == NULL)
-    {
-        return;
-    }
-    ch->sfxId = sfxId;
-    ch->channelMask = channelMask;
-    ch->object = obj;
-    if (pos != NULL)
-    {
-        ch->nearDistance = nearDist;
-        ch->farDistance = farDist;
-        ch->hasPosition = 1;
-        {
-            int t = 0;
-            if (tracksObj != 0 && channelMask != 0)
-            {
-                t = 1;
-            }
-            ch->tracksObjectPosition = t;
-        }
-        ch->x = pos[0];
-        ch->y = pos[1];
-        ch->z = pos[2];
-        Sfx_UpdateObjectChannel3D(ch);
-    }
-    else
-    {
-        ch->volume = 0x7f;
-    }
-}
-
-SfxObjectChannel* Sfx_AllocObjectChannel(a, b, pitch, c, d)
-s16 a;
-int b;
-double pitch;
-int c;
-
-int d;
-{
-    SfxObjectChannel* ch;
-    s32 i;
-    u32 handle;
-
-    if ((int)audioFlagFn_8000a188(4) != 0)
-    {
-        return 0;
-    }
-
-    ch = Sfx_FindFreeObjectChannel();
-    if (ch == NULL)
-    {
-        return 0;
-    }
-
-    handle = ((SndFXStartExWideFn)sndFXStartEx)(a, b, c, 0);
-    if (handle == (u32)-1)
-    {
-        goto fail;
-    }
-    if (gSfxGlobalCtrlLevel != 0 && d == 0)
-    {
-        ((SndFXCtrlWideFn)sndFXCtrl)(handle, 0x5b, gSfxGlobalCtrlLevel);
-    }
-
-    ch->object = 0;
-    ch->channelMask = 0;
-    ch->paused = 0;
-    ch->hasPosition = 0;
-    ch->tracksObjectPosition = 0;
-    ch->handle = handle;
-    {
-        f32 fz = lbl_803DE570;
-        ch->x = fz;
-        ch->y = fz;
-        ch->z = fz;
-    }
-    ch->field08 = a;
-    ch->volume = 0x64;
-    ch->nearDistance = lbl_803DE590;
-    ch->farDistance = lbl_803DE594;
-    ch->globalCtrlDisabled = d;
-
-    ch->age = gSfxObjectChannelAge++;
-    return ch;
-fail:
-    ch->handle = (u32)-1;
-    return 0;
-}
-
-void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId)
-{
-    Sfx_PlayFromObjectEx(obj, NULL, channel, sfxId);
-}
-
-void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId)
-{
-    f32 pos[3];
-
-    pos[0] = x;
-    pos[1] = y;
-    pos[2] = z;
-    Sfx_PlayFromObjectEx(obj, pos, 0, sfxId);
-}
-
-void Sfx_PlayFromObject(u32 obj, u16 sfxId)
-{
-    Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
-}
-
-void Sfx_UpdateObjectSounds(void)
-{
-    SfxObjectChannel* objectChannel;
-    SfxObjectChannel* ch;
-    s32 i;
-    u32 globalCtrl;
-
-    objectChannel = gSfxObjectChannels;
-    i = SFX_OBJECT_CHANNEL_COUNT;
-    while (i-- != 0)
-    {
-        if (objectChannel->handle != (u32)-1)
-        {
-            ch = (SfxObjectChannel*)sndFXCheck(objectChannel->handle);
-            if ((u32)ch == (u32)-1)
-            {
-                objectChannel->handle = (u32)-1;
-            }
-        }
-        objectChannel++;
-    }
-
-    if (mainGetBit(GAMEBIT_SHRINE_MUSIC_LOCK) != 0)
-    {
-        globalCtrl = 0xE;
-    }
-    else if (mainGetBit(GAMEBIT_ECSH_InShrine) != 0)
-    {
-        globalCtrl = 0xC;
-    }
-    else if (mainGetBit(GAMEBIT_WarpRelated0EFB) != 0)
-    {
-        globalCtrl = 0xD;
-    }
-    else if (mainGetBit(GAMEBIT_SETPIECE_ACTIVE) != 0)
-    {
-        globalCtrl = 0xC;
-    }
-    else if (mainGetBit(GAMEBIT_WMRelated0A7F) != 0)
-    {
-        globalCtrl = 0xC;
-    }
-    else if (mainGetBit(GAMEBIT_MAZEWELL_ACTIVE) != 0)
-    {
-        globalCtrl = 0xC;
-    }
-    else if (mainGetBit(GAMEBIT_PlayerInShop) != 0)
-    {
-        globalCtrl = 0xC;
-    }
-    else if (mainGetBit(0xDCF) != 0)
-    {
-        globalCtrl = 0xB;
-    }
-    else if (Music_GetActivePriority() <= 0x28)
-    {
-        globalCtrl = 0xC;
-    }
-    else
-    {
-        globalCtrl = 0;
-    }
-
-    if ((u8)globalCtrl != (s32)(gSfxGlobalCtrlLevel / 5))
-    {
-        objectChannel = gSfxObjectChannels;
-        gSfxGlobalCtrlLevel = (u8)((u8)globalCtrl * 5);
-        i = SFX_OBJECT_CHANNEL_COUNT;
-        while (i-- != 0)
-        {
-            if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0))
-            {
-                sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
-            }
-            objectChannel++;
-        }
-    }
-
-    ch = gSfxObjectChannels;
-    i = SFX_OBJECT_CHANNEL_COUNT;
-    while (i-- != 0)
-    {
-        if ((ch->handle != (u32)-1) && (ch->hasPosition != 0))
-        {
-            if (ch->tracksObjectPosition != 0)
-            {
-                if ((((GameObject*)ch->object)->objectFlags & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)
-                {
-                    ch->tracksObjectPosition = 0;
-                }
-                else
-                {
-                    ch->x = ((GameObject*)ch->object)->anim.worldPosX;
-                    ch->y = ((GameObject*)ch->object)->anim.worldPosY;
-                    ch->z = ((GameObject*)ch->object)->anim.worldPosZ;
-                }
-            }
-
-            if ((ch->tracksObjectPosition != 0) || (ch->globalCtrlDisabled != 0))
-            {
-                Sfx_UpdateObjectChannel3D(ch);
-            }
-        }
-        ch++;
-    }
-}
-
-#pragma dont_inline on
-void Sfx_InitObjectChannels(void)
-{
-    SfxObjectChannel* objectChannel;
-    s32 n;
-    s32 i;
-
-    n = SFX_OBJECT_CHANNEL_COUNT;
-    objectChannel = &gSfxObjectChannels[SFX_OBJECT_CHANNEL_COUNT];
-    goto checkNextChannel;
-setChannelFree:
-    objectChannel->handle = (u32)-1;
-checkNextChannel:
-    objectChannel--;
-    if (n-- != 0)
-    {
-        goto setChannelFree;
-    }
-
-    gSfxObjectChannelAge = 0;
-    objectChannel = gSfxObjectChannels;
-    gSfxGlobalCtrlLevel = 0;
-    i = SFX_OBJECT_CHANNEL_COUNT - 1;
-    do
-    {
-        if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0))
-        {
-            sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
-        }
-        objectChannel++;
-    } while (i-- != 0);
-}
-#pragma dont_inline reset
-
-SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode)
-{
-    SfxObjectChannel* objectChannel = gSfxObjectChannels;
-    SfxObjectChannel* bestChannel = NULL;
-    u64 bestAge;
-    int channelMask;
-    s32 i;
-
-    bestAge = (mode == 2) ? 0 : -1;
-    gSfxObjectChannelMatchCount = 0;
-    channelMask = (u8)channel;
-
-    for (i = SFX_OBJECT_CHANNEL_COUNT; i != 0; i--)
-    {
-        if ((objectChannel->handle != (u32)-1) && ((obj == 0) || (objectChannel->object == obj)) &&
-            (((u8)channel == 0) || ((objectChannel->channelMask & channelMask) != 0)) &&
-            (((u16)sfxId == 0) || (objectChannel->sfxId == (u16)sfxId)))
-        {
-            gSfxObjectChannelMatchCount++;
-
-            switch (mode)
-            {
-            case 0:
-                return objectChannel;
-            case 2:
-                if (objectChannel->age > bestAge)
-                {
-                    bestAge = objectChannel->age;
-                    bestChannel = objectChannel;
-                }
-                break;
-            case 1:
-            case 3:
-                if (objectChannel->age < bestAge)
-                {
-                    bestAge = objectChannel->age;
-                    bestChannel = objectChannel;
-                }
-                break;
-            }
-
-            if ((mode != 3) && ((int)gSfxObjectChannelMatchCount == 3))
-            {
-                return bestChannel;
-            }
-        }
-        objectChannel++;
-    }
-
-    return bestChannel;
-}
-
 #pragma dont_inline on
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third)
 {
@@ -1801,41 +1125,6 @@ int concatThreeStrings(char* dst, void* unused, const char* first, const char* s
     return 1;
 }
 #pragma dont_inline reset
-
-void fn_80009008(u32 request)
-{
-    (void)request;
-    gAudioArqRequestDone = 1;
-}
-
-void fn_80008EDC(u32 request)
-{
-    int i;
-    AudioArqRequestEntry* p = (AudioArqRequestEntry*)request;
-    AudioArqRequestEntry* e = gAudioArqRequests;
-    for (i = 0; i < 16; i++)
-    {
-        if (p == e)
-        {
-            e->callback(e->callbackArg1, e->callbackArg2, e->callbackArg3);
-            return;
-        }
-        e++;
-    }
-}
-
-void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag)
-{
-    if (musicFlag != 0 || fxFlag != 0)
-    {
-        ((void (*)(int, int, u8, u8))sndMasterVolume)(volume, time, musicFlag, fxFlag);
-    }
-    if (streamFlag != 0)
-    {
-        ((void (*)(int))AudioStream_SetVolume)(volume);
-        ((void (*)(int))AudioStream_SetDefaultVolume)(volume);
-    }
-}
 
 void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
@@ -1854,627 +1143,71 @@ void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo)
     }
 }
 
-#pragma opt_strength_reduction off
-int musicInitMidiWad(void)
+void Music_PlayTrackByIndex(int index)
 {
-    MusicTrackSlot* table;
-    MusicChannel* ch;
-    int track, j;
-    MusicTrackSlot* found;
-    u32 size;
-    int arenaOffset;
-    int saved;
-    int i;
-
-    if (!gMidiWadLoadStarted)
-    {
-        gMidiWadLoadStarted = 1;
-        ch = gMusicChannels;
-        for (i = 16; i != 0; i--)
-        {
-            ch->field_0 = -1;
-            ch->seqHandle = -1;
-            ch->bankData = NULL;
-            ch->voiceId = 0xff;
-            ch->status = 0;
-            ch->field_12 = 0;
-            *(int*)&ch->pad14[4] = 0;
-            ch++;
-        }
-        gMusicChannelCounterA = 1;
-        gMusicChannelCounterB = 1;
-        gAudioPendingLoadFlags |= AUDIO_LOAD_MIDI_WAD;
-        saved = testAndSetOnlyUseHeap3_u8(0);
-        gMidiWadFileData =
-            loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0, MIDIWADLoadedCallback);
-        testAndSetOnlyUseHeap3_u8(saved);
-    }
-    if (gAudioCompletedLoadFlags & AUDIO_LOAD_MIDI_WAD)
-    {
-        size = gMidiWadLoadedSize;
-        if ((int)size & 0x1f)
-        {
-            size = (size | 0x1f) + 1;
-        }
-        gMidiWadPayloadStart = (u8*)gMidiWadFileData + 0x1a0;
-        track = size - 0x1a0;
-        gMidiWadPayloadSize = track;
-        gMidiWadArenaSize = 0x1000000 - gMidiWadPayloadSize;
-        arenaOffset = gMidiWadArenaSize;
-        for (track = 0; track <= 0x63; track++)
-        {
-            found = NULL;
-            for (j = 0, table = (MusicTrackSlot*)sMusicTrackTable; j < 0x64; table++, j++)
-            {
-                if (track == table->id)
-                {
-                    found = (MusicTrackSlot*)sMusicTrackTable + j;
-                    break;
-                }
-            }
-            if (found != NULL)
-            {
-                found->offset = arenaOffset;
-                found->size = ((int*)gMidiWadFileData)[track];
-            }
-            {
-                u32 size2 = found->size;
-                if (size2 & 0x1f)
-                {
-                    size2 = (size2 | 0x1f) + 1;
-                }
-                arenaOffset += size2;
-            }
-        }
-        fn_80008F38(gMidiWadPayloadStart, gMidiWadArenaSize, gMidiWadPayloadSize);
-        saved = mmSetFreeDelay(0);
-        mm_free(gMidiWadFileData);
-        mmSetFreeDelay(saved);
-        return 1;
-    }
-    return 0;
-}
-#pragma opt_strength_reduction reset
-
-void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
-{
-    u32 saved;
-    if (status < 0)
-    {
-        OSReport(sPoolDataMLoadedCallbackLoadError);
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_POOL;
-        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_POOL;
-    }
+    MusicTrigger* trigger = Music_FindTriggerById(MUSICTRIG_dark_ice_boss_1_ec);
+    streamFn_8000a380(3, 1, 0);
+    trigger->track = *(s16*)((u8*)sMusicTrackTable + (index << 4));
+    Music_Trigger(MUSICTRIG_dark_ice_boss_1_ec, 1);
 }
 
-void poolDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+int return0x64_8000A378(void)
 {
-    u32 saved;
-    if (status < 0)
-    {
-        OSReport(sPoolDataSLoadedCallbackLoadError);
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_POOL;
-        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_POOL;
-    }
+    return 0x64;
 }
-
-void projectDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
+void streamFn_8000a380(int mask, int mode, int time)
 {
-    u32 saved;
-    if (status < 0)
-    {
-        OSReport(sProjectDataMLoadedCallbackLoadError);
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_PROJECT;
-        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_PROJECT;
-    }
-}
-
-void projectDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo)
-{
-    u32 saved;
-    if (status < 0)
-    {
-        OSReport(sProjectDataSLoadedCallbackLoadError);
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_PROJECT;
-        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_PROJECT;
-    }
-}
-
-void sampleBufferMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
-{
-    u32 saved;
-    if (status < 0)
-    {
-        OSReport(sSampleBufferMLoadedCallbackLoadError);
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_SAMPLE_BUF;
-        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_SAMPLE_BUF;
-    }
-}
-
-void sampleBufferSLoadedCallback(s32 status, DVDFileInfo* fileInfo)
-{
-    u32 saved;
-    if (status < 0)
-    {
-        OSReport(sSampleBufferSLoadedCallbackLoadError);
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_SAMPLE_BUF;
-        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_SAMPLE_BUF;
-    }
-}
-
-void sampleDirectoryMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
-{
-    u32 saved;
-    if (status < 0)
-    {
-        OSReport(sSampleDirectoryMLoadedCallbackLoadError);
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_M_SAMPLE_DIR;
-        gAudioCompletedLoadFlags |= AUDIO_LOAD_M_SAMPLE_DIR;
-    }
-}
-
-void sampleDirectorySLoadedCallback(s32 status, DVDFileInfo* fileInfo)
-{
-    u32 saved;
-    if (status < 0)
-    {
-        OSReport(sSampleDirectorySLoadedCallbackLoadError);
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_S_SAMPLE_DIR;
-        gAudioCompletedLoadFlags |= AUDIO_LOAD_S_SAMPLE_DIR;
-    }
-}
-
-void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo)
-{
-    u32 saved;
-    if (status < 0)
-    {
-        OSReport(sSfxTriggersLoadedCallbackLoadError);
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_SFX_TRIGGERS;
-        gAudioCompletedLoadFlags |= AUDIO_LOAD_SFX_TRIGGERS;
-    }
-}
-
-void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo)
-{
-    u32 saved;
-    if (status < 0)
-    {
-        OSReport(sMusicTriggersLoadedCallbackLoadError);
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_MUSIC_TRIGGERS;
-        gAudioCompletedLoadFlags |= AUDIO_LOAD_MUSIC_TRIGGERS;
-    }
-}
-
-#pragma opt_propagation off
-void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo)
-{
-    u32 saved;
-    if (status < 0)
-    {
-        OSReport(sStreamsLoadedCallbackLoadError);
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-    }
-    else
-    {
-        StreamEntry* s;
-        int count;
-        int i;
-        DVDClose(fileInfo);
-        saved = mmSetFreeDelay(0);
-        mm_free(fileInfo);
-        mmSetFreeDelay(saved);
-        {
-            u32 m;
-            u32 f2 = gAudioPendingLoadFlags;
-            m = ~AUDIO_LOAD_STREAMS;
-            gAudioPendingLoadFlags = f2 & m;
-        }
-        gAudioCompletedLoadFlags |= AUDIO_LOAD_STREAMS;
-        s = gStreamsData;
-        count = gStreamsCount;
-        for (i = count; i != 0; i--)
-        {
-            s->flag = 0;
-            s++;
-        }
-    }
-}
-
-#pragma opt_propagation reset
-void fn_80008F38(void* addr, u32 dest, u32 size)
-{
-    int idx;
-    AudioArqRequestEntry* entry;
-    idx = gAudioArqRequestIndex;
-    gAudioArqRequestIndex = idx + 1;
-    entry = &gAudioArqRequests[idx];
-    if (idx + 1 >= 0x10)
-    {
-        gAudioArqRequestIndex = 0;
-    }
-    if ((size & 0x1f) != 0)
-    {
-        size = (size | 0x1f) + 1;
-    }
-    DCFlushRange(addr, size);
-    gAudioArqRequestDone = 0;
-    ARQPostRequest(&entry->request, 0x64, 0, 1, (u32)addr, dest, size, fn_80009008);
-    while (gAudioArqRequestDone == 0)
-    {
-    }
-}
-
-#pragma dont_inline on
-void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3)
-{
-    int idx;
-    void* buf;
-    AudioArqRequestEntry* entry;
-    idx = gAudioArqRequestIndex;
-    gAudioArqRequestIndex = idx + 1;
-    entry = &gAudioArqRequests[idx];
-    if (idx + 1 >= 0x10)
-    {
-        gAudioArqRequestIndex = 0;
-    }
-    if ((size & 0x1f) != 0)
-    {
-        size = (size | 0x1f) + 1;
-    }
-    buf = mmAlloc(size, 0, 0);
-    *outBuf = buf;
-    entry->callback = (void (*)(int, int, int))cb;
-    entry->callbackArg1 = cbArg1;
-    entry->callbackArg2 = cbArg2;
-    entry->callbackArg3 = cbArg3;
-    DCFlushRange(buf, size);
-    gAudioArqRequestDone = 0;
-    ARQPostRequest(&entry->request, 0x64, 1, 1, (u32)source, (u32)buf, size, fn_80008EDC);
-}
-#pragma dont_inline reset
-
-int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
-{
-    switch (*sfxId)
-    {
-    case 0x170:
-    case 0xca:
-    case 0x109:
-        *sfxId = 0x409;
-    case 0x409:
-        *outChannel = 0;
-        break;
-    case 0x7e:
-    case 0x487:
-        *outChannel = 0;
-        break;
-    case 0x420:
-        Music_Trigger(MUSICTRIG_TTH_Fight, 0);
-        Music_Trigger(MUSICTRIG_TTH_Fight, 1);
-        return 0;
-    case 0x38c:
-        return !(gAudioActiveChannelMask & 4);
-    case 0x0:
-        return 0;
-    }
-    return 1;
-}
-
-u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit)
-{
-    SfxObjectChannel* ch = Sfx_FindObjectChannel(0, 0, sfxId, 3);
-    if (ch != NULL && (int)gSfxObjectChannelMatchCount > limit)
-    {
-        sndFXKeyOff(*(s32*)ch);
-        *(s32*)ch = -1;
-    }
-    if ((int)gSfxObjectChannelMatchCount < limit)
-    {
-        Sfx_PlayFromObjectExIntSfxLegacy(obj, NULL, 0, sfxId);
-    }
-    return gSfxObjectChannelMatchCount;
-}
-
-int AudioStream_Play(int id, void (*preparedCallback)(void))
-{
-    typedef int (*DVDOpenCompatFn)(char*, void*);
-    typedef s32 (*DVDCancelStreamAsyncCompatFn)(void*, void*);
-    typedef int (*DVDPrepareStreamAsyncCompatFn)(void*, int, int, void (*)(void));
-    typedef int (*DVDStopStreamAtEndAsyncCompatFn)(void*, int);
-    char path[64];
-    u8 vol;
-    u8* dvd[1];
-    int* fadeTbl;
-    StreamEntry* s;
-    int count;
-    int slot;
-    int i;
-    u8 stopped;
-
-    dvd[0] = gAudioStreamDvdBlockCurrent;
-    fadeTbl = gAudioStreamFadeTable;
-    s = gStreamsData;
-    count = gStreamsCount;
-    slot = -1;
-
-    if (id == 1228)
-    {
-        return 0;
-    }
-    if (id == 1318)
-    {
-        Music_Trigger(MUSICTRIG_drako_3, 0);
-        Music_Trigger(MUSICTRIG_TTH_Night, 1);
-    }
-    if ((int)audioFlagFn_8000a188(8) != 0)
-    {
-        return 0;
-    }
-
-    for (i = count; i != 0; i--)
-    {
-        if (s->id == id)
-        {
-            slot = (s - gStreamsData) + 1;
-            break;
-        }
-        s++;
-    }
-
-    if (slot == -1)
-    {
-        return 0;
-    }
-    if (gAudioStreamDvdState != 0)
-    {
-        return 0;
-    }
-    gAudioStreamDvdState = 0;
-
-    if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name, sAdpExtension) == 0)
-    {
-        goto ret0;
-    }
-    if (((DVDOpenCompatFn)DVDOpen)(path, dvd[0] + offsetof(AudioDvdStreamStorage, prepared.fileInfo)) == 0)
-    {
-        return 0;
-    }
-
-    if (gAudioStreamCurrentId != 0)
-    {
-        AISetStreamVolLeft(0);
-        AISetStreamVolRight(0);
-        if (((DVDCancelStreamAsyncCompatFn)DVDCancelStreamAsync)(
-                dvd[0] + offsetof(AudioDvdStreamStorage, currentCommand), (void*)AudioStream_CancelCallback) == 0)
-        {
-            OSReport((char*)fadeTbl + 0xC);
-            gAudioStreamPlaying = 0;
-        }
-        gAudioStreamPreparedId = 0;
-        gAudioStreamPreparingId = 0;
-        gAudioStreamCurrentId = 0;
-        gAudioStreamStartWhenPrepared = 0;
-        gAudioActiveChannelMask = 0;
-        gAudioStreamMusicFadeFlagB = 0;
-        gAudioStreamMusicFadeFlagA = 0;
-    }
-    else
-    {
-        gAudioStreamPlaying = 0;
-    }
-
-    gAudioStreamEndPos = (f32)(u32)s->lengthRaw / lbl_803DE5D4;
-    if (lbl_803DE5D0 == gAudioStreamEndPos)
-    {
-        gAudioStreamEndPos = gAudioStreamEndPosInfinite;
-    }
-
-    gAudioStreamMusicFadeFlagA = fadeTbl[(s->fadeBits >> 6) & 3] == 0 ? 0 : 1;
-    gAudioStreamMusicFadeFlagB = fadeTbl[(s->fadeBits >> 4) & 3] == 0 ? 0 : 1;
-    if (((u32)s->fadeBits >> 2) & 3)
-    {
-        Sfx_StopAllObjectSounds();
-    }
-    gAudioActiveChannelMask = (((u32)s->volBits >> 7) & 1) ? 4 : 0;
-
-    stopped = 0;
-    while (gAudioStreamPlaying != 0)
-    {
-        padUpdate();
-        checkReset();
-        if (stopped)
-        {
-            mmFreeTick(0);
-            waitNextFrame();
-        }
-        dvdCheckError();
-        if (stopped)
-        {
-            gameTextRun();
-            GXFlush_(1, 0);
-        }
-        if (gDvdErrorPauseActive != 0)
-        {
-            stopped = 1;
-            gAudioStreamPlaying = 0;
-        }
-    }
-
-    vol = (((s->volBits & 0x7F) + 1) * gAudioStreamDefaultVolume) >> 7;
-    gAudioStreamVolumeLeft = vol;
-    gAudioStreamVolumeRight = vol;
-    AISetStreamVolLeft(vol);
-    AISetStreamVolRight(vol);
-    gAudioStreamPreparedCallback = preparedCallback;
-    gAudioStreamPreparingId = slot;
-    gAudioStreamDvdState = 1;
-    ((DVDPrepareStreamAsyncCompatFn)DVDPrepareStreamAsync)(
-        dvd[0] + offsetof(AudioDvdStreamStorage, prepared.fileInfo), 0, 0, (void (*)(void))AudioStream_PrepareCallback);
-    ((DVDStopStreamAtEndAsyncCompatFn)DVDStopStreamAtEndAsync)(
-        dvd[0] + offsetof(AudioDvdStreamStorage, prepared.stopAtEndCommand), 0);
-    return 1;
-ret0:
-    return 0;
-}
-
-static inline MusicChannel* Music_FindActiveChannelForTrack(int track)
-{
-    int i;
     MusicChannel* ch = (MusicChannel*)(int)gMusicChannels;
-    for (i = 15; i >= 0; i--)
+    int i = 15;
+    do
     {
-        if ((int)ch->field_0 == track)
+        if (ch->status != 0 && ((ch->pad11 + 1) & mask) != 0)
         {
-            if (ch->status == 0)
+            switch (mode)
             {
-            }
-            else if (ch->status == 2)
-            {
-            }
-            else
-            {
-                switch (ch->status)
+            case 1:
+                if (audioIsResetting() == 0)
                 {
-                case 5:
-                    break;
-                default:
-                    return ch;
+                    if (ch->status != 2)
+                    {
+                        if (ch->status == 4 || ch->status == 5)
+                        {
+                            ch->status = 5;
+                        }
+                        else
+                        {
+                            sndSeqVolume(0, 250, ch->seqHandle, 1);
+                            ch->status = 2;
+                        }
+                    }
                 }
+                else if (ch->status == 4 || ch->status == 5)
+                {
+                    ch->status = 5;
+                }
+                else
+                {
+                    Music_FreeChannel(ch);
+                }
+                break;
+            case 2:
+                if (ch->status != 2)
+                {
+                    if (ch->status == 4 || ch->status == 5)
+                    {
+                        ch->status = 5;
+                    }
+                    else
+                    {
+                        sndSeqVolume(0, (u16)(time < 500 ? 500 : time), ch->seqHandle, 1);
+                        ch->status = 2;
+                    }
+                }
+                break;
             }
         }
         ch++;
-    }
-    return NULL;
-}
-
-static inline MusicTrigger* Music_FindTriggerById(int id)
-{
-    int i = gMusicTriggersCount;
-    MusicTrigger* trigger = gMusicTriggersData;
-    while (i != 0)
-    {
-        if ((int)trigger->id == id)
-        {
-            return trigger;
-        }
-        trigger++;
-        i--;
-    }
-    return NULL;
+    } while (i-- != 0);
 }
 
 void Music_Trigger(int id, int arg)
@@ -2533,86 +1266,6 @@ void Music_Trigger(int id, int arg)
         sndSeqVolume(0, (u16)(i < 0x1f4 ? 0x1f4 : i), channel->seqHandle, 1);
         channel->status = 2;
     }
-}
-
-static void Music_FreeChannel(MusicChannel* ch)
-{
-    sndSeqStop(ch->seqHandle);
-    mm_free(ch->bankData);
-    ch->field_0 = -1;
-    ch->seqHandle = -1;
-    ch->bankData = NULL;
-    ch->voiceId = 0xff;
-    ch->status = 0;
-    ch->field_12 = 0;
-    ch->field_20 = lbl_803DE560;
-}
-
-void streamFn_8000a380(int mask, int mode, int time)
-{
-    MusicChannel* ch = (MusicChannel*)(int)gMusicChannels;
-    int i = 15;
-    do
-    {
-        if (ch->status != 0 && ((ch->pad11 + 1) & mask) != 0)
-        {
-            switch (mode)
-            {
-            case 1:
-                if (audioIsResetting() == 0)
-                {
-                    if (ch->status != 2)
-                    {
-                        if (ch->status == 4 || ch->status == 5)
-                        {
-                            ch->status = 5;
-                        }
-                        else
-                        {
-                            sndSeqVolume(0, 250, ch->seqHandle, 1);
-                            ch->status = 2;
-                        }
-                    }
-                }
-                else if (ch->status == 4 || ch->status == 5)
-                {
-                    ch->status = 5;
-                }
-                else
-                {
-                    Music_FreeChannel(ch);
-                }
-                break;
-            case 2:
-                if (ch->status != 2)
-                {
-                    if (ch->status == 4 || ch->status == 5)
-                    {
-                        ch->status = 5;
-                    }
-                    else
-                    {
-                        sndSeqVolume(0, (u16)(time < 500 ? 500 : time), ch->seqHandle, 1);
-                        ch->status = 2;
-                    }
-                }
-                break;
-            }
-        }
-        ch++;
-    } while (i-- != 0);
-}
-
-static int Music_IsTriggerExcluded(int id)
-{
-    switch (id)
-    {
-    case 0x2b:
-    case 0xbd:
-    case 0xeb:
-        return 1;
-    }
-    return 0;
 }
 
 void Music_Update(void)
@@ -2851,35 +1504,94 @@ void Music_Update(void)
     } while (i-- != 0);
 }
 
-static inline MusicTrackSlot* Music_FindTrackSlot(int track)
+#pragma dont_inline on
+s32 Music_GetActivePriority(void)
 {
-    MusicTrackSlot* slot = (MusicTrackSlot*)sMusicTrackTable;
-    int i;
-    for (i = 99; i >= 0; i--)
-    {
-        if (slot->id == track)
-        {
-            return slot;
-        }
-        slot++;
-    }
-    return NULL;
+    return gMusicActivePriority;
 }
+#pragma dont_inline reset
 
-static inline MusicChannel* Music_FindFreeChannel(void)
+#pragma opt_strength_reduction off
+int musicInitMidiWad(void)
 {
-    MusicChannel* channel = gMusicChannels;
+    MusicTrackSlot* table;
+    MusicChannel* ch;
+    int track, j;
+    MusicTrackSlot* found;
+    u32 size;
+    int arenaOffset;
+    int saved;
     int i;
-    for (i = 15; i >= 0; i--)
+
+    if (!gMidiWadLoadStarted)
     {
-        if (channel->status == 0)
+        gMidiWadLoadStarted = 1;
+        ch = gMusicChannels;
+        for (i = 16; i != 0; i--)
         {
-            return channel;
+            ch->field_0 = -1;
+            ch->seqHandle = -1;
+            ch->bankData = NULL;
+            ch->voiceId = 0xff;
+            ch->status = 0;
+            ch->field_12 = 0;
+            *(int*)&ch->pad14[4] = 0;
+            ch++;
         }
-        channel++;
+        gMusicChannelCounterA = 1;
+        gMusicChannelCounterB = 1;
+        gAudioPendingLoadFlags |= AUDIO_LOAD_MIDI_WAD;
+        saved = testAndSetOnlyUseHeap3_u8(0);
+        gMidiWadFileData =
+            loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0, MIDIWADLoadedCallback);
+        testAndSetOnlyUseHeap3_u8(saved);
     }
-    return NULL;
+    if (gAudioCompletedLoadFlags & AUDIO_LOAD_MIDI_WAD)
+    {
+        size = gMidiWadLoadedSize;
+        if ((int)size & 0x1f)
+        {
+            size = (size | 0x1f) + 1;
+        }
+        gMidiWadPayloadStart = (u8*)gMidiWadFileData + 0x1a0;
+        track = size - 0x1a0;
+        gMidiWadPayloadSize = track;
+        gMidiWadArenaSize = 0x1000000 - gMidiWadPayloadSize;
+        arenaOffset = gMidiWadArenaSize;
+        for (track = 0; track <= 0x63; track++)
+        {
+            found = NULL;
+            for (j = 0, table = (MusicTrackSlot*)sMusicTrackTable; j < 0x64; table++, j++)
+            {
+                if (track == table->id)
+                {
+                    found = (MusicTrackSlot*)sMusicTrackTable + j;
+                    break;
+                }
+            }
+            if (found != NULL)
+            {
+                found->offset = arenaOffset;
+                found->size = ((int*)gMidiWadFileData)[track];
+            }
+            {
+                u32 size2 = found->size;
+                if (size2 & 0x1f)
+                {
+                    size2 = (size2 | 0x1f) + 1;
+                }
+                arenaOffset += size2;
+            }
+        }
+        fn_80008F38(gMidiWadPayloadStart, gMidiWadArenaSize, gMidiWadPayloadSize);
+        saved = mmSetFreeDelay(0);
+        mm_free(gMidiWadFileData);
+        mmSetFreeDelay(saved);
+        return 1;
+    }
+    return 0;
 }
+#pragma opt_strength_reduction reset
 
 void Music_LoadChannelForTrigger(MusicTrigger* trigger)
 {
@@ -2935,229 +1647,1727 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
                           (u32)slot, (u32)channel, (u32)trigger);
 }
 
-void Music_PlayTrackByIndex(int index)
+void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger)
 {
-    MusicTrigger* trigger = Music_FindTriggerById(MUSICTRIG_dark_ice_boss_1_ec);
-    streamFn_8000a380(3, 1, 0);
-    trigger->track = *(s16*)((u8*)sMusicTrackTable + (index << 4));
-    Music_Trigger(MUSICTRIG_dark_ice_boss_1_ec, 1);
+    MusicSeqStartParams params = gMusicSeqStartParamsDefault;
+
+    if (channel != NULL)
+    {
+        if (channel->status == 5)
+        {
+            mm_free(channel->bankData);
+            channel->field_0 = -1;
+            channel->seqHandle = -1;
+            channel->bankData = NULL;
+            channel->voiceId = 0xff;
+            channel->status = 0;
+            channel->field_12 = 0;
+            channel->field_20 = lbl_803DE560;
+        }
+        else
+        {
+            int seqHandle;
+            int voice;
+            if (trigger->field_6 != -1)
+            {
+                params.field_c = trigger->field_6;
+                params.flags |= 2;
+            }
+            if (trigger->field_c != -1)
+            {
+                voice = trigger->field_c;
+            }
+            else
+            {
+                voice = 0x7f;
+            }
+            params.field_10 = 0;
+            params.field_e = 0;
+            params.flags |= 4;
+            seqHandle = sndSeqPlayEx(bank->field_2, trigger->field_2, channel->bankData, &params, 0);
+            sndSeqVolume(voice, 0x1f4, seqHandle, 0);
+            channel->status = 1;
+            channel->seqHandle = seqHandle;
+            channel->voiceId = synthResolveHandle(seqHandle);
+        }
+    }
 }
 
-void audioSetSoundMode(int mode, u8 forceFlag)
+u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit)
 {
-    if (forceFlag == 0)
+    SfxObjectChannel* ch = Sfx_FindObjectChannel(0, 0, sfxId, 3);
+    if (ch != NULL && (int)gSfxObjectChannelMatchCount > limit)
     {
-        if (OSGetSoundMode() != 1)
+        sndFXKeyOff(*(s32*)ch);
+        *(s32*)ch = -1;
+    }
+    if ((int)gSfxObjectChannelMatchCount < limit)
+    {
+        Sfx_PlayFromObjectExIntSfxLegacy(obj, NULL, 0, sfxId);
+    }
+    return gSfxObjectChannelMatchCount;
+}
+
+s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel)
+{
+    SfxObjectChannel* objectChannel;
+
+    if (((u8)channel == 0) || (obj == 0))
+    {
+        objectChannel = NULL;
+    }
+    else
+    {
+        objectChannel = Sfx_FindObjectChannel(obj, channel, 0, 0);
+    }
+
+    if (objectChannel != NULL)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+#pragma dont_inline on
+s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
+{
+    SfxObjectChannel* objectChannel;
+
+    if ((u16)sfxId != 0)
+    {
+        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
+    }
+    else
+    {
+        objectChannel = NULL;
+    }
+
+    if (objectChannel != NULL)
+    {
+        return 1;
+    }
+    return 0;
+}
+#pragma dont_inline reset
+
+#pragma dont_inline on
+void Sfx_StopAllObjectSounds(void)
+{
+    s32 i;
+    SfxObjectChannel* objectChannel;
+
+    objectChannel = gSfxObjectChannels;
+    i = SFX_OBJECT_CHANNEL_COUNT;
+    while (i-- != 0)
+    {
+        if (objectChannel->handle != (u32)-1)
+        {
+            sndFXKeyOff(objectChannel->handle);
+            objectChannel->handle = (u32)-1;
+        }
+        objectChannel++;
+    }
+}
+#pragma dont_inline reset
+
+void audioFn_8000b694(u32 value)
+{
+    s32 i;
+    SfxObjectChannel* objectChannel;
+
+    objectChannel = gSfxObjectChannels;
+    gSfxGlobalCtrlLevel = (u8)(value * 5);
+    i = SFX_OBJECT_CHANNEL_COUNT - 1;
+    do
+    {
+        if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0))
+        {
+            sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
+        }
+        objectChannel++;
+    } while (i-- != 0);
+}
+
+void Sfx_SetObjectSoundsPaused(s32 paused)
+{
+    u8 pausedByte;
+    s32 i;
+    SfxObjectChannel* objectChannel;
+
+    objectChannel = gSfxObjectChannels;
+    i = SFX_OBJECT_CHANNEL_COUNT - 1;
+    pausedByte = paused;
+
+    do
+    {
+        if (objectChannel->handle != (u32)-1)
+        {
+            if (paused != 0)
+            {
+                sndFXCtrl(objectChannel->handle, 7, 0);
+            }
+            else if (objectChannel->paused != 0)
+            {
+                sndFXCtrl(objectChannel->handle, 7, objectChannel->volume);
+            }
+            objectChannel->paused = pausedByte;
+        }
+        objectChannel++;
+    } while (i-- != 0);
+}
+
+void Sfx_StopObjectChannel(u32 obj, u32 channel)
+{
+    SfxObjectChannel* objectChannel;
+
+    if (((u8)channel == 0) || (obj == 0))
+    {
+        objectChannel = NULL;
+    }
+    else
+    {
+        objectChannel = Sfx_FindObjectChannel(obj, channel, 0, 0);
+    }
+
+    if (objectChannel != NULL)
+    {
+        sndFXKeyOff(objectChannel->handle);
+        objectChannel->handle = (u32)-1;
+    }
+}
+
+#pragma dont_inline on
+void Sfx_StopFromObject(u32 obj, u32 sfxId)
+{
+    SfxObjectChannel* objectChannel;
+
+    if ((u16)sfxId != 0)
+    {
+        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
+    }
+    else
+    {
+        objectChannel = NULL;
+    }
+
+    if (objectChannel != NULL)
+    {
+        sndFXKeyOff(objectChannel->handle);
+        objectChannel->handle = (u32)-1;
+    }
+}
+#pragma dont_inline reset
+
+void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale)
+{
+    u8 volumeByte;
+    SfxObjectChannel* objectChannel;
+
+    volumeByte = volume;
+    if (((u8)channel == 0) || (obj == 0))
+    {
+        objectChannel = NULL;
+    }
+    else
+    {
+        objectChannel = Sfx_FindObjectChannel(obj, channel, 0, 2);
+    }
+
+    if (objectChannel != NULL)
+    {
+        if (volumeByte != 0xFE)
+        {
+            u32 ctrlVolume;
+
+            if (volumeByte == 0xFF)
+            {
+                volumeByte = 100;
+            }
+            objectChannel->volume = volumeByte;
+            if (objectChannel->hasPosition != 0)
+            {
+                Sfx_UpdateObjectChannel3D(objectChannel);
+            }
+            else
+            {
+                if (objectChannel->paused != 0)
+                {
+                    ctrlVolume = 0;
+                }
+                else
+                {
+                    ctrlVolume = volumeByte;
+                }
+                ((SndFXCtrlWideFn)sndFXCtrl)(objectChannel->handle, 7, (u8)ctrlVolume);
+            }
+        }
+
+        if (volumeScale < lbl_803DE570)
+        {
+            volumeScale = lbl_803DE570;
+        }
+        if (volumeScale > lbl_803DE574)
+        {
+            volumeScale = lbl_803DE574;
+        }
+        ((SndFXCtrl14WideFn)sndFXCtrl14)(objectChannel->handle, 0x80,
+                                         (s32)(lbl_803DE578 * volumeScale));
+    }
+}
+
+void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
+{
+    u8 volumeByte;
+    SfxObjectChannel* objectChannel;
+
+    volumeByte = volume;
+    if ((u16)sfxId != 0)
+    {
+        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 2);
+    }
+    else
+    {
+        objectChannel = NULL;
+    }
+
+    if (objectChannel != NULL)
+    {
+        if (volumeByte != 0xFE)
+        {
+            u32 ctrlVolume;
+
+            if (volumeByte == 0xFF)
+            {
+                volumeByte = 100;
+            }
+            objectChannel->volume = volumeByte;
+            if (objectChannel->hasPosition != 0)
+            {
+                Sfx_UpdateObjectChannel3D(objectChannel);
+            }
+            else
+            {
+                if (objectChannel->paused != 0)
+                {
+                    ctrlVolume = 0;
+                }
+                else
+                {
+                    ctrlVolume = volumeByte;
+                }
+                ((SndFXCtrlWideFn)sndFXCtrl)(objectChannel->handle, 7, (u8)ctrlVolume);
+            }
+        }
+
+        if (volumeScale < lbl_803DE570)
+        {
+            volumeScale = lbl_803DE570;
+        }
+        if (volumeScale > lbl_803DE574)
+        {
+            volumeScale = lbl_803DE574;
+        }
+        ((SndFXCtrl14WideFn)sndFXCtrl14)(objectChannel->handle, 0x80,
+                                         (s32)(lbl_803DE578 * volumeScale));
+    }
+}
+
+void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId)
+{
+    Sfx_PlayFromObjectEx(obj, NULL, channel, sfxId);
+}
+
+void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId)
+{
+    f32 pos[3];
+
+    pos[0] = x;
+    pos[1] = y;
+    pos[2] = z;
+    Sfx_PlayFromObjectEx(obj, pos, 0, sfxId);
+}
+
+#pragma dont_inline on
+void Sfx_PlayFromObject(u32 obj, u16 sfxId)
+{
+    Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
+}
+#pragma dont_inline reset
+
+void Sfx_UpdateObjectSounds(void)
+{
+    SfxObjectChannel* objectChannel;
+    SfxObjectChannel* ch;
+    s32 i;
+    u32 globalCtrl;
+
+    objectChannel = gSfxObjectChannels;
+    i = SFX_OBJECT_CHANNEL_COUNT;
+    while (i-- != 0)
+    {
+        if (objectChannel->handle != (u32)-1)
+        {
+            ch = (SfxObjectChannel*)sndFXCheck(objectChannel->handle);
+            if ((u32)ch == (u32)-1)
+            {
+                objectChannel->handle = (u32)-1;
+            }
+        }
+        objectChannel++;
+    }
+
+    if (mainGetBit(GAMEBIT_SHRINE_MUSIC_LOCK) != 0)
+    {
+        globalCtrl = 0xE;
+    }
+    else if (mainGetBit(GAMEBIT_ECSH_InShrine) != 0)
+    {
+        globalCtrl = 0xC;
+    }
+    else if (mainGetBit(GAMEBIT_WarpRelated0EFB) != 0)
+    {
+        globalCtrl = 0xD;
+    }
+    else if (mainGetBit(GAMEBIT_SETPIECE_ACTIVE) != 0)
+    {
+        globalCtrl = 0xC;
+    }
+    else if (mainGetBit(GAMEBIT_WMRelated0A7F) != 0)
+    {
+        globalCtrl = 0xC;
+    }
+    else if (mainGetBit(GAMEBIT_MAZEWELL_ACTIVE) != 0)
+    {
+        globalCtrl = 0xC;
+    }
+    else if (mainGetBit(GAMEBIT_PlayerInShop) != 0)
+    {
+        globalCtrl = 0xC;
+    }
+    else if (mainGetBit(0xDCF) != 0)
+    {
+        globalCtrl = 0xB;
+    }
+    else if (Music_GetActivePriority() <= 0x28)
+    {
+        globalCtrl = 0xC;
+    }
+    else
+    {
+        globalCtrl = 0;
+    }
+
+    if ((u8)globalCtrl != (s32)(gSfxGlobalCtrlLevel / 5))
+    {
+        objectChannel = gSfxObjectChannels;
+        gSfxGlobalCtrlLevel = (u8)((u8)globalCtrl * 5);
+        i = SFX_OBJECT_CHANNEL_COUNT;
+        while (i-- != 0)
+        {
+            if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0))
+            {
+                sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
+            }
+            objectChannel++;
+        }
+    }
+
+    ch = gSfxObjectChannels;
+    i = SFX_OBJECT_CHANNEL_COUNT;
+    while (i-- != 0)
+    {
+        if ((ch->handle != (u32)-1) && (ch->hasPosition != 0))
+        {
+            if (ch->tracksObjectPosition != 0)
+            {
+                if ((((GameObject*)ch->object)->objectFlags & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)
+                {
+                    ch->tracksObjectPosition = 0;
+                }
+                else
+                {
+                    ch->x = ((GameObject*)ch->object)->anim.worldPosX;
+                    ch->y = ((GameObject*)ch->object)->anim.worldPosY;
+                    ch->z = ((GameObject*)ch->object)->anim.worldPosZ;
+                }
+            }
+
+            if ((ch->tracksObjectPosition != 0) || (ch->globalCtrlDisabled != 0))
+            {
+                Sfx_UpdateObjectChannel3D(ch);
+            }
+        }
+        ch++;
+    }
+}
+
+#pragma dont_inline on
+void Sfx_InitObjectChannels(void)
+{
+    SfxObjectChannel* objectChannel;
+    s32 n;
+    s32 i;
+
+    n = SFX_OBJECT_CHANNEL_COUNT;
+    objectChannel = &gSfxObjectChannels[SFX_OBJECT_CHANNEL_COUNT];
+    goto checkNextChannel;
+setChannelFree:
+    objectChannel->handle = (u32)-1;
+checkNextChannel:
+    objectChannel--;
+    if (n-- != 0)
+    {
+        goto setChannelFree;
+    }
+
+    gSfxObjectChannelAge = 0;
+    objectChannel = gSfxObjectChannels;
+    gSfxGlobalCtrlLevel = 0;
+    i = SFX_OBJECT_CHANNEL_COUNT - 1;
+    do
+    {
+        if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0))
+        {
+            sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
+        }
+        objectChannel++;
+    } while (i-- != 0);
+}
+#pragma dont_inline reset
+
+void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
+{
+    u16 outSfxId;
+    u8 vol;
+    f32 pitch;
+    f32 nearDist;
+    f32 farDist;
+    int channelMask;
+    int stealExisting;
+    int globalCtrlDisabled;
+    f32 delta[3];
+    SfxObjectChannel* found;
+    SfxObjectChannel* ch;
+    int tracksObj;
+
+    tracksObj = 0;
+    if (!Sfx_ResolveObjectSfxId((int*)&obj, &sfxId))
+    {
+        return;
+    }
+    if (!Sfx_ReadTriggerParams((SfxTriggerFull*)Sfx_FindTrigger(sfxId), &outSfxId, &vol, &pitch, &nearDist, &farDist,
+                               &channelMask, &stealExisting, &globalCtrlDisabled))
+    {
+        return;
+    }
+    if (obj != 0 && pos == NULL)
+    {
+        pos = &((GameObject*)obj)->anim.worldPosX;
+        tracksObj = 1;
+    }
+    if (pos != NULL)
+    {
+        f32 maxDist = farDist;
+        if (!(Sfx_GetListenerRelativeDistance(pos, delta) <= maxDist))
         {
             return;
         }
     }
-    if ((u8)mode != gAudioSoundMode)
+    if ((u8)channel != 0)
     {
-        switch ((u8)mode)
-        {
-        case 0:
-            sndOutputMode(1);
-            break;
-        case 1:
-            sndOutputMode(2);
-            break;
-        case 2:
-            sndOutputMode(0);
-            break;
-        case 3:
-            sndOutputMode(1);
-            break;
-        }
+        channelMask = (u8)channel;
     }
-    if ((((u8)mode == 2) && (gAudioSoundMode != 2)) || (((u8)mode != 2) && (gAudioSoundMode == 2)))
+    if (obj != 0 && channelMask != 0)
     {
-        if ((u8)mode == 2)
+        if ((u8)channelMask == 0 || obj == 0)
         {
-            OSSetSoundMode(0);
+            found = NULL;
         }
         else
         {
-            OSSetSoundMode(1);
+            found = Sfx_FindObjectChannel(obj, (u8)channelMask, 0, 0);
+        }
+        if (found != NULL)
+        {
+            if (stealExisting == 0)
+            {
+                return;
+            }
+            sndFXKeyOff(found->handle);
+            found->handle = (u32)-1;
         }
     }
-    gAudioSoundMode = mode;
+    else
+    {
+        if (sfxId != 0)
+        {
+            found = Sfx_FindObjectChannel(obj, 0, sfxId, 1);
+        }
+        else
+        {
+            found = NULL;
+        }
+        if (found != NULL)
+        {
+            if (stealExisting != 0 || (int)gSfxObjectChannelMatchCount == 3)
+            {
+                sndFXKeyOff(found->handle);
+                found->handle = (u32)-1;
+            }
+        }
+    }
+    ch = Sfx_AllocObjectChannel(outSfxId, vol, pitch, 0x40, globalCtrlDisabled);
+    if (ch == NULL)
+    {
+        return;
+    }
+    ch->sfxId = sfxId;
+    ch->channelMask = channelMask;
+    ch->object = obj;
+    if (pos != NULL)
+    {
+        ch->nearDistance = nearDist;
+        ch->farDistance = farDist;
+        ch->hasPosition = 1;
+        {
+            int t = 0;
+            if (tracksObj != 0 && channelMask != 0)
+            {
+                t = 1;
+            }
+            ch->tracksObjectPosition = t;
+        }
+        ch->x = pos[0];
+        ch->y = pos[1];
+        ch->z = pos[2];
+        Sfx_UpdateObjectChannel3D(ch);
+    }
+    else
+    {
+        ch->volume = 0x7f;
+    }
+}
+
+int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
+{
+    switch (*sfxId)
+    {
+    case 0x170:
+    case 0xca:
+    case 0x109:
+        *sfxId = 0x409;
+    case 0x409:
+        *outChannel = 0;
+        break;
+    case 0x7e:
+    case 0x487:
+        *outChannel = 0;
+        break;
+    case 0x420:
+        Music_Trigger(MUSICTRIG_TTH_Fight, 0);
+        Music_Trigger(MUSICTRIG_TTH_Fight, 1);
+        return 0;
+    case 0x38c:
+        return !(gAudioActiveChannelMask & 4);
+    case 0x0:
+        return 0;
+    }
+    return 1;
+}
+
+int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f32* outF6, f32* outF7, f32* outF8,
+                          int* outI9, int* outI10, int* outI11)
+{
+    int idx;
+    int selector;
+
+    if (trigger == NULL || trigger->f_count == 0)
+    {
+        return 0;
+    }
+
+    selector = randomGetRange(1, trigger->selectRange);
+    if (trigger->id == 0xab)
+    {
+        if (trigger->f_curIdx == 0)
+        {
+            trigger->f_curIdx = 1;
+        }
+        else
+        {
+            trigger->f_curIdx = 0;
+        }
+        idx = trigger->f_curIdx;
+    }
+    else
+    {
+        idx = 0;
+        while (selector > trigger->weights[idx])
+        {
+            selector -= trigger->weights[idx];
+            idx++;
+        }
+        if (trigger->f_curIdx == idx)
+        {
+            idx++;
+            if (idx >= trigger->f_count)
+            {
+                idx = 0;
+            }
+        }
+    }
+    trigger->f_curIdx = idx;
+
+    *outSfxId = trigger->sfxIds[idx];
+    if (*outSfxId == 0)
+    {
+        return 0;
+    }
+
+    {
+        int hi;
+        int vr = trigger->volRand;
+        if ((u32)vr != 0)
+        {
+            hi = trigger->volBase + randomGetRange(0, vr);
+            *outVol = hi - randomGetRange(0, vr);
+        }
+        else
+        {
+            *outVol = trigger->volBase;
+        }
+    }
+    {
+        int pr = trigger->pitchRand;
+        if ((u32)pr != 0)
+        {
+            int hi = trigger->pitchBase + randomGetRange(0, pr);
+            *outF6 = (f32)(hi - randomGetRange(0, pr));
+        }
+        else
+        {
+            *outF6 = (f32)(u32)trigger->pitchBase;
+        }
+    }
+    *outF7 = (f32)(u32)trigger->nearDistanceRaw;
+    *outF8 = (f32)(u32)trigger->farDistanceRaw;
+    *outI9 = gSfxTriggerExtraTable[trigger->e_tableIdx];
+    *outI10 = trigger->e_bit0;
+    *outI11 = trigger->e_bit3;
+    return 1;
 }
 
 #pragma dont_inline on
-void audioLoadTriggerData(void)
+SfxTrigger* Sfx_FindTrigger(u16 id)
 {
-    char* base = sSampleBufferSLoadedCallbackLoadError;
-    int info;
-    int delay;
-    if (gMusicTriggersData != NULL)
+    SfxTrigger* low = (SfxTrigger*)gSfxTriggersData;
+    SfxTrigger* high = (SfxTrigger*)gSfxTriggersData + gSfxTriggersCount;
+    int key = id;
+    SfxTriggerCacheEntry* c = &gSfxTriggerLookupCache[key & 0xf];
+
+    if (c->key == key)
     {
-        delay = mmSetFreeDelay(0);
-        mm_free(gMusicTriggersData);
-        mm_free(gSfxTriggersData);
-        mm_free(gStreamsData);
-        mmSetFreeDelay(delay);
+        return (SfxTrigger*)gSfxTriggersData + c->index;
     }
-    gAudioPendingLoadFlags |= AUDIO_LOAD_MUSIC_TRIGGERS;
-    gMusicTriggersData = loadFileByPathAsync(base + 0x1b4, &info, 1, musicTriggersLoadedCallback);
-    gMusicTriggersCount = (u32)info >> 4;
-    gAudioPendingLoadFlags |= AUDIO_LOAD_SFX_TRIGGERS;
-    gSfxTriggersData = loadFileByPathAsync(base + 0x1cc, &info, 1, sfxTriggersLoadedCallback);
-    gSfxTriggersCount = (u32)info >> 5;
-    gAudioPendingLoadFlags |= AUDIO_LOAD_STREAMS;
-    gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, streamsLoadedCallback);
-    gStreamsCount = info / sizeof(StreamEntry);
-}
-#pragma dont_inline reset
-
-typedef struct AudioMemHookPair
-{
-    s32 alloc;
-    s32 free;
-} AudioMemHookPair;
-
-int audioInit(void)
-{
-    char* base = sSampleBufferSLoadedCallbackLoadError;
-    SalHooks hooks;
-    int reverbWork;
-    int delay;
-    int v;
-
-    *(AudioMemHookPair*)&hooks = *(AudioMemHookPair*)&gAudioMemAllocHook;
-    if (!gAudioInitStarted)
+    while (low < high)
     {
-        gAudioInitStarted = 1;
-        gAudioPendingLoadFlags = 0;
-        gAudioCompletedLoadFlags = 0;
-        testAndSet_onlyUseHeap3(1);
-        if (gAudioHardwareInitialized)
+        SfxTrigger* mid = low + (high - low) / 2;
+        if (mid->id > key)
         {
-            return 1;
+            high = mid;
         }
-        gAudioHardwareInitialized = 1;
-        ARInit(gAudioAramBlock, 0xa);
-        ARQInit();
-        AIInit(0);
-        AISetDSPSampleRate(0);
-        sndSetHooks(&hooks);
-        sndInit(0x30, 0x30, 0x18, 1, 1, (void*)0x1000000);
-        sndSetMaxVoices(0x30, 0x18);
-        if (OSGetSoundMode() == 0)
+        else if (mid->id < key)
         {
-            gAudioSoundMode = 2;
-            sndOutputMode(0);
+            low = mid + 1;
         }
         else
         {
-            gAudioSoundMode = 0;
-            sndOutputMode(1);
-        }
-        gAudioReverbSettings[0x13c] = 0;
-        *(f32*)&gAudioReverbSettings[0x148] = lbl_803DE550;
-        *(f32*)&gAudioReverbSettings[0x150] = lbl_803DE554;
-        *(f32*)&gAudioReverbSettings[0x14c] = lbl_803DE558;
-        *(f32*)&gAudioReverbSettings[0x140] = lbl_803DE558;
-        *(f32*)&gAudioReverbSettings[0x144] = lbl_803DE55C;
-        sndAuxCallbackUpdateSettingsReverbSTD((ReverbState*)gAudioReverbSettings);
-        reverbWork = 0;
-        sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, gAudioReverbSettings, 0xff, 0, 0, 0, 0xff,
-                                     (void*)reverbWork);
-        {
-            if (!sndIsInstalledU32())
-            {
-                OSReport(base + 0x1f8);
-                return 0xff;
-            }
-        }
-        sndVolume(0x7f, 0, 0xff);
-        sndMasterVolume(0x7f, 0x64, 1, 1);
-        Sfx_InitObjectChannels();
-        AudioStream_Init();
-        audioLoadTriggerData();
-        testAndSet_onlyUseHeap3(1);
-        gAudioPendingLoadFlags |= AUDIO_LOAD_M_POOL;
-        gAudioStarfoxMPoolDataHandle =
-            loadFileByPathAsync(base + 0x228, NULL, 0, poolDataMLoadedCallback);
-        gAudioPendingLoadFlags |= AUDIO_LOAD_M_PROJECT;
-        gAudioStarfoxMProjectDataHandle =
-            loadFileByPathAsync(base + 0x23c, NULL, 0, projectDataMLoadedCallback);
-        gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_DIR;
-        gAudioStarfoxMSampleDirectoryHandle =
-            loadFileByPathAsync(base + 0x250, NULL, 0, sampleDirectoryMLoadedCallback);
-        testAndSet_onlyUseHeap3(0);
-        gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_BUF;
-        gAudioStarfoxMSampleBufferHandle =
-            loadFileByPathAsync(base + 0x264, NULL, 0, sampleBufferMLoadedCallback);
-        if (gAudioStarfoxMPoolDataHandle == NULL || gAudioStarfoxMProjectDataHandle == NULL ||
-            gAudioStarfoxMSampleDirectoryHandle == NULL || gAudioStarfoxMSampleBufferHandle == NULL)
-        {
-            return 0xff;
-        }
-        testAndSet_onlyUseHeap3(0);
-    }
-    if (!gAudioMusicGroupReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) &&
-        (gAudioCompletedLoadFlags & AUDIO_LOAD_M_PROJECT) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) &&
-        (gAudioCompletedLoadFlags & AUDIO_LOAD_M_SAMPLE_DIR) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_SAMPLE_BUF))
-    {
-        sndPushGroup(gAudioStarfoxMProjectDataHandle, 0, gAudioStarfoxMSampleBufferHandle,
-                     gAudioStarfoxMSampleDirectoryHandle, gAudioStarfoxMPoolDataHandle);
-        delay = mmSetFreeDelay(0);
-        mm_free(gAudioStarfoxMSampleBufferHandle);
-        mmSetFreeDelay(delay);
-        gAudioMusicGroupReady = 1;
-        testAndSet_onlyUseHeap3(1);
-        gAudioPendingLoadFlags |= AUDIO_LOAD_S_POOL;
-        gAudioStarfoxSPoolDataHandle =
-            loadFileByPathAsync(base + 0x278, NULL, 0, poolDataSLoadedCallback);
-        gAudioPendingLoadFlags |= AUDIO_LOAD_S_PROJECT;
-        gAudioStarfoxSProjectDataHandle =
-            loadFileByPathAsync(base + 0x28c, NULL, 0, projectDataSLoadedCallback);
-        gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_DIR;
-        gAudioStarfoxSSampleDirectoryHandle =
-            loadFileByPathAsync(base + 0x2a0, NULL, 0, sampleDirectorySLoadedCallback);
-        testAndSet_onlyUseHeap3(0);
-        gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_BUF;
-        gAudioStarfoxSSampleBufferHandle =
-            loadFileByPathAsync(base + 0x2b4, NULL, 0, sampleBufferSLoadedCallback);
-        if (gAudioStarfoxSPoolDataHandle == NULL || gAudioStarfoxSProjectDataHandle == NULL ||
-            gAudioStarfoxSSampleDirectoryHandle == NULL || gAudioStarfoxSSampleBufferHandle == NULL)
-        {
-            return 0xff;
+            c->key = id;
+            c->index = mid - (SfxTrigger*)gSfxTriggersData;
+            return mid;
         }
     }
-    if (!gAudioSfxGroupsReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_POOL) &&
-        (gAudioCompletedLoadFlags & AUDIO_LOAD_S_PROJECT) && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_POOL) &&
-        (gAudioCompletedLoadFlags & AUDIO_LOAD_S_SAMPLE_DIR) && (gAudioCompletedLoadFlags & AUDIO_LOAD_S_SAMPLE_BUF))
-    {
-        for (v = 1; v <= 0x37; v++)
-        {
-            if (sndPushGroup(gAudioStarfoxSProjectDataHandle, v, gAudioStarfoxSSampleBufferHandle,
-                             gAudioStarfoxSSampleDirectoryHandle, gAudioStarfoxSPoolDataHandle) == 0)
-            {
-                OSReport(base + 0x2c8, v);
-            }
-        }
-        delay = mmSetFreeDelay(0);
-        mm_free(gAudioStarfoxSSampleBufferHandle);
-        mmSetFreeDelay(delay);
-        gAudioSfxGroupsReady = 1;
-    }
-    if (!gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady)
-    {
-        gAudioReady = musicInitMidiWadU8();
-    }
-    if (gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady &&
+    return NULL;
+}
+#pragma dont_inline reset
 
-        (gAudioCompletedLoadFlags & AUDIO_LOAD_MUSIC_TRIGGERS) &&
-        (gAudioCompletedLoadFlags & AUDIO_LOAD_SFX_TRIGGERS) && (gAudioCompletedLoadFlags & AUDIO_LOAD_STREAMS))
+SfxObjectChannel* Sfx_AllocObjectChannel(a, b, pitch, c, d)
+s16 a;
+int b;
+double pitch;
+int c;
+
+int d;
+{
+    SfxObjectChannel* ch;
+    s32 i;
+    u32 handle;
+
+    if ((int)audioFlagFn_8000a188(4) != 0)
     {
-        gAudioResetting = 0;
-        gAudioManagedChannelMask = 0x1f;
-        gAudioActiveChannelMask = 0;
-        return 1;
+        return 0;
     }
+
+    ch = Sfx_FindFreeObjectChannel();
+    if (ch == NULL)
+    {
+        return 0;
+    }
+
+    handle = ((SndFXStartExWideFn)sndFXStartEx)(a, b, c, 0);
+    if (handle == (u32)-1)
+    {
+        goto fail;
+    }
+    if (gSfxGlobalCtrlLevel != 0 && d == 0)
+    {
+        ((SndFXCtrlWideFn)sndFXCtrl)(handle, 0x5b, gSfxGlobalCtrlLevel);
+    }
+
+    ch->object = 0;
+    ch->channelMask = 0;
+    ch->paused = 0;
+    ch->hasPosition = 0;
+    ch->tracksObjectPosition = 0;
+    ch->handle = handle;
+    {
+        f32 fz = lbl_803DE570;
+        ch->x = fz;
+        ch->y = fz;
+        ch->z = fz;
+    }
+    ch->field08 = a;
+    ch->volume = 0x64;
+    ch->nearDistance = lbl_803DE590;
+    ch->farDistance = lbl_803DE594;
+    ch->globalCtrlDisabled = d;
+
+    ch->age = gSfxObjectChannelAge++;
+    return ch;
+fail:
+    ch->handle = (u32)-1;
     return 0;
+}
+
+void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
+{
+    void* slot;
+    int level;
+    f32 dist;
+    f32 near;
+    f32 far;
+    f32 volf;
+    f32 delta[3];
+
+    slot = Camera_GetCurrentViewSlot();
+    if (slot == NULL || objectChannel == NULL)
+    {
+        return;
+    }
+    if (!objectChannel->hasPosition)
+    {
+        return;
+    }
+    volf = (f32)(u32)objectChannel->volume;
+    level = volf;
+    near = objectChannel->nearDistance;
+    far = objectChannel->farDistance;
+    dist = Sfx_GetListenerRelativeDistance(&objectChannel->x, delta);
+    if (dist > lbl_803DE598 * far)
+    {
+        sndFXKeyOff(objectChannel->handle);
+        objectChannel->handle = (u32)-1;
+        return;
+    }
+    Sfx_RotateVectorByAngles(0, 0, -*(s16*)((u8*)slot + 0x54), delta);
+    Sfx_RotateVectorByAngles(*(s16*)slot, 0, 0, delta);
+    Sfx_RotateVectorByAngles(0, -*(s16*)((u8*)slot + 0x52), 0, delta);
+    if (dist > lbl_803DE59C)
+    {
+        f32 scale;
+        int pan;
+        int fx;
+
+        if (dist < near)
+        {
+            level = (int)(f64)volf;
+        }
+        else if (dist > far)
+        {
+            level = 1;
+        }
+        else
+        {
+            level = (int)(volf * (lbl_803DE574 - (dist - near) / (far - near)));
+            if (level < 1)
+            {
+                level = 1;
+            }
+            else if ((f32)level > volf)
+            {
+                level = (int)(f64)volf;
+            }
+        }
+        scale = lbl_803DE5A0 / dist;
+        delta[0] = delta[0] * scale;
+        delta[1] = delta[1] * scale;
+        delta[2] = delta[2] * scale;
+        pan = (int)(gSfxPanScale * delta[0] + gSfxPanCenter);
+        if (pan > 0x7f)
+        {
+            pan = 0x7f;
+        }
+        else if (pan < 0)
+        {
+            pan = 0;
+        }
+        fx = (int)(*(f32*)&gSfxPanScale * delta[2] + *(f32*)&gSfxPanCenter);
+        if (fx > 0x7f)
+        {
+            fx = 0x7f;
+        }
+        else if (fx < 0)
+        {
+            fx = 0;
+        }
+        sndFXCtrl(objectChannel->handle, 0xa, (u8)pan);
+        sndFXCtrl(objectChannel->handle, 0x83, (u8)fx);
+        sndFXCtrl(objectChannel->handle, 7, (u8)(objectChannel->paused ? 0 : level));
+    }
+    else
+    {
+        int v;
+        if (objectChannel->paused)
+        {
+            v = 0;
+        }
+        else
+        {
+            v = level;
+        }
+        sndFXCtrl(objectChannel->handle, 7, (u8)v);
+    }
+}
+
+void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v)
+{
+    f32 ra;
+    f32 x = v[0];
+    f32 y = v[1];
+    f32 z = v[2];
+    f32 ca;
+    f32 rb;
+    f32 cb;
+    f32 rc;
+    f32 cc;
+    f32 sa;
+    f32 sb;
+    f32 sc;
+    f32 t0, t1, A, B, p;
+
+    ra = gAudioPi * angX / gAudioAngleToRadDivisor;
+    ca = mathSinf(ra);
+    rb = gAudioPi * angY / gAudioAngleToRadDivisor;
+    cb = mathSinf(rb);
+    rc = gAudioPi * angZ / gAudioAngleToRadDivisor;
+    cc = mathSinf(rc);
+    sa = mathCosf(ra);
+    sb = mathCosf(rb);
+    sc = mathCosf(rc);
+
+    t0 = x * ca;
+    t1 = z * ca;
+    A = x * sa;
+    p = z * sa;
+    A = A + t1;
+    p = p - t0;
+    t0 = y * cb;
+    t1 = p * cb;
+    B = y * sb;
+    p = p * sb;
+    B = B - t1;
+    p = p + t0;
+    t0 = A * cc;
+    t1 = B * cc;
+    A = A * sc;
+    B = B * sc;
+    A = A - t1;
+    B = B + t0;
+
+    v[0] = A;
+    v[1] = B;
+    v[2] = p;
+}
+
+#pragma dont_inline on
+#pragma opt_common_subs off
+f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
+{
+    f32 v[3];
+    f32 t;
+    double t2;
+    f32* listener;
+    void* player = Obj_GetPlayerObject();
+    void* slot = Camera_GetCurrentViewSlot();
+    int seqNo = getCurSeqNoInt();
+
+    if (player != NULL && seqNo == 0)
+    {
+        listener = &((GameObject*)player)->anim.worldPosX;
+    }
+    else
+    {
+        if (slot == NULL)
+        {
+            goto retDefault;
+        }
+        if (player != NULL)
+        {
+            PSVECSubtract((f32*)((u8*)slot + 0x44), &((GameObject*)player)->anim.worldPosX, v);
+            t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
+            if (lbl_803DE5C0 < (t > lbl_803DE5C8 ? t : lbl_803DE5C8))
+            {
+                t2 = lbl_803DE5C0;
+            }
+            else
+            {
+                t2 = (t > lbl_803DE5C8 ? t : lbl_803DE5C8);
+            }
+            PSVECScale(v, v, t2);
+            PSVECAdd(&((GameObject*)player)->anim.worldPosX, v, v);
+            listener = v;
+        }
+        else
+        {
+            listener = (f32*)((u8*)slot + 0x44);
+        }
+        goto common;
+    retDefault:
+        return lbl_803DE570;
+    }
+common:
+    PSVECSubtract(listener, soundPos, outDelta);
+    return PSVECMag(outDelta);
+}
+#pragma opt_common_subs reset
+#pragma dont_inline reset
+
+SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode)
+{
+    SfxObjectChannel* objectChannel = gSfxObjectChannels;
+    SfxObjectChannel* bestChannel = NULL;
+    u64 bestAge;
+    int channelMask;
+    s32 i;
+
+    bestAge = (mode == 2) ? 0 : -1;
+    gSfxObjectChannelMatchCount = 0;
+    channelMask = (u8)channel;
+
+    for (i = SFX_OBJECT_CHANNEL_COUNT; i != 0; i--)
+    {
+        if ((objectChannel->handle != (u32)-1) && ((obj == 0) || (objectChannel->object == obj)) &&
+            (((u8)channel == 0) || ((objectChannel->channelMask & channelMask) != 0)) &&
+            (((u16)sfxId == 0) || (objectChannel->sfxId == (u16)sfxId)))
+        {
+            gSfxObjectChannelMatchCount++;
+
+            switch (mode)
+            {
+            case 0:
+                return objectChannel;
+            case 2:
+                if (objectChannel->age > bestAge)
+                {
+                    bestAge = objectChannel->age;
+                    bestChannel = objectChannel;
+                }
+                break;
+            case 1:
+            case 3:
+                if (objectChannel->age < bestAge)
+                {
+                    bestAge = objectChannel->age;
+                    bestChannel = objectChannel;
+                }
+                break;
+            }
+
+            if ((mode != 3) && ((int)gSfxObjectChannelMatchCount == 3))
+            {
+                return bestChannel;
+            }
+        }
+        objectChannel++;
+    }
+
+    return bestChannel;
+}
+
+void AudioStream_StopAll(void)
+{
+    if (gAudioStreamDvdState != 0)
+    {
+        AISetStreamVolLeft(0);
+        AISetStreamVolRight(0);
+        if (DVDCancelStreamAsync(&((AudioDvdStreamContext*)gAudioStreamDvdBlockPrepared)->preparedCommand,
+                                 fn_8000D0B4) == 0)
+        {
+            OSReport(sDvdCancelStreamWarning);
+        }
+        gAudioStreamPreparedId = 0;
+        gAudioStreamPreparingId = 0;
+        gAudioStreamCurrentId = 0;
+        gAudioStreamStartWhenPrepared = 0;
+        gAudioActiveChannelMask = 0;
+        gAudioStreamMusicFadeFlagB = 0;
+        gAudioStreamMusicFadeFlagA = 0;
+    }
+
+    if (gAudioStreamCurrentId != 0)
+    {
+        AISetStreamVolLeft(0);
+        AISetStreamVolRight(0);
+        if (DVDCancelStreamAsync((DVDCommandBlock*)gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
+        {
+            OSReport(sDvdCancelStreamWarning);
+            gAudioStreamPlaying = 0;
+        }
+    }
+    else
+    {
+        gAudioStreamPlaying = 0;
+    }
+
+    gAudioStreamPreparedId = 0;
+    gAudioStreamPreparingId = 0;
+    gAudioStreamCurrentId = 0;
+    gAudioStreamStartWhenPrepared = 0;
+    gAudioActiveChannelMask = 0;
+    gAudioStreamMusicFadeFlagB = 0;
+    gAudioStreamMusicFadeFlagA = 0;
+}
+
+void doNothing_8000CF54(void)
+{
+}
+
+#pragma dont_inline on
+u32 AudioStream_GetMusicFadeFlagA(void)
+{
+    if (gAudioStreamPos > gAudioStreamEndPos)
+    {
+        return 0;
+    }
+    return gAudioStreamMusicFadeFlagA;
+}
+#pragma dont_inline reset
+
+#pragma dont_inline on
+u32 AudioStream_GetMusicFadeFlagB(void)
+{
+    if (gAudioStreamPos > gAudioStreamEndPos)
+    {
+        return 0;
+    }
+    return gAudioStreamMusicFadeFlagB;
+}
+#pragma dont_inline reset
+
+u32 AudioStream_GetCurrentId(void)
+{
+    return gAudioStreamCurrentId;
+}
+
+u8 AudioStream_IsPreparing(void)
+{
+    return gAudioStreamDvdState;
+}
+
+#pragma dont_inline on
+void AudioStream_SetVolume(u8 volume)
+{
+    gAudioStreamVolumeLeft = volume;
+    gAudioStreamVolumeRight = volume;
+    AISetStreamVolLeft(volume);
+    AISetStreamVolRight(volume);
+}
+#pragma dont_inline reset
+
+void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block)
+{
+    (void)block;
+    if (result == 0)
+    {
+        AISetStreamPlayState(AI_STREAM_STOP);
+    }
+    gAudioActiveChannelMask = 0;
+    gAudioStreamPlaying = 0;
+}
+
+void AudioStream_StopCurrent(void)
+{
+    if (gAudioStreamCurrentId != 0)
+    {
+        AISetStreamVolLeft(0);
+        AISetStreamVolRight(0);
+        if (DVDCancelStreamAsync((DVDCommandBlock*)gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
+        {
+            OSReport(sDvdCancelStreamWarning);
+            gAudioStreamPlaying = 0;
+        }
+        gAudioStreamPreparedId = 0;
+        gAudioStreamPreparingId = 0;
+        gAudioStreamCurrentId = 0;
+        gAudioStreamStartWhenPrepared = 0;
+        gAudioActiveChannelMask = 0;
+        gAudioStreamMusicFadeFlagB = 0;
+        gAudioStreamMusicFadeFlagA = 0;
+    }
+    else
+    {
+        gAudioStreamPlaying = 0;
+    }
+}
+
+void fn_8000D0B4(s32 result, DVDCommandBlock* block)
+{
+    (void)result;
+    (void)block;
+    gAudioStreamDvdState = 0;
+}
+
+void AudioStream_CancelPrepared(void)
+{
+    AISetStreamVolLeft(0);
+    AISetStreamVolRight(0);
+    if (DVDCancelStreamAsync(&((AudioDvdStreamContext*)gAudioStreamDvdBlockPrepared)->preparedCommand,
+                             fn_8000D0B4) == 0)
+    {
+        OSReport(sDvdCancelStreamWarning);
+    }
+    gAudioStreamPreparedId = 0;
+    gAudioStreamPreparingId = 0;
+    gAudioStreamCurrentId = 0;
+    gAudioStreamStartWhenPrepared = 0;
+    gAudioActiveChannelMask = 0;
+    gAudioStreamMusicFadeFlagB = 0;
+    gAudioStreamMusicFadeFlagA = 0;
+}
+
+void AudioStream_StartPrepared(void)
+{
+    if (gAudioStreamPreparingId != 0)
+    {
+        gAudioStreamStartWhenPrepared = 1;
+    }
+    else if (gAudioStreamPreparedId != 0)
+    {
+        if (getGameState() == 1)
+        {
+            if (getGameState() == 1)
+            {
+                AISetStreamVolLeft(gAudioStreamVolumeLeft);
+                AISetStreamVolRight(gAudioStreamVolumeRight);
+                AISetStreamPlayState(AI_STREAM_START);
+                gAudioStreamPlaying = 1;
+                gAudioStreamPos = lbl_803DE5D0;
+                gAudioStreamCurrentId = gAudioStreamPreparedId;
+                gAudioStreamPreparedId = 0;
+                gAudioStreamPreparingId = 0;
+                gAudioStreamStartWhenPrepared = 0;
+            }
+            else
+            {
+                gAudioStreamPlaying = 0;
+            }
+        }
+    }
+    else if (gAudioStreamCurrentId == 0)
+    {
+        gAudioStreamMusicFadeFlagB = 0;
+        gAudioStreamMusicFadeFlagA = 0;
+        gAudioStreamStartWhenPrepared = 0;
+        gAudioActiveChannelMask = 0;
+    }
+}
+int AudioStream_Play(int id, void (*preparedCallback)(void))
+{
+    typedef int (*DVDOpenCompatFn)(char*, void*);
+    typedef s32 (*DVDCancelStreamAsyncCompatFn)(void*, void*);
+    typedef int (*DVDPrepareStreamAsyncCompatFn)(void*, int, int, void (*)(void));
+    typedef int (*DVDStopStreamAtEndAsyncCompatFn)(void*, int);
+    char path[64];
+    u8 vol;
+    u8* dvd[1];
+    int* fadeTbl;
+    StreamEntry* s;
+    int count;
+    int slot;
+    int i;
+    u8 stopped;
+
+    dvd[0] = gAudioStreamDvdBlockCurrent;
+    fadeTbl = gAudioStreamFadeTable;
+    s = gStreamsData;
+    count = gStreamsCount;
+    slot = -1;
+
+    if (id == 1228)
+    {
+        return 0;
+    }
+    if (id == 1318)
+    {
+        Music_Trigger(MUSICTRIG_drako_3, 0);
+        Music_Trigger(MUSICTRIG_TTH_Night, 1);
+    }
+    if ((int)audioFlagFn_8000a188(8) != 0)
+    {
+        return 0;
+    }
+
+    for (i = count; i != 0; i--)
+    {
+        if (s->id == id)
+        {
+            slot = (s - gStreamsData) + 1;
+            break;
+        }
+        s++;
+    }
+
+    if (slot == -1)
+    {
+        return 0;
+    }
+    if (gAudioStreamDvdState != 0)
+    {
+        return 0;
+    }
+    gAudioStreamDvdState = 0;
+
+    if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name, sAdpExtension) == 0)
+    {
+        goto ret0;
+    }
+    if (((DVDOpenCompatFn)DVDOpen)(path, dvd[0] + offsetof(AudioDvdStreamStorage, prepared.fileInfo)) == 0)
+    {
+        return 0;
+    }
+
+    if (gAudioStreamCurrentId != 0)
+    {
+        AISetStreamVolLeft(0);
+        AISetStreamVolRight(0);
+        if (((DVDCancelStreamAsyncCompatFn)DVDCancelStreamAsync)(
+                dvd[0] + offsetof(AudioDvdStreamStorage, currentCommand), (void*)AudioStream_CancelCallback) == 0)
+        {
+            OSReport((char*)fadeTbl + 0xC);
+            gAudioStreamPlaying = 0;
+        }
+        gAudioStreamPreparedId = 0;
+        gAudioStreamPreparingId = 0;
+        gAudioStreamCurrentId = 0;
+        gAudioStreamStartWhenPrepared = 0;
+        gAudioActiveChannelMask = 0;
+        gAudioStreamMusicFadeFlagB = 0;
+        gAudioStreamMusicFadeFlagA = 0;
+    }
+    else
+    {
+        gAudioStreamPlaying = 0;
+    }
+
+    gAudioStreamEndPos = (f32)(u32)s->lengthRaw / lbl_803DE5D4;
+    if (lbl_803DE5D0 == gAudioStreamEndPos)
+    {
+        gAudioStreamEndPos = gAudioStreamEndPosInfinite;
+    }
+
+    gAudioStreamMusicFadeFlagA = fadeTbl[(s->fadeBits >> 6) & 3] == 0 ? 0 : 1;
+    gAudioStreamMusicFadeFlagB = fadeTbl[(s->fadeBits >> 4) & 3] == 0 ? 0 : 1;
+    if (((u32)s->fadeBits >> 2) & 3)
+    {
+        Sfx_StopAllObjectSounds();
+    }
+    gAudioActiveChannelMask = (((u32)s->volBits >> 7) & 1) ? 4 : 0;
+
+    stopped = 0;
+    while (gAudioStreamPlaying != 0)
+    {
+        padUpdate();
+        checkReset();
+        if (stopped)
+        {
+            mmFreeTick(0);
+            waitNextFrame();
+        }
+        dvdCheckError();
+        if (stopped)
+        {
+            gameTextRun();
+            GXFlush_(1, 0);
+        }
+        if (gDvdErrorPauseActive != 0)
+        {
+            stopped = 1;
+            gAudioStreamPlaying = 0;
+        }
+    }
+
+    vol = (((s->volBits & 0x7F) + 1) * gAudioStreamDefaultVolume) >> 7;
+    gAudioStreamVolumeLeft = vol;
+    gAudioStreamVolumeRight = vol;
+    AISetStreamVolLeft(vol);
+    AISetStreamVolRight(vol);
+    gAudioStreamPreparedCallback = preparedCallback;
+    gAudioStreamPreparingId = slot;
+    gAudioStreamDvdState = 1;
+    ((DVDPrepareStreamAsyncCompatFn)DVDPrepareStreamAsync)(
+        dvd[0] + offsetof(AudioDvdStreamStorage, prepared.fileInfo), 0, 0, (void (*)(void))AudioStream_PrepareCallback);
+    ((DVDStopStreamAtEndAsyncCompatFn)DVDStopStreamAtEndAsync)(
+        dvd[0] + offsetof(AudioDvdStreamStorage, prepared.stopAtEndCommand), 0);
+    return 1;
+ret0:
+    return 0;
+}
+
+void AudioStream_UpdateFadeTimer(void)
+{
+    if (gAudioStreamCurrentId != 0)
+    {
+        f32 position = gAudioStreamPos;
+        gAudioStreamPos = position + (timeDelta / gAudioStreamFramesPerSecond);
+    }
+    else
+    {
+        gAudioStreamPos = lbl_803DE5D0;
+    }
+}
+
+void AudioStream_SetDefaultVolume(u8 volume)
+{
+    gAudioStreamDefaultVolume = volume;
+}
+
+#pragma dont_inline on
+void AudioStream_Init(void)
+{
+    AISetStreamVolLeft(0);
+    AISetStreamVolRight(0);
+    gAudioStreamCurrentId = 0;
+    gAudioStreamMusicFadeFlagA = 0;
+    gAudioStreamMusicFadeFlagB = 0;
+    gAudioStreamDefaultVolume = 0x7f;
+    gAudioStreamStartWhenPrepared = 0;
+}
+#pragma dont_inline reset
+
+void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo)
+{
+    (void)result;
+    (void)fileInfo;
+    if (getGameState() != 1)
+    {
+        gAudioStreamDvdState = 0;
+        return;
+    }
+    gAudioStreamPreparedId = gAudioStreamPreparingId;
+    gAudioStreamPreparingId = 0;
+    if (gAudioStreamStartWhenPrepared != 0)
+    {
+        if (getGameState() == 1)
+        {
+            AISetStreamVolLeft(gAudioStreamVolumeLeft);
+            AISetStreamVolRight(gAudioStreamVolumeRight);
+            AISetStreamPlayState(AI_STREAM_START);
+            gAudioStreamPlaying = 1;
+            gAudioStreamPos = lbl_803DE5D0;
+            gAudioStreamCurrentId = gAudioStreamPreparedId;
+            gAudioStreamPreparedId = 0;
+            gAudioStreamPreparingId = 0;
+            gAudioStreamStartWhenPrepared = 0;
+        }
+        else
+        {
+            gAudioStreamPlaying = 0;
+        }
+    }
+    else if (gAudioStreamPreparedCallback != NULL)
+    {
+        gAudioStreamPreparedCallback();
+    }
+    gAudioStreamDvdState = 0;
+}
+
+
+
+void AudioStream_PlayAddrCallback(u32 result)
+{
+    if ((result & 0xff) == 0)
+    {
+        gAudioStreamPlaying = 0;
+        if (gAudioStreamCurrentId != 0)
+        {
+            AISetStreamVolLeft(0);
+            AISetStreamVolRight(0);
+            gAudioStreamCurrentId = 0;
+            gAudioActiveChannelMask = 0;
+            AISetStreamPlayState(AI_STREAM_STOP);
+            gAudioStreamMusicFadeFlagB = 0;
+            gAudioStreamMusicFadeFlagA = 0;
+        }
+    }
+    gAudioStreamPlayAddrCallbackResult = result;
+    gAudioStreamPlayAddrCallbackDone = 1;
+}
+
+
+void Sfx_ClearLoopedObjectSounds(void)
+{
+    gSfxLoopedObjectSoundCount = 0;
+}
+
+
+void Sfx_UpdateLoopedObjectSounds(void)
+{
+    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
+    u8* fp;
+    u32* op;
+    u16* ip;
+    u16 index;
+    s16 i;
+    int index2;
+    u32 obj;
+    int removeSound;
+    u16 sz;
+
+    i = (s16)(gSfxLoopedObjectSoundCount - 1);
+    fp = table->flags + i;
+    op = (u32*)table->objects + i;
+    ip = (u16*)table->ids + i;
+    for (; i >= 0; i--)
+    {
+        removeSound = 0;
+        if (((*fp & SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE) != 0) && ((*fp & SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN) == 0))
+        {
+            removeSound = 1;
+        }
+        obj = *op;
+        if (((obj != 0) && ((((GameObject*)obj)->objectFlags & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)) || removeSound)
+        {
+            Sfx_StopFromObject(obj, *ip);
+            gSfxLoopedObjectSoundCount--;
+            sz = (u16)((gSfxLoopedObjectSoundCount - (index = i)) << 2);
+            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);
+            memmove((u16*)table->ids + index, (u16*)table->ids + index2,
+                    (u16)((gSfxLoopedObjectSoundCount - index) << 1));
+            memmove(table->flags + index, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - index));
+        }
+        else
+        {
+            *fp &= ~SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
+        }
+        fp--;
+        op--;
+        ip--;
+    }
+
+    {
+        s16 i2;
+        u16* ip2;
+        u32* op2;
+        for (i2 = 0, ip2 = table->ids, op2 = table->objects; i2 < gSfxLoopedObjectSoundCount; i2++)
+        {
+            if (Sfx_IsPlayingFromObject(*op2, *ip2) == 0)
+            {
+                Sfx_PlayFromObject(*op2, *ip2);
+            }
+            ip2++;
+            op2++;
+        }
+    }
+}
+
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
+
+
+
+void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
+{
+    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
+    u8* flags = table->flags;
+    s32 count;
+    u16 sameSfxCount;
+    u16* ip;
+    u32* op;
+    u32* objects;
+    u16* ids;
+    s16 j;
+    int found;
+    s16 i;
+
+    count = gSfxLoopedObjectSoundCount;
+    sameSfxCount = 0;
+    i = 0;
+    ids = table->ids;
+    ip = ids;
+    objects = table->objects;
+    op = objects;
+    for (; i < count; i++)
+    {
+        if (sfxId == *ip)
+        {
+            if (limit != 0)
+            {
+                sameSfxCount++;
+            }
+            if (*op == obj)
+            {
+                flags[i] |= SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
+                return;
+            }
+        }
+        ip++;
+        op++;
+    }
+
+    if (sameSfxCount <= limit)
+    {
+        for (j = 0; j < count; j++)
+        {
+            if ((*objects == obj) && (sfxId == *ids))
+            {
+                found = 1;
+                goto checked;
+            }
+            objects++;
+            ids++;
+        }
+        found = 0;
+    checked:
+        if ((found == 0) && (count != sizeof(table->flags)))
+        {
+            table->objects[count] = obj;
+            table->ids[count] = sfxId;
+            flags[count] = 0;
+            gSfxLoopedObjectSoundCount++;
+            Sfx_PlayFromObject(obj, sfxId);
+        }
+    }
+
+    if ((u32)count != gSfxLoopedObjectSoundCount)
+    {
+        flags[count] |= SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
+    }
+}
+
+void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
+{
+    Sfx_KeepAliveLoopedObjectSoundLimited(obj, sfxId, 0);
+}
+
+void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
+{
+    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
+    int index;
+    int index2;
+    s16 i;
+    u32* op;
+    u16 sz;
+
+    i = (s16)(gSfxLoopedObjectSoundCount - 1);
+    op = (u32*)table + i;
+    op += 0x60;
+    for (; i >= 0; i--)
+    {
+        if (*op == obj)
+        {
+            Sfx_StopFromObject(obj, table->ids[i]);
+            gSfxLoopedObjectSoundCount--;
+            sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
+            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);
+            memmove((u16*)table->ids + index, (u16*)table->ids + index2,
+                    (u16)((gSfxLoopedObjectSoundCount - index) << 1));
+            memmove(table->flags + index, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - index));
+            return;
+        }
+        op--;
+    }
+}
+
+void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
+{
+    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
+    u16 sfx16;
+    u32* op;
+    u16* ip;
+    s16 i;
+    int index;
+    int index2;
+    u16 sz;
+
+    i = (s16)(gSfxLoopedObjectSoundCount - 1);
+    op = (u32*)table->objects + i;
+    ip = (u16*)table->ids + i;
+    sfx16 = sfxId;
+    for (; i >= 0; i--)
+    {
+        if (*op == obj && sfx16 == *ip)
+        {
+            gSfxLoopedObjectSoundCount--;
+            sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
+            memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);
+            memmove((u16*)table->ids + index, (u16*)table->ids + index2,
+                    (u16)((gSfxLoopedObjectSoundCount - index) << 1));
+            memmove(table->flags + index, table->flags + index2, (u16)(gSfxLoopedObjectSoundCount - index));
+            Sfx_StopFromObject(obj, sfxId);
+            return;
+        }
+        op--;
+        ip--;
+    }
+}
+
+
+void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
+{
+    SfxLoopedObjectSoundTable* table;
+    s16 i;
+    u32* objectIt;
+    u16* idIt;
+    s32 count;
+    int found;
+
+    table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
+    i = 0;
+    objectIt = table->objects;
+    idIt = table->ids;
+    count = gSfxLoopedObjectSoundCount;
+    for (; i < count; i++)
+    {
+        if ((*objectIt == obj) && (sfxId == *idIt))
+        {
+            found = 1;
+            goto checked;
+        }
+        objectIt++;
+        idIt++;
+    }
+    found = 0;
+checked:
+    if ((found == 0) && (count != sizeof(table->flags)))
+    {
+        table->objects[count] = obj;
+        table->ids[count] = sfxId;
+        table->flags[count] = 0;
+        gSfxLoopedObjectSoundCount++;
+        Sfx_PlayFromObject(obj, sfxId);
+    }
 }
 
 char sSampleBufferSLoadedCallbackLoadError[] = "sampleBufferSLoadedCallback load error\n";
@@ -3372,6 +3582,9 @@ MusicTrackSlot sMusicTrackTable[] = {
 
 char sMidiWadLoadedCallbackLoadError[] = "MIDIWADLoadedCallback load error\n";
 char sMidiWadPath[] = "audio/midi.wad";
+#pragma explicit_zero_data on
+__declspec(section ".data") static u32 sMidiWadPathPad = 0;
+#pragma explicit_zero_data off
 
 SfxTriggerCacheEntry gSfxTriggerLookupCache[16] = {
     {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0},
@@ -3381,6 +3594,6 @@ SfxTriggerCacheEntry gSfxTriggerLookupCache[16] = {
 int gAudioStreamFadeTable[] = {0, 2, 4};
 char sDvdCancelStreamWarning[0x3C] = "WARNING:DVDCancelStreamAsync returned FALSE\012\000\000\000\000/streams/";
 
-u8 gSfxLoopedObjectSoundFlags[0x80];
-u16 gSfxLoopedObjectSoundIds[0x80];
 u32 gSfxLoopedObjectSoundObjects[0x80];
+u16 gSfxLoopedObjectSoundIds[0x80];
+u8 gSfxLoopedObjectSoundFlags[0x80];

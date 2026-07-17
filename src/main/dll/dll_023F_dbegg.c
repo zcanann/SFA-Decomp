@@ -19,10 +19,6 @@
  * progress + count), 0x42a (respawn), 0x44d, and the placement's
  * triggerGameBit. Messages are pumped by dbegg_processMessages (ObjMsg type
  * 17; subtypes 16-20).
- *
- * FUN_80200558 is a dbstealerworm sequence handler that genuinely lands in
- * this object's pool; the remaining FUN_ drift duplicates of the
- * 0x80200740-0x80204320 sibling handlers were dead and removed.
  */
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
@@ -139,8 +135,6 @@ typedef enum DbEggMode
     DBEGG_MODE_GATED_RESPAWN = 0xC, /* respawn gated on the activate game bit */
     DBEGG_MODE_HOMING = 0xD,        /* homing back to its target reposition point */
 } DbEggMode;
-extern u32 FUN_80006824();
-extern u64 FUN_800305f8();
 
 typedef struct DbeggPlacement
 {
@@ -167,6 +161,29 @@ typedef struct DbeggPlacement
     u8 pad2F[0x30 - 0x2F];
 } DbeggPlacement;
 
+#pragma peephole on
+int dbegg_setLaunchVelocity(GameObject* obj, f32* v)
+{
+    u8* inner = obj->extra;
+    if (((DbEggState*)inner)->mode == 0xb)
+    {
+        ((DbEggState*)inner)->launchVelX = v[0];
+        ((DbEggState*)inner)->launchVelY = v[1];
+        ((DbEggState*)inner)->launchVelZ = v[2];
+        return 1;
+    }
+    return 0;
+}
+
+#pragma scheduling on
+int dbegg_setScale(GameObject* obj)
+{
+    u8* inner = obj->extra;
+    return ((DbEggState*)inner)->mode != DBEGG_MODE_RELEASED ? 1 : 0;
+}
+
+#pragma scheduling off
+#pragma peephole off
 #pragma optimization_level 2
 void dbegg_processMessages(GameObject* obj)
 {
@@ -240,28 +257,6 @@ void dbegg_processMessages(GameObject* obj)
 }
 #pragma optimization_level reset
 
-int dbegg_getExtraSize(void)
-{
-    return 0x124;
-}
-int dbegg_getObjectTypeId(void)
-{
-    return 0x8;
-}
-
-void dbegg_free(int obj)
-{
-    ObjGroup_RemoveObject(obj, DBEGG_OBJGROUP);
-}
-
-#pragma scheduling on
-#pragma peephole on
-int dbegg_setScale(GameObject* obj)
-{
-    u8* inner = obj->extra;
-    return ((DbEggState*)inner)->mode != DBEGG_MODE_RELEASED ? 1 : 0;
-}
-
 #pragma scheduling off
 #pragma peephole off
 void dbegg_setupFromDef(GameObject* obj, u8* state)
@@ -323,67 +318,6 @@ void dbegg_setupFromDef(GameObject* obj, u8* state)
         (obj)->userData2 = 0;
         *(f32*)state = fz;
     }
-}
-
-#pragma peephole on
-int dbegg_setLaunchVelocity(GameObject* obj, f32* v)
-{
-    u8* inner = obj->extra;
-    if (((DbEggState*)inner)->mode == 0xb)
-    {
-        ((DbEggState*)inner)->launchVelX = v[0];
-        ((DbEggState*)inner)->launchVelY = v[1];
-        ((DbEggState*)inner)->launchVelZ = v[2];
-        return 1;
-    }
-    return 0;
-}
-
-#pragma peephole off
-void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
-{
-    u8* inner = ((GameObject*)obj)->extra;
-    if (visible != 0)
-    {
-        u32 t = ((DbEggState*)inner)->mode;
-        if (t != 0xc && t != 4 && t != 0xb)
-        {
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E61CC);
-        }
-    }
-}
-
-#pragma peephole on
-void dbegg_hitDetect(GameObject* obj)
-{
-    u8* state;
-    int hit;
-    hit = ObjHits_GetPriorityHit(obj, 0, 0, 0);
-    state = (obj)->extra;
-    if (hit == 0x12)
-    {
-        if (state[0x118] != 4)
-        {
-            Obj_GetPlayerObject();
-        }
-    }
-    if (state[0x118] != 9)
-    {
-        void* hitFrom = &(obj)->anim.previousLocalPosX;
-        void* hitTo = &(obj)->anim.localPosX;
-        f32 hitRadius = lbl_803E6218;
-        if (objBboxFn_800640cc(hitFrom, hitTo, hitRadius, 1, NULL, obj, 8, -1, 0xff, 0) != 0)
-        {
-            f32 damping = lbl_803E621C;
-            f32 velocityX = (obj)->anim.velocityX;
-            (obj)->anim.velocityX = velocityX - damping * velocityX;
-            velocityX = (obj)->anim.velocityZ;
-            (obj)->anim.velocityZ = velocityX - damping * velocityX;
-        }
-    }
-    (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
-    (obj)->anim.previousLocalPosY = (obj)->anim.localPosY;
-    (obj)->anim.previousLocalPosZ = (obj)->anim.localPosZ;
 }
 
 #pragma opt_common_subs off
@@ -576,68 +510,76 @@ void fn_801FE774(int obj, f32* vel)
     }
 }
 
-u32
 #pragma peephole off
-FUN_80200558(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
-             u64 arg6, u64 arg7, u64 arg8, u32 obj, int state,
-             u32 arg11, u32 arg12, u32 arg13, u32 arg14,
-             u32 arg15, u32 arg16)
-{
-    int control;
 
-    control = *(int*)(*(int*)&((GameObject*)obj)->extra + 0x40c);
-    ((DbStealerwormControl*)control)->flags14 |= DBWORM_FLAG14_FX_DUST;
-    ((DbStealerwormControl*)control)->flags15 |= 4;
-    ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E6F80;
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        arg1 = FUN_800305f8((double)lbl_803E6F40, arg2, arg3, arg4, arg5, arg6, arg7, arg8, obj, 0x11, 0, arg12, arg13,
-                            arg14, arg15, arg16);
-        ((GroundBaddieState*)state)->baddie.moveDone = 0;
-    }
-    ((GroundBaddieState*)state)->baddie.stateTag = 0x1f;
-    if (*(char*)(state + 0x27a) != '\0')
-    {
-        ((DbStealerwormControl*)control)->linkedObj = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
-        ((DbStealerwormControl*)control)->msgSlotIndex = 0x24;
-        ((DbStealerwormControl*)control)->msgMode = 0;
-        ObjMsg_SendToObject((void*)((DbStealerwormControl*)control)->linkedObj, 0x11, (void*)obj, 0x12);
-        FUN_80006824(obj, SFXfoot_ice_run_3);
-    }
-    if (lbl_803E6F84 < ((GameObject*)obj)->anim.currentMoveProgress)
-    {
-        ((DbStealerwormControl*)control)->msgAdvance = 1;
-    }
-    return 0;
+int dbegg_getExtraSize(void)
+{
+    return 0x124;
+}
+int dbegg_getObjectTypeId(void)
+{
+    return 0x8;
 }
 
-void dbegg_release(void)
+void dbegg_free(int obj)
 {
+    ObjGroup_RemoveObject(obj, DBEGG_OBJGROUP);
 }
 
-void dbegg_initialise(void)
+#pragma peephole off
+void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-}
-
-void dbegg_init(GameObject* obj)
-{
-    ObjModelState* modelState;
-    dbegg_setupFromDef(obj, (u8*)(obj)->extra);
-    ObjMsg_AllocQueue(obj, 8);
-    modelState = (obj)->anim.modelState;
-    if (modelState != NULL)
+    u8* inner = ((GameObject*)obj)->extra;
+    if (visible != 0)
     {
-        modelState->flags |= 0x4008;
+        u32 t = ((DbEggState*)inner)->mode;
+        if (t != 0xc && t != 4 && t != 0xb)
+        {
+            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E61CC);
+        }
     }
 }
+
+#pragma peephole on
+void dbegg_hitDetect(GameObject* obj)
+{
+    u8* state;
+    int hit;
+    hit = ObjHits_GetPriorityHit(obj, 0, 0, 0);
+    state = (obj)->extra;
+    if (hit == 0x12)
+    {
+        if (state[0x118] != 4)
+        {
+            Obj_GetPlayerObject();
+        }
+    }
+    if (state[0x118] != 9)
+    {
+        void* hitFrom = &(obj)->anim.previousLocalPosX;
+        void* hitTo = &(obj)->anim.localPosX;
+        f32 hitRadius = lbl_803E6218;
+        if (objBboxFn_800640cc(hitFrom, hitTo, hitRadius, 1, NULL, obj, 8, -1, 0xff, 0) != 0)
+        {
+            f32 damping = lbl_803E621C;
+            f32 velocityX = (obj)->anim.velocityX;
+            (obj)->anim.velocityX = velocityX - damping * velocityX;
+            velocityX = (obj)->anim.velocityZ;
+            (obj)->anim.velocityZ = velocityX - damping * velocityX;
+        }
+    }
+    (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
+    (obj)->anim.previousLocalPosY = (obj)->anim.localPosY;
+    (obj)->anim.previousLocalPosZ = (obj)->anim.localPosZ;
+}
+
+#pragma peephole off
 
 typedef struct DbEggIntPair
 {
     s32 a;
     s32 b;
 } DbEggIntPair;
-
-void dbegg_update(GameObject* obj);
 
 ObjectDescriptor12 gDB_eggObjDescriptor = {
     0,
@@ -1029,4 +971,24 @@ void dbegg_update(GameObject* obj)
         }
     }
 #undef hitState
+}
+
+void dbegg_init(GameObject* obj)
+{
+    ObjModelState* modelState;
+    dbegg_setupFromDef(obj, (u8*)(obj)->extra);
+    ObjMsg_AllocQueue(obj, 8);
+    modelState = (obj)->anim.modelState;
+    if (modelState != NULL)
+    {
+        modelState->flags |= 0x4008;
+    }
+}
+
+void dbegg_release(void)
+{
+}
+
+void dbegg_initialise(void)
+{
 }
