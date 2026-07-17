@@ -86,7 +86,6 @@ extern int mainGetBit(int eventId);
 extern void fn_8006FC00(int v);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void mainSetBits(int eventId, int value);
-extern void gameTextFn_80125ba4(int id);
 extern void envFxFn_800887cc(void);
 extern int fn_80198B68(int obj, int p2);
 extern void fn_80198DE8(int obj, int target);

@@ -798,12 +798,10 @@ void dll_0B_func0A(s16* p)
 }
 
 extern void GXLoadPosMtxImm(void* mtx, int id);
-extern void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex);
 extern void gxTevAddTextureFrameBlendStages(void);
 extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);
 extern void textBlendSetupFn_80078a7c(void);
-extern void fn_800542F4(void);
 
 int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
 {

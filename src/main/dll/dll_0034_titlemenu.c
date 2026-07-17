@@ -90,7 +90,6 @@ extern TitleMenuTextEntry lbl_8031A214[4];
 extern u8 gAttractMovieLoopCompleted;
 extern u8 lbl_803DD6F8;
 extern f32 lbl_803E1D28;
-extern int getUiDllFn_80014930(void);
 
 extern u8* lbl_803DD498;
 

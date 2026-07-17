@@ -151,7 +151,6 @@ extern f32 PSVECMag(f32* v);
 extern void PSVECNormalize(f32* src, f32* dst);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* c);
 extern f32 PSVECDotProduct(f32* a, f32* b);
-extern f32 fn_80291FF4(f32 v);
 extern void PSMTXRotAxisRad(void* mtx, f32* axis, f32 angle);
 extern void PSMTXMultVecSR(void* mtx, f32* src, f32* dst);
 extern f32 lbl_803E25C4;

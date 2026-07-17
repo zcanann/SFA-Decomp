@@ -23,13 +23,10 @@ extern f32 gVecMathNegHalfPi;
 extern f32 gVecMathTwoPi;
 extern f32 lbl_803DE7F4;
 
-extern float powfBitEstimate(float x, float y);
 extern float fcos16(int angle);
 extern int rand(void);
 extern f32 fsin16(int angle);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
-extern f32 __kernel_sin(f32);
-extern f32 __kernel_cos(f32, f32);
 
 void setMatrixFromObjectPos(f32* m, const MatrixTransform* transform);
 

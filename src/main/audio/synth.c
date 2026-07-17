@@ -310,7 +310,6 @@ typedef struct LAYER
 } LAYER;
 
 extern void* dataGetLayer(u16 id, u16* count);
-extern u32 vidMakeRoot(McmdVoiceState* voice);
 u32 StartKeymap(u16 id, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
                 u8 section, u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
 
@@ -1474,7 +1473,6 @@ int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux)
 #define SYNTH_FADE_TYPE_ACTION_2          2
 #define SYNTH_FADE_TYPE_ACTION_3          3
 
-extern int vidGetInternalId(u32 id);
 extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
 extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
 extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);

@@ -160,8 +160,6 @@ extern f32 lbl_803DD0DC;
 extern u8 lbl_803DD0F8;
 extern f32 lbl_803DEFB0;
 extern f32 lbl_803DEFC8;
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
 extern f32 lbl_803DF000;
 extern f32 lbl_803DF01C;
 void ObjSeq_setCamVars(int camA, int camB, int camC, int camD);

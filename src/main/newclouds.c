@@ -91,11 +91,8 @@ typedef struct WindSource
     s16 pad1a;
 } WindSource;
 #define NEWCLOUD_WIND_SOURCE_COUNT 6
-extern void normalize(f32 * x, f32 * y, f32 * z);
 extern void fn_800788DC(void);
 extern void fn_8006C51C(void* out);
-extern void GXSetCurrentMtx(u32 id);
-extern void srand(int seed);
 extern int gNewCloudLightningFogColor;
 extern const f32 lbl_803DF1D4;
 extern void* gNewClouds[8];
@@ -125,7 +122,6 @@ extern const f32 lbl_803DF274;
 extern const f32 lbl_803DF278;
 #define D7_CLOUD (*pp)
 extern char sSnowPrintSnowCloudInvalidCloudId[];
-extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern const f32 lbl_803DF204;
 
 static inline void snowFifoTexCoord2s16(s16 s, s16 t)

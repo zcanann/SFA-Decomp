@@ -200,7 +200,6 @@ extern void* gTitleMenuItemInterface;
 extern u8 lbl_803DCA3F;
 extern int gGameLoopPlayerTrailTime;
 extern f32 lbl_803DE7B0;
-extern void doNothing_endOfFrame(void);
 extern f32 lbl_803DE7A8;
 extern u8 lbl_803DCAC4;
 extern int gGameLoopPendingUiDllId;
@@ -208,7 +207,6 @@ extern int lbl_803DCACC;
 extern void GXSetCopyFilter(int aa, u8* samplePattern, int vf, u8* vfilter);
 extern int lbl_803DB428;
 extern int lbl_803DB42C;
-extern void* gameTextGetStr(int textId);
 extern u8 gGameLoopResetComboDebounce;
 extern f32 gGameLoopResetHoldTimer;
 extern f32 gGameLoopResetFadeOutTimer;
@@ -1347,7 +1345,6 @@ void gameUpdate(void)
 
 
 extern void voxmaps_updateTimers(void);
-extern void viewportEffectFn_8000e380(void);
 extern void debugPrintDraw(int a);
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 

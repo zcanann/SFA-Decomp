@@ -50,7 +50,6 @@ extern f32 lbl_803E1928;
 extern f32 lbl_803E192C;
 extern f32 lbl_803E1930;
 extern f32 lbl_803E1940;
-extern float powfBitEstimate(float x, float y);
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 
 void CameraModeCombat_copyToCurrent(void)

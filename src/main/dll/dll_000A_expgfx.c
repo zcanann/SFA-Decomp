@@ -205,8 +205,6 @@ extern const f32 lbl_803DF408;
 extern const f32 lbl_803DF40C;
 extern const f32 gExpgfxU16ToUnitScale;
 extern void _textSetColor(int unused, int a, int b, int c, int d);
-extern void fn_8000F83C(void);
-extern float __fabsf(float);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void setupReflectionIndirectTev(u32 flag);
 extern void fn_80079180(void);

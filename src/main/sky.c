@@ -234,7 +234,6 @@ extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void fogFn_80070404(f32 a, f32 b);
-extern f32 mathCosf(f32 x);
 extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
 extern void GXSetTevOrder(int stage, int coord, int map, int color);
 extern void GXSetTevDirect(int stage);

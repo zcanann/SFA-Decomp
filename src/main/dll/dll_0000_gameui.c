@@ -547,7 +547,6 @@ extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int arg, int 
 extern void drawFn_8011e8d8(void* tex, f32 x, f32 y, int a, u8 b, int w, int h, int off, int m);
 extern void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, u8 b, int c, int d);
 extern void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, u8 b, int c, int w, int h, int m);
-extern void hudDrawCMenu(int a, int b, int c);
 extern s16 gCMenuForcedSelIndex;
 extern s8 gCMenuPreselectOwnedBit;
 extern int gTrickyHudActionMask;
@@ -670,7 +669,6 @@ extern const f32 lbl_803E20C0;
 extern const f32 lbl_803E20C4;
 extern const f32 lbl_803E20CC;
 extern void boxDrawFn_8012975c(int a, int b, int c);
-extern void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c);
 extern u16 getNextTaskHintText(void);
 extern void fn_80128120(void* obj, u8 v);
 extern void fn_80128470(int v);
@@ -744,7 +742,6 @@ extern s8 lbl_803DD75E;
 extern f32 lbl_803DD768;
 extern const f32 lbl_803E2174;
 extern s16 lbl_803A8B48[0x98];
-extern void cMenuRotateFn_80124d80(void);
 extern void cMenuPlayTrickyCommandSfx(u8* player);
 extern s8 shouldCloseCMenu;
 extern s16 cMenuSelectedItem;
@@ -809,9 +806,7 @@ extern u8 gCMenuItemEnabledTable[0x3C0];
 extern int gCMenuItemTargetTable[0xBA];
 extern Texture* gGameUiBlinkTexture;
 extern int getScreenBlankFrameCount(void);
-extern void drawArwingHud(int a, int b, int c);
 extern void hudDrawFn_80121440(int a, int b, int c);
-extern void drawTrickyHudOverlay(int a, int b, int c);
 extern s32 lbl_803DD828;
 extern u32 lbl_803DD82C;
 extern int cameraGetTargetType(void);
@@ -832,7 +827,6 @@ extern void timeListDraw(int a, int b, int c);
 extern void cMenuRun(void);
 extern u32 gCMenuButtons;
 extern s8 gCMenuCloseSfx;
-extern int cMenuSetItems(s16* items, char useTricky);
 
 
 

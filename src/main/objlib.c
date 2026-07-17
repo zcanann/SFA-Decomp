@@ -32,7 +32,6 @@
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
-extern void setMatrixFromObjectTransposed(void* obj, f32* out);
 extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);
 extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);
 extern void fn_80054F74(int obj, float* pos);

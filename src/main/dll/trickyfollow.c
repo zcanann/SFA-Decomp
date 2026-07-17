@@ -98,7 +98,6 @@ extern void fn_800D9F38(RomCurveWalker* route);
 extern void fn_800D9EE8(RomCurveWalker* route);
 extern void fn_8004B31C(void* search, u32 route, void* target, int pathId, u32 dir);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
-extern void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag);
 
 static u8* trickyfollow_validateRouteNode(u8* node)
 {

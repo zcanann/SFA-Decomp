@@ -16,7 +16,6 @@
 #define MAC_REALTIME       macRealTime
 
 extern u64 macRealTime;
-extern u16 sndRand(void);
 /*
  * Delay/schedule a voice command, optionally randomizing the delay and
  * inserting the voice into the global time queue.

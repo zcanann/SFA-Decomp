@@ -73,7 +73,6 @@ extern f32 gLightmapDegToBamScale;
 extern F32Pair changed_803DEC08;
 extern f32 lbl_803DEC0C;
 extern FrustumPlane gViewFrustumPlanes[];
-extern f32 fn_80293AC4(int v);
 extern f32 fn_80293D0C(int v);
 extern f32 fn_80292248(f32 v);
 extern float floor(float x);
@@ -1353,7 +1352,6 @@ void fn_8005D0BC(int unused, int a, int b, int c)
     fn_800704FC(a, b, c);
 }
 
-extern void fn_8000F8F8(void);
 
 
 
@@ -1375,7 +1373,6 @@ void doNothing_8005D148(void)
 }
 
 
-extern void fn_8000F9B4(void);
 extern void drawFn_8006f500(void);
 void objDrawFn_8005da48(int* obj);
 void lightmap_sortTransparentDrawQueue(void);
