@@ -346,7 +346,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                             {
                                 if (*(s16*)(state + 0x98 + i * 2) == trickyPatch)
                                 {
-                                    trickyPatch = i;
+                                    trickyPatch = i & 0xffff;
                                     ((TrickyState*)state)->followPhase = 2;
                                     break;
                                 }
@@ -756,7 +756,8 @@ state_selected:
             {
                 for (step = 0; step < 4; step++)
                 {
-                    if (*(u8*)(node + step + 4) == ((TrickyState*)state)->walkGroup)
+                    u8 grp = *(u8*)(node + step + 4);
+                    if (grp == ((TrickyState*)state)->walkGroup)
                     {
                         break;
                     }
