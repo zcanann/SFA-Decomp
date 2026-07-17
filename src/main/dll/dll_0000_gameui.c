@@ -3407,7 +3407,7 @@ void hudUpdateMinimapReveal(void)
     return;
 }
 
-void hudDrawButtons(int unk1, int unk2, int unk3)
+void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
 {
     char* textPtr;
     u32 label;
@@ -3436,13 +3436,13 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     int slotCount;
     int sel;
     s16 fade;
-    u8* gp;
+    u8* phraseIndex;
     s16 alpha;
     s16 rowFade;
     s16 a16;
     int prevCharset;
     int prevCharset2;
-    u8* textObj;
+    GameTextDef* textObj;
     char slots[68];
     u32 glyph;
     int wid;
@@ -3518,7 +3518,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             }
         }
         GXSetScissor(0, 0, 0x280, 0x1E0);
-        hudDrawCMenu(unk1, unk2, unk3);
+        hudDrawCMenu(cMenuArg0, cMenuArg1, cMenuArg2);
         z[0] = 0;
         z[1] = z[0];
         do
@@ -3554,13 +3554,14 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             z[1] += 0x32;
             z[0]++;
         } while (z[0] < GCMENU_ITEM_ICON_COUNT);
-        drawTexture(((PauseMenuHud*)base)->texHandle, gHudRightColX, lbl_803E1FD0, fade * lbl_803DD8D4 / 0xFF & 0xFF,
+        drawTexture(((CMenuHud*)base)->textures1C0[0x21], gHudRightColX, lbl_803E1FD0,
+                    fade * lbl_803DD8D4 / 0xFF & 0xFF,
                     0x100);
-        drawScaledTexture(((PauseMenuHud*)base)->texHandle, gHudCMenuColX2, lbl_803E1FD0,
+        drawScaledTexture(((CMenuHud*)base)->textures1C0[0x21], gHudCMenuColX2, lbl_803E1FD0,
                           fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100, 0x12, 10, 1);
-        drawScaledTexture(((PauseMenuHud*)base)->texHandle, gHudRightColX, gHudCMenuRowY2,
+        drawScaledTexture(((CMenuHud*)base)->textures1C0[0x21], gHudRightColX, gHudCMenuRowY2,
                           fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100, 0x12, 10, 2);
-        drawScaledTexture(((PauseMenuHud*)base)->texHandle, gHudCMenuColX2, gHudCMenuRowY2,
+        drawScaledTexture(((CMenuHud*)base)->textures1C0[0x21], gHudCMenuColX2, gHudCMenuRowY2,
                           fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100, 0x12, 10, 3);
         if ((player != NULL) && (objIsCurModelNotZero(player) != 0))
         {
@@ -3576,8 +3577,8 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 icon = 0x5A;
                 break;
             }
-            drawTexture(((void**)(base + 0x1C0))[icon], gHudSectionIconX, lbl_803E1FB4, fade * lbl_803DD8D4 / 0xFF & 0xFF,
-                        0x100);
+            drawTexture(((void**)(base + 0x1C0))[icon], gHudSectionIconX, lbl_803E1FB4,
+                        fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100);
         }
     }
     if (hudYButtonItemIconTexture != NULL && gHudYButtonItemTextureCache != yButtonItemTextureId)
@@ -3593,12 +3594,12 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     }
     if (lbl_803DD83C != lbl_803E1E3C)
     {
-        drawTexture(((void**)(base + 0x1C0))[0], gHudBtnPrompt0X, lbl_803E1F9C, lbl_803DD83C, 0x100);
-        drawTexture(((void**)(base + 0x1C0))[1], gHudBtnPrompt1X, gHudBtnPrompt1Y, lbl_803DD83C, 0x100);
-        drawTexture(((void**)(base + 0x1C0))[2], gHudBtnPrompt2X, lbl_803E1FF0, lbl_803DD83C, 0x100);
+        drawTexture(((CMenuHud*)base)->textures1C0[0], gHudBtnPrompt0X, lbl_803E1F9C, lbl_803DD83C, 0x100);
+        drawTexture(((CMenuHud*)base)->textures1C0[1], gHudBtnPrompt1X, gHudBtnPrompt1Y, lbl_803DD83C, 0x100);
+        drawTexture(((CMenuHud*)base)->textures1C0[2], gHudBtnPrompt2X, lbl_803E1FF0, lbl_803DD83C, 0x100);
         if ((gHudAButtonFlashTimer & 8) == 0)
         {
-            drawTexture(((void**)(base + 0x1C0))[9], gHudBtnPrompt3X, gHudBtnPrompt3Y, lbl_803DD83C, 0x100);
+            drawTexture(((CMenuHud*)base)->textures1C0[9], gHudBtnPrompt3X, gHudBtnPrompt3Y, lbl_803DD83C, 0x100);
         }
         if ((aButtonIcon != 0) && (aButtonIcon != 0x1C))
         {
@@ -3636,36 +3637,35 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 }
                 textObj = gameTextGet(0x2AD);
             }
-            if (icon != 0 && (void*)textObj != NULL && *(u16*)(textObj + 2) > *(gp = gHudButtonIcons + icon * 2 + 1))
+            if (icon != 0 && textObj != NULL && textObj->count > *(phraseIndex = gHudButtonIcons + icon * 2 + 1))
             {
-                textPtr = *(char**)((u8*)*(void**)(textObj + 8) + *gp * 4);
+                textPtr = textObj->strings[*phraseIndex];
                 prevCharset2 = gameTextGetCharset();
                 gameTextSetCharset(3, 3);
                 gameTextMeasureFn_800163c4((char*)textPtr, 8, 0, 0, &am0, &am1, &am2, &am3);
                 gameTextShowStr((char*)textPtr, 8, 0, 0);
                 gameTextSetCharset(prevCharset2, 3);
-                gameTextMeasureFn_800163c4(*(char**)((u8*)*(void**)(textObj + 8) + *gp * 4), 8, 0, 0, &ax0, &ax1,
-                                           &ay0, &ay1);
+                gameTextMeasureFn_800163c4(textObj->strings[*phraseIndex], 8, 0, 0, &ax0, &ax1, &ay0, &ay1);
                 wid = (ax1 - ax0) + -0x19;
                 if (wid < 1)
                 {
                     wid = 1;
                 }
-                drawScaledTexture(((void**)(base + 0x1C0))[8], (f32)(0x219 - wid), gHudAButtonY, lbl_803DD83C, 0x100, wid,
-                                  0x16, 0);
-                drawTexture(((void**)(base + 0x1C0))[7], (f32)(0x20D - wid), gHudAButtonY, lbl_803DD83C, 0x100);
+                drawScaledTexture(((CMenuHud*)base)->textures1C0[8], (f32)(0x219 - wid), gHudAButtonY, lbl_803DD83C,
+                                  0x100, wid, 0x16, 0);
+                drawTexture(((CMenuHud*)base)->textures1C0[7], (f32)(0x20D - wid), gHudAButtonY, lbl_803DD83C, 0x100);
             }
             else
             {
-                drawTexture(((void**)(base + 0x1C0))[7], gHudAButtonIconX, gHudAButtonY, lbl_803DD83C, 0x100);
+                drawTexture(((CMenuHud*)base)->textures1C0[7], gHudAButtonIconX, gHudAButtonY, lbl_803DD83C, 0x100);
             }
             prevAButtonIcon = aButtonIcon;
-            drawTexture(((void**)(base + 0x1C0))[5], gHudRightColX, gHudAButtonY, lbl_803DD83C, 0x100);
+            drawTexture(((CMenuHud*)base)->textures1C0[5], gHudRightColX, gHudAButtonY, lbl_803DD83C, 0x100);
             gameTextSetCharset(prevCharset, 3);
         }
         else
         {
-            drawTexture(((void**)(base + 0x1C0))[3], gHudRightColX, gHudAButtonY, lbl_803DD83C, 0x100);
+            drawTexture(((CMenuHud*)base)->textures1C0[3], gHudRightColX, gHudAButtonY, lbl_803DD83C, 0x100);
             prevAButtonIcon = 0;
             gHudAButtonFlashTimer = 0;
         }
@@ -3698,36 +3698,35 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             prevCharset = gameTextGetCharset();
             gameTextSetCharset(3, 3);
             textObj = gameTextGet(0x2AD);
-            if (icon != 0 && (void*)textObj != NULL && *(u16*)(textObj + 2) > *(gp = gHudButtonIcons + icon * 2 + 1))
+            if (icon != 0 && textObj != NULL && textObj->count > *(phraseIndex = gHudButtonIcons + icon * 2 + 1))
             {
-                textPtr = *(char**)((u8*)*(void**)(textObj + 8) + *gp * 4);
+                textPtr = textObj->strings[*phraseIndex];
                 prevCharset2 = gameTextGetCharset();
                 gameTextSetCharset(3, 3);
                 gameTextMeasureFn_800163c4((char*)textPtr, 9, 0, 0, &bm0, &bm1, &bm2, &bm3);
                 gameTextShowStr((char*)textPtr, 9, 0, 0);
                 gameTextSetCharset(prevCharset2, 3);
-                gameTextMeasureFn_800163c4(*(char**)((u8*)*(void**)(textObj + 8) + *gp * 4), 9, 0, 0, &bx0, &bx1,
-                                           &by0, &by1);
+                gameTextMeasureFn_800163c4(textObj->strings[*phraseIndex], 9, 0, 0, &bx0, &bx1, &by0, &by1);
                 wid = (bx1 - bx0) + -7;
                 if (wid < 1)
                 {
                     wid = 1;
                 }
-                drawScaledTexture(((void**)(base + 0x1C0))[8], (f32)(0x219 - wid), gHudBButtonY, lbl_803DD83C, 0x100, wid,
-                                  0x16, 0);
-                drawTexture(((void**)(base + 0x1C0))[7], (f32)(0x20D - wid), gHudBButtonY, lbl_803DD83C, 0x100);
+                drawScaledTexture(((CMenuHud*)base)->textures1C0[8], (f32)(0x219 - wid), gHudBButtonY, lbl_803DD83C,
+                                  0x100, wid, 0x16, 0);
+                drawTexture(((CMenuHud*)base)->textures1C0[7], (f32)(0x20D - wid), gHudBButtonY, lbl_803DD83C, 0x100);
             }
             else
             {
-                drawTexture(((void**)(base + 0x1C0))[7], gHudBButtonIconX, gHudBButtonY, lbl_803DD83C, 0x100);
+                drawTexture(((CMenuHud*)base)->textures1C0[7], gHudBButtonIconX, gHudBButtonY, lbl_803DD83C, 0x100);
             }
             gHudPrevBButtonIcon = bButtonIcon;
-            drawTexture(((void**)(base + 0x1C0))[6], gHudRightColX, gHudBButtonGlyphY, lbl_803DD83C, 0x100);
+            drawTexture(((CMenuHud*)base)->textures1C0[6], gHudRightColX, gHudBButtonGlyphY, lbl_803DD83C, 0x100);
             gameTextSetCharset(prevCharset, 3);
         }
         else
         {
-            drawTexture(((void**)(base + 0x1C0))[4], gHudRightColX, gHudBButtonGlyphY, lbl_803DD83C, 0x100);
+            drawTexture(((CMenuHud*)base)->textures1C0[4], gHudRightColX, gHudBButtonGlyphY, lbl_803DD83C, 0x100);
             gHudPrevBButtonIcon = 0;
         }
         if (hudYButtonItemIconTexture != NULL)

@@ -51,7 +51,7 @@ typedef struct
 {
     u8 _pad0[0x190];
     int times190[12]; /* 0x190 */
-    int textures1C0[0x66]; /* 0x1c0 */
+    void* textures1C0[0x66]; /* 0x1c0 */
     s16 texIds358[0x28]; /* 0x358 */
     int textures3A8[0x28]; /* 0x3a8 */
     u8 itemFlags[0x40]; /* 0x448 */
@@ -65,7 +65,10 @@ typedef struct
     int ownedBits[0x40]; /* 0x848 */
     s16 textureIds[0x40]; /* 0x948 */
     void* itemTextures[0x40]; /* 0x9c8 */
-    u8 _padAC8[0x158]; /* 0xac8 */
+    u8 _padAC8[0xf0]; /* 0xac8 */
+    int visibleItemStates[7]; /* 0xbb8 */
+    void* visibleItemTextures[7]; /* 0xbd4 */
+    u8 _padBF0[0x30]; /* 0xbf0 */
     struct GameObject* anims[4]; /* 0xc20 */
 } CMenuHud;
 
