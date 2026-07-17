@@ -3504,9 +3504,14 @@ main/dll/DR/dll_0281_drearthcal.c:
 	.data       start:0x8032AE10 end:0x8032AE50
 
 main/dll/dll_0282_barrelgener.c:
-	.text       start:0x80221670 end:0x802227EC
+	.text       start:0x80221670 end:0x80221978
 	.data       start:0x8032AE50 end:0x8032AE88
-	.sdata      start:0x803DC398 end:0x803DC3B0
+	.sdata      start:0x803DC398 end:0x803DC39C
+
+main/dll/obj_movelib.c:
+	.text       start:0x80221978 end:0x802227EC
+	.sdata      start:0x803DC3A0 end:0x803DC3B0
+	.sdata2     start:0x803E6C48 end:0x803E6C58
 
 main/dll/DR/dll_0283_drbarrelgr.c:
 	.text       start:0x802227EC end:0x80223004
