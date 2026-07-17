@@ -27,6 +27,7 @@
 #include "main/camera_interface.h"
 #include "main/dll/cloudaction_interface.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/object_api.h"
 #include "main/obj_list.h"
 
@@ -168,7 +169,7 @@ ObjectDescriptor15 gSB_GalleonObjDescriptor = {
 
 void fn_801DFA28(GameObject* obj)
 {
-    int spawnData;
+    ObjPlacement* spawnData;
     SBGalleonState* state;
     GameObject* tricky;
     GameObject** objects;
@@ -209,7 +210,7 @@ void fn_801DFA28(GameObject* obj)
     int objCount;
     f32 camShake;
 
-    spawnData = *(int*)&obj->anim.placementData;
+    spawnData = obj->anim.placement;
     state = obj->extra;
     camShake = lbl_803E56C8;
     obj->anim.mapEventSlot = -1;
@@ -802,9 +803,9 @@ void fn_801DFA28(GameObject* obj)
                     ((SBGalleonState*)state)->musicLatch = 1;
                 }
                 ((SBGalleonState*)state)->cameraState = 1;
-                ((GameObject*)obj)->anim.localPosX = *(f32*)(spawnData + 0x8);
+                ((GameObject*)obj)->anim.localPosX = spawnData->posX;
                 ((GameObject*)obj)->anim.localPosY = lbl_803E57AC;
-                ((GameObject*)obj)->anim.localPosZ = *(f32*)(spawnData + 0x10);
+                ((GameObject*)obj)->anim.localPosZ = spawnData->posZ;
                 Sfx_StopObjectChannel((int)obj, 1);
                 DBPROT_MAP_EVENT(obj->anim.pad34, 2, 1);
                 OBJECT_TRIGGER_REFRESH(0, obj, -1);
