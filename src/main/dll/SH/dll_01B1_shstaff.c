@@ -44,7 +44,6 @@ int sh_staff_getExtraSize(void)
     return 0x74;
 }
 
-#pragma opt_strength_reduction on
 void sh_staff_free(int* obj, int flag)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -64,7 +63,6 @@ void sh_staff_free(int* obj, int flag)
         }
     }
 }
-#pragma opt_strength_reduction reset
 
 #include "main/dll/DR/DRearthwalk.h"
 #include "main/obj_placement.h"
