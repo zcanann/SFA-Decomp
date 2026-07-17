@@ -1453,7 +1453,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/SH/dll_01AC_shqueenearthwalker.c", cflags=cflags_dll_noopt),
             Object(Matching, "main/dll/lily.c"),
             Object(Matching, "main/dll/dll_1e8.c"),
-            Object(MatchingFor("GSAE01"), "main/dll/SH/shthorntailgroup.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/SH/SHthorntail.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/scshgroup.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/SH/dll_01AE_shlevelcontrol.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/SH/dll_01AF_shswaplift.c", cflags=cflags_dll_noopt),
