@@ -230,7 +230,15 @@ void fn_8013E0D0(int* obj, TrickyState* t)
                 {
                     b = 0;
                 }
-                else if (lbl_803E2410 != t->eventTime && !(t->currentTime - t->eventTime > lbl_803E2414))
+                else if (lbl_803E2410 == t->eventTime)
+                {
+                    b = 1;
+                }
+                else if (t->currentTime - t->eventTime > lbl_803E2414)
+                {
+                    b = 1;
+                }
+                else
                 {
                     b = 0;
                 }
