@@ -128,6 +128,14 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
     int shamt = bitWidth - 4;
     int hi = (*p >> 4) & 0xf;
     int i;
+    u8 nib;
+    int delta;
+    int base;
+    int nibValue;
+    u32 packed;
+    int curBit;
+    int bo;
+    u8* dp;
 
     if (shamt < 0)
     {
@@ -146,117 +154,23 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
 
     for (i = count / 2; i > 0; i--)
     {
-        {
-            u8 nib = *p & 0xf;
-            int base = lbl_802C18C0[idx];
-            int delta = 0;
-            if (nib & 1)
-            {
-                delta = base >> 2;
-            }
-            if (nib & 2)
-            {
-                delta += base >> 1;
-            }
-            if (nib & 4)
-            {
-                delta += base;
-            }
-            if (nib & 8)
-            {
-                delta = -delta;
-            }
-            acc += delta;
-            idx += lbl_802C1A24[nib];
-            if (idx < 0)
-            {
-                idx = 0;
-            }
-            else if (idx > 0x58)
-            {
-                idx = 0x58;
-            }
-            {
-                u32 packed = (u16)acc;
-                int curBit = state->bit;
-                int bo = curBit >> 3;
-                u8* dp;
-                packed <<= ((8 - (curBit & 7)) + sh16);
-                dp = (u8*)state->instrs;
-                dp[bo] |= (packed >> 16) & 0xff;
-                dp = (u8*)state->instrs;
-                dp[bo + 1] |= (packed >> 8) & 0xff;
-                dp = (u8*)state->instrs;
-                dp[bo + 2] |= packed & 0xff;
-                state->bit += bitWidth;
-                state->bit += gap;
-            }
-        }
-        {
-            u8 nib = (*p++ >> 4) & 0xf;
-            int base = lbl_802C18C0[idx];
-            int delta = 0;
-            if (nib & 1)
-            {
-                delta = base >> 2;
-            }
-            if (nib & 2)
-            {
-                delta += base >> 1;
-            }
-            if (nib & 4)
-            {
-                delta += base;
-            }
-            if (nib & 8)
-            {
-                delta = -delta;
-            }
-            acc += delta;
-            idx += lbl_802C1A24[nib];
-            if (idx < 0)
-            {
-                idx = 0;
-            }
-            else if (idx > 0x58)
-            {
-                idx = 0x58;
-            }
-            {
-                u32 packed = (u16)acc;
-                int curBit = state->bit;
-                int bo = curBit >> 3;
-                u8* dp;
-                packed <<= ((8 - (curBit & 7)) + sh16);
-                dp = (u8*)state->instrs;
-                dp[bo] |= (packed >> 16) & 0xff;
-                dp = (u8*)state->instrs;
-                dp[bo + 1] |= (packed >> 8) & 0xff;
-                dp = (u8*)state->instrs;
-                dp[bo + 2] |= packed & 0xff;
-                state->bit += bitWidth;
-                state->bit += gap;
-            }
-        }
-    }
-    if (count & 1)
-    {
-        u8 nib = *p++ & 0xf;
-        int base = lbl_802C18C0[idx];
-        int delta = 0;
-        if (nib & 1)
+        nib = *p & 0xf;
+        base = lbl_802C18C0[idx];
+        delta = 0;
+        nibValue = nib;
+        if (nibValue & 1)
         {
             delta = base >> 2;
         }
-        if (nib & 2)
+        if (nibValue & 2)
         {
             delta += base >> 1;
         }
-        if (nib & 4)
+        if (nibValue & 4)
         {
             delta += base;
         }
-        if (nib & 8)
+        if (nibValue & 8)
         {
             delta = -delta;
         }
@@ -271,10 +185,101 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
             idx = 0x58;
         }
         {
-            u32 packed = (u16)acc;
-            int curBit = state->bit;
-            int bo = curBit >> 3;
-            u8* dp;
+            packed = (u16)acc;
+            curBit = state->bit;
+            bo = curBit >> 3;
+            packed <<= ((8 - (curBit & 7)) + sh16);
+            dp = (u8*)state->instrs;
+            dp[bo] |= (packed >> 16) & 0xff;
+            dp = (u8*)state->instrs;
+            dp[bo + 1] |= (packed >> 8) & 0xff;
+            dp = (u8*)state->instrs;
+            dp[bo + 2] |= packed & 0xff;
+            state->bit += bitWidth;
+            state->bit += gap;
+        }
+
+        nib = (*p++ >> 4) & 0xf;
+        base = lbl_802C18C0[idx];
+        delta = 0;
+        nibValue = nib;
+        if (nibValue & 1)
+        {
+            delta = base >> 2;
+        }
+        if (nibValue & 2)
+        {
+            delta += base >> 1;
+        }
+        if (nibValue & 4)
+        {
+            delta += base;
+        }
+        if (nibValue & 8)
+        {
+            delta = -delta;
+        }
+        acc += delta;
+        idx += lbl_802C1A24[nib];
+        if (idx < 0)
+        {
+            idx = 0;
+        }
+        else if (idx > 0x58)
+        {
+            idx = 0x58;
+        }
+        {
+            packed = (u16)acc;
+            curBit = state->bit;
+            bo = curBit >> 3;
+            packed <<= ((8 - (curBit & 7)) + sh16);
+            dp = (u8*)state->instrs;
+            dp[bo] |= (packed >> 16) & 0xff;
+            dp = (u8*)state->instrs;
+            dp[bo + 1] |= (packed >> 8) & 0xff;
+            dp = (u8*)state->instrs;
+            dp[bo + 2] |= packed & 0xff;
+            state->bit += bitWidth;
+            state->bit += gap;
+        }
+    }
+    if (count & 1)
+    {
+        nib = *p++ & 0xf;
+        base = lbl_802C18C0[idx];
+        delta = 0;
+        nibValue = nib;
+        if (nibValue & 1)
+        {
+            delta = base >> 2;
+        }
+        if (nibValue & 2)
+        {
+            delta += base >> 1;
+        }
+        if (nibValue & 4)
+        {
+            delta += base;
+        }
+        if (nibValue & 8)
+        {
+            delta = -delta;
+        }
+        acc += delta;
+        idx += lbl_802C1A24[nib];
+        if (idx < 0)
+        {
+            idx = 0;
+        }
+        else if (idx > 0x58)
+        {
+            idx = 0x58;
+        }
+        {
+            packed = (u16)acc;
+            curBit = state->bit;
+            bo = curBit >> 3;
             packed <<= ((8 - (curBit & 7)) + sh16);
             dp = (u8*)state->instrs;
             dp[bo] |= (packed >> 16) & 0xff;
