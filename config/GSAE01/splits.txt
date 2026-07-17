@@ -2334,7 +2334,7 @@ main/dll/DIM/dll_01C1_dimsnowball.c:
 	.text       start:0x801B0DD4 end:0x801B13E8
 	.data       start:0x80323BC0 end:0x80325360
 	.sdata      start:0x803DBEE8 end:0x803DBEF0
-	.sdata2     start:0x803E4848 end:0x803E4CD0
+	.sdata2     start:0x803E4848 end:0x803E4860
 
 dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
 	.text       start:0x801B13E8 end:0x801B13E8
@@ -2342,6 +2342,7 @@ dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
 main/dll/DIM/dll_01C2_dimsnowball1c2.c:
 	.text       start:0x801B13E8 end:0x801B15D8
 	.data       start:0x80325360 end:0x80325398
+	.sdata2     start:0x803E4860 end:0x803E4CD0
 
 main/dll/DIM/dll_01C3_dimgate.c:
 	.text       start:0x801B15D8 end:0x801B17F4

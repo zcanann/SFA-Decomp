@@ -690,7 +690,7 @@ config.libs = [
                 extra_cflags=["-sdata", "8", "-sdata2", "8", "-schedule", "off"],
             ),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c"),
-            Object(NonMatching, "main/dll/DIM/dll_01C2_dimsnowball1c2.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/DIM/dll_01C2_dimsnowball1c2.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DIM/dll_01C3_dimgate.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DIM/dll_01C4_dimicewall.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DIM/dll_01C5_dimbarrier.c", cflags=cflags_dll_noopt),
