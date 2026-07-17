@@ -114,7 +114,7 @@ extern void modelAnimFn_800246a0(u8* dst, u8* model, u8* ch, f32 t, int max, int
 extern void fn_80007F78(u8 * ch, s16 * outRot, s16 * outRot2);
 extern void PSMTXTranspose(f32 * src, f32 * dst);
 extern f32 fn_802920A4(f32 x);
-extern f32 gModelDotClampMax;
+extern const f32 gModelDotClampMax;
 extern f32 gModelDotClampMin;
 extern f32 gMapSavedPlayerOffsetX;
 extern f32 gMapSavedPlayerOffsetZ;
@@ -1203,7 +1203,6 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
     f32* m;
     int prevOff;
     f32 dot;
-    f32 cap;
     u8* bankSel;
 
     idx = *(s8*)(*(u8**)(b + 0x3c) + (*(int***)(chain + 4))[0][0] * 0x1c);
@@ -1220,7 +1219,6 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
     }
     bankSel = model + 0xc;
     m = *(f32**)(bankSel + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10;
-    cap = gModelDotClampMax;
     for (i = 1; i < *(int*)(chain + 8) + 1; i++)
     {
         nextIdx = (*(int***)(chain + 4))[0][i];
@@ -1240,7 +1238,7 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
         PSVECSubtract(work, out, dir2);
         PSVECNormalize(dir2, dir2);
         dot = PSVECDotProduct(dir2, dir1);
-        if (dot < cap && dot > gModelDotClampMin)
+        if (dot < gModelDotClampMax && dot > gModelDotClampMin)
         {
             if (dot < lbl_803DE818 && dot > lbl_803DE840)
             {
@@ -1302,7 +1300,6 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
     f32* m;
     int prevOff;
     f32 dot;
-    f32 cap;
 
     idx = *(s8*)(*(u8**)(b + 0x3c) + (*(int***)(chain + 4))[0][0] * 0x1c);
     if (idx >= boneBlendSlotLimit(model))
@@ -1316,7 +1313,6 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
         idx = 0;
     }
     m = *(f32**)((u8*)(model + 0xc) + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10;
-    cap = gModelDotClampMax;
     for (i = 1; i < *(int*)(chain + 8) + 1; i++)
     {
         nextIdx = (*(int***)(chain + 4))[0][i];
@@ -1340,7 +1336,7 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
         PSVECSubtract(work, out, dir2);
         PSVECNormalize(dir2, dir2);
         dot = PSVECDotProduct(dir2, dir1);
-        if (dot < cap && dot > gModelDotClampMin)
+        if (dot < gModelDotClampMax && dot > gModelDotClampMin)
         {
             PSVECCrossProduct(dir2, dir1, axis);
             if (dot < lbl_803DE840)
