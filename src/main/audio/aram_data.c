@@ -104,4 +104,5 @@ u32 aramGetStreamBufferAddress(u8 idx, u32* outPos)
     return lbl_803D4468[idx].address;
 }
 
+u8 lbl_803D4868[0x18];
 AramStreamBufferEntry lbl_803D4468[ARAM_STREAM_BUFFER_COUNT];

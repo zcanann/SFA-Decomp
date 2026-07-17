@@ -27,6 +27,9 @@ force_active:
   # .sdata zero atom; dropping it would shorten the section and shift
   # every later SDA reference.
   - lbl_803DBE8C
+  # aram_data.c: the retail link retained this unreferenced .bss block;
+  # dropping it would shorten the section and shift every later .bss address.
+  - lbl_803D4868
 
 # Path to the main.dol file.
 object: sys/main.dol
