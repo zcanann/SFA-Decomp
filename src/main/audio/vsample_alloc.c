@@ -20,13 +20,13 @@ void synthInitVirtualSampleTable(void)
     state->callback = 0;
 }
 
-static void vsFreeBuffer(SynthVirtualSampleState* state, u8 entryIndex)
+static inline void vsFreeBuffer(SynthVirtualSampleState* state, u8 entryIndex)
 {
     state->entries[entryIndex].mode = SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE;
     state->voiceMap[state->entries[entryIndex].voice] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
 }
 
-static u8 vsAllocateBuffer(SynthVirtualSampleState* state)
+static inline u8 vsAllocateBuffer(SynthVirtualSampleState* state)
 {
     u8 i;
 
@@ -44,7 +44,7 @@ static u8 vsAllocateBuffer(SynthVirtualSampleState* state)
     return SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
 }
 
-static u16 vsNewInstanceID(SynthVirtualSampleState* state)
+static inline u16 vsNewInstanceID(SynthVirtualSampleState* state)
 {
     u8 i;
     u16 instID;
