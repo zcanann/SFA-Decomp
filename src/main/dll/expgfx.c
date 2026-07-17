@@ -249,6 +249,9 @@ static inline ExpgfxBounds* Expgfx_GetPoolBounds(int poolIndex)
     return &gExpgfxPoolBounds[poolIndex];
 }
 
+#define EXPGFX_POOL_ACTIVE_MASK_PTR(runtime, poolIndex) \
+    ((u32*)((u8*)(runtime)->poolActiveMasks + (poolIndex) * sizeof(u32)))
+
 static inline f64 Expgfx_U16AsDouble(u16 value)
 {
     u64 bits;
@@ -477,7 +480,7 @@ poolSearchDone:
     {
         slotIndex = 0;
         chosenPool = foundPoolIndex;
-        activeMaskPtr = (u32*)((u8*)runtime->poolActiveMasks + chosenPool * sizeof(u32));
+        activeMaskPtr = EXPGFX_POOL_ACTIVE_MASK_PTR(runtime, chosenPool);
         currentMask = *activeMaskPtr;
         for (; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
@@ -521,7 +524,7 @@ poolSearchDone:
     {
         slotIndex = 0;
         chosenPool = foundPoolIndex;
-        activeMaskPtr = (u32*)((u8*)runtime->poolActiveMasks + chosenPool * sizeof(u32));
+        activeMaskPtr = EXPGFX_POOL_ACTIVE_MASK_PTR(runtime, chosenPool);
         currentMask = *activeMaskPtr;
         for (; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
