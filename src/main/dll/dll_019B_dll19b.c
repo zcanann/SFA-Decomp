@@ -13,6 +13,7 @@
 #include "main/render_envfx_api.h"
 #undef RENDER_ENVFX_DIRECT_INT_CALL
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/dll/player_api.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
@@ -56,6 +57,23 @@ typedef struct Dll19BPlacement
 } Dll19BPlacement;
 
 STATIC_ASSERT(offsetof(Dll19BPlacement, activationDistPacked) == 0x1A);
+
+ObjectDescriptor dll_19B = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_19B_initialise,
+    (ObjectDescriptorCallback)dll_19B_release,
+    NULL,
+    (ObjectDescriptorCallback)dll_19B_init,
+    (ObjectDescriptorCallback)dll_19B_update,
+    (ObjectDescriptorCallback)dll_19B_hitDetect,
+    (ObjectDescriptorCallback)dll_19B_render,
+    (ObjectDescriptorCallback)dll_19B_free,
+    (ObjectDescriptorCallback)dll_19B_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dll_19B_getExtraSize,
+};
 
 int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
