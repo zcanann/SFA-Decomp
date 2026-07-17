@@ -56,7 +56,6 @@ typedef struct DfpTargetBlockPartfxArgs
 #define DFPTARGETBLOCK_POINT_OFFSET_Z 0x0C
 #define DFPTARGETBLOCK_POINT_STRIDE   0x0C
 
-extern const f32 lbl_803E648C;
 f32 gTargetBlockHomeZ;
 f32 gTargetBlockHomeX;
 extern s32 gTargetBlockHomePos[];
@@ -104,16 +103,16 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetB
         {
             deltaX = probe[0] - originalX;
             deltaZ = probe[2] - originalZ;
-            if (lbl_803E648C != obj->velX)
+            if (0.0f != obj->velX)
             {
                 obj->x = obj->x + deltaX;
             }
-            if (lbl_803E648C != obj->velZ)
+            if (0.0f != obj->velZ)
             {
                 obj->z = obj->z + deltaZ;
             }
             {
-                f32 zero = lbl_803E648C;
+                f32 zero = 0.0f;
                 obj->velX = zero;
                 obj->velY = zero;
                 obj->velZ = zero;
@@ -161,7 +160,7 @@ static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTarg
 
     obj->x = home->x;
     obj->z = home->z;
-    zero = lbl_803E648C;
+    zero = 0.0f;
     obj->velX = zero;
     obj->velZ = zero;
     state->mode = DFPTARGETBLOCK_AUDIO_MODE_RESETTING;
@@ -176,7 +175,7 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTar
 
     dx = obj->x - gTargetBlockHomeX;
     dz = obj->z - gTargetBlockHomeZ;
-    if (!((*(const f32*)&lbl_803E648C == dx) && (lbl_803E648C == dz)))
+    if (!((0.0f == dx) && (0.0f == dz)))
     {
         if (sqrtf(dx * dx + dz * dz) < *threshold)
         {
@@ -256,37 +255,37 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     obj->x = obj->velX * timeDelta + obj->x;
     obj->z = obj->velZ * timeDelta + obj->z;
 
-    if (lbl_803E648C != obj->velX)
+    if (0.0f != obj->velX)
     {
         Sfx_KeepAliveLoopedObjectSoundPtrU16Legacy(obj, DFPTARGETBLOCK_LOOP_SFX);
         velX = obj->velX;
-        if (velX < lbl_803E648C)
+        if (velX < 0.0f)
         {
-            if (velX >= lbl_803E648C)
+            if (velX >= 0.0f)
             {
-                obj->velX = lbl_803E648C;
+                obj->velX = 0.0f;
             }
         }
-        else if ((velX > lbl_803E648C) && (velX <= lbl_803E648C))
+        else if ((velX > 0.0f) && (velX <= 0.0f))
         {
-            obj->velX = lbl_803E648C;
+            obj->velX = 0.0f;
         }
     }
 
-    if (lbl_803E648C != obj->velZ)
+    if (0.0f != obj->velZ)
     {
         Sfx_KeepAliveLoopedObjectSoundPtrU16Legacy(obj, DFPTARGETBLOCK_LOOP_SFX);
         velZ = obj->velZ;
-        if (velZ < lbl_803E648C)
+        if (velZ < 0.0f)
         {
-            if (velZ >= lbl_803E648C)
+            if (velZ >= 0.0f)
             {
-                obj->velZ = lbl_803E648C;
+                obj->velZ = 0.0f;
             }
         }
-        else if ((velZ > lbl_803E648C) && (velZ <= lbl_803E648C))
+        else if ((velZ > 0.0f) && (velZ <= 0.0f))
         {
-            obj->velZ = lbl_803E648C;
+            obj->velZ = 0.0f;
         }
     }
 
@@ -360,9 +359,9 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
     home = obj->home;
     if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
     {
-        buf[3] = lbl_803E648C;
+        buf[3] = 0.0f;
         buf[4] = lbl_803E64C4.f;
-        buf[5] = lbl_803E648C;
+        buf[5] = 0.0f;
         objfx_spawnArcedBurstLegacy((int)obj, 5, lbl_803E64C8.f, 1, 2, 0x32, lbl_803E64C4.f, lbl_803E64C4.f,
                                    lbl_803E64B0.f, buf, 0);
     }
