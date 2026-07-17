@@ -28,6 +28,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/object_descriptor.h"
 #include "main/objfx.h"
 #include "main/dll/dll_0105_largecrate.h"
 #include "main/dll/dll_0106_scarab.h"
@@ -90,6 +91,23 @@ typedef struct
     f32 scaleZ;
     f32 scaleW;
 } ExplodeArgs;
+
+ObjectDescriptor gLargeCrateObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)largecrate_initialise,
+    (ObjectDescriptorCallback)largecrate_release,
+    0,
+    (ObjectDescriptorCallback)largecrate_init,
+    (ObjectDescriptorCallback)largecrate_update,
+    (ObjectDescriptorCallback)largecrate_hitDetect,
+    (ObjectDescriptorCallback)largecrate_render,
+    (ObjectDescriptorCallback)largecrate_free,
+    (ObjectDescriptorCallback)largecrate_getObjectTypeId,
+    largecrate_getExtraSize,
+};
 
 /* Spawn-setup buffers seeded by largecrate_spawnDropContents. Each child class
  * (dropType) reuses ObjPlacement's pos/color head and adds its own fields; the

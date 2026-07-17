@@ -1747,14 +1747,14 @@ main/dll/dll_801814d0.c:
 
 main/dll/dll_0104_smallbasket.c:
 	.text       start:0x801816F8 end:0x80183204
-	.data       start:0x803216B8 end:0x80321728
+	.data       start:0x803216B8 end:0x803216F0
 	.bss        start:0x803AC790 end:0x803AC7A0
 	.sbss       start:0x803DDAC0 end:0x803DDAC8
 
 main/dll/dll_0105_largecrate.c:
 	.text       start:0x80183204 end:0x801843C0
 	.rodata     start:0x802C2280 end:0x802C2298
-	.data       start:0x80321728 end:0x803217C0
+	.data       start:0x803216F0 end:0x803217C0
 	.sbss       start:0x803DDAC8 end:0x803DDAD0
 
 main/dll/dll_0106_scarab.c:
