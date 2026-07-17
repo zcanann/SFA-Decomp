@@ -120,7 +120,6 @@ extern const f32 lbl_803DF350;
 extern const f32 lbl_803DF354;
 extern const f32 lbl_803DF358;
 extern const f32 lbl_803DF35C;
-extern f32 lbl_803DF368;
 extern f32 lbl_803DF370;
 extern f32 lbl_803DF380;
 extern f32 lbl_803DF384;

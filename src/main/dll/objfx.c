@@ -371,7 +371,7 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode,
         {
             continue;
         }
-        f30 = randomGetRange(0, 1000) / lbl_803DF368;
+        f30 = randomGetRange(0, 1000) / 1000.0f;
         switch (mode)
         {
         case 1:
@@ -462,8 +462,8 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
         rvec[0] = randomGetRange(0, 0xffff);
         rvec[1] = 0;
         rvec[2] = 0;
-        f30 = randomGetRange(1, 1000) / lbl_803DF368;
-        f29 = randomGetRange(0, 1000) / lbl_803DF368;
+        f30 = randomGetRange(1, 1000) / 1000.0f;
+        f29 = randomGetRange(0, 1000) / 1000.0f;
         params.position[1] = lbl_803DF35C;
         params.position[2] = lbl_803DF35C;
         switch (mode)
@@ -539,9 +539,9 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chan
         {
             continue;
         }
-        params.position[0] = randomGetRange(0, 1000) / lbl_803DF368;
-        params.position[1] = randomGetRange(0, 1000) / lbl_803DF368;
-        params.position[2] = randomGetRange(0, 1000) / lbl_803DF368;
+        params.position[0] = randomGetRange(0, 1000) / 1000.0f;
+        params.position[1] = randomGetRange(0, 1000) / 1000.0f;
+        params.position[2] = randomGetRange(0, 1000) / 1000.0f;
         switch (mode)
         {
         case 1:
