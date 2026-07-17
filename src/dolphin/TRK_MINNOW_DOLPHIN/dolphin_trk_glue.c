@@ -2,16 +2,14 @@
 #include "OdemuExi2/odemuexi/DebuggerDriver.h"
 #include "amcstubs/AmcExi2Stubs.h"
 
-typedef struct UARTInlineBuffer {
-    s32 writeLen;
-    s32 readPos;
-    s32 readLen;
-    u32 _0C;
-    u8  readData[0x110C];
-} UARTInlineBuffer;
+#define BUFF_LEN 4362
 
-extern UARTInlineBuffer lbl_803D8888;
-extern u8 lbl_803D99A4[0x110C];
+u8 gWriteBuf[BUFF_LEN];
+u8 gReadBuf[BUFF_LEN];
+s32 _MetroTRK_Has_Framing;
+s32 gReadCount;
+s32 gReadPos;
+s32 gWritePos;
 
 DBCommTable gDBCommTable = {};
 
@@ -124,14 +122,14 @@ UARTError WriteUARTFlush(void)
 {
     UARTError error = UART_NoError;
 
-    while (lbl_803D8888.writeLen < 0x800) {
-        lbl_803D99A4[lbl_803D8888.writeLen] = 0;
-        lbl_803D8888.writeLen++;
+    while (gWritePos < 0x800) {
+        gWriteBuf[gWritePos] = 0;
+        gWritePos++;
     }
 
-    if (lbl_803D8888.writeLen != 0) {
-        error = TRKWriteUARTN(lbl_803D99A4, lbl_803D8888.writeLen);
-        lbl_803D8888.writeLen = 0;
+    if (gWritePos != 0) {
+        error = TRKWriteUARTN(gWriteBuf, gWritePos);
+        gWritePos = 0;
     }
 
     return error;
@@ -139,34 +137,33 @@ UARTError WriteUARTFlush(void)
 
 UARTError WriteUART1(u8 byte)
 {
-    lbl_803D99A4[lbl_803D8888.writeLen++] = byte;
+    gWriteBuf[gWritePos++] = byte;
     return UART_NoError;
 }
 
 UARTError TRKReadUARTPoll(s8* byte)
 {
     UARTError error = UART_NoData;
-    UARTInlineBuffer* uart = &lbl_803D8888;
     s32 cnt;
 
-    if (uart->readPos >= uart->readLen) {
-        uart->readPos = 0;
-        cnt = uart->readLen = TRKPollUART();
+    if (gReadPos >= gReadCount) {
+        gReadPos = 0;
+        cnt = gReadCount = TRKPollUART();
 
         if (cnt > 0) {
-            if (cnt > 0x110A) {
-                uart->readLen = 0x110A;
+            if (cnt > BUFF_LEN) {
+                gReadCount = BUFF_LEN;
             }
 
-            error = TRKReadUARTN(uart->readData, uart->readLen);
+            error = TRKReadUARTN(gReadBuf, gReadCount);
             if (error != UART_NoError) {
-                uart->readLen = 0;
+                gReadCount = 0;
             }
         }
     }
 
-    if (uart->readPos < uart->readLen) {
-        *byte = uart->readData[uart->readPos++];
+    if (gReadPos < gReadCount) {
+        *byte = gReadBuf[gReadPos++];
         error = UART_NoError;
     }
 
