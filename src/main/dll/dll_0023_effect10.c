@@ -65,12 +65,12 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     EffectSpawnParams p;
     u32 hasSrc;
 
-    gEffect10ScrollPhaseA = gEffect10ScrollPhaseA + 0.001f;
+    gEffect10ScrollPhaseA += 0.001f;
     if (gEffect10ScrollPhaseA > 1.0f)
     {
         gEffect10ScrollPhaseA = 0.1f;
     }
-    gEffect10ScrollPhaseB = gEffect10ScrollPhaseB + 0.0003f;
+    gEffect10ScrollPhaseB += 0.0003f;
     if (gEffect10ScrollPhaseB > 1.0f)
     {
         gEffect10ScrollPhaseB = 0.3f;
