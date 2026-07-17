@@ -33,6 +33,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "track/intersect_api.h"
 #include "track/intersect_fog_api.h"
+#include "main/newshadows_shadow_api.h"
 
 s16 lbl_803DCC18;
 s16 lbl_803DCC16;
@@ -142,7 +143,6 @@ static inline s16* objFindJointVecByKey(GameObject* obj, int key)
 }
 
 extern u32 objRenderFuzzFn_8003d6f8();
-extern void newshadows_getShadowTextureTable4x8(int* a, int* b, int* c);
 extern f32 lbl_803DE9A4;
 extern f32 lbl_803DE9C8;
 extern f32 lbl_803DE99C;

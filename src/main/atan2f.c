@@ -1,4 +1,5 @@
 #include "dolphin/types.h"
+#include "main/atan2f.h"
 
 extern float lbl_803E79C8;
 extern float lbl_803E79E8;

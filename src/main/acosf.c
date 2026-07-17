@@ -1,3 +1,5 @@
+#include "dolphin/MSL_C/PPCEABI/bare/H/k_tan.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 extern float lbl_803E79C0;
 extern float lbl_803E79C4;
 extern float lbl_803E79C8;
@@ -33,8 +35,6 @@ extern double lbl_803E7AA0;
 extern double lbl_803E7AA8;
 extern double lbl_803E7AB0;
 
-extern float sqrtf_8029312c(float x);
-extern float fn_80292DEC(float x);
 
 float __kernel_sin(float x) {
     float ax = __fabsf(x);
