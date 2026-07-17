@@ -7,6 +7,8 @@
 
 #pragma exceptions on
 
+SynthVirtualSampleState synthVirtualSampleState;
+
 /*
  * Reset the virtual sample stream buffer table.
  */
@@ -24,47 +26,48 @@ void synthInitVirtualSampleTable(void)
     state->callback = 0;
 }
 
-static inline void vsFreeBuffer(SynthVirtualSampleState* state, u8 entryIndex)
+static inline void vsFreeBuffer(u8 entryIndex)
 {
-    state->entries[entryIndex].mode = SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE;
-    state->voiceMap[state->entries[entryIndex].voice] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
+    synthVirtualSampleState.entries[entryIndex].mode = SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE;
+    synthVirtualSampleState.voiceMap[synthVirtualSampleState.entries[entryIndex].voice] =
+        SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
 }
 
-static inline u8 vsAllocateBuffer(SynthVirtualSampleState* state)
+static inline u8 vsAllocateBuffer(void)
 {
     u8 i;
 
-    for (i = 0; i < state->entryCount; ++i)
+    for (i = 0; i < synthVirtualSampleState.entryCount; ++i)
     {
-        if (state->entries[i].mode != SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE)
+        if (synthVirtualSampleState.entries[i].mode != SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE)
         {
             continue;
         }
-        state->entries[i].mode = SYNTH_VIRTUAL_SAMPLE_MODE_ACTIVE;
-        state->entries[i].position = 0;
+        synthVirtualSampleState.entries[i].mode = SYNTH_VIRTUAL_SAMPLE_MODE_ACTIVE;
+        synthVirtualSampleState.entries[i].position = 0;
         return i;
     }
 
     return SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
 }
 
-static inline u16 vsNewInstanceID(SynthVirtualSampleState* state)
+static inline u16 vsNewInstanceID(void)
 {
     u8 i;
     u16 instID;
 
     do
     {
-        instID = state->nextId++;
-        for (i = 0; i < state->entryCount; ++i)
+        instID = synthVirtualSampleState.nextId++;
+        for (i = 0; i < synthVirtualSampleState.entryCount; ++i)
         {
-            if (state->entries[i].mode != SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE &&
-                state->entries[i].callbackData.generation == instID)
+            if (synthVirtualSampleState.entries[i].mode != SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE &&
+                synthVirtualSampleState.entries[i].callbackData.generation == instID)
             {
                 break;
             }
         }
-    } while (i != state->entryCount);
+    } while (i != synthVirtualSampleState.entryCount);
 
     return instID;
 }
@@ -75,34 +78,33 @@ static inline u16 vsNewInstanceID(SynthVirtualSampleState* state)
  */
 u32 synthClaimVirtualSampleSlot(u8 voiceID)
 {
-    SynthVirtualSampleState* state[1];
     u8 sb;
     u8 i;
     u32 addr;
 
-    state[0] = &synthVirtualSampleState;
-
-    for (i = 0; i < state[0]->entryCount; ++i)
+    for (i = 0; i < synthVirtualSampleState.entryCount; ++i)
     {
-        if (state[0]->entries[i].mode != SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE && state[0]->entries[i].voice == voiceID)
+        if (synthVirtualSampleState.entries[i].mode != SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE &&
+            synthVirtualSampleState.entries[i].voice == voiceID)
         {
-            vsFreeBuffer(state[0], i);
+            vsFreeBuffer(i);
         }
     }
 
-    sb = state[0]->voiceMap[voiceID] = vsAllocateBuffer(state[0]);
+    sb = synthVirtualSampleState.voiceMap[voiceID] = vsAllocateBuffer();
     if (sb != SYNTH_VIRTUAL_SAMPLE_FREE_SLOT)
     {
-        addr = aramGetStreamBufferAddress(state[0]->voiceMap[voiceID], 0);
-        hwSetVirtualSampleLoopBuffer(voiceID, addr, state[0]->loopSize);
-        state[0]->entries[sb].callbackData.sampleId = hwGetSampleID(voiceID);
-        state[0]->entries[sb].callbackData.generation = vsNewInstanceID(state[0]);
-        state[0]->entries[sb].type = hwGetSampleType(voiceID);
-        state[0]->entries[sb].voice = voiceID;
-        if (state[0]->callback != 0)
+        addr = aramGetStreamBufferAddress(synthVirtualSampleState.voiceMap[voiceID], 0);
+        hwSetVirtualSampleLoopBuffer(voiceID, addr, synthVirtualSampleState.loopSize);
+        synthVirtualSampleState.entries[sb].callbackData.sampleId = hwGetSampleID(voiceID);
+        synthVirtualSampleState.entries[sb].callbackData.generation = vsNewInstanceID();
+        synthVirtualSampleState.entries[sb].type = hwGetSampleType(voiceID);
+        synthVirtualSampleState.entries[sb].voice = voiceID;
+        if (synthVirtualSampleState.callback != 0)
         {
-            state[0]->callback(SYNTH_VIRTUAL_SAMPLE_CLAIM_CALLBACK_KIND, &state[0]->entries[sb].callbackData);
-            return (state[0]->entries[sb].callbackData.generation << 8) | (u8)voiceID;
+            synthVirtualSampleState.callback(SYNTH_VIRTUAL_SAMPLE_CLAIM_CALLBACK_KIND,
+                                             &synthVirtualSampleState.entries[sb].callbackData);
+            return (synthVirtualSampleState.entries[sb].callbackData.generation << 8) | (u8)voiceID;
         }
         hwSetVirtualSampleLoopBuffer(voiceID, 0, 0);
     }
@@ -113,8 +115,6 @@ u32 synthClaimVirtualSampleSlot(u8 voiceID)
 
     return SYNTH_VIRTUAL_SAMPLE_INVALID_ID;
 }
-
-SynthVirtualSampleState synthVirtualSampleState;
 
 /*
  * Sample-completion handler: if the packed (slotIdx, sampleId)
