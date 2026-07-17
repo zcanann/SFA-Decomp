@@ -11,6 +11,7 @@
 #include "main/gametext_show_str_api.h"
 #include "main/textrender_api.h"
 #include "main/model_engine.h"
+#include "main/object_descriptor.h"
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
@@ -323,13 +324,15 @@ u16 gEnterSaveNameCharTextIds[40] = {0x037f, 0x0380, 0x0381, 0x0382, 0x0383, 0x0
                                      0x0393, 0x0394, 0x0395, 0x0396, 0x0397, 0x0398, 0x0489, 0x048a, 0x048b, 0x048c,
                                      0x048d, 0x048e, 0x048f, 0x0490, 0x0491, 0x0492, 0x0399, 0x039a, 0x039b, 0x039c};
 
-u32 lbl_8031A8D0[10] = {0x00000000,
-                        0x00000000,
-                        0x00000000,
-                        0x00050000,
-                        (u32)EnterSaveNameScreen_initialise,
-                        (u32)EnterSaveNameScreen_release,
-                        0x00000000,
-                        (u32)EnterSaveNameScreen_run,
-                        (u32)EnterSaveNameScreen_frameEnd,
-                        (u32)EnterSaveNameScreen_render};
+ObjectDescriptor6 lbl_8031A8D0 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)EnterSaveNameScreen_initialise,
+    (ObjectDescriptorCallback)EnterSaveNameScreen_release,
+    NULL,
+    (ObjectDescriptorCallback)EnterSaveNameScreen_run,
+    (ObjectDescriptorCallback)EnterSaveNameScreen_frameEnd,
+    (ObjectDescriptorCallback)EnterSaveNameScreen_render,
+};
