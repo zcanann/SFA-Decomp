@@ -322,24 +322,24 @@ test:
 void mapLoadUnloadObjects(int flag)
 {
     int grpBit;
+    u32 bits;
+    char* obj;
+    int unload;
+    s16 count;
+    int bit;
+    u8 mask;
+    u8* bp;
+    u32 objStart;
     int slot;
     int i;
     int objCount;
     s16 list[8];
     s16* idPtr;
     char* base;
-    s16 count;
-    char* obj;
     char* fp;
-    int unload;
-    u32 bits;
     int* tp;
-    int bit;
     u32 cur;
     u32 end;
-    u32 objStart;
-    u8* bp;
-    u8 mask;
     int vis;
     int idx;
 
