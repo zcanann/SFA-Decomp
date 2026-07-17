@@ -206,6 +206,7 @@ main/newshadows.c:
 track/intersect.c:
 	.text       start:0x8006EF38 end:0x8007E77C
 	.rodata     start:0x802C1EA8 end:0x802C1F80
+	.data       start:0x8030E9B4 end:0x8030EA0C
 	.bss        start:0x80391DC0 end:0x80396918
 	.sdata      start:0x803DB678 end:0x803DB700
 	.sbss       start:0x803DCFF0 end:0x803DD040
