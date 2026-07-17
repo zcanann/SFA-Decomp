@@ -366,6 +366,7 @@ main/dll/dll_0023_effect10.c:
 	.bss        start:0x8039C3B0 end:0x8039C3C8
 	.sdata      start:0x803DB830 end:0x803DB840
 	.sbss       start:0x803DD3B0 end:0x803DD3C0
+	.sdata2     start:0x803DFEB8 end:0x803DFF38
 
 main/dll/dll_0024_effect11.c:
 	.text       start:0x800C4864 end:0x800C56E0
@@ -498,6 +499,7 @@ main/dll/dll_005A_staffcollisionfunc03.c:
 main/dll/dll_005B_modgfxfunc03.c:
 	.text       start:0x800EB618 end:0x800EC7BC
 	.sdata      start:0x803DB8B0 end:0x803DB8C0
+	.sdata2     start:0x803E0730 end:0x803E0760
 
 main/dll/dll_005C_dll5cfunc0.c:
 	.text       start:0x800EC7BC end:0x800ECAE0
@@ -2156,6 +2158,7 @@ main/dll/dll_017D_rollingbarrel.c:
 	.text       start:0x801A5D88 end:0x801A6638
 	.data       start:0x80323128 end:0x80323160
 	.sbss       start:0x803DDB20 end:0x803DDB28
+	.sdata2     start:0x803E4460 end:0x803E44BC
 
 main/dll/MMP/dll_017E_mmplevelcontrol.c:
 	.text       start:0x801A6638 end:0x801A6C28
@@ -3280,6 +3283,7 @@ main/dll/dll_024E_drakordthornbush.c:
 	.text       start:0x8020BAB4 end:0x8020C278
 	.data       start:0x8032A0D8 end:0x8032A140
 	.sdata      start:0x803DC1A0 end:0x803DC1B8
+	.sdata2     start:0x803E6588 end:0x803E65CC
 
 main/worldasteroids.c:
 	.text       start:0x8020C278 end:0x8020C5EC

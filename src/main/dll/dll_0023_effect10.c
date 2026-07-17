@@ -45,36 +45,7 @@ f32 gEffect10TickScrollPhaseB = 0.3f;
 #define EFFECT10_FLAGA_POS_RELATIVE 0x1 /* offset start pos by source vector / model xform */
 #define EFFECT10_FLAGA_UNK2         0x2 /* cleared when set alongside POS_RELATIVE; meaning unknown */
 
-extern f32 lbl_803DFEB8;
-extern f32 lbl_803DFEBC;
-extern f32 lbl_803DFEC8;
 EffectSrcParams gEffect10DefaultSrcParams;
-extern f32 lbl_803DFEC4;
-extern f32 lbl_803DFECC;
-extern f32 lbl_803DFED0;
-extern f32 lbl_803DFED4;
-extern f32 lbl_803DFED8;
-extern f32 lbl_803DFEDC;
-extern f32 lbl_803DFEE0;
-extern f32 lbl_803DFEE4;
-extern f32 lbl_803DFEE8;
-extern f32 lbl_803DFEEC;
-extern f32 lbl_803DFEF0;
-extern f32 lbl_803DFEF4;
-extern f32 lbl_803DFEF8;
-extern f32 lbl_803DFEFC;
-extern f32 lbl_803DFF00;
-extern f32 lbl_803DFF04;
-extern f32 lbl_803DFF08;
-extern f32 lbl_803DFF0C;
-extern f32 lbl_803DFF10;
-extern f32 lbl_803DFF14;
-extern f32 lbl_803DFF18;
-extern f32 lbl_803DFF1C;
-extern f32 lbl_803DFF20;
-extern f32 lbl_803DFF24;
-extern f32 gEffect10Pi;
-extern f32 gEffect10SinePhaseScale;
 
 ObjectDescriptor6 lbl_80310C60 = {
     0,
@@ -94,15 +65,15 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     EffectSpawnParams p;
     u32 hasSrc;
 
-    gEffect10ScrollPhaseA = gEffect10ScrollPhaseA + lbl_803DFEB8;
+    gEffect10ScrollPhaseA = gEffect10ScrollPhaseA + 0.001f;
     if (gEffect10ScrollPhaseA > 1.0f)
     {
-        gEffect10ScrollPhaseA = lbl_803DFEBC;
+        gEffect10ScrollPhaseA = 0.1f;
     }
-    gEffect10ScrollPhaseB = gEffect10ScrollPhaseB + lbl_803DFEC4;
+    gEffect10ScrollPhaseB = gEffect10ScrollPhaseB + 0.0003f;
     if (gEffect10ScrollPhaseB > 1.0f)
     {
-        gEffect10ScrollPhaseB = lbl_803DFEC8;
+        gEffect10ScrollPhaseB = 0.3f;
     }
     if (obj == NULL)
     {
@@ -128,13 +99,13 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     p.flagsB = 0;
     p.idByte = id;
     p.model = obj;
-    p.posX = lbl_803DFECC;
-    p.posY = lbl_803DFECC;
-    p.posZ = lbl_803DFECC;
-    p.velX = lbl_803DFECC;
-    p.velY = lbl_803DFECC;
-    p.velZ = lbl_803DFECC;
-    p.scale = lbl_803DFECC;
+    p.posX = 0.0f;
+    p.posY = 0.0f;
+    p.posZ = 0.0f;
+    p.velX = 0.0f;
+    p.velY = 0.0f;
+    p.velZ = 0.0f;
+    p.scale = 0.0f;
     p.count = 0;
     p.unk04 = -1;
     p.alpha = 0xff;
@@ -149,9 +120,9 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     p.unk40 = 0;
     if (src == NULL)
     {
-        gEffect10DefaultSrcParams.x = lbl_803DFECC;
-        gEffect10DefaultSrcParams.y = lbl_803DFECC;
-        gEffect10DefaultSrcParams.z = lbl_803DFECC;
+        gEffect10DefaultSrcParams.x = 0.0f;
+        gEffect10DefaultSrcParams.y = 0.0f;
+        gEffect10DefaultSrcParams.z = 0.0f;
         gEffect10DefaultSrcParams.w = 1.0f;
         gEffect10DefaultSrcParams.rot0 = 0;
         gEffect10DefaultSrcParams.rot1 = 0;
@@ -161,8 +132,8 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     switch (id)
     {
     case 0x32a:
-        p.count = (int)(lbl_803DFED4 * src->w + lbl_803DFED0);
-        p.scale = lbl_803DFED8 * (f32)(int)p.count;
+        p.count = (int)(50.0f * src->w + 20.0f);
+        p.scale = 0.0008f * (f32)(int)p.count;
         p.flagsA = 0x8100200;
         p.kind = 0x57;
         p.srcX = src->x;
@@ -175,8 +146,8 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.alpha = 0xff;
         break;
     case 0x32b:
-        p.count = (int)(src->w * (f32)(int)randomGetRange(0x96, 0xc8) + lbl_803DFED4);
-        p.scale = lbl_803DFEDC * (f32)(int)p.count;
+        p.count = (int)(src->w * (f32)(int)randomGetRange(0x96, 0xc8) + 50.0f);
+        p.scale = 0.00014f * (f32)(int)p.count;
         p.flagsA = 0x8100200;
         p.kind = 0x56;
         p.srcX = src->x;
@@ -189,7 +160,7 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.alpha = 0xff;
         break;
     case 0x32c:
-        p.scale = lbl_803DFEE0 * (f32)(int)randomGetRange(2, 4);
+        p.scale = 0.02f * (f32)(int)randomGetRange(2, 4);
         p.count = 200;
         p.flagsA = 0x8100200;
         p.kind = 0x56;
@@ -203,7 +174,7 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.alpha = 0xff;
         break;
     case 0x32d:
-        p.scale = lbl_803DFEE4;
+        p.scale = 0.025f;
         p.count = 0x32;
         p.flagsA = 0x180200;
         p.flagsB = 0x1000000;
@@ -214,10 +185,10 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     {
         u16 color;
 
-        p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
-        p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(0xa, 0x50);
-        p.velZ = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
-        p.scale = lbl_803DFEF0 * (f32)(int)randomGetRange(5, 0x19);
+        p.velX = 0.004f * (f32)(int)randomGetRange(-0x28, 0x28);
+        p.velY = 0.002f * (f32)(int)randomGetRange(0xa, 0x50);
+        p.velZ = 0.004f * (f32)(int)randomGetRange(-0x28, 0x28);
+        p.scale = 0.0001f * (f32)(int)randomGetRange(5, 0x19);
         p.count = randomGetRange(0x64, 0x78);
         p.rot0 = randomGetRange(0, 0xffff);
         p.rot1 = randomGetRange(0, 0xffff);
@@ -239,10 +210,10 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.posX = src->x;
         p.posY = src->y;
         p.posZ = src->z;
-        p.velX = lbl_803DFEF4 * (f32)(int)randomGetRange(-100, 100);
-        p.velY = lbl_803DFEF4 * (f32)(int)randomGetRange(-100, 100);
-        p.velZ = lbl_803DFEF4 * (f32)(int)randomGetRange(-100, 100);
-        p.scale = src->w * (lbl_803DFEF8 * (f32)(int)randomGetRange(4, 5));
+        p.velX = 0.0035f * (f32)(int)randomGetRange(-100, 100);
+        p.velY = 0.0035f * (f32)(int)randomGetRange(-100, 100);
+        p.velZ = 0.0035f * (f32)(int)randomGetRange(-100, 100);
+        p.scale = src->w * (0.00065f * (f32)(int)randomGetRange(4, 5));
         p.count = randomGetRange(0xf, 0x23);
         p.alpha = 0xff;
         p.flagsA = 0x80110;
@@ -250,13 +221,13 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.kind = 0xc79;
         break;
     case 0x330:
-        p.posX = lbl_803DFEB8 * (f32)(int)randomGetRange(-100, 100) + src->x;
-        p.posY = lbl_803DFEB8 * (f32)(int)randomGetRange(-100, 100) + src->y;
-        p.posZ = lbl_803DFEB8 * (f32)(int)randomGetRange(-100, 100) + src->z;
-        p.velX = lbl_803DFEFC * (f32)(int)randomGetRange(-100, 100);
-        p.velY = lbl_803DFEFC * (f32)(int)randomGetRange(-100, 100);
-        p.velZ = lbl_803DFEFC * (f32)(int)randomGetRange(-100, 100);
-        p.scale = lbl_803DFEE8 * src->w;
+        p.posX = 0.001f * (f32)(int)randomGetRange(-100, 100) + src->x;
+        p.posY = 0.001f * (f32)(int)randomGetRange(-100, 100) + src->y;
+        p.posZ = 0.001f * (f32)(int)randomGetRange(-100, 100) + src->z;
+        p.velX = 0.005f * (f32)(int)randomGetRange(-100, 100);
+        p.velY = 0.005f * (f32)(int)randomGetRange(-100, 100);
+        p.velZ = 0.005f * (f32)(int)randomGetRange(-100, 100);
+        p.scale = 0.004f * src->w;
         p.count = randomGetRange(0xf, 0x23);
         p.alpha = 0xff;
         p.flagsA = 0x80100;
@@ -264,10 +235,10 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.kind = 0xc74;
         break;
     case 0x332:
-        p.velX = lbl_803DFF00 * (f32)(int)randomGetRange(-0x14, 0x14);
-        p.velY = lbl_803DFF00;
-        p.velZ = lbl_803DFF00 * (f32)(int)randomGetRange(-0x14, 0x14);
-        p.scale = lbl_803DFF04;
+        p.velX = 0.01f * (f32)(int)randomGetRange(-0x14, 0x14);
+        p.velY = 0.01f;
+        p.velZ = 0.01f * (f32)(int)randomGetRange(-0x14, 0x14);
+        p.scale = 0.0052f;
         p.count = 0x96;
         p.flagsA = 0xa100100;
         p.kind = 0x62;
@@ -287,10 +258,10 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.posX = scale * (f32)(int)randomGetRange(-10, 10);
         p.posY = scale * (f32)(int)randomGetRange(-10, 10);
         p.posZ = scale * (f32)(int)randomGetRange(-10, 10);
-        p.velX = scale * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
-        p.velY = scale * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
-        p.velZ = scale * (lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf));
-        p.scale = lbl_803DFF08 * (f32)(int)randomGetRange(8, 10);
+        p.velX = scale * (0.02f * (f32)(int)randomGetRange(-0xf, 0xf));
+        p.velY = scale * (0.02f * (f32)(int)randomGetRange(-0xf, 0xf));
+        p.velZ = scale * (0.02f * (f32)(int)randomGetRange(-0xf, 0xf));
+        p.scale = 0.0004f * (f32)(int)randomGetRange(8, 10);
         p.count = 0x50;
         p.flagsA = 0x80480404;
         p.flagsB = 0x20;
@@ -317,23 +288,23 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         }
         if (mode == 0)
         {
-            p.scale = lbl_803DFEE0;
+            p.scale = 0.02f;
             p.count = 1;
             p.flagsA = 0x480000;
         }
         else if (mode == 1)
         {
-            p.scale = lbl_803DFF0C;
+            p.scale = 0.04f;
             p.count = 1;
             p.flagsA = 0x480000;
             p.alpha = 0x32;
         }
         else if (mode == 2)
         {
-            p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-            p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-            p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-10, 10);
-            p.scale = lbl_803DFEFC;
+            p.velX = 0.02f * (f32)(int)randomGetRange(-0xf, 0xf);
+            p.velY = 0.02f * (f32)(int)randomGetRange(-0xf, 0xf);
+            p.velZ = 0.02f * (f32)(int)randomGetRange(-10, 10);
+            p.scale = 0.005f;
             p.count = randomGetRange(0x1e, 0x28);
             p.flagsA = 0x3000000;
             p.flagsB = 0x600000;
@@ -343,10 +314,10 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
             p.posX = (f32)(int)randomGetRange(-10, 10);
             p.posY = (f32)(int)randomGetRange(-10, 10);
             p.posZ = (f32)(int)randomGetRange(-10, 10);
-            p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-            p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-            p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-            p.scale = lbl_803DFF08 * (f32)(int)randomGetRange(8, 10);
+            p.velX = 0.02f * (f32)(int)randomGetRange(-0xf, 0xf);
+            p.velY = 0.02f * (f32)(int)randomGetRange(-0xf, 0xf);
+            p.velZ = 0.02f * (f32)(int)randomGetRange(-0xf, 0xf);
+            p.scale = 0.0004f * (f32)(int)randomGetRange(8, 10);
             p.count = 0x1e;
             p.alpha = 0xb4;
             p.flagsA = 0x80480404;
@@ -356,7 +327,7 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
             p.posX = (f32)(int)randomGetRange(-3, 3);
             p.posY = (f32)(int)randomGetRange(-3, 3);
             p.posZ = (f32)(int)randomGetRange(-3, 3);
-            p.scale = lbl_803DFF10;
+            p.scale = 0.003f;
             p.count = 100;
             p.flagsA = 0x80480000;
             p.flagsB = 0x400000;
@@ -379,23 +350,23 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         }
         if (mode == 0)
         {
-            p.scale = lbl_803DFEE0;
+            p.scale = 0.02f;
             p.count = 1;
             p.flagsA = 0x480000;
         }
         else if (mode == 1)
         {
-            p.scale = lbl_803DFF0C;
+            p.scale = 0.04f;
             p.count = 1;
             p.flagsA = 0x480000;
             p.alpha = 0x32;
         }
         else if (mode == 2)
         {
-            p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-            p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-            p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-10, 10);
-            p.scale = lbl_803DFEFC;
+            p.velX = 0.02f * (f32)(int)randomGetRange(-0xf, 0xf);
+            p.velY = 0.02f * (f32)(int)randomGetRange(-0xf, 0xf);
+            p.velZ = 0.02f * (f32)(int)randomGetRange(-10, 10);
+            p.scale = 0.005f;
             p.count = randomGetRange(0x1e, 0x28);
             p.flagsA = 0x3000000;
             p.flagsB = 0x600000;
@@ -405,10 +376,10 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
             p.posX = (f32)(int)randomGetRange(-10, 10);
             p.posY = (f32)(int)randomGetRange(-10, 10);
             p.posZ = (f32)(int)randomGetRange(-10, 10);
-            p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-            p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-            p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-0xf, 0xf);
-            p.scale = lbl_803DFF08 * (f32)(int)randomGetRange(8, 10);
+            p.velX = 0.02f * (f32)(int)randomGetRange(-0xf, 0xf);
+            p.velY = 0.02f * (f32)(int)randomGetRange(-0xf, 0xf);
+            p.velZ = 0.02f * (f32)(int)randomGetRange(-0xf, 0xf);
+            p.scale = 0.0004f * (f32)(int)randomGetRange(8, 10);
             p.count = 0x1e;
             p.alpha = 0xb4;
             p.flagsA = 0x80480404;
@@ -418,7 +389,7 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
             p.posX = (f32)(int)randomGetRange(-3, 3);
             p.posY = (f32)(int)randomGetRange(-3, 3);
             p.posZ = (f32)(int)randomGetRange(-3, 3);
-            p.scale = lbl_803DFF10;
+            p.scale = 0.003f;
             p.count = 100;
             p.flagsA = 0x80480000;
             p.flagsB = 0x400000;
@@ -428,28 +399,28 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         break;
     }
     case 0x340:
-        p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-100, 100);
-        p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(10, 200);
-        p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-100, 100);
-        p.scale = lbl_803DFEF0 * (f32)(int)randomGetRange(8, 0xb);
+        p.velX = 0.02f * (f32)(int)randomGetRange(-100, 100);
+        p.velY = 0.02f * (f32)(int)randomGetRange(10, 200);
+        p.velZ = 0.02f * (f32)(int)randomGetRange(-100, 100);
+        p.scale = 0.0001f * (f32)(int)randomGetRange(8, 0xb);
         p.count = 0x4b;
         p.flagsA = 0x1080000;
         p.kind = 0xc0f;
         break;
     case 0x342:
-        p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-100, 100);
-        p.velY = lbl_803DFF14 * (f32)(int)randomGetRange(0x14, 100);
-        p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-100, 100);
-        p.scale = lbl_803DFF18;
+        p.velX = 0.02f * (f32)(int)randomGetRange(-100, 100);
+        p.velY = 0.012f * (f32)(int)randomGetRange(0x14, 100);
+        p.velZ = 0.02f * (f32)(int)randomGetRange(-100, 100);
+        p.scale = 0.0015f;
         p.count = 0x28;
         p.flagsA = 0x1080200;
         p.kind = 0xc0f;
         break;
     case 0x343:
-        p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-100, 100);
-        p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(10, 200);
-        p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-100, 100);
-        p.scale = lbl_803DFF1C * (f32)(int)randomGetRange(8, 0xb);
+        p.velX = 0.02f * (f32)(int)randomGetRange(-100, 100);
+        p.velY = 0.02f * (f32)(int)randomGetRange(10, 200);
+        p.velZ = 0.02f * (f32)(int)randomGetRange(-100, 100);
+        p.scale = 0.00015f * (f32)(int)randomGetRange(8, 0xb);
         p.count = randomGetRange(0x41, 0x4b);
         p.flagsA = 0x1080000;
         p.flagsB = 0x5000000;
@@ -457,23 +428,23 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.alpha = randomGetRange(0x46, 100);
         break;
     case 0x344:
-        p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-100, 100);
-        p.velY = lbl_803DFF14 * (f32)(int)randomGetRange(0x14, 100);
-        p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-100, 100);
-        p.scale = lbl_803DFF1C * (f32)(int)randomGetRange(5, 10);
+        p.velX = 0.02f * (f32)(int)randomGetRange(-100, 100);
+        p.velY = 0.012f * (f32)(int)randomGetRange(0x14, 100);
+        p.velZ = 0.02f * (f32)(int)randomGetRange(-100, 100);
+        p.scale = 0.00015f * (f32)(int)randomGetRange(5, 10);
         p.count = 0x28;
         p.flagsA = 0x1080200;
         p.kind = 0x77;
         p.alpha = 0x7f;
         break;
     case 0x345:
-        p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-10, 10);
-        p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(0x14, 0x28);
-        p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-10, 10);
+        p.velX = 0.02f * (f32)(int)randomGetRange(-10, 10);
+        p.velY = 0.02f * (f32)(int)randomGetRange(0x14, 0x28);
+        p.velZ = 0.02f * (f32)(int)randomGetRange(-10, 10);
         p.posX = (f32)(int)randomGetRange(-10, 10);
-        p.posY = lbl_803DFF20;
+        p.posY = -4.0f;
         p.posZ = (f32)(int)randomGetRange(-10, 10);
-        p.scale = lbl_803DFF24;
+        p.scale = 0.009f;
         p.count = randomGetRange(0x14, 0x23);
         p.flagsA = 0x1080200;
         p.flagsB = 0x5000000;
@@ -484,20 +455,20 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.posX = src->x;
         p.posY = src->y;
         p.posZ = src->z;
-        p.scale = lbl_803DFEB8 * (f32)(int)randomGetRange(5, 0x19) + src->w;
+        p.scale = 0.001f * (f32)(int)randomGetRange(5, 0x19) + src->w;
         p.count = 0x1e0;
         p.linkGroup = 0;
         p.flagsA = 0x480014;
         p.kind = 0xdf;
         break;
     case 0x347:
-        p.velX = lbl_803DFEE0 * (f32)(int)randomGetRange(-0x1e, 0x1e);
-        p.velY = lbl_803DFEE0 * (f32)(int)randomGetRange(-5, 10);
-        p.velZ = lbl_803DFEE0 * (f32)(int)randomGetRange(-0x1e, 0x1e);
-        p.posX = lbl_803DFECC;
+        p.velX = 0.02f * (f32)(int)randomGetRange(-0x1e, 0x1e);
+        p.velY = 0.02f * (f32)(int)randomGetRange(-5, 10);
+        p.velZ = 0.02f * (f32)(int)randomGetRange(-0x1e, 0x1e);
+        p.posX = 0.0f;
         p.posY = (f32)(int)randomGetRange(10, 0x1e);
-        p.posZ = lbl_803DFECC;
-        p.scale = lbl_803DFF00;
+        p.posZ = 0.0f;
+        p.scale = 0.01f;
         p.count = 0x32;
         p.flagsA = 0x8a000208;
         p.kind = 0x60;
@@ -511,7 +482,7 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.alpha = 0x7f;
         break;
     case 0x34c:
-        p.scale = lbl_803DFEE4;
+        p.scale = 0.025f;
         p.count = 0x32;
         p.flagsA = 0x180200;
         p.flagsB = 0x1000000;
@@ -522,10 +493,10 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     {
         u16 color;
 
-        p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
-        p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(10, 0x50);
-        p.velZ = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
-        p.scale = lbl_803DFEF0 * (f32)(int)randomGetRange(5, 0x19);
+        p.velX = 0.004f * (f32)(int)randomGetRange(-0x28, 0x28);
+        p.velY = 0.002f * (f32)(int)randomGetRange(10, 0x50);
+        p.velZ = 0.004f * (f32)(int)randomGetRange(-0x28, 0x28);
+        p.scale = 0.0001f * (f32)(int)randomGetRange(5, 0x19);
         p.count = randomGetRange(0x64, 0x78);
         p.rot0 = randomGetRange(0, 0xffff);
         p.rot1 = randomGetRange(0, 0xffff);
@@ -551,11 +522,11 @@ int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     {
         u16 color;
 
-        p.velX = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
-        p.velY = lbl_803DFEEC * (f32)(int)randomGetRange(10, 0x50);
-        p.velZ = lbl_803DFEE8 * (f32)(int)randomGetRange(-0x28, 0x28);
+        p.velX = 0.004f * (f32)(int)randomGetRange(-0x28, 0x28);
+        p.velY = 0.002f * (f32)(int)randomGetRange(10, 0x50);
+        p.velZ = 0.004f * (f32)(int)randomGetRange(-0x28, 0x28);
         p.posY = (f32)(int)randomGetRange(5, 0x1e);
-        p.scale = lbl_803DFEF0 * (f32)(int)randomGetRange(5, 0x19);
+        p.scale = 0.0001f * (f32)(int)randomGetRange(5, 0x19);
         p.count = randomGetRange(0x64, 0x78);
         p.rot0 = randomGetRange(0, 0xffff);
         p.rot1 = randomGetRange(0, 0xffff);
@@ -612,30 +583,30 @@ void Effect10_func05(void)
 {
     f32 sum;
     f32 step;
-    sum = gEffect10TickScrollPhaseA + (step = lbl_803DFEB8 * timeDelta);
+    sum = gEffect10TickScrollPhaseA + (step = 0.001f * timeDelta);
     gEffect10TickScrollPhaseA = sum;
     if (sum > 1.0f)
     {
-        gEffect10TickScrollPhaseA = lbl_803DFEBC;
+        gEffect10TickScrollPhaseA = 0.1f;
     }
     sum = gEffect10TickScrollPhaseB + step;
     gEffect10TickScrollPhaseB = sum;
     if (sum > 1.0f)
     {
-        gEffect10TickScrollPhaseB = lbl_803DFEC8;
+        gEffect10TickScrollPhaseB = 0.3f;
     }
     gEffect10SineAnglePhaseA = gEffect10SineAnglePhaseA + framesThisStep * 0x64;
     if (gEffect10SineAnglePhaseA > 0x7fff)
     {
         gEffect10SineAnglePhaseA = 0;
     }
-    gEffect10SineValueA = mathSinf(gEffect10Pi * (f32)(s16)gEffect10SineAnglePhaseA / gEffect10SinePhaseScale);
+    gEffect10SineValueA = mathSinf(3.1415927f * (f32)(s16)gEffect10SineAnglePhaseA / 32768.0f);
     gEffect10SineAnglePhaseB = gEffect10SineAnglePhaseB + framesThisStep * 0x32;
     if (gEffect10SineAnglePhaseB > 0x7fff)
     {
         gEffect10SineAnglePhaseB = 0;
     }
-    gEffect10SineValueB = mathSinf(gEffect10Pi * (f32)(s16)gEffect10SineAnglePhaseB / gEffect10SinePhaseScale);
+    gEffect10SineValueB = mathSinf(3.1415927f * (f32)(s16)gEffect10SineAnglePhaseB / 32768.0f);
 }
 
 void Effect10_func03_nop(void)

@@ -26,9 +26,7 @@ u8 lbl_803DB8B0[4] = {0};
 u8 lbl_803DB8B4[8] = {0, 0, 0, 1, 0, 2, 0, 3};
 
 extern u8 lbl_80311E30[];
-extern u32 lbl_803E0730;
-extern const f32 lbl_803E0734, lbl_803E0738, lbl_803E073C, lbl_803E0740, lbl_803E0744;
-extern const f32 lbl_803E0748, lbl_803E074C, lbl_803E0750, lbl_803E0754;
+__declspec(section ".sdata2") u32 lbl_803E0730 = 0x00050014;
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
@@ -72,10 +70,10 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
         debugPrintf((char*)&base[0][0x70]);
         return -1;
     }
-    m.pos[0] = lbl_803E0734;
-    m.pos[1] = lbl_803E0734;
-    m.pos[2] = lbl_803E0734;
-    m.scale = *(const f32*)&lbl_803E0738;
+    m.pos[0] = 0.0f;
+    m.pos[1] = 0.0f;
+    m.pos[2] = 0.0f;
+    m.scale = 1.0f;
     m.seqId = 0;
     activeModel = *(u8**)model;
     if (*(u8*)(activeModel + 0xf2) == 0)
@@ -85,13 +83,13 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
     buf.v58 = effectId;
     buf.ctx = sourceObj;
     buf.v44 = effectId;
-    buf.pos[0] = lbl_803E0734;
-    buf.pos[1] = lbl_803E0734;
-    buf.pos[2] = lbl_803E0734;
-    buf.col[0] = lbl_803E0734;
-    buf.col[1] = lbl_803E0734;
-    buf.col[2] = lbl_803E0734;
-    buf.scale = lbl_803E0738;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = 0.0f;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 1.0f;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 4;
@@ -127,18 +125,18 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
         cmdList[0].flags = 1;
         cmdList[0].tex = lbl_803DB8B0;
         cmdList[0].mode = 8;
-        cmdList[0].x = lbl_803E0734;
-        cmdList[0].y = lbl_803E0734;
-        cmdList[0].z = lbl_803E0734;
+        cmdList[0].x = 0.0f;
+        cmdList[0].y = 0.0f;
+        cmdList[0].z = 0.0f;
         if (effectId == 0xc || effectId == 5)
         {
             cmdList[1].layer = 0;
             cmdList[1].flags = 4;
             cmdList[1].tex = lbl_803DB8B4;
             cmdList[1].mode = 2;
-            cmdList[1].x = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
-            cmdList[1].y = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
-            cmdList[1].z = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
+            cmdList[1].x = 0.15f * (f32)(int)randomGetRange(1, 6);
+            cmdList[1].y = 0.15f * (f32)(int)randomGetRange(1, 6);
+            cmdList[1].z = 0.15f * (f32)(int)randomGetRange(1, 6);
             cmd = &cmdList[2];
         }
         else if (effectId == 0xd)
@@ -147,9 +145,9 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
             cmdList[1].flags = 4;
             cmdList[1].tex = lbl_803DB8B4;
             cmdList[1].mode = 2;
-            cmdList[1].x = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
-            cmdList[1].y = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
-            cmdList[1].z = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
+            cmdList[1].x = 0.15f * (f32)(int)randomGetRange(1, 6);
+            cmdList[1].y = 0.15f * (f32)(int)randomGetRange(1, 6);
+            cmdList[1].z = 0.15f * (f32)(int)randomGetRange(1, 6);
             cmd = &cmdList[2];
         }
         else if (effectId == 0x14)
@@ -158,9 +156,9 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
             cmdList[1].flags = 4;
             cmdList[1].tex = lbl_803DB8B4;
             cmdList[1].mode = 2;
-            cmdList[1].x = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
-            cmdList[1].y = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
-            cmdList[1].z = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
+            cmdList[1].x = 0.25f * (f32)(int)randomGetRange(3, 6);
+            cmdList[1].y = 0.25f * (f32)(int)randomGetRange(3, 6);
+            cmdList[1].z = 0.25f * (f32)(int)randomGetRange(3, 6);
             cmd = &cmdList[2];
         }
         else if (effectId == 0x11)
@@ -169,9 +167,9 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
             cmdList[1].flags = 4;
             cmdList[1].tex = lbl_803DB8B4;
             cmdList[1].mode = 2;
-            cmdList[1].x = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
-            cmdList[1].y = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
-            cmdList[1].z = lbl_803E0740 * (f32)(int)randomGetRange(3, 6);
+            cmdList[1].x = 0.25f * (f32)(int)randomGetRange(3, 6);
+            cmdList[1].y = 0.25f * (f32)(int)randomGetRange(3, 6);
+            cmdList[1].z = 0.25f * (f32)(int)randomGetRange(3, 6);
             cmd = &cmdList[2];
         }
         else if (effectId == 0x10)
@@ -180,16 +178,16 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
             cmdList[1].flags = 4;
             cmdList[1].tex = lbl_803DB8B4;
             cmdList[1].mode = 8;
-            cmdList[1].x = lbl_803E0744;
-            cmdList[1].y = lbl_803E0734;
-            cmdList[1].z = lbl_803E0744;
+            cmdList[1].x = 255.0f;
+            cmdList[1].y = 0.0f;
+            cmdList[1].z = 255.0f;
             cmdList[2].layer = 0;
             cmdList[2].flags = 4;
             cmdList[2].tex = lbl_803DB8B4;
             cmdList[2].mode = 2;
-            cmdList[2].x = lbl_803E0748 * (f32)(int)randomGetRange(3, 6);
-            cmdList[2].y = lbl_803E0748 * (f32)(int)randomGetRange(3, 6);
-            cmdList[2].z = lbl_803E0748 * (f32)(int)randomGetRange(3, 6);
+            cmdList[2].x = 2.5f * (f32)(int)randomGetRange(3, 6);
+            cmdList[2].y = 2.5f * (f32)(int)randomGetRange(3, 6);
+            cmdList[2].z = 2.5f * (f32)(int)randomGetRange(3, 6);
             cmd = &cmdList[3];
         }
         else
@@ -198,34 +196,34 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
             cmdList[1].flags = 4;
             cmdList[1].tex = lbl_803DB8B4;
             cmdList[1].mode = 2;
-            cmdList[1].x = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
-            cmdList[1].y = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
-            cmdList[1].z = lbl_803E073C * (f32)(int)randomGetRange(1, 6);
+            cmdList[1].x = 0.15f * (f32)(int)randomGetRange(1, 6);
+            cmdList[1].y = 0.15f * (f32)(int)randomGetRange(1, 6);
+            cmdList[1].z = 0.15f * (f32)(int)randomGetRange(1, 6);
             cmd = &cmdList[2];
         }
         cmd[0].layer = 1;
         cmd[0].flags = 0;
         cmd[0].tex = NULL;
         cmd[0].mode = 0x80000000;
-        cmd[0].x = lbl_803E0734;
-        cmd[0].y = lbl_803E074C;
-        cmd[0].z = lbl_803E0734;
+        cmd[0].x = 0.0f;
+        cmd[0].y = -0.07f;
+        cmd[0].z = 0.0f;
         cmd[1].layer = 1;
         cmd[1].flags = 0;
         cmd[1].tex = NULL;
         cmd[1].mode = 0x100;
-        cmd[1].x = lbl_803E0734;
-        cmd[1].y = lbl_803E0750 * (f32)(int)randomGetRange(-10, 10);
-        cmd[1].z = lbl_803E0750 * (f32)(int)randomGetRange(-10, 10);
+        cmd[1].x = 0.0f;
+        cmd[1].y = 300.0f * (f32)(int)randomGetRange(-10, 10);
+        cmd[1].z = 300.0f * (f32)(int)randomGetRange(-10, 10);
         if (effectId == 0x10)
         {
             cmd[2].layer = 1;
             cmd[2].flags = 0;
             cmd[2].tex = NULL;
             cmd[2].mode = 0x400000;
-            cmd[2].x = lbl_803E0734;
-            cmd[2].y = lbl_803E0734;
-            cmd[2].z = lbl_803E0750 + (f32)(int)randomGetRange(0, 300);
+            cmd[2].x = 0.0f;
+            cmd[2].y = 0.0f;
+            cmd[2].z = 300.0f + (f32)(int)randomGetRange(0, 300);
             m.rotY = randomGetRange(-0x7fff, -0xfa0);
             m.rotX = randomGetRange(0, 0xffff);
             vecRotateZXY(&m.rotX, &cmd[2].x);
@@ -237,9 +235,9 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
             cmd[2].flags = 0;
             cmd[2].tex = NULL;
             cmd[2].mode = 0x400000;
-            cmd[2].x = lbl_803E0734;
-            cmd[2].y = lbl_803E0734;
-            cmd[2].z = lbl_803E0750 + (f32)(int)randomGetRange(0, 300);
+            cmd[2].x = 0.0f;
+            cmd[2].y = 0.0f;
+            cmd[2].z = 300.0f + (f32)(int)randomGetRange(0, 300);
             m.rotY = randomGetRange(-0x7fff, -0xfa0);
             m.rotX = randomGetRange(0, 0xffff);
             vecRotateZXY(&m.rotX, &cmd[2].x);
@@ -251,9 +249,9 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
             cmd[2].flags = 0;
             cmd[2].tex = NULL;
             cmd[2].mode = 0x400000;
-            cmd[2].x = lbl_803E0734;
-            cmd[2].y = lbl_803E0734;
-            cmd[2].z = lbl_803E0754 + (f32)(int)randomGetRange(0, 100);
+            cmd[2].x = 0.0f;
+            cmd[2].y = 0.0f;
+            cmd[2].z = 100.0f + (f32)(int)randomGetRange(0, 100);
             m.rotY = randomGetRange(-0x7fff, -0xfa0);
             m.rotX = randomGetRange(0, 0xffff);
             vecRotateZXY(&m.rotX, &cmd[2].x);
@@ -263,9 +261,9 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
         cmd[0].flags = 4;
         cmd[0].tex = lbl_803DB8B4;
         cmd[0].mode = 4;
-        cmd[0].x = lbl_803E0734;
-        cmd[0].y = lbl_803E0734;
-        cmd[0].z = lbl_803E0734;
+        cmd[0].x = 0.0f;
+        cmd[0].y = 0.0f;
+        cmd[0].z = 0.0f;
         buf.cmds = cmdList;
         buf.count = (cmd + 1) - cmdList;
         buf.flags = 0x4000000;

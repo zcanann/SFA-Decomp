@@ -25,24 +25,7 @@ typedef struct
 #define ROLLINGBARREL_OBJFLAG_PARENT_SLACK 0x1000
 
 s16 gRollingBarrelExplodingCount;
-extern int gRollingBarrelCurveInitPair;
-extern const f32 lbl_803E4468;
-extern const f32 lbl_803E446C;
-extern const f32 gRollingBarrelShakeMaxDist;
-extern const f32 lbl_803E4474;
-extern const f32 lbl_803E4478;
-extern const f32 lbl_803E447C;
-extern const f32 lbl_803E4480;
-extern const f32 lbl_803E4484;
-extern const f32 gRollingBarrelGravity;
-extern const f32 gRollingBarrelFallLimitY;
-extern const f32 gRollingBarrelBounceFactor;
-extern const f32 lbl_803E44A4;
-extern const f32 lbl_803E44A8;
-extern const f32 lbl_803E44AC;
-extern const f32 lbl_803E44B0;
-extern const f32 lbl_803E44B4;
-extern f32 gRollingBarrelCurveInitData;
+__declspec(section ".sdata2") RollingBarrelInitPair gRollingBarrelCurveInitPair = { 21, 0 };
 
 #pragma dont_inline on
 void fn_801A5D88(GameObject* obj, int explosionVariant)
@@ -66,19 +49,19 @@ void fn_801A5D88(GameObject* obj, int explosionVariant)
         spawnExplosion((int)obj, 1, 1, 0, debrisType, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
     }
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
-    state->timer = lbl_803E4468;
+    state->timer = 0.0f;
     (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
-                              (s32)(lbl_803E446C * (f32)(u32)(obj)->anim.modelInstance->primaryHitboxRadius));
+                              (s32)(3.0f * (f32)(u32)(obj)->anim.modelInstance->primaryHitboxRadius));
     player = (int)Obj_GetPlayerObject();
     if ((((GameObject*)player)->objectFlags & ROLLINGBARREL_OBJFLAG_PARENT_SLACK) == 0)
     {
         dist = Vec_distance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
-        if (dist <= gRollingBarrelShakeMaxDist)
+        if (dist <= 500.0f)
         {
-            falloff = lbl_803E4474 - dist / gRollingBarrelShakeMaxDist;
-            CameraShake_Start(lbl_803E4478 * falloff, lbl_803E447C * falloff, lbl_803E4480);
-            doRumble(lbl_803E4484 * falloff);
+            falloff = 1.0f - dist / 500.0f;
+            CameraShake_Start(5.0f * falloff, 10.0f * falloff, 4.0f);
+            doRumble(15.0f * falloff);
         }
     }
 }
@@ -123,7 +106,7 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         return;
     }
 
-    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E4474);
+    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, 1.0f);
 }
 
 void RollingBarrel_hitDetect(void)
@@ -148,7 +131,7 @@ void RollingBarrel_update(GameObject* obj)
     hitObject = 0;
     descriptor = *(RollingBarrelMapData**)&(obj)->anim.placementData;
     blocked = 0;
-    dist_sq = lbl_803E4468;
+    dist_sq = 0.0f;
     stateId = state->state;
 
     switch (stateId)
@@ -157,7 +140,7 @@ void RollingBarrel_update(GameObject* obj)
     {
         if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
         {
-            f32 vmax = lbl_803E446C;
+            f32 vmax = 3.0f;
             while (blocked == 0 && dist_sq < vmax * timeDelta)
             {
                 blocked = Curve_AdvanceAlongPath(&state->curve, state->curveSpeed);
@@ -186,29 +169,29 @@ void RollingBarrel_update(GameObject* obj)
 
         if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
         {
-            floor_y = lbl_803E4478 + state->curve.posY;
+            floor_y = 5.0f + state->curve.posY;
         }
         else
         {
             floor_y = state->curve.posY;
         }
 
-        state->verticalSpeed = gRollingBarrelGravity * timeDelta + state->verticalSpeed;
+        state->verticalSpeed = -0.1f * timeDelta + state->verticalSpeed;
         (obj)->anim.localPosY = state->verticalSpeed * timeDelta + (obj)->anim.localPosY;
 
         if ((obj)->anim.localPosY < floor_y)
         {
             if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE &&
-                (obj)->anim.localPosY < gRollingBarrelFallLimitY)
+                (obj)->anim.localPosY < -2680.0f)
             {
                 blocked = 1;
             }
-            if (blocked == 0 && state->verticalSpeed * state->verticalSpeed > lbl_803E446C)
+            if (blocked == 0 && state->verticalSpeed * state->verticalSpeed > 3.0f)
             {
                 Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_mfin2_c, 6);
             }
-            state->verticalSpeed *= gRollingBarrelBounceFactor;
-            (obj)->anim.localPosY = lbl_803E44A4 * floor_y - (obj)->anim.localPosY;
+            state->verticalSpeed *= -0.6f;
+            (obj)->anim.localPosY = 2.0f * floor_y - (obj)->anim.localPosY;
         }
         (obj)->anim.localPosX = state->curve.posX;
         (obj)->anim.localPosZ = state->curve.posZ;
@@ -216,7 +199,7 @@ void RollingBarrel_update(GameObject* obj)
 
         if (state->pitchRising != 0)
         {
-            (obj)->anim.rotZ = (s16)(lbl_803E44A8 * timeDelta + (f32)(int)(obj)->anim.rotZ);
+            (obj)->anim.rotZ = (s16)(32.0f * timeDelta + (f32)(int)(obj)->anim.rotZ);
             if ((obj)->anim.rotZ > 0x5000)
             {
                 state->pitchRising = 0;
@@ -224,7 +207,7 @@ void RollingBarrel_update(GameObject* obj)
         }
         else
         {
-            (obj)->anim.rotZ = (s16) - (lbl_803E44A8 * timeDelta - (f32)(int)(obj)->anim.rotZ);
+            (obj)->anim.rotZ = (s16) - (32.0f * timeDelta - (f32)(int)(obj)->anim.rotZ);
             if ((obj)->anim.rotZ < 0x3a00)
             {
                 state->pitchRising = 1;
@@ -232,7 +215,7 @@ void RollingBarrel_update(GameObject* obj)
         }
 
         {
-            f32 rotYStep = lbl_803E44AC * timeDelta;
+            f32 rotYStep = 512.0f * timeDelta;
             (obj)->anim.rotY = (s16)(rotYStep * state->curveSpeed + (f32)(int)(obj)->anim.rotY);
         }
         hitPriority = ObjHits_GetPriorityHit(obj, &hitObject, &hitSphereIndex, &hitVolume);
@@ -255,26 +238,26 @@ void RollingBarrel_update(GameObject* obj)
     break;
     case ROLLINGBARREL_STATE_EXPLODED_WAIT:
         state->timer += timeDelta;
-        if (state->timer >= lbl_803E44B0)
+        if (state->timer >= 30.0f)
         {
             state->state = ROLLINGBARREL_STATE_RESPAWN_WAIT;
-            state->timer -= lbl_803E44B0;
+            state->timer -= 30.0f;
         }
         break;
     case ROLLINGBARREL_STATE_RESPAWN_WAIT:
         state->timer += timeDelta;
-        if (state->timer >= lbl_803E44B0)
+        if (state->timer >= 30.0f)
         {
             state->hitVolumeSlot = 0;
             state->state = ROLLINGBARREL_STATE_CLEANUP;
-            state->timer -= lbl_803E44B0;
+            state->timer -= 30.0f;
             ObjGroup_AddObject((int)obj, ROLLINGBARREL_GROUP_ID);
             gRollingBarrelExplodingCount -= 1;
         }
         break;
     case ROLLINGBARREL_STATE_CLEANUP:
         state->timer += timeDelta;
-        if (state->timer >= lbl_803E44B4)
+        if (state->timer >= 3000.0f)
         {
             Obj_FreeObject(obj);
             return;
@@ -299,7 +282,7 @@ void RollingBarrel_init(GameObject* obj, RollingBarrelMapData* params)
     RollingBarrelState* state = obj->extra;
     int tmp[2];
 
-    *(RollingBarrelInitPair*)tmp = *(RollingBarrelInitPair*)&gRollingBarrelCurveInitPair;
+    *(RollingBarrelInitPair*)tmp = gRollingBarrelCurveInitPair;
     params->respawnParam = -1;
     obj->anim.flags = (s16)(obj->anim.flags & ~OBJANIM_FLAG_HIDDEN);
     obj->anim.rotZ = 0x4000;
@@ -311,13 +294,13 @@ void RollingBarrel_init(GameObject* obj, RollingBarrelMapData* params)
     obj->anim.localPosZ = params->z;
     obj->anim.worldPosZ = params->z;
 
-    state->verticalSpeed = params->verticalSpeed / lbl_803E447C;
-    state->curveSpeed = params->curveSpeed / lbl_803E447C;
+    state->verticalSpeed = params->verticalSpeed / 10.0f;
+    state->curveSpeed = params->curveSpeed / 10.0f;
     state->state = ROLLINGBARREL_STATE_ROLLING;
     state->pitchRising = 1;
-    state->timer = lbl_803E4468;
+    state->timer = 0.0f;
 
-    (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, gRollingBarrelCurveInitData, tmp, -1);
+    (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, 100.0f, tmp, -1);
 }
 
 void RollingBarrel_release(void)
