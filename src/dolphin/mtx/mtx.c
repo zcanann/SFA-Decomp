@@ -11,24 +11,11 @@ __declspec(section ".sdata2") const f32 lbl_803E7620 = 2.0f;
 __declspec(section ".sdata2") const f32 lbl_803E7624 = -1.0f;
 __declspec(section ".sdata2") const f32 lbl_803E7628 = 0.5f;
 __declspec(section ".sdata2") const f32 lbl_803E762C = 0.017453292f;
-extern void fn_80246E54(void);
-extern void fn_80246E80(void);
-extern void fn_80246EB4(void);
-extern void fn_80246F80(void);
-extern void fn_80246FD0(void);
-extern void fn_802470C8(void);
-extern void fn_80247138(void);
-extern void fn_802471E0(void);
-extern void fn_802472E4(void);
-extern void fn_80247318(void);
-extern void fn_80247340(void);
-extern void fn_8024740C(void);
 
 #ifdef GEKKO
 asm void PSMTXIdentity(register Mtx m)
 {
     nofralloc
-entry fn_80246E54
     lfs f0, lbl_803E761C(r2)
     lfs f1, lbl_803E7618(r2)
     psq_st f0, 0x8(r3), 0, 0
@@ -45,7 +32,6 @@ entry fn_80246E54
 asm void PSMTXCopy(const register Mtx src, register Mtx dst)
 {
     nofralloc
-entry fn_80246E80
     psq_l f0, 0(src), 0, 0
     psq_st f0, 0(dst), 0, 0
     psq_l f1, 8(src), 0, 0
@@ -64,7 +50,6 @@ entry fn_80246E80
 asm void PSMTXConcat(const register Mtx mA, const register Mtx mB, register Mtx mAB)
 {
     nofralloc
-entry fn_80246EB4
     stwu    r1, -64(r1)
     psq_l   fp0, 0(mA), 0, 0
     stfd    fp14, 8(r1)
@@ -121,7 +106,6 @@ entry fn_80246EB4
 asm void PSMTXTranspose(const register Mtx src, register Mtx xPose)
 {
     nofralloc
-entry fn_80246F80
     lfs f0, lbl_803E761C(r2)
     psq_l f1, 0(src), 0, 0
     stfs f0, 44(xPose)
@@ -147,7 +131,6 @@ entry fn_80246F80
 asm u32 PSMTXInverse(const register Mtx src, register Mtx inv)
 {
     nofralloc
-entry fn_80246FD0
     psq_l       fp0, 0(src), 1, 0
     psq_l       fp1, 4(src), 0, 0
     psq_l       fp2, 16(src), 1, 0
@@ -216,7 +199,6 @@ _regular:
 asm void PSMTXRotRad(Mtx m, char axis, f32 rad)
 {
     nofralloc
-entry fn_802470C8
     mflr r0
     stw r0, 0x4(r1)
     stwu r1, -0x28(r1)
@@ -250,7 +232,6 @@ entry fn_802470C8
 asm void PSMTXRotTrig(register Mtx m, register char axis, register f32 sinA, register f32 cosA)
 {
     nofralloc
-entry fn_80247138
     lfs f0, lbl_803E761C(r2)
     lfs f3, lbl_803E7618(r2)
     ori r0, r4, 0x20
@@ -302,7 +283,6 @@ _prt_end:
 asm void PSMTXRotAxisRad(register Mtx m, const Vec *axis, register f32 rad)
 {
     nofralloc
-entry fn_802471E0
     mflr r0
     stw r0, 0x4(r1)
     stwu r1, -0x58(r1)
@@ -373,7 +353,6 @@ entry fn_802471E0
 asm void PSMTXTrans(register Mtx m, register f32 xT, register f32 yT, register f32 zT)
 {
     nofralloc
-entry fn_802472E4
     lfs f0, lbl_803E761C(r2)
     lfs f4, lbl_803E7618(r2)
     stfs f1, 0xc(r3)
@@ -392,7 +371,6 @@ entry fn_802472E4
 asm void PSMTXScale(register Mtx m, register f32 xS, register f32 yS, register f32 zS)
 {
     nofralloc
-entry fn_80247318
     lfs f0, lbl_803E761C(r2)
     stfs f1, 0x0(r3)
     psq_st f0, 0x4(r3), 0, 0
@@ -408,7 +386,6 @@ entry fn_80247318
 asm void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, float scaleS, float scaleT, float transS, float transT)
 {
     nofralloc
-entry fn_80247340
     mflr r0
     stw r0, 0x4(r1)
     stwu r1, -0x58(r1)
@@ -465,7 +442,6 @@ entry fn_80247340
 asm void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, float scaleS, float scaleT, float transS, float transT)
 {
     nofralloc
-entry fn_8024740C
     fsubs f10, f4, f3
     lfs f11, lbl_803E7618(r2)
     fsubs f0, f1, f2

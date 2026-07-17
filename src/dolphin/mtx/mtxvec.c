@@ -1,13 +1,9 @@
 #include "dolphin/mtx.h"
 
-extern void fn_80247494(void);
-extern void fn_802474E8(void);
-extern void fn_802474F4(void);
 
 asm void PSMTXMultVec(const register Mtx m, const register Vec *in, register Vec *out)
 {
     nofralloc
-entry fn_80247494
     psq_l f0, 0(in), 0, 0
     psq_l f2, 0(m), 0, 0
     psq_l f1, 8(in), 1, 0
@@ -34,11 +30,9 @@ entry fn_80247494
 asm void PSMTXMultVecArray(const register Mtx m, const register Vec *srcBase, register Vec *dstBase, register u32 count)
 {
     nofralloc
-entry fn_802474E8
     psq_l f13, 0(m), 0, 0
     psq_l f12, 16(m), 0, 0
     subi r6, r6, 1
-entry fn_802474F4
     psq_l f11, 8(m), 0, 0
     ps_merge00 f0, f13, f12
     subi r5, r5, 4
