@@ -48,7 +48,7 @@ typedef struct SynthSong
     u8 pad_eb1[0x31];
     u8 counter; /* 0xee2 */
     u8 pad_ee3[0x14e4 - 0xee3];
-    u32 multiMode;           /* 0x14e4 */
+    u8* trackSectionTab;     /* 0x14e4 */
     SynthStream streams[16]; /* 0x14e8 */
 } SynthSong;
 
@@ -74,7 +74,7 @@ extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
 extern u8 lbl_803AF550[];
 
-extern u8 synthIsFadeOutActive(u8 idx);
+extern int synthIsFadeOutActive(u8 idx);
 extern u32 fn_8026E9D0(u8 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
 extern void synthFreeCallback(void* cb);
@@ -83,7 +83,7 @@ extern void synthRecycleVoiceCallbacks(void* song);
 void synthSetStudioChannelScale(int value, u8 bank, u8 key);
 
 /*
- * fn_8026EC44 - per-song pitch/mod LFO + event update pass.
+ * fn_8026EC44 - per-sequence tick and event update pass.
  */
 #pragma fp_contract off
 static inline f32 sal_fmod(f32 x, f32 y, f64 absy)
@@ -157,89 +157,89 @@ static inline void synthHandleMasterTrack(u8 secIndex)
     }
 }
 
-void fn_8026EC44(u32 dt)
+void fn_8026EC44(u32 deltaTime)
 {
-    u32 sum;
-    u32 i;
-    u32 j;
-    u32 ret;
-    u32 cb;
+    u32 tickSum;
+    u32 sectionIndex;
+    u32 timeIndex;
+    u32 eventsActive;
+    u32 callbacksActive;
     SynthSong* song;
-    SynthSong* next;
-    SynthSong* cs;
-    u32 mm;
-    u8 fade;
-    f32 c0;
-    f64 absRange;
-    f32 range;
-    f32 c1;
+    SynthSong* nextSong;
+    f32 tickRateScale;
+    f64 absoluteTickRange;
+    f32 tickRange;
+    f32 speedScale;
 
-    if (dt != 0)
+    if (deltaTime != 0)
     {
-        range = lbl_803E7788;
+        tickRange = lbl_803E7788;
         song = gSynthQueuedVoices;
-        absRange = fabs(range);
-        c0 = lbl_803E7780;
-        c1 = lbl_803E7784;
-        for (; song != NULL; song = next)
+        absoluteTickRange = fabs(tickRange);
+        tickRateScale = lbl_803E7780;
+        speedScale = lbl_803E7784;
+        for (; song != NULL; song = nextSong)
         {
-            next = song->next;
+            nextSong = song->next;
             gSynthCurrentVoice = song;
             gSynthCurrentVoiceSlotIndex = song->index;
-            fade = synthIsFadeOutActive(song->fadeIdx);
-            cs = gSynthCurrentVoice;
-            mm = cs->multiMode;
-            lbl_803DE224 = fade;
-            if (mm == 0)
+            lbl_803DE224 = synthIsFadeOutActive(song->fadeIdx);
+            if (gSynthCurrentVoice->trackSectionTab == NULL)
             {
                 synthHandleMasterTrack(0);
-                synthSetTickDelta(gSynthCurrentVoice->streams, dt, c0, c1, range, absRange);
-                ret = fn_8026E9D0(0, dt);
-                cb = synthUpdateCallbacks();
+                synthSetTickDelta(gSynthCurrentVoice->streams, deltaTime, tickRateScale, speedScale, tickRange,
+                                  absoluteTickRange);
+                eventsActive = fn_8026E9D0(0, deltaTime);
+                callbacksActive = synthUpdateCallbacks();
                 synthHandleKeyOffCallbacks();
-                for (i = 0; i < 2; ++i)
+                for (sectionIndex = 0; sectionIndex < 2; ++sectionIndex)
                 {
-                    sum = gSynthCurrentVoice->streams[0].o[i].acc + gSynthCurrentVoice->streams[0].d[i].step;
-                    gSynthCurrentVoice->streams[0].o[i].acc = sum & 0xffff;
-                    sum = sum >> 16;
-                    gSynthCurrentVoice->streams[0].o[i].out += sum + gSynthCurrentVoice->streams[0].d[i].delta;
+                    tickSum = gSynthCurrentVoice->streams[0].o[sectionIndex].acc +
+                              gSynthCurrentVoice->streams[0].d[sectionIndex].step;
+                    gSynthCurrentVoice->streams[0].o[sectionIndex].acc = tickSum & 0xffff;
+                    tickSum = tickSum >> 16;
+                    gSynthCurrentVoice->streams[0].o[sectionIndex].out +=
+                        tickSum + gSynthCurrentVoice->streams[0].d[sectionIndex].delta;
                 }
             }
             else
             {
-                ret = 0;
-                for (i = 0; i < 0x10; i++)
+                eventsActive = 0;
+                for (sectionIndex = 0; sectionIndex < 0x10; sectionIndex++)
                 {
-                    synthHandleMasterTrack(i);
-                    synthSetTickDelta(&gSynthCurrentVoice->streams[i], dt, c0, c1, range, absRange);
-                    ret |= fn_8026E9D0(i, dt);
+                    synthHandleMasterTrack(sectionIndex);
+                    synthSetTickDelta(&gSynthCurrentVoice->streams[sectionIndex], deltaTime, tickRateScale,
+                                      speedScale, tickRange, absoluteTickRange);
+                    eventsActive |= fn_8026E9D0(sectionIndex, deltaTime);
                 }
-                cb = synthUpdateCallbacks();
+                callbacksActive = synthUpdateCallbacks();
                 synthHandleKeyOffCallbacks();
-                for (i = 0; i < 16; i++)
+                for (sectionIndex = 0; sectionIndex < 16; sectionIndex++)
                 {
-                    for (j = 0; j < 2; ++j)
+                    for (timeIndex = 0; timeIndex < 2; ++timeIndex)
                     {
-                        sum = gSynthCurrentVoice->streams[i].o[j].acc + gSynthCurrentVoice->streams[i].d[j].step;
-                        gSynthCurrentVoice->streams[i].o[j].acc = sum & 0xffff;
-                        sum = sum >> 16;
-                        gSynthCurrentVoice->streams[i].o[j].out += sum + gSynthCurrentVoice->streams[i].d[j].delta;
+                        tickSum = gSynthCurrentVoice->streams[sectionIndex].o[timeIndex].acc +
+                                  gSynthCurrentVoice->streams[sectionIndex].d[timeIndex].step;
+                        gSynthCurrentVoice->streams[sectionIndex].o[timeIndex].acc = tickSum & 0xffff;
+                        tickSum = tickSum >> 16;
+                        gSynthCurrentVoice->streams[sectionIndex].o[timeIndex].out +=
+                            tickSum + gSynthCurrentVoice->streams[sectionIndex].d[timeIndex].delta;
                     }
                 }
             }
-            if ((ret == 0) && (cb == 0))
+            if ((eventsActive == 0) && (callbacksActive == 0))
             {
                 if (song->prev != NULL)
                 {
-                    *(SynthSong**)song->prev = next;
+                    song->prev->next = nextSong;
                 }
                 else
                 {
-                    gSynthQueuedVoices = next;
+                    gSynthQueuedVoices = nextSong;
                 }
-                if (next != NULL)
+                if (nextSong != NULL)
                 {
-                    next->prev = song->prev;
+                    nextSong->prev = song->prev;
                 }
                 synthRecycleVoiceCallbacks(song);
                 song->active = 0;
