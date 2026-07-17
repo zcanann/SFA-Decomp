@@ -811,9 +811,9 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             checkedTransient:
                 if (found == -1)
                 {
-                    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
+                    for (i = 0, transient = s[0]->transient; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++, transient++)
                     {
-                        if (s[0]->transient[i].mapId == -1)
+                        if (transient->mapId == -1)
                         {
                             (slot = &s[0]->transient[i])->mapId = idx;
                             slot->shift = shift;
