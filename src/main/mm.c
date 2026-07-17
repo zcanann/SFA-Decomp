@@ -701,7 +701,6 @@ void mm_free(void* p)
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag);
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, int tag);
 
-#pragma dont_inline on
 int mmSetFreeDelay(int v)
 {
     int old = gMmFreeDelay;
@@ -709,7 +708,6 @@ int mmSetFreeDelay(int v)
     gMmFreeDelay = v;
     return old;
 }
-#pragma dont_inline off
 #pragma opt_lifetimes off
 int mmAllocFromRegion(int region, int size, int type, int tag)
 {
