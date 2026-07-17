@@ -3192,7 +3192,7 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
     }
 
     if (RomCurveInterp_EvaluateOffsetPosition(((ObjSeqState*)seq)->curveInterp, offset, outPos, (s16*)(seq + 0x1a),
-                                              ((ObjSeqState*)seq)->groundSnapEnabled) != 0)
+                                              *(u8*)&((ObjSeqState*)seq)->groundSnapEnabled) != 0)
     {
         ((GameObject*)obj)->anim.localPosX = outPos[0];
         ((GameObject*)obj)->anim.localPosY = outPos[1];
