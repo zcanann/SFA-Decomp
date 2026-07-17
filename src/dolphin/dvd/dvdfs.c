@@ -14,7 +14,7 @@ static u32 MaxEntryNum;
 static u32 sDvdfsCurrentDirEntry;
 OSThreadQueue __DVDThreadQueue;
 u32 __DVDLongFileNameFlag;
-__declspec(section ".sdata") static const char sDvdfsFileName[] = "dvdfs.c";
+static char sDvdfsFileName[] = "dvdfs.c";
 
 static char sDVDIllegalPathFormatMessage[] =
     "DVDConvertEntrynumToPath(possibly DVDOpen or DVDChangeDir or DVDOpenDir): "
