@@ -102,11 +102,6 @@ extern f32 lbl_803E27C4;
 extern f32 lbl_803E27C8;
 extern f32 lbl_803E27CC;
 extern f32 lbl_803E27D0;
-extern f32 lbl_803E27D8;
-extern f32 lbl_803E27DC;
-extern f32 gGroundBaddiePi;
-extern f32 gGroundBaddieAngleUnitScale;
-extern f32 lbl_803E27E8;
 
 #pragma scheduling on
 #pragma peephole on
@@ -456,61 +451,4 @@ void fn_80151C68(int obj, u8* state)
         *(u16*)(state + 0x338) = gGroundBaddieTriggerResponseSeq[0];
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
     }
-}
-
-void fn_80151DB8(int obj, u8* state)
-{
-    GameObject* player;
-    ObjPlacement* setup;
-    f32 dy;
-    f32 px0;
-    f32 pz0;
-    f32 cosA;
-    f32 sinA;
-    f32 base;
-    f32 f5;
-    f32 f2v;
-    f32 dx;
-    f32 dz;
-
-    player = (GameObject*)Obj_GetPlayerObject();
-    setup = ((GameObject*)obj)->anim.placement;
-    dy = player->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-    dy = (dy >= lbl_803E27D8) ? dy : -dy;
-    if (dy > lbl_803E27DC)
-    {
-        return;
-    }
-    px0 = setup->posX -
-          lbl_803E27DC * mathSinf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
-    pz0 = setup->posZ -
-          lbl_803E27DC * mathCosf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
-    dx = player->anim.worldPosX - px0;
-    dz = player->anim.worldPosZ - pz0;
-    if (sqrtf(dx * dx + dz * dz) < ((GroundBaddieState*)state)->baddie.speedScale)
-    {
-        cosA = mathSinf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
-        sinA = mathCosf(gGroundBaddiePi * (f32)((GameObject*)obj)->anim.rotX / gGroundBaddieAngleUnitScale);
-        base = -(cosA * (px0 - cosA) + sinA * (pz0 - sinA));
-        f5 = base + (cosA * player->anim.previousWorldPosX + sinA * player->anim.previousWorldPosZ);
-        f2v = base + (cosA * player->anim.worldPosX + sinA * player->anim.worldPosZ);
-        if (f2v > lbl_803E27D8)
-        {
-            if (!(f5 >= lbl_803E27E8))
-            {
-                return;
-            }
-            player->anim.worldPosX = player->anim.worldPosX - cosA * f5;
-            player->anim.worldPosZ = player->anim.worldPosZ - sinA * f5;
-            Obj_TransformWorldPointToLocal(player->anim.worldPosX, player->anim.worldPosY, player->anim.worldPosZ,
-                                           &player->anim.localPosX, &player->anim.localPosY, &player->anim.localPosZ,
-                                           (u32)player->anim.parent);
-        }
-    }
-}
-
-void guardClawUpdateWhileFrozen(int obj, int* state)
-{
-    Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_pole1_c_23);
-    ((GroundBaddieState*)state)->baddie.reactionFlags |= 0x10;
 }
