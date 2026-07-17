@@ -4478,6 +4478,7 @@ dolphin/MSL_C/PPCEABI/bare/H/alloc.c:
 dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c:
 	.text       start:0x8028DADC end:0x8028DBE4
 	.data       start:0x80332380 end:0x803324C0
+	.bss        start:0x803DABF0 end:0x803DAEF0
 
 dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c:
 	.text       start:0x8028DBE4 end:0x8028E7FC
@@ -4622,10 +4623,13 @@ dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e_tables.c:
 main/dll/player.c:
 	.text       start:0x80295334 end:0x802B8A58
 	.data       start:0x80332FC0 end:0x80334ABC
+	.bss        start:0x803DAEF0 end:0x803DB0D0
 	.sdata      start:0x803DC660 end:0x803DC66C
 
 main/dll/dll_01B5_lightfoot.c:
 	.text       start:0x802B8A58 end:0x802B9780
+	.data       start:0x80334FF8 end:0x80335030
+	.bss        start:0x803DB0D0 end:0x803DB0F0
 
 main/dll/DIM/dll_0256_dimsnowhorn1.c:
 	.text       start:0x802B9780 end:0x802BC0D0

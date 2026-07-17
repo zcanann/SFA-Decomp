@@ -1,8 +1,8 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ansi_files.h"
 
-extern unsigned char lbl_803DADF0[];
-extern unsigned char lbl_803DACF0[];
-extern unsigned char lbl_803DABF0[];
+static unsigned char stdin_buff[0x100];
+static unsigned char stdout_buff[0x100];
+static unsigned char stderr_buff[0x100];
 
 int __TRK_write_console(__file_handle file, unsigned char* buff, size_t* count, __idle_proc idle_fn);
 
@@ -16,9 +16,9 @@ FILE __files[4] = {
      {0, 0},
      {0, 0},
      0,
-     lbl_803DADF0,
-     256,
-     lbl_803DADF0,
+     stdin_buff,
+     sizeof(stdin_buff),
+     stdin_buff,
      0,
      0,
      0,
@@ -38,9 +38,9 @@ FILE __files[4] = {
      {0, 0},
      {0, 0},
      0,
-     lbl_803DACF0,
-     256,
-     lbl_803DACF0,
+     stdout_buff,
+     sizeof(stdout_buff),
+     stdout_buff,
      0,
      0,
      0,
@@ -60,9 +60,9 @@ FILE __files[4] = {
      {0, 0},
      {0, 0},
      0,
-     lbl_803DABF0,
-     256,
-     lbl_803DABF0,
+     stderr_buff,
+     sizeof(stderr_buff),
+     stderr_buff,
      0,
      0,
      0,

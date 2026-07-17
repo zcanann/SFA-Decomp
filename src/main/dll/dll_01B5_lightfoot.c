@@ -22,6 +22,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/dll_01B5_lightfoot.h"
+#include "main/object_descriptor.h"
 #include "main/dll/player_api.h"
 #include "main/obj_group.h"
 #include "main/obj_link.h"
@@ -60,6 +61,26 @@ typedef struct LightfootSub
 #define LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define LIGHTFOOT_OBJFLAG_RENDERED           0x800
 #define LIGHTFOOT_OBJGROUP                   3
+
+int lbl_803DB0DC[5];
+int lbl_803DB0D0[3];
+
+ObjectDescriptor gLightFootObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)lightfoot_initialise,
+    (ObjectDescriptorCallback)lightfoot_release,
+    0,
+    (ObjectDescriptorCallback)lightfoot_init,
+    (ObjectDescriptorCallback)lightfoot_update,
+    (ObjectDescriptorCallback)lightfoot_hitDetect,
+    (ObjectDescriptorCallback)lightfoot_render,
+    (ObjectDescriptorCallback)lightfoot_free,
+    (ObjectDescriptorCallback)lightfoot_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)lightfoot_getExtraSize,
+};
 
 int lightfoot_getExtraSize(void)
 {
