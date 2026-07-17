@@ -254,3 +254,6 @@ ObjectDescriptor gSB_CloudBallObjDescriptor = {
     (ObjectDescriptorCallback)SB_CloudBall_getObjectTypeId,
     SB_CloudBall_getExtraSize,
 };
+
+__declspec(section ".sdata2") f32 gSbCloudBallLightAttenNear = 1.5e+02f;
+__declspec(section ".sdata2") f32 gSbCloudBallLightAttenFar = 2.5e+02f;

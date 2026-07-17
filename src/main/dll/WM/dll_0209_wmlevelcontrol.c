@@ -401,3 +401,4 @@ void WM_LevelControl_initialise(void)
 {
 }
 
+__declspec(section ".sdata2") f32 gWmLevelControlIntroMessageDuration = 3e+02f;

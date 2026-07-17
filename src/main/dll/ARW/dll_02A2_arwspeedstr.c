@@ -55,11 +55,11 @@ void ARWSpeedStr_update(GameObject* obj)
         (obj)->anim.localPosX += playerMapOffsetX;
         (obj)->anim.localPosZ += playerMapOffsetZ;
         state->flags = (state->flags | 1) & 0xff;
-        state->alpha = lbl_803E7104;
+        state->alpha = lbl_803E7104.f;
     }
     {
         f32 lifeTimer = state->lifeTimer;
-        f32 zero = lbl_803E7104;
+        f32 zero = lbl_803E7104.f;
         if (lifeTimer > zero)
         {
             state->lifeTimer = lifeTimer - timeDelta;
@@ -103,3 +103,8 @@ ObjectDescriptor gARWSpeedStrObjDescriptor = {
     (ObjectDescriptorCallback)ARWSpeedStr_free, (ObjectDescriptorCallback)ARWSpeedStr_getObjectTypeId,
     ARWSpeedStr_getExtraSize,
 };
+
+__declspec(section ".sdata2") f32 lbl_803E7100 = 1.0f;
+__declspec(section ".sdata2") const union ArwSpeedStrConstF32 lbl_803E7104 = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803E7108 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E710C = 1.4e+02f;

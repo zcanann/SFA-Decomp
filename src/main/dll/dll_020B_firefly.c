@@ -204,7 +204,7 @@ void FireFlyFn_801f4f88(GameObject* obj)
                     {
                         FireFlyState* st = (obj)->extra;
                         (obj)->anim.flags = (s16)((obj)->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
-                        st->despawnTimer = lbl_803E5EA8; /* 180.0f */
+                        st->despawnTimer = *(f32*)&lbl_803E5EA8;
                         gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
                         gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
                         Sfx_PlayFromObject((int)obj, SFXTRIG_lockoff22);
@@ -258,7 +258,7 @@ void firefly_update(GameObject* obj)
         {
             FireFlyState* st = obj->extra;
             obj->anim.flags = (s16)(obj->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
-            st->despawnTimer = lbl_803E5EA8;
+            st->despawnTimer = *(f32*)&lbl_803E5EA8;
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
             Sfx_PlayFromObject((int)obj, SFXTRIG_lockoff22);
@@ -284,7 +284,7 @@ void firefly_update(GameObject* obj)
     {
         if (timerCountDown(&state->lifeTimer) != 0)
         {
-            state->despawnTimer = lbl_803E5EA8;
+            state->despawnTimer = *(f32*)&lbl_803E5EA8;
         }
         if (state->despawnTimer > 0.0f)
         {

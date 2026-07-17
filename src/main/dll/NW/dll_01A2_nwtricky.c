@@ -179,3 +179,5 @@ void NW_tricky_init(int* obj)
     ((GameObject*)obj)->objectFlags =
         (u16)(((GameObject*)obj)->objectFlags | (NWTRICKY_OBJFLAG_HIDDEN | NWTRICKY_OBJFLAG_HITDETECT_DISABLED));
 }
+
+__declspec(section ".sdata2") f32 lbl_803E5268 = 2000.0f;

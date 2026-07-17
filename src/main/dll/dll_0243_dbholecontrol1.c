@@ -24,6 +24,8 @@
 #include "main/dll/dll_0243_dbholecontrol1.h"
 #include "string.h"
 
+__declspec(section ".sdata2") f32 lbl_803E6390 = 1.0f;
+
 /*
  * DbStealerwormControl - the per-family control record hung off
  * GroundBaddieState.control (state+0x40C) for dbstealerworm

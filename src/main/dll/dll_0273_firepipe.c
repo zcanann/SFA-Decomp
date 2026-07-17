@@ -625,3 +625,5 @@ ObjectDescriptor gFirePipeObjDescriptor = {
     (ObjectDescriptorCallback)firepipe_getObjectTypeId,
     firepipe_getExtraSize,
 };
+
+__declspec(section ".sdata2") f32 lbl_803E6BA8 = 0.1f;

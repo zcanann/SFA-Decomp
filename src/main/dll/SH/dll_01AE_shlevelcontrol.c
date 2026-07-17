@@ -88,12 +88,16 @@ STATIC_ASSERT(offsetof(ShLevelcontrolState, musicLatch) == 0x12);
 #define SHLEVELCONTROL_AIRMETER_BGTEXTURE    0x5db /* air-meter background texture id */
 
 extern f32 gShLevelControlBloopTimeLimit;
-extern f32 lbl_803E54B4; /* 0.0f floor: bloop-timer expiry, hud-text floor, sky-brightness arg */
 extern f32 gShLevelControlHudTextDuration;
 
 #include "main/dll/SH/dll_01AF_shswaplift.h"
 #include "main/pad.h"
 #include "main/dll/DR/DRearthwalk.h"
+
+union ShLevelControlConstF32 { f32 f; };
+
+__declspec(section ".sdata2") f32 gShLevelControlBloopTimeLimit = 1e+05f;
+const union ShLevelControlConstF32 lbl_803E54B4 = { 0.0f };
 
 extern void sh_staff_getExtraSize(void);
 extern void sh_staff_free(void);
@@ -389,7 +393,7 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
         else
         {
             ((ShLevelcontrolState*)state)->timer8 -= bloopsRemaining * timeDelta;
-            if (((ShLevelcontrolState*)state)->timer8 >= lbl_803E54B4)
+            if (((ShLevelcontrolState*)state)->timer8 >= lbl_803E54B4.f)
             {
                 (*gGameUIInterface)->runAirMeter((int)((ShLevelcontrolState*)state)->timer8);
             }
@@ -401,7 +405,7 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
             }
             else
             {
-                ((ShLevelcontrolState*)state)->timer8 = lbl_803E54B4;
+                ((ShLevelcontrolState*)state)->timer8 = lbl_803E54B4.f;
                 (*gGameUIInterface)->runAirMeter(1);
             }
         }
@@ -658,13 +662,13 @@ void SH_LevelControl_update(GameObject* obj)
     u8* base = (u8*)lbl_80327618;
 
     state = (obj)->extra;
-    if (((ShLevelcontrolState*)state)->hudTextTimer > lbl_803E54B4)
+    if (((ShLevelcontrolState*)state)->hudTextTimer > lbl_803E54B4.f)
     {
         gameTextShow(0x3f6);
         ((ShLevelcontrolState*)state)->hudTextTimer = ((ShLevelcontrolState*)state)->hudTextTimer - timeDelta;
         if (((ShLevelcontrolState*)state)->hudTextTimer < *(f32*)&lbl_803E54B4)
         {
-            ((ShLevelcontrolState*)state)->hudTextTimer = lbl_803E54B4;
+            ((ShLevelcontrolState*)state)->hudTextTimer = lbl_803E54B4.f;
         }
     }
     SH_LevelControl_setMusic((short*)state);
@@ -942,7 +946,7 @@ void SH_LevelControl_update(GameObject* obj)
                 fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
                 envFxActFn_800887f8(0x3f);
                 getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
-                skyFn_80088e54(0, lbl_803E54B4);
+                skyFn_80088e54(0, lbl_803E54B4.f);
             }
             else
             {

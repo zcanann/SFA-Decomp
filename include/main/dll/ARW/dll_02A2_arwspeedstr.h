@@ -36,7 +36,8 @@ STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, y) == 0x04);
 STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, z) == 0x08);
 
 extern f32 lbl_803E7100;
-extern f32 lbl_803E7104;
+union ArwSpeedStrConstF32 { f32 f; };
+extern const union ArwSpeedStrConstF32 lbl_803E7104;
 extern f32 lbl_803E7108;
 extern f32 lbl_803E710C;
 

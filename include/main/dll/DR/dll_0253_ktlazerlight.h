@@ -31,7 +31,8 @@ STATIC_ASSERT(sizeof(KtlazerlightPlacement) == 0x20);
 STATIC_ASSERT(offsetof(KtlazerlightState, light) == 0x04);
 STATIC_ASSERT(sizeof(KtlazerlightState) == 0x14);
 
-extern f32 lbl_803E68C0;
+union KtLazerLightConstF32;
+extern const union KtLazerLightConstF32 lbl_803E68C0;
 
 int ktlazerlight_getExtraSize(void);
 int ktlazerlight_getObjectTypeId(void);

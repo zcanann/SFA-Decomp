@@ -1,6 +1,9 @@
 
 #include "dolphin/os/__os.h"
 
+const u32 lbl_803E7610 = 0x2ABE003D;
+const u32 lbl_803E7614 = 0x003D003D;
+
 static OSFontHeader* FontData;
 static u8* SheetImage;
 static u8* WidthTable;
@@ -387,8 +390,8 @@ u32 OSLoadFont(OSFontHeader* fontData, void* tmp) {
             int y;
             u16 glyph[4];
 
-            *(u32*)&glyph[0] = lbl_803E7610;
-            *(u32*)&glyph[2] = lbl_803E7614;
+            *(u32*)&glyph[0] = *(u32*)&lbl_803E7610;
+            *(u32*)&glyph[2] = *(u32*)&lbl_803E7614;
 
             fontCode = GetFontCode(0x54);
             sheet = fontCode / CharsInSheet;

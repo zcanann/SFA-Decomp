@@ -29,6 +29,13 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/object_render_legacy.h"
 
+__declspec(section ".sdata2") f32 lbl_803E70E0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E70E4 = -1.0f;
+__declspec(section ".sdata2") f32 lbl_803E70E8 = 3.52e+04f;
+__declspec(section ".sdata2") f32 lbl_803E70EC = 2e+02f;
+__declspec(section ".sdata2") f32 lbl_803E70F0 = -6.5e+02f;
+__declspec(section ".sdata2") f32 lbl_803E70F4 = -8.7f;
+
 /* env effects co-activated once with the sky preset; opaque distinct roles */
 #define ARWLEVELCON_ENVFX_A 0x21f
 #define ARWLEVELCON_ENVFX_B 0x22b

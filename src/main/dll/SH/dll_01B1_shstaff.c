@@ -644,3 +644,8 @@ u32 gSC_totempoleObjDescriptor[14] = {0x00000000,
                                       (u32)sc_totempole_free,
                                       (u32)sc_totempole_getObjectTypeId,
                                       (u32)sc_totempole_getExtraSize};
+
+__declspec(section ".sdata2") f32 gShStaffFadeOutTimerInit = 1.5e+03f;
+__declspec(section ".sdata2") f32 gShStaffFizzSfxTimerInit = 0.9f;
+__declspec(section ".sdata2") f32 gShStaffMapUnloadDistSq = 4.9e+05f;
+__declspec(section ".sdata2") f32 gShStaffMapLoadDistSq = 2.5e+05f;
