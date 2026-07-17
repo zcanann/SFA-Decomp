@@ -240,11 +240,12 @@ STATIC_ASSERT(offsetof(EarthWarriorState, sub) == 0xb58);
 typedef struct
 {
     s16 v[5];
+    s16 pad;
 } EWPathRange;
 
 typedef struct
 {
-    f32 m[4][4];
+    u32 m[4][4];
 } EWColorTbl;
 
 typedef struct
@@ -296,9 +297,11 @@ extern f32 GXIndTexMtxScale1024;
 extern int lbl_803E82D8;
 extern u8 gDREarthWarriorInitData[];
 extern u8 gDREarthWarriorRowIndices[];
-extern EWPathRange lbl_802C2CA8;
-extern EWPathRange lbl_802C2CB4;
-extern EWColorTbl gDREarthWarriorColors;
+const EWPathRange lbl_802C2CA8 = {{10, 10, 0, 0, 0}, 0};
+const EWPathRange lbl_802C2CB4 = {{20, 20, 0, 0, 0}, 0};
+const EWColorTbl gDREarthWarriorColors = {
+    {{8, 255, 190, 120}, {8, 255, 255, 120}, {8, 180, 240, 255}, {8, 170, 255, 170}}
+};
 extern EWModelChainEntry* gEarthWarriorTailChainDesc;
 extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
 

@@ -113,6 +113,24 @@ typedef void (*PSVECScaleLegacyFn)(f32 scale, f32* src, f32* dst);
 #include "main/player_control_interface.h"
 #include "main/sky.h"
 
+const u8 lbl_802C2B30[12][16] = {
+    {0x40, 0x02, 0x01}, {0x40, 0x03, 0x01, 0x02}, {0x40, 0x04, 0x05, 0x06},
+    {0x40, 0x06, 0x05, 0x07}, {0x40, 0x06, 0x03, 0x02}, {0x40, 0x03, 0x06, 0x07},
+    {0x40, 0x03, 0x07, 0x01}, {0x40, 0x07, 0x05, 0x01}, {0x40, 0x04, 0x00, 0x01},
+    {0x40, 0x04, 0x01, 0x05}, {0x40, 0x00, 0x04, 0x02}, {0x40, 0x02, 0x04, 0x06},
+};
+
+const f32 lbl_802C2BF0[24] = {
+    -14.5f, 20.0f, -14.5f, 14.5f, 20.0f, -14.5f, -14.5f, 20.0f, 14.5f, 14.5f, 20.0f, 14.5f,
+    -14.5f, -7.0f, -14.5f, 14.5f, -7.0f, -14.5f, -14.5f, -7.0f, 14.5f, 14.5f, -7.0f, 14.5f,
+};
+
+const int lbl_802C2C50[6] = {0, 1, 2, 3, 4, 5};
+const int lbl_802C2C68[4] = {6, 105, 105, 255};
+const u8 lbl_802C2C78[16] = {0x0B, 0x04, 0x06, 0x0A, 0x0A, 0x03, 0x03, 0x02,
+                                    0x0E, 0x10, 0x12, 0x13, 0x05, 0x00, 0x00, 0x00};
+const u16 lbl_802C2C88[16] = {1, 2, 4, 8, 8, 16, 16, 64, 128, 256, 1, 32, 0xFFFF, 0, 0, 0};
+
 /* forward declarations for graduated functions */
 void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle);
 void playerDoTailAnims(int obj, void* statep);
@@ -3865,7 +3883,7 @@ extern void objAudioFn_8006edcc();
 
 extern u8 lbl_803DC6A8[8];
 extern u8 lbl_803DC6B0[2];
-extern int lbl_802C2C50[];
+extern const int lbl_802C2C50[];
 extern f32 lbl_803E8164;
 
 typedef struct
@@ -12124,7 +12142,7 @@ void playerDrawTeleportAnim(GameObject* obj)
     setMatrixFromObjectTransposed(&xf, mtx);
     PSMTXConcat(Camera_GetViewMatrix(), mtx, mtx);
     GXLoadPosMtxImm((const f32(*)[4])mtx, 0);
-    drawFn_8005cf8c((int)vp, lbl_802C2B30, 0xc);
+    drawFn_8005cf8c((int)vp, (const u8*)lbl_802C2B30, 0xc);
 
     if (((PlayerState*)state)->teleportAnimProgress >= lbl_803E80E0)
     {
@@ -14434,7 +14452,7 @@ void playerRunActiveSpells(GameObject* obj, int state)
 }
 
 
-extern int lbl_802C2C68[];
+extern const int lbl_802C2C68[];
 extern f32 lbl_803E8134;
 
 void fn_802AFB0C(int obj, int inner, int state)

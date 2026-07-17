@@ -4612,7 +4612,7 @@ dolphin/MSL_C/PPCEABI/bare/H/floorf.c:
 dolphin/MSL_C/PPCEABI/bare/H/trigf.c:
 	.text       start:0x802947CC end:0x80294BB8
 	.ctors      start:0x802C1884 end:0x802C1888
-	.rodata     start:0x802C2B20 end:0x802C2D4C
+	.rodata     start:0x802C2B20 end:0x802C2B30
 	.data       start:0x80332A18 end:0x80332A28
 	.sdata2     start:0x803E7E38 end:0x803E7E50
 
@@ -4635,6 +4635,7 @@ dolphin/TRK_MINNOW_DOLPHIN/mpc_7xx_603e_tables.c:
 
 main/dll/player.c:
 	.text       start:0x80295334 end:0x802B8A58
+	.rodata     start:0x802C2B30 end:0x802C2CA8
 	.data       start:0x80332FC0 end:0x80334EE8
 	.bss        start:0x803DAEF0 end:0x803DB0D0
 	.sdata      start:0x803DC660 end:0x803DC66C
@@ -4660,10 +4661,12 @@ main/audio/synth_constants.c:
 
 main/dll/DR/dll_0257_drearthwarrior.c:
 	.text       start:0x802BC7C0 end:0x802BF0C8
+	.rodata     start:0x802C2CA8 end:0x802C2D00
 	.data       start:0x803351F8 end:0x803356F0
 	.sdata      start:0x803DC760 end:0x803DC76C
 
 main/dll/DR/dll_0258_drcloudrunner.c:
 	.text       start:0x802BF0C8 end:0x802C187C
+	.rodata     start:0x802C2D00 end:0x802C2D4C
 	.data       start:0x803356F0 end:0x8033583D
 	.bss        start:0x803DB1C0 end:0x803DB1E0

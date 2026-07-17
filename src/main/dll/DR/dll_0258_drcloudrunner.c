@@ -61,6 +61,16 @@
 
 void* gDRCloudRunnerStateHandlers[8];
 
+const Vec3x gDRCloudRunnerVecTable[5] = {
+    {0.0f, 0.0f, 15.0f},
+    {0.0f, 0.0f, 30.0f},
+    {0.0f, 0.35f, 0.0f},
+    {0.0f, 0.0f, 1.0f},
+    {0.0f, 0.0f, 1.0f},
+};
+
+const int gDRCloudRunnerCurveIds[4] = {20, 21, 22, 23};
+
 STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 #define DRCLOUDRUNNER_PARTFX             0x66
 #define DRCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
