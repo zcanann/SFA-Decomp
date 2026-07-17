@@ -133,6 +133,24 @@ extern u8 lbl_803DCDED;
 extern void* lbl_803DCEA8;
 extern int lbl_803DCE74;
 
+typedef struct MapLoadRec
+{
+    s16 x;
+    s16 z;
+    s16 blockId;
+    s16 layer;
+} MapLoadRec;
+
+typedef struct MapCellEnt
+{
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 state;
+    s16 unk8;
+    s16 unkA;
+} MapCellEnt;
+
 int mapProcessRomList(int slot);
 void doPendingMapLoads(void);
 
@@ -1578,23 +1596,56 @@ void goToNextMapLayer(void)
 #pragma ppc_unroll_factor_limit 1
 extern char sTrackPiLockedFormat[];
 
+typedef struct MapShaderLayerCleanup
+{
+    u8 unk00[0x24];
+    void* textureOverride;
+    u8 unk28;
+    u8 textureOverrideType;
+    u8 textureScrollSlot;
+    u8 pad2b;
+} MapShaderLayerCleanup;
+
+typedef struct MapShaderCleanup
+{
+    u8 unk00[0x41];
+    u8 layerCount;
+    u8 unk42[2];
+} MapShaderCleanup;
+
+typedef struct MapBlockCleanup
+{
+    u8 unk00[0x54];
+    Texture** textures;
+    u8 unk58[0xc];
+    MapShaderCleanup* shaders;
+    u8 unk68[8];
+    void* hits;
+    void* auxData;
+    u8 unk78[0x28];
+    u8 textureCount;
+    u8 unkA1;
+    u8 shaderCount;
+    u8 unkA3;
+} MapBlockCleanup;
+
 void doPendingMapLoads(void)
 {
     int col;
     char* g2;
     int slot;
-    s16* rowCursor;
+    MapLoadRec* rowCursor;
     int* eBase;
     u8 waited;
     int layer;
     int zb[2];
     int i;
     char* base;
-    s16* recsCursor;
-    s16* cellCursor;
+    MapLoadRec* recsCursor;
+    MapLoadRec* cellCursor;
     int doLoad;
     int cnt;
-    s16* o1;
+    MapLoadRec* savedBlocks;
     f32 dz;
     int gx, gz;
     int* aBase;
@@ -1602,7 +1653,7 @@ void doPendingMapLoads(void)
     int row;
     int t2;
     int k2;
-    s16 recs[1200];
+    MapLoadRec recs[300];
     int rectA[4], rectB[4], rectC[4], rectD[4];
 
     base = lbl_8037E0C0;
@@ -1670,11 +1721,11 @@ void doPendingMapLoads(void)
                     ap2 = aBase;
                     cBase = (int*)(base + 0x41CC);
                     cp2 = cBase;
-                    o1 = recs;
-                    recsCursor = o1;
+                    savedBlocks = recs;
+                    recsCursor = savedBlocks;
                     for (; layer < 5; layer++)
                     {
-                        s16* ent = (s16*)*bp2;
+                        MapCellEnt* ent = (MapCellEnt*)*bp2;
                         char* grid = (char*)*ap2;
                         gMapLayerCellStates = (s8*)*cp2;
                         zb[0] = 0;
@@ -1690,42 +1741,42 @@ void doPendingMapLoads(void)
                                 c = g2[0];
                                 if (c > -1)
                                 {
-                                    cellCursor[0] = gMapBlockOriginX + zb[1];
-                                    cellCursor[1] = gMapBlockOriginZ + row;
-                                    cellCursor[3] = layer;
-                                    cellCursor[2] = c;
-                                    cellCursor += 4;
-                                    rowCursor += 4;
-                                    recsCursor += 4;
+                                    cellCursor->x = gMapBlockOriginX + zb[1];
+                                    cellCursor->z = gMapBlockOriginZ + row;
+                                    cellCursor->layer = layer;
+                                    cellCursor->blockId = c;
+                                    cellCursor++;
+                                    rowCursor++;
+                                    recsCursor++;
                                     cnt++;
                                 }
                                 g2[0] = -2;
-                                *(s8*)(gMapLayerCellStates + zb[0]) = -1;
-                                ent[3] = -3;
-                                ent[0] = -1;
-                                ent[1] = -1;
-                                ent[2] = -1;
+                                gMapLayerCellStates[zb[0]] = -1;
+                                ent[0].state = -3;
+                                ent[0].x = -1;
+                                ent[0].y = -1;
+                                ent[0].z = -1;
                                 zb[0] = zb[0] + 1;
                                 zb[1] = zb[1] + 1;
                                 c = g2[1];
                                 if (c > -1)
                                 {
-                                    cellCursor[0] = gMapBlockOriginX + zb[1];
-                                    cellCursor[1] = gMapBlockOriginZ + row;
-                                    cellCursor[3] = layer;
-                                    cellCursor[2] = c;
-                                    cellCursor += 4;
-                                    rowCursor += 4;
-                                    recsCursor += 4;
+                                    cellCursor->x = gMapBlockOriginX + zb[1];
+                                    cellCursor->z = gMapBlockOriginZ + row;
+                                    cellCursor->layer = layer;
+                                    cellCursor->blockId = c;
+                                    cellCursor++;
+                                    rowCursor++;
+                                    recsCursor++;
                                     cnt++;
                                 }
                                 g2[1] = -2;
-                                *(s8*)(gMapLayerCellStates + zb[0]) = -1;
-                                ent[9] = -3;
-                                ent[6] = -1;
-                                ent[7] = -1;
-                                ent[8] = -1;
-                                ent += 12;
+                                gMapLayerCellStates[zb[0]] = -1;
+                                ent[1].state = -3;
+                                ent[1].x = -1;
+                                ent[1].y = -1;
+                                ent[1].z = -1;
+                                ent += 2;
                                 zb[0] = zb[0] + 1;
                                 g2 += 2;
                                 zb[1] = zb[1] + 1;
@@ -1948,7 +1999,7 @@ void doPendingMapLoads(void)
                                                 }
                                                 else
                                                 {
-                                                    *(s8*)(gMapLayerCellStates + zc[0]) = (s8)cn2++;
+                                                    gMapLayerCellStates[zc[0]] = (s8)cn2++;
                                                 }
                                             }
                                             zc[0]++;
@@ -1967,79 +2018,79 @@ void doPendingMapLoads(void)
                 {
                     s8 first = 1;
                     int i3 = gShaderRomListSlotCount - 1;
-                    char* p4 = base + i3 * 8;
-                    p4 += 0x418C;
+                    ShaderRomListSlot* romListSlot = (ShaderRomListSlot*)(base + 0x418C) + i3;
                     for (; i3 >= 0; i3--)
                     {
-                        if (*(s8*)(p4 + 6) == 0)
+                        if (romListSlot->flag == 0)
                         {
-                            if (*(void**)p4 != NULL)
+                            if (romListSlot->romlist != NULL)
                             {
-                                s16 sl = *(s16*)(p4 + 4);
+                                s16 sl = romListSlot->slot;
                                 char* dp = base + sl * 0x8C;
-                                defStartFn_8005972c(*(char**)p4, (u32*)(dp + 0x4208), sl, 1);
-                                mm_free(*(void**)p4);
+                                defStartFn_8005972c(romListSlot->romlist, (u32*)(dp + 0x4208), sl, 1);
+                                mm_free(romListSlot->romlist);
                                 ((int*)(base + 0x83A8))[sl] = 0;
                             }
-                            *(int*)p4 = 0;
-                            *(s16*)(p4 + 4) = -1;
+                            romListSlot->romlist = NULL;
+                            romListSlot->slot = -1;
                         }
                         if (first)
                         {
-                            if (*(void**)p4 == NULL)
+                            if (romListSlot->romlist == NULL)
                                 gShaderRomListSlotCount--;
                             else
                                 first = 0;
                         }
-                        p4 -= 8;
+                        romListSlot--;
                     }
                 }
                 {
                     for (i = 0; i < cnt; i++)
                     {
-                        s16 mid = o1[2];
-                        if (mid >= 0)
+                        s16 blockId = savedBlocks->blockId;
+                        if (blockId >= 0)
                         {
-                            *(u8*)(gMapBlockRefCounts + mid) -= 1;
-                            if (*(u8*)(gMapBlockRefCounts + mid) == 0)
+                            gMapBlockRefCounts[blockId] -= 1;
+                            if (gMapBlockRefCounts[blockId] == 0)
                             {
-                                int blk = *(int*)((char*)gMapBlocks + mid * 4);
+                                MapBlockCleanup* block = (MapBlockCleanup*)gMapBlocks[blockId];
                                 int z[2];
-                                int rb;
-                                char* p;
-                                int k;
-                                *(s16*)((char*)gMapBlockIds + mid * 2) = -1;
-                                z[1] = *(int*)((char*)gMapBlocks + mid * 4) = z[0] = 0;
-                                for (; z[0] < *(u8*)(blk + 0xa2); z[1] += 68, z[0]++)
+                                MapShaderCleanup* shader;
+                                MapShaderLayerCleanup* shaderLayer;
+                                int layerIndex;
+                                gMapBlockIds[blockId] = -1;
+                                z[1] = gMapBlocks[blockId] = z[0] = 0;
+                                for (; z[0] < block->shaderCount; z[1] += sizeof(MapShaderCleanup), z[0]++)
                                 {
-                                    rb = *(int*)(blk + 0x64) + z[1];
-                                    k = 0;
-                                    p = (char*)rb;
-                                    for (; k < *(u8*)(rb + 0x41); k++)
+                                    shader = (MapShaderCleanup*)((char*)block->shaders + z[1]);
+                                    layerIndex = 0;
+                                    shaderLayer = (MapShaderLayerCleanup*)shader;
+                                    for (; layerIndex < shader->layerCount; layerIndex++)
                                     {
-                                        u32 cell2 = *(u8*)(p + 0x2a);
+                                        u32 cell2 = shaderLayer->textureScrollSlot;
                                         if (cell2 != 0xff)
                                         {
                                             if (*(u8*)(lbl_803DCE68 + cell2 * 16 + 12) != 0)
                                                 *(u8*)(lbl_803DCE68 + cell2 * 16 + 12) -= 1;
                                         }
-                                        if (*(u8*)(p + 0x29) != 0)
-                                            mapTextureOverrideRelease(*(int*)(p + 0x24), *(u8*)(p + 0x29));
-                                        p += 8;
+                                        if (shaderLayer->textureOverrideType != 0)
+                                            mapTextureOverrideRelease((int)shaderLayer->textureOverride,
+                                                                      shaderLayer->textureOverrideType);
+                                        shaderLayer = (MapShaderLayerCleanup*)((char*)shaderLayer + 8);
                                     }
                                 }
                                 z[1] = z[0] = 0;
-                                for (; z[0] < *(u8*)(blk + 0xa0); z[1] += 4, z[0]++)
-                                    textureFree((Texture*)(*(int*)(*(int*)(blk + 0x54) + z[1])));
-                                if (*(void**)(blk + 0x74) != NULL)
-                                    mm_free(*(void**)(blk + 0x74));
-                                if (*(void**)(blk + 0x70) != NULL)
-                                    mm_free(*(void**)(blk + 0x70));
+                                for (; z[0] < block->textureCount; z[1] += 4, z[0]++)
+                                    textureFree(*(Texture**)((char*)block->textures + z[1]));
+                                if (block->auxData != NULL)
+                                    mm_free(block->auxData);
+                                if (block->hits != NULL)
+                                    mm_free(block->hits);
                                 setMapBlockFlag();
-                                mm_free((void*)blk);
+                                mm_free(block);
                             }
                         }
-                        o1 += 4;
+                        savedBlocks++;
                     }
                 }
                 lbl_803DCE70 = 0;
@@ -2899,18 +2950,6 @@ void mapDebugRender(int* state)
 }
 
 
-
-typedef struct MapLoadRec
-{
-    s16 x, z, blockId, layer;
-} MapLoadRec;
-
-typedef struct MapCellEnt
-{
-    s16 x, y, z;
-    s16 state;
-    s16 unk8, unkA;
-} MapCellEnt;
 
 /* Emulates this TU's original per-file optimizer flags for the map-load
    path (copy propagation and loop transforms disabled); see build notes. */
