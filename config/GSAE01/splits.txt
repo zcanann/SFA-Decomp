@@ -492,7 +492,7 @@ main/dll/dll_0015_curves.c:
 main/dll/dll_0017_savegame.c:
 	.text       start:0x800E8100 end:0x800EA174
 	.rodata     start:0x802C2170 end:0x802C217C
-	.data       start:0x80311720 end:0x80312340
+	.data       start:0x80311720 end:0x80311EC8
 	.bss        start:0x803A2F80 end:0x803A4218
 	.sdata      start:0x803DB890 end:0x803DB898
 	.sbss       start:0x803DD488 end:0x803DD4A0
@@ -513,14 +513,17 @@ main/dll/dll_005A_staffcollisionfunc03.c:
 
 main/dll/dll_005B_modgfxfunc03.c:
 	.text       start:0x800EB618 end:0x800EC7BC
+	.data       start:0x80311EC8 end:0x80311F20
 	.sdata      start:0x803DB8B0 end:0x803DB8C0
 	.sdata2     start:0x803E0730 end:0x803E0760
 
 main/dll/dll_005C_dll5cfunc0.c:
 	.text       start:0x800EC7BC end:0x800ECAE0
+	.data       start:0x80311F20 end:0x80312130
 
 main/dll/dll_005D_dll5dfunc0.c:
 	.text       start:0x800ECAE0 end:0x800ECE04
+	.data       start:0x80312130 end:0x80312340
 
 main/dll/dll_005E_dll5efunc0.c:
 	.text       start:0x800ECE04 end:0x800ED294
