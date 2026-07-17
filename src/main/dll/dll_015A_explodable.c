@@ -25,7 +25,6 @@
 #include "main/object_api.h"
 #include "main/model.h"
 #include "track/intersect_api.h"
-#include "main/dll/dll_015F_attractor.h"
 #include "main/dll/dll_0166_exploded.h"
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/dll/MMP/dll_017E_mmplevelcontrol.h"
@@ -462,22 +461,6 @@ u32 gExplodableObjDescriptor[14] = {0x00000000,
                                     (u32)explodable_free,
                                     0x00000000,
                                     (u32)explodable_getExtraSize};
-u32 gAttractorObjDescriptor[16] = {0x00000000,
-                                   0x00000000,
-                                   0x00000000,
-                                   0x000b0000,
-                                   (u32)attractor_initialise,
-                                   (u32)attractor_release,
-                                   0x00000000,
-                                   (u32)attractor_init,
-                                   (u32)attractor_update,
-                                   (u32)attractor_hitDetect,
-                                   (u32)attractor_render,
-                                   (u32)attractor_free,
-                                   (u32)attractor_getObjectTypeId,
-                                   (u32)attractor_getExtraSize,
-                                   (u32)attractor_setScale,
-                                   (u32)attractor_getTarget};
 u32 gCFMagicWallObjDescriptor[14] = {0x00000000,
                                      0x00000000,
                                      0x00000000,

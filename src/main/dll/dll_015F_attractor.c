@@ -19,6 +19,7 @@
 #include "main/obj_placement.h"
 #include "main/obj_group.h"
 #include "main/object_api.h"
+#include "main/object_descriptor.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_015F_attractor.h"
 #include "main/vecmath.h"
@@ -110,3 +111,22 @@ void attractor_release(void)
 void attractor_initialise(void)
 {
 }
+
+ObjectDescriptor12 gAttractorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)attractor_initialise,
+    (ObjectDescriptorCallback)attractor_release,
+    0,
+    (ObjectDescriptorCallback)attractor_init,
+    (ObjectDescriptorCallback)attractor_update,
+    (ObjectDescriptorCallback)attractor_hitDetect,
+    (ObjectDescriptorCallback)attractor_render,
+    (ObjectDescriptorCallback)attractor_free,
+    (ObjectDescriptorCallback)attractor_getObjectTypeId,
+    attractor_getExtraSize,
+    (ObjectDescriptorCallback)attractor_setScale,
+    (ObjectDescriptorCallback)attractor_getTarget,
+};
