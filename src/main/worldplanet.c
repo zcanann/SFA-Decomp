@@ -227,32 +227,32 @@ void worldplanet_update(GameObject* obj)
         ((WorldObjState*)((GameObject*)arwing)->extra)->effectState = state->selectionLocked;
         prevPlanet = state->selectedPlanet;
         {
-            u8 ok;
-            int z[2];
+            int z[3];
             int* ids;
             u8* hints;
             z[0] = 0;
             z[1] = z[0];
+            z[2] = z[1];
             ids = tbl[3];
             hints = gWorldPlanetHintFlagTable;
-            for (; z[1] < 5; z[1]++)
+            for (; z[2] < 5; z[2]++)
             {
                 if (mainGetBit(*ids) != 0)
                 {
-                    ok = 1;
+                    z[0] = 1;
                     if (*hints != 0 && (s32)getNextTaskHintText() > 0xad)
                     {
-                        ok = 0;
+                        z[0] = 0;
                     }
-                    if (ok)
+                    if ((u8)z[0])
                     {
-                        z[0] |= 1 << z[1];
+                        z[1] |= 1 << z[2];
                     }
                 }
                 ids += 1;
                 hints += 1;
             }
-            state->unlockedPlanetMask = z[0];
+            state->unlockedPlanetMask = z[1];
         }
         if (gWorldPlanetSelectConfirmTimer == 0 && (u8)state->selectionLocked == 0)
         {
@@ -579,35 +579,35 @@ void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
 void worldplanet_init(GameObject* obj)
 {
     WorldPlanetState* state;
-    int z[2];
+    int z[3];
     int layer;
     int j;
-    int flag;
 
     state = obj->extra;
     gWorldPlanetSelectConfirmTimer = 0;
     mainSetBits(WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, 1);
     z[0] = 0;
     z[1] = z[0];
-    for (; z[1] < WORLDPLANET_PLANET_COUNT; z[1]++)
+    z[2] = z[1];
+    for (; z[2] < WORLDPLANET_PLANET_COUNT; z[2]++)
     {
-        if (mainGetBit(gWorldPlanetGameBitTable[z[1]]) != 0)
+        if (mainGetBit(gWorldPlanetGameBitTable[z[2]]) != 0)
         {
-            flag = 1;
-            if (gWorldPlanetHintFlagTable[z[1]] != 0)
+            z[0] = 1;
+            if (gWorldPlanetHintFlagTable[z[2]] != 0)
             {
                 if ((s32)getNextTaskHintText() > WORLDPLANET_HINT_UNLOCK_THRESHOLD)
                 {
-                    flag = 0;
+                    z[0] = 0;
                 }
             }
-            if ((u8)flag != 0)
+            if ((u8)z[0] != 0)
             {
-                z[0] |= 1 << z[1];
+                z[1] |= 1 << z[2];
             }
         }
     }
-    state->unlockedPlanetMask = z[0];
+    state->unlockedPlanetMask = z[1];
     if (gWorldPlanetSavedSelection != -1)
     {
         state->selectedPlanet = gWorldPlanetSavedSelection;
