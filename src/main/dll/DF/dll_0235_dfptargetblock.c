@@ -61,6 +61,73 @@ f32 gTargetBlockHomeZ;
 f32 gTargetBlockHomeX;
 extern s32 gTargetBlockHomePos[];
 
+extern const union TargetBlockConstF32 lbl_803E6490;
+extern const union TargetBlockConstF32 lbl_803E6494;
+extern const union TargetBlockConstF32 lbl_803E6498;
+extern const union TargetBlockConstF32 lbl_803E649C;
+extern const union TargetBlockConstF32 lbl_803E64A0;
+extern const union TargetBlockConstF32 lbl_803E64A4;
+extern f32 lbl_803E64A8;
+extern const union TargetBlockConstF32 lbl_803E64AC;
+extern const union TargetBlockConstF32 lbl_803E64B0;
+extern const union TargetBlockConstF32 lbl_803E64B4;
+extern const union TargetBlockConstF32 lbl_803E64B8;
+extern const union TargetBlockConstF32 lbl_803E64BC;
+extern const union TargetBlockConstF32 lbl_803E64C0;
+extern s32 gTargetBlockHomePos[];
+void dfptargetblock_initialise(void);
+const union TargetBlockConstF32 lbl_803E6488 = { 0.5f };
+
+
+#pragma auto_inline off
+void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints)
+{
+    u8* point;
+    f32 probe[3];
+    TrackBBoxHit hit;
+    f32 originalX;
+    f32 originalZ;
+    f32 deltaX;
+    f32 deltaZ;
+    int i;
+
+    i = 0;
+    point = collisionPoints->pointData;
+    while (i < collisionPoints->count)
+    {
+        probe[0] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_X) + obj->x;
+        originalX = probe[0];
+        probe[1] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
+        probe[2] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
+        originalZ = probe[2];
+        if (objBboxFn_800640cc(&obj->x, probe, lbl_803E6488.f, 1, &hit, (GameObject*)obj, 8, -1, 0, 0) != 0)
+        {
+            deltaX = probe[0] - originalX;
+            deltaZ = probe[2] - originalZ;
+            if (lbl_803E648C != obj->velX)
+            {
+                obj->x = obj->x + deltaX;
+            }
+            if (lbl_803E648C != obj->velZ)
+            {
+                obj->z = obj->z + deltaZ;
+            }
+            {
+                f32 zero = lbl_803E648C;
+                obj->velX = zero;
+                obj->velY = zero;
+                obj->velZ = zero;
+            }
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_bflconc1_1d0);
+            return;
+        }
+        point += DFPTARGETBLOCK_POINT_STRIDE;
+        i++;
+    }
+}
+#pragma auto_inline on
+
+
 int dfptargetblock_getExtraSize(void)
 {
     return 0x6c;
@@ -101,7 +168,6 @@ static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTarg
     obj->y = home->y - lbl_803E64AC.f;
     Sfx_PlayFromObject(obj, DFPTARGETBLOCK_RESET_SFX);
 }
-
 static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTargetBlockAudioState* state,
                                                const f32* threshold)
 {
@@ -122,8 +188,6 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTar
         state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
     }
 }
-
-const union TargetBlockConstF32 lbl_803E6488 = { 0.5f };
 
 void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 {
@@ -265,11 +329,6 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     }
 }
 
-static inline int* ZBomb_GetActiveModel(DfpTargetBlockObject* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
 
 __declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E6490 = { 1.0f };
 __declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E6494 = { -1.0f };
@@ -289,7 +348,6 @@ const union TargetBlockConstF32 lbl_803E64C8 = { 0.75f };
 const union TargetBlockConstF32 gTargetBlockMinVertexYSeed = { 10000.0f };
 const union TargetBlockConstF32 lbl_803E64D0 = { 219.0f };
 const union TargetBlockConstF32 lbl_803E64D4 = { -158.0f };
-
 void dfptargetblock_update(DfpTargetBlockObject* obj)
 {
     u8 mode;
@@ -358,6 +416,12 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
         }
     }
     return;
+}
+
+static inline int* ZBomb_GetActiveModel(DfpTargetBlockObject* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
 void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
@@ -436,9 +500,6 @@ void dfptargetblock_release(void)
 {
 }
 
-void dfptargetblock_initialise(void)
-{
-}
 
 s32 gTargetBlockHomePos[] = {0, 0, 0};
 
@@ -461,49 +522,7 @@ ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor = {
     },
     0,
 };
-
-void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints)
+void dfptargetblock_initialise(void)
 {
-    u8* point;
-    f32 probe[3];
-    TrackBBoxHit hit;
-    f32 originalX;
-    f32 originalZ;
-    f32 deltaX;
-    f32 deltaZ;
-    int i;
-
-    i = 0;
-    point = collisionPoints->pointData;
-    while (i < collisionPoints->count)
-    {
-        probe[0] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_X) + obj->x;
-        originalX = probe[0];
-        probe[1] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
-        probe[2] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
-        originalZ = probe[2];
-        if (objBboxFn_800640cc(&obj->x, probe, lbl_803E6488.f, 1, &hit, (GameObject*)obj, 8, -1, 0, 0) != 0)
-        {
-            deltaX = probe[0] - originalX;
-            deltaZ = probe[2] - originalZ;
-            if (lbl_803E648C != obj->velX)
-            {
-                obj->x = obj->x + deltaX;
-            }
-            if (lbl_803E648C != obj->velZ)
-            {
-                obj->z = obj->z + deltaZ;
-            }
-            {
-                f32 zero = lbl_803E648C;
-                obj->velX = zero;
-                obj->velY = zero;
-                obj->velZ = zero;
-            }
-            Sfx_PlayFromObject(obj, SFXTRIG_mv_bflconc1_1d0);
-            return;
-        }
-        point += DFPTARGETBLOCK_POINT_STRIDE;
-        i++;
-    }
 }
+

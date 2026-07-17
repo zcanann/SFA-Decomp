@@ -34,88 +34,32 @@ u8 gCmbsrcColorCycleIndexTable[8] = {5, 6, 4, 0, 0, 0, 0, 0};
 
 #define CMBSRC_OBJFLAG_RENDERED 0x800
 
-int cmbsrc_getExtraSize(void)
-{
-    return CMBSRC_EXTRA_STATE_BYTES;
-}
 
-int cmbsrc_getObjectTypeId(void)
-{
-    return 0;
-}
+int cmbsrc_update(CmbSrcObject* cmbsrc);
 
-void cmbsrc_initialise(void)
+u8 cmbsrc_shouldDeactivate(CmbSrcObject* obj, CmbSrcState* sourceState, CmbSrcMapData* mapData)
 {
-}
+    u8 result = 0;
+    f32 sunTime;
 
-void cmbsrc_release(void)
-{
-}
-
-int cmbsrc_updateAndReturnZero(CmbSrcObject* obj)
-{
-    cmbsrc_update(obj);
-    return 0;
-}
-
-int cmbsrc_getColorIndex(CmbSrcObject* cmbsrc)
-{
-    CmbSrcState* state = cmbsrc->state;
-    CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
-
-    if (setup->colorIndex == CMBSRC_MODE_COLOR_CYCLE)
+    if (sourceState->light != NULL && modelLightStruct_getActiveState(sourceState->light) != 2)
     {
-        int colorIndex = state->colorCycleIndex;
-        return (s8)colorIndex;
+        return 0;
     }
-    return -1;
-}
-
-void cmbsrc_setExternalActive(CmbSrcObject* obj, u8 active)
-{
-    CmbSrcState* state = obj->state;
-
-    if (active != 0)
+    if (mapData->gameBit != -1 && mainGetBit(mapData->gameBit) == 0)
     {
-        state->flags |= CMBSRC_STATE_EXTERNAL_ACTIVE;
+        result = 1;
     }
-    else
+    else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 && (*gSkyInterface)->getSunPosition(&sunTime) == 0)
     {
-        state->flags &= ~CMBSRC_STATE_EXTERNAL_ACTIVE;
+        result = 1;
     }
-}
-
-void cmbsrc_free(int obj)
-{
-    CmbSrcState* state;
-    CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
-    state = cmbsrc->state;
-
-    (*gExpgfxInterface)->freeSource(obj);
-    if (state->light != NULL)
+    else if (sourceState->hitCharge == 0)
     {
-        ModelLightStruct_free(state->light);
+        sourceState->inactiveTimer = (f32)(u32)sourceState->inactiveFrameCount;
+        result = 1;
     }
-    Sfx_StopObjectChannel((int)cmbsrc, CMBSRC_LOOP_SOUND_CHANNEL);
-}
-
-void cmbsrc_render(CmbSrcObject* cmbsrc, int p2, int p3, int p4, int p5, s8 visible)
-{
-    CmbSrcState* state = cmbsrc->state;
-    CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
-
-    if (visible != 0)
-    {
-        state->flags |= CMBSRC_STATE_RENDERED;
-        if (state->light != NULL && state->light->glowType != 0 && state->light->enabled != 0)
-        {
-            queueGlowRender(state->light);
-        }
-        if ((setup->flags & CMBSRC_MAP_RENDER_MODEL) != 0)
-        {
-            objRenderModelAndHitVolumes((int)cmbsrc, p2, p3, p4, p5, lbl_803E738C);
-        }
-    }
+    return result;
 }
 
 u8 cmbsrc_shouldActivate(CmbSrcObject* obj, CmbSrcState* sourceState, CmbSrcMapData* mapData)
@@ -149,72 +93,6 @@ u8 cmbsrc_shouldActivate(CmbSrcObject* obj, CmbSrcState* sourceState, CmbSrcMapD
         }
     }
     return result;
-}
-
-u8 cmbsrc_shouldDeactivate(CmbSrcObject* obj, CmbSrcState* sourceState, CmbSrcMapData* mapData)
-{
-    u8 result = 0;
-    f32 sunTime;
-
-    if (sourceState->light != NULL && modelLightStruct_getActiveState(sourceState->light) != 2)
-    {
-        return 0;
-    }
-    if (mapData->gameBit != -1 && mainGetBit(mapData->gameBit) == 0)
-    {
-        result = 1;
-    }
-    else if ((sourceState->flags & CMBSRC_STATE_THORNTAIL_GATE) != 0 && (*gSkyInterface)->getSunPosition(&sunTime) == 0)
-    {
-        result = 1;
-    }
-    else if (sourceState->hitCharge == 0)
-    {
-        sourceState->inactiveTimer = (f32)(u32)sourceState->inactiveFrameCount;
-        result = 1;
-    }
-    return result;
-}
-
-void cmbsrc_hitDetect(CmbSrcObject* cmbsrc)
-{
-    CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
-    CmbSrcState* state = cmbsrc->state;
-    int charge;
-
-    state->priorityHitType = 0;
-    if ((setup->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) != 0)
-    {
-        state->priorityHitType = ObjHits_GetPriorityHit((GameObject*)cmbsrc, 0, 0, 0);
-        if (state->priorityHitType == CMBSRC_HIT_TYPE_DAMAGE)
-        {
-            state->hitCharge -= 1;
-            state->hitRecoverTimer = lbl_803E7384;
-        }
-        {
-            f32 timer = state->hitRecoverTimer;
-            f32 limit = lbl_803E7360;
-            if (timer != limit)
-            {
-                state->hitRecoverTimer = timer - timeDelta;
-                if (state->hitRecoverTimer <= limit)
-                {
-                    state->hitCharge += 1;
-                    state->hitRecoverTimer = lbl_803E7384;
-                }
-            }
-        }
-        charge = state->hitCharge;
-        if (charge < 0)
-        {
-            charge = 0;
-        }
-        else if (charge > CMBSRC_MAX_HIT_CHARGE)
-        {
-            charge = CMBSRC_MAX_HIT_CHARGE;
-        }
-        state->hitCharge = charge;
-    }
 }
 
 u8 cmbsrc_cycleColor(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
@@ -418,8 +296,127 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
         }
     }
 }
-#pragma opt_propagation reset
 
+#pragma dont_inline reset
+#pragma opt_propagation reset
+int cmbsrc_updateAndReturnZero(CmbSrcObject* obj)
+{
+    cmbsrc_update(obj);
+    return 0;
+}
+
+int cmbsrc_getColorIndex(CmbSrcObject* cmbsrc)
+{
+    CmbSrcState* state = cmbsrc->state;
+    CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
+
+    if (setup->colorIndex == CMBSRC_MODE_COLOR_CYCLE)
+    {
+        int colorIndex = state->colorCycleIndex;
+        return (s8)colorIndex;
+    }
+    return -1;
+}
+
+void cmbsrc_setExternalActive(CmbSrcObject* obj, u8 active)
+{
+    CmbSrcState* state = obj->state;
+
+    if (active != 0)
+    {
+        state->flags |= CMBSRC_STATE_EXTERNAL_ACTIVE;
+    }
+    else
+    {
+        state->flags &= ~CMBSRC_STATE_EXTERNAL_ACTIVE;
+    }
+}
+
+int cmbsrc_getExtraSize(void)
+{
+    return CMBSRC_EXTRA_STATE_BYTES;
+}
+
+int cmbsrc_getObjectTypeId(void)
+{
+    return 0;
+}
+
+void cmbsrc_free(int obj)
+{
+    CmbSrcState* state;
+    CmbSrcObject* cmbsrc = (CmbSrcObject*)obj;
+    state = cmbsrc->state;
+
+    (*gExpgfxInterface)->freeSource(obj);
+    if (state->light != NULL)
+    {
+        ModelLightStruct_free(state->light);
+    }
+    Sfx_StopObjectChannel((int)cmbsrc, CMBSRC_LOOP_SOUND_CHANNEL);
+}
+
+void cmbsrc_render(CmbSrcObject* cmbsrc, int p2, int p3, int p4, int p5, s8 visible)
+{
+    CmbSrcState* state = cmbsrc->state;
+    CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
+
+    if (visible != 0)
+    {
+        state->flags |= CMBSRC_STATE_RENDERED;
+        if (state->light != NULL && state->light->glowType != 0 && state->light->enabled != 0)
+        {
+            queueGlowRender(state->light);
+        }
+        if ((setup->flags & CMBSRC_MAP_RENDER_MODEL) != 0)
+        {
+            objRenderModelAndHitVolumes((int)cmbsrc, p2, p3, p4, p5, lbl_803E738C);
+        }
+    }
+}
+
+void cmbsrc_hitDetect(CmbSrcObject* cmbsrc)
+{
+    CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
+    CmbSrcState* state = cmbsrc->state;
+    int charge;
+
+    state->priorityHitType = 0;
+    if ((setup->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) != 0)
+    {
+        state->priorityHitType = ObjHits_GetPriorityHit((GameObject*)cmbsrc, 0, 0, 0);
+        if (state->priorityHitType == CMBSRC_HIT_TYPE_DAMAGE)
+        {
+            state->hitCharge -= 1;
+            state->hitRecoverTimer = lbl_803E7384;
+        }
+        {
+            f32 timer = state->hitRecoverTimer;
+            f32 limit = lbl_803E7360;
+            if (timer != limit)
+            {
+                state->hitRecoverTimer = timer - timeDelta;
+                if (state->hitRecoverTimer <= limit)
+                {
+                    state->hitCharge += 1;
+                    state->hitRecoverTimer = lbl_803E7384;
+                }
+            }
+        }
+        charge = state->hitCharge;
+        if (charge < 0)
+        {
+            charge = 0;
+        }
+        else if (charge > CMBSRC_MAX_HIT_CHARGE)
+        {
+            charge = CMBSRC_MAX_HIT_CHARGE;
+        }
+        state->hitCharge = charge;
+    }
+}
+
+#pragma dont_inline on
 int cmbsrc_update(CmbSrcObject* cmbsrc)
 {
     CmbSrcState* state = cmbsrc->state;
@@ -498,8 +495,8 @@ int cmbsrc_update(CmbSrcObject* cmbsrc)
     }
     cmbsrc_updateVisuals(cmbsrc, state);
 }
-#pragma dont_inline off
 
+#pragma dont_inline off
 void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
 {
     u8* c2;
@@ -675,6 +672,16 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
     state->radius = 2.0f * mapData->radius;
     cmbsrc->updateCallback = cmbsrc_updateAndReturnZero;
 }
+
+#pragma dont_inline reset
+void cmbsrc_release(void)
+{
+}
+
+void cmbsrc_initialise(void)
+{
+}
+
 
 u8 gCmbsrcColorSoundIdTable[16] = {'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'};
 

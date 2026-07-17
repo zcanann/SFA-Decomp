@@ -100,12 +100,10 @@ extern f32 gKillerMushroomTriggerAnimSpeed;
 extern f32 gKillerMushroomStunAnimProgressDiv;
 
 extern void objFn_8002b67c(int* obj);
-#pragma dont_inline on
-s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};
-f32 gKillerMushroomStateAnimRates[11] = {
-    0.0f, 0.0f, 0.008f, 0.025f, 0.018f, 0.015f, 0.006f, 0.008f, 0.005f, 0.005f, 0.005f,
-};
+void enemymushroom_update(int* obj);
+void enemymushroom_initialise(void);
 
+#pragma dont_inline on
 void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* state, int enableTimer)
 {
     EnemyMushroomMapData* mapData;
@@ -138,8 +136,8 @@ void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* st
     ObjHits_EnableObject((int)obj);
     ObjHits_RefreshObjectState((int)obj);
 }
-#pragma dont_inline reset
 
+#pragma dont_inline reset
 int enemymushroom_getExtraSize(void)
 {
     return 0x3c;
@@ -170,45 +168,13 @@ void enemymushroom_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char 
 void enemymushroom_hitDetect(void)
 {
 }
-
-void enemymushroom_release(void)
-{
-}
-
-void enemymushroom_initialise(void)
-{
-}
-
-/* Constructor: seeds the state block, clamps the regrow period, offsets the
- * spawn height, flags the model, optionally resets to spawn, and registers
- * in object group 3. */
-void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int flag)
-{
-    EnemyMushroomState* state = obj->state;
-    f32 z = lbl_803E52FC;
-
-    state->timer = z;
-    state->hitRadius = z;
-    state->baseScale = obj->scale;
-    state->respawnFrameLimit = arg->respawnFrameLimit;
-    if (state->respawnFrameLimit < 0x708)
-    {
-        state->respawnFrameLimit = 0x708;
-    }
-    obj->posY = arg->posY - gKillerMushroomSpawnYOffset;
-    if (obj->modelState != NULL)
-    {
-        obj->modelState->flags |= 0x810;
-    }
-    if (flag == 0)
-    {
-        enemymushroom_resetToSpawn(obj, state, 0);
-    }
-    ObjGroup_AddObject((int)obj, SHKILLERMUSHROOM_OBJGROUP);
-}
-
-void enemymushroom_update(int* obj);
-
+void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int flag);
+void enemymushroom_release(void);
+#pragma dont_inline on
+s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};
+f32 gKillerMushroomStateAnimRates[11] = {
+    0.0f, 0.0f, 0.008f, 0.025f, 0.018f, 0.015f, 0.006f, 0.008f, 0.005f, 0.005f, 0.005f,
+};
 ObjectDescriptor gEnemyMushroomObjDescriptor = {
     0,
     0,
@@ -226,9 +192,11 @@ ObjectDescriptor gEnemyMushroomObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)enemymushroom_getExtraSize,
 };
 
+
+
+#pragma opt_common_subs off
 /* Per-frame state machine: dormant -> inflate -> chase -> deflate cycle,
  * hit reaction, pop and respawn. */
-#pragma opt_common_subs off
 void enemymushroom_update(int* obj)
 {
     char* state;
@@ -530,3 +498,40 @@ void enemymushroom_update(int* obj)
             (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_ANIM_DONE);
     }
 }
+
+#pragma opt_common_subs on
+/* Constructor: seeds the state block, clamps the regrow period, offsets the
+ * spawn height, flags the model, optionally resets to spawn, and registers
+ * in object group 3. */
+void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int flag)
+{
+    EnemyMushroomState* state = obj->state;
+    f32 z = lbl_803E52FC;
+
+    state->timer = z;
+    state->hitRadius = z;
+    state->baseScale = obj->scale;
+    state->respawnFrameLimit = arg->respawnFrameLimit;
+    if (state->respawnFrameLimit < 0x708)
+    {
+        state->respawnFrameLimit = 0x708;
+    }
+    obj->posY = arg->posY - gKillerMushroomSpawnYOffset;
+    if (obj->modelState != NULL)
+    {
+        obj->modelState->flags |= 0x810;
+    }
+    if (flag == 0)
+    {
+        enemymushroom_resetToSpawn(obj, state, 0);
+    }
+    ObjGroup_AddObject((int)obj, SHKILLERMUSHROOM_OBJGROUP);
+}
+
+void enemymushroom_release(void)
+{
+}
+void enemymushroom_initialise(void)
+{
+}
+

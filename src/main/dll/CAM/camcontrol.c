@@ -89,6 +89,7 @@ u8 gCamcontrolStateStorage[0x148];
 CamcontrolHandlerEntry* gCamcontrolHandlerEntries[20];
 extern CamcontrolBaddieControlInterface** gBaddieControlInterface;
 
+
 static inline CamcontrolBaddieControlInterface* camcontrol_GetBaddieControlInterface(void)
 {
     return *gBaddieControlInterface;
@@ -657,6 +658,38 @@ void Camera_setMode(s32 actionId, int priority, int startFlags, int dataSize, vo
     return;
 }
 
+
+
+void* Camera_getDefaultHandlerEntry(void)
+{
+    int i;
+
+    i = 0;
+    for (; i < gCamcontrolHandlerCount; i++)
+    {
+        if (gCamcontrolHandlerEntries[i]->actionId == CAMCONTROL_ACTION_DEFAULT)
+        {
+            return gCamcontrolHandlerEntries[i];
+        }
+    }
+    return NULL;
+}
+
+void* Camera_GetFollowPos(void)
+{
+    return gCamcontrolCurrentHandler;
+}
+
+u32 Camera_getMode(void)
+{
+    return gCamcontrolActiveActionId;
+}
+
+u32 Camera_get(void)
+{
+    return (u32)pCamera;
+}
+
 #define camera CAMCONTROL_CAMERA
 void Camera_update(void)
 {
@@ -757,35 +790,6 @@ void Camera_update(void)
 }
 #undef camera
 
-void* Camera_getDefaultHandlerEntry(void)
-{
-    int i;
-
-    i = 0;
-    for (; i < gCamcontrolHandlerCount; i++)
-    {
-        if (gCamcontrolHandlerEntries[i]->actionId == CAMCONTROL_ACTION_DEFAULT)
-        {
-            return gCamcontrolHandlerEntries[i];
-        }
-    }
-    return NULL;
-}
-
-void* Camera_GetFollowPos(void)
-{
-    return gCamcontrolCurrentHandler;
-}
-
-u32 Camera_getMode(void)
-{
-    return gCamcontrolActiveActionId;
-}
-u32 Camera_get(void)
-{
-    return (u32)pCamera;
-}
-
 void Camera_init(void* focus, f32 x, f32 y, f32 z)
 {
     memset((void*)pCamera, 0, sizeof(CamcontrolCameraState));
@@ -824,6 +828,7 @@ void Camera_initialise(void)
     lbl_803DD4CB = -1;
     gCamcontrolTargetClassMask = 0xffff;
 }
+
 
 char sCamcontrolTriggeredCamActionLoadWarning[] = "<camcontrol.c>  failed to load triggered camaction actionno %d\n";
 

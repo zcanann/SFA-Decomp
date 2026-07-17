@@ -61,6 +61,43 @@
 
 typedef u8 (*EarthWalkerHitReactUpdateFn)(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
                                           u32 reactionState, float* reactionStepScale);
+void earthwalker_init(GameObject* obj, int setup);
+void earthwalker_update(int obj);
+extern ObjHitReactEntry gEarthWalkerHitReactEntries[1];
+void earthwalker_init(GameObject* obj, int setup);
+void earthwalker_release(void);
+void earthwalker_initialise(void);
+
+int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int shouldAdvanceMove)
+{
+    EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
+    EarthWalkerState* ewState = ewObj->state;
+    int i;
+
+    ewState->flags &= ~1;
+    characterDoEyeAnimsState((GameObject*)obj, ewState->eyeAnimState);
+    if (dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)ewState, 0, 0) != 0)
+    {
+        return 0;
+    }
+    if ((s8)shouldAdvanceMove != 0)
+    {
+        ObjAnim_AdvanceCurrentMove((int)obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
+    }
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        switch (animUpdate->eventIds[i])
+        {
+        case 1:
+            getEnvfxActImmediatelyVoid(obj, obj, 509, 0);
+            break;
+        case 2:
+            getEnvfxActImmediatelyVoid(obj, obj, 512, 0);
+            break;
+        }
+    }
+    return 0;
+}
 
 int earthwalker_getExtraSize(void)
 {
@@ -98,20 +135,7 @@ void earthwalker_hitDetect(GameObject* obj)
         fn_8003AAE0(obj, seqFn_800394a0(), ewState->hitTriggerId, 0, 0x186a0);
     }
 }
-
-void earthwalker_release(void)
-{
-}
-
-void earthwalker_initialise(void)
-{
-}
-
-void earthwalker_init(GameObject* obj, int setup);
-void earthwalker_update(int obj);
-
 ObjHitReactEntry gEarthWalkerHitReactEntries[1] = {{575, 706, -1, {0xFF, 0xFF}, 0, {0, 0, 0}, 0.01f, {0, 0, 0, 0}}};
-
 ObjectDescriptor gEarthWalkerObjDescriptor = {
     0,
     0,
@@ -128,6 +152,8 @@ ObjectDescriptor gEarthWalkerObjDescriptor = {
     (ObjectDescriptorCallback)earthwalker_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)earthwalker_getExtraSize,
 };
+
+
 
 void earthwalker_update(int obj)
 {
@@ -431,31 +457,47 @@ void earthwalker_update(int obj)
 
     ObjAnim_AdvanceCurrentMove((int)obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
 }
-
-/*
- * DLL 0x28B state-machine handlers (installed by dll_028B_initialise into
- * gDll28BStateHandlers / gDll28BSubstateHandlers; driven each frame by
- * gPlayerInterface->update). Each returns the next state index (0 = stay).
- * `ai` is the BaddieState at obj->extra (== the local `state` pointer); the
- * The slot at 0x14 is setState().
- *
- *   stateHandler:    0 -> next state 2; 1/3 set moveSpeed on (re)entry,
- *                    3 also faces the player; 2 = locomotion: drives the
- *                    object along the ROM-curve route and samples root motion.
- *   substateHandler: 0 -> next state 2; 1 = follow curve, advancing points,
- *                    -> 3 when the player is within range; 2 = idle/watch,
- *                    -> 2 when player far, -> 4 (after a random 120..250
- *                    frame timer) when near; 3 requests setState 3 and
- *                    -> 3 when the move finishes.
- */
-int dll_28B_substateHandler0(void)
+void earthwalker_init(GameObject* obj, int setup)
 {
-    return 0x2;
+    EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
+    EarthWalkerState* ewState = ewObj->state;
+    int local;
+
+    local = gEarthWalkerMoveBlendData;
+    ewObj->animEventCallback = earthwalker_SeqFn;
+    dll_2E_func05(obj, (MoveLibState*)ewState, -8192, 12743, 2);
+    dll_2E_func09((MoveLibState*)ewState, 0, &local, 2);
+    /* moveLib state+0x614: head look-at only engages while the target is
+     * within this distance (live-verified in Dolphin - drop it below the
+     * player distance and the head snaps back to neutral). */
+    dll_2E_setLookAtMaxDistance((MoveLibState*)ewState, gEarthWalkerLookAtMaxDistance);
+    ewState->moveLibFlags611 |= 2;
+    ewObj->facingAngle = (s16)((s8) * (s8*)(setup + 0x18) << 8);
+    ewState->encounterType = *(u8*)(setup + 0x19);
+    if (ewState->encounterType == 1)
+    {
+        if ((int)mainGetBit(GAMEBIT_WC_FoundKing) != 0 || (*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
+        {
+            ewState->interactionState = 2;
+        }
+        else
+        {
+            ewState->interactionState = 0;
+        }
+    }
+    else
+    {
+        ewState->interactionState = 2;
+    }
+    ewState->lastTriggeredState = -1;
 }
 
-int dll_28B_stateHandler0(void)
+void earthwalker_release(void)
 {
-    return 0x2;
+}
+
+void earthwalker_initialise(void)
+{
 }
 
 int dll_28B_substateHandler3(int obj, int ai)
@@ -522,6 +564,27 @@ int dll_28B_substateHandler1(int obj, int ai)
     return 0;
 }
 
+/*
+ * DLL 0x28B state-machine handlers (installed by dll_028B_initialise into
+ * gDll28BStateHandlers / gDll28BSubstateHandlers; driven each frame by
+ * gPlayerInterface->update). Each returns the next state index (0 = stay).
+ * `ai` is the BaddieState at obj->extra (== the local `state` pointer); the
+ * The slot at 0x14 is setState().
+ *
+ *   stateHandler:    0 -> next state 2; 1/3 set moveSpeed on (re)entry,
+ *                    3 also faces the player; 2 = locomotion: drives the
+ *                    object along the ROM-curve route and samples root motion.
+ *   substateHandler: 0 -> next state 2; 1 = follow curve, advancing points,
+ *                    -> 3 when the player is within range; 2 = idle/watch,
+ *                    -> 2 when player far, -> 4 (after a random 120..250
+ *                    frame timer) when near; 3 requests setState 3 and
+ *                    -> 3 when the move finishes.
+ */
+int dll_28B_substateHandler0(void)
+{
+    return 0x2;
+}
+
 int dll_28B_stateHandler3(GameObject* obj, int ai)
 {
     GameObject* player = (GameObject*)Obj_GetPlayerObject();
@@ -559,71 +622,11 @@ int dll_28B_stateHandler1(int obj, int ai)
     return 0;
 }
 
-int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int shouldAdvanceMove)
+int dll_28B_stateHandler0(void)
 {
-    EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
-    EarthWalkerState* ewState = ewObj->state;
-    int i;
-
-    ewState->flags &= ~1;
-    characterDoEyeAnimsState((GameObject*)obj, ewState->eyeAnimState);
-    if (dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)ewState, 0, 0) != 0)
-    {
-        return 0;
-    }
-    if ((s8)shouldAdvanceMove != 0)
-    {
-        ObjAnim_AdvanceCurrentMove((int)obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
-    }
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        switch (animUpdate->eventIds[i])
-        {
-        case 1:
-            getEnvfxActImmediatelyVoid(obj, obj, 509, 0);
-            break;
-        case 2:
-            getEnvfxActImmediatelyVoid(obj, obj, 512, 0);
-            break;
-        }
-    }
-    return 0;
+    return 0x2;
 }
 
-void earthwalker_init(GameObject* obj, int setup)
-{
-    EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
-    EarthWalkerState* ewState = ewObj->state;
-    int local;
-
-    local = gEarthWalkerMoveBlendData;
-    ewObj->animEventCallback = earthwalker_SeqFn;
-    dll_2E_func05(obj, (MoveLibState*)ewState, -8192, 12743, 2);
-    dll_2E_func09((MoveLibState*)ewState, 0, &local, 2);
-    /* moveLib state+0x614: head look-at only engages while the target is
-     * within this distance (live-verified in Dolphin - drop it below the
-     * player distance and the head snaps back to neutral). */
-    dll_2E_setLookAtMaxDistance((MoveLibState*)ewState, gEarthWalkerLookAtMaxDistance);
-    ewState->moveLibFlags611 |= 2;
-    ewObj->facingAngle = (s16)((s8) * (s8*)(setup + 0x18) << 8);
-    ewState->encounterType = *(u8*)(setup + 0x19);
-    if (ewState->encounterType == 1)
-    {
-        if ((int)mainGetBit(GAMEBIT_WC_FoundKing) != 0 || (*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
-        {
-            ewState->interactionState = 2;
-        }
-        else
-        {
-            ewState->interactionState = 0;
-        }
-    }
-    else
-    {
-        ewState->interactionState = 2;
-    }
-    ewState->lastTriggeredState = -1;
-}
 
 #include "main/objHitReact.h"
 #include "main/gamebit_ids.h"

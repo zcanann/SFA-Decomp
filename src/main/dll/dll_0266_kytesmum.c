@@ -64,6 +64,238 @@ s16 gKytesMumRoamEventSfxTable[4] = {0x1B4, 0x1B5, 0x1B6, 0};
 const s32 gKytesMumQuestBits[3] = {0x43, 0x30A, -1};
 const s32 gKytesMumTriggerIds[3] = {0, 2, -1};
 
+extern u8 gKytesMumMoveSets[];
+extern int gKytesMumQuestIdleSfxTable[];
+void kytesmum_initialise(void);
+
+int kytesmum_updateInteractionRangeCallback(GameObject* obj, int unused, u8* arg)
+{
+    GameObject* player = Obj_GetPlayerObject();
+    KytesMumSetup* setup = ((KytesMumObject*)obj)->setup;
+    f32 dist;
+    ObjHits_DisableObject((int)obj);
+    dist = Vec_xzDistance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX);
+    if (dist < setup->interactionRange)
+    {
+        arg[0x90] |= 4;
+    }
+    else
+    {
+        arg[0x90] &= ~4;
+    }
+    return 0;
+}
+
+int kytesmum_idleCallback(void)
+{
+    Obj_GetPlayerObject();
+    return 0;
+}
+
+int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg)
+{
+    int next;
+    int questBits[3];
+    int triggerIds[3];
+    int count;
+    KytesMumRuntime* runtime;
+    *(KytesMumQuestTriple*)questBits = *(KytesMumQuestTriple*)gKytesMumQuestBits;
+    *(KytesMumQuestTriple*)triggerIds = *(KytesMumQuestTriple*)gKytesMumTriggerIds;
+    count = 0;
+    Obj_GetPlayerObject();
+    runtime = (KytesMumRuntime*)(obj)->extra;
+    saveGame_saveObjectPos((GameObject*)obj);
+    ObjHits_DisableObject((int)obj);
+    for (; questBits[count] != -1 && mainGetBit(questBits[count]) != 0; count++)
+    {
+        ;
+    }
+    if (count > 0)
+    {
+        runtime->idleSfxTable = (ObjSoundDef*)gKytesMumQuestIdleSfxTable;
+    }
+    mainSetBits(0xeb9, count == 1);
+    next = triggerIds[count];
+    if (next == -1)
+    {
+        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        return 1;
+    }
+    if (ObjTrigger_IsSet((int)obj) != 0)
+    {
+        (obj)->animEventCallback = kytesmum_idleCallback;
+        (*gObjectTriggerInterface)->runSequence(next, (void*)obj, -1);
+    }
+    return 0;
+}
+int kytesmum_getExtraSize(void);
+int kytesmum_getObjectTypeId(void);
+void kytesmum_free(int obj);
+void kytesmum_hitDetect(void);
+void kytesmum_init(GameObject* obj, KytesMumSetup* setup);
+void kytesmum_release(void);
+void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible);
+void kytesmum_update(GameObject* obj);
+u8 gKytesMumMoveSets[] = {
+    0x00, 0x00, 0x02, 0x06, 0x01, 0x27, 0x00, 0x00, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x04, 0x00,
+    0x05, 0x00, 0x01, 0x00, 0x08, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x35, 0x10, 0x00, 0x00, 0x00, 0x03, 0x36, 0x10,
+    0x00, 0x00, 0x00, 0x03, 0x37, 0x05, 0x00, 0x00, 0x00, 0x03, 0x38, 0x05, 0x00, 0x00, 0x00,
+};
+int gKytesMumQuestIdleSfxTable[] = {
+    0x02921000, 0x00000292, 0x10000000, 0x02920500, 0x00000292, 0x05000000,
+};
+u32 gKytesMumObjDescriptor[14] = {0x00000000,
+                                  0x00000000,
+                                  0x00000000,
+                                  0x00090000,
+                                  (u32)kytesmum_initialise,
+                                  (u32)kytesmum_release,
+                                  0x00000000,
+                                  (u32)kytesmum_init,
+                                  (u32)kytesmum_update,
+                                  (u32)kytesmum_hitDetect,
+                                  (u32)kytesmum_render,
+                                  (u32)kytesmum_free,
+                                  (u32)kytesmum_getObjectTypeId,
+                                  (u32)kytesmum_getExtraSize};
+
+
+#pragma auto_inline off
+#pragma optimization_level 2
+void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
+{
+    int i;
+    u8 flags = 0;
+    for (i = 0; i < (s8)arg[0x1b]; i++)
+    {
+        switch (*(s8*)(arg + i + 0x13))
+        {
+        case 0:
+            if (sfxData != 0)
+            {
+                Sfx_PlayFromObject(obj, sfxData[0]);
+            }
+            break;
+        case 7:
+            if (sfxData != 0)
+            {
+                Sfx_PlayFromObject(obj, sfxData[1]);
+            }
+            break;
+        case 1:
+            flags |= 1;
+            break;
+        case 2:
+            flags |= 2;
+            break;
+        case 3:
+            flags |= 4;
+            break;
+        case 4:
+            flags |= 8;
+            break;
+        case 5:
+        case 6:
+            break;
+        }
+    }
+    if (flags != 0 && sfxData != 0)
+    {
+        Sfx_PlayFromObject(obj, sfxData[3]);
+    }
+}
+#pragma auto_inline on
+
+
+#pragma optimization_level reset
+int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
+{
+    GameObject* player = Obj_GetPlayerObject();
+    int* tricky = (int*)getTrickyObject();
+    KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
+    if (objGetAnimState80A(player) == 0x40)
+    {
+        return 1;
+    }
+    if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+    {
+        if ((*gGameUIInterface)->isCurrentTriggerClear() == 0)
+        {
+            buttonDisable(0, PAD_BUTTON_A);
+            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0xb;
+            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 4;
+            (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 1), (void*)obj, -1);
+        }
+    }
+    if ((tricky != 0 && Vec_xzDistance(&(obj)->anim.worldPosX, (f32*)((char*)tricky + 0x18)) < gKytesMumFleeDistance) ||
+        (player != 0 &&
+         Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gKytesMumFleeDistance))
+    {
+        if ((obj)->anim.currentMove != 9)
+        {
+            ObjAnim_SetCurrentMove((int)obj, 9, lbl_803E698C, 0);
+            runtime->animSpeed = lbl_803E6990;
+            if (tricky != 0)
+            {
+                (*(void (**)(int*, int, int))((char*)*(void**)*(void**)((char*)tricky + 0x68) + 0x34))(tricky, 0, 0);
+            }
+        }
+    }
+    if ((obj)->anim.currentMove == 9)
+    {
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0xb;
+        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 4;
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, KYTESMUM_HIT_VOLUME_SLOT, 4, 7);
+        ObjHits_RegisterActiveHitVolumeObject((int)obj);
+    }
+    return 0;
+}
+
+int kytesmum_spawnInteractionCallback(GameObject* obj)
+{
+    Obj_GetPlayerObject();
+    if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+    {
+        buttonDisable(0, PAD_BUTTON_A);
+        if ((*gGameUIInterface)->isCurrentTriggerClear() == 0)
+        {
+            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+        }
+        return 0; /* callback always returns 0; the interacted path carries no result */
+    }
+    return 0;
+}
+
+#pragma opt_common_subs off
+#pragma opt_loop_invariants off
+int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
+    KytesMumSetup* setup;
+    int i;
+    Obj_GetPlayerObject();
+    setup = ((KytesMumObject*)obj)->setup;
+    ObjHits_EnableObject(obj);
+    ObjHits_RegisterActiveHitVolumeObject(obj);
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        if (animUpdate->eventIds[i] == 1 && setup->mode != 0)
+        {
+            Obj_RemoveFromUpdateList((u8*)obj);
+            ObjHits_DisableObject(obj);
+            ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        }
+    }
+    {
+        int move2 = runtime->moveSet->moves[2];
+        int result = !dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)runtime, move2, move2);
+        return !result;
+    }
+}
+
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
 int kytesmum_getExtraSize(void)
 {
     return KYTESMUM_EXTRA_SIZE;
@@ -74,15 +306,24 @@ int kytesmum_getObjectTypeId(void)
     return KYTESMUM_OBJECT_TYPE_ID;
 }
 
+void kytesmum_free(int obj)
+{
+    KytesMumSetup* setup = ((KytesMumObject*)obj)->setup;
+    if (setup->mode != 0)
+    {
+        ObjGroup_RemoveObject(obj, KYTESMUM_OBJGROUP);
+    }
+}
+
+void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible)
+{
+    if (visible != 0)
+    {
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6994);
+    }
+}
+
 void kytesmum_hitDetect(void)
-{
-}
-
-void kytesmum_initialise(void)
-{
-}
-
-void kytesmum_release(void)
 {
 }
 
@@ -157,91 +398,6 @@ void kytesmum_update(GameObject* obj)
     }
 }
 
-int kytesmum_idleCallback(void)
-{
-    Obj_GetPlayerObject();
-    return 0;
-}
-
-void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible)
-{
-    if (visible != 0)
-    {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6994);
-    }
-}
-
-void kytesmum_free(int obj)
-{
-    KytesMumSetup* setup = ((KytesMumObject*)obj)->setup;
-    if (setup->mode != 0)
-    {
-        ObjGroup_RemoveObject(obj, KYTESMUM_OBJGROUP);
-    }
-}
-
-int kytesmum_spawnInteractionCallback(GameObject* obj)
-{
-    Obj_GetPlayerObject();
-    if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
-    {
-        buttonDisable(0, PAD_BUTTON_A);
-        if ((*gGameUIInterface)->isCurrentTriggerClear() == 0)
-        {
-            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        }
-        return 0; /* callback always returns 0; the interacted path carries no result */
-    }
-    return 0;
-}
-
-int kytesmum_updateInteractionRangeCallback(GameObject* obj, int unused, u8* arg)
-{
-    GameObject* player = Obj_GetPlayerObject();
-    KytesMumSetup* setup = ((KytesMumObject*)obj)->setup;
-    f32 dist;
-    ObjHits_DisableObject((int)obj);
-    dist = Vec_xzDistance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX);
-    if (dist < setup->interactionRange)
-    {
-        arg[0x90] |= 4;
-    }
-    else
-    {
-        arg[0x90] &= ~4;
-    }
-    return 0;
-}
-
-#pragma opt_loop_invariants off
-#pragma opt_common_subs off
-int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
-    KytesMumSetup* setup;
-    int i;
-    Obj_GetPlayerObject();
-    setup = ((KytesMumObject*)obj)->setup;
-    ObjHits_EnableObject(obj);
-    ObjHits_RegisterActiveHitVolumeObject(obj);
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        if (animUpdate->eventIds[i] == 1 && setup->mode != 0)
-        {
-            Obj_RemoveFromUpdateList((u8*)obj);
-            ObjHits_DisableObject(obj);
-            ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        }
-    }
-    {
-        int move2 = runtime->moveSet->moves[2];
-        int result = !dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)runtime, move2, move2);
-        return !result;
-    }
-}
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-
 void kytesmum_init(GameObject* obj, KytesMumSetup* setup)
 {
     KytesMumMoveSet* moveSets = (KytesMumMoveSet*)gKytesMumMoveSets;
@@ -292,155 +448,13 @@ void kytesmum_init(GameObject* obj, KytesMumSetup* setup)
     kytesMum->objectFlags |= KYTESMUM_OBJFLAG_HITDETECT_DISABLED;
 }
 
-int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
+void kytesmum_release(void)
 {
-    GameObject* player = Obj_GetPlayerObject();
-    int* tricky = (int*)getTrickyObject();
-    KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
-    if (objGetAnimState80A(player) == 0x40)
-    {
-        return 1;
-    }
-    if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
-    {
-        if ((*gGameUIInterface)->isCurrentTriggerClear() == 0)
-        {
-            buttonDisable(0, PAD_BUTTON_A);
-            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0xb;
-            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 4;
-            (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 1), (void*)obj, -1);
-        }
-    }
-    if ((tricky != 0 && Vec_xzDistance(&(obj)->anim.worldPosX, (f32*)((char*)tricky + 0x18)) < gKytesMumFleeDistance) ||
-        (player != 0 &&
-         Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gKytesMumFleeDistance))
-    {
-        if ((obj)->anim.currentMove != 9)
-        {
-            ObjAnim_SetCurrentMove((int)obj, 9, lbl_803E698C, 0);
-            runtime->animSpeed = lbl_803E6990;
-            if (tricky != 0)
-            {
-                (*(void (**)(int*, int, int))((char*)*(void**)*(void**)((char*)tricky + 0x68) + 0x34))(tricky, 0, 0);
-            }
-        }
-    }
-    if ((obj)->anim.currentMove == 9)
-    {
-        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0xb;
-        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 4;
-        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, KYTESMUM_HIT_VOLUME_SLOT, 4, 7);
-        ObjHits_RegisterActiveHitVolumeObject((int)obj);
-    }
-    return 0;
+}
+void kytesmum_initialise(void)
+{
 }
 
-int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg)
-{
-    int next;
-    int questBits[3];
-    int triggerIds[3];
-    int count;
-    KytesMumRuntime* runtime;
-    *(KytesMumQuestTriple*)questBits = *(KytesMumQuestTriple*)gKytesMumQuestBits;
-    *(KytesMumQuestTriple*)triggerIds = *(KytesMumQuestTriple*)gKytesMumTriggerIds;
-    count = 0;
-    Obj_GetPlayerObject();
-    runtime = (KytesMumRuntime*)(obj)->extra;
-    saveGame_saveObjectPos((GameObject*)obj);
-    ObjHits_DisableObject((int)obj);
-    for (; questBits[count] != -1 && mainGetBit(questBits[count]) != 0; count++)
-    {
-        ;
-    }
-    if (count > 0)
-    {
-        runtime->idleSfxTable = (ObjSoundDef*)gKytesMumQuestIdleSfxTable;
-    }
-    mainSetBits(0xeb9, count == 1);
-    next = triggerIds[count];
-    if (next == -1)
-    {
-        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        return 1;
-    }
-    if (ObjTrigger_IsSet((int)obj) != 0)
-    {
-        (obj)->animEventCallback = kytesmum_idleCallback;
-        (*gObjectTriggerInterface)->runSequence(next, (void*)obj, -1);
-    }
-    return 0;
-}
-
-u8 gKytesMumMoveSets[] = {
-    0x00, 0x00, 0x02, 0x06, 0x01, 0x27, 0x00, 0x00, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x04, 0x00,
-    0x05, 0x00, 0x01, 0x00, 0x08, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x35, 0x10, 0x00, 0x00, 0x00, 0x03, 0x36, 0x10,
-    0x00, 0x00, 0x00, 0x03, 0x37, 0x05, 0x00, 0x00, 0x00, 0x03, 0x38, 0x05, 0x00, 0x00, 0x00,
-};
-
-int gKytesMumQuestIdleSfxTable[] = {
-    0x02921000, 0x00000292, 0x10000000, 0x02920500, 0x00000292, 0x05000000,
-};
-
-u32 gKytesMumObjDescriptor[14] = {0x00000000,
-                                  0x00000000,
-                                  0x00000000,
-                                  0x00090000,
-                                  (u32)kytesmum_initialise,
-                                  (u32)kytesmum_release,
-                                  0x00000000,
-                                  (u32)kytesmum_init,
-                                  (u32)kytesmum_update,
-                                  (u32)kytesmum_hitDetect,
-                                  (u32)kytesmum_render,
-                                  (u32)kytesmum_free,
-                                  (u32)kytesmum_getObjectTypeId,
-                                  (u32)kytesmum_getExtraSize};
-
-#pragma optimization_level 2
-void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
-{
-    int i;
-    u8 flags = 0;
-    for (i = 0; i < (s8)arg[0x1b]; i++)
-    {
-        switch (*(s8*)(arg + i + 0x13))
-        {
-        case 0:
-            if (sfxData != 0)
-            {
-                Sfx_PlayFromObject(obj, sfxData[0]);
-            }
-            break;
-        case 7:
-            if (sfxData != 0)
-            {
-                Sfx_PlayFromObject(obj, sfxData[1]);
-            }
-            break;
-        case 1:
-            flags |= 1;
-            break;
-        case 2:
-            flags |= 2;
-            break;
-        case 3:
-            flags |= 4;
-            break;
-        case 4:
-            flags |= 8;
-            break;
-        case 5:
-        case 6:
-            break;
-        }
-    }
-    if (flags != 0 && sfxData != 0)
-    {
-        Sfx_PlayFromObject(obj, sfxData[3]);
-    }
-}
 #pragma reset
 
 char sKytesMumYawDiffMessage[] = " YAW DIFF ";

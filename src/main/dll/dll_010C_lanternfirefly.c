@@ -68,14 +68,8 @@ extern f32 lbl_803E3AD8;
 extern f32 lbl_803E3ADC;
 extern f32 lbl_803E3AE0;
 
-int LanternFireFly_getExtraSize(void)
-{
-    return 0x74;
-}
-int LanternFireFly_getObjectTypeId(void)
-{
-    return 0x0;
-}
+void fn_801869DC(GameObject* obj);
+void LanternFireFly_update(GameObject* obj);
 
 /* LanternFireFly_modelMtxFn: receives (obj, anchorX, anchorY, anchorZ) and
  * stores the three floats into obj->extra at +0x54/+0x58/+0x5c. */
@@ -154,6 +148,96 @@ void LanternFireFly_setScale(u8* obj, f32* vec)
     sub->offZ = vec[2];
     sub->animFrame = 4;
 }
+#pragma auto_inline off
+/* Helpers placed last (anti-inline): LanternFireFly_update above calls both. */
+void fn_801868D0(GameObject* obj)
+{
+    typedef struct
+    {
+        s16 ang;
+        s16 b;
+        s16 c;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } LFRot;
+    LFRot rot;
+    LanternFireFlyState* state;
+    s16 angleDelta;
+    f32 fz;
+
+    state = obj->extra;
+    state->offX = lbl_803E3AB8;
+    state->offY = (f32)(int)randomGetRange(-state->wanderRange, state->wanderRange);
+    if (state->driftRangeZ < lbl_803E3ABC)
+    {
+        state->offZ = lbl_803E3AB8;
+    }
+    else
+    {
+        state->offZ = state->driftRangeZ - (f32)(int)randomGetRange(0x14, (s16)(int)state->driftRangeZ);
+    }
+    angleDelta = randomGetRange(3000, 5000);
+    state->randAngle += angleDelta;
+    fz = lbl_803E3AB8;
+    rot.x = fz;
+    rot.y = fz;
+    rot.z = fz;
+    rot.scale = lbl_803E3AA0;
+    rot.c = 0;
+    rot.b = 0;
+    rot.ang = state->randAngle;
+    vecRotateZXY(&rot.ang, &state->offX);
+}
+#pragma auto_inline on
+
+#pragma auto_inline off
+void fn_801869DC(GameObject* obj)
+{
+    typedef struct
+    {
+        u8 mode : 2;
+    } LFF2;
+    LanternFireFlyState* state;
+
+    state = obj->extra;
+    state->controlX[0] = state->controlX[1];
+    state->controlY[0] = state->controlY[1];
+    state->controlZ[0] = state->controlZ[1];
+    state->controlX[1] = state->controlX[2];
+    state->controlY[1] = state->controlY[2];
+    state->controlZ[1] = state->controlZ[2];
+    state->controlX[2] = state->controlX[3];
+    state->controlY[2] = state->controlY[3];
+    state->controlZ[2] = state->controlZ[3];
+    if (((LFF2*)&state->modeFlags)->mode == 1)
+    {
+        int player = (int)Obj_GetPlayerObject();
+        state->speed =
+            lbl_803E3AC4 * Vec_distance((void*)&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) +
+            lbl_803E3AC0;
+    }
+    else
+    {
+        state->speed = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
+    }
+    state->controlX[3] = state->offX;
+    state->controlY[3] = state->offY;
+    state->controlZ[3] = state->offZ;
+}
+#pragma auto_inline on
+
+
+int LanternFireFly_getExtraSize(void)
+{
+    return 0x74;
+}
+
+int LanternFireFly_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 /* LanternFireFly_free: free the light struct at sub[0] if present, then
  * (when p2==0 and the freshly-cleared sub[0] is NULL and mode bits 6..7
@@ -175,6 +259,8 @@ void LanternFireFly_free(u8* obj, int flag)
     ObjGroup_RemoveObject((int)obj, LANTERNFIREFLY_OBJGROUP);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
+
+
 
 void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -391,78 +477,3 @@ void LanternFireFly_initialise(void)
 {
 }
 
-/* Helpers placed last (anti-inline): LanternFireFly_update above calls both. */
-void fn_801868D0(GameObject* obj)
-{
-    typedef struct
-    {
-        s16 ang;
-        s16 b;
-        s16 c;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } LFRot;
-    LFRot rot;
-    LanternFireFlyState* state;
-    s16 angleDelta;
-    f32 fz;
-
-    state = obj->extra;
-    state->offX = lbl_803E3AB8;
-    state->offY = (f32)(int)randomGetRange(-state->wanderRange, state->wanderRange);
-    if (state->driftRangeZ < lbl_803E3ABC)
-    {
-        state->offZ = lbl_803E3AB8;
-    }
-    else
-    {
-        state->offZ = state->driftRangeZ - (f32)(int)randomGetRange(0x14, (s16)(int)state->driftRangeZ);
-    }
-    angleDelta = randomGetRange(3000, 5000);
-    state->randAngle += angleDelta;
-    fz = lbl_803E3AB8;
-    rot.x = fz;
-    rot.y = fz;
-    rot.z = fz;
-    rot.scale = lbl_803E3AA0;
-    rot.c = 0;
-    rot.b = 0;
-    rot.ang = state->randAngle;
-    vecRotateZXY(&rot.ang, &state->offX);
-}
-
-void fn_801869DC(GameObject* obj)
-{
-    typedef struct
-    {
-        u8 mode : 2;
-    } LFF2;
-    LanternFireFlyState* state;
-
-    state = obj->extra;
-    state->controlX[0] = state->controlX[1];
-    state->controlY[0] = state->controlY[1];
-    state->controlZ[0] = state->controlZ[1];
-    state->controlX[1] = state->controlX[2];
-    state->controlY[1] = state->controlY[2];
-    state->controlZ[1] = state->controlZ[2];
-    state->controlX[2] = state->controlX[3];
-    state->controlY[2] = state->controlY[3];
-    state->controlZ[2] = state->controlZ[3];
-    if (((LFF2*)&state->modeFlags)->mode == 1)
-    {
-        int player = (int)Obj_GetPlayerObject();
-        state->speed =
-            lbl_803E3AC4 * Vec_distance((void*)&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) +
-            lbl_803E3AC0;
-    }
-    else
-    {
-        state->speed = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
-    }
-    state->controlX[3] = state->offX;
-    state->controlY[3] = state->offY;
-    state->controlZ[3] = state->offZ;
-}

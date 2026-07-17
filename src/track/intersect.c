@@ -203,36 +203,6 @@ extern u32 lbl_803DD048;
 extern u32 gSaveCardSerialLo;
 extern u32 lbl_803DD050;
 extern u32 lbl_803DD054;
-
-void* fn_8006F388(u32 i)
-{
-    u8* base = lbl_8030E8B0;
-    switch (i)
-    {
-    case 0:
-        return base;
-    case 1:
-        return base + 0x14;
-    case 2:
-        return base + 0x3C;
-    case 3:
-        return base + 0x64;
-    case 4:
-        return base + 0x50;
-    case 5:
-        return base + 0x78;
-    case 6:
-        return base + 0x8C;
-    case 7:
-        return base + 0xA0;
-    case 10:
-    case 8:
-        return base + 0x28;
-    default:
-        return base + 0x28;
-    }
-}
-
 typedef struct
 {
     s16 id;
@@ -241,14 +211,59 @@ typedef struct
     f32 scale;
     Vec pos;
 } SplashFxParams;
-
 extern f32 lbl_803DEE20;
 extern f32 lbl_803DEE24;
 extern f32 lbl_803DEE28;
+typedef struct
+{
+    f32 x, y, z;
+    u16 id;
+    u8 alpha;
+    u8 flip;
+} RippleEntry;
+typedef struct
+{
+    f32 v[12];
+    u16 angle;
+    u8 type;
+    u8 alpha;
+    u8 flip;
+    u8 pad[3];
+} SplashQuad;
+typedef struct
+{
+    f32 scales[4];
+    u8 pad[0x10];
+    RippleEntry ripples[0x100];
+    SplashQuad quads[0x100];
+} WaterFxState;
+extern f32 gGxPi;
+extern f32 lbl_803DEE6C;
+extern f32 lbl_803DEE70;
+extern f32 lbl_803DEE74;
+extern f32 lbl_803DEE78;
+extern f32 lbl_803DEE7C;
+extern f32 lbl_803DEE80;
+extern int lbl_803DD03C;
+extern int lbl_803968C0[];
+extern f32 lbl_803DEE98;
+extern f32 lbl_803DEE9C;
+extern u8 gSaveCardRetry;
+void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type);
+void fn_80070234(f32* mat);
+void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
+void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
+void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale);
+void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag);
+int cardProbe(u8 retry);
+void showMemCardError(u8 err);
+void cardShowLoadingMsg(u8 kind);
+int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2);
+int saveCb_8007e748(int saveId, int size, void* dst);
 
+#pragma opt_common_subs off
 /* opt_common_subs off: the retail build re-truncates the u8 `flags`/`j`
  * loop values (clrlwi ,,24) at each use rather than caching the masked form. */
-#pragma opt_common_subs off
 void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unused, f32 scale)
 {
     Vec v;
@@ -427,9 +442,37 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
 }
 
 #pragma opt_common_subs reset
+void* fn_8006F388(u32 i)
+{
+    u8* base = lbl_8030E8B0;
+    switch (i)
+    {
+    case 0:
+        return base;
+    case 1:
+        return base + 0x14;
+    case 2:
+        return base + 0x3C;
+    case 3:
+        return base + 0x64;
+    case 4:
+        return base + 0x50;
+    case 5:
+        return base + 0x78;
+    case 6:
+        return base + 0x8C;
+    case 7:
+        return base + 0xA0;
+    case 10:
+    case 8:
+        return base + 0x28;
+    default:
+        return base + 0x28;
+    }
+}
 
-/* Per-iteration byte decrement of two parallel arrays. */
 #pragma opt_common_subs off
+/* Per-iteration byte decrement of two parallel arrays. */
 void timeFn_8006f400(f32 step)
 {
     int i;
@@ -467,8 +510,8 @@ void timeFn_8006f400(f32 step)
         }
     }
 }
-#pragma opt_common_subs reset
 
+#pragma opt_common_subs reset
 void drawFn_8006f500(void)
 {
     GXColor color;
@@ -600,32 +643,6 @@ void drawFn_8006f500(void)
     }
     Camera_ApplyFullViewport();
 }
-
-typedef struct
-{
-    f32 x, y, z;
-    u16 id;
-    u8 alpha;
-    u8 flip;
-} RippleEntry;
-
-typedef struct
-{
-    f32 v[12];
-    u16 angle;
-    u8 type;
-    u8 alpha;
-    u8 flip;
-    u8 pad[3];
-} SplashQuad;
-
-typedef struct
-{
-    f32 scales[4];
-    u8 pad[0x10];
-    RippleEntry ripples[0x100];
-    SplashQuad quads[0x100];
-} WaterFxState;
 
 #pragma opt_common_subs off
 void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
@@ -879,16 +896,6 @@ void clearScreenWidth(void)
     screenWidth = 0;
 }
 
-extern f32 gGxPi;
-extern f32 lbl_803DEE6C;
-extern f32 lbl_803DEE70;
-extern f32 lbl_803DEE74;
-extern f32 lbl_803DEE78;
-extern f32 lbl_803DEE7C;
-extern f32 lbl_803DEE80;
-extern int lbl_803DD03C;
-extern int lbl_803968C0[];
-
 void matrixFn_8006ff0c(float* mat, short* out, f32 fov, f32 aspect, f32 near, f32 far, f32 scale)
 {
     f32 angle;
@@ -944,9 +951,6 @@ void normalize(f32* x, f32* y, f32* z)
     *z = *z * scale;
 }
 
-extern f32 lbl_803DEE98;
-extern f32 lbl_803DEE9C;
-
 /* 4x4 identity fill. */
 void fn_80070234(f32* mat)
 {
@@ -967,6 +971,9 @@ void fn_80070234(f32* mat)
     }
 }
 
+
+#pragma peephole on
+
 #pragma peephole on
 #define GXSetZCompLoc ((GXSetZCompLocLegacyFn)GXSetZCompLoc)
 void gxSetPeControl_ZCompLoc_(u32 zCompLoc)
@@ -979,6 +986,7 @@ void gxSetPeControl_ZCompLoc_(u32 zCompLoc)
     }
 }
 #undef GXSetZCompLoc
+
 
 #define GXSetZMode ((GXSetZModeLegacyFn)GXSetZMode)
 void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable)
@@ -5335,7 +5343,6 @@ void fn_8007BD8C(int handle1, int handle2)
 
     fn_8007BD8C_body(handle1, handle2, mtx_30, &temp, &temp2, &k0, &k1, &k2, &tev1, &tev2);
 }
-#pragma inline_max_size reset
 
 void setupReflectionIndirectTev(u8 flag)
 {
@@ -5867,8 +5874,6 @@ s32 saveGameGetStatus(void)
     return lbl_803DB700;
 }
 
-extern u8 gSaveCardRetry;
-
 int cardDeleteFn_8007d99c(void)
 {
     int res;
@@ -5987,156 +5992,7 @@ int loadSaveGame(int a, int b)
     } while (gSaveCardRetry != 0);
     return ret;
 }
-
-void showMemCardError(u8 err)
-{
-    int opts[8];
-    int msgs[8];
-    int count;
-    int saved;
-    int sel;
-    u8 submenu;
-    int timer;
-    u8 held;
-    int* m;
-    int y;
-    int i;
-    int j;
-    int yy;
-    char* t;
-    int v;
-
-    sel = 0;
-    submenu = 0;
-    timer = 0;
-    held = 0;
-    gSaveCardRetry = 0;
-    if (lbl_803DB700 == 0xd || (err != 0 && lbl_803DB700 == 0xc))
-    {
-        return;
-    }
-    do
-    {
-        checkReset();
-        padUpdate();
-        mmFreeTick(0);
-        timer += 0x3e8;
-        waitNextFrame();
-        saved = lbl_803DB708;
-        hudDrawColoredLegacy(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
-        if (submenu != 0)
-        {
-            opts[0] = 6;
-            opts[1] = 5;
-            msgs[0] = 0x327;
-            msgs[1] = 0x321;
-            msgs[2] = 0x320;
-            count = 2;
-        }
-        else
-        {
-            cardGetMessage((u32*)opts, (u32*)msgs, (u32*)&count);
-        }
-        gameTextSetColorInt(0xff, 0xc0, 0x40, 0xff);
-        for (i = 0, m = msgs, y = 0x64; i < count + 1; m++, y += 0x14, i++)
-        {
-            t = (char*)gameTextGet(*m);
-            yy = y + ((i > 0) ? 0x64 : 0);
-            for (j = 0; j < *(u16*)(t + 2); j++)
-            {
-                gameTextShowStrLegacy((*(int**)(t + 8))[j], 0, 0, yy);
-                yy += 0x18;
-            }
-            if (i == sel)
-            {
-                v = (int)(lbl_803DEF94 * fn_80293AC4(timer) + lbl_803DEF90);
-                gameTextSetColorInt(v, v, v, 0xff);
-            }
-            else
-            {
-                gameTextSetColorInt(0xa0, 0xa0, 0xa0, 0xff);
-            }
-        }
-        gameTextRun();
-        GXFlush_(1, 0);
-        if (padGetStickYS8(0) < 0 || padGetCYS8(0) < 0)
-        {
-            if (held == 0)
-            {
-                sel++;
-                held = 1;
-            }
-        }
-        else if (padGetStickYS8(0) > 0 || padGetCYS8(0) > 0)
-        {
-            if (held == 0)
-            {
-                sel--;
-                held = 1;
-            }
-        }
-        else
-        {
-            held = 0;
-        }
-        if (sel < 0)
-        {
-            sel = 0;
-        }
-        else if (sel > count - 1)
-        {
-            sel = count - 1;
-        }
-        if (getButtonsJustPressed(0) & 0x100)
-        {
-            switch (opts[sel])
-            {
-            case 0:
-                submenu = 1;
-                sel = 0;
-                break;
-            case 1:
-                lbl_803DB700 = 0xd;
-                gSaveCardRetry = 1;
-                break;
-            case 2:
-                lbl_803DB424 = 0;
-                lbl_803DB700 = 0xd;
-                break;
-            case 3:
-                setGameState(6);
-                lbl_803DB424 = 0;
-                lbl_803DB700 = 0xd;
-                break;
-            case 4:
-                cardDeleteFn_8007d99c();
-                memCardFn_8007dd04(0);
-                if (lbl_803DB700 == 0xd)
-                {
-                    gSaveCardRetry = 1;
-                }
-                break;
-            case 5:
-                submenu = 0;
-                if (cardLoadFn_8007d72c() != 0)
-                {
-                    memCardFn_8007dd04(0);
-                }
-                if (lbl_803DB700 == 0xd)
-                {
-                    gSaveCardRetry = 1;
-                }
-                break;
-            case 6:
-                submenu = 0;
-                break;
-            default:
-                lbl_803DB700 = 0xd;
-            }
-        }
-    } while (lbl_803DB700 != 0xd);
-}
-
+#pragma auto_inline off
 int memCardFn_8007dd04(u8 retry)
 {
     int ret;
@@ -6176,6 +6032,8 @@ int memCardFn_8007dd04(u8 retry)
     } while (gSaveCardRetry != 0 && retry != 0);
     return ret;
 }
+#pragma auto_inline on
+
 
 int cardProbe(u8 retry)
 {
@@ -6339,6 +6197,155 @@ void cardGetMessage(u32* buttons, u32* texts, u32* count)
     }
 }
 
+void showMemCardError(u8 err)
+{
+    int opts[8];
+    int msgs[8];
+    int count;
+    int saved;
+    int sel;
+    u8 submenu;
+    int timer;
+    u8 held;
+    int* m;
+    int y;
+    int i;
+    int j;
+    int yy;
+    char* t;
+    int v;
+
+    sel = 0;
+    submenu = 0;
+    timer = 0;
+    held = 0;
+    gSaveCardRetry = 0;
+    if (lbl_803DB700 == 0xd || (err != 0 && lbl_803DB700 == 0xc))
+    {
+        return;
+    }
+    do
+    {
+        checkReset();
+        padUpdate();
+        mmFreeTick(0);
+        timer += 0x3e8;
+        waitNextFrame();
+        saved = lbl_803DB708;
+        hudDrawColoredLegacy(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
+        if (submenu != 0)
+        {
+            opts[0] = 6;
+            opts[1] = 5;
+            msgs[0] = 0x327;
+            msgs[1] = 0x321;
+            msgs[2] = 0x320;
+            count = 2;
+        }
+        else
+        {
+            cardGetMessage((u32*)opts, (u32*)msgs, (u32*)&count);
+        }
+        gameTextSetColorInt(0xff, 0xc0, 0x40, 0xff);
+        for (i = 0, m = msgs, y = 0x64; i < count + 1; m++, y += 0x14, i++)
+        {
+            t = (char*)gameTextGet(*m);
+            yy = y + ((i > 0) ? 0x64 : 0);
+            for (j = 0; j < *(u16*)(t + 2); j++)
+            {
+                gameTextShowStrLegacy((*(int**)(t + 8))[j], 0, 0, yy);
+                yy += 0x18;
+            }
+            if (i == sel)
+            {
+                v = (int)(lbl_803DEF94 * fn_80293AC4(timer) + lbl_803DEF90);
+                gameTextSetColorInt(v, v, v, 0xff);
+            }
+            else
+            {
+                gameTextSetColorInt(0xa0, 0xa0, 0xa0, 0xff);
+            }
+        }
+        gameTextRun();
+        GXFlush_(1, 0);
+        if (padGetStickYS8(0) < 0 || padGetCYS8(0) < 0)
+        {
+            if (held == 0)
+            {
+                sel++;
+                held = 1;
+            }
+        }
+        else if (padGetStickYS8(0) > 0 || padGetCYS8(0) > 0)
+        {
+            if (held == 0)
+            {
+                sel--;
+                held = 1;
+            }
+        }
+        else
+        {
+            held = 0;
+        }
+        if (sel < 0)
+        {
+            sel = 0;
+        }
+        else if (sel > count - 1)
+        {
+            sel = count - 1;
+        }
+        if (getButtonsJustPressed(0) & 0x100)
+        {
+            switch (opts[sel])
+            {
+            case 0:
+                submenu = 1;
+                sel = 0;
+                break;
+            case 1:
+                lbl_803DB700 = 0xd;
+                gSaveCardRetry = 1;
+                break;
+            case 2:
+                lbl_803DB424 = 0;
+                lbl_803DB700 = 0xd;
+                break;
+            case 3:
+                setGameState(6);
+                lbl_803DB424 = 0;
+                lbl_803DB700 = 0xd;
+                break;
+            case 4:
+                cardDeleteFn_8007d99c();
+                memCardFn_8007dd04(0);
+                if (lbl_803DB700 == 0xd)
+                {
+                    gSaveCardRetry = 1;
+                }
+                break;
+            case 5:
+                submenu = 0;
+                if (cardLoadFn_8007d72c() != 0)
+                {
+                    memCardFn_8007dd04(0);
+                }
+                if (lbl_803DB700 == 0xd)
+                {
+                    gSaveCardRetry = 1;
+                }
+                break;
+            case 6:
+                submenu = 0;
+                break;
+            default:
+                lbl_803DB700 = 0xd;
+            }
+        }
+    } while (lbl_803DB700 != 0xd);
+}
+
 /*
  * Per-frame "blocking" dialog renderer driven by the card-write retry
  * loops in _saveGame/DBC0/DC5C/DD04. Pumps 60 frames of the GX/dialog
@@ -6429,6 +6436,7 @@ int saveCb_8007e748(int saveId, int size, void* dst)
     memcpy(dst, lbl_803DD044 + 0x1F14, 0xE4);
     return 0;
 }
+
 
 /* .bss block 0x80391DC0-0x803967C0 */
 f32 gWaterFxState[4];

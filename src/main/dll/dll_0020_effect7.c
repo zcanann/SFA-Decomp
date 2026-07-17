@@ -94,58 +94,9 @@ ObjectDescriptor6 lbl_80310A78 = {
     (ObjectDescriptorCallback)Effect7_func05,
 };
 
-void Effect7_func03_nop(void)
-{
-}
 
-void Effect7_release(void)
-{
-}
-
-void Effect7_initialise(void)
-{
-}
-
-/*
- * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
- * the consumer-side definition of this 0x64-byte spawn request consumed by
- * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
- * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
- * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
- */
-
-#pragma scheduling off
 #pragma peephole off
-void Effect7_func05(void)
-{
-    f32 sum;
-    f32 step;
-    sum = gEffect7TexScrollPhaseA + (step = lbl_803DFCD8 * timeDelta);
-    gEffect7TexScrollPhaseA = sum;
-    if (sum > 1.0f)
-    {
-        gEffect7TexScrollPhaseA = lbl_803DFCDC;
-    }
-    sum = gEffect7TexScrollPhaseB + step;
-    gEffect7TexScrollPhaseB = sum;
-    if (sum > 1.0f)
-    {
-        gEffect7TexScrollPhaseB = lbl_803DFCE8;
-    }
-    gEffect7SinAngleA = gEffect7SinAngleA + framesThisStep * 0x64;
-    if (gEffect7SinAngleA > 0x7fff)
-    {
-        gEffect7SinAngleA = 0;
-    }
-    gEffect7SinValueA = mathSinf(gEffect7Pi * (f32)(s16)gEffect7SinAngleA / gEffect7SinAngleScale);
-    gEffect7SinAngleB = gEffect7SinAngleB + framesThisStep * 0x32;
-    if (gEffect7SinAngleB > 0x7fff)
-    {
-        gEffect7SinAngleB = 0;
-    }
-    gEffect7SinValueB = mathSinf(gEffect7Pi * (f32)(s16)gEffect7SinAngleB / gEffect7SinAngleScale);
-}
-
+#pragma scheduling off
 #define FILL368()                                                                                                      \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -538,3 +489,57 @@ int Effect7_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     return spawnResult;
 }
 #undef FILL368
+
+/*
+ * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
+ * the consumer-side definition of this 0x64-byte spawn request consumed by
+ * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
+ * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
+ * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
+ */
+
+void Effect7_func05(void)
+{
+    f32 sum;
+    f32 step;
+    sum = gEffect7TexScrollPhaseA + (step = lbl_803DFCD8 * timeDelta);
+    gEffect7TexScrollPhaseA = sum;
+    if (sum > 1.0f)
+    {
+        gEffect7TexScrollPhaseA = lbl_803DFCDC;
+    }
+    sum = gEffect7TexScrollPhaseB + step;
+    gEffect7TexScrollPhaseB = sum;
+    if (sum > 1.0f)
+    {
+        gEffect7TexScrollPhaseB = lbl_803DFCE8;
+    }
+    gEffect7SinAngleA = gEffect7SinAngleA + framesThisStep * 0x64;
+    if (gEffect7SinAngleA > 0x7fff)
+    {
+        gEffect7SinAngleA = 0;
+    }
+    gEffect7SinValueA = mathSinf(gEffect7Pi * (f32)(s16)gEffect7SinAngleA / gEffect7SinAngleScale);
+    gEffect7SinAngleB = gEffect7SinAngleB + framesThisStep * 0x32;
+    if (gEffect7SinAngleB > 0x7fff)
+    {
+        gEffect7SinAngleB = 0;
+    }
+    gEffect7SinValueB = mathSinf(gEffect7Pi * (f32)(s16)gEffect7SinAngleB / gEffect7SinAngleScale);
+}
+
+#pragma peephole reset
+#pragma scheduling reset
+void Effect7_func03_nop(void)
+{
+}
+
+void Effect7_release(void)
+{
+}
+
+
+
+void Effect7_initialise(void)
+{
+}

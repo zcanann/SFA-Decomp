@@ -68,58 +68,9 @@ ObjectDescriptor6 lbl_80310B50 = {
     (ObjectDescriptorCallback)Effect8_func05,
 };
 
-void Effect8_func03_nop(void)
-{
-}
 
-void Effect8_release(void)
-{
-}
-
-void Effect8_initialise(void)
-{
-}
-
-/*
- * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
- * the consumer-side definition of this 0x64-byte spawn request consumed by
- * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
- * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
- * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
- */
-
-#pragma scheduling off
 #pragma peephole off
-void Effect8_func05(void)
-{
-    f32 sum;
-    f32 step;
-    sum = lbl_803DB818 + (step = lbl_803DFD98 * timeDelta);
-    lbl_803DB818 = sum;
-    if (sum > 1.0f)
-    {
-        lbl_803DB818 = lbl_803DFD9C;
-    }
-    sum = lbl_803DB81C + step;
-    lbl_803DB81C = sum;
-    if (sum > 1.0f)
-    {
-        lbl_803DB81C = lbl_803DFDA8;
-    }
-    gModgfxSinePhaseA = gModgfxSinePhaseA + framesThisStep * 0x64;
-    if (gModgfxSinePhaseA > 0x7fff)
-    {
-        gModgfxSinePhaseA = 0;
-    }
-    gModgfxSineWaveA = mathSinf(gModgfxPi * (f32)(s16)gModgfxSinePhaseA / lbl_803DFE24);
-    gModgfxSinePhaseB = gModgfxSinePhaseB + framesThisStep * 0x32;
-    if (gModgfxSinePhaseB > 0x7fff)
-    {
-        gModgfxSinePhaseB = 0;
-    }
-    gModgfxSineWaveB = mathSinf(gModgfxPi * (f32)(s16)gModgfxSinePhaseB / lbl_803DFE24);
-}
-
+#pragma scheduling off
 #define FILL8()                                                                                                        \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -519,6 +470,60 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     return spawnResult;
 }
 #undef FILL8
+
+/*
+ * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
+ * the consumer-side definition of this 0x64-byte spawn request consumed by
+ * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
+ * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
+ * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
+ */
+
+void Effect8_func05(void)
+{
+    f32 sum;
+    f32 step;
+    sum = lbl_803DB818 + (step = lbl_803DFD98 * timeDelta);
+    lbl_803DB818 = sum;
+    if (sum > 1.0f)
+    {
+        lbl_803DB818 = lbl_803DFD9C;
+    }
+    sum = lbl_803DB81C + step;
+    lbl_803DB81C = sum;
+    if (sum > 1.0f)
+    {
+        lbl_803DB81C = lbl_803DFDA8;
+    }
+    gModgfxSinePhaseA = gModgfxSinePhaseA + framesThisStep * 0x64;
+    if (gModgfxSinePhaseA > 0x7fff)
+    {
+        gModgfxSinePhaseA = 0;
+    }
+    gModgfxSineWaveA = mathSinf(gModgfxPi * (f32)(s16)gModgfxSinePhaseA / lbl_803DFE24);
+    gModgfxSinePhaseB = gModgfxSinePhaseB + framesThisStep * 0x32;
+    if (gModgfxSinePhaseB > 0x7fff)
+    {
+        gModgfxSinePhaseB = 0;
+    }
+    gModgfxSineWaveB = mathSinf(gModgfxPi * (f32)(s16)gModgfxSinePhaseB / lbl_803DFE24);
+}
+
+#pragma peephole reset
+#pragma scheduling reset
+void Effect8_func03_nop(void)
+{
+}
+
+void Effect8_release(void)
+{
+}
+
+
+
+void Effect8_initialise(void)
+{
+}
 
 #define FILL338()                                                                                                      \
     do                                                                                                                 \

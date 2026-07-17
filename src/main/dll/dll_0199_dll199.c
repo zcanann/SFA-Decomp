@@ -53,39 +53,24 @@ extern f32 lbl_803E5168;
 extern f32 lbl_803E516C;
 extern f32 lbl_803E5170;
 extern f32 lbl_803E5174;
-
-void dll_199_hitDetect(void)
-{
-}
-
-int dll_199_getExtraSize(void)
-{
-    return 0x14;
-}
-int dll_199_getObjectTypeId(void)
-{
-    return 0x0;
-}
-
-void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5158);
-}
-
-void dll_199_free(int* obj)
-{
-    (*gModgfxInterface)->detachSource(obj);
-    ((void (*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
-    ((void (*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
-}
-
 void dll_199_initialise(void);
 void dll_199_release(void);
 void dll_199_init(GameObject* obj, int def);
 void dll_199_update(int obj);
-
+typedef struct Dll199ObjectDef
+{
+    u8 pad0[0x1A - 0x0];
+    s16 initStateOverride; /* 0x1A: if >0, high byte (>>8) overrides the object's initial state (default 10) */
+    u8 pad1C[0x20 - 0x1C];
+} Dll199ObjectDef;
+void dll_199_hitDetect(void);
+void dll_199_init(GameObject* obj, int def);
+void dll_199_release(void);
+void dll_199_initialise(void);
+int dll_199_getExtraSize(void);
+int dll_199_getObjectTypeId(void);
+void dll_199_free(int* obj);
+void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 ObjectDescriptor dll_199 = {
     0,
     0,
@@ -102,6 +87,8 @@ ObjectDescriptor dll_199 = {
     (ObjectDescriptorCallback)dll_199_getObjectTypeId,
     dll_199_getExtraSize,
 };
+
+
 
 int dll_199_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -210,12 +197,32 @@ int dll_199_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-typedef struct Dll199ObjectDef
+int dll_199_getExtraSize(void)
 {
-    u8 pad0[0x1A - 0x0];
-    s16 initStateOverride; /* 0x1A: if >0, high byte (>>8) overrides the object's initial state (default 10) */
-    u8 pad1C[0x20 - 0x1C];
-} Dll199ObjectDef;
+    return 0x14;
+}
+
+int dll_199_getObjectTypeId(void)
+{
+    return 0x0;
+}
+
+void dll_199_free(int* obj)
+{
+    (*gModgfxInterface)->detachSource(obj);
+    ((void (*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
+    ((void (*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
+}
+
+void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5158);
+}
+void dll_199_hitDetect(void)
+{
+}
 
 void dll_199_update(int obj)
 {
@@ -503,3 +510,4 @@ void dll_199_release(void)
 void dll_199_initialise(void)
 {
 }
+
