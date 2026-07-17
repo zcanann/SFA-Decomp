@@ -47,17 +47,6 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 #define EXPLODABLE_PHASE_BROKEN   2 /* already broken, nothing to do */
 
 extern GasVentTableEntry gExplodableBreakRecipeTable[];
-extern f32 lbl_803E435C;
-extern f32 lbl_803E4350;
-extern f32 lbl_803E4354;
-extern f32 lbl_803E4358;
-extern f32 lbl_803E4368;
-extern f32 lbl_803E436C;
-extern f32 lbl_803E4370;
-extern f32 lbl_803E4374;
-extern f32 lbl_803E4378;
-extern f32 lbl_803E437C;
-extern f32 lbl_803E4380;
 
 
 int explodable_spawnFragmentObject(GameObject* obj, int objType, int chunkSrc, int fragmentIndex)
@@ -79,8 +68,8 @@ int explodable_spawnFragmentObject(GameObject* obj, int objType, int chunkSrc, i
     s->posX = obj->anim.localPosX;
     s->posY = obj->anim.localPosY;
     s->posZ = obj->anim.localPosZ;
-    f1 = lbl_803E4350;
-    s->velX = lbl_803E4350 * c->velX;
+    f1 = 100.0f;
+    s->velX = 100.0f * c->velX;
     s->velY = f1 * c->velY;
     s->velZ = f1 * c->velZ;
     s->rotX = c->rotX;
@@ -89,16 +78,16 @@ int explodable_spawnFragmentObject(GameObject* obj, int objType, int chunkSrc, i
     s->spinX = c->spinX * (f32)(u32)c->spinScale;
     s->spinY = c->spinY * (f32)(u32)c->spinScale;
     s->spinZ = c->spinZ * (f32)(u32)c->spinScale;
-    f1 = lbl_803E4354;
-    s->spin2X = lbl_803E4354 * c->spin2X;
+    f1 = 10.0f;
+    s->spin2X = 10.0f * c->spin2X;
     s->spin2Z = f1 * c->spin2Z;
     s->spin2Y = f1 * c->spin2Y;
-    f1 = lbl_803E4358;
-    s->vel2X = lbl_803E4358 * c->vel2X;
+    f1 = 1000.0f;
+    s->vel2X = 1000.0f * c->vel2X;
     s->vel2Y = f1 * c->vel2Y;
     s->vel2Z = f1 * c->vel2Z;
     s->fragmentIndex = fragmentIndex;
-    s->scale = (s8)(int)(lbl_803E435C * (obj->anim.rootMotionScale / *(f32*)(*(int*)&obj->anim.modelInstance + 4)));
+    s->scale = (s8)(int)(20.0f * (obj->anim.rootMotionScale / *(f32*)(*(int*)&obj->anim.modelInstance + 4)));
     s->launchDelayBase = c->launchDelayBase;
     s->height = (int)c->height;
     return (int)Obj_SetupObject((ObjPlacement*)s, 5, obj->anim.mapEventSlot, -1, NULL);
@@ -138,7 +127,7 @@ void explodable_buildFragments(GameObject* obj, int def, int skipCentroid, int s
             c->spinScale = entMode;
             if (skipCentroid == 0)
             {
-                zero = lbl_803E4368;
+                zero = 0.0f;
                 c->centroidX = zero;
                 c->centroidY = zero;
                 c->centroidZ = zero;
@@ -153,7 +142,7 @@ void explodable_buildFragments(GameObject* obj, int def, int skipCentroid, int s
                     s.acc[1] = s.v[1] + s.acc[1];
                     s.acc[2] = s.v[2] + s.acc[2];
                 }
-                c->centroidX = s.acc[0] * ((zero = lbl_803E436C) / (f32)(u32)model->vertexCount);
+                c->centroidX = s.acc[0] * ((zero = 1.0f) / (f32)(u32)model->vertexCount);
                 c->centroidY = s.acc[1] * (zero / (f32)(u32)model->vertexCount);
                 c->centroidZ = s.acc[2] * (zero / (f32)(u32)model->vertexCount);
             }
@@ -184,6 +173,7 @@ void explodable_computeFragmentLaunch(GameObject* obj, int chunkSlot, int def)
     int max2;
     DrExplodableChunk* c = (DrExplodableChunk*)chunkSlot;
     int max;
+    f32 zero = 0.0f;
 
     vecRotateZXY((s16*)(def + 0x1a), &c->offX);
     c->posX = c->offX * obj->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posX;
@@ -196,47 +186,47 @@ void explodable_computeFragmentLaunch(GameObject* obj, int chunkSlot, int def)
     dy = c->offY - (f32)((ExplodablePlacement*)def)->originY;
     dz = c->offZ - (f32)((ExplodablePlacement*)def)->originZ;
     mag = sqrtf(dz * dz + (dx * dx + dy * dy));
-    if (mag != lbl_803E4368)
+    if (mag != zero)
     {
-        scale = (f32)((ExplodablePlacement*)def)->launchForce / (lbl_803E4370 * mag);
-        if (dx != lbl_803E4368 || dy != lbl_803E4368 || dz != lbl_803E4368)
+        scale = (f32)((ExplodablePlacement*)def)->launchForce / (5.0f * mag);
+        if (dx != zero || dy != zero || dz != zero)
         {
             normalize(&dx, &dy, &dz);
         }
         c->velX = dx * scale;
         c->velY = dy * scale;
         c->velZ = dz * scale;
-        max = (int)(lbl_803E4374 * (lbl_803E4378 + scale));
-        c->spinX = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
-        c->spinY = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
-        c->spinZ = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
-        scale = (f32)((ExplodablePlacement*)def)->launchScale2 / lbl_803E4358;
-        if (obj->anim.velocityX > lbl_803E4368)
+        max = (int)(200.0f * (0.5f + scale));
+        c->spinX = (f32)(int)randomGetRange(0, max) / 50.0f;
+        c->spinY = (f32)(int)randomGetRange(0, max) / 50.0f;
+        c->spinZ = (f32)(int)randomGetRange(0, max) / 50.0f;
+        scale = (f32)((ExplodablePlacement*)def)->launchScale2 / 1000.0f;
+        if (obj->anim.velocityX > 0.0f)
         {
             c->launchFlags |= 1;
         }
-        if (obj->anim.velocityZ > lbl_803E4368)
+        if (obj->anim.velocityZ > 0.0f)
         {
             c->launchFlags |= 2;
         }
-        if (c->spinX > lbl_803E4368)
+        if (c->spinX > 0.0f)
         {
             c->launchFlags |= 4;
         }
-        if (c->spinY > lbl_803E4368)
+        if (c->spinY > 0.0f)
         {
             c->launchFlags |= 8;
         }
-        if (c->spinZ > lbl_803E4368)
+        if (c->spinZ > 0.0f)
         {
             c->launchFlags |= 0x10;
         }
-        max2 = (int)(lbl_803E4374 * (lbl_803E4378 + scale));
-        c->spin2X = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
-        c->spin2Y = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
-        c->spin2Z = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        max2 = (int)(200.0f * (0.5f + scale));
+        c->spin2X = (f32)(int)randomGetRange(0, max2) / 200.0f;
+        c->spin2Y = (f32)(int)randomGetRange(0, max2) / 200.0f;
+        c->spin2Z = (f32)(int)randomGetRange(0, max2) / 200.0f;
         c->vel2X = dx * scale;
-        c->vel2Y = dy * scale - lbl_803E4380;
+        c->vel2Y = dy * scale - 0.07f;
         c->vel2Z = dz * scale;
         {
             int height = ((ExplodablePlacement*)def)->fragmentHeight;
@@ -403,7 +393,7 @@ void explodable_init(GameObject* obj, int setup)
         ((ExplodablePlacement*)setup)->scaleParam = 0x14;
     }
     (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase *
-                                  (f32)(int)((ExplodablePlacement*)setup)->scaleParam / lbl_803E435C;
+                                  (f32)(int)((ExplodablePlacement*)setup)->scaleParam / 20.0f;
     e = gExplodableBreakRecipeTable;
     if ((e[((DrExplodableState*)state)->recipeIndex].flags & 1) != 0)
     {

@@ -130,24 +130,11 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
 
 #define DFSH_FLAGS(state) ((DfshShrineFlagsBits*)&(state)->flags)
 
-extern f32 lbl_803E4E50;
-extern f32 lbl_803E4E54;
-extern f32 lbl_803E4E58;
-extern f32 lbl_803E4E5C;
-extern f32 gDfShShrinePi;
-extern f32 lbl_803E4E64;
-extern f32 lbl_803E4E68;
-extern f32 lbl_803E4E6C;
-extern f32 lbl_803E4E70;
-extern f32 gDfShShrineFadeDistance;
-extern f32 lbl_803E4E78;
-extern f32 lbl_803E4E88;
 u16 gDfShShrineRewardTable[50] = {
     246, 2997,  247, 2998,  248,  249,   250,  251,   2995, 2996,  60,   60,    60,   60,    600,   600,   600,
     600, 600,   600, 3000,  3008, 3001,  3009, 3002,  3003, 3004,  3005, 3006,  3007, 4,     36948, 4,     37071,
     4,   37054, 4,   37083, 4,    37063, 4,    37065, 4,    37066, 4,    37067, 4,    37068, 4,     37070,
 };
-extern const f32 lbl_803E4E8C;
 void DFSH_Shrine_update(int objArg);
 void DFSH_Shrine_hitDetect(void);
 void DFSH_Shrine_release(void);
@@ -181,24 +168,24 @@ void fn_801C2914(int obj)
         return;
     }
 
-    state->orbitA += (s32)(lbl_803E4E50 * timeDelta);
-    state->orbitB += (s32)(lbl_803E4E54 * timeDelta);
-    state->orbitC += (s32)(lbl_803E4E58 * timeDelta);
+    state->orbitA += (s32)(512.0f * timeDelta);
+    state->orbitB += (s32)(128.0f * timeDelta);
+    state->orbitC += (s32)(192.0f * timeDelta);
 
     ((GameObject*)obj)->anim.localPosY =
-        lbl_803E4E5C + (((ObjPlacement*)def)->posY + mathSinf((gDfShShrinePi * state->orbitA) / lbl_803E4E64));
+        20.0f + (((ObjPlacement*)def)->posY + mathSinf((3.1415927f * state->orbitA) / 32768.0f));
 
-    trigA = mathSinf((gDfShShrinePi * state->orbitB) / lbl_803E4E64);
-    trigB = mathSinf((gDfShShrinePi * state->orbitA) / lbl_803E4E64);
+    trigA = mathSinf((3.1415927f * state->orbitB) / 32768.0f);
+    trigB = mathSinf((3.1415927f * state->orbitA) / 32768.0f);
     trigB = trigB + trigA;
-    ((GameObject*)obj)->anim.rotZ = lbl_803E4E68 * trigB;
+    ((GameObject*)obj)->anim.rotZ = 600.0f * trigB;
 
-    trigA = mathSinf((gDfShShrinePi * state->orbitC) / lbl_803E4E64);
-    trigB = mathSinf((gDfShShrinePi * state->orbitA) / lbl_803E4E64);
+    trigA = mathSinf((3.1415927f * state->orbitC) / 32768.0f);
+    trigB = mathSinf((3.1415927f * state->orbitA) / 32768.0f);
     trigB = trigB + trigA;
-    ((GameObject*)obj)->anim.rotY = lbl_803E4E68 * trigB;
+    ((GameObject*)obj)->anim.rotY = 600.0f * trigB;
 
-    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4E6C, timeDelta,
+    ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta,
                                                                  (ObjAnimEventList*)animEvents);
     if (player != NULL)
     {
@@ -213,13 +200,13 @@ void fn_801C2914(int obj)
         {
             angleDelta += 0xffff;
         }
-        turnStep = (s32)(((f32)angleDelta * timeDelta) / lbl_803E4E70);
+        turnStep = (s32)(((f32)angleDelta * timeDelta) / 12.0f);
         ((GameObject*)obj)->anim.rotX += turnStep;
 
         distance = Vec_xzDistance((f32*)(obj + 0x18), (f32*)(player + 0x18));
-        if (distance <= gDfShShrineFadeDistance)
+        if (distance <= 30.0f)
         {
-            ((GameObject*)obj)->anim.alpha = (u8)(s32)(lbl_803E4E78 * (distance / gDfShShrineFadeDistance));
+            ((GameObject*)obj)->anim.alpha = (u8)(s32)(255.0f * (distance / 30.0f));
         }
         else
         {
@@ -260,14 +247,14 @@ int DFSH_Shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((GameObject*)objLocal)->anim.flags = (s16)(((GameObject*)objLocal)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 if (state->light != NULL)
                 {
-                    modelLightStruct_setEnabled(state->light, 0, lbl_803E4E88);
+                    modelLightStruct_setEnabled(state->light, 0, 1.0f);
                 }
                 break;
             case 0xf:
                 ((GameObject*)objLocal)->anim.flags = (s16)(((GameObject*)objLocal)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
                 if (state->light != NULL)
                 {
-                    modelLightStruct_setEnabled(state->light, 0, lbl_803E4E88);
+                    modelLightStruct_setEnabled(state->light, 0, 1.0f);
                 }
                 break;
             }
@@ -319,7 +306,7 @@ void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         light = state->light;
         if (light != NULL)
         {
-            modelLightStruct_setEnabled(light, 0, lbl_803E4E88);
+            modelLightStruct_setEnabled(light, 0, 1.0f);
         }
     }
     else
@@ -327,10 +314,10 @@ void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         light = state->light;
         if (light != NULL)
         {
-            modelLightStruct_setEnabled(light, 1, lbl_803E4E88);
+            modelLightStruct_setEnabled(light, 1, 1.0f);
         }
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4E88);
-        objParticleFn_80099d84((GameObject*)obj, lbl_803E4E88, 7, *(f32*)&lbl_803E4E88,
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+        objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f,
                                (ModelLightStruct*)state->light);
     }
 }
@@ -393,10 +380,10 @@ void DFSH_Shrine_update(int objArg)
     }
     SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)state->musicLatch, 1, -1, -1, 0xcbb, 8);
     SCGameBitLatch_Update((SCGameBitLatchState*)state->musicLatch, 4, -1, -1, 0xcbb, 0xc4);
-    if ((f32)(s32)state->transitionTimer > lbl_803E4E8C)
+    if ((f32)(s32)state->transitionTimer > 0.0f)
     {
         state->transitionTimer = (f32)(s32)state->transitionTimer - timeDelta;
-        if ((f32)(s32)state->transitionTimer <= lbl_803E4E8C)
+        if ((f32)(s32)state->transitionTimer <= 0.0f)
         {
             state->transitionTimer = 0;
         }
@@ -409,7 +396,7 @@ void DFSH_Shrine_update(int objArg)
     {
         f32 t = state->idleChimeTimer - timeDelta;
         state->idleChimeTimer = t;
-        if (t <= lbl_803E4E8C)
+        if (t <= 0.0f)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_spirit_voice);
             state->idleChimeTimer = (f32)(s32)randomGetRange(500, 1000);
@@ -443,7 +430,7 @@ void DFSH_Shrine_update(int objArg)
         if (state->rewardIndex < 10)
         {
             state->rewardTimer -= timeDelta;
-            if (state->rewardTimer <= lbl_803E4E8C)
+            if (state->rewardTimer <= 0.0f)
             {
                 mainSetBits(DFSH_REWARD_BIT(state->rewardIndex), 1);
                 state->rewardTimer = (f32)(u32)DFSH_REWARD_DELAY(state->rewardIndex);
@@ -518,7 +505,7 @@ void DFSH_Shrine_update(int objArg)
         state->mode = DFSHRINE_MODE_IDLE;
         DFSH_FLAGS(state)->openedBySequence = 0;
         state->rewardIndex = 0;
-        state->rewardTimer = lbl_803E4E8C;
+        state->rewardTimer = 0.0f;
         mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
         mainSetBits(0xb70, 0);
         mainSetBits(0xb71, 0);
@@ -557,7 +544,7 @@ void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init)
     ObjMsg_AllocQueue(obj, 4);
     mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
     state->rewardIndex = 0;
-    state->rewardTimer = lbl_803E4E8C;
+    state->rewardTimer = 0.0f;
     unlockLevel(mapGetDirIdx(0x1f), 1, 0);
     if (state->light == NULL)
     {

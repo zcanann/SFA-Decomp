@@ -124,28 +124,6 @@ typedef struct EcshPuzzleState
 /* Number of cups in the shuffle puzzle (cupSlotMap[6], cupPos holds 6 (x,z) pairs). */
 #define ECSHSHRINE_CUP_COUNT 6
 
-extern f32 gEcShShrineOrbitSpeedA;
-extern f32 gEcShShrineOrbitSpeedB;
-extern f32 gEcShShrineOrbitSpeedC;
-extern f32 lbl_803E4F9C;
-extern f32 gEcShShrinePi;
-extern f32 gEcShShrineAngleUnitScale;
-extern f32 lbl_803E4FA8;
-extern f32 lbl_803E4FAC;
-extern f32 lbl_803E4FB0;
-extern f32 gEcShShrineFadeDistance;
-extern f32 gEcShShrineFadeAlphaMax;
-extern f32 lbl_803E4FC8;
-extern f32 lbl_803E4FCC;
-extern f32 lbl_803E4FD0;
-extern f32 lbl_803E4FD4;
-extern f32 lbl_803E4FD8;
-extern f32 lbl_803E4FDC;
-extern f32 lbl_803E4FE0;
-extern f32 lbl_803E4FE4;
-extern f32 lbl_803E4FE8;
-extern f32 lbl_803E4FEC;
-extern f32 lbl_803E4FF0;
 extern int lbl_803DDBC0;
 extern void* gEcShShrineActiveObject;
 extern EcshIntPair lbl_803E8470;
@@ -206,23 +184,23 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
         return;
     }
 
-    state->orbitA = (s16)(state->orbitA + (s32)(gEcShShrineOrbitSpeedA * timeDelta));
-    state->orbitB = (s16)(state->orbitB + (s32)(gEcShShrineOrbitSpeedB * timeDelta));
-    state->orbitC = (s16)(state->orbitC + (s32)(gEcShShrineOrbitSpeedC * timeDelta));
+    state->orbitA = (s16)(state->orbitA + (s32)(512.0f * timeDelta));
+    state->orbitB = (s16)(state->orbitB + (s32)(128.0f * timeDelta));
+    state->orbitC = (s16)(state->orbitC + (s32)(192.0f * timeDelta));
 
-    obj->posY = lbl_803E4F9C + (config->posY + mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale));
+    obj->posY = 20.0f + (config->posY + mathSinf((3.1415927f * state->orbitA) / 32768.0f));
 
-    trigA = mathSinf((gEcShShrinePi * state->orbitB) / gEcShShrineAngleUnitScale);
-    trigB = mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale);
+    trigA = mathSinf((3.1415927f * state->orbitB) / 32768.0f);
+    trigB = mathSinf((3.1415927f * state->orbitA) / 32768.0f);
     trigB = trigB + trigA;
-    obj->roll = lbl_803E4FA8 * trigB;
+    obj->roll = 600.0f * trigB;
 
-    trigA = mathSinf((gEcShShrinePi * state->orbitC) / gEcShShrineAngleUnitScale);
-    trigB = mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale);
+    trigA = mathSinf((3.1415927f * state->orbitC) / 32768.0f);
+    trigB = mathSinf((3.1415927f * state->orbitA) / 32768.0f);
     trigB = trigB + trigA;
-    obj->pitch = lbl_803E4FA8 * trigB;
+    obj->pitch = 600.0f * trigB;
 
-    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4FAC, timeDelta, &animEvents);
+    ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, &animEvents);
 
     if (player != NULL)
     {
@@ -237,11 +215,11 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
             angleDelta += 0xFFFF;
         }
 
-        obj->yaw = (s16)(*(s16*)(int)&obj->yaw + (s32)(((f32)angleDelta * timeDelta) / lbl_803E4FB0));
+        obj->yaw = (s16)(*(s16*)(int)&obj->yaw + (s32)(((f32)angleDelta * timeDelta) / 12.0f));
         distance = Vec_xzDistance((f32*)((int)&obj->posX), (f32*)((int)player + 0x18));
-        if (distance <= gEcShShrineFadeDistance)
+        if (distance <= 30.0f)
         {
-            obj->fadeAlpha = (u8)(s32)(gEcShShrineFadeAlphaMax * (distance / gEcShShrineFadeDistance));
+            obj->fadeAlpha = (u8)(s32)(255.0f * (distance / 30.0f));
         }
         else
         {
@@ -289,14 +267,14 @@ int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
                 obj->flags |= MMSHRINE_FLAG_POSE_LOCKED;
                 if (state->light != NULL)
                 {
-                    modelLightStruct_setEnabled(state->light, 0, lbl_803E4FC8);
+                    modelLightStruct_setEnabled(state->light, 0, 1.0f);
                 }
                 break;
             case 15:
                 obj->flags &= ~MMSHRINE_FLAG_POSE_LOCKED;
                 if (state->light != NULL)
                 {
-                    modelLightStruct_setEnabled(state->light, 0, lbl_803E4FC8);
+                    modelLightStruct_setEnabled(state->light, 0, 1.0f);
                 }
                 break;
             }
@@ -401,16 +379,16 @@ void ecsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
     {
         if (*inner != NULL)
         {
-            modelLightStruct_setEnabled((ModelLightStruct*)*inner, 0, lbl_803E4FC8);
+            modelLightStruct_setEnabled((ModelLightStruct*)*inner, 0, 1.0f);
         }
         return;
     }
     if (*inner != NULL)
     {
-        modelLightStruct_setEnabled((ModelLightStruct*)*inner, 1, lbl_803E4FC8);
+        modelLightStruct_setEnabled((ModelLightStruct*)*inner, 1, 1.0f);
     }
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4FC8);
-    objParticleFn_80099d84((GameObject*)obj, lbl_803E4FC8, 7, *(f32*)&lbl_803E4FC8, (ModelLightStruct*)*inner);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f, (ModelLightStruct*)*inner);
 }
 
 void ecsh_shrine_hitDetect(void)
@@ -490,7 +468,7 @@ void ecsh_shrine_update(s16* obj)
     SCGameBitLatch_Update((SCGameBitLatchState*)(sub + 0x34), 2, -1, -1, 0xb9d, 0xd);
     SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(sub + 0x34), 1, -1, -1, 0xcbb, 8);
     SCGameBitLatch_Update((SCGameBitLatchState*)(sub + 0x34), 0x10, -1, -1, 0xcbb, 0xc4);
-    if (((EcshShrineState*)sub)->cooldownTimer > (zero = *(f32*)&lbl_803E4FCC))
+    if (((EcshShrineState*)sub)->cooldownTimer > (zero = 0.0f))
     {
         ((EcshShrineState*)sub)->cooldownTimer = ((EcshShrineState*)sub)->cooldownTimer - timeDelta;
         if (((EcshShrineState*)sub)->cooldownTimer <= zero)
@@ -526,7 +504,7 @@ void ecsh_shrine_update(s16* obj)
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 Music_Trigger(MUSICTRIG_DIM_Snow, 1);
                 {
-                    f32 fz = lbl_803E4FCC;
+                    f32 fz = 0.0f;
                     ps->cupPos[0] = fz;
                     ps->cupPos[1] = fz;
                     ps->cupPos[2] = fz;
@@ -553,10 +531,10 @@ void ecsh_shrine_update(s16* obj)
             if (sub[0x30] == 1)
             {
                 sub[0x2f] = 2;
-                ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FD0;
+                ((EcshShrineState*)sub)->cooldownTimer = 200.0f;
                 ((EcshShrineState*)sub)->animState = 6;
                 Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
-                ((EcshShrineState*)sub)->animTimer = lbl_803E4FCC;
+                ((EcshShrineState*)sub)->animTimer = 0.0f;
                 mainSetBits(GAMEBIT_ECSH_TestObservRunning, 1);
                 (*gScreenTransitionInterface)->step(0x78, 1);
             }
@@ -564,9 +542,9 @@ void ecsh_shrine_update(s16* obj)
             break;
         case 2:
             sub[0x2f] = 3;
-            ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FD4;
+            ((EcshShrineState*)sub)->cooldownTimer = 80.0f;
             ((EcshShrineState*)sub)->animState = 8;
-            ((EcshShrineState*)sub)->animTimer = lbl_803E4FD8;
+            ((EcshShrineState*)sub)->animTimer = 40.0f;
             ((EcshShrineState*)sub)->shuffleCount = 5;
             gv = randomGetRange(0, 5);
             sub[0x2e] = gv;
@@ -575,7 +553,7 @@ void ecsh_shrine_update(s16* obj)
         case 3:
         case 4:
         case 5:
-            if (((EcshShrineState*)sub)->animTimer > (fv = lbl_803E4FCC))
+            if (((EcshShrineState*)sub)->animTimer > (fv = 0.0f))
             {
                 if (((EcshShrineState*)sub)->animState == 1 && sub[0x31] == 0 &&
                     ((EcshShrineState*)sub)->animTimer < *(f32*)(sub + 0x14))
@@ -587,9 +565,9 @@ void ecsh_shrine_update(s16* obj)
                     sub[0x31] = 1;
                 }
                 ((EcshShrineState*)sub)->animTimer = ((EcshShrineState*)sub)->animTimer - timeDelta;
-                if (((EcshShrineState*)sub)->animTimer < lbl_803E4FCC)
+                if (((EcshShrineState*)sub)->animTimer < 0.0f)
                 {
-                    ((EcshShrineState*)sub)->animTimer = *(f32*)&lbl_803E4FCC;
+                    ((EcshShrineState*)sub)->animTimer = 0.0f;
                 }
             }
             else
@@ -598,18 +576,18 @@ void ecsh_shrine_update(s16* obj)
                 {
                 case 8:
                     ((EcshShrineState*)sub)->animState = 2;
-                    ((EcshShrineState*)sub)->animTimer = lbl_803E4FD8;
-                    ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FDC;
+                    ((EcshShrineState*)sub)->animTimer = 40.0f;
+                    ((EcshShrineState*)sub)->cooldownTimer = 60.0f;
                     break;
                 case 9:
                     ((EcshShrineState*)sub)->animState = 8;
-                    ((EcshShrineState*)sub)->animTimer = lbl_803E4FD8;
-                    ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FDC;
+                    ((EcshShrineState*)sub)->animTimer = 40.0f;
+                    ((EcshShrineState*)sub)->cooldownTimer = 60.0f;
                     break;
                 case 7:
                     ((EcshShrineState*)sub)->animState = 3;
-                    ((EcshShrineState*)sub)->animTimer = lbl_803E4FD8;
-                    ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FDC;
+                    ((EcshShrineState*)sub)->animTimer = 40.0f;
+                    ((EcshShrineState*)sub)->cooldownTimer = 60.0f;
                     break;
                 case 2:
                     ((EcshShrineState*)sub)->shuffleCount -= 1;
@@ -619,15 +597,15 @@ void ecsh_shrine_update(s16* obj)
                         ((EcshShrineState*)sub)->animState = 5;
                         if (sub[0x2f] == 3)
                         {
-                            *(f32*)(sub + 0xc) = lbl_803E4FA8;
+                            *(f32*)(sub + 0xc) = 600.0f;
                         }
                         else if (sub[0x2f] == 4)
                         {
-                            *(f32*)(sub + 0xc) = lbl_803E4FA8;
+                            *(f32*)(sub + 0xc) = 600.0f;
                         }
                         else
                         {
-                            *(f32*)(sub + 0xc) = lbl_803E4FA8;
+                            *(f32*)(sub + 0xc) = 600.0f;
                         }
                     }
                     else
@@ -636,7 +614,7 @@ void ecsh_shrine_update(s16* obj)
                         *(f32*)(sub + 0x14) = (f32)(int)randomGetRange(0x28, 0x3c);
                         Sfx_PlayFromObject(obj, SFXTRIG_spirit_basketspin);
                         ((EcshShrineState*)sub)->animState = 0;
-                        ((EcshShrineState*)sub)->animTimer = lbl_803E4FE0;
+                        ((EcshShrineState*)sub)->animTimer = 2.0f;
                         if (sub[0x2f] == 3)
                         {
                             pick = randomGetRange(0, 1);
@@ -729,7 +707,7 @@ void ecsh_shrine_update(s16* obj)
                     break;
                 case 0:
                     ((EcshShrineState*)sub)->animState = 1;
-                    ((EcshShrineState*)sub)->animTimer = lbl_803E4FE4;
+                    ((EcshShrineState*)sub)->animTimer = 100.0f;
                     break;
                 case 1:
                     ((EcshShrineState*)sub)->animState = 4;
@@ -744,7 +722,7 @@ void ecsh_shrine_update(s16* obj)
                     if (((EcshShrineState*)sub)->matchFlag == 0)
                     {
                         (*gScreenTransitionInterface)->start(0x1e, 1);
-                        ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FE8;
+                        ((EcshShrineState*)sub)->cooldownTimer = 31.0f;
                         ((EcshShrineState*)sub)->animState = 7;
                         Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
                         sub[0x2f] = 10;
@@ -757,8 +735,8 @@ void ecsh_shrine_update(s16* obj)
                             sub[0x2e] = gv;
                             sub[0x2f] = 4;
                             ((EcshShrineState*)sub)->animState = 9;
-                            ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FEC;
-                            ((EcshShrineState*)sub)->animTimer = lbl_803E4FB0;
+                            ((EcshShrineState*)sub)->cooldownTimer = 150.0f;
+                            ((EcshShrineState*)sub)->animTimer = 12.0f;
                             ((EcshShrineState*)sub)->shuffleCount = 7;
                             ((EcshShrineState*)sub)->matchFlag = -1;
                             Sfx_PlayFromObject(obj, SFXTRIG_sc_menuups16k);
@@ -770,8 +748,8 @@ void ecsh_shrine_update(s16* obj)
                             sub[0x2e] = gv;
                             sub[0x2f] = 5;
                             ((EcshShrineState*)sub)->animState = 9;
-                            ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FEC;
-                            ((EcshShrineState*)sub)->animTimer = lbl_803E4FB0;
+                            ((EcshShrineState*)sub)->cooldownTimer = 150.0f;
+                            ((EcshShrineState*)sub)->animTimer = 12.0f;
                             ((EcshShrineState*)sub)->shuffleCount = 9;
                             ((EcshShrineState*)sub)->matchFlag = -1;
                             Sfx_PlayFromObject(obj, SFXTRIG_sc_menuups16k);
@@ -779,7 +757,7 @@ void ecsh_shrine_update(s16* obj)
                         }
                         else
                         {
-                            ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FE8;
+                            ((EcshShrineState*)sub)->cooldownTimer = 31.0f;
                             (*gScreenTransitionInterface)->start(0x1e, 1);
                             sub[0x2f] = 6;
                             ((EcshShrineState*)sub)->animState = 3;
@@ -792,11 +770,11 @@ void ecsh_shrine_update(s16* obj)
                     else
                     {
                         *(f32*)(sub + 0xc) = *(f32*)(sub + 0xc) - timeDelta;
-                        if (*(f32*)(sub + 0xc) <= lbl_803E4FCC)
+                        if (*(f32*)(sub + 0xc) <= 0.0f)
                         {
                             sub[0x2f] = 10;
                             (*gScreenTransitionInterface)->start(0x1e, 1);
-                            ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FE8;
+                            ((EcshShrineState*)sub)->cooldownTimer = 31.0f;
                             ((EcshShrineState*)sub)->animState = 7;
                             Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
                         }
@@ -836,7 +814,7 @@ void ecsh_shrine_update(s16* obj)
             ((EcshShrineState*)sub)->matchFlag = -1;
             sub[0x2e] = 0;
             sub[0x30] = 0;
-            ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FF0;
+            ((EcshShrineState*)sub)->cooldownTimer = 400.0f;
             mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
             mainSetBits(GAMEBIT_ECSH_TestObservRunning, 0);
             mainSetBits(0xa6d, 0);
@@ -860,7 +838,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     *obj = (s16)((s32)def[0x18] << 8);
     ((EcshShrineState*)sub)->testPhase = 0;
     ((EcshShrineState*)sub)->transitionReady = 0;
-    ((EcshShrineState*)sub)->animTimer = lbl_803E4FCC;
+    ((EcshShrineState*)sub)->animTimer = 0.0f;
     ((EcshShrineState*)sub)->scale = 0;
     ((EcshShrineState*)sub)->shuffleCount = 0;
     ((EcshShrineState*)sub)->animState = 0;
@@ -874,7 +852,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     mainSetBits(GAMEBIT_WM_Spirit1Related_0143, 0);
     ((EcshShrineState*)sub)->unk18 = 0xc;
     ((EcshShrineState*)sub)->unk1C = 0x1e;
-    ((EcshShrineState*)sub)->cooldownTimer = lbl_803E4FD0;
+    ((EcshShrineState*)sub)->cooldownTimer = 200.0f;
     ((EcshShrineState*)sub)->unk1A = 0;
     ((EcshShrineState*)sub)->unk1E = 0;
     gv = mainGetBit(GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER);

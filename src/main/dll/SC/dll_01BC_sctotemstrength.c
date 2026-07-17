@@ -38,22 +38,6 @@ u16 lbl_803DC070[4] = {0x2B6, 0x2D7, 0x2D8, 0};
 extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 int gTotemStrengthDeactivateTimer;
-extern const f32 lbl_803E5668;
-extern const f32 lbl_803E566C;
-extern const f32 lbl_803E5670;
-extern const f32 lbl_803E5674;
-extern const f32 lbl_803E5678;
-extern const f32 lbl_803E567C;
-extern const f32 lbl_803E5680;
-extern const f32 lbl_803E5684;
-extern f32 lbl_803E5688;
-extern const f32 lbl_803E568C;
-extern const f32 lbl_803E5690;
-extern f32 lbl_803E5694;
-extern f32 lbl_803E5698;
-extern const f32 lbl_803E569C;
-extern f32 lbl_803E56A0;
-extern f32 lbl_803E56A4;
 
 /* Camera mode id passed to setMode()/getMode() (== the target camera-mode DLL number). */
 #define CAMMODE_STATIC 0x48 /* dll_0048_cameramodestatic */
@@ -163,8 +147,8 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
         case 5:
             if ((u32)st->linkedObject != 0)
             {
-                playerObj->anim.currentMoveProgress = lbl_803E5668;
-                ((GameObject*)st->linkedObject)->anim.currentMoveProgress = lbl_803E5668;
+                playerObj->anim.currentMoveProgress = 0.5f;
+                ((GameObject*)st->linkedObject)->anim.currentMoveProgress = 0.5f;
                 ObjAnim_SetCurrentMove(player, PLATFORM1_PLAYER_PULL_MOVE_ID, playerObj->anim.currentMoveProgress, 0);
                 ObjAnim_SetCurrentMove(st->linkedObject, PLATFORM1_IDLE_PULL_MOVE_ID,
                                        ((GameObject*)st->linkedObject)->anim.currentMoveProgress, 0);
@@ -209,29 +193,29 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
                 ret = 0;
                 goto done;
             }
-            wob1 = (f32)(st->currentTrackOffset + 0xb24) / lbl_803E566C;
-            wob2 = lbl_803E5674 * wob1 + lbl_803E5670;
-            if (wob2 < lbl_803E5678)
+            wob1 = (f32)(st->currentTrackOffset + 0xb24) / -15288.0f;
+            wob2 = 2.0f * wob1 + -1.0f;
+            if (wob2 < 0.0f)
             {
                 wob2 = -wob2;
             }
-            push = lbl_803E5684 * wob1 + lbl_803E5680;
-            push = push * wob2 + lbl_803E567C;
+            push = 1.7f * wob1 + 0.2f;
+            push = push * wob2 + 1.0f;
             buttons = getButtonsJustPressedIfNotBusy(0);
             if ((buttons & PAD_BUTTON_A) != 0 && isGameTimerDisabled() == 0)
             {
-                st->offsetVelocity = st->offsetVelocity - lbl_803E5688;
+                st->offsetVelocity = st->offsetVelocity - 2.7f;
             }
-            if (st->offsetVelocity < lbl_803E568C)
+            if (st->offsetVelocity < -40.0f)
             {
-                st->offsetVelocity = *(const f32*)&lbl_803E568C;
+                st->offsetVelocity = -40.0f;
             }
             if (st->currentTrackOffset >= PLATFORM1_TRACK_EXIT_NEG &&
                 st->currentTrackOffset <= PLATFORM1_TRACK_EXIT_POS)
             {
                 st->currentTrackOffset = (int)((f32)st->currentTrackOffset + st->offsetVelocity);
             }
-            diff = ((f32)st->prevTrackOffset - st->currentTrackOffset) / lbl_803E5690;
+            diff = ((f32)st->prevTrackOffset - st->currentTrackOffset) / 40.0f;
             if (st->currentTrackOffset < PLATFORM1_TRACK_EXIT_NEG)
             {
                 st->transitionStep = 0;
@@ -248,7 +232,7 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
                         break;
                     }
                 }
-                fn_801DE320(lbl_803DC070, (int)(fn_8001461C() / lbl_803E5694));
+                fn_801DE320(lbl_803DC070, (int)(fn_8001461C() / 10.0f));
                 hudFn_8011f38c(0);
                 if (st->loopSfxHandle > 0)
                 {
@@ -289,32 +273,32 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
             {
                 (*gObjectTriggerInterface)->setXrot(st->loopSfxHandle, st->currentTrackOffset);
             }
-            if (st->offsetVelocity < lbl_803E5690)
+            if (st->offsetVelocity < 40.0f)
             {
-                st->offsetVelocity = lbl_803E5698 * push + st->offsetVelocity;
+                st->offsetVelocity = 0.19f * push + st->offsetVelocity;
             }
             if (ObjAnim_AdvanceCurrentMove(
-                    player, ((f32)st->prevTrackOffset - st->currentTrackOffset) / lbl_803E569C, timeDelta, 0) != 0 &&
-                playerObj->anim.currentMoveProgress < lbl_803E5678)
+                    player, ((f32)st->prevTrackOffset - st->currentTrackOffset) / 9500.0f, timeDelta, 0) != 0 &&
+                playerObj->anim.currentMoveProgress < 0.0f)
             {
-                playerObj->anim.currentMoveProgress = lbl_803E567C + playerObj->anim.currentMoveProgress;
+                playerObj->anim.currentMoveProgress = 1.0f + playerObj->anim.currentMoveProgress;
             }
             if (ObjAnim_AdvanceCurrentMove(
-                    st->linkedObject, ((f32)st->currentTrackOffset - st->prevTrackOffset) / lbl_803E569C, timeDelta,
+                    st->linkedObject, ((f32)st->currentTrackOffset - st->prevTrackOffset) / 9500.0f, timeDelta,
                     0) != 0)
             {
                 progress = ((GameObject*)st->linkedObject)->anim.currentMoveProgress;
-                if (progress < lbl_803E5678)
+                if (progress < 0.0f)
                 {
-                    ((GameObject*)st->linkedObject)->anim.currentMoveProgress = lbl_803E567C + progress;
+                    ((GameObject*)st->linkedObject)->anim.currentMoveProgress = 1.0f + progress;
                 }
             }
             st->prevTrackOffset = st->currentTrackOffset;
         }
         st->playerSfxTimer = st->playerSfxTimer - timeDelta;
-        if (st->playerSfxTimer < *(f32*)&lbl_803E5678)
+        if (st->playerSfxTimer < 0.0f)
         {
-            if (diff < lbl_803E5678)
+            if (diff < 0.0f)
             {
                 st->playerSfxTimer = (f32)(int)randomGetRange(0x28, 100);
             }
@@ -325,9 +309,9 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
             Sfx_PlayFromObject(player, PLATFORM1_PLAYER_SFX_ID);
         }
         st->platformSfxTimer = st->platformSfxTimer - timeDelta;
-        if (st->platformSfxTimer < *(f32*)&lbl_803E5678)
+        if (st->platformSfxTimer < 0.0f)
         {
-            if (diff > lbl_803E5678)
+            if (diff > 0.0f)
             {
                 st->platformSfxTimer = (f32)(int)randomGetRange(0x28, 100);
             }
@@ -337,7 +321,7 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
             }
             Sfx_PlayFromObject((int)obj, PLATFORM1_PLATFORM_SFX_ID);
         }
-        if (diff < lbl_803E5678)
+        if (diff < 0.0f)
         {
             absDiff = -diff;
         }
@@ -345,12 +329,12 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
         {
             absDiff = diff;
         }
-        vol = (int)(lbl_803E56A0 * absDiff);
+        vol = (int)(100.0f * absDiff);
         if (vol > 100)
         {
             vol = 100;
         }
-        Sfx_SetObjectSfxVolume((int)obj, PLATFORM1_LOOP_SFX_ID, vol & 0xff, lbl_803E56A4);
+        Sfx_SetObjectSfxVolume((int)obj, PLATFORM1_LOOP_SFX_ID, vol & 0xff, 127.0f);
         ret = 0;
     }
 done:
@@ -373,7 +357,7 @@ void sc_totemstrength_free(void)
 
 void sc_totemstrength_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E567C);
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void sc_totemstrength_hitDetect(void)
@@ -435,8 +419,8 @@ void sc_totemstrength_update(u8* obj)
                 ((GameObject*)obj)->anim.rotX = -0x2900;
                 st->currentTrackOffset = -0x2900;
                 st->prevTrackOffset = st->currentTrackOffset;
-                zero = lbl_803E5678;
-                st->motionValue0 = lbl_803E5678;
+                zero = 0.0f;
+                st->motionValue0 = 0.0f;
                 st->offsetVelocity = zero;
                 st->transitionStep = 1;
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_FLAG_01);

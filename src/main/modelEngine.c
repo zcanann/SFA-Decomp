@@ -611,19 +611,19 @@ void gameTimerRun(void)
 
     if ((gModelEngineTimerState & MODELENGINE_TIMER_COUNTDOWN) || getHudHiddenFrameCount() != 0)
     {
-        dt = lbl_803DE6B8;
+        dt = 0.0f;
     }
 
     clamped = 0;
     if ((gModelEngineTimerFlags & 1) != 0)
     {
         gModelEngineTimerValue -= dt;
-        if (gModelEngineTimerValue <= *(f32*)&lbl_803DE6B8)
+        if (gModelEngineTimerValue <= 0.0f)
         {
             clamped = 1;
-            gModelEngineTimerValue = lbl_803DE6B8;
+            gModelEngineTimerValue = 0.0f;
         }
-        if (gModelEngineTimerValue < lbl_803DE6BC)
+        if (gModelEngineTimerValue < 600.0f)
         {
             colorFlag = 1;
         }
@@ -636,7 +636,7 @@ void gameTimerRun(void)
             clamped = 1;
             gModelEngineTimerValue = gModelEngineTimerDuration;
         }
-        if (gModelEngineTimerValue > gModelEngineTimerDuration - lbl_803DE6BC)
+        if (gModelEngineTimerValue > gModelEngineTimerDuration - 600.0f)
         {
             colorFlag = 1;
         }
@@ -659,13 +659,13 @@ void gameTimerRun(void)
         Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_sc_commsbleep_28c);
         if ((gModelEngineTimerFlags & 1) != 0)
         {
-            panByte = (f32)(0x7F - ((int)(lbl_803DE6C0 * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF));
-            volume = lbl_803DE6C4 - lbl_803DE6C8 * (gModelEngineTimerValue / gModelEngineTimerDuration);
+            panByte = (f32)(0x7F - ((int)(80.0f * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF));
+            volume = 1.3f - 0.6f * (gModelEngineTimerValue / gModelEngineTimerDuration);
         }
         else
         {
-            panByte = (f32)(((int)(lbl_803DE6C0 * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF) + 0x2F);
-            volume = lbl_803DE6C8 * (gModelEngineTimerValue / gModelEngineTimerDuration) + lbl_803DE6CC;
+            panByte = (f32)(((int)(80.0f * (gModelEngineTimerValue / gModelEngineTimerDuration)) & 0xFF) + 0x2F);
+            volume = 0.6f * (gModelEngineTimerValue / gModelEngineTimerDuration) + 0.7f;
         }
         Sfx_SetObjectSfxVolume(0, SFXTRIG_sc_commsbleep_28c, panByte, volume);
     }
@@ -676,7 +676,7 @@ void gameTimerRun(void)
         mins = totalSecs / 60;
         hours = mins / 60;
         minutes = mins - hours * 60;
-        hundredths = (int)(lbl_803DE6D0 * (gModelEngineTimerValue / lbl_803DE6D4));
+        hundredths = (int)(100.0f * (gModelEngineTimerValue / 60.0f));
         hundredths = hundredths - hundredths / 100 * 100;
 
         boxY = getMinimapY() - 0x28;
@@ -716,9 +716,9 @@ f32 fn_8001461C(void)
 {
     if (((s8)gModelEngineTimerFlags & 1) != 0)
     {
-        return lbl_803DE6E0 * ((gModelEngineTimerDuration - gModelEngineTimerValue) / lbl_803DE6D4);
+        return 1000.0f * ((gModelEngineTimerDuration - gModelEngineTimerValue) / 60.0f);
     }
-    return lbl_803DE6E0 * (gModelEngineTimerValue / lbl_803DE6D4);
+    return 1000.0f * (gModelEngineTimerValue / 60.0f);
 }
 
 f32 fn_80014668(void)
@@ -754,7 +754,7 @@ void gameTimerInit(s8 flags, int minutes)
     }
     else
     {
-        gModelEngineTimerValue = lbl_803DE6B8;
+        gModelEngineTimerValue = 0.0f;
     }
     gModelEngineTimerDuration = minutes * 60;
     gModelEngineTimerState |= MODELENGINE_TIMER_COUNTDOWN;

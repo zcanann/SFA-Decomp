@@ -51,6 +51,7 @@ main/modelEngine.c:
 	.bss        start:0x80338818 end:0x803398B0
 	.sdata      start:0x803DB278 end:0x803DB2A8
 	.sbss       start:0x803DC8E8 end:0x803DC908
+	.sdata2     start:0x803DE6B8 end:0x803DE6E4
 
 main/pad.c:
 	.text       start:0x80014A28 end:0x80015624
@@ -341,6 +342,7 @@ main/dll/dll_001F_effect6.c:
 	.data       start:0x80310A20 end:0x80310A78
 	.sdata      start:0x803DB7F0 end:0x803DB800
 	.sbss       start:0x803DD370 end:0x803DD380
+	.sdata2     start:0x803DFC80 end:0x803DFCD8
 
 main/dll/dll_0020_effect7.c:
 	.text       start:0x800BE034 end:0x800BF978
@@ -1522,6 +1524,7 @@ main/dll/dll_00DA_pollenfragment.c:
 	.text       start:0x8016A8E0 end:0x8016B230
 	.data       start:0x80320538 end:0x803205E8
 	.sdata      start:0x803DBD48 end:0x803DBD50
+	.sdata2     start:0x803E3158 end:0x803E31A0
 
 main/dll/dll_00DB_mikabomb.c:
 	.text       start:0x8016B230 end:0x8016B710
@@ -2121,6 +2124,7 @@ main/dll/dll_0159_blasted.c:
 main/dll/dll_015A_explodable.c:
 	.text       start:0x801A2BDC end:0x801A39B4
 	.data       start:0x80322DA0 end:0x80322ED8
+	.sdata2     start:0x803E4350 end:0x803E4390
 
 main/dll/CF/dll_015B_cfforcefield.c:
 	.text       start:0x801A39B4 end:0x801A3E9C
@@ -2151,6 +2155,7 @@ main/dll/CF/dll_0164_cflevelcontrol.c:
 
 main/dll/dll_0166_exploded.c:
 	.text       start:0x801A4DB8 end:0x801A57E8
+	.sdata2     start:0x803E43F0 end:0x803E442C
 
 main/dll/dll_0167_spiritdoorlock.c:
 	.text       start:0x801A57E8 end:0x801A5D88
@@ -2537,6 +2542,7 @@ main/dll/DF/dll_0178_dfshshrine.c:
 	.text       start:0x801C2914 end:0x801C3618
 	.data       start:0x80325F88 end:0x80326048
 	.sdata      start:0x803DBF60 end:0x803DBF68
+	.sdata2     start:0x803E4E50 end:0x803E4E98
 
 main/dll/dll_017A_spiritprize.c:
 	.text       start:0x801C3618 end:0x801C3B68
@@ -2570,6 +2576,7 @@ main/dll/dll_018E_mmshwaterspike.c:
 main/dll/dll_018F_ecshshrine.c:
 	.text       start:0x801C5990 end:0x801C6E0C
 	.data       start:0x80326208 end:0x80326324
+	.sdata2     start:0x803E4F90 end:0x803E4FF4
 
 main/dll/dll_0191_ecshcreator.c:
 	.text       start:0x801C6E0C end:0x801C70F0
@@ -2578,6 +2585,7 @@ main/dll/dll_0191_ecshcreator.c:
 main/dll/dll_0192_gpshshrine.c:
 	.text       start:0x801C70F0 end:0x801C8084
 	.data       start:0x80326360 end:0x803263B8
+	.sdata2     start:0x803E5000 end:0x803E5044
 
 main/dll/dll_0193_gpshobjcreator.c:
 	.text       start:0x801C8084 end:0x801C82C8
@@ -2793,6 +2801,7 @@ main/dll/SC/dll_01BC_sctotemstrength.c:
 	.data       start:0x80327AB8 end:0x80327AF0
 	.sdata      start:0x803DC070 end:0x803DC078
 	.sbss       start:0x803DDC10 end:0x803DDC18
+	.sdata2     start:0x803E5668 end:0x803E56B0
 
 main/dll/dll_01BD_paymentkiosk.c:
 	.text       start:0x801DF110 end:0x801DF4AC
@@ -3315,6 +3324,7 @@ main/snowclaw.c:
 	.data       start:0x8032A310 end:0x8032A3C8
 	.sdata      start:0x803DC218 end:0x803DC228
 	.sbss       start:0x803DDD38 end:0x803DDD40
+	.sdata2     start:0x803E66E0 end:0x803E673C
 
 main/crcloudrace.c:
 	.text       start:0x802106C0 end:0x80210BE8
@@ -3380,6 +3390,7 @@ main/dll/DR/dll_0261_drlasercannon.c:
 main/dll/dll_0262_drakormissile.c:
 	.text       start:0x80217F24 end:0x80218B24
 	.sdata      start:0x803DC2B0 end:0x803DC2C0
+	.sdata2     start:0x803E6940 end:0x803E6978
 
 main/dll/dll_0263_gmmazewell.c:
 	.text       start:0x80218B24 end:0x80218EE8
@@ -3669,6 +3680,7 @@ main/dll/dll_02AE_waterflowwe.c:
 main/dll/dll_02AF_tree.c:
 	.text       start:0x802356CC end:0x80236154
 	.data       start:0x8032BBE0 end:0x8032BCC8
+	.sdata2     start:0x803E72F8 end:0x803E7338
 
 main/dll/dll_02B0_brokenpipe.c:
 	.text       start:0x80236154 end:0x80236298

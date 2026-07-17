@@ -51,20 +51,9 @@ void drakormissile_free(GameObject* obj);
 void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible);
 void drakormissile_init(GameObject* obj, DrakorMissileSetup* setup);
 
-extern f32 lbl_803E6940;
-extern f32 lbl_803E6944;
-extern f32 lbl_803E6948;
-extern f32 lbl_803E694C;
-extern f32 lbl_803E6950;
-extern f32 lbl_803E6954;
-extern f32 lbl_803E6958;
-extern f32 lbl_803E6964;
-extern f32 lbl_803E6960;
 extern f32 lbl_803DC2B0;
 extern f32 lbl_803DC2B4;
 extern f32 lbl_803DC2B8;
 extern f32 gDrakorMissileProximityDetonateDist;
-extern f32 gDrakorMissileFadeOutDuration;
-extern f32 lbl_803E695C;
 
 #endif /* MAIN_DLL_DLL_0262_DRAKORMISSILE_H_ */
