@@ -5,6 +5,6 @@
 
 int adsrStartRelease(int state, int divisor);
 int adsrRelease(int state);
-int adsrHandle(int state, s16 *out1, s16 *out2);
+u32 adsrHandle(int state, u16 *out1, u16 *out2);
 
 #endif /* MAIN_AUDIO_ADSR_HANDLE_H_ */

@@ -4132,25 +4132,10 @@ main/audio/synth_ac.c:
 	.sdata2     start:0x803E7818 end:0x803E782C
 
 main/audio/synth_adsr.c:
-	extab       start:0x80005990 end:0x80005998
-	extabindex  start:0x800061E8 end:0x800061F4
-	.text       start:0x8027A60C end:0x8027A660
-	.sdata2     start:0x803E7830 end:0x803E7848
-
-main/audio/adsr_setup.c:
-	extab       start:0x80005998 end:0x800059A0
-	extabindex  start:0x800061F4 end:0x80006200
-	.text       start:0x8027A660 end:0x8027A8FC
-
-main/audio/adsr_handle.c:
-	extab       start:0x800059A0 end:0x800059B8
-	extabindex  start:0x80006200 end:0x80006224
-	.text       start:0x8027A8FC end:0x8027AC34
-
-main/audio/adsr_lowprec.c:
-	extab       start:0x800059B8 end:0x800059C0
-	extabindex  start:0x80006224 end:0x80006230
-	.text       start:0x8027AC34 end:0x8027ACB8
+	extab       start:0x80005990 end:0x800059C0
+	extabindex  start:0x800061E8 end:0x80006230
+	.text       start:0x8027A60C end:0x8027ACB8
+	.sdata2     start:0x803E7830 end:0x803E7858
 
 main/audio/vsample_alloc.c:
 	extab       start:0x800059C0 end:0x800059C8
