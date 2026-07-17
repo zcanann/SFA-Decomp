@@ -458,12 +458,14 @@ void worldplanet_update(GameObject* obj)
         {
             u32 ang;
             f32 r;
-            b = 0;
-            ang = -(obj)->anim.rotZ & 0xffff;
-            for (; b < WORLDPLANET_PLANET_COUNT; b++)
             {
-                int planetObj = ObjList_FindObjectByIdLegacy(tbl[2][b]);
-                ((GameObject*)planetObj)->anim.rotZ = -ang;
+                u8 spin = 0;
+                ang = -(obj)->anim.rotZ & 0xffff;
+                for (; spin < WORLDPLANET_PLANET_COUNT; spin++)
+                {
+                    int planetObj = ObjList_FindObjectByIdLegacy(tbl[2][spin]);
+                    ((GameObject*)planetObj)->anim.rotZ = -ang;
+                }
             }
             for (b = 0, r = gWorldPlanetOrbitRadius; b < WORLDPLANET_PLANET_COUNT; b++)
             {
