@@ -4560,7 +4560,7 @@ dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c:
 	.text       start:0x80291CBC end:0x80291F44
 	.sdata2     start:0x803E7978 end:0x803E79C0
 
-dolphin/MSL_C/PPCEABI/bare/H/k_sin.c:
+main/acosf.c:
 	.text       start:0x80291F44 end:0x802923C4
 
 main/atan2f.c:
