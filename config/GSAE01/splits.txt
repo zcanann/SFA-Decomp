@@ -3907,15 +3907,6 @@ dolphin/card/CARDMount.c:
 	.text       start:0x80261A7C end:0x8026253C
 	.data       start:0x8032ED40 end:0x8032ED80
 
-main/audio/mcmd_data.c:
-	.data       start:0x8032EDD0 end:0x8032F218
-
-dolphin/gx/GXTextureTables.c:
-	.data       start:0x8032F218 end:0x8032F618
-
-main/audio/adsr_data.c:
-	.data       start:0x8032F618 end:0x8032FDA0
-
 dolphin/card/CARDFormat.c:
 	.text       start:0x8026253C end:0x80262D2C
 
@@ -3986,6 +3977,16 @@ main/audio/synth_seq_dispatch.c:
 	extab       start:0x80005660 end:0x80005680
 	extabindex  start:0x80005D20 end:0x80005D50
 	.text       start:0x8026E0E4 end:0x8026EC44
+	.data       start:0x8032ED80 end:0x8032EDD0
+
+main/audio/mcmd_data.c:
+	.data       start:0x8032EDD0 end:0x8032F218
+
+dolphin/gx/GXTextureTables.c:
+	.data       start:0x8032F218 end:0x8032F618
+
+main/audio/adsr_data.c:
+	.data       start:0x8032F618 end:0x8032FDA0
 
 main/audio/synth_seq_queue.c:
 	.text       start:0x8026EC44 end:0x8026EC44
