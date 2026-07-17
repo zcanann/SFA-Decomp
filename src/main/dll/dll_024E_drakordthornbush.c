@@ -38,6 +38,7 @@
 int gThornBushLightningHitTable[2] = {15, 14};
 int gThornBushThornHitTable[2] = {5, 5};
 f32 gThornBushLightningTimerInit = 300.0f;
+static int lbl_803DC1B4[1] = {0};
 
 /* object def numbers selecting the two thornbush variants (anim.seqId) */
 #define THORNBUSH_SEQ_LIGHTNING          0x709
