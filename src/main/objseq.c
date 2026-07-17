@@ -1084,7 +1084,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, s8 flags, void
     u8* entry;
     int opcode;
     int sub;
-    s8 restart;
+    int restart;
     int reps;
     int val;
     int slot;
