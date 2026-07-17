@@ -4,11 +4,13 @@ r"""Search the GC/2.0 reference-asm corpus built by build_corpus.py.
 Answers the SFA playbook question "what C produces this asm shape, under our compiler?"
 by searching real, SFA-adjacent reference C recompiled with MWCC GC/2.0.
 
-    # find an asm shape (regex over normalized instructions), show the C that emits it
-    python3 tools/refcorpus/search_corpus.py --asm 'rlwinm[^.].*0x7f' --show-c
+    # find compact, size-ranked function candidates for an asm shape
+    python3 tools/refcorpus/search_corpus.py --asm 'rlwinm[^.].*0x7f'
     # find an instruction sequence in order (mnemonics, gaps allowed)
     python3 tools/refcorpus/search_corpus.py --seq 'extsb. rlwimi'
-    # go the other way: grep the reference C, show the asm GC/2.0 gave it
+    # inspect the complete assembly and C only after selecting a result
+    python3 tools/refcorpus/search_corpus.py --show rc_0123456789ab
+    # go the other way: find compiled functions containing matching reference C
     python3 tools/refcorpus/search_corpus.py --csrc 'for *\(.*u8 ' --profile both_on
     # scope / limit
     python3 tools/refcorpus/search_corpus.py --asm 'psq_l' --project dkr --limit 20
@@ -20,6 +22,7 @@ Profiles: both_off (SFA default), peep_on, sched_on, both_on, or 'all'. Default:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -43,6 +46,12 @@ class Func:
     sym: str          # symbol == C function name (MWCC doesn't mangle C)
     insns: List[str]  # normalized "mnemonic operands" lines
     text: str         # "\n".join(insns), for regex search
+
+    @property
+    def result_id(self) -> str:
+        identity = "\0".join((self.project, self.profile, self.src, self.sym))
+        digest = hashlib.blake2s(identity.encode(), digest_size=6).hexdigest()
+        return f"rc_{digest}"
 
 
 def _normalize_insn(line: str) -> Optional[str]:
@@ -120,7 +129,7 @@ def extract_c_function(src: str, sym: str) -> Optional[str]:
         # capture from line i until the body braces balance
         depth = 0
         buf: List[str] = []
-        for j in range(i, min(len(lines), i + 400)):
+        for j in range(i, len(lines)):
             buf.append(lines[j])
             depth += lines[j].count("{") - lines[j].count("}")
             if "{" in "\n".join(buf) and depth <= 0:
@@ -180,24 +189,62 @@ def search_asm(funcs: List[Func], pattern: str, flags: int) -> List[tuple]:
     return hits
 
 
-def print_asm_hit(f: Func, start: int, end: int, context: int, show_c: bool):
-    # translate char offsets to line indices
+def _match_instruction_span(f: Func, start: int, end: int) -> int:
     pre = f.text.count("\n", 0, start)
     post = f.text.count("\n", 0, end)
-    lo, hi = max(0, pre - context), min(len(f.insns), post + context + 1)
-    print(f"\n\033[1m{f.project}/{f.profile}\033[0m  {f.src} :: \033[36m{f.sym}\033[0m")
-    for k in range(lo, hi):
-        mark = ">" if pre <= k <= post else " "
-        print(f"    {mark} {f.insns[k]}")
-    if show_c:
-        c = extract_c_function(f.src, f.sym)
-        if c:
-            print("    --- C ---")
-            for cl in c.splitlines():
-                print(f"      {cl}")
+    return max(1, post - pre + 1)
 
 
-def do_csrc(pattern: str, projects, profile: str, limit: int, context: int):
+def _hit_sort_key(hit: tuple) -> tuple:
+    f, start, end = hit
+    return (
+        len(f.insns),
+        _match_instruction_span(f, start, end),
+        f.project,
+        f.src,
+        f.sym,
+        f.profile,
+    )
+
+
+def print_discovery(hits: List[tuple], total: int, profile: str, limit: int) -> None:
+    ordered = sorted(hits, key=_hit_sort_key)
+    print(f"[{len(ordered)} hit(s) over {total} funcs; profile(s): {profile}; smallest first]")
+    print("ID              INSNS  MATCH  PROJECT/PROFILE       FUNCTION  SOURCE")
+    for f, start, end in ordered[:limit]:
+        span = _match_instruction_span(f, start, end)
+        project_profile = f"{f.project}/{f.profile}"
+        print(
+            f"{f.result_id:15s} {len(f.insns):6d} {span:6d}  "
+            f"{project_profile:21s} {f.sym}  {f.src}"
+        )
+    if len(ordered) > limit:
+        print(f"... +{len(ordered)-limit} more (raise --limit)")
+    if ordered:
+        print("\nInspect one result with: python3 tools/refcorpus/search_corpus.py --show ID")
+
+
+def show_function(result_id: str) -> None:
+    matches = [f for f in load(None, ["all"]) if f.result_id == result_id]
+    if not matches:
+        raise SystemExit(f"unknown corpus result ID: {result_id}")
+    if len(matches) > 1:
+        raise SystemExit(f"ambiguous corpus result ID: {result_id}")
+    f = matches[0]
+    print(f"{f.result_id}  {f.project}/{f.profile}  {f.src} :: {f.sym}")
+    print(f"instructions: {len(f.insns)}")
+    print("\n--- assembly ---")
+    for insn in f.insns:
+        print(insn)
+    print("\n--- C ---")
+    source = extract_c_function(f.src, f.sym)
+    if source is None:
+        print("[C definition unavailable]")
+    else:
+        print(source)
+
+
+def search_csrc(pattern: str, projects, profile: str) -> tuple[List[tuple], int]:
     manifest = json.loads(MANIFEST.read_text())
     srcs = []
     seen = set()
@@ -208,8 +255,9 @@ def do_csrc(pattern: str, projects, profile: str, limit: int, context: int):
     rx = re.compile(pattern)
     # index funcs for the chosen display profile for asm lookup
     funcs = load(projects, [profile])
-    by_key = {(f.project, f.sym): f for f in funcs}
-    shown = 0
+    by_key = {(f.project, f.src, f.sym): f for f in funcs}
+    hits = []
+    seen_hits = set()
     for proj, src in srcs:
         try:
             lines = (R.REPO_ROOT / src).read_text(errors="ignore").splitlines()
@@ -219,20 +267,11 @@ def do_csrc(pattern: str, projects, profile: str, limit: int, context: int):
             if not rx.search(ln):
                 continue
             sym = _enclosing_c_symbol(lines, i)
-            print(f"\n\033[1m{proj}\033[0m  {src}:{i+1}  \033[36m{sym or '?'}\033[0m")
-            for k in range(max(0, i - context), min(len(lines), i + context + 1)):
-                mark = ">" if k == i else " "
-                print(f"    {mark} {lines[k]}")
-            f = by_key.get((proj, sym)) if sym else None
-            if f:
-                print(f"    --- asm ({profile}) ---")
-                for insn in f.insns[:40]:
-                    print(f"      {insn}")
-                if len(f.insns) > 40:
-                    print(f"      ... (+{len(f.insns)-40} insns)")
-            shown += 1
-            if shown >= limit:
-                return
+            f = by_key.get((proj, src, sym)) if sym else None
+            if f and f.result_id not in seen_hits:
+                hits.append((f, 0, 0))
+                seen_hits.add(f.result_id)
+    return hits, len(funcs)
 
 
 _C_DEF_RE = re.compile(r"^\w[\w\s\*]*\s\**(\w+)\s*\(")
@@ -254,19 +293,24 @@ def main():
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument("--asm", help="regex over normalized 'mnemonic operands' text")
     mode.add_argument("--seq", help="mnemonics in order, gaps allowed, e.g. 'extsb. rlwimi'")
-    mode.add_argument("--csrc", help="regex over reference C source; shows resulting asm")
+    mode.add_argument("--csrc", help="regex over reference C source; lists compiled functions")
+    mode.add_argument("--show", metavar="ID", help="show complete assembly and C for one result ID")
     mode.add_argument("--stats", action="store_true", help="corpus size summary")
     ap.add_argument("--project", help="comma list to restrict (" + ",".join(R.RECIPES) + ")")
     ap.add_argument("--profile", default="both_off",
                     help="both_off|peep_on|sched_on|both_on|all (default both_off)")
     ap.add_argument("--limit", type=int, default=25)
-    ap.add_argument("--context", type=int, default=3)
-    ap.add_argument("--show-c", action="store_true", help="also print the C function")
+    ap.add_argument("--context", type=int, default=3, help=argparse.SUPPRESS)
+    ap.add_argument("--show-c", action="store_true", help=argparse.SUPPRESS)
     ap.add_argument("-i", "--ignore-case", action="store_true")
     args = ap.parse_args()
 
     projects = args.project.split(",") if args.project else None
     profiles = [args.profile]
+
+    if args.show:
+        show_function(args.show)
+        return
 
     if args.stats:
         funcs = load(projects, ["all"])
@@ -279,8 +323,9 @@ def main():
         return
 
     if args.csrc:
-        do_csrc(args.csrc, projects, args.profile if args.profile != "all" else "both_off",
-                args.limit, args.context)
+        display_profile = args.profile if args.profile != "all" else "both_off"
+        hits, total = search_csrc(args.csrc, projects, display_profile)
+        print_discovery(hits, total, display_profile, args.limit)
         return
 
     if not (args.asm or args.seq):
@@ -292,11 +337,9 @@ def main():
         hits = search_seq(funcs, args.seq, flags)
     else:
         hits = search_asm(funcs, args.asm, flags)
-    print(f"[{len(hits)} hit(s) over {len(funcs)} funcs; profile(s): {args.profile}]")
-    for f, s, e in hits[:args.limit]:
-        print_asm_hit(f, s, e, args.context, args.show_c)
-    if len(hits) > args.limit:
-        print(f"\n... +{len(hits)-args.limit} more (raise --limit)")
+    if args.show_c:
+        print("note: --show-c is deprecated; use --show ID after discovery", file=sys.stderr)
+    print_discovery(hits, len(funcs), args.profile, args.limit)
 
 
 if __name__ == "__main__":

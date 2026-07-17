@@ -73,23 +73,29 @@ and its original C source.
 ## Search
 
 ```bash
-# asm shape -> the C that emits it (regex over normalized "mnemonic operands" text)
-python3 tools/refcorpus/search_corpus.py --asm 'rlwinm r[0-9]+,r[0-9]+,0,.*,' --show-c
+# asm shape -> compact matching-function list
+python3 tools/refcorpus/search_corpus.py --asm 'rlwinm r[0-9]+,r[0-9]+,0,.*,'
 
 # instructions in order (gaps allowed)
 python3 tools/refcorpus/search_corpus.py --seq 'extsb. rlwimi'
 
-# the reverse: grep the reference C, show the GC/2.0 asm it produced
+# the reverse: find compiled functions containing matching reference C
 python3 tools/refcorpus/search_corpus.py --csrc '&= ~0x80' --profile both_on
 
+# inspect one selected function's complete GC/2.0 assembly and original C
+python3 tools/refcorpus/search_corpus.py --show rc_0123456789ab
+
 # scoping / sizing
-python3 tools/refcorpus/search_corpus.py --asm 'psq_l'  --project dkr --limit 20 --context 5
+python3 tools/refcorpus/search_corpus.py --asm 'psq_l' --project dkr --limit 20
 python3 tools/refcorpus/search_corpus.py --stats
 ```
 
 `--profile` defaults to `both_off` (SFA's default); pass `all` to search every profile.
-Symbols in the corpus equal the C function names (MWCC doesn't mangle C), so `--show-c` and
-`--csrc` can round-trip between asm and source.
+Discovery output contains only a stable result ID, instruction count, match span, project,
+profile, function name, and source path. Results are sorted by instruction count ascending,
+so small self-contained examples appear first. Use `--show ID` only after choosing a useful
+candidate; it prints that function's complete normalized assembly and original C. IDs are
+derived from project/profile/source/symbol and remain stable across corpus rebuilds.
 
 `--asm` is a regex over the whole function's normalized text, so `\n` matches across
 instructions and backreferences can tie a register across lines — that is how you pin a
@@ -99,7 +105,34 @@ shape rather than a mnemonic:
 # an address add whose result is used at a displacement, while the same base+index
 # is also used indexed -- \1 \2 \3 tie the registers together
 python3 tools/refcorpus/search_corpus.py \
-  --asm '(?m)^add r(\d+),r(\d+),r(\d+)\n\w+ r\d+,\d+\(r\1\)\n\w+x f?\d+,r\2,r\3' --show-c
+  --asm '(?m)^add r(\d+),r(\d+),r(\d+)\n\w+ r\d+,\d+\(r\1\)\n\w+x f?\d+,r\2,r\3'
+```
+
+## Target symbol context
+
+The read-only symbol explorer avoids broad searches through a generated `.ctx` or the whole
+source tree. An isolated harness workspace supplies target metadata automatically:
+
+```bash
+python3 tools/symbol_context.py relevant
+python3 tools/symbol_context.py get ModelLightStruct
+```
+
+`relevant` extracts the target function, lists its direct and transitively referenced
+compound/layout types, reports the defining file, and distinguishes full definitions from
+forward declarations in that target's exact `.ctx`. `get` returns one complete balanced
+struct/union/enum/typedef declaration. Conflicting definitions are never selected silently;
+the command reports the candidate paths and accepts `--path` to disambiguate.
+
+Outside a harness workspace, supply the target explicitly:
+
+```bash
+python3 tools/symbol_context.py relevant \
+  --source src/main/track_dolphin.c \
+  --function queueGlowRender \
+  --context build/GSAE01/src/main/track_dolphin.ctx
+python3 tools/symbol_context.py get ModelLightStruct \
+  --context build/GSAE01/src/main/track_dolphin.ctx
 ```
 
 Findings that came out of the corpus (each traced to a named reference function):
