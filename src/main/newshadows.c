@@ -257,7 +257,7 @@ extern const f32 Vdchuff_803DEDC0;
 extern const f32 Vdchuff_803DEDD0;
 extern const f32 Vdchuff_803DEDD4;
 extern const f32 Uachuff_803DEE00;
-extern const f32 __PADFixBits;
+extern const f32 lbl_803DED08;
 extern const f32 Yachuff_803DEDE0;
 extern const f32 Yachuff_803DEDE4, Yachuff_803DEDE8;
 extern const f32 Vdchuff_803DEDD8, Vdchuff_803DEDDC;
@@ -1608,7 +1608,7 @@ static void fillDiskTexture(void)
             dx = dx * Yachuff_803DEDF0;
             dz = dz * Yachuff_803DEDF0;
             d2 = dx * dx + dz * dz;
-            base[off] = __PADFixBits * ((d2 > lbl_803DED2C) ? lbl_803DED28 : (lbl_803DED2C - d2));
+            base[off] = lbl_803DED08 * ((d2 > lbl_803DED2C) ? lbl_803DED28 : (lbl_803DED2C - d2));
         }
     }
 }
@@ -1649,7 +1649,7 @@ static void fillSmallDiskTexture(void)
             {
                 d2 = sqrtf(lbl_803DED2C - d2);
             }
-            base[off] = __PADFixBits * d2;
+            base[off] = lbl_803DED08 * d2;
         }
     }
 }
@@ -2976,8 +2976,8 @@ void initFn_8006d020(void)
                 dst += (col & 3) * 8;
                 dst += (col >> 2) * 0x200;
                 fn_8006CD20(row * Yachuff_803DEDE0, col * Yachuff_803DEDE0, tex, gNewShadowPlacements, count, &o1, &o2);
-                hi = (int)(__PADFixBits * o2);
-                lo = (int)(__PADFixBits * o1);
+                hi = (int)(lbl_803DED08 * o2);
+                lo = (int)(lbl_803DED08 * o1);
                 *(u16*)(dst + 0x60) = (u16)(((hi & 0xffff) << 8) | lo);
             }
         }

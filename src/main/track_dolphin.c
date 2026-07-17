@@ -277,13 +277,13 @@ typedef struct
 extern u32 DAT_803ddc00;
 extern u32 DAT_803ddc38;
 extern const f32 lbl_803DEC50;
-extern f32 __AR_Callback;
-extern f32 __AR_Size;
+extern f32 lbl_803DECB4;
+extern f32 lbl_803DECB0;
 extern const f32 lbl_803DEC6C;
 extern const f32 lbl_803DEC70;
 extern const f32 lbl_803DEC74;
-extern f32 __AR_init_flag;
-extern f32 __AR_BlockLength;
+extern f32 lbl_803DEC98;
+extern f32 lbl_803DEC9C;
 extern const f32 lbl_803DEC58;
 extern const f32 lbl_803DEC68;
 extern f32 lbl_803DEC90[2];
@@ -310,7 +310,7 @@ extern const f32 lbl_803DECB8;
 extern const f32 lbl_803DECBC;
 extern const f32 lbl_803DECC0;
 extern const f32 lbl_803DECC8;
-extern f32 __PADFixBits;
+extern f32 lbl_803DED08;
 extern const f32 lbl_803DECE8;
 extern const f32 lbl_803DECE0;
 extern const f32 lbl_803DECEC;
@@ -326,10 +326,10 @@ extern f32 lbl_803DEBD4, lbl_803DEBD8, lbl_803DEBDC;
 extern f32 displayOffsetH_803DEBFC, flushFlag_803DEBE4;
 extern f32 Initialized_803DEC30, EnabledBits_803DEC34, ResettingBits_803DEC38;
 extern f32 RecalibrateBits_803DEC3C, WaitingBits_803DEC40;
-extern const f32 __AR_FreeBlocks;
-extern const f32 __AR_StackPointer;
-extern const f32 __AR_ExpansionSize;
-extern const f32 __AR_InternalSize;
+extern const f32 lbl_803DECA0;
+extern const f32 lbl_803DECA4;
+extern const f32 lbl_803DECA8;
+extern const f32 lbl_803DECAC;
 extern const f32 lbl_803DECF0;
 extern const f32 lbl_803DECF4;
 extern const f32 lbl_803DECF8;
@@ -1474,24 +1474,24 @@ int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
         {
             cur = (*arrp)->height;
             cur = y - cur;
-            arCb = &__AR_Callback;
+            arCb = &lbl_803DECB4;
             if (cur >= *(f32*)arCb)
             {
-                if (best < *(f32*)&__AR_Callback || cur < best)
+                if (best < *(f32*)&lbl_803DECB4 || cur < best)
                 {
                     best = cur;
                 }
             }
         }
-        if (best >= __AR_Callback)
+        if (best >= lbl_803DECB4)
         {
             *outDepth = best;
             return 1;
         }
-        *outDepth = __AR_Callback;
+        *outDepth = lbl_803DECB4;
         return 0;
     }
-    *outDepth = __AR_Callback;
+    *outDepth = lbl_803DECB4;
     return 0;
 }
 
@@ -1509,7 +1509,7 @@ int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, 
     if (n != 0)
     {
         cur = y - arr[0]->height;
-        if (cur >= __AR_Callback)
+        if (cur >= lbl_803DECB4)
         {
         }
         else
@@ -1521,7 +1521,7 @@ int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, 
         for (i = 1; i < n; i++)
         {
             cur = y - arr[i]->height;
-            cur = cur >= *(f32*)&__AR_Callback ? cur : -cur;
+            cur = cur >= *(f32*)&lbl_803DECB4 ? cur : -cur;
             if (cur < best)
             {
                 best = cur;
@@ -1531,7 +1531,7 @@ int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, 
         *outGroundY = y - arr[bestIdx]->height;
         return 0;
     }
-    *outGroundY = __AR_Callback;
+    *outGroundY = lbl_803DECB4;
     return 1;
 }
 #pragma dont_inline reset
@@ -1550,7 +1550,7 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
     if (n != 0)
     {
         cur = y - arr[0]->height;
-        if (cur >= __AR_Callback)
+        if (cur >= lbl_803DECB4)
         {
         }
         else
@@ -1562,7 +1562,7 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
         for (i = 1; i < n; i++)
         {
             cur = y - arr[i]->height;
-            cur = cur >= *(f32*)&__AR_Callback ? cur : -cur;
+            cur = cur >= *(f32*)&lbl_803DECB4 ? cur : -cur;
             if (cur < best)
             {
                 best = cur;
@@ -1575,7 +1575,7 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
         outNormal[2] = arr[bestIdx]->normalZ;
         return 0;
     }
-    *outGroundY = __AR_Callback;
+    *outGroundY = lbl_803DECB4;
     return 1;
 }
 #pragma dont_inline reset
@@ -1606,7 +1606,7 @@ int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
         {
             *outSurfaceId = (int)arr[i]->object;
             *outSurfaceY = arr[i]->height;
-            return (arr[i]->normalY < __AR_Size) + 1;
+            return (arr[i]->normalY < lbl_803DECB0) + 1;
         }
     }
     return 0;
@@ -1830,9 +1830,9 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
     gSunDotCos = lenv;
     if ((f32)gSunDotCos < *(f32*)&lbl_803DEC58)
     {
-        gSunDotCos = (f32)gSunDotCos * __AR_init_flag;
+        gSunDotCos = (f32)gSunDotCos * lbl_803DEC98;
     }
-    if (gSunDotCos <= __AR_BlockLength)
+    if (gSunDotCos <= lbl_803DEC9C)
     {
         gSunDirChanged = 1;
     }
@@ -2301,7 +2301,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 {
     f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, step_y, dot, nx, proj, vy4, vy5, disc, dy, ny, len2, lc;
 
-    if (__AR_Callback == r)
+    if (lbl_803DECB4 == r)
         return 0;
 
     px = p4[0];
@@ -2313,7 +2313,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
         sum = sum + dyy;
     }
     cc = sum - r * r;
-    if (cc < __AR_Callback)
+    if (cc < lbl_803DECB4)
     {
         if (flag != 0)
         {
@@ -2326,12 +2326,12 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
     dx2 = p4[1] - px;
     dy2 = p5[1] - p5[0];
     len2 = dx2 * dx2 + dy2 * dy2;
-    if (len2 > __AR_Callback)
+    if (len2 > lbl_803DECB4)
     {
         B = lbl_803DECB8 * (dx2 * dx + dy2 * dy);
         lc = lbl_803DECBC * len2;
         disc = B * B - lc * cc;
-        if (disc >= __AR_Callback)
+        if (disc >= lbl_803DECB4)
         {
             root = sqrtf(disc);
             nB = -B;
@@ -2339,14 +2339,14 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
             denom = lbl_803DECB8 * len2;
             t1 = t1 / denom;
             t2 = (nB - root) / denom;
-            if (t1 < __AR_Callback)
+            if (t1 < lbl_803DECB4)
                 t1 = lbl_803DECC0;
-            if (t2 < *(f32*)&__AR_Callback)
+            if (t2 < *(f32*)&lbl_803DECB4)
                 t2 = lbl_803DECC0;
             if (t2 < t1)
                 t1 = t2;
             t = t1;
-            if (t >= *(f32*)(int)&__AR_Callback && t <= lbl_803DECC4)
+            if (t >= *(f32*)(int)&lbl_803DECB4 && t <= lbl_803DECC4)
             {
                 lbl_803DCF58 = t;
                 if (flag != 0)
@@ -2422,7 +2422,7 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
         return;
     }
     {
-        wA = (int)(__PADFixBits * blend) & 0xff;
+        wA = (int)(lbl_803DED08 * blend) & 0xff;
         wB = (0xff - wA) & 0xff;
         if (fmt == 4)
         {
@@ -2552,7 +2552,7 @@ void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode)
         Obj_TransformLocalPointToWorld(obj->anim.previousLocalPosX, obj->anim.previousLocalPosY,
                                        obj->anim.previousLocalPosZ, &obj->anim.previousWorldPosX,
                                        &obj->anim.previousWorldPosY, &obj->anim.previousWorldPosZ, (u32)oldParent);
-        Obj_TransformLocalVectorToWorld(obj->anim.velocityX, __AR_Callback,
+        Obj_TransformLocalVectorToWorld(obj->anim.velocityX, lbl_803DECB4,
                                         obj->anim.velocityZ, &dirX, (f32*)dirBuf, &dirZ, (u32)oldParent);
         yawSum = oldParent->anim.rotX + obj->anim.rotX;
     }
@@ -2575,7 +2575,7 @@ void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode)
                                            obj->anim.previousWorldPosZ, &obj->anim.previousLocalPosX,
                                            &obj->anim.previousLocalPosY, &obj->anim.previousLocalPosZ,
                                            (u32)obj->anim.parent);
-            Obj_TransformWorldVectorToLocal(dirX, __AR_Callback, dirZ, &obj->anim.velocityX, (f32*)dirBuf,
+            Obj_TransformWorldVectorToLocal(dirX, lbl_803DECB4, dirZ, &obj->anim.velocityX, (f32*)dirBuf,
                                             &obj->anim.velocityZ, (u32)obj->anim.parent);
             yawSum = yawSum - ((GameObject*)obj->anim.parent)->anim.rotX;
             if (yawSum > 0x8000)
@@ -2651,7 +2651,7 @@ int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit***
             break;
         if (desc->object != NULL)
         {
-            Matrix_TransformPoint(desc->currentMatrix, x, __AR_Callback, z, &tx, &ty, &tz);
+            Matrix_TransformPoint(desc->currentMatrix, x, lbl_803DECB4, z, &tx, &ty, &tz);
             fn_800659A8((TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
                         (TrackTriangle*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c), desc, tx, tz, mode);
         }
@@ -2826,7 +2826,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, u8 type, f32 f1p, f32 y)
         if (fa != fb)
             scale = fa / (fa - fb);
         else
-            scale = __AR_Callback;
+            scale = lbl_803DECB4;
         d0[0] = b0 - a0;
         d0[1] = b[1] - a[1];
         d0[2] = b[2] - a[2];
@@ -2840,7 +2840,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, u8 type, f32 f1p, f32 y)
     }
     {
         f32 p1 = *(f32*)(p + 1);
-        if (p1 < __AR_Size && p1 > lbl_803DECEC)
+        if (p1 < lbl_803DECB0 && p1 > lbl_803DECEC)
         {
             switch ((u8)type)
             {
@@ -2851,15 +2851,15 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, u8 type, f32 f1p, f32 y)
                 f32 dotL = b[1] * p[1];
                 f32 dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
                 y = y - dot;
-                if (y > __AR_Callback)
+                if (y > lbl_803DECB4)
                 {
                     f32 px = p[0] * p[0];
                     f32 pz = p[2] * p[2];
                     f32 d = fn_802943F4(fn_802925C4(p[1], sqrtf(px + pz)));
-                    if (__AR_Callback != d)
+                    if (lbl_803DECB4 != d)
                         y = y / d;
                     d1[0] = p[0];
-                    d1[1] = *(f32*)&__AR_Callback;
+                    d1[1] = *(f32*)&lbl_803DECB4;
                     d1[2] = p[2];
                     Vec3_Normalize(d1);
                     b[0] = y * d1[0] + b[0];
@@ -2910,7 +2910,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, u8 type, f32 f1p, f32 y)
                 f32 dotL = b[1] * p[1];
                 f32 dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
                 y = y - dot;
-                if (y > __AR_Callback)
+                if (y > lbl_803DECB4)
                 {
                     f32 px = p[0] * p[0];
                     f32 pz = p[2] * p[2];
@@ -2938,7 +2938,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
 
     Vec3_Cross(rayDir, T + 6, nrm);
     len = Vec3_Normalize(nrm);
-    if (__AR_Callback == len)
+    if (lbl_803DECB4 == len)
         return 0;
     e[0] = rayOrig[0] - T[0];
     e[1] = rayOrig[1] - T[1];
@@ -2962,11 +2962,11 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
             f32 dd = rayDir[1] * tmp14[1];
             f32 dn = dd + rayDir[0] * tmp14[0] + rayDir[2] * tmp14[2];
             f32 r = s / dn;
-            if (r < *(f32*)&__AR_Callback)
+            if (r < *(f32*)&lbl_803DECB4)
                 r = -r;
             len = len - r;
         }
-        zero = __AR_Callback;
+        zero = lbl_803DECB4;
         if (len >= zero)
         {
             if (len <= maxd)
@@ -3035,7 +3035,7 @@ int hitDetectFn_80067958(GameObject* contactSrc, f32* startPos, f32* endPos, int
             f32 b, a;
             fp = results;
             pp = results;
-            a = __AR_Callback;
+            a = lbl_803DECB4;
             b = lbl_803DECC4;
             while (i < lim)
             {
@@ -3088,7 +3088,7 @@ int hitDetectFn_80067958(GameObject* contactSrc, f32* startPos, f32* endPos, int
             f32 b, a;
             fp = (f32*)results + i * 4;
             pp = (void**)results + i;
-            a = __AR_Callback;
+            a = lbl_803DECB4;
             b = lbl_803DECC4;
             while (i < count)
             {
@@ -3712,54 +3712,54 @@ void initTextures(void)
 
     gShadowFlag = 10;
     gShadowVolumeBuffer = (int)mmAlloc(0xa8c0, 0x18, 0);
-    a[0] = __AR_init_flag;
-    b[0] = __AR_init_flag;
-    a[1] = __AR_init_flag;
-    b[1] = __AR_init_flag;
-    a[2] = __AR_init_flag;
-    b[2] = __AR_init_flag;
-    a[3] = __AR_init_flag;
-    b[3] = __AR_init_flag;
+    a[0] = lbl_803DEC98;
+    b[0] = lbl_803DEC98;
+    a[1] = lbl_803DEC98;
+    b[1] = lbl_803DEC98;
+    a[2] = lbl_803DEC98;
+    b[2] = lbl_803DEC98;
+    a[3] = lbl_803DEC98;
+    b[3] = lbl_803DEC98;
     a[4] = lbl_803DEC58;
     b[4] = lbl_803DEC58;
-    a[5] = __AR_init_flag;
-    b[5] = __AR_init_flag;
+    a[5] = lbl_803DEC98;
+    b[5] = lbl_803DEC98;
     a[6] = lbl_803DEC68;
     b[6] = lbl_803DEC68;
     a[7] = lbl_803DEC58;
     b[7] = lbl_803DEC58;
-    a[8] = __AR_init_flag;
-    b[8] = __AR_init_flag;
+    a[8] = lbl_803DEC98;
+    b[8] = lbl_803DEC98;
     a[9] = lbl_803DEC68;
     b[9] = lbl_803DEC68;
-    a[10] = __AR_init_flag;
-    b[10] = __AR_init_flag;
-    a[11] = __AR_init_flag;
-    b[11] = __AR_init_flag;
-    b[12] = __AR_init_flag;
-    b[13] = __AR_init_flag;
+    a[10] = lbl_803DEC98;
+    b[10] = lbl_803DEC98;
+    a[11] = lbl_803DEC98;
+    b[11] = lbl_803DEC98;
+    b[12] = lbl_803DEC98;
+    b[13] = lbl_803DEC98;
     b[14] = lbl_803DEC68;
-    b[15] = __AR_init_flag;
+    b[15] = lbl_803DEC98;
     b[16] = lbl_803DEC58;
     b[17] = lbl_803DEC68;
     b[18] = lbl_803DEC68;
     b[19] = lbl_803DEC58;
     b[20] = lbl_803DEC68;
     b[21] = lbl_803DEC68;
-    b[22] = __AR_init_flag;
+    b[22] = lbl_803DEC98;
     b[23] = lbl_803DEC68;
-    a[12] = __AR_FreeBlocks;
+    a[12] = lbl_803DECA0;
     a[13] = lbl_803DEC58;
-    a[14] = __AR_StackPointer;
-    a[15] = __AR_FreeBlocks;
-    a[16] = __AR_ExpansionSize;
-    a[17] = __AR_StackPointer;
-    a[18] = __AR_InternalSize;
-    a[19] = __AR_ExpansionSize;
-    a[20] = __AR_StackPointer;
-    a[21] = __AR_InternalSize;
+    a[14] = lbl_803DECA4;
+    a[15] = lbl_803DECA0;
+    a[16] = lbl_803DECA8;
+    a[17] = lbl_803DECA4;
+    a[18] = lbl_803DECAC;
+    a[19] = lbl_803DECA8;
+    a[20] = lbl_803DECA4;
+    a[21] = lbl_803DECAC;
     a[22] = lbl_803DEC58;
-    a[23] = __AR_StackPointer;
+    a[23] = lbl_803DECA4;
     allocLotsOfTextures();
 }
 #pragma opt_common_subs reset
@@ -3910,7 +3910,7 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
         f32 hy = *(f32*)((char*)out + 0x40) - *(f32*)((char*)out + 0x10);
         f32 len;
         *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
-        *(f32*)((char*)out + 0x30) = __AR_Callback;
+        *(f32*)((char*)out + 0x30) = lbl_803DECB4;
         *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
         {
             f32 sqA = *(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x2c);
@@ -3940,7 +3940,7 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
                                            (f32*)((int)out + 0x18), mtx);
         }
         *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
-        *(f32*)((char*)out + 0x20) = __AR_Callback;
+        *(f32*)((char*)out + 0x20) = lbl_803DECB4;
         *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
         {
             f32 sqA = *(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x1c);
@@ -4130,7 +4130,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
             nzi = xs[0] * (ys[1] - ys[2]) + (xs[1] * (ys[2] - ys[0]) + xs[2] * (ys[0] - ys[1]));
             fnz = nzi;
             len = sqrtf(fnz * fnz + (fnx * fnx + fny * fny));
-            if (!(len > __AR_Callback))
+            if (!(len > lbl_803DECB4))
                 continue;
             inv = lbl_803DECC4 / len;
             *(f32*)(cur + 4) = fnx * inv;
@@ -4139,14 +4139,14 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
 
             if (flag8)
             {
-                if (*(f32*)(cur + 8) >= __AR_Size)
+                if (*(f32*)(cur + 8) >= lbl_803DECB0)
                     continue;
                 if (*(f32*)(cur + 8) <= lbl_803DECEC)
                     continue;
             }
             if (flag4)
             {
-                if (*(f32*)(cur + 8) < __AR_Size && *(f32*)(cur + 8) > lbl_803DECEC)
+                if (*(f32*)(cur + 8) < lbl_803DECB0 && *(f32*)(cur + 8) > lbl_803DECEC)
                     continue;
             }
 
@@ -4160,7 +4160,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
                 s16* xw = xs;
                 s16* yw = ys;
                 s16* zw = zs;
-                f32 eps = __AR_Callback;
+                f32 eps = lbl_803DECB4;
                 for (; j2 < 3; j2++)
                 {
                     int k = j2 + 1;
@@ -4542,7 +4542,7 @@ u8 doEdges;
                 PSVECSubtract(vertp, verts2, e1);
                 PSVECCrossProduct(e0, e1, (f32*)(cur + 4));
                 mag = PSVECMag((f32*)(cur + 4));
-                if (!(mag > __AR_Callback))
+                if (!(mag > lbl_803DECB4))
                     continue;
                 {
                     f32 inv = lbl_803DECC4 / mag;
@@ -4550,7 +4550,7 @@ u8 doEdges;
                 }
                 if (f8)
                 {
-                    if (*(f32*)(cur + 8) >= __AR_Size || *(f32*)(cur + 8) <= lbl_803DECEC)
+                    if (*(f32*)(cur + 8) >= lbl_803DECB0 || *(f32*)(cur + 8) <= lbl_803DECEC)
                     {
                         if (type != 4)
                             continue;
@@ -4560,7 +4560,7 @@ u8 doEdges;
                 }
                 if (f4)
                 {
-                    if (*(f32*)(cur + 8) < __AR_Size && *(f32*)(cur + 8) > lbl_803DECEC)
+                    if (*(f32*)(cur + 8) < lbl_803DECB0 && *(f32*)(cur + 8) > lbl_803DECEC)
                         continue;
                 }
                 ((TrackTriangle*)cur)->planeD = -PSVECDotProduct((f32*)(cur + 4), v0);
@@ -4574,7 +4574,7 @@ u8 doEdges;
                     deg = 0;
                     j2 = 0;
                     ep = e0;
-                    eps = __AR_Callback;
+                    eps = lbl_803DECB4;
                     one = lbl_803DECC4;
                     do
                     {
@@ -5093,7 +5093,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
             dz = bz2 - az2;
             {
                 f32 dd = dx * dx + dz * dz;
-                if (__AR_Callback == dd)
+                if (lbl_803DECB4 == dd)
                     continue;
                 len = sqrtf(dd);
             }
@@ -5133,7 +5133,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                 mp = m;
                 zp = posZ;
                 xp = posX;
-                dist = __AR_Callback;
+                dist = lbl_803DECB4;
                 do
                 {
                     s16 mb = 1;
@@ -5171,7 +5171,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                     if (m[0] & 1)
                     {
                         found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
-                        dist = __AR_Callback;
+                        dist = lbl_803DECB4;
                     }
                     else if (m[0] & 2)
                     {
@@ -5189,7 +5189,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                     if (ma & 1)
                     {
                         found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
-                        dist = __AR_Callback;
+                        dist = lbl_803DECB4;
                     }
                     else if (ma & 2)
                     {
@@ -5210,19 +5210,19 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                         }
                         else
                         {
-                            fr = __AR_Callback;
+                            fr = lbl_803DECB4;
                         }
                         cx = sx * fr + posX[0];
                         cz = sz * fr + posZ[0];
                         lbl_803DCF58 = fr;
                         ok = 1;
-                        if (ld[0] + (cx * lb[0] + cz * la[0]) < __AR_Callback)
+                        if (ld[0] + (cx * lb[0] + cz * la[0]) < lbl_803DECB4)
                         {
                             found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
                             ok = 0;
-                            dist = __AR_Callback;
+                            dist = lbl_803DECB4;
                         }
-                        if (ld[1] + (cx * lb[1] + cz * la[1]) < __AR_Callback)
+                        if (ld[1] + (cx * lb[1] + cz * la[1]) < lbl_803DECB4)
                         {
                             found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
                             ok = 0;
@@ -5477,7 +5477,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     edge2p = edge2;
     vbp = vb;
     evecp = evec;
-    eps = __AR_Callback;
+    eps = lbl_803DECB4;
     do
     {
         cur[0] = ep1[0];
@@ -5536,11 +5536,11 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     plane[2] = tri->planeN[2];
                     plane[3] = tri->planeD;
                     dE = (plane[3] + PSVECDotProduct(plane, we)) - radius;
-                    if (!(dE <= (*(f32*)&__AR_Callback)))
+                    if (!(dE <= (*(f32*)&lbl_803DECB4)))
                         continue;
                     dS = (plane[3] + PSVECDotProduct(plane, ws)) - radius;
-                    if ((dS <= (*(f32*)&__AR_Callback) && dE >= (*(f32*)&__AR_Callback)) ||
-                        (dS >= (*(f32*)&__AR_Callback) && dE <= (*(f32*)&__AR_Callback)))
+                    if ((dS <= (*(f32*)&lbl_803DECB4) && dE >= (*(f32*)&lbl_803DECB4)) ||
+                        (dS >= (*(f32*)&lbl_803DECB4) && dE <= (*(f32*)&lbl_803DECB4)))
                     {
                         if (dS != dE)
                         {
@@ -5548,7 +5548,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         }
                         else
                         {
-                            frac = (*(f32*)&__AR_Callback);
+                            frac = (*(f32*)&lbl_803DECB4);
                         }
                         PSVECScale(delta, hitpt, frac);
                         PSVECAdd(hitpt, ws, hitpt);
@@ -5572,13 +5572,13 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1])) +
                                    PSVECDotProduct(edge2p, hitpt);
                         b = 0;
-                        if (radius > (*(f32*)&__AR_Callback))
+                        if (radius > (*(f32*)&lbl_803DECB4))
                         {
-                            if (edge0[3] > (*(f32*)&__AR_Callback))
+                            if (edge0[3] > (*(f32*)&lbl_803DECB4))
                                 b |= 1;
-                            if (edge1[3] > (*(f32*)&__AR_Callback))
+                            if (edge1[3] > (*(f32*)&lbl_803DECB4))
                                 b |= 2;
-                            if (edge2[3] > (*(f32*)&__AR_Callback))
+                            if (edge2[3] > (*(f32*)&lbl_803DECB4))
                                 b |= 4;
                         }
                         if (b == 0)
@@ -5588,7 +5588,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         }
                         tri->edgeOutBits = b;
                     }
-                    else if (dE >= negStep && radius > (*(f32*)&__AR_Callback))
+                    else if (dE >= negStep && radius > (*(f32*)&lbl_803DECB4))
                     {
                         edge0[0] = tri->edgeN0[0];
                         edge0[1] = tri->edgeN0[1];
@@ -5606,16 +5606,16 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1])) +
                                    PSVECDotProduct(edge2p, ws);
                         b = 0;
-                        if (edge0[3] > (*(f32*)&__AR_Callback))
+                        if (edge0[3] > (*(f32*)&lbl_803DECB4))
                             b |= 1;
-                        if (edge1[3] > (*(f32*)&__AR_Callback))
+                        if (edge1[3] > (*(f32*)&lbl_803DECB4))
                             b |= 2;
-                        if (edge2[3] > (*(f32*)&__AR_Callback))
+                        if (edge2[3] > (*(f32*)&lbl_803DECB4))
                             b |= 4;
                         tri->edgeOutBits = b;
                     }
                 }
-                if ((*(f32*)&__AR_Callback) == mag)
+                if ((*(f32*)&lbl_803DECB4) == mag)
                     goto found_hit;
                 for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
                      (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
@@ -5642,7 +5642,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         vb[2] = vs[0xe];
                         PSVECSubtract(vbp, va, evecp);
                         rdatap[2] = Vec3_Normalize(evecp);
-                        if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, (*(f32*)&__AR_Callback), hitpt, plane,
+                        if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, (*(f32*)&lbl_803DECB4), hitpt, plane,
                                                  &frac))
                         {
                             hit = 1;
@@ -5672,7 +5672,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         PSVECSubtract(va, ws, tmp1);
                         dotv = PSVECDotProduct(tmp1, dir);
                         sq = PSVECSquareMag(tmp1);
-                        if (dotv < (*(f32*)&__AR_Callback) && sq > rr)
+                        if (dotv < (*(f32*)&lbl_803DECB4) && sq > rr)
                         {
                             ok = 0;
                         }
@@ -5694,7 +5694,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                                 {
                                     dotv = dotv + root;
                                 }
-                                if (dotv >= (*(f32*)&__AR_Callback) && dotv <= mag)
+                                if (dotv >= (*(f32*)&lbl_803DECB4) && dotv <= mag)
                                 {
                                     PSVECScale(dir, hitpt, dotv);
                                     PSVECAdd(ws, hitpt, hitpt);
@@ -5725,7 +5725,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         PSVECSubtract(vbp, ws, tmp2);
                         sq = PSVECDotProduct(tmp2, dir);
                         dotv = PSVECSquareMag(tmp2);
-                        if (sq < (*(f32*)&__AR_Callback) && dotv > dE)
+                        if (sq < (*(f32*)&lbl_803DECB4) && dotv > dE)
                         {
                             ok = 0;
                         }
@@ -5747,7 +5747,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                                 {
                                     tt = sq + root;
                                 }
-                                if (tt >= (*(f32*)&__AR_Callback) && tt <= mag)
+                                if (tt >= (*(f32*)&lbl_803DECB4) && tt <= mag)
                                 {
                                     PSVECScale(dir, hitpt, tt);
                                     PSVECAdd(ws, hitpt, hitpt);
@@ -5859,7 +5859,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     slot_done:
         if (bounces != 0)
         {
-            if (norm4[1] >= __AR_Size || norm4[1] <= lbl_803DECEC)
+            if (norm4[1] >= lbl_803DECB0 || norm4[1] <= lbl_803DECEC)
             {
                 retHi |= curBit;
             }

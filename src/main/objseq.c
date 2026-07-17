@@ -261,8 +261,8 @@ extern void Obj_TransformWorldPointToLocal(f32 wx, f32 wy, f32 wz, f32* x, f32* 
 extern u8 lbl_8039944C[];
 extern int lbl_803DD0C0;
 extern s16 lbl_803DD08A;
-extern f32 MTRCallback;
-extern f32 DBGCallback;
+extern f32 lbl_803DF048;
+extern f32 lbl_803DF04C;
 extern f32 gObjSeqCurvePosOffsetX;
 extern f32 gObjSeqCurvePosOffsetY;
 extern f32 gObjSeqCurvePosOffsetZ;
@@ -271,8 +271,8 @@ extern u8 lbl_803DD0D9;
 extern u8 lbl_803DD078;
 extern s16 lbl_8030ECF8[];
 extern f32 lbl_803DD074;
-extern f32 RecvDataLeng;
-extern f32 SendMailData;
+extern f32 lbl_803DF054;
+extern f32 lbl_803DF050;
 extern u8 lbl_803DD111;
 extern u8 lbl_803DD112;
 extern f32 lbl_803DF02C;
@@ -4091,7 +4091,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                 {
                     val = 35.0f;
                 }
-                if (val > MTRCallback)
+                if (val > lbl_803DF048)
                 {
                     val = 125.0f;
                 }
@@ -4124,9 +4124,9 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
             {
                 val = lbl_803DEFB0;
             }
-            if (val > DBGCallback)
+            if (val > lbl_803DF04C)
             {
-                val = DBGCallback;
+                val = lbl_803DF04C;
             }
             seqObj[0x36] = val;
         }
@@ -4915,7 +4915,7 @@ int ObjSeq_update(u8* obj, f32 t)
         state->unk80 = 0;
         if (action != NULL && (state->flags & 4) != 0)
         {
-            *(u16*)(*(u8**)(action + 0x2c) + 0x58) = (u16)(int)(SendMailData * state->fade);
+            *(u16*)(*(u8**)(action + 0x2c) + 0x58) = (u16)(int)(lbl_803DF050 * state->fade);
         }
         ObjSeq_UpdateCurvePosition(obj, seq);
         if ((s8)state->groundSnapEnabled == 1 &&
@@ -4983,7 +4983,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 {
                     fval = lbl_803DD074;
                     aInt = fval;
-                    fval = fval - RecvDataLeng;
+                    fval = fval - lbl_803DF054;
                     lbl_803DD074 = fval;
                     if (aInt != (int)fval)
                     {
