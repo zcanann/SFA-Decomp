@@ -1,6 +1,8 @@
 #include "main/audio/snd_groups.h"
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/sal_dsp.h"
+#include "main/audio/data_tables.h"
+#include "main/audio/synth_jobs.h"
 
 #pragma exceptions on
 
@@ -79,16 +81,6 @@ typedef struct MIDISETUP
     u8 reserved[0x52];
 } MIDISETUP;
 
-extern void dataInsertMacro(u16 id, void* data);
-extern void dataRemoveMacro(u16 id);
-extern void dataInsertKeymap(u16 id, void* data);
-extern void dataRemoveKeymap(u16 id);
-extern void dataInsertLayer(u16 id, void* data, u16 num);
-extern void dataRemoveLayer(u16 id);
-extern void dataInsertCurve(u16 id, void* data);
-extern void dataRemoveCurve(u16 id);
-extern void dataAddSampleReference(u16 id);
-extern void dataRemoveSampleReference(u16 id);
 extern u32 hwInitStream(void* samples);
 extern u32 dataInsertSDir(void* sdir, u32 addr);
 extern void dataInsertFX(u16 gid, void* fx, u16 num);

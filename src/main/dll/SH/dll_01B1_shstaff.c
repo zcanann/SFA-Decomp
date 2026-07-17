@@ -79,6 +79,9 @@ void sh_staff_free(int* obj, int flag)
 #include "main/objprint_render_api.h"
 #include "main/map_load.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/SH/dll_01B2_shstaffhaze.h"
+#include "main/dll/SH/dll_01B4_shemptytumblew.h"
+#include "dolphin/mtx/mtx_legacy.h"
 
 typedef struct ShStaffPlacement
 {
@@ -113,16 +116,11 @@ extern void sh_beacon_getExtraSize(void);
 
 extern void sh_beacon_free(GameObject*);
 
-extern void SH_StaffHaze_render(GameObject*);
 extern void sh_beacon_update(GameObject*);
-extern void SH_EmptyTumbleW_update(GameObject*);
 
-extern void SH_StaffHaze_update(GameObject*);
 extern void sh_beacon_init(GameObject*);
-extern void SH_EmptyTumbleW_init(void);
 
 extern void PSMTXInverse(int src, f32* dst);
-extern void PSMTXConcat(f32* a, f32* b, f32* dst);
 extern void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int a);
 
 void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)

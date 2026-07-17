@@ -18,6 +18,8 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/SH/shthorntail_ai.h"
+#include "main/dll/SC/dll_01B0_shswapston.h"
+#include "main/dll/SC/SCanimobj.h"
 
 typedef struct SHthorntailTailSwingEffectScratch
 {
@@ -76,23 +78,11 @@ extern f32 lbl_803E5454;
 extern f32 lbl_803E5458;
 extern f32 lbl_803E545C;
 
-extern void warpstone_getExtraSize(void);
-
-extern void warpstone_getObjectTypeId(void);
-
 extern void warpstone_free(GameObject*);
 
 extern void warpstone_render(void);
 
 extern void warpstone_hitDetect(GameObject*);
-
-extern void warpstone_update(void);
-
-extern void warpstone_init(GameObject*);
-
-extern void warpstone_release(void);
-
-extern void warpstone_initialise(void);
 
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);

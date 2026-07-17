@@ -6,6 +6,7 @@
 #include "main/dll/baddie_control_interface.h"
 #include "main/player_control_interface.h"
 #include "main/dll/dll_801b9ecc.h"
+#include "main/dll/DIM/DIM2icicle.h"
 
 extern u8 lbl_803DDB84;
 int lbl_80325960[16] = {
@@ -13,8 +14,6 @@ int lbl_80325960[16] = {
 };
 extern u8 gDIMbossAnimController[];
 extern f32 lbl_803E4BB8;
-
-extern void DIM2icicle_updateHitResponse(int obj, int playerObj);
 
 static inline Dim2BaddieControlInterface* DIM2_GetBaddieControlInterface(void)
 {

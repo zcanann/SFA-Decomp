@@ -36,6 +36,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "dolphin/mtx/mtx_legacy.h"
 
 typedef struct HightopFlags3
 {
@@ -110,10 +111,6 @@ extern f32 lbl_803E5C0C;
 extern f32 lbl_803E5C10;
 extern f32 lbl_803E5C14;
 
-extern f32 PSVECMag(void* vec);
-extern void PSVECScale(f32* dst, f32* src, f32 s);
-extern void PSVECNormalize(void* src, void* dst);
-extern f32 PSVECDotProduct(void* a, void* b);
 extern void SnowBike_resetToRomListPosition();
 
 void fn_801EAE4C(short* obj, int stateRaw)

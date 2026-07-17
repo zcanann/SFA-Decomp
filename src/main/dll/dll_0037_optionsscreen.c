@@ -33,6 +33,7 @@
 #include "main/dll/savedata_struct.h"
 #include "main/dll/debug/prof.h"
 #include "main/dll/dll_0037_optionsscreen.h"
+#include "main/dll/dll_0015_curves.h"
 
 /* Menu-item slots per options panel (lbl_803A87D0[8], size 0x20 / 4). */
 #define OPTIONSSCREEN_MENU_ITEM_COUNT 8
@@ -61,8 +62,6 @@ extern u8 lbl_803DD6F9;
 extern u8 lbl_803DD6F8;  /* initial panel selector */
 extern s8 lbl_803DD704;  /* exit fade countdown */
 extern int lbl_803DD700; /* last highlighted item (for select sfx) */
-extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
-extern u8 shouldShowCredits(void);
 
 u16 lbl_8031A8F8[90] = {
     0x035a, 0x0012, 0x0140, 0x00a4, 0x0000, 0x0140, 0x0034, 0x0000, 0xffff, 0xffff, 0x00c8, 0x0200, 0x0000, 0xff01, 0xffff, 0xff00,

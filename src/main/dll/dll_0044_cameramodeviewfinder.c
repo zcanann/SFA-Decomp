@@ -39,6 +39,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_B8.h"
 
 ViewfinderState* lbl_803DD548;
 
@@ -67,7 +68,6 @@ typedef struct CameraModeViewfinderInitArgs
 
 
 
-extern void firstPersonZoomOutOnExit(int a, int b);
 extern void* memset(void* dst, int v, int n);
 extern f32 lbl_803E17C0;
 extern f32 lbl_803E17C4;

@@ -19,6 +19,7 @@
 #include "main/dll/FRONT/dll_3B.h"
 #include "dolphin/os.h"
 #include "dolphin/thp/THPAudio.h"
+#include "main/dll/FRONT/picmenu.h"
 
 /* THP frame-component type id for the audio track (vs 0 = video). */
 #define THP_FRAME_COMP_AUDIO 1
@@ -30,8 +31,6 @@
 #define THP_FRAME_HEADER_SIZE 8
 
 extern int gAttractMovieAudioThreadActive;
-extern void* PopReadedBuffer(void);
-extern void PushReadedBuffer2(void* arg);
 
 OSMessageQueue lbl_803A4460; /* ready-buffer queue */
 OSMessageQueue lbl_803A4480; /* free-buffer queue */

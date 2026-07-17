@@ -15,6 +15,8 @@
 #include "main/dll/dll_00F8_levelname.h"
 #include "main/dll/MMP/dll_010F_mmpbridge.h"
 #include "main/dll/dll_00FB_pressureswitchfb.h"
+#include "main/dll/screenOverlay.h"
+#include "main/dll/cloudprisoncontrol.h"
 
 #define AREA_OBJFLAG_UPDATE_DISABLED    0x8000
 #define AREA_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -24,18 +26,9 @@ extern void Door_getExtraSize(void);
 extern void Door_init(void);
 extern void Door_render(void);
 extern void Door_update(GameObject*);
-extern void InvisibleHitSwitch_getExtraSize(void);
-extern void InvisibleHitSwitch_init(GameObject*);
-extern void InvisibleHitSwitch_update(GameObject*);
 extern void ProjectileSwitch_free(void);
 extern void ProjectileSwitch_getExtraSize(void);
 extern void ProjectileSwitch_getObjectTypeId(void);
-extern void ProjectileSwitch_hitDetect(GameObject*);
-extern void ProjectileSwitch_init(GameObject*);
-extern void ProjectileSwitch_initialise(void);
-extern void ProjectileSwitch_release(void);
-extern void ProjectileSwitch_render(GameObject*);
-extern void ProjectileSwitch_update(GameObject*);
 int area_getExtraSize(void)
 {
     return 0x0;

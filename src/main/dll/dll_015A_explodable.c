@@ -27,6 +27,9 @@
 #include "track/intersect_api.h"
 #include "main/dll/dll_015F_attractor.h"
 #include "main/dll/dll_015D_slidingdoor.h"
+#include "main/dll/dll_0166_exploded.h"
+#include "main/dll/IM/IMspacecraft.h"
+#include "main/dll/MMP/dll_017E_mmplevelcontrol.h"
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 
@@ -58,79 +61,41 @@ extern f32 lbl_803E4378;
 extern f32 lbl_803E437C;
 extern f32 lbl_803E4380;
 
-extern void exploded_setScale(void);
-
 extern void cfforcefield_getExtraSize(void);
 extern void cfmagicwall_getExtraSize(void);
 extern void cflevelcontrol_getExtraSize(void);
-extern void exploded_getExtraSize(void);
-extern void SpiritDoorLock_getExtraSize(void);
-extern void RollingBarrel_getExtraSize(void);
-extern void MMP_levelcontrol_getExtraSize(void);
 
 extern void cfforcefield_getObjectTypeId(void);
 extern void cfmagicwall_getObjectTypeId(void);
 extern void cflevelcontrol_getObjectTypeId(void);
-extern void exploded_getObjectTypeId(void);
-extern void SpiritDoorLock_getObjectTypeId(void);
-extern void RollingBarrel_getObjectTypeId(void);
-extern void MMP_levelcontrol_getObjectTypeId(void);
 
 extern void cfforcefield_free(void);
 extern void cfmagicwall_free(void);
 extern void cflevelcontrol_free(void);
-extern void exploded_free(void);
-extern void SpiritDoorLock_free(GameObject*);
-extern void RollingBarrel_free(void);
-extern void MMP_levelcontrol_free(void);
 
 extern void cfforcefield_render(void);
 extern void cfmagicwall_render(void);
 extern void cflevelcontrol_render(void);
-extern void exploded_render(void);
-extern void SpiritDoorLock_render(void);
-extern void RollingBarrel_render(void);
-extern void MMP_levelcontrol_render(void);
 
 extern void cfforcefield_hitDetect(void);
 extern void cfmagicwall_hitDetect(void);
 extern void cflevelcontrol_hitDetect(void);
-extern void exploded_hitDetect(void);
-extern void SpiritDoorLock_hitDetect(void);
-extern void RollingBarrel_hitDetect(void);
-extern void MMP_levelcontrol_hitDetect(void);
 
 extern void cfforcefield_update(void);
 extern void cfmagicwall_update(GameObject*);
 extern void cflevelcontrol_update(GameObject*);
-extern void exploded_update(void);
-extern void SpiritDoorLock_update(GameObject*);
-extern void RollingBarrel_update(GameObject*);
-extern void MMP_levelcontrol_update(GameObject*);
 
 extern void cfforcefield_init(void);
 extern void cfmagicwall_init(void);
 extern void cflevelcontrol_init(void);
-extern void exploded_init(void);
-extern void SpiritDoorLock_init(GameObject*);
-extern void RollingBarrel_init(GameObject*);
-extern void MMP_levelcontrol_init(GameObject*);
 
 extern void cfforcefield_release(void);
 extern void cfmagicwall_release(void);
 extern void cflevelcontrol_release(void);
-extern void exploded_release(void);
-extern void SpiritDoorLock_release(void);
-extern void RollingBarrel_release(void);
-extern void MMP_levelcontrol_release(void);
 
 extern void cfforcefield_initialise(void);
 extern void cfmagicwall_initialise(void);
 extern void cflevelcontrol_initialise(void);
-extern void exploded_initialise(void);
-extern void SpiritDoorLock_initialise(void);
-extern void RollingBarrel_initialise(void);
-extern void MMP_levelcontrol_initialise(void);
 
 void explodable_render(void)
 {

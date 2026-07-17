@@ -91,8 +91,6 @@ extern f32 gTotemBondRingRotateSpeed;
 extern f32 gTotemBondCameraDistance;
 extern f32 lbl_803E5650;
 
-extern void fn_8011F6D4(u32 x);
-
 #pragma dont_inline on
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
 {

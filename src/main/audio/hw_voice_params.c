@@ -1,4 +1,5 @@
 #include "main/audio/dsp_voice.h"
+#include "main/audio/dsp_voice_state.h"
 
 #define DSP_VOICE_STRIDE                0xf4
 #define DSP_VOICE_PITCH_CHANGE_FLAG     0x8
@@ -8,7 +9,6 @@
 #define DSP_VOICE_ITD_DISABLED_MASK     0x7fffffff
 #define DSP_VOICE_ITD_CENTER            0x10
 
-extern DSPvoice* volatile dspVoice;
 extern u8 salTimeOffset;
 extern u16 lbl_803DC618[4];
 extern u16 lbl_803DC620[4];

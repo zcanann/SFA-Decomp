@@ -53,7 +53,6 @@
 #define BOUNCE_WALL_MAXY 0x10 /* boundsMaxY -> surfaceMode 4 */
 #define BOUNCE_WALL_MINY 0x20 /* boundsMinY -> surfaceMode 5 */
 
-extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern const f32 lbl_803E2FDC;
@@ -393,8 +392,6 @@ void dll_D3_free(int obj)
     }
     (*(void (*)(int, int*, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
 }
-
-extern void Vec3_Cross(f32* a, f32* b, f32* out);
 
 typedef struct StaffBits
 {
@@ -846,6 +843,7 @@ void fn_80166444(int obj, int state)
 #include "main/objfx.h"
 #include "main/object_descriptor.h"
 #include "string.h"
+#include "main/dll/dll_00D2_tumbleweed.h"
 
 typedef struct DllD3Placement
 {
@@ -866,10 +864,6 @@ void* gLandedArwingDefaultStateHandler;
 extern f32 gStaffActionBoundsSearchRadius;
 extern f32 lbl_803E3038;
 extern f32 lbl_803E3048;
-extern void LandedArwing_UpdateRetreatChase(GameObject*);
-extern void LandedArwing_UpdateBounceFade(void);
-extern void LandedArwing_TriggerLaunchTarget(void);
-extern void LandedArwing_ReturnZero(void);
 
 #pragma fp_contract off
 #pragma opt_common_subs off
