@@ -55,14 +55,12 @@ void arwbombcoll_setLifetime(GameObject* obj, int lifetime)
 }
 
 
-__declspec(section ".sdata2") f32 lbl_803E7078 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E707C = 0.0f;
-#pragma explicit_zero_data reset
-__declspec(section ".sdata2") f32 gArwBombCollActivateDistanceZ = 3840.0f;
-__declspec(section ".sdata2") f32 gArwBombCollAlphaFadeRate = 3.0f;
-__declspec(section ".sdata2") f32 gArwBombCollSpinRate = 600.0f;
-__declspec(section ".sdata2") f32 lbl_803E708C = 100.0f;
+static const f32 sRenderScale = 1.0f;
+static const f32 sMinLifetime = 0.0f;
+static const f32 sActivateDistanceZ = 3840.0f;
+static const f32 sAlphaFadeRate = 3.0f;
+static const f32 sSpinRate = 600.0f;
+static const f32 sExplosionScale = 100.0f;
 
 int ARWBombColl_getExtraSize(void)
 {
@@ -83,7 +81,7 @@ void ARWBombColl_free(void)
 
 void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7078);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, sRenderScale);
 }
 
 
@@ -109,7 +107,7 @@ void ARWBombColl_update(int obj)
 
     {
         f32 lt = state->lifetime;
-        if (lt > (minLifetime = lbl_803E707C))
+        if (lt > (minLifetime = sMinLifetime))
         {
             state->lifetime = lt - timeDelta;
             if (state->lifetime <= minLifetime)
@@ -133,7 +131,7 @@ void ARWBombColl_update(int obj)
         arwingCheck = getArwing();
         if (((arwingCheck != NULL)
                  ? (((GameObject*)obj)->anim.localPosZ - arwingCheck->anim.localPosZ <
-                    gArwBombCollActivateDistanceZ)
+                    sActivateDistanceZ)
                  : 0) != 0)
         {
             goto active;
@@ -146,14 +144,14 @@ active:
 {
     int alpha;
 
-    alpha = (int)(gArwBombCollAlphaFadeRate * timeDelta + (f32)(u32)objAnim->alpha);
+    alpha = (int)(sAlphaFadeRate * timeDelta + (f32)(u32)objAnim->alpha);
     if (alpha > 0xff)
     {
         alpha = 0xff;
     }
     objAnim->alpha = alpha;
     ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-    ((GameObject*)obj)->anim.rotX = gArwBombCollSpinRate * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
+    ((GameObject*)obj)->anim.rotX = sSpinRate * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWBOMBCOLL_HIT_VOLUME_SLOT, 0, 0);
     if (flags->b40 != 0)
     {
@@ -175,14 +173,14 @@ active:
             arwarwing_addScore(arw, 0xf);
             flags->b40 = 1;
             Obj_SetActiveModelIndex((GameObject*)obj, 1);
-            spawnExplosionLegacy(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
+            spawnExplosionLegacy(obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
         }
         if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
             (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
         {
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject(obj);
-            spawnExplosionLegacy(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
+            spawnExplosionLegacy(obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
         }
     }
     if (arw != NULL && flags->b80 != 0)

@@ -38,12 +38,6 @@ STATIC_ASSERT(sizeof(ArwBombFlags) == 0x1);
 STATIC_ASSERT(sizeof(ARWBombCollState) == 0x8);
 STATIC_ASSERT(offsetof(ARWBombCollState, flags) == 0x04);
 
-extern f32 lbl_803E7078;
-extern f32 lbl_803E707C;
-extern f32 gArwBombCollActivateDistanceZ;
-extern f32 gArwBombCollAlphaFadeRate;
-extern f32 gArwBombCollSpinRate;
-extern f32 lbl_803E708C;
 extern f32 gArwBombCollHitToleranceY;
 extern f32 gArwBombCollHitRadiusSq;
 extern f32 gArwBombCollPlaneHitRadius;
