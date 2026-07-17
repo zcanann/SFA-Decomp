@@ -2489,8 +2489,6 @@ void titleScreenDrawFn_80093db4(void)
     f32* cp;
     int i;
     int idx;
-    f32 x;
-    f32 y;
     f32 v[3];
     f32 mtx1[12];
     f32 mtx2[12];
@@ -2547,13 +2545,13 @@ void titleScreenDrawFn_80093db4(void)
             }
             else
             {
+                f64 ax;
                 idx = randomGetRange(0, 0x63);
-                x = constellation[idx * 3];
-                v[0] = x;
-                y = constellation[idx * 3 + 1];
-                v[1] = y;
+                v[0] = constellation[idx * 3];
+                v[1] = constellation[idx * 3 + 1];
                 v[2] = constellation[idx * 3 + 2];
-                if (__fabs(x) > gNewCloudStarAxisThreshold)
+                ax = __fabs(v[0]);
+                if (ax > gNewCloudStarAxisThreshold)
                 {
                     PSMTXRotRad(mtx1, 0x79,
                                 (lbl_803DF298 *
@@ -2578,55 +2576,59 @@ void titleScreenDrawFn_80093db4(void)
                     )
                     ;
                 }
-                else if (__fabs(y) > gNewCloudStarAxisThreshold)
-                {
-                    PSMTXRotRad(mtx1, 0x78,
-                                (lbl_803DF298 *
-                                    (lbl_803DF29C *
-                                        (lbl_803DF2A0 *
-                                            randomGetRange(-0x8000, 0x8000))
-                    )
-                    )
-                    /
-                    lbl_803DF2A4
-                    )
-                    ;
-                    PSMTXRotRad(mtx2, 0x7a,
-                                (lbl_803DF298 *
-                                    (lbl_803DF29C *
-                                        (lbl_803DF2A0 *
-                                            randomGetRange(-0x8000, 0x8000))
-                    )
-                    )
-                    /
-                    lbl_803DF2A4
-                    )
-                    ;
-                }
                 else
                 {
-                    PSMTXRotRad(mtx1, 0x78,
-                                (lbl_803DF298 *
-                                    (lbl_803DF29C *
-                                        (lbl_803DF2A0 *
-                                            randomGetRange(-0x8000, 0x8000))
-                    )
-                    )
-                    /
-                    lbl_803DF2A4
-                    )
-                    ;
-                    PSMTXRotRad(mtx2, 0x79,
-                                (lbl_803DF298 *
-                                    (lbl_803DF29C *
-                                        (lbl_803DF2A0 *
-                                            randomGetRange(-0x8000, 0x8000))
-                    )
-                    )
-                    /
-                    lbl_803DF2A4
-                    )
-                    ;
+                    f64 ay = __fabs(v[1]);
+                    if (ay > gNewCloudStarAxisThreshold)
+                    {
+                        PSMTXRotRad(mtx1, 0x78,
+                                    (lbl_803DF298 *
+                                        (lbl_803DF29C *
+                                            (lbl_803DF2A0 *
+                                                randomGetRange(-0x8000, 0x8000))
+                        )
+                        )
+                        /
+                        lbl_803DF2A4
+                        )
+                        ;
+                        PSMTXRotRad(mtx2, 0x7a,
+                                    (lbl_803DF298 *
+                                        (lbl_803DF29C *
+                                            (lbl_803DF2A0 *
+                                                randomGetRange(-0x8000, 0x8000))
+                        )
+                        )
+                        /
+                        lbl_803DF2A4
+                        )
+                        ;
+                    }
+                    else
+                    {
+                        PSMTXRotRad(mtx1, 0x78,
+                                    (lbl_803DF298 *
+                                        (lbl_803DF29C *
+                                            (lbl_803DF2A0 *
+                                                randomGetRange(-0x8000, 0x8000))
+                        )
+                        )
+                        /
+                        lbl_803DF2A4
+                        )
+                        ;
+                        PSMTXRotRad(mtx2, 0x79,
+                                    (lbl_803DF298 *
+                                        (lbl_803DF29C *
+                                            (lbl_803DF2A0 *
+                                                randomGetRange(-0x8000, 0x8000))
+                        )
+                        )
+                        /
+                        lbl_803DF2A4
+                        )
+                        ;
+                    }
                 }
                 PSMTXConcat((void*)mtx2, (void*)mtx1, (void*)mtx1);
                 PSMTXMultVecSR(mtx1, v, v);
