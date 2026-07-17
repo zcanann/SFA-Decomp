@@ -5878,7 +5878,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
         sp1 += 3;
         sp2 += 3;
     } while (i < count);
-    return (u8)((retHi << 4) | retLo);
+    return (u8)retLo | ((u8)retHi << 4);
 }
 #pragma opt_propagation reset
 #pragma opt_common_subs reset
