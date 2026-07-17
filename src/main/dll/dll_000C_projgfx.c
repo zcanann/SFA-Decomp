@@ -82,4 +82,3 @@ ObjectDescriptor11 projgfx_funcs = {
 char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
 char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
 char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
-__declspec(section ".data") int sProjgfxUnused[1] = {0};
