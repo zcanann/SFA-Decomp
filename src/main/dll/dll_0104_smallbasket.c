@@ -95,37 +95,29 @@ typedef struct SmallBasketThrowSetup
    header in the import skeleton; declared locally. */
 
 f32 gSmallBasketHitVelocity[4];
-extern const f32 lbl_803E3930;
-extern f32 lbl_803E3938;
-extern const f32 lbl_803E393C;
-extern const f32 lbl_803E3940;
-extern const f32 lbl_803E3944;
-extern const f32 lbl_803E3948;
-extern const f32 lbl_803E394C;
-extern const f32 lbl_803E3950;
-extern f32 lbl_803E3954;
-extern const f32 lbl_803E3958;
-extern const f32 lbl_803E395C;
-extern const f32 lbl_803E3960;
-extern const f32 lbl_803E3964;
-extern const f32 lbl_803E3970;
+union SmallBasketConstF32 { f32 f; };
+#pragma explicit_zero_data on
+const union SmallBasketConstF32 lbl_803E3930 = { 100.0f };
+__declspec(section ".sdata2") f32 lbl_803E3934 = 0.014f;
+__declspec(section ".sdata2") f32 lbl_803E3938 = 0.0f;
+const union SmallBasketConstF32 lbl_803E393C = { 0.25f };
+const union SmallBasketConstF32 lbl_803E3940 = { 50.0f };
+const union SmallBasketConstF32 lbl_803E3944 = { 75.0f };
+const union SmallBasketConstF32 lbl_803E3948 = { 3.0f };
+const union SmallBasketConstF32 lbl_803E394C = { 4.0f };
+const union SmallBasketConstF32 lbl_803E3950 = { 1.0f };
+__declspec(section ".sdata2") f32 lbl_803E3954 = 0.01f;
+const union SmallBasketConstF32 lbl_803E3958 = { 2.2f };
+const union SmallBasketConstF32 lbl_803E395C = { 15.0f };
+const union SmallBasketConstF32 lbl_803E3960 = { 5.0f };
+const union SmallBasketConstF32 lbl_803E3964 = { 2.0f };
+#pragma explicit_zero_data reset
 void SmallBasket_init(GameObject* obj, int def);
 void SmallBasket_update(GameObject* obj);
 void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
 void* gSmallBasketResource;
-extern const f32 lbl_803E3974;
 
 extern void fn_801814D0(int obj, int player, int state);
-extern f32 lbl_803E3934;
-extern const f32 lbl_803E3978;
-extern const f32 lbl_803E397C;
-extern const f32 lbl_803E3980;
-extern const f32 lbl_803E3984;
-extern const f32 lbl_803E3988;
-extern const f32 lbl_803E398C;
-extern const f32 lbl_803E3990;
-extern const f32 lbl_803E3994;
-extern f32 lbl_803E3998;
 typedef struct SmallbasketObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -195,7 +187,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         return 0;
     }
     hitVel = gSmallBasketHitVelocity;
-    if (hitVel[1] < lbl_803E393C)
+    if (hitVel[1] < lbl_803E393C.f)
     {
         slowMo = 1;
     }
@@ -205,17 +197,17 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         ratio = num;
         den = (f32)(int)Player_GetMaxHealth((int)player);
         ratio = ratio / den;
-        ratio = ratio * lbl_803E3930;
-        if (ratio <= lbl_803E3940)
+        ratio = ratio * lbl_803E3930.f;
+        if (ratio <= lbl_803E3940.f)
         {
             mode = 6;
         }
-        else if (ratio <= lbl_803E3944)
+        else if (ratio <= lbl_803E3944.f)
         {
-            if ((int)randomGetRange(0, (s16)(int)(ratio - lbl_803E3940)) < 7)
+            if ((int)randomGetRange(0, (s16)(int)(ratio - lbl_803E3940.f)) < 7)
             {
                 mode = 6;
-                max = (s16)(den * lbl_803E393C);
+                max = (s16)(den * lbl_803E393C.f);
                 if (max < 1)
                 {
                     max = 1;
@@ -252,9 +244,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
                                        ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
-            sc = lbl_803E3948;
+            sc = lbl_803E3948.f;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C.f * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         else
@@ -271,14 +263,14 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950.f);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950.f);
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958.f;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
-        spread.f10 = lbl_803E3950;
+        spread.f10 = lbl_803E3950.f;
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
@@ -306,9 +298,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
                                        ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
-            sc = lbl_803E3948;
+            sc = lbl_803E3948.f;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C.f * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         else
@@ -325,14 +317,14 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950.f);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950.f);
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958.f;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
-        spread.f10 = lbl_803E3950;
+        spread.f10 = lbl_803E3950.f;
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
@@ -360,9 +352,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
                                        ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
-            sc = lbl_803E3948;
+            sc = lbl_803E3948.f;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C.f * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         else
@@ -379,14 +371,14 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950.f);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950.f);
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958.f;
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
-        spread.f10 = lbl_803E3950;
+        spread.f10 = lbl_803E3950.f;
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
@@ -419,13 +411,13 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         if ((s8)data[9] != 0)
         {
             ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-0xf, 0xf);
-            ((ObjPlacement*)setup)->posY = lbl_803E395C + ((GameObject*)obj)->anim.localPosY;
+            ((ObjPlacement*)setup)->posY = lbl_803E395C.f + ((GameObject*)obj)->anim.localPosY;
             ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0xf, 0xf);
         }
         else
         {
             ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-            ((ObjPlacement*)setup)->posY = lbl_803E3960 + ((GameObject*)obj)->anim.localPosY;
+            ((ObjPlacement*)setup)->posY = lbl_803E3960.f + ((GameObject*)obj)->anim.localPosY;
             ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
         }
         ((SmallBasketThrowSetup*)setup)->field24 = -1;
@@ -433,9 +425,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
                                        ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
-            sc = lbl_803E3948;
+            sc = lbl_803E3948.f;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C.f * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
@@ -444,21 +436,21 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         {
             mag = sqrtf(mag);
             ((GameObject*)spawned)->anim.velocityX =
-                ((GameObject*)spawned)->anim.velocityX / (mag = lbl_803E3964 * mag);
+                ((GameObject*)spawned)->anim.velocityX / (mag = lbl_803E3964.f * mag);
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950.f);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
-        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950.f);
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958.f;
         (*(ObjThrowInitFn*)(*(int*)*(int*)&((GameObject*)spawned)->anim.dll + 0x2c))(
             spawned, ((GameObject*)spawned)->anim.velocityX, ((GameObject*)spawned)->anim.velocityY,
             ((GameObject*)spawned)->anim.velocityZ);
         spread.f14 = lbl_803E3938;
         spread.f18 = lbl_803E3938;
         spread.f1c = lbl_803E3938;
-        spread.f10 = lbl_803E3950;
+        spread.f10 = lbl_803E3950.f;
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
@@ -478,6 +470,18 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     }
     return 1;
 }
+
+const union SmallBasketConstF32 lbl_803E3970 = { 0.1f };
+const union SmallBasketConstF32 lbl_803E3974 = { -2.2f };
+const union SmallBasketConstF32 lbl_803E3978 = { 8.0f };
+const union SmallBasketConstF32 lbl_803E397C = { 0.75f };
+const union SmallBasketConstF32 lbl_803E3980 = { -0.75f };
+const union SmallBasketConstF32 lbl_803E3984 = { 1.2f };
+const union SmallBasketConstF32 lbl_803E3988 = { 0.35f };
+const union SmallBasketConstF32 lbl_803E398C = { -1.2f };
+const union SmallBasketConstF32 lbl_803E3990 = { -0.35f };
+const union SmallBasketConstF32 lbl_803E3994 = { -10.0f };
+__declspec(section ".sdata2") f32 lbl_803E3998 = -0.12f;
 
 #pragma opt_propagation reset
 int smallbasket_resolveCollision(u8* obj)
@@ -503,7 +507,7 @@ int smallbasket_resolveCollision(u8* obj)
     TrackQueryBounds sweptBounds;
 
     st = *(u8**)&((GameObject*)obj)->anim.hitReactState;
-    if (objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), lbl_803E3970, 1, NULL,
+    if (objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), lbl_803E3970.f, 1, NULL,
                            (GameObject*)obj, 1, -1, 0xff, 0) != 0)
     {
         ((ObjHitsPriorityState*)st)->contactFlags |= OBJHITS_CONTACT_FLAG_KIND0;
@@ -617,12 +621,12 @@ void objThrowFn_80182504(GameObject* obj)
     ((CfperchState*)extra)->carryAttached = 0;
     ((CfperchState*)extra)->carryState = 0;
     ((CfperchState*)extra)->throwState = 1;
-    obj->anim.velocityY = lbl_803E3958;
-    obj->anim.velocityZ = lbl_803E3974;
+    obj->anim.velocityY = lbl_803E3958.f;
+    obj->anim.velocityZ = lbl_803E3974.f;
     local.f14 = lbl_803E3938;
     local.f18 = lbl_803E3938;
     local.f1c = lbl_803E3938;
-    local.f10 = lbl_803E3950;
+    local.f10 = lbl_803E3950.f;
     local.fc = 0;
     local.fa = 0;
     local.f8 = *player;
@@ -665,7 +669,7 @@ void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char vi
         }
         else
         {
-            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E3950);
+            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E3950.f);
         }
     }
 }
@@ -702,7 +706,7 @@ void SmallBasket_update(GameObject* obj)
 
     player = Obj_GetPlayerObject();
     def = *(int*)&(obj)->anim.placementData;
-    animSpeed = lbl_803E3950;
+    animSpeed = lbl_803E3950.f;
     (*gSkyInterface)->getClockTime(&animSpeed);
     state = (obj)->extra;
     if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)def)->mapId) == 0)
@@ -729,7 +733,7 @@ void SmallBasket_update(GameObject* obj)
         if (state->hiddenTimer <= 0)
         {
             if ((Vec_distance(&(obj)->anim.worldPosX, &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) >
-                 lbl_803E3930) &&
+                 lbl_803E3930.f) &&
                 (state->enableGameBit == -1))
             {
                 flag[0] = 1;
@@ -753,7 +757,7 @@ void SmallBasket_update(GameObject* obj)
     {
         if (state->carryState != 2)
         {
-            level = (int)(lbl_803E3978 * timeDelta + (f32)(u32)(obj)->anim.alpha);
+            level = (int)(lbl_803E3978.f * timeDelta + (f32)(u32)(obj)->anim.alpha);
             if (level > 0xff)
             {
                 level = 0xff;
@@ -860,12 +864,12 @@ void SmallBasket_update(GameObject* obj)
                     {
                         *(u8*)&state->carryState = 0;
                         state->throwState = 1;
-                        (obj)->anim.velocityY = lbl_803E397C * playerState->baddie.inputMagnitude + lbl_803E3958;
-                        (obj)->anim.velocityZ = lbl_803E3980 * playerState->baddie.inputMagnitude + lbl_803E3974;
+                        (obj)->anim.velocityY = lbl_803E397C.f * playerState->baddie.inputMagnitude + lbl_803E3958.f;
+                        (obj)->anim.velocityZ = lbl_803E3980.f * playerState->baddie.inputMagnitude + lbl_803E3974.f;
                         blk.fy = lbl_803E3938;
                         blk.fz = lbl_803E3938;
                         blk.fw = lbl_803E3938;
-                        blk.fx = lbl_803E3950;
+                        blk.fx = lbl_803E3950.f;
                         blk.h2 = 0;
                         blk.h1 = 0;
                         blk.h0 = player->anim.rotX;
@@ -892,12 +896,12 @@ void SmallBasket_update(GameObject* obj)
                     {
                         *(u8*)&state->carryState = 0;
                         state->throwState = 1;
-                        (obj)->anim.velocityY = lbl_803E3988 * playerState->baddie.inputMagnitude + lbl_803E3984;
-                        (obj)->anim.velocityZ = lbl_803E3990 * playerState->baddie.inputMagnitude + lbl_803E398C;
+                        (obj)->anim.velocityY = lbl_803E3988.f * playerState->baddie.inputMagnitude + lbl_803E3984.f;
+                        (obj)->anim.velocityZ = lbl_803E3990.f * playerState->baddie.inputMagnitude + lbl_803E398C.f;
                         blk.fy = lbl_803E3938;
                         blk.fz = lbl_803E3938;
                         blk.fw = lbl_803E3938;
-                        blk.fx = lbl_803E3950;
+                        blk.fx = lbl_803E3950.f;
                         blk.h2 = 0;
                         blk.h1 = 0;
                         blk.h0 = player->anim.rotX;
@@ -922,7 +926,7 @@ void SmallBasket_update(GameObject* obj)
             if (*(s8*)&state->throwState == 1)
             {
                 ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, SMALLBASKET_HIT_VOLUME_SLOT, 1, 0);
-                if ((obj)->anim.velocityY > lbl_803E3994)
+                if ((obj)->anim.velocityY > lbl_803E3994.f)
                 {
                     (obj)->anim.velocityY = lbl_803E3998 * timeDelta + (obj)->anim.velocityY;
                 }
