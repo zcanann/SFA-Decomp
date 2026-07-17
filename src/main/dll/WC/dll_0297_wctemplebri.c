@@ -49,6 +49,7 @@
 
 
 
+#pragma dont_inline on
 void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state)
 {
     ObjTextureRuntimeSlot* tex;
@@ -74,8 +75,21 @@ void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state)
         phase = (phase - 0x10000) + 1;
     state->wavePhaseB = phase;
 }
+#pragma dont_inline off
 
-#pragma dont_inline on
+static void wctemplebri_deformVertex(ObjModel* model, ModelFileHeader* modelBase, WCTempleBriState* state, int i)
+{
+    s16* curr = ObjModel_GetCurrentVertexCoords(model, i);
+    s16* base = ObjModel_GetBaseVertexCoords(modelBase, i);
+    int wave = (u16)(int)(65535.0f * ((f32)curr[2] / state->maxY));
+    int idx = wave + state->wavePhaseA;
+
+    if (base[0] > 0)
+        curr[0] = (s16)(256.0f * mathSinf(3.1415927f * idx / 32768.0f) + (f32)base[0]);
+    else
+        curr[0] = (s16)((f32)base[0] - 256.0f * mathSinf(3.1415927f * idx / 32768.0f));
+}
+
 int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     ObjAnimComponent* objAnim = &obj->anim;
@@ -83,7 +97,6 @@ int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
     ObjModel* model;
     ModelFileHeader* modelBase;
     int i;
-    f32 waveScale;
     WCTempleBriState* state = obj->extra;
 
     animUpdate->sequenceEventActive = 0;
@@ -112,19 +125,8 @@ int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
     }
     model = Obj_GetActiveModel(obj);
     modelBase = model->file;
-    i = 0;
-    waveScale = *(f32*)&lbl_803E6E70;
-    for (; i < modelBase->vertexCount; i++)
-    {
-        s16* curr = ObjModel_GetCurrentVertexCoords(model, i);
-        s16* base = ObjModel_GetBaseVertexCoords(modelBase, i);
-        int wave = (u16)(int)(waveScale * ((f32)curr[2] / state->maxY));
-        int idx = wave + state->wavePhaseA;
-        if (base[0] > 0)
-            curr[0] = (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C) + (f32)base[0]);
-        else
-            curr[0] = (s16)((f32)base[0] - lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C));
-    }
+    for (i = 0; i < modelBase->vertexCount; i++)
+        wctemplebri_deformVertex(model, modelBase, state, i);
     return 0;
 }
 
@@ -160,21 +162,19 @@ void wctemplebri_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
         return;
     }
 
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6E90);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void wctemplebri_hitDetect(void)
 {
 }
 
-#pragma dont_inline on
 void wctemplebri_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim = &obj->anim;
     ObjModel* model;
     ModelFileHeader* modelBase;
     int i;
-    f32 waveScale;
     WCTempleBriState* state;
     WCTempleBriSetup* setup = (WCTempleBriSetup*)obj->anim.placementData;
 
@@ -183,19 +183,8 @@ void wctemplebri_update(GameObject* obj)
     wctemplebri_updateModelWarp(obj, state);
     model = Obj_GetActiveModel(obj);
     modelBase = model->file;
-    i = 0;
-    waveScale = *(f32*)&lbl_803E6E70;
-    for (; i < modelBase->vertexCount; i++)
-    {
-        s16* curr = ObjModel_GetCurrentVertexCoords(model, i);
-        s16* base = ObjModel_GetBaseVertexCoords(modelBase, i);
-        int wave = (u16)(int)(waveScale * ((f32)curr[2] / state->maxY));
-        int idx = wave + state->wavePhaseA;
-        if (base[0] > 0)
-            curr[0] = (s16)(lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C) + (f32)base[0]);
-        else
-            curr[0] = (s16)((f32)base[0] - lbl_803E6E74 * mathSinf(lbl_803E6E78 * idx / lbl_803E6E7C));
-    }
+    for (i = 0; i < modelBase->vertexCount; i++)
+        wctemplebri_deformVertex(model, modelBase, state, i);
     if (state->active != 0)
     {
         if ((state->flags & WCTEMPLEBRI_FLAG_SOLVED) == 0)
@@ -222,7 +211,7 @@ void wctemplebri_update(GameObject* obj)
     if ((void*)Obj_GetPlayerObject() != NULL)
     {
         if (PSVECDistance((const Vec*)&obj->anim.worldPosX,
-                          (const Vec*)&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) > lbl_803E6E94)
+                          (const Vec*)&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) > 1000.0f)
         {
             mainSetBits(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 0);
         }

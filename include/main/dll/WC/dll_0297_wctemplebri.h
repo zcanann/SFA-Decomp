@@ -46,12 +46,6 @@ STATIC_ASSERT(offsetof(WCTempleBriSetup, type) == 0x18);
 STATIC_ASSERT(offsetof(WCTempleBriSetup, modelIndex) == 0x19);
 STATIC_ASSERT(offsetof(WCTempleBriSetup, solvedBit) == 0x1e);
 
-extern f32 lbl_803E6E70;
-extern f32 lbl_803E6E74;
-extern f32 lbl_803E6E78;
-extern f32 lbl_803E6E7C;
-extern f32 lbl_803E6E90;
-extern f32 lbl_803E6E94;
 
 void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state);
 int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
