@@ -36,15 +36,25 @@
 #define CCLEVCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 #define CCLEVCONTROL_ENVFX_A              0x242
 
-int lbl_80323548[56] = {
-    0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241,
-    0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x023F023F, 0x023F023F,
-    0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F,
-    0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x02400240, 0x02400243, 0x02400243, 0x02430240,
-    0x02400240, 0x02400240, 0x02400240, 0x02400240, 0x02430243, 0x02430240, 0x02400240, 0x02400240,
-    0x02400240, 0x02400240, -1,         -1,         -1,         -1,         -1,         -1,
-    -1,         -1,         -1,         -1,         -1,         -1,         -1,         -1,
+typedef struct CcLevControlEnvFxTable
+{
+    s32 values0[14];
+    s32 values1[14];
+    s32 values2[14];
+    s32 values3[14];
+} CcLevControlEnvFxTable;
+
+CcLevControlEnvFxTable lbl_80323548 = {
+    {0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241,
+     0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241},
+    {0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F,
+     0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F},
+    {0x02400240, 0x02400243, 0x02400243, 0x02430240, 0x02400240, 0x02400240, 0x02400240,
+     0x02400240, 0x02430243, 0x02430240, 0x02400240, 0x02400240, 0x02400240, 0x02400240},
+    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 };
+
+STATIC_ASSERT(sizeof(CcLevControlEnvFxTable) == 0xE0);
 
 
 
@@ -166,7 +176,7 @@ void cclevcontrol_init(int* obj)
 {
     void* envfxTable;
     int* state;
-    envfxTable = lbl_80323548;
+    envfxTable = &lbl_80323548;
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = cclevcontrol_SeqFn;
     fn_80088870((char*)envfxTable + 0x38, envfxTable, (char*)envfxTable + 0x70, (char*)envfxTable + 0xa8);
