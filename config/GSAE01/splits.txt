@@ -968,7 +968,7 @@ main/dll/dll_bb.c:
 main/dll/dll_bc.c:
 	.text       start:0x8010210C end:0x8010224C
 
-main/dll/dll_0001_camcontrol.c:
+main/dll/CAM/camcontrol.c:
 	.text       start:0x8010224C end:0x80103524
 	.data       start:0x80319B14 end:0x80319CB4
 	.bss        start:0x803A4228 end:0x803A43C0
