@@ -60,21 +60,10 @@ STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
 
 #define STAFFACTIVATED_OBJ_GROUP 0x41
 
-extern f32 lbl_803E3BBC;
-extern f32 lbl_803E3BDC;
-extern f32 lbl_803E3BF0;
-extern f32 gStaffActivatedPi;
-extern f32 gStaffActivatedBinAngleScale;
-extern f32 lbl_803E3BFC;
-extern f32 lbl_803E3C00;
-extern f32 lbl_803E3C04;
-extern f32 lbl_803E3C08;
-extern f32 lbl_803E3C0C;
-extern f32 gStaffActivatedMinRootMotionScale;
-extern f32 lbl_803E3C14;
-extern f32 lbl_803E3C18;
 extern void landed_arwing_updateHitReaction(GameObject* obj, void* state);
 extern void landed_arwing_updateDamageTexture(GameObject* obj, void* state);
+
+extern const f32 lbl_803E3BBC;
 
 void staffactivated_calcInteractionTargetXZ(GameObject* obj, f32* outX, f32* outZ)
 {
@@ -89,27 +78,27 @@ void staffactivated_calcInteractionTargetXZ(GameObject* obj, f32* outX, f32* out
     switch (mode)
     {
     case STAFFACTIVATED_MODE_LIFT:
-        *outX = -(lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) -
+        *outX = -(20.0f * mathSinf(3.1415927f * (f32)(gobj->anim.rotX) / 32768.0f) -
                   state->targetX);
-        *outZ = -(lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) -
+        *outZ = -(20.0f * mathCosf(3.1415927f * (f32)(gobj->anim.rotX) / 32768.0f) -
                   state->targetZ);
         break;
     case STAFFACTIVATED_MODE_HIT_REACTION:
-        *outX = lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+        *outX = 20.0f * mathSinf(3.1415927f * (f32)(gobj->anim.rotX) / 32768.0f) +
                 state->targetX;
-        *outZ = lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+        *outZ = 20.0f * mathCosf(3.1415927f * (f32)(gobj->anim.rotX) / 32768.0f) +
                 state->targetZ;
         break;
     case STAFFACTIVATED_MODE_ACTION:
-        *outX = lbl_803E3BFC * mathSinf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+        *outX = 18.0f * mathSinf(3.1415927f * (f32)(gobj->anim.rotX) / 32768.0f) +
                 gobj->anim.localPosX;
-        *outZ = lbl_803E3BFC * mathCosf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+        *outZ = 18.0f * mathCosf(3.1415927f * (f32)(gobj->anim.rotX) / 32768.0f) +
                 gobj->anim.localPosZ;
         break;
     default:
-        *outX = lbl_803E3BF0 * mathSinf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+        *outX = 20.0f * mathSinf(3.1415927f * (f32)(gobj->anim.rotX) / 32768.0f) +
                 gobj->anim.localPosX;
-        *outZ = lbl_803E3BF0 * mathCosf(gStaffActivatedPi * (f32)(gobj->anim.rotX) / gStaffActivatedBinAngleScale) +
+        *outZ = 20.0f * mathCosf(3.1415927f * (f32)(gobj->anim.rotX) / 32768.0f) +
                 gobj->anim.localPosZ;
         break;
     }
@@ -226,16 +215,16 @@ void staffactivated_update(GameObject* obj)
         ((StaffFlags*)&state->flags)->b7 = isSet;
         if (((StaffFlags*)&state->flags)->b7)
         {
-            stk.posX = lbl_803E3C00;
-            stk.posY = lbl_803E3C04;
-            stk.posZ = lbl_803E3BDC;
+            stk.posX = 2.8f;
+            stk.posY = 1.7f;
+            stk.posZ = 0.0f;
             stk.scale = lbl_803E3BBC;
             stk.extra = 0;
             stk.life = 0x64;
             (*gPartfxInterface)->spawnObject((void*)obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, NULL);
-            stk.posX = lbl_803E3C00;
-            stk.posY = lbl_803E3C04;
-            stk.posZ = lbl_803E3BDC;
+            stk.posX = 2.8f;
+            stk.posY = 1.7f;
+            stk.posZ = 0.0f;
             stk.scale = lbl_803E3BBC;
             stk.extra = 5;
             stk.life = 0xa;
@@ -278,7 +267,7 @@ void staffactivated_init(GameObject* obj, StaffActivatedSetup* setupData)
         {
         case 2:
             modelVariant = 2;
-            scale = lbl_803E3C08;
+            scale = 1.25f;
             break;
         default:
             modelVariant = 1;
@@ -286,7 +275,7 @@ void staffactivated_init(GameObject* obj, StaffActivatedSetup* setupData)
             break;
         case 0:
             modelVariant = 0;
-            scale = lbl_803E3C0C;
+            scale = 0.75f;
             break;
         }
     }
@@ -302,34 +291,34 @@ void staffactivated_init(GameObject* obj, StaffActivatedSetup* setupData)
     }
 
     obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase * scale;
-    if (obj->anim.rootMotionScale < *(f32*)&gStaffActivatedMinRootMotionScale)
+    if (obj->anim.rootMotionScale < 0.1f)
     {
-        obj->anim.rootMotionScale = gStaffActivatedMinRootMotionScale;
+        obj->anim.rootMotionScale = 0.1f;
     }
 
     switch (setupData->mode)
     {
     case STAFFACTIVATED_MODE_LIFT:
         obj->hitVolumeIndex = modelVariant;
-        state->targetX = -(lbl_803E3C14 * (obj->anim.rootMotionScale *
-                                           (lbl_803E3C18 * mathSinf((gStaffActivatedPi * (f32)obj->anim.rotX) /
-                                                                    gStaffActivatedBinAngleScale))) -
+        state->targetX = -(0.5f * (obj->anim.rootMotionScale *
+                                           (10.0f * mathSinf((3.1415927f * (f32)obj->anim.rotX) /
+                                                                    32768.0f))) -
                            obj->anim.localPosX);
-        state->targetZ = -(lbl_803E3C14 * (obj->anim.rootMotionScale *
-                                           (lbl_803E3C18 * mathCosf((gStaffActivatedPi * (f32)obj->anim.rotX) /
-                                                                    gStaffActivatedBinAngleScale))) -
+        state->targetZ = -(0.5f * (obj->anim.rootMotionScale *
+                                           (10.0f * mathCosf((3.1415927f * (f32)obj->anim.rotX) /
+                                                                    32768.0f))) -
                            obj->anim.localPosZ);
         break;
     case STAFFACTIVATED_MODE_HIT_REACTION:
         state->targetX =
-            lbl_803E3C14 *
+            0.5f *
                 (obj->anim.rootMotionScale *
-                 (lbl_803E3C18 * mathSinf((gStaffActivatedPi * (f32)obj->anim.rotX) / gStaffActivatedBinAngleScale))) +
+                 (10.0f * mathSinf((3.1415927f * (f32)obj->anim.rotX) / 32768.0f))) +
             obj->anim.localPosX;
         state->targetZ =
-            lbl_803E3C14 *
+            0.5f *
                 (obj->anim.rootMotionScale *
-                 (lbl_803E3C18 * mathCosf((gStaffActivatedPi * (f32)obj->anim.rotX) / gStaffActivatedBinAngleScale))) +
+                 (10.0f * mathCosf((3.1415927f * (f32)obj->anim.rotX) / 32768.0f))) +
             obj->anim.localPosZ;
         break;
     default:

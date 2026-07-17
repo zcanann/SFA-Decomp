@@ -52,13 +52,9 @@ typedef struct PrisonGuardRotationWork
     f32 tz;
 } PrisonGuardRotationWork;
 
+
 extern const f32 lbl_803E3BBC;
 extern const f32 lbl_803E3BC4;
-extern f32 lbl_803E3BC8;
-extern f32 lbl_803E3BCC;
-extern f32 lbl_803E3BD8;
-extern const f32 lbl_803E3BDC;
-extern const f32 lbl_803E3BE0;
 
 void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state)
 {
@@ -73,7 +69,7 @@ void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state
     }
     if (state->liftReset == 0)
     {
-        state->liftVelocity = (s32) - (lbl_803E3BC8 * timeDelta - state->liftVelocity);
+        state->liftVelocity = (s32) - (4.0f * timeDelta - state->liftVelocity);
         state->liftHeight = (s32)((f32)state->liftVelocity * timeDelta + state->liftHeight);
         if (state->liftHeight > state->peakLiftHeight)
         {
@@ -112,7 +108,7 @@ void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitCooldown);
     state->previousLiftHeight = state->liftHeight;
     ((void (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj,
-                                                                state->liftHeight / lbl_803E3BCC);
+                                                                state->liftHeight / 2048.0f);
 }
 
 void cfPrisonGuard_setGameBitMirror(GameObject* obj, u8 flag)
@@ -146,6 +142,7 @@ void staffactivated_spawnMapEventDebris(GameObject* obj)
     int spawnedSetup;
     int spawnedObj;
     ObjPlacement* spawnedPlacement;
+    f32 zero;
     f32 lenSq;
     f32 len;
     s32 yawDelta;
@@ -158,12 +155,13 @@ void staffactivated_spawnMapEventDebris(GameObject* obj)
 
     if ((*gMapEventInterface)->shouldNotSaveTime(setup->base.mapId) != 0 && Obj_IsLoadingLocked() != 0)
     {
-        (*gMapEventInterface)->addTime(setup->base.mapId, lbl_803E3BD8 * setup->timedEventSeconds);
+        (*gMapEventInterface)->addTime(setup->base.mapId, 60.0f * setup->timedEventSeconds);
         if (tricky != 0)
         {
             trickyImpress((GameObject*)tricky);
         }
 
+        zero = 0.0f;
         i = 0;
         while (i < setup->debrisCount)
         {
@@ -181,7 +179,7 @@ void staffactivated_spawnMapEventDebris(GameObject* obj)
 
             lenSq = (((GameObject*)spawnedObj)->anim.velocityX * ((GameObject*)spawnedObj)->anim.velocityX) +
                     (((GameObject*)spawnedObj)->anim.velocityZ * ((GameObject*)spawnedObj)->anim.velocityZ);
-            if (lenSq != lbl_803E3BDC)
+            if (lenSq != zero)
             {
                 len = sqrtf(lenSq);
                 ((GameObject*)spawnedObj)->anim.velocityX = ((GameObject*)spawnedObj)->anim.velocityX / len;
@@ -194,11 +192,11 @@ void staffactivated_spawnMapEventDebris(GameObject* obj)
             ((GameObject*)spawnedObj)->anim.velocityZ =
                 ((GameObject*)spawnedObj)->anim.velocityZ *
                 (lbl_803E3BBC - (lbl_803E3BC4 * (f32)(int)randomGetRange(0, 0x19)));
-            ((GameObject*)spawnedObj)->anim.velocityY = lbl_803E3BE0;
+            ((GameObject*)spawnedObj)->anim.velocityY = 2.2f;
 
-            rotate.tx = lbl_803E3BDC;
-            rotate.ty = lbl_803E3BDC;
-            rotate.tz = lbl_803E3BDC;
+            rotate.tx = zero;
+            rotate.ty = zero;
+            rotate.tz = zero;
             rotate.scale = lbl_803E3BBC;
             rotate.z = 0;
             rotate.x = 0;
