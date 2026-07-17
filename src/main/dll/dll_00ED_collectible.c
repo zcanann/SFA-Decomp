@@ -42,25 +42,6 @@
 #include "main/object_render_legacy.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define COLLECTIBLE_OBJGROUP 4
-extern f32 gCollectibleDespawnTimerDuration;
-extern f32 lbl_803E3454;
-extern f32 lbl_803E345C;
-extern f32 lbl_803E3460;
-extern f32 gCollectibleBounceDamping;
-extern f32 gCollectibleAirFriction;
-extern f32 gCollectibleGravity;
-extern f32 lbl_803E3458;
-extern f32 gCollectibleLaunchSpeed;
-extern f32 gCollectibleLaunchAngle;
-extern f32 lbl_803E348C;
-extern f32 gCollectiblePickupRange;
-extern f32 gCollectibleSpinDamping;
-extern f32 gCollectibleSpinRate;
-extern f32 gCollectibleRotRate;
-extern f32 gCollectibleDefaultScale;
-extern f32 gCollectibleLifetimeTimer;
-extern f32 lbl_803E349C;
-extern f32 lbl_803E34A0;
 
 static const u32 sCollectiblePathWord[1] = {0x40400000};
 static const u8 sCollectiblePathByte[4] = {5, 0, 0, 0};
@@ -170,6 +151,11 @@ void collectible_setDisabled(int* obj, int flag)
 
 int collectible_getIsHidden(int* obj) { return ((GameObject*)obj)->userData1; }
 
+static f32 collectible_getRotX(GameObject* obj)
+{
+    return (f32)(obj)->anim.rotX;
+}
+
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 
 void collectible_applyPickup(int* obj)
@@ -184,7 +170,7 @@ void collectible_applyPickup(int* obj)
     ObjHits_DisableObject((u32)obj);
     if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)
     {
-        ((CollectibleState*)state)->despawnTimer = gCollectibleDespawnTimerDuration;
+        ((CollectibleState*)state)->despawnTimer = 180.0f;
         if (((GameObject*)obj)->anim.modelState != NULL)
         {
             ((GameObject*)obj)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
@@ -210,13 +196,13 @@ void collectible_applyPickup(int* obj)
         {
         case 90:
             Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
-            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 2, 40);
+            itemPickupDoParticleFxLegacy(obj, 1.0f, 2, 40);
             break;
         case 793:
             Sfx_PlayFromObject(obj, SFXTRIG_bapt11_c);
             mainSetBits(GAMEBIT_ITEM_NWFood_Got, 1);
             ((CollectibleState*)state)->hideFrames = 1200;
-            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
+            itemPickupDoParticleFxLegacy(obj, 1.0f, 255, 40);
             break;
         case 1702:
             {
@@ -226,17 +212,17 @@ void collectible_applyPickup(int* obj)
                     c = c + 1;
                 }
                 mainSetBits(GAMEBIT_ITEM_MoonSeed_Count, c);
-                itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 6, 40);
+                itemPickupDoParticleFxLegacy(obj, 1.0f, 6, 40);
                 Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
                 break;
             }
         case 34:
             Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
-            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
+            itemPickupDoParticleFxLegacy(obj, 1.0f, 255, 40);
             break;
         default:
             Sfx_PlayFromObject(obj, SFXTRIG_cam90_c);
-            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
+            itemPickupDoParticleFxLegacy(obj, 1.0f, 255, 40);
             break;
         }
         break;
@@ -246,26 +232,36 @@ void collectible_applyPickup(int* obj)
         case COLLECTIBLE_ITEM_ENERGY_EGG:
             Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_lockoff22);
             playerAddHealth(Obj_GetPlayerObject(), 4);
-            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 3, 40);
+            itemPickupDoParticleFxLegacy(obj, 1.0f, 3, 40);
             break;
         case COLLECTIBLE_ITEM_APPLE:
             playerAddHealth(Obj_GetPlayerObject(), 2);
             Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_lockoff22);
-            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 1, 40);
+            itemPickupDoParticleFxLegacy(obj, 1.0f, 1, 40);
             break;
         default:
             Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_cam90_c);
-            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
+            itemPickupDoParticleFxLegacy(obj, 1.0f, 255, 40);
             break;
         }
         break;
     default:
         Sfx_PlayFromObject(obj, SFXTRIG_cam90_c);
-        itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
+        itemPickupDoParticleFxLegacy(obj, 1.0f, 255, 40);
         break;
     }
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
     ((GameObject*)obj)->userData1 = 1;
+}
+
+static void collectible_updateSeqEffects(GameObject* obj)
+{
+    switch ((obj)->anim.seqId)
+    {
+    case 0x6a6:
+        objfx_spawnDirectionalBurstLegacy((int)obj, 5, 1.0f, 6, 1, 0x14, 3.0f, 0, 0);
+        break;
+    }
 }
 
 void collectible_updateLooseMotion(int* obj)
@@ -273,8 +269,8 @@ void collectible_updateLooseMotion(int* obj)
     u8* state = ((GameObject*)obj)->extra;
     if (((GameObject*)obj)->anim.seqId == 1702)
     {
-        objMove((GameObject*)obj, lbl_803E345C,
-                ((GameObject*)obj)->anim.velocityY * framesThisStep, lbl_803E345C);
+        objMove((GameObject*)obj, 0.0f,
+                ((GameObject*)obj)->anim.velocityY * framesThisStep, 0.0f);
     }
     else
     {
@@ -292,9 +288,9 @@ void collectible_updateLooseMotion(int* obj)
         f32 ny = -((GameObject*)obj)->anim.velocityY;
         f32 nz = -((GameObject*)obj)->anim.velocityZ;
         f32 len = sqrtf(nx * nx + ny * ny + nz * nz);
-        if (lbl_803E345C != len)
+        if (0.0f != len)
         {
-            f32 inv = lbl_803E3454 / len;
+            f32 inv = 1.0f / len;
             nx = nx * inv;
             ny = ny * inv;
             nz = nz * inv;
@@ -303,7 +299,7 @@ void collectible_updateLooseMotion(int* obj)
             f32 px = *(f32*)(state + 0xb8);
             f32 py = *(f32*)(state + 0xbc);
             f32 pz = *(f32*)(state + 0xc0);
-            f32 d = lbl_803E3460 * (nx * px + ny * py + nz * pz);
+            f32 d = 2.0f * (nx * px + ny * py + nz * pz);
             ((GameObject*)obj)->anim.velocityX = px * d;
             ((GameObject*)obj)->anim.velocityY = py * d;
             ((GameObject*)obj)->anim.velocityZ = pz * d;
@@ -312,7 +308,7 @@ void collectible_updateLooseMotion(int* obj)
         ((GameObject*)obj)->anim.velocityY -= ny;
         ((GameObject*)obj)->anim.velocityZ -= nz;
         ((GameObject*)obj)->anim.velocityY *= len;
-        ((GameObject*)obj)->anim.velocityY *= gCollectibleBounceDamping;
+        ((GameObject*)obj)->anim.velocityY *= 0.85f;
         ((GameObject*)obj)->anim.velocityX *= len;
         ((GameObject*)obj)->anim.velocityZ *= len;
         ((CollectibleState*)state)->bounceTimer -= 1;
@@ -320,7 +316,7 @@ void collectible_updateLooseMotion(int* obj)
         {
             f32 z;
             ((CollectibleState*)state)->bounceTimer = 0;
-            z = lbl_803E345C;
+            z = 0.0f;
             ((GameObject*)obj)->anim.velocityX = z;
             ((GameObject*)obj)->anim.velocityY = z;
             ((GameObject*)obj)->anim.velocityZ = z;
@@ -328,8 +324,9 @@ void collectible_updateLooseMotion(int* obj)
     }
     else
     {
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * gCollectibleAirFriction;
-        ((GameObject*)obj)->anim.velocityY = -(gCollectibleGravity * timeDelta - ((GameObject*)obj)->anim.velocityY);
+        f32 airFriction = 0.99f;
+        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * airFriction;
+        ((GameObject*)obj)->anim.velocityY = -(0.07f * timeDelta - ((GameObject*)obj)->anim.velocityY);
     }
 }
 
@@ -347,7 +344,7 @@ void collectible_updateIdleMotion(GameObject *obj)
             Sfx_PlayFromObject((int*)obj, SFXTRIG_dn_boar1_c_169);
         }
         (obj)->anim.rotY = ((CollectibleState*)state)->spinSpeed;
-        ((CollectibleState*)state)->spinSpeed *= gCollectibleSpinDamping;
+        ((CollectibleState*)state)->spinSpeed *= -0.8f;
         if ((obj)->anim.rotY < 10 && (obj)->anim.rotY > -10)
         {
             (obj)->anim.rotY = 0;
@@ -358,26 +355,26 @@ void collectible_updateIdleMotion(GameObject *obj)
     case 0x137:
     case 0x156:
     case 0x246:
-        (obj)->anim.rotX = gCollectibleSpinRate * timeDelta + (f32)(obj)->anim.rotX;
+        (obj)->anim.rotX = 200.0f * timeDelta + collectible_getRotX(obj);
         break;
     case 0x22:
-        (obj)->anim.rotX = gCollectibleSpinRate * timeDelta + (f32)(obj)->anim.rotX;
-        itemPickupDoParticleFxLegacy((int)obj, lbl_803E3454, 10, 1);
+        (obj)->anim.rotX = 200.0f * timeDelta + collectible_getRotX(obj);
+        itemPickupDoParticleFxLegacy((int)obj, 1.0f, 10, 1);
         break;
     case 0x27f:
-        if (*(f32*)state < gCollectibleSpinRate)
+        if (*(f32*)state < 200.0f)
         {
             if ((int)randomGetRange(0, 10) == 0)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, COLLECTIBLE_PARTFX_IDLE, NULL, 2,
                                                  -1, NULL);
             }
-            (obj)->anim.rotX += (s16)(gCollectibleRotRate * timeDelta);
+            (obj)->anim.rotX += (s16)(182.0f * timeDelta);
         }
         break;
     case 0x5e8:
-        (obj)->anim.rotX = gCollectibleSpinRate * timeDelta + (f32)(obj)->anim.rotX;
-        itemPickupDoParticleFxLegacy((int)obj, lbl_803E3454, 9, 1);
+        (obj)->anim.rotX = 200.0f * timeDelta + collectible_getRotX(obj);
+        itemPickupDoParticleFxLegacy((int)obj, 1.0f, 9, 1);
         break;
     }
 }
@@ -398,12 +395,7 @@ int collectible_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState* animUpdat
     }
     if (((CollectibleState*)state)->visibilityBitClear == 0)
     {
-        switch ((obj)->anim.seqId)
-        {
-        case 0x6a6:
-            objfx_spawnDirectionalBurstLegacy((int)obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
-            break;
-        }
+        collectible_updateSeqEffects(obj);
     }
 
     animUpdate->sequenceEventActive = 0;
@@ -412,16 +404,16 @@ int collectible_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState* animUpdat
         u8 cmd = animUpdate->eventIds[i];
         if (cmd == 1)
         {
-            s_val = gCollectibleLaunchSpeed * mathCosf(gCollectibleLaunchAngle);
-            c_val = gCollectibleLaunchSpeed * mathSinf(gCollectibleLaunchAngle);
+            s_val = 8.0f * mathCosf(2.5770879f);
+            c_val = 8.0f * mathSinf(2.5770879f);
             ((CollectibleState*)(obj)->extra)->bounceTimer = 8;
             (obj)->anim.velocityX = c_val;
-            (obj)->anim.velocityY = (vy = lbl_803E3460);
+            (obj)->anim.velocityY = (vy = 2.0f);
             (obj)->anim.velocityZ = s_val;
             ((CollectibleState*)(obj)->extra)->bounceTimer = 8;
-            (obj)->anim.velocityX = lbl_803E348C;
+            (obj)->anim.velocityX = 4.0f;
             (obj)->anim.velocityY = vy;
-            (obj)->anim.velocityZ = lbl_803E345C;
+            (obj)->anim.velocityZ = 0.0f;
         }
         else if (cmd == 2)
         {
@@ -431,7 +423,7 @@ int collectible_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState* animUpdat
         {
             f32 z;
             j = 0;
-            z = lbl_803E345C;
+            z = 0.0f;
             for (; j < 10; j++)
             {
                 buf[3] = z;
@@ -470,11 +462,11 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
     }
     dist = Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)focus)->anim.worldPosX);
     dy = ((GameObject*)focus)->anim.worldPosY - (obj)->anim.worldPosY;
-    if (dy < lbl_803E345C)
+    if (dy < 0.0f)
     {
         dy = -dy;
     }
-    if (dy < gCollectiblePickupRange && dist < ((CollectibleState*)state)->scale &&
+    if (dy < 100.0f && dist < ((CollectibleState*)state)->scale &&
         Obj_IsParentSlackClear((GameObject*)player) != 0)
     {
         ((CollectibleState*)state)->pickupMsgValue = -1;
@@ -560,17 +552,18 @@ void collectible_free(GameObject *obj)
 void collectible_render(GameObject *obj, int a, int b, int c, int d, s8 visible)
 {
     int state = *(int*)&(obj)->extra;
-    if (visible != 0 && ((CollectibleState*)state)->despawnTimer == lbl_803E345C && (obj)->userData1 == 0
+    f32 zero = 0.0f;
+    if (visible != 0 && ((CollectibleState*)state)->despawnTimer == zero && (obj)->userData1 == 0
         && ((obj)->anim.seqId == 0x156 || ((CollectibleState*)state)->visibilityBitClear == 0))
     {
         if ((((ObjAnimComponent*)obj)->modelInstance->flags & 0x10000) != 0 && ((CollectibleState*)state)->useColor != 0)
         {
             fn_8003B608(((CollectibleState*)state)->colorR, ((CollectibleState*)state)->colorG, ((CollectibleState*)state)->colorB);
         }
-        objRenderModelAndHitVolumes((int)obj, a, b, c, d, lbl_803E3454);
+        objRenderModelAndHitVolumes((int)obj, a, b, c, d, 1.0f);
         if ((obj)->anim.seqId == 0xa8)
         {
-            objfx_spawnDirectionalBurstLegacy((int)obj, 7, lbl_803E3454, 5, 1, 10, lbl_803E348C, 0, 0x20000000);
+            objfx_spawnDirectionalBurstLegacy((int)obj, 7, 1.0f, 5, 1, 10, 4.0f, 0, 0x20000000);
         }
     }
 }
@@ -593,7 +586,7 @@ void collectible_update(int obj)
 
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     timer = ((CollectibleState*)state)->despawnTimer;
-    zero = lbl_803E345C;
+    zero = 0.0f;
     if (timer != zero)
     {
         ((CollectibleState*)state)->despawnTimer = timer - timeDelta;
@@ -619,11 +612,11 @@ void collectible_update(int obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x6a6:
-        objfx_spawnDirectionalBurstLegacy(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
+        objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 6, 1, 0x14, 3.0f, 0, 0);
         break;
     }
     timer = ((CollectibleState*)state)->lifetimeTimer;
-    zero = lbl_803E345C;
+    zero = 0.0f;
     if (timer != zero)
     {
         ((CollectibleState*)state)->lifetimeTimer = timer - timeDelta;
@@ -631,14 +624,14 @@ void collectible_update(int obj)
         {
             if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
             {
-                ((CollectibleState*)state)->despawnTimer = gCollectibleDespawnTimerDuration;
+                ((CollectibleState*)state)->despawnTimer = 180.0f;
                 if (((GameObject*)obj)->anim.modelState != NULL)
                 {
                     ((GameObject*)obj)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
                 }
-                itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
+                itemPickupDoParticleFxLegacy(obj, 1.0f, 255, 40);
             }
-            ((CollectibleState*)state)->lifetimeTimer = lbl_803E345C;
+            ((CollectibleState*)state)->lifetimeTimer = 0.0f;
             return;
         }
     }
@@ -772,7 +765,7 @@ void collectible_init(GameObject *obj, int setup)
         }
         else
         {
-            ((CollectibleState*)state)->scale = gCollectibleDefaultScale;
+            ((CollectibleState*)state)->scale = 15.0f;
         }
         data = (u8*)(obj)->anim.modelInstance->hitVolumes;
         if (data != 0)
@@ -789,15 +782,15 @@ void collectible_init(GameObject *obj, int setup)
         switch ((obj)->anim.seqId)
         {
         case COLLECTIBLE_ITEM_ENERGY_EGG:
-            ((CollectibleState*)state)->unk40 = lbl_803E345C;
-            ((CollectibleState*)state)->lifetimeTimer = gCollectibleLifetimeTimer;
+            ((CollectibleState*)state)->unk40 = 0.0f;
+            ((CollectibleState*)state)->lifetimeTimer = 1800.0f;
             break;
         case COLLECTIBLE_ITEM_APPLE:
-            ((CollectibleState*)state)->unk40 = lbl_803E349C;
-            ((CollectibleState*)state)->lifetimeTimer = gCollectibleLifetimeTimer;
+            ((CollectibleState*)state)->unk40 = 3.2f;
+            ((CollectibleState*)state)->lifetimeTimer = 1800.0f;
             break;
         default:
-            ((CollectibleState*)state)->unk40 = lbl_803E34A0;
+            ((CollectibleState*)state)->unk40 = 10.0f;
             break;
         }
         (*gPathControlInterface)->init(state + 0x50, 0, 0x40006, 1);
