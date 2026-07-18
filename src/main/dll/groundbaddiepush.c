@@ -1,6 +1,6 @@
 /*
  * groundbaddiepush - the ground baddie's player-pushout and frozen-reaction
- * pair. fn_80151DB8 pushes the player out of a cylinder placed in front of the
+ * pair. groundBaddiePushPlayerOut pushes the player out of a cylinder placed in front of the
  * object (offset along the object's facing angle), reprojecting the player's
  * world position back to local space. guardClawUpdateWhileFrozen plays a dirt
  * step sfx and sets a reaction flag. Both are called only from sibling DLLs
@@ -21,7 +21,7 @@
 #define GROUND_BADDIE_PUSH_MAX_DEPTH -20.0f
 
 
-void fn_80151DB8(int obj, u8* state)
+void groundBaddiePushPlayerOut(int obj, u8* state)
 {
     GameObject* player;
     ObjPlacement* setup;

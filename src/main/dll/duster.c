@@ -286,7 +286,7 @@ void fn_80155884(int* obj, int state)
     else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
              (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
     {
-        fn_80154FB4((short*)obj, state, 0x19, (double)(0.5f));
+        fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)(0.5f));
         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             Baddie_SetMove((int)obj, state, 0, (0.5f), 0, 0);
@@ -318,11 +318,11 @@ void fn_80155948(int* obj, int state)
         move = ((GameObject*)obj)->anim.currentMove;
         if (move == 3)
         {
-            fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A00);
+            fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)lbl_803E2A00);
         }
         else if ((move == 0) || (move == 1))
         {
-            fn_80154FB4((short*)obj, state, 0x19, (double)(0.5f));
+            fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)(0.5f));
         }
         fn_80154D0C((int)obj, state, outIds, outVec);
         if (((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) ||

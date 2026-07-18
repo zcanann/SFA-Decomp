@@ -10,7 +10,7 @@
  *     tangent, plays landing/laser sfx, emits light-pulse + masked-hit fx
  *     while the active flag (objectFlags 0x800) is set, clamps vertical
  *     velocity, and spawns/parents a spark child object.
- *   gcRobotPatrol_init / fn_80152B90: a firefly hover. Init seeds state; update
+ *   gcRobotPatrol_init / mikaladon_update: a firefly hover. Init seeds state; update
  *     drives a circular drift, bobs between two heights, periodically
  *     spawns a dropped object, and runs ambient sfx timers.
  *   fn_80152040: a 12-byte-row state-table driver (gSeq11EStateTable) that
@@ -51,7 +51,7 @@ int lbl_803DBCA8[2] = {2, 3};
 f32 lbl_803DBCB0 = 0.018f;
 f32 lbl_803DBCB4 = 240.0f;
 
-/* gcRobotPatrol (fn_80152B90): periodically dropped object; parented back to
+/* gcRobotPatrol (mikaladon_update): periodically dropped object; parented back to
  * the dropper via +0xC4 and announced with SFX 0x249. */
 #define SEQOBJ11E_GCROBOT_DROP_OBJ 0x6b5
 
@@ -157,7 +157,7 @@ void fn_80152040(int* obj, u8* state)
     }
     if (gSeq11EStateTable[((BaddieState*)state)->userData1].flagB != 0)
     {
-        fn_80151DB8((int)obj, state);
+        groundBaddiePushPlayerOut((int)obj, state);
     }
 }
 

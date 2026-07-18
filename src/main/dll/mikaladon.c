@@ -1,7 +1,7 @@
 /*
- * mikaladon - the firefly-hover update handler (fn_80152B90) plus spawn-time
+ * mikaladon - the firefly-hover update handler (mikaladon_update) plus spawn-time
  * setup for the mikaladon enemy, dispatched by object seqId from the tricky
- * (DLL 0x00C4) and enemy (DLL 0x00C9) object DLLs. fn_80152B90 drives a
+ * (DLL 0x00C4) and enemy (DLL 0x00C9) object DLLs. mikaladon_update drives a
  * circular drift, bobs between two heights, periodically drops a spawned
  * object and runs ambient sfx timers; mikaladon_init seeds the per-instance
  * speed/anim scales and the curve-path step, then places the actor at its
@@ -40,7 +40,7 @@
 #define MAGICPLANT_PARTFX          0x802
 #define MAGICPLANT_HIT_VOLUME_SLOT 0xe
 
-/* gcRobotPatrol (fn_80152B90): periodically dropped object; parented back to
+/* gcRobotPatrol (mikaladon_update): periodically dropped object; parented back to
  * the dropper via +0xC4 and announced with SFX 0x249. */
 #define SEQOBJ11E_GCROBOT_DROP_OBJ 0x6b5
 
@@ -57,9 +57,9 @@ static f32 seq11e_intToFloat(int n)
 }
 
 
-/* fn_80152B90: firefly hover update: circle drift, bob between heights,
+/* mikaladon_update: firefly hover update: circle drift, bob between heights,
  * periodically drop a spawned object, ambient sfx timers. */
-void fn_80152B90(int* obj, u8* state)
+void mikaladon_update(int* obj, u8* state)
 {
     f32 y;
     f32 sinOut;

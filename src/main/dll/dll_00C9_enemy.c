@@ -213,7 +213,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80152514((int*)obj, (u8*)state);
                 break;
             case 0x642:
-                fn_80152B90((int*)obj, (u8*)state);
+                mikaladon_update((int*)obj, (u8*)state);
                 break;
             case 0x3fe:
             case 0x7c6:
@@ -290,7 +290,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80152514((int*)obj, (u8*)state);
                 break;
             case 0x642:
-                fn_80152B90((int*)obj, (u8*)state);
+                mikaladon_update((int*)obj, (u8*)state);
                 break;
             case 0x3fe:
             case 0x7c6:
@@ -401,7 +401,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             fn_80152514((int*)obj, (u8*)state);
             break;
         case 0x642:
-            fn_80152B90((int*)obj, (u8*)state);
+            mikaladon_update((int*)obj, (u8*)state);
             break;
         case 0x3fe:
         case 0x7c6:

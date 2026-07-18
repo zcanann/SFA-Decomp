@@ -7,6 +7,6 @@
 void fn_80154870(GameObject* obj, int* state);
 void fn_80154C24(GameObject* obj, int state);
 void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance);
-u32 fn_80154FB4(short* obj, int state, u32 turnTime, f32 maxDistance);
+u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 maxDistance);
 
 #endif /* MAIN_DLL_FIREFLYLANTERN_H_ */

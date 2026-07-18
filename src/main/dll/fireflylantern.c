@@ -11,7 +11,7 @@
  *     random path phase/step.
  *   - fn_80154D0C  computes the signed angle + planar distance from the
  *     object to its tracked target relative to the path plane.
- *   - fn_80154FB4  steers/moves the object toward its target along the
+ *   - fireflyLanternSteerTowardTarget  steers/moves the object toward its target along the
  *     path plane, clamped by a per-frame turn rate and max step.
  * (callers: dll_00C9_enemy, duster.)
  */

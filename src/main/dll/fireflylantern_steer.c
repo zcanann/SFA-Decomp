@@ -28,7 +28,7 @@ typedef struct FireflyState
     f32 planeAnchorZ; /* 0x364 */
 } FireflyState;
 
-u32 fn_80154FB4(short* obj, int state, u32 turnTime, f32 maxDistance)
+u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 maxDistance)
 {
     f32 moveTarget[3];
     f32 moveDelta[3];

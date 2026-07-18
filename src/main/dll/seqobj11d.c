@@ -12,7 +12,7 @@
  * (ObjHitsPriorityState). fn_801511E8 picks the next move when far from the
  * target; fn_801513AC steers toward a tracked object using getAngle.
  * fn_80151C68 is a pay-to-trigger interaction (spends 25 money, sets a
- * placement game bit, runs object trigger sequences). fn_80151DB8 pushes
+ * placement game bit, runs object trigger sequences). groundBaddiePushPlayerOut pushes
  * the player out of a cylinder around the object. guardClawUpdateWhileFrozen plays a dirt
  * step sfx and sets a reaction flag. fn_801513AC is also referenced
  * directly by the wisp baddie DLL.
