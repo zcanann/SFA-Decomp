@@ -40,7 +40,7 @@
 #include "main/vecmath.h"
 #include "main/track_dolphin_api.h"
 #include "main/object_render.h"
-#include "main/trig_ext.h"
+#include "main/trig_api.h"
 #define STAFFACTION_HIT_VOLUME_SLOT 9
 
 /* object group this object belongs to */
@@ -76,27 +76,24 @@ void fn_80166E38(f32* out, f32* forward, f32* up);
 u32 fn_801659B8(s16* obj, u32* params)
 {
     LandedArwingState* state;
-    GameObject* o;
 
-    o = (GameObject*)obj;
-
-    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&o->extra)->control;
+    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
     *(u8*)((int)params + 0x34d) = 1;
     if (*(s8*)((int)params + 0x27a) != 0)
     {
         state->speed = lbl_803E3004;
-        ObjHits_EnableObject(o);
-        o->anim.velocityX = -(state->speed) * fsin16Precise(*(s16*)o);
-        o->anim.velocityY = lbl_803E2FDC;
-        o->anim.velocityZ = -(state->speed) * fcos16Precise(*(s16*)o);
+        ObjHits_EnableObject((GameObject*)obj);
+        ((GameObject*)obj)->anim.velocityX = -(state->speed) * fsin16Precise(((GameObject*)obj)->anim.rotX);
+        ((GameObject*)obj)->anim.velocityY = lbl_803E2FDC;
+        ((GameObject*)obj)->anim.velocityZ = -(state->speed) * fcos16Precise(((GameObject*)obj)->anim.rotX);
         *params |= 0x2004000;
-        ObjAnim_SetCurrentMove((int)o, 0, lbl_803E2FDC, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FDC;
     }
-    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)o, STAFFACTION_HIT_VOLUME_SLOT, 1, -1);
-    *(u8*)(*(int*)&o->anim.hitReactState + 0x6c) = 9;
-    *(u8*)(*(int*)&o->anim.hitReactState + 0x6d) = 1;
-    ObjHits_RegisterActiveHitVolumeObject(o);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, STAFFACTION_HIT_VOLUME_SLOT, 1, -1);
+    *(u8*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6c) = 9;
+    *(u8*)(*(int*)&((GameObject*)obj)->anim.hitReactState + 0x6d) = 1;
+    ObjHits_RegisterActiveHitVolumeObject((GameObject*)obj);
     (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
     if (*(s8*)((int)params + 0x27a) != 0)
     {
@@ -104,11 +101,11 @@ u32 fn_801659B8(s16* obj, u32* params)
         {
             if (((state->flags92 >> 2) & 1) != 0u)
             {
-                fn_80165B3C(o, (int)state);
+                fn_80165B3C((GameObject*)obj, (int)state);
             }
             else
             {
-                fn_80166444((int)o, (int)state);
+                fn_80166444((int)obj, (int)state);
             }
         }
         else
