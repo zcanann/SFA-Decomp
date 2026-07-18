@@ -742,10 +742,12 @@ void* fn_80069944(u32* outVal)
 }
 #pragma dont_inline reset
 
+#pragma dont_inline on
 void fn_80069958(void** out)
 {
     *out = gTrackGridOrigin;
 }
+#pragma dont_inline reset
 
 u32 mapBlockFn_80060678(int* obj)
 {
