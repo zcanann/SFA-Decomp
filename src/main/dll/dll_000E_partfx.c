@@ -23,9 +23,9 @@
 #include "stdlib.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_000E_partfx.h"
+#include "main/dll/dll_001B_effect2.h"
 
 extern u8 lbl_80380209[];
-extern char sModgfxAlphaDebugFormat[];
 
 f32 gPartfxSpawnAnimPhase0 = 0.1f;
 f32 gPartfxSpawnAnimPhase1 = 0.3f;
