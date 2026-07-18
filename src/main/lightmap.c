@@ -43,6 +43,7 @@
 #include "main/dll/cloudaction_ext.h"
 #include "main/track_dolphin_ext.h"
 #include "main/trig_ext.h"
+#include "main/tex_dolphin_ext.h"
 
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
@@ -88,11 +89,8 @@ extern void _gxSetTevColor1(int a, int b, int c, int d);
 extern void _gxSetTevColor2(int a, int b, int c, int d);
 extern u8 lbl_803DCE98; /* count of allocated blocks */
 extern f32 lbl_803DEC18;
-extern void mapBlockRender_drawDimmedAabbLights(int* p1, int* obj, float* p3);
 extern int mapBlockRender_setLightmapShader(int* obj, int* state);
-extern void mapBlockRender_drawLightmapIndirectPasses(int* obj, int v, int* state, float* p3);
 extern int mapBlockRender_setShader(int p1, int* obj, int* state);
-extern void mapBlockRender_callList(int p1, int p2, int* obj, int v, int* state, float* p3);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void fn_802B4ED8(int* obj, int a, int b);
@@ -1505,7 +1503,7 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     modelRenderInstrsState_initPtrLegacy(state, *(void**)((char*)obj + 0x78), countShifted, countShifted);
     modelRenderInstrsState_setBitIntLegacy(state, (int)*(u16*)((char*)p1 + 0x14));
     state[4] += 4;
-    mapBlockRender_drawDimmedAabbLights(p1, obj, p3);
+    mapBlockRender_drawDimmedAabbLights((u32)p1, (u32)obj, (int)p3);
     newR = mapBlockRender_setLightmapShader(obj, state);
     state[4] += 4;
     mapBlockRender_setVtxDcrs(1, obj, newR, state);
@@ -1524,7 +1522,7 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
         *(int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
-    mapBlockRender_drawLightmapIndirectPasses(obj, newR, state, p3);
+    mapBlockRender_drawLightmapIndirectPasses((int)obj, (u8*)newR, state, p3);
 }
 void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
 {
@@ -1567,7 +1565,7 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
         *(int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
-    mapBlockRender_callList(1, 1, obj, newR, state, p3);
+    mapBlockRender_callList(1, 1, (int)obj, (u8*)newR, state, p3);
 }
 void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 {
@@ -1604,7 +1602,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
         *(int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
-    mapBlockRender_callList(1, 1, obj, newR, state, p3);
+    mapBlockRender_callList(1, 1, (int)obj, (u8*)newR, state, p3);
     Camera_ApplyFullViewport();
 }
 
