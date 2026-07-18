@@ -2389,7 +2389,6 @@ void fn_8008BDA8(void)
     } while (i < 3);
 }
 
-#pragma opt_common_subs off
 void skyFn_8008a04c(void)
 {
     int part;
@@ -2542,7 +2541,6 @@ void skyFn_8008a04c(void)
         fn_80089A60(2, lbl_803DF058, lbl_803DF058, lbl_803DF058, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
     }
 }
-#pragma opt_common_subs reset
 
 void fn_80089A60(int slot, f32 x, f32 y, f32 z, int red, int green, int blue, int ambientIntensity,
                  int lightIntensity, u8 blendAlpha)
@@ -2927,7 +2925,6 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
     }
 }
 
-#pragma opt_common_subs off
 void skyFn_8008aee8(void)
 {
     int* sky;
@@ -3111,7 +3108,6 @@ void skyFn_8008aee8(void)
                            lbl_803DF05C, v - sinProd / (f32)(u32)texW, -0x18f);
     }
 }
-#pragma opt_common_subs reset
 
 void Sky_func03(int a, int b, u8* cfg);
 

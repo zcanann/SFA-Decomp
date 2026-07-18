@@ -36,7 +36,7 @@
 #include "main/track_dolphin_api.h"
 
 s16 gDrLaserTurretIdleAnimMoves[2] = {0x13, 0x11};
-__declspec(section ".sdata") f32 gDrLaserTurretIdleAnimStepScales[3] = {0.01f, 0.0125f, 0.0f};
+f32 gDrLaserTurretIdleAnimStepScales[3] = {0.01f, 0.0125f, 0.0f};
 extern void* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 

@@ -163,28 +163,6 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox* hitbox, u32 arena)
     return (u32)transformState + sizeof(ObjHitboxTransformState);
 }
 
-u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitState, u32 entryArena,
-                          ObjAnimComponent* objAnim)
-{
-    ObjHitReactEntry* entries;
-
-    if (bank == NULL)
-    {
-        return entryArena;
-    }
-    hitState->entryBufferByteCapacity = OBJHITREACT_ENTRY_ARENA_BYTES;
-    entries = (ObjHitReactEntry*)roundUpTo8(entryArena);
-    hitState->entries = entries;
-    entryArena = (u32)entries + hitState->entryBufferByteCapacity;
-    hitState->activeHitboxMode = OBJHITREACT_ACTIVE_HITBOX_MODE;
-    if ((hitState->shapeFlags & OBJHITS_SHAPE_RESET_MODE_MASK) != 0)
-    {
-        hitState->resetHitboxMode = OBJHITREACT_RESET_HITBOX_MODE;
-    }
-    ObjHitReact_LoadMoveEntries(objAnim, bank, objType, hitState, 0, 1);
-    return entryArena;
-}
-
 void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, int objType, ObjHitReactState* hitState,
                                  int moveId, int async);
 

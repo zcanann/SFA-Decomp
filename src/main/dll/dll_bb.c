@@ -178,7 +178,6 @@ void camcontrol_applyState(CamcontrolCameraState* camera)
     Camera_UpdateViewMatrices();
 }
 
-#pragma opt_common_subs off
 void camcontrol_applyQueuedAction(void)
 {
     CameraViewSlot* view;
@@ -232,7 +231,6 @@ void camcontrol_applyQueuedAction(void)
         }
     }
 }
-#pragma opt_common_subs reset
 
 void Camera_func1D(int targetFlagMode)
 {

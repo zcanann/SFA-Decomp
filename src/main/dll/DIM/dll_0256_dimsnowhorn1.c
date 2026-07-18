@@ -1166,61 +1166,6 @@ void fn_802BB4B4(GameObject* obj, int frameStep, int slot)
     fn_802BB998((int)obj, (int)state, (int)state);
 }
 
-void fn_802BB998(int obj, int pointState, int inputState)
-{
-    u8 flags;
-    u8 pointIndex;
-    u8 count;
-    s32 inputFlags;
-    u16 sfxId;
-    struct
-    {
-        u32 unk0;
-        u32 unk4;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } args;
-
-    flags = 0;
-    inputFlags = *(s32*)&((BaddieState*)inputState)->eventFlags;
-    if ((inputFlags & 2) != 0)
-    {
-        flags |= 1;
-    }
-    if ((inputFlags & 4) != 0)
-    {
-        flags |= 2;
-    }
-
-    pointIndex = 0;
-    while (flags != 0)
-    {
-        if ((flags & 1) != 0)
-        {
-            args.x = *(f32*)(pointState + 0x9b0 + pointIndex * 0xc);
-            args.y = *(f32*)(pointState + 0x9b4 + pointIndex * 0xc);
-            args.z = *(f32*)(pointState + 0x9b8 + pointIndex * 0xc);
-            args.scale = 0.004f;
-
-            count = (u8)randomGetRange(2, 6);
-            while (count != 0)
-            {
-                ((EffectInterface*)*gPartfxInterface)
-                    ->spawnObject((void*)obj, randomGetRange(0, 1) + 0x1f9, &args, 0x10001, -1, NULL);
-                count--;
-            }
-
-            sfxId = audioPickSoundEffectU16Legacy((u8)(s8) * (s8*)&((BaddieState*)inputState)->paletteSlot, 9);
-            Sfx_PlayFromObject(obj, sfxId);
-            doRumble(3.0f);
-        }
-        flags >>= 1;
-        pointIndex++;
-    }
-}
-
 static inline s16 DIMSnowHorn1_angleTo(GameObject* obj, char* found)
 {
     s16 angleDelta = (obj)->anim.rotX - (u16)((GameObject*)found)->anim.rotX;
