@@ -322,8 +322,6 @@ void SnowBike_func12(GameObject* obj, f32* outFloat, s32* outBool)
     *outBool = ((SnowBikeMountState*)state)->unk414 < lbl_803E5AE8;
 }
 
-void fn_801EC870(int obj, register int state);
-
 void SnowBike_setRiderMode(GameObject* obj, int type)
 {
     int state = *(int*)&obj->extra;
