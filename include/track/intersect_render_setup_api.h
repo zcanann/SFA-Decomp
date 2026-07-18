@@ -9,6 +9,7 @@ void fn_80078DFC(void);
 void fn_80078ED0(void);
 void fn_80079180(void);
 void gxTevAddTextureFrameBlendStages(void);
+void setupReflectionIndirectTev(u8 flag);
 void textRenderSetupFn_80079804(void);
 void textureSetupFn_800799c0(void);
 

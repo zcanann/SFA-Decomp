@@ -64,7 +64,6 @@ void doHeatEffect(u8 alpha);
 void renderMotionBlur(f32 alpha);
 void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5);
 void fn_8007BD8C(int handle1, int handle2);
-void setupReflectionIndirectTev(u8 flag);
 void fn_8007C664(int param_1);
 void fn_8007CAF4(void);
 void gxTextureSetupFn_8007cf7c(void);

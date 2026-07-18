@@ -155,7 +155,6 @@ extern const f32 lbl_803DF404;
 extern const f32 lbl_803DF408;
 extern const f32 lbl_803DF40C;
 extern const f32 gExpgfxU16ToUnitScale;
-extern void setupReflectionIndirectTev(u32 flag);
 extern const f32 lbl_803DF414;
 extern const f32 lbl_803DF41C;
 extern const f32 lbl_803DF420;
