@@ -16,7 +16,6 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/gx/GXManage.h"
-#include "main/gx_scissor_api.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/camera.h"
 #include "main/frame_timing.h"
@@ -298,6 +297,7 @@ extern void mapGetBlocks(int* a, int* b);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
 extern void GXSetProjection(f32* m, int type);
 extern void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf, const u8 vfilter[7]);
+extern void GXSetScissor(int a, int b, int c, int d);
 extern int getDrawDistanceFlag_8005cd48(void);
 extern void* memcpy(void* d, const void* s, int n);
 
@@ -580,30 +580,6 @@ void shadowRenderFn_8006b558(int* obj)
     ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] + lbl_803DED18;
     ((f32*)obj[0x64 / 4])[5] = ((f32*)obj[0x64 / 4])[5] - lbl_803DED1C * ((f32*)obj[0x64 / 4])[0];
     ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] - lbl_803DED1C * ((f32*)obj[0x64 / 4])[0];
-}
-void fn_8006B830(ShadowSortEntry* arr, int count)
-{
-    int gap = 1;
-    int i, j;
-    ShadowSortEntry tmp;
-    int limit = (count - 1) / 9;
-    while (gap <= limit)
-        gap = gap * 3 + 1;
-    while (gap > 0)
-    {
-        for (i = gap + 1; i <= count; i++)
-        {
-            tmp = arr[i - 1];
-            j = i;
-            while (j > gap && arr[j - gap - 1].dist < tmp.dist)
-            {
-                arr[j - 1] = arr[j - gap - 1];
-                j -= gap;
-            }
-            arr[j - 1] = tmp;
-        }
-        gap /= 3;
-    }
 }
 extern NewShadowEntry gNewShadowEntries[0x294 / sizeof(NewShadowEntry)];
 
@@ -1110,6 +1086,8 @@ void allocLotsOfTextures(void)
 
 extern NewShadowEntry gNewShadowEntries[0x294 / sizeof(NewShadowEntry)];
 
+void fn_8006B830(ShadowSortEntry* arr, int count);
+
 void renderShadows(int unused0, int unused1, int unused2)
 {
     NewShadowCaster* casterPtr;
@@ -1163,7 +1141,7 @@ void renderShadows(int unused0, int unused1, int unused2)
         ObjModelState* modelState = obj->anim.modelState;
         u8 lod;
         u8 kind;
-        u32 screenW = 0, w = 0;
+        int screenW = 0, w = 0;
         NewShadowCastSlot* castSlot;
         Camera_SetCurrentViewIndex(0);
         lod = fn_800626C8(obj, framesThisStep);
@@ -1414,6 +1392,31 @@ void renderShadows(int unused0, int unused1, int unused2)
     Camera_RebuildProjectionMatrix();
     Camera_ApplyFullViewport();
     Camera_EnableViewYOffset();
+}
+
+void fn_8006B830(ShadowSortEntry* arr, int count)
+{
+    int gap = 1;
+    int i, j;
+    ShadowSortEntry tmp;
+    int limit = (count - 1) / 9;
+    while (gap <= limit)
+        gap = gap * 3 + 1;
+    while (gap > 0)
+    {
+        for (i = gap + 1; i <= count; i++)
+        {
+            tmp = arr[i - 1];
+            j = i;
+            while (j > gap && arr[j - gap - 1].dist < tmp.dist)
+            {
+                arr[j - 1] = arr[j - gap - 1];
+                j -= gap;
+            }
+            arr[j - 1] = tmp;
+        }
+        gap /= 3;
+    }
 }
 extern NewShadowCaster gNewShadowCasterTable[NEW_SHADOW_MAX_QUEUED_CASTERS];
 
