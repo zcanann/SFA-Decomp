@@ -67,48 +67,7 @@ extern f32 lbl_803E16C8;      /* 0.5f   - decay dead-zone (snap to 0 inside) */
 extern f32 lbl_803E16CC;      /* -0.5f  - decay dead-zone (snap to 0 inside) */
 
 int camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork, char traceMode, u8 runTrace,
-                         u8 runBbox, float radius)
-{
-    u8 blocked;
-    int clear;
-    float endTmp[3];
-    TrackQueryBounds sweptBounds;
-
-    if (outPos == NULL)
-    {
-        outPos = endTmp;
-    }
-    *outPos = *toPos;
-    outPos[1] = toPos[1];
-    outPos[2] = toPos[2];
-    *(float*)(traceWork + CAMCONTROL_TRACE_RADIUS_OFFSET) = radius;
-    *(s8*)(traceWork + CAMCONTROL_TRACE_BBOX_HIT_OFFSET) = -1;
-    *(s8*)(traceWork + CAMCONTROL_TRACE_MODE_OFFSET) = traceMode;
-    *(s16*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) = 0;
-    blocked = 0;
-    if (runBbox != 0)
-    {
-        blocked = objBboxFn_800640cc(fromPos, outPos, (float*)0x1, 0x0, 0x0, 0x10, 0xffffffff, 0xff, 0);
-    }
-    else
-    {
-        blocked = 0;
-    }
-    gCutCamBboxBlocked = blocked;
-    if (runTrace != 0)
-    {
-        hitDetect_calcSweptSphereBounds(&sweptBounds, fromPos, outPos,
-                                        (float*)(traceWork + CAMCONTROL_TRACE_RADIUS_OFFSET), 1);
-        hitDetectFn_800691c0(NULL, &sweptBounds, 0x240, 1);
-    }
-    hitDetectFn_80067958(NULL, fromPos, outPos, 1, traceWork, 0);
-    clear = 0;
-    if ((gCutCamBboxBlocked == 0) && (*(short*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) == 0))
-    {
-        clear = 1;
-    }
-    return clear;
-}
+                         u8 runBbox, float radius);
 
 void doNothing_80103660(int unused)
 {
@@ -196,27 +155,17 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
     short classId;
     u16 buttons;
     int cond;
-    int combatCam;
     CamcontrolAction43Payload action43Payload;
     CamcontrolAction44Payload action44Payload;
 
     if (target->pendingParentObj == NULL)
     {
-        combatCam = 0;
         buttons = getButtonsJustPressed(0);
-        if (camera->currentTarget != NULL)
-        {
-            classId = ((GameObject*)camera->currentTarget)->anim.classId;
-            if (((classId == 0x1c) || (classId == 0x2a)) && (target->anim.classId == 1))
-            {
-                cond = objFn_80296700(target);
-                if ((cond != 0) && (cond = fn_80295C0C(target), cond != 0))
-                {
-                    combatCam = 1;
-                }
-            }
-        }
-        if (combatCam || (camera->targetFlags & 2) != 0)
+        if (((camera->currentTarget != NULL) &&
+             (((classId = ((GameObject*)camera->currentTarget)->anim.classId) == 0x1c) || (classId == 0x2a)) &&
+             (target->anim.classId == 1) && ((cond = objFn_80296700(target)) != 0) &&
+             ((cond = fn_80295C0C(target)) != 0)) ||
+            ((camera->targetFlags & 2) != 0))
         {
             cameraSetInterpMode(1);
             (*gCameraInterface)->setMode(CAMMODE_COMBAT, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
@@ -642,3 +591,47 @@ void camcontrol_updateModeSettings(int camera)
     }
 }
 
+
+int camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork, char traceMode, u8 runTrace,
+                         u8 runBbox, float radius)
+{
+    u8 blocked;
+    int clear;
+    float endTmp[3];
+    TrackQueryBounds sweptBounds;
+
+    if (outPos == NULL)
+    {
+        outPos = endTmp;
+    }
+    *outPos = *toPos;
+    outPos[1] = toPos[1];
+    outPos[2] = toPos[2];
+    *(float*)(traceWork + CAMCONTROL_TRACE_RADIUS_OFFSET) = radius;
+    *(s8*)(traceWork + CAMCONTROL_TRACE_BBOX_HIT_OFFSET) = -1;
+    *(s8*)(traceWork + CAMCONTROL_TRACE_MODE_OFFSET) = traceMode;
+    *(s16*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) = 0;
+    blocked = 0;
+    if (runBbox != 0)
+    {
+        blocked = objBboxFn_800640cc(fromPos, outPos, (float*)0x1, 0x0, 0x0, 0x10, 0xffffffff, 0xff, 0);
+    }
+    else
+    {
+        blocked = 0;
+    }
+    gCutCamBboxBlocked = blocked;
+    if (runTrace != 0)
+    {
+        hitDetect_calcSweptSphereBounds(&sweptBounds, fromPos, outPos,
+                                        (float*)(traceWork + CAMCONTROL_TRACE_RADIUS_OFFSET), 1);
+        hitDetectFn_800691c0(NULL, &sweptBounds, 0x240, 1);
+    }
+    hitDetectFn_80067958(NULL, fromPos, outPos, 1, traceWork, 0);
+    clear = 0;
+    if ((gCutCamBboxBlocked == 0) && (*(short*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) == 0))
+    {
+        clear = 1;
+    }
+    return clear;
+}
