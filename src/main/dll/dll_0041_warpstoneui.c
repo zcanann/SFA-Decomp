@@ -61,14 +61,12 @@ int gWarpStoneUiSelectedIndices[0x6];
 int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuItem* items,
                              const WarpstoneEntry* entries, int count, int* selectedIndices)
 {
-    const WarpstoneEntry* entryp;
-    const WarpstoneMenuItem* sourceItem = templates;
-    WarpstoneMenuItem* outputItem = items;
-    int yoff;
     int slot;
-    int entry;
     int tmp;
+    int yoff;
     WarpstoneMenuItem* lastDst;
+    int entry;
+    const WarpstoneEntry* entryp;
 
     lastDst = NULL;
     entry = 0;
@@ -91,19 +89,19 @@ int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuIt
     {
         if (mainGetBit(entryp->bit) != 0)
         {
-            memcpy(outputItem, sourceItem, sizeof(WarpstoneMenuItem));
-            lastDst = outputItem;
-            outputItem->y = yoff;
-            outputItem->previousItem = slot - 1;
-            outputItem->nextItem = slot + 1;
+            memcpy(items, templates, sizeof(WarpstoneMenuItem));
+            lastDst = items;
+            items->y = yoff;
+            items->previousItem = slot - 1;
+            items->nextItem = slot + 1;
             selectedIndices[0] = entry;
             selectedIndices++;
-            outputItem++;
+            items++;
             yoff += 0x2a;
             slot++;
         }
         entryp++;
-        sourceItem++;
+        templates++;
     }
     if (lastDst != NULL)
     {
