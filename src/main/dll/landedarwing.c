@@ -15,13 +15,12 @@
 #include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
+#include "main/trig_api.h"
 
 /* raw offsets - kept as-is to match staffAction.c handlers */
 #define BADDIESTATE_HANDLER_TICK_FLAG 0x34d
 #define BADDIESTATE_JUST_LAUNCHED 0x27a
 
-extern f32 fsin16Precise(u16 angle);
-extern f32 fcos16Precise(u16 angle);
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E3004;

@@ -90,9 +90,9 @@ u32 fn_801659B8(s16* obj, u32* params)
     {
         state->speed = lbl_803E3004;
         ObjHits_EnableObject(o);
-        o->anim.velocityX = -(state->speed) * fsin16Precise((u16)*(s16*)o);
+        o->anim.velocityX = -(state->speed) * fsin16Precise(*(s16*)o);
         o->anim.velocityY = lbl_803E2FDC;
-        o->anim.velocityZ = -(state->speed) * fcos16Precise((u16)*(s16*)o);
+        o->anim.velocityZ = -(state->speed) * fcos16Precise(*(s16*)o);
         *params |= 0x2004000;
         ObjAnim_SetCurrentMove((int)o, 0, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FDC;

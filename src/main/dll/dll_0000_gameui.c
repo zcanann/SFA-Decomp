@@ -5607,7 +5607,7 @@ void timeListDraw(int unused1, int unused2, int unused3)
         int a, b;
         gTimeListPulseAngle += gTimeListPulseAngleStep;
         ang = gTimeListPulseAngle;
-        pulse = (int)(gTimeListPulseAmplitude * fsin16Precise((u16)ang) + gTimeListPulseBias);
+        pulse = (int)(gTimeListPulseAmplitude * fsin16Precise(ang) + gTimeListPulseBias);
         if (lbl_803DD75B == 1)
         {
             a = pulse;
@@ -5668,7 +5668,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
     char buf[0x20];
 
     gHighScorePulseAngle += gHighScorePulseAngleStep;
-    pulse = (int)(gHighScorePulseAmplitude * fsin16Precise((u16)gHighScorePulseAngle) + gHighScorePulseBias);
+    pulse = (int)(gHighScorePulseAmplitude * fsin16Precise(gHighScorePulseAngle) + gHighScorePulseBias);
     h = (s16)box->f0a;
     w = (s16)box->f08;
     y = box->f16;

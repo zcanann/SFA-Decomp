@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-float fsin16Precise(int angle);
-float fcos16Precise(int angle);
+float fsin16Precise(u16 angle);
+float fcos16Precise(u16 angle);
 
 #endif /* MAIN_TRIG_API_H_ */
