@@ -774,7 +774,7 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
                                                &proj[1], &proj[0]);
         }
         ((ObjFxNdcToScreenFn)Camera_NdcToScreen)(proj[2], proj[1], proj[0], &screen[2], &screen[1], &screen[0]);
-        depth = depthReadRequestPoll(screen[2], screen[1], (int)obj);
+        depth = depthReadRequestPoll(screen[2], screen[1], obj);
         if (screen[0] > depth)
         {
             switch (mode)

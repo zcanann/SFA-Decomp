@@ -2035,7 +2035,7 @@ void drawViewFinderHud(void)
         {
             f32 farP = Camera_GetFarPlane();
             f32 nearP = Camera_GetNearPlane();
-            int depth = depthReadRequestPollPointerKey(0x140, 0xf0, drawViewFinderHud);
+            int depth = depthReadRequestPoll(0x140, 0xf0, drawViewFinderHud);
             f32 dist =
                 (-farP * nearP) / (((f32)(u32)depth / gViewFinderDepthMax - lbl_803E1E68) * (farP - nearP) - nearP);
             if (dist > lbl_803E1E3C && dist < gTrickyHudNearestObjMaxDist)

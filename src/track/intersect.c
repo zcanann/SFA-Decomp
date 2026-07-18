@@ -846,10 +846,11 @@ void mapInitFn_8006fccc(void)
 /* Queues a GXPeekZ read at (x,y) tagged by an opaque requestKey (callers pass
  * any unique value - object ptrs, loop indices, even a function address) and
  * returns the previously completed result for that key, 0 until ready. */
-int depthReadRequestPoll(int x, int y, int requestKey)
+int depthReadRequestPoll(int x, int y, void* requestKey)
 {
     bool ok;
     int i;
+    int key = (int)requestKey;
     u16 n;
 
     ok = false;
@@ -868,14 +869,14 @@ int depthReadRequestPoll(int x, int y, int requestKey)
         {
             gDepthReadPendingQueue[n].x = x;
             gDepthReadPendingQueue[n].y = y;
-            gDepthReadPendingQueue[n].key = requestKey;
+            gDepthReadPendingQueue[n].key = key;
             gDepthReadPendingCount++;
         }
         i = 0;
         n = gDepthReadResultCount;
         for (; (u32)i < n; i++)
         {
-            if (requestKey == gDepthReadResults[i].key)
+            if (key == gDepthReadResults[i].key)
             {
                 return gDepthReadResults[i].value;
             }

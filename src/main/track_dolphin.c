@@ -3336,8 +3336,8 @@ void renderGlows(void)
             occ = 0;
             for (i = 0; i < 5; i++)
             {
-                int d = depthReadRequestPollPointerKey(sx + gSunOcclusionSampleOffsets[i * 2],
-                                                       sy + gSunOcclusionSampleOffsets[i * 2 + 1], (void*)i);
+                int d = depthReadRequestPoll(sx + gSunOcclusionSampleOffsets[i * 2],
+                                             sy + gSunOcclusionSampleOffsets[i * 2 + 1], (void*)i);
                 if (sz <= d && pauseMenuGetState() == 0)
                     occ++;
             }
@@ -3395,7 +3395,7 @@ void renderGlows(void)
             Camera_ProjectWorldPointWithOffset(e->worldX - playerMapOffsetX, e->worldY, e->worldZ - playerMapOffsetZ,
                                                e->glowProjectionRadius, &px, &py, &pz);
             Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
-            d = depthReadRequestPollPointerKey(sx, sy, e);
+            d = depthReadRequestPoll(sx, sy, e);
             if (sz <= d && pauseMenuGetState() == 0)
                 e->glowAlphaStep = 0x10;
             else
