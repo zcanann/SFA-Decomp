@@ -188,7 +188,6 @@ extern u32 GXSetBlendMode();
 extern void GXSetTevKColor(int id, ObjGXColor color);
 extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetNumTevStages(u8 nStages);
-extern void GXSetNumIndStages(u8 nIndStages);
 extern void GXSetTevOrder(int stage, int coord, int map, int color);
 extern void GXSetTevSwapMode(int stage, int ras, int tex);
 extern u32 lbl_803DB468;

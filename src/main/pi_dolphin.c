@@ -985,7 +985,6 @@ extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
 extern int lbl_803DCD78;
 extern u8* lbl_803DCD2C;
 extern int lbl_803DB5F4;
-extern void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp);
 extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
 extern void GXSetTevColorS10(int id, void* color);
 extern void GXSetTevKColor(int id, void* color);
@@ -4635,7 +4634,6 @@ extern int lbl_803DCD88;
 extern int lbl_803DCD8C;
 extern int lbl_803DCD90;
 extern u8 lbl_803DCD6A;
-extern void GXSetTevDirect(GXTevStageID tev_stage);
 extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
 extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
 extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,

@@ -546,7 +546,6 @@ extern const f32 lbl_803E2020;
 extern const f32 lbl_803E2024;
 extern const f64 lbl_803E2028;
 extern const f64 lbl_803E2030;
-extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
 extern void hudDrawTimedElement(int obj, void* p);
 extern u8 gHeadDisplayActive;
 extern u8 gHeadDisplayEntryIdx;
