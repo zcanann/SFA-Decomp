@@ -5,6 +5,7 @@
 #undef INTERSECT_SCREEN_DIRECT_SIGNED_WIDTH_CALL
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
+#include "main/model.h"
 #include "main/objprint_render_api.h"
 #include "main/newshadows_audio_api.h"
 #include "main/texture.h"
@@ -293,7 +294,6 @@ extern void fn_8004C234(f32* a, f32* b);
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
 extern void mapGetBlocks(int* a, int* b);
-extern f32* ObjModel_GetJointMatrix(ObjModel* model, int joint);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
 extern void GXSetProjection(f32* m, int type);
 extern void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf, const u8 vfilter[7]);
@@ -1275,7 +1275,7 @@ void renderShadows(int unused0, int unused1, int unused2)
             modelState->shadowOffsetZ = -vA[2];
             setScreenWidth(screenW);
             {
-                f32* m = ObjModel_GetJointMatrix(Obj_GetActiveModel(obj), 0);
+                f32* m = (f32*)ObjModel_GetJointMatrix((u8*)Obj_GetActiveModel(obj), 0);
                 slot->x = dirX + m[3];
                 slot->y = dirY + m[7];
                 slot->z = dirZ + m[11];

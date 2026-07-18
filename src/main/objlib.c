@@ -6,6 +6,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/lightmap_api.h"
 #include "main/dll/player_api.h"
 #include "main/object_api.h"
@@ -32,7 +33,6 @@
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
-extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);
 extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);
 extern void fn_80054F74(int obj, float* pos);
 extern char sObjAddObjectTypeReachedMaxTypes[];
@@ -1926,11 +1926,11 @@ u32 ObjPath_GetPointModelMtx(GameObject* obj, int pointIndex)
     jointIndex = pathPoint->modelIndex[(int)*(char*)((int)obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
     if ((jointIndex >= 0) && (jointIndex < (int)(u32) * (u8*)(*model + OBJ_MODEL_JOINT_COUNT_OFFSET)))
     {
-        return (u32)ObjModel_GetJointMatrix(model, jointIndex);
+        return (u32)ObjModel_GetJointMatrix((u8*)model, jointIndex);
     }
     else
     {
-        return (u32)ObjModel_GetJointMatrix(model, 0);
+        return (u32)ObjModel_GetJointMatrix((u8*)model, 0);
     }
 }
 
@@ -1978,7 +1978,7 @@ void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX,
             }
             else
             {
-                jointMtx = ObjModel_GetJointMatrix(model, jointIndex);
+                jointMtx = (f32*)ObjModel_GetJointMatrix((u8*)model, jointIndex);
             }
             if (useInputPosition != 0)
             {
