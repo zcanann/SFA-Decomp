@@ -214,7 +214,7 @@ void drakord_thornbush_update(GameObject* obj)
             if (Vec_distance(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &(obj)->anim.worldPosX) <
                 (f32)(s32)(((DrakordThornbushPlacement*)setup)->baseRadius << 1))
             {
-                ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), (int)obj, 5, 1, 0);
+                ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 5, 1, 0);
             }
             break;
         }

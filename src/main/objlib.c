@@ -642,12 +642,13 @@ void ObjHits_RefreshObjectState(int objPtr)
     return;
 }
 
-int ObjHits_RecordObjectHit(int obj, int hitObj, s8 priority, s8 hitVolume, s8 sphereIndex)
+int ObjHits_RecordObjectHit(GameObject* obj, GameObject* hitObj, s8 priority, int hitVolume, s8 sphereIndex)
 {
     ObjAnimComponent* sourceObj;
     ObjAnimComponent* targetObj;
     ObjHitsPriorityState* hitState;
     int hitSlot;
+    u8 hitVolumeId;
 
     if (priority == '\0')
     {
@@ -662,9 +663,10 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, s8 priority, s8 hitVolume, s8 s
     }
     if ((targetObj != NULL) && (targetObj->hitReactState != NULL))
     {
-        ((ObjHitsPriorityState*)targetObj->hitReactState)->lastHitObject = obj;
+        ((ObjHitsPriorityState*)targetObj->hitReactState)->lastHitObject = (u32)obj;
     }
     hitSlot = 0;
+    hitVolumeId = hitVolume;
     while (hitSlot < hitState->priorityHitCount)
     {
         if ((void*)hitState->hitObjects[hitSlot] == (void*)hitObj)
@@ -673,7 +675,7 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, s8 priority, s8 hitVolume, s8 s
             {
                 hitState->sphereIndices[hitSlot] = sphereIndex;
                 hitState->priorities[hitSlot] = priority;
-                hitState->hitVolumes[hitSlot] = hitVolume;
+                hitState->hitVolumes[hitSlot] = hitVolumeId;
                 hitState->hitPosX[hitSlot] = sourceObj->localPosX;
                 hitState->hitPosY[hitSlot] = sourceObj->localPosY;
                 hitState->hitPosZ[hitSlot] = sourceObj->localPosZ;
@@ -686,8 +688,8 @@ int ObjHits_RecordObjectHit(int obj, int hitObj, s8 priority, s8 hitVolume, s8 s
     {
         hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
         hitState->priorities[hitState->priorityHitCount] = priority;
-        hitState->hitVolumes[hitState->priorityHitCount] = hitVolume;
-        hitState->hitObjects[hitState->priorityHitCount] = hitObj;
+        hitState->hitVolumes[hitState->priorityHitCount] = hitVolumeId;
+        hitState->hitObjects[hitState->priorityHitCount] = (int)hitObj;
         hitState->hitPosX[hitState->priorityHitCount] = sourceObj->localPosX;
         hitState->hitPosY[hitState->priorityHitCount] = sourceObj->localPosY;
         hitState->hitPosZ[hitState->priorityHitCount] = sourceObj->localPosZ;

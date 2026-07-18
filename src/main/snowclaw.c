@@ -562,7 +562,7 @@ void snowclaw_hitDetect(GameObject* obj)
     }
     if (ObjHits_GetPriorityHit((GameObject*)(sub), &hit, 0, 0) == 0x15 && *(s8*)&((SnowclawState*)inner)->health >= 0)
     {
-        ObjHits_RecordObjectHit(sub, hit, 0x15, 1, 0);
+        ObjHits_RecordObjectHit((GameObject*)sub, (GameObject*)hit, 0x15, 1, 0);
         if (((SnowclawState*)inner)->hitCooldown < 0)
         {
             *(s8*)&((SnowclawState*)inner)->health -= 1;

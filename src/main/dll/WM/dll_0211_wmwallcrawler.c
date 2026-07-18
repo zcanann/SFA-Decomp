@@ -170,7 +170,7 @@ void wmwallcrawler_hitDetect(GameObject* obj)
         {
             target = ObjGroup_FindNearestObject(WMWALLCRAWLER_TARGET_OBJGROUP, (int)obj, &stk);
         }
-        ObjHits_RecordObjectHit((int)target, (int)obj, 0xb, 1, 0);
+        ObjHits_RecordObjectHit((GameObject*)target, obj, 0xb, 1, 0);
         state->mode = WMWALLCRAWLER_MODE_DIE;
         ((WcHitBits*)&state->hitBits)->hit = 0;
     }
@@ -785,4 +785,3 @@ void* gWM_WallCrawlerObjDescriptor[15] = {(void*)0x00000000,
                                           (void*)0x00000000};
 u8 lbl_80328E28[48] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-

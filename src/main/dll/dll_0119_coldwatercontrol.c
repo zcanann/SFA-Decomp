@@ -53,13 +53,13 @@ void ColdWaterControl_update(GameObject* obj)
         {
             if (-30.0f == state->timer)
             {
-                ObjHits_RecordObjectHit((int)state->playerObj, (int)obj, COLDWATER_HIT_PRIORITY, 0, 1);
+                ObjHits_RecordObjectHit(state->playerObj, obj, COLDWATER_HIT_PRIORITY, 0, 1);
             }
 
             state->timer = state->timer + timeDelta;
             if (state->timer > 240.0f)
             {
-                ObjHits_RecordObjectHit((int)state->playerObj, (int)obj, COLDWATER_HIT_PRIORITY, 1, 1);
+                ObjHits_RecordObjectHit(state->playerObj, obj, COLDWATER_HIT_PRIORITY, 1, 1);
                 state->timer = state->timer - 240.0f;
             }
         }

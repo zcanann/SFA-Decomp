@@ -108,7 +108,7 @@ void fn_801814D0(int obj, int arg, u8* state)
                         {
                             if (Vec_xzDistance((f32*)(*objects + 0x18), (f32*)(obj + 0x18)) < lbl_803DBDA4)
                             {
-                                ObjHits_RecordObjectHit(*objects, hitWork[3], 5, 1, 0);
+                                ObjHits_RecordObjectHit((GameObject*)*objects, (GameObject*)hitWork[3], 5, 1, 0);
                             }
                         }
                     }

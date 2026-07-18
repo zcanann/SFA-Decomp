@@ -235,7 +235,7 @@ void enemymushroom_update(int* obj)
                 !playerGetFlags3F0Bit5((GameObject*)(player)) &&
                 !(((GameObject*)player)->objectFlags & SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK))
             {
-                ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);
+                ObjHits_RecordObjectHit(player, (GameObject*)obj, 0x16, 1, 0);
                 ((EnemyMushroomState*)state)->stateFlags |= MUSHROOM_STATEFLAG_HIT_PLAYER;
             }
         }
@@ -299,7 +299,7 @@ void enemymushroom_update(int* obj)
                 !playerGetFlags3F0Bit5((GameObject*)(player)) &&
                 !(((GameObject*)player)->objectFlags & SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK))
             {
-                ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);
+                ObjHits_RecordObjectHit(player, (GameObject*)obj, 0x16, 1, 0);
                 ((EnemyMushroomState*)state)->stateFlags |= MUSHROOM_STATEFLAG_HIT_PLAYER;
             }
         }
@@ -513,4 +513,3 @@ void enemymushroom_release(void)
 void enemymushroom_initialise(void)
 {
 }
-

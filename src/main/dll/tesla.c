@@ -26,6 +26,7 @@
 #include "main/dll/trickycurve_object.h"
 #include "main/object_api.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/dll/player_api.h"
 #include "main/obj_message.h"
 #include "main/frame_timing.h"
@@ -164,7 +165,7 @@ void fn_80206968(TrickyCurveObject* obj)
         }
         else
         {
-            ObjHits_RecordObjectHit((int)player, 0, TRICKY_CURVE_HIT_PRIORITY, 2, 0);
+            ObjHits_RecordObjectHit(player, NULL, TRICKY_CURVE_HIT_PRIORITY, 2, 0);
         }
         Sfx_PlayFromObject((u32)player, TRICKY_CURVE_SFX_COOLDOWN);
         state->cooldown = TRICKY_CURVE_COOLDOWN_TICKS;

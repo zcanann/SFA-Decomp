@@ -119,7 +119,7 @@ void DeathGas_update(int* obj)
             if (state->hitTimer < floor)
             {
                 state->hitTimer += 120.0f;
-                ObjHits_RecordObjectHit((int)player, (int)obj, 0x16, 1, 0);
+                ObjHits_RecordObjectHit(player, (GameObject*)obj, 0x16, 1, 0);
             }
         }
     }

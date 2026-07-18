@@ -253,7 +253,7 @@ void dll_1D6_update(int* obj)
                 lim = ((GameObject*)obj)->anim.rootMotionScale * (f32)(int)*(s16*)((char*)row + extra->hitRow * 16);
                 if (lx <= lim)
                 {
-                    ObjHits_RecordObjectHit((int)player, (int)obj, 11, 4, 0);
+                    ObjHits_RecordObjectHit(player, (GameObject*)obj, 11, 4, 0);
                 }
             }
         }

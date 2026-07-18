@@ -314,7 +314,7 @@ void sc_musictree_update(GameObject* obj)
                 int rr = (*(int (**)(int))(*(int*)(*(int*)&((GameObject*)rc)->anim.dll) + 0x28))(rc);
                 if (rr > 1)
                 {
-                    ObjHits_RecordObjectHit(*pp, (int)obj, 0xe, 1, 0);
+                    ObjHits_RecordObjectHit((GameObject*)*pp, obj, 0xe, 1, 0);
                 }
             }
             pp = (int*)((char*)pp + 4);

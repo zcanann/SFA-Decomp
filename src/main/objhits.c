@@ -8,9 +8,7 @@
 #include "main/objHitReact.h"
 #include "main/obj_contact.h"
 #include "main/obj_list.h"
-#define OBJHITS_RECORD_OBJECT_HIT_DECLARED
 #include "main/objhits.h"
-#undef OBJHITS_RECORD_OBJECT_HIT_DECLARED
 #include "main/object_transform.h"
 #include "main/vecmath.h"
 #include "main/track_dolphin_api.h"
@@ -44,8 +42,6 @@ typedef int (*ObjHitsCheckHitVolumesLegacyFn)(int objA, int objB, int srcObj, ch
                                                int skelMask);
 
 extern f32 gObjHitsPriorityHitTickDelta;
-extern int ObjHits_RecordObjectHit(int obj, int hitObj, u8 priority, u8 hitVolume, s8 sphereIndex);
-
 static inline ObjHitsModelBank* ObjHits_GetActiveModel(int obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -1459,8 +1455,10 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
         {
             if ((u32)objA == srcObj)
             {
-                ObjHits_RecordObjectHit(objB, objA, stateSrc->objectPairPriority, stateSrc->objectPairHitVolume, hit);
-                ObjHits_RecordObjectHit(objA, objB, stateB->objectPairPriority, stateB->objectPairHitVolume, idxA);
+                ObjHits_RecordObjectHit((GameObject*)objB, (GameObject*)objA, stateSrc->objectPairPriority,
+                                        stateSrc->objectPairHitVolume, hit);
+                ObjHits_RecordObjectHit((GameObject*)objA, (GameObject*)objB, stateB->objectPairPriority,
+                                        stateB->objectPairHitVolume, idxA);
                 ObjHits_ApplyPairResponse(objA, objB, -bestX, gObjHitsScalarZero, -bestZ, 0);
                 return 1;
             }
@@ -1966,8 +1964,10 @@ void ObjHits_DetectObjectPair(int objA, int objB)
         }
         if ((dist < sumRadius) && (dist > gObjHitsScalarZero))
         {
-            ObjHits_RecordObjectHit(objB, objA, *(u8*)&stateA->objectPairPriority, stateA->objectPairHitVolume, 0);
-            ObjHits_RecordObjectHit(objA, objB, *(u8*)&stateB->objectPairPriority, stateB->objectPairHitVolume, 0);
+            ObjHits_RecordObjectHit((GameObject*)objB, (GameObject*)objA, stateA->objectPairPriority,
+                                    stateA->objectPairHitVolume, 0);
+            ObjHits_RecordObjectHit((GameObject*)objA, (GameObject*)objB, stateB->objectPairPriority,
+                                    stateB->objectPairHitVolume, 0);
             if (((stateB->flags & OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE) == 0) &&
                 ((stateA->flags & OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE) == 0))
             {

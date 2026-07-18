@@ -4373,7 +4373,7 @@ int playerStateAttack(GameObject* obj, int state, f32 fv)
             inner->hitTimer = t;
             if (t <= 0.0f)
             {
-                ((void (*)(int, int, int, int, int))ObjHits_RecordObjectHit)(inner->lastHitObject, (int)obj, 0xb, 1, 0);
+                ObjHits_RecordObjectHit((GameObject*)inner->lastHitObject, obj, 0xb, 1, 0);
                 (*(u8*)&((PlayerState*)inner)->hitCount)++;
                 inner->hitTimer = (f32)(u8)inner->hitInterval;
             }
@@ -15412,7 +15412,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
             if ((*(s16*)&((PlayerState*)state)->hitIntervalTimer -= dt) <= 0)
             {
                 *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0x3c;
-                ObjHits_RecordObjectHit((int)obj, 0, 0x14, 2, 0);
+                ObjHits_RecordObjectHit(obj, NULL, 0x14, 2, 0);
             }
             break;
         case SURFACE_CONVEYOR:
@@ -15434,7 +15434,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
             }
             break;
         case SURFACE_INSTANT_DEATH:
-            ObjHits_RecordObjectHit((int)obj, 0, 1, 0, 0);
+            ObjHits_RecordObjectHit(obj, NULL, 1, 0, 0);
             break;
         case 28:
             if (mainGetBit(0x21) == 0)
@@ -18726,7 +18726,7 @@ void Lightfoot_ProcessHitResponseFlags(int obj, int inner)
     if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x800)
     {
         *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x800;
-        ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 0x19, 2, 1);
+        ObjHits_RecordObjectHit(Obj_GetPlayerObject(), (GameObject*)obj, 0x19, 2, 1);
         Sfx_PlayFromObject(obj, SFXTRIG_wp_simp1_c);
         CameraShake_Start(lbl_803E81CC, lbl_803E81D0, lbl_803E81D4);
         doRumble(lbl_803E81D8);

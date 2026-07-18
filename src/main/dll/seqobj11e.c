@@ -369,7 +369,7 @@ void fn_80152514(int* obj, u8* state)
         if (*(s8*)((char*)def + 0x2e) != -1 && (child2 = ((GameObject*)obj)->childObjs[0]) != 0 &&
             fn_801A0174(child2) != 0)
         {
-            ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), (int)obj, 0x16, 2, 0);
+            ObjHits_RecordObjectHit(Obj_GetPlayerObject(), (GameObject*)obj, 0x16, 2, 0);
             gcRobotLight_init((GameObject*)obj, 0x3b2);
             Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_rolovr_6);
             *(f32*)(state + 0x32c) = lbl_803DBCB4;

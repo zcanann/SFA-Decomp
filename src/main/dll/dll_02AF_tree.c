@@ -229,7 +229,7 @@ void tree_update(GameObject* obj)
                                 if ((*(int (**)(int))(*(int*)(*(int*)(state->ambientEffectHandles[i] + 0x68)) + 0x28))(
                                         state->ambientEffectHandles[i]) > 1)
                                 {
-                                    ObjHits_RecordObjectHit(state->ambientEffectHandles[i], (int)obj, 0xe, 1, 0);
+                                    ObjHits_RecordObjectHit((GameObject*)state->ambientEffectHandles[i], obj, 0xe, 1, 0);
                                     break;
                                 }
                             }
@@ -390,4 +390,3 @@ ObjectDescriptor gTreeObjDescriptor = {
     NULL,
     tree_getExtraSize,
 };
-
