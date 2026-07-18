@@ -245,8 +245,8 @@ void TumbleWeedBush_update(int* obj)
     f32 sunTime;
     int hit0;
     f32 dx, dy, d;
-    int j;
     int nullVal;
+    int j;
     int** slot;
     int i;
 
