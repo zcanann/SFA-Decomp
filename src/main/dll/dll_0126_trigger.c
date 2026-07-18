@@ -62,6 +62,7 @@
 #include "main/sky.h"
 #include "main/dll/dll_80198a00.h"
 #include "main/gameloop_ext.h"
+#include "main/gameloop_pr.h"
 
 #define Sfx_StopFromObjectLegacy(obj, sfxId) \
     ((void (*)(void*, int))Sfx_StopFromObject)((obj), (sfxId))
@@ -87,7 +88,6 @@
 extern f32 lbl_803E40D8;
 extern int mainGetBit(int eventId);
 extern void fn_8006FC00(int v);
-extern void mainSetBits(int eventId, int value);
 
 #define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
 

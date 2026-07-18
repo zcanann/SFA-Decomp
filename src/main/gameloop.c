@@ -78,6 +78,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/lightmap.h"
 #include "main/pi_dolphin_ext.h"
 #include "main/lightmap_ext.h"
+#include "main/pi_dolphin_pr.h"
 
 f32 gGameLoopResetFadeOutTimer;
 void* lbl_803DCAFC;
@@ -171,7 +172,6 @@ typedef struct
     int arg24;
     int arg28;
 } AssetReq;
-extern void fileLoadToBuffer(int id, void* buf);
 extern void* lbl_803DCAFC;
 extern void* memcpy(void* dst, const void* src, int n);
 extern u8* gGameBitTable;
@@ -1065,7 +1065,6 @@ void gameTextInitFn_8001a234(void);
 
 extern u8 initLoadFiles(void);
 
-extern void viFn_8004a56c(int arg);
 
 extern void mapInitFn_8006fccc(void);
 

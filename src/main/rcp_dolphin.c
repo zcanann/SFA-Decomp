@@ -34,6 +34,7 @@
 #include "main/mm_ext.h"
 #include "main/newshadows_ext.h"
 #include "main/gameloop_cs.h"
+#include "main/pi_dolphin_pr.h"
 
 struct LoadedTextureEntry* gLoadedTextures;
 u16* gRcpTexIdRemap;
@@ -200,7 +201,6 @@ extern u8 gRcpTexAllocFailed;
 extern u32 gRcpTexAllocTag;
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
-extern void tex0GetFrame(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
 extern void tex1GetFrame(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
 extern void texPreGetMipmap(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
 

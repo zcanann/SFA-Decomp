@@ -44,6 +44,7 @@
 #include "main/pi_dolphin_ext2.h"
 #include "main/newshadows_ext2.h"
 #include "main/atan2f_cs.h"
+#include "main/sky_pr.h"
 
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
@@ -410,7 +411,6 @@ extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
 extern void fn_80077EF8(GameObject* hdr, void* col, void* mtx, f32 f);
 extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern u8 skyFn_8008919c(int);
-extern void* fn_8008912C(void);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);

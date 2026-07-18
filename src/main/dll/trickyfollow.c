@@ -24,6 +24,8 @@
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/skeetla_ext.h"
+#include "main/dll/Hcurves_pr.h"
+#include "main/dll/skeetla_pr.h"
 
 /* A plain XYZ point; recovered file-locally for the patch-target scratch slot
  * at TrickyState+0xD4 (an unnamed pad region in tricky_state.h). */
@@ -84,14 +86,12 @@ extern f32 lbl_803E24C0;
 extern char lbl_8031D2E8[];
 
 extern int isInWalkGroupOrPatch(f32* pos);
-extern s16 walkGroupFn_800db3e4(f32* pos, f32* target, int walkGroup);
 extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern void fn_800DB240(void* pos, void* out, u32 patch);
 extern int isPointWithinPatchGroup(f32* pos, int walkGroup, u32 patch);
 extern int trickyMove(u8* obj, void* moveState);
 extern void trickyRankLinkedRouteCandidates(u8* obj, u8* flags, int walkGroup, int* routes);
 extern int trickyFindReachableRouteIndex(u8* state, int* routes, u8* flags, u16 group);
-extern void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue);
 extern void fn_800D9F38(RomCurveWalker* route);
 extern void fn_800D9EE8(RomCurveWalker* route);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);

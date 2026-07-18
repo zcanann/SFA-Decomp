@@ -76,6 +76,7 @@ extern const f32 gMapBlockWorldSize;
 #include "main/rcp_dolphin_ext.h"
 #include "main/track_dolphin_cs.h"
 #include "main/dll/dll_0017_savegame_cs.h"
+#include "main/objprint_dolphin_pr.h"
 
 int lbl_803DB620 = -1;
 s8 lbl_803DB624[8] = {0, -2, -1, 1, 2, 0, 0, 0};
@@ -888,7 +889,6 @@ extern char sTrackLoadBlockOverrunError[];
 char lbl_803822C8[0x41A0];
 
 extern void mapBlockFn_80059354(int p1, int p2, MapCellEnt* entry, int layer);
-extern int mapCheckCurBlocks(int v);
 
 
 int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
