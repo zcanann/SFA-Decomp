@@ -204,7 +204,7 @@ void trickyDigTunnel(u8* obj, u8* state)
         state[0xa] = 1;
     case 1:
         trickyDebugPrint((char*)(base + 0x7b8));
-        trickyFn_8013b368((u8*)obj, lbl_803E2488, (u8*)state);
+        trickyFn_8013b368((GameObject*)obj, lbl_803E2488, (TrickyState*)state);
         gidx = Objfsa_GetWalkGroupIndexAtPoint((f32*)(obj + 0x18), NULL);
         if (((TrickyCurveNode*)((TrickyState*)state)->unk708)->walkGroup == gidx)
         {
@@ -215,7 +215,7 @@ void trickyDigTunnel(u8* obj, u8* state)
     case 2:
         trickyDebugPrint((char*)(base + 0x7cc));
         pos = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk700)->x;
-        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32*)pos, 1);
+        trickyUpdateApproachSpeed((GameObject*)obj, lbl_803E2488, (TrickyState*)state, (f32*)pos, 1);
         if (trickyMove(obj, (f32*)pos) == 0)
         {
             ((TrickyState*)state)->stateFlags |= 0x2010;
@@ -289,7 +289,7 @@ void trickyDigTunnel(u8* obj, u8* state)
                          Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
                                         &((TrickyCurveNode*)((TrickyState*)state)->unk704)->x));
         pos = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk704)->x;
-        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32*)pos, 1);
+        trickyUpdateApproachSpeed((GameObject*)obj, lbl_803E2488, (TrickyState*)state, (f32*)pos, 1);
         if (trickyMove(obj, (f32*)pos) == 0)
         {
             trickyAdvanceNode(state);
@@ -299,7 +299,7 @@ void trickyDigTunnel(u8* obj, u8* state)
     case 6:
         trickyDebugPrint((char*)(base + 0x810));
         pos = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk704)->x;
-        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32*)pos, 1);
+        trickyUpdateApproachSpeed((GameObject*)obj, lbl_803E2488, (TrickyState*)state, (f32*)pos, 1);
         if (trickyMove(obj, (f32*)pos) == 0)
         {
             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
@@ -383,7 +383,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
         }
         state[0xa] = 1;
     case 1:
-        ret = trickyFn_8013b368((u8*)obj, lbl_803E2488, (u8*)state);
+        ret = trickyFn_8013b368((GameObject*)obj, lbl_803E2488, (TrickyState*)state);
         if (ret == 0)
         {
             if (((TrickyState*)state)->unk70C != NULL)
@@ -431,7 +431,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
         }
         break;
     case 2:
-        if (trickyFn_8013b368((u8*)obj, lbl_803E2418, (u8*)state) == 0)
+        if (trickyFn_8013b368((GameObject*)obj, lbl_803E2418, (TrickyState*)state) == 0)
         {
             ((TrickyState*)state)->stateFlags |= 0x10;
             state[0xa] = 3;
@@ -562,7 +562,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                     }
                 }
                 if (trickyFoodFn_8014460c((GameObject*)obj, (int*)state) == 0 &&
-                    trickyFn_8013b368((u8*)obj, lbl_803E2488, (u8*)state) == 0)
+                    trickyFn_8013b368((GameObject*)obj, lbl_803E2488, (TrickyState*)state) == 0)
                 {
                     ((TrickyState*)state)->idleSfxTimer -= timeDelta;
                     if (((TrickyState*)state)->idleSfxTimer <= lbl_803E23DC)
@@ -728,7 +728,7 @@ int trickyFn_80142a14(int obj, int state)
         }
         tricky_startRandomIdleMove((GameObject*)(obj), state);
     }
-    else if ((u8)trickyFn_8013b368((u8*)obj, lbl_803E24C8, (u8*)state) != 1)
+    else if ((u8)trickyFn_8013b368((GameObject*)obj, lbl_803E24C8, (TrickyState*)state) != 1)
     {
         ((FlagByte728*)(state + 0x728))->bf5 = 1;
         sfxId = randomGetRange(862, 863);
@@ -855,7 +855,7 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
         }
         ((TrickyState*)state)->substate = 0;
     }
-    if ((u8)trickyFn_8013b368((u8*)obj, lbl_803E2408, (u8*)state) == 1)
+    if ((u8)trickyFn_8013b368((GameObject*)obj, lbl_803E2408, (TrickyState*)state) == 1)
     {
         return 1;
     }
@@ -957,7 +957,7 @@ int trickyFn_801430e0(u8* obj, u8* state)
     {
         return 1;
     }
-    if ((u8)trickyFn_8013b368((u8*)obj, lbl_803E2418, (u8*)state) != 1)
+    if ((u8)trickyFn_8013b368((GameObject*)obj, lbl_803E2418, (TrickyState*)state) != 1)
     {
         if (((TrickyState*)state)->childB != NULL)
         {
@@ -1329,7 +1329,7 @@ u32 trickyFn_80143b78(GameObject* obj, int* trickyState)
     {
         return 1;
     }
-    val = trickyFn_8013b368((u8*)obj, lbl_803E2408, (u8*)trickyState);
+    val = trickyFn_8013b368((GameObject*)obj, lbl_803E2408, (TrickyState*)trickyState);
     if (val == 1)
     {
         if (lbl_803E23DC == ((TrickyState*)trickyState)->cooldownA)
@@ -1382,7 +1382,7 @@ int trickyFn_80143c04(GameObject* obj, int state)
         }
         threshold = lbl_803E2408;
     }
-    result = trickyFn_8013b368((u8*)obj, threshold, (u8*)state);
+    result = trickyFn_8013b368((GameObject*)obj, threshold, (TrickyState*)state);
     if (result != 1)
     {
         if (result == 2)

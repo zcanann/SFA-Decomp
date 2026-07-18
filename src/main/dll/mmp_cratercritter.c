@@ -83,7 +83,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
             *(s32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
             ((TrickyState*)state)->linkedWalkGroup = 0;
         }
-        if (trickyFn_8013b368(self, lbl_803E247C, state) == 1)
+        if (trickyFn_8013b368((GameObject*)self, lbl_803E247C, (TrickyState*)state) == 1)
             return;
     }
 

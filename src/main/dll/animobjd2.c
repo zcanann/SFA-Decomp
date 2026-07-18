@@ -44,6 +44,7 @@
 #include "main/dll/dll_80136a40.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/flameblast_api.h"
+#include "main/dll/baddie/trickyfollow.h"
 #include "main/trig_ext.h"
 
 /* group owned by another DLL, queried here */
@@ -76,7 +77,6 @@ typedef struct AnimObjD2DripSetup
     u8 pad18[0x1a - 0x18];
     s16 index; /* 0x1a */
 } AnimObjD2DripSetup;
-extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];
 extern f32 lbl_803E23DC;

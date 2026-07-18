@@ -182,7 +182,7 @@ void trickyFn_80141290(int obj, int ball)
     }
     else
     {
-        trickyFn_8013b368((u8*)obj, lbl_803E2488, (u8*)ball);
+        trickyFn_8013b368((GameObject*)obj, lbl_803E2488, (TrickyState*)ball);
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, NULL) ==
             (walkGroup = Objfsa_GetWalkGroupIndexAtPoint((float*)((int)ts->unk700 + 8), NULL)))
         {

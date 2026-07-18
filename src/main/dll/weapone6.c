@@ -111,7 +111,7 @@ void fn_8013F100(GameObject* obj, register int state)
     case 1:
         if (fn_80179650((GameObject*)*(int*)&((TrickyState*)state)->unk700) != 0)
         {
-            status = trickyFn_8013b368((u8*)obj, lbl_803E24F0, (u8*)state);
+            status = trickyFn_8013b368(obj, lbl_803E24F0, (TrickyState*)state);
             if (status == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
@@ -166,7 +166,7 @@ void fn_8013F100(GameObject* obj, register int state)
         }
         else
         {
-            status = trickyFn_8013b368((u8*)obj, lbl_803E2408, (u8*)state);
+            status = trickyFn_8013b368(obj, lbl_803E2408, (TrickyState*)state);
             if (status == 0)
             {
                 if (*(float*)&((TrickyState*)state)->unk704 > lbl_803E23DC)
@@ -342,7 +342,7 @@ void fn_8013F100(GameObject* obj, register int state)
         }
         break;
     case 7:
-        status = trickyFn_8013b368((u8*)obj, lbl_803E2408, (u8*)state);
+        status = trickyFn_8013b368(obj, lbl_803E2408, (TrickyState*)state);
         if (status != 1)
         {
             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
@@ -404,7 +404,7 @@ void fn_8013F100(GameObject* obj, register int state)
             }
             ((TrickyState*)state)->substate = 5;
         case 5:
-            if (trickyFn_8013b368((u8*)obj, lbl_803E24C8, (u8*)state) == 0)
+            if (trickyFn_8013b368(obj, lbl_803E24C8, (TrickyState*)state) == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
                 {
@@ -454,7 +454,7 @@ void fn_8013F9E4(GameObject* obj, int state)
 
     if (trickyFoodFn_8014460c(obj, (int*)state) == 0)
     {
-        if (((int (*)(void*, f32, int))trickyFn_8013b368)(obj, lbl_803E2488, state) == 0)
+        if (trickyFn_8013b368(obj, lbl_803E2488, (TrickyState*)state) == 0)
         {
             ((TrickyState*)state)->idleSfxTimer -= timeDelta;
             if (((TrickyState*)state)->idleSfxTimer <= lbl_803E23DC)
@@ -574,7 +574,7 @@ void fn_8013FBE4(GameObject* obj, register int state)
             *(float*)&((TrickyState*)state)->unk704 = -(distance * dx - trackedObj->anim.worldPosX);
             *(float*)&((TrickyState*)state)->unk708 = trackedObj->anim.worldPosY;
             *(float*)&((TrickyState*)state)->unk70C = -(distance * dz - trackedObj->anim.worldPosZ);
-            if (((int (*)(void*, f32, int))trickyFn_8013b368)(obj, lbl_803E2488, state) == 0)
+            if (trickyFn_8013b368(obj, lbl_803E2488, (TrickyState*)state) == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
                 {
@@ -624,7 +624,7 @@ void fn_8013FEC0(int obj, int state)
     int inWater;
     int result;
 
-    result = trickyFn_8013b368((u8*)obj, lbl_803E247C, (u8*)state);
+    result = trickyFn_8013b368((GameObject*)obj, lbl_803E247C, (TrickyState*)state);
     if (result == 0)
     {
         if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)

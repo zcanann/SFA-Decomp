@@ -63,6 +63,7 @@
 #include "main/dll/dll_80136a40_ext.h"
 #include "main/dll/skeetla_ext.h"
 #include "main/dll/tricky_substates_ext.h"
+#include "main/dll/baddie/trickyfollow.h"
 #include "main/dll/mmp_critterspit_ext.h"
 #include "main/dll/dll_80136a40_ext2.h"
 #include "main/dll/dll_0014_unk.h"
@@ -210,7 +211,6 @@ STATIC_ASSERT(sizeof(struct VisBits16) == 0x10);
 extern void objAudioFn_8006edcc(int obj, u16 mask, int arg5, float* points, void* aux, f32 scaleX, f32 scaleY);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
-extern int trickyFn_8013b368();
 extern f32 objFn_801948c0(int obj, int coord);
 const struct VisBits16 gTrickyVisibilityBitsInit = {{0x10000, 0x20000, 0x40000, 0x80000}};
 extern char lbl_8031D2E8[];
@@ -355,7 +355,7 @@ void trickyFn_80144f50(GameObject* obj, int state)
         ((TrickyState*)state)->wanderTargetZ =
             (obj)->anim.worldPosZ - mathCosf((lbl_803E2454 * (f32) * (s16*)obj) / lbl_803E2458);
 
-        if (trickyFn_8013b368(obj, lbl_803E247C, state) != 1)
+        if (trickyFn_8013b368(obj, lbl_803E247C, (TrickyState*)state) != 1)
         {
             ((TrickyState*)state)->idleSfxTimer -= timeDelta;
             if (((TrickyState*)state)->idleSfxTimer <= lbl_803E23DC)
