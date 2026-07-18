@@ -63,7 +63,6 @@ static void wctemplebri_deformVertex(ObjModel* model, ModelFileHeader* modelBase
         curr[0] = (s16)((f32)base[0] - 256.0f * mathSinf(3.1415927f * idx / 32768.0f));
 }
 
-void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state);
 int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     ObjAnimComponent* objAnim = &obj->anim;
