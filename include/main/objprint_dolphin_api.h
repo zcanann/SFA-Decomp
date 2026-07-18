@@ -5,4 +5,6 @@
 
 s32 mapCheckCurBlocks(int v);
 
+extern u8 gObjAlphaCompareThreshold;
+
 #endif /* MAIN_OBJPRINT_DOLPHIN_API_H_ */
