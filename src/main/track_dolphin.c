@@ -55,6 +55,7 @@
 #include "main/newshadows_texture_api.h"
 #include "main/atan2f_api.h"
 #include "main/sky_texture_api.h"
+#include "main/tex_dolphin_ext.h"
 #include "string.h"
 
 u32 gTrackTriangleBufferEnd;
@@ -319,8 +320,6 @@ extern const f32 lbl_803DECCC;
 extern const f32 lbl_803DECD0;
 extern const f32 lbl_803DECD4;
 
-extern int mapBlockRender_setShader(int a, int* obj, int* state);
-extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
 extern int shouldDrawShadows(void);
 extern float floor(float x);
 
@@ -342,7 +341,7 @@ f32 gPrevSunDir[3];
 
 void mapBlockRender_setVtxDcrs(flag, obj, sh, bs) u8 flag;
 int* obj;
-int sh;
+MapShader* sh;
 
 int* bs;
 {
@@ -401,9 +400,9 @@ int* bs;
     bit3 = (val3 >> (pos3 & 7)) & 1;
     if (flag != 0)
     {
-        if ((u32)sh != 0 && (((MapShader*)sh)->flags & 0x80000000) == 0)
+        if (sh != NULL && (sh->flags & 0x80000000) == 0)
         {
-            for (i = 0; i < ((MapShader*)sh)->layerCount; i++)
+            for (i = 0; i < sh->layerCount; i++)
             {
                 GXSetVtxDesc(i + GX_VA_TEX0, bit3 ? GX_INDEX16 : GX_INDEX8);
             }
@@ -423,7 +422,7 @@ void renderMapBlock(int* o, u8 type)
     f32 m[16];
     int ptr;
     int count;
-    int shader;
+    MapShader* shader;
     int flag;
     void* viewMtx;
 
@@ -473,10 +472,10 @@ void renderMapBlock(int* o, u8 type)
             mapBlockRender_setVtxDcrs(flag, o, shader, state);
             break;
         case 1:
-            shader = mapBlockRender_setShader(flag, o, state);
+            shader = mapBlockRender_setShader(flag, (MapBlockData*)o, state);
             break;
         case 2:
-            mapBlockRender_callList(flag, 0, o, shader, state, m);
+            mapBlockRender_callList(flag, 0, (MapBlockData*)o, shader, state, m);
             break;
         case 4:
         {

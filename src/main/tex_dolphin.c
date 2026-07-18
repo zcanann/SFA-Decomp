@@ -13,6 +13,7 @@
 #include "main/objseq_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/lightmap_render_queue_api.h"
+#include "main/tex_dolphin_ext.h"
 
 u8 lbl_803DB638[4] = {0x20, 0x20, 0x20, 0};
 int gTexShaderAmbColor = -1;
@@ -527,7 +528,8 @@ u8 mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* plan
     return 1;
 }
 
-void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, int* stream, float* mtx)
+void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, MapShader* shader, int* stream,
+                             float* mtx)
 {
     int lightPos[3];
     int count;
@@ -561,13 +563,13 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
             bits = bits | (u32)(*(u8*)(byteBase + 2) << 16);
         }
         ((BitStreamReader*)stream)->bitPos = bitPos + 8;
-        rec[0] = (int)&((MapBlockData*)block)->bounds[(bits >> (bitPos & 7)) & 0xff];
+        rec[0] = (int)&block->bounds[(bits >> (bitPos & 7)) & 0xff];
         if ((shader != NULL) && ((SHADER_FLAGS(shader) & 2) != 0))
         {
             return;
         }
-        if (mapBlockBounds_ComputeAndTestPlanes(rec[0], block, (FrustumPlane*)(texGlobals + 0x987c), FRUSTUM_PLANE_COUNT,
-                                                &minX, &minY, &minZ, &maxX, &maxY, &maxZ) == 0)
+        if (mapBlockBounds_ComputeAndTestPlanes(rec[0], (int)block, (FrustumPlane*)(texGlobals + 0x987c),
+                                                FRUSTUM_PLANE_COUNT, &minX, &minY, &minZ, &maxX, &maxY, &maxZ) == 0)
         {
             return;
         }
@@ -576,7 +578,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
             flags = SHADER_FLAGS(shader);
             if ((flags & 0x80000000) != 0)
             {
-                fn_8005D3B4IntLegacy(rec[0], block, ((MapBlockBoundsRec*)rec[0])->selector);
+                fn_8005D3B4IntLegacy(rec[0], (int)block, ((MapBlockBoundsRec*)rec[0])->selector);
                 {
                     int shadowType = 5;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
@@ -585,7 +587,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
             }
             else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0))
             {
-                fn_8005D3B4IntLegacy(rec[0], block, ((MapBlockBoundsRec*)rec[0])->selector);
+                fn_8005D3B4IntLegacy(rec[0], (int)block, ((MapBlockBoundsRec*)rec[0])->selector);
                 {
                     int shadowType = 4;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
@@ -677,8 +679,8 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                         else
                         {
                             u8 mirrorVisible = mapBlockBounds_ComputeAndTestPlanes(
-                                rec[0], block, (FrustumPlane*)(texGlobals + 0x9818), FRUSTUM_PLANE_COUNT, &minX, &minY,
-                                &minZ, &maxX, &maxY, &maxZ);
+                                rec[0], (int)block, (FrustumPlane*)(texGlobals + 0x9818), FRUSTUM_PLANE_COUNT, &minX,
+                                &minY, &minZ, &maxX, &maxY, &maxZ);
                             if ((mirrorVisible != 0 && (u8)visArg != 0) || (mirrorVisible == 0 && (u8)visArg == 0))
                             {
                                 visible = 1;
@@ -709,7 +711,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
             if ((((flags & 0x4000) != 0) || ((flags & 0x8000) != 0) || ((flags & 0x10000) != 0)) &&
                 (mapBlockBounds_HasCornerPastDepthThreshold(rec[0], mtx) != 0))
             {
-                fn_8005D3B4IntLegacy(rec[0], block, 0x17);
+                fn_8005D3B4IntLegacy(rec[0], (int)block, 0x17);
                 {
                     int shadowType = 6;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
@@ -889,9 +891,9 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
     return;
 }
 
-int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
+MapShader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, int* bitReader)
 {
-    u32 shader;
+    MapShader* shader;
     u32 shaderIdx;
     int fogColor;
     int byteBase;
@@ -913,7 +915,7 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
         bits |= (u32) * (u8*)(byteBase + 2) << 16;
         bitReader[4] = bitPos + 6;
         shaderIdx = (bits >> (bitPos & 7)) & 0x3f;
-        shader = (int)&((MapBlockData*)blockData)->shaders[shaderIdx];
+        shader = &blockData->shaders[shaderIdx];
     }
 
     if (doSetup == 0)
@@ -949,7 +951,7 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
     }
     else
     {
-        mapBlockRender_setupShaderTextures(shader, 0x80);
+        mapBlockRender_setupShaderTextures((int)shader, 0x80);
     }
     flags = SHADER_FLAGS(shader);
     if ((flags & 0x20) != 0 && (lightList = lbl_803DCE34) != 0)

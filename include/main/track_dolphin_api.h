@@ -30,6 +30,8 @@ typedef struct TrackQueryBounds
 
 STATIC_ASSERT(sizeof(TrackQueryBounds) == 0x18);
 
+struct MapShader;
+
 int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameCount);
 int fn_80065640(void);
 int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag);
@@ -50,7 +52,7 @@ void trackGetGridOrigin(int** outOrigin);
 void fn_80069968(int* outCount, int* outTable);
 void mapInitFn_80069990(void);
 void trackIntersect(void);
-void mapBlockRender_setVtxDcrs(int flag, int* obj, int shader, int* blockState);
+void mapBlockRender_setVtxDcrs(int flag, int* obj, struct MapShader* shader, int* blockState);
 void initTextures(void);
 void fn_80060BB0(void);
 void* fn_800606DC(int* obj, int idx);
