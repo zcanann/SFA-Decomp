@@ -198,7 +198,8 @@ typedef struct TexLayer
     u8 pad7;
 } TexLayer;
 
-void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* bitReader, Mtx viewMtx)
+void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, MapShader* shader, int* bitReader,
+                                               Mtx viewMtx)
 {
     Mtx passMtx;
     float indMtx[2][3];
@@ -225,7 +226,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* b
     bitReader[4] = bitPos + 8;
     /* extract this cursor's 8-bit field (LSB-first: shift out the bits already
      * consumed within the byte, then mask the width) -> bounds-record index */
-    rec[0] = (int)((MapBlockBoundsRec*)*(int*)(blockData + 0x68) + ((bits >> (bitPos & 7)) & 0xff));
+    rec[0] = (int)((MapBlockBoundsRec*)*(int*)((u8*)blockData + 0x68) + ((bits >> (bitPos & 7)) & 0xff));
     flags = SHADER_FLAGS(shader);
     if ((flags & 0x4000) != 0)
     {
@@ -263,9 +264,9 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* b
     }
 }
 
-int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
+MapShader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, int* bitReader)
 {
-    int shader;
+    MapShader* shader;
     u32 shaderIdx;
     int fogColor;
     int byteBase;
@@ -284,10 +285,10 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
         bits |= (u32) * (u8*)(byteBase + 2) << 16;
         bitReader[4] = bitPos + 6;
         shaderIdx = (bits >> (bitPos & 7)) & 0x3f;
-        shader = (int)((MapShader*)*(int*)(blockData + 0x64) + shaderIdx);
+        shader = (MapShader*)*(int*)((u8*)blockData + 0x64) + shaderIdx;
     }
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
-    selectTexture((Texture*)(*(int*)Shader_getLayer((void*)shader, 0)), 0);
+    selectTexture((Texture*)(*(int*)Shader_getLayer(shader, 0)), 0);
     if ((SHADER_FLAGS(shader) & 4) != 0)
     {
         _gxSetFogParams();
@@ -320,7 +321,7 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
 
 /*
  * MapBlockData - the per-map-block record handed to the mapBlockRender_*
- * family as a raw int. Only the two array bases this file reads are named:
+ * family. Only the two array bases this file reads are named:
  * the 0x44-stride MapShader table at 0x64 and the 0x1c-stride
  * MapBlockBoundsRec table at 0x68. Declared HERE (not at top of file)
  * because any typedef parsed before mapBlockRender_setLightmapShader
