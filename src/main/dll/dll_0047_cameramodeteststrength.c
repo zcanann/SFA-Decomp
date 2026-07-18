@@ -32,6 +32,9 @@ extern void pathcam_buildWindowSamples(int* window, f32* x, f32* y, f32* z, f32*
 extern void pathcam_findTaggedNodeWindow(int node, int* window, int p3);
 extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
 
+void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* posEnd, s32 rotXEnd, s32 rotYEnd,
+                                       s32 rotZEnd);
+
 extern f32 lbl_803E18BC;
 
 u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
@@ -132,38 +135,6 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
         *(s16*)&camera->anim.rotZ = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotZStart, t, NULL);
     }
     return t >= lbl_803E188C;
-}
-
-void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* posEnd, s32 rotXEnd, s32 rotYEnd,
-                                       s32 rotZEnd)
-{
-    f32 dx;
-    f32 dy;
-    f32 dz;
-
-    lbl_803DD560->transitionComplete = 0;
-    lbl_803DD560->posXStart = camera->anim.localPosX;
-    lbl_803DD560->posYStart = camera->anim.localPosY;
-    lbl_803DD560->posZStart = camera->anim.localPosZ;
-    lbl_803DD560->rotXStart = (f32)(s32)camera->anim.rotX;
-    lbl_803DD560->rotYStart = (f32)(s32)camera->anim.rotY;
-    lbl_803DD560->rotZStart = (f32)(s32)camera->anim.rotZ;
-    lbl_803DD560->fovStart = camera->fov;
-    lbl_803DD560->posXEnd = posEnd[0];
-    lbl_803DD560->posYEnd = posEnd[1];
-    lbl_803DD560->posZEnd = posEnd[2];
-    lbl_803DD560->rotXEnd = rotXEnd;
-    lbl_803DD560->rotYEnd = rotYEnd;
-    lbl_803DD560->rotZEnd = rotZEnd;
-    lbl_803DD560->fovEnd = fovEnd;
-    lbl_803DD560->elapsed = lbl_803E1888;
-    dx = lbl_803DD560->posXEnd - lbl_803DD560->posXStart;
-    dy = lbl_803DD560->posYEnd - lbl_803DD560->posYStart;
-    dz = lbl_803DD560->posZEnd - lbl_803DD560->posZStart;
-    lbl_803DD560->duration = sqrtf(dx * dx + dy * dy + dz * dz);
-    (*gCameraInterface)
-        ->initialise(lbl_803DD560->duration, lbl_803DD560->speedCurve, lbl_803E18B0, (f64)lbl_803E18B4,
-                     (f64) * (f32*)&lbl_803E18B4, lbl_803E18B8);
 }
 
 void CameraModeTestStrength_copyToCurrent(void)
@@ -475,4 +446,36 @@ void CameraModeTestStrength_release(void)
 
 void CameraModeTestStrength_initialise(void)
 {
+}
+
+void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* posEnd, s32 rotXEnd, s32 rotYEnd,
+                                       s32 rotZEnd)
+{
+    f32 dx;
+    f32 dy;
+    f32 dz;
+
+    lbl_803DD560->transitionComplete = 0;
+    lbl_803DD560->posXStart = camera->anim.localPosX;
+    lbl_803DD560->posYStart = camera->anim.localPosY;
+    lbl_803DD560->posZStart = camera->anim.localPosZ;
+    lbl_803DD560->rotXStart = (f32)(s32)camera->anim.rotX;
+    lbl_803DD560->rotYStart = (f32)(s32)camera->anim.rotY;
+    lbl_803DD560->rotZStart = (f32)(s32)camera->anim.rotZ;
+    lbl_803DD560->fovStart = camera->fov;
+    lbl_803DD560->posXEnd = posEnd[0];
+    lbl_803DD560->posYEnd = posEnd[1];
+    lbl_803DD560->posZEnd = posEnd[2];
+    lbl_803DD560->rotXEnd = rotXEnd;
+    lbl_803DD560->rotYEnd = rotYEnd;
+    lbl_803DD560->rotZEnd = rotZEnd;
+    lbl_803DD560->fovEnd = fovEnd;
+    lbl_803DD560->elapsed = lbl_803E1888;
+    dx = lbl_803DD560->posXEnd - lbl_803DD560->posXStart;
+    dy = lbl_803DD560->posYEnd - lbl_803DD560->posYStart;
+    dz = lbl_803DD560->posZEnd - lbl_803DD560->posZStart;
+    lbl_803DD560->duration = sqrtf(dx * dx + dy * dy + dz * dz);
+    (*gCameraInterface)
+        ->initialise(lbl_803DD560->duration, lbl_803DD560->speedCurve, lbl_803E18B0, (f64)lbl_803E18B4,
+                     (f64) * (f32*)&lbl_803E18B4, lbl_803E18B8);
 }
