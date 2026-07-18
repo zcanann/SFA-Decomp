@@ -54,6 +54,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
+#include "main/dll/dll_801814d0.h"
 #define SMALLBASKET_HIT_VOLUME_SLOT 0xe
 
 #define SMALLBASKET_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -102,7 +103,6 @@ void SmallBasket_update(GameObject* obj);
 void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
 void* gSmallBasketResource;
 
-extern void fn_801814D0(int obj, int player, int state);
 typedef struct SmallbasketObjectDef
 {
     u8 pad0[0x18 - 0x0];
@@ -959,7 +959,7 @@ void SmallBasket_update(GameObject* obj)
         }
         else
         {
-            fn_801814D0((int)obj, (int)player, (int)state);
+            fn_801814D0((int)obj, (int)player, (u8*)state);
         }
         if ((state->randomTimer <= 0) && (state->carryState != 0))
         {

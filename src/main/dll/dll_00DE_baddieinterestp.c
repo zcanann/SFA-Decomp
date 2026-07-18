@@ -17,6 +17,7 @@
 #include "main/obj_group.h"
 #include "main/resource.h"
 #include "main/vecmath_distance_api.h"
+#include "main/dll/wispbaddieseq_ext.h"
 
 typedef struct BaddieinterestpPlacement
 {
@@ -33,7 +34,6 @@ typedef struct BaddieinterestpPlacement
     u8 pad2E[0x30 - 0x2E]; /* 0x2E */
 } BaddieinterestpPlacement;
 
-extern void fn_801504BC(int* obj, int kind);
 
 int BaddieInterestP_getExtraSize(void)
 {
@@ -127,7 +127,7 @@ void BaddieInterestP_update(int* obj)
                                     case 1464:
                                     case 1465:
                                     case 1505:
-                                        fn_801504BC(target, kind);
+                                        fn_801504BC((int)target, kind);
                                         break;
                                     }
                                     break;
@@ -152,7 +152,7 @@ void BaddieInterestP_update(int* obj)
                                         case 1464:
                                         case 1465:
                                         case 1505:
-                                            fn_801504BC(target, kind);
+                                            fn_801504BC((int)target, kind);
                                             break;
                                         }
                                     }
@@ -177,7 +177,7 @@ void BaddieInterestP_update(int* obj)
                                         case 1464:
                                         case 1465:
                                         case 1505:
-                                            fn_801504BC(target, kind);
+                                            fn_801504BC((int)target, kind);
                                             break;
                                         }
                                     }
