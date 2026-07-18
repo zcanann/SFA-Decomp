@@ -5,6 +5,8 @@
 #include "main/object_descriptor.h"
 
 extern ObjectDescriptor gMikaBombShadowObjDescriptor;
+extern const f32 gMikaBombGravityAccel;
+extern const f32 gMikaBombMinFallVelocity;
 
 void MikaBombShadow_free(void);
 int MikaBombShadow_getExtraSize(void);
