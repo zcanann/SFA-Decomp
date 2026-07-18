@@ -345,15 +345,16 @@ int isInBounds(f32 x, f32 z)
 
 int objPosToMapBlockIdx(f32 x, f32 y, f32 z)
 {
+    s8** tp;
     int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)gMapBlockOriginX);
     int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)gMapBlockOriginZ);
     int i;
     if (ix < 0 || ix >= 16) return -1;
     if (iz < 0 || iz >= 16) return -1;
     ix = ix + (iz << 4);
-    for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++)
+    for (tp = (s8**)gMapBlockLayerTables, i = 0; i < MAP_BLOCK_LAYER_COUNT; tp++, i++)
     {
-        s8* table = gMapBlockLayerTables[i];
+        s8* table = *tp;
         int idx = table[ix];
         if (idx > -1)
         {
@@ -372,6 +373,7 @@ extern void* lbl_803DCEA0;
 
 int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type, int* out_lastpage)
 {
+    int** pp;
     int inner_idx;
     int outer;
     int* page;
@@ -380,9 +382,9 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
     u16 limit;
     int sz;
 
-    for (outer = 0; outer < 0x78; outer++)
+    for (outer = 0, pp = (int**)gLoadedRomListPages; outer < 0x78; pp++, outer++)
     {
-        page = ((int**)gLoadedRomListPages)[outer];
+        page = *pp;
         if (page == NULL) continue;
 
         lbl_803DCEA0 = page;
@@ -600,6 +602,7 @@ void sortVisibleObjectKeysDescending(u32* arr, int n)
 
 void renderObjects(s8* opacity)
 {
+    u32* kp;
     int i;
     u32 flags;
     int idx;
@@ -608,17 +611,15 @@ void renderObjects(s8* opacity)
     int* p;
     int slot;
     int* objects;
-    u32* keys;
     LightmapDrawQueue* qbase;
     LightmapQEnt* q;
 
     qbase = (LightmapDrawQueue*)lbl_8037E0C0;
     q = (LightmapQEnt*)lbl_8037E0C0;
     objects = ObjList_GetObjects((int*)0, 0);
-    keys = (u32*)((u8*)qbase + 0x8818);
-    for (i = 1; i < gVisibleObjectSortKeyCount; i++)
+    for (i = 1, kp = (u32*)((u8*)qbase + 0x8818) + 1; i < gVisibleObjectSortKeyCount; kp++, i++)
     {
-        idx = keys[i] & 0x3ff;
+        idx = *kp & 0x3ff;
         obj = (u8*)objects[idx];
         flags = ((GameObject*)obj)->anim.modelInstance->flags;
         if ((flags & OBJDEF_FLAG_DEFERRED_RENDER) != 0 || ((((GameObject*)obj)->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER) != 0))
