@@ -65,7 +65,7 @@ void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params)
     }
     obj->angle = params->angleByte << 8;
     obj->height = obj->model->baseHeight;
-    obj->height = (f32)(u32)params->heightOffset * (0.001953125f) + obj->height;
+    obj->height = (f32)(u32)params->heightOffset / 512.0f + obj->height;
     if (obj->height < (0.01f))
     {
         obj->height = (0.01f);
