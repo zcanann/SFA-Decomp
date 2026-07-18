@@ -55,6 +55,7 @@
 #include "main/dll/baddie_frozen.h"
 #include "main/dll/Hcurves_ext.h"
 #include "main/dll/dll_80136a40_ext.h"
+#include "main/dll/skeetla_ext.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -206,7 +207,6 @@ extern void doNothing_onTrickyFree(void);
 extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
 extern int trickyFoodFn_8014460c(GameObject* obj, int state);
-extern void skeetla_spawnLinkedSparks(int obj);
 extern int trickyFn_8013b368();
 extern f32 objFn_801948c0(int obj, int coord);
 const struct VisBits16 gTrickyVisibilityBitsInit = {{0x10000, 0x20000, 0x40000, 0x80000}};
@@ -1108,12 +1108,12 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
             switch (((TrickyState*)state)->stateIndex)
             {
             case 2:
-                skeetla_spawnLinkedSparks((int)obj);
+                skeetla_spawnLinkedSparks((u8*)obj);
                 break;
             case 3:
                 if (((TrickyState*)state)->substate == 4)
                 {
-                    skeetla_spawnLinkedSparks((int)obj);
+                    skeetla_spawnLinkedSparks((u8*)obj);
                 }
                 break;
             }
