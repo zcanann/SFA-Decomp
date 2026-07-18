@@ -83,7 +83,6 @@ extern f32 lbl_803E57F4;
 extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
 const f32 gSbGalleonSkyLightVecs[12] = {-1.0f, -2.0f, -1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -0.25f, 1.0f};
-extern u8 lbl_803DC078[4];
 u8 gSbGalleonSkyColorA[4];
 u8 gSbGalleonSkyColorB[4];
 u8 gSbGalleonSkyColorC[4];
