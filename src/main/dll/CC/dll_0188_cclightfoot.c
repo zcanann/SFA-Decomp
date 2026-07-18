@@ -124,7 +124,6 @@ void cclightfoot_free(int* obj, int flag)
 
 
 
-extern u8 gCcLightfootAnimTable[];
 u8 gCcLightfootHitCooldown[8];
 
 typedef struct LightfootAnimTable
