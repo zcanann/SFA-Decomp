@@ -115,7 +115,7 @@ void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* st
         state->heightTarget = fr;
         state->riseStep = state->heightTarget / state->riseDuration;
     }
-    ObjHits_EnableObject((int)obj);
+    ObjHits_EnableObject((GameObject*)obj);
     ObjHits_RefreshObjectState((int)obj);
 }
 
@@ -397,7 +397,7 @@ void enemymushroom_update(int* obj)
         }
         break;
     case 0xa:
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject((GameObject*)obj);
         ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
         if (((EnemyMushroomState*)state)->timer > (f32)((EnemyMushroomState*)state)->respawnFrameLimit)
         {

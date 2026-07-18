@@ -339,13 +339,13 @@ void snowworm_update(int* obj, u8* state)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject((GameObject*)obj);
     }
     else
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject((GameObject*)obj);
     }
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0 &&

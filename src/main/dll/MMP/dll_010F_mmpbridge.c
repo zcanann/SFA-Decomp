@@ -66,7 +66,7 @@ void mmp_bridge_update(int* obj)
             }
             logPrintf(lbl_803DBD90, tex->offsetS);
         }
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject((GameObject*)obj);
     }
 }
 
@@ -80,10 +80,10 @@ void mmp_bridge_init(int* obj)
     }
     ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
     ((GameObject*)obj)->objectFlags |= (MMPBRIDGE_OBJFLAG_HIDDEN | MMPBRIDGE_OBJFLAG_HITDETECT_DISABLED);
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject((GameObject*)obj);
     if (mainGetBit(placement->enableBit) != 0)
     {
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject((GameObject*)obj);
     }
 }
 

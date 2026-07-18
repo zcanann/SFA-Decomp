@@ -152,7 +152,7 @@ void gcrobotlightbea_init(int* obj)
     GcRobotLightBeaState* state = ((GameObject*)obj)->extra;
     state->light = NULL;
     state->unk4 = 0;
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((GameObject*)obj);
     ((GameObject*)obj)->anim.alpha = 0x80;
 }
 

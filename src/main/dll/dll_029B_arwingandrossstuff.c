@@ -173,7 +173,7 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
         {
             spawnExplosionLegacy((int)obj, lbl_803E7014, 1, 0, 0, 1, 0, 0, 3);
             objAnim->flags |= OBJANIM_FLAG_HIDDEN;
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
             state->despawnTimer = lbl_803E7028;
         }
     }

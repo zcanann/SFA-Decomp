@@ -250,12 +250,12 @@ void lightfoot_update(GameObject* obj)
 
         if ((obj)->userData1 != 0)
         {
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         else
         {
-            ObjHits_EnableObject((u32)obj);
+            ObjHits_EnableObject(obj);
             (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
     }
@@ -336,7 +336,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
     {
         ((GroundBaddieState*)inner)->baddie.controlMode = 2;
         ((GroundBaddieState*)inner)->baddie.substate = 1;
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
         ((LightfootSub*)sub)->unk24 = randomGetRange(0, 3);
         ((LightfootSub*)sub)->unk28 = 0x6f1;
         ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6F0;
@@ -351,7 +351,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
         case 0x34316:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC714;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC718;
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
             *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
@@ -372,7 +372,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
         case 0x45c47:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC708;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC70C;
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
             ((LightfootSub*)sub)->unk28 = 0x6f2;
             *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
@@ -380,7 +380,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
         case 0x460b6:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC720;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC724;
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
             *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
@@ -444,7 +444,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
     ((LightfootSub*)sub)->animTimer = lbl_803E81C0;
     if ((obj)->userData1 != 0)
     {
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
     }
 }
 

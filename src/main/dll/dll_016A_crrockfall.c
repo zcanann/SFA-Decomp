@@ -301,7 +301,7 @@ void crrockfall_init(int* obj, CrrockfallPlacement* params)
         ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (int)((f32)hitState->primaryRadius * scale),
                                    (int)((f32)hitState->primaryCapsuleOffsetA * scale),
                                    (int)((f32)hitState->primaryCapsuleOffsetB * scale));
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject((GameObject*)obj);
     }
 
     modelState = ((GameObject*)obj)->anim.modelState;

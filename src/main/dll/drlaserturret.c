@@ -65,7 +65,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     {
         ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
     }
-    ObjHits_EnableObject((u32)obj);
+    ObjHits_EnableObject((GameObject*)obj);
     obj->hitFlags &= ~DR_LASERTURRET_HITFLAG_CLEAR_PROMPT;
     if (mainGetBit(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0)
     {

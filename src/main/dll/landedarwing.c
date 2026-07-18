@@ -69,7 +69,7 @@ u32 LandedArwing_UpdateFlightChase(int obj, int state)
     if (*(s8*)(state + BADDIESTATE_JUST_LAUNCHED) != 0)
     {
         sub->speed = lbl_803E3004;
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
         ((GameObject*)obj)->anim.velocityX =
             -sub->speed * fsin16Precise(((GameObject*)obj)->anim.rotX);
         ((GameObject*)obj)->anim.velocityY = lbl_803E2FDC;

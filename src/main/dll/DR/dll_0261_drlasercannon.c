@@ -582,12 +582,12 @@ void DR_LaserCannon_init(GameObject* obj, DrLaserCannonSetup* setup)
     DrLaserCannonState* state = (obj)->extra;
     f32 fz;
     state->health = DR_LASERCANNON_INITIAL_HEALTH;
-    ((void (*)(void*))ObjHits_EnableObject)(obj);
+    ObjHits_EnableObject(obj);
     if (mainGetBit(setup->destroyedGameBit) != 0)
     {
         (obj)->anim.flags |= DR_LASERCANNON_HIDDEN_FLAG;
         ((void (*)(void*))Obj_RemoveFromUpdateList)(obj);
-        ((void (*)(void*))ObjHits_DisableObject)(obj);
+        ObjHits_DisableObject(obj);
     }
     ((void (*)(void*, int))ObjGroup_AddObject)(obj, DR_LASERCANNON_GROUP_ID);
     state->beamObject = 0;

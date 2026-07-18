@@ -523,7 +523,7 @@ void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int clearChildren
     int i;
 
     player = (int)Obj_GetPlayerObject();
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
     (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     (obj)->anim.resetHitboxFlags = (u8)((obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
 

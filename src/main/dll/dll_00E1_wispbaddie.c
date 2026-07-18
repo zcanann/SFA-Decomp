@@ -233,7 +233,7 @@ void wispbaddie_update(GameObject* obj)
     if (state->hitRadius < state->maxHitRadius)
     {
         state->hitRadius += 0.005f;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
     }
     else
     {
@@ -243,7 +243,7 @@ void wispbaddie_update(GameObject* obj)
         particleParam = 0;
         (*gPartfxInterface)->spawnObject((void*)obj, state->particleId, NULL, 2, -1, &particleParam);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, WISPBADDIE_HIT_VOLUME_SLOT, 1, 0);
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
     }
 
     particleParam = 1;

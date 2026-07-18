@@ -134,7 +134,7 @@ void MikaBomb_update(int* obj)
         u32 localB;
         u32 localA;
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, MIKABOMB_HIT_VOLUME_SLOT, 1, 0);
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
                 (int)Obj_GetPlayerObject())
@@ -157,7 +157,7 @@ void MikaBomb_update(int* obj)
                 Obj_FreeObject((GameObject*)*st);
                 *st = 0;
             }
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject((GameObject*)obj);
         }
         else
         {
@@ -192,7 +192,7 @@ void MikaBomb_init(int* obj)
     ObjPlacement* alloc;
     f32 fz;
 
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((GameObject*)obj);
     ((GameObject*)obj)->anim.alpha = 0xff;
     fz = lbl_803E31C8;
     ((GameObject*)obj)->anim.velocityX = fz;

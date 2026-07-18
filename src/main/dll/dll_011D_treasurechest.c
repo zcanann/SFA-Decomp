@@ -94,7 +94,7 @@ int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
             break;
         case TREASURECHEST_SEQEV_OPENED:
             obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
             break;
         }
         i++;
@@ -177,7 +177,7 @@ void TreasureChest_update(GameObject* obj)
             }
             mainSetBits(setup->openGameBit, 1);
             flags->open = 1;
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
         }
         flags->trigger = 0;
         blk.params = lbl_802C22B0;
@@ -226,7 +226,7 @@ void TreasureChest_init(int* obj)
     if (state->open != 0)
     {
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject((GameObject*)obj);
     }
     lbl_803DDAE0 = Resource_Acquire(90, 1);
     state->trigger = 1;

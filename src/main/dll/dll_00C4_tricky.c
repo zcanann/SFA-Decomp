@@ -469,7 +469,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     state = *(int*)&((GameObject*)obj)->extra;
     if ((((TrickyState*)state)->stateFlags & 0x200) == 0)
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
         Sfx_StopObjectChannel(obj, 0x7f);
         if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0)
         {
@@ -1370,7 +1370,7 @@ void Tricky_update(int obj)
     }
     if ((trickyState->stateFlags & 0x200) != 0)
     {
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
         if ((trickyState->stateFlags & 0x4000) == 0)
         {
             TRICKY_RESET_COMMAND(state);
@@ -2185,7 +2185,7 @@ void Tricky_resumeAfterCommand(GameObject* obj, int state)
         }
         ((TrickyState*)state)->flags2E8 = ((TrickyState*)state)->flags2E8 | 4;
         Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_holorays16, 2);
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
     }
     if ((((TrickyState*)state)->flags2DC & 0x40000000) != 0)
     {
@@ -2241,7 +2241,7 @@ void tricky_handleDefeat(GameObject* obj, int state)
             }
         }
         ((TrickyState*)state)->actionTargetObj = NULL;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
         moveId = ((TrickyState*)state)->moveId1;
         ((TrickyState*)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState*)state)->moveSpeedScale1);
@@ -2354,11 +2354,11 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
     {
         if ((((TrickyState*)state)->controlFlags & 1) != 0)
         {
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject(obj);
         }
         else
         {
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
         }
         hit = ObjHits_GetPriorityHitWithPosition(obj, &attacker, &hitArg, &hitCount, &hitPos.x, &hitPos.y, &hitPos.z);
         hitPos.x += playerMapOffsetX;

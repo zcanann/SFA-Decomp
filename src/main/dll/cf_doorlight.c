@@ -120,7 +120,7 @@ int kaldachom_stateHandlerB02(GameObject* obj, GroundBaddieState* state)
     {
         ((CfDoorlightState*)sub)->control->soundFlags = 0;
         (*gPlayerInterface)->setState((void*)obj, state, 7);
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         ((CfDoorlightState*)sub)->flags400 = (u16)(((CfDoorlightState*)sub)->flags400 | 0x20);
         ((CfDoorlightState*)sub)->unk3E8 = lbl_803E3078;

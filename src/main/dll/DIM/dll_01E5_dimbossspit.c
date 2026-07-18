@@ -276,7 +276,7 @@ void DIMbossspit_init(int obj)
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0);
     ((DIMbossspitState*)state)->unk0 = 0;
     ((DIMbossspitState*)state)->unk2 = 0;
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((GameObject*)obj);
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel((GameObject*)obj), postRenderSetAlphaBlendState);
 }
 

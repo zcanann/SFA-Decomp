@@ -268,7 +268,7 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer)
         sub->motionFlags = (u8)(sub->motionFlags & ~2);
         ObjHits_SetFlags((ObjAnimComponent*)o, OBJHITS_PRIORITY_STATE_IMMOVABLE | 0x80);
         ObjHits_ClearSourceMask((ObjAnimComponent*)o, 1);
-        ObjHits_EnableObject(o);
+        ObjHits_EnableObject((GameObject*)o);
         ObjHits_SyncObjectPositionIfDirty((GameObject*)o);
     }
     else
@@ -474,7 +474,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
         ObjHits_ClearFlags((ObjAnimComponent*)obj, 0x80);
         ObjHits_SetSourceMask((ObjAnimComponent*)obj, 1);
         ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, 0x14, -5, 0x14);
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11_d1);
         (obj)->anim.localPosY += lbl_803E4308;
@@ -541,7 +541,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
     if (((GunpowderBarrelState*)sub)->detonateTrigger == 0 && ((((GunpowderBarrelState*)sub)->motionFlags & 2) || ((GunpowderBarrelState*)sub)->throwVelY > lbl_803E430C))
     {
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BODY, 1, 0);
-        ObjHits_EnableObject((u32)obj);
+        ObjHits_EnableObject((GameObject*)obj);
     }
     if (!((GpbHeldFlags*)&((GunpowderBarrelState*)sub)->heldFlags)->playerHeld)
     {
@@ -874,7 +874,7 @@ void gunpowderbarrel_update(GameObject *obj)
             (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
             ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, 8, -2, 0x19);
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject(obj);
             ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
             gunpowderbarrel_updatePhysics((int*)obj);
             gunpowderbarrel_setPlayerHeldState((int*)obj, 0);
@@ -1005,7 +1005,7 @@ void gunpowderbarrel_update(GameObject *obj)
             if (gen == 0)
             {
                 Obj_RemoveFromUpdateList((u8*)obj);
-                ObjHits_DisableObject((int)obj);
+                ObjHits_DisableObject(obj);
                 (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 s16toFloat(&state->respawnTimer, 0x3c);
                 return;
@@ -1023,12 +1023,12 @@ void gunpowderbarrel_update(GameObject *obj)
                 s16toFloat(&state->releaseTimer, 0x5a);
                 barrelgener_queueObjectRelease((GameObject*)gen, obj, 0x46);
                 ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
-                ObjHits_DisableObject((int)obj);
+                ObjHits_DisableObject(obj);
                 (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 return;
             }
             Obj_RemoveFromUpdateList((u8*)obj);
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         return;
@@ -1057,7 +1057,7 @@ void gunpowderbarrel_update(GameObject *obj)
         (((GpbHeldFlags*)&state->heldFlags)->cannonRangeVariant != 0 &&
          playerIsDisguised(player) == 0))
     {
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
         gunpowderbarrel_triggerExplosion(obj);
         (obj)->anim.alpha = 0xff;
         /* Releasing from carry: dispatch on the player's controlMode -
@@ -1179,7 +1179,7 @@ void gunpowderbarrel_init(int obj, u8* def)
         v = (placement->returnHome == 0) ? 0 : 1;
         ((GpbConfigFlags*)&state->configFlags)->returnHome = v;
     }
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((GameObject*)obj);
     state->hitRadius = (f32)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->primaryRadius;
     ((GpbHeldFlags*)&state->heldFlags)->held = 0;
     state->fallAccum = 0.0f;

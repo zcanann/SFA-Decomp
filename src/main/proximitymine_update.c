@@ -307,7 +307,7 @@ void ProximityMine_update(ProximityMineObject* obj)
             (*gPartfxInterface)->spawnObject(obj, PROXIMITYMINE_PARTFX, NULL, 1, -1, NULL);
             if (timerCountDown(&state->bounceTimer) != 0)
             {
-                ObjHits_EnableObject((u32)obj);
+                ObjHits_EnableObject((GameObject*)obj);
             }
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, PROXIMITYMINE_HIT_VOLUME_SLOT, 1, 0);
             if (state->effectHandle != NULL)
@@ -355,7 +355,7 @@ void ProximityMine_init(ProximityMineObject* obj, ProximityMineDef* def)
         def->mode = PROXIMITYMINE_SPAWN_PROXIMITY;
     }
     obj->angle = 0;
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject((GameObject*)obj);
     state->mode = PROXIMITYMINE_MODE_EXPIRED;
     storeZeroToFloatParam(&state->renderTimer);
     storeZeroToFloatParam(&state->resetTimer);
@@ -389,7 +389,7 @@ void ProximityMine_init(ProximityMineObject* obj, ProximityMineDef* def)
     case PROXIMITYMINE_SPAWN_PROXIMITY:
         storeZeroToFloatParam(&state->lifespanTimer);
         state->mode = PROXIMITYMINE_MODE_WAITING;
-        ObjHits_EnableObject((u32)obj);
+        ObjHits_EnableObject((GameObject*)obj);
         state->triggerDistance = (f32)(s32)def->parameter;
         storeZeroToFloatParam(&state->bounceTimer);
         break;

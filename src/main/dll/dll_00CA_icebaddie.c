@@ -350,7 +350,7 @@ int iceBaddie_stateHandlerB02(GameObject* obj, int state)
         *(int*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
         ((GroundBaddieState*)state)->baddie.physicsActive = 0;
         ((GroundBaddieState*)state)->baddie.hasTarget = 0;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else if ((s8)((GroundBaddieState*)state)->baddie.moveDone != 0)
@@ -1192,7 +1192,7 @@ void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
 {
     u32 acquired;
 
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((GameObject*)obj);
 
     if ((((GroundBaddieState*)sub)->configFlags & 0x4) != 0)
     {

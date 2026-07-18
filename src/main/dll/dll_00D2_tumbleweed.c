@@ -152,7 +152,7 @@ void tumbleweed_render2(int* obj, int targetPos)
     *(int*)&((BackpackState*)state)->targetPos = targetPos;
     half = 0.5f;
     ((BackpackState*)state)->speed = timeDelta * half;
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject((GameObject*)obj);
 }
 
 void tumbleweed_modelMtxFn(GameObject *obj)
@@ -160,7 +160,7 @@ void tumbleweed_modelMtxFn(GameObject *obj)
     int state = *(int*)&(obj)->extra;
     if (((TumbleweedState*)state)->mode == TUMBLEWEED_PHASE_ARMED)
     {
-        ObjHits_EnableObject((u32)obj);
+        ObjHits_EnableObject(obj);
         ((TumbleweedState*)state)->mode = TUMBLEWEED_PHASE_ROLLING;
         ((TumbleweedState*)state)->effectFlags |= 3;
         if ((obj)->anim.seqId == TUMBLEWEED_TYPE_4)
@@ -257,7 +257,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
         {
             if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0)
             {
-                ObjHits_EnableObject((u32)obj);
+                ObjHits_EnableObject(obj);
                 ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_ROLLING;
                 ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 3);
                 if (obj->anim.seqId == TUMBLEWEED_TYPE_4)
@@ -512,7 +512,7 @@ void tumbleweed_updateTargetedStateMachine(GameObject *obj)
                 ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_ROLLING;
                 *(u8*)&(obj)->anim.resetHitboxMode = (u8)(
                     *(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
-                ObjHits_EnableObject((u32)obj);
+                ObjHits_EnableObject(obj);
             }
         }
     }
@@ -628,7 +628,7 @@ void tumbleweed_updateEffects(GameObject *obj)
         (obj)->anim.alpha = 0;
         state->mode = TUMBLEWEED_PHASE_DESPAWNING;
         state->despawnTimer = 120.0f;
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
         state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_DESPAWN);
     }
 
@@ -682,7 +682,7 @@ void tumbleweed_init(GameObject *obj, int defData)
     randomGetRange(-0x12c, 0x12c);
     ObjGroup_AddObject((int)obj, TUMBLEWEED_OBJGROUP);
     ObjGroup_AddObject((int)obj, TUMBLEWEED_OBJGROUP_SECONDARY);
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject(obj);
     ObjMsg_AllocQueue((void*)obj, 1);
     if ((obj)->anim.seqId == TUMBLEWEED_TYPE_3)
     {

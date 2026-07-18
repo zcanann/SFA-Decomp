@@ -1904,7 +1904,7 @@ void andross_update(int obj)
         if (actionChanged)
         {
             androssbrain_setState(state->lightAnchorObj, ANDROSSBRAIN_VULNERABLE, 0);
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((GameObject*)obj);
             state->actionTimer = 0x3c;
             state->durationTimer = 3.0f;
             state->targetPosX = state->homePosX;
@@ -1953,7 +1953,7 @@ void andross_update(int obj)
                     state->actionToggle = 0;
                     state->actionState = 0x12;
                     androssbrain_setState(state->lightAnchorObj, ANDROSSBRAIN_SHIELDED, 0);
-                    ObjHits_EnableObject(obj);
+                    ObjHits_EnableObject((GameObject*)obj);
                 }
                 else
                 {
@@ -2000,7 +2000,7 @@ void andross_update(int obj)
         if (actionChanged)
         {
             androssbrain_setState(state->lightAnchorObj, ANDROSSBRAIN_VULNERABLE, 0);
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((GameObject*)obj);
             state->actionTimer = gAndrossBrainAttackDuration;
             state->targetPosX = state->arwingObj->anim.localPosX;
             state->targetPosY = state->arwingObj->anim.localPosY + gAndrossSpawnOffsetY;

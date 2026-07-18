@@ -85,7 +85,7 @@ void drakormissile_startActiveLaunch(GameObject* obj)
     ModelLightStruct* light;
     DrakorMissileState* state = (obj)->extra;
 
-    ObjHits_EnableObject((int)obj);
+    ObjHits_EnableObject(obj);
     state->state = DRAKORMISSILE_STATE_HOMING;
     (obj)->anim.rotZ = 0;
     light = objCreateLight(obj, 1);
@@ -146,7 +146,7 @@ void drakormissile_startStraightLaunch(GameObject* obj, GameObject* from, GameOb
     (obj)->anim.rotX = (s16)getAngle((obj)->anim.velocityX, (obj)->anim.velocityZ);
     (obj)->anim.rotY = -getAngle((obj)->anim.velocityY, horizDist);
     (obj)->anim.rotZ = 0;
-    ObjHits_EnableObject((int)obj);
+    ObjHits_EnableObject(obj);
     state->state = DRAKORMISSILE_STATE_STRAIGHT;
     endPos[0] = 600.0f * (obj)->anim.velocityX;
     endPos[1] = 600.0f * (obj)->anim.velocityY;
@@ -288,12 +288,12 @@ void drakormissile_update(int obj)
         ((GameObject*)obj)->anim.alpha = 0;
         if (state->timer == 0)
         {
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((GameObject*)obj);
         }
         state->timer += framesThisStep;
         if (state->timer > DRAKORMISSILE_CLEAR_TIMER)
         {
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((GameObject*)obj);
             Sfx_StopFromObject(obj, SFXTRIG_dn_boar1_c_173);
             Sfx_StopFromObject(obj, DRAKORMISSILE_ACTIVE_SFX_A);
             state->state = DRAKORMISSILE_STATE_FADEOUT;

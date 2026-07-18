@@ -153,7 +153,7 @@ void AndrossHand_update(int obj)
     ((GameObject*)obj)->anim.rotZ = 0;
     ((GameObject*)obj)->anim.rotY = 0;
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ANDROSSHAND_HIT_VOLUME_SLOT, 2, -1);
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((GameObject*)obj);
 
     if (state->androssObj != NULL)
     {

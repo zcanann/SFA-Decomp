@@ -788,7 +788,7 @@ void fn_801DFA28(GameObject* obj)
         {
             if (((SBGalleonState*)state)->fadeTimer == 0)
             {
-                ((void (*)(u32))ObjHits_DisableObject)((u32)obj);
+                ObjHits_DisableObject(obj);
                 SCREEN_TRANSITION_FADE(0x41, 1);
             }
             ((SBGalleonState*)state)->fadeTimer += framesThisStep;

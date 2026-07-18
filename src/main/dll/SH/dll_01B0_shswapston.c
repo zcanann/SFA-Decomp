@@ -611,7 +611,7 @@ void warpstone_init(GameObject* obj, u8* setup)
     obj->animEventCallback = warpstone_SeqFn;
     ((WarpstoneState*)state)->gameBitE = 0x15a;
     ((WarpstoneState*)state)->gameBit10 = 0x886;
-    ObjHits_EnableObject((u32)obj);
+    ObjHits_EnableObject(obj);
     if (mainGetBit(GAMEBIT_SH_SawWarpStoneIntro) != 0 && mainGetBit(GAMEBIT_SH_WarpStoneRelated015A) != 0)
     {
         ((WarpstoneState*)state)->activated = 1;

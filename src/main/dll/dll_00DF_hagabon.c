@@ -313,7 +313,7 @@ void Hagabon_update(int obj)
                 state->flags &= ~HAGABON_FLAG_FADE_OUT;
                 Sfx_StopFromObject(obj, SFXTRIG_en_twiggysnap11);
             }
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((GameObject*)obj);
         }
         if ((state->flags & HAGABON_FLAG_FADE_IN) != 0)
         {
@@ -348,7 +348,7 @@ void Hagabon_update(int obj)
             }
         }
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, HAGABON_HIT_VOLUME_SLOT, 1, 0);
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
     }
 
     state->player = Obj_GetPlayerObject();

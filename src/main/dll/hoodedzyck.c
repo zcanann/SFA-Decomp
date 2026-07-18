@@ -113,14 +113,14 @@ void fn_80156DA0(GameObject* obj, int state)
     hoodedZyck_tickPhaseTimer((DusterState*)state);
     if (0.0f != ((DusterState*)state)->decoyTimer)
     {
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         if ((obj)->anim.currentMove != 5)
         {
             Baddie_SetMove(obj, state, 5, lbl_803DBCEC, 0, 0);
         }
         else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject(obj);
             ((DusterState*)state)->decoyTimer = 0.0f;
         }
         (obj)->anim.alpha = 0xff;
@@ -203,14 +203,14 @@ void hoodedZyck_updateB(s16* obj, u8* state)
 
     if (0.0f != ((FCVars*)state)->emergeTimer)
     {
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject((GameObject*)obj);
         if (((GameObject*)obj)->anim.currentMove != 5)
         {
             Baddie_SetMove((int*)obj, state, 5, lbl_803DBCEC, 0, 0);
         }
         else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject((GameObject*)obj);
             ((FCVars*)state)->emergeTimer = 0.0f;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
@@ -354,14 +354,14 @@ void hoodedZyck_update(s16* obj, u8* state)
 
     if (0.0f != ((FCVars*)state)->emergeTimer)
     {
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject((GameObject*)obj);
         if (((GameObject*)obj)->anim.currentMove != 5)
         {
             Baddie_SetMove((int*)obj, state, 5, lbl_803DBCEC, 0, 0);
         }
         else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject((GameObject*)obj);
             ((FCVars*)state)->emergeTimer = 0.0f;
         }
         ((GameObject*)obj)->anim.alpha = 0xff;
@@ -386,7 +386,7 @@ void hoodedZyck_update(s16* obj, u8* state)
             int t = (s16)turnRaw;
             mag = (u16)(t >= 0 ? t : -t);
         }
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject((GameObject*)obj);
         grabbed = ((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN;
         if (grabbed != 0 && ((GameObject*)obj)->anim.currentMove == 6)
         {
@@ -465,5 +465,5 @@ void hoodedZyck_init(int* obj, int* st)
     ((GameObject*)obj)->anim.alpha = 0;
     ((BaddieState*)st)->pathStep = 0.5f * ratio;
     ((BaddieState*)st)->reactionFlags = 0;
-    ObjHits_EnableObject((int)obj);
+    ObjHits_EnableObject((GameObject*)obj);
 }

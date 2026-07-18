@@ -116,7 +116,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         return 0;
     }
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((GameObject*)obj);
     gb50 = mainGetBit(GAMEBIT_CF_UncleFlewOff); /* the old CloudRunner has flown off */
     gb48 = mainGetBit(0x48);                    /* the caged guardian has broken out */
     if ((sub->flags & 2) != 0 && mainGetBit(GAMEBIT_CFPerchRelated004D) != 0)
@@ -297,7 +297,7 @@ void CFPrisonGuard_update(int* obj)
         ((GameObject*)obj)->anim.resetHitboxFlags =
             (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
         Obj_RemoveFromUpdateList((u8*)obj);
         return;
     }

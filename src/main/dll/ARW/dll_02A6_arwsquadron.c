@@ -207,7 +207,7 @@ void arwsquadron_followLeader(GameObject* obj, ArwSquadronState* state)
     if (leaderState->phase == ARW_SQUADRON_STATE_DISABLED)
     {
         objAnim->flags |= OBJANIM_FLAG_HIDDEN;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         state->phase = ARW_SQUADRON_STATE_DISABLED;
         state->phase = ARW_SQUADRON_STATE_DISABLED;
     }
@@ -224,7 +224,7 @@ void arwsquadron_followPath(GameObject* obj, ArwSquadronState* state)
     if (pathResult == -1)
     {
         objAnim->flags |= OBJANIM_FLAG_HIDDEN;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         state->phase = ARW_SQUADRON_STATE_DISABLED;
     }
     else
@@ -287,7 +287,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
                 {
                     spawnExplosionLegacy((int)obj, 100.0f, 1, 0, 1, 1, 0, 0, 0);
                     (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-                    ObjHits_DisableObject((int)obj);
+                    ObjHits_DisableObject(obj);
                     squad->phase = ARW_SQUADRON_STATE_DISABLED;
                     squad->phase = ARW_SQUADRON_STATE_DEAD;
                     if (squad->dialogueVariant == 3)
@@ -297,7 +297,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
                 {
                     spawnExplosionLegacy((int)obj, 100.0f, 1, 0, 0, 1, 0, 0, 3);
                     (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-                    ObjHits_DisableObject((int)obj);
+                    ObjHits_DisableObject(obj);
                     squad->phase = ARW_SQUADRON_STATE_DEAD;
                 }
                 arwing = (int)getArwing();
@@ -494,7 +494,7 @@ void ARWSquadron_update(int obj)
         if (enable)
         {
             ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            ObjHits_EnableObject(obj);
+            ObjHits_EnableObject((GameObject*)obj);
             state->phase = ARW_SQUADRON_STATE_ACTIVE;
             {
                 ArwSquadronSetup* setupF = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
@@ -556,7 +556,7 @@ void ARWSquadron_update(int obj)
         if (disable)
         {
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((GameObject*)obj);
             state->phase = ARW_SQUADRON_STATE_DISABLED;
             return;
         }

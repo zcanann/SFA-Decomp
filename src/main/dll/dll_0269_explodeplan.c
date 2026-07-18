@@ -51,23 +51,23 @@ void explodeplan_update(GameObject* obj)
     if (mainGetBit(placement->removeGameBit) != 0)
     {
         (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
     }
     else
     {
         (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
     }
 }
 
 void explodeplan_init(GameObject* obj, char* arg)
 {
     ExplodePlanPlacement* def = (ExplodePlanPlacement*)arg;
-    ObjHits_EnableObject((int)obj);
+    ObjHits_EnableObject(obj);
     if (mainGetBit(def->removeGameBit) != 0)
     {
         (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
     }
     (obj)->anim.rotX = (s16)(def->rotXByte << 8);
 }

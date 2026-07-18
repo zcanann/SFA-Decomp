@@ -73,7 +73,7 @@ void MikaBombShadow_init(int* obj)
     f32 out;
     fn_80065684((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                 ((GameObject*)obj)->anim.localPosZ, &out, 0);
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((GameObject*)obj);
     ((GameObject*)obj)->anim.alpha = 0xff;
     ((GameObject*)obj)->anim.rotY = 0x4000;
     ((GameObject*)obj)->anim.rotX = 0;

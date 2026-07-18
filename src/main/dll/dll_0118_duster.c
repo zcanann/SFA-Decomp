@@ -318,7 +318,7 @@ void duster_update(GameObject* obj)
         if (mainGetBit(GAMEBIT_DUSTER_CARRIED) == 0)
         {
             state->heldObjectId = -1;
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
             ObjMsg_SendToObject((void*)player, DUSTER_MSG_REQUEST_PICKUP, obj, (u32)&state->heldObjectId);
             mainSetBits(GAMEBIT_DUSTER_CARRIED, 1);
         }
@@ -342,7 +342,7 @@ void duster_update(GameObject* obj)
         }
         if (obj->anim.hitReactState != NULL)
         {
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
         }
     }
 
@@ -378,7 +378,7 @@ void duster_init(GameObject* obj, u8* params)
     }
     if ((state->complete != 0 || state->active == 0) && (obj)->anim.hitReactState != NULL)
     {
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
     }
     ObjMsg_AllocQueue((void*)obj, 1);
     (obj)->animEventCallback = duster_SeqFn;

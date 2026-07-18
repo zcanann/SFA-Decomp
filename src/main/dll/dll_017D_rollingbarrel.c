@@ -227,12 +227,12 @@ void RollingBarrel_update(GameObject* obj)
 
     if (state->hitVolumeSlot != 0)
     {
-        ObjHits_EnableObject((u32)obj);
+        ObjHits_EnableObject(obj);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, state->hitVolumeSlot, 1, 0);
     }
     else
     {
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, state->hitVolumeSlot, 0, 0);
     }
 }

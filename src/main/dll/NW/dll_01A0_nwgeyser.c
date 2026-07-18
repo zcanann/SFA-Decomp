@@ -85,7 +85,7 @@ void nw_geyser_update(GameObject* obj)
         (obj)->objectFlags = (u16)((obj)->objectFlags | NWGEYSER_OBJFLAG_UPDATE_DISABLED);
         Sfx_RemoveLoopedObjectSound((int)obj, SFX_GEYSER_LOOP_A);
         Sfx_RemoveLoopedObjectSound((int)obj, SFX_GEYSER_LOOP_B);
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
         mainSetBits(0x398, 1);
     }
     else
@@ -93,7 +93,7 @@ void nw_geyser_update(GameObject* obj)
         Sfx_AddLoopedObjectSound((int)obj, SFX_GEYSER_LOOP_A);
         Sfx_AddLoopedObjectSound((int)obj, SFX_GEYSER_LOOP_B);
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        ObjHits_EnableObject((u32)obj);
+        ObjHits_EnableObject(obj);
     }
 }
 

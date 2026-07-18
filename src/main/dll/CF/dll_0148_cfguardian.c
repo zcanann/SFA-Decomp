@@ -1041,7 +1041,7 @@ void cfguardian_init(int* obj, u8* params)
         sub->questState = CFGUARDIAN_ROOST;
         dll_2E_func0A(8, (MoveLibTarget*)obj);
     }
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((GameObject*)obj);
     dll_2E_func05((GameObject*)obj, &sub->moveLib, -0x2000, 0x2800, 4);
     dll_2E_func08(&sub->moveLib, 0x12c, 0x64);
     dll_2E_func09(&sub->moveLib, &stk2, &stk1, 4);

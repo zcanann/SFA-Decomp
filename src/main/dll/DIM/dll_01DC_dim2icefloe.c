@@ -128,7 +128,7 @@ void dim2icefloe_update(GameObject *obj)
             (obj)->anim.localPosY = -(0.3f * timeDelta - (obj)->anim.localPosY);
             if ((obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1])
             {
-                ObjHits_DisableObject((int)obj);
+                ObjHits_DisableObject(obj);
                 (obj)->objectFlags |= 0x100;
                 fn_80296D20(Obj_GetPlayerObject(), obj);
             }

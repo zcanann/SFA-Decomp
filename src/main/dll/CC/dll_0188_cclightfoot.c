@@ -577,7 +577,7 @@ void cclightfoot_update(int obj)
         }
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCLIGHTFOOT_OBJFLAG_UPDATE_DISABLED);
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
         return;
     }
     stateId = state->state;

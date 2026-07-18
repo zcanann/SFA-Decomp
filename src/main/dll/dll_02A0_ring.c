@@ -341,7 +341,7 @@ void ring_update(GameObject* obj)
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
                 obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase;
                 Obj_SetActiveModelIndex(obj, RING_MODEL_DEFAULT);
-                ObjHits_DisableObject((int)obj);
+                ObjHits_DisableObject(obj);
                 state->flags.bit80 = 1;
                 if (state->light != NULL)
                 {
@@ -359,7 +359,7 @@ void ring_update(GameObject* obj)
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
                 obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase;
                 Obj_SetActiveModelIndex(obj, RING_MODEL_DEFAULT);
-                ObjHits_DisableObject((int)obj);
+                ObjHits_DisableObject(obj);
                 state->flags.bit80 = 1;
                 if (state->light != NULL)
                 {
@@ -525,7 +525,7 @@ void ring_init(GameObject* obj, RingPlacement* setup)
     else
     {
         f->bit80 = 1;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
     }
     state->linkId = p->linkId;
     state->pullHeight = (f32)p->pullHeight / 10.0f;

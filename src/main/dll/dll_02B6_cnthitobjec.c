@@ -144,13 +144,13 @@ void cnthitobjec_update(GameObject* obj)
         if ((u32)mainGetBit(setup->doneGameBit) != 0)
         {
             state->flags.disabled = 1;
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
         }
     }
 
     if (state->flags.disabled == 0 && state->remainingHealth == 0 && mainGetBit(setup->startGameBit) != 0)
     {
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
         state->remainingHealth = setup->startHealth;
         if (setup->mode != CNTHIT_MODE_VISIBLE_OBJECT)
         {
@@ -183,7 +183,7 @@ void cnthitobjec_init(GameObject* obj, CntHitObjectSetup* setup)
     if ((u32)mainGetBit(setupData->doneGameBit) != 0)
     {
         state->flags.disabled = 1;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
     }
     (obj)->animEventCallback = cnthitobjec_SeqFn;
 }

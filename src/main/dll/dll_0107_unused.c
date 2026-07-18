@@ -216,7 +216,7 @@ void dll_107_update(GameObject* obj)
         {
             state->holdTimer = 0;
             state->ventState = 0;
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject(obj);
             *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             (obj)->userData1 = 0;
         }
@@ -265,7 +265,7 @@ void dll_107_update(GameObject* obj)
             }
             if ((obj)->userData2 == 0)
             {
-                ObjHits_EnableObject((int)obj);
+                ObjHits_EnableObject(obj);
                 *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             }
             (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
@@ -275,7 +275,7 @@ void dll_107_update(GameObject* obj)
         else
         {
             u8 st21;
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->localPosX = (obj)->anim.localPosX;
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->localPosY = (obj)->anim.localPosY;
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->localPosZ = (obj)->anim.localPosZ;
@@ -351,7 +351,7 @@ void dll_107_update(GameObject* obj)
             {
                 (obj)->anim.velocityY = gWindLift107LaunchGravity * timeDelta + (obj)->anim.velocityY;
             }
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject(obj);
         }
         hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         held = hitState->contactFlags;
@@ -393,7 +393,7 @@ void dll_107_update(GameObject* obj)
             state->ventState = 500;
             state->launchPhase = 0;
             (obj)->userData2 = 0;
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject(obj);
             *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
         }
@@ -426,7 +426,7 @@ void fn_80185868(GameObject* obj, f32 arg)
     sub->rideState = 0;
     (obj)->userData2 = 0;
     (obj)->userData1 = 2;
-    ObjHits_EnableObject((int)obj);
+    ObjHits_EnableObject(obj);
     ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     sub->spitTimer = 0;
     if (arg < sub->radius)
@@ -435,7 +435,7 @@ void fn_80185868(GameObject* obj, f32 arg)
     }
     ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, sub->radius, -5, 10);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNUSED_HIT_VOLUME_SLOT, 1, 0);
-    ObjHits_EnableObject((int)obj);
+    ObjHits_EnableObject(obj);
 }
 
 typedef struct WindLift107Placement
@@ -462,7 +462,7 @@ void dll_107_init(int obj, int pArg)
     *(int*)&((ObjHitsPriorityState*)p54)->skeletonHitMask = 16;
     p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
     *(int*)&((ObjHitsPriorityState*)p54)->objectHitMask = 16;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((GameObject*)obj);
     ObjGroup_AddObject(obj, UNUSED_OBJGROUP);
     sub->ventState = 0;
     sub->launchPhase = 0;

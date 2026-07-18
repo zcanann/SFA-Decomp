@@ -89,7 +89,7 @@ static inline void sidekickBallThrow(GameObject* obj, f32 a, f32 b, f32 c)
     *(f32*)((char*)obj + 36) = a;
     obj->anim.velocityY = b;
     obj->anim.velocityZ = c;
-    ObjHits_EnableObject(objId = (int)obj);
+    ObjHits_EnableObject((GameObject*)(objId = (int)obj));
     ObjHits_SyncObjectPositionIfDirty((GameObject*)objId);
     state->hittableLatch = 1;
     state->launchX = obj->anim.localPosX;
@@ -121,7 +121,7 @@ void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* params)
         return;
     }
 
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
 
     getYButtonItem(&yItem);
@@ -217,7 +217,7 @@ void fn_80179678(GameObject* obj, GameObject* source)
     SidekickBallState* state = ((GameObject*)obj)->extra;
     state->fadeTimer = 0.0f;
     state->ballMode = SIDEKICK_BALL_IDLE;
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
     state->hittableLatch = 0;
 }
 
@@ -230,7 +230,7 @@ void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c)
     *(f32*)((char*)obj + 36) = a;
     obj->anim.velocityY = b;
     obj->anim.velocityZ = c;
-    ObjHits_EnableObject(objId = (int)obj);
+    ObjHits_EnableObject((GameObject*)(objId = (int)obj));
     ObjHits_SyncObjectPositionIfDirty((GameObject*)objId);
     state->hittableLatch = 1;
     state->launchX = obj->anim.localPosX;
@@ -307,7 +307,7 @@ void SidekickBall_update(GameObject* self)
         if ((buttonGetDisabled(0) & 0x100) == 0u && ((GameObject*)self)->userData2 == 0 &&
             ObjTrigger_IsSet((int)self) != 0)
         {
-            ObjHits_DisableObject((u32)self);
+            ObjHits_DisableObject(self);
             gotHit = 1;
         }
         state->triggerHit = gotHit;
@@ -384,7 +384,7 @@ u8 trickyBallMove(GameObject* obj)
     restitution = 0.7f;
     speed = restitution;
 
-    ObjHits_EnableObject((u32)obj);
+    ObjHits_EnableObject(obj);
 
     dy = (state->prevPos[1] - obj->anim.localPosY >= 0.0f)
              ? state->prevPos[1] - obj->anim.localPosY
@@ -532,7 +532,7 @@ void SidekickBall_init(GameObject* obj)
     (*gPathControlInterface)->setLocalPointCollision(state, 1, gSidekickBallPathPointData, state + 0x268, 1);
     (*gPathControlInterface)->setup(state, 1, gSidekickBallPathPointData, state + 0x268, &pathFlag);
     (*gPathControlInterface)->attachObject((void*)obj, state);
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject(obj);
     ((SidekickBallState*)state)->hittableLatch = 0; /* explicit post-memset store in target */
     ObjMsg_AllocQueue((void*)obj, 1);
     mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 0);

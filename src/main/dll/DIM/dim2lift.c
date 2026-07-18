@@ -158,7 +158,7 @@ int DIMbossAnim_finishDefeat(GameObject* obj, int p2)
         *(int*)&((BaddieState*)p2)->targetObj = 0;
         ((BaddieState*)p2)->physicsActive = 0;
         ((BaddieState*)p2)->hasTarget = 0;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode & ~0x80);
         ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xE0000, obj, 0);

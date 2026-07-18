@@ -45,12 +45,12 @@ void NW_ice_update(int* obj)
 
         if (((GameObject*)state->linkedObj)->anim.alpha < 0xc0)
         {
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject((GameObject*)obj);
             fn_80296D20(Obj_GetPlayerObject(), (GameObject*)obj);
         }
         else
         {
-            ObjHits_EnableObject((u32)obj);
+            ObjHits_EnableObject((GameObject*)obj);
         }
 
         if ((((GameObject*)state->linkedObj)->anim.alpha < 0xc0) || (nearestDist < 120.0f))

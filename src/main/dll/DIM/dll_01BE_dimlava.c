@@ -105,7 +105,7 @@ void lavaball1be_relaunch(s16* obj, int vertSpeed, int horizSpeed)
     ((GameObject*)obj)->anim.velocityZ =
         vxz * -mathCosf(gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
     ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((GameObject*)obj);
     state->flags &= ~LAVA1BE_FLAG_INACTIVE;
 }
 
@@ -188,7 +188,7 @@ void lavaball1be_update(s16* obj)
         state = ((GameObject*)obj)->extra;
         if (state->flags & LAVA1BE_FLAG_INACTIVE)
         {
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((GameObject*)obj);
         }
         else
         {
@@ -315,7 +315,7 @@ void lavaball1be_init(s16* obj, u8* p)
         }
         state->targetObj = ObjList_FindObjectById(state->linkedId);
         state->flags |= LAVA1BE_FLAG_INACTIVE;
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
         ((GameObject*)obj)->objectFlags |= DIMLAVA_OBJFLAG_HITDETECT_DISABLED;
         state->light = objCreateLight(obj, 1);
         light = state->light;

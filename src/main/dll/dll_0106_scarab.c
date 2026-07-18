@@ -422,7 +422,7 @@ void Scarab_update(GameObject* obj)
         {
             if (obj->anim.hitReactState != NULL)
             {
-                ObjHits_EnableObject((u32)obj);
+                ObjHits_EnableObject(obj);
             }
             obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
             obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
@@ -734,7 +734,7 @@ void Scarab_update(GameObject* obj)
                     }
                     if (obj->anim.hitReactState != NULL)
                     {
-                        ObjHits_DisableObject((u32)obj);
+                        ObjHits_DisableObject(obj);
                     }
                     Sfx_PlayFromObject((int)obj, (u16)state->pickupSfx);
                     itemPickupDoParticleFxLegacy(obj, lbl_803E3A00, state->particleId, 0x28);

@@ -450,11 +450,11 @@ void ObjHits_SyncObjectPositionIfDirty(GameObject* obj)
     return;
 }
 
-void ObjHits_DisableObject(u32 objPtr)
+void ObjHits_DisableObject(GameObject* obj)
 {
     ObjHitsPriorityState* hitState;
 
-    hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (hitState == 0)
     {
         return;
@@ -463,14 +463,12 @@ void ObjHits_DisableObject(u32 objPtr)
     return;
 }
 
-void ObjHits_EnableObject(u32 objPtr)
+void ObjHits_EnableObject(GameObject* obj)
 {
-    ObjAnimComponent* obj;
     ObjHitsPriorityState* hitState;
     s16 flags;
 
-    obj = (ObjAnimComponent*)objPtr;
-    hitState = (ObjHitsPriorityState*)obj->hitReactState;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (hitState == 0)
     {
         return;
@@ -481,12 +479,12 @@ void ObjHits_EnableObject(u32 objPtr)
         return;
     }
     hitState->flags = (s16)(flags | OBJHITS_PRIORITY_STATE_ENABLED);
-    hitState->localPosX = obj->localPosX;
-    hitState->localPosY = obj->localPosY;
-    hitState->localPosZ = obj->localPosZ;
-    hitState->worldPosX = obj->worldPosX;
-    hitState->worldPosY = obj->worldPosY;
-    hitState->worldPosZ = obj->worldPosZ;
+    hitState->localPosX = obj->anim.localPosX;
+    hitState->localPosY = obj->anim.localPosY;
+    hitState->localPosZ = obj->anim.localPosZ;
+    hitState->worldPosX = obj->anim.worldPosX;
+    hitState->worldPosY = obj->anim.worldPosY;
+    hitState->worldPosZ = obj->anim.worldPosZ;
     return;
 }
 

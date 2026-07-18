@@ -144,7 +144,7 @@ static inline void appleontree_markFallen(GameObject* obj)
     {
         if ((obj)->anim.hitReactState != NULL)
         {
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
         }
         ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
     }
@@ -234,7 +234,7 @@ void fn_8017D854(GameObject* obj, int msg)
             {
                 if (obj->anim.hitReactState != NULL)
                 {
-                    ObjHits_DisableObject((u32)obj);
+                    ObjHits_DisableObject(obj);
                 }
                 ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
             }
@@ -246,7 +246,7 @@ void fn_8017D854(GameObject* obj, int msg)
                 obj->anim.localPosY - ((AppleOnTreeState*)state)->dropHeight;
             if (obj->anim.hitReactState != NULL)
             {
-                ObjHits_DisableObject((u32)obj);
+                ObjHits_DisableObject(obj);
             }
             Sfx_PlayFromObject((int)obj, SFXTRIG_en_tranch_6);
         }
@@ -543,7 +543,7 @@ void AppleOnTree_update(int objArg)
                 {
                     if (*(void**)((u8*)obj + 0x54) != 0)
                     {
-                        ObjHits_DisableObject((int)obj);
+                        ObjHits_DisableObject((GameObject*)obj);
                     }
                     ((AppleOnTreeState*)val)->flags = ((AppleOnTreeState*)val)->flags | 2;
                 }
@@ -578,7 +578,7 @@ void AppleOnTree_update(int objArg)
                 } while (burstIndex < 8);
                 if (*(void**)((u8*)obj + 0x54) != 0)
                 {
-                    ObjHits_DisableObject(obj);
+                    ObjHits_DisableObject((GameObject*)obj);
                 }
                 ((AppleOnTreeState*)state)->flags = ((AppleOnTreeState*)state)->flags | 2;
                 ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
@@ -616,7 +616,7 @@ void AppleOnTree_update(int objArg)
                 } while (i < 8);
                 if (*(void**)((u8*)obj + 0x54) != 0)
                 {
-                    ObjHits_DisableObject(obj);
+                    ObjHits_DisableObject((GameObject*)obj);
                 }
                 ((AppleOnTreeState*)state)->flags = ((AppleOnTreeState*)state)->flags | 2;
                 ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
@@ -756,7 +756,7 @@ void AppleOnTree_update(int objArg)
                 {
                     if (*(void**)((u8*)obj + 0x54) != 0)
                     {
-                        ObjHits_DisableObject((int)obj);
+                        ObjHits_DisableObject((GameObject*)obj);
                     }
                     ((AppleOnTreeState*)placement)->flags = ((AppleOnTreeState*)placement)->flags | 2;
                 }
@@ -775,7 +775,7 @@ void AppleOnTree_update(int objArg)
                 {
                     if (*(void**)((u8*)obj + 0x54) != 0)
                     {
-                        ObjHits_DisableObject((int)obj);
+                        ObjHits_DisableObject((GameObject*)obj);
                     }
                     ((AppleOnTreeState*)placement)->flags = ((AppleOnTreeState*)placement)->flags | 2;
                 }

@@ -131,7 +131,7 @@ void fn_801814D0(int obj, int arg, u8* state)
             ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
             if (lbl_803DBDA0 != 0)
             {
-                ObjHits_DisableObject(obj);
+                ObjHits_DisableObject((GameObject*)obj);
             }
         }
     }

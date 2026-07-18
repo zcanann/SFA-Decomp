@@ -531,7 +531,7 @@ void kaldachom_init(GameObject* obj, int data, int skip_alloc)
     player = (int)Obj_GetPlayerObject();
     ((CampfireState*)state)->targetObj = player;
     ((GroundBaddieState*)state)->baddie.physicsActive = 0;
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
     control->pullupSfxTimer = (f32)(int)randomGetRange(300, 600);
     control->idleAnimTimer = (f32)(int)randomGetRange(0, 499);
     control->unk3C = lbl_803E3060.f;

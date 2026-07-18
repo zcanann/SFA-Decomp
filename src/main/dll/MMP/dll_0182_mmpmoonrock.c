@@ -114,7 +114,7 @@ void fn_801A7B10(GameObject* obj)
     if (blockIdx == -1)
         return;
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, MMPMOONROCK_HIT_VOLUME_SLOT, 1, 0);
-    ObjHits_EnableObject((int)obj);
+    ObjHits_EnableObject(obj);
     obj->anim.velocityY = obj->anim.velocityY - 0.12f * timeDelta;
     {
         f32 vel = obj->anim.velocityX;
@@ -428,7 +428,7 @@ void mmp_moonrock_update(GameObject* obj)
             {
                 state->flags = 0;
                 obj->anim.alpha = 0xFF;
-                ObjHits_DisableObject((int)obj);
+                ObjHits_DisableObject(obj);
                 fn_801A7D74(obj, 1, 1);
             }
             else
@@ -649,7 +649,7 @@ void mmp_moonrock_init(GameObject* obj, int param2)
     state->homeX = (obj)->anim.localPosX;
     state->homeY = (obj)->anim.localPosY;
     state->homeZ = (obj)->anim.localPosZ;
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
     fn_801A7D74(obj, 1, 2);
 }
 

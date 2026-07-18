@@ -224,7 +224,7 @@ void ChukChuk_update(short* obj)
             v->hitsLeft -= 1;
             if (v->hitsLeft < 1)
             {
-                ObjHits_DisableObject(obj);
+                ObjHits_DisableObject((GameObject*)obj);
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 v->flags |= CHUKCHUK_FLAG_DEAD;
                 Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311_26a);
@@ -245,7 +245,7 @@ void ChukChuk_init(u8* obj, u8* params)
     sub->gameBit = *(s16*)(params + 0x18);
     if (sub->gameBit != -1 && mainGetBit(sub->gameBit) != 0)
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         sub->flags = (u8)(sub->flags | CHUKCHUK_FLAG_DEAD);
     }

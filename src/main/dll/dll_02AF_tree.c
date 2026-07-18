@@ -363,7 +363,7 @@ void tree_init(GameObject* obj, TreeSetup* setup)
     }
     if (!(state->flags & TREE_FLAG_HIT_ENABLED))
     {
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
     }
 }
 

@@ -333,12 +333,12 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
     }
     if (obj->userData1 != 0)
     {
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
         obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
         return;
     }
     obj->anim.flags = obj->anim.flags & ~OBJANIM_FLAG_HIDDEN;
-    ObjHits_EnableObject((u32)obj);
+    ObjHits_EnableObject(obj);
     if ((s8)config[46] == -1)
     {
         obj->userData2 = 1;

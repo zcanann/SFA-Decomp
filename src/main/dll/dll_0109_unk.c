@@ -121,7 +121,7 @@ void carryable_break_respawn_update(GameObject* obj)
         break;
     case DLL109_PHASE_BREAKING:
         ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         state->phase = DLL109_PHASE_RESPAWNING;
         state->timer = 0.0f;
@@ -136,7 +136,7 @@ void carryable_break_respawn_update(GameObject* obj)
             if (ViewFrustum_IsSphereVisible(&(obj)->anim.localPosX,
                                             (obj)->anim.hitboxScale * (obj)->anim.rootMotionScale) == 0)
             {
-                ObjHits_EnableObject((int)obj);
+                ObjHits_EnableObject(obj);
                 *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 state->phase = DLL109_PHASE_INTACT;
             }

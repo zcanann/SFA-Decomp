@@ -284,7 +284,7 @@ void SnowBike_onSeqFree(int* obj)
         state->yawCurrent = sv;
         state->unk430 = lbl_803E5B74;
     }
-    ObjHits_EnableObject((u32)obj);
+    ObjHits_EnableObject((GameObject*)obj);
     (*gPathControlInterface)->attachObject((void*)obj, (char*)state + 0x178);
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosX = ((GameObject*)obj)->anim.localPosX;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->localPosY = ((GameObject*)obj)->anim.localPosY;
@@ -319,7 +319,7 @@ int SnowBike_SeqFn(short* obj, int unused, ObjSeqState* seq)
 
     state = *(int*)(obj + 0x5c);
     seq->freeCallback = (ObjAnimSequenceFreeCallback)SnowBike_onSeqFree;
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject((GameObject*)obj);
 
     for (i = 0; i < (int)(u32)seq->eventCount; i++)
     {

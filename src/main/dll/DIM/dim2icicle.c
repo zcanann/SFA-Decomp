@@ -636,7 +636,7 @@ void DIM2icicle_updateCombatState(DIMbossObject* obj, ObjAnimUpdateState* animUp
     gameObj = (GameObject*)obj;
     state = (IcicleState*)runtime->topState;
     tricky = (u8*)getTrickyObject();
-    ObjHits_EnableObject((u32)obj);
+    ObjHits_EnableObject((GameObject*)obj);
     updateRuntime->effectActive = 1;
     ((void (*)(DIMbossObject*, DIMbossRuntime*, f32, int)) *
      (VtableFn**)(*gBaddieControlInterface + 0x2c))(obj, updateRuntime, lbl_803E4C70, 1);

@@ -140,7 +140,7 @@ void BombPlantSpore_update(GameObject* obj)
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
                 state->detonateTimer = lbl_803E53BC;
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-                ObjHits_DisableObject((u32)obj);
+                ObjHits_DisableObject(obj);
                 BOMBPLANTSPORE_FLAGS(state)->waitingForDetonateAck = 0;
                 break;
             }
@@ -198,7 +198,7 @@ void BombPlantSpore_update(GameObject* obj)
         }
         if (((GameObject*)obj)->anim.velocityY < lbl_803E5394)
         {
-            ObjHits_EnableObject((u32)obj);
+            ObjHits_EnableObject(obj);
         }
         bombplantspore_updateDrift((GameObject*)(obj), state);
         if (randomGetRange(0, 100) < 5 && state->driftTimer <= lbl_803E5394)
@@ -270,7 +270,7 @@ void BombPlantSpore_update(GameObject* obj)
             modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
             state->detonateTimer = lbl_803E53BC;
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
         }
     }
 }
@@ -415,7 +415,7 @@ void BombPlantSpore_init(GameObject* obj, void* param2)
     state->fuseTimer = lbl_803E53F0;
     (obj)->objectFlags |= (BOMBPLANTSPORE_OBJFLAG_HIDDEN | BOMBPLANTSPORE_OBJFLAG_HITDETECT_DISABLED);
     (obj)->anim.velocityY = lbl_803E53F4;
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject(obj);
     state->spinAngle = randomGetRange(0, 0xffff);
 
     state->randomPhase = (f32)(int)randomGetRange(0, 1000) / lbl_803E5390;

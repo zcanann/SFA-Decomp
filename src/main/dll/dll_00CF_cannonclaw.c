@@ -98,7 +98,7 @@ void cannonclaw_update(u8* obj)
     ((GameObject*)obj)->userData1 = 1;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
         (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject((GameObject*)obj);
 }
 
 void cannonclaw_init(s16* dst, void* src)

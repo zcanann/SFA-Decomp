@@ -276,7 +276,7 @@ int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
         *(int*)&state->baddie.targetObj = 0;
         *(s8*)&state->baddie.physicsActive = 0;
         *(s8*)&state->baddie.hasTarget = 0;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
     else if (*(char*)&state->baddie.moveDone != '\0')
@@ -472,7 +472,7 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.moveJustStartedA != 0)
     {
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
     }
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
@@ -499,7 +499,7 @@ int fn_8015E5DC(short* obj, GroundBaddieState* state)
     sub = ((GameObject*)obj)->extra;
     if (*(char*)&state->baddie.moveJustStartedA != '\0')
     {
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
     }
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
@@ -558,7 +558,7 @@ int fn_8015E798(GameObject* obj, GroundBaddieState* state)
     }
     if (*(char*)&state->baddie.moveJustStartedA != '\0')
     {
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         state->baddie.moveSpeed = 0.01f;
         state->baddie.animSpeedA = 0.0f;
     }
@@ -937,7 +937,7 @@ void dll_CE_init(GameObject* obj, u8* def, int flags)
     (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))((int)obj, (int)sub, 0);
     sub->baddie.substate = 0;
     *(s8*)&sub->baddie.physicsActive = 0;
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
 }
 
 void dll_CE_release_nop(void)

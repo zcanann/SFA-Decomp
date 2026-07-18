@@ -96,7 +96,7 @@ void Pollen_hitDetect(GameObject* obj)
         obj->anim.velocityY = fz;
         obj->anim.velocityZ = fz;
         obj->anim.alpha = 0;
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
     }
 }
 
@@ -124,7 +124,7 @@ void Pollen_update(int obj)
                 ((GameObject*)obj)->anim.velocityY * timeDelta, ((GameObject*)obj)->anim.velocityZ * timeDelta);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, POLLEN_HIT_VOLUME_SLOT, 1, 0);
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 7);
-        ObjHits_EnableObject((u32)obj);
+        ObjHits_EnableObject((GameObject*)obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
             (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
                  (int)Obj_GetPlayerObject() ||
@@ -135,7 +135,7 @@ void Pollen_update(int obj)
             Sfx_PlayFromObject(obj, SFXTRIG_id_b6);
             ((GameObject*)obj)->anim.alpha = 0;
             extra->fragmentSpawnTimer = 0x3c;
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject((GameObject*)obj);
         }
         if (((GameObject*)obj)->anim.alpha == 0xff)
         {
@@ -207,7 +207,7 @@ void Pollen_init(GameObject* obj)
     extra->unk10 = 0;
     extra->fragmentSpawnTimer = 0;
     obj->anim.alpha = 0xff;
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject(obj);
     {
         int* p = *(int**)&obj->anim.modelState;
         if (p != NULL)

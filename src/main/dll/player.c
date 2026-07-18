@@ -15846,7 +15846,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         playerSetDisguised((GameObject*)obj, 0);
         inner->animState = -1;
     }
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((GameObject*)obj);
     *(u32*)&inner->flags360 &= ~PLAYER_FLAG_HITDETECT;
     if ((s8)seq->movementState != 0)
     {
@@ -16044,7 +16044,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         {
             seq->flags &= ~0x4c;
             seq->savedFlags &= ~0x48;
-            ObjHits_EnableObject(obj);
+            ObjHits_EnableObject((GameObject*)obj);
             if (seq->posOffsetScale >= 1.0f && (*gCameraInterface)->isZooming() == 0)
             {
                 ((PlayerState*)inner)->bodyLeanHalf = 0;
@@ -16115,7 +16115,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         {
             seq->flags &= ~0x4c;
             seq->savedFlags &= ~0x48;
-            ObjHits_EnableObject(obj);
+            ObjHits_EnableObject((GameObject*)obj);
             if ((s8)endFlag == 0)
             {
                 seq->movementState = 0;

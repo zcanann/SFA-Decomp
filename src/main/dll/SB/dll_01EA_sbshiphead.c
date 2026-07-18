@@ -221,7 +221,7 @@ void SB_ShipHead_update(GameObject* obj)
         {
             SB_GALLEON_VTBL(galleon)->onPartDestroyed((int)galleon);
             object->userData2 = 300;
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
         }
     }
     if (0 < object->userData2)

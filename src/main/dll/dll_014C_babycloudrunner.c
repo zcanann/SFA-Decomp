@@ -366,7 +366,7 @@ void babycloudrunner_update(int* obj)
             {
                 mainSetBits(def->runnerGameBit, 1);
             }
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((GameObject*)obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             sub->flags22C &= ~1;
             Obj_RemoveFromUpdateList((u8*)obj);
@@ -655,7 +655,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
     BabyCloudRunnerState* sub;
     BabyCloudRunnerPlacement* def = (BabyCloudRunnerPlacement*)defBytes;
 
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((GameObject*)obj);
     ObjMsg_AllocQueue(obj, 4);
     ((GameObject*)obj)->animEventCallback = babycloudrunner_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(def->initialYaw << 8);
@@ -676,7 +676,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
     sub->runnerState = 0;
     if (mainGetBit(def->runnerGameBit) != 0)
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         sub->flags22C = (u8)(sub->flags22C & ~1);
         Obj_RemoveFromUpdateList((u8*)obj);

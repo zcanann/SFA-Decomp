@@ -138,13 +138,13 @@ void collectible_setDisabled(int* obj, int flag)
     ((CollectibleState*)inner)->disabled = flag;
     if (flag != 0)
     {
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject((GameObject*)obj);
     }
     else
     {
         if (mainGetBit(((CollectibleState*)inner)->hideGameBit) == 0)
         {
-            ObjHits_EnableObject((u32)obj);
+            ObjHits_EnableObject((GameObject*)obj);
         }
     }
 }
@@ -167,7 +167,7 @@ void collectible_applyPickup(int* obj)
     getTrickyObject();
     Obj_GetPlayerObject();
     getTrickyObject();
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject((GameObject*)obj);
     if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)
     {
         ((CollectibleState*)state)->despawnTimer = 180.0f;
@@ -545,7 +545,7 @@ void collectible_update(int obj)
         if (((CollectibleState*)state)->despawnTimer <= zero)
         {
             ((CollectibleState*)state)->despawnTimer = zero;
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject((GameObject*)obj);
             if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
             {
                 Obj_FreeObject((GameObject*)obj);
@@ -620,7 +620,7 @@ void collectible_update(int obj)
             hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
             hitState->flags |= OBJHITS_PRIORITY_STATE_HIT_EXCLUDED;
         }
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject((GameObject*)obj);
         if (((CollectibleState*)state)->hideGameBit != -1 && mainGetBit((s32)((CollectibleState*)state)->hideGameBit) == 0)
         {
             ((GameObject*)obj)->userData1 = 0;

@@ -147,7 +147,7 @@ void wcfloortile_update(int obj)
         break;
     case WCFLOORTILE_PHASE_FALLEN:
         objAnim->alpha = 0;
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
         state->flags |= 3;
         break;
     case WCFLOORTILE_PHASE_RESTORE:
@@ -160,7 +160,7 @@ void wcfloortile_update(int obj)
         }
         objAnim->alpha = a;
     }
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
         break;
     }
     {

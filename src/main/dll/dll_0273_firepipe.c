@@ -120,7 +120,7 @@ void firepipe_releaseEffectObject(FirePipeObject* obj)
 {
     if ((((GameObject*)obj)->objectFlags & FIREPIPE_OBJFLAG_ACTIVE) != 0)
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
         ((GameObject*)obj)->objectFlags &= ~FIREPIPE_OBJFLAG_ACTIVE;
         Obj_RemoveFromUpdateList((u8*)obj);
         ((GameObject*)obj)->objectFlags |= FIREPIPE_OBJFLAG_UPDATE_DISABLED;
@@ -163,7 +163,7 @@ void firepipe_updateState(FirePipeObject* obj)
 
     if (obj->callback != NULL)
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
         if (flags->childEmitEnabled == 0)
         {
             return;
@@ -575,7 +575,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         obj->resetTimer = 0;
         obj->rotX = (short)((int)mapData->rotX << 8);
         obj->rotY = mapData->rotY << 8;
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
         ((FirePipeBitFlags*)&extra->flags)->restartPending = 0;
         extra->activeSpawn = 0;
         bitVal = mainGetBit((int)mapData->gameBit);

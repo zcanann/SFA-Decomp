@@ -325,11 +325,11 @@ void bombplant_update(void* obj)
 
     if ((entry[8] & 0x8) != 0)
     {
-        ObjHits_EnableObject((u32)obj);
+        ObjHits_EnableObject(obj);
     }
     else
     {
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
     }
 
     if ((entry[8] & 0x10) != 0)

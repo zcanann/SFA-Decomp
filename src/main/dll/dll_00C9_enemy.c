@@ -891,7 +891,7 @@ int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate)
     if (((GameObject*)node)->seqIndex == -1)
     {
         ((TrickyState*)sub)->flags2E8 &= ~3LL;
-        ObjHits_DisableObject((u32)node);
+        ObjHits_DisableObject(node);
         return 0;
     }
     if ((((TrickyState*)sub)->flags2DC & 0x1800) == 0)
@@ -2062,11 +2062,11 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
         {
             ((EnemyState*)state)->controlFlags |= 0x1000;
             *(u32*)&((EnemyState*)state)->initialFlags = *(u32*)&((EnemyState*)state)->initialFlags & ~0x1000LL;
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
         }
         else if ((((EnemyState*)state)->flags2E4 & 1) != 0)
         {
-            ObjHits_EnableObject((u32)obj);
+            ObjHits_EnableObject(obj);
         }
     }
     ((EnemyState*)state)->freezeRecoverTimer = lbl_803E2574;

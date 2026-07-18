@@ -86,7 +86,7 @@ void iceblast_update(GameObject* obj)
         vecRotateZXY(&vec.rotation.x, &obj->anim.velocity.x);
         ObjPath_GetPointWorldPosition(path, 0, &obj->anim.localPosX, &obj->anim.localPosY, &obj->anim.localPosZ,
                                       0);
-        ObjHits_EnableObject((u32)obj);
+        ObjHits_EnableObject(obj);
     }
     obj->anim.previousLocalPosX = obj->anim.localPosX;
     obj->anim.previousLocalPosY = obj->anim.localPosY;

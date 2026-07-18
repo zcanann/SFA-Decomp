@@ -206,7 +206,7 @@ void DIMLogFire_update(GameObject* obj)
         }
         if (state->strengthInit <= 0)
         {
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
             state->mode = DIMLOGFIRE_MODE_LIT;
             state->dousedLatch = 1;
             mainSetBits(placement->douseGameBit, 1);

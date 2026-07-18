@@ -68,7 +68,7 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
     def = (DoorPlacement*)((GameObject*)obj)->anim.placementData;
     if (((GameObject*)obj)->anim.alpha == 0)
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
     }
     if (((GameObject*)obj)->anim.modelInstance->textureSlotCount != 0)
     {

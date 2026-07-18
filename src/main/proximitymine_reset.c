@@ -30,7 +30,7 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
     storeZeroToFloatParam(&state->renderTimer);
     s16toFloat(&state->renderTimer, 10);
     state->mode = PROXIMITYMINE_MODE_EXPIRED;
-    ObjHits_EnableObject((u32)obj);
+    ObjHits_EnableObject((GameObject*)obj);
     ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     storeZeroToFloatParam(&state->resetTimer);
     fn_8009A8C8((GameObject*)obj, lbl_803E676C);
@@ -40,7 +40,7 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
     }
     ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, state->triggerDistance, -5, 10);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, PROXIMITYMINE_HIT_VOLUME_SLOT, 1, 0);
-    ObjHits_EnableObject((u32)obj);
+    ObjHits_EnableObject((GameObject*)obj);
     if (state->effectHandle != NULL)
     {
         modelLightStruct_freeSlot(&state->effectHandle);

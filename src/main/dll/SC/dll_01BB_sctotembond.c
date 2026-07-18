@@ -92,7 +92,7 @@ static void sc_totembond_beginOrbGame(ScTotemBondObject* obj, ScTotemBondState* 
     state->active = 1;
     obj->yaw = 0x3fff;
     state->ringIndex = (s16)(u16)((s32)obj->yaw / SC_TOTEMBOND_ORB_ANGLE_STEP);
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject((GameObject*)obj);
     sc_totembond_spawnGameBitOrbs(obj, state, -130.0f);
     mainSetBits(gTotemBondRingGameBits[state->ringIndex], 1);
     obj->mapAlpha = 0;
@@ -240,7 +240,7 @@ static inline void sc_totembond_finishOrbGame(ScTotemBondObject* obj, ScTotemBon
     (*gCameraInterface)->setMode(SC_TOTEMBOND_CAMMODE_DEFAULT, 0, 3, 0, NULL, 0, 0);
     obj->mapAlpha = 0xff;
     fn_80296124((GameObject*)(player), NULL, NULL, 0);
-    ObjHits_EnableObject((u32)obj);
+    ObjHits_EnableObject((GameObject*)obj);
     hudFn_8011f38c(0);
     mainSetBits(0x2bc, 1);
     state->eventFlags = 0;

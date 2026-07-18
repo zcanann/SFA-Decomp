@@ -137,7 +137,7 @@ void pinponspike_update(int obj)
         ((GameObject*)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
         ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, PINPONSPIKE_HIT_VOLUME_SLOT, 1, 0);
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
             (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
                  (int)Obj_GetPlayerObject() ||
@@ -175,7 +175,7 @@ void pinponspike_update(int obj)
 void pinponspike_init(GameObject* obj)
 {
     (obj)->userData1 = 0;
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
     (obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject((int)obj, SFXTRIG_whiz3_c);
     (obj)->objectFlags |= (PINPONSPIKE_OBJFLAG_HIDDEN | PINPONSPIKE_OBJFLAG_HITDETECT_DISABLED);

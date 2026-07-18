@@ -205,7 +205,7 @@ void SpiritDoorLock_update(GameObject* obj)
         {
             state->active = 0;
             mainSetBits(placement->doneGameBit, 1);
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
         }
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
@@ -248,7 +248,7 @@ void SpiritDoorLock_init(GameObject* obj, SpiritDoorLockMapData* params, int mod
     (obj)->anim.rootMotionScale = (*(f32**)&(obj)->anim.modelInstance)[1] * scale;
     state->spinAngle = 0;
 
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
     ((struct { u8 bit80 : 1; }*)&state->flags)->bit80 = 0;
 
     if (mode == 0)

@@ -161,7 +161,7 @@ void dimbossfire_update(GameObject *obj)
             state->flags &= ~DIMBOSSFIRE_FLAG_START_BURST;
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMBOSSFIRE_HIT_VOLUME_SLOT, 1, 0);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0xf);
-            ObjHits_EnableObject((u32)obj);
+            ObjHits_EnableObject(obj);
             if (((obj)->objectFlags & DIMBOSSFIRE_OBJFLAG_RENDERED) != 0)
             {
                 ref = 0;
@@ -224,7 +224,7 @@ void dimbossfire_update(GameObject *obj)
             }
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0);
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
         }
         else
         {
@@ -251,7 +251,7 @@ void dimbossfire_init(GameObject *obj, u32 arg2, int placement)
     state = obj->extra;
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0);
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject(obj);
     if (placement == 0)
     {
         state->cooldownTimer = (f32)(int)randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);

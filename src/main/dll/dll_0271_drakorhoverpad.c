@@ -884,7 +884,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
     }
     else
     {
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         ((DrakorHoverpadUpdateMainState*)p)->verticalVel = *(f32*)p;
         lbl_803DC2F8 = (*(f32*)&gDrakorHoverpadSpeedStep) * *(f32*)p;
     }

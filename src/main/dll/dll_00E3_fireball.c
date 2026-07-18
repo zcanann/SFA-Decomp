@@ -344,7 +344,7 @@ void Fireball_hitDetect(int* obj)
                                                  pal[paletteBase + 2], 0);
             }
         }
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
     }
     else
     {
@@ -455,7 +455,7 @@ void Fireball_update(int* obj)
                 ((FireballState*)state)->light = NULL;
             }
             ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((GameObject*)obj);
         }
     }
     if (((FireballState*)state)->fadeoutTimer != zero)

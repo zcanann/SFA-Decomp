@@ -159,7 +159,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
     {
         if (mainGetBit(GAMEBIT_DR_RescuedCloudRunner) != 0)
         {
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             bf31->b0 = 1;
             nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, (int)obj, &maxDist);

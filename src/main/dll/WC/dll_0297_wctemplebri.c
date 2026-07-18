@@ -174,12 +174,12 @@ void wctemplebri_update(GameObject* obj)
                 a = WCTEMPLEBRI_ALPHA_OPAQUE;
             objAnim->alpha = a;
         }
-        ObjHits_EnableObject((u32)obj);
+        ObjHits_EnableObject(obj);
     }
     else
     {
         mainSetBits(WCTEMPLEBRI_GLOBAL_ACTIVE_BIT, 0);
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
     }
     if ((void*)Obj_GetPlayerObject() != NULL)
     {
@@ -276,7 +276,7 @@ void wctemplebri_init(GameObject* obj, WCTempleBriSetup* setup)
     }
     else
     {
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
         objAnim->alpha = 0;
     }
     obj->objectFlags |= (WCTEMPLEBRI_OBJFLAG_HIDDEN | WCTEMPLEBRI_OBJFLAG_HITDETECT_DISABLED);

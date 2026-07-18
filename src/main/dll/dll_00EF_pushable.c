@@ -1378,7 +1378,7 @@ void pushable_update(int* obj)
         if (mainGetBit(GAMEBIT_PushableRelated0272) != 0)
         {
             Obj_RemoveFromUpdateList((u8*)obj);
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject((GameObject*)obj);
             ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
         break;
@@ -1431,7 +1431,7 @@ void pushable_init(s16* obj, char* def)
         ObjAnim_SetCurrentMove((int)obj, 0, z0, 0);
     }
     ObjMsg_AllocQueue(obj, 4);
-    ObjHits_EnableObject((u32)obj);
+    ObjHits_EnableObject((GameObject*)obj);
     {
         f32 minY = PUSHABLE_INITIAL_CULL_DISTANCE;
         for (i = 0; i < model->vertexCount; i++)

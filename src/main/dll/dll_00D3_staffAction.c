@@ -89,7 +89,7 @@ u32 fn_801659B8(s16* obj, u32* params)
     if (*(s8*)((int)params + 0x27a) != 0)
     {
         state->speed = lbl_803E3004;
-        ObjHits_EnableObject((u32)o);
+        ObjHits_EnableObject(o);
         o->anim.velocityX = -(state->speed) * fsin16Precise((u16)*(s16*)o);
         o->anim.velocityY = lbl_803E2FDC;
         o->anim.velocityZ = -(state->speed) * fcos16Precise((u16)*(s16*)o);
@@ -1059,7 +1059,7 @@ void dll_D3_init(GameObject* obj, int def, int flag)
     ((TreasureChestState*)state)->targetState = 0;
     ((TreasureChestState*)state)->unk405 = 0;
     ((TreasureChestState*)state)->unk25F = 0;
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject(obj);
 
     fz = lbl_803E2FF4;
     extra->unk_04 = fz;

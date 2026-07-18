@@ -113,7 +113,7 @@ void FlammableVine_update(GameObject* obj)
         {
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FLAMMABLEVINE_HIT_VOLUME_SLOT, 1, 0);
         }
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
 
         if ((obj)->anim.seqId == 0x102)
         {
@@ -150,7 +150,7 @@ void FlammableVine_update(GameObject* obj)
             state->flags = state->flags & ~1;
             state->flags = state->flags | 2;
             Obj_RemoveFromUpdateList((u8*)obj);
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
         }
     }
 
@@ -223,7 +223,7 @@ void FlammableVine_init(GameObject* obj, FlammablevineObjectDef* def)
     if (def->burnedBit != -1 && mainGetBit(def->burnedBit) != 0)
     {
         Obj_RemoveFromUpdateList((u8*)obj);
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
         (obj)->anim.alpha = 0;
         state->flags = state->flags | 2;
     }

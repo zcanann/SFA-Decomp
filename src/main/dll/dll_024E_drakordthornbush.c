@@ -150,7 +150,7 @@ void drakord_thornbush_hitDetect(int obj)
                 s16toFloat(&((DrakordThornbushState*)inner)->growth,
                            ((DrakordThornbushPlacement*)setup)->regrowDelay);
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-                ObjHits_DisableObject((u32)obj);
+                ObjHits_DisableObject((GameObject*)obj);
             }
             else if (*(u32*)&((ObjPlacement*)setup)->mapId == 0xffffffff)
             {
@@ -159,7 +159,7 @@ void drakord_thornbush_hitDetect(int obj)
             else
             {
                 Obj_RemoveFromUpdateList((u8*)obj);
-                ObjHits_DisableObject((u32)obj);
+                ObjHits_DisableObject((GameObject*)obj);
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
@@ -175,7 +175,7 @@ void drakord_thornbush_update(GameObject* obj)
     {
         if (((DrakordThornbushState*)inner)->growth < (f32)(s32)((DrakordThornbushPlacement*)setup)->baseRadius)
         {
-            ObjHits_EnableObject((u32)obj);
+            ObjHits_EnableObject(obj);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                       (int)(0.1f + (f32)(s32)((DrakordThornbushPlacement*)setup)->baseRadius -
                                             ((DrakordThornbushState*)inner)->growth));
@@ -203,7 +203,7 @@ void drakord_thornbush_update(GameObject* obj)
             if (playerGetFocusObject(Obj_GetPlayerObject()) != NULL)
             {
                 ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
-                ObjHits_EnableObject((u32)obj);
+                ObjHits_EnableObject(obj);
             }
             else
             {
@@ -221,7 +221,7 @@ void drakord_thornbush_update(GameObject* obj)
         if (((DrakordThornbushState*)inner)->health == 0)
         {
             setup2 = *(int*)&(obj)->anim.placementData;
-            ObjHits_EnableObject((u32)obj);
+            ObjHits_EnableObject(obj);
             ((DrakordThornbushState*)inner)->health = ((DrakordThornbushPlacement*)setup2)->spawnHealth;
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (s16)((DrakordThornbushState*)inner)->radius);
         }

@@ -194,7 +194,7 @@ void SwarmBaddie_update(GameObject* obj)
         state->hitVolumeEnvelope = lbl_803E26B0;
     }
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, SWARMBADDIE_HIT_VOLUME_SLOT, 1, 0);
-    ObjHits_EnableObject((int)obj);
+    ObjHits_EnableObject(obj);
     if (state->hitVolumeEnvelope > lbl_803E26B4)
     {
         state->hitVolumeEnvelope = state->hitVolumeEnvelope - lbl_803E26B8;

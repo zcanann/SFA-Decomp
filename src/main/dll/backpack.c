@@ -86,7 +86,7 @@ int LandedArwing_UpdateBounceFade(int obj, u32* stateWord)
     *(u8*)((int)stateWord + LANDED_ARWING_STATE_INDEX) = 3;
     if (*(s8*)((int)stateWord + LANDED_ARWING_JUST_COLLIDED) != 0)
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
         ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityX;
         ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY + lbl_803E2FD8;
         ((GameObject*)obj)->anim.velocityZ = -((GameObject*)obj)->anim.velocityZ;
@@ -164,7 +164,7 @@ int LandedArwing_UpdateRetreatChase(GameObject* obj, int stateWord)
     {
         state->scriptTimer = 0x3c;
         state->speed = lbl_803E2FFC;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
     }
     if (state->surfaceMode != LANDED_ARWING_SCRIPT_MODE &&
         ((u32)player == 0 || playerObj->anim.worldPosX < state->boundsMinX ||

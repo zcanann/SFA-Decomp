@@ -149,12 +149,12 @@ void pollenfragment_hitDetect(GameObject* obj)
                 Sfx_PlayFromObjectLimitedIntReturnLegacy(
                     (int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
             s16toFloatLegacy(extra + 0x20, 0x78);
         }
         if (((ObjHitsPriorityState*)(obj)->anim.hitReactState)->contactFlags != 0)
         {
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject(obj);
             ((PollenFragmentExtra*)extra)->timer = 0.0f;
             if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
             {
@@ -304,13 +304,13 @@ void pollenfragment_update(int obj)
     objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, POLLENFRAGMENT_HIT_VOLUME_SLOT, 1, 0);
-    ObjHits_EnableObject((u32)obj);
+    ObjHits_EnableObject((GameObject*)obj);
     hit = (void*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
     if (hit != NULL && ((GameObject*)hit)->anim.seqId != ((GameObject*)obj)->anim.seqId &&
         hit != *(void**)&((PollenFragmentExtra*)extra)->ownerObj)
     {
         ((PollenFragmentExtra*)extra)->timer = 0.0f;
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject((GameObject*)obj);
         if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
         {
             spawnExplosionLegacy(obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);

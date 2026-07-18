@@ -109,7 +109,7 @@ void drgenerator_hitDetect(GameObject* obj)
     }
     else
     {
-        ((void (*)(void*))ObjHits_DisableObject)(obj);
+        ObjHits_DisableObject(obj);
     }
 }
 
@@ -132,7 +132,7 @@ void drgenerator_update(GameObject* obj)
             }
             state->flags.b3 = 1;
             state->flags.b0 = 0;
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
             return;
         }
         if (state->flags.b3 != 0 && mainGetBit(placement->watchGameBit) != 0)
@@ -142,7 +142,7 @@ void drgenerator_update(GameObject* obj)
                 (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
             }
             state->flags.b3 = 0;
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject(obj);
             return;
         }
     }
@@ -172,12 +172,12 @@ void drgenerator_init(GameObject* obj, DrgeneratorPlacement* placement)
         }
     }
     state->hitsRemaining = 2;
-    ((void (*)(void*))ObjHits_EnableObject)(obj);
+    ObjHits_EnableObject(obj);
     if (mainGetBit(placement->completionGameBit) != 0)
     {
         (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         ((void (*)(void*))Obj_RemoveFromUpdateList)(obj);
-        ((void (*)(void*))ObjHits_DisableObject)(obj);
+        ObjHits_DisableObject(obj);
     }
     ((void (*)(void*, int))ObjGroup_AddObject)(obj, DRGENERATOR_OBJGROUP);
     *(int*)state = 0;

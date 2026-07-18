@@ -489,7 +489,7 @@ void largecrate_update(GameObject* obj)
     }
     if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)def)->mapId) == 0)
     {
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
     }
     else
     {
@@ -509,7 +509,7 @@ void largecrate_update(GameObject* obj)
                     {
                         ((LargeCrateState*)state)->animTimer = 0.0f;
                         ((LargeCrateState*)state)->breakTimer = 0;
-                        ObjHits_EnableObject((int)obj);
+                        ObjHits_EnableObject(obj);
                         *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                         (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                     }
@@ -526,7 +526,7 @@ void largecrate_update(GameObject* obj)
             (obj)->anim.alpha = level;
             if (((LargeCrateState*)state)->breakTimer != 0)
             {
-                ObjHits_DisableObject((int)obj);
+                ObjHits_DisableObject(obj);
                 if ((((LargeCrateState*)state)->breakTimer -= framesThisStep) <= 0)
                 {
                     if (((LargeCrateState*)state)->breakTimeBonus > 0)
@@ -648,7 +648,7 @@ void largecrate_init(GameObject* obj, u8* initData)
     if (mainGetBit((int)((LargeCrateState*)state)->brokenGameBit) != 0)
     {
         ((LargeCrateState*)state)->animTimer = 1.0f;
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
     }
 
     ((LargeCrateState*)state)->dropType = initData[0x19];

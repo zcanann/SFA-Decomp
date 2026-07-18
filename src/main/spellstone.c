@@ -116,7 +116,7 @@ void spellstone_update(SpellStoneObject* obj)
         }
         if (state->state == SPELLSTONE_STATE_HIDDEN)
         {
-            ObjHits_DisableObject((u32)obj);
+            ObjHits_DisableObject((GameObject*)obj);
             if (obj->followTarget != NULL)
             {
                 obj->posX = ((GameObject*)obj->followTarget)->anim.localPosX;
@@ -126,7 +126,7 @@ void spellstone_update(SpellStoneObject* obj)
         }
         else
         {
-            ObjHits_EnableObject((u32)obj);
+            ObjHits_EnableObject((GameObject*)obj);
         }
     }
     return;

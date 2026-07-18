@@ -156,7 +156,7 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
         state->flagsC49.b6 = 0;
         *(u32*)stateArg |= 0x1000000;
         storeZeroToFloatParam(&state->transitionTimer);
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
         if ((obj)->anim.currentMove != 2)
         {
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x78);
@@ -230,7 +230,7 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
         objModelClearVecFn_8003aa40(obj);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0);
         ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
         (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         return 0;

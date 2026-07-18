@@ -328,10 +328,10 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
     dist = 5000.0f;
     inner = obj->extra;
     ((SnowclawState*)inner)->hitFlag = 1;
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
     if (*(int**)inner != 0)
     {
-        ObjHits_DisableObject(*(int*)inner);
+        ObjHits_DisableObject((GameObject*)*(int*)inner);
     }
     if (obj->seqIndex != -1 && (obj->anim.seqId == 0x16d || obj->anim.seqId == 0x170) &&
         mainGetBit(GAMEBIT_IM_BikeRelated03A3) != 0)
@@ -672,8 +672,8 @@ void snowclaw_update(GameObject* obj)
         {
             obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ((GameObject*)*(int*)inner)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            ObjHits_DisableObject((int)obj);
-            ObjHits_DisableObject(*(int*)inner);
+            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((GameObject*)*(int*)inner);
         }
         else
         {
@@ -682,11 +682,11 @@ void snowclaw_update(GameObject* obj)
         return;
     }
 
-    ObjHits_EnableObject((int)obj);
+    ObjHits_EnableObject(obj);
     sub = *(int**)inner;
     if (sub != NULL)
     {
-        ObjHits_EnableObject((int)sub);
+        ObjHits_EnableObject((GameObject*)sub);
     }
 
     dropTable = *(const SnowClawDropObjectTable*)(pulseTable + 8);

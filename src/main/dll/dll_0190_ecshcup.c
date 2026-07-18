@@ -139,13 +139,13 @@ void ecsh_cup_update(short* obj)
         {
             ((GameObject*)obj)->anim.localPosX = state->velX * timeDelta + ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)obj)->anim.localPosZ = state->velZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject((GameObject*)obj);
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ECSHCUP_HIT_VOLUME_SLOT, 1, 0);
             ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
         }
         else
         {
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject((GameObject*)obj);
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
             ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
         }
@@ -292,7 +292,7 @@ void ecsh_cup_init(int obj, int def)
     {
         gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, obj, &dist);
     }
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((GameObject*)obj);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
     ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
 }

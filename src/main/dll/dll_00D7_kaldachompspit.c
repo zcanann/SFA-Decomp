@@ -166,7 +166,7 @@ void KaldaChompSpit_update(int obj)
             ((GameObject*)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
             ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         }
-        ObjHits_EnableObject((u32)obj);
+        ObjHits_EnableObject((GameObject*)obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
         {
             if (((GameObject*)obj)->userData1 < 0x17c)
@@ -228,7 +228,7 @@ void KaldaChompSpit_init(GameObject* obj)
 
     state = obj->extra;
     (obj)->userData1 = 400;
-    ObjHits_DisableObject((u32)obj);
+    ObjHits_DisableObject(obj);
     (obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject((int)obj, SFXTRIG_whiz3_c);
     (obj)->objectFlags |= KALDACHOMPSPIT_OBJFLAG_HITDETECT_DISABLED;

@@ -377,7 +377,7 @@ int cmbsrc_update(CmbSrcObject* cmbsrc)
             {
                 Sfx_StopObjectChannel((u32)cmbsrc, CMBSRC_LOOP_SOUND_CHANNEL);
             }
-            ObjHits_DisableObject((u32)cmbsrc);
+            ObjHits_DisableObject((GameObject*)cmbsrc);
             if (setup->gameBit != -1)
             {
                 mainSetBits(setup->gameBit, 0);
@@ -423,7 +423,7 @@ int cmbsrc_update(CmbSrcObject* cmbsrc)
             }
             if (!state->hitFlags.disabled)
             {
-                ObjHits_EnableObject((u32)cmbsrc);
+                ObjHits_EnableObject((GameObject*)cmbsrc);
             }
             if (setup->gameBit != -1)
             {
@@ -663,7 +663,7 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
         }
         if (state->hitFlags.disabled)
         {
-            ObjHits_DisableObject((int)cmbsrc);
+            ObjHits_DisableObject((GameObject*)cmbsrc);
         }
     }
     state->colorCycleTimer = randomGetRange(0, 0x64);

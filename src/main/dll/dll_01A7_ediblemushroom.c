@@ -604,7 +604,7 @@ void EdibleMushroom_update(u8* self)
             if (((u32)msg - 0x70000) != 0xB)
                 continue;
             ((GameObject*)self)->anim.flags = (s16)(((GameObject*)self)->anim.flags | OBJANIM_FLAG_HIDDEN);
-            ObjHits_DisableObject((u32)(int)self);
+            ObjHits_DisableObject((GameObject*)self);
             gameBitIncrement(((EdibleMushroomState*)state)->collectedGameBitId);
             mainSetBits(GAMEBIT_ITEM_TrickyFood_GrabInProgress, 0);
             if (((GameObject*)self)->anim.seqId == 0x658)
@@ -694,7 +694,7 @@ void EdibleMushroom_init(GameObject* obj, int aux)
     if (mainGetBit(((EdibleMushroomPlacement*)aux)->gameBitId) != 0)
     {
         ((EdibleMushroomState*)state)->animState = 8;
-        ObjHits_DisableObject((u32)obj);
+        ObjHits_DisableObject(obj);
         (obj)->anim.flags = (short)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     }
 

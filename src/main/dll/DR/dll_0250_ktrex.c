@@ -1676,7 +1676,7 @@ void ktrex_init(GameObject* obj, char* arg, int flag)
     rt->unk25F = 0;
     rt->unk349 = 0;
     *(u8*)&(obj)->anim.resetHitboxMode |= 0x88;
-    ObjHits_EnableObject((int)obj);
+    ObjHits_EnableObject(obj);
     if ((obj)->anim.modelState != NULL)
     {
         (obj)->anim.modelState->flags |= 0x810;

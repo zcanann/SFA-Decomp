@@ -160,7 +160,7 @@ void IceBall_update(u16* obj, int unused)
             ((GameObject*)objInt)->anim.velocityY * timeDelta, ((GameObject*)objInt)->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)objInt, ICEBALL_HIT_VOLUME_SLOT, 1, 0);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)objInt, 5);
-    ObjHits_EnableObject(objInt);
+    ObjHits_EnableObject((GameObject*)objInt);
     if ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject != 0 &&
         ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject ==
              (int)Obj_GetPlayerObject() ||
@@ -210,7 +210,7 @@ void fn_8015FBEC(GameObject* obj)
 void IceBall_init(GameObject* obj)
 {
     obj->userData1 = 0xb4;
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
     obj->anim.alpha = 0xff;
 }
 

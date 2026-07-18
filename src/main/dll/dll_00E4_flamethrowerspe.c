@@ -137,11 +137,11 @@ void flamethrowerspe_update(int* obj)
     case FLAMETHROWERSPE_PHASE_ACTIVE:
         if (timerCountDown(&((FlamethrowerspeState*)state)->lifeTimer) != 0)
         {
-            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject((GameObject*)obj);
             firepipe_releaseEffectObject(obj);
             return;
         }
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, lbl_803209C0[(s8) * (u8*)((char*)src + 0x19) * 3 + 2], 1, 0);
         {
             f32 dt = (f32)(f64)timeDelta;
@@ -166,7 +166,7 @@ void flamethrowerspe_init(int* obj, int* params)
     ((GameObject*)obj)->anim.velocityY = 0.0f;
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     ((FlamethrowerspeState*)state)->phase = FLAMETHROWERSPE_PHASE_LAUNCH;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((GameObject*)obj);
 }
 
 void flamethrowerspe_release(void)

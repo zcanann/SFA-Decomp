@@ -77,7 +77,7 @@ void ARWBlocker_update(GameObject* obj)
             alpha = 0xff;
         objAnim->alpha = alpha;
         (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
         if ((obj)->userData1 == 0)
         {
             switch (state->sequenceMode)
@@ -107,7 +107,7 @@ void ARWBlocker_init(GameObject* obj, int setup)
     state->sequenceMode = mapData->sequenceMode;
     (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
 }
 
 void ARWBlocker_release(void)

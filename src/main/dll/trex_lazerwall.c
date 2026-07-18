@@ -149,7 +149,7 @@ int TREX_Lazerwall_updateTimedChallenge(int obj)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
         (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     ((TREXLazerwallUpdateTimedChallengeState*)state)->popStateEnabled = 0;
-    ObjHits_DisableObject(obj);
+    ObjHits_DisableObject((GameObject*)obj);
 
     (*(TimerQueryFn*)(*(int*)*(int*)(((TREXLazerwallUpdateTimedChallengeState*)state)->timerObj + 0x68) + 0x54))(
         ((TREXLazerwallUpdateTimedChallengeState*)state)->timerObj, &elapsed, &now, &limit);

@@ -202,7 +202,7 @@ void dbegg_processMessages(GameObject* obj)
                 {
                     ObjGroup_RemoveObject((int)obj, DBEGG_OBJGROUP);
                 }
-                ObjHits_DisableObject((int)obj);
+                ObjHits_DisableObject(obj);
                 ((DbEggState*)eggState)->mode = DBEGG_MODE_HELD;
                 *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
                 break;
@@ -234,7 +234,7 @@ void dbegg_processMessages(GameObject* obj)
             case 20:
                 ((DbEggState*)eggState)->mode = DBEGG_MODE_FALLING;
                 *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
-                ObjHits_EnableObject((int)obj);
+                ObjHits_EnableObject(obj);
                 break;
             case 19:
                 mainSetBits(config->secondaryConditionId, 1);
@@ -865,7 +865,7 @@ void dbegg_update(GameObject* obj)
             }
             break;
         case DBEGG_MODE_HOMING:
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
             (obj)->anim.velocityX = (obj)->anim.velocityX +
                                     (((DbeggPlacement*)data)->targetPosX - (obj)->anim.localPosX) / (fz = lbl_803E6258);
             (obj)->anim.velocityY =
@@ -882,7 +882,7 @@ void dbegg_update(GameObject* obj)
             fx = fx >= *(f32*)&lbl_803E61C8 ? fx : -fx;
             if (fx + fz < lbl_803E625C)
             {
-                ObjHits_EnableObject((int)obj);
+                ObjHits_EnableObject(obj);
                 egg->mode = DBEGG_MODE_SETTLED;
                 (obj)->anim.localPosX = ((DbeggPlacement*)data)->targetPosX;
                 (obj)->anim.localPosY = ((DbeggPlacement*)data)->targetPosY;
@@ -903,12 +903,12 @@ void dbegg_update(GameObject* obj)
         if (egg->flags119 & 8)
         {
             *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
             if (mainGetBit(((DbeggPlacement*)data)->triggerGameBit) != 0)
             {
                 egg->flags119 &= ~9;
                 *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                ObjHits_EnableObject((int)obj);
+                ObjHits_EnableObject(obj);
             }
         }
         else if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)

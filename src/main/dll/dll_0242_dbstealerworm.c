@@ -1220,7 +1220,7 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
     sub->flags15 &= ~4;
     if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
     {
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
         ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
     }
     ((BaddieState*)baddie)->moveSpeed = 0.01f;
@@ -1408,7 +1408,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
     Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_baddie_vambat_death);
     if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
     {
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
     }
     ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
     ((BaddieState*)baddie)->moveSpeed = 0.01f;
@@ -1594,7 +1594,7 @@ int dbstealerworm_stateHandlerA06(GameObject* obj, int baddie)
         bs->physicsActive = 1;
         bs->hasTarget = 0;
         *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
         ObjGroup_RemoveObject((int)obj, DBSTEALERWORM_OBJGROUP);
         if (*(void**)&sub_40c->linkedObj != NULL)
         {
@@ -1703,7 +1703,7 @@ int dbstealerworm_stateHandlerA04(GameObject* obj, int baddie)
     DbStealerwormControl* sub;
     if (*(s8*)&bs->moveJustStartedA != 0)
     {
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
     }
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
     bs->moveSpeed = 0.01f;
@@ -1734,7 +1734,7 @@ int dbstealerworm_stateHandlerA03(int obj, int baddie)
 
     if (*(char*)&((BaddieState*)baddie)->moveJustStartedA != '\0')
     {
-        ObjHits_EnableObject(obj);
+        ObjHits_EnableObject((GameObject*)obj);
     }
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
     ((BaddieState*)baddie)->moveSpeed = 0.01f;
@@ -1757,7 +1757,7 @@ int dbstealerworm_stateHandlerA02(GameObject* obj, int baddie)
 
     if (*(s8*)&bs->moveJustStartedA != 0)
     {
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
     }
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DBSTEALERWORM_HIT_VOLUME_SLOT, 1, -1);
     if (*(s8*)&bs->moveJustStartedA != 0)
@@ -1809,7 +1809,7 @@ int dbstealerworm_stateHandlerA01(GameObject* obj, int baddie)
     if ((obj)->anim.currentMoveProgress > 0.25f)
     {
         sub_40c->flags14 |= DBWORM_FLAG14_FX_DUST;
-        ObjHits_DisableObject((int)obj);
+        ObjHits_DisableObject(obj);
     }
     if (*(char*)&bs->moveJustStartedA != '\0')
     {
@@ -1856,7 +1856,7 @@ int dbstealerworm_stateHandlerA00(GameObject* obj, int baddie)
         (obj)->anim.alpha = 255;
         bs->stateTag = 1;
         bs->moveSpeed = 0.012f + (f32)(u32)sub->aggression / 10000.0f;
-        ObjHits_EnableObject((int)obj);
+        ObjHits_EnableObject(obj);
         sub_40c->linkedObj = 0;
         sub_40c->msgSlotIndex = -1;
     }
@@ -2452,7 +2452,7 @@ void dbstealerworm_init(int* obj, u8* def, int flag)
     ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, sub, 3);
     ((GroundBaddieState*)sub)->baddie.substate = 0;
     ((GroundBaddieState*)sub)->baddie.physicsActive = 1;
-    ObjHits_EnableObject(obj);
+    ObjHits_EnableObject((GameObject*)obj);
     ObjMsg_AllocQueue(obj, 4);
     if (((GameObject*)obj)->anim.modelState != NULL)
     {

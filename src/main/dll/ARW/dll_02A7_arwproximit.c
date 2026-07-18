@@ -111,7 +111,7 @@ void arwproximit_update(GameObject* obj)
                 modelLightStruct_setupGlow(state->light, 0, 0, 0xff, 0, 0x64, 65.0f);
                 modelLightStruct_setGlowProjectionRadius(state->light, 50.0f);
             }
-            ObjHits_EnableObject((int)obj);
+            ObjHits_EnableObject(obj);
             ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
             (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             state->phase = ARWPROXIMIT_PHASE_FADEIN;
@@ -178,7 +178,7 @@ void arwproximit_update(GameObject* obj)
     case ARWPROXIMIT_PHASE_DETONATE:
         if (timerCountDown((void*)&state->despawnTimer) != 0)
         {
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
             state->phase = ARWPROXIMIT_PHASE_DONE;
         }
         break;
@@ -201,7 +201,7 @@ void arwproximit_update(GameObject* obj)
             if (state->light != NULL)
                 modelLightStruct_setEnabled(state->light, 0, 0.0f);
             spawnExplosionLegacy((int)obj, 100.0f, 1, 0, 0, 0, 0, 0, 1);
-            ObjHits_DisableObject((int)obj);
+            ObjHits_DisableObject(obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
             state->phase = ARWPROXIMIT_PHASE_DONE;
@@ -232,7 +232,7 @@ void arwproximit_init(GameObject* obj, ARWProximitSetup* setup, int flag)
     }
     storeZeroToFloatParam((void*)&state->warningTimer);
     storeZeroToFloatParam((void*)&state->despawnTimer);
-    ObjHits_DisableObject((int)obj);
+    ObjHits_DisableObject(obj);
     ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
 }
 

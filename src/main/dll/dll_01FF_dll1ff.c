@@ -138,7 +138,7 @@ void dll_1FF_update(int obj)
         }
         if (((GameObject*)obj)->userData2 == 0)
         {
-            ObjHits_EnableObject(obj);
+            ObjHits_EnableObject((GameObject*)obj);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
                 (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
             ((GameObject*)obj)->anim.velocityY = -(lbl_803E5D84.f * timeDelta - ((GameObject*)obj)->anim.velocityY);
@@ -174,7 +174,7 @@ void dll_1FF_update(int obj)
     }
     else
     {
-        ObjHits_DisableObject(obj);
+        ObjHits_DisableObject((GameObject*)obj);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
             (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         if ((getButtonsJustPressed(0) & DLL1FF_BUTTON_ACTION) != 0)
