@@ -1619,7 +1619,7 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
         walk += 4;
     }
 }
-u8 fn_8003BB74(void)
+int fn_8003BB74(void)
 {
     return lbl_803DCC3C;
 }

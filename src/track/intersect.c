@@ -1204,8 +1204,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 1;
                     gGxZModeValid = 1;
                 }
-                GXSetAlphaCompareLegacy(GX_GREATER, fn_8003BB74IntLegacy(), GX_AOP_AND, GX_GREATER,
-                                        fn_8003BB74IntLegacy());
+                GXSetAlphaCompareLegacy(GX_GREATER, fn_8003BB74(), GX_AOP_AND, GX_GREATER, fn_8003BB74());
             }
             else
             {
@@ -2077,8 +2076,8 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 1;
                     gGxZModeValid = 1;
                 }
-                obj_a = (void*)fn_8003BB74IntLegacy();
-                ref1 = fn_8003BB74IntLegacy();
+                obj_a = (void*)fn_8003BB74();
+                ref1 = fn_8003BB74();
                 GXSetAlphaCompareLegacy(GX_GREATER, ref1, GX_AOP_AND, GX_GREATER, (int)obj_a);
             }
             else
@@ -2578,8 +2577,8 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                 }
                 {
                     int b;
-                    alpha_byte = fn_8003BB74IntLegacy();
-                    b = fn_8003BB74IntLegacy();
+                    alpha_byte = fn_8003BB74();
+                    b = fn_8003BB74();
                     GXSetAlphaCompareLegacy(GX_GREATER, b, GX_AOP_AND, GX_GREATER, alpha_byte);
                 }
             }
