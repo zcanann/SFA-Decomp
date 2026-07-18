@@ -40,16 +40,8 @@ f32 gEffect2SpawnPhaseB = 0.3f;
 f32 gEffect2ScrollPhaseA = 0.1f;
 f32 gEffect2ScrollPhaseB = 0.3f;
 
-extern f32 gEffect2ScrollPhaseA;
-extern f32 gEffect2ScrollPhaseB;
-extern int gEffect2SinAngleA;
-extern int gEffect2SinAngleB;
-extern f32 gEffect2SinValueB;
-extern f32 gEffect2SinValueA;
-extern EmitterCfg gEffect2VelocityRangeTable;
 extern FxNode9 lbl_8039C338;
 extern int lbl_803DD2C4;
-extern int lbl_803DD348;
 extern f32 gEffect2SpawnPhaseA;
 extern f32 gEffect2SpawnPhaseB;
 extern s32 gEffect2TextureIdTable[];
