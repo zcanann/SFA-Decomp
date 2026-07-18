@@ -28,10 +28,6 @@ int gVoxMapsMaxMapIndex;
 void* gVoxMapsLargeTextures[2];
 void* gVoxMapsSmallTextures[2];
 
-int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ);
-void voxmaps_worldToGrid(f32* in, s16* out);
-int* voxmaps_updateActiveMap(VoxPos* obj);
-void* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8);
 static void heapSiftUp(CurveHeapNode* q, int i)
 {
     u16 key = q[i].priority;
@@ -47,7 +43,6 @@ static void heapSiftUp(CurveHeapNode* q, int i)
     q[i].priority = key;
     q[i].value = val;
 }
-int voxmaps_processRouteQueue(RouteState* state, int count);
 
 void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentDir, u16 count, s16* box)
 {
