@@ -12,6 +12,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
@@ -59,7 +60,6 @@ typedef struct
 
 extern FamilyTable lbl_8031F16C[]; /* per-family table-of-tables, 0x28-byte rows */
 extern u8 lbl_8031DD30[];          /* per-anim move-progress floats, indexed anim*4 */
-extern void fn_8014CF7C(int obj, int state, f32 e, f32 f, int c, int d);
 extern void fn_801513AC(GameObject* obj, u8* state);
 
 f32 lbl_803E2740 = 0.0f;
@@ -173,7 +173,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     if (*(f32*)(state + 0x32c) != 0.0f)
     {
         int pos = *(int*)&((BaddieState*)state)->trackedObj;
-        fn_8014CF7C((int)obj, state, *(f32*)(pos + 0xc), *(f32*)(pos + 0x14), 0xf, 0);
+        fn_8014CF7C(obj, state, *(f32*)(pos + 0xc), *(f32*)(pos + 0x14), 0xf, 0);
         if (((BaddieState*)state)->unk308 > 0.0166f)
         {
             ((BaddieState*)state)->unk308 = ((BaddieState*)state)->unk308 - 0.005f;

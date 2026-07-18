@@ -17,6 +17,7 @@
  * offsets into its per-baddie scratch region (0x29c..0x340).
  */
 #include "main/dll/baddie_state.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/trig.h"
 #include "main/dll/baddie_setmove.h"
@@ -37,7 +38,6 @@ int lbl_803DBCD0[2] = {2, 3};
 
 #define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 
-extern void fn_8014CF7C(int obj, int state, f32 a, f32 b, int c, int d);
 extern void fn_8014C678(int obj, int state, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int state, int c, f32 a, f32 b, int d);
 

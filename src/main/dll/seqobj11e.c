@@ -36,6 +36,7 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/dll/baddie_setmove.h"
 #include "main/objtexture.h"
 #include "main/dll/seqObj11E.h"
@@ -234,7 +235,6 @@ void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int
 
 
 extern int fn_801A0174(int* obj);
-extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
@@ -299,7 +299,7 @@ void fn_80152514(int* obj, u8* state)
         step = (s8) * ((u8*)def + 0x2a);
         if (step == 0)
         {
-            fn_8014CF7C(obj, state, path->posX, path->posZ, 0xf, 0);
+            fn_8014CF7C((GameObject*)obj, (int)state, path->posX, path->posZ, 0xf, 0);
         }
         else if (((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW)
         {
@@ -313,7 +313,7 @@ void fn_80152514(int* obj, u8* state)
                 step = -spd;
             }
             ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX - step;
-            fn_8014CF7C(obj, state, path->posX, path->posZ, 0xf, 0);
+            fn_8014CF7C((GameObject*)obj, (int)state, path->posX, path->posZ, 0xf, 0);
             if ((int)(10.0f * path->tangentY) >= 0)
             {
                 step = spd;

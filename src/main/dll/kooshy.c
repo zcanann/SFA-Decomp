@@ -4,6 +4,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/obj_placement.h"
@@ -38,7 +39,6 @@ extern f32 lbl_803E2930;
 void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
     fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
-extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8015355C(GameObject* obj, int state);
 
 void fn_80153640(GameObject* obj, int state)
@@ -139,7 +139,7 @@ void fn_8015383C(GameObject* obj, int state)
         if (hit != 0)
         {
             int trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
-            fn_8014CF7C((int)obj, state, ((GameObject*)trackedObj)->anim.localPosX,
+            fn_8014CF7C(obj, state, ((GameObject*)trackedObj)->anim.localPosX,
                         ((GameObject*)trackedObj)->anim.localPosZ, 0x14, 0);
             angle = (s16)(getAngle(vec[0], vec[2]) - (u16)(obj)->anim.rotX);
             if (angle > 0x8000)

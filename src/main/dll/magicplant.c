@@ -17,6 +17,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/obj_placement.h"
@@ -46,7 +47,6 @@ int lbl_803DBCC8[2] = {2, 3};
 void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
     fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
-extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 
@@ -107,7 +107,7 @@ void fn_80153040(GameObject* obj, int state)
             }
         }
 
-        fn_8014CF7C((int)obj, state, curve->posX, curve->posZ, 0xf, 0);
+        fn_8014CF7C(obj, state, curve->posX, curve->posZ, 0xf, 0);
 
         vec[0] = curve->posX - (obj)->anim.localPosX;
         vec[1] = curve->posY - (obj)->anim.localPosY;

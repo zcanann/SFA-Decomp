@@ -10,6 +10,7 @@
 #include "main/dll/hagabonstate_struct.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/dll_00E1_wispbaddie.h"
@@ -71,7 +72,6 @@ STATIC_ASSERT(sizeof(WispEventRow) == 0xc);
 STATIC_ASSERT(offsetof(WispEventRow, moveId) == 0x8);
 
 extern void fn_801513AC(GameObject* obj, int state);
-extern void fn_8014CF7C(int obj, int state, f32 e, f32 f, int c, int d);
 extern void* lbl_8031F16C[];
 extern u8 lbl_8031DD30[];
 
@@ -375,7 +375,7 @@ void fn_8014FF20(int obj, int state)
 void fn_8014FF24(int obj, int state)
 {
     f32* pos = (f32*)((BaddieState*)state)->trackedObj;
-    fn_8014CF7C(obj, state, pos[3], pos[5], 0xf, 0);
+    fn_8014CF7C((GameObject*)obj, state, pos[3], pos[5], 0xf, 0);
 }
 
 void battleDroidInit(int unused, char* p)

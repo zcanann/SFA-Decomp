@@ -16,6 +16,7 @@
  */
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/gameloop_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
@@ -377,7 +378,7 @@ void fn_80150910(int* obj, u8* state)
                 *(f32*)(state + 0x310) = lbl_803E2740;
             }
         }
-        ((void (*)(void*, void*, f32, f32, int, int))fn_8014CF7C)(obj, state, path->posX, path->posZ, 0xf, 0);
+        fn_8014CF7C((GameObject*)obj, (int)state, path->posX, path->posZ, 0xf, 0);
     }
     else
     {
@@ -518,7 +519,7 @@ void fn_80150EDC(GameObject* obj, void* state)
     if ((*(u8*)((u8*)state + 0x323) & 8) == 0)
     {
         void* tracked = ((BaddieState*)state)->trackedObj;
-        ((void (*)(void*, void*, f32, f32, int, int))fn_8014CF7C)(obj, state, ((GameObject*)tracked)->anim.localPosX,
-                                                                    ((GameObject*)tracked)->anim.localPosZ, 0xf, 0);
+        fn_8014CF7C((GameObject*)obj, (int)state, ((GameObject*)tracked)->anim.localPosX,
+                    ((GameObject*)tracked)->anim.localPosZ, 0xf, 0);
     }
 }

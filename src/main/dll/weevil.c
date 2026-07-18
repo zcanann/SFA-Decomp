@@ -14,6 +14,7 @@
  */
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
@@ -27,7 +28,6 @@
 
 #define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 
-extern void fn_8014CF7C(int obj, int state, f32 x, f32 z, int a, int b);
 extern int lbl_803DBCC8[2];
 extern f64 lbl_803E2938;
 extern f32 lbl_803E2940;
@@ -110,7 +110,7 @@ void fn_80153E0C(GameObject* obj, int state)
         {
             if ((obj)->anim.currentMove == 0)
             {
-                fn_8014CF7C((int)obj, state, curve->posX, curve->posZ, 0x3c, 0);
+                fn_8014CF7C(obj, state, curve->posX, curve->posZ, 0x3c, 0);
             }
             if (*(f32*)(state + 0x324) > lbl_803E294C)
             {
@@ -178,7 +178,7 @@ void fn_801540A0(int obj, int state)
     }
     if (((GameObject*)obj)->anim.currentMove != 3)
     {
-        fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+        fn_8014CF7C((GameObject*)obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                     ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 0x3c, 0);
     }
     else
@@ -205,7 +205,7 @@ void fn_801540A0(int obj, int state)
              (Baddie_SetMove(obj, state, 3, 0.375f, 0, 3), lbl_803E294C == *(f32*)(state + 0x328)))
     {
         *(f32*)(state + 0x328) = 50.0f;
-        fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+        fn_8014CF7C((GameObject*)obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                     ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 1, 0);
         Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_25d);
     }

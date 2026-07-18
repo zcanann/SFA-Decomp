@@ -1413,25 +1413,25 @@ void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledR
     }
 }
 
-void fn_8014CF7C(int* node, int unused, u16 divisor, int angleBias, f32 fa, f32 fb)
+void fn_8014CF7C(GameObject* node, int state, f32 targetX, f32 targetZ, int divisor, int angleBias)
 {
     s32 delta;
     f32 dt;
     s16 newVal;
-    f32 t0 = ((GameObject*)node)->anim.localPosX - fa;
-    f32 t1 = ((GameObject*)node)->anim.localPosZ - fb;
+    f32 t0 = node->anim.localPosX - targetX;
+    f32 t1 = node->anim.localPosZ - targetZ;
     delta = getAngle(t0, t1);
-    delta = (s16)(delta - (u16)((GameObject*)node)->anim.rotX);
+    delta = (s16)(delta - (u16)node->anim.rotX);
     if (delta > 0x8000)
         delta = (s16)(delta - 0xFFFF);
     if ((s16)delta < -0x8000)
         delta = (s16)(delta + 0xFFFF);
     delta += angleBias;
-    dt = timeDelta / (f32)(u32)divisor;
+    dt = timeDelta / (f32)(u32)(u16)divisor;
     if (dt > lbl_803E256C)
         dt = lbl_803E256C;
-    newVal = (s16)(*(s16*)(int)node + (s32)((f32)(s16)delta * dt));
-    ((GameObject*)node)->anim.rotX = newVal;
+    newVal = (s16)(node->anim.rotX + (s32)((f32)(s16)delta * dt));
+    node->anim.rotX = newVal;
 }
 
 void fn_8014D08C(GameObject* obj, int state, f32 rateScale, int moveId, int moveControlFlags, u8 stateByte)

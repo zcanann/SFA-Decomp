@@ -281,8 +281,8 @@ void fn_8015165C(GameObject* obj, u8* state)
         }
         if ((state[0x323] & 8) == 0)
         {
-            ((void (*)(int, u8*, f32, f32, int, int))fn_8014CF7C)(
-                (int)obj, state, ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosX,
+            fn_8014CF7C(obj, (int)state,
+                        ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosX,
                         ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosZ, 10, 0);
         }
     }

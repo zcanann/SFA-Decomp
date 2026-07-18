@@ -24,6 +24,7 @@
 #include "main/trig.h"
 #include "main/vecmath.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/curve_walker.h"
@@ -103,8 +104,7 @@ void fn_80154870(GameObject* obj, int* state)
         (obj)->anim.velocityX = fval;
         (obj)->anim.velocityZ = fval;
         curve = (RomCurveWalker*)state[0xa7];
-        ((void (*)(int, int*, f32, f32, int, int))fn_8014CF7C)((int)obj, state, *(f32*)((u8*)curve + 0xc),
-                                                                  *(f32*)((u8*)curve + 0x14), 10, 0);
+        fn_8014CF7C(obj, (int)state, *(f32*)((u8*)curve + 0xc), *(f32*)((u8*)curve + 0x14), 10, 0);
     }
     else
     {

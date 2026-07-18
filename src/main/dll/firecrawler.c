@@ -129,7 +129,6 @@ extern u8* gCrawlerReactionTables[];
 extern f32 gCrawlerS8Norm127;
 extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
 int gCrawlerNearbyObjectBuffer[0x20];
-extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
 extern f32 lbl_803DBCE0;
 extern f32 lbl_803DBCE4;
 extern f32 lbl_803DBCEC;
@@ -922,7 +921,7 @@ void crawler_updateC(s16* obj, u8* state)
             }
             if ((((FCVars*)state)->moveStartFlags & 8) == 0 && (((FCVars*)state)->flagsD & 0x10) == 0)
             {
-                fn_8014CF7C((int*)obj, state, base->posX, base->posZ, 0xf, 0);
+                fn_8014CF7C((GameObject*)obj, (int)state, base->posX, base->posZ, 0xf, 0);
             }
         }
         else if ((flags & 0xc0000000) != 0)
@@ -1143,7 +1142,8 @@ void crawler_updateB(s16* obj, u8* state)
 
     if ((((FCVars*)state)->moveStartFlags & 8) == 0 && (((FCVars*)state)->flagsD & 0x10) == 0)
     {
-        fn_8014CF7C((int*)obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+        fn_8014CF7C((GameObject*)obj, (int)state,
+                    ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                     ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 0x1e, 0);
     }
     fn_80157CDC((int)obj, (int)state);
@@ -1274,7 +1274,8 @@ void crawler_update(int* obj, u8* state)
 
     if ((((FCVars*)state)->moveStartFlags & 8) == 0 && (((FCVars*)state)->flagsD & 0x10) == 0)
     {
-        fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+        fn_8014CF7C((GameObject*)obj, (int)state,
+                    ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                     ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 0x1e, 0);
     }
     fn_80157CDC((int)obj, (int)state);
@@ -1342,5 +1343,3 @@ void crawler_initModelVariant(s16* obj, u8* state)
     }
     ((GameObject*)obj)->anim.rootMotionScale = 0.5f + ((f32)(s32)(s8)params[0x28] / gCrawlerS8Norm127);
 }
-
-
