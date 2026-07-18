@@ -8106,7 +8106,7 @@ void cMenuRun(void)
                     gCMenuScrollVel = 1;
                 }
             }
-            if ((cy >= 0xa && gCMenuPrevStickY < 0xa) || cy > 0x3c)
+            else if ((cy >= 0xa && gCMenuPrevStickY < 0xa) || cy > 0x3c)
             {
                 int m = gCMenuScrollTimer;
                 if (m < 0)
