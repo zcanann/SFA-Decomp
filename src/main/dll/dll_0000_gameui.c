@@ -7689,14 +7689,12 @@ void drawWorldMapHud(void)
                 if (mainGetBit(gTaskHintTable[*p].bit_id))
                 {
                     fi = gGameUiTaskHintCandidates[i];
-                    break;
+                    goto haveHint;
                 }
                 p++;
             }
-            if (i == GAMEUI_TASK_HINT_COUNT)
-            {
-                fi = -1;
-            }
+            fi = -1;
+        haveHint:
             n = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) +
                 mainGetBit(GAMEBIT_ITEM_SpellStone2_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
             if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got))
