@@ -125,97 +125,93 @@ void ARWBombColl_update(int obj)
         return;
     }
 
-    if (flags->b80 != 0)
+    if (flags->b80 != 0 ||
+        (((arwingCheck = getArwing()) != NULL
+              ? (((GameObject*)obj)->anim.localPosZ - arwingCheck->anim.localPosZ <
+                 sActivateDistanceZ)
+              : 0) == 0))
     {
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0;
-        return;
-    }
-    arwingCheck = getArwing();
-    if (((arwingCheck != NULL)
-             ? (((GameObject*)obj)->anim.localPosZ - arwingCheck->anim.localPosZ <
-                sActivateDistanceZ)
-             : 0) == 0)
-    {
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        objAnim->alpha = 0;
-        return;
-    }
-{
-    int alpha;
-
-    alpha = (int)(sAlphaFadeRate * timeDelta + (f32)(u32)objAnim->alpha);
-    if (alpha > 0xff)
-    {
-        alpha = 0xff;
-    }
-    objAnim->alpha = alpha;
-    ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-    ((GameObject*)obj)->anim.rotX = sSpinRate * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
-    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWBOMBCOLL_HIT_VOLUME_SLOT, 0, 0);
-    if (flags->b40 != 0)
-    {
-        if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
-            (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
-        {
-            arwarwing_addScore(arw, 0x19);
-            flags->b80 = 1;
-            ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            ObjHits_DisableObject((GameObject*)obj);
-        }
     }
     else
     {
-        int hit;
-        if (ObjHits_GetPriorityHit((GameObject*)(obj), &hit, 0, 0) != 0 && (u32)hit != 0 &&
-            (((GameObject*)hit)->anim.seqId == 0x604 || ((GameObject*)hit)->anim.seqId == 0x605))
         {
-            arwarwing_addScore(arw, 0xf);
-            flags->b40 = 1;
-            Obj_SetActiveModelIndex((GameObject*)obj, 1);
-            spawnExplosionLegacy(obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
-        }
-        if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
-            (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
-        {
-            ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            ObjHits_DisableObject((GameObject*)obj);
-            spawnExplosionLegacy(obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
+            int alpha;
+
+            alpha = (int)(sAlphaFadeRate * timeDelta + (f32)(u32)objAnim->alpha);
+            if (alpha > 0xff)
+            {
+                alpha = 0xff;
+            }
+            objAnim->alpha = alpha;
+            ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            ((GameObject*)obj)->anim.rotX = sSpinRate * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWBOMBCOLL_HIT_VOLUME_SLOT, 0, 0);
+            if (flags->b40 != 0)
+            {
+                if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
+                    (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
+                {
+                    arwarwing_addScore(arw, 0x19);
+                    flags->b80 = 1;
+                    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                    ObjHits_DisableObject((GameObject*)obj);
+                }
+            }
+            else
+            {
+                int hit;
+                if (ObjHits_GetPriorityHit((GameObject*)(obj), &hit, 0, 0) != 0 && (u32)hit != 0 &&
+                    (((GameObject*)hit)->anim.seqId == 0x604 || ((GameObject*)hit)->anim.seqId == 0x605))
+                {
+                    arwarwing_addScore(arw, 0xf);
+                    flags->b40 = 1;
+                    Obj_SetActiveModelIndex((GameObject*)obj, 1);
+                    spawnExplosionLegacy(obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
+                }
+                if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
+                    (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
+                {
+                    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                    ObjHits_DisableObject((GameObject*)obj);
+                    spawnExplosionLegacy(obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
+                }
+            }
+            if (arw != NULL && flags->b80 != 0)
+            {
+                switch (((GameObject*)obj)->anim.seqId)
+                {
+                case 0x609:
+                    Sfx_PlayFromObject(obj, SFXTRIG_ar_ring_pickup);
+                    arwarwing_upgradeLaserLevel(arw);
+                    break;
+                case 0x608:
+                    Sfx_PlayFromObject(obj, SFXTRIG_ar_largeenergy_pickup);
+                    arwarwing_addBomb(arw);
+                    break;
+                case 0x60a:
+                    break;
+                case 0x6d8:
+                    Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
+                    arwarwing_incrementPickup6D8Count(arw);
+                    break;
+                case 0x6d9:
+                    Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
+                    arwarwing_incrementPickup6D9Count(arw);
+                    break;
+                case 0x6db:
+                    Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
+                    arwarwing_incrementPickup6DBCount(arw);
+                    break;
+                case 0x6da:
+                    Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
+                    arwarwing_incrementPickup6DACount(arw);
+                    break;
+                }
+            }
         }
     }
-    if (arw != NULL && flags->b80 != 0)
-    {
-        switch (((GameObject*)obj)->anim.seqId)
-        {
-        case 0x609:
-            Sfx_PlayFromObject(obj, SFXTRIG_ar_ring_pickup);
-            arwarwing_upgradeLaserLevel(arw);
-            break;
-        case 0x608:
-            Sfx_PlayFromObject(obj, SFXTRIG_ar_largeenergy_pickup);
-            arwarwing_addBomb(arw);
-            break;
-        case 0x60a:
-            break;
-        case 0x6d8:
-            Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
-            arwarwing_incrementPickup6D8Count(arw);
-            break;
-        case 0x6d9:
-            Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
-            arwarwing_incrementPickup6D9Count(arw);
-            break;
-        case 0x6db:
-            Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
-            arwarwing_incrementPickup6DBCount(arw);
-            break;
-        case 0x6da:
-            Sfx_PlayFromObject(obj, SFXTRIG_ar_smallenergy_pickup);
-            arwarwing_incrementPickup6DACount(arw);
-            break;
-        }
-    }
-}
 }
 
 
