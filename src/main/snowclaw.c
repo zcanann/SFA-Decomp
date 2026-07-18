@@ -319,9 +319,9 @@ void snowclaw_syncMountTransform(GameObject* obj, GameObject* mount, int p2, int
 
 int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
 {
-    int* sub;
     int* inner;
     int i;
+    int* sub;
     SnowClawDropObjectTable tbl;
     f32 dist;
 
@@ -748,7 +748,7 @@ void snowclaw_update(GameObject* obj)
                 obj, *(u16*)&((SnowclawState*)inner)->moveIdBase + 5, 0.0f, 0);
             snowclaw_spawnDropBomb((GameObject*)(*(int*)inner), obj, (u8)choice, 0);
         }
-        s16toFloat(&((SnowclawState*)inner)->attackTimer,
+        s16toFloat((f32*)(inner + offsetof(SnowclawState, attackTimer)),
                    (s16)lbl_8032A340[fn_801EC9BC((GameObject*)(*(int*)inner)) - 1]);
     }
 
