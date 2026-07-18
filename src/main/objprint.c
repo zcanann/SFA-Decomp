@@ -187,6 +187,16 @@ void objAnimFn_80038f38(GameObject* obj, char* state)
     }
 }
 
+typedef struct
+{
+    s32 frame;
+    s32 frameCount;
+    f32 timer;
+    f32 timerStep;
+    int* keyframes;
+    u16 sfxId;
+} ObjKfAnimState;
+
 void objModelAndSoundFn_80039118(int obj, int state)
 {
     int frame;
@@ -196,16 +206,16 @@ void objModelAndSoundFn_80039118(int obj, int state)
 
     f32 t;
 
-    if (*(s32*)((char*)state + 0) < 0)
+    if (((ObjKfAnimState*)state)->frame < 0)
         return;
-    t = *(f32*)((char*)state + 8) - timeDelta;
-    *(f32*)((char*)state + 8) = t;
+    t = ((ObjKfAnimState*)state)->timer - timeDelta;
+    ((ObjKfAnimState*)state)->timer = t;
     if (t < lbl_803DE9A4)
     {
-        frame = *(int*)((char*)state + 0);
-        if (frame >= *(int*)((char*)state + 4))
+        frame = ((ObjKfAnimState*)state)->frame;
+        if (frame >= ((ObjKfAnimState*)state)->frameCount)
         {
-            *(int*)((char*)state + 0) = -1;
+            ((ObjKfAnimState*)state)->frame = -1;
             model = (int)OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
             {
@@ -218,11 +228,11 @@ void objModelAndSoundFn_80039118(int obj, int state)
         {
             if (frame == 1)
             {
-                Sfx_PlayFromObjectChannel((u32)obj, 0x10, *(u16*)((char*)state + 0x14));
+                Sfx_PlayFromObjectChannel((u32)obj, 0x10, ((ObjKfAnimState*)state)->sfxId);
             }
-            kf = *(int**)((char*)state + 0x10);
-            frame = *(int*)((char*)state + 0);
-            *(int*)((char*)state + 0) = frame + 1;
+            kf = ((ObjKfAnimState*)state)->keyframes;
+            frame = ((ObjKfAnimState*)state)->frame;
+            ((ObjKfAnimState*)state)->frame = frame + 1;
             kfval = kf[frame];
             model = (int)OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
@@ -231,7 +241,7 @@ void objModelAndSoundFn_80039118(int obj, int state)
                                                 *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), kfval - 1,
                                                 lbl_803DE99C / lbl_803DB464, 0);
             }
-            *(f32*)((char*)state + 8) = *(f32*)((char*)state + 8) + *(f32*)((char*)state + 0xc);
+            ((ObjKfAnimState*)state)->timer = ((ObjKfAnimState*)state)->timer + ((ObjKfAnimState*)state)->timerStep;
         }
     }
 }
