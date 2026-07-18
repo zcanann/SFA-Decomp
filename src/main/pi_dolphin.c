@@ -48,6 +48,7 @@
 #include "main/fileio.h"
 #include "main/gameloop_api.h"
 #include "main/map_load.h"
+#include "main/map_texscroll.h"
 #include "main/table_file.h"
 #include "main/rcp_dolphin.h"
 #include "main/sky_api.h"
@@ -938,7 +939,6 @@ extern f32 lbl_803DEACC;
 extern f32 lbl_803DEADC;
 extern int lbl_803DCD78;
 extern u8* lbl_803DCD2C;
-extern void mapTextureScrollGetOffset(u8 idx, f32* x, f32* y);
 extern f32 lbl_803DEAE4;
 extern u8 lbl_803DCD6B;
 extern f32 lbl_803DEAF4;

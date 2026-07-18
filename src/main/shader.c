@@ -45,6 +45,7 @@
 #include "main/dll/savegame.h"
 #include "main/loaded_file_flags.h"
 #include "main/map_load.h"
+#include "main/map_texscroll.h"
 #include "main/fileio.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
