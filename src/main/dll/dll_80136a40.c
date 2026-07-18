@@ -1395,7 +1395,7 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
     i = 0;
     objs = tmpList;
 
-    for (; i < count; i++, objs++)
+    for (; i < count; objs++, i++)
     {
         int* data;
         f32 obj_extra;
@@ -1543,7 +1543,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
         if (((TrickyState*)state)->targetPosPtr != targetPos)
         {
             ((TrickyState*)state)->targetPosPtr = targetPos;
-            *(u32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
+            *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
             ((TrickyState*)state)->linkedWalkGroup = 0;
         }
     }
