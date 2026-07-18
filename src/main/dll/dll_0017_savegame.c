@@ -48,6 +48,7 @@
 #include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/dll/dll_005B_modgfxfunc03.h"
 #include "main/dll/dll_002F_carryable.h"
+#include "main/dll/dll_0011_screens.h"
 
 u32 pRestartPoint;
 u8* lbl_803DD498;
@@ -1298,11 +1299,6 @@ u16 gSaveGameMapObjGroupBits[120] = {
 };
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-extern void screens_initialise();
-extern void screens_release();
-extern void screens_remove();
-extern void screens_run();
-extern void screens_show();
 void* lbl_80311900[56] = {(void*)0x00000000,
                           (void*)0x00000000,
                           (void*)0x00000000,
