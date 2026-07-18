@@ -306,19 +306,20 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
     }
     else
     {
-        e = gameTextFonts->entries;
         count = gameTextFonts->count;
-        found = 0;
+        e = gameTextFonts->entries;
         for (i = 0; i != count; i++)
         {
             if (e->id == id)
             {
                 found = 1;
-                break;
+                goto have_found;
             }
             e++;
         }
+        found = 0;
     }
+have_found:
     if (!found)
     {
         *outMaxX = 0;
@@ -682,16 +683,10 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
             {
                 state->charIndex = 0;
             }
-            if (state->charIndex == def->count - 1)
+            if (state->charIndex == def->count - 1 && (state->fC = 1) != 0 &&
+                lbl_803DC994 >= charCount)
             {
-                if ((state->fC = 1) != 0 && lbl_803DC994 >= charCount)
-                {
-                    state->f8 = 1;
-                }
-                else
-                {
-                    state->f8 = 0;
-                }
+                state->f8 = 1;
             }
             else
             {
