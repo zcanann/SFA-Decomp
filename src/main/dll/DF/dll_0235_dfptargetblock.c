@@ -22,6 +22,8 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 
+const f32 lbl_803E64B0 = 10.0f;
+const f32 lbl_803E64C0 = 20.0f;
 typedef struct DfpTargetBlockPartfxArgs
 {
     s16 rotX;
@@ -223,7 +225,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
         {
             dfptargetblock_resetToHome(obj, home, state);
         }
-        dfptargetblock_checkSettled(obj, state, &(10.0f));
+        dfptargetblock_checkSettled(obj, state, &lbl_803E64B0);
     }
     else if (mode == 2)
     {
@@ -246,7 +248,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
                                   -1, NULL);
             }
         }
-        dfptargetblock_checkSettled(obj, state, &(20.0f));
+        dfptargetblock_checkSettled(obj, state, &lbl_803E64C0);
     }
 }
 
@@ -314,7 +316,7 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
         buf[4] = (12.0f);
         buf[5] = 0.0f;
         objfx_spawnArcedBurstLegacy((int)obj, 5, (0.75f), 1, 2, 0x32, (12.0f), (12.0f),
-                                   (10.0f), buf, 0);
+                                   lbl_803E64B0, buf, 0);
     }
     else
     {

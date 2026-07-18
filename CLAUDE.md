@@ -52,9 +52,21 @@ These are match-hacks, not plausible 2002 source. They were purged repo-wide (se
 - **Match-volatiles** — `volatile` or `*(volatile T*)&` puns used to block CSE/hoisting. `volatile`
   is allowed only for genuine hardware/interrupt semantics (GX FIFO, hardware registers).
 - **Pool-reconstruction consts** — `lbl_8XXXXXXX`-named const defs read via `*(f32*)&`; write plain
-  literals.
+  literals. This includes the **`const union { f32 f; } lbl_x = { V };` + `lbl_x.f`** disguise (a
+  named-`.sdata2` float that blocks folding to force the pool symbol) — banned; write the plain
+  literal `V`. (A `union { f32 f; u32 u; }` used via BOTH `.f` and `.u` for a genuine int↔float
+  bit-reinterpretation is a different thing and is not this ban.)
 A unit that cannot match without one of these stays `NonMatching` (or awaits a TU re-split) — that is
 the accepted trade. Historical per-hack shapes and costs are recoverable via `docs/HACK_AUDIT.md`.
+
+**Why this keeps getting re-introduced, and the real fix:** `tools/unit_score.py` (objdiff one-shot)
+UNDERCOUNTS near-matches — it flags anonymous `@N` vs named `lbl_` `.sdata2` pool relocations as a diff
+even when the bytes are identical. Agents then "fix" the phantom diff with a pool-reconstruction hack.
+The truth metric is `report.json` `fuzzy_match_percent` (rebuild the unit `.o`, then
+`ninja build/GSAE01/report.json`); a plain literal usually scores identically. Guidance: **when the
+only diff is `@N`-vs-`lbl_` pool naming, it is almost always already byte-identical — do NOT hack it;
+trust report.json.** If the pool ORDER genuinely differs (report.json actually drops with plain
+literals), that is a TU-boundary artifact — leave the unit `NonMatching`, do not reconstruct the pool.
 
 ## House rules
 - NEVER write comments unless explicitly stated otherwise.
