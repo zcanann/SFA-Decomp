@@ -25,6 +25,7 @@
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/rcp_dolphin_ext.h"
+#include "main/lightmap.h"
 
 s16 gBoneParticleEffectTimer;
 s32 gBoneParticleScrollOffset;
@@ -56,7 +57,6 @@ f32 gBoneParticleDriftMin = -500.0f;
 const union BoneParticleConstF32 lbl_803DF4B8 = { 1.0f };
 const union BoneParticleConstF32 lbl_803DF4BC = { 20.02f };
 
-extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 
 static inline int* Modgfx_GetActiveModel(void* obj)
 {
@@ -274,7 +274,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     ((void (*)(void*, int, void*, f32, f32, int))Camera_LoadModelViewMatrix)(
         ctx, renderParam, &vtx, lbl_803DF4B8.f, lbl_803DF4A8.f, 0);
     GXSetCullMode(GX_CULL_NONE);
-    _textSetColor(ctx, 0xff, 0xff, 0xff, 0xff);
+    _textSetColor((int)ctx, 0xff, 0xff, 0xff, 0xff);
     textureSetupFn_800799c0();
     geomDrawFn_800796f0();
     gxTexColorFn_80079254();
