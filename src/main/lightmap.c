@@ -457,7 +457,6 @@ void sortVisibleObjectKeysDescending(u32* arr, int n)
     }
 }
 #pragma dont_inline off
-#pragma opt_loop_invariants off
 void getVisibleObjects(s8* opacity)
 {
     int part;
@@ -614,7 +613,6 @@ void getVisibleObjects(s8* opacity)
     }
     renderShadows(0, 0, 0);
 }
-#pragma opt_loop_invariants reset
 
 void renderObjects(s8* opacity)
 {
@@ -755,7 +753,7 @@ void renderSceneGeometry(int* p1, s8* order)
                     *(u16*)(blk + 4) ^= 1;
                     if (map[cell] == 0)
                     {
-                        goto next;
+                        continue;
                     }
                 }
                 if (idx > -1 && mapRectFn_8005a728(row, col, blk) != 0)
@@ -766,7 +764,6 @@ void renderSceneGeometry(int* p1, s8* order)
                     PSMTXTrans((f32*)(blk + 0xc), rowF, (f32)(int)*(s16*)(blk + 0x8e), colF);
                     renderMapBlock(blk, p1);
                 }
-            next:;
             }
         }
         layerTablePtr--;
@@ -924,7 +921,7 @@ void sceneDraw(void)
     }
     *(u32*)(((int)q + 8) + lbl_803DCE30 * 16) = 0x78000000;
     *(u32*)(((int)q + 12) + lbl_803DCE30 * 16) = 8;
-    lbl_803DCE30 = *(volatile s32*)&lbl_803DCE30 + 1;
+    lbl_803DCE30 = lbl_803DCE30 + 1;
     if (lbl_803DCE30 == 1000)
     {
         sceneDrawTransparentPolys();
@@ -932,7 +929,7 @@ void sceneDraw(void)
     }
     *(u32*)(((int)q + 8) + lbl_803DCE30 * 16) = 0x50000000;
     *(u32*)(((int)q + 12) + lbl_803DCE30 * 16) = 9;
-    lbl_803DCE30 = *(volatile s32*)&lbl_803DCE30 + 1;
+    lbl_803DCE30 = lbl_803DCE30 + 1;
     sceneDrawTransparentPolys();
     (*gModgfxInterface)->markSourceFrameUpdated(buf);
     (*gModgfxInterface)->renderEffects(NULL, 0, 0, 0, NULL);
@@ -1368,7 +1365,6 @@ void renderSceneGeometry(int* p1, s8* order);
 void doNothing_8005D14C(void)
 {
 }
-#pragma dont_inline on
 void renderShadowType3(u8* obj, u32 b, s32 offset)
 {
     f32 stk[3];
@@ -1409,7 +1405,6 @@ typedef union
     } u;
 } F64Cvt;
 
-#pragma dont_inline reset
 
 #pragma dont_inline on
 void lightmap_sortTransparentDrawQueue(void)
@@ -1651,10 +1646,8 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 }
 
 
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
 void objDrawFn_8005da48(int* obj)
 {
     int* model = (int*)Obj_GetActiveModel((GameObject*)obj);

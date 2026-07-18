@@ -103,8 +103,8 @@ extern f32 lbl_803E6190;
 extern f32 lbl_803E6194;
 extern f32 lbl_803E6198;
 
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 int fn_801FD4A8(GameObject* obj, int x)
 {
     VfpFlamePointData* extra = obj->extra;
@@ -115,15 +115,11 @@ int fn_801FD4A8(GameObject* obj, int x)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int VFP_flamepoint_getExtraSize(void)
 {
     return sizeof(VfpFlamePointData);
 }
-#pragma peephole off
-#pragma scheduling off
 
 void VFP_flamepoint_update(GameObject* obj)
 {
@@ -251,8 +247,6 @@ void fn_801FD6B4(GameObject* obj)
         tex->offsetT = (s16)scrollT;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 int return1_801FDA08(void)
 {
     return 0x1;
@@ -279,8 +273,6 @@ extern f32 lbl_803E61B4;
 void VFP_lavapool_free_nop(void)
 {
 }
-#pragma peephole off
-#pragma scheduling off
 void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     if (visible != 0)
@@ -289,8 +281,6 @@ void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E6168);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void VFP_lavapool_hitDetect_nop(void)
 {
@@ -300,8 +290,6 @@ void VFP_lavapool_update(GameObject* obj)
 {
     fn_801FD6B4(obj);
 }
-#pragma peephole off
-#pragma scheduling off
 
 void VFP_lavapool_init(GameObject* obj, int def)
 {
@@ -319,8 +307,6 @@ void VFP_lavapool_init(GameObject* obj, int def)
     state->amplitude = obj->anim.rootMotionScale;
     state->speedFactor = (f32)(int)randomGetRange(0x32, 100);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void VFP_lavapool_release_nop(void)
 {
@@ -337,16 +323,13 @@ int VFP_lavastar_getObjectTypeId(void)
 {
     return 0x0;
 }
-#pragma peephole on
-#pragma scheduling off
 
+#pragma peephole on
 void VFP_lavastar_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects((void*)obj);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void VFP_lavastar_render(void)
 {
@@ -356,9 +339,8 @@ void VFP_lavastar_hitDetect(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 
+#pragma peephole off
 void VFP_lavastar_update(int obj)
 {
     VfpLavaStarMapData* mapData;
@@ -402,22 +384,20 @@ void VFP_lavastar_init(GameObject* obj, int def)
     state->delayRangeMin = (f32)(int)randomGetRange(0x1e, 0x3c);
     state->delayRangeMax = (f32)(int)randomGetRange(100, 200);
 }
-#pragma peephole reset
 void VFP_lavastar_release(void)
 {
     Resource_Release(gVfpLavaPoolEffectResource);
     gVfpLavaPoolEffectResource = NULL;
 }
-#pragma peephole on
 
+#pragma peephole on
 void VFP_lavastar_initialise(void)
 {
     gVfpLavaPoolEffectResource = NULL;
     gVfpLavaPoolEffectResource = Resource_Acquire(MAIN_LAVAPOOL_RESOURCE_ID, 1);
 }
 
-#pragma peephole reset
-#pragma scheduling reset
+#pragma peephole off
 int VFP_SpellPlace_getExtraSize(void)
 {
     return sizeof(LaserState);
@@ -438,8 +418,6 @@ void VFP_SpellPlace_render(void)
 void VFP_SpellPlace_hitDetect(void)
 {
 }
-#pragma peephole off
-#pragma scheduling off
 
 void VFP_SpellPlace_update(int obj)
 {
@@ -506,8 +484,6 @@ void VFP_SpellPlace_init(int obj, s8* def)
     }
     spellPlace->objectFlags |= LASER_OBJECT_FLAGS_SEQUENCE_CONTROL;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void VFP_SpellPlace_release(void)
 {

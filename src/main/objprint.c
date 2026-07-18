@@ -1480,11 +1480,11 @@ void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, i
                 joint = (*(s8**)(*(char**)(staff + 0x50) + 0x2c))[off + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a];
                 jm = ObjModel_GetJointMatrix((u8*)model, joint);
                 t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
-                *(volatile f32*)vp = *(f32*)(t + off + 0x18);
+                vp[0] = *(f32*)(t + off + 0x18);
                 va[1] = *(f32*)(t + off + 0x1c);
                 va[2] = *(f32*)(t + off + 0x20);
                 PSMTXMultVec(jm, vp, vp);
-                *(volatile f32*)vp = *(volatile f32*)vp + playerMapOffsetX;
+                vp[0] = vp[0] + playerMapOffsetX;
                 va[2] = va[2] + playerMapOffsetZ;
                 *(f32*)(q + 0x6c) = vp[0];
                 *(f32*)(q + 0x74) = va[1];

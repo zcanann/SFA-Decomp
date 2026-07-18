@@ -180,8 +180,6 @@ void VFP_Block1_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= (LIGHT_OBJFLAG_HIDDEN | LIGHT_OBJFLAG_HITDETECT_DISABLED);
 }
 
-#pragma peephole reset
-#pragma scheduling on
 void VFP_Block1_release(void)
 {
 }
@@ -190,8 +188,6 @@ void VFP_Block1_initialise(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 void fn_801FBAC8(int obj)
 {
     int params = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -302,8 +298,6 @@ void fn_801FBAC8(int obj)
     }
 }
 
-#pragma peephole reset
-#pragma scheduling on
 int VFP_Platform_getExtraSize(void)
 {
     return 0x6;
@@ -319,8 +313,6 @@ void VFP_Platform_free(int obj)
     (*gExpgfxInterface)->freeSource2(obj);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void VFP_Platform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     VfpPlatformState* state = ((GameObject*)obj)->extra;
@@ -331,14 +323,10 @@ void VFP_Platform_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-#pragma peephole reset
-#pragma scheduling on
 void VFP_Platform_hitDetect(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 void VFP_Platform_update(GameObject* obj)
 {
     int params = *(int*)&(obj)->anim.placementData;
@@ -529,8 +517,6 @@ void VFP_Platform_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
-#pragma peephole reset
-#pragma scheduling on
 void VFP_Platform_release(void)
 {
 }
@@ -539,8 +525,6 @@ void VFP_Platform_initialise(void)
 {
 }
 #pragma auto_inline off
-#pragma peephole off
-#pragma scheduling off
 void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
 {
     VfpDoorSwitchState* state = obj->extra;
@@ -581,8 +565,6 @@ void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
 #pragma auto_inline on
 
 
-#pragma peephole reset
-#pragma scheduling on
 int VFP_DoorSwitch_getExtraSize(void)
 {
     return 0x4;
@@ -598,21 +580,15 @@ void VFP_DoorSwitch_free(int obj)
     (*gExpgfxInterface)->freeSource2(obj);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void VFP_DoorSwitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E611C);
 }
 
-#pragma peephole reset
-#pragma scheduling on
 void VFP_DoorSwitch_hitDetect(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 void VFP_DoorSwitch_update(GameObject* obj)
 {
     VfpDoorSwitchState* state;
@@ -654,8 +630,6 @@ void VFP_DoorSwitch_init(int obj, int data)
     ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
-#pragma peephole reset
-#pragma scheduling on
 void VFP_DoorSwitch_release(void)
 {
 }
@@ -664,8 +638,6 @@ void VFP_DoorSwitch_initialise(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 int SeqPoint_SeqFn(int obj, int param2, ObjAnimUpdateState* ctx)
 {
     SeqPointState* state = ((GameObject*)obj)->extra;
@@ -717,8 +689,6 @@ int SeqPoint_SeqFn(int obj, int param2, ObjAnimUpdateState* ctx)
     return 0;
 }
 
-#pragma peephole reset
-#pragma scheduling on
 int SeqPoint_getExtraSize(void)
 {
     return 0x10;
@@ -733,8 +703,6 @@ void SeqPoint_free(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 void SeqPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
@@ -742,14 +710,11 @@ void SeqPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6128);
 }
 
-#pragma peephole reset
-#pragma scheduling on
 void SeqPoint_hitDetect(void)
 {
 }
 
 #pragma peephole on
-#pragma scheduling off
 void SeqPoint_update(int* obj)
 {
     void* player = Obj_GetPlayerObject();
@@ -847,8 +812,6 @@ void SeqPoint_init(GameObject* obj, int data)
     obj->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
-#pragma peephole reset
-#pragma scheduling on
 void SeqPoint_release(void)
 {
 }
@@ -868,7 +831,6 @@ int VFPDragHead_getObjectTypeId(void)
 }
 
 #pragma peephole on
-#pragma scheduling off
 void VFPDragHead_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
@@ -880,8 +842,6 @@ void VFPDragHead_free(int obj)
     gVfpDragHeadResource = NULL;
 }
 
-#pragma peephole reset
-#pragma scheduling on
 void VFPDragHead_render(void)
 {
 }
@@ -893,7 +853,6 @@ void VFPDragHead_hitDetect(void)
 }
 
 #pragma peephole off
-#pragma scheduling off
 void VFPDragHead_update(int* obj)
 {
     int state = (s8)(*(s8**)&((GameObject*)obj)->anim.placementData)[0x19];
@@ -985,8 +944,6 @@ void VFPDragHead_init(GameObject* obj, int data)
     gVfpDragHeadResource = Resource_Acquire(LIGHT_DRAGHEAD_RESOURCE_ID, 1);
 }
 
-#pragma peephole reset
-#pragma scheduling on
 void VFPDragHead_release(void)
 {
 }
@@ -1017,15 +974,11 @@ void VFP_coreplat_free(int obj)
     (*gExpgfxInterface)->freeSource2(obj);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void VFP_coreplat_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6140);
 }
 
-#pragma peephole reset
-#pragma scheduling on
 void VFP_coreplat_hitDetect(void)
 {
 }
@@ -1034,8 +987,6 @@ void VFP_coreplat_update(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 void VFP_coreplat_init(GameObject* obj, int data)
 {
     VfpPlatformState* state = obj->extra;
@@ -1056,8 +1007,6 @@ void VFP_coreplat_init(GameObject* obj, int data)
     obj->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
-#pragma peephole reset
-#pragma scheduling on
 void VFP_coreplat_release(void)
 {
 }
@@ -1066,8 +1015,6 @@ void VFP_coreplat_initialise(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 void spellStoneUseFn_801fd270(GameObject* obj)
 {
     SpellStoneUseState* state = obj->extra;
@@ -1095,8 +1042,6 @@ void spellStoneUseFn_801fd270(GameObject* obj)
     }
 }
 
-#pragma peephole reset
-#pragma scheduling on
 int dll_224_getExtraSize_ret_6(void)
 {
     return 0x6;
@@ -1111,16 +1056,14 @@ void dll_224_free_nop(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible == 0)
         return;
 }
 
-#pragma peephole on
 #pragma scheduling on
+#pragma peephole on
 void dll_224_hitDetect(void* obj)
 {
     if (*(void**)((char*)obj + 0x74) != NULL)
@@ -1129,8 +1072,8 @@ void dll_224_hitDetect(void* obj)
     }
 }
 
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void dll_224_update(GameObject* obj)
 {
     int mapAct;
@@ -1165,8 +1108,6 @@ void dll_224_init(void* obj, void* other)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = hitboxFlags;
 }
 
-#pragma peephole on
-#pragma scheduling on
 void dll_224_release_nop(void)
 {
 }

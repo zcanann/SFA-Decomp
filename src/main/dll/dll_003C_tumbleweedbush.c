@@ -92,14 +92,12 @@ typedef struct LinkMenuItemDB
 } LinkMenuItemDB;
 #define LINK_FLAG_DRAW_SLOTS        0x0004
 
-#pragma scheduling off
 u16 fn_80130124(void)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     return gTumbleweedBushItems[linkSelected].itemId;
 }
 #pragma dont_inline on
-#pragma peephole off
 void linkInitTextures(LinkMenuItemDB* item)
 {
     int budget;
@@ -136,7 +134,6 @@ void linkInitTextures(LinkMenuItemDB* item)
     }
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 void linkDrawFn_801302c0(void)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
@@ -217,7 +214,6 @@ void linkDrawFn_801302c0(void)
         }
     }
 }
-#pragma peephole reset
 
 void titleScreenFn_80130464(u8 v)
 {
@@ -231,7 +227,6 @@ void setLinkIsRotated(void)
 {
     linkIsRotated = 1;
 }
-#pragma peephole off
 
 #pragma dont_inline on
 void linkDrawFn_80130484(void)
@@ -289,7 +284,6 @@ void linkDrawFn_80130484(void)
     }
 }
 #pragma dont_inline off
-#pragma scheduling off
 void Link_func0F(void)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
@@ -300,7 +294,6 @@ void Link_func0F(void)
         gTumbleweedBushItems[i].timer = 4;
     }
 }
-#pragma peephole reset
 void Link_copy(u8* srcArg)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
@@ -334,13 +327,10 @@ void Link_copy(u8* srcArg)
     }
 }
 
-#pragma scheduling reset
 u8 Link_func0C(void)
 {
     return linkCount_803dd90e;
 }
-#pragma peephole off
-#pragma scheduling off
 void Link_func0B(u8* srcArg)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
@@ -361,13 +351,11 @@ void Link_func0A(int idx, int v)
     gTumbleweedBushItems[idx].state = v;
 }
 
-#pragma peephole reset
 s32 Link_func09(int idx)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     return gTumbleweedBushItems[idx].state;
 }
-#pragma scheduling reset
 void Link_setOpacity(u8 v)
 {
     linkItemOpacity = v;
@@ -409,7 +397,6 @@ typedef struct LinkMenuItemDA
 #define LINK_FLAG_HIDDEN            0x4000
 #define LINK_FLAG_SELECTED_COLOR    0x0080
 
-#pragma peephole off
 void Link_setSelected(int v)
 {
     linkSelected = v;
@@ -452,13 +439,11 @@ typedef struct LinkMenuItem
 #define LINK_FLAG_CENTRE         0x0400
 #define LINK_IS_NAVIGABLE(index) ((gTumbleweedBushItems[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
 
-#pragma peephole reset
 s32 Link_getSelected(void)
 {
     return linkSelected;
 }
 
-#pragma peephole off
 void Link_render(void)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
@@ -621,7 +606,6 @@ void Link_render(void)
     MWTRACE(0xff);
 }
 
-#pragma opt_propagation off
 u32 Link_update(void)
 {
     extern LinkMenuItem gTumbleweedBushItems[40];
@@ -764,8 +748,6 @@ u32 Link_update(void)
     return result;
 }
 
-#pragma opt_propagation reset
-#pragma peephole reset
 
 void Link_free(void)
 {
@@ -781,7 +763,6 @@ void Link_free(void)
     }
     gTumbleweedBushItemCount = 0;
 }
-#pragma peephole off
 void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage, int unused1, int unused2,
                 int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue)
 {

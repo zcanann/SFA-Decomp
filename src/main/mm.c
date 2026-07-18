@@ -300,7 +300,6 @@ int alignUp2(int x)
     }
     return x;
 }
-#pragma dont_inline reset
 
 extern char sMmFreeInvalidLocationError[];
 extern char sMmAllocFreeMessageBlock[];
@@ -864,7 +863,6 @@ int getHeapItemSize(void* ptr)
         }
     }
 }
-#pragma dont_inline reset
 
 void texFlagFn_80023cbc(int v)
 {

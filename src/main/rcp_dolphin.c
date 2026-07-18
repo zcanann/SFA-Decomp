@@ -944,7 +944,7 @@ void gxTextureFn_80052efc(void)
     GXColor8 outColor;
     GXColor8 texColor;
     GXColor8 matColor;
-    u8* e; /* raw u8* + per-site casts are load-bearing: typed decls swap r28/r31 */
+    u8* e;
     u8* slots[1];
     int i;
     int clearSlot;
@@ -1036,7 +1036,6 @@ void gxTextureFn_80052efc(void)
     gRcpDistortGroup = 0;
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
 #pragma peephole on
 void ShaderDef_free(int* def)
 {
@@ -1073,7 +1072,6 @@ void ShaderDef_free(int* def)
     }
 }
 
-#pragma peephole reset
 #pragma peephole off
 void shaderInit(u8* def, void** out, u8* obj)
 {
@@ -1156,8 +1154,7 @@ void initFn_800534f8(void)
         }
         i++;
     } while (i < 6);
-    /* mode = 0 for the three remaining slots; member form (stb 0x1b(base+idx))
-     * diverges - target hoists base+0x1b and emits stbx. */
+    /* mode = 0 for the three remaining slots */
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
     (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
@@ -1190,9 +1187,6 @@ void texRestructRefs(int mode)
     u32 size;
     int d;
 
-    /* gLoadedTextures walks below keep the byte-offset (off += 16) launder
-     * form - plain gLoadedTextures[i].field indexing diverges (induction-var
-     * shape). */
     strs = (char*)(int)sRcpTexRestructStrings;
     done = 0;
     pass = 0;
@@ -1389,7 +1383,7 @@ void textureFn_80053d58(void* vobj)
     if (mipmap != 0)
     {
         GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter, (f32)(u32)obj[28],
-                        (f32)(s32)obj[29], /* minLod/maxLod: member form here ticks MWCC's @NNN counter */
+                        (f32)(s32)obj[29], /* minLod/maxLod */
                         lbl_803DEB98, 0, 0, 0);
     }
     else
@@ -1545,7 +1539,7 @@ void fn_800541A4(Texture* texture, s16 frameStep)
 #pragma peephole off
 #pragma scheduling off
 
-void textureFn_800541ac(int p1 /* unused; target never reads r3 */, int* tex, void* forceTex, int flags, int packed)
+void textureFn_800541ac(int p1 /* unused */, int* tex, void* forceTex, int flags, int packed)
 {
     int i;
     int idx, count;
@@ -1684,7 +1678,6 @@ void textureFree(Texture* tex)
     }
 }
 #pragma opt_propagation off
-#pragma peephole reset
 #pragma peephole off
 extern int gRcpTexBankCount[3];
 
@@ -2045,7 +2038,6 @@ doneBank1:
 }
 
 #pragma opt_propagation reset
-#pragma scheduling reset
 #pragma scheduling on
 int textureCrazyPointerFollowFn_80054c30(int* p, int n)
 {
@@ -2061,7 +2053,6 @@ int textureCrazyPointerFollowFn_80054c30(int* p, int n)
     return (int)p;
 }
 #pragma dont_inline on
-#pragma scheduling reset
 #pragma scheduling off
 void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter)
 {
@@ -2161,8 +2152,6 @@ doneBank1:
 }
 
 
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u32 bEnableColorFilter;
 extern u8 bEnableViewFinderHud;
@@ -2188,8 +2177,6 @@ void fn_80054F74(int* p, f32* vec)
     vec[0] = vec[0] + playerMapOffsetX;
     vec[2] = vec[2] + playerMapOffsetZ;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 bEnableDistortionFilter;
 extern u8 bEnableBlurFilter;
@@ -2235,7 +2222,6 @@ void timeOfDayFn_80055038(void)
     p[0x40] = (u8)(p[0x40] | 0x20);
 }
 #pragma peephole reset
-#pragma scheduling reset
 void Rcp_DisableBlurFilter(void)
 {
     bEnableBlurFilter = 0x0;
@@ -2385,10 +2371,6 @@ void Rcp_SetMonochromeFilterEnabled(u8 x)
     bEnableMonochromeFilter = x;
 }
 
-/* Declared here (not at top of file): a typedef parsed before fn_80053C40
- * renumbers MWCC's internal @NNN constant-pool symbol for its 0.0f
- * (strtab byte diff). ShaderDef_free/shaderInit above therefore keep raw
- * slot arithmetic on gRcpDistortSlots. */
 u8 Rcp_GetMotionBlurEnabled(void)
 {
     return bEnableMotionBlur;
@@ -2490,7 +2472,6 @@ void warpToMap(int idx, s8 transType)
     Pause_SetDisabled(1);
 }
 #undef mtx
-#pragma opt_common_subs on
 #pragma opt_dead_assignments off
 void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
 {
@@ -2529,7 +2510,7 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
 
     while (obj < end)
     {
-        /* i reused below as the object-visible flag (matches retail coloring) */
+        /* i reused below as the object-visible flag */
         if (objIndex < 0)
         {
             i = 0;
@@ -2604,7 +2585,6 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
 }
 
 
-#pragma opt_common_subs reset
 #pragma opt_dead_assignments reset
 
 extern f32 gMapBlockWorldSize;

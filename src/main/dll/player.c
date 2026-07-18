@@ -162,7 +162,6 @@ const u8 lbl_802C2C78[16] = {0x0B, 0x04, 0x06, 0x0A, 0x0A, 0x03, 0x03, 0x02,
                                     0x0E, 0x10, 0x12, 0x13, 0x05, 0x00, 0x00, 0x00};
 const u16 lbl_802C2C88[16] = {1, 2, 4, 8, 8, 16, 16, 64, 128, 256, 1, 32, 0xFFFF, 0, 0, 0};
 
-/* forward declarations for graduated functions */
 void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle);
 void playerDoTailAnims(int obj, void* statep);
 void playerUpdatePathEffectCountdown(GameObject* obj, int inner);
@@ -426,7 +425,6 @@ static inline ObjHitsPriorityState* Player_GetObjHitsState(GameObject* obj)
 {
     return (ObjHitsPriorityState*)obj->anim.hitReactState;
 }
-#pragma optimization_level 1
 int playerStopRidingObject(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
@@ -458,7 +456,6 @@ int playerStopRidingObject(GameObject* obj)
     }
     return 0;
 }
-#pragma optimization_level reset
 
 void fn_80295918(GameObject* obj, int sel, f32 fval)
 {
@@ -1389,7 +1386,6 @@ void playerHeal(GameObject* obj)
     inner->knockbackTimer = lbl_803E7EA4;
     inner->moveVariantIndex = 0xff;
 }
-#pragma opt_propagation off
 
 void fn_80296D20(GameObject* obj, GameObject* parentObj)
 {
@@ -1436,7 +1432,6 @@ void fn_80296D20(GameObject* obj, GameObject* parentObj)
         }
     }
 }
-#pragma opt_propagation reset
 
 void fn_80296EB4(GameObject* obj, int newParent)
 {
@@ -2012,7 +2007,6 @@ int playerState3B(GameObject* obj, int state, f32 fv)
     return 0;
 }
 
-#pragma opt_propagation off
 static void playerFreeSpawnedObjects(void** p, int i, int hi)
 {
     do
@@ -2026,7 +2020,6 @@ static void playerFreeSpawnedObjects(void** p, int i, int hi)
         i++;
     } while (i < 7);
 }
-#pragma opt_propagation reset
 
 int playerState3A(GameObject* obj, int state, f32 fv)
 {
@@ -3955,7 +3948,6 @@ int playerStateStopAimStaff(int obj, int state)
     }
     return 0;
 }
-#pragma opt_propagation off
 
 int playerStateStartAimStaff(GameObject* obj, int state)
 {
@@ -4039,7 +4031,6 @@ int playerStateStartAimStaff(GameObject* obj, int state)
     }
     return 0;
 }
-#pragma opt_propagation reset
 
 int playerState29(GameObject* obj, int state)
 {
@@ -4166,7 +4157,6 @@ void fn_8029BC08(GameObject* obj)
     gPlayerSubState = 1;
 }
 
-#pragma opt_loop_invariants off
 static inline void Player_ApplyStatusDamage(GameObject* obj, int param)
 {
     PlayerStatus* pc;
@@ -4191,7 +4181,6 @@ static inline void Player_ApplyStatusDamage(GameObject* obj, int param)
         playerDie(obj);
     }
 }
-#pragma opt_loop_invariants reset
 
 int playerState27(GameObject* obj, int state, f32 fv)
 {
@@ -4641,7 +4630,6 @@ void fn_8029C8C8(GameObject* obj, int p2)
         }
     }
 }
-#pragma opt_propagation off
 
 int playerState25(int obj, int state)
 {
@@ -4798,7 +4786,6 @@ int playerState25(int obj, int state)
     fn_802ABFBC((GameObject*)obj, state, inner);
     return 0;
 }
-#pragma opt_propagation reset
 int playerState24(GameObject* obj, int state, f32 fv)
 {
     PlayerState* inner = obj->extra;
@@ -7709,7 +7696,6 @@ finish:
     fn_802AB5A4((GameObject*)obj, inner, 5);
     return 0;
 }
-#pragma opt_propagation off
 
 int playerStateClimbOntoLadder(GameObject* obj, int state, f32 fv)
 {
@@ -7889,7 +7875,6 @@ int playerStateClimbOntoLadder(GameObject* obj, int state, f32 fv)
     fn_802AB5A4(obj, (int)inner, 5);
     return 0;
 }
-#pragma opt_propagation reset
 
 int playerState0D(GameObject* obj, int targetState)
 {
@@ -10739,7 +10724,6 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
     }
     return -1;
 }
-#pragma opt_propagation off
 
 void fn_802A81B8(GameObject* obj, int state, f32* out)
 {
@@ -10770,7 +10754,6 @@ void fn_802A81B8(GameObject* obj, int state, f32* out)
         out[2] = -mathCosf(gPlayerPi * (f32)((PlayerState*)state)->targetYaw / lbl_803E7F98);
     }
 }
-#pragma opt_propagation reset
 
 /*
  * Probe for a climbable map surface (a HITQUERY_CLIMB_SURFACE collision hit) and,
@@ -10785,8 +10768,7 @@ enum HitQueryMask
     HITQUERY_REUSE_TRIANGLE_BUFFER = 0x10, /* reuse the loaded map-triangle buffer (skip block reload) */
     HITQUERY_SKIP_CULLED_OBJECTS = 0x80,   /* skip objects whose modelInstance flag 0x01000000 is set */
     /* Composite the player's ladder/climb probe issues: a climb-typed map
-     * surface, map triangles only (no 0x01 -> no object hitboxes). Live-verified
-     * in Dolphin as the query that detects a ladder and seeds the climb state. */
+     * surface, map triangles only (no 0x01 -> no object hitboxes). */
     HITQUERY_CLIMB_SURFACE = 0x204,
 };
 
@@ -10949,7 +10931,6 @@ int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
     }
     return 0;
 }
-#pragma opt_loop_invariants off
 #pragma opt_propagation off
 int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
 {
@@ -11215,8 +11196,6 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     }
     return mode;
 }
-#pragma opt_loop_invariants reset
-#pragma peephole off
 int fn_802A8EE4(int a, int b, int c, int d, int e)
 {
     EmitPlane* pl;
@@ -11409,7 +11388,6 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     return 0;
 }
 #pragma opt_propagation reset
-#pragma peephole reset
 
 void fn_802A93F4(GameObject* obj, int p2, int p3)
 {
@@ -11967,8 +11945,8 @@ void staffShootFireball(GameObject* obj, int state, f32 unused)
     }
 }
 
-#pragma dont_inline on
 #pragma opt_propagation off
+#pragma dont_inline on
 void objDoTeleportAnim(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
@@ -12224,7 +12202,6 @@ void fn_802AAF80(GameObject* obj, int inner, int a, int b, int c)
     }
 }
 #pragma dont_inline reset
-#pragma opt_strength_reduction off
 int fn_802AB1D0(GameObject* obj)
 {
     GameObject* cur;
@@ -12285,7 +12262,6 @@ int fn_802AB1D0(GameObject* obj)
     }
     return (int)best;
 }
-#pragma opt_strength_reduction reset
 
 void playerCastSpell(int a, int b, int c)
 {
@@ -12360,7 +12336,6 @@ void playerCastSpell(int a, int b, int c)
     }
     ((PlayerState*)b)->animState = c;
 }
-#pragma dont_inline on
 void fn_802AB5A4(GameObject* obj, int p2, int flags)
 {
     u8 f = (u8)flags;
@@ -12387,7 +12362,6 @@ void fn_802AB5A4(GameObject* obj, int p2, int flags)
     }
 }
 
-#pragma dont_inline reset
 
 void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
 {
@@ -12604,7 +12578,6 @@ int fn_802ABAE8(GameObject* obj, int state, int inner, f32 fv)
     }
 }
 #pragma opt_common_subs reset
-#pragma opt_propagation off
 
 void fn_802ABFBC(GameObject* obj, int state, PlayerState* inner)
 {
@@ -12668,7 +12641,6 @@ void fn_802ABFBC(GameObject* obj, int state, PlayerState* inner)
         inner->headYaw *= powfBitEstimate(lbl_803E7F1C, timeDelta);
     }
 }
-#pragma opt_propagation reset
 
 void fn_802AC32C(int p1, int p2, int p3)
 {
@@ -14696,7 +14668,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             }
             if (gPlayerStepSfxTimer == 0)
             {
-                char* pt = *(char* volatile*)((char*)Player_GetActiveModel(obj) + 0x50);
+                char* pt = *(char**)((char*)Player_GetActiveModel(obj) + 0x50);
                 desc.x = playerMapOffsetX + *(f32*)(pt + surfIdx * 0x10 + 4);
                 desc.y = *(f32*)(pt + surfIdx * 0x10 + 8);
                 desc.z = playerMapOffsetZ + *(f32*)(pt + surfIdx * 0x10 + 0xc);
@@ -15433,8 +15405,8 @@ void fn_802B18BC(GameObject* obj, int state, f32 fv)
         ((PlayerState*)state)->idleDelayTimer = *(f32*)&lbl_803E7EA4;
     }
 }
-
 #pragma dont_inline reset
+
 
 void playerDoControls(GameObject* obj, int state, f32 fv)
 {
@@ -17045,8 +17017,8 @@ void fn_802B4DE0(GameObject* obj)
     ObjGroup_RemoveObject((int)obj, PLAYER_OBJGROUP);
     ObjModelChain_Free((ObjModelChain*)gPlayerModelChain);
 }
-#pragma opt_propagation off
 
+#pragma opt_propagation off
 void fn_802B4ED8(GameObject* obj, int p2, int mode)
 {
     PlayerState* inner = obj->extra;
@@ -17575,8 +17547,8 @@ void playerDoHitDetection(int obj)
         *(u32*)&((PlayerState*)inner)->flags360 &= ~0x400000LL;
     }
 }
-#pragma opt_propagation reset
 
+#pragma opt_propagation reset
 void playerUpdateWhileTimeStopped(int obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
@@ -18703,13 +18675,9 @@ void Lightfoot_UpdateAttachedChild(GameObject* obj, int inner)
 
 /*
  * Mask passed to hitDetectFn_80065e50 / hitDetectFn_800691c0 to pick what a
- * collision query tests. Low byte = behaviour flags (decoded from
- * hitDetectFn_800691c0); the high bits select the map-surface type (consumed by
- * mapLoadBlocksFn_800685cc; per-type meanings not yet decoded). Only the climb
- * mask is meaning-confirmed so far (live-verified ladder probe); the others are
- * left as raw literals at their call sites until traced.
+ * collision query tests. Low byte = behaviour flags; the high bits select the
+ * map-surface type (consumed by mapLoadBlocksFn_800685cc).
  */
-#pragma dont_inline on
 void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
 {
     int p = *(int*)((char*)inner + 0x40c);
@@ -18748,7 +18716,6 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
         Lightfoot_ProcessHitResponseFlags(obj, inner);
     }
 }
-#pragma dont_inline reset
 #pragma opt_loop_invariants off
 int Lightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -19026,7 +18993,6 @@ s16 gPlayerSpellGameBits[52] = {
     -10486, 15564, -13107, 15564, -13107, 15428, -25690, 15333, 24642, 15379, 29884, 15379,  29884,
 };
 
-/* .data tables (reconstructed to match player.o; typed per header externs) */
 s16 lbl_80333110[128] = {8,    8,    8,    8,    7,    7,    7,    7,    7,    7,    7,    7,    1051, 1051, 1051, 1051,
                          1051, 1051, 1051, 1051, 1051, 1051, 1051, 1051, 1093, 1093, 1457, 1090, 1092, 235,  234,  8,
                          140,  140,  140,  140,  147,  148,  149,  150,  147,  148,  149,  150,  147,  148,  149,  150,

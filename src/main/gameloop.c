@@ -221,7 +221,6 @@ void init(void);
 void cutsceneEnterExit(int entering, int affectSounds);
 void checkReset(void);
 
-#pragma dont_inline off
 #pragma peephole off
 #pragma scheduling off
 int return0_8002969C(void);
@@ -261,9 +260,6 @@ void loadAsset(void* reqVoid)
         break;
     }
 }
-#pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 void doNothing_8001F678(void)
 {
@@ -329,15 +325,11 @@ void loadAssetFileById(void* out, int fileId)
     loadAsset(&gGameLoopAssetReq);
 }
 #pragma dont_inline off
-#pragma peephole on
-#pragma scheduling reset
 
 void crash(void)
 {
     *(u8*)0 = 0;
 }
-#pragma peephole off
-#pragma scheduling off
 
 extern void gameTextShowStr(int str, int a, int b, int c);
 char sGameLoopResetMessages[0x50] =
@@ -464,7 +456,6 @@ int cacheAllocAndCopy(u32 srcAddr, u32 size, u32* cacheCursor, u32* outEnd, u32 
     *cacheCursor = srcAddr;
     return 0;
 }
-#pragma optimization_level 2
 void askProgressiveScanMode(void)
 {
     int showId;
@@ -583,7 +574,6 @@ void askProgressiveScanMode(void)
         GXFlush_(0, 0);
     } while (counter < 0xf0);
 }
-#pragma optimization_level reset
 #pragma peephole on
 #pragma scheduling reset
 
@@ -654,14 +644,11 @@ void blankScreen(int frames)
     }
 }
 
-#pragma peephole on
-#pragma scheduling reset
 
 s16 getScreenBlankFrameCount(void)
 {
     return screenBlankFrameCount;
 }
-#pragma peephole reset
 void doNothing_onSaveSelectScreenExit(void)
 {
 }
@@ -764,7 +751,6 @@ u32 mainGetBit(int eventId)
     }
     return result;
 }
-#pragma optimization_level 3
 
 void mainSetBits(int eventId, int value)
 {
@@ -852,9 +838,6 @@ void mainSetBits(int eventId, int value)
         bit <<= 1;
     }
 }
-#pragma optimization_level reset
-#pragma peephole reset
-#pragma scheduling reset
 
 int return1_800202BC(void)
 {
@@ -1035,7 +1018,6 @@ void Obj_ApplyPendingParentLinks(void);
 
 /* GameBit descriptor flags byte (gGameBitTable[id*4 + 2]). */
 
-#pragma peephole reset
 
 
 int getGameState(void)
@@ -1043,7 +1025,6 @@ int getGameState(void)
     return gameState;
 }
 
-#pragma peephole off
 
 void setTimeStop(int stop)
 {

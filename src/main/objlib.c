@@ -172,7 +172,6 @@ typedef struct ObjPathPoint
     s8 modelIndex[6];
 } ObjPathPoint;
 
-#pragma optimization_level 1
 #pragma scheduling off
 void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
 {
@@ -214,7 +213,6 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
     hitState->stateIndex = (s8)stateIndex;
     return;
 }
-#pragma optimization_level reset
 
 #pragma peephole off
 void ObjHits_SetTargetMask(int objPtr, u8 targetMask)
@@ -853,9 +851,7 @@ int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* 
     }
     return 0;
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume)
 {
     u8 hitPriority;

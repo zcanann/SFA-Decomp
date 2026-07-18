@@ -128,7 +128,6 @@ asm void ObjModel_TransformVerticesLinear(register u8* m1, register u8* m2, regi
 asm void ObjModel_TransformQuadVerticesLinear(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count);
 static int boneBlendSlotLimit(u8* model);
 
-#pragma dont_inline on
 #pragma peephole off
 #pragma scheduling off
 
@@ -285,8 +284,6 @@ lbl_BTN_z:
     blr
 }
 
-#pragma dont_inline reset
-#pragma dont_inline off
 
 void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
 {
@@ -317,8 +314,7 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
         else
         {
             /* hdr + 0x68 / 0x64 are ModelFileHeader animationDataSection /
-               animationModelPtrs; the typed member spelling shifts bytes in
-               this loop (alias/CSE class) -- keep the raw derefs here */
+               animationModelPtrs */
             blendSrc = *(u8**)(hdr + 0x68) + *(u16*)(animChan + 0x44) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
             blendDst = *(u8**)(*(u8**)(hdr + 0x64) + *(u16*)(animChan + 0x44) * 4);
         }
@@ -353,11 +349,6 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
         blendChan += 4;
     }
 }
-#pragma opt_common_subs on
-#pragma opt_loop_invariants on
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 
 void modelAnimFn_800246a0(u8* dst, u8* model, u8* channel, f32 t, int flags, int slotA, int slotB, int blendSel, int mode, s16 eventVal)
 {
@@ -442,29 +433,10 @@ void modelAnimFn_800246a0(u8* dst, u8* model, u8* channel, f32 t, int flags, int
     }
     lbl_80006C6C(&mtxBuf, dst, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, (u8)mode);
 }
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-#pragma ppc_unroll_factor_limit 8
-#pragma ppc_unroll_instructions_limit 256
-#pragma ppc_unroll_speculative on
 #pragma ppc_unroll_speculative off
 void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int flags)
 {
-    /* channel points at an ObjAnimState. stk is an on-stack working copy of
-       one (spelled as raw bytes: the retail frame reserves only 0x64 bytes,
-       sizeof(ObjAnimState) is 0x68). Some u16/s8 channel loads inside the
-       unrolled i/j loops must keep the raw *(u16*)(channel + 0x58)-style
-       spelling -- retyping them to ObjAnimState members changes MWCC's
-       alias/CSE class there and shifts bytes.
-
-       The bounded copy loop near the end is a MANUAL 8x unroll in the
-       original (WALKANIM_COPY_SLOT lanes + a j-indexed cleanup loop) under
-       #pragma ppc_unroll_speculative off: the compiler's own runtime
-       unroller emits the exact-div (srwi/andi.) shape for any loop whose
-       word-copy statements are affine in j, which never matches the retail
-       peel shape (n-8 guard + cleanup pointers re-derived from j via
-       slwi/add). The slotEvent = slotCount - 8 hoist and the redundant-
-       looking slotCount>0 / slotCount>8 guards are load-bearing. */
+    /* channel points at an ObjAnimState; stk is an on-stack working copy of one */
     u8 stk[0x64];
     int mtxBuf;
     int slotEvent;
@@ -628,8 +600,6 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
         }
     }
 }
-#pragma ppc_unroll_factor_limit 100
-#pragma ppc_unroll_instructions_limit 70
 #pragma ppc_unroll_speculative on
 
 void* animationLoad(int id, int a, int b, int e, int f);
@@ -640,9 +610,6 @@ void* ObjAnim_LoadCachedMove(int animId, int moveIndex, u8* cache, ObjAnimDef* a
     animationLoad((int)&out, animId, moveIndex, (int)cache, (int)animDef);
     return out;
 }
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 
 void modelAnimResetState(void* m, void* data)
 {
@@ -847,11 +814,8 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     }
     return 0;
 }
-#pragma opt_loop_invariants reset
 #pragma opt_propagation off
-#pragma ppc_unroll_factor_limit 100
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
+#pragma opt_loop_invariants reset
 int modelGetAmapSize(int animId, int amapFlag, int animCount)
 {
     int size;
@@ -879,12 +843,8 @@ int modelGetAmapSize(int animId, int amapFlag, int animCount)
     }
     return size;
 }
-#pragma opt_lifetimes off
-#pragma opt_loop_invariants on
 #pragma opt_propagation reset
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
+#pragma opt_lifetimes off
 int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChannels)
 {
     u8* hdr = model;
@@ -977,7 +937,6 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     return roundUpTo32(((total + 0x2f) & ~0xf) + 0x10);
 }
 #pragma opt_lifetimes reset
-#pragma opt_loop_invariants reset
 
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
 {
@@ -1170,8 +1129,6 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     ((ObjModel*)out2)->unk60 = 0;
     return out2;
 }
-#pragma opt_common_subs on
-#pragma opt_loop_invariants on
 #pragma scheduling on
 #pragma peephole on
 static int boneBlendSlotLimit(u8* model)
@@ -1385,7 +1342,6 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
         *(f32*)(*(u8**)chain + i * 0x54 + 8) = work[2];
     }
 }
-#pragma dont_inline reset
 #pragma dont_inline on
 void modelAnimFn_80026790(ObjModel* model, int unused, ObjModelChain* chain, ObjModelChainEntry* entry)
 {
@@ -1443,7 +1399,6 @@ void modelAnimFn_80026790(ObjModel* model, int unused, ObjModelChain* chain, Obj
         i++;
     }
 }
-#pragma opt_common_subs reset
 void fn_80026928(int* obj, int b, int* desc)
 {
     int i;
@@ -1546,9 +1501,7 @@ void fn_80026928(int* obj, int b, int* desc)
         PSMTXMultVec((f32*)(obj[(*(u16*)((u8*)obj + 0x18) & 1) + 3] + lastJointIdx * 0x40), (f32*)(lastEntry + 0x18), (f32*)lastEntry);
     }
 }
-#pragma dont_inline reset
 #pragma dont_inline off
-#pragma opt_common_subs on
 void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
 {
     int off;
@@ -1579,15 +1532,7 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
         ((ObjModelChain*)p)->unk19 = 1;
     }
 }
-#pragma dont_inline reset
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-#pragma peephole reset
 #pragma peephole on
-#pragma ppc_unroll_factor_limit 100
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
-#pragma scheduling reset
 #pragma scheduling on
 
 void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled)
@@ -1606,9 +1551,7 @@ void __set_debug_bba(u8* p)
 {
     p[0x19] = 0;
 }
-#pragma peephole reset
 #pragma peephole off
-#pragma scheduling reset
 #pragma scheduling off
 void ObjModelChain_AdvancePhase(ObjModelChain* chain)
 {
@@ -1619,7 +1562,6 @@ void ObjModelChain_AdvancePhase(ObjModelChain* chain)
         chain->phase -= *(f32*)&gModelPhaseWrapPeriod;
     }
 }
-#pragma dont_inline off
 
 void ObjModelChain_Free(ObjModelChain* chain)
 {
@@ -1719,11 +1661,6 @@ int roundUpTo8(int x);
 int roundUpTo16(int x);
 
 int roundUpTo32(int x);
-#pragma opt_common_subs on
-#pragma opt_loop_invariants on
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 /* Double-buffered DMA-cache vertex transform: stream vtxCount verts through a
    two-slot scratch cache (0x2000 apart, transform output at +0x1000), copying
    worker chunks in via copyToCache while the previous chunk is being processed,
@@ -1788,11 +1725,6 @@ void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA,
     }
     cacheQueueWait(0);
 }
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-#pragma ppc_unroll_factor_limit 100
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
 
 void model_multMtxs(u8* model, f32* out)
 {
@@ -1830,11 +1762,6 @@ void* getCache(void);
 
 void cacheQueueWait(int sync);
 
-#pragma opt_common_subs on
-#pragma opt_loop_invariants on
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 #pragma scheduling on
 #pragma peephole on
 static inline void* modelGetBoneMtx(ObjModel* model, int idx)
@@ -1931,12 +1858,7 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
         }
     }
 }
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
 #pragma opt_propagation reset
-#pragma ppc_unroll_factor_limit 100
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
 
 extern f32 lbl_803DE868;
 extern f32 lbl_803DE86C;
@@ -2098,7 +2020,6 @@ void ObjModel_ApplyBlendChannels(ObjModel* model)
     }
 }
 
-#pragma scheduling reset
 #pragma scheduling on
 void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
 {
@@ -2135,7 +2056,6 @@ void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
     }
 }
 
-#pragma scheduling reset
 #pragma scheduling off
 int ObjModel_HasActiveBlendChannels(ObjModel* model)
 {
@@ -2228,7 +2148,6 @@ void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b,
     ch[0].weightRate = weight;
     ch[0].flags0E = flags | BLENDCHAN_FLAG_FADING;
 }
-#pragma dont_inline reset
 void ObjModel_ClearBlendChannels(ObjModel* model)
 {
     if (model->file->morphTargetPtrs != NULL)
@@ -2239,14 +2158,7 @@ void ObjModel_ClearBlendChannels(ObjModel* model)
     }
 }
 
-/* defined in pi_dolphin.c with 5 params; the retail caller here emits a
-   6th arg (the model id) -- keep the caller-side arity */
-
-#pragma opt_common_subs on
 #pragma opt_loop_invariants off
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u8* obj)
 {
     extern f32 gMapSavedPlayerOffsetX;
@@ -2358,9 +2270,8 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
         prevSphere += 0x10;
     }
 }
-
 #pragma opt_loop_invariants reset
-#pragma opt_loop_invariants on
+
 
 extern f32 lbl_803DE880;
 
@@ -2454,9 +2365,6 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
     outPos[2] *= s;
 }
 
-#pragma dont_inline reset
-#pragma dont_inline on
-#pragma opt_common_subs reset
 #pragma opt_common_subs off
 void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
 {
@@ -2487,12 +2395,9 @@ void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
     }
     return buf;
 }
-
-#pragma dont_inline reset
-#pragma dont_inline off
 #pragma opt_common_subs reset
-#pragma opt_common_subs on
-#pragma optimization_level 1
+
+#pragma dont_inline off
 void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
 {
     int tmp;
@@ -2528,13 +2433,6 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
     }
     return animLoadFromTable((u8*)hdr, id, (s16)b, bufout);
 }
-#pragma dont_inline reset
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-#pragma optimization_level reset
-#pragma ppc_unroll_factor_limit 100
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
 void* fn_80028354(u8* modelFile, int index)
 {
     return ((ModelFileHeader*)modelFile)->collisionTriangles + index * 8;
@@ -2672,7 +2570,7 @@ void ObjModel_ToggleMatrixBuffer(u8* model)
 /* Per-bone delta-transform opcode bits: a set bit means the X/Y/Z
    component is present (as an s16) in the stream, else it is 0. */
 
-/* Hand-written assembly in the retail game: modelBoneTransforms_next is a
+/* Hand-written assembly: modelBoneTransforms_next is a
    private subroutine of modelApplyBoneTransform with a custom calling
    convention no C signature can express -- it takes the delta-stream cursor
    in r20 (advanced in place), returns the unpacked x/y/z deltas in
@@ -2708,7 +2606,6 @@ ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int r
 }
 
 u8 gModelJointScratchBuffer[0x140];
-#pragma dont_inline off
 void ObjModel_LoadRenderOpTextures(u8* model, int arg)
 {
     int i;
@@ -2726,9 +2623,6 @@ void ObjModel_LoadRenderOpTextures(u8* model, int arg)
 }
 
 
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 
 void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
 {
@@ -2787,8 +2681,6 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
 }
 
 
-#pragma opt_common_subs on
-#pragma opt_loop_invariants on
 
 extern s16 gModelRootRotX;
 extern s16 gModelRootRotY;
@@ -2843,11 +2735,6 @@ void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
     }
 }
 
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-#pragma ppc_unroll_factor_limit 100
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
 void ObjModel_ResolveRenderOpTextures(u8* m)
 {
     int j, k;
@@ -2920,7 +2807,6 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
         }
     }
 }
-#pragma dont_inline reset
 #pragma dont_inline on
 void ObjModel_RelocateAnimData(u8* m, u8* dst)
 {
@@ -2953,7 +2839,6 @@ void ObjModel_RelocateAnimData(u8* m, u8* dst)
 }
 
 
-#pragma dont_inline reset
 #pragma dont_inline off
 
 
@@ -3052,7 +2937,6 @@ void ObjModel_RelocateModelData(u8* m)
     }
 }
 
-#pragma dont_inline reset
 #pragma dont_inline on
 void* ObjModel_LoadModelData(int id)
 {
@@ -3086,7 +2970,6 @@ void* ObjModel_LoadModelData(int id)
 }
 
 
-#pragma dont_inline reset
 #pragma dont_inline off
 
 
@@ -3227,29 +3110,11 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
 
 
 
-#pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 int return0_8002969C(void) { return 0x0; }
 
 
-#pragma dont_inline off
-#pragma opt_common_subs on
-#pragma opt_loop_invariants on
-#pragma peephole on
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
-#pragma scheduling on
 
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-#pragma peephole reset
 #pragma peephole off
-#pragma ppc_unroll_factor_limit 100
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
-#pragma scheduling reset
 #pragma scheduling off
 
 
@@ -3265,7 +3130,6 @@ void ObjModel_InitResourceCaches(void)
     loadModelAndAnimTabs();
 }
 
-#pragma dont_inline reset
 #pragma dont_inline on
 void ObjModel_InitScratchBuffers(void)
 {
@@ -3283,7 +3147,6 @@ void ObjModel_InitScratchBuffers(void)
     gModelCacheBuffersB[5] = c + 0x3800;
 }
 
-#pragma dont_inline reset
 #pragma dont_inline off
 
 void ObjModel_InitRenderBuffers(void)
@@ -3299,11 +3162,6 @@ void ObjModel_InitRenderBuffers(void)
 }
 
 
-#pragma opt_common_subs on
-#pragma opt_loop_invariants on
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 
 void ObjModel_BlendNormalStream(u8* mtxs, u8* hdr, u8* data, u8** outs, int quad)
 {
@@ -3833,12 +3691,6 @@ lbl_TQVL_loop:
     addi    r1,r1,160
     blr
 }
-#pragma dont_inline reset
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-#pragma ppc_unroll_factor_limit 100
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
 
 asm
 void setGQR6(register u32 v)
@@ -3860,18 +3712,12 @@ void setGQR7Packed(int a, int b, int c, int d)
 {
     setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
 }
-#pragma dont_inline reset
 #pragma dont_inline off
 
 void setGQR6_2(int a, int b, int c, int d)
 {
     setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
 }
-#pragma opt_common_subs on
-#pragma opt_loop_invariants on
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize)
 {
     ModelRenderInstrsState dstState;
@@ -3923,19 +3769,7 @@ void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize)
 }
 
 
-#pragma peephole reset
-#pragma peephole on
-#pragma scheduling reset
-#pragma scheduling on
 
-#pragma dont_inline reset
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-#pragma peephole reset
-#pragma ppc_unroll_factor_limit 100
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
-#pragma scheduling reset
 int return0_8002A5B8(void) { return 0x0; }
 #pragma peephole off
 #pragma scheduling off

@@ -384,7 +384,6 @@ int fn_80136A40(int unused, int c)
 
 #define debugPrintDrawGlyph fn_80136A40
 
-#pragma optimization_level 3
 int debugPrintDrawRecord(int color, u8* p)
 {
     u8* start = p;
@@ -610,7 +609,6 @@ int debugPrintDrawRecord(int color, u8* p)
     return p - start;
 }
 #undef debugPrintDrawGlyph
-#pragma optimization_level 1
 #pragma peephole on
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
@@ -652,7 +650,6 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
     debugLogEnd = termCursor + 1;
     *termCursor = term;
 }
-#pragma optimization_level reset
 #pragma peephole off
 void debugPrintReset(void)
 {
@@ -1549,7 +1546,6 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
         ((TrickyImpressState*)b)->flags54 = ((TrickyImpressState*)b)->flags54 & ~0x1000LL;
     }
 }
-#pragma optimization_level 1
 int trickySelectQueuedCommandTarget(u8* state, int commandType)
 {
     f32 bestPriorityDist;

@@ -520,7 +520,6 @@ extern inline float sqrtf__inline(float x)
 
 
 
-#pragma dont_inline reset
 
 /* CloudSpawnParams.flags58 / NewCloud.flags144A - spawn command / trigger bits */
 #define NEWCLOUD_CMD_SPIN       0x1  /* enable cloud spin */
@@ -607,7 +606,6 @@ void snowCloudBuildBoxVerts(f32* out, f32 height, f32 scale)
     out[22] = zero;
     out[23] = edge;
 }
-#pragma dont_inline reset
 #pragma dont_inline off
 void mm_free_(void* ptr)
 {
@@ -722,7 +720,6 @@ void snowCloudInitFlakes(f32* buf, f32 a, f32 b, int cloudId)
     }
     ((NewCloud*)gNewClouds[i])->waveWriteIdx = ((NewCloud*)gNewClouds[i])->waveWriteIdx + 0xfa0;
 }
-#pragma dont_inline reset
 #pragma dont_inline on
 void snowFreeSnowCloud(int cloudId)
 {
@@ -768,7 +765,6 @@ void snowFreeSnowCloud(int cloudId)
 
 void* gNewClouds[8];
 void snowFreeSnowCloud(int index);
-#pragma dont_inline reset
 #pragma dont_inline off
 
 void dll_07_func0A_nop(void)
@@ -777,8 +773,6 @@ void dll_07_func0A_nop(void)
 
 WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
 #pragma opt_common_subs off
-#pragma opt_dead_assignments off
-#pragma opt_loop_invariants off
 
 extern const SnowFlakeUVs lbl_802C1FCC;
 
@@ -999,8 +993,6 @@ int snowPrintSnowCloud(int arg, int cloudId)
 
 
 #pragma opt_common_subs reset
-#pragma opt_dead_assignments reset
-#pragma opt_loop_invariants reset
 
 
 
@@ -1609,14 +1601,12 @@ void dll_07_func09(void)
     Camera_GetCurrentViewSlot();
     randomGetRange(5, 5);
 }
-#pragma dont_inline reset
 #pragma dont_inline on
 
 
 
 
 
-#pragma dont_inline reset
 #pragma dont_inline off
 
 int dll_07_func08(void)
@@ -1992,7 +1982,6 @@ extern void fn_800790AC(void);
 
 
 
-#pragma dont_inline reset
 #pragma dont_inline on
 #pragma opt_propagation reset
 void newclouds_killSnowCloud(int cloudId, int flag)
@@ -2036,7 +2025,6 @@ void newclouds_killSnowCloud(int cloudId, int flag)
     ((NewCloud*)gNewClouds[i])->flakeDrainRate =
         -((f32)flag / (f32)((NewCloud*)gNewClouds[i])->flakeCount);
 }
-#pragma dont_inline reset
 #pragma dont_inline off
 
 void newclouds_onMapSetup(void)
