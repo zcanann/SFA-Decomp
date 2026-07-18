@@ -22,6 +22,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
+#include "main/dll/objfsa.h"
 
 /* A plain XYZ point; recovered file-locally for the patch-target scratch slot
  * at TrickyState+0xD4 (an unnamed pad region in tricky_state.h). */
@@ -90,10 +91,7 @@ extern int trickyMove(u8* obj, void* moveState);
 extern void trickyRankLinkedRouteCandidates(u8* obj, u8* flags, int walkGroup, int* routes);
 extern int trickyFindReachableRouteIndex(u8* state, int* routes, u8* flags, u16 group);
 extern void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue);
-extern int fn_800DA980(RomCurveWalker* route, void* fromNode, void* toNode, void* targetNode);
-extern void RomCurve_stepClamped(RomCurveWalker* state, f32 dt);
 extern void trickyAdvanceRouteTargetAhead(u8* obj, RomCurveWalker* route, f32 speed);
-extern int curveFn_800da23c(RomCurveWalker* route, void* targetNode);
 extern void fn_800D9F38(RomCurveWalker* route);
 extern void fn_800D9EE8(RomCurveWalker* route);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);

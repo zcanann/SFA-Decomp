@@ -50,6 +50,8 @@
 #include "main/gamebits_api.h"
 #include "main/objprint_sound_api.h"
 #include "track/intersect_screen_api.h"
+#include "track/intersect_api.h"
+#include "main/dll/dll_0019_dll19func0.h"
 
 extern u8 debugLogBuffer[];
 
@@ -194,11 +196,9 @@ extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, GXColor* color);
 extern void OSResumeThread(u8* thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
-extern int dll_19_func1B(GameObject* p);
 #define Obj_SetModelColorOverrideRecursivePromoted(obj, red, green, blue, alpha, enabled)                         \
     ((void (*)(GameObject*, int, int, int, int, int))Obj_SetModelColorOverrideRecursive)(                        \
         (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
-extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 extern void gxDebugTextureFn_80078c1c(void);
 extern void GXSetTevColor(int id, GXColor* color);
 extern int OSDisableInterrupts(void);

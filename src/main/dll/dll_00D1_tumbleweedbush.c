@@ -38,6 +38,7 @@
 #include "main/vecmath_distance_api.h"
 #include "main/vecmath.h"
 #include "main/obj_group.h"
+#include "main/track_dolphin_api.h"
 
 typedef struct TumbleweedBushState
 {
@@ -79,7 +80,6 @@ extern u8 gTumbleweedBushPieceOffsetTable[];
 extern void* memcpy(void* dst, const void* src, int n);
 u8 gTumbleweedBushHitCooldownState;
 
-extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 s8 fn_801631C8(int* obj)
 {

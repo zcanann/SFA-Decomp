@@ -32,6 +32,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 #include "main/dll/viewfinder.h"
 #include "main/dll/dll_000B_dll0b.h"
+#include "track/intersect_api.h"
 
 int lbl_803DD278;
 int lbl_803DD274;
@@ -159,7 +160,6 @@ extern const f32 gExpgfxU16ToUnitScale;
 extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void setupReflectionIndirectTev(u32 flag);
 extern void fn_80079180(void);
-extern void fn_8007D670(void);
 #define setupAlphaTextureTev fn_80079180
 #define setupExpgfxRenderState fn_8007D670
 #define applyDepthModeOverrideViewport fn_8000F83C
