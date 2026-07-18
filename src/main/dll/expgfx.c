@@ -1815,336 +1815,331 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         tabEntry = &tabBase[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
         sourceObject = (ExpgfxSourceObject*)tabEntry->sourceId;
         texture = tabEntry->resource;
-        if ((1U << slotIndex & *activeMasks) == 0)
-            goto next_slot;
-        state = slot->stateBits.value;
-        if (((state >> 2) & 3) != 0)
-            goto next_slot;
-        if (((state >> 1) & 1) == 0)
-            goto next_slot;
-        if (slot->sequenceId == EXPGFX_INVALID_SEQUENCE_ID)
-            goto next_slot;
-        if ((state & 1) != 0)
-            goto next_slot;
-
-        lifeFraction = lbl_803DF358 * (f32)slot->lifetimeFrameLimit;
-        behaviorFlags = slot->behaviorFlags;
-        if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_TO_OPAQUE) != 0)
+        if ((1U << slotIndex & *activeMasks) != 0)
         {
-            f32 ratio = (f32)slot->lifetimeFrame / (f32)slot->lifetimeFrameLimit;
-            if (ratio < lbl_803DF35C)
+            state = slot->stateBits.value;
+            if (((state >> 2) & 3) == 0 && ((state >> 1) & 1) != 0 &&
+                slot->sequenceId != EXPGFX_INVALID_SEQUENCE_ID && (state & 1) == 0)
             {
-                ratio = lbl_803DF35C;
-            }
-            else if (ratio > lbl_803DF354)
-            {
-                ratio = lbl_803DF354;
-            }
-            {
-                u32 baseAlpha = slot->initialAlpha;
-                alpha = (int)((f32)((s32)baseAlpha - 0xff) * ratio + (f32)baseAlpha);
-            }
-        }
-        else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_OUT) != 0)
-        {
-            f32 ratio = (f32)slot->lifetimeFrame / (f32)slot->lifetimeFrameLimit;
-            if (ratio < lbl_803DF35C)
-            {
-                ratio = lbl_803DF35C;
-            }
-            else if (ratio > lbl_803DF354)
-            {
-                ratio = lbl_803DF354;
-            }
-            alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
-        }
-        else if ((slot->renderFlags & EXPGFX_RENDER_ALPHA_FADE_IN) != 0 &&
-                 (f32)slot->lifetimeFrame <= lifeFraction)
-        {
-            f32 ratio = (f32)slot->lifetimeFrame / lifeFraction;
-            if (ratio < lbl_803DF35C)
-            {
-                ratio = lbl_803DF35C;
-            }
-            else if (ratio > lbl_803DF354)
-            {
-                ratio = lbl_803DF354;
-            }
-            alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
-        }
-        else
-        {
-            u32 pulse = behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE;
-            if (pulse != 0 && (f32)slot->lifetimeFrame <= lifeFraction)
-            {
-                f32 ratio = (f32)slot->lifetimeFrame / lifeFraction;
-                if (ratio < lbl_803DF35C)
+                lifeFraction = lbl_803DF358 * (f32)slot->lifetimeFrameLimit;
+                behaviorFlags = slot->behaviorFlags;
+                if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_TO_OPAQUE) != 0)
                 {
-                    ratio = lbl_803DF35C;
-                }
-                else if (ratio > lbl_803DF354)
-                {
-                    ratio = lbl_803DF354;
-                }
-                alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
-            }
-            else if (pulse != 0)
-            {
-                f32 ratio = (lifeFraction - ((f32)slot->lifetimeFrame - lifeFraction)) / lifeFraction;
-                if (ratio < lbl_803DF35C)
-                {
-                    ratio = lbl_803DF35C;
-                }
-                else if (ratio > lbl_803DF354)
-                {
-                    ratio = lbl_803DF354;
-                }
-                alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
-            }
-            else
-            {
-                alpha = slot->initialAlpha;
-            }
-        }
-
-        angleB = 0;
-        angleA = angleB;
-        sx = slot->renderX;
-        sy = slot->renderY;
-        sz = slot->renderZ;
-        scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)slot->scaleCurrent;
-        if ((behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && hudHiddenFrameCount == 0)
-        {
-            f32 base = lbl_803DF358 * scaleSize;
-            f32 rnd = (f32)randomGetRange(1, 10);
-            scaleFactor = base + base / rnd;
-        }
-        else
-        {
-            scaleFactor = scaleSize;
-        }
-
-        {
-            u32 behavior = slot->behaviorFlags;
-            if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0)
-            {
-                angleB = 0;
-                if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_A) != 0)
-                {
-                    angleA = angleB;
-                }
-                else if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH) != 0)
-                {
-                    if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_SOURCE_OBJECT) != 0 && sourceObject != NULL)
+                    f32 ratio = (f32)slot->lifetimeFrame / (f32)slot->lifetimeFrameLimit;
+                    if (ratio < lbl_803DF35C)
                     {
-                        aimDelta[0] = cameraSlot->x - sourceObject->worldPosX;
-                        aimDelta[1] = cameraSlot->y - sourceObject->worldPosY;
-                        aimDelta[2] = cameraSlot->z - sourceObject->worldPosZ;
-                        PSVECNormalize((Vec*)aimDelta, (Vec*)aimDelta);
+                        ratio = lbl_803DF35C;
+                    }
+                    else if (ratio > lbl_803DF354)
+                    {
+                        ratio = lbl_803DF354;
+                    }
+                    {
+                        u32 baseAlpha = slot->initialAlpha;
+                        alpha = (int)((f32)((s32)baseAlpha - 0xff) * ratio + (f32)baseAlpha);
+                    }
+                }
+                else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_OUT) != 0)
+                {
+                    f32 ratio = (f32)slot->lifetimeFrame / (f32)slot->lifetimeFrameLimit;
+                    if (ratio < lbl_803DF35C)
+                    {
+                        ratio = lbl_803DF35C;
+                    }
+                    else if (ratio > lbl_803DF354)
+                    {
+                        ratio = lbl_803DF354;
+                    }
+                    alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
+                }
+                else if ((slot->renderFlags & EXPGFX_RENDER_ALPHA_FADE_IN) != 0 &&
+                         (f32)slot->lifetimeFrame <= lifeFraction)
+                {
+                    f32 ratio = (f32)slot->lifetimeFrame / lifeFraction;
+                    if (ratio < lbl_803DF35C)
+                    {
+                        ratio = lbl_803DF35C;
+                    }
+                    else if (ratio > lbl_803DF354)
+                    {
+                        ratio = lbl_803DF354;
+                    }
+                    alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
+                }
+                else
+                {
+                    u32 pulse = behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE;
+                    if (pulse != 0 && (f32)slot->lifetimeFrame <= lifeFraction)
+                    {
+                        f32 ratio = (f32)slot->lifetimeFrame / lifeFraction;
+                        if (ratio < lbl_803DF35C)
                         {
-                            f32 absX = __fabsf(aimDelta[0]);
-                            f32 absZ = __fabsf(aimDelta[2]);
-                            if (absX > absZ)
-                            {
-                                getAngle(absX, aimDelta[1]);
-                                angleB = (s16)(getAngle(absX, aimDelta[1]) - 0x3800);
-                            }
-                            else
-                            {
-                                getAngle(absZ, aimDelta[1]);
-                                angleB = (s16)(getAngle(absZ, aimDelta[1]) - 0x3800);
-                            }
-                            angleA = (s16)getAngle(aimDelta[0], aimDelta[2]);
+                            ratio = lbl_803DF35C;
                         }
+                        else if (ratio > lbl_803DF354)
+                        {
+                            ratio = lbl_803DF354;
+                        }
+                        alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
+                    }
+                    else if (pulse != 0)
+                    {
+                        f32 ratio = (lifeFraction - ((f32)slot->lifetimeFrame - lifeFraction)) / lifeFraction;
+                        if (ratio < lbl_803DF35C)
+                        {
+                            ratio = lbl_803DF35C;
+                        }
+                        else if (ratio > lbl_803DF354)
+                        {
+                            ratio = lbl_803DF354;
+                        }
+                        alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
                     }
                     else
                     {
-                        angleA = (s16)(0x10000 - cameraSlot->yaw);
-                        angleB = cameraSlot->pitch;
+                        alpha = slot->initialAlpha;
+                    }
+                }
+
+                angleB = 0;
+                angleA = angleB;
+                sx = slot->renderX;
+                sy = slot->renderY;
+                sz = slot->renderZ;
+                scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)slot->scaleCurrent;
+                if ((behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && hudHiddenFrameCount == 0)
+                {
+                    f32 base = lbl_803DF358 * scaleSize;
+                    f32 rnd = (f32)randomGetRange(1, 10);
+                    scaleFactor = base + base / rnd;
+                }
+                else
+                {
+                    scaleFactor = scaleSize;
+                }
+
+                {
+                    u32 behavior = slot->behaviorFlags;
+                    if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0)
+                    {
+                        angleB = 0;
+                        if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_A) != 0)
+                        {
+                            angleA = angleB;
+                        }
+                        else if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH) != 0)
+                        {
+                            if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_SOURCE_OBJECT) != 0 && sourceObject != NULL)
+                            {
+                                aimDelta[0] = cameraSlot->x - sourceObject->worldPosX;
+                                aimDelta[1] = cameraSlot->y - sourceObject->worldPosY;
+                                aimDelta[2] = cameraSlot->z - sourceObject->worldPosZ;
+                                PSVECNormalize((Vec*)aimDelta, (Vec*)aimDelta);
+                                {
+                                    f32 absX = __fabsf(aimDelta[0]);
+                                    f32 absZ = __fabsf(aimDelta[2]);
+                                    if (absX > absZ)
+                                    {
+                                        getAngle(absX, aimDelta[1]);
+                                        angleB = (s16)(getAngle(absX, aimDelta[1]) - 0x3800);
+                                    }
+                                    else
+                                    {
+                                        getAngle(absZ, aimDelta[1]);
+                                        angleB = (s16)(getAngle(absZ, aimDelta[1]) - 0x3800);
+                                    }
+                                    angleA = (s16)getAngle(aimDelta[0], aimDelta[2]);
+                                }
+                            }
+                            else
+                            {
+                                angleA = (s16)(0x10000 - cameraSlot->yaw);
+                                angleB = cameraSlot->pitch;
+                            }
+                        }
+                        else
+                        {
+                            angleA = (s16)(0x10000 - cameraSlot->yaw);
+                        }
+                    }
+                }
+
+                angleToVec2((u16)angleA, &cosA, &sinA);
+                angleToVec2((u16)angleB, &cosB, &sinB);
+                if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_A) != 0)
+                {
+                    angleToVec2((u16)(gExpgfxPhaseAngleA + (((u32)slot << 8) & 0xFF00)), &sinC, &cosC);
+                }
+                else if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_B) != 0)
+                {
+                    angleToVec2((u16)(gExpgfxPhaseAngleB + (((u32)slot << 8) & 0xFF00)), &sinC, &cosC);
+                }
+                if (sourceObject != NULL && (slot->renderFlags & EXPGFX_RENDER_MODULATE_ALPHA_SOURCE) != 0)
+                {
+                    alpha = (alpha * sourceObject->alpha) >> 8;
+                }
+
+                if (currentTexture != texture)
+                {
+                    selectTexture((Texture*)texture, 0);
+                    currentTexture = texture;
+                }
+
+                {
+                    u32 flags = slot->renderFlags;
+                    if ((flags & EXPGFX_RENDER_ALPHA_TEXTURE_SETUP) != 0)
+                    {
+                        if (alphaMode != 0)
+                        {
+                            textureSetupFn_800799c0();
+                            fn_80079180();
+                            textRenderSetupFn_80079804();
+                            alphaMode = 0;
+                        }
+                    }
+                    else if ((flags & EXPGFX_RENDER_ALT_ALPHA_SETUP) != 0)
+                    {
+                        if (!(alphaMode == 4 && ((trackedFlags != flags) & EXPGFX_RENDER_OVERRIDE_COLORS) == 0))
+                        {
+                            int masked;
+                            setupReflectionIndirectTev(flags & EXPGFX_RENDER_OVERRIDE_COLORS);
+                            alphaMode = 4;
+                            masked = slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS;
+                            trackedFlags = masked;
+                        }
+                    }
+                    else if (alphaMode != 1)
+                    {
+                        textureSetupFn_800799c0();
+                        geomDrawFn_800796f0();
+                        textRenderSetupFn_80079804();
+                        alphaMode = 1;
+                    }
+                }
+                if ((slot->renderFlags & EXPGFX_RENDER_DEPTH_BLEND_MODE) != 0)
+                {
+                    if (blendMode != 0)
+                    {
+                        Camera_ApplyFullViewport();
+                        gxSetZMode_(1, 3, 1);
+                        GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+                        gxSetPeControl_ZCompLoc_(0);
+                        GXSetAlphaCompare(GX_GREATER, 0xfe, GX_AOP_AND, GX_GREATER, 0xfe);
+                        blendMode = 0;
+                        zMode = 0;
+                        zCompLoc = 0;
                     }
                 }
                 else
                 {
-                    angleA = (s16)(0x10000 - cameraSlot->yaw);
+                    if (zCompLoc != 1)
+                    {
+                        gxSetPeControl_ZCompLoc_(1);
+                        GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                        zCompLoc = 1;
+                    }
+                    if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_DEPTH_MODE_OVERRIDE) != 0)
+                    {
+                        if (zMode != 1)
+                        {
+                            fn_8000F83C();
+                            gxSetZMode_(1, 3, 0);
+                            zMode = 1;
+                        }
+                    }
+                    else if (zMode != 2)
+                    {
+                        Camera_ApplyFullViewport();
+                        gxSetZMode_(1, 3, 0);
+                        zMode = 2;
+                    }
+                    if ((slot->renderFlags & EXPGFX_RENDER_BLEND_ADDITIVE) != 0)
+                    {
+                        if (blendMode != 1)
+                        {
+                            GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
+                            blendMode = 1;
+                        }
+                    }
+                    else if (blendMode != 2)
+                    {
+                        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
+                        blendMode = 2;
+                    }
                 }
-            }
-        }
 
-        angleToVec2((u16)angleA, &cosA, &sinA);
-        angleToVec2((u16)angleB, &cosB, &sinB);
-        if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_A) != 0)
-        {
-            angleToVec2((u16)(gExpgfxPhaseAngleA + (((u32)slot << 8) & 0xFF00)), &sinC, &cosC);
-        }
-        else if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_B) != 0)
-        {
-            angleToVec2((u16)(gExpgfxPhaseAngleB + (((u32)slot << 8) & 0xFF00)), &sinC, &cosC);
-        }
-        if (sourceObject != NULL && (slot->renderFlags & EXPGFX_RENDER_MODULATE_ALPHA_SOURCE) != 0)
-        {
-            alpha = (alpha * sourceObject->alpha) >> 8;
-        }
-
-        if (currentTexture != texture)
-        {
-            selectTexture((Texture*)texture, 0);
-            currentTexture = texture;
-        }
-
-        {
-            u32 flags = slot->renderFlags;
-            if ((flags & EXPGFX_RENDER_ALPHA_TEXTURE_SETUP) != 0)
-            {
-                if (alphaMode != 0)
+                sx -= playerMapOffsetX;
+                sz -= playerMapOffsetZ;
+                quad = (ExpgfxQuadVertex*)slot;
+                vertexStream = quad;
+                GXBegin(GX_QUADS, GX_VTXFMT4, 4);
+                for (vertexIndex = 0; vertexIndex < 4; vertexIndex++)
                 {
-                    textureSetupFn_800799c0();
-                    fn_80079180();
-                    textRenderSetupFn_80079804();
-                    alphaMode = 0;
+                    px = scaleFactor * __OSs16tof32(&vertexStream->x);
+                    py = scaleFactor * __OSs16tof32(&vertexStream->y);
+                    pz = scaleFactor * __OSs16tof32(&vertexStream->z);
+                    if ((slot->renderFlags & (EXPGFX_RENDER_PHASE_ROTATE_A | EXPGFX_RENDER_PHASE_ROTATE_B)) != 0)
+                    {
+                        cC = cosC;
+                        sC = sinC;
+                        nx = px * cC - py * sC;
+                        ny = px * sC + py * cC;
+                        cA = cosA;
+                        sB = sinB;
+                        pz_sinB = pz * sB;
+                        sA = sinA;
+                        cB = cosB;
+                        ay_cosB = ny * cB;
+                        worldX = sx + (nx * sA + cA * ay_cosB + cA * pz_sinB);
+                        worldY = sy + (ny * sB + (-pz) * cB);
+                        worldZ = sz + ((-nx) * cA + sA * ay_cosB + sA * pz_sinB);
+                    }
+                    else
+                    {
+                        cA = cosA;
+                        sB = sinB;
+                        pz_sinB = pz * sB;
+                        sA = sinA;
+                        cB = cosB;
+                        ay_cosB = py * cB;
+                        worldX = sx + (px * sA + cA * ay_cosB + cA * pz_sinB);
+                        worldY = sy + (py * sB + (-pz) * cB);
+                        worldZ = sz + ((-px) * cA + sA * ay_cosB + sA * pz_sinB);
+                    }
+                    viewProjW = viewMatrix[2][0] * worldX + viewMatrix[2][1] * worldY + viewMatrix[2][2] * worldZ +
+                                viewMatrix[2][3];
+                    if (viewProjW > lbl_803DB790)
+                    {
+                        alpha = (int)((f32)alpha * ((-viewProjW) - lbl_803DF414) / ((-lbl_803DB790) - lbl_803DF414));
+                    }
+                    GXWGFifo.f32 = worldX;
+                    GXWGFifo.f32 = worldY;
+                    GXWGFifo.f32 = worldZ;
+                    {
+                        u8 colorR;
+                        u8 colorG;
+                        u8 colorB;
+                        colorB = quad->colorB;
+                        colorG = quad->colorG;
+                        colorR = quad->colorR;
+                        GXWGFifo.u8 = colorR;
+                        GXWGFifo.u8 = colorG;
+                        GXWGFifo.u8 = colorB;
+                    }
+                    GXWGFifo.u8 = alpha;
+                    {
+                        s16 texU;
+                        s16 texV;
+                        texV = vertexStream->texT;
+                        texU = vertexStream->texS;
+                        GXWGFifo.s16 = texU;
+                        GXWGFifo.s16 = texV;
+                    }
+                    vertexStream++;
                 }
-            }
-            else if ((flags & EXPGFX_RENDER_ALT_ALPHA_SETUP) != 0)
-            {
-                if (!(alphaMode == 4 && ((trackedFlags != flags) & EXPGFX_RENDER_OVERRIDE_COLORS) == 0))
-                {
-                    int masked;
-                    setupReflectionIndirectTev(flags & EXPGFX_RENDER_OVERRIDE_COLORS);
-                    alphaMode = 4;
-                    masked = slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS;
-                    trackedFlags = masked;
-                }
-            }
-            else if (alphaMode != 1)
-            {
-                textureSetupFn_800799c0();
-                geomDrawFn_800796f0();
-                textRenderSetupFn_80079804();
-                alphaMode = 1;
-            }
-        }
-        if ((slot->renderFlags & EXPGFX_RENDER_DEPTH_BLEND_MODE) != 0)
-        {
-            if (blendMode != 0)
-            {
-                Camera_ApplyFullViewport();
-                gxSetZMode_(1, 3, 1);
-                GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-                gxSetPeControl_ZCompLoc_(0);
-                GXSetAlphaCompare(GX_GREATER, 0xfe, GX_AOP_AND, GX_GREATER, 0xfe);
-                blendMode = 0;
-                zMode = 0;
-                zCompLoc = 0;
-            }
-        }
-        else
-        {
-            if (zCompLoc != 1)
-            {
-                gxSetPeControl_ZCompLoc_(1);
-                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-                zCompLoc = 1;
-            }
-            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_DEPTH_MODE_OVERRIDE) != 0)
-            {
-                if (zMode != 1)
-                {
-                    fn_8000F83C();
-                    gxSetZMode_(1, 3, 0);
-                    zMode = 1;
-                }
-            }
-            else if (zMode != 2)
-            {
-                Camera_ApplyFullViewport();
-                gxSetZMode_(1, 3, 0);
-                zMode = 2;
-            }
-            if ((slot->renderFlags & EXPGFX_RENDER_BLEND_ADDITIVE) != 0)
-            {
-                if (blendMode != 1)
-                {
-                    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
-                    blendMode = 1;
-                }
-            }
-            else if (blendMode != 2)
-            {
-                GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-                blendMode = 2;
             }
         }
 
-        sx -= playerMapOffsetX;
-        sz -= playerMapOffsetZ;
-        quad = (ExpgfxQuadVertex*)slot;
-        vertexStream = quad;
-        GXBegin(GX_QUADS, GX_VTXFMT4, 4);
-        for (vertexIndex = 0; vertexIndex < 4; vertexIndex++)
-        {
-            px = scaleFactor * __OSs16tof32(&vertexStream->x);
-            py = scaleFactor * __OSs16tof32(&vertexStream->y);
-            pz = scaleFactor * __OSs16tof32(&vertexStream->z);
-            if ((slot->renderFlags & (EXPGFX_RENDER_PHASE_ROTATE_A | EXPGFX_RENDER_PHASE_ROTATE_B)) != 0)
-            {
-                cC = cosC;
-                sC = sinC;
-                nx = px * cC - py * sC;
-                ny = px * sC + py * cC;
-                cA = cosA;
-                sB = sinB;
-                pz_sinB = pz * sB;
-                sA = sinA;
-                cB = cosB;
-                ay_cosB = ny * cB;
-                worldX = sx + (nx * sA + cA * ay_cosB + cA * pz_sinB);
-                worldY = sy + (ny * sB + (-pz) * cB);
-                worldZ = sz + ((-nx) * cA + sA * ay_cosB + sA * pz_sinB);
-            }
-            else
-            {
-                cA = cosA;
-                sB = sinB;
-                pz_sinB = pz * sB;
-                sA = sinA;
-                cB = cosB;
-                ay_cosB = py * cB;
-                worldX = sx + (px * sA + cA * ay_cosB + cA * pz_sinB);
-                worldY = sy + (py * sB + (-pz) * cB);
-                worldZ = sz + ((-px) * cA + sA * ay_cosB + sA * pz_sinB);
-            }
-            viewProjW = viewMatrix[2][0] * worldX + viewMatrix[2][1] * worldY + viewMatrix[2][2] * worldZ +
-                        viewMatrix[2][3];
-            if (viewProjW > lbl_803DB790)
-            {
-                alpha = (int)((f32)alpha * ((-viewProjW) - lbl_803DF414) / ((-lbl_803DB790) - lbl_803DF414));
-            }
-            GXWGFifo.f32 = worldX;
-            GXWGFifo.f32 = worldY;
-            GXWGFifo.f32 = worldZ;
-            {
-                u8 colorR;
-                u8 colorG;
-                u8 colorB;
-                colorB = quad->colorB;
-                colorG = quad->colorG;
-                colorR = quad->colorR;
-                GXWGFifo.u8 = colorR;
-                GXWGFifo.u8 = colorG;
-                GXWGFifo.u8 = colorB;
-            }
-            GXWGFifo.u8 = alpha;
-            {
-                s16 texU;
-                s16 texV;
-                texV = vertexStream->texT;
-                texU = vertexStream->texS;
-                GXWGFifo.s16 = texU;
-                GXWGFifo.s16 = texV;
-            }
-            vertexStream++;
-        }
-
-    next_slot:
         slotIndex++;
     } while (slotIndex < EXPGFX_SLOTS_PER_POOL);
 
