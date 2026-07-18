@@ -46,7 +46,6 @@ typedef struct DfpTargetBlockPartfxArgs
 f32 gTargetBlockHomeZ;
 f32 gTargetBlockHomeX;
 extern s32 gTargetBlockHomePos[];
-void dfptargetblock_initialise(void);
 void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints);
 
 
