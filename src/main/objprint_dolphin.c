@@ -132,7 +132,6 @@ extern s32 gObjLevelLockSlots;
 extern volatile int lbl_803DCC80;
 extern f32 lbl_803DEA04;
 extern const f32 lbl_803DEA1C;
-extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
 extern void GXLoadPosMtxImm(f32* m, int id);
 typedef struct
 {
@@ -188,8 +187,6 @@ extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetNumTevStages(u8 nStages);
 extern void GXSetTevOrder(int stage, int coord, int map, int color);
 extern void GXSetTevSwapMode(int stage, int ras, int tex);
-extern u32 lbl_803DB468;
-extern u32 lbl_803DB470;
 extern u8 lbl_803DCC3D;
 extern s32 lbl_803DCC44;
 extern u32 lbl_803DE9F0;
