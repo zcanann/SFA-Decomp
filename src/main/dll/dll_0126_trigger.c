@@ -152,7 +152,6 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
     u8 i = 0;
     u8 b;
     u8 sflags;
-    u8 doRun;
     u8 c;
     int t;
     int t2;
@@ -168,46 +167,60 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
     int id;
     GameObject** objects;
 
-    while (i < 8)
+    for (; i < 8; i++, p += 4)
     {
-        if (p[1] != 0 &&
-            ((sflags = *state, (sflags & TRIGGER_SFLAG_DISABLED) == 0) || (*p & TRIGGER_CMD_OVERRIDE_DISABLED) != 0))
+        if (p[1] == 0)
         {
-            doRun = 0;
-            b = *p;
-            if ((b & TRIGGER_CMD_UNCONDITIONAL) == 0)
+            continue;
+        }
+        sflags = *state;
+        if ((sflags & TRIGGER_SFLAG_DISABLED) != 0 && (*p & TRIGGER_CMD_OVERRIDE_DISABLED) == 0)
+        {
+            continue;
+        }
+        b = *p;
+        if ((b & TRIGGER_CMD_UNCONDITIONAL) == 0)
+        {
+            if ((s8)legCode == 1)
             {
-                if ((s8)legCode == 1)
+                if ((b & TRIGGER_CMD_ON_ENTER) == 0)
                 {
-                    if ((b & TRIGGER_CMD_ON_ENTER) != 0 &&
-                        ((sflags & TRIGGER_SFLAG_ENTERED) == 0 || (b & TRIGGER_CMD_ONCE_ENTER) != 0))
-                    {
-                        doRun = 1;
-                    }
+                    continue;
                 }
-                else if ((s8)legCode == -1 && (b & TRIGGER_CMD_ON_EXIT) != 0)
+                if ((sflags & TRIGGER_SFLAG_ENTERED) != 0 && (b & TRIGGER_CMD_ONCE_ENTER) == 0)
                 {
-                    if ((sflags & TRIGGER_SFLAG_EXITED) == 0 || (b & TRIGGER_CMD_ONCE_EXIT) != 0)
-                    {
-                        doRun = 1;
-                    }
-                }
-            }
-            else if ((b & TRIGGER_CMD_ON_ENTER) != 0)
-            {
-                if ((s8)legCode >= 0)
-                {
-                    doRun = 1;
+                    continue;
                 }
             }
-            else if ((b & TRIGGER_CMD_ON_EXIT) == 0 || (s8)legCode <= 0)
+            else if ((s8)legCode == -1)
             {
-                doRun = 1;
-            }
-            if (doRun)
-            {
-                switch (p[1])
+                if ((b & TRIGGER_CMD_ON_EXIT) == 0)
                 {
+                    continue;
+                }
+                if ((sflags & TRIGGER_SFLAG_EXITED) != 0 && (b & TRIGGER_CMD_ONCE_EXIT) == 0)
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                continue;
+            }
+        }
+        else if ((b & TRIGGER_CMD_ON_ENTER) != 0)
+        {
+            if ((s8)legCode < 0)
+            {
+                continue;
+            }
+        }
+        else if ((b & TRIGGER_CMD_ON_EXIT) != 0 && (s8)legCode > 0)
+        {
+            continue;
+        }
+        switch (p[1])
+        {
                 case 1:
                     switch (p[2])
                     {
@@ -672,10 +685,6 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     break;
                 }
-            }
-        }
-        i++;
-        p += 4;
     }
     if ((s8)legCode > 0)
     {
