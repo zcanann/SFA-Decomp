@@ -787,9 +787,6 @@ void ObjHits_AddContactObject(GameObject* obj, GameObject* contactObj)
     return;
 }
 
-int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume,
-                                       float* outHitPosX, float* outHitPosY, float* outHitPosZ);
-
 void ObjHitReact_UpdateResetObjects(void)
 {
     ObjAnimComponent* obj;
