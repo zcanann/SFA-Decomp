@@ -18,6 +18,7 @@
  * boss's cameraState byte to other DLLs; SB_Galleon_onSeqFree
  * latches the object's local position as the home position.
  */
+#include "main/dll/DB/DBprotection.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_play_api.h"
@@ -934,9 +935,9 @@ void DBprotection_updateEnvfxGameBits(u8* state)
     }
 }
 
-int DBprotection_getCameraState(int* obj)
+int DBprotection_getCameraState(GameObject* obj)
 {
-    return *(s8*)((char*)(int*)((GameObject*)obj)->extra + 0x70);
+    return *(s8*)((char*)(int*)obj->extra + 0x70);
 }
 
 void DBprotection_updateShield(int* obj)

@@ -108,7 +108,7 @@ void SB_Propeller_update(GameObject* obj)
     {
         Sfx_KeepAliveLoopedObjectSound((int)obj, SB_PROPELLER_SFX_LOOP);
     }
-    camC = DBprotection_getCameraState((int*)*(int*)&objAnim->parent);
+    camC = DBprotection_getCameraState((GameObject*)objAnim->parent);
     if ((camC < 2) && (state->health <= 0))
     {
         state->smokeTimer = state->smokeTimer - timeDelta;

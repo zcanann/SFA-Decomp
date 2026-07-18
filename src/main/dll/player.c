@@ -18,6 +18,7 @@
 #include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_01B5_lightfoot.h"
+#include "main/dll/DB/DBprotection.h"
 #include "main/dll/SB/dll_01E8_sbgalleon.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/CF/staffactivated_helpers.h"
@@ -4063,7 +4064,6 @@ typedef struct
     u8 valsB[5];
 } HitDesc;
 
-extern int DBprotection_getCameraState(void);
 extern f32 lbl_803E8160;
 
 
@@ -17524,7 +17524,7 @@ void playerDoHitDetection(int obj)
         }
         {
             GameObject* g = getSbGalleon();
-            if (g != NULL && DBprotection_getCameraState() == 2)
+            if (g != NULL && DBprotection_getCameraState(g) == 2)
             {
                 ((GameObject*)obj)->anim.modelState->overrideWorldPosX =
                     ((GameObject*)obj)->anim.localPosX - *(f32*)((char*)g + 0xc);

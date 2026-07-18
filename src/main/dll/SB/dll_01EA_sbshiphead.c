@@ -170,7 +170,7 @@ void SB_ShipHead_update(GameObject* obj)
     {
         return;
     }
-    camState = DBprotection_getCameraState((int*)getSbGalleon());
+    camState = DBprotection_getCameraState(getSbGalleon());
     if (camState == 2)
     {
         if (Vec_distance((void*)(player + 0x18), &object->anim.worldPosX) < gSbShipHeadHissSfxDistance)

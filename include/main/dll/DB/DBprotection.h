@@ -7,7 +7,7 @@ struct GameObject;
 
 void fn_801DFA28(struct GameObject *obj);
 void DBprotection_updateEnvfxGameBits(u8 *state);
-int DBprotection_getCameraState(int *obj);
+int DBprotection_getCameraState(struct GameObject *obj);
 void DBprotection_updateShield(int *obj);
 void SB_Galleon_onSeqFree(int *obj);
 

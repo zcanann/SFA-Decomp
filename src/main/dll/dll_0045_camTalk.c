@@ -11,6 +11,7 @@
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/player_api.h"
+#include "main/dll/DB/DBprotection.h"
 #include "main/dll/SB/dll_01E8_sbgalleon.h"
 
 CameraModeBikeState* gCamTalkBikeState;
@@ -37,7 +38,6 @@ __declspec(section ".sdata2") f32 lbl_803E17A8 = 0.2f;
 __declspec(section ".sdata2") f32 gCamTalkDefaultFollowDist = 5e+01f;
 __declspec(section ".sdata2") f32 lbl_803E17B0 = 25.0f;
 __declspec(section ".sdata2") f32 lbl_803E17B4 = 0.0625f;
-extern int DBprotection_getCameraState(GameObject* obj);
 void CameraModeBike_copyToCurrent(f32* inputs)
 {
     gCamTalkBikeState->turnInput = inputs[0];
