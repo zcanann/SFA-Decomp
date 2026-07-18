@@ -245,3 +245,13 @@ owner regression judgment). RECOMMEND: change mathSinf/mathCosf to `double math*
 math.h canonical form), rebuild tree, churn — keep only if net-positive across all callers. Likely a
 multi-fn win (every sin/cos-multiply caller) if the double signature is authentic. Flagging for owner
 (active signature-recovery phase, full-context) rather than risk a large net-regression from a lane.
+
+## CORRECTION: mathSinf double-return DISPROVEN by direct test (185 regressions) — mathSinf IS float
+Tested the mathSinf-returns-double hypothesis from the prior handoff empirically: changed
+`double mathSinf(float x)` (def trig.c + proto math_trig_api.h), rebuilt tree, churned. Result:
+3 ups / 185 DOWNS — fn_801FD6B4 itself dropped 99.357->95.202, and dozens of matched-100 callers
+broke (staffactivated_init 100->93.4, Sfx_RotateVectorByAngles 100->93.8, all effectN_func05 100->97.2,
+etc). mathSinf is AUTHENTICALLY FLOAT. Reverted. The fn_801FD6B4 frsp divergence has a DIFFERENT cause
+(not the return type) — the earlier codegen inference was wrong. Do NOT change mathSinf/mathCosf to
+double. (mathCosf-def was already known to match 100 as float in s_sin.c, corroborating.) Prior handoff
+entry retracted.
