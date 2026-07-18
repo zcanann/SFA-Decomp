@@ -1222,7 +1222,7 @@ void DR_CloudRunner_update(GameObject* obj)
     }
     dll_2E_func03(obj, (MoveLibState*)((char*)inner + 0x4c4));
     objAnimFn_80038f38IntStateLegacy(obj, (int)((char*)inner + 0x494));
-    fn_8003B500IntStateLegacy(obj, (int)((char*)inner + 0x464), lbl_803E83A4);
+    fn_8003B500(obj, (s16*)((char*)inner + 0x464), lbl_803E83A4);
     characterDoEyeAnimsIntStateLegacy(obj, (int)inner + 0x464);
     if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {

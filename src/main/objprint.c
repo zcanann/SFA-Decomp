@@ -1391,7 +1391,7 @@ void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 
     }
 }
 
-void fn_8003B500(GameObject* obj, s16* state)
+void fn_8003B500(GameObject* obj, s16* state, f32 value)
 {
     s16* found;
 

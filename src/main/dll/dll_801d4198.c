@@ -76,7 +76,7 @@ int sh_queenearthwalker_processAnimEvents(GameObject* obj, void* unused, ObjAnim
             state->targetX = player->anim.localPosX;
             state->targetY = player->anim.localPosY;
             state->targetZ = player->anim.localPosZ;
-            fn_8003B500FloatLegacy(obj, (s16*)((u8*)state + 0x8), lbl_803E53F8);
+            fn_8003B500(obj, (s16*)((u8*)state + 0x8), lbl_803E53F8);
         }
         animUpdate->hitVolumePair &= ~0x40;
         if ((state->flags & QEW_FLAG_EYE_ANIMS) != 0)

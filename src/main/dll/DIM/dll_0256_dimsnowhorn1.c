@@ -1340,7 +1340,7 @@ void DIMSnowHorn1_update(GameObject* obj)
         {
             ((DIMSnowHorn1State*)statePtr)->playerNearby = 0;
         }
-        fn_8003B500FloatLegacy(obj, (s16*)(data + 0x980), 0.0f);
+        fn_8003B500(obj, (s16*)(data + 0x980), 0.0f);
         break;
     }
     switch (((DIMSnowHorn1State*)data)->mode)
