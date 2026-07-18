@@ -20,6 +20,7 @@
 #include "main/object_render.h"
 #include "main/dll/modgfx.h"
 #include "main/mm.h"
+#include "dolphin/mtx.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXCull.h"
@@ -73,7 +74,6 @@ extern f32 lbl_803DE9E0;
 extern int lbl_803DCC48;
 extern void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 x);
 extern f32 lbl_803DB464;
-extern void PSMTXConcat(void* a, void* b, void* c);
 extern f32 lbl_803DEA04;
 extern void playerRender(int obj, int a, int b, int c, int d, int flag);
 extern f32 lbl_803DE9E4;
@@ -92,8 +92,6 @@ extern f32 lbl_803DEA2C;
 extern f32 lbl_803DEA30;
 extern f32 lbl_803DEA04;
 extern f32 lbl_803DEA1C;
-#define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
-
 static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int kind);
 
 
@@ -139,8 +137,6 @@ extern u32 objRenderFuzzFn_8003d6f8();
 extern f32 lbl_803DE9A4;
 extern f32 lbl_803DE9C8;
 extern f32 lbl_803DE99C;
-
-typedef void (*ObjPrintLoadTexMtxFn)(f32* mtx, int id, int type);
 
 void objAnimFn_80038f38(GameObject* obj, char* state)
 {
@@ -1430,11 +1426,11 @@ void fn_8003B608(s16 a, s16 b, s16 c)
 
 void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, int b, int c)
 {
-    f32 va[3];
-    f32 vb[3];
+    Vec va;
+    Vec vb;
     int k;
     char* q;
-    f32* vp;
+    Vec* vp;
     int i;
     char* base;
     int model;
@@ -1452,43 +1448,43 @@ void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, 
         k = 1;
         off = 0x18;
         q = base;
-        vp = va;
+        vp = &va;
 
         while (i < *(s16*)(base + 0xb0))
         {
             if (k < *(u8*)(*(char**)(staff + 0x50) + 0x58))
             {
-                void* jm;
+                MtxPtr jm;
                 char* t;
                 int joint;
                 joint = (*(s8**)(*(char**)(staff + 0x50) + 0x2c))[off + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a];
-                jm = ObjModel_GetJointMatrix((u8*)model, joint);
+                jm = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, joint);
                 t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
-                vp[0] = *(f32*)(t + off + 0x18);
-                va[1] = *(f32*)(t + off + 0x1c);
-                va[2] = *(f32*)(t + off + 0x20);
+                vp->x = *(f32*)(t + off + 0x18);
+                va.y = *(f32*)(t + off + 0x1c);
+                va.z = *(f32*)(t + off + 0x20);
                 PSMTXMultVec(jm, vp, vp);
-                vp[0] = vp[0] + playerMapOffsetX;
-                va[2] = va[2] + playerMapOffsetZ;
-                *(f32*)(q + 0x6c) = vp[0];
-                *(f32*)(q + 0x74) = va[1];
-                *(f32*)(q + 0x7c) = va[2];
+                vp->x = vp->x + playerMapOffsetX;
+                va.z = va.z + playerMapOffsetZ;
+                *(f32*)(q + 0x6c) = vp->x;
+                *(f32*)(q + 0x74) = va.y;
+                *(f32*)(q + 0x7c) = va.z;
             }
             if (k < *(u8*)(*(char**)(staff + 0x50) + 0x58))
             {
                 char* t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
                 char* row = t + off;
                 int idx2 = *(s8*)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
-                char* mtx2 = *(char**)(model + ((*(u16*)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40;
-                vb[0] = *(f32*)row;
-                vb[1] = *(f32*)(t + off + 4);
-                vb[2] = *(f32*)(t + off + 8);
-                PSMTXMultVec(mtx2, vb, vb);
-                vb[0] = vb[0] + playerMapOffsetX;
-                vb[2] = vb[2] + playerMapOffsetZ;
-                *(f32*)(q + 0x54) = vb[0];
-                *(f32*)(q + 0x5c) = vb[1];
-                *(f32*)(q + 0x64) = vb[2];
+                MtxPtr mtx2 = (MtxPtr)(*(char**)(model + ((*(u16*)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40);
+                vb.x = *(f32*)row;
+                vb.y = *(f32*)(t + off + 4);
+                vb.z = *(f32*)(t + off + 8);
+                PSMTXMultVec(mtx2, &vb, &vb);
+                vb.x = vb.x + playerMapOffsetX;
+                vb.z = vb.z + playerMapOffsetZ;
+                *(f32*)(q + 0x54) = vb.x;
+                *(f32*)(q + 0x5c) = vb.y;
+                *(f32*)(q + 0x64) = vb.z;
             }
             k += 2;
             off += 0x30;
@@ -1499,18 +1495,18 @@ void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, 
         if (*(s16*)(base + 0xb0) != 0)
         {
             char* r = base + *(s16*)(base + 0xb2) * 4;
-            va[0] = *(f32*)(r + 0x6c);
-            va[1] = *(f32*)(r + 0x74);
-            va[2] = *(f32*)(r + 0x7c);
-            (*(void (**)(int, int, f32*))(*(int*)((GameObject*)staff)->anim.dll + 0x28))(staff, obj, vb);
-            va[0] = va[0] - vb[0];
-            va[1] = va[1] - vb[1];
-            va[2] = va[2] - vb[2];
-            ((GameObject*)staff)->anim.rotX = getAngle(va[0], va[2]);
+            va.x = *(f32*)(r + 0x6c);
+            va.y = *(f32*)(r + 0x74);
+            va.z = *(f32*)(r + 0x7c);
+            (*(void (**)(int, int, Vec*))(*(int*)((GameObject*)staff)->anim.dll + 0x28))(staff, obj, &vb);
+            va.x = va.x - vb.x;
+            va.y = va.y - vb.y;
+            va.z = va.z - vb.z;
+            ((GameObject*)staff)->anim.rotX = getAngle(va.x, va.z);
             {
-                f32 dx = va[0] * va[0];
-                f32 dz = va[2] * va[2];
-                ((GameObject*)staff)->anim.rotY = (s16)(-getAngle(va[1], sqrtf(dx + dz)) + 0x4000);
+                f32 dx = va.x * va.x;
+                f32 dz = va.z * va.z;
+                ((GameObject*)staff)->anim.rotY = (s16)(-getAngle(va.y, sqrtf(dx + dz)) + 0x4000);
             }
             ((GameObject*)staff)->anim.rotZ = 0;
         }
@@ -1635,44 +1631,44 @@ void fn_8003BB7C(u8 x)
 
 int fn_8003BB84(f32* m, f32* out)
 {
-    f32 v3[3];
-    f32 v1[3];
-    f32 v2[3];
+    Vec v3;
+    Vec v1;
+    Vec v2;
     f32 zero;
 
-    v1[0] = m[0];
-    v1[1] = m[1];
-    v1[2] = m[2];
-    v2[0] = m[4];
-    v2[1] = m[5];
-    v2[2] = m[6];
-    v3[0] = m[8];
-    v3[1] = m[9];
-    v3[2] = m[10];
+    v1.x = m[0];
+    v1.y = m[1];
+    v1.z = m[2];
+    v2.x = m[4];
+    v2.y = m[5];
+    v2.z = m[6];
+    v3.x = m[8];
+    v3.y = m[9];
+    v3.z = m[10];
 
-    if ((v1[0] == lbl_803DEA04 && v1[1] == lbl_803DEA04 && v1[2] == lbl_803DEA04) ||
-        (v2[0] == lbl_803DEA04 && v2[1] == lbl_803DEA04 && v2[2] == lbl_803DEA04) ||
-        (v3[0] == lbl_803DEA04 && v3[1] == lbl_803DEA04 && v3[2] == lbl_803DEA04))
+    if ((v1.x == lbl_803DEA04 && v1.y == lbl_803DEA04 && v1.z == lbl_803DEA04) ||
+        (v2.x == lbl_803DEA04 && v2.y == lbl_803DEA04 && v2.z == lbl_803DEA04) ||
+        (v3.x == lbl_803DEA04 && v3.y == lbl_803DEA04 && v3.z == lbl_803DEA04))
     {
         return 0;
     }
 
-    PSVECNormalize(v1, v1);
-    PSVECNormalize(v2, v2);
-    PSVECNormalize(v3, v3);
+    PSVECNormalize(&v1, &v1);
+    PSVECNormalize(&v2, &v2);
+    PSVECNormalize(&v3, &v3);
 
-    out[0] = v1[0];
-    out[1] = v1[1];
-    out[2] = v1[2];
+    out[0] = v1.x;
+    out[1] = v1.y;
+    out[2] = v1.z;
     zero = lbl_803DEA04;
     out[3] = zero;
-    out[4] = v2[0];
-    out[5] = v2[1];
-    out[6] = v2[2];
+    out[4] = v2.x;
+    out[5] = v2.y;
+    out[6] = v2.z;
     out[7] = zero;
-    out[8] = v3[0];
-    out[9] = v3[1];
-    out[10] = v3[2];
+    out[8] = v3.x;
+    out[9] = v3.y;
+    out[10] = v3.z;
     out[11] = zero;
     return 1;
 }
@@ -1721,60 +1717,60 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
 }
 
 
-void modelMtxFn_8003be38(int def, int p2, int mtxA, int mtxB)
+void modelMtxFn_8003be38(u8* def, int* model, f32* mtxA, f32* mtxB)
 {
-    int cache;
+    void* cache;
     int count;
     int i;
-    int mid;
-    int dstB;
-    int dstA;
+    MtxPtr mid;
+    MtxPtr dstB;
+    MtxPtr dstA;
     f32 fill;
 
-    cache = (int)getCache();
-    count = (s32)(u32) * (u8*)((char*)def + 0xf3) + (s32)(u32) * (u8*)((char*)def + 0xf4);
-    dstA = cache + 0x2700;
-    mid = cache;
-    dstB = cache + 0x12c0;
+    cache = getCache();
+    count = (s32)(u32)def[0xf3] + (s32)(u32)def[0xf4];
+    dstA = (MtxPtr)((u8*)cache + 0x2700);
+    mid = (MtxPtr)cache;
+    dstB = (MtxPtr)((u8*)cache + 0x12c0);
     cacheQueueWait(0);
     i = 0;
     fill = lbl_803DEA04;
     for (; i < count; i++)
     {
-        PSMTXConcat((void*)mtxA, (void*)dstA, (void*)mid);
-        PSMTXConcat((void*)mid, (void*)mtxB, (void*)dstB);
-        *(f32*)((char*)dstB + 0xc) = fill;
-        *(f32*)((char*)dstB + 0x1c) = fill;
-        *(f32*)((char*)dstB + 0x2c) = fill;
-        dstA += 0x40;
-        mid += 0x30;
-        dstB += 0x30;
+        PSMTXConcat((MtxPtr)mtxA, dstA, mid);
+        PSMTXConcat(mid, (MtxPtr)mtxB, dstB);
+        dstB[0][3] = fill;
+        dstB[1][3] = fill;
+        dstB[2][3] = fill;
+        dstA += 4;
+        mid += 3;
+        dstB += 3;
     }
     lbl_803DCC48 = 2;
 }
 
 void modelCalcVtxGroupMtxs(int def, int model)
 {
-    f32 ma[12];
-    f32 mb[12];
-    f32 trans[12];
+    Mtx ma;
+    Mtx mb;
+    Mtx trans;
     int off;
     int i;
 
     for (i = 0, off = 0; i < *(u8*)(def + 0xf4); i++)
     {
-        f32* out;
-        f32* m1;
+        MtxPtr out;
+        MtxPtr m1;
         char* jd;
-        f32* m2;
+        MtxPtr m2;
         u8* grp;
         f32 w;
         f32 wi;
 
         grp = (u8*)(*(int*)(def + 0x54) + off);
-        out = (f32*)ObjModel_GetJointMatrix((u8*)model, i + *(u8*)(def + 0xf3));
-        m1 = (f32*)ObjModel_GetJointMatrix((u8*)model, grp[0]);
-        m2 = (f32*)ObjModel_GetJointMatrix((u8*)model, grp[1]);
+        out = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, i + *(u8*)(def + 0xf3));
+        m1 = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, grp[0]);
+        m2 = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, grp[1]);
 
         w = (f32)grp[2] / 4.0f;
         wi = 1.0f - w;
@@ -1786,18 +1782,18 @@ void modelCalcVtxGroupMtxs(int def, int model)
         PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
         PSMTXConcat(m2, trans, mb);
 
-        out[0] = ma[0] * w + mb[0] * wi;
-        out[1] = ma[1] * w + mb[1] * wi;
-        out[2] = ma[2] * w + mb[2] * wi;
-        out[3] = ma[3] * w + mb[3] * wi;
-        out[4] = ma[4] * w + mb[4] * wi;
-        out[5] = ma[5] * w + mb[5] * wi;
-        out[6] = ma[6] * w + mb[6] * wi;
-        out[7] = ma[7] * w + mb[7] * wi;
-        out[8] = ma[8] * w + mb[8] * wi;
-        out[9] = ma[9] * w + mb[9] * wi;
-        out[10] = ma[10] * w + mb[10] * wi;
-        out[11] = ma[11] * w + mb[11] * wi;
+        out[0][0] = ma[0][0] * w + mb[0][0] * wi;
+        out[0][1] = ma[0][1] * w + mb[0][1] * wi;
+        out[0][2] = ma[0][2] * w + mb[0][2] * wi;
+        out[0][3] = ma[0][3] * w + mb[0][3] * wi;
+        out[1][0] = ma[1][0] * w + mb[1][0] * wi;
+        out[1][1] = ma[1][1] * w + mb[1][1] * wi;
+        out[1][2] = ma[1][2] * w + mb[1][2] * wi;
+        out[1][3] = ma[1][3] * w + mb[1][3] * wi;
+        out[2][0] = ma[2][0] * w + mb[2][0] * wi;
+        out[2][1] = ma[2][1] * w + mb[2][1] * wi;
+        out[2][2] = ma[2][2] * w + mb[2][2] * wi;
+        out[2][3] = ma[2][3] * w + mb[2][3] * wi;
         off += 4;
     }
 }
@@ -1872,15 +1868,13 @@ extern f32 lbl_803DEA34;
 extern f32 lbl_803DEA38;
 extern f32 lbl_803DEA1C;
 
-#undef GXLoadTexMtxImm
-#define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 {
-    f32 mtx4[12];
-    f32 mtx3[12];
-    f32 mtx2[12];
-    f32 mtxR[12];
-    f32 mtx5[12];
+    Mtx mtx4;
+    Mtx mtx3;
+    Mtx mtx2;
+    Mtx mtxR;
+    Mtx mtx5;
     IndTexMtx23 mtxA;
     IndTexMtx23 mtxB;
     GXColor kc;
@@ -1950,8 +1944,8 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     selectTexture((Texture*)((void*)t164), 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     PSMTXTrans(mtxR, lbl_803DEA28 * sx, *(f32*)&lbl_803DEA28 * sy, lbl_803DEA04);
-    mtxR[0] = lbl_803DEA1C;
-    mtxR[5] = lbl_803DEA1C;
+    mtxR[0][0] = lbl_803DEA1C;
+    mtxR[1][1] = lbl_803DEA1C;
     GXLoadTexMtxImm(mtxR, GX_PTTEXMTX2, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP4);
@@ -2062,14 +2056,12 @@ static inline int shaderProjDisabled(ModelLightStruct* light)
     return flag;
 }
 
-#undef GXLoadTexMtxImm
-#define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
 {
-    f32 mtx4[12];
-    f32 mtx3[12];
-    f32 mtx2[12];
-    f32 mtxR[12];
+    Mtx mtx4;
+    Mtx mtx3;
+    Mtx mtx2;
+    Mtx mtxR;
     IndTexMtx23 mtxA;
     IndTexMtx23 mtxB;
     GXColorS10 s10;
@@ -2178,7 +2170,7 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
     if (fancy)
     {
         GXSetTevDirect(GX_TEVSTAGE2);
-        GXLoadTexMtxImm(modelLightStruct_getProjectionTexMtx(lbl_803DCC64), GX_PTTEXMTX3, GX_MTX3x4);
+        GXLoadTexMtxImm((MtxPtr)modelLightStruct_getProjectionTexMtx(lbl_803DCC64), GX_PTTEXMTX3, GX_MTX3x4);
         GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, GX_PTTEXMTX3);
         if (lbl_803DCC60 == 0 || lbl_803DCC60 == 2)
         {
@@ -2233,8 +2225,8 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
     selectTexture((Texture*)((void*)texRef4), 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     PSMTXTrans(mtxR, lbl_803DEA28 * sx, *(f32*)&lbl_803DEA28 * sy, lbl_803DEA04);
-    mtxR[0] = lbl_803DEA1C;
-    mtxR[5] = lbl_803DEA1C;
+    mtxR[0][0] = lbl_803DEA1C;
+    mtxR[1][1] = lbl_803DEA1C;
     GXLoadTexMtxImm(mtxR, GX_PTTEXMTX2, GX_MTX3x4);
     GXSetTexCoordGen2(coord, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, coord, GX_TEXMAP4);

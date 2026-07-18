@@ -601,7 +601,7 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
     {
         if (skip == 0)
         {
-            modelMtxFn_8003be38PtrLegacy(hdr, model, mtx, m1);
+            modelMtxFn_8003be38(hdr, model, mtx, m1);
         }
         else
         {
