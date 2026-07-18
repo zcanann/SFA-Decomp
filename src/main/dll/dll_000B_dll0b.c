@@ -539,16 +539,17 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
             ((f32*)((char*)state + 0xac))[k] =
                 (target - (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf]) / frames;
             ((f32*)((char*)state + 0xac))[k + 1] = (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf];
-            goto animate;
         }
-        for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
+        else
         {
-            bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = target;
-            bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
+            for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
+            {
+                bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = target;
+                bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
+            }
+            return;
         }
-        return;
     }
-animate:
 {
     char* kb;
     int k4 = k * 4;
