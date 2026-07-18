@@ -49,6 +49,7 @@ void gameTextLoadTaskText(int taskId);
 void* getCurGameText(void);
 int getCurLanguage(void);
 void gameTextInit(void);
+void gameTextInitFn_8001a234(void);
 void gameTextInitFn_8001bd14(void);
 void gameTextInitFn_8001c794(void);
 void gameTextLoadGraphicsFn_8001a918(void);

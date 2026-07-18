@@ -15,6 +15,7 @@ void fn_8004D6D8(void);
 void fn_80050F2C(void);
 void fn_8004D230(void);
 void fn_8004D928(void);
+void setColor_803db5d0(u8 r, u8 g, u8 b);
 void gxTextureFn_8004bf88(void* params, u8 colorEnabled, u8 alphaEnabled, int* colorSelection,
                           int* alphaSelection);
 void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, s16 width, s16 height);

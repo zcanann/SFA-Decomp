@@ -991,9 +991,6 @@ void setGameState(int state)
 }
 
 
-void Obj_ApplyPendingParentLinks(void);
-
-
 /* GameBit descriptor flags byte (gGameBitTable[id*4 + 2]). */
 
 
@@ -1008,8 +1005,6 @@ void setTimeStop(int stop)
 {
     timeStop = (u8)stop;
 }
-
-void Obj_FlushDeferredFreeList(void);
 
 typedef struct PlayerTrailRecord
 {
@@ -1053,12 +1048,6 @@ void cutsceneEnterExit(int entering, int affectSounds)
     }
 }
 
-void gameTextInitFn_8001a234(void);
-
-
-
-
-
 extern u8 initLoadFiles(void);
 
 
@@ -1075,8 +1064,6 @@ void cutsceneExit(void)
     timeStop = 0;
     Sfx_SetObjectSoundsPaused(0);
 }
-
-void Obj_UpdateAllObjects(u8 flags);
 
 extern f32 lbl_803DE7B8;
 
@@ -1106,8 +1093,6 @@ void mapLoadByCoords(f32 x, f32 y, f32 z, int act)
     Music_Trigger(MUSICTRIG_galleon_battle, 0);
     gGameLoopMusicFadeTimer = lbl_803DE7B4;
 }
-
-extern void setColor_803db5d0(int r, int g, int b);
 
 void doQueuedLoads(void)
 {
