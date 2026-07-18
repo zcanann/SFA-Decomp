@@ -126,11 +126,25 @@ void PlayControl(void)
     {
         if ((lbl_803A5D60.playFlags & THP_PLAY_EVEN_FIELD) != 0)
         {
-            allowPop = VIGetNextField() == 0;
+            if (VIGetNextField() == 0)
+            {
+                allowPop = 1;
+            }
+            else
+            {
+                allowPop = 0;
+            }
         }
         else if ((lbl_803A5D60.playFlags & THP_PLAY_ODD_FIELD) != 0)
         {
-            allowPop = VIGetNextField() == 1;
+            if (VIGetNextField() == 1)
+            {
+                allowPop = 1;
+            }
+            else
+            {
+                allowPop = 0;
+            }
         }
         else
         {
