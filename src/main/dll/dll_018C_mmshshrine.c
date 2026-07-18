@@ -242,7 +242,7 @@ void fn_801C4664(void* objArg)
 {
     DFSHLaserBeamConfig* config;
     DFSHLaserBeamRuntime* runtime;
-    void* playerObj;
+    GameObject* playerObj;
     DFSHLaserBeamObject* obj;
     f32 trigA;
     f32 trigB;
@@ -286,20 +286,22 @@ void fn_801C4664(void* objArg)
         return;
     }
 
-    angleDelta = (u16)getAngle(obj->worldPosX - ((GameObject*)playerObj)->anim.worldPosX,
-                               obj->worldPosZ - ((GameObject*)playerObj)->anim.worldPosZ) -
-                 (u16)obj->yaw;
-    if (angleDelta > 0x8000)
     {
-        angleDelta -= 0xFFFF;
+        f32 dx = obj->worldPosX - playerObj->anim.worldPosX;
+        f32 dz = obj->worldPosZ - playerObj->anim.worldPosZ;
+        int ang = (u16)getAngle(dx, dz);
+        angleDelta = ang - (int)(u16)obj->yaw;
+        if (angleDelta > 0x8000)
+        {
+            angleDelta -= 0xFFFF;
+        }
+        if (angleDelta < -0x8000)
+        {
+            angleDelta += 0xFFFF;
+        }
+        obj->yaw = (s16)((int)*(s16*)obj + (int)(((f32)angleDelta * timeDelta) / 12.0f));
     }
-    if (angleDelta < -0x8000)
-    {
-        angleDelta += 0xFFFF;
-    }
-
-    obj->yaw = (s16)(obj->yaw + (s16)(((f32)angleDelta * timeDelta) / 12.0f));
-    distance = Vec_xzDistance(&obj->worldPosX, &((GameObject*)playerObj)->anim.worldPosX);
+    distance = Vec_xzDistance(&obj->worldPosX, &playerObj->anim.worldPosX);
     if (distance <= 30.0f)
     {
         obj->alpha = (u8)(int)(255.0f * (distance / 30.0f));
