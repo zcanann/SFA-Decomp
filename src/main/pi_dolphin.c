@@ -156,8 +156,6 @@ extern u32 GXSetBlendMode();
 extern int lbl_803DCD6C;
 extern int lbl_803DCD70;
 extern int lbl_803DCD74;
-extern char* sResourceFileNameTable[];
-extern char sRomlistZlbPathFormat[];
 extern char sResourceFileNameAudioTab[];
 extern u8 lbl_80345E10[]; /* resource file table -- see struct MldfTables */
 extern s16 lbl_803DCC92;
@@ -281,8 +279,6 @@ struct PackHeader
 };
 
 extern char sResourceFileNameAudioBin[];
-extern char sResourceFileNameSfxTab[];
-extern char sResourceFileNameSfxBin[];
 extern char sResourceFileNameAmbientTab[];
 extern char sResourceFileNameAmbientBin[];
 extern char sResourceFileNameMusicTab[];
@@ -352,7 +348,6 @@ extern char sResourceFileNameTexpreTab[];
 extern char sResourceFileNamePreanimBin[];
 extern char sResourceFileNamePreanimTab[];
 extern char sResourceFileNameEnvfxactBin[];
-extern char sResourceFileNameNull[];
 
 char* sResourceFileNameTable[90] = {
     sResourceFileNameAudioTab,    sResourceFileNameAudioBin,    sResourceFileNameSfxTab,
@@ -391,14 +386,8 @@ extern char sMapFileNameFrontend[];
 extern char sMapFileNameFrontend2[];
 extern char sMapFileNameDragrock[];
 extern char sMapFileNameKrazoapalace[];
-extern char sMapFileNameTemple[];
-extern char sMapFileNameHightop[];
 extern char sMapFileNameDiscovery[];
-extern char sMapFileNameHollow[];
-extern char sMapFileNameHollow2[];
 extern char sMapFileNameMazecave[];
-extern char sMapFileNameWastes[];
-extern char sMapFileNameWarlock[];
 extern char sMapFileNameFortress[];
 extern char sMapFileNameWallcity[];
 extern char sMapFileNameSwapcircle[];
@@ -424,8 +413,6 @@ extern char sMapFileNameEcshrine[];
 extern char sMapFileNameGpshrine[];
 extern char sMapFileNameDiamondbay[];
 extern char sMapFileNameEarthwalker[];
-extern char sMapFileNameWillow[];
-extern char sMapFileNameArwing[];
 extern char sMapFileNameDbshrine[];
 extern char sMapFileNameNwshrine[];
 extern char sMapFileNameCcshrine[];
@@ -437,13 +424,8 @@ extern char sMapFileNameSnowmines4[];
 extern char sMapFileNameSnowmines5[];
 extern char sMapFileNameTrexboss[];
 extern char sMapFileNameMikelava[];
-extern char sMapFileNameDfptop[];
 extern char sMapFileNameSwapstore[];
-extern char sMapFileNameDragbot[];
-extern char sMapFileNameKamdrag[];
 extern char sMapFileNameMagicave[];
-extern char sMapFileNameDuster[];
-extern char sMapFileNameLinkb[];
 extern char sMapFileNameCloudjoin[];
 extern char sMapFileNameArwingtoplanet[];
 extern char sMapFileNameArwingdarkice[];
@@ -453,15 +435,6 @@ extern char sMapFileNameArwingdragon[];
 extern char sMapFileNameGamefront[];
 extern char sMapFileNameLinklevel[];
 extern char sMapFileNameGreatfox[];
-extern char sMapFileNameLinka[];
-extern char sMapFileNameLinkc[];
-extern char sMapFileNameLinkd[];
-extern char sMapFileNameLinke[];
-extern char sMapFileNameLinkf[];
-extern char sMapFileNameLinkg[];
-extern char sMapFileNameLinkh[];
-extern char sMapFileNameLinkj[];
-extern char sMapFileNameLinki[];
 extern char sMapFileNameDfpodium[];
 extern char sMapFileNameDfcradle[];
 extern char sMapFileNameDfcavehatch1[];
@@ -707,15 +680,6 @@ char sResourceFileNamePreanimBin[] = "PREANIM.bin";
 char sResourceFileNamePreanimTab[] = "PREANIM.tab";
 char sResourceFileNameEnvfxactBin[] = "ENVFXACT.bin";
 
-extern char sMapFileNameCrfort[];
-extern char sMapFileNameDbay[];
-extern char sMapFileNameDesert[];
-extern char sMapFileNameDfalls[];
-extern char sMapFileNameMmpass[];
-extern char sMapFileNameNwastes[];
-extern char sMapFileNameShop[];
-extern char sMapFileNameSwaphol[];
-extern char sMapFileNameVolcano[];
 
 char sMapFileNameDragrockbot[] = "dragrockbot";
 char sMapFileNameShipbattle[] = "shipbattle";
@@ -941,13 +905,11 @@ void* jumptable_802CC254[73] = {
 char sMapAssetPathFormats[0x78] =
     "%s/animcurv.bin\0%s/animcurv.tab\0%s/voxmap.bin\0\0\0warlock/voxmap.bin\0\0%s/voxmap.tab\0\0"
     "\0%s/mod%d.zlb.bin\0\0\0\0%s/mod%d.tab";
-extern char* sMapFileNameTable[];
 extern u8 lbl_803DCD28;
 extern f32 lbl_803DCD44;
 extern f32 lbl_803DCD40;
 extern u32 lbl_803DB5EC;
 extern f32 lbl_803DB5F0;
-extern u32 sMapFileNameIndexRemapTable[];
 extern u8 lbl_803DCD31;
 extern f32 lbl_803DCD34;
 extern f32 lbl_803DCD38;
@@ -3591,7 +3553,6 @@ int mapGetDirIdx(int idx)
 }
 
 
-extern char sAssetHaltFormat[];
 extern int lbl_8035EF48[];
 extern s16 lbl_803DCC78;
 
