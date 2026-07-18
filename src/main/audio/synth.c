@@ -444,104 +444,103 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
     u8 mKey;
 
     vid = 0xFFFFFFFF;
-    if ((l = dataGetLayer(layerID, &count)) == NULL)
+    if ((l = dataGetLayer(layerID, &count)) != NULL)
     {
-        return 0xFFFFFFFF;
-    }
 
-    mKey = key & 0x7f;
-    for (; count != 0; --count, l++)
-    {
-        if (l->id == 0xffff || l->keyLow > mKey || l->keyHigh < mKey)
+        mKey = key & 0x7f;
+        for (; count != 0; --count, l++)
         {
-            continue;
-        }
-
-        note = mKey + l->transpose;
-        note = note > 127 ? 127 : note < 0 ? 0 : note;
-
-        new_id = 0xFFFFFFFF;
-        if ((l->id & 0xC000) == 0)
-        {
-            u32 rejected;
-            u32 ok;
-            if ((u16)inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 8064)
-            {
-                new_id = audioFn_8026f630(note & 0x7f, midi, midiSet, 0, &rejected);
-                ok = !rejected;
-            }
-            else
-            {
-                ok = 1;
-            }
-            if (!ok)
+            if (l->id == 0xffff || l->keyLow > mKey || l->keyHigh < mKey)
             {
                 continue;
             }
-        }
 
-        if (new_id == 0xFFFFFFFF)
-        {
-            if ((l->panning & 0x80) == 0)
-            {
-                pan = l->panning - 0x40;
-                pan += panning;
-                pan = pan < 0 ? 0 : pan > 0x7f ? 0x7f : pan;
-            }
-            else
-            {
-                pan = 0x80;
-            }
+            note = mKey + l->transpose;
+            note = note > 127 ? 127 : note < 0 ? 0 : note;
 
-            scaledVol = (vol * l->volume) / 0x7f;
-            prio += l->prioOffset;
-            prio = prio > 0xff ? 0xff : prio < 0 ? 0 : prio;
-
-            switch (l->id & 0xC000)
+            new_id = 0xFFFFFFFF;
+            if ((l->id & 0xC000) == 0)
             {
-            case 0:
-                new_id = macStart(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
-                                  section, step, trackid, 0, vGroup, studio, itd);
-                break;
-            case 0x4000:
-                new_id = StartKeymap(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
-                                     section, step, trackid, 0, vGroup, studio, itd);
-                break;
-            case 0x8000:
-                new_id = audioLayerFn_8026f8b8(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi,
-                                               midiSet, section, step, trackid, 0, vGroup, studio, itd);
-                break;
-            }
-        }
-
-        if (new_id != 0xFFFFFFFF)
-        {
-            if (vid == 0xFFFFFFFF)
-            {
-                if (vidFlag != 0)
+                u32 rejected;
+                u32 ok;
+                if ((u16)inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 8064)
                 {
-                    vid = vidMakeRoot(&synthVoice[new_id & 0xff]);
+                    new_id = audioFn_8026f630(note & 0x7f, midi, midiSet, 0, &rejected);
+                    ok = !rejected;
                 }
                 else
                 {
-                    vid = new_id;
+                    ok = 1;
+                }
+                if (!ok)
+                {
+                    continue;
                 }
             }
-            else
-            {
-                synthVoice[id & 0xff].child = new_id;
-                synthVoice[new_id & 0xff].parent = id;
-            }
-            id = new_id;
-            while (synthVoice[id & 0xff].child != 0xFFFFFFFF)
-            {
-                synthVoice[id & 0xff].block = 1;
-                id = synthVoice[id & 0xff].child;
-            }
-            synthVoice[id & 0xff].block = 1;
-        }
-    }
 
+            if (new_id == 0xFFFFFFFF)
+            {
+                if ((l->panning & 0x80) == 0)
+                {
+                    pan = l->panning - 0x40;
+                    pan += panning;
+                    pan = pan < 0 ? 0 : pan > 0x7f ? 0x7f : pan;
+                }
+                else
+                {
+                    pan = 0x80;
+                }
+
+                scaledVol = (vol * l->volume) / 0x7f;
+                prio += l->prioOffset;
+                prio = prio > 0xff ? 0xff : prio < 0 ? 0 : prio;
+
+                switch (l->id & 0xC000)
+                {
+                case 0:
+                    new_id = macStart(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
+                                      section, step, trackid, 0, vGroup, studio, itd);
+                    break;
+                case 0x4000:
+                    new_id = StartKeymap(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
+                                         section, step, trackid, 0, vGroup, studio, itd);
+                    break;
+                case 0x8000:
+                    new_id = audioLayerFn_8026f8b8(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi,
+                                                   midiSet, section, step, trackid, 0, vGroup, studio, itd);
+                    break;
+                }
+            }
+
+            if (new_id != 0xFFFFFFFF)
+            {
+                if (vid == 0xFFFFFFFF)
+                {
+                    if (vidFlag != 0)
+                    {
+                        vid = vidMakeRoot(&synthVoice[new_id & 0xff]);
+                    }
+                    else
+                    {
+                        vid = new_id;
+                    }
+                }
+                else
+                {
+                    synthVoice[id & 0xff].child = new_id;
+                    synthVoice[new_id & 0xff].parent = id;
+                }
+                id = new_id;
+                while (synthVoice[id & 0xff].child != 0xFFFFFFFF)
+                {
+                    synthVoice[id & 0xff].block = 1;
+                    id = synthVoice[id & 0xff].child;
+                }
+                synthVoice[id & 0xff].block = 1;
+            }
+        }
+
+    }
     return vid;
 }
 
@@ -766,114 +765,104 @@ void LowPrecisionHandler(int voice)
     s32 vrange;
     s32 voff;
     sv = HWVOICE(voice);
-    if (!hwIsActive(voice) && sv->addr == 0)
+    if (hwIsActive(voice) || sv->addr != 0)
     {
-        UpdateTimeMIDICtrl(sv);
-        return;
-    }
 
-    lowDeltaTime = (u32)(synthRealTime - *(u64*)&sv->lastLowCallTimeHi);
-    *(u64*)&sv->lastLowCallTimeHi = synthRealTime;
+        lowDeltaTime = (u32)(synthRealTime - *(u64*)&sv->lastLowCallTimeHi);
+        *(u64*)&sv->lastLowCallTimeHi = synthRealTime;
 
-    for (j = 0; j < 2; ++j)
-    {
-        if (sv->lfo[j].period == 0)
-        {
-            continue;
-        }
-        sv->lfo[j].time += lowDeltaTime;
-        sv->lfo[j].value = sndSin((u16)((sv->lfo[j].time % sv->lfo[j].period * 16) / (sv->lfo[j].period / 256)));
-        if (sv->lfo[j].value != sv->lfo[j].lastValue)
-        {
-            sv->lfo[j].lastValue = sv->lfo[j].value;
-            if (sv->lfoUsedByInput[j])
-            {
-                sv->lfoUsedByInput[j] = 0;
-                sv->midiDirtyFlags |= 0x1FFF;
-            }
-        }
-    }
-
-    if ((HWVOICE_FLAGS(sv) & 0x2000) != 0)
-    {
-        sv->vibCurTime += lowDeltaTime;
-        sv->vibCurOffset = sndSin((u16)((sv->vibCurTime % sv->vibPeriod * 16) / (sv->vibPeriod / 256)));
-    }
-
-    if (sv->sweepNum[0] | sv->sweepNum[1])
-    {
-        cntDelta = (lowDeltaTime << 8) >> 4;
-        addFactor = (lowDeltaTime << 4) >> 4;
         for (j = 0; j < 2; ++j)
         {
-            if (sv->sweepNum[j] == 0)
+            if (sv->lfo[j].period == 0)
             {
                 continue;
             }
-            sv->sweepCnt[j] -= cntDelta;
-            if (sv->sweepCnt[j] <= 0)
+            sv->lfo[j].time += lowDeltaTime;
+            sv->lfo[j].value = sndSin((u16)((sv->lfo[j].time % sv->lfo[j].period * 16) / (sv->lfo[j].period / 256)));
+            if (sv->lfo[j].value != sv->lfo[j].lastValue)
             {
-                sv->sweepCnt[j] = sv->sweepNum[j] << 16;
-                sv->sweepOff[j] = 0;
-            }
-            else
-            {
-                sv->sweepOff[j] += (sv->sweepAdd[j] >> 12) * addFactor;
-            }
-        }
-    }
-
-    for (j = 0; j < 2; ++j)
-    {
-        u32 panVal;
-        if (sv->panning[j] == sv->panTarget[j])
-        {
-            continue;
-        }
-        sv->panTime[j] -= lowDeltaTime;
-        if ((s32)sv->panTime[j] <= 0)
-        {
-            sv->panning[j] = sv->panTarget[j];
-            sv->panTime[j] = 0;
-        }
-        else
-        {
-            sv->panning[j] = sv->panTarget[j] - (sv->panTime[j] / 256) * sv->panDelta[j];
-            panVal = sv->panning[j];
-            sv->panning[j] = (s32)panVal < 0 ? 0 : panVal > 0x7F0000 ? 0x7F0000 : panVal;
-        }
-        HWVOICE_FLAGS(sv) |= 0x200000000000ULL;
-    }
-
-    if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0 && adsrHandleLowPrecision(&sv->pitchADSR, &adsr_start, &adsr_delta))
-    {
-        HWVOICE_FLAGS(sv) &= ~0x20000000000ULL;
-    }
-
-    ccents = (sv->curNote << 16) + (sv->curDetune * 0x10000) / 100;
-    if ((HWVOICE_FLAGS(sv) & 0x10030) != 0)
-    {
-        if (sv->midi != 0xFF)
-        {
-            pbend = inpGetPitchBend((McmdVoiceState*)sv);
-            sv->pbLast = pbend;
-            if (pbend != 0x2000)
-            {
-                pbend -= 0x2000;
-                if (pbend < 0)
+                sv->lfo[j].lastValue = sv->lfo[j].value;
+                if (sv->lfoUsedByInput[j])
                 {
-                    ccents += sv->pbLowerKeyRange * pbend * 8;
+                    sv->lfoUsedByInput[j] = 0;
+                    sv->midiDirtyFlags |= 0x1FFF;
+                }
+            }
+        }
+
+        if ((HWVOICE_FLAGS(sv) & 0x2000) != 0)
+        {
+            sv->vibCurTime += lowDeltaTime;
+            sv->vibCurOffset = sndSin((u16)((sv->vibCurTime % sv->vibPeriod * 16) / (sv->vibPeriod / 256)));
+        }
+
+        if (sv->sweepNum[0] | sv->sweepNum[1])
+        {
+            cntDelta = (lowDeltaTime << 8) >> 4;
+            addFactor = (lowDeltaTime << 4) >> 4;
+            for (j = 0; j < 2; ++j)
+            {
+                if (sv->sweepNum[j] == 0)
+                {
+                    continue;
+                }
+                sv->sweepCnt[j] -= cntDelta;
+                if (sv->sweepCnt[j] <= 0)
+                {
+                    sv->sweepCnt[j] = sv->sweepNum[j] << 16;
+                    sv->sweepOff[j] = 0;
                 }
                 else
                 {
-                    ccents += sv->pbUpperKeyRange * pbend * 8;
+                    sv->sweepOff[j] += (sv->sweepAdd[j] >> 12) * addFactor;
                 }
             }
         }
-    }
-    else
-    {
-        pbend = sv->pbLast;
+
+        for (j = 0; j < 2; ++j)
+        {
+            u32 panVal;
+            if (sv->panning[j] == sv->panTarget[j])
+            {
+                continue;
+            }
+            sv->panTime[j] -= lowDeltaTime;
+            if ((s32)sv->panTime[j] <= 0)
+            {
+                sv->panning[j] = sv->panTarget[j];
+                sv->panTime[j] = 0;
+            }
+            else
+            {
+                sv->panning[j] = sv->panTarget[j] - (sv->panTime[j] / 256) * sv->panDelta[j];
+                panVal = sv->panning[j];
+                sv->panning[j] = (s32)panVal < 0 ? 0 : panVal > 0x7F0000 ? 0x7F0000 : panVal;
+            }
+            HWVOICE_FLAGS(sv) |= 0x200000000000ULL;
+        }
+
+        if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0 && adsrHandleLowPrecision(&sv->pitchADSR, &adsr_start, &adsr_delta))
+        {
+            HWVOICE_FLAGS(sv) &= ~0x20000000000ULL;
+        }
+
+        ccents = (sv->curNote << 16) + (sv->curDetune * 0x10000) / 100;
+        if ((HWVOICE_FLAGS(sv) & 0x10030) != 0)
+        {
+            if (sv->midi != 0xFF)
+            {
+                pbend = inpGetPitchBend((McmdVoiceState*)sv);
+                sv->pbLast = pbend;
+            }
+            else
+            {
+                pbend = 0x2000;
+            }
+        }
+        else
+        {
+            pbend = sv->pbLast;
+        }
         if (pbend != 0x2000)
         {
             pbend -= 0x2000;
@@ -886,79 +875,79 @@ void LowPrecisionHandler(int voice)
                 ccents += sv->pbUpperKeyRange * pbend * 8;
             }
         }
-    }
 
-    if ((HWVOICE_FLAGS(sv) & 0x2000) != 0)
-    {
-        Modulation = inpGetModulation((McmdVoiceState*)sv);
-        vrange = sv->vibKeyRange * 256 + (sv->vibCentRange * 256) / 100;
-        if (sv->vibModAddScale != 0)
+        if ((HWVOICE_FLAGS(sv) & 0x2000) != 0)
         {
-            vrange += (sv->vibModAddScale * ((Modulation >> 7) & 0x1FF)) >> 7;
-        }
-        if ((HWVOICE_FLAGS(sv) & 0x4000) != 0)
-        {
-            voff = (sv->vibCurOffset * ((Modulation >> 7) & 0x1FF)) >> 7;
-        }
-        else
-        {
-            voff = sv->vibCurOffset;
-        }
-        ccents += (vrange * voff) >> 4;
-    }
-
-    if (sv->midi != 0xFF)
-    {
-        portamentoRaw = inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, sv->midi, sv->midiSet);
-        if ((u16)portamentoRaw != sv->portLastCtrlState || (HWVOICE_FLAGS(sv) & 0x21000) == 0x20000)
-        {
-            if ((u16)portamentoRaw <= 0x1F80)
+            Modulation = inpGetModulation((McmdVoiceState*)sv);
+            vrange = sv->vibKeyRange * 256 + (sv->vibCentRange * 256) / 100;
+            if (sv->vibModAddScale != 0)
             {
-                HWVOICE_FLAGS(sv) &= ~0x400;
+                vrange += (sv->vibModAddScale * ((Modulation >> 7) & 0x1FF)) >> 7;
+            }
+            if ((HWVOICE_FLAGS(sv) & 0x4000) != 0)
+            {
+                voff = (sv->vibCurOffset * ((Modulation >> 7) & 0x1FF)) >> 7;
             }
             else
             {
-                if ((HWVOICE_FLAGS(sv) & 0x400) == 0)
+                voff = sv->vibCurOffset;
+            }
+            ccents += (vrange * voff) >> 4;
+        }
+
+        if (sv->midi != 0xFF)
+        {
+            portamentoRaw = inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, sv->midi, sv->midiSet);
+            if ((u16)portamentoRaw != sv->portLastCtrlState || (HWVOICE_FLAGS(sv) & 0x21000) == 0x20000)
+            {
+                if ((u16)portamentoRaw <= 0x1F80)
                 {
-                    if ((HWVOICE_FLAGS(sv) & 0x20000) == 0)
+                    HWVOICE_FLAGS(sv) &= ~0x400;
+                }
+                else
+                {
+                    if ((HWVOICE_FLAGS(sv) & 0x400) == 0)
                     {
-                        if (sv->portType == 1)
+                        if ((HWVOICE_FLAGS(sv) & 0x20000) == 0)
                         {
-                            if ((HWVOICE_FLAGS(sv) & 0x1000) == 0)
+                            if (sv->portType == 1)
                             {
-                                sv->portTime = 0;
+                                if ((HWVOICE_FLAGS(sv) & 0x1000) == 0)
+                                {
+                                    sv->portTime = 0;
+                                }
+                                else
+                                {
+                                    sv->portTime = sv->portDuration;
+                                }
                             }
                             else
                             {
                                 sv->portTime = sv->portDuration;
                             }
+                            sv->portCurPitch = sv->lastNote << 16;
                         }
-                        else
-                        {
-                            sv->portTime = sv->portDuration;
-                        }
-                        sv->portCurPitch = sv->lastNote << 16;
                     }
+                    HWVOICE_FLAGS(sv) |= 0x400;
                 }
-                HWVOICE_FLAGS(sv) |= 0x400;
+                HWVOICE_FLAGS(sv) |= 0x1000;
+                sv->portLastCtrlState = portamentoRaw;
             }
-            HWVOICE_FLAGS(sv) |= 0x1000;
-            sv->portLastCtrlState = portamentoRaw;
         }
+
+        ccents = apply_portamento(sv, ccents, lowDeltaTime);
+
+        if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0)
+        {
+            ccents += sv->pitchADSRRange * (sv->pitchADSR.currentVolume >> 16) >> 7;
+        }
+
+        cpitch = convert_cents(sv, ccents);
+        cpitch += sv->sweepOff[0] + sv->sweepOff[1];
+        hwSetPitch(voice, sv->curPitch = ((cpitch >> 16) * inpGetDoppler((McmdVoiceState*)sv)) >> 13);
+        synthQueueDelayedUpdate((SynthDelayedNode*)sv, 0, 0xF00);
+
     }
-
-    ccents = apply_portamento(sv, ccents, lowDeltaTime);
-
-    if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0)
-    {
-        ccents += sv->pitchADSRRange * (sv->pitchADSR.currentVolume >> 16) >> 7;
-    }
-
-    cpitch = convert_cents(sv, ccents);
-    cpitch += sv->sweepOff[0] + sv->sweepOff[1];
-    hwSetPitch(voice, sv->curPitch = ((cpitch >> 16) * inpGetDoppler((McmdVoiceState*)sv)) >> 13);
-    synthQueueDelayedUpdate((SynthDelayedNode*)sv, 0, 0xF00);
-
     UpdateTimeMIDICtrl(sv);
 }
 
@@ -984,151 +973,149 @@ void ZeroOffsetHandler(int voice)
     f32 postVol;
 
     sv = HWVOICE(voice);
-    if (!hwIsActive(voice) && sv->addr == 0)
+    if (hwIsActive(voice) || sv->addr != 0)
     {
-        UpdateTimeMIDICtrl(sv);
-        return;
-    }
 
-    lowDeltaTime = (u32)(synthRealTime - *(u64*)&sv->lastZeroCallTimeHi);
-    *(u64*)&sv->lastZeroCallTimeHi = synthRealTime;
+        lowDeltaTime = (u32)(synthRealTime - *(u64*)&sv->lastZeroCallTimeHi);
+        *(u64*)&sv->lastZeroCallTimeHi = synthRealTime;
 
-    if ((HWVOICE_FLAGS(sv) & 0x8000) != 0)
-    {
-        sv->envCurrent += sv->envDelta * (lowDeltaTime >> 8);
-        if (sv->envDelta < 0)
+        if ((HWVOICE_FLAGS(sv) & 0x8000) != 0)
         {
-            if (sv->envTarget >= sv->envCurrent)
+            sv->envCurrent += sv->envDelta * (lowDeltaTime >> 8);
+            if (sv->envDelta < 0)
+            {
+                if (sv->envTarget >= sv->envCurrent)
+                {
+                    sv->envCurrent = sv->envTarget;
+                    HWVOICE_FLAGS(sv) &= ~0x8000;
+                }
+            }
+            else if (sv->envTarget <= sv->envCurrent)
             {
                 sv->envCurrent = sv->envTarget;
                 HWVOICE_FLAGS(sv) &= ~0x8000;
             }
+            sv->volume = sv->envCurrent;
+            volUpdate = 1;
         }
-        else if (sv->envTarget <= sv->envCurrent)
+        else
         {
-            sv->envCurrent = sv->envTarget;
-            HWVOICE_FLAGS(sv) &= ~0x8000;
+            volUpdate = (HWVOICE_FLAGS(sv) & 0x100000000000ULL) != 0;
         }
-        sv->volume = sv->envCurrent;
-        volUpdate = 1;
-    }
-    else
-    {
-        volUpdate = (HWVOICE_FLAGS(sv) & 0x100000000000ULL) != 0;
-    }
 
-    HWVOICE_FLAGS(sv) &= ~0x100000000000ULL;
+        HWVOICE_FLAGS(sv) &= ~0x100000000000ULL;
 
-    faderVol = synthMasterFader[sv->vGroup].auxCurrent * synthMasterFader[sv->vGroup].current *
-               synthMasterFader[sv->fxFlag ? 22 : 21].current;
+        faderVol = synthMasterFader[sv->vGroup].auxCurrent * synthMasterFader[sv->vGroup].current *
+                   synthMasterFader[sv->fxFlag ? 22 : 21].current;
 
-    if (sv->track != 0xFF)
-    {
-        vol = (1.f / 127.f) * (faderVol * (f32)synthTrackVolume[sv->track]);
-    }
-    else
-    {
-        vol = faderVol;
-    }
-
-    if (vol != sv->lastVolFaderScale)
-    {
-        sv->lastVolFaderScale = vol;
-        volUpdate = 1;
-    }
-
-    voiceVol = (1.f / (8192.f * 1016.f)) * (f32)sv->volume;
-
-    if ((sv->treScale | sv->treModAddScale) != 0)
-    {
-        Modulation = inpGetModulation((McmdVoiceState*)sv);
-        lfo = (1.f / 8192.f) *
-              (f32)(0x2000 - ((0x2000 - ((s16)inpGetTremolo((McmdVoiceState*)sv) - 0x2000)) >> 1));
+        if (sv->track != 0xFF)
         {
-            f32 modScale = 1.490207e-08f * ((f32)Modulation * (f32)(0x1000 - sv->treModAddScale));
-            scale = (1.f / 4096.f) * ((f32)sv->treScale * (1.f - modScale));
+            vol = (1.f / 127.f) * (faderVol * (f32)synthTrackVolume[sv->track]);
         }
-        if (sv->treCurScale < scale)
+        else
         {
-            if ((sv->treCurScale += 0.2f) > scale)
+            vol = faderVol;
+        }
+
+        if (vol != sv->lastVolFaderScale)
+        {
+            sv->lastVolFaderScale = vol;
+            volUpdate = 1;
+        }
+
+        voiceVol = (1.f / (8192.f * 1016.f)) * (f32)sv->volume;
+
+        if ((sv->treScale | sv->treModAddScale) != 0)
+        {
+            Modulation = inpGetModulation((McmdVoiceState*)sv);
+            lfo = (1.f / 8192.f) *
+                  (f32)(0x2000 - ((0x2000 - ((s16)inpGetTremolo((McmdVoiceState*)sv) - 0x2000)) >> 1));
             {
-                sv->treCurScale = scale;
+                f32 modScale = 1.490207e-08f * ((f32)Modulation * (f32)(0x1000 - sv->treModAddScale));
+                scale = (1.f / 4096.f) * ((f32)sv->treScale * (1.f - modScale));
             }
-        }
-        else if (sv->treCurScale > scale)
-        {
-            if ((sv->treCurScale -= 0.2f) < scale)
+            if (sv->treCurScale < scale)
             {
-                sv->treCurScale = scale;
-            }
-        }
-        {
-            f32 tmp = lfo * (1.f - sv->treCurScale);
-            voiceVol = voiceVol * (1.f - tmp);
-        }
-        volUpdate = 1;
-    }
-
-    if ((synthFlags & 1) == 0)
-    {
-        if ((HWVOICE_FLAGS(sv) & 0x200000000000ULL) != 0 || (sv->midiDirtyFlags & 0x6) != 0)
-        {
-            HWVOICE_FLAGS(sv) &= ~0x200000000000ULL;
-            pan = sv->panning[0] + (inpGetPanning((McmdVoiceState*)sv) - 0x2000) * 0x200;
-            sv->lastPan = pan < 0 ? 0 : (pan > 0x7F0000 ? 0x7F0000 : pan);
-
-            if ((synthFlags & 2) != 0)
-            {
-                if ((sv->lastSPan = sv->panning[1] + (u16)inpGetSurPanning((McmdVoiceState*)sv) * 0x200) > 0x7F0000)
+                if ((sv->treCurScale += 0.2f) > scale)
                 {
-                    sv->lastSPan = 0x7F0000;
+                    sv->treCurScale = scale;
                 }
             }
-            else
+            else if (sv->treCurScale > scale)
             {
-                sv->lastSPan = 0;
+                if ((sv->treCurScale -= 0.2f) < scale)
+                {
+                    sv->treCurScale = scale;
+                }
+            }
+            {
+                f32 tmp = lfo * (1.f - sv->treCurScale);
+                voiceVol = voiceVol * (1.f - tmp);
             }
             volUpdate = 1;
         }
-        else if ((synthFlags & 2) == 0)
+
+        if ((synthFlags & 1) == 0)
         {
+            if ((HWVOICE_FLAGS(sv) & 0x200000000000ULL) != 0 || (sv->midiDirtyFlags & 0x6) != 0)
+            {
+                HWVOICE_FLAGS(sv) &= ~0x200000000000ULL;
+                pan = sv->panning[0] + (inpGetPanning((McmdVoiceState*)sv) - 0x2000) * 0x200;
+                sv->lastPan = pan < 0 ? 0 : (pan > 0x7F0000 ? 0x7F0000 : pan);
+
+                if ((synthFlags & 2) != 0)
+                {
+                    if ((sv->lastSPan = sv->panning[1] + (u16)inpGetSurPanning((McmdVoiceState*)sv) * 0x200) > 0x7F0000)
+                    {
+                        sv->lastSPan = 0x7F0000;
+                    }
+                }
+                else
+                {
+                    sv->lastSPan = 0;
+                }
+                volUpdate = 1;
+            }
+            else if ((synthFlags & 2) == 0)
+            {
+                sv->lastSPan = 0;
+            }
+        }
+        else
+        {
+            sv->lastPan = 0x400000;
             sv->lastSPan = 0;
+            volUpdate |= (HWVOICE_FLAGS(sv) & 0x200000000000ULL) != 0;
+            HWVOICE_FLAGS(sv) &= ~0x200000000000ULL;
         }
-    }
-    else
-    {
-        sv->lastPan = 0x400000;
-        sv->lastSPan = 0;
-        volUpdate |= (HWVOICE_FLAGS(sv) & 0x200000000000ULL) != 0;
-        HWVOICE_FLAGS(sv) &= ~0x200000000000ULL;
-    }
 
-    if (volUpdate || (sv->midiDirtyFlags & 0xF01) != 0)
-    {
-        preVol = voiceVol;
-        postVol = (1.f / 16383.f) * (voiceVol * vol * (f32)inpGetVolume((McmdVoiceState*)sv));
-        auxa = (1.f / 127.f) * (f32)sv->revVolOffset +
-               ((1.f / 16383.f) * (preVol * (f32)inpGetPreAuxA((McmdVoiceState*)sv)) +
-                (1.f / 127.f) *
-                    ((f32)sv->revVolScale *
-                     ((1.f / 16383.f) * (postVol * (f32)inpGetReverb((McmdVoiceState*)sv)))));
-        auxb = (1.f / 16383.f) * (preVol * (f32)inpGetPreAuxB((McmdVoiceState*)sv)) +
-               (1.f / 16383.f) * (postVol * (f32)inpGetPostAuxB((McmdVoiceState*)sv));
-        sv->curOutputVolume = (u16)(32767.f * postVol);
-        hwSetVolume(voice, sv->volTable, postVol, sv->lastPan, sv->lastSPan, auxa, auxb);
-    }
-
-    if (sv->age != 0)
-    {
-        if ((s32)(sv->age -= sv->ageSpeed * lowDeltaTime) < 0)
+        if (volUpdate || (sv->midiDirtyFlags & 0xF01) != 0)
         {
-            sv->age = 0;
+            preVol = voiceVol;
+            postVol = (1.f / 16383.f) * (voiceVol * vol * (f32)inpGetVolume((McmdVoiceState*)sv));
+            auxa = (1.f / 127.f) * (f32)sv->revVolOffset +
+                   ((1.f / 16383.f) * (preVol * (f32)inpGetPreAuxA((McmdVoiceState*)sv)) +
+                    (1.f / 127.f) *
+                        ((f32)sv->revVolScale *
+                         ((1.f / 16383.f) * (postVol * (f32)inpGetReverb((McmdVoiceState*)sv)))));
+            auxb = (1.f / 16383.f) * (preVol * (f32)inpGetPreAuxB((McmdVoiceState*)sv)) +
+                   (1.f / 16383.f) * (postVol * (f32)inpGetPostAuxB((McmdVoiceState*)sv));
+            sv->curOutputVolume = (u16)(32767.f * postVol);
+            hwSetVolume(voice, sv->volTable, postVol, sv->lastPan, sv->lastSPan, auxa, auxb);
         }
-        hwSetPriority(voice, sv->prio << 24 | sv->age >> 15);
+
+        if (sv->age != 0)
+        {
+            if ((s32)(sv->age -= sv->ageSpeed * lowDeltaTime) < 0)
+            {
+                sv->age = 0;
+            }
+            hwSetPriority(voice, sv->prio << 24 | sv->age >> 15);
+        }
+
+        synthQueueDelayedUpdate((SynthDelayedNode*)sv, 1, (5 - hwGetTimeOffset()) * 256);
+
     }
-
-    synthQueueDelayedUpdate((SynthDelayedNode*)sv, 1, (5 - hwGetTimeOffset()) * 256);
-
     UpdateTimeMIDICtrl(sv);
 }
 
@@ -1140,28 +1127,25 @@ void EventHandler(int voice)
     SynthHwVoice* sv;
 
     sv = HWVOICE(voice);
-    if (!hwIsActive(voice) && sv->addr == 0)
+    if (hwIsActive(voice) || sv->addr != 0)
     {
-        UpdateTimeMIDICtrl(sv);
-        return;
-    }
+        macSetPedalState(sv, inpGetPedal((McmdVoiceState*)sv) > 0x1F80);
 
-    macSetPedalState(sv, inpGetPedal((McmdVoiceState*)sv) > 0x1F80);
-
-    if ((HWVOICE_FLAGS(sv) & 0x20) != 0)
-    {
-        HWVOICE_FLAGS(sv) &= ~0x20;
-        HWVOICE_FLAGS(sv) |= 0x10;
-        hwStart(voice, sv->studio);
-    }
-
-    if ((HWVOICE_FLAGS(sv) & 0x10000000090ULL) == 0x90)
-    {
-        HWVOICE_FLAGS(sv) &= ~0x90;
-        hwKeyOff(voice);
-        if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0 && adsrRelease(&sv->pitchADSR))
+        if ((HWVOICE_FLAGS(sv) & 0x20) != 0)
         {
-            HWVOICE_FLAGS(sv) &= ~0x20000000000ULL;
+            HWVOICE_FLAGS(sv) &= ~0x20;
+            HWVOICE_FLAGS(sv) |= 0x10;
+            hwStart(voice, sv->studio);
+        }
+
+        if ((HWVOICE_FLAGS(sv) & 0x10000000090ULL) == 0x90)
+        {
+            HWVOICE_FLAGS(sv) &= ~0x90;
+            hwKeyOff(voice);
+            if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0 && adsrRelease(&sv->pitchADSR))
+            {
+                HWVOICE_FLAGS(sv) &= ~0x20000000000ULL;
+            }
         }
     }
 
