@@ -112,14 +112,14 @@ void ProjectedLight_init(GameObject* obj, ProjectedLightSetup* setup)
             f32 halfHeight = (f32)(u32)setupData->projectionHeight / 10.0f;
             f32 halfWidth;
             f32 nearDepth, farDepth;
-            if (halfHeight < lbl_803E7260)
+            if (halfHeight < 1.0f)
             {
-                halfHeight = lbl_803E7260;
+                halfHeight = 1.0f;
             }
             halfWidth = (f32)(u32)setupData->projectionWidth / 10.0f;
-            if (halfWidth < lbl_803E7260)
+            if (halfWidth < 1.0f)
             {
-                halfWidth = lbl_803E7260;
+                halfWidth = 1.0f;
             }
             if (setupData->orthoDepthNibbles != 0)
             {
@@ -129,7 +129,7 @@ void ProjectedLight_init(GameObject* obj, ProjectedLightSetup* setup)
             }
             else
             {
-                nearDepth = lbl_803E7260;
+                nearDepth = 1.0f;
                 farDepth = nearDepth;
             }
             modelLightStruct_setupOrthoProjection(state->light, halfWidth, -halfWidth, -halfHeight, halfHeight,
@@ -139,14 +139,14 @@ void ProjectedLight_init(GameObject* obj, ProjectedLightSetup* setup)
         {
             f32 height = (f32)(u32)setupData->projectionHeight / 10.0f;
             f32 width;
-            if (height < lbl_803E7260)
+            if (height < 1.0f)
             {
-                height = lbl_803E7260;
+                height = 1.0f;
             }
             width = (f32)(u32)setupData->projectionWidth / 10.0f;
-            if (width < lbl_803E7260)
+            if (width < 1.0f)
             {
-                width = lbl_803E7260;
+                width = 1.0f;
             }
             modelLightStruct_setupPerspectiveProjection(state->light, (f32)(u32)setupData->fovY, height / width);
         }
