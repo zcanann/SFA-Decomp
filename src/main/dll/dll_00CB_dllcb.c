@@ -209,7 +209,7 @@ int fn_80160534(int* obj)
     u8 step;
     if (((GameObject*)obj)->anim.alpha >= (step = framesThisStep))
     {
-        ((GameObject*)obj)->anim.alpha = ((GameObject*)obj)->anim.alpha - step;
+        ((GameObject*)obj)->anim.alpha -= step;
     }
     else
     {
