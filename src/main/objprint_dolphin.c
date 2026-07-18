@@ -48,6 +48,9 @@
 #include "dolphin/gx/GXCull.h"
 #include "string.h"
 #include "dolphin/gx/GXBump.h"
+#include "ext_min/GXGeometry_min.h"
+#include "ext_min/GXTransform_min.h"
+#include "ext_min/GXTev_min.h"
 
 ModelLightStruct* lbl_803DCC64;
 u8 lbl_803DCC60;
@@ -140,24 +143,14 @@ typedef struct
     int pad[3];
     int pos;
 } MtxBitStream;
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void GXLoadNrmMtxImm(f32* m, int id);
-extern void GXBegin(int prim, int fmt, u16 count);
 typedef struct
 {
     u8 r, g, b, a;
 } ObjGXColor;
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
-extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, int out);
-extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int out);
 extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjGXColor color);
-extern void GXSetTevColor(int id, u32* color);
 extern f32 lbl_803DEA38;
 extern f32 lbl_803DEA4C;
 extern f32 lbl_803DEA50;
@@ -183,14 +176,8 @@ s32 mapCheckCurBlocks(int v);
 #define OBJPRINT_MODEL_DEF(obj)         (((ObjAnimComponent*)(obj))->modelInstance)
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent*)(obj))->bankIndex)
 
-extern u32 GXSetTevKColorSel();
 extern u32 GXSetBlendMode();
-extern void GXSetTevKColor(int id, ObjGXColor color);
-extern void GXSetNumTexGens(u8 nTexGens);
-extern void GXSetNumTevStages(u8 nStages);
 extern void GXSetNumIndStages(u8 nIndStages);
-extern void GXSetTevOrder(int stage, int coord, int map, int color);
-extern void GXSetTevSwapMode(int stage, int ras, int tex);
 extern u32 lbl_803DB468;
 extern u32 lbl_803DB470;
 extern u8 lbl_803DCC3D;

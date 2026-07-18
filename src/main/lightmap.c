@@ -47,6 +47,7 @@
 #include "main/acosf_cs.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "ext_min/intersect_min.h"
+#include "ext_min/mtx_legacy_min.h"
 
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
@@ -93,7 +94,6 @@ extern u8 lbl_803DCE98; /* count of allocated blocks */
 extern f32 lbl_803DEC18;
 extern int mapBlockRender_setLightmapShader(int* obj, int* state);
 extern int mapBlockRender_setShader(int p1, int* obj, int* state);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void fn_802B4ED8(int* obj, int a, int b);
 extern u32 lbl_803DCE34;
@@ -107,7 +107,6 @@ extern void screenImageDraw(void);
 extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 extern int mapRectFn_8005a728(int row, int col, u8* block);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void renderMapBlock(u8* block, int* p1);
 extern int lbl_8038228C[];
 extern s32 gMapLayerCellStates;

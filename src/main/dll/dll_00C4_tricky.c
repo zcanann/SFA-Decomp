@@ -61,6 +61,7 @@
 #include "main/dll/dll_80136a40_ext2.h"
 #include "main/dll/dll_0014_unk.h"
 #include "main/pi_dolphin_cs.h"
+#include "ext_min/string_min.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -267,7 +268,6 @@ extern f32 lbl_803E2544;
 extern f32 lbl_803E2548;
 extern f32 lbl_803E254C;
 extern f32 lbl_803E2550;
-extern void memmove(void* dst, void* src, int n);
 extern void fn_801B17F4(GameObject*);
 extern void fn_801B6D40(void);
 extern void fn_801FD4A8(GameObject*);

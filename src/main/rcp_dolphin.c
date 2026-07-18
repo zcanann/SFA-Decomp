@@ -37,6 +37,10 @@
 #include "main/pi_dolphin_pr.h"
 #include "main/gx_scissor_api.h"
 #include "string.h"
+#include "ext_min/GXBump_min.h"
+#include "ext_min/GXTexture_min.h"
+#include "ext_min/mtx_legacy_min.h"
+#include "ext_min/os_min.h"
 
 struct LoadedTextureEntry* gLoadedTextures;
 u16* gRcpTexIdRemap;
@@ -90,7 +94,6 @@ extern u8 lbl_803DCD69;
 extern u8 lbl_803DCD6A;
 extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetNumTevStages(u8 nStages);
-extern void GXSetNumIndStages(u8 nIndStages);
 extern u8 gRcpDistortSlots[];
 typedef struct LoadedTextureEntry
 {
@@ -138,7 +141,6 @@ extern F32Pair lbl_803DEB58;
 extern f32 lbl_803DEB5C;
 extern f32 lbl_803DEB7C;
 extern void GXSetTevKAlphaSel(int tev, int sel);
-extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
 extern void textureFn_80053d58(void* obj);
 extern void GXInitTexObj(void* obj, void* img, u16 w, u16 h, int fmt, u8 ws, u8 wt, u8 mipmap);
 extern void GXInitTexObjUserData(void* obj, void* udata);
@@ -185,7 +187,6 @@ typedef struct GXColor8
     u8 b;
     u8 a;
 } GXColor8;
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void GXSetChanAmbColor(int chan, GXColor8 c);
 extern void GXSetChanMatColor(int chan, GXColor8 c);
 extern void GXSetTexCopyDst(int w, int h, int fmt, int mip);
@@ -199,8 +200,6 @@ extern f32 gRcpScreenWidth;
 extern f32 gRcpScreenHeight;
 extern u8 gRcpTexAllocFailed;
 extern u32 gRcpTexAllocTag;
-extern int OSDisableInterrupts(void);
-extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void tex1GetFrame(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
 extern void texPreGetMipmap(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
 

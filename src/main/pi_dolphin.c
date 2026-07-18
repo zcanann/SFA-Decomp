@@ -176,6 +176,13 @@ extern volatile int lbl_803DCC80;
 #include "main/newshadows_ext2.h"
 #include "main/rcp_dolphin_cs.h"
 #include "dolphin/gx/GXBump.h"
+#include "ext_min/GXTev_min.h"
+#include "ext_min/GXFifo_min.h"
+#include "ext_min/GXManage_min.h"
+#include "ext_min/GXPixel_min.h"
+#include "ext_min/GXFrameBuffer_min.h"
+#include "ext_min/os_min.h"
+#include "ext_min/GXPerf_min.h"
 
 struct MldfNames
 {
@@ -962,11 +969,8 @@ extern void* lbl_803DCD10;
 extern void VISetBlack(int);
 extern u8 lbl_803DB5CC;
 extern void C_MTXOrtho(f32* mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
-extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
-extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
 extern char* lbl_803DCD08;
 extern void GXGetFifoPtrs(void* fifo, void** out_g, void** out_p);
-extern void GXEnableBreakPt(void* p);
 extern void* lbl_803DCCD4;
 extern void* renderFrameBuffer;
 extern void* externalFrameBuffer0;
@@ -985,14 +989,11 @@ extern int lbl_803DCD80;
 extern u8 lbl_803DCD69;
 extern f32 lbl_803DEACC;
 extern f32 lbl_803DEADC;
-extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
 extern int lbl_803DCD78;
 extern u8* lbl_803DCD2C;
 extern int lbl_803DB5F4;
 extern void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp);
-extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
 extern void GXSetTevColorS10(int id, void* color);
-extern void GXSetTevKColor(int id, void* color);
 extern void mapTextureScrollGetOffset(u8 idx, f32* x, f32* y);
 extern void PSMTXIdentity(f32 m[3][4]);
 extern void PSMTXRotRad(f32 m[3][4], int axis, f32 rad);
@@ -1002,7 +1003,6 @@ typedef struct
 } PiVec3;
 extern void PSMTXRotAxisRad(f32 m[3][4], PiVec3* axis, f32 rad);
 extern u8 lbl_803DB5E8;
-extern void GXSetTevOp(int stage, int mode);
 extern f32 lbl_803DEAE4;
 extern u8 lbl_803DCD6B;
 extern void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 sS, f32 sT, f32 tS, f32 tT);
@@ -1014,7 +1014,6 @@ extern int lbl_803DCD84;
 extern f32 lbl_803DEAE8;
 extern f32 lbl_803DEAEC;
 extern f32 lbl_803DEAF0;
-extern void GXSetTevColor(int id, void* color);
 extern u8 gLoadingScreenTextures[];
 extern char lbl_8035F680[0x38];
 extern void OSStopStopwatch(void* sw);
@@ -1024,9 +1023,7 @@ extern void OSStartStopwatch(void* sw);
 extern int OSGetCurrentThread(void);
 extern int Queue_GetCount(void* q);
 extern void OSSleepThread(void* q);
-extern int GXReadDrawSync(void);
 extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
-extern void GXGetGPStatus(u8* a, u8* b, u8* c, u8* d, u8* e);
 extern void GXInitFifoBase(void* fifo, void* base, u32 size);
 extern void GXSetCPUFifo(void* fifo);
 extern void GXSetGPFifo(void* fifo);
@@ -1034,7 +1031,6 @@ extern int GXInit(void* base, u32 size);
 extern void OSWakeupThread(void* q);
 extern int Queue_Peek(void* q, void* out);
 extern void Queue_Pop(void* q, void* out);
-extern void GXDisableBreakPt(void);
 extern void GXPeekZ(int x, int y, void* out);
 extern f32 lbl_803DCCC0;
 extern f32 physicsTimeScale;
@@ -1067,13 +1063,6 @@ extern void GXInitFifoLimits(void* fifo, u32 hi, u32 lo);
 extern void Queue_Init(void* q, void* buf, int n, int stride);
 extern void OSInitThreadQueue(char* q);
 extern void GXSetBreakPtCallback(void (*cb)());
-extern void GXSetFieldMode(int field_mode, int half_aspect_ratio);
-extern void GXSetDispCopySrc(int left, int top, int wd, int ht);
-extern u32 GXSetDispCopyYScale(f32 vscale);
-extern void GXSetDispCopyDst(int wd, int ht);
-extern void GXSetPixelFmt(int pix_fmt, int z_fmt);
-extern void GXSetDither(int dither);
-extern void GXSetDispCopyGamma(int gamma);
 extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
 extern char lbl_8035F6B8[0x78];
 extern char* lbl_803DCCE0;
@@ -2397,7 +2386,6 @@ char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
 
 
 
-extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern int zlbDecompress(u8* src, int size, u8* dst, void* outp);
 
 typedef struct PathPoint
@@ -4320,7 +4308,6 @@ typedef union
 } PiWGPipe;
 
 extern volatile PiWGPipe GXWGFifo : (0xCC008000);
-extern void GXSetGPMetric(int perf0, int perf1);
 
 extern u8 enableDebugText;
 
@@ -4682,12 +4669,6 @@ extern int lbl_803DCD8C;
 extern int lbl_803DCD90;
 extern u8 lbl_803DCD6A;
 extern void GXSetTevDirect(GXTevStageID tev_stage);
-extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
-extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
-extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                            GXTevRegID out_reg);
-extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                            GXTevRegID out_reg);
 void setDisplayCopyFilter(void)
 {
     u8* p = (u8*)gRenderModeObj;
@@ -4702,11 +4683,7 @@ void setDisplayCopyFilter(void)
 }
 
 
-extern void GXSetAlphaUpdate(GXBool update_enable);
-extern void GXFlush(void);
 extern void Queue_Push(void* q, void* item);
-extern void GXSetDrawSync(u16 v);
-extern void GXCopyDisp(void* fb, u8 clear);
 
 int GXFlush_(u8 visible, int unused)
 {
@@ -5387,8 +5364,6 @@ int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, i
     return 0;
 }
 
-extern void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue,
-                                  GXTevColorChan alpha);
 
 void freeAndNull(void** p)
 {

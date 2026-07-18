@@ -31,6 +31,8 @@
 #include "main/dll/modgfx.h"
 #include "dolphin/gx/GXFrameBuffer.h"
 #include "string.h"
+#include "ext_min/GXTexture_min.h"
+#include "ext_min/GXTransform_min.h"
 
 CameraViewSlot* gNewShadowCurrentViewSlot;
 u32 gNewShadowReflectionSmallTexture;
@@ -286,10 +288,8 @@ extern u32 FUN_8028680c();
 extern u32 FUN_80286858();
 extern u32 FUN_802947f8();
 extern u32 SQRT();
-extern void GXInvalidateTexAll(void);
 extern float floor(float);
 extern void fn_80069EB8();
-extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
 extern void mapGetBlocks(int* a, int* b);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);

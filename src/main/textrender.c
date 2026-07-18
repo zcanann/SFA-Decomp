@@ -25,6 +25,7 @@
 #include "track/intersect_api.h"
 #include "string.h"
 #include "main/lightmap.h"
+#include "ext_min/OSFont_min.h"
 
 struct JapaneseDiscStatusResource;
 struct EnglishDiscStatusResource;
@@ -345,7 +346,6 @@ extern void textBlendSetupFn_80078a7c(void);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 int getGameState(void);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
-extern u16 OSGetFontEncode(void);
 extern void OSLoadFont(void* buf, void* tmp);
 extern void OSGetFontWidth(u8* s, int* width);
 extern void OSGetFontTexel(u8* s, void* img, int pos, int stride, int* width);
