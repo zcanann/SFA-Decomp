@@ -73,7 +73,6 @@ STATIC_ASSERT(sizeof(WispEventRow) == 0xc);
 STATIC_ASSERT(offsetof(WispEventRow, moveId) == 0x8);
 
 extern void* lbl_8031F16C[];
-extern u8 lbl_8031DD30[];
 
 /*
  * HagabonAnimState - file-local overlay naming the PER-FAMILY anim-control
