@@ -77,6 +77,10 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 extern f32 gSbCloudBallLightAttenNear;
 extern f32 gSbCloudBallLightAttenFar;
 
+static const union {
+    f32 f;
+} kZeroFade = {0.0f};
+
 int SB_CloudBall_getExtraSize(void)
 {
     return 0x24;
@@ -174,7 +178,7 @@ void SB_CloudBall_update(GameObject* obj)
         if (obj->userData1 < 0 ||
             (player != NULL && (((GameObject*)player)->objectFlags & SBCLOUDBALL_OBJFLAG_PARENT_SLACK) != 0))
         {
-            if (state->fadeTimer == 0.0f)
+            if (state->fadeTimer == kZeroFade.f)
             {
                 obj->anim.alpha = 0;
                 state->fadeTimer = SB_CLOUD_BALL_FADE_TIME;
@@ -187,7 +191,7 @@ void SB_CloudBall_update(GameObject* obj)
         ObjAnim_GetPriorityHitState(&obj->anim)->objectHitMask = 0x10;
         ObjAnim_GetPriorityHitState(&obj->anim)->skeletonHitMask = 0x10;
         ObjAnim_GetPriorityHitState(&obj->anim)->flags |= 1;
-        if (ObjAnim_GetPriorityHitState(&obj->anim)->contactFlags != 0 && state->fadeTimer == 0.0f)
+        if (ObjAnim_GetPriorityHitState(&obj->anim)->contactFlags != 0 && state->fadeTimer == kZeroFade.f)
         {
             projectileParticleFxFn_80099660Legacy((int*)obj, 1.0f, 2);
             state->fadeTimer = SB_CLOUD_BALL_FADE_TIME;
