@@ -36,7 +36,6 @@
 
 
 
-void fn_8015FBEC(GameObject* obj);
 
 static inline u8 scarab_isObjectInList(void* obj)
 {
