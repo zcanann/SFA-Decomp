@@ -6,7 +6,7 @@
  * (fn_801E76A0): reading the shop's current item price through the stall's
  * interface vtable, pushing the three price digits into his number-texture
  * slots, and handling buy/cancel through the screen-transition + UI dll.
- * fn_801E7DC8 scatters the paid scarab coins (object type 1151). Per-frame
+ * ShopKeeper_spawnScarabs scatters the paid scarab coins (object type 1151). Per-frame
  * look-at and eye animation run through the shared dll_2E (moveLib) blocks.
  */
 #include "main/dll_000A_expgfx.h"
@@ -52,7 +52,7 @@ STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
-/* Obj_AllocObjectSetup(36,...) buffer composed in fn_801E7DC8. Head is the
+/* Obj_AllocObjectSetup(36,...) buffer composed in ShopKeeper_spawnScarabs. Head is the
  * common ObjPlacement; mapId slot (0x14) is repurposed as an int (vendorObj),
  * tail (0x18..0x1B) is file-local. */
 typedef struct ShopkeeperSpawnSetup
@@ -88,7 +88,7 @@ extern f32 lbl_803E5A20;
 
 extern f32 lbl_803E59F0;
 
-void fn_801E7DC8(GameObject* obj, int state, int count);
+void ShopKeeper_spawnScarabs(GameObject* obj, int state, int count);
 
 f32 lbl_803E5A24 = 10.0f;
 f32 lbl_803E5A28 = 300.0f;
@@ -208,7 +208,7 @@ int fn_801E76A0(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
         switch (seq->eventIds[i])
         {
         case 1:
-            fn_801E7DC8(obj, state, ((ShopkeeperState*)state)->amount);
+            ShopKeeper_spawnScarabs(obj, state, ((ShopkeeperState*)state)->amount);
             ((ShopkeeperState*)state)->flags9D4 |= SHOPKEEPER_FLAG_PURCHASED;
             break;
         case 2:
@@ -283,7 +283,7 @@ int fn_801E76A0(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
 }
 
 f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
-void fn_801E7DC8(GameObject* obj, int state, int count)
+void ShopKeeper_spawnScarabs(GameObject* obj, int state, int count)
 {
     int i;
     f32 groundHeight;

@@ -2,7 +2,7 @@
  * DLL 0x2A4 - a short-lived spinning debris object spawned around the
  * on-rails Arwing flight sections.
  *
- * fn_8023134C / fn_8023137C are the launch helpers the enemy generator's
+ * dll_2A4_setLifetime / dll_2A4_setVelocity are the launch helpers the enemy generator's
  * spawn modes use to hand a freshly loaded ship its fade lifetime and
  * direction vector.
  *
@@ -24,13 +24,13 @@
 #define ROT_RANGE_MAX 0xffff
 #define SPIN_RATE_MAG 0x14
 
-void fn_8023134C(GameObject* obj, int lifetime)
+void dll_2A4_setLifetime(GameObject* obj, int lifetime)
 {
     Dll2A3State* state = obj->extra;
     state->lifetime = lifetime;
 }
 
-void fn_8023137C(GameObject* obj, Dll2A3Velocity* velocity)
+void dll_2A4_setVelocity(GameObject* obj, Dll2A3Velocity* velocity)
 {
     obj->anim.velocityX = velocity->x;
     obj->anim.velocityY = velocity->y;

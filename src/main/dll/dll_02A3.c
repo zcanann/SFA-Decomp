@@ -4,7 +4,7 @@
  * On init it fades in from alpha 0, picks a random starting orientation
  * and random per-axis spin speeds. Each frame it fades the alpha up to a
  * cap, advances its rotation by the spin speeds, and drifts along its
- * velocity (gravity/launch supplied by fn_8023137C). It self-frees once
+ * velocity (gravity/launch supplied by dll_2A4_setVelocity). It self-frees once
  * its lifetime decays past a threshold.
  *
  * lbl_803DDD90 is a live-instance refcount (bumped on init, dropped on
@@ -24,13 +24,13 @@ int lbl_803DDD90;
 #include "main/object_descriptor.h"
 #include "main/object_render_legacy.h"
 
-void fn_80231028(GameObject* obj, int speed)
+void dll_2A3_setSpeed(GameObject* obj, int speed)
 {
     ARWSpeedStrState* state = obj->extra;
     state->speed = speed;
 }
 
-void fn_80231058(GameObject* obj, ARWSpeedStrVelocity* velocity)
+void dll_2A3_setVelocity(GameObject* obj, ARWSpeedStrVelocity* velocity)
 {
     obj->anim.velocityX = velocity->x;
     obj->anim.velocityY = velocity->y;

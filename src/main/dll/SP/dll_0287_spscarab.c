@@ -1,6 +1,6 @@
 /*
  * spscarab (DLL 0x287) - the scarab coin / pickup that the shopkeeper
- * scatters when paid (see spshopkeeper fn_801E7DC8, which spawns object
+ * scatters when paid (see spshopkeeper ShopKeeper_spawnScarabs, which spawns object
  * type 1151 = this object).
  *
  * Each scarab is launched along its facing angle, falls under gravity and

@@ -5,7 +5,7 @@
  * one of two spawn helpers selected by the placement's spawnMode before
  * re-arming the timer.
  *
- * fn_802315EC / fn_802317A8 are the two spawn modes: each allocates an
+ * arwgenerato_spawnSquadronShipA / arwgenerato_spawnSquadronShipB are the two spawn modes: each allocates an
  * enemy squadron ship (object id 0x616 / 0x617), scatters it around this
  * object's position by the placement's per-axis spread, then loads it and
  * hands it a direction vector and launch speed via the sibling projectile
@@ -40,8 +40,8 @@ typedef struct SquadronShipSetup
 /* spawned squadron-ship extra block; fields written at +0x4,0x5,0x8,0xc,0x10,0x18..0x1a */
 #define SPAWN_EXTRA_SIZE 0x20
 
-void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
-void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
+void arwgenerato_spawnSquadronShipA(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
+void arwgenerato_spawnSquadronShipB(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
 
 int arwgenerato_getExtraSize(void)
 {
@@ -81,10 +81,10 @@ void arwgenerato_update(GameObject* obj)
             switch (mapData->spawnMode)
             {
             case 0:
-                fn_802317A8(obj, state, mapData);
+                arwgenerato_spawnSquadronShipB(obj, state, mapData);
                 break;
             case 1:
-                fn_802315EC(obj, state, mapData);
+                arwgenerato_spawnSquadronShipA(obj, state, mapData);
                 break;
             }
             state->spawnTimer = (f32)(u32)mapData->spawnInterval;
@@ -92,7 +92,7 @@ void arwgenerato_update(GameObject* obj)
     }
 }
 
-void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
+void arwgenerato_spawnSquadronShipA(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
 {
     SquadronShipSetup* newObj;
     Dll2A3Velocity dir;
@@ -118,12 +118,12 @@ void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* s
         dir.x = setup->velocityX / *(f32*)&lbl_803E7140;
         dir.y = setup->velocityY / *(f32*)&lbl_803E7140;
         dir.z = setup->velocityZ / *(f32*)&lbl_803E7140;
-        fn_8023137C((GameObject*)(newObj), &dir);
-        fn_8023134C((GameObject*)(newObj), setup->projectileSpeed);
+        dll_2A4_setVelocity((GameObject*)(newObj), &dir);
+        dll_2A4_setLifetime((GameObject*)(newObj), setup->projectileSpeed);
     }
 }
 
-void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
+void arwgenerato_spawnSquadronShipB(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
 {
     SquadronShipSetup* newObj;
     ARWSpeedStrVelocity dir;
@@ -149,8 +149,8 @@ void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* s
         dir.x = setup->velocityX / *(f32*)&lbl_803E7140;
         dir.y = setup->velocityY / *(f32*)&lbl_803E7140;
         dir.z = setup->velocityZ / *(f32*)&lbl_803E7140;
-        fn_80231058((GameObject*)(newObj), &dir);
-        fn_80231028((GameObject*)(newObj), setup->projectileSpeed);
+        dll_2A3_setVelocity((GameObject*)(newObj), &dir);
+        dll_2A3_setSpeed((GameObject*)(newObj), setup->projectileSpeed);
     }
 }
 

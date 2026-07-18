@@ -51,7 +51,7 @@ void ARWSpeedStr_update(GameObject* obj);
 void ARWSpeedStr_release(void);
 void ARWSpeedStr_initialise(void);
 
-void fn_80231028(GameObject* obj, int speed);
-void fn_80231058(GameObject* obj, ARWSpeedStrVelocity* velocity);
+void dll_2A3_setSpeed(GameObject* obj, int speed);
+void dll_2A3_setVelocity(GameObject* obj, ARWSpeedStrVelocity* velocity);
 
 #endif

@@ -41,7 +41,7 @@ void arwgenerato_init(GameObject* obj, ARWGeneratorSetup* setup);
 void arwgenerato_release(void);
 void arwgenerato_initialise(void);
 
-void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
-void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
+void arwgenerato_spawnSquadronShipA(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
+void arwgenerato_spawnSquadronShipB(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
 
 #endif

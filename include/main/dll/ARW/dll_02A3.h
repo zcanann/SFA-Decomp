@@ -38,7 +38,7 @@ void dll_2A3_init(GameObject* obj);
 void dll_2A3_release_nop(void);
 void dll_2A3_initialise_nop(void);
 
-void fn_8023134C(GameObject* obj, int lifetime);
-void fn_8023137C(GameObject* obj, Dll2A3Velocity* velocity);
+void dll_2A4_setLifetime(GameObject* obj, int lifetime);
+void dll_2A4_setVelocity(GameObject* obj, Dll2A3Velocity* velocity);
 
 #endif
