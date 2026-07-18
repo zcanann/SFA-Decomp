@@ -838,8 +838,8 @@ int textureFn_80052bb4(int model, f32* params)
 {
     ModelLightStruct* la;
     ModelLightStruct* lb;
-    la = fn_80089A58();
-    lb = fn_80089A50();
+    la = skyGetSunLight();
+    lb = skyGetMoonLight();
     if (la == NULL || lb == NULL)
     {
         return 0;

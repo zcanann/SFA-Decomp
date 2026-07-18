@@ -4,7 +4,7 @@
  * accessed via gBaddieControlInterface). Each creature contributes its
  * own init/update/freeze-event handlers:
  *   - rachnop (rachnopInit / fn_801557D4 / fn_80155884 / fn_80155948 /
- *     rachnopUpdateWhileFrozen): wall-crawling spider; fn_801554B4 probes
+ *     rachnopUpdateWhileFrozen): wall-crawling spider; rachnopFindWallPlane probes
  *     the surrounding geometry (objBboxFn_800640cc) to find a wall face,
  *     then drives roll/charge moves toward the tracked player.
  *   - pollen spit (pollenFn_80155b10): spawns a projectile setup object
@@ -68,7 +68,7 @@ typedef struct DusterState
     u8 pad32C[0x338 - 0x32C];
     u16 turnDelta; /* 0x338 hooded-zyck per-frame rotY step */
     /*
-     * 0x344..0x364: the wall/plane block fn_801554B4 writes from a bbox probe
+     * 0x344..0x364: the wall/plane block rachnopFindWallPlane writes from a bbox probe
      * hit and the crawl helpers read back. planeNormal (0x344) is passed by
      * address to the PSVEC helpers, so it stays raw; the rest are scalar-only.
      */
@@ -104,7 +104,7 @@ extern const f32 lbl_803E2A88;
 extern const f32 lbl_803E2A8C;
 extern const f32 lbl_803E2A90;
 
-void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
+void wallPlaneClampMoveTarget(float* outPos, float* anchor, float lateral, float height)
 {
     float hi;
     float lo;
@@ -162,7 +162,7 @@ void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
     outPos[2] = scale * anchor[2] + outPos[2];
 }
 
-void fn_801554B4(int* obj, int state)
+void rachnopFindWallPlane(int* obj, int state)
 {
     u8 didHit;
     float* probeOffsets;
@@ -257,7 +257,7 @@ void fn_801557D4(int* obj, int state)
 
     if (((BaddieState*)state)->userData1 == 0)
     {
-        fn_801554B4(obj, state);
+        rachnopFindWallPlane(obj, state);
     }
     else
     {
@@ -281,7 +281,7 @@ void fn_80155884(int* obj, int state)
 
     if (((BaddieState*)state)->userData1 == 0)
     {
-        fn_801554B4(obj, state);
+        rachnopFindWallPlane(obj, state);
     }
     else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
              (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
@@ -309,7 +309,7 @@ void fn_80155948(int* obj, int state)
 
     if (((BaddieState*)state)->userData1 == 0)
     {
-        fn_801554B4(obj, state);
+        rachnopFindWallPlane(obj, state);
     }
     else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
              (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))

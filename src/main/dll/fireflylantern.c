@@ -57,7 +57,7 @@ typedef struct FireflyState
     f32 anchorY;     /* 0x32C */
     f32 unk330;      /* 0x330 */
     u8 pad334[0x358 - 0x334];
-    /* 0x344..0x364 is the wall/plane block fn_801554B4 (duster.c) writes.
+    /* 0x344..0x364 is the wall/plane block rachnopFindWallPlane (duster.c) writes.
      * planeNormal (0x344..0x34C) is passed by address to the PSVEC helpers,
      * so it stays raw here; only the scalar-only anchor point is named. */
     f32 planeAnchorY; /* 0x358 */
@@ -161,7 +161,7 @@ void fn_80154870(GameObject* obj, int* state)
     ((BaddieState*)state)->userData1 += 1;
     (obj)->anim.rotY = (1024.0f * fn_80293DA4(0.19634955f * (f32)(u32)((BaddieState*)state)->userData1) +
                         (f32)(obj)->anim.rotY);
-    ((void (*)(int, int*))fn_80154328)((int)obj, state);
+    ((void (*)(int, int*))baddieSpawnWaterRipple)((int)obj, state);
 }
 
 void fn_80154C24(GameObject* obj, int state)

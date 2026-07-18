@@ -406,7 +406,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             fn_80153E0C((GameObject*)(obj), state);
             break;
         case 0x251:
-            fn_80154584((GameObject*)(obj), state);
+            waterBaddieFollowCurveUpdate((GameObject*)(obj), state);
             break;
         case 0x25d:
             fn_801557D4((int*)obj, state);

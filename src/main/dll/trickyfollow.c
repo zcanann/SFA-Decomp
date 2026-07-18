@@ -771,7 +771,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                                         RomCurve_stepClamped(route, lbl_803E2448);
                                     }
                                     route->reverse = prod;
-                                    fn_800D9EE8(route);
+                                    RomCurve_swapEndpointNodes(route);
                                 }
                             }
                         }

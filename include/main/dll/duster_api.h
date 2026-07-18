@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-void fn_8015536C(float* outPos, float* anchor, float lateral, float height);
+void wallPlaneClampMoveTarget(float* outPos, float* anchor, float lateral, float height);
 
 extern u8 gDusterEbaMoveTable[];
 

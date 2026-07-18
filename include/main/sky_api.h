@@ -24,8 +24,8 @@ void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
 void skySetOverrideLightColorEnabled(u8 enabled);
 void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 void skySetOverrideLightDirectionEnabled(u8 enabled);
-ModelLightStruct* fn_80089A50(void);
-ModelLightStruct* fn_80089A58(void);
+ModelLightStruct* skyGetMoonLight(void);
+ModelLightStruct* skyGetSunLight(void);
 
 #define getSkyColorFn_80088e08ByteLegacy(slot) \
     ((u8 (*)(int))getSkyColorFn_80088e08)((slot))

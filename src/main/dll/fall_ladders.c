@@ -5,13 +5,13 @@
  * called by other baddie DLLs (dll_00C9_enemy, dll_00C4_tricky) as per-state
  * update/setup callbacks for a curve-following water creature.
  *
- *   fn_80154328  spawns a water ripple under the object and a splash sfx when
+ *   baddieSpawnWaterRipple  spawns a water ripple under the object and a splash sfx when
  *                it is moving fast enough; gated by a randomised cooldown.
  *   Baddie_HandleHitReaction  hit-reaction handler: sets reaction flags + door sfx above a
  *                progress threshold.
- *   fn_80154584  curve-path follow update: advances the RomCurveWalker, steers
+ *   waterBaddieFollowCurveUpdate  curve-path follow update: advances the RomCurveWalker, steers
  *                toward the next point, bobs rotY via a sine table, then calls
- *                fn_80154328.
+ *                baddieSpawnWaterRipple.
  *
  * The state pointer is the surrounding BaddieState; most accesses are raw
  * offsets into its per-baddie scratch region (0x29c..0x340).
@@ -38,7 +38,7 @@ int lbl_803DBCD0[2] = {2, 3};
 
 #define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 
-void fn_80154328(int obj, int state);
+void baddieSpawnWaterRipple(int obj, int state);
 
 void Baddie_HandleHitReaction(GameObject* obj, u8* state, int unused, int cmd, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
@@ -59,7 +59,7 @@ void Baddie_HandleHitReaction(GameObject* obj, u8* state, int unused, int cmd, i
     }
 }
 
-void fn_80154584(GameObject* obj, int state)
+void waterBaddieFollowCurveUpdate(GameObject* obj, int state)
 {
     ObjHitsPriorityState* hitState;
     RomCurveWalker* curve;
@@ -121,10 +121,10 @@ void fn_80154584(GameObject* obj, int state)
     ((BaddieState*)state)->userData1 += 1;
     (obj)->anim.rotY =
         1024.0f * fn_80293DA4(0.19634955f * (f32)(u32) * (u8*)(state + 0x33a)) + (f32)(obj)->anim.rotY;
-    ((void (*)(int, int))fn_80154328)((int)obj, state);
+    ((void (*)(int, int))baddieSpawnWaterRipple)((int)obj, state);
 }
 
-void fn_80154328(int obj, int state)
+void baddieSpawnWaterRipple(int obj, int state)
 {
     f32 mtx[17];
     MatrixTransform stk;

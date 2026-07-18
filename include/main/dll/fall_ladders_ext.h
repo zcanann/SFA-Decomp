@@ -3,6 +3,6 @@
 
 #include "main/camera.h"
 
-void fn_80154584(GameObject* obj, int state);
+void waterBaddieFollowCurveUpdate(GameObject* obj, int state);
 
 #endif /* MAIN_DLL_FALL_LADDERS_EXT_H_ */

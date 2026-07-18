@@ -264,7 +264,7 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, u32 currentWalkGro
     return patchGroupId & 0xff;
 }
 
-void fn_800D9EE8(RomCurveWalker* p)
+void RomCurve_swapEndpointNodes(RomCurveWalker* p)
 {
     u32* a = (u32*)&p->node9C;
     u32* b = (u32*)&p->nodeA4;

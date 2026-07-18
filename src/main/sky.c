@@ -636,12 +636,12 @@ void modelTextureFn_80089970(int slot)
     lightSetColor(0, gSkyState[slot * 0xa4 + 0x88], gSkyState[slot * 0xa4 + 0x89], gSkyState[slot * 0xa4 + 0x8a]);
 }
 
-ModelLightStruct* fn_80089A50(void)
+ModelLightStruct* skyGetMoonLight(void)
 {
     return gSkyMoonLight;
 }
 
-ModelLightStruct* fn_80089A58(void)
+ModelLightStruct* skyGetSunLight(void)
 {
     return gSkySunLight;
 }
