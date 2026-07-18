@@ -186,7 +186,7 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
     {
         gameTextShow(0x476);
         state->promptTimer -= timeDelta;
-        if (state->promptTimer < lbl_803E7488)
+        if (state->promptTimer < *(f32*)&lbl_803E7488)
         {
             state->promptTimer = lbl_803E7488;
         }

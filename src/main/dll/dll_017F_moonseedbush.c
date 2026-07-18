@@ -25,6 +25,10 @@
 
 STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 
+extern const f32 lbl_803E44D0;
+extern const f32 lbl_803E44D4;
+extern const f32 lbl_803E44D8;
+
 #define MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* sequence event opcodes consumed by MoonSeedBush_SeqFn */
@@ -135,10 +139,10 @@ void MoonSeedBush_init(GameObject* obj, int data)
     obj->anim.rotX = (s16)(placement->rotXByte << 8);
     obj->animEventCallback = MoonSeedBush_SeqFn;
     obj->objectFlags |= MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED;
-    obj->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * (0.015625f);
-    if (obj->anim.rootMotionScale == (0.0f))
+    obj->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * lbl_803E44D4;
+    if (obj->anim.rootMotionScale == lbl_803E44D8)
     {
-        obj->anim.rootMotionScale = 1.0f;
+        obj->anim.rootMotionScale = lbl_803E44D0;
     }
     obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
     if (placement->grownGameBit != -1)
