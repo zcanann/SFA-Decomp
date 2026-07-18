@@ -87,7 +87,6 @@ STATIC_ASSERT(offsetof(ShLevelcontrolState, musicLatch) == 0x12);
 #define SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS       0x20000000
 #define SHLEVELCONTROL_AIRMETER_BGTEXTURE    0x5db /* air-meter background texture id */
 
-extern f32 gShLevelControlBloopTimeLimit;
 extern f32 gShLevelControlHudTextDuration;
 
 #include "main/dll/SH/dll_01AF_shswaplift.h"
