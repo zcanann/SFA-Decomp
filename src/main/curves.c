@@ -10,11 +10,6 @@ f32 gCurveForwardDiffStep;
 
 typedef f32 (*CurveEvalPtrFirst)(f32* values, f32 t, f32* outTangent);
 
-void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, f32* outZ, int count, CurveCoeffFn coeffFn);
-f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent);
-f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
-void Curve_BuildSegmentLengthTable(Curve* curve, int count);
-
 void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, f32* outZ, int count,
                                CurveCoeffFn coeffFn)
 {
