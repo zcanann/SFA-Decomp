@@ -11,6 +11,7 @@
 #define WALLANIMATOR_RUNTIME_ACTIVE_FLAG 0x80
 #define WALLANIMATOR_COMPLETE_SFX        0x109
 
+struct WallanimatorPlacement;
 f32 wallanimator_setScale(GameObject* obj, int desc);
 void FUN_80194544(int param_1);
 void FUN_801945fc(int param_1, int param_2);
@@ -29,7 +30,7 @@ int wallanimator_getExtraSize(void);
 void wallanimator_free(int obj);
 void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void wallanimator_update(GameObject* obj);
-void wallanimator_init(s16* obj, s16* desc);
+void wallanimator_init(int obj, struct WallanimatorPlacement* desc);
 int XyzAnimator_getExtraSize(void);
 void XyzAnimator_free(GameObject* obj, int param_2);
 

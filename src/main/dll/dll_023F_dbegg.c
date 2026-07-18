@@ -77,7 +77,6 @@ extern int fn_801FE560(GameObject* obj, f32* out, f32 a, f32 b, int p3);
 extern const f32 lbl_803E61CC;
 extern const f32 lbl_803E6218;
 extern const f32 lbl_803E621C;
-extern const f32 gDbEggSurfaceNotFound;
 extern const f32 lbl_803E61E4;
 extern const f32 lbl_803E61E8;
 extern const f32 lbl_803E61EC;
@@ -325,12 +324,12 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
     TrackGroundHit** hitCursor;
     TrackGroundHit* hit;
 
-    *out = lbl_803E61C8;
+    *out = 0.0f;
     hitCount = hitDetectFn_80065e50(obj, (obj)->anim.localPosX + offsetX, (obj)->anim.localPosY,
                                     (obj)->anim.localPosZ + offsetZ, &hitList, 0, 0);
     if (hitCount != 0)
     {
-        ground = gDbEggSurfaceNotFound;
+        ground = 10000.0f;
         water = ground;
         hitCursor = hitList;
         for (i = 0; i < hitCount; i++)
@@ -339,7 +338,7 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
             dy = hit->height - (obj)->anim.localPosY;
             if ((s8)hit->surfaceType == 0xe)
             {
-                if (water >= lbl_803E61C8)
+                if (water >= 0.0f)
                 {
                     bestAbs = water;
                 }
@@ -347,7 +346,7 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
                 {
                     bestAbs = -water;
                 }
-                if (dy >= lbl_803E61C8)
+                if (dy >= 0.0f)
                 {
                     curAbs = dy;
                 }
@@ -362,7 +361,7 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
             }
             else
             {
-                if (ground >= lbl_803E61C8)
+                if (ground >= 0.0f)
                 {
                     bestAbs = ground;
                 }
@@ -370,7 +369,7 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
                 {
                     bestAbs = -ground;
                 }
-                if (dy >= lbl_803E61C8)
+                if (dy >= 0.0f)
                 {
                     curAbs = dy;
                 }
@@ -387,23 +386,23 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
         }
         if (flag == 0)
         {
-            if (ground != gDbEggSurfaceNotFound)
+            if (ground != 10000.0f)
             {
                 *out = ground;
                 return 0;
             }
-            if (water != gDbEggSurfaceNotFound)
+            if (water != 10000.0f)
             {
                 *out = water;
                 return 1;
             }
-            *out = lbl_803E61E4;
+            *out = 1000.0f;
         }
         else
         {
-            if (water != gDbEggSurfaceNotFound)
+            if (water != 10000.0f)
             {
-                if (ground >= lbl_803E61C8)
+                if (ground >= 0.0f)
                 {
                     bestAbs = ground;
                 }
@@ -411,7 +410,7 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
                 {
                     bestAbs = -ground;
                 }
-                if (water >= lbl_803E61C8)
+                if (water >= 0.0f)
                 {
                     curAbs = water;
                 }
@@ -419,7 +418,7 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
                 {
                     curAbs = -water;
                 }
-                if (curAbs <= bestAbs || water > lbl_803E61C8)
+                if (curAbs <= bestAbs || water > 0.0f)
                 {
                     *out = water;
                     return 0;
@@ -427,12 +426,12 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
                 *out = ground;
                 return 1;
             }
-            if (ground != gDbEggSurfaceNotFound)
+            if (ground != 10000.0f)
             {
                 *out = ground;
                 return 1;
             }
-            *out = lbl_803E61E4;
+            *out = 1000.0f;
         }
     }
     return 0;

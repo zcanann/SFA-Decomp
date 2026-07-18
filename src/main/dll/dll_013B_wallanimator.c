@@ -204,19 +204,15 @@ void wallanimator_update(GameObject* obj)
     }
 }
 
-void wallanimator_init(s16* obj, s16* placement)
+void wallanimator_init(int obj, WallanimatorPlacement* placement)
 {
-    int oi;
     WallanimatorState* state;
-    GameObject* go;
 
-    go = (GameObject*)obj;
-    oi = (int)obj;
-    state = go->extra;
-    *obj = ((WallanimatorPlacement*)placement)->initialRotX;
-    ObjGroup_AddObject(oi, WALLANIMATOR_GROUP_PRIMARY);
-    ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_SECONDARY);
-    if (mainGetBit((int)((WallanimatorPlacement*)placement)->gameBit) != 0)
+    state = ((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.rotX = placement->initialRotX;
+    ObjGroup_AddObject(obj, WALLANIMATOR_GROUP_PRIMARY);
+    ObjGroup_AddObject(obj, WALLANIMATOR_GROUP_SECONDARY);
+    if (mainGetBit((int)placement->gameBit) != 0)
     {
         state->activeFlag = 1;
         state->timer = WALLANIMATOR_DONE_TIMER;
