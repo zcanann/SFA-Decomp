@@ -197,15 +197,19 @@ void seqHandle(u32 deltaTime)
  */
 void seqInit(void)
 {
+    u16* note;
     SynthVoice* voice;
-    SynthCallbackLink* callback;
+    SynthVoiceRuntime* runtime;
     SynthCallbackLink* prev;
+    SynthCallbackLink* callback;
     u32 i;
     int j;
 
+    runtime = SYNTH_VOICE_RUNTIME();
     gSynthQueuedVoices = NULL;
     gSynthAllocatedVoices = NULL;
-    voice = &gSynthVoices[0];
+    voice = &runtime->voices[0];
+    note = runtime->voiceNotes[0];
     for (i = 0; i < 8; i++)
     {
         if (i == 0)
@@ -216,29 +220,31 @@ void seqInit(void)
         else
         {
             (voice - 1)->next = voice;
-            voice->prev = &gSynthVoices[i - 1];
+            voice->prev = &SYNTH_VOICE_RUNTIME()->voices[i - 1];
         }
         voice->slotIndex = i;
         voice->state = 0;
         for (j = 0; j < 16; j++)
         {
-            gSynthVoiceNotes[i][j] = 0xffff;
+            note[j] = 0xffff;
         }
+        note += 16;
         voice++;
     }
-    gSynthVoices[i - 1].next = NULL;
+    runtime->voices[i - 1].next = NULL;
 
     prev = NULL;
-    gSynthFreeCallbacks = &gSynthCallbacks[0];
+    callback = &runtime->callbacks[0];
+    gSynthFreeCallbacks = callback;
     for (i = 0; i < 0x100; i++)
     {
-        callback = &gSynthCallbacks[i];
         callback->prev = prev;
         if (prev != NULL)
         {
             prev->next = callback;
         }
         prev = callback;
+        callback++;
     }
     prev->next = NULL;
     gSynthNextHandle = 0;
