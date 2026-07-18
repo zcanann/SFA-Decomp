@@ -53,6 +53,7 @@ char sLanguageNameItalian[] = "Italian";
 char sLanguageNameSpanish[] = "Spanish";
 
 int utf8GetNextChar(u8* str, int* outLen);
+int isSpace(u32 c);
 static inline int gameTextIdExists(int id);
 char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH);
 static inline int textCountChars(char* lineStr);
@@ -120,17 +121,6 @@ static inline int textCountChars(char* lineStr)
     return charCount;
 }
 
-int isSpace(u32 c)
-{
-    int result = 0;
-
-    if (c == 0x20 || c == 0x3000 || c == 0x303F)
-    {
-        result = 1;
-    }
-    return result;
-}
-
 char* gameStrcpy(char* dst, char* src)
 {
     u32 ch;
@@ -153,37 +143,6 @@ char* gameStrcpy(char* dst, char* src)
     } while (ch != 0);
     return dst - 1;
 }
-int utf8GetNextChar(u8* str, int* outLen)
-{
-    u8 first = *str;
-    int cls = gUtf8CharClassTable[first];
-    u32 acc = 0;
-    switch (cls)
-    {
-    case 5:
-        str++;
-        acc = first << 6;
-    case 4:
-        acc += *str++;
-        acc <<= 6;
-    case 3:
-        acc += *str++;
-        acc <<= 6;
-    case 2:
-        acc += *str++;
-        acc <<= 6;
-    case 1:
-        acc += *str++;
-        acc <<= 6;
-    case 0:
-        acc += *str;
-    default:
-        break;
-    }
-    *outLen = cls + 1;
-    return acc - gUtf8ClassOffsetTable[cls];
-}
-
 int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId)
 {
     int i;
@@ -912,15 +871,9 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             char* q = --dst;
             for (;;)
             {
-                int k;
-                for (k = 6; ; k--)
-                {
-                    ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
-                    if (k == charLen2 || k == 1)
-                    {
-                        break;
-                    }
-                }
+                int k = 6;
+            retry:
+                ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
                 if (k == charLen2)
                 {
                     if (isSpace(ch))
@@ -940,6 +893,14 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
                         break;
                     }
                 }
+                else
+                {
+                    k--;
+                    if (k > 0)
+                    {
+                        goto retry;
+                    }
+                }
             }
             boundary++;
             lineIdx++;
@@ -949,6 +910,48 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     }
     *dst = 0;
     return buffer;
+}
+
+int isSpace(u32 c)
+{
+    int result = 0;
+
+    if (c == 0x20 || c == 0x3000 || c == 0x303F)
+    {
+        result = 1;
+    }
+    return result;
+}
+
+int utf8GetNextChar(u8* str, int* outLen)
+{
+    u8 first = *str;
+    int cls = gUtf8CharClassTable[first];
+    u32 acc = 0;
+    switch (cls)
+    {
+    case 5:
+        str++;
+        acc = first << 6;
+    case 4:
+        acc += *str++;
+        acc <<= 6;
+    case 3:
+        acc += *str++;
+        acc <<= 6;
+    case 2:
+        acc += *str++;
+        acc <<= 6;
+    case 1:
+        acc += *str++;
+        acc <<= 6;
+    case 0:
+        acc += *str;
+    default:
+        break;
+    }
+    *outLen = cls + 1;
+    return acc - gUtf8ClassOffsetTable[cls];
 }
 
 void* gameTextGetBox(int box)
