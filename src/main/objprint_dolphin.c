@@ -35,6 +35,7 @@
 #include "main/camera.h"
 #include "dolphin/gx/GXDispList.h"
 #include "dolphin/gx/GXLighting.h"
+#include "dolphin/gx/GXPixel.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -155,7 +156,6 @@ extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
 extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
 extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, int out);
 extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int out);
-extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjGXColor color);
 extern void GXSetTevColor(int id, u32* color);
 extern f32 lbl_803DEA38;
 extern f32 lbl_803DEA4C;
@@ -181,7 +181,6 @@ s32 mapCheckCurBlocks(int v);
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent*)(obj))->bankIndex)
 
 extern u32 GXSetTevKColorSel();
-extern u32 GXSetBlendMode();
 extern void GXSetTevKColor(int id, ObjGXColor color);
 extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetNumTevStages(u8 nStages);
@@ -236,7 +235,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     GXSetNumIndStages(0);
     GXSetNumTexGens(2);
     GXSetCullMode(2);
-    GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjGXColor*)&lbl_803DB468);
+    GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
     gxSetZModeByteLegacy(1, 3, 0);
     gxSetPeControl_ZCompLocByteLegacy(1);
     GXSetBlendMode(1, 4, 5, 5);
@@ -1891,7 +1890,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjGXColor*)&lbl_803DB468);
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
     gxSetPeControl_ZCompLocByteLegacy(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
@@ -2278,7 +2277,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjGXColor*)&lbl_803DB468);
+        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
         gxSetPeControl_ZCompLocByteLegacy(1);
         GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
         GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
@@ -2304,7 +2303,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         objFn_8003dc50(m, (u8*)obj);
         if (((ModelFileHeader*)m)->flags & 0x100)
         {
-            GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjGXColor*)&lbl_803DB468);
+            GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
         }
         else
         {

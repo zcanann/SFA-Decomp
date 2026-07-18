@@ -25,6 +25,7 @@
 #include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
 #include "dolphin/gx/GXLighting.h"
+#include "dolphin/gx/GXPixel.h"
 #include "main/camera.h"
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
@@ -249,11 +250,6 @@ typedef union
     f32 f32;
 } GolfWGPipe;
 
-typedef struct
-{
-    u8 r, g, b, a;
-} GlowGXColor;
-
 #define MAP_DYNAMIC_SLOT_COUNT 64
 
 extern const f32 lbl_803DEC50;
@@ -349,9 +345,7 @@ extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
 extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
 extern void GXSetCullMode(int mode);
 extern void GXSetCurrentMtx(u32 id);
-extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXBegin(int type, int fmt, int count);
-extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
 
@@ -3282,7 +3276,7 @@ void renderGlows(void)
     f32 px, py, pz;
     s32 sx, sy, sz;
     u8 amb[3];
-    GlowGXColor fogCol;
+    GXColor fogCol;
     f32 sunMtx[12];
     f32 dir[3];
     f32 cam[3];
@@ -3292,7 +3286,7 @@ void renderGlows(void)
     f32 sunDot;
     f32 cx, cy, cz;
 
-    fogCol = *(GlowGXColor*)&sSynthFadeUnit;
+    fogCol = *(GXColor*)&sSynthFadeUnit;
     GXSetCullMode(GX_CULL_NONE);
     Camera_RebuildProjectionMatrix();
     GXClearVtxDesc();
@@ -3301,7 +3295,7 @@ void renderGlows(void)
     textureSetupFn_800799c0();
     gxTextureFn_800794e0();
     textRenderSetupFn_80079804();
-    GXSetFog(GX_FOG_NONE, fogCol, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC);
+    GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, fogCol);
     gxBlendFn_800789ac();
     alpha = 0xff;
     gSunFlareScissorWidth = 0;
