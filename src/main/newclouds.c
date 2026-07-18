@@ -87,7 +87,6 @@ typedef struct WindSource
 extern int gNewCloudLightningFogColor;
 extern const f32 lbl_803DF1D4;
 extern void* gNewClouds[8];
-extern void* gNewCloudLayerTextures[4];
 
 typedef void (*LightningDrawBoltU8WidthFn)(f32* start, f32* end, u8 width, f32 segScale, f32 d, int* seed, int depth,
                                            int flags);
@@ -1133,7 +1132,6 @@ void snowReposSnowCloud(int cloudId)
 
 extern char sSnowKillSnowCloudInvalidCloudId[];
 
-extern WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
 
 void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
 {
