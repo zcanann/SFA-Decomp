@@ -345,7 +345,6 @@ extern void textBlendSetupFn_80078a7c(void);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 int getGameState(void);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
-extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int flag);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int part, int flag);
 extern u16 OSGetFontEncode(void);
 extern void OSLoadFont(void* buf, void* tmp);
@@ -3404,17 +3403,14 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
     textureSetupFn_800799c0();
     textRenderSetupFn_800795e8();
     textRenderSetupFn_80079804();
-    ((void (*)(void*, f32, f32, int, int, int, int, int))drawScaledTexture)(
-        gGameTextBoxEdgeTexture, (f32)(x - gGameTextBoxInset), (f32)(y - gGameTextBoxInset), alpha, 0x100,
-        halfW + gGameTextBoxInset, halfH + gGameTextBoxInset, 0);
-    ((void (*)(void*, f32, f32, int, int, int, int, int))drawScaledTexture)(
-        gGameTextBoxEdgeTexture, midX, (f32)(y - gGameTextBoxInset), alpha, 0x100, halfW + gGameTextBoxInset,
-        halfH + gGameTextBoxInset, 1);
-    ((void (*)(void*, f32, f32, int, int, int, int, int))drawScaledTexture)(
-        gGameTextBoxEdgeTexture, (f32)(x - gGameTextBoxInset), midY, alpha, 0x100, halfW + gGameTextBoxInset,
-        halfH + gGameTextBoxInset, 2);
-    ((void (*)(void*, f32, f32, int, int, int, int, int))drawScaledTexture)(
-        gGameTextBoxEdgeTexture, midX, midY, alpha, 0x100, halfW + gGameTextBoxInset, halfH + gGameTextBoxInset, 3);
+    drawScaledTexture(gGameTextBoxEdgeTexture, (f32)(x - gGameTextBoxInset), (f32)(y - gGameTextBoxInset), alpha,
+                      0x100, halfW + gGameTextBoxInset, halfH + gGameTextBoxInset, 0);
+    drawScaledTexture(gGameTextBoxEdgeTexture, midX, (f32)(y - gGameTextBoxInset), alpha, 0x100,
+                      halfW + gGameTextBoxInset, halfH + gGameTextBoxInset, 1);
+    drawScaledTexture(gGameTextBoxEdgeTexture, (f32)(x - gGameTextBoxInset), midY, alpha, 0x100,
+                      halfW + gGameTextBoxInset, halfH + gGameTextBoxInset, 2);
+    drawScaledTexture(gGameTextBoxEdgeTexture, midX, midY, alpha, 0x100, halfW + gGameTextBoxInset,
+                      halfH + gGameTextBoxInset, 3);
 }
 void gameTextInitFn_8001c794(void)
 {

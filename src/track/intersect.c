@@ -3310,18 +3310,21 @@ void drawRect(f32 sx, f32 sy, int x, int y)
     GXSetColorUpdate(GX_TRUE);
 }
 
-void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, u8 flags)
+void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int width, int height, int flags)
 {
     extern f32 lbl_803DEEDC;
     GXColor c;
     s32 w, h;
+    s32 alpha;
     f32 u0, u1, v0, v1;
     u8 fbits;
 
     c.r = 0xFF;
     c.g = 0xFF;
     c.b = 0xFF;
-    c.a = (u8)(((s32)alpha_mod * gHudTintAlpha) >> 8);
+    alpha = (u8)alpha_mod;
+    alpha *= gHudTintAlpha;
+    c.a = (u8)(alpha >> 8);
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -3369,7 +3372,7 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    fbits = flags;
+    fbits = (u8)flags;
     if ((fbits & 4) != 0)
     {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
@@ -3378,8 +3381,8 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
     {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     }
-    w = (s32)(((u32)(width << 2) * scale) >> 8);
-    h = (s32)(((u32)(height << 2) * scale) >> 8);
+    w = (s32)(((u32)(width << 2) * (u16)scale) >> 8);
+    h = (s32)(((u32)(height << 2) * (u16)scale) >> 8);
     sx = hudScale * sx;
     sy = hudScale * sy;
     {

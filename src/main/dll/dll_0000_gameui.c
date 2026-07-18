@@ -399,7 +399,6 @@ extern char sTrickyDebugXCoordFormat[];
 
 extern int fn_8011E0D8();
 extern void* memset(void* p, int v, int n);
-extern void drawScaledTexture(void* texture, f32 x, f32 y, int alpha, int scale, int width, int height, int flags);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
 extern void hudDrawCounter(int id, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget);
@@ -4280,8 +4279,6 @@ typedef struct HeadDisplayEntry
 
 void drawFn_80125424(void)
 {
-    extern void drawScaledTexture(void* texture, f32 x, f32 y, u8 alpha, int scale, int width, int height,
-                                  int flags);
     u32 width;
     u32 height;
     int panelType;
@@ -4426,13 +4423,16 @@ void drawFn_80125424(void)
             }
         }
         drawTexture(hudTextures[10], lbl_803E2054, (s16)width - 5, panelAlpha, 0x100);
-        drawScaledTexture(hudTextures[13], lbl_803E2040, (s16)width - 5, panelAlpha, 0x100, 0x78, 5, 0);
-        drawScaledTexture(hudTextures[11], lbl_803E2054, (s16)width, panelAlpha, 0x100, 5, (s16)height, 0);
-        drawScaledTexture(hudTextures[13], lbl_803E2040, (s16)width + (s16)(int)height, panelAlpha, 0x100, 0x78, 5, 2);
-        drawScaledTexture(hudTextures[11], lbl_803E2058, (s16)width, panelAlpha, 0x100, 5, (s16)height, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, (s16)width + (s16)(int)height, panelAlpha, 0x100, 5, 5, 3);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, (s16)width - 5, panelAlpha, 0x100, 5, 5, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2054, (s16)width + (s16)(int)height, panelAlpha, 0x100, 5, 5, 2);
+        drawScaledTexture(hudTextures[13], lbl_803E2040, (s16)width - 5, (u8)panelAlpha, 0x100, 0x78, 5, 0);
+        drawScaledTexture(hudTextures[11], lbl_803E2054, (s16)width, (u8)panelAlpha, 0x100, 5, (s16)height, 0);
+        drawScaledTexture(hudTextures[13], lbl_803E2040, (s16)width + (s16)(int)height, (u8)panelAlpha, 0x100, 0x78,
+                          5, 2);
+        drawScaledTexture(hudTextures[11], lbl_803E2058, (s16)width, (u8)panelAlpha, 0x100, 5, (s16)height, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, (s16)width + (s16)(int)height, (u8)panelAlpha, 0x100, 5, 5,
+                          3);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, (s16)width - 5, (u8)panelAlpha, 0x100, 5, 5, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2054, (s16)width + (s16)(int)height, (u8)panelAlpha, 0x100, 5, 5,
+                          2);
     }
 }
 
@@ -7317,7 +7317,6 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
  * map layout with location labels. */
 void mapScreenDrawHud(int p1, int p2, int p3)
 {
-    extern void drawScaledTexture(void* texture, f32 x, f32 y, u8 alpha, int scale, int width, int height, int flags);
     u8* hintCandidates;
     if (pauseMenuState != 0)
     {
@@ -7352,21 +7351,21 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         width = (s16) * (u16*)(gTextBoxes + 0x182);
         drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5), (f32)(panelY - 5), panelAlpha,
                     0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY - 5), panelAlpha, 0x100,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY - 5), (u8)panelAlpha, 0x100,
                           width, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX - 5), panelY, panelAlpha, 0x100, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX - 5), panelY, (u8)panelAlpha, 0x100, 5,
                           height, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, panelX, panelY, panelAlpha, 0x100, width, height, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY + height), panelAlpha, 0x100,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex30, panelX, panelY, (u8)panelAlpha, 0x100, width, height, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY + height), (u8)panelAlpha, 0x100,
                           width, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX + width), panelY, panelAlpha, 0x100, 5,
-                          height, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX + width), panelY, (u8)panelAlpha, 0x100,
+                          5, height, 1);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX + width), (f32)(panelY + height),
-                          panelAlpha, 0x100, 5, 5, 3);
+                          (u8)panelAlpha, 0x100, 5, 5, 3);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX + width), (f32)(panelY - 5),
-                          panelAlpha, 0x100, 5, 5, 1);
+                          (u8)panelAlpha, 0x100, 5, 5, 1);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5), (f32)(panelY + height),
-                          panelAlpha, 0x100, 5, 5, 2);
+                          (u8)panelAlpha, 0x100, 5, 5, 2);
         *(u16*)(gTextBoxes + 0x18a) = revealedHeight;
         {
             s8 firstAvailableHint;
@@ -7487,20 +7486,20 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         }
         lbl_803DD77C++;
         drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E219C, panelAlpha, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E219C, panelAlpha, 0x100, 0x82,
-                          5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2198, lbl_803E1E9C, panelAlpha, 0x100, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E219C, (u8)panelAlpha, 0x100,
+                          0x82, 5, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2198, lbl_803E1E9C, (u8)panelAlpha, 0x100, 5,
                           0x96, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E1ECC, panelAlpha, 0x100, 0x82,
-                          5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2058, lbl_803E1E9C, panelAlpha, 0x100, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E1ECC, (u8)panelAlpha, 0x100,
+                          0x82, 5, 2);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2058, lbl_803E1E9C, (u8)panelAlpha, 0x100, 5,
                           0x96, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E1ECC, panelAlpha, 0x100, 5, 5,
-                          3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E219C, panelAlpha, 0x100, 5, 5,
-                          1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E1ECC, panelAlpha, 0x100, 5, 5,
-                          2);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E1ECC, (u8)panelAlpha, 0x100, 5,
+                          5, 3);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E219C, (u8)panelAlpha, 0x100, 5,
+                          5, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E1ECC, (u8)panelAlpha, 0x100, 5,
+                          5, 2);
         {
             int row;
             int phaseA;

@@ -153,7 +153,6 @@ extern f32 lbl_803E2380;
 extern f32 lbl_803E2384;
 extern f32 lbl_803E2388;
 extern u8 lbl_803DB411;
-extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
 extern f32 lbl_803E22F0;
 extern f32 lbl_803E22F4;
 extern f32 lbl_803E22FC;
@@ -419,18 +418,18 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
         yb = (int)m2[7];
         texs = (Texture**)gTitleScreenTextures;
         tex = texs[4];
-        drawScaledTexture((char*)tex, (f32)(int)(xb + 0x5a + (texs2 = (Texture**)gTitleScreenTextures)[6]->width),
+        drawScaledTexture(tex, (f32)(int)(xb + 0x5a + (texs2 = (Texture**)gTitleScreenTextures)[6]->width),
                           (f32)(int)(yb - 0x10), alpha, 0x100, tex->width,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
         tex = texs2[6];
-        drawScaledTexture((char*)tex, (f32)(int)(xb + 0x5a), (f32)(int)(yb - 0x10), 0xff, 0x100, tex->width,
+        drawScaledTexture(tex, (f32)(int)(xb + 0x5a), (f32)(int)(yb - 0x10), 0xff, 0x100, tex->width,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
         tex = texs2[6];
         w = tex->width;
-        drawScaledTexture((char*)tex, (f32)(int)(xb + (texs[4]->width + 0x57) + w), (f32)(int)(yb - 0x10), 0xff, 0x100, w,
+        drawScaledTexture(tex, (f32)(int)(xb + (texs[4]->width + 0x57) + w), (f32)(int)(yb - 0x10), 0xff, 0x100, w,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 1);
         tex = (Texture*)gTitleScreenTextures[0];
-        drawScaledTexture((char*)tex, (f32)(int)(xb + 0x23), (f32)(int)(yb - 0x10), 0xff, 0x100, tex->width,
+        drawScaledTexture(tex, (f32)(int)(xb + 0x23), (f32)(int)(yb - 0x10), 0xff, 0x100, tex->width,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
     }
     mtx = (f32*)gTitleScreenMtx;
@@ -467,7 +466,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
         do
         {
             tex = texs[4];
-            drawScaledTexture((char*)tex, (f32)(int)(xb + 0x5a + texs[6]->width - (i + 1) * 4),
+            drawScaledTexture(tex, (f32)(int)(xb + 0x5a + texs[6]->width - (i + 1) * 4),
                               (f32)(int)(yb - 0x10 - (i + 1) * 3), (int)(u32)lbl_803DD9C0 >> (i + 3) & 0xff, 0x100,
                               tex->width + (i + 1) * 8, (u32)(sc3 * gTitleScreenCursorY) + ((i + 1) * 6 + 0x10), 4);
             i++;
@@ -487,25 +486,25 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
     texs = (Texture**)gTitleScreenTextures;
     {
         Texture* t = texs[18];
-        drawScaledTexture((char*)t, (f32)(int)((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50),
+        drawScaledTexture(t, (f32)(int)((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50),
                           (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100, t->width, t->height, 1);
     }
     texs2 = &((Texture**)(gTitleScreenTextures + 8))[idx];
     {
         Texture* t = *texs2;
-        drawScaledTexture((char*)t, (f32)(int)((int)(lbl_803E22F0 * gTitleScreenCursorX) + (texs[18]->width - 0x4a)),
+        drawScaledTexture(t, (f32)(int)((int)(lbl_803E22F0 * gTitleScreenCursorX) + (texs[18]->width - 0x4a)),
                           (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100, t->width, t->height, 0);
     }
     {
         Texture* t = texs[18];
-        drawScaledTexture((char*)t,
+        drawScaledTexture(t,
                           (f32)(int)(0x280 - ((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50) - texs[18]->width),
                           (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100, t->width, t->height, 0);
     }
     {
         Texture* t = *texs2;
         drawScaledTexture(
-            (char*)t,
+            t,
             (f32)(int)(0x27a - ((int)(lbl_803E22F0 * gTitleScreenCursorX) - 0x50) - texs[18]->width - t->width),
             (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100, t->width, t->height, 1);
     }

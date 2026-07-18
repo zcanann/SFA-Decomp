@@ -45,7 +45,6 @@ void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 
 void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, int u_offset,
                         int v_offset);
 void drawRect(f32 sx, f32 sy, int x, int y);
-void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, u8 flags);
 void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
 void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
 void trackIntersect_drawColorBand(void);
