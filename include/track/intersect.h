@@ -13,6 +13,8 @@
 #include "track/intersect_whirlpool_api.h"
 #include "ghidra_import.h"
 
+typedef struct ProjectedShadowTexture ProjectedShadowTexture;
+
 void* fn_8006F388(u32 i);
 void timeFn_8006f400(f32 step);
 void drawFn_8006f500(void);
@@ -37,11 +39,11 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3);
 void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z);
 void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2);
 void drawRect(f32 sx, f32 sy, int x, int y);
-void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
-void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
+void objectShadow_setupSwappedProjectedTexture(ProjectedShadowTexture* shadow, u32* colorPtr, Mtx mtx);
+void objectShadow_setupProjectedTexture(ProjectedShadowTexture* shadow, u32* colorPtr, Mtx mtx);
 void trackIntersect_drawColorBand(void);
-void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth);
-void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale);
+void fn_80077AD8(ProjectedShadowTexture* shadow, u32* colorPtr, Mtx mtx, f32 depth);
+void fn_80077EF8(ProjectedShadowTexture* shadow, u32* colorPtr, Mtx mtx, f32 scale);
 void FUN_80070ec8(void);
 void fn_8007880C(void);
 void gxBlendFn_800788dc(void);

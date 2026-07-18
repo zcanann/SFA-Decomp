@@ -1,6 +1,7 @@
 #include "main/dll/partfx_interface.h"
 #include "dolphin/card.h"
 #include "main/hud_visibility_api.h"
+#include "main/map_block.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/audio/sfx.h"
@@ -3662,15 +3663,15 @@ void drawTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale)
     Camera_RebuildProjectionMatrix();
 }
 
-void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
+void objectShadow_setupSwappedProjectedTexture(ProjectedShadowTexture* shadow, u32* colorPtr, Mtx mtx)
 {
     Mtx tmp;
 
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_ALPHA, GX_CH_RED, GX_CH_ALPHA, GX_CH_RED);
-    PSMTXConcat((float (*)[4])obj, mtx, tmp);
+    PSMTXConcat(shadow->textureMtx, mtx, tmp);
     GXLoadTexMtxImm(tmp, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    selectTexture((Texture*)(*(int*)(obj + 0x18)), 0);
+    selectTexture(shadow->texture, 0);
     GXSetTevKColor(GX_KCOLOR0, *(GXColor*)colorPtr);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
@@ -3706,14 +3707,14 @@ void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
+void objectShadow_setupProjectedTexture(ProjectedShadowTexture* shadow, u32* colorPtr, Mtx mtx)
 {
     Mtx tmp;
 
-    PSMTXConcat((float (*)[4])obj, mtx, tmp);
+    PSMTXConcat(shadow->textureMtx, mtx, tmp);
     GXLoadTexMtxImm(tmp, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    selectTexture((Texture*)(*(int*)(obj + 0x18)), 0);
+    selectTexture(shadow->texture, 0);
     GXSetTevKColor(GX_KCOLOR0, *(GXColor*)colorPtr);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
@@ -3748,7 +3749,7 @@ void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth)
+void fn_80077AD8(ProjectedShadowTexture* shadow, u32* colorPtr, Mtx mtx, f32 depth)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     Mtx m58;
@@ -3763,15 +3764,15 @@ void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth)
     u8 t;
 
     kc = lbl_803E8454;
-    PSMTXConcat((MtxP)st, (MtxP)m, m58);
+    PSMTXConcat(shadow->textureMtx, mtx, m58);
     GXLoadTexMtxImm(m58, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    selectTexture((Texture*)(*(int*)(st + 0x60)), 0);
-    t = p2[3];
-    p2[3] = (t >> 1) + (t >> 2);
-    c.r = p2[3];
-    c.g = p2[3];
-    c.b = p2[3];
+    selectTexture(shadow->texture, 0);
+    t = ((u8*)colorPtr)[3];
+    ((u8*)colorPtr)[3] = (t >> 1) + (t >> 2);
+    c.r = ((u8*)colorPtr)[3];
+    c.g = ((u8*)colorPtr)[3];
+    c.b = ((u8*)colorPtr)[3];
     GXSetTevKColor(GX_KCOLOR0, c);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
@@ -3781,10 +3782,10 @@ void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth)
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    v.x = m[3];
-    v.y = m[7];
-    v.z = m[11];
-    PSMTXMultVec((MtxP)(st + 0x30), &v, &v);
+    v.x = mtx[0][3];
+    v.y = mtx[1][3];
+    v.z = mtx[2][3];
+    PSMTXMultVec(shadow->depthMtx, &v, &v);
     z = -v.z;
     fn_8006C5B8((u32*)&handle);
     selectTexture((Texture*)handle, 1);
@@ -3797,7 +3798,7 @@ void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth)
     m58[1][1] = lbl_803DEEDC;
     m58[1][2] = lbl_803DEEDC;
     m58[1][3] = lbl_803DEEDC;
-    PSMTXConcat((MtxP)(st + 0x30), (MtxP)m, m28);
+    PSMTXConcat(shadow->depthMtx, mtx, m28);
     PSMTXConcat(m58, m28, m28);
     GXLoadTexMtxImm(m28, GX_TEXMTX1, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
@@ -3833,7 +3834,7 @@ void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
+void fn_80077EF8(ProjectedShadowTexture* shadow, u32* colorPtr, Mtx mtx, f32 scale)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     typedef struct
@@ -3868,21 +3869,21 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
     stab = lbl_803DEEAC;
     *(u32*)&fog_var = lbl_803E8450;
 
-    PSMTXConcat((f32(*)[4])obj, mtx, mtx_110);
+    PSMTXConcat(shadow->textureMtx, mtx, mtx_110);
     GXLoadTexMtxImm(mtx_110, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
 
-    selectTexture((Texture*)(*(int*)&(obj)->anim.eventTable), 0);
+    selectTexture(shadow->texture, 0);
 
-    if (((u8*)obj)[0x65] < 8)
+    if (shadow->mode < 8)
     {
         GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_RED);
-        stage_idx = ((u8*)obj)[0x65] - 1;
+        stage_idx = shadow->mode - 1;
     }
-    else if (((u8*)obj)[0x65] < 0x10)
+    else if (shadow->mode < 0x10)
     {
         GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_ALPHA, GX_CH_ALPHA, GX_CH_ALPHA, GX_CH_ALPHA);
-        stage_idx = ((u8*)obj)[0x65] - 9;
+        stage_idx = shadow->mode - 9;
     }
     if (stage_idx < 0)
         stage_idx = 0;
@@ -3892,10 +3893,10 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
     ((u8*)&color2)[2] = 0x7F;
     GXSetTevColor(GX_TEVREG0, color2);
 
-    node[3] = (u8)((node[3] >> 1) + (node[3] >> 2));
-    ((u8*)&temp)[0] = node[3];
-    ((u8*)&temp)[1] = node[3];
-    ((u8*)&temp)[2] = node[3];
+    ((u8*)colorPtr)[3] = (u8)((((u8*)colorPtr)[3] >> 1) + (((u8*)colorPtr)[3] >> 2));
+    ((u8*)&temp)[0] = ((u8*)colorPtr)[3];
+    ((u8*)&temp)[1] = ((u8*)colorPtr)[3];
+    ((u8*)&temp)[2] = ((u8*)colorPtr)[3];
     GXSetTevKColor(GX_KCOLOR0, temp);
 
     stage_base = 0;
@@ -3955,7 +3956,7 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
     vec3[0] = mtx[0][3];
     vec3[1] = mtx[1][3];
     vec3[2] = mtx[2][3];
-    PSMTXMultVec((f32(*)[4])((u8*)(int)obj + 0x30), (Vec*)vec3, (Vec*)vec3);
+    PSMTXMultVec(shadow->depthMtx, (Vec*)vec3, (Vec*)vec3);
     f31_val = -vec3[2];
 
     fn_8006C5B8((u32*)&handle);
@@ -3972,7 +3973,7 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
         mtx_110[1][2] = lbl_803DEEDC;
         mtx_110[1][3] = lbl_803DEEDC;
     }
-    PSMTXConcat((f32(*)[4])((u8*)obj + 0x30), mtx, mtx_e0);
+    PSMTXConcat(shadow->depthMtx, mtx, mtx_e0);
     PSMTXConcat(mtx_110, mtx_e0, mtx_e0);
     GXLoadTexMtxImm(mtx_e0, GX_TEXMTX1, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);

@@ -350,10 +350,6 @@ extern void GXSetCullMode(int mode);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXBegin(int type, int fmt, int count);
-extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* mtx);
-extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
-extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
-extern void fn_80077EF8(GameObject* hdr, void* col, void* mtx, f32 f);
 extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern u8 skyFn_8008919c(int);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
@@ -3128,14 +3124,14 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     u8 col[4];
     u8 save_18[12];
     u8 save_c[12];
-    f32 mtx[16];
-    f32 outMtx[16];
+    f32 mtx[4][4];
+    f32 outMtx[4][4];
     f32 f31, f30;
     f32 kf;
     s16 s31, s30, s29;
     u32 handle;
     u32 h2;
-    int hdr;
+    ProjectedShadowTexture* hdr;
     void* viewMtx;
 
     GXClearVtxDesc();
@@ -3143,7 +3139,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     col[0] = 0;
     col[1] = 0;
     col[2] = 0;
-    col[3] = *(u8*)(((MapBlockData*)blockData)->shadowTexHeader + 0x64);
+    col[3] = ((MapBlockData*)blockData)->shadowTexHeader->alpha;
     f31 = ((GameObject*)obj)->anim.rootMotionScale;
     s31 = ((GameObject*)obj)->anim.rotX;
     s30 = ((GameObject*)obj)->anim.rotZ;
@@ -3164,13 +3160,13 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
         memcpy((char*)((int)obj + 0x18), (char*)blockData + 0x20, 0xc);
         memcpy((char*)((int)obj + 0xc), (char*)((int)blockData + 0x20), 0xc);
     }
-    Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
+    Obj_BuildWorldTransformMatrix((GameObject*)obj, (f32*)mtx, 0);
     viewMtx = Camera_GetViewMatrix();
     PSMTXConcat(viewMtx, mtx, outMtx);
     GXLoadPosMtxImm(outMtx, GX_PNMTX0);
     if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
     {
-        int c = *(int*)col;
+        u32 c = *(u32*)col;
         objectShadow_setupSwappedProjectedTexture(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx);
     }
     else
@@ -3182,20 +3178,20 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
         handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
         if (handle != 0xFFFFFFFF ||
             (h2 = textureFn_8006c5c4(), hdr = ((MapBlockData*)blockData)->shadowTexHeader,
-             *(u32*)(hdr + 0x60) == h2))
+             (u32)hdr->texture == h2))
         {
-            int c = *(int*)col;
+            u32 c = *(u32*)col;
             objectShadow_setupProjectedTexture(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx);
         }
-        else if (*(u8*)(hdr + 0x65) == 0xff)
+        else if (hdr->mode == 0xff)
         {
-            int c = *(int*)col;
+            u32 c = *(u32*)col;
             fn_80077AD8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
         }
         else
         {
-            int c = *(int*)col;
-            fn_80077EF8((GameObject*)(((MapBlockData*)blockData)->shadowTexHeader), &c, mtx, f30);
+            u32 c = *(u32*)col;
+            fn_80077EF8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
         }
     }
     GXSetCullMode(GX_CULL_FRONT);
