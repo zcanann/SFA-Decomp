@@ -2476,6 +2476,7 @@ static inline void expgfx_clearResourceTable(ExpgfxResourceEntry* resourceEntry,
     }
 }
 
+#pragma opt_propagation off
 void expgfx_resetAllPools(void)
 {
     u16* refCountPtr;
@@ -2575,6 +2576,7 @@ void expgfx_resetAllPools(void)
         expgfx_clearResourceTable(resourceEntry, 0, 0, 0, 0, 0);
     }
 }
+#pragma opt_propagation reset
 
 void expgfx_updateFrameState(int sourceMode, int sourceId)
 {
