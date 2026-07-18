@@ -19,6 +19,8 @@
 #include "main/audio/hw_keyoff.h"
 #include "main/audio/inp_midi.h"
 #include "main/audio/mcmd_exec.h"
+#include "main/audio/voice_conv.h"
+#include "main/audio/voice_manage.h"
 #include "string.h"
 
 
@@ -66,16 +68,9 @@ STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo1) == 0x30);
 #define SYNTH_FADE_ACTION_DISABLED           4
 #define SYNTH_INVALID_LINK_ID                0xffffffff
 #define SYNTH_VOICE_SLOT_SIZE                0x404
-#define SYNTH_VOICE_STRIDE                   0x404
-#define SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET   0x11c
 
 extern u8 gSynthDelayBucketCursor;
 extern u8 gSynthInitialized;
-
-extern void voiceRegister(McmdVoiceState* state);
-extern void voiceKill(u32 voice);
-extern void voiceInitPriorityTables(void);
-extern void voiceInitRegistrationTables(void);
 
 extern u32 synthMasterFaderPauseActiveFlags;
 extern u32 synthMasterFaderActiveFlags;
@@ -272,9 +267,6 @@ void* synthAuxAUser[8];
 u8 synthTrackVolume[64];
 SynthFade synthMasterFader[32];
 SynthInfo synthInfo;
-
-extern u32 voiceGetPitchRatio(u8 note, u32 sInfo);
-extern u16 voiceScaleSampleRate(u32 rate);
 
 extern void hwSetVolume(u32 voice, u8 table, f32 vol, u32 pan, u32 span, f32 auxa, f32 auxb);
 
@@ -730,7 +722,7 @@ static inline u32 convert_cents(SynthHwVoice* svoice, u32 ccents)
     cpitch = voiceGetPitchRatio(ccents >> 16, svoice->sInfo) << 16;
     if ((curDetune = ccents & 0xFFFF) != 0)
     {
-        cpitch += curDetune * (voiceScaleSampleRate(cpitch >> 16) - (cpitch >> 16));
+        cpitch += curDetune * ((u16)voiceScaleSampleRate(cpitch >> 16) - (cpitch >> 16));
     }
     return cpitch;
 }
