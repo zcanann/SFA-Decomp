@@ -23,7 +23,7 @@ extern f32 lbl_803E65FC;
 extern f32 lbl_803E6600;
 extern f32 gWorldPlanetLightingSkyDirX;
 extern f32 gWorldPlanetLightingSkyDirZ;
-void worldplanet_updateMapLighting(void)
+void worldplanet_updateMapLighting(int a)
 {
     skyFn_80089710(7, 1, 0);
 

@@ -35,6 +35,7 @@
 #include "track/intersect_api.h"
 #include "track/intersect_fog_api.h"
 #include "main/newshadows_shadow_api.h"
+#include "main/object_ext.h"
 
 s16 lbl_803DCC18;
 s16 lbl_803DCC16;
@@ -1549,7 +1550,6 @@ void fn_8003B950(f32* matrix)
     lbl_803DCC10 = (u32)matrix;
 }
 
-extern void doNothing_beforeRenderObject(int x);
 
 void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
 {

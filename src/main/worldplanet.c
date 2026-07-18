@@ -63,7 +63,6 @@ extern int gWorldPlanetLoadedMapId;
 extern f32 gWorldPlanetPathProgress;
 extern f32 lbl_803E65F8;
 extern u16 getNextTaskHintText(void);
-extern void worldplanet_updateMapLighting(int obj);
 extern void setFrameCountdown_800202c4(int frames);
 
 extern f32 lbl_803DDD00;
@@ -74,6 +73,7 @@ extern int gWorldPlanetObjectIdTable[3][5]; /* [row][WorldPlanetSlot]; see defin
 
 #include "main/fsin16_approx_api.h"
 #include "main/fcos16_approx_api.h"
+#include "main/worldplanet_lighting.h"
 extern f32 gWorldPlanetPfxOffsetX;
 extern f32 gWorldPlanetPfxOffsetY;
 extern f32 gWorldPlanetPfxOffsetZ;

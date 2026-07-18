@@ -3,6 +3,6 @@
 
 #include "global.h"
 
-void worldplanet_updateMapLighting(void);
+void worldplanet_updateMapLighting(int a);
 
 #endif /* MAIN_WORLDPLANET_LIGHTING_H_ */

@@ -259,7 +259,7 @@ void doNothing_afterRenderObject(void)
 {
 }
 
-void doNothing_beforeRenderObject(void)
+void doNothing_beforeRenderObject(int a)
 {
 }
 
