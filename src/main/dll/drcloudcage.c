@@ -420,7 +420,7 @@ void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, i
         (distanceScale < lbl_803E5AE8) ? lbl_803E5AE8 : ((distanceScale > lbl_803E5B08) ? lbl_803E5B08 : distanceScale);
     if (channelFlags & 1)
     {
-        if (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 8))
+        if (Sfx_IsPlayingFromObjectChannel((int)obj, 8))
         {
             gDrCloudCageWindVolume = lbl_803E5B0C * clamped;
             if (gDrCloudCageWindVolume < lbl_803E5AE8)
@@ -457,7 +457,7 @@ void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, i
     }
     if (channelFlags & 2)
     {
-        if (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 1))
+        if (Sfx_IsPlayingFromObjectChannel((int)obj, 1))
         {
             if (((DRCloudCageState*)state)->distanceGate < lbl_803E5B18)
             {

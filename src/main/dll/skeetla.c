@@ -434,7 +434,7 @@ static void skeetla_playFootstepSfx(u8* obj, u16 sfxId)
     u8* state = ((GameObject*)obj)->extra;
     if (((((TrickyState*)((GameObject*)obj)->extra)->statusFlags >> 6) & 1) == 0u &&
         ((((GameObject*)obj)->anim.currentMove >= 0x30) || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
-        (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 0x10) == 0))
+        (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0))
     {
         objAudioFn_800393f8Legacy(obj, state + 0x3a8, sfxId, 0x500, -1, 0);
     }
@@ -526,7 +526,7 @@ int trickyMove(u8* obj, f32* targetPos)
                 if (((TrickyState*)state)->sfxIntervalTimer <= lbl_803E23DC)
                 {
                     ((TrickyState*)state)->sfxIntervalTimer = (f32)(int)randomGetRange(600, 1200);
-                    if (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 0x10) == 0)
+                    if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                     {
                         if (moveSpeed > lbl_803E23E8)
                         {

@@ -136,7 +136,7 @@ void dll_22C_update(int obj)
         {
             if (object->anim.localPosY < 60.0f + placement->posY)
             {
-                if (Sfx_IsPlayingFromObjectChannelIntLegacy(obj, 8) == 0)
+                if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_id_116);
                     blob->sfxLatch = 1;
@@ -190,7 +190,7 @@ void dll_22C_update(int obj)
                 if (object->anim.localPosY == 60.0f + placement->posY)
                 {
                     blob->mode = DLL22C_MODE_DESCEND;
-                    if (Sfx_IsPlayingFromObjectChannelIntLegacy(obj, 8) == 0)
+                    if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                     {
                         Sfx_PlayFromObject(obj, SFXTRIG_liftloop);
                         blob->sfxLatch = 1;
@@ -199,7 +199,7 @@ void dll_22C_update(int obj)
                 else if (object->anim.localPosY == placement->posY - 1228.0f)
                 {
                     blob->mode = DLL22C_MODE_ASCEND;
-                    if (Sfx_IsPlayingFromObjectChannelIntLegacy(obj, 8) == 0)
+                    if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0)
                     {
                         Sfx_PlayFromObject(obj, SFXTRIG_liftloop);
                         blob->sfxLatch = 1;

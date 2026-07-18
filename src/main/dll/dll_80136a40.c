@@ -1181,7 +1181,7 @@ int fn_80138920(GameObject* obj, int sfxId, int vol)
     case 47:
         return 0;
     }
-    if (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 16) != 0)
+    if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) != 0)
         return 0;
     objAudioFn_800393f8Legacy(obj, b + 936, sfxId, vol, -1, 0);
     return 1;

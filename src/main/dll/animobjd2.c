@@ -157,7 +157,7 @@ typedef struct
             s16 a0 = ((GameObject*)(obj))->anim.currentMove;                                                           \
             if (a0 >= 0x30 || a0 < 0x29)                                                                               \
             {                                                                                                          \
-                if (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 0x10) == 0)                                           \
+                if (Sfx_IsPlayingFromObjectChannel((int)(obj), 0x10) == 0)                                             \
                 {                                                                                                      \
                     objAudioFn_800393f8Legacy(obj, cfg + 0x3a8, snd, p4, -1, 0);                                       \
                 }                                                                                                      \

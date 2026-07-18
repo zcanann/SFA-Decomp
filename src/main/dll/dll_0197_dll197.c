@@ -195,7 +195,7 @@ void dll_197_update(int obj)
 
     player = (int)Obj_GetPlayerObject();
     distance = Vec_distance((void*)(player + 0x18), &((GameObject*)obj)->anim.worldPosX);
-    if (Sfx_IsPlayingFromObjectChannelIntLegacy(obj, 0x40) != 0)
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0)
     {
         if (distance >= 90.0f && state->active != 0)
         {

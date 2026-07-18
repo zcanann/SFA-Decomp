@@ -299,7 +299,7 @@ s32 Music_GetActivePriority(void);
 void Music_LoadChannelForTrigger(MusicTrigger* trigger);
 void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger);
 u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
-s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
+int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 void Sfx_StopAllObjectSounds(void);
 void audioFn_8000b694(u32 value);
@@ -1595,11 +1595,11 @@ u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit)
     return gSfxObjectChannelMatchCount;
 }
 
-s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel)
+int Sfx_IsPlayingFromObjectChannel(int obj, int channel)
 {
     SfxObjectChannel* objectChannel;
 
-    if (((u8)channel == 0) || (obj == 0))
+    if (((u8)channel == 0) || ((u32)obj == 0))
     {
         objectChannel = NULL;
     }

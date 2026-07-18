@@ -466,7 +466,7 @@ void fn_8013F9E4(GameObject* obj, int state)
                     move = obj->anim.currentMove;
                     if (move >= 48 || move < 41)
                     {
-                        if (((s32 (*)(void*, u32))Sfx_IsPlayingFromObjectChannel)(obj, 16) == 0)
+                        if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) == 0)
                         {
                             objAudioFn_800393f8Legacy(obj, (void*)(extra + 936), 864, 1280, -1, 0);
                         }
