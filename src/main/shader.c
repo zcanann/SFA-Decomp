@@ -6,6 +6,7 @@
 #include "main/pi_data_file_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/pi_flush_api.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/debug.h"
 #include "main/frustum.h"
 #include "main/shader_api.h"
@@ -88,7 +89,6 @@ extern int mapCoordsToId(int x, int z, int layer);
 extern s16* gMapBlockIds;
 extern u8 lbl_803DCE98;
 extern u8* gMapBlockRefCounts;
-extern int textureLoad(int id, int param);
 typedef struct TexOverrideEntry
 {
     u32 key;   /* 0x00 */
@@ -1001,7 +1001,7 @@ int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
         {
             int v = *(int*)(*(int*)((char*)blk[0] + 0x54) + z[1]);
             v = -(int)((u32)v | 0x8000);
-            *(int*)(*(int*)((char*)blk[0] + 0x54) + z[1]) = textureLoad(v, 0);
+            *(void**)(*(int*)((char*)blk[0] + 0x54) + z[1]) = textureLoad(v, 0);
             z[1] += 4;
             z[0]++;
         }
