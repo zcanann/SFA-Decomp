@@ -46,6 +46,7 @@
 #include "main/dll/dll_00C9_enemy.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/os/OSCache.h"
+#include "dolphin/vi.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "main/objprint_sound_api.h"
@@ -202,12 +203,7 @@ extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, 
 extern void GXSetTevColor(int id, GXColor* color);
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
-extern void VISetPreRetraceCallback(void* cb);
-extern void VISetPostRetraceCallback(void* cb);
 extern void GXSetBreakPtCallback(void* cb);
-extern void VISetNextFrameBuffer(void* fb);
-extern void VIFlush(void);
-extern void VIWaitForRetrace(void);
 int TitleScreen_getObjectTypeId(u8* obj);
 
 u8 debugLogBuffer[0x1100];
