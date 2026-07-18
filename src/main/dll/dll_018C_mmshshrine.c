@@ -208,6 +208,8 @@ void MMSH_Shrine_update(int objArg);
 void MMSH_Shrine_init(GameObject* obj, int def);
 void MMSH_Shrine_release(void);
 void MMSH_Shrine_initialise(void);
+extern void fearTestMeterSetRange(u8 a, u8 b, s16 c);
+int fn_801C49B8(void* objArg);
 
 ObjectDescriptor gMMSH_ShrineObjDescriptor = {
     0,
@@ -226,8 +228,18 @@ ObjectDescriptor gMMSH_ShrineObjDescriptor = {
     MMSH_Shrine_getExtraSize,
 };
 
-const f32 gLaserBeamOrbitPi = 3.1415927f;
-const f32 gLaserBeamOrbitAngleScale = 32768.0f;
+union MMSHConstF32 { f32 f; };
+const union MMSHConstF32 lbl_803E4F08 = { 512.0f };
+const union MMSHConstF32 lbl_803E4F0C = { 128.0f };
+const union MMSHConstF32 lbl_803E4F10 = { 192.0f };
+const union MMSHConstF32 lbl_803E4F14 = { 20.0f };
+const union MMSHConstF32 gLaserBeamOrbitPi = { 3.1415927f };
+const union MMSHConstF32 gLaserBeamOrbitAngleScale = { 32768.0f };
+const union MMSHConstF32 lbl_803E4F20 = { 600.0f };
+const union MMSHConstF32 lbl_803E4F24 = { 0.005f };
+const union MMSHConstF32 lbl_803E4F28 = { 12.0f };
+const union MMSHConstF32 lbl_803E4F2C = { 30.0f };
+const union MMSHConstF32 lbl_803E4F30 = { 255.0f };
 
 /*
  * Advances the ambient laser-beam bob, aim, and player proximity alpha.
@@ -256,25 +268,25 @@ void fn_801C4664(void* objArg)
         return;
     }
 
-    DFSH_LASER_ORBIT_A(runtime) = (s16)(DFSH_LASER_ORBIT_A(runtime) + (int)(512.0f * timeDelta));
-    DFSH_LASER_ORBIT_B(runtime) = (s16)(DFSH_LASER_ORBIT_B(runtime) + (int)(128.0f * timeDelta));
-    DFSH_LASER_ORBIT_C(runtime) = (s16)(DFSH_LASER_ORBIT_C(runtime) + (int)(192.0f * timeDelta));
+    DFSH_LASER_ORBIT_A(runtime) = (s16)(DFSH_LASER_ORBIT_A(runtime) + (int)(lbl_803E4F08.f * timeDelta));
+    DFSH_LASER_ORBIT_B(runtime) = (s16)(DFSH_LASER_ORBIT_B(runtime) + (int)(lbl_803E4F0C.f * timeDelta));
+    DFSH_LASER_ORBIT_C(runtime) = (s16)(DFSH_LASER_ORBIT_C(runtime) + (int)(lbl_803E4F10.f * timeDelta));
 
     obj->localPosY =
-        20.0f + (*(f32*)((u8*)config + 0xC) +
-                        mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale));
+        lbl_803E4F14.f + (*(f32*)((u8*)config + 0xC) +
+                        mathSinf((gLaserBeamOrbitPi.f * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale.f));
 
-    trigA = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_B(runtime)) / gLaserBeamOrbitAngleScale);
-    trigB = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale);
+    trigA = mathSinf((gLaserBeamOrbitPi.f * DFSH_LASER_ORBIT_B(runtime)) / gLaserBeamOrbitAngleScale.f);
+    trigB = mathSinf((gLaserBeamOrbitPi.f * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale.f);
     trigB = trigB + trigA;
-    obj->roll = (s16)(600.0f * trigB);
+    obj->roll = (s16)(lbl_803E4F20.f * trigB);
 
-    trigA = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_C(runtime)) / gLaserBeamOrbitAngleScale);
-    trigB = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale);
+    trigA = mathSinf((gLaserBeamOrbitPi.f * DFSH_LASER_ORBIT_C(runtime)) / gLaserBeamOrbitAngleScale.f);
+    trigB = mathSinf((gLaserBeamOrbitPi.f * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale.f);
     trigB = trigB + trigA;
-    obj->pitch = (s16)(600.0f * trigB);
+    obj->pitch = (s16)(lbl_803E4F20.f * trigB);
 
-    ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, &animEvents);
+    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4F24.f, timeDelta, &animEvents);
     if (playerObj == NULL)
     {
         return;
@@ -292,11 +304,11 @@ void fn_801C4664(void* objArg)
         angleDelta += 0xFFFF;
     }
 
-    obj->yaw = (s16)(obj->yaw + (s16)(((f32)angleDelta * timeDelta) / 12.0f));
+    obj->yaw = (s16)(obj->yaw + (s16)(((f32)angleDelta * timeDelta) / lbl_803E4F28.f));
     distance = Vec_xzDistance(&obj->worldPosX, &((GameObject*)playerObj)->anim.worldPosX);
-    if (distance <= 30.0f)
+    if (distance <= lbl_803E4F2C.f)
     {
-        obj->alpha = (u8)(int)(255.0f * (distance / 30.0f));
+        obj->alpha = (u8)(int)(lbl_803E4F30.f * (distance / lbl_803E4F2C.f));
     }
     else
     {
@@ -304,57 +316,15 @@ void fn_801C4664(void* objArg)
     }
 }
 
-/*
- * Drives the DragonRock Shrine laser-beam sway controller.
- */
-extern void fearTestMeterSetRange(u8 a, u8 b, s16 c);
-int fn_801C49B8(void* objArg)
-{
-    DFSHLaserBeamObject* obj;
-    DFSHLaserBeamRuntime* runtime;
-    f32 stickAccel;
-    f32 target;
-    f32 zero;
-    int swayValue;
-
-    obj = (DFSHLaserBeamObject*)objArg;
-    runtime = obj->runtime;
-    if ((DFSH_LASER_FLAGS(runtime) & 0x20) == 0)
-    {
-        fn_8011F6D4(1);
-        DFSH_LASER_FLAGS(runtime) |= 0x20;
-        zero = 0.0f;
-        runtime->swayPhase = zero;
-        runtime->swayVelocity = zero;
-        runtime->swayAccel = zero;
-    }
-
-    stickAccel = (f32)(s8)padGetStickX(0) / 72.0f;
-    stickAccel = stickAccel * 0.0010416667209938169f;
-    runtime->swayVelocity += stickAccel * timeDelta;
-
-    target = runtime->swayTarget;
-    if (target < 0.0f && runtime->swayAccel > target)
-    {
-        runtime->swayAccel -= 0.0010416667209938169f * timeDelta;
-    }
-    else if (target > 0.0f)
-    {
-        if (runtime->swayAccel < target)
-        {
-            runtime->swayAccel += 0.0010416667209938169f * timeDelta;
-        }
-    }
-
-    runtime->swayPhase += timeDelta * (runtime->swayVelocity + runtime->swayAccel);
-    swayValue = (int)(96.0f * runtime->swayPhase);
-    fearTestMeterSetRange(0x60, 0x39, swayValue);
-    if ((swayValue > 0x39) || (swayValue < -0x39))
-    {
-        return 1;
-    }
-    return 0;
-}
+const union MMSHConstF32 lbl_803E4F40 = { 0.0f };
+const union MMSHConstF32 lbl_803E4F44 = { 72.0f };
+const union MMSHConstF32 lbl_803E4F48 = { 0.0010416667209938169f };
+const union MMSHConstF32 lbl_803E4F4C = { 96.0f };
+const union MMSHConstF32 lbl_803E4F50 = { 1.0f };
+const union MMSHConstF32 lbl_803E4F54 = { -0.0026041667442768812f };
+const union MMSHConstF32 lbl_803E4F58 = { 0.0026041667442768812f };
+const union MMSHConstF32 lbl_803E4F5C = { 2.0f };
+const union MMSHConstF32 lbl_803E4F60 = { 0.5f };
 
 int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
 {
@@ -385,14 +355,14 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
                 ((MMSHShrineObject*)objArg)->flags06 |= MMSH_SHRINE_FLAG_LIT;
                 if (runtime->light != NULL)
                 {
-                    modelLightStruct_setEnabled(runtime->light, 0, 1.0f);
+                    modelLightStruct_setEnabled(runtime->light, 0, lbl_803E4F50.f);
                 }
                 break;
             case 0xf:
                 ((MMSHShrineObject*)objArg)->flags06 &= ~MMSH_SHRINE_FLAG_LIT;
                 if (runtime->light != NULL)
                 {
-                    modelLightStruct_setEnabled(runtime->light, 0, 1.0f);
+                    modelLightStruct_setEnabled(runtime->light, 0, lbl_803E4F50.f);
                 }
                 break;
             case 1:
@@ -407,20 +377,20 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
                 }
                 break;
             case 3:
-                runtime->swayTarget = -0.0026041667442768812f;
+                runtime->swayTarget = lbl_803E4F54.f;
                 break;
             case 4:
-                runtime->swayTarget = 0.0026041667442768812f;
+                runtime->swayTarget = lbl_803E4F58.f;
                 break;
             case 5:
                 runtime->swayTarget = -runtime->swayTarget;
                 runtime->swayVelocity = -runtime->swayTarget;
                 break;
             case 6:
-                runtime->swayTarget *= 2.0f;
+                runtime->swayTarget *= lbl_803E4F5C.f;
                 break;
             case 8:
-                runtime->swayTarget *= 0.5f;
+                runtime->swayTarget *= lbl_803E4F60.f;
                 break;
             }
         }
@@ -439,6 +409,57 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
         return MMSH_SHRINE_SEQ_RESULT_COMPLETE;
     }
     runtime->latch.activeMask |= MMSH_SHRINE_LATCH_FLAG_OPEN_READY;
+    return 0;
+}
+
+/*
+ * Drives the DragonRock Shrine laser-beam sway controller.
+ */
+int fn_801C49B8(void* objArg)
+{
+    DFSHLaserBeamObject* obj;
+    DFSHLaserBeamRuntime* runtime;
+    f32 stickAccel;
+    f32 target;
+    f32 zero;
+    int swayValue;
+
+    obj = (DFSHLaserBeamObject*)objArg;
+    runtime = obj->runtime;
+    if ((DFSH_LASER_FLAGS(runtime) & 0x20) == 0)
+    {
+        fn_8011F6D4(1);
+        DFSH_LASER_FLAGS(runtime) |= 0x20;
+        zero = lbl_803E4F40.f;
+        runtime->swayPhase = zero;
+        runtime->swayVelocity = zero;
+        runtime->swayAccel = zero;
+    }
+
+    stickAccel = (f32)(s8)padGetStickX(0) / lbl_803E4F44.f;
+    stickAccel = stickAccel * lbl_803E4F48.f;
+    runtime->swayVelocity += stickAccel * timeDelta;
+
+    target = runtime->swayTarget;
+    if (target < lbl_803E4F40.f && runtime->swayAccel > target)
+    {
+        runtime->swayAccel -= lbl_803E4F48.f * timeDelta;
+    }
+    else if (target > lbl_803E4F40.f)
+    {
+        if (runtime->swayAccel < target)
+        {
+            runtime->swayAccel += lbl_803E4F48.f * timeDelta;
+        }
+    }
+
+    runtime->swayPhase += timeDelta * (runtime->swayVelocity + runtime->swayAccel);
+    swayValue = (int)(lbl_803E4F4C.f * runtime->swayPhase);
+    fearTestMeterSetRange(0x60, 0x39, swayValue);
+    if ((swayValue > 0x39) || (swayValue < -0x39))
+    {
+        return 1;
+    }
     return 0;
 }
 
@@ -487,17 +508,17 @@ void MMSH_Shrine_render(GameObject* obj, u32 a2, u32 a3, u32 a4, u32 a5, char vi
     {
         if (runtime->light != NULL)
         {
-            modelLightStruct_setEnabled(runtime->light, 0, 1.0f);
+            modelLightStruct_setEnabled(runtime->light, 0, lbl_803E4F50.f);
         }
     }
     else
     {
         if (runtime->light != NULL)
         {
-            modelLightStruct_setEnabled(runtime->light, 1, 1.0f);
+            modelLightStruct_setEnabled(runtime->light, 1, lbl_803E4F50.f);
         }
-        objRenderModelAndHitVolumes((int)obj, a2, a3, a4, a5, 1.0f);
-        objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f,
+        objRenderModelAndHitVolumes((int)obj, a2, a3, a4, a5, lbl_803E4F50.f);
+        objParticleFn_80099d84((GameObject*)obj, lbl_803E4F50.f, 7, lbl_803E4F50.f,
                                (ModelLightStruct*)runtime->light);
     }
 }
@@ -543,7 +564,7 @@ void MMSH_Shrine_update(int objArg)
     {
         f32 idleSfxTimer = runtime->idleSfxTimer - timeDelta;
         runtime->idleSfxTimer = idleSfxTimer;
-        if (idleSfxTimer <= 0.0f)
+        if (idleSfxTimer <= lbl_803E4F40.f)
         {
             Sfx_PlayFromObject((int)obj, MMSH_SHRINE_SFX_IDLE);
             runtime->idleSfxTimer = (f32)(s32)randomGetRange(500, 1000);
