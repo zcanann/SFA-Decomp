@@ -19,49 +19,7 @@ int lbl_803DDB18;
 extern u8* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
 
-/* Flags every trigger/volume in the map block under the object that
- * carries the given event id: sets bits 0..1 on matching block entries
- * and bit 1 on matching group records. Returns 0 when the block is
- * missing or not trigger-enabled. */
-int fn_801A27B8(GameObject* obj, int id)
-{
-    MapBlockData* block;
-
-    block = mapGetBlock(objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
-    if (block == NULL || (block->flags4 & 0x8) == 0)
-    {
-        return 0;
-    }
-    {
-        int j;
-        int i;
-        for (i = 0; i < block->polyGroupCount; i++)
-        {
-            u8* e = mapBlockFn_800606ec(block, i);
-            if (id == mapBlockFn_80060678(e))
-            {
-                *(int*)(e + 0x10) |= 3;
-            }
-        }
-        for (j = 0; j < block->layerCount; j++)
-        {
-            u8* g = (u8*)fn_8006070C(block, j);
-            u8* p;
-            int k;
-            k = 0;
-            p = g;
-            for (; k < *(u8*)(g + 0x41); k++)
-            {
-                if (*(u8*)(p + 0x29) == id)
-                {
-                    *(int*)(g + 0x3c) |= 2;
-                }
-                p += 8;
-            }
-        }
-    }
-    return 1;
-}
+int fn_801A27B8(GameObject* obj, int id);
 
 int blasted_getExtraSize(void)
 {
@@ -230,3 +188,43 @@ ObjectDescriptor gBlastedObjDescriptor = {
     (ObjectDescriptorCallback)blasted_getObjectTypeId,
     blasted_getExtraSize,
 };
+
+int fn_801A27B8(GameObject* obj, int id)
+{
+    MapBlockData* block;
+
+    block = mapGetBlock(objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
+    if (block == NULL || (block->flags4 & 0x8) == 0)
+    {
+        return 0;
+    }
+    {
+        int j;
+        int i;
+        for (i = 0; i < block->polyGroupCount; i++)
+        {
+            u8* e = mapBlockFn_800606ec(block, i);
+            if (id == mapBlockFn_80060678(e))
+            {
+                *(int*)(e + 0x10) |= 3;
+            }
+        }
+        for (j = 0; j < block->layerCount; j++)
+        {
+            u8* g = (u8*)fn_8006070C(block, j);
+            u8* p;
+            int k;
+            k = 0;
+            p = g;
+            for (; k < *(u8*)(g + 0x41); k++)
+            {
+                if (*(u8*)(p + 0x29) == id)
+                {
+                    *(int*)(g + 0x3c) |= 2;
+                }
+                p += 8;
+            }
+        }
+    }
+    return 1;
+}
