@@ -238,7 +238,6 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
         if (otherObj != (u32)obj && ((GameObject*)otherObj)->anim.seqId == 0x518 &&
             Vec_distance(&obj->anim.worldPosX, (void*)(otherObj + 0x18)) < 40.0f)
         {
-            u32 kind;
             odef = (MmpMoonrockPlacement*)((GameObject*)list[i])->anim.placementData;
             mydef = (MmpMoonrockPlacement*)obj->anim.placementData;
             pedestalCount = mainGetBit(0x88C);
@@ -250,8 +249,7 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
                 {
                     mainSetBits(odef->placedGameBit, 0);
                 }
-                kind = state->kind;
-                if (kind == 3 || kind == 4 || kind == 6)
+                if (state->kind == 3 || state->kind == 4 || state->kind == 6)
                 {
                     pedestalCount -= 1;
                 }
@@ -299,8 +297,7 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
                     mainSetBits(mydef->kindGameBit, odef->kindGameBit);
                     state->kind = odef->kindGameBit;
                 }
-                kind = state->kind;
-                if (kind == 3 || kind == 4 || kind == 6)
+                if (state->kind == 3 || state->kind == 4 || state->kind == 6)
                 {
                     if (mode != 2)
                     {
