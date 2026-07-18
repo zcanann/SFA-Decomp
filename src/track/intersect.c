@@ -1714,7 +1714,7 @@ void doColorFilter(u8* mod)
 
 static inline f32 distortSqrtf(f32 x)
 {
-    float y;
+    volatile float y;
     double guess = __frsqrte((double)x);
     guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * x);
     guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * x);
@@ -1807,8 +1807,8 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
             c1.a = lbl_803DEF20 * sr;
         }
         sr = sr * gSynthFadeMask;
-        if (sr > lbl_803DEEE4)
-            sr = lbl_803DEEE4;
+        if (sr > *(f32*)&lbl_803DEEE4)
+            sr = *(f32*)&lbl_803DEEE4;
         c3.a = lbl_803DEF20 * sr;
     }
 
@@ -1832,8 +1832,8 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
         indMtx[5] = lbl_803DEEDC;
     }
 
-    PSMTXTrans(mtx_a0, gSynthDelayedActionWord0 * (-proj5) - gSynthDelayedActionWord0,
-               gSynthDelayedActionWord0 * proj4 - gSynthDelayedActionWord0, lbl_803DEEDC);
+    PSMTXTrans(mtx_a0, *(f32*)&gSynthDelayedActionWord0 * (-proj5) - *(f32*)&gSynthDelayedActionWord0,
+               *(f32*)&gSynthDelayedActionWord0 * proj4 - *(f32*)&gSynthDelayedActionWord0, lbl_803DEEDC);
     PSMTXScale(mtx_70, lbl_803DEF24, *(f32*)&lbl_803DEF24, lbl_803DEEDC);
     PSMTXRotRad(mtx_d0, 'z', angle);
     PSMTXConcat(mtx_70, mtx_a0, mtx_70);
@@ -2727,7 +2727,7 @@ u32 objCallback_80074d04(int handle, void* model)
     getTextureFn_8006c5e4((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
 
-    PSMTXScale(mtx_ec, 4.0f, 4.0f, 4.0f);
+    PSMTXScale(mtx_ec, hudScale, hudScale, hudScale);
     mtx_ec[0][3] = f1;
     GXLoadTexMtxImm(mtx_ec, GX_TEXMTX1, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
@@ -2746,7 +2746,7 @@ u32 objCallback_80074d04(int handle, void* model)
     GXSetIndTexMtx(1, (f32(*)[3])indMtx_44, -4);
     GXSetTevIndirect(0, 0, 0, 7, 1, 6, 6, 0, 0, 0);
 
-    PSMTXScale(mtx_bc, 0.83f, 0.83f, 0.83f);
+    PSMTXScale(mtx_bc, lbl_803DEF40, lbl_803DEF40, lbl_803DEF40);
     PSMTXRotRad(mtx_5c, 'z', lbl_803DEEF0);
     PSMTXConcat(mtx_5c, mtx_bc, mtx_bc);
     mtx_bc[0][3] = f2;
