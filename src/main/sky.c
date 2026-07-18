@@ -34,7 +34,12 @@
 #include "main/loaded_file_flags.h"
 #include "track/intersect_screen_api.h"
 #include "track/intersect_api.h"
-#include "dolphin/gx/GXLegacyDecls.h"
+#include "dolphin/gx/GXBump.h"
+#include "dolphin/gx/GXGeometry.h"
+#include "dolphin/gx/GXLighting.h"
+#include "dolphin/gx/GXPixel.h"
+#include "dolphin/gx/GXTev.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/lightmap_ext.h"
 #include "main/track_dolphin_sky_api.h"
 #include "main/track_dolphin_shadow_api.h"
@@ -181,13 +186,6 @@ extern const f32 gSkyPi;
 extern f32 lbl_803DF190;
 extern f32 lbl_803DF194;
 
-extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
-extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
-extern f32 PSVECMag(f32* vec);
-extern void PSVECScale(f32 scale, f32* src, f32* dst);
-extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
-extern void PSVECNormalize(void* src, void* dst);
-extern void GXSetTexCoordGen2(int coord, int func, int src, int mtx, int normalize, int pttexmtx);
 int getEnvFxBit2BA(void)
 {
     return (u8)mainGetBit(GAMEBIT_ENV_dayNo);
@@ -424,9 +422,9 @@ void skyBuildSunModelMatrix(f32 mtx[3][4])
     f32 scaleMtx[3][4];
 
     scale = lbl_803DF05C / *(f32*)(gSkySunObject + 8);
-    PSMTXScale(scaleMtx, scale, scale, scale);
+    PSMTXScale((f32*)scaleMtx, scale, scale, scale);
     Obj_BuildWorldTransformMatrix((GameObject*)gSkySunObject, (f32*)mtx, 0);
-    PSMTXConcat(mtx, scaleMtx, mtx);
+    PSMTXConcat((f32*)mtx, (f32*)scaleMtx, (f32*)mtx);
 }
 
 u8 skyFn_8008919c(int slot)
@@ -1836,7 +1834,8 @@ void fn_8008923C(GameObject* obj, f32* x, f32* y, f32* z)
                 mag = PSVECMag(dir);
                 if (mag > lbl_803DF058)
                 {
-                    PSVECScale(lbl_803DF05C / mag, dir, dir);
+                    mag = lbl_803DF05C / mag;
+                    PSVECScale(dir, dir, mag);
                     *x = dir[0];
                     *y = dir[1];
                     *z = dir[2];
@@ -2912,9 +2911,9 @@ void skyFn_8008aee8(void)
     f32 blend;
     f32 v;
     f32 ang0;
-    FogColor fogColor;
+    GXColor fogColor;
 
-    fogColor = *(FogColor*)&lbl_803E8458;
+    fogColor = *(GXColor*)&lbl_803E8458;
     if (gSkyState != NULL)
     {
         if ((player = Obj_GetPlayerObject()) != NULL &&
