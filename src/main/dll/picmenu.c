@@ -55,9 +55,7 @@ extern s32 gPicMenuVideoDecodeThreadCreated;
 extern s32 gPicMenuVideoDecodePrepareReady;
 extern s32 gAttractMovieIdleFrameCount; /* sbss slot is 8 bytes; upper word unreferenced */
 
-void THPRead_Reader(void);
 void AttractMovieVideo_DecoderForOnMemory(void*);
-void AttractMovieVideo_Decoder(void);
 
 char gPicMenuReadThreadArea[0x1000];
 OSThread gPicMenuReadThread;
