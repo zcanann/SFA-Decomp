@@ -217,7 +217,7 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
 void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot)
 {
     ExpgfxRuntimeDataLayout* runtime;
-    u32 activeBit[1];
+    int activeBit[1];
     u32* resources[1];
     ExpgfxSlot* slot;
     u32 inactiveBitMask;
@@ -288,7 +288,7 @@ static inline void expgfxRemoveAllBody(void)
     ExpgfxSlot* slot;
     int slotIndex;
     int poolIndex;
-    u32 activeBit;
+    int activeBit;
     s16* poolSlotTypeIds;
     s8* poolActiveCountPtrs;
     u32* poolActiveMasks;
@@ -337,11 +337,7 @@ static inline void expgfxRemoveAllBody(void)
                 }
 
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-                {
-                    u32 currentMaskValue = *poolActiveMasks;
-                    u32 inactiveBitMask = ~activeBit;
-                    *poolActiveMasks = currentMaskValue & inactiveBitMask;
-                }
+                *poolActiveMasks &= ~activeBit;
             }
 
             slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
@@ -2315,13 +2311,12 @@ void expgfx_resetAllPools(void)
     u32* poolSourceIds[1];
     u8* poolFrameFlags[1];
     int resourceIndex;
-    u32 activeBit;
+    int activeBit;
     int poolIndex;
     ExpgfxResourceEntry* resourceEntry;
     ExpgfxTableEntry* tableEntry;
     ExpgfxStaticDataLayout* staticData;
     u32* slotPoolBases[1];
-    u32 inactiveBitMask;
     int tableIndex;
     ExpgfxRuntimeDataLayout* runtime[1];
     int slotIndex;
@@ -2375,11 +2370,7 @@ void expgfx_resetAllPools(void)
                 }
 
                 slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-                {
-                    u32 currentMaskValue = *poolActiveMasks[0];
-                    inactiveBitMask = ~activeBit;
-                    *poolActiveMasks[0] = currentMaskValue & inactiveBitMask;
-                }
+                *poolActiveMasks[0] &= ~activeBit;
             }
 
             slot = (ExpgfxSlot*)((u8*)slot + EXPGFX_SLOT_SIZE);
