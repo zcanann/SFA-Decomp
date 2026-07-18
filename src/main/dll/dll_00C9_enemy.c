@@ -119,8 +119,6 @@ extern f32 lbl_803E25D4;
 extern f32 lbl_803E2598;
 
 extern f32 lbl_803E25DC;
-extern u32 gEnemySelfAngleFlagClearMask[];
-extern u32 gEnemyTargetAngleFlagClearMask[];
 extern f32 lbl_803E25B8;
 extern f32 lbl_803E25EC;
 extern f32 lbl_803E25F0;
