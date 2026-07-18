@@ -127,7 +127,6 @@ extern f32 lbl_803E2C5C;
 extern f32 lbl_803E2C60;
 extern f32 lbl_803E2C64;
 extern f32 lbl_803E2C68;
-extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
 
 /*
  * FCVars - file-local overlay naming the crawler/HagabonMK2-family scratch
@@ -388,7 +387,8 @@ void hagabonMK2_updateB(s16* obj, u8* state)
             ratio *= t * timeDelta;
         }
         ((GameObject*)obj)->anim.rotY = (f32)(int)((GameObject*)obj)->anim.rotY - ratio;
-        fn_8014CD1C(obj, state, (int)((FCVars*)state)->emergeTimer, lbl_803E2C68 * spd, lbl_803E2C30, 1);
+        fn_8014CD1C((GameObject*)obj, state, (int)((FCVars*)state)->emergeTimer, lbl_803E2C68 * spd,
+                    lbl_803E2C30, 1);
     }
 
     {

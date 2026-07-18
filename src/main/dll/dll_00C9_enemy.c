@@ -1153,7 +1153,7 @@ void fn_8014C66C(GameObject* obj, GameObject* target)
 {
     ((EnemyState*)obj->extra)->trackedObj = target;
 }
-void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 flag)
+void fn_8014C678(GameObject* obj1, void* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 flag)
 {
     f32 mag1, mag2, magcross, finalScale;
     f32 stk_20[3];
@@ -1348,7 +1348,7 @@ f32 sidekickToy_accelerateTowardTargetXZ(GameObject* obj, f32 tx, f32 ty, f32 tz
     return dy;
 }
 
-void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledRoll)
+void fn_8014CD1C(GameObject* node, void* sub, int divisor, f32 fa, f32 fb, u8 useScaledRoll)
 {
     f32 dt;
     int angle;
@@ -1356,7 +1356,7 @@ void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledR
     f32 delta_f;
     s16 newVal;
 
-    dt = timeDelta / (f32)(u32)divisor;
+    dt = timeDelta / (f32)(u32)(u16)divisor;
     if (dt > lbl_803E256C)
         dt = lbl_803E256C;
 

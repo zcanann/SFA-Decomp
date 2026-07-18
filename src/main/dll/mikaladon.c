@@ -14,6 +14,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -43,7 +44,6 @@
  * the dropper via +0xC4 and announced with SFX 0x249. */
 #define SEQOBJ11E_GCROBOT_DROP_OBJ 0x6b5
 
-extern void fn_8014CD1C(int* obj, u8* state, int p3, f32 a, f32 b, int p6);
 extern f32 lbl_803E2868;
 extern f32 lbl_803E286C;
 
@@ -130,7 +130,7 @@ void fn_80152B90(int* obj, u8* state)
     ((GameObject*)obj)->anim.velocityX = oneOverTimeDelta * (sinOut - ((GameObject*)obj)->anim.localPosX);
     ((GameObject*)obj)->anim.velocityY = oneOverTimeDelta * (y - ((GameObject*)obj)->anim.localPosY);
     ((GameObject*)obj)->anim.velocityZ = oneOverTimeDelta * (cosOut - ((GameObject*)obj)->anim.localPosZ);
-    fn_8014CD1C(obj, state, 0xf, 7.5f, 1.0f, 0);
+    fn_8014CD1C((GameObject*)obj, state, 0xf, 7.5f, 1.0f, 0);
     *(f32*)(state + 0x334) = *(f32*)(state + 0x334) - timeDelta;
     if (*(f32*)(state + 0x334) <= lbl_803E2868)
     {

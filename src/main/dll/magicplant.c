@@ -47,8 +47,6 @@ int lbl_803DBCC8[2] = {2, 3};
 void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
     fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
-extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
-extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 
 void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
@@ -112,7 +110,7 @@ void fn_80153040(GameObject* obj, int state)
         vec[0] = curve->posX - (obj)->anim.localPosX;
         vec[1] = curve->posY - (obj)->anim.localPosY;
         vec[2] = curve->posZ - (obj)->anim.localPosZ;
-        fn_8014C678((int)obj, state, vec, 1.5f, 0.75f, 0.15f, 1);
+        fn_8014C678(obj, (void*)state, vec, 1.5f, 0.75f, 0.15f, 1);
 
         *(f32*)(state + 0x324) = *(f32*)(state + 0x324) + timeDelta;
         if (*(f32*)(state + 0x324) > 3.6e+02f)
@@ -122,7 +120,7 @@ void fn_80153040(GameObject* obj, int state)
         }
     }
 
-    fn_8014CD1C((int)obj, state, 0xf, 1e+01f, 1.0f, 0);
+    fn_8014CD1C(obj, (void*)state, 0xf, 1e+01f, 1.0f, 0);
 
     *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
     if (*(f32*)(state + 0x328) <= 0.0f)
@@ -204,8 +202,8 @@ void fn_80153248(GameObject* obj, int state)
             }
         }
     }
-    fn_8014C678((int)obj, state, vec, 1.5f, 0.75f, 0.15f, 1);
-    fn_8014CD1C((int)obj, state, 0xf, 1e+01f, 1.0f, 0);
+    fn_8014C678(obj, (void*)state, vec, 1.5f, 0.75f, 0.15f, 1);
+    fn_8014CD1C(obj, (void*)state, 0xf, 1e+01f, 1.0f, 0);
 }
 
 void vambat_init(GameObject* obj, int state)

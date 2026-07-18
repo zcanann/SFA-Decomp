@@ -108,8 +108,8 @@ void fn_80154870(GameObject* obj, int* state)
     }
     else
     {
-        ((void (*)(int, int*, f32*, f32, f32, f32, int))fn_8014C678)((int)obj, state, dvec, 2.0f, 0.1f, 0.1f, 1);
-        ((void (*)(int, int*, int, f32, f32, int))fn_8014CD1C)((int)obj, state, 0xf, 7.5f, 1.0f, 0);
+        fn_8014C678(obj, state, dvec, 2.0f, 0.1f, 0.1f, 1);
+        fn_8014CD1C(obj, state, 0xf, 7.5f, 1.0f, 0);
     }
     if (state[0xb7] & 0x40000000U)
     {

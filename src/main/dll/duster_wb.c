@@ -39,7 +39,6 @@ typedef struct DusterState
 
 extern int lbl_803DBCD8[2];
 extern u8 gDusterEbaMoveTable[];
-extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 extern const f32 lbl_803E2A98;
 extern const f32 lbl_803E2AA8;
 extern const f32 lbl_803E2AAC;
@@ -179,7 +178,7 @@ void fn_8015625C(u32 obj, int state)
             ((BaddieState*)state)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState*)state)->unk308);
         }
     }
-    fn_8014CD1C(obj, state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
+    fn_8014CD1C((GameObject*)obj, (void*)state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
 }
 
 void fn_8015652C(u32 obj, int state)
@@ -290,7 +289,7 @@ void fn_8015652C(u32 obj, int state)
             ((BaddieState*)state)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState*)state)->unk308);
         }
     }
-    fn_8014CD1C(obj, state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
+    fn_8014CD1C((GameObject*)obj, (void*)state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
 }
 
 void wbInit(u32 unused, int state)
