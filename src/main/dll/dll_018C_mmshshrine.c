@@ -205,15 +205,9 @@ typedef struct MMSHShrineObject
     s32 loadTriggerTimer;
 } MMSHShrineObject;
 
-int MMSH_Shrine_getExtraSize(void);
-int MMSH_Shrine_getObjectTypeId(void);
 void MMSH_Shrine_free(GameObject* obj);
 void MMSH_Shrine_render(GameObject* obj, u32 a2, u32 a3, u32 a4, u32 a5, char visible);
-void MMSH_Shrine_hitDetect(void);
 void MMSH_Shrine_update(int objArg);
-void MMSH_Shrine_init(GameObject* obj, int def);
-void MMSH_Shrine_release(void);
-void MMSH_Shrine_initialise(void);
 
 ObjectDescriptor gMMSH_ShrineObjDescriptor = {
     0,
