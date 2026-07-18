@@ -115,7 +115,6 @@ static u64 saveGame_checksum(u64* p, int count)
 #define MAKETEX_CAMMODE_NPCSPEAK 0x4d /* cameramode DLL dll_004D_cameramodenpcspeak */
 #define MAKETEX_CAMMODE_DEFAULT  0x42 /* default gameplay cameramode DLL */
 
-extern GameObject* focusedNpc;
 extern u8 seqGlobal3;
 extern u32 lbl_803DB714;
 extern u32 lbl_803DB71C;
