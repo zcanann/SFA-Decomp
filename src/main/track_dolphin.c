@@ -509,26 +509,7 @@ int* bs;
     }
 }
 
-void setupToRenderMapBlock(int* block, void* posMtx)
-{
-    f32 out[12];
-    f32 tmp[12];
-    f32 fc;
-
-    GXLoadPosMtxImm(posMtx, GX_PNMTX0);
-    PSMTXCopy(posMtx, tmp);
-    fc = lbl_803DEBCC;
-    tmp[3] = fc;
-    tmp[7] = fc;
-    tmp[11] = fc;
-    GXLoadNrmMtxImm(tmp, GX_PNMTX0);
-    PSMTXConcat(lbl_803967F0, posMtx, out);
-    GXLoadTexMtxImm(out, GX_TEXMTX2, GX_MTX3x4);
-    GXSetArray(GX_VA_POS, *(void**)((char*)block + 0x58), 6);
-    GXSetArray(GX_VA_CLR0, *(void**)((char*)block + 0x5C), 2);
-    GXSetArray(GX_VA_TEX0, *(void**)((char*)block + 0x60), 4);
-    GXSetArray(GX_VA_TEX1, *(void**)((char*)block + 0x60), 4);
-}
+void setupToRenderMapBlock(int* block, void* posMtx);
 
 void renderMapBlock(int* o, u8 type)
 {
@@ -613,6 +594,27 @@ void renderMapBlock(int* o, u8 type)
             break;
         }
     }
+}
+
+void setupToRenderMapBlock(int* block, void* posMtx)
+{
+    f32 out[12];
+    f32 tmp[12];
+    f32 fc;
+
+    GXLoadPosMtxImm(posMtx, GX_PNMTX0);
+    PSMTXCopy(posMtx, tmp);
+    fc = lbl_803DEBCC;
+    tmp[3] = fc;
+    tmp[7] = fc;
+    tmp[11] = fc;
+    GXLoadNrmMtxImm(tmp, GX_PNMTX0);
+    PSMTXConcat(lbl_803967F0, posMtx, out);
+    GXLoadTexMtxImm(out, GX_TEXMTX2, GX_MTX3x4);
+    GXSetArray(GX_VA_POS, *(void**)((char*)block + 0x58), 6);
+    GXSetArray(GX_VA_CLR0, *(void**)((char*)block + 0x5C), 2);
+    GXSetArray(GX_VA_TEX0, *(void**)((char*)block + 0x60), 4);
+    GXSetArray(GX_VA_TEX1, *(void**)((char*)block + 0x60), 4);
 }
 
 void FUN_80064384(int param)
@@ -706,10 +708,7 @@ MapShader* fn_8006070C(MapBlockData* obj, int idx)
     return obj->shaders + idx;
 }
 
-void* fn_800606DC(int* obj, int idx)
-{
-    return (char*)((int**)obj)[0x4c / 4] + idx * 8;
-}
+void* fn_800606DC(int* obj, int idx);
 
 void fn_80060490(u32* outX, u32* outY, u32* outWidth, u32* outHeight)
 {
@@ -728,11 +727,7 @@ u8 gTrackGridOrigin[0x104];
 
 TrackBlockDescriptor gTrackBlockDescriptors[20];
 
-void* fn_80069944(u32* outVal)
-{
-    *outVal = gActiveTrackBlockCount;
-    return gTrackBlockDescriptors;
-}
+void* fn_80069944(u32* outVal);
 
 void fn_80069958(void** out)
 {
@@ -759,12 +754,7 @@ void playerShadowFn_80062a30(GameObject* obj)
 }
 
 /* fn_80060668 -- extract bits 8-15 of obj[0x10] as a byte. */
-u32 fn_80060668(int* obj)
-{
-    u32 v = obj[4];
-    v &= 0x00FF0000;
-    return v >> 16;
-}
+u32 fn_80060668(int* obj);
 
 void fn_80062894(void)
 {
@@ -776,12 +766,7 @@ void fn_80062894(void)
     lbl_803DCEE8 = 0;
 }
 
-void fn_80069968(s32* out1, u32* out2)
-{
-    TrackBlockDescriptor* descriptors = gTrackBlockDescriptors;
-    *out1 = descriptors[gActiveTrackBlockCount].firstTriangle;
-    *out2 = gTrackTriangleBuffer;
-}
+void fn_80069968(s32* out1, u32* out2);
 
 int fn_80065640(void)
 {
@@ -841,7 +826,6 @@ void queueGlowRender(ModelLightStruct* light)
     i = 0;
     offsetZ = playerMapOffsetZ;
     offsetX = playerMapOffsetX;
-    visible = 1;
     for (; i < 5; i++)
     {
         FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
@@ -850,9 +834,11 @@ void queueGlowRender(ModelLightStruct* light)
         if (dot < lbl_803DEBCC)
         {
             visible = 0;
-            break;
+            goto check;
         }
     }
+    visible = 1;
+check:
 {
     u8 vis = visible;
     if (vis == 0 && light->glowAlpha == 0)
@@ -899,34 +885,7 @@ void fn_80060BB0(void)
     }
 }
 
-int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
-{
-    f32* p;
-    f32* base;
-    int i;
-    int n;
-
-    i = 0;
-    p = base = lbl_803DCF38;
-    n = gIntersectPointCount;
-    for (; i < n; i++)
-    {
-        if (x == p[0] && y == p[1] && z == p[2])
-        {
-            s16* q = arr + 1;
-            q[i << 1] = val;
-            return i;
-        }
-        p += 3;
-    }
-    base[n * 3] = x;
-    lbl_803DCF38[gIntersectPointCount * 3 + 1] = y;
-    lbl_803DCF38[gIntersectPointCount * 3 + 2] = z;
-    arr[gIntersectPointCount << 1] = val;
-    arr[(gIntersectPointCount << 1) + 1] = -1;
-    gIntersectPointCount++;
-    return gIntersectPointCount - 1;
-}
+int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z);
 
 char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
 
@@ -1246,7 +1205,7 @@ void* MapBlock_loadFromFile(int blockId)
     int tableEntry;
     if (blockId > gMapBlockIndexCount)
     {
-        return 0;
+        goto ret0a;
     }
     table = (int*)gMapBlockIndexList;
     if (table != 0)
@@ -1256,12 +1215,18 @@ void* MapBlock_loadFromFile(int blockId)
         {
             if (tableEntry == 0 && table[blockId + 1] == 0)
             {
-                return 0;
+                goto ret0b;
             }
             blockOff = tableEntry;
             checkLoadBlock(tableEntry, &compressedLen, &decompressedSize);
         }
     }
+    goto cont;
+ret0b:
+    return 0;
+ret0a:
+    return 0;
+cont:
     if (compressedLen <= 0)
     {
         return 0;
@@ -1358,72 +1323,9 @@ void fn_8006058C(short* out, float* vec)
     out[2] = zScaled;
 }
 
-void vecGetRanges(f32* pts, f32* base, f32 scale, int* out)
-{
-    int i;
+void vecGetRanges(f32* pts, f32* base, f32 scale, int* out);
 
-    out[0] = 0x7fffffff;
-    out[3] = 0x80000000;
-    out[1] = 0x7fffffff;
-    out[4] = 0x80000000;
-    out[2] = 0x7fffffff;
-    out[5] = 0x80000000;
-    for (i = 0; i < 8; i++)
-    {
-        f32 x = scale * pts[0] + base[0];
-        f32 y = scale * pts[1] + base[1];
-        f32 z = scale * pts[2] + base[2];
-        if (x < out[0])
-            out[0] = x;
-        if (x > out[3])
-            out[3] = x;
-        if (y < out[1])
-            out[1] = y;
-        if (y > out[4])
-            out[4] = y;
-        if (z < out[2])
-            out[2] = z;
-        if (z > out[5])
-            out[5] = z;
-        pts += 3;
-    }
-}
-
-int objShadowFn_80062378(GameObject* obj, u8 param)
-{
-    int lo;
-    int hi;
-    f32 inv;
-    void* p;
-
-    p = (obj)->anim.modelInstance;
-    if (((ObjDef*)p)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
-    {
-        lo = 1000;
-        hi = 2000;
-    }
-    else
-    {
-        lo = 400;
-        hi = 500;
-    }
-    inv = (Camera_DistanceToCurrentViewPosition((obj)->anim.worldPosX, (obj)->anim.worldPosY, (obj)->anim.worldPosZ) -
-           lo) /
-          (f32)(hi - lo);
-    if (inv < 0.0f)
-    {
-        inv = 0.0f;
-    }
-    else if (inv > 1.0f)
-    {
-        inv = 1.0f;
-    }
-    inv = 1.0f - inv;
-    {
-        int n = (int)((f32)param * inv);
-        return (n * (*(u8*)((char*)obj + 0x37) + 1)) >> 8;
-    }
-}
+int objShadowFn_80062378(GameObject* obj, u8 param);
 
 int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
 {
@@ -1504,47 +1406,7 @@ int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, 
     return 1;
 }
 
-int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag)
-{
-    TrackGroundHit** arr;
-    int n;
-    int i;
-    int bestIdx;
-    f32 best;
-    f32 cur;
-
-    n = hitDetectFn_80065e50((GameObject*)obj, x, y, z, &arr, 0, flag);
-    if (n != 0)
-    {
-        cur = y - arr[0]->height;
-        if (cur >= lbl_803DECB4)
-        {
-        }
-        else
-        {
-            cur = -cur;
-        }
-        best = cur;
-        bestIdx = 0;
-        for (i = 1; i < n; i++)
-        {
-            cur = y - arr[i]->height;
-            cur = cur >= lbl_803DECB4 ? cur : -cur;
-            if (cur < best)
-            {
-                best = cur;
-                bestIdx = i;
-            }
-        }
-        *outGroundY = y - arr[bestIdx]->height;
-        outNormal[0] = arr[bestIdx]->normalX;
-        outNormal[1] = arr[bestIdx]->normalY;
-        outNormal[2] = arr[bestIdx]->normalZ;
-        return 0;
-    }
-    *outGroundY = lbl_803DECB4;
-    return 1;
-}
+int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag);
 
 int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY, int* outSurfaceId)
 {
@@ -1709,50 +1571,7 @@ void fn_80069EB8(int param)
     lbl_803DCF80 = param;
 }
 
-void fn_80061094(f32* vec, f32* out, f32 scale)
-{
-    AngleXf xf;
-    f32 ax;
-    f32 az;
-    int i;
-    int rotY;
-
-    xf.tx = 0.0f;
-    xf.ty = 0.0f;
-    xf.tz = 0.0f;
-    xf.scale = 1.0f;
-    xf.rotZ = 0;
-    ax = __fabsf(vec[0]);
-    az = __fabsf(vec[2]);
-    if (ax > az)
-    {
-        rotY = (u16)getAngle(ax, vec[1]);
-    }
-    else
-    {
-        rotY = (u16)getAngle(az, vec[1]);
-    }
-    xf.rotY = rotY;
-    if (xf.rotY > 0x2000)
-    {
-        xf.rotY = 0x2000;
-    }
-    xf.rotX = (s16)getAngle(vec[0], vec[2]);
-    for (i = 0; i < 8; i++)
-    {
-        out[i * 3 + 0] = lbl_8038D7DC[i * 3 + 0];
-        if (lbl_8038D7DC[i * 3 + 1] > 0.0f)
-        {
-            out[i * 3 + 1] = lbl_8038D7DC[i * 3 + 1];
-        }
-        else
-        {
-            out[i * 3 + 1] = scale * lbl_8038D7DC[i * 3 + 1];
-        }
-        out[i * 3 + 2] = lbl_8038D7DC[i * 3 + 2];
-        vecRotateZXY(&xf.rotX, &out[i * 3]);
-    }
-}
+void fn_80061094(f32* vec, f32* out, f32 scale);
 
 void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
 {
@@ -1869,8 +1688,7 @@ void fn_8006135C(s16* out, GameObject* obj)
 
     if (fn_80065768((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &dist, a, 0) != 0)
     {
-        *(u8*)((char*)out + 0x18) = 0xff;
-        return;
+        goto fail;
     }
     PSVECNormalize(a, a);
     b[0] = lbl_803DEC68;
@@ -1905,6 +1723,51 @@ void fn_8006135C(s16* out, GameObject* obj)
     out[10] = (s * (c[1] + (nd - b[1])));
     out[11] = (s * (c[2] + (z - b[2])));
     *(u8*)((char*)out + 0x18) = 1;
+    return;
+fail:
+    *(u8*)((char*)out + 0x18) = 0xff;
+}
+
+int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag)
+{
+    TrackGroundHit** arr;
+    int n;
+    int i;
+    int bestIdx;
+    f32 best;
+    f32 cur;
+
+    n = hitDetectFn_80065e50((GameObject*)obj, x, y, z, &arr, 0, flag);
+    if (n != 0)
+    {
+        cur = y - arr[0]->height;
+        if (cur >= lbl_803DECB4)
+        {
+        }
+        else
+        {
+            cur = -cur;
+        }
+        best = cur;
+        bestIdx = 0;
+        for (i = 1; i < n; i++)
+        {
+            cur = y - arr[i]->height;
+            cur = cur >= lbl_803DECB4 ? cur : -cur;
+            if (cur < best)
+            {
+                best = cur;
+                bestIdx = i;
+            }
+        }
+        *outGroundY = y - arr[bestIdx]->height;
+        outNormal[0] = arr[bestIdx]->normalX;
+        outNormal[1] = arr[bestIdx]->normalY;
+        outNormal[2] = arr[bestIdx]->normalZ;
+        return 0;
+    }
+    *outGroundY = lbl_803DECB4;
+    return 1;
 }
 
 void hitDetect_calcSweptSphereBounds(TrackQueryBounds* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
@@ -2018,6 +1881,89 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
     }
     objDrawFn_80061f0c(cache, modelState, (int*)obj, gShadowVisibleCount, &drawScratch, buf48, yOff);
     return 0;
+}
+
+void fn_80069968(s32* out1, u32* out2)
+{
+    TrackBlockDescriptor* descriptors = gTrackBlockDescriptors;
+    *out1 = descriptors[gActiveTrackBlockCount].firstTriangle;
+    *out2 = gTrackTriangleBuffer;
+}
+
+void vecGetRanges(f32* pts, f32* base, f32 scale, int* out)
+{
+    int i;
+
+    out[0] = 0x7fffffff;
+    out[3] = 0x80000000;
+    out[1] = 0x7fffffff;
+    out[4] = 0x80000000;
+    out[2] = 0x7fffffff;
+    out[5] = 0x80000000;
+    for (i = 0; i < 8; i++)
+    {
+        f32 x = scale * pts[0] + base[0];
+        f32 y = scale * pts[1] + base[1];
+        f32 z = scale * pts[2] + base[2];
+        if (x < out[0])
+            out[0] = x;
+        if (x > out[3])
+            out[3] = x;
+        if (y < out[1])
+            out[1] = y;
+        if (y > out[4])
+            out[4] = y;
+        if (z < out[2])
+            out[2] = z;
+        if (z > out[5])
+            out[5] = z;
+        pts += 3;
+    }
+}
+
+void fn_80061094(f32* vec, f32* out, f32 scale)
+{
+    AngleXf xf;
+    f32 ax;
+    f32 az;
+    int i;
+    int rotY;
+
+    xf.tx = 0.0f;
+    xf.ty = 0.0f;
+    xf.tz = 0.0f;
+    xf.scale = 1.0f;
+    xf.rotZ = 0;
+    ax = __fabsf(vec[0]);
+    az = __fabsf(vec[2]);
+    if (ax > az)
+    {
+        rotY = (u16)getAngle(ax, vec[1]);
+    }
+    else
+    {
+        rotY = (u16)getAngle(az, vec[1]);
+    }
+    xf.rotY = rotY;
+    if (xf.rotY > 0x2000)
+    {
+        xf.rotY = 0x2000;
+    }
+    xf.rotX = (s16)getAngle(vec[0], vec[2]);
+    for (i = 0; i < 8; i++)
+    {
+        out[i * 3 + 0] = lbl_8038D7DC[i * 3 + 0];
+        if (lbl_8038D7DC[i * 3 + 1] > 0.0f)
+        {
+            out[i * 3 + 1] = lbl_8038D7DC[i * 3 + 1];
+        }
+        else
+        {
+            out[i * 3 + 1] = scale * lbl_8038D7DC[i * 3 + 1];
+        }
+        out[i * 3 + 2] = lbl_8038D7DC[i * 3 + 2];
+        vecRotateZXY(&xf.rotX, &out[i * 3]);
+    }
 }
 
 void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* ranges, u32 a, int b)
@@ -2247,6 +2193,12 @@ int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32
         }
     }
     return grp;
+}
+
+void* fn_80069944(u32* outVal)
+{
+    *outVal = gActiveTrackBlockCount;
+    return gTrackBlockDescriptors;
 }
 
 int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
@@ -2847,7 +2799,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
                 b[0] = t * p[0] + b[0];
                 b[1] = t * p[1] + b[1];
                 b[2] = t * p[2] + b[2];
-                return 1;
+                goto done;
             }
             case 9:
             case 0xa:
@@ -2868,6 +2820,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
             }
         }
     }
+done:
     return 1;
 }
 
@@ -3171,6 +3124,42 @@ void objDrawFn_80061654(int obj, int placementObj)
     }
 }
 
+int objShadowFn_80062378(GameObject* obj, u8 param)
+{
+    int lo;
+    int hi;
+    f32 inv;
+    void* p;
+
+    p = (obj)->anim.modelInstance;
+    if (((ObjDef*)p)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
+    {
+        lo = 1000;
+        hi = 2000;
+    }
+    else
+    {
+        lo = 400;
+        hi = 500;
+    }
+    inv = (Camera_DistanceToCurrentViewPosition((obj)->anim.worldPosX, (obj)->anim.worldPosY, (obj)->anim.worldPosZ) -
+           lo) /
+          (f32)(hi - lo);
+    if (inv < 0.0f)
+    {
+        inv = 0.0f;
+    }
+    else if (inv > 1.0f)
+    {
+        inv = 1.0f;
+    }
+    inv = 1.0f - inv;
+    {
+        int n = (int)((f32)param * inv);
+        return (n * (*(u8*)((char*)obj + 0x37) + 1)) >> 8;
+    }
+}
+
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
 {
     f32* verts = buf48;
@@ -3324,35 +3313,31 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
             f30 = 10.0f;
         else
             f30 = ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
+        handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
+        if (handle == 0xFFFFFFFF)
         {
-            int useSpecial = 0;
-            handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
-            if (handle == 0xFFFFFFFF)
-            {
-                u32 h2 = textureFn_8006c5c4();
-                hdr = ((MapBlockData*)blockData)->shadowTexHeader;
-                if (*(u32*)(hdr + 0x60) != h2)
-                    useSpecial = 1;
-            }
-            if (useSpecial)
-            {
-                if (*(u8*)(hdr + 0x65) == 0xff)
-                {
-                    int c = *(int*)col;
-                    fn_80077AD8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
-                }
-                else
-                {
-                    int c = *(int*)col;
-                    fn_80077EF8((GameObject*)(((MapBlockData*)blockData)->shadowTexHeader), &c, mtx, f30);
-                }
-            }
-            else
-            {
-                int c = *(int*)col;
-                objectShadow_setupProjectedTexture(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx);
-            }
+            u32 h2 = textureFn_8006c5c4();
+            hdr = ((MapBlockData*)blockData)->shadowTexHeader;
+            if (*(u32*)(hdr + 0x60) != h2)
+                goto drawSpecial;
         }
+        {
+            int c = *(int*)col;
+            objectShadow_setupProjectedTexture(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx);
+        }
+        goto afterDraw;
+    drawSpecial:
+        if (*(u8*)(hdr + 0x65) == 0xff)
+        {
+            int c = *(int*)col;
+            fn_80077AD8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
+        }
+        else
+        {
+            int c = *(int*)col;
+            fn_80077EF8((GameObject*)(((MapBlockData*)blockData)->shadowTexHeader), &c, mtx, f30);
+        }
+    afterDraw:;
     }
     GXSetCullMode(GX_CULL_FRONT);
     GXSetCurrentMtx(GX_PNMTX0);
@@ -3776,7 +3761,6 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
         }
         if (hit == 0)
             continue;
-        e = NULL;
         if (slot != 0xff)
         {
             char* fl;
@@ -3789,12 +3773,14 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
                 {
                     *(u8*)(fl + 0x14) = 0;
                     e = (int*)fl;
-                    break;
+                    goto haveEntry;
                 }
                 fl += 0x18;
                 k++;
             } while (k < 0x40);
         }
+        e = NULL;
+    haveEntry:
         if (e != NULL)
         {
             t20[0] = ((ModelLightStruct*)e)->localY;
@@ -3820,16 +3806,14 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
                     *(int*)((char*)e + 4) = (int)o;
                     *(u8*)((char*)e + 0x15) = slot;
                     *(u8*)((char*)e + 0x14) = 2;
-                    break;
+                    goto stored;
                 }
                 e = (int*)((char*)e + 0x18);
                 k++;
             } while (k < 0x40);
-            if (k >= 0x40)
-            {
-                debugPrintf(sTrackNoFreeLastLineError);
-                e = NULL;
-            }
+            debugPrintf(sTrackNoFreeLastLineError);
+            e = NULL;
+        stored:
             if (e != NULL)
             {
                 ((ModelLightStruct*)e)->localY = t14[0];
@@ -4559,6 +4543,18 @@ u8 doEdges;
     return cur;
 }
 
+void* fn_800606DC(int* obj, int idx)
+{
+    return (char*)((int**)obj)[0x4c / 4] + idx * 8;
+}
+
+u32 fn_80060668(int* obj)
+{
+    u32 v = obj[4];
+    v &= 0x00FF0000;
+    return v >> 16;
+}
+
 /* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
 void trackIntersect(void)
@@ -4811,6 +4807,35 @@ void trackIntersect(void)
         gIntersectSegmentTypeTable[pi + 1] = gIntersectLineCount;
     }
     lbl_803DCF44 = 1;
+}
+
+int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
+{
+    f32* p;
+    f32* base;
+    int i;
+    int n;
+
+    i = 0;
+    p = base = lbl_803DCF38;
+    n = gIntersectPointCount;
+    for (; i < n; i++)
+    {
+        if (x == p[0] && y == p[1] && z == p[2])
+        {
+            s16* q = arr + 1;
+            q[i << 1] = val;
+            return i;
+        }
+        p += 3;
+    }
+    base[n * 3] = x;
+    lbl_803DCF38[gIntersectPointCount * 3 + 1] = y;
+    lbl_803DCF38[gIntersectPointCount * 3 + 2] = z;
+    arr[gIntersectPointCount << 1] = val;
+    arr[(gIntersectPointCount << 1) + 1] = -1;
+    gIntersectPointCount++;
+    return gIntersectPointCount - 1;
 }
 
 /* doLotsOfMath -- sweep a 2D segment (with radius) against the intersection
