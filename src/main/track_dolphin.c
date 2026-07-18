@@ -537,7 +537,6 @@ void setupToRenderMapBlock(int* block, void* posMtx)
 }
 #pragma dont_inline reset
 
-#pragma push
 void renderMapBlock(int* o, u8 type)
 {
     int state[5];
@@ -622,7 +621,6 @@ void renderMapBlock(int* o, u8 type)
         }
     }
 }
-#pragma pop
 
 void FUN_80064384(int param)
 {
@@ -747,30 +745,22 @@ void* fn_80069944(u32* outVal)
 }
 #pragma dont_inline reset
 
-#pragma dont_inline on
 void fn_80069958(void** out)
 {
     *out = gTrackGridOrigin;
 }
-#pragma dont_inline reset
 
-/* mapBlockFn_80060678 -- return top byte of obj[0x10]
- * (clrrwi 24 + srwi 24). */
 u32 mapBlockFn_80060678(int* obj)
 {
     return (*(u32*)&((GameObject*)obj)->anim.localPosY & 0xff000000) >> 24;
 }
 
-/* mapGetBlocks: write a fixed table base and an sbss u32 into two
- * out-pointers. */
 void mapGetBlocks(void** outPtr, u32* outVal)
 {
     *outPtr = gMapBlockLayerTables;
     *outVal = gMapBlocks;
 }
 
-/* playerShadowFn_80062a30 -- if obj[0x64] non-NULL, clear bits 0x2020 in
- * its u32 at +0x30. */
 void playerShadowFn_80062a30(GameObject* obj)
 {
     ObjModelState* p = obj->anim.modelState;
@@ -789,8 +779,6 @@ u32 fn_80060668(int* obj)
 }
 #pragma dont_inline reset
 
-/* fn_80062894 -- clear two shorts, toggle two bytes (1 - x), clear
- * two more bytes. */
 void fn_80062894(void)
 {
     lbl_803DCEF6 = 0;
@@ -801,8 +789,6 @@ void fn_80062894(void)
     lbl_803DCEE8 = 0;
 }
 
-/* fn_80069968 -- read s16 at gTrackBlockDescriptors[idx*0x18 + 4] into *out1, and
- * the sbss u32 gTrackTriangleBuffer into *out2. */
 #pragma dont_inline on
 void fn_80069968(s32* out1, u32* out2)
 {
@@ -838,8 +824,6 @@ void objFn_80065604(void)
     } while (i < MAP_DYNAMIC_SLOT_COUNT);
 }
 
-#pragma peephole on
-#pragma optimization_level 1
 void fn_80063368(int target)
 {
     int zero, idx;
@@ -857,8 +841,6 @@ void fn_80063368(int target)
         idx += sizeof(MapDynamicSlot);
     }
 }
-#pragma optimization_level reset
-#pragma peephole reset
 
 void queueGlowRender(ModelLightStruct* light)
 {
@@ -900,8 +882,6 @@ check:
     gGlowLightList[idx] = (int)light;
 }
 
-#pragma peephole on
-#pragma optimization_level 1
 void fn_80060BB0(void)
 {
     char* arr;
@@ -934,8 +914,6 @@ void fn_80060BB0(void)
         byteOff += 4;
     }
 }
-#pragma optimization_level reset
-#pragma peephole reset
 
 #pragma dont_inline on
 int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
@@ -970,7 +948,6 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 
 char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
 
-#pragma opt_loop_invariants off
 void intersectModLineBuild(IntersectModLineObject* obj)
 {
     s16 pointLinks[0xd48];
@@ -1115,7 +1092,6 @@ void intersectModLineBuild(IntersectModLineObject* obj)
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
 }
-#pragma opt_loop_invariants reset
 
 void fn_800605F0(s16* in, f32* out)
 {
@@ -1149,7 +1125,6 @@ int fn_80060688(GameObject* obj, int type)
 /* fn_80062808 -- begin a new shadow-volume frame: clear the per-frame
  * counts, flip the three double-buffer selectors, and rotate the current
  * write pointers to the buffer picked by this frame's flip index. */
-#pragma opt_propagation off
 void fn_80062808(void)
 {
     void* bufPtr;
@@ -1174,7 +1149,6 @@ void fn_80062808(void)
     lbl_803DCF14 = lbl_803DCF1C;
     lbl_803DCF0C = lbl_803DCF20;
 }
-#pragma opt_propagation reset
 
 void fn_80065574(int matchVal, GameObject* obj, int flag)
 {
@@ -1291,7 +1265,7 @@ void* MapBlock_loadFromFile(int blockId)
     int tableEntry;
     if (blockId > gMapBlockIndexCount)
     {
-        goto ret0a;
+        return 0;
     }
     table = (int*)gMapBlockIndexList;
     if (table != 0)
@@ -1301,18 +1275,12 @@ void* MapBlock_loadFromFile(int blockId)
         {
             if (tableEntry == 0 && table[blockId + 1] == 0)
             {
-                goto ret0b;
+                return 0;
             }
             blockOff = tableEntry;
             checkLoadBlock(tableEntry, &compressedLen, &decompressedSize);
         }
     }
-    goto cont;
-ret0b:
-    return 0;
-ret0a:
-    return 0;
-cont:
     if (compressedLen <= 0)
     {
         return 0;
@@ -1520,7 +1488,6 @@ int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
     return 0;
 }
 
-#pragma dont_inline on
 int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag)
 {
     TrackGroundHit** arr;
@@ -1559,7 +1526,6 @@ int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, 
     *outGroundY = lbl_803DECB4;
     return 1;
 }
-#pragma dont_inline reset
 
 #pragma dont_inline on
 int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag)
@@ -1817,7 +1783,6 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
 }
 #pragma dont_inline reset
 
-#pragma opt_propagation off
 void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
 {
     f32 vec[3];
@@ -1870,7 +1835,6 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
         gShadowFlag = 1;
     }
 }
-#pragma opt_propagation reset
 
 #pragma opt_strength_reduction off
 #pragma opt_propagation off
@@ -2203,7 +2167,6 @@ void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* ranges, u32 a, int 
     }
 }
 
-#pragma opt_propagation off
 int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32 offX, f32 offZ, int p8, int kindMask)
 {
     int j;
@@ -2320,7 +2283,6 @@ int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32
     }
     return grp;
 }
-#pragma opt_propagation reset
 
 int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 {
@@ -3530,7 +3492,6 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
 #pragma opt_strength_reduction reset
 #pragma ppc_unroll_speculative on
 
-#pragma opt_dead_assignments off
 void renderGlows(void)
 {
     f32 px, py, pz;
@@ -3713,7 +3674,6 @@ void renderGlows(void)
         GXSetCurrentMtx(GX_PNMTX0);
     }
 }
-#pragma opt_dead_assignments reset
 
 void gxErrorFn_80060b40(void)
 {
@@ -3729,7 +3689,6 @@ void gxErrorFn_80060b40(void)
 
 f32 lbl_8038D77C[0x18];
 
-#pragma opt_common_subs off
 void initTextures(void)
 {
     f32* a = lbl_8038D77C;
@@ -3787,7 +3746,6 @@ void initTextures(void)
     a[23] = lbl_803DECA4;
     allocLotsOfTextures();
 }
-#pragma opt_common_subs reset
 
 char sTrackNoFreeLastLineError[] = "NO FREE LAST LINE\n";
 
@@ -4256,8 +4214,6 @@ u8 doEdges;
     f32 e2[3];
     f32 e1[3];
     f32 e0[3];
-    /* verts2 sits directly above verts on the stack; the vertex loop below
-     * walks vf across both (vertex 1 -> verts, vertex 2 -> verts2). */
     f32 verts2[3];
     f32 verts[3];
     f32 v0[3];
@@ -4480,8 +4436,6 @@ u8 doEdges;
             t0 = ((MapTriGroup*)tri)->firstTri;
             vq = (u8*)(bb + t0 * 8);
             vEnd = ((MapTriGroup*)tri)[1].firstTri;
-            /* int-cast keeps vertp a real variable (a bare `= verts` alias is
-             * folded away and the PSVEC calls rematerialize the address). */
             vertp = (f32*)(u32)verts;
             for (; t0 < vEnd; t0++, vq += 8)
             {
@@ -4911,8 +4865,6 @@ void trackIntersect(void)
     }
     lbl_803DCF44 = 1;
 }
-#pragma opt_dead_assignments reset
-#pragma opt_dead_assignments reset
 
 /* doLotsOfMath -- sweep a 2D segment (with radius) against the intersection
  * line table, sliding/clipping the end point; fills *out with the last hit. */

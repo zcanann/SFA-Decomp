@@ -879,7 +879,6 @@ skip:
     return 0;
 }
 
-#pragma opt_propagation off
 int trickyFn_80142eb0(GameObject* obj, int state)
 {
     short move;
@@ -968,7 +967,6 @@ int trickyFn_80142eb0(GameObject* obj, int state)
 }
 
 #pragma opt_propagation reset
-#pragma opt_common_subs off
 int trickyFn_801430e0(u8* obj, u8* state)
 {
     u8* ptr;
@@ -1010,7 +1008,6 @@ int trickyFn_801430e0(u8* obj, u8* state)
     }
     return 1;
 }
-#pragma opt_common_subs reset
 
 u32 trickyFn_80143210(GameObject* obj, int* trickyState)
 {
@@ -1898,7 +1895,6 @@ int trickyFoodFn_8014460c(GameObject* obj, int* state)
     return 0;
 }
 
-#pragma opt_common_subs off
 void fn_80144B50(u8* obj, u8* state)
 {
     int hit[1];
@@ -1998,4 +1994,3 @@ void fn_80144B50(u8* obj, u8* state)
         }
     }
 }
-#pragma opt_common_subs reset

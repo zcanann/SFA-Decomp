@@ -53,16 +53,12 @@ enum
 extern f32 lbl_803E56B0; /* 0.0f effect-position seed */
 extern f32 lbl_803E56B4; /* 1.0f effect scale / render distance */
 
-#pragma scheduling on
-#pragma peephole on
 
 static inline void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams* params)
 {
     (*gPartfxInterface)->spawnObject((void*)obj, FESEQOBJECT_PARTFX, params, 1, -1, NULL);
 }
 
-#pragma scheduling off
-#pragma peephole off
 int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     FEseqobjectEffectParams effect;

@@ -204,11 +204,6 @@ typedef struct TexLayer
     u8 pad7;
 } TexLayer;
 
-/* NOTE: this fn and mapBlockRender_setLightmapShader sit BEFORE the
- * BitStreamReader/MapBlockData typedefs (declared further down) - a typedef
- * declared any earlier renumbers MWCC's internal @NNN constant-pool symbol
- * for setLightmapShader's 0.0f (a byte diff in the .o strtab). They keep the
- * raw int* bit-cursor spelling ([0]=byte base, [4]=bit position). */
 #pragma opt_common_subs off
 void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* bitReader, Mtx viewMtx)
 {
@@ -304,34 +299,30 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
     if ((SHADER_FLAGS(shader) & 4) != 0)
     {
         _gxSetFogParams();
-        goto LAB_8005E630;
     }
-    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&fogColor);
-LAB_8005E630:
-    if ((SHADER_FLAGS(shader) & 1) == 0)
+    else
     {
-        if ((SHADER_FLAGS(shader) & 0x40000) == 0)
+        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&fogColor);
+    }
+    if ((SHADER_FLAGS(shader) & 1) != 0 || (SHADER_FLAGS(shader) & 0x40000) != 0 ||
+        (SHADER_FLAGS(shader) & 0x800) != 0 || (SHADER_FLAGS(shader) & 0x1000) != 0)
+    {
+        GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexLightmapAmbColor);
+        if ((SHADER_FLAGS(shader) & 0x40000) != 0)
         {
-            if ((SHADER_FLAGS(shader) & 0x800) == 0)
-            {
-                if ((SHADER_FLAGS(shader) & 0x1000) == 0)
-                    goto LAB_8005E6D0;
-            }
+            GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+        }
+        else
+        {
+            GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         }
     }
-    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexLightmapAmbColor);
-    if ((SHADER_FLAGS(shader) & 0x40000) != 0)
+    else
     {
-        GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
-        goto LAB_8005E718;
+        objGetColor(0, &ambColor[0], &ambColor[1], &ambColor[2]);
+        GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+        GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambColor[0]);
     }
-    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
-    goto LAB_8005E718;
-LAB_8005E6D0:
-    objGetColor(0, &ambColor[0], &ambColor[1], &ambColor[2]);
-    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
-    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambColor[0]);
-LAB_8005E718:
     return shader;
 }
 
@@ -923,6 +914,7 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
     int byteBase;
     int fogColor;
     u32 flags;
+    int* lightList;
     u8 ambColor[3];
     u8 fogRgba[4];
     u32 bits;
@@ -950,10 +942,11 @@ int mapBlockRender_setShader(u8 doSetup, int blockData, int* bitReader)
     if ((SHADER_FLAGS(shader) & 4) != 0)
     {
         _gxSetFogParams();
-        goto LAB_8005F608;
     }
-    GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&fogColor);
-LAB_8005F608:
+    else
+    {
+        GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&fogColor);
+    }
     if ((shader != 0) && ((SHADER_FLAGS(shader) & 0x80000000) != 0))
     {
         return shader;
@@ -971,85 +964,72 @@ LAB_8005F608:
     if ((SHADER_FLAGS(shader) & 0x80) != 0)
     {
         fn_8004DA54((char*)shader);
-        goto LAB_8005F690;
     }
-    mapBlockRender_setupShaderTextures(shader, 0x80);
-LAB_8005F690:
-    flags = SHADER_FLAGS(shader);
-    if ((flags & 0x20) != 0)
+    else
     {
-        int* lightList = lbl_803DCE34;
-        if (lightList != 0)
-        {
-            fn_8004FDA0ColorLegacy(lightList, &lbl_80382008, lbl_803DB638);
-            goto LAB_8005F6F4;
-        }
+        mapBlockRender_setupShaderTextures(shader, 0x80);
     }
-    if ((flags & 0x40) != 0)
+    flags = SHADER_FLAGS(shader);
+    if ((flags & 0x20) != 0 && (lightList = lbl_803DCE34) != 0)
+    {
+        fn_8004FDA0ColorLegacy(lightList, &lbl_80382008, lbl_803DB638);
+    }
+    else if ((flags & 0x40) != 0)
     {
         fn_8004E0FC();
-        goto LAB_8005F6F4;
     }
-    if (isHeavyFogEnabled())
+    else if (isHeavyFogEnabled())
     {
         getColor803dd01c(fogRgba);
         renderHeavyFog(fogRgba);
     }
-LAB_8005F6F4:
     if (((SHADER_FLAGS(shader) & 0x40000000) != 0) || ((SHADER_FLAGS(shader) & 0x20000000) != 0))
     {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
         gxSetZMode_(1, GX_LEQUAL, 0);
         gxSetPeControl_ZCompLoc_(1);
         GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-        goto LAB_8005F7FC;
     }
-    if ((SHADER_FLAGS(shader) & 0x400) != 0)
+    else if ((SHADER_FLAGS(shader) & 0x400) != 0 && (SHADER_FLAGS(shader) & 0x80) == 0)
     {
-        if ((SHADER_FLAGS(shader) & 0x80) == 0)
+        GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+        gxSetZMode_(1, GX_LEQUAL, 1);
+        gxSetPeControl_ZCompLoc_(0);
+        GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_AND, GX_GREATER, 0);
+    }
+    else
+    {
+        GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+        gxSetZMode_(1, GX_LEQUAL, 1);
+        gxSetPeControl_ZCompLoc_(1);
+        GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+    }
+    if ((SHADER_FLAGS(shader) & 1) != 0 || (SHADER_FLAGS(shader) & 0x40000) != 0 ||
+        (SHADER_FLAGS(shader) & 0x800) != 0 || (SHADER_FLAGS(shader) & 0x1000) != 0)
+    {
+        GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexShaderAmbColor);
+        if ((SHADER_FLAGS(shader) & 0x40000) != 0)
         {
-            GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-            gxSetZMode_(1, GX_LEQUAL, 1);
-            gxSetPeControl_ZCompLoc_(0);
-            GXSetAlphaCompare(GX_GREATER, 0, GX_AOP_AND, GX_GREATER, 0);
-            goto LAB_8005F7FC;
+            GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+        }
+        else
+        {
+            GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         }
     }
-    GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-    gxSetZMode_(1, GX_LEQUAL, 1);
-    gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-LAB_8005F7FC:
-    if ((SHADER_FLAGS(shader) & 1) == 0)
+    else
     {
-        if ((SHADER_FLAGS(shader) & 0x40000) == 0)
-        {
-            if ((SHADER_FLAGS(shader) & 0x800) == 0)
-            {
-                if ((SHADER_FLAGS(shader) & 0x1000) == 0)
-                    goto LAB_8005F89C;
-            }
-        }
+        objGetColor(0, &ambColor[0], &ambColor[1], &ambColor[2]);
+        GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+        GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambColor[0]);
     }
-    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexShaderAmbColor);
-    if ((SHADER_FLAGS(shader) & 0x40000) != 0)
-    {
-        GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
-        goto LAB_8005F8E4;
-    }
-    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
-    goto LAB_8005F8E4;
-LAB_8005F89C:
-    objGetColor(0, &ambColor[0], &ambColor[1], &ambColor[2]);
-    GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
-    GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambColor[0]);
-LAB_8005F8E4:
     if ((SHADER_FLAGS(shader) & 0x8) != 0)
     {
         GXSetCullMode(GX_CULL_BACK);
-        goto LAB_8005F908;
     }
-    GXSetCullMode(GX_CULL_NONE);
-LAB_8005F908:
+    else
+    {
+        GXSetCullMode(GX_CULL_NONE);
+    }
     return shader;
 }

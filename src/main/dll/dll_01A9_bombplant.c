@@ -123,7 +123,6 @@ typedef struct
 
 /* Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
-#pragma opt_common_subs off
 #pragma auto_inline off
 void bombplant_throwSpore(int* obj, int* p2)
 {
@@ -160,7 +159,6 @@ void bombplant_throwSpore(int* obj, int* p2)
     }
 }
 #pragma auto_inline reset
-#pragma opt_common_subs reset
 
 int bombplant_getExtraSize(void)
 {
@@ -480,7 +478,6 @@ u8 gBombPlantStateTable[] =
 };
 
 /*__DATA_EXTERNS__*/
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* gBombPlantObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, bombplant_init, bombplant_update, bombplant_hitDetect, bombplant_render, bombplant_free, bombplant_getObjectTypeId, bombplant_getExtraSize, (void*)0x00000000 };
 u8 lbl_80326D98[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 void* gBombPlantSporeObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_init, BombPlantSpore_update, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_free, (void*)0x00000000, BombPlantSpore_getExtraSize, (void*)0x00000000 };

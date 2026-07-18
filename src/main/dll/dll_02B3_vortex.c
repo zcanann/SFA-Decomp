@@ -274,7 +274,6 @@ void Vortex_update(GameObject* obj)
     }
 }
 
-#pragma opt_strength_reduction on
 #pragma opt_propagation off
 void Vortex_init(GameObject* obj, VortexSetup* setup)
 {
@@ -340,7 +339,6 @@ void Vortex_init(GameObject* obj, VortexSetup* setup)
     state->particleTimer = randomGetRange(0, 0x14);
     *(f32*)((int)o + 0x40) = *(f32*)((int)o + 0x40) * lbl_803E7404;
 }
-#pragma opt_strength_reduction reset
 #pragma opt_propagation reset
 
 void Vortex_release(void)

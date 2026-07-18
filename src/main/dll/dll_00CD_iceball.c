@@ -150,7 +150,6 @@ int IceBall_getObjectTypeId(void)
     return 0x0;
 }
 
-#pragma scheduling off
 #pragma peephole off
 void IceBall_free(void)
 {
@@ -163,7 +162,6 @@ void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (visible32 != 0)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
-#pragma scheduling on
 #pragma peephole on
 
 void IceBall_hitDetect(void)
@@ -251,7 +249,6 @@ ObjectDescriptor gIceBallObjDescriptor = {
     IceBall_getExtraSize,
 };
 
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 u8 lbl_80320008[120] = {0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0,
                         0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2,
                         0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0,

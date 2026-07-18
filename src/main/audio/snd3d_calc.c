@@ -2,7 +2,6 @@
 #include "main/audio/synth_voice.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
-#pragma exceptions on
 
 typedef struct S3DActiveNode
 {

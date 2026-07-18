@@ -316,7 +316,6 @@ void saveSelectGoToChapterSelect(void)
     }
 }
 #pragma dont_inline on
-#pragma opt_dead_assignments off
 void saveSelectFn_8011a70c(void)
 {
     int i;
@@ -353,7 +352,6 @@ void saveSelectFn_8011a70c(void)
     }
 }
 
-#pragma opt_dead_assignments reset
 void saveSelectGoToChooseSlot(int arg)
 {
     SaveSelectPanel* p;

@@ -773,7 +773,6 @@ void gameTextSetWindow(u8* textBox)
         s->arg0 = idx;
     }
 }
-#pragma dont_inline reset
 
 static inline TextGlyph* findGlyph(u32 ch, int glyphLang)
 {
@@ -1194,11 +1193,6 @@ void translateToDinoLanguage(u8* str)
         byteOff += charLen;
     }
 }
-#pragma dont_inline off
-#pragma opt_strength_reduction off
-#pragma opt_unroll_loops on
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 int GameText_CountPrintableChars(u8* str)
 {
     int count;
@@ -1227,11 +1221,6 @@ int GameText_CountPrintableChars(u8* str)
     return count;
 }
 
-#pragma dont_inline reset
-#pragma opt_strength_reduction reset
-#pragma opt_unroll_loops reset
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
 
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang)
 {
@@ -1339,11 +1328,6 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
         *outZero = lbl_803DE704;
     }
 }
-#pragma dont_inline off
-#pragma opt_strength_reduction on
-#pragma opt_unroll_loops on
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 
 SubtitleCmd* subtitleParseControlCmds(int str, int* count)
 {
@@ -1438,13 +1422,6 @@ int GameText_FindControlCodeArgs(u8* str, u32 target, int* out)
     return 0;
 }
 
-#pragma dont_inline reset
-#pragma opt_strength_reduction reset
-#pragma opt_unroll_loops reset
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
-#pragma peephole reset
-#pragma peephole on
 void* gameTextGetPhrase(int textId, int phraseIndex)
 {
     char* strings;
@@ -1458,7 +1435,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = (u16*)(lbl_803399C0 + *(int*)&gGameTextBufferIndex * 0xc);
+        entry = (u16*)(lbl_803399C0 + gGameTextBufferIndex * 0xc);
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
@@ -1489,7 +1466,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = (u16*)(lbl_803399C0 + *(int*)&gGameTextBufferIndex * 0xc);
+        entry = (u16*)(lbl_803399C0 + gGameTextBufferIndex * 0xc);
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
@@ -1506,7 +1483,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = (u16*)(lbl_803399C0 + *(int*)&gGameTextBufferIndex * 0xc);
+        entry = (u16*)(lbl_803399C0 + gGameTextBufferIndex * 0xc);
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
@@ -1558,8 +1535,6 @@ void* gameTextGetStr(int textId)
     return *(void**)*(u8**)((u8*)t + 8);
 }
 
-#pragma peephole reset
-#pragma peephole off
 void* gameTextGet(int textId)
 {
     u8* gameTextBase;
@@ -1669,7 +1644,6 @@ void* gameTextGet(int textId)
     *(f32*)gGameTextFallbackBuf = lbl_803DE704;
     return gGameTextLastEntry;
 }
-#pragma dont_inline off
 
 void gameTextResetCursor(int flags)
 {
@@ -1726,7 +1700,6 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
         s->arg2 = y;
     }
 }
-#pragma dont_inline reset
 #pragma dont_inline on
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
 {
@@ -1750,7 +1723,6 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
         s->arg3 = a;
     }
 }
-#pragma dont_inline reset
 #pragma dont_inline off
 void gameTextLoadDir(int dirId)
 {
@@ -1814,22 +1786,13 @@ void gameTextLoadDir(int dirId)
     }
 }
 
-#pragma dont_inline reset
 #pragma dont_inline on
-#pragma peephole reset
-#pragma peephole on
-#pragma scheduling reset
-#pragma scheduling on
 
 int gameTextGetCharset(void)
 {
     return gameTextCharset;
 }
 
-#pragma peephole reset
-#pragma peephole off
-#pragma scheduling reset
-#pragma scheduling off
 void gameTextSetCharset(int charset, int flags)
 {
     if (gameTextDrawFunc != NULL || (flags & 1))
@@ -1853,15 +1816,10 @@ void gameTextSetCharset(int charset, int flags)
         s->arg0 = charset;
     }
 }
-#pragma peephole reset
-#pragma peephole on
-#pragma scheduling reset
-#pragma scheduling on
 void* getCurGameText(void)
 {
     return curGameTextDir;
 }
-#pragma dont_inline reset
 int getCurLanguage(void)
 {
     return curLanguage;
@@ -1872,18 +1830,12 @@ f32 gameTextFn_80019c00(void)
 {
     return gameTextFonts->timer;
 }
-#pragma dont_inline reset
 #pragma dont_inline on
-#pragma peephole reset
-#pragma peephole off
-#pragma scheduling reset
-#pragma scheduling off
 int gameTextGetState(int i)
 {
     return gGameTextCharsets[i].state;
 }
 
-#pragma dont_inline reset
 #pragma dont_inline off
 #pragma opt_unroll_loops on
 
@@ -2142,7 +2094,6 @@ void gameTextRun(void)
     }
     gCurTextBox = NULL;
 }
-#pragma opt_unroll_loops reset
 
 void gameTextInit(void)
 {
@@ -2151,7 +2102,6 @@ void gameTextInit(void)
     gameTextLoadDir(0x1c);
 }
 
-#pragma opt_unroll_loops on
 
 void gameTextInitFn_8001a234(void)
 {
@@ -2851,19 +2801,10 @@ void gameTextOpenCallback_8001b3d0(s32 status, DVDFileInfo* fileInfo)
 }
 
 u8 curGameTexts[0x260];
-#pragma opt_unroll_loops reset
-#pragma peephole reset
-#pragma peephole on
-#pragma scheduling reset
-#pragma scheduling on
 void gameTextSetDrawFunc(void* fn)
 {
     gameTextDrawFunc = fn;
 }
-#pragma peephole reset
-#pragma peephole off
-#pragma scheduling reset
-#pragma scheduling off
 
 int gameTextFn_8001b44c(int x)
 {
@@ -2874,9 +2815,6 @@ int gameTextFn_8001b44c(int x)
     }
     return 0;
 }
-#pragma opt_unroll_loops on
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 
 extern f32 gSubtitleLineTimes[0x100];
 
@@ -2943,9 +2881,6 @@ void subtitleUpdateAndDraw(int a)
         }
     }
 }
-#pragma opt_unroll_loops reset
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
 void mainLoopDoGameText(void)
 {
     if (gGameTextSequenceMode != 0)
@@ -3040,7 +2975,6 @@ GlyphResource802CA100 lbl_802CA100 = {
     0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6
     },
 };
-#pragma dont_inline reset
 #pragma dont_inline on
 #pragma opt_unroll_loops on
 void subtitleFn_8001b700(void)
@@ -3073,10 +3007,7 @@ void subtitleFn_8001b700(void)
         }
     }
 }
-#pragma dont_inline reset
-#pragma dont_inline on
 #pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 #pragma opt_strength_reduction on
 #pragma optimization_level 1
 #pragma peephole off
@@ -3193,12 +3124,10 @@ void subtitleBuildLineTable(void)
     }
 }
 
-#pragma dont_inline reset
 #pragma dont_inline off
 #pragma opt_strength_reduction reset
 #pragma optimization_level reset
 #pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
 
 void subtitleStart(int x)
 {
@@ -3216,9 +3145,6 @@ void subtitleStart(int x)
     }
 }
 
-#pragma opt_unroll_loops reset
-#pragma peephole reset
-#pragma peephole on
 void gameTextLoadTaskText(int taskId)
 {
     int textId;
@@ -3269,8 +3195,6 @@ void gameTextLoadTaskText(int taskId)
     }
 }
 
-#pragma peephole reset
-#pragma peephole off
 
 int subtitleIsActive(void)
 {
@@ -3300,7 +3224,6 @@ int setSubtitlesEnabled(int enabled)
     }
     return old;
 }
-#pragma opt_unroll_loops off
 void gameTextInitFn_8001bd14(void)
 {
     int i;
@@ -3326,8 +3249,6 @@ void gameTextInitFn_8001bd14(void)
     }
 }
 
-#pragma opt_unroll_loops reset
-#pragma opt_unroll_loops on
 void fn_8001BDD4(int mode)
 {
     switch (mode)
@@ -3353,7 +3274,6 @@ void fn_8001BE2C(int mode)
     }
 }
 
-#pragma dont_inline reset
 #pragma dont_inline on
 void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
 {
@@ -3517,10 +3437,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     ((GameTextBox*)box)->cursorX = savedX;
     ((GameTextBox*)box)->cursorY = savedY;
 }
-#pragma dont_inline reset
 #pragma dont_inline off
-#pragma ppc_unroll_instructions_limit 96
-#pragma ppc_unroll_speculative on
 
 void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
 {
@@ -3710,16 +3627,12 @@ void gameTextInitFn_8001c794(void)
     DCFlushRange(gGameTextBoxEdgeTexture + 1, 800);
 }
 
-/* .bss block 0x80339980-0x8033AF40 */
 u8 gGameTextBase[0x20];
 u8 lbl_803399A0[0x20];
 u8 lbl_803399C0[0x280];
 u32 lbl_80339C40[0x240];
 GameTextSlot gGameTextCommandSlots[0xA00 / sizeof(GameTextSlot)];
 
-/* .data jump tables (attributed from auto object; pointer tables regenerate
- * ADDR32 relocs). The compiler also emits its own anonymous copies for the
- * switches; these named tables pair with the retail symbols. */
 void* jumptable_802C9DD4[12] = {
     (void*)((u8*)textRenderStr + 0x408), (void*)((u8*)textRenderStr + 0x508), (void*)((u8*)textRenderStr + 0x508),
     (void*)((u8*)textRenderStr + 0x438), (void*)((u8*)textRenderStr + 0x440), (void*)((u8*)textRenderStr + 0x450),

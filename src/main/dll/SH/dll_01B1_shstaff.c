@@ -429,7 +429,6 @@ int sh_staff_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 }
 
 #pragma dont_inline on
-#pragma opt_strength_reduction on
 void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int clearChildren)
 {
     int player;
@@ -458,7 +457,6 @@ void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int clearChildren
 
     state->phase = SHSTAFF_PHASE_DONE;
 }
-#pragma opt_strength_reduction reset
 #pragma dont_inline reset
 
 void sh_staff_update(GameObject* obj)

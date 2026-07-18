@@ -343,7 +343,6 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
 #pragma opt_propagation reset
 
 #pragma opt_propagation off
-#pragma inline_max_size(4000)
 static inline void expgfxRemoveAllBody(void)
 {
     ExpgfxTableEntry* expTabEntry;
@@ -422,16 +421,12 @@ static inline void expgfxRemoveAllBody(void)
     }
 }
 
-#pragma inline_max_size reset
 void expgfxRemoveAll(void)
 {
     expgfxRemoveAllBody();
 }
 #pragma opt_propagation reset
 
-#pragma ppc_unroll_speculative on
-#pragma ppc_unroll_factor_limit 5
-#pragma ppc_unroll_instructions_limit 120
 #pragma opt_strength_reduction off
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, u32 sourceId)
 {
@@ -544,8 +539,6 @@ poolSearchDone:
 
     return EXPGFX_INVALID_POOL_INDEX;
 }
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 256
 
 void expgfx_initSlotQuad(void* slotPtr)
 {
@@ -745,94 +738,14 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     ambScaled[1] = (f32)ambG8 * camScale;
     ambScaled[0] = (f32)ambB8 * camScale;
 
-    next = 0;
     scan = runtime->poolActiveCounts;
-    for (batch = 8; batch != 0; batch--)
+    for (next = 0; next < EXPGFX_POOL_COUNT; next++)
     {
-        switch (scan[0])
-        {
-        case 0:
+        if (scan[next] != 0)
             break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[1])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[2])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[3])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[4])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[5])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[6])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[7])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[8])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[9])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        scan += 10;
-        next++;
     }
-    next = -1;
-foundFirst:
+    if (next == EXPGFX_POOL_COUNT)
+        next = -1;
     pool = next;
     if (pool != -1)
     {
@@ -875,17 +788,12 @@ foundFirst:
             scan = (s8*)(curPoolBuf + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
             for (; next < EXPGFX_POOL_COUNT; next++)
             {
-                switch (*scan)
-                {
-                case 0:
+                if (*scan != 0)
                     break;
-                default:
-                    goto foundNext;
-                }
                 scan++;
             }
-            next = -1;
-        foundNext:
+            if (next == EXPGFX_POOL_COUNT)
+                next = -1;
             slot = (ExpgfxSlot*)curCache;
             if (next > -1)
             {
@@ -1868,8 +1776,6 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
 #pragma opt_strength_reduction reset
 #pragma opt_propagation reset
 
-#pragma scheduling on
-#pragma peephole on
 void expgfx_ownerFree3(u32 sourceId)
 {
     expgfx_free(sourceId);
@@ -1889,8 +1795,6 @@ int expgfx_func09(void)
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void expgfx_renderSourcePools(int sourceId, int sourceMode)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -2373,7 +2277,6 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
 #pragma opt_propagation reset
 #pragma optimization_level reset
 
-#pragma inline_max_size(4000)
 static inline void renderParticlesBody(void)
 {
     float queuePosition[3];
@@ -2447,19 +2350,13 @@ void renderParticles(void)
 {
     renderParticlesBody();
 }
-#pragma inline_max_size reset
 
-#pragma scheduling on
-#pragma peephole on
 void expgfx_free2(u32 sourceId)
 {
     expgfx_free(sourceId);
     return;
 }
 
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
 void expgfx_free(u32 sourceId)
 {
     s8* poolActiveCounts[1];
@@ -2516,7 +2413,6 @@ void expgfx_free(u32 sourceId)
         poolIndex++;
     }
 }
-#pragma dont_inline reset
 
 static inline void expgfx_clearResourceTable(ExpgfxResourceEntry* resourceEntry, s32 zeroFlag, s32 zeroResource,
                                              s32 zeroId, s32 zeroScore, s32 zeroReserved)
@@ -2537,7 +2433,6 @@ static inline void expgfx_clearResourceTable(ExpgfxResourceEntry* resourceEntry,
     }
 }
 
-#pragma opt_propagation off
 void expgfx_resetAllPools(void)
 {
     u16* refCountPtr;
@@ -2637,7 +2532,6 @@ void expgfx_resetAllPools(void)
         expgfx_clearResourceTable(resourceEntry, 0, 0, 0, 0, 0);
     }
 }
-#pragma opt_propagation reset
 
 void expgfx_updateFrameState(int sourceMode, int sourceId)
 {
@@ -2682,7 +2576,6 @@ void expgfx_updateFrameState(int sourceMode, int sourceId)
     return;
 }
 
-#pragma dont_inline on
 int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slotType, int boundsTemplateId)
 {
     u32 behaviorFlags;
@@ -3015,7 +2908,6 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         return slot->sequenceId;
     }
 }
-#pragma dont_inline reset
 
 #pragma ppc_unroll_speculative off
 #pragma ppc_unroll_factor_limit 1
@@ -3109,7 +3001,6 @@ void expgfx_release(void)
 #pragma ppc_unroll_speculative off
 #pragma ppc_unroll_factor_limit 1
 #pragma ppc_unroll_instructions_limit 120
-#pragma opt_propagation off
 void expgfx_initialise(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -3169,12 +3060,10 @@ void expgfx_initialise(void)
     memset(runtime->expTab, 0, EXPGFX_EXPTAB_BYTES);
     return;
 }
-#pragma opt_propagation reset
 #pragma ppc_unroll_speculative on
 #pragma ppc_unroll_factor_limit 5
 #pragma ppc_unroll_instructions_limit 120
 
-/* .bss block 0x8039AB58-0x8039BE98 */
 u8 gExpgfxRuntimeData[0x980];
 ExpgfxTableEntry gExpgfxTableEntries[0x550 / sizeof(ExpgfxTableEntry)];
 void* gExpgfxTrackedPoolSourceIds[0x50];
@@ -3194,7 +3083,6 @@ char sExpgfxInvalidTabIndex[] = "expgfx.c: invalid tabindex\n";
 
 char sExpgfxScaleOverflow[] = "expgfx.c: scale overflow\n";
 
-/* descriptor/ptr table auto 0x8030fca8-0x8030fd20 (8-byte aligned in retail) */
 Dll0BDescriptorTable lbl_8030FCA8 = {{0x00000000,
                                       0x00000000,
                                       0x00000000,

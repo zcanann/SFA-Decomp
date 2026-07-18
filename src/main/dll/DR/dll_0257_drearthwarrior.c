@@ -1379,7 +1379,6 @@ void DR_EarthWarrior_update(GameObject* obj)
     }
 #undef hitState
 }
-#pragma opt_common_subs off
 #pragma opt_propagation off
 void DR_EarthWarrior_init(GameObject* obj, int def)
 {
@@ -1458,7 +1457,6 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     *(int*)((char*)obj + 0x108) = (int)fn_802BC788;
     ObjModelChain_SetEnabled((ObjModelChain*)((DREarthWarriorState*)inner)->tailSimHandle, 1);
 }
-#pragma opt_common_subs reset
 #pragma opt_propagation reset
 
 void DR_EarthWarrior_release(void)
@@ -1542,7 +1540,6 @@ u8 gDREarthWarriorRowIndices[960] = {
     64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
 };
 
-/* --- .data reconstruction (0x803351F8-0x803352AC) --- */
 
 int lbl_8033566C[4] = {0x17, 0x18, 0x19, 0x1A};
 

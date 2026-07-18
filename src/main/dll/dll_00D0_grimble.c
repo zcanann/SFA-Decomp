@@ -361,7 +361,6 @@ void grimble_free(GameObject* obj)
     (*(void (**)(int, int*, int))(*(int*)gBaddieControlInterface + 0x40))((int)obj, state, 0);
 }
 
-#pragma opt_common_subs off
 void grimble_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     char* state = obj->extra;
@@ -386,7 +385,6 @@ void grimble_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         ((GroundBaddieState*)state)->flags400 = ((GroundBaddieState*)state)->flags400 & ~0x100;
     }
 }
-#pragma opt_common_subs reset
 
 void grimble_hitDetect(int obj)
 {
@@ -509,7 +507,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
     grimble_getExtraSize,
 };
 
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* gCannonClawObjDescriptor[14] = {(void*)0x00000000,          (void*)0x00000000,      (void*)0x00000000,
                                       (void*)0x00090000,          cannonclaw_initialise,  cannonclaw_release,
                                       (void*)0x00000000,          cannonclaw_init,        cannonclaw_update,

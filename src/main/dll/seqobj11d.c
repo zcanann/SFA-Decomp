@@ -83,11 +83,7 @@ typedef struct
 extern int fn_8014C11C(int obj, f32 f, int a, int b, u8* tbl);
 u8 gGroundBaddieTargetSearchResult[0x80];
 
-#pragma scheduling on
-#pragma peephole on
 
-#pragma scheduling off
-#pragma peephole off
 
 __declspec(section ".sdata2") f32 lbl_803E27A4 = 0.6f;
 __declspec(section ".sdata2") f32 lbl_803E27A8 = 0.8f;

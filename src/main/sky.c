@@ -907,7 +907,6 @@ void dll_06_func0D(void)
     }
 }
 
-#pragma opt_propagation off
 void sky2_initialise(void)
 {
     u8** states;
@@ -928,7 +927,6 @@ void sky2_initialise(void)
     gSky2State = NULL;
     states[1] = NULL;
 }
-#pragma opt_propagation reset
 
 int fn_8008B71C(int slot)
 {
@@ -1554,7 +1552,7 @@ void sky2_run(void)
             {
                 g = lbl_803DF108;
             }
-            if (b > *(volatile f32*)&lbl_803DF118)
+            if (b > lbl_803DF118)
             {
                 b = cmax;
             }
@@ -2280,7 +2278,6 @@ void fn_8008C9F4(u8* cfg, u8 flags)
     *(int*)((&gSky2State)[idx] + 0x44) = 0;
 }
 
-#pragma opt_common_subs on
 void fn_8008D088(int slot)
 {
     SkySlotAnim* p;
@@ -2381,7 +2378,6 @@ void fn_8008D088(int slot)
         (*(SkySlotAnim**)(&gSky2State + slot))->prevT = (*(SkySlotAnim**)(&gSky2State + slot))->t;
     }
 }
-#pragma opt_common_subs reset
 
 void fn_8008BDA8(void)
 {
@@ -3464,7 +3460,6 @@ ObjectDescriptor17 lbl_8030F4AC = {
     (ObjectDescriptorCallback)dll_06_func0F,
 };
 
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 u8 lbl_8030F500[160] = {255, 206, 0,   0,   255, 206, 255, 206, 0, 100, 255, 206, 0, 50,  0, 100, 255, 206, 0, 50,
                         0,   0,   255, 206, 255, 206, 0,   0,   0, 50,  255, 206, 0, 100, 0, 50,  0,   50,  0, 100,
                         0,   50,  0,   50,  0,   0,   0,   50,  0, 0,   0,   0,   0, 0,   0, 6,   0,   0,   0, 2,

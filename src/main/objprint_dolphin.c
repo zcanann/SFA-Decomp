@@ -384,7 +384,6 @@ void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e)
     }
 }
 
-#pragma opt_propagation on
 typedef union
 {
     u8 u8;
@@ -491,7 +490,6 @@ void objRenderFn_8003d980(u8* obj, int* p2)
         (*gPartfxInterface)->spawnObject(obj, 0x7fd, &blk, 0x200001, -1, NULL);
     }
 }
-#pragma opt_propagation reset
 
 extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
 extern void GXSetNumChans(u8 nChans);
@@ -740,7 +738,6 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
     }
 }
 #pragma optimization_level reset
-#pragma optimization_level 2
 #pragma dont_inline reset
 void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
 {
@@ -848,7 +845,6 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
         }
     }
 }
-#pragma optimization_level reset
 #pragma dont_inline on
 void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
 {
@@ -939,12 +935,11 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
                         }
                         else
                         {
-                            goto useZero;
+                            use = 0;
                         }
                     }
                     else
                     {
-                    useZero:
                         use = 0;
                     }
                 }
@@ -1540,9 +1535,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     return idx;
 }
-#pragma opt_common_subs off
 #pragma opt_propagation reset
-#pragma scheduling off
 void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
 {
     u8 blend;
@@ -1665,8 +1658,6 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
         }
     }
 }
-#pragma opt_common_subs reset
-#pragma scheduling reset
 
 extern f32 gObjJointMtxTemp[];
 extern void GXSetArray(int attr, int ptr, int stride);

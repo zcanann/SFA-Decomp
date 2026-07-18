@@ -41,9 +41,6 @@ f32 interpolate(f32 a, f32 t, f32 exp)
     }
     return lbl_803DE7C0;
 }
-#pragma dont_inline on
-#pragma fp_contract on
-#pragma opt_strength_reduction on
 void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
 {
     f32 cross[3];
@@ -91,9 +88,6 @@ void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
         *out2 = s * roll / d;
     }
 }
-#pragma dont_inline reset
-#pragma fp_contract reset
-#pragma opt_strength_reduction reset
 
 void setMatrixFromObjectTransposed(void* obj, f32* out)
 {
@@ -201,8 +195,6 @@ void initRotationMtx(f32* m, f32 a, f32 b, f32 c)
     m[5] = b;
     m[10] = c;
 }
-#pragma fp_contract on
-#pragma opt_strength_reduction on
 void vecRotateYXZ(s16* a, f32* v)
 {
     f32 x, y, z;
@@ -244,7 +236,6 @@ void vecRotateYXZ(s16* a, f32* v)
     v[1] = y;
     v[2] = z;
 }
-#pragma dont_inline off
 void vecRotateZXY(s16* rotation, f32* vector)
 {
     f32 s2;
@@ -267,7 +258,6 @@ void vecRotateZXY(s16* rotation, f32* vector)
     vector[0] = t5 * c0 + t2 * s0;
     vector[2] = t2 * c0 - t5 * s0;
 }
-#pragma dont_inline reset
 #pragma fp_contract off
 #pragma opt_dead_assignments off
 #pragma opt_lifetimes off
@@ -363,8 +353,6 @@ void mtx44ScaleRow1(f32* p, f32 s)
     p[5] *= s;
     p[6] *= s;
 }
-#pragma fp_contract on
-#pragma opt_strength_reduction on
 
 void setMatrixFromObjectPos(f32* m, const MatrixTransform* transform)
 {
@@ -399,8 +387,6 @@ void setMatrixFromObjectPos(f32* m, const MatrixTransform* transform)
     m[14] = transform->z;
     m[15] = lbl_803DE7C4;
 }
-#pragma dont_inline off
-#pragma fp_contract off
 int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
 {
     f32* timer = timerp;
@@ -446,9 +432,6 @@ int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
     }
     return 0;
 }
-#pragma dont_inline reset
-#pragma fp_contract reset
-#pragma opt_strength_reduction reset
 
 int randomGetRange(int lo, int hi)
 {
@@ -483,7 +466,6 @@ void copyMatrix44(f32* src, f32* dst)
     dst[14] = src[14];
     dst[15] = src[15];
 }
-#pragma fp_contract on
 void mtx44_mult(f32* a, f32* b, f32* out)
 {
     f32* end = a + 12;

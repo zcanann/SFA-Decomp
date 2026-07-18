@@ -78,7 +78,6 @@ __declspec(section ".sdata2") f32 lbl_803E50C0 = 12.0f;
 __declspec(section ".sdata2") f32 lbl_803E50C4 = 30.0f;
 __declspec(section ".sdata2") f32 lbl_803E50C8 = 255.0f;
 
-#pragma dont_inline on
 void fn_801C8B68(int obj)
 {
     register int self = obj;
@@ -141,7 +140,6 @@ void fn_801C8B68(int obj)
         ((GameObject*)self)->anim.alpha = 0xff;
     }
 }
-#pragma dont_inline reset
 
 __declspec(section ".sdata2") f32 lbl_803E50D8 = 1.0f;
 #pragma explicit_zero_data on

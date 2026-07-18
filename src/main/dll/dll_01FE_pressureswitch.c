@@ -118,9 +118,7 @@ void PressureSwitch_hitDetect(void)
 {
 }
 
-#pragma opt_strength_reduction off
 
-#pragma opt_common_subs off
 void PressureSwitch_update(int obj)
 {
     int byteOff[1];
@@ -296,7 +294,6 @@ void PressureSwitch_update(int obj)
         }
     }
 }
-#pragma opt_common_subs reset
 
 void PressureSwitch_init(int* obj, u8* init)
 {

@@ -53,8 +53,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 #define GROUNDANIMATOR_OBJGROUP        0x31
 #define GROUNDANIMATOR_TARGET_OBJGROUP 0x4
 
-#pragma scheduling on
-#pragma peephole on
 union GroundAnimatorConstF32 { f32 f; };
 __declspec(section ".sdata2") f32 lbl_803E3F98 = 100.0f;
 const union GroundAnimatorConstF32 lbl_803E3F9C = { 0.0f };
@@ -73,7 +71,6 @@ u8 groundanimator_modelMtxFn(int* obj)
     return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x2b);
 }
 
-#pragma scheduling off
 u8 groundanimator_isFullySunk(int* obj)
 {
     GroundAnimatorState* state = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
@@ -83,7 +80,6 @@ u8 groundanimator_isFullySunk(int* obj)
     return depth > lbl_803E3F98 * maxDepth;
 }
 
-#pragma peephole off
 __declspec(section ".sdata2") f32 lbl_803E3FA8 = -20.0f;
 __declspec(section ".sdata2") f32 lbl_803E3FAC = 20.0f;
 const union GroundAnimatorConstF32 lbl_803E3FB0 = { 0.0f };
@@ -217,15 +213,11 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     }
 }
 
-#pragma scheduling on
-#pragma peephole on
 int groundanimator_getExtraSize(void)
 {
     return 0x30;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void groundanimator_free(int* obj, int flag)
 {
     void* entry;
@@ -285,7 +277,6 @@ void groundanimator_free(int* obj, int flag)
     ObjGroup_RemoveObject((int)obj, GROUNDANIMATOR_OBJGROUP);
 }
 
-#pragma scheduling on
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -293,7 +284,6 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3FC4);
 }
 
-#pragma scheduling off
 #pragma fp_contract off
 void groundanimator_update(int* obj)
 {

@@ -274,7 +274,6 @@ void dimmagicbridge_initialise(void)
 {
 }
 
-#pragma force_active on
 /* .sdata2 constant pool */
 const f32 lbl_803E4A1C = 0.0f;
 const f32 lbl_803E4A20 = 1.0f;

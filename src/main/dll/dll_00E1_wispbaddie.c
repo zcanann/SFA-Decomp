@@ -353,8 +353,6 @@ void wispbaddie_init(GameObject* obj, int setup, int initialised)
     (obj)->objectFlags = (u16)((obj)->objectFlags | WISPBADDIE_OBJFLAG_HITDETECT_DISABLED);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void wispbaddie_release(void)
 {
 }

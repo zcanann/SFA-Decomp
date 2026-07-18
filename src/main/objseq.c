@@ -1741,7 +1741,6 @@ void ObjSeq_seqState_free(u8* seq)
         ((ObjSeqState*)seq)->curveInterp = NULL;
     }
 }
-#pragma reset
 
 
 #pragma dont_inline on
@@ -2060,7 +2059,6 @@ void ObjSeq_updateCamera(void)
     lbl_803DD0B8 = NULL;
     lbl_803DD0F8 = 0;
 }
-#pragma ppc_unroll_speculative on
 
 #pragma dont_inline on
 void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
@@ -2228,7 +2226,6 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
     }
     return values[1];
 }
-#pragma ppc_unroll_speculative on
 
 int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
 {
@@ -2883,7 +2880,6 @@ int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj)
     }
     return result;
 }
-#pragma ppc_unroll_speculative on
 
 void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode* curve, RomCurveNode* next, f32 t,
                                           int flag)
@@ -5103,7 +5099,6 @@ int ObjSeq_takeXrotChanged(int index)
     objSeqXrotChanged[index] = 0;
     return changed;
 }
-#pragma ppc_unroll_speculative on
 
 void ObjSeq_setXrot(int index, int xrot)
 {
@@ -5348,7 +5343,6 @@ void ObjSeq_onMapSetup(void)
 }
 #pragma optimization_level reset
 #pragma ppc_unroll_speculative on
-#pragma ppc_unroll_speculative on
 
 void ObjSeq_release(void)
 {
@@ -5376,7 +5370,6 @@ void fn_80088730(u8* out)
     out[3] = src[3];
 }
 
-/* .bss block 0x80396918-0x8039A7A8 */
 u8 lbl_80396918[0x2A80];
 s16 gObjSeqBgCmds[0x5A];
 u8 lbl_8039944C[0xA0];
@@ -5399,7 +5392,6 @@ int gObjSeqMsgIds[] = {
     0x000F000C, 0x000F000D, 0x000F000E, 0x000F000F, 0x000F0010, 0x00130001, 0x00130002,
 };
 
-/* --- objseq .data reconstruction (absorbed range 0x8030EC00-0x8030EF58) --- */
 extern void ObjSeq_preempt();
 extern void ObjSeq_yield();
 extern void ObjSeq_getGlobal3();

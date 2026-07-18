@@ -370,7 +370,7 @@ void mapLoadUnloadObjects(int flag)
                 int j2;
                 for (j2 = 0; j2 < count; j2++)
                 {
-                    if (*w == *(volatile s16*)idPtr)
+                    if (*w == *idPtr)
                     {
                         dup = 1;
                         break;
@@ -1310,7 +1310,7 @@ void beginLoadingMap(void)
     *(f32*)(base + 0x8590) = p[2];
     *(int*)(base + 0x8594) = 1;
     gMapBlockOriginWorldX = gMapBlockOriginX * 640;
-    gMapBlockOriginWorldZ = *(volatile int*)&gMapBlockOriginZ * 640;
+    gMapBlockOriginWorldZ = gMapBlockOriginZ * 640;
     playerMapOffsetX = gMapBlockOriginWorldX;
     playerMapOffsetZ = gMapBlockOriginWorldZ;
     gMapSavedPlayerOffsetX = playerMapOffsetX;
@@ -1480,8 +1480,6 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
     u32 v, v2;
     int cellVal;
 
-    /* ptr0 = romlist-page handle (offsets 0x0/0xc/0x14/0x2c/0x30/0x34): kept as
-       raw int-base derefs; casting to a struct ptr shifts the -O4,p base CSE. */
     if (idx == -1)
     {
         o0[0] = -1;
@@ -2256,7 +2254,6 @@ void* fn_80059334(int a, int b)
     int* base = (int*)lbl_803822A0[0];
     return (char*)base + (a + (b << 4)) * 12;
 }
-#pragma ppc_unroll_factor_limit 4
 
 extern s16 lbl_803DCE90;
 extern u16* lbl_803DCE84;
@@ -2335,7 +2332,6 @@ void mapBlockFn_80059354(int x, int z, MapCellEnt* out, int layer)
         out->cellIndex = 0;
     }
 }
-#pragma ppc_unroll_factor_limit 8
 
 extern int mapGetRomListAndOffsets(int p1, int b);
 
@@ -2496,7 +2492,6 @@ void fn_80059A50(int pageIndex)
     }
 }
 
-#pragma dont_inline on
 int mapCoordsToId(int x, int z, int layerIdx)
 {
     int x0, z0;
@@ -2540,9 +2535,6 @@ int mapCoordsToId(int x, int z, int layerIdx)
     return -1;
 }
 
-/* .data block 0x8030E4B0-0x8030E7C4. Defined here (before
- * frustumPlanes_updateAabbCornerIndices) so the compiler-emitted switch
- * jumptable lands after it, matching the retail .data layout. */
 
 char sShaderDebugStrings[172] = {
     0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 52, 0, 0, 0, 60,
@@ -2574,9 +2566,6 @@ int gSunOcclusionSampleOffsets[10] = {
 /* Scene geometry draw-order table (referenced by lightmap.c). */
 u8 lbl_8030E65C[16] = {7, 6, 5, 4, 3, 2, 1, 0, 8, 9, 10, 11, 12, 13, 14, 15};
 
-/* Retail symbol lbl_8030E66C (0xD4 bytes): a second 16-entry draw-order table
- * (referenced by lightmap.c) followed by the objShouldLoad debug strings;
- * the splitter merged them into one object. */
 struct
 {
     u8 drawOrder[16];
@@ -2605,7 +2594,6 @@ char sTrackLoadBlockOverrunError[] = "trackLoadBlockEnd: track block overrun\n";
 char sTrackPiLockedFormat[] = "track piLocked %x\n";
 
 char sTrackCellCoordFormat[] = " cellx %i celly %i cellz %i ";
-#pragma dont_inline reset
 
 void mapBlockFn_80059c2c(u8* outFlags)
 {
@@ -2962,8 +2950,6 @@ void mapDebugRender(int* state)
 
 
 
-/* Emulates this TU's original per-file optimizer flags for the map-load
-   path (copy propagation and loop transforms disabled); see build notes. */
 #pragma optimization_level reset
 #pragma ppc_unroll_factor_limit 8
 
@@ -3135,7 +3121,6 @@ void playerVecFn_8005a9b0(void)
     frustumPlanes_updateAabbCornerIndices(gPlayerRelativeFrustumPlanes, FRUSTUM_PLANE_COUNT);
 }
 
-/* .bss glue block 0x8037E0C0-0x803822C8 (defined here; other units reference) */
 char lbl_8037E0C0[0x2149];
 u8 lbl_80380209[0x1DFF];
 u8 lbl_80382008[0x30];
@@ -3147,6 +3132,5 @@ u8 lbl_8038228C[0x14];
 int lbl_803822A0[5];
 int gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
 
-/* .bss glue 0x80386468-0x803868D8 */
 void* gLoadedRomListPages[0x78];
 u8 lbl_80386648[0x290];

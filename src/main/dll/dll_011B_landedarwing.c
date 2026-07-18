@@ -143,7 +143,6 @@ extern LandedArwingFxPoint gLandedArwingPathFxTable[];
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
-#pragma dont_inline on
 void landed_arwing_renderPathEffects(GameObject* obj)
 {
     LandedArwingState* state;
@@ -196,7 +195,6 @@ void landed_arwing_renderPathEffects(GameObject* obj)
         objfx_spawnLightPulseLegacy(obj, 0.7f, 4, 0, 0, state->path7Fx, scratch.effectPos);
     }
 }
-#pragma dont_inline reset
 
 int landed_arwing_getExtraSize(void)
 {

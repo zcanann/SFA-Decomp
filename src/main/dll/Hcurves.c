@@ -199,8 +199,6 @@ RomCurveDef* RomCurve_findByIdWithIndex(u32 curveId, int* outIndex);
 void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds);
 f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment);
 
-#pragma peephole on
-#pragma scheduling on
 
 static inline ObjfsaPatch* Objfsa_GetPatch(int patchIndex)
 {
@@ -273,10 +271,6 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, u32 currentWalkGro
     return patchGroupId & 0xff;
 }
 
-#pragma opt_common_subs on
-#pragma peephole reset
-#pragma peephole off
-#pragma ppc_unroll_instructions_limit 80
 void fn_800D9EE8(float* p)
 {
     u32* a = (u32*)((char*)p + 0x9c);
@@ -290,10 +284,6 @@ void fn_800D9EE8(float* p)
     }
 }
 
-#pragma opt_common_subs reset
-#pragma peephole reset
-#pragma peephole on
-#pragma ppc_unroll_instructions_limit 70
 static inline int Objfsa_FindRomCurveById(int curveId)
 {
     int hi;
@@ -405,9 +395,7 @@ static inline RomCurveDef* RomCurve_FindByIdWithLimit(u32 curveId, int lim)
     return NULL;
 }
 
-#pragma peephole reset
 #pragma peephole off
-#pragma scheduling reset
 #pragma scheduling off
 static inline int Objfsa_RomCurveIsBlocked(int curve)
 {
@@ -610,7 +598,6 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
 }
 #pragma opt_loop_invariants reset
 
-#pragma opt_common_subs on
 int fn_800D9F38(void* walker, void* curve)
 {
     char* A = walker;
@@ -752,8 +739,6 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
 
     return 0;
 }
-#pragma peephole reset
-#pragma peephole on
 void RomCurve_stepClamped(RomCurveWalker* state, f32 dt)
 {
     if (state->phase <= lbl_803E05F0)
@@ -766,8 +751,6 @@ void RomCurve_stepClamped(RomCurveWalker* state, f32 dt)
     }
     Curve_AdvanceAlongPath(state, dt);
 }
-#pragma peephole reset
-#pragma peephole off
 
 int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
 {
@@ -909,7 +892,6 @@ void* Objfsa_FindNearestEnabledCurveType24(f32* pos, int p4_filter, int p5_filte
     }
     return bestHit;
 }
-#pragma ppc_unroll_instructions_limit 80
 
 void walkPath_writeU16LE(u32 v, u8* dst)
 {
@@ -973,10 +955,6 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
     return 1;
 }
 
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants off
-#pragma ppc_unroll_instructions_limit 70
-#pragma opt_loop_invariants reset
 
 u32 isPointWithinPatchGroup(float* point, u32 patchGroupIndex, int groupId)
 {
@@ -1069,8 +1047,6 @@ int getPatchGroup(float* point, int patchGroupIndex)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma peephole on
 u32 isInWalkGroupOrPatch(float* point)
 {
     s16* nz;
@@ -1114,8 +1090,6 @@ u32 isInWalkGroupOrPatch(float* point)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma peephole off
 int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patchInfo)
 {
     u32 wgi;
@@ -1200,7 +1174,6 @@ int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patc
         mathCosf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + (secondOff)) + 0x2c) << 8) /           \
                  lbl_803E0618);                                                                                        \
     *(f32*)(stateBytes + 0x104) = lbl_803E0610 * t
-#pragma opt_common_subs on
 
 static inline int RomCurve_pickRandomControlPointId_2A(int curve)
 {
@@ -1261,7 +1234,6 @@ static inline int RomCurve_pickRandomControlPointId_2B(int curve)
     }
     return result;
 }
-#pragma opt_common_subs reset
 
 u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
 {
@@ -1299,19 +1271,8 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
     return 0;
 }
 
-#pragma opt_common_subs on
-#pragma peephole reset
-#pragma peephole on
-#pragma scheduling reset
-#pragma scheduling on
 
 
-#pragma opt_common_subs reset
-#pragma opt_common_subs off
-#pragma peephole reset
-#pragma peephole off
-#pragma scheduling reset
-#pragma scheduling off
 int mathFn_800dbff0(float* point)
 {
     s16 up;
@@ -1803,11 +1764,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     }
 }
 #pragma opt_propagation reset
-#pragma peephole reset
-#pragma peephole on
 #pragma ppc_unroll_instructions_limit 70
-#pragma scheduling reset
-#pragma scheduling on
 void doNothing_onTrickyFree(void)
 {
 }
@@ -1815,10 +1772,6 @@ void doNothing_onTrickyFree(void)
 void doNothing_onTrickyInit(void)
 {
 }
-#pragma peephole reset
-#pragma peephole off
-#pragma scheduling reset
-#pragma scheduling off
 
 int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
 {
@@ -2297,10 +2250,6 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
 fail:
     return 1;
 }
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants off
-#pragma peephole reset
-#pragma peephole on
 int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode)
 {
     int curveIndex;
@@ -2390,10 +2339,6 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     }
     return -1;
 }
-#pragma opt_common_subs on
-#pragma opt_loop_invariants reset
-#pragma peephole reset
-#pragma peephole off
 
 
 
@@ -2580,7 +2525,6 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     }
     return -1;
 }
-#pragma ppc_unroll_instructions_limit 80
 
 int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
 {
@@ -2697,8 +2641,6 @@ int RomCurve_func16(double x, double y, double z)
 
     return -1;
 }
-#pragma opt_common_subs reset
-#pragma ppc_unroll_instructions_limit 70
 
 f32 curves_getPathLength(u32 startNode, u32 endNode, f32* posA, f32* posB, f32 t1, f32 t2)
 {
@@ -2832,7 +2774,6 @@ done_exit:
     return total;
 }
 
-#pragma opt_common_subs on
 
 void curves_getPos(int curve, float* outX, float* outY, float* outZ, f32 phase)
 {
@@ -2942,7 +2883,6 @@ int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* 
     *outPhase = gFloatZero;
     return curve;
 }
-#pragma ppc_unroll_instructions_limit 80
 
 u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, float* outLateralOffset,
                                           float* outVerticalOffset, float* outPhase)
@@ -3062,7 +3002,6 @@ u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, fl
     }
     return 0;
 }
-#pragma opt_common_subs reset
 #pragma opt_common_subs off
 #pragma dont_inline on
 int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a, RomCurveDef* b, f32 unusedW)
@@ -3091,7 +3030,6 @@ int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef
     return 0;
 }
 #pragma dont_inline off
-#pragma opt_common_subs reset
 #pragma opt_common_subs on
 
 int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
@@ -3363,7 +3301,6 @@ int curves_findByAction(int act)
     }
     return -1;
 }
-#pragma fp_contract off
 int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* outCurveId)
 {
     f32* distWrite;
@@ -3531,7 +3468,6 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
     }
     return -1;
 }
-#pragma fp_contract reset
 
 int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCount, int* previousLinkId)
 {

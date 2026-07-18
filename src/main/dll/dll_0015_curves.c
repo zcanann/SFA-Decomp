@@ -638,7 +638,6 @@ void fn_800E5F1C(GameObject* obj, CurvesCollisionState* collision)
 }
 
 #pragma opt_propagation reset
-#pragma opt_unroll_count 4
 void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
 {
     u8 pointCount;
@@ -753,7 +752,6 @@ buildTransform:
         targetRow += 3;
     }
 }
-#pragma opt_unroll_count 0
 
 void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
 {
@@ -927,12 +925,9 @@ void dll_15_func0A(GameObject* obj, CurvesCollisionState* collision)
 {
     u32 flags;
     u8* worldBase;
-    /* Parallel loop counters kept in one array so the codegen matches:
-     * [0] = worldIdx (component index into localPointWorld, steps by 3),
-     * [1] = point loop counter (steps by 1). */
     int loopIdx[2];
     u8* wb[1];  /* worldBase walker (steps by 0xc) */
-    int off[1]; /* byteOff walker (steps by 0xc); element init copy keeps the retail mr */
+    int off[1]; /* byteOff walker (steps by 0xc) */
     f32* localPoint;
     f32 one;
     MatrixTransform transform;
@@ -1629,7 +1624,6 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
         state->hitBounds.maxZ = maxZ;
     }
 }
-#pragma opt_unroll_count 8
 void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoints, f32* radii, s8* types)
 {
     int i;
@@ -1645,7 +1639,6 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
     }
     state->flags |= CURVES_COLLISION_STATE_HIT_SEGMENTS;
 }
-#pragma opt_unroll_count 0
 
 void curves_setLocalPointCollisionEx(CurvesCollisionState* state, int pointCount, f32* localPointPositions,
                                      f32* localPointRadii, int primaryHitType, int secondaryHitType)

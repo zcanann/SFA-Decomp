@@ -40,7 +40,6 @@ typedef struct CameraModeClimbInitArgs
     s8 minHeight;
 } CameraModeClimbInitArgs;
 
-#pragma dont_inline on
 
 extern f32 lbl_803E19A0;
 extern f32 gCamClimbDistanceSmoothRate;

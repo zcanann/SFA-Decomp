@@ -45,7 +45,6 @@ void ControlLight_hitDetect(void)
 {
 }
 
-#pragma opt_loop_invariants off
 #pragma optimization_level 1
 void ControlLight_update(GameObject* obj)
 {
@@ -108,7 +107,6 @@ void ControlLight_update(GameObject* obj)
     state->lastBit = newBit;
 }
 
-#pragma opt_loop_invariants reset
 #pragma optimization_level reset
 void ControlLight_init(GameObject* obj, int setup)
 {

@@ -271,7 +271,6 @@ void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 cle
     mainSetBits(latchBit, !mainGetBit(latchBit));
 }
 
-#pragma dont_inline on
 void SH_LevelControl_setMusic(short* obj)
 {
 
@@ -330,9 +329,7 @@ void SH_LevelControl_setMusic(short* obj)
         SCGameBitLatch_Update((SCGameBitLatchState*)obj, 0x10, -1, -1, 0xbfe, 0xc3);
     }
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
 {
     int player;
@@ -467,10 +464,7 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
         (*gMapEventInterface)->savePoint(0, 0, 1, 0);
     }
 }
-#pragma dont_inline reset
 
-#pragma scheduling on
-#pragma peephole on
 #define SHOPKEEPER_THORNTAIL_OBJECT_ID 0x442ff
 #define SHOPKEEPER_LOADING_FLAG        0x1000
 #define SHOPKEEPER_OBJFLAG_HIDDEN      0x4000
@@ -506,8 +500,6 @@ typedef struct ShopkeeperObject
         (state)->mapOverride = -1;                                                                                     \
     }
 
-#pragma scheduling off
-#pragma peephole off
 void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* state)
 {
 

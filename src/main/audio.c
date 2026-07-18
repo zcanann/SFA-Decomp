@@ -3192,8 +3192,6 @@ void Sfx_UpdateLoopedObjectSounds(void)
 
 #pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
-#pragma opt_loop_invariants reset
-#pragma opt_strength_reduction reset
 
 
 

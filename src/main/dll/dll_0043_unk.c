@@ -53,7 +53,6 @@ __declspec(section ".sdata2") f32 gCamStaffAnimPi = 3.1415927f;
 __declspec(section ".sdata2") f32 gCamStaffAnimHalfCircleBams = 32768.0f;
 __declspec(section ".sdata2") f32 gCamStaffAnimDegToBams = 182.04445f;
 
-#pragma dont_inline on
 void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
 {
     short targetClassId;
@@ -110,7 +109,6 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
 done:
     return;
 }
-#pragma dont_inline reset
 
 void CameraModeStaffAnim_copyToCurrent(void)
 {
@@ -223,15 +221,11 @@ void camclimb_update(CameraObject* cam)
 }
 #pragma dont_inline reset
 
-#pragma scheduling on
-#pragma peephole on
 static inline f32 CameraModeStaffAnim_angleToRadians(int angle)
 {
     return (gCamStaffAnimPi * angle) / gCamStaffAnimHalfCircleBams;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
 {
     GameObject* target;

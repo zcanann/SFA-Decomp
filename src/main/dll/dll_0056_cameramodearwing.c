@@ -69,8 +69,6 @@ extern f32 gCamArwingXScaleDefault;
 extern f32 gCamArwingYScaleDefault;
 extern f32 lbl_803E1BDC;
 
-#pragma peephole off
-#pragma scheduling off
 
 void CameraModeArwing_copyToCurrent(void* p1, u32 kind)
 {

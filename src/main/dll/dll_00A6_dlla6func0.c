@@ -217,7 +217,6 @@ void dll_A6_func00_nop(void)
 u8 gDllA6EffectHwWords[] = {0x00, 0x00, 0x00, 0x46, 0x00, 0x46, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* lbl_80318E20[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_A6_func00_nop, dll_A6_func01_nop, (void*)0x00000000, dll_A6_func03};
 u8 lbl_80318E40[136] = {

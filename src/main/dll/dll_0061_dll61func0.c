@@ -35,7 +35,6 @@ enum
 
 extern u8 lbl_803128E8[];
 
-#pragma fp_contract off
 void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     ModgfxSpawnPacket buf;
@@ -193,7 +192,6 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_803128E8, 8, &base[0x5c], DLL61_EFFECT_ID, 0);
 }
-#pragma fp_contract reset
 
 void dll_61_func01_nop(void)
 {

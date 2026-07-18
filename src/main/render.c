@@ -494,7 +494,6 @@ void fn_80007F78(ObjAnimState* anim, s16* dst, s16* out)
     } while ((u64)(u32)dst != end);
 }
 
-#pragma dont_inline on
 void render_copyPackedU64Tail(u64* dst, u32 packed)
 {
     /* Preserve the leading bytes of *dst; fill the tail from the aligned
@@ -529,9 +528,7 @@ void render_copyPackedU64Tail(u64* dst, u32 packed)
         break;
     }
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void render_copyPackedU64Head(u64* dst, u32 packed)
 {
     /* Fill the head from the aligned 64-bit word; preserve bytes after the
@@ -566,7 +563,6 @@ void render_copyPackedU64Head(u64* dst, u32 packed)
         break;
     }
 }
-#pragma dont_inline reset
 
 s16 renderModeSetOrGet(int mode)
 {

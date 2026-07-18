@@ -86,19 +86,16 @@ typedef struct ProjNearSearch
     f32 dz;
 } ProjNearSearch;
 
-#pragma optimization_level reset
 int dll_2E_func0F_ret_0(void)
 {
     return 0x0;
 }
 
-#pragma optimization_level reset
 void dll_2E_setLookAtMaxDistance(MoveLibState* state, f32 value)
 {
     state->lookAtMaxDistance = value;
 }
 
-#pragma optimization_level reset
 void dll_2E_func09(MoveLibState* s, const void* src1, const void* src2, int count)
 {
     (void)count;
@@ -110,7 +107,6 @@ void dll_2E_func09(MoveLibState* s, const void* src1, const void* src2, int coun
     memcpy(s->eventTable, src2, (u32)s->pointCount * 2);
 }
 
-#pragma optimization_level reset
 f32 dll_2E_func0B(GameObject* obj, int arg)
 {
     int r = ((int (*)(int))(*gRomCurveInterface)->slot40)(arg);
@@ -121,7 +117,6 @@ f32 dll_2E_func0B(GameObject* obj, int arg)
     return -1.0f;
 }
 
-#pragma optimization_level reset
 /* Copies a curve point's position into the caller's record and aims its
  * angle at the nearest group-8 object (falling back to the point's packed
  * angle). */
@@ -153,7 +148,6 @@ int dll_2E_func0C(int idx, MoveLibTarget* out)
     return 0;
 }
 
-#pragma optimization_level reset
 /* Copies a curve point's position and packed angle into the caller's
  * record. */
 int dll_2E_func0A(int idx, MoveLibTarget* out)
@@ -177,7 +171,6 @@ int dll_2E_func0A(int idx, MoveLibTarget* out)
     return 0;
 }
 
-#pragma optimization_level reset
 f32 fn_80114224(const Vec* start, const Vec* end, const Vec* startTangent, const Vec* endTangent, int steps)
 {
     f32 prev_x, prev_y, prev_z;
@@ -227,7 +220,6 @@ f32 fn_80114224(const Vec* start, const Vec* end, const Vec* startTangent, const
     return total;
 }
 
-#pragma optimization_level reset
 int fn_80114408(GameObject* obj, const MoveLibWaypointDef* def, MoveLibHermiteState* state, f32* phaseOut, f32 speed)
 {
     int ret = 0;
@@ -284,7 +276,6 @@ int fn_80114408(GameObject* obj, const MoveLibWaypointDef* def, MoveLibHermiteSt
     return ret;
 }
 
-#pragma optimization_level reset
 /* Advances the object along its movement curve, snapping to ground and
  * easing the yaw toward the path direction. */
 int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, MoveLibHermiteState* state, int curveVariant,
@@ -349,7 +340,6 @@ int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, MoveLibHerm
     return hit;
 }
 
-#pragma optimization_level 4
 /* Homes the object toward its target at the given speed, snapping when
  * close, easing yaw and pacing the walk anim. */
 int dll_2E_func0D(GameObject* obj, const MoveLibTarget* target, f32 speed, int move, f32* out, u8* flags)
@@ -595,7 +585,6 @@ void dll_2E_func05(GameObject* obj, MoveLibState* s, s16 a, s16 b, int count)
     dll_2E_func09(s, gMoveLibDefaultMoveData, gMoveLibDefaultMoveData, s->pointCount);
 }
 
-#pragma optimization_level reset
 void dll_2E_func08(MoveLibState* state, int reattackDelayBase, int reattackDelayMin)
 {
     state->reattackDelayBase = reattackDelayBase;
@@ -603,13 +592,11 @@ void dll_2E_func08(MoveLibState* state, int reattackDelayBase, int reattackDelay
     state->reattackTimer = reattackDelayBase;
 }
 
-#pragma optimization_level reset
 void dll_2E_func04(MoveLibState* state, GameObject* target)
 {
     state->lockTarget = target;
 }
 
-#pragma optimization_level 4
 void dll_2E_func03(GameObject* obj, MoveLibState* s)
 {
     register int yawDelta;
@@ -802,7 +789,6 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
     }
 }
 
-#pragma optimization_level 4
 int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turning, PostControl* control,
                        float* turnSpeed, s16* moves, f32* targetPos)
 {
@@ -921,12 +907,10 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
     return 1;
 }
 
-#pragma optimization_level 4
 void dll_2E_release_nop(void)
 {
 }
 
-#pragma optimization_level 4
 void dll_2E_initialise_nop(void)
 {
 }

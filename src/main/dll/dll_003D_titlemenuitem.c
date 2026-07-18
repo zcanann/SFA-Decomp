@@ -172,7 +172,6 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     }
 }
 
-#pragma opt_propagation off
 void TitleMenuItem_update(TitleMenuItem* item)
 {
     s16 oldValue;
@@ -300,7 +299,6 @@ void TitleMenuItem_update(TitleMenuItem* item)
     }
 }
 
-#pragma opt_propagation reset
 void TitleMenuItem_free(void)
 {
     mmFreeLegacyNoArg();

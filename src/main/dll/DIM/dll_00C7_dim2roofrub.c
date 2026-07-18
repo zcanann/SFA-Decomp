@@ -122,7 +122,6 @@ typedef struct Dim2PartVec
     f32 y;
     f32 z;
 } Dim2PartVec;
-#pragma opt_propagation reset
 
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 #define DIM2ROOFRUB_SEQID_SLIDE 0xa8

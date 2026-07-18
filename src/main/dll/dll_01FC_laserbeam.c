@@ -435,7 +435,6 @@ void LaserBeam_update(int obj2)
     }
 }
 
-#pragma opt_strength_reduction off
 
 void LaserBeam_init(s16* obj, char* arg)
 {
@@ -477,7 +476,6 @@ void LaserBeam_init(s16* obj, char* arg)
         b->texture = textureLoadAsset(LASERBEAM_TEXTURE_DEFAULT);
     }
 }
-#pragma opt_strength_reduction reset
 
 void LaserBeam_release(void)
 {
