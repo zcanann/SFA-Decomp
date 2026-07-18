@@ -1731,13 +1731,13 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     Mtx mtx_70;
     f32 indMtx[6];
     int handle1;
-    int handle2;
+    Texture* handle2;
     f32 proj5, proj4, proj3, proj2, proj1, proj0;
     GXColor c0;
     GXColor c1;
     GXColor c2;
     GXColor c3;
-    int handle3;
+    Texture* handle3;
     f32 x, z;
 
     *(u32*)&c0 = lbl_803DEEB8;
@@ -1772,8 +1772,8 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     selectReflectionTexture(0);
     getReflectionTexture2((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
-    fn_8006C540((u32*)&handle2);
-    selectTexture((Texture*)handle2, 2);
+    fn_8006C540(&handle2);
+    selectTexture(handle2, 2);
 
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_ALPHA);
     GXSetTevSwapModeTable(GX_TEV_SWAP2, GX_CH_GREEN, GX_CH_GREEN, GX_CH_GREEN, GX_CH_ALPHA);
@@ -1817,8 +1817,8 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetTevKColor(2, c2);
     GXSetTevColor(1, c3);
 
-    fn_8006C534((u32*)&handle3);
-    selectTexture((Texture*)handle3, 3);
+    fn_8006C534(&handle3);
+    selectTexture(handle3, 3);
 
     {
         f32 ind_s = lbl_803DB6CC / radius;
@@ -4422,15 +4422,15 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
 {
     extern f32 lbl_803DEEDC;
     extern f32 lbl_803DEEE4;
-    int handle;
+    Texture* handle;
     GXColor c0, c1, c2;
     Mtx mtx;
 
     *(u32*)&c0 = lbl_803DEEA0;
     *(u32*)&c1 = lbl_803DEEA4;
     *(u32*)&c2 = lbl_803DEEA8;
-    fn_8006C540((u32*)&handle);
-    selectTexture((Texture*)handle, 0);
+    fn_8006C540(&handle);
+    selectTexture(handle, 0);
     {
         f32 dec = *(f32*)&gSynthDelayedActionWord0;
         f32 zero = lbl_803DEEDC;

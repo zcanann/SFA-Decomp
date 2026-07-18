@@ -6090,7 +6090,6 @@ void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2)
     }
 }
 
-extern void fn_8006C504(void* out);
 extern f32 SaveEnd_803DEAD4;
 extern f32 lbl_803DEB04;
 extern f32 lbl_803DEB08;
@@ -6695,7 +6694,7 @@ void fn_8004DA54(char* p1)
     IndTexMtx23 m1;
     IndTexMtx23 m2;
     u8* tex30;
-    u8* tex2c;
+    Texture* tex2c;
     f32 rx;
     f32 ry;
     f32 cv;
@@ -6749,14 +6748,14 @@ void fn_8004DA54(char* p1)
     fn_8006C504(&tex2c);
     if (tex2c != 0)
     {
-        void* obj = tex2c + 0x20;
-        if (*(u8*)(tex2c + 0x48) != 0)
+        GXTexObj* obj = (GXTexObj*)tex2c->gxTexObj;
+        if (tex2c->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex2c + 0x40), 0);
+            GXLoadTexObjPreLoaded(obj, (GXTexRegion*)tex2c->tmemAddr, 0);
         }
         else
         {
-            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP0);
+            GXLoadTexObj(obj, GX_TEXMAP0);
         }
     }
     {
@@ -6848,7 +6847,6 @@ void fn_8004DA54(char* p1)
 }
 
 
-extern void fn_8006C510(void* out);
 extern f32 lbl_803DEB1C;
 extern f32 lbl_803DEB20;
 extern f32 lbl_803DEB24;
@@ -6871,7 +6869,7 @@ void fn_8004E0FC(void)
     PiVec3 vb;
     PiVec3 vc;
     PiVec3 vd;
-    u8* tex1c;
+    Texture* tex1c;
     u8* tex18;
     f32 rx;
     f32 ry;
@@ -6931,14 +6929,14 @@ void fn_8004E0FC(void)
         int id = lbl_803DCD8C;
         if (tex1c != 0)
         {
-            void* obj = tex1c + 0x20;
-            if (*(u8*)(tex1c + 0x48) != 0)
+            GXTexObj* obj = (GXTexObj*)tex1c->gxTexObj;
+            if (tex1c->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex1c + 0x40), id);
+                GXLoadTexObjPreLoaded(obj, (GXTexRegion*)tex1c->tmemAddr, id);
             }
             else
             {
-                GXLoadTexObj((GXTexObj*)obj, id);
+                GXLoadTexObj(obj, id);
             }
         }
     }
@@ -7032,7 +7030,6 @@ void fn_8004E0FC(void)
 }
 
 extern f32 lbl_803DEAC4;
-extern void fn_8006C528(void* out);
 extern f32 lbl_803DEB2C;
 
 void renderHeavyFog(void* fogColor)
@@ -7042,7 +7039,7 @@ void renderHeavyFog(void* fogColor)
     f32 m6c[3][4];
     f32 mrot[3][4];
     IndTexMtx23 im;
-    u8* tex20;
+    Texture* tex20;
     u8* tex1c;
     f32 a;
     f32 b;
@@ -7073,14 +7070,14 @@ void renderHeavyFog(void* fogColor)
         int id = lbl_803DCD8C;
         if (tex20 != 0)
         {
-            void* obj = tex20 + 0x20;
-            if (*(u8*)(tex20 + 0x48) != 0)
+            GXTexObj* obj = (GXTexObj*)tex20->gxTexObj;
+            if (tex20->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex20 + 0x40), id);
+                GXLoadTexObjPreLoaded(obj, (GXTexRegion*)tex20->tmemAddr, id);
             }
             else
             {
-                GXLoadTexObj((GXTexObj*)obj, id);
+                GXLoadTexObj(obj, id);
             }
         }
     }
@@ -7348,7 +7345,7 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
 {
     f32 matA[3][4];
     f32 matB[3][4];
-    u8* src;
+    Texture* src;
     int color;
     int id;
     f32 f;
@@ -7382,7 +7379,7 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
         matB[2][1] = 0.0f;
         matB[2][2] = 0.0f;
         matB[2][3] = 1.0f;
-        fn_8006C540((u32*)&src);
+        fn_8006C540(&src);
         GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
         GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
         GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
@@ -7407,14 +7404,14 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
         id = lbl_803DCD8C;
         if (src != NULL)
         {
-            u8* obj = src + 0x20;
-            if (src[0x48] != 0)
+            GXTexObj* obj = (GXTexObj*)src->gxTexObj;
+            if (src->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
+                GXLoadTexObjPreLoaded(obj, (GXTexRegion*)src->tmemAddr, id);
             }
             else
             {
-                GXLoadTexObj((GXTexObj*)obj, id);
+                GXLoadTexObj(obj, id);
             }
         }
         lbl_803DCD90 = lbl_803DCD90 + 2;
@@ -7433,7 +7430,7 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
 {
     f32 matA[3][4];
     f32 matB[3][4];
-    u8* src;
+    Texture* src;
     int color;
     int id;
     f32 f;
@@ -7467,7 +7464,7 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
         matB[2][1] = 0.0f;
         matB[2][2] = 0.0f;
         matB[2][3] = 1.0f;
-        fn_8006C540((u32*)&src);
+        fn_8006C540(&src);
         GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
         GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
         GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
@@ -7492,14 +7489,14 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
         id = lbl_803DCD8C;
         if (src != NULL)
         {
-            u8* obj = src + 0x20;
-            if (src[0x48] != 0)
+            GXTexObj* obj = (GXTexObj*)src->gxTexObj;
+            if (src->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
+                GXLoadTexObjPreLoaded(obj, (GXTexRegion*)src->tmemAddr, id);
             }
             else
             {
-                GXLoadTexObj((GXTexObj*)obj, id);
+                GXLoadTexObj(obj, id);
             }
         }
         lbl_803DCD90 = lbl_803DCD90 + 2;
@@ -7519,7 +7516,7 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
 {
     f32 matA[3][4];
     f32 matB[3][4];
-    u8* src;
+    Texture* src;
     int color;
     int id;
     f32 f;
@@ -7557,7 +7554,7 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
         matB[2][1] = 0.0f;
         matB[2][2] = 0.0f;
         matB[2][3] = 1.0f;
-        fn_8006C540((u32*)&src);
+        fn_8006C540(&src);
         GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
         GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
         GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
@@ -7583,14 +7580,14 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
         id = lbl_803DCD8C;
         if (src != NULL)
         {
-            u8* obj = src + 0x20;
-            if (src[0x48] != 0)
+            GXTexObj* obj = (GXTexObj*)src->gxTexObj;
+            if (src->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
+                GXLoadTexObjPreLoaded(obj, (GXTexRegion*)src->tmemAddr, id);
             }
             else
             {
-                GXLoadTexObj((GXTexObj*)obj, id);
+                GXLoadTexObj(obj, id);
             }
         }
         lbl_803DCD90 = lbl_803DCD90 + 2;
