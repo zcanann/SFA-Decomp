@@ -112,7 +112,7 @@ f32 gHudYButtonAnimYScale = 7.0f;
 f32 gHudYButtonAnimRenderScale = 5.0f;
 f32 lbl_803DBA84 = 20.0f;
 u8 lbl_803DBA88 = 1;
-volatile s16 lbl_803DBA8A = 192;
+s16 lbl_803DBA8A = 192;
 f32 lbl_803DBA8C = 1.5f;
 s8 gHighScoreActiveTableId = -1;
 u8 gHighScoreHighlightRow = 255;
@@ -359,7 +359,7 @@ extern int lbl_803A9428[];
 extern const f32 lbl_803E1E80;
 extern int lbl_803E1E34;
 extern int lbl_803E1E38;
-extern volatile s16 lbl_803DBA8A;
+extern s16 lbl_803DBA8A;
 extern f32 lbl_803DBA8C;
 extern f32 gTrickyHudIconPosX, gTrickyHudIconPosY, gTrickyHudIconPosZ, gTrickyHudIconScale;
 extern f32 gTrickyHudIconRotZ, gTrickyHudIconRotX, gTrickyHudIconRotY, lbl_803DD7FC;
@@ -908,7 +908,7 @@ void gameUiLoadResources(void)
 
         {
             GameObject* object = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, NULL);
-            GameObject* volatile* objects = lbl_803DD868;
+            GameObject** objects = lbl_803DD868;
             objects[0] = object;
             objects[0]->anim.localPosX = lbl_803E1E3C;
             objects[0]->anim.localPosY = lbl_803E1E48;
@@ -919,7 +919,7 @@ void gameUiLoadResources(void)
 
         {
             GameObject* object = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, NULL);
-            GameObject* volatile* objects = lbl_803DD868;
+            GameObject** objects = lbl_803DD868;
             objects[1] = object;
             objects[1]->anim.localPosX = lbl_803E1E3C;
             objects[1]->anim.localPosY = lbl_803E1E54;
@@ -934,7 +934,7 @@ void gameUiLoadResources(void)
 
         {
             GameObject* object = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x756), 4, -1, -1, NULL);
-            GameObject* volatile* objects = lbl_803DD860;
+            GameObject** objects = lbl_803DD860;
             objects[1] = object;
             p = (char*)objects[1];
             ObjModel_SetRenderCallback(*(void**)*(int*)(p + 0x7c), fn_8011E0D8);
@@ -1342,8 +1342,7 @@ void pauseMenuDrawElement(void* element, f32 fx, f32 fy, int depthZ, u8 paletteI
 }
 void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
 {
-    GameObject* volatile* objs;
-    s16 sa, sb, sc;
+    int i;
     f32 mA[12];
     f32 mB[12];
     f32 pi;
@@ -1378,30 +1377,19 @@ void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
     Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
-    objs = lbl_803DD860;
-    sa = a;
-    sb = b;
-    sc = c;
-    ((GameObject*)objs[0])->anim.localPosX = gTrickyHudIconPosX;
-    ((GameObject*)objs[0])->anim.localPosY = gTrickyHudIconPosY;
-    ((GameObject*)objs[0])->anim.localPosZ = gTrickyHudIconPosZ;
-    ((GameObject*)objs[0])->anim.worldPosX = gTrickyHudIconPosX;
-    ((GameObject*)objs[0])->anim.worldPosY = gTrickyHudIconPosY;
-    ((GameObject*)objs[0])->anim.worldPosZ = gTrickyHudIconPosZ;
-    *(f32*)((u8*)objs[0] + 0x8) = f4;
-    ((GameObject*)objs[0])->anim.rotZ = sa;
-    ((GameObject*)objs[0])->anim.rotY = sb;
-    ((GameObject*)objs[0])->anim.rotX = sc;
-    ((GameObject*)objs[1])->anim.localPosX = gTrickyHudIconPosX;
-    ((GameObject*)objs[1])->anim.localPosY = gTrickyHudIconPosY;
-    ((GameObject*)objs[1])->anim.localPosZ = gTrickyHudIconPosZ;
-    ((GameObject*)objs[1])->anim.worldPosX = gTrickyHudIconPosX;
-    ((GameObject*)objs[1])->anim.worldPosY = gTrickyHudIconPosY;
-    ((GameObject*)objs[1])->anim.worldPosZ = gTrickyHudIconPosZ;
-    *(f32*)((u8*)objs[1] + 0x8) = f4;
-    ((GameObject*)objs[1])->anim.rotZ = sa;
-    ((GameObject*)objs[1])->anim.rotY = sb;
-    ((GameObject*)objs[1])->anim.rotX = sc;
+    for (i = 0; i < 2; i++)
+    {
+        lbl_803DD860[i]->anim.localPosX = gTrickyHudIconPosX;
+        lbl_803DD860[i]->anim.localPosY = gTrickyHudIconPosY;
+        lbl_803DD860[i]->anim.localPosZ = gTrickyHudIconPosZ;
+        lbl_803DD860[i]->anim.worldPosX = gTrickyHudIconPosX;
+        lbl_803DD860[i]->anim.worldPosY = gTrickyHudIconPosY;
+        lbl_803DD860[i]->anim.worldPosZ = gTrickyHudIconPosZ;
+        lbl_803DD860[i]->anim.rootMotionScale = f4;
+        lbl_803DD860[i]->anim.rotZ = a;
+        lbl_803DD860[i]->anim.rotY = b;
+        lbl_803DD860[i]->anim.rotX = c;
+    }
 }
 void gameUiResetMenuState(void)
 {
@@ -5827,7 +5815,7 @@ void pauseMenuDoSave(void)
     {
         u8 r, g, b, a;
     } colorB, colorA;
-    GameObject* volatile* objects;
+    GameObject** objects;
     u8 i;
     u8 j;
 
@@ -7400,6 +7388,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 int hintIndex;
                 u8* candidate;
                 i = 0;
+                hintIndex = -1;
                 hintCandidates = (u8*)&gGameUiTaskHintCandidates;
                 candidate = hintCandidates;
                 for (; i < GAMEUI_TASK_HINT_COUNT; i++)
@@ -7407,12 +7396,10 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                     if (mainGetBit(gTaskHintTable[*candidate].bit_id))
                     {
                         hintIndex = (s8)gGameUiTaskHintCandidates[i];
-                        goto haveIdx2;
+                        break;
                     }
                     candidate++;
                 }
-                hintIndex = -1;
-            haveIdx2:
                 firstAvailableHint = (s8)hintIndex;
                 taskCount = mainGetBit(GAMEBIT_ITEM_SpellStone3_Got);
                 taskPartial = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
@@ -7701,6 +7688,7 @@ void drawWorldMapHud(void)
             int i;
             u8* p;
             i = 0;
+            fi = -1;
             base = (u8*)(int)gGameUiTaskHintCandidates;
             p = base;
             for (; i < GAMEUI_TASK_HINT_COUNT; i++)
@@ -7708,12 +7696,10 @@ void drawWorldMapHud(void)
                 if (mainGetBit(gTaskHintTable[*p].bit_id))
                 {
                     fi = gGameUiTaskHintCandidates[i];
-                    goto haveIdx;
+                    break;
                 }
                 p++;
             }
-            fi = -1;
-        haveIdx:
             n = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) +
                 mainGetBit(GAMEBIT_ITEM_SpellStone2_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
             if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got))
@@ -8122,7 +8108,6 @@ void cMenuRun(void)
                         Sfx_PlayFromObject(0, SFXTRIG_warningloop);
                     }
                     gCMenuScrollVel = 1;
-                    goto scrolled;
                 }
             }
             if ((cy >= 0xa && gCMenuPrevStickY < 0xa) || cy > 0x3c)
@@ -8139,7 +8124,6 @@ void cMenuRun(void)
                     gCMenuScrollVel = -1;
                 }
             }
-        scrolled:
             gCMenuPrevStickY = cy;
             if (gCMenuScrollVel > 0xff)
             {
@@ -8747,6 +8731,7 @@ void GameUI_update(void)
         if (allowCStickTarget != 0)
         {
             int cxa, cya;
+            int stickMoved = 1;
             if ((s8)padGetCXS8(0) < 0)
                 cxa = -padGetCXS8(0);
             else
@@ -8758,8 +8743,9 @@ void GameUI_update(void)
                 else
                     cya = padGetCYS8(0);
                 if (cya <= 5)
-                    goto skipTarget;
+                    stickMoved = 0;
             }
+            if (stickMoved)
             {
                 int closed;
                 if (*(s8*)&cMenuOpen != 0)
@@ -8823,12 +8809,12 @@ void GameUI_update(void)
                     }
                 }
             }
-        skipTarget:;
         }
 
         flags = gCMenuButtons;
         {
             int closed;
+            int dispatched = 0;
             if ((flags & 0x20000) && tricky != 0 && (s8)cMenuState != 2)
             {
                 if (*(s8*)&cMenuOpen != 0)
@@ -8846,10 +8832,10 @@ void GameUI_update(void)
                     lbl_803DD8B7 = 2;
                     gCMenuCurSection = 2;
                     cMenuSelectFirstEnabledItem(2, 1);
-                    goto afterDispatch;
+                    dispatched = 1;
                 }
             }
-            if ((flags & 0x80000) && (s8)cMenuState != 3)
+            if (!dispatched && (flags & 0x80000) && (s8)cMenuState != 3)
             {
                 if (*(s8*)&cMenuOpen != 0)
                     closed = 0;
@@ -8868,10 +8854,10 @@ void GameUI_update(void)
                     cMenuSelectFirstEnabledItem(0, 0);
                     if (trickyProximity != 0)
                         cMenuSelectItemByTarget(0, 0xc1, 0);
-                    goto afterDispatch;
+                    dispatched = 1;
                 }
             }
-            if ((flags & 0x40000) && (s8)cMenuState != 4)
+            if (!dispatched && (flags & 0x40000) && (s8)cMenuState != 4)
             {
                 if (*(s8*)&cMenuOpen != 0)
                     closed = 0;
@@ -8888,32 +8874,20 @@ void GameUI_update(void)
                     lbl_803DD8B7 = 1;
                     gCMenuCurSection = 1;
                     cMenuSelectFirstEnabledItem(1, 0);
-                    goto afterDispatch;
+                    dispatched = 1;
                 }
             }
 
+            if (!dispatched)
             {
                 int absCx = cx < 0 ? -cx : cx;
-                if (absCx < 0xf)
-                    goto camCheck;
-                {
-                    int absPrev = lbl_803DD78E < 0 ? -lbl_803DD78E : lbl_803DD78E;
-                    if (absPrev >= 0xf)
-                        goto camCheck;
-                }
-                if (gCMenuScrollTimer != 0)
-                    goto camCheck;
+                int absPrev = lbl_803DD78E < 0 ? -lbl_803DD78E : lbl_803DD78E;
+                int absAng = angDelta < 0 ? -angDelta : angDelta;
                 if (*(s8*)&cMenuOpen == 0)
                     closed = 0;
                 else
                     closed = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
-                if (!closed)
-                    goto camCheck;
-                {
-                    int absAng = angDelta < 0 ? -angDelta : angDelta;
-                    if (absAng >= 0x2710)
-                        goto camCheck;
-                }
+                if (absCx >= 0xf && absPrev < 0xf && gCMenuScrollTimer == 0 && closed && absAng < 0x2710)
                 {
                     int dir = 1;
                     u8 next = cMenuState;
@@ -8948,14 +8922,12 @@ void GameUI_update(void)
                         *(s8*)&shouldOpenCMenu = (s8)next;
                         lbl_803DD8B7 = sectionTarget;
                     }
-                    goto afterDispatch;
+                    dispatched = 1;
                 }
             }
-        camCheck:
-            if ((*gCameraInterface)->getMode() == CAMMODE_WORLDMAP)
+            if (!dispatched && (*gCameraInterface)->getMode() == CAMMODE_WORLDMAP)
                 cMenuOpen = 0;
         }
-    afterDispatch:
 
         if ((s8)shouldOpenCMenu != 0)
         {
