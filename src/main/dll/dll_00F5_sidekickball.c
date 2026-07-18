@@ -62,7 +62,6 @@ enum SidekickBallMode
 void fn_8017962C(GameObject* obj);
 int fn_80179650(GameObject* obj);
 void fn_80179678(GameObject* obj, GameObject* source);
-void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c);
 
 
 static inline int fltEqual(f32 a, f32 b)
@@ -221,15 +220,15 @@ void fn_80179678(GameObject* obj, GameObject* source)
     state->hittableLatch = 0;
 }
 
-void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c)
+void fn_801796BC(GameObject* obj, GameObject* source, f32 velocityX, f32 velocityY, f32 velocityZ)
 {
     SidekickBallState* state = obj->extra;
     int objId;
     state->ballMode = SIDEKICK_BALL_THROWN;
     state->fadeTimer = 0.0f;
-    *(f32*)((char*)obj + 36) = a;
-    obj->anim.velocityY = b;
-    obj->anim.velocityZ = c;
+    *(f32*)((char*)obj + 36) = velocityX;
+    obj->anim.velocityY = velocityY;
+    obj->anim.velocityZ = velocityZ;
     ObjHits_EnableObject((GameObject*)(objId = (int)obj));
     ObjHits_SyncObjectPositionIfDirty((GameObject*)objId);
     state->hittableLatch = 1;

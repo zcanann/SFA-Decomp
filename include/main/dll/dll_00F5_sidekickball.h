@@ -39,6 +39,7 @@ void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* state);
 void fn_8017962C(GameObject* obj);
 int fn_80179650(GameObject* obj);
 void fn_80179678(GameObject* obj, GameObject* source);
+void fn_801796BC(GameObject* obj, GameObject* source, f32 velocityX, f32 velocityY, f32 velocityZ);
 int SidekickBall_getExtraSize(void);
 void SidekickBall_free(int obj);
 void SidekickBall_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);

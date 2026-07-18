@@ -88,15 +88,13 @@ extern f32 lbl_803E24F4;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
-extern void fn_801796BC(int slot, int obj, double a, double b, double c);
-
 void fn_8013F100(GameObject* obj, register int state)
 {
     int status;
     int extra;
     int useSwimAnim;
     s16 move;
-    double bob;
+    f32 bob;
     f32 resetTimer;
     u8* targetPos;
 
@@ -302,7 +300,7 @@ void fn_8013F100(GameObject* obj, register int state)
             status = *(int*)&((TrickyState*)state)->unk700;
             *(float*)(status + 0x10) += lbl_803E2488;
             bob = -mathCosf(lbl_803E2454 * (f32)(s32) * (short*)obj / lbl_803E2458);
-            fn_801796BC(*(int*)&((TrickyState*)state)->unk700, (int)obj,
+            fn_801796BC((GameObject*)*(int*)&((TrickyState*)state)->unk700, obj,
                         -mathSinf(lbl_803E2454 * (f32)(s32) * (short*)obj / lbl_803E2458), lbl_803E23E8, bob);
             ((TrickyState*)state)->substate = 2;
         }
