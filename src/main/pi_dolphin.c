@@ -20,6 +20,7 @@
 #include "main/pad.h"
 #include "main/pi_data_file_api.h"
 #include "main/pi_flush_api.h"
+#include "main/pi_dolphin_texture_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/os/OSResetSW.h"
 #include "dolphin/gx/GXCull.h"
@@ -3634,7 +3635,7 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
     }
 }
 
-void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
+void tex1GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
 {
     int idx = -1;
     if (lbl_8035F3E8[0x20] != 0 || lbl_8035F3E8[0x4b] != 0)
@@ -3789,7 +3790,7 @@ void tex0GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* fr
 }
 
 
-void texPreGetMipmap(u32 texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
+void texPreGetMipmap(int texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
 {
     u32 base = lbl_8035F3E8[0x4f];
     if (base != 0)

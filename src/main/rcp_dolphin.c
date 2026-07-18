@@ -35,6 +35,7 @@
 #include "main/mm_ext.h"
 #include "main/newshadows_ext.h"
 #include "main/pi_dolphin_load_api.h"
+#include "main/pi_dolphin_texture_api.h"
 #include "main/gx_scissor_api.h"
 #include "string.h"
 
@@ -195,9 +196,6 @@ extern f32 lbl_803DEB80;
 extern f32 gRcpScreenWidth;
 extern f32 gRcpScreenHeight;
 extern u8 gRcpTexAllocFailed;
-extern void tex1GetFrame(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
-extern void texPreGetMipmap(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
-
 void* textureLoadAsset(int asset);
 void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter);
 static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights);
