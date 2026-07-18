@@ -2918,7 +2918,7 @@ void pauseMenuDrawStatus(void)
     if ((((lbl_803DD792 & 1) != 0) ||
          ((lbl_803E1E3C == (*gScreenTransitionInterface)->getProgress()) &&
           ((*gCameraInterface)->getMode() != CAMMODE_VIEWFINDER) &&
-          ((*(u16*)(player + 0xB0) & 0x1000) == 0) && (getHudHiddenFrameCount() == 0) && (lbl_803DD75B == 0))) &&
+          ((((GameObject*)player)->objectFlags & 0x1000) == 0) && (getHudHiddenFrameCount() == 0) && (lbl_803DD75B == 0))) &&
         (pauseMenuState == 0))
     {
         lbl_803DD83C = lbl_803E1FA0 * timeDelta + lbl_803DD83C;
@@ -2949,7 +2949,7 @@ void pauseMenuDrawStatus(void)
         case HUD_STATUS_FIREFLIES:
         case HUD_STATUS_MOON_SEEDS:
         case HUD_STATUS_FUEL_CELLS:
-            if ((((f32*)(base + 0xAFC))[i] >= lbl_803E1E3C && ((*(u16*)(player + 0xB0) & 0x1000) == 0) &&
+            if ((((f32*)(base + 0xAFC))[i] >= lbl_803E1E3C && ((((GameObject*)player)->objectFlags & 0x1000) == 0) &&
                  (pauseMenuState == 0) && ((u32)airMeter == 0) && (getHudHiddenFrameCount() == 0) &&
                  ((*gCameraInterface)->getMode() != CAMMODE_VIEWFINDER)) ||
                 ((i == HUD_STATUS_SCARABS) && ((lbl_803DD792 & 2) != 0)))
@@ -3898,8 +3898,8 @@ int cMenuRingModelRenderFn(int obj, int block, int idx)
     *(u32*)cfg = lbl_803E1E14;
     renderOp = (int)ObjModel_GetRenderOp((ModelFileHeader*)*(int*)block, idx);
     resetLotsOfRenderVars();
-    cfg[3] = *(u8*)(obj + 0x37);
-    gxFn_80051fb8IntLegacy(textureIdxToPtr(*(int*)(renderOp + 0x24)), 0, 0, cfg, 0, 1);
+    cfg[3] = ((GameObject*)obj)->anim.renderAlpha;
+    gxFn_80051fb8IntLegacy(textureIdxToPtr(((ModelRenderOp*)renderOp)->textureId), 0, 0, cfg, 0, 1);
     textureFn_800528bc();
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetZMode_(0, GX_ALWAYS, 0);
@@ -3920,11 +3920,11 @@ int cMenuRingIconRenderFn(int obj, int block, int idx)
     {
         if (gCMenuRingIconActiveFlags[slotIdx] != 0)
         {
-            cfg[3] = *(u8*)(obj + 0x37);
+            cfg[3] = ((GameObject*)obj)->anim.renderAlpha;
         }
         else
         {
-            cfg[3] = lbl_803E2010 * (f32)(u32) * (u8*)(obj + 0x37);
+            cfg[3] = lbl_803E2010 * (f32)(u32)((GameObject*)obj)->anim.renderAlpha;
         }
         gxFn_80051fb8IntLegacy(tex, 0, 0, cfg, 0, 1);
     }
@@ -4018,11 +4018,11 @@ void hudDrawCMenu(int p1, int p2, int p3)
             break;
         }
         model = (int)Obj_GetActiveModel(gCMenuRingObjs[sel]);
-        *(u16*)(model + 0x18) &= ~8;
-        *(u8*)((u8*)gCMenuRingObjs[sel] + 0x37) = cMenuFadeCounter;
+        ((ObjModel*)model)->bufferFlags &= ~8;
+        gCMenuRingObjs[sel]->anim.renderAlpha = cMenuFadeCounter;
         model = (int)Obj_GetActiveModel(gCMenuRingFrontObjs[sel]);
-        *(u16*)(model + 0x18) &= ~8;
-        *(u8*)((u8*)gCMenuRingFrontObjs[sel] + 0x37) = cMenuFadeCounter * lbl_803DD8D4 / 0xff;
+        ((ObjModel*)model)->bufferFlags &= ~8;
+        gCMenuRingFrontObjs[sel]->anim.renderAlpha = cMenuFadeCounter * lbl_803DD8D4 / 0xff;
         if (best > lbl_803E1E3C)
         {
             objRender(p1, p2, p3, zero, gCMenuRingObjs[sel], 1);
@@ -4183,8 +4183,8 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2)
     hudDrawTimedElement(obj, &lbl_803A9398);
     if ((void*)tricky != 0)
     {
-        gTrickyHudItemMask = (*(int (**)(int))(*(int*)(*(int*)(tricky + 0x68)) + 0x24))(tricky);
-        gTrickyHudActionMask = (*(int (**)(int))(*(int*)(*(int*)(tricky + 0x68)) + 0x20))(tricky);
+        gTrickyHudItemMask = (*(int (**)(int))((char*)*((GameObject*)tricky)->anim.dll + 0x24))(tricky);
+        gTrickyHudActionMask = (*(int (**)(int))((char*)*((GameObject*)tricky)->anim.dll + 0x20))(tricky);
     }
     else
     {
@@ -4196,7 +4196,7 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2)
         (((GameObject*)player)->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 && pauseMenuState == 0 &&
         (void*)tricky != 0 && getHudHiddenFrameCount() == 0)
     {
-        (*(int (**)(int, int*))(*(int*)(*(int*)(tricky + 0x68)) + 0x48))(tricky, &iconIndex);
+        (*(int (**)(int, int*))((char*)*((GameObject*)tricky)->anim.dll + 0x48))(tricky, &iconIndex);
         if (gTrickyHudCachedIconTexture != 0)
         {
             if (gTrickyHudCachedIconIndex != iconIndex)

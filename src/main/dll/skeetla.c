@@ -800,7 +800,7 @@ void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelec
             if (candidates[count] != NULL)
             {
                 entry = candidates[count];
-                if ((linkSelector == 0) || (*(u8*)((u8*)routeDef + 4 + count) == linkSelector))
+                if ((linkSelector == 0) || (((ObjfsaRomCurveDef*)routeDef)->linkSelectors[count] == linkSelector))
                 {
                     requiredBit = ((ObjfsaRomCurveDef*)entry)->requiredBit;
                     if ((requiredBit == -1) || (mainGetBit(requiredBit) != 0))
@@ -808,7 +808,7 @@ void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelec
                         forbiddenBit = ((ObjfsaRomCurveDef*)entry)->forbiddenBit;
                         if ((forbiddenBit == -1) || (mainGetBit(forbiddenBit) == 0))
                         {
-                            if (((s8)routeDef[0x1a] != 9) || (*(s8*)((u8*)entry + 0x1a) != 8))
+                            if ((((ObjfsaRomCurveDef*)routeDef)->unk1A != 9) || (((ObjfsaRomCurveDef*)entry)->unk1A != 8))
                             {
                                 count++;
                             }
@@ -1004,12 +1004,12 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
             for (j = 0; j < 4; j++)
             {
                 linkCurveId = ((ObjfsaRomCurveDef*)curve)->linkIds[j];
-                if ((linkCurveId > -1) && (*(u8*)((u8*)curve + 4 + j) == linkSelector))
+                if ((linkCurveId > -1) && (((ObjfsaRomCurveDef*)curve)->linkSelectors[j] == linkSelector))
                 {
-                    if (*(s8*)((u8*)curve + 0x1a) == 8)
+                    if (((ObjfsaRomCurveDef*)curve)->unk1A == 8)
                     {
                         linkedCurve = (*gRomCurveInterface)->getById(linkCurveId);
-                        if ((linkedCurve != NULL) && (*(s8*)((u8*)linkedCurve + 0x1a) == 9))
+                        if ((linkedCurve != NULL) && (((ObjfsaRomCurveDef*)linkedCurve)->unk1A == 9))
                         {
                             continue;
                         }

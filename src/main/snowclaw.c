@@ -163,7 +163,7 @@ void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int us
     if (Obj_IsLoadingLocked() != 0)
     {
         obj2 = (int)Obj_AllocObjectSetup(0x24, SNOWCLAW_CHILD_OBJ_DROP_BOMB);
-        *(s16*)(obj2 + 0x0) = SNOWCLAW_CHILD_OBJ_DROP_BOMB;
+        ((ObjPlacement*)obj2)->objectId = SNOWCLAW_CHILD_OBJ_DROP_BOMB;
         ((ObjPlacement*)obj2)->color[0] = 2;
         ((ObjPlacement*)obj2)->color[2] = 0xff;
         ((ObjPlacement*)obj2)->color[1] = 1;
@@ -214,9 +214,9 @@ void snowclaw_updateMountAttack(GameObject* obj, int mount)
     int delay;
 
     inner = (obj)->extra;
-    movePhase = (*(f32 (*)(int, f32*))(*(int*)(*(int*)(*(int*)(mount + 0x68)) + 0x44)))(mount, &moveStep);
+    movePhase = (*(f32 (**)(int, f32*))((char*)*((GameObject*)mount)->anim.dll + 0x44))(mount, &moveStep);
     moveStep = lbl_803DC224 + 2.0f * (movePhase * lbl_803DC224);
-    (*(void (*)(int, f32*, int*))(*(int*)(*(int*)(*(int*)(mount + 0x68)) + 0x40)))(mount, &mountPhase, &mountFlag);
+    (*(void (**)(int, f32*, int*))((char*)*((GameObject*)mount)->anim.dll + 0x40))(mount, &mountPhase, &mountFlag);
     magnitude = (int)(16384.0f * mountPhase);
     if (magnitude < 0)
     {

@@ -31,6 +31,7 @@
 #include "main/lightmap_api.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_state.h"
 #include "main/object_update_list.h"
 #include "main/track_dolphin_api.h"
 #include "main/track_bbox_api.h"
@@ -182,17 +183,17 @@ void gunpowderbarrel_launchAtTarget(GameObject *obj, u8 flag)
     u32* p;
     int count;
     GunpowderBarrelState* state = (obj)->extra;
-    u8* playerState;
+    PlayerState* playerState;
     s16 stk[8];
     f32 fz;
     f32 sx, sy, sz;
 
-    playerState = (u8*)((GameObject*)Obj_GetPlayerObject())->extra;
+    playerState = ((GameObject*)Obj_GetPlayerObject())->extra;
     state->throwVelX = 0.0f;
     if (flag != 0)
     {
-        state->throwVelY = lbl_803E42C8 * *(f32*)(playerState + 0x298) + lbl_803E42C4;
-        state->throwVelZ = lbl_803E42D0 * *(f32*)(playerState + 0x298) + lbl_803E42CC;
+        state->throwVelY = lbl_803E42C8 * playerState->baddie.inputMagnitude + lbl_803E42C4;
+        state->throwVelZ = lbl_803E42D0 * playerState->baddie.inputMagnitude + lbl_803E42CC;
     }
     else
     {

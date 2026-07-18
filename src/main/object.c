@@ -1635,14 +1635,14 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
         extra = 0x8e0;
         break;
     default:
-        extra = 0;
-        if (*(int**)((u8*)tmpl + 0x68) != 0)
+        if (*(int**)((u8*)tmpl + 0x68) != 0 &&
+            (cb = (int (*)(void*, int)) * (int*)(**(int**)((u8*)tmpl + 0x68) + 0x1c)) != 0)
         {
-            cb = (int (*)(void*, int)) * (int*)(**(int**)((u8*)tmpl + 0x68) + 0x1c);
-            if (cb != 0)
-            {
-                extra = cb(tmpl, size);
-            }
+            extra = cb(tmpl, size);
+        }
+        else
+        {
+            extra = 0;
         }
         break;
     }

@@ -93,13 +93,18 @@ enum MMSHShrinePhase
 
 typedef struct DFSHLaserBeamConfig
 {
-    u8 pad00[0x18];
+    u8 pad00[0x0C];
+    f32 baseHeight;
+    u8 pad10[0x18 - 0x10];
     s8 yawByte;
     u8 proximityMode;
     s16 rangeAngle;
     u8 pad1C[0x1E - 0x1C];
     s16 disableGameBit;
 } DFSHLaserBeamConfig;
+STATIC_ASSERT(offsetof(DFSHLaserBeamConfig, baseHeight) == 0x0C);
+STATIC_ASSERT(offsetof(DFSHLaserBeamConfig, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(DFSHLaserBeamConfig, disableGameBit) == 0x1E);
 
 typedef struct DFSHLaserBeamRuntime
 {
@@ -253,7 +258,7 @@ void fn_801C4664(void* objArg)
     if ((obj->flags06 & OBJANIM_FLAG_HIDDEN) != 0)
     {
         obj->yaw = 0;
-        obj->localPosY = *(f32*)((u8*)config + 0xC);
+        obj->localPosY = config->baseHeight;
         return;
     }
 
@@ -262,7 +267,7 @@ void fn_801C4664(void* objArg)
     DFSH_LASER_ORBIT_C(runtime) = (s16)(DFSH_LASER_ORBIT_C(runtime) + (int)(192.0f * timeDelta));
 
     obj->localPosY =
-        20.0f + (*(f32*)((u8*)config + 0xC) +
+        20.0f + (config->baseHeight +
                         mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale));
 
     trigA = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_B(runtime)) / gLaserBeamOrbitAngleScale);

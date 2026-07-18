@@ -640,7 +640,7 @@ int Tricky_func10(int* obj, int targetObj)
                 m = ~0x400;
                 state[0x54 / 4] = f2 & m;
             }
-            *(s16*)((u8*)state + 0xd2) = 0;
+            ((TrickyState*)state)->linkedWalkGroup = 0;
         }
         *((u8*)state + 10) = 0;
         *((u8*)state + 8) = 10;
@@ -676,7 +676,7 @@ void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
                 return;
             }
             state[0x700 / 4] = (int)Objfsa_FindNearestEnabledCurveType24((void*)(targetObj + 0x18), -1, 3);
-            *(f32*)((u8*)state + 0x710) = (f32)(int)randomGetRange(0x168, 0x28);
+            ((TrickyState*)state)->unk710 = (f32)(int)randomGetRange(0x168, 0x28);
             *((u8*)state + 8) = 5;
             state[0x24 / 4] = targetObj;
             nextTarget = (void*)(state[0x700 / 4] + 8);
@@ -684,7 +684,7 @@ void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
             {
                 state[0x28 / 4] = (int)nextTarget;
                 *(u32*)&state[0x54 / 4] &= ~0x400LL;
-                *(s16*)((u8*)state + 0xd2) = 0;
+                ((TrickyState*)state)->linkedWalkGroup = 0;
             }
             *((u8*)state + 10) = 0;
         }

@@ -126,7 +126,7 @@ void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, 
     vec[0] = x;
     vec[1] = y;
     vec[2] = z;
-    matrixIndex = *(s8*)(obj + 0x35) << 4;
+    matrixIndex = ((GameObject*)obj)->anim.transformMatrixIndex << 4;
     Matrix_TransformVector((f32*)((u8*)gObjYawTransformMatrices + (matrixIndex << 2)), vec, vec);
     *outX = vec[0];
     *outY = vec[1];
@@ -141,7 +141,7 @@ void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, 
     vec[0] = x;
     vec[1] = y;
     vec[2] = z;
-    matrixIndex = *(s8*)(obj + 0x35) << 4;
+    matrixIndex = ((GameObject*)obj)->anim.transformMatrixIndex << 4;
     Matrix_TransformVector((f32*)((u8*)gObjInverseYawTransformMatrices + (matrixIndex << 2)), vec, vec);
     *outX = vec[0];
     *outY = vec[1];
@@ -154,7 +154,7 @@ void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f
 
     if (obj != 0)
     {
-        matrixIndex = *(s8*)(obj + 0x35) << 4;
+        matrixIndex = ((GameObject*)obj)->anim.transformMatrixIndex << 4;
         Matrix_TransformPoint((f32*)((u8*)gObjInverseYawTransformMatrices + (matrixIndex << 2)), x, y, z, outX, outY,
                               outZ);
     }
@@ -172,7 +172,7 @@ void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f
 
     if (obj != 0)
     {
-        matrixIndex = *(s8*)(obj + 0x35) << 4;
+        matrixIndex = ((GameObject*)obj)->anim.transformMatrixIndex << 4;
         Matrix_TransformPoint((f32*)((u8*)gObjYawTransformMatrices + (matrixIndex << 2)), x, y, z, outX, outY, outZ);
     }
     else
@@ -197,7 +197,7 @@ void Obj_GetWorldPosition(u32 obj, f32* outX, f32* outY, f32* outZ)
     }
     else
     {
-        matrixIndex = *(s8*)(parent + 0x35) << 4;
+        matrixIndex = ((GameObject*)parent)->anim.transformMatrixIndex << 4;
         Matrix_TransformPoint((f32*)((u8*)gObjYawTransformMatrices + (matrixIndex << 2)),
                               ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                               ((GameObject*)obj)->anim.localPosZ, outX, outY, outZ);
@@ -1113,7 +1113,7 @@ void Camera_InitState(void)
         *(f32*)((u8*)slot + 0x24) = lbl_803DE60C;
         *(f32*)((u8*)slot + 0x28) = lbl_803DE60C;
         slot->shakeMagnitude = lbl_803DE60C;
-        *(u32*)((u8*)slot + 0x40) = 0;
+        slot->parentObject = NULL;
         *(s16*)((u8*)slot + 0x5A) = 0;
         *(f32*)((u8*)slot + 0x18) = lbl_803DE610;
     }

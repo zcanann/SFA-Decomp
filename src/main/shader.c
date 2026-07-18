@@ -1800,7 +1800,7 @@ void doPendingMapLoads(void)
                 if (gShaderRomListSlotCount > 0)
                 {
                     s8* q = (s8*)(base + 0x418C);
-                    for (; i < gShaderRomListSlotCount; i++)
+                    for (i = 0; i < gShaderRomListSlotCount; i++)
                     {
                         q[6] = 0;
                         q += 8;

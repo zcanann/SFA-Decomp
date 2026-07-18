@@ -62,7 +62,7 @@ int FireFlyLantern_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
                 child = state->fireflies[state->fireflyCount - 1];
                 if (child != 0)
                 {
-                    (*(void (*)(void*))(*(int*)(*(int*)(*(int*)((u8*)child + 0x68)) + 0x24)))(child);
+                    (*(void (**)(void*))((char*)*child->anim.dll + 0x24))(child);
                 }
                 --state->fireflyCount;
                 --state->remainingCount;
@@ -78,7 +78,7 @@ int FireFlyLantern_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
     while (i < state->fireflyCount)
     {
         child = state->fireflies[i];
-        (*(void (*)(void*, f32, f32, f32))(*(int*)(*(int*)(*(int*)((u8*)child + 0x68)) + 0x28)))(
+        (*(void (**)(void*, f32, f32, f32))((char*)*child->anim.dll + 0x28))(
             child, obj->anim.localPosX, lbl_803E3AEC + obj->anim.localPosY, obj->anim.localPosZ);
         i++;
     }
@@ -130,7 +130,7 @@ void FireFlyLantern_update(GameObject* obj)
             child = state->fireflies[0];
             if (child != 0)
             {
-                (*(void (*)(void*))(*(int*)(*(int*)(*(int*)((u8*)child + 0x68)) + 0x24)))(child);
+                (*(void (**)(void*))((char*)*child->anim.dll + 0x24))(child);
             }
             gameBitDecrement(state->gameBit);
         }

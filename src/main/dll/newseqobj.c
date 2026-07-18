@@ -56,6 +56,26 @@ typedef struct
     u16 padA;  /* 0xa */
 } IdleRow;
 
+typedef struct SeqObj11EState
+{
+    u8 pad0[0x323];
+    u8 animFlags; /* 0x323 */
+    f32 unk324;   /* 0x324 */
+    f32 seqTimer; /* 0x328 */
+    f32 unk32C;   /* 0x32c */
+    f32 unk330;   /* 0x330 */
+    f32 unk334;   /* 0x334 */
+    u16 seqNode;  /* 0x338 */
+} SeqObj11EState;
+
+STATIC_ASSERT(offsetof(SeqObj11EState, animFlags) == 0x323);
+STATIC_ASSERT(offsetof(SeqObj11EState, unk324) == 0x324);
+STATIC_ASSERT(offsetof(SeqObj11EState, seqTimer) == 0x328);
+STATIC_ASSERT(offsetof(SeqObj11EState, unk32C) == 0x32c);
+STATIC_ASSERT(offsetof(SeqObj11EState, unk330) == 0x330);
+STATIC_ASSERT(offsetof(SeqObj11EState, unk334) == 0x334);
+STATIC_ASSERT(offsetof(SeqObj11EState, seqNode) == 0x338);
+
 u8 sidekickToy_handleHitMessage(GameObject* obj, u8* state, GameObject* attacker, int msgId, int arrIdx, int damage,
                                 Vec* hitPos, int sector, f32 hDist, f32 vDist)
 {
@@ -113,10 +133,10 @@ u8 sidekickToy_handleHitMessage(GameObject* obj, u8* state, GameObject* attacker
                 state[0x33a] = rowsC[state[0x33c] * 12 + 0xa];
             }
             ret = rowsC[state[0x33c] * 12 + 9];
-            *(f32*)(state + 0x32c) = *(f32*)(state + 0x330);
+            ((SeqObj11EState*)state)->unk32C = ((SeqObj11EState*)state)->unk330;
             z = lbl_803E2740;
-            *(f32*)(state + 0x324) = z;
-            *(f32*)(state + 0x334) = z;
+            ((SeqObj11EState*)state)->unk324 = z;
+            ((SeqObj11EState*)state)->unk334 = z;
         }
     }
     else
@@ -137,33 +157,33 @@ u8 sidekickToy_handleHitMessage(GameObject* obj, u8* state, GameObject* attacker
             }
         }
         z = lbl_803E2740;
-        *(f32*)(state + 0x324) = z;
+        ((SeqObj11EState*)state)->unk324 = z;
         if (state[0x2f1] & 0x18)
         {
             if (state[0x2f1] & 1)
             {
-                *(f32*)(state + 0x334) = 50.0f;
+                ((SeqObj11EState*)state)->unk334 = 50.0f;
             }
             else
             {
-                *(f32*)(state + 0x334) = 30.0f;
+                ((SeqObj11EState*)state)->unk334 = 30.0f;
             }
         }
         else
         {
-            *(f32*)(state + 0x334) = z;
+            ((SeqObj11EState*)state)->unk334 = z;
         }
-        if (*(f32*)(state + 0x328) != lbl_803E2740 && *(u16*)(state + 0x338) != 0)
+        if (((SeqObj11EState*)state)->seqTimer != lbl_803E2740 && ((SeqObj11EState*)state)->seqNode != 0)
         {
             {
                 SeqRow16* rows = (SeqRow16*)rowsB;
-                Baddie_SetMove(obj, state, rows[rowsB[*(u16*)(state + 0x338) * 16 + 0xb]].anim,
-                               *(f32*)(rowsB + rowsB[*(u16*)(state + 0x338) * 16 + 0xb] * 16), 0,
-                               (u8)rows[rowsB[*(u16*)(state + 0x338) * 16 + 0xb]].flags);
+                Baddie_SetMove(obj, state, rows[rowsB[((SeqObj11EState*)state)->seqNode * 16 + 0xb]].anim,
+                               *(f32*)(rowsB + rowsB[((SeqObj11EState*)state)->seqNode * 16 + 0xb] * 16), 0,
+                               (u8)rows[rowsB[((SeqObj11EState*)state)->seqNode * 16 + 0xb]].flags);
             }
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                 (ObjAnimComponent*)obj,
-                *(f32*)(lbl_8031DD30 + rowsB[rowsB[*(u16*)(state + 0x338) * 16 + 0xb] * 16 + 8] * 4));
+                *(f32*)(lbl_8031DD30 + rowsB[rowsB[((SeqObj11EState*)state)->seqNode * 16 + 0xb] * 16 + 8] * 4));
         }
         else
         {
@@ -174,8 +194,8 @@ u8 sidekickToy_handleHitMessage(GameObject* obj, u8* state, GameObject* attacker
                            (u8)rows[(u8)amount].flags);
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
                 (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + rows[(u8)amount].anim * 4));
-            *(u16*)(state + 0x338) = animRows[off + 9];
-            *(f32*)(state + 0x328) = (f32)(u32) * (u16*)(state + 0x2ec);
+            ((SeqObj11EState*)state)->seqNode = animRows[off + 9];
+            ((SeqObj11EState*)state)->seqTimer = (f32)(u32) * (u16*)(state + 0x2ec);
         }
         ((BaddieState*)state)->reactionFlags |= 8;
         if (attacker->anim.classId == 0x1c)
@@ -248,16 +268,16 @@ void fn_80150910(int* obj, u8* state)
     }
     ((void (*)(GameObject*, void*))fn_8015039C)((GameObject*)(obj), state);
     {
-        f32 t = *(f32*)(state + 0x328);
+        f32 t = ((SeqObj11EState*)state)->seqTimer;
         f32 z = lbl_803E2740;
-        if (t != z && *(u16*)(state + 0x338) != 0)
+        if (t != z && ((SeqObj11EState*)state)->seqNode != 0)
         {
-            *(f32*)(state + 0x328) = t - timeDelta;
-            if (*(f32*)(state + 0x328) <= z)
+            ((SeqObj11EState*)state)->seqTimer = t - timeDelta;
+            if (((SeqObj11EState*)state)->seqTimer <= z)
             {
-                *(f32*)(state + 0x328) = z;
+                ((SeqObj11EState*)state)->seqTimer = z;
                 ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
-                *(u16*)(state + 0x338) = tbl1c[*(u16*)(state + 0x338) * 16 + 0xa];
+                ((SeqObj11EState*)state)->seqNode = tbl1c[((SeqObj11EState*)state)->seqNode * 16 + 0xa];
             }
         }
     }
@@ -341,15 +361,15 @@ void fn_80150910(int* obj, u8* state)
         }
         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) && state[0x33d] == 0)
         {
-            if (*(u16*)(state + 0x338) != 0)
+            if (((SeqObj11EState*)state)->seqNode != 0)
             {
                 SeqRow16* seqRow16 = (SeqRow16*)tbl1c;
-                Baddie_SetMove(obj, state, seqRow16[*(u16*)(state + 0x338)].anim,
-                               *(f32*)(tbl1c + *(u16*)(state + 0x338) * 16), 0,
-                               (u8)seqRow16[*(u16*)(state + 0x338)].flags);
+                Baddie_SetMove(obj, state, seqRow16[((SeqObj11EState*)state)->seqNode].anim,
+                               *(f32*)(tbl1c + ((SeqObj11EState*)state)->seqNode * 16), 0,
+                               (u8)seqRow16[((SeqObj11EState*)state)->seqNode].flags);
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                    (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + tbl1c[*(u16*)(state + 0x338) * 16 + 8] * 4));
-                *(u16*)(state + 0x338) = tbl1c[*(u16*)(state + 0x338) * 16 + 9];
+                    (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + tbl1c[((SeqObj11EState*)state)->seqNode * 16 + 8] * 4));
+                ((SeqObj11EState*)state)->seqNode = tbl1c[((SeqObj11EState*)state)->seqNode * 16 + 9];
             }
             else if (*(f32*)(state + 0x310) > 0.0001f)
             {
@@ -358,12 +378,12 @@ void fn_80150910(int* obj, u8* state)
                 state[0x2f4] = 0;
                 if (*(f32*)(state + 0x310) > 1.2f)
                 {
-                    state[0x323] = 1;
+                    ((SeqObj11EState*)state)->animFlags = 1;
                     ObjAnim_SetCurrentMove((int)obj, tbl0[0x20], lbl_803E2740, 0);
                 }
                 else
                 {
-                    state[0x323] = 1;
+                    ((SeqObj11EState*)state)->animFlags = 1;
                     ObjAnim_SetCurrentMove((int)obj, tbl0[0x14], lbl_803E2740, 0);
                 }
             }
@@ -372,7 +392,7 @@ void fn_80150910(int* obj, u8* state)
                 state[0x2f2] = 0;
                 state[0x2f3] = 0;
                 state[0x2f4] = 0;
-                state[0x323] = 1;
+                ((SeqObj11EState*)state)->animFlags = 1;
                 *(f32*)(state + 0x308) = 0.01f;
                 ObjAnim_SetCurrentMove((int)obj, tbl0[8], lbl_803E2740, 0);
                 *(f32*)(state + 0x310) = lbl_803E2740;
@@ -385,18 +405,18 @@ void fn_80150910(int* obj, u8* state)
         if (state[0x33d] == 0 && (flags & BADDIE_CONTROL_SEQUENCE_DRIVEN))
         {
             u8 r = randomGetRange(1, tbl4[8]);
-            if (*(u16*)(state + 0x338) != 0)
+            if (((SeqObj11EState*)state)->seqNode != 0)
             {
                 {
                     SeqRow16* seqRow16 = (SeqRow16*)tbl1c;
-                    state[0x2f2] = (u8)seqRow16[*(u16*)(state + 0x338)].extra;
-                    Baddie_SetMove(obj, state, seqRow16[*(u16*)(state + 0x338)].anim,
-                                   *(f32*)(tbl1c + *(u16*)(state + 0x338) * 16), 0,
-                                   (u8)seqRow16[*(u16*)(state + 0x338)].flags);
+                    state[0x2f2] = (u8)seqRow16[((SeqObj11EState*)state)->seqNode].extra;
+                    Baddie_SetMove(obj, state, seqRow16[((SeqObj11EState*)state)->seqNode].anim,
+                                   *(f32*)(tbl1c + ((SeqObj11EState*)state)->seqNode * 16), 0,
+                                   (u8)seqRow16[((SeqObj11EState*)state)->seqNode].flags);
                 }
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                    (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + tbl1c[*(u16*)(state + 0x338) * 16 + 8] * 4));
-                *(u16*)(state + 0x338) = tbl1c[*(u16*)(state + 0x338) * 16 + 9];
+                    (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + tbl1c[((SeqObj11EState*)state)->seqNode * 16 + 8] * 4));
+                ((SeqObj11EState*)state)->seqNode = tbl1c[((SeqObj11EState*)state)->seqNode * 16 + 9];
             }
             else
             {
@@ -442,17 +462,17 @@ void fn_80150EDC(GameObject* obj, void* state)
     ((void (*)(GameObject*, void*))fn_8015039C)(obj, state);
 
     {
-        if (*(f32*)((u8*)state + 0x328) != lbl_803E2740 && *(u16*)((u8*)state + 0x338) != 0)
+        if (((SeqObj11EState*)state)->seqTimer != lbl_803E2740 && ((SeqObj11EState*)state)->seqNode != 0)
         {
             f32 zero = lbl_803E2740;
-            *(f32*)((u8*)state + 0x328) = *(f32*)((u8*)state + 0x328) - timeDelta;
-            if (*(f32*)((u8*)state + 0x328) <= zero)
+            ((SeqObj11EState*)state)->seqTimer = ((SeqObj11EState*)state)->seqTimer - timeDelta;
+            if (((SeqObj11EState*)state)->seqTimer <= zero)
             {
-                *(f32*)((u8*)state + 0x328) = zero;
+                ((SeqObj11EState*)state)->seqTimer = zero;
                 ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
                 {
                     SeqRow16* seqRow16 = (SeqRow16*)seqRows;
-                    *(u16*)((u8*)state + 0x338) = seqRow16[*(u16*)((u8*)state + 0x338)].alt;
+                    ((SeqObj11EState*)state)->seqNode = seqRow16[((SeqObj11EState*)state)->seqNode].alt;
                 }
             }
         }
@@ -472,15 +492,15 @@ void fn_80150EDC(GameObject* obj, void* state)
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         SeqRow16* seqRow16 = (SeqRow16*)seqRows;
-        if (*(u16*)((u8*)state + 0x338) != 0)
+        if (((SeqObj11EState*)state)->seqNode != 0)
         {
-            *(u8*)((u8*)state + 0x2f2) = seqRow16[*(u16*)((u8*)state + 0x338)].extra;
-            Baddie_SetMove(obj, state, seqRow16[*(u16*)((u8*)state + 0x338)].anim,
-                           *(f32*)(seqRows + (*(u16*)((u8*)state + 0x338) << 4)), 0,
-                           (u8)seqRow16[*(u16*)((u8*)state + 0x338)].flags);
+            *(u8*)((u8*)state + 0x2f2) = seqRow16[((SeqObj11EState*)state)->seqNode].extra;
+            Baddie_SetMove(obj, state, seqRow16[((SeqObj11EState*)state)->seqNode].anim,
+                           *(f32*)(seqRows + (((SeqObj11EState*)state)->seqNode << 4)), 0,
+                           (u8)seqRow16[((SeqObj11EState*)state)->seqNode].flags);
             ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                (ObjAnimComponent*)obj, *(f32*)(table + (seqRow16[*(u16*)((u8*)state + 0x338)].anim << 2)));
-            *(u16*)((u8*)state + 0x338) = seqRow16[*(u16*)((u8*)state + 0x338)].next;
+                (ObjAnimComponent*)obj, *(f32*)(table + (seqRow16[((SeqObj11EState*)state)->seqNode].anim << 2)));
+            ((SeqObj11EState*)state)->seqNode = seqRow16[((SeqObj11EState*)state)->seqNode].next;
         }
         else
         {
@@ -492,7 +512,7 @@ void fn_80150EDC(GameObject* obj, void* state)
             idleAnim = idleRows[*(u16*)((u8*)state + 0x2a0)].anim;
             if (idleAnim == 0)
             {
-                *(u8*)((u8*)state + 0x323) = 3;
+                ((SeqObj11EState*)state)->animFlags = 3;
                 ObjAnim_SetCurrentMove((int)obj, *(u8*)((u8*)animCtrl + 0x2c), lbl_803E2740, 0);
             }
             else
@@ -516,7 +536,7 @@ void fn_80150EDC(GameObject* obj, void* state)
         }
     }
 
-    if ((*(u8*)((u8*)state + 0x323) & 8) == 0)
+    if ((((SeqObj11EState*)state)->animFlags & 8) == 0)
     {
         void* tracked = ((BaddieState*)state)->trackedObj;
         fn_8014CF7C((GameObject*)obj, (int)state, ((GameObject*)tracked)->anim.localPosX,
