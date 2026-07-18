@@ -970,7 +970,7 @@ void SaveGame_updateTimes(void)
     p = base;
     while (i < ((SaveGameData*)base)->timeEntryCount)
     {
-        if (((SaveGameData*)base)->playTime > ((SaveGameTimeEntry*)(p + 0x6f0))->time)
+        if (((SaveGameData*)base)->playTime > ((SaveGameData*)p)->timeEntries[0].time)
         {
             cnt = (((SaveGameData*)base)->timeEntryCount -= 1);
             ((SaveGameTimeEntry*)(p + 0x6f0))->objId = ((SaveGameTimeEntry*)(base + 0x6f0))[cnt].objId;
