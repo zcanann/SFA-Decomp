@@ -3051,21 +3051,7 @@ void ObjModel_InitResourceCaches(void)
     loadModelAndAnimTabs();
 }
 
-void ObjModel_InitScratchBuffers(void)
-{
-    u8* c = getCache();
-    gModelCacheBuffersA[0] = c;
-    gModelCacheBuffersA[1] = c + 0x1000;
-    gModelCacheBuffersA[2] = c + 0x2000;
-    gModelCacheBuffersA[3] = c + 0x3000;
-    c = getCache();
-    gModelCacheBuffersB[0] = c;
-    gModelCacheBuffersB[1] = c + 0x1000;
-    gModelCacheBuffersB[2] = c + 0x1800;
-    gModelCacheBuffersB[3] = c + 0x2000;
-    gModelCacheBuffersB[4] = c + 0x3000;
-    gModelCacheBuffersB[5] = c + 0x3800;
-}
+void ObjModel_InitScratchBuffers(void);
 
 void ObjModel_InitRenderBuffers(void)
 {
@@ -3213,6 +3199,22 @@ void ObjModel_BlendVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u8* out)
         memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
         cacheQueueWait(0);
     }
+}
+
+void ObjModel_InitScratchBuffers(void)
+{
+    u8* c = getCache();
+    gModelCacheBuffersA[0] = c;
+    gModelCacheBuffersA[1] = c + 0x1000;
+    gModelCacheBuffersA[2] = c + 0x2000;
+    gModelCacheBuffersA[3] = c + 0x3000;
+    c = getCache();
+    gModelCacheBuffersB[0] = c;
+    gModelCacheBuffersB[1] = c + 0x1000;
+    gModelCacheBuffersB[2] = c + 0x1800;
+    gModelCacheBuffersB[3] = c + 0x2000;
+    gModelCacheBuffersB[4] = c + 0x3000;
+    gModelCacheBuffersB[5] = c + 0x3800;
 }
 
 asm void ObjModel_TransformVerticesWithTranslation(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count)
