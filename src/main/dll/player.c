@@ -18,6 +18,7 @@
 #include "main/dll/player_state_api.h"
 #include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
+#include "main/dll/dll_000D_playershadow.h"
 #include "main/dll/dll_01B5_lightfoot.h"
 #include "main/dll/DB/DBprotection.h"
 #include "main/dll/SB/dll_01E8_sbgalleon.h"
@@ -16924,7 +16925,7 @@ void playerRender(int obj, int a, int b, int c, int d, int flag)
         {
             playerDrawTeleportAnim((GameObject*)(obj));
         }
-        (*(void (*)(int))(*(int*)(*gPlayerShadowInterface + 0x8)))(obj);
+        (*gPlayerShadowInterface)->renderObject((GameObject*)obj);
         if (*(void**)((char*)inner + 0x7f0) != NULL &&
             ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
              arrayIndexOf((int*)&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))

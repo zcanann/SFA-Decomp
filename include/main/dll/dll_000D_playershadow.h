@@ -25,6 +25,20 @@ STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertY) == 0x16);
 STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertZ) == 0x1c);
 STATIC_ASSERT(offsetof(PlayerShadowTriHit, surfaceType) == 0x48);
 
+typedef struct PlayerShadowInterface
+{
+    void* unused;
+    void (*func03)(void);
+    void (*renderObject)(GameObject* obj);
+    void (*setMode)(u8 mode);
+} PlayerShadowInterface;
+
+STATIC_ASSERT(sizeof(PlayerShadowInterface) == 0x10);
+STATIC_ASSERT(offsetof(PlayerShadowInterface, renderObject) == 0x8);
+STATIC_ASSERT(offsetof(PlayerShadowInterface, setMode) == 0xc);
+
+extern PlayerShadowInterface** gPlayerShadowInterface;
+
 void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj);
 void playerShadow_setMode(u8 v);
 void playerShadow_renderObject(GameObject* obj);

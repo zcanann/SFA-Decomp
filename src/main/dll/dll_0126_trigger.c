@@ -31,6 +31,7 @@
 #include "main/object.h"
 #include "main/dll/player_api.h"
 #include "main/dll/player_data.h"
+#include "main/dll/dll_000D_playershadow.h"
 #include "main/camera_interface.h"
 #include "main/dll/cloudaction_interface.h"
 #include "main/game_ui_interface.h"
@@ -308,7 +309,7 @@ void objInterpretSeq(GameObject* obj, int seqArg, s8 legCode, int distSq)
                         (*gCloudActionInterface)->func09Nop(p[3]);
                         break;
                     case 4:
-                        (*(VtableFn*)(*gPlayerShadowInterface + 0xc))(p[3]);
+                        (*gPlayerShadowInterface)->setMode(p[3]);
                         break;
                     case 5:
                         fn_8006FC00(p[3]);

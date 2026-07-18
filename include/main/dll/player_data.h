@@ -39,7 +39,6 @@ extern int gPlayerHeldObject;
 extern f32 gPlayerPartFxParams[];
 extern u8 gPlayerHudVtxBuf[];
 extern s16 gPlayerStopMoves[4];
-extern int* gPlayerShadowInterface;
 extern u8 gPlayerSurfacePfxModeTable[];
 extern u64 gPlayerLastSfxFrame;
 extern u64 gPlayerFrameCounter;

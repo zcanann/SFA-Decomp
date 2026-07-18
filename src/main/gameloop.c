@@ -70,6 +70,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/textrender_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_0011_screens.h"
+#include "main/dll/dll_000D_playershadow.h"
 #include "main/voxmaps.h"
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
 #include "main/dll/dll_BC.h"
@@ -112,7 +113,7 @@ void* lbl_803DCA94;
 void* gScreensInterface;
 PlayerControlInterface** gPlayerInterface;
 EffectInterface** gPartfxInterface;
-void* gPlayerShadowInterface;
+PlayerShadowInterface** gPlayerShadowInterface;
 ProjgfxInterface** gProjgfxInterface;
 ModgfxInterface** gModgfxInterface;
 ExpgfxInterface** gExpgfxInterface;
@@ -192,7 +193,6 @@ extern u8 gGameLoopProgressiveMode;
 extern void* lbl_803DCA94;
 extern void* gTitleMenuControlInterface;
 extern void* gTitleMenuControlInterfaceCopy;
-extern void* gPlayerShadowInterface;
 extern void* gScreensInterface;
 extern void* gTitleMenuLinkInterface;
 extern void* gPathControlInterface;
