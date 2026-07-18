@@ -47,9 +47,6 @@ enum AndrossHandHealth
     ANDROSSHAND_HEALTH_PHASE2 = 0x12
 };
 
-void androsshand_spawnShot(GameObject* obj, AndrossHandState* state, int p3);
-void androsshand_handleDamage(GameObject* obj, AndrossHandState* state);
-
 const f32 lbl_803E75AC = 0.0f;
 
 void androsshand_setState(GameObject* obj, AndrossHandStateId newState, u8 force)
