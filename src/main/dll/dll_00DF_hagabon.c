@@ -37,6 +37,7 @@
 #include "main/obj_group.h"
 #include "main/mm.h"
 #include "string.h"
+#include "main/curve.h"
 
 int lbl_803DBC70[2] = {2, 3};
 #define HAGABON_HIT_VOLUME_SLOT 10
@@ -69,7 +70,6 @@ extern f32 lbl_803DDA58; /* last-seen curve point cache, shared with swarmbaddie
 f32 gHagabonPi = 3.1415927f;
 union HagabonConstF32 { f32 f; };
 const union HagabonConstF32 lbl_803E2624 = { 0.001f };
-extern int Curve_AdvanceAlongPath(int curve, f32 t);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
@@ -91,7 +91,7 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
     curve = state->curve;
     flags = &state->flags;
 
-    if (((Curve_AdvanceAlongPath(curve, state->curveStep) != 0) || (*(int*)(curve + 0x10) != *(int*)&lbl_803DDA58)) &&
+    if (((Curve_AdvanceAlongPath((Curve*)curve, state->curveStep) != 0) || (*(int*)(curve + 0x10) != *(int*)&lbl_803DDA58)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
         ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, 400.0f, lbl_803DBC70, -1) != 0))
     {

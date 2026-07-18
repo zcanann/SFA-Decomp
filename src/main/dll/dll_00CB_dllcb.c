@@ -34,6 +34,7 @@
 #include "main/dll/dll_00CB_dllcb.h"
 #include "main/dll/dll_00CD_iceball.h"
 #include "main/voxmaps.h"
+#include "main/curve.h"
 
 typedef struct DllCBPlacement
 {
@@ -70,7 +71,6 @@ extern u8 lbl_80320008[];
 extern u8 lbl_80320080[];
 
 extern void* memcpy(void* dst, const void* src, int n);
-extern int Curve_AdvanceAlongPath(int* p, f32 t);
 void ChukChuk_free(void);
 void ChukChuk_hitDetect(void);
 void ChukChuk_release(void);
@@ -320,7 +320,7 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             path = (RomCurveWalker*)((GroundBaddieState*)sub)->path;
             if ((((GroundBaddieState*)sub)->flags400 & BADDIE_FLAG400_PATH_ACTIVE) != 0)
             {
-                if ((Curve_AdvanceAlongPath((int*)path, ((GroundBaddieState*)sub)->baddie.animSpeedA) != 0 ||
+                if ((Curve_AdvanceAlongPath((Curve*)path, ((GroundBaddieState*)sub)->baddie.animSpeedA) != 0 ||
                      path->atSegmentEnd != 0) &&
                     (*gRomCurveInterface)->goNextPoint(path) != 0)
                 {
@@ -429,7 +429,7 @@ void dll_CB_update(int* obj)
     path = (RomCurveWalker*)sub->path;
     if ((sub->flags400 & BADDIE_FLAG400_PATH_ACTIVE) == 0)
         return;
-    if (Curve_AdvanceAlongPath((int*)path, sub->baddie.animSpeedA) != 0 || path->atSegmentEnd != 0)
+    if (Curve_AdvanceAlongPath((Curve*)path, sub->baddie.animSpeedA) != 0 || path->atSegmentEnd != 0)
     {
         if ((*gRomCurveInterface)->goNextPoint(path) != 0)
         {
