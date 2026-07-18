@@ -209,7 +209,7 @@ void dll_19_func19(u8* cam, u8* ctx)
 
 void dll_19_func12(int* obj, int* state, u8 flag)
 {
-    Sfx_StopObjectChannelPtrLegacy(obj, 127);
+    Sfx_StopObjectChannel((int)obj, 127);
     if ((((GroundBaddieState*)state)->configFlags & flag) == 0)
     {
         s16 soundId;
@@ -547,7 +547,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
                 *(s8*)(baddieState + 847) = hit;
             }
         }
-        Sfx_StopObjectChannelPtrLegacy(obj, 16);
+        Sfx_StopObjectChannel((int)obj, 16);
         ObjMsg_SendToObject((void*)hitId, DLL19_ADVANCE_MSG, obj, 0);
     }
     return hit;

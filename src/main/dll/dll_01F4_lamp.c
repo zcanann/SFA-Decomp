@@ -43,7 +43,7 @@ int Lamp_getExtraSize(void)
 
 void Lamp_free(int* obj)
 {
-    Sfx_StopObjectChannelPtrLegacy(obj, 0x40);
+    Sfx_StopObjectChannel((int)obj, 0x40);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
@@ -107,7 +107,7 @@ void Lamp_update(int obj)
     }
     else if (distance >= 100.0f)
     {
-        Sfx_StopObjectChannelPtrLegacy(obj, 0x40);
+        Sfx_StopObjectChannel((int)obj, 0x40);
     }
 
     if (((GameObject*)obj)->anim.seqId != LAMP_SEQ_STATIC)

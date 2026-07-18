@@ -213,7 +213,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
             }
             if (DFSH_LASER_CYCLE_TIMER(runtime) < 0x28)
             {
-                Sfx_StopObjectChannelPtrLegacy(obj, 0x40);
+                Sfx_StopObjectChannel((int)obj, 0x40);
                 if ((runtime->beamVolumeScale >= 0.0f) && (DFSH_LASER_BLOCKED(runtime) == 0))
                 {
                     runtime->beamVolumeScale -= 0.0026f * timeDelta;

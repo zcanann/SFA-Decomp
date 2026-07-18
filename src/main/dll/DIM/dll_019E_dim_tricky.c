@@ -294,7 +294,7 @@ void dll_19E_update(void* obj)
             }
             else
             {
-                ((void (*)(void*, int))Sfx_StopObjectChannel)(obj, 0x40);
+                Sfx_StopObjectChannel((int)obj, 0x40);
                 (*gModgfxInterface)->detachSource(obj);
                 (*gExpgfxInterface)->freeSource((u32)obj);
                 if ((state->gameBitId != -1) && (mainGetBit(state->gameBitId) != 0))

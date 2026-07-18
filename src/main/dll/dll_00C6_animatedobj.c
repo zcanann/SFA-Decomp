@@ -130,7 +130,7 @@ void animatedobj_free(int* obj, int seqFlag)
         ->freeState(((GameObject*)obj)->extra);
     ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
     Sfx_RemoveLoopedObjectSoundForObjectPtrLegacy(obj);
-    Sfx_StopObjectChannelPtrLegacy(obj, 0x7f);
+    Sfx_StopObjectChannel((int)obj, 0x7f);
     if (((GameObject*)obj)->anim.seqId == 0x774 && ((GameObject*)obj)->childCount != 0)
     {
         Obj_FreeObject(((GameObject*)obj)->childObjs[0]);

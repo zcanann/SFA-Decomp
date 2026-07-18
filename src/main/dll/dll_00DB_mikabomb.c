@@ -112,7 +112,7 @@ void MikaBomb_update(int* obj)
         }
         else
         {
-            Sfx_StopObjectChannelPtrLegacy(obj, 0x7f);
+            Sfx_StopObjectChannel((int)obj, 0x7f);
             ((GameObject*)obj)->anim.alpha = 0;
             Obj_FreeObject((GameObject*)obj);
             return;

@@ -256,7 +256,7 @@ void crrockfall_update(int* obj)
         {
             hitState->flags &= ~1;
             state->mode = zcEn3_ROCKFALL_MODE_SHATTERED;
-            Sfx_StopObjectChannelPtrLegacy(obj, 8);
+            Sfx_StopObjectChannel((int)obj, 8);
             if (((GameObject*)obj)->anim.seqId == CRROCKFALL_SEQ_QUARRY)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_mv_dinostomp1);

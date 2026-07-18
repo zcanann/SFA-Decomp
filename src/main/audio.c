@@ -304,7 +304,7 @@ s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 void Sfx_StopAllObjectSounds(void);
 void audioFn_8000b694(u32 value);
 void Sfx_SetObjectSoundsPaused(s32 paused);
-void Sfx_StopObjectChannel(u32 obj, u32 channel);
+void Sfx_StopObjectChannel(int obj, int channel);
 void Sfx_StopFromObject(u32 obj, u32 sfxId);
 void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
@@ -1661,11 +1661,11 @@ void Sfx_SetObjectSoundsPaused(s32 paused)
     } while (i-- != 0);
 }
 
-void Sfx_StopObjectChannel(u32 obj, u32 channel)
+void Sfx_StopObjectChannel(int obj, int channel)
 {
     SfxObjectChannel* objectChannel;
 
-    if (((u8)channel == 0) || (obj == 0))
+    if (((u8)channel == 0) || ((u32)obj == 0))
     {
         objectChannel = NULL;
     }

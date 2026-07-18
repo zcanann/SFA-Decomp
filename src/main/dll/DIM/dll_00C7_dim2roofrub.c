@@ -220,7 +220,7 @@ void dim2roofrub_free(int* obj)
 {
     (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
     ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
-    Sfx_StopObjectChannelPtrLegacy(obj, 0x7f);
+    Sfx_StopObjectChannel((int)obj, 0x7f);
 }
 
 #define DIM2ROOFRUB_SEQID_SLIDE 0xa8

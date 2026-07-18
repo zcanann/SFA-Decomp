@@ -38,7 +38,7 @@ int sh_queenearthwalker_processAnimEvents(GameObject* obj, void* unused, ObjAnim
 
     if ((state->flags & QEW_FLAG_INIT_DONE) == 0)
     {
-        Sfx_StopObjectChannelPtrLegacy(obj, 0x7f);
+        Sfx_StopObjectChannel((int)obj, 0x7f);
         state->flags &= ~QEW_FLAG_ACTIVE;
         state->flags |= QEW_FLAG_INIT_DONE;
     }

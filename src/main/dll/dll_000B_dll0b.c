@@ -1411,7 +1411,7 @@ void dll_0B_func05(void)
                 {
                     if (((ModgfxPendingSpawn*)(E9 + emOff))->param14 == -1)
                     {
-                        Sfx_StopObjectChannelPtrLegacy(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj, 0x40);
+                        Sfx_StopObjectChannel((int)*(int**)&((ModgfxEffectSlot*)eff)->sourceObj, 0x40);
                     }
                     else
                     {
