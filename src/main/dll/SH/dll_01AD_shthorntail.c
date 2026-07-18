@@ -68,8 +68,6 @@ typedef u8 (*SHThorntailHitReactUpdateFn)(int obj, ObjHitReactEntry* table, u32 
 
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
-extern u8 gSHthorntailPathHeaders[0x30];
-extern u8 gSHthorntailPathData[0x4AC];
 extern u32 lbl_803E5410;
 extern SHthorntailPathControlInterface** gPathControlInterface;
 
