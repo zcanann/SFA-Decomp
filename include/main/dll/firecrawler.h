@@ -34,4 +34,8 @@ STATIC_ASSERT(offsetof(FireCrawlerState, tailModelChain) == 0x36c);
 
 void crawler_playReactionEffects(int* obj, int* st);
 
+extern u8 gCrawlerSeqTable[];
+extern u8 gSnowwormSeqIndexReset[4];
+extern u8 gSnowwormSeqIndexMax[4];
+
 #endif
