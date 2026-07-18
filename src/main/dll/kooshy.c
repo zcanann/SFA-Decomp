@@ -18,7 +18,6 @@
 #include "main/dll/kooshy.h"
 #include "main/dll/magicplant_ext.h"
 
-extern u8 gMagicPlantSeqEntryTable[8];
 
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
 
