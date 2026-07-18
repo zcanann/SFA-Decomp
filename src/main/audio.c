@@ -2298,19 +2298,19 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
     f32 t;
     double t2;
     f32* listener;
-    void* player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     void* slot = Camera_GetCurrentViewSlot();
     int seqNo = getCurSeqNoInt();
 
     if (player != NULL && seqNo == 0)
     {
-        listener = &((GameObject*)player)->anim.worldPosX;
+        listener = &player->anim.worldPosX;
     }
     else if (slot != NULL)
     {
         if (player != NULL)
         {
-            PSVECSubtract((f32*)((u8*)slot + 0x44), &((GameObject*)player)->anim.worldPosX, v);
+            PSVECSubtract((f32*)((u8*)slot + 0x44), &player->anim.worldPosX, v);
             t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
             if (lbl_803DE5C0 < (t > lbl_803DE5C8 ? t : lbl_803DE5C8))
             {
@@ -2321,7 +2321,7 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
                 t2 = (t > lbl_803DE5C8 ? t : lbl_803DE5C8);
             }
             PSVECScale(v, v, t2);
-            PSVECAdd(&((GameObject*)player)->anim.worldPosX, v, v);
+            PSVECAdd(&player->anim.worldPosX, v, v);
             listener = v;
         }
         else

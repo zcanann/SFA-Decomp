@@ -268,6 +268,15 @@ cflags_dll_noopt = [
     "-opt", "nopeephole,noschedule",
 ]
 
+# ...plus auto-inlining off: functions marked `inline` are still inlined, but
+# small non-inline helpers are not auto-inlined (matches the original build,
+# which emits calls to trivial getters like Music_GetActivePriority).
+cflags_dll_noopt_noautoinline = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule",
+    "-inline", "noauto",
+]
+
 cflags_dll_nosched = [
     *cflags_base,
     "-opt", "noschedule",
@@ -850,7 +859,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/audio/synth_ac.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(MatchingFor("GSAE01"), "main/audio/synth_adsr.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(NonMatching, "main/render.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/audio.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/audio.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/camera.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/curves.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/voxmaps.c", cflags=cflags_dll_noopt),
