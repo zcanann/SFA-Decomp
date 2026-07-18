@@ -1,24 +1,10 @@
 #ifndef MAIN_AUDIO_SND_REVERB_H_
 #define MAIN_AUDIO_SND_REVERB_H_
 
-#include "ghidra_import.h"
+#include "dolphin/axfx.h"
 
-typedef struct ReverbParams {
-  int p0;
-  int p4;
-  int p8;
-} ReverbParams;
-
-typedef struct ReverbState {
-  u8 unk0[0x13c];
-  u8 enabled;
-  u8 unk13D[3];
-  f32 a;
-  f32 c;
-  f32 b;
-  f32 d;
-  f32 e;
-} ReverbState;
+typedef AXFX_BUFFERUPDATE ReverbParams;
+typedef AXFX_REVERBSTD ReverbState;
 
 void salFree(void *ptr);
 void sndAuxCallbackReverbSTD(u8 mode, ReverbParams *params, ReverbState *state);

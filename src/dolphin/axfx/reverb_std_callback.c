@@ -1,4 +1,4 @@
-#include <dolphin/axfx.h>
+#include "dolphin/axfx/reverb_std_callback.h"
 
 extern const f32 axfx_reverb_std_handle_f32_0p3;
 extern const f32 axfx_reverb_std_handle_f32_0p6;

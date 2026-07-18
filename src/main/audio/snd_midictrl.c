@@ -1,5 +1,6 @@
 #include "main/audio/inp_midi.h"
 #include "main/audio/mcmd.h"
+#include "main/audio/mcmd_exec.h"
 #include "main/audio/synth_config.h"
 #include "main/audio/synth_voice.h"
 #include "string.h"
@@ -465,7 +466,6 @@ u8 inpGetMidiLastNote(u8 channel, u8 key)
 }
 
 extern u64 synthRealTime;
-extern s16 varGet(int state, int useExCtrl, u8 index);
 
 /*
  * Evaluate a controller expression list and cache its 14-bit result.
@@ -483,7 +483,7 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot
     {
         if (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG)
         {
-            tmp = (statePtr != NULL ? (s16)varGet((int)statePtr, 0, slotPtr->entries[i].controller) : 0);
+            tmp = (statePtr != NULL ? varGet(statePtr, 0, slotPtr->entries[i].controller) : 0);
             goto block_18;
         }
         ctrl = slotPtr->entries[i].controller;

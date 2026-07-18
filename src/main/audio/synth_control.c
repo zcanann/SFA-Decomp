@@ -1,8 +1,5 @@
+#include "main/audio/sal_dsp.h"
 #include "src/main/audio/synth_internal.h"
-
-
-extern void sndBegin(void);
-extern void sndEnd(void);
 
 void sndSeqStop(u32 handle)
 {
