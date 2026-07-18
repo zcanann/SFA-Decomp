@@ -41,7 +41,6 @@
 #include "dolphin/gx/GXEnum.h"
 #include "main/render_mode_api.h"
 #include "dolphin/gx/GXLegacyDecls.h"
-#include "track/intersect_api.h"
 
 ModgfxPendingSpawn* gModgfxPendingSpawnStartCursor;
 ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
@@ -257,6 +256,8 @@ void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
 
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
+extern void gxTexColorFn_80079254(void);
+extern void gxBlendFn_80078b4c(void);
 
 /* Per-bone particle vertex update + draw. */
 
@@ -534,19 +535,21 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
     {
         f32 target = ((ModgfxVertexGroupCmd*)p)->valueX;
         s16 frames = ((ModgfxState*)state)->blendFrameCount;
-        if (frames == 0)
+        if (frames != 0)
         {
-            for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
-            {
-                bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = target;
-                bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
-            }
-            return;
+            ((f32*)((char*)state + 0xac))[k] =
+                (target - (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf]) / frames;
+            ((f32*)((char*)state + 0xac))[k + 1] = (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf];
+            goto animate;
         }
-        ((f32*)((char*)state + 0xac))[k] =
-            (target - (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf]) / frames;
-        ((f32*)((char*)state + 0xac))[k + 1] = (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf];
+        for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
+        {
+            bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = target;
+            bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
+        }
+        return;
     }
+animate:
 {
     char* kb;
     int k4 = k * 4;
@@ -666,38 +669,6 @@ void fn_800A0FD0(ModgfxState* state)
         src++;
     }
 }
-void fn_800A1040(s16 sequenceId, int forceAll)
-{
-    PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
-    int i;
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
-    {
-        if (arr[i] == NULL)
-            continue;
-        if (sequenceId != arr[i]->sequenceId && forceAll == 0)
-            continue;
-        if (arr[i]->auxAllocation != NULL)
-        {
-            mm_free(arr[i]->auxAllocation);
-        }
-        if (arr[i]->instanceObject != NULL)
-        {
-            Obj_FreeObject(arr[i]->instanceObject);
-        }
-        arr[i]->inlineData = NULL;
-        if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL)
-        {
-            textureFree((Texture*)(arr[i]->textureResource));
-        }
-        if (arr[i]->textureIsBorrowed == 0)
-        {
-            arr[i]->textureResource = NULL;
-        }
-        mm_free(arr[i]);
-        arr[i] = NULL;
-    }
-}
-
 /* Flag every active effect whose owner object has the 0x800 state bit
  * by setting its frameUpdated flag. */
 void dll_0B_func0E(void)
@@ -748,7 +719,7 @@ void dll_0B_func0C(void* source, char value)
 }
 void dll_0B_func0B(void)
 {
-    lbl_803DD282 = lbl_803DD282 + 1;
+    lbl_803DD282++;
 }
 
 void dll_0B_func0A(s16* p)
@@ -768,6 +739,7 @@ void dll_0B_func0A(s16* p)
 extern void gxTevAddTextureFrameBlendStages(void);
 extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);
+extern void textBlendSetupFn_80078a7c(void);
 
 int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
 {
@@ -1964,6 +1936,38 @@ void dll_0B_onMapSetup(void)
 void dll_0B_release(void)
 {
     fn_800A1040(0, 1);
+}
+
+void fn_800A1040(s16 sequenceId, int forceAll)
+{
+    PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
+    int i;
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
+    {
+        if (arr[i] == NULL)
+            continue;
+        if (sequenceId != arr[i]->sequenceId && forceAll == 0)
+            continue;
+        if (arr[i]->auxAllocation != NULL)
+        {
+            mm_free(arr[i]->auxAllocation);
+        }
+        if (arr[i]->instanceObject != NULL)
+        {
+            Obj_FreeObject(arr[i]->instanceObject);
+        }
+        arr[i]->inlineData = NULL;
+        if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL)
+        {
+            textureFree((Texture*)(arr[i]->textureResource));
+        }
+        if (arr[i]->textureIsBorrowed == 0)
+        {
+            arr[i]->textureResource = NULL;
+        }
+        mm_free(arr[i]);
+        arr[i] = NULL;
+    }
 }
 void dll_0B_initialise(void)
 {
