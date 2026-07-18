@@ -2,6 +2,7 @@
 #define MAIN_AUDIO_SND3D_H_
 
 #include "ghidra_import.h"
+#include "main/audio/snd_types.h"
 
 #define S3D_EMITTER_FLAG_POSITIONAL 0x00000001
 #define S3D_EMITTER_FLAG_RESTART_ON_STOP 0x00000002
@@ -75,7 +76,7 @@ typedef struct SndStudioInputLink {
     SndSpatialEntry *target;
     u32 flags;
     u8 pad2c[8];
-    u8 studioInput[4];
+    SND_STUDIO_INPUT studioInput;
 } SndStudioInputLink;
 
 typedef struct S3DEmitterCtrl {

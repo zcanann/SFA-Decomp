@@ -6,6 +6,7 @@
 #include "main/audio/sal_dsp.h"
 #include "main/audio/aram.h"
 #include "main/audio/dsp_voice_state.h"
+#include "main/audio/sal_studio.h"
 
 
 extern void* dspCmdBuffer;
@@ -16,9 +17,6 @@ extern u32 dspARAMZeroBuffer;
 extern DSPstudioinfo dspStudio[8];
 extern u8 salMaxStudioNum;
 extern u8 salNumVoices;
-
-void salInitHRTFBuffer(void);
-void salActivateStudio(u8 studio, u32 isMaster, u32 type);
 
 u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
 {
@@ -118,7 +116,7 @@ void salInitHRTFBuffer(void)
     DCFlushRangeNoSync(dspCmdBuffer, 0x100);
 }
 
-int salExitDspCtrl(void)
+u32 salExitDspCtrl(void)
 {
     u8 i;
 
@@ -140,7 +138,7 @@ int salExitDspCtrl(void)
     return 1;
 }
 
-void salActivateStudio(u8 studio, u32 isMaster, u32 type)
+void salActivateStudio(u8 studio, u32 isMaster, SND_STUDIO_TYPE type)
 {
     DSPstudioinfo* base = dspStudio;
 
@@ -171,7 +169,7 @@ void salDeactivateStudio(u8 studio)
     base[studio].state = 0;
 }
 
-int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u16 targetVol, u16* resetFlags,
+u32 salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u16 targetVol, u16* resetFlags,
                                   u16 resetMask)
 {
     int delta;

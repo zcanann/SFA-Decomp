@@ -237,18 +237,18 @@ void s3dUpdateDoorStudioInputs(void)
                 {
                     v = link->inputScale;
                     f = (1.0f - v) * v;
-                    link->studioInput[1] = (s32)((f32)link->sendLevel * v);
-                    link->studioInput[2] = 0;
-                    link->studioInput[0] = (s32)(127.0f * v);
+                    link->studioInput.volA = (s32)((f32)link->sendLevel * v);
+                    link->studioInput.volB = 0;
+                    link->studioInput.vol = (s32)(127.0f * v);
                     if ((link->flags & 1) != 0)
                     {
-                        link->studioInput[3] = link->target->assignedVoice;
-                        synthAddStudioInput(link->source->assignedVoice, link->studioInput);
+                        link->studioInput.srcStudio = link->target->assignedVoice;
+                        synthAddStudioInput(link->source->assignedVoice, &link->studioInput);
                     }
                     else
                     {
-                        link->studioInput[3] = link->source->assignedVoice;
-                        synthAddStudioInput(link->target->assignedVoice, link->studioInput);
+                        link->studioInput.srcStudio = link->source->assignedVoice;
+                        synthAddStudioInput(link->target->assignedVoice, &link->studioInput);
                     }
                     link->flags |= 0x80000000;
                 }
@@ -263,7 +263,7 @@ void s3dUpdateDoorStudioInputs(void)
                 if ((sourceVoice != 0xff && sourceVoice == link->activeInput) ||
                     (link->target->assignedVoice != 0xff && link->target->assignedVoice == link->activeInput))
                 {
-                    synthRemoveStudioInput(link->activeInput, link->studioInput);
+                    synthRemoveStudioInput(link->activeInput, &link->studioInput);
                 }
                 link->flags &= 0x7fffffff;
             }
@@ -271,9 +271,9 @@ void s3dUpdateDoorStudioInputs(void)
             {
                 v = link->inputScale;
                 f = (1.0f - v) * v;
-                link->studioInput[1] = (s32)((f32)link->sendLevel * v);
-                link->studioInput[2] = 0;
-                link->studioInput[0] = (s32)(127.0f * v);
+                link->studioInput.volA = (s32)((f32)link->sendLevel * v);
+                link->studioInput.volB = 0;
+                link->studioInput.vol = (s32)(127.0f * v);
             }
         }
     }

@@ -7,14 +7,6 @@
 extern u8 salAuxFrame;
 extern u8 salMaxStudioNum;
 
-typedef struct SND_STUDIO_INPUT
-{
-    u8 vol;
-    u8 volA;
-    u8 volB;
-    u8 srcStudio;
-} SND_STUDIO_INPUT;
-
 #include "dolphin/os.h"
 #include "dolphin/os/OSCache.h"
 #include "string.h"
@@ -38,12 +30,7 @@ extern u16 dspMixerCycles[]; /* dspMixerCycles[32] */
 extern u16 pbOffsets[];      /* pbOffsets[9] */
 extern u16 dspSRCCycles[4][3];
 
-extern int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u16 targetVol, u16* resetFlags,
-                                         u16 resetMask);
-extern void HandleDepopVoice(DSPstudioinfo* stp, DSPvoice* dsp_vptr);
-extern void SortVoices(DSPvoice** voices, int l, int r);
 int salSynthSendMessage(int synth, int msg);
-void salDeactivateVoice(DSPvoice* voice);
 
 extern int (*salMessageCallback)(int msg, int arg);
 
@@ -1055,7 +1042,7 @@ void salDeactivateVoice(DSPvoice* voice)
     voice->state = 0;
 }
 
-int salAddStudioInput(DSPstudioinfo* studio, SND_STUDIO_INPUT* input)
+u32 salAddStudioInput(DSPstudioinfo* studio, SND_STUDIO_INPUT* input)
 {
     if (studio->numInputs < 7)
     {
@@ -1070,7 +1057,7 @@ int salAddStudioInput(DSPstudioinfo* studio, SND_STUDIO_INPUT* input)
     return 0;
 }
 
-int salRemoveStudioInput(DSPstudioinfo* studio, SND_STUDIO_INPUT* input)
+u32 salRemoveStudioInput(DSPstudioinfo* studio, SND_STUDIO_INPUT* input)
 {
     int i;
 

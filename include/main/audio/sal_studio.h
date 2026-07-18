@@ -2,15 +2,16 @@
 #define MAIN_AUDIO_SAL_STUDIO_H_
 
 #include "ghidra_import.h"
+#include "main/audio/dsp_voice.h"
 
-void salInitDspCtrl(void);
+u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2);
 void salInitHRTFBuffer(void);
-int salExitDspCtrl(void);
-void salActivateStudio(u8 idx, u8 a, int b);
-void salDeactivateStudio(u8 idx);
-int salCheckVolErrorAndResetDelta(u16 *active, u16 *direction, u16 *current, u16 target, u16 *stepFlags,
-                u16 mask);
-void HandleDepopVoice(int accum, int *voiceRef);
-void SortVoices(int *items, int left, int right);
+u32 salExitDspCtrl(void);
+void salActivateStudio(u8 studio, u32 isMaster, SND_STUDIO_TYPE type);
+void salDeactivateStudio(u8 studio);
+u32 salCheckVolErrorAndResetDelta(u16 *dspVolume, u16 *dspDelta, u16 *lastVolume,
+                                  u16 targetVolume, u16 *resetFlags, u16 resetMask);
+void HandleDepopVoice(DSPstudioinfo *studio, DSPvoice *voice);
+void SortVoices(DSPvoice **voices, int left, int right);
 
 #endif /* MAIN_AUDIO_SAL_STUDIO_H_ */

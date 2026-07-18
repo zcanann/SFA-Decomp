@@ -3,6 +3,7 @@
 
 #include "main/audio/dsp_voice_state.h"
 #include "main/audio/sal_dsp.h"
+#include "main/audio/sal_studio.h"
 #include "main/audio/synth_jobs.h"
 #include "main/audio/synth_voice.h"
 #include "main/audio/synth_virtual_sample.h"
@@ -14,8 +15,6 @@ extern u8 salNumVoices;
 extern u8 salAuxFrame;
 extern u8 salFrame;
 extern u32 salMessageCallback;
-extern void salExitDspCtrl(void);
-extern u32 salInitDspCtrl(u32 valueA, u32 valueB, u32 enabled);
 void snd_handle_irq(void)
 {
     u32 timeOffset;
@@ -70,7 +69,7 @@ void snd_handle_irq(void)
     hwIRQLeaveCritical();
 }
 
-int hwInit(u32* sampleRate, u8 valueA, u8 valueB, u32 flags)
+int hwInit(u32* sampleRate, u16 numVoices, u16 numStudios, u32 flags)
 {
     hwInitIrq();
     salFrame = 0;
@@ -78,7 +77,7 @@ int hwInit(u32* sampleRate, u8 valueA, u8 valueB, u32 flags)
     salMessageCallback = 0;
 
     if ((u32)salInitAi(snd_handle_irq, flags, sampleRate) != 0 &&
-        salInitDspCtrl(valueA, valueB, (flags & 1) != 0) != 0 && (u32)salInitDsp(flags) != 0)
+        salInitDspCtrl(numVoices, numStudios, (flags & 1) != 0) != 0 && (u32)salInitDsp(flags) != 0)
     {
         sndEnd();
         salStartAi();

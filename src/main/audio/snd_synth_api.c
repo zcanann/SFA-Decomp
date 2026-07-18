@@ -10,6 +10,8 @@
 #include "main/audio/hw_input.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/hw_samplemem.h"
+#include "main/audio/hw_stream.h"
+#include "main/audio/hw_volume.h"
 #include "main/audio/synth_callback.h"
 #include "main/audio/voice_manage.h"
 #include "main/audio/synth_config.h"
@@ -33,13 +35,6 @@ extern u8 synthAuxBMIDI[8];
 extern u8 synthAuxAMIDISet[8];
 extern u8 synthAuxAMIDI[8];
 extern u32 synthFlags;
-
-extern void hwRemoveInput(u8 idx, void* input);
-extern void hwActivateStudio(u8 slot, int a, int b);
-extern void hwDeactivateStudio(u8 slot);
-extern void hwSetAUXProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser, void* auxBCallback,
-                                        void* auxBUser);
-extern void hwOff(u32 slot);
 
 /*
  * MusyX sequence volume API, wrapping the underlying synth volume helper.
@@ -193,58 +188,58 @@ void sndOutputMode(int mode)
  * Configure studio AUX A/B processing callbacks and cache the callback
  * routing indices used by synth voice updates.
  */
-void sndSetAuxProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser, u8 auxAIndex, void* auxAData,
+void sndSetAuxProcessingCallbacks(u8 studio, void* auxACallback, void* auxAUser, u8 auxAIndex, void* auxAData,
                                   void* auxBCallback, void* auxBUser, u8 auxBIndex, void* auxBData)
 {
     sndBegin();
     if (auxACallback != 0)
     {
-        synthAuxAMIDI[studio & 0xff] = auxAIndex;
+        synthAuxAMIDI[studio] = auxAIndex;
         if (auxAIndex != 0xff)
         {
-            synthAuxAMIDISet[studio & 0xff] = synthResolveHandle((u32)auxAData);
-            synthAuxACallback[studio & 0xff] = auxACallback;
-            synthAuxAUser[studio & 0xff] = auxAUser;
+            synthAuxAMIDISet[studio] = synthResolveHandle((u32)auxAData);
+            synthAuxACallback[studio] = auxACallback;
+            synthAuxAUser[studio] = auxAUser;
         }
     }
     else
     {
-        synthAuxACallback[studio & 0xff] = 0;
-        synthAuxAMIDI[studio & 0xff] = 0xff;
+        synthAuxACallback[studio] = 0;
+        synthAuxAMIDI[studio] = 0xff;
     }
     if (auxBCallback != 0)
     {
-        synthAuxBMIDI[studio & 0xff] = auxBIndex;
+        synthAuxBMIDI[studio] = auxBIndex;
         if (auxBIndex != 0xff)
         {
-            synthAuxBMIDISet[studio & 0xff] = synthResolveHandle((u32)auxBData);
-            synthAuxBCallback[studio & 0xff] = auxBCallback;
-            synthAuxBUser[studio & 0xff] = auxBUser;
+            synthAuxBMIDISet[studio] = synthResolveHandle((u32)auxBData);
+            synthAuxBCallback[studio] = auxBCallback;
+            synthAuxBUser[studio] = auxBUser;
         }
     }
     else
     {
-        synthAuxBCallback[studio & 0xff] = 0;
-        synthAuxBMIDI[studio & 0xff] = 0xff;
+        synthAuxBCallback[studio] = 0;
+        synthAuxBMIDI[studio] = 0xff;
     }
     hwSetAUXProcessingCallbacks(studio, auxACallback, auxAUser, auxBCallback, auxBUser);
     sndEnd();
 }
 
 /*
- * Reset a slot's tracking state (clear two ptr arrays + 0xFF in two
+ * Reset a studio's tracking state (clear two ptr arrays + 0xFF in two
  * byte arrays + zero in a third) and call hwActivateStudio.
  */
-void synthActivateStudio(u8 slot, int a, int b)
+void synthActivateStudio(u8 studio, u32 isMaster, SND_STUDIO_TYPE type)
 {
     sndBegin();
-    synthAuxACallback[slot] = 0;
-    synthAuxBCallback[slot] = 0;
-    synthAuxAMIDI[slot] = 0xff;
-    synthAuxBMIDI[slot] = 0xff;
-    synthITDDefault[slot][1] = 0;
-    synthITDDefault[slot][0] = 0;
-    hwActivateStudio(slot, a, b);
+    synthAuxACallback[studio] = 0;
+    synthAuxBCallback[studio] = 0;
+    synthAuxAMIDI[studio] = 0xff;
+    synthAuxBMIDI[studio] = 0xff;
+    synthITDDefault[studio][1] = 0;
+    synthITDDefault[studio][0] = 0;
+    hwActivateStudio(studio, isMaster, type);
     sndEnd();
 }
 
@@ -252,7 +247,7 @@ void synthActivateStudio(u8 slot, int a, int b)
  * Deactivate a studio: clear routed AUX callbacks and release/off any voices
  * currently assigned to that studio.
  */
-void synthDeactivateStudio(u8 slot)
+void synthDeactivateStudio(u8 studio)
 {
     u32 offset;
     u32 i;
@@ -263,7 +258,7 @@ void synthDeactivateStudio(u8 slot)
     for (; i < SYNTH_CONFIGURATION->voiceCount; i++)
     {
         voice = (u8*)synthVoice + offset;
-        if (slot == ((McmdVoiceState*)voice)->studio)
+        if (studio == ((McmdVoiceState*)voice)->studio)
         {
             if (((McmdVoiceState*)voice)->voiceHandle != 0xffffffff)
             {
@@ -280,26 +275,26 @@ void synthDeactivateStudio(u8 slot)
         offset += SYNTH_VOICE_STRIDE;
     }
     sndBegin();
-    synthAuxACallback[slot] = 0;
-    synthAuxBCallback[slot] = 0;
-    synthAuxAMIDI[slot] = 0xff;
-    synthAuxBMIDI[slot] = 0xff;
+    synthAuxACallback[studio] = 0;
+    synthAuxBCallback[studio] = 0;
+    synthAuxAMIDI[studio] = 0xff;
+    synthAuxBMIDI[studio] = 0xff;
     sndEnd();
-    hwDeactivateStudio(slot);
+    hwDeactivateStudio(studio);
 }
 
 /*
  * Wrapper for hwAddInput.
  */
-void synthAddStudioInput(u8 idx, void* input)
+u32 synthAddStudioInput(u8 studio, SND_STUDIO_INPUT* input)
 {
-    hwAddInput(idx, input);
+    return hwAddInput(studio, input);
 }
 
 /*
  * Wrapper for hwRemoveInput.
  */
-void synthRemoveStudioInput(u8 idx, void* input)
+u32 synthRemoveStudioInput(u8 studio, SND_STUDIO_INPUT* input)
 {
-    hwRemoveInput(idx, input);
+    return hwRemoveInput(studio, input);
 }

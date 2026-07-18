@@ -1,16 +1,16 @@
 #include "main/audio/hw_stream.h"
 
 #include "main/audio/dsp_voice_state.h"
+#include "main/audio/hw_dspctrl.h"
 #include "dolphin/os/OSCache.h"
 
 extern DSPstudioinfo dspStudio[8];
-extern void salRemoveStudioInput(DSPstudioinfo* studio, void* input);
 extern int aramGetStreamBufferAddress(int stream, void* out);
 extern void aramUploadData(int dest, int src, u32 size, int mode, u32 callback, u32 callbackArg);
 
-void hwRemoveInput(u32 idx, void* input)
+u32 hwRemoveInput(u8 studio, SND_STUDIO_INPUT* input)
 {
-    salRemoveStudioInput(&dspStudio[idx & 0xff], input);
+    return salRemoveStudioInput(&dspStudio[studio], input);
 }
 
 int hwChangeStudio(int slot)

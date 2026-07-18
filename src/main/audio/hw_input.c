@@ -1,11 +1,10 @@
 #include "main/audio/hw_input.h"
-#include "main/unknown/autos/musyx_dsp.h"
+#include "main/audio/hw_dspctrl.h"
 
 
 extern DSPstudioinfo dspStudio[8];
-extern void salAddStudioInput(DSPstudioinfo* studio, void* input);
 
-void hwAddInput(u8 index, void* input)
+u32 hwAddInput(u8 studio, SND_STUDIO_INPUT* input)
 {
-    salAddStudioInput(&dspStudio[index], input);
+    return salAddStudioInput(&dspStudio[studio], input);
 }

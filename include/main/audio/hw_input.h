@@ -2,7 +2,8 @@
 #define MAIN_AUDIO_HW_INPUT_H_
 
 #include "ghidra_import.h"
+#include "main/audio/snd_types.h"
 
-void hwAddInput(u8 index, void *input);
+u32 hwAddInput(u8 studio, SND_STUDIO_INPUT *input);
 
 #endif /* MAIN_AUDIO_HW_INPUT_H_ */

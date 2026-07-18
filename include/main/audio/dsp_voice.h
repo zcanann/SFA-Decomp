@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/audio/adsr.h"
+#include "main/audio/snd_types.h"
 
 /* Canonical SAL DSP voice/studio records (upstream musyx names, layouts
  * verified against hw_* codegen and the matched hw_dspctrl recovery).
@@ -106,7 +107,7 @@ typedef struct DSPinput {
     u16 vol;    /* 0x02 */
     u16 volA;   /* 0x04 */
     u16 volB;   /* 0x06 */
-    void *desc; /* 0x08 */
+    SND_STUDIO_INPUT *desc; /* 0x08 */
 } DSPinput;
 
 typedef struct DSPstudioinfo {
@@ -120,7 +121,7 @@ typedef struct DSPstudioinfo {
     u8 state;                 /* 0x50 */
     u8 isMaster;              /* 0x51 */
     u8 numInputs;             /* 0x52 */
-    s32 type;                 /* 0x54 */
+    SND_STUDIO_TYPE type;     /* 0x54 */
     DSPinput in[7];           /* 0x58 */
     void *auxAHandler;        /* 0xac */
     void *auxBHandler;        /* 0xb0 */

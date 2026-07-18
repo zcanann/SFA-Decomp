@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 void snd_handle_irq(void);
-int hwInit(u32 *sampleRate, u8 valueA, u8 valueB, u32 flags);
+int hwInit(u32 *sampleRate, u16 numVoices, u16 numStudios, u32 flags);
 void hwExit(void);
 void hwSetTimeOffset(int value);
 u8 hwGetTimeOffset(void);

@@ -1,14 +1,13 @@
 #include "main/audio/hw_volume.h"
 #include "main/audio/dsp_voice_state.h"
+#include "main/audio/hw_dspctrl.h"
+#include "main/audio/sal_studio.h"
 
 
 extern DSPstudioinfo dspStudio[8];
 extern u8 lbl_802C2820[];
 extern f32 lbl_803E78E4;
 
-extern void salDeactivateVoice(void* entry);
-extern void salActivateStudio(void);
-extern void salDeactivateStudio(void);
 extern void salCalcVolumeMatrix(int voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 vol, f32 auxa,
                                 f32 auxb);
 
@@ -88,17 +87,17 @@ void hwSetVolume(int slot, u32 volumeTable, f32 volume, f32 auxA, f32 auxB,
 /*
  * Disable a voice slot.
  */
-void hwOff(int slot)
+void hwOff(s32 slot)
 {
-    salDeactivateVoice((u8*)dspVoice + slot * 0xf4);
+    salDeactivateVoice(&dspVoice[slot]);
 }
 
 /*
- * Set the four AUX-mix DSP processing callbacks for a voice slot.
+ * Set the four AUX-mix DSP processing callbacks for a studio.
  */
-void hwSetAUXProcessingCallbacks(u8 idx, void* cb0, void* cb1, void* cb2, void* cb3)
+void hwSetAUXProcessingCallbacks(u8 studio, void* cb0, void* cb1, void* cb2, void* cb3)
 {
-    DSPstudioinfo* entry = &dspStudio[idx];
+    DSPstudioinfo* entry = &dspStudio[studio];
     entry->auxAHandler = cb0;
     entry->auxAUser = cb1;
     entry->auxBHandler = cb2;
@@ -108,15 +107,15 @@ void hwSetAUXProcessingCallbacks(u8 idx, void* cb0, void* cb1, void* cb2, void* 
 /*
  * Activate the audio "studio" effect chain - thin wrapper.
  */
-void hwActivateStudio(void)
+void hwActivateStudio(u8 studio, bool isMaster, SND_STUDIO_TYPE type)
 {
-    salActivateStudio();
+    salActivateStudio(studio, isMaster, type);
 }
 
 /*
  * Deactivate the audio "studio" effect chain - thin wrapper.
  */
-void hwDeactivateStudio(void)
+void hwDeactivateStudio(u8 studio)
 {
-    salDeactivateStudio();
+    salDeactivateStudio(studio);
 }
