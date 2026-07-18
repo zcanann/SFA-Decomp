@@ -42,9 +42,6 @@ f32 gEffect2ScrollPhaseB = 0.3f;
 
 extern FxNode9 lbl_8039C338;
 extern int lbl_803DD2C4;
-extern f32 gEffect2SpawnPhaseA;
-extern f32 gEffect2SpawnPhaseB;
-extern s32 gEffect2TextureIdTable[];
 
 EmitterCfg gEffect2VelocityRangeTable = {
     {
