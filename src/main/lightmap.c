@@ -1158,8 +1158,7 @@ void initMapBlocks(void)
 
 void gameFlagFn_8005cd24(int v)
 {
-    if (v != 0) renderFlags |= 0x20000;
-    else renderFlags &= ~0x20000;
+    renderFlags = (v != 0) ? (renderFlags | 0x20000) : (renderFlags & ~0x20000);
 }
 
 u32 getDrawDistanceFlag_8005cd48(void) { return renderFlags & RENDERFLAG_DRAW_DISTANCE; }
@@ -1208,8 +1207,7 @@ void setDrawLights(int v)
 
 void gameFlagFn_8005ce6c(int v)
 {
-    if (v != 0) renderFlags |= 0x20;
-    else renderFlags &= ~0x20;
+    renderFlags = (v != 0) ? (renderFlags | 0x20) : (renderFlags & ~0x20);
 }
 
 u8 isOvercast(void)
@@ -1221,14 +1219,12 @@ u8 isOvercast(void)
 
 void setIsOvercast(int v)
 {
-    if (v != 0) renderFlags |= RENDERFLAG_OVERCAST;
-    else renderFlags &= ~RENDERFLAG_OVERCAST;
+    renderFlags = (v != 0) ? (renderFlags | RENDERFLAG_OVERCAST) : (renderFlags & ~RENDERFLAG_OVERCAST);
 }
 
 void fn_8005CECC(int v)
 {
-    if (v != 0) renderFlags |= 0x80000;
-    else renderFlags &= ~0x80000;
+    renderFlags = (v != 0) ? (renderFlags | 0x80000) : (renderFlags & ~0x80000);
 }
 
 void setDrawCloudsAndLights(int v)
@@ -1248,8 +1244,7 @@ void setDrawCloudsAndLights(int v)
 
 void setPendingMapLoad(int v)
 {
-    if (v != 0) renderFlags |= RENDERFLAG_PENDING_MAP_LOAD;
-    else renderFlags &= ~RENDERFLAG_PENDING_MAP_LOAD;
+    renderFlags = (v != 0) ? (renderFlags | RENDERFLAG_PENDING_MAP_LOAD) : (renderFlags & ~RENDERFLAG_PENDING_MAP_LOAD);
 }
 typedef struct LightmapVertex
 {
