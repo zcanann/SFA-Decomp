@@ -230,7 +230,6 @@ extern void set_shadowFlag_803dcc29(int x);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
 extern void GXSetProjection(f32* m, int type);
 extern void GXSetScissor(int a, int b, int c, int d);
-extern int getDrawDistanceFlag_8005cd48(void);
 
 static inline void boxBlurRow(u8* row, u8* blurred, int size, int window)
 {

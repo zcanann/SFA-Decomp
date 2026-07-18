@@ -1159,7 +1159,7 @@ void gameFlagFn_8005cd24(int v)
     renderFlags = (v != 0) ? (renderFlags | 0x20000) : (renderFlags & ~0x20000);
 }
 
-u32 getDrawDistanceFlag_8005cd48(void) { return renderFlags & RENDERFLAG_DRAW_DISTANCE; }
+int getDrawDistanceFlag_8005cd48(void) { return renderFlags & RENDERFLAG_DRAW_DISTANCE; }
 
 extern f32 widescreenAspect_803DEC1C;
 extern f32 lbl_803DB670;
