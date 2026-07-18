@@ -282,7 +282,6 @@ int fn_801E76A0(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
     return 0;
 }
 
-f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode);
 void ShopKeeper_spawnScarabs(GameObject* obj, int state, int count)
 {
     int i;
