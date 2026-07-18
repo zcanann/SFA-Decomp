@@ -29,7 +29,6 @@ s32 lbl_803DC058[2] = {0xC7C, 0xC7D};
 #define WARPSTONELIFT_ITEM_BIT 0xC7C
 
 extern f32 lbl_803E54C8;
-extern s32 lbl_803DC058[2]; /* the two "already-swapped" progress bits */
 
 
 int warpstonelift_getExtraSize(void)
