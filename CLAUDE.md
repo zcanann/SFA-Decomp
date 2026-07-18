@@ -40,6 +40,21 @@ project matches more.
 - Branch off main; rebase + `ninja EXIT=0` before each commit; commit only when asked. One owner per `.c`.
 - Edit SJIS-bearing files byte-wise (python rb/wb). Never `git stash` in a worktree — use `git checkout -- <file>`.
 
+## Banned constructs (game code: `src/main/`, `src/track/`)
+These are match-hacks, not plausible 2002 source. They were purged repo-wide (see
+`docs/HACK_AUDIT.md`, tag `pre-hack-purge`) and MUST NOT re-enter:
+- **Any `#pragma`** — per-function pragma sandwiches of every kind (peephole/scheduling/dont_inline/
+  inline_max_size/opt_*/ppc_unroll_*/optimization_level/fp_contract/explicit_zero_data/force_active/
+  exceptions). Compiler configuration lives in `configure.py` cflags only.
+- **`goto`** — write structured control flow.
+- **`__declspec(section ...)`** and any section-forcing data placement.
+- **Match-volatiles** — `volatile` or `*(volatile T*)&` puns used to block CSE/hoisting. `volatile`
+  is allowed only for genuine hardware/interrupt semantics (GX FIFO, hardware registers).
+- **Pool-reconstruction consts** — `lbl_8XXXXXXX`-named const defs read via `*(f32*)&`; write plain
+  literals.
+A unit that cannot match without one of these stays `NonMatching` (or awaits a TU re-split) — that is
+the accepted trade. Historical per-hack shapes and costs are recoverable via `docs/HACK_AUDIT.md`.
+
 ## House rules
 - NEVER write comments unless explicitly stated otherwise.
 - When updating comments NEVER track history, stuff like "used to be named x" always keep comments current.
@@ -54,7 +69,6 @@ project matches more.
 - Single-bit clear: write `x &= ~0x80` (→ `rlwinm`), not `x &= 0xff7f` (→ `andi`).
 - `u8` not `char` for a byte loaded and stored without arithmetic — drops a spurious `extsb`.
 - Local **declaration order** sets saved-register homes (first-declared top-loaded value → highest reg). Reorder decls to swap registers.
-- `#pragma peephole off` / `scheduling off` (paired with `reset`) around a fn unfuses `extsb.`/`rlwinm.` dot-merges and fixes call/FP scheduling — only in `-O4,p` units, never the noopt/audio units.
 - `f32 fn(f32)`, not `double fn(double)`, for single-precision helpers — avoids an `fmul`+`frsp`.
 - A single-bit flag written as a C bitfield (`u8 x:1`) compiles to `li; rlwimi`, not a manual `|= mask`.
 - FP compare feeding a branch → write the plain operator (`a >= b` → `fcmpo`+branch). A stored/returned float-bool uses a different form.

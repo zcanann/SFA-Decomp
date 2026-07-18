@@ -14,6 +14,14 @@ The complete pre-purge state is pinned at git tag `pre-hack-purge`
 - Load-bearing hack inventory with probed per-hack costs: session logs referenced
   in the wave-1/2 cleanup commits (6baee808c1, f4fc2e4464, bb1f92748d).
 
+## Policy going forward
+
+These constructs are BANNED from game code (`src/main/`, `src/track/`) — see the
+"Banned constructs" section of CLAUDE.md, which is the enforced source of truth:
+no `#pragma` of any kind, no `goto`, no `__declspec(section ...)`, no
+match-volatiles/CSE-blocking puns, no `lbl_`-named pool-reconstruction consts.
+Units that cannot match without them stay NonMatching or await a TU re-split.
+
 ## Wave 1 (partial - agents interrupted; ~1,536 of 3,209 hack lines removed)
 
 Overall fuzzy 99.841 -> 95.171 (post-demotion report). Every unit still compiles;
