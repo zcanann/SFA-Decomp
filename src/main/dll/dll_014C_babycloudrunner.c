@@ -434,7 +434,7 @@ void babycloudrunner_update(int* obj)
                                          &((GameObject*)near)->anim.worldPosX) >
                             gBabyCloudRunnerPlayerFarDist)
                         {
-                            fn_8014C66C((GameObject*)near, (GameObject*)obj);
+                            enemy_setTrackedObj((GameObject*)near, (GameObject*)obj);
                             if (((GameObject*)obj)->anim.currentMove != 0xd)
                             {
                                 ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject*)obj)->anim.currentMoveProgress, 0);
@@ -444,14 +444,14 @@ void babycloudrunner_update(int* obj)
                         }
                         else
                         {
-                            fn_8014C66C((GameObject*)near, Obj_GetPlayerObject());
+                            enemy_setTrackedObj((GameObject*)near, Obj_GetPlayerObject());
                         }
                     }
                     else
                     {
                         if (near != NULL)
                         {
-                            fn_8014C66C((GameObject*)near, Obj_GetPlayerObject());
+                            enemy_setTrackedObj((GameObject*)near, Obj_GetPlayerObject());
                         }
                     }
                     fn_8019E3F4(obj);

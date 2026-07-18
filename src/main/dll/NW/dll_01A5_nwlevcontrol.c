@@ -295,7 +295,7 @@ void nw_levcontrol_update(int objArg)
                 }
                 else
                 {
-                    int extra = (int)(fn_80014668() / 60.0f);
+                    int extra = (int)(gameTimerGetValue() / 60.0f);
                     gameTimerStop();
                     gameTimerInit(0x15, (u32)state->timerMinutes + extra);
                     timerSetToCountUp();

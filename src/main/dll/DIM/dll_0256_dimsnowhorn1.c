@@ -603,10 +603,10 @@ int DIMSnowHorn1_stateHandler05(GameObject* obj, int state)
             {
                 o1 = (int*)ObjList_FindObjectById(id_a);
                 if (o1 != NULL)
-                    fn_8014C63C((GameObject*)o1);
+                    enemy_trackPlayer((GameObject*)o1);
                 o1 = (int*)ObjList_FindObjectById(id_b);
                 if (o1 != NULL)
-                    fn_8014C63C((GameObject*)o1);
+                    enemy_trackPlayer((GameObject*)o1);
                 inner->proximityPhase = 2;
             }
             break;
@@ -618,11 +618,11 @@ int DIMSnowHorn1_stateHandler05(GameObject* obj, int state)
                 o1 = (int*)ObjList_FindObjectById(id_a);
                 o2 = (int*)ObjList_FindObjectById(id_c);
                 if (o1 != NULL && o2 != NULL)
-                    fn_8014C66C((GameObject*)o1, (GameObject*)o2);
+                    enemy_setTrackedObj((GameObject*)o1, (GameObject*)o2);
                 o1 = (int*)ObjList_FindObjectById(id_b);
                 o2 = (int*)ObjList_FindObjectById(id_d);
                 if (o1 != NULL && o2 != NULL)
-                    fn_8014C66C((GameObject*)o1, (GameObject*)o2);
+                    enemy_setTrackedObj((GameObject*)o1, (GameObject*)o2);
                 inner->proximityPhase = 1;
             }
             else

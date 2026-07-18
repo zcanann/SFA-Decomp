@@ -6,7 +6,7 @@
 u32 Link_update(void);
 void setLinkNotRotated(void);
 void setLinkIsRotated(void);
-u16 fn_80130124(void);
+u16 linkGetSelectedItemId(void);
 void linkDrawFn_801302c0(void);
 void linkDrawFn_80130484(void);
 void FUN_80131098(void);

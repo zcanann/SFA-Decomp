@@ -92,7 +92,7 @@ typedef struct LinkMenuItemDB
 } LinkMenuItemDB;
 #define LINK_FLAG_DRAW_SLOTS        0x0004
 
-u16 fn_80130124(void)
+u16 linkGetSelectedItemId(void)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     return gTumbleweedBushItems[linkSelected].itemId;

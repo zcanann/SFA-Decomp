@@ -468,7 +468,7 @@ void DFSH_Shrine_update(int objArg)
                     targetObj = ObjList_FindObjectById(targetId);
                     if (targetObj != 0)
                     {
-                        fn_8014C5C0((GameObject*)targetObj);
+                        enemy_setHealthZero((GameObject*)targetObj);
                     }
                 }
             }

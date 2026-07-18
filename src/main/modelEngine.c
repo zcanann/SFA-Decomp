@@ -405,7 +405,7 @@ void objListAdd(ObjLinkedList* list, int prev, int item)
     list->count++;
 }
 
-void fn_80013B6C(ObjLinkedList* list, s16 nextOffset)
+void objListInit(ObjLinkedList* list, s16 nextOffset)
 {
     list->head = 0;
     list->nextOffset = nextOffset;
@@ -661,7 +661,7 @@ f32 fn_8001461C(void)
     return 1000.0f * (gModelEngineTimerValue / 60.0f);
 }
 
-f32 fn_80014668(void)
+f32 gameTimerGetValue(void)
 {
     return gModelEngineTimerValue;
 }

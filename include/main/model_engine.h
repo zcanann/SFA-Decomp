@@ -83,7 +83,7 @@ RingBufferQueue* allocModelStruct_800139e8(int capacity, int elemSize);
 
 void objList_remove(ObjLinkedList* list, int item);
 void objListAdd(ObjLinkedList* list, int prev, int item);
-void fn_80013B6C(ObjLinkedList* list, s16 nextOffset);
+void objListInit(ObjLinkedList* list, s16 nextOffset);
 BOOL model_findIdxInModelList(ModelList* list, void* header, int* outIndex);
 BOOL ModelList_getHeader(ModelList* list, int index, void* outHeader);
 void model_adjustModelList(ModelList* list, int index);
@@ -96,7 +96,7 @@ void fn_8001404C(s32 value);
 void hudNumberFn_80014060(void);
 void set_hudNumber_803db278(s32 value);
 f32 fn_8001461C(void);
-f32 fn_80014668(void);
+f32 gameTimerGetValue(void);
 void curUiDllDraw(int a, int b, int c, int d);
 void uiDll_runFrameEndAndLoadNext(void);
 int uiDll_runFrameStartAndLoadNext(void);

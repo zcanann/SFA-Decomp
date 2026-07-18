@@ -295,7 +295,7 @@ void renderClouds(int a, int b, int c, int d)
         PSMTXTrans(mtx, pos[0], pos[1], pos[2]);
         GXLoadPosMtxImm(mtx, GX_PNMTX0);
         GXSetCurrentMtx(GX_PNMTX0);
-        selectTexture((Texture*)fn_8008912C(), 0);
+        selectTexture((Texture*)skyGetSkyTexture(), 0);
         if (cloudT >= 0.5f)
         {
             _gxSetTevColor2(0x80, 0x80, 0xff, 0xff);

@@ -3314,7 +3314,7 @@ void renderGlows(void)
                 PSMTXConcat(viewMtx, sunMtx, sunMtx);
                 GXLoadPosMtxImm((const f32 (*)[4])sunMtx, GX_PNMTX0);
                 GXSetCurrentMtx(GX_PNMTX0);
-                selectTexture((Texture*)((int)fn_8008912C()), 0);
+                selectTexture((Texture*)((int)skyGetSkyTexture()), 0);
                 getAmbientColor(0, &amb[0], &amb[1], &amb[2]);
                 sunDot = (f32)(u32)sky * sunDot;
                 _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(lbl_803DEBFC * sunDot));
@@ -3745,7 +3745,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
 
     for (; i < count; i++)
     {
-        u8* blk = fn_80028364((u8*)hdr, i);
+        u8* blk = modelFileGetCollisionBlock((u8*)hdr, i);
         s16* bs = (s16*)blk;
         u32 bf = *(u32*)(blk + 0x10);
         int tEnd, t;
@@ -3771,7 +3771,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
         t = *(u16*)blk;
         for (; t < tEnd; t++)
         {
-            u16* twn = fn_80028354((u8*)hdr, t);
+            u16* twn = modelFileGetCollisionTriangle((u8*)hdr, t);
             u16* tw;
             f32 tMinY, tMaxX, tMinX, tMaxY, tMinZ, tMaxZ;
             int j;

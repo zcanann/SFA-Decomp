@@ -1095,7 +1095,7 @@ void fn_8014C540(GameObject* obj, int* outIdx, f32* outA, f32* outB)
     *outB = fz;
     *outIdx = 0;
 }
-void fn_8014C5C0(GameObject* obj)
+void enemy_setHealthZero(GameObject* obj)
 {
     int* state = obj->extra;
     ((EnemyState*)state)->current = 0;
@@ -1121,13 +1121,13 @@ f32 enemy_getHealthFraction(register GameObject* obj)
     return lbl_803E2574;
 }
 
-void fn_8014C63C(GameObject* obj)
+void enemy_trackPlayer(GameObject* obj)
 {
     int* state = obj->extra;
     ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
 }
 
-void fn_8014C66C(GameObject* obj, GameObject* target)
+void enemy_setTrackedObj(GameObject* obj, GameObject* target)
 {
     ((EnemyState*)obj->extra)->trackedObj = target;
 }

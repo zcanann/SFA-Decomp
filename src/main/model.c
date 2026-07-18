@@ -2340,12 +2340,12 @@ void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
     }
     return buf;
 }
-void* fn_80028354(u8* modelFile, int index)
+void* modelFileGetCollisionTriangle(u8* modelFile, int index)
 {
     return ((ModelFileHeader*)modelFile)->collisionTriangles + index * 8;
 }
 
-void* fn_80028364(u8* modelFile, int index)
+void* modelFileGetCollisionBlock(u8* modelFile, int index)
 {
     return ((ModelFileHeader*)modelFile)->collisionBlocks + index * 0x14;
 }

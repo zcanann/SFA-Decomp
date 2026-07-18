@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-void* fn_8008912C(void);
+void* skyGetSkyTexture(void);
 
 #endif /* MAIN_SKY_TEXTURE_API_H_ */

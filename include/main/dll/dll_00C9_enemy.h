@@ -80,12 +80,12 @@ void FUN_8014c694(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_
 void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4);
 int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate);
 int fn_8014C11C(GameObject* obj, f32 radius, u8 flags, int maxCount, EnemyTargetSearchResult* results);
-void fn_8014C66C(GameObject* obj, GameObject* target);
+void enemy_setTrackedObj(GameObject* obj, GameObject* target);
 void fn_8014C678(GameObject* obj, void* state, f32* direction, f32 maxSpeed, f32 speedRange, f32 maxAngle,
                  u8 adjustGroundVelocity);
 void fn_8014CD1C(GameObject* obj, void* state, int divisor, f32 rollScale, f32 pitchScale, u8 useScaledRoll);
-void fn_8014C5C0(GameObject* obj);
-void fn_8014C63C(GameObject* obj);
+void enemy_setHealthZero(GameObject* obj);
+void enemy_trackPlayer(GameObject* obj);
 u8 fn_8014C4D8(GameObject* obj);
 void fn_8014C540(GameObject* obj, int* outIdx, f32* outA, f32* outB);
 void baddieTurnTowardPoint(GameObject* obj, int state, f32 targetX, f32 targetZ, int divisor, int angleBias);

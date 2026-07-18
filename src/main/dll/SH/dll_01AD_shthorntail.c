@@ -330,7 +330,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
              (objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][2]) ||
              (objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][3])))
         {
-            fn_8014C66C((GameObject*)objects[index], (GameObject*)obj);
+            enemy_setTrackedObj((GameObject*)objects[index], (GameObject*)obj);
             if ((vec3f_distanceSquared((f32*)&objects[index]->pos, (f32*)&obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
                 (mainGetBit(SHthorntail_GetLinkedGameBit(objects[index]->config)) == 0u))
             {

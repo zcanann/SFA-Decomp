@@ -462,7 +462,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
             i++;
         } while (i < 4);
     }
-    if (gTitleScreenCursorY > lbl_803E22F8 && (boxIndex = fn_80130124()) != 0xFFFF)
+    if (gTitleScreenCursorY > lbl_803E22F8 && (boxIndex = linkGetSelectedItemId()) != 0xFFFF)
     {
         int t = *(s16*)((int)gameTextGetBox(boxIndex) + 0x16);
         xb = (int)mtx[3];

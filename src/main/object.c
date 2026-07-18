@@ -2246,12 +2246,12 @@ void Obj_ResetObjectSystem(void)
     gObjDeferredFreeCount = 0;
     lbl_803DCB8C = 0;
     gObjCount = 0;
-    fn_80013B6C(&gObjUpdateList, 0x38);
+    objListInit(&gObjUpdateList, 0x38);
     gObjDeferredFreeCount = 0;
     lbl_803DCB8C = 0;
     lbl_803DCB70 = 0;
     gObjCount = 0;
-    fn_80013B6C(&gObjUpdateList, 0x38);
+    objListInit(&gObjUpdateList, 0x38);
     gObjPartitionPivot = 0;
     ObjGroup_ClearAll();
     ObjHits_ResetWorkBuffers();
@@ -2544,7 +2544,7 @@ void Obj_InitObjectSystem(void)
     lbl_803DCB8C = 0;
     lbl_803DCB70 = 0;
     gObjCount = 0;
-    fn_80013B6C(&gObjUpdateList, 0x38);
+    objListInit(&gObjUpdateList, 0x38);
     gObjPartitionPivot = 0;
     ObjGroup_ClearAll();
     ObjHits_ResetWorkBuffers();

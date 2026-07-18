@@ -292,7 +292,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                     int* o2 = (int*)ObjList_FindObjectById(gNwMammothBushObjectIds[i]);
                     if ((int*)fn_80296118((GameObject*)*(int*)&state->playerObject) == o2)
                     {
-                        fn_8014C66C((GameObject*)o2, state->playerObject);
+                        enemy_setTrackedObj((GameObject*)o2, state->playerObject);
                     }
                     else
                     {
@@ -303,16 +303,16 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                             if (vec3f_distanceSquared(&((GameObject*)state->playerObject)->anim.worldPosX,
                                                       (f32*)&o2[6]) >= gNwMammothTumbleweedDistSqThreshold)
                             {
-                                fn_8014C66C((GameObject*)o2, (GameObject*)obj);
+                                enemy_setTrackedObj((GameObject*)o2, (GameObject*)obj);
                             }
                             else
                             {
-                                fn_8014C66C((GameObject*)o2, state->playerObject);
+                                enemy_setTrackedObj((GameObject*)o2, state->playerObject);
                             }
                         }
                         else
                         {
-                            fn_8014C66C((GameObject*)o2, (GameObject*)tw);
+                            enemy_setTrackedObj((GameObject*)o2, (GameObject*)tw);
                         }
                     }
                 }

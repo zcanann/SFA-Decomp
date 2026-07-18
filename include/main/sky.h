@@ -97,14 +97,14 @@ int getSkyStructField24C(void);
 void skyGetCurrentTextureColor(u8* red, u8* green, u8* blue);
 void skyGetCurrentAmbientAndLightColors(u8* ambientRed, u8* ambientGreen, u8* ambientBlue, u8* lightRed, u8* lightGreen,
                                         u8* lightBlue);
-void* fn_8008912C(void);
+void* skyGetSkyTexture(void);
 void skyBuildSunModelMatrix(f32 mtx[3][4]);
 u8 skyFn_8008919c(int slot);
 void getTimeOfDay(f32* time);
 void renderSky(int a, int b, int c, int d, int visible);
 void getAmbientColor(int slot, u8* red, u8* green, u8* blue);
 int getSunPos(f32* outTime);
-void fn_8008B88C(int* outTimer);
+void skyGetTimer(int* outTimer);
 void fn_800897D4(int slot, f32* x, f32* y, f32* z);
 void dll_06_func0B(int* x, int* y);
 void dll_06_func0A(int* a, int* b, int* c, f32* scale);

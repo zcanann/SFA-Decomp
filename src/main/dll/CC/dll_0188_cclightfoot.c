@@ -272,8 +272,8 @@ void cclightfoot_update(int obj)
                             oNear = oNear ^ tmp;
                             oFar = tmp ^ oNear;
                         }
-                        fn_8014C66C((GameObject*)oNear, (GameObject*)state->playerObj);
-                        fn_8014C66C((GameObject*)oFar, (GameObject*)obj);
+                        enemy_setTrackedObj((GameObject*)oNear, (GameObject*)state->playerObj);
+                        enemy_setTrackedObj((GameObject*)oFar, (GameObject*)obj);
                         targetObj = oFar;
                         dist = getXZDistance((f32*)(obj + 0x18), (f32*)(oFar + 0x18));
                     }
@@ -284,7 +284,7 @@ void cclightfoot_update(int obj)
                             off = i * 4;
                             *(f32*)((u8*)dists + off) =
                                 getXZDistance((f32*)(obj + 0x18), (f32*)(*(int*)((u8*)state + off + 8) + 0x18));
-                            fn_8014C66C((GameObject*)*(int*)((u8*)state + off + 8), (GameObject*)obj);
+                            enemy_setTrackedObj((GameObject*)*(int*)((u8*)state + off + 8), (GameObject*)obj);
                         }
                         if (dists[0] < dists[1])
                         {
@@ -333,11 +333,11 @@ void cclightfoot_update(int obj)
                      (void*)fn_80296118((GameObject*)state->playerObj) != (void*)fallback) ||
                     playerIsDisguised((GameObject*)state->playerObj) != 0)
                 {
-                    fn_8014C66C((GameObject*)fallback, (GameObject*)obj);
+                    enemy_setTrackedObj((GameObject*)fallback, (GameObject*)obj);
                 }
                 else
                 {
-                    fn_8014C66C((GameObject*)fallback, (GameObject*)state->playerObj);
+                    enemy_setTrackedObj((GameObject*)fallback, (GameObject*)state->playerObj);
                 }
                 targetObj = fallback;
                 dist = getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18));

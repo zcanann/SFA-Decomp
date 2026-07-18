@@ -91,7 +91,7 @@ void NW_tricky_update(int* obj)
             {
                 if (((GameObject*)*scan)->anim.seqId == NWTRICKY_SNOWHORN_HERD_SEQID)
                 {
-                    fn_8014C66C((GameObject*)*scan, (GameObject*)player);
+                    enemy_setTrackedObj((GameObject*)*scan, (GameObject*)player);
                 }
             }
             mainSetBits(GAMEBIT_Tricky_Usable, 1);
@@ -135,11 +135,11 @@ void NW_tricky_update(int* obj)
                     dPlayer = vec3f_distanceSquared(((NwObjPos*)*scan2)->worldPos, ((NwObjPos*)player)->worldPos);
                     if (vec3f_distanceSquared(((NwObjPos*)*scan2)->worldPos, ((NwObjPos*)tricky)->worldPos) < dPlayer)
                     {
-                        fn_8014C66C((GameObject*)*scan2, (GameObject*)tricky);
+                        enemy_setTrackedObj((GameObject*)*scan2, (GameObject*)tricky);
                     }
                     else
                     {
-                        fn_8014C66C((GameObject*)*scan2, (GameObject*)player);
+                        enemy_setTrackedObj((GameObject*)*scan2, (GameObject*)player);
                     }
                 }
             }

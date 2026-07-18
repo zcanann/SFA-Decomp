@@ -411,7 +411,7 @@ void skyGetCurrentAmbientAndLightColors(u8* ambientRed, u8* ambientGreen, u8* am
     *lightBlue = 0xff;
 }
 
-void* fn_8008912C(void)
+void* skyGetSkyTexture(void)
 {
     return gSkySkyTexture;
 }
@@ -646,7 +646,7 @@ ModelLightStruct* skyGetSunLight(void)
     return gSkySunLight;
 }
 
-void fn_8008B88C(int* outTimer)
+void skyGetTimer(int* outTimer)
 {
     u8* sky;
 
@@ -3131,7 +3131,7 @@ SkyDllInterface lbl_8030F414 = {
     (ObjectDescriptorCallback)getTimeOfDay,
     (ObjectDescriptorCallback)skyGetClockTime,
     (ObjectDescriptorCallback)doNothing_8008B8B0,
-    (ObjectDescriptorCallback)fn_8008B88C,
+    (ObjectDescriptorCallback)skyGetTimer,
     (ObjectDescriptorCallback)getSunPos,
     (ObjectDescriptorCallback)pDll_Sky_setTimeOfDay_nop,
     (ObjectDescriptorCallback)return0_8008B7E8,
