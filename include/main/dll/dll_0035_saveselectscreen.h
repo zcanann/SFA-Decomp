@@ -27,4 +27,13 @@ void FUN_8011c080(void);
 /* extern-cleanup: defining-file public prototypes */
 void saveSelectGoToChooseSlot(int arg);
 
+extern u8 saveFileSelect_debugCheatProgress;
+extern u8 saveFileSelect_saveCheatProgress;
+extern u8 saveFileSelect_cheatInputTimer;
+extern s8 saveFileSelect_currentSlotIndex;
+extern u8 saveFileSelect_saveDirty;
+extern struct FrontendSaveSlot* saveFileSelect_saveSlotsBase;
+extern struct FrontendSaveSlot* saveFileSelect_saveSlots;
+extern u16 saveFileSelect_slotCheatSequence[6];
+
 #endif /* MAIN_DLL_DLL_47_H_ */
