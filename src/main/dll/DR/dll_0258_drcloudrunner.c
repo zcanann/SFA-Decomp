@@ -77,34 +77,7 @@ STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 #define DRCLOUDRUNNER_CHILD_OBJ_PROJECTILE 0x42a
 
 
-void fn_802BF0C8(GameObject* obj, CloudRunnerState* state, int mode)
-{
-    u8* base = gDRCloudRunnerMoveParamTable;
-    int stk = lbl_803E83A0;
-    u8* pathState = (u8*)&state->baddie + 4;
-    u8 moveMode;
-    pathState[0x25b] = 1;
-    moveMode = mode;
-    if (moveMode == 1)
-    {
-        (*gPathControlInterface)->init(pathState, 0, 0x42087, 0);
-        (*gPathControlInterface)->setLocalPointCollision(pathState, 1, base + 0x18, &lbl_803DC774, 8);
-        (*gPathControlInterface)->setup(pathState, 1, base + 0xc, &lbl_803DC770, &stk);
-    }
-    else if (moveMode == 2)
-    {
-        (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
-        (*gPathControlInterface)->setLocalPointCollision(pathState, 2, base + 0x30, &lbl_803DC77C, 8);
-        (*gPathControlInterface)->setup(pathState, 1, base + 0x24, &lbl_803DC778, &stk);
-    }
-    else if (moveMode == 0)
-    {
-        (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
-        (*gPathControlInterface)->setLocalPointCollision(pathState, 2, base + 0x48, &lbl_803DC784, 8);
-        (*gPathControlInterface)->setup(pathState, 1, base + 0x3c, &lbl_803DC780, &stk);
-    }
-    (*gPathControlInterface)->attachObject(obj, pathState);
-}
+void fn_802BF0C8(GameObject* obj, CloudRunnerState* state, int mode);
 
 void DR_CloudRunner_func23(GameObject* obj, int mode, int* out)
 {
@@ -1386,3 +1359,32 @@ ObjectDescriptor24 gDR_CloudRunnerObjDescriptor = {
 };
 
 char sOnCloudFormat[] = "ON CLOUD=%d\n";
+
+void fn_802BF0C8(GameObject* obj, CloudRunnerState* state, int mode)
+{
+    u8* base = gDRCloudRunnerMoveParamTable;
+    int stk = lbl_803E83A0;
+    u8* pathState = (u8*)&state->baddie + 4;
+    u8 moveMode;
+    pathState[0x25b] = 1;
+    moveMode = mode;
+    if (moveMode == 1)
+    {
+        (*gPathControlInterface)->init(pathState, 0, 0x42087, 0);
+        (*gPathControlInterface)->setLocalPointCollision(pathState, 1, base + 0x18, &lbl_803DC774, 8);
+        (*gPathControlInterface)->setup(pathState, 1, base + 0xc, &lbl_803DC770, &stk);
+    }
+    else if (moveMode == 2)
+    {
+        (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
+        (*gPathControlInterface)->setLocalPointCollision(pathState, 2, base + 0x30, &lbl_803DC77C, 8);
+        (*gPathControlInterface)->setup(pathState, 1, base + 0x24, &lbl_803DC778, &stk);
+    }
+    else if (moveMode == 0)
+    {
+        (*gPathControlInterface)->init(pathState, 3, 0x42087, 0);
+        (*gPathControlInterface)->setLocalPointCollision(pathState, 2, base + 0x48, &lbl_803DC784, 8);
+        (*gPathControlInterface)->setup(pathState, 1, base + 0x3c, &lbl_803DC780, &stk);
+    }
+    (*gPathControlInterface)->attachObject(obj, pathState);
+}
