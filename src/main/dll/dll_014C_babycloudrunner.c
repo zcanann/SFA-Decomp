@@ -188,9 +188,9 @@ ObjectDescriptor12 gBabyCloudRunnerObjDescriptor = {
 
 int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
+    char* player;
     BabyCloudRunnerPlacement* def = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
     s8 inRange;
-    char* player;
     int yaw;
     u8* animUpdateBytes = (u8*)animUpdate;
     f32 dx;
