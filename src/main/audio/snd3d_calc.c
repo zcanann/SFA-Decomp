@@ -390,15 +390,11 @@ void s3dStartQueuedEmitters(void)
     u32 handle;
     u8 studio;
     f32 distanceDelta;
-    int startVoice;
-    int voiceStarted;
 
     for (groupIndex = 0; groupIndex < lbl_803DE36B; groupIndex++)
     {
-        node = startGroup[groupIndex].activeHead;
-        while (node != (S3DActiveNode*)0x0)
+        for (node = startGroup[groupIndex].activeHead; node != (S3DActiveNode*)0x0; node = node->next)
         {
-            startVoice = 1;
             if ((startGroup[groupIndex].sortedHead != (S3DSortedNode*)0x0) &&
                 !((lbl_803DE36A != 0) &&
                   ((startGroup[groupIndex].key & S3D_GROUP_KEY_STEREO_LIMIT) != 0) &&
@@ -407,14 +403,14 @@ void s3dStartQueuedEmitters(void)
                 distanceDelta = node->distance - startGroup[groupIndex].sortedHead->distance;
                 if (distanceDelta <= 0.08f)
                 {
-                    startVoice = 0;
+                    continue;
                 }
                 else if (distanceDelta <= 0.15f)
                 {
                     emitter = node->emitter;
                     if (++emitter->retryCounter < 0x14)
                     {
-                        startVoice = 0;
+                        continue;
                     }
                 }
                 else
@@ -423,61 +419,56 @@ void s3dStartQueuedEmitters(void)
                 }
             }
 
-            if (startVoice)
+            emitter = node->emitter;
+            if ((emitter->entry != (SndSpatialEntry*)0x0) && (emitter->entry->assignedVoice == 0xff))
             {
-                voiceStarted = 0;
-                emitter = node->emitter;
-                if ((emitter->entry == (SndSpatialEntry*)0x0) || (emitter->entry->assignedVoice != 0xff))
+                if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) == 0)
                 {
-                    if (emitter->entry != (SndSpatialEntry*)0x0)
-                    {
-                        studio = emitter->entry->assignedVoice;
-                    }
-                    else
-                    {
-                        studio = emitter->studio;
-                    }
-
-                    handle = synthFXStart(emitter->fxId, 0x7f, 0x40, studio,
-                                          (emitter->flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0);
-                    emitter->handle = handle;
-                    if (handle != S3D_INVALID_FX_HANDLE)
-                    {
-                        voiceStarted = 1;
-                    }
-                }
-
-                if (voiceStarted == 0)
-                {
-                    if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) == 0)
-                    {
-                        emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
-                        emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
-                    }
-                }
-                else
-                {
-                    if ((emitter->flags & S3D_EMITTER_FLAG_SKIP_FADE_IN) == 0)
-                    {
-                        emitter->flags |= S3D_EMITTER_FLAG_AGE_OUT;
-                        emitter->age = 0.0f;
-                    }
-                    else
-                    {
-                        emitter->age = 1.0f;
-                    }
-                    s3dApplyEmitterControls(emitter, node->distance, node->pan, node->frontBack, node->azimuth,
-                                            node->pitch);
+                    emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
                     emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
-                    startGroup[groupIndex].sortedCount++;
-                    if (startGroup[groupIndex].sortedHead != (S3DSortedNode*)0x0)
-                    {
-                        startGroup[groupIndex].sortedHead = startGroup[groupIndex].sortedHead->next;
-                    }
                 }
+                continue;
             }
 
-            node = node->next;
+            if (emitter->entry != (SndSpatialEntry*)0x0)
+            {
+                studio = emitter->entry->assignedVoice;
+            }
+            else
+            {
+                studio = emitter->studio;
+            }
+
+            handle = synthFXStart(emitter->fxId, 0x7f, 0x40, studio,
+                                  (emitter->flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0);
+            emitter->handle = handle;
+            if (handle == S3D_INVALID_FX_HANDLE)
+            {
+                if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) == 0)
+                {
+                    emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
+                    emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
+                }
+                continue;
+            }
+
+            if ((emitter->flags & S3D_EMITTER_FLAG_SKIP_FADE_IN) == 0)
+            {
+                emitter->flags |= S3D_EMITTER_FLAG_AGE_OUT;
+                emitter->age = 0.0f;
+            }
+            else
+            {
+                emitter->age = 1.0f;
+            }
+            s3dApplyEmitterControls(emitter, node->distance, node->pan, node->frontBack, node->azimuth,
+                                    node->pitch);
+            emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
+            startGroup[groupIndex].sortedCount++;
+            if (startGroup[groupIndex].sortedHead != (S3DSortedNode*)0x0)
+            {
+                startGroup[groupIndex].sortedHead = startGroup[groupIndex].sortedHead->next;
+            }
         }
     }
 }
