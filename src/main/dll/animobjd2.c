@@ -41,6 +41,7 @@
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/flameblast_api.h"
 
@@ -77,7 +78,6 @@ typedef struct AnimObjD2DripSetup
 extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
-extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];
 extern f32 lbl_803E23DC;
@@ -184,7 +184,8 @@ void fn_8013E0D0(int* obj, TrickyState* t)
         int go;
         trickyDebugPrint(str + 0x5a0);
         ok = trickyFn_8013b368(gobj, lbl_803E24D4, t);
-        if ((t->followObj = trickyFindNearestUsableBaddie(*(void**)&t->playerObj, lbl_803E24D8, 0)) != NULL)
+        if ((t->followObj =
+                 (u8*)trickyFindNearestUsableBaddie((GameObject*)t->playerObj, lbl_803E24D8, 0)) != NULL)
         {
             TRICKY_RETARGET((u8*)t, *(int*)&t->followObj);
             go = 1;
@@ -264,7 +265,8 @@ void fn_8013E0D0(int* obj, TrickyState* t)
         int go;
         trickyDebugPrint(str + 0x5b4, **(u8**)&t->progressPtr, *(int*)&t->stateFlags728);
         ok = trickyFn_8013b368(gobj, lbl_803E24D4, t);
-        if ((t->followObj = trickyFindNearestUsableBaddie(*(void**)&t->playerObj, lbl_803E24D8, 0)) != NULL)
+        if ((t->followObj =
+                 (u8*)trickyFindNearestUsableBaddie((GameObject*)t->playerObj, lbl_803E24D8, 0)) != NULL)
         {
             TRICKY_RETARGET((u8*)t, *(int*)&t->followObj);
             go = 1;
@@ -393,7 +395,8 @@ void fn_8013E0D0(int* obj, TrickyState* t)
         int go;
         trickyDebugPrint(str + 0x5cc);
         ok = trickyFn_8013b368(gobj, lbl_803E24E4, t);
-        if ((t->followObj = trickyFindNearestUsableBaddie(*(void**)&t->playerObj, lbl_803E24D8, 0)) != NULL)
+        if ((t->followObj =
+                 (u8*)trickyFindNearestUsableBaddie((GameObject*)t->playerObj, lbl_803E24D8, 0)) != NULL)
         {
             TRICKY_RETARGET((u8*)t, *(int*)&t->followObj);
             go = 1;
@@ -479,15 +482,15 @@ void fn_8013E0D0(int* obj, TrickyState* t)
     case ANIMOBJD2_SUBSTATE_ORBIT:
     {
         void** p;
-        int* tgt;
-        void* found = trickyFindNearestUsableBaddie(*(void**)&t->playerObj, lbl_803E24D8, 0);
-        if (found != NULL && ((GameObject*)found)->anim.seqId == ANIMOBJD2_CIRCLE_TARGET_SEQID)
+        GameObject* tgt;
+        GameObject* found = trickyFindNearestUsableBaddie((GameObject*)t->playerObj, lbl_803E24D8, 0);
+        if (found != NULL && found->anim.seqId == ANIMOBJD2_CIRCLE_TARGET_SEQID)
         {
             tgt = found;
         }
         else
         {
-            tgt = (int*)Player_GetTargetObject(t->playerObj);
+            tgt = (GameObject*)Player_GetTargetObject(t->playerObj);
         }
         if ((u32)tgt != *(u32*)&t->cooldownB || *(int*)&t->stateFlags728 != 0)
         {
@@ -503,10 +506,10 @@ void fn_8013E0D0(int* obj, TrickyState* t)
             ratio = lbl_803E23F8;
             for (; i < count; i++)
             {
-                f32 d1 = Vec_xzDistance(&((GameObject*)p[0])->anim.worldPosX, &((GameObject*)tgt)->anim.worldPosX);
+                f32 d1 = Vec_xzDistance(&((GameObject*)p[0])->anim.worldPosX, &tgt->anim.worldPosX);
                 f32 d2 = Vec_xzDistance(&((GameObject*)p[0])->anim.worldPosX,
                                         &((GameObject*)*(void**)&t->playerObj)->anim.worldPosX);
-                f32 d3 = Vec_xzDistance(&((GameObject*)tgt)->anim.worldPosX,
+                f32 d3 = Vec_xzDistance(&tgt->anim.worldPosX,
                                         &((GameObject*)*(void**)&t->playerObj)->anim.worldPosX);
                 if (d1 + d2 > ratio * d3)
                 {

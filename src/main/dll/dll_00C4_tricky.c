@@ -203,7 +203,6 @@ extern void doNothing_onTrickyFree(void);
 extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
 extern int trickyFoodFn_8014460c(GameObject* obj, int state);
-extern int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2);
 extern void skeetla_spawnLinkedSparks(int obj);
 extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
@@ -833,8 +832,8 @@ int Tricky_updateSideCommandPrompts(int obj)
         }
         else
         {
-            ref = trickyFindNearestUsableBaddie(((TrickyState*)state)->playerObj, lbl_803E2524, 1);
-            if ((void*)ref != NULL)
+            if (trickyFindNearestUsableBaddie((GameObject*)((TrickyState*)state)->playerObj, lbl_803E2524, 1) !=
+                NULL)
             {
                 promptA = true;
                 promptC = true;
@@ -1351,7 +1350,7 @@ void Tricky_update(int obj)
     int setup;
     int count;
     u32 flags;
-    int step;
+    GameObject* step;
     int played;
     int talking;
     u8* target;
@@ -1748,13 +1747,13 @@ void Tricky_update(int obj)
                     if (trickyState->stateIndex == 1 && trickyState->commandPhase != 0 &&
                         (flags & 0x20000) == 0)
                     {
-                        step = trickyFindNearestUsableBaddie(trickyState->playerObj, lbl_803E24D8, 0);
-                        if ((void*)step != NULL)
+                        step = trickyFindNearestUsableBaddie((GameObject*)trickyState->playerObj, lbl_803E24D8, 0);
+                        if (step != NULL)
                         {
-                            *(int*)&trickyState->followObj = step;
-                            if (trickyState->targetPosPtr != (u8*)(step + 0x18))
+                            trickyState->followObj = (u8*)step;
+                            if (trickyState->targetPosPtr != (u8*)&step->anim.worldPosX)
                             {
-                                trickyState->targetPosPtr = (u8*)(step + 0x18);
+                                trickyState->targetPosPtr = (u8*)&step->anim.worldPosX;
                                 {
                                     u32 mask;
                                     u32 stateFlags = trickyState->stateFlags;

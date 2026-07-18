@@ -23,5 +23,6 @@ void errDisplayThreadMain(void);
 void reportAllocFail(void);
 void debugPrintDraw(int ctx);
 void objAnimFreeChildren(int a, int b, GameObject** c);
+GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes);
 
 #endif

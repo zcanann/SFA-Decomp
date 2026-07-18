@@ -1406,11 +1406,11 @@ void* trickyGetQueuedPathParticlePos(GameObject* obj)
     return &((TrickyImpressState*)obj->extra)->renderPosX;
 }
 
-int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTypes)
+GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes)
 {
     int* objs;
     int* tmpList;
-    int closest;
+    GameObject* closest;
     int i;
     f32 bestDistSq;
     int count;
@@ -1472,11 +1472,11 @@ int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTyp
                             continue;
                     }
                     {
-                        f32 dist = vec3f_distanceSquared((f32*)(origin + 0x18), (f32*)(*objs + 0x18));
+                        f32 dist = vec3f_distanceSquared(&origin->anim.worldPosX, (f32*)(*objs + 0x18));
                         if (dist < bestDistSq)
                         {
                             bestDistSq = dist;
-                            closest = *objs;
+                            closest = (GameObject*)*objs;
                         }
                     }
                 }
