@@ -104,133 +104,8 @@ void BombPlantSpore_free(GameObject* obj)
     }
 }
 
-/* These two drift helpers' only callers are BombPlantSpore_update/init in
- * this TU. */
-void bombplantspore_startDriftBurst(GameObject* obj, void* state)
-{
-    s16 baseAngle;
-    void* params;
-    s32 angleDelta;
-
-    params = obj->anim.placementData;
-    baseAngle = ((BombplantsporeStartDriftBurstPlacement*)params)->baseAngle;
-
-    ((BombPlantSporeState*)state)->spinTimer = (f32)(int)randomGetRange(0x1e, 0x2d);
-
-    ((BombPlantSporeState*)state)->driftTimer =
-        ((BombPlantSporeState*)state)->spinTimer + (f32)(int)randomGetRange(0x78, 0xb4);
-
-    ((BombPlantSporeState*)state)->burstDriftAngle =
-        (s16)(((BombPlantSporeState*)state)->currentSpinAngle + randomGetRange(-2000, 2000));
-    angleDelta = (s32)((BombPlantSporeState*)state)->burstDriftAngle - (u16)baseAngle;
-    if (0x8000 < angleDelta)
-    {
-        angleDelta -= 0xffff;
-    }
-    if (angleDelta < -0x8000)
-    {
-        angleDelta += 0xffff;
-    }
-    if (angleDelta > ((BombplantsporeStartDriftBurstPlacement*)params)->angleSpread)
-    {
-        ((BombPlantSporeState*)state)->burstDriftAngle =
-            (s16)(baseAngle + ((BombplantsporeStartDriftBurstPlacement*)params)->angleSpread);
-    }
-    if (angleDelta < -(s32)((BombplantsporeStartDriftBurstPlacement*)params)->angleSpread)
-    {
-        ((BombPlantSporeState*)state)->burstDriftAngle =
-            (s16)(baseAngle - ((BombplantsporeStartDriftBurstPlacement*)params)->angleSpread);
-    }
-
-    ((BombPlantSporeState*)state)->driftSpeedTarget = (f32)(int)randomGetRange(900, 0x514) / lbl_803E5390;
-    ((BombPlantSporeState*)state)->driftSpeed = lbl_803E5394;
-
-    ((BombPlantSporeState*)state)->driftSin = mathSinf(
-        (gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->burstDriftAngle) / gBombPlantSporeAngleHalfPeriod);
-    ((BombPlantSporeState*)state)->driftCos = mathCosf(
-        (gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->burstDriftAngle) / gBombPlantSporeAngleHalfPeriod);
-}
-
-void bombplantspore_updateDrift(GameObject* obj, void* state)
-{
-    s16 baseAngle;
-    void* params;
-    s32 angleDelta;
-
-    params = obj->anim.placementData;
-    baseAngle = ((BombplantsporeUpdateDriftPlacement*)params)->baseAngle;
-
-    if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->spinChangeTimer <= lbl_803E5394)
-    {
-        ((BombPlantSporeState*)state)->spinAngle = randomGetRange(2000, 4000);
-        if (randomGetRange(0, 1) != 0)
-        {
-            ((BombPlantSporeState*)state)->spinAngle = -((BombPlantSporeState*)state)->spinAngle;
-        }
-        ((BombPlantSporeState*)state)->spinAngle += ((BombPlantSporeState*)state)->currentSpinAngle;
-        angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - (u16)baseAngle;
-        if (angleDelta > 0x8000)
-        {
-            angleDelta -= 0xffff;
-        }
-        if (angleDelta < -0x8000)
-        {
-            angleDelta += 0xffff;
-        }
-        if (angleDelta > ((BombplantsporeUpdateDriftPlacement*)params)->angleSpread)
-        {
-            ((BombPlantSporeState*)state)->spinAngle =
-                (s16)(baseAngle + ((BombplantsporeUpdateDriftPlacement*)params)->angleSpread);
-        }
-        if (angleDelta < -(s32)((BombplantsporeUpdateDriftPlacement*)params)->angleSpread)
-        {
-            ((BombPlantSporeState*)state)->spinAngle =
-                (s16)(baseAngle - ((BombplantsporeUpdateDriftPlacement*)params)->angleSpread);
-        }
-        ((BombPlantSporeState*)state)->spinChangeTimer = lbl_803E53A8;
-    }
-
-    if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->spinChangeTimer <= lbl_803E5394)
-    {
-        ((BombPlantSporeState*)state)->randomPhase =
-            ((BombPlantSporeState*)state)->driftAmplitude + (f32)(int)randomGetRange(-200, 200) / lbl_803E5390;
-        if (((BombPlantSporeState*)state)->randomPhase < lbl_803E53AC)
-        {
-            ((BombPlantSporeState*)state)->randomPhase = lbl_803E53AC;
-        }
-        else if (((BombPlantSporeState*)state)->randomPhase > lbl_803E53B0)
-        {
-            ((BombPlantSporeState*)state)->randomPhase = lbl_803E53B0;
-        }
-    }
-
-    angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - (u16)((BombPlantSporeState*)state)->currentSpinAngle;
-    if (angleDelta > 0x8000)
-    {
-        angleDelta -= 0xffff;
-    }
-    if (angleDelta < -0x8000)
-    {
-        angleDelta += 0xffff;
-    }
-    ((BombPlantSporeState*)state)->currentSpinAngle += (angleDelta * framesThisStep) >> 4;
-    {
-        f32 amplitude;
-        f32 amplitudeStep =
-            (((BombPlantSporeState*)state)->randomPhase - (amplitude = ((BombPlantSporeState*)state)->driftAmplitude)) *
-            lbl_803E53B4;
-        ((BombPlantSporeState*)state)->driftAmplitude = amplitudeStep * timeDelta + amplitude;
-    }
-
-    ((BombPlantSporeState*)state)->driftBaseX =
-        ((BombPlantSporeState*)state)->driftAmplitude *
-        mathSinf((gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->currentSpinAngle) /
-                 gBombPlantSporeAngleHalfPeriod);
-    ((BombPlantSporeState*)state)->driftBaseZ =
-        ((BombPlantSporeState*)state)->driftAmplitude *
-        mathCosf((gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->currentSpinAngle) /
-                 gBombPlantSporeAngleHalfPeriod);
-}
+void bombplantspore_startDriftBurst(GameObject* obj, void* state);
+void bombplantspore_updateDrift(GameObject* obj, void* state);
 
 void BombPlantSpore_update(GameObject* obj)
 {
@@ -399,6 +274,133 @@ void BombPlantSpore_update(GameObject* obj)
         }
     }
 }
+
+void bombplantspore_startDriftBurst(GameObject* obj, void* state)
+{
+    s16 baseAngle;
+    void* params;
+    s32 angleDelta;
+
+    params = obj->anim.placementData;
+    baseAngle = ((BombplantsporeStartDriftBurstPlacement*)params)->baseAngle;
+
+    ((BombPlantSporeState*)state)->spinTimer = (f32)(int)randomGetRange(0x1e, 0x2d);
+
+    ((BombPlantSporeState*)state)->driftTimer =
+        ((BombPlantSporeState*)state)->spinTimer + (f32)(int)randomGetRange(0x78, 0xb4);
+
+    ((BombPlantSporeState*)state)->burstDriftAngle =
+        (s16)(((BombPlantSporeState*)state)->currentSpinAngle + randomGetRange(-2000, 2000));
+    angleDelta = (s32)((BombPlantSporeState*)state)->burstDriftAngle - (u16)baseAngle;
+    if (0x8000 < angleDelta)
+    {
+        angleDelta -= 0xffff;
+    }
+    if (angleDelta < -0x8000)
+    {
+        angleDelta += 0xffff;
+    }
+    if (angleDelta > ((BombplantsporeStartDriftBurstPlacement*)params)->angleSpread)
+    {
+        ((BombPlantSporeState*)state)->burstDriftAngle =
+            (s16)(baseAngle + ((BombplantsporeStartDriftBurstPlacement*)params)->angleSpread);
+    }
+    if (angleDelta < -(s32)((BombplantsporeStartDriftBurstPlacement*)params)->angleSpread)
+    {
+        ((BombPlantSporeState*)state)->burstDriftAngle =
+            (s16)(baseAngle - ((BombplantsporeStartDriftBurstPlacement*)params)->angleSpread);
+    }
+
+    ((BombPlantSporeState*)state)->driftSpeedTarget = (f32)(int)randomGetRange(900, 0x514) / lbl_803E5390;
+    ((BombPlantSporeState*)state)->driftSpeed = lbl_803E5394;
+
+    ((BombPlantSporeState*)state)->driftSin = mathSinf(
+        (gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->burstDriftAngle) / gBombPlantSporeAngleHalfPeriod);
+    ((BombPlantSporeState*)state)->driftCos = mathCosf(
+        (gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->burstDriftAngle) / gBombPlantSporeAngleHalfPeriod);
+}
+
+void bombplantspore_updateDrift(GameObject* obj, void* state)
+{
+    s16 baseAngle;
+    void* params;
+    s32 angleDelta;
+
+    params = obj->anim.placementData;
+    baseAngle = ((BombplantsporeUpdateDriftPlacement*)params)->baseAngle;
+
+    if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->spinChangeTimer <= lbl_803E5394)
+    {
+        ((BombPlantSporeState*)state)->spinAngle = randomGetRange(2000, 4000);
+        if (randomGetRange(0, 1) != 0)
+        {
+            ((BombPlantSporeState*)state)->spinAngle = -((BombPlantSporeState*)state)->spinAngle;
+        }
+        ((BombPlantSporeState*)state)->spinAngle += ((BombPlantSporeState*)state)->currentSpinAngle;
+        angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - (u16)baseAngle;
+        if (angleDelta > 0x8000)
+        {
+            angleDelta -= 0xffff;
+        }
+        if (angleDelta < -0x8000)
+        {
+            angleDelta += 0xffff;
+        }
+        if (angleDelta > ((BombplantsporeUpdateDriftPlacement*)params)->angleSpread)
+        {
+            ((BombPlantSporeState*)state)->spinAngle =
+                (s16)(baseAngle + ((BombplantsporeUpdateDriftPlacement*)params)->angleSpread);
+        }
+        if (angleDelta < -(s32)((BombplantsporeUpdateDriftPlacement*)params)->angleSpread)
+        {
+            ((BombPlantSporeState*)state)->spinAngle =
+                (s16)(baseAngle - ((BombplantsporeUpdateDriftPlacement*)params)->angleSpread);
+        }
+        ((BombPlantSporeState*)state)->spinChangeTimer = lbl_803E53A8;
+    }
+
+    if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState*)state)->spinChangeTimer <= lbl_803E5394)
+    {
+        ((BombPlantSporeState*)state)->randomPhase =
+            ((BombPlantSporeState*)state)->driftAmplitude + (f32)(int)randomGetRange(-200, 200) / lbl_803E5390;
+        if (((BombPlantSporeState*)state)->randomPhase < lbl_803E53AC)
+        {
+            ((BombPlantSporeState*)state)->randomPhase = lbl_803E53AC;
+        }
+        else if (((BombPlantSporeState*)state)->randomPhase > lbl_803E53B0)
+        {
+            ((BombPlantSporeState*)state)->randomPhase = lbl_803E53B0;
+        }
+    }
+
+    angleDelta = (s32)((BombPlantSporeState*)state)->spinAngle - (u16)((BombPlantSporeState*)state)->currentSpinAngle;
+    if (angleDelta > 0x8000)
+    {
+        angleDelta -= 0xffff;
+    }
+    if (angleDelta < -0x8000)
+    {
+        angleDelta += 0xffff;
+    }
+    ((BombPlantSporeState*)state)->currentSpinAngle += (angleDelta * framesThisStep) >> 4;
+    {
+        f32 amplitude;
+        f32 amplitudeStep =
+            (((BombPlantSporeState*)state)->randomPhase - (amplitude = ((BombPlantSporeState*)state)->driftAmplitude)) *
+            lbl_803E53B4;
+        ((BombPlantSporeState*)state)->driftAmplitude = amplitudeStep * timeDelta + amplitude;
+    }
+
+    ((BombPlantSporeState*)state)->driftBaseX =
+        ((BombPlantSporeState*)state)->driftAmplitude *
+        mathSinf((gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->currentSpinAngle) /
+                 gBombPlantSporeAngleHalfPeriod);
+    ((BombPlantSporeState*)state)->driftBaseZ =
+        ((BombPlantSporeState*)state)->driftAmplitude *
+        mathCosf((gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->currentSpinAngle) /
+                 gBombPlantSporeAngleHalfPeriod);
+}
+
 
 void BombPlantSpore_init(GameObject* obj, void* param2)
 {
