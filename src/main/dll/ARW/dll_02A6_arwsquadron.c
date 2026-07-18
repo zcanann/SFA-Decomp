@@ -42,10 +42,6 @@
 #define ARWSQUADRON_CHILD_OBJ_PROJECTILE 0x6ae
 
 
-void ARWSquadron_render(int obj, int p2, int p3, int p4, int p5);
-void ARWSquadron_hitDetect(void);
-void ARWSquadron_update(int obj);
-void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup);
 
 static const int kArwSquadronDefaultCurveMode[1] = {40};
 
