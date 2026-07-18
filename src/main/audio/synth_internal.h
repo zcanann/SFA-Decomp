@@ -6,6 +6,8 @@
 #endif
 
 #include "main/audio/mcmd.h"
+#include "main/audio/synth_queue.h"
+#include "main/dll/synthfade_struct.h"
 
 #define SYNTH_MAX_VOICES 8
 #define SYNTH_CALLBACK_COUNT 0x100
@@ -100,24 +102,6 @@ typedef struct SynthDelayStorage
 /* The 0x404 voice-slot record is the canonical McmdVoiceState (mcmd.h);
  * the former McmdVoiceState view is retired. */
 
-typedef struct SynthFade
-{
-    f32 current;
-    f32 target;
-    f32 start;
-    f32 progress;
-    f32 progressStep;
-    f32 auxCurrent;
-    f32 auxTarget;
-    f32 auxStart;
-    f32 auxProgress;
-    f32 auxProgressStep;
-    u32 handle;
-    u8 delayAction;
-    u8 type;
-    u8 pad[2];
-} SynthFade;
-
 typedef struct SynthPitchPoint
 {
     u32 threshold;
@@ -143,35 +127,39 @@ typedef struct SynthTrackCursor
     void* current;
 } SynthTrackCursor;
 
+typedef struct SynthSequenceState SynthSequenceState;
+
 typedef struct SynthSequenceEvent
 {
     struct SynthSequenceEvent* next;
     struct SynthSequenceEvent* prev;
-    u32 value;
-    void* eventData;
-    void* state;
+    u32 time;
+    void* data;
+    SynthSequenceState* state;
     u8 type;
-    u8 channel;
+    u8 trackId;
     u8 pad16[2];
 } SynthSequenceEvent;
 
-typedef struct SynthSequenceState
+typedef struct SynthSequenceStream
 {
-    u32 currentValue;
-    u32 valueOffset;
-    u8* stream;
-    void* eventData;
-    u8* primaryStream;
-    u16 primaryValue;
-    s16 primaryStep;
-    u32 primaryLimit;
-    u8* secondaryStream;
-    u16 secondaryValue;
-    s16 secondaryStep;
-    u32 secondaryLimit;
-    u8 controller;
+    u8* cursor;
+    u16 value;
+    s16 step;
+    u32 nextTime;
+} SynthSequenceStream;
+
+struct SynthSequenceState
+{
+    u32 lastTime;
+    u32 baseTime;
+    u8* noteData;
+    void* patternInfo;
+    SynthSequenceStream pitchBend;
+    SynthSequenceStream modulation;
+    u8 midi;
     u8 pad29[3];
-} SynthSequenceState;
+};
 
 typedef struct SynthTimeWord
 {
@@ -184,7 +172,7 @@ typedef struct SynthSequenceQueue
     u8* masterTrackBase;
     u8* masterTrackCursor;
     u32 bpm;
-    u8 unk0C[0x10];
+    SynthTimeWord tickDelta[2];
     SynthSequenceEvent* eventList;
     SynthTimeWord time[2];
     u8 timeIndex;
@@ -278,9 +266,9 @@ typedef struct SynthVoice
     u8 slotIndex;
     u16 groupId;
     u32 handle;
-    u8* normtab;
+    SynthPage* normtab;
     u8 normTrans[0x80];
-    u8* drumtab;
+    SynthPage* drumtab;
     u8 drumTrans[0x80];
     u8* arrbase;
     u32 immediateMixValue0;
@@ -340,6 +328,7 @@ extern u8 gSynthInitialized;
 extern u8 gSynthDelayBucketCursor;
 extern SynthCallbackLink* gSynthFreeCallbacks;
 extern SynthVoice* gSynthCurrentVoice;
+extern u32 gSynthCurrentVoiceSlotIndex;
 /* WRONG-SYMBOL IMPORT BUG: lbl_803DEEE8 is the 0.2f constant in the .sdata2
  * float pool (0x3E4CCCCD; intersect.c reads it as f32 correctly). The
  * synth_control.c list-walk that indexes it as a voice array needs a

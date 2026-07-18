@@ -30,12 +30,12 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
     if (track->current != 0)
     {
         ev = SYNTH_CHANNEL_EVENT(gSynthCurrentVoice, trackId);
-        ev->channel = channel;
+        ev->trackId = channel;
         ev->state = pattern;
 
         for (;;)
         {
-            if (pattern->stream == 0)
+            if (pattern->noteData == 0)
             {
                 if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_END)
                 {
@@ -60,59 +60,59 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
                     }
 
                     ev->type = 3;
-                    ev->value = TRACK_CMD(track)->value0;
+                    ev->time = TRACK_CMD(track)->value0;
                     track->current = track->base + TRACK_CMD(track)->arg * sizeof(SynthTrackCommand);
                     return ev;
                 }
 
                 ev->type = 4;
-                ev->value = TRACK_CMD(track)->value0;
-                ev->eventData = track->current;
+                ev->time = TRACK_CMD(track)->value0;
+                ev->data = track->current;
                 track->current = TRACK_CMD(track) + 1;
                 return ev;
             }
 
-            pitchTime = pattern->primaryLimit;
-            modTime = pattern->secondaryLimit;
+            pitchTime = pattern->pitchBend.nextTime;
+            modTime = pattern->modulation.nextTime;
 
             for (;;)
             {
-                patternTime = *(u16*)pattern->stream + pattern->currentValue;
+                patternTime = *(u16*)pattern->noteData + pattern->lastTime;
                 if (patternTime < pitchTime && patternTime < modTime)
                 {
-                    if (pattern->stream[2] == 0xFF && pattern->stream[3] == 0xFF)
+                    if (pattern->noteData[2] == 0xFF && pattern->noteData[3] == 0xFF)
                     {
-                        pattern->stream = 0;
+                        pattern->noteData = 0;
                         break;
                     }
 
-                    ev->eventData = pattern->stream;
-                    pattern->currentValue = patternTime;
+                    ev->data = pattern->noteData;
+                    pattern->lastTime = patternTime;
 
-                    if ((pattern->stream[2] & 0x80) != 0)
+                    if ((pattern->noteData[2] & 0x80) != 0)
                     {
-                        pattern->stream += 4;
+                        pattern->noteData += 4;
                     }
-                    else if ((pattern->stream[2] | pattern->stream[3]) == 0)
+                    else if ((pattern->noteData[2] | pattern->noteData[3]) == 0)
                     {
-                        pattern->stream += 4;
+                        pattern->noteData += 4;
                         continue;
                     }
                     else
                     {
-                        pattern->stream += 6;
+                        pattern->noteData += 6;
                     }
                     ev->type = 0;
-                    ev->value = patternTime + pattern->valueOffset;
+                    ev->time = patternTime + pattern->baseTime;
                 }
                 else if (pitchTime < modTime)
                 {
-                    ev->value = pitchTime + pattern->valueOffset;
+                    ev->time = pitchTime + pattern->baseTime;
                     ev->type = 2;
                 }
                 else
                 {
-                    ev->value = modTime + pattern->valueOffset;
+                    ev->time = modTime + pattern->baseTime;
                     ev->type = 1;
                 }
                 return ev;
@@ -135,7 +135,7 @@ void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* even
     current = queue->eventList;
     while (current != 0)
     {
-        if (current->value > event->value)
+        if (current->time > event->time)
         {
             event->next = current;
             event->prev = prev;

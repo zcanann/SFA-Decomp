@@ -34,7 +34,6 @@ typedef struct SynthMasterTrackEvent
 
 extern SynthSeqRuntime lbl_803AF550;
 extern u8 synthTrackVolume[0x40];
-extern int gSynthCurrentVoiceSlotIndex;
 
 static inline void BuildTransTab(u8* tab, SynthPage* page)
 {
@@ -87,13 +86,13 @@ u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u3
 
     seqId = nseq->slotIndex;
     nseq->pendingStartActive = 0;
-    nseq->normtab = (u8*)norm;
-    nseq->drumtab = (u8*)drum;
+    nseq->normtab = norm;
+    nseq->drumtab = drum;
     nseq->arrbase = (u8*)song;
     nseq->groupId = sgid;
 
-    BuildTransTab(nseq->normTrans, (SynthPage*)nseq->normtab);
-    BuildTransTab(nseq->drumTrans, (SynthPage*)nseq->drumtab);
+    BuildTransTab(nseq->normTrans, nseq->normtab);
+    BuildTransTab(nseq->drumTrans, nseq->drumtab);
 
     nseq->currentStudio = seqId + 23;
     for (i = 0; i < 64; i++)
@@ -197,7 +196,7 @@ u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u3
     for (i = 0; i < 64; i++)
     {
         synthTrackVolume[i] = 0x7F;
-        SYNTH_SEQUENCE_STATE(nseq, i)->stream = 0;
+        SYNTH_SEQUENCE_STATE(nseq, i)->noteData = 0;
         if (tracktab[i] != 0)
         {
             SYNTH_TRACK_CURSOR(nseq, i)->current = SYNTH_TRACK_CURSOR(nseq, i)->base = (u8*)(tracktab[i] + (u32)song);
@@ -236,9 +235,9 @@ u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u3
                 prg = nseq->normTrans[prg];
                 if (prg != 0xFF)
                 {
-                    nseq->prgState[(u8)i].macId = *(u16*)(nseq->normtab + prg * 6);
-                    nseq->prgState[(u8)i].priority = nseq->normtab[prg * 6 + 2];
-                    nseq->prgState[(u8)i].maxVoices = nseq->normtab[prg * 6 + 3];
+                    nseq->prgState[(u8)i].macId = *(u16*)((u8*)nseq->normtab + prg * 6);
+                    nseq->prgState[(u8)i].priority = ((u8*)nseq->normtab)[prg * 6 + 2];
+                    nseq->prgState[(u8)i].maxVoices = ((u8*)nseq->normtab)[prg * 6 + 3];
                 }
             }
             else
@@ -246,9 +245,9 @@ u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u3
                 prg = nseq->drumTrans[prg];
                 if (prg != 0xFF)
                 {
-                    nseq->prgState[(u8)i].macId = *(u16*)(nseq->drumtab + prg * 6);
-                    nseq->prgState[(u8)i].priority = nseq->drumtab[prg * 6 + 2];
-                    nseq->prgState[(u8)i].maxVoices = nseq->drumtab[prg * 6 + 3];
+                    nseq->prgState[(u8)i].macId = *(u16*)((u8*)nseq->drumtab + prg * 6);
+                    nseq->prgState[(u8)i].priority = ((u8*)nseq->drumtab)[prg * 6 + 2];
+                    nseq->prgState[(u8)i].maxVoices = ((u8*)nseq->drumtab)[prg * 6 + 3];
                 }
             }
             inpSetMidiCtrl(MCMD_CTRL_VOLUME, i, seqId, midiData[5]);

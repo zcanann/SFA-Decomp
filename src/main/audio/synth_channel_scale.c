@@ -7,6 +7,7 @@
 #include "main/audio/synth_config.h"
 #include "main/audio/synth_job_queue.h"
 #include "main/audio/synth_channel_scale.h"
+#include "main/audio/synth_seq_dispatch.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 #include "main/audio/synth_volume.h"
@@ -75,7 +76,6 @@ extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
 extern u8 lbl_803AF550[];
 
-extern u32 fn_8026E9D0(u8 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
 extern void synthFreeCallback(void* cb);
 extern void synthRecycleVoiceCallbacks(void* song);
@@ -186,7 +186,7 @@ void fn_8026EC44(u32 deltaTime)
                 synthHandleMasterTrack(0);
                 synthSetTickDelta(gSynthCurrentVoice->streams, deltaTime, tickRateScale, speedScale, tickRange,
                                   absoluteTickRange);
-                eventsActive = fn_8026E9D0(0, deltaTime);
+                eventsActive = synthProcessChannelEventQueue(0, deltaTime);
                 callbacksActive = synthUpdateCallbacks();
                 synthHandleKeyOffCallbacks();
                 for (sectionIndex = 0; sectionIndex < 2; ++sectionIndex)
@@ -207,7 +207,7 @@ void fn_8026EC44(u32 deltaTime)
                     synthHandleMasterTrack(sectionIndex);
                     synthSetTickDelta(&gSynthCurrentVoice->streams[sectionIndex], deltaTime, tickRateScale,
                                       speedScale, tickRange, absoluteTickRange);
-                    eventsActive |= fn_8026E9D0(sectionIndex, deltaTime);
+                    eventsActive |= synthProcessChannelEventQueue(sectionIndex, deltaTime);
                 }
                 callbacksActive = synthUpdateCallbacks();
                 synthHandleKeyOffCallbacks();
