@@ -2185,7 +2185,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
     OSFontHeader* bufB;
     int savedHeap;
     int count;
-    u8* glyph;
+    TextGlyph* glyph;
     u8* fontData;
     u8 s[3];
     s32 width;
@@ -2237,7 +2237,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
     *(u16*)(base30 + 0x68) = 0;
     *(u16*)(base30 + 0x6a) = 0x18;
     count = *(int*)(base31 + 0x58);
-    glyph = *(u8**)(base31 + 0x50);
+    glyph = *(TextGlyph**)(base31 + 0x50);
     x = 0;
     y = 0;
     while (count--)
@@ -2250,7 +2250,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
             u32 val;
             int hi;
             u8 lo;
-            c = *(int*)glyph;
+            c = glyph->key;
             p[0] = gGameTextSjisGlyphTable;
             val = 0;
             i = 0xfe;
@@ -2279,7 +2279,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
         }
         else
         {
-            s[0] = *(int*)glyph;
+            s[0] = glyph->key;
             s[1] = 0;
         }
         OSGetFontWidth((const char*)s, &width);
@@ -2307,16 +2307,16 @@ void gameTextLoadGraphicsFn_8001a918(void)
             x = 0;
             y += 0x18;
         }
-        *(u16*)(glyph + 4) = x;
-        *(u16*)(glyph + 6) = y;
-        *(u8*)(glyph + 8) = 0;
-        *(u8*)(glyph + 9) = 0;
-        *(u8*)(glyph + 0xa) = 0;
-        *(u8*)(glyph + 0xb) = 0;
-        *(u8*)(glyph + 0xc) = width;
-        *(u8*)(glyph + 0xd) = 0x18;
-        *(u8*)(glyph + 0xe) = 6;
-        *(u8*)(glyph + 0xf) = 0;
+        glyph->u = x;
+        glyph->v = y;
+        glyph->offsetX = 0;
+        glyph->advanceX = 0;
+        glyph->offsetY = 0;
+        glyph->advanceY = 0;
+        glyph->width = width;
+        glyph->height = 0x18;
+        glyph->lang = 6;
+        glyph->page = 0;
         {
             u32* src;
             int ty;
@@ -2326,8 +2326,8 @@ void gameTextLoadGraphicsFn_8001a918(void)
             int row;
 
             src = (u32*)buf;
-            tx = *(u16*)(glyph + 4) >> 3;
-            ty = *(u16*)(glyph + 6) >> 3;
+            tx = glyph->u >> 3;
+            ty = glyph->v >> 3;
             row = ty;
             txEnd = tx + 3;
             tyEnd = ty + 3;
@@ -2355,7 +2355,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
             }
         }
         x += wbytes << 3;
-        glyph += 0x10;
+        glyph++;
     }
     DCFlushRange(*(u8**)(base31 + 0x60) + 0x60, 0x20000);
     mm_free(bufA);
@@ -3376,12 +3376,12 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
     int midX;
     int midY;
 
-    alpha = *(u8*)(p + 0x1e);
-    alpha |= *(u8*)(p + 0x1e);
-    x = *(s16*)(p + 0x14);
-    y = *(s16*)(p + 0x16);
-    halfW = ((x + *(u16*)(p + 0x8)) - *(s16*)(p + 0x14)) >> 1;
-    halfH = ((y + *(u16*)(p + 0xa)) - *(s16*)(p + 0x16)) >> 1;
+    alpha = ((GameTextBox*)p)->alpha;
+    alpha |= ((GameTextBox*)p)->alpha;
+    x = ((GameTextBox*)p)->x;
+    y = ((GameTextBox*)p)->y;
+    halfW = ((x + ((GameTextBox*)p)->width) - ((GameTextBox*)p)->x) >> 1;
+    halfH = ((y + ((GameTextBox*)p)->height) - ((GameTextBox*)p)->y) >> 1;
     midX = x + halfW;
     midY = y + halfH;
     setTextColor(0, gGameTextBoxColorR & 0xff, gGameTextBoxColorG & 0xff, gGameTextBoxColorB & 0xff,

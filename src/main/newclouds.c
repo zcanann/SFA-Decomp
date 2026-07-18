@@ -132,15 +132,15 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
 
 f32 fn_8008ED88(void)
 {
-    u8* state;
+    LightningEffect* state;
     u16 totalFrames;
     u16 currentFrame;
 
-    state = (u8*)lbl_803DD19C;
+    state = lbl_803DD19C;
     if (state != NULL)
     {
-        totalFrames = *(u16*)(state + 0x22);
-        currentFrame = *(u16*)(state + 0x20);
+        totalFrames = state->lifetime;
+        currentFrame = state->timer;
         return (f32)(s32)(totalFrames - currentFrame) / totalFrames;
     }
     return lbl_803DF1A0;
@@ -148,16 +148,16 @@ f32 fn_8008ED88(void)
 
 void fn_8008EDE8(f32* out)
 {
-    u8* state;
+    LightningEffect* state;
 
-    state = (u8*)lbl_803DD19C;
+    state = lbl_803DD19C;
     if (state == NULL)
     {
         return;
     }
-    out[0] = *(f32*)(state + 0);
-    out[1] = *(f32*)((u8*)lbl_803DD19C + 4);
-    out[2] = *(f32*)((u8*)lbl_803DD19C + 8);
+    out[0] = state->start[0];
+    out[1] = lbl_803DD19C->start[1];
+    out[2] = lbl_803DD19C->start[2];
 }
 
 void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
@@ -2010,7 +2010,7 @@ extern const f32 lbl_803DF27C;
  */
 #undef NC_CLOUD
 #undef NC_CLOUD
-#define NC_CLOUD ((u8 *)gNewClouds[*(u16 *)(params + 0x26)])
+#define NC_CLOUD ((u8 *)gNewClouds[cfg->cloudIndex])
 extern int gNewCloudMusicIdByType[5];
 
 void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
@@ -2053,7 +2053,7 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
         posB[1] = ((GameObject*)objB)->anim.worldPosY;
         posB[2] = ((GameObject*)objB)->anim.worldPosZ;
     }
-    if ((u32)*(u16*)(params + 0x26) > 8)
+    if ((u32)cfg->cloudIndex > 8)
     {
         return;
     }
@@ -2080,19 +2080,19 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
         {
             if (params[0x5c] == 0 || params[0x5c] == 4)
             {
-                switch (*(u16*)(params + 0x26))
+                switch (cfg->cloudIndex)
                 {
                 case 0:
                     *(s16*)(env + 0xe) = (s16)cfg->windCount - 1;
                     *(int*)(env + 0x14) = posA[0];
                     *(int*)(env + 0x18) = posA[1];
                     *(int*)(env + 0x1c) = posA[2];
-                    if ((s8)env[*(u16*)(params + 0x26) + 0x41] == -1)
+                    if ((s8)env[cfg->cloudIndex + 0x41] == -1)
                     {
                         return;
                     }
-                    ((NewCloud*)NC_CLOUD)->stationary = 1 - env[*(u16*)(params + 0x26) + 0x41];
-                    if ((s8)env[*(u16*)(params + 0x26) + 0x41] != 0)
+                    ((NewCloud*)NC_CLOUD)->stationary = 1 - env[cfg->cloudIndex + 0x41];
+                    if ((s8)env[cfg->cloudIndex + 0x41] != 0)
                     {
                         return;
                     }
@@ -2101,11 +2101,11 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
                         u8* p18 = env + 0x18;
                         u8* p1c = env + 0x1c;
                         ((NewCloud*)NC_CLOUD)->worldPosX =
-                            (f32) * (int*)(p14 + *(u16*)(params + 0x26) * 0xc);
+                            (f32) * (int*)(p14 + cfg->cloudIndex * 0xc);
                         ((NewCloud*)NC_CLOUD)->worldPosY =
-                            (f32) * (int*)(p18 + *(u16*)(params + 0x26) * 0xc);
+                            (f32) * (int*)(p18 + cfg->cloudIndex * 0xc);
                         ((NewCloud*)NC_CLOUD)->worldPosZ =
-                            (f32) * (int*)(p1c + *(u16*)(params + 0x26) * 0xc);
+                            (f32) * (int*)(p1c + cfg->cloudIndex * 0xc);
                     }
                     break;
                 case 1:
@@ -2113,12 +2113,12 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
                     *(int*)(env + 0x20) = posA[0];
                     *(int*)(env + 0x24) = posA[1];
                     *(int*)(env + 0x28) = posA[2];
-                    if ((s8)env[*(u16*)(params + 0x26) + 0x41] == -1)
+                    if ((s8)env[cfg->cloudIndex + 0x41] == -1)
                     {
                         return;
                     }
-                    ((NewCloud*)NC_CLOUD)->stationary = 1 - env[*(u16*)(params + 0x26) + 0x41];
-                    if ((s8)env[*(u16*)(params + 0x26) + 0x41] != 0)
+                    ((NewCloud*)NC_CLOUD)->stationary = 1 - env[cfg->cloudIndex + 0x41];
+                    if ((s8)env[cfg->cloudIndex + 0x41] != 0)
                     {
                         return;
                     }
@@ -2127,11 +2127,11 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
                         u8* p18 = env + 0x18;
                         u8* p1c = env + 0x1c;
                         ((NewCloud*)NC_CLOUD)->worldPosX =
-                            (f32) * (int*)(p14 + *(u16*)(params + 0x26) * 0xc);
+                            (f32) * (int*)(p14 + cfg->cloudIndex * 0xc);
                         ((NewCloud*)NC_CLOUD)->worldPosY =
-                            (f32) * (int*)(p18 + *(u16*)(params + 0x26) * 0xc);
+                            (f32) * (int*)(p18 + cfg->cloudIndex * 0xc);
                         ((NewCloud*)NC_CLOUD)->worldPosZ =
-                            (f32) * (int*)(p1c + *(u16*)(params + 0x26) * 0xc);
+                            (f32) * (int*)(p1c + cfg->cloudIndex * 0xc);
                     }
                     break;
                 case 2:
@@ -2139,12 +2139,12 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
                     *(int*)(env + 0x2c) = posA[0];
                     *(int*)(env + 0x30) = posA[1];
                     *(int*)(env + 0x34) = posA[2];
-                    if ((s8)env[*(u16*)(params + 0x26) + 0x41] == -1)
+                    if ((s8)env[cfg->cloudIndex + 0x41] == -1)
                     {
                         return;
                     }
-                    ((NewCloud*)NC_CLOUD)->stationary = 1 - env[*(u16*)(params + 0x26) + 0x41];
-                    if ((s8)env[*(u16*)(params + 0x26) + 0x41] != 0)
+                    ((NewCloud*)NC_CLOUD)->stationary = 1 - env[cfg->cloudIndex + 0x41];
+                    if ((s8)env[cfg->cloudIndex + 0x41] != 0)
                     {
                         return;
                     }
@@ -2153,11 +2153,11 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
                         u8* p18 = env + 0x18;
                         u8* p1c = env + 0x1c;
                         ((NewCloud*)NC_CLOUD)->worldPosX =
-                            (f32) * (int*)(p14 + *(u16*)(params + 0x26) * 0xc);
+                            (f32) * (int*)(p14 + cfg->cloudIndex * 0xc);
                         ((NewCloud*)NC_CLOUD)->worldPosY =
-                            (f32) * (int*)(p18 + *(u16*)(params + 0x26) * 0xc);
+                            (f32) * (int*)(p18 + cfg->cloudIndex * 0xc);
                         ((NewCloud*)NC_CLOUD)->worldPosZ =
-                            (f32) * (int*)(p1c + *(u16*)(params + 0x26) * 0xc);
+                            (f32) * (int*)(p1c + cfg->cloudIndex * 0xc);
                     }
                     break;
                 }
@@ -2175,7 +2175,7 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
     }
     if ((fl & NEWCLOUD_CMD_RELOCATE) && cloud->anchoredToObj != 0)
     {
-        ((s8*)(env + 0x41))[*(u16*)(params + 0x26)] = cloud->stationary;
+        ((s8*)(env + 0x41))[cfg->cloudIndex] = cloud->stationary;
         ((NewCloud*)NC_CLOUD)->stationary = 1 - ((NewCloud*)NC_CLOUD)->stationary;
         if (((NewCloud*)NC_CLOUD)->stationary == 1)
         {
@@ -2205,19 +2205,19 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
                 Music_Trigger(gNewCloudMusicIdByType[((NewCloud*)NC_CLOUD)->cloudType], 1);
             }
         }
-        if ((s8)env[*(u16*)(params + 0x26) + 0x41] == 0)
+        if ((s8)env[cfg->cloudIndex + 0x41] == 0)
         {
             u8* p14 = env + 0x14;
             u8* p18 = env + 0x18;
             u8* p1c = env + 0x1c;
-            *(int*)(p14 + *(u16*)(params + 0x26) * 0xc) = posA[0];
-            *(int*)(p18 + *(u16*)(params + 0x26) * 0xc) = posA[1];
-            *(int*)(p1c + *(u16*)(params + 0x26) * 0xc) = posA[2];
+            *(int*)(p14 + cfg->cloudIndex * 0xc) = posA[0];
+            *(int*)(p18 + cfg->cloudIndex * 0xc) = posA[1];
+            *(int*)(p1c + cfg->cloudIndex * 0xc) = posA[2];
         }
     }
     else if (fl & NEWCLOUD_CMD_KILL)
     {
-        newclouds_killSnowCloud(*(u16*)(params + 0x26), 0);
+        newclouds_killSnowCloud(cfg->cloudIndex, 0);
     }
     else if (fl & NEWCLOUD_CMD_DESPAWN)
     {

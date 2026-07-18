@@ -144,7 +144,7 @@ void objAnimFn_80038f38(GameObject* obj, char* state)
     s16* found;
     int timer;
 
-    timer = (s32) * (f32*)(state + 0xc);
+    timer = (s32)((ObjSoundState*)state)->timer;
     found = objFindJointVecByKey(obj, 1);
 
     if (*(s8*)state != 0)
@@ -159,20 +159,20 @@ void objAnimFn_80038f38(GameObject* obj, char* state)
             if (timer < 0)
             {
                 Sfx_StopObjectChannel((u32)obj, 0x10);
-                *(f32*)(state + 4) = lbl_803DE9A4;
-                *(s16*)(state + 0x14) = 0;
+                ((ObjSoundState*)state)->blendWeight = lbl_803DE9A4;
+                ((ObjSoundState*)state)->pitch = 0;
             }
-            *(f32*)(state + 0xc) = timer;
+            ((ObjSoundState*)state)->timer = timer;
         }
     }
     else
     {
-        *(f32*)(state + 0xc) = lbl_803DE9C8;
-        *(s16*)(state + 0x14) = 0;
-        if (*(f32*)(state + 4) > lbl_803DE9A4)
+        ((ObjSoundState*)state)->timer = lbl_803DE9C8;
+        ((ObjSoundState*)state)->pitch = 0;
+        if (((ObjSoundState*)state)->blendWeight > lbl_803DE9A4)
         {
             int* pi;
-            *(f32*)(state + 4) = *(f32*)&lbl_803DE9A4;
+            ((ObjSoundState*)state)->blendWeight = *(f32*)&lbl_803DE9A4;
             pi = OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8*)(*pi + 0xf9) != 0)
             {
@@ -184,7 +184,7 @@ void objAnimFn_80038f38(GameObject* obj, char* state)
 
     if (found != NULL)
     {
-        found[0] = (s16)((found[0] + *(s16*)(state + 0x14)) >> 1);
+        found[0] = (s16)((found[0] + ((ObjSoundState*)state)->pitch) >> 1);
     }
 }
 
@@ -247,10 +247,10 @@ void objAudioFn_80039270(u32 obj, void* p, u16 sfxId)
     if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
     {
         Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
-        *(f32*)((char*)p + 0xc) = lbl_803DE9C8;
-        *(s16*)((char*)p + 0x14) = -0x500;
-        *(u8*)p = 1;
-        *(f32*)((char*)p + 4) = lbl_803DE99C;
+        ((ObjSoundState*)p)->timer = lbl_803DE9C8;
+        ((ObjSoundState*)p)->pitch = -0x500;
+        ((ObjSoundState*)p)->active = 1;
+        ((ObjSoundState*)p)->blendWeight = lbl_803DE99C;
     }
 }
 
@@ -1958,7 +1958,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
     GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    selectTexture((Texture*)(textureIdxToPtr(*(int*)(rop + 0x38))), 2);
+    selectTexture((Texture*)(textureIdxToPtr(*(int*)((u8*)rop + 0x38))), 2);
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
     GXSetIndTexCoordScale(1, 0, 0);
@@ -2241,7 +2241,7 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
     GXSetTevAlphaOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
     if (*(void**)(rop + 0x38) != NULL)
     {
-        selectTexture((Texture*)(textureIdxToPtr(*(int*)(rop + 0x38))), 2);
+        selectTexture((Texture*)(textureIdxToPtr(*(int*)((u8*)rop + 0x38))), 2);
         GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
         GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
         GXSetIndTexCoordScale(1, 0, 0);

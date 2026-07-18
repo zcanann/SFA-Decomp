@@ -1009,9 +1009,9 @@ void objFreeObjDef(u8* obj, int flag)
         for (i = 0; i < gObjCount; i++)
         {
             otherObj = ((u8**)gObjList)[i];
-            if (*(int*)(otherObj + 0xc0) == (int)obj)
+            if (*(int*)&((GameObject*)otherObj)->pendingParentObj == (int)obj)
             {
-                *(int*)(otherObj + 0xc0) = 0;
+                *(int*)&((GameObject*)otherObj)->pendingParentObj = 0;
             }
         }
     }
@@ -1554,12 +1554,12 @@ void modelInitBones(f32 scale, void* model)
 
     sc = scale;
     hdr = *(u8**)m;
-    if ((!*(u16*)(hdr + 2) & 0x1000) || (*(u8*)(hdr + 0xf3) == 0))
+    if ((!((ModelFileHeader*)hdr)->flags & 0x1000) || (((ModelFileHeader*)hdr)->jointCount == 0))
     {
         return;
     }
     {
-        if ((src = *(f32**)(hdr + 0x18)) != NULL && (tbl = *(u8**)(m + 0x14)) != NULL)
+        if ((src = *(f32**)(hdr + 0x18)) != NULL && (tbl = ((ObjModel*)m)->jointWorkspace) != NULL)
         {
             **(f32**)(tbl + 4) = src[0] * sc;
             if (**(f32**)(tbl + 4) == lbl_803DE88C)
@@ -1576,11 +1576,11 @@ void modelInitBones(f32 scale, void* model)
             off = 4;
             boneOff = 0x1c;
             sumP = &sums[1];
-            for (; i < *(u8*)(*(u8**)m + 0xf3); srcP++, off += 4, boneOff += 0x1c, sumP++, i++)
+            for (; i < ((ObjModel*)m)->file->jointCount; srcP++, off += 4, boneOff += 0x1c, sumP++, i++)
             {
                 *(f32*)(*(u8**)(tbl + 4) + off) = sc * *srcP;
                 *(f32*)(*(u8**)(tbl + 8) + off) = *(f32*)(*(u8**)(tbl + 4) + off) * *(f32*)(*(u8**)(tbl + 4) + off);
-                bone = *(u8**)(hdr + 0x3c) + boneOff;
+                bone = ((ModelFileHeader*)hdr)->jointData + boneOff;
                 parent = *(s8*)bone;
                 vx = *(f32*)(bone + 4);
                 vy = *(f32*)(bone + 8);
@@ -2338,7 +2338,7 @@ void Obj_UpdateModelBlendStates(void)
                                 c0 = ((GameObject*)child)->pendingParentObj;
                                 if (c0 != 0)
                                 {
-                                    bp = *(u8**)(c0 + 0xb8);
+                                    bp = (u8*)((GameObject*)c0)->extra;
                                 }
                                 else
                                 {
@@ -2659,7 +2659,7 @@ void Obj_RegisterObject(GameObject* obj, int flags)
             prev = 0;
             cur = *(int*)((u8*)&gObjUpdateList + 4);
             off = *(s16*)((u8*)&gObjUpdateList + 2);
-            while (cur != 0 && object->activeHitboxMode < *(s8*)(cur + 0xae))
+            while (cur != 0 && object->activeHitboxMode < ((GameObject*)cur)->anim.activeHitboxMode)
             {
                 prev = cur;
                 cur = *(int*)(cur + off);

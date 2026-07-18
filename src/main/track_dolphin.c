@@ -437,9 +437,9 @@ int* bs;
     bit3 = (val3 >> (pos3 & 7)) & 1;
     if (flag != 0)
     {
-        if ((u32)sh != 0 && (*(u32*)(sh + 0x3c) & 0x80000000) == 0)
+        if ((u32)sh != 0 && (((MapShader*)sh)->flags & 0x80000000) == 0)
         {
-            for (i = 0; i < *(u8*)(sh + 0x41); i++)
+            for (i = 0; i < ((MapShader*)sh)->layerCount; i++)
             {
                 GXSetVtxDesc(i + GX_VA_TEX0, bit3 ? GX_INDEX16 : GX_INDEX8);
             }
@@ -3841,7 +3841,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
             {
                 s16* v = ObjModel_GetBaseVertexCoords((ModelFileHeader*)hdr, *tw);
                 f32 fx, fy, fz;
-                if (*(u16*)(hdr + 2) & 0x800)
+                if (((ModelFileHeader*)hdr)->flags & 0x800)
                 {
                     fx = v[0] * scale;
                     fy = v[1] * scale;

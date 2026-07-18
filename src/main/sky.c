@@ -777,10 +777,10 @@ void dll_06_func0A(int* a, int* b, int* c, f32* scale)
     {
         return;
     }
-    *a = *(int*)(state + 0x24);
-    *b = *(int*)(gSky2State + 0x28);
-    *c = *(int*)(gSky2State + 0x2c);
-    *scale = *(f32*)(gSky2State + 0x30c);
+    *a = ((Dll06InterpState*)state)->targetX;
+    *b = ((Dll06InterpState*)gSky2State)->targetY;
+    *c = ((Dll06InterpState*)gSky2State)->targetZ;
+    *scale = ((Dll06InterpState*)gSky2State)->blend;
 }
 
 void dll_06_func0E(void)
@@ -1828,7 +1828,8 @@ void fn_8008923C(GameObject* obj, f32* x, f32* y, f32* z)
                     {
                         if (*p == found)
                         {
-                            if (-*(f32*)(cur + 0x130) < lbl_803DF064 * -*(f32*)(found + 0x130))
+                            if (-((ModelLightStruct*)cur)->selectionScore <
+                                lbl_803DF064 * -((ModelLightStruct*)found)->selectionScore)
                             {
                                 cur = found;
                             }
@@ -2298,8 +2299,8 @@ void fn_8008BDA8(void)
     ((SkyState*)gSkyState)->textureId0 = 0xc38;
     ((SkyState*)gSkyState)->textureId1 = 0xc38;
     tex0 = *(u8**)gSkyState;
-    ((SkyState*)gSkyState)->texture0 = textureAlloc(*(u16*)(tex0 + 0xa), *(u16*)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
-    ((SkyState*)gSkyState)->texture1 = textureAlloc(*(u16*)(tex0 + 0xa), *(u16*)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
+    ((SkyState*)gSkyState)->texture0 = textureAlloc(((Texture*)tex0)->width, ((Texture*)tex0)->height, 6, 0, 0, 1, 0, 1, 1);
+    ((SkyState*)gSkyState)->texture1 = textureAlloc(((Texture*)tex0)->width, ((Texture*)tex0)->height, 6, 0, 0, 1, 0, 1, 1);
     i = 0;
     iofs = 0;
     do
@@ -3066,7 +3067,7 @@ void skyFn_8008aee8(void)
         GXSetNumTevStages(1);
         screenRes = getScreenResolution();
         sinProd *= 2.0f;
-        texW = *(u16*)(texC + 0xc);
+        texW = ((Texture*)texC)->height;
         v = angle / (32.0f * (f32)(u32)texW);
         skyDrawFn_80075d5c(0, 0, (screenRes & 0xffff) << 2, (screenRes >> 16) << 2, 0.0f, v,
                            1.0f, v - sinProd / (f32)(u32)texW, -0x18f);

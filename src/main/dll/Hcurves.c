@@ -271,14 +271,14 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, u32 currentWalkGro
 
 void fn_800D9EE8(RomCurveWalker* p)
 {
-    u32* a = (u32*)((char*)p + 0x9c);
-    u32* b = (u32*)((char*)p + 0xa4);
+    u32* a = (u32*)&p->node9C;
+    u32* b = (u32*)&p->nodeA4;
     *a ^= *b;
     *b ^= *a;
     *a ^= *b;
-    if (*(f32*)p >= lbl_803E05C8)
+    if (p->phase >= lbl_803E05C8)
     {
-        *(f32*)p = 0.99f;
+        p->phase = 0.99f;
     }
 }
 
@@ -1974,23 +1974,23 @@ int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
 
 void RomCurve_setNextNode(void* walker, void* curve)
 {
-    char* A = walker;
+    RomCurveWalker* state = walker;
     f32 t;
-    if (curve != 0 && (u32)curve != *(u32*)(A + 0xa4))
+    if (curve != 0 && (u32)curve != (u32)state->nodeA4)
     {
-        *(void**)(A + 0xa4) = curve;
-        *(f32*)(A + 0xbc) = *(f32*)((*(char**)(A + 0xa4)) + 0x8);
-        t = (float)(u32) * (u8*)((*(char**)(A + 0xa4)) + 0x2e) *
-            mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((*(char**)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
-        *(f32*)(A + 0xc4) = lbl_803E0610 * t;
-        *(f32*)(A + 0xdc) = *(f32*)((*(char**)(A + 0xa4)) + 0xc);
-        t = (float)(u32) * (u8*)((*(char**)(A + 0xa4)) + 0x2e) *
-            mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((*(char**)(A + 0xa4)) + 0x2d)) << 8) / lbl_803E0618);
-        *(f32*)(A + 0xe4) = lbl_803E0610 * t;
-        *(f32*)(A + 0xfc) = *(f32*)((*(char**)(A + 0xa4)) + 0x10);
-        t = (float)(u32) * (u8*)((*(char**)(A + 0xa4)) + 0x2e) *
-            mathCosf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((*(char**)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
-        *(f32*)(A + 0x104) = lbl_803E0610 * t;
+        state->nodeA4 = curve;
+        state->hermX2[1] = *(f32*)((char*)state->nodeA4 + 0x8);
+        t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
+            mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2c)) << 8) / lbl_803E0618);
+        state->hermX2[3] = lbl_803E0610 * t;
+        state->hermY2[1] = *(f32*)((char*)state->nodeA4 + 0xc);
+        t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
+            mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2d)) << 8) / lbl_803E0618);
+        state->hermY2[3] = lbl_803E0610 * t;
+        state->hermZ2[1] = *(f32*)((char*)state->nodeA4 + 0x10);
+        t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
+            mathCosf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2c)) << 8) / lbl_803E0618);
+        state->hermZ2[3] = lbl_803E0610 * t;
     }
 }
 
@@ -2203,16 +2203,16 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
         if (state->reverse != 0)
         {
             distanceCurve = *(s32*)&state->nodeA4;
-            dx = *(f32*)(distanceCurve + 0x8) - (obj)->anim.localPosX;
-            dy = *(f32*)(distanceCurve + 0xc) - (obj)->anim.localPosY;
-            dz = *(f32*)(distanceCurve + 0x10) - (obj)->anim.localPosZ;
+            dx = ((RomCurveDef*)distanceCurve)->x - (obj)->anim.localPosX;
+            dy = ((RomCurveDef*)distanceCurve)->y - (obj)->anim.localPosY;
+            dz = ((RomCurveDef*)distanceCurve)->z - (obj)->anim.localPosZ;
         }
         else
         {
             distanceCurve = *(s32*)&state->nodeA0;
-            dx = *(f32*)(distanceCurve + 0x8) - (obj)->anim.localPosX;
-            dy = *(f32*)(distanceCurve + 0xc) - (obj)->anim.localPosY;
-            dz = *(f32*)(distanceCurve + 0x10) - (obj)->anim.localPosZ;
+            dx = ((RomCurveDef*)distanceCurve)->x - (obj)->anim.localPosX;
+            dy = ((RomCurveDef*)distanceCurve)->y - (obj)->anim.localPosY;
+            dz = ((RomCurveDef*)distanceCurve)->z - (obj)->anim.localPosZ;
         }
         distance = sqrtf(dx * dx + dy * dy + dz * dz);
         if (distance > maxDistance)
@@ -2266,8 +2266,8 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
 
     objPos = obj + 0xc;
     curvePos[0] = *(f32*)objPos;
-    curvePos[1] = lbl_803E0640 + *(f32*)(obj + 0x10);
-    curvePos[2] = *(f32*)(obj + 0x14);
+    curvePos[1] = lbl_803E0640 + ((GameObject*)obj)->anim.localPosY;
+    curvePos[2] = ((GameObject*)obj)->anim.localPosZ;
     voxmaps_worldToGrid(curvePos, objGrid);
 
     for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++)
@@ -2369,7 +2369,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     {
         return -1;
     }
-    if (RomCurve_findByIdWithIndex(*(s32*)(startCurve + 0x14), &startIndex) == NULL)
+    if (RomCurve_findByIdWithIndex(((RomCurveDef*)startCurve)->id, &startIndex) == NULL)
     {
         return -1;
     }
@@ -2397,12 +2397,12 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             continue;
         }
 
-        distance = (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10)) *
-                   (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10));
-        queueDistances[0] = (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) *
-                                (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) +
-                            (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) *
-                                (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) +
+        distance = (((RomCurveDef*)directCurve)->z - ((RomCurveDef*)startCurve)->z) *
+                   (((RomCurveDef*)directCurve)->z - ((RomCurveDef*)startCurve)->z);
+        queueDistances[0] = (((RomCurveDef*)directCurve)->x - ((RomCurveDef*)startCurve)->x) *
+                                (((RomCurveDef*)directCurve)->x - ((RomCurveDef*)startCurve)->x) +
+                            (((RomCurveDef*)directCurve)->y - ((RomCurveDef*)startCurve)->y) *
+                                (((RomCurveDef*)directCurve)->y - ((RomCurveDef*)startCurve)->y) +
                             distance;
         queueCount = 0;
         queueIndices[queueCount++] = directIndex;
@@ -2430,7 +2430,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
 
                 for (linkSlot = 0; linkSlot < 4; linkSlot++)
                 {
-                    linkId = *(s32*)((queueCurve + linkSlot * 4) + 0x1c);
+                    linkId = ((RomCurveDef*)queueCurve)->linkIds[linkSlot];
                     if (linkId <= -1)
                     {
                         continue;
@@ -2443,13 +2443,13 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                         continue;
                     }
 
-                    linkDistance = (*(f32*)(queueCurve + 0x10) - *(f32*)(linkCurve + 0x10)) *
-                                       (*(f32*)(queueCurve + 0x10) - *(f32*)(linkCurve + 0x10)) +
+                    linkDistance = (((RomCurveDef*)queueCurve)->z - ((RomCurveDef*)linkCurve)->z) *
+                                       (((RomCurveDef*)queueCurve)->z - ((RomCurveDef*)linkCurve)->z) +
                                    (distance +
-                                    (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) *
-                                        (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) +
-                                    (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc)) *
-                                        (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc)));
+                                    (((RomCurveDef*)queueCurve)->x - ((RomCurveDef*)linkCurve)->x) *
+                                        (((RomCurveDef*)queueCurve)->x - ((RomCurveDef*)linkCurve)->x) +
+                                    (((RomCurveDef*)queueCurve)->y - ((RomCurveDef*)linkCurve)->y) *
+                                        (((RomCurveDef*)queueCurve)->y - ((RomCurveDef*)linkCurve)->y));
 
                     insertIndex = 0;
                     while (insertIndex < queueCount && scanBase[insertIndex] > linkDistance)
@@ -2481,7 +2481,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     }
     if (candidateCount == 1)
     {
-        *previousCurveId = *(s32*)(startCurve + 0x14);
+        *previousCurveId = ((RomCurveDef*)startCurve)->id;
         return candidateIds[0];
     }
     if (candidateCount > 1)
@@ -2499,7 +2499,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             }
         }
 
-        *previousCurveId = *(s32*)(startCurve + 0x14);
+        *previousCurveId = ((RomCurveDef*)startCurve)->id;
         sel[1] = 0;
         sel[0] = sel[1];
         for (; sel[0] < candidateCount; sel[0]++)

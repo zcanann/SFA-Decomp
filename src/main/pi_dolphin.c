@@ -6171,7 +6171,7 @@ void textureFn_8004c330(void* p1, void* mtx)
                 *(u16*)(dst + 0x60) = ((v1 & 0xf8) >> 3) | ((v2 & 0xf8) << 8 | (v3 & 0xfc) << 3);
             }
         }
-        DCFlushRange(lbl_803DCD2C + 0x60, *(u32*)(lbl_803DCD2C + 0x44));
+        DCFlushRange(lbl_803DCD2C + 0x60, ((Texture*)lbl_803DCD2C)->dataSize);
     }
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     m.v[0][1] = lbl_803DEAE0 * mathSinf(Prepared_803DEAD8 * sx) + lbl_803DEADC;
@@ -6221,13 +6221,13 @@ void textureFn_8004c330(void* p1, void* mtx)
     }
     {
         int id2 = lbl_803DCD8C + 1;
-        u8* tex = lbl_803DCD2C;
+        Texture* tex = (Texture*)lbl_803DCD2C;
         if (tex != 0)
         {
-            void* obj = tex + 0x20;
-            if (*(u8*)(tex + 0x48) != 0)
+            void* obj = textureGetGXTexObj(tex);
+            if (tex->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex + 0x40), id2);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, textureGetGXTexRegion(tex), id2);
             }
             else
             {
@@ -6651,7 +6651,7 @@ void fn_8004DA54(char* p1)
     f32 mtx64[3][4];
     IndTexMtx23 m1;
     IndTexMtx23 m2;
-    u8* tex30;
+    Texture* tex30;
     Texture* tex2c;
     f32 rx;
     f32 ry;
@@ -6664,16 +6664,16 @@ void fn_8004DA54(char* p1)
     f32 s;
     f32 k;
     f32 t;
-    u8* tex24;
+    Texture* tex24;
     m1 = lbl_802C1DC8;
     m2 = lbl_802C1DE0[0];
-    tex24 = *(u8**)(p1 + 0x24);
+    tex24 = *(Texture**)(p1 + 0x24);
     if (tex24 != 0)
     {
-        void* obj = tex24 + 0x20;
-        if (*(u8*)(tex24 + 0x48) != 0)
+        void* obj = textureGetGXTexObj(tex24);
+        if (tex24->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex24 + 0x40), 2);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, textureGetGXTexRegion(tex24), 2);
         }
         else
         {
@@ -6733,10 +6733,10 @@ void fn_8004DA54(char* p1)
     getTextureFn_8006c5e4((u32*)&tex30);
     if (tex30 != 0)
     {
-        void* obj = tex30 + 0x20;
-        if (*(u8*)(tex30 + 0x48) != 0)
+        void* obj = textureGetGXTexObj(tex30);
+        if (tex30->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex30 + 0x40), 1);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, textureGetGXTexRegion(tex30), 1);
         }
         else
         {
@@ -6828,7 +6828,7 @@ void fn_8004E0FC(void)
     PiVec3 vc;
     PiVec3 vd;
     Texture* tex1c;
-    u8* tex18;
+    Texture* tex18;
     f32 rx;
     f32 ry;
     void* invView;
@@ -6966,10 +6966,10 @@ void fn_8004E0FC(void)
         int id2 = lbl_803DCD8C + 1;
         if (tex18 != 0)
         {
-            void* obj = tex18 + 0x20;
-            if (*(u8*)(tex18 + 0x48) != 0)
+            void* obj = textureGetGXTexObj(tex18);
+            if (tex18->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex18 + 0x40), id2);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, textureGetGXTexRegion(tex18), id2);
             }
             else
             {
@@ -6998,7 +6998,7 @@ void renderHeavyFog(void* fogColor)
     f32 mrot[3][4];
     IndTexMtx23 im;
     Texture* tex20;
-    u8* tex1c;
+    Texture* tex1c;
     f32 a;
     f32 b;
     int kc;
@@ -7103,10 +7103,10 @@ void renderHeavyFog(void* fogColor)
             int id2 = lbl_803DCD8C + 1;
             if (tex1c != 0)
             {
-                void* obj = tex1c + 0x20;
-                if (*(u8*)(tex1c + 0x48) != 0)
+                void* obj = textureGetGXTexObj(tex1c);
+                if (tex1c->preloaded != 0)
                 {
-                    GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex1c + 0x40), id2);
+                    GXLoadTexObjPreLoaded((GXTexObj*)obj, textureGetGXTexRegion(tex1c), id2);
                 }
                 else
                 {

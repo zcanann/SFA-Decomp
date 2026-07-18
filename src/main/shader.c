@@ -531,7 +531,7 @@ void mapLoadUnloadObjects(int flag)
                 {
                     int lp = obj2->anim.transformMatrixIndex + 1;
                     bit = 0;
-                    cur = *(u32*)(page2 + 0x20);
+                    cur = (u32)((MapRomListPage*)page2)->objects;
                     end = cur + *(int*)(base + (0x4290 + mid2 * 0x8C));
                     bits = (*gMapEventInterface)->getObjGroups(mid2);
                     if (bits != 0)
@@ -694,11 +694,11 @@ int mapTextureOverrideAcquire(int key, int value, int type)
     }
     if (found != -1)
     {
-        *(s16*)((char*)(lbl_803DCE6C + 12) + found * 16) = 1;
-        *(int*)((char*)(lbl_803DCE6C + 4) + found * 16) = 0;
-        *(int*)((char*)(lbl_803DCE6C + 8) + found * 16) = value;
+        ((TexOverrideEntry*)lbl_803DCE6C)[found].refs = 1;
+        ((TexOverrideEntry*)lbl_803DCE6C)[found].data0 = 0;
+        ((TexOverrideEntry*)lbl_803DCE6C)[found].data1 = value;
         ((TexOverrideEntry*)lbl_803DCE6C)[found].key = key;
-        *(u8*)((char*)(lbl_803DCE6C + 14) + found * 16) = type;
+        ((TexOverrideEntry*)lbl_803DCE6C)[found].type = type;
         return found;
     }
     OSReport(sTrackGlobalTexanimOverflowError);
@@ -854,9 +854,9 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
     e = base;
     for (; idx < 0x3a; idx++)
     {
-        if (*(s16*)(e + 8) == xStep && *(s16*)(e + 0xa) == yStep)
+        if (((TexScrollEntry*)e)->xStep == xStep && ((TexScrollEntry*)e)->yStep == yStep)
         {
-            *(u8*)(e + 0xc) += 1;
+            ((TexScrollEntry*)e)->refCount += 1;
             return idx;
         }
         e += 0x10;
@@ -864,7 +864,7 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
     slot = -1;
     for (idx2 = 0, e = base; idx2 < 0x3a; e += 0x10, idx2++)
     {
-        if (*(u8*)(e + 0xc) == 0)
+        if (((TexScrollEntry*)e)->refCount == 0)
         {
             slot = idx2;
             break;
@@ -873,12 +873,12 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
     if (slot == -1)
         return -1;
     e = base + slot * 0x10;
-    *(s16*)(e + 8) = (s16)((xStep << 16) / (texWidthFixed >> 6));
-    *(s16*)(e + 0xa) = (s16)((yStep << 16) / (texHeightFixed >> 6));
+    ((TexScrollEntry*)e)->xStep = (s16)((xStep << 16) / (texWidthFixed >> 6));
+    ((TexScrollEntry*)e)->yStep = (s16)((yStep << 16) / (texHeightFixed >> 6));
     init = lbl_803DEBCC;
-    *(f32*)e = init;
-    *(f32*)(e + 4) = init;
-    *(u8*)(e + 0xc) += 1;
+    ((TexScrollEntry*)e)->offsetX = init;
+    ((TexScrollEntry*)e)->offsetY = init;
+    ((TexScrollEntry*)e)->refCount += 1;
     return slot;
 }
 
@@ -2325,7 +2325,7 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
 
     found = 0;
     mask = 0;
-    cur = *(char**)(p + 0x20);
+    cur = (char*)((MapRomListPage*)p)->objects;
     count = *(u16*)(p + 8);
     if (count != 0)
     {
@@ -2386,7 +2386,7 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
                         (*gCheckpointInterface)->addRouteEntry((CheckpointRouteEntry*)cur);
                     if (found == 0)
                     {
-                        tbl[0x21] = (int)cur - *(int*)(p + 0x20);
+                        tbl[0x21] = (int)cur - (int)((MapRomListPage*)p)->objects;
                         found = 1;
                     }
                 }
@@ -2394,7 +2394,7 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
                 {
                     if ((mask & (1 << *(u8*)(cur + 6))) == 0)
                     {
-                        tbl[*(u8*)(cur + 6)] = (int)cur - *(int*)(p + 0x20);
+                        tbl[*(u8*)(cur + 6)] = (int)cur - (int)((MapRomListPage*)p)->objects;
                         mask |= 1 << *(u8*)(cur + 6);
                     }
                 }
@@ -2622,7 +2622,7 @@ int mapProcessRomList(int slot)
     dx = *(f32*)(cur + 0x24);
     if (cur != 0)
     {
-        obj = *(char**)(cur + 0x20);
+        obj = (char*)((MapRomListPage*)cur)->objects;
         for (j = 0; j < *(u16*)(cur + 8);)
         {
             if (saveGame_restoreObjectPosToRomList(obj) == 0)
@@ -2726,20 +2726,20 @@ int objUpdateOpacity(GameObject* obj)
     op = ((GameObject*)obj)->anim.alpha;
     if (op == 0)
     {
-        *(u8*)((char*)obj + 0x37) = 0;
+        ((GameObject*)obj)->anim.renderAlpha = 0;
         return 0;
     }
     ptr = (void*)((GameObject*)obj)->anim.placementData;
     if (ptr != 0 && (*(u8*)(ptr + 5) & 1))
     {
-        *(u8*)((char*)obj + 0x37) = (u8)(((op + 1) * 255) >> 8);
+        ((GameObject*)obj)->anim.renderAlpha = (u8)(((op + 1) * 255) >> 8);
     }
     else
     {
-        range = *(f32*)((char*)obj + 0x40);
+        range = ((GameObject*)obj)->anim.cullDistance2;
         if (range < lbl_803DEBB8)
         {
-            *(u8*)((char*)obj + 0x37) = 0;
+            ((GameObject*)obj)->anim.renderAlpha = 0;
             return 0;
         }
         player = Obj_GetPlayerObject();
@@ -2755,7 +2755,7 @@ int objUpdateOpacity(GameObject* obj)
         }
         if (d > range)
         {
-            *(u8*)((char*)obj + 0x37) = 0;
+            ((GameObject*)obj)->anim.renderAlpha = 0;
             return 0;
         }
         alpha = 255;
@@ -2775,16 +2775,16 @@ int objUpdateOpacity(GameObject* obj)
         sz = sz * gMapBlockWorldSize;
         if (sz < 10.0f)
         {
-            *(u8*)((char*)obj + 0x37) = 0;
+            ((GameObject*)obj)->anim.renderAlpha = 0;
             return 0;
         }
         if (sz < 15.0f)
         {
             alpha = (int)(((f32)alpha * (sz - 10.0f)) / 5.0f);
         }
-        *(u8*)((char*)obj + 0x37) = (u8)((alpha * (((GameObject*)obj)->anim.alpha + 1)) >> 8);
+        ((GameObject*)obj)->anim.renderAlpha = (u8)((alpha * (((GameObject*)obj)->anim.alpha + 1)) >> 8);
     }
-    if (*(u8*)((char*)obj + 0x37) == 0)
+    if (((GameObject*)obj)->anim.renderAlpha == 0)
     {
         return 0;
     }

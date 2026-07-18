@@ -1384,10 +1384,10 @@ void dll_0B_func05(void)
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x100)
                 {
-                    char* em = PENDING_SPAWNS + emOff;
-                    ((ModgfxEffectSlot*)eff)->rotOffsetZ += (s16)(*(f32*)(em + 0x4) * gModgfxMotionStep);
-                    ((ModgfxEffectSlot*)eff)->rotOffsetY += (s16)(*(f32*)(em + 0x8) * gModgfxMotionStep);
-                    ((ModgfxEffectSlot*)eff)->rotOffsetX += (s16)(*(f32*)(em + 0xc) * gModgfxMotionStep);
+                    ModgfxPendingSpawn* em = (ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff);
+                    ((ModgfxEffectSlot*)eff)->rotOffsetZ += (s16)(em->posX * gModgfxMotionStep);
+                    ((ModgfxEffectSlot*)eff)->rotOffsetY += (s16)(em->posY * gModgfxMotionStep);
+                    ((ModgfxEffectSlot*)eff)->rotOffsetX += (s16)(em->posZ * gModgfxMotionStep);
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x80)
                 {
@@ -1454,13 +1454,13 @@ void dll_0B_func05(void)
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x80000000)
                 {
-                    char* em = PENDING_SPAWNS + emOff;
+                    ModgfxPendingSpawn* em = (ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff);
                     ((ModgfxEffectSlot*)eff)->motionOffsetX =
-                        *(f32*)(em + 0x4) * gModgfxMotionStep + ((ModgfxEffectSlot*)eff)->motionOffsetX;
+                        em->posX * gModgfxMotionStep + ((ModgfxEffectSlot*)eff)->motionOffsetX;
                     ((ModgfxEffectSlot*)eff)->motionOffsetY =
-                        *(f32*)(em + 0x8) * gModgfxMotionStep + ((ModgfxEffectSlot*)eff)->motionOffsetY;
+                        em->posY * gModgfxMotionStep + ((ModgfxEffectSlot*)eff)->motionOffsetY;
                     ((ModgfxEffectSlot*)eff)->motionOffsetZ =
-                        *(f32*)(em + 0xc) * gModgfxMotionStep + ((ModgfxEffectSlot*)eff)->motionOffsetZ;
+                        em->posZ * gModgfxMotionStep + ((ModgfxEffectSlot*)eff)->motionOffsetZ;
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x800000)
                 {
@@ -1725,12 +1725,10 @@ s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16*
                 {
                     *(s16*)(dstv + 8) =
                         128.0f *
-                        ((f32)sb[3] / (f32) *
-                         (u16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource + 0xa));
+                        ((f32)sb[3] / (f32)((Texture*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource)->width);
                     *(s16*)(dstv + 0xa) =
                         128.0f *
-                        ((f32)sb[4] / (f32) *
-                         (u16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource + 0xc));
+                        ((f32)sb[4] / (f32)((Texture*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource)->height);
                 }
                 dstv[0xc] = 0xff;
                 dstv[0xd] = 0xff;

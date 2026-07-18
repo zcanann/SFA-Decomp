@@ -172,7 +172,7 @@ static inline void GXPosition1x8(const u8 x) { GXWGFifo.u8 = x; }
 
 void updateVisibleGeometry(void)
 {
-    u8* cam;
+    CameraViewSlot* cam;
     int n;
     int i;
     f32 tt, ff, ss;
@@ -186,7 +186,7 @@ void updateVisibleGeometry(void)
     MatrixTransform st;
     f32 m[17];
 
-    cam = (u8*)Camera_GetCurrentViewSlot();
+    cam = Camera_GetCurrentViewSlot();
     if ((renderFlags & RENDERFLAG_WIDESCREEN) != 0 || (renderFlags & RENDERFLAG_DRAW_DISTANCE) != 0)
     {
         scale = Camera_GetFovY() / lbl_803DEBF8;
@@ -196,16 +196,16 @@ void updateVisibleGeometry(void)
         scale = Camera_GetFovY();
         scale *= lbl_803DEBFC;
     }
-    xx = *(f32*)(cam + 0x44) - playerMapOffsetX;
-    yy = *(f32*)(cam + 0x48);
-    zz = *(f32*)(cam + 0x4c) - playerMapOffsetZ;
+    xx = cam->worldX - playerMapOffsetX;
+    yy = cam->worldY;
+    zz = cam->worldZ - playerMapOffsetZ;
     st.x = lbl_803DEBCC;
     st.y = lbl_803DEBCC;
     st.z = lbl_803DEBCC;
     st.scale = lbl_803DEBDC;
-    st.rotX = 0x8000 - *(s16*)(cam + 0x50);
-    st.rotY = -*(s16*)(cam + 0x52);
-    st.rotZ = *(s16*)(cam + 0x54);
+    st.rotX = 0x8000 - cam->worldYaw;
+    st.rotY = -cam->worldPitch;
+    st.rotZ = cam->worldRoll;
     setMatrixFromObjectPos(m, &st);
     Matrix_TransformPoint(m, lbl_803DEBCC, *(f32*)&lbl_803DEBCC, lbl_803DEC00, &ox, &oy, &oz);
     gViewFrustumPlanes[0].normalX = ox;
@@ -731,7 +731,7 @@ void renderSceneGeometry(int* p1, s8* order)
                 else
                 {
                     blk = gMapBlocks[idx];
-                    *(u16*)(blk + 4) ^= 1;
+                    ((MapBlockData*)blk)->flags4 ^= 1;
                     if (map[cell] == 0)
                     {
                         continue;
@@ -742,7 +742,7 @@ void renderSceneGeometry(int* p1, s8* order)
                     lbl_803DCE58 = rowF;
                     colF = gMapBlockWorldSize * (f32)col;
                     lbl_803DCE54 = colF;
-                    PSMTXTrans((f32*)(blk + 0xc), rowF, (f32)(int)*(s16*)(blk + 0x8e), colF);
+                    PSMTXTrans((f32*)(blk + 0xc), rowF, (f32)(int)((MapBlockData*)blk)->collisionYOffset, colF);
                     renderMapBlock(blk, p1);
                 }
             }

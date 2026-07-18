@@ -971,11 +971,11 @@ void SaveGame_updateTimes(void)
     p = base;
     while (i < ((SaveGameData*)base)->timeEntryCount)
     {
-        if (((SaveGameData*)base)->playTime > *(f32*)(p + 0x6f4))
+        if (((SaveGameData*)base)->playTime > ((SaveGameTimeEntry*)(p + 0x6f0))->time)
         {
             cnt = (((SaveGameData*)base)->timeEntryCount -= 1);
-            *(int*)(p + 0x6f0) = ((SaveGameTimeEntry*)(base + 0x6f0))[cnt].objId;
-            *(f32*)(p + 0x6f4) = ((SaveGameTimeEntry*)(base + 0x6f0))[((SaveGameData*)base)->timeEntryCount].time;
+            ((SaveGameTimeEntry*)(p + 0x6f0))->objId = ((SaveGameTimeEntry*)(base + 0x6f0))[cnt].objId;
+            ((SaveGameTimeEntry*)(p + 0x6f0))->time = ((SaveGameTimeEntry*)(base + 0x6f0))[((SaveGameData*)base)->timeEntryCount].time;
         }
         else
         {
@@ -1001,7 +1001,7 @@ f32 SaveGame_gplayGetTime(int id)
     count = ((SaveGameData*)p)->timeEntryCount;
     for (; i < count; i++)
     {
-        if (*(int*)(p + 0x6f0) == id)
+        if (((SaveGameTimeEntry*)(p + 0x6f0))->objId == id)
         {
             p = gSaveGameData;
             return ((SaveGameTimeEntry*)(p + 0x6f0))[i].time - ((SaveGameData*)p)->playTime;
@@ -1022,7 +1022,7 @@ int SaveGame_gplayShouldNotSaveTime(int id)
     count = ((SaveGameData*)p)->timeEntryCount;
     for (i = 0; i < count; i++)
     {
-        if (*(int*)(p + 0x6f0) == id)
+        if (((SaveGameTimeEntry*)(p + 0x6f0))->objId == id)
             return 0;
         p += 8;
     }
@@ -1048,7 +1048,7 @@ void SaveGame_gplayAddTime(int id, f32 time)
     p = base;
     for (; i < count; i++)
     {
-        if (*(int*)(p + 0x6f0) == id)
+        if (((SaveGameTimeEntry*)(p + 0x6f0))->objId == id)
             break;
         p += 8;
     }
@@ -1101,7 +1101,8 @@ void loadMapForCurrentSaveGame(void)
     stopRumble2();
     resetYbutton();
     base = (char*)gSaveGameData + ((SaveGameData*)gSaveGameData)->currentCharacter * 16;
-    mapLoadByCoords(*(f32*)(base + 0x684), *(f32*)(base + 0x688), *(f32*)(base + 0x68c), *(s8*)(base + 0x691));
+    mapLoadByCoords(((SaveGameCharacterPosition*)(base + 0x684))->x, ((SaveGameCharacterPosition*)(base + 0x684))->y,
+                    ((SaveGameCharacterPosition*)(base + 0x684))->z, ((SaveGameCharacterPosition*)(base + 0x684))->map);
     if (getCurUiDll() != 4)
     {
         loadUiDll(1);

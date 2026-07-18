@@ -444,7 +444,7 @@ void objFn_8003dc50(u8* obj, u8* model)
     }
     t10 = b & 0x10;
     chan = t10 ? 4 : 0;
-    if (*(u16*)(obj + 0xe2) & 2)
+    if (((ModelFileHeader*)obj)->shaderFlags & 2)
     {
         if (t2 || t10)
         {
@@ -466,7 +466,7 @@ void objFn_8003dc50(u8* obj, u8* model)
         modelLightChannels_reset(0);
         ch = chan;
         modelLightChannel_configure(ch, 0, en2);
-        f = *(u16*)(obj + 0xe2);
+        f = ((ModelFileHeader*)obj)->shaderFlags;
         if (!(f & 9))
         {
             int mode;
@@ -891,7 +891,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
             layer = Shader_getLayer(shader, layerIdx);
             if ((layer[4] & 0x80) == mask)
             {
-                if ((*(u32*)(shader + 0x3c) & SHADER_FLAG_DECAL_LAYER) && layerIdx == 1)
+                if ((((ObjModelRenderOp*)shader)->flags & SHADER_FLAG_DECAL_LAYER) && layerIdx == 1)
                 {
                     gxTextureFn_80050e28IntLegacy(p3[0] != 0 ? 1 : 0);
                     return 1;
@@ -1192,7 +1192,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     {
         u8 hl;
-        if (modelRenderFn_8003e98c(obj, (u8*)op, refs, 0x80, hl = ((*(u16*)(p2 + 0xe2) & 2) && !(p2[0x24] & 2)),
+        if (modelRenderFn_8003e98c(obj, (u8*)op, refs, 0x80, hl = ((((ModelFileHeader*)p2)->shaderFlags & 2) && !(p2[0x24] & 2)),
                                    nlay) == 0)
         {
             gxTextureFn_80050e28IntLegacy(refs[0] != 0 ? 1 : 0);
@@ -1227,7 +1227,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         }
         modelRenderFn_8003e98c(obj, (u8*)op, refs, 0, hl, nlay);
     }
-    if (isHeavyFogEnabled() && !(*(u16*)(p2 + 2) & 0x100))
+    if (isHeavyFogEnabled() && !(((ModelFileHeader*)p2)->flags & 0x100))
     {
         getColor803dd01cFloatLegacy(&fogc);
         renderHeavyFog(&fogc);
@@ -1274,7 +1274,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             {
                 u16 f2;
                 GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-                f2 = *(u16*)(p2 + 2);
+                f2 = ((ModelFileHeader*)p2)->flags;
                 if (f2 & 0x400)
                 {
                     gxSetZModeByteLegacy(0, 3, 0);
@@ -1295,7 +1295,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             else if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_ALPHA_TEST_OPAQUE)
             {
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-                if (*(u16*)(p2 + 2) & 0x400)
+                if (((ModelFileHeader*)p2)->flags & 0x400)
                 {
                     gxSetZModeByteLegacy(0, 3, 0);
                 }
@@ -1308,7 +1308,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             else
             {
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-                if (*(u16*)(p2 + 2) & 0x400)
+                if (((ModelFileHeader*)p2)->flags & 0x400)
                 {
                     gxSetZModeByteLegacy(0, 3, 0);
                 }
@@ -1344,7 +1344,7 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
     u32 alpha;
     u8 cull;
     u32 sf;
-    if (obj[0x37] < 0xff || ((sf = *(u32*)(shader + 0x3c)) & SHADER_FLAG_FORCE_BLEND))
+    if (obj[0x37] < 0xff || ((sf = ((ObjModelRenderOp*)shader)->flags) & SHADER_FLAG_FORCE_BLEND))
     {
         blend = 1;
         if (((ModelFileHeader*)m)->flags & 0x400)
@@ -1401,7 +1401,7 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
         zcomploc = 1;
         alpha = 0;
     }
-    if (*(u32*)(shader + 0x3c) & SHADER_FLAG_BACKFACE_CULL)
+    if (((ObjModelRenderOp*)shader)->flags & SHADER_FLAG_BACKFACE_CULL)
     {
         cull = 1;
     }
@@ -1514,8 +1514,8 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         }
         *(u16*)((char*)am + 0x18) |= 8;
     }
-    modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, *(u16*)(m + 0xd8) << 3,
-                                         *(u16*)(m + 0xd8) << 3);
+    modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, ((ModelFileHeader*)m)->instrsBitLenWords << 3,
+                                         ((ModelFileHeader*)m)->instrsBitLenWords << 3);
     if (((ModelFileHeader*)m)->shaderFlags & MODEL_SHADERFLAGS_USE_OBJ_COLOR)
     {
         if (gObjOverrideColorPending != 0)
@@ -1527,7 +1527,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         }
         else
         {
-            objGetColor(*(u8*)((char*)obj + 0xf2), &color[0], &color[1], &color[2]);
+            objGetColor(((GameObject*)obj)->lightColorSlot, &color[0], &color[1], &color[2]);
         }
     }
     else
@@ -1536,7 +1536,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         color[1] = 0xff;
         color[0] = 0xff;
     }
-    color[3] = *(u8*)((char*)obj + 0x37);
+    color[3] = ((GameObject*)obj)->anim.renderAlpha;
     cb = (ObjModelRenderCb)ObjModel_GetRenderCallback((ObjModel*)am);
     if (gObjRenderSetupDone == 0 || cb != NULL)
     {
@@ -1639,7 +1639,7 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
         char* src;
         char* dst;
         int i;
-        obj = *(u8*)(obj + 0xf3) + *(u8*)(obj + 0xf4);
+        obj = ((ModelFileHeader*)obj)->jointCount + ((ModelFileHeader*)obj)->extraJointCount;
         src = c2 + 0x2700;
         dst = c2;
         cacheQueueWait(0);
@@ -1844,8 +1844,8 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         *(u16*)((char*)am + 0x18) |= 8;
     }
     modelInitMtxsPtrLegacy(m, am);
-    modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, *(u16*)(m + 0xd8) << 3,
-                                         *(u16*)(m + 0xd8) << 3);
+    modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, ((ModelFileHeader*)m)->instrsBitLenWords << 3,
+                                         ((ModelFileHeader*)m)->instrsBitLenWords << 3);
     if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries != 0)
     {
         PSMTXConcat(vm, wm, cm);
@@ -2073,7 +2073,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     }
     else
     {
-        objGetColor(*(u8*)((char*)obj + 0xf2), (u8*)&gObjCurChanColor, (u8*)&gObjCurChanColor + 1,
+        objGetColor(((GameObject*)obj)->lightColorSlot, (u8*)&gObjCurChanColor, (u8*)&gObjCurChanColor + 1,
                     (u8*)&gObjCurChanColor + 2);
     }
     mode8 = mode;
@@ -2199,8 +2199,8 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         }
     }
     modelInitMtxsPtrLegacy(m, am);
-    modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, *(u16*)(m + 0xd8) << 3,
-                                         *(u16*)(m + 0xd8) << 3);
+    modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, ((ModelFileHeader*)m)->instrsBitLenWords << 3,
+                                         ((ModelFileHeader*)m)->instrsBitLenWords << 3);
     {
         f32 inv = lbl_803DEA1C / ((GameObject*)obj)->anim.rootMotionScale;
         PSMTXScale(sm, inv, inv, inv);
@@ -2673,7 +2673,8 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
         }
         objRotateFn_8003bce8VoidLegacy(m2, (s16*)child, (s16*)child + 1, (s16*)child + 2);
     }
-    *(u8*)((char*)child + 0x37) = ((((GameObject*)child)->anim.alpha + 1) * *(u8*)((char*)parent + 0x37)) >> 8;
+    ((GameObject*)child)->anim.renderAlpha =
+        ((((GameObject*)child)->anim.alpha + 1) * ((GameObject*)parent)->anim.renderAlpha) >> 8;
     *(u8*)((char*)child + 0xf1) = *(u8*)((char*)parent + 0xf1);
     if (!(((GameObject*)child)->anim.flags & OBJANIM_FLAG_HIDDEN))
     {

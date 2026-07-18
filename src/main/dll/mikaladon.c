@@ -112,7 +112,7 @@ void fn_80152B90(int* obj, u8* state)
                     spawned = (int*)loadObjectAtObject((GameObject*)obj, (ObjPlacement*)setup);
                     if (spawned != 0)
                     {
-                        *(int**)((char*)spawned + 0xc4) = obj;
+                        ((GameObject*)spawned)->ownerObj = obj;
                         Sfx_PlayFromObject((u32)obj, SFXTRIG_id_249);
                     }
                 }

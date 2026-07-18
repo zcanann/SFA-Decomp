@@ -16264,7 +16264,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 for (endFlag = 0; endFlag < objCount; endFlag++)
                 {
                     va = *(int*)obj2;
-                    if ((u32)va != 0 && arrayIndexOf((int*)(tbl + 0x13c), 9, *(s16*)(va + 0x46)) != -1)
+                    if ((u32)va != 0 && arrayIndexOf((int*)(tbl + 0x13c), 9, ((GameObject*)va)->anim.seqId) != -1)
                     {
                         f32 dsq = vec3f_distanceSquared((f32*)(va + 0x18), (f32*)(obj + 0x18));
                         if (dsq < best || found == 0)
@@ -16288,7 +16288,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
                     ((GameObject*)obj)->anim.modelState->shadowAlphaStep = 0;
                     seq->flags &= ~4;
-                    switch (*(s16*)(va + 0x46))
+                    switch (((GameObject*)va)->anim.seqId)
                     {
                     case 0x72:
                     case 0x38c:
@@ -16333,7 +16333,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                         ((PlayerState*)inner)->moveSequenceFlags = 4;
                         ObjAnim_SetCurrentMove(obj, 0xf8, 0.0f, 1);
                     }
-                    if (arrayIndexOf((int*)(tbl + 0x160), 4, *(s16*)(va + 0x46)) != -1)
+                    if (arrayIndexOf((int*)(tbl + 0x160), 4, ((GameObject*)va)->anim.seqId) != -1)
                     {
                         (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner, 0x1a);
                         *(void (**)(int))((char*)inner + 0x304) = (void (*)(int))fn_8029F67C;
@@ -16371,13 +16371,13 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             case 0xb:
             {
                 int gb = (int)((PlayerState*)inner)->focusObject;
-                if ((u32)gb != 0 && *(s16*)(gb + 0x46) == 0x416)
+                if ((u32)gb != 0 && ((GameObject*)gb)->anim.seqId == 0x416)
                 {
                     (*gCameraInterface)->setFocus((void*)gb, 0);
                     (*gCameraInterface)->loadTriggeredCamAction(0, 0x69, 0);
                     (*gObjectTriggerInterface)->setCamVars(0x42, 4, 0, 0);
                 }
-                else if ((u32)gb != 0 && arrayIndexOf((int*)(tbl + 0x160), 4, *(s16*)(gb + 0x46)) != -1)
+                else if ((u32)gb != 0 && arrayIndexOf((int*)(tbl + 0x160), 4, ((GameObject*)gb)->anim.seqId) != -1)
                 {
                     (*gObjectTriggerInterface)->setCamVars(0x53, 0, 0, 0);
                 }
@@ -16476,7 +16476,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                         int p17 = *(int*)(va + 0x7f8);
                         if ((u32)p17 != 0)
                         {
-                            s16 sp17 = *(s16*)(p17 + 0x46);
+                            s16 sp17 = ((GameObject*)p17)->anim.seqId;
                             if (sp17 == 0x3cf || sp17 == 0x662)
                             {
                                 objThrowFn_80182504((GameObject*)(p17));
@@ -17844,9 +17844,9 @@ void fn_802AB5A4(GameObject* obj, int p2, int flags)
     if (f & 2)
     {
         curves_preparePointCollisionFrame((int)obj, (CurvesCollisionState*)((char*)(int)p2 + 4));
-        *(f32*)(q + 0x20) = obj->anim.worldPosX;
-        *(f32*)(q + 0x24) = lbl_803E80EC + obj->anim.worldPosY;
-        *(f32*)(q + 0x28) = obj->anim.worldPosZ;
+        ((CurvesCollisionState*)q)->points[2][0] = obj->anim.worldPosX;
+        ((CurvesCollisionState*)q)->points[2][1] = lbl_803E80EC + obj->anim.worldPosY;
+        ((CurvesCollisionState*)q)->points[2][2] = obj->anim.worldPosZ;
     }
     if (f & 4)
     {
