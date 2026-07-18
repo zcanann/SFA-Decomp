@@ -33,7 +33,7 @@
 #include "main/pi_dolphin_ext.h"
 #include "main/mm_ext.h"
 #include "main/newshadows_ext.h"
-#include "main/pi_dolphin_pr.h"
+#include "main/pi_dolphin_load_api.h"
 #include "main/gx_scissor_api.h"
 #include "string.h"
 

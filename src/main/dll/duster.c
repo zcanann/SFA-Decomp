@@ -48,7 +48,7 @@
 #include "main/dll/player_api.h"
 #include "main/dll/fireflyLantern.h"
 #include "main/dll/duster.h"
-#include "main/dll/dll_00D8_pinponspike_cs.h"
+#include "main/dll/dll_00D8_pinponspike_arc_api.h"
 
 int lbl_803DBCD8[2] = {2, 3};
 

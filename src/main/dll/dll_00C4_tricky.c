@@ -70,7 +70,7 @@
 #include "main/dll/mmp_critterspit_ext.h"
 #include "main/dll/dll_80136a40_ext2.h"
 #include "main/dll/dll_0014_unk.h"
-#include "main/pi_dolphin_cs.h"
+#include "main/pi_dolphin_texture_api.h"
 #include "main/newshadows_audio_api.h"
 #include "string.h"
 

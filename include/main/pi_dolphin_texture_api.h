@@ -1,5 +1,5 @@
-#ifndef MAIN_PI_DOLPHIN_CS_H_
-#define MAIN_PI_DOLPHIN_CS_H_
+#ifndef MAIN_PI_DOLPHIN_TEXTURE_API_H_
+#define MAIN_PI_DOLPHIN_TEXTURE_API_H_
 
 #include "types.h"
 
@@ -11,4 +11,4 @@ void trickyVoxAllocFn_8004b5d4(int* out);
 void* fn_8004B118(int* p);
 int fn_8004B148(int* p);
 
-#endif /* MAIN_PI_DOLPHIN_CS_H_ */
+#endif /* MAIN_PI_DOLPHIN_TEXTURE_API_H_ */

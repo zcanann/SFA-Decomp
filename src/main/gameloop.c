@@ -78,7 +78,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/lightmap.h"
 #include "main/pi_dolphin_ext.h"
 #include "main/lightmap_ext.h"
-#include "main/pi_dolphin_pr.h"
+#include "main/pi_dolphin_load_api.h"
 #include "string.h"
 
 f32 gGameLoopResetFadeOutTimer;

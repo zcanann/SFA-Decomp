@@ -22,7 +22,7 @@
 #include "main/camera.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
-#include "main/shader_cs.h"
+#include "main/shader_map_api.h"
 
 s16 gCamcontrolTargetHelpTextId = -1;
 u16 gCamcontrolTargetClassMask = 0xFFFF;

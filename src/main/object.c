@@ -1,7 +1,7 @@
 #include "dolphin/os/OSReport.h"
 #include "main/dll/objpathtransform_struct.h"
 #include "main/shader_api.h"
-#include "main/shader_cs.h"
+#include "main/shader_map_api.h"
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/model.h"

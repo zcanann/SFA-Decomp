@@ -174,7 +174,7 @@ extern volatile int lbl_803DCC80;
 #include "main/objmodel.h"
 #include "main/mm_ext.h"
 #include "main/newshadows_ext2.h"
-#include "main/rcp_dolphin_cs.h"
+#include "main/rcp_dolphin_render_api.h"
 #include "dolphin/gx/GXBump.h"
 
 struct MldfNames

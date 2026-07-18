@@ -28,7 +28,7 @@
 #include "main/lightmap_api.h"
 #include "main/pad.h"
 #include "main/screen_transition.h"
-#include "main/rcp_dolphin_cs.h"
+#include "main/rcp_dolphin_render_api.h"
 
 #define OPTIONS_MENU_ACTION_CLOSE      0
 #define OPTIONS_MENU_ACTION_SELECT     1

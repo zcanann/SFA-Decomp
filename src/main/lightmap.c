@@ -44,7 +44,7 @@
 #include "main/track_dolphin_ext.h"
 #include "main/trig_ext.h"
 #include "main/tex_dolphin_ext.h"
-#include "main/acosf_cs.h"
+#include "main/acosf_api.h"
 #include "dolphin/gx/GXGeometry.h"
 
 char colorFilterColor[4] = "\xFF\x70\x40";

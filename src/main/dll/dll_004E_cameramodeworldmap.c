@@ -28,7 +28,7 @@
 #include "main/pad.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
-#include "main/dll/dll_0000_gameui_cs.h"
+#include "main/dll/dll_0000_gameui_hud_api.h"
 
 CameraModeWorldMapState* gCamWorldMapState;
 

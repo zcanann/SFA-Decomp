@@ -37,7 +37,7 @@
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "main/lightmap_ext.h"
 #include "main/track_dolphin_ext2.h"
-#include "main/track_dolphin_cs.h"
+#include "main/track_dolphin_shadow_api.h"
 #include "string.h"
 
 typedef struct SkyColorByte
