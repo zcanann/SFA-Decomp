@@ -76,26 +76,6 @@ enum NwMammothRuntimeFlag
 
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5218;
-extern u8 lbl_803DBF70[4];
-extern u8 lbl_803DBF74[4];
-extern u8 lbl_803DBF78[4];
-extern u8 lbl_803DBF7C[4];
-extern u8 lbl_803DBF80[4];
-extern u8 lbl_803DBFB4[4];
-extern u8 lbl_803DBFB8[4];
-extern u8 lbl_803DBFBC[4];
-extern u8 lbl_803DBF84[4];
-extern u8 lbl_803DBF88[4];
-extern u8 lbl_803DBF8C[4];
-extern u8 lbl_803DBF90[4];
-extern u8 lbl_803DBF94[4];
-extern u8 lbl_803DBF98[4];
-extern u8 lbl_803DBF9C[4];
-extern u8 lbl_803DBFA0[4];
-extern u8 lbl_803DBFA4[4];
-extern u8 lbl_803DBFA8[4];
-extern u8 lbl_803DBFAC[4];
-extern u8 lbl_803DBFB0[4];
 extern f32 lbl_803E5210;
 extern u32 lbl_803E5208;
 
