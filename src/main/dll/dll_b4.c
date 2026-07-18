@@ -20,8 +20,6 @@
 extern ModelLightStruct* lbl_803DD4C4;
 extern f32 lbl_803E1640;
 
-extern void lightSetColor(int a, int b, int c, int d);
-
 void lockIconInit(void)
 {
     if (gCamcontrolTargetReticle == NULL)

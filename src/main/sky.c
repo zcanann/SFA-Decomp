@@ -220,7 +220,6 @@ extern f32 lbl_803DF194;
 
 extern void renderSunAndMoon();
 extern int moonFxCb_80074110(int obj, int* model, int param);
-extern void lightSetColor(int index, int red, int green, int blue);
 extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern f32 PSVECMag(f32* vec);

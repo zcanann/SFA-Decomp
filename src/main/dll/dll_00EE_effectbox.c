@@ -32,8 +32,6 @@
 #define EFFECTBOX_OBJFLAG_HIDDEN             0x4000
 #define EFFECTBOX_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern void fn_8002B758(void);
-
 #define EFFECTBOX_RENDER_SCALE 1.0f
 #define EFFECTBOX_PI           3.1415927f
 #define EFFECTBOX_ANGLE_SCALE  32768.0f
@@ -48,9 +46,9 @@ int EffectBox_getObjectTypeId(void)
     return 0x0;
 }
 
-void EffectBox_free(void)
+void EffectBox_free(GameObject* obj)
 {
-    fn_8002B758();
+    fn_8002B758(obj);
 }
 
 void EffectBox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

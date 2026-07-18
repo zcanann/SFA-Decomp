@@ -17,6 +17,7 @@ void gxBlendFn_80078b4c(void);
 void gxTexColorFn_80079254(void);
 void gxTextureFn_800794e0(void);
 void mapInitFn_8006fccc(void);
+void fn_8006FC00(int enable);
 void matrixFn_8006ff0c(f32* matrix, s16* out, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane, f32 scale);
 void normalize(f32* x, f32* y, f32* z);
 void textBlendSetupFn_80078a7c(void);

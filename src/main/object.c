@@ -34,6 +34,7 @@
 #include "main/texture.h"
 #include "main/camera.h"
 #include "main/object.h"
+#include "main/object_ext.h"
 #include "main/object_update_list.h"
 #include "main/object_api.h"
 #include "main/newshadows_shadow_api.h"

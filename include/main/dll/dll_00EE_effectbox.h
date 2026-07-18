@@ -23,7 +23,7 @@ typedef struct EffectboxPlacement
 
 int EffectBox_getExtraSize(void);
 int EffectBox_getObjectTypeId(void);
-void EffectBox_free(void);
+void EffectBox_free(GameObject* obj);
 void EffectBox_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void EffectBox_hitDetect(void);
 void EffectBox_update(GameObject* obj);
