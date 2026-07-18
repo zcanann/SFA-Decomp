@@ -489,7 +489,7 @@ int iceBaddie_updateContactHitState(GameObject* obj, int state)
 
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 10;
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 1;
-    ObjHits_RegisterActiveHitVolumeObject((int)obj);
+    ObjHits_RegisterActiveHitVolumeObject(obj);
     if (sub->aggression > 0x32)
     {
         if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
@@ -668,7 +668,7 @@ int iceBaddie_stateHandlerA06(GameObject* obj, int state)
     ((IceBaddieControl*)sub->control)->effectFlags |= ICEBADDIE_FX_BURST;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 10;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 1;
-    ObjHits_RegisterActiveHitVolumeObject((int)obj);
+    ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         lbl_803DDA79 = randomGetRange(0, 2);
@@ -723,7 +723,7 @@ int iceBaddie_stateHandlerA05(GameObject* obj, int state)
     ((IceBaddieControl*)sub->control)->effectFlags |= ICEBADDIE_FX_BURST;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 10;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 1;
-    ObjHits_RegisterActiveHitVolumeObject((int)obj);
+    ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         choice = randomGetRange(0, 1);
@@ -803,7 +803,7 @@ int iceBaddie_updateImpactHitState(GameObject* obj, int state)
 
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 10;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 1;
-    ObjHits_RegisterActiveHitVolumeObject((int)obj);
+    ObjHits_RegisterActiveHitVolumeObject(obj);
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
@@ -912,7 +912,7 @@ int iceBaddie_updateOpenHitState(GameObject* obj, int state)
     ((GroundBaddieState*)state)->baddie.physicsActive = 1;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 9;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 1;
-    ObjHits_RegisterActiveHitVolumeObject((int)obj);
+    ObjHits_RegisterActiveHitVolumeObject(obj);
     if (*(char*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != '\0')
     {
         ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, 0);

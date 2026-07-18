@@ -58,8 +58,6 @@
 /* spray burst spawned 10x when the baddie-control fx flag bit 4 is set */
 #define DLLCE_PARTFX_SPRAY    0x343
 #define DLLCE_HIT_VOLUME_SLOT 10
-extern void ObjHits_RegisterActiveHitVolumeObject();
-
 u8 lbl_803AC580[0x18];
 
 /* State handlers implemented by dll_00CA_icebaddie.c. */
@@ -479,7 +477,7 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
-    ObjHits_RegisterActiveHitVolumeObject(obj);
+    ObjHits_RegisterActiveHitVolumeObject((GameObject*)obj);
     state->baddie.moveSpeed = 0.01f;
     if ((s8)state->baddie.moveJustStartedA != 0)
     {
@@ -506,7 +504,7 @@ int fn_8015E5DC(short* obj, GroundBaddieState* state)
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DLLCE_HIT_VOLUME_SLOT, 1, -1);
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairPriority = 10;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectPairHitVolume = 1;
-    ObjHits_RegisterActiveHitVolumeObject(obj);
+    ObjHits_RegisterActiveHitVolumeObject((GameObject*)obj);
     if (*(char*)&state->baddie.moveJustStartedA != '\0')
     {
         objs = ObjList_GetObjects(&i, &count);

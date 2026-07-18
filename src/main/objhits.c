@@ -15,7 +15,7 @@
 #include "main/vecmath.h"
 #include "main/track_dolphin_api.h"
 
-int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT] = {0};
+GameObject* gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT] = {NULL};
 ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
 f32 gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT * OBJHITS_CONTACT_SCRATCH_WORDS];
@@ -1615,12 +1615,12 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
 }
 #undef ObjHits_CheckHitVolumes
 
-void ObjHits_RegisterActiveHitVolumeObject(int obj)
+void ObjHits_RegisterActiveHitVolumeObject(GameObject* obj)
 {
     int index;
 
     index = 0;
-    while (index < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT && (u32)gObjHitsActiveHitVolumeObjects[index] != 0)
+    while (index < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT && gObjHitsActiveHitVolumeObjects[index] != NULL)
     {
         index = index + 1;
     }

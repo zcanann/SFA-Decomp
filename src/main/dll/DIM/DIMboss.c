@@ -522,7 +522,7 @@ void DIMboss_update(DIMbossObject* obj)
                 topState->introSinkHeight = lbl_803E4BD8;
             }
         }
-        ObjHits_RegisterActiveHitVolumeObject((int)obj);
+        ObjHits_RegisterActiveHitVolumeObject((GameObject*)obj);
         if (obj->updateInitialized == 0)
         {
             obj->anim.localPosX = config->spawnX;

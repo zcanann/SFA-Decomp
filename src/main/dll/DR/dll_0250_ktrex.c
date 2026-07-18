@@ -1576,7 +1576,7 @@ void ktrex_update(int obj)
         runtime->unk270 = 11;
         runtime->moveJustStartedB = 1;
     }
-    ObjHits_RegisterActiveHitVolumeObject(obj);
+    ObjHits_RegisterActiveHitVolumeObject((GameObject*)obj);
     runtime->playerObj = Obj_GetPlayerObject();
     if (runtime->playerObj != NULL)
     {

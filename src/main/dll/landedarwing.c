@@ -12,6 +12,7 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
 
@@ -82,7 +83,7 @@ u32 LandedArwing_UpdateFlightChase(int obj, int state)
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, LANDED_ARWING_OBJECT_PAIR_PRIORITY, LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME, -1);
     ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->objectPairPriority = LANDED_ARWING_OBJECT_PAIR_PRIORITY;
     ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->objectPairHitVolume = LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME;
-    ObjHits_RegisterActiveHitVolumeObject(obj);
+    ObjHits_RegisterActiveHitVolumeObject((GameObject*)obj);
 
     (*gPathControlInterface)->advance((void*)obj, (void*)(state + 4), timeDelta);
 

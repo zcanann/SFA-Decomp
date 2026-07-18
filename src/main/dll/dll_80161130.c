@@ -318,7 +318,7 @@ int grimble_stateHandlerA06(GameObject* obj, GroundBaddieState* p, f32 spd)
     ctrl = ((GroundBaddieState*)(obj)->extra)->control;
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 9;
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 1;
-    ObjHits_RegisterActiveHitVolumeObject((int)obj);
+    ObjHits_RegisterActiveHitVolumeObject(obj);
     if (randomGetRange(0, 100) < 50)
     {
         if ((s8)p->baddie.moveJustStartedA != 0)

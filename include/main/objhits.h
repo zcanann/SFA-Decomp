@@ -80,7 +80,7 @@
 #define OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET  0x10F
 #define OBJHITBOX_ROTATED_BOUNDS_RESET_FRAMES        10
 
-extern int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
+extern GameObject* gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
 extern f32 gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT * OBJHITS_CONTACT_SCRATCH_WORDS];
 extern void* gObjHitsPrimaryHitboxBufferScratch0;
 extern void* gObjHitsSecondaryHitboxBufferScratch0;
@@ -288,7 +288,7 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix);
 u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char checkB, u32 mask, u32 volMask);
 void doNothing_800333C8(int objA, int objB, int att, void* state, void* attState, f32 dt);
 void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 dt);
-void ObjHits_RegisterActiveHitVolumeObject(int obj);
+void ObjHits_RegisterActiveHitVolumeObject(GameObject* obj);
 void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag);
 void ObjHits_DetectObjectPair(int objA, int objB);
 void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, void* scratchC, void* scratchD,

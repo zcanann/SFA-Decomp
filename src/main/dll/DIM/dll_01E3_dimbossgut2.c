@@ -228,7 +228,7 @@ void DIM_BossGut2_update(GameObject* obj)
         ObjAnim_AdvanceCurrentMove((int)obj, 0.015f, timeDelta, NULL);
         ((ObjHitsPriorityState*)*(int*)&(obj)->anim.hitReactState)->hitVolumePriority = 9;
         ((ObjHitsPriorityState*)*(int*)&(obj)->anim.hitReactState)->hitVolumeId = 1;
-        ObjHits_RegisterActiveHitVolumeObject((int)obj);
+        ObjHits_RegisterActiveHitVolumeObject(obj);
         val = state->curveData;
         curveLight = (u8*)val->light;
         if ((curveLight != NULL) && (curveLight[0x2f8] != 0) && (curveLight[0x4c] != 0))

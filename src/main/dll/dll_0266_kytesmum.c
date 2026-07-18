@@ -197,7 +197,7 @@ int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0xb;
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 4;
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, KYTESMUM_HIT_VOLUME_SLOT, 4, 7);
-        ObjHits_RegisterActiveHitVolumeObject((int)obj);
+        ObjHits_RegisterActiveHitVolumeObject(obj);
     }
     return 0;
 }
@@ -225,7 +225,7 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
     Obj_GetPlayerObject();
     setup = ((KytesMumObject*)obj)->setup;
     ObjHits_EnableObject(obj);
-    ObjHits_RegisterActiveHitVolumeObject(obj);
+    ObjHits_RegisterActiveHitVolumeObject((GameObject*)obj);
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         if (animUpdate->eventIds[i] == 1 && setup->mode != 0)
@@ -417,7 +417,7 @@ void kytesmum_init(GameObject* obj, KytesMumSetup* setup)
             Obj_RemoveFromUpdateList((u8*)obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
-        ObjHits_RegisterActiveHitVolumeObject((int)obj);
+        ObjHits_RegisterActiveHitVolumeObject(obj);
         kytesMum->interactionCallback = kytesmum_animEventCallback;
         break;
     case KYTESMUM_MODE_QUEST_A:

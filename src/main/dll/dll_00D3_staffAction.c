@@ -100,7 +100,7 @@ u32 fn_801659B8(s16* obj, u32* params)
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)o, STAFFACTION_HIT_VOLUME_SLOT, 1, -1);
     *(u8*)(*(int*)&o->anim.hitReactState + 0x6c) = 9;
     *(u8*)(*(int*)&o->anim.hitReactState + 0x6d) = 1;
-    ObjHits_RegisterActiveHitVolumeObject((int)o);
+    ObjHits_RegisterActiveHitVolumeObject(o);
     (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
     if (*(s8*)((int)params + 0x27a) != 0)
     {

@@ -380,7 +380,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         ((ByteFlags*)&inner->flagsBC0)->b08 = 0;
         needMove = 1;
     }
-    ObjHits_RegisterActiveHitVolumeObject(obj);
+    ObjHits_RegisterActiveHitVolumeObject((GameObject*)obj);
     if (*(s8*)&((CloudRunnerState*)baddie)->baddie.moveJustStartedA != 0)
     {
         if (!((ByteFlags*)&inner->flagsBC0)->b20)
