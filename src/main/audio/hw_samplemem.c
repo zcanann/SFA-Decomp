@@ -17,23 +17,19 @@ void hwSaveSample(u32** sample, void** ptr)
     size = header & 0xffffff;
     if (type != 3)
     {
-        if (type < 3)
+        do
         {
-            if (type >= 2)
+            if (type >= 3 || type < 2)
             {
-                size <<= 1;
+                if (type >= 0 && type < 6)
+                {
+                    adjusted = size + 0xd;
+                    size = (adjusted / 7 * 4) & ~7;
+                }
+                break;
             }
-            else if (type >= 0)
-            {
-                adjusted = size + 0xd;
-                size = (adjusted / 7 * 4) & ~7;
-            }
-        }
-        else if (type < 6)
-        {
-            adjusted = size + 0xd;
-            size = (adjusted / 7 * 4) & ~7;
-        }
+            size <<= 1;
+        } while (0);
     }
     *ptr = (void*)aramStoreData(*ptr, size);
 }
@@ -50,23 +46,19 @@ void hwRemoveSample(u32* sample, void* ptr)
     size = header & 0xffffff;
     if (type != 3)
     {
-        if (type < 3)
+        do
         {
-            if (type >= 2)
+            if (type >= 3 || type < 2)
             {
-                size <<= 1;
+                if (type >= 0 && type < 6)
+                {
+                    adjusted = size + 0xd;
+                    size = (adjusted / 7 * 4) & ~7;
+                }
+                break;
             }
-            else if (type >= 0)
-            {
-                adjusted = size + 0xd;
-                size = (adjusted / 7 * 4) & ~7;
-            }
-        }
-        else if (type < 6)
-        {
-            adjusted = size + 0xd;
-            size = (adjusted / 7 * 4) & ~7;
-        }
+            size <<= 1;
+        } while (0);
     }
     aramRemoveData(ptr, size);
 }
