@@ -5,5 +5,6 @@
 
 void saveGame_saveObjectPos(GameObject* obj);
 void saveGame_unsaveObjectPos(GameObject* obj);
+int pushable_savePos(GameObject* obj);
 
 #endif /* MAIN_DLL_SAVEGAME_OBJECT_API_H_ */

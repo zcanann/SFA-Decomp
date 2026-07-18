@@ -142,7 +142,6 @@ typedef struct
 
 int gPushableSavedMapIdCount;
 int gPushableSavedMapIds[0x28];
-extern void pushable_savePos(int* obj);
 
 int pushable_render2(GameObject* obj);
 void pushable_modelMtxFn(GameObject* obj, int modelNo);
@@ -1348,7 +1347,7 @@ void pushable_update(int* obj)
     {
         if (state->savePosEnabled != 0)
         {
-            pushable_savePos(obj);
+            pushable_savePos((GameObject*)obj);
         }
     }
     switch (((GameObject*)obj)->anim.seqId)
@@ -1564,7 +1563,7 @@ void pushable_init(s16* obj, char* def)
             state->flags = state->flags | 0x81;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-            pushable_savePos((int*)obj);
+            pushable_savePos((GameObject*)obj);
         }
         state->savePosEnabled = 0;
         break;
