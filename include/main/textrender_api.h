@@ -22,6 +22,7 @@ extern GameTextSlot lbl_8033A540[];
 #define gGameTextCommandSlots lbl_8033A540
 
 void subtitleFn_8001b700(void);
+void subtitleStart(int x);
 void subtitleUpdateAndDraw(int mode);
 void subtitleBuildLineTable(void);
 int subtitleIsActive(void);

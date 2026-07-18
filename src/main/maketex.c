@@ -156,8 +156,6 @@ extern f32 lbl_803DD074;
 extern int lbl_803DB724;
 extern f32 gObjSeqSlotStreamTimeTable[];
 
-extern void subtitleStart(int);
-
 int saveCb_8007e77c(u8 idx, int unused, void* dst)
 {
     memcpy(dst, (void*)(lbl_803DD044 + idx * 1772 + 2640), 1772);
