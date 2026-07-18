@@ -1223,33 +1223,32 @@ void MapBlock_init(GameObject* obj)
 
 void MapBlock_initHits(GameObject* obj, int index)
 {
-    int off;
     int i;
     int* table = (int*)lbl_803DCE80;
     int fileOff = table[index];
     int size = table[index + 1] - fileOff;
     int entry;
+    s16 v;
     if (size > 0)
     {
         *(void**)((char*)obj + 0x70) = mmAlloc(size, 5, 0);
         fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, *(void**)((char*)obj + 0x70), fileOff, size);
     }
     *(u16*)((char*)obj + 0x9c) = (u32)size / 20;
-    for (i = 0, off = 0; i < *(u16*)((char*)obj + 0x9c); i++)
+    for (i = 0; i < *(u16*)((char*)obj + 0x9c); i++)
     {
-        entry = *(int*)&obj->anim.textureSlots + off;
-        if (*(s16*)(entry + 0) < 0 || *(s16*)(entry + 2) < 0 || *(s16*)(entry + 0) > 0x280 ||
-            *(s16*)(entry + 2) > 0x280)
+        entry = *(int*)&obj->anim.textureSlots + i * 20;
+        if (*(s16*)(entry + 0) < 0 || (v = *(s16*)(entry + 2)) < 0 || *(s16*)(entry + 0) > 0x280 ||
+            v > 0x280)
         {
             *(u8*)(entry + 0xf) = 0x40;
         }
-        entry = *(int*)&obj->anim.textureSlots + off;
-        if (*(s16*)(entry + 8) < 0 || *(s16*)(entry + 0xa) < 0 || *(s16*)(entry + 8) > 0x280 ||
-            *(s16*)(entry + 0xa) > 0x280)
+        entry = *(int*)&obj->anim.textureSlots + i * 20;
+        if (*(s16*)(entry + 8) < 0 || (v = *(s16*)(entry + 0xa)) < 0 || *(s16*)(entry + 8) > 0x280 ||
+            v > 0x280)
         {
             *(u8*)(entry + 0xf) = 0x40;
         }
-        off += 0x14;
     }
     *(int*)&obj->anim.hitVolumeTransforms = 0;
     *(u16*)((char*)obj + 0x9e) = 0;
