@@ -884,8 +884,8 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
 {
     u32* entry;
     u32 nearest;
-    u32 index;
-    u32 limit;
+    int index;
+    int limit;
     float distanceSq;
     float bestDistanceSq;
 
@@ -896,9 +896,9 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
         return 0;
     }
     index = gObjGroupOffsets[group];
-    limit = (u32)(&gObjGroupOffsets[group])[1];
+    limit = gObjGroupOffsets[group + 1];
     entry = gObjGroupObjects + index;
-    while ((int)index < (int)limit)
+    while (index < limit)
     {
         if (*entry != 0)
         {
@@ -923,8 +923,8 @@ GameObject* ObjGroup_FindNearestObjectForObject(int group, GameObject* obj, floa
 {
     u32* entry;
     GameObject* nearest;
-    u32 index;
-    u32 limit;
+    int index;
+    int limit;
     float distanceSq;
     float bestDistanceSq;
 
@@ -942,9 +942,9 @@ GameObject* ObjGroup_FindNearestObjectForObject(int group, GameObject* obj, floa
         bestDistanceSq = lbl_803DE968;
     }
     index = gObjGroupOffsets[group];
-    limit = (u32)(&gObjGroupOffsets[group])[1];
+    limit = gObjGroupOffsets[group + 1];
     entry = gObjGroupObjects + index;
-    while ((int)index < (int)limit)
+    while (index < limit)
     {
         if ((GameObject*)*entry != obj)
         {
@@ -969,8 +969,9 @@ int ObjGroup_FindNearestObject(int group, int obj, float* maxDistance)
 {
     u32* entry;
     u32 nearest;
-    u32 index;
-    u32 limit;
+    GameObject* o;
+    int index;
+    int limit;
     float distanceSq;
     float bestDistanceSq;
 
@@ -987,15 +988,15 @@ int ObjGroup_FindNearestObject(int group, int obj, float* maxDistance)
     {
         bestDistanceSq = lbl_803DE968;
     }
+    o = (GameObject*)obj;
     index = gObjGroupOffsets[group];
-    limit = (u32)(&gObjGroupOffsets[group])[1];
+    limit = gObjGroupOffsets[group + 1];
     entry = gObjGroupObjects + index;
-    while ((int)index < (int)limit)
+    while (index < limit)
     {
-        if (*entry != obj)
+        if ((GameObject*)*entry != o)
         {
-            distanceSq =
-                vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)*entry)->anim.worldPosX);
+            distanceSq = vec3f_distanceSquared(&o->anim.worldPosX, &((GameObject*)*entry)->anim.worldPosX);
             if (distanceSq < bestDistanceSq)
             {
                 bestDistanceSq = distanceSq;
