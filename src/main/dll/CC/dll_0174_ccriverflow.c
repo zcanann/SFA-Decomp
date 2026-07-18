@@ -11,8 +11,9 @@
 #include "main/dll/DF/DFcradle.h"
 #include "main/gamebits.h"
 
-f32 lbl_803E4DD0 = 0.001953125f;
-f32 lbl_803E4DD4 = 0.01f;
+union CCriverflowConstF32 { f32 f; };
+const union CCriverflowConstF32 lbl_803E4DD0 = { 0.001953125f };
+const union CCriverflowConstF32 lbl_803E4DD4 = { 0.01f };
 
 int ccriverflow_getExtraSize(void)
 {
@@ -67,8 +68,8 @@ void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params)
     }
     obj->angle = params->angleByte << 8;
     obj->height = obj->model->baseHeight;
-    obj->height = (f32)(u32)params->heightOffset * lbl_803E4DD0 + obj->height;
-    if (obj->height < lbl_803E4DD4)
+    obj->height = (f32)(u32)params->heightOffset * lbl_803E4DD0.f + obj->height;
+    if (obj->height < lbl_803E4DD4.f)
     {
         obj->height = *(f32*)&lbl_803E4DD4;
     }
