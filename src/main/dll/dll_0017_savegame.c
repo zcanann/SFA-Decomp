@@ -47,6 +47,7 @@
 #include "main/pad.h"
 #include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/dll/dll_005B_modgfxfunc03.h"
+#include "main/dll/dll_002F_carryable.h"
 
 u32 pRestartPoint;
 u8* lbl_803DD498;
@@ -1297,20 +1298,6 @@ u16 gSaveGameMapObjGroupBits[120] = {
 };
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-extern void Carryable_free();
-extern void Carryable_wasJustGrabbed();
-extern void Carryable_getDropDisabled();
-extern void Carryable_getSurfaceType();
-extern void Carryable_init();
-extern void Carryable_initialise();
-extern void Carryable_getCarryState();
-extern void Carryable_release();
-extern void Carryable_setGravityEnabled();
-extern void Carryable_setDropDisabled();
-extern void Carryable_setSuppressPositionSave();
-extern void Carryable_stopCarrying();
-extern void Carryable_updateHeld();
-extern void Carryable_updateRenderState();
 extern void screens_initialise();
 extern void screens_release();
 extern void screens_remove();
