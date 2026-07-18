@@ -46,16 +46,8 @@ STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
 const ItemIdSet3 gArwingAttachmentItemSetWander = {0x166, 0x167, 0x256};
 const ItemIdSet3 gArwingAttachmentItemSetIdle = {0x166, 0x167, 0x256};
-void dll_200_update(int obj);
 extern ArwAttachTarget gArwingAttachmentTargets[];
 extern char sArwingAttachmentDiffFormat[9];
-void dll_200_update(int obj);
-void dll_200_init(int* obj, int* arg);
-void dll_200_release_nop(void);
-void dll_200_initialise_nop(void);
-
-void fn_801F20D4(GameObject* obj);
-void fn_801F27E4(GameObject* obj);
 
 void fn_801F2290(int obj)
 {
@@ -260,11 +252,6 @@ int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* ani
     }
     return 0;
 }
-int dll_200_getExtraSize_ret_40(void);
-int dll_200_getObjectTypeId(void);
-void dll_200_free_nop(void);
-void dll_200_hitDetect_nop(void);
-void dll_200_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible);
 ObjHitReactEntry gArwingAttachmentHitReactTable[] = {
     {731, -1, -1, {0xFF, 0xFF}, 0, {0, 0, 0}, 0.0f, {0, 0, 0, 0}},
     {731, -1, -1, {0xFF, 0xFF}, 0, {0, 0, 0}, 0.0f, {0, 0, 0, 0}},
