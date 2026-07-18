@@ -1136,7 +1136,7 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     GXSetVtxDesc(GX_VA_NRM, GX_DIRECT);
     return 1;
 }
-volatile PPCWGPipe GXWGFifo : (0xCC008000);
+#define GXWGFifo (*(volatile PPCWGPipe*)0xCC008000)
 
 void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
