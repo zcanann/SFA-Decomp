@@ -34,6 +34,7 @@
 #include "main/game_object.h"
 #include "dolphin/gx/GXMisc.h"
 #include "dolphin/os/OSContext.h"
+#include "dolphin/os/OSInterrupt.h"
 #include "dolphin/gx/GXStruct.h"
 #include "dolphin/gx/GXTev.h"
 #include "main/object_api.h"
@@ -198,8 +199,6 @@ extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, 
 #define Obj_SetModelColorOverrideRecursivePromoted(obj, red, green, blue, alpha, enabled)                         \
     ((void (*)(GameObject*, int, int, int, int, int))Obj_SetModelColorOverrideRecursive)(                        \
         (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
-extern int OSDisableInterrupts(void);
-extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void GXSetBreakPtCallback(void* cb);
 int TitleScreen_getObjectTypeId(u8* obj);
 

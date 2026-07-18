@@ -18,6 +18,8 @@
 #include "main/model_engine.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
+#include "dolphin/os/OSInterrupt.h"
+#include "dolphin/os/OSStopwatch.h"
 #include "string.h"
 #include "main/pad.h"
 #include "main/pi_data_file_api.h"
@@ -923,7 +925,6 @@ extern f32 lbl_803DCD3C;
 extern u8 lbl_803DCCB0;
 extern void gxPerfFn_8004a77c(int);
 extern void* lbl_803DCD10;
-extern void VISetBlack(int);
 extern char* lbl_803DCD08;
 extern void* renderFrameBuffer;
 extern void* externalFrameBuffer0;
@@ -949,11 +950,7 @@ extern f32 lbl_803DEAE8;
 extern f32 lbl_803DEAEC;
 extern f32 lbl_803DEAF0;
 extern u8 gLoadingScreenTextures[];
-extern char lbl_8035F680[0x38];
-extern void OSStopStopwatch(void* sw);
-extern u64 OSCheckStopwatch(void* sw);
-extern void OSResetStopwatch(void* sw);
-extern void OSStartStopwatch(void* sw);
+extern OSStopwatch lbl_8035F680;
 extern f32 lbl_803DCCC0;
 extern f32 physicsTimeScale;
 extern f32 lbl_803DEAA0;
@@ -2298,7 +2295,6 @@ char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
 
 
 
-extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern int zlbDecompress(u8* src, int size, u8* dst, void* outp);
 
 int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
@@ -4683,10 +4679,10 @@ void waitNextFrame(void)
     int lvl;
     u32 frames;
 
-    OSStopStopwatch(lbl_8035F680);
-    lbl_803DCCC0 = OSCheckStopwatch(lbl_8035F680) / (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
-    OSResetStopwatch(lbl_8035F680);
-    OSStartStopwatch(lbl_8035F680);
+    OSStopStopwatch(&lbl_8035F680);
+    lbl_803DCCC0 = OSCheckStopwatch(&lbl_8035F680) / (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
+    OSResetStopwatch(&lbl_8035F680);
+    OSStartStopwatch(&lbl_8035F680);
     timeDelta = physicsTimeScale * (lbl_803DEAA0 * lbl_803DCCC0);
     if (gDvdErrorPauseActive != 0)
     {
@@ -7991,7 +7987,7 @@ u16 lbl_8035F860[0x8000];
 u8 lbl_8035F740[0x120];
 RingBufferQueue lbl_8035F730;
 char lbl_8035F6B8[0x78];
-char lbl_8035F680[0x38];
+OSStopwatch lbl_8035F680;
 s16 gObjMapBlockInfo[0x9C];
 u32 lbl_8035F3E8[0x58];
 int lbl_8035F208[0x78];
