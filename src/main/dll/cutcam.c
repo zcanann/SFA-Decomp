@@ -47,7 +47,6 @@ u8 gCutCamBboxBlocked;
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
 #define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
-extern u8 gCutCamBboxBlocked; /* last bbox-hit result */
 extern f32 lbl_803DD52C;      /* yaw-offset blend gain */
 extern f32 lbl_803E1688;      /* 4.0f  - collision probe / trace radius */
 extern f32 lbl_803E168C;      /* 3.1415927f (pi); angle-units -> radians with lbl_803E1690 */
