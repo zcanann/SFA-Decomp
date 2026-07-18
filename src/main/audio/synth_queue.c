@@ -626,41 +626,33 @@ void synthSetHandleValue16(u32 handle, u32 speed)
 {
     u32 key;
     u32 found;
-    SynthVoiceRuntime* runtime;
+    SynthSeqRuntime* runtime;
     SynthVoice* voice;
 
-    runtime = SYNTH_VOICE_RUNTIME();
+    runtime = &lbl_803AF550;
     key = handle & 0x7fffffffu;
 
-    voice = gSynthQueuedVoices;
-    while (voice != 0)
+    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
     {
         if (voice->handle == key)
         {
             found = voice->slotIndex | (handle & 0x80000000);
-            break;
+            goto resolved;
         }
-        voice = voice->next;
     }
 
-    if (voice == 0)
+    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
     {
-        voice = gSynthAllocatedVoices;
-        while (voice != 0)
+        if (voice->handle == key)
         {
-            if (voice->handle == key)
-            {
-                found = voice->slotIndex | (handle & 0x80000000);
-                break;
-            }
-            voice = voice->next;
-        }
-        if (voice == 0)
-        {
-            found = 0xffffffff;
+            found = voice->slotIndex | (handle & 0x80000000);
+            goto resolved;
         }
     }
 
+    found = 0xffffffff;
+
+resolved:
     if ((found & 0x80000000) == 0)
     {
         SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, found, 0) = speed;
@@ -700,35 +692,27 @@ void synthRestoreQueuedHandle(u32 handle)
 
     key = handle & 0x7fffffffu;
 
-    voice = gSynthQueuedVoices;
-    while (voice != 0)
+    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
     {
         if (voice->handle == key)
         {
             found = voice->slotIndex | (handle & 0x80000000);
-            break;
+            goto resolved;
         }
-        voice = voice->next;
     }
 
-    if (voice == 0)
+    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
     {
-        voice = gSynthAllocatedVoices;
-        while (voice != 0)
+        if (voice->handle == key)
         {
-            if (voice->handle == key)
-            {
-                found = voice->slotIndex | (handle & 0x80000000);
-                break;
-            }
-            voice = voice->next;
-        }
-        if (voice == 0)
-        {
-            found = 0xffffffff;
+            found = voice->slotIndex | (handle & 0x80000000);
+            goto resolved;
         }
     }
 
+    found = 0xffffffff;
+
+resolved:
     if ((found & 0x80000000) == 0)
     {
         voice = &gSynthVoices[found];

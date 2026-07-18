@@ -8,35 +8,33 @@ extern SynthVoiceRuntime lbl_803AF550;
 void synthSetHandleMixData(u32 handle, u32 mixValue0, u32 mixValue1)
 {
     SynthVoiceRuntime* runtime;
-    SynthVoice* queuedVoice;
-    SynthVoice* allocatedVoice;
+    SynthVoice* walker;
     u32 slot;
     u32 resolvedHandle;
 
     runtime = SYNTH_VOICE_RUNTIME();
     resolvedHandle = handle & SYNTH_HANDLE_ID_MASK;
+    for (walker = gSynthQueuedVoices; walker != 0; walker = walker->next)
+    {
+        if (walker->handle == resolvedHandle)
+        {
+            slot = walker->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
+            goto resolved;
+        }
+    }
+
+    for (walker = gSynthAllocatedVoices; walker != 0; walker = walker->next)
+    {
+        if (walker->handle == resolvedHandle)
+        {
+            slot = walker->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
+            goto resolved;
+        }
+    }
+
     slot = SYNTH_HANDLE_INVALID;
-    for (queuedVoice = gSynthQueuedVoices; queuedVoice != 0; queuedVoice = queuedVoice->next)
-    {
-        if (queuedVoice->handle == resolvedHandle)
-        {
-            slot = queuedVoice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
-            break;
-        }
-    }
 
-    if (slot == SYNTH_HANDLE_INVALID)
-    {
-        for (allocatedVoice = gSynthAllocatedVoices; allocatedVoice != 0; allocatedVoice = allocatedVoice->next)
-        {
-            if (allocatedVoice->handle == resolvedHandle)
-            {
-                slot = allocatedVoice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
-                break;
-            }
-        }
-    }
-
+resolved:
     if (slot == SYNTH_HANDLE_INVALID)
     {
         return;
