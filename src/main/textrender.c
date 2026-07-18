@@ -341,9 +341,6 @@ extern int gSubtitleLineCount;
 extern Texture* gGameTextBoxEdgeTexture;
 extern u32 lbl_80339C40[];
 
-extern void textRenderSetupFn_800795e8(void);
-extern void textBlendSetupFn_80078a7c(void);
-extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 int getGameState(void);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
 extern void OSLoadFont(void* buf, void* tmp);
