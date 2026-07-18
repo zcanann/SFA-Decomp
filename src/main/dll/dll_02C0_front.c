@@ -167,17 +167,6 @@ extern f32 lbl_803E2338;
 extern f32 lbl_803E233C;
 extern f32 lbl_803E2340;
 
-int TitleScreen_getExtraSize(void);
-void TitleScreen_hitDetect(void);
-int TitleScreen_getObjectTypeId(u8* obj);
-void TitleScreen_release(void);
-void TitleScreen_initialise(void);
-void TitleScreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void TitleScreen_init(u8* obj, u8* def);
-void TitleScreen_free(u8* obj);
-void TitleScreen_update(u8* obj);
-
-
 void fn_80134870(int obj, u8* arr)
 {
     s8* sarr = (s8*)arr;
