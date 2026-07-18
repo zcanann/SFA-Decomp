@@ -429,23 +429,23 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
          * to the generator's position, latch it via saveGame, then restore. */
         if (((GpbConfigFlags*)&((GunpowderBarrelState*)sub)->configFlags)->returnHome)
         {
-            int** objs;
-            int* best;
-            int* def;
-            int i[1];
-            int** p;
-            def = *(int**)&(obj)->anim.placementData;
+            int i;
+            u32* objs;
+            int best;
+            GunpowderbarrelPlacement* def;
+            u32* p;
+            def = *(GunpowderbarrelPlacement**)&(obj)->anim.placementData;
             best = 0;
-            if (((GunpowderbarrelPlacement*)def)->generatorLinkId != 0)
+            if (def->generatorLinkId != 0)
             {
-                objs = (int**)ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &count);
-                i[0] = 0;
+                objs = ObjGroup_GetObjects(GUNPOWDERBARREL_OBJGROUP, &count);
+                i = 0;
                 p = objs;
-                for (; i[0] < count; i[0]++)
+                for (; i < count; i++)
                 {
-                    if (((GunpowderbarrelPlacement*)def)->generatorLinkId == barrelgener_getLinkId((GameObject*)(*p)))
+                    if (def->generatorLinkId == barrelgener_getLinkId((GameObject*)(*p)))
                     {
-                        best = objs[i[0]];
+                        best = objs[i];
                         break;
                     }
                     p++;
@@ -453,9 +453,9 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
             }
             else
             {
-                best = (int*)ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, (int)obj, 0);
+                best = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, (int)obj, 0);
             }
-            if (best != 0)
+            if ((void*)best != NULL)
             {
                 f32 x, y, z;
                 x = (obj)->anim.localPosX;
