@@ -71,4 +71,6 @@ void gxTextureFn_8004d5b4(void* renderOp);
     (((void (*)(u32, int, int, int, int))fn_80050558)( \
         (texture), (texMtx), (stageMode), (componentMode), (variant)))
 
+void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5);
+
 #endif /* MAIN_PI_DOLPHIN_API_H_ */

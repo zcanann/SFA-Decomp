@@ -59,5 +59,6 @@ void titleScreenDrawFn_80093db4(void);
 void drawSkyStars(void);
 void cloudClearOverridePosition(void);
 void cloudSetOverridePosition(f32 x, f32 y, f32 z);
+void lightningRenderActive(void);
 
 #endif /* MAIN_NEWCLOUDS_H_ */

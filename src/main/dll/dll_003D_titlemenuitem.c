@@ -51,7 +51,6 @@ void* lbl_803A9DB8[TITLE_MENU_ITEM_TEXTURE_COUNT]; /* cached menu textures */
 extern s16 lbl_8031C2A8[TITLE_MENU_ITEM_TEXTURE_COUNT];   /* texture asset ids for the cache */
 
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
-extern void gameTextSetWindowStrPos(int windowId, int x, int y);
 
 
 void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)

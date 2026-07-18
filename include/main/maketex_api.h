@@ -23,4 +23,6 @@ int saveCb_8007e77c(u8 index, int unused, void* dst);
 #define saveGamePrepareLegacy(writeImages, cbA, cbB, cbC, cbD, callback) \
     saveGame_prepareAndWrite((writeImages), (cbA), (cbB), (cbC), (cbD), (SaveGameCallback)(callback))
 
+int seqStreamFn_8008023c(int x);
+
 #endif /* MAIN_MAKETEX_API_H_ */

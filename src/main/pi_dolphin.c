@@ -6762,7 +6762,6 @@ void fn_8004D6D8(void)
 
 #pragma peephole reset
 
-extern void textureFn_8006c75c(int a);
 
 void fn_8004D928(void)
 {

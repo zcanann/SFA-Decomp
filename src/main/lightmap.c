@@ -110,7 +110,6 @@ extern u8 lbl_803DCE06;
 extern s32 heatEffectIntensity;
 extern u8 gLightmapScreenImageEnabled;
 extern void screenImageDraw(void);
-extern void lightningRenderActive(void);
 extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 extern void drawViewFinderAperture(f32 a, f32 b, int c, int d);

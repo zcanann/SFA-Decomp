@@ -24,5 +24,6 @@ void Obj_SetActiveModelIndex(GameObject* obj, int idx);
 void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int yBound, u8 radiusOrHeight, u8 flags);
 void objSetHintTextIdx(GameObject* obj, u16 idx);
 void objSetSlot(GameObject* obj, s8 slot);
+void doNothing_afterRenderObject(void);
 
 #endif /* MAIN_OBJECT_API_H_ */

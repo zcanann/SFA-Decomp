@@ -1572,7 +1572,6 @@ void fn_8003B950(f32* matrix)
 }
 
 extern void doNothing_beforeRenderObject(int x);
-extern void doNothing_afterRenderObject(void);
 
 void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
 {

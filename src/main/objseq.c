@@ -283,7 +283,6 @@ extern int gObjSeqMsgIds[];
 extern s8 gObjSeqJumpLatch[];
 int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag);
 extern void Rcp_SetMonochromeFilterEnabled(int enabled);
-extern int seqStreamFn_8008023c(int slot);
 
 extern int gObjSeqStreamTableB[];
 extern u32 gObjSeqCurrentTrackId;

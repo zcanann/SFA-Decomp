@@ -227,7 +227,6 @@ extern void PSVECNormalize(void* src, void* dst);
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void GXSetTexCoordGen2(int coord, int func, int src, int mtx, int normalize, int pttexmtx);
 extern void fn_80069B1C(void* a, void* b, f32 t, void* c);
-extern void fn_8005CECC(int mode);
 extern void* memset(void* dst, int c, int n);
 int getEnvFxBit2BA(void)
 {

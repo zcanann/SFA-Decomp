@@ -106,7 +106,6 @@ typedef struct ShaderRomListSlot
     s8 flag;
     s8 pad;
 } ShaderRomListSlot;
-extern void mapsBinGetRomlistSize(int offset, int* a, int* b, int* c, int tabIndex);
 extern int lbl_803DCE7C;
 extern int gShaderMapRomBuffers[];
 extern void* memset(void* p, int v, int n);

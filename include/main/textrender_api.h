@@ -59,4 +59,6 @@ void fn_8001BE2C(int mode);
 #define gameTextSetColorU8 gameTextSetColor
 #define gameTextGetLegacy ((GameTextGetLegacyFn)gameTextGet)
 
+void gameTextSetWindowStrPos(int idx, int x, int y);
+
 #endif /* MAIN_TEXTRENDER_API_H_ */

@@ -27,4 +27,6 @@ void setIsOvercast(int value);
 #define doNothing_8005D148Legacy(a, b) ((void (*)(int, int))doNothing_8005D148)((a), (b))
 #define doNothing_8005D14CLegacy(a, b) ((void (*)(int, int))doNothing_8005D14C)((a), (b))
 
+void fn_8005CECC(int v);
+
 #endif /* MAIN_LIGHTMAP_API_H_ */
