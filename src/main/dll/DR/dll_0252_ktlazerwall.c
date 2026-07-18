@@ -27,8 +27,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0252_ktlazerwall.h"
 
-void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle);
-
 const union KtlazerwallConstF32 lbl_803E6898 = {0.0f};
 const union KtlazerwallConstF32 lbl_803E689C = {0.5f};
 const union KtlazerwallConstF32 lbl_803E68A0 = {0.1f};
