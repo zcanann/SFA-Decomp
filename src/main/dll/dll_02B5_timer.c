@@ -118,7 +118,6 @@ void timer_update(GameObject* obj)
 {
     int textureId[1];
     int expiredThisFrame;
-    int runTail;
     TimerFlags* flags;
     TimerSetup* setup;
     TimerState* state;
@@ -126,7 +125,6 @@ void timer_update(GameObject* obj)
     setup = (TimerSetup*)(obj)->anim.placementData;
     flags = &state->flags;
 
-    runTail = 0;
     if (((int (*)(int))fn_80080150)((int)state) != 0)
     {
         expiredThisFrame = 0;
@@ -152,11 +150,7 @@ void timer_update(GameObject* obj)
             mainSetBits(setup->startGameBit, 0);
             expiredThisFrame = 1;
         }
-        if (expiredThisFrame == 0)
-        {
-            runTail = 1;
-        }
-        else
+        if (expiredThisFrame != 0)
         {
             flags->expired = 1;
             switch (state->mode)
@@ -173,11 +167,11 @@ void timer_update(GameObject* obj)
                 break;
             }
             flags->manual = 0;
+            return;
         }
     }
     else
     {
-        runTail = 1;
         if ((void*)mainGetBit(setup->startGameBit) != NULL || flags->manual != 0)
         {
             storeZeroToFloatParam(&state->countdownTimer);
@@ -202,44 +196,42 @@ void timer_update(GameObject* obj)
             }
         }
     }
-    if (runTail)
+    if (state->mode == TIMER_MODE_EFFECT && ((int (*)(int))fn_80080150)((int)state) != 0)
     {
-        if (state->mode == TIMER_MODE_EFFECT && ((int (*)(int))fn_80080150)((int)state) != 0)
+        ModelLight* light = state->lightSlot;
+        f32 progress = (f32)(setup->durationMinutes * 60) / state->countdownTimer;
+        int scroll = (int)(progress * lbl_803DC41C);
+        ObjTextureRuntimeSlot* texPtr = objFindTexture(obj, 0, 0);
+        if (texPtr != 0)
         {
-            ModelLight* light = state->lightSlot;
-            int scroll = (int)((f32)(setup->durationMinutes * 60) / state->countdownTimer * lbl_803DC41C);
-            ObjTextureRuntimeSlot* texPtr = objFindTexture(obj, 0, 0);
-            if (texPtr != 0)
+            textureId[0] = texPtr->textureId + scroll * framesThisStep;
+            if (textureId[0] > 512)
             {
-                textureId[0] = texPtr->textureId + scroll * framesThisStep;
-                if (textureId[0] > 512)
-                {
-                    textureId[0] -= 512;
-                }
-                texPtr->textureId = textureId[0];
+                textureId[0] -= 512;
             }
-            if (light != NULL)
-            {
-                scroll = textureId[0] >> 8;
-            }
-            else
-            {
-                scroll = 0;
-            }
-            if (state->lightSlot != NULL)
-            {
-                if (scroll == 1 && scroll != flags->flag20)
-                {
-                    Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_timerbeep);
-                }
-                modelLightStruct_setEnabled(state->lightSlot, (u8)scroll, 0.0f);
-            }
-            flags->flag20 = scroll;
+            texPtr->textureId = textureId[0];
+        }
+        if (light != NULL)
+        {
+            scroll = textureId[0] >> 8;
+        }
+        else
+        {
+            scroll = 0;
         }
         if (state->lightSlot != NULL)
         {
-            modelLightStruct_updateGlowAlpha(state->lightSlot);
+            if (scroll == 1 && scroll != flags->flag20)
+            {
+                Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_timerbeep);
+            }
+            modelLightStruct_setEnabled(state->lightSlot, (u8)scroll, 0.0f);
         }
+        flags->flag20 = scroll;
+    }
+    if (state->lightSlot != NULL)
+    {
+        modelLightStruct_updateGlowAlpha(state->lightSlot);
     }
 }
 
