@@ -82,7 +82,6 @@ typedef struct
 #define MUSHROOM_STATEFLAG_ACTIVE     0x4 /* hittable this frame (set at update top) */
 
 
-extern void objFn_8002b67c(int* obj);
 void enemymushroom_update(int* obj);
 void enemymushroom_initialise(void);
 
@@ -378,7 +377,7 @@ void enemymushroom_update(int* obj)
             {
                 (*gExpgfxInterface)->freeSource((u32)obj);
                 ((EnemyMushroomState*)state)->stateId = 0;
-                objFn_8002b67c(obj);
+                objFn_8002b67c((GameObject*)obj);
             }
             else
             {
@@ -403,7 +402,7 @@ void enemymushroom_update(int* obj)
         {
             enemymushroom_resetToSpawn((EnemyMushroomObject*)obj, (EnemyMushroomState*)state, 1);
             ((EnemyMushroomState*)state)->stateId = 1;
-            objFn_8002b67c(obj);
+            objFn_8002b67c((GameObject*)obj);
         }
         break;
     default:

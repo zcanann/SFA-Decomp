@@ -678,7 +678,7 @@ void objSetHintTextIdx(GameObject* obj, u16 idx)
     (obj)->hintTextIdx = idx;
 }
 
-void objFn_8002b67c(u8* obj)
+void objFn_8002b67c(GameObject* obj)
 {
     ObjHitVolumeRuntimeBounds* dst;
     ObjDefHitVolume* src;
@@ -688,13 +688,13 @@ void objFn_8002b67c(u8* obj)
     {
         return;
     }
-    dst = ((GameObject*)obj)->anim.hitVolumeBounds;
+    dst = obj->anim.hitVolumeBounds;
     if (dst == NULL)
     {
         return;
     }
-    src = ((GameObject*)obj)->anim.modelInstance->hitVolumes;
-    idx = ((GameObject*)obj)->hitVolumeIndex;
+    src = obj->anim.modelInstance->hitVolumes;
+    idx = obj->hitVolumeIndex;
     src += idx;
     dst += idx;
     dst->bounds[0] = src->bounds[0];
