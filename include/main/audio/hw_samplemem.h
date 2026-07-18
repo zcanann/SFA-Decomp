@@ -2,9 +2,10 @@
 #define MAIN_AUDIO_HW_SAMPLEMEM_H_
 
 #include "ghidra_import.h"
+#include "main/audio/data_ref.h"
 
-void hwSaveSample(u32 **sample, void **ptr);
-void hwRemoveSample(u32 *sample, void *ptr);
+void hwSaveSample(SAMPLE_HEADER **sample, void **ptr);
+void hwRemoveSample(SAMPLE_HEADER *sample, void *ptr);
 void hwSyncSampleMem(void);
 void hwFrameDone(void);
 

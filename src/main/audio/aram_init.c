@@ -54,7 +54,7 @@ void aramInit(u32 extraSize)
 /*
  * Empty stub (4 bytes: just blr).
  */
-void aramGetZeroBuffer(void)
+void aramExit(void)
 {
 }
 

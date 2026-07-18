@@ -73,7 +73,7 @@ void* hwFlushStream(u8 streamHandle)
     return (void*)aramGetStreamBufferAddress(streamHandle, 0);
 }
 
-void* hwInitStream(void* samples)
+void* hwTransAddr(void* samples)
 {
     return samples;
 }

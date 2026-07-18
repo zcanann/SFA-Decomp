@@ -254,7 +254,7 @@ s32 sndPushGroup(void* prj_data, u16 gid, void* samples, void* sdir, void* pool)
                 poolPtr = pool;
                 gs[sp].sdirAddr = sdir;
                 sampleRef = (u16*)((u8*)prj_data + g->sampleOff);
-                if (dataInsertSDir(sdir, hwInitStream(samples)))
+                if (dataInsertSDir(sdir, hwTransAddr(samples)))
                 {
                     audioFn_8027b690(sampleRef, sdir, 1, 0);
                 }

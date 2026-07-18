@@ -8,7 +8,7 @@ void aramUploadData(void *src, u32 dst, u32 size, u32 mode,
                     void (*callback)(u32), u32 callbackArg);
 void aramSyncTransferQueue(void);
 void aramInit(u32 extraSize);
-void aramGetZeroBuffer(void);
+void aramExit(void);
 u32 aramGetBaseAddress(void);
 u32 aramStoreData(void *src, u32 size);
 void aramRemoveData(void *unused, u32 size);

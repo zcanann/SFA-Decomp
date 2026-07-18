@@ -6,6 +6,8 @@
 #include "ghidra_import.h"
 #include "main/audio/data_ref.h"
 #include "main/audio/dsp_voice.h"
+#include "main/audio/hw_aram.h"
+#include "main/audio/hw_samplemem.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/data_tables.h"
 
@@ -24,10 +26,6 @@ extern DATA_TAB* dataGetCurve_result;
 extern DATA_TAB dataGetKeymap_key;
 extern DATA_TAB* dataGetKeymap_result;
 extern LAYER_TAB* dataGetLayer_result;
-extern void hwSaveSample(SAMPLE_HEADER** header, void** addr);
-extern void hwRemoveSample(SAMPLE_HEADER* header, void* addr);
-extern void hwGetStreamPlayBuffer(u32 smpBase, u32 smpLength);
-extern int hwTransAddr(int addr);
 
 DataFXSearchKey dataGetFXSearchKey;
 LAYER_TAB dataGetLayerSearchKey;
@@ -720,10 +718,10 @@ void dataInit(u32 smpBase, u32 smpLength)
         dataMacroBucketTable[i].num = 0;
         dataMacroBucketTable[i].subTabIndex = 0;
     }
-    hwGetStreamPlayBuffer(smpBase, smpLength);
+    hwInitSampleMem(smpBase, smpLength);
 }
 
-int IFFifoAlloc(int addr)
+void dataExit(void)
 {
-    return hwTransAddr(addr);
+    hwExitSampleMem();
 }

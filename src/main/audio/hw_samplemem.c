@@ -5,14 +5,14 @@
 extern u32 dspHRTFOn;
 extern void* (*gSalMallocHook)(u32 size);
 
-void hwSaveSample(u32** sample, void** ptr)
+void hwSaveSample(SAMPLE_HEADER** sample, void** ptr)
 {
     u32 size;
     s32 type;
     u32 adjusted;
     u32 header;
 
-    header = (*sample)[1];
+    header = (*sample)->length;
     type = header >> 24;
     size = header & 0xffffff;
     switch (type)
@@ -31,14 +31,14 @@ void hwSaveSample(u32** sample, void** ptr)
     *ptr = (void*)aramStoreData(*ptr, size);
 }
 
-void hwRemoveSample(u32* sample, void* ptr)
+void hwRemoveSample(SAMPLE_HEADER* sample, void* ptr)
 {
     u32 size;
     s32 type;
     u32 adjusted;
     u32 header;
 
-    header = sample[1];
+    header = sample->length;
     type = header >> 24;
     size = header & 0xffffff;
     switch (type)

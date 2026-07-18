@@ -4,6 +4,6 @@
 #include "ghidra_import.h"
 
 u32 hwExitStream(u32 value);
-void hwGetStreamPlayBuffer(u32 unused, u32 value);
-void hwTransAddr(void);
+void hwInitSampleMem(u32 baseAddr, u32 length);
+void hwExitSampleMem(void);
 #endif /* MAIN_AUDIO_HW_ARAM_H_ */

@@ -1,4 +1,5 @@
 #include "main/audio/snd_core.h"
+#include "main/audio/data_tables.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_control.h"
 #include "main/audio/synth_config.h"
@@ -6,7 +7,6 @@
 
 
 extern u8 gSynthInitialized;
-extern void IFFifoAlloc(void);
 extern const float lbl_803E78C8;
 extern const double lbl_803E78D0;
 extern const double lbl_803E78D8;
@@ -14,7 +14,7 @@ extern const double lbl_803E78D8;
 void sndQuit(void)
 {
     hwExit();
-    IFFifoAlloc();
+    dataExit();
     s3dExit();
     synthExit();
     gSynthInitialized = 0;

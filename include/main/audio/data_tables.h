@@ -24,6 +24,6 @@ void *dataGetLayer(u16 cid, u16 *n);
 FX_TAB *dataGetFX(u16 fid);
 s32 dataGetSample(u16 sampleId, SAMPLE_INFO *sampleInfo);
 void dataInit(u32 smpBase, u32 smpLength);
-int IFFifoAlloc(int addr);
+void dataExit(void);
 
 #endif /* MAIN_AUDIO_DATA_TABLES_H_ */

@@ -10,12 +10,12 @@ u32 hwExitStream(u32 value)
     return __cvt_fp2unsigned((double)((lbl_803E78E8 * (f32)value) / (f32)SYNTH_CONFIGURATION->sampleRate));
 }
 
-void hwGetStreamPlayBuffer(u32 unused, u32 value)
+void hwInitSampleMem(u32 baseAddr, u32 length)
 {
-    aramInit(value);
+    aramInit(length);
 }
 
-void hwTransAddr(void)
+void hwExitSampleMem(void)
 {
-    aramGetZeroBuffer();
+    aramExit();
 }
