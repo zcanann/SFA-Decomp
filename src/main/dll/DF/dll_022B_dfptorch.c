@@ -101,7 +101,12 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
             stk2.d[0] = cam->x - (obj)->anim.localPosX;
             stk2.d[1] = cam->y - (obj)->anim.localPosY;
             stk2.d[2] = cam->z - (obj)->anim.localPosZ;
-            dist = sqrtf(stk2.d[2] * stk2.d[2] + (stk2.d[0] * stk2.d[0] + stk2.d[1] * stk2.d[1]));
+            {
+                f32 sqZ = stk2.d[2] * stk2.d[2];
+                f32 sqX = stk2.d[0] * stk2.d[0];
+                f32 sqY = stk2.d[1] * stk2.d[1];
+                dist = sqrtf(sqZ + (sqX + sqY));
+            }
             if (dist > 50.0f)
             {
                 scale = 1.0f / dist;
