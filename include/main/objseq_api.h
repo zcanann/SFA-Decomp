@@ -10,6 +10,7 @@ void fn_80088730(u8* colorOut);
 
 #define getCurSeqNoInt() (((GetCurSeqNoIntFn)getCurSeqNo)())
 
+extern struct GameObject* focusedNpc;
 extern u8 curSeqNo;
 extern s16 seqGlobal1;
 extern s16 seqGlobal2;
