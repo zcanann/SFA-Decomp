@@ -7,6 +7,7 @@
 #include "main/audio/hw_voice_start.h"
 #include "dolphin/os/OSCache.h"
 #include "main/audio/hw_sample.h"
+#include "main/audio/hw_volume.h"
 #include "main/audio/synth_jobs.h"
 
 
@@ -35,7 +36,6 @@ extern void hwGetPos(u8* buffer, u32 offset, u32 length, u8 handle, u32 callback
 extern void hwInitSamplePlayback(u32 voice, u32 keyInfo, SynthSampleInfo* sample, u32 a, s32 b, u32 voiceId, u32 c,
                                  u32 d);
 extern void hwSetPitch(u32 voice, s32 pitch);
-extern void hwSetVolume(u32 voice, u8 table, f32 vol, u32 pan, u32 span, f32 auxa, f32 auxb);
 
 void streamHandle(void)
 {
@@ -80,8 +80,8 @@ void streamHandle(void)
                                  synthVoice[si->voice].voiceHandle, 1, 1);
             f = (f32)si->frq / (f32)SYNTH_CONFIGURATION->sampleRate;
             hwSetPitch(si->voice, f * 4096.0f);
-            hwSetVolume(si->voice, 0, si->volume * (1 / 127.0f), si->pan << 16, si->surroundPan << 16,
-                        si->leftVolume * (1 / 127.0f), si->rightVolume * (1 / 127.0f));
+            hwSetVolume(si->voice, 0, si->volume * (1 / 127.0f), si->leftVolume * (1 / 127.0f),
+                        si->rightVolume * (1 / 127.0f), si->pan << 16, si->surroundPan << 16);
             hwStart(si->voice, si->studio);
             si->state = SYNTH_JOB_STATE_PLAYING;
             if (!(si->flags & 0x20000))
@@ -325,8 +325,8 @@ void streamOutputModeChanged(void)
             if (streamInfo[i].state != SYNTH_JOB_STATE_DONE)
             {
                 hwSetVolume(streamInfo[i].voice, 0, volumeScale * streamInfo[i].volume,
-                            streamInfo[i].pan << 0x10, streamInfo[i].surroundPan << 0x10,
-                            volumeScale * streamInfo[i].leftVolume, volumeScale * streamInfo[i].rightVolume);
+                            volumeScale * streamInfo[i].leftVolume, volumeScale * streamInfo[i].rightVolume,
+                            streamInfo[i].pan << 0x10, streamInfo[i].surroundPan << 0x10);
             }
         }
     }

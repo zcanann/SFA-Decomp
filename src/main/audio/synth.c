@@ -14,6 +14,7 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/hw_voice_params.h"
 #include "main/audio/hw_voice_start.h"
+#include "main/audio/hw_volume.h"
 #include "main/audio/data_tables.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/vid_init.h"
@@ -265,8 +266,6 @@ void* synthAuxAUser[8];
 u8 synthTrackVolume[64];
 SynthFade synthMasterFader[32];
 SynthInfo synthInfo;
-
-extern void hwSetVolume(u32 voice, u8 table, f32 vol, u32 pan, u32 span, f32 auxa, f32 auxb);
 
 extern u32 adsrHandleLowPrecision(SynthVoiceAdsr* adsr, u16* start, u16* delta);
 extern u32 adsrRelease(SynthVoiceAdsr* adsr);
@@ -1087,7 +1086,7 @@ void ZeroOffsetHandler(int voice)
             auxb = (1.f / 16383.f) * (preVol * (f32)inpGetPreAuxB((McmdVoiceState*)sv)) +
                    (1.f / 16383.f) * (postVol * (f32)inpGetPostAuxB((McmdVoiceState*)sv));
             sv->curOutputVolume = (u16)(32767.f * postVol);
-            hwSetVolume(voice, sv->volTable, postVol, sv->lastPan, sv->lastSPan, auxa, auxb);
+            hwSetVolume(voice, sv->volTable, postVol, auxa, auxb, sv->lastPan, sv->lastSPan);
         }
 
         if (sv->age != 0)

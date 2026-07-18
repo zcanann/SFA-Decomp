@@ -17,7 +17,8 @@ extern void salCalcVolumeMatrix(int voltab_index, f32* out, u32 pan, u32 span, u
  * 3-axis float input via salCalcVolumeMatrix, clamps each to s16, and writes
  * back to the voice's pan/volume table.
  */
-void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
+void hwSetVolume(int slot, u32 volumeTable, f32 volume, f32 auxA, f32 auxB,
+                 u32 pan, u32 surroundPan)
 {
     f32 out[9];
     u16 il;
@@ -25,17 +26,18 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
     u16 is;
     DSPvoice* voice = (DSPvoice*)((u8*)dspVoice + slot * 0xf4);
 
-    if (vol >= 1.0f)
-        vol = 1.0f;
-    if (auxa >= 1.0f)
-        auxa = 1.0f;
-    if (auxb >= 1.0f)
-        auxb = 1.0f;
+    if (volume >= 1.0f)
+        volume = 1.0f;
+    if (auxA >= 1.0f)
+        auxA = 1.0f;
+    if (auxB >= 1.0f)
+        auxB = 1.0f;
 
     {
         u32 f0w = voice->flags;
         f0w &= 0x80000000;
-        salCalcVolumeMatrix(p2, out, aux, p7, f0w != 0, dspStudio[voice->studio].type == 1, vol, auxa, auxb);
+        salCalcVolumeMatrix(volumeTable, out, pan, surroundPan, f0w != 0,
+                            dspStudio[voice->studio].type == 1, volume, auxA, auxB);
     }
 
     il = lbl_803E78E4 * out[0];
@@ -76,7 +78,7 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
 
     if (voice->flags & 0x80000000)
     {
-        u8* p = lbl_802C2820 + (((aux >> 16) & 0xff) << 1);
+        u8* p = lbl_802C2820 + (((pan >> 16) & 0xff) << 1);
         voice->itdShiftL = *(u16*)p;
         voice->itdShiftR = 0x20 - *(u16*)p;
         voice->changed[0] |= 0x200;
