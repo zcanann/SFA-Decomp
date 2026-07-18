@@ -269,7 +269,7 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
     }
 }
 
-f32 fn_8010AC48(int* obj, f32 px, f32 unused, f32 pz)
+f32 fn_8010AC48(f32 px, f32 unused, f32 pz, int* obj)
 {
     RomCurveNode* pts[4];
     int* sp;

@@ -29,8 +29,6 @@ extern f32 lbl_803E18AC;
 extern f32 lbl_803E18B0;
 extern f32 lbl_803E18B4;
 extern f32 lbl_803E18B8;
-extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
-
 void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* posEnd, s32 rotXEnd, s32 rotYEnd,
                                        s32 rotZEnd);
 
