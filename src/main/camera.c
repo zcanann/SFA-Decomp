@@ -727,12 +727,9 @@ void Camera_UpdateProjection(void* viewportArg)
         {
             C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane,
                              gCameraFarPlane);
-            C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, lbl_803DE628,
-                                   lbl_803DE62C, lbl_803DE62C);
-            C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE62C,
-                                   lbl_803DE62C, lbl_803DE62C);
-            C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE630,
-                                   lbl_803DE62C, lbl_803DE62C);
+            C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, 0.4f, 0.4f, 0.5f, 0.5f);
+            C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, 0.5f, 0.5f, 0.5f, 0.5f);
+            C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, 0.5f, -0.5f, 0.5f, 0.5f);
         }
         GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
         gCameraCurrentViewIndex = viewIndex;
@@ -765,12 +762,9 @@ void Camera_UpdateProjection(void* viewportArg)
         {
             C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane,
                              gCameraFarPlane);
-            C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, lbl_803DE628,
-                                   lbl_803DE62C, lbl_803DE62C);
-            C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE62C,
-                                   lbl_803DE62C, lbl_803DE62C);
-            C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE630,
-                                   lbl_803DE62C, lbl_803DE62C);
+            C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, 0.4f, 0.4f, 0.5f, 0.5f);
+            C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, 0.5f, 0.5f, 0.5f, 0.5f);
+            C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, 0.5f, -0.5f, 0.5f, 0.5f);
         }
         GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
         Camera_ApplyCurrentViewport(viewportArg);
@@ -1042,12 +1036,9 @@ void Camera_RebuildProjectionMatrix(void)
     else
     {
         C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane, gCameraFarPlane);
-        C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, *(f32*)&lbl_803DE628,
-                              lbl_803DE62C, *(f32*)&lbl_803DE62C);
-        C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, *(f32*)&lbl_803DE62C,
-                              *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
-        C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE630,
-                              *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
+        C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, 0.4f, 0.4f, 0.5f, 0.5f);
+        C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, 0.5f, 0.5f, 0.5f, 0.5f);
+        C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, 0.5f, -0.5f, 0.5f, 0.5f);
     }
     GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
 }
