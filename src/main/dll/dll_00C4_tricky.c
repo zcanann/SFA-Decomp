@@ -60,6 +60,7 @@
 #include "main/dll/mmp_critterspit_ext.h"
 #include "main/dll/dll_80136a40_ext2.h"
 #include "main/dll/dll_0014_unk.h"
+#include "main/pi_dolphin_cs.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -202,8 +203,6 @@ STATIC_ASSERT(sizeof(struct VisBits16) == 0x10);
 
 extern u64 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
-extern void freeAndNull(void* p);
-extern void trickyVoxAllocFn_8004b5d4(void* out);
 extern void objAudioFn_8006edcc(int obj, u16 mask, int arg5, float* points, void* aux, f32 scaleX, f32 scaleY);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);

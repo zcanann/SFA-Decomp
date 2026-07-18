@@ -174,6 +174,7 @@ extern volatile int lbl_803DCC80;
 #include "main/objmodel.h"
 #include "main/mm_ext.h"
 #include "main/newshadows_ext2.h"
+#include "main/rcp_dolphin_cs.h"
 
 struct MldfNames
 {
@@ -974,7 +975,6 @@ extern u16 lbl_803DB5CE;
 extern char lbl_8035F730[0x10];
 extern u8 GXNtsc480Prog[];
 extern void GXSetCopyFilter(u8 aa, u8* pat, u8 vf_en, u8* vfilter);
-extern void fn_80053C40(u8* tex, void* out);
 extern u8 lbl_803DCD30;
 extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);

@@ -28,6 +28,7 @@
 #include "main/lightmap_api.h"
 #include "main/pad.h"
 #include "main/screen_transition.h"
+#include "main/rcp_dolphin_cs.h"
 
 #define OPTIONS_MENU_ACTION_CLOSE      0
 #define OPTIONS_MENU_ACTION_SELECT     1
@@ -66,7 +67,6 @@ extern s8 lbl_803DD705;  /* transition pending flag */
 extern u8* lbl_803DD708; /* saved volumes at [10..12] */
 extern f32 lbl_803E1DD0; /* rumble strength */
 extern s8 lbl_803DBA28;
-extern void Rcp_SetColorFilterEnabled(int enabled);
 
 void optionsMenu_applyAudioSetting(int action, int option)
 {

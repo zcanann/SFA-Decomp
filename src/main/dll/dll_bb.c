@@ -22,6 +22,7 @@
 #include "main/camera.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
+#include "main/shader_cs.h"
 
 s16 gCamcontrolTargetHelpTextId = -1;
 u16 gCamcontrolTargetClassMask = 0xFFFF;
@@ -32,7 +33,6 @@ extern f32 lbl_803DD4D0;
 extern f32 lbl_803E1668;
 extern f32 lbl_803E166C;
 
-extern void loadMapForCameraPos(f32 x, f32 y, f32 z);
 
 void camcontrol_applyState(CamcontrolCameraState* camera)
 {
