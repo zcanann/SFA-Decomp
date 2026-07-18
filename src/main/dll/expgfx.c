@@ -134,8 +134,6 @@ extern f32 gExpgfxYVelocitySlowStep;
 extern f32 gExpgfxYVelocityNegativeLimit;
 extern const f32 gExpgfxSlotMotionStep;
 
-extern u16 gExpgfxPhaseAngleA;
-extern u16 gExpgfxPhaseAngleB;
 extern const f32 lbl_803DF3C8;
 extern const f32 lbl_803DF3CC;
 extern const f32 lbl_803DF3D0;
