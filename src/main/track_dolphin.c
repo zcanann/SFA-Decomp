@@ -788,7 +788,7 @@ void objFn_80065604(void)
     } while (i < MAP_DYNAMIC_SLOT_COUNT);
 }
 
-void fn_80063368(int target)
+void fn_80063368(GameObject* target)
 {
     int zero, idx;
     s16 i;
@@ -798,7 +798,7 @@ void fn_80063368(int target)
     for (; i < MAP_DYNAMIC_SLOT_COUNT; i++)
     {
         u32* p = (u32*)(gMapDynamicSlots + idx);
-        if (*p == target)
+        if ((GameObject*)*p == target)
         {
             ((MapDynamicSlot*)p)->cooldown = zero;
         }

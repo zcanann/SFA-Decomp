@@ -62,6 +62,7 @@ void objFn_80065604(void);
 void setupToRenderMapBlock(int* block, void* posMtx);
 void fn_80062894(void);
 void fn_80062808(void);
+void fn_80063368(GameObject* target);
 void renderGlows(void);
 void MapBlock_init(GameObject* obj);
 void MapBlock_initHits(GameObject* obj, int index);

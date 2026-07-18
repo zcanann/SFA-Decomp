@@ -88,8 +88,6 @@ extern const f32 lbl_803E06B8;
 extern const f32 lbl_803E06BC;
 extern const f32 lbl_803E06C0;
 
-extern void fn_80063368(short* obj);
-
 RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll);
 
@@ -828,7 +826,7 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
             *(f32*)((u8*)collision + iv[0] * 12 + 280) = lbl_803E068C + *(f32*)((u8*)collision + iv[0] * 12 + 232);
             *(f32*)((u8*)collision + iv[0] * 12 + 284) = *(f32*)((u8*)collision + iv[0] * 12 + 236);
         }
-        fn_80063368((short*)obj);
+        fn_80063368((GameObject*)obj);
     }
 }
 
@@ -890,7 +888,7 @@ void dll_15_func0A(GameObject* obj, CurvesCollisionState* collision)
             *(f32*)(worldBase + 284) = *(f32*)(worldBase + 236);
             worldBase += 0xc;
         }
-        fn_80063368((short*)obj);
+        fn_80063368(obj);
     }
 }
 
@@ -1187,7 +1185,7 @@ void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, u32 update
                 *(f32*)(wb[0] + 284) = *(f32*)(wb[0] + 236);
                 wb[0] += 0xc;
             }
-            fn_80063368((short*)curveObj);
+            fn_80063368(curveObj);
         }
         if ((s32)(state->flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0)
         {
@@ -1276,7 +1274,7 @@ void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, u32 update
                 *(f32*)(wb[0] + 284) = *(f32*)(wb[0] + 236);
                 wb[0] += 0xc;
             }
-            fn_80063368((short*)curveObj);
+            fn_80063368(curveObj);
         }
     }
     if (curveObj->anim.parentAnim != NULL)
