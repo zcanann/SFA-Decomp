@@ -82,7 +82,6 @@ extern const f32 lbl_803E4C38;
 extern f32 lbl_803E4C3C;
 extern f32 lbl_803E4C40;
 extern f32 lbl_803E4C48;
-extern f32 gDIMbossAnimScratchBase[3];
 
 void DIM2icicle_updateBossSequenceEffects(DIMbossObject* obj, DIMbossRuntime* runtime)
 {
@@ -446,7 +445,6 @@ extern int* gDIMbossHitEffectResource;
 extern int gDim2IcicleHitCooldown;
 extern f32 lbl_803E4C10;
 const s16 lbl_802C2338[7] = {10, 25, 25, 10, 20, 20, 20};
-extern u8 gDim2IcicleHitFxBuffer[];
 
 typedef struct IcicleHitDesc
 {
