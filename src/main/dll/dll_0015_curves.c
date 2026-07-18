@@ -28,6 +28,7 @@
 #include "main/dll/savedata_struct.h"
 #include "main/camera_interface.h"
 #include "main/dll/dll_0015_curves.h"
+#include "main/dll/dll_0017_savegame_api.h"
 #include "main/object_descriptor.h"
 #include "main/game_ui_interface.h"
 #include "main/lightmap_api.h"
@@ -68,7 +69,6 @@ typedef struct CurvesSaveGameObjectPosition
 #define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
 
 extern SaveData saveData;
-extern u8 gSaveGameData[];
 extern f32 lbl_803E0668;
 extern const f32 lbl_803E066C;
 extern const f32 lbl_803E068C;
