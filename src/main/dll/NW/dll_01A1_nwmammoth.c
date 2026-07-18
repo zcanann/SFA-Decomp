@@ -30,6 +30,7 @@
 #include "main/vecmath_distance_api.h"
 #include "main/object_render.h"
 #include "main/dll/path_control_interface.h"
+#include "main/dll/dll_00D1_tumbleweedbush.h"
 
 u8 lbl_803DBF70[4] = {1, 0, 0, 0};
 u8 lbl_803DBF74[4] = {1, 1, 0, 0};
@@ -106,7 +107,6 @@ extern u8 lbl_803DBFAC[4];
 extern u8 lbl_803DBFB0[4];
 extern int gNwMammothBushObjectIds[];
 extern int gNwMammothBushGameBits[];
-extern GameObject* tumbleweedbush_findNearestActive(void* pos);
 extern void fn_80163980(int o);
 extern f32 lbl_803E5210;
 extern u8 gNwMammothTables[];

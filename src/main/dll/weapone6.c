@@ -36,6 +36,7 @@
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/tricky_substates_ext.h"
 #include "main/dll/trickyfollow_ext.h"
+#include "main/dll/dll_00D1_tumbleweedbush.h"
 
 typedef struct
 {
@@ -86,7 +87,6 @@ extern f32 lbl_803E24F4;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
-extern int tumbleweedbush_findNearestActive(void);
 extern int fn_801CDE70(int);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
 
@@ -526,7 +526,7 @@ void fn_8013FBE4(GameObject* obj, register int state)
     float distance;
     f32 resetTimer;
     float* targetPos;
-    u8* trackedObj;
+    GameObject* trackedObj;
     u32 currentBit;
     u8 bitIndex;
     u8 newBit;
@@ -547,10 +547,10 @@ void fn_8013FBE4(GameObject* obj, register int state)
             **(u8**)state -= 2;
         }
         targetPos = (float*)fn_801CDE70(*(int*)&((TrickyState*)state)->followObj);
-        trackedObj = (u8*)tumbleweedbush_findNearestActive();
+        trackedObj = tumbleweedbush_findNearestActive(targetPos);
         if (trackedObj != 0 && **(u8**)state != 0)
         {
-            if (trackedObj != *(u8**)&((TrickyState*)state)->unk710 &&
+            if (trackedObj != *(GameObject**)&((TrickyState*)state)->unk710 &&
                 ((TrickyState*)state)->targetPosPtr != (u8*)(state + 0x704))
             {
                 ((TrickyState*)state)->targetPosPtr = (u8*)(state + 0x704);
@@ -571,9 +571,9 @@ void fn_8013FBE4(GameObject* obj, register int state)
                 dz = dz / distance;
             }
             distance = lbl_803E24D4;
-            *(float*)&((TrickyState*)state)->unk704 = -(distance * dx - *(float*)(trackedObj + 0x18));
-            *(float*)&((TrickyState*)state)->unk708 = *(float*)(trackedObj + 0x1c);
-            *(float*)&((TrickyState*)state)->unk70C = -(distance * dz - *(float*)(trackedObj + 0x20));
+            *(float*)&((TrickyState*)state)->unk704 = -(distance * dx - trackedObj->anim.worldPosX);
+            *(float*)&((TrickyState*)state)->unk708 = trackedObj->anim.worldPosY;
+            *(float*)&((TrickyState*)state)->unk70C = -(distance * dz - trackedObj->anim.worldPosZ);
             if (((int (*)(void*, f32, int))trickyFn_8013b368)(obj, lbl_803E2488, state) == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)

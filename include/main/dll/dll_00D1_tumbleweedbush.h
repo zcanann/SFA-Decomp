@@ -4,6 +4,8 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
+struct GameObject;
+
 /* Bush variant anim.seqIds and the sibling tumbleweed seqId each one spawns.
  * The sibling ids match dll_00D2_tumbleweed.h's TUMBLEWEED_TYPE_1/3/4
  * (0x39d/0x4ba/0x4c1). */
@@ -24,5 +26,6 @@ extern ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor;
 
 /* extern-cleanup: defining-file public prototypes */
 s8 fn_801631C8(int* obj);
+struct GameObject* tumbleweedbush_findNearestActive(f32* position);
 
 #endif /* MAIN_DLL_DLL_00D1_TUMBLEWEEDBUSH_H_ */

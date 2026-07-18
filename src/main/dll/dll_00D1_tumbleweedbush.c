@@ -359,7 +359,7 @@ void TumbleWeedBush_initialise(void)
 {
 }
 
-void* tumbleweedbush_findNearestActive(f32* p_pos)
+GameObject* tumbleweedbush_findNearestActive(f32* p_pos)
 {
     int count;
     void** list;
