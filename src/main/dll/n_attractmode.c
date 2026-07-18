@@ -11,7 +11,6 @@
 #include "main/dll/dll_3e_api.h"
 
 extern s32 gAttractMovieIdleFrameCount;
-extern u8 gTitleMenuSelection;
 extern u16* gRenderModeObj;
 extern char sNAttractModeStringBlock[];
 
