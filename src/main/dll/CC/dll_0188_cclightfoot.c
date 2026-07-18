@@ -123,7 +123,6 @@ void cclightfoot_free(int* obj, int flag)
 }
 
 
-void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist);
 
 extern u8 gCcLightfootAnimTable[];
 u8 gCcLightfootHitCooldown[8];
@@ -163,6 +162,38 @@ ObjectDescriptor gCClightfootObjDescriptor = {
     cclightfoot_getExtraSize,
 };
 
+void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
+{
+    s16 move;
+    if (CC_LIGHTFOOT_DIST_SENTINEL == dist)
+    {
+        state->state = CCLIGHTFOOT_STATE_DORMANT;
+        return;
+    }
+    if ((state->flags & 2) != 0)
+    {
+        state->state = CCLIGHTFOOT_STATE_INTRO;
+        return;
+    }
+    if (dist < 3025.0f)
+    {
+        move = ((GameObject*)targetObj)->anim.currentMove;
+        if (move == 24 && ((GameObject*)targetObj)->anim.currentMoveProgress > 0.2f)
+        {
+            state->state = CCLIGHTFOOT_STATE_PARRY;
+            return;
+        }
+        if (move == 25)
+        {
+            state->state = CCLIGHTFOOT_STATE_GUARD;
+            return;
+        }
+        state->state = CCLIGHTFOOT_STATE_REACT;
+        return;
+    }
+    state->state = CCLIGHTFOOT_STATE_APPROACH;
+}
+
 void cclightfoot_update(int obj)
 {
     LightfootAnimTable* tbl = (LightfootAnimTable*)gCcLightfootAnimTable;
@@ -198,16 +229,92 @@ void cclightfoot_update(int obj)
     o1 = state->targetA;
     if (o1 != 0)
     {
-        if (!(enemy_getHealthFraction((GameObject*)o1) > 0.0f))
+        do
         {
-            valid = 0;
-        }
-        else
-        {
-            valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o1)->anim.placementData + 0x18)) != 0 ? 0 : 1;
-        }
-        if (valid != 0)
-        {
+            if (!(enemy_getHealthFraction((GameObject*)o1) > 0.0f))
+            {
+                valid = 0;
+            }
+            else
+            {
+                valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o1)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+            }
+            if (valid != 0)
+            {
+                o2 = state->targetB;
+                if (!(enemy_getHealthFraction((GameObject*)o2) > 0.0f))
+                {
+                    valid = 0;
+                }
+                else
+                {
+                    valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+                }
+                if (valid != 0)
+                {
+                    dist = getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(state->targetB + 0x18));
+                    if (getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(state->targetA + 0x18)) < dist)
+                    {
+                        oNear = state->targetA;
+                        oFar = state->targetB;
+                    }
+                    else
+                    {
+                        oNear = state->targetB;
+                        oFar = state->targetA;
+                    }
+                    if ((getXZDistance((f32*)(obj + 0x18), (f32*)(state->playerObj + 0x18)) < 32400.0f ||
+                         (void*)fn_80296118((GameObject*)state->playerObj) == (void*)state->targetA ||
+                         (void*)fn_80296118((GameObject*)state->playerObj) == (void*)state->targetB) &&
+                        playerIsDisguised((GameObject*)state->playerObj) == 0)
+                    {
+                        if ((void*)fn_80296118((GameObject*)state->playerObj) == (void*)oFar)
+                        {
+                            u32 tmp = oFar ^ oNear;
+                            oNear = oNear ^ tmp;
+                            oFar = tmp ^ oNear;
+                        }
+                        fn_8014C66C((GameObject*)oNear, (GameObject*)state->playerObj);
+                        fn_8014C66C((GameObject*)oFar, (GameObject*)obj);
+                        targetObj = oFar;
+                        dist = getXZDistance((f32*)(obj + 0x18), (f32*)(oFar + 0x18));
+                    }
+                    else
+                    {
+                        for (i = 0; i < 2; i++)
+                        {
+                            off = i * 4;
+                            *(f32*)((u8*)dists + off) =
+                                getXZDistance((f32*)(obj + 0x18), (f32*)(*(int*)((u8*)state + off + 8) + 0x18));
+                            fn_8014C66C((GameObject*)*(int*)((u8*)state + off + 8), (GameObject*)obj);
+                        }
+                        if (dists[0] < dists[1])
+                        {
+                            targetObj = state->targetA;
+                            dist = dists[0];
+                        }
+                        else
+                        {
+                            targetObj = state->targetB;
+                            dist = dists[1];
+                        }
+                    }
+                    break;
+                }
+            }
+            o2 = state->targetA;
+            if (!(enemy_getHealthFraction((GameObject*)o2) > 0.0f))
+            {
+                valid = 0;
+            }
+            else
+            {
+                valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+            }
+            if (valid != 0)
+            {
+                fallback = state->targetA;
+            }
             o2 = state->targetB;
             if (!(enemy_getHealthFraction((GameObject*)o2) > 0.0f))
             {
@@ -217,107 +324,32 @@ void cclightfoot_update(int obj)
             {
                 valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
             }
-        }
-        if (valid != 0)
-        {
-            dist = getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(state->targetB + 0x18));
-            if (getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(state->targetA + 0x18)) < dist)
+            if (valid != 0)
             {
-                oNear = state->targetA;
-                oFar = state->targetB;
+                fallback = state->targetB;
             }
-            else
+            if (fallback != 0)
             {
-                oNear = state->targetB;
-                oFar = state->targetA;
-            }
-            if ((getXZDistance((f32*)(obj + 0x18), (f32*)(state->playerObj + 0x18)) < 32400.0f ||
-                 (void*)Player_GetTargetObject(state->playerObj) == (void*)state->targetA ||
-                 (void*)Player_GetTargetObject(state->playerObj) == (void*)state->targetB) &&
-                playerIsDisguised((GameObject*)state->playerObj) == 0)
-            {
-                if ((void*)Player_GetTargetObject(state->playerObj) == (void*)oFar)
+                dist = getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(fallback + 0x18));
+                if ((getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18)) < dist &&
+                     (void*)fn_80296118((GameObject*)state->playerObj) != (void*)fallback) ||
+                    playerIsDisguised((GameObject*)state->playerObj) != 0)
                 {
-                    u32 tmp = oFar ^ oNear;
-                    oNear = oNear ^ tmp;
-                    oFar = tmp ^ oNear;
-                }
-                fn_8014C66C((GameObject*)oNear, (GameObject*)state->playerObj);
-                fn_8014C66C((GameObject*)oFar, (GameObject*)obj);
-                targetObj = oFar;
-                dist = getXZDistance((f32*)(obj + 0x18), (f32*)(oFar + 0x18));
-            }
-            else
-            {
-                for (i = 0; i < 2; i++)
-                {
-                    off = i * 4;
-                    *(f32*)((u8*)dists + off) =
-                        getXZDistance((f32*)(obj + 0x18), (f32*)(*(int*)((u8*)state + off + 8) + 0x18));
-                    fn_8014C66C((GameObject*)*(int*)((u8*)state + off + 8), (GameObject*)obj);
-                }
-                if (dists[0] < dists[1])
-                {
-                    targetObj = state->targetA;
-                    dist = dists[0];
+                    fn_8014C66C((GameObject*)fallback, (GameObject*)obj);
                 }
                 else
                 {
-                    targetObj = state->targetB;
-                    dist = dists[1];
+                    fn_8014C66C((GameObject*)fallback, (GameObject*)state->playerObj);
                 }
-            }
-        }
-        else
-        {
-        o2 = state->targetA;
-        if (!(enemy_getHealthFraction((GameObject*)o2) > 0.0f))
-        {
-            valid = 0;
-        }
-        else
-        {
-            valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
-        }
-        if (valid != 0)
-        {
-            fallback = state->targetA;
-        }
-        o2 = state->targetB;
-        if (!(enemy_getHealthFraction((GameObject*)o2) > 0.0f))
-        {
-            valid = 0;
-        }
-        else
-        {
-            valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
-        }
-        if (valid != 0)
-        {
-            fallback = state->targetB;
-        }
-        if (fallback != 0)
-        {
-            dist = getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(fallback + 0x18));
-            if ((getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18)) < dist &&
-                 (void*)Player_GetTargetObject(state->playerObj) != (void*)fallback) ||
-                playerIsDisguised((GameObject*)state->playerObj) != 0)
-            {
-                fn_8014C66C((GameObject*)fallback, (GameObject*)obj);
+                targetObj = fallback;
+                dist = getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18));
             }
             else
             {
-                fn_8014C66C((GameObject*)fallback, (GameObject*)state->playerObj);
+                targetObj = state->playerObj;
+                dist = CC_LIGHTFOOT_DIST_SENTINEL;
             }
-            targetObj = fallback;
-            dist = getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18));
-        }
-        else
-        {
-            targetObj = state->playerObj;
-            dist = CC_LIGHTFOOT_DIST_SENTINEL;
-        }
-        }
+        } while (0);
         angle = getAngle(-(((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX),
                          -(((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ));
         diff = (s16)(((GameObject*)obj)->anim.rotX - (u16)angle);
@@ -599,37 +631,6 @@ void cclightfoot_update(int obj)
     }
 }
 
-void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
-{
-    s16 move;
-    if (CC_LIGHTFOOT_DIST_SENTINEL == dist)
-    {
-        state->state = CCLIGHTFOOT_STATE_DORMANT;
-        return;
-    }
-    if ((state->flags & 2) != 0)
-    {
-        state->state = CCLIGHTFOOT_STATE_INTRO;
-        return;
-    }
-    if (dist < 3025.0f)
-    {
-        move = ((GameObject*)targetObj)->anim.currentMove;
-        if (move == 24 && ((GameObject*)targetObj)->anim.currentMoveProgress > 0.2f)
-        {
-            state->state = CCLIGHTFOOT_STATE_PARRY;
-            return;
-        }
-        if (move == 25)
-        {
-            state->state = CCLIGHTFOOT_STATE_GUARD;
-            return;
-        }
-        state->state = CCLIGHTFOOT_STATE_REACT;
-        return;
-    }
-    state->state = CCLIGHTFOOT_STATE_APPROACH;
-}
 
 void cclightfoot_init(int* obj, int* def)
 {
