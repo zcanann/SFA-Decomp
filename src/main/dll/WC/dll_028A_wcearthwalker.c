@@ -61,11 +61,6 @@
 
 typedef u8 (*EarthWalkerHitReactUpdateFn)(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
                                           u32 reactionState, float* reactionStepScale);
-void earthwalker_init(GameObject* obj, int setup);
-void earthwalker_update(int obj);
-void earthwalker_init(GameObject* obj, int setup);
-void earthwalker_release(void);
-void earthwalker_initialise(void);
 
 int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int shouldAdvanceMove)
 {
