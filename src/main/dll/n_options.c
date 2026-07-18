@@ -32,6 +32,7 @@
 #include "main/dll/FRONT/picmenu.h"
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/gx/GXGeometry.h"
+#include "main/pi_dolphin_api.h"
 
 static const GXColorS10 sMovieTevColor0 = {-90, 0, -114, 135};
 static const GXColor sMovieKColor0 = {0x00, 0x00, 0xE2, 0x58};
@@ -51,8 +52,6 @@ extern u32 lbl_803DD674;               /* queued next DMA source addr */
 extern u32 lbl_803DD678;               /* AI DMA double-buffer index */
 extern f32 lbl_803E1D50;               /* playback time accumulator */
 extern OSMessageQueue lbl_803A5CCC[1]; /* spent texture-set queue */
-
-extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int width, int height);
 
 u16 gAttractMovieVolumeScale[128] = {
     0,     2,     8,     18,    32,    50,    73,    99,    130,   164,   203,   245,   292,   343,   398,   457,

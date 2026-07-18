@@ -24,6 +24,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/checkpoint_interface.h"
 #include "main/dll/DR/DRcloudcage.h"
+#include "main/dll/dll_0255_snowbike.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/lightmap_api.h"
@@ -67,8 +68,6 @@ extern f32 lbl_803E5B6C; /* 56.0f */
 extern f32 lbl_803E5B70; /* -1.0f */
 extern f32 lbl_803E5B74; /* -0.05f */
 extern f32 lbl_803E5B78; /* 2.0f */
-extern int fn_801EC870(int p1, int p2);
-
 int drshackle_updateSwingBlend(GameObject* obj, int state)
 {
     ShackleSwingState* s = (ShackleSwingState*)state;

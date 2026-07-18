@@ -178,6 +178,7 @@ STATIC_ASSERT(offsetof(SnowBikeState, haloPitchDrift) == 0x594);
 void SnowBike_update(GameObject* obj);
 void SnowBike_resetToRomListPosition(GameObject* obj);
 void fn_801EAE4C(GameObject* obj, SnowBikeState* state);
+void fn_801EC870(int obj, int state);
 void fn_801EB0D4(u32 obj, int stateRaw);
 void fn_801EB634(GameObject* obj, int stateRaw);
 s32 fn_801EC9BC(GameObject* obj);
