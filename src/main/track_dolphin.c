@@ -1327,6 +1327,7 @@ void vecGetRanges(f32* pts, f32* base, f32 scale, int* out);
 
 int objShadowFn_80062378(GameObject* obj, u8 param);
 
+#pragma opt_common_subs off
 int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
 {
     TrackGroundHit** arr;
@@ -1334,7 +1335,6 @@ int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
     int i;
     f32 best;
     f32 cur;
-    f32* arCb;
 
     n = hitDetectFn_80065e50((GameObject*)obj, x, y, z, &arr, 0, kinds);
     if (n != 0)
@@ -1346,8 +1346,7 @@ int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
         {
             cur = (*arrp)->height;
             cur = y - cur;
-            arCb = &lbl_803DECB4;
-            if (cur >= *(f32*)arCb)
+            if (cur >= lbl_803DECB4)
             {
                 if (best < lbl_803DECB4 || cur < best)
                 {
@@ -1366,6 +1365,7 @@ int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
     *outDepth = lbl_803DECB4;
     return 0;
 }
+#pragma opt_common_subs reset
 
 int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag)
 {
