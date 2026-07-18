@@ -43,6 +43,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/seqobj11d_ext.h"
+#include "main/dll/groundbaddiepush_ext.h"
 
 int lbl_803DBCA8[2] = {2, 3};
 f32 lbl_803DBCB0 = 0.018f;
@@ -69,7 +70,6 @@ typedef struct
 } Seq11ERow;
 
 extern Seq11ERow gSeq11EStateTable[];
-extern void fn_80151DB8(int* obj, u8* state);
 
 void fn_80152040(int* obj, u8* state)
 {
@@ -155,7 +155,7 @@ void fn_80152040(int* obj, u8* state)
     }
     if (gSeq11EStateTable[((BaddieState*)state)->userData1].flagB != 0)
     {
-        fn_80151DB8(obj, state);
+        fn_80151DB8((int)obj, state);
     }
 }
 

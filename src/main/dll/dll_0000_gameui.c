@@ -592,6 +592,7 @@ extern const f32 lbl_803E2064;
 extern const f32 lbl_803E2068;
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 #include "main/fsin16_approx_api.h"
+#include "main/dll/dll_8011d918_ext.h"
 extern u32 lbl_8031AE20[56];
 extern GridEntry lbl_8031BB90[];
 extern GridEntry lbl_8031BD90[];
@@ -727,7 +728,6 @@ extern s8 lbl_803DD75E;
 extern f32 lbl_803DD768;
 extern const f32 lbl_803E2174;
 extern s16 lbl_803A8B48[0x98];
-extern void cMenuPlayTrickyCommandSfx(u8* player);
 extern s8 shouldCloseCMenu;
 extern s16 cMenuSelectedItem;
 extern s16 gCMenuSelUsedBit;
@@ -8251,7 +8251,7 @@ void cMenuRun(void)
                                     {
                                         cMenuOpen = 0;
                                         gCMenuActivatedId = cMenuSelectedItem;
-                                        cMenuPlayTrickyCommandSfx((u8*)player);
+                                        cMenuPlayTrickyCommandSfx((int)player);
                                         gCMenuCloseSfx = 0;
                                     }
                                 }
@@ -8283,7 +8283,7 @@ void cMenuRun(void)
                     if (gTrickyHudItemMask & (1 << yButtonItem))
                     {
                         gCMenuActivatedId = yButtonItem;
-                        cMenuPlayTrickyCommandSfx((u8*)player);
+                        cMenuPlayTrickyCommandSfx((int)player);
                         buttonDisable(0, 0x900);
                     }
                 }
