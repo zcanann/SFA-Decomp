@@ -1551,7 +1551,7 @@ void textureFn_8006c75c(int id)
 void drawReflectionTexture(void)
 {
     char* texture = gNewShadowReflectionTexture;
-    drawTexture(texture, lbl_803DED28, lbl_803DED28, 0xff, 0x40);
+    drawTexture(texture, 0.0f, 0.0f, 0xff, 0x40);
     GXSetTexCopySrc(0, 0, 0x50, 0x3c);
     GXSetTexCopyDst(0x50, 0x3c, GX_TF_RGB565, GX_FALSE);
     GXCopyTex((char*)gNewShadowReflectionSmallTexture + 0x60, GX_TRUE);
