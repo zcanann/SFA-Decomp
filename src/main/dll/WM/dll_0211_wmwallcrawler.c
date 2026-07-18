@@ -114,7 +114,6 @@ int wmwallcrawler_animEventCallback(GameObject* obj)
 /* dont_inline: defined before its update call sites (address order),
    but the retail unit keeps both bls. No same-TU callees, so the wrap
    is safe (see the dont_inline CAUTION in the playbook). */
-void wmwallcrawler_alignToFloorNormal(GameObject* obj, TrackGroundHit* floorHit);
 
 int wmwallcrawler_getExtraSize(void)
 {
