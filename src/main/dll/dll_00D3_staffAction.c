@@ -40,6 +40,7 @@
 #include "main/vecmath.h"
 #include "main/track_dolphin_api.h"
 #include "main/object_render.h"
+#include "main/trig_ext.h"
 #define STAFFACTION_HIT_VOLUME_SLOT 9
 
 /* object group this object belongs to */
@@ -53,8 +54,6 @@
 #define BOUNCE_WALL_MAXY 0x10 /* boundsMaxY -> surfaceMode 4 */
 #define BOUNCE_WALL_MINY 0x20 /* boundsMinY -> surfaceMode 5 */
 
-extern float fsin16Precise(int angle);
-extern float fcos16Precise(int angle);
 extern const f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
 extern f32 lbl_803E3004;
