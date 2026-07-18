@@ -159,10 +159,8 @@ void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetB
                            int musicId)
 {
 
-    int hasClearIfSetBit = (-1 - clearIfSetBit) | (clearIfSetBit + 1);
-    int hasClearIfClearBit = (-1 - clearIfClearBit) | (clearIfClearBit + 1);
-    u8 clearIfSetBitValid = (u8)((u32)hasClearIfSetBit >> 31);
-    u8 clearIfClearBitValid = (u8)((u32)hasClearIfClearBit >> 31);
+    u8 clearIfSetBitValid = clearIfSetBit != -1;
+    u8 clearIfClearBitValid = clearIfClearBit != -1;
 
     if ((state->activeMask & mask) != 0)
     {
