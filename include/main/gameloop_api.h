@@ -8,6 +8,7 @@
 extern u8 lbl_803DB424;
 
 int getGameState(void);
+int getScreenBlankFrameCount(void);
 int return1_800202BC(void);
 void fn_8001FE90(void);
 void checkReset(void);

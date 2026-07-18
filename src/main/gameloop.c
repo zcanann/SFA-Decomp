@@ -636,7 +636,7 @@ void blankScreen(int frames)
 }
 
 
-s16 getScreenBlankFrameCount(void)
+int getScreenBlankFrameCount(void)
 {
     return screenBlankFrameCount;
 }

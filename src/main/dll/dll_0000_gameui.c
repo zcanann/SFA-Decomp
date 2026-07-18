@@ -788,7 +788,6 @@ extern u8 gGameUiUnusedHudSetting;
 extern u8 gCMenuItemEnabledTable[0x3C0];
 extern int gCMenuItemTargetTable[0xBA];
 extern Texture* gGameUiBlinkTexture;
-extern int getScreenBlankFrameCount(void);
 extern void hudDrawFn_80121440(int a, int b, int c);
 extern s32 lbl_803DD828;
 extern u32 lbl_803DD82C;
