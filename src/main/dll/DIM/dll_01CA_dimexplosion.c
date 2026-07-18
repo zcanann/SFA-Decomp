@@ -75,7 +75,7 @@ STATIC_ASSERT(offsetof(GravityDebris, active) == 0x20);
 #define GX_QUADS   0x80
 #define GX_VTXFMT2 2
 
-int gExplosionTextures[GEXPLOSION_TEXTURE_COUNT];
+void* gExplosionTextures[GEXPLOSION_TEXTURE_COUNT];
 extern f32 lbl_803E492C;
 extern f32 lbl_803E4930;
 extern f32 lbl_803E4934;
@@ -780,14 +780,15 @@ void explosion_init(GameObject* obj, int def)
 
 void explosion_release(u32 obj)
 {
+    void** p;
     int i;
 
-    for (i = 0; i < GEXPLOSION_TEXTURE_COUNT; i++)
+    for (i = 0, p = gExplosionTextures; i < GEXPLOSION_TEXTURE_COUNT; p++, i++)
     {
-        if (((int**)gExplosionTextures)[i] != NULL)
+        if (*p != NULL)
         {
-            textureFree((Texture*)((int)((int**)gExplosionTextures)[i]));
-            ((int**)gExplosionTextures)[i] = NULL;
+            textureFree((Texture*)*p);
+            *p = NULL;
         }
     }
 }
@@ -805,7 +806,7 @@ void explosion_initialise(void)
     gExplosionFalloffScaleBlue = lbl_803E492C / expf(lbl_803E492C);
     for (i = 0; i < GEXPLOSION_TEXTURE_COUNT; i++)
     {
-        gExplosionTextures[i] = (int)textureLoadAsset(t.v[i]);
+        gExplosionTextures[i] = textureLoadAsset(t.v[i]);
     }
 }
 

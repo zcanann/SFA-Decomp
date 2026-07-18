@@ -1532,17 +1532,17 @@ void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
 
 void DIMSnowHorn1_release(void)
 {
-    void* zero;
     void** p;
-    void* v;
-    p = (void**)(int)&gDIMSnowHorn1Texture;
-    zero = NULL;
-    v = *p;
-    if (v != NULL)
+    int i;
+    p = &gDIMSnowHorn1Texture;
+    for (i = 0; i < 1; i++)
     {
-        textureFree((Texture*)((u8*)v));
+        if (p[i] != NULL)
+        {
+            textureFree((Texture*)p[i]);
+        }
+        p[i] = NULL;
     }
-    *p = zero;
 }
 
 void DIMSnowHorn1_initialise(void)

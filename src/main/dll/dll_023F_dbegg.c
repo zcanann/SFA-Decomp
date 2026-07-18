@@ -177,7 +177,7 @@ int dbegg_setLaunchVelocity(GameObject* obj, f32* v)
 int dbegg_setScale(GameObject* obj)
 {
     u8* inner = obj->extra;
-    return ((DbEggState*)inner)->mode != DBEGG_MODE_RELEASED ? 1 : 0;
+    return ((DbEggState*)inner)->mode != DBEGG_MODE_RELEASED;
 }
 
 void dbegg_processMessages(GameObject* obj)
