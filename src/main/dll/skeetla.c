@@ -92,7 +92,6 @@ extern f32 lbl_803E2480;
 extern const f32 lbl_803E2484;
 extern char lbl_8031D2E8[];
 extern u32 gSkeetlaFootstepSfxIds01;
-extern u16 gSkeetlaFootstepSfxId2;
 
 void trickyUpdateCollisionAndPathState(u8* obj)
 {
