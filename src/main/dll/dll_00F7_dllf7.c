@@ -128,17 +128,20 @@ void dll_F7_free(int obj)
     ObjGroup_RemoveObject(obj, DLLF7_OBJGROUP);
 }
 
+extern const f32 lbl_803E3400;
+extern const f32 lbl_803E3404;
+
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DllF7State* state = ((GameObject*)obj)->extra;
     if (state->byte9 == 0 && visible != 0)
     {
         f32 v = state->bounceOffset;
-        if (v != (0.0f))
+        if (v != lbl_803E3400)
         {
             fn_8003B5E0(0xc8, 0, 0, v);
         }
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, (1.0f));
+        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3404);
     }
 }
 
