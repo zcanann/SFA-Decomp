@@ -25,8 +25,6 @@
 #include "string.h"
 #include "main/lightmap.h"
 
-union DbHoleControl1ConstF32 { f32 f; };
-const union DbHoleControl1ConstF32 lbl_803E6390 = { 1.0f };
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -154,7 +152,7 @@ void dbholecontrol1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 enabled = visible;
     if (enabled != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6390.f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (1.0f));
 }
 
 void dbholecontrol1_hitDetect(void)
