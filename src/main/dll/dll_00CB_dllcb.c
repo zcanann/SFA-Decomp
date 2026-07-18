@@ -82,7 +82,6 @@ void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void ChukChuk_update(short* obj);
 void ChukChuk_setScale(int obj, int v);
 
-int fn_80160534(int* obj);
 
 int fn_801601C4(GameObject* obj, GroundBaddieState* state)
 {
