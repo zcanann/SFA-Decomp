@@ -352,6 +352,7 @@ int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, RomCurveWalker* route, f32
     return result;
 }
 
+#pragma opt_common_subs off
 void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, const Vec3f* velocity, int turnFrames, f32 rollFactor,
                                         f32 pitchFactor)
 {
@@ -418,3 +419,4 @@ void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, const Vec3f* velocity, 
         anim->rotY += (int)(delta * rate);
     }
 }
+#pragma opt_common_subs reset
