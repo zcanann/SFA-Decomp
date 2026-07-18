@@ -75,4 +75,8 @@ void gxTextureFn_8004d5b4(void* renderOp);
 
 void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5);
 
+extern s16 gObjMapBlockInfo[];
+extern s16 sMapFileNameAdjacencyTable[];
+extern char sAssetIndexOverflowError[];
+
 #endif /* MAIN_PI_DOLPHIN_API_H_ */
