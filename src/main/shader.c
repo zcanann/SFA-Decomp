@@ -35,7 +35,6 @@
 #include "main/sky_interface.h"
 #include "main/sky_api.h"
 
-#define skyFn_80088c94ByteMode(flags, mode) ((void (*)(int, u8))skyFn_80088c94)((flags), (mode))
 #include "main/camera.h"
 #include "main/object_transform.h"
 #include "main/mm.h"
@@ -1361,8 +1360,8 @@ void beginLoadingMap(void)
             if (v != -1)
                 getEnvfxActImmediatelyVoid(player, player, v & 0xFFFF, 0);
         }
-        skyFn_80088c94ByteMode(1, (*(u8*)(env + 0x40) & 2) ? 1 : 0);
-        skyFn_80088c94ByteMode(2, (*(u8*)(env + 0x40) & 4) ? 1 : 0);
+        skyFn_80088c94(1, (*(u8*)(env + 0x40) & 2) ? 1 : 0);
+        skyFn_80088c94(2, (*(u8*)(env + 0x40) & 4) ? 1 : 0);
         skyFn_80088e54((*(u8*)(env + 0x40) & 0x10) ? 1 : 0, lbl_803DEBCC);
         if (*(u8*)(env + 0x40) & 1)
             bo = 1;

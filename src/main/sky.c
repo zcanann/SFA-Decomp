@@ -1703,7 +1703,7 @@ void sky2_onMapSetup(void)
     }
 }
 
-void skyFn_80088c94(int flags, int mode)
+void skyFn_80088c94(int flags, u8 mode)
 {
     u8* env;
     u8* sky;
@@ -1714,7 +1714,7 @@ void skyFn_80088c94(int flags, int mode)
     {
         if ((flags & (1 << i)) != 0)
         {
-            if ((u8)mode != 0)
+            if (mode != 0)
             {
                 ((SkyBlendStateFlags*)(gSkyState + i * 0xa4 + 0xc1))->unused80 = 1;
             }
