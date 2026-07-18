@@ -19,6 +19,8 @@
 #include "main/table_file.h"
 #include "main/frame_timing.h"
 #include "dolphin/gx/GXLegacyDecls.h"
+#include "main/rcp_dolphin_ext.h"
+#include "main/pi_dolphin_ext.h"
 
 int gModelTabEntryCount;
 s16* gModelResourceBuffer;
@@ -40,8 +42,6 @@ u16 gModelCopyChunkWordLimit = 0x2A0;
 #define GX_ALWAYS 7
 extern void* memset(void* dst, int val, int n);
 extern f32 gModelPhaseWrapPeriod;
-extern void shaderInit(u8* def, void* out, int arg, int n);
-extern void loadModelsBin(int fileOffset, int* animCount, int* headerSize, int* amapFlag, int* dataLen, int id);
 extern void* memcpy(void* dst, const void* src, int n);
 extern f32 lbl_803DE828;
 extern f32 lbl_803DE840;

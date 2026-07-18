@@ -71,6 +71,8 @@ extern const f32 gMapBlockWorldSize;
 #include "track/intersect_api.h"
 #include "main/model.h"
 #include "main/pi_dolphin.h"
+#include "main/track_dolphin_ext.h"
+#include "main/gameloop_ext.h"
 
 int lbl_803DB620 = -1;
 s8 lbl_803DB624[8] = {0, -2, -1, 1, 2, 0, 0, 0};
@@ -637,7 +639,7 @@ void* mapTextureOverrideGetEntry(int idx)
     return (void*)(lbl_803DCE6C + (idx << 4));
 }
 
-int return0_80056694(void)
+int return0_80056694(void* wpad0, int wpad1)
 {
     return 0x0;
 }
@@ -888,7 +890,6 @@ extern void mapBlockFn_80059354(int p1, int p2, MapCellEnt* entry, int layer);
 extern int mapCheckCurBlocks(int v);
 
 extern void MapBlock_initShaders(GameObject* blk);
-extern int return0_80060B90(void* blk);
 
 int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
 {
@@ -993,7 +994,6 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     setMapBlockFlag();
 }
 
-extern void doNothing_8001F678(int a, int b);
 void unloadMap(void)
 {
     int blk;

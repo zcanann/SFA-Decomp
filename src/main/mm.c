@@ -270,7 +270,7 @@ int testAndSet_onlyUseHeap3(int v)
 
 extern MmRegion gMmRegionTable[0xA0 / sizeof(MmRegion)];
 
-int printHeapStats(void)
+int printHeapStats(int wpad0)
 {
     OSReport(sMemStatsFormat, gMmRegion0Used, gMmRegionTable[0].size, gMmRegion1Used, gMmRegionTable[1].size,
              gMmRegion2Used, gMmRegionTable[2].size, gMmRegion3Used, gMmRegionTable[3].size,

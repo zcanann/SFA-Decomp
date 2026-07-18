@@ -25,6 +25,7 @@
 #include "dolphin/os/OSCache.h"
 #include "main/object_descriptor.h"
 #include "main/track_dolphin_api.h"
+#include "main/track_dolphin_ext.h"
 
 typedef struct MapBlockHdr
 {
@@ -54,7 +55,6 @@ typedef struct EdgeVerts
 
 #define XYZANIMATOR_OBJGROUP 0x51
 
-extern int return0_80060B90(void* blk);
 extern u32 mapBlockFn_80060678(int* block);
 
 f32 objFn_801948c0(u8* obj, u8 coord)

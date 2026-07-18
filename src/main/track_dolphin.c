@@ -680,12 +680,12 @@ void doNothing_80062A50(void)
 {
 }
 
-int return0_80060B90(void)
+int return0_80060B90(void* wpad0)
 {
     return 0x0;
 }
 
-void fn_800628CC(void)
+void fn_800628CC(void* wpad0)
 {
     gShadowFlag = 0x1;
 }
@@ -1439,7 +1439,7 @@ int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
     return 0;
 }
 
-void* shadowInit(int* obj, int size)
+void* shadowInit(int* obj, int size, int wpad0)
 {
     int rounded;
     ObjModelState* modelState;

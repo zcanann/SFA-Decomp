@@ -41,6 +41,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/player.h"
 #include "string.h"
+#include "main/track_dolphin_ext.h"
 
 s16 gObjPartitionPivot;
 void* lbl_803DCBC0;
@@ -215,7 +216,6 @@ extern void objFreeObjDef(u8* def, int flags);
 extern void Obj_RegisterObject(GameObject* obj, int b);
 extern void objLoadPlayerFromSave(u8* obj);
 extern void modelInitBones(f32 scale, void* model);
-extern int shadowInit(void* obj, int cursor, int arg);
 extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();

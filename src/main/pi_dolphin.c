@@ -172,6 +172,7 @@ extern int lbl_803DCC8C;
 #include "main/objprint_load_api.h"
 #include "dolphin/os/OSAlloc.h"
 #include "main/objmodel.h"
+#include "main/mm_ext.h"
 
 struct MldfNames
 {
@@ -3642,7 +3643,6 @@ int mapGetDirIdx(int idx)
 }
 
 
-extern void printHeapStats(int a);
 extern char sAssetHaltFormat[];
 extern int lbl_8035EF48[];
 extern s16 lbl_803DCC78;
@@ -3921,7 +3921,7 @@ void texPreGetMipmap(u32 texId, int unused, int* outA, int* outB, int count, u8*
     }
 }
 
-void loadModelsBin(int offsetFlags, int* p1c, int* p20, int* p18, int* p4)
+void loadModelsBin(int offsetFlags, int* p1c, int* p20, int* p18, int* p4, int wpad0)
 {
     u32 tab0 = 0;
     u32 tab1 = 0;
@@ -4158,7 +4158,7 @@ int fileLoadToBuffer(int id, void* buffer)
     return fileInfo.length;
 }
 
-void* fileLoad(int id)
+void* fileLoad(int id, int wpad0)
 {
     DVDFileInfo fileInfo;
     if (lbl_8035F3E8[id] != 0)
@@ -4535,7 +4535,7 @@ void initViewport(void)
 {
     C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, *(f32*)&lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
 }
-void videoInit(void)
+void videoInit(void* wpad0, int wpad1)
 {
     u8 fifo[0x80];
     f32 mtx[3][4];
@@ -7655,7 +7655,7 @@ void fn_8004FDA0(u8* texSrc, void* texMtx)
     lbl_803DCD69++;
 }
 
-void textureFn_8004ff20(void* p1)
+void textureFn_8004ff20(void* p1, void* wpad0, void* wpad1, int wpad2)
 {
     if (p1 != 0)
     {

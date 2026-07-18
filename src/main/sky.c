@@ -35,6 +35,7 @@
 #include "track/intersect_screen_api.h"
 #include "track/intersect_api.h"
 #include "dolphin/gx/GXLegacyDecls.h"
+#include "main/lightmap_ext.h"
 
 typedef struct SkyColorByte
 {
@@ -224,7 +225,6 @@ extern f32 PSVECMag(f32* vec);
 extern void PSVECScale(f32 scale, f32* src, f32* dst);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
-extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void GXSetTexCoordGen2(int coord, int func, int src, int mtx, int normalize, int pttexmtx);
 extern void fn_80069B1C(void* a, void* b, f32 t, void* c);
 extern void* memset(void* dst, int c, int n);

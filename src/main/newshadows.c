@@ -25,6 +25,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/shader_api.h"
 #include "main/track_dolphin.h"
+#include "main/objprint_ext.h"
 
 CameraViewSlot* gNewShadowCurrentViewSlot;
 u32 gNewShadowReflectionSmallTexture;
@@ -176,7 +177,6 @@ extern void GXLoadTexObjPreLoaded(void* obj, void* region, int id);
 extern void GXPreLoadEntireTexture(void* obj, void* region);
 extern u8 fn_800626C8(GameObject* obj, int frames);
 extern void fn_8008923C(GameObject* obj, f32* a, f32* b, f32* c);
-extern void objRenderShadowIfVisible(GameObject* obj, int a, int b, int c, int d, int e);
 
 extern const double lbl_803DED58;
 

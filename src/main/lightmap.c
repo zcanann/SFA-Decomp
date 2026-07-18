@@ -961,7 +961,7 @@ void sceneDraw(void)
 extern s8 curMapType;
 extern int lbl_803DCEA8;
 
-void sceneRender(void)
+void sceneRender(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad5)
 {
     renderFlags |= 0x21;
     if (curMapType == MAPTYPE_SUBMAP || curMapType == MAPTYPE_SUBMAP_UNUSED)
@@ -1299,7 +1299,7 @@ void drawFn_8005cf8c(int vertexBase, const u8* triList, int triCount)
 }
 
 
-void fn_8005D0BC(int unused, int a, int b, int c)
+void fn_8005D0BC(int unused, int a, int b, int c, int wpad0)
 {
     fn_800704FC(a, b, c);
 }

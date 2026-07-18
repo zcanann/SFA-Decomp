@@ -76,6 +76,8 @@ int lbl_803DB42C = 0x16A;
 #include "track/intersect_api.h"
 #include "dolphin/ai.h"
 #include "main/lightmap.h"
+#include "main/pi_dolphin_ext.h"
+#include "main/lightmap_ext.h"
 
 f32 gGameLoopResetFadeOutTimer;
 void* lbl_803DCAFC;
@@ -169,7 +171,6 @@ typedef struct
     int arg24;
     int arg28;
 } AssetReq;
-extern void* fileLoad(int id, int heap);
 extern void fileLoadToBuffer(int id, void* buf);
 extern void* lbl_803DCAFC;
 extern void* memcpy(void* dst, const void* src, int n);
@@ -226,7 +227,7 @@ void checkReset(void);
 
 int return0_8002969C(void);
 
-void doNothing_8001F678(void)
+void doNothing_8001F678(int wpad0, int wpad1)
 {
 }
 void doNothing_startOfFrame(void)
@@ -323,7 +324,7 @@ void loadAsset(void* reqVoid)
     }
 }
 
-void crash(void)
+void crash(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad5, int wpad6, int wpad7)
 {
     *(u8*)0 = 0;
 }
@@ -1060,7 +1061,6 @@ void cutsceneEnterExit(int entering, int affectSounds)
 
 void gameTextInitFn_8001a234(void);
 
-extern void videoInit(void* rmode, int arg);
 
 
 
@@ -1091,7 +1091,6 @@ void cutsceneExit(void)
 
 void Obj_UpdateAllObjects(u8 flags);
 
-extern void sceneRender(int a, int b, int c, int d, int e, int f);
 extern f32 lbl_803DE7B8;
 
 

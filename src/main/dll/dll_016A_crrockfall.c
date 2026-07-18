@@ -30,6 +30,7 @@
 #include "main/frame_timing.h"
 #include "main/objhits.h"
 #include "main/object_descriptor.h"
+#include "main/track_dolphin_ext.h"
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
@@ -47,7 +48,6 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 void* gRockfallResource;
 extern u8 gRockfallCfgTable[];
-extern void fn_800628CC(int* obj);
 
 static int crrockfall_isPlayerInRange(int* obj)
 {

@@ -7,6 +7,7 @@
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/mm.h"
+#include "main/mm_ext.h"
 
 extern u8 gAttractMoviePreparePending;
 extern void* gAttractMovieBuffer0;
@@ -26,7 +27,6 @@ extern u16* gRenderModeObj;
 extern char sNAttractModeStringBlock[];
 
 extern bool prepareAttractMode();
-extern void printHeapStats(int mode);
 
 #define NATTRACTMODE_MOVIE_PATH_OFFSET      0x154
 #define NATTRACTMODE_MALLOC_FAILED_OFFSET   0x160

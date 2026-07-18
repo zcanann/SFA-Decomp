@@ -30,6 +30,8 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXDispList.h"
 #include "main/dll/modgfx.h"
+#include "main/pi_dolphin_ext.h"
+#include "main/mm_ext.h"
 
 struct LoadedTextureEntry* gLoadedTextures;
 u16* gRcpTexIdRemap;
@@ -185,7 +187,6 @@ extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void GXSetChanAmbColor(int chan, GXColor8 c);
 extern void GXSetChanMatColor(int chan, GXColor8 c);
 extern void GXSetTexCopyDst(int w, int h, int fmt, int mip);
-extern void textureFn_8004ff20(void* asset, f32* mtx, void* out, int p4);
 extern void GXCopyTex(void* dst, int clear);
 extern void GXPreLoadEntireTexture(void* obj, u32* region);
 extern u32 gRcpDistortAmbColor;
@@ -1058,7 +1059,7 @@ void ShaderDef_free(int* def)
     }
 }
 
-void shaderInit(u8* def, void** out, u8* obj)
+void shaderInit(u8* def, void** out, u8* obj, int wpad0)
 {
     void** slot;
     void* s;
@@ -1157,7 +1158,6 @@ void* textureIdxToPtr(int idx)
 }
 
 
-extern void printHeapStats(int mode);
 extern char sRcpTexRestructStrings[];
 
 void texRestructRefs(int mode)
@@ -1475,7 +1475,7 @@ void fn_800541A4(Texture* texture, s16 frameStep)
     texture->animationFrameStep = frameStep;
 }
 
-void textureFn_800541ac(int p1 /* unused */, int* tex, void* forceTex, int flags, int packed)
+void textureFn_800541ac(int p1 /* unused */, int* tex, void* forceTex, int flags, int packed, int wpad0, int wpad1)
 {
     int i;
     int idx, count;

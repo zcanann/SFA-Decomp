@@ -1516,7 +1516,7 @@ void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, 
 
 extern void objRenderShadow(void* obj);
 
-void objRenderShadowIfVisible(GameObject* obj)
+void objRenderShadowIfVisible(GameObject* obj, int wpad0, int wpad1, int wpad2, int wpad3, int wpad4)
 {
     void** arr = *(void***)&(obj)->anim.banks;
     s8 idx = (obj)->anim.bankIndex;
