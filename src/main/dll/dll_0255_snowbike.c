@@ -29,6 +29,7 @@
 #include "main/dll/drhightop.h"
 #include "main/dll/dll_801e991c.h"
 #include "string.h"
+#include "main/lightmap.h"
 
 f32 lbl_803DC0B8 = 15.0f;
 int lbl_803DC0BC = -1;
@@ -143,7 +144,6 @@ extern f32 lbl_803E5B70;
 extern f32 lbl_803E5B90;
 extern f32 lbl_803E5B94;
 extern f32 lbl_803E5B98;
-extern void* mapRomListFindItem(int a, int b, int c, int d, int e);
 extern int gSnowBikeMountRomListTable[];
 extern s16 gSnowBikeHitObjectIdTable[];
 extern f32 lbl_803E5B28;
@@ -264,7 +264,7 @@ void SnowBike_resetToRomListPosition(GameObject* obj)
     f32 zero;
 
     table = (int*)((int)gSnowBikeMountRomListTable + (int)(((SnowBikeMountState*)state)->romListGroupIndex) * 12);
-    found = mapRomListFindItem(table[((SnowBikeMountState*)state)->romListItemIndex], 0, 0, 0, 0);
+    found = (SnowBikeRomListItem*)mapRomListFindItem(table[((SnowBikeMountState*)state)->romListItemIndex], 0, 0, 0, 0);
     if (found != NULL)
     {
         if (((SnowBikeMountState*)state)->romListGroupIndex != 0)

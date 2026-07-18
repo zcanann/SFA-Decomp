@@ -23,6 +23,7 @@
 #include "main/dll/dll_0242_dbstealerworm.h"
 #include "main/dll/dll_0243_dbholecontrol1.h"
 #include "string.h"
+#include "main/lightmap.h"
 
 f32 lbl_803E6390 = 1.0f;
 
@@ -60,7 +61,6 @@ STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 extern f32 lbl_803E6390;
 int lbl_803DDCE0;
 
-extern void* mapRomListFindItem(int, int, int, int, int);
 
 void DBstealerwo_setFuncPtrs_80203c78(void)
 {
