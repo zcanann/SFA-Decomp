@@ -102,10 +102,6 @@ extern int ObjGroup_FindNearestObject(int kind, void* obj, f32* maxDistance);
 extern u8 gSnowClawMoveTable[];
 int gSnowClawDropBombAngle;
 
-typedef s8 (*ObjUpdateOpacityS8Fn)(int obj);
-
-#define objUpdateOpacityS8 ((ObjUpdateOpacityS8Fn)objUpdateOpacity)
-
 u8 gSnowClawMoveTable[] = {
     0x00, 0x00, 0x03, 0x89, 0x00, 0x00, 0x03, 0x8D, 0x00, 0x00, 0x03, 0x8A, 0x00, 0x00, 0x03, 0x8E,
     0x00, 0x00, 0x04, 0xD3, 0x00, 0x00, 0x04, 0xD4, 0x00, 0x00, 0x01, 0x6D, 0x00, 0x00, 0x01, 0x6C,
@@ -133,9 +129,9 @@ void snowclaw_free(GameObject* obj);
 void snowclaw_init(int* obj, u8* init);
 void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int userData1Value);
 void snowclaw_updateMountAttack(GameObject* obj, int mount);
-void snowclaw_syncMountTransform(GameObject* obj, int sub, int p2, int p3, int p4, int p5, int opacity, int mountAlpha,
-                                 int enabled);
-void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, int vis);
+void snowclaw_syncMountTransform(GameObject* obj, GameObject* mount, int p2, int p3, int p4, int p5, int opacity,
+                                 int mountAlpha, int enabled);
+void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis);
 void snowclaw_hitDetect(GameObject* obj);
 void snowclaw_update(GameObject* obj);
 int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq);
@@ -290,18 +286,18 @@ void snowclaw_updateMountAttack(GameObject* obj, int mount)
 }
 
 #pragma dont_inline on
-void snowclaw_syncMountTransform(GameObject* obj, int sub, int p2, int p3, int p4, int p5, int opacity, int mountAlpha,
-                                 int enabled)
+void snowclaw_syncMountTransform(GameObject* obj, GameObject* mount, int p2, int p3, int p4, int p5, int opacity,
+                                 int mountAlpha, int enabled)
 {
     f32 newPosX, newPosY, newPosZ;
 
     if (enabled != 0 && (s8)opacity != 0 && mountAlpha > 0)
     {
-        u8 saved = *(u8*)(sub + 0x37);
-        *(u8*)(sub + 0x37) = mountAlpha;
-        (*(void (**)(int, int, int, int, int, int))((char*)*((GameObject*)sub)->anim.dll + 0x10))(sub, p2, p3, p4, p5,
-                                                                                                  -1);
-        *(u8*)(sub + 0x37) = saved;
+        u8 saved = *(u8*)((u8*)mount + 0x37);
+        *(u8*)((u8*)mount + 0x37) = mountAlpha;
+        (*(void (**)(GameObject*, int, int, int, int, int))((char*)*mount->anim.dll + 0x10))(mount, p2, p3, p4, p5,
+                                                                                             -1);
+        *(u8*)((u8*)mount + 0x37) = saved;
     }
     obj->anim.previousWorldPosX = obj->anim.worldPosX;
     obj->anim.previousWorldPosY = obj->anim.worldPosY;
@@ -309,20 +305,20 @@ void snowclaw_syncMountTransform(GameObject* obj, int sub, int p2, int p3, int p
     obj->anim.previousLocalPosX = obj->anim.localPosX;
     obj->anim.previousLocalPosY = obj->anim.localPosY;
     obj->anim.previousLocalPosZ = obj->anim.localPosZ;
-    (*(void (**)(int, f32*, f32*, f32*))((char*)*((GameObject*)sub)->anim.dll + 0x28))(sub, &newPosX, &newPosY,
-                                                                                       &newPosZ);
+    (*(void (**)(GameObject*, f32*, f32*, f32*))((char*)*mount->anim.dll + 0x28))(mount, &newPosX, &newPosY,
+                                                                                   &newPosZ);
     obj->anim.localPosX = newPosX;
     obj->anim.localPosY = newPosY;
     obj->anim.localPosZ = newPosZ;
-    obj->anim.rotX = ((GameObject*)sub)->anim.rotX;
-    obj->anim.rotY = ((GameObject*)sub)->anim.rotY;
-    obj->anim.rotZ = ((GameObject*)sub)->anim.rotZ;
+    obj->anim.rotX = mount->anim.rotX;
+    obj->anim.rotY = mount->anim.rotY;
+    obj->anim.rotZ = mount->anim.rotZ;
     obj->anim.worldPosX = obj->anim.localPosX;
     obj->anim.worldPosY = obj->anim.localPosY;
     obj->anim.worldPosZ = obj->anim.localPosZ;
-    obj->anim.velocityX = ((GameObject*)sub)->anim.velocityX;
-    obj->anim.velocityY = ((GameObject*)sub)->anim.velocityY;
-    obj->anim.velocityZ = ((GameObject*)sub)->anim.velocityZ;
+    obj->anim.velocityX = mount->anim.velocityX;
+    obj->anim.velocityY = mount->anim.velocityY;
+    obj->anim.velocityZ = mount->anim.velocityZ;
 }
 
 #pragma dont_inline reset
@@ -480,10 +476,10 @@ void snowclaw_free(GameObject* obj)
     }
 }
 
-void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, int vis)
+void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
     int* inner;
-    int sub;
+    GameObject* mount;
     int found;
     int oldFlag;
     f32 dist;
@@ -492,15 +488,15 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, int vis)
 
     dist = 5000.0f;
     inner = (obj)->extra;
-    sub = *(int*)inner;
+    mount = *(GameObject**)inner;
     if ((obj)->anim.alpha < 5)
     {
         ((SnowclawState*)inner)->particleAlpha = 0.0f;
     }
     found = 0;
-    if (*(s8*)&((SnowclawState*)inner)->health >= 0 && (u32)sub != 0)
+    if (*(s8*)&((SnowclawState*)inner)->health >= 0 && mount != NULL)
     {
-        if ((*(int (**)(int))((char*)*((GameObject*)sub)->anim.dll + 0x38))(sub) == 2)
+        if ((*(int (**)(GameObject*))((char*)*mount->anim.dll + 0x38))(mount) == 2)
         {
             found = 1;
         }
@@ -508,8 +504,8 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, int vis)
     if (found != 0)
     {
         (obj)->anim.flags |= 8;
-        vis = objUpdateOpacityS8(sub);
-        snowclaw_syncMountTransform(obj, sub, p2, p3, p4, p5, vis, ((SnowclawState*)inner)->mountAlpha, 1);
+        vis = objUpdateOpacity(mount);
+        snowclaw_syncMountTransform(obj, mount, p2, p3, p4, p5, vis, ((SnowclawState*)inner)->mountAlpha, 1);
     }
     else
     {
@@ -635,7 +631,7 @@ void snowclaw_hitDetect(GameObject* obj)
     if (*(int**)inner != 0 &&
         (*(int (**)(int*))((char*)*((GameObject*)*(int**)inner)->anim.dll + 0x38))(*(int**)inner) == 2)
     {
-        snowclaw_syncMountTransform(obj, (int)*(int**)inner, 0, 0, 0, 0, 0, 0, 0);
+        snowclaw_syncMountTransform(obj, *(GameObject**)inner, 0, 0, 0, 0, 0, 0, 0);
     }
     a5 = ((SnowclawState*)inner)->hitCooldown;
     if (a5 >= 0)
