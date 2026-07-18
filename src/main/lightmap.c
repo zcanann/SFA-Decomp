@@ -1212,7 +1212,7 @@ void gameFlagFn_8005ce6c(int v)
     else renderFlags &= ~0x20;
 }
 
-u32 isOvercast(void)
+u8 isOvercast(void)
 {
     u32 v = renderFlags & RENDERFLAG_OVERCAST;
     u32 t = ((u32) - (s32)v | v) >> 31;
@@ -1313,7 +1313,7 @@ void setTextColor(int unused, int a, int b, int c, int d)
     _gxSetTevColor2(a, b, c, d);
 }
 
-void doNothing_8005D148(void)
+void doNothing_8005D148(int arg0, int arg1)
 {
 }
 
@@ -1326,7 +1326,7 @@ void getVisibleObjects(s8 * opacity);
 
 void renderSceneGeometry(int* p1, s8* order);
 
-void doNothing_8005D14C(void)
+void doNothing_8005D14C(int arg0, int arg1)
 {
 }
 void renderShadowType3(u8* obj, u32 b, s32 offset)

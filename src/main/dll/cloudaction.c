@@ -242,7 +242,7 @@ void renderClouds(int a, int b, int c, int d)
 
     if (lbl_8039AB28.mainCloudObj != NULL)
     {
-        if (isOvercastByteLegacy())
+        if (isOvercast())
         {
             fn_8008DAE8((int)lbl_8039AB28.mainCloudObj);
         }

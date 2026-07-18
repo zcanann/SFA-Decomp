@@ -62,7 +62,7 @@ void drawSkyStars(void)
     f32 t;
 
     timeOk = (*gSkyInterface)->getSunPosition(&t);
-    if (isOvercastByteLegacy() != 0)
+    if (isOvercast() != 0)
     {
         if (timeOk != 0)
         {
