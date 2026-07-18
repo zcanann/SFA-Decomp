@@ -124,6 +124,18 @@ typedef struct
     f32 fw;
 } BasketMathArgs;
 
+extern const f32 lbl_803E3930;
+extern const f32 lbl_803E3934;
+extern const f32 lbl_803E3938;
+extern const f32 lbl_803E393C;
+extern const f32 lbl_803E3940;
+extern const f32 lbl_803E3944;
+extern const f32 lbl_803E3948;
+extern const f32 lbl_803E394C;
+extern const f32 lbl_803E3950;
+extern const f32 lbl_803E3954;
+extern const f32 lbl_803E3958;
+
 int fn_801816F8(u8* obj, u8* player, u8* dataIn)
 {
     GameObject* playerObj;
@@ -169,7 +181,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         return 0;
     }
     hitVel = gSmallBasketHitVelocity;
-    if (hitVel[1] < (0.25f))
+    if (hitVel[1] < lbl_803E393C)
     {
         slowMo = 1;
     }
@@ -179,17 +191,17 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         ratio = num;
         den = (f32)(int)Player_GetMaxHealth((int)player);
         ratio = ratio / den;
-        ratio = ratio * (100.0f);
-        if (ratio <= (50.0f))
+        ratio = ratio * lbl_803E3930;
+        if (ratio <= lbl_803E3940)
         {
             mode = 6;
         }
-        else if (ratio <= (75.0f))
+        else if (ratio <= lbl_803E3944)
         {
-            if ((int)randomGetRange(0, (s16)(int)(ratio - (50.0f))) < 7)
+            if ((int)randomGetRange(0, (s16)(int)(ratio - lbl_803E3940)) < 7)
             {
                 mode = 6;
-                max = (s16)(den * (0.25f));
+                max = (s16)(den * lbl_803E393C);
                 if (max < 1)
                 {
                     max = 1;
@@ -226,9 +238,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
                                        ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
-            sc = (3.0f);
+            sc = lbl_803E3948;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = (4.0f) * hitVel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         else
@@ -238,21 +250,21 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
-        if (mag != (0.0f))
+        if (mag != lbl_803E3938)
         {
             mag = sqrtf(mag);
             ((GameObject*)spawned)->anim.velocityX = ((GameObject*)spawned)->anim.velocityX / mag;
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX * -((0.01f) * (f32)(int)randomGetRange(0, 0x19) - (1.0f));
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ * -((0.01f) * (f32)(int)randomGetRange(0, 0x19) - (1.0f));
-        ((GameObject*)spawned)->anim.velocityY = (2.2f);
-        spread.f14 = (0.0f);
-        spread.f18 = (0.0f);
-        spread.f1c = (0.0f);
-        spread.f10 = (1.0f);
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
+        spread.f14 = lbl_803E3938;
+        spread.f18 = lbl_803E3938;
+        spread.f1c = lbl_803E3938;
+        spread.f10 = lbl_803E3950;
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
@@ -280,9 +292,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
                                        ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
-            sc = (3.0f);
+            sc = lbl_803E3948;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = (4.0f) * hitVel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         else
@@ -292,21 +304,21 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
-        if (mag != (0.0f))
+        if (mag != lbl_803E3938)
         {
             mag = sqrtf(mag);
             ((GameObject*)spawned)->anim.velocityX = ((GameObject*)spawned)->anim.velocityX / mag;
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX * -((0.01f) * (f32)(int)randomGetRange(0, 0x19) - (1.0f));
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ * -((0.01f) * (f32)(int)randomGetRange(0, 0x19) - (1.0f));
-        ((GameObject*)spawned)->anim.velocityY = (2.2f);
-        spread.f14 = (0.0f);
-        spread.f18 = (0.0f);
-        spread.f1c = (0.0f);
-        spread.f10 = (1.0f);
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
+        spread.f14 = lbl_803E3938;
+        spread.f18 = lbl_803E3938;
+        spread.f1c = lbl_803E3938;
+        spread.f10 = lbl_803E3950;
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
@@ -334,9 +346,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
                                        ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
-            sc = (3.0f);
+            sc = lbl_803E3948;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = (4.0f) * hitVel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         else
@@ -346,21 +358,21 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
-        if (mag != (0.0f))
+        if (mag != lbl_803E3938)
         {
             mag = sqrtf(mag);
             ((GameObject*)spawned)->anim.velocityX = ((GameObject*)spawned)->anim.velocityX / mag;
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX * -((0.01f) * (f32)(int)randomGetRange(0, 0x19) - (1.0f));
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ * -((0.01f) * (f32)(int)randomGetRange(0, 0x19) - (1.0f));
-        ((GameObject*)spawned)->anim.velocityY = (2.2f);
-        spread.f14 = (0.0f);
-        spread.f18 = (0.0f);
-        spread.f1c = (0.0f);
-        spread.f10 = (1.0f);
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
+        spread.f14 = lbl_803E3938;
+        spread.f18 = lbl_803E3938;
+        spread.f1c = lbl_803E3938;
+        spread.f10 = lbl_803E3950;
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
@@ -407,14 +419,14 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
                                        ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
-            sc = (3.0f);
+            sc = lbl_803E3948;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = (4.0f) * hitVel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
-        if (mag != (0.0f))
+        if (mag != lbl_803E3938)
         {
             mag = sqrtf(mag);
             ((GameObject*)spawned)->anim.velocityX =
@@ -422,17 +434,17 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
             ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)spawned)->anim.velocityZ / mag;
         }
         ((GameObject*)spawned)->anim.velocityX =
-            ((GameObject*)spawned)->anim.velocityX * -((0.01f) * (f32)(int)randomGetRange(0, 0x19) - (1.0f));
+            ((GameObject*)spawned)->anim.velocityX * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
         ((GameObject*)spawned)->anim.velocityZ =
-            ((GameObject*)spawned)->anim.velocityZ * -((0.01f) * (f32)(int)randomGetRange(0, 0x19) - (1.0f));
-        ((GameObject*)spawned)->anim.velocityY = (2.2f);
+            ((GameObject*)spawned)->anim.velocityZ * -(lbl_803E3954 * (f32)(int)randomGetRange(0, 0x19) - lbl_803E3950);
+        ((GameObject*)spawned)->anim.velocityY = lbl_803E3958;
         (*(ObjThrowInitFn*)(*(int*)*(int*)&((GameObject*)spawned)->anim.dll + 0x2c))(
             spawned, ((GameObject*)spawned)->anim.velocityX, ((GameObject*)spawned)->anim.velocityY,
             ((GameObject*)spawned)->anim.velocityZ);
-        spread.f14 = (0.0f);
-        spread.f18 = (0.0f);
-        spread.f1c = (0.0f);
-        spread.f10 = (1.0f);
+        spread.f14 = lbl_803E3938;
+        spread.f18 = lbl_803E3938;
+        spread.f1c = lbl_803E3938;
+        spread.f10 = lbl_803E3950;
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = randomGetRange(-10000, 10000);
