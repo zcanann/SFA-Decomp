@@ -184,8 +184,6 @@ extern int lbl_803DB754;
 extern f32 lbl_803DF190;
 extern f32 lbl_803DF194;
 
-extern void renderSunAndMoon();
-extern int moonFxCb_80074110(int obj, int* model, int param);
 extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern f32 PSVECMag(f32* vec);
@@ -586,11 +584,11 @@ void getTimeOfDay(f32* time)
     *time = ((SkyState*)sky)->timeOfDay;
 }
 
-void renderSky(void)
+void renderSky(int a, int b, int c, int d, int visible)
 {
     if (gSkySunObject != NULL && gSkyMoonObject != NULL)
     {
-        renderSunAndMoon();
+        renderSunAndMoon(a, b, c, d, visible);
     }
     skyFn_8008a500();
     skyFn_8008a04c();

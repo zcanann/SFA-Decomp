@@ -31,6 +31,7 @@ void gxBlendFn_800788dc(void);
 void gxTevAddColor1Stage(void);
 void timeFn_8006f400(f32 step);
 void drawFn_8006f500(void);
+int moonFxCb_80074110(u8* obj, int* model, int slot);
 void resetSomeGxFlags(void);
 void fogFn_80070404(f32 a, f32 b);
 void doSpiritVisionFilter(void);
