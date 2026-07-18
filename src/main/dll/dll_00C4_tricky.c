@@ -61,6 +61,7 @@
 #include "main/dll/baddie_frozen.h"
 #include "main/dll/Hcurves_ext.h"
 #include "main/dll/Hcurves_api.h"
+#include "main/dll/xyzanimator_api.h"
 #include "main/dll/dll_80136a40_ext.h"
 #include "main/dll/skeetla_ext.h"
 #include "main/dll/tricky_substates_ext.h"
@@ -212,7 +213,6 @@ STATIC_ASSERT(sizeof(struct VisBits16) == 0x10);
 extern void objAudioFn_8006edcc(int obj, u16 mask, int arg5, float* points, void* aux, f32 scaleX, f32 scaleY);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
-extern f32 objFn_801948c0(int obj, int coord);
 const struct VisBits16 gTrickyVisibilityBitsInit = {{0x10000, 0x20000, 0x40000, 0x80000}};
 extern char lbl_8031D2E8[];
 extern char gTrickyPathPointCollision[];
@@ -1140,7 +1140,7 @@ void Tricky_hitDetect(GameObject* obj)
 {
     f32 dy;
     f32 y;
-    int* objects;
+    GameObject** objects;
     int i;
     void* firepipeObj;
     int state;
@@ -1173,7 +1173,7 @@ void Tricky_hitDetect(GameObject* obj)
     if ((((TrickyState*)state)->statusFlags >> 5 & 1) != 0u)
     {
         {
-            int* t = (int*)ObjGroup_GetObjects(TRICKY_HEIGHT_TRACK_GROUP, count);
+            GameObject** t = (GameObject**)ObjGroup_GetObjects(TRICKY_HEIGHT_TRACK_GROUP, count);
             i = 0;
             objects = t;
         }
@@ -1186,12 +1186,10 @@ void Tricky_hitDetect(GameObject* obj)
                                                                     : -(height - obj->anim.localPosY);
                 if (dy < lbl_803E24B8)
                 {
-                    ((TrickyState*)state)->heightTrackObjId =
-                        ((ObjPlacement*)*(int*)&((GameObject*)*objects)->anim.placementData)->mapId;
+                    ((TrickyState*)state)->heightTrackObjId = (*objects)->anim.placement->mapId;
                 }
             }
-            if (((TrickyState*)state)->heightTrackObjId ==
-                (u32)((ObjPlacement*)*(int*)&((GameObject*)*objects)->anim.placementData)->mapId)
+            if (((TrickyState*)state)->heightTrackObjId == (u32)(*objects)->anim.placement->mapId)
             {
                 if ((((TrickyState*)state)->trackedHeight != lbl_803E23DC) &&
                     (((TrickyState*)state)->trackedHeight == height))

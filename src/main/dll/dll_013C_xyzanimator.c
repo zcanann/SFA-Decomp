@@ -27,6 +27,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/track_dolphin_ext.h"
 #include "main/track_dolphin_ext2.h"
+#include "main/dll/xyzanimator_api.h"
 
 typedef struct MapBlockHdr
 {
@@ -57,26 +58,26 @@ typedef struct EdgeVerts
 #define XYZANIMATOR_OBJGROUP 0x51
 
 
-f32 objFn_801948c0(u8* obj, u8 coord)
+f32 objFn_801948c0(GameObject* obj, u8 coord)
 {
     XyzAnimatorState* state;
 
-    if (obj == NULL || (state = (XyzAnimatorState*)((GameObject*)obj)->extra, state == NULL))
+    if (obj == NULL || (state = (XyzAnimatorState*)obj->extra, state == NULL))
     {
         return 0.0f;
     }
     switch (coord)
     {
     case 1:
-        return ((GameObject*)obj)->anim.localPosX + state->offsetX;
+        return obj->anim.localPosX + state->offsetX;
     case 2:
         return state->offsetX;
     case 3:
-        return ((GameObject*)obj)->anim.localPosY + state->offsetY;
+        return obj->anim.localPosY + state->offsetY;
     case 4:
         return state->offsetY;
     case 5:
-        return ((GameObject*)obj)->anim.localPosZ + state->offsetZ;
+        return obj->anim.localPosZ + state->offsetZ;
     case 6:
         return state->offsetZ;
     }

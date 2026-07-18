@@ -11,7 +11,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/game_object.h"
 #include "main/obj_list.h"
-#include "main/dll/MMP/dll_013B_wallanimator.h"
+#include "main/dll/xyzanimator_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_018E_mmshwaterspike.h"
 
@@ -46,7 +46,7 @@ void mmsh_waterspike_hitDetect(void)
 
 void mmsh_waterspike_update(int obj)
 {
-    void* animObj;
+    GameObject* animObj;
     TrackGroundHit** hitPtr;
     TrackGroundHit* hit;
     int hitCount;

@@ -20,7 +20,6 @@ void FUN_801948b0(int param_1, int param_2, int param_3, int param_4, int param_
 void FUN_801948d8(u32 param_1);
 void FUN_801949ec(u16* param_1, int param_2);
 double FUN_80194a70(int param_1, u8 param_2);
-f32 objFn_801948c0(u8* obj, u8 coord);
 void FUN_80194b10(u32 param_1, u32 param_2, int param_3);
 void fn_80194964(int obj, int state, int block);
 void fn_80194C40(u32 def, int state, int block);
