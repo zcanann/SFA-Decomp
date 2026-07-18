@@ -10,5 +10,7 @@
 
 void fn_801A7D74(GameObject* obj, u8 place, u8 mode);
 int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* outHeight, int* outObject);
+void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z);
+void fn_801A80F0(GameObject* obj, u8 flag);
 
 #endif

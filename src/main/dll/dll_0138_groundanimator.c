@@ -13,6 +13,7 @@
 #include "main/dll/visanimatorstate_struct.h"
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
+#include "main/dll/MMP/dll_0182_mmpmoonrock.h"
 #include "main/gamebits.h"
 #include "dolphin/os/OSCache.h"
 #include "main/mm.h"
@@ -56,10 +57,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 union GroundAnimatorConstF32 { f32 f; };
 const union GroundAnimatorConstF32 lbl_803E3F98 = { 100.0f };
 const union GroundAnimatorConstF32 lbl_803E3F9C = { 0.0f };
-extern void fn_801A80F0(GameObject* e, int arg);
-
-extern void fn_801A80C4(GameObject* o, f32 x, f32 y, f32 z);
-
 u8 groundanimator_modelMtxFn(int* obj)
 {
     return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x2b);
