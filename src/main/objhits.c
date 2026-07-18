@@ -871,8 +871,6 @@ int ObjHits_TestTaperedCapsule3D(float* point, float pointRadius, float baseRadi
     return *dist2 <= radiusSum * radiusSum;
 }
 
-void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount);
-
 void ObjHits_TickPriorityHitCooldowns(void)
 {
     int slotOffset;
@@ -1465,8 +1463,6 @@ int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char ch
     }
     return 0;
 }
-
-void doNothing_800333C8(int objA, int objB, int att, void* state, void* attState, f32 dt);
 
 void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 dt)
 {
