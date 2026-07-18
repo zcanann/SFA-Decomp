@@ -2063,6 +2063,7 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
     IndTexMtx23 mtxA;
     IndTexMtx23 mtxB;
     GXColorS10 s10;
+    int stage;
     int coord;
     int texTbl;
     int texCnt;
@@ -2072,7 +2073,6 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
     int projFlagOut1;
     u8* rop;
     f32 fz;
-    int stage;
     int projBlendMode;
     u8 fancy;
 
