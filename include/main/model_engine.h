@@ -68,7 +68,7 @@ extern int lbl_803DB288;
 u8* modelRenderFn_80006744(u8* src, int count, ModelRenderInstrsState* state, int gap, u8 bitWidth);
 int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap, u8 bitWidth);
 
-s16 Queue_GetCount(RingBufferQueue* queue);
+int Queue_GetCount(RingBufferQueue* queue);
 BOOL Queue_IsEmpty(RingBufferQueue* queue);
 void Queue_Peek(RingBufferQueue* queue, void* dst);
 void Queue_Pop(RingBufferQueue* queue, void* dst);

@@ -14,6 +14,7 @@
 #include "main/newshadows.h"
 #include "main/mm.h"
 #include "main/model.h"
+#include "main/model_engine.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
 #include "string.h"
@@ -928,7 +929,6 @@ extern void* renderFrameBuffer;
 extern void* externalFrameBuffer0;
 extern void* externalFrameBuffer1;
 extern u8 lbl_803DCCA7;
-extern char lbl_8035F730[0x10];
 extern u8 lbl_803DCD30;
 extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
@@ -971,10 +971,7 @@ extern void OSStopStopwatch(void* sw);
 extern u64 OSCheckStopwatch(void* sw);
 extern void OSResetStopwatch(void* sw);
 extern void OSStartStopwatch(void* sw);
-extern int Queue_GetCount(void* q);
 extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
-extern int Queue_Peek(void* q, void* out);
-extern void Queue_Pop(void* q, void* out);
 extern f32 lbl_803DCCC0;
 extern f32 physicsTimeScale;
 extern f32 lbl_803DEAA0;
@@ -996,8 +993,8 @@ extern void* lbl_803DCCE4;
 extern void* displayFrameBuffer;
 extern u8 lbl_803DCCA6;
 extern u8 lbl_803DCCA4;
-extern void Queue_Init(void* q, void* buf, int n, int stride);
 extern char lbl_8035F6B8[0x78];
+extern RingBufferQueue lbl_8035F730;
 extern char* lbl_803DCCE0;
 extern int lbl_803DCCB8;
 extern int lbl_803DCCF4;
@@ -4223,17 +4220,17 @@ void gpuErrorHandler(u32 retraceCount)
 
     if (lbl_803DCCA8 != 0 && lbl_803DCCA9 != 0)
     {
-        Queue_Pop(lbl_8035F730, tok);
+        Queue_Pop(&lbl_8035F730, tok);
         lbl_803DCCAC = 0;
         OSWakeupThread((OSThreadQueue*)&lbl_803DCCC4);
-        if (Queue_IsEmpty(lbl_8035F730) != 0)
+        if (Queue_IsEmpty(&lbl_8035F730) != 0)
         {
             GXDisableBreakPt();
             lbl_803DCCA7 = 0;
         }
         else
         {
-            Queue_Peek(lbl_8035F730, tok);
+            Queue_Peek(&lbl_8035F730, tok);
             GXEnableBreakPt((void*)tok[0]);
             lbl_803DCCA7 = 1;
         }
@@ -4330,19 +4327,19 @@ void videoSwapFrameBuffers(u32 retraceCount)
         GXSetCPUFifo(&fifo);
         GXSetGPFifo(&fifo);
         lbl_803DCCD4 = GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
-        if (Queue_IsEmpty(lbl_8035F730) == 0)
+        if (Queue_IsEmpty(&lbl_8035F730) == 0)
         {
-            Queue_Pop(lbl_8035F730, tok);
+            Queue_Pop(&lbl_8035F730, tok);
         }
         OSWakeupThread((OSThreadQueue*)&lbl_803DCCC4);
-        if (Queue_IsEmpty(lbl_8035F730) != 0)
+        if (Queue_IsEmpty(&lbl_8035F730) != 0)
         {
             GXDisableBreakPt();
             lbl_803DCCA7 = 0;
         }
         else
         {
-            Queue_Peek(lbl_8035F730, tok);
+            Queue_Peek(&lbl_8035F730, tok);
             GXEnableBreakPt((void*)tok[0]);
         }
         gxPerfFn_8004a77c(1);
@@ -4361,7 +4358,7 @@ void videoFn_800499e8(void)
     {
         THPPlayerPostDrawDone();
     }
-    Queue_Peek(lbl_8035F730, &peek);
+    Queue_Peek(&lbl_8035F730, &peek);
     i = 0;
     src = gDepthReadPendingQueue;
     dst = gDepthReadResults;
@@ -4383,17 +4380,17 @@ void videoFn_800499e8(void)
     }
     else
     {
-        Queue_Pop(lbl_8035F730, tok);
+        Queue_Pop(&lbl_8035F730, tok);
         lbl_803DCCAC = 0;
         OSWakeupThread((OSThreadQueue*)&lbl_803DCCC4);
-        if (Queue_IsEmpty(lbl_8035F730) != 0)
+        if (Queue_IsEmpty(&lbl_8035F730) != 0)
         {
             GXDisableBreakPt();
             lbl_803DCCA7 = 0;
         }
         else
         {
-            Queue_Peek(lbl_8035F730, tok);
+            Queue_Peek(&lbl_8035F730, tok);
             GXEnableBreakPt((void*)tok[0]);
             lbl_803DCCA7 = 1;
         }
@@ -4449,7 +4446,7 @@ void videoInit(void* wpad0, int wpad1)
     GXInitFifoLimits(lbl_803DCCD4, (u32)lbl_803DCCE4 - 0x4000, (u32)((u32)lbl_803DCCE4 * 3) >> 2);
     GXSetCPUFifo(lbl_803DCCD4);
     GXSetGPFifo(lbl_803DCCD4);
-    Queue_Init(lbl_8035F730, lbl_8035F6B8, 10, 0xc);
+    Queue_Init(&lbl_8035F730, lbl_8035F6B8, 10, 0xc);
     OSInitThreadQueue((OSThreadQueue*)&lbl_803DCCC4);
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);
@@ -4580,7 +4577,6 @@ void setDisplayCopyFilter(void)
 }
 
 
-extern void Queue_Push(void* q, void* item);
 int GXFlush_(u8 visible, int unused)
 {
     void* fifo_get;
@@ -4596,7 +4592,7 @@ int GXFlush_(u8 visible, int unused)
     item[1] = 0;
     item[2] = renderFrameBuffer;
     s = OSDisableInterrupts();
-    Queue_Push(&lbl_8035F730[0], item);
+    Queue_Push(&lbl_8035F730, item);
     if (lbl_803DCCA7 == 0)
     {
         GXEnableBreakPt(fifo_put);
@@ -4748,7 +4744,7 @@ void waitNextFrame(void)
         OSReport(sThreadStateAttrSuspendFormat, lbl_803DCCDC->state, lbl_803DCCDC->attr,
                  lbl_803DCCDC->suspend);
     }
-    if ((u32)Queue_GetCount(lbl_8035F730) > 1)
+    if ((u32)Queue_GetCount(&lbl_8035F730) > 1)
     {
         lbl_803DCCAC = 0;
         OSSleepThread((OSThreadQueue*)&lbl_803DCCC4);
@@ -8046,7 +8042,7 @@ u8 lbl_8036F880[0x8000];
 u8 lbl_8036F860[0x20];
 u16 lbl_8035F860[0x8000];
 u8 lbl_8035F740[0x120];
-char lbl_8035F730[0x10];
+RingBufferQueue lbl_8035F730;
 char lbl_8035F6B8[0x78];
 char lbl_8035F680[0x38];
 s16 gObjMapBlockInfo[0x9C];

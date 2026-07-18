@@ -1416,7 +1416,7 @@ void voxmaps_initialise(void)
     gVoxMapsSmallTextures[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
 }
 
-s16 Queue_GetCount(RingBufferQueue* queue)
+int Queue_GetCount(RingBufferQueue* queue)
 {
     return queue->count;
 }
