@@ -274,11 +274,11 @@ typedef struct SynthVoice
     u32 immediateMixValue0;
     u32 immediateMixValue1;
     u8 unk124[0x200];
-    u8 studioMap[0x40];
+    u8 trackVolumeGroup[0x40];
     u8 unk364[0xB00];
     SynthCallbackLink* callbackLists[3];
     SynthProgramState prgState[0x10];
-    u8 currentStudio;
+    u8 defaultVolumeGroup;
     u8 unkEB1[0x1B];
     SynthPendingUpdate pendingUpdate;
     u8 pendingStartActive;
@@ -329,6 +329,7 @@ extern u8 gSynthDelayBucketCursor;
 extern SynthCallbackLink* gSynthFreeCallbacks;
 extern SynthVoice* gSynthCurrentVoice;
 extern u32 gSynthCurrentVoiceSlotIndex;
+extern u8 gSynthCurrentFadeOutState;
 /* WRONG-SYMBOL IMPORT BUG: lbl_803DEEE8 is the 0.2f constant in the .sdata2
  * float pool (0x3E4CCCCD; intersect.c reads it as f32 correctly). The
  * synth_control.c list-walk that indexes it as a voice array needs a
@@ -361,7 +362,7 @@ extern const f32 sSynthFadeTimeScale;
 
 #define sSynthFadeScale lbl_803E8430
 void synthInitVoices(void);
-void synthSetStudioChannelScale(s32 value, u8 studioIndex, u8 channelIndex);
+void synthSetStudioChannelScale(int value, u8 studioIndex, u8 channelIndex);
 int synthGetVoiceSlotChannelScale(McmdVoiceState *slot);
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel);
 void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event);

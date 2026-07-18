@@ -52,7 +52,7 @@ void snd_handle_irq(void)
     {
         hwIRQEnterCritical();
         hwSetTimeOffset(timeOffset);
-        fn_8026EC44(0x100);
+        seqHandle(0x100);
         synthHandle(0x100);
         hwIRQLeaveCritical();
     }

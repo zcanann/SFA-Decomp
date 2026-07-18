@@ -4,8 +4,8 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 
-void fn_8026EC44(u32 deltaTime);
-void fn_8026F30C(void);
+void seqHandle(u32 deltaTime);
+void seqInit(void);
 void synthSetStudioChannelScale(int value, u8 bank, u8 key);
 int synthGetVoiceSlotChannelScale(McmdVoiceState *state);
 void fn_8026F5B8(McmdVoiceState *state);

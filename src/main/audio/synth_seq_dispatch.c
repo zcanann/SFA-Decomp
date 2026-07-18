@@ -44,7 +44,6 @@ typedef struct
 #define SEQ_TIME_EMPTY 0x7fffffff
 
 extern u8 synthITDDefault[];
-extern u8 lbl_803DE224;
 
 static inline void seqInitStream(SynthSequenceStream* stream, u32 streamDataOffset)
 {
@@ -236,7 +235,7 @@ SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 voice
                         u8 vt;
                         u8 tid;
 
-                        if (lbl_803DE224 != 0)
+                        if (gSynthCurrentFadeOutState != 0)
                         {
                             mod = -1;
                         }
@@ -251,7 +250,7 @@ SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 voice
                                  synthStartSound(macId, sv2->prgState[midi].priority,
                                                  sv2->prgState[midi].maxVoices, key & 0xff,
                                                  velocity & 0xff, 0x40, midi, gSynthCurrentVoiceSlotIndex & 0xff,
-                                                 voice, 0, tid, sv2->studioMap[tid], mod, vt,
+                                                 voice, 0, tid, sv2->trackVolumeGroup[tid], mod, vt,
                                                  synthITDDefault[vt * 2])) == 0xFFFFFFFF)
                         {
                             if (note->next != 0)

@@ -94,10 +94,10 @@ u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u3
     BuildTransTab(nseq->normTrans, nseq->normtab);
     BuildTransTab(nseq->drumTrans, nseq->drumtab);
 
-    nseq->currentStudio = seqId + 23;
+    nseq->defaultVolumeGroup = seqId + 23;
     for (i = 0; i < 64; i++)
     {
-        nseq->studioMap[i] = nseq->currentStudio;
+        nseq->trackVolumeGroup[i] = nseq->defaultVolumeGroup;
     }
 
     nseq->defStudio = studio;
@@ -109,7 +109,7 @@ u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u3
         {
             nseq->section[i].speed = 0x100;
         }
-        synthVolume(0x7F, 0, nseq->currentStudio, 0, -1);
+        synthVolume(0x7F, 0, nseq->defaultVolumeGroup, 0, -1);
     }
     else
     {
@@ -143,7 +143,7 @@ u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u3
         {
             for (i = 0; i < para->numSeqVolumeDefinitions; i++)
             {
-                nseq->studioMap[para->seqVolumeDefinitions[i].track] =
+                nseq->trackVolumeGroup[para->seqVolumeDefinitions[i].track] =
                     para->seqVolumeDefinitions[i].volumeGroup;
                 synthSetMusicVolumeType(para->seqVolumeDefinitions[i].volumeGroup, 0);
             }
@@ -151,7 +151,7 @@ u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u3
 
         if (para->flags & 4)
         {
-            synthVolume(para->volume.target, para->volume.time, nseq->currentStudio, 0, -1);
+            synthVolume(para->volume.target, para->volume.time, nseq->defaultVolumeGroup, 0, -1);
             for (i = 0; i < para->numFaded; i++)
             {
                 synthVolume(para->volume.target, para->volume.time, para->faded[i], 0, -1);

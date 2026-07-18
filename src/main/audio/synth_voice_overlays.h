@@ -12,7 +12,7 @@ typedef struct SynthVoiceProgramState
 typedef struct SynthVoiceTrackRuntime
 {
     SynthTrackCursor trackCursors[SYNTH_SEQUENCE_TRACK_COUNT];
-    u8 studioMap[SYNTH_SEQUENCE_TRACK_COUNT];
+    u8 trackVolumeGroup[SYNTH_SEQUENCE_TRACK_COUNT];
     SynthSequenceState sequenceStates[SYNTH_SEQUENCE_TRACK_COUNT];
 } SynthVoiceTrackRuntime;
 

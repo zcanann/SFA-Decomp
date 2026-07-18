@@ -9,8 +9,8 @@
 #undef SYNTH_VOICE_RUNTIME
 #define SYNTH_VOICE_RUNTIME() (&lbl_803AF550)
 
-#define SYNTH_VOICE_STUDIO_MAP_OFFSET ((u32) & (((SynthVoice*)0)->studioMap))
-#define SYNTH_RUNTIME_VOICES_OFFSET   ((u32) & (((SynthVoiceRuntime*)0)->voices))
+#define SYNTH_VOICE_TRACK_VOLUME_GROUP_OFFSET ((u32) & (((SynthVoice*)0)->trackVolumeGroup))
+#define SYNTH_RUNTIME_VOICES_OFFSET            ((u32) & (((SynthVoiceRuntime*)0)->voices))
 
 #define SYNTH_START_FLAG_VOLUME_MODE2  0x01
 #define SYNTH_START_FLAG_REUSE_HANDLE  0x02
@@ -68,17 +68,19 @@ resolved:
         if ((studioIndex & SYNTH_HANDLE_QUEUED_FLAG) == 0)
         {
             voiceBase = (u8*)runtime + studioIndex * sizeof(SynthVoice);
-            synthVolume(volume, time, ((SynthVoice*)(voiceBase + SYNTH_RUNTIME_VOICES_OFFSET))->currentStudio, mode,
-                        pubHandle);
+            synthVolume(volume, time,
+                        ((SynthVoice*)(voiceBase + SYNTH_RUNTIME_VOICES_OFFSET))->defaultVolumeGroup,
+                        mode, pubHandle);
             voice = (SynthVoice*)(voiceBase + SYNTH_RUNTIME_VOICES_OFFSET);
             voiceBytes = (u8*)voice;
             voiceCursor = (u8*)voice;
             voiceIndex = 0;
             do
             {
-                if (voiceBytes[SYNTH_VOICE_STUDIO_MAP_OFFSET] != voice->currentStudio)
+                if (voiceBytes[SYNTH_VOICE_TRACK_VOLUME_GROUP_OFFSET] != voice->defaultVolumeGroup)
                 {
-                    synthVolume(volume, time, voiceCursor[SYNTH_VOICE_STUDIO_MAP_OFFSET], 0, SYNTH_HANDLE_INVALID);
+                    synthVolume(volume, time, voiceCursor[SYNTH_VOICE_TRACK_VOLUME_GROUP_OFFSET], 0,
+                                SYNTH_HANDLE_INVALID);
                 }
                 voiceBytes++;
                 voiceCursor++;

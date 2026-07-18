@@ -247,7 +247,7 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, u32 ar
         u8 voiceCountSnapshot = SYNTH_CONFIGURATION->voiceCount;
         synthResetLoadedGroupCount();
         dataInit(0, aramSize);
-        fn_8026F30C();
+        seqInit();
         synthIdleWaitActive = 0;
         synthInit(SND_DEFAULT_SAMPLE_RATE, voiceCountSnapshot);
         streamInit();
