@@ -1647,8 +1647,8 @@ int fn_8003BB84(f32* m, f32* out)
     v3.z = m[10];
 
     if ((v1.x == lbl_803DEA04 && v1.y == lbl_803DEA04 && v1.z == lbl_803DEA04) ||
-        (v2.x == lbl_803DEA04 && v2.y == lbl_803DEA04 && v2.z == lbl_803DEA04) ||
-        (v3.x == lbl_803DEA04 && v3.y == lbl_803DEA04 && v3.z == lbl_803DEA04))
+        (v2.x == 0.0f && v2.y == 0.0f && v2.z == 0.0f) ||
+        (v3.x == 0.0f && v3.y == 0.0f && v3.z == 0.0f))
     {
         return 0;
     }
