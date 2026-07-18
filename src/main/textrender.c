@@ -1314,10 +1314,9 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = (u16*)(lbl_803399C0 + gGameTextBufferIndex * 0xc);
-        gGameTextLastEntry = (u8*)entry;
-        gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
-        *entry = 0xffff;
+        gGameTextLastEntry = lbl_803399C0 + gGameTextBufferIndex * 0xc;
+        gCurTextBuffer = *(int*)*(int**)(gGameTextLastEntry + 8);
+        *(u16*)gGameTextLastEntry = 0xffff;
         gGameTextFallbackBuf = (int)(lbl_803399A0 + gGameTextBufferIndex * 4);
         switch (gameTextFonts->mode)
         {
@@ -1345,10 +1344,9 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = (u16*)(lbl_803399C0 + gGameTextBufferIndex * 0xc);
-        gGameTextLastEntry = (u8*)entry;
-        gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
-        *entry = 0xffff;
+        gGameTextLastEntry = lbl_803399C0 + gGameTextBufferIndex * 0xc;
+        gCurTextBuffer = *(int*)*(int**)(gGameTextLastEntry + 8);
+        *(u16*)gGameTextLastEntry = 0xffff;
         gGameTextFallbackBuf = (int)(lbl_803399A0 + gGameTextBufferIndex * 4);
         sprintf((char*)gCurTextBuffer, strings + 0xefc, textId,
                 sMapDirectoryNameTable[(int)curGameTextDir]);
@@ -1362,10 +1360,9 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = (u16*)(lbl_803399C0 + gGameTextBufferIndex * 0xc);
-        gGameTextLastEntry = (u8*)entry;
-        gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
-        *entry = 0xffff;
+        gGameTextLastEntry = lbl_803399C0 + gGameTextBufferIndex * 0xc;
+        gCurTextBuffer = *(int*)*(int**)(gGameTextLastEntry + 8);
+        *(u16*)gGameTextLastEntry = 0xffff;
         gGameTextFallbackBuf = (int)(lbl_803399A0 + gGameTextBufferIndex * 4);
         sprintf((char*)gCurTextBuffer, strings + 0xf10, textId, phraseIndex);
         return gGameTextLastEntry;
@@ -1388,10 +1385,9 @@ void* gameTextGetStr(int textId)
         {
             gGameTextBufferIndex = 0;
         }
-        entry = lbl_803399C0 + gGameTextBufferIndex * 0xc;
-        gGameTextLastEntry = entry;
-        gCurTextBuffer = *(int*)*(int**)(entry + 8);
-        *(u16*)entry = 0xffff;
+        gGameTextLastEntry = lbl_803399C0 + gGameTextBufferIndex * 0xc;
+        gCurTextBuffer = *(int*)*(int**)(gGameTextLastEntry + 8);
+        *(u16*)gGameTextLastEntry = 0xffff;
         gGameTextFallbackBuf = (int)(lbl_803399A0 + gGameTextBufferIndex * 4);
         switch (gameTextFonts->mode)
         {
@@ -1437,17 +1433,10 @@ void* gameTextGet(int textId)
         {
             gGameTextBufferIndex = 0;
         }
-        {
-            u8* slotBase = gameTextBase + gGameTextBufferIndex * 0xc;
-            entry = (u16*)(slotBase + 0x40);
-        }
-        gGameTextLastEntry = (u8*)entry;
-        gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
-        *entry = 0xffff;
-        {
-            u8* fb = gameTextBase + gGameTextBufferIndex * 4;
-            gGameTextFallbackBuf = (int)(fb + 0x20);
-        }
+        gGameTextLastEntry = gameTextBase + gGameTextBufferIndex * 0xc + 0x40;
+        gCurTextBuffer = *(int*)*(int**)(gGameTextLastEntry + 8);
+        *(u16*)gGameTextLastEntry = 0xffff;
+        gGameTextFallbackBuf = (int)(gameTextBase + gGameTextBufferIndex * 4 + 0x20);
 
         switch (gameTextFonts->mode)
         {
@@ -1507,17 +1496,10 @@ void* gameTextGet(int textId)
     {
         gGameTextBufferIndex = 0;
     }
-    {
-        u8* slotBase = gameTextBase + gGameTextBufferIndex * 0xc;
-        entry = (u16*)(slotBase + 0x40);
-    }
-    gGameTextLastEntry = (u8*)entry;
-    gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
-    *entry = 0xffff;
-    {
-        u8* fb = gameTextBase + gGameTextBufferIndex * 4;
-        gGameTextFallbackBuf = (int)(fb + 0x20);
-    }
+    gGameTextLastEntry = gameTextBase + gGameTextBufferIndex * 0xc + 0x40;
+    gCurTextBuffer = *(int*)*(int**)(gGameTextLastEntry + 8);
+    *(u16*)gGameTextLastEntry = 0xffff;
+    gGameTextFallbackBuf = (int)(gameTextBase + gGameTextBufferIndex * 4 + 0x20);
     sprintf((char*)gCurTextBuffer, lbl_803DB3D4, textId, sMapDirectoryNameTable[(int)curGameTextDir]);
     *(u16*)gGameTextLastEntry = textId;
     *(f32*)gGameTextFallbackBuf = lbl_803DE704;
