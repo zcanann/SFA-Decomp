@@ -434,7 +434,8 @@ void Obj_SetModelColorFadeRecursive(GameObject* obj, int frames, u8 red, u8 gree
     i = 0;
     while (i < obj->childCount)
     {
-        Obj_SetModelColorFadeRecursive((GameObject*)obj->childObjs[i], frames, red, green, blue, startAtHalf);
+        ((void (*)(GameObject*, int, u8, u8, u8, u8))Obj_SetModelColorFadeRecursive)(
+            (GameObject*)obj->childObjs[i], frames, red, green, blue, startAtHalf);
         i++;
     }
 }
@@ -500,7 +501,8 @@ void Obj_StartModelFadeIn(GameObject* obj, int frames)
         if (obj->fadeCounter < fadeLimit)
         {
             obj->fadeCounter++;
-            Obj_SetModelColorFadeRecursive(obj, 0x1e, 0xa0, 0xff, 0xff, 0);
+            ((void (*)(GameObject*, int, u8, u8, u8, u8))Obj_SetModelColorFadeRecursive)(obj, 0x1e, 0xa0, 0xff, 0xff,
+                                                                                        0);
         }
         if (obj->fadeCounter == fadeLimit)
         {
@@ -636,7 +638,7 @@ void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags)
     }
     else
     {
-        Obj_BuildWorldTransformMatrix(parent, parentMtx, 1);
+        ((void (*)(GameObject*, f32*, int))Obj_BuildWorldTransformMatrix)(parent, parentMtx, 1);
         PSMTXConcat((f32*)parentMtx, mtx, mtx);
     }
 }
