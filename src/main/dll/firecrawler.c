@@ -919,7 +919,7 @@ void crawler_updateC(s16* obj, u8* state)
             }
             if ((((FCVars*)state)->moveStartFlags & 8) == 0 && (((FCVars*)state)->flagsD & 0x10) == 0)
             {
-                fn_8014CF7C((GameObject*)obj, (int)state, base->posX, base->posZ, 0xf, 0);
+                baddieTurnTowardPoint((GameObject*)obj, (int)state, base->posX, base->posZ, 0xf, 0);
             }
         }
         else if ((flags & 0xc0000000) != 0)
@@ -1140,7 +1140,7 @@ void crawler_updateB(s16* obj, u8* state)
 
     if ((((FCVars*)state)->moveStartFlags & 8) == 0 && (((FCVars*)state)->flagsD & 0x10) == 0)
     {
-        fn_8014CF7C((GameObject*)obj, (int)state,
+        baddieTurnTowardPoint((GameObject*)obj, (int)state,
                     ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                     ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 0x1e, 0);
     }
@@ -1272,7 +1272,7 @@ void crawler_update(int* obj, u8* state)
 
     if ((((FCVars*)state)->moveStartFlags & 8) == 0 && (((FCVars*)state)->flagsD & 0x10) == 0)
     {
-        fn_8014CF7C((GameObject*)obj, (int)state,
+        baddieTurnTowardPoint((GameObject*)obj, (int)state,
                     ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                     ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 0x1e, 0);
     }

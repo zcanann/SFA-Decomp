@@ -1394,7 +1394,7 @@ void fn_8014CD1C(GameObject* node, void* sub, int divisor, f32 fa, f32 fb, u8 us
     }
 }
 
-void fn_8014CF7C(GameObject* node, int state, f32 targetX, f32 targetZ, int divisor, int angleBias)
+void baddieTurnTowardPoint(GameObject* node, int state, f32 targetX, f32 targetZ, int divisor, int angleBias)
 {
     s32 delta;
     f32 dt;

@@ -398,7 +398,7 @@ void fn_80150910(int* obj, u8* state)
                 *(f32*)(state + 0x310) = lbl_803E2740;
             }
         }
-        fn_8014CF7C((GameObject*)obj, (int)state, path->posX, path->posZ, 0xf, 0);
+        baddieTurnTowardPoint((GameObject*)obj, (int)state, path->posX, path->posZ, 0xf, 0);
     }
     else
     {
@@ -539,7 +539,7 @@ void fn_80150EDC(GameObject* obj, void* state)
     if ((((SeqObj11EState*)state)->animFlags & 8) == 0)
     {
         void* tracked = ((BaddieState*)state)->trackedObj;
-        fn_8014CF7C((GameObject*)obj, (int)state, ((GameObject*)tracked)->anim.localPosX,
+        baddieTurnTowardPoint((GameObject*)obj, (int)state, ((GameObject*)tracked)->anim.localPosX,
                     ((GameObject*)tracked)->anim.localPosZ, 0xf, 0);
     }
 }

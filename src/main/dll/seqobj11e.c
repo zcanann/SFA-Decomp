@@ -276,7 +276,7 @@ void fn_80152514(int* obj, u8* state)
         step = (s8) * ((u8*)def + 0x2a);
         if (step == 0)
         {
-            fn_8014CF7C((GameObject*)obj, (int)state, path->posX, path->posZ, 0xf, 0);
+            baddieTurnTowardPoint((GameObject*)obj, (int)state, path->posX, path->posZ, 0xf, 0);
         }
         else if (((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW)
         {
@@ -290,7 +290,7 @@ void fn_80152514(int* obj, u8* state)
                 step = -spd;
             }
             ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX - step;
-            fn_8014CF7C((GameObject*)obj, (int)state, path->posX, path->posZ, 0xf, 0);
+            baddieTurnTowardPoint((GameObject*)obj, (int)state, path->posX, path->posZ, 0xf, 0);
             if ((int)(10.0f * path->tangentY) >= 0)
             {
                 step = spd;

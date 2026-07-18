@@ -111,7 +111,7 @@ void dll_06_func0A(int* a, int* b, int* c, f32* scale);
 void dll_06_func0E(void);
 void dll_06_func0D(void);
 void sky2_initialise(void);
-void fn_8008EDE8(f32* out);
+void lightningGetStartPos(f32* out);
 int fn_8008B71C(int slot);
 void skyTimeToDayHourMinute(f32 time, s16* days, s16* hours, s16* minutes);
 void skyGetClockTime(f32* time);

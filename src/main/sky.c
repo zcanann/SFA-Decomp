@@ -1503,11 +1503,11 @@ void sky2_run(void)
             }
             if (sa <= lbl_803DF108)
             {
-                fn_8005CECC(1);
+                setStarsHidden(1);
             }
             else
             {
-                fn_8005CECC(0);
+                setStarsHidden(0);
             }
             p = *pp;
             flags = *(u16*)&((GameObject*)p)->anim.rotZ;

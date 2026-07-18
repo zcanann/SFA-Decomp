@@ -64,13 +64,15 @@ typedef struct
 
 extern u32 renderFlags;
 /* Global renderFlags bits (decoded by the accessor fns below: shouldDrawShadows,
- * shouldDrawClouds, getDrawDistanceFlag, isOvercast, setPendingMapLoad). */
+ * shouldDrawClouds, getDrawDistanceFlag, isOvercast, setPendingMapLoad,
+ * setStarsHidden). */
 #define RENDERFLAG_WIDESCREEN      0x8
 #define RENDERFLAG_DRAW_CLOUDS     0x10
 #define RENDERFLAG_DRAW_SHADOWS    0x80
 #define RENDERFLAG_PENDING_MAP_LOAD 0x1000
 #define RENDERFLAG_DRAW_DISTANCE   0x10000
 #define RENDERFLAG_OVERCAST        0x40000
+#define RENDERFLAG_HIDE_STARS      0x80000
 
 extern f32 lbl_803DEBF8;
 extern f32 lbl_803DEBFC;
@@ -823,7 +825,7 @@ void sceneDraw(void)
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
     t = 0;
-    if ((renderFlags & 0x40) != 0 && (renderFlags & 0x80000) == 0)
+    if ((renderFlags & 0x40) != 0 && (renderFlags & RENDERFLAG_HIDE_STARS) == 0)
     {
         t = 1;
     }
@@ -1220,9 +1222,9 @@ void setIsOvercast(int v)
     renderFlags = (v != 0) ? (renderFlags | RENDERFLAG_OVERCAST) : (renderFlags & ~RENDERFLAG_OVERCAST);
 }
 
-void fn_8005CECC(int v)
+void setStarsHidden(int v)
 {
-    renderFlags = (v != 0) ? (renderFlags | 0x80000) : (renderFlags & ~0x80000);
+    renderFlags = (v != 0) ? (renderFlags | RENDERFLAG_HIDE_STARS) : (renderFlags & ~RENDERFLAG_HIDE_STARS);
 }
 
 void setDrawCloudsAndLights(int v)

@@ -16,7 +16,7 @@ void fuzzRenderFn_800412dc(int* obj);
 void renderResetFn_8003fc60(void);
 void set_shadowFlag_803dcc29(u8 enabled);
 void objRenderFn_80041018(GameObject* obj);
-void fn_800412B8(u8 red, u8 green, u8 blue);
+void objSetOverrideColor(u8 red, u8 green, u8 blue);
 void objRenderModel(GameObject* obj);
 void objSetMtxFn_800412d4(u32 mtx);
 void modelInitMtxs(int modelFile, int model);

@@ -374,7 +374,7 @@ void fn_8014FF20(int obj, int state)
 void fn_8014FF24(int obj, int state)
 {
     f32* pos = (f32*)((BaddieState*)state)->trackedObj;
-    fn_8014CF7C((GameObject*)obj, state, pos[3], pos[5], 0xf, 0);
+    baddieTurnTowardPoint((GameObject*)obj, state, pos[3], pos[5], 0xf, 0);
 }
 
 void battleDroidInit(int unused, char* p)

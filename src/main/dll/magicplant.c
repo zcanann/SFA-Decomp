@@ -106,7 +106,7 @@ void fn_80153040(GameObject* obj, int state)
             }
         }
 
-        fn_8014CF7C(obj, state, curve->posX, curve->posZ, 0xf, 0);
+        baddieTurnTowardPoint(obj, state, curve->posX, curve->posZ, 0xf, 0);
 
         vec[0] = curve->posX - (obj)->anim.localPosX;
         vec[1] = curve->posY - (obj)->anim.localPosY;

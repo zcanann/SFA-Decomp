@@ -176,7 +176,7 @@ void fn_801F3F18(GameObject* obj)
 
     /* hold the blend at full while spirit-restore progress is running,
        then decay it toward 0. */
-    if (fn_8008ED88() > 0.0f)
+    if (lightningGetRemainingFraction() > 0.0f)
     {
         gWmLevelControlBlendHold = 1.0f;
         gWmLevelControlBlendFactor = 1.0f;

@@ -24,7 +24,7 @@ void doNothing_8005D14C(int arg0, int arg1);
 void titleScreenFn_8005cdd4(int enabled);
 void setIsOvercast(int value);
 
-void fn_8005CECC(int v);
+void setStarsHidden(int v);
 
 void* mapGetBlockIdx(int layer);
 

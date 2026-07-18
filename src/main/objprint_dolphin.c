@@ -2442,7 +2442,7 @@ void objRenderFn_80041018(GameObject* obj)
 
 
 
-void fn_800412B8(u8 r, u8 g, u8 b)
+void objSetOverrideColor(u8 r, u8 g, u8 b)
 {
     gObjOverrideColorPending = 1;
     gObjOverrideColor[0] = r;

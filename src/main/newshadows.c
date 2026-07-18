@@ -1012,7 +1012,7 @@ void allocLotsOfTextures(void)
 
 extern NewShadowEntry gNewShadowEntries[0x294 / sizeof(NewShadowEntry)];
 
-void fn_8006B830(ShadowSortEntry* arr, int count);
+void sortShadowEntriesDescending(ShadowSortEntry* arr, int count);
 
 void renderShadows(int unused0, int unused1, int unused2)
 {
@@ -1037,7 +1037,7 @@ void renderShadows(int unused0, int unused1, int unused2)
     if (gNewShadowCasterCount == 0)
         return;
     Camera_DisableViewYOffset();
-    fn_8006B830((ShadowSortEntry*)shadowData->casters, gNewShadowCasterCount);
+    sortShadowEntriesDescending((ShadowSortEntry*)shadowData->casters, gNewShadowCasterCount);
     Camera_SetCurrentViewIndex(1);
     slot = Camera_GetCurrentViewSlot();
     savedFovY = Camera_GetFovY();
@@ -1321,7 +1321,7 @@ void renderShadows(int unused0, int unused1, int unused2)
     Camera_EnableViewYOffset();
 }
 
-void fn_8006B830(ShadowSortEntry* arr, int count)
+void sortShadowEntriesDescending(ShadowSortEntry* arr, int count)
 {
     int gap = 1;
     int i, j;

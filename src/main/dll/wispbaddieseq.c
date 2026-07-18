@@ -194,7 +194,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     if (((HagabonAnimState*)state)->moveHoldTimer != 0.0f)
     {
         GameObject* pos = (GameObject*)((BaddieState*)state)->trackedObj;
-        fn_8014CF7C(obj, state, pos->anim.localPosX, pos->anim.localPosZ, 0xf, 0);
+        baddieTurnTowardPoint(obj, state, pos->anim.localPosX, pos->anim.localPosZ, 0xf, 0);
         if (((BaddieState*)state)->unk308 > 0.0166f)
         {
             ((BaddieState*)state)->unk308 = ((BaddieState*)state)->unk308 - 0.005f;

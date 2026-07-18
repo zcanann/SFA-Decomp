@@ -88,7 +88,7 @@ void fn_8014C5C0(GameObject* obj);
 void fn_8014C63C(GameObject* obj);
 u8 fn_8014C4D8(GameObject* obj);
 void fn_8014C540(GameObject* obj, int* outIdx, f32* outA, f32* outB);
-void fn_8014CF7C(GameObject* obj, int state, f32 targetX, f32 targetZ, int divisor, int angleBias);
+void baddieTurnTowardPoint(GameObject* obj, int state, f32 targetX, f32 targetZ, int divisor, int angleBias);
 f32 enemy_getHealthFraction(GameObject* obj);
 f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
                                          f32 maxVel, f32 drag);

@@ -53,7 +53,7 @@ f32 gSnowFlakeWaveValue;
 s16 gSnowFlakeWaveAngle;
 int gNewCloudFlashRotAngle;
 ModelLightStruct* gNewCloudModelLight;
-LightningEffect* lbl_803DD19C;
+LightningEffect* gActiveLightning;
 u8 gNewCloudBlizzardActive;
 u8 lbl_803DD19A;
 u8 lbl_803DD199;
@@ -130,13 +130,13 @@ extern const f32 lbl_803DF1CC;
 
 void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int* seed, int depth, int flags);
 
-f32 fn_8008ED88(void)
+f32 lightningGetRemainingFraction(void)
 {
     LightningEffect* state;
     u16 totalFrames;
     u16 currentFrame;
 
-    state = lbl_803DD19C;
+    state = gActiveLightning;
     if (state != NULL)
     {
         totalFrames = state->lifetime;
@@ -146,18 +146,18 @@ f32 fn_8008ED88(void)
     return lbl_803DF1A0;
 }
 
-void fn_8008EDE8(f32* out)
+void lightningGetStartPos(f32* out)
 {
     LightningEffect* state;
 
-    state = lbl_803DD19C;
+    state = gActiveLightning;
     if (state == NULL)
     {
         return;
     }
     out[0] = state->start[0];
-    out[1] = lbl_803DD19C->start[1];
-    out[2] = lbl_803DD19C->start[2];
+    out[1] = gActiveLightning->start[1];
+    out[2] = gActiveLightning->start[2];
 }
 
 void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
@@ -528,9 +528,9 @@ extern const f32 lbl_803DF1DC;
 
 void lightningRenderActive(void)
 {
-    if (lbl_803DD19C != NULL)
+    if (gActiveLightning != NULL)
     {
-        lightningRender(lbl_803DD19C);
+        lightningRender(gActiveLightning);
     }
 }
 void snowCloudBuildBoxVerts(f32* out, f32 height, f32 scale);
@@ -1027,7 +1027,7 @@ void snowReposSnowCloud(int cloudId)
         (f32)((NewCloud*)gNewClouds[i])->lightningTimer - timeDelta;
     q = gNewClouds[cloudId];
     if (((NewCloud*)q)->cloudType == 4 && (((NewCloud*)q)->lightningFlags & 0x38) != 0 &&
-        ((NewCloud*)q)->lightningTimer <= 0 && ((NewCloud*)q)->stationary == 0 && lbl_803DD19C == 0)
+        ((NewCloud*)q)->lightningTimer <= 0 && ((NewCloud*)q)->stationary == 0 && gActiveLightning == 0)
     {
         if (((NewCloud*)q)->followCamera != 0 && cam != NULL)
         {
@@ -1085,7 +1085,7 @@ void snowReposSnowCloud(int cloudId)
         )
         -
             gNewCloudLightningForwardDist * fwd[2];
-        lbl_803DD19C = lightningCreate((const Vec3f*)from, (const Vec3f*)to, gNewCloudLightningRadius,
+        gActiveLightning = lightningCreate((const Vec3f*)from, (const Vec3f*)to, gNewCloudLightningRadius,
                                        lbl_803DF1BC, 0xf, 0xc0, 0);
         {
             Sfx_PlayAtPositionFromObjectIntFirstLegacy(0, from[0], from[1], from[2],
@@ -1793,13 +1793,13 @@ void dll_07_func06(void)
     {
         gNewCloudOvercastFadeRate = lbl_803DF250;
     }
-    if (lbl_803DD19C != NULL)
+    if (gActiveLightning != NULL)
     {
-        lbl_803DD19C->timer += 1;
-        if (lbl_803DD19C->timer >= lbl_803DD19C->lifetime)
+        gActiveLightning->timer += 1;
+        if (gActiveLightning->timer >= gActiveLightning->lifetime)
         {
-            mm_free(lbl_803DD19C);
-            lbl_803DD19C = NULL;
+            mm_free(gActiveLightning);
+            gActiveLightning = NULL;
         }
     }
     t = gNewCloudScrollPhaseA + lbl_803DF254 * timeDelta;

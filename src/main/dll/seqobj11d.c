@@ -239,7 +239,7 @@ void fn_8015165C(GameObject* obj, u8* state)
         }
         if ((state[0x323] & 8) == 0)
         {
-            fn_8014CF7C(obj, (int)state,
+            baddieTurnTowardPoint(obj, (int)state,
                         ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosX,
                         ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosZ, 10, 0);
         }

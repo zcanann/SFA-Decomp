@@ -390,12 +390,12 @@ void snowworm_update(int* obj, u8* state)
                 r * mathSinf(angle) + *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8);
             ((GameObject*)obj)->anim.localPosZ =
                 r * mathCosf(angle) + ((GameObject*)((GameObject*)obj)->anim.placementData)->anim.localPosY;
-            fn_8014CF7C((GameObject*)obj, (int)state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+            baddieTurnTowardPoint((GameObject*)obj, (int)state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                         ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 1, 0);
         }
     }
 
-    fn_8014CF7C((GameObject*)obj, (int)state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+    baddieTurnTowardPoint((GameObject*)obj, (int)state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                 ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ,
                 lbl_803DBD30[((FCVars*)state)->turnDelta], 0);
     crawler_playReactionEffects(obj, (int*)state);

@@ -132,7 +132,7 @@ void fn_80153E0C(GameObject* obj, int state)
         {
             if ((obj)->anim.currentMove == 0)
             {
-                fn_8014CF7C(obj, state, curve->posX, curve->posZ, 0x3c, 0);
+                baddieTurnTowardPoint(obj, state, curve->posX, curve->posZ, 0x3c, 0);
             }
             if (((WeevilState*)state)->approachTimer > lbl_803E294C)
             {
@@ -200,7 +200,7 @@ void fn_801540A0(int obj, int state)
     }
     if (((GameObject*)obj)->anim.currentMove != 3)
     {
-        fn_8014CF7C((GameObject*)obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+        baddieTurnTowardPoint((GameObject*)obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                     ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 0x3c, 0);
     }
     else
@@ -227,7 +227,7 @@ void fn_801540A0(int obj, int state)
              (Baddie_SetMove(obj, state, 3, 0.375f, 0, 3), lbl_803E294C == ((WeevilState*)state)->retreatTimer))
     {
         ((WeevilState*)state)->retreatTimer = 50.0f;
-        fn_8014CF7C((GameObject*)obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+        baddieTurnTowardPoint((GameObject*)obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                     ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 1, 0);
         Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_25d);
     }

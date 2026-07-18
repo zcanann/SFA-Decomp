@@ -104,7 +104,7 @@ void fn_80154870(GameObject* obj, int* state)
         (obj)->anim.velocityX = fval;
         (obj)->anim.velocityZ = fval;
         curve = (RomCurveWalker*)state[0xa7];
-        fn_8014CF7C(obj, (int)state, *(f32*)((u8*)curve + 0xc), *(f32*)((u8*)curve + 0x14), 10, 0);
+        baddieTurnTowardPoint(obj, (int)state, *(f32*)((u8*)curve + 0xc), *(f32*)((u8*)curve + 0x14), 10, 0);
     }
     else
     {

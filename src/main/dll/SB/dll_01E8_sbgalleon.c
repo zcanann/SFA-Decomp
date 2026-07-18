@@ -172,7 +172,7 @@ void fn_801E1588(int obj, int state)
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x29, 0x4b, 0xa9);
     skyFn_80089710Legacy(SBGALLEON_SKY_LIGHT_SLOT, 1, 0);
-    if (fn_8008ED88() > *(f32*)&lbl_803E56CC)
+    if (lightningGetRemainingFraction() > *(f32*)&lbl_803E56CC)
     {
         lbl_803DDC24 = lbl_803E57A4;
         lbl_803DDC28 = lbl_803E57A4;

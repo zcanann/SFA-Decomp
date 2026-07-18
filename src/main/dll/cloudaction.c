@@ -10,8 +10,8 @@
  * renderClouds() positions each live layer to the current camera view
  * slot (or to the gCloudOverride* position when one is set), draws it via
  * objRender, and additionally draws a procedural sun/glare quad through
- * the GX FIFO when the sky's cloud factor (fn_8008ED88) is above
- * threshold. cloudaction_update() re-reads the env layer state each step,
+ * the GX FIFO when the active lightning flash's remaining-life fraction
+ * (lightningGetRemainingFraction) is above threshold. cloudaction_update() re-reads the env layer state each step,
  * (re)spawns/frees the three layers as their asset ids change, and feeds
  * the texture-scroll step; cloudaction_func05() scrolls the main layer's
  * texture each frame.
@@ -205,7 +205,7 @@ void renderClouds(int a, int b, int c, int d)
         v = view->z;
         gCloudOverrideObject->anim.worldPosZ = v;
         gCloudOverrideObject->anim.localPosZ = v;
-        fn_800412B8(ambientRed, ambientGreen, ambientBlue);
+        objSetOverrideColor(ambientRed, ambientGreen, ambientBlue);
         objRender(a, b, c, d, gCloudOverrideObject, 1);
         return;
     }
@@ -233,7 +233,7 @@ void renderClouds(int a, int b, int c, int d)
             lbl_8039AB28.upperCloudObj->anim.localPosY = view->y;
             lbl_8039AB28.upperCloudObj->anim.localPosZ = view->z;
         }
-        fn_800412B8(ambientRed, ambientGreen, ambientBlue);
+        objSetOverrideColor(ambientRed, ambientGreen, ambientBlue);
         objRender(a, b, c, d, lbl_8039AB28.upperCloudObj, 1);
     }
 
@@ -256,7 +256,7 @@ void renderClouds(int a, int b, int c, int d)
         lbl_8039AB28.mainCloudObj->anim.worldPosZ = v;
         lbl_8039AB28.mainCloudObj->anim.localPosZ = v;
         lbl_8039AB28.mainCloudObj->anim.rotY = 0;
-        fn_800412B8(ambientRed, ambientGreen, ambientBlue);
+        objSetOverrideColor(ambientRed, ambientGreen, ambientBlue);
         objRender(a, b, c, d, lbl_8039AB28.mainCloudObj, 1);
 
         fn_80060490(&clipX, &clipY, &clipW, &clipH);
@@ -275,10 +275,10 @@ void renderClouds(int a, int b, int c, int d)
         }
     }
 
-    cloudT = fn_8008ED88();
+    cloudT = lightningGetRemainingFraction();
     if (cloudT > 0.0f)
     {
-        fn_8008EDE8(pos);
+        lightningGetStartPos(pos);
         pos[0] -= playerMapOffsetX;
         pos[2] -= playerMapOffsetZ;
         viewMtx = Camera_GetViewMatrix();

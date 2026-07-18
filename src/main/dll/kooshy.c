@@ -138,7 +138,7 @@ void fn_8015383C(GameObject* obj, int state)
         if (hit != 0)
         {
             int trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
-            fn_8014CF7C(obj, state, ((GameObject*)trackedObj)->anim.localPosX,
+            baddieTurnTowardPoint(obj, state, ((GameObject*)trackedObj)->anim.localPosX,
                         ((GameObject*)trackedObj)->anim.localPosZ, 0x14, 0);
             angle = (s16)(getAngle(vec[0], vec[2]) - (u16)(obj)->anim.rotX);
             if (angle > 0x8000)
