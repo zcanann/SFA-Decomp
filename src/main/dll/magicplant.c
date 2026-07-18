@@ -92,7 +92,8 @@ void fn_80153040(GameObject* obj, int state)
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
-        if (Curve_AdvanceAlongPath(curve, ((BaddieState*)state)->pathStep) != 0 || curve->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(&curve->curve, ((BaddieState*)state)->pathStep) != 0 ||
+            curve->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
@@ -152,7 +153,7 @@ void fn_80153248(GameObject* obj, int state)
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
-        if (Curve_AdvanceAlongPath(curve, 2.0f * ((BaddieState*)state)->pathStep) != 0 ||
+        if (Curve_AdvanceAlongPath(&curve->curve, 2.0f * ((BaddieState*)state)->pathStep) != 0 ||
             curve->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)

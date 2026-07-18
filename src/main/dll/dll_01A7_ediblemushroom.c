@@ -128,7 +128,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                         dz = ((RomCurveWalker*)state)->posZ - ((GameObject*)obj)->anim.localPosZ;
                         if (dx * dx + dz * dz < rangeSq)
                         {
-                            if (Curve_AdvanceAlongPath(((RomCurveWalker*)state),
+                            if (Curve_AdvanceAlongPath(&((EdibleMushroomState*)state)->curve.curve,
                                                        ((EdibleMushroomState*)state)->curveAdvanceStep) != 0 ||
                                 ((RomCurveWalker*)state)->atSegmentEnd != 0)
                             {
@@ -231,7 +231,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                             dz = ((RomCurveWalker*)state)->posZ - ((GameObject*)obj)->anim.localPosZ;
                             if (dx * dx + dz * dz < rangeSq)
                             {
-                                if (Curve_AdvanceAlongPath(((RomCurveWalker*)state),
+                                if (Curve_AdvanceAlongPath(&((EdibleMushroomState*)state)->curve.curve,
                                                            ((EdibleMushroomState*)state)->curveAdvanceStep) != 0 ||
                                     ((RomCurveWalker*)state)->atSegmentEnd != 0)
                                 {
@@ -266,7 +266,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                             dz = ((RomCurveWalker*)state)->posZ - ((GameObject*)obj)->anim.localPosZ;
                             if (dx * dx + dz * dz < rangeSq)
                             {
-                                if (Curve_AdvanceAlongPath(((RomCurveWalker*)state),
+                                if (Curve_AdvanceAlongPath(&((EdibleMushroomState*)state)->curve.curve,
                                                            ((EdibleMushroomState*)state)->curveAdvanceStep) != 0 ||
                                     ((RomCurveWalker*)state)->atSegmentEnd != 0)
                                 {
@@ -314,7 +314,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                     dz = ((RomCurveWalker*)state)->posZ - ((GameObject*)obj)->anim.localPosZ;
                     if (dx * dx + dz * dz < rangeSq)
                     {
-                        if (Curve_AdvanceAlongPath(((RomCurveWalker*)state),
+                        if (Curve_AdvanceAlongPath(&((EdibleMushroomState*)state)->curve.curve,
                                                    ((EdibleMushroomState*)state)->curveAdvanceStep) != 0 ||
                             ((RomCurveWalker*)state)->atSegmentEnd != 0)
                         {

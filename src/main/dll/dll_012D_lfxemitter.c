@@ -103,7 +103,8 @@ void lfxemitter_update(LfxEmitterObject* obj)
 
     if ((state->flags & LFXEMITTER_FLAG_FOLLOW_CURVE) != 0)
     {
-        if ((Curve_AdvanceAlongPath(&state->curve, state->curveSpeed) != 0) || (state->curve.atSegmentEnd != 0))
+        if ((Curve_AdvanceAlongPath(&state->curve.curve, state->curveSpeed) != 0) ||
+            (state->curve.atSegmentEnd != 0))
         {
             (*gRomCurveInterface)->goNextPoint(&state->curve);
         }

@@ -99,7 +99,7 @@ void fn_8014F620(GameObject* obj, WispBaddieState* state)
     state->hoverWavePhase += (s16)(2048.0f * timeDelta);
 
     wave = 1.0f + mathSinf((gWispBaddiePi * (f32)state->pathWavePhase) / 32768.0f);
-    done = Curve_AdvanceAlongPath(curve, state->hitRadius * wave);
+    done = Curve_AdvanceAlongPath(&curve->curve, state->hitRadius * wave);
     if (((done != 0) || (curve->atSegmentEnd != gWispBaddieLastSegmentEnd)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
         ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, 400.0f, lbl_803DBC80, -1) != 0))

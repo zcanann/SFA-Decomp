@@ -316,7 +316,7 @@ void fn_80150910(int* obj, u8* state)
         {
             *(f32*)(state + 0x310) = 0.25f;
         }
-        if (Curve_AdvanceAlongPath(path, *(f32*)(state + 0x310)) != 0 || path->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(&path->curve, *(f32*)(state + 0x310)) != 0 || path->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint(path) != 0)
             {

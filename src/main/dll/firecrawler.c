@@ -810,7 +810,8 @@ void crawler_updateC(s16* obj, u8* state)
                     ((FCVars*)state)->pathSpeed = 0.25f;
                 }
             }
-            if ((Curve_AdvanceAlongPath(base, ((FCVars*)state)->pathSpeed) != 0 || base->atSegmentEnd != 0) &&
+            if ((Curve_AdvanceAlongPath(&base->curve, ((FCVars*)state)->pathSpeed) != 0 ||
+                 base->atSegmentEnd != 0) &&
                 (*gRomCurveInterface)->goNextPoint(base) != 0 &&
                 (*gRomCurveInterface)
                         ->initCurve(*(RomCurveWalker**)state, obj, 700.0f, (int*)&lbl_803DBCF0, -1) != 0)

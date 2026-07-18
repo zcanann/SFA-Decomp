@@ -2,6 +2,7 @@
 #define MAIN_DLL_OBJFSA_H_
 
 #include "ghidra_import.h"
+#include "main/curve.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/objfsa_query_api.h"
 
@@ -71,7 +72,6 @@ FUN_800dd62c(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
 void FUN_800dde2c(int param_1,int param_2);
 int RomCurve_setClosed(RomCurveWalker *state,int closed);
 u8 RomCurve_goNextPoint(RomCurveWalker *state);
-int Curve_AdvanceAlongPath(RomCurveWalker *state,f32 step);
 void RomCurve_stepClamped(RomCurveWalker *state,f32 step);
 int curveFn_800da23c(RomCurveWalker *state,void *targetCurve);
 int fn_800DA980(RomCurveWalker *state,void *fromCurve,void *toCurve,void *targetCurve);

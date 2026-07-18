@@ -829,7 +829,7 @@ void dbegg_update(GameObject* obj)
             }
             break;
         case DBEGG_MODE_CURVE_FOLLOW:
-            if (Curve_AdvanceAlongPath(&egg->curve, lbl_803E6250) != 0 || egg->curve.atSegmentEnd != 0)
+            if (Curve_AdvanceAlongPath(&egg->curve.curve, lbl_803E6250) != 0 || egg->curve.atSegmentEnd != 0)
             {
                 if ((*gRomCurveInterface)->goNextPoint(&egg->curve) != 0)
                 {

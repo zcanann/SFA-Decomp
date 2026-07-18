@@ -260,7 +260,7 @@ void fn_80152514(int* obj, u8* state)
     {
         int step;
 
-        if (Curve_AdvanceAlongPath(path, ((BaddieState*)state)->pathStep) != 0 || path->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(&path->curve, ((BaddieState*)state)->pathStep) != 0 || path->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint(path) != 0)
             {

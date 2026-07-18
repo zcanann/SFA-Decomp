@@ -79,7 +79,7 @@ void fn_80154870(GameObject* obj, int* state)
         Sfx_PlayFromObject((u32)obj, SFXTRIG_windlift_loop);
     }
     if (((state[0xb7] & 0x2000U) != 0) &&
-        ((Curve_AdvanceAlongPath(curve, 0.0f) != 0 || curve->atSegmentEnd != 0) &&
+        ((Curve_AdvanceAlongPath(&curve->curve, 0.0f) != 0 || curve->atSegmentEnd != 0) &&
          ((*gRomCurveInterface)->goNextPoint(curve) != 0)) &&
         ((*gRomCurveInterface)->initCurve((RomCurveWalker*)*state, (void*)obj, 700.0f, (int*)&lbl_803DBCD0, -1) !=
          0))

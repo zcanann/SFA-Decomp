@@ -46,15 +46,22 @@ typedef struct CurveFishSetup
 
 typedef struct CurveFishState
 {
-    u8 pad00[0x10];
-    int hasRouteEdge;
-    u8 pad14[0x54];
-    f32 targetX;
-    f32 targetY;
-    f32 targetZ;
-    u8 pad74[0x30];
-    int routeCursor;
-    u8 padA8[0x60];
+    union
+    {
+        RomCurveWalker route;
+        struct
+        {
+            u8 pad00[0x10];
+            int hasRouteEdge;
+            u8 pad14[0x54];
+            f32 targetX;
+            f32 targetY;
+            f32 targetZ;
+            u8 pad74[0x30];
+            int routeCursor;
+            u8 padA8[0x60];
+        };
+    };
     u8 mode;
     u8 pad109[3];
     f32 animTimer;
@@ -226,7 +233,7 @@ void CurveFish_update(int obj)
             i = 0;
             while (distLimit > distance && i < 5)
             {
-                Curve_AdvanceAlongPath((RomCurveWalker*)state, 2.0f);
+                Curve_AdvanceAlongPath(&state->route.curve, 2.0f);
                 distance = getXZDistance(&state->targetX, (f32*)(obj + 0xc));
                 i++;
             }
@@ -234,7 +241,7 @@ void CurveFish_update(int obj)
             if (state->hasRouteEdge != 0)
             {
                 nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(state->routeCursor, 0);
-                if (curveFn_800da23c((RomCurveWalker*)state, (*gRomCurveInterface)->getById(nextNode)) != 0)
+                if (curveFn_800da23c(&state->route, (*gRomCurveInterface)->getById(nextNode)) != 0)
                 {
                     state->mode = CURVEFISH_MODE_WAIT;
                     state->phaseTimer = 0.0f;

@@ -103,7 +103,7 @@ void RollingBarrel_update(GameObject* obj)
             f32 vmax = 3.0f;
             while (blocked == 0 && dist_sq < vmax * timeDelta)
             {
-                blocked = Curve_AdvanceAlongPath(&state->curve, state->curveSpeed);
+                blocked = Curve_AdvanceAlongPath(&state->curve.curve, state->curveSpeed);
                 if (blocked == 0 && state->curve.atSegmentEnd != 0)
                 {
                     (*gRomCurveInterface)->goNextPoint(&state->curve);
@@ -117,7 +117,7 @@ void RollingBarrel_update(GameObject* obj)
         }
         else
         {
-            blocked = Curve_AdvanceAlongPath(&state->curve, state->curveSpeed);
+            blocked = Curve_AdvanceAlongPath(&state->curve.curve, state->curveSpeed);
             if (blocked == 0 && state->curve.atSegmentEnd != 0)
             {
                 (*gRomCurveInterface)->goNextPoint(&state->curve);

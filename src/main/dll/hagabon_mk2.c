@@ -326,7 +326,8 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         {
             t = lbl_803E2C3C;
         }
-        if ((Curve_AdvanceAlongPath(base, ((BaddieState*)state)->pathStep * t) != 0 || base->atSegmentEnd != 0) &&
+        if ((Curve_AdvanceAlongPath(&base->curve, ((BaddieState*)state)->pathStep * t) != 0 ||
+             base->atSegmentEnd != 0) &&
             (*gRomCurveInterface)->goNextPoint(base) != 0 &&
             (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, lbl_803E2C44, (int*)&lbl_803DBCF8, -1) != 0)
         {

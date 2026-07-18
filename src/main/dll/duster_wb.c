@@ -231,7 +231,8 @@ void fn_8015652C(u32 obj, int state)
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
-        if (((Curve_AdvanceAlongPath(route, ((BaddieState*)state)->pathStep) != 0 || route->atSegmentEnd != 0) &&
+        if (((Curve_AdvanceAlongPath(&route->curve, ((BaddieState*)state)->pathStep) != 0 ||
+              route->atSegmentEnd != 0) &&
              (*gRomCurveInterface)->goNextPoint(route) != 0) &&
             (*gRomCurveInterface)
                     ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2AE4, (int*)&lbl_803DBCD8, -1) != 0)

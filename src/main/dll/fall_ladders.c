@@ -72,7 +72,8 @@ void fn_80154584(GameObject* obj, int state)
     hitState->suppressOutgoingHits = 0;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
-        if ((Curve_AdvanceAlongPath(curve, ((BaddieState*)state)->pathStep) != 0 || curve->atSegmentEnd != 0) &&
+        if ((Curve_AdvanceAlongPath(&curve->curve, ((BaddieState*)state)->pathStep) != 0 ||
+             curve->atSegmentEnd != 0) &&
             (*gRomCurveInterface)->goNextPoint((void*)curve) != 0 &&
             (*gRomCurveInterface)
                     ->initCurve(*(RomCurveWalker**)state, (void*)obj, 700.0f, lbl_803DBCD0, -1) != 0)

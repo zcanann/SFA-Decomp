@@ -29,6 +29,7 @@
 #include "main/dll/Hcurves_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
+#include "main/curve.h"
 #include "main/track_bbox_api.h"
 #include "main/curve_eval.h"
 #include "main/voxmaps.h"
@@ -137,8 +138,6 @@ extern f32 gFloatHalf;
 extern const f32 gRomCurveFindDistInit;
 
 extern u32 countLeadingZeros();
-extern void curvesMove(float* state);
-extern void curvesSetupMoveNetworkCurve(float* state);
 
 int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx);
 int RomCurve_getControlPointId(int curve, int exclude, int pickIdx);
@@ -692,7 +691,7 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
 
         if (state->moveNetwork != 0)
         {
-            curvesSetupMoveNetworkCurve((float*)state);
+            curvesSetupMoveNetworkCurve(&state->curve);
             if (state->phase <= lbl_803E05F0)
             {
                 state->phase = 0.01f;
@@ -726,7 +725,7 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
 
         if (state->moveNetwork != 0)
         {
-            curvesSetupMoveNetworkCurve((float*)state);
+            curvesSetupMoveNetworkCurve(&state->curve);
             if (state->phase >= lbl_803E05C8)
             {
                 state->phase = 0.99f;
@@ -746,7 +745,7 @@ void RomCurve_stepClamped(RomCurveWalker* state, f32 dt)
     {
         state->phase = 0.99f;
     }
-    Curve_AdvanceAlongPath(state, dt);
+    Curve_AdvanceAlongPath(&state->curve, dt);
 }
 
 int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
@@ -803,7 +802,7 @@ int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* tar
     state->coeffY = state->hermY;
     state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
-    curvesMove((float*)state);
+    curvesMove(&state->curve);
     return 0;
 }
 
@@ -1834,7 +1833,7 @@ int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
     state->coeffY = state->hermY;
     state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
-    curvesMove((float*)state);
+    curvesMove(&state->curve);
     return 0;
 fail:
     return 1;
@@ -1896,7 +1895,7 @@ int RomCurve_func29(RomCurveWalker* state, int pickIdx)
 
     if (state->moveNetwork != 0)
     {
-        curvesSetupMoveNetworkCurve((float*)state);
+        curvesSetupMoveNetworkCurve(&state->curve);
     }
 
     if (state->reverse != 0)
@@ -2057,7 +2056,7 @@ int RomCurve_setClosed(RomCurveWalker* state, int closed)
     state->coeffY = state->hermY;
     state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
-    curvesMove((float*)state);
+    curvesMove(&state->curve);
     state->phase = savedPhase;
     return 0;
 }
@@ -2118,7 +2117,7 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
 
     if (state->moveNetwork != 0)
     {
-        curvesSetupMoveNetworkCurve((float*)state);
+        curvesSetupMoveNetworkCurve(&state->curve);
     }
     if (state->reverse != 0)
     {
@@ -2236,7 +2235,7 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
     state->coeffY = state->hermY;
     state->coeffZ = state->hermZ;
     state->moveNetwork = 8;
-    curvesMove((float*)state);
+    curvesMove(&state->curve);
     return 0;
 fail:
     return 1;
