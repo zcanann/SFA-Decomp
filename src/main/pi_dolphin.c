@@ -1,5 +1,6 @@
 #include "dolphin/os/OSReport.h"
 #include "dolphin/PPCArch.h"
+#include "dolphin/mtx.h"
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "dolphin/gx/GXStruct.h"
@@ -922,7 +923,6 @@ extern u8 lbl_803DCCB0;
 extern void gxPerfFn_8004a77c(int);
 extern void* lbl_803DCD10;
 extern void VISetBlack(int);
-extern void C_MTXOrtho(f32* mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
 extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
 extern char* lbl_803DCD08;
@@ -931,9 +931,6 @@ extern void* externalFrameBuffer0;
 extern void* externalFrameBuffer1;
 extern u8 lbl_803DCCA7;
 extern u8 lbl_803DCD30;
-extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
-extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
-extern void PSMTXConcat(f32 dst[3][4], f32 a[3][4], f32 b[3][4]);
 extern u8 lbl_803DCD68;
 extern int lbl_803DCD80;
 extern u8 lbl_803DCD69;
@@ -946,17 +943,9 @@ extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
 extern void GXSetTevColorS10(int id, void* color);
 extern void GXSetTevKColor(int id, void* color);
 extern void mapTextureScrollGetOffset(u8 idx, f32* x, f32* y);
-extern void PSMTXIdentity(f32 m[3][4]);
-extern void PSMTXRotRad(f32 m[3][4], int axis, f32 rad);
-typedef struct
-{
-    f32 x, y, z;
-} PiVec3;
-extern void PSMTXRotAxisRad(f32 m[3][4], PiVec3* axis, f32 rad);
 extern void GXSetTevOp(int stage, int mode);
 extern f32 lbl_803DEAE4;
 extern u8 lbl_803DCD6B;
-extern void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 sS, f32 sT, f32 tS, f32 tT);
 extern f32 lbl_803DEAF4;
 extern f32 lbl_803DEAF8;
 extern f32 lbl_803DEAFC;
@@ -4401,7 +4390,7 @@ extern f32 lbl_803DEA78;
 extern f32 lbl_803DEA88;
 extern f32 lbl_803DEA8C;
 extern f32 lbl_803DEA90;
-extern f32 hudMatrix[];
+extern Mtx44 hudMatrix;
 
 void initViewport(void)
 {
@@ -6739,20 +6728,20 @@ void fn_8004E0FC(void)
     f32 m98[3][4];
     f32 m68[3][4];
     IndTexMtx23 im;
-    PiVec3 va;
-    PiVec3 vb;
-    PiVec3 vc;
-    PiVec3 vd;
+    Vec va;
+    Vec vb;
+    Vec vc;
+    Vec vd;
     Texture* tex1c;
     Texture* tex18;
     f32 rx;
     f32 ry;
     void* invView;
-    va = ((PiVec3*)&lbl_802C1D50)[4];
-    vb = ((PiVec3*)&lbl_802C1D50)[5];
-    vc = ((PiVec3*)&lbl_802C1D50)[6];
-    vd = ((PiVec3*)&lbl_802C1D50)[7];
-    im = *(IndTexMtx23*)((PiVec3*)&lbl_802C1D50 + 8);
+    va = ((Vec*)&lbl_802C1D50)[4];
+    vb = ((Vec*)&lbl_802C1D50)[5];
+    vc = ((Vec*)&lbl_802C1D50)[6];
+    vd = ((Vec*)&lbl_802C1D50)[7];
+    im = *(IndTexMtx23*)((Vec*)&lbl_802C1D50 + 8);
     invView = Camera_GetInverseViewMatrix();
     PSMTXRotAxisRad(mf8, &va, lbl_803DEAC8);
     PSMTXRotAxisRad(mc8, &vb, lbl_803DEAC8);
