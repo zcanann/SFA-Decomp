@@ -34,9 +34,11 @@
 #include "main/vecmath.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXDispList.h"
+#include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXLighting.h"
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTev.h"
+#include "dolphin/gx/GXTransform.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -134,19 +136,12 @@ extern s32 gObjLevelLockSlots;
 extern volatile int lbl_803DCC80;
 extern f32 lbl_803DEA04;
 extern const f32 lbl_803DEA1C;
-extern void GXLoadPosMtxImm(f32* m, int id);
 typedef struct
 {
     u8* data;
     int pad[3];
     int pos;
 } MtxBitStream;
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXLoadTexMtxImm(f32* m, int id, int type);
-extern void GXLoadNrmMtxImm(f32* m, int id);
-extern void GXBegin(int prim, int fmt, u16 count);
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 extern f32 lbl_803DEA38;
 extern f32 lbl_803DEA4C;
@@ -171,7 +166,6 @@ s32 mapCheckCurBlocks(int v);
 #define OBJPRINT_MODEL_DEF(obj)         (((ObjAnimComponent*)(obj))->modelInstance)
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent*)(obj))->bankIndex)
 
-extern void GXSetNumTexGens(u8 nTexGens);
 extern u8 lbl_803DCC3D;
 extern s32 lbl_803DCC44;
 extern u32 lbl_803DE9F0;
@@ -208,7 +202,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
     selectTexture(*(Texture**)(shadowTable + ((lbl_803DCC44 >> 2) + lbl_803DCC3D * shadowStride) * 4), 0);
     PSMTXScale(mtx, lbl_803DEA38, *(f32*)&lbl_803DEA38, lbl_803DEA1C);
-    GXLoadTexMtxImm(mtx, 0x40, 0);
+    GXLoadTexMtxImm((const f32 (*)[4])mtx, 0x40, 0);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_TRUE, GX_PTTEXMTX0);
     GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD1, GX_TEXMAP0, GX_COLOR0A0);
@@ -326,7 +320,7 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     f32* vm = Camera_GetViewMatrix();
     Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
     PSMTXConcat(vm, wm, cm);
-    GXLoadPosMtxImm(cm, gObjGxPosMtxIdTable[0]);
+    GXLoadPosMtxImm((const f32 (*)[4])cm, gObjGxPosMtxIdTable[0]);
     GXSetCurrentMtx(gObjGxPosMtxIdTable[0]);
     PSMTXScale(sm, lbl_803DEA1C / ((GameObject*)obj)->anim.rootMotionScale,
                lbl_803DEA1C / ((GameObject*)obj)->anim.rootMotionScale, lbl_803DEA1C);
@@ -334,7 +328,7 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     cm[7] = lbl_803DEA04;
     cm[11] = lbl_803DEA04;
     PSMTXConcat(cm, sm, cm);
-    GXLoadTexMtxImm(cm, 0x1e, 0);
+    GXLoadTexMtxImm((const f32 (*)[4])cm, 0x1e, 0);
     gxTextureFn_80072dfcIntModelLegacy(obj, mdl, 0);
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -640,20 +634,20 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
             {
                 u8* pm = (u8*)(cache + idx * 0x30);
                 u8* nm = pm + 0x12c0;
-                GXLoadPosMtxImm((f32*)pm, *tbl[0]);
+                GXLoadPosMtxImm((const f32 (*)[4])pm, *tbl[0]);
                 if (skip == 0 && tex != 0)
                 {
-                    GXLoadTexMtxImm((f32*)nm, *tbl2, 0);
+                    GXLoadTexMtxImm((const f32 (*)[4])nm, *tbl2, 0);
                 }
                 if (skip == 0 && nrm != 0)
                 {
-                    GXLoadNrmMtxImm((f32*)nm, *tbl[0]);
+                    GXLoadNrmMtxImm((const f32 (*)[4])nm, *tbl[0]);
                 }
             }
             else
             {
                 PSMTXConcat(mtx, (f32*)ObjModel_GetJointMatrix((u8*)model, idx), tmp);
-                GXLoadPosMtxImm(tmp, *tbl[0]);
+                GXLoadPosMtxImm((const f32 (*)[4])tmp, *tbl[0]);
                 if (skip == 0 && (nrm != 0 || tex != 0))
                 {
                     tmp[3] = lbl_803DEA04;
@@ -662,11 +656,11 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
                     PSMTXConcat(tmp, m1, tmp);
                     if (tex != 0)
                     {
-                        GXLoadTexMtxImm(tmp, *tbl2, 0);
+                        GXLoadTexMtxImm((const f32 (*)[4])tmp, *tbl2, 0);
                     }
                     if (nrm != 0)
                     {
-                        GXLoadNrmMtxImm(tmp, *tbl[0]);
+                        GXLoadNrmMtxImm((const f32 (*)[4])tmp, *tbl[0]);
                     }
                 }
             }
@@ -1213,7 +1207,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
         PSMTXConcat(vm, wm, t1);
         PSMTXConcat((f32*)lbl_803967F0, t1, t2);
-        GXLoadTexMtxImm(t2, 0x24, 0);
+        GXLoadTexMtxImm((const f32 (*)[4])t2, 0x24, 0);
         fn_8004D928();
     }
     if (OBJPRINT_MODEL_DEF(obj)->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER)
@@ -1434,8 +1428,6 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
 }
 
 extern f32 gObjJointMtxTemp[];
-extern void GXSetArray(int attr, int ptr, int stride);
-
 void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
 {
     f32 wm[16];
@@ -1553,8 +1545,9 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
     }
     if (gObjCachedModel != (u32)m)
     {
-        GXSetArray(GX_VA_POS, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
-        GXSetArray(GX_VA_TEX0, *(int*)&((ModelFileHeader*)m)->texCoords, 4);
+        GXSetArray(GX_VA_POS,
+                   (void*)((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
+        GXSetArray(GX_VA_TEX0, ((ModelFileHeader*)m)->texCoords, 4);
         gObjCachedModel = (u32)m;
     }
     shaderSetGxFlags((u8*)obj, m, (u8*)((ModelFileHeader*)m)->renderOps);
@@ -1663,12 +1656,12 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
             }
             if (lbl_803DCC48 == 2)
             {
-                GXLoadPosMtxImm((f32*)(cache + idx * 0x30), *tbl[0]);
+                GXLoadPosMtxImm((const f32 (*)[4])(cache + idx * 0x30), *tbl[0]);
             }
             else
             {
                 PSMTXConcat(mtx, (f32*)ObjModel_GetJointMatrix((u8*)model, idx), tmp);
-                GXLoadPosMtxImm(tmp, *tbl[0]);
+                GXLoadPosMtxImm((const f32 (*)[4])tmp, *tbl[0]);
             }
             tbl[0]++;
         }
@@ -1822,7 +1815,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries != 0)
     {
         PSMTXConcat(vm, wm, cm);
-        GXLoadPosMtxImm(cm, gObjGxPosMtxIdTable[9]);
+        GXLoadPosMtxImm((const f32 (*)[4])cm, gObjGxPosMtxIdTable[9]);
     }
     {
         u8* o;
@@ -1882,7 +1875,8 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         gxSetZModeByteLegacy(0, 3, 0);
         GXSetCullMode(GX_CULL_NONE);
     }
-    GXSetArray(GX_VA_POS, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
+    GXSetArray(GX_VA_POS,
+               (void*)((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
     done = 0;
     while (!done)
     {
@@ -2193,14 +2187,14 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         }
         {
             f32 z;
-            GXLoadPosMtxImm(fm, gObjGxPosMtxIdTable[9]);
+            GXLoadPosMtxImm((const f32 (*)[4])fm, gObjGxPosMtxIdTable[9]);
             z = lbl_803DEA04;
             fm[3] = z;
             fm[7] = z;
             fm[11] = z;
             PSMTXConcat(fm, sm, fm);
-            GXLoadNrmMtxImm(fm, gObjGxPosMtxIdTable[9]);
-            GXLoadTexMtxImm(fm, gObjGxTexMtxIdTable[9], 0);
+            GXLoadNrmMtxImm((const f32 (*)[4])fm, gObjGxPosMtxIdTable[9]);
+            GXLoadTexMtxImm((const f32 (*)[4])fm, gObjGxTexMtxIdTable[9], 0);
         }
     }
     m1 = mode8 & 1;
@@ -2283,18 +2277,19 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             _gxSetFogParams();
         }
     }
-    GXSetArray(GX_VA_POS, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
+    GXSetArray(GX_VA_POS,
+               (void*)((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
     if (((ModelFileHeader*)m)->flags24 & 8)
     {
-        GXSetArray(GX_VA_NRM, *(int*)((char*)am + 0x24), 9);
+        GXSetArray(GX_VA_NRM, ((ObjModel*)am)->normalBuf, 9);
     }
     else
     {
-        GXSetArray(GX_VA_NRM, *(int*)((char*)am + 0x24), 3);
+        GXSetArray(GX_VA_NRM, ((ObjModel*)am)->normalBuf, 3);
     }
-    GXSetArray(GX_VA_CLR0, *(int*)&((ModelFileHeader*)m)->colors, 2);
-    GXSetArray(GX_VA_TEX0, *(int*)&((ModelFileHeader*)m)->texCoords, 4);
-    GXSetArray(GX_VA_TEX1, *(int*)&((ModelFileHeader*)m)->texCoords, 4);
+    GXSetArray(GX_VA_CLR0, ((ModelFileHeader*)m)->colors, 2);
+    GXSetArray(GX_VA_TEX0, ((ModelFileHeader*)m)->texCoords, 4);
+    GXSetArray(GX_VA_TEX1, ((ModelFileHeader*)m)->texCoords, 4);
     done = 0;
     while (!done)
     {
