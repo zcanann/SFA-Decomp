@@ -68,7 +68,7 @@ extern float lbl_803E7DA4;
 extern float lbl_803E7DA8;
 extern float lbl_803E7DAC;
 
-float fsin16Precise(u16 angle) {
+float fsin16Precise(int angle) {
     s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&reduced);
     float y2 = y * y;
@@ -174,7 +174,7 @@ float fsin16(int angle) {
     }
 }
 
-float fcos16Precise(u16 angle) {
+float fcos16Precise(int angle) {
     s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&reduced);
     float y2 = y * y;
