@@ -12,6 +12,7 @@
 #include "main/mm.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
+#include "dolphin/os/OSFont.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/savedata_struct.h"
@@ -343,10 +344,6 @@ extern u32 lbl_80339C40[];
 
 int getGameState(void);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
-extern u16 OSGetFontEncode(void);
-extern void OSLoadFont(void* buf, void* tmp);
-extern void OSGetFontWidth(u8* s, int* width);
-extern void OSGetFontTexel(u8* s, void* img, int pos, int stride, int* width);
 
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
 extern void translateToDinoLanguage(u8* str);
@@ -2185,13 +2182,13 @@ void gameTextLoadGraphicsFn_8001a918(void)
     int sizeB;
     int x;
     u8* bufA;
-    u8* bufB;
+    OSFontHeader* bufB;
     int savedHeap;
     int count;
     u8* glyph;
     u8* fontData;
     u8 s[3];
-    int width;
+    s32 width;
 
     fontData = (u8*)gGameTextFontData;
     base30 = lbl_802C8680;
@@ -2285,7 +2282,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
             s[0] = *(int*)glyph;
             s[1] = 0;
         }
-        OSGetFontWidth(s, &width);
+        OSGetFontWidth((const char*)s, &width);
         if (width > *(u16*)(base30 + 0x68))
         {
             *(u16*)(base30 + 0x68) = width;
@@ -2304,7 +2301,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
                 *q++ = 0;
             }
         }
-        OSGetFontTexel(s, buf, 0, 6, &width);
+        OSGetFontTexel((const char*)s, buf, 0, 6, &width);
         if (x + 0x18 > 0x200)
         {
             x = 0;
