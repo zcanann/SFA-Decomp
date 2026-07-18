@@ -138,8 +138,6 @@ const GuardianVec gCfGuardianHitboxTemplateA = {{5, 15, 15, 0, 0}}; /* hitbox te
 const GuardianVec gCfGuardianHitboxTemplateB = {{25, 25, 15, 5, 5}}; /* hitbox template copied at init */
 extern int gCfGuardianSeqStreamTable[][2];     /* chatter sequence-stream table, 0xf states */
 const GuardianMsg gCfGuardianHeadingTemplate = {7, 8, 7, 8}; /* active/idle heading-pair template (cfguardian_SeqFn) */
-extern int cfguardian_updateMain();
-extern int gCfGuardianIdleMoveTable[]; /* per-quest-state idle move id (-1 = none) */
 
 /* cfguardianPlayEventSfx: walk this step's triggered anim events and play the
  * matching per-event sfx. sfxIds is a 3-entry table: [0] the move sfx,
