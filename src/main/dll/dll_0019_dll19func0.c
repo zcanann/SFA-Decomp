@@ -814,7 +814,7 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                     traced = voxmaps_traceIntGrid(gridB, gridA, NULL, &losOut, 0);
                     if (losOut == 1 || traced != 0)
                     {
-                        if (objBboxFn_800640cc((f32*)((int)self + 12), gridIn, 1.0f, 0, (TrackBBoxHit*)bboxOut,
+                        if (objBboxFn_800640cc((f32*)(self + 12), gridIn, 1.0f, 0, (TrackBBoxHit*)bboxOut,
                                                (GameObject*)self, 4, -1, 0, 0) != 0)
                         {
                             found = 0;
