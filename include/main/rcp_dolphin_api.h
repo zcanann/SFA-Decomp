@@ -59,4 +59,7 @@ int textureCrazyPointerFollowFn_80054c30(int* texture, int frame);
 #define textureLoadIntLegacy(texId, flag) \
     (((int (*)(int, int))textureLoad)((texId), (flag)))
 
+void FUN_800537a0(u32 unused1, u32 unused2, int format, char param4, u32 param5, u8 wrapS, u8 wrapT, u8 minFilter,
+                  u8 magFilter);
+
 #endif /* MAIN_RCP_DOLPHIN_API_H_ */

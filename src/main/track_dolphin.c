@@ -45,7 +45,6 @@
 #include "main/newshadows_ext2.h"
 #include "main/atan2f_api.h"
 #include "main/sky_texture_api.h"
-#include "main/lightmap_pr.h"
 #include "string.h"
 
 u32 gTrackTriangleBufferEnd;

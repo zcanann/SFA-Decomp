@@ -63,7 +63,6 @@
 #include "main/sky.h"
 #include "main/dll/dll_80198a00.h"
 #include "main/gameloop_ext.h"
-#include "main/gameloop_pr.h"
 
 #define Sfx_StopFromObjectLegacy(obj, sfxId) \
     ((void (*)(void*, int))Sfx_StopFromObject)((obj), (sfxId))

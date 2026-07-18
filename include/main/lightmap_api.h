@@ -25,4 +25,6 @@ void setIsOvercast(int value);
 
 void fn_8005CECC(int v);
 
+void* mapGetBlockIdx(int layer);
+
 #endif /* MAIN_LIGHTMAP_API_H_ */

@@ -43,7 +43,7 @@
 #include "main/frame_timing.h"
 #include "main/mm.h"
 #include "main/camera_ext.h"
-#include "main/maketex_kr.h"
+#include "main/maketex_yield_api.h"
 #include "dolphin/os.h"
 #include "main/pi_dolphin_api.h"
 #include "string.h"

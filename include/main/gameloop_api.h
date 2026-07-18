@@ -28,4 +28,6 @@ void addButtonObject(void* obj);
 
 void removeButtonObject(u32 object);
 
+void blankScreen(int frames);
+
 #endif /* MAIN_GAMELOOP_API_H_ */
