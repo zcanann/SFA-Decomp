@@ -99,7 +99,7 @@ void drawSkyStars(void)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     textureSetupFn_800799c0();
-    fn_800790AC();
+    gxTevAddColor1Stage();
     textRenderSetupFn_80079804();
     gxBlendFn_800789ac();
     color = *(FogColor*)&gNewCloudStarFogColor;

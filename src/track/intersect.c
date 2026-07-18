@@ -1204,7 +1204,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 1;
                     gGxZModeValid = 1;
                 }
-                GXSetAlphaCompareLegacy(GX_GREATER, fn_8003BB74(), GX_AOP_AND, GX_GREATER, fn_8003BB74());
+                GXSetAlphaCompareLegacy(GX_GREATER, objGetAlphaCompareThreshold(), GX_AOP_AND, GX_GREATER, objGetAlphaCompareThreshold());
             }
             else
             {
@@ -2076,8 +2076,8 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 1;
                     gGxZModeValid = 1;
                 }
-                obj_a = (void*)fn_8003BB74();
-                ref1 = fn_8003BB74();
+                obj_a = (void*)objGetAlphaCompareThreshold();
+                ref1 = objGetAlphaCompareThreshold();
                 GXSetAlphaCompareLegacy(GX_GREATER, ref1, GX_AOP_AND, GX_GREATER, (int)obj_a);
             }
             else
@@ -2577,8 +2577,8 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                 }
                 {
                     int b;
-                    alpha_byte = fn_8003BB74();
-                    b = fn_8003BB74();
+                    alpha_byte = objGetAlphaCompareThreshold();
+                    b = objGetAlphaCompareThreshold();
                     GXSetAlphaCompareLegacy(GX_GREATER, b, GX_AOP_AND, GX_GREATER, alpha_byte);
                 }
             }
@@ -4052,7 +4052,7 @@ void fn_8007880C(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void fn_800788DC(void)
+void gxBlendFn_800788dc(void)
 {
     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
     {
@@ -4211,7 +4211,7 @@ void textRenderSetup(void)
     gTevTexMapCursor += 1;
 }
 
-void fn_800790AC(void)
+void gxTevAddColor1Stage(void)
 {
     GXSetTevOrder(gTevStageCursor, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
     GXSetTevDirect(gTevStageCursor);

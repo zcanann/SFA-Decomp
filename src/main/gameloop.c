@@ -131,7 +131,7 @@ u8 gGameLoopInitComplete;
 u8 gGameLoopButtonObjectCount;
 s16 screenBlankFrameCount;
 u8 gGameLoopMusicActive;
-u16 lbl_803DCA42;
+u16 gGameLoopMusicRequestCount;
 u8 gGameLoopMapLoadPending;
 u8 lbl_803DCA40;
 u8 lbl_803DCA3F;
@@ -151,7 +151,7 @@ extern s8 frameCountdown;
 extern s16 screenBlankFrameCount;
 extern u8 gGameLoopInitComplete;
 extern u8 gGameLoopButtonObjectCount;
-extern u16 lbl_803DCA42;
+extern u16 gGameLoopMusicRequestCount;
 extern u8 gGameLoopPendingMusicId;
 extern void loadAsset(void* req);
 extern u8 gGameLoopReloadRequested;
@@ -610,13 +610,13 @@ void addButtonObject(void* obj)
 
 void fn_8001FE90(void)
 {
-    lbl_803DCA42++;
+    gGameLoopMusicRequestCount++;
     gGameLoopPendingMusicId = 0xd0;
 }
 
 void fn_8001FEA8(void)
 {
-    lbl_803DCA42++;
+    gGameLoopMusicRequestCount++;
     gGameLoopPendingMusicId = 0xc9;
 }
 
@@ -1172,7 +1172,7 @@ void doQueuedLoads(void)
 void gameUpdate(void)
 {
     Obj_GetPlayerObject();
-    lbl_803DCA42 = 0;
+    gGameLoopMusicRequestCount = 0;
     mainLoopDoGameText();
     if (hudHiddenFrameCount == 0)
     {
@@ -1240,7 +1240,7 @@ void gameUpdate(void)
             screenBlankFrameCount = 0;
         }
     }
-    if (lbl_803DCA42 != 0)
+    if (gGameLoopMusicRequestCount != 0)
     {
         if (gGameLoopMusicActive == 0)
         {

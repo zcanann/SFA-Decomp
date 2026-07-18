@@ -472,7 +472,7 @@ void lightningRender(LightningEffect* p)
     textureSetupFn_800799c0();
     gxTextureFn_800794e0();
     textRenderSetupFn_80079804();
-    fn_800788DC();
+    gxBlendFn_800788dc();
     fn_8006C51C(&tex);
     selectTexture(tex, 0);
     GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, color);

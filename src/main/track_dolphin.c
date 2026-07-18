@@ -1729,7 +1729,7 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
         vecGetRanges((f32*)buf48, base, modelState->shadowScale, (int*)&ranges);
 
         hitDetectFn_800691c0(obj, &ranges, 0x81, 0);
-        fn_80069958((int**)&vtx);
+        trackGetGridOrigin((int**)&vtx);
         fn_80069968(&idxOut, &alphaOut);
 
         alpha = alphaOut;
@@ -1746,7 +1746,7 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
     return 0;
 }
 
-void fn_80069958(int** outOrigin)
+void trackGetGridOrigin(int** outOrigin)
 {
     *outOrigin = (int*)gTrackGridOrigin;
 }

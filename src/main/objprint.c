@@ -1544,7 +1544,7 @@ void objRenderModelAndHitVolumes(GameObject* obj, f32 scale)
 }
 
 
-extern u8 lbl_803DCC3C;
+extern u8 gObjAlphaCompareThreshold;
 void fn_8003B950(f32* matrix)
 {
     lbl_803DCC10 = (u32)matrix;
@@ -1619,14 +1619,14 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
         walk += 4;
     }
 }
-int fn_8003BB74(void)
+int objGetAlphaCompareThreshold(void)
 {
-    return lbl_803DCC3C;
+    return gObjAlphaCompareThreshold;
 }
 
-void fn_8003BB7C(u8 x)
+void objSetAlphaCompareThreshold(u8 x)
 {
-    lbl_803DCC3C = x;
+    gObjAlphaCompareThreshold = x;
 }
 
 int fn_8003BB84(f32* m, f32* out)

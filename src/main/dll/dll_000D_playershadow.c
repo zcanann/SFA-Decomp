@@ -300,7 +300,7 @@ void playerShadow_renderObject(GameObject* obj)
     hitDetectFn_800691c0(obj, &hitData, 0x84, 0);
     fn_80069968(&hitCount, &hitTable);
     hitTableValue = hitTable;
-    fn_80069958(&tileInfo);
+    trackGetGridOrigin(&tileInfo);
     fn_800A3AF0((PlayerShadowTriHit*)hitTableValue, hitCount, (obj)->anim.localPosX - tileInfo[0],
                 (obj)->anim.localPosZ - tileInfo[2], obj);
 }

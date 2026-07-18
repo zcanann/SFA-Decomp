@@ -61,7 +61,7 @@ s32 lbl_803DCC44;
 s32 gObjFuzzStep;
 u8 lbl_803DCC3E;
 u8 lbl_803DCC3D;
-u8 lbl_803DCC3C;
+u8 gObjAlphaCompareThreshold;
 f32 gObjFuzzPhase;
 u8 lbl_803DCC36;
 u8 lbl_803DCC35;
@@ -1284,7 +1284,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 {
                     zon = 0;
                     gxSetZModeByteLegacy(1, 3, 1);
-                    GXSetAlphaCompare(GX_GREATER, lbl_803DCC3C, GX_AOP_AND, GX_GREATER, lbl_803DCC3C);
+                    GXSetAlphaCompare(GX_GREATER, gObjAlphaCompareThreshold, GX_AOP_AND, GX_GREATER, gObjAlphaCompareThreshold);
                 }
                 else
                 {
