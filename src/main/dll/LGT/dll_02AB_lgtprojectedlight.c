@@ -65,6 +65,7 @@ void ProjectedLight_update(GameObject* obj)
     obj->anim.rotZ = (s16)((f32)(setup->rotZSpeed << 4) * timeDelta + (f32)obj->anim.rotZ);
 }
 
+#pragma opt_common_subs off
 void ProjectedLight_init(GameObject* obj, ProjectedLightSetup* setup)
 {
     PointLightVec vec;
@@ -159,6 +160,7 @@ void ProjectedLight_init(GameObject* obj, ProjectedLightSetup* setup)
                                                setupData->targetAlpha);
     }
 }
+#pragma opt_common_subs reset
 
 void ProjectedLight_release(void)
 {
