@@ -798,7 +798,7 @@ void gunpowderbarrel_hitDetect(int obj)
     }
 
     if (state->heldByCarryInterface == 0 &&
-        objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), lbl_803E432C, 1,
+        objBboxFn_800640cc(&barrel->anim.previousLocalPosX, &barrel->anim.localPosX, lbl_803E432C, 1,
                            (TrackBBoxHit*)&collision_buf[0], (GameObject*)obj, 8, -1, 0xff, 0) != 0)
     {
         if ((s8) * ((u8*)&collision_buf[0] + 0x51) == 0x14)
@@ -817,7 +817,7 @@ void gunpowderbarrel_hitDetect(int obj)
             sp10[0] = *((f32*)&collision_buf[0] + 7);
             sp10[1] = *((f32*)&collision_buf[0] + 8);
             sp10[2] = *((f32*)&collision_buf[0] + 9);
-            Vec3_ReflectAgainstNormal(sp10, (void*)(obj + 0x24), (void*)(obj + 0x24));
+            Vec3_ReflectAgainstNormal(sp10, &barrel->anim.velocityX, &barrel->anim.velocityX);
             Vec3_ReflectAgainstNormal(sp10, &state->throwVelX, &state->throwVelX);
 
             {

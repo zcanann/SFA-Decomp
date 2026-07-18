@@ -1893,7 +1893,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     mtxA = lbl_802C1B40;
     mtxB = lbl_802C1B58;
     rop = (u8*)ObjModel_GetRenderOp((ModelFileHeader*)*model, ropIdx);
-    if ((*(u32*)(rop + 0x3c) & 0x200) == 0)
+    if ((((ModelRenderOp*)rop)->flags & 0x200) == 0)
     {
         if ((lbl_803DCC44 & 3) != 0)
         {
@@ -2080,7 +2080,7 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
     mtxA = lbl_802C1B10;
     mtxB = lbl_802C1B28;
     rop = (u8*)ObjModel_GetRenderOp(model->file, ropIdx);
-    if ((*(u32*)(rop + 0x3c) & 0x200) == 0)
+    if ((((ModelRenderOp*)rop)->flags & 0x200) == 0)
     {
         lbl_803DCC3E = 0;
         return 0;

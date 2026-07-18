@@ -115,6 +115,10 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             {
                 doSteal = 1;
             }
+            else
+            {
+                doSteal = 0;
+            }
         }
 
         if (doSteal)

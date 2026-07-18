@@ -289,11 +289,11 @@ void snowclaw_syncMountTransform(GameObject* obj, GameObject* mount, int p2, int
 
     if (enabled != 0 && (s8)opacity != 0 && mountAlpha > 0)
     {
-        u8 saved = *(u8*)((u8*)mount + 0x37);
-        *(u8*)((u8*)mount + 0x37) = mountAlpha;
+        u8 saved = mount->anim.renderAlpha;
+        mount->anim.renderAlpha = mountAlpha;
         (*(void (**)(GameObject*, int, int, int, int, int))((char*)*mount->anim.dll + 0x10))(mount, p2, p3, p4, p5,
                                                                                              -1);
-        *(u8*)((u8*)mount + 0x37) = saved;
+        mount->anim.renderAlpha = saved;
     }
     obj->anim.previousWorldPosX = obj->anim.worldPosX;
     obj->anim.previousWorldPosY = obj->anim.worldPosY;
@@ -508,10 +508,10 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
     }
     if ((s8)vis != 0 && ((SnowclawState*)inner)->mountAlpha != 0)
     {
-        oldFlag = *(u8*)((char*)obj + 0x37);
+        oldFlag = obj->anim.renderAlpha;
         if (found != 0)
         {
-            *(u8*)((char*)obj + 0x37) = ((SnowclawState*)inner)->mountAlpha;
+            obj->anim.renderAlpha = ((SnowclawState*)inner)->mountAlpha;
         }
         if ((obj)->childCount == 0 && (obj)->anim.seqId == 0x389 &&
             ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 != 0)
@@ -526,7 +526,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
         objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
         ObjPath_GetPointWorldPosition(obj, 1, &((SnowclawState*)inner)->posX, &((SnowclawState*)inner)->posY,
                                       &((SnowclawState*)inner)->posZ, 0);
-        *(u8*)((char*)obj + 0x37) = oldFlag;
+        obj->anim.renderAlpha = oldFlag;
         if (((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->flag6 != 0)
         {
             if (((SnowclawState*)inner)->particleAlpha != zero)
