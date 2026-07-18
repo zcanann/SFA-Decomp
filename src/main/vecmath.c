@@ -26,8 +26,6 @@ extern f32 gVecMathNegHalfPi;
 extern f32 gVecMathTwoPi;
 extern f32 lbl_803DE7F4;
 
-void setMatrixFromObjectPos(f32* m, const MatrixTransform* transform);
-
 f32 interpolate(f32 a, f32 t, f32 exp)
 {
     if (t <= lbl_803DE7C4)
