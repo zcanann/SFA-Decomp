@@ -208,62 +208,6 @@ void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
 static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights);
 
 
-#define GX_CULL_NONE     0
-#define GX_CULL_FRONT    1
-#define GX_CULL_BACK     2
-#define GX_BM_NONE       0
-#define GX_BL_ZERO       0
-#define GX_BL_ONE        1
-#define GX_LO_NOOP       5
-#define GX_AOP_AND       0
-#define GX_ALWAYS        7
-#define GX_EQUAL         2
-#define GX_MT_XF_FLUSH   1
-#define GX_TF_RGBA8      6
-#define GX_FALSE         0
-#define GX_TF_I4         0
-#define GX_TEXMAP1       1
-#define GX_TEV_SWAP1     1
-#define GX_CH_ALPHA      3
-#define GX_VA_POS        9
-#define GX_VA_NRM        10
-#define GX_PNMTX0        0
-#define GX_TEXMTX0       0x1e
-#define GX_MTX2x4        1
-#define GX_DIRECT        1
-#define GX_TRIANGLESTRIP 0x98
-#define GX_VTXFMT4       4
-#define GX_TG_MTX2x4     1
-#define GX_IDENTITY      0x3c
-#define GX_PTIDENTITY    0x7d
-#define GX_COLOR0        0
-#define GX_COLOR0A0      4
-#define GX_COLOR1A1      5
-#define GX_TEVREG0       1
-#define GX_TEXCOORD_NULL 0xff
-#define GX_TEXMAP_NULL   0xff
-#define GX_COLOR_NULL    0xff
-#define GX_TEV_SWAP0     0
-#define GX_TEV_ADD       0
-#define GX_TB_ZERO       0
-#define GX_CS_SCALE_1    0
-#define GX_TRUE          1
-#define GX_TEVPREV       0
-#define GX_CC_CPREV      0
-#define GX_CC_APREV      1
-#define GX_CC_A0         3
-#define GX_CC_C1         4
-#define GX_CC_C2         6
-#define GX_CC_TEXC       8
-#define GX_CC_RASC       0xa
-#define GX_CC_KONST      0xe
-#define GX_CC_ZERO       0xf
-#define GX_CA_APREV      0
-#define GX_CA_TEXA       4
-#define GX_CA_RASA       5
-#define GX_CA_KONST      6
-#define GX_CA_ZERO       7
-
 #define RCP_DISTORT_TEXTURE_ID 0x5dc
 
 extern u32 GXSetBlendMode();
@@ -760,7 +704,7 @@ static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
     modelLightChannel_configure(0, 0, 0);
     for (n = 0; n < count; n++)
     {
-        modelLightStruct_loadChannelLight(0, (u8*)lights[n], (u8*)model);
+        modelLightStruct_loadChannelLight(0, lights[n], model);
     }
     modelLightChannels_applyGXControls();
 }
@@ -947,22 +891,22 @@ int textureFn_80052bb4(int model, f32* params)
     modelLightChannel_configure(2, 0, 0);
     modelLightStruct_setSpecularAttenuation(la, params[0], lbl_803DEB60);
     modelLightStruct_setSpecularColor(la, 0xff, 0, 0, 0xff);
-    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
+    modelLightStruct_loadChannelLight(0, la, (GameObject*)model);
     modelLightStruct_setSpecularAttenuation(la, params[1], lbl_803DEB60);
     modelLightStruct_setSpecularColor(la, 0, 0, 0xff, 0xff);
-    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
+    modelLightStruct_loadChannelLight(0, la, (GameObject*)model);
     modelLightStruct_setAngularAttenuation(la, lbl_803DEB70, lbl_803DEB60, lbl_803DEB60);
-    modelLightStruct_loadChannelLight(2, (u8*)la, (u8*)model);
+    modelLightStruct_loadChannelLight(2, la, (GameObject*)model);
     modelLightChannel_configure(1, 1, 0);
     modelLightChannel_configure(3, 0, 0);
     modelLightStruct_setSpecularAttenuation(lb, params[0], lbl_803DEB60);
     modelLightStruct_setSpecularColor(lb, 0xff, 0, 0, 0xff);
-    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
+    modelLightStruct_loadChannelLight(1, lb, (GameObject*)model);
     modelLightStruct_setSpecularAttenuation(lb, params[1], lbl_803DEB60);
     modelLightStruct_setSpecularColor(lb, 0, 0, 0xff, 0xff);
-    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
+    modelLightStruct_loadChannelLight(1, lb, (GameObject*)model);
     modelLightStruct_setAngularAttenuation(lb, lbl_803DEB74, lbl_803DEB60, lbl_803DEB60);
-    modelLightStruct_loadChannelLight(3, (u8*)lb, (u8*)model);
+    modelLightStruct_loadChannelLight(3, lb, (GameObject*)model);
     modelLightChannels_applyGXControls();
     modelLightStruct_setAngularAttenuation(la, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);
     modelLightStruct_setAngularAttenuation(lb, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);

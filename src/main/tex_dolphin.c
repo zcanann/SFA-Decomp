@@ -19,12 +19,6 @@ int gTexShaderAmbColor = -1;
 int gTexLightmapAmbColor = -1;
 s8 gTexIndMtxScaleExp = -2;
 
-#define GX_CULL_NONE  0
-#define GX_CULL_FRONT 1
-#define GX_CULL_BACK  2
-#define GX_FOG_NONE   0
-#define GX_LEQUAL     3
-
 extern f32 lbl_803DEBC8;
 extern f32 lbl_803DEBCC;
 extern const f32 lbl_803DEBFC;

@@ -218,7 +218,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
         modelLightChannel_configure(2, 0, 0);
         GXSetChanAmbColor(GX_ALPHA0, *(GXColor*)&lbl_803DB470);
         GXSetChanMatColor(GX_ALPHA0, *(GXColor*)&lbl_803DB468);
-        modelLightStruct_loadChannelLight(2, (u8*)renderHandle, (u8*)obj);
+        modelLightStruct_loadChannelLight(2, renderHandle, (GameObject*)obj);
         modelLightChannels_applyGXControls();
         ModelLightStruct_free(renderHandle);
     }
@@ -514,7 +514,7 @@ void objFn_8003dc50(u8* obj, u8* model)
                 p = larr;
                 for (; i < count; i++)
                 {
-                    modelLightStruct_loadChannelLight(ch, (u8*)*p, model);
+                    modelLightStruct_loadChannelLight(ch, *p, (GameObject*)model);
                     p++;
                 }
             }
@@ -565,7 +565,7 @@ void objFn_8003dc50(u8* obj, u8* model)
                             *sp = 3;
                         }
                         modelLightChannel_configure(*sp, 2, 0);
-                        modelLightStruct_loadChannelLight(*sp, (u8*)*lp, model);
+                        modelLightStruct_loadChannelLight(*sp, *lp, (GameObject*)model);
                         GXSetChanAmbColor(*sp, *(GXColor*)&lbl_803DB470);
                         GXSetChanMatColor(*sp, *(GXColor*)&lbl_803DB468);
                         lp++;

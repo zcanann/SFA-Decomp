@@ -2,6 +2,7 @@
 #define MAIN_MODEL_LIGHT_H_
 
 #include "ghidra_import.h"
+#include "dolphin/gx/GXStruct.h"
 #include "main/modellight_api.h"
 
 typedef struct GameObject GameObject;
@@ -35,14 +36,16 @@ typedef struct ModelLightStruct {
     int objectLightMaskIndex;
     int transformMode;
     u8 objectLightMask;
-    u8 pad65[0xa8 - 0x65];
+    u8 pad65[3];
+    GXLightObj diffuseLightObj;
     u8 diffuseColor[4];
     u8 diffuseFadeStartColor[4];
     u8 diffuseFadeTargetColor[4];
     f32 spotCutoff;
     int spotFunction;
     u8 fieldBC;
-    u8 padBD[0x100 - 0xbd];
+    u8 padBD[3];
+    GXLightObj specularLightObj;
     u8 specularColor[4];
     u8 specularFadeStartColor[4];
     u8 specularFadeTargetColor[4];
@@ -92,6 +95,10 @@ typedef struct ModelLightStruct {
     u8 pad2fd[0x300 - 0x2fd];
 } ModelLightStruct;
 
+STATIC_ASSERT(offsetof(ModelLightStruct, diffuseLightObj) == 0x68);
+STATIC_ASSERT(offsetof(ModelLightStruct, specularLightObj) == 0xc0);
+STATIC_ASSERT(sizeof(ModelLightStruct) == 0x300);
+
 typedef ModelLightStruct ModelLight;
 
 enum ModelLightKind
@@ -129,7 +136,7 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
                                                 ModelLightStruct** outLights, int maxLights, int* outCount);
 void modelLightStruct_selectObjectLights(GameObject* object, ModelLightStruct** outLights, int maxLights,
                                          s32* outCount, int typeMask);
-void modelLightStruct_loadChannelLight(int channel, u8* light, u8* object);
+void modelLightStruct_loadChannelLight(int channel, ModelLightStruct* light, GameObject* object);
 int modelLightStruct_getProjectedLightChannelPreference(ModelLightStruct *light);
 void modelLightStruct_setProjectedLightChannelPreference(ModelLightStruct *light, int preference);
 void modelLightStruct_setSelectionPriority(ModelLightStruct *light, u8 priority);

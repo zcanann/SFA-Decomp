@@ -24,7 +24,7 @@ void GXSetTevKAlphaSel(int stage, int sel);
 void GXSetNumIndStages(int count);
 void GXSetNumTexGens(int count);
 void GXSetNumTevStages(int count);
-void GXSetNumChans(int count);
+void GXSetNumChans(u8 count);
 void GXSetTevDirect(int stage);
 void GXSetTevOrder(int stage, int coord, int map, int color);
 void GXSetTevColorIn(int stage, int a, int b, int c, int d);

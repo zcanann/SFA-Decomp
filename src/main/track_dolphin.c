@@ -23,6 +23,7 @@
 #include "main/object_transform.h"
 #include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
+#include "dolphin/gx/GXLighting.h"
 #include "main/camera.h"
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
@@ -252,59 +253,6 @@ typedef struct
     u8 r, g, b, a;
 } GlowGXColor;
 
-#define GX_FALSE          0
-#define GX_TG_MTX2x4      1
-#define GX_TG_TEX0        4
-#define GX_IDENTITY       0x3c
-#define GX_PTIDENTITY     0x7d
-#define GX_TEV_KASEL_K0_A 0x1c
-
-#define GX_CULL_NONE      0
-#define GX_CULL_FRONT     1
-#define GX_CULL_BACK      2
-#define GX_LEQUAL         3
-#define GX_COLOR0A0       4
-#define GX_COLOR1A1       5
-#define GX_COLOR_NULL     0xff
-#define GX_DISABLE        0
-#define GX_ENABLE         1
-#define GX_SRC_REG        0
-#define GX_DF_NONE        0
-#define GX_AF_NONE        2
-#define GX_TEVSTAGE0      0
-#define GX_TEXCOORD0      0
-#define GX_TEXMAP0        0
-#define GX_CC_ZERO        0xf
-#define GX_CA_TEXA        4
-#define GX_CA_KONST       6
-#define GX_CA_ZERO        7
-#define GX_TEV_ADD        0
-#define GX_TB_ZERO        0
-#define GX_CS_SCALE_1     0
-#define GX_TEVPREV        0
-#define GX_BM_BLEND       1
-#define GX_BL_SRCALPHA    4
-#define GX_BL_INVSRCALPHA 5
-#define GX_LO_NOOP        5
-#define GX_FOG_NONE       0
-#define GX_VA_POS         9
-#define GX_VA_CLR0        11
-#define GX_VA_TEX0        13
-#define GX_VA_TEX1        14
-#define GX_DIRECT         1
-#define GX_KCOLOR0        0
-#define GX_QUADS          0x80
-#define GX_TRIANGLES      0x90
-#define GX_VTXFMT0        0
-#define GX_VTXFMT2        2
-#define GX_VTXFMT6        6
-#define GX_PNMTX0         0
-#define GX_PNMTX9         0x1b
-#define GX_INDEX8         2
-#define GX_INDEX16        3
-#define GX_TEXMTX2        0x24
-#define GX_MTX3x4         0
-
 #define MAP_DYNAMIC_SLOT_COUNT 64
 
 extern const f32 lbl_803DEC50;
@@ -392,8 +340,6 @@ extern void GXSetTevKColor(int id, void* color);
 extern void GXSetTevKAlphaSel(int stage, int sel);
 extern void GXSetNumTevStages(u8 nStages);
 extern void GXSetNumIndStages(u8 nIndStages);
-extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
-extern void GXSetNumChans(u8 nChans);
 extern void GXSetTevOrder(int a, int b, int c, int d);
 extern void GXSetTevDirect(int stage);
 extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);

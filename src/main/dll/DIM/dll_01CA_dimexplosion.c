@@ -69,13 +69,6 @@ STATIC_ASSERT(offsetof(GravityDebris, active) == 0x20);
 
 #define GEXPLOSION_TEXTURE_COUNT 4
 
-#define GX_PNMTX0  0 /* GXPosNrmMtx (GXEnum.h): GX_PNMTX0=0 */
-#define GX_VA_POS  9
-#define GX_VA_TEX0 13
-#define GX_DIRECT  1
-#define GX_QUADS   0x80
-#define GX_VTXFMT2 2
-
 void* gExplosionTextures[GEXPLOSION_TEXTURE_COUNT];
 extern f32 lbl_803E492C;
 extern f32 lbl_803E4930;

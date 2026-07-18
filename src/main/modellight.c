@@ -11,7 +11,9 @@
 #include "main/frame_timing.h"
 #include "main/object_transform.h"
 #include "main/object_api.h"
+#include "dolphin/gx/GXGet.h"
 #include "dolphin/gx/GXLegacyDecls.h"
+#include "dolphin/gx/GXLighting.h"
 #include "string.h"
 
 int gModelLightNextGXLightId;
@@ -35,19 +37,6 @@ typedef struct ModelLightCornerBlock
 } ModelLightCornerBlock;
 
 STATIC_ASSERT(sizeof(ModelLightCornerBlock) == 0x60);
-
-#define GX_COLOR0    0
-#define GX_DF_NONE   0
-#define GX_DF_CLAMP  2
-#define GX_FALSE     0
-#define GX_SRC_REG   0
-#define GX_COLOR1    1
-#define GX_AF_NONE   2
-#define GX_ALPHA0    2
-#define GX_ALPHA1    3
-#define GX_COLOR0A0  4
-#define GX_COLOR1A1  5
-#define GX_DA_MEDIUM 2
 
 #define MODELLIGHT_DEFAULT_GLOW_TEXTURE_ID 0x605
 
@@ -81,14 +70,6 @@ const ModelLightCornerBlock gModelLightCornerBlock = {{
     1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
     -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
     -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f}};
-extern void GXInitLightDistAttn(u8* lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
-extern void GXGetLightAttnK(u8* lt_obj, f32* k0, f32* k1, f32* k2);
-extern void GXInitLightAttnA(u8* lt_obj, f32 a0, f32 a1, f32 a2);
-extern void GXInitLightAttn(u8* lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
-extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int lightMask, int diffFn, int attnFn);
-extern void GXInitLightSpot(u8* lt_obj, f32 cutoff, int spot_func);
-extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
-
 ModelLightStruct* objAllocLight(void* owner);
 
 extern void* gModelLightList[0x32];
@@ -167,8 +148,10 @@ ModelLightStruct* modelLightStruct_createPointLight(void* owner, u8 red, u8 gree
         light[0xbc] = 1;
         ((ModelLightStruct*)light)->attenuationNear = lbl_803DE750;
         ((ModelLightStruct*)light)->attenuationFar = lbl_803DE754;
-        GXInitLightDistAttn(light + 0x68, ((ModelLightStruct*)light)->attenuationNear, lbl_803DE758, GX_DA_MEDIUM);
-        GXGetLightAttnK(light + 0x68, (f32*)(light + 0x124), (f32*)(light + 0x128), (f32*)(light + 0x12c));
+        GXInitLightDistAttn((GXLightObj*)(light + 0x68), ((ModelLightStruct*)light)->attenuationNear, lbl_803DE758,
+                            GX_DA_MEDIUM);
+        GXGetLightAttnK((GXLightObj*)(light + 0x68), (f32*)(light + 0x124), (f32*)(light + 0x128),
+                        (f32*)(light + 0x12c));
         if (setFlag != 0)
         {
             light[0x2fb] = 1;
@@ -496,7 +479,7 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f
     obj->specularAttenuationScale = scale;
     obj->specularBrightness = brightness;
     atten = obj->specularAttenuationScale * lbl_803DE790;
-    GXInitLightAttn((u8*)obj + 0xc0, 0.0f, 0.0f, 1.0f, atten, 0.0f, 1.0f - atten);
+    GXInitLightAttn(&obj->specularLightObj, 0.0f, 0.0f, 1.0f, atten, 0.0f, 1.0f - atten);
 }
 
 void modelLightStruct_setSpecularTargetColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
@@ -529,7 +512,7 @@ void modelLightStruct_setSpecularColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8
 
 void modelLightStruct_setAngularAttenuation(ModelLightStruct* p, f32 a, f32 b, f32 c)
 {
-    GXInitLightAttnA((u8*)p + 0x68, a, b, c);
+    GXInitLightAttnA(&p->diffuseLightObj, a, b, c);
 }
 
 void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int mode)
@@ -538,11 +521,11 @@ void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int 
     obj->spotFunction = mode;
     if (mode == 0)
     {
-        GXInitLightAttnA((u8*)obj + 0x68, lbl_803DE760, lbl_803DE75C, *(f32*)&lbl_803DE75C);
+        GXInitLightAttnA(&obj->diffuseLightObj, lbl_803DE760, lbl_803DE75C, *(f32*)&lbl_803DE75C);
     }
     else
     {
-        GXInitLightSpot((u8*)obj + 0x68, obj->spotCutoff, obj->spotFunction);
+        GXInitLightSpot(&obj->diffuseLightObj, obj->spotCutoff, obj->spotFunction);
     }
 }
 
@@ -595,12 +578,6 @@ void modelLightStruct_setLightKind(ModelLightStruct* p, int v)
 }
 
 extern void Vec_normalize(f32* dst, f32* src);
-extern void GXInitSpecularDir(u8* lt_obj, f32 x, f32 y, f32 z);
-extern void GXInitLightColor(u8* lt_obj, void* color);
-extern void GXLoadLightObjImm(u8* lt_obj, int lightId);
-extern void GXInitLightPos(u8* lt_obj, f32 x, f32 y, f32 z);
-extern void GXInitLightDir(u8* lt_obj, f32 x, f32 y, f32 z);
-extern void GXInitLightAttnK(u8* lt_obj, f32 k0, f32 k1, f32 k2);
 
 void objSetEventName(ModelLightStruct* light, int name)
 {
@@ -632,13 +609,10 @@ void modelLightStruct_setEnabled(ModelLightStruct* light, u8 enabled, f32 durati
 
 void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 near, f32 far)
 {
-    u8* obj = (u8*)light;
-
-    ((ModelLightStruct*)obj)->attenuationNear = near;
-    ((ModelLightStruct*)obj)->attenuationFar = far;
-    GXInitLightDistAttn(obj + 0x68, ((ModelLightStruct*)obj)->attenuationNear, lbl_803DE758, GX_DA_MEDIUM);
-    GXGetLightAttnK(obj + 0x68, &((ModelLightStruct*)obj)->attenuationK0, &((ModelLightStruct*)obj)->attenuationK1,
-                    &((ModelLightStruct*)obj)->attenuationK2);
+    light->attenuationNear = near;
+    light->attenuationFar = far;
+    GXInitLightDistAttn(&light->diffuseLightObj, light->attenuationNear, lbl_803DE758, GX_DA_MEDIUM);
+    GXGetLightAttnK(&light->diffuseLightObj, &light->attenuationK0, &light->attenuationK1, &light->attenuationK2);
 }
 
 void modelLightStruct_setDirection(ModelLightStruct* s, f32 x, f32 y, f32 z)
@@ -811,8 +785,10 @@ ModelLightStruct* objAllocLight(void* owner)
     ((ModelLightStruct*)light)->projectedLightChannelPreference = 1;
     ((ModelLightStruct*)light)->attenuationNear = lbl_803DE750;
     ((ModelLightStruct*)light)->attenuationFar = lbl_803DE754;
-    GXInitLightDistAttn(light + 0x68, ((ModelLightStruct*)light)->attenuationNear, lbl_803DE758, GX_DA_MEDIUM);
-    GXGetLightAttnK(light + 0x68, (f32*)(light + 0x124), (f32*)(light + 0x128), (f32*)(light + 0x12c));
+    GXInitLightDistAttn((GXLightObj*)(light + 0x68), ((ModelLightStruct*)light)->attenuationNear, lbl_803DE758,
+                        GX_DA_MEDIUM);
+    GXGetLightAttnK((GXLightObj*)(light + 0x68), (f32*)(light + 0x124), (f32*)(light + 0x128),
+                    (f32*)(light + 0x12c));
     zero = lbl_803DE75C;
     ((ModelLightStruct*)light)->attenuationFar = zero;
     light[0x2fc] = 0x7f;
@@ -831,7 +807,7 @@ ModelLightStruct* objAllocLight(void* owner)
     light[0xab] = 0xff;
     ((ModelLightStruct*)light)->spotCutoff = lbl_803DE79C;
     ((ModelLightStruct*)light)->spotFunction = 0;
-    GXInitLightAttnA(light + 0x68, lbl_803DE760, zero, zero);
+    GXInitLightAttnA((GXLightObj*)(light + 0x68), lbl_803DE760, zero, zero);
     light[0x114] = 0;
     light[0x104] = 0xff;
     light[0x100] = 0xff;
@@ -845,7 +821,8 @@ ModelLightStruct* objAllocLight(void* owner)
     ((ModelLightStruct*)light)->specularBrightness = lbl_803DE76C;
     atten = ((ModelLightStruct*)light)->specularAttenuationScale * lbl_803DE790;
     zero = lbl_803DE75C;
-    GXInitLightAttn(light + 0xc0, zero, zero, lbl_803DE760, atten, zero, *(f32*)&lbl_803DE760 - atten);
+    GXInitLightAttn((GXLightObj*)(light + 0xc0), zero, zero, lbl_803DE760, atten, zero,
+                    *(f32*)&lbl_803DE760 - atten);
     modelLightStruct_startColorFade((ModelLightStruct*)light, 0, 0);
     light[0xb0] = 0xff;
     light[0xb1] = 0xff;
@@ -938,14 +915,14 @@ void modelLightStruct_setEnabled(ModelLightStruct* light, u8 enabled, f32 durati
     light->activeIntensity = lbl_803DE760;
 }
 
-void modelLightStruct_loadDiffuseGXLight(u8* light, u8* obj, int lightId)
+void modelLightStruct_loadDiffuseGXLight(ModelLightStruct* light, GameObject* obj, GXLightID lightId)
 {
     f32 viewPos[3];
     f32* view;
     int lightType;
 
     view = Camera_GetViewMatrix();
-    lightType = ((ModelLightStruct*)light)->lightKind;
+    lightType = light->lightKind;
     switch (lightType)
     {
     case 2:
@@ -953,65 +930,61 @@ void modelLightStruct_loadDiffuseGXLight(u8* light, u8* obj, int lightId)
         if (gModelLightUseModelRelativePositions != 0)
         {
             f32 worldPos[3];
-            if (((ModelLightStruct*)light)->transformMode == 0)
+            if (light->transformMode == 0)
             {
-                worldPos[0] = ((GameObject*)obj)->anim.localPosX - playerMapOffsetX;
-                worldPos[1] = ((GameObject*)obj)->anim.localPosY;
-                worldPos[2] = ((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ;
+                worldPos[0] = obj->anim.localPosX - playerMapOffsetX;
+                worldPos[1] = obj->anim.localPosY;
+                worldPos[2] = obj->anim.localPosZ - playerMapOffsetZ;
                 PSMTXMultVec(view, worldPos, viewPos);
             }
             else
             {
-                *(IVec3*)viewPos = *(IVec3*)(obj + 0xc);
+                *(IVec3*)viewPos = *(IVec3*)&obj->anim.localPosX;
             }
-            PSVECSubtract(&((ModelLightStruct*)light)->viewX, viewPos, viewPos);
-            GXInitLightPos(light + 0x68, viewPos[0], viewPos[1], viewPos[2]);
+            PSVECSubtract(&light->viewX, viewPos, viewPos);
+            GXInitLightPos(&light->diffuseLightObj, viewPos[0], viewPos[1], viewPos[2]);
         }
         else
         {
-            GXInitLightPos(light + 0x68, ((ModelLightStruct*)light)->viewX, ((ModelLightStruct*)light)->viewY,
-                           ((ModelLightStruct*)light)->viewZ);
+            GXInitLightPos(&light->diffuseLightObj, light->viewX, light->viewY, light->viewZ);
         }
-        GXInitLightDir(light + 0x68, ((ModelLightStruct*)light)->viewDirX, ((ModelLightStruct*)light)->viewDirY,
-                       ((ModelLightStruct*)light)->viewDirZ);
-        if (obj != NULL && (((ObjAnimComponent*)obj)->modelInstance->flags & 0x10) == 0)
+        GXInitLightDir(&light->diffuseLightObj, light->viewDirX, light->viewDirY, light->viewDirZ);
+        if (obj != NULL && (obj->anim.modelInstance->flags & 0x10) == 0)
         {
-            u8 rgba[4];
-            u32 color;
+            GXColor color;
             f32 amt;
-            rgba[0] = light[0xa8] * (amt = ((ModelLightStruct*)light)->lightAmount);
-            rgba[1] = light[0xa9] * amt;
-            rgba[2] = light[0xaa] * amt;
-            rgba[3] = light[0xab] * amt;
-            color = *(u32*)rgba;
-            GXInitLightColor(light + 0x68, &color);
-            GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, *(f32*)&lbl_803DE75C);
+            color.r = light->diffuseColor[0] * (amt = light->lightAmount);
+            color.g = light->diffuseColor[1] * amt;
+            color.b = light->diffuseColor[2] * amt;
+            color.a = light->diffuseColor[3] * amt;
+            GXInitLightColor(&light->diffuseLightObj, color);
+            GXInitLightAttnK(&light->diffuseLightObj, lbl_803DE760, lbl_803DE75C, *(f32*)&lbl_803DE75C);
         }
         else
         {
-            u32 color;
-            color = *(u32*)(light + 0xa8);
-            GXInitLightColor(light + 0x68, &color);
-            GXInitLightAttnK(light + 0x68, ((ModelLightStruct*)light)->attenuationK0,
-                             ((ModelLightStruct*)light)->attenuationK1, ((ModelLightStruct*)light)->attenuationK2);
+            GXColor color;
+            color = *(GXColor*)light->diffuseColor;
+            GXInitLightColor(&light->diffuseLightObj, color);
+            GXInitLightAttnK(&light->diffuseLightObj, light->attenuationK0, light->attenuationK1,
+                             light->attenuationK2);
         }
         break;
     case 4:
     {
         f32 worldPos[3];
-        u32 color;
+        GXColor color;
         if (obj != NULL)
         {
-            if (((ModelLightStruct*)light)->transformMode == 0)
+            if (light->transformMode == 0)
             {
-                worldPos[0] = ((GameObject*)obj)->anim.localPosX - playerMapOffsetX;
-                worldPos[1] = ((GameObject*)obj)->anim.localPosY;
-                worldPos[2] = ((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ;
+                worldPos[0] = obj->anim.localPosX - playerMapOffsetX;
+                worldPos[1] = obj->anim.localPosY;
+                worldPos[2] = obj->anim.localPosZ - playerMapOffsetZ;
                 PSMTXMultVec(view, worldPos, viewPos);
             }
             else
             {
-                *(IVec3*)viewPos = *(IVec3*)(obj + 0xc);
+                *(IVec3*)viewPos = *(IVec3*)&obj->anim.localPosX;
             }
         }
         else
@@ -1020,23 +993,23 @@ void modelLightStruct_loadDiffuseGXLight(u8* light, u8* obj, int lightId)
             viewPos[1] = lbl_803DE75C;
             viewPos[2] = lbl_803DE75C;
         }
-        PSVECScale((f32*)(light + 0x40), (f32*)(light + 0x1c), lbl_803DE7A4);
-        PSVECAdd((f32*)(light + 0x1c), viewPos, viewPos);
-        GXInitLightPos(light + 0x68, viewPos[0], viewPos[1], viewPos[2]);
-        color = *(u32*)(light + 0xa8);
-        GXInitLightColor(light + 0x68, &color);
-        GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, *(f32*)&lbl_803DE75C);
+        PSVECScale(&light->viewDirX, &light->viewX, lbl_803DE7A4);
+        PSVECAdd(&light->viewX, viewPos, viewPos);
+        GXInitLightPos(&light->diffuseLightObj, viewPos[0], viewPos[1], viewPos[2]);
+        color = *(GXColor*)light->diffuseColor;
+        GXInitLightColor(&light->diffuseLightObj, color);
+        GXInitLightAttnK(&light->diffuseLightObj, lbl_803DE760, lbl_803DE75C, *(f32*)&lbl_803DE75C);
         break;
     }
     }
-    GXLoadLightObjImm(light + 0x68, lightId);
+    GXLoadLightObjImm(&light->diffuseLightObj, lightId);
 }
 
-void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
+void modelLightStruct_loadChannelLight(int channel, ModelLightStruct* light, GameObject* obj)
 {
     f32 viewDir[3];
     f32 localDir[3];
-    u32 color;
+    GXColor color;
     int lightId[1];
     f32* view[1];
     int lightType;
@@ -1051,13 +1024,13 @@ void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
     {
         lightId[0] = gModelLightNextGXLightId;
         view[0] = Camera_GetViewMatrix();
-        lightType = ((ModelLightStruct*)light)->lightKind;
+        lightType = light->lightKind;
         switch (lightType)
         {
         case 2:
-            PSVECSubtract(&((GameObject*)obj)->anim.localPosX, (f32*)(light + 0x10), localDir);
+            PSVECSubtract(&obj->anim.localPosX, &light->worldX, localDir);
             PSVECNormalize(localDir, localDir);
-            if (((ModelLightStruct*)light)->transformMode == 0)
+            if (light->transformMode == 0)
             {
                 PSMTXMultVecSR(view[0], localDir, viewDir);
             }
@@ -1066,18 +1039,17 @@ void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
 
                 *(IVec3*)viewDir = *(IVec3*)localDir;
             }
-            GXInitSpecularDir(light + 0xc0, viewDir[0], viewDir[1], viewDir[2]);
+            GXInitSpecularDir(&light->specularLightObj, viewDir[0], viewDir[1], viewDir[2]);
             break;
         case 3:
             break;
         case 4:
-            GXInitSpecularDir(light + 0xc0, ((ModelLightStruct*)light)->viewDirX, ((ModelLightStruct*)light)->viewDirY,
-                              ((ModelLightStruct*)light)->viewDirZ);
+            GXInitSpecularDir(&light->specularLightObj, light->viewDirX, light->viewDirY, light->viewDirZ);
             break;
         }
-        color = *(u32*)(light + 0x100);
-        GXInitLightColor(light + 0xc0, &color);
-        GXLoadLightObjImm(light + 0xc0, lightId[0]);
+        color = *(GXColor*)light->specularColor;
+        GXInitLightColor(&light->specularLightObj, color);
+        GXLoadLightObjImm(&light->specularLightObj, lightId[0]);
     }
     gModelLightChannelStates[channel].lightMask |= gModelLightNextGXLightId;
     gModelLightNextGXLightId <<= 1;

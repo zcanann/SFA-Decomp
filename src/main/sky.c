@@ -93,29 +93,6 @@ u8 lbl_803DB758 = 1;
 #define SKY_CHILD_OBJ_SUN            0x62b /* spawned into gSkySunObject */
 #define SKY_CHILD_OBJ_MOON           0x62c /* spawned into gSkyMoonObject */
 #define SKY_TEXTURE_SKY              0x5fa /* gSkySkyTexture */
-#define GX_FALSE                     0
-#define GX_TEV_SWAP0                 0
-#define GX_TG_MTX2x4                 1
-#define GX_TG_TEX0                   4
-#define GX_IDENTITY                  60
-#define GX_PTIDENTITY                125
-#define GX_CS_SCALE_1                0
-#define GX_TB_ZERO                   0
-#define GX_TEVPREV                   0
-#define GX_TEVSTAGE0                 0
-#define GX_TEV_ADD                   0
-#define GX_TEXCOORD0                 0
-#define GX_TEXMAP0                   0
-#define GX_TRUE                      1
-#define GX_CA_TEXA                   4
-#define GX_CC_C1                     4
-#define GX_CC_A1                     5
-#define GX_CA_ZERO                   7
-#define GX_CC_TEXC                   8
-#define GX_CC_ZERO                   0xf
-#define GX_COLOR_NULL                0xff
-#define GX_FOG_NONE                  0
-
 extern u8 gSkyConfigFieldIndices[];
 extern u8 gSkyEnvFxFlags;
 extern u8* gSkyState;
