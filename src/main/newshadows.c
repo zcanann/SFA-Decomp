@@ -292,7 +292,6 @@ extern void fn_80069EB8();
 extern void fn_8004C234(f32* a, f32* b);
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
-extern void fn_80061094(f32* v, f32* out, f32 x);
 extern void mapGetBlocks(int* a, int* b);
 extern f32* ObjModel_GetJointMatrix(ObjModel* model, int joint);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);

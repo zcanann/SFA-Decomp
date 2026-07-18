@@ -63,7 +63,6 @@ extern void fn_800605F0(void* cell, void* out);
 extern void fn_8006058C(void* cell, void* in);
 extern void fn_801A80F0(GameObject* e, int arg);
 
-extern int fn_80060688(GameObject* block, int v);
 extern void fn_801A80C4(GameObject* o, f32 x, f32 y, f32 z);
 
 u8 groundanimator_modelMtxFn(int* obj)

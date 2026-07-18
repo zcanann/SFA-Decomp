@@ -89,7 +89,6 @@ extern s16* gMapBlockIds;
 extern u8 lbl_803DCE98;
 extern u8* gMapBlockRefCounts;
 extern int textureLoad(int id, int param);
-extern void MapBlock_initHits(GameObject* blk, int blockId);
 typedef struct TexOverrideEntry
 {
     u32 key;   /* 0x00 */
@@ -959,7 +958,6 @@ char lbl_803822C8[0x41A0];
 extern void mapBlockFn_80059354(int p1, int p2, MapCellEnt* entry, int layer);
 extern int mapCheckCurBlocks(int v);
 
-extern void MapBlock_init(GameObject* blk);
 extern void MapBlock_initShaders(GameObject* blk);
 extern int return0_80060B90(void* blk);
 

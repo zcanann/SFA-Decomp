@@ -59,6 +59,10 @@ void setupToRenderMapBlock(int* block, void* posMtx);
 void fn_80062894(void);
 void fn_80062808(void);
 void renderGlows(void);
+void MapBlock_init(GameObject* obj);
+void MapBlock_initHits(GameObject* obj, int index);
+int fn_80060688(GameObject* obj, int type);
+void fn_80061094(f32* vec, f32* out, f32 scale);
 
 extern int lbl_803DCF34;
 extern f32* lbl_803DCF38;
