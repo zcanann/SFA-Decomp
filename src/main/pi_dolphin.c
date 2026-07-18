@@ -4290,7 +4290,7 @@ int initLoadFiles(void)
 void tvInit(void)
 {
     gRenderModeObj->viWidth = 0x294;
-    gRenderModeObj->viXOrigin = gRenderModeObj->viXOrigin - 0xa;
+    gRenderModeObj->viXOrigin -= 0xa;
     VIConfigure(gRenderModeObj);
     VIFlush();
     VIWaitForRetrace();
