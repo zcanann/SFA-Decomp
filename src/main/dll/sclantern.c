@@ -91,12 +91,3 @@ u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     return advanceResult;
 }
 
-u32 playerFn_801d6d58(void)
-{
-    u32 playerObj;
-
-    (*gMapEventInterface)->getCurChar();
-    playerObj = (u32)Obj_GetPlayerObject();
-    objGetAnimStateFlags((GameObject*)playerObj, 0xff);
-    return 2;
-}

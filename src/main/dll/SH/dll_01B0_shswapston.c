@@ -331,6 +331,16 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
     return 0;
 }
 
+u32 playerFn_801d6d58(void)
+{
+    u32 playerObj;
+
+    (*gMapEventInterface)->getCurChar();
+    playerObj = (u32)Obj_GetPlayerObject();
+    objGetAnimStateFlags((GameObject*)playerObj, 0xff);
+    return 2;
+}
+
 int warpstone_getExtraSize(void)
 {
     return 0xd8;
