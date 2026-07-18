@@ -35,12 +35,12 @@
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
 #include "main/dll/DR/DRcloudcage.h"
+#include "main/dll/dll_0255_snowbike.h"
 
 /* lbl_803DC0BC/gDrCloudCageRouteDistGate/lbl_803AD088 are shared route-rank state owned by
    drhightop; the lbl_803E5* pool and gDrCloudCagePointTemplate point template live in this
    DLL's data; timeDelta is the global frame delta. */
 extern s32 lbl_803DC0BC;
-extern f32 gDrCloudCageRouteDistGate;
 f32 gDrCloudCageWindVolume;
 extern u8 lbl_803AD088[];
 struct DRCloudCagePoints;
