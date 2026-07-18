@@ -37,6 +37,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "string.h"
 
 u8 gNewCloudBlizzardActivePrev;
 void* lbl_803DD1C8;
@@ -70,7 +71,6 @@ typedef struct
 {
     s16 uv[6];
 } SnowFlakeUVs;
-extern void* memset(void* dst, int c, int n);
 extern char sSnowFreeSnowCloudInvalidCloudId[];
 typedef struct WindSource
 {
@@ -2310,4 +2310,4 @@ char lbl_8030F670[] =
     0x61, 0x76, 0x61, 0x69, 0x6C, 0x61, 0x62, 0x6C, 0x65, 0x0A, 0x00, 0x00,
 };
 char sSnowKillSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i - in snowKillSnowCloud\n";
-
+

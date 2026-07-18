@@ -22,6 +22,7 @@
 #include "main/rcp_dolphin_api.h"
 #include "main/dll/dll_0015_save_settings.h"
 #include "track/intersect_api.h"
+#include "string.h"
 
 struct JapaneseDiscStatusResource;
 struct EnglishDiscStatusResource;
@@ -343,7 +344,6 @@ extern void textBlendSetupFn_80078a7c(void);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 int getGameState(void);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
-extern void* memcpy(void* dst, const void* src, int n);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int scale);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int flag);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int part, int flag);

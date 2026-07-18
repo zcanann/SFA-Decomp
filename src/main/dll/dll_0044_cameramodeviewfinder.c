@@ -40,6 +40,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_B8.h"
+#include "string.h"
 
 ViewfinderState* lbl_803DD548;
 
@@ -68,7 +69,6 @@ typedef struct CameraModeViewfinderInitArgs
 
 
 
-extern void* memset(void* dst, int v, int n);
 extern f32 lbl_803E17C0;
 extern f32 lbl_803E17C4;
 extern f32 lbl_803E17C8;

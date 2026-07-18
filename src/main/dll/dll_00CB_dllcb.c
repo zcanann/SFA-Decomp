@@ -35,6 +35,7 @@
 #include "main/dll/dll_00CD_iceball.h"
 #include "main/voxmaps.h"
 #include "main/curve.h"
+#include "string.h"
 
 typedef struct DllCBPlacement
 {
@@ -70,7 +71,6 @@ void* gDllCBStateHandlers[6];
 extern u8 lbl_80320008[];
 extern u8 lbl_80320080[];
 
-extern void* memcpy(void* dst, const void* src, int n);
 void ChukChuk_free(void);
 void ChukChuk_hitDetect(void);
 void ChukChuk_release(void);

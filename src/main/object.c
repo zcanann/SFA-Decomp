@@ -40,6 +40,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/player.h"
+#include "string.h"
 
 s16 gObjPartitionPivot;
 void* lbl_803DCBC0;
@@ -209,9 +210,7 @@ extern int gObjFileCount;
 extern f32 gMapSavedPlayerOffsetX;
 extern f32 gMapSavedPlayerOffsetZ;
 
-extern void* memset(void* dst, int val, int n);
 extern void objList_remove(void* list, void* item);
-extern void* memcpy(void* dst, const void* src, int n);
 extern void objFreeObjDef(u8* def, int flags);
 extern void Obj_RegisterObject(GameObject* obj, int b);
 extern void objLoadPlayerFromSave(u8* obj);

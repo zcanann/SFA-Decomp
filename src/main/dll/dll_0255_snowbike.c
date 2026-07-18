@@ -28,6 +28,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/drhightop.h"
 #include "main/dll/dll_801e991c.h"
+#include "string.h"
 
 f32 lbl_803DC0B8 = 15.0f;
 int lbl_803DC0BC = -1;
@@ -157,7 +158,6 @@ extern char lbl_803284E0[];
 /* texture asset loaded into lbl_803DDC60 (this DLL's only texture) */
 #define SNOWBIKE_TEXTURE_ID 0x186
 extern u32 lbl_803E5AE0;
-extern void* memcpy(void* dst, const void* src, int n);
 extern void Obj_ClearModelSlotIndex(int obj);
 extern f32 lbl_803E5AF0;
 extern f32 lbl_803E5B14;
