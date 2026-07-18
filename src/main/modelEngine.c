@@ -502,10 +502,6 @@ ModelList* allocModelStruct(int capacity, int dataSize)
     return list;
 }
 
-BOOL Resource_Release(void* handleSlot);
-
-void* Resource_Acquire(u16 id, int unused);
-
 void Resource_ResetRefCounts(void)
 {
     u32 i;
