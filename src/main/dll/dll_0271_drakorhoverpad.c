@@ -388,11 +388,11 @@ int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
             drakorhoverpad_nodeWobbleSin(CM_SLOT, CM_NODE->tangentYaw << 8);
         *(f32*)&((GameObject*)p)->ownerObj =
             drakorhoverpad_nodeWobbleSin(AMP_SLOT, AMP_NODE->tangentYaw << 8);
-        *(f32*)(p + 0xd8) = CM_NODE->y;
+        *(f32*)&((GameObject*)p)->childObjs[4] = CM_NODE->y;
         *(f32*)&((GameObject*)p)->unkDC = AMP_NODE->y;
-        *(f32*)(p + 0xe0) =
+        *(f32*)&((GameObject*)p)->unkE0[0] =
             drakorhoverpad_nodeWobbleSin(CM_SLOT, CM_NODE->tangentPitch << 8);
-        *(f32*)(p + 0xe4) =
+        *(f32*)&((GameObject*)p)->hitVolumeIndex =
             drakorhoverpad_nodeWobbleSin(AMP_SLOT, AMP_NODE->tangentPitch << 8);
         *(f32*)&((GameObject*)p)->userData2 = CM_NODE->z;
         ((GameObject*)p)->externalVelX = AMP_NODE->z;
@@ -409,11 +409,11 @@ int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
             drakorhoverpad_nodeWobbleSin(CM_SLOT, CM_NODE->tangentYaw << 8);
         *(f32*)&((GameObject*)p)->ownerObj =
             drakorhoverpad_nodeWobbleSin(TGT_SLOT, TGT_NODE->tangentYaw << 8);
-        *(f32*)(p + 0xd8) = CM_NODE->y;
+        *(f32*)&((GameObject*)p)->childObjs[4] = CM_NODE->y;
         *(f32*)&((GameObject*)p)->unkDC = TGT_NODE->y;
-        *(f32*)(p + 0xe0) =
+        *(f32*)&((GameObject*)p)->unkE0[0] =
             drakorhoverpad_nodeWobbleSin(CM_SLOT, CM_NODE->tangentPitch << 8);
-        *(f32*)(p + 0xe4) =
+        *(f32*)&((GameObject*)p)->hitVolumeIndex =
             drakorhoverpad_nodeWobbleSin(TGT_SLOT, TGT_NODE->tangentPitch << 8);
         *(f32*)&((GameObject*)p)->userData2 = CM_NODE->z;
         ((GameObject*)p)->externalVelX = TGT_NODE->z;

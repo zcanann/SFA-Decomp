@@ -109,13 +109,13 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (state->flags & ANIMSPACECRAFT_FLAG_BLINK_ON)
     {
-        *(f32*)(lbl_803AC948 + 0xc) = 143.0f;
-        *(f32*)(lbl_803AC948 + 0x10) = 16.0f;
-        *(f32*)(lbl_803AC948 + 0x14) = -79.0f;
+        ((PartFxSpawnParams*)lbl_803AC948)->posX = 143.0f;
+        ((PartFxSpawnParams*)lbl_803AC948)->posY = 16.0f;
+        ((PartFxSpawnParams*)lbl_803AC948)->posZ = -79.0f;
         (*gPartfxInterface)->spawnObject(obj, ANIMSPACECRAFT_PARTFX, lbl_803AC948, 4, -1, NULL);
-        *(f32*)(lbl_803AC948 + 0xc) = -143.0f;
-        *(f32*)(lbl_803AC948 + 0x10) = 16.0f;
-        *(f32*)(lbl_803AC948 + 0x14) = -79.0f;
+        ((PartFxSpawnParams*)lbl_803AC948)->posX = -143.0f;
+        ((PartFxSpawnParams*)lbl_803AC948)->posY = 16.0f;
+        ((PartFxSpawnParams*)lbl_803AC948)->posZ = -79.0f;
         (*gPartfxInterface)->spawnObject(obj, ANIMSPACECRAFT_PARTFX, lbl_803AC948, 4, -1, NULL);
     }
     tex = objFindTexture((GameObject*)(obj), 0, 0);
@@ -188,9 +188,9 @@ void imanimspacecraft_init(GameObject* obj)
     f32 pos;
     obj->animEventCallback = imanimspacecraft_SeqFn;
     pos = 0.0f;
-    *(f32*)(lbl_803AC948 + 0xc) = pos;
-    *(f32*)(lbl_803AC948 + 0x10) = pos;
-    *(f32*)(lbl_803AC948 + 0x14) = pos;
+    ((PartFxSpawnParams*)lbl_803AC948)->posX = pos;
+    ((PartFxSpawnParams*)lbl_803AC948)->posY = pos;
+    ((PartFxSpawnParams*)lbl_803AC948)->posZ = pos;
     mainSetBits(GAMEBIT_IM_Unk0BEB, 1);
     mainSetBits(GAMEBIT_IM_Unk0BEC, 1);
     mainSetBits(GAMEBIT_IM_Unk0BED, 1);

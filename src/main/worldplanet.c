@@ -465,24 +465,24 @@ void worldplanet_update(GameObject* obj)
             }
             for (b = 0, r = gWorldPlanetOrbitRadius; b < WORLDPLANET_PLANET_COUNT; b++)
             {
-                s16* rotPtr = (s16*)ObjList_FindObjectById(tbl[0][b]);
+                GameObject* planetObj = ObjList_FindObjectById(tbl[0][b]);
                 if (tbl[0][b] == WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID)
                 {
-                    *rotPtr = ang + tbl[1][b] + 0x4000;
+                    planetObj->anim.rotX = ang + tbl[1][b] + 0x4000;
                 }
                 else
                 {
-                    *rotPtr += 0x3c;
+                    planetObj->anim.rotX += 0x3c;
                 }
                 if (state->orbitSoundFrameCount > 2)
                 {
-                    Sfx_KeepAliveLoopedObjectSound((u32)rotPtr, SFXTRIG_crf_babyambi2);
+                    Sfx_KeepAliveLoopedObjectSound((u32)planetObj, SFXTRIG_crf_babyambi2);
                 }
-                *(f32*)(rotPtr + 6) =
+                planetObj->anim.localPosX =
                     r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fcos16Approx(3000) + (obj)->anim.localPosX;
-                *(f32*)(rotPtr + 8) =
+                planetObj->anim.localPosY =
                     r * fsin16Approx((ang + tbl[1][b]) & 0xffff) * fsin16Approx(3000) + (obj)->anim.localPosY;
-                *(f32*)(rotPtr + 10) = r * fcos16Approx((ang + tbl[1][b]) & 0xffff) + (obj)->anim.localPosZ;
+                planetObj->anim.localPosZ = r * fcos16Approx((ang + tbl[1][b]) & 0xffff) + (obj)->anim.localPosZ;
             }
         }
         state->orbitSoundFrameCount += 1;

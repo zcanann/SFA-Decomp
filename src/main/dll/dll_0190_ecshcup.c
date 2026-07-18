@@ -112,7 +112,7 @@ void ecsh_cup_update(short* obj)
     {
         gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, (int)obj, &dist);
     }
-    if (gEcShCupNearestObject != 0 && *(short*)(gEcShCupNearestObject + 0x44) != 0)
+    if (gEcShCupNearestObject != 0 && ((GameObject*)gEcShCupNearestObject)->anim.classId != 0)
     {
         (*(void (*)(int*, u8*)) * (int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x28))(&mode, buf);
         *obj += state->spinRate;
@@ -156,15 +156,15 @@ void ecsh_cup_update(short* obj)
             {
                 ((GameObject*)obj)->anim.localPosY = *(f32*)&lbl_803E5078 * timeDelta + ((GameObject*)obj)->anim.localPosY;
             }
-            if (*(u8*)((char*)obj + 0x37) != 0xff)
+            if (((GameObject*)obj)->anim.renderAlpha != 0xff)
             {
-                fade = (f32)(u32) * (u8*)((char*)obj + 0x37);
+                fade = (f32)(u32)((GameObject*)obj)->anim.renderAlpha;
                 fade = *(f32*)&lbl_803E507C * timeDelta + fade;
                 if (fade >= *(f32*)&lbl_803E5080)
                 {
                     fade = *(f32*)&lbl_803E5080;
                 }
-                *(u8*)((char*)obj + 0x37) = (u8)fade;
+                ((GameObject*)obj)->anim.renderAlpha = (u8)fade;
             }
             state->spawnTimer -= timeDelta;
             if (state->spawnTimer <= *(f32*)&lbl_803E5068)
@@ -188,15 +188,15 @@ void ecsh_cup_update(short* obj)
                     }
                 }
             }
-            if (*(u8*)((char*)obj + 0x37) != 0)
+            if (((GameObject*)obj)->anim.renderAlpha != 0)
             {
-                fade = (f32)(u32) * (u8*)((char*)obj + 0x37);
+                fade = (f32)(u32)((GameObject*)obj)->anim.renderAlpha;
                 fade = fade - *(f32*)&lbl_803E507C * timeDelta;
                 if (fade <= *(f32*)&lbl_803E5068)
                 {
                     fade = *(f32*)&lbl_803E5068;
                 }
-                *(u8*)((char*)obj + 0x37) = (u8)fade;
+                ((GameObject*)obj)->anim.renderAlpha = (u8)fade;
             }
         }
         else if (m == 8 && m != state->currentMode)
@@ -286,7 +286,7 @@ void ecsh_cup_init(int obj, int def)
     ((EcshCupState*)state)->bobTimer = randomGetRange(0, 0x258);
     ((EcshCupState*)state)->spinRate = randomGetRange(-0x320, 0x320);
     *(u8*)&((EcshCupState*)state)->bobDir = 1;
-    *(u8*)(obj + 0x37) = 0;
+    ((GameObject*)obj)->anim.renderAlpha = 0;
     ((EcshCupState*)state)->spawnTimer = *(f32*)&lbl_803E5068;
     if (gEcShCupNearestObject == 0)
     {

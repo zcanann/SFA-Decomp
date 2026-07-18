@@ -9,6 +9,7 @@
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
+#include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 #include "main/dll/dll_007C_dll7cfunc0.h"
@@ -253,9 +254,9 @@ void dll_7C_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)buf.ctx != 0)
         {
-            buf.pos[0] += *(f32*)(buf.ctx + 0x18);
-            buf.pos[1] += *(f32*)(buf.ctx + 0x1c);
-            buf.pos[2] += *(f32*)(buf.ctx + 0x20);
+            buf.pos[0] += ((GameObject*)buf.ctx)->anim.worldPosX;
+            buf.pos[1] += ((GameObject*)buf.ctx)->anim.worldPosY;
+            buf.pos[2] += ((GameObject*)buf.ctx)->anim.worldPosZ;
         }
         else
         {

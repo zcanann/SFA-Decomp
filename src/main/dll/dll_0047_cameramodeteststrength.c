@@ -314,8 +314,9 @@ void CameraModeTestStrength_update(short* cam)
             ((GameObject*)lbl_803DD560->linkedObject)->anim.localPosZ = v;
         }
         Obj_TransformWorldPointToLocal(((CameraObject*)cam)->anim.worldPosX, ((CameraObject*)cam)->anim.worldPosY,
-                                       ((CameraObject*)cam)->anim.worldPosZ, (float*)(cam + 6), (float*)(cam + 8),
-                                       (float*)(cam + 10), *(int*)(cam + 0x18));
+                                       ((CameraObject*)cam)->anim.worldPosZ, &((CameraObject*)cam)->anim.localPosX,
+                                       &((CameraObject*)cam)->anim.localPosY, &((CameraObject*)cam)->anim.localPosZ,
+                                       *(int*)(cam + 0x18));
     }
 }
 
@@ -427,8 +428,9 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
         ((CameraObject*)cam)->anim.worldPosY = py;
         ((CameraObject*)cam)->anim.worldPosZ = pz;
         Obj_TransformWorldPointToLocal(((CameraObject*)cam)->anim.worldPosX, ((CameraObject*)cam)->anim.worldPosY,
-                                       ((CameraObject*)cam)->anim.worldPosZ, (float*)(cam + 6), (float*)(cam + 8),
-                                       (float*)(cam + 10), *(int*)(cam + 0x18));
+                                       ((CameraObject*)cam)->anim.worldPosZ, &((CameraObject*)cam)->anim.localPosX,
+                                       &((CameraObject*)cam)->anim.localPosY, &((CameraObject*)cam)->anim.localPosZ,
+                                       *(int*)(cam + 0x18));
         cam[0] = pitch;
         cam[1] = yaw;
         cam[2] = roll;

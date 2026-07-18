@@ -486,7 +486,7 @@ void shadowRenderFn_8006b558(int* obj)
         set_shadowFlag_803dcc29(0);
         ((GameObject*)obj)->anim.rootMotionScale = saved;
         model = (int*)Obj_GetActiveModel((GameObject*)obj);
-        *(u16*)((char*)model + 0x18) &= ~0x8;
+        ((ObjModel*)model)->bufferFlags &= ~0x8;
         gxSetZMode_(1, GX_LEQUAL, 1);
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
         GXSetTexCopyDst(0x80, 0x80, GX_CTF_B8, GX_FALSE);
@@ -1438,7 +1438,7 @@ void* textureAlloc512(void)
 {
     Texture* tex = (Texture*)textureAlloc(0x200, 0x200, 1, 0, 0, 0, 0, 0, 0);
     tex->refCount = 1;
-    DCFlushRange((char*)tex + 0x60, *(u32*)((char*)tex + 0x44));
+    DCFlushRange((char*)tex + 0x60, tex->dataSize);
     return tex;
 }
 void fn_8006C5B8(u32* p)

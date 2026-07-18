@@ -946,10 +946,10 @@ void ShaderDef_free(int* def)
     {
         for (i = 0; i < 6; i++)
         {
-            s = *(void**)(gRcpDistortSlots + i * 0x1C);
+            s = ((RcpDistortSlot*)gRcpDistortSlots)[i].texture;
             if (((Texture*)s)->refCount != 0 && s == p1)
             {
-                (((Texture*)*(void**)(gRcpDistortSlots + i * 0x1C))->refCount)--;
+                (((Texture*)((RcpDistortSlot*)gRcpDistortSlots)[i].texture)->refCount)--;
                 break;
             }
         }
@@ -959,10 +959,10 @@ void ShaderDef_free(int* def)
         return;
     for (j = 0; j < 6; j++)
     {
-        if (((Texture*)*(void**)(gRcpDistortSlots + j * 0x1C))->refCount != 0 &&
-            *(void**)(gRcpDistortSlots + j * 0x1C) == p2)
+        if (((Texture*)((RcpDistortSlot*)gRcpDistortSlots)[j].texture)->refCount != 0 &&
+            ((RcpDistortSlot*)gRcpDistortSlots)[j].texture == p2)
         {
-            (((Texture*)*(void**)(gRcpDistortSlots + j * 0x1C))->refCount)--;
+            (((Texture*)((RcpDistortSlot*)gRcpDistortSlots)[j].texture)->refCount)--;
             return;
         }
     }
@@ -1396,7 +1396,7 @@ void textureFn_800541ac(int p1 /* unused */, int* tex, void* forceTex, int flags
     if (tex == NULL)
         return;
     idx = packed >> 16;
-    f10 = *(u16*)((char*)tex + 0x10);
+    f10 = ((Texture*)tex)->animationFrameCount;
     if (f10 != 0)
         count = f10 >> 8;
     else
@@ -1764,7 +1764,7 @@ void* textureLoad(int texId, u8 flagIn)
             }
             else
             {
-                *(u16*)(firstTex + 0x10) = mipChainWord;
+                ((Texture*)firstTex)->animationFrameCount = mipChainWord;
                 mipLevel = mips;
                 continue;
             }
@@ -1778,7 +1778,7 @@ void* textureLoad(int texId, u8 flagIn)
             {
                 flag = 0;
             }
-            *(u16*)(buf + 0xe) = 1;
+            ((Texture*)buf)->refCount = 1;
         }
         else
         {
@@ -1798,11 +1798,11 @@ void* textureLoad(int texId, u8 flagIn)
         if (mipLevel == 0)
         {
             firstTex = buf;
-            *(u16*)(buf + 0x10) = mipChainWord;
+            ((Texture*)buf)->animationFrameCount = mipChainWord;
         }
         else
         {
-            *(u16*)(buf + 0x10) = 1;
+            ((Texture*)buf)->animationFrameCount = 1;
         }
     }
     walk = firstTex;
@@ -1868,7 +1868,7 @@ void* textureLoad(int texId, u8 flagIn)
 
 int textureCrazyPointerFollowFn_80054c30(int* p, int n)
 {
-    int limit = *(u16*)((char*)p + 16);
+    int limit = ((Texture*)p)->animationFrameCount;
     int i;
     if (n >= limit)
         n = limit - 1;
@@ -1890,7 +1890,7 @@ void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
     ((Texture*)obj)->format = fmt;
     ((Texture*)obj)->width = w;
     ((Texture*)obj)->height = h;
-    *(u16*)(obj + 16) = 1;
+    ((Texture*)obj)->animationFrameCount = 1;
     ((Texture*)obj)->refCount = 0;
     ((Texture*)obj)->wrapS = wrapS;
     ((Texture*)obj)->wrapT = wrapT;
@@ -1940,7 +1940,7 @@ void textureFn_80053d58(void* vobj)
         int fmt = GXGetTexObjFmt(texObj);
         w = GXGetTexObjWidth(texObj);
         h = GXGetTexObjHeight(texObj);
-        *(u32*)(obj + 68) = GXGetTexBufferSize(w, h, fmt, 0, 0);
+        ((Texture*)obj)->dataSize = GXGetTexBufferSize(w, h, fmt, 0, 0);
     }
 }
 
@@ -2300,11 +2300,11 @@ void warpToMap(int idx, s8 transType)
 {
     u8* p = lbl_803DCE78;
     getTabEntry(p, MLDF_FILEID_WARPTAB_BIN, idx << 4, 16);
-    ((WarpDestination*)gRcpPendingWarpDest)->x = *(f32*)(p + 0);
-    ((WarpDestination*)gRcpPendingWarpDest)->y = *(f32*)(p + 4);
-    ((WarpDestination*)gRcpPendingWarpDest)->z = *(f32*)(p + 8);
-    ((WarpDestination*)gRcpPendingWarpDest)->layer = *(s16*)(p + 12);
-    ((WarpDestination*)gRcpPendingWarpDest)->angle = *(s16*)(p + 14);
+    ((WarpDestination*)gRcpPendingWarpDest)->x = ((WarpDestination*)p)->x;
+    ((WarpDestination*)gRcpPendingWarpDest)->y = ((WarpDestination*)p)->y;
+    ((WarpDestination*)gRcpPendingWarpDest)->z = ((WarpDestination*)p)->z;
+    ((WarpDestination*)gRcpPendingWarpDest)->layer = ((WarpDestination*)p)->layer;
+    ((WarpDestination*)gRcpPendingWarpDest)->angle = ((WarpDestination*)p)->angle;
     lbl_803DCEBA = (s16)idx;
     lbl_803DCEBD = 1;
     *(s8*)&gRcpWarpTransitionType = transType;
@@ -2563,7 +2563,7 @@ int objShouldUnload(u8* obj)
         y = lbl_80386648[idx2].y;
         z = lbl_80386648[idx2].z;
     }
-    dist = *(f32*)(obj + 0x3c);
+    dist = ((GameObject*)obj)->anim.loadDistance;
     if (((GameObject*)obj)->anim.parent != NULL)
     {
         x -= ((GameObject*)obj)->anim.localPosX;

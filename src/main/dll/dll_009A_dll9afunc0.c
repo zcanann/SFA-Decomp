@@ -13,6 +13,8 @@
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
+#include "main/game_object.h"
+#include "main/dll/partfx_interface.h"
 
 u8 lbl_803DB958[8] = {0, 0, 0, 1, 0, 2, 0, 0};
 u8 gScreenFx9APartTexB[4] = {0, 2, 0, 0};
@@ -217,21 +219,21 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     {
         if ((void*)hdr.target != NULL && (void*)parent != NULL)
         {
-            hdr.bx = hdr.bx + (*(f32*)(hdr.target + 0x18) + *(f32*)(parent + 0xc));
-            hdr.by = hdr.by + (*(f32*)(hdr.target + 0x1c) + *(f32*)(parent + 0x10));
-            hdr.bz = hdr.bz + (*(f32*)(hdr.target + 0x20) + *(f32*)(parent + 0x14));
+            hdr.bx = hdr.bx + (((GameObject*)hdr.target)->anim.worldPosX + ((PartFxSpawnParams*)parent)->posX);
+            hdr.by = hdr.by + (((GameObject*)hdr.target)->anim.worldPosY + ((PartFxSpawnParams*)parent)->posY);
+            hdr.bz = hdr.bz + (((GameObject*)hdr.target)->anim.worldPosZ + ((PartFxSpawnParams*)parent)->posZ);
         }
         else if ((void*)hdr.target != NULL)
         {
-            hdr.bx = hdr.bx + *(f32*)(hdr.target + 0x18);
-            hdr.by = hdr.by + *(f32*)(hdr.target + 0x1c);
-            hdr.bz = hdr.bz + *(f32*)(hdr.target + 0x20);
+            hdr.bx = hdr.bx + ((GameObject*)hdr.target)->anim.worldPosX;
+            hdr.by = hdr.by + ((GameObject*)hdr.target)->anim.worldPosY;
+            hdr.bz = hdr.bz + ((GameObject*)hdr.target)->anim.worldPosZ;
         }
         else if ((void*)parent != NULL)
         {
-            hdr.bx = hdr.bx + *(f32*)(parent + 0xc);
-            hdr.by = hdr.by + *(f32*)(parent + 0x10);
-            hdr.bz = hdr.bz + *(f32*)(parent + 0x14);
+            hdr.bx = hdr.bx + ((PartFxSpawnParams*)parent)->posX;
+            hdr.by = hdr.by + ((PartFxSpawnParams*)parent)->posY;
+            hdr.bz = hdr.bz + ((PartFxSpawnParams*)parent)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 3, lbl_80317B98, 1, lbl_803DB958, DLL9A_EFFECT_ID, 0);

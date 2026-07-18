@@ -412,7 +412,7 @@ void fn_80152514(int* obj, u8* state)
             {
                 flag = 1;
             }
-            *(int*)((u8*)newObj + 0xf4) = flag;
+            newObj->userData1 = flag;
             ObjLink_AttachChild((GameObject*)obj, newObj, attached);
         }
     }

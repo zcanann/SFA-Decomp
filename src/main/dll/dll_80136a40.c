@@ -317,9 +317,9 @@ int fn_80136A40(int unused, int c)
             if (gDebugDrawPass != 0)
             {
                 selectTexture((Texture*)((char*)gDebugFontTex0), 0);
-                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex0 + 10));
+                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex0)->width);
                 gDebugGlyphVScale =
-                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex0 + 0xc));
+                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex0)->height);
             }
             gDebugCurrentFontSet = 0;
         }
@@ -332,9 +332,9 @@ int fn_80136A40(int unused, int c)
             if (gDebugDrawPass != 0)
             {
                 selectTexture((Texture*)((char*)gDebugFontTex1), 0);
-                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex1 + 10));
+                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex1)->width);
                 gDebugGlyphVScale =
-                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex1 + 0xc));
+                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex1)->height);
             }
             gDebugCurrentFontSet = 1;
         }
@@ -347,9 +347,9 @@ int fn_80136A40(int unused, int c)
             if (gDebugDrawPass != 0)
             {
                 selectTexture((Texture*)((char*)gDebugFontTex2), 0);
-                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex2 + 10));
+                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex2)->width);
                 gDebugGlyphVScale =
-                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex2 + 0xc));
+                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex2)->height);
             }
             gDebugCurrentFontSet = 2;
         }
@@ -1403,7 +1403,7 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
             obj_extra = enemy_getHealthFraction((GameObject*)*objs);
         }
 
-        data = (int*)*(int*)(*objs + 0x4c);
+        data = (int*)((GameObject*)*objs)->anim.placementData;
         g1 = *(s16*)((char*)data + 0x18);
         if (g1 == -1)
         {
@@ -1437,7 +1437,7 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
                             continue;
                     }
                     {
-                        f32 dist = vec3f_distanceSquared(&origin->anim.worldPosX, (f32*)(*objs + 0x18));
+                        f32 dist = vec3f_distanceSquared(&origin->anim.worldPosX, &((GameObject*)*objs)->anim.worldPosX);
                         if (dist < bestDistSq)
                         {
                             bestDistSq = dist;
@@ -1498,7 +1498,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
         if (*(s8*)(entry + 0x74d) == commandType)
         {
             f32 dist = getXZDistance(&((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX,
-                                     (f32*)(*(u8**)(entry + 0x748) + 0x18));
+                                     &((GameObject*)*(u8**)(entry + 0x748))->anim.worldPosX);
 
             if (*(s8*)(entry + 0x74c) == 1)
             {
