@@ -91,23 +91,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 
 
 
-extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int animatedobj_getExtraSize(void) { return 0x140; }
 
 ObjectDescriptor gAnimatedObjDescriptor = {

@@ -308,7 +308,7 @@ void fn_8002A5DC(u8* obj)
         fn_800213D0(vecA, vecB, &((GameObject*)obj)->anim.rotZ, &((GameObject*)obj)->anim.rotY, (s16*)obj);
     }
 }
-void Obj_SetModelRenderOpAlpha(u8* obj, s8 alpha)
+void Obj_SetModelRenderOpAlpha(void* obj, u8 alpha)
 {
     ObjAnimComponent* objAnim;
     ModelFileHeader* modelFile;

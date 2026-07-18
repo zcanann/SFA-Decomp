@@ -19,7 +19,7 @@ typedef struct ModelRenderOp
     u8 pad40;
     u8 mode;
     u8 pad42;
-    s8 alphaOverride;
+    u8 alphaOverride;
 } ModelRenderOp;
 
 STATIC_ASSERT(sizeof(ModelRenderOp) == 0x44);

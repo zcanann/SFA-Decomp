@@ -18,6 +18,7 @@ void Obj_BuildInverseWorldTransformMatrix(GameObject* obj, f32* out);
 void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags);
 void Obj_SetModelColorFadeRecursive(GameObject* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 void Obj_SetModelColorOverrideRecursive(GameObject* obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled);
+void Obj_SetModelRenderOpAlpha(void* obj, u8 alpha);
 void Obj_Shatter(GameObject* obj);
 void Obj_StartModelFadeIn(GameObject* obj, int frames);
 void Obj_SetActiveModelIndex(GameObject* obj, int idx);

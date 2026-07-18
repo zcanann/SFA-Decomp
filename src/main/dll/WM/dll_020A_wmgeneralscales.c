@@ -54,8 +54,6 @@ ObjectDescriptor gWM_GeneralScalesObjDescriptor = {
 /* romlist object type of the sword child (retail 'scalessword') */
 #define WMGENERALSCALES_SWORD_OBJECT_TYPE 0x1B8
 
-extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
-
 int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WmGeneralScalesState* state;
@@ -75,11 +73,11 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             a = 0xff;
         }
         state->fadeAlpha = a;
-        Obj_SetModelRenderOpAlpha(obj, (u8)a);
+        Obj_SetModelRenderOpAlpha((void*)obj, (u8)a);
     }
     else
     {
-        Obj_SetModelRenderOpAlpha(obj, 0);
+        Obj_SetModelRenderOpAlpha((void*)obj, 0);
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -139,7 +137,7 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             u8* p = *(u8**)&((GameObject*)obj)->anim.modelInstance;
             p[0x5f] &= ~0x10;
-            Obj_SetModelRenderOpAlpha(obj, 0);
+            Obj_SetModelRenderOpAlpha((void*)obj, 0);
             state->fadeAlpha = 0;
             break;
         }
