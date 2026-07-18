@@ -44,11 +44,8 @@
 /* spore puff emitted on the sporePuffTimer tick during the burrow/attack state */
 #define EDIBLEMUSHROOM_PARTFX_SPORE_PUFF 0x51d
 
-void EdibleMushroom_init(GameObject* obj, int aux);
 void EdibleMushroom_update(u8* self);
 void EdibleMushroom_hitDetect(u8* obj);
-void EdibleMushroom_free(int obj);
-int EdibleMushroom_getExtraSize(void);
 s16 fn_801D129C(u8* obj, GameObject* player, u8* state, f32 dist);
 
 s16 gEdibleMushroomMoveIdTable[12] = {0, 1, 6, 2, 3, 4, 0, 5, 6, 7, -1, 0};
