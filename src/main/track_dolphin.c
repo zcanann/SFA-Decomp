@@ -379,7 +379,6 @@ extern void memcpy(void* dst, void* src, int n);
 extern void checkLoadBlock(int v, int* outA, int* outB);
 extern int mapTextureOverrideAcquire(int tex, int value, int type);
 extern int shouldDrawShadows(void);
-extern u16 modelFileHeaderGetCullDistance(u8* modelFile);
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 extern f32 fn_802925C4(f32 x, f32 y);
 extern float floor(float x);
@@ -2126,7 +2125,7 @@ void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* ranges, u32 a, int 
                 hdr = *(int*)model;
                 if (*(u16*)(hdr + 0xf0) == 0)
                     continue;
-                r = (f32)(u32)(u16)modelFileHeaderGetCullDistance((void*)hdr);
+                r = (f32)(u32)(u16)modelFileHeaderGetCullDistance((ModelFileHeader*)hdr);
                 c = resetObj->worldPosX;
                 if (f30 < c - r)
                     continue;
@@ -3810,7 +3809,7 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
         dy = ((GameObject*)o)->anim.localPosY - w0[1];
         dz = ((GameObject*)o)->anim.localPosZ - w0[2];
         hdr = *(int*)(*(int*)(*(int*)&((GameObject*)o)->anim.banks + (s8)((ObjHitsPriorityState*)p54)->stateIndex * 4));
-        rad = (f32)((u16)modelFileHeaderGetCullDistance((void*)hdr) + 0x32);
+        rad = (f32)((u16)modelFileHeaderGetCullDistance((ModelFileHeader*)hdr) + 0x32);
         rad = rad * rad;
         hit = 0;
         {

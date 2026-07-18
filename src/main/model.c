@@ -2489,9 +2489,9 @@ ModelRenderOp* ObjModel_GetRenderOp(ModelFileHeader* model, int renderOpIndex)
 
 void memcpyToCache(void* dst, void* src, u32 count);
 
-u16 modelFileHeaderGetCullDistance(u8* modelFile)
+u16 modelFileHeaderGetCullDistance(ModelFileHeader* modelFile)
 {
-    return ((ModelFileHeader*)modelFile)->cullDistance;
+    return modelFile->cullDistance;
 }
 
 u8* gModelCacheBuffersA[4];

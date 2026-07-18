@@ -229,7 +229,6 @@ extern void fn_80013B6C(int* p, int n);
 extern void mapLoadForObject(int id, void* obj);
 extern int loadModLines(int n, s16* out);
 extern void intersectModLineBuild(u8* buf);
-u16 modelFileHeaderGetCullDistance(u8* modelFile);
 void ObjModel_ClearRenderAttachment(u8* model);
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
 int roundUpTo32(int x);
@@ -2206,9 +2205,9 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         modelPtr = *(int*)((u8*)obj->models + i * 4);
         if (modelPtr != 0)
         {
-            if ((f32)modelFileHeaderGetCullDistance(*(u8**)modelPtr) > max)
+            if ((f32)modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr) > max)
             {
-                max = modelFileHeaderGetCullDistance(*(u8**)modelPtr);
+                max = modelFileHeaderGetCullDistance(*(ModelFileHeader**)modelPtr);
             }
         }
     }

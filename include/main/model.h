@@ -267,6 +267,7 @@ STATIC_ASSERT(offsetof(ObjModelChain, unk19) == 0x19);
 STATIC_ASSERT(offsetof(ObjModelChain, enabled) == 0x1A);
 
 ObjModelJointMatrix *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex);
+u16 modelFileHeaderGetCullDistance(ModelFileHeader* modelFile);
 void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out);
 int ObjModel_HasActiveBlendChannels(ObjModel* model);
 void ObjModel_ClearBlendChannels(ObjModel* model);

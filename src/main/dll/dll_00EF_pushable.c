@@ -143,7 +143,6 @@ extern void memcpy(void* dst, void* src, int n);
 int gPushableSavedMapIdCount;
 int gPushableSavedMapIds[0x28];
 extern void pushable_savePos(int* obj);
-extern int modelFileHeaderGetCullDistance(int hdr);
 
 int pushable_render2(GameObject* obj);
 void pushable_modelMtxFn(GameObject* obj, int modelNo);
@@ -1424,7 +1423,9 @@ void pushable_init(s16* obj, char* def)
     state->unk_B0 = *(int*)&((PushableObjectDef*)def)->unk1C;
     state->scale = (f32) * &((PushableObjectDef*)def)->scaleRaw / PUSHABLE_SCALE_DENOM;
     state->scale = state->scale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    state->cullDistance = state->scale * (f32)(u16)modelFileHeaderGetCullDistance(*entry) + PUSHABLE_MIN_GROUND_CLEARANCE;
+    state->cullDistance =
+        state->scale * (f32)(u16)modelFileHeaderGetCullDistance((ModelFileHeader*)*entry) +
+        PUSHABLE_MIN_GROUND_CLEARANCE;
     {
         f32 z0 = PUSHABLE_ZERO;
         state->timer_0x14 = z0;
