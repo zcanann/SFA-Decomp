@@ -19,6 +19,10 @@
 #include "main/dll/dll_0119_coldwatercontrol.h"
 #include "main/dll/dll_00EC_infopoint.h"
 #include "main/dll/dll_011A_decoration11a.h"
+#include "main/dll/dll_010C_lanternfirefly.h"
+#include "main/dll/dll_010B_fireflylantern.h"
+#include "main/dll/dll_010A_fallladders.h"
+#include "main/dll/dll_0109_unk.h"
 #include "main/dll/CF/windlift.h"
 
 typedef struct PortalspelldoorPlacement
@@ -40,48 +44,6 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 extern f32 lbl_803E3A8C;
 extern f32 lbl_803E3A90;
 extern f32 lbl_803E3A88;
-
-extern void LanternFireFly_getExtraSize(void);
-extern void dll_109_getExtraSize_ret_16(void);
-extern void Fall_Ladders_getExtraSize(void);
-
-extern void LanternFireFly_getObjectTypeId(void);
-extern void dll_109_getObjectTypeId(void);
-extern void Fall_Ladders_getObjectTypeId(void);
-
-extern void LanternFireFly_free(void);
-extern void dll_109_free(void);
-extern void Fall_Ladders_free(void);
-
-extern void LanternFireFly_render(void);
-extern void FireFlyLantern_getExtraSize(void);
-extern void dll_109_render(void);
-extern void Fall_Ladders_render(void);
-
-extern void LanternFireFly_hitDetect(void);
-extern void FireFlyLantern_getObjectTypeId(void);
-extern void dll_109_hitDetect_nop(void);
-extern void Fall_Ladders_hitDetect(void);
-
-extern void LanternFireFly_update(GameObject*);
-extern void FireFlyLantern_free(void);
-extern void carryable_break_respawn_update(GameObject*);
-extern void Fall_Ladders_update(GameObject*);
-
-extern void LanternFireFly_init(GameObject*);
-extern void FireFlyLantern_render(void);
-extern void dll_109_init(GameObject*);
-extern void Fall_Ladders_init(void);
-
-extern void LanternFireFly_release(void);
-extern void FireFlyLantern_update(GameObject*);
-extern void dll_109_release_nop(void);
-extern void Fall_Ladders_release(void);
-
-extern void LanternFireFly_initialise(void);
-extern void FireFlyLantern_init(GameObject*);
-extern void dll_109_initialise_nop(void);
-extern void Fall_Ladders_initialise(void);
 
 int PortalSpellDoor_getExtraSize(void)
 {
