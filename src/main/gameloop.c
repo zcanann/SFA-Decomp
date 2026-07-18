@@ -206,8 +206,6 @@ extern f32 lbl_803DE7A8;
 extern u8 lbl_803DCAC4;
 extern int lbl_803DCACC;
 extern void GXSetCopyFilter(int aa, u8* samplePattern, int vf, u8* vfilter);
-extern int lbl_803DB428;
-extern int lbl_803DB42C;
 extern f32 gGameLoopResetHoldTimer;
 extern f32 gGameLoopResetFadeOutTimer;
 extern u8 gGameLoopHardReset;
