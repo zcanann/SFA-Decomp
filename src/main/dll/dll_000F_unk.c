@@ -737,6 +737,8 @@ void player_setOverride(u32 x)
 void player_updateVel(char* p, char* obj, int unused)
 {
     float fcos, fsin;
+    f32 vx;
+    f32 vz;
     if (((s32)(s8) * (obj + 0x34c) & 1) != 0)
     {
         fcos = mathSinf(gPlayerMovePi * (float)(s32)((GameObject*)p)->anim.rotX / gPlayerMoveHalfCircleAngle);
@@ -755,9 +757,9 @@ void player_updateVel(char* p, char* obj, int unused)
                 -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;
             if (((s32)(s8) * (obj + 0x34c) & 4) != 0)
             {
-                ((BaddieState*)obj)->animSpeedC =
-                    sqrtf(((GameObject*)p)->anim.velocityX * ((GameObject*)p)->anim.velocityX +
-                          ((GameObject*)p)->anim.velocityZ * ((GameObject*)p)->anim.velocityZ);
+                vx = ((GameObject*)p)->anim.velocityX * ((GameObject*)p)->anim.velocityX;
+                vz = ((GameObject*)p)->anim.velocityZ * ((GameObject*)p)->anim.velocityZ;
+                ((BaddieState*)obj)->animSpeedC = sqrtf(vx + vz);
             }
         }
         *(s8*)(obj + 0x34c) = 0;
@@ -987,9 +989,12 @@ void player_applyVelocityStep(int* obj, int* ctx, f32 t)
 void fn_800D8414(int* obj, int* ctx)
 {
     int diff;
+    f32 mx;
+    f32 mz;
     *(f32*)&((BaddieState*)ctx)->trackedObj = ((BaddieState*)ctx)->inputMagnitude;
-    ((BaddieState*)ctx)->inputMagnitude = sqrtf(((BaddieState*)ctx)->moveInputX * ((BaddieState*)ctx)->moveInputX +
-                                                ((BaddieState*)ctx)->moveInputZ * ((BaddieState*)ctx)->moveInputZ);
+    mx = ((BaddieState*)ctx)->moveInputX * ((BaddieState*)ctx)->moveInputX;
+    mz = ((BaddieState*)ctx)->moveInputZ * ((BaddieState*)ctx)->moveInputZ;
+    ((BaddieState*)ctx)->inputMagnitude = sqrtf(mx + mz);
     if (((BaddieState*)ctx)->inputMagnitude > lbl_803E0578)
     {
         ((BaddieState*)ctx)->inputMagnitude = lbl_803E0578;
