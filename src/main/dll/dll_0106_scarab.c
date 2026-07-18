@@ -88,10 +88,6 @@ extern f32 lbl_803E3A34;
 extern f32 lbl_803E3A38;
 extern f32 lbl_803E3A3C;
 extern f32 lbl_803E3A40;
-extern f32 lbl_803DBDD0;
-extern f32 lbl_803DBDC4;
-extern f32 lbl_803DBDC8;
-extern f32 lbl_803DBDCC;
 const ScarabVec3 sScarabStartInit = {0.0f, 0.0f, 0.0f};
 const ScarabVec3 sScarabEndInit = {0.0f, 0.0f, 0.0f};
 int scarab_sweptCollide(GameObject* obj)
