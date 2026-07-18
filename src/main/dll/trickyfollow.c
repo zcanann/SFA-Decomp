@@ -10,6 +10,7 @@
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/path_control_interface.h"
+#include "main/dll/objfsa_query_api.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -81,7 +82,6 @@ extern f32 lbl_803E24C0;
 extern char lbl_8031D2E8[];
 
 extern int isInWalkGroupOrPatch(f32* pos);
-extern u32 Objfsa_GetWalkGroupIndexAtPoint(f32* pos, void* info);
 extern s16 walkGroupFn_800db3e4(f32* pos, f32* target, int walkGroup);
 extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern void fn_800DB240(void* pos, void* out, u32 patch);
@@ -195,7 +195,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
         ((TrickyState*)state)->patch[2] = 0;
         ((TrickyState*)state)->patch[3] = 0;
     }
-    targetWg = Objfsa_GetWalkGroupIndexAtPoint((f32*)target, &wgi);
+    targetWg = Objfsa_GetWalkGroupIndexAtPoint((f32*)target, (ObjfsaWalkGroupPatchInfo*)&wgi);
     if (((wg != 0) && (targetWg == 0)) && ((ulink = getPatchGroup((f32*)target, wg)) != 0))
     {
         walkPath_writeU16LE(ulink, pair);

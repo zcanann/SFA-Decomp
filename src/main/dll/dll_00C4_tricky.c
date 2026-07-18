@@ -38,6 +38,7 @@
 #include "main/dll/flameblast_api.h"
 #include "main/dll/player_api.h"
 #include "main/dll/path_control_interface.h"
+#include "main/dll/objfsa_query_api.h"
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
@@ -250,7 +251,6 @@ extern f32 lbl_803E25C8;
 
 extern int fn_80138D7C(int obj, int state);
 extern void Tricky_updateBlendChannelWeight(int obj, int state);
-extern u8 Objfsa_GetWalkGroupIndexAtPoint(void* pos, int patchInfo);
 extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int filter4, int filter5);
 extern f32 lbl_803E25A4;
@@ -463,7 +463,7 @@ void trickyFn_80144f50(GameObject* obj, int state)
 void trickyFn_801451d8(GameObject* obj, int state)
 {
     u8 pathBytes[16];
-    u32 pathByte = Objfsa_GetWalkGroupIndexAtPoint((void*)((int)obj + 0x18), 0);
+    u32 pathByte = (u8)Objfsa_GetWalkGroupIndexAtPoint((f32*)((int)obj + 0x18), NULL);
 
     pathBytes[0] = pathByte;
     if (pathByte == 0)
