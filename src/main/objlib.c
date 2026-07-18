@@ -171,7 +171,7 @@ typedef struct ObjPathPoint
     s8 modelIndex[6];
 } ObjPathPoint;
 
-void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
+void ObjHitbox_SetStateIndex(GameObject* object, ObjHitReactState* hitStatePtr, int stateIndex)
 {
     ObjAnimComponent* obj;
     ObjHitsPriorityState* hitState;
@@ -179,7 +179,7 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
     ObjHitsPriorityWorkSlot* workSlot;
     int modelCount;
 
-    obj = (ObjAnimComponent*)objPtr;
+    obj = &object->anim;
     modelCount = obj->modelInstance->modelCount;
     if (stateIndex >= modelCount)
     {

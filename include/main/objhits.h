@@ -88,7 +88,7 @@ extern const f32 gObjHitsScalarZero;
 extern f32 gObjHitsScalarOne;
 extern char sObjHitsTooManyHitSpheresWarning[];
 
-void ObjHitbox_SetStateIndex(int obj, int hitState, int stateIndex);
+void ObjHitbox_SetStateIndex(GameObject* obj, ObjHitReactState* hitState, int stateIndex);
 #ifndef OBJHITS_IMPLEMENTATION
 void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, int radius);
 void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalMin, int verticalMax);

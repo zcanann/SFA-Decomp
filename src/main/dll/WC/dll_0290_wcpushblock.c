@@ -617,7 +617,7 @@ void wcpushblock_init(GameObject* obj, WCPushBlockSetup* setup)
     {
         objAnim->bankIndex = 0;
     }
-    ObjHitbox_SetStateIndex((int)obj, *(int*)&obj->anim.hitReactState, objAnim->bankIndex);
+    ObjHitbox_SetStateIndex(obj, obj->anim.hitReactState, objAnim->bankIndex);
     state->initialTile = setup->initialTile;
     state->baseY = lbl_803E6DA0 + setup->base.posY;
 }
