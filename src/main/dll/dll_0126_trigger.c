@@ -60,6 +60,7 @@
 #include "main/dll/mmp_gyservent.h"
 #include "main/audio/sfx.h"
 #include "main/sky.h"
+#include "main/dll/dll_80198a00.h"
 
 #define Sfx_StopFromObjectLegacy(obj, sfxId) \
     ((void (*)(void*, int))Sfx_StopFromObject)((obj), (sfxId))
@@ -87,9 +88,6 @@ extern int mainGetBit(int eventId);
 extern void fn_8006FC00(int v);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void mainSetBits(int eventId, int value);
-extern int fn_80198B68(int obj, int p2);
-extern void fn_80198DE8(int obj, int target);
-extern void fn_80198A00(int obj, int target);
 
 #define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
 
@@ -881,7 +879,7 @@ void Trigger_hitDetect(GameObject* obj)
                     }
                     if (ok2 && ok)
                     {
-                        fn_80198DE8((int)obj, target);
+                        fn_80198DE8((u8*)obj, target);
                     }
                     break;
                 case 0x4e:
@@ -895,8 +893,8 @@ void Trigger_hitDetect(GameObject* obj)
                     if (ok)
                     {
                         TriggerState* st = (TriggerState*)(obj)->extra;
-                        inside = fn_80198B68((int)obj, (int)&st->prevTargetPosX);
-                        wasInside = fn_80198B68((int)obj, (int)&st->targetPosX);
+                        inside = fn_80198B68((u8*)obj, &st->prevTargetPosX);
+                        wasInside = fn_80198B68((u8*)obj, &st->targetPosX);
                         if (inside != 0)
                         {
                             if (wasInside == 0)
@@ -950,7 +948,7 @@ void Trigger_hitDetect(GameObject* obj)
                 case 0xf4:
                     if (ok)
                     {
-                        fn_80198A00((int)obj, target);
+                        fn_80198A00((u8*)obj, target);
                     }
                     break;
                 }

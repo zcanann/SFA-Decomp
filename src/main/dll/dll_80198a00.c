@@ -6,6 +6,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/dll/dll_80198a00.h"
 
 /* Per-object trigger-plane state stashed at obj->extra. Distinct from
  * MmpMoonrockState (which overlays the same slot for the carried-rock class):
