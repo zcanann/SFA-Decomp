@@ -5,7 +5,7 @@
 #include "ghidra_import.h"
 
 void fn_801E9C00(GameObject* obj, int state);
-void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, int intensity, int unused,
+void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale, int intensity, u8* unused,
                                 u8 channelFlags);
 f32 fn_801EA678(GameObject* obj, int state);
 

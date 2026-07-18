@@ -361,9 +361,8 @@ int SnowBike_SeqFn(short* obj, int unused, ObjSeqState* seq)
             ((SnowBikeState*)state)->stickY = 0x46;
         }
 
-        ((void (*)(int, int, f32, int, int, u8))drcloudcage_updateEngineFx)(
-            (int)obj, state, ((SnowBikeState*)state)->distanceScale,
-            (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->unk430), state + 0x461, 4);
+        drcloudcage_updateEngineFx((GameObject*)obj, (void*)state, ((SnowBikeState*)state)->distanceScale,
+                                   (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->unk430), (u8*)(state + 0x461), 4);
     }
 
     ((HightopFlags3*)&((SnowBikeState*)state)->flags428)->active = 0;

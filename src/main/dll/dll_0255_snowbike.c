@@ -20,6 +20,7 @@
 #include "main/vecmath.h"
 #include "main/dll/DR/DRpickup.h"
 #include "main/dll/DR/DRshackle.h"
+#include "main/dll/DR/DRcloudcage.h"
 #include "main/mm.h"
 #include "main/pad.h"
 #include "main/frame_timing.h"
@@ -170,7 +171,6 @@ extern f32 lbl_803E5C5C;
 extern f32 lbl_803E5C60;
 extern f32 lbl_803E5C64;
 extern f32 lbl_803E5C68;
-extern void drcloudcage_updateEngineFx(int obj, u8* state, f32 speed, int val, u8* p, int n);
 extern f32 lbl_803E5B6C;
 extern f32 lbl_803E5BA0;
 extern f32 gSnowBikeBamToDeg;
@@ -859,7 +859,7 @@ void SnowBike_update(GameObject* obj)
             objApplyVelocity((u8*)obj);
         }
         fn_801EB0D4((int)obj, (int)state);
-        drcloudcage_updateEngineFx((int)obj, state, ((SnowBikeState*)state)->distanceScale,
+        drcloudcage_updateEngineFx(obj, state, ((SnowBikeState*)state)->distanceScale,
                                    (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->unk430), state + 0x461, 7);
         fn_801EB634(obj, (int)state);
         obj->anim.rotX = ((SnowBikeState*)state)->yaw;

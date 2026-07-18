@@ -34,6 +34,7 @@
 #include "string.h"
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
+#include "main/dll/DR/DRcloudcage.h"
 
 /* lbl_803DC0BC/gDrCloudCageRouteDistGate/lbl_803AD088 are shared route-rank state owned by
    drhightop; the lbl_803E5* pool and gDrCloudCagePointTemplate point template live in this
@@ -406,7 +407,7 @@ typedef struct DRCloudCagePulseParams
     f32 unk14;
 } DRCloudCagePulseParams;
 
-void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, int intensity, int unused,
+void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale, int intensity, u8* unused,
                                 u8 channelFlags)
 {
     f32 clamped;
@@ -548,7 +549,7 @@ void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, i
         objfx_spawnLightPulseLegacy(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
                               &pulse);
     }
-    fn_801E9C00(obj, state);
+    fn_801E9C00(obj, (int)state);
 }
 
 f32 fn_801EA678(GameObject* obj, int state)
