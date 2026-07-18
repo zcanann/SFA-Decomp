@@ -77,8 +77,6 @@ STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 #define DRCLOUDRUNNER_CHILD_OBJ_PROJECTILE 0x42a
 
 
-void fn_802BF0C8(GameObject* obj, CloudRunnerState* state, int mode);
-
 void DR_CloudRunner_func23(GameObject* obj, int mode, int* out)
 {
     struct gbids
