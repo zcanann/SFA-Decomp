@@ -202,11 +202,11 @@ int Hagabon_getObjectTypeId(void)
     return 0xb;
 }
 
-void Hagabon_free(GameObject* obj)
+void Hagabon_free(int obj)
 {
-    void** state = obj->extra;
-    ObjGroup_RemoveObject((int)obj, HAGABON_OBJGROUP);
-    Sfx_StopFromObject((int)obj, SFXTRIG_en_twiggysnap11);
+    void** state = ((GameObject*)obj)->extra;
+    ObjGroup_RemoveObject(obj, HAGABON_OBJGROUP);
+    Sfx_StopFromObject(obj, SFXTRIG_en_twiggysnap11);
     if (*state != NULL)
     {
         mm_free(*state);

@@ -11,7 +11,7 @@ void Hagabon_release(void);
 void Hagabon_initialise(void);
 void fn_8014E1DC(GameObject* obj, HagabonState* state);
 void Hagabon_hitDetect(GameObject* obj);
-void Hagabon_free(GameObject* obj);
+void Hagabon_free(int obj);
 void Hagabon_init(GameObject* obj, int data, int skip_alloc);
 void Hagabon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 int Hagabon_getExtraSize(void);
