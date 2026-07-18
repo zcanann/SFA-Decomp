@@ -4,6 +4,7 @@
 #include "types.h"
 
 f32 PSVECMag(f32* v);
+f32 PSVECSquareMag(f32* v);
 f32 PSVECSquareDistance(f32* a, f32* b);
 f32 PSVECDotProduct(f32* a, f32* b);
 f32 PSVECDistance(f32* a, f32* b);
@@ -19,6 +20,7 @@ void PSMTXTrans(f32* mtx, f32 x, f32 y, f32 z);
 void PSMTXIdentity(f32* mtx);
 u32 PSMTXInverse(f32* src, f32* dst);
 void PSMTXMultVec(f32* mtx, f32* src, f32* dst);
+void PSMTXMultVecArray(f32* mtx, f32* src, f32* dst, u32 count);
 void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
 void PSMTXRotAxisRad(f32* mtx, f32* axis, f32 rad);
 void PSMTXRotRad(f32* mtx, int axis, f32 rad);
