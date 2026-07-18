@@ -815,11 +815,11 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
                 s16 lim;
                 if (n2 % 2 != 0)
                 {
-                    lim = (s16)(gObjPrintDegToAngle * (f32)sp2[i]);
+                    lim = (s16)(*(f32*)&gObjPrintDegToAngle * (f32)sp2[i]);
                 }
                 else
                 {
-                    lim = (s16)(gObjPrintDegToAngle * (f32)spd[i]);
+                    lim = (s16)(*(f32*)&gObjPrintDegToAngle * (f32)spd[i]);
                 }
                 v = src[n2];
                 dst[n2] = v;
