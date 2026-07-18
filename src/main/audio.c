@@ -2395,12 +2395,8 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
     {
         listener = &((GameObject*)player)->anim.worldPosX;
     }
-    else
+    else if (slot != NULL)
     {
-        if (slot == NULL)
-        {
-            return lbl_803DE570;
-        }
         if (player != NULL)
         {
             PSVECSubtract((f32*)((u8*)slot + 0x44), &((GameObject*)player)->anim.worldPosX, v);
@@ -2421,6 +2417,10 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
         {
             listener = (f32*)((u8*)slot + 0x44);
         }
+    }
+    else
+    {
+        return lbl_803DE570;
     }
     PSVECSubtract(listener, soundPos, outDelta);
     return PSVECMag(outDelta);
