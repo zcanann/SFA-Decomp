@@ -588,41 +588,41 @@ int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
     cpX = cp->posX;
     cpZ = cp->posZ;
     distB = offs2 + (cos2 * cpX + sin2 * cpZ);
-    if (((distA < zero && dist < zero) || (distA >= lbl_803E04E8 && dist >= lbl_803E04E8)) &&
-        ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 > lbl_803E04E8)))
+    if (((distA < zero && dist < zero) || (distA >= 0.0f && dist >= 0.0f)) &&
+        ((distB <= 0.0f && dist2 <= 0.0f) || (distB > 0.0f && dist2 > 0.0f)))
     {
         dx = cpX - cp2X;
         dy = cp->posY - cp2->posY;
         dz = cpZ - cp2Z;
         len = sqrtf(dz * dz + (dx * dx + dy * dy));
-        if (len > lbl_803E04E8)
+        if (len > 0.0f)
         {
             q = lbl_803E0504 / len;
             nx = dx * q;
             nz = dz * q;
         }
         proj = cosv * nx + sinv * nz;
-        if (proj > lbl_803E0510 && proj < lbl_803E0514)
+        if (proj > -0.01f && proj < lbl_803E0514)
         {
             return ang;
         }
         t0 = -dist / proj;
         proj2 = cos2 * nx + sin2 * nz;
-        if (proj2 > lbl_803E0510 && proj2 < lbl_803E0514)
+        if (proj2 > -0.01f && proj2 < lbl_803E0514)
         {
             return ang;
         }
         sum = dist2 / proj2;
-        frac = lbl_803E04E8;
+        frac = 0.0f;
         sum = t0 + sum;
-        if (lbl_803E04E8 != sum)
+        if (0.0f != sum)
         {
             frac = t0 / sum;
         }
         state->routeProgress = frac;
-        if (state->routeProgress < lbl_803E04E8)
+        if (state->routeProgress < 0.0f)
         {
-            state->routeProgress = lbl_803E04E8;
+            state->routeProgress = 0.0f;
         }
         if (state->routeProgress >= lbl_803E0518)
         {
@@ -821,8 +821,8 @@ void Checkpoint_Remove(CheckpointRouteEntry* obj)
     }
     if (i >= count)
         return;
-    count = gCheckpointRouteCount - 1;
-    gCheckpointRouteCount = count;
+    gCheckpointRouteCount = gCheckpointRouteCount - 1;
+    count = gCheckpointRouteCount;
     e = &gCheckpointRouteTable[i];
     while (i < count)
     {
