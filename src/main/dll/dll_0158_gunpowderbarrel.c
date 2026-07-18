@@ -518,7 +518,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
 void gunpowderbarrel_updatePhysics(int* obj)
 {
     u8* sub;
-    int* contact;
+    GameObject* contact;
     f32 outY;
     int block;
     f32 dt;
@@ -628,11 +628,11 @@ void gunpowderbarrel_updatePhysics(int* obj)
         if (contact != 0)
         {
             u32 flags;
-            ObjHits_AddContactObject((int)contact, (int)obj);
-            flags = ((ObjAnimComponent*)contact)->modelInstance->flags;
+            ObjHits_AddContactObject(contact, (GameObject*)obj);
+            flags = contact->anim.modelInstance->flags;
             if ((flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(flags & 0x8000))
             {
-                ((GunpowderBarrelState*)sub)->queuedHitObject = (GameObject*)contact;
+                ((GunpowderBarrelState*)sub)->queuedHitObject = contact;
             }
             else if (((GunpowderBarrelState*)sub)->fallAccum < lbl_803E431C)
             {

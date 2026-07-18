@@ -164,7 +164,7 @@ void dll_1DA_update(int obj)
         if (((GameObject*)obj)->anim.localPosY < *(f32*)&lbl_803E4B04 + floorList[i]->height)
         {
             ((GameObject*)obj)->anim.localPosY = floorList[i]->height;
-            ObjHits_AddContactObject((int)floorList[i]->object, obj);
+            ObjHits_AddContactObject(floorList[i]->object, (GameObject*)obj);
             ((Dll1DAState*)state)->grounded = 1;
             break;
         }

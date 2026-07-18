@@ -90,8 +90,6 @@ typedef struct
     s16 pad3;
 } SetScaleParams;
 
-typedef void (*PushableAddContactObjectFn)(int obj, void* contactObj);
-
 /* object group this object joins while active */
 #define PUSHABLE_OBJGROUP 5
 
@@ -1258,7 +1256,7 @@ void pushable_hitDetect(GameObject* obj)
                             contactObj = groundHits[j]->object;
                             if (contactObj != NULL)
                             {
-                                ((PushableAddContactObjectFn)ObjHits_AddContactObject)((int)contactObj, obj);
+                                ObjHits_AddContactObject(contactObj, obj);
                             }
                             groundPointCount++;
                             foundGround = 1;

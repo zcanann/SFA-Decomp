@@ -327,7 +327,7 @@ void fn_800E56A4(GameObject* obj, CurvesCollisionState* collision)
     collision->contactObj = collision->traceHitObj;
     if (collision->contactObj != 0)
     {
-        ObjHits_AddContactObject(collision->contactObj, (int)obj);
+        ObjHits_AddContactObject(collision->contactObj, obj);
     }
 }
 

@@ -753,7 +753,7 @@ int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, int priority,
     return 1;
 }
 
-void ObjHits_AddContactObject(int obj, int contactObj)
+void ObjHits_AddContactObject(GameObject* obj, GameObject* contactObj)
 {
     int contactObjectIndex;
     int contactObjectCount;
@@ -763,7 +763,7 @@ void ObjHits_AddContactObject(int obj, int contactObj)
     int storeState;
     int transformState;
 
-    transformState = *(int*)(obj + OBJHITBOX_TRANSFORM_STATE_OFFSET);
+    transformState = *(int*)((u8*)obj + OBJHITBOX_TRANSFORM_STATE_OFFSET);
     if ((u32)transformState == 0)
     {
         return;
@@ -777,7 +777,7 @@ void ObjHits_AddContactObject(int obj, int contactObj)
     for (i = 0; i < contactObjectCount; i++)
     {
         u32 entryObj = *(u32*)(transformState + contactOffset + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET);
-        if (entryObj == contactObj)
+        if (entryObj == (u32)contactObj)
         {
             return;
         }
@@ -785,7 +785,7 @@ void ObjHits_AddContactObject(int obj, int contactObj)
     }
     storeState = *(int*)((u8*)obj + OBJHITBOX_TRANSFORM_STATE_OFFSET);
     contactObjectIndex = (*(char*)(transformState + OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET))++;
-    *(int*)(storeState + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET + contactObjectIndex * 4) = contactObj;
+    *(int*)(storeState + OBJHITBOX_STATE_CONTACT_OBJECTS_OFFSET + contactObjectIndex * 4) = (int)contactObj;
     return;
 }
 

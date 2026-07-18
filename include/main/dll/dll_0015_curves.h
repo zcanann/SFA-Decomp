@@ -121,11 +121,11 @@ typedef struct CurvesCollisionState
     s8 segmentHitTypes[4];
     s8 segmentSourceTypes[4];
     u8 pad0C0[4];
-    u32 traceHitObj; /* 0x0C4 */
+    GameObject* traceHitObj; /* 0x0C4 */
     u8 pad0C8[0x0D4 - 0x0C8];
     s16 traceHitCount; /* 0x0D4 copied into surfaceCounter after segment traces */
     u8 pad0D6[2];
-    u32 contactObj; /* 0x0D8 latest trace hit forwarded to ObjHits_AddContactObject */
+    GameObject* contactObj; /* 0x0D8 latest trace hit forwarded to ObjHits_AddContactObject */
     f32* localPointPositions;
     f32* localPointRadii;
     f32 localPointWorld[4][3];  /* 0x0E4 localPointPositions transformed to world */

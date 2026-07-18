@@ -3014,7 +3014,7 @@ int hitDetectFn_80067958(GameObject* contactSrc, f32* startPos, f32* endPos, int
             Obj_TransformLocalVectorByWorldMatrix(pp[i + 0x17], &fp[i * 4], &fp[i * 4]);
             if (contactSrc != NULL)
             {
-                ObjHits_AddContactObject((int)pp[i + 0x17], (int)contactSrc);
+                ObjHits_AddContactObject(pp[i + 0x17], contactSrc);
             }
         }
     }
