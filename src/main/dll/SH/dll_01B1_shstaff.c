@@ -112,7 +112,6 @@ extern f32 gShStaffMapUnloadDistSq;
 extern f32 gShStaffMapLoadDistSq;
 
 
-extern void PSMTXInverse(int src, f32* dst);
 extern void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int a);
 
 void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -148,7 +147,7 @@ void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
         if (state->phase == SHSTAFF_PHASE_CARRY_ATTACH)
         {
             Obj_BuildWorldTransformMatrix((GameObject*)obj, mtxB, 0);
-            PSMTXInverse((int)ObjPath_GetPointModelMtx((GameObject*)player, 0), mtxA);
+            PSMTXInverse((f32*)ObjPath_GetPointModelMtx((GameObject*)player, 0), mtxA);
             PSMTXConcat(mtxA, mtxB, state->carryMtx);
             state->phase = SHSTAFF_PHASE_CARRY_RENDER;
         }

@@ -150,7 +150,6 @@ typedef struct StaffQuakeSpellState
     u8 active;       /* 0x20: spell active flag */
 } StaffQuakeSpellState;
 extern s16 sStaffSwipeTextureIdTable[4];
-extern void GXLoadTexMtxImm(f32* m, int id, int type);
 typedef struct QuakePartVec
 {
     u16 h0, h1, h2;

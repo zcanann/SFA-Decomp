@@ -7,6 +7,7 @@ void GXBegin(int prim, int fmt, u16 count);
 void GXClearVtxDesc(void);
 void GXInvalidateTexAll(void);
 void GXLoadPosMtxImm(f32* matrix, s32 slot);
+void GXLoadTexMtxImm(f32* matrix, s32 slot, s32 type);
 void GXResetWriteGatherPipe(void);
 void GXSetProjection(f32* matrix, s32 projectionMode);
 void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane);

@@ -17,6 +17,7 @@ void PSMTXConcat(f32* a, f32* b, f32* out);
 void PSMTXScale(f32* mtx, f32 x, f32 y, f32 z);
 void PSMTXTrans(f32* mtx, f32 x, f32 y, f32 z);
 void PSMTXIdentity(f32* mtx);
+u32 PSMTXInverse(f32* src, f32* dst);
 void PSMTXMultVec(f32* mtx, f32* src, f32* dst);
 void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
 void PSMTXRotAxisRad(f32* mtx, f32* axis, f32 rad);

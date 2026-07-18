@@ -56,6 +56,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "dolphin/gx/GXLegacyDecls.h"
+#include "dolphin/mtx/mtx_legacy.h"
 
 s8 lbl_803DBC08 = -1;
 s8 lbl_803DBC09 = -1;
@@ -125,7 +126,6 @@ extern f32 lbl_803E2344;
 extern f32 lbl_803E2348;
 extern f32 lbl_803E234C;
 extern f32 lbl_803E2350;
-extern void PSMTXTrans(void*, f32, f32, f32);
 extern f32 lbl_803E231C;
 extern f32 lbl_803E2320;
 extern f32 lbl_803E2324;
@@ -535,7 +535,7 @@ void fn_80135814(u32 a, u32 b)
 }
 void titleScreenPositionElements(f32 a, f32 b)
 {
-    PSMTXTrans(gTitleScreenMtx, a, b, lbl_803E22F8);
+    PSMTXTrans((f32*)gTitleScreenMtx, a, b, lbl_803E22F8);
     gTitleScreenCursorY = (lbl_803E2344 - b) / lbl_803E2348;
     lbl_803DD9B4 = (a - lbl_803E234C) / lbl_803E2350;
     gTitleScreenCursorX = lbl_803E2318 - gTitleScreenCursorY;
@@ -1070,8 +1070,6 @@ void TitleScreen_release(void)
 
 
 extern s16 gTitleScreenTextureIds[];
-extern void PSMTXIdentity(void*);
-
 /* Main title-screen texture asset ids (docblock: "the main texture (asset 0x647 or 0xC5)"). */
 #define FRONT_MAIN_TEXTURE_ID_A 0x647
 #define FRONT_MAIN_TEXTURE_ID_B 0xC5
@@ -1098,7 +1096,7 @@ void TitleScreen_initialise(void)
     }
     lbl_803DD9D0 = lbl_803E2318;
     lbl_803DD9CC = lbl_803E2318;
-    PSMTXIdentity(gTitleScreenMtx);
+    PSMTXIdentity((f32*)gTitleScreenMtx);
     for (i = 0; i < TITLE_SCREEN_TEXTURE_COUNT; i++)
     {
         gTitleScreenTextures[i] = textureLoadAsset(gTitleScreenTextureIds[i]);
