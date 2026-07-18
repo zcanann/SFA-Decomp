@@ -4,4 +4,5 @@
 #include "types.h"
 
 void printHeapStats(int mode);
+void* stackCreate(int count, int size);
 #endif /* MAIN_MM_EXT_H_ */

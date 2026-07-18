@@ -1055,7 +1055,6 @@ extern u16 gDepthReadResults[];
 extern u16 gDepthReadPendingCount;
 extern u16 gDepthReadResultCount;
 extern u8 lbl_803DCCA8;
-extern int stackCreate(int n, int stride);
 extern u8 lbl_803DCC90;
 extern int lbl_803DCC88;
 extern int lbl_803DCC98;
@@ -4186,7 +4185,7 @@ int initLoadFiles(void)
     {
         lbl_803DCC90 = 1;
         lbl_803DCC88 = 0;
-        lbl_803DCC8C = stackCreate(0x5e, 0x40);
+        lbl_803DCC8C = (int)stackCreate(0x5e, 0x40);
         i = 0;
         rom = (int*)((MldfArenaBlock*)tbl + 1) - MLDF_ROM_LIST_WORDS_FROM_ARENA_END;
         for (; i < 0x75; rom++, i++)

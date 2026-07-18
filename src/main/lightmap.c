@@ -40,6 +40,7 @@
 #include "main/dll/savegame_env_api.h"
 #include "main/sky.h"
 #include "track/intersect_api.h"
+#include "main/dll/cloudaction_ext.h"
 
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
@@ -95,7 +96,6 @@ extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void objDrawFn_80061654(int* obj, int* model);
 extern void fn_802B4ED8(int* obj, int a, int b);
-extern u32 cloudGetLayerTextureSize(f32 * a, f32 * b);
 extern u32 lbl_803DCE34;
 extern f32 lbl_803DEC10;
 extern void mapDebugRender(void* p);
@@ -792,7 +792,7 @@ void sceneDraw(void)
     s8 buf[616];
 
     q = (char*)lbl_8037E0C0;
-    lbl_803DCE34 = cloudGetLayerTextureSize(&skyA, &skyB);
+    lbl_803DCE34 = (u32)cloudGetLayerTextureSize(&skyA, &skyB);
     if (lbl_803DCE34 != 0)
     {
         *(f32*)(q + 0x3f48) = lbl_803DEC10;

@@ -53,6 +53,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/dll/DR/dll_026B_drchimmey.h"
 #include "main/dll/baddie_frozen.h"
+#include "main/dll/Hcurves_ext.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -252,7 +253,6 @@ extern f32 lbl_803E25C8;
 extern int fn_80138D7C(int obj, int state);
 extern void Tricky_updateBlendChannelWeight(int obj, int state);
 extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
-extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int filter4, int filter5);
 extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
 const FrozenFxColors gTrickyFrozenFxColors = {0x08, 0xFF, 0xFF, 0x78};
@@ -683,7 +683,7 @@ void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
             {
                 return;
             }
-            state[0x700 / 4] = Objfsa_FindNearestEnabledCurveType24((void*)(targetObj + 0x18), -1, 3);
+            state[0x700 / 4] = (int)Objfsa_FindNearestEnabledCurveType24((void*)(targetObj + 0x18), -1, 3);
             *(f32*)((u8*)state + 0x710) = (f32)(int)randomGetRange(0x168, 0x28);
             *((u8*)state + 8) = 5;
             state[0x24 / 4] = targetObj;
