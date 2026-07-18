@@ -190,14 +190,14 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     BabyCloudRunnerPlacement* def = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
     s8 inRange;
-    s8 i;
+    char* player;
     int yaw;
     u8* animUpdateBytes = (u8*)animUpdate;
     f32 dx;
     f32 dz;
     f32 distSq;
     BabyCloudRunnerState* sub = ((GameObject*)obj)->extra;
-    char* player;
+    s8 i;
     if (((GameObject*)obj)->seqIndex == 4)
     {
         return 0;
