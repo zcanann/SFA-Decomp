@@ -5362,17 +5362,7 @@ int gObjSeqMsgIds[] = {
     0x000F000C, 0x000F000D, 0x000F000E, 0x000F000F, 0x000F0010, 0x00130001, 0x00130002,
 };
 
-extern void ObjSeq_preempt();
 extern void ObjSeq_yield();
-extern void ObjSeq_getGlobal3();
-extern void ObjSeq_setGlobal3();
-extern void ObjSeq_getGlobal1();
-extern void ObjSeq_setGlobal1();
-extern void ObjSeq_getGlobal2();
-extern void ObjSeq_setGlobal2();
-extern void ObjSeq_SetObjs();
-extern void ObjSeq_setOverridePos();
-extern void ObjSeq_func23();
 
 u32 lbl_8030EC00[4] = {0x28E5, 0x28E6, 0x28E7, 0x28E8};
 u32 lbl_8030EC10[3] = {0x501C, 0x501D, 0x501E};
