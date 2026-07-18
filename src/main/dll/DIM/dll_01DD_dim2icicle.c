@@ -54,14 +54,6 @@ typedef struct Dim2iciclePlacement
     s16 impactGameBit;
 } Dim2iciclePlacement;
 
-union Dim2IcicleConstF32 { f32 f; };
-const union Dim2IcicleConstF32 lbl_803E4B68 = {1.0f};
-const union Dim2IcicleConstF32 lbl_803E4B6C = {0.333f};
-const union Dim2IcicleConstF32 lbl_803E4B70 = {-100000.0f};
-const union Dim2IcicleConstF32 lbl_803E4B74 = {0.1f};
-const union Dim2IcicleConstF32 lbl_803E4B78 = {-10.0f};
-const union Dim2IcicleConstF32 lbl_803E4B7C = {10.0f};
-const union Dim2IcicleConstF32 lbl_803E4B80 = {0.0f};
 
 int dim2icicle_getExtraSize(void) { return 0xc; }
 
@@ -74,7 +66,7 @@ void dim2icicle_free(void)
 void dim2icicle_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4B68.f);
+    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, (1.0f));
 }
 
 void dim2icicle_hitDetect(void)
@@ -103,7 +95,7 @@ void dim2icicle_update(GameObject *obj)
         break;
     case DIM2ICICLE_MODE_WOBBLE:
         (obj)->anim.rotY = ((Dim2IcicleState*)sub)->wobbleRotY;
-        ((Dim2IcicleState*)sub)->wobbleRotY = (f32)((Dim2IcicleState*)sub)->wobbleRotY * lbl_803E4B6C.f;
+        ((Dim2IcicleState*)sub)->wobbleRotY = (f32)((Dim2IcicleState*)sub)->wobbleRotY * (0.333f);
         if ((obj)->anim.rotY >= 10)
         {
             break;
@@ -120,7 +112,7 @@ void dim2icicle_update(GameObject *obj)
             TrackGroundHit** list;
             hitCount = hitDetectFn_80065e50(obj, (obj)->anim.localPosX, (obj)->anim.localPosY,
                                             (obj)->anim.localPosZ, &list, 0, 0);
-            ((Dim2IcicleState*)sub)->dropY = lbl_803E4B70.f;
+            ((Dim2IcicleState*)sub)->dropY = (-100000.0f);
             for (i = 0; i < hitCount; i++)
             {
                 TrackGroundHit* hit = list[i];
@@ -130,7 +122,7 @@ void dim2icicle_update(GameObject *obj)
                     i = hitCount;
                 }
             }
-            if (lbl_803E4B70.f != ((Dim2IcicleState*)sub)->dropY)
+            if ((-100000.0f) != ((Dim2IcicleState*)sub)->dropY)
             {
                 ((Dim2IcicleState*)sub)->dropTargetFound = 1;
             }
@@ -143,10 +135,10 @@ void dim2icicle_update(GameObject *obj)
                 Sfx_PlayFromObject((int)obj, SFXTRIG_wp_swdwood16);
             }
         }
-        (obj)->anim.velocityY = -(lbl_803E4B74.f * timeDelta - (obj)->anim.velocityY);
-        if ((obj)->anim.velocityY < lbl_803E4B78.f)
+        (obj)->anim.velocityY = -((0.1f) * timeDelta - (obj)->anim.velocityY);
+        if ((obj)->anim.velocityY < (-10.0f))
         {
-            (obj)->anim.velocityY = lbl_803E4B78.f;
+            (obj)->anim.velocityY = (-10.0f);
         }
         (obj)->anim.localPosY = (obj)->anim.velocityY * timeDelta + (obj)->anim.
             localPosY;
@@ -157,10 +149,10 @@ void dim2icicle_update(GameObject *obj)
             (*gWaterfxInterface)->spawnSplashBurst(
                 (void*)obj, (obj)->anim.localPosX,
                 ((Dim2IcicleState*)sub)->dropY, (obj)->anim.localPosZ,
-                lbl_803E4B7C.f);
+                (10.0f));
             (*gWaterfxInterface)->spawnRipple(
                 (obj)->anim.localPosX, ((Dim2IcicleState*)sub)->dropY,
-                (obj)->anim.localPosZ, 0, lbl_803E4B80.f, 2);
+                (obj)->anim.localPosZ, 0, (0.0f), 2);
             Sfx_PlayFromObject((int)obj, SFXTRIG_mv_curtainopen16);
             ((Dim2IcicleState*)sub)->timer = 0x96;
         }
@@ -181,7 +173,7 @@ void dim2icicle_update(GameObject *obj)
             {
                 v = 0;
                 (obj)->anim.localPosY = ((Dim2iciclePlacement*)state)->resetPosY;
-                (obj)->anim.velocityY = lbl_803E4B80.f;
+                (obj)->anim.velocityY = (0.0f);
             }
             (obj)->anim.alpha = v;
         }
@@ -205,7 +197,7 @@ void dim2icicle_init(GameObject *obj, s8* p)
         (obj)->anim.alpha = 0xff;
     }
     (obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
-    (obj)->anim.velocityY = lbl_803E4B80.f;
+    (obj)->anim.velocityY = (0.0f);
     (obj)->objectFlags |= DIM2ICICLE_OBJFLAG_HITDETECT_DISABLED;
 }
 

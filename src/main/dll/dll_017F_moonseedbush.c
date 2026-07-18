@@ -126,9 +126,6 @@ void MoonSeedBush_update(GameObject* obj)
     state->flags &= ~1;
 }
 
-union MoonSeedBushConstF32 { f32 f; };
-const union MoonSeedBushConstF32 lbl_803E44D4 = { 0.015625f };
-const union MoonSeedBushConstF32 lbl_803E44D8 = { 0.0f };
 
 void MoonSeedBush_init(GameObject* obj, int data)
 {
@@ -138,8 +135,8 @@ void MoonSeedBush_init(GameObject* obj, int data)
     obj->anim.rotX = (s16)(placement->rotXByte << 8);
     obj->animEventCallback = MoonSeedBush_SeqFn;
     obj->objectFlags |= MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED;
-    obj->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * lbl_803E44D4.f;
-    if (obj->anim.rootMotionScale == lbl_803E44D8.f)
+    obj->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * (0.015625f);
+    if (obj->anim.rootMotionScale == (0.0f))
     {
         obj->anim.rootMotionScale = 1.0f;
     }

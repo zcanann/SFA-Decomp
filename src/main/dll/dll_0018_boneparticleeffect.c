@@ -49,13 +49,7 @@ s32 gBoneParticleBufferFlip;
 
 extern void* gBoneParticleEffectBuffers[];
 extern f32 gBoneParticleDriftVelocity;
-union BoneParticleConstF32 { f32 f; };
-const union BoneParticleConstF32 lbl_803DF4A8 = { 0.0f };
-const union BoneParticleConstF32 gBoneParticleDriftMax = { 500.0f };
-const union BoneParticleConstF32 lbl_803DF4B0 = { -1.0f };
-const union BoneParticleConstF32 gBoneParticleDriftMin = { -500.0f };
-const union BoneParticleConstF32 lbl_803DF4B8 = { 1.0f };
-const union BoneParticleConstF32 lbl_803DF4BC = { 20.02f };
+const f32 lbl_803DF4BC = 20.02f;
 
 
 static inline int* Modgfx_GetActiveModel(void* obj)
@@ -134,16 +128,16 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
         gBoneParticleScrollOffset = gBoneParticleScrollOffset - 0x1f;
     }
     gBoneParticleDrift = gBoneParticleDriftVelocity * timeDelta + gBoneParticleDrift;
-    if (gBoneParticleDrift > gBoneParticleDriftMax.f)
+    if (gBoneParticleDrift > (500.0f))
     {
-        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0.f;
-        gBoneParticleDrift = gBoneParticleDriftMax.f;
+        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * (-1.0f);
+        gBoneParticleDrift = (500.0f);
         Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_282);
     }
-    else if (gBoneParticleDrift < gBoneParticleDriftMin.f)
+    else if (gBoneParticleDrift < (-500.0f))
     {
-        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0.f;
-        gBoneParticleDrift = gBoneParticleDriftMin.f;
+        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * (-1.0f);
+        gBoneParticleDrift = (-500.0f);
         Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_282);
     }
     slot = 0;
@@ -157,9 +151,9 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
             row = 0;
             j = 0;
             idp = base + 0x5b4;
-            zero = lbl_803DF4A8.f;
-            one = lbl_803DF4B8.f;
-            k2002 = lbl_803DF4BC.f;
+            zero = (0.0f);
+            one = (1.0f);
+            k2002 = lbl_803DF4BC;
             while (j < 5)
             {
                 vtx.vx = zero;
@@ -185,7 +179,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
                 dx = dx * k2002;
                 if (id == 0x1d || id == 0x1d)
                 {
-                    dy = *(f32*)&lbl_803DF4BC.f * (8.0f + dy);
+                    dy = *(f32*)&lbl_803DF4BC * (8.0f + dy);
                 }
                 else
                 {
@@ -272,7 +266,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
         textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
     }
     ((void (*)(void*, int, void*, f32, f32, int))Camera_LoadModelViewMatrix)(
-        ctx, renderParam, &vtx, lbl_803DF4B8.f, lbl_803DF4A8.f, 0);
+        ctx, renderParam, &vtx, (1.0f), (0.0f), 0);
     GXSetCullMode(GX_CULL_NONE);
     _textSetColor((int)ctx, 0xff, 0xff, 0xff, 0xff);
     textureSetupFn_800799c0();
@@ -396,10 +390,10 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
         if ((int)randomGetRange(1, 0x64) <= prob)
         {
             void* mtx;
-            data.x = lbl_803DF4A8.f;
-            data.y = lbl_803DF4A8.f;
-            data.z = lbl_803DF4A8.f;
-            data.scale = lbl_803DF4B8.f;
+            data.x = (0.0f);
+            data.y = (0.0f);
+            data.z = (0.0f);
+            data.scale = (1.0f);
             data.unk4 = 0;
             data.unk2 = 0;
             data.unk0 = 0;
@@ -420,7 +414,7 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
             }
             else
             {
-                data.scale = lbl_803DF4B8.f;
+                data.scale = (1.0f);
                 data.unk0 = 0;
                 data.unk4 = 0;
                 data.unk2 = 0;

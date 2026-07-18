@@ -13,10 +13,7 @@
 #include "main/model_light.h"
 #include "main/dll/DR/dll_0253_ktlazerlight.h"
 
-union KtLazerLightConstF32 { f32 f; };
 
-const union KtLazerLightConstF32 lbl_803E68C0 = { 0.0f };
-const union KtLazerLightConstF32 lbl_803E68C4 = { 0.0f };
 
 int ktlazerlight_getExtraSize(void)
 {
@@ -60,7 +57,7 @@ void ktlazerlight_update(GameObject* obj)
         }
         if (light != 0)
         {
-            modelLightStruct_setEnabled(light, 1, lbl_803E68C0.f);
+            modelLightStruct_setEnabled(light, 1, (0.0f));
             modelLightStruct_setDiffuseColor(light, 0x64, 0x6e, 0xff, 0xff);
             modelLightStruct_setDistanceAttenuation(state->light, (f32)(intensity * 0x1a),
                                                     (f32)(intensity * 0x1a + 0x14));
@@ -70,7 +67,7 @@ void ktlazerlight_update(GameObject* obj)
     {
         if (light != 0)
         {
-            modelLightStruct_setEnabled(light, 0, lbl_803E68C0.f);
+            modelLightStruct_setEnabled(light, 0, (0.0f));
         }
     }
 }

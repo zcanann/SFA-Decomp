@@ -59,8 +59,6 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 #define TREASURECHEST_SEQEV_STAFFBIT_CLR 3 /* clear StaffFlags b5 */
 #define TREASURECHEST_SEQEV_OPENED       4 /* hide + disable the chest */
 
-union TreasureChestConstF32 { f32 f; };
-const union TreasureChestConstF32 lbl_803E3C1C = { 0.0f };
 int lbl_803DDAE4;
 const ChestHitParams lbl_802C22B0 = {8, 0xFF, 0xFF, 0x78};
 void* lbl_803DDAE0;

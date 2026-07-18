@@ -28,8 +28,6 @@ f32 gCamForceBehindOrbitRadius = 40.0f;
 f32 gCamForceBehindPi = 3.1415927f;
 f32 gCamForceBehindBamsToRadDivisor = 32768.0f;
 f32 gCamForceBehindHeightOffset = 37.0f;
-union CamForceBehindConstF32 { f32 f; };
-const union CamForceBehindConstF32 lbl_803E1B0C = { 0.0f };
 extern f32 gCamForceBehindDefaultOrbitRadius; /* default orbit radius (when no override is supplied) */
 extern f32 gCamForceBehindOrbitRadius;        /* orbit radius */
 extern f32 gCamForceBehindActiveHeightOffset; /* active height offset */

@@ -67,15 +67,6 @@ typedef struct HagabonPlacement
 
 extern f32 lbl_803DDA58; /* last-seen curve point cache, shared with swarmbaddie */
 #define HAGABON_ALPHA_MAX 255.0f
-union HagabonConstF32 { f32 f; };
-const union HagabonConstF32 lbl_803E2608 = { 400.0f };
-const union HagabonConstF32 lbl_803E260C = { 128.0f };
-const union HagabonConstF32 lbl_803E2610 = { 256.0f };
-const union HagabonConstF32 lbl_803E2614 = { 512.0f };
-const union HagabonConstF32 lbl_803E2618 = { 1000.0f };
-const union HagabonConstF32 gHagabonPi = { 3.1415927f };
-const union HagabonConstF32 lbl_803E2620 = { 32768.0f };
-const union HagabonConstF32 lbl_803E2624 = { 0.001f };
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
@@ -99,56 +90,56 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
 
     if (((Curve_AdvanceAlongPath((Curve*)curve, state->curveStep) != 0) || (*(int*)(curve + 0x10) != *(int*)&lbl_803DDA58)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
-        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2608.f, lbl_803DBC70, -1) != 0))
+        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, (400.0f), lbl_803DBC70, -1) != 0))
     {
         *flags &= ~HAGABON_FLAG_PATH_NEEDS_LINK;
     }
 
     *(int*)&lbl_803DDA58 = *(int*)(curve + 0x10);
 
-    *(u16*)&state->wavePhaseA += (u16)(lbl_803E260C.f * timeDelta);
-    *(u16*)&state->wavePhaseB += (u16)(lbl_803E2610.f * timeDelta);
-    *(u16*)&state->wavePhaseC += (u16)(lbl_803E2614.f * timeDelta);
+    *(u16*)&state->wavePhaseA += (u16)((128.0f) * timeDelta);
+    *(u16*)&state->wavePhaseB += (u16)((256.0f) * timeDelta);
+    *(u16*)&state->wavePhaseC += (u16)((512.0f) * timeDelta);
 
-    waveA = mathSinf((gHagabonPi.f * (f32)(u32)state->wavePhaseB) / lbl_803E2620.f);
-    waveB = mathSinf((gHagabonPi.f * (f32)(u32)state->wavePhaseA) / lbl_803E2620.f);
+    waveA = mathSinf(((3.1415927f) * (f32)(u32)state->wavePhaseB) / (32768.0f));
+    waveB = mathSinf(((3.1415927f) * (f32)(u32)state->wavePhaseA) / (32768.0f));
     waveA = waveB + waveA;
-    obj->anim.rotZ = lbl_803E2618.f * waveA;
+    obj->anim.rotZ = (1000.0f) * waveA;
 
-    waveA = mathSinf((gHagabonPi.f * (f32)(u32)state->wavePhaseC) / lbl_803E2620.f);
-    waveB = mathSinf((gHagabonPi.f * (f32)(u32)state->wavePhaseA) / lbl_803E2620.f);
+    waveA = mathSinf(((3.1415927f) * (f32)(u32)state->wavePhaseC) / (32768.0f));
+    waveB = mathSinf(((3.1415927f) * (f32)(u32)state->wavePhaseA) / (32768.0f));
     waveA = waveB + waveA;
-    obj->anim.rotY = lbl_803E2618.f * waveA;
+    obj->anim.rotY = (1000.0f) * waveA;
 
     if ((*flags & HAGABON_FLAG_CHASE) != 0)
     {
         obj->anim.velocityX +=
-            lbl_803E2624.f * (state->player->anim.localPosX - obj->anim.localPosX);
+            (0.001f) * (state->player->anim.localPosX - obj->anim.localPosX);
         obj->anim.velocityY +=
-            lbl_803E2624.f * ((60.0f + state->player->anim.localPosY) - obj->anim.localPosY);
+            (0.001f) * ((60.0f + state->player->anim.localPosY) - obj->anim.localPosY);
         obj->anim.velocityZ +=
-            lbl_803E2624.f * (state->player->anim.localPosZ - obj->anim.localPosZ);
+            (0.001f) * (state->player->anim.localPosZ - obj->anim.localPosZ);
     }
     else if ((*flags & HAGABON_FLAG_PATH_RETURN) != 0)
     {
         obj->anim.velocityX +=
-            lbl_803E2624.f * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
+            (0.001f) * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
         obj->anim.velocityY +=
-            lbl_803E2624.f * (*(f32*)(curve + 0x6c) - obj->anim.localPosY);
+            (0.001f) * (*(f32*)(curve + 0x6c) - obj->anim.localPosY);
         obj->anim.velocityZ +=
-            lbl_803E2624.f * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
+            (0.001f) * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
     }
     else
     {
         obj->anim.velocityX +=
-            lbl_803E2624.f * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
-        waveA = mathSinf((gHagabonPi.f * (f32)(u32)state->wavePhaseB) / lbl_803E2620.f);
-        waveB = mathSinf((gHagabonPi.f * (f32)(u32)state->wavePhaseA) / lbl_803E2620.f);
+            (0.001f) * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
+        waveA = mathSinf(((3.1415927f) * (f32)(u32)state->wavePhaseB) / (32768.0f));
+        waveB = mathSinf(((3.1415927f) * (f32)(u32)state->wavePhaseA) / (32768.0f));
         waveA = waveB + waveA;
         waveA = ((10.0f * waveA) + *(f32*)(curve + 0x6c)) - obj->anim.localPosY;
-        obj->anim.velocityY += lbl_803E2624.f * waveA;
+        obj->anim.velocityY += (0.001f) * waveA;
         obj->anim.velocityZ +=
-            lbl_803E2624.f * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
+            (0.001f) * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
     }
 
     obj->anim.velocityX *= (damp = 0.9f);

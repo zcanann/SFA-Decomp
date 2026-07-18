@@ -40,14 +40,6 @@ const f32 lbl_803E7450 = 0.0f;
 const f32 lbl_803E7454 = 5.0f;
 const f32 lbl_803E7458 = 0.5f;
 const f32 lbl_803E745C = 1.0f;
-union GfLevelconConstF32 { f32 f; };
-const union GfLevelconConstF32 lbl_803E7460 = { -0.1f };
-const union GfLevelconConstF32 lbl_803E7464 = { -0.5f };
-const union GfLevelconConstF32 lbl_803E7468 = { -0.2f };
-const union GfLevelconConstF32 lbl_803E746C = { 476.0f };
-const union GfLevelconConstF32 lbl_803E7470 = { 112.5f };
-const union GfLevelconConstF32 lbl_803E7474 = { 150.0f };
-const union GfLevelconConstF32 lbl_803E7478 = { 180.0f };
 
 /* sequence event opcodes consumed by gf_levelcon_SeqFn */
 #define GFLEVELCON_SEQEV_NONE          0
@@ -128,16 +120,16 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
         case GFLEVELCON_SEQEV_SKY_PRESET_A:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, lbl_803E7460.f, lbl_803E7464.f, lbl_803E7468.f);
+            skyFn_800894a8(7, (-0.1f), (-0.5f), (-0.2f));
             getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_START_PROMPT:
-            state->promptTimer = lbl_803E746C.f;
+            state->promptTimer = (476.0f);
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_B:
             skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, lbl_803E7470.f, lbl_803E7474.f, lbl_803E7478.f, 0, 0);
-            skyFn_800894a8(7, lbl_803E7464.f, -1.0f, lbl_803E7464.f);
+            skyFn_800895e0(7, (112.5f), (150.0f), (180.0f), 0, 0);
+            skyFn_800894a8(7, (-0.5f), -1.0f, (-0.5f));
             getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_B, 0);
             break;
         case GFLEVELCON_SEQEV_LIGHT_ON:
@@ -157,7 +149,7 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
         case GFLEVELCON_SEQEV_SKY_PRESET_C:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, 1.0f, -1.0f, lbl_803E7464.f);
+            skyFn_800894a8(7, 1.0f, -1.0f, (-0.5f));
             getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_C, 0);
             break;
         case GFLEVELCON_SEQEV_LOAD_MAP:
@@ -177,13 +169,13 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
         case GFLEVELCON_SEQEV_SKY_PRESET_D:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, 0.5f, -1.0f, lbl_803E7464.f);
+            skyFn_800894a8(7, 0.5f, -1.0f, (-0.5f));
             getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_E:
             skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, lbl_803E7470.f, lbl_803E7474.f, lbl_803E7478.f, 0, 0);
-            skyFn_800894a8(7, 0.5f, -1.0f, lbl_803E7464.f);
+            skyFn_800895e0(7, (112.5f), (150.0f), (180.0f), 0, 0);
+            skyFn_800894a8(7, 0.5f, -1.0f, (-0.5f));
             getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_B, 0);
             break;
         }

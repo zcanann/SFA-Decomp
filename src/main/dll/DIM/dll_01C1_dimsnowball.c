@@ -62,8 +62,6 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 f32 lbl_803E4848 = 1.0f;
 f32 lbl_803E484C = 0.0625f;
-union DimSnowballConstF32 { f32 f; };
-const union DimSnowballConstF32 lbl_803E4850 = { 0.0f };
 f32 lbl_803E4854 = 1000.0f;
 
 s16 lbl_803DBEE8 = 0x3E6;
@@ -210,7 +208,7 @@ void dimsnowball_update(GameObject* obj)
     }
     dy1 = y[1] - y[0];
     dy2 = y[2] - y[3];
-    if (dy2 <= lbl_803E4850.f && dy1 <= lbl_803E4850.f && ((DimsnowballState*)state)->jingleCooldown <= 0)
+    if (dy2 <= (0.0f) && dy1 <= (0.0f) && ((DimsnowballState*)state)->jingleCooldown <= 0)
     {
         sqrtf((obj)->anim.velocityZ * (obj)->anim.velocityZ +
               ((obj)->anim.velocityX * (obj)->anim.velocityX + (obj)->anim.velocityY * (obj)->anim.velocityY));
@@ -220,9 +218,9 @@ void dimsnowball_update(GameObject* obj)
         }
         ((DimsnowballState*)state)->jingleCooldown = 0x1e;
     }
-    (obj)->anim.localPosX = x[1] + lbl_803E4850.f * (x[2] - x[1]);
-    (obj)->anim.localPosY = y[1] + lbl_803E4850.f * (y[2] - y[1]);
-    (obj)->anim.localPosZ = z[1] + lbl_803E4850.f * (z[2] - z[1]);
+    (obj)->anim.localPosX = x[1] + (0.0f) * (x[2] - x[1]);
+    (obj)->anim.localPosY = y[1] + (0.0f) * (y[2] - y[1]);
+    (obj)->anim.localPosZ = z[1] + (0.0f) * (z[2] - z[1]);
     (obj)->anim.localPosX = (obj)->anim.localPosX + ((GameObject*)*state)->anim.localPosX;
     (obj)->anim.localPosY = (obj)->anim.localPosY + ((GameObject*)*state)->anim.localPosY;
     (obj)->anim.localPosZ = (obj)->anim.localPosZ + ((GameObject*)*state)->anim.localPosZ;

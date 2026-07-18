@@ -7,8 +7,7 @@
 #include "main/gamebits.h"
 #include "main/object_descriptor.h"
 
-union InvisibleHitSwitchConstF32 { f32 f; };
-const union InvisibleHitSwitchConstF32 lbl_803E3730 = { 0.0f };
+const f32 lbl_803E3730 = 0.0f;
 
 #define INVISIBLEHITSWITCH_OBJFLAG_HIDDEN 0x4000
 #define INVISIBLEHITSWITCH_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -76,14 +75,14 @@ void InvisibleHitSwitch_update(GameObject *obj)
         }
     }
 
-    if (((InvisibleHitSwitchState*)state)->cooldownTimer > lbl_803E3730.f)
+    if (((InvisibleHitSwitchState*)state)->cooldownTimer > lbl_803E3730)
     {
         ((InvisibleHitSwitchState*)state)->cooldownTimer =
             ((InvisibleHitSwitchState*)state)->cooldownTimer - (f32)(u32)
         framesThisStep;
-        if (((InvisibleHitSwitchState*)state)->cooldownTimer <= lbl_803E3730.f)
+        if (((InvisibleHitSwitchState*)state)->cooldownTimer <= lbl_803E3730)
         {
-            ((InvisibleHitSwitchState*)state)->cooldownTimer = lbl_803E3730.f;
+            ((InvisibleHitSwitchState*)state)->cooldownTimer = lbl_803E3730;
             mainSetBits((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 0);
         }
         else
@@ -92,7 +91,7 @@ void InvisibleHitSwitch_update(GameObject *obj)
         }
     }
 
-    if (((InvisibleHitSwitchState*)state)->activationTimer != *(f32*)&lbl_803E3730.f)
+    if (((InvisibleHitSwitchState*)state)->activationTimer != *(f32*)&lbl_803E3730)
     {
         ((InvisibleHitSwitchState*)state)->activationTimer = ((InvisibleHitSwitchState*)state)->activationTimer - timeDelta;
         if (((InvisibleHitSwitchState*)state)->activationTimer < 60.0f)
@@ -100,13 +99,13 @@ void InvisibleHitSwitch_update(GameObject *obj)
             hitId = ObjHits_GetPriorityHit(obj, 0, 0, 0);
             if ((int)((InvisibleHitSwitchState*)state)->hitId == hitId)
             {
-                ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3730.f;
+                ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3730;
                 ((InvisibleHitSwitchState*)state)->active = 1;
                 mainSetBits((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 1);
             }
-            else if (((InvisibleHitSwitchState*)state)->activationTimer <= *(f32*)&lbl_803E3730.f)
+            else if (((InvisibleHitSwitchState*)state)->activationTimer <= *(f32*)&lbl_803E3730)
             {
-                ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3730.f;
+                ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3730;
             }
         }
     }

@@ -160,11 +160,6 @@ void SwarmBaddie_hitDetect(void)
 {
 }
 
-union SwarmBaddieConstF32 { f32 f; };
-const union SwarmBaddieConstF32 lbl_803E26B0 = { 2.0f };
-const union SwarmBaddieConstF32 lbl_803E26B4 = { 1.0f };
-const union SwarmBaddieConstF32 lbl_803E26B8 = { 0.005f };
-const union SwarmBaddieConstF32 lbl_803E26BC = { 63.0f };
 
 void SwarmBaddie_update(GameObject* obj)
 {
@@ -188,13 +183,13 @@ void SwarmBaddie_update(GameObject* obj)
     if (ObjHits_GetPriorityHitWithPosition(obj, &hitD, &hitB, (u32*)&hitA, (f32*)&hitE, (f32*)&hitC,
                                            (f32*)&hitF) != 0)
     {
-        state->hitVolumeEnvelope = lbl_803E26B0.f;
+        state->hitVolumeEnvelope = (2.0f);
     }
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, SWARMBADDIE_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject(obj);
-    if (state->hitVolumeEnvelope > lbl_803E26B4.f)
+    if (state->hitVolumeEnvelope > (1.0f))
     {
-        state->hitVolumeEnvelope = state->hitVolumeEnvelope - lbl_803E26B8.f;
+        state->hitVolumeEnvelope = state->hitVolumeEnvelope - (0.005f);
     }
     volume = state->hitVolumeEnvelope;
     Sfx_SetObjectChannelVolumeScaleFirstLegacy(
@@ -202,7 +197,7 @@ void SwarmBaddie_update(GameObject* obj)
                 mathSinf((SWARM_BADDIE_PI * (f32)(state->yawWavePhase + state->rollWavePhase)) /
                          SWARM_BADDIE_S16_ANGLE_SCALE) +
             volume,
-        (int)obj, 0x40, (int)(lbl_803E26BC.f * volume));
+        (int)obj, 0x40, (int)((63.0f) * volume));
     (*gPartfxInterface)->spawnObject((void*)obj, SWARMBADDIE_PARTFX, NULL, 2, -1, &state->hitVolumeEnvelope);
     state->player = Obj_GetPlayerObject();
     if (state->player != NULL)
@@ -241,7 +236,7 @@ void SwarmBaddie_init(GameObject* obj, int data, int skip_alloc)
     SwarmBaddieState* state = (obj)->extra;
     state->curveStep = (f32)(s32) * (s16*)(data + 0x1A) / 50.0f;
     state->chaseRadius = 4.0f * (f32)(s32) * (s8*)(data + 0x19);
-    state->hitVolumeEnvelope = lbl_803E26B4.f;
+    state->hitVolumeEnvelope = (1.0f);
     if (skip_alloc == 0)
     {
         state->curve = mmAlloc(0x108, 0x1A, 0);
