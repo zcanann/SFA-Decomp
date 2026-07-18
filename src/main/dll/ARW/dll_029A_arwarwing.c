@@ -211,33 +211,19 @@ static inline f32 arwarwing_readTriggerL(void)
     return -(f32)(u32)(u8)padGetLTrigger(0) / 150.0f;
 }
 
-void arwarwing_readControls(GameObject* obj, ArwingState* state);
 
-void arwarwing_updateThrusters(GameObject* obj, ArwingState* state);
 
-void arwarwing_updateBarrelRoll(GameObject* obj, ArwingState* state);
 
-void arwarwing_clampToFlightBounds(GameObject* obj, ArwingState* state);
 
-void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state);
 
-void arwarwing_spawnBomb(GameObject* obj, ArwingState* state, int side);
 
-void arwarwing_updateBombFire(GameObject* obj, ArwingState* state);
 
-void arwarwing_spawnLaserShot(GameObject* obj, ArwingState* state, int side, int level, int linkEffect);
 
-void arwarwing_updateWeaponFire(GameObject* obj, ArwingState* state);
 
-void arwarwing_emitDamageEffects(int obj, ArwingState* state);
 
-void arwarwing_handlePathDamage(GameObject* obj, ArwingState* state);
 
-void arwarwing_handleObjectDamage(GameObject* obj, ArwingState* state);
 
-void arwarwing_updateRollAndEngine(int obj, ArwingState* state);
 
-void arwarwing_warpByCourse(GameObject* obj);
 
 void arwarwing_clearAimSnapshot(GameObject* obj)
 {
@@ -405,7 +391,6 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void arwarwing_initAttachments(GameObject* obj, ArwingState* state);
 
 void arwarwing_resetFlightState(GameObject* obj)
 {
