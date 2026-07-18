@@ -74,8 +74,6 @@ extern f32 lbl_803DE9D8;
 extern f32 lbl_803DE9DC;
 extern f32 lbl_803DE9E0;
 extern int lbl_803DCC48;
-extern void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 x);
-extern f32 lbl_803DB464;
 extern f32 lbl_803DEA04;
 extern f32 lbl_803DE9E4;
 extern f32 gObjPrintDegToAngle;
