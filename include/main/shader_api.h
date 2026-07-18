@@ -37,6 +37,7 @@ int objUpdateOpacity(struct GameObject* obj);
 void playerUpdateFn_8005649c(void);
 void doPendingMapLoads(void);
 void mapReloadWithFadeout(void);
+void mapSetup(int mapType, f32 x, int* outMapId, int* outEvent, f32 y, f32 z);
 void initMaps(void);
 void unloadMap(void);
 void beginLoadingMap(void);

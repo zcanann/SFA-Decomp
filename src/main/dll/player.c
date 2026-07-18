@@ -297,8 +297,7 @@ void fn_802B4DE0(GameObject* obj, int p2);
 void fn_802B4ED8(GameObject* obj, int p2, int mode);
 void playerUpdateWhileTimeStopped(int obj);
 void objLoadPlayerFromSave(int obj);
-void playerInitFuncPtrsEntry(int obj);
-void playerInitFuncPtrs(int obj);
+void playerInitFuncPtrs(void);
 #define LANTERNFIREFLY_OBJGROUP  0x30 /* DLL 0x10C lanternfirefly */
 typedef struct
 {
@@ -17936,12 +17935,12 @@ void fn_802AABE4(int obj)
     ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT, OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
 }
 
-void playerInitFuncPtrsEntry(int obj)
+void playerInitFuncPtrsEntry(void)
 {
-    playerInitFuncPtrs(obj);
+    playerInitFuncPtrs();
 }
 
-void playerInitFuncPtrs(int obj)
+void playerInitFuncPtrs(void)
 {
     int* p = gPlayerStateHandlers;
     p[0] = (int)playerState00;

@@ -1011,7 +1011,6 @@ void setTimeStop(int stop)
 
 void Obj_FlushDeferredFreeList(void);
 
-extern void mapSetup();
 typedef struct PlayerTrailRecord
 {
     f32 posX;
@@ -1063,10 +1062,6 @@ void gameTextInitFn_8001a234(void);
 extern u8 initLoadFiles(void);
 
 
-extern void playerInitFuncPtrsEntry(void);
-
-
-
 u8 lbl_8033C3B8[0x3E8];
 u8 gGameLoopRenderModeCopy[0x40];
 extern char sMainFinishedInitMessage[];
@@ -1100,7 +1095,7 @@ extern f32 lbl_803DE7B4;
 void mapLoadByCoords(f32 x, f32 y, f32 z, int act)
 {
     lbl_803DCA38 = 0;
-    mapSetup(act, &gGameLoopPendingMapId, &gGameLoopPendingMapDataFileId);
+    mapSetup(act, x, &gGameLoopPendingMapId, &gGameLoopPendingMapDataFileId, y, z);
     lbl_803DCA40 = 1;
     gGameLoopMapLoadPending = 1;
     memset(gGameLoopPlayerTrailBuffer, 0, 0x3c0);

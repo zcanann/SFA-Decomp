@@ -1114,7 +1114,7 @@ void gameTextLoadForMap_800571f0(u8 force)
 
 extern u8* lbl_803DCE78;
 
-void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
+void mapSetup(int mapType, f32 a, int* outMapId, int* outEvent, f32 b, f32 c)
 {
     MapInfoRecord* tabEntry;
     int mapY;
