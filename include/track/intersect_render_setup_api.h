@@ -8,6 +8,7 @@ void gxDebugTextureFn_80078c1c(void);
 void fn_80078DFC(void);
 void fn_80078ED0(void);
 void fn_80079180(void);
+void _gxSetTevColor1(int r, int g, int b, int a);
 void _gxSetTevColor2(int r, int g, int b, int a);
 void gxTevAddTextureFrameBlendStages(void);
 void setupReflectionIndirectTev(u8 flag);

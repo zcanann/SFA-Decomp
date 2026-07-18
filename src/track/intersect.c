@@ -4400,7 +4400,7 @@ void _gxSetTevColor2(int r, int g, int b, int a)
     GXSetTevColor(GX_TEVREG1, c);
 }
 
-void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
+void _gxSetTevColor1(int r, int g, int b, int a)
 {
     GXColor c;
     c.r = r;

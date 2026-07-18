@@ -56,7 +56,6 @@ void fn_800790AC(void);
 void gxTexColorFn_80079254(void);
 void gxTextureFn_800794e0(void);
 void textRenderSetupFn_800795e8(void);
-void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a);
 void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag);
 void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1, f32 s3);
 void doHeatEffect(u8 alpha);

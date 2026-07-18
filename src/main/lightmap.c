@@ -87,7 +87,6 @@ extern void PSMTXMultVec(int m, f32* in, f32* out);
 extern void* gMapBlockLayerTables[];
 extern void** gMapBlocks;
 extern void fn_800704FC(int a, int b, int c);
-extern void _gxSetTevColor1(int a, int b, int c, int d);
 extern u8 lbl_803DCE98; /* count of allocated blocks */
 extern f32 lbl_803DEC18;
 extern int mapBlockRender_setLightmapShader(int* obj, int* state);
