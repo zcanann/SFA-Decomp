@@ -53,8 +53,6 @@ f32 gCamStaffAnimPi = 3.1415927f;
 f32 gCamStaffAnimHalfCircleBams = 32768.0f;
 f32 gCamStaffAnimDegToBams = 182.04445f;
 
-void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target);
-
 void camcontrol_releasePathState(void)
 {
     mm_free(gCamcontrolPathState);
