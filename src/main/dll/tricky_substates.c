@@ -216,7 +216,7 @@ void trickyDigTunnel(u8* obj, u8* state)
         trickyDebugPrint((char*)(base + 0x7cc));
         pos = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk700)->x;
         trickyUpdateApproachSpeed((GameObject*)obj, lbl_803E2488, (TrickyState*)state, (f32*)pos, 1);
-        if (trickyMove(obj, (f32*)pos) == 0)
+        if (trickyMove((GameObject*)obj, (f32*)pos) == 0)
         {
             ((TrickyState*)state)->stateFlags |= 0x2010;
             state[0xa] = 3;
@@ -290,7 +290,7 @@ void trickyDigTunnel(u8* obj, u8* state)
                                         &((TrickyCurveNode*)((TrickyState*)state)->unk704)->x));
         pos = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk704)->x;
         trickyUpdateApproachSpeed((GameObject*)obj, lbl_803E2488, (TrickyState*)state, (f32*)pos, 1);
-        if (trickyMove(obj, (f32*)pos) == 0)
+        if (trickyMove((GameObject*)obj, (f32*)pos) == 0)
         {
             trickyAdvanceNode(state);
             state[0xa] = 6;
@@ -300,7 +300,7 @@ void trickyDigTunnel(u8* obj, u8* state)
         trickyDebugPrint((char*)(base + 0x810));
         pos = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk704)->x;
         trickyUpdateApproachSpeed((GameObject*)obj, lbl_803E2488, (TrickyState*)state, (f32*)pos, 1);
-        if (trickyMove(obj, (f32*)pos) == 0)
+        if (trickyMove((GameObject*)obj, (f32*)pos) == 0)
         {
             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
             {

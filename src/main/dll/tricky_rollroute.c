@@ -155,7 +155,7 @@ void trickyFn_80141290(int obj, int ball)
 
         ts->speed = speed;
         trickyAdvanceRouteTargetAhead(obj, &ts->route, ts->speed);
-        trickyMove((u8*)obj, &ts->route.posX);
+        trickyMove((GameObject*)obj, &ts->route.posX);
 
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, NULL) != 0)
         {

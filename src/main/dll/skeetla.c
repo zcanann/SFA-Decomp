@@ -440,14 +440,14 @@ static void skeetla_playFootstepSfx(u8* obj, u16 sfxId)
     }
 }
 
-int trickyMove(u8* obj, f32* targetPos)
+int trickyMove(GameObject* obj, f32* targetPos)
 {
     f32 prospectivePos[3];
     f32 adjustedPos[3];
     u16 sfxIds[3];
     u16 sfxId;
     char* debugStrings;
-    u8* state;
+    TrickyState* state;
     f32 moveSpeed;
     f32 length;
     s16 previousYaw;
@@ -457,81 +457,81 @@ int trickyMove(u8* obj, f32* targetPos)
     u32 f;
 
     debugStrings = lbl_8031D2E8;
-    state = ((GameObject*)obj)->extra;
-    moveSpeed = ((TrickyState*)state)->speed;
+    state = obj->extra;
+    moveSpeed = state->speed;
     trickyDebugPrint(sSkeetlaVelDebugFmt, moveSpeed);
 
-    ((TrickyState*)state)->dirX = targetPos[0] - ((GameObject*)obj)->anim.worldPosX;
-    ((TrickyState*)state)->dirZ = targetPos[2] - ((GameObject*)obj)->anim.worldPosZ;
-    length = sqrtf((((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX) +
-                   (((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ));
+    state->dirX = targetPos[0] - obj->anim.worldPosX;
+    state->dirZ = targetPos[2] - obj->anim.worldPosZ;
+    length = sqrtf((state->dirX * state->dirX) +
+                   (state->dirZ * state->dirZ));
     if (lbl_803E23DC != length)
     {
-        ((TrickyState*)state)->dirX /= length;
-        ((TrickyState*)state)->dirZ /= length;
+        state->dirX /= length;
+        state->dirZ /= length;
     }
 
     if (moveSpeed < lbl_803E2420)
     {
         f32 stepX;
         f32 stepZ;
-        stepX = lbl_803E2420 * ((TrickyState*)state)->dirX;
-        prospectivePos[0] = stepX * timeDelta + ((GameObject*)obj)->anim.worldPosX;
-        prospectivePos[1] = ((GameObject*)obj)->anim.worldPosY;
-        stepZ = lbl_803E2420 * ((TrickyState*)state)->dirZ;
-        prospectivePos[2] = stepZ * timeDelta + ((GameObject*)obj)->anim.worldPosZ;
+        stepX = lbl_803E2420 * state->dirX;
+        prospectivePos[0] = stepX * timeDelta + obj->anim.worldPosX;
+        prospectivePos[1] = obj->anim.worldPosY;
+        stepZ = lbl_803E2420 * state->dirZ;
+        prospectivePos[2] = stepZ * timeDelta + obj->anim.worldPosZ;
     }
     else
     {
-        prospectivePos[0] = timeDelta * (((TrickyState*)state)->dirX * moveSpeed) + ((GameObject*)obj)->anim.worldPosX;
-        prospectivePos[1] = ((GameObject*)obj)->anim.worldPosY;
-        prospectivePos[2] = timeDelta * (((TrickyState*)state)->dirZ * moveSpeed) + ((GameObject*)obj)->anim.worldPosZ;
+        prospectivePos[0] = timeDelta * (state->dirX * moveSpeed) + obj->anim.worldPosX;
+        prospectivePos[1] = obj->anim.worldPosY;
+        prospectivePos[2] = timeDelta * (state->dirZ * moveSpeed) + obj->anim.worldPosZ;
     }
 
     adjustedPos[0] = prospectivePos[0];
     adjustedPos[1] = prospectivePos[1];
     adjustedPos[2] = prospectivePos[2];
-    trickyApplyObjectAvoidanceToStep((f32*)(obj + 0x18), adjustedPos, targetPos);
+    trickyApplyObjectAvoidanceToStep(&obj->anim.worldPosX, adjustedPos, targetPos);
     if (vec3f_distanceSquared(prospectivePos, adjustedPos) > lbl_803E2468)
     {
-        ((TrickyState*)state)->dirX = adjustedPos[0] - ((GameObject*)obj)->anim.worldPosX;
-        ((TrickyState*)state)->dirZ = adjustedPos[2] - ((GameObject*)obj)->anim.worldPosZ;
-        length = sqrtf((((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX) +
-                       (((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ));
+        state->dirX = adjustedPos[0] - obj->anim.worldPosX;
+        state->dirZ = adjustedPos[2] - obj->anim.worldPosZ;
+        length = sqrtf((state->dirX * state->dirX) +
+                       (state->dirZ * state->dirZ));
         if (lbl_803E23DC != length)
         {
-            ((TrickyState*)state)->dirX /= length;
-            ((TrickyState*)state)->dirZ /= length;
+            state->dirX /= length;
+            state->dirZ /= length;
         }
     }
 
     if (moveSpeed >= lbl_803E2420)
     {
-        skeetla_updateFacingFromMoveVector(obj, &turnDelta);
-        if (skeetla_isInWater(state) != 0)
+        skeetla_updateFacingFromMoveVector((u8*)obj, &turnDelta);
+        if (skeetla_isInWater((u8*)state) != 0)
         {
             objAnimFn_8013a3f0((int)obj, 7, lbl_803E2468, 0x2000000);
-            ((TrickyState*)state)->cooldownC = lbl_803E2440;
-            ((TrickyState*)state)->particleTimer = lbl_803E23DC;
+            state->cooldownC = lbl_803E2440;
+            state->particleTimer = lbl_803E23DC;
             trickyDebugPrint(debugStrings + 0x184);
             return 1;
         }
 
-        if (((TrickyState*)state)->stateIndex == 1)
+        if (state->stateIndex == 1)
         {
-            if ((skeetla_pathSpeedDelta(obj) >= lbl_803E23DC ? skeetla_pathSpeedDelta(obj)
-                                                             : -skeetla_pathSpeedDelta(obj)) > lbl_803E23DC)
+            if ((skeetla_pathSpeedDelta((u8*)obj) >= lbl_803E23DC ? skeetla_pathSpeedDelta((u8*)obj)
+                                                                  : -skeetla_pathSpeedDelta((u8*)obj)) > lbl_803E23DC)
             {
-                ((TrickyState*)state)->sfxIntervalTimer -= timeDelta;
-                if (((TrickyState*)state)->sfxIntervalTimer <= lbl_803E23DC)
+                state->sfxIntervalTimer -= timeDelta;
+                if (state->sfxIntervalTimer <= lbl_803E23DC)
                 {
-                    ((TrickyState*)state)->sfxIntervalTimer = (f32)(int)randomGetRange(600, 1200);
+                    state->sfxIntervalTimer = (f32)(int)randomGetRange(600, 1200);
                     if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                     {
                         if (moveSpeed > lbl_803E23E8)
                         {
                             sfxId = randomGetRange(0x34d, 0x34e);
-                            skeetla_playFootstepSfx(obj, sfxId);
+                            skeetla_playFootstepSfx((u8*)obj, sfxId);
                         }
                         else
                         {
@@ -546,7 +546,7 @@ int trickyMove(u8* obj, f32* targetPos)
                                 randomGetRange(0, 1);
                             }
                             sfxId = sfxIds[randomGetRange(0, 2)];
-                            skeetla_playFootstepSfx(obj, sfxId);
+                            skeetla_playFootstepSfx((u8*)obj, sfxId);
                         }
                     }
                 }
@@ -555,7 +555,7 @@ int trickyMove(u8* obj, f32* targetPos)
 
         if (moveSpeed > lbl_803E246C)
         {
-            ((TrickyState*)state)->voiceCooldown = lbl_803E2440;
+            state->voiceCooldown = lbl_803E2440;
             objAnimFn_8013a3f0((int)obj, 0x30, lbl_803E2468, 0x3000000);
         }
         else if (moveSpeed > lbl_803E23E8)
@@ -578,25 +578,25 @@ int trickyMove(u8* obj, f32* targetPos)
         return 1;
     }
 
-    previousYaw = ((GameObject*)obj)->anim.rotX;
+    previousYaw = obj->anim.rotX;
     turnDelta = 0;
-    skeetla_updateFacingFromMoveVector(obj, &turnDelta);
+    skeetla_updateFacingFromMoveVector((u8*)obj, &turnDelta);
     td = turnDelta;
 
-    if ((((TrickyState*)state)->stateFlags & 0x100000) != 0)
+    if ((state->stateFlags & 0x100000) != 0)
     {
-        if (skeetla_isInWater(state) != 0)
+        if (skeetla_isInWater((u8*)state) != 0)
         {
             trickyDebugPrint(debugStrings + 0x1bc);
             objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-            ((TrickyState*)state)->cooldownC = lbl_803E2440;
-            ((TrickyState*)state)->particleTimer = lbl_803E23DC;
+            state->cooldownC = lbl_803E2440;
+            state->particleTimer = lbl_803E23DC;
         }
         else
         {
             u32 flags;
             trickyDebugPrint(debugStrings + 0x1d0);
-            flags = ((TrickyState*)state)->stateFlags;
+            flags = state->stateFlags;
             if ((flags & 0x400000) != 0)
             {
                 if ((td >= 0 ? td : -td) > 0x3555)
@@ -635,13 +635,13 @@ int trickyMove(u8* obj, f32* targetPos)
                     }
                 }
             }
-            ((GameObject*)obj)->anim.rotX = previousYaw;
+            obj->anim.rotX = previousYaw;
             objAnimFn_8013a3f0((int)obj, animId, lbl_803E2478, 0x1000100);
         }
     }
 
-    ((TrickyState*)state)->speed = lbl_803E2420;
-    f = ((TrickyState*)state)->stateFlags;
+    state->speed = lbl_803E2420;
+    f = state->stateFlags;
     if (((f & 0x100000) == 0) && ((f & 0x200000) == 0))
     {
         return 0;

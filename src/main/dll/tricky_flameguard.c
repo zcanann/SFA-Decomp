@@ -513,7 +513,7 @@ void trickyFlame(GameObject* obj, int trickyState)
         trickyDebugPrint(strBase + 0x720);
         target = (f32*)(*(int*)&((TrickyRuntime*)trickyState)->guardPoint[0] + 0x8);
         trickyUpdateApproachSpeed((GameObject*)obj, lbl_803E2488, (TrickyState*)trickyState, target, 1);
-        trickyMove((u8*)obj, target);
+        trickyMove(obj, target);
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&(obj)->anim.worldPosX, 0x0) == 0)
         {
             ((TrickyRuntime*)trickyState)->flags |= TRICKY_STATE_RESET_FLAG_10;
@@ -524,7 +524,7 @@ void trickyFlame(GameObject* obj, int trickyState)
         trickyDebugPrint(strBase + 0x734);
         target = (f32*)(*(int*)&((TrickyRuntime*)trickyState)->guardPoint[0] + 0x8);
         trickyUpdateApproachSpeed((GameObject*)obj, lbl_803E2488, (TrickyState*)trickyState, target, 1);
-        if (trickyMove((u8*)obj, target) != 0)
+        if (trickyMove(obj, target) != 0)
         {
             break;
         }
@@ -639,7 +639,7 @@ void trickyFlame(GameObject* obj, int trickyState)
         trickyDebugPrint(strBase + 0x764);
         target = (f32*)((int)((TrickyRuntime*)trickyState)->homeObj + 0x18);
         trickyUpdateApproachSpeed((GameObject*)obj, lbl_803E2418, (TrickyState*)trickyState, target, 1);
-        if (trickyMove((u8*)obj, target) == 0)
+        if (trickyMove(obj, target) == 0)
         {
             objAnimFn_8013a3f0((int)obj, 0x1a, lbl_803E23E4, 0x4000000);
             ((TrickyRuntime*)trickyState)->guardState = 6;
@@ -720,7 +720,7 @@ void trickyFlame(GameObject* obj, int trickyState)
         {
             target = (f32*)(*(int*)&((TrickyRuntime*)trickyState)->guardPoint[1] + 0x8);
             trickyUpdateApproachSpeed((GameObject*)obj, lbl_803E2488, (TrickyState*)trickyState, target, 1);
-            trickyMove((u8*)obj, target);
+            trickyMove(obj, target);
             if (Objfsa_GetWalkGroupIndexAtPoint((float*)&(obj)->anim.worldPosX, 0x0) != 0)
             {
                 ((TrickyRuntime*)trickyState)->growlLatState = 1;

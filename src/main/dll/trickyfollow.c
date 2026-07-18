@@ -89,7 +89,6 @@ extern int isInWalkGroupOrPatch(f32* pos);
 extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern void fn_800DB240(void* pos, void* out, u32 patch);
 extern int isPointWithinPatchGroup(f32* pos, int walkGroup, u32 patch);
-extern int trickyMove(u8* obj, void* moveState);
 extern void trickyRankLinkedRouteCandidates(u8* obj, u8* flags, int walkGroup, int* routes);
 extern int trickyFindReachableRouteIndex(u8* state, int* routes, u8* flags, u16 group);
 extern void fn_800D9F38(RomCurveWalker* route);
@@ -517,30 +516,30 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         }
         else
         {
-            moved = trickyMove((u8*)obj, target);
+            moved = trickyMove(obj, (f32*)target);
         }
         break;
     case 1:
         trickyDebugPrint(strs + 0x428);
-        moved = trickyMove((u8*)obj, target);
+        moved = trickyMove(obj, (f32*)target);
         break;
     case 2:
         trickyDebugPrint(strs + 0x434);
         state->speed = velBefore;
         trickyUpdateApproachSpeed(obj, lbl_803E23DC, state, (f32*)(patchTarget = (u8*)state + slot * 0xc + 0xa0), 1);
-        moved = trickyMove((u8*)obj, patchTarget);
+        moved = trickyMove(obj, (f32*)patchTarget);
         break;
     case 4:
         trickyDebugPrint(strs + 0x448);
         state->speed = velBefore;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32*)((u8*)state + 0xec), 1);
-        moved = trickyMove((u8*)obj, (u8*)state + 0xec);
+        moved = trickyMove(obj, (f32*)((u8*)state + 0xec));
         break;
     case 3:
         trickyDebugPrint(strs + 0x45c);
         state->speed = velBefore;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32*)((u8*)state + 0xd4), 1);
-        moved = trickyMove((u8*)obj, (u8*)state + 0xd4);
+        moved = trickyMove(obj, (f32*)((u8*)state + 0xd4));
         break;
     case 6:
         trickyDebugPrint(strs + 0x46c, 10,
@@ -594,7 +593,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                         trickyUpdateApproachSpeed(obj, lbl_803E246C, state, &route->posX, 1);
                     }
                     trickyAdvanceRouteTargetAhead((int)obj, route, state->speed);
-                    moved = trickyMove((u8*)obj, &route->posX);
+                    moved = trickyMove(obj, &route->posX);
                     switch (*(s8*)(prevNode + 0x1a))
                     {
                     case 1:
@@ -704,7 +703,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                 state->speed = velBefore;
                 trickyUpdateApproachSpeed(obj, lbl_803E246C, state,
                                           (f32*)((u8*)state->routeSeedNode + 8), 1);
-                moved = trickyMove((u8*)obj, ((u8*)state->routeSeedNode + 8));
+                moved = trickyMove(obj, (f32*)((u8*)state->routeSeedNode + 8));
             }
             else
             {
@@ -725,7 +724,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         state->routeSeedNode = (void*)routePtrs[i];
         state->speed = velBefore;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32*)((u8*)state->routeSeedNode + 8), 1);
-        moved = trickyMove((u8*)obj, ((u8*)state->routeSeedNode + 8));
+        moved = trickyMove(obj, (f32*)((u8*)state->routeSeedNode + 8));
         state->followPhase = 6;
         break;
     case 7:
@@ -879,7 +878,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                 }
             }
             trickyAdvanceRouteTargetAhead((int)obj, route, state->speed);
-            moved = trickyMove((u8*)obj, &route->posX);
+            moved = trickyMove(obj, &route->posX);
             type = *(s8*)((u8*)route->nodeA0 + 0x1a);
             switch (type)
             {
@@ -932,7 +931,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, &route->posX, 1);
         }
         trickyAdvanceRouteTargetAhead((int)obj, route, state->speed);
-        trickyMove((u8*)obj, &route->posX);
+        trickyMove(obj, &route->posX);
         dir = route->reverse;
         if (((dir == 0) && (route->atSegmentEnd != 0)) || ((dir != 0 && (route->atSegmentEnd == 0))))
         {
@@ -1153,7 +1152,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, &route->posX, 1);
         }
         trickyAdvanceRouteTargetAhead((int)obj, route, state->speed);
-        trickyMove((u8*)obj, &route->posX);
+        trickyMove(obj, &route->posX);
         dir = route->reverse;
         if (((dir == 0) && (route->atSegmentEnd != 0)) || ((dir != 0 && (route->atSegmentEnd == 0))))
         {
@@ -1228,7 +1227,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         if ((state->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             state->speed = lbl_803E24C0;
-            trickyMove((u8*)obj, &route->posX);
+            trickyMove(obj, &route->posX);
             state->followPhase = 7;
         }
         break;
@@ -1269,7 +1268,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, &route->posX, 1);
         }
         trickyAdvanceRouteTargetAhead((int)obj, route, state->speed);
-        trickyMove((u8*)obj, &route->posX);
+        trickyMove(obj, &route->posX);
         dir = route->reverse;
         if (((dir == 0) && (route->atSegmentEnd != 0)) || ((dir != 0 && (route->atSegmentEnd == 0))))
         {
