@@ -32,10 +32,6 @@ STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 #define DIMMAGICBRIDGE_GAMEBIT_TRIGGER 0x1ef
 #define DIMMAGICBRIDGE_GAMEBIT_LATCH   0x1e8
 
-void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub);
-
-void dimmagicbridge_scrollTextureChannels(int obj, u8* extra);
-
 int dimmagicbridge_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int j;
