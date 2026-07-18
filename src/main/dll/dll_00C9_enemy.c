@@ -1070,15 +1070,25 @@ u8 fn_8014C4D8(GameObject* obj)
 {
     int* state;
     f32 val;
-    if (obj == NULL)
-        return 0;
-    state = obj->extra;
-    if (state == NULL)
-        return 0;
-    val = ((EnemyState*)state)->freezeRecoverTimer;
-    if (val != lbl_803E2574)
+    if (obj != NULL)
     {
-        return (u8)((s32)(val / lbl_803E2598) + 1);
+        state = obj->extra;
+    }
+    else
+    {
+        return 0;
+    }
+    if (state != NULL)
+    {
+        val = ((EnemyState*)state)->freezeRecoverTimer;
+        if (val != lbl_803E2574)
+        {
+            return (u8)((s32)(val / lbl_803E2598) + 1);
+        }
+        else
+        {
+            return 0;
+        }
     }
     return 0;
 }
