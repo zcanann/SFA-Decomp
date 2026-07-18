@@ -51,6 +51,16 @@ typedef struct VfpLavaStarMapData
     s16 gameBit;
 } VfpLavaStarMapData;
 
+typedef struct VfpFlamePointMapData
+{
+    ObjPlacement base;
+    u8 pad18[2];
+    s16 counterInit;  /* 0x1a */
+    s16 noCheck;      /* 0x1c */
+    s16 showGameBit;  /* 0x1e */
+    s16 checkGameBit; /* 0x20 */
+} VfpFlamePointMapData;
+
 typedef struct VfpLavaPoolState
 {
     u8 pad00[4];
@@ -75,6 +85,10 @@ STATIC_ASSERT(offsetof(VfpLavaStarState, effectTimer) == 0x0E);
 STATIC_ASSERT(offsetof(VfpLavaStarState, particleToggle) == 0x10);
 STATIC_ASSERT(offsetof(VfpLavaStarMapData, heightOffset) == 0x1A);
 STATIC_ASSERT(offsetof(VfpLavaStarMapData, gameBit) == 0x1E);
+STATIC_ASSERT(offsetof(VfpFlamePointMapData, counterInit) == 0x1A);
+STATIC_ASSERT(offsetof(VfpFlamePointMapData, noCheck) == 0x1C);
+STATIC_ASSERT(offsetof(VfpFlamePointMapData, showGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(VfpFlamePointMapData, checkGameBit) == 0x20);
 STATIC_ASSERT(sizeof(VfpLavaPoolState) == 0x18);
 STATIC_ASSERT(offsetof(VfpLavaPoolState, timerA) == 0x04);
 STATIC_ASSERT(offsetof(VfpLavaPoolState, timerB) == 0x06);
@@ -168,10 +182,11 @@ void VFP_flamepoint_update(GameObject* obj)
 void VFP_flamepoint_init(int* obj, s8* def)
 {
     VfpFlamePointData* d = (VfpFlamePointData*)((GameObject*)obj)->extra;
-    d->counter = (s8) * (s16*)(def + 0x1a);
-    d->noCheck = (u8) * (s16*)(def + 0x1c);
-    d->showGameBit = *(s16*)(def + 0x1e);
-    d->checkGameBit = *(s16*)(def + 0x20);
+    VfpFlamePointMapData* mapData = (VfpFlamePointMapData*)def;
+    d->counter = (s8)mapData->counterInit;
+    d->noCheck = (u8)mapData->noCheck;
+    d->showGameBit = mapData->showGameBit;
+    d->checkGameBit = mapData->checkGameBit;
     ((GameObject*)obj)->objectFlags |= (MAIN_OBJFLAG_HIDDEN | MAIN_OBJFLAG_HITDETECT_DISABLED);
 }
 
