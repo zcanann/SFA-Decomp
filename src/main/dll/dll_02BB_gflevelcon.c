@@ -36,10 +36,18 @@
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 
-f32 lbl_803E7450 = 0.0f;
-f32 lbl_803E7454 = 5.0f;
-f32 lbl_803E7458 = 0.5f;
-f32 lbl_803E745C = 1.0f;
+const f32 lbl_803E7450 = 0.0f;
+const f32 lbl_803E7454 = 5.0f;
+const f32 lbl_803E7458 = 0.5f;
+const f32 lbl_803E745C = 1.0f;
+union GfLevelconConstF32 { f32 f; };
+const union GfLevelconConstF32 lbl_803E7460 = { -0.1f };
+const union GfLevelconConstF32 lbl_803E7464 = { -0.5f };
+const union GfLevelconConstF32 lbl_803E7468 = { -0.2f };
+const union GfLevelconConstF32 lbl_803E746C = { 476.0f };
+const union GfLevelconConstF32 lbl_803E7470 = { 112.5f };
+const union GfLevelconConstF32 lbl_803E7474 = { 150.0f };
+const union GfLevelconConstF32 lbl_803E7478 = { 180.0f };
 
 /* sequence event opcodes consumed by gf_levelcon_SeqFn */
 #define GFLEVELCON_SEQEV_NONE          0
@@ -86,6 +94,7 @@ void gf_levelcon_free(void);
 void gf_levelcon_update(GameObject* obj);
 void gf_levelcon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void gf_levelcon_init(GameObject* obj);
+void gf_levelcon_findLinkedObjects(GameObject* obj);
 
 ObjectDescriptor gGF_LevelConObjDescriptor = {
     0,
@@ -103,6 +112,109 @@ ObjectDescriptor gGF_LevelConObjDescriptor = {
     (ObjectDescriptorCallback)gf_levelcon_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)gf_levelcon_getExtraSize,
 };
+
+int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpdate)
+{
+    GfLevelconHandleScriptEventsState* state = obj->extra;
+    int i;
+
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        switch (animUpdate->eventIds[i])
+        {
+        case GFLEVELCON_SEQEV_NONE:
+            break;
+        case GFLEVELCON_SEQEV_SKY_PRESET_A:
+            skyFn_80089710(7, 1, 0);
+            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
+            skyFn_800894a8(7, lbl_803E7460.f, lbl_803E7464.f, lbl_803E7468.f);
+            getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_A, 0);
+            break;
+        case GFLEVELCON_SEQEV_START_PROMPT:
+            state->promptTimer = lbl_803E746C.f;
+            break;
+        case GFLEVELCON_SEQEV_SKY_PRESET_B:
+            skyFn_80089710(7, 1, 0);
+            skyFn_800895e0(7, lbl_803E7470.f, lbl_803E7474.f, lbl_803E7478.f, 0, 0);
+            skyFn_800894a8(7, lbl_803E7464.f, -1.0f, lbl_803E7464.f);
+            getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_B, 0);
+            break;
+        case GFLEVELCON_SEQEV_LIGHT_ON:
+            gf_levelcon_findLinkedObjects(obj);
+            if (state->light != 0)
+            {
+                pointlight_setEffectState((GameObject*)state->light, 1);
+            }
+            break;
+        case GFLEVELCON_SEQEV_LIGHT_OFF:
+            gf_levelcon_findLinkedObjects(obj);
+            if (state->light != 0)
+            {
+                pointlight_setEffectState((GameObject*)state->light, 0);
+            }
+            break;
+        case GFLEVELCON_SEQEV_SKY_PRESET_C:
+            skyFn_80089710(7, 1, 0);
+            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
+            skyFn_800894a8(7, 1.0f, -1.0f, lbl_803E7464.f);
+            getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_C, 0);
+            break;
+        case GFLEVELCON_SEQEV_LOAD_MAP:
+            loadMapAndParent(0x29);
+            break;
+        case GFLEVELCON_SEQEV_UNLOCK_LEVELS:
+            unlockLevel(0, 0, 1);
+            unlockLevel(0, 1, 1);
+            mapUnload(mapGetDirIdx(0xb), 0x20000000);
+            break;
+        case GFLEVELCON_SEQEV_CREDITS:
+            unlockLevel(0, 0, 1);
+            loadUiDll(4);
+            warpToMap(0x12, 0);
+            creditsStart();
+            break;
+        case GFLEVELCON_SEQEV_SKY_PRESET_D:
+            skyFn_80089710(7, 1, 0);
+            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
+            skyFn_800894a8(7, 0.5f, -1.0f, lbl_803E7464.f);
+            getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_A, 0);
+            break;
+        case GFLEVELCON_SEQEV_SKY_PRESET_E:
+            skyFn_80089710(7, 1, 0);
+            skyFn_800895e0(7, lbl_803E7470.f, lbl_803E7474.f, lbl_803E7478.f, 0, 0);
+            skyFn_800894a8(7, 0.5f, -1.0f, lbl_803E7464.f);
+            getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_B, 0);
+            break;
+        }
+    }
+
+    if (state->promptTimer > 0.0f)
+    {
+        gameTextShow(0x476);
+        state->promptTimer -= timeDelta;
+        if (state->promptTimer < 0.0f)
+        {
+            state->promptTimer = 0.0f;
+        }
+    }
+
+    {
+        s16* scroll = state->scrollA;
+        if (scroll != NULL)
+        {
+            *scroll += (s16)(256.0f * timeDelta);
+        }
+    }
+    {
+        s16* scroll = state->scrollB;
+        if (scroll != NULL)
+        {
+            *scroll -= (s16)(256.0f * timeDelta);
+        }
+    }
+    return 0;
+}
 
 void gf_levelcon_findLinkedObjects(GameObject* obj)
 {
@@ -135,109 +247,6 @@ void gf_levelcon_findLinkedObjects(GameObject* obj)
             }
         }
     }
-}
-
-int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpdate)
-{
-    GfLevelconHandleScriptEventsState* state = obj->extra;
-    int i;
-
-    animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        switch (animUpdate->eventIds[i])
-        {
-        case GFLEVELCON_SEQEV_NONE:
-            break;
-        case GFLEVELCON_SEQEV_SKY_PRESET_A:
-            skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, -0.1f, -0.5f, -0.2f);
-            getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_A, 0);
-            break;
-        case GFLEVELCON_SEQEV_START_PROMPT:
-            state->promptTimer = 476.0f;
-            break;
-        case GFLEVELCON_SEQEV_SKY_PRESET_B:
-            skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, 112.5f, 150.0f, 180.0f, 0, 0);
-            skyFn_800894a8(7, -0.5f, -1.0f, -0.5f);
-            getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_B, 0);
-            break;
-        case GFLEVELCON_SEQEV_LIGHT_ON:
-            gf_levelcon_findLinkedObjects(obj);
-            if (state->light != 0)
-            {
-                pointlight_setEffectState((GameObject*)state->light, 1);
-            }
-            break;
-        case GFLEVELCON_SEQEV_LIGHT_OFF:
-            gf_levelcon_findLinkedObjects(obj);
-            if (state->light != 0)
-            {
-                pointlight_setEffectState((GameObject*)state->light, 0);
-            }
-            break;
-        case GFLEVELCON_SEQEV_SKY_PRESET_C:
-            skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, 1.0f, -1.0f, -0.5f);
-            getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_C, 0);
-            break;
-        case GFLEVELCON_SEQEV_LOAD_MAP:
-            loadMapAndParent(0x29);
-            break;
-        case GFLEVELCON_SEQEV_UNLOCK_LEVELS:
-            unlockLevel(0, 0, 1);
-            unlockLevel(0, 1, 1);
-            mapUnload(mapGetDirIdx(0xb), 0x20000000);
-            break;
-        case GFLEVELCON_SEQEV_CREDITS:
-            unlockLevel(0, 0, 1);
-            loadUiDll(4);
-            warpToMap(0x12, 0);
-            creditsStart();
-            break;
-        case GFLEVELCON_SEQEV_SKY_PRESET_D:
-            skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, 0.5f, -1.0f, -0.5f);
-            getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_A, 0);
-            break;
-        case GFLEVELCON_SEQEV_SKY_PRESET_E:
-            skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, 112.5f, 150.0f, 180.0f, 0, 0);
-            skyFn_800894a8(7, 0.5f, -1.0f, -0.5f);
-            getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_B, 0);
-            break;
-        }
-    }
-
-    if (state->promptTimer > 0.0f)
-    {
-        gameTextShow(0x476);
-        state->promptTimer -= timeDelta;
-        if (state->promptTimer < 0.0f)
-        {
-            state->promptTimer = 0.0f;
-        }
-    }
-
-    {
-        s16* scroll = state->scrollA;
-        if (scroll != NULL)
-        {
-            *scroll += (s16)(256.0f * timeDelta);
-        }
-    }
-    {
-        s16* scroll = state->scrollB;
-        if (scroll != NULL)
-        {
-            *scroll -= (s16)(256.0f * timeDelta);
-        }
-    }
-    return 0;
 }
 
 int gf_levelcon_getExtraSize(void)
