@@ -106,11 +106,15 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     u8 strip;
     u8 fadeAlpha;
     f32 conv;
+    s32 w;
+    s32 h;
 
     GXGetScissor(&sx, &sy, &sw, &sh);
     Camera_GetCurrentViewport(&vx, &vy, &vr, &vb);
-    width = (vr - vx) & 0xffff;
-    height = (vb - vy) & 0xffff;
+    w = vr - vx;
+    width = w & 0xffff;
+    h = vb - vy;
+    height = h & 0xffff;
     if (screenTransitionAlpha > gScreenTransitionAlphaMidpoint)
     {
         maxAlpha = 0xff;
@@ -134,7 +138,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         fadeSpan = (half - band) & 0xffff;
         outer = (half + band) & 0xffff;
         band = ((half - 1) - band) & 0xffff;
-        GXSetScissor(vx, vy, vr - vx, vb - vy);
+        GXSetScissor(vx, vy, w, h);
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
