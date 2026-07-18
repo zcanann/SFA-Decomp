@@ -3,6 +3,11 @@
 
 #include "main/dll/SH/SHthorntail_internal.h"
 
+extern u8 gSHthorntailPathHeaders[0x30];
+extern u8 gSHthorntailPathData[0x4AC];
+extern char sSHthorntailSourceFile[];
+extern char sThorntailEnteredInvalidState[];
+
 int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj);
 void SHthorntail_updateTailSwing(u32 objectId,SHthorntailRuntime *runtime);
 u32 SHthorntail_chooseNextState(SHthorntailObject *obj,SHthorntailRuntime *runtime,
