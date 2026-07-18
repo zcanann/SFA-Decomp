@@ -51,6 +51,7 @@
 #include "ext_min/GXGeometry_min.h"
 #include "ext_min/GXTransform_min.h"
 #include "ext_min/GXTev_min.h"
+#include "ext_min/GXBump_min.h"
 
 ModelLightStruct* lbl_803DCC64;
 u8 lbl_803DCC60;
@@ -177,7 +178,6 @@ s32 mapCheckCurBlocks(int v);
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent*)(obj))->bankIndex)
 
 extern u32 GXSetBlendMode();
-extern void GXSetNumIndStages(u8 nIndStages);
 extern u32 lbl_803DB468;
 extern u32 lbl_803DB470;
 extern u8 lbl_803DCC3D;

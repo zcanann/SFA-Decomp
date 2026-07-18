@@ -155,7 +155,6 @@ extern u32 FUN_80259858();
 extern u32 FUN_8025aeac();
 extern u32 FUN_8025b054();
 extern u32 FUN_8025c510();
-extern u32 GXSetBlendMode();
 
 extern int lbl_803DCD6C;
 extern int lbl_803DCD70;
@@ -183,6 +182,7 @@ extern volatile int lbl_803DCC80;
 #include "ext_min/GXFrameBuffer_min.h"
 #include "ext_min/os_min.h"
 #include "ext_min/GXPerf_min.h"
+#include "dolphin/gx/GXPixel.h"
 
 struct MldfNames
 {

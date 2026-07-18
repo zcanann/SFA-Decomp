@@ -41,6 +41,7 @@
 #include "ext_min/GXTexture_min.h"
 #include "ext_min/mtx_legacy_min.h"
 #include "ext_min/os_min.h"
+#include "ext_min/GXGeometry_min.h"
 
 struct LoadedTextureEntry* gLoadedTextures;
 u16* gRcpTexIdRemap;
@@ -92,7 +93,6 @@ extern u32 lbl_803DCDB4;
 extern u8 lbl_803DCD68;
 extern u8 lbl_803DCD69;
 extern u8 lbl_803DCD6A;
-extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetNumTevStages(u8 nStages);
 extern u8 gRcpDistortSlots[];
 typedef struct LoadedTextureEntry
