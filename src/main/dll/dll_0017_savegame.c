@@ -200,7 +200,6 @@ extern f32 lbl_803E06D4;
 const SaveGameDefaultPosition gSaveGameDefaultPosition = {
     570.6483764648438f, -82.0f, 15790.8203125f};
 
-extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
 void loadMapForCurrentSaveGame(void);
 
 u8 gSaveGameData[0xF70];

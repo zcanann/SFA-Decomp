@@ -1100,10 +1100,10 @@ void mapReload(void)
 }
 extern f32 lbl_803DE7B4;
 
-void mapLoadByCoords(int arg)
+void mapLoadByCoords(f32 x, f32 y, f32 z, int act)
 {
     lbl_803DCA38 = 0;
-    mapSetup(arg, &gGameLoopPendingMapId, &gGameLoopPendingMapDataFileId);
+    mapSetup(act, &gGameLoopPendingMapId, &gGameLoopPendingMapDataFileId);
     lbl_803DCA40 = 1;
     gGameLoopMapLoadPending = 1;
     memset(gGameLoopPlayerTrailBuffer, 0, 0x3c0);

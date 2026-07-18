@@ -25,6 +25,7 @@
 #include "dolphin/ai.h"
 #include "main/dll/FRONT/attract_movie.h"
 #include "dolphin/thp/THPPlayer.h"
+#include "dolphin/thp/THPDecode.h"
 #include "string.h"
 #include "main/fileio.h"
 #include "main/dll/FRONT/picmenu.h"
@@ -54,8 +55,6 @@ extern s32 gPicMenuReadThreadCreated; /* sbss slot is 8 bytes; upper word unrefe
 extern s32 gPicMenuVideoDecodeThreadCreated;
 extern s32 gPicMenuVideoDecodePrepareReady;
 extern s32 gAttractMovieIdleFrameCount; /* sbss slot is 8 bytes; upper word unreferenced */
-
-extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
 
 void THPRead_Reader(void);
 void AttractMovieVideo_DecoderForOnMemory(void*);

@@ -81,6 +81,7 @@
 #include "main/shader_map_text_api.h"
 #include "track/intersect_hud_api.h"
 #include "main/dll/dll_0011_screens.h"
+#include "main/dll/dll_8B.h"
 
 u16 lbl_803DBA30 = 420;
 f32 lbl_803DBA34 = 0.3f;
@@ -791,7 +792,6 @@ extern Texture* gGameUiBlinkTexture;
 extern void hudDrawFn_80121440(int a, int b, int c);
 extern s32 lbl_803DD828;
 extern u32 lbl_803DD82C;
-extern int cameraGetTargetType(void);
 extern int cMenuCountAvailableEntries(CMenuItemDef* items, s8 useTricky);
 extern u8 shouldOpenCMenu;
 extern int lbl_803A9320[0x11];
