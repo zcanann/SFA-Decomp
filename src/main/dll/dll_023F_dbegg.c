@@ -387,12 +387,12 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
         }
         if (flag == 0)
         {
-            if (gDbEggSurfaceNotFound != ground)
+            if (ground != gDbEggSurfaceNotFound)
             {
                 *out = ground;
                 return 0;
             }
-            if (gDbEggSurfaceNotFound != water)
+            if (water != gDbEggSurfaceNotFound)
             {
                 *out = water;
                 return 1;
@@ -401,7 +401,7 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
         }
         else
         {
-            if (gDbEggSurfaceNotFound != water)
+            if (water != gDbEggSurfaceNotFound)
             {
                 if (ground >= lbl_803E61C8)
                 {
@@ -427,7 +427,7 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
                 *out = ground;
                 return 1;
             }
-            if (gDbEggSurfaceNotFound != ground)
+            if (ground != gDbEggSurfaceNotFound)
             {
                 *out = ground;
                 return 1;
