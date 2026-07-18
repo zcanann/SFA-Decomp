@@ -48,7 +48,6 @@ extern u32 gDIMbossRenderMtx[12];
 extern MoveLibState gDIMbossAnimController;
 extern void (*gDIMbossAnimTable[6])(void);
 extern void (*gDIMbossHitDetectAnimTable[12])(void);
-extern f32 gDIMbossAnimScratchBase[3];
 
 
 
