@@ -217,7 +217,6 @@ extern void Obj_RegisterObject(GameObject* obj, int b);
 extern int loadModLines(int n, s16* out);
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
 void ObjModel_LoadRenderOpTextures(u8* model, int arg);
-void setMatrixFromObjectTransposed(void* obj, f32* out);
 void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);
 void* ObjModel_LoadAnimData(u8* p, int b, int c);
 void* ObjModel_Load(int id, int arg2, int* outSize);
@@ -235,12 +234,8 @@ u8 gObjCameraSetupBlock[32] = {
 };
 
 char sObjFreeNonExistentObjectWarning[] = "Tried to free non-existent object\n";
-void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags);
 void Obj_RunInitCallback(u8* obj, int cb, int unused);
-void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
 void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load);
-void Obj_ResetObjectSystem(void);
-void Obj_FreeObject(GameObject* obj);
 
 
 void doNothing_afterRenderObject(void)
