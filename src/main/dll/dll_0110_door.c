@@ -255,7 +255,7 @@ void Door_init(int* obj, u8* def)
         case 1101:
             {
                 s32 subtype = ((GameObject*)obj)->anim.mapEventSlot;
-                if ((subtype >= 31 && subtype < 35) || (subtype >= 40 && subtype < 43))
+                if ((subtype < 43 && subtype >= 40) || (subtype >= 31 && subtype < 35))
                 {
                     state->movementSfx = 832;
                     state->endpointSfx = 833;
