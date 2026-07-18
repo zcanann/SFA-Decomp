@@ -55,7 +55,7 @@ typedef struct DIMWoodDoorState
 
 typedef struct DIMWoodDoorShardState
 {
-    int parent;
+    GameObject* parent;
     u8 variant;
     u8 lifetime;
     u8 hitRadius;
@@ -68,26 +68,27 @@ extern f32 lbl_803DBF14;
 extern f32 gDimWoodDoorPi;
 extern f32 gDimWoodDoorAngleHalfCircle;
 
-void DIMwooddoor_spawnShard(int obj, u8 variant)
+void DIMwooddoor_spawnShard(GameObject* obj, u8 variant)
 {
     DIMWoodDoorConfig* config;
     DIMWoodDoorState* state;
     DIMWoodDoorShardState* shardState;
     s16* modelVec;
     u8* setup;
-    int shard;
+    GameObject* shard;
     f32 launchSpeed;
     f32 launchScale;
     f32 angle;
+    int objHandle = (int)obj;
 
-    config = *(DIMWoodDoorConfig**)&((GameObject*)obj)->anim.placementData;
-    if (Obj_IsLoadingLocked() == 0 || (state = ((GameObject*)obj)->extra)->shouldSpawnShard == 0 ||
+    config = *(DIMWoodDoorConfig**)&obj->anim.placementData;
+    if (Obj_IsLoadingLocked() == 0 || (state = obj->extra)->shouldSpawnShard == 0 ||
         state->launchDelay > 0)
     {
         return;
     }
 
-    modelVec = objModelGetVecFn_800395d8((GameObject*)(obj), 0);
+    modelVec = objModelGetVecFn_800395d8(obj, 0);
     setup = (u8*)Obj_AllocObjectSetup(0x24, DIMWOODDOOR_CHILD_OBJ_SHARD);
     setup[4] = config->setup04;
     setup[6] = config->setup06;
@@ -97,13 +98,13 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     ((ObjPlacement*)setup)->posY = state->targetY;
     ((ObjPlacement*)setup)->posZ = state->targetZ;
 
-    shard = (int)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
-    shardState = *(DIMWoodDoorShardState**)&((GameObject*)shard)->extra;
+    shard = Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, 0);
+    shardState = shard->extra;
     shardState->parent = obj;
     shardState->variant = variant;
     if (variant != 0)
     {
-        if (((GameObject*)obj)->anim.mapEventSlot == 0x1b)
+        if (obj->anim.mapEventSlot == 0x1b)
         {
             shardState->lifetime = 100;
         }
@@ -121,12 +122,12 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
 
     launchSpeed = state->launchSpeed;
     launchScale = 2.0f * launchSpeed;
-    *(s16*)shard = ((GameObject*)obj)->anim.rotX + modelVec[1];
+    shard->anim.rotX = obj->anim.rotX + modelVec[1];
     angle = (gDimWoodDoorPi * (f32)(s32) * (s16*)shard) / gDimWoodDoorAngleHalfCircle;
-    ((GameObject*)shard)->anim.velocityX = launchScale * -mathSinf(angle);
-    ((GameObject*)shard)->anim.velocityY = launchSpeed;
+    shard->anim.velocityX = launchScale * -mathSinf(angle);
+    shard->anim.velocityY = launchSpeed;
     angle = (gDimWoodDoorPi * (f32)(s32) * (s16*)shard) / gDimWoodDoorAngleHalfCircle;
-    ((GameObject*)shard)->anim.velocityZ = launchScale * -mathCosf(angle);
+    shard->anim.velocityZ = launchScale * -mathCosf(angle);
 
     state->shouldSpawnShard = 0;
     state->cooldown = 50;
@@ -139,8 +140,8 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
         state->launchDelay = (s16)(randomGetRange(config->delayMin, config->delayMax) << 2);
     }
 
-    ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
-    Sfx_PlayFromObject(obj, SFXTRIG_tr_jrumbalp);
+    ObjAnim_SetCurrentMove(objHandle, 0, 0.0f, 0);
+    Sfx_PlayFromObject(objHandle, SFXTRIG_tr_jrumbalp);
 }
 
 void DIMwooddoor_updateShardAim(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ, f32 distance)

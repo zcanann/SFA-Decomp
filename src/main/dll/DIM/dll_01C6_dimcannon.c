@@ -30,7 +30,7 @@
 #include "main/obj_group.h"
 #include "main/obj_message.h"
 #include "main/obj_path.h"
-#include "main/dll/DIM/dimwooddoor_aim_api.h"
+#include "main/dll/DIM/DIMwooddoor.h"
 
 f32 lbl_803DBEF0 = 6.0f;
 f32 gDimCannonAnimAdvanceSpeedCur = 0.025f;
@@ -60,8 +60,6 @@ STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 void* lbl_803DDB50;
 
 extern f32 lbl_803E48B8;
-
-extern void DIMwooddoor_spawnShard(int* obj, int variant);
 
 extern f32 lbl_803E48EC;
 extern f32 gDimCannonAnimAdvanceSpeed;
@@ -210,7 +208,7 @@ int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                     ((DimCannonState*)state)->airMeterCharge = 0;
                 }
             }
-            DIMwooddoor_spawnShard(obj, 1);
+            DIMwooddoor_spawnShard((GameObject*)obj, 1);
             if (((GameObject*)obj)->anim.mapEventSlot == DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED &&
                 ((DimCannonState*)state)->hasActivated == 0 && mainGetBit(GAMEBIT_DIM_CannonRelated0C17) &&
                 mainGetBit(GAMEBIT_DIM_CannonRelated0A21))
@@ -453,7 +451,7 @@ void DIMCannon_update(int* obj)
             DIMwooddoor_updateShardAim((GameObject*)(obj), *(f32*)&((DimCannonState*)state)->aimTargetX,
                                        *(f32*)&((DimCannonState*)state)->aimTargetY,
                                        ((DimCannonState*)state)->aimTargetZ, ((DimCannonState*)state)->distance);
-            DIMwooddoor_spawnShard(obj, 0);
+            DIMwooddoor_spawnShard((GameObject*)obj, 0);
             {
                 f32 d2 = ((DimCannonState*)state)->distance;
                 int v = ((DimcannonPlacement*)src)->triggerRange * lbl_803DBF0C;
