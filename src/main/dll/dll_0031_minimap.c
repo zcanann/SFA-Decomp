@@ -37,6 +37,8 @@
 #include "main/obj_group.h"
 #include "main/lightmap_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_stop_object_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/minimap_api.h"
@@ -63,8 +65,6 @@ f32 gMinimapZoomStepMax = 1.05f;
 f32 gMinimapZoomStep = 1.0f;
 int gMinimapPrevAreaNameId = -1;
 f32 gMinimapWorldToTexScale = 0.08f;
-void Sfx_PlayFromObject(int obj, int id);
-void Sfx_StopFromObject(u32 obj, u32 sfxId);
 
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
 
