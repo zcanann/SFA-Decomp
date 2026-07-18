@@ -148,7 +148,6 @@ extern f32 lbl_803DE9C8;
 extern f32 lbl_803DE99C;
 
 typedef void (*ObjPrintSetTevKColorFn)(int id, ObjPrintGXColor color);
-typedef void (*ObjPrintSetChanColorFn)(int chan, ObjPrintGXColor color);
 typedef void (*ObjPrintSetFogFn)(int type, f32 startZ, f32 endZ, f32 nearZ, f32 farZ, ObjPrintGXColor color);
 typedef void (*ObjPrintLoadTexMtxFn)(f32* mtx, int id, int type);
 
@@ -1886,10 +1885,6 @@ extern f32 lbl_803DEA1C;
 
 #undef GXSetTevKColor
 #define GXSetTevKColor ((ObjPrintSetTevKColorFn)GXSetTevKColor)
-#undef GXSetChanAmbColor
-#define GXSetChanAmbColor ((ObjPrintSetChanColorFn)GXSetChanAmbColor)
-#undef GXSetChanMatColor
-#define GXSetChanMatColor ((ObjPrintSetChanColorFn)GXSetChanMatColor)
 #undef GXSetIndTexMtx
 #define GXSetIndTexMtx ((ObjPrintSetIndTexMtxFn)GXSetIndTexMtx)
 #undef GXSetFog
@@ -2025,8 +2020,8 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
             modelLightStruct_setDiffuseColor(lt, 0xff, 0xff, 0xff, 0xff);
             modelLightChannels_reset(0);
             modelLightChannel_configure(2, 0, 0);
-            GXSetChanAmbColor(GX_ALPHA0, *(ObjPrintGXColor*)&lbl_803DB470);
-            GXSetChanMatColor(GX_ALPHA0, *(ObjPrintGXColor*)&lbl_803DB468);
+            GXSetChanAmbColor(GX_ALPHA0, *(GXColor*)&lbl_803DB470);
+            GXSetChanMatColor(GX_ALPHA0, *(GXColor*)&lbl_803DB468);
             modelLightStruct_loadChannelLight(2, (u8*)lt, (u8*)obj);
             modelLightChannels_applyGXControls();
             ModelLightStruct_free(lt);

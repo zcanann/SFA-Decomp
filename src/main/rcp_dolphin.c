@@ -30,6 +30,7 @@
 #include "dolphin/os/OSCache.h"
 #include "main/gx_scissor_api.h"
 #include "dolphin/gx/GXDispList.h"
+#include "dolphin/gx/GXLighting.h"
 #include "main/dll/modgfx.h"
 
 struct LoadedTextureEntry* gLoadedTextures;
@@ -174,16 +175,7 @@ extern u8 gRcpDistortSlotIndex;
 extern void* gRcpDistortTexture;
 extern u16* gRcpTexIdRemap;
 extern void* gRcpTexHeaderBuffer;
-typedef struct GXColor8
-{
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} GXColor8;
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-extern void GXSetChanAmbColor(int chan, GXColor8 c);
-extern void GXSetChanMatColor(int chan, GXColor8 c);
 extern void GXSetTexCopyDst(int w, int h, int fmt, int mip);
 extern void textureFn_8004ff20(void* asset, f32* mtx, void* out, int p4);
 extern void GXCopyTex(void* dst, int clear);
@@ -205,63 +197,6 @@ extern void texPreGetMipmap(int word, int id, int* sizeOut, int* frameOut, int m
 void* textureLoadAsset(int asset);
 void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter);
 static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights);
-
-
-#define GX_CULL_NONE     0
-#define GX_CULL_FRONT    1
-#define GX_CULL_BACK     2
-#define GX_BM_NONE       0
-#define GX_BL_ZERO       0
-#define GX_BL_ONE        1
-#define GX_LO_NOOP       5
-#define GX_AOP_AND       0
-#define GX_ALWAYS        7
-#define GX_EQUAL         2
-#define GX_MT_XF_FLUSH   1
-#define GX_TF_RGBA8      6
-#define GX_FALSE         0
-#define GX_TF_I4         0
-#define GX_TEXMAP1       1
-#define GX_TEV_SWAP1     1
-#define GX_CH_ALPHA      3
-#define GX_VA_POS        9
-#define GX_VA_NRM        10
-#define GX_PNMTX0        0
-#define GX_TEXMTX0       0x1e
-#define GX_MTX2x4        1
-#define GX_DIRECT        1
-#define GX_TRIANGLESTRIP 0x98
-#define GX_VTXFMT4       4
-#define GX_TG_MTX2x4     1
-#define GX_IDENTITY      0x3c
-#define GX_PTIDENTITY    0x7d
-#define GX_COLOR0        0
-#define GX_COLOR0A0      4
-#define GX_COLOR1A1      5
-#define GX_TEVREG0       1
-#define GX_TEXCOORD_NULL 0xff
-#define GX_TEXMAP_NULL   0xff
-#define GX_COLOR_NULL    0xff
-#define GX_TEV_SWAP0     0
-#define GX_TEV_ADD       0
-#define GX_TB_ZERO       0
-#define GX_CS_SCALE_1    0
-#define GX_TRUE          1
-#define GX_TEVPREV       0
-#define GX_CC_CPREV      0
-#define GX_CC_APREV      1
-#define GX_CC_A0         3
-#define GX_CC_C1         4
-#define GX_CC_C2         6
-#define GX_CC_TEXC       8
-#define GX_CC_RASC       0xa
-#define GX_CC_KONST      0xe
-#define GX_CC_ZERO       0xf
-#define GX_CA_APREV      0
-#define GX_CA_TEXA       4
-#define GX_CA_RASA       5
-#define GX_CA_KONST      6
-#define GX_CA_ZERO       7
 
 #define RCP_DISTORT_TEXTURE_ID 0x5dc
 
@@ -794,9 +729,9 @@ void gxTextureFn_80052efc(void)
     } mtxu;
 #define mtx mtxu.m
     ModelLightStruct* lights[8];
-    GXColor8 outColor;
-    GXColor8 texColor;
-    GXColor8 matColor;
+    GXColor outColor;
+    GXColor texColor;
+    GXColor matColor;
     u8* e;
     u8* slots[1];
     int i;
@@ -811,8 +746,8 @@ void gxTextureFn_80052efc(void)
     mtx[3] = lbl_803DEB74;
     mtx[7] = lbl_803DEB74;
     GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
-    GXSetChanAmbColor(GX_COLOR0A0, *(GXColor8*)&gRcpDistortAmbColor);
-    GXSetChanAmbColor(GX_COLOR1A1, *(GXColor8*)&gRcpDistortAmbColor);
+    GXSetChanAmbColor(GX_COLOR0A0, *(GXColor*)&gRcpDistortAmbColor);
+    GXSetChanAmbColor(GX_COLOR1A1, *(GXColor*)&gRcpDistortAmbColor);
     GXSetTexCopyDst(0x20, 0x20, GX_TF_RGBA8, GX_FALSE);
     modelTextureFn_80089970(2);
     i = 0;
@@ -845,7 +780,7 @@ void gxTextureFn_80052efc(void)
     resetLotsOfRenderVars();
     textureFn_800524ec(&gRcpDistortMatColor);
     textureFn_800528bc();
-    GXSetChanMatColor(GX_COLOR0, *(GXColor8*)&gRcpDistortMatColor);
+    GXSetChanMatColor(GX_COLOR0, *(GXColor*)&gRcpDistortMatColor);
     clearSlot = 5;
     k = 5;
     e = gRcpDistortSlots + 0x8c;

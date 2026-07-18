@@ -26,6 +26,7 @@
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
 #include "main/pi_dolphin.h"
+#include "dolphin/gx/GXLighting.h"
 #include "dolphin/gx/GXManage.h"
 #include "main/sky_state.h"
 #include "main/track_dolphin_api.h"
@@ -92,15 +93,8 @@ extern int mapBlockRender_setShader(int p1, int* obj, int* state);
 extern void mapBlockRender_callList(int p1, int p2, int* obj, int v, int* state, float* p3);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
-typedef struct
-{
-    u8 r, g, b, a;
-} GXColor8;
 extern void objDrawFn_80061654(int* obj, int* model);
 extern void fn_802B4ED8(int* obj, int a, int b);
-extern void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc amb_src, GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn, GXAttnFn attn_fn);
-extern void GXSetChanAmbColor(int chan, GXColor8* c);
-extern void GXSetNumChans(u8 nChans);
 extern u32 cloudGetLayerTextureSize(f32 * a, f32 * b);
 extern u32 lbl_803DCE34;
 extern f32 lbl_803DEC10;
@@ -791,10 +785,10 @@ void sceneDraw(void)
     GameObject* player;
     u8 flag;
     int t;
-    GXColor8 c;
+    GXColor c;
     f32 skyA;
     f32 skyB;
-    GXColor8 ccopy;
+    GXColor ccopy;
     s8 buf[616];
 
     q = (char*)lbl_8037E0C0;
@@ -868,7 +862,7 @@ void sceneDraw(void)
     GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     ccopy = c;
-    GXSetChanAmbColor(GX_COLOR0, &ccopy);
+    GXSetChanAmbColor(GX_COLOR0, ccopy);
     GXSetNumChans(1);
     renderSceneGeometry((int*)0, lbl_8030E65C);
     renderResetFn_8003fc60();
@@ -1649,9 +1643,9 @@ void sceneDrawTransparentPolys(void)
     int i;
     int* block;
     GameObject* player;
-    GXColor8 c4copy, c4;
-    GXColor8 c5copy, c5;
-    GXColor8 c6copy, c6;
+    GXColor c4copy, c4;
+    GXColor c5copy, c5;
+    GXColor c6copy, c6;
     f32 m[16];
 
     lightmap_sortTransparentDrawQueue();
@@ -1698,7 +1692,7 @@ void sceneDrawTransparentPolys(void)
             GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             objGetColor(0, (u8*)&c4, (u8*)&c4 + 1, (u8*)&c4 + 2);
             c4copy = c4;
-            GXSetChanAmbColor(GX_COLOR0, &c4copy);
+            GXSetChanAmbColor(GX_COLOR0, c4copy);
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
@@ -1710,7 +1704,7 @@ void sceneDrawTransparentPolys(void)
             GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             objGetColor(0, (u8*)&c5, (u8*)&c5 + 1, (u8*)&c5 + 2);
             c5copy = c5;
-            GXSetChanAmbColor(GX_COLOR0, &c5copy);
+            GXSetChanAmbColor(GX_COLOR0, c5copy);
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
@@ -1722,7 +1716,7 @@ void sceneDrawTransparentPolys(void)
             GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             objGetColor(0, (u8*)&c6, (u8*)&c6 + 1, (u8*)&c6 + 2);
             c6copy = c6;
-            GXSetChanAmbColor(GX_COLOR0, &c6copy);
+            GXSetChanAmbColor(GX_COLOR0, c6copy);
             GXSetNumChans(1);
             PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
             setupToRenderMapBlock(block, m);
