@@ -1226,7 +1226,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     if (mapGetBlockAtPos(gridX, gridY, 0) != NULL)
     {
         block = fn_80059334(gridX, gridY);
-        blockId = block->f6;
+        blockId = block->blockId;
     }
     if (blockId != -1)
     {

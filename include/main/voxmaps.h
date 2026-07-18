@@ -30,7 +30,7 @@ typedef struct VoxPos {
 
 typedef struct VoxBlock {
     u8 pad0[6];
-    s16 f6;
+    s16 blockId;
     s8 f8;
     s8 f9;
 } VoxBlock;
