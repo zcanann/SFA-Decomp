@@ -5,9 +5,6 @@
 
 u32 mapLoadDataFile(int mapId, int fileId);
 s32 getDataFileSize(int id);
-void loadDataFiles(int arg);
-
-#define loadDataFilesNoArgLegacy() \
-    (((void (*)(void))loadDataFiles)())
+void loadDataFiles();
 
 #endif /* MAIN_PI_DATA_FILE_API_H_ */

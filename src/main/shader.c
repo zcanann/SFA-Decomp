@@ -1848,7 +1848,7 @@ void doPendingMapLoads(void)
                         checkReset();
                         if (waited)
                             waitNextFrame();
-                        loadDataFilesNoArgLegacy();
+                        loadDataFiles();
                         dvdCheckError();
                         if (waited)
                         {
@@ -2606,7 +2606,7 @@ int mapProcessRomList(int slot)
         checkReset();
         if (flag)
             waitNextFrame();
-        loadDataFilesNoArgLegacy();
+        loadDataFiles();
         dvdCheckError();
         if (flag)
         {

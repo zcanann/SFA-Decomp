@@ -338,7 +338,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
                 {
                     waitNextFrame();
                 }
-                loadDataFilesNoArgLegacy();
+                loadDataFiles();
                 dvdCheckError();
                 if (loadWaitStarted)
                 {

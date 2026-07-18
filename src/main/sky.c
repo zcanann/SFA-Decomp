@@ -974,7 +974,7 @@ void loadLightFn_8008bbc4(void)
         {
             waitNextFrame();
         }
-        loadDataFilesNoArgLegacy();
+        loadDataFiles();
         dvdCheckError();
         if (done)
         {

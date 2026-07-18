@@ -1088,7 +1088,6 @@ extern u8 lbl_803DCD18[];
 
 void piRomLoadSection(int romOffset, int mapIndex, int destBuf);
 int GXFlush_(u8 visible, int unused);
-void loadDataFiles(int arg);
 void waitNextFrame(void);
 
 
@@ -3644,7 +3643,7 @@ extern char sAssetHaltFormat[];
 extern int lbl_8035EF48[];
 extern s16 lbl_803DCC78;
 
-void loadDataFiles(int arg)
+void loadDataFiles()
 {
     int i;
     if (getButtonsJustPressed(2) & PAD_BUTTON_A)

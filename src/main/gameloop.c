@@ -1302,7 +1302,7 @@ void gameLoop(void)
         gameUpdate();
         viewportEffectFn_8000e380();
         doNothing_startOfFrame();
-        loadDataFilesNoArgLegacy();
+        loadDataFiles();
         audioUpdate();
         Sfx_UpdateLoopedObjectSounds();
     }
