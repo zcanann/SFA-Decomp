@@ -359,5 +359,7 @@ void DIMboss_release(void);
 void DIMboss_initialise(void);
 void DIMboss_initialiseAnimTables(void);
 extern ObjectDescriptor12 gDIM_BossObjDescriptor;
+extern f32 gDIMbossAnimScratchBase[3];
+extern u8 gDim2IcicleHitFxBuffer[];
 
 #endif /* MAIN_DLL_DIM_DIMBOSS_H_ */
