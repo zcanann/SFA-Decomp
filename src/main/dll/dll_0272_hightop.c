@@ -74,17 +74,6 @@ const HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF,
 #define HIGHTOP_OBJGROUP       0xa
 #define ARWARWING_OBJGROUP     0x26
 
-void HighTop_hitDetect(GameObject* obj);
-void HighTop_update(GameObject* obj);
-int HighTop_getExtraSize(void);
-int HighTop_getObjectTypeId(void);
-void HighTop_free(int obj);
-void HighTop_render(void* obj, int p2, int p3, int p4, int p5, char visible);
-void HighTop_hitDetect(GameObject* obj);
-void HighTop_update(GameObject* obj);
-void HighTop_init(GameObject* obj, HighTopPlacement* placement);
-void HighTop_release(void);
-
 static const u32 sHighTopPathParam[1] = {0x01010101};
 
 int hightop_stateHandler10(GameObject* obj, HighTopRuntime* stateArg)
@@ -516,21 +505,6 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
     state->flags &= ~1;
     return 0;
 }
-f32 hightop_func13(int obj, f32* out);
-int HighTop_render2(void);
-int HighTop_setScale(void);
-int hightop_func0B(void);
-int hightop_func0E(void);
-int hightop_func10(void);
-int hightop_func14(void);
-void HighTop_func0F(int obj, f32* ox, f32* oy, f32* oz);
-void HighTop_getLookTargetYaw(GameObject* obj, int mode, int* out);
-void HighTop_initialise(void);
-void HighTop_modelMtxFn(int obj, f32* a, f32* b, f32* c);
-void HighTop_renderGroundMarker(GameObject* obj, f32 scale);
-void hightop_func11(GameObject* obj, int val);
-void hightop_func12(int obj, f32* a, int* b);
-void hightop_func15(void);
 int gHighTopIdleSequenceIds[3] = {0x4, 0x5, 0x6};
 int gHighTopIdleSequenceWeights[3] = {0x32, 0x19, 0x19};
 int lbl_8032AB48[26] = {0x8,         0x9,        0x7, 0xA,        -1043857408, 0x0, -1032847360, 0x41C80000, 0x0,
@@ -567,8 +541,6 @@ ObjectDescriptor24 gHighTopObjDescriptor = {
     (ObjectDescriptorCallback)HighTop_renderGroundMarker,
     (ObjectDescriptorCallback)HighTop_getLookTargetYaw,
 };
-
-int hightop_handleMotionEvent(int obj, u8 event);
 
 int hightop_defaultStateHandler(void)
 {
@@ -797,8 +769,6 @@ int HighTop_seqFn(GameObject* obj)
     }
     return 0;
 }
-
-void hightop_playMovementSfx(GameObject* obj, HighTopRuntime* state2, HighTopRuntime* state);
 
 void HighTop_getLookTargetYaw(GameObject* obj, int mode, int* out)
 {
