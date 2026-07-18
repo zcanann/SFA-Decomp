@@ -6,9 +6,6 @@
 #include "main/audio/snd_groups.h"
 #include "main/audio/synth_volume.h"
 
-#undef SYNTH_VOICE_RUNTIME
-#define SYNTH_VOICE_RUNTIME() (&lbl_803AF550)
-
 #define SYNTH_VOICE_TRACK_VOLUME_GROUP_OFFSET ((u32) & (((SynthVoice*)0)->trackVolumeGroup))
 #define SYNTH_RUNTIME_VOICES_OFFSET            ((u32) & (((SynthVoiceRuntime*)0)->voices))
 
@@ -20,8 +17,6 @@
 #define SYNTH_START_FLAG_SPEED         0x20
 #define SYNTH_START_FLAG_VOLUME_MODE3  0x40
 #define SYNTH_START_FLAG_CLEAR_MUTE    0x80
-
-extern SynthVoiceRuntime lbl_803AF550;
 
 /*
  * sndSeqVolume backend. Resolves a sequence handle across queued and active

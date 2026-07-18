@@ -32,7 +32,6 @@ typedef struct SynthMasterTrackEvent
 #define SYNTH_VOICE_STATE_QUEUED    1 /* on gSynthQueuedVoices; awaiting start */
 #define SYNTH_VOICE_STATE_ALLOCATED 2 /* on gSynthAllocatedVoices; playing */
 
-extern SynthSeqRuntime lbl_803AF550;
 extern u8 synthTrackVolume[0x40];
 
 static inline void BuildTransTab(u8* tab, SynthPage* page)
@@ -454,7 +453,7 @@ void synthFreeHandle(u32 handle)
     u32 i;
     SynthVoiceRuntimeView* runtimeView;
 
-    runtime = &lbl_803AF550;
+    runtime = (SynthSeqRuntime*)(void*)gSynthCallbacks;
     key = handle & 0x7fffffffu;
 
     for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
@@ -567,7 +566,7 @@ void synthSetHandleValue16(u32 handle, u16 speed)
     SynthSeqRuntime* runtime;
     SynthVoice* voice;
 
-    runtime = &lbl_803AF550;
+    runtime = (SynthSeqRuntime*)(void*)gSynthCallbacks;
     key = handle & 0x7fffffffu;
 
     for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
