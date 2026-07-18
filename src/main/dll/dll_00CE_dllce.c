@@ -263,8 +263,8 @@ int fn_8015DEB4(int* obj, GroundBaddieState* state)
 int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub = obj->extra;
-    f32* v;
     f32 z;
+    f32* v;
 
     if (*(char*)&state->baddie.moveJustStartedB != '\0')
     {
@@ -684,13 +684,14 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
         GroundBaddieState* sub = ((GameObject*)p1)->extra;
     f32 t;
+    f32 zero = 0.0f;
 
     if (visible == 0 || ((GameObject*)p1)->userData1 != 0 || sub->targetState == 0)
     {
         return;
     }
     t = sub->glowAlpha;
-    if (t != 0.0f)
+    if (t != zero)
     {
         fn_8003B5E0(200, 0, 0, t);
     }
