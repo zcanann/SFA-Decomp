@@ -118,7 +118,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
     cmdList = buf.entries;
     for (; emitCount != 0; emitCount--)
     {
-        /* anim.worldPosZ (obj+0x20) is reused here as a pointer to the model's
+        /* anim.worldPosZ is reused here as a pointer to the model's
            texture-index table head; deref twice to reach the active index. */
         texture = textureIdxToPtr(**(int**)&((GameObject*)activeModel)->anim.worldPosZ);
         cmdList[0].layer = 0;

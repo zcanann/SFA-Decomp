@@ -156,30 +156,21 @@ void ShipBattle_init(GameObject* obj, int def)
     state->unk28 = -1;
 
     chainIndex = obj->userData1;
-    if (chainIndex == 0)
+    if (chainIndex == 0 && ((ShipBattleObjectDef*)def)->segmentIndex != 1)
     {
-        if (((ShipBattleObjectDef*)def)->segmentIndex != 1)
+        (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)def);
+        obj->userData1 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
+    }
+    else if (chainIndex != 0 && ((ShipBattleObjectDef*)def)->segmentIndex != chainIndex - 1)
+    {
+        (*gObjectTriggerInterface)->freeState((u8*)state);
+        if (((ShipBattleObjectDef*)def)->segmentIndex != -1)
         {
             (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)def);
-            obj->userData1 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
-            goto light_setup;
         }
+        obj->userData1 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
     }
 
-    if (chainIndex != 0)
-    {
-        if (((ShipBattleObjectDef*)def)->segmentIndex != chainIndex - 1)
-        {
-            (*gObjectTriggerInterface)->freeState((u8*)state);
-            if (((ShipBattleObjectDef*)def)->segmentIndex != -1)
-            {
-                (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)def);
-            }
-            obj->userData1 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
-        }
-    }
-
-light_setup:
     if (obj->anim.seqId == SHIPBATTLE_FIRE_SEQ_ID)
     {
         light = (int)objCreateLight(obj, 1);

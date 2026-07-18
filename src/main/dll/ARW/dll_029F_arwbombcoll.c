@@ -90,7 +90,6 @@ void ARWBombColl_hitDetect(void)
 }
 
 
-#pragma opt_common_subs off
 void ARWBombColl_update(int obj)
 {
     GameObject* arw;
@@ -218,7 +217,6 @@ active:
 }
 }
 
-#pragma opt_common_subs reset
 
 void ARWBombColl_init(GameObject* obj, ARWBombCollSetup* setup)
 {

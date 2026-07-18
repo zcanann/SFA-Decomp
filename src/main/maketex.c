@@ -49,8 +49,6 @@ typedef struct
  * Per-object turn-to-face scratch state (carried in GameObject::extra for
  * class-0x10 sequence objects). Only the fields touched by the turn step and
  * the sequence teardown are named; the rest of the region stays padding.
- * Field offsets are pinned to the original raw-buffer layout so member
- * spelling stays byte-neutral.
  */
 typedef struct ObjSeqTurnState
 {

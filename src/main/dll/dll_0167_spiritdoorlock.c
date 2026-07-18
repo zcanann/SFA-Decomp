@@ -52,8 +52,6 @@ typedef struct
     int a, b, c;
 } Vec3i;
 
-/* Per-file declarations retained where their spelling is
-   load-bearing for codegen, so they stay local to this TU. */
 const int gSpiritDoorLockOrbitOffsetBase[4] = {0, 0, 0x40E00000, 0};
 extern s16 gSpiritDoorLockSpinSpeed;
 extern s32 gSpiritDoorLockTexScrollSpeed;

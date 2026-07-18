@@ -544,7 +544,6 @@ void hagabonMK2_update(s16* obj, u8* state)
     }
 }
 
-#pragma opt_common_subs off
 void crawler_initTailModel(int* obj, int* st)
 {
     u8* tab;
@@ -575,4 +574,3 @@ void crawler_initTailModel(int* obj, int* st)
     ((BaddieState*)st)->reactionFlags = ((BaddieState*)st)->reactionFlags | 0x100;
     *(int*)((char*)obj + 0x108) = (int)&baddieAfterUpdateBonesCb;
 }
-#pragma opt_common_subs reset

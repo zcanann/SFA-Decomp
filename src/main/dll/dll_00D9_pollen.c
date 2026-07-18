@@ -151,7 +151,6 @@ void Pollen_update(int obj)
         Obj_FreeObject((GameObject*)obj);
     }
 }
-#pragma dont_inline on
 void Pollen_burst(GameObject* obj)
 {
     int burstCounter;
@@ -196,7 +195,6 @@ void Pollen_burst(GameObject* obj)
     } while (burstCounter-- != 0);
     extra->fragmentSpawnTimer = POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES;
 }
-#pragma dont_inline off
 
 void Pollen_init(GameObject* obj)
 {
