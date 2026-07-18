@@ -581,8 +581,8 @@ int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
         state->linkDepth = state->linkDepth + 1;
         return ang;
     }
-    cp2X = cp2->posX;
     cp2Z = cp2->posZ;
+    cp2X = cp2->posX;
     distA = offs + (cosv * cp2X + sinv * cp2Z);
     cpX = cp->posX;
     cpZ = cp->posZ;
