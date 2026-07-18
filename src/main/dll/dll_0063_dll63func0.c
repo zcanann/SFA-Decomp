@@ -32,15 +32,15 @@ extern u8 lbl_80312BD8[];
 #define DLL63_EFFECT_Y 4.0f
 #define DLL63_FLAG_SCALE 0.1f
 
-static inline void dll_63_func03Body(u8* sourceObj, int variant, u8* posSource, u32 flags)
+void dll_63_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     ModgfxPointerSpawnPacket buf;
-    u32 flag;
-    int i;
+    u8* base = lbl_80312BD8;
     s16* rec;
+    int i;
+    u32 flag;
     GfxCmd* entries;
     GfxCmd* cmd;
-    u8* base = (u8*)(int)lbl_80312BD8;
     if (variant == 1)
     {
         *(s16*)&base[0x112] = 0;
@@ -297,12 +297,6 @@ static inline void dll_63_func03Body(u8* sourceObj, int variant, u8* posSource, 
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], DLL63_EFFECT_ID, 0);
-    base++;
-}
-
-void dll_63_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
-{
-    dll_63_func03Body(sourceObj, variant, posSource, flags);
 }
 
 void dll_63_func01_nop(void)
