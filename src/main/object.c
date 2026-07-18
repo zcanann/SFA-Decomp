@@ -221,7 +221,6 @@ extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();
 extern void fn_802B4DE0(u8* obj, int flag);
-extern void fn_80059A50(int arg);
 extern void playerUpdateWhileTimeStopped(u8* obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8* obj);

@@ -44,5 +44,8 @@ void goToNextMapLayer(void);
 void goToPrevMapLayer(void);
 void playerVecFn_8005a9b0(void);
 s32 getCurMapLayer(void);
+void fn_80059A50(int pageIndex);
+void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, int f2, int idx);
+int mapTextureOverrideAcquire(int key, int value, int type);
 
 #endif /* MAIN_SHADER_API_H_ */

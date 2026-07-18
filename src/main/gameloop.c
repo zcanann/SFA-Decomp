@@ -1321,7 +1321,6 @@ void gameUpdate(void)
 }
 
 
-extern void debugPrintDraw(int a);
 
 void gameLoop(void)
 {

@@ -687,9 +687,6 @@ static void fillBoxRows(u8* map, int* box)
     }
 }
 
-extern void mapFn_80057d24(int x, int z, int* box0, int* box1, int* box2, int* box3, int layer,
-                           int one, int v);
-
 void renderSceneGeometry(int* p1, s8* order)
 {
     u8 map[256];
