@@ -26,6 +26,7 @@
 #include "main/object_render_legacy.h"
 #include "main/obj_list.h"
 #include "main/dll/pushable.h"
+#include "main/dll/dll_00EF_pushable.h"
 #include "main/dll/player_target.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -93,9 +94,6 @@ void InvHit_hitDetect(void)
 
 
 void InvHit_init(int* obj, u8* def);
-void InvHit_update(int* obj);
-void InvHit_release(void);
-void InvHit_initialise(void);
 
 ObjectDescriptor gInvHitObjDescriptor = {
     0,
