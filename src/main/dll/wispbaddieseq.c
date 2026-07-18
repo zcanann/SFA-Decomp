@@ -111,7 +111,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     {
         return 0;
     }
-    if (((HagabonAnimState*)state)->unk328 != 0.0f && ((HagabonAnimState*)state)->unk338 != 0)
+    if (((HagabonAnimState*)state)->unk328 != lbl_803E2740 && ((HagabonAnimState*)state)->unk338 != 0)
     {
         return 0;
     }
@@ -138,16 +138,15 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     }
     if ((u8)allowNewEvent != 0)
     {
-        if ((eventFlags != 0 || ((HagabonAnimState*)state)->eventDelayTimer != 0.0f) && (stateFlags & 0x40) == 0 &&
-            flag20 == 0)
+        if ((eventFlags != 0 || ((HagabonAnimState*)state)->eventDelayTimer != lbl_803E2740) &&
+            (stateFlags & 0x40) == 0 && flag20 == 0)
         {
-            if (((HagabonAnimState*)state)->eventDelayTimer != 0.0f)
+            if (((HagabonAnimState*)state)->eventDelayTimer != lbl_803E2740)
             {
-                f32 zero = 0.0f;
                 ((HagabonAnimState*)state)->eventDelayTimer = ((HagabonAnimState*)state)->eventDelayTimer - timeDelta;
-                if (((HagabonAnimState*)state)->eventDelayTimer <= zero)
+                if (((HagabonAnimState*)state)->eventDelayTimer <= lbl_803E2740)
                 {
-                    ((HagabonAnimState*)state)->eventDelayTimer = zero;
+                    ((HagabonAnimState*)state)->eventDelayTimer = lbl_803E2740;
                 }
                 else
                 {
@@ -160,14 +159,14 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
                 ((HagabonAnimState*)state)->eventDelayTimer =
                     ((HagabonAnimState*)state)->unk334 +
                     (f32)(int)randomGetRange(base[eventTableIndex + 0x152c], base[eventTableIndex + 0x152d]);
-                ((HagabonAnimState*)state)->unk334 = 0.0f;
+                ((HagabonAnimState*)state)->unk334 = lbl_803E2740;
                 return 0;
             }
         }
     }
     if ((((u8)allowNewEvent != 0 && ((HagabonAnimState*)state)->animEvent != 0 && eventRows[eventIndex].moveId != 0) ||
          (((HagabonAnimState*)state)->animEvent & 0x20) != 0) &&
-        !(((HagabonAnimState*)state)->activeEventIndex == eventIndex && 0.0f != ((HagabonAnimState*)state)->moveHoldTimer))
+        !(((HagabonAnimState*)state)->activeEventIndex == eventIndex && lbl_803E2740 != ((HagabonAnimState*)state)->moveHoldTimer))
     {
         sf2 = ((BaddieState*)state)->controlFlags;
         if ((sf2 & 0x800080) != 0 || (((HagabonAnimState*)state)->animEvent & 0x20) != 0)
@@ -191,7 +190,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
         }
         return 0;
     }
-    if (((HagabonAnimState*)state)->moveHoldTimer != 0.0f)
+    if (((HagabonAnimState*)state)->moveHoldTimer != lbl_803E2740)
     {
         GameObject* pos = (GameObject*)((BaddieState*)state)->trackedObj;
         baddieTurnTowardPoint(obj, state, pos->anim.localPosX, pos->anim.localPosZ, 0xf, 0);
@@ -209,9 +208,9 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
                 (ObjAnimComponent*)obj, *(f32*)(base + eventRows[((HagabonAnimState*)state)->activeEventIndex].moveId * 4));
         }
         ((HagabonAnimState*)state)->moveHoldTimer = ((HagabonAnimState*)state)->moveHoldTimer - timeDelta;
-        if (((HagabonAnimState*)state)->moveHoldTimer <= 0.0f)
+        if (((HagabonAnimState*)state)->moveHoldTimer <= lbl_803E2740)
         {
-            ((HagabonAnimState*)state)->moveHoldTimer = 0.0f;
+            ((HagabonAnimState*)state)->moveHoldTimer = lbl_803E2740;
             controlFlags = ((BaddieState*)state)->controlFlags;
             controlMask = ~0x40;
             ((BaddieState*)state)->controlFlags = controlFlags & controlMask;
