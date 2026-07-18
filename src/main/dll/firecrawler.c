@@ -121,19 +121,12 @@ typedef struct FirepipeSetup
     u8 unk22;          /* 0x22 */
     u8 unk23;          /* 0x23 */
 } FirepipeSetup;
-extern void* gCrawlerModelChainIds[];
 extern void* gCrawlerDescriptorTable[];
-extern u8* gCrawlerReactionTables[];
 
 extern f32 gCrawlerS8Norm127;
 EnemyTargetSearchResult gCrawlerNearbyObjectBuffer[16];
-extern f32 lbl_803DBCE0;
-extern f32 lbl_803DBCE4;
-extern f32 lbl_803DBCEC;
-
 void fn_80157B58(int* obj, u8* state);
 
-extern f32 lbl_803DBCE8;
 f32 gCrawlerHitSfxTimer;
 
 
