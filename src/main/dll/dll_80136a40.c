@@ -56,7 +56,7 @@
 extern u8 debugLogBuffer[];
 
 u16 gDebugTabWidth = 0x20;
-void* debugLogEnd = debugLogBuffer;
+u8* debugLogEnd = debugLogBuffer;
 char sErrDSI[] = "DSI";
 char sErrISI[] = "ISI";
 char sErrFmtPC[] = "PC\t%x";
@@ -143,7 +143,7 @@ extern u8 gDebugScaleBiasY;
 extern void* gDebugFontTex2;
 extern void* gDebugFontTex1;
 extern void* gDebugFontTex0;
-extern void* debugLogEnd;
+extern u8* debugLogEnd;
 extern int gDebugRecordCount;
 extern f32 lbl_803E2408;
 extern u32 gDebugPrintOriginX;
@@ -610,42 +610,16 @@ int debugPrintDrawRecord(int color, u8* p)
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     int n;
-    u8* p;
-    u8* termCursor;
-    u8 tag;
-    u8 term;
     n = gDebugRecordCount + 1;
     gDebugRecordCount = n;
     if (n > 0xfa)
         return;
-    tag = 0x81;
-    p = debugLogEnd;
-    debugLogEnd = p + 1;
-    *p = tag;
-    {
-        u8* q = debugLogEnd;
-        debugLogEnd = q + 1;
-        *q = r;
-    }
-    {
-        u8* q = debugLogEnd;
-        debugLogEnd = q + 1;
-        *q = g;
-    }
-    {
-        u8* q = debugLogEnd;
-        debugLogEnd = q + 1;
-        *q = b;
-    }
-    {
-        u8* q = debugLogEnd;
-        debugLogEnd = q + 1;
-        *q = a;
-    }
-    term = 0;
-    termCursor = debugLogEnd;
-    debugLogEnd = termCursor + 1;
-    *termCursor = term;
+    *debugLogEnd++ = 0x81;
+    *debugLogEnd++ = r;
+    *debugLogEnd++ = g;
+    *debugLogEnd++ = b;
+    *debugLogEnd++ = a;
+    *debugLogEnd++ = 0;
 }
 void debugPrintReset(void)
 {
@@ -766,7 +740,7 @@ void debugPrintf(char* fmt, ...)
     if ((int)((u8*)debugLogEnd - debugLogBuffer) <= 0x1000)
     {
         va_start(args, fmt);
-        vsprintf(debugLogEnd, fmt, args);
+        vsprintf((char*)debugLogEnd, fmt, args);
     }
 }
 
