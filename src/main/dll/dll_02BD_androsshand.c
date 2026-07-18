@@ -47,95 +47,8 @@ enum AndrossHandHealth
     ANDROSSHAND_HEALTH_PHASE2 = 0x12
 };
 
-void androsshand_spawnShot(GameObject* obj, AndrossHandState* state, int p3)
-{
-    f32 pt[3];
-    f32 dx, dz, dist;
-    int yaw;
-    AndrossHandShotSetup* setup;
-
-    if (Obj_IsLoadingLocked())
-    {
-        ObjPath_GetPointWorldPosition(obj, 0, &pt[0], &pt[1], &pt[2], 0);
-        dx = pt[0] - state->arwingObj->anim.localPosX;
-        dz = pt[2] - state->arwingObj->anim.localPosZ;
-        dist = sqrtf(dx * dx + dz * dz);
-        yaw = (u16)getAngle(dx, dz) + 0x8000;
-        gAndrossHandShotPitch = (u16)getAngle(pt[1] - state->arwingObj->anim.localPosY, dist) >> 8;
-        setup = (AndrossHandShotSetup*)Obj_AllocObjectSetup(0x20, ANDROSSHAND_CHILD_OBJ_SHOT);
-        setup->head.posX = pt[0];
-        setup->head.posY = pt[1];
-        setup->head.posZ = pt[2];
-        setup->yaw = (obj->anim.rotX + yaw) >> 8;
-        setup->pitch = gAndrossHandShotPitch;
-        setup->flag18 = 0;
-        setup->head.color[0] = 1;
-        setup->head.color[1] = 1;
-        obj = loadObjectAtObject(obj, &setup->head);
-        if (obj != NULL)
-        {
-            arwprojectile_setLifetime(obj, lbl_803DC510);
-            arwprojectile_placeForward(obj, lbl_803DC50C);
-        }
-    }
-}
-
-void androsshand_handleDamage(GameObject* obj, AndrossHandState* state)
-{
-    u32 hitVol;
-    int sphereIdx;
-    int hitObj;
-    f32 x;
-    f32 y;
-    f32 z;
-    int cooldown;
-
-    cooldown = state->hitCooldown - framesThisStep;
-    if (cooldown < 0)
-    {
-        cooldown = 0;
-    }
-    state->hitCooldown = cooldown;
-    if (ObjHits_GetPriorityHit(obj, &hitObj, &sphereIdx, &hitVol) != 0 && state->hitCooldown == 0)
-    {
-        switch (sphereIdx)
-        {
-        case 0:
-            state->health -= 1;
-            state->hitCooldown = 6;
-            state->zSpringVelocity = lbl_803DC508;
-            Sfx_PlayFromObject((int)obj, SFXTRIG_wmap_nameoff);
-            if (state->health == 0)
-            {
-                state->handState = ANDROSSHAND_STATE_DEAD;
-                andross_setPartSignal(state->androssObj, 1);
-                Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11);
-                ObjPath_GetPointWorldPosition(obj, 0, &x, &y, &z, 0);
-                DIMexplosionFn_8009a96c((u8*)obj, x, y, z, 120.0f, 1, 1, 1, 1, 0, 1, 0);
-            }
-            break;
-        }
-    }
-    if (state->health != 0)
-    {
-        if (state->hitCooldown != 0)
-        {
-            state->damageTextureState = 1;
-        }
-        else
-        {
-            state->damageTextureState = 0;
-        }
-    }
-    else
-    {
-        state->damageTextureState = 2;
-    }
-    {
-        ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
-        texture->textureId = state->damageTextureState << 8;
-    }
-}
+void androsshand_spawnShot(GameObject* obj, AndrossHandState* state, int p3);
+void androsshand_handleDamage(GameObject* obj, AndrossHandState* state);
 
 const f32 lbl_803E75AC = 0.0f;
 
@@ -461,6 +374,96 @@ void AndrossHand_update(int obj)
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     }
     ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta, 0);
+}
+
+void androsshand_spawnShot(GameObject* obj, AndrossHandState* state, int p3)
+{
+    f32 pt[3];
+    f32 dx, dz, dist;
+    int yaw;
+    AndrossHandShotSetup* setup;
+
+    if (Obj_IsLoadingLocked())
+    {
+        ObjPath_GetPointWorldPosition(obj, 0, &pt[0], &pt[1], &pt[2], 0);
+        dx = pt[0] - state->arwingObj->anim.localPosX;
+        dz = pt[2] - state->arwingObj->anim.localPosZ;
+        dist = sqrtf(dx * dx + dz * dz);
+        yaw = (u16)getAngle(dx, dz) + 0x8000;
+        gAndrossHandShotPitch = (u16)getAngle(pt[1] - state->arwingObj->anim.localPosY, dist) >> 8;
+        setup = (AndrossHandShotSetup*)Obj_AllocObjectSetup(0x20, ANDROSSHAND_CHILD_OBJ_SHOT);
+        setup->head.posX = pt[0];
+        setup->head.posY = pt[1];
+        setup->head.posZ = pt[2];
+        setup->yaw = (obj->anim.rotX + yaw) >> 8;
+        setup->pitch = gAndrossHandShotPitch;
+        setup->flag18 = 0;
+        setup->head.color[0] = 1;
+        setup->head.color[1] = 1;
+        obj = loadObjectAtObject(obj, &setup->head);
+        if (obj != NULL)
+        {
+            arwprojectile_setLifetime(obj, lbl_803DC510);
+            arwprojectile_placeForward(obj, lbl_803DC50C);
+        }
+    }
+}
+
+void androsshand_handleDamage(GameObject* obj, AndrossHandState* state)
+{
+    u32 hitVol;
+    int sphereIdx;
+    int hitObj;
+    f32 x;
+    f32 y;
+    f32 z;
+    int cooldown;
+
+    cooldown = state->hitCooldown - framesThisStep;
+    if (cooldown < 0)
+    {
+        cooldown = 0;
+    }
+    state->hitCooldown = cooldown;
+    if (ObjHits_GetPriorityHit(obj, &hitObj, &sphereIdx, &hitVol) != 0 && state->hitCooldown == 0)
+    {
+        switch (sphereIdx)
+        {
+        case 0:
+            state->health -= 1;
+            state->hitCooldown = 6;
+            state->zSpringVelocity = lbl_803DC508;
+            Sfx_PlayFromObject((int)obj, SFXTRIG_wmap_nameoff);
+            if (state->health == 0)
+            {
+                state->handState = ANDROSSHAND_STATE_DEAD;
+                andross_setPartSignal(state->androssObj, 1);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11);
+                ObjPath_GetPointWorldPosition(obj, 0, &x, &y, &z, 0);
+                DIMexplosionFn_8009a96c((u8*)obj, x, y, z, 120.0f, 1, 1, 1, 1, 0, 1, 0);
+            }
+            break;
+        }
+    }
+    if (state->health != 0)
+    {
+        if (state->hitCooldown != 0)
+        {
+            state->damageTextureState = 1;
+        }
+        else
+        {
+            state->damageTextureState = 0;
+        }
+    }
+    else
+    {
+        state->damageTextureState = 2;
+    }
+    {
+        ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
+        texture->textureId = state->damageTextureState << 8;
+    }
 }
 
 
