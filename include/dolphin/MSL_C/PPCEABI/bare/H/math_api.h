@@ -19,7 +19,10 @@ float fn_80291FF4(float x);
 float fn_80292194(float x);
 float fn_80293AC4(int angle);
 void fn_80293C64(float angle, float* sinOut, float* cosOut);
+float fn_80293F7C(float x);
+float fn_802942EC(float x);
 float fn_802943F4(float x);
+float fn_8029454C(float x);
 float fn_802945E0(float x);
 
 #endif /* DOLPHIN_MSL_C_PPCEABI_BARE_H_MATH_API_H_ */

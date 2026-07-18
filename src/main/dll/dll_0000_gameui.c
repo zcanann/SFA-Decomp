@@ -402,7 +402,6 @@ extern int fn_8011E0D8();
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 extern void hudDrawCounter(int id, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget);
 extern void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, GXColor* color);
-extern f32 fn_8029454C(f32);
 char sHudCounterFmt02d[] = "%02d";
 char sHudCounterFmt03d[] = "%03d";
 char lbl_803DBB58[] = "%d";

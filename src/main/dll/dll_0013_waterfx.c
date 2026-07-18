@@ -116,8 +116,6 @@ extern const f32 lbl_803DF2F8;
 extern const f32 lbl_803DF304;
 extern f32 gWaterfxPi;
 extern const f32 lbl_803DF314;
-extern f32 fn_802942EC(f32);
-extern f32 fn_80293F7C(f32);
 
 void waterfx_setupSplashDropPointRender(void)
 {
