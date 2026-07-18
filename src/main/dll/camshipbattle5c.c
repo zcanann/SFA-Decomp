@@ -281,12 +281,14 @@ f32 fn_8010AC48(f32 px, f32 unused, f32 pz, int* obj)
     f32 sz;
     f32 nsz;
     f32 nsx;
-    f32 nx;
     f32 nz;
+    f32 nx;
     f32 len;
     f32 t1;
     f32 t2;
     f32 negdot;
+    f32 p1x;
+    f32 p1z;
     for (i = 0, sp = obj, dp = pts; i < 4; i++)
     {
         *dp = (RomCurveNode*)(*gRomCurveInterface)->getById(*sp);
@@ -297,8 +299,8 @@ f32 fn_8010AC48(f32 px, f32 unused, f32 pz, int* obj)
     dz1 = pts[2]->z - pts[1]->z;
     if (pts[0] != NULL)
     {
-        sx = pts[1]->x - pts[0]->x;
         sz = pts[1]->z - pts[0]->z;
+        sx = pts[1]->x - pts[0]->x;
     }
     else
     {
@@ -307,20 +309,23 @@ f32 fn_8010AC48(f32 px, f32 unused, f32 pz, int* obj)
     }
     nx = lbl_803E18A8 * (sx + dx1);
     nz = lbl_803E18A8 * (sz + dz1);
-    len = sqrtf(nz * nz + nx * nx);
+    len = sqrtf(nx * nx + nz * nz);
     if (0.0f != len)
     {
         nx = nx / len;
         nz = nz / len;
     }
-    negdot = -(nz * pts[1]->z + nx * pts[1]->x);
+    p1z = pts[1]->z;
+    p1x = pts[1]->x;
+    negdot = nz * p1z + nx * p1x;
+    negdot = -negdot;
     t1 = nx * dx1 + nz * dz1;
     if (0.0f != t1)
     {
         t1 = -(negdot + (nx * px + nz * pz)) / t1;
     }
-    sx = pts[2]->x - pts[1]->x;
-    sz = pts[2]->z - pts[1]->z;
+    sx = pts[2]->x - p1x;
+    sz = pts[2]->z - p1z;
     if (pts[3] != NULL)
     {
         nsx = pts[3]->x - pts[2]->x;
@@ -339,7 +344,8 @@ f32 fn_8010AC48(f32 px, f32 unused, f32 pz, int* obj)
         nx = nx / len;
         nz = nz / len;
     }
-    negdot = -(nx * pts[2]->x + nz * pts[2]->z);
+    negdot = nx * pts[2]->x + nz * pts[2]->z;
+    negdot = -negdot;
     t2 = nx * dx1 + nz * dz1;
     if (0.0f != t2)
     {
