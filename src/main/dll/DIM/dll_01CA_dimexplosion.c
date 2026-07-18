@@ -794,6 +794,8 @@ void explosion_release(u32 obj)
 void explosion_initialise(void)
 {
     FbTexTbl t;
+    int* src;
+    void** dst;
     int i;
     t = gExplosionTexTable;
     gExplosionDebrisSpeedScale = lbl_803E492C / expf(lbl_803E4934);
@@ -802,9 +804,9 @@ void explosion_initialise(void)
     gExplosionFalloffScaleRed = lbl_803E492C / expf(lbl_803E4950);
     gExplosionFalloffScaleGreen = lbl_803E492C / expf(lbl_803E4954);
     gExplosionFalloffScaleBlue = lbl_803E492C / expf(lbl_803E492C);
-    for (i = 0; i < GEXPLOSION_TEXTURE_COUNT; i++)
+    for (i = 0, src = t.v, dst = gExplosionTextures; i < GEXPLOSION_TEXTURE_COUNT; src++, dst++, i++)
     {
-        gExplosionTextures[i] = textureLoadAsset(t.v[i]);
+        *dst = textureLoadAsset(*src);
     }
 }
 
