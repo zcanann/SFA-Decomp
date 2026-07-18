@@ -7,6 +7,7 @@
 #include "main/obj_group.h"
 #include "main/obj_path.h"
 #include "main/objprint_character_api.h"
+#include "main/objprint_api.h"
 #include "main/object.h"
 #include "main/obj_trigger.h"
 #include "main/dll/dll_0000_gameui_api.h"
@@ -108,7 +109,6 @@ extern int gNwMammothBushGameBits[];
 extern GameObject* tumbleweedbush_findNearestActive(void* pos);
 extern void fn_80163980(int o);
 extern f32 lbl_803E5210;
-extern void fn_8003A168(GameObject* obj, void* p);
 extern u8 gNwMammothTables[];
 extern u8 gNwMammothPathSetupDataA[];
 extern u8 gNwMammothPathSetupDataB[];

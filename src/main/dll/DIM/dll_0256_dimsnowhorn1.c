@@ -1289,7 +1289,7 @@ void DIMSnowHorn1_update(GameObject* obj)
                 (int)obj, arm, 1, ((DIMSnowHorn1State*)data)->hitReactState, (f32*)((char*)data + 0xa94));
         if (((DIMSnowHorn1State*)data)->hitReactState != 0)
         {
-            fn_8003A168(obj, data + 0x980);
+            fn_8003A168(obj, (void*)(data + 0x980));
             characterDoEyeAnimsState(obj, data + 0x980);
             return;
         }

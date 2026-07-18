@@ -47,8 +47,6 @@ const NwGeyserTextureScrollParams gNwGeyserTextureScrollParams = {512.0f, 0.0f};
 
 extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points, void* scratch, f32 scaleX,
                                 f32 scaleZ);
-extern void fn_8003A168(GameObject* obj, void* p);
-
 void fn_801CDF94(GameObject* obj, int state, int flag);
 
 int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -143,4 +141,3 @@ int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     }
     return 0;
 }
-

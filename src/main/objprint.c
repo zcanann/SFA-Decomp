@@ -672,7 +672,7 @@ void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 val)
     }
 }
 
-void fn_8003A168(GameObject* obj, int state)
+void fn_8003A168(GameObject* obj, void* state)
 {
     s16* found;
 
@@ -687,7 +687,7 @@ void fn_8003A168(GameObject* obj, int state)
     {
         found[1] = (s16)((s32)found[1] * 3 / 4);
     }
-    *(s16*)(state + 0x1a) = 0;
+    *(s16*)((u8*)state + 0x1a) = 0;
 }
 
 

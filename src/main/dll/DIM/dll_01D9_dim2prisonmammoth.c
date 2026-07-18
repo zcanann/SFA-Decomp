@@ -199,7 +199,7 @@ void dim2prisonmammoth_update(int obj)
                 (f32*)(inner + 0x390));
         if (((Dim2prisonmammothState*)inner)->hitReactState != 0)
         {
-            fn_8003A168((GameObject*)(obj), inner + 0x35c);
+            fn_8003A168((GameObject*)(obj), (void*)(inner + 0x35c));
             characterDoEyeAnimsState((GameObject*)obj, inner + 0x35c);
             return;
         }

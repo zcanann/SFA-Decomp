@@ -1896,7 +1896,7 @@ void Tricky_update(int obj)
     }
     if (((GameObject*)obj)->anim.currentMove == 0x2a)
     {
-        fn_8003A168PointerStateLegacy((GameObject*)(obj), (void*)(state + 0x378));
+        fn_8003A168((GameObject*)(obj), (void*)(state + 0x378));
         fn_8003B228((GameObject*)(obj), (void*)(state + 0x378));
     }
     else
