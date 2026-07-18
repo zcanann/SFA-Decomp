@@ -41,7 +41,7 @@ void NW_ice_update(int* obj)
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)state->linkedObj)->anim.localPosY;
         ((GameObject*)obj)->anim.localPosZ = ((GameObject*)state->linkedObj)->anim.localPosZ;
         ((GameObject*)obj)->anim.rotX = ((GameObject*)state->linkedObj)->anim.rotX;
-        ObjGroup_FindNearestObjectForObject(NWICE_OBJGROUP, (u32)obj, &nearestDist);
+        ObjGroup_FindNearestObjectForObject(NWICE_OBJGROUP, (GameObject*)obj, &nearestDist);
 
         if (((GameObject*)state->linkedObj)->anim.alpha < 0xc0)
         {

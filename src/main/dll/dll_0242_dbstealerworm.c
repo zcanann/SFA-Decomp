@@ -68,13 +68,8 @@
 #include "string.h"
 #include "main/dll/baddie_control_interface.h"
 
-#define ObjGroup_FindNearestObjectForObjectLegacy(group, obj, distance) \
-    ((int (*)())ObjGroup_FindNearestObjectForObject)((group), (obj), (distance))
 #define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
     ((s16 (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
-typedef f32 (*VecXzDistanceIntFn)(int a, int b);
-#define Vec_xzDistanceInt ((VecXzDistanceIntFn)Vec_xzDistance)
-
 typedef struct DbstealerwormPlacement
 {
     u8 pad0[0x4 - 0x0];
@@ -183,8 +178,8 @@ int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
         case 0:
             if (sub->objGroup != 0)
             {
-                *(int*)&((BaddieState*)baddie)->targetObj =
-                    ObjGroup_FindNearestObjectForObject(sub->objGroup, (int)obj, &range);
+                ((BaddieState*)baddie)->targetObj =
+                    ObjGroup_FindNearestObjectForObject(sub->objGroup, obj, &range);
             }
             break;
         case 1:
@@ -210,8 +205,8 @@ int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
             {
                 if (ObjGroup_ContainsObject(*(int*)&((BaddieState*)baddie)->targetObj, sub->objGroup) == 0)
                 {
-                    *(int*)&((BaddieState*)baddie)->targetObj =
-                        ObjGroup_FindNearestObjectForObject(sub->objGroup, (int)obj, 0);
+                    ((BaddieState*)baddie)->targetObj =
+                        ObjGroup_FindNearestObjectForObject(sub->objGroup, obj, 0);
                     if (*(void**)&((BaddieState*)baddie)->targetObj == NULL)
                     {
                         sub->msgAdvance = 1;
@@ -247,10 +242,10 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
     int data = *(int*)&(obj)->anim.placementData;
     int base;
     int routeIndex;
-    u32 found;
+    GameObject* found;
     int i;
     int* p;
-    u32 nearest;
+    GameObject* nearest;
     int buf[3];
     f32 range;
 
@@ -279,8 +274,8 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
         }
         if (*(int*)(sub->routeCursor + 4) != 0)
         {
-            *(int*)&((BaddieState*)baddie)->targetObj =
-                ObjGroup_FindNearestObjectForObject(*(int*)(sub->routeCursor + 4), (int)obj, &range);
+            ((BaddieState*)baddie)->targetObj =
+                ObjGroup_FindNearestObjectForObject(*(int*)(sub->routeCursor + 4), obj, &range);
         }
         if (*(void**)&((BaddieState*)baddie)->targetObj != NULL)
         {
@@ -301,13 +296,13 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
             p = &lbl_803296FC[3];
             for (; p--, --i >= 0;)
             {
-                nearest = ObjGroup_FindNearestObjectForObject(*p, (int)obj, &range);
+                nearest = ObjGroup_FindNearestObjectForObject(*p, obj, &range);
                 if (nearest != 0)
                 {
                     found = nearest;
                 }
             }
-            *(int*)&((BaddieState*)baddie)->targetObj = found;
+            ((BaddieState*)baddie)->targetObj = found;
             if (found != 0)
             {
                 if (range < 50.0f)
@@ -471,7 +466,8 @@ int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t)
     {
         fn_80202A2C(obj, lbl_8032973C, lbl_8032974C, 4, frac);
     }
-    d = Vec_xzDistanceInt((int)obj + 0x18, (int)&((GameObject*)((BaddieState*)baddie)->targetObj)->anim.worldPosX);
+    d = Vec_xzDistance(&obj->anim.worldPosX,
+                       &((GameObject*)((BaddieState*)baddie)->targetObj)->anim.worldPosX);
     ((BaddieState*)baddie)->stateTag = 1;
     if (d < 30.0f)
     {
@@ -716,7 +712,8 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
         fn_80202A2C(obj, (int*)(tbl + 0x344), (f32*)(tbl + 0x354), 4, frac);
     }
     player = (int)Obj_GetPlayerObject();
-    ratio = (Vec_xzDistanceInt((int)obj + 0x18, player + 0x18) - 60.0f) / (0.05f * blob->aggression);
+    ratio = (Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) - 60.0f) /
+            (0.05f * blob->aggression);
     n = (int)(ratio < 0.0f ? 0.0f : (ratio > 100.0f ? 100.0f : ratio));
     logPrintf(tbl + 0x444, n);
     player = (int)Obj_GetPlayerObject();
@@ -1899,7 +1896,7 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
     f32 rangeInit;
     f32 accX;
     f32 accZ;
-    u32 nearest;
+    GameObject* nearest;
     f32 k;
     f32 scale;
     f32 cosv;
@@ -1921,7 +1918,7 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
     for (; i < n; i++)
     {
         stk.range = rangeInit;
-        nearest = ObjGroup_FindNearestObjectForObjectLegacy(*objCursor, obj, &stk.range);
+        nearest = ObjGroup_FindNearestObjectForObject(*objCursor, obj, &stk.range);
         if (nearest != 0)
         {
             if (stk.range == 0.0f)
@@ -1932,9 +1929,9 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
             k = scale - stk.range / 260.0f;
             k = k * k;
             k = k * k;
-            stk.d[0] = ((GameObject*)nearest)->anim.localPosX - (obj)->anim.localPosX;
-            stk.d[1] = ((GameObject*)nearest)->anim.localPosY - (obj)->anim.localPosY;
-            stk.d[2] = ((GameObject*)nearest)->anim.localPosZ - (obj)->anim.localPosZ;
+            stk.d[0] = nearest->anim.localPosX - (obj)->anim.localPosX;
+            stk.d[1] = nearest->anim.localPosY - (obj)->anim.localPosY;
+            stk.d[2] = nearest->anim.localPosZ - (obj)->anim.localPosZ;
             stk.d[0] = stk.d[0] * (scale / stk.range);
             stk.d[1] = stk.d[1] * (scale / stk.range);
             stk.d[2] = stk.d[2] * (scale / stk.range);

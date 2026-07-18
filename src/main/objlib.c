@@ -1023,10 +1023,10 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
     return nearest;
 }
 
-int ObjGroup_FindNearestObjectForObject(int group, int obj, float* maxDistance)
+GameObject* ObjGroup_FindNearestObjectForObject(int group, GameObject* obj, float* maxDistance)
 {
     u32* entry;
-    u32 nearest;
+    GameObject* nearest;
     u32 index;
     u32 limit;
     float distanceSq;
@@ -1050,14 +1050,13 @@ int ObjGroup_FindNearestObjectForObject(int group, int obj, float* maxDistance)
     entry = gObjGroupObjects + index;
     while ((int)index < (int)limit)
     {
-        if (*entry != obj)
+        if ((GameObject*)*entry != obj)
         {
-            distanceSq =
-                vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)*entry)->anim.worldPosX);
+            distanceSq = vec3f_distanceSquared(&obj->anim.worldPosX, &((GameObject*)*entry)->anim.worldPosX);
             if (distanceSq < bestDistanceSq)
             {
                 bestDistanceSq = distanceSq;
-                nearest = *entry;
+                nearest = (GameObject*)*entry;
             }
         }
         entry++;

@@ -3,9 +3,11 @@
 
 #include "global.h"
 
+struct GameObject;
+
 int ObjGroup_ContainsObject(u32 obj, int group);
 int ObjGroup_FindNearestObjectToPoint(int group, f32* point, f32* maxDistance);
-int ObjGroup_FindNearestObjectForObject(int group, int obj, f32* maxDistance);
+struct GameObject* ObjGroup_FindNearestObjectForObject(int group, struct GameObject* obj, f32* maxDistance);
 int ObjGroup_FindNearestObject(int group, int obj, f32* maxDistance);
 u32* ObjGroup_GetObjects(int group, int* countOut);
 void ObjGroup_RemoveObject(int obj, int group);
