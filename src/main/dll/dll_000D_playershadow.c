@@ -30,9 +30,7 @@ u8 gPlayerShadowMode;
 #define PLAYERSHADOW_PARTFX_B 0x73
 #define PLAYERSHADOW_PARTFX_C 0x190
 
-extern u8 gPlayerShadowMode;
 extern s16 lbl_803DD29A;
-extern s16 gPlayerShadowCamRotY;
 f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
 
 /* Walks the tri-hit table under the player and, for ground surface types
