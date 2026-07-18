@@ -81,7 +81,6 @@ extern char sMmShowInfoFBMemoryStoreMessageBlock[];
 extern char sMemStatsFormat[];
 extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
 extern char sMmMemoryStoreMessageBlock[];
-extern void LCQueueWait();
 
 void mmFreeDeferred(void* p);
 int testAndSet_onlyUseHeaps1and2(int v);
@@ -114,7 +113,7 @@ void cacheQueueWait(int sync)
 {
     if (gAttractMovieState == 4 || gAttractMovieState == 0)
     {
-        LCQueueWait();
+        LCQueueWait(sync);
     }
 }
 
