@@ -25,5 +25,7 @@ void PSMTXRotRad(f32* mtx, int axis, f32 rad);
 void C_MTXOrtho(f32* matrix, f32 top, f32 bottom, f32 left, f32 right, f32 nearPlane, f32 farPlane);
 void C_MTXPerspective(f32* matrix, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane);
 void C_MTXLightPerspective(f32* matrix, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
+void C_MTXLightOrtho(f32* matrix, f32 top, f32 bottom, f32 left, f32 right, f32 scaleS, f32 scaleT, f32 transS,
+                     f32 transT);
 
 #endif /* DOLPHIN_MTX_MTX_LEGACY_H_ */

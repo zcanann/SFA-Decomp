@@ -2,6 +2,7 @@
 #define DOLPHIN_GX_GXLEGACYDECLS_H_
 
 #include "dolphin/gx/GXFogColor.h"
+#include "dolphin/gx/GXTransformLegacy.h"
 
 void GXBegin(int prim, int fmt, u16 count);
 void GXClearVtxDesc(void);
@@ -9,8 +10,6 @@ void GXInvalidateTexAll(void);
 void GXLoadPosMtxImm(f32* matrix, s32 slot);
 void GXLoadTexMtxImm(f32* matrix, s32 slot, s32 type);
 void GXResetWriteGatherPipe(void);
-void GXSetProjection(f32* matrix, s32 projectionMode);
-void GXSetViewport(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane);
 void GXSetViewportJitter(f32 left, f32 top, f32 width, f32 height, f32 nearPlane, f32 farPlane, u32 field);
 void GXSetCullMode(int mode);
 void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
