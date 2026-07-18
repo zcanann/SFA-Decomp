@@ -7340,15 +7340,15 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, int scale);
     extern void drawScaledTexture(void* texture, f32 x, f32 y, u8 alpha, int scale, int width, int height, int flags);
     u8* hintCandidates;
-    s16 revealedHeight;
     if (pauseMenuState != 0)
     {
         return;
     }
     if (gWorldMapVoiceoverTimer != 0)
     {
-        s16 voiceoverTimer, panelAlpha, width, panelX, panelY;
         int height;
+        s16 revealedHeight;
+        s16 voiceoverTimer, panelAlpha, width, panelX, panelY;
         voiceoverTimer = gWorldMapVoiceoverTimer;
         panelAlpha = voiceoverTimer;
         panelAlpha *= 0xf;
