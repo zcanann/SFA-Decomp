@@ -4731,9 +4731,9 @@ void waitNextFrame(void)
 extern GXTexObj lbl_803779A0;
 
 
-int fn_8004AA24(int* ctx, int* ref);
-void fn_8004AAD4(u8* arr, int size, int idx);
-void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
+int pathSearchNodeMatchesTarget(int* ctx, int* ref);
+void pathSearchHeapSiftDown(u8* arr, int size, int idx);
+void pathSearchEnqueuePoint(int* q, int* elem, int idx, u32 d, char* obj)
 {
     PathSearch* search = (PathSearch*)q;
     PathPoint* point = (PathPoint*)obj;
@@ -4749,7 +4749,7 @@ void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
     PathSearchNode* node4;
     int visited;
     int cnt;
-    if (fn_8004AA24(q, elem) != 0)
+    if (pathSearchNodeMatchesTarget(q, elem) != 0)
     {
         cnt = search->nodeCount;
         if (cnt != 0xfe)
@@ -4831,7 +4831,7 @@ void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
             *entry = newpri;
             if (newpri < old)
             {
-                fn_8004AAD4((u8*)heap, s2, pos);
+                pathSearchHeapSiftDown((u8*)heap, s2, pos);
             }
             else if (newpri > old)
             {
@@ -4923,7 +4923,7 @@ void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
     }
 }
 
-void fn_8004AFA0(int* q, int* elem, int idx)
+void pathSearchExpandNode(int* q, int* elem, int idx)
 {
     u8 mask;
     char* p;
@@ -4967,7 +4967,7 @@ void fn_8004AFA0(int* q, int* elem, int idx)
                             if (!(*(s8*)(obj + 0x1a) == 8 && *(s8*)(node + 0x1a) == 9))
                             {
                                 f32 d = vec3f_distanceSquared((f32*)(node + 8), (f32*)(obj + 8));
-                                fn_8004AB5C(q, elem, idx, (u32)((f32)(u32)elem[2] + d), obj);
+                                pathSearchEnqueuePoint(q, elem, idx, (u32)((f32)(u32)elem[2] + d), obj);
                             }
                         }
                     }
@@ -4982,7 +4982,7 @@ void fn_8004AFA0(int* q, int* elem, int idx)
         p += 4;
     }
 }
-void* fn_8004B118(PathSearch* search)
+void* pathSearchGetNextPoint(PathSearch* search)
 {
     int* p = (int*)search;
     void** arr;
@@ -4996,7 +4996,7 @@ void* fn_8004B118(PathSearch* search)
     return NULL;
 }
 
-int fn_8004B148(PathSearch* search)
+int pathSearchBuildPath(PathSearch* search)
 {
     int* p = (int*)search;
     int node;
@@ -5048,7 +5048,7 @@ int fn_8004B148(PathSearch* search)
     return count;
 }
 
-int fn_8004B218(PathSearch* search, u32 n_)
+int pathSearchStep(PathSearch* search, u32 n_)
 {
     int n;
     int* q = (int*)search;
@@ -5072,13 +5072,13 @@ int fn_8004B218(PathSearch* search, u32 n_)
             idx = *(u16*)((char*)heap + 0xc);
             *(int*)((char*)heap + 0x8) = *(int*)((int)heap + *(s16*)((char*)q + 0x22) * 8);
             *(u16*)((char*)heap + 0xc) = *(u16*)((char*)heap + (*(s16*)((char*)q + 0x22))-- * 8 + 4);
-            fn_8004AAD4((u8*)heap, *(s16*)((char*)q + 0x22), 1);
+            pathSearchHeapSiftDown((u8*)heap, *(s16*)((char*)q + 0x22), 1);
         }
         if (idx >= 0)
         {
             elem = (int*)(*(int*)((char*)q + 0) + idx * 16);
             *(int*)((char*)q + 0x1c) = idx;
-            if (fn_8004AA24(q, elem) != 0)
+            if (pathSearchNodeMatchesTarget(q, elem) != 0)
             {
                 done = 1;
                 result = 1;
@@ -5086,7 +5086,7 @@ int fn_8004B218(PathSearch* search, u32 n_)
             else
             {
                 *((u8*)elem + 0xe) = 1;
-                fn_8004AFA0(q, elem, idx);
+                pathSearchExpandNode(q, elem, idx);
             }
         }
         else
@@ -5099,7 +5099,7 @@ int fn_8004B218(PathSearch* search, u32 n_)
     return result;
 }
 
-int fn_8004AA24(int* ctx, int* ref)
+int pathSearchNodeMatchesTarget(int* ctx, int* ref)
 {
     int* node;
     int target;
@@ -5139,7 +5139,7 @@ int fn_8004AA24(int* ctx, int* ref)
     }
 }
 
-void fn_8004AAD4(u8* arr, int size, int idx)
+void pathSearchHeapSiftDown(u8* arr, int size, int idx)
 {
     u16* h = (u16*)arr;
     int half;
@@ -5171,7 +5171,7 @@ void fn_8004AAD4(u8* arr, int size, int idx)
     h[idx * 4 + 2] = val;
 }
 
-int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u32 routeFlags)
+int pathSearchBegin(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u32 routeFlags)
 {
     int i;
     PathSearchNode* node;

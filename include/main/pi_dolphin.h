@@ -112,8 +112,8 @@ void gxTransformFn_8004a83c(void);
 void allocSomething32bytes(void);
 void initViewport(void);
 void tvInit(void);
-void fn_8004AFA0(int* q, int* elem, int idx);
-void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj);
+void pathSearchExpandNode(int* q, int* elem, int idx);
+void pathSearchEnqueuePoint(int* q, int* elem, int idx, u32 d, char* obj);
 
 
 #include "main/mldf_fileid.h"

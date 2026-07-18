@@ -53,9 +53,9 @@ STATIC_ASSERT(sizeof(PathHeapEntry) == 0x8);
 STATIC_ASSERT(sizeof(PathSearch) == 0x30);
 
 void trickyVoxAllocFn_8004b5d4(PathSearch* search);
-void* fn_8004B118(PathSearch* search);
-int fn_8004B148(PathSearch* search);
-int fn_8004B218(PathSearch* search, u32 timeout);
-int fn_8004B31C(PathSearch* search, PathPoint* startPoint, f32* targetPosition, int pathId, u32 routeFlags);
+void* pathSearchGetNextPoint(PathSearch* search);
+int pathSearchBuildPath(PathSearch* search);
+int pathSearchStep(PathSearch* search, u32 timeout);
+int pathSearchBegin(PathSearch* search, PathPoint* startPoint, f32* targetPosition, int pathId, u32 routeFlags);
 
 #endif /* MAIN_PI_DOLPHIN_PATH_API_H_ */
