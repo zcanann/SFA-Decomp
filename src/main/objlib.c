@@ -701,11 +701,9 @@ int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, int priority,
     ObjAnimComponent* targetObj;
     ObjHitsPriorityState* hitState;
     int hitSlot;
-    s8 priorityId;
     u8 hitVolumeId;
 
-    priorityId = priority;
-    if (priorityId == '\0')
+    if ((s8)priority == '\0')
     {
         return 0;
     }
@@ -726,10 +724,10 @@ int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, int priority,
     {
         if ((void*)hitState->hitObjects[hitSlot] == (void*)hitObj)
         {
-            if (hitState->priorities[hitSlot] > priorityId)
+            if (hitState->priorities[hitSlot] > (s8)priority)
             {
                 hitState->sphereIndices[hitSlot] = sphereIndex;
-                hitState->priorities[hitSlot] = priorityId;
+                hitState->priorities[hitSlot] = priority;
                 hitState->hitVolumes[hitSlot] = hitVolumeId;
                 hitState->hitPosX[hitSlot] = hitPosX;
                 hitState->hitPosY[hitSlot] = hitPosY;
@@ -742,7 +740,7 @@ int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, int priority,
     if ((hitSlot == hitState->priorityHitCount) && (hitState->priorityHitCount < OBJHITS_PRIORITY_HIT_COUNT))
     {
         hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
-        hitState->priorities[hitState->priorityHitCount] = priorityId;
+        hitState->priorities[hitState->priorityHitCount] = priority;
         hitState->hitVolumes[hitState->priorityHitCount] = hitVolumeId;
         hitState->hitObjects[hitState->priorityHitCount] = (int)hitObj;
         hitState->hitPosX[hitState->priorityHitCount] = hitPosX;
@@ -763,7 +761,7 @@ void ObjHits_AddContactObject(GameObject* obj, GameObject* contactObj)
     int storeState;
     int transformState;
 
-    transformState = *(int*)((u8*)obj + OBJHITBOX_TRANSFORM_STATE_OFFSET);
+    transformState = *(int*)((int)obj + OBJHITBOX_TRANSFORM_STATE_OFFSET);
     if ((u32)transformState == 0)
     {
         return;
