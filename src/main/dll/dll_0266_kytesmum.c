@@ -64,8 +64,6 @@ s16 gKytesMumRoamEventSfxTable[4] = {0x1B4, 0x1B5, 0x1B6, 0};
 const s32 gKytesMumQuestBits[3] = {0x43, 0x30A, -1};
 const s32 gKytesMumTriggerIds[3] = {0, 2, -1};
 
-void kytesmum_initialise(void);
-
 int kytesmum_updateInteractionRangeCallback(GameObject* obj, int unused, u8* arg)
 {
     GameObject* player = Obj_GetPlayerObject();
@@ -126,15 +124,6 @@ int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg)
     }
     return 0;
 }
-int kytesmum_getExtraSize(void);
-int kytesmum_getObjectTypeId(void);
-void kytesmum_free(int obj);
-void kytesmum_hitDetect(void);
-void kytesmum_init(GameObject* obj, KytesMumSetup* setup);
-void kytesmum_release(void);
-void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible);
-void kytesmum_update(GameObject* obj);
-void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData);
 u8 gKytesMumMoveSets[] = {
     0x00, 0x00, 0x02, 0x06, 0x01, 0x27, 0x00, 0x00, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x04, 0x00,
     0x05, 0x00, 0x01, 0x00, 0x08, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
