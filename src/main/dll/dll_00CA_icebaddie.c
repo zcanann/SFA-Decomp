@@ -397,48 +397,49 @@ int iceBaddie_checkTargetState(int obj, int state)
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     f32 neutralBlend;
 
-    if (((GroundBaddieState*)state)->baddie.targetObj == NULL)
-        return 0;
-
-    if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
+    if (((GroundBaddieState*)state)->baddie.targetObj != NULL)
     {
-        neutralBlend = 0.0f;
-        ((GroundBaddieState*)state)->baddie.animSpeedB = neutralBlend;
-        ((GroundBaddieState*)state)->baddie.animSpeedA = neutralBlend;
-        if ((u32)sub->aggression > 50)
+        if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
         {
-            if (((GroundBaddieState*)state)->baddie.targetDistance < 0.5f * (f32)(u32)sub->aggroRange ||
-                (sub->configFlags & 0x2) != 0)
+            neutralBlend = 0.0f;
+            ((GroundBaddieState*)state)->baddie.animSpeedB = neutralBlend;
+            ((GroundBaddieState*)state)->baddie.animSpeedA = neutralBlend;
+            if ((u32)sub->aggression > 50)
             {
-                (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, state, 0);
+                if (((GroundBaddieState*)state)->baddie.targetDistance < 0.5f * (f32)(u32)sub->aggroRange ||
+                    (sub->configFlags & 0x2) != 0)
+                {
+                    (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, state, 0);
+                }
+                else
+                {
+                    (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, state, 1);
+                }
             }
             else
             {
                 (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, state, 1);
             }
         }
-        else
+
+        if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveDone != 0)
         {
-            (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, state, 1);
+            (**(void (**)(int, int, f32, int))((char*)(*gPlayerInterface) + 0x30))(obj, state, timeDelta, 4);
+            if (((u8)(**(int (**)(int, int, f32))((char*)(*gBaddieControlInterface) + 0x18))(obj, state, 75.0f) &
+                 1) == 0)
+            {
+                return 5;
+            }
+
+            if (((GroundBaddieState*)state)->baddie.targetDistance < 0.5f * (f32)(u32)sub->aggroRange ||
+                (sub->configFlags & 0x2) != 0)
+            {
+                return 8;
+            }
+            return 7;
         }
     }
-
-    if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveDone == 0)
-        return 0;
-
-    (**(void (**)(int, int, f32, int))((char*)(*gPlayerInterface) + 0x30))(obj, state, timeDelta, 4);
-    if (((u8)(**(int (**)(int, int, f32))((char*)(*gBaddieControlInterface) + 0x18))(obj, state, 75.0f) & 1) ==
-        0)
-    {
-        return 5;
-    }
-
-    if (((GroundBaddieState*)state)->baddie.targetDistance < 0.5f * (f32)(u32)sub->aggroRange ||
-        (sub->configFlags & 0x2) != 0)
-    {
-        return 8;
-    }
-    return 7;
+    return 0;
 }
 
 int iceBaddie_updateLandingState(GameObject* obj, int state)
