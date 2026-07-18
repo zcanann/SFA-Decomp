@@ -456,6 +456,9 @@ void askProgressiveScanMode(void)
     int showId;
     u32 counter;
     int sel;
+    s32 textId;
+    u32 i;
+    u32 j;
     u8* box;
     u8 savedByte;
 
@@ -523,7 +526,7 @@ void askProgressiveScanMode(void)
         VIConfigure(gRenderModeObj);
         VISetBlack(1);
         VIFlush();
-        sel = 0x340;
+        textId = 0x340;
     }
     else
     {
@@ -533,28 +536,28 @@ void askProgressiveScanMode(void)
         VIConfigure(gRenderModeObj);
         VISetBlack(1);
         VIFlush();
-        sel = 0x341;
+        textId = 0x341;
     }
-    counter = 0;
+    i = 0;
     do
     {
         VIWaitForRetrace();
-        counter++;
-    } while (counter < 100);
+        i++;
+    } while (i < 100);
     VISetBlack(0);
     VIFlush();
     VIWaitForRetrace();
     VIWaitForRetrace();
-    counter = 0;
-    showId = (u32)sel;
+    j = 0;
+    showId = textId;
     do
     {
-        counter++;
+        j++;
         padUpdate();
         checkReset();
         mmFreeTick(0);
         waitNextFrame();
-        if (counter < 0xff)
+        if (j < 0xff)
         {
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         }
@@ -567,7 +570,7 @@ void askProgressiveScanMode(void)
         dvdCheckError();
         doNothing_endOfFrame();
         GXFlush_(0, 0);
-    } while (counter < 0xf0);
+    } while (j < 0xf0);
 }
 
 
