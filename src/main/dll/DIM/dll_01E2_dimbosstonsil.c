@@ -339,7 +339,6 @@ void DIMbosstonsil_update(GameObject* obj)
     }
 }
 
-#pragma opt_propagation off
 void DIMbosstonsil_init(int obj, u32 def, int isAltVariant)
 {
     u8 variant;
@@ -387,7 +386,6 @@ void DIMbosstonsil_init(int obj, u32 def, int isAltVariant)
     }
     return;
 }
-#pragma opt_propagation reset
 
 void DIMbosstonsil_release(void)
 {
