@@ -8,7 +8,7 @@ u32 synthIsFadeActive(u32 fadeIndex);
 void synthSetFadeAction(u32 fadeIndex, u8 action);
 void synthExit(void);
 void sndSeqStop(u32 handle);
-void sndSeqSpeed(u32 handle, u32 speed);
+void sndSeqSpeed(u32 handle, u16 speed);
 void sndSeqContinue(u32 handle);
 void sndSeqMute(u32 handle, u32 mute, u32 time);
 

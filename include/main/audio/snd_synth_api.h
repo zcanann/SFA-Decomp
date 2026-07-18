@@ -7,12 +7,8 @@
 typedef int (*SndFXCtrlWideFn)(u32 handle, u32 controller, u32 value);
 typedef int (*SndFXCtrl14WideFn)(u32 handle, u32 controller, u32 value);
 typedef int (*SndFXStartExWideFn)(s16 fxId, int volume, int pan, int studio);
-typedef void (*SndSeqVolumeNarrowFn)(u8 volume, u16 time, u32 handle, u8 mode);
 
-#define sndSeqVolumeNarrowLegacy(volume, time, handle, mode)                                                            \
-    ((SndSeqVolumeNarrowFn)sndSeqVolume)((volume), (time), (handle), (mode))
-
-void sndSeqVolume(int seqId, int volume, int time, int mode);
+void sndSeqVolume(u8 volume, u16 time, u32 seqId, u8 mode);
 u16 seqGetMIDIPriority(u8 slot, u8 event);
 int sndFXCtrl(int handle, u8 controller, u8 value);
 int sndFXCtrl14(int handle, u8 controller, u16 value);

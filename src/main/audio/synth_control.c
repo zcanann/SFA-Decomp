@@ -11,7 +11,7 @@ void sndSeqStop(u32 handle)
     sndEnd();
 }
 
-void sndSeqSpeed(u32 handle, u32 speed)
+void sndSeqSpeed(u32 handle, u16 speed)
 {
     sndBegin();
     synthSetHandleValue16(handle, speed);

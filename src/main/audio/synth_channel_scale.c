@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
-#include "main/audio/snd_synth_legacy.h"
+#include "main/audio/snd_synth_api.h"
 #include "main/audio/voice_id.h"
 #include "main/audio/voice_manage.h"
 #include "main/audio/synth_config.h"

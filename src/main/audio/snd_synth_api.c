@@ -13,6 +13,7 @@
 #include "main/audio/synth_callback.h"
 #include "main/audio/voice_manage.h"
 #include "main/audio/synth_config.h"
+#include "main/audio/synth_handle.h"
 
 #define SYNTH_VOICE_DIRTY_FLAGS_OFFSET        0x114
 
@@ -33,7 +34,6 @@ extern u8 synthAuxAMIDISet[8];
 extern u8 synthAuxAMIDI[8];
 extern u32 synthFlags;
 
-extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
 extern void hwRemoveInput(u8 idx, void* input);
 extern void hwActivateStudio(u8 slot, int a, int b);
 extern void hwDeactivateStudio(u8 slot);
@@ -44,10 +44,10 @@ extern void hwOff(u32 slot);
 /*
  * MusyX sequence volume API, wrapping the underlying synth volume helper.
  */
-void sndSeqVolume(int seqId, int volume, int time, int mode)
+void sndSeqVolume(u8 volume, u16 time, u32 seqId, u8 mode)
 {
     sndBegin();
-    synthUpdateHandle(seqId, volume, time, mode);
+    synthUpdateHandle(volume, time, seqId, mode);
     sndEnd();
 }
 

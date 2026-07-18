@@ -1,7 +1,10 @@
 #include "src/main/audio/synth_internal.h"
-#include "main/audio/snd_synth_legacy.h"
+#include "main/audio/snd_synth_api.h"
+#include "main/audio/synth_callback.h"
+#include "main/audio/synth_control.h"
 #include "main/audio/synth_handle.h"
 #include "main/audio/snd_groups.h"
+#include "main/audio/synth_volume.h"
 
 #undef SYNTH_VOICE_RUNTIME
 #define SYNTH_VOICE_RUNTIME() (&lbl_803AF550)
@@ -19,16 +22,13 @@
 #define SYNTH_START_FLAG_CLEAR_MUTE    0x80
 
 extern SynthVoiceRuntime lbl_803AF550;
-extern void synthVolume(u32 value0, u32 value1, u8 studio, u32 mode, u32 handle);
-extern void sndSeqSpeed(u32 handle, u16 speed);
-extern u32 synthResolveHandle(u32 handle);
 
 /*
  * sndSeqVolume backend. Resolves a sequence handle across queued and active
  * voices; active voices update immediately, queued voices cache a pending
  * studio-volume change until they are started.
  */
-void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode)
+void synthUpdateHandle(u8 volume, u16 time, u32 handle, u8 mode)
 {
     SynthVoiceRuntime* runtime;
     u8* voiceBase;
@@ -68,7 +68,7 @@ resolved:
         if ((studioIndex & SYNTH_HANDLE_QUEUED_FLAG) == 0)
         {
             voiceBase = (u8*)runtime + studioIndex * sizeof(SynthVoice);
-            synthVolume(value0, value1, ((SynthVoice*)(voiceBase + SYNTH_RUNTIME_VOICES_OFFSET))->currentStudio, mode,
+            synthVolume(volume, time, ((SynthVoice*)(voiceBase + SYNTH_RUNTIME_VOICES_OFFSET))->currentStudio, mode,
                         pubHandle);
             voice = (SynthVoice*)(voiceBase + SYNTH_RUNTIME_VOICES_OFFSET);
             voiceBytes = (u8*)voice;
@@ -78,7 +78,7 @@ resolved:
             {
                 if (voiceBytes[SYNTH_VOICE_STUDIO_MAP_OFFSET] != voice->currentStudio)
                 {
-                    synthVolume(value0, value1, voiceCursor[SYNTH_VOICE_STUDIO_MAP_OFFSET], 0, SYNTH_HANDLE_INVALID);
+                    synthVolume(volume, time, voiceCursor[SYNTH_VOICE_STUDIO_MAP_OFFSET], 0, SYNTH_HANDLE_INVALID);
                 }
                 voiceBytes++;
                 voiceCursor++;
@@ -91,18 +91,18 @@ resolved:
             switch (mode & 0xF)
             {
             case 0:
-                runtime->voices[handle].pendingUpdate.studio = value0;
+                runtime->voices[handle].pendingUpdate.studio = volume;
                 break;
             case 1:
                 runtime->voices[handle].pendingUpdate.output = 0;
                 break;
             case 2:
                 runtime->voices[handle].pendingUpdate.flags |= SYNTH_PENDING_FLAG_STUDIO_MODE2;
-                runtime->voices[handle].pendingUpdate.studio = value0;
+                runtime->voices[handle].pendingUpdate.studio = volume;
                 break;
             case 3:
                 runtime->voices[handle].pendingUpdate.flags |= SYNTH_PENDING_FLAG_STUDIO_MODE3;
-                runtime->voices[handle].pendingUpdate.studio = value0;
+                runtime->voices[handle].pendingUpdate.studio = volume;
                 break;
             }
         }

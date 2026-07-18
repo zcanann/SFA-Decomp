@@ -561,7 +561,7 @@ resolved:
  * Update sequence playback speed immediately, or queue it for a deferred
  * handle update.
  */
-void synthSetHandleValue16(u32 handle, u32 speed)
+void synthSetHandleValue16(u32 handle, u16 speed)
 {
     u32 key;
     u32 found;
