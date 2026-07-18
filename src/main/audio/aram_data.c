@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/aram.h"
 
 typedef struct AramStreamBufferEntry
 {
@@ -14,8 +15,6 @@ extern u8 lbl_803D3F60[];
 extern u32 aramTop;
 extern u32 aramWrite;
 extern u32 aramStream;
-extern void* (*aramChunkCallback)(void* src, u32 chunk);
-extern u32 aramChunkSize;
 extern u32 aramQueueWrite;
 extern u32 aramQueueValid;
 extern AramStreamBufferEntry* aramStreamFreeList;
@@ -24,7 +23,7 @@ extern AramStreamBufferEntry lbl_803D4468[ARAM_STREAM_BUFFER_COUNT];
 /*
  * Allocate+DMA: copies `size` bytes from `src` into the audio
  * memory pool, returning the pre-write cursor. With a registered
- * chunking callback, copies in pieces of at most aramChunkSize bytes.
+ * chunking callback, copies in pieces of at most aramUploadChunkSize bytes.
  */
 u32 aramStoreData(void* src, u32 size)
 {
@@ -36,7 +35,7 @@ u32 aramStoreData(void* src, u32 size)
     alignedSize = (size + 0x1f) & ~0x1f;
     startPos = aramWrite;
 
-    if (aramChunkCallback == NULL)
+    if (aramUploadCallback == NULL)
     {
         DCFlushRange(src, alignedSize);
         aramUploadData(src, aramWrite, alignedSize, 0, 0, 0);
@@ -46,8 +45,8 @@ u32 aramStoreData(void* src, u32 size)
 
     while (alignedSize != 0)
     {
-        chunk = (alignedSize >= aramChunkSize) ? aramChunkSize : alignedSize;
-        piece = aramChunkCallback(src, chunk);
+        chunk = (alignedSize >= aramUploadChunkSize) ? aramUploadChunkSize : alignedSize;
+        piece = aramUploadCallback((u32)src, chunk);
         DCFlushRange(piece, chunk);
         aramUploadData(piece, aramWrite, chunk, 0, 0, 0);
         alignedSize -= chunk;

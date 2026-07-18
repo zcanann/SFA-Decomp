@@ -14,7 +14,6 @@ extern u8 salTimeOffset;
 extern u8 salNumVoices;
 extern u8 salAuxFrame;
 extern u8 salFrame;
-extern u32 salMessageCallback;
 void snd_handle_irq(void)
 {
     u32 timeOffset;
@@ -119,9 +118,9 @@ u32 hwIsActive(u32 slot)
     return active != 0;
 }
 
-void hwSetMesgCallback(u32 value)
+void hwSetMesgCallback(SndMessageCallback callback)
 {
-    salMessageCallback = value;
+    salMessageCallback = callback;
 }
 
 void hwSetPriority(int slot, u32 value)

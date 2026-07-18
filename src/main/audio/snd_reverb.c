@@ -1,13 +1,11 @@
 #include "dolphin/axfx/reverb_std_callback.h"
 #include "dolphin/axfx/reverb_std_create.h"
+#include "main/audio/hw_samplemem.h"
 #include "main/audio/snd_reverb.h"
-
-
-extern u32 gSalMallocHook[2];
 
 void salFree(void* ptr)
 {
-    ((void (*)(void*))gSalMallocHook[1])(ptr);
+    salHooks.freeHook(ptr);
 }
 
 void sndAuxCallbackReverbSTD(u8 mode, ReverbParams* params, ReverbState* state)

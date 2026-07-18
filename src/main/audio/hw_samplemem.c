@@ -3,7 +3,6 @@
 
 
 extern u32 dspHRTFOn;
-extern void* (*gSalMallocHook)(u32 size);
 
 void hwSaveSample(SAMPLE_HEADER** sample, void** ptr)
 {
@@ -68,7 +67,7 @@ void hwFrameDone(void)
 
 void sndSetHooks(const SalHooks* hooks)
 {
-    *(SalHooks*)&gSalMallocHook = *hooks;
+    salHooks = *hooks;
 }
 
 void hwDisableHRTF(void)

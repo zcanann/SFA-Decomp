@@ -1,4 +1,5 @@
 #include "main/audio/hw_dspctrl.h"
+#include "main/audio/hw_init.h"
 #include "main/audio/adsr_setup.h"
 #include "main/audio/adsr_handle.h"
 #include "main/unknown/autos/musyx_dsp.h"
@@ -32,7 +33,6 @@ extern u16 dspSRCCycles[4][3];
 
 int salSynthSendMessage(int synth, int msg);
 
-extern int (*salMessageCallback)(int msg, int arg);
 
 static void sal_setup_dspvol(u16* dsp_delta, u16* last_vol, u16 vol)
 {

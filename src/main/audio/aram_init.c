@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/aram.h"
 #include "main/audio/sal_dsp.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/ar.h"
@@ -6,7 +7,6 @@
 extern u8 lbl_803D3F60[];
 extern u32 aramTop;
 extern u32 aramWrite;
-extern void* aramChunkCallback;
 
 /*
  * Initializes the AR-side audio data buffer: allocates a 0x500-byte
@@ -47,7 +47,7 @@ void aramInit(u32 extraSize)
         aramTop = ARGetSize();
     }
     aramWrite = arBase + 0x500;
-    aramChunkCallback = NULL;
+    aramUploadCallback = NULL;
     aramInitStreamBuffers();
 }
 

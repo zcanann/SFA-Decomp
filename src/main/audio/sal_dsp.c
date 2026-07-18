@@ -1,5 +1,6 @@
 #include "main/audio/sal_dsp.h"
 #include "main/audio/sal_ai.h"
+#include "main/audio/hw_samplemem.h"
 #include "dolphin/dsp.h"
 
 
@@ -12,7 +13,6 @@ typedef struct
 
 extern u16 hwIrqLevel;
 extern u32 oldState;
-extern void* (*gSalMallocHook)(u32 size);
 extern u32 salLastTick;
 extern u16 dspCmdFirstSize;
 extern u32 dspCmdList;
@@ -366,5 +366,5 @@ void hwIRQLeaveCritical(void)
 
 void* salMalloc(u32 size)
 {
-    return gSalMallocHook(size);
+    return salHooks.mallocHook(size);
 }

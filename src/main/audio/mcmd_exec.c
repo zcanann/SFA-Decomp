@@ -10,6 +10,7 @@
 #include "main/audio/voice_manage.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_channel_scale.h"
+#include "main/audio/synth_callback.h"
 #include "main/audio/synth_voice.h"
 #include "main/audio/mcmd_wait.h"
 #include "main/audio/synth_config.h"
@@ -18,7 +19,6 @@ extern int macActiveRoot;
 extern int macTimeQueueRoot;
 extern u64 macRealTime;
 extern s32 synthGlobalVariable[16];
-extern void (*synthMessageCallback)(u32 id, u32 message);
 
 #define SYNTH_GLOBAL_REG(index) (synthGlobalVariable[(index) - 0x10])
 

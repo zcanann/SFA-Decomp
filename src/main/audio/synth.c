@@ -7,6 +7,7 @@
 #include "util/carry.h"
 #include "main/audio/synth_channel.h"
 #include "main/audio/synth_channel_scale.h"
+#include "main/audio/synth_callback.h"
 #include "main/audio/synth_init.h"
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/voice_id.h"
@@ -1411,8 +1412,6 @@ u32 synthFXStart(u16 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux)
 #define SYNTH_FADE_TYPE_ACTION_2          2
 #define SYNTH_FADE_TYPE_ACTION_3          3
 
-extern u32 synthMessageCallback;
-
 /*
  * synthFXSetCtrl - sndFXCtrl underlying impl.
  * Walks the handle's voice-slot chain, dispatching inpSetMidiCtrl per slot.
@@ -1649,7 +1648,7 @@ void synthSetMusicVolumeType(u8 voiceIdx, u8 value)
  *   2 -> claim virtual sample slot
  *   3 -> simple vacate via hwGetVirtualSampleID + synthHandleVirtualSampleDone
  */
-int synthHWMessageHandler(int mode, u32 arg)
+u32 synthHWMessageHandler(u32 mode, u32 arg)
 {
     u32 result = 0;
 
@@ -1876,7 +1875,7 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     voiceInitRegistrationTables();
 
     synthInitJobQueue(state);
-    hwSetMesgCallback((u32)synthHWMessageHandler);
+    hwSetMesgCallback(synthHWMessageHandler);
 }
 
 void synthExit(void)

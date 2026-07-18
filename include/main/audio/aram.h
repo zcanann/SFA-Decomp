@@ -3,6 +3,11 @@
 
 #include "ghidra_import.h"
 
+typedef void* (*AramUploadCallback)(u32 sourceOffset, u32 size);
+
+extern AramUploadCallback aramUploadCallback;
+extern u32 aramUploadChunkSize;
+
 void aramQueueCallback(void *req);
 void aramUploadData(void *src, u32 dst, u32 size, u32 mode,
                     void (*callback)(u32), u32 callbackArg);

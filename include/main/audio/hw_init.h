@@ -4,13 +4,17 @@
 #include "ghidra_import.h"
 #include "main/audio/dsp_voice.h"
 
+typedef u32 (*SndMessageCallback)(u32 message, u32 userValue);
+
+extern SndMessageCallback salMessageCallback;
+
 void snd_handle_irq(void);
 int hwInit(u32 *sampleRate, u16 numVoices, u16 numStudios, u32 flags);
 void hwExit(void);
 void hwSetTimeOffset(int value);
 u8 hwGetTimeOffset(void);
 u32 hwIsActive(u32 slot);
-void hwSetMesgCallback(u32 value);
+void hwSetMesgCallback(SndMessageCallback callback);
 void hwSetPriority(int slot, u32 value);
 void hwInitSamplePlayback(u32 voice, u16 sampleId, SAMPLE_INFO *sampleInfo,
                           u32 resetAdsr, u32 priority, u32 callbackUserValue,

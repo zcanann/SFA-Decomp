@@ -5,6 +5,9 @@
 
 typedef struct SynthCallbackLink SynthCallbackLink;
 typedef struct SynthVoice SynthVoice;
+typedef void (*SynthMessageCallback)(u32 voiceId, s32 message);
+
+extern SynthMessageCallback synthMessageCallback;
 
 void synthRecycleVoiceCallbacks(SynthVoice *voice);
 SynthCallbackLink *synthAllocCallback(s32 triggerValue, u8 controllerIndex);
