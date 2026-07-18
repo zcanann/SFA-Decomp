@@ -3,10 +3,9 @@
 #include <dolphin/axfx.h>
 
 #include "dolphin/axfx/__axfx.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 extern const double reverb_hi_4ch_handle_i2fMagic;
-
-extern f32 powf(f32 x, f32 y);
 
 static s32 axfx_reverb_hi_dpl2_lens[10] = {
     0x000006FD, 0x000007CF, 0x0000091D, 0x000001B1, 0x00000095,
