@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/gameloop_api.h"
 #include "main/object_api.h"
+#include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/pad.h"
 #include "main/curve_eval.h"
@@ -220,7 +221,6 @@ extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern f32 PSVECMag(f32* vec);
 extern void PSVECScale(f32 scale, f32* src, f32* dst);
-extern void objRender(int a, int b, int c, int d, void* obj, int mode);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
@@ -2962,7 +2962,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             {
                 model = (u8*)Obj_GetActiveModel((GameObject*)gSkySunObject);
                 *(u16*)(model + 0x18) &= ~8;
-                objRender(a, b, c, d, gSkySunObject, 1);
+                objRender(a, b, c, d, (GameObject*)gSkySunObject, 1);
             }
         }
         if (((u8*)gSkyMoonObject)[0x37] != 0)
@@ -2979,7 +2979,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             {
                 model = (u8*)Obj_GetActiveModel(gSkyMoonObject);
                 *(u16*)(model + 0x18) &= ~8;
-                objRender(a, b, c, d, gSkyMoonObject, 1);
+                objRender(a, b, c, d, (GameObject*)gSkyMoonObject, 1);
             }
         }
         Camera_SetFarPlane(far, 0);

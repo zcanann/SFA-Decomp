@@ -28,6 +28,7 @@
 #include "main/dll/player_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/objprint_render_api.h"
 #include "main/gamebits.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/pad.h"
@@ -199,7 +200,6 @@ extern f32 gMinimapFNeg40;
 extern f32 gMinimapF0_05;
 extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 
-extern void objRender(int a, int b, int c, int d, void* obj, int f);
 extern f32 gMinimapF110;
 extern f32 gMinimapF43;
 extern f32 gMinimapF390;

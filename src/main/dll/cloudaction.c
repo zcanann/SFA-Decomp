@@ -37,6 +37,7 @@
 #include "track/intersect_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
+#include "main/objprint_render_api.h"
 #include "main/model.h"
 #include "main/sky_api.h"
 #include "main/camera.h"
@@ -65,7 +66,6 @@ __declspec(section ".sdata2") f32 lbl_803DF2B4 = 0.0f;
 #pragma explicit_zero_data reset
 
 extern void fn_800412B8(int a, int b, int c);
-extern void objRender(int a, int b, int c, int d, int obj, int flag);
 extern int shouldDrawClouds(void);
 extern void fn_80060490(int* a, int* b, int* c, int* d);
 extern void GXGetScissor(int* x, int* y, int* w, int* h);
@@ -228,7 +228,7 @@ void renderClouds(int a, int b, int c, int d)
         gCloudOverrideObject->anim.worldPosZ = v;
         gCloudOverrideObject->anim.localPosZ = v;
         fn_800412B8(ambientRed, ambientGreen, ambientBlue);
-        objRender(a, b, c, d, (int)gCloudOverrideObject, 1);
+        objRender(a, b, c, d, gCloudOverrideObject, 1);
         return;
     }
 
@@ -256,7 +256,7 @@ void renderClouds(int a, int b, int c, int d)
             lbl_8039AB28.upperCloudObj->anim.localPosZ = view->z;
         }
         fn_800412B8(ambientRed, ambientGreen, ambientBlue);
-        objRender(a, b, c, d, (int)lbl_8039AB28.upperCloudObj, 1);
+        objRender(a, b, c, d, lbl_8039AB28.upperCloudObj, 1);
     }
 
     if (lbl_8039AB28.mainCloudObj != NULL)
@@ -279,7 +279,7 @@ void renderClouds(int a, int b, int c, int d)
         lbl_8039AB28.mainCloudObj->anim.localPosZ = v;
         lbl_8039AB28.mainCloudObj->anim.rotY = 0;
         fn_800412B8(ambientRed, ambientGreen, ambientBlue);
-        objRender(a, b, c, d, (int)lbl_8039AB28.mainCloudObj, 1);
+        objRender(a, b, c, d, lbl_8039AB28.mainCloudObj, 1);
 
         fn_80060490(&clipX, &clipY, &clipW, &clipH);
         if (clipW > 0 && clipH > 0)
@@ -289,7 +289,7 @@ void renderClouds(int a, int b, int c, int d)
             model->file->flags = model->file->flags | 0x2000;
             fn_8003BB7C(0x80);
             GXSetColorUpdate(GX_FALSE);
-            objRender(a, b, c, d, (int)lbl_8039AB28.mainCloudObj, 1);
+            objRender(a, b, c, d, lbl_8039AB28.mainCloudObj, 1);
             model->file->flags = model->file->flags & ~0x2000;
             fn_8003BB7C(0);
             GXSetColorUpdate(GX_TRUE);
@@ -362,7 +362,7 @@ void renderClouds(int a, int b, int c, int d)
             lbl_8039AB28.lowerCloudObj->anim.localPosY = view->y;
             lbl_8039AB28.lowerCloudObj->anim.localPosZ = view->z;
         }
-        objRender(a, b, c, d, (int)lbl_8039AB28.lowerCloudObj, 1);
+        objRender(a, b, c, d, lbl_8039AB28.lowerCloudObj, 1);
     }
 }
 

@@ -14,7 +14,7 @@ void fn_8003B5E0(int red, int green, int blue, u8 alpha);
 void fn_8003B950(f32* matrix);
 u8 fn_8003BB74(void);
 void modelCalcVtxGroupMtxs(int def, int model);
-void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c);
+void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, int c);
 void objModelClearVecFn_8003aa40(GameObject* obj);
 
 #define fn_8003B5E0IntAlphaLegacy(red, green, blue, alpha) \

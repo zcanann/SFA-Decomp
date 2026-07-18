@@ -5,6 +5,7 @@
 #undef INTERSECT_SCREEN_DIRECT_SIGNED_WIDTH_CALL
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
+#include "main/objprint_render_api.h"
 #include "main/newshadows_audio_api.h"
 #include "main/texture.h"
 #include "main/newshadows_shadow_api.h"
@@ -171,7 +172,6 @@ extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
 extern void GXLoadTexObj(void* obj, int id);
 extern void GXLoadTexObjPreLoaded(void* obj, void* region, int id);
 extern void GXPreLoadEntireTexture(void* obj, void* region);
-extern void objRender(int a, int b, int c, int d, int* obj, int e);
 extern u8 fn_800626C8(GameObject* obj, int frames);
 extern void fn_8008923C(GameObject* obj, f32* a, f32* b, f32* c);
 extern void objRenderShadowIfVisible(GameObject* obj, int a, int b, int c, int d, int e);
@@ -561,7 +561,7 @@ void shadowRenderFn_8006b558(int* obj)
         saved = ((GameObject*)obj)->anim.rootMotionScale;
         ((GameObject*)obj)->anim.rootMotionScale = objScale;
         set_shadowFlag_803dcc29(1);
-        objRender(0, 0, 0, 0, obj, 1);
+        objRender(0, 0, 0, 0, (GameObject*)obj, 1);
         set_shadowFlag_803dcc29(0);
         ((GameObject*)obj)->anim.rootMotionScale = saved;
         model = (int*)Obj_GetActiveModel((GameObject*)obj);

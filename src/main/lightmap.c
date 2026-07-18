@@ -297,7 +297,6 @@ void* RomList_GetLoadedPages(void)
 u32 gVisibleObjectSortKeys[0x400];
 extern int gLightmapDeferredObjectCount;
 extern s16 gVisibleObjectSortKeyCount;
-extern void objRender(int a, int b, int c, int d, void* obj, int f);
 
 typedef struct
 {
@@ -652,7 +651,7 @@ void renderObjects(s8* opacity)
             {
                 (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, obj);
             }
-            objRender(0, 0, 0, 0, obj, 1);
+            objRender(0, 0, 0, 0, (GameObject*)obj, 1);
             p = (int*)((GameObject*)obj)->anim.modelState;
             if (p != NULL && ((GameObject*)obj)->anim.modelState->shadowCastSlot != NULL)
             {
@@ -908,7 +907,7 @@ void sceneDraw(void)
     for (; i < gLightmapDeferredObjectCount; i++)
     {
         (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, (void*)*(u32*)cursor);
-        objRender(0, 0, 0, 0, (void*)*(u32*)cursor, 1);
+        objRender(0, 0, 0, 0, (GameObject*)*(u32*)cursor, 1);
         cursor += 4;
     }
     renderParticles();
@@ -1660,7 +1659,7 @@ void objDrawFn_8005da48(int* obj)
         void* shadow;
         (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, obj);
         renderResetFn_8003fc60();
-        objRender(0, 0, 0, 0, obj, 1);
+        objRender(0, 0, 0, 0, (GameObject*)obj, 1);
         fn_8000F9B4();
         shadow = ((GameObject*)obj)->anim.modelState;
         if (shadow != NULL && ((ObjModelState*)shadow)->shadowCastSlot != NULL)

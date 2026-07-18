@@ -1444,7 +1444,7 @@ void fn_8003B608(s16 a, s16 b, s16 c)
 int fn_80039834(s16* curve, s16* state, f32 a, f32 b);
 #pragma opt_common_subs off
 #pragma opt_propagation off
-void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, int c)
+void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, int b, int c)
 {
     f32 va[3];
     f32 vb[3];
@@ -1458,7 +1458,7 @@ void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, i
     int staff;
 
     staff = staffArg;
-    obj = objArg;
+    obj = (int)objArg;
     model = modelArg;
     if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && ((GameObject*)staff)->anim.classId == 0x2d)
     {
@@ -1574,7 +1574,7 @@ void fn_8003B950(f32* matrix)
 extern void doNothing_beforeRenderObject(int x);
 extern void doNothing_afterRenderObject(void);
 
-void objRender(int a, int b, int c, int d, int obj, int flag)
+void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
 {
     void* sub;
     int walk;
@@ -1599,12 +1599,12 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
             vfn = *(void (**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
             if (vfn != NULL)
             {
-                vfn(obj, a, b, c, d, flag);
+                vfn((int)obj, a, b, c, d, flag);
             }
         }
         else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL)
         {
-            (*(void (*)(int))objRenderModel)(obj);
+            (*(void (*)(int))objRenderModel)((int)obj);
             if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
             {
                 objRenderFn_80041018((GameObject*)obj);
@@ -1617,12 +1617,12 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         {
         case 0:
         case 0x1f:
-            playerRender(obj, a, b, c, d, flag);
+            playerRender((int)obj, a, b, c, d, flag);
             break;
         default:
             if (OBJPRINT_ACTIVE_BANK(obj) != NULL)
             {
-                (*(void (*)(int))objRenderModel)(obj);
+                (*(void (*)(int))objRenderModel)((int)obj);
                 if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
                 {
                     objRenderFn_80041018((GameObject*)obj);
@@ -1632,7 +1632,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         }
     }
     doNothing_afterRenderObject();
-    for (i = 0, walk = obj; i < (s32)(u32)((GameObject*)obj)->childCount; i++)
+    for (i = 0, walk = (int)obj; i < (s32)(u32)((GameObject*)obj)->childCount; i++)
     {
         int staff = *(int*)&((GameObject*)walk)->childObjs[0];
         if (((GameObject*)staff)->anim.classId == 0x2d)

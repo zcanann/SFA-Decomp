@@ -10,6 +10,7 @@
 #include "main/obj_group.h"
 #include "main/model.h"
 #include "main/object_api.h"
+#include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/gamebits.h"
 #include "main/camera_interface.h"
@@ -571,7 +572,6 @@ extern const f64 lbl_803E2030;
 extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
 extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
 extern void hudDrawTimedElement(int obj, void* p);
-extern void objRender(int a, int b, int c, int d, void* obj, int flag);
 extern u8 gHeadDisplayActive;
 extern u8 gHeadDisplayEntryIdx;
 extern u16 gHeadDisplayPanelWidth;
