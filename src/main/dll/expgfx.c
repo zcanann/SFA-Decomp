@@ -32,7 +32,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 #include "main/dll/viewfinder.h"
 #include "main/dll/dll_000B_dll0b.h"
-#include "track/intersect_api.h"
 
 int lbl_803DD278;
 int lbl_803DD274;
@@ -160,6 +159,7 @@ extern const f32 gExpgfxU16ToUnitScale;
 extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void setupReflectionIndirectTev(u32 flag);
 extern void fn_80079180(void);
+extern void fn_8007D670(void);
 #define setupAlphaTextureTev fn_80079180
 #define setupExpgfxRenderState fn_8007D670
 #define applyDepthModeOverrideViewport fn_8000F83C
@@ -369,10 +369,7 @@ static inline void expgfxRemoveAllBody(void)
     }
 }
 
-void expgfxRemoveAll(void)
-{
-    expgfxRemoveAllBody();
-}
+void expgfxRemoveAll(void);
 
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, u32 sourceId)
 {
@@ -399,7 +396,7 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
     poolSlotTypeIds[0] = &gExpgfxStaticPoolSlotTypeIds[0];
     poolActiveCounts = runtime->poolActiveCounts;
     activeCountWalk = poolActiveCounts;
-    for (batchGroup = 0; !foundPool && batchGroup < EXPGFX_POOL_SEARCH_BATCH_COUNT;
+    for (batchGroup = 0; batchGroup < EXPGFX_POOL_SEARCH_BATCH_COUNT;
          sourceIdWalk[0] += EXPGFX_POOL_SEARCH_BATCH_SIZE,
              activeCountWalk += EXPGFX_POOL_SEARCH_BATCH_SIZE, batchGroup++)
     {
@@ -411,10 +408,11 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
             {
                 foundPoolIndex = searchIndex;
                 foundPool = 1;
-                break;
+                goto poolSearchDone;
             }
         }
     }
+poolSearchDone:
 
     if (foundPool)
     {
@@ -1625,44 +1623,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     }
 }
 
-int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s16 resourceId)
-{
-    ExpgfxTableEntry* entry;
-    int tableIndex;
-    int freeIndex;
-
-    for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++)
-    {
-        entry = &gExpgfxTableEntries[tableIndex];
-        if ((entry->refCount != 0) && (entry->resource == resourceHandle) && (entry->sourceId == sourceId) &&
-            (entry->attachedTableKey == attachedTableKey))
-        {
-            if (gExpgfxTableEntries[tableIndex].refCount >= EXPGFX_REFCOUNT_OVERFLOW)
-            {
-                debugPrintf(sExpgfxAddToTableUsageOverflow);
-                return EXPGFX_INVALID_TABLE_INDEX;
-            }
-            gExpgfxTableEntries[tableIndex].refCount++;
-            return (s16)tableIndex;
-        }
-    }
-
-    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++)
-    {
-        if (gExpgfxTableEntries[freeIndex].refCount == 0)
-        {
-            gExpgfxTableEntries[freeIndex].refCount = 1;
-            gExpgfxTableEntries[freeIndex].resource = resourceHandle;
-            gExpgfxTableEntries[freeIndex].sourceId = sourceId;
-            gExpgfxTableEntries[freeIndex].attachedTableKey = attachedTableKey;
-            gExpgfxTableEntries[freeIndex].resourceId = resourceId;
-            return (s16)freeIndex;
-        }
-    }
-
-    debugPrintf(sExpgfxExpTabIsFull);
-    return EXPGFX_INVALID_TABLE_INDEX;
-}
+int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s16 resourceId);
 
 int expgfx_updateSourceFrameFlags(void* sourceObject)
 {
@@ -1856,25 +1817,26 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     cacheQueueWait(0);
 
     slot = cachedSlots - 1;
+    slotIndex = 0;
     activeMasks = &gExpgfxSlotActiveMasks[poolIndex];
     tabBase = gExpgfxTableEntries;
-    for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
+    do
     {
         slot++;
         tabEntry = &tabBase[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
         sourceObject = (ExpgfxSourceObject*)tabEntry->sourceId;
         texture = tabEntry->resource;
         if ((1U << slotIndex & *activeMasks) == 0)
-            continue;
+            goto next_slot;
         state = slot->stateBits.value;
         if (((state >> 2) & 3) != 0)
-            continue;
+            goto next_slot;
         if (((state >> 1) & 1) == 0)
-            continue;
+            goto next_slot;
         if (slot->sequenceId == EXPGFX_INVALID_SEQUENCE_ID)
-            continue;
+            goto next_slot;
         if ((state & 1) != 0)
-            continue;
+            goto next_slot;
 
         lifeFraction = lbl_803DF358 * (f32)slot->lifetimeFrameLimit;
         behaviorFlags = slot->behaviorFlags;
@@ -2192,7 +2154,10 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             }
             vertexStream++;
         }
-    }
+
+    next_slot:
+        slotIndex++;
+    } while (slotIndex < EXPGFX_SLOTS_PER_POOL);
 
     if (gExpgfxRenderResetPending != 0)
     {
@@ -2834,6 +2799,45 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
     }
 }
 
+int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s16 resourceId)
+{
+    ExpgfxTableEntry* entry;
+    int tableIndex;
+    int freeIndex;
+
+    for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++)
+    {
+        entry = &gExpgfxTableEntries[tableIndex];
+        if ((entry->refCount != 0) && (entry->resource == resourceHandle) && (entry->sourceId == sourceId) &&
+            (entry->attachedTableKey == attachedTableKey))
+        {
+            if (gExpgfxTableEntries[tableIndex].refCount >= EXPGFX_REFCOUNT_OVERFLOW)
+            {
+                debugPrintf(sExpgfxAddToTableUsageOverflow);
+                return EXPGFX_INVALID_TABLE_INDEX;
+            }
+            gExpgfxTableEntries[tableIndex].refCount++;
+            return (s16)tableIndex;
+        }
+    }
+
+    for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeIndex++)
+    {
+        if (gExpgfxTableEntries[freeIndex].refCount == 0)
+        {
+            gExpgfxTableEntries[freeIndex].refCount = 1;
+            gExpgfxTableEntries[freeIndex].resource = resourceHandle;
+            gExpgfxTableEntries[freeIndex].sourceId = sourceId;
+            gExpgfxTableEntries[freeIndex].attachedTableKey = attachedTableKey;
+            gExpgfxTableEntries[freeIndex].resourceId = resourceId;
+            return (s16)freeIndex;
+        }
+    }
+
+    debugPrintf(sExpgfxExpTabIsFull);
+    return EXPGFX_INVALID_TABLE_INDEX;
+}
+
 void expgfx_onMapSetup(void)
 {
     ExpgfxRuntimeDataLayout* runtime[1];
@@ -2911,6 +2915,11 @@ void expgfx_release(void)
         poolIndex = poolIndex + 1;
     } while (poolIndex < EXPGFX_POOL_COUNT);
     return;
+}
+
+void expgfxRemoveAll(void)
+{
+    expgfxRemoveAllBody();
 }
 
 void expgfx_initialise(void)
