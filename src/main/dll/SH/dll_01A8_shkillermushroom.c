@@ -83,7 +83,6 @@ typedef struct
 
 
 void enemymushroom_update(int* obj);
-void enemymushroom_initialise(void);
 
 void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* state, int enableTimer)
 {
@@ -150,7 +149,6 @@ void enemymushroom_hitDetect(void)
 {
 }
 void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int flag);
-void enemymushroom_release(void);
 s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};
 f32 gKillerMushroomStateAnimRates[11] = {
     0.0f, 0.0f, 0.008f, 0.025f, 0.018f, 0.015f, 0.006f, 0.008f, 0.005f, 0.005f, 0.005f,
