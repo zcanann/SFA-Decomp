@@ -93,7 +93,7 @@ void ObjHitbox_SetStateIndex(int obj, int hitState, int stateIndex);
 void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, int radius);
 void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalMin, int verticalMax);
 #endif
-int ObjHits_AllocObjectState(int obj, u32 arena);
+int ObjHits_AllocObjectState(GameObject* obj, u32 arena);
 void ObjHits_ResetWorkBuffers(void);
 void ObjHits_InitWorkBuffers(void);
 
@@ -311,7 +311,7 @@ void ObjHits_DisableObject(GameObject* obj);
 void ObjHits_EnableObject(GameObject* obj);
 int ObjHits_IsObjectEnabled(ObjAnimComponent* obj);
 void ObjHits_SyncObjectPosition(GameObject* obj);
-void ObjHits_RefreshObjectState(int obj);
+void ObjHits_RefreshObjectState(GameObject* obj);
 void ObjHits_AddContactObject(int obj, int contactObj);
 int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, int priority, int hitVolume, s8 sphereIndex,
                               f32 hitPosX, f32 hitPosY, f32 hitPosZ);

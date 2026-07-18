@@ -1013,7 +1013,7 @@ void gunpowderbarrel_update(GameObject *obj)
             memset(&state->throwVelX, 0, 0xc);
             memset((void*)&(obj)->anim.velocityX, 0, 0xc);
             state->motionFlags &= ~2;
-            ObjHits_RefreshObjectState((int)obj);
+            ObjHits_RefreshObjectState(obj);
             /* Generator + respawns flag: hand the barrel back to the generator,
              * hide it, and arm both the respawn and release timers. */
             if (((GpbConfigFlags*)&state->configFlags)->respawns != 0)

@@ -116,7 +116,7 @@ void enemymushroom_resetToSpawn(EnemyMushroomObject* obj, EnemyMushroomState* st
         state->riseStep = state->heightTarget / state->riseDuration;
     }
     ObjHits_EnableObject((GameObject*)obj);
-    ObjHits_RefreshObjectState((int)obj);
+    ObjHits_RefreshObjectState((GameObject*)obj);
 }
 
 int enemymushroom_getExtraSize(void)

@@ -511,15 +511,15 @@ void ObjHits_SyncObjectPosition(GameObject* obj)
     return;
 }
 
-int ObjHits_AllocObjectState(int objPtr, u32 arena)
+int ObjHits_AllocObjectState(GameObject* obj, u32 arena)
 {
     u32 stateArena;
     ObjHitsPriorityState* hitState;
 
     stateArena = roundUpTo4(arena);
-    ((ObjAnimComponent*)objPtr)->hitReactState = (ObjHitReactState*)stateArena;
-    hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
-    ObjHits_RefreshObjectState(objPtr);
+    obj->anim.hitReactState = (ObjHitReactState*)stateArena;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+    ObjHits_RefreshObjectState(obj);
     hitState->activeHitboxMode = OBJHITS_ACTIVE_HITBOX_MODE;
     if ((hitState->shapeFlags & OBJHITS_SHAPE_RESET_MODE_MASK) != 0)
     {
@@ -528,7 +528,7 @@ int ObjHits_AllocObjectState(int objPtr, u32 arena)
     return stateArena + 0xb8;
 }
 
-void ObjHits_RefreshObjectState(int objPtr)
+void ObjHits_RefreshObjectState(GameObject* object)
 {
     ObjAnimComponent* obj;
     ObjHitsPriorityState* hitState;
@@ -536,7 +536,7 @@ void ObjHits_RefreshObjectState(int objPtr)
     short capsuleOffsetA;
     short capsuleOffsetB;
 
-    obj = (ObjAnimComponent*)objPtr;
+    obj = &object->anim;
     hitState = (ObjHitsPriorityState*)obj->hitReactState;
     if (hitState != 0)
     {

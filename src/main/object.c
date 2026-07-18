@@ -2033,7 +2033,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     obj->cullDist = max;
     if (modelDef->hitboxStateCount != 0)
     {
-        cursor = ObjHits_AllocObjectState((int)obj, cursor);
+        cursor = ObjHits_AllocObjectState((GameObject*)obj, cursor);
         if ((s8)modelDef->primaryHitboxShapeFlags & 8)
         {
             cursor = ObjHitbox_AllocRotatedBounds((ObjHitbox*)obj, cursor);

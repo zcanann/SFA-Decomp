@@ -66,7 +66,7 @@ int bombplant_SeqFn(int* obj)
         ((EnemyMushroomState*)state)->riseStep = ((EnemyMushroomState*)state)->heightTarget / ((EnemyMushroomState*)
             state)->riseDuration;
         ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->riseDuration;
-        ObjHits_RefreshObjectState((int)obj);
+        ObjHits_RefreshObjectState((GameObject*)obj);
         ((EnemyMushroomState*)state)->resetToSpawn = 0;
         ((EnemyMushroomState*)state)->flags = (u8)(((EnemyMushroomState*)state)->flags | BOMBPLANT_FLAG_STATE_ENTERED);
     }
@@ -250,7 +250,7 @@ void bombplant_update(void* obj)
             ((BombPlantState*)state)->growRate =
                 ((BombPlantState*)state)->growStartScale / ((BombPlantState*)state)->growDuration;
             ((BombPlantState*)state)->growTimer = ((BombPlantState*)state)->growDuration;
-            ObjHits_RefreshObjectState((int)obj);
+            ObjHits_RefreshObjectState((GameObject*)obj);
         }
         if (((GameObject*)obj)->anim.rootMotionScale > ((BombPlantState*)state)->growStartScale)
         {
@@ -417,7 +417,7 @@ void bombplant_init(GameObject *obj, void* param, int flag)
         ((BombPlantState*)state)->growRate =
             ((BombPlantState*)state)->growStartScale / ((BombPlantState*)state)->growDuration;
         ((BombPlantState*)state)->growTimer = ((BombPlantState*)state)->growDuration;
-        ObjHits_RefreshObjectState((int)obj);
+        ObjHits_RefreshObjectState(obj);
         ((BombPlantState*)state)->stateIndex = 1;
     }
     else
@@ -428,7 +428,7 @@ void bombplant_init(GameObject *obj, void* param, int flag)
         (obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
         (obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
         (obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
-        ObjHits_RefreshObjectState((int)obj);
+        ObjHits_RefreshObjectState(obj);
     }
 }
 
