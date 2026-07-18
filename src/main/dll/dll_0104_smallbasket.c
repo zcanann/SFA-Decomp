@@ -124,7 +124,6 @@ typedef struct
     f32 fw;
 } BasketMathArgs;
 
-#pragma opt_propagation off
 int fn_801816F8(u8* obj, u8* player, u8* dataIn)
 {
     GameObject* playerObj;
@@ -454,9 +453,6 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     return 1;
 }
 
-__declspec(section ".sdata2") f32 lbl_803E3998 = -0.12f;
-
-#pragma opt_propagation reset
 int smallbasket_resolveCollision(u8* obj)
 {
     typedef struct
@@ -901,7 +897,7 @@ void SmallBasket_update(GameObject* obj)
                 ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, SMALLBASKET_HIT_VOLUME_SLOT, 1, 0);
                 if ((obj)->anim.velocityY > (-10.0f))
                 {
-                    (obj)->anim.velocityY = lbl_803E3998 * timeDelta + (obj)->anim.velocityY;
+                    (obj)->anim.velocityY = -0.12f * timeDelta + (obj)->anim.velocityY;
                 }
                 ObjHits_EnableObject(obj);
             }

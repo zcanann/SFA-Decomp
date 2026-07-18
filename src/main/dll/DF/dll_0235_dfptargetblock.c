@@ -170,8 +170,11 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
         {
             hitObj->velX = 0.0f;
         }
-        obj->velX = hitObj->velX * (0.25f);
-        obj->velZ = hitObj->velZ * (0.25f);
+        {
+            f32 scale = 0.25f;
+            obj->velX = hitObj->velX * scale;
+            obj->velZ = hitObj->velZ * scale;
+        }
     }
 
     obj->x = obj->velX * timeDelta + obj->x;
@@ -382,7 +385,7 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
     int i;
     DfpTargetBlockState* state;
     ModelFileHeader* model;
-    double fconv;
+    f32 fconv;
     DfpTargetBlockPoint point;
 
     state = (DfpTargetBlockState*)obj->state;
@@ -396,19 +399,19 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
     }
     else
     {
-        fconv = (double)(10000.0f);
+        fconv = 10000.0f;
         for (i = 0; i < (int)(u32)model->vertexCount; i = i + 1)
         {
             Model_GetVertexPosition(model, i, &point.x);
-            if ((double)point.y < fconv)
+            if (point.y < fconv)
             {
-                fconv = (double)point.y;
+                fconv = point.y;
             }
         }
         for (i = 0; i < (int)(u32)model->vertexCount; i = i + 1)
         {
             Model_GetVertexPosition(model, i, &point.x);
-            if ((double)point.y == fconv)
+            if (point.y == fconv)
             {
                 found = false;
                 for (j = 0; j < state->floorPointCount; j = j + 1)
@@ -438,8 +441,8 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
         state->stateSfxReady = bitVal;
         if (state->completionSfxReady != '\0')
         {
-            obj->x = obj->x + (219.0f);
-            obj->z = obj->z + (-158.0f);
+            obj->x += 219.0f;
+            obj->z += -158.0f;
             state->mode = DFPTARGETBLOCK_MODE_SETTLED;
         }
     }

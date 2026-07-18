@@ -23,25 +23,14 @@ u8 lbl_803DB938[8] = {0, 1, 0, 0, 0, 0, 0, 0};
 
 
 extern u8 lbl_803DB938[8]; /* texture/resource handle */
-const f32 lbl_803E1294 = 0.0f;
-const f32 lbl_803E1298 = 0.014f;
-const f32 lbl_803E129C = 0.03f;
-const f32 lbl_803E12A0 = 255.0f;
-const f32 lbl_803E12A4 = 0.0f;
-const f32 lbl_803E12A8 = 85.0f;
-const f32 lbl_803E12AC = 80.0f;
-const f32 lbl_803E12B0 = 100.0f;
-const f32 lbl_803E12B4 = -80.0f;
-const f32 lbl_803E12B8 = 2.0f;
-const f32 lbl_803E12BC = 0.0f;
 extern u8 lbl_80317488[];
 
 void dll_95_func01_nop(void);
 
 void dll_94_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, f32* extraArgs)
 {
-    u8* base = lbl_80317488;
     ModgfxSpawnPacket buf;
+    u8* base = (u8*)(int)lbl_80317488;
     GfxCmd* e;
     f32 s = (1.0f);
     if (extraArgs != NULL)
@@ -176,6 +165,18 @@ void dll_94_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 6, base, 4, base + 0x3c, DLL94_EFFECT_ID, 0);
 }
+
+const f32 lbl_803E1294 = 0.0f;
+const f32 lbl_803E1298 = 0.014f;
+const f32 lbl_803E129C = 0.03f;
+const f32 lbl_803E12A0 = 255.0f;
+const f32 lbl_803E12A4 = 0.0f;
+const f32 lbl_803E12A8 = 85.0f;
+const f32 lbl_803E12AC = 80.0f;
+const f32 lbl_803E12B0 = 100.0f;
+const f32 lbl_803E12B4 = -80.0f;
+const f32 lbl_803E12B8 = 2.0f;
+const f32 lbl_803E12BC = 0.0f;
 
 void dll_94_func01_nop(void)
 {

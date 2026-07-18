@@ -58,6 +58,7 @@ void CameraModeForceBehind_update(u8* obj)
     f32 baseX, baseY, baseZ;
     f32 cosYaw, sinYaw, sinPitch, cosPitch;
     f32 radius;
+    f32 dx, dz;
 
     angle = gCamForceBehindPi * (f32)(0x8000 - camera->anim.rotX) / gCamForceBehindBamsToRadDivisor;
     cosv = mathSinf(angle);
@@ -66,7 +67,9 @@ void CameraModeForceBehind_update(u8* obj)
     pos[1] = gCamForceBehindHeightOffset + target->anim.worldPosY;
     pos[2] = sinv * gCamForceBehindOrbitRadius + (sz = target->anim.worldPosZ);
     camcontrol_traceFromTarget(pos, target, pos, &extra);
-    gCamForceBehindTraceDistance = sqrtf((pos[0] - sx) * (pos[0] - sx) + (pos[2] - sz) * (pos[2] - sz));
+    dx = pos[0] - sx;
+    dz = pos[2] - sz;
+    gCamForceBehindTraceDistance = sqrtf(dx * dx + dz * dz);
     gCamForceBehindPlacementRadius = gCamForceBehindTraceDistance;
 
     Player_GetAimAngles((int)target, &yaw, &pitch);

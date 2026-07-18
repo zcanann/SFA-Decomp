@@ -444,7 +444,7 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
         if ((u32)trickyState->targetPosition != (best + 0x18))
         {
             trickyState->targetPosition = (f32*)(best + 0x18);
-            *(s32*)&trickyState->flags &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG;
+            TRICKY_CLEAR_TARGET_DIRTY(trickyState);
             trickyState->targetTurnTimer = 0;
         }
         trickyState->guardState = 4;

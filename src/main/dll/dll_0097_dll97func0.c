@@ -23,45 +23,12 @@ u8 lbl_803DB948[8] = {0, 1, 0, 0, 0, 0, 0, 0};
 #define DLL97_EFFECT_ID 0x3c
 
 
-const f32 lbl_803E1314 = 0.0f;
-const f32 lbl_803E1318 = 0.0f;
-const f32 lbl_803E131C = 0.22f;
-const f32 lbl_803E1320 = 0.3f;
-const f32 lbl_803E1324 = 255.0f;
-const f32 lbl_803E1328 = -7.0f;
-const f32 lbl_803E132C = 7.0f;
-const f32 lbl_803E1330 = 1.0f;
-const f32 lbl_803E1334 = -1.0f;
-const f32 lbl_803E1338 = -2.0f;
-const f32 lbl_803E133C = 2.0f;
-const f32 lbl_803E1340 = 1.0f;
-const f32 lbl_803E1344 = 0.0f;
-const f32 lbl_803E1348 = 155.0f;
-const f32 lbl_803E134C = 55.0f;
-const f32 lbl_803E1350 = 0.15f;
-const f32 lbl_803E1354 = 0.1f;
-const f32 lbl_803E1358 = -0.5f;
-const f32 lbl_803E135C = 4.0f;
-const f32 lbl_803E1360 = 25.0f;
-const f32 lbl_803E1364 = 8.0f;
-const f32 lbl_803E1368 = 2.0f;
-const f32 lbl_803E136C = 0.0f;
-const f32 lbl_803E1370 = 0.0f;
-const f32 lbl_803E1374 = 1.0f;
-const f32 lbl_803E1378 = 0.2f;
-const f32 lbl_803E137C = 0.01f;
-const f32 lbl_803E1380 = 0.8f;
-const f32 lbl_803E1384 = 255.0f;
-const f32 lbl_803E1388 = 1.8f;
-const f32 lbl_803E138C = 3.0f;
-const f32 lbl_803E1390 = 4.0f;
-const f32 lbl_803E1394 = 200.0f;
 extern u8 lbl_80317810[];
 
 void dll_97_func03(int sourceObj, int variant, int posSource, u32 flags, u32 unused, f32* extraArgs)
 {
-    u8* base = lbl_80317810;
     ModgfxSpawnPacket buf;
+    u8* base = (u8*)(int)lbl_80317810;
     GfxCmd* e;
     f32 s = (1.0f);
     if (extraArgs != NULL)
@@ -174,12 +141,12 @@ void dll_97_func03(int sourceObj, int variant, int posSource, u32 flags, u32 unu
     {
         if ((u32)sourceObj != 0 && (u32)posSource != 0)
         {
-            buf.pos[0] =
-                (0.0f) + (((GameObject*)(sourceObj))->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX);
-            buf.pos[1] =
-                (0.0f) + (((GameObject*)(sourceObj))->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY);
-            buf.pos[2] =
-                (0.0f) + (((GameObject*)(sourceObj))->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ);
+            buf.pos[0] +=
+                ((GameObject*)(sourceObj))->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] +=
+                ((GameObject*)(sourceObj))->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] +=
+                ((GameObject*)(sourceObj))->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ;
         }
         else if ((u32)sourceObj != 0)
         {
@@ -196,6 +163,40 @@ void dll_97_func03(int sourceObj, int variant, int posSource, u32 flags, u32 unu
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 6, base, 4, base + 0x3c, DLL97_EFFECT_ID, 0);
 }
+
+const f32 lbl_803E1314 = 0.0f;
+const f32 lbl_803E1318 = 0.0f;
+const f32 lbl_803E131C = 0.22f;
+const f32 lbl_803E1320 = 0.3f;
+const f32 lbl_803E1324 = 255.0f;
+const f32 lbl_803E1328 = -7.0f;
+const f32 lbl_803E132C = 7.0f;
+const f32 lbl_803E1330 = 1.0f;
+const f32 lbl_803E1334 = -1.0f;
+const f32 lbl_803E1338 = -2.0f;
+const f32 lbl_803E133C = 2.0f;
+const f32 lbl_803E1340 = 1.0f;
+const f32 lbl_803E1344 = 0.0f;
+const f32 lbl_803E1348 = 155.0f;
+const f32 lbl_803E134C = 55.0f;
+const f32 lbl_803E1350 = 0.15f;
+const f32 lbl_803E1354 = 0.1f;
+const f32 lbl_803E1358 = -0.5f;
+const f32 lbl_803E135C = 4.0f;
+const f32 lbl_803E1360 = 25.0f;
+const f32 lbl_803E1364 = 8.0f;
+const f32 lbl_803E1368 = 2.0f;
+const f32 lbl_803E136C = 0.0f;
+const f32 lbl_803E1370 = 0.0f;
+const f32 lbl_803E1374 = 1.0f;
+const f32 lbl_803E1378 = 0.2f;
+const f32 lbl_803E137C = 0.01f;
+const f32 lbl_803E1380 = 0.8f;
+const f32 lbl_803E1384 = 255.0f;
+const f32 lbl_803E1388 = 1.8f;
+const f32 lbl_803E138C = 3.0f;
+const f32 lbl_803E1390 = 4.0f;
+const f32 lbl_803E1394 = 200.0f;
 
 void dll_97_func01_nop(void)
 {

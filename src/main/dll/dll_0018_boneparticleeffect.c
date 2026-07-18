@@ -49,7 +49,6 @@ s32 gBoneParticleBufferFlip;
 
 extern void* gBoneParticleEffectBuffers[];
 extern f32 gBoneParticleDriftVelocity;
-const f32 lbl_803DF4BC = 20.02f;
 
 
 static inline int* Modgfx_GetActiveModel(void* obj)
@@ -153,7 +152,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
             idp = base + 0x5b4;
             zero = (0.0f);
             one = (1.0f);
-            k2002 = lbl_803DF4BC;
+            k2002 = 20.02f;
             while (j < 5)
             {
                 vtx.vx = zero;
@@ -179,7 +178,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
                 dx = dx * k2002;
                 if (id == 0x1d || id == 0x1d)
                 {
-                    dy = *(f32*)&lbl_803DF4BC * (8.0f + dy);
+                    dy = 20.02f * (8.0f + dy);
                 }
                 else
                 {
