@@ -157,7 +157,7 @@ typedef struct KaldaCombatStack
 void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
 {
     KaldaChomControl* control;
-    int playerObj;
+    GameObject* playerObj;
     int result;
     u8 rnd;
     KaldaCombatStack st;
@@ -167,7 +167,7 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
 
     control = ((CampfireState*)stateWithBaddieData)->control;
     st.p = gKaldachomCombatParams;
-    playerObj = (int)Obj_GetPlayerObject();
+    playerObj = Obj_GetPlayerObject();
     if (((GroundBaddieState*)state)->baddie.targetObj != NULL)
     {
         int target = *(int*)&((GroundBaddieState*)state)->baddie.targetObj;
@@ -178,8 +178,8 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
     }
     (*(void (**)(void*, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x54))(
         obj, state, stateWithBaddieData + 0x35c, ((GroundBaddieState*)stateWithBaddieData)->gameBitB, 0, 0, 0, 4);
-    (*(void (**)(void*, int, int, u16*, u16*, u16*))(*(int*)gBaddieControlInterface + 0x14))(obj, playerObj, 4, &hitType,
-                                                                                           &hitAux1, &hitAux2);
+    (*(void (**)(void*, GameObject*, int, u16*, u16*, u16*))(*(int*)gBaddieControlInterface + 0x14))(
+        obj, playerObj, 4, &hitType, &hitAux1, &hitAux2);
     if ((hitType == 1) || (hitType == 2))
     {
         result = (*(int (**)(void*, int, int, int, int, int, int, void*))(*(int*)gBaddieControlInterface + 0x50))(

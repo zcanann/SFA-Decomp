@@ -4,7 +4,8 @@
 #include "main/game_object.h"
 #include "dolphin/mtx/vec_types.h"
 
-int sidekickToy_handleHitMessage(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector, f32 hDist, f32 vDist);
+u8 sidekickToy_handleHitMessage(GameObject* obj, u8* state, GameObject* attacker, int hit, int p5, int p6,
+                                Vec* hitPos, int sector, f32 hDist, f32 vDist);
 void guardClawUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
 void gcRobotPatrol_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
 void mikaladon_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);

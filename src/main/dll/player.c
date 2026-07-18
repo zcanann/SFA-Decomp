@@ -15,6 +15,7 @@
 #include "main/objprint_render_api.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_ext2.h"
 #include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_01B5_lightfoot.h"
@@ -167,7 +168,6 @@ void playerDoTailAnims(int obj, void* statep);
 void playerUpdatePathEffectCountdown(GameObject* obj, int inner);
 int playerStopRidingObject(GameObject* obj);
 void fn_802960E4(int a, f32 b, f32 c);
-void fn_802961FC(int a, u8 type);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
 int fn_80297498(void);
 int playerState41(GameObject* obj, int state, f32 fv);
@@ -740,7 +740,7 @@ void objSetXRot(GameObject* obj, int v)
     *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
 }
 
-void fn_802961FC(int a, u8 type)
+void fn_802961FC(GameObject* obj, u8 type)
 {
     u8 v = type;
     if (type > 2)

@@ -38,6 +38,7 @@
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/flameblast_api.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_ext2.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/objfsa_query_api.h"
 #include "main/mapEventTypes.h"
@@ -262,7 +263,6 @@ extern f32 lbl_803E258C;
 extern f32 lbl_803E2590;
 extern f32 lbl_803E2594;
 extern f32 lbl_803E259C;
-extern void fn_802961FC(u8* proj, int result);
 extern TrickySfxPair lbl_803E23C4;
 extern f32 lbl_803E24C8;
 extern f32 lbl_803E24D8;
@@ -2324,12 +2324,12 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
 {
     int player;
     int hit;
-    int result;
+    u8 result;
     u16 sector;
     int diff;
     f32 hDist;
     f32 vDist;
-    u8* proj;
+    GameObject* proj;
     f32* dp;
     f32 zero;
     FrozenFxParams params;
@@ -2463,8 +2463,8 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                 case 0x5b9:
                 case 0x5e1:
                 case 0x7a6:
-                    result = sidekickToy_handleHitMessage((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos,
-                                                          sector, hDist, vDist);
+                    result = sidekickToy_handleHitMessage(obj, state, (GameObject*)attacker, hit, hitArg, hitCount,
+                                                          &hitPos, sector, hDist, vDist);
                     break;
                 case 0xd8:
                 case 0x281:
@@ -2591,8 +2591,8 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                 }
                 objLightFn_8009a1dc((void*)obj, lbl_803E259C, &params, 4, (void*)((TrickyState*)state)->light);
             }
-            proj = (u8*)((TrickyState*)state)->actionTargetObj;
-            if (proj != NULL && ((GameObject*)proj)->anim.classId == 1)
+            proj = ((TrickyState*)state)->actionTargetObj;
+            if (proj != NULL && proj->anim.classId == 1)
             {
                 fn_802961FC(proj, result);
             }

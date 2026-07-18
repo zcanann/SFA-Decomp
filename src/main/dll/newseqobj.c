@@ -32,6 +32,7 @@
 #include "main/gamebit_ids.h"
 #include "main/dll/newseqobj_baddie.h"
 #include "main/dll/dll_00C9_enemy_ext.h"
+#include "main/dll/baddie_frozen.h"
 
 
 /* per-family anim-table row: speed + flags + anim ids and chain links */
@@ -55,13 +56,14 @@ typedef struct
     u16 padA;  /* 0xa */
 } IdleRow;
 
-int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int damage, void* wpad0, int wpad1, int wpad2, int wpad3)
+u8 sidekickToy_handleHitMessage(GameObject* obj, u8* state, GameObject* attacker, int msgId, int arrIdx, int damage,
+                                Vec* hitPos, int sector, f32 hDist, f32 vDist)
 {
     u8* animRows;
     u8* rowsC;
     u8* rowsB;
     u8* trig;
-    int ret;
+    u8 ret;
 
     animRows = lbl_8031F16C[state[0x33b]].tbl10;
     rowsC = lbl_8031F16C[state[0x33b]].tbl24;
@@ -78,7 +80,7 @@ int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, 
     {
         damage = damage * 0xa;
     }
-    if (((GameObject*)obj)->anim.currentMove == animRows[0x128])
+    if (obj->anim.currentMove == animRows[0x128])
     {
         return 0;
     }
@@ -93,8 +95,7 @@ int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, 
         if (msgId != 0x11)
         {
             f32 z;
-            if (msgId != 0x1a && ((GameObject*)attacker)->anim.seqId != 0x6d &&
-                ((GameObject*)attacker)->anim.seqId != 0x754)
+            if (msgId != 0x1a && attacker->anim.seqId != 0x6d && attacker->anim.seqId != 0x754)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_swdout1);
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_gethit02);
@@ -177,13 +178,13 @@ int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, 
             *(f32*)(state + 0x328) = (f32)(u32) * (u16*)(state + 0x2ec);
         }
         ((BaddieState*)state)->reactionFlags |= 8;
-        if (((GameObject*)attacker)->anim.classId == 0x1c)
+        if (attacker->anim.classId == 0x1c)
         {
             return 0;
         }
         {
-            int* other = (int*)((GameObject*)attacker)->ownerObj;
-            if (other != 0 && ((GameObject*)other)->anim.classId == 0x1c)
+            GameObject* other = attacker->ownerObj;
+            if (other != 0 && other->anim.classId == 0x1c)
             {
                 return 0;
             }
@@ -212,8 +213,7 @@ int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, 
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_attack);
         }
-        if (msgId != 0x1a && msgId != 0x1f && ((GameObject*)attacker)->anim.seqId != 0x6d &&
-            ((GameObject*)attacker)->anim.seqId != 0x754)
+        if (msgId != 0x1a && msgId != 0x1f && attacker->anim.seqId != 0x6d && attacker->anim.seqId != 0x754)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_stftest);
         }
