@@ -17,6 +17,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/FRONT/frontend_control.h"
+#include "main/dll/dll_0035_saveselectscreen.h"
 #include "main/gametext_show_str_api.h"
 #include "main/textrender_api.h"
 #include "main/pad.h"
@@ -28,16 +29,8 @@
 #define SECONDS_PER_HOUR    3600
 #define SECONDS_PER_MINUTE  60
 
-extern u8 saveFileSelect_debugCheatProgress;
-extern u8 saveFileSelect_saveCheatProgress;
-extern u8 saveFileSelect_cheatInputTimer;
-extern s8 saveFileSelect_currentSlotIndex;
-extern u8 saveFileSelect_saveDirty;
-extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;
-extern FrontendSaveSlot* saveFileSelect_saveSlots;
 extern u8 enableDebugText;
 extern u16 saveFileSelect_debugCheatSequence[6];
-extern u16 saveFileSelect_slotCheatSequence[6];
 extern void* lbl_803A8680[4];
 extern f32 lbl_803E1D58;
 extern f32 lbl_803E1D5C;
