@@ -223,7 +223,6 @@ extern const f32 lbl_803DED68;
 extern const f32 lbl_803DED6C;
 extern f32 gMapSavedPlayerOffsetX, gMapSavedPlayerOffsetZ;
 
-extern float floor(float);
 extern void GXSetScissor(int left, int top, int width, int height);
 
 static inline void boxBlurRow(u8* row, u8* blurred, int size, int window)
@@ -795,9 +794,9 @@ void allocLotsOfTextures(void)
                     f32 rcb = rc;
                     d3 = sqrtf(rcb * rcb + cc2 * cc2);
                 }
-                n1 = -fn_802943F4(lbl_803DEE00 * d1);
-                n2 = __fabs(fn_802943F4(lbl_803DEE00 * d2));
-                n3 = __fabs(fn_802943F4(lbl_803DEE00 * d3));
+                n1 = -mathCosfHighPrecision(lbl_803DEE00 * d1);
+                n2 = __fabs(mathCosfHighPrecision(lbl_803DEE00 * d2));
+                n3 = __fabs(mathCosfHighPrecision(lbl_803DEE00 * d3));
                 a = n1 - (f32)n2;
                 b = n1 - (f32)n3;
                 if (a > mx)
@@ -838,9 +837,9 @@ void allocLotsOfTextures(void)
                         f32 rcb = rc;
                         d3 = sqrtf(rcb * rcb + cc2 * cc2);
                     }
-                    n1 = -fn_802943F4(lbl_803DEE00 * d1);
-                    n2 = -fn_802943F4(lbl_803DEE00 * d2);
-                    n3 = -fn_802943F4(lbl_803DEE00 * d3);
+                    n1 = -mathCosfHighPrecision(lbl_803DEE00 * d1);
+                    n2 = -mathCosfHighPrecision(lbl_803DEE00 * d2);
+                    n3 = -mathCosfHighPrecision(lbl_803DEE00 * d3);
                     a = inv * (lbl_803DEDC0 * (n1 - n2)) + lbl_803DEDC0;
                     b = inv * (lbl_803DEDC0 * (n1 - n3)) + lbl_803DEDC0;
                     if (d1 < lbl_803DED2C)
@@ -1605,7 +1604,7 @@ void maybeHudFn_8006c91c(void)
     gNewShadowCasterCount = 0;
     gNewShadowCurrentViewSlot = Camera_GetCurrentViewSlot();
     lbl_803DCFA0 = (u16)(lbl_803DCFA0 + framesThisStep * 0x28a);
-    lbl_803DCFA4 = 0.2f * floor(6.284f * (f32)(u32)lbl_803DCFA0 / 65536.0f);
+    lbl_803DCFA4 = 0.2f * mathSinfHighPrecision(6.284f * (f32)(u32)lbl_803DCFA0 / 65536.0f);
     fn_80060BB0();
     gNewShadowFrameIndex = (gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT;
     if (isHeavyFogEnabled())
@@ -1898,8 +1897,8 @@ void initFn_8006d020(void)
             dst += (col & 3) * 8;
             dst += (col >> 2) * 0x200;
             cv = lbl_803DEDE8 * col;
-            n1 = fn_802943F4(lbl_803DED38 * floor(cv) + rv);
-            n2 = fn_802943F4(cv);
+            n1 = mathCosfHighPrecision(lbl_803DED38 * mathSinfHighPrecision(cv) + rv);
+            n2 = mathCosfHighPrecision(cv);
             prod = n1 * n2;
             prod = lbl_803DEDC0 * prod + lbl_803DEDC0;
             fa = lbl_803DEDC0 * n1 + lbl_803DEDC0;

@@ -326,28 +326,28 @@ void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle)
         lbl_803DC670 = lbl_803E7E80;
         lbl_803DC674 = lbl_803E7E84;
         lbl_803DC678 = lbl_803E7E88;
-        PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * fn_802943F4(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
+        PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * mathCosfHighPrecision(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
         PSMTXMultVecSR(mtx1, vec, vec);
         break;
     case 4:
         lbl_803DC670 = lbl_803E7E98;
         lbl_803DC674 = lbl_803E7E84;
         lbl_803DC678 = lbl_803E7E88;
-        PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * fn_802943F4(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
+        PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * mathCosfHighPrecision(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
         PSMTXMultVecSR(mtx1, vec, vec);
         break;
     case 5:
         lbl_803DC670 = lbl_803E7E9C;
         lbl_803DC674 = lbl_803E7E84;
         lbl_803DC678 = lbl_803E7E88;
-        PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * fn_802943F4(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
+        PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * mathCosfHighPrecision(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
         PSMTXMultVecSR(mtx1, vec, vec);
         break;
     case 2:
         lbl_803DC670 = lbl_803E7EA0;
         lbl_803DC674 = lbl_803E7EA4;
         lbl_803DC678 = lbl_803E7EA8;
-        PSMTXRotRad(mtx1, 0x79, lbl_803E7EAC * fn_802943F4(lbl_803E7E98 * angle));
+        PSMTXRotRad(mtx1, 0x79, lbl_803E7EAC * mathCosfHighPrecision(lbl_803E7E98 * angle));
         PSMTXRotRad(mtx2, 0x78, lbl_803E7EB0);
         PSMTXConcat(mtx2, mtx1, mtx1);
         PSMTXMultVecSR(mtx1, vec, vec);
@@ -356,7 +356,7 @@ void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle)
         lbl_803DC670 = lbl_803E7E80;
         lbl_803DC674 = lbl_803E7E84;
         lbl_803DC678 = lbl_803E7E88;
-        PSMTXRotRad(mtx1, 0x79, lbl_803E7EB4 * fn_802943F4(lbl_803E7EB4 * angle - lbl_803E7EB8 * (f32)mode));
+        PSMTXRotRad(mtx1, 0x79, lbl_803E7EB4 * mathCosfHighPrecision(lbl_803E7EB4 * angle - lbl_803E7EB8 * (f32)mode));
         if (mode == 1)
         {
             PSMTXRotRad(mtx2, 0x78, lbl_803E7EBC);

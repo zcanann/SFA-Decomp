@@ -75,7 +75,7 @@ float fn_802942EC(float x) {
     }
 }
 
-float fn_802943F4(float x) {
+float mathCosfHighPrecision(float x) {
     int n;
     double y = tan(&n, x);
     double y2 = y * y;

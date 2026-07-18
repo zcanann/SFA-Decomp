@@ -2261,7 +2261,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
     }
 
     phase = lbl_803DE9AC * bs->timer;
-    wave = lbl_803DE9A8 * fn_802943F4(phase);
+    wave = lbl_803DE9A8 * mathCosfHighPrecision(phase);
     wave = wave * bs->amount / lbl_803DE9B0;
     rotation = (gObjLibBlinkAngleUnitScale * (leftScale * wave)) / gObjLibBlinkAnglePiDivisor;
     *(s16*)(playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_LEFT_JOINT_TAG) + 2) = rotation;

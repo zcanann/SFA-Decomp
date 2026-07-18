@@ -210,7 +210,7 @@ void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5,
     f32 mtx[12];
     f32 a;
     a = lbl_803E2C20 * f1 - lbl_803E2C24 * (f32)(s32)int_deg;
-    a = fn_802943F4(a);
+    a = mathCosfHighPrecision(a);
     a = lbl_803E2C1C * a;
     PSMTXRotRad(mtx, 0x79, a);
     PSMTXMultVecSR(mtx, vec, vec);

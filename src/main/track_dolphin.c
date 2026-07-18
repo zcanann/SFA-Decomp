@@ -320,8 +320,6 @@ extern const f32 lbl_803DECCC;
 extern const f32 lbl_803DECD0;
 extern const f32 lbl_803DECD4;
 
-extern float floor(float x);
-
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
 extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1,
@@ -2581,7 +2579,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
                 {
                     f32 px = p[0] * p[0];
                     f32 pz = p[2] * p[2];
-                    f32 d = fn_802943F4(fn_802925C4(p[1], sqrtf(px + pz)));
+                    f32 d = mathCosfHighPrecision(fn_802925C4(p[1], sqrtf(px + pz)));
                     if (lbl_803DECB4 != d)
                         y = y / d;
                     d1[0] = p[0];
@@ -2640,7 +2638,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
                 {
                     f32 px = p[0] * p[0];
                     f32 pz = p[2] * p[2];
-                    f32 d = floor(fn_802925C4(p[1], sqrtf(px + pz)));
+                    f32 d = mathSinfHighPrecision(fn_802925C4(p[1], sqrtf(px + pz)));
                     d = y / d;
                     b[1] = b[1] + d;
                 }

@@ -83,7 +83,6 @@ extern f32 gLightmapDegToBamScale;
 extern F32Pair lbl_803DEC08;
 extern f32 lbl_803DEC0C;
 extern FrustumPlane gViewFrustumPlanes[];
-extern float floor(float x);
 
 extern void PSMTXMultVec(int m, f32* in, f32* out);
 extern void* gMapBlockLayerTables[];
@@ -222,8 +221,8 @@ void updateVisibleGeometry(void)
     ff = lbl_803DEC08.lo;
     tt = ff * ratio2;
     tt = fn_80292248(sqrtf(ff * tt + ratio2));
-    ff = floor(tt);
-    ss = fn_802943F4(tt);
+    ff = mathSinfHighPrecision(tt);
+    ss = mathCosfHighPrecision(tt);
     Matrix_TransformPoint(m, ss, lbl_803DEBCC, -ff, &ox, &oy, &oz);
     gViewFrustumPlanes[n = 1].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;

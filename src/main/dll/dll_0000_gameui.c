@@ -4678,9 +4678,9 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
         alpha = hudElementOpacity * lbl_803DD760;
         lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
-        lbl_803DD750 = (u16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
-        lbl_803DD752 = (u16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
-        lbl_803DD754 = (u16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
+        lbl_803DD750 = (u16)(lbl_803DBA4C * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA40));
+        lbl_803DD752 = (u16)(lbl_803DD74C * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
+        lbl_803DD754 = (u16)(lbl_803DBA50 * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
         fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
@@ -4745,9 +4745,9 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
         alpha = hudElementOpacity * lbl_803DD760;
         lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
-        lbl_803DD750 = (u16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
-        lbl_803DD752 = (u16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
-        lbl_803DD754 = (u16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
+        lbl_803DD750 = (u16)(lbl_803DBA4C * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA40));
+        lbl_803DD752 = (u16)(lbl_803DD74C * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
+        lbl_803DD754 = (u16)(lbl_803DBA50 * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
         fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
@@ -4825,9 +4825,9 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
         alpha = hudElementOpacity * lbl_803DD760;
         lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
-        lbl_803DD750 = (u16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
-        lbl_803DD752 = (u16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
-        lbl_803DD754 = (u16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
+        lbl_803DD750 = (u16)(lbl_803DBA4C * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA40));
+        lbl_803DD752 = (u16)(lbl_803DD74C * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
+        lbl_803DD754 = (u16)(lbl_803DBA50 * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
         fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
@@ -4935,9 +4935,9 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
     case 11:
         lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
-        lbl_803DD750 = (u16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
-        lbl_803DD752 = (u16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
-        lbl_803DD754 = (u16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
+        lbl_803DD750 = (u16)(lbl_803DBA4C * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA40));
+        lbl_803DD752 = (u16)(lbl_803DD74C * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
+        lbl_803DD754 = (u16)(lbl_803DBA50 * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
         fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
@@ -5043,9 +5043,9 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
     alpha = hudElementOpacity * lbl_803DD760;
     lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
     lbl_803DD748 += timeDelta;
-    lbl_803DD750 = (u16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
-    lbl_803DD752 = (u16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
-    lbl_803DD754 = (u16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
+    lbl_803DD750 = (u16)(lbl_803DBA4C * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA40));
+    lbl_803DD752 = (u16)(lbl_803DD74C * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
+    lbl_803DD754 = (u16)(lbl_803DBA50 * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
     lbl_803DBA3C = lbl_803E2070 * lbl_803DD760;
     lbl_803DBA34 = lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760);
     fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,

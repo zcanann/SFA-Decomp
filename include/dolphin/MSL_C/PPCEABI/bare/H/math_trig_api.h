@@ -2,7 +2,9 @@
 #define DOLPHIN_MSL_C_PPCEABI_BARE_H_MATH_TRIG_API_H_
 
 float mathCosf(float x);
+float mathCosfHighPrecision(float x);
 float mathSinf(float x);
+float mathSinfHighPrecision(float x);
 float cosf(float x);
 float sinf(float x);
 
