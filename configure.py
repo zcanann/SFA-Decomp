@@ -1750,7 +1750,7 @@ config.libs = [
                 "main/atan2f.c",
                 mw_version="GC/1.2.5n",
                 cflags=msl_math_o0_cflags,
-                extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra],
+                extra_cflags=["-O0", "-opt", "peephole,functions", "-inline", "auto", *msl_math_extra],
                 progress_category="game",
             ),
             Object(
