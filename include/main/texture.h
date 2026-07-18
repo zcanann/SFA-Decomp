@@ -61,6 +61,16 @@ STATIC_ASSERT(offsetof(Texture, preloaded) == 0x48);
 STATIC_ASSERT(offsetof(Texture, imageOffset) == 0x50);
 STATIC_ASSERT(sizeof(Texture) == 0x60);
 
+static inline struct _GXTexObj* textureGetGXTexObj(Texture* texture)
+{
+    return (struct _GXTexObj*)texture->gxTexObj;
+}
+
+static inline struct _GXTexRegion* textureGetGXTexRegion(Texture* texture)
+{
+    return (struct _GXTexRegion*)texture->tmemAddr;
+}
+
 void *textureLoadAsset(int asset);
 void textureFree(Texture *texture);
 void textureFn_8004c264(Texture *texture, int mapId);

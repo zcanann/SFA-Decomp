@@ -6706,10 +6706,10 @@ void fn_8004DA54(char* p1)
     fn_8006C504(&tex2c);
     if (tex2c != 0)
     {
-        GXTexObj* obj = (GXTexObj*)tex2c->gxTexObj;
+        GXTexObj* obj = textureGetGXTexObj(tex2c);
         if (tex2c->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded(obj, (GXTexRegion*)tex2c->tmemAddr, 0);
+            GXLoadTexObjPreLoaded(obj, textureGetGXTexRegion(tex2c), 0);
         }
         else
         {
@@ -6887,10 +6887,10 @@ void fn_8004E0FC(void)
         int id = lbl_803DCD8C;
         if (tex1c != 0)
         {
-            GXTexObj* obj = (GXTexObj*)tex1c->gxTexObj;
+            GXTexObj* obj = textureGetGXTexObj(tex1c);
             if (tex1c->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded(obj, (GXTexRegion*)tex1c->tmemAddr, id);
+                GXLoadTexObjPreLoaded(obj, textureGetGXTexRegion(tex1c), id);
             }
             else
             {
@@ -7028,10 +7028,10 @@ void renderHeavyFog(void* fogColor)
         int id = lbl_803DCD8C;
         if (tex20 != 0)
         {
-            GXTexObj* obj = (GXTexObj*)tex20->gxTexObj;
+            GXTexObj* obj = textureGetGXTexObj(tex20);
             if (tex20->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded(obj, (GXTexRegion*)tex20->tmemAddr, id);
+                GXLoadTexObjPreLoaded(obj, textureGetGXTexRegion(tex20), id);
             }
             else
             {
@@ -7362,10 +7362,10 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
         id = lbl_803DCD8C;
         if (src != NULL)
         {
-            GXTexObj* obj = (GXTexObj*)src->gxTexObj;
+            GXTexObj* obj = textureGetGXTexObj(src);
             if (src->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded(obj, (GXTexRegion*)src->tmemAddr, id);
+                GXLoadTexObjPreLoaded(obj, textureGetGXTexRegion(src), id);
             }
             else
             {
@@ -7447,10 +7447,10 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
         id = lbl_803DCD8C;
         if (src != NULL)
         {
-            GXTexObj* obj = (GXTexObj*)src->gxTexObj;
+            GXTexObj* obj = textureGetGXTexObj(src);
             if (src->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded(obj, (GXTexRegion*)src->tmemAddr, id);
+                GXLoadTexObjPreLoaded(obj, textureGetGXTexRegion(src), id);
             }
             else
             {
@@ -7538,10 +7538,10 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
         id = lbl_803DCD8C;
         if (src != NULL)
         {
-            GXTexObj* obj = (GXTexObj*)src->gxTexObj;
+            GXTexObj* obj = textureGetGXTexObj(src);
             if (src->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded(obj, (GXTexRegion*)src->tmemAddr, id);
+                GXLoadTexObjPreLoaded(obj, textureGetGXTexRegion(src), id);
             }
             else
             {
