@@ -38,9 +38,6 @@ typedef struct ObjHitsVec3
     f32 z;
 } ObjHitsVec3;
 
-typedef int (*ObjHitsCheckHitVolumesLegacyFn)(int objA, int objB, int srcObj, char checkA, char checkB, u32 mask,
-                                               int skelMask);
-
 extern f32 gObjHitsPriorityHitTickDelta;
 static inline ObjHitsModelBank* ObjHits_GetActiveModel(int obj)
 {
@@ -969,7 +966,7 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix)
     return;
 }
 
-u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char checkB, u32 mask, u32 volMask)
+int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char checkB, u32 mask, u32 volMask)
 {
     float* contact;
     int countB;
@@ -1471,7 +1468,6 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
 
 void doNothing_800333C8(int objA, int objB, int att, void* state, void* attState, f32 dt);
 
-#define ObjHits_CheckHitVolumes ((ObjHitsCheckHitVolumesLegacyFn)ObjHits_CheckHitVolumes)
 void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 dt)
 {
     ObjHitsPriorityState* attStateB;
@@ -1613,8 +1609,6 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
         }
     }
 }
-#undef ObjHits_CheckHitVolumes
-
 void ObjHits_RegisterActiveHitVolumeObject(GameObject* obj)
 {
     int index;
