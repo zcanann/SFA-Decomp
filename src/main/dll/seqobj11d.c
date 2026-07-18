@@ -250,6 +250,7 @@ void fn_801511E8(GameObject* obj, u8* state)
 {
     u8* entry;
     u32 idx;
+    u8 wrapIdx;
     char* base;
 
     base = (char*)lbl_8031F16C;
@@ -266,13 +267,14 @@ void fn_801511E8(GameObject* obj, u8* state)
             state[0x33a] = (u8)(entry[8] + 3);
         }
     }
+    wrapIdx = 1;
     while (*(u32*)(entry + (idx = state[0x33a]) * 16 + 4) != 0 &&
            (((GroundBaddieState*)state)->baddie.controlFlags & *(u32*)(entry + idx * 16 + 4)) == 0)
     {
         (((GroundBaddieState*)state)->baddie.userData1)++;
         if (state[0x33a] > entry[8])
         {
-            state[0x33a] = 1;
+            state[0x33a] = wrapIdx;
         }
     }
     *(u8*)(state + 0x2f2) = (entry + state[0x33a] * 16)[10];

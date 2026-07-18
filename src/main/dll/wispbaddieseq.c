@@ -62,7 +62,7 @@ typedef struct
 extern FamilyTable lbl_8031F16C[]; /* per-family table-of-tables, 0x28-byte rows */
 extern u8 lbl_8031DD30[];          /* per-anim move-progress floats, indexed anim*4 */
 
-static const f32 lbl_803E2740[1] = {0.0f};
+f32 lbl_803E2740 = 0.0f;
 
 u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
 {
@@ -72,11 +72,9 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     u8 eventIndex;
     int ei;
     int flag20;
-    u8 sequenceIndex;
-    u32 stateFlags;
     u8 eventFlags;
-    f32 t;
-    f32 z;
+    u32 stateFlags;
+    u8 sequenceIndex;
     f32 blendScale;
     f32 blendTimer;
     int eventTableIndex;
@@ -93,7 +91,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     {
         return 0;
     }
-    if (*(f32*)(state + 0x328) != lbl_803E2740[0] && *(u16*)(state + 0x338) != 0)
+    if (*(f32*)(state + 0x328) != 0.0f && *(u16*)(state + 0x338) != 0)
     {
         return 0;
     }
@@ -120,16 +118,15 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     }
     if ((u8)allowNewEvent != 0)
     {
-        if ((eventFlags != 0 || *(f32*)(state + 0x324) != lbl_803E2740[0]) && (stateFlags & 0x40) == 0 && flag20 == 0)
+        if ((eventFlags != 0 || *(f32*)(state + 0x324) != 0.0f) && (stateFlags & 0x40) == 0 && flag20 == 0)
         {
-            t = *(f32*)(state + 0x324);
-            z = lbl_803E2740[0];
-            if (t != z)
+            if (*(f32*)(state + 0x324) != 0.0f)
             {
-                *(f32*)(state + 0x324) = t - timeDelta;
-                if (*(f32*)(state + 0x324) <= z)
+                f32 zero = 0.0f;
+                *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
+                if (*(f32*)(state + 0x324) <= zero)
                 {
-                    *(f32*)(state + 0x324) = z;
+                    *(f32*)(state + 0x324) = zero;
                 }
                 else
                 {
@@ -142,14 +139,14 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
                 *(f32*)(state + 0x324) =
                     *(f32*)(state + 0x334) +
                     (f32)(int)randomGetRange(base[eventTableIndex + 0x152c], base[eventTableIndex + 0x152d]);
-                *(f32*)(state + 0x334) = lbl_803E2740[0];
+                *(f32*)(state + 0x334) = 0.0f;
                 return 0;
             }
         }
     }
     if ((((u8)allowNewEvent != 0 && *(u8*)(state + 0x2f1) != 0 && eventRows[eventIndex].moveId != 0) ||
          (*(u8*)(state + 0x2f1) & 0x20) != 0) &&
-        !(*(u8*)(state + 0x33c) == eventIndex && lbl_803E2740[0] != *(f32*)(state + 0x32c)))
+        !(*(u8*)(state + 0x33c) == eventIndex && 0.0f != *(f32*)(state + 0x32c)))
     {
         sf2 = ((BaddieState*)state)->controlFlags;
         if ((sf2 & 0x800080) != 0 || (*(u8*)(state + 0x2f1) & 0x20) != 0)
@@ -173,7 +170,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
         }
         return 0;
     }
-    if (*(f32*)(state + 0x32c) != lbl_803E2740[0])
+    if (*(f32*)(state + 0x32c) != 0.0f)
     {
         int pos = *(int*)&((BaddieState*)state)->trackedObj;
         fn_8014CF7C(obj, state, *(f32*)(pos + 0xc), *(f32*)(pos + 0x14), 0xf, 0);
@@ -190,9 +187,9 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
                 (ObjAnimComponent*)obj, *(f32*)(base + eventRows[*(u8*)(state + 0x33c)].moveId * 4));
         }
         *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
-        if (*(f32*)(state + 0x32c) <= lbl_803E2740[0])
+        if (*(f32*)(state + 0x32c) <= 0.0f)
         {
-            *(f32*)(state + 0x32c) = lbl_803E2740[0];
+            *(f32*)(state + 0x32c) = 0.0f;
             controlFlags = ((BaddieState*)state)->controlFlags;
             controlMask = ~0x40;
             ((BaddieState*)state)->controlFlags = controlFlags & controlMask;

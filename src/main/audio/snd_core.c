@@ -8,10 +8,6 @@
 
 
 extern u8 gSynthInitialized;
-<<<<<<< HEAD
-=======
-extern void IFFifoAlloc(void);
->>>>>>> 2bd65e1731 (snd_core: recover salNormalizeVector to 100% (unit all-fns-100 code))
 
 void sndQuit(void)
 {
