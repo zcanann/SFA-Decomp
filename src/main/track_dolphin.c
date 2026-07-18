@@ -214,7 +214,7 @@ typedef struct IntersectModLineSource
     u8 pad12[2];
 } IntersectModLineSource;
 
-typedef struct IntersectModLineObject
+struct IntersectModLineObject
 {
     u8 pad00[0x30];
     IntersectModLineSource* sourceLines; /* 0x30 */
@@ -223,7 +223,7 @@ typedef struct IntersectModLineObject
     f32* points;                 /* 0x3c */
     u8 pad40[0x1c];
     u8 sourceLineCount;          /* 0x5c */
-} IntersectModLineObject;
+};
 
 typedef struct AngleXf
 {

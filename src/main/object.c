@@ -40,6 +40,7 @@
 #include "main/pi_dolphin.h"
 #include "main/pi_data_file_api.h"
 #include "main/track_dolphin_api.h"
+#include "track/intersect_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/player.h"
@@ -220,7 +221,6 @@ extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();
 extern int loadModLines(int n, s16* out);
-extern void intersectModLineBuild(u8* buf);
 void ObjModel_ClearRenderAttachment(u8* model);
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
 int roundUpTo32(int x);
@@ -1222,7 +1222,7 @@ u8* loadObjectFile(int id)
         {
             *(int*)(buf + 0x30) = loadModLines(n, &modLine);
             *(u8*)(buf + 0x5c) = modLine;
-            intersectModLineBuild(buf);
+            intersectModLineBuild((IntersectModLineObject*)buf);
         }
         *(u8**)((int)gObjFileBufferTable + off) = buf;
         gObjFileRefCount[id] = 1;

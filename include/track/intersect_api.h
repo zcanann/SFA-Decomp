@@ -8,6 +8,9 @@
 #include "track/intersect_render_setup_api.h"
 #include "track/intersect_screen_api.h"
 
+typedef struct IntersectModLineObject IntersectModLineObject;
+
+void intersectModLineBuild(IntersectModLineObject* obj);
 u32 objAudioFn_8006ef38(void);
 void fn_80078740(void);
 void gxBlendFn_800789ac(void);
