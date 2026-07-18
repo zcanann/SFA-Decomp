@@ -23,6 +23,7 @@
 #include "track/intersect_card_api.h"
 #include "main/textrender_api.h"
 #include "main/objseq_api.h"
+#include "main/objanim_update.h"
 #include "main/fileio.h"
 #include "main/audio/stream_api.h"
 #include "main/audio/audio_control_api.h"
@@ -1116,9 +1117,9 @@ int seqStreamFn_8008023c(int x)
     return 1;
 }
 
-int animatedObjGetSeqId(int obj)
+int animatedObjGetSeqId(ObjAnimUpdateState* state)
 {
-    return gObjSeqSlotSeqIdTable[(s8) * (u8*)(obj + 0x57)] - 1;
+    return gObjSeqSlotSeqIdTable[state->sequenceSlot] - 1;
 }
 
 int fn_80080360(int p, int val)

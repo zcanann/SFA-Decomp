@@ -76,7 +76,6 @@ int lbl_803DDBF4;
 
 extern int playerHasKrazoaSpirit();
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
-extern int animatedObjGetSeqId(int obj);
 extern int fn_80080360(int obj, int seqId);
 
 int warpstone_testEvent(u32 obj, u32 unused, int option)
@@ -188,7 +187,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
     u8 command;
     ObjAnimUpdateState* animUpdate = (ObjAnimUpdateState*)animObj;
 
-    if (animatedObjGetSeqId(animObj) == 0x35f)
+    if (animatedObjGetSeqId((ObjAnimUpdateState*)animObj) == 0x35f)
     {
         fn_80080360(animObj, 0x2648);
         if (getCurUiDll() != 0x10)
@@ -237,7 +236,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
         animUpdate->sequenceEventActive = 0;
 
         if (mainGetBit(((WarpstoneUpdateMenuAnimObjState*)state)->gameBitE) != 0 &&
-            animatedObjGetSeqId(animObj) == 0x35f)
+            animatedObjGetSeqId((ObjAnimUpdateState*)animObj) == 0x35f)
         {
             AudioStream_CancelPrepared();
             seqClearTaskTexts();

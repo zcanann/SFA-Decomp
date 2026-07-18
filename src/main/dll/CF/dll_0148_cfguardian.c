@@ -153,7 +153,6 @@ const GuardianVec gCfGuardianHitboxTemplateA = {{5, 15, 15, 0, 0}}; /* hitbox te
 const GuardianVec gCfGuardianHitboxTemplateB = {{25, 25, 15, 5, 5}}; /* hitbox template copied at init */
 extern int gCfGuardianSeqStreamTable[][2];     /* chatter sequence-stream table, 0xf states */
 const GuardianMsg gCfGuardianHeadingTemplate = {7, 8, 7, 8}; /* active/idle heading-pair template (cfguardian_SeqFn) */
-extern int animatedObjGetSeqId(int* p);
 extern int cfguardian_updateMain();
 extern f32 Vec_xzDistance(void* a, void* b);
 extern int gCfGuardianIdleMoveTable[]; /* per-quest-state idle move id (-1 = none) */
@@ -966,7 +965,7 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         sel = &stk.idleMoveA;
     }
-    if (animatedObjGetSeqId((int*)animUpdate) != 0x283)
+    if (animatedObjGetSeqId(animUpdate) != 0x283)
     {
         if (dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)sub, sel[0], sel[1]) != 0)
         {

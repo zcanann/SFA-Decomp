@@ -59,6 +59,7 @@ f32 gAndrossDistortPhase;
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/object_render_legacy.h"
+#include "main/maketex_sequence_api.h"
 
 #define GAMEBIT_ANDROSS_HIT_CUE_BASE 0x108 /* six consecutive random-hit cue bits */
 
@@ -78,7 +79,6 @@ typedef struct AndrossChildSetup
     s16 flags;
 } AndrossChildSetup;
 
-extern int animatedObjGetSeqId(int obj);
 extern void turnOnDistortionFilter(f32* pos, f32 a, u32* color, f32 c);
 
 #pragma dont_inline on
@@ -2305,7 +2305,7 @@ void andross_update(int obj)
                 aimTarget = (GameObject*)aimTarget->pendingParentObj;
             }
             if ((aimTarget->anim.classId != 0x10) ||
-                (found = animatedObjGetSeqId((int)aimTarget->extra), found != 0x598))
+                (found = animatedObjGetSeqId(aimTarget->extra), found != 0x598))
             {
                 aimTarget->anim.placement->posX = boss->anim.localPosX;
                 aimTarget->anim.placement->posY = boss->anim.localPosY;
@@ -2321,7 +2321,7 @@ void andross_update(int obj)
                 aimTarget = (GameObject*)aimTarget->pendingParentObj;
             }
             if ((aimTarget->anim.classId != 0x10) ||
-                (found = animatedObjGetSeqId((int)aimTarget->extra), found != 0x598))
+                (found = animatedObjGetSeqId(aimTarget->extra), found != 0x598))
             {
                 aimTarget->anim.placement->posX = boss->anim.localPosX;
                 aimTarget->anim.placement->posY = boss->anim.localPosY;
@@ -2337,7 +2337,7 @@ void andross_update(int obj)
                 aimTarget = (GameObject*)aimTarget->pendingParentObj;
             }
             if ((aimTarget->anim.classId != 0x10) ||
-                (found = animatedObjGetSeqId((int)aimTarget->extra), found != 0x598))
+                (found = animatedObjGetSeqId(aimTarget->extra), found != 0x598))
             {
                 aimTarget->anim.placement->posX = boss->anim.localPosX;
                 aimTarget->anim.placement->posY = boss->anim.localPosY;
@@ -2353,7 +2353,7 @@ void andross_update(int obj)
                 aimTarget = (GameObject*)aimTarget->pendingParentObj;
             }
             if ((aimTarget->anim.classId != 0x10) ||
-                (found = animatedObjGetSeqId((int)aimTarget->extra), found != 0x598))
+                (found = animatedObjGetSeqId(aimTarget->extra), found != 0x598))
             {
                 aimTarget->anim.placement->posX = boss->anim.localPosX;
                 aimTarget->anim.placement->posY = boss->anim.localPosY;
@@ -2369,7 +2369,7 @@ void andross_update(int obj)
                 aimTarget = (GameObject*)aimTarget->pendingParentObj;
             }
             if ((aimTarget->anim.classId != 0x10) ||
-                (found = animatedObjGetSeqId((int)aimTarget->extra), found != 0x598))
+                (found = animatedObjGetSeqId(aimTarget->extra), found != 0x598))
             {
                 aimTarget->anim.placement->posX = boss->anim.localPosX;
                 aimTarget->anim.placement->posY = boss->anim.localPosY;
