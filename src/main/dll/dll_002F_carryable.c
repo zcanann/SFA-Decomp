@@ -44,6 +44,7 @@
 
 /* flag byte (state->flags) bits */
 #define CARRYABLE_FLAG_JUST_GRABBED      0x01
+#define CARRYABLE_FLAG_GRAVITY_DISABLED  0x02
 #define CARRYABLE_FLAG_DROP_DISABLED     0x04
 #define CARRYABLE_FLAG_SUPPRESS_POS_SAVE 0x08
 
@@ -119,11 +120,11 @@ void Carryable_setGravityEnabled(u8* state, u8 clear)
 {
     if (clear != 0)
     {
-        ((CarryableUpdateHeldState*)state)->flags &= ~2;
+        ((CarryableUpdateHeldState*)state)->flags &= ~CARRYABLE_FLAG_GRAVITY_DISABLED;
     }
     else
     {
-        ((CarryableUpdateHeldState*)state)->flags |= 2;
+        ((CarryableUpdateHeldState*)state)->flags |= CARRYABLE_FLAG_GRAVITY_DISABLED;
     }
 }
 
@@ -211,7 +212,7 @@ int Carryable_updateHeld(u8* obj)
             int cnt, i, j;
             ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-            if ((((CarryableUpdateHeldState*)held)->flags & 2) == 0)
+            if ((((CarryableUpdateHeldState*)held)->flags & CARRYABLE_FLAG_GRAVITY_DISABLED) == 0)
             {
                 ((GameObject*)obj)->anim.velocityY = -(lbl_803E06DC * timeDelta - ((GameObject*)obj)->anim.velocityY);
                 ((GameObject*)obj)->anim.localPosY =
