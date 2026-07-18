@@ -1,6 +1,7 @@
 #include "dolphin/os/OSReport.h"
 #include "main/dll/objpathtransform_struct.h"
 #include "main/shader_api.h"
+#include "main/shader_cs.h"
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/model.h"
@@ -11,6 +12,7 @@
 #include "main/audio/stream_api.h"
 #include "main/camera_interface.h"
 #include "main/dll/boneparticleeffect_interface.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/modgfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/waterfx_interface.h"
@@ -219,9 +221,7 @@ extern void modelInitBones(f32 scale, void* model);
 extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();
-extern void playerRenderQuakeSpell(void);
 extern void fn_80013B6C(int* p, int n);
-extern void mapLoadForObject(int id, void* obj);
 extern int loadModLines(int n, s16* out);
 extern void intersectModLineBuild(u8* buf);
 void ObjModel_ClearRenderAttachment(u8* model);
@@ -1334,7 +1334,7 @@ void Obj_UpdateObject(GameObject* obj)
             playerUpdateWhileTimeStopped((int)obj);
             break;
         case 0x69:
-            playerRenderQuakeSpell();
+            playerRenderQuakeSpell(obj);
             break;
         case 0x4f3:
         case 0x882:

@@ -1135,9 +1135,9 @@ void staff_setScale(void)
 
 u8 gStaffQuakeSpellState[0x28];
 
-void playerRenderQuakeSpell(int* obj)
+void playerRenderQuakeSpell(GameObject* obj)
 {
-    quakeSpellFn_8016cee8(obj, (GameObject*)((GameObject*)obj)->ownerObj);
+    quakeSpellFn_8016cee8((int*)obj, (GameObject*)obj->ownerObj);
 }
 
 int staff_getExtraSize(void)

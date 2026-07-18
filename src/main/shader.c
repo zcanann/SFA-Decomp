@@ -10,6 +10,7 @@
 #include "main/debug.h"
 #include "main/frustum.h"
 #include "main/shader_api.h"
+#include "main/shader_cs.h"
 #include "main/shader_map_text_api.h"
 #include "main/textrender_api.h"
 #include "main/texture.h"
@@ -2305,7 +2306,7 @@ void mapBlockFn_80059354(int x, int z, MapCellEnt* out, int layer)
 
 extern int mapGetRomListAndOffsets(int p1, int b);
 
-void mapLoadForObject(int mapId, char* obj)
+void mapLoadForObject(int mapId, GameObject* obj)
 {
     int saved = gShaderCurMapEventId;
     int slot;
@@ -2322,7 +2323,7 @@ void mapLoadForObject(int mapId, char* obj)
         }
         slot++;
     }
-    *(u8*)(obj + 0x34) = slot;
+    obj->anim.pad34 = slot;
     (*gMapEventInterface)->setMapActLut(mapId, slot);
     defStartFn_8005972c((char*)romList, (u32*)&lbl_803822C8[slot * 0x8c], slot, 0);
     (*gMapEventInterface)->updateObjGroups(slot);
