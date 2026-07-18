@@ -17,7 +17,6 @@
 extern f32 lbl_803E4348;
 int lbl_803DDB18;
 
-int fn_801A27B8(GameObject* obj, int id);
 
 int blasted_getExtraSize(void)
 {
