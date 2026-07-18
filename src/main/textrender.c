@@ -716,40 +716,6 @@ int getControlCharLen(u32 c)
     return 0;
 }
 
-void gameTextSetWindow(u8* textBox)
-{
-    int i;
-    GameTextSlot* s;
-    int idx;
-
-    if (textBox == NULL)
-    {
-        i = gGameTextCommandCount;
-        gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        gCurTextBox = NULL;
-        s->opcode = 8;
-        s->arg0 = 0xff;
-    }
-    else
-    {
-        i = gGameTextCommandCount;
-        gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        idx = (textBox - (u8*)gTextBoxes) / 0x20;
-        if (idx == 0xff)
-        {
-            gCurTextBox = NULL;
-        }
-        else
-        {
-            gCurTextBox = (u8*)gTextBoxes + idx * 0x20;
-        }
-        s->opcode = 8;
-        s->arg0 = idx;
-    }
-}
-
 static inline TextGlyph* findGlyph(u32 ch, int glyphLang)
 {
     int cnt;
@@ -3379,6 +3345,40 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     }
     ((GameTextBox*)box)->cursorX = savedX;
     ((GameTextBox*)box)->cursorY = savedY;
+}
+
+void gameTextSetWindow(u8* textBox)
+{
+    int i;
+    GameTextSlot* s;
+    int idx;
+
+    if (textBox == NULL)
+    {
+        i = gGameTextCommandCount;
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
+        gCurTextBox = NULL;
+        s->opcode = 8;
+        s->arg0 = 0xff;
+    }
+    else
+    {
+        i = gGameTextCommandCount;
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
+        idx = (textBox - (u8*)gTextBoxes) / 0x20;
+        if (idx == 0xff)
+        {
+            gCurTextBox = NULL;
+        }
+        else
+        {
+            gCurTextBox = (u8*)gTextBoxes + idx * 0x20;
+        }
+        s->opcode = 8;
+        s->arg0 = idx;
+    }
 }
 
 void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
