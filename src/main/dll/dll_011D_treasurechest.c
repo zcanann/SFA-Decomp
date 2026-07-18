@@ -67,9 +67,9 @@ void* lbl_803DDAE0;
 
 int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int i;
     TreasureChestSetup* setup;
     u8* state;
+    int i;
     u8 eventId;
 
     setup = (TreasureChestSetup*)obj->anim.placementData;
