@@ -85,8 +85,6 @@ void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData);
 int NW_mammoth_getExtraSize(void);
 void NW_mammoth_free(GameObject* obj);
 void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
-void NW_mammoth_update(NwMammothObject* obj, int unused);
-void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isReload);
 
 u8 gNwMammothTables[40] = {0x02, 0xDA, 0x03, 0x75, 0x00, 0x30, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x3C, 0x44,
                            0x9B, 0xA6, 0x00, 0x00, 0x00, 0x00, 0x02, 0xDA, 0x03, 0x75, 0x00, 0x31, 0xFF, 0xFF,
