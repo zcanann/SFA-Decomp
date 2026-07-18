@@ -41,8 +41,8 @@ extern f32 lbl_803E2958;
 void weevil_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     u8 cond = 0;
-    int kind = (obj)->anim.currentMove;
-    if (kind == 5 || kind == 4 || (kind == 6 && (double)(obj)->anim.currentMoveProgress < lbl_803E2938))
+    if ((obj)->anim.currentMove == 5 || (obj)->anim.currentMove == 4 ||
+        ((obj)->anim.currentMove == 6 && (double)(obj)->anim.currentMoveProgress < lbl_803E2938))
     {
         if (msgFlag != 0xe)
         {
