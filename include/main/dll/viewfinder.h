@@ -4,7 +4,6 @@
 #include "types.h"
 
 extern f32 lbl_803DB790;
-extern f32 lbl_803DF348;
 extern f32 lbl_803DF34C;
 
 void viewFinderSetZoom(f32 zoom);

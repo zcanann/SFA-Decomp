@@ -5,13 +5,6 @@
 #include "main/game_object.h"
 
 extern const f32 lbl_803E5EAC;
-extern f32 lbl_803E5EB0;
-extern f32 lbl_803E5EB4;
-extern f32 lbl_803E5EB8;
-extern f32 lbl_803E5EBC;
-extern f32 lbl_803E5EC0;
-extern f32 lbl_803E5EC4;
-extern f32 lbl_803E5EC8;
 
 int firefly_animEventCallback(GameObject* obj);
 void fn_801F4C28(GameObject* obj, LgtFireFlyRec* record);

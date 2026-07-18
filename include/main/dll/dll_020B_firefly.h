@@ -68,13 +68,6 @@ STATIC_ASSERT(sizeof(FireFlyState) == FIREFLY_EXTRA_SIZE);
 
 extern s16 lbl_803DC128;
 extern const f32 lbl_803E5EA8;
-extern f32 lbl_803E5ED8;
-extern f32 lbl_803E5EDC;
-extern f32 lbl_803E5EE0;
-extern f32 lbl_803E5EE4;
-extern f32 lbl_803E5EE8;
-extern f32 lbl_803E5EEC;
-extern f32 lbl_803E5EF0;
 
 void FireFlyFn_801f4f88(GameObject* obj);
 void firefly_free(GameObject* obj);

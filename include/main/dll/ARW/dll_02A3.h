@@ -27,10 +27,6 @@ STATIC_ASSERT(offsetof(Dll2A3State, rotZSpeed) == 0x08);
 
 extern int lbl_803DDD90;
 extern int lbl_803DDD94;
-extern f32 lbl_803E7118;
-extern f32 lbl_803E711C;
-extern f32 lbl_803E7120;
-extern f32 lbl_803E7124;
 
 int dll_2A3_getExtraSize_ret_12(void);
 int dll_2A3_getObjectTypeId(void);

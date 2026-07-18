@@ -15,8 +15,6 @@ extern char sProjgfxSetzscaleDoNoLongerSupported[];
 
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
 
-extern u32 FUN_80017814();
-extern u32 FUN_802420e0();
 
 void modgfx_releaseExpgfxPools(void);
 void modgfx_allocExpgfxPools(void);

@@ -41,7 +41,6 @@ STATIC_ASSERT(offsetof(ARWBombCollState, flags) == 0x04);
 extern f32 gArwBombCollHitToleranceY;
 extern f32 gArwBombCollHitRadiusSq;
 extern f32 gArwBombCollPlaneHitRadius;
-extern f32 lbl_803E70A0;
 
 int ARWBombColl_getExtraSize(void);
 int ARWBombColl_getObjectTypeId(void);

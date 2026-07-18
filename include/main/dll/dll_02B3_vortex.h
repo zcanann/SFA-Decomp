@@ -52,8 +52,6 @@ extern const f32 gVortexRadiusParamScale;
 extern f32 lbl_803E73E4;
 extern const f32 lbl_803E73E8;
 extern const f32 lbl_803E73EC;
-extern double lbl_803E73F0;
-extern double lbl_803E73F8;
 extern f32 gVortexAlphaFadeSpeed;
 extern s16 gVortexAngleSpeed83D[4];
 extern s16 gVortexAngleSpeedDefault[4];

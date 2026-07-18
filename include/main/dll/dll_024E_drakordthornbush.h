@@ -57,17 +57,8 @@ STATIC_ASSERT(offsetof(DrakordThornbushState, baseScale) == 0x70);
 STATIC_ASSERT(offsetof(DrakordThornbushState, radius) == 0x74);
 STATIC_ASSERT(sizeof(DrakordThornbushState) == 0x7c);
 
-extern f32 lbl_803E6588;
 extern f32 gThornBushLightScaleMax;
-extern f32 lbl_803E6590;
-extern f32 lbl_803E6594;
-extern f32 lbl_803E6598;
-extern f32 lbl_803E65A8;
 extern f32 gThornBushLightScaleRate;
-extern f32 lbl_803E65B0;
-extern f32 lbl_803E65C0;
-extern f32 lbl_803E65C4;
-extern f32 lbl_803E65C8;
 extern int gThornBushLightningHitTable[2];
 extern int gThornBushThornHitTable[2];
 extern f32 gThornBushLightningTimerInit;

@@ -53,9 +53,6 @@ STATIC_ASSERT(offsetof(WmPlanetsMapData, radiusByte) == 0x19);
 STATIC_ASSERT(offsetof(WmPlanetsMapData, modelIndex) == 0x1A);
 STATIC_ASSERT(sizeof(WmPlanetsMapData) == 0x1C);
 
-extern f32 lbl_803E5F98;
-extern f32 lbl_803E5F9C;
-extern f32 lbl_803E5FA0;
 
 int WM_Planets_getExtraSize(void);
 int WM_Planets_getObjectTypeId(void);
