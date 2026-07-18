@@ -13,6 +13,7 @@
 #include "main/object_transform.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0046_cameramodedebug.h"
+#include "main/pad.h"
 #include "main/pad_ext.h"
 
 CameraModeDebugState* gCamDebugState;
@@ -33,10 +34,6 @@ extern f32 gCamDebugOrbitRadiusMin;
 extern f32 gCamDebugOrbitRadiusMax;
 extern f32 gCamDebugPi;
 extern f32 gCamDebugAngleUnitScale;
-/* pad.h declares getButtonsJustPressed as u32; the u16 override in
-   CameraModeDebug_update is load-bearing for the mask comparison. */
-extern u16 getButtonsJustPressed(int port);
-
 void CameraModeDebug_copyToCurrent_nop(void)
 {
 }
@@ -60,7 +57,7 @@ void CameraModeDebug_update(CameraObject* cam)
     move = lbl_803E1840;
     state = (GameObject*)cam->anim.targetObj;
     held = getButtonsHeld(0);
-    if ((getButtonsJustPressed(0) & PAD_BUTTON_RIGHT) != 0)
+    if (((u16)getButtonsJustPressed(0) & PAD_BUTTON_RIGHT) != 0)
     {
         (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
         return;
