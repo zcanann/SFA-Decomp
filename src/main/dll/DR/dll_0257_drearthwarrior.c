@@ -297,6 +297,20 @@ extern f32 lbl_803E8394;
 extern f32 GXIndTexMtxScale1024;
 extern int lbl_803E82D8;
 extern u8 gDREarthWarriorInitData[];
+
+typedef struct DREarthWarriorInitData
+{
+    u8 unk0[0xC];
+    u8 unkC[0x30];
+    u8 unk3C[0x10];
+    u8 unk4C[0x18];
+    u8 unk64[0x20];
+    u8 unk84[0x54];
+    u8 unkD8[0x40];
+    u8 unk118[0xA4];
+    u8 unk1BC[0xA4];
+    u8 unk260[4];
+} DREarthWarriorInitData;
 extern u8 gDREarthWarriorRowIndices[];
 const EWPathRange lbl_802C2CA8 = {{10, 10, 0, 0, 0}};
 const EWPathRange lbl_802C2CB4 = {{20, 20, 0, 0, 0}};
@@ -712,12 +726,17 @@ void fn_802BCA10(GameObject* obj, int sub, int state)
     }
     delta = (int)((f32)delta * lbl_803E8324);
     delta = (delta < -0x16c) ? -0x16c : ((delta > 0x16c) ? 0x16c : delta);
-    ((EarthWarriorSub*)sub)->aimAccumY = delta * timeDelta + (f32)(s32)((EarthWarriorSub*)sub)->aimAccumY;
+    ((EarthWarriorSub*)sub)->aimAccumY = delta * timeDelta + (f32)(s32)*(s16*)&((EarthWarriorSub*)sub)->aimAccumY;
     ((EarthWarriorSub*)sub)->aimHalfY = ((EarthWarriorSub*)sub)->aimAccumY / 2;
     {
-        f32 ph = (f32)(s32)((BaddieState*)state)->spawnRotY / lbl_803E8328;
-        f32 t = (ph < lbl_803E8334) ? lbl_803E8334 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
-        delta = (int)(lbl_803E832C * (lbl_803E8330 * -t));
+        f32 step;
+        f32 scale;
+        f32 ph;
+
+        ph = (f32)(s32)((BaddieState*)state)->spawnRotY / lbl_803E8328;
+        scale = lbl_803E832C;
+        step = lbl_803E8330;
+        delta = (int)(scale * (step * -((ph < lbl_803E8334) ? lbl_803E8334 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph))));
         delta -= (u16)((EarthWarriorSub*)sub)->aimAccumX;
     }
     if (delta > 0x8000)
@@ -1377,7 +1396,7 @@ void DR_EarthWarrior_update(GameObject* obj)
 }
 void DR_EarthWarrior_init(GameObject* obj, int def)
 {
-    register u8* base = gDREarthWarriorInitData;
+    DREarthWarriorInitData* base = (DREarthWarriorInitData*)gDREarthWarriorInitData;
     int inner = *(int*)&(obj)->extra;
     int stk;
     EWPathRange r2;
@@ -1397,8 +1416,8 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     ((EarthWarriorState*)inner)->baddie.gravity = lbl_803E8384;
     pathState = (u8*)&((EarthWarriorState*)inner)->baddie + 4;
     (*gPathControlInterface)->init(pathState, 0, 0x48683, 1);
-    (*gPathControlInterface)->setup(pathState, 4, base + 0xc, base + 0x3c, &stk);
-    (*gPathControlInterface)->setLocalPointCollision(pathState, 1, base + 0x4c, base + 0x64, 8);
+    (*gPathControlInterface)->setup(pathState, 4, base->unkC, base->unk3C, &stk);
+    (*gPathControlInterface)->setLocalPointCollision(pathState, 1, base->unk4C, base->unk64, 8);
     pathState[0x264] = 0x28;
     (*gPathControlInterface)->attachObject((void*)obj, pathState);
     ObjHits_EnableObject(obj);
@@ -1409,23 +1428,23 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     ((DREarthWarriorState*)inner)->unk9FD |= 2;
     ((DREarthWarriorState*)inner)->unk1444 = lbl_803E82E8;
     ((DREarthWarriorState*)inner)->airMeterCapacity = ((DREarthWarriorPlacement*)def)->airMeterMax;
-    ((DREarthWarriorState*)inner)->unkF50 = (int)(base + 0xd8);
-    ((DREarthWarriorState*)inner)->unkF58 = (int)(base + 0x84);
+    ((DREarthWarriorState*)inner)->unkF50 = (int)base->unkD8;
+    ((DREarthWarriorState*)inner)->unkF58 = (int)base->unk84;
     {
         f32 v = lbl_803E8338;
         ((DREarthWarriorState*)inner)->unk138C = v;
         ((DREarthWarriorState*)inner)->unk1384 = v;
     }
     ((DREarthWarriorState*)inner)->unk1388 = lbl_803E838C;
-    ((DREarthWarriorState*)inner)->unkFA8 = base + 0x118;
+    ((DREarthWarriorState*)inner)->unkFA8 = base->unk118;
     ((DREarthWarriorState*)inner)->unk1428 = 0x29;
-    ((DREarthWarriorState*)inner)->unkFAC = base + 0x1bc;
+    ((DREarthWarriorState*)inner)->unkFAC = base->unk1BC;
     ((DREarthWarriorState*)inner)->unk1429 = 0x29;
-    ((DREarthWarriorState*)inner)->unkFB0 = base + 0x260;
+    ((DREarthWarriorState*)inner)->unkFB0 = base->unk260;
     ((DREarthWarriorState*)inner)->unk142A = 0x2e;
-    ((DREarthWarriorState*)inner)->unkFB4 = base + 0x1bc;
+    ((DREarthWarriorState*)inner)->unkFB4 = base->unk1BC;
     ((DREarthWarriorState*)inner)->unk142B = 0x29;
-    ((DREarthWarriorState*)inner)->unkFB8 = base + 0x260;
+    ((DREarthWarriorState*)inner)->unkFB8 = base->unk260;
     ((DREarthWarriorState*)inner)->unk142C = 0x2e;
     ((DREarthWarriorState*)inner)->unk1338 = GXIndTexMtxScale1024;
     {
