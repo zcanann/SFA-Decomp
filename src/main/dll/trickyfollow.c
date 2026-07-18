@@ -89,8 +89,6 @@ extern int isInWalkGroupOrPatch(f32* pos);
 extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern void fn_800DB240(void* pos, void* out, u32 patch);
 extern int isPointWithinPatchGroup(f32* pos, int walkGroup, u32 patch);
-extern void trickyRankLinkedRouteCandidates(u8* obj, u8* flags, int walkGroup, int* routes);
-extern int trickyFindReachableRouteIndex(u8* state, int* routes, u8* flags, u16 group);
 extern void fn_800D9F38(RomCurveWalker* route);
 extern void fn_800D9EE8(RomCurveWalker* route);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
@@ -164,7 +162,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         u8 mask;
         u16 patch[5];
     } wgi;
-    int routePtrs[9];
+    void* routePtrs[9];
 #define route (&state->route)
 
     moved = 1;
@@ -713,7 +711,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         break;
     case 5:
         trickyDebugPrint(strs + 0x480);
-        trickyRankLinkedRouteCandidates((u8*)obj, routeFlags, (s16)wg, routePtrs);
+        trickyRankLinkedRouteCandidates(obj, routeFlags, (s16)wg, routePtrs);
         i = trickyFindReachableRouteIndex((u8*)state, routePtrs, routeFlags, state->walkGroup);
         if (i == -1)
         {
@@ -721,7 +719,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
             return 2;
         }
         state->routeSeedDir = routeFlags[i];
-        state->routeSeedNode = (void*)routePtrs[i];
+        state->routeSeedNode = routePtrs[i];
         state->speed = velBefore;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32*)((u8*)state->routeSeedNode + 8), 1);
         moved = trickyMove(obj, (f32*)((u8*)state->routeSeedNode + 8));

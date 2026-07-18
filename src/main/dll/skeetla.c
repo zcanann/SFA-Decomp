@@ -877,7 +877,7 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
     return ((TrickyState*)state)->cachedRouteEntry;
 }
 
-int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pathId)
+int trickyFindReachableRouteIndex(u8* state, void** routes, u8* routeFlags, int pathId)
 {
     s8 status[TRICKY_ROUTE_CANDIDATE_COUNT];
     s8 i;
@@ -941,7 +941,7 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
     return -1;
 }
 
-void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelector, void** outRoutes)
+void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 linkSelector, void** outRoutes)
 {
     f32 bestDistances[TRICKY_ROUTE_CANDIDATE_COUNT];
     int i;
@@ -957,9 +957,9 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
     int count;
     u8 k;
     int linkCurveId;
-    u8* state;
+    TrickyState* state;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     curves = (void**)(*gRomCurveInterface)->getCurves(&count);
 
     init = lbl_803E2418;
@@ -990,13 +990,13 @@ void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelecto
         }
 
         cz = ((ObjfsaRomCurveDef*)curve)->z;
-        p = *(f32**)&((TrickyState*)state)->targetPosPtr;
+        p = *(f32**)&state->targetPosPtr;
         {
             f32 sq0 = (p[2] - cz) * (p[2] - cz);
             f32 sq1 = (p[0] - ((ObjfsaRomCurveDef*)curve)->x) * (p[0] - ((ObjfsaRomCurveDef*)curve)->x);
-            f32 sq2 = (((GameObject*)obj)->anim.worldPosX - ((ObjfsaRomCurveDef*)curve)->x) *
-                      (((GameObject*)obj)->anim.worldPosX - ((ObjfsaRomCurveDef*)curve)->x);
-            f32 sq3 = (((GameObject*)obj)->anim.worldPosZ - cz) * (((GameObject*)obj)->anim.worldPosZ - cz);
+            f32 sq2 = (obj->anim.worldPosX - ((ObjfsaRomCurveDef*)curve)->x) *
+                      (obj->anim.worldPosX - ((ObjfsaRomCurveDef*)curve)->x);
+            f32 sq3 = (obj->anim.worldPosZ - cz) * (obj->anim.worldPosZ - cz);
             score = sq0 + (sq1 + (sq2 + sq3));
         }
         if (score < bestDistances[7])
