@@ -25,7 +25,7 @@
 #include "main/dll/skeetla.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/skeetla_ext.h"
-#include "main/dll/Hcurves_pr.h"
+#include "main/dll/Hcurves_api.h"
 
 /* A plain XYZ point; recovered file-locally for the patch-target scratch slot
  * at TrickyState+0xD4 (an unnamed pad region in tricky_state.h). */
@@ -84,13 +84,6 @@ extern f32 lbl_803E24B8;
 extern f32 lbl_803E24BC;
 extern f32 lbl_803E24C0;
 extern char lbl_8031D2E8[];
-
-extern int isInWalkGroupOrPatch(f32* pos);
-extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
-extern void fn_800DB240(void* pos, void* out, u32 patch);
-extern int isPointWithinPatchGroup(f32* pos, int walkGroup, u32 patch);
-extern void fn_800D9F38(RomCurveWalker* route);
-extern void fn_800D9EE8(RomCurveWalker* route);
 
 static u8* trickyfollow_validateRouteNode(u8* node)
 {
@@ -344,7 +337,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                             }
                             if (i == 4)
                             {
-                                fn_800DB240(target, (u8*)state + 0xec, trickyPatch);
+                                fn_800DB240((f32*)target, (f32*)((u8*)state + 0xec), (u16)trickyPatch);
                                 state->followPhase = 4;
                             }
                         }
@@ -385,7 +378,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                             }
                             else
                             {
-                                fn_800DB240(target, (u8*)state + 0xec, tp);
+                                fn_800DB240((f32*)target, (f32*)((u8*)state + 0xec), (u16)tp);
                                 state->followPhase = 4;
                             }
                         }
@@ -405,7 +398,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                 {
                     if (wg != 0)
                     {
-                        u16 pid = Objfsa_GetPatchGroupIdAtPoint(target);
+                        u16 pid = Objfsa_GetPatchGroupIdAtPoint((f32*)target);
                         if (pid == 0)
                         {
                             state->followPhase = 0;
@@ -472,7 +465,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                                 }
                                 if (i == 4)
                                 {
-                                    fn_800DB240(target, (u8*)state + 0xec, p);
+                                    fn_800DB240((f32*)target, (f32*)((u8*)state + 0xec), (u16)p);
                                     state->followPhase = 4;
                                 }
                             }
@@ -482,7 +475,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                             }
                             else
                             {
-                                fn_800DB240(target, (u8*)state + 0xec, p);
+                                fn_800DB240((f32*)target, (f32*)((u8*)state + 0xec), (u16)p);
                                 state->followPhase = 4;
                             }
                         }
@@ -837,7 +830,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
             {
                 if (nextRouteNode != route->nodeA4)
                 {
-                    fn_800D9F38(route);
+                    fn_800D9F38(route, nextRouteNode);
                 }
                 walkNodes = 1;
             }

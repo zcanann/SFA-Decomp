@@ -60,6 +60,7 @@
 #include "main/main_internal.h"
 #include "main/dll/baddie_frozen.h"
 #include "main/dll/Hcurves_ext.h"
+#include "main/dll/Hcurves_api.h"
 #include "main/dll/dll_80136a40_ext.h"
 #include "main/dll/skeetla_ext.h"
 #include "main/dll/tricky_substates_ext.h"
@@ -253,7 +254,6 @@ extern f32 lbl_803E25C0;
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25C8;
 
-extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
 const FrozenFxColors gTrickyFrozenFxColors = {0x08, 0xFF, 0xFF, 0x78};
@@ -425,7 +425,7 @@ void trickyFn_801451d8(GameObject* obj, int state)
     pathBytes[0] = pathByte;
     if (pathByte == 0)
     {
-        int pathId = Objfsa_GetPatchGroupIdAtPoint((void*)((int)obj + 0x18));
+        int pathId = Objfsa_GetPatchGroupIdAtPoint(&obj->anim.worldPosX);
         if (pathId != 0)
         {
             walkPath_writeU16LE(pathId & 0xffff, pathBytes);

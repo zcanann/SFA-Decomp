@@ -26,6 +26,7 @@
 #include "main/dll/objfsa_romcurve.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/objfsa.h"
+#include "main/dll/Hcurves_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/track_bbox_api.h"
@@ -271,16 +272,16 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, u32 currentWalkGro
     return patchGroupId & 0xff;
 }
 
-void fn_800D9EE8(float* p)
+void fn_800D9EE8(RomCurveWalker* p)
 {
     u32* a = (u32*)((char*)p + 0x9c);
     u32* b = (u32*)((char*)p + 0xa4);
     *a ^= *b;
     *b ^= *a;
     *a ^= *b;
-    if (*p >= lbl_803E05C8)
+    if (*(f32*)p >= lbl_803E05C8)
     {
-        *p = 0.99f;
+        *(f32*)p = 0.99f;
     }
 }
 
@@ -594,9 +595,9 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
     return 0;
 }
 
-int fn_800D9F38(void* walker, void* curve)
+int fn_800D9F38(RomCurveWalker* walker, void* curve)
 {
-    char* A = walker;
+    char* A = (char*)walker;
     char* B = curve;
     if (*(u32*)(A + 0xa0) == 0 || *(u32*)(A + 0xa4) == 0 || curve == 0)
         return 1;
@@ -922,7 +923,7 @@ void walkPath_writeU16LE(u32 v, u8* dst)
         }                                                                                                              \
     }
 
-int fn_800DB240(int p1, f32* outVec, u16 id)
+int fn_800DB240(f32* point, f32* outVec, u16 id)
 {
     u8 i;
     f32 d1;
@@ -934,14 +935,14 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
     }
 
     outVec[0] = (f32)(s32)gObjfsaPatches[i].exit0X;
-    outVec[1] = *(f32*)(p1 + 4);
+    outVec[1] = point[1];
     outVec[2] = (f32)(s32)gObjfsaPatches[i].exit0Z;
-    d1 = vec3f_distanceSquared((f32*)p1, outVec);
+    d1 = vec3f_distanceSquared(point, outVec);
 
     outVec[0] = (f32)(s32)gObjfsaPatches[i].exit1X;
     outVec[2] = (f32)(s32)gObjfsaPatches[i].exit1Z;
 
-    if (vec3f_distanceSquared((f32*)p1, outVec) < d1)
+    if (vec3f_distanceSquared(point, outVec) < d1)
     {
         return 1;
     }
@@ -952,7 +953,7 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
 }
 
 
-u32 isPointWithinPatchGroup(float* point, u32 patchGroupIndex, int groupId)
+int isPointWithinPatchGroup(float* point, u32 patchGroupIndex, int groupId)
 {
     u8 k;
     u32 pidx;
@@ -1043,7 +1044,7 @@ int getPatchGroup(float* point, int patchGroupIndex)
     }
     return 0;
 }
-u32 isInWalkGroupOrPatch(float* point)
+int isInWalkGroupOrPatch(float* point)
 {
     s16* nz;
     s16* nx;
@@ -1231,7 +1232,7 @@ static inline int RomCurve_pickRandomControlPointId_2B(int curve)
     return result;
 }
 
-u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
+int Objfsa_GetPatchGroupIdAtPoint(float* point)
 {
     int n;
     ObjfsaPatch* patch;
