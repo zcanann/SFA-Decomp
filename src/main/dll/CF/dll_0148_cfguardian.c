@@ -279,8 +279,8 @@ int cfguardian_setScale(int* obj)
 int cfguardianFlyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 t, int pointId, f32* outPhase)
 {
     int ret;
-    int moved;
     u8 sel;
+    int moved;
     int pt;
     s16 yawDelta;
     int curveArgs[2];
@@ -331,7 +331,7 @@ int cfguardianFlyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 t, int p
             obj->anim.localPosY = obj->anim.localPosY - ground;
         }
     }
-    ObjAnim_SampleRootCurvePhase(t, &obj->anim, outPhase);
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, t, outPhase);
     if (moved != 0)
     {
         yawDelta = (s16)(getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
@@ -501,17 +501,9 @@ int cfguardian_updateMain(GameObject* obj)
             }
             else
             {
-                f32 x = 400.0f * obj->anim.velocityY;
-                f32 w;
+                f32 w = 400.0f * obj->anim.velocityY;
                 f32 r;
-                if (x >= 0.0f)
-                {
-                    w = x;
-                }
-                else
-                {
-                    w = -x;
-                }
+                w = (w >= 0.0f) ? w : -w;
                 r = (f32)obj->anim.rotX;
                 r = r + w;
                 obj->anim.rotX = r;
@@ -842,7 +834,12 @@ int cfguardianSteerToward(GameObject* obj, MoveLibTarget* target, f32 speed, f32
     dx = target->x - obj->anim.localPosX;
     dy = target->y - obj->anim.localPosY;
     dz = target->z - obj->anim.localPosZ;
-    dist = sqrtf(dz * dz + (dx * dx + dy * dy));
+    {
+        f32 sqDz = dz * dz;
+        f32 sqDx = dx * dx;
+        f32 sqDy = dy * dy;
+        dist = sqrtf(sqDz + (sqDx + sqDy));
+    }
     if (dist < 5.0f * speed)
     {
         return 1;
@@ -866,7 +863,7 @@ int cfguardianSteerToward(GameObject* obj, MoveLibTarget* target, f32 speed, f32
     {
         ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
     }
-    ObjAnim_SampleRootCurvePhase(speed, &obj->anim, outPhase);
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, speed, outPhase);
     return 0;
 }
 
