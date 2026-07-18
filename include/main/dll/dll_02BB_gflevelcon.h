@@ -63,13 +63,6 @@ STATIC_ASSERT(offsetof(GfHitState, timer[0]) == 0xB2);
 STATIC_ASSERT(offsetof(GfHitState, texState[0]) == 0xB9);
 
 extern ObjectDescriptor gGF_LevelConObjDescriptor;
-extern f32 lbl_803E7460;
-extern f32 lbl_803E7464;
-extern f32 lbl_803E7468;
-extern f32 lbl_803E746C;
-extern f32 lbl_803E7470;
-extern f32 lbl_803E7474;
-extern f32 lbl_803E7478;
 
 int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpdate);
 int gf_levelcon_getExtraSize(void);
