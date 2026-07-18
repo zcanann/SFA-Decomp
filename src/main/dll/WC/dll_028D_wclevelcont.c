@@ -36,10 +36,6 @@
 #define WCPUSHBLOCK_GAMEBIT_B_FADE   0x809
 #define WCPUSHBLOCK_GAMEBIT_B_COUNT  0x811
 
-void fn_802251B4(GameObject* obj, WcLevelControlState* state);
-void wcpushblock_updateLevelControlState(GameObject* obj, WcLevelControlState* state);
-void wclevelcont_syncProgressBits(WcLevelControlState* state);
-
 void wclevelcont_update(GameObject* obj)
 {
     WcLevelControlState* state = obj->extra;
