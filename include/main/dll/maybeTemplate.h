@@ -2,7 +2,6 @@
 #define MAIN_DLL_MAYBETEMPLATE_H_
 
 #include "main/audio/sfx.h"
-#include "main/dll/maybeTemplate.h"
 #include "main/camera_interface.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
@@ -13,6 +12,6 @@
 void pauseMenuDrawStatus(void);
 void cMenuUpdateAnims(void);
 void minimapFn_8012310c(void);
-void hudDrawMagicBar(int alpha, int elementAlpha, u32 flags);
+void hudDrawMagicBar(int alpha, int elementAlpha, u8 flags);
 
 #endif

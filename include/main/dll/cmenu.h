@@ -3,7 +3,8 @@
 
 #include "ghidra_import.h"
 
-int cMenuSetItems(s16* items, char useTricky);
+struct CMenuItemDef;
+int cMenuSetItems(struct CMenuItemDef* items, char useTricky);
 int cMenuRingModelRenderFn(int obj, int block, int idx);
 void drawTrickyHudOverlay(int obj, int unused1, int unused2);
 int cMenuRingIconRenderFn(int obj, int block, int idx);

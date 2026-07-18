@@ -12,14 +12,14 @@ typedef struct TaskHintEntry
     u16 hint0; /* 0x00 */
     u16 hint2; /* 0x02 */
     u16 hint4; /* 0x04 */
-    u8 _6[0x2]; /* 0x06 */
+    u8 pad06[0x2]; /* 0x06 */
     s32 hint8; /* 0x08 */
     s32 hintC; /* 0x0c */
     s32 hint10; /* 0x10 */
-    u8 _14[0x2]; /* 0x14 */
+    u8 pad14[0x2]; /* 0x14 */
     u16 bit_id; /* 0x16 */
     u8 thresh; /* 0x18 */
-    u8 _19; /* 0x19 */
+    u8 unk19; /* 0x19 */
     u16 bit1a; /* 0x1a */
 } TaskHintEntry; /* sizeof = 0x1c */
 
@@ -32,13 +32,13 @@ typedef struct
     u8 trailX; /* 0x08 */
     u8 trailY; /* 0x09 */
     u8 count; /* 0x0a */
-    u8 _b; /* 0x0b */
+    u8 unk0B; /* 0x0b */
     s8 nav[4]; /* 0x0c */
     f32 f10; /* 0x10 */
     s32 f14; /* 0x14 */
     s32 f18; /* 0x18 */
     u8 f1c; /* 0x1c */
-    u8 _1d[3];
+    u8 pad1D[3];
 } GridEntry; /* sizeof = 0x20 */
 
 typedef struct
@@ -49,11 +49,11 @@ typedef struct
 
 typedef struct
 {
-    u8 _pad0[0x190];
+    u8 pad000[0x190];
     int times190[12]; /* 0x190 */
     void* textures1C0[0x66]; /* 0x1c0 */
     s16 texIds358[0x28]; /* 0x358 */
-    int textures3A8[0x28]; /* 0x3a8 */
+    void* textures3A8[0x28]; /* 0x3a8 */
     u8 itemFlags[0x40]; /* 0x448 */
     u8 enabled[0x40]; /* 0x488 */
     u8 closeMode[0x40]; /* 0x4c8 */
@@ -65,40 +65,40 @@ typedef struct
     int ownedBits[0x40]; /* 0x848 */
     s16 textureIds[0x40]; /* 0x948 */
     void* itemTextures[0x40]; /* 0x9c8 */
-    u8 _padAC8[0xf0]; /* 0xac8 */
+    u8 padAC8[0xf0]; /* 0xac8 */
     int visibleItemStates[7]; /* 0xbb8 */
     void* visibleItemTextures[7]; /* 0xbd4 */
-    u8 _padBF0[0x30]; /* 0xbf0 */
+    u8 padBF0[0x30]; /* 0xbf0 */
     struct GameObject* anims[4]; /* 0xc20 */
 } CMenuHud;
 
 typedef struct
 {
-    u8 _pad0[0x210];
+    u8 pad000[0x210];
 
     struct
     {
         s16 bitA;
         s16 bitB;
         u8 thresh;
-        u8 _5;
+        u8 unk5;
         s16 alt;
     } tokens[4]; /* 0x210 */
-    u8 _pad230[0x490]; /* 0x230 */
+    u8 pad230[0x490]; /* 0x230 */
     struct
     {
         s16 id;
-        u8 _2[4];
+        u8 unk2[4];
         s16 alt;
-        u8 _8[8];
+        u8 unk8[8];
     } items[8]; /* 0x6c0 */
     int list740[4]; /* 0x740 */
     struct
     {
-        u8 _0[0xe];
+        u8 unk0[0xe];
         s16 alt;
     } alts[31]; /* 0x750 */
-    u8 _pad940[4]; /* 0x940 */
+    u8 pad940[4]; /* 0x940 */
     struct
     {
         u16 cell;
@@ -115,13 +115,18 @@ typedef struct
 
 typedef struct
 {
-    u8 _pad000[0x1c0];
+    u8 pad000[0x1c0];
     void* hudTextures[102]; /* 0x1c0 */
-    u8 _pad358[0x448 - 0x358];
+    u8 pad358[0x448 - 0x358];
     u8 itemFlags[64]; /* 0x448 */
-    u8 _pad488[0x948 - 0x488];
+    u8 pad488[0x948 - 0x488];
     s16 itemSlots[64]; /* 0x948 */
     void* itemTextures[64]; /* 0x9c8 */
+    f32 itemFade[13]; /* 0xac8 */
+    f32 counterOpacity[13]; /* 0xafc */
+    int previousItemValues[13]; /* 0xb30 */
+    u8 itemGotFlags[13]; /* 0xb64 */
+    int displayedItemValues[13]; /* 0xb74 */
 } GameUiHud;
 
 extern u32 lbl_8031BF90[6];
