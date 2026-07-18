@@ -569,6 +569,7 @@ void quakeSpellTextureFn_8016dbf4(void)
     }
 }
 extern void* gStaffSwipeTextures[2];
+extern f32 lbl_803E32A4;
 
 void staffDrawSwipe(int* obj, int* swipe)
 {
@@ -628,9 +629,9 @@ void staffDrawSwipe(int* obj, int* swipe)
 }
 void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 {
+    u8* model2;
     u8* slot;
     u8* obj;
-    u8* model2;
     ObjWeaponDaTable* weaponDaTable;
     s16* tbl;
     int count;
@@ -693,10 +694,10 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
             tbl = ((GameObject*)obj)->anim.weaponDaTable->entries;
             if (sw >= 0.0f)
             {
-                fla = fastFloorf(sw * 40.0f) / 40.0f;
+                fla = fastFloorf(sw * *(f32*)&lbl_803E32A4) / *(f32*)&lbl_803E32A4;
                 fla *= *(f32*)&lbl_803E330C;
-                tmax *= 40.0f;
-                flb = fastFloorf(tmax) / 40.0f;
+                tmax *= *(f32*)&lbl_803E32A4;
+                flb = fastFloorf(tmax) / *(f32*)&lbl_803E32A4;
                 flb *= *(f32*)&lbl_803E330C;
                 ibase = fla;
                 frac = fla - ibase;
