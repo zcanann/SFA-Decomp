@@ -120,7 +120,7 @@ void fn_80154584(GameObject* obj, int state)
     ((BaddieState*)state)->userData1 += 1;
     (obj)->anim.rotY =
         1024.0f * fn_80293DA4(0.19634955f * (f32)(u32) * (u8*)(state + 0x33a)) + (f32)(obj)->anim.rotY;
-    fn_80154328((int)obj, state);
+    ((void (*)(int, int))fn_80154328)((int)obj, state);
 }
 
 void fn_80154328(int obj, int state)
