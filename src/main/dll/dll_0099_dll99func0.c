@@ -38,9 +38,9 @@ extern f32 lbl_803E1360;
 extern f32 lbl_803E1364;
 extern f32 lbl_803E1368;
 
-static inline void dll_99_func03Body(u8* table, int sourceObj, int variant, int posSource, u32 flags, int arg5,
-                                     f32* extraArgs)
+void dll_99_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, f32* extraArgs)
 {
+    u8* table = lbl_80317AF8;
     ModgfxSpawnPacket buf;
     GfxCmd* entry;
     f32 scale = lbl_803E1340;
@@ -175,12 +175,6 @@ static inline void dll_99_func03Body(u8* table, int sourceObj, int variant, int 
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 6, table, 4, table + 0x3c, DLL99_EFFECT_ID, 0);
-    table++;
-}
-
-void dll_99_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, f32* extraArgs)
-{
-    dll_99_func03Body(lbl_80317AF8, sourceObj, variant, posSource, flags, arg5, extraArgs);
 }
 
 void dll_99_func01_nop(void)
