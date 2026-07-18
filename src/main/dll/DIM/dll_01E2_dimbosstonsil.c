@@ -158,10 +158,15 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
         hitReactMode = state->hitReactMode;
         switch (hitReactMode)
         {
-        case 0:
-            break;
         case 1:
-            goto updateHitReaction;
+            animOk = (*(int (**)(void*, ObjAnimUpdateState*, DIMbosstonsilState*, u8*, u8*, int))(
+                *(int*)gBaddieControlInterface + 0x34))(obj, animUpdate, state, lbl_803DDBB0, lbl_803DDBA8, 0);
+            if (animOk != 0)
+            {
+                (*(void (**)(void*, DIMbosstonsilState*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(
+                    obj, state, lbl_803E4C90, 1);
+            }
+            break;
         case 2:
             animUpdate->hitVolumePair = 0;
             dimBossTonsil_newState_hitFightMain((u8*)obj, animUpdate, state, state);
@@ -172,25 +177,12 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
                     ->update(obj, state, lbl_803E4CB8, *(f32*)&lbl_803E4CB8, lbl_803DDBB0, lbl_803DDBA8);
                 animUpdate->sequenceEventActive = 0;
             }
-            goto updateDone;
+            break;
+        default:
+            animUpdate->hitVolumePair = -1;
+            animUpdate->hitVolumePair &= ~0x40;
+            break;
         }
-        goto clearHitVolumePair;
-
-    updateHitReaction:
-        animOk = (*(int (**)(void*, ObjAnimUpdateState*, DIMbosstonsilState*, u8*, u8*, int))(
-            *(int*)gBaddieControlInterface + 0x34))(obj, animUpdate, state, lbl_803DDBB0, lbl_803DDBA8, 0);
-        if (animOk != 0)
-        {
-            (*(void (**)(void*, DIMbosstonsilState*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(
-                obj, state, lbl_803E4C90, 1);
-        }
-        goto updateDone;
-
-    clearHitVolumePair:
-        animUpdate->hitVolumePair = -1;
-        animUpdate->hitVolumePair &= ~0x40;
-
-    updateDone:;
     }
 
     if ((obj)->seqIndex == -1)
@@ -346,7 +338,6 @@ void DIMbosstonsil_update(GameObject* obj)
     }
 }
 
-#pragma opt_propagation off
 void DIMbosstonsil_init(int obj, u32 def, int isAltVariant)
 {
     u8 variant;
@@ -399,7 +390,6 @@ void DIMbosstonsil_release(void)
 {
 }
 
-#pragma opt_propagation reset
 void DIMbosstonsil_initialise(void)
 {
     ((void (**)(void))lbl_803DDBB0)[0] = DIMbosstonsil_startIdleHitReaction;

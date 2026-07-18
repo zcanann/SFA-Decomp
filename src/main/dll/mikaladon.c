@@ -55,14 +55,6 @@ static f32 seq11e_intToFloat(int n)
     return (f32)n;
 }
 
-__declspec(section ".sdata2") f32 lbl_803E2878 = 5.0f;
-__declspec(section ".sdata2") f32 lbl_803E287C = 75.0f;
-__declspec(section ".sdata2") f32 lbl_803E2880 = 1.3f;
-__declspec(section ".sdata2") f32 lbl_803E2884 = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E2888 = 500.0f;
-__declspec(section ".sdata2") f32 lbl_803E288C = 1.5f;
-__declspec(section ".sdata2") f32 lbl_803E2890 = 7.5f;
-__declspec(section ".sdata2") f32 lbl_803E2894 = 1.0f;
 
 /* fn_80152B90: firefly hover update: circle drift, bob between heights,
  * periodically drop a spawned object, ambient sfx timers. */
@@ -72,7 +64,7 @@ void fn_80152B90(int* obj, u8* state)
     f32 sinOut;
     f32 cosOut;
 
-    *(u16*)(state + 0x338) = lbl_803E287C * timeDelta + (f32)(u32) * (u16*)(state + 0x338);
+    *(u16*)(state + 0x338) = 75.0f * timeDelta + (f32)(u32) * (u16*)(state + 0x338);
     fn_80293018(*(u16*)(state + 0x338), &sinOut, &cosOut);
     sinOut = sinOut * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x324);
     cosOut = cosOut * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x32c);
@@ -84,7 +76,7 @@ void fn_80152B90(int* obj, u8* state)
         y = ((GameObject*)obj)->anim.localPosY;
         dx = *(f32*)(state + 0x324) - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX;
         dz = *(f32*)(state + 0x32c) - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ;
-        if (sqrtf(dx * dx + dz * dz) <= lbl_803E2880 * ((BaddieState*)state)->unk2A8)
+        if (sqrtf(dx * dx + dz * dz) <= 1.3f * ((BaddieState*)state)->unk2A8)
         {
             ((BaddieState*)state)->userData1 = 1;
             ((BaddieState*)state)->userData2 = 0;
@@ -92,8 +84,8 @@ void fn_80152B90(int* obj, u8* state)
     }
     else if (((BaddieState*)state)->userData1 == 1)
     {
-        y = ((GameObject*)obj)->anim.localPosY - lbl_803E2884 * timeDelta;
-        if (y <= *(f32*)(state + 0x328) - lbl_803E2888)
+        y = ((GameObject*)obj)->anim.localPosY - 0.5f * timeDelta;
+        if (y <= *(f32*)(state + 0x328) - 500.0f)
         {
             ((BaddieState*)state)->userData1 = 2;
         }
@@ -110,7 +102,7 @@ void fn_80152B90(int* obj, u8* state)
 
                     setup = (u8*)Obj_AllocObjectSetup(0x24, SEQOBJ11E_GCROBOT_DROP_OBJ);
                     ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                    ((ObjPlacement*)setup)->posY = lbl_803E2878 + ((GameObject*)obj)->anim.localPosY;
+                    ((ObjPlacement*)setup)->posY = 5.0f + ((GameObject*)obj)->anim.localPosY;
                     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
                     ((ObjPlacement*)setup)->color[0] = 1;
                     ((ObjPlacement*)setup)->color[1] = 1;
@@ -128,7 +120,7 @@ void fn_80152B90(int* obj, u8* state)
     }
     else
     {
-        y = lbl_803E288C * timeDelta + ((GameObject*)obj)->anim.localPosY;
+        y = 1.5f * timeDelta + ((GameObject*)obj)->anim.localPosY;
         if (y >= *(f32*)(state + 0x328))
         {
             ((BaddieState*)state)->userData1 = 0;
@@ -137,7 +129,7 @@ void fn_80152B90(int* obj, u8* state)
     ((GameObject*)obj)->anim.velocityX = oneOverTimeDelta * (sinOut - ((GameObject*)obj)->anim.localPosX);
     ((GameObject*)obj)->anim.velocityY = oneOverTimeDelta * (y - ((GameObject*)obj)->anim.localPosY);
     ((GameObject*)obj)->anim.velocityZ = oneOverTimeDelta * (cosOut - ((GameObject*)obj)->anim.localPosZ);
-    fn_8014CD1C(obj, state, 0xf, lbl_803E2890, lbl_803E2894, 0);
+    fn_8014CD1C(obj, state, 0xf, 7.5f, 1.0f, 0);
     *(f32*)(state + 0x334) = *(f32*)(state + 0x334) - timeDelta;
     if (*(f32*)(state + 0x334) <= lbl_803E2868)
     {
@@ -163,7 +155,7 @@ void mikaladon_init(GameObject* obj, int state)
     ((BaddieState*)state)->unk2E4 = 1;
     ((BaddieState*)state)->unk308 = 0.01f;
     ((BaddieState*)state)->animDeltaScale = 0.006f;
-    lblA = lbl_803E2894;
+    lblA = 1.0f;
     ((BaddieState*)state)->unk304 = lblA;
     ((BaddieState*)state)->unk320 = 1;
     *(f32*)&((BaddieState*)state)->eventFlags = lblA;

@@ -2,7 +2,6 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/synth_scale.h"
 
-#pragma exceptions on
 
 extern u32 sndRandSeed;
 

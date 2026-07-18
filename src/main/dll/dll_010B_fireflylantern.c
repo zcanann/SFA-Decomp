@@ -21,7 +21,6 @@ extern f32 lbl_803E3AF0;
 extern const f32 lbl_803E3AEC;
 extern f32 lbl_803E3AE8;
 
-#pragma dont_inline on
 GameObject* FireFlyLantern_spawnFireFly(int* obj)
 {
     FireFlyLanternSpawnSetup* setup;
@@ -44,7 +43,6 @@ GameObject* FireFlyLantern_spawnFireFly(int* obj)
     setup->field18 = 30;
     return loadObjectAtObject((GameObject*)obj, (ObjPlacement*)setup);
 }
-#pragma dont_inline reset
 
 int FireFlyLantern_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

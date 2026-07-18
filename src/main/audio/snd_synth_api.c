@@ -1,7 +1,6 @@
 #include "main/audio/snd_synth_api.h"
 #include "main/audio/synth_voice.h"
 
-#pragma exceptions on
 #include "main/audio/mcmd.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/synth_delay.h"

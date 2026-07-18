@@ -166,53 +166,24 @@ int LandedArwing_UpdateRetreatChase(GameObject* obj, int stateWord)
         state->speed = lbl_803E2FFC;
         ObjHits_DisableObject((int)obj);
     }
-    if (state->surfaceMode == LANDED_ARWING_SCRIPT_MODE)
+    if (state->surfaceMode != LANDED_ARWING_SCRIPT_MODE &&
+        ((u32)player == 0 || playerObj->anim.worldPosX < state->boundsMinX ||
+         (playerObj->anim.worldPosX > state->boundsMaxX && playerObj->anim.worldPosY < state->boundsMinY) ||
+         (playerObj->anim.worldPosY > state->boundsMaxY && playerObj->anim.worldPosZ < state->boundsMinZ) ||
+         playerObj->anim.worldPosZ > state->boundsMaxZ))
     {
-        goto use_player_reflect_position;
+        x = (obj)->anim.localPosX;
+        y = (obj)->anim.localPosY;
+        z = (obj)->anim.localPosZ;
+        scale = lbl_803E2FDC;
     }
-    if ((u32)player == 0)
+    else
     {
-        goto use_object_position;
+        x = (obj)->anim.localPosX - lbl_803E3000 * (playerObj->anim.localPosX - (obj)->anim.localPosX);
+        y = (obj)->anim.localPosY - lbl_803E3000 * (playerObj->anim.localPosY - (obj)->anim.localPosY);
+        z = (obj)->anim.localPosZ - lbl_803E3000 * (playerObj->anim.localPosZ - (obj)->anim.localPosZ);
+        scale = lbl_803E2FF4;
     }
-    if (playerObj->anim.worldPosX < state->boundsMinX)
-    {
-        goto use_object_position;
-    }
-    if (playerObj->anim.worldPosX > state->boundsMaxX)
-    {
-        if (playerObj->anim.worldPosY < state->boundsMinY)
-        {
-            goto use_object_position;
-        }
-    }
-    if (playerObj->anim.worldPosY > state->boundsMaxY)
-    {
-        if (playerObj->anim.worldPosZ < state->boundsMinZ)
-        {
-            goto use_object_position;
-        }
-    }
-    if (playerObj->anim.worldPosZ > state->boundsMaxZ)
-    {
-        goto use_object_position;
-    }
-    goto use_player_reflect_position;
-use_object_position:
-{
-    x = (obj)->anim.localPosX;
-    y = (obj)->anim.localPosY;
-    z = (obj)->anim.localPosZ;
-    scale = lbl_803E2FDC;
-    goto update_action;
-}
-use_player_reflect_position:
-{
-    x = (obj)->anim.localPosX - lbl_803E3000 * (playerObj->anim.localPosX - (obj)->anim.localPosX);
-    y = (obj)->anim.localPosY - lbl_803E3000 * (playerObj->anim.localPosY - (obj)->anim.localPosY);
-    z = (obj)->anim.localPosZ - lbl_803E3000 * (playerObj->anim.localPosZ - (obj)->anim.localPosZ);
-    scale = lbl_803E2FF4;
-}
-update_action:
     updateConstrainedChaseVelocity(obj, x, y, z, scale);
     if (state->surfaceMode == LANDED_ARWING_SCRIPT_MODE)
     {

@@ -91,7 +91,6 @@ u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     return advanceResult;
 }
 
-#pragma dont_inline on
 u32 playerFn_801d6d58(void)
 {
     u32 playerObj;

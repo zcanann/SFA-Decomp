@@ -765,7 +765,6 @@ int arrayIndexOf(int* arr, int count, int target)
     }
     return -1;
 }
-#pragma dont_inline on
 void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
 {
     int key;
@@ -800,7 +799,6 @@ void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
     {
     }
 }
-#pragma dont_inline reset
 
 int seqStreamLookupFn_8007fff8(void* entries, int count, int key)
 {

@@ -205,7 +205,6 @@ void s3dHandle(void)
 /*
  * Reset 3D sound bookkeeping and store a stereo flag.
  */
-#pragma dont_inline on
 void s3dInit(u32 flags)
 {
     u8 stereo = (flags & S3D_INIT_STEREO_FLAG) != 0;
@@ -219,7 +218,6 @@ void s3dInit(u32 flags)
     s3dCallCnt = 0;
     lbl_803DE36A = stereo;
 }
-#pragma dont_inline reset
 
 /*
  * Empty stub.

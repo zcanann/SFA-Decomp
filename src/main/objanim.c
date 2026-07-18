@@ -29,8 +29,6 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16* axis, int sampleIndex)
 /*
  * Retail string evidence labels this source-side path as objanim.c/setBlendMove.
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAnimState* state, u32 moveId,
                           int eventState)
 {
@@ -123,8 +121,6 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, 
     return;
 }
 
-#pragma peephole off
-#pragma opt_common_subs off
 int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandle, ObjAnimEventList* events)
 {
     ObjAnimComponent* objAnim;
@@ -307,7 +303,6 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
 
     return wrapped;
 }
-#pragma opt_common_subs reset
 
 int Object_ObjAnimSetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
 {
@@ -324,8 +319,6 @@ int Object_ObjAnimSetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
 }
 
 int
-#pragma scheduling off
-#pragma peephole off
 Object_ObjAnimSetMove(f32 moveProgress, int objAnimHandle, int moveId, int moveControlFlags)
 {
     ObjAnimComponent* objAnim;
@@ -454,7 +447,6 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent* objAnim, u32 frameCount
     }
 }
 
-#pragma peephole off
 int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float* phaseOut)
 {
     ObjAnimBank* bank;
@@ -544,7 +536,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     }
     if (moveData->rootCurveOffset == 0)
     {
-        goto noCurve;
+        return 0;
     }
     curve = ObjAnim_GetMoveDataRootCurve(moveData);
 
@@ -572,7 +564,7 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     axisFirstSample = *axis;
     if (axisFirstSample == 0)
     {
-        goto noCurve;
+        return 0;
     }
 
     lastSample = ObjAnim_ReadRootAxisSample(axis, segmentCount);
@@ -652,9 +644,6 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
         *phaseOut = phase;
     }
     return 1;
-
-noCurve:
-    return 0;
 }
 
 int ObjAnim_AdvanceCurrentMove(int objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events)
@@ -1034,8 +1023,6 @@ int ObjAnim_SetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int ObjAnim_SetCurrentMove(int objAnimHandle, int moveId, f32 moveProgress, int moveControlFlags)
 {
     ObjAnimComponent* objAnim;

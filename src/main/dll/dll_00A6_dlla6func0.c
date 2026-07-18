@@ -45,7 +45,6 @@ extern f32 lbl_803E155C;
 extern f32 lbl_803E1560;
 extern f32 lbl_803E1564;
 
-#pragma opt_propagation off
 void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
 {
     ModgfxSpawnPacket buf;
@@ -204,7 +203,6 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 3, lbl_80318DF0, 1, lbl_803DB980, DLLA6_EFFECT_ID, 0);
 }
-#pragma opt_propagation reset
 
 void dll_A6_func01_nop(void)
 {

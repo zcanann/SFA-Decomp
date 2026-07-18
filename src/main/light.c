@@ -148,9 +148,7 @@ void VFP_Block1_hitDetect(void)
 {
 }
 
-
 STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
-#pragma scheduling off
 void VFP_Block1_update(GameObject* obj)
 {
     int player = (int)Obj_GetPlayerObject();
@@ -171,7 +169,6 @@ void VFP_Block1_update(GameObject* obj)
     }
 }
 
-#pragma peephole off
 void VFP_Block1_init(int obj, int data)
 {
     VfpPlatformState* state = ((GameObject*)obj)->extra;
@@ -524,7 +521,6 @@ void VFP_Platform_release(void)
 void VFP_Platform_initialise(void)
 {
 }
-#pragma auto_inline off
 void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
 {
     VfpDoorSwitchState* state = obj->extra;
@@ -562,8 +558,6 @@ void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
         }
     }
 }
-#pragma auto_inline on
-
 
 int VFP_DoorSwitch_getExtraSize(void)
 {
@@ -714,7 +708,6 @@ void SeqPoint_hitDetect(void)
 {
 }
 
-#pragma peephole on
 void SeqPoint_update(int* obj)
 {
     void* player = Obj_GetPlayerObject();
@@ -798,7 +791,6 @@ void SeqPoint_update(int* obj)
     }
 }
 
-#pragma peephole off
 void SeqPoint_init(GameObject* obj, int data)
 {
     SeqPointState* state = obj->extra;
@@ -830,7 +822,6 @@ int VFPDragHead_getObjectTypeId(void)
     return 0x0;
 }
 
-#pragma peephole on
 void VFPDragHead_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2(obj);
@@ -846,13 +837,11 @@ void VFPDragHead_render(void)
 {
 }
 
-
 STATIC_ASSERT(sizeof(VfpPlatformState) == 0x6);
 void VFPDragHead_hitDetect(void)
 {
 }
 
-#pragma peephole off
 void VFPDragHead_update(int* obj)
 {
     int state = (s8)(*(s8**)&((GameObject*)obj)->anim.placementData)[0x19];
@@ -951,7 +940,6 @@ void VFPDragHead_release(void)
 void VFPDragHead_initialise(void)
 {
 }
-
 
 STATIC_ASSERT(sizeof(VfpDragHeadState) == 0xC);
 int return0_801FD13C(void)
@@ -1062,8 +1050,6 @@ void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         return;
 }
 
-#pragma scheduling on
-#pragma peephole on
 void dll_224_hitDetect(void* obj)
 {
     if (*(void**)((char*)obj + 0x74) != NULL)
@@ -1072,8 +1058,6 @@ void dll_224_hitDetect(void* obj)
     }
 }
 
-#pragma scheduling off
-#pragma peephole off
 void dll_224_update(GameObject* obj)
 {
     int mapAct;
@@ -1115,7 +1099,6 @@ void dll_224_release_nop(void)
 void dll_224_initialise_nop(void)
 {
 }
-
 
 ObjectDescriptor gVFP_PlatformObjDescriptor = {
     0,

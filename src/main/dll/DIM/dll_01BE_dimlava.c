@@ -57,20 +57,18 @@ typedef struct
 
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
-__declspec(section ".sdata2") f32 gDimLavaDebrisGravity = 0.05f;
-__declspec(section ".sdata2") f32 gDimLavaDebrisRootMotionScale = 0.25f;
-__declspec(section ".sdata2") f32 gDimLavaVelocityScale = 0.1f;
-__declspec(section ".sdata2") f32 gDimLavaPi = 3.14159274f;
-__declspec(section ".sdata2") f32 gDimLavaAngleUnitsHalfCircle = 32768.0f;
+f32 gDimLavaDebrisGravity = 0.05f;
+f32 gDimLavaDebrisRootMotionScale = 0.25f;
+f32 gDimLavaVelocityScale = 0.1f;
+f32 gDimLavaPi = 3.14159274f;
+f32 gDimLavaAngleUnitsHalfCircle = 32768.0f;
 const LavaVec gDimLavaDebrisBaseVec = {1.2f, 0.0f, 0.0f};
-
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
 
 void lavaball1be_relaunch(s16* obj, int vertSpeed, int horizSpeed)
 {
@@ -111,13 +109,10 @@ void lavaball1be_relaunch(s16* obj, int vertSpeed, int horizSpeed)
     state->flags &= ~LAVA1BE_FLAG_INACTIVE;
 }
 
-__declspec(section ".sdata2") f32 lbl_803E47F0 = 1.0f;
-__declspec(section ".sdata2") f32 gDimLavaGravity = -0.09f;
-__declspec(section ".sdata2") f32 lbl_803E47F8 = 2.0f;
-__declspec(section ".sdata2") f32 lbl_803E47FC = 60.0f;
-__declspec(section ".sdata2") f32 gDimLavaLightAttenNear = 30.0f;
-__declspec(section ".sdata2") f32 gDimLavaLightAttenFar = 50.0f;
-__declspec(section ".sdata2") f32 gDimLavaGlowRadius = 20.0f;
+f32 gDimLavaGravity = -0.09f;
+f32 gDimLavaLightAttenNear = 30.0f;
+f32 gDimLavaLightAttenFar = 50.0f;
+f32 gDimLavaGlowRadius = 20.0f;
 
 u32 lavaball1be_isInactive(int* obj)
 {
@@ -158,7 +153,7 @@ void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
             queueGlowRender(state->light);
         }
     }
-    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E47F0);
+    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void lavaball1be_hitDetect(void)
@@ -208,7 +203,7 @@ void lavaball1be_update(s16* obj)
             ((GameObject*)obj)->anim.velocityY = gDimLavaGravity * dt + ((GameObject*)obj)->anim.velocityY;
             objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
                     ((GameObject*)obj)->anim.velocityZ * dt);
-            if (((GameObject*)obj)->anim.velocityY < lbl_803E47F8)
+            if (((GameObject*)obj)->anim.velocityY < 2.0f)
             {
                 if (!(state->flags & LAVA1BE_FLAG_FALLING))
                 {
@@ -231,19 +226,19 @@ void lavaball1be_update(s16* obj)
                 {
                     if (state->explodeCooldown != 0)
                     {
-                        spawnExplosionLegacy(obj, lbl_803E47FC, 0, 1, 0, 0, 0, 0, 0);
+                        spawnExplosionLegacy(obj, 60.0f, 0, 1, 0, 0, 0, 0, 0);
                     }
                     else
                     {
                         state->explodeCooldown = 0xa;
-                        spawnExplosionLegacy(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
+                        spawnExplosionLegacy(obj, 60.0f, 1, 1, 0, 0, 0, 0, 0);
                     }
                     state->flags |= LAVA1BE_FLAG_INACTIVE;
                     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
                 if (((ObjAnimComponent*)sub)->bankIndex & 1)
                 {
-                    spawnExplosionLegacy(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
+                    spawnExplosionLegacy(obj, 60.0f, 1, 1, 0, 0, 0, 0, 0);
                     state->flags |= LAVA1BE_FLAG_INACTIVE;
                     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     return;

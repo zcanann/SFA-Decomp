@@ -2,7 +2,6 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_unregister.h"
 
-#pragma exceptions on
 
 typedef struct VoicePrioVoiceRec
 {
@@ -223,7 +222,6 @@ int vidGetInternalId(u32 id)
  * voiceRemovePriority - voice priority-queue removal. Removes the active
  * voice from its group's linked list and from the sorted priority list.
  */
-#pragma optimization_level 2
 void voiceRemovePriority(int state)
 {
     McmdVoiceState* s = (McmdVoiceState*)state;
@@ -270,4 +268,3 @@ void voiceRemovePriority(int state)
     }
     vps->user = 0;
 }
-#pragma optimization_level reset

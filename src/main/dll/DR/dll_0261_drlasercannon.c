@@ -242,7 +242,6 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     }
     return delta > 0x100;
 }
-#pragma dont_inline on
 GameObject* drlasercannon_getTrackedTarget(GameObject* obj, int* cooldownTimer)
 {
     int* tricky = (int*)getTrickyObject();
@@ -276,7 +275,6 @@ GameObject* drlasercannon_getTrackedTarget(GameObject* obj, int* cooldownTimer)
     }
     return NULL;
 }
-#pragma dont_inline off
 
 int DR_LaserCannon_getExtraSize(void)
 {

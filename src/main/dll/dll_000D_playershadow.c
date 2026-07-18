@@ -38,8 +38,6 @@ extern void fn_80069958(int** out);
 
 f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
 
-#pragma peephole off
-#pragma scheduling off
 /* Walks the tri-hit table under the player and, for ground surface types
  * 0x10-0x17, spawns footfall particle effects at a random barycentric point
  * on each struck triangle. offsX/offsZ = obj position minus the tile origin,

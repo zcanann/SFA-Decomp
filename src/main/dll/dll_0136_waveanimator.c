@@ -45,18 +45,6 @@ void* lbl_803DDAF4; /* per-cell height field */
 void* lbl_803DDAF0; /* per-grid phase table */
 void* lbl_803DDAEC; /* per-cell RGB color field */
 u8 lbl_803DDAE8;    /* live-instance refcount */
-union WaveAnimatorConstF32 { f32 f; };
-__declspec(section ".sdata2") f32 lbl_803E3F40 = 65536.0f;   /* grid step scale */
-const union WaveAnimatorConstF32 lbl_803E3F44 = { 0.0f };
-__declspec(section ".sdata2") f32 lbl_803E3F48 = 3.1415927f;   /* wave scale */
-__declspec(section ".sdata2") f32 lbl_803E3F4C = 32768.0f;   /* wave divisor */
-__declspec(section ".sdata2") f32 lbl_803E3F50 = 190.0f;   /* R ramp base */
-__declspec(section ".sdata2") f32 lbl_803E3F54 = 65.0f;   /* R ramp slope */
-__declspec(section ".sdata2") f32 lbl_803E3F58 = 90.0f;   /* G ramp base */
-__declspec(section ".sdata2") f32 lbl_803E3F5C = 165.0f;   /* G ramp slope */
-__declspec(section ".sdata2") f32 lbl_803E3F60 = 20.0f;   /* B ramp base */
-__declspec(section ".sdata2") f32 lbl_803E3F64 = 235.0f;   /* B ramp slope */
-extern f32 lbl_803E3F70;   /* model scale */
 void fn_801923F8(int* cfgArg);
 
 void waveanimator_modelMtxFn(GameObject* obj, int a, int b, int c)
@@ -104,18 +92,18 @@ void fn_801923F8(int* cfgArg)
     lbl_803DDAEC = mmAlloc(3 * cfg->period * cfg->period, 0xFFFFFF, 0);
 
     x = cfg->originX;
-    stepX = (s32)((lbl_803E3F40 * cfg->spanX) / cfg->period);
+    stepX = (s32)((65536.0f * cfg->spanX) / cfg->period);
     y = cfg->originY;
-    stepY = (s32)((lbl_803E3F40 * cfg->spanY) / cfg->period);
+    stepY = (s32)((65536.0f * cfg->spanY) / cfg->period);
 
-    initHeight = lbl_803E3F44.f;
+    initHeight = 0.0f;
     cfg->maxHeight = initHeight;
     cfg->minHeight = initHeight;
 
     i = 0;
     heightIdx = 0;
-    waveScale = lbl_803E3F48;
-    waveDivisor = lbl_803E3F4C;
+    waveScale = 3.1415927f;
+    waveDivisor = 32768.0f;
     for (; i < cfg->period; i++)
     {
         f32 xv;
@@ -151,7 +139,7 @@ void fn_801923F8(int* cfgArg)
         heightIdx = 0;
         x = heightIdx;
         i = heightIdx;
-        colorSplitZero = lbl_803E3F44.f;
+        colorSplitZero = 0.0f;
         for (; heightIdx < cfg->period; heightIdx++)
         {
             int src[1];
@@ -162,9 +150,9 @@ void fn_801923F8(int* cfgArg)
                 if (v < colorSplitZero)
                 {
                     t = (v - cfg->minHeight) / negMin;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0]) = lbl_803E3F54 * t + lbl_803E3F50;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 1) = lbl_803E3F5C * t + lbl_803E3F58;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 2) = lbl_803E3F64 * t + lbl_803E3F60;
+                    *(u8*)((u8*)lbl_803DDAEC + byte[0]) = 65.0f * t + 190.0f;
+                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 1) = 165.0f * t + 90.0f;
+                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 2) = 235.0f * t + 20.0f;
                 }
                 else
                 {
@@ -189,8 +177,6 @@ void fn_801923F8(int* cfgArg)
     }
 }
 
-__declspec(section ".sdata2") f32 lbl_803E3F70 = 1.0f;
-const union WaveAnimatorConstF32 lbl_803E3F74 = { 0.0f };
 
 int waveanimator_getExtraSize(void)
 {
@@ -219,7 +205,7 @@ void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3F70);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void waveanimator_hitDetect(int* obj)
@@ -271,7 +257,7 @@ void waveanimator_init(int* obj, int* desc)
     state->ampY = (f32)((WaveanimatorObjectDef*)desc)->ampY;
     state->period = ((WaveanimatorObjectDef*)desc)->period;
     state->gridN = ((WaveanimatorObjectDef*)desc)->gridN;
-    scale = lbl_803E3F70;
+    scale = 1.0f;
     state->scaleA = scale;
     state->scaleB = scale;
     if (lbl_803DDAE8 == 0)

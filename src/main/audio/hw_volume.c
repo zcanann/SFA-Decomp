@@ -1,7 +1,6 @@
 #include "main/audio/hw_volume.h"
 #include "main/audio/dsp_voice_state.h"
 
-#pragma exceptions on
 
 extern DSPstudioinfo dspStudio[8];
 extern u8 lbl_802C2820[];

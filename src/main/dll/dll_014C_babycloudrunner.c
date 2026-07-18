@@ -95,10 +95,6 @@ extern f32 lbl_803E4254;
 void babycloudrunner_release(void);
 void babycloudrunner_initialise(void);
 
-#pragma dont_inline on
-#pragma opt_common_subs off
-#pragma peephole off
-#pragma scheduling off
 int fn_8019E3F4(int* obj)
 {
     f32 speed;
@@ -191,8 +187,6 @@ void sandworm_turnTowardTargetAnim(GameObject* obj, GameObject* target, BabyClou
 /* Turn toward the target by a fraction of the yaw delta; when roughly aligned
  * play/advance the idle move, otherwise start or speed-scale the turn move by
  * the delta. */
-#pragma dont_inline off
-#pragma opt_common_subs reset
 int babycloudrunner_tryCapture(void* p)
 {
     int* obj;
@@ -391,8 +385,6 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma peephole on
-#pragma scheduling on
 
 int babycloudrunner_getExtraSize(void)
 {
@@ -403,15 +395,12 @@ int babycloudrunner_getObjectTypeId(void)
 {
     return 0;
 }
-#pragma peephole off
-#pragma scheduling off
 
 void babycloudrunner_free(int* obj)
 {
     ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
     ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
 }
-#pragma scheduling on
 void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible;
@@ -424,13 +413,9 @@ void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     return;
 }
 
-#pragma peephole on
 void babycloudrunner_hitDetect(void)
 {
 }
-#pragma opt_common_subs off
-#pragma peephole off
-#pragma scheduling off
 void babycloudrunner_update(int* obj)
 {
     char* player;
@@ -663,7 +648,6 @@ void babycloudrunner_update(int* obj)
 /* Pick the burrow/surface move from the vertical speed, clamp the playback
  * rate, latch the spit SFX while surfacing fast, and advance the current
  * move. */
-#pragma opt_common_subs reset
 void babycloudrunner_init(int* obj, u8* defBytes)
 {
     BabyCloudRunnerState* sub;
@@ -719,8 +703,6 @@ void babycloudrunner_init(int* obj, u8* defBytes)
     }
 }
 
-#pragma peephole on
-#pragma scheduling on
 
 void babycloudrunner_release(void)
 {

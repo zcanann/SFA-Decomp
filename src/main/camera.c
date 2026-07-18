@@ -678,7 +678,6 @@ void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* ou
         *outZ *= invW;
     }
 }
-#pragma dont_inline on
 void Camera_ApplyCurrentViewport(void* viewportArg)
 {
     u16 height;
@@ -693,8 +692,6 @@ void Camera_ApplyCurrentViewport(void* viewportArg)
     clipped = clipped - viewportY;
     gxSetScissorRect(0, 0, 0, viewportY, height, clipped);
 }
-#pragma dont_inline off
-#pragma opt_common_subs off
 typedef struct CameraViewportEntry {
     u8 pad00[0x20];
     s32 scissorX;
@@ -831,7 +828,6 @@ f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z)
     return sqrtf(dz + (dx + dy));
 }
 
-
 void Camera_SetCurrentViewRotation(int yaw, int pitch, int roll)
 {
     CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
@@ -840,7 +836,6 @@ void Camera_SetCurrentViewRotation(int yaw, int pitch, int roll)
     slot->pitch = pitch;
     slot->roll = roll;
 }
-
 
 void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
 {
@@ -870,7 +865,6 @@ f32* Camera_GetInverseViewMatrix(void)
 {
     return gCameraInverseViewMatrix;
 }
-#pragma optimization_level 2
 void Camera_UpdateViewMatrices(void)
 {
     u8* base = (u8*)gObjInverseYawTransformMatrices;
@@ -926,8 +920,6 @@ void Camera_UpdateViewMatrices(void)
     PSMTXCopy((f32*)(base + 5760), (f32*)(base + 5632));
     *(f32*)(base + 5632 + 44) = *(f32*)(base + 5632 + 28) = *(f32*)(base + 5632 + 12) = lbl_803DE60C;
 }
-
-#pragma optimization_level reset
 
 void Camera_ApplyFullViewport(void)
 {
@@ -1038,7 +1030,6 @@ f32* Camera_GetProjectionMatrix(void)
     return gCameraProjectionMatrix;
 }
 
-#pragma opt_common_subs off
 void Camera_RebuildProjectionMatrix(void)
 {
     if (gCameraProjectionMode == 1)

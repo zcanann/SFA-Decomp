@@ -59,9 +59,6 @@ WarpstoneEntry gWarpStoneUiEntryTable[WARPSTONE_UI_ENTRY_COUNT] = {
 };
 int gWarpStoneUiSelectedIndices[0x6];
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_lifetimes off
 int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuItem* items,
                              const WarpstoneEntry* entries, int count, int* selectedIndices)
 {
@@ -115,18 +112,12 @@ int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuIt
     }
     return slot;
 }
-#pragma opt_lifetimes reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
 void WarpstoneUI_setState(int val)
 {
     warpstoneUIState[0] = val;
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void WarpstoneUI_showUI(int arg)
 {
     int sel;
@@ -180,13 +171,11 @@ void WarpstoneUI_showUI(int arg)
         gWarpStoneUiMenuActive = 0;
     }
 }
-#pragma scheduling reset
 
 void WarpstoneUI_frameEnd(void)
 {
 }
 
-#pragma scheduling off
 int WarpstoneUI_frameStart(void)
 {
     f32 alpha;
@@ -209,7 +198,6 @@ int WarpstoneUI_frameStart(void)
     }
     return 0;
 }
-#pragma scheduling reset
 
 void WarpstoneUI_release(void)
 {
@@ -217,14 +205,12 @@ void WarpstoneUI_release(void)
     textureFree((Texture*)(lbl_803DD980));
 }
 
-#pragma scheduling off
 void WarpstoneUI_initialise(void)
 {
     lbl_803DD984 = textureLoadAsset(WARPSTONEUI_TEXTURE_A);
     lbl_803DD980 = textureLoadAsset(WARPSTONEUI_TEXTURE_B);
     lbl_803DD97C = lbl_803E22E0;
 }
-#pragma scheduling reset
 
 u8 gWarpStoneUiMenuItemTemplates[] = {
     0x03, 0x4C, 0x00, 0x2F, 0x01, 0x5E, 0x00, 0x52, 0x00, 0x00, 0x01, 0x90, 0x00, 0x34, 0x00, 0x00, 0xFF, 0xFF, 0xFF,

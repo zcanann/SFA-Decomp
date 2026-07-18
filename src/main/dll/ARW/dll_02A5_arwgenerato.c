@@ -40,7 +40,6 @@ typedef struct SquadronShipSetup
 /* spawned squadron-ship extra block; fields written at +0x4,0x5,0x8,0xc,0x10,0x18..0x1a */
 #define SPAWN_EXTRA_SIZE 0x20
 
-#pragma dont_inline on
 void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
 {
     SquadronShipSetup* newObj;

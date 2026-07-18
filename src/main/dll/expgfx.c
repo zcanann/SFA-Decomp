@@ -399,7 +399,7 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
     poolSlotTypeIds[0] = &gExpgfxStaticPoolSlotTypeIds[0];
     poolActiveCounts = runtime->poolActiveCounts;
     activeCountWalk = poolActiveCounts;
-    for (batchGroup = 0; batchGroup < EXPGFX_POOL_SEARCH_BATCH_COUNT;
+    for (batchGroup = 0; !foundPool && batchGroup < EXPGFX_POOL_SEARCH_BATCH_COUNT;
          sourceIdWalk[0] += EXPGFX_POOL_SEARCH_BATCH_SIZE,
              activeCountWalk += EXPGFX_POOL_SEARCH_BATCH_SIZE, batchGroup++)
     {
@@ -411,11 +411,10 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
             {
                 foundPoolIndex = searchIndex;
                 foundPool = 1;
-                goto poolSearchDone;
+                break;
             }
         }
     }
-poolSearchDone:
 
     if (foundPool)
     {
@@ -628,7 +627,6 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     u8 parity;
     u32 resource;
     s8* scan;
-    int batch;
     int curPool;
     int scaled;
     u32* maskPtr;
@@ -683,94 +681,18 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     ambScaled[1] = (f32)ambG8 * camScale;
     ambScaled[0] = (f32)ambB8 * camScale;
 
-    next = 0;
     scan = runtime->poolActiveCounts;
-    for (batch = 8; batch != 0; batch--)
+    for (next = 0; next < EXPGFX_POOL_COUNT; next++)
     {
-        switch (scan[0])
+        if (scan[next] != 0)
         {
-        case 0:
             break;
-        default:
-            goto foundFirst;
         }
-        next++;
-        switch (scan[1])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[2])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[3])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[4])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[5])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[6])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[7])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[8])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[9])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        scan += 10;
-        next++;
     }
-    next = -1;
-foundFirst:
+    if (next == EXPGFX_POOL_COUNT)
+    {
+        next = -1;
+    }
     pool = next;
     if (pool != -1)
     {
@@ -813,17 +735,16 @@ foundFirst:
             scan = (s8*)(curPoolBuf + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
             for (; next < EXPGFX_POOL_COUNT; next++)
             {
-                switch (*scan)
+                if (*scan != 0)
                 {
-                case 0:
                     break;
-                default:
-                    goto foundNext;
                 }
                 scan++;
             }
-            next = -1;
-        foundNext:
+            if (next == EXPGFX_POOL_COUNT)
+            {
+                next = -1;
+            }
             slot = (ExpgfxSlot*)curCache;
             if (next > -1)
             {
@@ -1935,26 +1856,25 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     cacheQueueWait(0);
 
     slot = cachedSlots - 1;
-    slotIndex = 0;
     activeMasks = &gExpgfxSlotActiveMasks[poolIndex];
     tabBase = gExpgfxTableEntries;
-    do
+    for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
     {
         slot++;
         tabEntry = &tabBase[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
         sourceObject = (ExpgfxSourceObject*)tabEntry->sourceId;
         texture = tabEntry->resource;
         if ((1U << slotIndex & *activeMasks) == 0)
-            goto next_slot;
+            continue;
         state = slot->stateBits.value;
         if (((state >> 2) & 3) != 0)
-            goto next_slot;
+            continue;
         if (((state >> 1) & 1) == 0)
-            goto next_slot;
+            continue;
         if (slot->sequenceId == EXPGFX_INVALID_SEQUENCE_ID)
-            goto next_slot;
+            continue;
         if ((state & 1) != 0)
-            goto next_slot;
+            continue;
 
         lifeFraction = lbl_803DF358 * (f32)slot->lifetimeFrameLimit;
         behaviorFlags = slot->behaviorFlags;
@@ -2272,10 +2192,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             }
             vertexStream++;
         }
-
-    next_slot:
-        slotIndex++;
-    } while (slotIndex < EXPGFX_SLOTS_PER_POOL);
+    }
 
     if (gExpgfxRenderResetPending != 0)
     {

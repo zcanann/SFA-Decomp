@@ -255,23 +255,16 @@ void Door_init(int* obj, u8* def)
         case 1101:
             {
                 s32 subtype = ((GameObject*)obj)->anim.mapEventSlot;
-                if (subtype < 40)
+                if ((subtype >= 31 && subtype < 35) || (subtype >= 40 && subtype < 43))
                 {
-                    if (subtype >= 35)
-                        goto soundSetB;
-                    if (subtype >= 31)
-                        goto soundSetA;
-                    goto soundSetB;
+                    state->movementSfx = 832;
+                    state->endpointSfx = 833;
                 }
-                if (subtype >= 43)
-                    goto soundSetB;
-            soundSetA:
-                state->movementSfx = 832;
-                state->endpointSfx = 833;
-                break;
-            soundSetB:
-                state->movementSfx = 1154;
-                state->endpointSfx = 1155;
+                else
+                {
+                    state->movementSfx = 1154;
+                    state->endpointSfx = 1155;
+                }
                 break;
             }
         case 358:

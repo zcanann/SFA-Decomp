@@ -25,9 +25,9 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer, vo
 
     player = &lbl_803A5D60;
     if (player->isOpen == 0)
-        goto fail;
+        return 0;
     if (player->state != 0)
-        goto fail;
+        return 0;
 
     if (player->isOnMemory != 0)
     {
@@ -80,9 +80,6 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer, vo
 
     lbl_803A5D60.thpWorkArea = thpWorkBuffer;
     return 1;
-
-fail:
-    return 0;
 }
 
 void AttractMovie_GetBufferSizes(u32* movieOrReadBufferSize, int* yTextureBufferSize, int* uTextureBufferSize,

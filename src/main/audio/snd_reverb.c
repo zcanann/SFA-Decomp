@@ -1,6 +1,5 @@
 #include "main/audio/snd_reverb.h"
 
-#pragma exceptions on
 
 extern u32 gSalMallocHook[2];
 extern void ReverbSTDCallback(int a, int b, int c, void* state);

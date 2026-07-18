@@ -1048,7 +1048,6 @@ int DIMSnowHorn1_setScale(GameObject* obj)
     return 0;
 }
 
-#pragma dont_inline on
 void fn_802BB998(int obj, int pointState, int inputState)
 {
     u8 flags;
@@ -1104,7 +1103,6 @@ void fn_802BB998(int obj, int pointState, int inputState)
     }
 }
 
-#pragma dont_inline reset
 int DIMSnowHorn1_getExtraSize(void)
 {
     return 0xd0c;
@@ -1531,7 +1529,6 @@ void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
     }
 }
 
-#pragma opt_propagation off
 void DIMSnowHorn1_release(void)
 {
     void* zero;

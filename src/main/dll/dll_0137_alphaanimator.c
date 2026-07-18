@@ -79,7 +79,6 @@ void AlphaAnimator_free(int* obj)
         mm_free(p);
 }
 
-#pragma peephole off
 void AlphaAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
@@ -90,7 +89,6 @@ void AlphaAnimator_hitDetect(void)
 {
 }
 
-#pragma scheduling off
 void AlphaAnimator_update(int* obj)
 {
     AlphaanimatorPlacement* d;
@@ -325,13 +323,11 @@ void AlphaAnimator_update(int* obj)
     }
 }
 
-#pragma peephole on
 void AlphaAnimator_init(int* obj)
 {
     *(s8*)&((AlphaAnimatorState*)((GameObject*)obj)->extra)->prevGate = -1;
 }
 
-#pragma scheduling on
 void AlphaAnimator_release(void)
 {
 }

@@ -5,7 +5,6 @@
 #define S3D_ENTRY_FADE_IN  0x80000000 /* ramp fade up toward full, then clear */
 #define S3D_ENTRY_FADE_OUT 0x40000000 /* ramp fade down toward zero, then clear */
 
-#pragma exceptions on
 
 extern Snd3DEmitter* s3dEmitterRoot;
 extern SndSpatialListener* s3dListenerRoot;
@@ -20,7 +19,6 @@ extern u32 synthSendKeyOff(u32 handle);
  * Update average squared distance from each active spatial entry to all
  * registered listeners.
  */
-#pragma fp_contract off
 void s3dUpdateRoomDistances(void)
 {
     SndSpatialListener* listener;
@@ -281,4 +279,3 @@ void s3dUpdateDoorStudioInputs(void)
         }
     }
 }
-#pragma fp_contract reset

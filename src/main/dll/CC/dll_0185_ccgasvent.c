@@ -26,7 +26,6 @@ int ccgasvent_getExtraSize(void)
     return 0x1;
 }
 
-#pragma scheduling off
 void ccgasvent_free(int obj)
 {
     ObjGroup_RemoveObject(obj, CCGASVENT_GROUP);
@@ -36,8 +35,6 @@ void ccgasvent_render(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void ccgasvent_update(int* obj)
 {
     f32 dist = 3.4028235e38f;

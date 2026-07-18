@@ -30,9 +30,6 @@ extern f32 fsin16(int angle);
 
 void setMatrixFromObjectPos(f32* m, const MatrixTransform* transform);
 
-#pragma peephole off
-#pragma scheduling off
-
 f32 interpolate(f32 a, f32 t, f32 exp)
 {
     if (t <= lbl_803DE7C4)
@@ -258,10 +255,6 @@ void vecRotateZXY(s16* rotation, f32* vector)
     vector[0] = t5 * c0 + t2 * s0;
     vector[2] = t2 * c0 - t5 * s0;
 }
-#pragma fp_contract off
-#pragma opt_dead_assignments off
-#pragma opt_lifetimes off
-#pragma opt_strength_reduction reset
 void mtxRotateByVec3s(f32* mtx, const void* transform)
 {
     f32 cx;
@@ -343,9 +336,6 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     mtx[14] = t1;
     mtx[15] = lbl_803DE7C4;
 }
-#pragma fp_contract reset
-#pragma opt_dead_assignments reset
-#pragma opt_lifetimes reset
 
 void mtx44ScaleRow1(f32* p, f32 s)
 {
@@ -545,7 +535,6 @@ void mtx44_mult(f32* a, f32* b, f32* out)
     out[2] = t;
 }
 
-#pragma opt_strength_reduction off
 void mtx44_multSafe(f32* a, f32* b, f32* out)
 {
     f32 tmp[16];
@@ -588,9 +577,6 @@ void mtx44_multSafe(f32* a, f32* b, f32* out)
     }
 }
 
-#pragma fp_contract reset
-#pragma opt_strength_reduction reset
-
 void Matrix_TransformVector(f32* m, f32* v, f32* out)
 {
     f32 vx, vy, vz;
@@ -628,14 +614,12 @@ void Matrix_TransformVector(f32* m, f32* v, f32* out)
     out[2] = m0 + m2;
 }
 
-
 void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz)
 {
     *ox = m[12] + (m[0] * x + m[4] * y + m[8] * z);
     *oy = m[13] + (m[1] * x + m[5] * y + m[9] * z);
     *oz = m[14] + (m[2] * x + m[6] * y + m[10] * z);
 }
-
 
 void Vec3_ReflectAgainstNormal(f32* a, f32* n, f32* out)
 {
@@ -669,7 +653,6 @@ void Vec3_ScaleAdd(f32* a, f32* b, f32 s, f32* out)
     out[2] = s * b[2] + a[2];
 }
 
-
 f32 Vec3_Normalize(f32* v)
 {
     f32 len;
@@ -686,14 +669,12 @@ f32 Vec3_Normalize(f32* v)
     return len;
 }
 
-
 void Vec3_Cross(f32* a, f32* b, f32* out)
 {
     out[0] = a[1] * b[2] - a[2] * b[1];
     out[1] = a[2] * b[0] - a[0] * b[2];
     out[2] = a[0] * b[1] - a[1] * b[0];
 }
-
 
 f32 Vec3_Length(f32* v)
 {

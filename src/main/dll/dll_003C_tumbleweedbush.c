@@ -97,7 +97,6 @@ u16 fn_80130124(void)
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     return gTumbleweedBushItems[linkSelected].itemId;
 }
-#pragma dont_inline on
 void linkInitTextures(LinkMenuItemDB* item)
 {
     int budget;
@@ -133,7 +132,6 @@ void linkInitTextures(LinkMenuItemDB* item)
         OSReport(sTumbleweedBushSlotOverflowErr);
     }
 }
-#pragma dont_inline reset
 void linkDrawFn_801302c0(void)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
@@ -228,7 +226,6 @@ void setLinkIsRotated(void)
     linkIsRotated = 1;
 }
 
-#pragma dont_inline on
 void linkDrawFn_80130484(void)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
@@ -283,7 +280,6 @@ void linkDrawFn_80130484(void)
         }
     }
 }
-#pragma dont_inline off
 void Link_func0F(void)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];

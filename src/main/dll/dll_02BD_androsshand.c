@@ -195,8 +195,6 @@ void AndrossHand_hitDetect(void)
 {
 }
 
-#pragma dont_inline on
-#pragma opt_common_subs off
 f32 gAndrossHandMoveAnimSpeeds[7] = {0.02f, 0.007f, 0.007f, 0.003f, 0.02f, 0.013f, 0.007f};
 
 ObjectDescriptor gAndrossHandObjDescriptor = {

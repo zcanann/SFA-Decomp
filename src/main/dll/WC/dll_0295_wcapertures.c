@@ -27,7 +27,6 @@
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 
-#pragma dont_inline on
 
 #define WCAPERTURES_EXTRA_SIZE        8
 #define WCAPERTURES_RENDER_TYPE_BASE  0x400

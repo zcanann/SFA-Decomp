@@ -103,8 +103,6 @@ extern f32 lbl_803E6190;
 extern f32 lbl_803E6194;
 extern f32 lbl_803E6198;
 
-#pragma scheduling off
-#pragma peephole off
 int fn_801FD4A8(GameObject* obj, int x)
 {
     VfpFlamePointData* extra = obj->extra;
@@ -260,7 +258,6 @@ int VFP_lavapool_getObjectTypeId(void)
     return 0x0;
 }
 
-
 #define MAIN_LAVAPOOL_RESOURCE_ID 0xa6
 
 #define MAIN_LAVASTAR_PARTFX 0x3a4
@@ -268,7 +265,6 @@ int VFP_lavapool_getObjectTypeId(void)
 extern void* gVfpLavaPoolEffectResource;
 extern f32 lbl_803E61B0;
 extern f32 lbl_803E61B4;
-
 
 void VFP_lavapool_free_nop(void)
 {
@@ -324,7 +320,6 @@ int VFP_lavastar_getObjectTypeId(void)
     return 0x0;
 }
 
-#pragma peephole on
 void VFP_lavastar_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -339,8 +334,6 @@ void VFP_lavastar_hitDetect(void)
 {
 }
 
-
-#pragma peephole off
 void VFP_lavastar_update(int obj)
 {
     VfpLavaStarMapData* mapData;
@@ -368,7 +361,6 @@ void VFP_lavastar_update(int obj)
     state->particleToggle ^= 1;
 }
 
-
 void VFP_lavastar_init(GameObject* obj, int def)
 {
     VfpLavaStarState* state;
@@ -390,14 +382,12 @@ void VFP_lavastar_release(void)
     gVfpLavaPoolEffectResource = NULL;
 }
 
-#pragma peephole on
 void VFP_lavastar_initialise(void)
 {
     gVfpLavaPoolEffectResource = NULL;
     gVfpLavaPoolEffectResource = Resource_Acquire(MAIN_LAVAPOOL_RESOURCE_ID, 1);
 }
 
-#pragma peephole off
 int VFP_SpellPlace_getExtraSize(void)
 {
     return sizeof(LaserState);

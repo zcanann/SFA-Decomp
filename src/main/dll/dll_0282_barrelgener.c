@@ -52,7 +52,6 @@ int lbl_803DC398 = 0x14;
 
 
 
-#pragma explicit_zero_data off
 int barrelgener_getLinkId(GameObject* obj)
 {
     BarrelGeneratorSetup* setup = (BarrelGeneratorSetup*)(obj)->anim.placementData;

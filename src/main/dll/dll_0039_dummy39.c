@@ -30,8 +30,6 @@ void Dummy39_frameEnd(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 int Dummy39_run(void)
 {
     s32 step;
@@ -54,8 +52,6 @@ int Dummy39_run(void)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void Dummy39_release(void)
 {

@@ -182,7 +182,6 @@ STATIC_ASSERT(offsetof(FCVars, moveChainIndex) == 0x33e);
 STATIC_ASSERT(offsetof(FCVars, reactStep) == 0x33f);
 STATIC_ASSERT(offsetof(FCVars, linkedObj) == 0x340);
 
-#pragma dont_inline on
 
 void fn_8015A52C(s16* obj)
 {
@@ -208,7 +207,6 @@ void fn_8015A52C(s16* obj)
     }
 }
 
-#pragma dont_inline reset
 
 void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int sub)
 {

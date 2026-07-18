@@ -25,17 +25,17 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
-__declspec(section ".sdata2") u16 gSpScarabPaletteBytesA = 0x0213;
-__declspec(section ".sdata2") u8 gSpScarabPaletteByteB = 0x16;
-__declspec(section ".sdata2") f32 gSpScarabGravity = 0.1f;
+u16 gSpScarabPaletteBytesA = 0x0213;
+u8 gSpScarabPaletteByteB = 0x16;
+f32 gSpScarabGravity = 0.1f;
 const f32 gSpScarabBounceVelocityY = 0.0f;
-__declspec(section ".sdata2") f32 gSpScarabCollisionRadius = 3.0f;
-__declspec(section ".sdata2") f32 gSpScarabPickupRadius = 1e+02f;
-__declspec(section ".sdata2") f32 gSpScarabPickupParticleScale = 1.0f;
-__declspec(section ".sdata2") f32 gSpScarabDustBurstScale = 2.5f;
-__declspec(section ".sdata2") f32 gSpScarabPi = 3.1415927f;
-__declspec(section ".sdata2") f32 gSpScarabAngleToRadiansDivisor = 32768.0f;
-__declspec(section ".sdata2") f32 gSpScarabBaseSpeedScale = 0.4f;
+f32 gSpScarabCollisionRadius = 3.0f;
+f32 gSpScarabPickupRadius = 100.0f;
+f32 gSpScarabPickupParticleScale = 1.0f;
+f32 gSpScarabDustBurstScale = 2.5f;
+f32 gSpScarabPi = 3.1415927f;
+f32 gSpScarabAngleToRadiansDivisor = 32768.0f;
+f32 gSpScarabBaseSpeedScale = 0.4f;
 
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);

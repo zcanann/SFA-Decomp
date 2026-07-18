@@ -151,9 +151,6 @@ void Credits_frameEnd(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_strength_reduction off
 int Credits_frameStart(void)
 {
     u8 idx;
@@ -230,16 +227,12 @@ int Credits_frameStart(void)
     }
     return 0;
 }
-#pragma opt_strength_reduction on
-#pragma scheduling on
-#pragma peephole on
 
 void Credits_release(void)
 {
     textureFree((Texture*)(lbl_803DD974));
 }
 
-#pragma scheduling off
 void Credits_initialise(void)
 {
     lbl_803DD974 = textureLoadAsset(CREDITS_TEXTURE_ID);

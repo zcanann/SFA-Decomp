@@ -33,15 +33,11 @@ int spiritdoorspirit_getObjectTypeId(void)
     return 0x0;
 }
 
-#pragma scheduling off
 void spiritdoorspirit_free(GameObject* obj)
 {
     ObjGroup_RemoveObject((int)obj, SPIRITDOORSPIRIT_OBJGROUP);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 
 void spiritdoorspirit_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {

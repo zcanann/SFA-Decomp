@@ -435,8 +435,6 @@ typedef struct WarpstoneFlags
 
 s16 lbl_803DDBF2;
 s16 lbl_803DDBF0;
-extern f32 lbl_803E5460;
-extern f32 lbl_803E546C;
 
 
 void warpstone_update(int obj)
@@ -535,23 +533,23 @@ void warpstone_update(int obj)
                 }
                 if (((GameObject*)obj)->anim.currentMove != moveId)
                 {
-                    ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, moveId, lbl_803E5460, 0);
+                    ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, moveId, 0.0f, 0);
                 }
             }
             else if (((GameObject*)obj)->anim.currentMove != 0)
             {
-                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0, lbl_803E5460, 0);
+                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0, 0.0f, 0);
                 Sfx_StopFromObject(obj, SFXTRIG_swapstone_move_long);
             }
             else if (randFn_80080100(lbl_803DC048) != 0)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_swapstone_mumble);
-                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0x1b, lbl_803E5460, 0);
+                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0x1b, 0.0f, 0);
             }
             else if (randFn_80080100(lbl_803DC04C) != 0)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_long);
-                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0x1a, lbl_803E5460, 0);
+                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0x1a, 0.0f, 0);
             }
         }
     }
@@ -571,7 +569,7 @@ void warpstone_update(int obj)
     {
     case 0x17:
     case 0x19:
-        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E546C)
+        if (((GameObject*)obj)->anim.currentMoveProgress > 0.5f)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_long);
             ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 1;
@@ -579,7 +577,7 @@ void warpstone_update(int obj)
         break;
     case 0x16:
     case 0x18:
-        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E546C)
+        if (((GameObject*)obj)->anim.currentMoveProgress > 0.5f)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_short_2bc);
             ((WarpstoneFlags*)(state + 0xd5))->sfxFired = 1;

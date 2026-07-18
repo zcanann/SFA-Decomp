@@ -118,14 +118,10 @@ STATIC_ASSERT(sizeof(WmLevelControlSkyVecTable) == 0x30);
 /* LightFoot Village map-event id (seeded from the palace spirit chain). */
 #define WMLEVELCONTROL_MAP_LIGHTFOOT 0xe
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5E70 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E5E74 = 1.0f;
-__declspec(section ".sdata2") f32 gWmLevelControlBlendDecayPerTick = 0.02f;
-__declspec(section ".sdata2") f32 gWmLevelControlLightIntensityBase = 32.0f;
-__declspec(section ".sdata2") f32 gWmLevelControlLightIntensityRange = 128.0f;
-__declspec(section ".sdata2") f32 gWmLevelControlOverrideLightIntensity = 100.0f;
+f32 gWmLevelControlBlendDecayPerTick = 0.02f;
+f32 gWmLevelControlLightIntensityBase = 32.0f;
+f32 gWmLevelControlLightIntensityRange = 128.0f;
+f32 gWmLevelControlOverrideLightIntensity = 100.0f;
 extern f32 gWmLevelControlIntroMessageDuration;   /* 300.0: intro-message duration */
 const WmLevelControlSkyVecTable gWmLevelControlSkyVecTable = {{
     {-1.0f, -2.0f, -1.0f},
@@ -145,7 +141,6 @@ extern void fn_80089578(int flags, int red, int green, int blue);
 void fn_801F3F18(GameObject* obj)
 {
     LightVecSet L;
-    f32 lightX;
     f32 decay;
     const LightVec3* vecs;
     u8* fromColor;
@@ -183,26 +178,20 @@ void fn_801F3F18(GameObject* obj)
     }
 
     /* hold the blend at full while spirit-restore progress is running,
-       then decay it toward 0. The volatile launders re-load the zero
-       per use (#114; a plain extern CSEs into a reg, a literal would
-       pool locally and block the unit's sdata2 claim). */
-    if (fn_8008ED88() > *(f32*)&lbl_803E5E70)
+       then decay it toward 0. */
+    if (fn_8008ED88() > 0.0f)
     {
-        gWmLevelControlBlendHold = lbl_803E5E74;
-        gWmLevelControlBlendFactor = lbl_803E5E74;
+        gWmLevelControlBlendHold = 1.0f;
+        gWmLevelControlBlendFactor = 1.0f;
     }
     decay = -(gWmLevelControlBlendDecayPerTick * timeDelta - gWmLevelControlBlendFactor);
     gWmLevelControlBlendFactor = decay;
-    if (decay < (lightX = *(f32*)&lbl_803E5E70))
+    if (decay < 0.0f)
     {
-        gWmLevelControlBlendFactor = lightX;
+        gWmLevelControlBlendFactor = 0.0f;
     }
 
-    /* blend each color channel source->target by the blend factor.
-       The call args re-read the just-stored bytes VOLATILE (#114):
-       MWCC's word-granular store forwarding otherwise passes the last
-       byte stored for all three args - the misforward this fn shipped
-       with before the volatile reads. */
+    /* blend each color channel source->target by the blend factor. */
     fromColor = gWmLevelControlLightColorFrom;
     toColor = gWmLevelControlLightColorTo;
     gWmLevelControlBlendedLightColor[0] =
@@ -211,9 +200,9 @@ void fn_801F3F18(GameObject* obj)
         gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
     gWmLevelControlBlendedLightColor[2] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
-    skyFn_800895e0Legacy(1, *(volatile u8*)&gWmLevelControlBlendedLightColor,
-                   ((volatile u8*)&gWmLevelControlBlendedLightColor)[1],
-                   ((volatile u8*)&gWmLevelControlBlendedLightColor)[2], 0x40, 0x40);
+    skyFn_800895e0Legacy(1, gWmLevelControlBlendedLightColor[0],
+                   gWmLevelControlBlendedLightColor[1],
+                   gWmLevelControlBlendedLightColor[2], 0x40, 0x40);
 
     fromColor = gWmLevelControlSkyColorFrom;
     toColor = gWmLevelControlSkyColorTo;
@@ -223,8 +212,8 @@ void fn_801F3F18(GameObject* obj)
         gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
     gWmLevelControlBlendedSkyColor[2] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
-    fn_80089510(1, *(volatile u8*)&gWmLevelControlBlendedSkyColor, ((volatile u8*)&gWmLevelControlBlendedSkyColor)[1],
-                ((volatile u8*)&gWmLevelControlBlendedSkyColor)[2]);
+    fn_80089510(1, gWmLevelControlBlendedSkyColor[0], gWmLevelControlBlendedSkyColor[1],
+                gWmLevelControlBlendedSkyColor[2]);
 
     fromColor = gWmLevelControlFogColorFrom;
     toColor = gWmLevelControlFogColorTo;
@@ -234,15 +223,13 @@ void fn_801F3F18(GameObject* obj)
         gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
     gWmLevelControlBlendedFogColor[2] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
-    fn_80089578(1, *(volatile u8*)&gWmLevelControlBlendedFogColor, ((volatile u8*)&gWmLevelControlBlendedFogColor)[1],
-                ((volatile u8*)&gWmLevelControlBlendedFogColor)[2]);
+    fn_80089578(1, gWmLevelControlBlendedFogColor[0], gWmLevelControlBlendedFogColor[1],
+                gWmLevelControlBlendedFogColor[2]);
 
     gWmLevelControlBlendedLightIntensity =
         gWmLevelControlBlendFactor * gWmLevelControlLightIntensityRange + gWmLevelControlLightIntensityBase;
     skySetOverrideLightDirectionEnabled(1);
-    /* the embedded def pins light.x-then-color.x load order in the
-       x arg (the bare spelling pre-hoists the two-use color.x) */
-    skySetOverrideLightDirection(gWmLevelControlBlendFactor * (L.light.x - (lightX = L.color.x)) + lightX,
+    skySetOverrideLightDirection(gWmLevelControlBlendFactor * (L.light.x - L.color.x) + L.color.x,
                                  gWmLevelControlBlendFactor * (L.light.y - L.color.y) + L.color.y,
                                  gWmLevelControlBlendFactor * (L.light.z - L.color.z) + L.color.z,
                                  gWmLevelControlOverrideLightIntensity);
@@ -271,7 +258,7 @@ void WM_LevelControl_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5E74);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void WM_LevelControl_hitDetect(void)
@@ -288,15 +275,15 @@ void WM_LevelControl_update(GameObject* obj)
     Obj_GetPlayerObject(); /* result unused (retail does the same call) */
     state = (obj)->extra;
     timer = state->messageTimer;
-    if (timer > lbl_803E5E70)
+    if (timer > 0.0f)
     {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShow(0x42c);
         state->messageTimer = state->messageTimer - timeDelta;
         timer = state->messageTimer;
-        if (timer < lbl_803E5E70)
+        if (timer < 0.0f)
         {
-            state->messageTimer = *(f32*)&lbl_803E5E70;
+            state->messageTimer = 0.0f;
         }
     }
     if (state->latchesDisabled == 0)
@@ -401,4 +388,4 @@ void WM_LevelControl_initialise(void)
 {
 }
 
-__declspec(section ".sdata2") f32 gWmLevelControlIntroMessageDuration = 3e+02f;
+f32 gWmLevelControlIntroMessageDuration = 300.0f;

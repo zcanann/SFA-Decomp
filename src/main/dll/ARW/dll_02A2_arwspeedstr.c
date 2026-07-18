@@ -104,7 +104,7 @@ ObjectDescriptor gARWSpeedStrObjDescriptor = {
     ARWSpeedStr_getExtraSize,
 };
 
-__declspec(section ".sdata2") f32 lbl_803E7100 = 1.0f;
-__declspec(section ".sdata2") const union ArwSpeedStrConstF32 lbl_803E7104 = { 0.0f };
-__declspec(section ".sdata2") f32 lbl_803E7108 = 2.0f;
-__declspec(section ".sdata2") f32 lbl_803E710C = 1.4e+02f;
+f32 lbl_803E7100 = 1.0f;
+const union ArwSpeedStrConstF32 lbl_803E7104 = { 0.0f };
+f32 lbl_803E7108 = 2.0f;
+f32 lbl_803E710C = 1.4e+02f;

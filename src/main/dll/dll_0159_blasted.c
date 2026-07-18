@@ -23,7 +23,6 @@ extern int mapBlockFn_80060678(void* entry);
  * carries the given event id: sets bits 0..1 on matching block entries
  * and bit 1 on matching group records. Returns 0 when the block is
  * missing or not trigger-enabled. */
-#pragma dont_inline on
 int fn_801A27B8(GameObject* obj, int id)
 {
     MapBlockData* block;
@@ -96,7 +95,6 @@ void blasted_hitDetect(void)
  * (state 5) pieces, records each unique piece, advances the damage model
  * index, and on the final piece latches the GameBit, fires the trigger,
  * and swaps to the destroyed model. */
-#pragma opt_loop_invariants off
 void blasted_update(GameObject* obj)
 {
     int i;

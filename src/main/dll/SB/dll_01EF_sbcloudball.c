@@ -107,10 +107,6 @@ void SB_CloudBall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E58EC = 0.0f;
-#pragma explicit_zero_data off
-
 void SB_CloudBall_hitDetect(GameObject* obj)
 {
     SBCloudBallState* state = obj->extra;
@@ -118,7 +114,7 @@ void SB_CloudBall_hitDetect(GameObject* obj)
 
     if ((void*)target == NULL)
         return;
-    if (state->fadeTimer != lbl_803E58EC)
+    if (state->fadeTimer != 0.0f)
         return;
     if (((GameObject*)target)->anim.seqId == CLOUDBALL_TARGET_TYPE_ID)
     {
@@ -138,7 +134,7 @@ void SB_CloudBall_update(GameObject* obj)
     SBCloudBallState* state = obj->extra;
     void* player = Obj_GetPlayerObject();
     f32 timer = state->fadeTimer;
-    f32 zero = lbl_803E58EC;
+    f32 zero = 0.0f;
     if (timer != zero)
     {
         state->fadeTimer = timer - timeDelta;
@@ -177,7 +173,7 @@ void SB_CloudBall_update(GameObject* obj)
         if (obj->userData1 < 0 ||
             (player != NULL && (((GameObject*)player)->objectFlags & SBCLOUDBALL_OBJFLAG_PARENT_SLACK) != 0))
         {
-            if (state->fadeTimer == lbl_803E58EC)
+            if (state->fadeTimer == 0.0f)
             {
                 obj->anim.alpha = 0;
                 state->fadeTimer = SB_CLOUD_BALL_FADE_TIME;
@@ -190,7 +186,7 @@ void SB_CloudBall_update(GameObject* obj)
         ObjAnim_GetPriorityHitState(&obj->anim)->objectHitMask = 0x10;
         ObjAnim_GetPriorityHitState(&obj->anim)->skeletonHitMask = 0x10;
         ObjAnim_GetPriorityHitState(&obj->anim)->flags |= 1;
-        if (ObjAnim_GetPriorityHitState(&obj->anim)->contactFlags != 0 && state->fadeTimer == lbl_803E58EC)
+        if (ObjAnim_GetPriorityHitState(&obj->anim)->contactFlags != 0 && state->fadeTimer == 0.0f)
         {
             projectileParticleFxFn_80099660Legacy((int*)obj, 1.0f, 2);
             state->fadeTimer = SB_CLOUD_BALL_FADE_TIME;
@@ -255,5 +251,5 @@ ObjectDescriptor gSB_CloudBallObjDescriptor = {
     SB_CloudBall_getExtraSize,
 };
 
-__declspec(section ".sdata2") f32 gSbCloudBallLightAttenNear = 1.5e+02f;
-__declspec(section ".sdata2") f32 gSbCloudBallLightAttenFar = 2.5e+02f;
+f32 gSbCloudBallLightAttenNear = 150.0f;
+f32 gSbCloudBallLightAttenFar = 250.0f;

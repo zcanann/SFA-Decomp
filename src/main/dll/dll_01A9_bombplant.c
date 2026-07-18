@@ -123,7 +123,6 @@ typedef struct
 
 /* Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
-#pragma auto_inline off
 void bombplant_throwSpore(int* obj, int* p2)
 {
     BombplantSporeSpawn* spore;
@@ -158,7 +157,6 @@ void bombplant_throwSpore(int* obj, int* p2)
         Obj_SetupObject((ObjPlacement*)spore, 5, -1, -1, NULL);
     }
 }
-#pragma auto_inline reset
 
 int bombplant_getExtraSize(void)
 {
@@ -233,7 +231,7 @@ void bombplant_update(void* obj)
     Obj_GetPlayerObject();
     if (objIsFrozen(obj) != 0)
     {
-        goto epilogue;
+        return;
     }
 
     state = ((GameObject*)obj)->extra;
@@ -414,7 +412,6 @@ void bombplant_update(void* obj)
         ((BombPlantState*)state)->flags &= ~BOMBPLANT_FLAG_MOVE_ACTIVE;
     }
 
-epilogue:
     return;
 }
 #undef hitX

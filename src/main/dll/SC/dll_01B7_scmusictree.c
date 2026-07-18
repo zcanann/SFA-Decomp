@@ -134,7 +134,6 @@ typedef struct ScMusictreeState
     u8 pad4D[0x50 - 0x4D];
 } ScMusictreeState;
 
-#pragma dont_inline on
 void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 idx)
 {
     int def = *(int*)&(obj)->anim.placementData;
@@ -165,10 +164,7 @@ void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 
             (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, (void*)*(int*)&(obj)->anim.parent);
     }
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma opt_common_subs off
 void sc_musictree_handleHitObject(GameObject* obj, int extra, int effectType)
 {
     int id = ((ObjPlacement*)obj->anim.placementData)->mapId;
@@ -294,10 +290,8 @@ void sc_musictree_update(GameObject* obj)
             q = (int*)((char*)q + 0xc);
         }
     }
-    if ((((ScMusictreeState*)inner)->flags & SCMUSICTREE_FLAG_HIT_ACTIVE) == 0)
+    if ((((ScMusictreeState*)inner)->flags & SCMUSICTREE_FLAG_HIT_ACTIVE) != 0)
     {
-        goto end;
-    }
     if (((ScMusictreeState*)inner)->flags & (SCMUSICTREE_FLAG_PRIORITY_HIT | SCMUSICTREE_FLAG_SATELLITES))
     {
         rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, (u32*)&hr3, &vec[0],
@@ -312,9 +306,8 @@ void sc_musictree_update(GameObject* obj)
     {
         ((CloudRunnerState*)inner)->baddie.velZ = ((CloudRunnerState*)inner)->baddie.velZ - timeDelta;
     }
-    if (rcType == 0) goto end;
-    if (rcType == 0x11) goto end;
-    if (!(((CloudRunnerState*)inner)->baddie.velZ <= 0.0f)) goto end;
+    if (rcType != 0 && rcType != 0x11 && ((CloudRunnerState*)inner)->baddie.velZ <= 0.0f)
+    {
     if (((ScMusictreeState*)inner)->flags & (SCMUSICTREE_FLAG_PRIORITY_HIT | SCMUSICTREE_FLAG_SATELLITES))
     {
         vec[0] = vec[0] + playerMapOffsetX;
@@ -356,7 +349,8 @@ void sc_musictree_update(GameObject* obj)
             pp = (int*)((char*)pp + 4);
         }
     }
-end:
+    }
+    }
     {
         void* player = Obj_GetPlayerObject();
         f32 dx = obj->anim.localPosX - ((GameObject*)player)->anim.localPosX;

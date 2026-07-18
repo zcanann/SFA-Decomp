@@ -25,8 +25,6 @@ static inline Dim2PlayerInterface* DIM2_GetPlayerInterface(void)
     return (Dim2PlayerInterface*)*gPlayerInterface;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int fn_801B9ECC(int a, int obj)
 {
     DimAnimTable* base;

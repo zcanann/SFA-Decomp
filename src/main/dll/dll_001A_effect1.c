@@ -32,7 +32,6 @@ extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
 extern FxNode9 lbl_8039C320;
 
-#pragma scheduling off
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
@@ -130,7 +129,6 @@ extern FxNode9 lbl_8039C320;
         spawnParams = (PartFxSpawnParams*)&lbl_8039C320;                                                               \
     } while (0)
 
-#pragma peephole off
 int Effect1_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                    s16* extraArgs)
 {

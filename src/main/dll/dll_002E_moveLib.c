@@ -60,11 +60,6 @@
 
 extern u8 gMoveLibDefaultMoveData[];
 
-
-
-
-
-
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
 
 /* Animation-channel helpers implemented by objprint.c. */
@@ -76,7 +71,6 @@ s16 objMathFn_8003a380(PostObjAnimComponent* objAnim, PostObject* obj, void* pri
                        f32 distance, int eventCount, int eventState);
 
 void fn_80038F1C(int a, int b);
-
 
 typedef struct ProjNearSearch
 {
@@ -420,7 +414,6 @@ int dll_2E_func0D(GameObject* obj, const MoveLibTarget* target, f32 speed, int m
     return 0;
 }
 
-#pragma optimization_level reset
 void fn_80114B1C(GameObject* obj)
 {
     MoveLibState* state;
@@ -437,7 +430,6 @@ void fn_80114B1C(GameObject* obj)
     fn_8003A9C0((char*)state->animChannels, state->pointCount, 0, 0);
 }
 
-#pragma optimization_level 2
 int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16 b)
 {
     s16 pair[2];
@@ -515,7 +507,6 @@ int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16
     return 0;
 }
 
-#pragma optimization_level reset
 /* Latches the path-relative start offset on first use and refreshes the
  * current path point position. */
 void dll_2E_func06(GameObject* obj, MoveLibState* s, int point)
@@ -556,7 +547,6 @@ void dll_2E_func06(GameObject* obj, MoveLibState* s, int point)
     s->targetZ = v.z0;
 }
 
-#pragma optimization_level reset
 /* Initializes the movement-state block and primes the animation channel
  * tables. */
 void dll_2E_func05(GameObject* obj, MoveLibState* s, s16 a, s16 b, int count)
@@ -914,7 +904,6 @@ void dll_2E_release_nop(void)
 void dll_2E_initialise_nop(void)
 {
 }
-
 
 u8 gMoveLibDefaultMoveData[20] = {0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23,
                                   0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23};

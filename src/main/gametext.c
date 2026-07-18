@@ -100,18 +100,16 @@ static inline int textCountChars(char* lineStr)
         {
             SpecialGlyph* g = lbl_802C86F0;
             int n;
-            int val;
+            int val = 0;
             for (n = 46; n-- != 0;)
             {
                 if (g->key == ch)
                 {
                     val = g->val;
-                    goto haveVal;
+                    break;
                 }
                 g++;
             }
-            val = 0;
-        haveVal:
             byteOffset += val * 2;
         }
         else
@@ -122,7 +120,6 @@ static inline int textCountChars(char* lineStr)
     return charCount;
 }
 
-#pragma auto_inline off
 int isSpace(u32 c)
 {
     int result = 0;
@@ -567,7 +564,6 @@ void gameTextFn_80016810(int a, int b, int c)
     }
 }
 
-
 void gameTextShow(int a)
 {
     int i;
@@ -678,12 +674,11 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
                 }
                 else
                 {
-                    goto setF8Zero;
+                    state->f8 = 0;
                 }
             }
             else
             {
-            setF8Zero:
                 state->f8 = 0;
             }
             state->fC = 0;
@@ -691,7 +686,6 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
     }
     gameTextRenderStrs(def->strings[state->charIndex], 0x7c);
 }
-
 
 void gameTextFn_80016c18(int a, int b)
 {
@@ -735,7 +729,6 @@ static inline MeasGlyph* gameTextFindGlyph(u32 ch, int langIdx)
     return NULL;
 }
 
-
 void gameTextFreePhrase(int* p)
 {
     p[0] = 0;
@@ -748,7 +741,6 @@ void gameTextFreePhrase(int* p)
         ((void**)p)[5] = NULL;
     }
 }
-#pragma ppc_unroll_speculative on
 char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH)
 {
     int cursor;
@@ -920,9 +912,15 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             char* q = --dst;
             for (;;)
             {
-                int k = 6;
-            retry:
-                ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
+                int k;
+                for (k = 6; ; k--)
+                {
+                    ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
+                    if (k == charLen2 || k == 1)
+                    {
+                        break;
+                    }
+                }
                 if (k == charLen2)
                 {
                     if (isSpace(ch))
@@ -942,14 +940,6 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
                         break;
                     }
                 }
-                else
-                {
-                    k--;
-                    if (k > 0)
-                    {
-                        goto retry;
-                    }
-                }
             }
             boundary++;
             lineIdx++;
@@ -960,8 +950,6 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     *dst = 0;
     return buffer;
 }
-#pragma ppc_unroll_speculative off
-
 
 void* gameTextGetBox(int box)
 {

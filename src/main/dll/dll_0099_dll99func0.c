@@ -38,7 +38,6 @@ extern f32 lbl_803E1360;
 extern f32 lbl_803E1364;
 extern f32 lbl_803E1368;
 
-#pragma inline_max_size(2000)
 static inline void dll_99_func03Body(u8* table, int sourceObj, int variant, int posSource, u32 flags, int arg5,
                                      f32* extraArgs)
 {
@@ -183,7 +182,6 @@ void dll_99_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
 {
     dll_99_func03Body(lbl_80317AF8, sourceObj, variant, posSource, flags, arg5, extraArgs);
 }
-#pragma inline_max_size reset
 
 void dll_99_func01_nop(void)
 {

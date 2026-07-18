@@ -97,8 +97,6 @@ void WeirdUnusedMenu_frameEnd(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 int WeirdUnusedMenu_run(void)
 {
     int selection;

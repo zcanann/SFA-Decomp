@@ -134,7 +134,6 @@ void dll_1CE_free(void)
     lbl_803DDB78 = NULL;
 }
 
-#pragma peephole off
 void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -142,7 +141,6 @@ void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E49E8);
 }
 
-#pragma peephole on
 void dll_1CE_hitDetect(void)
 {
 }
@@ -151,9 +149,6 @@ void dll_1CE_hitDetect(void)
  * velocity while idle, and once a key object is nearby, count down then
  * ring the gamebit and (if the load isn't locked) spawn the contents
  * object seeded from the door's transform. */
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_strength_reduction off
 void dll_1CE_update(int* obj)
 {
     int* q = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -232,7 +227,6 @@ void dll_1CE_update(int* obj)
         Obj_SetupObject((ObjPlacement*)no, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     }
 }
-#pragma opt_strength_reduction reset
 
 void dll_1CE_init(u8* obj, u8* params)
 {
@@ -251,8 +245,6 @@ void dll_1CE_init(u8* obj, u8* params)
     }
     sub->openVelocity = lbl_803E49F0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void dll_1CE_release(void)
 {

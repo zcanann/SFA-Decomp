@@ -32,7 +32,6 @@ extern u8 lbl_80312BD8[];
 #define DLL63_EFFECT_Y 4.0f
 #define DLL63_FLAG_SCALE 0.1f
 
-#pragma inline_max_size(4000)
 static inline void dll_63_func03Body(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     ModgfxPointerSpawnPacket buf;
@@ -305,7 +304,6 @@ void dll_63_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     dll_63_func03Body(sourceObj, variant, posSource, flags);
 }
-#pragma inline_max_size reset
 
 void dll_63_func01_nop(void)
 {

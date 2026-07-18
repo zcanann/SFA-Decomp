@@ -23,8 +23,6 @@
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 #define DIMLAVASMASH_HIT_SEQID_CANNONBALL 397 /* dimlavaball cannonball (0x18d) */
 
-#pragma dont_inline on
-#pragma opt_propagation off
 void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
 {
     int clearMask;
@@ -66,8 +64,6 @@ void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
         }
     }
 }
-#pragma dont_inline off
-#pragma opt_propagation reset
 
 int dimlavasmash_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

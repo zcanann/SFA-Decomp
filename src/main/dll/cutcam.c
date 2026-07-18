@@ -66,7 +66,6 @@ extern f32 lbl_803E16C4;      /* 0.9f   - per-frame yaw-offset decay */
 extern f32 lbl_803E16C8;      /* 0.5f   - decay dead-zone (snap to 0 inside) */
 extern f32 lbl_803E16CC;      /* -0.5f  - decay dead-zone (snap to 0 inside) */
 
-#pragma dont_inline on
 int camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceWork, char traceMode, u8 runTrace,
                          u8 runBbox, float radius)
 {
@@ -110,7 +109,6 @@ int camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceW
     }
     return clear;
 }
-#pragma dont_inline reset
 
 void doNothing_80103660(int unused)
 {
@@ -198,11 +196,13 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
     short classId;
     u16 buttons;
     int cond;
+    int combatCam;
     CamcontrolAction43Payload action43Payload;
     CamcontrolAction44Payload action44Payload;
 
     if (target->pendingParentObj == NULL)
     {
+        combatCam = 0;
         buttons = getButtonsJustPressed(0);
         if (camera->currentTarget != NULL)
         {
@@ -212,13 +212,12 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
                 cond = objFn_80296700(target);
                 if ((cond != 0) && (cond = fn_80295C0C(target), cond != 0))
                 {
-                    goto action_49;
+                    combatCam = 1;
                 }
             }
         }
-        if ((camera->targetFlags & 2) != 0)
+        if (combatCam || (camera->targetFlags & 2) != 0)
         {
-        action_49:
             cameraSetInterpMode(1);
             (*gCameraInterface)->setMode(CAMMODE_COMBAT, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
         }

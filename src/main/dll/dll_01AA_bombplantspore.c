@@ -106,7 +106,6 @@ void BombPlantSpore_free(GameObject* obj)
 
 /* These two drift helpers' only callers are BombPlantSpore_update/init in
  * this TU. */
-#pragma dont_inline on
 void bombplantspore_startDriftBurst(GameObject* obj, void* state)
 {
     s16 baseAngle;
@@ -232,7 +231,6 @@ void bombplantspore_updateDrift(GameObject* obj, void* state)
         mathCosf((gBombPlantSporePi * (f32)((BombPlantSporeState*)state)->currentSpinAngle) /
                  gBombPlantSporeAngleHalfPeriod);
 }
-#pragma dont_inline reset
 
 void BombPlantSpore_update(GameObject* obj)
 {

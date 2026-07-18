@@ -33,7 +33,6 @@
 
 #define WCTREXSTATU_MAPEVENT_RAISED 2
 
-#pragma opt_strength_reduction off
 int wctrexstatu_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -54,7 +53,6 @@ int wctrexstatu_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState
 
     return 0;
 }
-#pragma opt_strength_reduction reset
 
 int wctrexstatu_getExtraSize(void)
 {

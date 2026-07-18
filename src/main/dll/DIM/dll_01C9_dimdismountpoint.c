@@ -160,7 +160,6 @@ ObjectDescriptor12 gDIMDismountPointObjDescriptor = {
     (ObjectDescriptorCallback)DIMDismountPoint_func0B,
 };
 
-#pragma force_active on
 /* .sdata2 constant pool */
 const u32 lbl_803E4928 = 0xFFFFFFFF;
 const f32 lbl_803E492C = 1.0f;

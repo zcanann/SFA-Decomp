@@ -195,7 +195,6 @@ void enemy_hitDetect(GameObject* obj);
 void enemy_free(GameObject* obj, int flag);
 void enemy_update(int obj);
 
-
 extern f32 enemyRespawnDistanceSq;
 extern u8 lbl_8031DBD8[];
 extern u8 lbl_8031DBE4[];
@@ -954,7 +953,6 @@ int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-
 /* sidekickToy_updateCurveTargetLatch: pre-curve probe + state-bit gate. If state's 0x2000 bit is
  * set, ask baddieTargetFn_8014a150 whether the target is locked on; on hit,
  * leave state[0x2dc] alone. Otherwise initialise the rom-curve walker with
@@ -1124,21 +1122,15 @@ u8 fn_8014C4D8(GameObject* obj)
     int* state;
     f32 val;
     if (obj == NULL)
-        goto null_obj;
+        return 0;
     state = obj->extra;
-    goto have_state;
-null_obj:
-    return 0;
-have_state:
     if (state == NULL)
-        goto null_state;
+        return 0;
     val = ((EnemyState*)state)->freezeRecoverTimer;
     if (val != lbl_803E2574)
     {
         return (u8)((s32)(val / lbl_803E2598) + 1);
     }
-    return 0;
-null_state:
     return 0;
 }
 
@@ -1198,7 +1190,6 @@ void fn_8014C66C(GameObject* obj, GameObject* target)
 {
     ((EnemyState*)obj->extra)->trackedObj = target;
 }
-#pragma opt_common_subs off
 void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 flag)
 {
     f32 mag1, mag2, magcross, finalScale;
@@ -1293,7 +1284,6 @@ void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 fla
         }
     }
 }
-#pragma opt_common_subs reset
 
 /* sidekickToy_accelerateTowardTarget3D: 3D physics step toward a target. Variant of sidekickToy_accelerateTowardTargetXZ that
  * uses the full 3D distance (xyz) instead of planar (xz), and also nudges
@@ -1350,8 +1340,6 @@ f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz
     return dy;
 }
 
-
-
 /* sidekickToy_accelerateTowardTargetXZ: xz-plane physics step toward a target. Computes the planar
  * distance to (tx,ty,tz), then nudges the obj's xz velocity (offsets 0x24,
  * 0x2c) by timeDelta * speedScale * unitDir, clamped at +/-maxVel, with an
@@ -1396,7 +1384,6 @@ f32 sidekickToy_accelerateTowardTargetXZ(GameObject* obj, f32 tx, f32 ty, f32 tz
     }
     return dy;
 }
-
 
 void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledRoll)
 {
@@ -1479,7 +1466,6 @@ void fn_8014CF7C(int* node, int unused, u16 divisor, int angleBias, f32 fa, f32 
     ((GameObject*)node)->anim.rotX = newVal;
 }
 
-
 void fn_8014D08C(GameObject* obj, int state, f32 rateScale, int moveId, int moveControlFlags, u8 stateByte)
 {
     ObjHitsPriorityState* hitState;
@@ -1509,7 +1495,6 @@ void baddieAfterUpdateBonesCb(GameObject* obj, int* bones)
         break;
     }
 }
-
 
 int enemy_getExtraSize(void)
 {

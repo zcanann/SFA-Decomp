@@ -117,9 +117,6 @@ static u8* trickyfollow_validateRouteNode(u8* node)
     return node;
 }
 
-#pragma opt_common_subs off
-#pragma opt_loop_invariants off
-#pragma inline_max_total_size(100000)
 int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
 {
     int tp;
@@ -136,6 +133,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     int dir;
     int i;
     u8* node;
+    int walkNodes;
     u8* prevNode;
     u8* patchTarget;
     int d;
@@ -383,27 +381,27 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                     }
                     else
                     {
-                        if (wg == 0)
+                        if (wg == 0 &&
+                            (tp = getPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->activeWalkGroup) & 0xffff) !=
+                                0)
                         {
-                            tp = getPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->activeWalkGroup) & 0xffff;
-                            if ((u32)tp != 0)
+                            if (*(s16*)&((TrickyState*)state)->linkedWalkGroup == tp)
                             {
-                                if (*(s16*)&((TrickyState*)state)->linkedWalkGroup == tp)
-                                {
-                                    ((TrickyState*)state)->followPhase = 3;
-                                }
-                                else
-                                {
-                                    fn_800DB240(target, state + 0xec, tp);
-                                    ((TrickyState*)state)->followPhase = 4;
-                                }
-                                goto state_selected;
+                                ((TrickyState*)state)->followPhase = 3;
+                            }
+                            else
+                            {
+                                fn_800DB240(target, state + 0xec, tp);
+                                ((TrickyState*)state)->followPhase = 4;
                             }
                         }
-                        pp = tp;
-                        i = isPointWithinPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->activeWalkGroup, pp);
-                        trickyReportError(strs + 0x374, pp, targetWg, wg, ((TrickyState*)state)->activeWalkGroup, i);
-                        ((TrickyState*)state)->followPhase = 0;
+                        else
+                        {
+                            pp = tp;
+                            i = isPointWithinPatchGroup((f32*)(obj + 0x18), ((TrickyState*)state)->activeWalkGroup, pp);
+                            trickyReportError(strs + 0x374, pp, targetWg, wg, ((TrickyState*)state)->activeWalkGroup, i);
+                            ((TrickyState*)state)->followPhase = 0;
+                        }
                     }
                 }
             }
@@ -504,7 +502,6 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             }
         }
     }
-state_selected:
     if (((TrickyState*)state)->followPhase < 5)
     {
         ((TrickyState*)state)->stateFlags &= ~0x2000LL;
@@ -782,7 +779,7 @@ state_selected:
                                 {
                                     if (found >= -1)
                                     {
-                                        goto set_found;
+                                        found = 1;
                                     }
                                 }
                                 else if (found < 2)
@@ -801,14 +798,12 @@ state_selected:
                                 }
                             }
                         }
-                        continue;
-                    set_found:
-                        found = 1;
                     }
                 }
             }
         }
         dir = route->reverse;
+        walkNodes = 0;
         if (((dir == 0) && (route->atSegmentEnd != 0)) || ((dir != 0 && (route->atSegmentEnd == 0))))
         {
             if ((node = trickySelectRouteEntry(state, route->nodeA4, dir & 0xff)) != 0)
@@ -830,9 +825,12 @@ state_selected:
                     }
                     break;
                 }
-                goto walk_nodes_common;
+                walkNodes = 1;
             }
-            ((TrickyState*)state)->followPhase = 0;
+            else
+            {
+                ((TrickyState*)state)->followPhase = 0;
+            }
         }
         else
         {
@@ -847,52 +845,55 @@ state_selected:
                 {
                     fn_800D9F38(route);
                 }
-            walk_nodes_common:
-                if ((((TrickyState*)state)->savedWalkGroup == 0) || (wg != ((TrickyState*)state)->savedWalkGroup))
+                walkNodes = 1;
+            }
+        }
+        if (walkNodes != 0)
+        {
+            if ((((TrickyState*)state)->savedWalkGroup == 0) || (wg != ((TrickyState*)state)->savedWalkGroup))
+            {
+                yawA = getAngle(((TrickyState*)state)->prevLocalPosX - ((GameObject*)obj)->anim.localPosX,
+                                ((TrickyState*)state)->prevLocalPosZ - ((GameObject*)obj)->anim.localPosZ);
+                yawB = getAngle(((TrickyState*)state)->prevLocalPosX - route->posX,
+                                ((TrickyState*)state)->prevLocalPosZ - route->posZ);
+                diff = yawA - (u16)yawB;
+                if (0x8000 < diff)
                 {
-                    yawA = getAngle(((TrickyState*)state)->prevLocalPosX - ((GameObject*)obj)->anim.localPosX,
-                                    ((TrickyState*)state)->prevLocalPosZ - ((GameObject*)obj)->anim.localPosZ);
-                    yawB = getAngle(((TrickyState*)state)->prevLocalPosX - route->posX,
-                                    ((TrickyState*)state)->prevLocalPosZ - route->posZ);
-                    diff = yawA - (u16)yawB;
-                    if (0x8000 < diff)
-                    {
-                        diff = diff - 0xffff;
-                    }
-                    if (diff < -0x8000)
-                    {
-                        diff = diff + 0xffff;
-                    }
-                    if (diff > 0x4000)
-                    {
-                        diff -= 0x8000;
-                    }
-                    else if (diff < -0x4000)
-                    {
-                        diff += 0x8000;
-                    }
-                    d = (diff >= 0) ? diff : -diff;
-                    if (0x1000 < d)
-                    {
-                        ((TrickyState*)state)->speed = velBefore;
-                        trickyUpdateApproachSpeed(obj, lbl_803E246C, state, &route->posX, 1);
-                    }
+                    diff = diff - 0xffff;
                 }
-                trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
-                moved = trickyMove(obj, &route->posX);
-                type = *(s8*)((u8*)route->nodeA0 + 0x1a);
-                switch (type)
+                if (diff < -0x8000)
                 {
-                case 1:
-                    ((TrickyState*)state)->followPhase = 8;
-                    break;
-                case 5:
-                    ((TrickyState*)state)->followPhase = 0xb;
-                    break;
-                case 6:
-                    ((TrickyState*)state)->followPhase = 0xd;
-                    break;
+                    diff = diff + 0xffff;
                 }
+                if (diff > 0x4000)
+                {
+                    diff -= 0x8000;
+                }
+                else if (diff < -0x4000)
+                {
+                    diff += 0x8000;
+                }
+                d = (diff >= 0) ? diff : -diff;
+                if (0x1000 < d)
+                {
+                    ((TrickyState*)state)->speed = velBefore;
+                    trickyUpdateApproachSpeed(obj, lbl_803E246C, state, &route->posX, 1);
+                }
+            }
+            trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
+            moved = trickyMove(obj, &route->posX);
+            type = *(s8*)((u8*)route->nodeA0 + 0x1a);
+            switch (type)
+            {
+            case 1:
+                ((TrickyState*)state)->followPhase = 8;
+                break;
+            case 5:
+                ((TrickyState*)state)->followPhase = 0xb;
+                break;
+            case 6:
+                ((TrickyState*)state)->followPhase = 0xd;
+                break;
             }
         }
         break;
@@ -1351,11 +1352,8 @@ state_selected:
     }
     return 0;
 }
-#pragma opt_loop_invariants reset
-#pragma opt_common_subs reset
 #undef route
 
-#pragma opt_common_subs off
 void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag)
 {
     struct
@@ -1488,4 +1486,3 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
         ((TrickyState*)state)->speed = (step > gTrickyFollowMaxSpeed) ? gTrickyFollowMaxSpeed : step;
     }
 }
-#pragma opt_common_subs reset

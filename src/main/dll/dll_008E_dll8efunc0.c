@@ -31,7 +31,6 @@ extern u8 gDll8EEffectSpawnResource[8];
 u8 gDll8EEffectSpawnResource[8] = {0, 0, 0, 1, 0, 2, 0, 0};
 u8 gDll8EEffectTexture[8] = {0, 0, 0, 1, 0, 2, 0, 0};
 
-#pragma opt_propagation off
 void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
@@ -194,7 +193,6 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     (*gModgfxInterface)
         ->spawnEffect(&buf, 0, 3, gDll8EEffectVtxColorTable, 1, &gDll8EEffectSpawnResource, DLL8E_EFFECT_ID, 0);
 }
-#pragma opt_propagation reset
 
 void dll_8E_func01_nop(void)
 {
@@ -229,7 +227,6 @@ u32 lbl_80316E0C[9] = {
     0x00000000, (u32)dll_8F_func03, 0x00000000};
 
 /* descriptor/ptr table auto 0x803e1178-0x803e1398 */
-#pragma force_active on
 const f32 lbl_803E1178 = 0.0f;
 const f32 lbl_803E117C = 0.2f;
 const f32 lbl_803E1180 = 2.0f;
@@ -280,4 +277,3 @@ const f32 lbl_803E1230 = 25.0f;
 const f32 lbl_803E1234 = 8.0f;
 const f32 lbl_803E1238 = 2.0f;
 const f32 lbl_803E123C = 0.0f;
-#pragma force_active reset

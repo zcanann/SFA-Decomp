@@ -65,7 +65,6 @@ enum
 /* Advance the ordered spell-tablet puzzle. The four step bits must be
    set in array order; the next-expected bit advances the step, any
    later bit lighting early resets the whole puzzle. */
-#pragma dont_inline on
 void fn_801F9804(GameObject* obj)
 {
     s16* p;

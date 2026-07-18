@@ -14,7 +14,6 @@
 s16 gWcTempleDiaGameBitsA[4] = {0x2F8, 0x2D1, 0x2D2, 0};
 s16 gWcTempleDiaGameBitsB[4] = {0x203, 0x2EC, 0x2EF, 0};
 
-#pragma dont_inline on
 
 #define WCTEMPLE_DIA_EXTRA_SIZE       0x14
 #define WCTEMPLE_DIA_STAGE_COUNT      3

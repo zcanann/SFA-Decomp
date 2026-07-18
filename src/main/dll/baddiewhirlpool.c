@@ -41,10 +41,6 @@
 
 extern void renderWhirlpool(void);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs reset
-#pragma fp_contract reset
 void iceBaddie_enterWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
 {
     ObjHitsPriorityState* hitState;
@@ -60,10 +56,6 @@ void iceBaddie_enterWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
     (obj)->anim.rotX -= 256;
 }
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs reset
-#pragma fp_contract reset
 void iceBaddie_leaveWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
 {
     if (state->baddie.userData2 != 0)
@@ -74,10 +66,6 @@ void iceBaddie_leaveWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
     *(u16*)obj = (float)(int)(obj)->anim.rotX - 256.0f * timeDelta;
 }
 
-#pragma scheduling off
-#pragma peephole on
-#pragma opt_common_subs reset
-#pragma fp_contract reset
 void baddie_initWhirlpoolState(int* obj, GroundBaddieState* state)
 {
     f32 fz;
@@ -99,4 +87,4 @@ void baddie_initWhirlpoolState(int* obj, GroundBaddieState* state)
     state->baddie.userData2 = 0;
     ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel((GameObject*)obj), renderWhirlpool);
 }
-
+

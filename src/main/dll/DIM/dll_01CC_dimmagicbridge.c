@@ -32,10 +32,6 @@ STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 #define DIMMAGICBRIDGE_GAMEBIT_TRIGGER 0x1ef
 #define DIMMAGICBRIDGE_GAMEBIT_LATCH   0x1e8
 
-
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
 void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub)
 {
     int i;
@@ -99,7 +95,6 @@ void dimmagicbridge_scrollTextureChannels(int obj, u8* extra)
         phase = phase - 0xffff;
     state->wavePhaseB = phase;
 }
-#pragma dont_inline reset
 
 int dimmagicbridge_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -168,7 +163,6 @@ void dimmagicbridge_hitDetect(void)
 {
 }
 
-#pragma peephole on
 void dimmagicbridge_update(GameObject* obj)
 {
     DimMagicBridgeState* sub;
@@ -192,7 +186,6 @@ void dimmagicbridge_update(GameObject* obj)
         fn_80065574(0x11, (GameObject*)(0), 0);
     }
 }
-#pragma peephole off
 
 void dimmagicbridge_init(u8* obj, u8* params)
 {
@@ -274,8 +267,6 @@ void dimmagicbridge_initialise(void)
 {
 }
 
-#pragma force_active on
-/* .sdata2 constant pool */
 const f32 lbl_803E4A1C = 0.0f;
 const f32 lbl_803E4A20 = 1.0f;
 const f32 lbl_803E4A24 = 0.0f;

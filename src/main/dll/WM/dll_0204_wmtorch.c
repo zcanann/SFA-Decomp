@@ -152,6 +152,4 @@ ObjectDescriptor gWM_TorchObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)wmtorch_getExtraSize,
 };
 
-#pragma explicit_zero_data on
 u32 lbl_80328AD8[12] = {0};
-#pragma explicit_zero_data off

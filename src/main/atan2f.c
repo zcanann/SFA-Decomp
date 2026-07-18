@@ -37,7 +37,6 @@ static inline u32 float_bits(const float *value) {
     return ((const FloatWord *)value)->bits;
 }
 
-#pragma peephole on
 float __kernel_cos(float y, float x) {
     float ax = __fabsf(x);
     float ay = __fabsf(y);

@@ -77,7 +77,6 @@ STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 #define DRCLOUDRUNNER_CHILD_OBJ_PROJECTILE 0x42a
 
 
-#pragma dont_inline on
 void fn_802BF0C8(GameObject* obj, CloudRunnerState* state, int mode)
 {
     u8* base = gDRCloudRunnerMoveParamTable;
@@ -106,7 +105,6 @@ void fn_802BF0C8(GameObject* obj, CloudRunnerState* state, int mode)
     }
     (*gPathControlInterface)->attachObject(obj, pathState);
 }
-#pragma dont_inline off
 
 void DR_CloudRunner_func23(GameObject* obj, int mode, int* out)
 {
@@ -941,7 +939,6 @@ int DR_CloudRunner_stateHandler00(GameObject* obj)
     ((ByteFlags*)&inner->flagsBC0)->b10 = inner->airTimeRemaining > 0;
     return 3;
 }
-#pragma opt_loop_invariants off
 int DR_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     CloudRunnerState* inner = obj->extra;
@@ -962,7 +959,6 @@ int DR_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
     ((ByteFlags*)&inner->flagsBC1)->b80 = 1;
     return 0;
 }
-#pragma opt_loop_invariants reset
 
 void DR_CloudRunner_setGroundMarkerMatrix(GameObject* obj)
 {

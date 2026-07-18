@@ -123,10 +123,6 @@ static inline void snowFifoTexCoord2s16(s16 s, s16 t)
     GXWGFifo.s16 = t;
 }
 
-
-#pragma dont_inline off
-
-
 extern const f32 gNewCloudUpVectorThreshold;
 extern f32 lbl_803DF1BC;
 extern const f32 lbl_803DF1C0;
@@ -135,7 +131,6 @@ extern const f32 lbl_803DF1C8;
 extern const f32 lbl_803DF1CC;
 
 void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int* seed, int depth, int flags);
-
 
 f32 fn_8008ED88(void)
 {
@@ -294,7 +289,6 @@ void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
         srand(savedRand);
     }
 }
-
 
 extern const f32 lbl_803DF1D0;
 
@@ -517,9 +511,6 @@ extern inline float sqrtf__inline(float x)
     return x;
 }
 
-
-
-
 /* CloudSpawnParams.flags58 / NewCloud.flags144A - spawn command / trigger bits */
 #define NEWCLOUD_CMD_SPIN       0x1  /* enable cloud spin */
 #define NEWCLOUD_CMD_SPAWN      0x2  /* create/spawn cloud */
@@ -544,7 +535,6 @@ void lightningRenderActive(void)
         lightningRender(lbl_803DD19C);
     }
 }
-#pragma dont_inline on
 LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, s16 lifetime,
                                  u8 width, u8 flags)
 {
@@ -605,7 +595,6 @@ void snowCloudBuildBoxVerts(f32* out, f32 height, f32 scale)
     out[22] = zero;
     out[23] = edge;
 }
-#pragma dont_inline off
 void mm_free_(void* ptr)
 {
     mm_free(ptr);
@@ -719,7 +708,6 @@ void snowCloudInitFlakes(f32* buf, f32 a, f32 b, int cloudId)
     }
     ((NewCloud*)gNewClouds[i])->waveWriteIdx = ((NewCloud*)gNewClouds[i])->waveWriteIdx + 0xfa0;
 }
-#pragma dont_inline on
 void snowFreeSnowCloud(int cloudId)
 {
     u8* env;
@@ -764,16 +752,12 @@ void snowFreeSnowCloud(int cloudId)
 
 void* gNewClouds[8];
 void snowFreeSnowCloud(int index);
-#pragma dont_inline off
 
 void dll_07_func0A_nop(void)
 {
 }
 
 WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
-#pragma opt_common_subs off
-
-extern const SnowFlakeUVs lbl_802C1FCC;
 
 int snowPrintSnowCloud(int arg, int cloudId)
 {
@@ -799,15 +783,14 @@ int snowPrintSnowCloud(int arg, int cloudId)
     f32 mtxT[12];
     f32 mtxA[16];
     f32 mtxOut[16];
-    volatile f32 vx[3];
-    volatile f32 vy[3];
-    volatile f32 vz[3];
-    volatile SnowFlakeUVs uvs;
+    f32 vx[3];
+    f32 vy[3];
+    f32 vz[3];
+    SnowFlakeUVs uvs = {{-48, 0, 176, 0, 64, 256}};
     f32* qx;
     f32* qy;
     f32* qz;
 
-    uvs = lbl_802C1FCC;
     qx = (f32*)vx;
     qy = (f32*)vy;
     qz = (f32*)vz;
@@ -990,14 +973,8 @@ int snowPrintSnowCloud(int arg, int cloudId)
     return 0;
 }
 
-
-#pragma opt_common_subs reset
-
-
-
 f32 lbl_8039A8F0[4];
 extern int gNewCloudSnowFogColor;
-
 
 typedef struct
 {
@@ -1007,8 +984,6 @@ typedef struct
 const SnowVec3 lbl_802C1FA8 = {{0.0f, 0.0f, 0.0f}};
 const SnowVec3 lbl_802C1FB4 = {{0.0f, 0.0f, 0.0f}};
 const SnowVec3 lbl_802C1FC0 = {{0.0f, 0.0f, 0.0f}};
-__declspec(section ".rodata") const SnowFlakeUVs lbl_802C1FCC = {{-48, 0, 176, 0, 64, 256}};
-
 
 extern char lbl_8030F670[];
 extern const f32 lbl_803DF228;
@@ -1316,7 +1291,6 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
     out[2] = out[2] * scale;
 }
 
-
 extern char lbl_8030F500[];
 extern const f32 gNewCloudType0Height;
 extern const f32 gNewCloudType0Scale;
@@ -1591,35 +1565,16 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
     }
 }
 
-
-
-
-
 void dll_07_func09(void)
 {
     Camera_GetCurrentViewSlot();
     randomGetRange(5, 5);
 }
-#pragma dont_inline on
-
-
-
-
-
-#pragma dont_inline off
 
 int dll_07_func08(void)
 {
     return gNewCloudBlizzardActive;
 }
-
-
-
-
-
-
-
-
 
 void lightningDrawBolt(f32* start, f32* end, int width, f32 c, f32 d, int* seed, int e, int f);
 
@@ -1645,7 +1600,6 @@ void dll_07_func07(int arg)
                         lbl_803DD199, lbl_803DD19A, lbl_803DB768);
     }
 }
-#pragma opt_propagation off
 void dll_07_func06(void)
 {
     CameraViewSlot* cam;
@@ -1976,10 +1930,6 @@ void dll_07_func06(void)
     }
 }
 
-
-
-#pragma dont_inline on
-#pragma opt_propagation reset
 void newclouds_killSnowCloud(int cloudId, int flag)
 {
     void* p;
@@ -2021,7 +1971,6 @@ void newclouds_killSnowCloud(int cloudId, int flag)
     ((NewCloud*)gNewClouds[i])->flakeDrainRate =
         -((f32)flag / (f32)((NewCloud*)gNewClouds[i])->flakeCount);
 }
-#pragma dont_inline off
 
 void newclouds_onMapSetup(void)
 {
@@ -2053,7 +2002,6 @@ void newclouds_onMapSetup(void)
     Music_Trigger(MUSICTRIG_crun_dungeon, 0);
 }
 extern const f32 lbl_803DF27C;
-
 
 /*
  * `params` kept as raw u8* here (not CloudSpawnParams*): the NC_CLOUD macro
@@ -2362,5 +2310,4 @@ char lbl_8030F670[] =
     0x61, 0x76, 0x61, 0x69, 0x6C, 0x61, 0x62, 0x6C, 0x65, 0x0A, 0x00, 0x00,
 };
 char sSnowKillSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i - in snowKillSnowCloud\n";
-
-
+

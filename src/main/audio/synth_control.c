@@ -1,6 +1,5 @@
 #include "src/main/audio/synth_internal.h"
 
-#pragma exceptions on
 
 extern void sndBegin(void);
 extern void sndEnd(void);

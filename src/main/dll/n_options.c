@@ -506,7 +506,7 @@ int ProperTimingForGettingNextFrame(void)
     {
         if (VIGetNextField() != 0)
         {
-            goto returnFalse;
+            return FALSE;
         }
         return TRUE;
     }
@@ -515,7 +515,7 @@ int ProperTimingForGettingNextFrame(void)
     {
         if (VIGetNextField() != 1)
         {
-            goto returnFalse;
+            return FALSE;
         }
         return TRUE;
     }
@@ -537,7 +537,6 @@ int ProperTimingForGettingNextFrame(void)
         lbl_803A5D60.prevCount = lbl_803A5D60.curCount;
         return TRUE;
     }
-returnFalse:
     return FALSE;
 }
 

@@ -39,7 +39,6 @@ GameObject* gWaterFlowPhaseDriver;
 
 
 
-#pragma opt_dead_assignments off
 void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
 {
     GameObject* object = obj;
@@ -149,7 +148,6 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
     }
 }
 
-#pragma opt_dead_assignments reset
 int waterflowwe_getExtraSize(void)
 {
     return sizeof(WaterFlowWeState);

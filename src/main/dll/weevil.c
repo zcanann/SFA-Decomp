@@ -41,33 +41,14 @@ void weevil_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgF
 {
     u8 cond = 0;
     int kind = (obj)->anim.currentMove;
-    if (kind == 5)
+    if (kind == 5 || kind == 4 || (kind == 6 && (double)(obj)->anim.currentMoveProgress < lbl_803E2938))
     {
-    }
-    else if (kind == 4)
-    {
-    }
-    else if (kind == 6)
-    {
-        if ((double)(obj)->anim.currentMoveProgress < lbl_803E2938)
+        if (msgFlag != 0xe)
         {
-        }
-        else
-        {
-            goto checkedKind;
+            cond = 1;
         }
     }
-    else
-    {
-        goto checkedKind;
-    }
 
-    if (msgFlag != 0xe)
-    {
-        cond = 1;
-    }
-
-checkedKind:
 {
     u32 condV = cond;
     if (msgFlag == 0x10)
@@ -176,16 +157,6 @@ void fn_80153E0C(GameObject* obj, int state)
     }
 }
 
-__declspec(section ".sdata2") f32 lbl_803E2968 = 3.6e+02f;
-__declspec(section ".sdata2") f32 lbl_803E296C = 0.35f;
-__declspec(section ".sdata2") f32 lbl_803E2970 = 0.375f;
-__declspec(section ".sdata2") f32 lbl_803E2974 = 5e+01f;
-__declspec(section ".sdata2") f32 lbl_803E2978 = 4e+01f;
-__declspec(section ".sdata2") f32 lbl_803E297C = 0.02f;
-__declspec(section ".sdata2") f32 lbl_803E2980 = 0.97f;
-__declspec(section ".sdata2") f32 lbl_803E2984 = 1.5f;
-__declspec(section ".sdata2") f32 lbl_803E2988 = 4.0f;
-__declspec(section ".sdata2") f32 lbl_803E298C = 6e+01f;
 
 void fn_801540A0(int obj, int state)
 {
@@ -197,7 +168,7 @@ void fn_801540A0(int obj, int state)
     if (*(void**)(state + 0x340) != 0)
     {
         done = 1;
-        *(f32*)(state + 0x324) = lbl_803E2968;
+        *(f32*)(state + 0x324) = 360.0f;
         *(f32*)(state + 0x32c) = lbl_803E294C;
         if (((GameObject*)obj)->anim.currentMove != 0)
         {
@@ -227,12 +198,12 @@ void fn_801540A0(int obj, int state)
     else if (((BaddieState*)state)->userData1 == 0)
     {
         ((BaddieState*)state)->userData1 = 1;
-        Baddie_SetMove(obj, state, 1, lbl_803E296C, 0, 3);
+        Baddie_SetMove(obj, state, 1, 0.35f, 0, 3);
     }
     else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 &&
-             (Baddie_SetMove(obj, state, 3, lbl_803E2970, 0, 3), lbl_803E294C == *(f32*)(state + 0x328)))
+             (Baddie_SetMove(obj, state, 3, 0.375f, 0, 3), lbl_803E294C == *(f32*)(state + 0x328)))
     {
-        *(f32*)(state + 0x328) = lbl_803E2974;
+        *(f32*)(state + 0x328) = 50.0f;
         fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
                     ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 1, 0);
         Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_25d);
@@ -249,16 +220,16 @@ void fn_801542AC(int unused, u8* state)
 {
     f32 fz;
     f32 fc;
-    ((BaddieState*)state)->speedScale = lbl_803E2978;
+    ((BaddieState*)state)->speedScale = 40.0f;
     ((BaddieState*)state)->unk2E4 = 173;
-    ((BaddieState*)state)->unk308 = lbl_803E297C;
+    ((BaddieState*)state)->unk308 = 0.02f;
     ((BaddieState*)state)->animDeltaScale = lbl_803E2954;
-    ((BaddieState*)state)->unk304 = lbl_803E2980;
+    ((BaddieState*)state)->unk304 = 0.97f;
     ((BaddieState*)state)->unk320 = 0;
-    fz = lbl_803E2984;
+    fz = 1.5f;
     *(f32*)&((BaddieState*)state)->eventFlags = fz;
     ((BaddieState*)state)->unk321 = 7;
-    ((BaddieState*)state)->unk318 = lbl_803E2988;
+    ((BaddieState*)state)->unk318 = 4.0f;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fz;
     fc = lbl_803E294C;
@@ -267,6 +238,6 @@ void fn_801542AC(int unused, u8* state)
     *(f32*)((char*)state + 812) = fc;
     ((BaddieState*)state)->userData1 = 0;
     ((BaddieState*)state)->userData2 = 0;
-    *(f32*)((char*)state + 816) = lbl_803E298C;
+    *(f32*)((char*)state + 816) = 60.0f;
     ((BaddieState*)state)->pathStep = lbl_803E2958;
 }

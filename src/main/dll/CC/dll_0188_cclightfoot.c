@@ -123,7 +123,6 @@ void cclightfoot_free(int* obj, int flag)
 }
 
 
-#pragma dont_inline on
 void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
 {
     s16 move;
@@ -155,7 +154,6 @@ void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
     }
     state->state = CCLIGHTFOOT_STATE_APPROACH;
 }
-#pragma dont_inline reset
 
 extern u8 gCcLightfootAnimTable[];
 u8 gCcLightfootHitCooldown[8];
@@ -238,23 +236,19 @@ void cclightfoot_update(int obj)
         {
             valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o1)->anim.placementData + 0x18)) != 0 ? 0 : 1;
         }
-        if (valid == 0)
+        if (valid != 0)
         {
-            goto cc_else;
+            o2 = state->targetB;
+            if (!(enemy_getHealthFraction((GameObject*)o2) > 0.0f))
+            {
+                valid = 0;
+            }
+            else
+            {
+                valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+            }
         }
-        o2 = state->targetB;
-        if (!(enemy_getHealthFraction((GameObject*)o2) > 0.0f))
-        {
-            valid = 0;
-        }
-        else
-        {
-            valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
-        }
-        if (valid == 0)
-        {
-            goto cc_else;
-        }
+        if (valid != 0)
         {
             dist = getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(state->targetB + 0x18));
             if (getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(state->targetA + 0x18)) < dist)
@@ -304,9 +298,8 @@ void cclightfoot_update(int obj)
                 }
             }
         }
-        goto cc_endif;
-    cc_else:
-    {
+        else
+        {
         o2 = state->targetA;
         if (!(enemy_getHealthFraction((GameObject*)o2) > 0.0f))
         {
@@ -354,8 +347,7 @@ void cclightfoot_update(int obj)
             targetObj = state->playerObj;
             dist = CC_LIGHTFOOT_DIST_SENTINEL;
         }
-    }
-    cc_endif:;
+        }
         angle = getAngle(-(((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX),
                          -(((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ));
         diff = (s16)(((GameObject*)obj)->anim.rotX - (u16)angle);

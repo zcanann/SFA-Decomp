@@ -41,9 +41,6 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 /* glow-texture ramp table */
 u8 lbl_8031FF80[] = {0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0};
 
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_8015F5B0(short* obj)
 {
     ChukChukState* sub;
@@ -76,10 +73,7 @@ void fn_8015F5B0(short* obj)
         }
     }
 }
-#pragma dont_inline reset
 
-#pragma scheduling on
-#pragma peephole on
 void ChukChuk_setScale(int obj, int message)
 {
     switch ((u8)message)
@@ -90,8 +84,6 @@ void ChukChuk_setScale(int obj, int message)
     }
 }
 
-#pragma scheduling off
-#pragma peephole off
 int ChukChuk_getExtraSize(void)
 {
     return sizeof(ChukChukState);
@@ -101,14 +93,10 @@ int ChukChuk_getObjectTypeId(void)
     return 0x0;
 }
 
-#pragma scheduling on
-#pragma peephole on
 void ChukChuk_free(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -116,15 +104,10 @@ void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
-#pragma scheduling on
-#pragma peephole on
 void ChukChuk_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_propagation off
 void ChukChuk_update(short* obj)
 {
 
@@ -278,9 +261,6 @@ void ChukChuk_init(u8* obj, u8* params)
     }
 }
 
-#pragma opt_propagation reset
-#pragma scheduling on
-#pragma peephole on
 void ChukChuk_release(void)
 {
 }

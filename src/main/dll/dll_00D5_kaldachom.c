@@ -91,7 +91,6 @@ extern f32 lbl_803E30C8;
 extern f32 lbl_803E30CC;
 u8 gKaldachomHitLightWork[0x18];
 
-#pragma dont_inline on
 void kaldaChomFn_8016821c(GameObject* obj, KaldaChomControl* control)
 {
     u8 loadLocked;
@@ -178,7 +177,6 @@ void kaldaChomFn_80168374(GameObject* obj, int state, u8 useUpperMouthPoint)
     }
 }
 
-#pragma dont_inline off
 void kaldachom_handleAnimEvents(GameObject* obj, int state, int eventStateArg)
 {
     KaldaChomControl* control = ((CampfireState*)state)->control;

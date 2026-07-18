@@ -224,7 +224,6 @@ typedef struct SnowBikePlacement
     s16 gameBitId;
     u8 pad20[0x24 - 0x20];
 } SnowBikePlacement;
-#pragma inline_max_size reset
 
 typedef struct
 {
@@ -232,7 +231,6 @@ typedef struct
     f32 quad[4];
 } SBRotQuad;
 
-#pragma dont_inline on
 void fn_801EC7A0(int obj, int state)
 {
     MatrixTransform v;
@@ -324,7 +322,6 @@ void fn_801EC928(int obj, int state)
     ((SnowBikeState*)state)->collisionBounceScale = fz;
 }
 
-#pragma dont_inline reset
 s32 fn_801EC9BC(GameObject* obj)
 {
     return (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&obj->extra + 0x28));
@@ -565,6 +562,7 @@ void SnowBike_hitDetect(GameObject* obj)
     f32 clamped;
     f32 limit;
     f32 dummy;
+    int applyMotion;
 
     state = obj->extra;
     other = *(u8**)obj->anim.hitReactState;
@@ -586,24 +584,20 @@ void SnowBike_hitDetect(GameObject* obj)
             oneOverTimeDelta * (obj->anim.localPosY - obj->anim.previousLocalPosY);
         state->localVelY = obj->anim.velocityY;
     }
+    applyMotion = 1;
     if (state->unk3D6 == 0)
     {
         if ((((ObjHitsPriorityState*)obj->anim.hitReactState)->flags & 8) != 0 &&
             arrayIndexOf((int*)gSnowBikeHitObjectIdTable, 10, ((GameObject*)other)->anim.seqId) == -1)
         {
         }
-        else
+        else if (*(void**)&state->linkedObj == NULL || !(state->collisionFxDamping <= lbl_803E5AEC))
         {
-            if (*(void**)&state->linkedObj == NULL)
-            {
-                goto clamp;
-            }
-            if (!(state->collisionFxDamping <= lbl_803E5AEC))
-            {
-                goto clamp;
-            }
+            applyMotion = 0;
         }
     }
+    if (applyMotion)
+    {
     mag = PSVECMag((f32*)((int)obj + 0x24));
     if (mag > lbl_803E5AEC)
     {
@@ -663,7 +657,7 @@ void SnowBike_hitDetect(GameObject* obj)
     }
     Matrix_TransformPoint((f32*)((u8*)state + 0x12c), obj->anim.velocityX, lbl_803E5AE8,
                           obj->anim.velocityZ, &state->localVelX, &dummy, &state->distanceScale);
-clamp:
+    }
 {
     f32 limit;
     f32 value = state->localVelX;
@@ -735,7 +729,6 @@ clamp:
     state->linkedObj = 0;
 }
 
-#pragma opt_common_subs off
 void SnowBike_update(GameObject* obj)
 {
     u8* state = obj->extra;
@@ -941,8 +934,6 @@ void SnowBike_update(GameObject* obj)
     }
 }
 
-#pragma opt_common_subs reset
-#pragma inline_max_size(4000)
 static inline void SnowBike_initBody(int obj, SnowBikePlacement* params, int flag)
 {
     f32 fv;
@@ -1143,8 +1134,6 @@ void SnowBike_initialise(void)
         lbl_803DDC60 = textureLoadAsset(SNOWBIKE_TEXTURE_ID);
     }
 }
-
-#pragma opt_common_subs reset
 
 s16 gSnowBikeHitObjectIdTable[26] = {
     0, 365, 0, 368, 0, 364, 0, 367, 0, 905, 0, 906, 0, 1235, 0, 909, 0, 910, 0, 1236, 1175, 1176, 1180, 930, 931, 1180,

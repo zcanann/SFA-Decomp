@@ -116,7 +116,6 @@ void dim2lavacontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 
     if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4B90);
 }
 
-#pragma opt_common_subs off
 void dim2lavacontrol_update(int obj)
 {
     int diff;
@@ -192,7 +191,6 @@ void dim2lavacontrol_update(int obj)
     SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)((char*)obj + 8), 0x10, -1, -1, 0xf04, 0x2c);
     SCGameBitLatch_Update((SCGameBitLatchState*)((char*)obj + 8), 4, -1, -1, 0xcbb, 0xc4);
 }
-#pragma opt_common_subs reset
 
 void dim2lavacontrol_init(GameObject *obj, int param2)
 {

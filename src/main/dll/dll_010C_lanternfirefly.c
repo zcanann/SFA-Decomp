@@ -148,7 +148,6 @@ void LanternFireFly_setScale(u8* obj, f32* vec)
     sub->offZ = vec[2];
     sub->animFrame = 4;
 }
-#pragma auto_inline off
 /* Helpers placed last (anti-inline): LanternFireFly_update above calls both. */
 void fn_801868D0(GameObject* obj)
 {
@@ -190,9 +189,7 @@ void fn_801868D0(GameObject* obj)
     rot.ang = state->randAngle;
     vecRotateZXY(&rot.ang, &state->offX);
 }
-#pragma auto_inline on
 
-#pragma auto_inline off
 void fn_801869DC(GameObject* obj)
 {
     typedef struct
@@ -226,7 +223,6 @@ void fn_801869DC(GameObject* obj)
     state->controlY[3] = state->offY;
     state->controlZ[3] = state->offZ;
 }
-#pragma auto_inline on
 
 
 int LanternFireFly_getExtraSize(void)

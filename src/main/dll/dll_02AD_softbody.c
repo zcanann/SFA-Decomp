@@ -4,7 +4,7 @@
  * accumulators (lbl_803DDDA0 / lbl_803DDD9C). The first non-disabled
  * instance to update becomes the global "phase driver" (lbl_803DDD98)
  * and advances both phases by timeDelta each frame, wrapping each at
- * lbl_803E7288; every softbody then samples one of the two phases to
+ * 1.0f; every softbody then samples one of the two phases to
  * pick its current animation move. Which phase is used depends on the
  * object's seqId: moves in [0x6AF,0x6B2) use the first phase, all
  * others use the second.
@@ -24,13 +24,6 @@ GameObject* lbl_803DDD98;
 #include "main/objhits.h"
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
-
-__declspec(section ".sdata2") f32 lbl_803E7288 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E728C = 0.001f;
-__declspec(section ".sdata2") f32 lbl_803E7290 = 0.005f;
-__declspec(section ".sdata2") f32 lbl_803E7294 = 255.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E7298 = 0.0f;
 
 #define SOFTBODY_OBJECT_FLAGS_INIT 0x2000
 
@@ -60,7 +53,7 @@ void SoftBody_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7288);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -82,18 +75,18 @@ void SoftBody_update(GameObject* obj)
     {
         f32 phase;
 
-        phase = lbl_803E728C * timeDelta + lbl_803DDDA0;
+        phase = 0.001f * timeDelta + lbl_803DDDA0;
         lbl_803DDDA0 = phase;
-        while (phase > *(f32*)&lbl_803E7288)
+        while (phase > 1.0f)
         {
-            phase -= *(f32*)&lbl_803E7288;
+            phase -= 1.0f;
         }
         lbl_803DDDA0 = phase;
-        phase = lbl_803E7290 * timeDelta + lbl_803DDD9C;
+        phase = 0.005f * timeDelta + lbl_803DDD9C;
         lbl_803DDD9C = phase;
-        while (phase > *(f32*)&lbl_803E7288)
+        while (phase > 1.0f)
         {
-            phase -= *(f32*)&lbl_803E7288;
+            phase -= 1.0f;
         }
         lbl_803DDD9C = phase;
     }
@@ -121,15 +114,15 @@ void SoftBody_init(GameObject* obj, SoftBodySetup* setup)
     object->anim.rotX = (s16)(setupData->rotX << 8);
     if (setupData->scale != 0)
     {
-        object->anim.rootMotionScale = (f32)(u32)setupData->scale / lbl_803E7294;
-        if (object->anim.rootMotionScale == lbl_803E7298)
+        object->anim.rootMotionScale = (f32)(u32)setupData->scale / 255.0f;
+        if (object->anim.rootMotionScale == 0.0f)
         {
-            object->anim.rootMotionScale = lbl_803E7288;
+            object->anim.rootMotionScale = 1.0f;
         }
         object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
     object->objectFlags |= SOFTBODY_OBJECT_FLAGS_INIT;
-    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E7298, 0);
+    ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
     if (object->anim.hitReactState != NULL)
     {
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
@@ -145,8 +138,8 @@ void SoftBody_release(void)
 void SoftBody_initialise(void)
 {
     lbl_803DDD98 = NULL;
-    lbl_803DDDA0 = lbl_803E7298;
-    lbl_803DDD9C = lbl_803E7298;
+    lbl_803DDDA0 = 0.0f;
+    lbl_803DDD9C = 0.0f;
 }
 
 ObjectDescriptor gSoftBodyObjDescriptor = {

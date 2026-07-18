@@ -74,8 +74,6 @@ ObjectDescriptor6 lbl_80310BD8 = {
         spawnParams = (PartFxSpawnParams*)&lbl_8039C398;                                                               \
     } while (0)
 
-#pragma scheduling off
-#pragma peephole off
 int Effect9_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                    s16* extraArgs)
 {

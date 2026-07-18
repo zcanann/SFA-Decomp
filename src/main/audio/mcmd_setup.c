@@ -6,7 +6,6 @@
 #include "main/audio/data_tables.h"
 #include "main/audio/mcmd_setup.h"
 
-#pragma exceptions on
 extern void synthFXCloneMidiSetup(McmdVoiceState* voice, McmdVoiceState* state);
 void DoSetPitch(McmdVoiceState* svoice);
 extern void synthQueueVoiceInputUpdate(McmdVoiceState* state);

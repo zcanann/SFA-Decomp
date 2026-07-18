@@ -273,7 +273,6 @@ u32 getButtonsHeld(int port)
 void doNothing_endOfFrame(void)
 {
 }
-#pragma opt_common_subs off
 void padUpdate(void)
 {
     u32* padStateBlock;
@@ -441,7 +440,7 @@ void padUpdate(void)
                 *repeatY = 0;
             }
             *prevStickY = sy;
-            stickReload = *(volatile s8*)prevStickY;
+            stickReload = *prevStickY;
             if ((s8)stickReload < -35)
             {
                 (*repeatY)++;
@@ -460,7 +459,7 @@ void padUpdate(void)
                 *repeatY = 0;
             }
             *prevStickX = sx;
-            stickReload = *(volatile s8*)prevStickX;
+            stickReload = *prevStickX;
             if ((s8)stickReload < -35)
             {
                 (*repeatX)++;
@@ -514,13 +513,11 @@ void padUpdate(void)
     }
     lbl_803DCCA5 = 0;
 }
-#pragma opt_common_subs reset
 
 void setRumbleEnabled(u8 enabled)
 {
     rumbleEnabled = enabled;
 }
-
 
 int initControllers(void)
 {

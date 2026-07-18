@@ -320,7 +320,6 @@ typedef struct
  * any entry's modelType is 0x6a3 with state[0x2dc] bit 0x20000000 set
  * AND bits 0x1800 clear, latches "found" and exits. If nothing matched,
  * loads the default triggered camera action. */
-#pragma dont_inline on
 void crawler_checkNearbyActive(int obj, u8* state)
 {
     u8 count = fn_8014C11C(obj, 640.0f, 0, 0x28, gCrawlerNearbyObjectBuffer);
@@ -412,9 +411,7 @@ void fn_80157B58(int* obj, u8* state)
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_cvdrip1c_4ae);
     }
 }
-#pragma dont_inline reset
 
-#pragma opt_loop_invariants off
 void fn_80157CDC(int obj, int state)
 {
     typedef struct

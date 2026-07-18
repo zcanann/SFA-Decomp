@@ -15,27 +15,28 @@ void synthSetHandleMixData(u32 handle, u32 mixValue0, u32 mixValue1)
 
     runtime = SYNTH_VOICE_RUNTIME();
     resolvedHandle = handle & SYNTH_HANDLE_ID_MASK;
+    slot = SYNTH_HANDLE_INVALID;
     for (queuedVoice = gSynthQueuedVoices; queuedVoice != 0; queuedVoice = queuedVoice->next)
     {
         if (queuedVoice->handle == resolvedHandle)
         {
             slot = queuedVoice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
-            goto found;
+            break;
         }
     }
 
-    for (allocatedVoice = gSynthAllocatedVoices; allocatedVoice != 0; allocatedVoice = allocatedVoice->next)
+    if (slot == SYNTH_HANDLE_INVALID)
     {
-        if (allocatedVoice->handle == resolvedHandle)
+        for (allocatedVoice = gSynthAllocatedVoices; allocatedVoice != 0; allocatedVoice = allocatedVoice->next)
         {
-            slot = allocatedVoice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
-            goto found;
+            if (allocatedVoice->handle == resolvedHandle)
+            {
+                slot = allocatedVoice->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
+                break;
+            }
         }
     }
 
-    slot = SYNTH_HANDLE_INVALID;
-
-found:
     if (slot == SYNTH_HANDLE_INVALID)
     {
         return;

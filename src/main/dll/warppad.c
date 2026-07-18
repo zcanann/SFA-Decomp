@@ -43,19 +43,12 @@
 
 extern u8 lbl_803DCDE0;
 extern s16 lbl_803DCEB8;
-#pragma explicit_zero_data on
 #define WARP_PAD_PULSE_STAGE1_TIME 120.0f
 #define WARP_PAD_PULSE_STAGE2_TIME 360.0f
 #define WARP_PAD_PULSE_STAGE3_TIME 420.0f
 #define WARP_PAD_PULSE_END_TIME 480.0f
-__declspec(section ".sdata2") f32 lbl_803E3E98 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E3E9C = 55.0f;
-__declspec(section ".sdata2") f32 gWarpPadProximityBurstDistSq = 409600.0f;
-__declspec(section ".sdata2") f32 lbl_803E3EA4 = 0.75f;
-__declspec(section ".sdata2") f32 lbl_803E3EA8 = 30.0f;
-__declspec(section ".sdata2") f32 lbl_803E3EAC = 110.0f;
-__declspec(section ".sdata2") f32 lbl_803E3EB0 = 0.5f;
+f32 lbl_803E3E98 = 0.0f;
+f32 gWarpPadProximityBurstDistSq = 409600.0f;
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
 
 extern f32 gWarpPadTriggerDist;
@@ -79,7 +72,7 @@ void warpPadFn_8019042c(GameObject* obj)
     state = (obj)->extra;
     player = Obj_GetPlayerObject();
     fx.pos[0] = lbl_803E3E98;
-    fx.pos[1] = lbl_803E3E9C;
+    fx.pos[1] = 55.0f;
     fx.pos[2] = lbl_803E3E98;
     flags = state->flags;
 
@@ -109,15 +102,15 @@ void warpPadFn_8019042c(GameObject* obj)
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8,
-                                            *(f32*)&lbl_803E3EA8,
-                                      lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.75f, 2, 7, 100, 30.0f,
+                                            30.0f,
+                                      110.0f, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EB0, 1, 6, 100, lbl_803E3EA8,
-                                            *(f32*)&lbl_803E3EA8,
-                                      lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.5f, 1, 6, 100, 30.0f,
+                                            30.0f,
+                                      110.0f, &fx, 0);
             }
         }
         fx.effectId = 0xc0e;
@@ -131,15 +124,15 @@ void warpPadFn_8019042c(GameObject* obj)
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8,
-                                            *(f32*)&lbl_803E3EA8,
-                                      lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.75f, 2, 7, 100, 30.0f,
+                                            30.0f,
+                                      110.0f, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EB0, 5, 6, 100, lbl_803E3EA8,
-                                            *(f32*)&lbl_803E3EA8,
-                                      lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.5f, 5, 6, 100, 30.0f,
+                                            30.0f,
+                                      110.0f, &fx, 0);
             }
         }
         fx.effectId = 0xc7e;
@@ -153,15 +146,15 @@ void warpPadFn_8019042c(GameObject* obj)
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EA4, 2, 7, 100, lbl_803E3EA8,
-                                            *(f32*)&lbl_803E3EA8,
-                                      lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.75f, 2, 7, 100, 30.0f,
+                                            30.0f,
+                                      110.0f, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, lbl_803E3EB0, 3, 6, 100, lbl_803E3EA8,
-                                            *(f32*)&lbl_803E3EA8,
-                                      lbl_803E3EAC, &fx, 0);
+                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.5f, 3, 6, 100, 30.0f,
+                                            30.0f,
+                                      110.0f, &fx, 0);
             }
         }
         fx.effectId = 0xc13;
@@ -172,7 +165,7 @@ void warpPadFn_8019042c(GameObject* obj)
     {
         if (state->pulseTimer < WARP_PAD_PULSE_STAGE1_TIME)
         {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0)
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * 0.5f)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
@@ -191,7 +184,7 @@ void warpPadFn_8019042c(GameObject* obj)
         }
         else if (state->pulseTimer < WARP_PAD_PULSE_STAGE3_TIME)
         {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0)
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * 0.5f)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
@@ -257,32 +250,31 @@ void warpPadPlayerStandingOn(GameObject* obj)
     if ((state->triggerMode == 0) && (state->countdownActive == 0) &&
         (((obj)->objectFlags & WARPPAD_OBJFLAG_PARENT_SLACK) == 0))
     {
-        if (lbl_803DCEB8 > -1)
+        if ((lbl_803DCEB8 > -1) &&
+            (Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) <
+             gWarpPadTriggerDist))
         {
-            player = Obj_GetPlayerObject();
-            if (Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gWarpPadTriggerDist)
-            {
-                (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                (obj)->userData1 = state->activateDelay;
-                state->triggerMode = 0;
-                state->countdownActive = 1;
-                lbl_803DCDE0 = 2;
-                goto updateTimer;
-            }
-        }
-        gameBit = placement->enableGameBit;
-        if (((gameBit == -1) ||
-             ((mainGetBit(gameBit) != 0) && (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))) &&
-            (ObjTrigger_IsSet((int)obj) != 0))
-        {
-            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
             (obj)->userData1 = state->activateDelay;
-            state->triggerMode = 1;
+            state->triggerMode = 0;
             state->countdownActive = 1;
+            lbl_803DCDE0 = 2;
+        }
+        else
+        {
+            gameBit = placement->enableGameBit;
+            if (((gameBit == -1) ||
+                 ((mainGetBit(gameBit) != 0) && (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0))) &&
+                (ObjTrigger_IsSet((int)obj) != 0))
+            {
+                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+                (obj)->userData1 = state->activateDelay;
+                state->triggerMode = 1;
+                state->countdownActive = 1;
+            }
         }
     }
 
-updateTimer:
     if (state->countdownActive != 0)
     {
         if ((obj)->userData1 > 0)
@@ -296,13 +288,11 @@ updateTimer:
         }
     }
     state->cooldownTimer = state->cooldownTimer - timeDelta;
-    if (state->cooldownTimer <= *(f32*)&lbl_803E3E98)
+    if (state->cooldownTimer <= lbl_803E3E98)
     {
         state->cooldownTimer = lbl_803E3E98;
         state->unk0A = -1;
     }
 }
 
-union WarpPadConstF32 { f32 f; };
-__declspec(section ".sdata2") f32 gWarpPadTriggerDist = 40.0f;
-const union WarpPadConstF32 lbl_803E3EE4 = { 0.0f };
+f32 gWarpPadTriggerDist = 40.0f;

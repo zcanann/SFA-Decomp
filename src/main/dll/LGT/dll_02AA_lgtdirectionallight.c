@@ -30,9 +30,7 @@ const f32 lbl_802C2608[4] = {0.0f, 0.0f, 1.0f, 0.0f};
 #define DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
 #define DIRECTIONALLIGHT_DEBUG_FIELD_COUNT      8
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E7250 = 0.0f;
-#pragma explicit_zero_data off
+f32 lbl_803E7250 = 0.0f;
 
 struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor = {
     0,

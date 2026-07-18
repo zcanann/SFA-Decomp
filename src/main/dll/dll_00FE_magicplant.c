@@ -237,7 +237,6 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, Magic
     }
 }
 
-#pragma dont_inline on
 void MagicPlant_spawnChild(GameObject* obj, int objectId)
 {
     MagicPlantChildSetup* setup;
@@ -274,7 +273,6 @@ void MagicPlant_spawnChild(GameObject* obj, int objectId)
         }
     }
 }
-#pragma dont_inline reset
 
 int MagicPlant_SeqFn(u8* obj)
 {
@@ -336,8 +334,6 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-#pragma dont_inline on
-#pragma opt_common_subs off
 void MagicPlant_update(int obj)
 {
     s32 alpha;
@@ -461,8 +457,6 @@ void MagicPlant_update(int obj)
     ObjAnim_AdvanceCurrentMove((int)obj, state->animStepScale, timeDelta, NULL);
 }
 
-#pragma opt_common_subs reset
-#pragma dont_inline reset
 void MagicPlant_init(GameObject* obj, MagicPlantSetup* setup)
 {
     MagicPlantObject* plant;

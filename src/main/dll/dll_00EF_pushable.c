@@ -187,7 +187,6 @@ static void pushableClampToZero(f32* value)
     }
 }
 
-#pragma dont_inline on
 int fn_80174438(int obj, PushableState* state)
 {
     int def;
@@ -380,7 +379,6 @@ int fn_80174668(GameObject* obj, PushableState* state)
     }
     return 0;
 }
-#pragma dont_inline reset
 
 void fn_80174A80(GameObject* obj, PushableState* ext)
 {

@@ -41,10 +41,6 @@ f32 gMmpAsteroidIntensityHeightTable[4] = {0.0f, 0.0f, 10.0f, 50.0f};
 PartFxSpawnParams gMmpAsteroidDustSpawnParams;
 int gMmpAsteroidDustHeightParam;
 
-#pragma peephole off
-
-#pragma scheduling off
-
 #define MMP_ASTEROID_PI 3.14159274f
 
 int mmp_asteroid_re_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -94,11 +90,6 @@ int mmp_asteroid_re_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animU
     return 0;
 }
 
-
-#pragma peephole on
-
-#pragma scheduling on
-
 int mmp_asteroid_re_getExtraSize(void)
 {
     return 0x1c;
@@ -113,8 +104,6 @@ void mmp_asteroid_re_free(void)
 {
 }
 
-#pragma peephole off
-
 void mmp_asteroid_re_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -122,19 +111,12 @@ void mmp_asteroid_re_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
-#pragma peephole on
-
 void mmp_asteroid_re_hitDetect(void)
 {
 }
 
-#pragma peephole off
-
-#pragma scheduling off
-
 void mmp_asteroid_re_update(int obj)
 {
-
 
     MmpAsteroidReState* state = ((GameObject*)obj)->extra;
     if ((state->eventFlags & ASTEROIDRE_SEQ_TICK) == 0)
@@ -298,10 +280,6 @@ void mmp_asteroid_re_init(GameObject* obj)
         state->baseY2 = v;
     }
 }
-
-#pragma peephole on
-
-#pragma scheduling on
 
 void mmp_asteroid_re_release(void)
 {

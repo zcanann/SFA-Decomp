@@ -87,8 +87,6 @@ extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 
 
-#pragma scheduling off
-#pragma peephole off
 int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WarpPointObjectDef* p = *(WarpPointObjectDef**)&((GameObject*)obj)->anim.placementData;
@@ -124,7 +122,6 @@ void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     if (p->mode == WARPPOINT_MODE_HINT_TIMER)
         return;
 }
-#pragma reset
 
 void WarpPoint_update(GameObject* obj)
 {

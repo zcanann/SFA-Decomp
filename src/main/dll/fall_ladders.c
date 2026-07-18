@@ -37,13 +37,10 @@ int lbl_803DBCD0[2] = {2, 3};
 
 #define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 
-
 extern void fn_8014CF7C(int obj, int state, f32 a, f32 b, int c, int d);
 extern void fn_8014C678(int obj, int state, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int state, int c, f32 a, f32 b, int d);
 
-
-#pragma dont_inline on
 void fn_80154328(int obj, int state)
 {
     f32 mtx[17];
@@ -77,10 +74,6 @@ void fn_80154328(int obj, int state)
     }
 }
 
-#pragma dont_inline reset
-
-#pragma optimization_level 1
-#pragma peephole on
 void Baddie_HandleHitReaction(GameObject* obj, u8* state, int unused, int cmd)
 {
     int objCopy = (int)obj;
@@ -99,8 +92,6 @@ void Baddie_HandleHitReaction(GameObject* obj, u8* state, int unused, int cmd)
         ((BaddieState*)state)->reactionFlags |= 16;
     }
 }
-#pragma peephole reset
-#pragma optimization_level reset
 
 void fn_80154584(GameObject* obj, int state)
 {

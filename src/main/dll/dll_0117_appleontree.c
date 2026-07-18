@@ -149,7 +149,6 @@ static inline void appleontree_markFallen(GameObject* obj)
     }
 }
 
-#pragma opt_lifetimes off
 void fn_8017D854(GameObject* obj, int msg)
 {
     int state = *(int*)&obj->extra;
@@ -253,7 +252,6 @@ void fn_8017D854(GameObject* obj, int msg)
     }
 }
 
-#pragma opt_lifetimes reset
 /* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
  * range, either send a trigger event (first contact) or apply healing +
  * particle FX + sfx + free-or-disable. */
@@ -534,7 +532,6 @@ int fn_8017DF34(GameObject* obj, int state, f32 y)
     }
 }
 
-#pragma inline_max_size(1)
 void AppleOnTree_update(int objArg)
 {
     float fa;

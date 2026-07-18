@@ -163,7 +163,6 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox* hitbox, u32 arena)
     return (u32)transformState + sizeof(ObjHitboxTransformState);
 }
 
-#pragma dont_inline on
 void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, int objType, ObjHitReactState* hitState,
                                  int moveId, int async)
 {
@@ -202,7 +201,6 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, i
     }
     return;
 }
-#pragma dont_inline reset
 
 u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitState, u32 entryArena,
                           ObjAnimComponent* objAnim)

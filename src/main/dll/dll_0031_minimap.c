@@ -52,9 +52,7 @@ f32 gMinimapMinZoom = 0.3f;
 f32 gMinimapMaxZoom = 2.0f;
 int gMinimapBoxWidth = 120;
 int gMinimapBoxHeight = 100;
-#pragma explicit_zero_data on
 GameObject* lbl_803DBBC8[2] = {0};
-#pragma explicit_zero_data off
 s16 gMinimapRegionMinX = 0x7FFF;
 s16 gMinimapRegionMinZ = 0x7FFF;
 f32 gMinimapZoomInRate = 0.995f;
@@ -71,11 +69,6 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId);
 
 /* group owned by another DLL, queried here */
 #define FUELCELL_OBJGROUP 0x4f /* DLL 0x123 fuelcell */
-
-
-
-
-
 
 #define MINIMAP_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -192,8 +185,6 @@ extern f32 gMinimapF22;
 extern f32 gMinimapF68;
 extern f32 gMinimapF74;
 
-#pragma scheduling off
-#pragma peephole off
 extern f32 gMinimapFNeg15;
 extern f32 gMinimapFNeg9_8;
 extern f32 gMinimapFNeg40;
@@ -759,7 +750,6 @@ static inline void Minimap_freeObjectSlots(GameObject** slots, int count)
     }
 }
 
-#pragma dont_inline on
 void Minimap_setupCompassBlip(void)
 {
     f32 scale;
@@ -788,7 +778,6 @@ void Minimap_setupCompassBlip(void)
         ((GameObject*)lbl_803DBBC8[i])->anim.rootMotionScale = scale;
     }
 }
-#pragma dont_inline reset
 
 void fn_80133934(void)
 {

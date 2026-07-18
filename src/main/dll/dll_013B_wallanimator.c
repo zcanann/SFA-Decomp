@@ -204,8 +204,6 @@ void wallanimator_update(GameObject* obj)
     }
 }
 
-#pragma optimization_level 1
-#pragma peephole on
 void wallanimator_init(s16* obj, s16* placement)
 {
     int oi;

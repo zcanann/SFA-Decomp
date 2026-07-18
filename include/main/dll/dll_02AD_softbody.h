@@ -24,11 +24,6 @@ STATIC_ASSERT(sizeof(SoftBodySetup) == 0x20);
 extern GameObject* lbl_803DDD98;
 extern f32 lbl_803DDD9C;
 extern f32 lbl_803DDDA0;
-extern f32 lbl_803E7288;
-extern f32 lbl_803E728C;
-extern f32 lbl_803E7290;
-extern f32 lbl_803E7294;
-extern f32 lbl_803E7298;
 
 int SoftBody_getExtraSize(void);
 int SoftBody_getObjectTypeId(void);

@@ -20,19 +20,6 @@
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL96_EFFECT_ID 0x89
 
-#pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E12C0 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E12C4 = 0.15f;
-__declspec(section ".sdata2") f32 lbl_803E12C8 = 0.03f;
-__declspec(section ".sdata2") f32 lbl_803E12CC = 10.5f;
-__declspec(section ".sdata2") f32 lbl_803E12D0 = 4.0f;
-__declspec(section ".sdata2") f32 lbl_803E12D4 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E12D8 = 255.0f;
-const f32 lbl_803E12DC = 0.0f;
-// BIAS lbl_803E12E0 minted by compiler
-#pragma explicit_zero_data reset
-#pragma force_active reset
 extern u8 lbl_803175E8[];
 
 int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
@@ -50,68 +37,68 @@ int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[0].flags = 0x15;
     e[0].tex = base + 0x1b0;
     e[0].mode = 4;
-    e[0].x = lbl_803E12C0;
-    e[0].y = lbl_803E12C0;
-    e[0].z = lbl_803E12C0;
+    e[0].x = 0.0f;
+    e[0].y = 0.0f;
+    e[0].z = 0.0f;
     e[1].layer = 0;
     e[1].flags = 0x15;
     e[1].tex = base + 0x1b0;
     e[1].mode = 2;
     if (mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) != 0)
     {
-        e[1].x = lbl_803E12C4;
+        e[1].x = 0.15f;
     }
     else
     {
-        e[1].x = lbl_803E12C8 * (f32)(int)randomGetRange(5, 10);
+        e[1].x = 0.03f * (f32)(int)randomGetRange(5, 10);
     }
-    e[1].y = lbl_803E12CC;
+    e[1].y = 10.5f;
     e[1].z = e[1].x;
     e[2].layer = 1;
     e[2].flags = 7;
     e[2].tex = base + 0x164;
     e[2].mode = 2;
-    e[2].x = lbl_803E12D0;
-    e[2].y = lbl_803E12D4;
-    e[2].z = lbl_803E12D0;
+    e[2].x = 4.0f;
+    e[2].y = 1.0f;
+    e[2].z = 4.0f;
     e[3].layer = 1;
     e[3].flags = 0x15;
     e[3].tex = base + 0x1b0;
     e[3].mode = 4;
-    e[3].x = lbl_803E12D8;
-    e[3].y = lbl_803E12C0;
-    e[3].z = lbl_803E12C0;
+    e[3].x = 255.0f;
+    e[3].y = 0.0f;
+    e[3].z = 0.0f;
     e[4].layer = 1;
     e[4].flags = 0x15;
     e[4].tex = base + 0x1b0;
     e[4].mode = 0x4000;
-    e[4].x = lbl_803E12C0;
-    e[4].y = lbl_803E12D0;
-    e[4].z = lbl_803E12C0;
+    e[4].x = 0.0f;
+    e[4].y = 4.0f;
+    e[4].z = 0.0f;
     e[5].layer = 2;
     e[5].flags = 0x15;
     e[5].tex = base + 0x1b0;
     e[5].mode = 4;
-    e[5].x = lbl_803E12C0;
-    e[5].y = lbl_803E12C0;
-    e[5].z = lbl_803E12C0;
+    e[5].x = 0.0f;
+    e[5].y = 0.0f;
+    e[5].z = 0.0f;
     e[6].layer = 2;
     e[6].flags = 0x15;
     e[6].tex = base + 0x1b0;
     e[6].mode = 0x4000;
-    e[6].x = lbl_803E12C0;
-    e[6].y = lbl_803E12D0;
-    e[6].z = lbl_803E12C0;
+    e[6].x = 0.0f;
+    e[6].y = 4.0f;
+    e[6].z = 0.0f;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E12C0;
-    buf.pos[1] = lbl_803E12C0;
-    buf.pos[2] = lbl_803E12C0;
-    buf.col[0] = lbl_803E12C0;
-    buf.col[1] = lbl_803E12C0;
-    buf.col[2] = lbl_803E12C0;
-    buf.scale = lbl_803E12D0;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = 0.0f;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 4.0f;
     buf.v40 = 2;
     buf.v3c = 7;
     buf.v59 = 0xe;
@@ -132,15 +119,15 @@ int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E12C0 + *(f32*)(sourceObj + 0xc);
-            buf.pos[1] = lbl_803E12C0 + *(f32*)(sourceObj + 0x10);
-            buf.pos[2] = lbl_803E12C0 + *(f32*)(sourceObj + 0x14);
+            buf.pos[0] = 0.0f + *(f32*)(sourceObj + 0xc);
+            buf.pos[1] = 0.0f + *(f32*)(sourceObj + 0x10);
+            buf.pos[2] = 0.0f + *(f32*)(sourceObj + 0x14);
         }
         else
         {
-            buf.pos[0] = lbl_803E12C0 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E12C0 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E12C0 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] = 0.0f + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = 0.0f + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = 0.0f + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     return (*gModgfxInterface)

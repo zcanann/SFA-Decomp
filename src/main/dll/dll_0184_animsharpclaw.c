@@ -28,8 +28,6 @@
 
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-#pragma scheduling off
-#pragma dont_inline on
 int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -66,8 +64,6 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma dont_inline reset
-#pragma scheduling on
 
 int animsharpclaw_getExtraSize(void)
 {
@@ -78,8 +74,6 @@ int animsharpclaw_getObjectTypeId(void)
     return 0xb;
 }
 
-#pragma peephole off
-#pragma scheduling off
 void animsharpclaw_free(GameObject* obj)
 {
     u8* inner;
@@ -95,7 +89,6 @@ void animsharpclaw_free(GameObject* obj)
     (*(void (*)(int, int, int, int, int))(*(int*)(*gTitleMenuControlInterface + 0x8)))((int)obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
 }
-#pragma scheduling on
 
 void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -103,14 +96,11 @@ void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (isVisible != 0)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
-#pragma peephole on
 
 void animsharpclaw_hitDetect(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 void animsharpclaw_update(int* obj)
 {
     int* placement;
@@ -195,8 +185,6 @@ void animsharpclaw_init(int* obj, u8* init)
         ((GameObject*)obj)->anim.modelState->shadowTintB = 0x96;
     }
 }
-#pragma peephole on
-#pragma scheduling on
 
 void animsharpclaw_release(void)
 {

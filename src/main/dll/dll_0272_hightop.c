@@ -131,8 +131,6 @@ int hightop_stateHandler10(GameObject* obj, HighTopRuntime* stateArg)
     return 0;
 }
 
-#pragma opt_common_subs off
-#pragma opt_strength_reduction reset
 int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
 {
     HighTopRuntime* state = (obj)->extra;
@@ -277,7 +275,6 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
     return 0;
 }
 
-#pragma opt_common_subs reset
 int hightop_stateHandler08(GameObject* obj, HighTopRuntime* stateArg)
 {
     HighTopRuntime* state = (obj)->extra;
@@ -501,14 +498,8 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
     if (player != 0)
     {
         f32 dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-        if ((dy >= 0.0f ? dy : -dy) < 30.0f)
+        if ((dy >= 0.0f ? dy : -dy) < 30.0f || (dy >= 0.0f ? dy : -dy) > 300.0f)
         {
-            goto inRange;
-        }
-        dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-        if ((dy >= 0.0f ? dy : -dy) > 300.0f)
-        {
-        inRange:
             state->flags |= 1;
             if ((int)randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
             {
@@ -519,11 +510,10 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
                     (*gObjectTriggerInterface)->runSequence(9, (void*)obj, -1);
                 }
             }
-            goto done;
+            return 0;
         }
     }
     state->flags &= ~1;
-done:
     return 0;
 }
 f32 hightop_func13(int obj, f32* out);
@@ -578,9 +568,6 @@ ObjectDescriptor24 gHighTopObjDescriptor = {
     (ObjectDescriptorCallback)HighTop_getLookTargetYaw,
 };
 
-
-
-#pragma dont_inline on
 int hightop_handleMotionEvent(int obj, u8 event)
 {
     HighTopRuntime* runtime = ((GameObject*)obj)->extra;
@@ -680,7 +667,7 @@ int hightop_stateHandler02(GameObject* obj, HighTopRuntime* stateArg, f32 dt)
     {
         absd = -d336;
     }
-    if (*(volatile s16*)&state->turnRateThreshold < absd)
+    if (state->turnRateThreshold < absd)
     {
         conv = (int)(182.04445f * ((f32)d336 * dt));
         (obj)->anim.rotX = (s16)((obj)->anim.rotX + ((s16)conv >> 5));
@@ -1269,5 +1256,4 @@ void HighTop_initialise(void)
     t[10] = hightop_stateHandler10;
     gHighTopDefaultStateHandler = hightop_defaultStateHandler;
 }
-
-
+

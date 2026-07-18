@@ -125,8 +125,6 @@ u32 lbl_8031ACF8[10] = {0x00000000, 0x00000000, 0x00000000, 0x00050000,
         (u32)OptionsScreen_render};
 
 
-#pragma peephole off
-#pragma scheduling off
 void OptionsScreen_render(int arg)
 {
     int alpha;

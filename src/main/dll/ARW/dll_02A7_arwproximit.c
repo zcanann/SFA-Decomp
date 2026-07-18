@@ -24,15 +24,10 @@
 #include "main/vecmath.h"
 #include "main/object_render_legacy.h"
 
-#pragma explicit_zero_data on
 #define ARW_PROXIMITY_TAUNT_DISTANCE 2700.0f
 #define ARW_PROXIMITY_ACTIVATE_DISTANCE 5120.0f
 #define ARW_PROXIMITY_FADE_IN_RATE 3.0f
 #define ARW_PROXIMITY_WARNING_DISTANCE 900.0f
-__declspec(section ".sdata2") f32 lbl_803E71D8 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E71DC = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E71E0 = 127.0f;
 
 #define ARWPROXIMIT_HIT_VOLUME_SLOT 5
 
@@ -109,7 +104,7 @@ void arwproximit_update(GameObject* obj)
             if (state->light != NULL)
             {
                 modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
-                modelLightStruct_setPosition(state->light, lbl_803E71D8, *(f32*)&lbl_803E71D8, 50.0f);
+                modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 50.0f);
                 modelLightStruct_setDiffuseColor(state->light, 0, 0xff, 0, 0);
                 modelLightStruct_setDiffuseTargetColor(state->light, 0, 0, 0, 0);
                 modelLightStruct_setDistanceAttenuation(state->light, 50.0f, 70.0f);
@@ -170,8 +165,8 @@ void arwproximit_update(GameObject* obj)
             storeZeroToFloatParam((void*)&state->warningTimer);
             s16toFloat((void*)&state->despawnTimer, 0x14);
             if (state->light != NULL)
-                modelLightStruct_setEnabled(state->light, 0, lbl_803E71D8);
-            spawnExplosionLegacy((int)obj, lbl_803E71E0, 1, 0, 1, 1, 0, 0, 1);
+                modelLightStruct_setEnabled(state->light, 0, 0.0f);
+            spawnExplosionLegacy((int)obj, 127.0f, 1, 0, 1, 1, 0, 0, 1);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x12c);
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWPROXIMIT_HIT_VOLUME_SLOT, 1, 0);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -204,8 +199,8 @@ void arwproximit_update(GameObject* obj)
             if (state->textVariant == 3)
                 gameTextFn_80125ba4(0xe);
             if (state->light != NULL)
-                modelLightStruct_setEnabled(state->light, 0, lbl_803E71D8);
-            spawnExplosionLegacy((int)obj, lbl_803E71DC, 1, 0, 0, 0, 0, 0, 1);
+                modelLightStruct_setEnabled(state->light, 0, 0.0f);
+            spawnExplosionLegacy((int)obj, 100.0f, 1, 0, 0, 0, 0, 0, 1);
             ObjHits_DisableObject((int)obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);

@@ -35,8 +35,6 @@ int ColdWaterControl_getExtraSize(void)
     return 0x8;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void ColdWaterControl_update(GameObject* obj)
 {
     ColdwaterControlState* state;
@@ -76,7 +74,6 @@ void ColdWaterControl_update(GameObject* obj)
     }
 }
 
-#pragma scheduling on
 void ColdWaterControl_init(GameObject* obj)
 {
     ColdwaterControlState* p = (ColdwaterControlState*)obj->extra;

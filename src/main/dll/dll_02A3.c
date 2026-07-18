@@ -37,12 +37,6 @@ void fn_80231058(GameObject* obj, ARWSpeedStrVelocity* velocity)
     obj->anim.velocityZ = velocity->z;
 }
 
-__declspec(section ".sdata2") f32 lbl_803E7118 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E711C = 0.0f;
-#pragma explicit_zero_data reset
-__declspec(section ".sdata2") f32 lbl_803E7120 = 8.0f;
-__declspec(section ".sdata2") f32 lbl_803E7124 = 255.0f;
 
 int dll_2A3_getExtraSize_ret_12(void)
 {
@@ -61,7 +55,7 @@ void dll_2A3_free(void)
 
 void dll_2A3_render(int obj, int p2, int p3, int p4, int p5)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7118);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_2A3_hitDetect(void)
@@ -76,7 +70,7 @@ void dll_2A3_update(GameObject* obj)
     f32 alpha;
     Dll2A3State* state = obj->extra;
 
-    if ((lifetime = state->lifetime) > (lifetimeFloor = lbl_803E711C))
+    if ((lifetime = state->lifetime) > (lifetimeFloor = 0.0f))
     {
         state->lifetime = lifetime - timeDelta;
         if (state->lifetime <= lifetimeFloor)
@@ -88,10 +82,10 @@ void dll_2A3_update(GameObject* obj)
     }
 
     alpha = (f32)(u32)obj->anim.alpha;
-    alpha = lbl_803E7120 * timeDelta + alpha;
-    if (alpha > lbl_803E7124)
+    alpha = 8.0f * timeDelta + alpha;
+    if (alpha > 255.0f)
     {
-        alpha = lbl_803E7124;
+        alpha = 255.0f;
     }
     obj->anim.alpha = alpha;
 

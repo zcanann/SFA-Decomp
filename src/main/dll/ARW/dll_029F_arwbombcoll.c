@@ -125,21 +125,22 @@ void ARWBombColl_update(int obj)
         return;
     }
 
-    if (flags->b80 == 0)
+    if (flags->b80 != 0)
     {
-        arwingCheck = getArwing();
-        if (((arwingCheck != NULL)
-                 ? (((GameObject*)obj)->anim.localPosZ - arwingCheck->anim.localPosZ <
-                    sActivateDistanceZ)
-                 : 0) != 0)
-        {
-            goto active;
-        }
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        objAnim->alpha = 0;
+        return;
     }
-    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    objAnim->alpha = 0;
-    return;
-active:
+    arwingCheck = getArwing();
+    if (((arwingCheck != NULL)
+             ? (((GameObject*)obj)->anim.localPosZ - arwingCheck->anim.localPosZ <
+                sActivateDistanceZ)
+             : 0) == 0)
+    {
+        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        objAnim->alpha = 0;
+        return;
+    }
 {
     int alpha;
 

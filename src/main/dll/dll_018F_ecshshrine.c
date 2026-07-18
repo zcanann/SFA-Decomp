@@ -395,7 +395,6 @@ void ecsh_shrine_hitDetect(void)
 {
 }
 
-#pragma opt_strength_reduction off
 /*
  * Main state machine.
  *

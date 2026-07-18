@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/aram_queue.h"
 
-#pragma exceptions on
 
 u8 lbl_803D3F60[0x284];
 extern u8 lbl_803D41E4[];
@@ -12,7 +11,6 @@ extern u8 lbl_803D41E4[];
  * and invokes any pending entry's callback whose request handle
  * matches `req`. Decrements the count when done.
  */
-#pragma scheduling on
 void aramQueueCallback(void* req)
 {
     AramTransferQueue* queue;

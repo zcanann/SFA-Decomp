@@ -99,7 +99,6 @@ void bossdrakor_update(int obj);
 void bossdrakor_hitDetect(GameObject* obj);
 void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init);
 
-#pragma opt_common_subs off
 
 int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -158,8 +157,6 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     }
     return 0;
 }
-#pragma opt_propagation off
-#pragma dont_inline on
 void bossdrakor_updateHeadTracking(GameObject* obj, int state)
 {
     BossDrakorState* drakorState;

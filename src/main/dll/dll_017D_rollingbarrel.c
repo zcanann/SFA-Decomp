@@ -25,9 +25,8 @@ typedef struct
 #define ROLLINGBARREL_OBJFLAG_PARENT_SLACK 0x1000
 
 s16 gRollingBarrelExplodingCount;
-__declspec(section ".sdata2") RollingBarrelInitPair gRollingBarrelCurveInitPair = { 21, 0 };
+RollingBarrelInitPair gRollingBarrelCurveInitPair = { 21, 0 };
 
-#pragma dont_inline on
 void fn_801A5D88(GameObject* obj, int explosionVariant)
 {
     RollingBarrelState* state = (obj)->extra;

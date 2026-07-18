@@ -75,10 +75,7 @@ typedef enum CurveFishMode
 /* per-frame cap on the body's yaw turn toward the next path node */
 #define CURVEFISH_MAX_YAW_TURN 0x180
 
-/* ROM curve query key for the fish path curves; first entry of this TU's
- * .sdata2 (retail 0x803E38E8), followed by the compiler float pool. Read
- * through a volatile view in CurveFish_update so the value is not constant
- * folded away. */
+/* ROM curve query key for the fish path curves */
 const u32 gCurveFishCurveQueryKey = ROMCURVE_TYPE_CURVEFISH;
 
 int CurveFish_getExtraSize(void)
@@ -114,7 +111,7 @@ void CurveFish_update(int obj)
     setup = *(CurveFishSetup**)&((GameObject*)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
     setup2 = *(CurveFishSetup**)&((GameObject*)obj)->anim.placementData;
-    curveQuery = *(volatile u32*)&gCurveFishCurveQueryKey;
+    curveQuery = gCurveFishCurveQueryKey;
 
     state->phaseTimer += timeDelta;
 

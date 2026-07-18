@@ -91,7 +91,6 @@ extern int fn_80198B68(int obj, int p2);
 extern void fn_80198DE8(int obj, int target);
 extern void fn_80198A00(int obj, int target);
 
-
 #define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
 
 void Trigger_init(u8* obj, u8* params)
@@ -148,8 +147,6 @@ void Trigger_init(u8* obj, u8* params)
     state[0] = (u8)(state[0] | TRIGGER_SFLAG_SEED_TARGET);
 }
 
-#pragma opt_loop_invariants off
-#pragma opt_strength_reduction on
 void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
 {
     char* desc = (char*)&gTriggerObjDescriptor;
@@ -158,6 +155,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
     u8 i = 0;
     u8 b;
     u8 sflags;
+    u8 doRun;
     u8 c;
     int t;
     int t2;
@@ -178,46 +176,39 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
         if (p[1] != 0 &&
             ((sflags = *state, (sflags & TRIGGER_SFLAG_DISABLED) == 0) || (*p & TRIGGER_CMD_OVERRIDE_DISABLED) != 0))
         {
+            doRun = 0;
             b = *p;
             if ((b & TRIGGER_CMD_UNCONDITIONAL) == 0)
             {
                 if ((s8)legCode == 1)
                 {
-                    if ((b & TRIGGER_CMD_ON_ENTER) != 0)
+                    if ((b & TRIGGER_CMD_ON_ENTER) != 0 &&
+                        ((sflags & TRIGGER_SFLAG_ENTERED) == 0 || (b & TRIGGER_CMD_ONCE_ENTER) != 0))
                     {
-                        if ((sflags & TRIGGER_SFLAG_ENTERED) != 0)
-                        {
-                            if ((b & TRIGGER_CMD_ONCE_ENTER) == 0)
-                            {
-                                goto next;
-                            }
-                        }
-                        goto run;
+                        doRun = 1;
                     }
                 }
                 else if ((s8)legCode == -1 && (b & TRIGGER_CMD_ON_EXIT) != 0)
                 {
-                    if ((sflags & TRIGGER_SFLAG_EXITED) != 0)
+                    if ((sflags & TRIGGER_SFLAG_EXITED) == 0 || (b & TRIGGER_CMD_ONCE_EXIT) != 0)
                     {
-                        if ((b & TRIGGER_CMD_ONCE_EXIT) == 0)
-                        {
-                            goto next;
-                        }
+                        doRun = 1;
                     }
-                    goto run;
                 }
             }
             else if ((b & TRIGGER_CMD_ON_ENTER) != 0)
             {
-                if ((s8)legCode < 0)
+                if ((s8)legCode >= 0)
                 {
-                    goto next;
+                    doRun = 1;
                 }
-                goto run;
             }
             else if ((b & TRIGGER_CMD_ON_EXIT) == 0 || (s8)legCode <= 0)
             {
-            run:
+                doRun = 1;
+            }
+            if (doRun)
+            {
                 switch (p[1])
                 {
                 case 1:
@@ -686,7 +677,6 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                 }
             }
         }
-    next:
         i++;
         p += 4;
     }
@@ -700,8 +690,6 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
         *state |= TRIGGER_SFLAG_EXITED;
     }
 }
-#pragma opt_loop_invariants reset
-#pragma opt_strength_reduction reset
 
 int Trigger_getExtraSize(void)
 {
@@ -728,7 +716,6 @@ void Trigger_free(GameObject* obj)
         entry += 4;
     }
 }
-#pragma reset
 
 /* group owned by another DLL, queried here */
 
@@ -743,8 +730,6 @@ void Trigger_free(GameObject* obj)
  * Per-command-entry flags byte (entry[0] in the 4-byte command records at
  * placementData+0x18). Gates whether the entry runs for a given activation leg.
  */
-
-
 
 void Trigger_render(void)
 {
@@ -977,8 +962,6 @@ void Trigger_hitDetect(GameObject* obj)
 void Trigger_update(void)
 {
 }
-
-
 
 void Trigger_release(void)
 {

@@ -31,8 +31,6 @@ char lbl_803DBBF0[] = "%2d";
 extern f32 lbl_803E22A0;
 extern void* lbl_803DD960;
 
-#pragma scheduling off
-#pragma peephole off
 void dll_3F_updateTimerReadout(void* obj)
 {
     char buf[12];
@@ -66,8 +64,6 @@ void dll_3F_updateTimerReadout(void* obj)
     sprintf(buf, lbl_803DBBF0, elapsed);
 }
 
-#pragma scheduling on
-#pragma peephole on
 void dll_3F_frameEnd_nop(void)
 {
 }
@@ -82,7 +78,6 @@ void dll_3F_release(void)
     textureFree((Texture*)(lbl_803DD960));
 }
 
-#pragma scheduling off /* intentional: last fn in TU */
 void dll_3F_initialise(void)
 {
     lbl_803DD960 = textureLoadAsset(DLL3F_TEXTURE_ID);

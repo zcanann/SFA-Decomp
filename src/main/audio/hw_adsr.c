@@ -1,6 +1,5 @@
 #include "main/audio/dsp_voice_state.h"
 
-#pragma exceptions on
 #include "main/audio/voice_conv.h"
 #include "main/audio/hw_adsr.h"
 extern u8 voiceAdsrDecayTable[];

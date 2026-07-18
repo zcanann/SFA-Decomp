@@ -572,7 +572,6 @@ void collectible_hitDetect(void)
 {
 }
 
-#pragma dont_inline on
 
 void collectible_update(int obj)
 {
@@ -699,7 +698,6 @@ void collectible_update(int obj)
     }
 }
 
-#pragma dont_inline reset
 
 void collectible_init(GameObject *obj, int setup)
 {

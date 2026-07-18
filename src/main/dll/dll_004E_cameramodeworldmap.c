@@ -63,8 +63,6 @@ extern f32 lbl_803E1A64;
 extern f32 lbl_803E1A68;
 extern f32 gCamWorldMapAlphaScale;
 
-#pragma peephole off
-#pragma scheduling off
 
 void CameraModeWorldMap_copyToCurrent(int* p1, int kind)
 {
@@ -97,8 +95,6 @@ void CameraModeWorldMap_free(void)
     mm_free((void*)gCamWorldMapState);
     gCamWorldMapState = NULL;
 }
-#pragma opt_common_subs off
-#pragma opt_propagation off
 void CameraModeWorldMap_update(u8* obj)
 {
     GameObject* camera = (GameObject*)obj;
@@ -402,8 +398,6 @@ void CameraModeWorldMap_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
 
 void CameraModeWorldMap_init(int* obj)
 {

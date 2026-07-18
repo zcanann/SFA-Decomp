@@ -15,7 +15,6 @@
 
 #define DFPSTATUE1_OBJFLAG_HIDDEN 0x4000
 
-#pragma dont_inline on
 void dfpstatue1_updateState(DfpStatue1Object* obj)
 {
     DfpStatue1State* state;
@@ -60,7 +59,6 @@ void dfpstatue1_updateState(DfpStatue1Object* obj)
         }
     }
 }
-#pragma dont_inline reset
 
 int DFP_Statue1_getExtraSize(void)
 {

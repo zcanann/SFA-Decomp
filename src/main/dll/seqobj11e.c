@@ -54,9 +54,6 @@ f32 lbl_803DBCB4 = 240.0f;
 typedef void (*SeqObj11ESetMovePointerStateFn)(GameObject* obj, void* state, int moveId, f32 speed, int p5,
                                                int flags);
 
-#pragma scheduling off
-#pragma peephole off
-
 /* fn_80152040: state-table driver: walks the 12-byte gSeq11EStateTable state
  * rows, advancing on GameBit + sequence flags and kicking the matching anim. */
 
@@ -162,8 +159,6 @@ void fn_80152040(int* obj, u8* state)
     }
 }
 
-extern f32 lbl_803E280C;
-
 void guardClaw_init(int* obj, u8* state)
 {
     int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -176,7 +171,7 @@ void guardClaw_init(int* obj, u8* state)
     ((BaddieState*)state)->animDeltaScale = 0.17f;
     ((BaddieState*)state)->unk304 = 0.97f;
     ((BaddieState*)state)->unk320 = 0;
-    fz = lbl_803E280C;
+    fz = 1.0f;
     *(f32*)&((BaddieState*)state)->eventFlags = fz;
     ((BaddieState*)state)->unk321 = 0;
     ((BaddieState*)state)->unk318 = fz;
@@ -188,12 +183,6 @@ void guardClaw_init(int* obj, u8* state)
     }
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
 }
-
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E280C = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E2810 = 2.5f;
-__declspec(section ".sdata2") f32 lbl_803E2814 = 0.0f;
-#pragma explicit_zero_data off
 
 int gcRobotLight_init(GameObject* obj, int childId)
 {
@@ -218,8 +207,6 @@ int gcRobotLight_init(GameObject* obj, int childId)
     return (int)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
 }
 
-#pragma opt_common_subs off
-
 void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int msg)
 {
     int sub;
@@ -234,16 +221,13 @@ void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int
     Sfx_PlayFromObject((u32)obj, SFXTRIG_en_lrope_powerdown);
     ((BaddieState*)state)->reactionFlags |= 0x8;
     *(f32*)(state + 0x32c) = (f32)(u32)(u16) * (s16*)(sub + 0x2c);
-    fn_8014D08C((GameObject*)(obj), state, 1, lbl_803E2810, 0, 0);
+    fn_8014D08C((GameObject*)(obj), state, 1, 2.5f, 0, 0);
     *(u32*)&((BaddieState*)state)->unk2E4 &= ~0x20LL;
-    fz = lbl_803E2814;
-    obj->anim.velocityZ = lbl_803E2814;
+    fz = 0.0f;
+    obj->anim.velocityZ = 0.0f;
     obj->anim.velocityY = fz;
     obj->anim.velocityX = fz;
 }
-
-
-#pragma opt_common_subs reset
 
 /* fn_80152514: main update: child-zap timer, curve follow, heading steps,
  * landing sfx, light-pulse fx, child spark spawn. */
@@ -254,10 +238,6 @@ extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
-extern f32 lbl_803DBCB0;
-extern f32 lbl_803DBCB4;
-extern f32 lbl_803E2814;
-
 typedef struct
 {
     u8 pad[8];
@@ -267,7 +247,6 @@ typedef struct
     f32 d;
 } SeqFxParams;
 
-#pragma dont_inline on
 void fn_80152514(int* obj, u8* state)
 {
     int* def;
@@ -278,7 +257,7 @@ void fn_80152514(int* obj, u8* state)
 
     def = *(int**)&((GameObject*)obj)->anim.placementData;
     path = *(RomCurveWalker**)state;
-    if (*(f32*)(state + 0x32c) > lbl_803E2814)
+    if (*(f32*)(state + 0x32c) > 0.0f)
     {
         int* child = ((GameObject*)obj)->childObjs[0];
         if (child != 0)
@@ -288,9 +267,9 @@ void fn_80152514(int* obj, u8* state)
             *(int*)&((GameObject*)obj)->childObjs[0] = 0;
         }
         *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
-        if (*(f32*)(state + 0x32c) <= *(f32*)&lbl_803E2814)
+        if (*(f32*)(state + 0x32c) <= 0.0f)
         {
-            *(f32*)(state + 0x32c) = lbl_803E2814;
+            *(f32*)(state + 0x32c) = 0.0f;
             *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20;
             Sfx_StopObjectChannel((u32)obj, 4);
             ((SeqObj11ESetMovePointerStateFn)fn_8014D08C)((GameObject*)obj, state, 0, 1.0f, 0, 0);
@@ -385,7 +364,7 @@ void fn_80152514(int* obj, u8* state)
     }
     if (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_RENDERED)
     {
-        f32 z = lbl_803E2814;
+        f32 z = 0.0f;
         fx.b = z;
         fx.c = z;
         fx.d = z;
@@ -393,7 +372,7 @@ void fn_80152514(int* obj, u8* state)
         objfx_spawnLightPulseLegacy((GameObject*)(obj), 0.5f, 2, 0, 6, 0.25f, &fx);
         fx.c = 12.0f;
         objfx_spawnMaskedHitEffectLegacy(obj, 0.4f, 1, 6, 0x20, &fx);
-        fx.b = lbl_803E2814;
+        fx.b = 0.0f;
         z = -30.0f;
         fx.c = z;
         fx.d = z;
@@ -406,7 +385,7 @@ void fn_80152514(int* obj, u8* state)
     {
         ((GameObject*)obj)->anim.velocityY = 0.5f;
     }
-    if (lbl_803E2814 == *(f32*)(state + 0x32c))
+    if (0.0f == *(f32*)(state + 0x32c))
     {
         int* child2;
 
@@ -461,14 +440,10 @@ void fn_80152514(int* obj, u8* state)
         }
     }
 }
-#pragma dont_inline off
 
-
-/* scheduling stays off; only peephole flips on for the next two handlers */
-#pragma peephole on
 void gcRobotPatrol_init(GameObject* obj, int state)
 {
-                        f32 fz;
+    f32 fz;
 
     ((BaddieState*)state)->speedScale = 60.0f;
     *(u32*)&((BaddieState*)state)->unk2E4 = 41;
@@ -484,18 +459,13 @@ void gcRobotPatrol_init(GameObject* obj, int state)
     ((BaddieState*)state)->unk318 = fz;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fz;
-    *(f32*)(state + 0x32c) = lbl_803E2814;
+    *(f32*)(state + 0x32c) = 0.0f;
     obj->anim.hitboxScale = 100.0f;
     Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_tr_bcrek1_c);
 }
 
-#pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E2864 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E2868 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E286C = 60.0f;
-#pragma explicit_zero_data off
-#pragma force_active reset
+f32 lbl_803E2868 = 0.0f;
+f32 lbl_803E286C = 60.0f;
 
 void mikaladon_updateWhileFrozen(int obj, int state, int unused, int msg)
 {

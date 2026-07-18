@@ -43,8 +43,6 @@ void mmp_gyservent_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void mmp_gyservent_update(GameObject* obj)
 {
     int def = *(int*)&(obj)->anim.placementData;

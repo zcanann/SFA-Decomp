@@ -61,15 +61,10 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
 union TreasureChestConstF32 { f32 f; };
 const union TreasureChestConstF32 lbl_803E3C1C = { 0.0f };
-__declspec(section ".sdata2") f32 lbl_803E3C20 = 1.0f;
 int lbl_803DDAE4;
-__declspec(section ".sdata2") f32 lbl_803E3C24 = 0.6f;
 const ChestHitParams lbl_802C22B0 = {8, 0xFF, 0xFF, 0x78};
 void* lbl_803DDAE0;
-__declspec(section ".sdata2") f32 lbl_803E3C28 = 20.0f;
-__declspec(section ".sdata2") f32 lbl_803E3C2C = 0.99f;
 
-#pragma opt_loop_invariants off
 int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -107,8 +102,6 @@ int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
     return 0;
 }
 
-#pragma opt_loop_invariants reset
-
 int TreasureChest_getExtraSize(void)
 {
     return 1;
@@ -126,7 +119,7 @@ void TreasureChest_free(void)
 
 void TreasureChest_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3C20);
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void TreasureChest_hitDetect(GameObject* obj)
@@ -138,7 +131,7 @@ void TreasureChest_hitDetect(GameObject* obj)
     state = ((GameObject*)obj)->extra;
     if (((u32)state[0] >> 5 & 1) != 0)
     {
-        hitDetectFn_80097070(lbl_803E3C24, (int)obj, 2, (u8)(setup->hitboxKind + 6), 4, 0);
+        hitDetectFn_80097070(0.6f, (int)obj, 2, (u8)(setup->hitboxKind + 6), 4, 0);
     }
 }
 
@@ -157,12 +150,12 @@ void TreasureChest_update(GameObject* obj)
 
     flags = ((GameObject*)obj)->extra;
     setup = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
-    nearestDist = lbl_803E3C28;
+    nearestDist = 20.0f;
     if (flags->trigger != 0 && flags->open != 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E3C2C, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, 0.99f, 0);
     }
     if (flags->open == 0)
     {
@@ -195,7 +188,7 @@ void TreasureChest_update(GameObject* obj)
         {
             blk.x = blk.x + playerMapOffsetX;
             blk.z[0] = blk.z[0] + playerMapOffsetZ;
-            blk.scale = lbl_803E3C20;
+            blk.scale = 1.0f;
             blk.c = 0;
             blk.b = 0;
             blk.a = 0;

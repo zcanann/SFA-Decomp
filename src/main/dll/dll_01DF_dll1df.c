@@ -155,7 +155,6 @@ ObjectDescriptor lbl_80325928 = {
     (ObjectDescriptorExtraSizeCallback)dll_1DF_getExtraSize,
 };
 
-#pragma force_active on
 /* .sdata2 constant pool */
 const f32 lbl_803E4BB8 = 2e+02f;
 const f32 lbl_803E4BBC = 1e+02f;

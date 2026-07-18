@@ -45,7 +45,6 @@ void checkpoint4_update(void)
 {
 }
 
-#pragma opt_common_subs off
 void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* placement)
 {
     f32 radius;
@@ -88,7 +87,6 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
     checkpoint->checkpointIndex = placement->checkpointIndex;
     checkpoint->objectFlags |= CHECKPOINT4_OBJECT_FLAGS_ENABLED;
 }
-#pragma opt_common_subs reset
 
 void checkpoint4_release(void)
 {

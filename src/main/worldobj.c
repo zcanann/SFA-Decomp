@@ -95,8 +95,6 @@ void worldobj_spawnGreatFoxEffects(GameObject* obj);
 void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId);
 void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-
-#pragma dont_inline on
 void worldobj_spawnGreatFoxEffects(GameObject* obj)
 {
     WorldObjEffectParams params;
@@ -155,7 +153,6 @@ void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, 
         (*gPartfxInterface)->spawnObject((void*)obj, dispatchId, &params, 2, -1, NULL);
     }
 }
-#pragma dont_inline off
 
 int worldobj_getExtraSize(void)
 {
@@ -246,7 +243,6 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         break;
     }
 }
-
 
 void worldobj_hitDetect(void)
 {
@@ -566,7 +562,6 @@ void worldobj_update(GameObject* obj)
         break;
     }
 }
-#pragma opt_common_subs off
 void worldobj_init(GameObject* obj, int arg)
 {
     WorldObjState* state = (obj)->extra;
@@ -686,7 +681,6 @@ void worldobj_init(GameObject* obj, int arg)
         break;
     }
 }
-#pragma opt_common_subs reset
 
 void worldobj_release(void)
 {

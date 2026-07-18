@@ -11,8 +11,6 @@
 #include "main/model_engine.h"
 #include "main/dll/dll_0010_uicontroller.h"
 
-#pragma scheduling off
-#pragma peephole off
 void UIController_render(void* context, int arg1, int arg2)
 {
     if (gameTimerIsRunningContext(context, arg1, arg2) != 0)

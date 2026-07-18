@@ -321,7 +321,6 @@ void DR_EarthWarrior_func23(GameObject* obj, int mode)
         break;
     }
 }
-#pragma dont_inline on
 int fn_802BC830(GameObject* obj, int sub, int state)
 {
     *(u32*)&((EarthWarriorSub*)sub)->unk360 |= 0x1000000LL;
@@ -364,8 +363,6 @@ int fn_802BC830(GameObject* obj, int sub, int state)
     }
     return 0;
 }
-#pragma dont_inline reset
-#pragma opt_common_subs off
 void fn_802BCA10(GameObject* obj, int sub, int state)
 {
     int angle;
@@ -458,7 +455,6 @@ void fn_802BCA10(GameObject* obj, int sub, int state)
         vec9[0] = (s16)(t >> 1);
     }
 }
-#pragma opt_common_subs reset
 
 int DR_EarthWarrior_defaultStateHandler(void)
 {
@@ -1071,7 +1067,6 @@ void DR_EarthWarrior_free(GameObject* obj)
     }
 }
 
-
 void DR_EarthWarrior_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
     EarthWarriorState* inner = (obj)->extra;
@@ -1091,7 +1086,6 @@ void DR_EarthWarrior_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 
         dll_2E_func06(obj, (MoveLibState*)((char*)inner + 0x3ec), 0);
     }
 }
-
 
 void DR_EarthWarrior_hitDetect(GameObject* obj)
 {
@@ -1379,7 +1373,6 @@ void DR_EarthWarrior_update(GameObject* obj)
     }
 #undef hitState
 }
-#pragma opt_propagation off
 void DR_EarthWarrior_init(GameObject* obj, int def)
 {
     register u8* base = gDREarthWarriorInitData;
@@ -1457,7 +1450,6 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     *(int*)((char*)obj + 0x108) = (int)fn_802BC788;
     ObjModelChain_SetEnabled((ObjModelChain*)((DREarthWarriorState*)inner)->tailSimHandle, 1);
 }
-#pragma opt_propagation reset
 
 void DR_EarthWarrior_release(void)
 {
@@ -1467,7 +1459,6 @@ void DR_EarthWarrior_release(void)
         gEarthWarriorResource = NULL;
     }
 }
-
 
 void DR_EarthWarrior_initialise(void)
 {
@@ -1539,7 +1530,6 @@ u8 gDREarthWarriorRowIndices[960] = {
     64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
     64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154, 64, 217, 153, 154,
 };
-
 
 int lbl_8033566C[4] = {0x17, 0x18, 0x19, 0x1A};
 

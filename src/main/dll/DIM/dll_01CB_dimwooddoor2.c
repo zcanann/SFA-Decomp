@@ -50,8 +50,6 @@ void dimwooddoor2_free(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void dimwooddoor2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;

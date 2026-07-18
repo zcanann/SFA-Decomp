@@ -96,28 +96,16 @@ void FlammableVine_update(GameObject* obj)
     tricky = getTrickyObject();
 
     *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-    if (((FlammablevineObjectDef*)def)->gateBit == -1)
+    if (((FlammablevineObjectDef*)def)->gateBit == -1 ||
+        (mainGetBit(((FlammablevineObjectDef*)def)->gateBit) != 0 && tricky != NULL &&
+         mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0))
     {
-        goto can_use_vine;
+        canUse = 1;
     }
-    if (mainGetBit(((FlammablevineObjectDef*)def)->gateBit) == 0)
+    else
     {
-        goto cant_use_vine;
+        canUse = 0;
     }
-    if (tricky == NULL)
-    {
-        goto cant_use_vine;
-    }
-    if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) == 0)
-    {
-        goto cant_use_vine;
-    }
-can_use_vine:
-    canUse = 1;
-    goto checked_vine_use;
-cant_use_vine:
-    canUse = 0;
-checked_vine_use:
 
     if ((state->flags & 3) == 0)
     {

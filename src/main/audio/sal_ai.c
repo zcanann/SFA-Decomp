@@ -1,7 +1,6 @@
 #include "main/audio/sal_ai.h"
 #include "main/audio/synth_config.h"
 
-#pragma exceptions on
 #include "main/audio/sal_dsp.h"
 #include "string.h"
 #include "dolphin/os/OSCache.h"

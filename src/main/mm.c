@@ -256,7 +256,6 @@ int mmCreateMemoryStore(int size)
     }
     return store->handle;
 }
-#pragma dont_inline on
 
 int testAndSet_onlyUseHeaps1and2(int v)
 {
@@ -277,8 +276,6 @@ int testAndSet_onlyUseHeap3(int v)
         return old;
     }
 }
-
-#pragma dont_inline off
 
 extern MmRegion gMmRegionTable[0xA0 / sizeof(MmRegion)];
 
@@ -359,7 +356,6 @@ int roundUpTo32(int x)
     return x;
 }
 
-#pragma dont_inline on
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag)
 {
     int ni;
@@ -408,7 +404,6 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int item
 DeferredFree gMmDeferredFreeStack[0x3E80 / sizeof(DeferredFree)];
 
 void* gMmStoreArray[0x20];
-
 
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, int tag)
 {
@@ -483,7 +478,6 @@ void heapFree(int region, int idx)
         base[--gMmRegionTable[region].slotCount].stack = idx;
     }
 }
-#pragma dont_inline off
 
 int mmGetRegionForPtr(u8* ptr)
 {
@@ -498,7 +492,6 @@ int mmGetRegionForPtr(u8* ptr)
     return -1;
 }
 
-#pragma dont_inline on
 void mmFreeDeferred(void* p)
 {
     DeferredFree* stack;
@@ -525,7 +518,6 @@ void mmFreeDeferred(void* p)
     gMmDeferredFreeStack[gMmDeferredFreeCount].delay = gMmFreeDelay;
     gMmDeferredFreeCount++;
 }
-#pragma dont_inline off
 
 void mmFree(void* p)
 {
@@ -559,7 +551,6 @@ void mmFree(void* p)
     OSReport(sMmAllocFreeMessageBlock, p);
 }
 
-#pragma dont_inline on
 void mmFreeTick(int arg)
 {
     MmGlobal* g[1];
@@ -582,14 +573,8 @@ void mmFreeTick(int arg)
         if (d->delay == 0)
         {
             mmFree(d->ptr);
-            {
-                char* a = (char*)g[0] + *(volatile s16*)&gMmDeferredFreeCount * 8;
-                d->ptr = ((DeferredFree*)(a + 0x78))->ptr;
-            }
-            {
-                char* b = (char*)g[0] + *(volatile s16*)&gMmDeferredFreeCount * 8;
-                d->delay = ((DeferredFree*)(b + 0x78))->delay;
-            }
+            d->ptr = g[0]->deferred[gMmDeferredFreeCount - 1].ptr;
+            d->delay = g[0]->deferred[gMmDeferredFreeCount - 1].delay;
             gMmDeferredFreeCount--;
         }
         else
@@ -682,7 +667,6 @@ void mm_free(void* p)
         mmFreeDeferred(p);
     }
 }
-#pragma dont_inline off
 
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag);
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, int tag);
@@ -694,7 +678,6 @@ int mmSetFreeDelay(int v)
     gMmFreeDelay = v;
     return old;
 }
-#pragma opt_lifetimes off
 int mmAllocFromRegion(int region, int size, int type, int tag)
 {
     char* msg = sMmShowInfoFBMemoryStoreMessageBlock;
@@ -843,7 +826,6 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
     }
     return 0;
 }
-#pragma opt_lifetimes reset
 
 int getHeapItemSize(void* ptr)
 {
@@ -937,7 +919,6 @@ void* mmAlloc(int size, int type, int flag)
     }
     return result;
 }
-#pragma dont_inline on
 void* mmInitRegion(u8* buf, int size, int numSlots)
 {
     int regIdx = gMmRegionCount++;
@@ -974,7 +955,6 @@ void* mmInitRegion(u8* buf, int size, int numSlots)
     gMmRegionTable[regIdx].slotCount++;
     return gMmRegionTable[regIdx].start;
 }
-#pragma dont_inline off
 
 void mmInit(void)
 {

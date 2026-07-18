@@ -1,6 +1,5 @@
 #include "main/audio/hw_voice_start.h"
 
-#pragma exceptions on
 
 extern u8* dspVoice;
 extern u8 salTimeOffset;

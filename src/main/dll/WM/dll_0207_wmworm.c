@@ -49,7 +49,6 @@ void WM_Worm_hitDetect(void)
 {
 }
 
-#pragma opt_common_subs off
 void WM_Worm_update(GameObject* obj)
 {
     float dx;

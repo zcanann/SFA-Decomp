@@ -38,8 +38,6 @@ ObjectDescriptor6 lbl_80310B50 = {
 };
 
 
-#pragma peephole off
-#pragma scheduling off
 #define FILL8()                                                                                                        \
     do                                                                                                                 \
     {                                                                                                                  \

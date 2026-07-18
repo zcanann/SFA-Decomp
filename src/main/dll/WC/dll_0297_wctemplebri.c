@@ -49,7 +49,6 @@
 
 
 
-#pragma dont_inline on
 void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state)
 {
     ObjTextureRuntimeSlot* tex;
@@ -75,7 +74,6 @@ void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state)
         phase = (phase - 0x10000) + 1;
     state->wavePhaseB = phase;
 }
-#pragma dont_inline off
 
 static void wctemplebri_deformVertex(ObjModel* model, ModelFileHeader* modelBase, WCTempleBriState* state, int i)
 {
@@ -130,7 +128,6 @@ int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-#pragma dont_inline off
 int wctemplebri_getExtraSize(void)
 {
     return WCTEMPLEBRI_EXTRA_SIZE;
@@ -218,7 +215,6 @@ void wctemplebri_update(GameObject* obj)
     }
 }
 
-#pragma dont_inline off
 void wctemplebri_init(GameObject* obj, WCTempleBriSetup* setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;

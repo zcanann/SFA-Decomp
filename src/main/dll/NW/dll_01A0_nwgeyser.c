@@ -42,14 +42,7 @@ typedef struct NwGeyserTextureScrollParams
     f32 initialOffset;
 } NwGeyserTextureScrollParams;
 
-#pragma explicit_zero_data on
 const NwGeyserTextureScrollParams gNwGeyserTextureScrollParams = {512.0f, 0.0f};
-__declspec(section ".sdata2") u32 lbl_803E5208 = 0x01010101;
-__declspec(section ".sdata2") f32 lbl_803E520C = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E5210 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E5214 = 40000.0f;
-__declspec(section ".sdata2") f32 lbl_803E5218 = 30.0f;
-#pragma explicit_zero_data reset
 
 
 extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points, void* scratch, f32 scaleX,
@@ -128,13 +121,13 @@ int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     if ((((NwMammothState*)state)->runtimeFlags & 0x20) == 0)
     {
         Sfx_StopObjectChannel((int)obj, 0x7f);
-        ((NwMammothState*)state)->pathSpeed = lbl_803E520C;
+        ((NwMammothState*)state)->pathSpeed = 0.0f;
         ((NwMammothState*)state)->runtimeFlags = (u8)(((NwMammothState*)state)->runtimeFlags & ~0x10);
         ((NwMammothState*)state)->runtimeFlags = (u8)(((NwMammothState*)state)->runtimeFlags | 0x20);
     }
     if ((((NwMammothState*)state)->runtimeFlags & 4) != 0)
     {
-        ((NwMammothState*)state)->playerDistanceSq = lbl_803E520C;
+        ((NwMammothState*)state)->playerDistanceSq = 0.0f;
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~8);
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~0x40);
         fn_801CDF94(obj, (int)state, 1);
@@ -142,7 +135,7 @@ int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     audioEvents = state + 0x440;
     audioPoints = state + 0x45c;
     audioScratch = state + 0x16c;
-    objAudioFn_8006ef38((int)obj, audioEvents, 8, audioPoints, audioScratch, lbl_803E5210, *(f32*)&lbl_803E5210);
+    objAudioFn_8006ef38((int)obj, audioEvents, 8, audioPoints, audioScratch, 1.0f, 1.0f);
     if (animUpdate->eventCount != 0)
     {
         (obj)->objectFlags = (u16)((obj)->objectFlags & ~0x400);
@@ -151,11 +144,10 @@ int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     return 0;
 }
 
-#pragma dont_inline on
 void fn_801CDF94(GameObject* obj, int state, int flag)
 {
     if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL &&
-        ((NwMammothState*)state)->playerDistanceSq < lbl_803E5214)
+        ((NwMammothState*)state)->playerDistanceSq < 40000.0f)
     {
         ((NwMammothState*)state)->eyeTarget.enabled = 1;
         ((NwMammothState*)state)->eyeTarget.targetX =
@@ -176,8 +168,7 @@ void fn_801CDF94(GameObject* obj, int state, int flag)
     }
     else
     {
-        fn_8003A230(obj, (CharacterEyeAnimState*)(state + 0x40c), lbl_803E520C);
+        fn_8003A230(obj, (CharacterEyeAnimState*)(state + 0x40c), 0.0f);
         characterDoEyeAnimsState(obj, state + 0x40c);
     }
 }
-#pragma dont_inline reset

@@ -15,8 +15,8 @@
 
 union KtLazerLightConstF32 { f32 f; };
 
-__declspec(section ".sdata2") const union KtLazerLightConstF32 lbl_803E68C0 = { 0.0f };
-__declspec(section ".sdata2") const union KtLazerLightConstF32 lbl_803E68C4 = { 0.0f };
+const union KtLazerLightConstF32 lbl_803E68C0 = { 0.0f };
+const union KtLazerLightConstF32 lbl_803E68C4 = { 0.0f };
 
 int ktlazerlight_getExtraSize(void)
 {

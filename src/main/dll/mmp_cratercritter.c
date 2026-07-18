@@ -21,7 +21,6 @@ extern f32 lbl_803E247C;
 extern f32 lbl_803E24C4;
 extern char sInWaterMessage[]; /* "in water\n" */
 extern char lbl_8031D478[];    /* "out of water\n" (head of the 0x38C Tricky debug-string blob @0x8031D478) */
-#pragma peephole on
 void trickyFn_8013d8f0(u8* self, u8* state)
 {
     u8* nearest;

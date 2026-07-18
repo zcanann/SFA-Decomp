@@ -114,7 +114,6 @@ typedef struct FirePipeEffectSetup
     s16 scale;         /* 0x1a */
 } FirePipeEffectSetup;
 
-#pragma dont_inline on
 int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* spawnDef)
 {
     int i;
@@ -154,7 +153,6 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
     }
     return (int)effectObj;
 }
-#pragma dont_inline reset
 
 void firepipe_releaseEffectObject(FirePipeObject* obj)
 {
@@ -626,4 +624,4 @@ ObjectDescriptor gFirePipeObjDescriptor = {
     firepipe_getExtraSize,
 };
 
-__declspec(section ".sdata2") f32 lbl_803E6BA8 = 0.1f;
+f32 lbl_803E6BA8 = 0.1f;

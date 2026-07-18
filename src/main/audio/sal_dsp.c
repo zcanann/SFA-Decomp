@@ -1,7 +1,6 @@
 #include "main/audio/sal_dsp.h"
 #include "dolphin/dsp.h"
 
-#pragma exceptions on
 
 typedef struct
 {
@@ -324,14 +323,12 @@ u32 salGetStartDelay(void)
     return OS_TICKS_TO_USEC(now - salLastTick);
 }
 
-#pragma scheduling off
 void hwInitIrq(void)
 {
     oldState = OSDisableInterrupts();
     hwIrqLevel = 1;
 }
 
-#pragma scheduling on
 void hwEnableIrq(void)
 {
 }

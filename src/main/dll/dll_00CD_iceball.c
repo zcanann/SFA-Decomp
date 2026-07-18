@@ -36,9 +36,6 @@
 
 
 
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_8015FBEC(GameObject* obj)
 {
 
@@ -64,7 +61,6 @@ void fn_8015FBEC(GameObject* obj)
     Camera_EnableViewYOffset();
     CameraShake_SetAllMagnitudes(1.0f);
 }
-#pragma dont_inline reset
 
 static inline u8 scarab_isObjectInList(void* obj)
 {
@@ -138,8 +134,6 @@ void fn_8015FCCC(GameObject* obj)
     }
 }
 
-#pragma scheduling on
-#pragma peephole on
 
 int IceBall_getExtraSize(void)
 {
@@ -150,7 +144,6 @@ int IceBall_getObjectTypeId(void)
     return 0x0;
 }
 
-#pragma peephole off
 void IceBall_free(void)
 {
     Camera_DisableViewYOffset();
@@ -162,14 +155,11 @@ void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (visible32 != 0)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
-#pragma peephole on
 
 void IceBall_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void IceBall_update(u16* obj, int unused)
 {
     int objInt;
@@ -221,8 +211,6 @@ void IceBall_init(GameObject* obj)
     ObjHits_DisableObject((int)obj);
     obj->anim.alpha = 0xff;
 }
-#pragma scheduling on
-#pragma peephole on
 
 void IceBall_release(void)
 {

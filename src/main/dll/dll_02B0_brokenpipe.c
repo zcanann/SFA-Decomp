@@ -12,10 +12,8 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 
-__declspec(section ".sdata2") f32 lbl_803E7338 = 255.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E733C = 0.0f;
-#pragma explicit_zero_data off
+f32 lbl_803E7338 = 255.0f;
+f32 lbl_803E733C = 0.0f;
 
 #define BROKENPIPE_OBJFLAG_HIDDEN 0x4000
 

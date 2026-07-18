@@ -1,7 +1,6 @@
 #include "src/main/audio/synth_internal.h"
 #include "main/audio/snd_synth_legacy.h"
 #include "main/audio/synth_handle.h"
-#pragma exceptions on
 
 typedef struct SynthStartParams
 {

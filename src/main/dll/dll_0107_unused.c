@@ -56,11 +56,9 @@ static const f64 lbl_803E3A78 = 4503601774854144.0;
 static const f32 gWindLift107RadiusScale = 10.0f;
 static const f32 gWindLift107DefaultRadius = 50.0f;
 
-#pragma dont_inline on
 void* lbl_803DDAD4;
 void* lbl_803DDAD0;
 
-#pragma opt_common_subs off
 void fn_80185868(GameObject* obj, f32 arg)
 {
 
@@ -98,8 +96,6 @@ void fn_80185868(GameObject* obj, f32 arg)
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNUSED_HIT_VOLUME_SLOT, 1, 0);
     ObjHits_EnableObject((int)obj);
 }
-#pragma opt_common_subs reset
-#pragma dont_inline reset
 
 int dll_107_getExtraSize_ret_44(void)
 {
@@ -127,14 +123,14 @@ void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderSt
     state = (obj)->extra;
     if (state->ventState != 0 && state->ventState <= 50)
     {
-        goto end;
+        return;
     }
     switch (state->holdTimer)
     {
     case 0:
         break;
     default:
-        goto end;
+        return;
     }
     if ((obj)->userData2 != 0)
     {
@@ -143,14 +139,14 @@ void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderSt
         }
         else
         {
-            goto end;
+            return;
         }
     }
     else
     {
         if (renderState == 0)
         {
-            goto end;
+            return;
         }
     }
     spitTimer = state->spitTimer;
@@ -176,14 +172,12 @@ void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderSt
         }
     }
     objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E3A5C);
-end:;
 }
 
 void dll_107_hitDetect_nop(void)
 {
 }
 
-#pragma opt_common_subs off
 void dll_107_update(GameObject* obj)
 {
 
@@ -443,7 +437,6 @@ void dll_107_update(GameObject* obj)
         }
     }
 }
-#pragma opt_common_subs reset
 
 typedef struct WindLift107Placement
 {

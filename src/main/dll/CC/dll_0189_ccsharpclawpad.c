@@ -30,8 +30,6 @@ int CCSharpclawPad_getExtraSize(void)
     return 0x4;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void CCSharpclawPad_update(GameObject* obj)
 {
     SharpClawPadParticleArgs particleArgs;

@@ -134,7 +134,6 @@ void dvdCheckError(void)
     }
 }
 
-#pragma dont_inline on
 int DVDRead(DVDFileInfo* fileInfo, void* buf, int size, int offset)
 {
     typedef int (*DVDReadAsyncPrioCompatFn)(void*, void*, int, int, void (*)(void*), int);

@@ -158,9 +158,6 @@ u32 gKytesMumObjDescriptor[14] = {0x00000000,
                                   (u32)kytesmum_getObjectTypeId,
                                   (u32)kytesmum_getExtraSize};
 
-
-#pragma auto_inline off
-#pragma optimization_level 2
 void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
 {
     int i;
@@ -203,10 +200,7 @@ void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
         Sfx_PlayFromObject(obj, sfxData[3]);
     }
 }
-#pragma auto_inline on
 
-
-#pragma optimization_level reset
 int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
 {
     GameObject* player = Obj_GetPlayerObject();
@@ -449,8 +443,6 @@ void kytesmum_release(void)
 void kytesmum_initialise(void)
 {
 }
-
-#pragma reset
 
 char sKytesMumYawDiffMessage[] = " YAW DIFF ";
 

@@ -84,7 +84,6 @@ int CCGasVentControl_SeqFn(GameObject* obj)
     return 0;
 }
 
-#pragma dont_inline on
 u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
 {
     u8 i;
@@ -125,7 +124,6 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
     }
     return count;
 }
-#pragma dont_inline reset
 
 int ccgasventcontrol_getExtraSize(void)
 {

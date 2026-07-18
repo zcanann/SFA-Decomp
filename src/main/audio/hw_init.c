@@ -1,7 +1,6 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/hw_dspctrl.h"
 
-#pragma exceptions on
 #include "main/audio/dsp_voice_state.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/synth_jobs.h"

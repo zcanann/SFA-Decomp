@@ -45,8 +45,6 @@ s16 lbl_803DBD88[4] = {50, 50, 512, 512};
 
 #define MODEL_LIGHT_KIND_POINT 2
 
-
-
 /* anim.seqId of the staff-mode-5 shield variant (docblock: "seqId 0x836 uses
  * staff-mode 5, otherwise mode 7"). */
 #define SHIELD_SEQID_STAFF_MODE5 0x836
@@ -138,7 +136,6 @@ f32 lbl_80320A28[] = {
     0.3f,
 };
 
-
 GameObject* fn_801702D4(GameObject* obj, f32 fv)
 {
     void* alloc;
@@ -177,8 +174,6 @@ ObjectDescriptor gShieldObjDescriptor = {
     Shield_getExtraSize,
 };
 
-#pragma opt_common_subs off
-#pragma opt_lifetimes off
 void staffFn_80170380(GameObject* obj, int cmd)
 {
     f32* tbl[1];
@@ -470,8 +465,6 @@ void staffFn_80170380(GameObject* obj, int cmd)
     }
     }
 }
-#pragma opt_lifetimes reset
-#pragma opt_common_subs reset
 
 int Shield_getExtraSize(void)
 {

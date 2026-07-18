@@ -734,12 +734,10 @@ void* fn_80069944(u32* outVal)
     return gTrackBlockDescriptors;
 }
 
-#pragma dont_inline on
 void fn_80069958(void** out)
 {
     *out = gTrackGridOrigin;
 }
-#pragma dont_inline reset
 
 u32 mapBlockFn_80060678(int* obj)
 {
@@ -932,7 +930,6 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 
 char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
 
-#pragma opt_loop_invariants off
 void intersectModLineBuild(IntersectModLineObject* obj)
 {
     s16 pointLinks[0xd48];
@@ -1077,7 +1074,6 @@ void intersectModLineBuild(IntersectModLineObject* obj)
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
 }
-#pragma opt_loop_invariants reset
 
 void fn_800605F0(s16* in, f32* out)
 {
@@ -1469,7 +1465,6 @@ int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
     return 0;
 }
 
-#pragma dont_inline on
 int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag)
 {
     TrackGroundHit** arr;
@@ -1508,7 +1503,6 @@ int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, 
     *outGroundY = lbl_803DECB4;
     return 1;
 }
-#pragma dont_inline reset
 
 int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag)
 {
@@ -2138,7 +2132,6 @@ void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* ranges, u32 a, int 
     }
 }
 
-#pragma opt_propagation off
 int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32 offX, f32 offZ, int p8, int kindMask)
 {
     int j;
@@ -2255,7 +2248,6 @@ int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32
     }
     return grp;
 }
-#pragma opt_propagation reset
 
 int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 {
@@ -3452,7 +3444,6 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     }
 }
 
-#pragma opt_dead_assignments off
 void renderGlows(void)
 {
     f32 px, py, pz;
@@ -3635,7 +3626,6 @@ void renderGlows(void)
         GXSetCurrentMtx(GX_PNMTX0);
     }
 }
-#pragma opt_dead_assignments reset
 
 void gxErrorFn_80060b40(void)
 {

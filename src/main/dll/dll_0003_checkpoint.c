@@ -54,7 +54,6 @@ typedef struct CheckpointNavState
     u8 branchFlag; /* 0x30 */
 } CheckpointNavState;
 
-#pragma dont_inline on
 CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
 {
     s32 high;
@@ -86,7 +85,6 @@ CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
     return NULL;
 }
 
-#pragma dont_inline off
 s32 fn_800D55BC(CheckpointRouteEntry* checkpoint, s32 linkIndex, f32* outX, f32* outY, f32* outZ, u8 mode,
                 f32 lateralOffset, f32 verticalOffset)
 {
@@ -510,7 +508,6 @@ u32 Checkpoint_func0E(s32* p)
     return lbl_803DD418;
 }
 
-
 /* Object cursor written back by Checkpoint_func08: the sampled heading/pitch
  * angles at the front and the interpolated world position (x/y/z) mid-block. */
 STATIC_ASSERT(offsetof(CheckpointCursor, posX) == 0x0C);
@@ -551,14 +548,12 @@ void Checkpoint_func0D(u32 v)
     ((u32*)lbl_803DD41C)[lbl_803DD416++] = v;
 }
 
-
 #include "main/game_object.h"
 extern f32 lbl_803E050C; /* used by Checkpoint_func07 */
 extern f32 lbl_803E0510; /* used by Checkpoint_func07 */
 extern f32 lbl_803E0514; /* used by Checkpoint_func07 */
 extern f32 lbl_803E0518; /* used by Checkpoint_func07/06 */
 
-#pragma opt_common_subs off
 /* Project the object onto the current checkpoint segment, stepping the route
  * cursor forward or back and returning the segment heading. */
 int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
@@ -667,7 +662,6 @@ int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
     }
     return ang;
 }
-#pragma opt_common_subs reset
 
 extern f64 lbl_803E0520;
 extern f32 lbl_803E051C;
@@ -845,7 +839,6 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
         }
     }
 }
-#pragma opt_common_subs off
 void Checkpoint_Remove(CheckpointRouteEntry* obj)
 {
     int count;
@@ -873,7 +866,6 @@ void Checkpoint_Remove(CheckpointRouteEntry* obj)
 
 u32 gCheckpointPartFxListBuffer[0x14];
 
-#pragma opt_common_subs reset
 void Checkpoint_Add(CheckpointRouteEntry* entry)
 {
     int i = 0;
@@ -898,12 +890,10 @@ void Checkpoint_Add(CheckpointRouteEntry* entry)
     gCheckpointRouteTable[i].key = entry->sortKey;
 }
 
-
 void Checkpoint_reset(void)
 {
     gCheckpointRouteCount = 0x0;
 }
-
 
 void Checkpoint_release(void)
 {

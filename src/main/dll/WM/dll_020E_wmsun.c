@@ -56,10 +56,8 @@
 #define WMSUN_ENVFX_A 0x30
 #define WMSUN_ENVFX_B 0x34
 
-#pragma explicit_zero_data on
 #define WM_SUN_PI 3.1415927f
-__declspec(section ".sdata2") f32 lbl_803E5F20 = 0.0f;
-#pragma explicit_zero_data off
+f32 lbl_803E5F20 = 0.0f;
 const WmSunVec3 gWmSunGlareDir = {0.0f, 0.0f, -1.0f};
 const WmSunVec3 gWmSunGlareSun = {0.0f, 0.0f, -1.0f};
 

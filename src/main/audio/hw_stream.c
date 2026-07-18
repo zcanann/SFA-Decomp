@@ -1,6 +1,5 @@
 #include "main/audio/hw_stream.h"
 
-#pragma exceptions on
 #include "main/audio/dsp_voice_state.h"
 #include "dolphin/os/OSCache.h"
 
@@ -14,7 +13,6 @@ void hwRemoveInput(u32 idx, void* input)
     salRemoveStudioInput(&dspStudio[idx & 0xff], input);
 }
 
-#pragma optimization_level 1
 int hwChangeStudio(int slot)
 {
     int mode;
@@ -58,7 +56,6 @@ int hwChangeStudio(int slot)
         return slot;
     }
 }
-#pragma optimization_level reset
 
 void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, u32 callback, u32 callbackArg)
 {

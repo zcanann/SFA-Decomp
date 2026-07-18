@@ -90,8 +90,6 @@ void Fall_Ladders_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void Fall_Ladders_update(GameObject* obj)
 {
     int def;

@@ -78,7 +78,6 @@ extern f32 gNwMammothPathSpeedMin;
 extern f32 gNwMammothPlayerNearDistSq;
 extern f32 gNwMammothPathDecel;
 extern f32 gNwMammothPathSpeedMax;
-extern f32 lbl_803E5250;
 extern u8 lbl_803DBF70[4];
 extern u8 lbl_803DBF74[4];
 extern u8 lbl_803DBF78[4];
@@ -114,7 +113,6 @@ extern u8 gNwMammothTables[];
 extern u8 gNwMammothPathSetupDataA[];
 extern u8 gNwMammothPathSetupDataB[];
 extern u32 lbl_803E5208;
-extern f32 lbl_803E5254;
 extern f32 gNwMammothDefaultAnimStepScale;
 
 int fn_801CE078(int* obj, u8* state);
@@ -163,7 +161,6 @@ typedef struct
     f32 pos[3];
 } WoPartfxBlock;
 
-#pragma dont_inline on
 int fn_801CE078(int* obj, u8* st)
 {
     u8 night;
@@ -250,19 +247,17 @@ int fn_801CE078(int* obj, u8* st)
     return 1;
 }
 
-__declspec(section ".sdata2") f32 gNwMammothSfxInterval = 900.0f;
-__declspec(section ".sdata2") f32 gNwMammothTumbleweedDistSqThreshold = 250000.0f;
-__declspec(section ".sdata2") f32 gNwMammothCaptureDist = 6.25f;
-__declspec(section ".sdata2") f32 gNwMammothAirMeterFull = 200.0f;
-__declspec(section ".sdata2") f32 gNwMammothAirMeterPerSegment = 66.666664f;
-__declspec(section ".sdata2") f32 gNwMammothPathAccel = 0.01f;
-__declspec(section ".sdata2") f32 gNwMammothPathSpeedMin = 0.05f;
-__declspec(section ".sdata2") f32 gNwMammothPlayerNearDistSq = 6400.0f;
-__declspec(section ".sdata2") f32 gNwMammothPathDecel = 0.02f;
-__declspec(section ".sdata2") f32 gNwMammothPathSpeedMax = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E5250 = 0.1f;
-__declspec(section ".sdata2") f32 lbl_803E5254 = 1000.0f;
-__declspec(section ".sdata2") f32 gNwMammothDefaultAnimStepScale = 0.005f;
+f32 gNwMammothSfxInterval = 900.0f;
+f32 gNwMammothTumbleweedDistSqThreshold = 250000.0f;
+f32 gNwMammothCaptureDist = 6.25f;
+f32 gNwMammothAirMeterFull = 200.0f;
+f32 gNwMammothAirMeterPerSegment = 66.666664f;
+f32 gNwMammothPathAccel = 0.01f;
+f32 gNwMammothPathSpeedMin = 0.05f;
+f32 gNwMammothPlayerNearDistSq = 6400.0f;
+f32 gNwMammothPathDecel = 0.02f;
+f32 gNwMammothPathSpeedMax = 0.5f;
+f32 gNwMammothDefaultAnimStepScale = 0.005f;
 
 void fn_801CE2BC(int* obj, u8* st, short* objDef)
 {
@@ -554,7 +549,7 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
         break;
     }
     case 7:
-        if (state->pathSpeed > lbl_803E5250)
+        if (state->pathSpeed > 0.1f)
         {
             state->stateIndex = 8;
         }
@@ -695,7 +690,6 @@ void fn_801CEE0C(int obj, int baddie, NwMammothMapData* mapData)
         break;
     }
 }
-#pragma dont_inline reset
 
 int NW_mammoth_getExtraSize(void)
 {
@@ -744,7 +738,6 @@ enum NwMammothStateFlag
 typedef u8 (*NwMammothHitReactUpdateFn)(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
                                         u32 reactionState, float* reactionStepScale);
 
-#pragma inline_max_size(4000)
 static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
 {
     int triggerIndex;
@@ -881,7 +874,6 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
 {
     nw_mammoth_updateBody(obj, unused);
 }
-#pragma inline_max_size reset
 
 void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isReload)
 {
@@ -922,7 +914,7 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     case 3:
         curveParam = NW_MAMMOTH_CURVE_PARAM;
         state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_PATH_CONTROL);
-        if ((u8)(*gRomCurveInterface)->initCurve(&state->curveState, obj, lbl_803E5254, &curveParam, -1) == 0)
+        if ((u8)(*gRomCurveInterface)->initCurve(&state->curveState, obj, 1000.0f, &curveParam, -1) == 0)
         {
             obj->localPosX = state->curveState.pointX;
             obj->localPosZ = state->curveState.pointZ;
@@ -964,18 +956,6 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     }
     ObjGroup_AddObject((int)obj, NW_MAMMOTH_GROUP_ID);
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 void* gNW_trickyObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, (void*)0x00090000,
                                      (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, NW_tricky_init,

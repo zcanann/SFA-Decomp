@@ -1,6 +1,5 @@
 #include "ghidra_import.h"
 
-#pragma exceptions on
 typedef struct AramStreamBufferEntry
 {
     struct AramStreamBufferEntry* next;

@@ -65,7 +65,6 @@ static inline void shTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = t;
 }
 
-#pragma opt_common_subs off
 void fn_801E991C(int p1, char* table)
 {
     u8 r;

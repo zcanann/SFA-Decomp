@@ -95,7 +95,6 @@ void SpiritDoorLock_hitDetect(void)
 {
 }
 
-#pragma opt_loop_invariants off
 void SpiritDoorLock_update(GameObject* obj)
 {
     SpiritDoorLockState* state;
@@ -228,7 +227,6 @@ void SpiritDoorLock_update(GameObject* obj)
         }
     }
 }
-#pragma opt_loop_invariants reset
 
 void SpiritDoorLock_init(GameObject* obj, SpiritDoorLockMapData* params, int mode)
 {

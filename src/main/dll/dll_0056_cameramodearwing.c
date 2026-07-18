@@ -98,8 +98,6 @@ void CameraModeArwing_copyToCurrent(void* p1, u32 kind)
 void CameraModeArwing_free(void)
 {
 }
-#pragma opt_common_subs off
-#pragma opt_propagation off
 void CameraModeArwing_update(u8* obj)
 {
     int yaw0, pitch0;
@@ -221,7 +219,6 @@ void CameraModeArwing_update(u8* obj)
                                    &((GameObject*)obj)->anim.localPosZ,
                                    *(int*)&((GameObject*)obj)->anim.parent);
 }
-#pragma opt_propagation reset
 void CameraModeArwing_init(int* obj, int mode, int unused)
 {
     int* a4 = ((int**)obj)[0xA4 / 4];
@@ -260,7 +257,6 @@ void CameraModeArwing_init(int* obj, int mode, int unused)
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)a4)->anim.worldPosZ + *(f32*)(base + 56);
 }
 
-#pragma opt_common_subs reset
 void CameraModeArwing_release(void)
 {
 }

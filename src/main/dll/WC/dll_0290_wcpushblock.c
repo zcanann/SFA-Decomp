@@ -167,8 +167,6 @@ ObjectDescriptor gWCPushBlockObjDescriptor = {
 };
 
 
-#pragma opt_common_subs off
-#pragma opt_dead_assignments off
 void wcpushblock_update(GameObject* obj)
 {
 

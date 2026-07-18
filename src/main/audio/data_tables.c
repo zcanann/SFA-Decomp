@@ -9,7 +9,6 @@
 #include "main/audio/sal_dsp.h"
 #include "main/audio/data_tables.h"
 
-#pragma exceptions on
 
 #define dataLayerTab           (((SynthDataTables*)dataSmpSDirs)->layer)
 #define dataMacMainTab         (((SynthDataTables*)dataSmpSDirs)->macMain)

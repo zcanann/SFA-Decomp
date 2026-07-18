@@ -47,16 +47,12 @@ int gKTrexFloorSwitchCurveFindResult = 0x19;
 #define KTREXFLOORSWITCH_PARTFX_MOVING  0x488 /* emitted each frame the plate is actively rising/sinking */
 #define KTREXFLOORSWITCH_PARTFX_SETTLED 0x486 /* emitted once the plate has stopped moving */
 
-__declspec(section ".sdata2") f32 lbl_803E6858 = 1.0f;
-__declspec(section ".sdata2") f64 gKTrexFloorSwitchPi = 3.142;
-__declspec(section ".sdata2") f64 gKTrexFloorSwitchBamHalfCircle = 32768.0;
-__declspec(section ".sdata2") f32 gKTrexFloorSwitchTriggerBoxInset = 5.0f;
-__declspec(section ".sdata2") f32 gKTrexFloorSwitchRiseSpeed = 0.075f;
-__declspec(section ".sdata2") f32 gKTrexFloorSwitchRetractSpeed = 0.125f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E687C = 0.0f;
-#pragma explicit_zero_data reset
-__declspec(section ".sdata2") f32 gKTrexFloorSwitchScrollSpeed = 8.0f;
+f64 gKTrexFloorSwitchPi = 3.142;
+f64 gKTrexFloorSwitchBamHalfCircle = 32768.0;
+f32 gKTrexFloorSwitchTriggerBoxInset = 5.0f;
+f32 gKTrexFloorSwitchRiseSpeed = 0.075f;
+f32 gKTrexFloorSwitchRetractSpeed = 0.125f;
+f32 gKTrexFloorSwitchScrollSpeed = 8.0f;
 
 int KT_RexFloorSwitch_getExtraSize(void)
 {
@@ -76,7 +72,7 @@ void KT_RexFloorSwitch_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6858);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)1.0f);
     }
 }
 
@@ -264,7 +260,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
                 moved = 1;
             }
         }
-        if (((KtrexfloorswitchState*)state)->chargeTimer < lbl_803E687C)
+        if (((KtrexfloorswitchState*)state)->chargeTimer < 0.0f)
         {
             ((KtrexfloorswitchState*)state)->chargeTimer =
                 (f32)(u32)((KtrexfloorswitchPlacement*)placement)->chargeReload;
@@ -310,7 +306,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
         }
         if ((((KtrexfloorswitchState*)state)->flags & KTREXFLOORSWITCH_FLAG_CHARGED) != 0)
         {
-            if (((KtrexfloorswitchState*)state)->chargeTimer < lbl_803E687C)
+            if (((KtrexfloorswitchState*)state)->chargeTimer < 0.0f)
             {
                 ((KtrexfloorswitchState*)state)->flags &= ~KTREXFLOORSWITCH_FLAG_CHARGED;
                 ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED;
@@ -345,7 +341,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
     {
         if ((s8)((KtrexfloorswitchState*)state)->graceTimer != 0)
         {
-            if (lbl_803E687C == ((KtrexfloorswitchState*)state)->scrollSpeed)
+            if (0.0f == ((KtrexfloorswitchState*)state)->scrollSpeed)
             {
                 ((KtrexfloorswitchState*)state)->scrollSpeed = gKTrexFloorSwitchScrollSpeed;
             }
@@ -373,7 +369,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
             else if (scroll < 0x100)
             {
                 scroll = 0x100;
-                ((KtrexfloorswitchState*)state)->scrollSpeed = lbl_803E687C;
+                ((KtrexfloorswitchState*)state)->scrollSpeed = 0.0f;
             }
             tex->textureId = scroll;
         }

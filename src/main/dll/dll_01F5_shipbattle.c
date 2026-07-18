@@ -26,8 +26,7 @@
 #include "main/dll/dll_01F5_shipbattle.h"
 #include "main/object_descriptor.h"
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5958 = 0.0f;
+f32 lbl_803E5958 = 0.0f;
 
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);

@@ -11,7 +11,6 @@
 #include "main/audio/sfx_limited_object_api.h"
 #include "main/dll/dll_8011d918.h"
 
-#pragma scheduling off
 
 extern s16 gCMenuActivatedId;
 

@@ -9,7 +9,6 @@
 #include "main/audio/hw_sample.h"
 #include "main/audio/synth_jobs.h"
 
-#pragma exceptions on
 
 typedef u32 (*SynthStreamUpdateFn)(u8* buffer, u32 length, u8* buffer2, u32 length2, u32 user);
 

@@ -164,10 +164,10 @@ void SwarmBaddie_hitDetect(void)
 {
 }
 
-__declspec(section ".sdata2") f32 lbl_803E26B0 = 2.0f;
-__declspec(section ".sdata2") f32 lbl_803E26B4 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E26B8 = 0.005f;
-__declspec(section ".sdata2") f32 lbl_803E26BC = 63.0f;
+f32 lbl_803E26B0 = 2.0f;
+f32 lbl_803E26B4 = 1.0f;
+f32 lbl_803E26B8 = 0.005f;
+f32 lbl_803E26BC = 63.0f;
 
 void SwarmBaddie_update(GameObject* obj)
 {

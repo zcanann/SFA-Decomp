@@ -17,9 +17,7 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
-#pragma explicit_zero_data on
 u8 lbl_803DB900[8] = {0};
-#pragma explicit_zero_data off
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL87_EFFECT_ID 0x1fd

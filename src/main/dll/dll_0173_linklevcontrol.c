@@ -74,7 +74,6 @@ u8 lbl_803239F0[224] = {
 };
 
 
-#pragma dont_inline on
 void link_levcontrol_updateAreaMusic(int* obj)
 {
     LinkLevControlState* state = ((GameObject*)obj)->extra;
@@ -172,7 +171,6 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
         break;
     }
 }
-#pragma dont_inline reset
 
 int link_levcontrol_getExtraSize(void)
 {

@@ -96,7 +96,7 @@ extern f32 gShLevelControlHudTextDuration;
 
 union ShLevelControlConstF32 { f32 f; };
 
-__declspec(section ".sdata2") f32 gShLevelControlBloopTimeLimit = 1e+05f;
+f32 gShLevelControlBloopTimeLimit = 1e+05f;
 const union ShLevelControlConstF32 lbl_803E54B4 = { 0.0f };
 
 extern void sh_staff_getExtraSize(void);
@@ -159,7 +159,6 @@ int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* 
     return 0;
 }
 
-#pragma dont_inline on
 void mapUnloadFn_801d7c94(void* obj, void* state)
 {
 
@@ -189,21 +188,17 @@ void mapUnloadFn_801d7c94(void* obj, void* state)
         mapUnload(0x43, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
         mapUnload(0x45, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
     }
-    if (runtime->eventCountdown != SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE)
+    if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE)
     {
-        goto dec;
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 0, 1);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 2, 1);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 3, 1);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 5, 1);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 0xa, 1);
     }
-    (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 0, 1);
-    (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 2, 1);
-    (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 3, 1);
-    (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 5, 1);
-    (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 0xa, 1);
-dec:
     runtime->eventCountdown--;
 }
-#pragma dont_inline reset
 
-#pragma opt_common_subs off
 void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetBit, s16 clearIfClearBit, s16 latchBit,
                            int musicId)
 {
@@ -218,7 +213,7 @@ void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetB
         if (clearIfSetBitValid == 0 || mainGetBit(clearIfSetBit) == 0)
         {
             if (mainGetBit(latchBit) != 0)
-                goto end;
+                return;
         }
         if (clearIfSetBitValid != 0)
         {
@@ -240,7 +235,7 @@ void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetB
         if (clearIfClearBitValid == 0 || mainGetBit(clearIfClearBit) == 0)
         {
             if (mainGetBit(latchBit) == 0)
-                goto end;
+                return;
         }
         if (clearIfSetBitValid != 0)
         {
@@ -257,11 +252,8 @@ void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetB
         }
         state->activeMask = state->activeMask | mask;
     }
-end:
-    return;
 }
 
-#pragma opt_common_subs reset
 void SCGameBitLatch_UpdateInverted(SCGameBitLatchState* state, int mask, s16 clearIfSetBit, s16 clearIfClearBit,
                                    s16 latchBit, int musicId)
 {

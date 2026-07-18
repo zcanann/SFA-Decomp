@@ -47,18 +47,14 @@
 u16 gSaveSelectSlotTextIds[4] = {0x23, 0x24, 0x25, 0};
 u8 gSaveSelectInfoTextIds[3] = {0x21, 0x20, 0x1F};
 s8 gSaveSelectPanelIndex = -1;
-#pragma explicit_zero_data on
 int gSaveSelectInfoStartSlot = 0;
 int lbl_803DBA00 = 0;
-#pragma explicit_zero_data off
 s16 gSaveSelectTextureIds[4] = {0x31D, 0x31F, 0x31E, 0};
 char sFrontendCompletionPercentFormat[] = "%1d%";
 char sFrontendSingleDigitFormat[] = "%1d";
 char sFrontendFoxName[] = "FOX";
 char sFrontendStringFormat[] = "%s";
-#pragma explicit_zero_data on
 char lbl_803DBA20[4] = "";
-#pragma explicit_zero_data off
 char sFrontendPercentFormat[] = "%d%";
 
 #define PAD_BUTTON_A 0x100
@@ -92,7 +88,6 @@ typedef struct SaveSelectPanel
 
 /* texture asset loaded into gSaveSelectTexture */
 #define SAVESELECTSCREEN_TEXTURE_ID 0x2dd
-
 
 extern TitleMenuControl* gTitleMenuControlInterface;
 extern TitleMenuControl* gTitleMenuLinkInterface;
@@ -134,7 +129,6 @@ extern TitleMenuControl* gMapEventInterface;
 extern void* lbl_803DD498;
 char sSaveGameBinPathFormat[] = "/savegame/save%d.bin";
 
-#pragma dont_inline on
 void saveSelectOpenFile(int sel, int slot)
 {
     TitleMenuTextEntry** pp;
@@ -237,7 +231,6 @@ void saveFileSelect_init(int sel, int slot)
     }
 }
 
-#pragma dont_inline off
 void saveSelectSetupMenuItems(SaveSelectPanel* p)
 {
     int i;
@@ -315,7 +308,6 @@ void saveSelectGoToChapterSelect(void)
         lbl_803DD6C4 = 0;
     }
 }
-#pragma dont_inline on
 void saveSelectFn_8011a70c(void)
 {
     int i;
@@ -445,8 +437,6 @@ void saveSelectScreenFree(int runExitCallback)
         gSaveSelectMenuItem = NULL;
     }
 }
-
-#pragma dont_inline off
 
 void SaveSelectScreen_render(int param)
 {

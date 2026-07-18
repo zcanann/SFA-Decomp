@@ -10,7 +10,6 @@
 
 #define PROJGFX_UNSUPPORTED_FALSE_RETURN 0
 
-#pragma scheduling off
 int projgfx_rayhit_doUnsupported(void)
 {
     OSReport(sProjgfxRayhitDoNoLongerSupported);
@@ -22,7 +21,6 @@ int projgfx_setzscale_doUnsupported(void)
     OSReport(sProjgfxSetzscaleDoNoLongerSupported);
     return PROJGFX_UNSUPPORTED_FALSE_RETURN;
 }
-#pragma scheduling reset
 
 int projgfx_getObjectTypeId(void)
 {
@@ -50,12 +48,10 @@ void projgfx_onMapSetup(void)
 {
 }
 
-#pragma scheduling off
 void projgfx_release_doUnsupported(void)
 {
     OSReport(sProjgfxReleaseDoNoLongerSupported);
 }
-#pragma scheduling reset
 
 void projgfx_initialise(void)
 {

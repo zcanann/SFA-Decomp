@@ -63,8 +63,6 @@ void dll_28B_hitDetect_nop(void)
 {
 }
 
-#pragma opt_common_subs off
-#pragma opt_propagation off
 void dll_28B_update(GameObject* obj)
 {
     f32 oz, oy, ox;

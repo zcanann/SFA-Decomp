@@ -52,7 +52,7 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject* fallbackTarget, int 
     {
         targetObject = (GameObject*)target;
         if (targetObject->anim.hitVolumeTransforms == NULL)
-            goto end;
+            return;
 
         idx = target->targetSetupIndex;
         slot = &targetObject->anim.hitVolumeTransforms[idx];
@@ -113,5 +113,4 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject* fallbackTarget, int 
         gCamcontrolTargetState = savedReticleState;
         reticle->anim.alpha = savedReticleAlpha;
     }
-end:;
 }

@@ -161,7 +161,6 @@ typedef struct DbeggPlacement
     u8 pad2F[0x30 - 0x2F];
 } DbeggPlacement;
 
-#pragma peephole on
 int dbegg_setLaunchVelocity(GameObject* obj, f32* v)
 {
     u8* inner = obj->extra;
@@ -181,8 +180,6 @@ int dbegg_setScale(GameObject* obj)
     return ((DbEggState*)inner)->mode != DBEGG_MODE_RELEASED ? 1 : 0;
 }
 
-#pragma peephole off
-#pragma optimization_level 2
 void dbegg_processMessages(GameObject* obj)
 {
     int eggState;
@@ -253,7 +250,6 @@ void dbegg_processMessages(GameObject* obj)
         }
     }
 }
-#pragma optimization_level reset
 
 void dbegg_setupFromDef(GameObject* obj, u8* state)
 {
@@ -316,8 +312,6 @@ void dbegg_setupFromDef(GameObject* obj, u8* state)
     }
 }
 
-#pragma opt_common_subs off
-#pragma opt_loop_invariants off
 int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
 {
     f32 water;
@@ -443,8 +437,6 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
     }
     return 0;
 }
-#pragma opt_loop_invariants reset
-#pragma opt_common_subs reset
 
 void fn_801FE774(int obj, f32* vel)
 {
@@ -504,7 +496,6 @@ void fn_801FE774(int obj, f32* vel)
     }
 }
 
-
 int dbegg_getExtraSize(void)
 {
     return 0x124;
@@ -563,7 +554,6 @@ void dbegg_hitDetect(GameObject* obj)
     (obj)->anim.previousLocalPosY = (obj)->anim.localPosY;
     (obj)->anim.previousLocalPosZ = (obj)->anim.localPosZ;
 }
-
 
 typedef struct DbEggIntPair
 {

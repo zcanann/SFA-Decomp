@@ -64,7 +64,6 @@ void PushFreeAudioBuffer(void* message)
     OSSendMessage(&lbl_803A4480.queue, message, OS_MESSAGE_NOBLOCK);
 }
 
-#pragma dont_inline on
 void AttractMovieAudio_Decode(void* readBufferArg)
 {
     u32* audioFrameSizes;
@@ -96,7 +95,6 @@ void AttractMovieAudio_Decode(void* readBufferArg)
         audioFrameSizes++;
     }
 }
-#pragma dont_inline reset
 
 void* AudioDecoderForOnMemory(void* param)
 {

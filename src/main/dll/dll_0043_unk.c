@@ -47,17 +47,18 @@ typedef struct CameraModeStaffAnimSettings
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder (action) */
 #define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
-__declspec(section ".sdata2") f32 gCamStaffAnimCurveMin = -100000.0f;
-__declspec(section ".sdata2") f32 gCamStaffAnimCurveMax = 100000.0f;
-__declspec(section ".sdata2") f32 gCamStaffAnimPi = 3.1415927f;
-__declspec(section ".sdata2") f32 gCamStaffAnimHalfCircleBams = 32768.0f;
-__declspec(section ".sdata2") f32 gCamStaffAnimDegToBams = 182.04445f;
+f32 gCamStaffAnimCurveMin = -100000.0f;
+f32 gCamStaffAnimCurveMax = 100000.0f;
+f32 gCamStaffAnimPi = 3.1415927f;
+f32 gCamStaffAnimHalfCircleBams = 32768.0f;
+f32 gCamStaffAnimDegToBams = 182.04445f;
 
 void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
 {
     short targetClassId;
     u16 buttons;
     GameObject* targetObj;
+    int followTarget;
     struct
     {
         f32 x;
@@ -69,36 +70,22 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
     {
         buttons = getButtonsJustPressed(0);
         targetObj = (GameObject*)camera->currentTarget;
+        followTarget = 0;
         if (targetObj != NULL)
         {
             targetClassId = targetObj->anim.classId;
-            if (targetClassId == 0x1c)
+            if ((targetClassId == 0x1c || targetClassId == 0x2a) && target->anim.classId == 1 &&
+                objFn_80296700(target) != 0)
             {
-                goto checkActiveTarget;
-            }
-            if (targetClassId != 0x2a)
-            {
-                goto checkOverrideFlag;
-            }
-        checkActiveTarget:
-            if (target->anim.classId != 1)
-            {
-                goto checkOverrideFlag;
-            }
-            if (objFn_80296700(target) != 0)
-            {
-                goto sendFollowAction;
+                followTarget = 1;
             }
         }
-    checkOverrideFlag:
-        if ((camera->targetFlags & 2) != 0)
+        if (followTarget || (camera->targetFlags & 2) != 0)
         {
-        sendFollowAction:
             (*gCameraInterface)->setMode(CAMMODE_COMBAT, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
-            goto done;
         }
-        if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
-            (objFn_802962b4((GameObject*)target) != 0))
+        else if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
+                 (objFn_802962b4((GameObject*)target) != 0))
         {
             actionPayload.x = gCamcontrolPathState->actionParamX;
             actionPayload.z = gCamcontrolPathState->actionParamZ;
@@ -106,8 +93,6 @@ void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
             (*gCameraInterface)->setMode(CAMMODE_VIEWFINDER, 1, 0, 0xc, &actionPayload, 0, 0xff);
         }
     }
-done:
-    return;
 }
 
 void CameraModeStaffAnim_copyToCurrent(void)
@@ -120,7 +105,6 @@ void camcontrol_releasePathState(void)
     gCamcontrolPathState = NULL;
 }
 
-#pragma dont_inline on
 void camclimb_update(CameraObject* cam)
 {
     u8 needsReset;
@@ -219,7 +203,6 @@ void camclimb_update(CameraObject* cam)
     }
     return;
 }
-#pragma dont_inline reset
 
 static inline f32 CameraModeStaffAnim_angleToRadians(int angle)
 {

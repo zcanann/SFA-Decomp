@@ -7,7 +7,6 @@
 #include "main/audio/aram.h"
 #include "main/audio/dsp_voice_state.h"
 
-#pragma exceptions on
 
 extern void* dspCmdBuffer;
 extern void* dspITDBuffer;

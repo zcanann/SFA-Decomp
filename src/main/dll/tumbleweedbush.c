@@ -57,7 +57,6 @@ extern f32 lbl_803E2444;
 extern f32 lbl_803E24C8;
 extern f32 lbl_803E24CC;
 extern f32 lbl_803E24D0;
-#pragma opt_propagation off
 void trickyGrowl(void* obj, void* trickyState)
 {
     void* state;

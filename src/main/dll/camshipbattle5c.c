@@ -42,8 +42,6 @@ extern char sPathCamNeedTwoControlPointsError[];
 
 extern f32 lbl_803E18A8; /* midpoint factor (segment normal averaging) */
 
-#pragma opt_common_subs off
-#pragma ppc_unroll_factor_limit 1
 void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4, f32* o5, f32* o6, f32* o7)
 {
     f32* wp;
@@ -187,8 +185,6 @@ void pathcam_buildWindowSamples(int* nodes, f32* o1, f32* o2, f32* o3, f32* o4, 
         } while (axis < 3);
     }
 }
-#pragma opt_common_subs on
-#pragma ppc_unroll_factor_limit 4
 
 void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
 {

@@ -1090,7 +1090,6 @@ void* SaveGame_getLast(void)
     return gSaveGameData;
 }
 
-#pragma dont_inline on
 void loadMapForCurrentSaveGame(void)
 {
     char* base;
@@ -1111,7 +1110,6 @@ void loadMapForCurrentSaveGame(void)
     screenTransitionFn_800d7b04(0x1e, 1);
     saveGameLoadStatus = 2;
 }
-#pragma dont_inline off
 
 s32 SaveGame_gplayGetRestartGameNotCleared(void)
 {

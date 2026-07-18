@@ -20,13 +20,11 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_005B_modgfxfunc03.h"
 
-#pragma explicit_zero_data on
 u8 lbl_803DB8B0[4] = {0};
-#pragma explicit_zero_data off
 u8 lbl_803DB8B4[8] = {0, 0, 0, 1, 0, 2, 0, 3};
 
 extern u8 lbl_80311E30[];
-__declspec(section ".sdata2") u32 lbl_803E0730 = 0x00050014;
+u32 lbl_803E0730 = 0x00050014;
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {

@@ -46,15 +46,7 @@ typedef struct FxEmitWorldSpawnArgs
 } FxEmitWorldSpawnArgs;
 
 extern char sCFTreasSharpyDebugFormat[];
-__declspec(section ".sdata2") f32 lbl_803E3E40 = 600.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3E44 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E3E48 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3E4C = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E3E50 = 0.1f;
+f32 lbl_803E3E40 = 600.0f;
 
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg)                                                         \
     (*gPartfxInterface)->spawnObject((void*)(obj), id, data, flags, model, (void*)(arg))
@@ -145,7 +137,7 @@ void fxemit_emitEffect(FxEmitObject* obj)
         args.yaw = obj->objAnim.rotX;
         args.roll = obj->objAnim.rotZ;
         args.pitch = obj->objAnim.rotY;
-        args.scale = lbl_803E3E48;
+        args.scale = 1.0f;
         if (state->emitCount > 0)
         {
             for (i = 0; i < state->emitCount; i++)
@@ -415,7 +407,7 @@ void FxEmit_update(FxEmitObject* obj)
                         state->suppressed = 1;
                     }
                     dist = sqrtf(dx * dx + dy * dy + dz * dz);
-                    if (dist <= state->triggerRadius || lbl_803E3E4C == state->triggerRadius)
+                    if (dist <= state->triggerRadius || 0.0f == state->triggerRadius)
                     {
                         fxemit_emitEffect(obj);
                     }
@@ -444,7 +436,7 @@ void FxEmit_init(FxEmitObject* obj, FxEmitPlacement* setup)
     state->effectMode = setup->effectMode;
     state->effectId = setup->effectId;
     state->emitCount = setup->emitCount;
-    obj->objAnim.rootMotionScale = lbl_803E3E50;
+    obj->objAnim.rootMotionScale = 0.1f;
     state->enableBit = setup->enableBit;
     state->stopBit = setup->stopBit;
     state->suppressed = 0;

@@ -34,7 +34,6 @@ int firefly_animEventCallback(GameObject* obj)
     return 0;
 }
 
-#pragma dont_inline on
 void fn_801F4C28(GameObject* obj, LgtFireFlyRec* record)
 {
     record->src0X = obj->anim.localPosX;

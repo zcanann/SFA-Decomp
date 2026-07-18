@@ -51,7 +51,6 @@ extern u8 voiceAdsrDecayTable[];
 extern void synthQueueVoiceInputUpdate(McmdVoiceState* state);
 extern void fn_802712C8(McmdVoiceState* state); /* synthStartSynthJobHandling */
 
-#pragma exceptions on
 
 /*
  * Choose a randomized note/velocity command and dispatch it through the
@@ -181,7 +180,6 @@ void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
         {
             inpSetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent, 0x7f);
         }
-    init_port:
         if (!(MAC_CFLAGS(state) & MAC_FLAG64(0, 0x400)))
         {
             fn_8026F5B8((int)state);
@@ -192,7 +190,11 @@ void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
         if (state->midiSlot != 0xff &&
             (u16)inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent) > 0x1f80)
         {
-            goto init_port;
+            if (!(MAC_CFLAGS(state) & MAC_FLAG64(0, 0x400)))
+            {
+                fn_8026F5B8((int)state);
+            }
+            state->outputFlags |= 0x400;
         }
         break;
     }
@@ -247,7 +249,6 @@ static inline u32 mcmdVarGet32Legacy(McmdVoiceState* state, u32 useExCtrl, u32 i
 /*
  * Write a synth register, routing high registers to the EX controller bank.
  */
-#pragma dont_inline on
 void varSet32(McmdVoiceState* state, u32 useExCtrl, u8 index, s32 value)
 {
     if (useExCtrl != 0)
@@ -263,7 +264,6 @@ void varSet32(McmdVoiceState* state, u32 useExCtrl, u8 index, s32 value)
     }
     SYNTH_GLOBAL_REG(index) = value;
 }
-#pragma dont_inline reset
 
 static inline void varSet(McmdVoiceState* state, u8 useExCtrl, u8 index, s16 value)
 {
@@ -1377,7 +1377,6 @@ void TimeQueueAdd(McmdVoiceState* state)
 /*
  * Remove a voice from the time queue and clear its scheduled wake time.
  */
-#pragma dont_inline on
 void TimeQueueRemove(McmdVoiceState* sv, u32 disableUpdate)
 {
     if (*(u64*)&sv->wakeTimeHi != 0)
@@ -1406,7 +1405,6 @@ void TimeQueueRemove(McmdVoiceState* sv, u32 disableUpdate)
         MAC_CFLAGS(sv) &= ~MAC_FLAG64(0, 0x40004);
     }
 }
-#pragma dont_inline reset
 
 /*
  * Move a yielded voice back onto the active voice list.

@@ -45,7 +45,6 @@ void mmp_trenchfx_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-#pragma peephole off
 void mmp_trenchfx_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible == 0)
@@ -56,7 +55,6 @@ void mmp_trenchfx_hitDetect(void)
 {
 }
 
-#pragma scheduling off
 void mmp_trenchfx_update(GameObject* obj)
 {
     MmpTrenchfxState* state = obj->extra;

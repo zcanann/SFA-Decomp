@@ -108,8 +108,6 @@ void* lbl_80310670[10] = {(void*)0,
                           (void*)Effect2_func04,
                           (void*)Effect2_func05};
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),

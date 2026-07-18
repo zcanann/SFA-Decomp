@@ -433,7 +433,6 @@ void waterfx_func08(s16 id, f32 x, f32 y, f32 z, f32 w)
     gWaterfxWakeCount++;
 }
 
-#pragma dont_inline on
 void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d)
 {
     WaterParticle* p;
@@ -468,7 +467,6 @@ void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d)
     slot->f10 = lbl_803DF300;
     slot->f14 = lbl_803DF2EC / (lbl_803DF320 * sqrtf(slot->f0c));
 }
-#pragma dont_inline reset
 
 int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
 {

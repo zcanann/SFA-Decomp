@@ -68,15 +68,13 @@ typedef struct TumbleweedBushPlacement
 } TumbleweedBushPlacement;
 
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 gTumbleweedBushPieceScale = 64.0f;
-__declspec(section ".sdata2") f32 gTumbleweedBushRenderScale = 1.0f;
-__declspec(section ".sdata2") f32 gTumbleweedBushInitScale = 0.0f;
-__declspec(section ".sdata2") f32 gTumbleweedBushHitRadius = 15.0f;
-__declspec(section ".sdata2") f32 gTumbleweedBushHitYMin = -5.0f;
-__declspec(section ".sdata2") f32 gTumbleweedBushHitYMax = 100.0f;
-__declspec(section ".sdata2") f32 gTumbleweedBushNearestInitDist = 3.4028235e38f;
-#pragma explicit_zero_data off
+f32 gTumbleweedBushPieceScale = 64.0f;
+f32 gTumbleweedBushRenderScale = 1.0f;
+f32 gTumbleweedBushInitScale = 0.0f;
+f32 gTumbleweedBushHitRadius = 15.0f;
+f32 gTumbleweedBushHitYMin = -5.0f;
+f32 gTumbleweedBushHitYMax = 100.0f;
+f32 gTumbleweedBushNearestInitDist = 3.4028235e38f;
 extern u8 gTumbleweedBushPieceOffsetTable[];
 extern void* memcpy(void* dst, const void* src, int n);
 u8 gTumbleweedBushHitCooldownState;
@@ -239,7 +237,6 @@ void TumbleWeedBush_hitDetect(void)
 {
 }
 
-#pragma optimization_level 2
 void TumbleWeedBush_update(int* obj)
 {
     TumbleweedBushState* state;
@@ -299,7 +296,6 @@ void TumbleWeedBush_update(int* obj)
     }
 }
 
-#pragma optimization_level reset
 void TumbleWeedBush_init(u8* obj, TumbleweedBushPlacement* params, int param3)
 {
     u8* sub;

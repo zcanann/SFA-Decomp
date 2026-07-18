@@ -84,7 +84,6 @@ void* gNW_levcontrolObjDescriptor[14] = {
     (void*)0x00000000, (void*)0x00000000,  nw_levcontrol_init, nw_levcontrol_update,      (void*)0x00000000,
     (void*)0x00000000, nw_levcontrol_free, (void*)0x00000000,  nw_levcontrol_getExtraSize};
 
-#pragma dont_inline on
 int fn_801CFD68(u8* stateBytes)
 {
     extern s32 lbl_803269F8[];

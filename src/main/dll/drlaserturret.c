@@ -36,7 +36,7 @@
 #include "main/track_dolphin_api.h"
 
 s16 gDrLaserTurretIdleAnimMoves[2] = {0x13, 0x11};
-__declspec(section ".sdata") f32 gDrLaserTurretIdleAnimStepScales[3] = {0.01f, 0.0125f, 0.0f};
+f32 gDrLaserTurretIdleAnimStepScales[3] = {0.01f, 0.0125f, 0.0f};
 extern void* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
@@ -107,14 +107,6 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     return 0;
 }
 
-__declspec(section ".sdata2") f32 lbl_803E5A08 = 0.99f;
-__declspec(section ".sdata2") f32 lbl_803E5A0C = -0.0125f;
-__declspec(section ".sdata2") f32 lbl_803E5A10 = 0.02f;
-__declspec(section ".sdata2") f32 lbl_803E5A14 = -0.9f;
-__declspec(section ".sdata2") f32 lbl_803E5A18 = 80.0f;
-__declspec(section ".sdata2") f32 lbl_803E5A1C = -0.002f;
-__declspec(section ".sdata2") f32 lbl_803E5A20 = 10000.0f;
-
 int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimState* animState)
 {
     void* playerObj;
@@ -145,19 +137,14 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     {
         if (animState->moveComplete != 0)
         {
-            if (obj->currentMove == DR_LASERTURRET_ANIM_TRACKING)
+            if (obj->currentMove == DR_LASERTURRET_ANIM_TRACKING && animState->animStepScale > lbl_803E59DC)
             {
-                if (animState->animStepScale > lbl_803E59DC)
-                {
-                    ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_ALERT, lbl_803E59DC, 0);
-                    goto action_done;
-                }
+                ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_ALERT, lbl_803E59DC, 0);
             }
-            if (obj->currentMove != 0)
+            else if (obj->currentMove != 0)
             {
                 ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
             }
-        action_done:
             animState->animStepScale = gDrLaserTurretDefaultAnimStepScale;
             state->flags = state->flags & ~DR_LASERTURRET_FLAG_ACTION_ACTIVE;
             rng = randomGetRange(0x1f4, 0x3e8);
@@ -178,8 +165,8 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         Sfx_PlayFromObject((int)obj, DR_LASERTURRET_SFX_ACTION);
         if (obj->currentMove == DR_LASERTURRET_ANIM_ALERT)
         {
-            ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_TRACKING, lbl_803E5A08, 0);
-            animState->animStepScale = lbl_803E5A0C;
+            ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_TRACKING, 0.99f, 0);
+            animState->animStepScale = -0.0125f;
         }
         else
         {
@@ -200,10 +187,10 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         return DR_LASERTURRET_STATE_CONTINUE;
     }
     t = shopKeeperRotateFn_801e7c4c((s16*)obj, playerObj, 0);
-    rate = lbl_803E5A10;
-    if (t > lbl_803E5A18)
+    rate = 0.02f;
+    if (t > 80.0f)
     {
-        target = lbl_803E5A14;
+        target = -0.9f;
     }
     else
     {
@@ -211,13 +198,13 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     }
     d = rate * (target - animState->aimBlend);
     animState->aimBlend = d * timeDelta + animState->aimBlend;
-    if (animState->aimBlend > lbl_803E5A1C)
+    if (animState->aimBlend > -0.002f)
     {
         animState->aimBlend = lbl_803E59DC;
     }
     animState->aimBlend = lbl_803E59DC;
     count = hitDetectFn_80065e50((GameObject*)obj, obj->x, obj->y, obj->z, &arr, 0, 0);
-    minDist = lbl_803E5A20;
+    minDist = 10000.0f;
     for (idx = 0; idx < count; idx++)
     {
         dist = arr[idx]->height - obj->y;

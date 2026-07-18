@@ -728,7 +728,6 @@ void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flag
 
 /* opt_loop_invariants off: retail recomputes the loop-invariant self-position
  * reads inside the scan loop; hoisting them changes the schedule */
-#pragma opt_loop_invariants off
 int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
 {
     f32 bboxOut[20];
@@ -832,7 +831,6 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
     }
     return obj;
 }
-#pragma opt_loop_invariants reset
 
 int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar)
 {

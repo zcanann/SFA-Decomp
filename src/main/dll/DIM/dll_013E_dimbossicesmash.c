@@ -52,9 +52,7 @@ typedef struct DimbossicesmashPlacement
 
 u8 lbl_803DDB00;
 
-#pragma explicit_zero_data on
 u8 lbl_80322368[0xC] = {0};
-#pragma explicit_zero_data off
 
 /* seed the icesmash launch state from the setup record: spawn position/rotation,
  * launch velocity (optionally homing on the target point), rotation velocities

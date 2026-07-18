@@ -222,8 +222,6 @@ void dll_0B_func11(int modelOrResource, float posX, float posY, float posZ, s16 
     gModgfxPendingSpawnWriteCursor++;
 }
 
-
-
 void dll_0B_func10(void)
 {
     ModgfxPendingSpawn* cursor = gModgfxPendingSpawnQueue;
@@ -231,7 +229,6 @@ void dll_0B_func10(void)
     gModgfxPendingSpawnWriteCursor = cursor;
     gModgfxSequenceParamIndex = 0;
 }
-
 
 void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
 {
@@ -257,14 +254,12 @@ void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
     gModgfxSpawnContext.textureFrameTimer = 0;
 }
 
-
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
 extern void gxTexColorFn_80079254(void);
 extern void gxBlendFn_80078b4c(void);
 
 /* Per-bone particle vertex update + draw. */
-
 
 void fn_800A02DC(ModgfxState* state, f32* in)
 {
@@ -370,7 +365,6 @@ void fn_800A0478(ModgfxState* state)
     state->scaleChannels[1].step[1] = f0;
     state->scaleChannels[1].step[2] = f0;
 }
-
 
 void fn_800A0524(void* state, void* p, int mode)
 {
@@ -528,7 +522,6 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
     ((ModgfxState*)obj)->rotOffsetY += ((ModgfxState*)obj)->rotStepY;
     ((ModgfxState*)obj)->rotOffsetX += ((ModgfxState*)obj)->rotStepX;
 }
-#pragma opt_common_subs off
 void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 {
     extern f32 gModgfxMotionStep;
@@ -542,21 +535,19 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
     {
         f32 target = ((ModgfxVertexGroupCmd*)p)->valueX;
         s16 frames = ((ModgfxState*)state)->blendFrameCount;
-        if (frames != 0)
+        if (frames == 0)
         {
-            ((f32*)((char*)state + 0xac))[k] =
-                (target - (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf]) / frames;
-            ((f32*)((char*)state + 0xac))[k + 1] = (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf];
-            goto animate;
+            for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
+            {
+                bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = target;
+                bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
+            }
+            return;
         }
-        for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
-        {
-            bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = target;
-            bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
-        }
-        return;
+        ((f32*)((char*)state + 0xac))[k] =
+            (target - (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf]) / frames;
+        ((f32*)((char*)state + 0xac))[k + 1] = (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf];
     }
-animate:
 {
     char* kb;
     int k4 = k * 4;
@@ -579,7 +570,6 @@ animate:
     }
 }
 }
-#pragma opt_common_subs reset
 
 void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 {
@@ -677,7 +667,6 @@ void fn_800A0FD0(ModgfxState* state)
         src++;
     }
 }
-#pragma dont_inline on
 void fn_800A1040(s16 sequenceId, int forceAll)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
@@ -709,8 +698,6 @@ void fn_800A1040(s16 sequenceId, int forceAll)
         arr[i] = NULL;
     }
 }
-
-#pragma dont_inline reset
 
 /* Flag every active effect whose owner object has the 0x800 state bit
  * by setting its frameUpdated flag. */
@@ -748,7 +735,6 @@ void dll_0B_func0D(void* source)
     }
 }
 
-
 void dll_0B_func0C(void* source, char value)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
@@ -761,14 +747,10 @@ void dll_0B_func0C(void* source, char value)
         }
     }
 }
-#pragma peephole on
-#pragma scheduling on
 void dll_0B_func0B(void)
 {
     lbl_803DD282 = lbl_803DD282 + 1;
 }
-#pragma peephole off
-#pragma scheduling off
 
 void dll_0B_func0A(s16* p)
 {
@@ -1129,7 +1111,6 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     return 0;
 }
 
-
 void dll_0B_func08(void* param)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
@@ -1196,7 +1177,6 @@ void dll_0B_func07(void* source)
     }
 }
 
-
 static inline int modgfx_findFreeEffectSlot(void** p, int found, int i)
 {
     for (; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; p++, i++)
@@ -1215,8 +1195,6 @@ void dll_0B_func06(void)
 {
     fn_800A1040(0, 1);
 }
-
-
 
 typedef void (*ExpFn2)(void*, int);
 typedef void (*ExpFn3)(void*, void*, int);
@@ -1240,7 +1218,7 @@ void dll_0B_func05(void)
     int k;
     void* res;
     s16 ang[3];
-    volatile f32 q[4];
+    f32 q[4];
     BoneSpawnData tmpl;
     int objCount;
     int objIdx;
@@ -1272,7 +1250,7 @@ void dll_0B_func05(void)
                 if (((ModgfxEffectSlot*)eff)->frameIndex > 6)
                 {
                     fn_800A1040(((ModgfxEffectSlot*)eff)->animSlotId, 0);
-                    goto slot_done;
+                    break;
                 }
                 ((ModgfxEffectSlot*)eff)->frameDuration =
                     ((ModgfxEffectSlot*)eff)->frameTimings[((ModgfxEffectSlot*)eff)->frameIndex];
@@ -1286,7 +1264,7 @@ void dll_0B_func05(void)
                 if (((ModgfxEffectSlot*)eff)->frameIndex > 6)
                 {
                     fn_800A1040(((ModgfxEffectSlot*)eff)->animSlotId, 0);
-                    goto slot_done;
+                    break;
                 }
                 ((ModgfxEffectSlot*)eff)->frameDuration =
                     ((ModgfxEffectSlot*)eff)->frameTimings[((ModgfxEffectSlot*)eff)->frameIndex];
@@ -1642,12 +1620,10 @@ void dll_0B_func05(void)
                 ((ModgfxEffectSlot*)eff)->frameDuration = ((ModgfxEffectSlot*)eff)->frameDuration - framesThisStep;
             }
         }
-    slot_done:
         gExpgfxUpdatingActivePools = 0;
     }
 }
 
-#pragma opt_propagation off
 s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16* d, int textureAssetId,
                   void* textureResource)
 {
@@ -1975,8 +1951,6 @@ s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16*
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->initialDelayFrames = st->sourceModeCopy;
     return ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sequenceId;
 }
-#pragma opt_propagation reset
-
 
 void dll_0B_onMapSetup(void)
 {

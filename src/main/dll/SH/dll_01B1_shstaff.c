@@ -428,7 +428,6 @@ int sh_staff_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-#pragma dont_inline on
 void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int clearChildren)
 {
     int player;
@@ -457,7 +456,6 @@ void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int clearChildren
 
     state->phase = SHSTAFF_PHASE_DONE;
 }
-#pragma dont_inline reset
 
 void sh_staff_update(GameObject* obj)
 {
@@ -469,10 +467,8 @@ void sh_staff_update(GameObject* obj)
 
     if (mode == SHSTAFF_PHASE_IDLE)
     {
-        if (player == NULL)
-            goto end;
-        if (Player_GetStaffObject(player) == NULL)
-            goto end;
+        if (player != NULL && Player_GetStaffObject(player) != NULL)
+        {
         if (mainGetBit(GAMEBIT_STAFF_ACQUIRED) != 0)
         {
             sh_staff_deactivate(obj, (obj)->extra, 0);
@@ -499,6 +495,7 @@ void sh_staff_update(GameObject* obj)
             }
             state->slots[0] = loadResult;
             state->sfxTimer = gShStaffFizzSfxTimerInit;
+        }
         }
     }
     else if (mode == SHSTAFF_PHASE_ARMED)
@@ -537,7 +534,6 @@ void sh_staff_update(GameObject* obj)
             mainSetBits(GAMEBIT_STAFF_PICKUP_MAP_UNLOADED, 1);
         }
     }
-end:
     hudFn_8011f38c(0);
     state->hazeClimbT = lbl_803E54D8 * timeDelta + state->hazeClimbT;
     if (state->hazeClimbT > lbl_803E54D0)
@@ -643,7 +639,7 @@ u32 gSC_totempoleObjDescriptor[14] = {0x00000000,
                                       (u32)sc_totempole_getObjectTypeId,
                                       (u32)sc_totempole_getExtraSize};
 
-__declspec(section ".sdata2") f32 gShStaffFadeOutTimerInit = 1.5e+03f;
-__declspec(section ".sdata2") f32 gShStaffFizzSfxTimerInit = 0.9f;
-__declspec(section ".sdata2") f32 gShStaffMapUnloadDistSq = 4.9e+05f;
-__declspec(section ".sdata2") f32 gShStaffMapLoadDistSq = 2.5e+05f;
+f32 gShStaffFadeOutTimerInit = 1.5e+03f;
+f32 gShStaffFizzSfxTimerInit = 0.9f;
+f32 gShStaffMapUnloadDistSq = 4.9e+05f;
+f32 gShStaffMapLoadDistSq = 2.5e+05f;

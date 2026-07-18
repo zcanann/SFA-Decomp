@@ -10,7 +10,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 #include "main/audio/synth_volume.h"
 
-#pragma exceptions on
 
 typedef struct
 {
@@ -85,7 +84,6 @@ void synthSetStudioChannelScale(int value, u8 bank, u8 key);
 /*
  * fn_8026EC44 - per-sequence tick and event update pass.
  */
-#pragma fp_contract off
 static inline f32 sal_fmod(f32 x, f32 y, f64 absy)
 {
     s64 n;
@@ -253,7 +251,6 @@ void fn_8026EC44(u32 deltaTime)
         }
     }
 }
-#pragma fp_contract reset
 
 /*
  * fn_8026F30C - synth song/callback pool init.

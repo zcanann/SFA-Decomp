@@ -101,8 +101,6 @@ ObjectDescriptor gIMIceMountainObjDescriptor = {
 /* imicemountain_updateEventState: the act-1 event machine (states 1..7;
  * state 0 idles), advancing avalanche fx, the boulder spawn, level
  * locks and the final warp as the relevant game bits are set. */
-#pragma scheduling off
-#pragma peephole off
 void imicemountain_updateEventState(int* obj)
 {
     IMIceMountainState* extra = ((GameObject*)obj)->extra;

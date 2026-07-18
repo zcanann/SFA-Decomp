@@ -153,7 +153,6 @@ int ktrex_shouldAdvanceArenaPhase(void)
     return 0;
 }
 
-#pragma dont_inline on
 void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
 {
     int* model;
@@ -187,7 +186,6 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
                                    0);
 }
 
-#pragma dont_inline reset
 int ktrex_stateHandlerA11(GameObject* obj, KTRexRuntime* runtime)
 {
     int phase;
@@ -397,7 +395,7 @@ int ktrex_stateHandlerA08(GameObject* obj, KTRexRuntime* runtime)
                 (f32)(u32) * (u16*)(row + (gKTRexState->phaseCounter & ~1));
         }
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-        goto ret0;
+        return 0;
     }
     if ((gKTRexState->timerFA & 8) == 0)
     {
@@ -405,7 +403,7 @@ int ktrex_stateHandlerA08(GameObject* obj, KTRexRuntime* runtime)
         gKTRexState->stateTimer = timer;
         if (!(timer <= 0.0f))
         {
-            goto ret0;
+            return 0;
         }
     }
     if ((gKTRexState->timerFA & 8) != 0)
@@ -420,8 +418,6 @@ int ktrex_stateHandlerA08(GameObject* obj, KTRexRuntime* runtime)
     }
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     return 10;
-ret0:
-    return 0;
 }
 
 int ktrex_stateHandlerA07(GameObject* obj, KTRexRuntime* runtime)
@@ -555,7 +551,7 @@ int ktrex_stateHandlerA03(GameObject* obj, KTRexRuntime* runtime)
     if ((s8)runtime->moveJustStartedB != 0)
     {
         (*(void (**)(GameObject*, KTRexRuntime*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 2);
-        goto ret0;
+        return 0;
     }
     if ((s8)runtime->moveDone != 0)
     {
@@ -582,7 +578,6 @@ int ktrex_stateHandlerA03(GameObject* obj, KTRexRuntime* runtime)
         }
         return popped + 1;
     }
-ret0:
     return 0;
 }
 
@@ -1394,7 +1389,6 @@ int ktrex_updateArenaPathProgress(KTRexRuntime* runtime)
     return changed;
 }
 
-#pragma dont_inline on
 int ktrex_isPlayerInLaneThreatRange(GameObject* obj)
 {
     u8 state = gKTRexState->laneMode;
@@ -1431,7 +1425,6 @@ int ktrex_isPlayerInLaneThreatRange(GameObject* obj)
     return 0;
 }
 
-#pragma dont_inline reset
 void ktrex_func0B(void)
 {
 }

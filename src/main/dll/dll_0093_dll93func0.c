@@ -19,19 +19,6 @@
 #define DLL93_EFFECT_ID 0x89
 
 extern u8 lbl_80317260[];
-#pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E1240 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E1244 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E1248 = 0.1f;
-__declspec(section ".sdata2") f32 lbl_803E124C = 10.5f;
-__declspec(section ".sdata2") f32 lbl_803E1250 = 255.0f;
-__declspec(section ".sdata2") f32 lbl_803E1254 = 1.1f;
-__declspec(section ".sdata2") f32 lbl_803E1258 = 1.2f;
-const f32 lbl_803E125C = 0.0f;
-// BIAS lbl_803E1260 minted by compiler
-#pragma explicit_zero_data reset
-#pragma force_active reset
 
 void dll_93_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
@@ -44,55 +31,55 @@ void dll_93_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[0].flags = 0x15;
     e[0].tex = base + 0x1b0;
     e[0].mode = 4;
-    e[0].x = lbl_803E1240;
-    e[0].y = lbl_803E1240;
-    e[0].z = lbl_803E1240;
+    e[0].x = 0.0f;
+    e[0].y = 0.0f;
+    e[0].z = 0.0f;
     e[1].layer = 0;
     e[1].flags = 0x15;
     e[1].tex = base + 0x1b0;
     e[1].mode = 2;
-    rval = lbl_803E1248 * (f32)(int)randomGetRange(0, 10) + lbl_803E1244;
+    rval = 0.1f * (f32)(int)randomGetRange(0, 10) + 1.0f;
     e[1].x = rval;
-    e[1].y = lbl_803E124C;
+    e[1].y = 10.5f;
     e[1].z = rval;
     e[2].layer = 1;
     e[2].flags = 0x15;
     e[2].tex = base + 0x1b0;
     e[2].mode = 4;
-    e[2].x = lbl_803E1250;
-    e[2].y = lbl_803E1240;
-    e[2].z = lbl_803E1240;
+    e[2].x = 255.0f;
+    e[2].y = 0.0f;
+    e[2].z = 0.0f;
     e[3].layer = 1;
     e[3].flags = 0x15;
     e[3].tex = base + 0x1b0;
     e[3].mode = 0x4000;
-    e[3].x = lbl_803E1254;
-    e[3].y = lbl_803E1240;
-    e[3].z = lbl_803E1240;
+    e[3].x = 1.1f;
+    e[3].y = 0.0f;
+    e[3].z = 0.0f;
     e[4].layer = 2;
     e[4].flags = 0x15;
     e[4].tex = base + 0x1b0;
     e[4].mode = 4;
-    e[4].x = lbl_803E1240;
-    e[4].y = lbl_803E1240;
-    e[4].z = lbl_803E1240;
+    e[4].x = 0.0f;
+    e[4].y = 0.0f;
+    e[4].z = 0.0f;
     e[5].layer = 2;
     e[5].flags = 0x15;
     e[5].tex = base + 0x1b0;
     e[5].mode = 0x4000;
-    e[5].x = lbl_803E1254;
-    e[5].y = lbl_803E1240;
-    e[5].z = lbl_803E1240;
+    e[5].x = 1.1f;
+    e[5].y = 0.0f;
+    e[5].z = 0.0f;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E1240;
-    buf.pos[1] = lbl_803E1240;
-    buf.pos[2] = lbl_803E1240;
-    buf.col[0] = lbl_803E1240;
-    buf.col[1] = lbl_803E1240;
-    buf.col[2] = lbl_803E1240;
-    buf.scale = lbl_803E1258;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = 0.0f;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 1.2f;
     buf.v40 = 2;
     buf.v3c = 7;
     buf.v59 = 0xe;
@@ -113,15 +100,15 @@ void dll_93_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E1240 + *(f32*)(sourceObj + 0xc);
-            buf.pos[1] = lbl_803E1240 + *(f32*)(sourceObj + 0x10);
-            buf.pos[2] = lbl_803E1240 + *(f32*)(sourceObj + 0x14);
+            buf.pos[0] = 0.0f + *(f32*)(sourceObj + 0xc);
+            buf.pos[1] = 0.0f + *(f32*)(sourceObj + 0x10);
+            buf.pos[2] = 0.0f + *(f32*)(sourceObj + 0x14);
         }
         else
         {
-            buf.pos[0] = lbl_803E1240 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E1240 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E1240 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] = 0.0f + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = 0.0f + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = 0.0f + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80317260, 0x18, base + 0xd4, DLL93_EFFECT_ID, 0);

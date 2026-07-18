@@ -60,7 +60,6 @@ void BaddieInterestP_hitDetect(void)
 {
 }
 
-#pragma opt_loop_invariants off
 void BaddieInterestP_update(int* obj)
 {
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
@@ -199,7 +198,6 @@ void BaddieInterestP_update(int* obj)
         }
     }
 }
-#pragma opt_loop_invariants reset
 
 void BaddieInterestP_init(void)
 {

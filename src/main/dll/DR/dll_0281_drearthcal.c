@@ -43,8 +43,6 @@ void drearthcal_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void drearthcal_update(GameObject* obj)
 {
     GameObject* player;

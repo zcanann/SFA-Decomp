@@ -16,8 +16,6 @@ f32 screenTransitionAlpha;
 
 extern u8 gScreenTransitionDone;
 
-#pragma scheduling off
-#pragma peephole off
 
 typedef struct
 {
@@ -232,8 +230,6 @@ extern f32 gScreenTransitionHoldTimer;
 extern u8 gScreenTransitionType;
 extern u8 gScreenTransitionDelay;
 
-#pragma scheduling off
-#pragma peephole off
 void screenTransition_fadeFrom(int duration, int type, f32 from)
 {
     screenTransitionAlpha = gScreenTransitionAlphaMax * from;
@@ -243,16 +239,12 @@ void screenTransition_fadeFrom(int duration, int type, f32 from)
     gScreenTransitionDelay = 1;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 u32 isScreenTransitionActive(void)
 {
     return gScreenTransitionAlphaMax == screenTransitionAlpha;
 }
 
-#pragma scheduling off
-#pragma peephole off
 
 void screenTransitionFn_800d7b04(int duration, int type)
 {
@@ -263,7 +255,6 @@ void screenTransitionFn_800d7b04(int duration, int type)
     gScreenTransitionDelay = 5;
 }
 
-#pragma opt_common_subs off
 void screenTransition_fadeIn(int duration, int type)
 {
     if (gScreenTransitionAlphaStep >= lbl_803E0560 || lbl_803E0560 == screenTransitionAlpha)
@@ -358,7 +349,6 @@ void screenTransition_update(int p1, int p2, int p3)
         break;
     }
 }
-#pragma opt_common_subs reset
 
 
 u32 lbl_80311340[14] = {

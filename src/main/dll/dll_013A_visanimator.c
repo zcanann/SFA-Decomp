@@ -46,8 +46,6 @@ void VisAnimator_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void VisAnimator_update(int* obj)
 {
     s16* placement = ((GameObject*)obj)->anim.placementData;

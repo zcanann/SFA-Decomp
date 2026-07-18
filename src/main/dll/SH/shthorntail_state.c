@@ -22,7 +22,6 @@ extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern char sSHthorntailSourceFile[];
 extern char sThorntailEnteredInvalidState[];
 
-#pragma dont_inline on
 
 void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime)
 {

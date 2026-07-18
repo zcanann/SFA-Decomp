@@ -29,12 +29,6 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/object_render_legacy.h"
 
-__declspec(section ".sdata2") f32 lbl_803E70E0 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E70E4 = -1.0f;
-__declspec(section ".sdata2") f32 lbl_803E70E8 = 3.52e+04f;
-__declspec(section ".sdata2") f32 lbl_803E70EC = 2e+02f;
-__declspec(section ".sdata2") f32 lbl_803E70F0 = -6.5e+02f;
-__declspec(section ".sdata2") f32 lbl_803E70F4 = -8.7f;
 
 /* env effects co-activated once with the sky preset; opaque distinct roles */
 #define ARWLEVELCON_ENVFX_A 0x21f
@@ -133,7 +127,7 @@ void arwlevelcon_free(void)
 
 void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E70E0);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void arwlevelcon_hitDetect(void)
@@ -156,7 +150,7 @@ void arwlevelcon_update(GameObject* obj)
         {
             skyFn_800895e0(7, 0x96, 0x64, 0xf0, 0, 0);
         }
-        skyFn_800894a8(7, lbl_803E70E4, *(f32*)&lbl_803E70E4, lbl_803E70E0);
+        skyFn_800894a8(7, -1.0f, -1.0f, 1.0f);
         getEnvfxActVoid(0, 0, ARWLEVELCON_ENVFX_A, 0);
         getEnvfxActVoid(0, 0, ARWLEVELCON_ENVFX_B, 0);
         setIsOvercast(0);
@@ -187,7 +181,7 @@ void arwlevelcon_update(GameObject* obj)
     if (state->ringChoiceTriggered == 0)
     {
         MapRomList* mapBlock = mapBlockFn_800592e4();
-        if (arwing->anim.localPosZ - mapBlock->worldZ > lbl_803E70E8 &&
+        if (arwing->anim.localPosZ - mapBlock->worldZ > 35200.0f &&
             arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0)
         {
             int requiredRings, collectedRings;
@@ -218,12 +212,12 @@ void arwlevelcon_init(GameObject* obj, ARWLevelConSetup* setup)
     state->sequenceSlot = 1;
     state->sequenceCameraId = 0x50;
     {
-        f32 seqParam = lbl_803E70EC;
+        f32 seqParam = 200.0f;
         state->sequenceParam0 = seqParam;
         state->sequenceParam1 = seqParam;
     }
-    state->sequenceParam2 = lbl_803E70F0;
-    state->sequenceParam3 = lbl_803E70F4;
+    state->sequenceParam2 = -650.0f;
+    state->sequenceParam3 = -8.7f;
     if (setup->routeSignature == 0x48f7e)
     {
         state->alternateRoute = 1;

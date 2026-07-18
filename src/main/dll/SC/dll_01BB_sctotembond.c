@@ -105,7 +105,6 @@ static void sc_totembond_beginOrbGame(ScTotemBondObject* obj, ScTotemBondState* 
     Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 1);
 }
 
-#pragma dont_inline on
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
 {
     s32 angleOffset;
@@ -204,7 +203,6 @@ u32 sc_totembond_SeqFn(ScTotemBondObject* obj, u32 unused, ObjAnimUpdateState* a
     return 0;
 }
 
-#pragma dont_inline reset
 int sc_totembond_getExtraSize(void)
 {
     return 0x28;

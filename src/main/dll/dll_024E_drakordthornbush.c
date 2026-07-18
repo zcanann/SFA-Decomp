@@ -55,7 +55,6 @@ int drakord_thornbush_getObjectTypeId(void)
     return 0;
 }
 
-#pragma opt_common_subs off
 
 void drakord_thornbush_free(int obj)
 {
@@ -278,7 +277,6 @@ void drakord_thornbush_init(GameObject* obj, u8* init)
     }
 }
 
-#pragma opt_common_subs reset
 
 void drakord_thornbush_release(void)
 {

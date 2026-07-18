@@ -17,7 +17,7 @@ void viewFinderSetZoom(f32 zoom)
     lbl_803DB790 = -3000.0f / zoom;
 }
 
-__declspec(section ".sdata2") f32 lbl_803DF34C = 50.0f;
+f32 lbl_803DF34C = 50.0f;
 
 void viewFinderSetZoomTo50(void)
 {

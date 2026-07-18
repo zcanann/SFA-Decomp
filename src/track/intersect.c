@@ -224,9 +224,7 @@ extern u32 lbl_803DEEA0, lbl_803DEEA4, lbl_803DEEA8;
 extern StageCountTable lbl_803DEEAC;
 extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
 extern u32 lbl_803DEEC8, lbl_803DEECC, lbl_803DEED0, lbl_803DEED4, lbl_803E8450;
-/* Narrow-typed aliases for sbss/sdata state vars touched by the small
- * helpers below. */
-extern volatile s32 lbl_803DB700;
+extern s32 lbl_803DB700;
 extern u8 lbl_803DD059;
 extern u32 lbl_803DD048;
 extern u32 gSaveCardSerialLo;
@@ -290,7 +288,6 @@ void cardShowLoadingMsg(u8 kind);
 int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2);
 int saveCb_8007e748(int saveId, int size, void* dst);
 
-#pragma opt_common_subs off
 /* opt_common_subs off: the retail build re-truncates the u8 `flags`/`j`
  * loop values (clrlwi ,,24) at each use rather than caching the masked form. */
 void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unused, f32 scale)
@@ -469,7 +466,6 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
     }
 }
 
-#pragma opt_common_subs reset
 void* fn_8006F388(u32 i)
 {
     u8* base = lbl_8030E8B0;
@@ -498,7 +494,6 @@ void* fn_8006F388(u32 i)
     }
 }
 
-#pragma opt_common_subs off
 /* Per-iteration byte decrement of two parallel arrays. */
 void timeFn_8006f400(f32 step)
 {
@@ -538,7 +533,6 @@ void timeFn_8006f400(f32 step)
     }
 }
 
-#pragma opt_common_subs reset
 void drawFn_8006f500(void)
 {
     GXColor color;
@@ -671,7 +665,6 @@ void drawFn_8006f500(void)
     Camera_ApplyFullViewport();
 }
 
-#pragma opt_common_subs off
 void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
 {
     WaterFxState* base;
@@ -766,7 +759,6 @@ void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
     }
 }
 
-#pragma opt_common_subs reset
 void fn_8006FC00(int enable)
 {
     int i;
@@ -999,9 +991,7 @@ void fn_80070234(f32* mat)
 }
 
 
-#pragma peephole on
 
-#pragma peephole on
 #define GXSetZCompLoc ((GXSetZCompLocLegacyFn)GXSetZCompLoc)
 void gxSetPeControl_ZCompLoc_(u32 zCompLoc)
 {
@@ -1030,7 +1020,6 @@ void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable)
 }
 #undef GXSetZMode
 
-#pragma peephole off
 void resetSomeGxFlags(void)
 {
     gGxZModeValid = 0;
@@ -1727,7 +1716,7 @@ void doColorFilter(u8* mod)
 
 static inline f32 distortSqrtf(f32 x)
 {
-    volatile float y;
+    float y;
     double guess = __frsqrte((double)x);
     guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * x);
     guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * x);
@@ -1736,7 +1725,6 @@ static inline f32 distortSqrtf(f32 x)
     return y;
 }
 
-#pragma opt_common_subs off
 void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -1974,7 +1962,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     Camera_RebuildProjectionMatrix();
 }
 
-#pragma opt_common_subs reset
 int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -2694,12 +2681,6 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     return 1;
 }
 
-static inline void forceSingle_inl(f32* p)
-{
-    volatile f32 v = *p;
-    *p = v;
-}
-
 u32 objCallback_80074d04(int handle, void* model)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -2728,12 +2709,7 @@ u32 objCallback_80074d04(int handle, void* model)
         dist = px * px + py * py + pz * pz;
         if (dist > lbl_803DEEDC)
         {
-            double g = __frsqrte((double)dist);
-            g = lbl_803DEF10 * g * (lbl_803DEF18 - g * g * dist);
-            g = lbl_803DEF10 * g * (lbl_803DEF18 - g * g * dist);
-            g = lbl_803DEF10 * g * (lbl_803DEF18 - g * g * dist);
-            dist = (float)(dist * g);
-            forceSingle_inl(&dist);
+            dist = distortSqrtf(dist);
         }
         f31_val = lbl_803DEF3C / dist;
         if (f31_val > lbl_803DEEE4)
@@ -5239,7 +5215,6 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     Camera_RebuildProjectionMatrix();
 }
 
-#pragma inline_max_size(4000)
 static inline void fn_8007BD8C_body(int handle1, int handle2, Mtx mtx_30, GXColor* temp, GXColor* temp2, GXColor* k0,
                                     GXColor* k1, GXColor* k2, GXColor* tev1, GXColor* tev2)
 {
@@ -5596,7 +5571,6 @@ void fn_8007CAF4(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-#pragma opt_common_subs off
 void gxTextureSetupFn_8007cf7c(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -5748,7 +5722,6 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-#pragma opt_common_subs reset
 void fn_8007D670(void)
 {
     f32* base = (f32*)&lbl_803967C0;
@@ -6016,7 +5989,6 @@ int loadSaveGame(int a, int b)
     } while (gSaveCardRetry != 0);
     return ret;
 }
-#pragma auto_inline off
 int memCardFn_8007dd04(u8 retry)
 {
     int ret;
@@ -6056,7 +6028,6 @@ int memCardFn_8007dd04(u8 retry)
     } while (gSaveCardRetry != 0 && retry != 0);
     return ret;
 }
-#pragma auto_inline on
 
 
 int cardProbe(u8 retry)

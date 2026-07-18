@@ -52,7 +52,6 @@ static inline ObjHitsModelBank* ObjHits_GetActiveModel(int obj)
     return (ObjHitsModelBank*)objAnim->banks[objAnim->bankIndex];
 }
 
-#pragma opt_propagation off
 int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointData* jointData, int* model,
                                   ObjHitsSkeletonHit* hits, ObjHitsSkeletonHit** outBest, f32 yMax, f32 yMin,
                                   f32* outAccum)
@@ -361,7 +360,6 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
     cur->pointIndexA = OBJHITS_SKELETON_HIT_SENTINEL;
     return cur != hits;
 }
-#pragma opt_propagation reset
 
 int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
                                    ObjHitsSkeletonJointData* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit,
@@ -880,7 +878,6 @@ int ObjHits_TestTaperedCapsule3D(float* point, float pointRadius, float baseRadi
     return *dist2 <= radiusSum * radiusSum;
 }
 
-#pragma dont_inline on
 void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount)
 {
     int maxGap;
@@ -911,7 +908,6 @@ void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount)
     }
     return;
 }
-#pragma dont_inline reset
 
 void ObjHits_TickPriorityHitCooldowns(void)
 {
@@ -1502,11 +1498,9 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
     return 0;
 }
 
-#pragma dont_inline on
 void doNothing_800333C8(int objA, int objB, int att, void* state, void* attState, f32 dt)
 {
 }
-#pragma dont_inline reset
 
 #define ObjHits_CheckHitVolumes ((ObjHitsCheckHitVolumesLegacyFn)ObjHits_CheckHitVolumes)
 void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 dt)
@@ -1919,9 +1913,10 @@ void ObjHits_DetectObjectPair(int objA, int objB)
             {
                 tmp = yB - radiusB;
             }
-            if (!(tmp > yA))
-                goto spanOverlap;
-            goto end;
+            if (tmp > yA)
+            {
+                return;
+            }
         }
         else
         {
@@ -1942,9 +1937,10 @@ void ObjHits_DetectObjectPair(int objA, int objB)
                 tmp = yA - radiusA;
             }
             if (tmp > yB)
-                goto end;
+            {
+                return;
+            }
         }
-    spanOverlap:
         dy = gObjHitsScalarZero;
         vertical = 1;
     }
@@ -2033,10 +2029,8 @@ void ObjHits_DetectObjectPair(int objA, int objB)
             }
         }
     }
-end:;
 }
 
-#pragma opt_propagation off
 void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, void* scratchC, void* scratchD,
                                void* scratchE, int depth)
 {
@@ -2163,7 +2157,6 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
         ObjHits_CheckSkeletonPair(objB, objA, hits, scratchB, scratchC, scratchD, scratchE, depth + 1);
     }
 }
-#pragma opt_propagation reset
 
 void ObjHits_CheckTrackContact(int objA, int objB)
 {

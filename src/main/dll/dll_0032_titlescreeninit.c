@@ -181,9 +181,6 @@ void runLoadingScreens(void)
     }
 }
 
-#pragma opt_propagation off
-#pragma opt_common_subs off
-#pragma inline_max_size(4000)
 static inline void initLoadingScreenTexturesBody(void)
 {
     int textureSize;

@@ -35,7 +35,6 @@ typedef struct DusterState
 
 #define DUSTER_HIT_VOLUME_SLOT 10
 
-#pragma dont_inline on
 
 extern int lbl_803DBCD8[2];
 extern u8 gDusterEbaMoveTable[];

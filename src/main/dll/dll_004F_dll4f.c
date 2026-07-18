@@ -13,8 +13,6 @@
 CameraMode4FState* gCameraMode4FState;
 
 
-#pragma scheduling off
-#pragma peephole off
 void dll_4F_func06_nop(void)
 {
 }

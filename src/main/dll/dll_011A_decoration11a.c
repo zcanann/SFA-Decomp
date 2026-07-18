@@ -42,8 +42,6 @@ void decoration11a_free(void)
 {
 }
 
-#pragma scheduling off /* TU-wide from here: hitDetect/init inherit this */
-#pragma peephole off
 void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -64,20 +62,11 @@ void decoration11a_hitDetect(int obj)
     f32 term;
 
     modelId = ((GameObject*)obj)->anim.seqId;
-    if (modelId == DECOR11A_MODEL_A)
-    {
-        goto check_decor_objects;
-    }
-    if (modelId == DECOR11A_MODEL_B)
-    {
-        goto check_decor_objects;
-    }
-    if (modelId != DECOR11A_MODEL_C)
+    if (modelId != DECOR11A_MODEL_A && modelId != DECOR11A_MODEL_B && modelId != DECOR11A_MODEL_C)
     {
         return;
     }
 
-check_decor_objects:
     state = ((GameObject*)obj)->extra;
     objects = (int*)ObjGroup_GetObjects(2, &count);
     while (count != 0)
@@ -163,8 +152,6 @@ void decoration11a_update(void)
 {
 }
 
-#pragma dont_inline on
-#pragma peephole on
 void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
 {
     f32 component;
@@ -184,8 +171,6 @@ void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
     else if (component < minOut[2])
         minOut[2] = component;
 }
-#pragma dont_inline reset
-#pragma peephole off
 
 void decoration11a_init(int* obj, u8* def)
 {
@@ -204,17 +189,7 @@ void decoration11a_init(int* obj, u8* def)
     }
     {
         s16 model = ((GameObject*)obj)->anim.seqId;
-        if (model == DECOR11A_MODEL_A)
-        {
-            goto calc_decor_bounds;
-        }
-        if (model == DECOR11A_MODEL_B)
-        {
-            goto calc_decor_bounds;
-        }
-        if (model == DECOR11A_MODEL_C)
-        {
-        calc_decor_bounds:
+        if (model == DECOR11A_MODEL_A || model == DECOR11A_MODEL_B || model == DECOR11A_MODEL_C)
         {
             int i;
             ModelFileHeader* m;
@@ -244,7 +219,6 @@ void decoration11a_init(int* obj, u8* def)
                 maxMag = PSVECMag(state + 3);
             }
             state[6] = maxMag;
-        }
         }
     }
 }

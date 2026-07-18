@@ -64,8 +64,6 @@ extern u8 dll_19_func18[];
 extern u8 dll_19_func19[];
 extern u8 dll_19_func1A[];
 
-#pragma scheduling off
-#pragma peephole off
 f32 titleScreenGetCamProgress(void)
 {
     return titleScreenCamProgress;

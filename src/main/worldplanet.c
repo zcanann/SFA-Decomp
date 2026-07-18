@@ -116,9 +116,6 @@ void worldplanet_hitDetect(void)
 
 void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY);
 
-#pragma opt_lifetimes off
-#pragma opt_loop_invariants off
-#pragma opt_strength_reduction off
 void worldplanet_update(GameObject* obj)
 {
     u8 prevPlanet;
@@ -492,11 +489,7 @@ void worldplanet_update(GameObject* obj)
         state->orbitSoundFrameCount += 1;
     }
 }
-#pragma opt_strength_reduction reset
-#pragma opt_loop_invariants reset
-#pragma opt_lifetimes reset
 
-#pragma peephole on
 void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
 {
     WorldPlanetState* state = obj->extra;
@@ -576,7 +569,6 @@ void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
         *outY = 0;
     }
 }
-#pragma peephole reset
 
 void worldplanet_init(GameObject* obj)
 {

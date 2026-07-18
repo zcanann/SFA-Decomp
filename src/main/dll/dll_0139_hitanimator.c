@@ -52,7 +52,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 extern int mapBlockFn_80060678(void* entry);
 
-#pragma dont_inline on
 void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnimatorState* state,
                             HitAnimatorPlacement* desc)
 {

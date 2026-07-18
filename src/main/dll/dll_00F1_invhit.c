@@ -72,8 +72,6 @@ int InvHit_getObjectTypeId(void)
 {
     return 0x0;
 }
-#pragma peephole off
-#pragma scheduling off
 void InvHit_free(GameObject* obj)
 {
     char* inner = obj->extra;

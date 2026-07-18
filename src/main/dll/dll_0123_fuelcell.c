@@ -109,7 +109,6 @@ typedef struct
     f32 pos2[3]; // 0x18
 } GameObjPos;
 
-#pragma opt_loop_invariants off
 void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
 {
     int** list;

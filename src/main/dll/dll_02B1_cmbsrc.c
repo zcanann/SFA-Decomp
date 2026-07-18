@@ -34,7 +34,6 @@ u8 gCmbsrcColorCycleIndexTable[8] = {5, 6, 4, 0, 0, 0, 0, 0};
 
 #define CMBSRC_OBJFLAG_RENDERED 0x800
 
-
 int cmbsrc_update(CmbSrcObject* cmbsrc);
 
 u8 cmbsrc_shouldDeactivate(CmbSrcObject* obj, CmbSrcState* sourceState, CmbSrcMapData* mapData)
@@ -146,8 +145,6 @@ u8 cmbsrc_cycleColor(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     return idx;
 }
 
-#pragma dont_inline on
-#pragma opt_propagation off
 void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
 {
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -297,8 +294,6 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     }
 }
 
-#pragma dont_inline reset
-#pragma opt_propagation reset
 int cmbsrc_updateAndReturnZero(CmbSrcObject* obj)
 {
     cmbsrc_update(obj);
@@ -416,7 +411,6 @@ void cmbsrc_hitDetect(CmbSrcObject* cmbsrc)
     }
 }
 
-#pragma dont_inline on
 int cmbsrc_update(CmbSrcObject* cmbsrc)
 {
     CmbSrcState* state = cmbsrc->state;
@@ -496,7 +490,6 @@ int cmbsrc_update(CmbSrcObject* cmbsrc)
     cmbsrc_updateVisuals(cmbsrc, state);
 }
 
-#pragma dont_inline off
 void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
 {
     u8* c2;
@@ -673,7 +666,6 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
     cmbsrc->updateCallback = cmbsrc_updateAndReturnZero;
 }
 
-#pragma dont_inline reset
 void cmbsrc_release(void)
 {
 }
@@ -681,7 +673,6 @@ void cmbsrc_release(void)
 void cmbsrc_initialise(void)
 {
 }
-
 
 u8 gCmbsrcColorSoundIdTable[16] = {'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'};
 

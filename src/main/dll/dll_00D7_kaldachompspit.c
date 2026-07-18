@@ -46,7 +46,6 @@ typedef struct KaldaChompSpitState
 
 STATIC_ASSERT(sizeof(KaldaChompSpitState) == 0x4);
 
-#pragma dont_inline on
 void kaldachompspit_burst(GameObject* obj)
 {
     int i;

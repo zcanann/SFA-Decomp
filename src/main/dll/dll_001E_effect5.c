@@ -62,8 +62,6 @@ void* lbl_803109B8[10] = {(void*)0x00000000,  (void*)0x00000000, (void*)0x000000
                           Effect5_initialise, Effect5_release,   (void*)0x00000000, Effect5_func03_nop,
                           Effect5_func04,     Effect5_func05};
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),

@@ -144,9 +144,6 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
     return 0;
 }
 
-#pragma opt_propagation off
-#pragma opt_common_subs off
-#pragma opt_lifetimes off
 void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
 {
     char* strBase = lbl_8031D2E8;
@@ -406,11 +403,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         break;
     }
 }
-#pragma opt_lifetimes reset
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
 
-#pragma peephole on
 int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
 {
     int count;
@@ -459,10 +452,7 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
     }
     return 0;
 }
-#pragma peephole off
 
-#pragma opt_propagation off
-#pragma opt_common_subs off
 void trickyFlame(GameObject* obj, int trickyState)
 {
     char* strBase = lbl_8031D2E8;
@@ -564,6 +554,7 @@ void trickyFlame(GameObject* obj, int trickyState)
             }
             trickyTurnTowardYaw((u8*)obj, srcAng);
         }
+        dieFlag = 1;
         if ((double)(obj)->anim.currentMoveProgress > (double)lbl_803E24AC)
         {
             if ((((TrickyRuntime*)trickyState)->flags & TRICKY_STATE_HELPERS_ACTIVE_FLAG) == 0)
@@ -615,12 +606,9 @@ void trickyFlame(GameObject* obj, int trickyState)
                         }
                     }
                     dieFlag = 0;
-                    goto flame_diecheck;
                 }
             }
         }
-        dieFlag = 1;
-    flame_diecheck:
         if (dieFlag == 0)
         {
             ((TrickyRuntime*)trickyState)->guardState = 8;
@@ -660,6 +648,7 @@ void trickyFlame(GameObject* obj, int trickyState)
         break;
     case 6:
         trickyDebugPrint(strBase + 0x778);
+        dieFlag = 1;
         if ((double)(obj)->anim.currentMoveProgress > (double)lbl_803E24AC)
         {
             if ((((TrickyRuntime*)trickyState)->flags & TRICKY_STATE_HELPERS_ACTIVE_FLAG) == 0)
@@ -711,12 +700,9 @@ void trickyFlame(GameObject* obj, int trickyState)
                         }
                     }
                     dieFlag = 0;
-                    goto guard_diecheck;
                 }
             }
         }
-        dieFlag = 1;
-    guard_diecheck:
         if (dieFlag == 0)
         {
             ((TrickyRuntime*)trickyState)->growlLatState = 1;
@@ -748,8 +734,6 @@ void trickyFlame(GameObject* obj, int trickyState)
         break;
     }
 }
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
 void fn_8014128C(void)
 {
 }

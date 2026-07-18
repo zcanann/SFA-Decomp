@@ -79,7 +79,6 @@ void wctile_hitDetect(void)
 {
 }
 
-#pragma opt_common_subs off
 void wctile_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim = &obj->anim;

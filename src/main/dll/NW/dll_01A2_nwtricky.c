@@ -50,7 +50,6 @@ void NW_tricky_free(int obj)
     mainSetBits(GAMEBIT_Tricky_Usable, 1);
 }
 
-#pragma opt_loop_invariants off
 void NW_tricky_update(int* obj)
 {
 
@@ -179,4 +178,4 @@ void NW_tricky_init(int* obj)
         (u16)(((GameObject*)obj)->objectFlags | (NWTRICKY_OBJFLAG_HIDDEN | NWTRICKY_OBJFLAG_HITDETECT_DISABLED));
 }
 
-__declspec(section ".sdata2") f32 lbl_803E5268 = 2000.0f;
+f32 lbl_803E5268 = 2000.0f;

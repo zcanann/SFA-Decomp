@@ -2,7 +2,6 @@
 #include "main/audio/synth_voice.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
-
 typedef struct S3DActiveNode
 {
     struct S3DActiveNode* next;
@@ -70,10 +69,9 @@ typedef struct SndFVector
 
 #define S3D_CLAMP_7BIT(value) (((value) & 0xff) > 0x7f ? 0x7f : (value))
 
-#pragma fp_contract off
 extern inline f32 sqrtf(f32 x)
 {
-    volatile f32 y;
+    f32 y;
 
     if (x > 0.0f)
     {
@@ -198,7 +196,6 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
         *frontBackOut = pan.z / listenerCount;
     }
 }
-#pragma fp_contract reset
 
 void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 unused, f32 azimuth, f32 pitch)
 {
@@ -396,93 +393,93 @@ void s3dStartQueuedEmitters(void)
     u32 handle;
     u8 studio;
     f32 distanceDelta;
-
+    int startVoice;
+    int voiceStarted;
 
     for (groupIndex = 0; groupIndex < lbl_803DE36B; groupIndex++)
     {
         node = startGroup[groupIndex].activeHead;
         while (node != (S3DActiveNode*)0x0)
         {
-            if (startGroup[groupIndex].sortedHead == (S3DSortedNode*)0x0)
+            startVoice = 1;
+            if ((startGroup[groupIndex].sortedHead != (S3DSortedNode*)0x0) &&
+                !((lbl_803DE36A != 0) &&
+                  ((startGroup[groupIndex].key & S3D_GROUP_KEY_STEREO_LIMIT) != 0) &&
+                  (startGroup[groupIndex].sortedCount < startGroup[groupIndex].activeHead->emitter->maxVoices)))
             {
-                goto start_voice;
-            }
-            if ((lbl_803DE36A != 0) &&
-                ((startGroup[groupIndex].key & S3D_GROUP_KEY_STEREO_LIMIT) != 0) &&
-                (startGroup[groupIndex].sortedCount < startGroup[groupIndex].activeHead->emitter->maxVoices))
-            {
-                goto start_voice;
-            }
-
-            distanceDelta = node->distance - startGroup[groupIndex].sortedHead->distance;
-            if (distanceDelta <= 0.08f)
-            {
-                goto next_node;
-            }
-            if (distanceDelta <= 0.15f)
-            {
-                emitter = node->emitter;
-                if (++emitter->retryCounter < 0x14)
+                distanceDelta = node->distance - startGroup[groupIndex].sortedHead->distance;
+                if (distanceDelta <= 0.08f)
                 {
-                    goto next_node;
+                    startVoice = 0;
+                }
+                else if (distanceDelta <= 0.15f)
+                {
+                    emitter = node->emitter;
+                    if (++emitter->retryCounter < 0x14)
+                    {
+                        startVoice = 0;
+                    }
+                }
+                else
+                {
+                    node->emitter->retryCounter = 0;
                 }
             }
-            else
+
+            if (startVoice)
             {
-                node->emitter->retryCounter = 0;
+                voiceStarted = 0;
+                emitter = node->emitter;
+                if ((emitter->entry == (SndSpatialEntry*)0x0) || (emitter->entry->assignedVoice != 0xff))
+                {
+                    if (emitter->entry != (SndSpatialEntry*)0x0)
+                    {
+                        studio = emitter->entry->assignedVoice;
+                    }
+                    else
+                    {
+                        studio = emitter->studio;
+                    }
+
+                    handle = synthFXStart(emitter->fxId, 0x7f, 0x40, studio,
+                                          (emitter->flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0);
+                    emitter->handle = handle;
+                    if (handle != S3D_INVALID_FX_HANDLE)
+                    {
+                        voiceStarted = 1;
+                    }
+                }
+
+                if (voiceStarted == 0)
+                {
+                    if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) == 0)
+                    {
+                        emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
+                        emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
+                    }
+                }
+                else
+                {
+                    if ((emitter->flags & S3D_EMITTER_FLAG_SKIP_FADE_IN) == 0)
+                    {
+                        emitter->flags |= S3D_EMITTER_FLAG_AGE_OUT;
+                        emitter->age = 0.0f;
+                    }
+                    else
+                    {
+                        emitter->age = 1.0f;
+                    }
+                    s3dApplyEmitterControls(emitter, node->distance, node->pan, node->frontBack, node->azimuth,
+                                            node->pitch);
+                    emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
+                    startGroup[groupIndex].sortedCount++;
+                    if (startGroup[groupIndex].sortedHead != (S3DSortedNode*)0x0)
+                    {
+                        startGroup[groupIndex].sortedHead = startGroup[groupIndex].sortedHead->next;
+                    }
+                }
             }
 
-        start_voice:
-            emitter = node->emitter;
-            if ((emitter->entry != (SndSpatialEntry*)0x0) && (emitter->entry->assignedVoice == 0xff))
-            {
-                goto stop_voice;
-            }
-
-            if (emitter->entry != (SndSpatialEntry*)0x0)
-            {
-                studio = emitter->entry->assignedVoice;
-            }
-            else
-            {
-                studio = emitter->studio;
-            }
-
-            handle = synthFXStart(emitter->fxId, 0x7f, 0x40, studio,
-                                  (emitter->flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0);
-            emitter->handle = handle;
-            if (handle != S3D_INVALID_FX_HANDLE)
-            {
-                goto started;
-            }
-
-        stop_voice:
-            if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) == 0)
-            {
-                emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
-                emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
-            }
-            goto next_node;
-
-        started:
-            if ((emitter->flags & S3D_EMITTER_FLAG_SKIP_FADE_IN) == 0)
-            {
-                emitter->flags |= S3D_EMITTER_FLAG_AGE_OUT;
-                emitter->age = 0.0f;
-            }
-            else
-            {
-                emitter->age = 1.0f;
-            }
-            s3dApplyEmitterControls(emitter, node->distance, node->pan, node->frontBack, node->azimuth, node->pitch);
-            emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
-            startGroup[groupIndex].sortedCount++;
-            if (startGroup[groupIndex].sortedHead != (S3DSortedNode*)0x0)
-            {
-                startGroup[groupIndex].sortedHead = startGroup[groupIndex].sortedHead->next;
-            }
-
-        next_node:
             node = node->next;
         }
     }

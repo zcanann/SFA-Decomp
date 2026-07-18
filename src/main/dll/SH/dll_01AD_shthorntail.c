@@ -65,16 +65,10 @@ typedef u8 (*SHThorntailHitReactUpdateFn)(int obj, ObjHitReactEntry* table, u32 
 
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
-extern f32 lbl_803E5448;
 extern u8 gSHthorntailPathHeaders[0x30];
 extern u8 gSHthorntailPathData[0x4AC];
 extern u32 lbl_803E5410;
 extern SHthorntailPathControlInterface** gPathControlInterface;
-extern f32 lbl_803E544C;
-extern f32 lbl_803E5450;
-extern f32 lbl_803E5454;
-extern f32 lbl_803E5458;
-extern f32 lbl_803E545C;
 
 extern void warpstone_free(GameObject*);
 
@@ -85,8 +79,6 @@ extern void warpstone_hitDetect(GameObject*);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
 extern u32 modelInitBones();
-
-#pragma dont_inline on
 
 void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {
@@ -277,7 +269,6 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
     SHthorntail_updateState(obj, runtime);
 }
 
-
 u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     SHthorntailRuntime* runtime;
@@ -313,7 +304,7 @@ u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjA
     }
     runtime->activeMoveValid = 0;
     objAudioFn_8006ef38((int)obj, (int)&animUpdate->animEvents, 8, (int)runtime->renderPathPoints,
-                        (int)runtime->moveScratch, lbl_803E5448, *(f32*)&lbl_803E5448);
+                        (int)runtime->moveScratch, 1.0f, 1.0f);
     return 0;
 }
 
@@ -340,7 +331,7 @@ void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, 
     int pointIndex;
 
     runtime = obj->runtime;
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5448);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
     dll_2E_func06((GameObject*)obj, (MoveLibState*)runtime, 0);
     pointIndex = 0;
     do
@@ -353,9 +344,6 @@ void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, 
     } while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
 }
 
-#pragma optimization_level 3
-#pragma opt_loop_invariants off
-#pragma opt_common_subs off
 void SHthorntail_update(SHthorntailObject* obj)
 {
     u8* stateTables;
@@ -391,7 +379,7 @@ void SHthorntail_update(SHthorntailObject* obj)
                 (*gPartfxInterface)
                     ->spawnObject(obj, SHTHORNTAIL_PARTFX_TAILSWING, effectScratch.particleParams, 0x200001, -1, NULL);
             }
-            runtime->effectTimer = lbl_803E5450;
+            runtime->effectTimer = 30.0f;
         }
         runtime->effectTimer = runtime->effectTimer - timeDelta;
     }
@@ -469,9 +457,9 @@ void SHthorntail_update(SHthorntailObject* obj)
             {
                 runtime->storedFacingAngle = obj->facingAngle;
             }
-            facingAngleRadians = (lbl_803E5454 * (f32)(s32)runtime->storedFacingAngle) / lbl_803E5458;
+            facingAngleRadians = (3.1415927f * (f32)(s32)runtime->storedFacingAngle) / 32768.0f;
             facingCos = -mathSinf(facingAngleRadians);
-            facingAngleRadians = (lbl_803E5454 * (f32)(s32)runtime->storedFacingAngle) / lbl_803E5458;
+            facingAngleRadians = (3.1415927f * (f32)(s32)runtime->storedFacingAngle) / 32768.0f;
             facingSin = -mathCosf(facingAngleRadians);
             obj->modelPos.x = facingCos * -animEvents.rootDeltaZ + obj->modelPos.x;
             obj->modelPos.z = facingSin * -animEvents.rootDeltaZ + obj->modelPos.z;
@@ -496,7 +484,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             eventId++;
         }
         objAudioFn_8006ef38((int)obj, (int)&animEvents, 8, (int)runtime->renderPathPoints, (int)runtime->moveScratch,
-                            lbl_803E5448, lbl_803E5448);
+                            1.0f, 1.0f);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
              SHTHORNTAIL_STATE_FLAG_DISABLE_MOVE_CONTROL) != 0)
         {
@@ -538,7 +526,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         if (activeConfigToken == SHTHORNTAIL_CONFIG_TOKEN_NONE)
         {
             gSHthorntailActiveConfigToken = obj->config->configToken;
-            obj->velocityY = -(lbl_803E544C * timeDelta - obj->velocityY);
+            obj->velocityY = -(0.17f * timeDelta - obj->velocityY);
             (*gSHthorntailPathControlInterface)->advanceControl(obj, runtime->moveScratch, timeDelta);
             (*gSHthorntailPathControlInterface)->applyControl(obj, runtime->moveScratch);
             (*gSHthorntailPathControlInterface)->finishControl(obj, runtime->moveScratch, timeDelta);
@@ -553,7 +541,7 @@ void SHthorntail_update(SHthorntailObject* obj)
             }
             if (('\x02' <= runtime->behaviorState) && (runtime->behaviorState <= '\x06'))
             {
-                obj->velocityY = -(lbl_803E544C * timeDelta - obj->velocityY);
+                obj->velocityY = -(0.17f * timeDelta - obj->velocityY);
                 (*gSHthorntailPathControlInterface)->advanceControl(obj, runtime->moveScratch, timeDelta);
                 (*gSHthorntailPathControlInterface)->applyControl(obj, runtime->moveScratch);
                 (*gSHthorntailPathControlInterface)->finishControl(obj, runtime->moveScratch, timeDelta);
@@ -603,7 +591,7 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
         runtime->idleTimer = (f32)(s32)randomTime;
         break;
     }
-    obj->modelScale = *(float*)((int)obj->anim.modelInstance + 4) * ((float)config->initScale / lbl_803E545C);
+    obj->modelScale = *(float*)((int)obj->anim.modelInstance + 4) * ((float)config->initScale / 1000.0f);
     Obj_GetActiveModel((GameObject*)obj);
     modelInitBones((double)obj->modelScale);
     moveScratch = (int)runtime->moveScratch;

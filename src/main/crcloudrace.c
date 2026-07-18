@@ -37,7 +37,6 @@ ObjectDescriptor gCrCloudRaceObjDescriptor = {
     crcloudrace_getExtraSize,
 };
 
-#pragma dont_inline on
 void crcloudrace_updateCompletionState(int obj, CrCloudRaceState* state)
 {
     f32 dist;

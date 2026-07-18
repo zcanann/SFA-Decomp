@@ -136,7 +136,6 @@ void CameraModeCombat_free(CameraObject* camera)
     ((CameraModeCombatFlags*)&camera->smoothingFlags)->b0 = 0;
 }
 
-#pragma opt_common_subs off
 void CameraModeCombat_update(short* cam)
 {
     f32 vec[3];
@@ -474,7 +473,6 @@ void CameraModeCombat_update(short* cam)
     }
 }
 
-#pragma opt_common_subs reset
 void CameraModeCombat_init(CameraObject* camera, u32 unused, GameObject** targetPtr)
 {
     float dx;

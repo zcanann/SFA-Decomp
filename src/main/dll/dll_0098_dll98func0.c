@@ -3,7 +3,7 @@
  * modgfx command-list pattern (cf. dll_0099_dll99func0.c). func00/func01 are
  * empty entry stubs (defined below in reverse address order: func01 then
  * func00); func03 fills a ModgfxSpawnPacket of nine command entries from the .sdata2
- * float table at lbl_803E1318.. and the per-entry flag/texture/anim table at
+ * float table at 0.0f.. and the per-entry flag/texture/anim table at
  * lbl_803178B0, then dispatches it through gModgfxInterface->spawnEffect.
  *
  * The extraArgs argument (zero vs. non-zero) selects between two y-offset
@@ -24,16 +24,6 @@
 #define DLL98_EFFECT_ID_DEFAULT  0x3f3
 
 extern u8 lbl_803178B0[];
-extern f32 lbl_803E1318;
-extern f32 lbl_803E131C;
-extern f32 lbl_803E1320;
-extern f32 lbl_803E1324;
-extern f32 lbl_803E1328;
-extern f32 lbl_803E132C;
-extern f32 lbl_803E1330;
-extern f32 lbl_803E1334;
-extern f32 lbl_803E1338;
-extern f32 lbl_803E133C;
 
 void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, int extraArgs)
 {
@@ -42,115 +32,115 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
     GfxCmd* entry;
     int anim;
     *(s16*)(table + 0x216) = randomGetRange(0, 0x1e) + 0x1e;
-    *(volatile s16*)(table + 0x218) = *(volatile s16*)(table + 0x216);
+    *(s16*)(table + 0x218) = *(s16*)(table + 0x216);
     entry = buf.entries;
     entry[0].layer = 0;
     entry[0].flags = 0x12;
     entry[0].tex = table + 0x1dc;
     entry[0].mode = 4;
-    entry[0].x = lbl_803E1318;
-    entry[0].y = lbl_803E1318;
-    entry[0].z = lbl_803E1318;
+    entry[0].x = 0.0f;
+    entry[0].y = 0.0f;
+    entry[0].z = 0.0f;
     entry[1].layer = 0;
     entry[1].flags = 0x12;
     entry[1].tex = table + 0x1dc;
     entry[1].mode = 2;
-    entry[1].z = entry[1].x = lbl_803E131C;
-    entry[1].y = lbl_803E1320;
+    entry[1].z = entry[1].x = 0.22f;
+    entry[1].y = 0.3f;
     entry[2].layer = 1;
     entry[2].flags = 0x12;
     entry[2].tex = table + 0x1dc;
     entry[2].mode = 4;
-    entry[2].x = lbl_803E1324;
-    entry[2].y = lbl_803E1318;
-    entry[2].z = lbl_803E1318;
+    entry[2].x = 255.0f;
+    entry[2].y = 0.0f;
+    entry[2].z = 0.0f;
     entry[3].layer = 1;
     entry[3].flags = 0x12;
     entry[3].tex = table + 0x1dc;
     entry[3].mode = 0x400000;
-    entry[3].x = lbl_803E1318;
+    entry[3].x = 0.0f;
     if ((u32)extraArgs != 0)
     {
-        entry[3].y = lbl_803E1328;
+        entry[3].y = -7.0f;
     }
     else
     {
-        entry[3].y = lbl_803E132C;
+        entry[3].y = 7.0f;
     }
-    entry[3].z = lbl_803E1318;
+    entry[3].z = 0.0f;
     entry[4].layer = 1;
     entry[4].flags = 0x12;
     entry[4].tex = table + 0x1dc;
     entry[4].mode = 0x4000;
-    entry[4].x = lbl_803E1318;
+    entry[4].x = 0.0f;
     if ((u32)extraArgs != 0)
     {
-        entry[4].y = lbl_803E1330;
+        entry[4].y = 1.0f;
     }
     else
     {
-        entry[4].y = lbl_803E1334;
+        entry[4].y = -1.0f;
     }
-    entry[4].z = lbl_803E1318;
+    entry[4].z = 0.0f;
     entry[5].layer = 2;
     entry[5].flags = 0x12;
     entry[5].tex = table + 0x1dc;
     entry[5].mode = 4;
-    entry[5].x = lbl_803E1318;
-    entry[5].y = lbl_803E1318;
-    entry[5].z = lbl_803E1318;
+    entry[5].x = 0.0f;
+    entry[5].y = 0.0f;
+    entry[5].z = 0.0f;
     entry[6].layer = 2;
     entry[6].flags = 0x12;
     entry[6].tex = table + 0x1dc;
     entry[6].mode = 0x400000;
-    entry[6].x = lbl_803E1318;
+    entry[6].x = 0.0f;
     if ((u32)extraArgs != 0)
     {
-        entry[6].y = lbl_803E1328;
+        entry[6].y = -7.0f;
     }
     else
     {
-        entry[6].y = lbl_803E132C;
+        entry[6].y = 7.0f;
     }
-    entry[6].z = lbl_803E1318;
+    entry[6].z = 0.0f;
     entry[7].layer = 2;
     entry[7].flags = 0x12;
     entry[7].tex = table + 0x1dc;
     entry[7].mode = 0x4000;
-    entry[7].x = lbl_803E1318;
+    entry[7].x = 0.0f;
     if ((u32)extraArgs != 0)
     {
-        entry[7].y = lbl_803E1330;
+        entry[7].y = 1.0f;
     }
     else
     {
-        entry[7].y = lbl_803E1334;
+        entry[7].y = -1.0f;
     }
-    entry[7].z = lbl_803E1318;
+    entry[7].z = 0.0f;
     entry[8].layer = 2;
     entry[8].flags = 0x12;
     entry[8].tex = table + 0x1dc;
     entry[8].mode = 2;
-    entry[8].x = lbl_803E1330;
-    entry[8].y = lbl_803E1330;
-    entry[8].z = lbl_803E1330;
+    entry[8].x = 1.0f;
+    entry[8].y = 1.0f;
+    entry[8].z = 1.0f;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = *(f32*)&lbl_803E1318;
+    buf.pos[0] = 0.0f;
     if ((u32)extraArgs != 0)
     {
-        buf.pos[1] = lbl_803E1338;
+        buf.pos[1] = -2.0f;
     }
     else
     {
-        buf.pos[1] = lbl_803E133C;
+        buf.pos[1] = 2.0f;
     }
-    buf.pos[2] = *(f32*)&lbl_803E1318;
-    buf.col[0] = *(f32*)&lbl_803E1318;
-    buf.col[1] = *(f32*)&lbl_803E1318;
-    buf.col[2] = *(f32*)&lbl_803E1318;
-    buf.scale = lbl_803E1330;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 1.0f;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 0x12;
@@ -173,13 +163,13 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
         {
             buf.pos[0] += ((GameObject*)(buf.ctx))->anim.worldPosX;
             buf.pos[1] += ((GameObject*)(buf.ctx))->anim.worldPosY;
-            buf.pos[2] = lbl_803E1318 + ((GameObject*)(buf.ctx))->anim.worldPosZ;
+            buf.pos[2] = 0.0f + ((GameObject*)(buf.ctx))->anim.worldPosZ;
         }
         else
         {
             buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
             buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E1318 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[2] = 0.0f + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     if (variant == 0)

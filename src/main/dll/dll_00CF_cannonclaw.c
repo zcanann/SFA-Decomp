@@ -27,7 +27,6 @@ extern f32 lbl_803E2F30;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
 
-#pragma scheduling off
 void grimble_initialiseStateHandlerTables(void)
 {
     gGrimbleStateHandlersA[0] = grimble_stateHandlerA00;
@@ -47,7 +46,6 @@ void grimble_initialiseStateHandlerTables(void)
     gGrimbleStateHandlersB[4] = grimble_stateHandlerB04;
     gGrimbleStateHandlersB[5] = grimble_stateHandlerB05;
 }
-#pragma scheduling reset
 
 int cannonclaw_getExtraSize(void)
 {
@@ -62,8 +60,6 @@ void cannonclaw_free(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)

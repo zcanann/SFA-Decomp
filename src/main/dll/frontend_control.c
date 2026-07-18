@@ -42,8 +42,8 @@ extern f32 lbl_803E1D58;
 extern f32 lbl_803E1D5C;
 extern f32 lbl_803E1D60;
 extern char sFrontendTimeFormat[];
-__declspec(section ".sdata") extern char sFrontendCompletionPercentFormat[];
-__declspec(section ".sdata") extern char sFrontendSingleDigitFormat[];
+extern char sFrontendCompletionPercentFormat[];
+extern char sFrontendSingleDigitFormat[];
 extern void drawTexture(void* tex, f32 x, f32 y, int p2, int alpha);
 
 void saveFileSelect_checkCheatCodes(void)

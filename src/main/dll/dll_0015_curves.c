@@ -167,7 +167,6 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
     return 1;
 }
 
-#pragma opt_loop_invariants off
 void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision)
 {
     GameObject* object;
@@ -256,7 +255,6 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision)
     }
 }
 
-#pragma opt_loop_invariants reset
 void fn_800E56A4(GameObject* obj, CurvesCollisionState* collision)
 {
     RomCurvePoint* point;
@@ -335,7 +333,6 @@ void fn_800E56A4(GameObject* obj, CurvesCollisionState* collision)
     }
 }
 
-#pragma opt_common_subs off
 void fn_800E58FC(GameObject* obj, CurvesCollisionState* collision)
 {
     f32 sumY;
@@ -469,7 +466,6 @@ void fn_800E58FC(GameObject* obj, CurvesCollisionState* collision)
     }
 }
 
-#pragma dont_inline on
 void fn_800E5CBC(short* obj, int state)
 {
     CurvesCollisionState* collision;
@@ -521,7 +517,6 @@ void fn_800E5CBC(short* obj, int state)
     }
 }
 
-#pragma opt_common_subs reset
 void fn_800E5E38(GameObject* obj, CurvesCollisionState* collision)
 {
     u32 hitCount;
@@ -553,8 +548,6 @@ void fn_800E5E38(GameObject* obj, CurvesCollisionState* collision)
     }
 }
 
-#pragma dont_inline off
-#pragma opt_propagation off
 void fn_800E5F1C(GameObject* obj, CurvesCollisionState* collision)
 {
     int seg;
@@ -637,7 +630,6 @@ void fn_800E5F1C(GameObject* obj, CurvesCollisionState* collision)
     collision->resultFloorGap = collision->floorGap[0];
 }
 
-#pragma opt_propagation reset
 void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
 {
     u8 pointCount;
@@ -696,32 +688,30 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
     }
     if (pointCount > 1)
     {
-        if ((s32)(collision->flags & CURVES_COLLISION_STATE_KEEP_POSITION) != 0)
+        if ((s32)(collision->flags & CURVES_COLLISION_STATE_KEEP_POSITION) == 0)
         {
-            goto buildTransform;
+            zero = lbl_803E0668;
+            ((GameObject*)obj)->anim.localPosX = zero;
+            ((GameObject*)obj)->anim.localPosZ = zero;
+            pointIndex = 0;
+            localPoint = (f32*)collision;
+            pointLimit = pointCount * 3;
+            for (; pointIndex < pointLimit; pointIndex += 3)
+            {
+                ((GameObject*)obj)->anim.localPosX += localPoint[57];
+                ((GameObject*)obj)->anim.localPosZ += localPoint[59];
+                localPoint += 3;
+            }
+            averageScale = lbl_803E068C / pointCount;
+            ((GameObject*)obj)->anim.localPosX *= averageScale;
+            ((GameObject*)obj)->anim.localPosZ *= averageScale;
         }
-        zero = lbl_803E0668;
-        ((GameObject*)obj)->anim.localPosX = zero;
-        ((GameObject*)obj)->anim.localPosZ = zero;
-        pointIndex = 0;
-        localPoint = (f32*)collision;
-        pointLimit = pointCount * 3;
-        for (; pointIndex < pointLimit; pointIndex += 3)
-        {
-            ((GameObject*)obj)->anim.localPosX += localPoint[57];
-            ((GameObject*)obj)->anim.localPosZ += localPoint[59];
-            localPoint += 3;
-        }
-        averageScale = lbl_803E068C / pointCount;
-        ((GameObject*)obj)->anim.localPosX *= averageScale;
-        ((GameObject*)obj)->anim.localPosZ *= averageScale;
     }
     else if ((s32)(collision->flags & CURVES_COLLISION_STATE_KEEP_POSITION) == 0)
     {
         ((GameObject*)obj)->anim.localPosX = collision->localPointWorld[0][0];
         ((GameObject*)obj)->anim.localPosZ = collision->localPointWorld[0][2];
     }
-buildTransform:
     transform.rotX = ((GameObject*)obj)->anim.rotX;
     if ((s32)(collision->flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0)
     {

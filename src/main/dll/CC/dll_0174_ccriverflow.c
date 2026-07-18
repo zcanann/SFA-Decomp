@@ -11,8 +11,8 @@
 #include "main/dll/DF/DFcradle.h"
 #include "main/gamebits.h"
 
-__declspec(section ".sdata2") f32 lbl_803E4DD0 = 0.001953125f;
-__declspec(section ".sdata2") f32 lbl_803E4DD4 = 0.01f;
+f32 lbl_803E4DD0 = 0.001953125f;
+f32 lbl_803E4DD4 = 0.01f;
 
 int ccriverflow_getExtraSize(void)
 {

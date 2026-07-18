@@ -4,7 +4,6 @@
 #include "main/audio/vidlisttables.h"
 #include "main/audio/voice_prio.h"
 
-#pragma exceptions on
 
 typedef struct VoicePrioPrev
 {

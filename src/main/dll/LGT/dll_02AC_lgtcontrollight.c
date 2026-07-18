@@ -45,7 +45,6 @@ void ControlLight_hitDetect(void)
 {
 }
 
-#pragma optimization_level 1
 void ControlLight_update(GameObject* obj)
 {
     u8 newBit;
@@ -107,7 +106,6 @@ void ControlLight_update(GameObject* obj)
     state->lastBit = newBit;
 }
 
-#pragma optimization_level reset
 void ControlLight_init(GameObject* obj, int setup)
 {
     ControlLightSetup* setupData = (ControlLightSetup*)setup;

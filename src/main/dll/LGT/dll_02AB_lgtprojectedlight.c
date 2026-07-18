@@ -23,7 +23,7 @@ const f32 lbl_802C2618[4] = {0.0f, 0.0f, 1.0f, 0.0f};
 #define PROJECTEDLIGHT_DEFAULT_TEXTURE_ASSET 0x5dc
 #define PROJECTEDLIGHT_PROJECTION_ORTHO      0
 
-__declspec(section ".sdata2") f32 lbl_803E7260 = 1.0f;
+f32 lbl_803E7260 = 1.0f;
 
 int ProjectedLight_getExtraSize(void)
 {
@@ -65,7 +65,6 @@ void ProjectedLight_update(GameObject* obj)
     obj->anim.rotZ = (s16)((f32)(setup->rotZSpeed << 4) * timeDelta + (f32)obj->anim.rotZ);
 }
 
-#pragma opt_common_subs off
 void ProjectedLight_init(GameObject* obj, ProjectedLightSetup* setup)
 {
     PointLightVec vec;
@@ -160,7 +159,6 @@ void ProjectedLight_init(GameObject* obj, ProjectedLightSetup* setup)
                                                setupData->targetAlpha);
     }
 }
-#pragma opt_common_subs reset
 
 void ProjectedLight_release(void)
 {

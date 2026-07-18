@@ -194,9 +194,7 @@ void Ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing)
     }
     state->phase = 2;
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwing)
 {
     ObjAnimComponent* objAnim = &obj->anim;

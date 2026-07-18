@@ -39,8 +39,6 @@ void CameraModeShipBattle_free(void)
     gCamShipBattleState = 0;
 }
 
-#pragma opt_common_subs off
-#pragma opt_propagation off
 void CameraModeShipBattle_update(short* cam)
 {
     f32 fa;

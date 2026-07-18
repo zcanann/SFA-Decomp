@@ -118,6 +118,7 @@ void timer_update(GameObject* obj)
 {
     int textureId[1];
     int expiredThisFrame;
+    int runTail;
     TimerFlags* flags;
     TimerSetup* setup;
     TimerState* state;
@@ -125,6 +126,7 @@ void timer_update(GameObject* obj)
     setup = (TimerSetup*)(obj)->anim.placementData;
     flags = &state->flags;
 
+    runTail = 0;
     if (((int (*)(int))fn_80080150)((int)state) != 0)
     {
         expiredThisFrame = 0;
@@ -152,8 +154,9 @@ void timer_update(GameObject* obj)
         }
         if (expiredThisFrame == 0)
         {
-            goto tail;
+            runTail = 1;
         }
+        else
         {
             flags->expired = 1;
             switch (state->mode)
@@ -174,6 +177,7 @@ void timer_update(GameObject* obj)
     }
     else
     {
+        runTail = 1;
         if ((void*)mainGetBit(setup->startGameBit) != NULL || flags->manual != 0)
         {
             storeZeroToFloatParam(&state->countdownTimer);
@@ -197,12 +201,13 @@ void timer_update(GameObject* obj)
                 break;
             }
         }
-    tail:
+    }
+    if (runTail)
+    {
         if (state->mode == TIMER_MODE_EFFECT && ((int (*)(int))fn_80080150)((int)state) != 0)
         {
             ModelLight* light = state->lightSlot;
-            f32 glowAlpha; /* embedded-assign pins lbl_803DC41C to glowAlpha's reg */
-            int scroll = (int)((f32)(setup->durationMinutes * 60) / state->countdownTimer * (glowAlpha = lbl_803DC41C));
+            int scroll = (int)((f32)(setup->durationMinutes * 60) / state->countdownTimer * lbl_803DC41C);
             ObjTextureRuntimeSlot* texPtr = objFindTexture(obj, 0, 0);
             if (texPtr != 0)
             {

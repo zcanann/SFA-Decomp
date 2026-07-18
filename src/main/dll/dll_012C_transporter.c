@@ -76,7 +76,6 @@ ObjectDescriptor gTransporterObjDescriptor = {
     Transporter_getExtraSize,
 };
 
-#pragma opt_loop_invariants off
 int Transporter_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -268,7 +267,6 @@ int Transporter_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     warpPadFn_8019042c((GameObject*)obj);
     return 0;
 }
-#pragma opt_loop_invariants reset
 
 int Transporter_getExtraSize(void)
 {

@@ -64,8 +64,6 @@ void DFP_Torch_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-#pragma opt_common_subs off
-#pragma fp_contract off
 void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
 

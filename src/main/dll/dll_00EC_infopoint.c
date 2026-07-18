@@ -28,8 +28,6 @@
 extern int lbl_803219A0[];
 extern int lbl_80321990[];
 
-#pragma scheduling off
-#pragma peephole off
 int InfoPoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     InfopointState* state = obj->extra;

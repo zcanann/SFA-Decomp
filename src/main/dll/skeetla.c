@@ -96,7 +96,6 @@ extern u16 gSkeetlaFootstepSfxId2;
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 
-#pragma peephole off
 void trickyUpdateCollisionAndPathState(u8* obj)
 {
     TrickyState* state;
@@ -307,7 +306,6 @@ int trickyAdvanceRouteTargetAhead(int obj, RomCurveWalker* route, f32 speed)
     return 1;
 }
 
-#pragma optimization_level 2
 int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
 {
     u8* state;
@@ -373,7 +371,6 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
 
     return delta;
 }
-#pragma optimization_level reset
 
 static int skeetla_isInWater(u8* state)
 {
@@ -517,7 +514,7 @@ int trickyMove(u8* obj, f32* targetPos)
             ((TrickyState*)state)->cooldownC = lbl_803E2440;
             ((TrickyState*)state)->particleTimer = lbl_803E23DC;
             trickyDebugPrint(debugStrings + 0x184);
-            goto ret_one;
+            return 1;
         }
 
         if (((TrickyState*)state)->stateIndex == 1)
@@ -578,7 +575,7 @@ int trickyMove(u8* obj, f32* targetPos)
             objAnimFn_8013a3f0((int)obj, 1, lbl_803E2468, 0x3000000);
         }
         trickyDebugPrint(debugStrings + 0x1a0);
-        goto ret_one;
+        return 1;
     }
 
     previousYaw = ((GameObject*)obj)->anim.rotX;
@@ -649,7 +646,6 @@ int trickyMove(u8* obj, f32* targetPos)
     {
         return 0;
     }
-ret_one:
     return 1;
 }
 
@@ -889,8 +885,6 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
     return -1;
 }
 
-#pragma peephole on
-#pragma inline_max_size(100)
 void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
 {
     void* entry;
@@ -943,9 +937,7 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
     ((TrickyState*)state)->cachedRouteFlags = routeFlagValue;
     return entry;
 }
-#pragma inline_max_size reset
 
-#pragma peephole off
 void trickyRankLinkedRouteCandidates(u8* obj, u8* outRouteFlags, s16 linkSelector, void** outRoutes)
 {
     f32 bestDistances[TRICKY_ROUTE_CANDIDATE_COUNT];

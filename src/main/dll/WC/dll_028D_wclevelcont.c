@@ -36,7 +36,6 @@
 #define WCPUSHBLOCK_GAMEBIT_B_FADE   0x809
 #define WCPUSHBLOCK_GAMEBIT_B_COUNT  0x811
 
-#pragma dont_inline on
 void fn_802251B4(GameObject* obj, WcLevelControlState* state)
 {
     f32 sunTime;
@@ -195,9 +194,7 @@ void fn_802251B4(GameObject* obj, WcLevelControlState* state)
             mainSetBits(GAMEBIT_TrickyTalk, randomGetRange(6, 7));
     }
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void wcpushblock_updateLevelControlState(GameObject* obj, WcLevelControlState* state)
 {
     if (state->completionFlags & WCLEVELCTL_FLAG_EVENT_ACTIVE)
@@ -316,9 +313,7 @@ void wcpushblock_updateLevelControlState(GameObject* obj, WcLevelControlState* s
     }
     state->completionFlags &= ~WCLEVELCTL_FLAG_TRIGGERED;
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 int wclevelcont_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WcLevelControlState* state = obj->extra;
@@ -361,9 +356,7 @@ int wclevelcont_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     }
     return 0;
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, int dx, int dy)
 {
     int i;
@@ -457,7 +450,6 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
     }
     return 4;
 }
-#pragma dont_inline reset
 
 void wclevelcont_getSolvedTileXYB(s16 value, s16* outRow, s16* outCol)
 {
@@ -777,7 +769,6 @@ void wclevelcont_hitDetect(void)
 {
 }
 
-#pragma opt_common_subs off
 void wclevelcont_syncProgressBits(WcLevelControlState* state)
 {
     int flag;
@@ -821,9 +812,7 @@ void wclevelcont_syncProgressBits(WcLevelControlState* state)
     mainSetBits(0xf31, flag);
     SCGameBitLatch_Update(&state->gameBitLatch, 0x80, -1, -1, 0xf31, 0xaf);
 }
-#pragma opt_common_subs reset
 
-#pragma dont_inline on
 void wclevelcont_update(GameObject* obj)
 {
     WcLevelControlState* state = obj->extra;
@@ -864,7 +853,6 @@ void wclevelcont_update(GameObject* obj)
         mainSetBits(0x7f1, 1);
     }
 }
-#pragma dont_inline off
 
 void wclevelcont_init(GameObject* obj)
 {

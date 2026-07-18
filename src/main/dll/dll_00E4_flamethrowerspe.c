@@ -60,7 +60,6 @@ typedef struct FlamethrowerspeState
 extern f32 lbl_803E33A0;
 extern f32 lbl_803DBD60;
 extern void firepipe_releaseEffectObject(int* obj);
-#pragma explicit_zero_data on
 extern f32 lbl_803DBD68;
 extern f32 lbl_803DBD6C;
 extern int lbl_803DBD64;
@@ -119,7 +118,6 @@ void flamethrowerspe_hitDetect(void)
 {
 }
 
-#pragma opt_common_subs off
 void flamethrowerspe_update(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -156,7 +154,6 @@ void flamethrowerspe_update(int* obj)
         break;
     }
 }
-#pragma opt_common_subs reset
 
 void flamethrowerspe_init(int* obj, int* params)
 {

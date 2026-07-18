@@ -36,12 +36,11 @@ enum
     SPDRAPE_MOVE_CLOSE = 2
 };
 
-#pragma explicit_zero_data on
 #define SP_DRAPE_NEAR_RADIUS_SQ 4900.0f
 #define SP_DRAPE_LEAVE_RADIUS 8100.0f
 #define SP_DRAPE_REOPEN_PROGRESS 0.6f
 #define SP_DRAPE_PI 3.1415927f
-__declspec(section ".sdata2") f32 lbl_803E5AA0 = 0.0f;
+f32 lbl_803E5AA0 = 0.0f;
 
 ObjectDescriptor gSPDrapeObjDescriptor = {
     0,

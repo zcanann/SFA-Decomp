@@ -84,7 +84,6 @@ void AndrossBrain_hitDetect(void)
 {
 }
 
-#pragma opt_common_subs off
 void AndrossBrain_update(GameObject* obj)
 {
     AndrossBrainState* state = (obj)->extra;

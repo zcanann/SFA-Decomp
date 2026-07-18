@@ -49,9 +49,8 @@ extern void* gBoneParticleEffectBuffers[];
 extern f32 gBoneParticleDriftVelocity;
 union BoneParticleConstF32 { f32 f; };
 const union BoneParticleConstF32 lbl_803DF4A8 = { 0.0f };
-__declspec(section ".sdata2") f32 gBoneParticleDriftMax = 500.0f;
-__declspec(section ".sdata2") f32 lbl_803DF4B0 = -1.0f;
-__declspec(section ".sdata2") f32 gBoneParticleDriftMin = -500.0f;
+f32 gBoneParticleDriftMax = 500.0f;
+f32 gBoneParticleDriftMin = -500.0f;
 const union BoneParticleConstF32 lbl_803DF4B8 = { 1.0f };
 const union BoneParticleConstF32 lbl_803DF4BC = { 20.02f };
 
@@ -69,8 +68,6 @@ void boneParticleEffect_func08_nop(void)
 }
 
 /* scheduling-off intentionally stays in effect through end-of-file. Do not close. */
-#pragma scheduling off
-#pragma peephole off
 
 f32 gBoneParticleConfigTable[108] = {
     -1500.0f, 0.0f,     -1500.0f, -1500.0f, 0.0f,     1500.0f, 1500.0f, 0.0f,    1500.0f, 1500.0f,  0.0f,    -1500.0f,
@@ -85,7 +82,6 @@ f32 gBoneParticleConfigTable[108] = {
 };
 
 /* Per-bone particle vertex update + draw. */
-#pragma opt_propagation off
 void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
 {
     BoneFxVtx vtx;
@@ -139,13 +135,13 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     gBoneParticleDrift = gBoneParticleDriftVelocity * timeDelta + gBoneParticleDrift;
     if (gBoneParticleDrift > gBoneParticleDriftMax)
     {
-        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
+        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * -1.0f;
         gBoneParticleDrift = gBoneParticleDriftMax;
         Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_282);
     }
     else if (gBoneParticleDrift < gBoneParticleDriftMin)
     {
-        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
+        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * -1.0f;
         gBoneParticleDrift = gBoneParticleDriftMin;
         Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_282);
     }
@@ -295,12 +291,10 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     }
     gBoneParticleBufferFlip = 1 - gBoneParticleBufferFlip;
 }
-#pragma opt_propagation reset
 
 void boneParticleEffect_func06_nop(void)
 {
 }
-
 
 ParticleSlot gBoneParticleInitData[] = {
     {-500, -900, -500, 0, 0, 0, 255, 255, 255, 255},

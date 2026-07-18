@@ -2,7 +2,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 #include "main/audio/inp_midi.h"
 
-#pragma exceptions on
 
 typedef struct
 {
@@ -495,7 +494,6 @@ static inline SeqEvent* seqGetGlobalEvent(SeqQueue* section)
     return ev;
 }
 
-#pragma fp_contract off
 static inline f32 seq_fmod(f32 x, f32 y)
 {
     f32 ay;

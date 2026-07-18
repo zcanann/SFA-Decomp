@@ -80,7 +80,6 @@ void drakormissile_modelMtxFn(GameObject* obj)
     }
 }
 
-#pragma opt_common_subs off
 void drakormissile_startActiveLaunch(GameObject* obj)
 {
     ModelLightStruct* light;
@@ -113,7 +112,6 @@ void drakormissile_startActiveLaunch(GameObject* obj)
     Sfx_PlayFromObject((int)obj, DRAKORMISSILE_ACTIVE_SFX_B);
 }
 
-#pragma fp_contract off
 void drakormissile_startStraightLaunch(GameObject* obj, GameObject* from, GameObject* target, f32 speed)
 {
     ModelLightStruct* light;
@@ -191,8 +189,6 @@ void drakormissile_startStraightLaunch(GameObject* obj, GameObject* from, GameOb
     Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_173);
 }
 
-#pragma fp_contract reset
-#pragma opt_common_subs reset
 int drakormissile_setScale(GameObject* obj)
 {
     DrakorMissileState* state = obj->extra;

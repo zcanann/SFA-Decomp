@@ -1666,23 +1666,22 @@ u32 mapLoadDataFile(int mapId, int fileId)
             for (n = 0xf; n != 0; n--)
             {
                 if (mapId == grp[0])
-                    goto remap_found;
+                    break;
                 idx = idx + 1;
                 if (mapId == grp[1])
-                    goto remap_found;
+                    break;
                 idx = idx + 1;
                 if (mapId == grp[2])
-                    goto remap_found;
+                    break;
                 idx = idx + 1;
                 if (mapId == grp[3])
-                    goto remap_found;
+                    break;
                 idx = idx + 1;
                 if (mapId == grp[4])
-                    goto remap_found;
+                    break;
                 grp = grp + 5;
                 idx = idx + 1;
             }
-        remap_found:
             piRomLoadSection(0, idx, 0);
             if (mapId > 4)
             {
@@ -5044,13 +5043,15 @@ void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
         if (scanNode->point == point)
         {
             visited = scanNode->visited;
-            goto found;
+            break;
         }
         z[1] += 0x10;
         z[0]++;
     }
-    z[0] = -1;
-found:
+    if (n <= 0)
+    {
+        z[0] = -1;
+    }
     if (z[0] >= 0 && visited == 0)
     {
         PathSearchNode* node3 = &search->nodes[z[0]];
@@ -5535,7 +5536,7 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
     int sym;
     int type;
     int hlit;
-    volatile int final;
+    int final;
     int hclen;
     int hdist;
     u8* curLens;
@@ -5692,14 +5693,9 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
                     u8* cnts;
                     size = 7;
                     cnts = lbl_803DCD20;
-                blscan:
+                    while (cnts[size] == 0)
                     {
-                        int cb = cnts[size];
-                        if (cb == 0)
-                        {
-                            size--;
-                            goto blscan;
-                        }
+                        size--;
                     }
                     {
                         u8* t18;
@@ -5811,15 +5807,10 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
                     u16* scan;
                     lenMax = 0xf;
                     scan = (u16*)(((u8*)cnts94 + lenMax) + lenMax);
-                lmscan:
+                    while (*scan == 0)
                     {
-                        int cs = *scan;
-                        if (cs == 0)
-                        {
-                            scan -= 1;
-                            lenMax -= 1;
-                            goto lmscan;
-                        }
+                        scan -= 1;
+                        lenMax -= 1;
                     }
                     {
                         u16* t54 = lbl_80377954;
@@ -5861,15 +5852,9 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
                     distMax = 0xf;
                     cntsB4 = lbl_803778B4;
                     t74 = lbl_80377974;
-                dmscan:
+                    while (*(u16*)(((u8*)cntsB4 + distMax) + distMax) == 0)
                     {
-                        u16* pd = (u16*)(((u8*)cntsB4 + distMax) + distMax);
-                        int cd = *pd;
-                        if (cd == 0)
-                        {
-                            distMax -= 1;
-                            goto dmscan;
-                        }
+                        distMax -= 1;
                     }
                     j = 1;
                     code = 0;

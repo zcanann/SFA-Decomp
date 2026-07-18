@@ -47,7 +47,6 @@
 #include "main/resource.h"
 
 CloudActionRuntime lbl_8039AB28;
-__declspec(section ".data") u32 lbl_8039AB44;
 
 GameObject* lbl_803DD1F0[2];
 u8 cloudOverridePosition;
@@ -55,15 +54,7 @@ f32 lbl_803DD1E8;
 f32 lbl_803DD1E4;
 f32 lbl_803DD1E0;
 
-volatile f32 gCloudActionGlareQuadSize = 8000.0f;
-#pragma explicit_zero_data on
-f32 lbl_803DB784 = 0.0f;
-#pragma explicit_zero_data reset
-
-__declspec(section ".sdata2") f32 lbl_803DF2B0 = 0.0001f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803DF2B4 = 0.0f;
-#pragma explicit_zero_data reset
+f32 gCloudActionGlareQuadSize = 8000.0f;
 
 extern void fn_800412B8(int a, int b, int c);
 extern int shouldDrawClouds(void);
@@ -113,34 +104,25 @@ void* cloudGetLayerTextureSize(f32* out1, f32* out2)
         tex = objFindTexture((GameObject*)(lbl_8039AB28.mainCloudObj), 0, 0);
         if (tex != NULL)
         {
-            f32 scale = lbl_803DF2B0;
+            f32 scale = 0.0001f;
             *out1 = scale * tex->offsetS;
             *out2 = scale * tex->offsetT;
         }
         else
         {
-            f32 d = lbl_803DF2B4;
+            f32 d = 0.0f;
             *out1 = d;
             *out2 = d;
         }
         return textureIdxToPtr(*layer);
     }
     {
-        f32 d = lbl_803DF2B4;
+        f32 d = 0.0f;
         *out1 = d;
         *out2 = d;
     }
     return NULL;
 }
-
-const union CloudActionConstF32 lbl_803DF2C0 = { 300.0f };
-const union CloudActionConstF32 lbl_803DF2C4 = { 40.0f };
-const union CloudActionConstF32 lbl_803DF2C8 = { 0.5f };
-const union CloudActionConstF32 lbl_803DF2CC = { 2.0f };
-const union CloudActionConstF32 lbl_803DF2D0 = { 255.0f };
-const union CloudActionConstF32 lbl_803DF2D4 = { 1.0f };
-const union CloudActionConstF32 lbl_803DF2D8 = { 50.0f };
-const union CloudActionConstF32 lbl_803DF2DC = { 3.0f };
 
 void __kill_critical_regions(void)
 {
@@ -245,7 +227,7 @@ void renderClouds(int a, int b, int c, int d)
         if ((u32)gCloudOverridePositionValid != 0)
         {
             lbl_8039AB28.upperCloudObj->anim.localPosX = gCloudOverridePositionX;
-            lbl_8039AB28.upperCloudObj->anim.localPosY = lbl_803DF2C0.f + gCloudOverridePositionY;
+            lbl_8039AB28.upperCloudObj->anim.localPosY = 300.0f + gCloudOverridePositionY;
             lbl_8039AB28.upperCloudObj->anim.localPosZ = gCloudOverridePositionZ;
         }
         else
@@ -271,7 +253,7 @@ void renderClouds(int a, int b, int c, int d)
         v = view->x;
         lbl_8039AB28.mainCloudObj->anim.worldPosX = v;
         lbl_8039AB28.mainCloudObj->anim.localPosX = v;
-        v = lbl_803DF2C4.f + view->y;
+        v = 40.0f + view->y;
         lbl_8039AB28.mainCloudObj->anim.worldPosY = v;
         lbl_8039AB28.mainCloudObj->anim.localPosY = v;
         v = view->z;
@@ -298,7 +280,7 @@ void renderClouds(int a, int b, int c, int d)
     }
 
     cloudT = fn_8008ED88();
-    if (cloudT > lbl_803DF2B4)
+    if (cloudT > 0.0f)
     {
         fn_8008EDE8(pos);
         pos[0] -= playerMapOffsetX;
@@ -318,30 +300,30 @@ void renderClouds(int a, int b, int c, int d)
         GXLoadPosMtxImm(mtx, GX_PNMTX0);
         GXSetCurrentMtx(GX_PNMTX0);
         selectTexture((Texture*)fn_8008912C(), 0);
-        if (cloudT >= lbl_803DF2C8.f)
+        if (cloudT >= 0.5f)
         {
             _gxSetTevColor2(0x80, 0x80, 0xff, 0xff);
         }
         else
         {
-            _gxSetTevColor2(0x80, 0x80, 0xff, (int)(lbl_803DF2CC.f * (lbl_803DF2D0.f * cloudT)));
+            _gxSetTevColor2(0x80, 0x80, 0xff, (int)(2.0f * (255.0f * cloudT)));
         }
         if (getHudHiddenFrameCount() == 0)
         {
-            *(f32*)&gCloudActionGlareQuadSize = randomGetRange(0x1f40, 0x2ee0);
+            gCloudActionGlareQuadSize = randomGetRange(0x1f40, 0x2ee0);
         }
         GXBegin(GX_QUADS, GX_VTXFMT2, 4);
         v = -gCloudActionGlareQuadSize;
-        GXPos3f32(v, v, lbl_803DF2B4);
-        GXTex2f32(lbl_803DF2B4, lbl_803DF2B4);
-        GXPos3f32(gCloudActionGlareQuadSize, -gCloudActionGlareQuadSize, lbl_803DF2B4);
-        GXTex2f32(lbl_803DF2D4.f, lbl_803DF2B4);
+        GXPos3f32(v, v, 0.0f);
+        GXTex2f32(0.0f, 0.0f);
+        GXPos3f32(gCloudActionGlareQuadSize, -gCloudActionGlareQuadSize, 0.0f);
+        GXTex2f32(1.0f, 0.0f);
         v = gCloudActionGlareQuadSize;
-        GXPos3f32(gCloudActionGlareQuadSize, v, lbl_803DF2B4);
-        GXTex2f32(lbl_803DF2D4.f, lbl_803DF2D4.f);
+        GXPos3f32(gCloudActionGlareQuadSize, v, 0.0f);
+        GXTex2f32(1.0f, 1.0f);
         v = gCloudActionGlareQuadSize;
-        GXPos3f32(-v, v, lbl_803DF2B4);
-        GXTex2f32(lbl_803DF2B4, lbl_803DF2D4.f);
+        GXPos3f32(-v, v, 0.0f);
+        GXTex2f32(0.0f, 1.0f);
     }
 
     if (lbl_8039AB28.lowerCloudObj != NULL)
@@ -352,7 +334,7 @@ void renderClouds(int a, int b, int c, int d)
         if ((u32)gCloudOverridePositionValid != 0)
         {
             lbl_8039AB28.lowerCloudObj->anim.localPosX = gCloudOverridePositionX;
-            lbl_8039AB28.lowerCloudObj->anim.localPosY = gCloudOverridePositionY - lbl_803DF2D8.f;
+            lbl_8039AB28.lowerCloudObj->anim.localPosY = gCloudOverridePositionY - 50.0f;
             lbl_8039AB28.lowerCloudObj->anim.localPosZ = gCloudOverridePositionZ;
         }
         else
@@ -409,9 +391,9 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     }
     lbl_803DB618[0] = lbl_803DB618[1];
     lbl_803DB618[1] = (u16)val;
-    lbl_8039AB28.textureScrollStep = *(f32*)(state + 8) / lbl_803DF2DC.f;
+    lbl_8039AB28.textureScrollStep = *(f32*)(state + 8) / 3.0f;
     lbl_8039AB28.pad19 = 0;
-    if ((*(volatile u8*)(state + 0x59) & 4) != 0)
+    if ((*(u8*)(state + 0x59) & 4) != 0)
     {
         lbl_8039AB28.layerRenderEnabled = 0;
     }

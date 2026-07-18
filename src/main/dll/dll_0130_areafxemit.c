@@ -77,7 +77,6 @@ enum
         (args)->pos[2] += (obj)->objAnim.localPosZ;                                                                    \
     } while (0)
 
-#pragma dont_inline on
 void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
 {
     AreaFxEmitState* state;
@@ -123,7 +122,6 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
         }
     }
 }
-#pragma dont_inline reset
 
 void areafxemit_emitEffect(AreaFxEmitObject* obj)
 {

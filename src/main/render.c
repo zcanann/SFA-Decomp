@@ -99,9 +99,7 @@ f32 gRenderSinTable[513] = {
     0.9987949728965759f, 0.9989410042762756f, 0.9990779757499695f, 0.9992049932479858f, 0.9993219971656799f, 0.9994310140609741f, 0.9995290040969849f, 0.9996190071105957f,
     0.9996989965438843f, 0.9997689723968506f, 0.9998310208320618f, 0.9998819828033447f, 0.9999250173568726f, 0.9999579787254333f, 0.9999809861183167f, 0.9999949932098389f,
     1.0f};
-#pragma explicit_zero_data on
 u8 lbl_802C3564[0x1964] = {0};
-#pragma explicit_zero_data off
 
 typedef struct EnvfxActEntry {
     u8 pad0[0x2a];
@@ -430,14 +428,10 @@ void fn_80007F78(ObjAnimState* anim, s16* dst, s16* out)
         outPos += 2;
 
         sample = 0;
-        if ((hw & 0x10) == 0)
-        {
-            sample = 0;
-            goto storeSecond;
-        }
-        else
+        if ((hw & 0x10) != 0)
         {
             u64 nib3;
+            int skipSecond = 0;
 
             h = *(u16*)(u32)tp;
             if ((h & 0x10) != 0)
@@ -456,8 +450,7 @@ void fn_80007F78(ObjAnimState* anim, s16* dst, s16* out)
                 tp += 2;
                 if (((u32)h & 0x20) == 0)
                 {
-                    sample = 0;
-                    goto storeSecond;
+                    skipSecond = 1;
                 }
                 else
                 {
@@ -465,7 +458,7 @@ void fn_80007F78(ObjAnimState* anim, s16* dst, s16* out)
                 }
             }
             nib3 = h & 0xf;
-            if (nib3 != 0)
+            if (!skipSecond && nib3 != 0)
             {
                 u64 masked2 = h & 0xFFF0;
                 bitpos += nib3;
@@ -486,9 +479,11 @@ void fn_80007F78(ObjAnimState* anim, s16* dst, s16* out)
                 bufA <<= (nib3 & 0xFFFFFFFF);
                 bufB <<= (nib3 & 0xFFFFFFFF);
             }
-            tp += 2;
+            if (!skipSecond)
+            {
+                tp += 2;
+            }
         }
-    storeSecond:
         *dst = sample;
         dst++;
     } while ((u64)(u32)dst != end);

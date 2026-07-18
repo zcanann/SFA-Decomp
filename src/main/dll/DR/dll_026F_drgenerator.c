@@ -122,43 +122,30 @@ void drgenerator_update(GameObject* obj)
     {
         state->flags.b4 = 1;
     }
-    if (state->flags.b4 != 0)
+    if (state->flags.b4 == 0)
     {
-        goto loop;
+        if (state->flags.b3 == 0 && mainGetBit(placement->watchGameBit) == 0)
+        {
+            if ((obj)->anim.seqId != 0x72e)
+            {
+                (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
+            }
+            state->flags.b3 = 1;
+            state->flags.b0 = 0;
+            ObjHits_DisableObject((int)obj);
+            return;
+        }
+        if (state->flags.b3 != 0 && mainGetBit(placement->watchGameBit) != 0)
+        {
+            if ((obj)->anim.seqId != 0x72e)
+            {
+                (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
+            }
+            state->flags.b3 = 0;
+            ObjHits_EnableObject((int)obj);
+            return;
+        }
     }
-    if (state->flags.b3 != 0)
-    {
-        goto enable;
-    }
-    if (mainGetBit(placement->watchGameBit) != 0)
-    {
-        goto enable;
-    }
-    if ((obj)->anim.seqId != 0x72e)
-    {
-        (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
-    }
-    state->flags.b3 = 1;
-    state->flags.b0 = 0;
-    ObjHits_DisableObject((int)obj);
-    return;
-enable:
-    if (state->flags.b3 == 0)
-    {
-        goto loop;
-    }
-    if (mainGetBit(placement->watchGameBit) == 0)
-    {
-        goto loop;
-    }
-    if ((obj)->anim.seqId != 0x72e)
-    {
-        (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
-    }
-    state->flags.b3 = 0;
-    ObjHits_EnableObject((int)obj);
-    return;
-loop:
     if (state->flags.b0 == 0)
     {
         return;

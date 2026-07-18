@@ -5,7 +5,6 @@
 #include "main/audio/hw_stream.h"
 #include "main/audio/hw_samplemem_api.h"
 
-#pragma exceptions on
 
 SynthVirtualSampleState synthVirtualSampleState;
 

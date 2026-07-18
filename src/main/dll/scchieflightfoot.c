@@ -35,19 +35,8 @@ typedef struct SHthorntailDustEffectParams
 #define DUST_SPAWN_CHANCE_RANGE 0x1e0
 #define DUST_BURST_PUFF_COUNT   0xf
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5460 = 0.0f;
-#pragma explicit_zero_data reset
-__declspec(section ".sdata2") f32 lbl_803E5464 = 55.0f;
-__declspec(section ".sdata2") f32 lbl_803E5468 = 120.0f;
-__declspec(section ".sdata2") f32 lbl_803E546C = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E5470 = 360.0f;
-__declspec(section ".sdata2") f32 lbl_803E5474 = 3.0f;
-__declspec(section ".sdata2") f32 gChiefLightfootDustCloudScale = 0.0009f;
-__declspec(section ".sdata2") f32 lbl_803E547C = 240.0f;
-__declspec(section ".sdata2") f32 lbl_803E5480 = 420.0f;
-__declspec(section ".sdata2") f32 gChiefLightfootDustBurstScale = 0.00036f;
-__declspec(section ".sdata2") f32 lbl_803E5488 = 480.0f;
+f32 gChiefLightfootDustCloudScale = 0.0009f;
+f32 gChiefLightfootDustBurstScale = 0.00036f;
 
 void SHthorntail_updateDustEffects(SHthorntailObject* obj)
 {
@@ -58,36 +47,36 @@ void SHthorntail_updateDustEffects(SHthorntailObject* obj)
 
     playerObj = Obj_GetPlayerObject();
     runtime = obj->runtime;
-    effectParams.position.x = lbl_803E5460;
-    effectParams.position.y = lbl_803E5464;
-    effectParams.position.z = lbl_803E5460;
+    effectParams.position.x = 0.0f;
+    effectParams.position.y = 55.0f;
+    effectParams.position.z = 0.0f;
     effectParams.effectType = DUST_PUFF_PARAM_TYPE;
     effectParams.count = 1;
     if ((runtime->dustEffectFlags & SHTHORNTAIL_DUST_FLAG_ACTIVE) != 0)
     {
-        if (runtime->dustEffectTimer < lbl_803E5468)
+        if (runtime->dustEffectTimer < 120.0f)
         {
-            if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < runtime->dustEffectTimer * lbl_803E546C)
+            if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < runtime->dustEffectTimer * 0.5f)
             {
                 (*gPartfxInterface)->spawnObject(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
             }
         }
-        else if (runtime->dustEffectTimer < lbl_803E5470)
+        else if (runtime->dustEffectTimer < 360.0f)
         {
-            if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < runtime->dustEffectTimer / lbl_803E5474)
+            if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < runtime->dustEffectTimer / 3.0f)
             {
                 (*gPartfxInterface)->spawnObject(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
             }
             effectParams.radius = 0x28;
             effectParams.flags = 0;
             effectParams.scale =
-                gChiefLightfootDustCloudScale * ((runtime->dustEffectTimer - lbl_803E5468) / lbl_803E547C);
+                gChiefLightfootDustCloudScale * ((runtime->dustEffectTimer - 120.0f) / 240.0f);
             (*gPartfxInterface)->spawnObject(playerObj, DUST_CLOUD_EFFECT_ID, &effectParams, 2, -1, NULL);
             runtime->dustEffectFlags = runtime->dustEffectFlags | SHTHORNTAIL_DUST_FLAG_BURST_READY;
         }
-        else if (runtime->dustEffectTimer < lbl_803E5480)
+        else if (runtime->dustEffectTimer < 420.0f)
         {
-            if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < runtime->dustEffectTimer * lbl_803E546C)
+            if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < runtime->dustEffectTimer * 0.5f)
             {
                 (*gPartfxInterface)->spawnObject(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
             }
@@ -104,12 +93,12 @@ void SHthorntail_updateDustEffects(SHthorntailObject* obj)
         }
         else
         {
-            if (runtime->dustEffectTimer < lbl_803E5488)
+            if (runtime->dustEffectTimer < 480.0f)
             {
             }
             else
             {
-                runtime->dustEffectTimer = lbl_803E5460;
+                runtime->dustEffectTimer = 0.0f;
                 runtime->dustEffectFlags = runtime->dustEffectFlags & ~SHTHORNTAIL_DUST_FLAG_ACTIVE;
             }
         }

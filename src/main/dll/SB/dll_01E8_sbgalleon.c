@@ -204,8 +204,8 @@ void fn_801E1588(int obj, int state)
         int v2 = gSbGalleonSkyColorAStart[2];
         gSbGalleonSkyColorA[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorAEnd[2] - v2);
     }
-    skyFn_800895e0Legacy(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorA[0],
-                   *(volatile u8*)&gSbGalleonSkyColorA[1], *(volatile u8*)&gSbGalleonSkyColorA[2], 0x40, 0x40);
+    skyFn_800895e0Legacy(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorA[0],
+                   gSbGalleonSkyColorA[1], gSbGalleonSkyColorA[2], 0x40, 0x40);
     {
         int v0 = lbl_803DC078[0];
         gSbGalleonSkyColorB[0] = v0 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[0] - v0);
@@ -218,8 +218,8 @@ void fn_801E1588(int obj, int state)
         int v2 = lbl_803DC078[2];
         gSbGalleonSkyColorB[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[2] - v2);
     }
-    fn_80089510(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorB[0],
-                *(volatile u8*)&gSbGalleonSkyColorB[1], *(volatile u8*)&gSbGalleonSkyColorB[2]);
+    fn_80089510(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorB[0],
+                gSbGalleonSkyColorB[1], gSbGalleonSkyColorB[2]);
     {
         int v0 = gSbGalleonSkyColorCStart[0];
         gSbGalleonSkyColorC[0] = v0 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorCEnd[0] - v0);
@@ -232,8 +232,8 @@ void fn_801E1588(int obj, int state)
         int v2 = gSbGalleonSkyColorCStart[2];
         gSbGalleonSkyColorC[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorCEnd[2] - v2);
     }
-    fn_80089578(SBGALLEON_SKY_LIGHT_SLOT, *(volatile u8*)&gSbGalleonSkyColorC[0],
-                *(volatile u8*)&gSbGalleonSkyColorC[1], *(volatile u8*)&gSbGalleonSkyColorC[2]);
+    fn_80089578(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorC[0],
+                gSbGalleonSkyColorC[1], gSbGalleonSkyColorC[2]);
     lbl_803DDC2D = lbl_803DDC28 * lbl_803E57E0 + lbl_803E57F0;
     skySetOverrideLightDirectionEnabled(1);
     skySetOverrideLightDirection(lbl_803DDC28 * (d.x - c.x) + c.x, lbl_803DDC28 * (d.y - c.y) + c.y,

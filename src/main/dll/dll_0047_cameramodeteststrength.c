@@ -34,7 +34,6 @@ extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
 
 extern f32 lbl_803E18BC;
 
-#pragma dont_inline on
 u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
 {
     u8 flags;

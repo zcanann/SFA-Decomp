@@ -40,7 +40,6 @@ extern f32 lbl_803E138C;
 extern f32 lbl_803E1390;
 extern f32 lbl_803E1394;
 
-#pragma opt_propagation off
 void dll_9A_func03(int target, int variant, int parent, u32 flags)
 {
     ScreenSeq seq;

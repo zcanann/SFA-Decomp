@@ -73,11 +73,6 @@ typedef struct MmpMoonrockPlacement
     u8 pad22[0x28 - 0x22];
 } MmpMoonrockPlacement;
 
-
-
-
-
-#pragma dont_inline on
 int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2)
 {
     TrackGroundHit** results;
@@ -128,7 +123,6 @@ void fn_801A79E0(GameObject* obj)
         saveGame_saveObjectPos((GameObject*)obj);
     }
 }
-#pragma dont_inline reset
 void fn_801A7B10(GameObject* obj)
 {
     MmpMoonrockState* state = obj->extra;
@@ -221,7 +215,6 @@ void fn_801A7B10(GameObject* obj)
         obj->anim.velocityZ = zeroVel;
     }
 }
-#pragma dont_inline on
 void fn_801A7CC4(GameObject* obj)
 {
     MmpMoonrockState* state = obj->extra;
@@ -252,9 +245,6 @@ void fn_801A7CC4(GameObject* obj)
     vecRotateZXY(&rotIn, &obj->anim.velocityX);
     state->flags |= MOONROCK_FLAG_THROWN;
 }
-#pragma dont_inline reset
-
-
 
 void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
 {
@@ -288,13 +278,8 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
                     mainSetBits(odef->placedGameBit, 0);
                 }
                 kind = state->kind;
-                if (kind == 3)
-                    goto dec;
-                if (kind == 4)
-                    goto dec;
-                if (kind == 6)
+                if (kind == 3 || kind == 4 || kind == 6)
                 {
-                dec:
                     pedestalCount -= 1;
                 }
                 else
@@ -342,13 +327,8 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
                     state->kind = odef->kindGameBit;
                 }
                 kind = state->kind;
-                if (kind == 3)
-                    goto held;
-                if (kind == 4)
-                    goto held;
-                if (kind == 6)
+                if (kind == 3 || kind == 4 || kind == 6)
                 {
-                held:
                     if (mode != 2)
                     {
                         pedestalCount = pedestalCount + 1;
@@ -396,7 +376,6 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
     }
 }
 
-
 void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z)
 {
     (obj)->anim.localPosX = x;
@@ -404,8 +383,6 @@ void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z)
     (obj)->anim.localPosZ = z;
     saveGame_saveObjectPos((GameObject*)obj);
 }
-
-
 
 void fn_801A80F0(GameObject* obj, u8 flag)
 {
@@ -422,7 +399,6 @@ void fn_801A80F0(GameObject* obj, u8 flag)
     }
 }
 
-
 int mmp_moonrock_getExtraSize(void)
 {
     return 0x30;
@@ -437,8 +413,6 @@ void mmp_moonrock_free(int obj)
     ObjGroup_RemoveObject((u32)obj, MMPMOONROCK_OBJGROUP);
     (*gCarryableInterface)->free(obj);
 }
-
-
 
 void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -548,6 +522,7 @@ void mmp_moonrock_update(GameObject* obj)
             i = 0;
             list = (u32*)def;
             k = 40.0f;
+            found = 1;
             for (; i < count; i++)
             {
                 GameObject* other = (GameObject*)*list;
@@ -556,13 +531,11 @@ void mmp_moonrock_update(GameObject* obj)
                 {
                     (*gCarryableInterface)->setVisible(stateCopy, 1);
                     found = 0;
-                    goto checked;
+                    break;
                 }
                 list++;
             }
         }
-        found = 1;
-    checked:
         if (found != 0)
         {
             state->flags |= MOONROCK_FLAG_PICKUP_PENDING;

@@ -46,7 +46,6 @@ void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData);
 void CameraModeNpcSpeak_release(void);
 void CameraModeNpcSpeak_initialise(void);
-#pragma auto_inline off
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ)
 {
     CameraModeNpcSpeakState* state = gCamNpcSpeakState;

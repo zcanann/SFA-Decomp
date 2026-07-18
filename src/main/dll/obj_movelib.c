@@ -114,7 +114,6 @@ int Obj_UpdateLightningCluster(GameObject* obj, LightningEffect** entries, int c
     return 1;
 }
 
-#pragma opt_loop_invariants off
 int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, const Vec3f* targetPos, Vec3f* outPos)
 {
     f32 pos[3];
@@ -153,7 +152,6 @@ int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, const Vec3f* targetPos, V
     return voxmaps_traceLine((VoxPos*)gridA, (VoxPos*)gridB, (VoxPos*)gridOut, NULL, 0) != 0;
 }
 
-#pragma opt_loop_invariants reset
 int voxmaps_traceWorldLine(void* startPos, void* endPos)
 {
     int grid1[2];
@@ -200,7 +198,6 @@ void Obj_SpawnHitLightAndFade(GameObject* obj, const Vec3f* pos, f32 scale)
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
-#pragma optimization_level 2
 void Obj_SteerVelocityTowardVector(GameObject* obj, Vec3f* currentVelocity, Vec3f* desiredDirection, f32 maxSpeed,
                                    f32 maxSpeedDelta, f32 maxTurnAngle)
 {
@@ -266,7 +263,6 @@ void Obj_SteerVelocityTowardVector(GameObject* obj, Vec3f* currentVelocity, Vec3
     obj->anim.velocityZ = n2[2] * t;
 }
 
-#pragma optimization_level reset
 int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* obj, RomCurveWalker* route, f32 advanceStep,
                                             f32 arriveRadius, f32 speed, int flag, int* pickIdx)
 {
@@ -356,7 +352,6 @@ int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, RomCurveWalker* route, f32
     return result;
 }
 
-#pragma opt_common_subs off
 void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, const Vec3f* velocity, int turnFrames, f32 rollFactor,
                                         f32 pitchFactor)
 {

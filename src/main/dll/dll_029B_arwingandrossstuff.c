@@ -63,7 +63,6 @@ ObjectDescriptor gArwingAndrossStuffObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)arwingandrossstuff_getExtraSize,
 };
 
-#pragma opt_common_subs off
 void arwprojectile_createLinkedEffect(GameObject* obj, u8 enable)
 {
     ArwProjectileState* state = (obj)->extra;
@@ -99,7 +98,6 @@ void arwprojectile_createLinkedEffect(GameObject* obj, u8 enable)
     }
     modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
 }
-#pragma opt_common_subs reset
 
 void arwprojectile_placeForward(GameObject* obj, f32 dist)
 {

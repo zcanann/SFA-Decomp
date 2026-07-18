@@ -446,7 +446,6 @@ void shop_update(GameObject* obj)
     }
 }
 
-#pragma inline_max_size(1000)
 static inline void shop_initBody(GameObject* obj, int objDef)
 {
     u8* item;
@@ -463,7 +462,6 @@ static inline void shop_initBody(GameObject* obj, int objDef)
     (obj)->userData2 = 0;
     mainSetBits(GAMEBIT_PlayerInShop, 1);
 }
-#pragma inline_max_size reset
 
 void shop_init(GameObject* obj, int objDef)
 {

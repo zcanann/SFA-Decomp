@@ -204,7 +204,6 @@ typedef struct TexLayer
     u8 pad7;
 } TexLayer;
 
-#pragma opt_common_subs off
 void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* bitReader, Mtx viewMtx)
 {
     Mtx passMtx;
@@ -269,7 +268,6 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* b
         GXCallDisplayList(((MapBlockBoundsRec*)rec[0])->dlist, (u32)((MapBlockBoundsRec*)rec[0])->dlistSize);
     }
 }
-#pragma opt_common_subs reset
 
 int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
 {
@@ -573,12 +571,12 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
         rec[0] = (int)&((MapBlockData*)block)->bounds[(bits >> (bitPos & 7)) & 0xff];
         if ((shader != NULL) && ((SHADER_FLAGS(shader) & 2) != 0))
         {
-            goto end;
+            return;
         }
         if (mapBlockBounds_ComputeAndTestPlanes(rec[0], block, (FrustumPlane*)(texGlobals + 0x987c), FRUSTUM_PLANE_COUNT,
                                                 &minX, &minY, &minZ, &maxX, &maxY, &maxZ) == 0)
         {
-            goto end;
+            return;
         }
         if ((u8)passSelect == 0)
         {
@@ -706,7 +704,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                         }
                         if ((u8)visible == 0)
                         {
-                            goto end;
+                            return;
                         }
                         fn_8004D230();
                     }
@@ -726,12 +724,9 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                 lbl_803DCE30 = lbl_803DCE30 + 1;
             }
         }
-    end:
-        return;
     }
 }
 
-#pragma opt_common_subs off
 void mapBlockRender_setupShaderTextures(int shader, int mode)
 {
     int layerIdx;
@@ -764,19 +759,21 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                     if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) && ((int)ovrByte == ovr->layerByte))
                     {
                         texId = textureCrazyPointerFollowFn_80054c30((int*)layerTexId, base[overrideIdx].ptr);
-                        goto layer0_done;
+                        break;
                     }
                     ovr = ovr + 1;
                     overrideIdx = overrideIdx + 1;
                 }
-                texId = layerTexId;
+                if (remain == 0)
+                {
+                    texId = layerTexId;
+                }
             }
             else
             {
                 texId = *layer;
             }
         }
-    layer0_done:
         if (((TexLayer*)layer)->mtxIndex != 0xff)
         {
             ((void (*)(f32, f32*, f32, f32))PSMTXTrans)(
@@ -808,19 +805,21 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                     if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) && ((int)ovrByte == ovr->layerByte))
                     {
                         texId = textureCrazyPointerFollowFn_80054c30((int*)layerTexId, base[overrideIdx].ptr);
-                        goto layer1_done;
+                        break;
                     }
                     ovr = ovr + 1;
                     overrideIdx = overrideIdx + 1;
                 }
-                texId = layerTexId;
+                if (remain == 0)
+                {
+                    texId = layerTexId;
+                }
             }
             else
             {
                 texId = *layer;
             }
         }
-    layer1_done:
         if (((TexLayer*)layer)->mtxIndex != 0xff)
         {
             ((void (*)(f32, f32*, f32, f32))PSMTXTrans)(
@@ -858,18 +857,20 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                                 ((int)ovrLayerByte == ovr->layerByte))
                             {
                                 texId = textureCrazyPointerFollowFn_80054c30((int*)layerTexId, base[overrideIdx].ptr);
-                                goto layerN_done;
+                                break;
                             }
                             ovr = ovr + 1;
                             overrideIdx = overrideIdx + 1;
                         }
-                        texId = layerTexId;
+                        if (remain == 0)
+                        {
+                            texId = layerTexId;
+                        }
                     }
                     else
                     {
                         texId = layerTexId;
                     }
-                layerN_done:
                     if (((TexLayer*)layer)->mtxIndex != 0xff)
                     {
                         float* mvec;

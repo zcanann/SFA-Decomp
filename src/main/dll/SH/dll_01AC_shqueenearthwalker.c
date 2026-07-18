@@ -81,7 +81,6 @@ ObjectDescriptor gSH_queenearthwalkerObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)sh_queenearthwalker_getExtraSize,
 };
 
-#pragma dont_inline on
 void openPortalFn_801d4364(GameObject* obj, void* state)
 {
     void* player;
@@ -122,7 +121,6 @@ void openPortalFn_801d4364(GameObject* obj, void* state)
     ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
     fn_8003B500FloatLegacy(obj, (s16*)((int)state + 0x8), lbl_803E53F8);
 }
-#pragma dont_inline reset
 
 void queenFeedFn_801d44a4(GameObject* obj, void* state)
 {

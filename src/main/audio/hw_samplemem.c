@@ -1,7 +1,6 @@
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/dsp_voice_state.h"
 
-#pragma exceptions on
 
 extern u32 dspHRTFOn;
 extern void* (*gSalMallocHook)(u32 size);
@@ -21,23 +20,21 @@ void hwSaveSample(u32** sample, void** ptr)
         if (type < 3)
         {
             if (type >= 2)
-                goto size_double;
-            if (type >= 0)
-                goto size_adpcm;
-            goto save;
+            {
+                size <<= 1;
+            }
+            else if (type >= 0)
+            {
+                adjusted = size + 0xd;
+                size = (adjusted / 7 * 4) & ~7;
+            }
         }
-        else if (type >= 6)
+        else if (type < 6)
         {
-            goto save;
+            adjusted = size + 0xd;
+            size = (adjusted / 7 * 4) & ~7;
         }
-    size_adpcm:
-        adjusted = size + 0xd;
-        size = (adjusted / 7 * 4) & ~7;
-        goto save;
-    size_double:
-        size <<= 1;
     }
-save:
     *ptr = (void*)aramStoreData(*ptr, size);
 }
 
@@ -56,23 +53,21 @@ void hwRemoveSample(u32* sample, void* ptr)
         if (type < 3)
         {
             if (type >= 2)
-                goto size_double;
-            if (type >= 0)
-                goto size_adpcm;
-            goto remove;
+            {
+                size <<= 1;
+            }
+            else if (type >= 0)
+            {
+                adjusted = size + 0xd;
+                size = (adjusted / 7 * 4) & ~7;
+            }
         }
-        else if (type >= 6)
+        else if (type < 6)
         {
-            goto remove;
+            adjusted = size + 0xd;
+            size = (adjusted / 7 * 4) & ~7;
         }
-    size_adpcm:
-        adjusted = size + 0xd;
-        size = (adjusted / 7 * 4) & ~7;
-        goto remove;
-    size_double:
-        size <<= 1;
     }
-remove:
     aramRemoveData(ptr, size);
 }
 

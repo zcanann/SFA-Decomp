@@ -26,7 +26,6 @@
 #define HUD_STATE_WORLDMAP 5
 #define HUD_STATE_HIDDEN 6
 
-#pragma scheduling off
 void fn_801AC01C(GameObject *obj)
 {
     int state = *(int*)&(obj)->extra;

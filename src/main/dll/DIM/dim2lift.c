@@ -81,8 +81,6 @@ typedef struct DIM2icicleBlueWhiteEffectPlacement
 STATIC_ASSERT(sizeof(DIM2icicleBlueWhiteEffectPlacement) == 0x24);
 
 
-#pragma peephole off
-#pragma scheduling off
 int DIMbossAnim_updatePlayerHitReaction(GameObject* obj, int runtime)
 {
     u16 dirSector;

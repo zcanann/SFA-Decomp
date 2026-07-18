@@ -64,7 +64,6 @@ typedef struct FireflyState
     f32 planeAnchorZ; /* 0x364 */
 } FireflyState;
 
-#pragma opt_common_subs off
 void fn_80154870(GameObject* obj, int* state)
 {
     RomCurveWalker* curve;
@@ -163,7 +162,6 @@ void fn_80154870(GameObject* obj, int* state)
                         (f32)(obj)->anim.rotY);
     ((void (*)(int, int*))fn_80154328)((int)obj, state);
 }
-#pragma opt_common_subs reset
 
 void fn_80154C24(GameObject* obj, int state)
 {

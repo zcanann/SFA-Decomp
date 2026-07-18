@@ -40,7 +40,6 @@ void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int f
 extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8015355C(GameObject* obj, int state);
 
-#pragma dont_inline on
 void fn_80153640(GameObject* obj, int state)
 {
     ObjPlacement* fx;

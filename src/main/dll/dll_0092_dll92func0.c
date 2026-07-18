@@ -37,7 +37,6 @@ extern f32 lbl_803E1230;
 extern f32 lbl_803E1234;
 extern f32 lbl_803E1238;
 
-#pragma inline_max_size(2000)
 static inline void dll_92_func03Body(u8* base, int sourceObj, int variant, int posSource, u32 flags, u32 arg5,
                                      f32* extraArgs)
 {

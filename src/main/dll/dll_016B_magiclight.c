@@ -34,9 +34,6 @@ typedef struct MagicLightPlacement
     s16 subtypeParam; /* 0x1a */
 } MagicLightPlacement;
 
-
-#pragma scheduling off
-#pragma peephole off
 int MagicLight_SeqFn(int* obj)
 {
     MagicLightState* state;
@@ -63,7 +60,6 @@ int MagicLight_SeqFn(int* obj)
     return 0;
 }
 
-#pragma scheduling on
 int MagicLight_getExtraSize(int* obj)
 {
     if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW)
@@ -71,7 +67,6 @@ int MagicLight_getExtraSize(int* obj)
     return 0x14;
 }
 
-#pragma scheduling off
 int MagicLight_getObjectTypeId(void)
 {
     return 0x0;
@@ -90,7 +85,6 @@ void MagicLight_free(GameObject* obj)
     }
 }
 
-#pragma scheduling on
 void MagicLight_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     if ((obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW && visible != 0)
@@ -99,13 +93,10 @@ void MagicLight_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visib
     }
 }
 
-#pragma peephole on
 void MagicLight_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void MagicLight_update(GameObject* obj)
 {
     if (obj->anim.seqId != MAGICLIGHT_SEQ_GLOW && obj->userData1 == 0)
@@ -166,8 +157,6 @@ void MagicLight_init(int* obj, u8* params)
     }
 }
 
-#pragma scheduling on
-#pragma peephole on
 void MagicLight_release(void)
 {
 }

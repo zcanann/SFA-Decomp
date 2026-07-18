@@ -73,7 +73,6 @@ ObjectDescriptor gEdibleMushroomObjDescriptor = {
     EdibleMushroom_getExtraSize,
 };
 
-#pragma optimization_level 2
 void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 {
     GameObject* player;
@@ -462,7 +461,6 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
 
     objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, 0.0f, ((GameObject*)obj)->anim.velocityZ * timeDelta);
 }
-#pragma optimization_level reset
 
 s16 fn_801D129C(u8* obj, GameObject* player, u8* state, f32 dist)
 {
@@ -579,7 +577,6 @@ void EdibleMushroom_hitDetect(u8* obj)
     }
 }
 
-#pragma opt_loop_invariants off
 void EdibleMushroom_update(u8* self)
 {
     u8* state;
@@ -598,7 +595,7 @@ void EdibleMushroom_update(u8* self)
     enemy = (u8*)getTrickyObject();
 
     if (objIsFrozen(self) != 0)
-        goto end;
+        return;
 
     if (((EdibleMushroomState*)state)->animState == 8)
     {
@@ -620,7 +617,7 @@ void EdibleMushroom_update(u8* self)
             }
             Sfx_PlayFromObject((u32)self, SFXTRIG_cam90_c);
         }
-        goto end;
+        return;
     }
 
     if (((EdibleMushroomState*)state)->seqResetPending != 0)
@@ -677,10 +674,7 @@ void EdibleMushroom_update(u8* self)
         }
     }
     edibleMushroomFn_801d083c(self, state, other);
-
-end:;
 }
-#pragma opt_loop_invariants reset
 
 void EdibleMushroom_init(GameObject* obj, int aux)
 {

@@ -238,4 +238,4 @@ ObjectDescriptor12 gDrakorEnergyObjDescriptor = {
     (ObjectDescriptorCallback)DrakorEnergy_func0B_nop,
 };
 
-__declspec(section ".sdata2") f32 lbl_803E62A0 = -4.0f;
+f32 lbl_803E62A0 = -4.0f;

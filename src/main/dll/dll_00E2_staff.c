@@ -570,7 +570,6 @@ void quakeSpellTextureFn_8016dbf4(void)
         GXDrawTorus(((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius, 10, 20);
     }
 }
-#pragma opt_common_subs off
 extern void* gStaffSwipeTextures[2];
 
 void staffDrawSwipe(int* obj, int* swipe)
@@ -629,7 +628,6 @@ void staffDrawSwipe(int* obj, int* swipe)
         swp++;
     }
 }
-#pragma opt_propagation off
 void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 {
     u8* slot;
@@ -884,8 +882,6 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
         ((StaffState*)swipe)->progress = *(f32*)(model2 + 4);
     }
 }
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
 
 
 void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)

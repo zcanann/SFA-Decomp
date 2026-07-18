@@ -40,8 +40,6 @@ STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 #define MOONSEEDBUSH_SEED_PLANTED 1 /* planted, growing */
 #define MOONSEEDBUSH_SEED_GROWN   2 /* fully grown / triggered */
 
-#pragma peephole off
-#pragma scheduling off
 int MoonSeedBush_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     MoonSeedBushState* state = obj->extra;
@@ -128,10 +126,6 @@ void MoonSeedBush_update(GameObject* obj)
     state->flags &= ~1;
 }
 
-__declspec(section ".sdata2") f32 lbl_803E44D4 = 0.015625f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E44D8 = 0.0f;
-#pragma explicit_zero_data off
 
 void MoonSeedBush_init(GameObject* obj, int data)
 {
@@ -141,8 +135,8 @@ void MoonSeedBush_init(GameObject* obj, int data)
     obj->anim.rotX = (s16)(placement->rotXByte << 8);
     obj->animEventCallback = MoonSeedBush_SeqFn;
     obj->objectFlags |= MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED;
-    obj->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * lbl_803E44D4;
-    if (obj->anim.rootMotionScale == lbl_803E44D8)
+    obj->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * 0.015625f;
+    if (obj->anim.rootMotionScale == 0.0f)
     {
         obj->anim.rootMotionScale = 1.0f;
     }

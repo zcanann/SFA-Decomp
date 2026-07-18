@@ -1,6 +1,5 @@
 #include "main/audio/mcmd_loop.h"
 
-#pragma exceptions on
 #include "main/audio/hw_init.h"
 #include "main/audio/inp_ctrl.h"
 

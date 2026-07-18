@@ -1,7 +1,6 @@
 #include "main/audio/hw_dspctrl.h"
 #include "main/unknown/autos/musyx_dsp.h"
 
-#pragma exceptions on
 
 extern u8 salAuxFrame;
 extern u8 salMaxStudioNum;

@@ -54,7 +54,6 @@ void dll_200_init(int* obj, int* arg);
 void dll_200_release_nop(void);
 void dll_200_initialise_nop(void);
 
-#pragma dont_inline on
 void fn_801F20D4(GameObject* obj)
 {
     int state;
@@ -102,7 +101,6 @@ void fn_801F20D4(GameObject* obj)
     }
 }
 
-#pragma dont_inline reset
 void fn_801F2290(int obj)
 {
     Dll200State* state;
@@ -268,7 +266,6 @@ void fn_801F2290(int obj)
     }
 }
 
-#pragma dont_inline on
 void fn_801F27E4(GameObject* obj)
 {
     int state;
@@ -314,9 +311,6 @@ void fn_801F27E4(GameObject* obj)
         }
     }
 }
-#pragma auto_inline off
-#pragma dont_inline reset
-#pragma opt_strength_reduction off
 int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* animUpdate, int unused2)
 {
     int state;
@@ -360,7 +354,6 @@ int dll_200_getObjectTypeId(void);
 void dll_200_free_nop(void);
 void dll_200_hitDetect_nop(void);
 void dll_200_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible);
-#pragma opt_strength_reduction off
 ObjHitReactEntry gArwingAttachmentHitReactTable[] = {
     {731, -1, -1, {0xFF, 0xFF}, 0, {0, 0, 0}, 0.0f, {0, 0, 0, 0}},
     {731, -1, -1, {0xFF, 0xFF}, 0, {0, 0, 0}, 0.0f, {0, 0, 0, 0}},
@@ -397,10 +390,6 @@ ObjectDescriptor dll_200 = {
     (ObjectDescriptorExtraSizeCallback)dll_200_getExtraSize_ret_40,
 };
 char sArwingAttachmentDiffFormat[9] = "diff %d\n";
-
-
-#pragma auto_inline on
-
 
 int dll_200_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate, int unused2)
 {
@@ -443,7 +432,6 @@ int dll_200_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate, i
     return 0;
 }
 
-#pragma opt_strength_reduction reset
 int dll_200_getExtraSize_ret_40(void)
 {
     return sizeof(Dll200State);
@@ -556,5 +544,4 @@ void dll_200_release_nop(void)
 void dll_200_initialise_nop(void)
 {
 }
-
-
+

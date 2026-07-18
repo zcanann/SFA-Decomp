@@ -30,7 +30,6 @@ extern f32 lbl_803E13E0;
 extern f32 lbl_803E13E4;
 extern f32 lbl_803E13E8;
 
-#pragma optimization_level 2
 void dll_9C_func03(int target, int variant, int parent, u32 flags)
 {
     ScreenFxHdr hdr;
@@ -199,7 +198,6 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, (u8*)(int)lbl_80317E00, 0x18, base + 0xd4, DLL9C_EFFECT_ID, 0);
 }
-#pragma optimization_level reset
 
 void dll_9C_func01_nop(void)
 {

@@ -71,8 +71,6 @@ void dll_109_free(int obj)
     (*gCarryableInterface)->free(obj);
 }
 
-#pragma scheduling off
-#pragma peephole off
 void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     Dll109State* state = ((GameObject*)obj)->extra;
@@ -155,8 +153,6 @@ void dll_109_init(GameObject* obj, Dll109MapData* p)
     (*(void (**)(int*, int))((u8*)*gCarryableInterface + 0x2c))(obj->extra, 1);
 }
 
-#pragma scheduling on
-#pragma peephole on
 void dll_109_release_nop(void)
 {
 }

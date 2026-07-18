@@ -24,9 +24,7 @@
 #include "track/intersect_api.h"
 
 int gRopeNodeTextureAssetIds[2] = {0x3CA, 0x5DD};
-#pragma explicit_zero_data on
 void* gRopeNodeTextures[2] = {0};
-#pragma explicit_zero_data off
 f32 lbl_803DBF50[2] = {0.1f, 0.13f};
 u8 gRopeNodeVariantVisibleFlags[8] = {0, 1, 0, 0, 0, 0, 0, 0};
 
@@ -393,7 +391,6 @@ typedef struct DfropenodeRenderState
     u8 blue;
 } DfropenodeRenderState;
 
-#pragma opt_loop_invariants off
 void dfropenode_render(int obj, int p2, int p3)
 {
     ObjAnimComponent* objAnim;
@@ -510,7 +507,6 @@ void dfropenode_render(int obj, int p2, int p3)
     }
 }
 
-#pragma opt_loop_invariants reset
 void dfropenode_hitDetect(void)
 {
 }

@@ -142,54 +142,52 @@ void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* params)
     {
         params->triggerHit = 2;
     }
-    if (params->triggerHit != 2)
-        goto end;
-    if (((GameObject*)obj)->userData2 != 0)
-        goto end;
-
-    if (fn_8029669C(player) == 0)
-        goto fading;
-
-    params->triggerHit = 0;
-    params->triggerArmed = 1;
-
+    if (params->triggerHit == 2 && ((GameObject*)obj)->userData2 == 0)
     {
-        f32 k = 0.75f;
-        ((GameObject*)obj)->anim.velocityY = k * (0.25f * *(f32*)((char*)playerState + 0x298) + 2.2f);
-        ((GameObject*)obj)->anim.velocityZ = k * (-0.25f * *(f32*)((char*)playerState + 0x298) + -2.2f);
-    }
-
-    ((GameObject*)lcl)->anim.localPosX = 0.0f;
-    ((GameObject*)lcl)->anim.localPosY = 0.0f;
-    ((GameObject*)lcl)->anim.localPosZ = 0.0f;
-    ((GameObject*)lcl)->anim.rootMotionScale = 1.0f;
-    ((GameObject*)lcl)->anim.rotZ = 0;
-    ((GameObject*)lcl)->anim.rotY = 0;
-    {
-        s16 rotVal;
-        if (((GameObject*)player)->anim.parent != NULL)
+        if (fn_8029669C(player) == 0)
         {
-            rotVal = (s16)(*(s16*)*(int**)&((GameObject*)player)->anim.parent + ((GameObject*)player)->anim.rotX);
+            params->triggerHit = 0;
+            params->sendHoldMessage[0] = 0;
+            params->fadeTimer = 60.0f;
+            params->ballMode = SIDEKICK_BALL_FADING;
         }
         else
         {
-            rotVal = ((GameObject*)player)->anim.rotX;
+            params->triggerHit = 0;
+            params->triggerArmed = 1;
+
+            {
+                f32 k = 0.75f;
+                ((GameObject*)obj)->anim.velocityY = k * (0.25f * *(f32*)((char*)playerState + 0x298) + 2.2f);
+                ((GameObject*)obj)->anim.velocityZ = k * (-0.25f * *(f32*)((char*)playerState + 0x298) + -2.2f);
+            }
+
+            ((GameObject*)lcl)->anim.localPosX = 0.0f;
+            ((GameObject*)lcl)->anim.localPosY = 0.0f;
+            ((GameObject*)lcl)->anim.localPosZ = 0.0f;
+            ((GameObject*)lcl)->anim.rootMotionScale = 1.0f;
+            ((GameObject*)lcl)->anim.rotZ = 0;
+            ((GameObject*)lcl)->anim.rotY = 0;
+            {
+                s16 rotVal;
+                if (((GameObject*)player)->anim.parent != NULL)
+                {
+                    rotVal = (s16)(*(s16*)*(int**)&((GameObject*)player)->anim.parent + ((GameObject*)player)->anim.rotX);
+                }
+                else
+                {
+                    rotVal = ((GameObject*)player)->anim.rotX;
+                }
+                *(s16*)lcl = rotVal;
+            }
+            vecRotateZXY(lcl, &((GameObject*)obj)->anim.velocityX);
+
+            sidekickBallThrow((GameObject*)obj, *(f32*)((char*)obj + 36), ((GameObject*)obj)->anim.velocityY,
+                        ((GameObject*)obj)->anim.velocityZ);
         }
-        *(s16*)lcl = rotVal;
     }
-    vecRotateZXY(lcl, &((GameObject*)obj)->anim.velocityX);
 
-    sidekickBallThrow((GameObject*)obj, *(f32*)((char*)obj + 36), ((GameObject*)obj)->anim.velocityY,
-                ((GameObject*)obj)->anim.velocityZ);
-    goto end;
 
-fading:
-    params->triggerHit = 0;
-    params->sendHoldMessage[0] = 0;
-    params->fadeTimer = 60.0f;
-    params->ballMode = SIDEKICK_BALL_FADING;
-
-end:
     if (params->sendHoldMessage[0] != 0)
     {
         ObjMsg_SendToObject(player, SIDEKICKBALL_MSG_PLAYER_GRAB, (void*)obj, 0);
@@ -417,6 +415,7 @@ u8 trickyBallMove(GameObject* obj)
     }
     else
     {
+        hasFloorDepth = 0;
         if (fltNotEqual(state->floorY, 0.0f))
         {
             if (obj->anim.localPosY > state->floorY)
@@ -427,11 +426,8 @@ u8 trickyBallMove(GameObject* obj)
             {
                 state->floorDepth = state->floorY - obj->anim.localPosY;
                 hasFloorDepth = 1;
-                goto floor_done;
             }
         }
-        hasFloorDepth = 0;
-    floor_done:;
     }
 
     if (hasFloorDepth != 0)

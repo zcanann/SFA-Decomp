@@ -241,30 +241,24 @@ void PushReadedBuffer2(OSMessage msg)
     OSSendMessage(&gPicMenuReadedBuffer2Queue, msg, OS_MESSAGE_BLOCK);
 }
 
-#pragma dont_inline on
 OSMessage PopReadedBuffer2(void)
 {
     OSMessage msg;
     OSReceiveMessage(&gPicMenuReadedBuffer2Queue, &msg, OS_MESSAGE_BLOCK);
     return msg;
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void PushFreeReadBuffer(OSMessage msg)
 {
     OSSendMessage(&gPicMenuFreeReadBufferQueue, msg, OS_MESSAGE_BLOCK);
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 OSMessage PopReadedBuffer(void)
 {
     OSMessage msg;
     OSReceiveMessage(&gPicMenuReadedBufferQueue, &msg, OS_MESSAGE_BLOCK);
     return msg;
 }
-#pragma dont_inline reset
 
 void THPRead_Reader(void)
 {

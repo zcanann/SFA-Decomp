@@ -44,8 +44,6 @@ ObjectDescriptor gARWArwingGuObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)ARWArwingGu_getExtraSize,
 };
 
-#pragma scheduling off
-#pragma peephole off
 void arwarwinggu_setActiveVisible(GameObject* obj, u8 active, u8 visible)
 {
     ObjAnimComponent* objAnim = &(obj)->anim;

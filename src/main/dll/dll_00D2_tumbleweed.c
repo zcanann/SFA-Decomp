@@ -229,7 +229,6 @@ void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if ((s32)visible >= 1) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
-#pragma opt_loop_invariants off
 void tumbleweed_updateStateMachine(GameObject* obj)
 {
     int aux;
@@ -470,7 +469,6 @@ void tumbleweed_updateStateMachine(GameObject* obj)
     }
 }
 
-#pragma opt_loop_invariants reset
 
 void tumbleweed_updateTargetedStateMachine(GameObject *obj)
 {

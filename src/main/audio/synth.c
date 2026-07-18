@@ -18,7 +18,6 @@
 #include "main/audio/inp_ctrl.h"
 #include "main/audio/hw_keyoff.h"
 
-#pragma exceptions on
 
 struct SynthDelayedNode
 {
@@ -443,11 +442,12 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
     s32 note;
     u8 scaledVol;
     u8 mKey;
+    u32 reuse;
 
     vid = 0xFFFFFFFF;
     if ((l = dataGetLayer(layerID, &count)) == NULL)
     {
-        goto end;
+        return 0xFFFFFFFF;
     }
 
     mKey = key & 0x7f;
@@ -461,6 +461,7 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
         note = mKey + l->transpose;
         note = note > 127 ? 127 : note < 0 ? 0 : note;
 
+        reuse = 0;
         if ((l->id & 0xC000) == 0)
         {
             u32 rejected;
@@ -481,44 +482,46 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
             }
             if (new_id != 0xFFFFFFFF)
             {
-                goto apply_new_id;
+                reuse = 1;
             }
         }
 
-        if ((l->panning & 0x80) == 0)
+        if (reuse == 0)
         {
-            pan = l->panning - 0x40;
-            pan += panning;
-            pan = pan < 0 ? 0 : pan > 0x7f ? 0x7f : pan;
-        }
-        else
-        {
-            pan = 0x80;
-        }
+            if ((l->panning & 0x80) == 0)
+            {
+                pan = l->panning - 0x40;
+                pan += panning;
+                pan = pan < 0 ? 0 : pan > 0x7f ? 0x7f : pan;
+            }
+            else
+            {
+                pan = 0x80;
+            }
 
-        scaledVol = (vol * l->volume) / 0x7f;
-        prio += l->prioOffset;
-        prio = prio > 0xff ? 0xff : prio < 0 ? 0 : prio;
+            scaledVol = (vol * l->volume) / 0x7f;
+            prio += l->prioOffset;
+            prio = prio > 0xff ? 0xff : prio < 0 ? 0 : prio;
 
-        switch (l->id & 0xC000)
-        {
-        case 0:
-            new_id = macStart(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
-                              section, step, trackid, 0, vGroup, studio, itd);
-            break;
-        case 0x4000:
-            new_id = StartKeymap(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
-                                 section, step, trackid, 0, vGroup, studio, itd);
-            break;
-        case 0x8000:
-            new_id = audioLayerFn_8026f8b8(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi,
-                                           midiSet, section, step, trackid, 0, vGroup, studio, itd);
-            break;
+            switch (l->id & 0xC000)
+            {
+            case 0:
+                new_id = macStart(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
+                                  section, step, trackid, 0, vGroup, studio, itd);
+                break;
+            case 0x4000:
+                new_id = StartKeymap(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
+                                     section, step, trackid, 0, vGroup, studio, itd);
+                break;
+            case 0x8000:
+                new_id = audioLayerFn_8026f8b8(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi,
+                                               midiSet, section, step, trackid, 0, vGroup, studio, itd);
+                break;
+            }
         }
 
         if (new_id != 0xFFFFFFFF)
         {
-        apply_new_id:
             if (vid == 0xFFFFFFFF)
             {
                 if (vidFlag != 0)
@@ -545,7 +548,6 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
         }
     }
 
-end:
     return vid;
 }
 
@@ -772,7 +774,8 @@ void LowPrecisionHandler(int voice)
     sv = HWVOICE(voice);
     if (!hwIsActive(voice) && sv->addr == 0)
     {
-        goto end;
+        UpdateTimeMIDICtrl(sv);
+        return;
     }
 
     lowDeltaTime = (u32)(synthRealTime - *(u64*)&sv->lastLowCallTimeHi);
@@ -860,13 +863,23 @@ void LowPrecisionHandler(int voice)
         {
             pbend = inpGetPitchBend((McmdVoiceState*)sv);
             sv->pbLast = pbend;
-            goto pbend_adjust;
+            if (pbend != 0x2000)
+            {
+                pbend -= 0x2000;
+                if (pbend < 0)
+                {
+                    ccents += sv->pbLowerKeyRange * pbend * 8;
+                }
+                else
+                {
+                    ccents += sv->pbUpperKeyRange * pbend * 8;
+                }
+            }
         }
     }
     else
     {
         pbend = sv->pbLast;
-    pbend_adjust:
         if (pbend != 0x2000)
         {
             pbend -= 0x2000;
@@ -952,7 +965,6 @@ void LowPrecisionHandler(int voice)
     hwSetPitch(voice, sv->curPitch = ((cpitch >> 16) * inpGetDoppler((McmdVoiceState*)sv)) >> 13);
     synthQueueDelayedUpdate((SynthDelayedNode*)sv, 0, 0xF00);
 
-end:
     UpdateTimeMIDICtrl(sv);
 }
 
@@ -960,7 +972,6 @@ end:
  * Zero-offset per-voice update: volume envelope, tremolo, panning and final
  * volume/aux sends.
  */
-#pragma fp_contract off
 void ZeroOffsetHandler(int voice)
 {
     SynthHwVoice* sv;
@@ -981,7 +992,8 @@ void ZeroOffsetHandler(int voice)
     sv = HWVOICE(voice);
     if (!hwIsActive(voice) && sv->addr == 0)
     {
-        goto end;
+        UpdateTimeMIDICtrl(sv);
+        return;
     }
 
     lowDeltaTime = (u32)(synthRealTime - *(u64*)&sv->lastZeroCallTimeHi);
@@ -1123,10 +1135,8 @@ void ZeroOffsetHandler(int voice)
 
     synthQueueDelayedUpdate((SynthDelayedNode*)sv, 1, (5 - hwGetTimeOffset()) * 256);
 
-end:
     UpdateTimeMIDICtrl(sv);
 }
-#pragma fp_contract reset
 
 /*
  * Event per-voice update: pedal state, deferred hardware start and key-off.
@@ -1138,7 +1148,8 @@ void EventHandler(int voice)
     sv = HWVOICE(voice);
     if (!hwIsActive(voice) && sv->addr == 0)
     {
-        goto end;
+        UpdateTimeMIDICtrl(sv);
+        return;
     }
 
     macSetPedalState(sv, inpGetPedal((McmdVoiceState*)sv) > 0x1F80);
@@ -1160,7 +1171,6 @@ void EventHandler(int voice)
         }
     }
 
-end:
     UpdateTimeMIDICtrl(sv);
 }
 
@@ -1333,7 +1343,6 @@ void synthDispatchFadeAction(SynthFade* fade)
  * Periodic synth tick: drains delayed-action buckets, advances fade ramps,
  * runs AUX callbacks, and advances the global synth timer.
  */
-#pragma fp_contract off
 void synthHandle(u32 deltaTime)
 {
     u32 i;
@@ -1645,34 +1654,33 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
 
     case SYNTH_FADE_SELECTOR_ACTION_2:
         matchState = SYNTH_FADE_TYPE_ACTION_2;
-        goto setup_type;
+        break;
 
     case SYNTH_FADE_SELECTOR_ACTION_3:
         matchState = SYNTH_FADE_TYPE_ACTION_3;
-        goto setup_type;
+        break;
 
     case SYNTH_FADE_SELECTOR_ACTION_0:
         matchState = SYNTH_FADE_TYPE_ACTION_0;
-        goto setup_type;
+        break;
 
     case SYNTH_FADE_SELECTOR_ACTION_1:
         matchState = SYNTH_FADE_TYPE_ACTION_1;
-
-    setup_type:
-        for (fade = synthMasterFader, i = 0; i < SYNTH_FADE_COUNT; ++i, ++fade)
-        {
-            if (fade->type == matchState)
-            {
-                SetupFader(fade, volume, convertedTime, action, SYNTH_INVALID_LINK_ID);
-                synthMasterFaderActiveFlags |= 1U << i;
-            }
-        }
-        return;
+        break;
 
     default:
         SetupFader(&synthMasterFader[target], volume, convertedTime, action, handle);
         synthMasterFaderActiveFlags |= 1U << target;
         return;
+    }
+
+    for (fade = synthMasterFader, i = 0; i < SYNTH_FADE_COUNT; ++i, ++fade)
+    {
+        if (fade->type == matchState)
+        {
+            SetupFader(fade, volume, convertedTime, action, SYNTH_INVALID_LINK_ID);
+            synthMasterFaderActiveFlags |= 1U << i;
+        }
     }
 }
 int synthIsFadeOutActive(u8 voiceIdx)

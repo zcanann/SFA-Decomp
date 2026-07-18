@@ -66,18 +66,6 @@
 #define MAP_EVENT_GET_ANIM(mapId, eventId)          (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
-__declspec(section ".sdata2") f32 lbl_803E50A0 = 512.0f;
-__declspec(section ".sdata2") f32 lbl_803E50A4 = 128.0f;
-__declspec(section ".sdata2") f32 lbl_803E50A8 = 192.0f;
-__declspec(section ".sdata2") f32 lbl_803E50AC = 20.0f;
-__declspec(section ".sdata2") f32 gEcShCupPi = 3.1415927f;
-__declspec(section ".sdata2") f32 gEcShCupAngleToRadDivisor = 32768.0f;
-__declspec(section ".sdata2") f32 lbl_803E50B8 = 600.0f;
-__declspec(section ".sdata2") f32 lbl_803E50BC = 0.005f;
-__declspec(section ".sdata2") f32 lbl_803E50C0 = 12.0f;
-__declspec(section ".sdata2") f32 lbl_803E50C4 = 30.0f;
-__declspec(section ".sdata2") f32 lbl_803E50C8 = 255.0f;
-
 void fn_801C8B68(int obj)
 {
     register int self = obj;
@@ -96,23 +84,23 @@ void fn_801C8B68(int obj)
         return;
     }
 
-    *(short*)(state + 0xe) = (short)((int)*(short*)(state + 0xe) + (int)(lbl_803E50A0 * timeDelta));
-    *(short*)(state + 0x10) = (short)((int)*(short*)(state + 0x10) + (int)(lbl_803E50A4 * timeDelta));
-    *(short*)(state + 0x12) = (short)((int)*(short*)(state + 0x12) + (int)(lbl_803E50A8 * timeDelta));
+    *(short*)(state + 0xe) = (short)((int)*(short*)(state + 0xe) + (int)(512.0f * timeDelta));
+    *(short*)(state + 0x10) = (short)((int)*(short*)(state + 0x10) + (int)(128.0f * timeDelta));
+    *(short*)(state + 0x12) = (short)((int)*(short*)(state + 0x12) + (int)(192.0f * timeDelta));
 
     ((GameObject*)self)->anim.localPosY =
-        lbl_803E50AC + (*(float*)(state2 + 0xc) +
-                        mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor));
-    angA = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0x10)) / gEcShCupAngleToRadDivisor);
-    angB = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor);
+        20.0f + (*(float*)(state2 + 0xc) +
+                        mathSinf((3.1415927f * (f32)(s32) * (short*)(state + 0xe)) / 32768.0f));
+    angA = mathSinf((3.1415927f * (f32)(s32) * (short*)(state + 0x10)) / 32768.0f);
+    angB = mathSinf((3.1415927f * (f32)(s32) * (short*)(state + 0xe)) / 32768.0f);
     angB = angB + angA;
-    *(s16*)&((GameObject*)self)->anim.rotZ = (lbl_803E50B8 * angB);
-    angA = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0x12)) / gEcShCupAngleToRadDivisor);
-    angB = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor);
+    *(s16*)&((GameObject*)self)->anim.rotZ = (600.0f * angB);
+    angA = mathSinf((3.1415927f * (f32)(s32) * (short*)(state + 0x12)) / 32768.0f);
+    angB = mathSinf((3.1415927f * (f32)(s32) * (short*)(state + 0xe)) / 32768.0f);
     angB = angB + angA;
-    *(s16*)&((GameObject*)self)->anim.rotY = (lbl_803E50B8 * angB);
+    *(s16*)&((GameObject*)self)->anim.rotY = (600.0f * angB);
 
-    ObjAnim_AdvanceCurrentMove(self, lbl_803E50BC, timeDelta,
+    ObjAnim_AdvanceCurrentMove(self, 0.005f, timeDelta,
                                                                  (ObjAnimEventList*)&local_var);
 
     if (player == NULL)
@@ -128,23 +116,18 @@ void fn_801C8B68(int obj)
         if (delta < -0x8000)
             delta += 0xffff;
         ((GameObject*)self)->anim.rotX =
-            (short)((int)*(s16*)(int)(GameObject*)self + (int)((f32)delta * timeDelta / lbl_803E50C0));
+            (short)((int)*(s16*)(int)(GameObject*)self + (int)((f32)delta * timeDelta / 12.0f));
     }
     dist = Vec_xzDistance((f32*)((u8*)self + 24), &player->anim.worldPosX);
-    if (dist <= lbl_803E50C4)
+    if (dist <= 30.0f)
     {
-        ((GameObject*)self)->anim.alpha = (u8)(int)(lbl_803E50C8 * (dist / lbl_803E50C4));
+        ((GameObject*)self)->anim.alpha = (u8)(int)(255.0f * (dist / 30.0f));
     }
     else
     {
         ((GameObject*)self)->anim.alpha = 0xff;
     }
 }
-
-__declspec(section ".sdata2") f32 lbl_803E50D8 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E50DC = 0.0f;
-#pragma explicit_zero_data reset
 
 int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
@@ -180,14 +163,14 @@ int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
                 ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 if (runtime->light != NULL)
                 {
-                    modelLightStruct_setEnabled(runtime->light, 0, lbl_803E50D8);
+                    modelLightStruct_setEnabled(runtime->light, 0, 1.0f);
                 }
                 break;
             case 0xf:
                 ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
                 if (runtime->light != NULL)
                 {
-                    modelLightStruct_setEnabled(runtime->light, 0, lbl_803E50D8);
+                    modelLightStruct_setEnabled(runtime->light, 0, 1.0f);
                 }
                 break;
             }
@@ -237,17 +220,17 @@ void dbsh_shrine_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visi
     {
         if (runtime->light != NULL)
         {
-            modelLightStruct_setEnabled(runtime->light, 0, lbl_803E50D8);
+            modelLightStruct_setEnabled(runtime->light, 0, 1.0f);
         }
     }
     else
     {
         if (runtime->light != NULL)
         {
-            modelLightStruct_setEnabled(runtime->light, 1, lbl_803E50D8);
+            modelLightStruct_setEnabled(runtime->light, 1, 1.0f);
         }
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E50D8);
-        objParticleFn_80099d84((GameObject*)obj, lbl_803E50D8, 7, *(f32*)&lbl_803E50D8,
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f,
                                (ModelLightStruct*)runtime->light);
     }
 }
@@ -293,7 +276,7 @@ void dbsh_shrine_update(DbshShrineObject* obj)
         {
             f32 idleSfxTimer = runtime->idleSfxTimer - timeDelta;
             runtime->idleSfxTimer = idleSfxTimer;
-            if (idleSfxTimer <= lbl_803E50DC)
+            if (idleSfxTimer <= 0.0f)
             {
                 Sfx_PlayFromObject((u32)obj, DBSH_SHRINE_IDLE_SFX);
                 runtime->idleSfxTimer = (f32)(int)randomGetRange(500, 1000);

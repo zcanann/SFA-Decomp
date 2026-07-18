@@ -5,9 +5,6 @@
 #include "main/modellight_api.h"
 #include "global.h"
 
-extern f32 lbl_803E71D8;
-extern f32 lbl_803E71DC;
-extern f32 lbl_803E71E0;
 
 typedef struct ARWProximitSetup
 {

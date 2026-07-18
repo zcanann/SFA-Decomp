@@ -306,7 +306,6 @@ void* gResourceLoadedHandles[0x2C1];
 u16 gResourceRefCounts[0x2C2];
 char gModelEngineTextBuf[0x10];
 
-
 RingBufferQueue* allocModelStruct_800139e8(int capacity, int elemSize)
 {
     RingBufferQueue* queue = mmAlloc(elemSize * capacity + sizeof(RingBufferQueue), 0x1a, 0);
@@ -446,7 +445,6 @@ BOOL ModelList_getHeader(ModelList* list, int index, void* outHeader)
     return FALSE;
 }
 
-#pragma opt_common_subs off
 void model_adjustModelList(ModelList* list, int index)
 {
     s16* entry;
@@ -462,22 +460,12 @@ void model_adjustModelList(ModelList* list, int index)
         entry += list->strideShorts;
     }
 
-    goto checkTail;
-trimTail:
-    list->end = (s16*)((u8*)list->end - list->strideShorts * 2);
-checkTail:
-    if (list->end <= list->entries)
+    while (list->end > list->entries && list->end[-1] == -1)
     {
-        return;
+        list->end = (s16*)((u8*)list->end - list->strideShorts * 2);
     }
-    if (list->end[-1] == -1)
-    {
-        goto trimTail;
-    }
-    return;
 }
 
-#pragma opt_common_subs on
 void modelInitModelList(ModelList* list, s16 index, void* header)
 {
     s16* entry;
@@ -514,7 +502,6 @@ ModelList* allocModelStruct(int capacity, int dataSize)
     return list;
 }
 
-#pragma dont_inline on
 BOOL Resource_Release(void* handleSlot)
 {
     s32 i;
@@ -560,8 +547,6 @@ void* Resource_Acquire(u16 id, int unused)
     return &gResourceLoadedHandles[index];
 }
 
-#pragma dont_inline reset
-#pragma ppc_unroll_speculative on
 void Resource_ResetRefCounts(void)
 {
     u32 i;
@@ -572,7 +557,6 @@ void Resource_ResetRefCounts(void)
     }
 }
 
-#pragma ppc_unroll_speculative off
 void fn_8001404C(s32 value)
 {
     lbl_803DB28C = value;
@@ -924,7 +908,6 @@ void initGameTimer(void)
     gModelEngineTimerValue = 0.0f;
     gModelEngineTimerDuration = 0.0f;
 }
-
 
 ResourceDescriptor* gResourceDescriptors[] = {
     &lbl_8031C020,

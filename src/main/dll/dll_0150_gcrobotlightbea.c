@@ -47,8 +47,6 @@ STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);
 extern f32 PSVECDistance(void* a, void* b);
 
-#pragma scheduling off
-#pragma peephole off
 
 u32 fn_801A0174(int* obj)
 {

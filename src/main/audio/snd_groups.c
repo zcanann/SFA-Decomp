@@ -4,7 +4,6 @@
 #include "main/audio/data_tables.h"
 #include "main/audio/synth_jobs.h"
 
-#pragma exceptions on
 
 typedef struct GROUP_DATA
 {
@@ -242,7 +241,6 @@ void InsertData(u16 id, void* data, u8 dataType, u32 remove)
     }
 }
 
-#pragma dont_inline on
 void audioFn_8027b690(u16* ref, void* data, u8 dataType, u32 remove)
 {
     u16 id;

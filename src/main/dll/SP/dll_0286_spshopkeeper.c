@@ -90,8 +90,8 @@ extern f32 lbl_803E59F0;
 
 void fn_801E7DC8(GameObject* obj, int state, int count);
 
-__declspec(section ".sdata2") f32 lbl_803E5A24 = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E5A28 = 300.0f;
+f32 lbl_803E5A24 = 10.0f;
+f32 lbl_803E5A28 = 300.0f;
 
 int ShopKeeper_getExtraSize(void);
 int ShopKeeper_getObjectTypeId(void);
@@ -282,7 +282,6 @@ int fn_801E76A0(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
     return 0;
 }
 
-#pragma dont_inline on
 f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
 {
     f32 dist;
@@ -333,7 +332,6 @@ f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
     }
     return dist;
 }
-#pragma dont_inline reset
 
 void fn_801E7DC8(GameObject* obj, int state, int count)
 {

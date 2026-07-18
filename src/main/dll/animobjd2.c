@@ -165,9 +165,6 @@ typedef struct
         }                                                                                                              \
     }
 
-#pragma opt_loop_invariants off
-#pragma opt_common_subs off
-#pragma opt_propagation off
 void fn_8013E0D0(int* obj, TrickyState* t)
 {
     GameObject* gobj = (GameObject*)obj;
@@ -593,12 +590,7 @@ void fn_8013E0D0(int* obj, TrickyState* t)
     }
     }
 }
-#pragma opt_propagation reset
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
 
-#pragma dont_inline on
-#pragma opt_common_subs off
 void* trickyFindCirclingTarget(GameObject* obj, void* state)
 {
     void* target;
@@ -615,7 +607,7 @@ void* trickyFindCirclingTarget(GameObject* obj, void* state)
 
     target = (void*)fn_80296118((GameObject*)(*(int*)((u8*)state + 0x4)));
     if (target == NULL)
-        goto fail;
+        return NULL;
 
     list = (void**)ObjGroup_GetObjects(3, &count);
     for (i = 0; i < count; i++)
@@ -630,14 +622,11 @@ void* trickyFindCirclingTarget(GameObject* obj, void* state)
             {
                 return target;
             }
-            goto fail;
+            return NULL;
         }
     }
-fail:
     return NULL;
 }
-#pragma opt_common_subs reset
-#pragma dont_inline reset
 
 void trickyUpdateCirclingTargetPosition(void* objPtr, void* state)
 {

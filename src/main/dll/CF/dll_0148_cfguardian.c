@@ -148,7 +148,6 @@ enum
 #define GUARDIAN_SFX_FLAP    0xe1
 #define GUARDIAN_SFX_CHATTER 0xdf
 
-
 extern int Curve_AdvanceAlongPath(int p1);
 const GuardianVec gCfGuardianHitboxTemplateA = {{5, 15, 15, 0, 0}}; /* hitbox template copied at init */
 const GuardianVec gCfGuardianHitboxTemplateB = {{25, 25, 15, 5, 5}}; /* hitbox template copied at init */
@@ -385,7 +384,6 @@ int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int 
  * along the normalized delta, blend the yaw by speed over distance,
  * move it and keep the chase move playing. Returns 1 when already
  * within the closing threshold. */
-#pragma dont_inline on
 int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
 {
     f32 dist;
@@ -428,9 +426,7 @@ int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
     ((int (*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, outPhase);
     return 0;
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 int* findRomCurvePointNearObject(int* obj, int curveGroup, int* outVec, int mode)
 {
     int* result = NULL;
@@ -464,7 +460,6 @@ int* findRomCurvePointNearObject(int* obj, int curveGroup, int* outVec, int mode
     }
     return result;
 }
-#pragma dont_inline reset
 
 /* cfguardian_updateMain: the Queen's brain - the fifteen-state quest
  * progression (path flights, landing physics, dialogue triggers and idle
@@ -480,7 +475,6 @@ static inline f32 cfguardianAbs(f32 x)
     return -x;
 }
 
-#pragma opt_common_subs off
 int cfguardian_updateMain(GameObject* obj)
 {
     CfGuardianState* sub;
@@ -937,7 +931,6 @@ int cfguardian_updateMain(GameObject* obj)
     }
     return 0;
 }
-#pragma opt_common_subs reset
 
 /* cfguardian_SeqFn: the Queen's sequence message handler.
  * Persists position on a negative cue, otherwise picks the active/idle

@@ -60,8 +60,6 @@ ObjectDescriptor6 lbl_80310A20 = {
 };
 
 
-#pragma peephole off
-#pragma scheduling off
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
  * the consumer-side definition of this 0x64-byte spawn request consumed by
@@ -304,8 +302,6 @@ void Effect6_func05(void)
     gEffect6Osc1Value = mathSinf(3.1415927f * (f32)(s16)gEffect6Osc1Angle / 32768.0f);
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 void Effect6_func03_nop(void)
 {
 }

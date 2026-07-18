@@ -28,9 +28,7 @@
 #include "main/object_descriptor.h"
 
 s16 gDll1D6SlotTabIndex[4] = {0x10A, 0x14F, 0x151, 0x153};
-#pragma explicit_zero_data on
 u8 gDll1D6SlotInUse[8] = {0};
-#pragma explicit_zero_data off
 
 typedef struct Dll1D6Placement
 {
@@ -95,13 +93,8 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 #define DLL1D6_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-
 FbWGPipe GXWGFifo : (0xCC008000);
 
-
-#pragma explicit_zero_data off
-#pragma peephole off
-#pragma scheduling off
 int dll_1D6_getExtraSize(void)
 {
     return 0x20;
@@ -135,17 +128,12 @@ void dll_1D6_hitDetect(void)
 {
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 static inline ObjModel* DIM2snowball_GetActiveModel(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (ObjModel*)objAnim->banks[objAnim->bankIndex];
 }
 
-#pragma opt_common_subs off
-#pragma peephole off
-#pragma scheduling off
 void dll_1D6_update(int* obj)
 {
     Dll1D6State* extra;
@@ -294,7 +282,6 @@ void dll_1D6_update(int* obj)
     }
 }
 
-#pragma opt_common_subs on
 void dll_1D6_init(int* obj, u8* paramsBytes)
 {
     Dll1D6Placement* params = (Dll1D6Placement*)paramsBytes;
@@ -349,7 +336,6 @@ void dll_1D6_initialise(void)
 {
 }
 
-
 ObjectDescriptor dll_1D6 = {
     0,
     0,
@@ -367,8 +353,6 @@ ObjectDescriptor dll_1D6 = {
     (ObjectDescriptorExtraSizeCallback)dll_1D6_getExtraSize,
 };
 
-#pragma force_active on
-/* .sdata2 constant pool */
 const f32 lbl_803E4AA0 = 1.0f;
 const f32 lbl_803E4AA4 = 0.9f;
 const f32 lbl_803E4AA8 = -0.1f;
@@ -379,9 +363,7 @@ const f32 lbl_803E4AB8 = 36.0f;
 const f32 lbl_803E4ABC = 0.75f;
 const f32 lbl_803E4AC0[2] = {2.1f, 0.0f};
 const f32 lbl_803E4AC8 = 2.859375f;
-const f32 lbl_803E4ACC = 0.0f;
 const f32 lbl_803E4AD0 = 0.0f;
-const f32 lbl_803E4AD4 = 0.0f;
 const f32 lbl_803E4AD8 = 1.0f;
 const f32 lbl_803E4ADC = 0.5f;
 const f32 lbl_803E4AE0 = 0.85f;

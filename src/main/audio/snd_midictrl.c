@@ -3,7 +3,6 @@
 #include "main/audio/synth_config.h"
 #include "string.h"
 
-#pragma exceptions on
 
 /* Standard MIDI controller (CC) numbers handled by the RPN setter. */
 #define MIDI_CC_DATA_ENTRY_MSB 6

@@ -54,10 +54,6 @@
 /* ObjHits priority-hit result that cuts the plant */
 #define MSPLANTING_HIT_CUT 0x1A
 
-
-
-#pragma scheduling off
-#pragma peephole off
 int MoonSeedPlantingSpot_SeqFn(int obj)
 {
     obj = *(int*)&((GameObject*)obj)->extra;
@@ -79,7 +75,6 @@ int MoonSeedPlantingSpot_func0B(void)
     return 0x0;
 }
 
-#pragma optimization_level 2
 int MoonSeedPlantingSpot_setScale(int* obj, int arg)
 {
     int* placement;
@@ -119,7 +114,6 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
     }
     return ret;
 }
-#pragma optimization_level reset
 
 int MoonSeedPlantingSpot_getExtraSize(void)
 {
@@ -172,8 +166,6 @@ void MoonSeedPlantingSpot_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void MoonSeedPlantingSpot_update(int obj)
 {
     int ex = *(int*)&((GameObject*)obj)->extra;

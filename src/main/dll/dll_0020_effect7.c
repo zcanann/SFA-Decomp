@@ -50,8 +50,6 @@ ObjectDescriptor6 lbl_80310A78 = {
 };
 
 
-#pragma peephole off
-#pragma scheduling off
 #define FILL368()                                                                                                      \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -483,8 +481,6 @@ void Effect7_func05(void)
     gEffect7SinValueB = mathSinf(3.1415927f * (f32)(s16)gEffect7SinAngleB / 32768.0f);
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 void Effect7_func03_nop(void)
 {
 }

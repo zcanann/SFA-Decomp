@@ -62,14 +62,8 @@ extern u8 lbl_8031DD30[];          /* per-anim move-progress floats, indexed ani
 extern void fn_8014CF7C(int obj, int state, f32 e, f32 f, int c, int d);
 extern void fn_801513AC(GameObject* obj, u8* state);
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E2740 = 0.0f;
-#pragma explicit_zero_data off
+f32 lbl_803E2740 = 0.0f;
 
-#pragma peephole off
-#pragma scheduling off
-
-#pragma opt_propagation off
 u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
 {
     u8* base = lbl_8031DD30;
@@ -97,7 +91,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     {
         return 0;
     }
-    if (*(f32*)(state + 0x328) != *(f32*)&lbl_803E2740 && *(u16*)(state + 0x338) != 0)
+    if (*(f32*)(state + 0x328) != 0.0f && *(u16*)(state + 0x338) != 0)
     {
         return 0;
     }
@@ -124,11 +118,11 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     }
     if ((u8)allowNewEvent != 0)
     {
-        if ((eventFlags != 0 || *(f32*)(state + 0x324) != lbl_803E2740) && (stateFlags & 0x40) == 0 && flag20 == 0)
+        if ((eventFlags != 0 || *(f32*)(state + 0x324) != 0.0f) && (stateFlags & 0x40) == 0 && flag20 == 0)
         {
-            if (*(f32*)(state + 0x324) != lbl_803E2740)
+            if (*(f32*)(state + 0x324) != 0.0f)
             {
-                f32 zero = lbl_803E2740;
+                f32 zero = 0.0f;
                 *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
                 if (*(f32*)(state + 0x324) <= zero)
                 {
@@ -145,14 +139,14 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
                 *(f32*)(state + 0x324) =
                     *(f32*)(state + 0x334) +
                     (f32)(int)randomGetRange(base[eventTableIndex + 0x152c], base[eventTableIndex + 0x152d]);
-                *(f32*)(state + 0x334) = lbl_803E2740;
+                *(f32*)(state + 0x334) = 0.0f;
                 return 0;
             }
         }
     }
     if ((((u8)allowNewEvent != 0 && *(u8*)(state + 0x2f1) != 0 && eventRows[eventIndex].moveId != 0) ||
          (*(u8*)(state + 0x2f1) & 0x20) != 0) &&
-        !(*(u8*)(state + 0x33c) == eventIndex && lbl_803E2740 != *(f32*)(state + 0x32c)))
+        !(*(u8*)(state + 0x33c) == eventIndex && 0.0f != *(f32*)(state + 0x32c)))
     {
         sf2 = ((BaddieState*)state)->controlFlags;
         if ((sf2 & 0x800080) != 0 || (*(u8*)(state + 0x2f1) & 0x20) != 0)
@@ -176,7 +170,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
         }
         return 0;
     }
-    if (*(f32*)(state + 0x32c) != lbl_803E2740)
+    if (*(f32*)(state + 0x32c) != 0.0f)
     {
         int pos = *(int*)&((BaddieState*)state)->trackedObj;
         fn_8014CF7C((int)obj, state, *(f32*)(pos + 0xc), *(f32*)(pos + 0x14), 0xf, 0);
@@ -193,9 +187,9 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
                 (ObjAnimComponent*)obj, *(f32*)(base + eventRows[*(u8*)(state + 0x33c)].moveId * 4));
         }
         *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
-        if (*(f32*)(state + 0x32c) <= *(f32*)&lbl_803E2740)
+        if (*(f32*)(state + 0x32c) <= 0.0f)
         {
-            *(f32*)(state + 0x32c) = lbl_803E2740;
+            *(f32*)(state + 0x32c) = 0.0f;
             controlFlags = ((BaddieState*)state)->controlFlags;
             controlMask = ~0x40;
             ((BaddieState*)state)->controlFlags = controlFlags & controlMask;
@@ -213,9 +207,6 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     return 0;
 }
 
-__declspec(section ".sdata2") f32 lbl_803E2760 = 640.0f;
-__declspec(section ".sdata2") f32 lbl_803E2764 = 4.0f;
-
 void fn_8015039C(GameObject* obj, int animState)
 {
     GameObject* player;
@@ -229,14 +220,14 @@ void fn_8015039C(GameObject* obj, int animState)
         if ((player->objectFlags & WISPBADDIE_OBJFLAG_PARENT_SLACK) == 0)
         {
             distance = Vec_distance(&(obj)->anim.worldPosX, &player->anim.worldPosX);
-            if (distance <= lbl_803E2760)
+            if (distance <= 640.0f)
             {
-                rumbleFalloff = 1.0f - distance / lbl_803E2760;
+                rumbleFalloff = 1.0f - distance / 640.0f;
                 rumbleFalloff = 3.0f * rumbleFalloff;
                 doRumble(rumbleFalloff);
             }
-            CameraShake_ApplyRadial((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, lbl_803E2760,
-                                    lbl_803E2764);
+            CameraShake_ApplyRadial((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, 640.0f,
+                                    4.0f);
         }
     }
     if ((((HagabonAnimState*)animState)->moveEventFlags & 0x40) != 0)
@@ -257,7 +248,6 @@ void fn_8015039C(GameObject* obj, int animState)
     }
 }
 
-#pragma optimization_level 2
 void fn_801504BC(int obj, int delta)
 {
     u8* inner = ((GameObject*)obj)->extra;
@@ -266,4 +256,3 @@ void fn_801504BC(int obj, int delta)
     inner[0x33d] = (u8)(delta + (u32)ptr[8] + 1);
     inner[0x33e] = 1;
 }
-#pragma optimization_level reset
