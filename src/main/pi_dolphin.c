@@ -30,6 +30,7 @@
 #include "dolphin/gx/GXLighting.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXFrameBuffer.h"
+#include "dolphin/gx/GXCpu2Efb.h"
 #include "dolphin/gx/GXManage.h"
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTexture.h"
@@ -974,7 +975,6 @@ extern int Queue_GetCount(void* q);
 extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
 extern int Queue_Peek(void* q, void* out);
 extern void Queue_Pop(void* q, void* out);
-extern void GXPeekZ(int x, int y, void* out);
 extern f32 lbl_803DCCC0;
 extern f32 physicsTimeScale;
 extern f32 lbl_803DEAA0;
@@ -986,8 +986,6 @@ extern volatile int lbl_803DCCAC;
 extern int lbl_803DCCA0;
 extern u16 lbl_803DCCAA;
 extern u8 lbl_803DCCA9;
-extern u16 gDepthReadPendingQueue[];
-extern u16 gDepthReadResults[];
 extern u8 lbl_803DCCA8;
 extern u8 lbl_803DCC90;
 extern int lbl_803DCC88;
@@ -4355,8 +4353,8 @@ void videoFn_800499e8(void)
 {
     char peek[12];
     int tok[3];
-    u16* src;
-    u16* dst;
+    DepthReadRequest* src;
+    DepthReadRequest* dst;
     int i;
 
     if (gAttractMovieState == 2 || gAttractMovieState == 3)
@@ -4369,12 +4367,12 @@ void videoFn_800499e8(void)
     dst = gDepthReadResults;
     for (; i < (int)(u32)gDepthReadPendingCount; i++)
     {
-        dst[0] = src[0];
-        dst[1] = src[1];
-        *(int*)(dst + 4) = *(int*)(src + 4);
-        GXPeekZ(dst[0], dst[1], dst + 2);
-        src += 6;
-        dst += 6;
+        dst->x = src->x;
+        dst->y = src->y;
+        dst->key = src->key;
+        GXPeekZ(dst->x, dst->y, &dst->value);
+        src++;
+        dst++;
     }
     gDepthReadResultCount = gDepthReadPendingCount;
     gDepthReadPendingCount = 0;

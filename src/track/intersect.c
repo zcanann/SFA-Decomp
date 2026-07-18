@@ -15,6 +15,7 @@
 #include "track/intersect.h"
 #include "track/intersect_card_api.h"
 #include "track/intersect_fog_api.h"
+#include "track/intersect_depth_read_api.h"
 #include "main/model.h"
 #include "main/model_engine.h"
 #include "main/texture.h"
@@ -132,19 +133,8 @@ static const IndStageInitData lbl_802C1EA8 = {
      {2, 1, 0, 0, 0, 0, 0}}};
 static const IndMtxInit lbl_802C1F68 = {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}};
 
-/* Entry of gDepthReadPendingQueue/gDepthReadResults (0xC stride, 0x14 cap). */
-typedef struct DepthReadRequest
-{
-    u16 x;     /* 0x0 */
-    u16 y;     /* 0x2 */
-    s32 value; /* 0x4: completed GXPeekZ result */
-    s32 key;   /* 0x8: opaque request key */
-} DepthReadRequest;
-
 extern f32 lbl_803DEE90;
 
-extern DepthReadRequest gDepthReadResults[0x14];
-extern DepthReadRequest gDepthReadPendingQueue[0x14];
 extern f32 hudMatrix[4][4];
 extern f32 hudScale;
 extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
