@@ -41,18 +41,13 @@ extern f32 lbl_803E1208;
 #include "main/dll/dll_0099_dll99func0.h"
 #include "main/dll/screens.h"
 #include "main/dll/pickup.h"
+#include "main/dll/dll_009A_dll9afunc0.h"
+#include "main/dll/dll_009B_dll9bfunc0.h"
+#include "main/dll/dll_009C_dll9cfunc0.h"
+#include "main/dll/dll_009D_dll9dfunc0.h"
+#include "main/dll/dll_009E_dll9efunc0.h"
 
 u8 gDll91Func0Tex[8] = {0, 0x0A, 0, 0x0C, 0, 0x0E, 0, 0x10};
-extern void dll_9A_func01_nop(void);
-extern void dll_9B_func01_nop(void);
-extern void dll_9C_func01_nop(void);
-extern void dll_9D_func01_nop(void);
-extern void dll_9E_func01_nop(void);
-extern void dll_9A_func00_nop(void);
-extern void dll_9B_func00_nop(void);
-extern void dll_9C_func00_nop(void);
-extern void dll_9D_func00_nop(void);
-extern void dll_9E_func00_nop(void);
 
 void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
