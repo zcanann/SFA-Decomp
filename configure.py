@@ -297,6 +297,12 @@ cflags_dll_noopt_noprop = [
     "-opt", "nopeephole,noschedule,nopropagation",
 ]
 
+# ...plus strength reduction off (keeps byte-array loop indices as a single indexed IV).
+cflags_dll_noopt_noprop_nostrength = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,nopropagation,nostrength",
+]
+
 # ...plus loop-invariant code motion off (opt_loop_invariants off).
 cflags_dll_noopt_noloopinv = [
     *cflags_base,
@@ -1198,7 +1204,7 @@ config.libs = [
             Object(NonMatching, "main/dll/weapone6.c", cflags=cflags_dll_noopt_noprop),
             Object(NonMatching, "main/dll/tricky_flameguard.c", cflags=cflags_dll_noopt_nocse_noprop),
             Object(NonMatching, "main/dll/tricky_rollroute.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/tricky_substates.c", cflags=cflags_dll_noopt_noprop),
+            Object(NonMatching, "main/dll/tricky_substates.c", cflags=cflags_dll_noopt_noprop_nostrength),
             Object(NonMatching, "main/dll/dll_00C4_tricky.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00C9_enemy.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00DF_hagabon.c", cflags=cflags_dll_noopt),
