@@ -186,6 +186,8 @@ void renderClouds(int a, int b, int c, int d)
     void* viewMtx;
     f32 cloudT;
     f32 v;
+    f32 c0;
+    f32 c1;
 
     view = Camera_GetCurrentViewSlot();
     (*gSkyInterface)
@@ -310,17 +312,16 @@ void renderClouds(int a, int b, int c, int d)
             gCloudActionGlareQuadSize = randomGetRange(0x1f40, 0x2ee0);
         }
         GXBegin(GX_QUADS, GX_VTXFMT2, 4);
-        v = -gCloudActionGlareQuadSize;
-        GXPos3f32(v, v, 0.0f);
-        GXTex2f32(0.0f, 0.0f);
-        GXPos3f32(gCloudActionGlareQuadSize, -gCloudActionGlareQuadSize, 0.0f);
-        GXTex2f32(1.0f, 0.0f);
-        v = gCloudActionGlareQuadSize;
-        GXPos3f32(gCloudActionGlareQuadSize, v, 0.0f);
-        GXTex2f32(1.0f, 1.0f);
-        v = gCloudActionGlareQuadSize;
-        GXPos3f32(-v, v, 0.0f);
-        GXTex2f32(0.0f, 1.0f);
+        c0 = 0.0f;
+        c1 = 1.0f;
+        GXPos3f32(-gCloudActionGlareQuadSize, -gCloudActionGlareQuadSize, c0);
+        GXTex2f32(c0, c0);
+        GXPos3f32(gCloudActionGlareQuadSize, -gCloudActionGlareQuadSize, c0);
+        GXTex2f32(c1, c0);
+        GXPos3f32(gCloudActionGlareQuadSize, gCloudActionGlareQuadSize, c0);
+        GXTex2f32(c1, c1);
+        GXPos3f32(-gCloudActionGlareQuadSize, gCloudActionGlareQuadSize, c0);
+        GXTex2f32(c0, c1);
     }
 
     if (lbl_8039AB28.lowerCloudObj != NULL)
