@@ -37,6 +37,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "dolphin/mtx/mtx_legacy.h"
+#include "main/dll/drhightop.h"
 
 typedef struct HightopFlags3
 {

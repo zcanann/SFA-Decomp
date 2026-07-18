@@ -26,6 +26,8 @@
 #include "main/maketex_api.h"
 #include "main/dll/tricky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/drhightop.h"
+#include "main/dll/dll_801e991c.h"
 
 f32 lbl_803DC0B8 = 15.0f;
 int lbl_803DC0BC = -1;
@@ -142,8 +144,6 @@ extern f32 lbl_803E5B94;
 extern f32 lbl_803E5B98;
 extern void* mapRomListFindItem(int a, int b, int c, int d, int e);
 extern int gSnowBikeMountRomListTable[];
-extern void fn_801E991C(void* obj, void* path);
-extern void fn_801EB940(int obj, u8* state);
 extern s16 gSnowBikeHitObjectIdTable[];
 extern f32 lbl_803E5B28;
 extern f32 lbl_803E5B88;
@@ -171,7 +171,6 @@ extern f32 lbl_803E5C60;
 extern f32 lbl_803E5C64;
 extern f32 lbl_803E5C68;
 extern void Obj_SetModelSlotIndex(int obj, int slot);
-extern void fn_801EBD60(int obj, u8* state);
 extern void drcloudcage_updateEngineFx(int obj, u8* state, f32 speed, int val, u8* p, int n);
 extern void objApplyVelocity(int obj);
 extern int Rcp_GetMotionBlurEnabled(void);
@@ -481,7 +480,7 @@ void SnowBike_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visib
     void* path;
 
     path = (obj)->extra;
-    fn_801E991C(obj, path);
+    fn_801E991C((int)obj, (char*)path);
     if (visible == -1)
     {
         objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);
@@ -517,7 +516,7 @@ void SnowBike_hitDetect(GameObject* obj)
     }
     if (state->riderMode == 2)
     {
-        fn_801EB940((int)obj, (u8*)state);
+        fn_801EB940((short*)obj, (int)state);
         state->savedRotY = obj->anim.rotY;
         state->savedRotZ = obj->anim.rotZ;
         obj->anim.rotY = (f32)obj->anim.rotY + state->haloPitchDrift;
@@ -730,7 +729,7 @@ void SnowBike_update(GameObject* obj)
         {
             if (drshackle_updateAttachedPosition(obj, (ShackleSwingState*)state) != 0)
             {
-                fn_801EBD60((int)obj, state);
+                fn_801EBD60(obj, (int)state);
                 fn_801EC7A0((int)obj, (int)state);
                 if (((SnowBikeState*)state)->collisionFxTimer != lbl_803E5AE8)
                 {
@@ -811,7 +810,7 @@ void SnowBike_update(GameObject* obj)
                 clamped = value;
             }
             ((SnowBikeState*)state)->stickX = clamped;
-            fn_801EBD60((int)obj, state);
+            fn_801EBD60(obj, (int)state);
             fn_801EC7A0((int)obj, (int)state);
             if (((SnowBikeState*)state)->collisionFxTimer != lbl_803E5AE8)
             {
