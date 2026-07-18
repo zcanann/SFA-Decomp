@@ -117,8 +117,6 @@ void dll_19_func03_nop(void);
 
 
 const Dll19ChildObjectIdTable lbl_802C2190 = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
-extern f32 gDll19SeqMinDist;
-extern s8 gDll19SeqStallCount;
 extern u8 lbl_8031A054[];
 extern u8 lbl_8031A048[];
 
