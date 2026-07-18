@@ -54,9 +54,6 @@ typedef struct
 } Vec3i;
 
 const int gSpiritDoorLockOrbitOffsetBase[4] = {0, 0, 0x40E00000, 0};
-extern s16 gSpiritDoorLockSpinSpeed;
-extern s32 gSpiritDoorLockTexScrollSpeed;
-extern s32 gSpiritDoorLockTexScrollWrap;
 extern f32 lbl_803E4430;
 extern f32 gSpiritDoorLockDefaultScale;
 extern f32 gSpiritDoorLockApproachRange;
