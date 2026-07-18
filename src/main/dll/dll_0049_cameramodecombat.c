@@ -70,8 +70,8 @@ void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f3
     GameObject* target;
     ObjHitVolumeRuntimeTransform* hitVolumes;
     u8 curIdx;
-    float t;
     float lim;
+    float t;
 
     target = (GameObject*)camera->targetObj;
     focus = (GameObject*)camera->anim.targetObj;
@@ -95,17 +95,17 @@ void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f3
         }
         {
             u8 ci = gCamCombatState->pathBlendStartIndex;
-            u8 ti = target->hitVolumeIndex;
-            float dx = hitVolumes[ci].centerX - hitVolumes[ti].centerX;
-            float dy = hitVolumes[ci].centerY - hitVolumes[ti].centerY;
-            float dz = hitVolumes[ci].centerZ - hitVolumes[ti].centerZ;
-            float w = gCamCombatState->pathBlendWeight;
+            float w;
+            float dx = hitVolumes[ci].centerX - hitVolumes[target->hitVolumeIndex].centerX;
+            float dy = hitVolumes[ci].centerY - hitVolumes[target->hitVolumeIndex].centerY;
+            float dz = hitVolumes[ci].centerZ - hitVolumes[target->hitVolumeIndex].centerZ;
+            w = gCamCombatState->pathBlendWeight;
             dx *= w;
             dy *= w;
             dz *= w;
-            dx += hitVolumes[ti].centerX;
-            dy += hitVolumes[ti].centerY;
-            dz += hitVolumes[ti].centerZ;
+            dx += hitVolumes[target->hitVolumeIndex].centerX;
+            dy += hitVolumes[target->hitVolumeIndex].centerY;
+            dz += hitVolumes[target->hitVolumeIndex].centerZ;
             *outX = dx - focus->anim.worldPosX;
             *outY = dy - *targetY;
             *outZ = dz - focus->anim.worldPosZ;
