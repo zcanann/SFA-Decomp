@@ -23,6 +23,7 @@ u8 lbl_803DB938[8] = {0, 1, 0, 0, 0, 0, 0, 0};
 
 
 extern u8 lbl_803DB938[8]; /* texture/resource handle */
+#pragma force_active on
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E1268 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E126C = 0.0f;
@@ -47,6 +48,7 @@ const f32 lbl_803E12B4 = -80.0f;
 const f32 lbl_803E12B8 = 2.0f;
 const f32 lbl_803E12BC = 0.0f;
 #pragma explicit_zero_data reset
+#pragma force_active reset
 extern u8 lbl_80317488[];
 
 void dll_95_func01_nop(void); /* forward decl to align function set with v1.0 asm; defined in dll_0095 */

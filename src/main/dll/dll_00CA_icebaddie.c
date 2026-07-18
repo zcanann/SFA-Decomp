@@ -55,7 +55,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_00CD_iceball.h"
 #include "main/voxmaps.h"
-#include "main/object_descriptor.h"
 
 /*
  * The per-object "control" sub-block (at GroundBaddieState + 0x40c). Only the
@@ -118,6 +117,7 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 #define ICEBADDIE_PARTICLE_PUFF    0x57 /* puff / impact burst particle */
 #define ICEBADDIE_PARTICLE_DEBRIS  0x58 /* landing debris particle */
 
+
 u8 lbl_803DDA79;
 u8 lbl_803DDA78;
 
@@ -130,6 +130,10 @@ extern s16 gIceBaddieAttackMovesAlt[];
 extern u8 gIceBaddieParticleArgsTable[];
 extern u8 gIceBaddiePaletteIndexTable[];
 
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 int iceBaddie_stateHandlerB07(int obj, int state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
@@ -235,6 +239,9 @@ int iceBaddie_stateHandlerB07(int obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 int iceBaddie_stateHandlerB06(int obj, int state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
@@ -299,6 +306,10 @@ int iceBaddie_stateHandlerB06(int obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract reset
 int iceBaddie_stateHandlerB05(int* obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0)
@@ -319,6 +330,9 @@ int iceBaddie_stateHandlerB05(int* obj, GroundBaddieState* state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 int iceBaddie_stateHandlerB04(int obj, int state)
 {
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
@@ -328,6 +342,9 @@ int iceBaddie_stateHandlerB04(int obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 int iceBaddie_stateHandlerB03(GameObject* obj, int state)
 {
     GroundBaddieState* sub;
@@ -342,6 +359,8 @@ int iceBaddie_stateHandlerB03(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
 #pragma opt_common_subs off
 int iceBaddie_stateHandlerB02(GameObject* obj, int state)
 {
@@ -367,7 +386,10 @@ int iceBaddie_stateHandlerB02(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
 #pragma opt_common_subs reset
+#pragma fp_contract reset
 int iceBaddie_stateHandlerB01(int* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
@@ -394,6 +416,10 @@ int iceBaddie_stateHandlerB01(int* obj, GroundBaddieState* state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract reset
 int iceBaddie_checkTargetState(int obj, int state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
@@ -446,6 +472,9 @@ return0:
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 int iceBaddie_updateLandingState(GameObject* obj, int state)
 {
     GroundBaddieState* sub = (obj)->extra;
@@ -465,14 +494,13 @@ int iceBaddie_updateLandingState(GameObject* obj, int state)
     if ((((GroundBaddieState*)state)->baddie.moveEventFlags & 1) == 0)
     {
         player = (int)Obj_GetPlayerObject();
-        if (((GameObject*)player)->anim.seqId != 0)
-        {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
-        }
-        else
-        {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_swd);
-        }
+        if (((GameObject*)player)->anim.seqId == 0)
+            goto playGroundLandSound;
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
+        goto playLandingExtras;
+    playGroundLandSound:
+        Sfx_PlayFromObject((int)obj, SFXTRIG_swd);
+    playLandingExtras:
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_rfall5_c);
         Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_26f);
         ((GroundBaddieState*)state)->baddie.moveEventFlags |= 1;
@@ -486,6 +514,9 @@ int iceBaddie_updateLandingState(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 int iceBaddie_updateContactHitState(GameObject* obj, int state)
 {
     GroundBaddieState* sub = (obj)->extra;
@@ -522,6 +553,9 @@ int iceBaddie_updateContactHitState(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 int iceBaddie_stateHandlerA0B(GameObject* obj, int state)
 {
     GroundBaddieState* sub = (obj)->extra;
@@ -558,6 +592,9 @@ int iceBaddie_stateHandlerA0B(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 int iceBaddie_updateDropState(GameObject* obj, int state)
 {
     int control = *(int*)(*(int*)&(obj)->extra + 0x40c);
@@ -573,14 +610,13 @@ int iceBaddie_updateDropState(GameObject* obj, int state)
     {
         Obj_GetPlayerObject();
         player = (int)Obj_GetPlayerObject();
-        if (((GameObject*)player)->anim.seqId != 0)
-        {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
-        }
-        else
-        {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_swd);
-        }
+        if (((GameObject*)player)->anim.seqId == 0)
+            goto playGroundDropSound;
+        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
+        goto playDropExtras;
+    playGroundDropSound:
+        Sfx_PlayFromObject((int)obj, SFXTRIG_swd);
+    playDropExtras:
         Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_26e);
     }
     ((GroundBaddieState*)state)->baddie.stateTag = 3;
@@ -589,6 +625,9 @@ int iceBaddie_updateDropState(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 int iceBaddie_updateCommDownState(GameObject* obj, int state)
 {
     GroundBaddieState* sub = (obj)->extra;
@@ -613,6 +652,10 @@ int iceBaddie_updateCommDownState(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract reset
 int iceBaddie_updateControlMove5State(int* obj, GroundBaddieState* state)
 {
     IceBaddieControl* control = (IceBaddieControl*)((GroundBaddieState*)((GameObject*)obj)->extra)->control;
@@ -628,6 +671,9 @@ int iceBaddie_updateControlMove5State(int* obj, GroundBaddieState* state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 int iceBaddie_updateHeightBlendState(GameObject* obj, int state)
 {
     int control = *(int*)(*(int*)&(obj)->extra + 0x40c);
@@ -665,6 +711,8 @@ int iceBaddie_updateHeightBlendState(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
 #pragma opt_common_subs off
 int iceBaddie_stateHandlerA06(GameObject* obj, int state)
 {
@@ -721,6 +769,9 @@ int iceBaddie_stateHandlerA06(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
 int iceBaddie_stateHandlerA05(GameObject* obj, int state)
 {
     GroundBaddieState* sub = obj->extra;
@@ -777,6 +828,8 @@ int iceBaddie_stateHandlerA05(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
 #pragma opt_common_subs reset
 int iceBaddie_updateSpinState(GameObject* obj, int state)
 {
@@ -803,6 +856,8 @@ int iceBaddie_updateSpinState(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
 #pragma opt_common_subs off
 int iceBaddie_updateImpactHitState(GameObject* obj, int state)
 {
@@ -832,6 +887,8 @@ int iceBaddie_updateImpactHitState(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
 #pragma opt_common_subs reset
 int iceBaddie_updateHideResetState(GameObject* obj, int state)
 {
@@ -865,6 +922,8 @@ int iceBaddie_updateHideResetState(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
 int iceBaddie_updateOpenState(GameObject* obj, int state)
 {
     GroundBaddieState* sub;
@@ -910,6 +969,8 @@ int iceBaddie_updateOpenState(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
 #pragma opt_common_subs off
 int iceBaddie_updateOpenHitState(GameObject* obj, int state)
 {
@@ -957,7 +1018,10 @@ int iceBaddie_updateOpenHitState(GameObject* obj, int state)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
 #pragma opt_common_subs reset
+#pragma fp_contract reset
 #pragma dont_inline on
 void iceBaddie_spawnIceBall(int* obj, int* state)
 {
@@ -986,6 +1050,9 @@ void iceBaddie_spawnIceBall(int* obj, int* state)
     }
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 void iceBaddie_updateControlEffects(GameObject* obj, int state)
 {
     int control = (int)((GroundBaddieState*)state)->control;
@@ -1066,6 +1133,9 @@ void iceBaddie_updateControlEffects(GameObject* obj, int state)
     ((IceBaddieControl*)control)->effectFlags = 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 void iceBaddie_updateEffectAnchors(GameObject* obj, int state)
 {
     int control = (int)((GroundBaddieState*)state)->control;
@@ -1138,6 +1208,10 @@ void iceBaddie_updateEffectAnchors(GameObject* obj, int state)
     }
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract reset
 void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
 {
     u32 acquired;
@@ -1181,6 +1255,9 @@ void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
     }
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
 void iceBaddie_updateTargetMotion(GameObject* obj, int sub, int state)
 {
     int control = *(int*)&((GroundBaddieState*)sub)->control;
@@ -1210,6 +1287,10 @@ void iceBaddie_updateTargetMotion(GameObject* obj, int sub, int state)
     *(int*)&(obj)->pendingParentObj = ((GroundBaddieState*)sub)->savedObjC0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract off
 void iceBaddie_updateTargetCollision(int obj, int sub, int state)
 {
     int control = *(int*)&((GroundBaddieState*)sub)->control;
@@ -1261,6 +1342,9 @@ void iceBaddie_updateTargetCollision(int obj, int sub, int state)
     }
 }
 
+#pragma scheduling off
+#pragma peephole on
+#pragma opt_common_subs reset
 void iceBaddie_func0B(int obj, int message)
 {
     GroundBaddieState* state = ((GameObject*)obj)->extra;
@@ -1275,22 +1359,37 @@ void iceBaddie_func0B(int obj, int message)
     }
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract reset
 s16 iceBaddie_setScale(int* obj)
 {
     return ((GroundBaddieState*)((GameObject*)obj)->extra)->baddie.controlMode;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract reset
 int iceBaddie_getExtraSize(void)
 {
     return 0x458;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract reset
 int iceBaddie_getObjectTypeId(void)
 {
     return 0x49;
 }
 
+#pragma scheduling off
+#pragma peephole off
 #pragma opt_common_subs off
+#pragma fp_contract reset
 void iceBaddie_free(GameObject* obj)
 {
     GroundBaddieState* state = obj->extra;
@@ -1305,7 +1404,10 @@ void iceBaddie_free(GameObject* obj)
     ((void (*)(int, int, int))((void**)*gBaddieControlInterface)[16])((int)obj, (int)state, 0x20);
 }
 
+#pragma scheduling off
+#pragma peephole off
 #pragma opt_common_subs reset
+#pragma fp_contract reset
 void iceBaddie_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible)
 {
     GroundBaddieState* state = (obj)->extra;
@@ -1324,12 +1426,21 @@ void iceBaddie_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, in
     iceBaddie_updateEffectAnchors((GameObject*)obj, (int)state);
 }
 
+#pragma scheduling off
+#pragma peephole on
+#pragma opt_common_subs reset
+#pragma fp_contract reset
 void iceBaddie_hitDetect(int obj)
 {
     ((void (*)(int, int, u8*))((void**)*gPlayerInterface)[3])(obj, *(int*)&((GameObject*)obj)->extra,
                                                               gIceBaddieStateHandlersA);
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract reset
+#pragma dont_inline on
 void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
 {
     GroundBaddieState* sub;
@@ -1386,6 +1497,10 @@ void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
     }
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract reset
 #pragma dont_inline reset
 void iceBaddie_init(int obj, u8* params, int flags)
 {
@@ -1416,14 +1531,28 @@ void iceBaddie_init(int obj, u8* params, int flags)
     *(s8*)&sub->baddie.physicsActive = 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract reset
+#pragma dont_inline reset
 void iceBaddie_release_nop(void)
 {
 }
 
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs reset
+#pragma fp_contract reset
+#pragma dont_inline reset
 void iceBaddie_initialise(void)
 {
     fn_8015DAE8();
 }
+
+
+/* --- icebaddie .data reconstruction (0x8031FD80-0x8031FEA8) --- */
+#include "main/object_descriptor.h"
 
 s16 gIceBaddieAttackMoves[8] = {5, 6, 8, 6, 5, 8, 6, 0};
 s16 gIceBaddieAttackMovesAlt[8] = {8, 6, 9, 8, 6, 9, 9, 0};
