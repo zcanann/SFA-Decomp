@@ -351,7 +351,6 @@ extern void GXSetCurrentMtx(u32 id);
 extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXBegin(int type, int fmt, int count);
 extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
-extern u8 skyFn_8008919c(int);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
