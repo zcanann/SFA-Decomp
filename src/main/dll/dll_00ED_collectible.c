@@ -525,7 +525,6 @@ void collectible_hitDetect(void)
 }
 
 
-void collectible_updateIdleMotion(GameObject *obj);
 void collectible_update(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
