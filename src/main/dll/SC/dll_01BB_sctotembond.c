@@ -85,8 +85,6 @@ extern u16 gTotemBondRingGameBits[];
 extern u16 gTotemBondOrbGameBits[];
 
 
-void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius);
-
 static void sc_totembond_beginOrbGame(ScTotemBondObject* obj, ScTotemBondState* state)
 {
     state->active = 1;
