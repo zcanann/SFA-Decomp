@@ -15,6 +15,8 @@
 #include "main/dll/SB/dll_01E8_sbgalleon.h"
 
 CameraModeBikeState* gCamTalkBikeState;
+extern const f32 lbl_803E17B4;
+extern const f32 lbl_803E17A8;
 extern ViewfinderState* lbl_803DD548;
 extern f32 lbl_803E17C0;
 extern f32 lbl_803E17C4;
@@ -93,7 +95,7 @@ void CameraModeBike_update(CameraObject* camera)
         sinPitch = mathSinf((3.1415927f) * (f32)(s32)camera->anim.rotY / (32768.0f));
         st = gCamTalkBikeState;
         clampedHeight = -st->heightInput / (6.0f);
-        kFollowA = (0.2f);
+        kFollowA = lbl_803E17A8;
         kFollowB = (25.0f);
         clampedHeight =
             (clampedHeight < (0.0f)) ? (0.0f) : ((clampedHeight > (1.0f)) ? (1.0f) : clampedHeight);
@@ -106,7 +108,7 @@ void CameraModeBike_update(CameraObject* camera)
         camera->anim.worldPosX = posZ + cosYaw;
         camera->anim.worldPosY = posY + kFollowA;
         camera->anim.worldPosZ = posX + kFollowB;
-        rotVal = (int)((0.2f) * gCamTalkBikeState->rollInput);
+        rotVal = (int)(lbl_803E17A8 * gCamTalkBikeState->rollInput);
         angleDelta = rotVal - (u16)camera->anim.rotZ;
         if (0x8000 < angleDelta)
         {
@@ -117,7 +119,7 @@ void CameraModeBike_update(CameraObject* camera)
             angleDelta = angleDelta + 0xFFFF;
         }
         rollStep = angleDelta * timeDelta;
-        camera->anim.rotZ += rollStep * (0.0625f);
+        camera->anim.rotZ += rollStep * lbl_803E17B4;
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                        &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                        (u32)camera->anim.parent);
