@@ -23,10 +23,11 @@ typedef struct KtlazerwallState
     s32 bolt;        /* 0x10: lightning bolt allocation (pointer) */
 } KtlazerwallState;
 
-extern f32 lbl_803E68B0;
-extern f32 lbl_803E68B4;
-extern f32 lbl_803E68B8;
-extern f32 lbl_803E68BC;
+union KtlazerwallConstF32 { f32 f; };
+extern const union KtlazerwallConstF32 lbl_803E68B0;
+extern const union KtlazerwallConstF32 lbl_803E68B4;
+extern const union KtlazerwallConstF32 lbl_803E68B8;
+extern const union KtlazerwallConstF32 lbl_803E68BC;
 
 int KT_Lazerwall_getExtraSize(void);
 int KT_Lazerwall_getObjectTypeId(void);

@@ -29,6 +29,15 @@
 
 void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle);
 
+const union KtlazerwallConstF32 lbl_803E6898 = {0.0f};
+const union KtlazerwallConstF32 lbl_803E689C = {0.5f};
+const union KtlazerwallConstF32 lbl_803E68A0 = {0.1f};
+const union KtlazerwallConstF32 lbl_803E68A4 = {0.3f};
+const union KtlazerwallConstF32 lbl_803E68B0 = {120.0f};
+const union KtlazerwallConstF32 lbl_803E68B4 = {0.25f};
+const union KtlazerwallConstF32 lbl_803E68B8 = {230.0f};
+const union KtlazerwallConstF32 lbl_803E68BC = {0.01f};
+
 int KT_Lazerwall_getExtraSize(void)
 {
     return 0x14;
@@ -58,11 +67,11 @@ void KT_Lazerwall_render(GameObject* obj)
     if (*(void**)&((KtlazerwallState*)extra)->bolt != 0)
     {
         ((KtlazerwallState*)extra)->driftTimer -= timeDelta;
-        if (((KtlazerwallState*)extra)->driftTimer <= 0.0f)
+        if (((KtlazerwallState*)extra)->driftTimer <= lbl_803E6898.f)
         {
-            f32 kick = 120.0f * ((KtlazerwallState*)extra)->driftSpeed;
+            f32 kick = lbl_803E68B0.f * ((KtlazerwallState*)extra)->driftSpeed;
             bolt = ((KtlazerwallState*)extra)->bolt;
-            *(f32*)(bolt + 0x10) -= kick * 0.25f;
+            *(f32*)(bolt + 0x10) -= kick * lbl_803E68B4.f;
             ((KtlazerwallState*)extra)->driftTimer = (f32)(int)randomGetRange(0xa, 0x78);
         }
         else
@@ -114,7 +123,7 @@ void KT_Lazerwall_update(GameObject* obj)
     {
         mainSetBits(((KtlazerwallPlacement*)placement)->activeBit, 1);
         flags[0] |= 9;
-        ktrexfloorswitch_spawnEnergyArc(obj, 230.0f, 120);
+        ktrexfloorswitch_spawnEnergyArc(obj, lbl_803E68B8.f, 120);
         (*gPartfxInterface)->spawnObject((void*)obj, 1150, NULL, 2, -1, NULL);
         for (i = 10; i != 0; i--)
         {
@@ -147,14 +156,14 @@ void KT_Lazerwall_update(GameObject* obj)
     }
     {
         f32 timer = ((KtlazerwallState*)flags)->reloadTimer;
-        f32 limit = 0.0f;
+        f32 limit = lbl_803E6898.f;
         if (timer > limit)
         {
             ((KtlazerwallState*)flags)->reloadTimer = timer - timeDelta;
             if (((KtlazerwallState*)flags)->reloadTimer <= limit)
             {
                 Sfx_PlayFromObject((int)obj, SFXTRIG_wp_blaserflyby16);
-                ((KtlazerwallState*)flags)->reloadTimer = 0.0f;
+                ((KtlazerwallState*)flags)->reloadTimer = lbl_803E6898.f;
             }
         }
     }
@@ -164,8 +173,8 @@ void KT_Lazerwall_init(GameObject* obj, char* placement)
 {
     char* extra = obj->extra;
     obj->anim.rotX = (s16)((s8)placement[0x18] << 8);
-    ((KtlazerwallState*)extra)->reloadTimer = 0.0f;
-    ((KtlazerwallState*)extra)->driftSpeed = 0.01f * (f32)(int)randomGetRange(0x50, 0x78);
+    ((KtlazerwallState*)extra)->reloadTimer = lbl_803E6898.f;
+    ((KtlazerwallState*)extra)->driftSpeed = lbl_803E68BC.f * (f32)(int)randomGetRange(0x50, 0x78);
     if ((s32)randomGetRange(0, 1) != 0)
     {
         ((KtlazerwallState*)extra)->driftSpeed = -((KtlazerwallState*)extra)->driftSpeed;
@@ -193,11 +202,11 @@ void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
     pos[0] = (obj)->anim.localPosX;
     pos[1] = (obj)->anim.localPosY;
     pos[2] = (obj)->anim.localPosZ;
-    dir[0] = 0.0f;
+    dir[0] = lbl_803E6898.f;
     {
         f32 fr = angle;
         fr = fr * runtime->angleScale;
-        dir[1] = -(fr * 0.5f);
+        dir[1] = -(fr * lbl_803E689C.f);
     }
     dir[2] = scale;
     vecRotateZXY(&obj->anim.rotX, dir);
@@ -205,6 +214,6 @@ void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
     dir[1] += (obj)->anim.localPosY;
     dir[2] += (obj)->anim.localPosZ;
     runtime->unk8 = (f32)(int)randomGetRange(10, angle);
-    runtime->boltObj = lightningCreateU16Promoted((const Vec3f*)pos, (const Vec3f*)dir, 0.1f, 0.3f,
+    runtime->boltObj = lightningCreateU16Promoted((const Vec3f*)pos, (const Vec3f*)dir, lbl_803E68A0.f, lbl_803E68A4.f,
                                                   angle, 96, 0);
 }
