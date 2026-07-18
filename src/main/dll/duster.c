@@ -128,7 +128,7 @@ void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
     float upConst;
     float scale;
 
-    hi = anchor[6] - lbl_803E2A20.f;
+    hi = anchor[6] - 15.0f;
     if (height > hi)
     {
         height = hi;
@@ -141,15 +141,15 @@ void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
             height = lo;
         }
     }
-    if (anchor[4] > lbl_803E2A00)
+    if (anchor[4] > 0.0f)
     {
-        hi = anchor[4] - lbl_803E2A20.f;
-        lo = lbl_803E2A20.f;
+        hi = anchor[4] - 15.0f;
+        lo = 15.0f;
     }
     else
     {
-        hi = lbl_803E2A28.f;
-        lo = lbl_803E2A20.f + anchor[4];
+        hi = -15.0f;
+        lo = 15.0f + anchor[4];
     }
     if (lateral > hi)
     {
@@ -330,7 +330,7 @@ void fn_80155948(int* obj, int state)
              (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
     {
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
-        move = *(short*)(obj + 0x28);
+        move = ((GameObject*)obj)->anim.currentMove;
         if (move == 3)
         {
             fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A00);
@@ -341,7 +341,7 @@ void fn_80155948(int* obj, int state)
         }
         fn_80154D0C((int)obj, state, outIds, outVec);
         if (((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) ||
-            ((outIds[0] < 0x5dc && (*(short*)(obj + 0x28) != 1))))
+            ((outIds[0] < 0x5dc && (((GameObject*)obj)->anim.currentMove != 1))))
         {
             if (outIds[0] < 0x5dc)
             {
