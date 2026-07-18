@@ -102,9 +102,7 @@ static inline u8 ktrex_hasLaneLerpOvershot(void)
     return 0;
 }
 
-int ktrex_updateArenaPathProgress(KTRexRuntime* runtime);
 int ktrex_isPlayerInLaneThreatRange(GameObject* obj);
-void ktrex_initialiseStateHandlerTables(void);
 
 int ktrex_shouldAdvanceArenaPhase(void)
 {
