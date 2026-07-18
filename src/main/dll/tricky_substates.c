@@ -652,7 +652,7 @@ void trickyFn_80142524(u8* obj, u8* state)
         ((GameObject*)obj)->anim.worldPosX = *(f32*)(found + 0x18);
         ((GameObject*)obj)->anim.worldPosY = *(f32*)(found + 0x1c);
         ((GameObject*)obj)->anim.worldPosZ = *(f32*)(found + 0x20);
-        ObjHits_SyncObjectPosition((int)obj);
+        ObjHits_SyncObjectPosition((GameObject*)obj);
         ((GameObject*)obj)->anim.rotX = *(s16*)found;
         state[9] = 0;
         z = lbl_803E23DC;

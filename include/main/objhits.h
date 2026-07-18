@@ -310,7 +310,7 @@ void ObjHits_SyncObjectPositionIfDirty(GameObject* obj);
 void ObjHits_DisableObject(GameObject* obj);
 void ObjHits_EnableObject(GameObject* obj);
 int ObjHits_IsObjectEnabled(ObjAnimComponent* obj);
-void ObjHits_SyncObjectPosition(u32 obj);
+void ObjHits_SyncObjectPosition(GameObject* obj);
 void ObjHits_RefreshObjectState(int obj);
 void ObjHits_AddContactObject(int obj, int contactObj);
 int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, int priority, int hitVolume, s8 sphereIndex,

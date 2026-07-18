@@ -178,7 +178,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
         ((GameObject*)obj)->anim.worldPosX = ((TrickyState*)state)->homePosX;
         ((GameObject*)obj)->anim.worldPosY = ((TrickyState*)state)->homePosY;
         ((GameObject*)obj)->anim.worldPosZ = ((TrickyState*)state)->homePosZ;
-        ObjHits_SyncObjectPosition((u32)obj);
+        ObjHits_SyncObjectPosition((GameObject*)obj);
     }
     target = *(u8**)&((TrickyState*)state)->targetPosPtr;
     wg = Objfsa_GetWalkGroupIndexAtPoint((f32*)(obj + 0x18), 0);
@@ -1335,7 +1335,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             ((GameObject*)obj)->anim.worldPosX = ((TrickyState*)state)->homePosX;
             ((GameObject*)obj)->anim.worldPosY = ((TrickyState*)state)->homePosY;
             ((GameObject*)obj)->anim.worldPosZ = ((TrickyState*)state)->homePosZ;
-            ObjHits_SyncObjectPosition((u32)obj);
+            ObjHits_SyncObjectPosition((GameObject*)obj);
         }
     }
     step = ((TrickyState*)state)->followPhase;

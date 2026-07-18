@@ -1415,7 +1415,7 @@ void Tricky_update(int obj)
             ((GameObject*)obj)->anim.worldPosX = trickyState->homePosX;
             ((GameObject*)obj)->anim.worldPosY = trickyState->homePosY;
             ((GameObject*)obj)->anim.worldPosZ = trickyState->homePosZ;
-            ObjHits_SyncObjectPosition(obj);
+            ObjHits_SyncObjectPosition((GameObject*)obj);
             childLoop.index = 0;
             trickyState->followPhase = childLoop.index;
             z = lbl_803E23DC;
