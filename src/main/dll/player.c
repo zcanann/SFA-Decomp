@@ -11609,7 +11609,7 @@ void staffShootFireball(GameObject* obj, int state, f32 unused)
         {
             return;
         }
-        fb->anim.flags = fb->anim.flags | 0x2000;
+        fb->anim.flags = fb->anim.flags | OBJANIM_FLAG_OWNS_PLACEMENT_DATA;
         if (((PlayerState*)state)->baddie.targetObj != NULL)
         {
             ObjHitVolumeRuntimeTransform* pt;

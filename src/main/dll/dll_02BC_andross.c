@@ -1616,7 +1616,7 @@ void andross_update(int obj)
         state->camOffsetAccum = fval;
         if (boss->anim.currentMoveProgress >= lbl_803E74DC.f)
         {
-            state->arwingObj->anim.flags |= 0x4000;
+            state->arwingObj->anim.flags |= OBJANIM_FLAG_HIDDEN;
             state->actionState = 0x11;
         }
         break;
@@ -2170,7 +2170,7 @@ void andross_update(int obj)
                        : 15.0f * timeDelta + state->camOffsetAccum;
             state->camOffsetAccum = fval;
             state->arwingFlightActive = 0;
-            state->arwingObj->anim.flags &= ~0x4000;
+            state->arwingObj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             rotationDelta = (int)((f32)(s16)arwarwing_getRotY(state->arwingObj) + fc * gAndrossArwingRotationScale);
             arwarwing_setRotY(state->arwingObj, rotationDelta);
             thrustB.x = gAndrossZero;
@@ -2213,7 +2213,7 @@ void andross_update(int obj)
                        : 10.0f * timeDelta + state->camOffsetAccum;
             state->camOffsetAccum = fval;
             state->arwingFlightActive = 0;
-            state->arwingObj->anim.flags &= ~0x4000;
+            state->arwingObj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             rotationDelta = (int)((f32)(s16)arwarwing_getRotY(state->arwingObj) + fc * gAndrossArwingReleaseRotationScale);
             arwarwing_setRotY(state->arwingObj, rotationDelta);
             thrustA.x = gAndrossZero;
