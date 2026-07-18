@@ -76,8 +76,8 @@ extern const f32 gMapBlockWorldSize;
 #include "main/gameloop_ext.h"
 #include "main/rcp_dolphin_ext.h"
 #include "main/track_dolphin_cs.h"
-#include "main/dll/dll_0017_savegame_cs.h"
-#include "main/objprint_dolphin_pr.h"
+#include "main/dll/dll_0017_savegame_api.h"
+#include "main/objprint_dolphin_api.h"
 #include "string.h"
 
 int lbl_803DB620 = -1;

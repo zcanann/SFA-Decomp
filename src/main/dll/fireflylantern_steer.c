@@ -13,7 +13,7 @@
 #include "main/vecmath.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/objfsa.h"
-#include "main/dll/duster_cs.h"
+#include "main/dll/duster_api.h"
 
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;

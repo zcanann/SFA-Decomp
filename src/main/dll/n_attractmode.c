@@ -8,7 +8,7 @@
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/mm.h"
 #include "main/mm_ext.h"
-#include "main/dll/dll_3e_kr.h"
+#include "main/dll/dll_3e_api.h"
 
 extern u8 gAttractMoviePreparePending;
 extern void* gAttractMovieBuffer0;

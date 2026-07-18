@@ -43,7 +43,7 @@
 #include "main/sky_ext.h"
 #include "main/pi_dolphin_ext2.h"
 #include "main/newshadows_ext2.h"
-#include "main/atan2f_cs.h"
+#include "main/atan2f_api.h"
 #include "main/sky_texture_api.h"
 #include "main/lightmap_pr.h"
 #include "string.h"

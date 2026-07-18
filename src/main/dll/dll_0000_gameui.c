@@ -591,9 +591,9 @@ extern const f32 lbl_803E2064;
 extern const f32 lbl_803E2068;
 #include "main/fsin16_approx_api.h"
 #include "main/dll/dll_8011d918_ext.h"
-#include "main/trig_cs.h"
-#include "main/dll/dll_0017_savegame_cs.h"
-#include "main/dll/dll_0011_screens_pr.h"
+#include "main/trig_api.h"
+#include "main/dll/dll_0017_savegame_api.h"
+#include "main/dll/dll_0011_screens_api.h"
 #include "string.h"
 #include "dolphin/gx/GXPixel.h"
 #include "track/intersect_api.h"
