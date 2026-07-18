@@ -119,6 +119,7 @@ extern const f32 lbl_803E2A8C;
 extern const f32 lbl_803E2A90;
 
 extern int fn_80169EF4(float* src, float* dst, f32 speed, char flag, f32 arc);
+#pragma opt_common_subs off
 void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
 {
     float hi;
@@ -176,6 +177,7 @@ void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
     outPos[1] = scale * anchor[1] + outPos[1];
     outPos[2] = scale * anchor[2] + outPos[2];
 }
+#pragma opt_common_subs reset
 
 void fn_801554B4(int* obj, int state)
 {
