@@ -13,6 +13,7 @@
 #include "main/object_transform.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
+#include "dolphin/PPCArch.h"
 #include "main/rcp_dolphin.h"
 #include "main/pi_dolphin.h"
 #include "main/loaded_file_flags.h"
@@ -2355,8 +2356,6 @@ void* fn_80028354(u8* modelFile, int index)
 {
     return ((ModelFileHeader*)modelFile)->collisionTriangles + index * 8;
 }
-
-extern u32 PPCMfhid2(void);
 
 void* fn_80028364(u8* modelFile, int index)
 {

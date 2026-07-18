@@ -484,7 +484,7 @@ void PPCSync();
 void PPCHalt();
 u32 PPCMffpscr();
 void PPCMtfpscr(u32 newFPSCR);
-u32 PPCMfhid2();
+u32 PPCMfhid2(void);
 void PPCMthid2(u32 newhid2);
 u32 PPCMfwpar();
 void PPCMtwpar(u32 newwpar);
