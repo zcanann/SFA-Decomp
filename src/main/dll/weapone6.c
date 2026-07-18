@@ -35,6 +35,7 @@
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/tricky_substates_ext.h"
+#include "main/dll/trickyfollow_ext.h"
 
 typedef struct
 {
@@ -85,7 +86,6 @@ extern f32 lbl_803E24F4;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
-extern int trickyFn_8013b368(int obj, f32 speed, int state);
 extern int tumbleweedbush_findNearestActive(void);
 extern int fn_801CDE70(int);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
@@ -111,7 +111,7 @@ void fn_8013F100(GameObject* obj, register int state)
     case 1:
         if (fn_80179650((GameObject*)*(int*)&((TrickyState*)state)->unk700) != 0)
         {
-            status = trickyFn_8013b368((int)obj, lbl_803E24F0, state);
+            status = trickyFn_8013b368((u8*)obj, lbl_803E24F0, (u8*)state);
             if (status == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
@@ -166,7 +166,7 @@ void fn_8013F100(GameObject* obj, register int state)
         }
         else
         {
-            status = trickyFn_8013b368((int)obj, lbl_803E2408, state);
+            status = trickyFn_8013b368((u8*)obj, lbl_803E2408, (u8*)state);
             if (status == 0)
             {
                 if (*(float*)&((TrickyState*)state)->unk704 > lbl_803E23DC)
@@ -342,7 +342,7 @@ void fn_8013F100(GameObject* obj, register int state)
         }
         break;
     case 7:
-        status = trickyFn_8013b368((int)obj, lbl_803E2408, state);
+        status = trickyFn_8013b368((u8*)obj, lbl_803E2408, (u8*)state);
         if (status != 1)
         {
             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
@@ -404,7 +404,7 @@ void fn_8013F100(GameObject* obj, register int state)
             }
             ((TrickyState*)state)->substate = 5;
         case 5:
-            if (trickyFn_8013b368((int)obj, lbl_803E24C8, state) == 0)
+            if (trickyFn_8013b368((u8*)obj, lbl_803E24C8, (u8*)state) == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
                 {
@@ -624,7 +624,7 @@ void fn_8013FEC0(int obj, int state)
     int inWater;
     int result;
 
-    result = trickyFn_8013b368(obj, lbl_803E247C, state);
+    result = trickyFn_8013b368((u8*)obj, lbl_803E247C, (u8*)state);
     if (result == 0)
     {
         if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)

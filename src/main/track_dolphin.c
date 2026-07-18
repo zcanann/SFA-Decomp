@@ -40,6 +40,7 @@
 #include "main/rcp_dolphin_api.h"
 #include "main/objmodel.h"
 #include "main/newshadows_ext.h"
+#include "main/sky_ext.h"
 
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
@@ -408,7 +409,6 @@ extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
 extern void fn_80077EF8(GameObject* hdr, void* col, void* mtx, f32 f);
 extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern u8 skyFn_8008919c(int);
-extern void skyBuildSunModelMatrix(f32* out);
 extern void* fn_8008912C(void);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern void allocLotsOfTextures(void);
@@ -3471,7 +3471,7 @@ void renderGlows(void)
             int i;
             int occ;
             f32 fade;
-            skyBuildSunModelMatrix(sunMtx);
+            skyBuildSunModelMatrix((f32(*)[4])sunMtx);
             Camera_ProjectWorldPointWithOffset(sunMtx[3], sunMtx[7], sunMtx[11], lbl_803DEBD4, &px, &py, &pz);
             Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
             gSunFlareScissorX = sx - 0x10;

@@ -32,6 +32,7 @@
 #include "main/dll/modgfx.h"
 #include "main/pi_dolphin_ext.h"
 #include "main/mm_ext.h"
+#include "main/newshadows_ext.h"
 
 struct LoadedTextureEntry* gLoadedTextures;
 u16* gRcpTexIdRemap;
@@ -144,7 +145,6 @@ extern u16 GXGetTexObjWidth(void* obj);
 extern u16 GXGetTexObjHeight(void* obj);
 extern f32 lbl_803DEB98;
 extern f32 lbl_803DEB9C;
-extern void findSomething(int);
 extern void GXSetTevSwapModeTable(int table, int r, int g, int b, int a);
 extern void GXSetTevKColor(int id, int* color);
 extern u8 lbl_803779A0[];
@@ -1594,13 +1594,13 @@ void textureFree(Texture* tex)
                         continue;
                     next = *(u8**)iter;
                     if (((Texture*)iter)->preloaded != 0)
-                        findSomething((int)((Texture*)iter)->tmemAddr);
+                        findSomething((void*)((Texture*)iter)->tmemAddr);
                     if (((Texture*)iter)->cached == 0)
                         mm_free(iter);
                     iter = next;
                 }
                 if (((Texture*)tex)->preloaded != 0)
-                    findSomething(*(int*)&((Texture*)tex)->tmemAddr);
+                    findSomething((void*)*(int*)&((Texture*)tex)->tmemAddr);
                 if (((Texture*)tex)->cached == 0)
                     mm_free(tex);
                 gLoadedTextures[i].key = -1;

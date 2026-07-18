@@ -5,4 +5,5 @@
 
 void* textureAlloc512(void);
 
+void findSomething(void* needle);
 #endif /* MAIN_NEWSHADOWS_EXT_H_ */
