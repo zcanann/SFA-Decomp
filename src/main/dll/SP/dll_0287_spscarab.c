@@ -70,17 +70,6 @@ STATIC_ASSERT(sizeof(SpscarabState) == 0x14);
 #define SPSCARAB_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SPSCARAB_OBJFLAG_UPDATE_DISABLED    0x8000
 
-extern u16 gSpScarabPaletteBytesA;
-extern u8 gSpScarabPaletteByteB;
-extern f32 gSpScarabGravity;             /* gravity */
-extern const f32 gSpScarabBounceVelocityY;     /* ground-bounce velocityY */
-extern f32 gSpScarabCollisionRadius;     /* bbox collision radius */
-extern f32 gSpScarabPickupRadius;        /* pickup radius */
-extern f32 gSpScarabPickupParticleScale; /* pickup particle scale */
-extern f32 gSpScarabDustBurstScale;      /* dust-burst scale */
-extern f32 gSpScarabPi;
-extern f32 gSpScarabAngleToRadiansDivisor;
-extern f32 gSpScarabBaseSpeedScale; /* base horizontal speed scale */
 
 int SPScarab_getExtraSize(void)
 {
