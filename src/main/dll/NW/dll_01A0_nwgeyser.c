@@ -144,31 +144,3 @@ int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     return 0;
 }
 
-void fn_801CDF94(GameObject* obj, int state, int flag)
-{
-    if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL &&
-        ((NwMammothState*)state)->playerDistanceSq < 40000.0f)
-    {
-        ((NwMammothState*)state)->eyeTarget.enabled = 1;
-        ((NwMammothState*)state)->eyeTarget.targetX =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosX;
-        ((NwMammothState*)state)->eyeTarget.targetY =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosY;
-        ((NwMammothState*)state)->eyeTarget.targetZ =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosZ;
-    }
-    else
-    {
-        ((NwMammothState*)state)->eyeTarget.enabled = 0;
-    }
-    if ((lbl_803268B4[((NwMammothState*)state)->stateIndex] & 0x2) != 0)
-    {
-        fn_8003A168(obj, (void*)(state + 0x40c));
-        fn_8003B228(obj, (void*)(state + 0x40c));
-    }
-    else
-    {
-        fn_8003A230(obj, (CharacterEyeAnimState*)(state + 0x40c), 0.0f);
-        characterDoEyeAnimsState(obj, state + 0x40c);
-    }
-}
