@@ -33,6 +33,7 @@
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/baddie_control_interface.h"
+#include "string.h"
 
 #define DIM2ICICLE_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 
@@ -75,7 +76,6 @@ typedef struct IcicleState
     u8 index;
 } IcicleState;
 
-extern void memcpy(void* dst, void* src, int n);
 extern const f32 lbl_803E4BCC;
 extern const f32 lbl_803E4C34;
 extern const f32 lbl_803E4C38;
@@ -752,4 +752,3 @@ int gDim2IcicleSequenceSfx[] = {
 u8 gDim2LiftFarMoveChoices[60] = {0, 1, 0, 1, 0, 8, 0, 4, 0, 5, 0, 5, 0, 3, 0, 4, 0, 3, 0, 5,
                                   0, 4, 0, 5, 0, 6, 0, 0, 0, 5, 0, 4, 0, 3, 0, 5, 0, 4, 0, 5,
                                   0, 6, 0, 0, 0, 4, 0, 5, 0, 4, 0, 5, 0, 4, 0, 5, 0, 6, 0, 0};
-

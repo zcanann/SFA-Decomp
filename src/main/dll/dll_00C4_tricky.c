@@ -72,6 +72,7 @@
 #include "main/dll/dll_0014_unk.h"
 #include "main/pi_dolphin_cs.h"
 #include "main/newshadows_audio_api.h"
+#include "string.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -269,7 +270,6 @@ extern f32 lbl_803E2544;
 extern f32 lbl_803E2548;
 extern f32 lbl_803E254C;
 extern f32 lbl_803E2550;
-extern void memmove(void* dst, void* src, int n);
 
 u16 gSkeetlaFootstepSfxId2 = 0x355;
 f32 lbl_803E23DC = 0.0f;

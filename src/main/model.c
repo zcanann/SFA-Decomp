@@ -23,6 +23,7 @@
 #include "main/pi_dolphin_ext.h"
 #include "main/acosf_cs.h"
 #include "dolphin/base/PPCArch.h"
+#include "string.h"
 
 int gModelTabEntryCount;
 s16* gModelResourceBuffer;
@@ -42,9 +43,7 @@ u16 gModelCopyChunkWordLimit = 0x2A0;
 #define GX_AOP_AND 0
 #define GX_LEQUAL 3
 #define GX_ALWAYS 7
-extern void* memset(void* dst, int val, int n);
 extern f32 gModelPhaseWrapPeriod;
-extern void* memcpy(void* dst, const void* src, int n);
 extern f32 lbl_803DE828;
 extern f32 lbl_803DE840;
 extern f32 lbl_803DE818;

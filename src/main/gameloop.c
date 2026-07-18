@@ -79,6 +79,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/pi_dolphin_ext.h"
 #include "main/lightmap_ext.h"
 #include "main/pi_dolphin_pr.h"
+#include "string.h"
 
 f32 gGameLoopResetFadeOutTimer;
 void* lbl_803DCAFC;
@@ -151,7 +152,6 @@ extern s16 screenBlankFrameCount;
 extern u8 gGameLoopInitComplete;
 extern int gGameLoopButtonObjects[2];
 extern u8 gGameLoopButtonObjectCount;
-extern void* memset(void* dst, int val, int n);
 extern u16 lbl_803DCA42;
 extern u8 gGameLoopPendingMusicId;
 extern void loadAsset(void* req);
@@ -173,7 +173,6 @@ typedef struct
     int arg28;
 } AssetReq;
 extern void* lbl_803DCAFC;
-extern void* memcpy(void* dst, const void* src, int n);
 extern u8* gGameBitTable;
 extern s16 gGameBitCount;
 extern u8* gGameBitSaveData;

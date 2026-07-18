@@ -17,6 +17,7 @@
 #include "main/audio/vid_init.h"
 #include "main/audio/inp_ctrl.h"
 #include "main/audio/hw_keyoff.h"
+#include "string.h"
 
 
 struct SynthDelayedNode
@@ -1452,7 +1453,6 @@ extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
 extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
 extern void macSetExternalKeyoff(McmdVoiceState* slot);
 extern void macSampleEndNotify(void);
-extern void memset(void* dst, int value, u32 size);
 extern void macInit(void);
 extern u32 synthMessageCallback;
 
