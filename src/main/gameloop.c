@@ -225,15 +225,15 @@ void doNothing_startOfFrame(void)
 }
 extern AssetReq gGameLoopAssetReq;
 
-void* animationLoad(int id, s16 animId, s16 moveIndex, int cache, int animDef)
+void animationLoad(void** out, int animId, int moveIndex, u8* cache, struct ObjAnimDef* animDef)
 {
     gGameLoopAssetReq.pending = 1;
     gGameLoopAssetReq.type = 7;
-    gGameLoopAssetReq.resourceId = animId;
-    gGameLoopAssetReq.dest = id;
-    gGameLoopAssetReq.argC = moveIndex;
-    gGameLoopAssetReq.arg20 = cache;
-    gGameLoopAssetReq.arg24 = animDef;
+    gGameLoopAssetReq.resourceId = (s16)animId;
+    gGameLoopAssetReq.dest = (int)out;
+    gGameLoopAssetReq.argC = (s16)moveIndex;
+    gGameLoopAssetReq.arg20 = (int)cache;
+    gGameLoopAssetReq.arg24 = (int)animDef;
     loadAsset(&gGameLoopAssetReq);
 }
 
@@ -249,16 +249,16 @@ typedef enum GameLoopState
     GAMELOOP_STATE_HARD_RESET_REQUESTED = 6 /* like RESET_REQUESTED but flags a hard reset */
 } GameLoopState;
 
-void* loadTextureFile(int id, int arg)
+void loadTextureFile(void** out, int assetId)
 {
     gGameLoopAssetReq.pending = 1;
     gGameLoopAssetReq.type = 3;
-    gGameLoopAssetReq.resourceId = arg;
-    gGameLoopAssetReq.dest = id;
+    gGameLoopAssetReq.resourceId = assetId;
+    gGameLoopAssetReq.dest = (int)out;
     loadAsset(&gGameLoopAssetReq);
 }
 
-void* getTabEntry(void* dst, int fileId, int offset, int size)
+void getTabEntry(void* dst, int fileId, int offset, int size)
 {
     gGameLoopAssetReq.pending = 1;
     gGameLoopAssetReq.type = 2;

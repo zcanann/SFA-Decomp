@@ -102,7 +102,6 @@ typedef struct LoadedTextureEntry
 } LoadedTextureEntry;
 extern int gLoadedTextureCount;
 extern LoadedTextureEntry* gLoadedTextures;
-extern void loadTextureFile(void** out, int asset);
 extern int lbl_803DCD58, lbl_803DCD84;
 extern int lbl_803DCD54, lbl_803DCD80;
 extern int lbl_803DCD64, lbl_803DCD90;

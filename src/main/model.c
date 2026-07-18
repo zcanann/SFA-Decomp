@@ -592,12 +592,10 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
     }
 }
 
-void* animationLoad(int id, int a, int b, int e, int f);
-
 void* ObjAnim_LoadCachedMove(int animId, int moveIndex, u8* cache, ObjAnimDef* animDef)
 {
     void* out = NULL;
-    animationLoad((int)&out, animId, moveIndex, (int)cache, (int)animDef);
+    animationLoad(&out, animId, moveIndex, cache, animDef);
     return out;
 }
 
