@@ -25,7 +25,9 @@
 #include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
 #include "dolphin/gx/GXLighting.h"
+#include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXPixel.h"
+#include "dolphin/gx/GXTev.h"
 #include "main/camera.h"
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
@@ -333,16 +335,6 @@ extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
-extern void GXSetTevKColor(int id, void* color);
-extern void GXSetTevKAlphaSel(int stage, int sel);
-extern void GXSetNumTevStages(u8 nStages);
-extern void GXSetNumIndStages(u8 nIndStages);
-extern void GXSetTevOrder(int a, int b, int c, int d);
-extern void GXSetTevDirect(int stage);
-extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
-extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
 extern void GXSetCullMode(int mode);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXBegin(int type, int fmt, int count);
@@ -2898,21 +2890,12 @@ static inline void GXPosition3f32(const f32 x, const f32 y, const f32 z)
     GXWGFifo.f32 = z;
 }
 
-typedef struct TrackGXColor
-{
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} TrackGXColor;
-
 void objDrawFn_80061654(int obj, int placementObj)
 {
     s16* shadowVerts;
     u8 alpha;
     void* viewMtx;
-    TrackGXColor kColor;
-    TrackGXColor kColorCopy;
+    GXColor kColor;
     f32 mtx[16];
     f32 outMtx[16];
 
@@ -2945,8 +2928,7 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
             GXSetNumTexGens(1);
             GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-            kColorCopy = kColor;
-            GXSetTevKColor(GX_KCOLOR0, &kColorCopy);
+            GXSetTevKColor(GX_KCOLOR0, kColor);
             GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
             GXSetNumTevStages(1);
             GXSetNumIndStages(0);

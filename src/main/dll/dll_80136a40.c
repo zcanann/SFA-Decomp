@@ -35,6 +35,7 @@
 #include "dolphin/gx/GXMisc.h"
 #include "dolphin/os/OSContext.h"
 #include "dolphin/gx/GXStruct.h"
+#include "dolphin/gx/GXTev.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/object.h"
@@ -197,7 +198,6 @@ extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, 
 #define Obj_SetModelColorOverrideRecursivePromoted(obj, red, green, blue, alpha, enabled)                         \
     ((void (*)(GameObject*, int, int, int, int, int))Obj_SetModelColorOverrideRecursive)(                        \
         (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
-extern void GXSetTevColor(int id, GXColor* color);
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void GXSetBreakPtCallback(void* cb);
@@ -377,7 +377,6 @@ int debugPrintDrawRecord(int color, u8* p)
     u8* start = p;
     u8 c;
     GXColor textColorSource;
-    GXColor textColor;
     GXColor positionColor;
     GXColor positionColorSource;
     GXColor newlineColor;
@@ -416,8 +415,7 @@ int debugPrintDrawRecord(int color, u8* p)
                 textColorSource.g = green;
                 textColorSource.b = blue;
                 textColorSource.a = alpha;
-                textColor = textColorSource;
-                GXSetTevColor(GX_TEVREG0, &textColor);
+                GXSetTevColor(GX_TEVREG0, textColorSource);
             }
             break;
         }

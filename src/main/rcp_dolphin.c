@@ -30,7 +30,9 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSInterrupt.h"
 #include "dolphin/gx/GXDispList.h"
+#include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXPixel.h"
+#include "dolphin/gx/GXTev.h"
 #include "main/dll/modgfx.h"
 #include "main/pi_dolphin_ext.h"
 #include "main/mm_ext.h"
@@ -90,9 +92,7 @@ extern u32 lbl_803DCDB4;
 extern void GXSetNumTexGens(u8 nTexGens);
 extern u8 lbl_803DCD68;
 extern u8 lbl_803DCD69;
-extern void GXSetNumIndStages(u8 nIndStages);
 extern u8 lbl_803DCD6A;
-extern void GXSetNumTevStages(u8 nStages);
 extern u8 gRcpDistortSlots[];
 typedef struct LoadedTextureEntry
 {
@@ -119,15 +119,6 @@ extern u8 lbl_803DCD4A;
 extern u8 lbl_803DCD49;
 extern u8 lbl_803DCD48;
 extern u8 lbl_803DCD30;
-extern void GXSetTevDirect(int tev);
-extern void GXSetTevOrder(int tev, int tc, int tm, int color);
-extern void GXSetTevSwapMode(int tev, int ras, int tex);
-extern void GXSetTevColorIn(int tev, int a, int b, int c, int d);
-extern void GXSetTevAlphaIn(int tev, int a, int b, int c, int d);
-extern void GXSetTevColorOp(int tev, int op, int bias, int scale, int clamp, int outreg);
-extern void GXSetTevAlphaOp(int tev, int op, int bias, int scale, int clamp, int outreg);
-extern void GXSetTevColor(int id, int* color);
-extern void GXSetTevKColorSel(int tev, int sel);
 typedef struct F32Pair
 {
     f32 lo;
@@ -139,7 +130,6 @@ extern F32Pair lbl_803DEB58;
 extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
 extern f32 lbl_803DEB5C;
 extern f32 lbl_803DEB7C;
-extern void GXSetTevKAlphaSel(int tev, int sel);
 extern void textureFn_80053d58(void* obj);
 extern void GXInitTexObj(void* obj, void* img, u16 w, u16 h, int fmt, u8 ws, u8 wt, u8 mipmap);
 extern void GXInitTexObjUserData(void* obj, void* udata);
@@ -148,8 +138,6 @@ extern u16 GXGetTexObjWidth(void* obj);
 extern u16 GXGetTexObjHeight(void* obj);
 extern f32 lbl_803DEB98;
 extern f32 lbl_803DEB9C;
-extern void GXSetTevSwapModeTable(int table, int r, int g, int b, int a);
-extern void GXSetTevKColor(int id, int* color);
 extern u8 lbl_803779A0[];
 extern void GXSetMisc(int token, u32 val);
 extern void GXBegin(int prim, int vtxfmt, u16 nverts);
@@ -426,7 +414,6 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
 {
     int sel;
     int v1;
-    int color;
     int map;
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
@@ -458,8 +445,7 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
     }
     else
     {
-        color = *kparam;
-        GXSetTevKColor(lbl_803DCD74, &color);
+        GXSetTevKColor(lbl_803DCD74, *(GXColor*)kparam);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
         if (*(void**)&((Texture*)tex)->imageOffset != NULL)
         {
@@ -562,10 +548,8 @@ void gxTextureFn_80052638(int* param)
 {
     int sel;
     int v1;
-    int color;
     GXSetTevDirect(lbl_803DCD90);
-    color = param[0];
-    GXSetTevColor(GX_TEVREG0, &color);
+    GXSetTevColor(GX_TEVREG0, *(GXColor*)param);
     gxTextureFn_8004bf88(param, 1, 0, &sel, &v1);
     GXSetTevKColorSel(lbl_803DCD90, sel);
     GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);

@@ -36,6 +36,7 @@
 #include "dolphin/gx/GXDispList.h"
 #include "dolphin/gx/GXLighting.h"
 #include "dolphin/gx/GXPixel.h"
+#include "dolphin/gx/GXTev.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -143,20 +144,10 @@ typedef struct
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetCurrentMtx(u32 id);
-extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void GXLoadNrmMtxImm(f32* m, int id);
 extern void GXBegin(int prim, int fmt, u16 count);
-typedef struct
-{
-    u8 r, g, b, a;
-} ObjGXColor;
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
-extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, int out);
-extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int out);
-extern void GXSetTevColor(int id, u32* color);
 extern f32 lbl_803DEA38;
 extern f32 lbl_803DEA4C;
 extern f32 lbl_803DEA50;
@@ -180,12 +171,7 @@ s32 mapCheckCurBlocks(int v);
 #define OBJPRINT_MODEL_DEF(obj)         (((ObjAnimComponent*)(obj))->modelInstance)
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent*)(obj))->bankIndex)
 
-extern u32 GXSetTevKColorSel();
-extern void GXSetTevKColor(int id, ObjGXColor color);
 extern void GXSetNumTexGens(u8 nTexGens);
-extern void GXSetNumTevStages(u8 nStages);
-extern void GXSetTevOrder(int stage, int coord, int map, int color);
-extern void GXSetTevSwapMode(int stage, int ras, int tex);
 extern u8 lbl_803DCC3D;
 extern s32 lbl_803DCC44;
 extern u32 lbl_803DE9F0;
@@ -216,7 +202,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
         modelLightChannels_applyGXControls();
         ModelLightStruct_free(renderHandle);
     }
-    GXSetTevKColor(GX_KCOLOR0, *(ObjGXColor*)&savedEnvColor);
+    GXSetTevKColor(GX_KCOLOR0, *(GXColor*)&savedEnvColor);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
     newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
@@ -1051,8 +1037,6 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     int b;
     u8 color[4];
     f32 fogc;
-    u32 tmp1;
-    u32 tmp2;
 
     shad = 0;
     {
@@ -1108,8 +1092,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         {
             color[3] = 0;
         }
-        tmp1 = *(u32*)color;
-        GXSetTevColor(GX_TEVREG2, &tmp1);
+        GXSetTevColor(GX_TEVREG2, *(GXColor*)color);
         fn_800510F0IntLegacy(refs[1], refs[0] != 0 ? 1 : 0, ((u8*)op)[0x20]);
         if (color[3] != 0)
         {
@@ -1118,8 +1101,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     else
     {
-        tmp2 = gObjGxDefaultChanColor;
-        GXSetTevColor(GX_TEVREG2, &tmp2);
+        GXSetTevColor(GX_TEVREG2, *(GXColor*)&gObjGxDefaultChanColor);
     }
     nlay = lbl_803DCC5C;
     if (gObjShadowNear != 0)
@@ -1566,7 +1548,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         if (gObjGxKColorCache[0] != color[0] || gObjGxKColorCache[1] != color[1] || gObjGxKColorCache[2] != color[2] ||
             gObjGxKColorCache[3] != color[3])
         {
-            GXSetTevKColor(GX_KCOLOR0, *(ObjGXColor*)color);
+            GXSetTevKColor(GX_KCOLOR0, *(GXColor*)color);
             *(u32*)gObjGxKColorCache = *(u32*)color;
         }
     }
@@ -1749,8 +1731,6 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     f32 im[16];
     MtxBitStream bs;
     u8 color[4];
-    u32 tev1;
-    u32 tev2;
     int* am;
     f32* vm;
     u8 did;
@@ -1856,8 +1836,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         sh = ((u8*)((GameObject*)o)->anim.modelState->shadowCastSlot)[0x65];
         if (sh == 0xff)
         {
-            tev1 = lbl_803DB468;
-            GXSetTevColor(GX_TEVREG2, &tev1);
+            GXSetTevColor(GX_TEVREG2, *(GXColor*)&lbl_803DB468);
             GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
         }
         else
@@ -1875,8 +1854,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
                 color[2] = 0;
             }
             color[3] = 0xff;
-            tev2 = *(u32*)color;
-            GXSetTevColor(GX_TEVREG2, &tev2);
+            GXSetTevColor(GX_TEVREG2, *(GXColor*)color);
             GXSetBlendMode(GX_BM_LOGIC, GX_BL_ONE, GX_BL_ZERO, GX_LO_OR);
         }
     }
@@ -1997,8 +1975,6 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     f32 t2m[12];
     MtxBitStream bs;
     u8 color[4];
-    u32 tev1;
-    u32 tev2;
     u8 o9;
     u8 o8;
     int* am;
@@ -2247,8 +2223,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             sh = ((u8*)((GameObject*)o)->anim.modelState->shadowCastSlot)[0x65];
             if (sh == 0xff)
             {
-                tev1 = lbl_803DB468;
-                GXSetTevColor(GX_TEVREG2, &tev1);
+                GXSetTevColor(GX_TEVREG2, *(GXColor*)&lbl_803DB468);
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
             }
             else
@@ -2266,8 +2241,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                     color[2] = 0;
                 }
                 color[3] = 0xff;
-                tev2 = *(u32*)color;
-                GXSetTevColor(GX_TEVREG2, &tev2);
+                GXSetTevColor(GX_TEVREG2, *(GXColor*)color);
                 GXSetBlendMode(GX_BM_LOGIC, GX_BL_ONE, GX_BL_ZERO, GX_LO_OR);
             }
         }

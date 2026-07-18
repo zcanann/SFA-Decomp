@@ -36,6 +36,7 @@
 #include "dolphin/gx/GXManage.h"
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXPerf.h"
+#include "dolphin/gx/GXTev.h"
 #include "dolphin/gx/GXTexture.h"
 #include "dolphin/gx/GXTransform.h"
 #include "dolphin/os/OSTime.h"
@@ -923,8 +924,6 @@ extern u8 lbl_803DCCB0;
 extern void gxPerfFn_8004a77c(int);
 extern void* lbl_803DCD10;
 extern void VISetBlack(int);
-extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
-extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
 extern char* lbl_803DCD08;
 extern void* renderFrameBuffer;
 extern void* externalFrameBuffer0;
@@ -936,14 +935,9 @@ extern int lbl_803DCD80;
 extern u8 lbl_803DCD69;
 extern f32 lbl_803DEACC;
 extern f32 lbl_803DEADC;
-extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
 extern int lbl_803DCD78;
 extern u8* lbl_803DCD2C;
-extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
-extern void GXSetTevColorS10(int id, void* color);
-extern void GXSetTevKColor(int id, void* color);
 extern void mapTextureScrollGetOffset(u8 idx, f32* x, f32* y);
-extern void GXSetTevOp(int stage, int mode);
 extern f32 lbl_803DEAE4;
 extern u8 lbl_803DCD6B;
 extern f32 lbl_803DEAF4;
@@ -954,7 +948,6 @@ extern int lbl_803DCD84;
 extern f32 lbl_803DEAE8;
 extern f32 lbl_803DEAEC;
 extern f32 lbl_803DEAF0;
-extern void GXSetTevColor(int id, void* color);
 extern u8 gLoadingScreenTextures[];
 extern char lbl_8035F680[0x38];
 extern void OSStopStopwatch(void* sw);
@@ -4545,12 +4538,6 @@ extern int lbl_803DCD88;
 extern int lbl_803DCD8C;
 extern int lbl_803DCD90;
 extern u8 lbl_803DCD6A;
-extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
-extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
-extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                            GXTevRegID out_reg);
-extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                            GXTevRegID out_reg);
 void setDisplayCopyFilter(void)
 {
     GXRenderModeObj* renderMode = gRenderModeObj;
@@ -5245,8 +5232,6 @@ int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, i
     return 0;
 }
 
-extern void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue,
-                                  GXTevColorChan alpha);
 
 void freeAndNull(void** p)
 {
@@ -5818,13 +5803,7 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
     return 0;
 }
 
-typedef struct
-{
-    int a;
-    int b;
-} PiColorS10;
-
-extern int lbl_803DEAB0; /* first word of a PiColorS10 (through 803DEAC0) */
+extern int lbl_803DEAB0; /* first word of a GXColorS10 (through 803DEAC0) */
 extern int lbl_803DEAB8;
 extern int lbl_803DEABC;
 extern int lbl_803DEAC0;
@@ -5945,8 +5924,7 @@ void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2)
     }
     if (found1 == 0 || found2 == 0)
     {
-        int color = *(int*)bufp;
-        GXSetTevKColor(lbl_803DCD74, &color);
+        GXSetTevKColor(lbl_803DCD74, *(GXColor*)bufp);
         lbl_803DCD74 = lbl_803DCD74 + 1;
         lbl_803DCD70 = lbl_803DCD70 + 1;
         lbl_803DCD6C = lbl_803DCD6C + 1;
@@ -6153,10 +6131,7 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
     u8 buf5c[0x20];
     u8 buf3c[0x20];
     u8 buf1c[0x20];
-    PiColorS10 cs10;
-    int ck1;
-    int ck2;
-    int ck3;
+    GXColorS10 cs10;
     int h2;
     int w2;
     if (lbl_803DCD6A > 0xb || lbl_803DCD69 > 6 || lbl_803DCD8C > 5 || lbl_803DCD74 > 1)
@@ -6208,14 +6183,11 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
         GXSetTevSwapMode(lbl_803DCD90 + 4, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevKColorSel(lbl_803DCD90 + 4, GX_TEV_KCSEL_1_4);
         lbl_803DCD30 = 1;
-        cs10 = *(PiColorS10*)&lbl_803DEAB0;
-        GXSetTevColorS10(1, &cs10);
-        ck1 = lbl_803DEAB8;
-        GXSetTevKColor(lbl_803DCD74, &ck1);
-        ck2 = lbl_803DEABC;
-        GXSetTevKColor(lbl_803DCD74 + 1, &ck2);
-        ck3 = lbl_803DEAC0;
-        GXSetTevKColor(lbl_803DCD74 + 2, &ck3);
+        cs10 = *(GXColorS10*)&lbl_803DEAB0;
+        GXSetTevColorS10(GX_TEVREG0, cs10);
+        GXSetTevKColor(lbl_803DCD74, *(GXColor*)&lbl_803DEAB8);
+        GXSetTevKColor(lbl_803DCD74 + 1, *(GXColor*)&lbl_803DEABC);
+        GXSetTevKColor(lbl_803DCD74 + 2, *(GXColor*)&lbl_803DEAC0);
         GXInitTexObj((GXTexObj*)buf5c, tex0, w, h, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
         GXInitTexObjLOD((GXTexObj*)buf5c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
         GXLoadTexObj((GXTexObj*)buf5c, lbl_803DCD8C);
@@ -6444,13 +6416,11 @@ void fn_8004D230(void)
 void gxTextureFn_8004d5b4(void* p1)
 {
     u8 buf[3];
-    int color;
     u8 b = *(u8*)((char*)p1 + 0x43);
     buf[2] = b;
     buf[1] = b;
     buf[0] = b;
-    color = *(int*)buf;
-    GXSetTevKColor(lbl_803DCD74, &color);
+    GXSetTevKColor(lbl_803DCD74, *(GXColor*)buf);
     GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
@@ -6564,7 +6534,6 @@ void fn_8004DA54(char* p1)
     f32 sv;
     f32 tsx;
     f32 tsy;
-    int kc;
     f32 f31v;
     f32 s;
     f32 k;
@@ -6671,8 +6640,7 @@ void fn_8004DA54(char* p1)
     ((u8*)&lbl_803DB5EC)[0] = lbl_803DEB18 * f31v;
     ((u8*)&lbl_803DB5EC)[1] = 0;
     ((u8*)&lbl_803DB5EC)[2] = 0;
-    kc = lbl_803DB5EC;
-    GXSetTevKColor(lbl_803DCD74, &kc);
+    GXSetTevKColor(lbl_803DCD74, *(GXColor*)&lbl_803DB5EC);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, lbl_803DCD6C);
     GXSetTevKColorSel(GX_TEVSTAGE1, lbl_803DCD70);
     GXSetTevDirect(GX_TEVSTAGE0);
@@ -6906,7 +6874,6 @@ void renderHeavyFog(void* fogColor)
     Texture* tex1c;
     f32 a;
     f32 b;
-    int kc;
     f32(*iv)[4];
     f32 k;
     im = lbl_802C1D68[0];
@@ -6926,8 +6893,7 @@ void renderHeavyFog(void* fogColor)
     mcc[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(mcc, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-    kc = *(int*)fogColor;
-    GXSetTevKColor(lbl_803DCD74, &kc);
+    GXSetTevKColor(lbl_803DCD74, *(GXColor*)fogColor);
     fn_8006C528(&tex20);
     {
         int id = lbl_803DCD8C;
@@ -7068,8 +7034,7 @@ void fn_8004EECC(void)
 
 void fn_8004EF9C(int* param)
 {
-    int color = param[0];
-    GXSetTevColor(GX_TEVREG1, &color);
+    GXSetTevColor(GX_TEVREG1, *(GXColor*)param);
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
     GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_ZERO);
@@ -7209,7 +7174,6 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
     f32 matA[3][4];
     f32 matB[3][4];
     Texture* src;
-    int color;
     int id;
     f32 f;
     if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7)
@@ -7249,8 +7213,7 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
         GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-        color = *colorIn;
-        GXSetTevKColor(lbl_803DCD74, &color);
+        GXSetTevKColor(lbl_803DCD74, *(GXColor*)colorIn);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
         GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_KONST, GX_CC_TEXC, GX_CC_ZERO);
         GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
@@ -7294,7 +7257,6 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
     f32 matA[3][4];
     f32 matB[3][4];
     Texture* src;
-    int color;
     int id;
     f32 f;
     if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7)
@@ -7334,8 +7296,7 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
         GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-        color = *colorIn;
-        GXSetTevKColor(lbl_803DCD74, &color);
+        GXSetTevKColor(lbl_803DCD74, *(GXColor*)colorIn);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
         GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_KONST, GX_CC_TEXC, GX_CC_ZERO);
         GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
@@ -7380,7 +7341,6 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
     f32 matA[3][4];
     f32 matB[3][4];
     Texture* src;
-    int color;
     int id;
     f32 f;
     if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0x10 || lbl_803DCD69 >= 7)
@@ -7424,8 +7384,7 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
         GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
         GXSetTevDirect(lbl_803DCD90);
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-        color = *colorIn;
-        GXSetTevKColor(lbl_803DCD74, &color);
+        GXSetTevKColor(lbl_803DCD74, *(GXColor*)colorIn);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
         GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_KONST, GX_CC_TEXC, GX_CC_ZERO);
         GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
