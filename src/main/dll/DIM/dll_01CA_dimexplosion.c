@@ -114,9 +114,6 @@ const FbTexTbl gExplosionTexTable = {
 
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
-void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z);
-void explosion_computeColor(f32 age, f32 lifetime, u8 mode, u8* out);
-
 void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
 {
     s16* placement = (obj)->anim.placementData;
