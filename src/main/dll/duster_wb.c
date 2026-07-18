@@ -15,6 +15,7 @@
 #include "main/object.h"
 #include "main/obj_placement.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/duster_api.h"
 #include "main/dll/baddie_setmove.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
@@ -38,7 +39,6 @@ typedef struct DusterState
 
 
 extern int lbl_803DBCD8[2];
-extern u8 gDusterEbaMoveTable[];
 extern const f32 lbl_803E2A98;
 extern const f32 lbl_803E2AA8;
 extern const f32 lbl_803E2AAC;
