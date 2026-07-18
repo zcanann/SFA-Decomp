@@ -164,7 +164,6 @@ typedef struct MapRomListPage
 } MapRomListPage;
 
 int mapProcessRomList(int slot);
-void doPendingMapLoads(void);
 
 int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)
 {
