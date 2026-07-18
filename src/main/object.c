@@ -760,9 +760,7 @@ void fn_8002B758(void* v)
 }
 void fn_8002B860(void* v)
 {
-    s8 i = gObjPtrTableCount;
-    gObjPtrTableCount = i + 1;
-    gObjPtrTable[i] = v;
+    gObjPtrTable[gObjPtrTableCount++] = v;
 }
 
 void Obj_SetActiveModelIndex(GameObject* obj, int idx)
