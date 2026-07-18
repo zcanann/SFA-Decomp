@@ -5,7 +5,6 @@
 
 void _textSetColor(int unused, int a, int b, int c, int d);
 void updateEnvironment(int mode);
-u32 shouldDrawShadows(void);
 int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type, int* out_lastpage);
 
 #endif /* MAIN_LIGHTMAP_H_ */

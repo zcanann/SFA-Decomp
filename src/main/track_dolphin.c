@@ -320,7 +320,6 @@ extern const f32 lbl_803DECCC;
 extern const f32 lbl_803DECD0;
 extern const f32 lbl_803DECD4;
 
-extern int shouldDrawShadows(void);
 extern float floor(float x);
 
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
@@ -1660,7 +1659,7 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
 
     cache = getCache();
     modelState = obj->anim.modelState;
-    if (shouldDrawShadows() == 0)
+    if ((s32)shouldDrawShadows() == 0)
     {
         obj->anim.modelState->shadowCastSlot = NULL;
         return 0;
