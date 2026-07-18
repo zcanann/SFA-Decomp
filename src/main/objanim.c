@@ -534,116 +534,114 @@ int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float*
     {
         moveData = (ObjAnimMoveData*)animDef->moveData[state->moveCacheSlot];
     }
-    if (moveData->rootCurveOffset == 0)
+    if (moveData->rootCurveOffset != 0)
     {
-        return 0;
-    }
-    curve = ObjAnim_GetMoveDataRootCurve(moveData);
+        curve = ObjAnim_GetMoveDataRootCurve(moveData);
 
-    rootScale = curve->scale * objAnim->rootMotionScale;
-    segmentCount = curve->sampleCount - 1;
-    axis = ObjAnim_GetRootCurveAxisData(curve);
-    hasFirstAxis = 0;
-    axisFirstSample = *axis;
-    if (axisFirstSample != 0)
-    {
-        hasFirstAxis = 1;
-    }
-    if (axisFirstSample == 0)
-    {
-        axis++;
-    }
-    if (hasFirstAxis == 0)
-    {
+        rootScale = curve->scale * objAnim->rootMotionScale;
+        segmentCount = curve->sampleCount - 1;
+        axis = ObjAnim_GetRootCurveAxisData(curve);
+        hasFirstAxis = 0;
         axisFirstSample = *axis;
+        if (axisFirstSample != 0)
+        {
+            hasFirstAxis = 1;
+        }
         if (axisFirstSample == 0)
         {
             axis++;
         }
-    }
-    axisFirstSample = *axis;
-    if (axisFirstSample == 0)
-    {
-        return 0;
-    }
-
-    lastSample = ObjAnim_ReadRootAxisSample(axis, segmentCount);
-    if (lastSample < 0)
-    {
-        rootScale = -rootScale;
-    }
-    if (lastSample == 0)
-    {
-        return 0;
-    }
-
-    sampleCount = segmentCount;
-    phaseStep = gObjAnimProgressOne / sampleCount;
-    sampleProgress = sampleCount * objAnim->currentMoveProgress;
-    sampleIndex = sampleProgress;
-    sampleFraction = sampleProgress - sampleIndex;
-
-    if (blendSamples != NULL)
-    {
-        s16* axisAt;
-        if (blendSamples[segmentCount] < 0)
+        if (hasFirstAxis == 0)
         {
-            blendScale = -blendScale;
-        }
-        axisAt = &axis[sampleIndex];
-        previousDistance = rootScale * (moveWeight * axisAt[1]);
-        previousDistance += blendScale * (blendWeight * blendSamples[sampleIndex]);
-        nextDistance = rootScale * (moveWeight * axisAt[2]);
-        nextDistance += blendScale * (blendWeight * blendSamples[sampleIndex + 1]);
-    }
-    else
-    {
-        s16* axisAt = &axis[sampleIndex];
-        previousDistance = rootScale * axisAt[1];
-        nextDistance = rootScale * axisAt[2];
-    }
-
-    targetDistance += previousDistance + sampleFraction * (nextDistance - previousDistance);
-    phase = phaseStep - (phaseStep * sampleFraction);
-    broke = 0;
-    do
-    {
-        if (nextDistance > targetDistance)
-        {
-            phase -= (phaseStep * (nextDistance - targetDistance)) / (nextDistance - previousDistance);
-            broke = 1;
-        }
-        else
-        {
-            sampleIndex++;
-            if (sampleIndex >= segmentCount)
+            axisFirstSample = *axis;
+            if (axisFirstSample == 0)
             {
-                sampleIndex = 0;
+                axis++;
             }
-            previousDistance = nextDistance;
+        }
+        axisFirstSample = *axis;
+        if (axisFirstSample != 0)
+        {
+            lastSample = ObjAnim_ReadRootAxisSample(axis, segmentCount);
+            if (lastSample < 0)
+            {
+                rootScale = -rootScale;
+            }
+            if (lastSample == 0)
+            {
+                return 0;
+            }
+
+            sampleCount = segmentCount;
+            phaseStep = gObjAnimProgressOne / sampleCount;
+            sampleProgress = sampleCount * objAnim->currentMoveProgress;
+            sampleIndex = sampleProgress;
+            sampleFraction = sampleProgress - sampleIndex;
+
             if (blendSamples != NULL)
             {
-                s16* axisAt = &axis[sampleIndex];
-                f32 blendDelta;
-                f32 moveDelta;
-                blendDelta = blendScale * ((f32)blendSamples[sampleIndex + 1] - blendSamples[sampleIndex]);
-                moveDelta = rootScale * ((f32)axisAt[2] - axisAt[1]);
-                nextDistance += (moveDelta * moveWeight) + (blendDelta * blendWeight);
+                s16* axisAt;
+                if (blendSamples[segmentCount] < 0)
+                {
+                    blendScale = -blendScale;
+                }
+                axisAt = &axis[sampleIndex];
+                previousDistance = rootScale * (moveWeight * axisAt[1]);
+                previousDistance += blendScale * (blendWeight * blendSamples[sampleIndex]);
+                nextDistance = rootScale * (moveWeight * axisAt[2]);
+                nextDistance += blendScale * (blendWeight * blendSamples[sampleIndex + 1]);
             }
             else
             {
                 s16* axisAt = &axis[sampleIndex];
-                nextDistance += rootScale * ((f32)axisAt[2] - axisAt[1]);
+                previousDistance = rootScale * axisAt[1];
+                nextDistance = rootScale * axisAt[2];
             }
-            phase += phaseStep;
-        }
-    } while (!broke);
 
-    if (phaseOut != NULL)
-    {
-        *phaseOut = phase;
+            targetDistance += previousDistance + sampleFraction * (nextDistance - previousDistance);
+            phase = phaseStep - (phaseStep * sampleFraction);
+            broke = 0;
+            do
+            {
+                if (nextDistance > targetDistance)
+                {
+                    phase -= (phaseStep * (nextDistance - targetDistance)) / (nextDistance - previousDistance);
+                    broke = 1;
+                }
+                else
+                {
+                    sampleIndex++;
+                    if (sampleIndex >= segmentCount)
+                    {
+                        sampleIndex = 0;
+                    }
+                    previousDistance = nextDistance;
+                    if (blendSamples != NULL)
+                    {
+                        s16* axisAt = &axis[sampleIndex];
+                        f32 blendDelta;
+                        f32 moveDelta;
+                        blendDelta = blendScale * ((f32)blendSamples[sampleIndex + 1] - blendSamples[sampleIndex]);
+                        moveDelta = rootScale * ((f32)axisAt[2] - axisAt[1]);
+                        nextDistance += (moveDelta * moveWeight) + (blendDelta * blendWeight);
+                    }
+                    else
+                    {
+                        s16* axisAt = &axis[sampleIndex];
+                        nextDistance += rootScale * ((f32)axisAt[2] - axisAt[1]);
+                    }
+                    phase += phaseStep;
+                }
+            } while (!broke);
+
+            if (phaseOut != NULL)
+            {
+                *phaseOut = phase;
+            }
+            return 1;
+        }
     }
-    return 1;
+    return 0;
 }
 
 int ObjAnim_AdvanceCurrentMove(int objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events)
