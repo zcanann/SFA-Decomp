@@ -50,6 +50,10 @@ s32 gBoneParticleBufferFlip;
 extern void* gBoneParticleEffectBuffers[];
 extern f32 gBoneParticleDriftVelocity;
 
+extern const f32 gBoneParticleDriftMax;
+extern const f32 lbl_803DF4B0;
+extern const f32 gBoneParticleDriftMin;
+
 
 static inline int* Modgfx_GetActiveModel(void* obj)
 {
@@ -127,16 +131,16 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
         gBoneParticleScrollOffset = gBoneParticleScrollOffset - 0x1f;
     }
     gBoneParticleDrift = gBoneParticleDriftVelocity * timeDelta + gBoneParticleDrift;
-    if (gBoneParticleDrift > (500.0f))
+    if (gBoneParticleDrift > gBoneParticleDriftMax)
     {
-        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * (-1.0f);
-        gBoneParticleDrift = (500.0f);
+        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
+        gBoneParticleDrift = gBoneParticleDriftMax;
         Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_282);
     }
-    else if (gBoneParticleDrift < (-500.0f))
+    else if (gBoneParticleDrift < gBoneParticleDriftMin)
     {
-        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * (-1.0f);
-        gBoneParticleDrift = (-500.0f);
+        gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
+        gBoneParticleDrift = gBoneParticleDriftMin;
         Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_282);
     }
     slot = 0;
@@ -163,12 +167,8 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
                 vtx.sy = 0;
                 vtx.sx = 0;
                 jb = (u8*)model[(*(u16*)((u8*)model + 0x18) & 1) + 3];
-                {
-                    u8* idr2 = base + gBoneParticleStageIndex * 5;
-                    idr2 = idr2 + j;
-                    id = idr2[0x5b4];
-                }
-                mtx = (u8*)((BoneFxJRow*)jb + (id << 4));
+                mtx = (u8*)((BoneFxJRow*)jb
+                            + ((id = (base + gBoneParticleStageIndex * 5)[j + 0x5b4]) << 4));
                 dx = *(f32*)(mtx + 0x30) + playerMapOffsetX;
                 dy = *(f32*)(mtx + 0x34);
                 dz = *(f32*)(mtx + 0x38) + playerMapOffsetZ;
@@ -195,7 +195,8 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
                     u8* idr;
                     f32 sc;
                     id = *(u8*)(idp + gBoneParticleStageIndex * 5);
-                    idr = base + id;
+                    idr = base;
+                    idr = idr + id;
                     cls = idr[0x590];
                     if (cls == 0)
                     {
