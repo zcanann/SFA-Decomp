@@ -3064,11 +3064,11 @@ int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef
     bz = b->z;
     cross1 = bx * az - ax * bz;
     sum1 = cross1 + (x * (bz - az) + z * (ax - bx));
-    if ((sum1 <= gFloatZero && cross1 >= gFloatZero) || (sum1 >= gFloatZero && cross1 < gFloatZero))
+    if ((sum1 <= 0.0f && cross1 >= 0.0f) || (sum1 >= 0.0f && cross1 < 0.0f))
     {
         f32 cross_a = -z * ax + x * az;
         f32 cross_b = -z * bx + x * bz;
-        if ((cross_a <= gFloatZero && cross_b >= gFloatZero) || (cross_a >= gFloatZero && cross_b < gFloatZero))
+        if ((cross_a <= 0.0f && cross_b >= 0.0f) || (cross_a >= 0.0f && cross_b < 0.0f))
         {
             return 1;
         }
