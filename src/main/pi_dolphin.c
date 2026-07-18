@@ -169,23 +169,7 @@ extern int lbl_803DCC7C;
 extern volatile int lbl_803DCC80;
 extern int lbl_803DCC8C;
 
-extern void mergeTableFiles(void* buf, int a, int b, int n);
-extern void animCurvReadCb(s32 result, DVDFileInfo* fileInfo);
-extern void animCurvTabReadCb(s32 result, DVDFileInfo* fileInfo);
-extern void voxMapReadCb(s32 result, DVDFileInfo* fileInfo);
-extern void voxMapTabReadCb(s32 result, DVDFileInfo* fileInfo);
-extern void blocksReadCb(s32 result, DVDFileInfo* fileInfo);
-extern void blocksTabReadCb(s32 result, DVDFileInfo* fileInfo);
-extern void tex1ReadCb(s32 result, DVDFileInfo* fileInfo);
-extern void tex1tab1readCb(s32 result, DVDFileInfo* fileInfo);
-extern void tex1tab2readCb(s32 result, DVDFileInfo* fileInfo);
-extern void tex0readCb();
-extern void tex0tab1readCb();
-extern void tex0tab2readCb();
-extern void animReadCb(s32 result, DVDFileInfo* fileInfo);
-extern void animTabReadCb(s32 result, DVDFileInfo* fileInfo);
-extern void modelsReadCb(s32 result, DVDFileInfo* fileInfo);
-extern void modelsTabReadCb(s32 result, DVDFileInfo* fileInfo);
+#include "main/objprint_load_api.h"
 
 struct MldfNames
 {
@@ -780,7 +764,6 @@ s16 sMapFileNameAdjacencyTable[] = {
 };
 
 
-extern void fn_80041D98();
 
 void* jumptable_802CBE94[13] = {
     (void*)((u8*)fn_80041D98 + 0x44), (void*)((u8*)fn_80041D98 + 0x48),
@@ -1072,7 +1055,6 @@ extern u16 gDepthReadPendingCount;
 extern u16 gDepthReadResultCount;
 extern u8 lbl_803DCCA8;
 extern int stackCreate(int n, int stride);
-extern void dvdReadCb_80041d30();
 extern u8 lbl_803DCC90;
 extern int lbl_803DCC88;
 extern int lbl_803DCC98;
@@ -3653,7 +3635,6 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
 extern int lbl_8035F208[];
 extern u32 lbl_8035F3E8[];
 extern int lbl_803DCC74;
-extern void romListReadCb();
 
 
 int mapGetDirIdx(int idx)
