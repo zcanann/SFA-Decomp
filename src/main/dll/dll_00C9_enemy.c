@@ -1416,7 +1416,7 @@ void fn_8014CF7C(GameObject* node, int state, f32 targetX, f32 targetZ, int divi
     dt = timeDelta / (f32)(u32)(u16)divisor;
     if (dt > lbl_803E256C)
         dt = lbl_803E256C;
-    newVal = (s16)(node->anim.rotX + (s32)((f32)(s16)delta * dt));
+    newVal = (s16)(*(s16*)node + (s32)((f32)(s16)delta * dt));
     node->anim.rotX = newVal;
 }
 
