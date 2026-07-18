@@ -21,12 +21,8 @@ int hwChangeStudio(int slot)
     int samplePos;
     DSPvoice* voice;
     DSPvoice* curVoice;
-    int offset;
-    u8* base;
 
-    offset = slot * 0xf4;
-    base = (u8*)dspVoice;
-    voice = (DSPvoice*)(base + offset);
+    voice = &dspVoice[slot];
     if (voice->state != 2)
     {
         return 0;
@@ -38,7 +34,7 @@ int hwChangeStudio(int slot)
     case 1:
     case 4:
     case 5:
-        curVoice = (DSPvoice*)(base + offset);
+        curVoice = (DSPvoice*)((u8*)dspVoice + slot * 0xf4);
         pos = curVoice->currentAddr;
         samplePos = ((pos - 2 * *(int*)&curVoice->smp_info.addr) >> 4) * 0xe;
         lowBits = pos & 0xf;
