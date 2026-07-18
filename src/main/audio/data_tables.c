@@ -310,7 +310,7 @@ s32 dataRemoveCurve(u16 sid)
     return 0;
 }
 
-s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
+u32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
 {
     s32 i;
     SDIR_DATA* s;
@@ -430,7 +430,7 @@ s32 dataRemoveSampleReference(u16 sid)
     return 0;
 }
 
-s32 dataInsertFX(u16 gid, FX_TAB* fx, u16 fxNum)
+u32 dataInsertFX(u16 gid, FX_TAB* fx, u16 fxNum)
 {
     long i;
     FX_GROUP* g;

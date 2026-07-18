@@ -51,7 +51,7 @@ void salCallback(u32 p1, u32 p2, u32 p3, int p4, u32 p5, u32 p6)
 /*
  * Mark "needs callback" + "frame done".
  */
-void dspInitCallback(void)
+void dspInitCallback(void* task)
 {
     salDspCallbackEnabled = 1;
     salDspInitIsDone = 1;
@@ -60,7 +60,7 @@ void dspInitCallback(void)
 /*
  * Run pending user callback (if any) under a re-entrancy guard.
  */
-void dspResumeCallback(void)
+void dspResumeCallback(void* task)
 {
     struct
     {

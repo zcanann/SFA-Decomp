@@ -1,4 +1,5 @@
 #include "main/audio/sal_dsp.h"
+#include "main/audio/sal_ai.h"
 #include "dolphin/dsp.h"
 
 
@@ -258,8 +259,6 @@ u16 lbl_80330840[0xCF0] = {
     0x8000, 0x029C, 0x0CE6, 0x02DF, 0x0000, 0x0000, 0x0000, 0x0000,
 };
 extern u16 lbl_803DC628[4];
-extern void dspInitCallback(void* task);
-extern void dspResumeCallback(void* task);
 
 int salInitDsp(u32 flags)
 {

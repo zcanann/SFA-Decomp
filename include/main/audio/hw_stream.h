@@ -9,6 +9,6 @@ u32 hwChangeStudio(u32 voice);
 void hwGetPos(void *buffer, u32 offset, u32 byteCount, u8 streamHandle,
               void (*callback)(u32), u32 callbackArg);
 void *hwFlushStream(u8 streamHandle);
-void hwInitStream(void);
+void* hwInitStream(void* samples);
 
 #endif /* MAIN_AUDIO_HW_STREAM_H_ */

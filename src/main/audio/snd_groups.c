@@ -1,5 +1,6 @@
 #include "main/audio/snd_groups.h"
 #include "main/audio/hw_samplemem.h"
+#include "main/audio/hw_stream.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/data_tables.h"
 #include "main/audio/synth_jobs.h"
@@ -72,12 +73,9 @@ typedef struct FX_DATA
 {
     u16 num;
     u16 reserved;
-    u8 fx[1];
+    FX_TAB fx[1];
 } FX_DATA;
 
-extern u32 hwInitStream(void* samples);
-extern u32 dataInsertSDir(void* sdir, u32 addr);
-extern void dataInsertFX(u16 gid, void* fx, u16 num);
 extern u8 gSynthInitialized;
 extern s16 synthLoadedGroupCount;
 GSTACK synthLoadedGroupTable[128];

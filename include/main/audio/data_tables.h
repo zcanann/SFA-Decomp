@@ -13,6 +13,8 @@ s32 dataInsertCurve(u16 cid, void *curvedata);
 s32 dataRemoveCurve(u16 sid);
 s32 dataAddSampleReference(u16 sid);
 s32 dataRemoveSampleReference(u16 sid);
+u32 dataInsertSDir(SDIR_DATA *sdir, void *smp_data);
+u32 dataInsertFX(u16 gid, FX_TAB *fx, u16 fxNum);
 s32 dataInsertMacro(u16 mid, void *macroaddr);
 s32 dataRemoveMacro(u16 mid);
 void *dataGetMacro(u16 mid);
