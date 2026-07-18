@@ -22,10 +22,10 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
+#include "main/dll/skeetla.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/skeetla_ext.h"
 #include "main/dll/Hcurves_pr.h"
-#include "main/dll/skeetla_pr.h"
 
 /* A plain XYZ point; recovered file-locally for the patch-target scratch slot
  * at TrickyState+0xD4 (an unnamed pad region in tricky_state.h). */
@@ -91,7 +91,6 @@ extern void fn_800DB240(void* pos, void* out, u32 patch);
 extern int isPointWithinPatchGroup(f32* pos, int walkGroup, u32 patch);
 extern void fn_800D9F38(RomCurveWalker* route);
 extern void fn_800D9EE8(RomCurveWalker* route);
-extern void trickyTurnTowardYaw(u8* obj, int yaw);
 
 static u8* trickyfollow_validateRouteNode(u8* node)
 {
