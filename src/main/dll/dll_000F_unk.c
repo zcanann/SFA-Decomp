@@ -102,48 +102,7 @@ void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f3
     }
 }
 
-void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int unused)
-{
-    f32 dx, dz, dist, max;
-
-    *(u32*)state &= ~0x100000;
-    dx = ((GameObject*)obj)->anim.localPosX - cx;
-    dz = ((GameObject*)obj)->anim.localPosZ - cz;
-    dist = sqrtf(dx * dx + dz * dz);
-    *(f32*)((char*)state + 0x2bc) = dist;
-    max = lbl_803E0578;
-    if (*(f32*)((char*)state + 0x2bc) < lbl_803E0580)
-    {
-        max = lbl_803E0584 * *(f32*)((char*)state + 0x2bc);
-        ((BaddieState*)state)->animSpeedC = ((BaddieState*)state)->animSpeedC * lbl_803E0574;
-    }
-    if (dist > max)
-    {
-        f32 q = dist / max;
-        dx = dx / q;
-        dz = dz / q;
-    }
-    ((BaddieState*)state)->moveInputX = dx;
-    ((BaddieState*)state)->moveInputZ = -dz;
-    ((BaddieState*)state)->moveInputX = ((BaddieState*)state)->moveInputX * t;
-    ((BaddieState*)state)->moveInputZ = ((BaddieState*)state)->moveInputZ * t;
-    if (((BaddieState*)state)->moveInputX > lbl_803E0578)
-    {
-        ((BaddieState*)state)->moveInputX = lbl_803E0578;
-    }
-    if (((BaddieState*)state)->moveInputX < lbl_803E057C)
-    {
-        ((BaddieState*)state)->moveInputX = lbl_803E057C;
-    }
-    if (((BaddieState*)state)->moveInputZ > lbl_803E0578)
-    {
-        ((BaddieState*)state)->moveInputZ = lbl_803E0578;
-    }
-    if (((BaddieState*)state)->moveInputZ < lbl_803E057C)
-    {
-        ((BaddieState*)state)->moveInputZ = lbl_803E057C;
-    }
-}
+void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int unused);
 
 void player_applyVelocityStep(int* obj, int* ctx, f32 t)
 {
@@ -420,6 +379,49 @@ void player_updateCurve(int* obj, int* state, f32 t)
         {
             player_followCurve(obj, state, ((ObjfsaRomCurveDef*)curve)->x, ((ObjfsaRomCurveDef*)curve)->z, t, 1);
         }
+    }
+}
+
+void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int unused)
+{
+    f32 dx, dz, dist, max;
+
+    *(u32*)state &= ~0x100000;
+    dx = ((GameObject*)obj)->anim.localPosX - cx;
+    dz = ((GameObject*)obj)->anim.localPosZ - cz;
+    dist = sqrtf(dx * dx + dz * dz);
+    *(f32*)((char*)state + 0x2bc) = dist;
+    max = lbl_803E0578;
+    if (*(f32*)((char*)state + 0x2bc) < lbl_803E0580)
+    {
+        max = lbl_803E0584 * *(f32*)((char*)state + 0x2bc);
+        ((BaddieState*)state)->animSpeedC = ((BaddieState*)state)->animSpeedC * lbl_803E0574;
+    }
+    if (dist > max)
+    {
+        f32 q = dist / max;
+        dx = dx / q;
+        dz = dz / q;
+    }
+    ((BaddieState*)state)->moveInputX = dx;
+    ((BaddieState*)state)->moveInputZ = -dz;
+    ((BaddieState*)state)->moveInputX = ((BaddieState*)state)->moveInputX * t;
+    ((BaddieState*)state)->moveInputZ = ((BaddieState*)state)->moveInputZ * t;
+    if (((BaddieState*)state)->moveInputX > lbl_803E0578)
+    {
+        ((BaddieState*)state)->moveInputX = lbl_803E0578;
+    }
+    if (((BaddieState*)state)->moveInputX < lbl_803E057C)
+    {
+        ((BaddieState*)state)->moveInputX = lbl_803E057C;
+    }
+    if (((BaddieState*)state)->moveInputZ > lbl_803E0578)
+    {
+        ((BaddieState*)state)->moveInputZ = lbl_803E0578;
+    }
+    if (((BaddieState*)state)->moveInputZ < lbl_803E057C)
+    {
+        ((BaddieState*)state)->moveInputZ = lbl_803E057C;
     }
 }
 
