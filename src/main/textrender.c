@@ -353,6 +353,7 @@ extern void OSGetFontTexel(u8* s, void* img, int pos, int stride, int* width);
 
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
 extern void translateToDinoLanguage(u8* str);
+void gameTextSetWindow(u8* textBox);
 extern void loadGameTextSequence();
 extern void setLanguageFn_8001ad64(void* slot);
 extern void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box);
@@ -2823,10 +2824,11 @@ void subtitleBuildLineTable(void)
     win = (u8*)gTextBoxes + 0x140;
     gSubtitleLineCount = 0;
     gSubtitleBlockCount = 0;
-    for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
+    i = 0;
+    do
     {
         s[0]->times[i] = gSubtitleNoTimeSentinel;
-    }
+    } while (++i < SUBTITLE_LINE_COUNT);
     for (i = 0; i < t->count; i++)
     {
         str = t->strs[i];
@@ -2839,10 +2841,11 @@ void subtitleBuildLineTable(void)
         strLines = textMeasureFn_80016c9c(str, (f32)(u32) * (u16*)(win + 2), *(f32*)(win + 0xc), &count, NULL);
         if (strLines != NULL)
         {
-            for (k = 0; k < count; k++)
+            k = 0;
+            do
             {
                 s[0]->lines[gSubtitleLineCount++] = strLines[k];
-            }
+            } while (++k < count);
             blk = (void**)((u8*)s[0] + gSubtitleBlockCount * 4);
             if (*blk != NULL)
             {
@@ -2881,10 +2884,11 @@ void subtitleBuildLineTable(void)
                     total += n;
                     if (found != 0)
                     {
-                        for (q = m; q >= k; q--)
+                        q = m;
+                        do
                         {
                             s[0]->times[q] = s[0]->times[q + 1] - delta * (s[0]->times[q] / total);
-                        }
+                        } while (--q >= k);
                         break;
                     }
                     m++;

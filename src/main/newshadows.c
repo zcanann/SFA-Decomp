@@ -1368,7 +1368,16 @@ void shadowCreate(int* obj)
         dy = ((GameObject*)obj)->anim.worldPosY - cam->y;
         dz = ((GameObject*)obj)->anim.worldPosZ - cam->z;
         dist2 = dx * dx + dy * dy + dz * dz;
-        dist2 = sqrtf(dist2);
+        if (dist2 > lbl_803DED28)
+        {
+            double guess = __frsqrte((double)dist2);
+            f32 root;
+            guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
+            guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
+            guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
+            root = (f32)(dist2 * guess);
+            dist2 = root;
+        }
         gNewShadowCasterTable[gNewShadowCasterCount].scale = ((GameObject*)obj)->anim.modelState->shadowScale / dist2;
         if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
         {
@@ -1643,10 +1652,9 @@ f32 gNewShadowPlacements[0x112];
 void findSomething(void* needle)
 {
     int i;
-    NewShadowEntry* p;
-    for (i = 0, p = gNewShadowEntries; i < NEW_SHADOW_ENTRY_CAPACITY; ++p, ++i)
+    for (i = 0; i < NEW_SHADOW_ENTRY_CAPACITY; ++i)
     {
-        if (p->isActive != 0 && p == needle)
+        if (gNewShadowEntries[i].isActive != 0 && &gNewShadowEntries[i] == needle)
         {
             gNewShadowEntries[i].isActive = 0;
             return;
@@ -1679,7 +1687,7 @@ void fn_8006CB50(void)
         x = 0;
         yhi = (y >> 2) * 0x20;
         ylo = (y & 3) * 2;
-        fy = y - lbl_803DEDAC;
+        fy = y - 127.5f;
         for (; x < 0x100; x++)
         {
             u8* rowBase;
@@ -1689,24 +1697,24 @@ void fn_8006CB50(void)
             row = rowBase + yhi;
             row += (x & 3) * 8;
             addr = row + (x >> 2) * 0x800;
-            fx = x - lbl_803DEDAC;
+            fx = x - 127.5f;
             dist = sqrtf(fy * fy + fx * fx);
             ny = fy / dist;
             fx /= dist;
-            if (dist <= lbl_803DEDB8)
+            if (dist <= 112.0f)
             {
-                t = lbl_803DED34 * (lbl_803DEDB0 - lbl_803DED48 * dist);
-                s = t * lbl_803DEDB4;
+                t = 2.0f * (0.9f * 112.0f - 0.9f * dist);
+                s = t * 0.00390625f;
             }
             else
             {
-                s = lbl_803DED28;
+                s = 0.0f;
             }
             {
                 ny = ny * s;
                 fx = fx * s;
-                py = lbl_803DEDC0 * ny + lbl_803DEDBC;
-                px = lbl_803DEDC0 * fx + lbl_803DEDBC;
+                py = 127.0f * ny + 128.0f;
+                px = 127.0f * fx + 128.0f;
                 ((NewShadowVectorTexel*)(addr + 0x60))->packedXY =
                     (u16)((int)px | (((int)py & 0xffff) << 8));
             }

@@ -4486,10 +4486,12 @@ void videoFn_800499e8(void)
     dst = gDepthReadResults;
     for (; i < (int)(u32)gDepthReadPendingCount; i++)
     {
-        dst[i * 6] = src[i * 6];
-        dst[i * 6 + 1] = src[i * 6 + 1];
-        *(int*)(dst + i * 6 + 4) = *(int*)(src + i * 6 + 4);
-        GXPeekZ(dst[i * 6], dst[i * 6 + 1], dst + i * 6 + 2);
+        dst[0] = src[0];
+        dst[1] = src[1];
+        *(int*)(dst + 4) = *(int*)(src + 4);
+        GXPeekZ(dst[0], dst[1], dst + 2);
+        src += 6;
+        dst += 6;
     }
     gDepthReadResultCount = gDepthReadPendingCount;
     gDepthReadPendingCount = 0;
@@ -7244,7 +7246,7 @@ void fn_8004F080(void)
     GXSetTevAlphaOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 3;
-    lbl_803DCD6A = lbl_803DCD6A + 3;
+    lbl_803DCD6A += 3;
 }
 
 void fn_8004F2B0(void)

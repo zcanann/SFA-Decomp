@@ -342,7 +342,7 @@ extern const f32 lbl_803DECC0;
 extern const f32 lbl_803DECC8;
 extern f32 lbl_803DED08;
 extern const f32 lbl_803DECE8;
-extern const f32 gTrackGridCellSize;
+extern const f32 lbl_803DECE0;
 extern const f32 lbl_803DECEC;
 extern volatile GolfWGPipe GXWGFifo : (0xCC008000);
 extern const f32 lbl_803DEC78;
@@ -1284,15 +1284,15 @@ int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
                 }
             }
         }
-        if (best >= *(f32*)&lbl_803DECB4)
+        if (best >= lbl_803DECB4)
         {
             *outDepth = best;
             return 1;
         }
-        *outDepth = lbl_803DECB4;
+        *outDepth = 0.0f;
         return 0;
     }
-    *outDepth = lbl_803DECB4;
+    *outDepth = 0.0f;
     return 0;
 }
 
@@ -1309,7 +1309,7 @@ int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, 
     if (n != 0)
     {
         cur = y - arr[0]->height;
-        cur = cur >= *(f32*)&lbl_803DECB4 ? cur : -cur;
+        cur = cur >= lbl_803DECB4 ? cur : -cur;
         best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
@@ -1518,20 +1518,20 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
     }
     gShadowOffsetZ = c * param;
     dot = vec[0] * gPrevSunDir[0] + vec[1] * gPrevSunDir[1] + vec[2] * gPrevSunDir[2];
-    lenp = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] + gPrevSunDir[2] * gPrevSunDir[2];
     lenv = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
+    lenp = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] + gPrevSunDir[2] * gPrevSunDir[2];
     mag = lenv * lenp;
     if (mag != lbl_803DEC58)
     {
         lenp = sqrtf(mag);
     }
-    lenv = *(f32*)&lbl_803DEC58;
+    lenv = lbl_803DEC58;
     if (lenp != lenv)
     {
         lenv = dot / lenp;
     }
     gSunDotCos = lenv;
-    if ((f32)gSunDotCos < *(f32*)&lbl_803DEC58)
+    if ((f32)gSunDotCos < lbl_803DEC58)
     {
         gSunDotCos = (f32)gSunDotCos * lbl_803DEC98;
     }
@@ -1664,7 +1664,7 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
     if (n != 0)
     {
         cur = y - arr[0]->height;
-        cur = cur >= *(f32*)&lbl_803DECB4 ? cur : -cur;
+        cur = cur >= lbl_803DECB4 ? cur : -cur;
         best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
@@ -2167,7 +2167,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
             t2 = (nB - root) / denom;
             if (t1 < lbl_803DECB4)
                 t1 = lbl_803DECC0;
-            if (t2 < *(f32*)&lbl_803DECB4)
+            if (t2 < lbl_803DECB4)
                 t2 = lbl_803DECC0;
             if (t2 < t1)
                 t1 = t2;
@@ -2624,10 +2624,9 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
     f32 d0[3];
     f32 d1[3];
 
-    if (type == 3)
+    if ((u8)type == 3)
     {
         f32 fa, scale;
-        f32 a0, b0;
         f32 fb;
         b[0] = c[0];
         b[1] = c[1];
@@ -2639,16 +2638,14 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
         {
             f32 fbd = b[1] * p[1];
             f32 fad = a[1] * p[1];
-            b0 = b[0];
-            fb = (fbd + b0 * p[0] + b[2] * p[2] + p[3]) - y;
-            a0 = a[0];
-            fa = (fad + a0 * p[0] + a[2] * p[2] + p[3]) - y;
+            fb = (fbd + b[0] * p[0] + b[2] * p[2] + p[3]) - y;
+            fa = (fad + a[0] * p[0] + a[2] * p[2] + p[3]) - y;
         }
         if (fa != fb)
             scale = fa / (fa - fb);
         else
             scale = lbl_803DECB4;
-        d0[0] = b0 - a0;
+        d0[0] = b[0] - a[0];
         d0[1] = b[1] - a[1];
         d0[2] = b[2] - a[2];
         b[0] = d0[0] * scale;
@@ -2680,7 +2677,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
                     if (lbl_803DECB4 != d)
                         y = y / d;
                     d1[0] = p[0];
-                    d1[1] = *(f32*)&lbl_803DECB4;
+                    d1[1] = lbl_803DECB4;
                     d1[2] = p[2];
                     Vec3_Normalize(d1);
                     b[0] = y * d1[0] + b[0];
@@ -2782,7 +2779,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
             f32 dd = rayDir[1] * tmp14[1];
             f32 dn = dd + rayDir[0] * tmp14[0] + rayDir[2] * tmp14[2];
             f32 r = s / dn;
-            if (r < *(f32*)&lbl_803DECB4)
+            if (r < lbl_803DECB4)
                 r = -r;
             len = len - r;
         }
@@ -2946,7 +2943,7 @@ int hitDetectFn_80067958(GameObject* contactSrc, f32* startPos, f32* endPos, int
     return hitCount;
 }
 
-static inline void GXPosition3s16(const s16 x, const s16 y, const s16 z)
+static inline void GXPosition3s16(const int x, const int y, const int z)
 {
     GXWGFifo.s16 = x;
     GXWGFifo.s16 = y;
@@ -2977,7 +2974,7 @@ typedef struct TrackGXColor
 void objDrawFn_80061654(int obj, int placementObj)
 {
     s16* shadowVerts;
-    int alpha;
+    u8 alpha;
     void* viewMtx;
     TrackGXColor kColor;
     TrackGXColor kColorCopy;
@@ -2993,7 +2990,7 @@ void objDrawFn_80061654(int obj, int placementObj)
     {
         alpha = (u8)objShadowFn_80062378((GameObject*)obj, 0x96);
         kColor.a = alpha;
-        if (kColor.a != 0)
+        if (alpha != 0)
         {
             viewMtx = Camera_GetViewMatrix();
             Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
@@ -4114,10 +4111,10 @@ u8 doEdges;
         z1 ^= z0;
         z0 ^= z1;
     }
-    gx0 = fastFloorf((f32)x0 / gTrackGridCellSize);
-    gz0 = fastFloorf((f32)z0 / gTrackGridCellSize);
-    gx1 = fastFloorf((f32)x1 / gTrackGridCellSize);
-    gz1 = fastFloorf((f32)z1 / gTrackGridCellSize);
+    gx0 = fastFloorf((f32)x0 / lbl_803DECE0);
+    gz0 = fastFloorf((f32)z0 / lbl_803DECE0);
+    gx1 = fastFloorf((f32)x1 / lbl_803DECE0);
+    gz1 = fastFloorf((f32)z1 / lbl_803DECE0);
 
     count = 0;
     layer = 0;
@@ -4542,7 +4539,7 @@ void trackIntersect(void)
             f32 blockZ;
             gridX = 0;
             blockIndex = rowOffset;
-            blockZ = gTrackGridCellSize * gridZ;
+            blockZ = lbl_803DECE0 * gridZ;
             for (; gridX < 0x10; blockIndex++, gridX++)
             {
                 if ((s8)idx[blockIndex] >= 0)
@@ -4551,7 +4548,7 @@ void trackIntersect(void)
                     f32 blockX;
                     sourceIndex = 0;
                     sourceOffset = 0;
-                    blockX = gTrackGridCellSize * gridX;
+                    blockX = lbl_803DECE0 * gridX;
                     for (; sourceIndex < blk->hitCount; sourceOffset += 0x14, sourceIndex++)
                     {
                         if (gIntersectLineCount < 0x5dc)
