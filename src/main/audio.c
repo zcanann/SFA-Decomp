@@ -867,7 +867,7 @@ int audioInit(void)
         AIInit(0);
         AISetDSPSampleRate(0);
         sndSetHooks(&hooks);
-        sndInit(0x30, 0x30, 0x18, 1, 1, (void*)0x1000000);
+        sndInit(0x30, 0x30, 0x18, 1, 1, 0x1000000);
         sndSetMaxVoices(0x30, 0x18);
         if (OSGetSoundMode() == 0)
         {

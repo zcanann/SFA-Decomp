@@ -1,5 +1,6 @@
 #include "main/audio/snd3d_calc.h"
 #include "main/audio/synth_voice.h"
+#include "main/audio/synth_delay.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 typedef struct S3DActiveNode
@@ -40,9 +41,6 @@ extern u8 lbl_803DE36D;
 extern u8 lbl_803DE36A;
 extern SndSpatialListener* s3dListenerRoot;
 
-extern u32 synthFXSetCtrl(u32 handle, u8 controller, int value);
-extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
-
 typedef struct SndFVector
 {
     f32 x;
@@ -67,8 +65,6 @@ typedef struct SndFVector
 #define S3D_GROUP_KEY_STEREO_LIMIT       0x80000000
 #define S3D_INVALID_FX_HANDLE            0xffffffff
 
-#define S3D_CLAMP_7BIT(value) (((value) & 0xff) > 0x7f ? 0x7f : (value))
-
 extern inline f32 sqrtf(f32 x)
 {
     f32 y;
@@ -83,6 +79,15 @@ extern inline f32 sqrtf(f32 x)
         return y;
     }
     return x;
+}
+
+static u8 clip127(u8 value)
+{
+    if (value > 0x7f)
+    {
+        return 0x7f;
+    }
+    return value;
 }
 
 void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* azimuthOut, f32* pitchOut,
@@ -207,24 +212,16 @@ void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 u
     handle = emitter->handle;
     if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) != 0)
     {
-        {
-            u32 v = (u32)(int)(127.0f * (emitter->age * distance));
-            if ((v & 0xff) > 0x7f)
-            {
-                v = 0x7f;
-            }
-            synthFXSetCtrl(handle, S3D_CTRL_VOLUME, v);
-        }
+        synthFXSetCtrl(handle, S3D_CTRL_VOLUME, clip127(127.0f * (emitter->age * distance)));
     }
     else
     {
-        synthFXSetCtrl(handle, S3D_CTRL_VOLUME, S3D_CLAMP_7BIT((u32)(int)(127.0f * distance)));
+        synthFXSetCtrl(handle, S3D_CTRL_VOLUME, clip127(127.0f * distance));
     }
 
-    synthFXSetCtrl(handle, S3D_CTRL_PAN, S3D_CLAMP_7BIT((u32)(int)(64.0f * (1.0f + pan))));
+    synthFXSetCtrl(handle, S3D_CTRL_PAN, clip127(64.0f * (1.0f + pan)));
 
-    synthFXSetCtrl(handle, S3D_CTRL_SPATIAL_AZIMUTH,
-                   S3D_CLAMP_7BIT((u32)(int)(64.0f * (1.0f - azimuth))));
+    synthFXSetCtrl(handle, S3D_CTRL_SPATIAL_AZIMUTH, clip127(64.0f * (1.0f - azimuth)));
 
     pitch = 8192.0f * pitch;
     if ((u32)pitch > S3D_CTRL_14BIT_LIMIT)

@@ -119,6 +119,6 @@ typedef struct Snd3DEmitter {
 void s3dHandle(void);
 void s3dInit(u32 flags);
 void s3dExit(void);
-int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void *data);
+int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, u32 aramSize);
 
 #endif /* MAIN_AUDIO_SND3D_H_ */

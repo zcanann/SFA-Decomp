@@ -1,5 +1,6 @@
 #include "main/audio/snd3d_room.h"
 #include "main/audio/snd_synth_api.h"
+#include "main/audio/synth_delay.h"
 
 /* SndSpatialEntry.flags: room-fade one-shots driven per update tick */
 #define S3D_ENTRY_FADE_IN  0x80000000 /* ramp fade up toward full, then clear */
@@ -13,8 +14,6 @@ extern SndStudioInputLink* s3dDoorRoot;
 extern u32 snd_used_studios;
 extern u8 snd_base_studio;
 extern u8 snd_max_studios;
-extern u32 synthSendKeyOff(u32 handle);
-
 /*
  * Update average squared distance from each active spatial entry to all
  * registered listeners.

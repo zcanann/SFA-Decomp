@@ -8,6 +8,8 @@
 #include "main/audio/snd_synth_api.h"
 #include "main/audio/synth_voice.h"
 #include "main/audio/synth_config.h"
+#include "main/audio/synth_delay.h"
+#include "main/audio/data_tables.h"
 
 #define S3D_UNLINK_EMITTER(emitter)                                                                                    \
     do                                                                                                                 \
@@ -36,12 +38,10 @@ extern SndStudioInputLink* s3dDoorRoot;
 extern u32 snd_used_studios;
 extern u8 snd_base_studio;
 extern u8 snd_max_studios;
-extern u32 synthSendKeyOff(u32 handle);
 extern u8 lbl_803DE36A;
 extern u8 lbl_803DE36B;
 extern u8 lbl_803DE36C;
 extern u8 lbl_803DE36D;
-extern void dataInit(int p1, void* p2);
 
 void s3dHandle(void)
 {
@@ -214,7 +214,7 @@ void s3dExit(void)
  * a chain of subsystem inits if hwInit succeeded; sets the
  * gSynthInitialized flag last.
  */
-int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void* data)
+int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, u32 aramSize)
 {
     u32 sampleRate;
     u32 sampleRatePad[3];
@@ -246,7 +246,7 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void* 
     {
         u8 voiceCountSnapshot = SYNTH_CONFIGURATION->voiceCount;
         synthResetLoadedGroupCount();
-        dataInit(0, data);
+        dataInit(0, aramSize);
         fn_8026F30C();
         synthIdleWaitActive = 0;
         synthInit(SND_DEFAULT_SAMPLE_RATE, voiceCountSnapshot);
