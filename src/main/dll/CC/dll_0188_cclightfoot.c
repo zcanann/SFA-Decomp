@@ -142,7 +142,6 @@ u8 gCcLightfootAnimTable[92] = {
     35,  215, 10, 188, 163, 215, 10, 60,  35,  215, 10, 60,  35,  215, 10,  60,  117, 194, 143, 60,  163, 215, 10,
 };
 
-void cclightfoot_update(int obj);
 
 ObjectDescriptor gCClightfootObjDescriptor = {
     0,
