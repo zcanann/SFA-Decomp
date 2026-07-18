@@ -334,10 +334,9 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int unused)
 
 void player_findCurve(int* obj, int* state, int curveId)
 {
-    f32 px = ((GameObject*)obj)->anim.localPosX;
-    f32 py = ((GameObject*)obj)->anim.localPosY;
-    f32 pz = ((GameObject*)obj)->anim.localPosZ;
-    *(int*)((char*)state + 0x33c) = (*gRomCurveInterface)->find(&curveId, 1, *(s8*)((char*)state + 0x344), px, py, pz);
+    *(int*)((char*)state + 0x33c) = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
+        &curveId, 1, *(s8*)((char*)state + 0x344));
 }
 
 void player_playSoundFn10(int* obj, int* state, int bit, int idx, int* sfxTable)

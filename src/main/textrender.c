@@ -691,6 +691,7 @@ u8 sGameTextGlyphOrder[0x1b] = "urstovwxazbcmdefghtkilnpoq";
 int getControlCharLen(u32 c);
 void* gameTextGet(int textId);
 int gameTextFn_8001b44c(int x);
+int gameTextGetState(int i);
 int subtitleIsActive(void);
 void subtitleFn_8001b700(void);
 void dvdCancelCallback_8001b39c(s32 result, DVDCommandBlock* block);
@@ -1723,10 +1724,6 @@ void gameTextSetCharset(int charset, int flags)
         s->arg0 = charset;
     }
 }
-void* getCurGameText(void)
-{
-    return curGameTextDir;
-}
 int getCurLanguage(void)
 {
     return curLanguage;
@@ -1736,11 +1733,6 @@ f32 gameTextFn_80019c00(void)
 {
     return gameTextFonts->timer;
 }
-int gameTextGetState(int i)
-{
-    return gGameTextCharsets[i].state;
-}
-
 void gameTextRun(void)
 {
     GameTextSlot* cmd;
@@ -3377,6 +3369,16 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     }
     ((GameTextBox*)box)->cursorX = savedX;
     ((GameTextBox*)box)->cursorY = savedY;
+}
+
+void* getCurGameText(void)
+{
+    return curGameTextDir;
+}
+
+int gameTextGetState(int i)
+{
+    return gGameTextCharsets[i].state;
 }
 
 void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
