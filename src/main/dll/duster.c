@@ -387,100 +387,8 @@ void rachnopInit(u32 unused, int state)
     return;
 }
 
-void pollenFn_80155b10(u32 obj, int state)
-{
-    u32 loadLocked;
-    int ref;
-    u16* setup;
-    f32 spd;
-    f32 t;
-    f32 dx;
-    f32 dz;
-    f32 a[3];
-    f32 b[3];
-    float velXZ;
-    float cosVal;
-    float velY;
-    float cosPitch;
-
-    loadLocked = Obj_IsLoadingLocked();
-    if ((loadLocked & 0xff) != 0)
-    {
-        a[0] = ((GameObject*)obj)->anim.localPosX;
-        a[1] = lbl_803E2A48.f + ((GameObject*)obj)->anim.localPosY;
-        a[2] = ((GameObject*)obj)->anim.localPosZ;
-        ref = *(int*)&((BaddieState*)state)->trackedObj;
-        b[0] = ((GameObject*)ref)->anim.localPosX;
-        b[1] = lbl_803E2A4C.f + ((GameObject*)ref)->anim.localPosY;
-        b[2] = ((GameObject*)ref)->anim.localPosZ;
-        spd = lbl_803E2A50.f * (lbl_803E2A58.f * (f32)(int)randomGetRange(-10, 10) + lbl_803E2A54.f);
-        ref = fn_80169EF4(a, b, spd, 1, lbl_803E2A5C.f);
-        fn_80293018(ref, &cosVal, &velXZ);
-        velXZ = velXZ * spd;
-        cosVal = cosVal * spd;
-        dx = b[0] - ((GameObject*)obj)->anim.localPosX;
-        dz = b[2] - ((GameObject*)obj)->anim.localPosZ;
-        if (lbl_803E2A60.f != dz)
-        {
-            ref = getAngle(dx, dz);
-            fn_80293018(ref, &cosPitch, &velY);
-            t = velXZ;
-            velY = velY * t;
-            velXZ = t * cosPitch;
-        }
-        else
-        {
-            velY = lbl_803E2A60.f;
-        }
-        setup = (u16*)Obj_AllocObjectSetup(0x24, DUSTER_CHILD_OBJ_POLLEN_SPIT);
-        ((ObjPlacement*)setup)->posX = a[0];
-        ((ObjPlacement*)setup)->posY = a[1];
-        ((ObjPlacement*)setup)->posZ = a[2];
-        ((ObjPlacement*)setup)->color[0] = 1;
-        ((ObjPlacement*)setup)->color[1] = 1;
-        ((ObjPlacement*)setup)->color[2] = 0xff;
-        ((ObjPlacement*)setup)->color[3] = 0xff;
-        ref = (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
-        if ((void*)ref != NULL)
-        {
-            ((GameObject*)ref)->anim.velocityX = velXZ;
-            ((GameObject*)ref)->anim.velocityY = cosVal;
-            ((GameObject*)ref)->anim.velocityZ = velY;
-            *(u32*)&((GameObject*)ref)->ownerObj = obj;
-            Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_cackle);
-        }
-    }
-    return;
-}
-
-void timeOfDayFn_80155cf8(int obj, int state)
-{
-    u8 isDaytime;
-    float timeInfo[4];
-
-    (*gSkyInterface)->getTimeOfDay(timeInfo);
-    if ((timeInfo[0] >= gDusterDayStartSeconds) && (timeInfo[0] <= gDusterDayEndSeconds))
-    {
-        isDaytime = 1;
-    }
-    else
-    {
-        isDaytime = 0;
-    }
-    if ((isDaytime != 0) && (((BaddieState*)state)->userData1 == 0))
-    {
-        ((BaddieState*)state)->userData1 = 1;
-        *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-        Baddie_SetMove(obj, state, 1, lbl_803E2A78, 0, 0);
-    }
-    else if ((isDaytime == 0) && (((BaddieState*)state)->userData1 == 2))
-    {
-        ((BaddieState*)state)->userData1 = 1;
-        *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-        Baddie_SetMove(obj, state, 3, lbl_803E2A78, 0, 0);
-    }
-    return;
-}
+void pollenFn_80155b10(u32 obj, int state);
+void timeOfDayFn_80155cf8(int obj, int state);
 
 void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int eventKind, u32 unused2, int damage)
 {
@@ -584,6 +492,101 @@ void fn_80156010(u32 obj, int state)
         }
     }
     timeOfDayFn_80155cf8(obj, state);
+    return;
+}
+
+void pollenFn_80155b10(u32 obj, int state)
+{
+    u32 loadLocked;
+    int ref;
+    u16* setup;
+    f32 spd;
+    f32 t;
+    f32 dx;
+    f32 dz;
+    f32 a[3];
+    f32 b[3];
+    float velXZ;
+    float cosVal;
+    float velY;
+    float cosPitch;
+
+    loadLocked = Obj_IsLoadingLocked();
+    if ((loadLocked & 0xff) != 0)
+    {
+        a[0] = ((GameObject*)obj)->anim.localPosX;
+        a[1] = lbl_803E2A48.f + ((GameObject*)obj)->anim.localPosY;
+        a[2] = ((GameObject*)obj)->anim.localPosZ;
+        ref = *(int*)&((BaddieState*)state)->trackedObj;
+        b[0] = ((GameObject*)ref)->anim.localPosX;
+        b[1] = lbl_803E2A4C.f + ((GameObject*)ref)->anim.localPosY;
+        b[2] = ((GameObject*)ref)->anim.localPosZ;
+        spd = lbl_803E2A50.f * (lbl_803E2A58.f * (f32)(int)randomGetRange(-10, 10) + lbl_803E2A54.f);
+        ref = fn_80169EF4(a, b, spd, 1, lbl_803E2A5C.f);
+        fn_80293018(ref, &cosVal, &velXZ);
+        velXZ = velXZ * spd;
+        cosVal = cosVal * spd;
+        dx = b[0] - ((GameObject*)obj)->anim.localPosX;
+        dz = b[2] - ((GameObject*)obj)->anim.localPosZ;
+        if (lbl_803E2A60.f != dz)
+        {
+            ref = getAngle(dx, dz);
+            fn_80293018(ref, &cosPitch, &velY);
+            t = velXZ;
+            velY = velY * t;
+            velXZ = t * cosPitch;
+        }
+        else
+        {
+            velY = lbl_803E2A60.f;
+        }
+        setup = (u16*)Obj_AllocObjectSetup(0x24, DUSTER_CHILD_OBJ_POLLEN_SPIT);
+        ((ObjPlacement*)setup)->posX = a[0];
+        ((ObjPlacement*)setup)->posY = a[1];
+        ((ObjPlacement*)setup)->posZ = a[2];
+        ((ObjPlacement*)setup)->color[0] = 1;
+        ((ObjPlacement*)setup)->color[1] = 1;
+        ((ObjPlacement*)setup)->color[2] = 0xff;
+        ((ObjPlacement*)setup)->color[3] = 0xff;
+        ref = (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
+        if ((void*)ref != NULL)
+        {
+            ((GameObject*)ref)->anim.velocityX = velXZ;
+            ((GameObject*)ref)->anim.velocityY = cosVal;
+            ((GameObject*)ref)->anim.velocityZ = velY;
+            *(u32*)&((GameObject*)ref)->ownerObj = obj;
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_cackle);
+        }
+    }
+    return;
+}
+
+void timeOfDayFn_80155cf8(int obj, int state)
+{
+    u8 isDaytime;
+    float timeInfo[4];
+
+    (*gSkyInterface)->getTimeOfDay(timeInfo);
+    if ((timeInfo[0] >= gDusterDayStartSeconds) && (timeInfo[0] <= gDusterDayEndSeconds))
+    {
+        isDaytime = 1;
+    }
+    else
+    {
+        isDaytime = 0;
+    }
+    if ((isDaytime != 0) && (((BaddieState*)state)->userData1 == 0))
+    {
+        ((BaddieState*)state)->userData1 = 1;
+        *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
+        Baddie_SetMove(obj, state, 1, lbl_803E2A78, 0, 0);
+    }
+    else if ((isDaytime == 0) && (((BaddieState*)state)->userData1 == 2))
+    {
+        ((BaddieState*)state)->userData1 = 1;
+        *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
+        Baddie_SetMove(obj, state, 3, lbl_803E2A78, 0, 0);
+    }
     return;
 }
 
