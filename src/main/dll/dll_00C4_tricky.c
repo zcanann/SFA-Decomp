@@ -418,7 +418,7 @@ void trickyFn_80144f50(GameObject* obj, int state)
 void trickyFn_801451d8(GameObject* obj, int state)
 {
     u8 pathBytes[16];
-    u32 pathByte = (u8)Objfsa_GetWalkGroupIndexAtPoint((f32*)((int)obj + 0x18), NULL);
+    u32 pathByte = (u8)Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
 
     pathBytes[0] = pathByte;
     if (pathByte == 0)
@@ -635,12 +635,7 @@ int Tricky_func10(int* obj, int targetObj)
         if ((void*)state[0x28 / 4] != (void*)(targetObj + 0x18))
         {
             state[0x28 / 4] = targetObj + 0x18;
-            {
-                u32 m;
-                u32 f2 = *(u32*)&state[0x54 / 4];
-                m = ~0x400;
-                state[0x54 / 4] = f2 & m;
-            }
+            *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
             ((TrickyState*)state)->linkedWalkGroup = 0;
         }
         *((u8*)state + 10) = 0;
@@ -684,7 +679,7 @@ void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
             if ((void*)state[0x28 / 4] != nextTarget)
             {
                 state[0x28 / 4] = (int)nextTarget;
-                *(u32*)&state[0x54 / 4] &= ~0x400LL;
+                *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
                 ((TrickyState*)state)->linkedWalkGroup = 0;
             }
             *((u8*)state + 10) = 0;
