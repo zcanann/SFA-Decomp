@@ -13,6 +13,7 @@
 #include "main/object_transform.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0046_cameramodedebug.h"
+#include "main/pad_ext.h"
 
 CameraModeDebugState* gCamDebugState;
 
@@ -32,9 +33,6 @@ extern f32 gCamDebugOrbitRadiusMin;
 extern f32 gCamDebugOrbitRadiusMax;
 extern f32 gCamDebugPi;
 extern f32 gCamDebugAngleUnitScale;
-extern u32 getButtonsHeld(int port);
-extern u8 padGetCX(int port);
-extern u8 padGetCY(int port);
 /* pad.h declares getButtonsJustPressed as u32; the u16 override in
    CameraModeDebug_update is load-bearing for the mask comparison. */
 extern u16 getButtonsJustPressed(int port);
