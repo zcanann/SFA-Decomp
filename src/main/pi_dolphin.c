@@ -4727,7 +4727,7 @@ void waitNextFrame(void)
 }
 
 
-extern u8 lbl_803779A0[];
+extern GXTexObj lbl_803779A0;
 
 
 int fn_8004AA24(int* ctx, int* ref);
@@ -5994,8 +5994,8 @@ void textureFn_8004c264(Texture* texture, int mapId)
     }
     if (*(void**)((u8*)texture + 80) != NULL)
     {
-        fn_80053C40((u8*)texture, lbl_803779A0);
-        GXLoadTexObj((GXTexObj*)lbl_803779A0, GX_TEXMAP1);
+        fn_80053C40(texture, &lbl_803779A0);
+        GXLoadTexObj(&lbl_803779A0, GX_TEXMAP1);
     }
 }
 
@@ -7974,7 +7974,7 @@ void fn_80051528(void* p1, void* mtx)
     lbl_803DCD69 += 1;
 }
 
-u8 lbl_803779A0[0x20];
+GXTexObj lbl_803779A0;
 u16 lbl_80377974[0x16];
 u16 lbl_80377954[0x10];
 u8 lbl_803778D4[0x80];

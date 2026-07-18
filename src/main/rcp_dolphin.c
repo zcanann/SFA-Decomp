@@ -17,6 +17,7 @@
 #include "main/model_light.h"
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
+#include "main/rcp_dolphin_render_api.h"
 #include "main/camera.h"
 #include "main/loaded_file_flags.h"
 #include "main/pi_dolphin.h"
@@ -31,8 +32,10 @@
 #include "dolphin/os/OSInterrupt.h"
 #include "dolphin/gx/GXDispList.h"
 #include "dolphin/gx/GXBump.h"
+#include "dolphin/gx/GXGet.h"
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTev.h"
+#include "dolphin/gx/GXTexture.h"
 #include "main/dll/modgfx.h"
 #include "main/pi_dolphin_ext.h"
 #include "main/mm_ext.h"
@@ -127,18 +130,12 @@ typedef struct F32Pair
 extern f32 lbl_803DEB60;
 extern f32 lbl_803DEB78;
 extern F32Pair lbl_803DEB58;
-extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
 extern f32 lbl_803DEB5C;
 extern f32 lbl_803DEB7C;
 extern void textureFn_80053d58(void* obj);
-extern void GXInitTexObj(void* obj, void* img, u16 w, u16 h, int fmt, u8 ws, u8 wt, u8 mipmap);
-extern void GXInitTexObjUserData(void* obj, void* udata);
-extern int GXGetTexObjFmt(void* obj);
-extern u16 GXGetTexObjWidth(void* obj);
-extern u16 GXGetTexObjHeight(void* obj);
 extern f32 lbl_803DEB98;
 extern f32 lbl_803DEB9C;
-extern u8 lbl_803779A0[];
+extern GXTexObj lbl_803779A0;
 extern void GXSetMisc(int token, u32 val);
 extern void GXBegin(int prim, int vtxfmt, u16 nverts);
 extern u8 gRcpWarpDistortListBuilt;
@@ -179,7 +176,6 @@ extern void GXSetChanAmbColor(int chan, GXColor8 c);
 extern void GXSetChanMatColor(int chan, GXColor8 c);
 extern void GXSetTexCopyDst(int w, int h, int fmt, int mip);
 extern void GXCopyTex(void* dst, int clear);
-extern void GXPreLoadEntireTexture(void* obj, u32* region);
 extern u8 gRcpDistortGroup;
 extern f32 lbl_803DEB80;
 extern f32 gRcpScreenWidth;
@@ -194,8 +190,6 @@ static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights);
 
 extern void GXLoadTexMtxImm(f32* mtx, int id, int type);
 extern void GXSetTexCoordGen2(int dst, int fn, int src, int mtx, int normalize, int pt);
-extern void GXLoadTexObjPreLoaded(u8* obj, u32* region, int map);
-extern void GXLoadTexObj(u8* obj, int map);
 
 void fn_80051868(u8* tex, f32* mtx, int mode)
 {
@@ -252,10 +246,10 @@ void fn_80051868(u8* tex, f32* mtx, int mode)
     map = lbl_803DCD8C;
     if (tex != NULL)
     {
-        u8* to = tex + 0x20;
+        GXTexObj* to = textureGetGXTexObj((Texture*)tex);
         if (((Texture*)tex)->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded(to, ((Texture*)tex)->tmemAddr, map);
+            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion((Texture*)tex), map);
         }
         else
         {
@@ -317,10 +311,10 @@ void fn_80051B00(u8* tex, f32* mtx, int mode, int* kparam)
     map = lbl_803DCD8C;
     if (tex != NULL)
     {
-        u8* to = tex + 0x20;
+        GXTexObj* to = textureGetGXTexObj((Texture*)tex);
         if (((Texture*)tex)->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded(to, ((Texture*)tex)->tmemAddr, map);
+            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion((Texture*)tex), map);
         }
         else
         {
@@ -382,10 +376,10 @@ void fn_80051D5C(u8* tex, f32* mtx, int mode, int* kparam)
     map = lbl_803DCD8C;
     if (tex != NULL)
     {
-        u8* to = tex + 0x20;
+        GXTexObj* to = textureGetGXTexObj((Texture*)tex);
         if (((Texture*)tex)->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded(to, ((Texture*)tex)->tmemAddr, map);
+            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion((Texture*)tex), map);
         }
         else
         {
@@ -407,8 +401,6 @@ typedef struct TevSwapEntry
     int b;
 } TevSwapEntry;
 extern TevSwapEntry gRcpTevSwapTable[24];
-
-void fn_80053C40(u8* tex, u8* obj);
 
 void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK)
 {
@@ -485,10 +477,10 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
     map = lbl_803DCD8C;
     if (tex != NULL)
     {
-        u8* to = tex + 0x20;
+        GXTexObj* to = textureGetGXTexObj((Texture*)tex);
         if (((Texture*)tex)->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded(to, ((Texture*)tex)->tmemAddr, map);
+            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion((Texture*)tex), map);
         }
         else
         {
@@ -496,8 +488,8 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
         }
         if (*(void**)&((Texture*)tex)->imageOffset != NULL)
         {
-            fn_80053C40(tex, lbl_803779A0);
-            GXLoadTexObj(lbl_803779A0, GX_TEXMAP1);
+            fn_80053C40((Texture*)tex, &lbl_803779A0);
+            GXLoadTexObj(&lbl_803779A0, GX_TEXMAP1);
         }
     }
     if (*(void**)&((Texture*)tex)->imageOffset != NULL)
@@ -742,7 +734,8 @@ void gxTextureFn_80052efc(void)
             tex = ((RcpDistortSlot*)slots[0])[i].texture;
             if (((Texture*)tex)->preloaded != 0)
             {
-                GXPreLoadEntireTexture(tex + 0x20, ((Texture*)tex)->tmemAddr);
+                GXPreLoadEntireTexture(textureGetGXTexObj((Texture*)tex),
+                                       textureGetGXTexRegion((Texture*)tex));
             }
         }
     }
@@ -779,7 +772,8 @@ void gxTextureFn_80052efc(void)
             tex = ((RcpDistortSlot*)slots[0])[i].texture;
             if (((Texture*)tex)->preloaded != 0)
             {
-                GXPreLoadEntireTexture(tex + 0x20, ((Texture*)tex)->tmemAddr);
+                GXPreLoadEntireTexture(textureGetGXTexObj((Texture*)tex),
+                                       textureGetGXTexRegion((Texture*)tex));
             }
         }
     }
@@ -1210,13 +1204,10 @@ extern u8 gRcpWarpTransitionType;
 extern u8 lbl_803DCEBD;
 
 
-extern void GXInitTexObjLOD(void* obj, int mn, int mg, f32 minLod, f32 maxLod, f32 lodBias, u8 bclamp, u8 edgeLod,
-                            u8 aniso);
-
-void fn_80053C40(u8* tex, u8* obj)
+void fn_80053C40(Texture* tex, GXTexObj* obj)
 {
     u8 mipmap;
-    if ((int)((Texture*)tex)->maxLod - (int)((Texture*)tex)->minLod > 0)
+    if ((int)tex->maxLod - (int)tex->minLod > 0)
     {
         mipmap = 1;
     }
@@ -1224,12 +1215,12 @@ void fn_80053C40(u8* tex, u8* obj)
     {
         mipmap = 0;
     }
-    GXInitTexObj(obj, (u8*)(tex + ((Texture*)tex)->imageOffset + 0x60), ((Texture*)tex)->width, ((Texture*)tex)->height,
-                 GX_TF_I4, ((Texture*)tex)->wrapS, ((Texture*)tex)->wrapT, mipmap);
+    GXInitTexObj(obj, (u8*)tex + tex->imageOffset + 0x60, tex->width, tex->height,
+                 GX_TF_I4, tex->wrapS, tex->wrapT, mipmap);
     if (mipmap != 0)
     {
-        GXInitTexObjLOD(obj, ((Texture*)tex)->minFilter, ((Texture*)tex)->magFilter, (f32)(u32)((Texture*)tex)->minLod,
-                        (f32)(s32)((Texture*)tex)->maxLod, lbl_803DEB98, 0, 0, 0);
+        GXInitTexObjLOD(obj, tex->minFilter, tex->magFilter, (f32)(u32)tex->minLod,
+                        (f32)(s32)tex->maxLod, lbl_803DEB98, 0, 0, 0);
     }
     else
     {
@@ -1894,10 +1885,10 @@ void textureFn_80053d58(void* vobj)
 {
     u8* obj = (u8*)vobj;
     u8 mipmap = 0;
-    void* texObj;
+    GXTexObj* texObj;
     *(int*)(obj + 64) = mipmap;
     ((Texture*)obj)->preloaded = mipmap;
-    texObj = (void*)(obj + 32);
+    texObj = textureGetGXTexObj((Texture*)obj);
     if ((int)((Texture*)obj)->maxLod - (int)((Texture*)obj)->minLod > 0)
         mipmap = 1;
     GXInitTexObj(texObj, obj + 96, ((Texture*)obj)->width, ((Texture*)obj)->height, ((Texture*)obj)->format,
