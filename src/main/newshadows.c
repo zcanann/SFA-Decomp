@@ -1001,8 +1001,11 @@ void allocLotsOfTextures(void)
         entryBytes = (u8*)(int)gNewShadowEntries + i * 0x14;
         for (; i < 0x21; i++)
         {
-            entryBytes[0x10] = 0;
-            entryBytes[0x11] = 1;
+            int k;
+            for (k = 0; k < 2; k++)
+            {
+                entryBytes[0x10 + k] = (u8)k;
+            }
             entryBytes += 0x14;
         }
     }
