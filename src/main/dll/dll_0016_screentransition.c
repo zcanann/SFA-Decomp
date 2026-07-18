@@ -222,7 +222,6 @@ f32 screenTransition_getAlpha(void)
 
 extern f32 gScreenTransitionAlphaMax;
 extern f32 lbl_803E0564;
-extern f32 lbl_803E0560;
 extern f32 lbl_803E055C;
 extern f32 gScreenTransitionAlphaStep;
 extern f32 gScreenTransitionHoldTimer;
@@ -233,7 +232,7 @@ void screenTransition_fadeFrom(int duration, int type, f32 from)
 {
     screenTransitionAlpha = gScreenTransitionAlphaMax * from;
     gScreenTransitionAlphaStep = -(lbl_803E055C * from) / duration;
-    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionHoldTimer = 0.0f;
     gScreenTransitionType = type;
     gScreenTransitionDelay = 1;
 }
@@ -249,31 +248,31 @@ void screenTransitionFn_800d7b04(int duration, int type)
 {
     screenTransitionAlpha = gScreenTransitionAlphaMax;
     gScreenTransitionAlphaStep = lbl_803E0564 / duration;
-    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionHoldTimer = 0.0f;
     gScreenTransitionType = type;
     gScreenTransitionDelay = 5;
 }
 
 void screenTransition_fadeIn(int duration, int type)
 {
-    if (gScreenTransitionAlphaStep >= lbl_803E0560 || lbl_803E0560 == screenTransitionAlpha)
+    if (gScreenTransitionAlphaStep >= 0.0f || 0.0f == screenTransitionAlpha)
     {
         screenTransitionAlpha = gScreenTransitionAlphaMax;
     }
     gScreenTransitionAlphaStep = lbl_803E0564 / duration;
-    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionHoldTimer = 0.0f;
     gScreenTransitionType = type;
     gScreenTransitionDelay = 1;
 }
 
 void screenTransition_fadeOut(int duration, int type)
 {
-    if (gScreenTransitionAlphaStep <= lbl_803E0560 || gScreenTransitionAlphaMax == screenTransitionAlpha)
+    if (gScreenTransitionAlphaStep <= 0.0f || gScreenTransitionAlphaMax == screenTransitionAlpha)
     {
-        screenTransitionAlpha = lbl_803E0560;
+        screenTransitionAlpha = 0.0f;
     }
     gScreenTransitionAlphaStep = lbl_803E055C / duration;
-    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionHoldTimer = 0.0f;
     gScreenTransitionType = type;
     gScreenTransitionDelay = 0;
 }
@@ -289,12 +288,12 @@ void screenTransition_update(int p1, int p2, int p3)
         if (screenTransitionPause == 0 && gScreenTransitionHoldTimer >= gScreenTransitionHoldDuration)
         {
             (*gScreenTransitionInterface)->step(0x1e, gScreenTransitionType);
-            gScreenTransitionHoldTimer = lbl_803E0560;
+            gScreenTransitionHoldTimer = 0.0f;
         }
         screenTransitionAlpha = gScreenTransitionAlphaStep * timeDelta + screenTransitionAlpha;
-        if (screenTransitionAlpha < lbl_803E0560)
+        if (screenTransitionAlpha < 0.0f)
         {
-            screenTransitionAlpha = lbl_803E0560;
+            screenTransitionAlpha = 0.0f;
             gScreenTransitionDone = 1;
             if (gScreenTransitionType == SCREEN_TRANSITION_HUD)
             {

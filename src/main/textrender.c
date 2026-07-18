@@ -297,6 +297,7 @@ extern GameTextBox gTextBoxes[];
 extern u8 lbl_802C8680[];
 extern const f32 lbl_803DE70C;
 extern const f32 lbl_803DE710;
+extern f32 gSubtitleNoTimeSentinel;
 extern int gGameTextShadowOffsetX;
 extern int gGameTextShadowOffsetY;
 extern int gameTextCharset;
@@ -2876,7 +2877,7 @@ void subtitleBuildLineTable(void)
     gSubtitleBlockCount = 0;
     for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
     {
-        s[0]->times[i] = 0.0001f;
+        s[0]->times[i] = gSubtitleNoTimeSentinel;
     }
     for (i = 0; i < t->count; i++)
     {
@@ -2908,7 +2909,7 @@ void subtitleBuildLineTable(void)
     }
     for (k = 0; k < gSubtitleLineCount; k++)
     {
-        if (0.0001f != s[0]->times[k])
+        if (gSubtitleNoTimeSentinel != s[0]->times[k])
         {
             curTime = s[0]->times[k];
             total = GameText_CountPrintableChars((u8*)s[0]->lines[k]);
@@ -2922,7 +2923,7 @@ void subtitleBuildLineTable(void)
                 ftotal = total;
                 if (m < 255)
                 {
-                    if (0.0001f != s[0]->times[m + 1])
+                    if (gSubtitleNoTimeSentinel != s[0]->times[m + 1])
                     {
                         delta = s[0]->times[m + 1] - curTime;
                         found = 1;

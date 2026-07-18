@@ -72,6 +72,36 @@ s16 lbl_803DC298[4] = {0x560, 0x561, 0x562, 0x563};
 
 const KtrexMsgBlob gKTRexMsgTemplate = {{6, 0x69, 0x69, 0xFF}};
 
+static inline u8 ktrex_getLaneMaskForTimer(int timer)
+{
+    u8 laneMasks[4] = {2, 8, 1, 4};
+
+    timer = (timer >> 1) & 3;
+    return laneMasks[timer];
+}
+
+static inline u8 ktrex_hasLaneLerpOvershot(void)
+{
+    if ((gKTRexState->currentLaneMask & gKTRexState->activeLaneMask) != 0)
+    {
+        if ((gKTRexState->timerFA & 1) != 0)
+        {
+            if (gKTRexState->laneLerpT - gKTRexState->laneFrac > 0.1f)
+            {
+                return 1;
+            }
+        }
+        else
+        {
+            if (gKTRexState->laneFrac - gKTRexState->laneLerpT > 0.1f)
+            {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 int ktrex_updateArenaPathProgress(KTRexRuntime* runtime);
 int ktrex_isPlayerInLaneThreatRange(GameObject* obj);
 void ktrex_initialiseStateHandlerTables(void);
@@ -639,45 +669,20 @@ int ktrex_stateHandlerA02(GameObject* obj, KTRexRuntime* runtime)
     }
     if ((gKTRexState->currentLaneMask & gKTRexState->activeLaneMask) != 0)
     {
-        u8 overshot;
         gKTRexState->timerFA &= ~0x40;
-        if ((gKTRexState->currentLaneMask & gKTRexState->activeLaneMask) != 0)
         {
-            if ((gKTRexState->timerFA & 1) != 0)
+            if (ktrex_hasLaneLerpOvershot() != 0)
             {
-                if (gKTRexState->laneLerpT - gKTRexState->laneFrac > 0.1f)
+                int push;
+                gKTRexState->pathCountdown = 1;
+                push = 5;
+                if (Stack_IsFull(gKTRexState->stack) == 0)
                 {
-                    overshot = 1;
+                    Stack_Push(gKTRexState->stack, &push);
                 }
-                else
-                {
-                    overshot = 0;
-                }
+                gKTRexState->moveVariant = 1;
+                return 5;
             }
-            else if (gKTRexState->laneFrac - gKTRexState->laneLerpT > 0.1f)
-            {
-                overshot = 1;
-            }
-            else
-            {
-                overshot = 0;
-            }
-        }
-        else
-        {
-            overshot = 0;
-        }
-        if (overshot != 0)
-        {
-            int push;
-            gKTRexState->pathCountdown = 1;
-            push = 5;
-            if (Stack_IsFull(gKTRexState->stack) == 0)
-            {
-                Stack_Push(gKTRexState->stack, &push);
-            }
-            gKTRexState->moveVariant = 1;
-            return 5;
         }
     }
     return 0;
@@ -991,6 +996,13 @@ int ktrex_stateHandlerB00(GameObject* obj, KTRexRuntime* runtime)
     return 0;
 }
 
+static inline f32* KTRex_GetActiveContactPointTable(GameObject* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    u8* model = (u8*)objAnim->banks[objAnim->bankIndex];
+    return *(f32**)(model + 0x50);
+}
+
 void ktrex_updateContactEffects(GameObject* obj, KTRexRuntime* runtime)
 {
     int hitType;
@@ -1055,8 +1067,7 @@ void ktrex_updateContactEffects(GameObject* obj, KTRexRuntime* runtime)
     else if (gKTRexContactEffectCooldown == 0)
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_95);
-        contactPoints =
-            *(f32**)((u8*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex] + 0x50);
+        contactPoints = KTRex_GetActiveContactPointTable(obj);
         gKTRexEffectSpawnWork.posX = contactPoints[hitType * 4 + 1] + playerMapOffsetX;
         gKTRexEffectSpawnWork.posY = contactPoints[hitType * 4 + 2];
         gKTRexEffectSpawnWork.posZ = contactPoints[hitType * 4 + 3] + playerMapOffsetZ;
@@ -1608,9 +1619,8 @@ void ktrex_update(int obj)
     gKTRexState->laneFrac = frac;
     {
         KTRexArenaState* st = (KTRexArenaState*)gKTRexState;
-        u8 laneMasks[4] = {2, 8, 1, 4};
 
-        st->currentLaneMask = laneMasks[(st->timerFA >> 1) & 3];
+        st->currentLaneMask = ktrex_getLaneMaskForTimer(st->timerFA);
     }
     zm[0] = 0;
     zc[0] = zm[0];

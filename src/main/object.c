@@ -1360,20 +1360,28 @@ void Obj_UpdateObject(GameObject* obj)
     }
     if ((obj->objectFlags & OBJECT_OBJFLAG_UPDATE_DISABLED) == 0)
     {
-        if (object->seqId == 0 || object->seqId == 0x1f)
+        do
         {
-            playerUpdate(obj);
-            Obj_GetWorldPosition((u32)obj, &object->worldPosX, &object->worldPosY, &object->worldPosZ);
-        }
-        else if (object->dll != NULL)
-        {
-            cb2 = (void (*)(GameObject*)) * (int*)((u8*)*object->dll + 8);
-            if (cb2 != 0)
+            switch (object->seqId)
             {
-                cb2(obj);
+            case 0:
+            case 0x1f:
+                playerUpdate(obj);
+                break;
+            default:
+                if (object->dll == NULL)
+                {
+                    continue;
+                }
+                cb2 = (void (*)(GameObject*)) * (int*)((u8*)*object->dll + 8);
+                if (cb2 != 0)
+                {
+                    cb2(obj);
+                }
+                break;
             }
             Obj_GetWorldPosition((u32)obj, &object->worldPosX, &object->worldPosY, &object->worldPosZ);
-        }
+        } while (0);
     }
     if (object->hitReactState != NULL)
     {
@@ -2430,12 +2438,13 @@ void Obj_UpdateAllObjects(u8 flags)
         {
             if ((((GameObject*)obj3)->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0)
             {
-                if (((GameObject*)obj3)->anim.seqId == 0 || ((GameObject*)obj3)->anim.seqId == 0x1f)
+                switch (((GameObject*)obj3)->anim.seqId)
                 {
+                case 0:
+                case 0x1f:
                     playerDoHitDetection(obj3);
-                }
-                else
-                {
+                    break;
+                default:
                     if (((GameObject*)obj3)->anim.dll == 0)
                     {
                         continue;
@@ -2446,6 +2455,7 @@ void Obj_UpdateAllObjects(u8 flags)
                         continue;
                     }
                     cb(obj3);
+                    break;
                 }
                 Obj_GetWorldPosition((u32)obj3, &((GameObject*)obj3)->anim.worldPosX,
                                      &((GameObject*)obj3)->anim.worldPosY, &((GameObject*)obj3)->anim.worldPosZ);
@@ -2459,21 +2469,29 @@ void Obj_UpdateAllObjects(u8 flags)
             child = *(int*)&((GameObject*)obj2)->childObjs[0];
             if ((((GameObject*)child)->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0)
             {
-                if (((GameObject*)child)->anim.seqId == 0 || ((GameObject*)child)->anim.seqId == 0x1f)
+                do
                 {
-                    playerDoHitDetection(child);
-                    Obj_GetWorldPosition((u32)child, (f32*)(child + 0x18), (f32*)(child + 0x1c), (f32*)(child + 0x20));
-                }
-                else if (((GameObject*)child)->anim.dll != 0)
-                {
-                    cb = (void (*)(int)) * (int*)((u8*)*((GameObject*)child)->anim.dll + 0xc);
-                    if (cb != 0)
+                    switch (((GameObject*)child)->anim.seqId)
                     {
+                    case 0:
+                    case 0x1f:
+                        playerDoHitDetection(child);
+                        break;
+                    default:
+                        if (((GameObject*)child)->anim.dll == 0)
+                        {
+                            continue;
+                        }
+                        cb = (void (*)(int)) * (int*)((u8*)*((GameObject*)child)->anim.dll + 0xc);
+                        if (cb == 0)
+                        {
+                            continue;
+                        }
                         cb(child);
-                        Obj_GetWorldPosition((u32)child, (f32*)(child + 0x18), (f32*)(child + 0x1c),
-                                             (f32*)(child + 0x20));
+                        break;
                     }
-                }
+                    Obj_GetWorldPosition((u32)child, (f32*)(child + 0x18), (f32*)(child + 0x1c), (f32*)(child + 0x20));
+                } while (0);
             }
         }
         Waterfx_RunFrameLegacy((*gWaterfxInterface), framesThisStep);

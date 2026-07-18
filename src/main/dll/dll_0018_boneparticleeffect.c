@@ -441,15 +441,18 @@ void boneParticleEffect_func03_nop(void)
 
 void boneParticleEffect_release(void)
 {
-    int i;
     void* zero;
+    void** buf;
+    int i;
     i = 0;
+    buf = gBoneParticleEffectBuffers;
     zero = NULL;
     do
     {
-        if (gBoneParticleEffectBuffers[i] != NULL)
-            mm_free(gBoneParticleEffectBuffers[i]);
-        gBoneParticleEffectBuffers[i] = zero;
+        if (*buf != NULL)
+            mm_free(*buf);
+        *buf = zero;
+        buf++;
         i++;
     } while (i < BONE_PARTICLE_EFFECT_BUFFER_COUNT);
     if (gBoneParticleTextureA != NULL)
