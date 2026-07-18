@@ -56,6 +56,7 @@
 #include "main/dll/Hcurves_ext.h"
 #include "main/dll/dll_80136a40_ext.h"
 #include "main/dll/skeetla_ext.h"
+#include "main/dll/tricky_substates_ext.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -206,7 +207,6 @@ extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoin
 extern void doNothing_onTrickyFree(void);
 extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
-extern int trickyFoodFn_8014460c(GameObject* obj, int state);
 extern int trickyFn_8013b368();
 extern f32 objFn_801948c0(int obj, int coord);
 const struct VisBits16 gTrickyVisibilityBitsInit = {{0x10000, 0x20000, 0x40000, 0x80000}};
@@ -351,7 +351,7 @@ void trickyFn_80144f50(GameObject* obj, int state)
     u32 sfxDisabled;
     u32 transitionFlag;
 
-    if (trickyFoodFn_8014460c(obj, state) == 0)
+    if (trickyFoodFn_8014460c(obj, (int*)state) == 0)
     {
         ((TrickyState*)state)->wanderTargetX =
             (obj)->anim.worldPosX - mathSinf((lbl_803E2454 * (f32) * (s16*)obj) / lbl_803E2458);

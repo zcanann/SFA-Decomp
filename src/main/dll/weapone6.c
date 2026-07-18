@@ -34,6 +34,7 @@
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
+#include "main/dll/tricky_substates_ext.h"
 
 typedef struct
 {
@@ -85,7 +86,6 @@ extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
 extern int trickyFn_8013b368(int obj, f32 speed, int state);
-extern int trickyFoodFn_8014460c(GameObject* obj, int state);
 extern int tumbleweedbush_findNearestActive(void);
 extern int fn_801CDE70(int);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
@@ -452,7 +452,7 @@ void fn_8013F9E4(GameObject* obj, int state)
     int inWater;
     s16 move;
 
-    if (trickyFoodFn_8014460c(obj, state) == 0)
+    if (trickyFoodFn_8014460c(obj, (int*)state) == 0)
     {
         if (((int (*)(void*, f32, int))trickyFn_8013b368)(obj, lbl_803E2488, state) == 0)
         {
