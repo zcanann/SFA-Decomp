@@ -44,12 +44,6 @@
 
 extern f32 lbl_803DE594;
 
-typedef u32 (*SndIsInstalledU32Fn)(void);
-typedef u8 (*MusicInitMidiWadU8Fn)(void);
-
-#define sndIsInstalledU32 ((SndIsInstalledU32Fn)sndIsInstalled)
-#define musicInitMidiWadU8 ((MusicInitMidiWadU8Fn)musicInitMidiWad)
-
 const MusicSeqStartParams gMusicSeqStartParamsDefault = {
     4, {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}, 0x100, 0, 0x7F, {0}};
 
@@ -301,7 +295,6 @@ void streamFn_8000a380(int mask, int mode, int time);
 void Music_Trigger(int id, int arg);
 void Music_Update(void);
 s32 Music_GetActivePriority(void);
-int musicInitMidiWad(void);
 void Music_LoadChannelForTrigger(MusicTrigger* trigger);
 void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger);
 u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
@@ -986,7 +979,7 @@ int audioInit(void)
         sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, gAudioReverbSettings, 0xff, 0, 0, 0, 0xff,
                                      (void*)reverbWork);
         {
-            if (!sndIsInstalledU32())
+            if (!sndIsInstalled())
             {
                 OSReport(base + 0x1f8);
                 return 0xff;
@@ -1067,7 +1060,7 @@ int audioInit(void)
     }
     if (!gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady)
     {
-        gAudioReady = musicInitMidiWadU8();
+        gAudioReady = musicInitMidiWad();
     }
     if (gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady &&
 
@@ -1493,7 +1486,7 @@ s32 Music_GetActivePriority(void)
     return gMusicActivePriority;
 }
 
-int musicInitMidiWad(void)
+u8 musicInitMidiWad(void)
 {
     MusicTrackSlot* table;
     MusicChannel* ch;

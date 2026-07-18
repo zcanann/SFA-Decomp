@@ -27,7 +27,7 @@ void sndSetMaxVoices(u8 valueA, u8 valueB)
     SYNTH_CONFIGURATION->fxVoiceCount = valueB;
 }
 
-u8 sndIsInstalled(void)
+u32 sndIsInstalled(void)
 {
     return gSynthInitialized;
 }

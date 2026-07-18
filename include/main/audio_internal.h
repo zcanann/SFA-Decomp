@@ -301,7 +301,7 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta);
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third);
 void fn_80009008(u32 request);
 void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-int musicInitMidiWad(void);
+u8 musicInitMidiWad(void);
 void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 void poolDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 void projectDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
