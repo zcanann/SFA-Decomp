@@ -171,6 +171,7 @@ extern int lbl_803DCC8C;
 
 #include "main/objprint_load_api.h"
 #include "dolphin/os/OSAlloc.h"
+#include "main/objmodel.h"
 
 struct MldfNames
 {
@@ -941,8 +942,6 @@ void* jumptable_802CC254[73] = {
 char sMapAssetPathFormats[0x78] =
     "%s/animcurv.bin\0%s/animcurv.tab\0%s/voxmap.bin\0\0\0warlock/voxmap.bin\0\0%s/voxmap.tab\0\0"
     "\0%s/mod%d.zlb.bin\0\0\0\0%s/mod%d.tab";
-extern u32 ObjModel_GetUnpackedResourceSize(int p, u32 size);
-extern void ObjModel_UnpackResourcePayload(int p, u32 size, int dst, u32 unpacked);
 extern char* sMapFileNameTable[];
 extern u8 lbl_803DCD28;
 extern f32 lbl_803DCD44;
@@ -3033,7 +3032,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             tmp = return0_8002A5B8(fileBuf);
             if (tmp != 0)
             {
-                *sizeOut = ObjModel_GetUnpackedResourceSize(fileBuf, *sizeOut);
+                *sizeOut = ObjModel_GetUnpackedResourceSize((u8*)fileBuf, *sizeOut);
             }
         }
         break;
@@ -3054,7 +3053,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             tmp = return0_8002A5B8(fileBuf);
             if (tmp != 0)
             {
-                *sizeOut = ObjModel_GetUnpackedResourceSize(fileBuf, *sizeOut);
+                *sizeOut = ObjModel_GetUnpackedResourceSize((u8*)fileBuf, *sizeOut);
             }
         }
         break;
@@ -3575,8 +3574,8 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             tmp = return0_8002A5B8(fileBuf);
             if (tmp != 0)
             {
-                ObjModel_UnpackResourcePayload(fileBuf, *sizeOut, destBuf,
-                                               ObjModel_GetUnpackedResourceSize(fileBuf, *sizeOut));
+                ObjModel_UnpackResourcePayload((u8*)fileBuf, *sizeOut, (u8*)destBuf,
+                                               ObjModel_GetUnpackedResourceSize((u8*)fileBuf, *sizeOut));
             }
             else
             {

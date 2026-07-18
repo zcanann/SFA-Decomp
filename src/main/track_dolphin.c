@@ -38,6 +38,7 @@
 #include "main/voxmaps.h"
 #include "track/intersect_api.h"
 #include "main/rcp_dolphin_api.h"
+#include "main/objmodel.h"
 
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
@@ -411,8 +412,6 @@ extern void skyBuildSunModelMatrix(f32* out);
 extern void* fn_8008912C(void);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern void allocLotsOfTextures(void);
-extern u8* fn_80028364(int hdr, int i);
-extern u16* fn_80028354(int hdr, int tri);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
@@ -3942,7 +3941,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
 
     for (; i < count; i++)
     {
-        u8* blk = fn_80028364(hdr, i);
+        u8* blk = fn_80028364((u8*)hdr, i);
         s16* bs = (s16*)blk;
         u32 bf = *(u32*)(blk + 0x10);
         int tEnd, t;
@@ -3968,7 +3967,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
         t = *(u16*)blk;
         for (; t < tEnd; t++)
         {
-            u16* twn = fn_80028354(hdr, t);
+            u16* twn = fn_80028354((u8*)hdr, t);
             u16* tw;
             f32 tMinY, tMaxX, tMinX, tMaxY, tMinZ, tMaxZ;
             int j;
