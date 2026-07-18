@@ -77,17 +77,6 @@ const f32 lbl_803E745C = 1.0f;
 #define GFLEVELCON_ENVFX_B 0x21d
 #define GFLEVELCON_ENVFX_C 0x21e
 
-int gf_levelcon_getExtraSize(void);
-int gf_levelcon_getObjectTypeId(void);
-void gf_levelcon_hitDetect(void);
-void gf_levelcon_initialise(void);
-void gf_levelcon_release(void);
-void gf_levelcon_free(void);
-void gf_levelcon_update(GameObject* obj);
-void gf_levelcon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void gf_levelcon_init(GameObject* obj);
-void gf_levelcon_findLinkedObjects(GameObject* obj);
-
 ObjectDescriptor gGF_LevelConObjDescriptor = {
     0,
     0,
