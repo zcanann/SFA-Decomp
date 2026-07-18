@@ -119,7 +119,6 @@ void WM_ObjCreator_hitDetect(void)
 void WM_ObjCreator_init(int* obj, s8* def);
 void WM_ObjCreator_release(void);
 void WM_ObjCreator_initialise(void);
-void WM_ObjCreator_update(GameObject* obj);
 
 ObjectDescriptor gWM_ObjCreatorObjDescriptor = {
     0,
