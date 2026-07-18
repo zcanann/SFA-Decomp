@@ -97,7 +97,6 @@ extern f32 lbl_803E2C88;
 extern f32 lbl_803E2C8C;
 extern f32 lbl_803E2C90;
 extern f32 lbl_803E2C94;
-extern u8 gCrawlerSeqTable[];
 extern void* gCrawlerModelChainIds[];
 
 extern f32 lbl_803E2C1C;
