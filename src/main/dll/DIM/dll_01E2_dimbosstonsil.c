@@ -158,15 +158,6 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
         hitReactMode = state->hitReactMode;
         switch (hitReactMode)
         {
-        case 1:
-            animOk = (*(int (**)(void*, ObjAnimUpdateState*, DIMbosstonsilState*, u8*, u8*, int))(
-                *(int*)gBaddieControlInterface + 0x34))(obj, animUpdate, state, lbl_803DDBB0, lbl_803DDBA8, 0);
-            if (animOk != 0)
-            {
-                (*(void (**)(void*, DIMbosstonsilState*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(
-                    obj, state, lbl_803E4C90, 1);
-            }
-            break;
         case 2:
             animUpdate->hitVolumePair = 0;
             dimBossTonsil_newState_hitFightMain((u8*)obj, animUpdate, state, state);
@@ -176,6 +167,15 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
                 (*gPlayerInterface)
                     ->update(obj, state, lbl_803E4CB8, *(f32*)&lbl_803E4CB8, lbl_803DDBB0, lbl_803DDBA8);
                 animUpdate->sequenceEventActive = 0;
+            }
+            break;
+        case 1:
+            animOk = (*(int (**)(void*, ObjAnimUpdateState*, DIMbosstonsilState*, u8*, u8*, int))(
+                *(int*)gBaddieControlInterface + 0x34))(obj, animUpdate, state, lbl_803DDBB0, lbl_803DDBA8, 0);
+            if (animOk != 0)
+            {
+                (*(void (**)(void*, DIMbosstonsilState*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(
+                    obj, state, lbl_803E4C90, 1);
             }
             break;
         case 0:

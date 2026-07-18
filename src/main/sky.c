@@ -631,26 +631,7 @@ void renderSky(void)
     skyFn_8008a04c();
 }
 
-void getAmbientColor(int slot, u8* red, u8* green, u8* blue)
-{
-    u8* sky;
-    int offset;
-
-    sky = gSkyState;
-    if (sky == NULL)
-    {
-        *blue = 0xff;
-        *green = 0xff;
-        *red = 0xff;
-        return;
-    }
-
-    offset = slot * 0xa4;
-    *red = gSkyState[offset + 0x78];
-    *green = gSkyState[offset + 0x79];
-    *blue = gSkyState[offset + 0x7a];
-}
-
+void getAmbientColor(int slot, u8* red, u8* green, u8* blue);
 void textureColorFn_8008991c(int slot, u8* red, u8* green, u8* blue)
 {
     u8* sky;
@@ -1626,6 +1607,27 @@ void sky2_run(void)
         i++;
     } while (i < 2);
 }
+
+void getAmbientColor(int slot, u8* red, u8* green, u8* blue)
+{
+    u8* sky;
+    int offset;
+
+    sky = gSkyState;
+    if (sky == NULL)
+    {
+        *blue = 0xff;
+        *green = 0xff;
+        *red = 0xff;
+        return;
+    }
+
+    offset = slot * 0xa4;
+    *red = gSkyState[offset + 0x78];
+    *green = gSkyState[offset + 0x79];
+    *blue = gSkyState[offset + 0x7a];
+}
+
 
 void sky2_onMapSetup(void)
 {

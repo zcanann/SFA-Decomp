@@ -203,23 +203,6 @@ void s3dHandle(void)
 }
 
 /*
- * Reset 3D sound bookkeeping and store a stereo flag.
- */
-void s3dInit(u32 flags)
-{
-    u8 stereo = (flags & S3D_INIT_STEREO_FLAG) != 0;
-    s3dEmitterRoot = 0;
-    s3dListenerRoot = 0;
-    s3dRoomRoot = 0;
-    s3dDoorRoot = 0;
-    snd_used_studios = 0;
-    snd_base_studio = S3D_BASE_STUDIO;
-    snd_max_studios = S3D_MAX_STUDIOS;
-    s3dCallCnt = 0;
-    lbl_803DE36A = stereo;
-}
-
-/*
  * Empty stub.
  */
 void s3dExit(void)
@@ -274,4 +257,21 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void* 
         result = 0;
     }
     return result;
+}
+
+/*
+ * Reset 3D sound bookkeeping and store a stereo flag.
+ */
+void s3dInit(u32 flags)
+{
+    u8 stereo = (flags & S3D_INIT_STEREO_FLAG) != 0;
+    s3dEmitterRoot = 0;
+    s3dListenerRoot = 0;
+    s3dRoomRoot = 0;
+    s3dDoorRoot = 0;
+    snd_used_studios = 0;
+    snd_base_studio = S3D_BASE_STUDIO;
+    snd_max_studios = S3D_MAX_STUDIOS;
+    s3dCallCnt = 0;
+    lbl_803DE36A = stereo;
 }

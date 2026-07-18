@@ -287,6 +287,7 @@ void playerRunActiveSpells(GameObject* obj, int state);
 void fn_802B066C(GameObject* obj, int state);
 void playerStaffInit(GameObject* obj, int state);
 void playerDoEyeAnims(GameObject* obj, int state);
+int fn_80295A04(GameObject* obj, int sel);
 void fn_802B18BC(GameObject* obj, int state, f32 fv);
 void playerDoControls(GameObject* obj, int state, f32 fv);
 void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt);
@@ -446,60 +447,6 @@ void fn_80295918(GameObject* obj, int sel, f32 fval)
         *(u32*)&((PlayerState*)state)->flags360 &= ~0x80000LL;
         break;
     }
-}
-
-int fn_80295A04(GameObject* obj, int sel)
-{
-    int state = *(int*)&obj->extra;
-    switch (sel)
-    {
-    case 1:
-        if ((*(int*)((char*)state + 0x310) & 0x1000) != 0 ||
-            (obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0)
-            return 0;
-        return 1;
-    case 2:
-        switch (((PlayerState*)state)->baddie.controlMode)
-        {
-        case 1:
-            return 0;
-        case 2:
-        {
-            s16* list;
-            s16 key;
-            int i;
-            i = 0;
-            list = *(s16**)((char*)state + 0x3f8);
-            key = obj->anim.currentMove;
-            while (key != *list && i < 0x14)
-            {
-                list += 4;
-                i += 4;
-            }
-            return i / 4;
-        }
-        default:
-            return 5;
-        }
-    case 9:
-        return *(s8*)&((PlayerState*)state)->baddie.stateTag == 3;
-    case 10:
-        return *(u32*)&((PlayerState*)state)->flags360 & 0x200;
-    case 11:
-        return *(u32*)&((PlayerState*)state)->flags360 & 0x100;
-    case 13:
-        return ((PlayerState*)state)->baddie.hasTarget == 1;
-    case 14:
-        return ((PlayerState*)state)->animState;
-    case 18:
-    {
-        void* p = *(void**)((char*)state + 0x7f0);
-        if (p != 0)
-            return *(s16*)((char*)p + 0x46);
-        return 0;
-    }
-    }
-    return 0;
 }
 
 void objSetPos(GameObject* obj, f32 f1, f32 f2, f32 f3)
@@ -12125,33 +12072,6 @@ void playerCastSpell(int a, int b, int c)
     }
     ((PlayerState*)b)->animState = c;
 }
-void fn_802AB5A4(GameObject* obj, int p2, int flags)
-{
-    u8 f = (u8)flags;
-    char* q = (char*)p2 + 4;
-    if (f & 1)
-    {
-        curves_updateLocalPointTransforms((int)obj, (CurvesCollisionState*)q);
-    }
-    if (f & 2)
-    {
-        curves_preparePointCollisionFrame((int)obj, (CurvesCollisionState*)((char*)(int)p2 + 4));
-        *(f32*)(q + 0x20) = obj->anim.worldPosX;
-        *(f32*)(q + 0x24) = lbl_803E80EC + obj->anim.worldPosY;
-        *(f32*)(q + 0x28) = obj->anim.worldPosZ;
-    }
-    if (f & 4)
-    {
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosX = obj->anim.localPosX;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosY = obj->anim.localPosY;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosZ = obj->anim.localPosZ;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosX = obj->anim.worldPosX;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosY = obj->anim.worldPosY;
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosZ = obj->anim.worldPosZ;
-    }
-}
-
-
 void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
 {
     int any;
@@ -14700,50 +14620,6 @@ void fn_802B066C(GameObject* obj, int state)
     }
 }
 
-void playerStaffInit(GameObject* obj, int state)
-{
-    GameObject* child;
-    int b;
-
-    if (gPlayerPathObject == NULL && Obj_IsLoadingLocked())
-    {
-        child = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x69), 4, -1, -1, obj->anim.parent);
-        gPlayerPathObject = child;
-        ObjLink_AttachChild((int)obj, (int)child, 2);
-    }
-    if (gPlayerPathObject != NULL)
-    {
-        *(int*)&((GameObject*)gPlayerPathObject)->anim.parent = *(int*)&obj->anim.parent;
-    }
-
-    ((PlayerState*)state)->chargeLevel -= lbl_803E7E98 * timeDelta;
-    if (((PlayerState*)state)->chargeLevel < *(f32*)&lbl_803E7EA4)
-    {
-        ((PlayerState*)state)->chargeLevel = lbl_803E7EA4;
-    }
-    ((PlayerState*)state)->boulderChargeLevel -= lbl_803E7E98 * timeDelta;
-    if (((PlayerState*)state)->boulderChargeLevel < *(f32*)&lbl_803E7EA4)
-    {
-        ((PlayerState*)state)->boulderChargeLevel = lbl_803E7EA4;
-    }
-
-    fn_8011F34C((u8)(int)((PlayerState*)state)->chargeLevel);
-
-    if ((u32)obj != 0)
-    {
-        b = (((ObjAnimComponent*)obj)->bankIndex != 0);
-    }
-    else
-    {
-        b = 0;
-    }
-    if (b == 0 && mainGetBit(GAMEBIT_ITEM_Staff_Got))
-    {
-        staffToggle(obj, 0);
-    }
-}
-
-
 void playerDoEyeAnims(GameObject* obj, int state)
 {
     s16* vec9 = objModelGetVecFn_800395d8(obj, 9);
@@ -14869,6 +14745,61 @@ void playerDoEyeAnims(GameObject* obj, int state)
         }
     }
 }
+
+int fn_80295A04(GameObject* obj, int sel)
+{
+    int state = *(int*)&obj->extra;
+    switch (sel)
+    {
+    case 1:
+        if ((*(int*)((char*)state + 0x310) & 0x1000) != 0 ||
+            (obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0)
+            return 0;
+        return 1;
+    case 2:
+        switch (((PlayerState*)state)->baddie.controlMode)
+        {
+        case 1:
+            return 0;
+        case 2:
+        {
+            s16* list;
+            s16 key;
+            int i;
+            i = 0;
+            list = *(s16**)((char*)state + 0x3f8);
+            key = obj->anim.currentMove;
+            while (key != *list && i < 0x14)
+            {
+                list += 4;
+                i += 4;
+            }
+            return i / 4;
+        }
+        default:
+            return 5;
+        }
+    case 9:
+        return *(s8*)&((PlayerState*)state)->baddie.stateTag == 3;
+    case 10:
+        return *(u32*)&((PlayerState*)state)->flags360 & 0x200;
+    case 11:
+        return *(u32*)&((PlayerState*)state)->flags360 & 0x100;
+    case 13:
+        return ((PlayerState*)state)->baddie.hasTarget == 1;
+    case 14:
+        return ((PlayerState*)state)->animState;
+    case 18:
+    {
+        void* p = *(void**)((char*)state + 0x7f0);
+        if (p != 0)
+            return *(s16*)((char*)p + 0x46);
+        return 0;
+    }
+    }
+    return 0;
+}
+
 
 
 void fn_802B0EA4(GameObject* obj, int inner, int state)
@@ -17907,6 +17838,77 @@ void objLoadPlayerFromSave(int obj)
     }
     gPlayerHeldObject = 0;
 }
+
+void fn_802AB5A4(GameObject* obj, int p2, int flags)
+{
+    u8 f = (u8)flags;
+    char* q = (char*)p2 + 4;
+    if (f & 1)
+    {
+        curves_updateLocalPointTransforms((int)obj, (CurvesCollisionState*)q);
+    }
+    if (f & 2)
+    {
+        curves_preparePointCollisionFrame((int)obj, (CurvesCollisionState*)((char*)(int)p2 + 4));
+        *(f32*)(q + 0x20) = obj->anim.worldPosX;
+        *(f32*)(q + 0x24) = lbl_803E80EC + obj->anim.worldPosY;
+        *(f32*)(q + 0x28) = obj->anim.worldPosZ;
+    }
+    if (f & 4)
+    {
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosX = obj->anim.localPosX;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosY = obj->anim.localPosY;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosZ = obj->anim.localPosZ;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosX = obj->anim.worldPosX;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosY = obj->anim.worldPosY;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosZ = obj->anim.worldPosZ;
+    }
+}
+
+
+void playerStaffInit(GameObject* obj, int state)
+{
+    GameObject* child;
+    int b;
+
+    if (gPlayerPathObject == NULL && Obj_IsLoadingLocked())
+    {
+        child = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x69), 4, -1, -1, obj->anim.parent);
+        gPlayerPathObject = child;
+        ObjLink_AttachChild((int)obj, (int)child, 2);
+    }
+    if (gPlayerPathObject != NULL)
+    {
+        *(int*)&((GameObject*)gPlayerPathObject)->anim.parent = *(int*)&obj->anim.parent;
+    }
+
+    ((PlayerState*)state)->chargeLevel -= lbl_803E7E98 * timeDelta;
+    if (((PlayerState*)state)->chargeLevel < *(f32*)&lbl_803E7EA4)
+    {
+        ((PlayerState*)state)->chargeLevel = lbl_803E7EA4;
+    }
+    ((PlayerState*)state)->boulderChargeLevel -= lbl_803E7E98 * timeDelta;
+    if (((PlayerState*)state)->boulderChargeLevel < *(f32*)&lbl_803E7EA4)
+    {
+        ((PlayerState*)state)->boulderChargeLevel = lbl_803E7EA4;
+    }
+
+    fn_8011F34C((u8)(int)((PlayerState*)state)->chargeLevel);
+
+    if ((u32)obj != 0)
+    {
+        b = (((ObjAnimComponent*)obj)->bankIndex != 0);
+    }
+    else
+    {
+        b = 0;
+    }
+    if (b == 0 && mainGetBit(GAMEBIT_ITEM_Staff_Got))
+    {
+        staffToggle(obj, 0);
+    }
+}
+
 
 void fn_802AABE4(int obj)
 {

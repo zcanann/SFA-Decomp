@@ -1615,44 +1615,6 @@ int Sfx_IsPlayingFromObjectChannel(int obj, int channel)
     return 0;
 }
 
-s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
-{
-    SfxObjectChannel* objectChannel;
-
-    if ((u16)sfxId != 0)
-    {
-        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
-    }
-    else
-    {
-        objectChannel = NULL;
-    }
-
-    if (objectChannel != NULL)
-    {
-        return 1;
-    }
-    return 0;
-}
-
-void Sfx_StopAllObjectSounds(void)
-{
-    s32 i;
-    SfxObjectChannel* objectChannel;
-
-    objectChannel = gSfxObjectChannels;
-    i = SFX_OBJECT_CHANNEL_COUNT;
-    while (i-- != 0)
-    {
-        if (objectChannel->handle != (u32)-1)
-        {
-            sndFXKeyOff(objectChannel->handle);
-            objectChannel->handle = (u32)-1;
-        }
-        objectChannel++;
-    }
-}
-
 void audioFn_8000b694(u32 value)
 {
     s32 i;
@@ -3016,6 +2978,45 @@ void Sfx_UpdateLoopedObjectSounds(void)
         }
     }
 }
+
+s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
+{
+    SfxObjectChannel* objectChannel;
+
+    if ((u16)sfxId != 0)
+    {
+        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
+    }
+    else
+    {
+        objectChannel = NULL;
+    }
+
+    if (objectChannel != NULL)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+void Sfx_StopAllObjectSounds(void)
+{
+    s32 i;
+    SfxObjectChannel* objectChannel;
+
+    objectChannel = gSfxObjectChannels;
+    i = SFX_OBJECT_CHANNEL_COUNT;
+    while (i-- != 0)
+    {
+        if (objectChannel->handle != (u32)-1)
+        {
+            sndFXKeyOff(objectChannel->handle);
+            objectChannel->handle = (u32)-1;
+        }
+        objectChannel++;
+    }
+}
+
 
 
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)

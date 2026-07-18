@@ -194,6 +194,7 @@ void drakorhoverpad_updateMain(GameObject* obj);
 void drakorhoverpad_initMain(GameObject* obj, void* desc);
 void drakorhoverpad_release(void);
 void drakorhoverpad_initialise(void);
+int drakorhoverpad_init(GameObject* obj);
 
 void drakorhoverpad_resetPendingMotion(GameObject* obj)
 {
@@ -479,47 +480,6 @@ ObjectDescriptor24 gDrakorHoverPadObjDescriptor = {
     (ObjectDescriptorCallback)drakorhoverpad_renderGroundMarker,
     (ObjectDescriptorCallback)drakorhoverpad_func17,
 };
-int drakorhoverpad_init(GameObject* obj)
-{
-    u8* p = (obj)->extra;
-    DrakorHoverpadFlags* f = (DrakorHoverpadFlags*)(p + 0x178);
-
-    if (f->b40 == 0)
-    {
-        if (f->state > 3)
-        {
-            if (0.0f == ((DrakorHoverpadState*)p)->speed)
-            {
-                f->state = 0;
-            }
-        }
-    }
-    if (f->b01 != mainGetBit(1654))
-    {
-        f->b01 ^= 1;
-        *(f32*)p = -*(f32*)p;
-        if (f->state == 3)
-        {
-            f->state = 0;
-            *(f32*)p = (*(f32*)&gDrakorHoverpadSpeedStep);
-        }
-        if (f->state == 4)
-        {
-            f->state = 0;
-            *(f32*)p = -2.0f;
-        }
-        if (f->b40 != 0)
-        {
-            if (0.0f == *(f32*)p)
-            {
-                *(f32*)p = (f->b01 != 0) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
-            }
-        }
-        Sfx_PlayFromObject((int)obj, SFXTRIG_id_309);
-    }
-    return 0;
-}
-
 int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCode, void* out)
 {
     u8* p = (obj)->extra;
@@ -1029,6 +989,47 @@ void drakorhoverpad_updateMain(GameObject* obj)
     Obj_SteerVelocityTowardVector(obj, (Vec3f*)&obj->anim.velocityX, (Vec3f*)diff, spd, spd / 30.0f,
                                   0.3f);
     PSVECAdd(&(obj)->anim.localPosX, &(obj)->anim.velocityX, &(obj)->anim.localPosX);
+}
+
+int drakorhoverpad_init(GameObject* obj)
+{
+    u8* p = (obj)->extra;
+    DrakorHoverpadFlags* f = (DrakorHoverpadFlags*)(p + 0x178);
+
+    if (f->b40 == 0)
+    {
+        if (f->state > 3)
+        {
+            if (0.0f == ((DrakorHoverpadState*)p)->speed)
+            {
+                f->state = 0;
+            }
+        }
+    }
+    if (f->b01 != mainGetBit(1654))
+    {
+        f->b01 ^= 1;
+        *(f32*)p = -*(f32*)p;
+        if (f->state == 3)
+        {
+            f->state = 0;
+            *(f32*)p = (*(f32*)&gDrakorHoverpadSpeedStep);
+        }
+        if (f->state == 4)
+        {
+            f->state = 0;
+            *(f32*)p = -2.0f;
+        }
+        if (f->b40 != 0)
+        {
+            if (0.0f == *(f32*)p)
+            {
+                *(f32*)p = (f->b01 != 0) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
+            }
+        }
+        Sfx_PlayFromObject((int)obj, SFXTRIG_id_309);
+    }
+    return 0;
 }
 
 void drakorhoverpad_initMain(GameObject* obj, void* desc)

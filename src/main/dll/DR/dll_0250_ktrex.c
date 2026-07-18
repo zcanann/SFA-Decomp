@@ -395,29 +395,32 @@ int ktrex_stateHandlerA08(GameObject* obj, KTRexRuntime* runtime)
                 (f32)(u32) * (u16*)(row + (gKTRexState->phaseCounter & ~1));
         }
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-        return 0;
     }
-    if ((gKTRexState->timerFA & 8) == 0)
+    else
     {
-        timer = gKTRexState->stateTimer - timeDelta;
-        gKTRexState->stateTimer = timer;
-        if (!(timer <= 0.0f))
+        if ((gKTRexState->timerFA & 8) == 0)
         {
-            return 0;
+            timer = gKTRexState->stateTimer - timeDelta;
+            gKTRexState->stateTimer = timer;
+            if (!(timer <= 0.0f))
+            {
+                return 0;
+            }
         }
+        else
+        {
+            gKTRexState->phaseCountdown -= 1;
+            runtime->hitCountdown = 3;
+        }
+        gKTRexState->timerFA &= ~0x10;
+        if (gKTRexState->phaseCountdown == 0)
+        {
+            return 2;
+        }
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        return 10;
     }
-    if ((gKTRexState->timerFA & 8) != 0)
-    {
-        gKTRexState->phaseCountdown -= 1;
-        runtime->hitCountdown = 3;
-    }
-    gKTRexState->timerFA &= ~0x10;
-    if (gKTRexState->phaseCountdown == 0)
-    {
-        return 2;
-    }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    return 10;
+    return 0;
 }
 
 int ktrex_stateHandlerA07(GameObject* obj, KTRexRuntime* runtime)

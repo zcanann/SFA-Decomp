@@ -426,7 +426,6 @@ void synthQueueHandle(u32 handle)
 
     key = handle & 0x7fffffffu;
 
-    found = 0xffffffff;
     sv = gSynthQueuedVoices;
     while (sv != 0)
     {
@@ -438,7 +437,7 @@ void synthQueueHandle(u32 handle)
         sv = sv->next;
     }
 
-    if (found == 0xffffffff)
+    if (sv == 0)
     {
         sv = gSynthAllocatedVoices;
         while (sv != 0)
@@ -449,6 +448,10 @@ void synthQueueHandle(u32 handle)
                 break;
             }
             sv = sv->next;
+        }
+        if (sv == 0)
+        {
+            found = 0xffffffff;
         }
     }
 
@@ -508,7 +511,6 @@ void synthFreeHandle(u32 handle)
 
     runtime = &lbl_803AF550;
 
-    found = 0xffffffff;
     voice = gSynthQueuedVoices;
     while (voice != 0)
     {
@@ -520,7 +522,7 @@ void synthFreeHandle(u32 handle)
         voice = voice->next;
     }
 
-    if (found == 0xffffffff)
+    if (voice == 0)
     {
         voice = gSynthAllocatedVoices;
         while (voice != 0)
@@ -531,6 +533,10 @@ void synthFreeHandle(u32 handle)
                 break;
             }
             voice = voice->next;
+        }
+        if (voice == 0)
+        {
+            found = 0xffffffff;
         }
     }
 
@@ -626,7 +632,6 @@ void synthSetHandleValue16(u32 handle, u32 speed)
     runtime = SYNTH_VOICE_RUNTIME();
     key = handle & 0x7fffffffu;
 
-    found = 0xffffffff;
     voice = gSynthQueuedVoices;
     while (voice != 0)
     {
@@ -638,7 +643,7 @@ void synthSetHandleValue16(u32 handle, u32 speed)
         voice = voice->next;
     }
 
-    if (found == 0xffffffff)
+    if (voice == 0)
     {
         voice = gSynthAllocatedVoices;
         while (voice != 0)
@@ -649,6 +654,10 @@ void synthSetHandleValue16(u32 handle, u32 speed)
                 break;
             }
             voice = voice->next;
+        }
+        if (voice == 0)
+        {
+            found = 0xffffffff;
         }
     }
 
@@ -691,7 +700,6 @@ void synthRestoreQueuedHandle(u32 handle)
 
     key = handle & 0x7fffffffu;
 
-    found = 0xffffffff;
     voice = gSynthQueuedVoices;
     while (voice != 0)
     {
@@ -703,7 +711,7 @@ void synthRestoreQueuedHandle(u32 handle)
         voice = voice->next;
     }
 
-    if (found == 0xffffffff)
+    if (voice == 0)
     {
         voice = gSynthAllocatedVoices;
         while (voice != 0)
@@ -714,6 +722,10 @@ void synthRestoreQueuedHandle(u32 handle)
                 break;
             }
             voice = voice->next;
+        }
+        if (voice == 0)
+        {
+            found = 0xffffffff;
         }
     }
 

@@ -295,7 +295,30 @@ void gameTextShowTimeStr(char* str)
 
 void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
 {
-    int found = gameTextIdExists(id);
+    GlyphEntry* e;
+    int count;
+    int i;
+    int found;
+
+    if (gameTextFonts->mode != 2)
+    {
+        found = 0;
+    }
+    else
+    {
+        e = gameTextFonts->entries;
+        count = gameTextFonts->count;
+        found = 0;
+        for (i = 0; i != count; i++)
+        {
+            if (e->id == id)
+            {
+                found = 1;
+                break;
+            }
+            e++;
+        }
+    }
     if (!found)
     {
         *outMaxX = 0;
@@ -565,7 +588,41 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
         return;
     }
     lineStr = def->strings[state->charIndex];
-    charCount = textCountChars(lineStr);
+    {
+        int byteOffset;
+        u32 ch;
+        int charLen;
+
+        charCount = 0;
+        byteOffset = 0;
+        if (lineStr != NULL)
+        {
+            while ((ch = utf8GetNextChar((u8*)(lineStr + byteOffset), &charLen)) != 0)
+            {
+                byteOffset += charLen;
+                if (ch >= 0xe000 && ch <= 0xf8ff)
+                {
+                    SpecialGlyph* g = lbl_802C86F0;
+                    int n;
+                    int val = 0;
+                    for (n = 46; n-- != 0;)
+                    {
+                        if (g->key == ch)
+                        {
+                            val = g->val;
+                            break;
+                        }
+                        g++;
+                    }
+                    byteOffset += val * 2;
+                }
+                else
+                {
+                    charCount++;
+                }
+            }
+        }
+    }
     if (state->active == 0)
     {
         lbl_803DC998 = 0;

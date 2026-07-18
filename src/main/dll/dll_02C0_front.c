@@ -1038,7 +1038,7 @@ void fn_80134870(int obj, u8* arr);
 
 /* Two-byte state push (no equality check): copy lbl_803DD990 to
  * lbl_803DBC08 and write new value. */
-void titleScreenFn_801368c4(u8 arg)
+void titleScreenFn_801368c4(s8 arg)
 {
     lbl_803DBC08 = lbl_803DD990;
     lbl_803DD990 = arg;
