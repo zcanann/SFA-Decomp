@@ -137,14 +137,6 @@ typedef struct
 {
     f32 x, y, z;
 } TrickyVec3;
-int enemy_getExtraSize(void);
-int enemy_getObjectTypeId(void);
-void enemy_release(void);
-void enemy_initialise(void);
-void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void enemy_hitDetect(GameObject* obj);
-void enemy_free(GameObject* obj, int flag);
-void enemy_update(int obj);
 
 extern f32 enemyRespawnDistanceSq;
 extern u8 lbl_8031DBD8[];
@@ -794,16 +786,6 @@ void baddieTurnTowardTarget(int* node, int* sub)
         }
     }
 }
-
-int enemy_getExtraSize(void);
-int enemy_getObjectTypeId(void);
-void enemy_free(GameObject* obj, int flag);
-void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void enemy_hitDetect(GameObject* obj);
-void enemy_update(int obj);
-void enemy_init(GameObject* obj, u8* setup, int flag);
-void enemy_release(void);
-void enemy_initialise(void);
 
 u32 gEnemySelfAngleFlagClearMask[] = {
     0x40000, 0x80000, 0x80000, 0x10000, 0x10000, 0x20000, 0x20000, 0x40000,
