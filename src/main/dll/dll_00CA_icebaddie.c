@@ -1340,18 +1340,21 @@ int iceBaddie_getObjectTypeId(void)
     return 0x49;
 }
 
-void iceBaddie_free(GameObject* obj)
+void iceBaddie_free(int* obj)
 {
-    GroundBaddieState* state = obj->extra;
+    GroundBaddieState* state = ((GameObject*)obj)->extra;
 
     Camera_DisableViewYOffset();
     ObjGroup_RemoveObject((int)obj, ICEBADDIE_OBJGROUP);
-    if (obj->childObjs[0] != NULL)
     {
-        Obj_FreeObject(*(GameObject**)&obj->childObjs[0]);
-        *(int*)&obj->childObjs[0] = 0;
+        int* sub = ((GameObject*)obj)->childObjs[0];
+        if (sub != NULL)
+        {
+            Obj_FreeObject((GameObject*)sub);
+            ((GameObject*)obj)->childObjs[0] = NULL;
+        }
     }
-    ((void (*)(int, int, int))((void**)*gBaddieControlInterface)[16])((int)obj, (int)state, 0x20);
+    ((void (*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int*)state, 0x20);
 }
 
 void iceBaddie_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible)
