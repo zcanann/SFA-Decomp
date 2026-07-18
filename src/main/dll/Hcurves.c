@@ -186,16 +186,11 @@ u8 gObjfsaWalkGroupActive[0xB8];
     *(po) = -((f32)pl->normalX * (XA) + (f32)pl->normalZ * (ZA))
 
 int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode);
-int mathFn_800dbff0(float* point);
 u8 RomCurve_goNextPoint(RomCurveWalker* state);
 static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset, int useCos);
 inline f32 objfsaCorner(s8 ofs, f32 scl, f32* base);
 u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, float* outLateralOffset,
                                           float* outVerticalOffset, float* outPhase);
-int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance);
-RomCurveDef* RomCurve_findByIdWithIndex(u32 curveId, int* outIndex);
-void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds);
-f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment);
 
 
 static inline ObjfsaPatch* Objfsa_GetPatch(int patchIndex)
