@@ -56,7 +56,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 union GroundAnimatorConstF32 { f32 f; };
 __declspec(section ".sdata2") f32 lbl_803E3F98 = 100.0f;
 const union GroundAnimatorConstF32 lbl_803E3F9C = { 0.0f };
-extern void* mapBlockFn_800606ec(int* obj, int idx);
 extern int mapBlockFn_80060678(void* entry);
 
 extern void fn_800605F0(void* cell, void* out);

@@ -56,7 +56,6 @@ typedef struct EdgeVerts
 
 extern int return0_80060B90(void* blk);
 extern u32 mapBlockFn_80060678(int* block);
-extern void* mapBlockFn_800606ec(int* block, int idx);
 
 f32 objFn_801948c0(u8* obj, u8 coord)
 {
