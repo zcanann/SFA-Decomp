@@ -224,7 +224,6 @@ extern const f32 lbl_803DED6C;
 extern f32 gMapSavedPlayerOffsetX, gMapSavedPlayerOffsetZ;
 
 extern float floor(float);
-extern void fn_80069EB8();
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
@@ -1622,7 +1621,7 @@ void maybeHudFn_8006c91c(void)
         else
             v = (int)(lbl_803DED1C * (hi - z) / (hi - lo));
         if ((u8)v != lbl_803DCF80)
-            fn_80069EB8();
+            fn_80069EB8((u8)v);
     }
 }
 
