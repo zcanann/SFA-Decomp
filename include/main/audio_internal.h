@@ -83,7 +83,7 @@ typedef struct SfxObjectChannel {
     u8 tracksObjectPosition;
     u8 paused;
     u8 volume;
-    s16 field08;
+    u16 fxId;
     u8 pad0a[0x02];
     f32 x;
     f32 y;

@@ -317,7 +317,8 @@ void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId);
 int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
 int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f32* outF6, f32* outF7, f32* outF8, int* outI9, int* outI10, int* outI11);
 SfxTrigger* Sfx_FindTrigger(u16 id);
-SfxObjectChannel* Sfx_AllocObjectChannel(int a, int b, double pitch, int c, int d);
+SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan,
+                                         int globalCtrlDisabled);
 void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v);
 f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta);
@@ -631,7 +632,8 @@ static inline SfxObjectChannel* Sfx_FindFreeObjectChannel(void)
     return NULL;
 }
 
-SfxObjectChannel* Sfx_AllocObjectChannel(int a, int b, double pitch, int c, int d);
+SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan,
+                                         int globalCtrlDisabled);
 
 void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
@@ -1703,7 +1705,7 @@ void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale
                 {
                     ctrlVolume = volumeByte;
                 }
-                ((SndFXCtrlWideFn)sndFXCtrl)(objectChannel->handle, 7, (u8)ctrlVolume);
+                sndFXCtrl(objectChannel->handle, 7, (u8)ctrlVolume);
             }
         }
 
@@ -1715,8 +1717,7 @@ void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale
         {
             volumeScale = lbl_803DE574;
         }
-        ((SndFXCtrl14WideFn)sndFXCtrl14)(objectChannel->handle, 0x80,
-                                         (s32)(lbl_803DE578 * volumeScale));
+        sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
     }
 }
 
@@ -1760,7 +1761,7 @@ void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
                 {
                     ctrlVolume = volumeByte;
                 }
-                ((SndFXCtrlWideFn)sndFXCtrl)(objectChannel->handle, 7, (u8)ctrlVolume);
+                sndFXCtrl(objectChannel->handle, 7, (u8)ctrlVolume);
             }
         }
 
@@ -1772,8 +1773,7 @@ void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
         {
             volumeScale = lbl_803DE574;
         }
-        ((SndFXCtrl14WideFn)sndFXCtrl14)(objectChannel->handle, 0x80,
-                                         (s32)(lbl_803DE578 * volumeScale));
+        sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
     }
 }
 
@@ -2180,13 +2180,8 @@ SfxTrigger* Sfx_FindTrigger(u16 id)
     return NULL;
 }
 
-SfxObjectChannel* Sfx_AllocObjectChannel(a, b, pitch, c, d)
-s16 a;
-int b;
-double pitch;
-int c;
-
-int d;
+SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan,
+                                         int globalCtrlDisabled)
 {
     SfxObjectChannel* ch;
     s32 i;
@@ -2203,12 +2198,12 @@ int d;
         return 0;
     }
 
-    handle = ((SndFXStartExWideFn)sndFXStartEx)(a, b, c, 0);
+    handle = sndFXStartEx(fxId, volume, pan, 0);
     if (handle != (u32)-1)
     {
-        if (gSfxGlobalCtrlLevel != 0 && d == 0)
+        if (gSfxGlobalCtrlLevel != 0 && globalCtrlDisabled == 0)
         {
-            ((SndFXCtrlWideFn)sndFXCtrl)(handle, 0x5b, gSfxGlobalCtrlLevel);
+            sndFXCtrl(handle, 0x5b, gSfxGlobalCtrlLevel);
         }
 
         ch->object = 0;
@@ -2223,11 +2218,11 @@ int d;
             ch->y = fz;
             ch->z = fz;
         }
-        ch->field08 = a;
+        ch->fxId = fxId;
         ch->volume = 0x64;
         ch->nearDistance = lbl_803DE590;
         ch->farDistance = lbl_803DE594;
-        ch->globalCtrlDisabled = d;
+        ch->globalCtrlDisabled = globalCtrlDisabled;
 
         ch->age = gSfxObjectChannelAge++;
         return ch;

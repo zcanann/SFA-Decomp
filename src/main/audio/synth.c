@@ -1375,7 +1375,7 @@ void synthHandle(u32 deltaTime)
 /*
  * Start an FX sample by id, applying default volume/pan sentinels.
  */
-int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux)
+u32 synthFXStart(u16 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux)
 {
     FX_TAB* fx;
     u32 handle;

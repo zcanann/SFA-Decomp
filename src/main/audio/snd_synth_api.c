@@ -62,7 +62,7 @@ u16 seqGetMIDIPriority(u8 slot, u8 event)
 /*
  * MusyX FX controller wrapper.
  */
-int sndFXCtrl(int handle, u8 controller, u8 value)
+int sndFXCtrl(u32 handle, u8 controller, u8 value)
 {
     int result;
     sndBegin();
@@ -74,7 +74,7 @@ int sndFXCtrl(int handle, u8 controller, u8 value)
 /*
  * MusyX FX 14-bit controller wrapper.
  */
-int sndFXCtrl14(int handle, u8 controller, u16 value)
+int sndFXCtrl14(u32 handle, u8 controller, u16 value)
 {
     int result;
     sndBegin();
@@ -87,7 +87,7 @@ int sndFXCtrl14(int handle, u8 controller, u16 value)
  * MusyX FX key-off wrapper. Rena's SFA-Amethyst export also names this
  * address audioStopSound, matching the game-facing behavior.
  */
-int sndFXKeyOff(int handle)
+int sndFXKeyOff(u32 handle)
 {
     int result;
     sndBegin();
@@ -99,9 +99,9 @@ int sndFXKeyOff(int handle)
 /*
  * MusyX FX start wrapper, adding the current studio's cached aux index.
  */
-int sndFXStartEx(u32 fxId, u8 volume, u8 pan, u8 studio)
+u32 sndFXStartEx(u16 fxId, u8 volume, u8 pan, u8 studio)
 {
-    int result;
+    u32 result;
     u8 auxIndex;
     sndBegin();
     auxIndex = synthITDDefault[studio][1];
