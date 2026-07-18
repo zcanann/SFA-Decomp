@@ -44,6 +44,7 @@
 #include "main/gamebits.h"
 #include "main/mm.h"
 #include "main/model_light.h"
+#include "main/object_ext.h"
 
 f32 lbl_803DC340 = -0.01f;
 f32 lbl_803DC344 = 0.3f;
@@ -56,7 +57,6 @@ int lbl_803DC350 = 0x0A;
 #define FIREPIPE_OBJFLAG_ACTIVE          0x200
 #define FIREPIPE_OBJFLAG_RENDERED        0x800
 #define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
-extern void Obj_InsertIntoUpdateList(int obj);
 
 extern f32 lbl_803E6B70;
 extern f32 lbl_803E6B74;
@@ -398,7 +398,7 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
             freeDelay = mmSetFreeDelay(0);
             mm_free(spawnDef);
             mmSetFreeDelay(freeDelay);
-            Obj_InsertIntoUpdateList((int)effectObj);
+            Obj_InsertIntoUpdateList((u8*)effectObj);
             effectObj->objectFlags &= ~FIREPIPE_OBJFLAG_UPDATE_DISABLED;
             return (int)effectObj;
         }

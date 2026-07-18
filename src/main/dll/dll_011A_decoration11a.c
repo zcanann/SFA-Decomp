@@ -22,6 +22,7 @@
 #include "main/dll/dll_011A_decoration11a.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/object_render_legacy.h"
+#include "main/object_ext.h"
 
 /* model/seq ids of the three variants that carry a collision volume */
 enum
@@ -31,7 +32,6 @@ enum
     DECOR11A_MODEL_C = 0x7a3
 };
 
-extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
 
 int decoration11a_getExtraSize(void)
 {
@@ -76,7 +76,7 @@ void decoration11a_hitDetect(int obj)
             if (((GameObject*)*objects)->anim.hitReactState != NULL)
             {
                 radius = (f32)((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->primaryRadius;
-                objWorldToLocalPos(localPos, obj, (f32*)(*objects + 0xc));
+                objWorldToLocalPos(localPos, (ObjLocalTransform*)obj, (f32*)(*objects + 0xc));
 
                 sum = 0.0f;
 

@@ -30,6 +30,7 @@
 #include "main/dll/dll_801e991c.h"
 #include "string.h"
 #include "main/lightmap.h"
+#include "main/object_ext.h"
 
 f32 lbl_803DC0B8 = 15.0f;
 int lbl_803DC0BC = -1;
@@ -158,7 +159,6 @@ extern char lbl_803284E0[];
 /* texture asset loaded into lbl_803DDC60 (this DLL's only texture) */
 #define SNOWBIKE_TEXTURE_ID 0x186
 extern u32 lbl_803E5AE0;
-extern void Obj_ClearModelSlotIndex(int obj);
 extern f32 lbl_803E5AF0;
 extern f32 lbl_803E5B14;
 extern f32 lbl_803E5B1C;
@@ -170,9 +170,7 @@ extern f32 lbl_803E5C5C;
 extern f32 lbl_803E5C60;
 extern f32 lbl_803E5C64;
 extern f32 lbl_803E5C68;
-extern void Obj_SetModelSlotIndex(int obj, int slot);
 extern void drcloudcage_updateEngineFx(int obj, u8* state, f32 speed, int val, u8* p, int n);
-extern void objApplyVelocity(int obj);
 extern int Rcp_GetMotionBlurEnabled(void);
 extern f32 lbl_803E5B6C;
 extern f32 lbl_803E5BA0;
@@ -692,7 +690,7 @@ void SnowBike_update(GameObject* obj)
         }
         if (mainGetBit(GAMEBIT_SnowBikeRelated01FB) != 0)
         {
-            Obj_SetModelSlotIndex((int)obj, 0x13);
+            Obj_SetModelSlotIndex((u8*)obj, 0x13);
         }
     }
     *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
@@ -780,7 +778,7 @@ void SnowBike_update(GameObject* obj)
                                       ((SnowBikeState*)state)->localVelY, ((SnowBikeState*)state)->distanceScale,
                                       &obj->anim.velocityX, &obj->anim.velocityY,
                                       &obj->anim.velocityZ);
-                objApplyVelocity((int)obj);
+                objApplyVelocity((u8*)obj);
             }
         }
         else
@@ -859,7 +857,7 @@ void SnowBike_update(GameObject* obj)
                                   ((SnowBikeState*)state)->localVelY, ((SnowBikeState*)state)->distanceScale,
                                   &obj->anim.velocityX, &obj->anim.velocityY,
                                   &obj->anim.velocityZ);
-            objApplyVelocity((int)obj);
+            objApplyVelocity((u8*)obj);
         }
         fn_801EB0D4((int)obj, (int)state);
         drcloudcage_updateEngineFx((int)obj, state, ((SnowBikeState*)state)->distanceScale,
@@ -925,7 +923,7 @@ void SnowBike_init(int obj, u8* paramsRaw, int flag)
         memcpy(alloc, params, 36);
         *(u8**)&((GameObject*)obj)->anim.placementData = alloc;
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_OWNS_PLACEMENT_DATA;
-        Obj_ClearModelSlotIndex(obj);
+        Obj_ClearModelSlotIndex((u8*)obj);
     }
     rot = params->yawByte << 8;
     ((SnowBikeState*)state)->yawCurrent = rot;

@@ -21,6 +21,7 @@
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_00EE_effectbox.h"
+#include "main/object_ext.h"
 
 /* EffectboxPlacement.targetMode values */
 #define EFFECTBOX_TARGET_PLAYER   0 /* Obj_GetPlayerObject */
@@ -32,7 +33,6 @@
 #define EFFECTBOX_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 extern void fn_8002B758(void);
-extern void fn_8002B860(int obj);
 
 #define EFFECTBOX_RENDER_SCALE 1.0f
 #define EFFECTBOX_PI           3.1415927f
@@ -173,7 +173,7 @@ void EffectBox_init(GameObject* obj, EffectboxPlacement* def)
     u32 flags;
     if ((obj)->userData1 == 0)
     {
-        fn_8002B860((int)obj);
+        fn_8002B860((void*)obj);
     }
     (obj)->userData1 = 1;
     gameBit = def->gameBitIndex;

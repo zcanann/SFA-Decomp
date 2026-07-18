@@ -39,13 +39,13 @@
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "main/dll/tricky_api.h"
+#include "main/object_ext.h"
 #define SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SIDEKICKBALL_OBJFLAG_PARENT_SLACK       0x1000
 #define SIDEKICKBALL_MSG_PLAYER_GRAB            0x100010 /* tells player to grab/hold the ball */
 /* GameCube controller button masks */
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_Y 0x800
-extern void fn_8002A5DC(int obj);
 extern char sSidekickBallYVelDepthFormat[];
 extern char sSidekickBallDotFormat[];
 extern u8 gSidekickBallPathPointData[];
@@ -506,7 +506,7 @@ u8 trickyBallMove(GameObject* obj)
         obj->anim.velocityY -= 0.05f * timeDelta;
     }
 
-    fn_8002A5DC((int)obj);
+    fn_8002A5DC((u8*)obj);
     state->prevPos[0] = obj->anim.localPosX;
     state->prevPos[1] = obj->anim.localPosY;
     state->prevPos[2] = obj->anim.localPosZ;
