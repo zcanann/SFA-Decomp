@@ -123,7 +123,6 @@ typedef struct
 
 /* Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
-void bombplant_throwSpore(int* obj, int* p2);
 
 int bombplant_getExtraSize(void)
 {
