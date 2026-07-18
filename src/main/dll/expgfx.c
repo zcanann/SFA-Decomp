@@ -427,6 +427,9 @@ void expgfxRemoveAll(void)
 }
 #pragma opt_propagation reset
 
+#pragma ppc_unroll_speculative on
+#pragma ppc_unroll_factor_limit 5
+#pragma ppc_unroll_instructions_limit 120
 #pragma opt_strength_reduction off
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, u32 sourceId)
 {
@@ -539,6 +542,8 @@ poolSearchDone:
 
     return EXPGFX_INVALID_POOL_INDEX;
 }
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 256
 
 void expgfx_initSlotQuad(void* slotPtr)
 {
@@ -738,14 +743,94 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     ambScaled[1] = (f32)ambG8 * camScale;
     ambScaled[0] = (f32)ambB8 * camScale;
 
+    next = 0;
     scan = runtime->poolActiveCounts;
-    for (next = 0; next < EXPGFX_POOL_COUNT; next++)
+    for (batch = 8; batch != 0; batch--)
     {
-        if (scan[next] != 0)
+        switch (scan[0])
+        {
+        case 0:
             break;
+        default:
+            goto foundFirst;
+        }
+        next++;
+        switch (scan[1])
+        {
+        case 0:
+            break;
+        default:
+            goto foundFirst;
+        }
+        next++;
+        switch (scan[2])
+        {
+        case 0:
+            break;
+        default:
+            goto foundFirst;
+        }
+        next++;
+        switch (scan[3])
+        {
+        case 0:
+            break;
+        default:
+            goto foundFirst;
+        }
+        next++;
+        switch (scan[4])
+        {
+        case 0:
+            break;
+        default:
+            goto foundFirst;
+        }
+        next++;
+        switch (scan[5])
+        {
+        case 0:
+            break;
+        default:
+            goto foundFirst;
+        }
+        next++;
+        switch (scan[6])
+        {
+        case 0:
+            break;
+        default:
+            goto foundFirst;
+        }
+        next++;
+        switch (scan[7])
+        {
+        case 0:
+            break;
+        default:
+            goto foundFirst;
+        }
+        next++;
+        switch (scan[8])
+        {
+        case 0:
+            break;
+        default:
+            goto foundFirst;
+        }
+        next++;
+        switch (scan[9])
+        {
+        case 0:
+            break;
+        default:
+            goto foundFirst;
+        }
+        scan += 10;
+        next++;
     }
-    if (next == EXPGFX_POOL_COUNT)
-        next = -1;
+    next = -1;
+foundFirst:
     pool = next;
     if (pool != -1)
     {
@@ -788,12 +873,17 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
             scan = (s8*)(curPoolBuf + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
             for (; next < EXPGFX_POOL_COUNT; next++)
             {
-                if (*scan != 0)
+                switch (*scan)
+                {
+                case 0:
                     break;
+                default:
+                    goto foundNext;
+                }
                 scan++;
             }
-            if (next == EXPGFX_POOL_COUNT)
-                next = -1;
+            next = -1;
+        foundNext:
             slot = (ExpgfxSlot*)curCache;
             if (next > -1)
             {
