@@ -73,6 +73,7 @@ extern const f32 gMapBlockWorldSize;
 #include "main/pi_dolphin.h"
 #include "main/track_dolphin_ext.h"
 #include "main/gameloop_ext.h"
+#include "main/rcp_dolphin_ext.h"
 
 int lbl_803DB620 = -1;
 s8 lbl_803DB624[8] = {0, -2, -1, 1, 2, 0, 0, 0};
@@ -122,7 +123,6 @@ extern void* memset(void* p, int v, int n);
     ((s16*)gShaderMapRomBuffers[2])[(idx + (slot)) << 1] = -1;                                             \
     ((s16*)gShaderMapRomBuffers[2])[((idx + (slot)) << 1) + 1] = -1
 extern int objShouldUnload(GameObject* obj);
-extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
 extern void mapClearBit(int mapId, int bit);
 extern s8* gMapLayerCellStates;
 extern int gMapPendingFileFlags;
@@ -454,7 +454,7 @@ void mapLoadUnloadObjects(int flag)
                     {
                         if ((bits & 1) && (s8)SaveGame_findTransientMapBit(i, grpBit) == -1)
                         {
-                            mapInstantiateObjects(((char**)(base + 0x83A8))[i], i, grpBit, 0);
+                            mapInstantiateObjects((int*)((char**)(base + 0x83A8))[i], i, grpBit, 0);
                             mapClearBit(i, grpBit);
                         }
                         bits >>= 1;
@@ -538,7 +538,7 @@ void mapLoadUnloadObjects(int flag)
                         {
                             if ((bits & 1) && (s8)SaveGame_findTransientMapBit(mid2, grpBit) == -1)
                             {
-                                mapInstantiateObjects(page2, mid2, grpBit, (char*)obj2);
+                                mapInstantiateObjects((int*)page2, mid2, grpBit, (int)obj2);
                             }
                             bits >>= 1;
                             mapClearBit(mid2, grpBit);

@@ -22,6 +22,7 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_0104_smallbasket_ext.h"
 
 int lbl_803DBDA0 = 1;
 f32 lbl_803DBDA4 = 15.0f;
@@ -58,7 +59,6 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
 
-extern void fn_801816F8(int obj, int arg, u8* state);
 
 void fn_801814D0(int obj, int arg, u8* state)
 {
@@ -123,7 +123,7 @@ void fn_801814D0(int obj, int arg, u8* state)
             }
             ((DusterState*)state)->hitReactTimer = 0x32;
             state[9] = 0;
-            fn_801816F8(obj, arg, state);
+            fn_801816F8((u8*)obj, (u8*)arg, state);
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             launchVel = lbl_803E3938;
             ((GameObject*)obj)->anim.velocityX = lbl_803E3938;
