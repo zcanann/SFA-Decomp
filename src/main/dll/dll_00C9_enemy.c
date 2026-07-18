@@ -119,7 +119,6 @@ extern f32 lbl_803E25D0;
 extern f32 lbl_803E25D4;
 extern f32 lbl_803E2598;
 
-extern u8 baddieTargetFn_8014a150(GameObject* obj, u8* state, f32* pos, void* dataOffset);
 extern f32 lbl_803E25DC;
 extern u32 gEnemySelfAngleFlagClearMask[];
 extern u32 gEnemyTargetAngleFlagClearMask[];
@@ -127,7 +126,6 @@ extern f32 lbl_803E25B8;
 extern f32 lbl_803E25EC;
 extern f32 lbl_803E25F0;
 extern f32 lbl_803E25F4;
-extern void baddieFn_8014a304(int* a, int* s, f32 v);
 extern f32 lbl_803E25D8;
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25E8;
@@ -693,7 +691,7 @@ void fn_8014B878(int* obj, int* sub)
     {
         if ((((TrickyState*)sub)->controlFlags & 0x1000) != 0)
         {
-            u8 r = baddieTargetFn_8014a150((GameObject*)obj, (u8*)sub, (f32*)((char*)obj + 0x18),
+            u8 r = baddieTargetFn_8014a150((GameObject*)obj, (int)sub, (f32*)((char*)obj + 0x18),
                                            (u8*)((TrickyState*)sub)->actionTargetObj + 0x18);
             if (r != 0)
                 ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
@@ -733,7 +731,7 @@ void fn_8014B878(int* obj, int* sub)
         {
             if ((((TrickyState*)sub)->controlFlags & 0x40) != 0)
             {
-                baddieFn_8014a304(obj, sub, ((TrickyState*)sub)->waterLevel);
+                baddieFn_8014a304((int)obj, (int)sub, ((TrickyState*)sub)->waterLevel);
             }
             else
             {
@@ -930,7 +928,7 @@ void sidekickToy_updateCurveTargetLatch(GameObject* obj)
     u8* data = *(u8**)state;
     if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
-        if ((u8)baddieTargetFn_8014a150((GameObject*)obj, state, &(obj)->anim.worldPosX, data + 0x68) != 0)
+        if ((u8)baddieTargetFn_8014a150((GameObject*)obj, (int)state, &(obj)->anim.worldPosX, data + 0x68) != 0)
         {
             return;
         }
