@@ -1066,8 +1066,6 @@ void gameTextInitFn_8001a234(void);
 extern u8 initLoadFiles(void);
 
 
-extern void mapInitFn_8006fccc(void);
-
 extern void playerInitFuncPtrsEntry(void);
 
 
