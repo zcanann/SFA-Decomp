@@ -740,7 +740,8 @@ void mapTextureScrollGetOffset(int idx, float* outX, float* outY)
     *outY = *(f32*)(base + idx) / divisor;
 }
 
-void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, int texHeightFixed)
+void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, int texHeightFixed,
+                             int secondaryXStep, int secondaryYStep, int texWidthFixed2, int texHeightFixed2)
 {
     TexScrollEntry* e = (TexScrollEntry*)lbl_803DCE68 + idx;
     e->xStep = (s16)((xStep << 16) / (texWidthFixed >> 6));
@@ -833,7 +834,8 @@ static inline int mapFindRomListSlotById(int id)
     return -1;
 }
 
-int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed)
+int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed,
+                            int secondaryXStep, int secondaryYStep, int texWidthFixed2, int texHeightFixed2)
 {
     char* base;
     char* e;

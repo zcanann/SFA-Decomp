@@ -21,11 +21,8 @@
 #include "main/dll/dll_0134_texscroll2.h"
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
+#include "main/map_texscroll.h"
 
-extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidthFixed, int texHeightFixed,
-                                    int secondaryXStep, int secondaryYStep, int texWidthFixed2, int texHeightFixed2);
-extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int secondaryXStep,
-                                   int secondaryYStep, int texWidthFixed2, int texHeightFixed2);
 
 void texscroll2_setScale(TexScroll2Object* obj, s8 stepY)
 {
