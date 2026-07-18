@@ -49,6 +49,7 @@ void CameraModeDebug_free(void)
     gCamDebugState = 0;
 }
 
+#pragma opt_common_subs off
 void CameraModeDebug_update(CameraObject* cam)
 {
     GameObject* state;
@@ -119,6 +120,7 @@ void CameraModeDebug_update(CameraObject* cam)
     Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ, &cam->anim.localPosX,
                                    &cam->anim.localPosY, &cam->anim.localPosZ, *(int*)&cam->anim.parent);
 }
+#pragma opt_common_subs reset
 
 void CameraModeDebug_init(void)
 {
