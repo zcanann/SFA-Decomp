@@ -1,7 +1,5 @@
 #include <dolphin/gx.h>
-
-float cosf(float);
-float sinf(float);
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 
 extern const f32 lbl_803E7730;
 extern const f32 lbl_803E7748;

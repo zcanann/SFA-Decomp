@@ -1,5 +1,6 @@
 #include "dolphin.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 
 #define __epsilon 3.45266983e-4f
 #define __HI(x) (((s32*)&x)[0])
@@ -9,8 +10,6 @@ extern const float __sincos_on_quadrant[];
 extern const float __sincos_poly[];
 
 void __sinit_trigf_c(void);
-float sinf(float x);
-float cosf(float x);
 float sin__Ff(float x);
 float cos__Ff(float x);
 

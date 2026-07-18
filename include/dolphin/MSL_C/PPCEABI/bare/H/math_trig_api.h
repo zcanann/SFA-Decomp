@@ -3,5 +3,7 @@
 
 float mathCosf(float x);
 float mathSinf(float x);
+float cosf(float x);
+float sinf(float x);
 
 #endif // DOLPHIN_MSL_C_PPCEABI_BARE_H_MATH_TRIG_API_H_

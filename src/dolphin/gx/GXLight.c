@@ -1,11 +1,10 @@
 
 #include "dolphin/gx/__gx.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 
 #pragma fp_contract off
 
 #define __GXData gx
-
-extern f32 cosf(f32);
 
 static inline float sqrtf(float x) {
     static const double half = 0.5;
