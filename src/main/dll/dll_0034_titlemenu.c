@@ -28,6 +28,7 @@
 #include "main/dll/savegame.h"
 #include "track/intersect_card_api.h"
 #include "main/dll/dll_0057_cameramodetitle.h"
+#include "main/dll/dll_02C0_front_ext.h"
 
 u8 gTitleMenuPanelOpen;
 s8 gTitleMenuLoadDelay;
@@ -69,7 +70,6 @@ typedef u8 (*TitleMenuShouldShowCreditsRenderFn)(u8* obj);
 extern void titleScreenFn_80130464(u8 v);
 
 extern void titleScreenFn_801368a4(u8 arg);
-extern void titleScreenFn_801368c4(s8 arg);
 extern TitleMenuTextEntry lbl_8031A214[4];
 extern u8 gAttractMovieLoopCompleted;
 extern u8 lbl_803DD6F8;

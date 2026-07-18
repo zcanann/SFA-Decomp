@@ -39,6 +39,7 @@
 #include "main/object_descriptor.h"
 #include "main/dll/player_api.h"
 #include "main/dll/tricky_api.h"
+#include "main/dll/dll_0000_gameui_ext.h"
 
 /* env-effect ids fired when the shrine load-trigger timer expires (index-style; roles opaque) */
 /* camera mode DLL 0x4c = dll_004C_camDebug */
@@ -307,7 +308,6 @@ void fn_801C4664(void* objArg)
 /*
  * Drives the DragonRock Shrine laser-beam sway controller.
  */
-extern void fearTestMeterSetRange(u8 a, u8 b, s16 c);
 int fn_801C49B8(void* objArg);
 
 int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)

@@ -61,6 +61,9 @@
 #include "main/dll/seqobj11d_baddie.h"
 #include "main/dll/magicplant.h"
 #include "main/dll/seqObj11D.h"
+#include "main/dll/dll_00C4_tricky_ext.h"
+#include "main/dll/magicplant_ext.h"
+#include "main/dll/fall_ladders_ext.h"
 
 int lbl_803DBC58[2] = {2, 3};
 f32 lbl_803DBC60 = 20.0f;
@@ -105,12 +108,7 @@ typedef struct
 
 extern void* memcpy(void* dst, void* src, int n);
 extern void tricky_handleDefeat(GameObject* obj, int state);
-extern void Tricky_resumeAfterCommand(GameObject* obj, int state);
-extern void Tricky_applyFloorResponse(GameObject* obj, int state);
 
-extern void fn_80153040(GameObject* obj, int state);
-extern void fn_80153248(GameObject* obj, int state);
-extern void fn_80154584(GameObject* obj, int state);
 extern f32 lbl_803E256C;
 extern f32 lbl_803E2570;
 extern f32 lbl_803E2574;

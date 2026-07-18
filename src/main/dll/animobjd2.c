@@ -44,6 +44,7 @@
 #include "main/dll/dll_80136a40.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/flameblast_api.h"
+#include "main/trig_ext.h"
 
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP    0x4b /* DLL 0x100 trickywarp */
@@ -75,8 +76,6 @@ typedef struct AnimObjD2DripSetup
     u8 pad18[0x1a - 0x18];
     s16 index; /* 0x1a */
 } AnimObjD2DripSetup;
-extern float fsin16Precise(int angle);
-extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];

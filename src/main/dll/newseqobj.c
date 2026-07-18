@@ -31,7 +31,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/newseqobj_baddie.h"
-extern void sidekickToy_updateCurveTargetLatch(GameObject* obj);
+#include "main/dll/dll_00C9_enemy_ext.h"
 
 
 /* per-family anim-table row: speed + flags + anim ids and chain links */

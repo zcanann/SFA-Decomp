@@ -6,6 +6,7 @@
 #include "main/vecmath.h"
 #include "stdlib.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
+#include "main/trig_ext.h"
 
 typedef f32 Mtx[3][4];
 
@@ -26,7 +27,6 @@ extern f32 gVecMathTwoPi;
 extern f32 lbl_803DE7F4;
 
 extern float fcos16(int angle);
-extern f32 fsin16(int angle);
 
 void setMatrixFromObjectPos(f32* m, const MatrixTransform* transform);
 

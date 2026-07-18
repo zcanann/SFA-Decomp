@@ -16,6 +16,7 @@
 #include "main/frame_timing.h"
 #include "main/voxmaps.h"
 #include "main/dll/kooshy.h"
+#include "main/dll/magicplant_ext.h"
 
 extern u8 gMagicPlantSeqEntryTable[8];
 
@@ -39,7 +40,6 @@ extern f32 lbl_803E2930;
 void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
     fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
-extern void fn_8015355C(GameObject* obj, int state);
 
 void fn_80153640(GameObject* obj, int state)
 {
