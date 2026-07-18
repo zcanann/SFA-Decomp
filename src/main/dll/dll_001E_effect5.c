@@ -49,14 +49,6 @@ STATIC_ASSERT(offsetof(PartfxEffectState, activeVertexBufferIndex) == 0x130);
 STATIC_ASSERT(offsetof(PartfxEffectState, emitterCount) == 0x139);
 STATIC_ASSERT(offsetof(PartfxEffectState, textureIsBorrowed) == 0x13F);
 
-extern f32 gEffect5AnimProgressC;
-extern f32 gEffect5AnimProgressD;
-extern int gEffect5SinPhaseA;
-extern int gEffect5SinPhaseB;
-extern f32 gEffect5SinValueB;
-extern f32 gEffect5SinValueA;
-extern f32 gEffect5AnimProgressA;
-extern f32 gEffect5AnimProgressB;
 
 void* lbl_803109B8[10] = {(void*)0x00000000,  (void*)0x00000000, (void*)0x00000000, (void*)0x00050000,
                           Effect5_initialise, Effect5_release,   (void*)0x00000000, Effect5_func03_nop,
