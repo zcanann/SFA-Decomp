@@ -217,9 +217,6 @@ extern f32 gMapSavedPlayerOffsetZ;
 
 extern void objFreeObjDef(u8* def, int flags);
 extern void Obj_RegisterObject(GameObject* obj, int b);
-extern int objCallback_80074d04();
-extern int modelCb_80073d04();
-extern int modelCb_80074518();
 extern int loadModLines(int n, s16* out);
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
 int roundUpTo32(int x);
