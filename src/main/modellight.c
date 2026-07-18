@@ -466,7 +466,6 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 top, f32 b
 {
     f32 fScale;
     f32 eScale;
-    f32 unit;
 
     obj->projectionTop = top;
     obj->projectionBottom = bottom;
@@ -477,9 +476,8 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 top, f32 b
     eScale = scaleT * lbl_803DE790;
     C_MTXLightOrtho(obj->lightProjectionTexMtx, obj->projectionTop, obj->projectionBottom, obj->projectionLeft,
                     obj->projectionRight, fScale, eScale, fScale, eScale);
-    unit = lbl_803DE790;
     C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom, obj->projectionLeft,
-                    obj->projectionRight, unit, unit, unit, unit);
+                    obj->projectionRight, 0.5f, 0.5f, 0.5f, 0.5f);
 }
 
 void* modelLightStruct_getProjectionTexture(ModelLightStruct* p)
@@ -494,16 +492,12 @@ void modelLightStruct_setProjectionTexture(ModelLightStruct* p, void* v)
 }
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f32 brightness)
 {
-    u8* lightObj;
-    f32 zero;
     f32 atten;
 
     obj->specularAttenuationScale = scale;
     obj->specularBrightness = brightness;
     atten = obj->specularAttenuationScale * lbl_803DE790;
-    lightObj = (u8*)obj + 0xc0;
-    zero = lbl_803DE75C;
-    GXInitLightAttn(lightObj, zero, zero, lbl_803DE760, atten, zero, *(f32*)&lbl_803DE760 - atten);
+    GXInitLightAttn((u8*)obj + 0xc0, 0.0f, 0.0f, 1.0f, atten, 0.0f, 1.0f - atten);
 }
 
 void modelLightStruct_setSpecularTargetColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
