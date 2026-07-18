@@ -30,7 +30,9 @@
  * SnowHorn herd objects (seqId 0x13a)"). */
 #define NWTRICKY_SNOWHORN_HERD_SEQID 0x13a
 
-extern f32 lbl_803E5268;
+const union { f32 f; } lbl_803E5260 = {0.0f};
+const union { f32 f; } lbl_803E5264 = {600.0f};
+const union { f32 f; } lbl_803E5268 = {2000.0f};
 const int lbl_802C23E8[4] = {0xF5B, 0x43EC9, 0x43ED6, 0};
 
 int NW_tricky_SeqFn(void)
@@ -102,10 +104,10 @@ void NW_tricky_update(int* obj)
                 if (!(*(u8(**)(int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x40))(tricky))
                 {
                     mainSetBits(GAMEBIT_Tricky_Usable, 0);
-                    ((NwTrickyState*)state)->timer = 0.0f;
+                    ((NwTrickyState*)state)->timer = lbl_803E5260.f;
                 }
 
-                for (i2 = 0, ip = ids.ids, healthMin = 0.0f; i2 < 3; ip++, i2++)
+                for (i2 = 0, ip = ids.ids, healthMin = lbl_803E5260.f; i2 < 3; ip++, i2++)
                 {
                     found = (int*)ObjList_FindObjectById(*ip);
                     if (found != NULL && enemy_getHealthFraction((GameObject*)found) > healthMin)
@@ -118,9 +120,9 @@ void NW_tricky_update(int* obj)
 
                 ((NwTrickyState*)state)->timer += timeDelta;
                 timer = ((NwTrickyState*)state)->timer;
-                if (timer >= 600.0f)
+                if (timer >= lbl_803E5264.f)
                 {
-                    ((NwTrickyState*)state)->timer = timer - 600.0f;
+                    ((NwTrickyState*)state)->timer = timer - lbl_803E5264.f;
                     fn_80138920((GameObject*)tricky, 0x152, 0x1000);
                 }
             }
@@ -156,9 +158,9 @@ void NW_tricky_update(int* obj)
             }
         }
         timer = ((NwTrickyState*)state)->timer;
-        if (timer >= lbl_803E5268)
+        if (timer >= lbl_803E5268.f)
         {
-            ((NwTrickyState*)state)->timer = timer - lbl_803E5268;
+            ((NwTrickyState*)state)->timer = timer - lbl_803E5268.f;
             if (mainGetBit(GAMEBIT_TrickyTalk) == 0xff)
             {
                 if ((*gMapEventInterface)->getTrickyEnergy()[0] < 4)
@@ -177,5 +179,3 @@ void NW_tricky_init(int* obj)
     ((GameObject*)obj)->objectFlags =
         (u16)(((GameObject*)obj)->objectFlags | (NWTRICKY_OBJFLAG_HIDDEN | NWTRICKY_OBJFLAG_HITDETECT_DISABLED));
 }
-
-f32 lbl_803E5268 = 2000.0f;
