@@ -61,15 +61,6 @@ extern f32 lbl_803E4264;
  * alarm on cues, bail when captured or freed, watch player distance and
  * water impacts to chase or stand down, with idle digging SFX and a
  * queued-message drain. */
-int CFPrisonGuard_getExtraSize(void);
-int CFPrisonGuard_getObjectTypeId(void);
-void CFPrisonGuard_free(void);
-void CFPrisonGuard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-void CFPrisonGuard_hitDetect(int* obj);
-void CFPrisonGuard_update(int* obj);
-void CFPrisonGuard_init(int* obj, u8* params);
-void CFPrisonGuard_release(void);
-void CFPrisonGuard_initialise(void);
 
 ObjectDescriptor gCFPrisonGuardObjDescriptor = {
     0,
