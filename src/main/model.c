@@ -1604,13 +1604,6 @@ int loadModelAndAnimTabs(void)
     return 1;
 }
 
-int roundUpTo4(int x);
-
-int roundUpTo8(int x);
-
-int roundUpTo16(int x);
-
-int roundUpTo32(int x);
 /* Double-buffered DMA-cache vertex transform: stream vtxCount verts through a
    two-slot scratch cache (0x2000 apart, transform output at +0x1000), copying
    worker chunks in via copyToCache while the previous chunk is being processed,
@@ -1703,12 +1696,6 @@ void model_multMtxs(u8* model, f32* out)
         PSMTXConcat(out, base + j * 0x10, base + j * 0x10);
     }
 }
-
-int alignUp2(int x);
-
-void* getCache(void);
-
-void cacheQueueWait(int sync);
 
 static inline void* modelGetBoneMtx(ObjModel* model, int idx)
 {
@@ -2371,8 +2358,6 @@ void* fn_80028354(u8* modelFile, int index)
 
 extern u32 PPCMfhid2(void);
 
-void copyToCache(void* dst, void* src, u32 count);
-
 void* fn_80028364(u8* modelFile, int index)
 {
     return ((ModelFileHeader*)modelFile)->collisionBlocks + index * 0x14;
@@ -2416,8 +2401,6 @@ ModelRenderOp* ObjModel_GetRenderOp(ModelFileHeader* model, int renderOpIndex)
 {
     return &model->renderOps[renderOpIndex];
 }
-
-void memcpyToCache(void* dst, void* src, u32 count);
 
 u16 modelFileHeaderGetCullDistance(ModelFileHeader* modelFile)
 {

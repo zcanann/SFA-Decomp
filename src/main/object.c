@@ -219,7 +219,6 @@ extern void objFreeObjDef(u8* def, int flags);
 extern void Obj_RegisterObject(GameObject* obj, int b);
 extern int loadModLines(int n, s16* out);
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
-int roundUpTo32(int x);
 void ObjModel_LoadRenderOpTextures(u8* model, int arg);
 void setMatrixFromObjectTransposed(void* obj, f32* out);
 void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);

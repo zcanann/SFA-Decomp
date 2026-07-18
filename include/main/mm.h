@@ -3,8 +3,11 @@
 
 #include "ghidra_import.h"
 
+int alignUp2(int value);
 int roundUpTo4(int value);
 int roundUpTo8(int value);
+int roundUpTo16(int value);
+int roundUpTo32(int value);
 void mm_free(void *ptr);
 void *mmAlloc(int size, int type, int flag);
 void* getCache(void);
