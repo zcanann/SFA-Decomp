@@ -1,6 +1,4 @@
-#include "main/audio/snd3d_room.h"
-#include "main/audio/synth_delay.h"
-#include "main/audio/snd_synth_api.h"
+#include "main/audio/sal_volume.h"
 
 typedef struct
 {
@@ -110,7 +108,8 @@ static void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalV
                            pi->rpan_fm * gSnd3dRoomVolTable.pan[pi->rpan_im + 1]);
 }
 
-void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 vol, f32 auxa, f32 auxb)
+void salCalcVolumeMatrix(u8 volumeTable, f32* out, u32 pan, u32 surroundPan, u32 itd, u32 dpl2, f32 volume,
+                         f32 auxA, f32 auxB)
 {
     SalVolTab* tabs;
     f32* vol_tab;
@@ -119,12 +118,12 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
     SAL_PANINFO pi;
 
     tabs = &gSnd3dRoomVolTable;
-    vol_tab = (voltab_index == 0) ? tabs->vol : voiceAdsrSustainTable;
+    vol_tab = (volumeTable == 0) ? tabs->vol : voiceAdsrSustainTable;
 
     if (pan == 0x800000)
     {
         pan = 0;
-        span = 0x7f0000;
+        surroundPan = 0x7f0000;
     }
 
     if (pan <= 0x10000)
@@ -135,13 +134,13 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
     {
         panAdj = pan - 0x10000;
     }
-    if (span <= 0x10000)
+    if (surroundPan <= 0x10000)
     {
         spanAdj = 0;
     }
     else
     {
-        spanAdj = span - 0x10000;
+        spanAdj = surroundPan - 0x10000;
     }
 
     panPos = 2.4220301e-07f * panAdj;
@@ -174,14 +173,14 @@ void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, 
 
     if (dpl2 == 0)
     {
-        CalcBus(vol_tab, out, vol, &pi, tabs);
-        CalcBus(vol_tab, out + 3, auxa, &pi, tabs);
-        CalcBus(vol_tab, out + 6, auxb, &pi, tabs);
+        CalcBus(vol_tab, out, volume, &pi, tabs);
+        CalcBus(vol_tab, out + 3, auxA, &pi, tabs);
+        CalcBus(vol_tab, out + 6, auxB, &pi, tabs);
     }
     else
     {
-        CalcBusDPL2(vol_tab, out, vol, &pi, tabs);
-        CalcBus(vol_tab, out + 3, auxa, &pi, tabs);
+        CalcBusDPL2(vol_tab, out, volume, &pi, tabs);
+        CalcBus(vol_tab, out + 3, auxA, &pi, tabs);
         out[2] = 0.0f;
         out[8] = 0.0f;
     }

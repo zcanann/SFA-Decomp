@@ -2,28 +2,26 @@
 #include "main/audio/dsp_voice_state.h"
 #include "main/audio/hw_dspctrl.h"
 #include "main/audio/sal_studio.h"
+#include "main/audio/sal_volume.h"
 
 
 extern DSPstudioinfo dspStudio[8];
 extern u8 lbl_802C2820[];
 extern f32 lbl_803E78E4;
 
-extern void salCalcVolumeMatrix(int voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 vol, f32 auxa,
-                                f32 auxb);
-
 /*
  * hwSetVolume - large mix-volume setter; computes 4-channel pan from
  * 3-axis float input via salCalcVolumeMatrix, clamps each to s16, and writes
  * back to the voice's pan/volume table.
  */
-void hwSetVolume(int slot, u32 volumeTable, f32 volume, f32 auxA, f32 auxB,
-                 u32 pan, u32 surroundPan)
+void hwSetVolume(u32 voiceIndex, u8 volumeTable, f32 volume, u32 pan, u32 surroundPan,
+                 f32 auxA, f32 auxB)
 {
     f32 out[9];
     u16 il;
     u16 ir;
     u16 is;
-    DSPvoice* voice = (DSPvoice*)((u8*)dspVoice + slot * 0xf4);
+    DSPvoice* voice = (DSPvoice*)((u8*)dspVoice + voiceIndex * 0xf4);
 
     if (volume >= 1.0f)
         volume = 1.0f;

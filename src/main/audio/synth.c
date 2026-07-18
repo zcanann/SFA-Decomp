@@ -1076,7 +1076,7 @@ void ZeroOffsetHandler(int voice)
             auxb = (1.f / 16383.f) * (preVol * (f32)inpGetPreAuxB((McmdVoiceState*)sv)) +
                    (1.f / 16383.f) * (postVol * (f32)inpGetPostAuxB((McmdVoiceState*)sv));
             sv->curOutputVolume = (u16)(32767.f * postVol);
-            hwSetVolume(voice, sv->volTable, postVol, auxa, auxb, sv->lastPan, sv->lastSPan);
+            hwSetVolume(voice, sv->volTable, postVol, sv->lastPan, sv->lastSPan, auxa, auxb);
         }
 
         if (sv->age != 0)

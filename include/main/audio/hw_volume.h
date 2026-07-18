@@ -4,8 +4,8 @@
 #include "ghidra_import.h"
 #include "main/audio/snd_types.h"
 
-void hwSetVolume(int slot, u32 volumeTable, f32 volume, f32 auxA, f32 auxB,
-                 u32 pan, u32 surroundPan);
+void hwSetVolume(u32 voice, u8 volumeTable, f32 volume, u32 pan, u32 surroundPan,
+                 f32 auxA, f32 auxB);
 void hwOff(s32 voice);
 void hwSetAUXProcessingCallbacks(u8 studio, void *auxACallback, void *auxAUser,
                                  void *auxBCallback, void *auxBUser);
