@@ -678,7 +678,6 @@ void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* ou
         *outZ *= invW;
     }
 }
-void Camera_ApplyCurrentViewport(void* viewportArg);
 typedef struct CameraViewportEntry {
     u8 pad00[0x20];
     s32 scissorX;
