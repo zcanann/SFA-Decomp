@@ -6,6 +6,7 @@
 #include "main/audio/voice_manage.h"
 #include "main/audio/synth_config.h"
 #include "main/audio/synth_job_queue.h"
+#include "main/audio/synth_channel_scale.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 #include "main/audio/synth_volume.h"
@@ -78,8 +79,6 @@ extern u32 fn_8026E9D0(u8 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
 extern void synthFreeCallback(void* cb);
 extern void synthRecycleVoiceCallbacks(void* song);
-
-void synthSetStudioChannelScale(int value, u8 bank, u8 key);
 
 /*
  * fn_8026EC44 - per-sequence tick and event update pass.

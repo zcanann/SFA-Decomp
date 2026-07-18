@@ -6,6 +6,8 @@
 #include "main/dll/synthfade_struct.h"
 #include "util/carry.h"
 #include "main/audio/synth_channel.h"
+#include "main/audio/synth_channel_scale.h"
+#include "main/audio/synth_init.h"
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/voice_id.h"
 #include "main/audio/synth_queue.h"
@@ -102,10 +104,6 @@ typedef void (*SynthAuxCallback)(u8 reason, SynthAuxInfo* info, void* user);
 extern u16 inpGetAuxA(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
 extern u16 inpGetAuxB(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
 
-extern u32 audioFn_8026f630(u8 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
-extern u32 audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 pan, u8 midi,
-                                 u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio,
-                                 u32 itd);
 typedef struct SynthVoiceLfo
 {
     s32 time;
@@ -318,9 +316,9 @@ int synthGetVoiceSlotChannelScale(McmdVoiceState* state)
 /*
  * Flag-check and conditional store.
  */
-void fn_8026F5B8(int state)
+void fn_8026F5B8(McmdVoiceState* state)
 {
-    McmdVoiceState* v = (McmdVoiceState*)state;
+    McmdVoiceState* v = state;
     u64 flags;
 
     flags = *(u64*)&v->inputFlags;

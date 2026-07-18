@@ -6,6 +6,7 @@
 #include "main/audio/synth_jobs.h"
 #include "main/audio/synth_voice.h"
 #include "main/audio/synth_virtual_sample.h"
+#include "main/audio/synth_channel_scale.h"
 
 extern u8 gSynthInitialized;
 extern u8 salTimeOffset;
@@ -15,8 +16,6 @@ extern u8 salFrame;
 extern u32 salMessageCallback;
 extern void salExitDspCtrl(void);
 extern u32 salInitDspCtrl(u32 valueA, u32 valueB, u32 enabled);
-extern void fn_8026EC44(u32 value);
-
 void snd_handle_irq(void)
 {
     u32 timeOffset;

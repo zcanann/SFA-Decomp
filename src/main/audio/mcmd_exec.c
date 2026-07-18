@@ -182,7 +182,7 @@ void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
         }
         if (!(MAC_CFLAGS(state) & MAC_FLAG64(0, 0x400)))
         {
-            fn_8026F5B8((int)state);
+            fn_8026F5B8(state);
         }
         state->outputFlags |= 0x400;
         break;
@@ -192,7 +192,7 @@ void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
         {
             if (!(MAC_CFLAGS(state) & MAC_FLAG64(0, 0x400)))
             {
-                fn_8026F5B8((int)state);
+                fn_8026F5B8(state);
             }
             state->outputFlags |= 0x400;
         }
