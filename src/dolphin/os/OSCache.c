@@ -2,6 +2,7 @@
 #include <dolphin/PPCArch.h>
 
 #include "dolphin/os/__os.h"
+#include "dolphin/os/OSReport.h"
 
 #ifndef __GEKKO__
 #define __GEKKO__
@@ -11,7 +12,6 @@
 #define OS_CACHED_REGION_PREFIX 0x8000
 
 // prototypes
-extern void OSReport(const char* msg, ...);
 void DMAErrorHandler(OSError error, OSContext* context, ...);
 
 #ifdef __GEKKO__

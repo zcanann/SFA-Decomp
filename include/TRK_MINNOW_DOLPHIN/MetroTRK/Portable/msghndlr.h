@@ -1,6 +1,9 @@
 #ifndef METROTRK_PORTABLE_MSGHNDLR_H
 #define METROTRK_PORTABLE_MSGHNDLR_H
 
-#include "PowerPC_EABI_Support/MetroTRK/trk.h"
+#include "dolphin/types.h"
+
+void SetTRKConnected(BOOL connected);
+BOOL GetTRKConnected(void);
 
 #endif /* METROTRK_PORTABLE_MSGHNDLR_H */

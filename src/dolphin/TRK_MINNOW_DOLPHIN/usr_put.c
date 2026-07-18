@@ -1,7 +1,5 @@
-#include "dolphin/types.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msghndlr.h"
 
-extern void SetTRKConnected(BOOL);
-extern BOOL GetTRKConnected(void);
 void OSReport(const char* msg);
 
 BOOL usr_puts_serial(const char* msg)
