@@ -103,9 +103,9 @@ void InvisibleHitSwitch_update(GameObject *obj)
                 ((InvisibleHitSwitchState*)state)->active = 1;
                 mainSetBits((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 1);
             }
-            else if (((InvisibleHitSwitchState*)state)->activationTimer <= *(f32*)&lbl_803E3730)
+            else if (((InvisibleHitSwitchState*)state)->activationTimer <= 0.0f)
             {
-                ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3730;
+                ((InvisibleHitSwitchState*)state)->activationTimer = 0.0f;
             }
         }
     }
