@@ -484,17 +484,20 @@ int ProperTimingForGettingNextFrame(void)
 {
     int frame;
     s64 tick;
+    u32 field;
 
     if ((lbl_803A5D60.playFlags & 2) != 0)
     {
-        if (VIGetNextField() == 0)
+        field = VIGetNextField();
+        if (field == 0)
         {
             return TRUE;
         }
     }
     else if ((lbl_803A5D60.playFlags & 4) != 0)
     {
-        if (VIGetNextField() == 1)
+        field = VIGetNextField();
+        if (field == 1)
         {
             return TRUE;
         }
