@@ -34,6 +34,7 @@
 #include "dolphin/gx/GXCpu2Efb.h"
 #include "dolphin/gx/GXManage.h"
 #include "dolphin/gx/GXPixel.h"
+#include "dolphin/gx/GXPerf.h"
 #include "dolphin/gx/GXTexture.h"
 #include "dolphin/gx/GXTransform.h"
 #include "dolphin/os/OSTime.h"
@@ -971,7 +972,6 @@ extern void OSStopStopwatch(void* sw);
 extern u64 OSCheckStopwatch(void* sw);
 extern void OSResetStopwatch(void* sw);
 extern void OSStartStopwatch(void* sw);
-extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
 extern f32 lbl_803DCCC0;
 extern f32 physicsTimeScale;
 extern f32 lbl_803DEAA0;
@@ -4194,7 +4194,6 @@ typedef union
 } PiWGPipe;
 
 extern volatile PiWGPipe GXWGFifo : (0xCC008000);
-extern void GXSetGPMetric(int perf0, int perf1);
 
 extern u8 enableDebugText;
 
@@ -4203,13 +4202,13 @@ void gpuErrorHandler(u32 retraceCount)
     char* strs = (char*)gLoadingScreenTextures;
     int tok[3];
     u32 botClks;
-    int botPerf0;
+    u32 botPerf0;
     u32 botClks2;
-    int botPerf1;
+    u32 botPerf1;
     u32 topClks;
-    int topPerf0;
+    u32 topPerf0;
     u32 topClks2;
-    int topPerf1;
+    u32 topPerf1;
     u8 cmdRdy;
     u8 readIdle;
     u8 fifoErr;
@@ -4258,8 +4257,8 @@ void gpuErrorHandler(u32 retraceCount)
     if (enableDebugText != 0 && lbl_803DCCDC != NULL && (u32)lbl_803DCCAC > 600)
     {
         debugPrintfxy(0x32, 100, strs + 0x40000);
-        GXReadXfRasMetric(&botPerf0, (int*)&botClks, &botPerf1, (int*)&botClks2);
-        GXReadXfRasMetric(&topPerf0, (int*)&topClks, &topPerf1, (int*)&topClks2);
+        GXReadXfRasMetric(&botPerf0, &botClks, &botPerf1, &botClks2);
+        GXReadXfRasMetric(&topPerf0, &topClks, &topPerf1, &topClks2);
         xfStuck = (topClks - botClks) == 0;
         cmdStuck = (topPerf0 - botPerf0) == 0;
         rdIdle = (topClks2 - botClks2) != 0;
@@ -4629,8 +4628,8 @@ void viFn_8004a56c(int val)
 void logGpuHang(void)
 {
     char* strs = (char*)gLoadingScreenTextures;
-    int topClks, topPerf0, topClks2, topPerf1;
-    int botClks, botPerf0, botClks2, botPerf1;
+    u32 topClks, topPerf0, topClks2, topPerf1;
+    u32 botClks, botPerf0, botClks2, botPerf1;
     u32 xfStuck;
     u32 cmdStuck;
     u32 rdIdle;
