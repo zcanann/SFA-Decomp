@@ -52,7 +52,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 /* object type id of the lobbed projectile spawned on the firing cue */
 #define SB_PROJECTILE_OBJID 0x138
 
-extern u8 gSbShipHeadHasFiredFireball;
 int gSbShipHeadPrevGalleonPhase;
 
 /* .sdata2 constant pool */
