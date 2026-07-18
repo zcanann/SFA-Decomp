@@ -24,7 +24,8 @@ u8 lbl_803DB8B0[4] = {0};
 u8 lbl_803DB8B4[8] = {0, 0, 0, 1, 0, 2, 0, 3};
 
 extern u8 lbl_80311E30[];
-u32 lbl_803E0730 = 0x00050014;
+union ModgfxFunc03ConstU32 { u32 w; };
+const union ModgfxFunc03ConstU32 lbl_803E0730 = { 0x00050014 };
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {
@@ -57,7 +58,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
     base[0] = lbl_80311E30;
     result = 0;
     model = Gameplay_GetActiveModel(sourceObj);
-    *(u32*)&r = lbl_803E0730;
+    *(u32*)&r = lbl_803E0730.w;
     if (countRange != NULL)
     {
         r.lo = countRange[0];
