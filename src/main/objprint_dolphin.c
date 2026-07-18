@@ -55,7 +55,7 @@ ModelLightStruct* lbl_803DCC64;
 u8 lbl_803DCC60;
 s32 lbl_803DCC5C;
 u8 gObjOverrideColor[3];
-u32 gObjCurChanColor;
+GXColor gObjCurChanColor;
 f32 gObjShadowDist;
 u8 gObjShadowNear;
 s32 lbl_803DCC48;
@@ -428,8 +428,8 @@ void objFn_8003dc50(u8* obj, u8* model)
     {
         if (t2 || t10)
         {
-            ((u8*)&gObjCurChanColor)[3] = 0;
-            GXSetChanAmbColor(chan, *(GXColor*)&gObjCurChanColor);
+            gObjCurChanColor.a = 0;
+            GXSetChanAmbColor(chan, gObjCurChanColor);
             GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetNumChans(1);
@@ -864,7 +864,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
         }
     }
     layerIdx = 0;
-    colp = (u8*)&gObjCurChanColor;
+    colp = &gObjCurChanColor.r;
     {
         for (; layerIdx < shader[0x41]; layerIdx++)
         {
@@ -879,7 +879,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                 alpha = ((obj[0x37] + 1) * shader[0xc]) >> 8;
                 if (*(u32*)layer != 0)
                 {
-                    f32* mtxp;
+                    f32 (*mtxp)[4];
                     u8 fl;
                     tex = textureIdxToPtr(*(u32*)layer);
                     {
@@ -922,7 +922,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                                 ty = tx = lbl_803DEA04;
                             trans:
                                 PSMTXTrans(m, tx, ty, lbl_803DEA04);
-                                mtxp = m;
+                                mtxp = (f32 (*)[4])m;
                             }
                         }
                         else
@@ -952,34 +952,33 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                     color[2] = 0xff;
                     if (p3[0] != 0 || (shader[0] == 0xff && shader[1] == 0xff && shader[2] == 0xff))
                     {
-                        gxFn_80051fb8IntLegacy(tex, (int)mtxp, (u8)fl, color, *((u8*)p3 + 8), 1);
+                        gxFn_80051fb8(tex, mtxp, (u8)fl, (GXColor*)color, *((u8*)p3 + 8), 1);
                     }
                     else if (p5 != 0)
                     {
                         colp[3] = color[3];
                         if (shader[0x40] & 0x10)
                         {
-                            fn_80051B00Legacy(tex, (int)mtxp, (u8)fl, (u8*)&gObjCurChanColor);
+                            fn_80051B00(tex, mtxp, (u8)fl, &gObjCurChanColor);
                         }
                         else
                         {
-                            gxFn_80051fb8IntLegacy(tex, (int)mtxp, (u8)fl, (u8*)&gObjCurChanColor,
-                                                  *((u8*)p3 + 8), 1);
+                            gxFn_80051fb8(tex, mtxp, (u8)fl, &gObjCurChanColor, *((u8*)p3 + 8), 1);
                         }
                     }
                     else
                     {
                         if (shader[0x40] & 0x10)
                         {
-                            fn_80051868Legacy(tex, (int)mtxp, (u8)fl);
+                            fn_80051868(tex, mtxp, (u8)fl);
                             if (color[3] < 0xff)
                             {
-                                gxColorFn_80052764PtrLegacy(color);
+                                gxColorFn_80052764((GXColor*)color);
                             }
                         }
                         else
                         {
-                            fn_80051D5CIntMtxLegacy(tex, (int)mtxp, (u8)fl, color);
+                            fn_80051D5C(tex, mtxp, (u8)fl, (GXColor*)color);
                         }
                     }
                 }
@@ -991,12 +990,12 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                     color[3] = alpha;
                     if (p3[0] != 0 || (shader[0] == 0xff && shader[1] == 0xff && shader[2] == 0xff))
                     {
-                        gxColorFn_80052764PtrLegacy(color);
+                        gxColorFn_80052764((GXColor*)color);
                     }
                     else if (p5 != 0)
                     {
                         colp[3] = alpha;
-                        gxColorFn_80052764PtrLegacy((u8*)&gObjCurChanColor);
+                        gxColorFn_80052764(&gObjCurChanColor);
                     }
                     else
                     {
@@ -1005,12 +1004,12 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                             gxColorFn_800523d0();
                             if (color[3] < 0xff)
                             {
-                                gxColorFn_80052764PtrLegacy(color);
+                                gxColorFn_80052764((GXColor*)color);
                             }
                         }
                         else
                         {
-                            textureFn_800524ecLegacy(color);
+                            textureFn_800524ec((GXColor*)color);
                         }
                     }
                 }
@@ -1229,7 +1228,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             color[1] = obj[0xed];
             color[2] = obj[0xee];
             color[3] = obj[0xef];
-            gxTextureFn_80052638ByteLegacy(color);
+            gxTextureFn_80052638((GXColor*)color);
         }
     }
     if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_WATER_CAUSTIC)
@@ -1521,8 +1520,8 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         {
             _gxSetFogParams();
             resetLotsOfRenderVars();
-            gxFn_80051fb8IntLegacy(textureIdxToPtr(*(int*)(*(int*)&((ModelFileHeader*)m)->renderOps + 0x24)), 0,
-                                   0, color, 0, 0);
+            gxFn_80051fb8(textureIdxToPtr(*(int*)(*(int*)&((ModelFileHeader*)m)->renderOps + 0x24)), NULL,
+                          0, (GXColor*)color, 0, 0);
             if (isHeavyFogEnabled() != 0)
             {
                 f32 c;
@@ -2036,15 +2035,15 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     }
     if (gObjOverrideColorPending != 0)
     {
-        *(u8*)&gObjCurChanColor = gObjOverrideColor[0];
-        ((u8*)&gObjCurChanColor)[1] = gObjOverrideColor[1];
-        ((u8*)&gObjCurChanColor)[2] = gObjOverrideColor[2];
+        gObjCurChanColor.r = gObjOverrideColor[0];
+        gObjCurChanColor.g = gObjOverrideColor[1];
+        gObjCurChanColor.b = gObjOverrideColor[2];
         gObjOverrideColorPending = 0;
     }
     else
     {
-        objGetColor(((GameObject*)obj)->lightColorSlot, (u8*)&gObjCurChanColor, (u8*)&gObjCurChanColor + 1,
-                    (u8*)&gObjCurChanColor + 2);
+        objGetColor(((GameObject*)obj)->lightColorSlot, &gObjCurChanColor.r, &gObjCurChanColor.g,
+                    &gObjCurChanColor.b);
     }
     mode8 = mode;
     m4 = mode8 & 4;

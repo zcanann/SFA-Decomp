@@ -3893,12 +3893,12 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
 int cMenuRingModelRenderFn(int obj, int block, int idx)
 {
     int renderOp;
-    u8 cfg[4];
-    *(u32*)cfg = lbl_803E1E14;
+    GXColor cfg;
+    *(u32*)&cfg = lbl_803E1E14;
     renderOp = (int)ObjModel_GetRenderOp((ModelFileHeader*)*(int*)block, idx);
     resetLotsOfRenderVars();
-    cfg[3] = ((GameObject*)obj)->anim.renderAlpha;
-    gxFn_80051fb8IntLegacy(textureIdxToPtr(((ModelRenderOp*)renderOp)->textureId), 0, 0, cfg, 0, 1);
+    cfg.a = ((GameObject*)obj)->anim.renderAlpha;
+    gxFn_80051fb8(textureIdxToPtr(((ModelRenderOp*)renderOp)->textureId), NULL, 0, &cfg, 0, 1);
     textureFn_800528bc();
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetZMode_(0, GX_ALWAYS, 0);
@@ -3911,26 +3911,26 @@ int cMenuRingIconRenderFn(int obj, int block, int idx)
 {
     int slotIdx;
     void* tex;
-    u8 cfg[4];
-    *(u32*)cfg = lbl_803E1E10;
+    GXColor cfg;
+    *(u32*)&cfg = lbl_803E1E10;
     slotIdx = ObjModel_GetRenderOp((ModelFileHeader*)*(int*)block, idx)->layerCount - 1;
     resetLotsOfRenderVars();
     if (slotIdx >= 0 && slotIdx <= 6 && (tex = gCMenuRingIconTextures[slotIdx]) != 0)
     {
         if (gCMenuRingIconActiveFlags[slotIdx] != 0)
         {
-            cfg[3] = ((GameObject*)obj)->anim.renderAlpha;
+            cfg.a = ((GameObject*)obj)->anim.renderAlpha;
         }
         else
         {
-            cfg[3] = lbl_803E2010 * (f32)(u32)((GameObject*)obj)->anim.renderAlpha;
+            cfg.a = lbl_803E2010 * (f32)(u32)((GameObject*)obj)->anim.renderAlpha;
         }
-        gxFn_80051fb8IntLegacy(tex, 0, 0, cfg, 0, 1);
+        gxFn_80051fb8(tex, NULL, 0, &cfg, 0, 1);
     }
     else
     {
-        cfg[3] = 0;
-        gxColorFn_80052764PtrLegacy(cfg);
+        cfg.a = 0;
+        gxColorFn_80052764(&cfg);
     }
     textureFn_800528bc();
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);

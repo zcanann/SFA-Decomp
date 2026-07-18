@@ -61,7 +61,7 @@ int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
         color.b = 0;
         alphaVal = ((obj->anim.alpha + 1) * LOCK_ICON_DIM_ALPHA_SCALE) >> 8;
         color.a = alphaVal;
-        fn_80051D5CPtrMtxLegacy(textureIdxToPtr(renderOp->textureId), 0, 0, &color);
+        fn_80051D5C(textureIdxToPtr(renderOp->textureId), NULL, 0, &color);
     }
     else
     {
@@ -69,7 +69,7 @@ int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
         color.g = 0xff;
         color.b = 0xff;
         color.a = obj->anim.alpha;
-        fn_80051D5CPtrMtxLegacy(textureIdxToPtr(renderOp->textureId), 0, 0, &color);
+        fn_80051D5C(textureIdxToPtr(renderOp->textureId), NULL, 0, &color);
     }
     textureFn_800528bc();
     if (obj->anim.alpha < 0xff || renderOp->distanceTier <= tier)

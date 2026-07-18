@@ -11,6 +11,7 @@
  * fixed alpha-compare / cull state used for HUD icons.
  */
 #include "main/dll/dll_B2.h"
+#include "dolphin/gx/GXStruct.h"
 #include "main/rcp_dolphin_api.h"
 #include "track/intersect_depth_state_api.h"
 #include "main/model.h"
@@ -26,14 +27,6 @@ typedef struct CamcontrolIconRenderOp
     u8 pad28;      /* 0x28 */
     u8 variantId;  /* 0x29: 1 = "press A" icon variant */
 } CamcontrolIconRenderOp;
-
-typedef struct CamcontrolIconColor
-{
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} CamcontrolIconColor;
 
 #define GX_BM_NONE        0
 #define GX_BM_BLEND       1
@@ -52,7 +45,7 @@ typedef struct CamcontrolIconColor
 int aButtonIconTexCb(GameObject* obj, void** objPtr, u32 renderOpIdx)
 {
     CamcontrolIconRenderOp* renderOp;
-    CamcontrolIconColor color; /* r/g/b intentionally left unset: callee reads only alpha for this op */
+    GXColor color; /* r/g/b intentionally left unset: callee reads only alpha for this op */
 
     renderOp = (CamcontrolIconRenderOp*)ObjModel_GetRenderOp((ModelFileHeader*)*objPtr, renderOpIdx);
     resetLotsOfRenderVars();
@@ -75,7 +68,7 @@ int aButtonIconTexCb(GameObject* obj, void** objPtr, u32 renderOpIdx)
     {
         color.a = 0;
     }
-    fn_80051D5CPtrMtxLegacy(textureIdxToPtr(renderOp->textureId), 0, 0, &color);
+    fn_80051D5C(textureIdxToPtr(renderOp->textureId), NULL, 0, &color);
     textureFn_800528bc();
     if (color.a < 0xff)
     {

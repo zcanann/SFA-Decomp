@@ -5,6 +5,8 @@
 #include "main/rcp_dolphin_state_api.h"
 #include "main/texture.h"
 
+struct _GXColor;
+
 void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 void* textureAlloc(u16 width, u16 height, int format, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
                    u8 minFilter, u8 magFilter);
@@ -27,32 +29,16 @@ void warpToMap(int idx, s8 transType);
 void fn_800541A4(Texture* texture, u16 frameStep);
 void fn_800542F4(void);
 void textureAnimFn_80053f2c(const Texture* texture, u32* flags, s32* frame);
-void fn_80051868(u8* texture, f32* texMtx, int mode);
-void fn_80051B00(u8* texture, f32* texMtx, int mode, int* color);
-void fn_80051D5C(u8* texture, f32* texMtx, int mode, int* color);
-void gxFn_80051fb8(u8* texture, f32* texMtx, int mode, int* color, u8 swapSelector, u8 useKColor);
-void textureFn_800524ec(int* color);
-void gxColorFn_80052764(int* color);
-void gxTextureFn_80052638(int* color);
+void fn_80051868(Texture* texture, f32 (*texMtx)[4], int mode);
+void fn_80051B00(Texture* texture, f32 (*texMtx)[4], int mode, struct _GXColor* color);
+void fn_80051D5C(Texture* texture, f32 (*texMtx)[4], int mode, struct _GXColor* color);
+void gxFn_80051fb8(Texture* texture, f32 (*texMtx)[4], int mode, struct _GXColor* color, u8 swapSelector,
+                   u8 useKColor);
+void textureFn_800524ec(struct _GXColor* color);
+void gxColorFn_80052764(struct _GXColor* color);
+void gxTextureFn_80052638(struct _GXColor* color);
 int textureCrazyPointerFollowFn_80054c30(int* texture, int frame);
 
-#define fn_80051868Legacy(texture, texMtx, mode) \
-    (((void (*)(void*, int, int))fn_80051868)((texture), (texMtx), (mode)))
-#define fn_80051B00Legacy(texture, texMtx, mode, color) \
-    (((void (*)(void*, int, int, u8*))fn_80051B00)((texture), (texMtx), (mode), (color)))
-#define fn_80051D5CIntMtxLegacy(texture, texMtx, mode, color) \
-    (((void (*)(void*, int, int, u8*))fn_80051D5C)((texture), (texMtx), (mode), (color)))
-#define fn_80051D5CPtrMtxLegacy(texture, texMtx, mode, color) \
-    (((void (*)(void*, void*, int, void*))fn_80051D5C)((texture), (texMtx), (mode), (color)))
-#define gxFn_80051fb8IntLegacy(texture, texMtx, mode, color, swapSelector, useKColor) \
-    (((void (*)(void*, int, int, void*, int, int))gxFn_80051fb8)( \
-        (texture), (texMtx), (mode), (color), (swapSelector), (useKColor)))
-#define textureFn_800524ecLegacy(color) \
-    (((void (*)(u8*))textureFn_800524ec)((color)))
-#define gxColorFn_80052764PtrLegacy(color) \
-    (((void (*)(void*))gxColorFn_80052764)((color)))
-#define gxTextureFn_80052638ByteLegacy(color) \
-    (((void (*)(u8*))gxTextureFn_80052638)((color)))
 #define textureCrazyPointerFollowLegacy(texture, frame) \
     (((void* (*)(void*, int))textureCrazyPointerFollowFn_80054c30)((texture), (frame)))
 #define fn_800541A4Promoted(texture, frameStep) \

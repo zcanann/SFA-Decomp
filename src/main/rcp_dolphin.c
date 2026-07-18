@@ -30,12 +30,18 @@
 #include "main/dll/savegame_env_api.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSInterrupt.h"
+#include "dolphin/mtx.h"
 #include "dolphin/gx/GXDispList.h"
+#include "dolphin/gx/GXFrameBuffer.h"
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXGet.h"
+#include "dolphin/gx/GXGeometry.h"
+#include "dolphin/gx/GXLighting.h"
+#include "dolphin/gx/GXManage.h"
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTev.h"
 #include "dolphin/gx/GXTexture.h"
+#include "dolphin/gx/GXTransform.h"
 #include "main/dll/modgfx.h"
 #include "main/pi_dolphin_ext.h"
 #include "main/mm_ext.h"
@@ -85,14 +91,13 @@ u8 lbl_803DCD4A;
 u8 lbl_803DCD49;
 u8 lbl_803DCD48;
 
-u32 gRcpDistortAmbColor = 0;
-int gRcpDistortMatColor = -1;
+GXColor gRcpDistortAmbColor = {0, 0, 0, 0};
+GXColor gRcpDistortMatColor = {0xff, 0xff, 0xff, 0xff};
 u32 gRcpTexAllocTag = 6;
 char sDebugIntLineFormat[] = "%d\n";
 extern u32 gRcpRenderFlags;
 extern u32 lbl_803DCDB0;
 extern u32 lbl_803DCDB4;
-extern void GXSetNumTexGens(u8 nTexGens);
 extern u8 lbl_803DCD68;
 extern u8 lbl_803DCD69;
 extern u8 lbl_803DCD6A;
@@ -136,8 +141,6 @@ extern void textureFn_80053d58(void* obj);
 extern f32 lbl_803DEB98;
 extern f32 lbl_803DEB9C;
 extern GXTexObj lbl_803779A0;
-extern void GXSetMisc(int token, u32 val);
-extern void GXBegin(int prim, int vtxfmt, u16 nverts);
 extern u8 gRcpWarpDistortListBuilt;
 extern u32 gRcpWarpDistortListSize;
 extern F32Pair lbl_803DEB50;
@@ -164,18 +167,6 @@ extern u8 gRcpDistortSlotIndex;
 extern void* gRcpDistortTexture;
 extern u16* gRcpTexIdRemap;
 extern void* gRcpTexHeaderBuffer;
-typedef struct GXColor8
-{
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} GXColor8;
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-extern void GXSetChanAmbColor(int chan, GXColor8 c);
-extern void GXSetChanMatColor(int chan, GXColor8 c);
-extern void GXSetTexCopyDst(int w, int h, int fmt, int mip);
-extern void GXCopyTex(void* dst, int clear);
 extern u8 gRcpDistortGroup;
 extern f32 lbl_803DEB80;
 extern f32 gRcpScreenWidth;
@@ -188,10 +179,7 @@ static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights);
 
 #define RCP_DISTORT_TEXTURE_ID 0x5dc
 
-extern void GXLoadTexMtxImm(f32* mtx, int id, int type);
-extern void GXSetTexCoordGen2(int dst, int fn, int src, int mtx, int normalize, int pt);
-
-void fn_80051868(u8* tex, f32* mtx, int mode)
+void fn_80051868(Texture* tex, MtxPtr mtx, int mode)
 {
     int map;
     GXSetTevDirect(lbl_803DCD90);
@@ -246,10 +234,10 @@ void fn_80051868(u8* tex, f32* mtx, int mode)
     map = lbl_803DCD8C;
     if (tex != NULL)
     {
-        GXTexObj* to = textureGetGXTexObj((Texture*)tex);
-        if (((Texture*)tex)->preloaded != 0)
+        GXTexObj* to = textureGetGXTexObj(tex);
+        if (tex->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion((Texture*)tex), map);
+            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion(tex), map);
         }
         else
         {
@@ -264,7 +252,7 @@ void fn_80051868(u8* tex, f32* mtx, int mode)
     lbl_803DCD69++;
 }
 
-void fn_80051B00(u8* tex, f32* mtx, int mode, int* kparam)
+void fn_80051B00(Texture* tex, MtxPtr mtx, int mode, GXColor* kparam)
 {
     int sel;
     int v1;
@@ -311,10 +299,10 @@ void fn_80051B00(u8* tex, f32* mtx, int mode, int* kparam)
     map = lbl_803DCD8C;
     if (tex != NULL)
     {
-        GXTexObj* to = textureGetGXTexObj((Texture*)tex);
-        if (((Texture*)tex)->preloaded != 0)
+        GXTexObj* to = textureGetGXTexObj(tex);
+        if (tex->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion((Texture*)tex), map);
+            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion(tex), map);
         }
         else
         {
@@ -329,7 +317,7 @@ void fn_80051B00(u8* tex, f32* mtx, int mode, int* kparam)
     lbl_803DCD69++;
 }
 
-void fn_80051D5C(u8* tex, f32* mtx, int mode, int* kparam)
+void fn_80051D5C(Texture* tex, MtxPtr mtx, int mode, GXColor* kparam)
 {
     int sel;
     int v1;
@@ -376,10 +364,10 @@ void fn_80051D5C(u8* tex, f32* mtx, int mode, int* kparam)
     map = lbl_803DCD8C;
     if (tex != NULL)
     {
-        GXTexObj* to = textureGetGXTexObj((Texture*)tex);
-        if (((Texture*)tex)->preloaded != 0)
+        GXTexObj* to = textureGetGXTexObj(tex);
+        if (tex->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion((Texture*)tex), map);
+            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion(tex), map);
         }
         else
         {
@@ -402,7 +390,7 @@ typedef struct TevSwapEntry
 } TevSwapEntry;
 extern TevSwapEntry gRcpTevSwapTable[24];
 
-void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK)
+void gxFn_80051fb8(Texture* tex, MtxPtr mtx, int mode, GXColor* kparam, u8 swapsel, u8 useK)
 {
     int sel;
     int v1;
@@ -426,7 +414,7 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
     {
         gxTextureFn_8004bf88(kparam, 1, 1, &sel, &v1);
         GXSetTevKColorSel(lbl_803DCD90, sel);
-        if (*(void**)&((Texture*)tex)->imageOffset != NULL)
+        if (*(void**)&tex->imageOffset != NULL)
         {
             GXSetTevKAlphaSel(lbl_803DCD90 + 1, v1);
         }
@@ -437,9 +425,9 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
     }
     else
     {
-        GXSetTevKColor(lbl_803DCD74, *(GXColor*)kparam);
+        GXSetTevKColor(lbl_803DCD74, *kparam);
         GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
-        if (*(void**)&((Texture*)tex)->imageOffset != NULL)
+        if (*(void**)&tex->imageOffset != NULL)
         {
             GXSetTevKAlphaSel(lbl_803DCD90 + 1, lbl_803DCD6C);
         }
@@ -477,22 +465,22 @@ void gxFn_80051fb8(u8* tex, f32* mtx, int mode, int* kparam, u8 swapsel, u8 useK
     map = lbl_803DCD8C;
     if (tex != NULL)
     {
-        GXTexObj* to = textureGetGXTexObj((Texture*)tex);
-        if (((Texture*)tex)->preloaded != 0)
+        GXTexObj* to = textureGetGXTexObj(tex);
+        if (tex->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion((Texture*)tex), map);
+            GXLoadTexObjPreLoaded(to, textureGetGXTexRegion(tex), map);
         }
         else
         {
             GXLoadTexObj(to, map);
         }
-        if (*(void**)&((Texture*)tex)->imageOffset != NULL)
+        if (*(void**)&tex->imageOffset != NULL)
         {
-            fn_80053C40((Texture*)tex, &lbl_803779A0);
+            fn_80053C40(tex, &lbl_803779A0);
             GXLoadTexObj(&lbl_803779A0, GX_TEXMAP1);
         }
     }
-    if (*(void**)&((Texture*)tex)->imageOffset != NULL)
+    if (*(void**)&tex->imageOffset != NULL)
     {
         lbl_803DCD6A++;
         lbl_803DCD90 = lbl_803DCD90 + 1;
@@ -536,7 +524,7 @@ void gxColorFn_800523d0(void)
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
-void gxTextureFn_80052638(int* param)
+void gxTextureFn_80052638(GXColor* param)
 {
     int sel;
     int v1;
@@ -558,7 +546,7 @@ void gxTextureFn_80052638(int* param)
     lbl_803DCD6A++;
 }
 
-void gxColorFn_80052764(int* param)
+void gxColorFn_80052764(GXColor* param)
 {
     int sel_color;
     int sel_alpha;
@@ -677,7 +665,7 @@ static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
     modelLightChannels_applyGXControls();
 }
 
-void textureFn_800524ec(int* param);
+void textureFn_800524ec(GXColor* param);
 void textureFn_800528bc(void);
 void resetLotsOfRenderVars(void);
 int textureFn_80052bb4(int model, f32* params);
@@ -685,14 +673,14 @@ void gxTextureFn_80052efc(void)
 {
     union
     {
-        f32 m[12];
+        Mtx m;
         f64 a8;
     } mtxu;
 #define mtx mtxu.m
     ModelLightStruct* lights[8];
-    GXColor8 outColor;
-    GXColor8 texColor;
-    GXColor8 matColor;
+    GXColor outColor;
+    GXColor texColor;
+    GXColor matColor;
     u8* e;
     u8* slots[1];
     int i;
@@ -704,11 +692,11 @@ void gxTextureFn_80052efc(void)
 
     gxFn_80052dc0();
     PSMTXScale(mtx, lbl_803DEB74, lbl_803DEB80, lbl_803DEB74);
-    mtx[3] = lbl_803DEB74;
-    mtx[7] = lbl_803DEB74;
+    mtx[0][3] = lbl_803DEB74;
+    mtx[1][3] = lbl_803DEB74;
     GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
-    GXSetChanAmbColor(GX_COLOR0A0, *(GXColor8*)&gRcpDistortAmbColor);
-    GXSetChanAmbColor(GX_COLOR1A1, *(GXColor8*)&gRcpDistortAmbColor);
+    GXSetChanAmbColor(GX_COLOR0A0, gRcpDistortAmbColor);
+    GXSetChanAmbColor(GX_COLOR1A1, gRcpDistortAmbColor);
     GXSetTexCopyDst(0x20, 0x20, GX_TF_RGBA8, GX_FALSE);
     modelTextureFn_80089970(2);
     i = 0;
@@ -727,7 +715,7 @@ void gxTextureFn_80052efc(void)
             GXSetChanMatColor(GX_COLOR1A1, matColor);
             textureFn_80052bb4(((RcpDistortSlot*)slots[0])[i].model, ((RcpDistortSlot*)slots[0])[i].params);
             resetLotsOfRenderVars();
-            textureFn_8004ff20(gRcpDistortTexture, mtx, &texColor, 0);
+            textureFn_8004ff20(gRcpDistortTexture, (f32*)mtx, &texColor, 0);
             textureFn_800528bc();
             lightFn_80052974((f32)(i * 0x20), lbl_803DEB60);
             GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + 0x60, 0);
@@ -742,7 +730,7 @@ void gxTextureFn_80052efc(void)
     resetLotsOfRenderVars();
     textureFn_800524ec(&gRcpDistortMatColor);
     textureFn_800528bc();
-    GXSetChanMatColor(GX_COLOR0, *(GXColor8*)&gRcpDistortMatColor);
+    GXSetChanMatColor(GX_COLOR0, gRcpDistortMatColor);
     clearSlot = 5;
     k = 5;
     e = gRcpDistortSlots + 0x8c;
@@ -786,7 +774,7 @@ void gxTextureFn_80052efc(void)
     Camera_ApplyFullViewport();
     gRcpDistortGroup = 0;
 }
-void textureFn_800524ec(int* param)
+void textureFn_800524ec(GXColor* param)
 {
     int sel_color;
     int sel_alpha;
