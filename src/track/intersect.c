@@ -2831,7 +2831,7 @@ u32 objCallback_80074d04(int handle, void* model)
     return 1;
 }
 
-void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
+void hudDrawRect(int x1, int y1, int x2, int y2, GXColor color)
 {
     extern f32 lbl_803DEEDC;
 
@@ -2850,8 +2850,8 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    color[3] = (u8)(((s32)color[3] * gHudTintAlpha) >> 8);
-    GXSetTevKColor(GX_KCOLOR0, *(GXColor*)color);
+    color.a = (u8)(((s32)color.a * gHudTintAlpha) >> 8);
+    GXSetTevKColor(GX_KCOLOR0, color);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);

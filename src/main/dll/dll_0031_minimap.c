@@ -140,7 +140,6 @@ void Minimap_setupCompassBlip(void);
 void fn_8013351C(void);
 
 extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32* color);
-extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern u8 lbl_803DD7BA;
 extern s16 lbl_803DD7A2;
 extern s16 lbl_803DBA6E;
@@ -235,7 +234,6 @@ int Minimap_update(void)
     f32 c2, s1, c1, c3, s3, fv;
     u32 col;
     u32 col2;
-    u32 cwRect;
     u32 cwTri1;
     u32 cwTri2;
     u32 cwL;
@@ -489,8 +487,7 @@ int Minimap_update(void)
                     ((u8*)&col)[0] = 0x20;
                     ((u8*)&col)[1] = 0x4d;
                     ((u8*)&col)[2] = 0x84;
-                    cwRect = col;
-                    hudDrawRect(0x32, lbl_803DD938, boxW + 0x32, lbl_803DD938 + boxH, &cwRect);
+                    hudDrawRect(0x32, lbl_803DD938, boxW + 0x32, lbl_803DD938 + boxH, *(GXColor*)&col);
                     drawPartialTexture(minimapTexture, (gMinimapF50 - panx) - frac,
                                        ((f32)(int)lbl_803DD938 - pany) - fv, gMinimapContentAlpha & 0xff,
                                        (int)(gMinimapF256 * *(f32*)&gMinimapZoom), texW - u, texH - vv, u, vv);

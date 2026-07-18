@@ -5,6 +5,7 @@
 #include "main/camera.h"
 #include "main/frame_timing.h"
 #include "main/fileio.h"
+#include "track/intersect_hud_api.h"
 
 u8 screenTransitionPause;
 u8 gScreenTransitionDelay;
@@ -15,21 +16,12 @@ f32 gScreenTransitionAlphaStep;
 f32 screenTransitionAlpha;
 
 
-typedef struct
-{
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} HudColor;
-
 extern f32 gScreenTransitionHoldDuration;
-extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
 extern void setHudOpacity(int op);
 
 static inline void screenTransitionFadeBlack(void)
 {
-    HudColor col;
+    GXColor col;
     u32 sx;
     u32 sy;
     u32 sw;
@@ -46,7 +38,7 @@ static inline void screenTransitionFadeBlack(void)
 
 static inline void screenTransitionFadeColor(u8 r, u8 g, u8 b)
 {
-    HudColor col;
+    GXColor col;
     u32 sx;
     u32 sy;
     u32 sw;
@@ -91,7 +83,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     u32 sy;
     u32 sw;
     u32 sh;
-    HudColor col;
+    GXColor col;
     u8 maxAlpha;
     u32 dist;
     u32 width;

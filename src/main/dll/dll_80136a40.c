@@ -192,7 +192,6 @@ extern u16 gDebugScreenHeight;
 extern u32 gDebugMarginRight;
 extern u32 gDebugMarginBottom;
 
-extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, GXColor* color);
 extern void OSResumeThread(u8* thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
@@ -377,11 +376,8 @@ int debugPrintDrawRecord(int color, u8* p)
     u8 c;
     GXColor textColorSource;
     GXColor positionColor;
-    GXColor positionColorSource;
     GXColor newlineColor;
-    GXColor newlineColorSource;
     GXColor wrapColor;
-    GXColor wrapColorSource;
 
     while ((c = *p++) != 0)
     {
@@ -472,12 +468,11 @@ int debugPrintDrawRecord(int color, u8* p)
                     y1 = y1 * sc;
                     x0 = x0 * (sc = gDebugScaleY + gDebugScaleBiasY);
                     x2 = x2 * sc;
-                    positionColorSource.r = gDebugTextColorR;
-                    positionColorSource.g = gDebugTextColorG;
-                    positionColorSource.b = gDebugTextColorB;
-                    positionColorSource.a = gDebugTextColorA;
-                    positionColor = positionColorSource;
-                    hudDrawRect(y0, x0, y1, x2, &positionColor);
+                    positionColor.r = gDebugTextColorR;
+                    positionColor.g = gDebugTextColorG;
+                    positionColor.b = gDebugTextColorB;
+                    positionColor.a = gDebugTextColorA;
+                    hudDrawRect(y0, x0, y1, x2, positionColor);
                 }
             }
             debugPrintYpos = *p++;
@@ -519,12 +514,11 @@ int debugPrintDrawRecord(int color, u8* p)
                     y1 = y1 * sc;
                     x0 = x0 * (sc = gDebugScaleY + gDebugScaleBiasY);
                     x2 = x2 * sc;
-                    newlineColorSource.r = gDebugTextColorR;
-                    newlineColorSource.g = gDebugTextColorG;
-                    newlineColorSource.b = gDebugTextColorB;
-                    newlineColorSource.a = gDebugTextColorA;
-                    newlineColor = newlineColorSource;
-                    hudDrawRect(y0, x0, y1, x2, &newlineColor);
+                    newlineColor.r = gDebugTextColorR;
+                    newlineColor.g = gDebugTextColorG;
+                    newlineColor.b = gDebugTextColorB;
+                    newlineColor.a = gDebugTextColorA;
+                    hudDrawRect(y0, x0, y1, x2, newlineColor);
                 }
             }
             debugPrintYpos = gDebugPrintOriginY;
@@ -577,12 +571,11 @@ int debugPrintDrawRecord(int color, u8* p)
                     y1 = y1 * sc;
                     x0 = x0 * (sc = gDebugScaleY + gDebugScaleBiasY);
                     x2 = x2 * sc;
-                    wrapColorSource.r = gDebugTextColorR;
-                    wrapColorSource.g = gDebugTextColorG;
-                    wrapColorSource.b = gDebugTextColorB;
-                    wrapColorSource.a = gDebugTextColorA;
-                    wrapColor = wrapColorSource;
-                    hudDrawRect(y0, x0, y1, x2, &wrapColor);
+                    wrapColor.r = gDebugTextColorR;
+                    wrapColor.g = gDebugTextColorG;
+                    wrapColor.b = gDebugTextColorB;
+                    wrapColor.a = gDebugTextColorA;
+                    hudDrawRect(y0, x0, y1, x2, wrapColor);
                 }
             }
             debugPrintYpos = gDebugPrintOriginY;
@@ -627,10 +620,9 @@ void debugPrintDraw(int ctx)
     u32 y2;
     u32 xa, xb, ya, yb;
     u32 xs;
-    GXColor colw;
+    GXColor colb;
     u8* p;
     u16 tx, ty;
-    GXColor colb;
     u32 x1;
     f32 scale;
     int pass;
@@ -698,8 +690,7 @@ void debugPrintDraw(int ctx)
         colb.g = gDebugTextColorG;
         colb.b = gDebugTextColorB;
         colb.a = gDebugTextColorA;
-        colw = colb;
-        hudDrawRect(xa, ya, xb, yb, &colw);
+        hudDrawRect(xa, ya, xb, yb, colb);
     }
     p = debugLogBuffer;
     debugPrintYpos = gDebugPrintOriginY;

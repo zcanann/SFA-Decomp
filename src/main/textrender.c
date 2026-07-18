@@ -54,7 +54,7 @@ char* lbl_803DB3B4[2] = {sDiscInsertPromptLine, sDiscInsertGameDiscLine};
 char lbl_803DB3BC[4] = {0};
 char* lbl_803DB3C0[1] = {(char*)&sDiscStatusMessageTable};
 int lbl_803DB3C4 = 0x800;
-int gGameTextClearColor = 0xC0;
+GXColor gGameTextClearColor = {0, 0, 0, 0xC0};
 int lbl_803DB3CC = 3;
 f32 lbl_803DB3D0 = 0.4f;
 char lbl_803DB3D4[] = "    ";
@@ -332,7 +332,7 @@ extern int gGameTextLastLanguage;
 extern void* lbl_8033BE40[];
 extern Texture* gGameTextBoxCornerTexture;
 extern Texture* gGameTextBoxBgTexture;
-extern u32 gGameTextBoxFillColor;
+extern GXColor gGameTextBoxFillColor;
 extern int gSubtitleLineIndex;
 extern f32 gSubtitleCurTime;
 extern int gSubtitleElapsedFrames;
@@ -341,13 +341,12 @@ extern Texture* gGameTextBoxEdgeTexture;
 extern u32 lbl_80339C40[];
 
 int getGameState(void);
-extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
 
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
-extern void translateToDinoLanguage(u8* str);
+void translateToDinoLanguage(u8* str);
 void gameTextSetWindow(u8* textBox);
-extern void setLanguageFn_8001ad64(void* slot);
-extern void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box);
+void setLanguageFn_8001ad64(void* slot);
+void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box);
 int GameText_CountPrintableChars(u8* str);
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
 
@@ -1557,7 +1556,7 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 void gameTextLoadDir(int dirId)
 {
     GameTextSlot* cmd;
-    int color;
+    GXColor color;
     int slotIndex;
 
     lbl_803DC9A7 = 0xff;
@@ -1570,7 +1569,7 @@ void gameTextLoadDir(int dirId)
         gameTextFonts = (TextFont*)&gGameTextCharsets[GAMETEXT_SLOT_ERROR];
         gameTextCharset = GAMETEXT_SLOT_ERROR;
         color = gGameTextClearColor;
-        hudDrawRect(0, 0, 0xa00, 0x780, &color);
+        hudDrawRect(0, 0, 0xa00, 0x780, color);
         lbl_803DC99C = 0;
         if (gameTextDrawFunc == NULL)
         {
@@ -1643,7 +1642,7 @@ void gameTextRun(void)
     int languageId;
     GameTextLoadSlot* slot;
     GameTextBox* textBox;
-    int color;
+    GXColor color;
     double fadeLimit;
     double zero;
 
@@ -1862,7 +1861,7 @@ void gameTextRun(void)
             if (cmd->arg0 == 2)
             {
                 color = gGameTextClearColor;
-                hudDrawRect(0, 0, 0xa00, 0x780, &color);
+                hudDrawRect(0, 0, 0xa00, 0x780, color);
                 lbl_803DC99C = 0;
             }
             break;
@@ -2905,8 +2904,8 @@ void gameTextSetCharset(int charset, int flags)
         gameTextCharset = charset;
         if (charset == 2)
         {
-            int color = gGameTextClearColor;
-            hudDrawRect(0, 0, 0xa00, 0x780, &color);
+            GXColor color = gGameTextClearColor;
+            hudDrawRect(0, 0, 0xa00, 0x780, color);
             lbl_803DC99C = 0;
         }
     }
@@ -3162,8 +3161,6 @@ void fn_8001BE2C(int mode)
 
 void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
 {
-    u32 colorB;
-    u32 colorA;
     int c6y1;
     int c6y0;
     int c6x1;
@@ -3210,8 +3207,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
             u16 bw = ((GameTextBox*)box)->width;
             s16 by = ((GameTextBox*)box)->y;
             s16 bx = ((GameTextBox*)box)->x;
-            colorB = gGameTextBoxFillColor;
-            hudDrawRect(bx, by, bx + bw, by + bh, &colorB);
+            hudDrawRect(bx, by, bx + bw, by + bh, gGameTextBoxFillColor);
         }
         else
         {
@@ -3229,8 +3225,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         u16 bw = ((GameTextBox*)box)->width;
         s16 by = ((GameTextBox*)box)->y;
         s16 bx = ((GameTextBox*)box)->x;
-        colorA = gGameTextBoxFillColor;
-        hudDrawRect(bx, by, bx + bw, by + bh, &colorA);
+        hudDrawRect(bx, by, bx + bw, by + bh, gGameTextBoxFillColor);
     }
     break;
     case 6:

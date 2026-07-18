@@ -17,6 +17,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/gx/GXManage.h"
+#include "dolphin/gx/GXCull.h"
 #include "dolphin/gx/GXTransformLegacy.h"
 #include "dolphin/gx/GXStruct.h"
 #include "dolphin/gx/GXTexture.h"
@@ -222,8 +223,6 @@ extern const f32 lbl_803DED44, lbl_803DED4C, lbl_803DED50;
 extern const f32 lbl_803DED68;
 extern const f32 lbl_803DED6C;
 extern f32 gMapSavedPlayerOffsetX, gMapSavedPlayerOffsetZ;
-
-extern void GXSetScissor(int left, int top, int width, int height);
 
 static inline void boxBlurRow(u8* row, u8* blurred, int size, int window)
 {
