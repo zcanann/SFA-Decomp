@@ -26,7 +26,6 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
-#include "ext_min/dll_01CC_dimmagicbridge_min.h"
 
 /* Spawn-setup buffer seeded by dll_1CE_update for its child (obj id 0x246):
  * position/color head plus class-specific fields (see the target stb/sth). */
@@ -102,6 +101,7 @@ extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
+extern void dimmagicbridge_update(GameObject*);
 int dimmagicbridge_getExtraSize(void);
 extern u8 dim_levelcontrol_free[];
 extern u8 dim_levelcontrol_getExtraSize[];

@@ -26,7 +26,6 @@
 #include "main/dll/skeetla_ext.h"
 #include "main/dll/Hcurves_pr.h"
 #include "main/dll/skeetla_pr.h"
-#include "ext_min/skeetla_min.h"
 
 /* A plain XYZ point; recovered file-locally for the patch-target scratch slot
  * at TrickyState+0xD4 (an unnamed pad region in tricky_state.h). */
@@ -95,6 +94,7 @@ extern void trickyRankLinkedRouteCandidates(u8* obj, u8* flags, int walkGroup, i
 extern int trickyFindReachableRouteIndex(u8* state, int* routes, u8* flags, u16 group);
 extern void fn_800D9F38(RomCurveWalker* route);
 extern void fn_800D9EE8(RomCurveWalker* route);
+extern void trickyTurnTowardYaw(u8* obj, int yaw);
 
 static u8* trickyfollow_validateRouteNode(u8* node)
 {

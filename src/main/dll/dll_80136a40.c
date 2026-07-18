@@ -52,9 +52,6 @@
 #include "track/intersect_screen_api.h"
 #include "track/intersect_api.h"
 #include "main/dll/dll_0019_dll19func0.h"
-#include "ext_min/os_min.h"
-#include "ext_min/vifuncs_min.h"
-#include "ext_min/vi_min.h"
 
 extern u8 debugLogBuffer[];
 
@@ -203,7 +200,14 @@ extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, 
     ((void (*)(GameObject*, int, int, int, int, int))Obj_SetModelColorOverrideRecursive)(                        \
         (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
 extern void GXSetTevColor(int id, GXColor* color);
+extern int OSDisableInterrupts(void);
+extern asm BOOL OSRestoreInterrupts(register BOOL level);
+extern void VISetPreRetraceCallback(void* cb);
+extern void VISetPostRetraceCallback(void* cb);
 extern void GXSetBreakPtCallback(void* cb);
+extern void VISetNextFrameBuffer(void* fb);
+extern void VIFlush(void);
+extern void VIWaitForRetrace(void);
 int TitleScreen_getObjectTypeId(u8* obj);
 
 u8 debugLogBuffer[0x1100];

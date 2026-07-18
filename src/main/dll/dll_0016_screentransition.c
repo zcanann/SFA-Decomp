@@ -5,7 +5,6 @@
 #include "main/camera.h"
 #include "main/frame_timing.h"
 #include "main/fileio.h"
-#include "ext_min/intersect_min.h"
 
 u8 screenTransitionPause;
 u8 gScreenTransitionDelay;
@@ -28,6 +27,7 @@ typedef struct
 
 extern f32 gScreenTransitionHoldDuration;
 extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
+extern void setHudOpacity(int op);
 
 static inline void screenTransitionFadeBlack(void)
 {

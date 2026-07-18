@@ -64,7 +64,6 @@
 #include "main/dll/dll_80198a00.h"
 #include "main/gameloop_ext.h"
 #include "main/gameloop_pr.h"
-#include "ext_min/intersect_min.h"
 
 #define Sfx_StopFromObjectLegacy(obj, sfxId) \
     ((void (*)(void*, int))Sfx_StopFromObject)((obj), (sfxId))
@@ -88,6 +87,7 @@
 #define TRIGGER_CMD_UNCONDITIONAL     0x10 /* ignore enter/exit gating */
 #define TRIGGER_CMD_OVERRIDE_DISABLED 0x20 /* run even when SFLAG_DISABLED is set */
 extern f32 lbl_803E40D8;
+extern void fn_8006FC00(int v);
 
 #define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
 

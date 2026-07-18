@@ -8,8 +8,6 @@
 #include "main/mm.h"
 #include "main/pi_dolphin_api.h"
 #include "main/pi_flush_api.h"
-#include "ext_min/os_min.h"
-#include "ext_min/OSAlloc_min.h"
 
 u8 gMmRegionCount;
 s16 gMmDeferredFreeCount;
@@ -302,7 +300,9 @@ extern char sMmSpawnedUnalignedSlotWarning[];
 extern int lbl_803DCC7C;
 extern char sMmFreeMemoryUsageCorruptedError[];
 
+extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void heapFree(int region, int slotIdx);
+extern void* OSAllocFromHeap(int heap, int size);
 extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);
 
 int roundUpTo4(int x)

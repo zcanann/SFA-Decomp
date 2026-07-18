@@ -47,11 +47,6 @@
 #include "main/sky_pr.h"
 #include "main/lightmap_pr.h"
 #include "string.h"
-#include "ext_min/mtx_legacy_min.h"
-#include "ext_min/GXGeometry_min.h"
-#include "ext_min/GXBump_min.h"
-#include "ext_min/GXLighting_min.h"
-#include "ext_min/GXTransform_min.h"
 
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
@@ -375,9 +370,13 @@ extern const f32 lbl_803DECD4;
 
 extern u32 FUN_80017790();
 extern u32 FUN_8001779c();
+extern f32 PSVECDotProduct(f32* a, f32* b);
+extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern void PSVECScale(f32* src, f32* dst, f32 s);
+extern void PSVECNormalize(f32* src, f32* dst);
 extern f32 PSVECSquareMag(f32* v);
 extern void GXLoadPosMtxImm(void* mtx, int slot);
+extern void PSMTXCopy(void* src, void* dst);
 extern void GXLoadNrmMtxImm(void* mtx, int slot);
 extern void PSMTXConcat(void* a, void* b, void* out);
 extern void GXLoadTexMtxImm(void* mtx, int slot, int type);
@@ -389,11 +388,14 @@ extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 extern float floor(float x);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
+extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
 extern void GXSetTevKColor(int id, void* color);
 extern void GXSetTevKAlphaSel(int stage, int sel);
 extern void GXSetNumTevStages(u8 nStages);
+extern void GXSetNumIndStages(u8 nIndStages);
 extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
+extern void GXSetNumChans(u8 nChans);
 extern void GXSetTevOrder(int a, int b, int c, int d);
 extern void GXSetTevDirect(int stage);
 extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
@@ -401,6 +403,7 @@ extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
 extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
 extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
 extern void GXSetCullMode(int mode);
+extern void GXSetCurrentMtx(u32 id);
 extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXBegin(int type, int fmt, int count);
 extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* mtx);
@@ -411,6 +414,8 @@ extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern u8 skyFn_8008919c(int);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
+extern void PSVECSubtract(f32* a, f32* b, f32* out);
+extern f32 PSVECMag(f32* v);
 
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);

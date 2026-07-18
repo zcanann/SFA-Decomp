@@ -38,7 +38,6 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "string.h"
-#include "ext_min/intersect_min.h"
 
 u8 gNewCloudBlizzardActivePrev;
 void* lbl_803DD1C8;
@@ -67,6 +66,7 @@ int gNewCloudWindSourcesInit = 1;
 extern const f32 lbl_803DF1A0;
 extern const f32 lbl_803DF1A4;
 extern int snowPrintSnowCloud(int arg, int x);
+extern void drawFn_80079e64(double s1, u8 mtxIdx, void* vec, double s2, u8 a0, u8 a1, double s3);
 typedef struct
 {
     s16 uv[6];

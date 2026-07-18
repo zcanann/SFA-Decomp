@@ -546,6 +546,7 @@ extern const f32 lbl_803E2020;
 extern const f32 lbl_803E2024;
 extern const f64 lbl_803E2028;
 extern const f64 lbl_803E2030;
+extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
 extern void hudDrawTimedElement(int obj, void* p);
 extern u8 gHeadDisplayActive;
 extern u8 gHeadDisplayEntryIdx;
@@ -595,7 +596,6 @@ extern const f32 lbl_803E2068;
 #include "string.h"
 #include "dolphin/gx/GXPixel.h"
 #include "track/intersect_api.h"
-#include "ext_min/GXTev_min.h"
 extern u32 lbl_8031AE20[56];
 extern GridEntry lbl_8031BB90[];
 extern GridEntry lbl_8031BD90[];
