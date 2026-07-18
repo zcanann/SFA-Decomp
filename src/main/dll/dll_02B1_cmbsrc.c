@@ -34,13 +34,6 @@ u8 gCmbsrcColorCycleIndexTable[8] = {5, 6, 4, 0, 0, 0, 0, 0};
 
 #define CMBSRC_OBJFLAG_RENDERED 0x800
 
-int cmbsrc_update(CmbSrcObject* cmbsrc);
-
-u8 cmbsrc_shouldDeactivate(CmbSrcObject* obj, CmbSrcState* sourceState, CmbSrcMapData* mapData);
-u8 cmbsrc_shouldActivate(CmbSrcObject* obj, CmbSrcState* sourceState, CmbSrcMapData* mapData);
-
-u8 cmbsrc_cycleColor(CmbSrcObject* cmbsrc, CmbSrcState* sourceState);
-
 void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
 {
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
