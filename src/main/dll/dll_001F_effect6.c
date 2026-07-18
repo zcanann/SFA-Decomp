@@ -37,15 +37,6 @@ f32 gEffect6ScrollPhase1 = 0.3f;
 f32 gEffect6ScrollPhase2 = 0.1f;
 f32 gEffect6ScrollPhase3 = 0.3f;
 
-extern f32 gEffect6ScrollPhase2;
-extern f32 gEffect6ScrollPhase3;
-extern int gEffect6Osc0Angle;
-extern int gEffect6Osc1Angle;
-extern f32 gEffect6Osc1Value;
-extern f32 gEffect6Osc0Value;
-extern f32 gEffect6ScrollPhase0;
-extern f32 gEffect6ScrollPhase1;
-
 ObjectDescriptor6 lbl_80310A20 = {
     0,
     0,
