@@ -39,6 +39,7 @@
 #include "track/intersect_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/objmodel.h"
+#include "main/newshadows_ext.h"
 
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
@@ -367,7 +368,6 @@ extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern void PSVECScale(f32* src, f32* dst, f32 s);
 extern void PSVECNormalize(f32* src, f32* dst);
 extern f32 PSVECSquareMag(f32* v);
-extern int textureAlloc512(void);
 extern void GXLoadPosMtxImm(void* mtx, int slot);
 extern void PSMTXCopy(void* src, void* dst);
 extern void GXLoadNrmMtxImm(void* mtx, int slot);
