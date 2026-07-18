@@ -100,15 +100,6 @@ STATIC_ASSERT(offsetof(DoorF4Placement, gameBitC) == 0x20);
 extern f32 lbl_803E3680;
 extern f32 lbl_803E3684;
 
-void DoorF4_initialise(void);
-int DoorF4_getExtraSize(void);
-int DoorF4_getObjectTypeId(void);
-void DoorF4_free(int obj);
-void DoorF4_hitDetect(void);
-void DoorF4_init(int* obj, int* params);
-void DoorF4_release(void);
-void DoorF4_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void DoorF4_update(int* obj);
 ObjectDescriptor gDoorF4ObjDescriptor = {
     0,
     0,
