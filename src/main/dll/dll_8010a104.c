@@ -27,7 +27,6 @@
 
 extern f32 lbl_803E1888; /* near distance threshold */
 extern f32 lbl_803E188C; /* far distance threshold */
-extern f32 fn_8010AC48(f32 px, f32 py, f32 pz, int* obj);
 
 void fn_8010A104(int* nodeId, int* leadNodeId, f32 x, f32 y, f32 z, int tag)
 {
@@ -83,7 +82,7 @@ void fn_8010A104(int* nodeId, int* leadNodeId, f32 x, f32 y, f32 z, int tag)
         settled = 1;
         node = (int)(*gRomCurveInterface)->getById(*nodeId);
         pathcam_findTaggedNodeWindow((u8*)node, window, tag);
-        dist = fn_8010AC48(x, y, z, window);
+        dist = fn_8010AC48(window, x, y, z);
         if (dist < nearThresh)
         {
             if (window[0] > -1)
