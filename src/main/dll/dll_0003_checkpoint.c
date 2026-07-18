@@ -54,37 +54,6 @@ typedef struct CheckpointNavState
     u8 branchFlag; /* 0x30 */
 } CheckpointNavState;
 
-CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
-{
-    s32 high;
-    s32 low;
-    s32 mid;
-    *idx_out = -1;
-    if (key < 0)
-        return NULL;
-    high = gCheckpointRouteCount - 1;
-    low = 0;
-    while (high >= low)
-    {
-        mid = (high + low) >> 1;
-        if ((u32)key > gCheckpointRouteTable[mid].key)
-        {
-            low = mid + 1;
-        }
-        else if ((u32)key < gCheckpointRouteTable[mid].key)
-        {
-            high = mid - 1;
-        }
-        else
-        {
-            *idx_out = mid;
-            return gCheckpointRouteTable[mid].entry;
-        }
-    }
-    *idx_out = -1;
-    return NULL;
-}
-
 s32 fn_800D55BC(CheckpointRouteEntry* checkpoint, s32 linkIndex, f32* outX, f32* outY, f32* outZ, u8 mode,
                 f32 lateralOffset, f32 verticalOffset)
 {
@@ -915,3 +884,34 @@ u32 lbl_803112E8[22] = {
     (u32)Checkpoint_func0C, (u32)Checkpoint_func0D, (u32)Checkpoint_func0E, (u32)Checkpoint_func0F,
     (u32)Checkpoint_func10, (u32)Checkpoint_onGameLoop,
 };
+
+CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
+{
+    s32 high;
+    s32 low;
+    s32 mid;
+    *idx_out = -1;
+    if (key < 0)
+        return NULL;
+    high = gCheckpointRouteCount - 1;
+    low = 0;
+    while (high >= low)
+    {
+        mid = (high + low) >> 1;
+        if ((u32)key > gCheckpointRouteTable[mid].key)
+        {
+            low = mid + 1;
+        }
+        else if ((u32)key < gCheckpointRouteTable[mid].key)
+        {
+            high = mid - 1;
+        }
+        else
+        {
+            *idx_out = mid;
+            return gCheckpointRouteTable[mid].entry;
+        }
+    }
+    *idx_out = -1;
+    return NULL;
+}
