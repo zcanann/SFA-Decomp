@@ -17,6 +17,7 @@
 #include "main/obj_link.h"
 #include "main/obj_path.h"
 #include "main/objfx.h"
+#include "main/dll/objfx.h"
 #include "main/camera.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0000_gameui_api.h"
@@ -82,7 +83,6 @@ extern f32 lbl_803E66B8;
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
-extern void objfx_spawnFlaggedTrailBurst(void* obj, f32 scale, int a, int b, int c, void* vec);
 
 int worldobj_getExtraSize(void);
 void worldobj_hitDetect(void);

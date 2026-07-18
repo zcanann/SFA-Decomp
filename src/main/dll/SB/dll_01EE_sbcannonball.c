@@ -9,6 +9,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
+#include "main/dll/objfx.h"
 #include "main/model_light.h"
 #include "main/object.h"
 #include "main/dll/sbshipheadstate_struct.h"
@@ -78,8 +79,6 @@ typedef struct SBCannonBallState
     ModelLightStruct* modelLight;
     u8 pad24[0x28 - 0x24];
 } SBCannonBallState;
-
-extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, int d);
 
 int SB_CannonBall_getExtraSize(void)
 {
@@ -177,9 +176,9 @@ void SB_CannonBall_update(GameObject* obj)
     }
     else
     {
-        objfx_spawnFlaggedTrailBurst((int*)obj, 0.22f, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID,
+        objfx_spawnFlaggedTrailBurst(obj, 0.22f, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID,
                                      SB_CANNONBALL_SETUP_PARAM, 0);
-        objfx_spawnFlaggedTrailBurst((int*)obj, 0.22f, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID,
+        objfx_spawnFlaggedTrailBurst(obj, 0.22f, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID,
                                      SB_CANNONBALL_SETUP_PARAM, 0);
     }
     (*gPartfxInterface)->spawnObject(obj, SB_CANNONBALL_TRAIL_PARTICLE_ID, NULL, 1, -1, NULL);

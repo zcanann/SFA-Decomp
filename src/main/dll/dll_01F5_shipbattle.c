@@ -17,6 +17,7 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/game_object.h"
+#include "main/dll/objfx.h"
 #include "main/objseq.h"
 #include "main/object.h"
 #include "main/object_render_legacy.h"
@@ -43,8 +44,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 
 extern u8 lbl_803DB411;
 f32 lbl_803DDC50[2];
-
-extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 
 int ShipBattle_getExtraSize(void)
 {

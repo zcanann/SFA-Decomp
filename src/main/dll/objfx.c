@@ -867,7 +867,7 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
     }
 }
 
-void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int f6val, int f4val, int origin, f32 fval)
+void objfx_spawnFlaggedTrailBurst(void* obj, f32 fval, u8 mode, int f6val, int f4val, void* origin)
 {
     ObjFxParticleFlags params;
     int i;
@@ -895,7 +895,7 @@ void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int f6val, int f4val, int 
         params.b = 0;
         for (i = 0; i < count; i++)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)origin);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
         }
         break;
     case 2:
@@ -903,7 +903,7 @@ void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int f6val, int f4val, int 
         params.b = 0;
         for (i = 0; i < count; i++)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)origin);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
         }
         break;
     case 3:
@@ -911,7 +911,7 @@ void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int f6val, int f4val, int 
         params.b = 1;
         for (i = 0; i < count; i++)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)origin);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
         }
         break;
     case 4:
@@ -919,7 +919,7 @@ void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int f6val, int f4val, int 
         params.b = 1;
         for (i = 0; i < count; i++)
         {
-            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, (void*)origin);
+            (*gPartfxInterface)->spawnObject(obj, 0x7b7, &params, 1, -1, origin);
         }
         break;
     }

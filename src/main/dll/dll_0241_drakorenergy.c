@@ -19,6 +19,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/dll/objfx.h"
 #include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
@@ -58,8 +59,6 @@ extern f32 gDrakorEnergyGravity;
 extern f32 gDrakorEnergyPi;
 extern f32 gDrakorEnergyPhaseDivisor;
 extern f32 lbl_803E6294;
-
-extern void objfx_spawnFlaggedTrailBurst(int, f32, int, int, int, int);
 
 void DrakorEnergy_func0B_nop(void)
 {
@@ -153,7 +152,7 @@ void drakorenergy_update(int obj)
         {
             ((DrakorEnergyState*)state)->mode = DRAKORENERGY_MODE_CHASING;
         }
-        objfx_spawnFlaggedTrailBurst(obj, lbl_803DC174, 1, 0xc22, 0x14, obj + 0x24);
+        objfx_spawnFlaggedTrailBurst((void*)obj, lbl_803DC174, 1, 0xc22, 0x14, (void*)(obj + 0x24));
         break;
     case DRAKORENERGY_MODE_CHASING:
         dist = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX);
@@ -180,7 +179,7 @@ void drakorenergy_update(int obj)
             colorRGB[2] = 0xff;
             colorRGB[1] = 0;
             colorRGB[0] = 0xff;
-            objfx_spawnFlaggedTrailBurst(obj, lbl_803DC174, 1, 0xc22, 0x14, obj + 0x24);
+            objfx_spawnFlaggedTrailBurst((void*)obj, lbl_803DC174, 1, 0xc22, 0x14, (void*)(obj + 0x24));
         }
         break;
     case DRAKORENERGY_MODE_RESET:

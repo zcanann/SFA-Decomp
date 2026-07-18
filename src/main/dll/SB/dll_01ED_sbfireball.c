@@ -10,6 +10,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/game_object.h"
+#include "main/dll/objfx.h"
 #include "main/object.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
@@ -46,8 +47,6 @@ enum
 
 /* obj->userData1 life timer set at init, decremented by framesThisStep */
 #define SB_FIREBALL_LIFETIME 0x4b0
-
-extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 
 int SB_FireBall_getExtraSize(void)
 {
@@ -127,7 +126,7 @@ void SB_FireBall_update(GameObject* obj)
         obj->anim.localPosZ += state->velZ * timeDelta;
 
         particleArgs[2] = 3.0f;
-        objfx_spawnFlaggedTrailBurst((int*)obj, 0.8f, SB_FIREBALL_SETUP_SIZE, SB_FIREBALL_SETUP_MODEL_ID,
+        objfx_spawnFlaggedTrailBurst(obj, 0.8f, SB_FIREBALL_SETUP_SIZE, SB_FIREBALL_SETUP_MODEL_ID,
                                      SB_FIREBALL_SETUP_PARAM, NULL);
         (*gPartfxInterface)->spawnObject((void*)obj, SB_FIREBALL_TRAIL_PARTICLE_ID, particleArgs, 1, -1, NULL);
 
