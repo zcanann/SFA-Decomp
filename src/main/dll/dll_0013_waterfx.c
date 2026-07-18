@@ -105,6 +105,7 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 #define GX_CS_SCALE_1     0
 #define GX_TRUE           1
 #define GX_TEVPREV        0
+#define GX_KCOLOR0        0
 #define GX_TEV_KCSEL_K0   0xc
 #define GX_TEV_KASEL_K0_A 0x1c
 
@@ -153,7 +154,7 @@ void waterfx_setupSplashDropPointRender(void)
     col[2] = (col[2] >> 2) + 0x80;
     col[3] = 0x80;
     *(int*)kcol = *(int*)col;
-    GXSetTevKColor(0, kcol);
+    GXSetTevKColor(GX_KCOLOR0, kcol);
 }
 
 /*

@@ -977,7 +977,7 @@ void pauseMenuMapFn_8011de20(void* this, u8 a, s16 b, int c)
     GXColor colA = *(GXColor*)&lbl_803E1E34;
     GXColor colB = *(GXColor*)&lbl_803E1E38;
     colA.a = a;
-    GXSetTevColor(1, colA);
+    GXSetTevColor(GX_TEVREG0, colA);
     GXLoadPosMtxImm((const f32(*)[4])lbl_803A8830, 0);
     GXLoadNrmMtxImm((const f32(*)[4])lbl_803A8830, 0);
     GXSetCurrentMtx(0);
