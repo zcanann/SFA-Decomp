@@ -209,7 +209,6 @@ extern f32 gMapSavedPlayerOffsetX;
 extern f32 gMapSavedPlayerOffsetZ;
 
 extern void* memset(void* dst, int val, int n);
-extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
 extern void objList_remove(void* list, void* item);
 extern void* memcpy(void* dst, const void* src, int n);
 extern void objFreeObjDef(u8* def, int flags);
@@ -599,7 +598,7 @@ void objWorldToLocalPos(f32* out, ObjLocalTransform* transform, f32* in)
 #undef rotMtx
 }
 
-void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out)
+void Obj_BuildInverseWorldTransformMatrix(GameObject* obj, f32* out)
 {
     ObjPathTransform transform;
     f32 rotMtx[16];

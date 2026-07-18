@@ -161,9 +161,6 @@ extern f32 lbl_803E5C74;
 extern const f32 lbl_803E5CBC;
 extern const f32 lbl_803E5CC0;
 
-extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
-
-
 /* Analog-stick steering update for the cloudrunner ride (target 0x801EE668;
  * Ghidra split this body as FUN_801eeafc). Integrates stick X/Y into the
  * bird's yaw/pitch/roll, clamps to the steer limits, advances the
@@ -501,7 +498,7 @@ void SB_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
         {
             *state = *state - playerMapOffsetX;
             state[2] = state[2] - playerMapOffsetZ;
-            Obj_BuildInverseWorldTransformMatrix(*(int*)&obj->anim.parent, mtx);
+            Obj_BuildInverseWorldTransformMatrix(obj->anim.parent, mtx);
             PSMTXMultVec(mtx, state, state);
         }
     }
@@ -513,7 +510,7 @@ void SB_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
         {
             *state = *state - playerMapOffsetX;
             state[2] = state[2] - playerMapOffsetZ;
-            Obj_BuildInverseWorldTransformMatrix(*(int*)&obj->anim.parent, mtx);
+            Obj_BuildInverseWorldTransformMatrix(obj->anim.parent, mtx);
             PSMTXMultVec(mtx, state, state);
         }
     }

@@ -10,6 +10,7 @@
 #include "main/texture.h"
 #include "main/frame_timing.h"
 #include "main/object_transform.h"
+#include "main/object_api.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 
 int gModelLightNextGXLightId;
@@ -85,7 +86,6 @@ extern void GXInitLightDistAttn(u8* lt_obj, f32 ref_dist, f32 ref_br, int dist_f
 extern void GXGetLightAttnK(u8* lt_obj, f32* k0, f32* k1, f32* k2);
 extern void GXInitLightAttnA(u8* lt_obj, f32 a0, f32 a1, f32 a2);
 extern void GXInitLightAttn(u8* lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
-extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
 extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int lightMask, int diffFn, int attnFn);
 extern void GXInitLightSpot(u8* lt_obj, f32 cutoff, int spot_func);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
@@ -984,7 +984,7 @@ ModelLightStruct* objAllocLight(void* owner)
     light[0x10b] = 0xff;
     if (*(void**)light != NULL)
     {
-        Obj_BuildInverseWorldTransformMatrix(*(u8**)light, (f32*)(light + 0x170));
+        Obj_BuildInverseWorldTransformMatrix((GameObject*)*(void**)light, (f32*)(light + 0x170));
     }
     atten = lbl_803DE760;
     ((ModelLightStruct*)light)->lightAmount = atten;
@@ -1537,7 +1537,7 @@ void updateLights(void)
 
             if (((ModelLightStruct*)light)->lightKind == 8)
             {
-                Obj_BuildInverseWorldTransformMatrix(*(u8**)light, (f32*)(light + 0x170));
+                Obj_BuildInverseWorldTransformMatrix((GameObject*)*(void**)light, (f32*)(light + 0x170));
                 PSMTXConcat((f32*)(light + 0x170), Camera_GetInverseViewMatrix(), concatMtx);
                 PSMTXConcat((f32*)(light + 0x1b0), concatMtx, (f32*)(light + 0x230));
             }

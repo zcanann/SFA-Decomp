@@ -14,6 +14,7 @@ int objIsFrozen(u8* obj);
 GameObject* ObjList_FindObjectById(u32 objectId);
 u8 Obj_IsLoadingLocked(void);
 ObjModel* Obj_GetActiveModel(GameObject* obj);
+void Obj_BuildInverseWorldTransformMatrix(GameObject* obj, f32* out);
 void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags);
 void Obj_SetModelColorFadeRecursive(GameObject* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 void Obj_SetModelColorOverrideRecursive(GameObject* obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled);
