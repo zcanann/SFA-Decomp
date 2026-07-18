@@ -115,10 +115,6 @@ GenPropsWGPipe GXWGFifo : (0xCC008000);
 #define DIM2ROOFRUB_EVENT_SPAWN_DUST   4
 #define DIM2ROOFRUB_PARTFX 2046
 extern u32 lbl_80320768[];
-void dim2roofrub_free(int* obj);
-void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
-void dim2roofrub_update(int* obj);
-void dim2roofrub_init(int* obj, int* params);
 
 void dim2roofrub_spawnEffects(int* obj)
 {
