@@ -37,6 +37,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/player_control_interface.h"
 #include "main/dll/baddie_control_interface.h"
+#include "main/dll/player_ext2.h"
 
 /* object group this object belongs to */
 #define KALDACHOM_OBJGROUP 3
@@ -54,7 +55,6 @@
 #define KALDACHOM_EFFECT_RESOURCE_ID         0x5a /* shared effect resource -> gKaldachomEffectResource */
 
 
-extern void fn_802961FC(int a, u8 type);
 
 typedef struct KaldaCombatParams
 {

@@ -173,6 +173,7 @@ extern volatile int lbl_803DCC80;
 #include "dolphin/os/OSAlloc.h"
 #include "main/objmodel.h"
 #include "main/mm_ext.h"
+#include "main/newshadows_ext2.h"
 
 struct MldfNames
 {
@@ -1004,8 +1005,6 @@ extern void GXSetTevOp(int stage, int mode);
 extern f32 lbl_803DEAE4;
 extern u8 lbl_803DCD6B;
 extern void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 sS, f32 sT, f32 tS, f32 tT);
-extern int fn_8006C754(void);
-extern int fn_8006C74C(void);
 extern f32 lbl_803DEAF4;
 extern f32 lbl_803DEAF8;
 extern f32 lbl_803DEAFC;

@@ -26,6 +26,7 @@
 #include "main/shader_api.h"
 #include "main/track_dolphin.h"
 #include "main/objprint_ext.h"
+#include "main/pi_dolphin_ext2.h"
 
 CameraViewSlot* gNewShadowCurrentViewSlot;
 u32 gNewShadowReflectionSmallTexture;
@@ -290,7 +291,6 @@ extern void GXCopyTex(void* dest, GXBool clear);
 extern void GXInvalidateTexAll(void);
 extern float floor(float);
 extern void fn_80069EB8();
-extern void fn_8004C234(f32* a, f32* b);
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
 extern void mapGetBlocks(int* a, int* b);

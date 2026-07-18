@@ -36,6 +36,7 @@
 #include "track/intersect_api.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "main/lightmap_ext.h"
+#include "main/track_dolphin_ext2.h"
 
 typedef struct SkyColorByte
 {
@@ -215,7 +216,6 @@ extern int lbl_803DB754;
 extern f32 lbl_803DF190;
 extern f32 lbl_803DF194;
 
-extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
 extern void renderSunAndMoon();
 extern int moonFxCb_80074110(int obj, int* model, int param);
 extern void lightSetColor(int index, int red, int green, int blue);

@@ -41,6 +41,8 @@
 #include "main/objmodel.h"
 #include "main/newshadows_ext.h"
 #include "main/sky_ext.h"
+#include "main/pi_dolphin_ext2.h"
+#include "main/newshadows_ext2.h"
 
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
@@ -378,7 +380,6 @@ extern void GXSetArray(int attr, void* base, int stride);
 extern int mapBlockRender_setShader(int a, int* obj, int* state);
 extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
 extern void memcpy(void* dst, void* src, int n);
-extern void checkLoadBlock(int v, int* outA, int* outB);
 extern int shouldDrawShadows(void);
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 extern f32 fn_802925C4(f32 x, f32 y);
@@ -411,7 +412,6 @@ extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern u8 skyFn_8008919c(int);
 extern void* fn_8008912C(void);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
-extern void allocLotsOfTextures(void);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);

@@ -58,6 +58,7 @@
 #include "main/dll/skeetla_ext.h"
 #include "main/dll/tricky_substates_ext.h"
 #include "main/dll/mmp_critterspit_ext.h"
+#include "main/dll/dll_80136a40_ext2.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -251,7 +252,6 @@ extern f32 lbl_803E25C0;
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25C8;
 
-extern int fn_80138D7C(int obj, int state);
 extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
