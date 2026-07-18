@@ -135,9 +135,6 @@ u8 gWmLevelControlBlendedFogColor[4];      /* blended fog-color out-triplet */
 u8 gWmLevelControlBlendedLightIntensity;   /* blended light-intensity byte */
 f32 gWmLevelControlBlendFactor;            /* current blend factor */
 f32 gWmLevelControlBlendHold;              /* restore-blend hold flag */
-extern void fn_80089510(int flags, int red, int green, int blue);
-extern void fn_80089578(int flags, int red, int green, int blue);
-
 void fn_801F3F18(GameObject* obj)
 {
     LightVecSet L;

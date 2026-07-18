@@ -100,8 +100,6 @@ void skyGetCurrentAmbientAndLightColors(u8* ambientRed, u8* ambientGreen, u8* am
 void* fn_8008912C(void);
 void skyBuildSunModelMatrix(f32 mtx[3][4]);
 int skyFn_8008919c(int slot);
-void fn_80089510(int flags, u8 red, u8 green, u8 blue);
-void fn_80089578(int flags, u8 red, u8 green, u8 blue);
 void getTimeOfDay(f32* time);
 void renderSky(void);
 void getAmbientColor(int slot, u8* red, u8* green, u8* blue);
