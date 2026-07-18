@@ -69,13 +69,9 @@ typedef struct StaffBits
     u8 b0 : 1;
 } StaffBits;
 
-u32 fn_801659B8(s16* obj, u32* params);
-void fn_80165B3C(GameObject* obj, int state);
 void fn_80166840(GameObject* obj, int state, f32* hit, f32* end);
 void updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ, f32 blend);
-void fn_80166444(int obj, int state);
 void fn_80166E38(f32* out, f32* forward, f32* up);
-void fn_80167550(GameObject* obj, GameObject* otherObj);
 
 u32 fn_801659B8(s16* obj, u32* params)
 {
