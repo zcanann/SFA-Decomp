@@ -34,6 +34,7 @@
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/track_dolphin_api.h"
 #include "main/resource.h"
+#include "main/maketex.h"
 
 typedef struct PushablePlacement
 {
@@ -175,7 +176,6 @@ ObjectDescriptor14 gPushableObjDescriptor = {
 };
 
 char sPushPullObjectHitpointOverflow[] = "PUSHPULL OBJECT: hitpoint overflow\n";
-extern void fn_8007FE04(int* array, int* count, int value);
 const PushableRadii gPushableDefaultBox = {{0.0f, 0.0f, 0.0f, 0.0f}};
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
 

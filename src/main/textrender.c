@@ -24,6 +24,7 @@
 #include "main/dll/dll_0015_save_settings.h"
 #include "track/intersect_api.h"
 #include "string.h"
+#include "main/lightmap.h"
 
 struct JapaneseDiscStatusResource;
 struct EnglishDiscStatusResource;
@@ -339,7 +340,6 @@ extern int gSubtitleLineCount;
 extern Texture* gGameTextBoxEdgeTexture;
 extern u32 lbl_80339C40[];
 
-extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void textRenderSetupFn_800795e8(void);
 extern void textBlendSetupFn_80078a7c(void);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);

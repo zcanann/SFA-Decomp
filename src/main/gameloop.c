@@ -75,6 +75,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/dll/dll_BC.h"
 #include "track/intersect_api.h"
 #include "dolphin/ai.h"
+#include "main/lightmap.h"
 
 f32 gGameLoopResetFadeOutTimer;
 void* lbl_803DCAFC;
@@ -1090,7 +1091,6 @@ void cutsceneExit(void)
 
 void Obj_UpdateAllObjects(u8 flags);
 
-extern void updateEnvironment(int a);
 extern void sceneRender(int a, int b, int c, int d, int e, int f);
 extern f32 lbl_803DE7B8;
 

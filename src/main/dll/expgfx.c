@@ -33,6 +33,7 @@
 #include "main/dll/viewfinder.h"
 #include "main/dll/dll_000B_dll0b.h"
 #include "track/intersect_api.h"
+#include "main/lightmap.h"
 
 int lbl_803DD278;
 int lbl_803DD274;
@@ -157,7 +158,6 @@ extern const f32 lbl_803DF404;
 extern const f32 lbl_803DF408;
 extern const f32 lbl_803DF40C;
 extern const f32 gExpgfxU16ToUnitScale;
-extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void setupReflectionIndirectTev(u32 flag);
 extern void fn_80079180(void);
 #define setupAlphaTextureTev fn_80079180
