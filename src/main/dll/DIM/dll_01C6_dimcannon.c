@@ -79,9 +79,9 @@ typedef struct DimcannonState
     u8 pad0[0x7 - 0x0];
     u8 unk7;
     u8 pad8[0x9 - 0x8];
-    s8 unk9;
-    s8 unkA;
-    s8 unkB;
+    s8 rotZRate;
+    s8 rotYRate;
+    s8 rotXRate;
     u8 padC[0x10 - 0xC];
 } DimcannonState;
 #define DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED 0x13
@@ -492,9 +492,9 @@ void DIMCannon_init(int* obj, int* arg)
             *(u32*)&((ObjHitsPriorityState*)p)->secondaryRadiusY |= 0x8000LL;
         }
         state = ((GameObject*)obj)->extra;
-        ((DimcannonState*)state)->unk9 = randomGetRange(-0x64, 0x64);
-        ((DimcannonState*)state)->unkA = randomGetRange(-0x64, 0x64);
-        ((DimcannonState*)state)->unkB = randomGetRange(-0x64, 0x64);
+        ((DimcannonState*)state)->rotZRate = randomGetRange(-0x64, 0x64);
+        ((DimcannonState*)state)->rotYRate = randomGetRange(-0x64, 0x64);
+        ((DimcannonState*)state)->rotXRate = randomGetRange(-0x64, 0x64);
         ((DimcannonState*)state)->unk7 = 1;
         p = *(int**)&((GameObject*)obj)->anim.hitReactState;
         if (p != 0)
