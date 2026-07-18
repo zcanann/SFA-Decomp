@@ -882,7 +882,9 @@ void errDisplayInstallHandlers(void)
     OSCreateThread(gErrDisplayThread, errDisplayThreadMain, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
 }
 
-void reportAllocFail(void)
+void reportAllocFail(int region0SizeKb, int region0FreeKb, int region1SizeKb, int region1FreeKb, int region2SizeKb,
+                     int region2FreeKb, int memoryState, int tickCount, int requestedSize, int largestFree0,
+                     int largestFree1)
 {
 }
 void errDisplayThreadMain(void)

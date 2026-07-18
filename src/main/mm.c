@@ -1,6 +1,7 @@
 #include "dolphin/os/OSReport.h"
 #include "dolphin/os.h"
 #include "ghidra_import.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/dll/savegame.h"
 #include "main/attract_movie_api.h"
 #include "dolphin/os/OSCache.h"
@@ -300,7 +301,6 @@ extern int lbl_803DCC7C;
 extern char sMmFreeMemoryUsageCorruptedError[];
 
 extern void heapFree(int region, int slotIdx);
-extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);
 
 int roundUpTo4(int x)
 {
