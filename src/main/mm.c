@@ -83,11 +83,6 @@ extern char sMemStatsFormat[];
 extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
 extern char sMmMemoryStoreMessageBlock[];
 
-void mmFreeDeferred(void* p);
-int testAndSet_onlyUseHeaps1and2(int v);
-void mmFree(void* p);
-void* mmAlloc(int size, int type, int flag);
-
 void memcpyToCache(void* dst, void* src, u32 count)
 {
     if (gAttractMovieState != 4 && gAttractMovieState != 0)
