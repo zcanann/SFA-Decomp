@@ -24,62 +24,61 @@ int AttractMovie_AssignBuffers(void* movieOrReadBuffer, void* yTextureBuffer, vo
     u32 i;
 
     player = &lbl_803A5D60;
-    if (player->isOpen == 0)
-        return 0;
-    if (player->state != 0)
-        return 0;
-
-    if (player->isOnMemory != 0)
+    if (player->isOpen != 0 && player->state == 0)
     {
-        player->movieData = movieOrReadBuffer;
-        curr = (u8*)movieOrReadBuffer + player->header.mMovieDataSize;
-    }
-    else
-    {
-        curr = movieOrReadBuffer;
-        for (i = 0; i < 10; i++)
+        if (player->isOnMemory != 0)
         {
-            player->readBuffer[i].ptr = curr;
-            frameBufferSize = ALIGN_NEXT_32(player->header.mBufferSize);
-            curr += frameBufferSize;
+            player->movieData = movieOrReadBuffer;
+            curr = (u8*)movieOrReadBuffer + player->header.mMovieDataSize;
         }
-    }
-
-    player = &lbl_803A5D60;
-    yTextureSize = ALIGN_NEXT_32(player->videoInfo.xSize * player->videoInfo.ySize);
-    uvTextureSize = ALIGN_NEXT_32((player->videoInfo.xSize * player->videoInfo.ySize) >> 2);
-    for (i = 0; i < 3; i++)
-    {
-        player->textureSet[i].yTexture = yTextureBuffer;
-        DCInvalidateRange(curr, yTextureSize);
-        player->textureSet[i].uTexture = uTextureBuffer;
-        DCInvalidateRange(curr, uvTextureSize);
-        player->textureSet[i].vTexture = vTextureBuffer;
-        DCInvalidateRange(curr, uvTextureSize);
-        curr += uvTextureSize;
-    }
-
-    player = &lbl_803A5D60;
-    if (player->audioExists != 0)
-    {
-        player->audioBuffer[0].buffer = audioBuffer;
-        player->audioBuffer[0].curPtr = audioBuffer;
-        player->audioBuffer[0].validSample = 0;
+        else
         {
-            u32 audioBufferSize = ALIGN_NEXT_32(player->header.mAudioMaxSamples * 4);
-            u8* nextAudioBuffer = (u8*)audioBuffer + audioBufferSize;
-            player->audioBuffer[1].buffer = (s16*)nextAudioBuffer;
-            player->audioBuffer[1].curPtr = (s16*)nextAudioBuffer;
-            player->audioBuffer[1].validSample = 0;
-            nextAudioBuffer = nextAudioBuffer + audioBufferSize;
-            player->audioBuffer[2].buffer = (s16*)nextAudioBuffer;
-            player->audioBuffer[2].curPtr = (s16*)nextAudioBuffer;
-            player->audioBuffer[2].validSample = 0;
+            curr = movieOrReadBuffer;
+            for (i = 0; i < 10; i++)
+            {
+                player->readBuffer[i].ptr = curr;
+                frameBufferSize = ALIGN_NEXT_32(player->header.mBufferSize);
+                curr += frameBufferSize;
+            }
         }
-    }
 
-    lbl_803A5D60.thpWorkArea = thpWorkBuffer;
-    return 1;
+        player = &lbl_803A5D60;
+        yTextureSize = ALIGN_NEXT_32(player->videoInfo.xSize * player->videoInfo.ySize);
+        uvTextureSize = ALIGN_NEXT_32((player->videoInfo.xSize * player->videoInfo.ySize) >> 2);
+        for (i = 0; i < 3; i++)
+        {
+            player->textureSet[i].yTexture = yTextureBuffer;
+            DCInvalidateRange(curr, yTextureSize);
+            player->textureSet[i].uTexture = uTextureBuffer;
+            DCInvalidateRange(curr, uvTextureSize);
+            player->textureSet[i].vTexture = vTextureBuffer;
+            DCInvalidateRange(curr, uvTextureSize);
+            curr += uvTextureSize;
+        }
+
+        player = &lbl_803A5D60;
+        if (player->audioExists != 0)
+        {
+            player->audioBuffer[0].buffer = audioBuffer;
+            player->audioBuffer[0].curPtr = audioBuffer;
+            player->audioBuffer[0].validSample = 0;
+            {
+                u32 audioBufferSize = ALIGN_NEXT_32(player->header.mAudioMaxSamples * 4);
+                u8* nextAudioBuffer = (u8*)audioBuffer + audioBufferSize;
+                player->audioBuffer[1].buffer = (s16*)nextAudioBuffer;
+                player->audioBuffer[1].curPtr = (s16*)nextAudioBuffer;
+                player->audioBuffer[1].validSample = 0;
+                nextAudioBuffer = nextAudioBuffer + audioBufferSize;
+                player->audioBuffer[2].buffer = (s16*)nextAudioBuffer;
+                player->audioBuffer[2].curPtr = (s16*)nextAudioBuffer;
+                player->audioBuffer[2].validSample = 0;
+            }
+        }
+
+        lbl_803A5D60.thpWorkArea = thpWorkBuffer;
+        return 1;
+    }
+    return 0;
 }
 
 void AttractMovie_GetBufferSizes(u32* movieOrReadBufferSize, int* yTextureBufferSize, int* uTextureBufferSize,
