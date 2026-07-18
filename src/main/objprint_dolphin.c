@@ -52,7 +52,7 @@
 ModelLightStruct* lbl_803DCC64;
 u8 lbl_803DCC60;
 s32 lbl_803DCC5C;
-u8 gObjOverrideColor;
+u8 gObjOverrideColor[3];
 u32 gObjCurChanColor;
 f32 gObjShadowDist;
 u8 gObjShadowNear;
@@ -1521,9 +1521,9 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
     {
         if (gObjOverrideColorPending != 0)
         {
-            color[0] = gObjOverrideColor;
-            color[1] = (&gObjOverrideColor)[1];
-            color[2] = (&gObjOverrideColor)[2];
+            color[0] = gObjOverrideColor[0];
+            color[1] = gObjOverrideColor[1];
+            color[2] = gObjOverrideColor[2];
             gObjOverrideColorPending = 0;
         }
         else
@@ -2067,9 +2067,9 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     }
     if (gObjOverrideColorPending != 0)
     {
-        *(u8*)&gObjCurChanColor = gObjOverrideColor;
-        ((u8*)&gObjCurChanColor)[1] = (&gObjOverrideColor)[1];
-        ((u8*)&gObjCurChanColor)[2] = (&gObjOverrideColor)[2];
+        *(u8*)&gObjCurChanColor = gObjOverrideColor[0];
+        ((u8*)&gObjCurChanColor)[1] = gObjOverrideColor[1];
+        ((u8*)&gObjCurChanColor)[2] = gObjOverrideColor[2];
         gObjOverrideColorPending = 0;
     }
     else
@@ -2446,9 +2446,9 @@ void objRenderFn_80041018(GameObject* obj)
 void fn_800412B8(u8 r, u8 g, u8 b)
 {
     gObjOverrideColorPending = 1;
-    gObjOverrideColor = r;
-    (&gObjOverrideColor)[1] = g;
-    (&gObjOverrideColor)[2] = b;
+    gObjOverrideColor[0] = r;
+    gObjOverrideColor[1] = g;
+    gObjOverrideColor[2] = b;
 }
 
 extern u32 lbl_803DCC74;
