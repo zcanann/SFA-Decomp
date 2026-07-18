@@ -38,6 +38,7 @@
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/savegame_env_api.h"
 #include "main/sky.h"
+#include "track/intersect_api.h"
 
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
@@ -112,7 +113,6 @@ extern void screenImageDraw(void);
 extern void lightningRenderActive(void);
 extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
-extern void doBlurFilter(f32 a, f32 b, f32 c, u8 d, u8 e);
 extern void drawViewFinderAperture(f32 a, f32 b, int c, int d);
 extern int mapRectFn_8005a728(int row, int col, u8* block);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
@@ -773,7 +773,6 @@ void renderSceneGeometry(int* p1, s8* order)
 }
 extern u8 bEnableMotionBlur;
 extern f32 lbl_803DB62C;
-extern void renderMotionBlur(f32 v);
 
 extern u8 bEnableBlurFilter;
 extern f32 lbl_803DCE50;
@@ -790,7 +789,6 @@ extern void doDistortionFilter(void* buf, f32 a2, void* color, f32 a1);
 extern u8 bEnableMonochromeFilter;
 extern void doColorFilter(void* color);
 extern u8 bEnableSpiritVision;
-extern void doSpiritVisionFilter(void);
 extern u8 bEnableViewFinderHud;
 extern f32 lbl_803DEC14;
 extern s32 bEnableColorFilter;
@@ -1338,9 +1336,6 @@ void _textSetColor(int unused, int a, int b, int c, int d)
     _gxSetTevColor1(a, b, c, d);
 }
 
-extern void gxTextureSetupFn_8007cf7c(void);
-
-
 void setTextColor(int unused, int a, int b, int c, int d)
 {
     _gxSetTevColor2(a, b, c, d);
@@ -1351,7 +1346,6 @@ void doNothing_8005D148(void)
 }
 
 
-extern void drawFn_8006f500(void);
 void objDrawFn_8005da48(int* obj);
 void lightmap_sortTransparentDrawQueue(void);
 

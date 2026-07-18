@@ -33,6 +33,7 @@
 #include "main/object_descriptor.h"
 #include "main/loaded_file_flags.h"
 #include "track/intersect_screen_api.h"
+#include "track/intersect_api.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 
 typedef struct SkyColorByte
@@ -224,12 +225,9 @@ extern void PSVECScale(f32 scale, f32* src, f32* dst);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
-extern void fogFn_80070404(f32 a, f32 b);
 extern void GXSetTexCoordGen2(int coord, int func, int src, int mtx, int normalize, int pttexmtx);
-extern void fn_8007880C(void);
 extern void fn_80069B1C(void* a, void* b, f32 t, void* c);
 extern void fn_8005CECC(int mode);
-extern void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z);
 extern void* memset(void* dst, int c, int n);
 int getEnvFxBit2BA(void)
 {

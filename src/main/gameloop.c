@@ -72,6 +72,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/voxmaps.h"
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
 #include "main/dll/dll_BC.h"
+#include "track/intersect_api.h"
 
 f32 gGameLoopResetFadeOutTimer;
 void* lbl_803DCAFC;
@@ -1114,8 +1115,6 @@ void cutsceneExit(void)
 void Obj_UpdateAllObjects(u8 flags);
 
 extern void updateEnvironment(int a);
-extern void timeFn_8006f400(f32 dt);
-extern void resetSomeGxFlags(void);
 extern void sceneRender(int a, int b, int c, int d, int e, int f);
 extern f32 lbl_803DE7B8;
 
@@ -1323,7 +1322,6 @@ void gameUpdate(void)
 
 
 extern void debugPrintDraw(int a);
-extern void drawRect(f32 sx, f32 sy, int x, int y);
 
 void gameLoop(void)
 {

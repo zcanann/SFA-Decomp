@@ -20,6 +20,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/dll/dll_0015_save_settings.h"
+#include "track/intersect_api.h"
 
 struct JapaneseDiscStatusResource;
 struct EnglishDiscStatusResource;
@@ -351,7 +352,6 @@ extern Texture* gGameTextBoxEdgeTexture;
 extern u32 lbl_80339C40[];
 
 extern void _textSetColor(int unused, int a, int b, int c, int d);
-extern void textRenderSetup(void);
 extern void textRenderSetupFn_800795e8(void);
 extern void textBlendSetupFn_80078a7c(void);
 extern void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht);

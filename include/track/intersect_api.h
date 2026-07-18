@@ -26,5 +26,17 @@ void fn_8007CAF4(void);
 void fn_8007D670(void);
 void fn_800788DC(void);
 void fn_800790AC(void);
+void timeFn_8006f400(f32 step);
+void drawFn_8006f500(void);
+void resetSomeGxFlags(void);
+void fogFn_80070404(f32 a, f32 b);
+void doSpiritVisionFilter(void);
+void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z);
+void drawRect(f32 sx, f32 sy, int x, int y);
+void fn_8007880C(void);
+void textRenderSetup(void);
+void renderMotionBlur(f32 alpha);
+void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5);
+void gxTextureSetupFn_8007cf7c(void);
 
 #endif /* TRACK_INTERSECT_API_H_ */
