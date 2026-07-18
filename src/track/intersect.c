@@ -3142,17 +3142,21 @@ void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 
     Camera_RebuildProjectionMatrix();
 }
 
-void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, int u_offset,
+void drawPartialTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int width, int height, int u_offset,
                         int v_offset)
 {
     GXColor c;
+    s32 alpha;
     s32 w;
+    u16 drawScale;
     f32 u1, u0, v0, v1;
 
     c.r = 0xFF;
     c.g = 0xFF;
     c.b = 0xFF;
-    c.a = (u8)(((s32)alpha_mod * gHudTintAlpha) >> 8);
+    alpha = (u8)alpha_mod;
+    alpha *= gHudTintAlpha;
+    c.a = (u8)(alpha >> 8);
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -3201,7 +3205,8 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    w = (s32)(((u32)(width << 2) * scale) >> 8);
+    drawScale = scale;
+    w = (s32)(((u32)(width << 2) * drawScale) >> 8);
     sx = hudScale * sx;
     sy = hudScale * sy;
     u0 = (f32)(u32)u_offset / (f32)((u16*)obj)[5];
@@ -3227,14 +3232,14 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = (s16)(sx + (f32)(u32)w);
-    GXWGFifo.s16 = (s16)(sy + (f32)(u32)(((u32)(height << 2) * scale) >> 8));
+    GXWGFifo.s16 = (s16)(sy + (f32)(u32)(((u32)(height << 2) * drawScale) >> 8));
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v1;
 
     GXWGFifo.u8 = 0x3C;
     GXWGFifo.s16 = sx;
-    GXWGFifo.s16 = (s16)(sy + (f32)(u32)(((u32)(height << 2) * scale) >> 8));
+    GXWGFifo.s16 = (s16)(sy + (f32)(u32)(((u32)(height << 2) * drawScale) >> 8));
     GXWGFifo.s16 = -8;
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v1;
