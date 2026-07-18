@@ -19,4 +19,6 @@ void gameTextFn_8001628c(int id, int x, int y, int* outMaxX, int* outMaxY, int* 
 #define gameTextMeasureS32 ((GameTextMeasureS32Fn)gameTextMeasureFn_800163c4)
 #define gameTextBoundsS32 ((GameTextBoundsS32Fn)gameTextFn_8001628c)
 
+char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH);
+
 #endif /* MAIN_GAMETEXT_API_H_ */

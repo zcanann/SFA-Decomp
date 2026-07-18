@@ -367,7 +367,6 @@ extern void OSLoadFont(void* buf, void* tmp);
 extern void OSGetFontWidth(u8* s, int* width);
 extern void OSGetFontTexel(u8* s, void* img, int pos, int stride, int* width);
 extern void gameTextShowStr(int str, int a, int b, int c);
-extern char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH);
 
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
 extern void translateToDinoLanguage(u8* str);

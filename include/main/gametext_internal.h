@@ -127,7 +127,6 @@ extern char sLanguageNameSpanish[];
 
 int getControlCharLen(u32 c);
 void gameTextDrawBox(GameTextDef* def, int box, TextSlot* slot);
-char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH);
 void textRenderStr(char* str, TextSlot* slot, f32 x, f32 y, f32 lineH, int flag);
 
 #endif /* MAIN_GAMETEXT_INTERNAL_H_ */
