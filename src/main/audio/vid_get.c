@@ -1,25 +1,26 @@
 #include "main/audio/vid_get.h"
+#include "main/audio/mcmd.h"
 
-extern u32* vidRoot;
+extern McmdVidListNode* vidRoot;
 
-u32* get_vidlist(u32 key)
+McmdVidListNode* get_vidlist(u32 id)
 {
-    u32* node;
+    McmdVidListNode* node;
     u32 value;
 
     node = vidRoot;
     while (node != NULL)
     {
-        value = node[2];
-        if (value == key)
+        value = node->id;
+        if (value == id)
         {
             return node;
         }
-        if (value > key)
+        if (value > id)
         {
             break;
         }
-        node = (u32*)node[0];
+        node = node->next;
     }
     return NULL;
 }

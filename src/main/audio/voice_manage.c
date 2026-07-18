@@ -3,6 +3,7 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_jobs.h"
 #include "main/audio/synth_config.h"
+#include "main/audio/vid_get.h"
 
 
 typedef struct VoiceListNode
@@ -22,7 +23,6 @@ extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
 extern u8 voiceListInsert;
 extern u8 voiceListRoot;
-extern u32 get_vidlist(u32 id);
 
 static u8 vidListNodes[0x800];
 static u8 midiKeySlots[0x80];
@@ -124,10 +124,10 @@ int voiceKillById(u32 id)
 
     if (gSynthInitialized != 0)
     {
-        u32 listEntry;
+        McmdVidListNode* listEntry;
         if ((id != SYNTH_INVALID_VOICE) && ((listEntry = get_vidlist(id)) != 0))
         {
-            id = *(u32*)(listEntry + 0xc);
+            id = listEntry->internalId;
         }
         else
         {

@@ -3,6 +3,8 @@
 
 #include "ghidra_import.h"
 
-u32 *get_vidlist(u32 key);
+typedef struct McmdVidListNode McmdVidListNode;
+
+McmdVidListNode* get_vidlist(u32 id);
 
 #endif /* MAIN_AUDIO_VID_GET_H_ */
