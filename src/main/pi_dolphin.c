@@ -4912,80 +4912,12 @@ void waitNextFrame(void)
     GXInvalidateTexAll();
 }
 
-int fn_8004AA24(int* ctx, int* ref)
-{
-    int* node;
-    int target;
-    target = ctx[4];
-    node = (int*)ref[0];
-    switch (((s8*)node)[0x19])
-    {
-    case 0x24:
-    {
-        u8 idx = ((u8*)ref)[0xc];
-        if ((idx & 0x80) == 0)
-        {
-            if (((u8*)node)[3] != 0)
-            {
-                return target == ((u8*)node)[3];
-            }
-            else
-            {
-                int* p;
-                int* arr;
-                int i;
-                arr = (int*)*(int*)((char*)ctx[0] + (idx << 4));
-                for (i = 0, p = arr; i < 4; i++)
-                {
-                    if ((u32)node[5] == *(u32*)((char*)p + 0x1c))
-                    {
-                        return target == ((u8*)arr)[i + 4];
-                    }
-                    p++;
-                }
-            }
-        }
-        return 0;
-    }
-    default:
-        return target == (int)node;
-    }
-}
 
 extern u8 lbl_803779A0[];
 
-void fn_8004AAD4(u8* arr, int size, int idx)
-{
-    u16* h = (u16*)arr;
-    int half;
-    u8* childptr;
-    u32 key = *(u32*)((int)arr + idx * 8);
-    u16 val = h[idx * 4 + 2];
-    int child;
-    u8* cp;
-    half = size >> 1;
-    while (idx <= half)
-    {
-        child = idx + idx;
-        if (child < size)
-        {
-            cp = arr + child * 8;
-            if (*(u32*)cp < *(u32*)(cp + 8))
-            {
-                child++;
-            }
-        }
-        childptr = arr + child * 8;
-        if (key >= *(u32*)childptr)
-            break;
-        *(u32*)(arr + idx * 8) = *(u32*)childptr;
-        *(u16*)(arr + idx * 8 + 4) = *(u16*)(childptr + 4);
-        idx = child;
-    }
-    *(u32*)((int)arr + idx * 8) = key;
-    h[idx * 4 + 2] = val;
-}
 
+int fn_8004AA24(int* ctx, int* ref);
+void fn_8004AAD4(u8* arr, int size, int idx);
 void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
 {
     PathSearch* search = (PathSearch*)q;
@@ -5348,6 +5280,78 @@ int fn_8004B218(void* q_, u32 n_)
         n--;
     }
     return result;
+}
+
+int fn_8004AA24(int* ctx, int* ref)
+{
+    int* node;
+    int target;
+    target = ctx[4];
+    node = (int*)ref[0];
+    switch (((s8*)node)[0x19])
+    {
+    case 0x24:
+    {
+        u8 idx = ((u8*)ref)[0xc];
+        if ((idx & 0x80) == 0)
+        {
+            if (((u8*)node)[3] != 0)
+            {
+                return target == ((u8*)node)[3];
+            }
+            else
+            {
+                int* p;
+                int* arr;
+                int i;
+                arr = (int*)*(int*)((char*)ctx[0] + (idx << 4));
+                for (i = 0, p = arr; i < 4; i++)
+                {
+                    if ((u32)node[5] == *(u32*)((char*)p + 0x1c))
+                    {
+                        return target == ((u8*)arr)[i + 4];
+                    }
+                    p++;
+                }
+            }
+        }
+        return 0;
+    }
+    default:
+        return target == (int)node;
+    }
+}
+
+void fn_8004AAD4(u8* arr, int size, int idx)
+{
+    u16* h = (u16*)arr;
+    int half;
+    u8* childptr;
+    u32 key = *(u32*)((int)arr + idx * 8);
+    u16 val = h[idx * 4 + 2];
+    int child;
+    u8* cp;
+    half = size >> 1;
+    while (idx <= half)
+    {
+        child = idx + idx;
+        if (child < size)
+        {
+            cp = arr + child * 8;
+            if (*(u32*)cp < *(u32*)(cp + 8))
+            {
+                child++;
+            }
+        }
+        childptr = arr + child * 8;
+        if (key >= *(u32*)childptr)
+            break;
+        *(u32*)(arr + idx * 8) = *(u32*)childptr;
+        *(u16*)(arr + idx * 8 + 4) = *(u16*)(childptr + 4);
+        idx = child;
+    }
+    *(u32*)((int)arr + idx * 8) = key;
+    h[idx * 4 + 2] = val;
 }
 
 int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u32 routeFlags)
