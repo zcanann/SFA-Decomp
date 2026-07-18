@@ -1116,7 +1116,6 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
     }
     return 1;
 }
-#pragma dont_inline on
 void voxmaps_worldToGrid(f32* in, s16* out)
 {
     f32 sx, sy, sz;
@@ -1147,7 +1146,6 @@ void voxmaps_worldToGrid(f32* in, s16* out)
     out[1] = iy / 10;
     out[2] = iz / 10;
 }
-#pragma dont_inline reset
 
 void voxmaps_gridToWorld(f32* out, s16* grid)
 {
@@ -1163,7 +1161,6 @@ void voxmaps_gridToWorld(f32* out, s16* grid)
         Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2], gVoxMapsTransformObj);
     }
 }
-#pragma dont_inline on
 /* Rank the occupancy bitmap: count set bits in the (ySlot) row up to the cell at
  * (tileX, tileZ), then index nodeBase by that running count. The per-row base count
  * is packed into the header (low/high nibble depending on which 8-tile half tileZ is
@@ -1211,7 +1208,6 @@ int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int 
     }
     return nodeBase + count;
 }
-#pragma dont_inline reset
 #pragma opt_propagation off
 #pragma opt_strength_reduction off
 int* voxmaps_updateActiveMap(VoxPos* obj)

@@ -648,8 +648,6 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 ((GameObject*)obj)->anim.velocityZ * timeDelta);
     }
 }
-#pragma peephole off
-#pragma scheduling off
 
 void fn_8014B878(int* obj, int* sub)
 {
@@ -783,7 +781,6 @@ void fn_8014B878(int* obj, int* sub)
         ((TrickyState*)sub)->flags2DC |= 0x800LL;
     }
 }
-#pragma fp_contract off
 void baddieTurnTowardTarget(int* node, int* sub)
 {
     GameObject* target = ((TrickyState*)sub)->actionTargetObj;
@@ -847,7 +844,6 @@ void baddieTurnTowardTarget(int* node, int* sub)
         }
     }
 }
-#pragma fp_contract reset
 
 int enemy_getExtraSize(void);
 int enemy_getObjectTypeId(void);
@@ -1197,16 +1193,12 @@ void fn_8014C63C(GameObject* obj)
     int* state = obj->extra;
     ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void fn_8014C66C(GameObject* obj, GameObject* target)
 {
     ((EnemyState*)obj->extra)->trackedObj = target;
 }
 #pragma opt_common_subs off
-#pragma peephole off
-#pragma scheduling off
 void fn_8014C678(int* obj1, int* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 flag)
 {
     f32 mag1, mag2, magcross, finalScale;
@@ -1465,7 +1457,6 @@ void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledR
         ((GameObject*)node)->anim.rotY = newVal2;
     }
 }
-#pragma fp_contract on
 
 void fn_8014CF7C(int* node, int unused, u16 divisor, int angleBias, f32 fa, f32 fb)
 {
@@ -1488,7 +1479,6 @@ void fn_8014CF7C(int* node, int unused, u16 divisor, int angleBias, f32 fa, f32 
     ((GameObject*)node)->anim.rotX = newVal;
 }
 
-#pragma fp_contract reset
 
 void fn_8014D08C(GameObject* obj, int state, f32 rateScale, int moveId, int moveControlFlags, u8 stateByte)
 {
@@ -1520,8 +1510,6 @@ void baddieAfterUpdateBonesCb(GameObject* obj, int* bones)
     }
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 int enemy_getExtraSize(void)
 {
@@ -1555,9 +1543,6 @@ typedef struct EnemyPlacement
     u16 unk34;
     u8 pad36[0x38 - 0x36];
 } EnemyPlacement;
-#pragma fp_contract on
-#pragma peephole off
-#pragma scheduling off
 
 void enemy_free(GameObject* obj, int flag)
 {

@@ -101,8 +101,6 @@ void dll_28B_update(GameObject* obj)
                           gWcEarthWalkerIdleTimerThreshold, &ox, &oy, &oz);
     doNothing_80062A50((int)obj, ox, oy, oz);
 }
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
 
 void dll_28B_init(GameObject* obj)
 {

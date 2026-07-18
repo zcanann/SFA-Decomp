@@ -1058,7 +1058,6 @@ void pauseMenuFn_8012b77c(void);
 void pauseMenuRunSubmenu(int p1);
 void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q);
 
-#pragma opt_propagation off
 void gameUiLoadResources(void)
 {
     char* base = lbl_803A87F0;
@@ -1167,8 +1166,6 @@ void gameUiLoadResources(void)
     }
 }
 
-#pragma opt_propagation reset
-#pragma scheduling off
 void cutSceneFn_8011dd30(void)
 {
     cutsceneFadeInOut(1);
@@ -1644,9 +1641,6 @@ void gameUiResetMenuState(void)
     lbl_803DD792 = 0;
 }
 
-#pragma peephole on
-#pragma scheduling reset
-#pragma scheduling on
 u8 pauseMenuGetState(void)
 {
     return pauseMenuState;
@@ -1656,9 +1650,6 @@ void fn_8011F34C(u8 x)
     lbl_803DD7B3 = x;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
 
 void arwingHudSetVisible(u32 x)
 {
@@ -1675,15 +1666,10 @@ void arwingHudSetVisible(u32 x)
     }
     arwingHudAlpha = 0xff;
 }
-#pragma peephole on
-#pragma scheduling reset
-#pragma scheduling on
 void hudFn_8011f38c(u8 x)
 {
     lbl_803DD792 = x;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void resetYbutton(void)
 {
@@ -1691,7 +1677,6 @@ void resetYbutton(void)
     yButtonItemTextureId = -1;
 }
 
-#pragma scheduling on
 u16 getYButtonItem(s16* out)
 {
     s32 t;
@@ -1704,7 +1689,6 @@ u16 getYButtonItem(s16* out)
 }
 
 /* GameUI_airMeterSetShutdown: set bit 7 of (*p)+0x44 if p non-null */
-#pragma scheduling reset
 
 void setBButtonIcon(int icon)
 {
@@ -1725,7 +1709,6 @@ void setAButtonIcon(int icon)
         aButtonIcon = icon;
     }
 }
-#pragma scheduling off
 
 void fearTestMeterDraw(void)
 {
@@ -1778,27 +1761,21 @@ void fearTestMeterDraw(void)
                 (hgt + 0x32) - lbl_803DBAEE, col);
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
-#pragma peephole on
-#pragma scheduling reset
-#pragma scheduling on
 
 void fn_8011F6D4(u32 x)
 {
     gFearTestMeterFadeIn = (s16)(u8)x;
 }
-#pragma peephole reset
 void fearTestMeterSetRange(u8 a, u8 b, s16 c)
 {
     fearTestMeterOuterHalfWidth = a;
     fearTestMeterInnerHalfWidth = b;
     fearTestMeterMarkerX = c;
 }
-#pragma peephole on
 void hudFn_8011f6f0(u8 x)
 {
     gTrickyHudShowNearestInfo = x;
 }
-#pragma peephole reset
 
 void GameUI_airMeterSetField24(float v)
 {
@@ -1807,8 +1784,6 @@ void GameUI_airMeterSetField24(float v)
         return;
     *(f32*)((char*)p + 0x24) = v;
 }
-#pragma scheduling reset
-#pragma scheduling off
 void GameUI_airMeterSetShutdown(void)
 {
     AirMeterFlags* p = (AirMeterFlags*)airMeter;
@@ -2313,16 +2288,10 @@ void drawViewFinderHud(void)
 
 #pragma opt_common_subs reset
 #pragma opt_propagation reset
-#pragma peephole on
-#pragma scheduling reset
-#pragma scheduling on
 void GameUI_func0E(u8 x)
 {
     lbl_803DBA88 = x;
 }
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
 
 void hudDrawTimedElement(int unused, void* element)
 {
@@ -6242,7 +6211,6 @@ void perspectiveFn_80129db4(void)
 }
 
 /* Pause menu master state machine. */
-#pragma opt_common_subs on
 #pragma opt_dead_assignments off
 void pauseMenuFn_80129ee0(void)
 {
@@ -7059,7 +7027,6 @@ void pauseMenuFn_80129ee0(void)
         }
     }
 }
-#pragma opt_common_subs reset
 #pragma opt_dead_assignments reset
 
 /* Pause-menu grid cursor stepper. Reads the

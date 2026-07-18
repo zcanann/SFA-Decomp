@@ -75,8 +75,6 @@ typedef struct MmpMoonrockPlacement
 
 
 
-#pragma peephole off
-#pragma scheduling off
 
 
 #pragma dont_inline on
@@ -399,8 +397,6 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
 }
 
 
-#pragma peephole on
-#pragma scheduling on
 void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z)
 {
     (obj)->anim.localPosX = x;
@@ -410,8 +406,6 @@ void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z)
 }
 
 
-#pragma peephole off
-#pragma scheduling off
 
 void fn_801A80F0(GameObject* obj, u8 flag)
 {
@@ -428,8 +422,6 @@ void fn_801A80F0(GameObject* obj, u8 flag)
     }
 }
 
-#pragma peephole on
-#pragma scheduling on
 
 int mmp_moonrock_getExtraSize(void)
 {
@@ -440,7 +432,6 @@ int mmp_moonrock_getObjectTypeId(void)
 {
     return 0x0;
 }
-#pragma scheduling off
 void mmp_moonrock_free(int obj)
 {
     ObjGroup_RemoveObject((u32)obj, MMPMOONROCK_OBJGROUP);
@@ -456,13 +447,10 @@ void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
     }
 }
-#pragma scheduling on
 
 void mmp_moonrock_hitDetect(void)
 {
 }
-#pragma peephole off
-#pragma scheduling off
 
 void mmp_moonrock_update(GameObject* obj)
 {
@@ -687,8 +675,6 @@ void mmp_moonrock_init(GameObject* obj, int param2)
     ObjHits_DisableObject((int)obj);
     fn_801A7D74(obj, 1, 2);
 }
-#pragma peephole on
-#pragma scheduling on
 
 void mmp_moonrock_release(void)
 {

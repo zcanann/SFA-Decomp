@@ -226,10 +226,7 @@ void bossdrakor_updateHeadTracking(GameObject* obj, int state)
         }
     }
 }
-#pragma dont_inline off
-#pragma opt_propagation reset
 
-#pragma dont_inline on
 int bossdrakor_chooseNextMove(GameObject* obj, f32* speedOut)
 {
     int state;
@@ -288,7 +285,6 @@ int bossdrakor_chooseNextMove(GameObject* obj, f32* speedOut)
     *speedOut = gBossDrakorMoveSpeedTable[idx];
     return v;
 }
-#pragma dont_inline off
 
 
 
@@ -541,13 +537,11 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         break;
     }
 }
-#pragma opt_common_subs reset
 
 int bossdrakor_getExtraSize(void)
 {
     return 0x1a4;
 }
-#pragma opt_common_subs off
 
 void bossdrakor_free(GameObject* obj)
 {
@@ -663,7 +657,6 @@ void bossdrakor_hitDetect(GameObject* obj)
     ((BossDrakorState*)inner)->hitSfxCooldown -= timeDelta;
     ((BossDrakorState*)inner)->hurtSfxCooldown -= timeDelta;
 }
-#pragma opt_propagation off
 void bossdrakor_update(int obj)
 {
     int state;
@@ -947,7 +940,6 @@ void bossdrakor_update(int obj)
         bossdrakor_updateHeadTracking((GameObject*)(obj), state);
     }
 }
-#pragma opt_propagation reset
 void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init)
 {
     int inner = *(int*)&(obj)->extra;
@@ -984,7 +976,6 @@ void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init)
     Music_Trigger(MUSICTRIG_citytombs, 1);
     ((BossDrakorState*)inner)->lightObj = 0;
 }
-#pragma opt_common_subs reset
 
 /* groups owned by other DLLs, queried here */
 

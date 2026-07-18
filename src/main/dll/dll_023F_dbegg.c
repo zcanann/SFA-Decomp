@@ -175,14 +175,12 @@ int dbegg_setLaunchVelocity(GameObject* obj, f32* v)
     return 0;
 }
 
-#pragma scheduling on
 int dbegg_setScale(GameObject* obj)
 {
     u8* inner = obj->extra;
     return ((DbEggState*)inner)->mode != DBEGG_MODE_RELEASED ? 1 : 0;
 }
 
-#pragma scheduling off
 #pragma peephole off
 #pragma optimization_level 2
 void dbegg_processMessages(GameObject* obj)
@@ -257,8 +255,6 @@ void dbegg_processMessages(GameObject* obj)
 }
 #pragma optimization_level reset
 
-#pragma scheduling off
-#pragma peephole off
 void dbegg_setupFromDef(GameObject* obj, u8* state)
 {
     AnimBehaviorConfig* config;
@@ -322,7 +318,6 @@ void dbegg_setupFromDef(GameObject* obj, u8* state)
 
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
-#pragma peephole off
 int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
 {
     f32 water;
@@ -451,7 +446,6 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
 #pragma opt_loop_invariants reset
 #pragma opt_common_subs reset
 
-#pragma peephole on
 void fn_801FE774(int obj, f32* vel)
 {
     f32 limit;
@@ -510,7 +504,6 @@ void fn_801FE774(int obj, f32* vel)
     }
 }
 
-#pragma peephole off
 
 int dbegg_getExtraSize(void)
 {
@@ -526,7 +519,6 @@ void dbegg_free(int obj)
     ObjGroup_RemoveObject(obj, DBEGG_OBJGROUP);
 }
 
-#pragma peephole off
 void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     u8* inner = ((GameObject*)obj)->extra;
@@ -540,7 +532,6 @@ void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-#pragma peephole on
 void dbegg_hitDetect(GameObject* obj)
 {
     u8* state;
@@ -573,7 +564,6 @@ void dbegg_hitDetect(GameObject* obj)
     (obj)->anim.previousLocalPosZ = (obj)->anim.localPosZ;
 }
 
-#pragma peephole off
 
 typedef struct DbEggIntPair
 {

@@ -52,8 +52,6 @@ int InfoPoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int InfoPoint_getExtraSize(void)
 {
@@ -68,23 +66,17 @@ void InfoPoint_free(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void InfoPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void InfoPoint_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void InfoPoint_update(GameObject* obj)
 {
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
@@ -114,8 +106,6 @@ void InfoPoint_init(int* obj, u8* def)
     state->flag = 0;
     ((GameObject*)obj)->objectFlags |= INFOPOINT_OBJFLAG_HITDETECT_DISABLED;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void InfoPoint_release(void)
 {

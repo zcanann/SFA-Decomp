@@ -65,16 +65,12 @@ void arwarwinggu_setActiveVisible(GameObject* obj, u8 active, u8 visible)
     }
 }
 
-#pragma scheduling on
-#pragma peephole on
 void arwarwinggu_setTextureFrame(GameObject* obj, int textureFrame)
 {
     ArwingGuState* state = obj->extra;
     state->texture.textureFrame = textureFrame;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void arwarwinggu_applyTextureFrame(GameObject* obj)
 {
     ObjModel* model;
@@ -87,8 +83,6 @@ void arwarwinggu_applyTextureFrame(GameObject* obj)
     fn_800541A4Promoted(anim, (u16)state->texture.textureFrame);
     textureAnimFn_80053f2c(anim, &state->texture.textureAnimFlags, &texture->textureId);
 }
-#pragma scheduling on
-#pragma peephole on
 
 int ARWArwingGu_getExtraSize(GameObject* obj)
 {
@@ -123,8 +117,6 @@ void ARWArwingGu_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void ARWArwingGu_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim = &(obj)->anim;

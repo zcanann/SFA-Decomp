@@ -102,7 +102,6 @@ void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* s
         fn_80231028((GameObject*)(newObj), setup->projectileSpeed);
     }
 }
-#pragma dont_inline reset
 
 int arwgenerato_getExtraSize(void)
 {

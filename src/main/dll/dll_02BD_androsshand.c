@@ -465,8 +465,6 @@ void AndrossHand_update(int obj)
     ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta, 0);
 }
 
-#pragma opt_common_subs reset
-#pragma dont_inline reset
 
 void AndrossHand_init(int obj, AndrossHandSetup* setup)
 {

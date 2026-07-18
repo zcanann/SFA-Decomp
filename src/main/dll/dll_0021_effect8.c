@@ -478,8 +478,6 @@ void Effect8_func05(void)
     gModgfxSineWaveB = mathSinf(3.1415927f * (f32)(s16)gModgfxSinePhaseB / 32768.0f);
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 void Effect8_func03_nop(void)
 {
 }

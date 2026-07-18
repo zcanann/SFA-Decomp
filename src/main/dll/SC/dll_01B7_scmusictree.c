@@ -207,8 +207,6 @@ void sc_musictree_handleHitObject(GameObject* obj, int extra, int effectType)
     }
     state->animSpeed = 0.0225f;
 }
-#pragma opt_common_subs reset
-#pragma dont_inline reset
 
 int sc_musictree_getExtraSize(void) { return 0x50; }
 int sc_musictree_getObjectTypeId(void) { return 0x0; }
@@ -246,7 +244,6 @@ void sc_musictree_hitDetect(void)
 {
 }
 
-#pragma opt_common_subs off
 void sc_musictree_update(GameObject* obj)
 {
     int inner = *(int*)&obj->extra;
@@ -397,7 +394,6 @@ end:
         ((ScMusictreeState*)inner)->previousDistance = distU16;
     }
 }
-#pragma opt_common_subs reset
 
 void sc_musictree_init(GameObject* obj, SCMusicTreeSetup* setup)
 {

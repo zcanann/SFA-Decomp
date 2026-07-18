@@ -125,7 +125,6 @@ extern f32 lbl_803E2504;
 
 int trickyGuardFindBaddieTarget(TrickyRuntime* state);
 
-#pragma scheduling on
 static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
 {
     u32 target = (u32)trickyState->guardTarget;
@@ -145,10 +144,8 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
     return 0;
 }
 
-#pragma scheduling off
 #pragma opt_propagation off
 #pragma opt_common_subs off
-#pragma opt_strength_reduction on
 #pragma opt_lifetimes off
 void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
 {
@@ -409,7 +406,6 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         break;
     }
 }
-#pragma opt_strength_reduction reset
 #pragma opt_lifetimes reset
 #pragma opt_common_subs reset
 #pragma opt_propagation reset

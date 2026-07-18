@@ -63,7 +63,6 @@ int fn_801A27B8(GameObject* obj, int id)
     }
     return 1;
 }
-#pragma dont_inline reset
 
 int blasted_getExtraSize(void)
 {
@@ -177,7 +176,6 @@ void blasted_update(GameObject* obj)
         }
     }
 }
-#pragma opt_loop_invariants reset
 
 void blasted_init(GameObject* obj, int placement)
 {

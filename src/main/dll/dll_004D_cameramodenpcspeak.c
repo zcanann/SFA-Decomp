@@ -86,7 +86,6 @@ void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ)
             0.03f * ((30.0f + target->anim.worldPosY) - state->anchorY);
     *outZ = sinVal * dist + dz;
 }
-#pragma auto_inline on
 
 
 void CameraModeNpcSpeak_copyToCurrent(void)

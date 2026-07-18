@@ -273,7 +273,6 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     ((GameObject*)obj)->anim.rotZ = state->pathRotZ;
 }
 
-#pragma peephole on
 int trickyAdvanceRouteTargetAhead(int obj, RomCurveWalker* route, f32 speed)
 {
     f32 limit;
@@ -309,7 +308,6 @@ int trickyAdvanceRouteTargetAhead(int obj, RomCurveWalker* route, f32 speed)
     return 1;
 }
 
-#pragma peephole off
 #pragma optimization_level 2
 int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
 {
@@ -378,8 +376,6 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
 }
 #pragma optimization_level reset
 
-#pragma scheduling on
-#pragma peephole on
 static int skeetla_isInWater(u8* state)
 {
     if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
@@ -448,8 +444,6 @@ static void skeetla_playFootstepSfx(u8* obj, u16 sfxId)
     }
 }
 
-#pragma scheduling off
-#pragma peephole off
 int trickyMove(u8* obj, f32* targetPos)
 {
     f32 prospectivePos[3];
@@ -708,8 +702,6 @@ int objAnimFn_8013a3f0(int obj, int newState, f32 speed, u32 flags)
     return 0;
 }
 
-#pragma scheduling on
-#pragma peephole on
 static void* skeetla_validateRouteEntry(void* entry)
 {
     if (entry == NULL)
@@ -731,8 +723,6 @@ static void* skeetla_validateRouteEntry(void* entry)
     return entry;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelector, int routeFlagValue)
 {
     void* candidates[4];
@@ -1111,7 +1101,6 @@ void skeetla_spawnLinkedSparks(u8* obj)
     }
 }
 
-#pragma peephole on
 void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* center, f32 minDistance, f32 moveDistance)
 {
     f32 projection[3];
@@ -1197,7 +1186,6 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     end[2] = center[2] + (dz * moveDistance);
 }
 
-#pragma peephole off
 void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
 {
     int count;

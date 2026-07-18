@@ -69,8 +69,6 @@ extern f32 lbl_803E4C30;
 extern s16 gDim2LiftFarMoveChoices[30];
 extern u8 gDIMbossAnimController[];
 
-#pragma scheduling off
-#pragma peephole off
 typedef struct DIM2icicleBlueWhiteEffectPlacement
 {
     ObjPlacement base;
@@ -177,15 +175,11 @@ int DIMbossAnim_finishDefeat(GameObject* obj, int p2)
     return 0;
 }
 
-#pragma peephole on
-#pragma scheduling on
 int DIMbossAnim_hasMoveDone(int unused, int* state)
 {
     return *(s8*)&((BaddieState*)state)->moveDone != 0;
 }
 
-#pragma peephole off
-#pragma scheduling off
 int DIMbossAnim_returnToIdleWhenDone(int obj, int runtime)
 {
     if (*(s8*)&((BaddieState*)runtime)->moveDone != 0)
@@ -195,8 +189,6 @@ int DIMbossAnim_returnToIdleWhenDone(int obj, int runtime)
     return 0;
 }
 
-#pragma peephole on
-#pragma scheduling on
 int DIMbossAnim_selectTargetControlMode(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -217,8 +209,6 @@ int DIMbossAnim_selectTargetControlMode(int* obj)
     }
 }
 
-#pragma peephole off
-#pragma scheduling off
 int DIMbossHitDetect_tonsilSlam(GameObject* obj, int runtime)
 {
     f32 animSpeed;

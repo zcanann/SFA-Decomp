@@ -224,9 +224,6 @@ void initLoadingScreenTextures(void)
 {
     initLoadingScreenTexturesBody();
 }
-#pragma inline_max_size reset
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
 
 void TitleScreenInit_render(void)
 {

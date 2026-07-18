@@ -156,7 +156,6 @@ char* gameStrcpy(char* dst, char* src)
     } while (ch != 0);
     return dst - 1;
 }
-#pragma dont_inline on
 int utf8GetNextChar(u8* str, int* outLen)
 {
     u8 first = *str;
@@ -187,7 +186,6 @@ int utf8GetNextChar(u8* str, int* outLen)
     *outLen = cls + 1;
     return acc - gUtf8ClassOffsetTable[cls];
 }
-#pragma dont_inline reset
 
 int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId)
 {
@@ -237,7 +235,6 @@ void gameTextShowStr(char* text, int box, int arg2, int arg3)
         e->arg3 = arg3;
     }
 }
-#pragma ppc_unroll_speculative off
 
 void gameTextRenderStrs(char* str, int boxIdx)
 {
@@ -305,7 +302,6 @@ void gameTextRenderStrs(char* str, int boxIdx)
         Camera_ApplyCurrentViewport(NULL);
     }
 }
-#pragma ppc_unroll_speculative off
 
 void gameTextAppendStr(char* str, int arg2)
 {
@@ -443,7 +439,6 @@ void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, i
     box->f18 = savedX;
     box->f1a = savedY;
 }
-#pragma ppc_unroll_speculative off
 
 void gameTextFn_8001658c(int a, int b, int c)
 {
@@ -552,7 +547,6 @@ void gameTextFn_8001658c(int a, int b, int c)
     lbl_803DC9A5 = save5;
     lbl_803DC9A4 = save4;
 }
-#pragma ppc_unroll_speculative off
 
 void gameTextFn_80016810(int a, int b, int c)
 {
@@ -592,7 +586,6 @@ void gameTextShow(int a)
         e->arg2 = 0;
     }
 }
-#pragma ppc_unroll_speculative off
 
 void textDisplayFn_800168dc(int textId, TextDisplayState* state)
 {
@@ -698,7 +691,6 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
     }
     gameTextRenderStrs(def->strings[state->charIndex], 0x7c);
 }
-#pragma ppc_unroll_speculative off
 
 
 void gameTextFn_80016c18(int a, int b)
@@ -970,7 +962,6 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
 }
 #pragma ppc_unroll_speculative off
 
-#pragma ppc_unroll_speculative off
 
 void* gameTextGetBox(int box)
 {

@@ -232,7 +232,6 @@ void camcontrol_applyQueuedAction(void)
         }
     }
 }
-#pragma opt_common_subs reset
 
 void Camera_func1D(int targetFlagMode)
 {

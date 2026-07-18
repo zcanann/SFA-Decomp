@@ -72,7 +72,6 @@ void crcloudrace_updateCompletionState(int obj, CrCloudRaceState* state)
         }
     }
 }
-#pragma dont_inline reset
 
 void crcloudrace_updateRaceState(int obj)
 {

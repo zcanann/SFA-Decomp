@@ -59,7 +59,6 @@ static int arwsquadron_isPlayerWithinRangeZ(GameObject* obj, f32 range)
     return deltaZ < range && deltaZ > -100.0f;
 }
 
-#pragma dont_inline off
 void arwsquadron_emitEffects(GameObject* obj, ArwSquadronState* state)
 {
     u8 flag = 1;
@@ -103,7 +102,6 @@ void arwsquadron_emitEffects(GameObject* obj, ArwSquadronState* state)
     }
 }
 
-#pragma dont_inline reset
 void arwsquadron_applyCommandParams(GameObject* obj, ArwSquadronState* state)
 {
     SquadCmdFlags* flags = &state->flags.cmd;
@@ -165,7 +163,6 @@ void arwsquadron_applyCommandParams(GameObject* obj, ArwSquadronState* state)
     }
 }
 
-#pragma dont_inline off
 void arwsquadron_followLeader(GameObject* obj, ArwSquadronState* state)
 {
     ObjAnimComponent* objAnim = &obj->anim;
@@ -216,7 +213,6 @@ void arwsquadron_followLeader(GameObject* obj, ArwSquadronState* state)
     }
 }
 
-#pragma dont_inline reset
 void arwsquadron_followPath(GameObject* obj, ArwSquadronState* state)
 {
     ObjAnimComponent* objAnim = &obj->anim;
@@ -250,7 +246,6 @@ void arwsquadron_followPath(GameObject* obj, ArwSquadronState* state)
     }
 }
 
-#pragma optimization_level 2
 void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, int flag)
 {
     f32 pz, py, px;
@@ -278,8 +273,6 @@ void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, int fl
     Sfx_PlayFromObjectLimited((int)proj, SFXTRIG_wp_blaserhit16, 4);
 }
 
-#pragma dont_inline off
-#pragma optimization_level reset
 void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
 {
     SquadCmdFlags* flags = &squad->flags.cmd;
@@ -405,7 +398,6 @@ void ARWSquadron_free(void)
 {
 }
 
-#pragma dont_inline off
 
 ObjectDescriptor gARWSquadronObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, 0, 0, 0,
@@ -758,4 +750,3 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
     state->dialogueVariant = setupData->dialogueVariant;
 }
 
-#pragma dont_inline off

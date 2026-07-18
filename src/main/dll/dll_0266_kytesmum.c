@@ -265,8 +265,6 @@ int kytesmum_spawnInteractionCallback(GameObject* obj)
     return 0;
 }
 
-#pragma opt_common_subs off
-#pragma opt_loop_invariants off
 int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
@@ -292,8 +290,6 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
     }
 }
 
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
 int kytesmum_getExtraSize(void)
 {
     return KYTESMUM_EXTRA_SIZE;

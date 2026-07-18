@@ -235,7 +235,6 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
         }
     }
 }
-#pragma opt_loop_invariants reset
 
 void FuelCell_update(GameObject* obj)
 {

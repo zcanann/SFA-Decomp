@@ -249,7 +249,6 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
 }
 void staff_update(int* obj);
 
-#pragma opt_common_subs off
 
 void quakeSpellFn_8016cee8(int* obj, GameObject* player)
 {
@@ -459,7 +458,6 @@ void quakeSpellFn_8016cee8(int* obj, GameObject* player)
         }
     }
 }
-#pragma opt_common_subs reset
 void staffSetGlow(GameObject* obj, u8 attackType, u8 enable)
 {
     u8* state = obj->extra;
@@ -1220,7 +1218,6 @@ void staff_hitDetect(void)
 
 
 
-#pragma opt_common_subs off
 
 
 void staff_update(int* obj)
@@ -1336,7 +1333,6 @@ void staff_update(int* obj)
         }
     }
 }
-#pragma opt_common_subs reset
 
 void staff_init(int* obj)
 {

@@ -31,7 +31,6 @@ void ccgasvent_free(int obj)
 {
     ObjGroup_RemoveObject(obj, CCGASVENT_GROUP);
 }
-#pragma scheduling reset
 
 void ccgasvent_render(void)
 {
@@ -67,10 +66,7 @@ void ccgasvent_update(int* obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void ccgasvent_init(int obj)
 {
     ObjGroup_AddObject(obj, CCGASVENT_GROUP);

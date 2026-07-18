@@ -49,7 +49,6 @@ void* gNewCloudStarDisplayLists[0x5C];
 #define NEWCLOUD_TEXTURE_STAR_A 0xc21 /* gNewCloudStarTextureA */
 #define NEWCLOUD_TEXTURE_STAR_B 0xc22 /* gNewCloudStarTextureB */
 
-#pragma opt_common_subs off
 void drawSkyStars(void)
 {
     int timeOk;
@@ -152,7 +151,6 @@ void drawSkyStars(void)
         GXCallDisplayList(gNewCloudStarDisplayLists[i], gNewCloudStarDisplayListSizes[i]);
     }
 }
-#pragma opt_common_subs reset
 
 static const f32 gNewCloudStarRadius[1] = {5000.0f};
 static const f32 gNewCloudStarAxisThreshold[1] = {3750.0f};

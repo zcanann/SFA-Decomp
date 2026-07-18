@@ -278,7 +278,6 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
     SHthorntail_updateState(obj, runtime);
 }
 
-#pragma dont_inline reset
 
 u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -570,9 +569,6 @@ void SHthorntail_update(SHthorntailObject* obj)
     }
     return;
 }
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-#pragma optimization_level reset
 
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
 {

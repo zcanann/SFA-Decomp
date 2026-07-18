@@ -793,7 +793,6 @@ void Camera_UpdateProjection(void* viewportArg)
         gCameraCurrentViewIndex = viewIndex;
     }
 }
-#pragma opt_common_subs reset
 
 void Camera_GetCurrentViewport(s32* outX, s32* outY, u32* outHeight, s32* outWidth)
 {
@@ -1059,7 +1058,6 @@ void Camera_RebuildProjectionMatrix(void)
     }
     GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
 }
-#pragma opt_common_subs reset
 
 f32 Camera_GetFarPlane(void)
 {
@@ -1111,9 +1109,6 @@ void Camera_SetFovY(f32 fovY)
     gCameraFovY = fovY;
 }
 
-#pragma ppc_unroll_factor_limit 3
-#pragma ppc_unroll_instructions_limit 80
-#pragma ppc_unroll_speculative on
 void Camera_InitState(void)
 {
     u8* base = (u8*)gObjInverseYawTransformMatrices;

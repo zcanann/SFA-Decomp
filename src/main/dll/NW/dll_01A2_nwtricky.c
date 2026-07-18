@@ -171,7 +171,6 @@ void NW_tricky_update(int* obj)
         break;
     }
 }
-#pragma opt_loop_invariants reset
 
 void NW_tricky_init(int* obj)
 {

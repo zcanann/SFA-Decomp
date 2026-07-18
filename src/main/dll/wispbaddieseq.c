@@ -212,7 +212,6 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     }
     return 0;
 }
-#pragma opt_propagation reset
 
 __declspec(section ".sdata2") f32 lbl_803E2760 = 640.0f;
 __declspec(section ".sdata2") f32 lbl_803E2764 = 4.0f;

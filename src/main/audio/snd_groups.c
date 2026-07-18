@@ -265,7 +265,6 @@ void audioFn_8027b690(u16* ref, void* data, u8 dataType, u32 remove)
         }
     }
 }
-#pragma dont_inline reset
 
 s32 sndPushGroup(void* prj_data, u16 gid, void* samples, void* sdir, void* pool)
 {

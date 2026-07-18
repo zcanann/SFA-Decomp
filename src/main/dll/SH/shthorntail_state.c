@@ -310,4 +310,3 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
     SHthorntail_updateState(obj, runtime);
 }
 
-#pragma dont_inline reset

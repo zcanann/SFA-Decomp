@@ -152,8 +152,6 @@ void CameraModeShipBattle_update(short* cam)
                                    &((CameraObject*)cam)->anim.localPosY, &((CameraObject*)cam)->anim.localPosZ,
                                    *(int*)&((CameraObject*)cam)->anim.parent);
 }
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
 
 void CameraModeShipBattle_init(void)
 {

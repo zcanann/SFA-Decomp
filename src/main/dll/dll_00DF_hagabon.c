@@ -223,9 +223,7 @@ void Hagabon_free(GameObject* obj)
         *state = NULL;
     }
 }
-#pragma opt_common_subs reset
 
-#pragma opt_common_subs off
 void Hagabon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     HagabonState* state = *(HagabonState**)&obj->extra;
@@ -263,7 +261,6 @@ void Hagabon_hitDetect(GameObject* obj)
     }
 }
 
-#pragma fp_contract off
 void Hagabon_update(int obj)
 {
     GameObject* player;
@@ -397,7 +394,6 @@ void Hagabon_update(int obj)
     }
     fn_8014E1DC((GameObject*)obj, state);
 }
-#pragma fp_contract reset
 
 void Hagabon_init(GameObject* obj, int data, int skip_alloc)
 {

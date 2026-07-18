@@ -152,8 +152,6 @@ s16 dll_0B_func18(void)
     return gModgfxLastSpawnHandle;
 }
 
-#pragma peephole off
-#pragma scheduling off
 void dll_0B_func17(u32 flags)
 {
     gModgfxSpawnContext.flags |= flags;
@@ -335,8 +333,6 @@ void fn_800A02DC(ModgfxState* state, f32* in)
 }
 
 void* gPartfxActiveEffects[0x32];
-#pragma peephole reset
-#pragma peephole on
 
 void fn_800A0478(ModgfxState* state)
 {
@@ -374,8 +370,6 @@ void fn_800A0478(ModgfxState* state)
     state->scaleChannels[1].step[1] = f0;
     state->scaleChannels[1].step[2] = f0;
 }
-#pragma peephole reset
-#pragma peephole off
 
 
 void fn_800A0524(void* state, void* p, int mode)
@@ -664,8 +658,6 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 #undef base
 }
 
-#pragma peephole reset
-#pragma peephole on
 void fn_800A0FD0(ModgfxState* state)
 {
     int i;
@@ -686,8 +678,6 @@ void fn_800A0FD0(ModgfxState* state)
     }
 }
 #pragma dont_inline on
-#pragma peephole reset
-#pragma peephole off
 void fn_800A1040(s16 sequenceId, int forceAll)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
@@ -771,17 +761,13 @@ void dll_0B_func0C(void* source, char value)
         }
     }
 }
-#pragma peephole reset
 #pragma peephole on
-#pragma scheduling reset
 #pragma scheduling on
 void dll_0B_func0B(void)
 {
     lbl_803DD282 = lbl_803DD282 + 1;
 }
-#pragma peephole reset
 #pragma peephole off
-#pragma scheduling reset
 #pragma scheduling off
 
 void dll_0B_func0A(s16* p)
@@ -1225,14 +1211,10 @@ static inline int modgfx_findFreeEffectSlot(void** p, int found, int i)
     return -1;
 }
 
-#pragma peephole reset
-#pragma peephole on
 void dll_0B_func06(void)
 {
     fn_800A1040(0, 1);
 }
-#pragma peephole reset
-#pragma peephole off
 
 
 
@@ -2006,15 +1988,11 @@ void dll_0B_onMapSetup(void)
         gPartfxActiveEffects[i] = NULL;
     }
 }
-#pragma peephole reset
-#pragma peephole on
 
 void dll_0B_release(void)
 {
     fn_800A1040(0, 1);
 }
-#pragma peephole reset
-#pragma peephole off
 void dll_0B_initialise(void)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;

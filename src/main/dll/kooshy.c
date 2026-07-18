@@ -74,7 +74,6 @@ void fn_80153640(GameObject* obj, int state)
         Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_blooplaugh2);
     }
 }
-#pragma dont_inline reset
 
 void kooshy_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag, int hitId, int damage)
 {

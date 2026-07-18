@@ -87,7 +87,6 @@ void HighTop_release(void);
 
 static const u32 sHighTopPathParam[1] = {0x01010101};
 
-#pragma opt_strength_reduction off
 int hightop_stateHandler10(GameObject* obj, HighTopRuntime* stateArg)
 {
     HighTopRuntime* rt = obj->extra;
@@ -338,7 +337,6 @@ int hightop_stateHandler08(GameObject* obj, HighTopRuntime* stateArg)
     return 0;
 }
 
-#pragma opt_common_subs off
 int hightop_stateHandler07(GameObject* obj, HighTopRuntime* stateArg)
 {
     HighTopRuntime* rt = (obj)->extra;
@@ -376,7 +374,6 @@ int hightop_stateHandler07(GameObject* obj, HighTopRuntime* stateArg)
     return 9;
 }
 
-#pragma opt_common_subs reset
 int hightop_stateHandler06(GameObject* obj, HighTopRuntime* state)
 {
     HighTopRuntime* runtime = obj->extra;
@@ -544,7 +541,6 @@ void HighTop_renderGroundMarker(GameObject* obj, f32 scale);
 void hightop_func11(GameObject* obj, int val);
 void hightop_func12(int obj, f32* a, int* b);
 void hightop_func15(void);
-#pragma dont_inline on
 int gHighTopIdleSequenceIds[3] = {0x4, 0x5, 0x6};
 int gHighTopIdleSequenceWeights[3] = {0x32, 0x19, 0x19};
 int lbl_8032AB48[26] = {0x8,         0x9,        0x7, 0xA,        -1043857408, 0x0, -1032847360, 0x41C80000, 0x0,
@@ -617,7 +613,6 @@ int hightop_handleMotionEvent(int obj, u8 event)
     return 0;
 }
 
-#pragma dont_inline reset
 int hightop_defaultStateHandler(void)
 {
     return 0x0;
@@ -846,7 +841,6 @@ int HighTop_seqFn(GameObject* obj)
     return 0;
 }
 
-#pragma dont_inline on
 void hightop_playMovementSfx(GameObject* obj, HighTopRuntime* state2, HighTopRuntime* state)
 {
     int flags = state->baddie.eventFlags;
@@ -870,7 +864,6 @@ void hightop_playMovementSfx(GameObject* obj, HighTopRuntime* state2, HighTopRun
     }
 }
 
-#pragma dont_inline reset
 void HighTop_getLookTargetYaw(GameObject* obj, int mode, int* out)
 {
     MoveLibTarget target;
@@ -1277,5 +1270,4 @@ void HighTop_initialise(void)
     gHighTopDefaultStateHandler = hightop_defaultStateHandler;
 }
 
-#pragma opt_strength_reduction reset
 

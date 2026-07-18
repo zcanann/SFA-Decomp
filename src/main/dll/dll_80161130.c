@@ -121,7 +121,6 @@ int grimble_stateHandlerB04(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-#pragma scheduling on
 int grimble_stateHandlerB03(int obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.hitPoints < 1)
@@ -129,7 +128,6 @@ int grimble_stateHandlerB03(int obj, GroundBaddieState* state)
     return 1;
 }
 
-#pragma scheduling off
 int scarab_updateProximityGate(int* obj, GroundBaddieState* state)
 {
     int* target;

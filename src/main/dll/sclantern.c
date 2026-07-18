@@ -101,4 +101,3 @@ u32 playerFn_801d6d58(void)
     objGetAnimStateFlags((GameObject*)playerObj, 0xff);
     return 2;
 }
-#pragma dont_inline reset

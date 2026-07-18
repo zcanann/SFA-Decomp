@@ -107,7 +107,6 @@ void fn_801F9804(GameObject* obj)
         }
     }
 }
-#pragma dont_inline reset
 
 int VFP_LevelControl_getExtraSize(void)
 {

@@ -127,7 +127,6 @@ void WM_Worm_update(GameObject* obj)
     return;
 }
 
-#pragma opt_common_subs reset
 void WM_Worm_init(GameObject* obj, WmWormSetup* setup)
 {
     WmWormState* state;

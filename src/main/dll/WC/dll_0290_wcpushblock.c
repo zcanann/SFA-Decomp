@@ -606,8 +606,6 @@ void wcpushblock_update(GameObject* obj)
         mathSinf(gWcPushBlockPi * (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state) / gWcPushBlockAngleScale);
     obj->anim.localPosY = WCPUSHBLOCK_BASE_Y(state) + WCPUSHBLOCK_BOB_Y(state);
 }
-#pragma opt_common_subs reset
-#pragma opt_dead_assignments reset
 
 
 void wcpushblock_init(GameObject* obj, WCPushBlockSetup* setup)

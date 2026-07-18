@@ -828,7 +828,6 @@ void ecsh_shrine_update(s16* obj)
     }
 }
 
-#pragma opt_strength_reduction reset
 void ecsh_shrine_init(s16* obj, s8* def)
 {
     int* sub = ((GameObject*)obj)->extra;

@@ -688,7 +688,6 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
 }
 
 /* dont_inline: keeps func0C out-of-line so func17's call site matches retail */
-#pragma dont_inline on
 void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
                    int animMove, s8 field25f)
 {
@@ -726,7 +725,6 @@ void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flag
         mainSetBits(gameBit, 1);
     }
 }
-#pragma dont_inline reset
 
 /* opt_loop_invariants off: retail recomputes the loop-invariant self-position
  * reads inside the scan loop; hoisting them changes the schedule */

@@ -268,7 +268,6 @@ void doNothing_beforeRenderObject(void)
 {
 }
 
-#pragma dont_inline off
 #pragma peephole off
 #pragma scheduling off
 
@@ -319,7 +318,6 @@ void fn_8002A5DC(u8* obj)
         fn_800213D0(vecA, vecB, &((GameObject*)obj)->anim.rotZ, &((GameObject*)obj)->anim.rotY, (s16*)obj);
     }
 }
-#pragma dont_inline reset
 void Obj_SetModelRenderOpAlpha(u8* obj, s8 alpha)
 {
     ObjAnimComponent* objAnim;
@@ -416,7 +414,6 @@ void Obj_TickModelColorFadeRecursive(GameObject* obj)
     }
 }
 
-#pragma dont_inline off
 #pragma peephole on
 #pragma scheduling on
 
@@ -501,14 +498,10 @@ void Obj_Shatter(GameObject* obj)
     (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7fc, NULL, 0x32, NULL);
 }
 
-#pragma peephole on
-#pragma scheduling on
 int objIsFrozen(u8* obj)
 {
     return ((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_FROZEN;
 }
-#pragma peephole off
-#pragma scheduling off
 
 void Obj_StartModelFadeIn(GameObject* obj, int frames)
 {
@@ -672,7 +665,6 @@ void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags)
 }
 
 #pragma dont_inline reset
-#pragma dont_inline off
 
 GameObject* loadObjectAtObject(GameObject* src, ObjPlacement* setup)
 {
@@ -973,7 +965,6 @@ ObjPlacement* Obj_AllocObjectSetup(int size, int type)
     return p;
 }
 #pragma opt_common_subs off
-#pragma opt_lifetimes on
 #pragma opt_loop_invariants off
 void objFreeObjDef(u8* obj, int flag)
 {
@@ -1179,7 +1170,6 @@ void objFreeObjDef(u8* obj, int flag)
     mm_free(obj);
 }
 #pragma opt_common_subs reset
-#pragma opt_lifetimes reset
 #pragma opt_loop_invariants reset
 
 static inline void Obj_FreeDeferredObjects(void)

@@ -203,7 +203,6 @@ void imicemountain_updateEventState(int* obj)
     }
 }
 
-#pragma peephole on
 int IMIceMountain_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -228,12 +227,10 @@ int IMIceMountain_getObjectTypeId(void)
     return 0x0;
 }
 
-#pragma scheduling on
 void IMIceMountain_free(void)
 {
 }
 
-#pragma peephole off
 void IMIceMountain_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -241,15 +238,12 @@ void IMIceMountain_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E46D8);
 }
 
-#pragma peephole on
 void IMIceMountain_hitDetect(void)
 {
 }
 
 /* IMIceMountain_update: lazy-spawn the ambient effects, run the active state,
  * fade the warning timer, drive the music latch, then refresh the gamebit latches. */
-#pragma scheduling off
-#pragma peephole off
 void IMIceMountain_update(int* obj)
 {
     IMIceMountainState* extra = ((GameObject*)obj)->extra;
@@ -393,5 +387,3 @@ void IMIceMountain_init(int* obj)
 #undef MEVT_TRIGGER
 #undef MEVT_SET
 #undef MEVT_QUERY
-#pragma peephole on
-#pragma scheduling on

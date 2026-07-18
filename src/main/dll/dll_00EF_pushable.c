@@ -1033,8 +1033,6 @@ static inline int* Transporter_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-#pragma scheduling off
-#pragma peephole off
 void pushable_free(int* obj)
 {
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;

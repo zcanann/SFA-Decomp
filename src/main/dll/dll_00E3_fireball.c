@@ -524,7 +524,6 @@ void Fireball_update(int* obj)
 #undef hitState
 }
 
-#pragma opt_common_subs off
 void Fireball_init(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
@@ -591,7 +590,6 @@ void Fireball_init(int* obj)
         }
     }
 }
-#pragma opt_common_subs reset
 
 void Fireball_release(void)
 {

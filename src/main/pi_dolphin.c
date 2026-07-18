@@ -81,7 +81,7 @@ u32 lbl_803DCCBC;
 int lbl_803DCCB8;
 f32 lbl_803DCCB4;
 u8 lbl_803DCCB0;
-int lbl_803DCCAC;
+volatile int lbl_803DCCAC;
 u16 lbl_803DCCAA;
 u8 lbl_803DCCA9;
 u8 lbl_803DCCA8;
@@ -1066,7 +1066,7 @@ extern f32 lbl_803DEA7C;
 extern f32 lbl_803DCCB4;
 extern u8 lbl_803DB411;
 extern int lbl_803DCCDC;
-extern int lbl_803DCCAC;
+extern volatile int lbl_803DCCAC;
 extern int lbl_803DCCA0;
 extern u16 lbl_803DCCAA;
 extern u8 lbl_803DCCA9;
@@ -2478,7 +2478,6 @@ typedef struct PathSearch
     u16 padding2E;
 } PathSearch;
 
-#pragma dont_inline on
 #pragma optimize_for_size reset
 int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
                               u32 flagBits)
@@ -3667,8 +3666,6 @@ extern int lbl_8035F208[];
 extern u32 lbl_8035F3E8[];
 extern int lbl_803DCC74;
 extern void romListReadCb();
-#pragma dont_inline reset
-#pragma ppc_unroll_speculative on
 
 
 int mapGetDirIdx(int idx)
@@ -3678,11 +3675,6 @@ int mapGetDirIdx(int idx)
     return sMapFileNameIndexRemapTable[idx];
 }
 
-#pragma peephole reset
-#pragma peephole off
-#pragma ppc_unroll_speculative on
-#pragma scheduling reset
-#pragma scheduling off
 
 extern void printHeapStats(int a);
 extern char sAssetHaltFormat[];
@@ -3731,7 +3723,6 @@ void loadDataFiles(int arg)
     }
     loadTableFiles();
 }
-#pragma ppc_unroll_speculative on
 void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
 {
     char buf[1024];
@@ -3775,7 +3766,6 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
         }
     }
 }
-#pragma ppc_unroll_speculative on
 
 void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
 {
@@ -4011,7 +4001,6 @@ void loadModelsBin(int offsetFlags, int* p1c, int* p20, int* p18, int* p4)
 }
 
 #pragma peephole reset
-#pragma peephole on
 
 /* base+0x74 / base+0x78 are lbl_8035F3E8[0x1d]/[0x1e] (MldfTables.ptrs: maps info
    bin/tab); the byte-offset spelling is codegen-load-bearing */
@@ -4028,7 +4017,6 @@ void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5)
     *out2 = *(s16*)(e + 0x1e);
     *out3 = *(int*)(*(char**)(base + 0x74) + *(int*)(*(char**)(base + 0x78) + p5 * 4 + 0x18) + 4);
 }
-#pragma peephole reset
 #pragma peephole off
 
 void checkLoadBlock(int a, int* pc, int* p8)
@@ -4190,7 +4178,6 @@ int fileLoadToBufferOffset(int id, void* buffer, int offset, int size)
     return size;
 }
 #pragma peephole reset
-#pragma peephole on
 
 int fileLoadToBuffer(int id, void* buffer)
 {
@@ -4223,7 +4210,6 @@ void* fileLoad(int id)
     DVDClose(&fileInfo);
     return (void*)lbl_8035F3E8[id];
 }
-#pragma peephole reset
 #pragma peephole off
 
 int initLoadFiles(void)
@@ -4355,7 +4341,6 @@ int initLoadFiles(void)
     return 0;
 }
 #pragma peephole reset
-#pragma peephole on
 void tvInit(void)
 {
     gRenderModeObj->viWidth = 0x294;
@@ -4378,7 +4363,6 @@ typedef union
 
 extern volatile PiWGPipe GXWGFifo : (0xCC008000);
 extern void GXSetGPMetric(int perf0, int perf1);
-#pragma peephole reset
 #pragma peephole off
 
 extern u8 enableDebugText;
@@ -4475,7 +4459,6 @@ void gpuErrorHandler(u32 retraceCount)
     }
 }
 #pragma peephole reset
-#pragma peephole on
 void logGpuHang(void);
 
 void videoSwapFrameBuffers(u32 retraceCount)
@@ -4504,7 +4487,7 @@ void videoSwapFrameBuffers(u32 retraceCount)
         lbl_803DCCA0 = 0;
     }
     lbl_803DCCAC = lbl_803DCCAC + 1;
-    if (lbl_803DCCB0 != 0 && (u32) * (volatile int*)&lbl_803DCCAC > 18000)
+    if (lbl_803DCCB0 != 0 && (u32)lbl_803DCCAC > 18000)
     {
         logGpuHang();
         gxErrorFn_80060b40();
@@ -4581,7 +4564,6 @@ void videoFn_800499e8(void)
         }
     }
 }
-#pragma peephole reset
 #pragma peephole off
 
 extern f32 lbl_803DEA70;
@@ -4756,7 +4738,6 @@ extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTe
 extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
                             GXTevRegID out_reg);
 #pragma peephole reset
-#pragma peephole on
 void setDisplayCopyFilter(void)
 {
     u8* p = (u8*)gRenderModeObj;
@@ -4770,7 +4751,6 @@ void setDisplayCopyFilter(void)
     }
 }
 
-#pragma peephole reset
 #pragma peephole off
 
 extern void GXSetAlphaUpdate(GXBool update_enable);
@@ -5283,7 +5263,6 @@ void fn_8004AFA0(int* q, int* elem, int idx)
         p += 4;
     }
 }
-#pragma ppc_unroll_speculative on
 void* fn_8004B118(int* p)
 {
     void** arr;
@@ -5347,7 +5326,6 @@ int fn_8004B148(int* p)
     *(u16*)(p + 0xb) = 0;
     return count;
 }
-#pragma ppc_unroll_speculative on
 
 int fn_8004B218(void* q_, u32 n_)
 {
@@ -5399,8 +5377,6 @@ int fn_8004B218(void* q_, u32 n_)
     }
     return result;
 }
-#pragma ppc_unroll_speculative on
-#pragma ppc_unroll_speculative off
 
 int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u8 routeFlags)
 {
@@ -5465,8 +5441,6 @@ extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGe
                               GXBool normalize, u32 pt_texmtx);
 extern void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue,
                                   GXTevColorChan alpha);
-#pragma ppc_unroll_speculative on
-#pragma ppc_unroll_speculative on
 
 void freeAndNull(void** p)
 {
@@ -5477,7 +5451,6 @@ void freeAndNull(void** p)
     }
 }
 #pragma peephole reset
-#pragma peephole on
 
 void trickyVoxAllocFn_8004b5d4(int* out)
 {
@@ -5485,7 +5458,6 @@ void trickyVoxAllocFn_8004b5d4(int* out)
     out[1] = out[0] + 0xfe0;
     out[2] = out[1] + 0x7f0;
 }
-#pragma peephole reset
 #pragma peephole off
 
 
@@ -6220,8 +6192,6 @@ extern f32 lbl_803DEB14;
 extern f32 lbl_803DEB18;
 
 #pragma peephole reset
-#pragma peephole on
-#pragma ppc_unroll_speculative on
 void fn_8004C1E4(u8 b, f32 scale)
 {
     ((u8*)&lbl_803DB5EC)[3] = b;
@@ -6233,16 +6203,12 @@ void fn_8004C1E4(u8 b, f32 scale)
 }
 
 #pragma scheduling reset
-#pragma scheduling on
 
 void disableHeavyFog(void)
 {
     lbl_803DCD28 = 0x0;
 }
-#pragma peephole reset
 #pragma peephole off
-#pragma ppc_unroll_speculative on
-#pragma scheduling reset
 #pragma scheduling off
 
 void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode)
@@ -6256,10 +6222,7 @@ void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode)
     lbl_803DCD31 = mode;
 }
 #pragma peephole reset
-#pragma peephole on
-#pragma ppc_unroll_speculative on
 #pragma scheduling reset
-#pragma scheduling on
 
 
 void fn_8004C234(f32* p1, f32* p2)
@@ -6272,10 +6235,7 @@ u8 isHeavyFogEnabled(void)
 {
     return lbl_803DCD28;
 }
-#pragma peephole reset
 #pragma peephole off
-#pragma ppc_unroll_speculative on
-#pragma scheduling reset
 #pragma scheduling off
 
 void* Shader_getLayer(void* base, int idx)
@@ -6808,7 +6768,6 @@ void fn_8004D6D8(void)
 
 
 #pragma peephole reset
-#pragma peephole on
 
 extern void textureFn_8006c75c(int a);
 
@@ -6834,7 +6793,6 @@ void fn_8004D928(void)
 }
 
 #pragma opt_common_subs off
-#pragma peephole reset
 #pragma peephole off
 void fn_8004DA54(char* p1)
 {
@@ -7343,7 +7301,6 @@ void renderHeavyFog(void* fogColor)
     lbl_803DCD6C = lbl_803DCD6C + 1;
 }
 #pragma peephole reset
-#pragma peephole on
 void fn_8004EECC(void)
 {
     GXSetTevDirect(lbl_803DCD90);
@@ -7496,10 +7453,7 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
     lbl_803DCD69 += 2;
     return result;
 }
-#pragma peephole reset
 
-#pragma peephole reset
-#pragma peephole off
 
 void fn_8004F380(f32 scale, int* colorIn, f32* pos)
 {
@@ -7762,7 +7716,6 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
     }
 }
 #pragma peephole reset
-#pragma peephole on
 
 void fn_8004FDA0(u8* texSrc, void* texMtx)
 {
@@ -7799,7 +7752,6 @@ void fn_8004FDA0(u8* texSrc, void* texMtx)
     lbl_803DCD6A++;
     lbl_803DCD69++;
 }
-#pragma peephole reset
 #pragma peephole off
 
 void textureFn_8004ff20(void* p1)
@@ -8062,7 +8014,6 @@ void fn_80050558(u8* texSrc, void* texMtx, int stageMode, int compMode, int vari
 
 
 #pragma peephole reset
-#pragma peephole on
 
 void fn_80050A28(int scale)
 {
@@ -8075,7 +8026,6 @@ void fn_80050A28(int scale)
     lbl_803DCD88++;
     lbl_803DCD69++;
 }
-#pragma peephole reset
 #pragma peephole off
 
 extern int lbl_8030CEE0[];
@@ -8324,7 +8274,6 @@ void fn_80051528(void* p1, void* mtx)
     lbl_803DCD69 += 1;
 }
 
-/* .bss glue 0x8035EF48-0x803779C0 */
 u8 lbl_803779A0[0x20];
 u16 lbl_80377974[0x16];
 u16 lbl_80377954[0x10];

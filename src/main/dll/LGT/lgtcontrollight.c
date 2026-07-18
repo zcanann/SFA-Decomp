@@ -66,9 +66,7 @@ void fn_801F4C28(GameObject* obj, LgtFireFlyRec* record)
     record->firstFrame = 1;
     record->unk78 = 1200.0f;
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void fn_801F4D54(GameObject* obj, LgtFireFlyRec* record)
 {
     struct
@@ -115,7 +113,6 @@ void fn_801F4D54(GameObject* obj, LgtFireFlyRec* record)
     record->offY += record->posY;
     record->offZ += record->posZ;
 }
-#pragma dont_inline reset
 
 void fn_801F4ECC(GameObject* obj, BoulderShakeRec* record)
 {

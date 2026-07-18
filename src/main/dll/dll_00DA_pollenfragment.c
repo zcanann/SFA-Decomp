@@ -167,8 +167,6 @@ void pollenfragment_hitDetect(GameObject* obj)
     }
 }
 
-#pragma opt_common_subs on
-#pragma opt_strength_reduction on
 void pollenfragment_update(int obj)
 {
     u8* extra;
@@ -323,8 +321,6 @@ void pollenfragment_update(int obj)
     }
 }
 
-#pragma opt_common_subs reset
-#pragma opt_strength_reduction reset
 void pollenfragment_init(GameObject* obj, int config)
 {
     s8 pollenType;
@@ -375,8 +371,6 @@ void pollenfragment_initialise(void)
 {
 }
 
-#pragma opt_strength_reduction reset
-#pragma opt_common_subs reset
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

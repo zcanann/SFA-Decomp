@@ -262,7 +262,6 @@ void vambat_init(GameObject* obj, int state)
     }
 }
 
-#pragma dont_inline on
 void fn_8015355C(GameObject* obj, int state)
 {
     u8 count = 0;
@@ -296,4 +295,3 @@ void fn_8015355C(GameObject* obj, int state)
         }
     }
 }
-#pragma dont_inline reset

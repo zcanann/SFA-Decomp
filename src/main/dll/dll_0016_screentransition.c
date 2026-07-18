@@ -205,16 +205,12 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     }
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 screenTransitionPause;
-#pragma peephole off
 void setScreenTransitionPause(u32 pause)
 {
     screenTransitionPause = pause;
 }
-#pragma peephole reset
 
 u8 screenTransition_func07(void)
 {
@@ -279,9 +275,7 @@ void screenTransition_fadeIn(int duration, int type)
     gScreenTransitionType = type;
     gScreenTransitionDelay = 1;
 }
-#pragma opt_common_subs reset
 
-#pragma opt_common_subs off
 void screenTransition_fadeOut(int duration, int type)
 {
     if (gScreenTransitionAlphaStep <= lbl_803E0560 || gScreenTransitionAlphaMax == screenTransitionAlpha)
@@ -293,9 +287,7 @@ void screenTransition_fadeOut(int duration, int type)
     gScreenTransitionType = type;
     gScreenTransitionDelay = 0;
 }
-#pragma opt_common_subs reset
 
-#pragma opt_common_subs off
 void screenTransition_update(int p1, int p2, int p3)
 {
     if (gScreenTransitionDelay != 0)
@@ -368,8 +360,6 @@ void screenTransition_update(int p1, int p2, int p3)
 }
 #pragma opt_common_subs reset
 
-#pragma peephole reset
-#pragma scheduling reset
 
 u32 lbl_80311340[14] = {
     0, 0, 0, 0x00080000,

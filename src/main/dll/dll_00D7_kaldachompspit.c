@@ -77,7 +77,6 @@ void kaldachompspit_burst(GameObject* obj)
         Sfx_PlayFromObject((int)obj, SFXTRIG_lummy311);
     }
 }
-#pragma dont_inline reset
 
 int KaldaChompSpit_getExtraSize(void)
 {

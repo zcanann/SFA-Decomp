@@ -1283,7 +1283,6 @@ void synthQueueVoiceInputUpdate(SynthDelayedNode* fade)
  * Walk a voice linked-list, marking each entry's slot 9 as 0xff and
  * invoking the callback for entries whose voice's 0x11c field is 0.
  */
-#pragma dont_inline on
 void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback callback)
 {
     SynthDelayedNode* node = *head;
@@ -1301,7 +1300,6 @@ void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback
     }
     *head = 0;
 }
-#pragma dont_inline reset
 
 static inline void HandleVoices(void)
 {

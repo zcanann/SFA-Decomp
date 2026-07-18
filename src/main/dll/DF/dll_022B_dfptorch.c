@@ -148,8 +148,6 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
         }
     }
 }
-#pragma fp_contract reset
-#pragma opt_common_subs reset
 
 void DFP_Torch_hitDetect(void)
 {

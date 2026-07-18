@@ -102,8 +102,6 @@ void spiritdoorspirit_init(GameObject* obj)
     *(s8*)&obj->anim.alpha = 0;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 void spiritdoorspirit_release(void)
 {

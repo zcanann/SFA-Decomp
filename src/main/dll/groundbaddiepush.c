@@ -20,8 +20,6 @@
 #define GROUND_BADDIE_PUSH_RADIUS 50.0f
 #define GROUND_BADDIE_PUSH_MAX_DEPTH -20.0f
 
-#pragma scheduling off
-#pragma peephole off
 
 void fn_80151DB8(int obj, u8* state)
 {

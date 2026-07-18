@@ -121,10 +121,7 @@ void CameraModeForceBehind_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
-#pragma opt_propagation reset
-#pragma opt_common_subs reset
 
-#pragma opt_propagation off
 __declspec(section ".sdata2") f32 gCamForceBehindEaseRate = 0.25f;
 __declspec(section ".sdata2") f32 gCamForceBehindDefaultOrbitRadius = 40.0f;
 
@@ -164,7 +161,6 @@ void CameraModeForceBehind_init(u8* obj, int unused, f32* params)
         gCamForceBehindActiveHeightOffset = gCamForceBehindHeightOffset;
     }
 }
-#pragma opt_propagation reset
 
 void CameraModeForceBehind_release(void)
 {

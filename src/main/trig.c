@@ -275,7 +275,6 @@ void fn_80293C64(float x, float* sin_out, float* cos_out) {
     }
 }
 
-#pragma peephole off
 
 float fn_80293DA4(float x) {
     u16 n;

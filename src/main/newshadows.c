@@ -526,10 +526,8 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
     DCFlushRange(data, size * size);
 }
 
-#pragma peephole reset
 #pragma peephole off
 #pragma ppc_unroll_speculative on
-#pragma scheduling reset
 #pragma scheduling off
 
 extern u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
@@ -1121,7 +1119,6 @@ void allocLotsOfTextures(void)
 }
 #pragma opt_loop_invariants reset
 #pragma opt_propagation reset
-#pragma ppc_unroll_speculative on
 
 #pragma opt_common_subs off
 #pragma opt_dead_assignments off
@@ -1435,7 +1432,6 @@ void renderShadows(int unused0, int unused1, int unused2)
     Camera_EnableViewYOffset();
 }
 #pragma opt_common_subs reset
-#pragma opt_common_subs on
 #pragma opt_dead_assignments reset
 #pragma opt_loop_invariants reset
 extern NewShadowCaster gNewShadowCasterTable[NEW_SHADOW_MAX_QUEUED_CASTERS];
@@ -1498,9 +1494,7 @@ void textureFn_8006c4e0(int* p1, int* p2)
     *p2 = 0x10;
 }
 #pragma peephole reset
-#pragma peephole on
 #pragma scheduling reset
-#pragma scheduling on
 
 void fn_8006C4F8(u32* p)
 {
@@ -1530,9 +1524,7 @@ void fn_8006C540(u32* p)
 {
     *p = gNewShadowRadialTexture;
 }
-#pragma peephole reset
 #pragma peephole off
-#pragma scheduling reset
 #pragma scheduling off
 
 void* textureAlloc512(void)
@@ -1543,9 +1535,7 @@ void* textureAlloc512(void)
     return tex;
 }
 #pragma peephole reset
-#pragma peephole on
 #pragma scheduling reset
-#pragma scheduling on
 void fn_8006C5B8(u32* p)
 {
     *p = gNewShadowRampTexture;
@@ -1569,9 +1559,7 @@ void getTextureFn_8006c5e4(u32* p)
 }
 
 u8 lbl_8038E1E8[0x80];
-#pragma peephole reset
 #pragma peephole off
-#pragma scheduling reset
 #pragma scheduling off
 
 void objShadowFn_8006c5f0(GameObject* obj, u32* outTable, f32* outF, int* outX, int* outY)
@@ -1585,17 +1573,13 @@ void objShadowFn_8006c5f0(GameObject* obj, u32* outTable, f32* outF, int* outX, 
 
 Texture* gNewShadowNoiseTexFrames[0x10];
 #pragma peephole reset
-#pragma peephole on
 #pragma scheduling reset
-#pragma scheduling on
 
 f32 fn_8006C670(void)
 {
     return lbl_803DCFA4;
 }
-#pragma peephole reset
 #pragma peephole off
-#pragma scheduling reset
 #pragma scheduling off
 
 void fn_8006C678(int id)
@@ -1631,9 +1615,7 @@ void selectReflectionTexture(int id)
     }
 }
 #pragma peephole reset
-#pragma peephole on
 #pragma scheduling reset
-#pragma scheduling on
 u32 getReflectionTexture1(void)
 {
     return (u32)gNewShadowReflectionTexture;
@@ -1655,9 +1637,7 @@ u32 fn_8006C754(void)
     return gNewShadowFalloffTexture;
 }
 
-#pragma peephole reset
 #pragma peephole off
-#pragma scheduling reset
 #pragma scheduling off
 
 void textureFn_8006c75c(int id)
@@ -1759,9 +1739,7 @@ u32 gNewShadowCastTextures[NEW_SHADOW_MAX_CAST_TEXTURES];
 
 
 #pragma peephole reset
-#pragma peephole on
 #pragma scheduling reset
-#pragma scheduling on
 
 void newshadows_getReflectionScrollOffsets(f32* outScrollX, f32* outScrollY)
 {
@@ -1774,9 +1752,7 @@ f32 gNewShadowPlacements[0x112];
 /* Builds the animated water-noise assets: scatters up to 50 non-overlapping random
    placements ([0]=lifetime 8..16 frames, [1..2]=pos, [3]=outer size, [4]=inner size),
    renders 16 noise animation frames through fn_8006CD20, then the caustic texture. */
-#pragma peephole reset
 #pragma peephole off
-#pragma scheduling reset
 #pragma scheduling off
 
 void findSomething(void* needle)
@@ -1793,9 +1769,7 @@ void findSomething(void* needle)
 }
 
 #pragma peephole reset
-#pragma peephole on
 #pragma scheduling reset
-#pragma scheduling on
 
 void fn_8006CB24(void)
 {
@@ -1804,11 +1778,8 @@ void fn_8006CB24(void)
 }
 #pragma opt_loop_invariants off
 #pragma opt_propagation reset
-#pragma opt_propagation on
-#pragma peephole reset
 #pragma peephole off
 #pragma ppc_unroll_speculative on
-#pragma scheduling reset
 #pragma scheduling off
 void fn_8006CB50(void)
 {

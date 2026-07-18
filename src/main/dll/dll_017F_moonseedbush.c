@@ -77,8 +77,6 @@ int MoonSeedBush_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
     }
     return state->seedState != MOONSEEDBUSH_SEED_GROWN;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int MoonSeedBush_getExtraSize(void)
 {
@@ -93,21 +91,17 @@ void MoonSeedBush_free(void)
 {
 }
 
-#pragma peephole off
 void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
-#pragma peephole reset
 
 void MoonSeedBush_hitDetect(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 void MoonSeedBush_update(GameObject* obj)
 {
     MoonSeedBushState* state = (obj)->extra;
@@ -162,8 +156,6 @@ void MoonSeedBush_init(GameObject* obj, int data)
         state->seedState = MOONSEEDBUSH_SEED_UNGROWN;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void MoonSeedBush_release(void)
 {

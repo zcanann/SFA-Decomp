@@ -65,7 +65,6 @@ void fn_801A5D88(GameObject* obj, int explosionVariant)
         }
     }
 }
-#pragma dont_inline reset
 
 int RollingBarrel_getExtraSize(void)
 {

@@ -120,7 +120,6 @@ int fn_801CFD68(u8* stateBytes)
 
     return 0;
 }
-#pragma dont_inline reset
 
 int nw_levcontrol_getExtraSize(void)
 {

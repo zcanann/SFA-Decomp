@@ -90,7 +90,6 @@ ObjectDescriptor gRingObjDescriptor = {
     ring_getExtraSize,
 };
 
-#pragma dont_inline on
 void arwbombcoll_updateMovingAxis(GameObject* obj, RingState* state)
 {
     u8 mode = state->route;
@@ -139,9 +138,7 @@ void arwbombcoll_updateMovingAxis(GameObject* obj, RingState* state)
         }
     }
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void Ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing)
 {
     GameObject* arwingObj = arwing;
@@ -236,7 +233,6 @@ int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwi
     }
     return 0;
 }
-#pragma dont_inline reset
 
 int ring_getExtraSize(void)
 {

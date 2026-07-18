@@ -194,7 +194,6 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 
-#pragma opt_loop_invariants on
 void animatedobj_update(int* obj)
 {
     ObjSeqState* seq = ((GameObject*)obj)->extra;
@@ -280,7 +279,6 @@ void animatedobj_update(int* obj)
         }
     }
 }
-#pragma opt_loop_invariants reset
 
 
 void animatedobj_init(int* obj, int* params)

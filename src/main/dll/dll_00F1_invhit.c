@@ -84,19 +84,15 @@ void InvHit_free(GameObject* obj)
         break;
     }
 }
-#pragma peephole on
 void InvHit_render(int* obj, int a, int b, int c, int d)
 {
     objRenderModelAndHitVolumes((int)obj, a, b, c, d, 1.0f);
 }
-#pragma scheduling on
 
 void InvHit_hitDetect(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 
 void InvHit_init(int* obj, u8* def);
 void InvHit_update(int* obj);
@@ -275,7 +271,6 @@ void InvHit_update(int* obj)
     }
 }
 
-#pragma opt_common_subs off
 void InvHit_init(int* obj, u8* def)
 {
     InvHitState* state = ((GameObject*)obj)->extra;
@@ -368,9 +363,6 @@ void InvHit_init(int* obj, u8* def)
 }
 
 
-#pragma opt_common_subs reset
-#pragma peephole on
-#pragma scheduling on
 
 void InvHit_release(void)
 {

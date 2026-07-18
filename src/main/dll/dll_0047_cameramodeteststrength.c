@@ -166,7 +166,6 @@ void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* po
         ->initialise(lbl_803DD560->duration, lbl_803DD560->speedCurve, lbl_803E18B0, (f64)lbl_803E18B4,
                      (f64) * (f32*)&lbl_803E18B4, lbl_803E18B8);
 }
-#pragma dont_inline reset
 
 void CameraModeTestStrength_copyToCurrent(void)
 {

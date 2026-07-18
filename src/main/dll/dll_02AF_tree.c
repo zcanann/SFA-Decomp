@@ -121,13 +121,11 @@ void tree_updateAmbientEffects(GameObject* obj, TreeState* state)
     }
 }
 
-#pragma dont_inline reset
 int tree_getExtraSize(void)
 {
     return sizeof(TreeState);
 }
 
-#pragma dont_inline off
 void tree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     TreeSetup* setup = (TreeSetup*)obj->anim.placementData;
@@ -287,7 +285,6 @@ void tree_update(GameObject* obj)
     }
 }
 
-#pragma opt_common_subs reset
 void tree_init(GameObject* obj, TreeSetup* setup)
 {
     TreeSetup* setupData = setup;
@@ -372,7 +369,6 @@ void tree_init(GameObject* obj, TreeSetup* setup)
     }
 }
 
-#pragma opt_common_subs reset
 
 f32 gTreeEffectColors[] = {
     0.0f, 250.0f, 0.0f, 80.0f,  0.0f,  250.0f, 0.0f, 110.0f, 25.0f, 200.0f, 0.0f, 80.0f,  0.0f, 100.0f, 0.0f, 60.0f,

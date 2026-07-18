@@ -298,8 +298,6 @@ void creditsStart_(void)
         gTitleScreenCreditTimer = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 u8 shouldShowCredits(void)
 {
@@ -540,8 +538,6 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
 u8 gTitleScreenMtx[0x34];
 #pragma opt_common_subs reset
 #pragma opt_propagation reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Two-word setter for state pair. */
 void fn_80135814(u32 a, u32 b)
@@ -634,8 +630,6 @@ void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32
     GXWGFifo.f32 = v1;
     Camera_RebuildProjectionMatrix();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int TitleScreen_getExtraSize(void)
 {
@@ -688,8 +682,6 @@ void TitleScreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     n_attractmode_releaseMovieBuffers();
     gTitleScreenCreditsEndTriggered = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void TitleScreen_hitDetect(void)
 {
@@ -1077,8 +1069,6 @@ void titleScreenFn_801368c4(u8 arg)
     lbl_803DBC08 = lbl_803DD990;
     lbl_803DD990 = arg;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void titleScreenFn_801368d4(void)
 {

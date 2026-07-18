@@ -106,7 +106,6 @@ void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnim
         }
     }
 }
-#pragma dont_inline reset
 
 int HitAnimator_getExtraSize(void)
 {

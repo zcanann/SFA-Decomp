@@ -92,9 +92,7 @@ void mmp_trenchfx_update(GameObject* obj)
         (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_TICK, lbl_803AC930, 0x200001, -1, NULL);
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void mmp_trenchfx_init(GameObject* obj, int data)
 {
     MmpTrenchfxState* state = obj->extra;
@@ -115,8 +113,6 @@ void mmp_trenchfx_init(GameObject* obj, int data)
     obj->anim.rotX = angle;
     obj->anim.rootMotionScale = 0.1f;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void mmp_trenchfx_release(void)
 {

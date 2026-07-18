@@ -174,7 +174,6 @@ void AndrossBrain_update(GameObject* obj)
         break;
     }
 }
-#pragma opt_common_subs reset
 
 void AndrossBrain_init(GameObject* obj)
 {

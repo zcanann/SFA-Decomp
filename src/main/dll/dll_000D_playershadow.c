@@ -213,7 +213,6 @@ const union PlayerShadowConstF32 lbl_803DF4A0 = { 230.0f };
 const union PlayerShadowConstF32 lbl_803DF4A4 = { 125.0f };
 
 
-#pragma scheduling reset
 void playerShadow_setMode(u8 v)
 {
     if (v == 0 || v >= 0xa)
@@ -233,7 +232,6 @@ void* playerShadow_funcs[10] = {(void*)0x00000000,
                                 playerShadow_renderObject,
                                 playerShadow_setMode};
 
-#pragma scheduling off
 void playerShadow_renderObject(GameObject* obj)
 {
     f32 radii[4] = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -325,8 +323,6 @@ void playerShadow_renderObject(GameObject* obj)
                 (obj)->anim.localPosZ - tileInfo[2], obj);
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 void playerShadow_func03_nop(void)
 {
 }

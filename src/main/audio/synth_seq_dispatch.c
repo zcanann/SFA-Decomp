@@ -570,4 +570,3 @@ int fn_8026E9D0(u8 voice, u32 param)
     }
     return 1;
 }
-#pragma fp_contract reset

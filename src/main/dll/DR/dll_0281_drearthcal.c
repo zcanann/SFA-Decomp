@@ -117,8 +117,6 @@ void drearthcal_init(GameObject* obj, DREarthCalSetup* setup)
     obj->anim.rotX = (s16)(setup->yaw << 8);
     obj->objectFlags |= DREARTHCAL_INIT_FLAGS;
 }
-#pragma scheduling on
-#pragma peephole on
 
 void drearthcal_release(void)
 {

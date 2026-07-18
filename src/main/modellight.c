@@ -447,7 +447,6 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct* light)
     }
     light->glowAlpha = newAlpha;
 }
-#pragma dont_inline reset
 
 void modelLightStruct_setGlowProjectionRadius(ModelLightStruct* light, f32 radius)
 {
@@ -523,7 +522,6 @@ void modelLightStruct_setProjectionNearZ(ModelLightStruct* p, f32 v)
     p->projectionNearZ = (v < lbl_803DE78C) ? lbl_803DE78C : ((v > p->projectionFarZ) ? p->projectionFarZ : v);
 }
 
-#pragma dont_inline off
 #pragma opt_common_subs off
 void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 fovY, f32 aspect)
 {
@@ -556,7 +554,6 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 top, f32 b
     C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom, obj->projectionLeft,
                     obj->projectionRight, unit, unit, unit, unit);
 }
-#pragma dont_inline reset
 #pragma opt_common_subs reset
 
 void* modelLightStruct_getProjectionTexture(ModelLightStruct* p)
@@ -569,7 +566,6 @@ void modelLightStruct_setProjectionTexture(ModelLightStruct* p, void* v)
 {
     p->projectionTexture = v;
 }
-#pragma dont_inline off
 #pragma opt_propagation off
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f32 brightness)
 {
@@ -584,7 +580,6 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f
     zero = lbl_803DE75C;
     GXInitLightAttn(lightObj, zero, zero, lbl_803DE760, atten, zero, *(f32*)&lbl_803DE760 - atten);
 }
-#pragma dont_inline reset
 #pragma opt_propagation reset
 
 void modelLightStruct_setSpecularTargetColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
@@ -1247,7 +1242,6 @@ void modelLightChannels_reset(u8 useModelRelative)
     gModelLightChannelStates[5].active = 0;
 }
 
-#pragma dont_inline off
 void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f32 maxX, f32 maxY, f32 maxZ,
                                                 ModelLightStruct** outLights, int maxLights, int* outCount)
 {
@@ -1439,7 +1433,6 @@ void modelLightStruct_selectObjectLights(GameObject* obj, ModelLightStruct** out
         light->selectionScore = -light->selectionScore;
     }
 }
-#pragma dont_inline reset
 
 void lightGetColor(int i, u8* r, u8* g, u8* b)
 {

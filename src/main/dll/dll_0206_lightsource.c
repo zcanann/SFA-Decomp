@@ -83,7 +83,6 @@ void lightsource_hitDetect(void)
 {
 }
 
-#pragma opt_strength_reduction off
 
 typedef struct LightSourceFlagByte
 {
@@ -211,7 +210,6 @@ void lightsource_update(GameObject* obj)
     }
 }
 
-#pragma opt_strength_reduction reset
 
 typedef struct LightColorTable
 {

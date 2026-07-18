@@ -23,7 +23,6 @@ u8 lbl_803DB948[8] = {0, 1, 0, 0, 0, 0, 0, 0};
 #define DLL97_EFFECT_ID 0x3c
 
 
-#pragma force_active on
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E12E8 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E12EC = 0.0f;
@@ -70,7 +69,6 @@ const f32 lbl_803E138C = 3.0f;
 const f32 lbl_803E1390 = 4.0f;
 const f32 lbl_803E1394 = 200.0f;
 #pragma explicit_zero_data reset
-#pragma force_active reset
 extern u8 lbl_80317810[];
 
 #pragma inline_max_size(2000)

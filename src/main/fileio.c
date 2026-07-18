@@ -167,7 +167,6 @@ int DVDRead(DVDFileInfo* fileInfo, void* buf, int size, int offset)
     }
     return gDvdReadCallbackResult;
 }
-#pragma dont_inline reset
 
 void fileReadCb_80015954(s32 result, DVDFileInfo* fileInfo)
 {

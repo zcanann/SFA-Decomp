@@ -167,8 +167,6 @@ void Fall_Ladders_init(int* obj, FallLaddersObjectDef* def)
         state->playStartSound = 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void Fall_Ladders_release(void)
 {

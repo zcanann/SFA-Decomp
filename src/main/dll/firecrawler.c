@@ -348,9 +348,7 @@ void crawler_checkNearbyActive(int obj, u8* state)
         (*gCameraInterface)->loadTriggeredCamAction(0, 0, 0);
     }
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void firecrawler_spawnFirepipe(int* obj, u8* state)
 {
     int* child;
@@ -381,9 +379,7 @@ void firecrawler_spawnFirepipe(int* obj, u8* state)
         }
     }
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void fn_80157B58(int* obj, u8* state)
 {
     u8 locked = Obj_IsLoadingLocked();
@@ -499,7 +495,6 @@ void fn_80157CDC(int obj, int state)
         }
     }
 }
-#pragma opt_loop_invariants reset
 
 void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, int damage)
 {

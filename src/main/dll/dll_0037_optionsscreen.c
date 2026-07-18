@@ -191,7 +191,6 @@ void OptionsScreen_frameEnd(void)
 {
 }
 
-#pragma peephole on
 static inline void optionsScreenFreeMenuItems(void)
 {
     int i;
@@ -206,7 +205,6 @@ static inline void optionsScreenFreeMenuItems(void)
     }
 }
 
-#pragma peephole off
 int OptionsScreen_frameStart(void)
 {
     int step = framesThisStep;
@@ -338,7 +336,6 @@ void OptionsScreen_release(void)
 {
 }
 
-#pragma peephole on
 void OptionsScreen_initialise(void)
 {
     (*gScreenTransitionInterface)->step(20, 5);

@@ -182,7 +182,6 @@ int fn_801603E8(int* obj, u8* obj2)
     return 0;
 }
 
-#pragma dont_inline reset
 
 #pragma dont_inline on
 int fn_8016043C(GameObject* obj, GroundBaddieState* state)
@@ -212,7 +211,6 @@ int fn_8016043C(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-#pragma scheduling on
 int fn_8016050C(int p1, u8* obj)
 {
     if ((s8)obj[0x354] < 1)
@@ -220,7 +218,6 @@ int fn_8016050C(int p1, u8* obj)
     return 6;
 }
 
-#pragma scheduling off
 int fn_8016052C(void)
 {
     return 0x6;
@@ -290,7 +287,6 @@ int fn_80160690(short* out, u8* obj)
     return 0;
 }
 
-#pragma dont_inline on
 #pragma peephole off
 void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)
 {
@@ -443,14 +439,10 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
     return ((GroundBaddieState*)sub)->subMode != 0;
 }
 
-#pragma peephole on
-#pragma scheduling on
 void dll_CB_func0B_nop(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 s16 dll_CB_setScale(int* obj)
 {
     return ((BaddieState*)((GameObject*)obj)->extra)->controlMode;
@@ -481,7 +473,6 @@ void dll_CB_free(int* obj)
     ((void (*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int*)state, 1);
 }
 
-#pragma scheduling on
 void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -496,15 +487,12 @@ void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-#pragma peephole on
-#pragma scheduling off
 void dll_CB_hitDetect(int* obj)
 {
     void* a = ((GameObject*)obj)->extra;
     (*gPlayerInterface)->updateVelocityState(obj, a, gDllCBMoveHandlers);
 }
 
-#pragma peephole off
 void dll_CB_update(int* obj)
 {
     RomCurveWalker* path;
@@ -575,14 +563,10 @@ void dll_CB_init(int* obj, u8* params, int extra)
     }
 }
 
-#pragma peephole on
-#pragma scheduling on
 void dll_CB_release_nop(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 void dll_CB_initialise(void)
 {
     ((void**)gDllCBMoveHandlers)[0] = fn_80160690;
@@ -598,5 +582,3 @@ void dll_CB_initialise(void)
 }
 
 
-#pragma peephole reset
-#pragma scheduling reset
