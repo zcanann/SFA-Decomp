@@ -43,7 +43,6 @@ enum
 };
 
 extern char lbl_803A57C0[0x50C];
-extern char gPicMenuDvdReadBuffer[0x40];
 extern f32 gPicMenuMaxVolume;
 extern s32 lbl_803DD660;
 extern AIDCallback lbl_803DD668;
