@@ -226,3 +226,22 @@ void*/int types are the authentic recovery, this is an accepted correctness>matc
 restoring the u32 signature returns it to 100 (the shared proto can keep u32 or the .c can cast at the
 copyToCache sites). Caught by churn-mine (non-purge unit, real -3.8 regression, likely unnoticed during
 the declaration share). Flagging for awareness.
+
+## HIGH-VALUE: mathSinf/mathCosf authentic return type is DOUBLE, not float (math-subsystem signature bug)
+Ground-truth evidence (from frame-slack lane on main.c fn_801FD6B4 99.357, corroborated): the target
+codegen for `obj->f = C1*amp + C2*amp*mathSinf(x)` emits a CLEAN truncating `stfs` (no frsp) plus an
+explicit `frsp` ONLY before the single-precision `fmuls`/`fmadds`. That shape is the signature of
+mathSinf returning DOUBLE (the store auto-truncates double->float; the single-op multiply must round its
+double operand). With the in-scope prototype `float mathSinf(float)` MWCC treats the result as already
+single and omits the frsp -> mismatch.
+CORROBORATING HEADER INCONSISTENCY: mathCosf is declared `double mathCosf(double x)` in include/math.h
+AND include/dolphin/math.h (canonical), but `float mathCosf(float x)` in
+include/dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h. The double form is almost certainly authentic; the
+MSL_C float header is the divergence. Definition is src/main/trig.c `float mathSinf(float x)` (~99.6%).
+SCOPE/RISK: 129 mathSinf callers tree-wide (+ mathCosf). This is the regression-prone return-type-
+propagation class (cf. cacheAllocAndCopy/seqStartPlay) but ~10x blast radius, AND it changes the trig.c
+definition's own codegen. NOT attempted by a single-file lane (out of scope + needs tree-wide churn +
+owner regression judgment). RECOMMEND: change mathSinf/mathCosf to `double math*(double x)` (unify to the
+math.h canonical form), rebuild tree, churn — keep only if net-positive across all callers. Likely a
+multi-fn win (every sin/cos-multiply caller) if the double signature is authentic. Flagging for owner
+(active signature-recovery phase, full-context) rather than risk a large net-regression from a lane.
