@@ -48,7 +48,7 @@ void fn_801F4C28(GameObject* obj, LgtFireFlyRec* record)
     record->src3X = obj->anim.localPosX;
     record->src3Y = obj->anim.localPosY;
     record->src3Z = obj->anim.localPosZ;
-    record->baseX = lbl_803E5EAC;
+    record->baseX = lbl_803E5EAC.f;
     record->baseY = 0.0275f;
     record->baseZ = 1.0f;
     record->unk68 = 0;
