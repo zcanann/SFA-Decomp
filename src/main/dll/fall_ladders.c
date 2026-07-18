@@ -38,39 +38,7 @@ int lbl_803DBCD0[2] = {2, 3};
 
 #define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 
-
-void fn_80154328(int obj, int state)
-{
-    f32 mtx[17];
-    MatrixTransform stk;
-    f32 tx;
-    f32 ox;
-    f32 tz;
-
-    *(f32*)(state + 0x330) -= timeDelta;
-    if (*(f32*)(state + 0x330) <= 0.0f)
-    {
-        *(f32*)(state + 0x330) = (f32)(s32)randomGetRange(30, 60);
-        stk.x = ((GameObject*)obj)->anim.localPosX;
-        stk.y = 0.0f;
-        stk.z = ((GameObject*)obj)->anim.localPosZ;
-        stk.rotX = ((GameObject*)obj)->anim.rotX;
-        stk.rotY = 0;
-        stk.rotZ = 0;
-        stk.scale = 1.0f;
-        setMatrixFromObjectPos(mtx, &stk);
-        tx = 5.0f + (f32)(s32)randomGetRange(-20, 20) / 10.0f;
-        tz = 2.0f + (f32)(s32)randomGetRange(-20, 20) / 10.0f;
-        Matrix_TransformPoint(mtx, tx, 0.0f, tz, &tx, &ox, &tz);
-        (*gWaterfxInterface)->spawnRipple(tx, *(f32*)(state + 0x32c), tz, 0, 0.0f, 3);
-        if (sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-                  ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) > 0.5f)
-        {
-            ((void (*)(u32, f32, f32, f32, u16))Sfx_PlayAtPositionFromObject)(obj, stk.x, stk.y, stk.z,
-                                                                              SFXstaff_proj_putaway);
-        }
-    }
-}
+void fn_80154328(int obj, int state);
 
 void Baddie_HandleHitReaction(GameObject* obj, u8* state, int unused, int cmd, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
@@ -153,4 +121,37 @@ void fn_80154584(GameObject* obj, int state)
     (obj)->anim.rotY =
         1024.0f * fn_80293DA4(0.19634955f * (f32)(u32) * (u8*)(state + 0x33a)) + (f32)(obj)->anim.rotY;
     fn_80154328((int)obj, state);
+}
+
+void fn_80154328(int obj, int state)
+{
+    f32 mtx[17];
+    MatrixTransform stk;
+    f32 tx;
+    f32 ox;
+    f32 tz;
+
+    *(f32*)(state + 0x330) -= timeDelta;
+    if (*(f32*)(state + 0x330) <= 0.0f)
+    {
+        *(f32*)(state + 0x330) = (f32)(s32)randomGetRange(30, 60);
+        stk.x = ((GameObject*)obj)->anim.localPosX;
+        stk.y = 0.0f;
+        stk.z = ((GameObject*)obj)->anim.localPosZ;
+        stk.rotX = ((GameObject*)obj)->anim.rotX;
+        stk.rotY = 0;
+        stk.rotZ = 0;
+        stk.scale = 1.0f;
+        setMatrixFromObjectPos(mtx, &stk);
+        tx = 5.0f + (f32)(s32)randomGetRange(-20, 20) / 10.0f;
+        tz = 2.0f + (f32)(s32)randomGetRange(-20, 20) / 10.0f;
+        Matrix_TransformPoint(mtx, tx, 0.0f, tz, &tx, &ox, &tz);
+        (*gWaterfxInterface)->spawnRipple(tx, *(f32*)(state + 0x32c), tz, 0, 0.0f, 3);
+        if (sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+                  ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) > 0.5f)
+        {
+            ((void (*)(u32, f32, f32, f32, u16))Sfx_PlayAtPositionFromObject)(obj, stk.x, stk.y, stk.z,
+                                                                              SFXstaff_proj_putaway);
+        }
+    }
 }

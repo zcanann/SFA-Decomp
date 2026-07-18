@@ -4799,6 +4799,12 @@ void logGpuHang(void)
         OSReport(strs + 0x4019c);
     }
 }
+void gxTransformFn_8004a83c(void)
+{
+    lbl_803DCCB0 = 0;
+    gxPerfFn_8004a77c(0);
+}
+
 void gxPerfFn_8004a77c(int enabled)
 {
     if ((u8)enabled != 0)
@@ -4824,13 +4830,6 @@ void gxPerfFn_8004a77c(int enabled)
         GXWGFifo.u16 = 0x1006;
         GXWGFifo.u32 = 0;
     }
-}
-
-
-void gxTransformFn_8004a83c(void)
-{
-    lbl_803DCCB0 = 0;
-    gxPerfFn_8004a77c(0);
 }
 
 extern char sThreadStateAttrSuspendFormat[];

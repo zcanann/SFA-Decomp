@@ -470,25 +470,18 @@ void ARWSquadron_update(int obj)
             inRange = (deltaZ < thr && deltaZ > -100.0f);
             if (inRange)
             {
-                if (setupL->gameBit > 0)
-                {
-                    enable = mainGetBit(setupL->gameBit) != 0;
-                }
-                else
+                int inRange2 = 0;
+                if (setupL->gameBit <= 0)
                 {
                     f32 thr2 = state->exitDistance;
                     GameObject* aim2 = (GameObject*)getArwing();
                     f32 d2;
-                    int inRange2;
                     if (aim2 == NULL)
                         aim2 = Obj_GetPlayerObject();
                     d2 = leader->anim.localPosZ - aim2->anim.localPosZ;
                     inRange2 = (d2 < thr2 && d2 > -100.0f);
-                    if (inRange2)
-                        enable = 1;
-                    else
-                        enable = mainGetBit(setupL->gameBit) != 0;
                 }
+                enable = inRange2 || mainGetBit(setupL->gameBit) != 0;
             }
         }
         if (enable)
@@ -532,11 +525,7 @@ void ARWSquadron_update(int obj)
             inRange = (deltaZ < thr && deltaZ > -100.0f);
             if (!inRange)
             {
-                if (setupL->gameBit > 0)
-                {
-                    disable = mainGetBit(setupL->gameBit) == 0;
-                }
-                else
+                if (setupL->gameBit <= 0)
                 {
                     f32 thr2 = state->exitDistance;
                     GameObject* aim2 = (GameObject*)getArwing();
@@ -548,9 +537,9 @@ void ARWSquadron_update(int obj)
                     inRange2 = (d2 < thr2 && d2 > -100.0f);
                     if (!inRange2)
                         disable = 1;
-                    else
-                        disable = mainGetBit(setupL->gameBit) == 0;
                 }
+                if (!disable && mainGetBit(setupL->gameBit) == 0)
+                    disable = 1;
             }
         }
         if (disable)

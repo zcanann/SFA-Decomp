@@ -66,53 +66,7 @@ f32 gTargetBlockHomeX;
 extern s32 gTargetBlockHomePos[];
 extern s32 gTargetBlockHomePos[];
 void dfptargetblock_initialise(void);
-
-
-void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints)
-{
-    u8* point;
-    f32 probe[3];
-    TrackBBoxHit hit;
-    f32 originalX;
-    f32 originalZ;
-    f32 deltaX;
-    f32 deltaZ;
-    int i;
-
-    i = 0;
-    point = collisionPoints->pointData;
-    while (i < collisionPoints->count)
-    {
-        probe[0] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_X) + obj->x;
-        originalX = probe[0];
-        probe[1] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
-        probe[2] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
-        originalZ = probe[2];
-        if (objBboxFn_800640cc(&obj->x, probe, lbl_803E6488.f, 1, &hit, (GameObject*)obj, 8, -1, 0, 0) != 0)
-        {
-            deltaX = probe[0] - originalX;
-            deltaZ = probe[2] - originalZ;
-            if (0.0f != obj->velX)
-            {
-                obj->x = obj->x + deltaX;
-            }
-            if (0.0f != obj->velZ)
-            {
-                obj->z = obj->z + deltaZ;
-            }
-            {
-                f32 zero = 0.0f;
-                obj->velX = zero;
-                obj->velY = zero;
-                obj->velZ = zero;
-            }
-            Sfx_PlayFromObject(obj, SFXTRIG_mv_bflconc1_1d0);
-            return;
-        }
-        point += DFPTARGETBLOCK_POINT_STRIDE;
-        i++;
-    }
-}
+void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints);
 
 
 int dfptargetblock_getExtraSize(void)
@@ -313,6 +267,53 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
             }
         }
         dfptargetblock_checkSettled(obj, state, &lbl_803E64C0.f);
+    }
+}
+
+
+void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints)
+{
+    u8* point;
+    f32 probe[3];
+    TrackBBoxHit hit;
+    f32 originalX;
+    f32 originalZ;
+    f32 deltaX;
+    f32 deltaZ;
+    int i;
+
+    i = 0;
+    point = collisionPoints->pointData;
+    while (i < collisionPoints->count)
+    {
+        probe[0] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_X) + obj->x;
+        originalX = probe[0];
+        probe[1] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
+        probe[2] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
+        originalZ = probe[2];
+        if (objBboxFn_800640cc(&obj->x, probe, lbl_803E6488.f, 1, &hit, (GameObject*)obj, 8, -1, 0, 0) != 0)
+        {
+            deltaX = probe[0] - originalX;
+            deltaZ = probe[2] - originalZ;
+            if (0.0f != obj->velX)
+            {
+                obj->x = obj->x + deltaX;
+            }
+            if (0.0f != obj->velZ)
+            {
+                obj->z = obj->z + deltaZ;
+            }
+            {
+                f32 zero = 0.0f;
+                obj->velX = zero;
+                obj->velY = zero;
+                obj->velZ = zero;
+            }
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_bflconc1_1d0);
+            return;
+        }
+        point += DFPTARGETBLOCK_POINT_STRIDE;
+        i++;
     }
 }
 

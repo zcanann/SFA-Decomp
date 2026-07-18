@@ -853,7 +853,19 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         }
         else
         {
-            MeasGlyph* found = gameTextFindGlyph(ch, langIdx);
+            MeasGlyph* found;
+            MeasGlyph* g = (MeasGlyph*)gameTextFonts->glyphs;
+            int cnt = gameTextFonts->glyphCount;
+            found = NULL;
+            while (cnt-- != 0)
+            {
+                if (g->key == ch && g->lang == langIdx)
+                {
+                    found = g;
+                    break;
+                }
+                g++;
+            }
             if (found != NULL)
             {
                 int advance = (found->fC + found->f8) + found->f9;

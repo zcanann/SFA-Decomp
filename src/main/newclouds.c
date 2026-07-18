@@ -535,66 +535,7 @@ void lightningRenderActive(void)
         lightningRender(lbl_803DD19C);
     }
 }
-LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, s16 lifetime,
-                                 u8 width, u8 flags)
-{
-    LightningEffect* p = mmAlloc(40, 23, 0);
-
-    if (p == NULL)
-    {
-        return NULL;
-    }
-    p->start[0] = start->x;
-    p->start[1] = start->y;
-    p->start[2] = start->z;
-    p->end[0] = end->x;
-    p->end[1] = end->y;
-    p->end[2] = end->z;
-    p->radiusX = radiusX;
-    p->radiusY = radiusY;
-    *(s16*)&p->lifetime = lifetime;
-    p->width = width;
-    p->timer = 0;
-    p->seed = 0xFFFF;
-    p->flags = flags;
-    return p;
-}
-void snowCloudBuildBoxVerts(f32* out, f32 height, f32 scale)
-{
-    f32 side;
-    f32 zero;
-    f32 scaledHeight;
-    f32 edge;
-
-    side = lbl_803DF1D8 * scale;
-    out[0] = side;
-    zero = 0.0f;
-    out[1] = zero;
-    out[2] = side;
-    out[3] = side;
-    scaledHeight = height * scale;
-    out[4] = scaledHeight;
-    out[5] = side;
-    edge = lbl_803DF1DC * scale;
-    out[6] = edge;
-    out[7] = scaledHeight;
-    out[8] = side;
-    out[9] = edge;
-    out[10] = zero;
-    out[11] = side;
-    out[12] = side;
-    out[13] = zero;
-    out[14] = edge;
-    out[15] = side;
-    out[16] = scaledHeight;
-    out[17] = edge;
-    out[18] = edge;
-    out[19] = scaledHeight;
-    out[20] = edge;
-    out[21] = edge;
-    out[22] = zero;
-    out[23] = edge;
-}
+void snowCloudBuildBoxVerts(f32* out, f32 height, f32 scale);
 void mm_free_(void* ptr)
 {
     mm_free(ptr);
@@ -1521,6 +1462,67 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
         gNewCloudWindSources[5].flag = 0;
         gNewCloudWindSourcesInit = 0;
     }
+}
+
+LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, s16 lifetime,
+                                 u8 width, u8 flags)
+{
+    LightningEffect* p = mmAlloc(40, 23, 0);
+
+    if (p == NULL)
+    {
+        return NULL;
+    }
+    p->start[0] = start->x;
+    p->start[1] = start->y;
+    p->start[2] = start->z;
+    p->end[0] = end->x;
+    p->end[1] = end->y;
+    p->end[2] = end->z;
+    p->radiusX = radiusX;
+    p->radiusY = radiusY;
+    *(s16*)&p->lifetime = lifetime;
+    p->width = width;
+    p->timer = 0;
+    p->seed = 0xFFFF;
+    p->flags = flags;
+    return p;
+}
+void snowCloudBuildBoxVerts(f32* out, f32 height, f32 scale)
+{
+    f32 side;
+    f32 zero;
+    f32 scaledHeight;
+    f32 edge;
+
+    side = lbl_803DF1D8 * scale;
+    out[0] = side;
+    zero = 0.0f;
+    out[1] = zero;
+    out[2] = side;
+    out[3] = side;
+    scaledHeight = height * scale;
+    out[4] = scaledHeight;
+    out[5] = side;
+    edge = lbl_803DF1DC * scale;
+    out[6] = edge;
+    out[7] = scaledHeight;
+    out[8] = side;
+    out[9] = edge;
+    out[10] = zero;
+    out[11] = side;
+    out[12] = side;
+    out[13] = zero;
+    out[14] = edge;
+    out[15] = side;
+    out[16] = scaledHeight;
+    out[17] = edge;
+    out[18] = edge;
+    out[19] = scaledHeight;
+    out[20] = edge;
+    out[21] = edge;
+    out[22] = zero;
+    out[23] = edge;
 }
 
 void dll_07_func09(void)

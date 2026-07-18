@@ -244,6 +244,7 @@ char sObjFreeNonExistentObjectWarning[] = "Tried to free non-existent object\n";
 void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags);
 void Obj_RunInitCallback(u8* obj, int cb, int unused);
 void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
+void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load);
 void Obj_ResetObjectSystem(void);
 void Obj_FreeObject(GameObject* obj);
 
@@ -1269,43 +1270,6 @@ void objGetWeaponDa(u8* obj, int objType, ObjWeaponDaTable* weaponDaTable, int k
     }
 }
 
-void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load)
-{
-    int i;
-    s16* tbl;
-    s16 da2;
-
-    tbl = ((GameObject*)obj)->anim.modelInstance->eventMoveTable;
-    eventTable->byteCount = 0;
-    if (tbl == NULL)
-    {
-        return;
-    }
-    i = 0;
-    while (tbl[i] != -1)
-    {
-        if (tbl[i] == (int)moveId)
-        {
-            da2 = tbl[i + 1];
-            eventTable->byteCount = tbl[i + 2];
-            if (eventTable->byteCount > 0x50)
-            {
-                eventTable->byteCount = 0x50;
-            }
-            if (load == 0)
-            {
-                getTabEntry(eventTable->entries, MLDF_FILEID_OBJEVENT_BIN, da2, eventTable->byteCount);
-            }
-            else
-            {
-                fileLoadToBufferOffset(MLDF_FILEID_OBJEVENT_BIN, eventTable->entries, da2, eventTable->byteCount);
-            }
-            return;
-        }
-        i += 3;
-    }
-}
-
 void Obj_UpdateObject(GameObject* obj)
 {
     ObjAnimComponent* object;
@@ -2072,6 +2036,43 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     }
     obj->parent = parent;
     return obj;
+}
+
+void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load)
+{
+    int i;
+    s16* tbl;
+    s16 da2;
+
+    tbl = ((GameObject*)obj)->anim.modelInstance->eventMoveTable;
+    eventTable->byteCount = 0;
+    if (tbl == NULL)
+    {
+        return;
+    }
+    i = 0;
+    while (tbl[i] != -1)
+    {
+        if (tbl[i] == (int)moveId)
+        {
+            da2 = tbl[i + 1];
+            eventTable->byteCount = tbl[i + 2];
+            if (eventTable->byteCount > 0x50)
+            {
+                eventTable->byteCount = 0x50;
+            }
+            if (load == 0)
+            {
+                getTabEntry(eventTable->entries, MLDF_FILEID_OBJEVENT_BIN, da2, eventTable->byteCount);
+            }
+            else
+            {
+                fileLoadToBufferOffset(MLDF_FILEID_OBJEVENT_BIN, eventTable->entries, da2, eventTable->byteCount);
+            }
+            return;
+        }
+        i += 3;
+    }
 }
 
 GameObject* Obj_SetupObject(ObjPlacement* data, int flags, int mapLayer, int objIndex, void* parent)
