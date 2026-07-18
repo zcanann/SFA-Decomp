@@ -1799,32 +1799,11 @@ void doPendingMapLoads(void)
                 i = 0;
                 if (gShaderRomListSlotCount > 0)
                 {
-                    int rem = gShaderRomListSlotCount - 8;
-                    if (gShaderRomListSlotCount > 8)
+                    s8* q = (s8*)(base + 0x418C);
+                    for (; i < gShaderRomListSlotCount; i++)
                     {
-                        s8* p = (s8*)(base + 0x418C);
-                        s8 z0 = i, z1 = i, z2 = i, z3 = i, z4 = i, z5 = i, z6 = i, z7 = i;
-                        for (; i < rem; i += 8)
-                        {
-                            p[6] = z0;
-                            p[14] = z1;
-                            p[22] = z2;
-                            p[30] = z3;
-                            p[38] = z4;
-                            p[46] = z5;
-                            p[54] = z6;
-                            p[62] = z7;
-                            p += 64;
-                        }
-                    }
-                    {
-                        s8* q = (s8*)(base + i * 8);
-                        q += 0x418C;
-                        for (; i < gShaderRomListSlotCount; i++)
-                        {
-                            q[6] = 0;
-                            q += 8;
-                        }
+                        q[6] = 0;
+                        q += 8;
                     }
                 }
                 gShaderCurMapEventId = mapCoordsToId(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, 0);
