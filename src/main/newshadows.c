@@ -256,7 +256,6 @@ extern u32 FUN_8003b7dc();
 extern u32 FUN_8003b878();
 extern u32 FUN_80040cd0();
 extern u32 FUN_8005d00c();
-extern u32 objAudioFn_8006ef38();
 extern u32 FUN_8006f788();
 extern u32 FUN_8006f790();
 extern u32 FUN_800709e8();
@@ -2031,18 +2030,18 @@ u16 audioPickSoundEffect_8006ed24(s8 a, u8 b)
 }
 
 
-void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2)
+void objAudioFn_8006edcc(GameObject* obj, int eventMask, u8 type, void* points, void* state, f32 unused, f32 scale)
 {
-    s8 buf[0x1c];
+    ObjAnimEventList events;
     int bit;
-    memset(buf, 0, 0x1c);
+    memset(&events, 0, sizeof(events));
     for (bit = 0; bit < 32; bit++)
     {
-        if ((mask >> bit) & 1)
+        if ((eventMask >> bit) & 1)
         {
-            buf[buf[0x1b] + 0x13] = bit;
-            buf[0x1b]++;
+            events.triggeredIds[events.triggerCount] = bit;
+            events.triggerCount++;
         }
     }
-    objAudioFn_8006ef38(p1, buf, p5, p6, p7, f1, f2);
+    objAudioFn_8006ef38(obj, &events, type, points, state, unused, scale);
 }

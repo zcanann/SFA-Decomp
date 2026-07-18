@@ -38,6 +38,7 @@
 #include "main/pi_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/shader_api.h"
+#include "main/newshadows_audio_api.h"
 
 typedef void (*GXSetZCompLocLegacyFn)(u8 beforeTex);
 typedef void (*GXSetZModeLegacyFn)(u8 compareEnable, int compareFunc, u8 updateEnable);
@@ -167,8 +168,6 @@ extern f32 lbl_803DEF90, lbl_803DEF94, lbl_803DEF98, lbl_803DEF9C;
 extern GXColor lbl_803DEEB4, lbl_803E8454;
 
 void* fn_8006F388(u32 i);
-void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unused, f32 scale);
-
 void* jumptable_8030E9B4[11] = {
     (void*)((u8*)objAudioFn_8006ef38 + 0x9C), (void*)((u8*)objAudioFn_8006ef38 + 0x54),
     (void*)((u8*)objAudioFn_8006ef38 + 0x9C), (void*)((u8*)objAudioFn_8006ef38 + 0x5C),
@@ -289,7 +288,8 @@ int saveCb_8007e748(int saveId, int size, void* dst);
 
 /* opt_common_subs off: the retail build re-truncates the u8 `flags`/`j`
  * loop values (clrlwi ,,24) at each use rather than caching the masked form. */
-void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unused, f32 scale)
+void objAudioFn_8006ef38(GameObject* obj, ObjAnimEventList* events, u8 type, void* points, void* state, f32 unused,
+                         f32 scale)
 {
     Vec v;
     SplashFxParams ps;
@@ -339,9 +339,9 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
         break;
     }
     flags = 0;
-    for (i = 0; i < hits[0x1b]; i++)
+    for (i = 0; i < events->triggerCount; i++)
     {
-        switch (hits[0x13 + i])
+        switch (events->triggeredIds[i])
         {
         case 1:
             flags |= 1;
@@ -365,11 +365,11 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
     {
         return;
     }
-    if (!(((BaddieState*)st)->contactSfxFlags & 0x10) && ((BaddieState*)st)->contactSfxMuted != 0)
+    if (!(((BaddieState*)state)->contactSfxFlags & 0x10) && ((BaddieState*)state)->contactSfxMuted != 0)
     {
         return;
     }
-    n = ((BaddieState*)st)->surfaceSoundIndex;
+    n = ((BaddieState*)state)->surfaceSoundIndex;
     if (n < 0 || n >= 0x23)
     {
         n = 0;
@@ -379,7 +379,7 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
         n = tbl[0xb4 + n];
     }
     sfx = n;
-    desc = ((BaddieState*)st)->contactObj;
+    desc = ((BaddieState*)state)->contactObj;
     if (desc != NULL)
     {
         switch (((GameObject*)desc)->anim.seqId)
@@ -393,15 +393,15 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
     }
     if (sfxTab != NULL)
     {
-        vec = vecs + vecIdx * 3;
-        if (((BaddieState*)st)->waterDepth > lbl_803DEE20)
+        vec = (f32*)points + vecIdx * 3;
+        if (((BaddieState*)state)->waterDepth > lbl_803DEE20)
         {
-            (*gWaterfxInterface)->spawnImpactSurface(obj, flags, vecs, st, unused);
+            (*gWaterfxInterface)->spawnImpactSurface((u8*)obj, flags, (f32*)points, (u8*)state, unused);
             sfx = 5;
         }
-        if ((GameObject*)obj == Obj_GetPlayerObject())
+        if (obj == Obj_GetPlayerObject())
         {
-            if (*(s16*)(*(u32*)&((GameObject*)obj)->extra + 0x81a) == 1)
+            if (*(s16*)(*(u32*)&obj->extra + 0x81a) == 1)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_foot_ice_scuff);
             }
@@ -421,15 +421,15 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
     scale = lbl_803DEE24 * scale;
     while (flags != 0)
     {
-        vec = vecs + i * 3;
+        vec = (f32*)points + i * 3;
         v.x = vec[0];
         v.y = vec[1];
         v.z = vec[2];
         if (flags & 1)
         {
-            if (((GameObject*)obj)->anim.classId == 1 || ((GameObject*)obj)->anim.seqId == 0x416)
+            if (obj->anim.classId == 1 || obj->anim.seqId == 0x416)
             {
-                playerEarthWalkerAudioFn_8006f950(obj, (f32*)&v, i & 1, sfx);
+                playerEarthWalkerAudioFn_8006f950((u8*)obj, (f32*)&v, i & 1, sfx);
             }
             ps.pos.x = vec[0];
             ps.pos.y = vec[1];
@@ -438,9 +438,9 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
             ps.id = sfx;
             ps.unk4 = 0;
             ps.unk2 = 0;
-            v.x = lbl_803DEE28 * ((GameObject*)obj)->anim.velocityX;
-            v.y = lbl_803DEE28 * ((GameObject*)obj)->anim.velocityY;
-            v.z = lbl_803DEE28 * ((GameObject*)obj)->anim.velocityZ;
+            v.x = lbl_803DEE28 * obj->anim.velocityX;
+            v.y = lbl_803DEE28 * obj->anim.velocityY;
+            v.z = lbl_803DEE28 * obj->anim.velocityZ;
             if (sfx == 6 || sfx == 3)
             {
                 cnt = randomGetRange(2, 4);

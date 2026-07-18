@@ -42,6 +42,7 @@
 #include "main/vecmath.h"
 #include "main/dll/DIM/dll_01D9_dim2prisonmammoth.h"
 #include "main/newshadows.h"
+#include "main/newshadows_audio_api.h"
 
 #define storeZeroToFloatParamLegacy(timer) \
     ((void (*)(int))storeZeroToFloatParam)((timer))
@@ -1341,8 +1342,8 @@ void DR_EarthWarrior_update(GameObject* obj)
         f32 saved = (obj)->anim.velocityY;
         (obj)->anim.velocityY = lbl_803E8304;
         *(int*)&inner->baddie.eventFlags &= ~7;
-        objAudioFn_8006edcc((int)obj, *(int*)&inner->baddie.eventFlags, inner->sub.soundId, (int)((char*)inner + 0xb18),
-                            (int)((char*)inner + 0x4), inner->baddie.animSpeedA,
+        objAudioFn_8006edcc(obj, *(int*)&inner->baddie.eventFlags, inner->sub.soundId, (void*)((char*)inner + 0xb18),
+                            (void*)((char*)inner + 0x4), inner->baddie.animSpeedA,
                             (inner->sub.soundId == 8) ? lbl_803E837C : lbl_803E8380);
         (obj)->anim.velocityY = saved;
     }

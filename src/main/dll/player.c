@@ -3806,8 +3806,6 @@ int playerStateAimStaff(int obj, int state)
     return 0;
 }
 
-extern void objAudioFn_8006edcc();
-
 extern u8 lbl_803DC6A8[8];
 extern u8 lbl_803DC6B0[2];
 extern const int lbl_802C2C50[];
@@ -16714,9 +16712,9 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         }
     }
     *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-    ((void (*)(int, int, int, int, int, f32, f32))objAudioFn_8006ef38)(
-        obj, (int)&seq->animEvents, ((PlayerState*)inner)->animSoundId, (int)((char*)inner + 0x3c4),
-        (int)((char*)inner + 4), ((PlayerState*)inner)->baddie.animSpeedA, 1.0f);
+    objAudioFn_8006ef38((GameObject*)obj, &seq->animEvents, ((PlayerState*)inner)->animSoundId,
+                        (void*)((char*)inner + 0x3c4), (void*)((char*)inner + 4),
+                        ((PlayerState*)inner)->baddie.animSpeedA, 1.0f);
     return result;
 }
 
@@ -17649,7 +17647,7 @@ void playerUpdate(GameObject* obj)
             ((PlayerState*)inner)->isHoldingObject = 0;
             ((PlayerState*)inner)->queuedBitCount = 0;
             *(s16*)obj = ((PlayerState*)inner)->targetYaw;
-            objAudioFn_8006edcc(obj, *(int*)&((PlayerState*)inner)->baddie.eventFlags,
+            objAudioFn_8006edcc((GameObject*)obj, *(int*)&((PlayerState*)inner)->baddie.eventFlags,
                                 ((PlayerState*)inner)->animSoundId, (void*)(inner + 0x3c4), (void*)(inner + 4),
                                 ((PlayerState*)inner)->baddie.animSpeedA, lbl_803E7EE0);
         }

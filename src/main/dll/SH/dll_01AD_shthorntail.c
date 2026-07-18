@@ -22,6 +22,7 @@
 #include "main/dll/SC/dll_01B0_shswapston.h"
 #include "main/dll/SC/SCanimobj.h"
 #include "main/dll/SH/dll_01B0_shswapston.h"
+#include "main/newshadows_audio_api.h"
 
 typedef struct SHthorntailTailSwingEffectScratch
 {
@@ -73,8 +74,6 @@ extern u32 lbl_803E5410;
 extern SHthorntailPathControlInterface** gPathControlInterface;
 
 
-extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
-                                f32 scaleY);
 void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {
     int playerObj;
@@ -383,8 +382,8 @@ u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjA
         characterDoEyeAnimsState((GameObject*)obj, runtime->collisionShapeState);
     }
     runtime->activeMoveValid = 0;
-    objAudioFn_8006ef38((int)obj, (int)&animUpdate->animEvents, 8, (int)runtime->renderPathPoints,
-                        (int)runtime->moveScratch, 1.0f, 1.0f);
+    objAudioFn_8006ef38((GameObject*)obj, &animUpdate->animEvents, 8, runtime->renderPathPoints,
+                        runtime->moveScratch, 1.0f, 1.0f);
     return 0;
 }
 
@@ -563,8 +562,8 @@ void SHthorntail_update(SHthorntailObject* obj)
             }
             eventId++;
         }
-        objAudioFn_8006ef38((int)obj, (int)&animEvents, 8, (int)runtime->renderPathPoints, (int)runtime->moveScratch,
-                            1.0f, 1.0f);
+        objAudioFn_8006ef38((GameObject*)obj, &animEvents, 8, runtime->renderPathPoints, runtime->moveScratch, 1.0f,
+                            1.0f);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
              SHTHORNTAIL_STATE_FLAG_DISABLE_MOVE_CONTROL) != 0)
         {

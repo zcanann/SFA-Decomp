@@ -31,6 +31,7 @@
 #include "main/object_render.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
+#include "main/newshadows_audio_api.h"
 
 u8 lbl_803DBF70[4] = {1, 0, 0, 0};
 u8 lbl_803DBF74[4] = {1, 1, 0, 0};
@@ -851,7 +852,7 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
     {
         state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_ANIM_ENDED);
     }
-    objAudioFn_8006ef38((int)obj, &state->animEvents, 8, state->pathPoints, state->pathState, lbl_803E5210,
+    objAudioFn_8006ef38((GameObject*)obj, &state->animEvents, 8, state->pathPoints, state->pathState, lbl_803E5210,
                         *(f32*)&lbl_803E5210);
     fn_801CDF94((GameObject*)obj, (int)state, table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
     state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);

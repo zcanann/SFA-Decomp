@@ -13,7 +13,6 @@
 #include "track/intersect_whirlpool_api.h"
 #include "ghidra_import.h"
 
-void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unused, f32 scale);
 void* fn_8006F388(u32 i);
 void timeFn_8006f400(f32 step);
 void drawFn_8006f500(void);

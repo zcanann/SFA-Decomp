@@ -22,6 +22,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
+#include "main/newshadows_audio_api.h"
 
 /* GameBit that erupts/retires the geyser (hides it, drops its sounds). */
 #define GAMEBIT_GEYSER_OFF 0xa
@@ -45,8 +46,6 @@ typedef struct NwGeyserTextureScrollParams
 const NwGeyserTextureScrollParams gNwGeyserTextureScrollParams = {512.0f, 0.0f};
 
 
-extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points, void* scratch, f32 scaleX,
-                                f32 scaleZ);
 void fn_801CDF94(GameObject* obj, int state, int flag);
 
 int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -133,7 +132,7 @@ int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     audioEvents = state + 0x440;
     audioPoints = state + 0x45c;
     audioScratch = state + 0x16c;
-    objAudioFn_8006ef38((int)obj, audioEvents, 8, audioPoints, audioScratch, 1.0f, 1.0f);
+    objAudioFn_8006ef38(obj, (ObjAnimEventList*)audioEvents, 8, audioPoints, audioScratch, 1.0f, 1.0f);
     if (animUpdate->eventCount != 0)
     {
         (obj)->objectFlags = (u16)((obj)->objectFlags & ~0x400);

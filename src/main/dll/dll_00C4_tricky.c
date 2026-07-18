@@ -71,6 +71,7 @@
 #include "main/dll/dll_80136a40_ext2.h"
 #include "main/dll/dll_0014_unk.h"
 #include "main/pi_dolphin_cs.h"
+#include "main/newshadows_audio_api.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -211,9 +212,6 @@ STATIC_ASSERT(sizeof(struct VisBits16) == 0x10);
 #define BADDIE_PLACEMENT_DEATH_GAMEBIT          0x18 /* s16: gamebit incremented on defeat */
 #define BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT 0x1a /* s16: gamebit cleared on defeat */
 
-extern void objAudioFn_8006edcc(int obj, u16 mask, int arg5, float* points, void* aux, f32 scaleX, f32 scaleY);
-extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
-                                f32 scaleY);
 const struct VisBits16 gTrickyVisibilityBitsInit = {{0x10000, 0x20000, 0x40000, 0x80000}};
 extern char lbl_8031D2E8[];
 extern char gTrickyPathPointCollision[];
@@ -576,7 +574,8 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     objAnimFreeChildren(obj, state, (GameObject**)&((TrickyState*)state)->child);
     fn_80138D7C(obj, state);
     Tricky_updateBlendChannelWeight(obj, (u8*)state);
-    objAudioFn_8006ef38(obj, (int)&animUpdate->animEvents, 1, state + 0x7d8, state + 0xf8, lbl_803E23E8,
+    objAudioFn_8006ef38((GameObject*)obj, &animUpdate->animEvents, 1, (void*)(state + 0x7d8),
+                        (void*)(state + 0xf8), lbl_803E23E8,
                         *(f32*)&lbl_803E23E8);
     if ((((TrickyState*)state)->stateFlags & 1) != 0)
     {
@@ -2006,8 +2005,8 @@ void Tricky_update(int obj)
     Tricky_updateBlendChannelWeight(obj, (u8*)state);
     if (trickyState->speed > lbl_803E254C)
     {
-        objAudioFn_8006ef38(obj, state + 0x80c, 1, state + 0x7d8, state + 0xf8, trickyState->speed,
-                            lbl_803E23E8);
+        objAudioFn_8006ef38((GameObject*)obj, (ObjAnimEventList*)(state + 0x80c), 1, (void*)(state + 0x7d8),
+                            (void*)(state + 0xf8), trickyState->speed, lbl_803E23E8);
     }
     if (lbl_803E23DC == trickyState->waterLevel)
     {
@@ -3051,7 +3050,7 @@ void Tricky_applyFloorResponse(GameObject* obj, int state)
     if ((((TrickyState*)state)->controlFlags & 0x00200000) != 0)
     {
         ObjPath_GetPointWorldPositionArray(obj, 2, 2, points);
-        objAudioFn_8006edcc((int)obj, ((TrickyState*)state)->animEventMask, 7, points, (void*)(state + 4),
+        objAudioFn_8006edcc(obj, ((TrickyState*)state)->animEventMask, 7, points, (void*)(state + 4),
                             ((TrickyState*)state)->unk310, lbl_803E256C);
     }
 }
