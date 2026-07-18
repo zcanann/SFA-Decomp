@@ -37,7 +37,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/player_control_interface.h"
 #include "main/dll/baddie_control_interface.h"
-#include "main/dll/player_ext2.h"
+#include "main/dll/player_state_api.h"
 
 /* object group this object belongs to */
 #define KALDACHOM_OBJGROUP 3

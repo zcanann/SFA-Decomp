@@ -19,7 +19,7 @@
 #include "main/dll/titlemenuitem_struct.h"
 #include "main/dll/savedata_struct.h"
 #include "dolphin/os/OSRtc.h"
-#include "main/rcp_dolphin_ext2.h"
+#include "main/rcp_dolphin_state_api.h"
 extern int* gTitleMenuLinkInterface;
 extern int* gTitleMenuItemInterface;
 extern s8 lbl_803DBA28;

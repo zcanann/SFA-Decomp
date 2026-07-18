@@ -9,7 +9,7 @@
 #include "main/dll/dll_0140_fogcontrol.h"
 #include "main/object_descriptor.h"
 #include "main/shader_ext.h"
-#include "main/shader_cs2.h"
+#include "main/shader_maptex_api.h"
 
 typedef struct TexframeanimatorPlacement
 {

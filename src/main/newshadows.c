@@ -26,7 +26,7 @@
 #include "main/shader_api.h"
 #include "main/track_dolphin.h"
 #include "main/objprint_ext.h"
-#include "main/pi_dolphin_ext2.h"
+#include "main/pi_dolphin_fileload_api.h"
 #include "main/dll/modgfx.h"
 #include "dolphin/gx/GXFrameBuffer.h"
 #include "string.h"

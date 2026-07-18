@@ -15,7 +15,7 @@
 #include "main/objprint_render_api.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/player_api.h"
-#include "main/dll/player_ext2.h"
+#include "main/dll/player_state_api.h"
 #include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_01B5_lightfoot.h"
