@@ -118,7 +118,7 @@ typedef struct LandedArwingFxScratch
     f32 z;
 } LandedArwingFxScratch;
 
-typedef struct LandedArwingState
+struct LandedArwingObjectState
 {
     f32 sequenceHitCooldown;
     f32 path7Fx;
@@ -137,7 +137,7 @@ typedef struct LandedArwingState
     u8 unk1E;
     u8 spawnCount;
     f32 hitEffectCooldown;
-} LandedArwingState;
+};
 
 extern LandedArwingFxPoint gLandedArwingPathFxTable[];
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
@@ -145,7 +145,7 @@ extern LandedArwingFxPoint gLandedArwingPathFxTable[];
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
 void landed_arwing_renderPathEffects(GameObject* obj)
 {
-    LandedArwingState* state;
+    LandedArwingObjectState* state;
     u8 i;
     LandedArwingFxScratch scratch;
     f32 zero = 0.0f;
@@ -203,7 +203,7 @@ int landed_arwing_getExtraSize(void)
 
 void landed_arwing_free(GameObject* obj)
 {
-    LandedArwingState* state = obj->extra;
+    LandedArwingObjectState* state = obj->extra;
     if (state->childObject != NULL)
     {
         Obj_FreeObject(state->childObject);
@@ -286,7 +286,7 @@ int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
 {
     int i;
     int def;
-    LandedArwingState* state;
+    LandedArwingObjectState* state;
     int mapId;
     GameObject* child;
 
@@ -483,7 +483,7 @@ int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
 
 void landed_arwing_update(GameObject* obj)
 {
-    LandedArwingState* state;
+    LandedArwingObjectState* state;
     int player;
     GameObject* child;
 
@@ -549,7 +549,7 @@ void landed_arwing_update(GameObject* obj)
 
 void landed_arwing_init(GameObject* obj, int param)
 {
-    LandedArwingState* state = obj->extra;
+    LandedArwingObjectState* state = obj->extra;
     obj->objectFlags = obj->objectFlags | LANDEDARWING_OBJFLAG_HITDETECT_DISABLED;
     state->sequenceState = 1;
     if (mainGetBit(((LandedArwingPlacement*)param)->triggerGameBit) == 0)
@@ -559,10 +559,10 @@ void landed_arwing_init(GameObject* obj, int param)
     obj->animEventCallback = Landed_Arwing_SeqFn;
 }
 
-void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingState* state)
+void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingObjectState* state)
 {
     int i;
-    LandedArwingState* otherState;
+    LandedArwingObjectState* otherState;
     int def;
     ObjPlacement* setup;
     int other;
@@ -645,7 +645,7 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingState* state)
     ObjAnim_AdvanceCurrentMove((int)obj, state->path8Fx, timeDelta, &events);
 }
 
-void landed_arwing_updateDamageTexture(GameObject* obj, LandedArwingState* state)
+void landed_arwing_updateDamageTexture(GameObject* obj, LandedArwingObjectState* state)
 {
     int def;
     ObjTextureRuntimeSlot* texture;

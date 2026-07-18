@@ -23,6 +23,7 @@
 #include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/object_descriptor.h"
+#include "main/dll/dll_011B_landedarwing.h"
 
 STATIC_ASSERT(sizeof(StaffActivatedState) == 0x24);
 STATIC_ASSERT(offsetof(StaffActivatedState, targetX) == 0x00);
@@ -59,9 +60,6 @@ STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
 #define STAFFACTIVATED_PARTICLE_ID     0x7c3
 
 #define STAFFACTIVATED_OBJ_GROUP 0x41
-
-extern void landed_arwing_updateHitReaction(GameObject* obj, void* state);
-extern void landed_arwing_updateDamageTexture(GameObject* obj, void* state);
 
 extern const f32 lbl_803E3BBC;
 
@@ -187,11 +185,11 @@ void staffactivated_update(GameObject* obj)
         staffactivated_updateLiftHeight((GameObject*)obj, state);
         break;
     case STAFFACTIVATED_MODE_HIT_REACTION:
-        landed_arwing_updateHitReaction((GameObject*)(obj), state);
+        landed_arwing_updateHitReaction(obj, (LandedArwingObjectState*)state);
         break;
     case STAFFACTIVATED_MODE_DAMAGE_FIRST:
     case STAFFACTIVATED_MODE_DAMAGE_SECOND:
-        landed_arwing_updateDamageTexture((GameObject*)(obj), state);
+        landed_arwing_updateDamageTexture(obj, (LandedArwingObjectState*)state);
         break;
     case STAFFACTIVATED_MODE_ACTION:
         if (obj->anim.resetHitboxFlags & STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER)

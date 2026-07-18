@@ -10,6 +10,10 @@
 #include "main/objtexture.h"
 #include "main/dll/CF/CFBaby.h"
 
-void landed_arwing_renderPathEffects(GameObject* obj);
+typedef struct LandedArwingObjectState LandedArwingObjectState;
 
-#endif
+void landed_arwing_renderPathEffects(GameObject* obj);
+void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingObjectState* state);
+void landed_arwing_updateDamageTexture(GameObject* obj, LandedArwingObjectState* state);
+
+#endif /* MAIN_DLL_DLL_011B_LANDEDARWING_H_ */
