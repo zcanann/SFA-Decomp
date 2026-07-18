@@ -656,6 +656,8 @@ void dll_07_func0A_nop(void)
 
 WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
 
+static const SnowFlakeUVs kSnowFlakeUVs = {{-48, 0, 176, 0, 64, 256}};
+
 int snowPrintSnowCloud(int arg, int cloudId)
 {
     u8* p;
@@ -675,7 +677,6 @@ int snowPrintSnowCloud(int arg, int cloudId)
     f32 stepZ;
     f32 size;
     f32 yb;
-    int base;
     f32 mtxB[16];
     f32 mtxT[12];
     f32 mtxA[16];
@@ -683,11 +684,13 @@ int snowPrintSnowCloud(int arg, int cloudId)
     f32 vx[3];
     f32 vy[3];
     f32 vz[3];
-    SnowFlakeUVs uvs = {{-48, 0, 176, 0, 64, 256}};
+    SnowFlakeUVs uvs;
     f32* qx;
     f32* qy;
     f32* qz;
+    s16* puv;
 
+    uvs = kSnowFlakeUVs;
     qx = (f32*)vx;
     qy = (f32*)vy;
     qz = (f32*)vz;
@@ -843,28 +846,31 @@ int snowPrintSnowCloud(int arg, int cloudId)
             }
         }
         yb = part->y - *(f32*)(p + part->angle * 4 + 8);
-        base = part->quadIndex * 0x2c;
-        vx[0] = *(f32*)(p + base + 0x1008) * (size = part->fallSpeed) + part->x;
-        vy[0] = *(f32*)(p + base + 0x1014) * (size = part->fallSpeed) + yb;
-        vz[0] = *(f32*)(p + base + 0x1020) * (size = part->fallSpeed) + part->z;
-        vx[1] = *(f32*)(p + base + 0x100c) * (size = part->fallSpeed) + part->x;
-        vy[1] = *(f32*)(p + base + 0x1018) * (size = part->fallSpeed) + yb;
-        vz[1] = *(f32*)(p + base + 0x1024) * (size = part->fallSpeed) + part->z;
-        vx[2] = *(f32*)(p + base + 0x1010) * (size = part->fallSpeed) + part->x;
-        vy[2] = *(f32*)(p + base + 0x101c) * (size = part->fallSpeed) + yb;
-        vz[2] = *(f32*)(p + base + 0x1028) * (size = part->fallSpeed) + part->z;
+        size = part->fallSpeed;
+        vx[0] = ((f32*)p)[part->quadIndex * 11 + 1026] * size + part->x;
+        vy[0] = ((f32*)p)[part->quadIndex * 11 + 1029] * size + yb;
+        vz[0] = ((f32*)p)[part->quadIndex * 11 + 1032] * size + part->z;
+        vx[1] = ((f32*)p)[part->quadIndex * 11 + 1027] * size + part->x;
+        vy[1] = ((f32*)p)[part->quadIndex * 11 + 1030] * size + yb;
+        vz[1] = ((f32*)p)[part->quadIndex * 11 + 1033] * size + part->z;
+        vx[2] = ((f32*)p)[part->quadIndex * 11 + 1028] * size + part->x;
+        vy[2] = ((f32*)p)[part->quadIndex * 11 + 1031] * size + yb;
+        vz[2] = ((f32*)p)[part->quadIndex * 11 + 1034] * size + part->z;
+        puv = uvs.uv;
         GXWGFifo.f32 = (f64)qx[0];
         GXWGFifo.f32 = (f64)qy[0];
         GXWGFifo.f32 = (f64)qz[0];
-        snowFifoTexCoord2s16(uvs.uv[0], uvs.uv[1]);
+        snowFifoTexCoord2s16(puv[0], puv[1]);
+        puv += 2;
         GXWGFifo.f32 = (f64)qx[1];
         GXWGFifo.f32 = (f64)qy[1];
         GXWGFifo.f32 = (f64)qz[1];
-        snowFifoTexCoord2s16(uvs.uv[2], uvs.uv[3]);
+        snowFifoTexCoord2s16(puv[0], puv[1]);
+        puv += 2;
         GXWGFifo.f32 = (f64)qx[2];
         GXWGFifo.f32 = (f64)qy[2];
         GXWGFifo.f32 = (f64)qz[2];
-        snowFifoTexCoord2s16(uvs.uv[4], uvs.uv[5]);
+        snowFifoTexCoord2s16(puv[0], puv[1]);
         part += 1;
     }
     return 0;
