@@ -49,7 +49,6 @@ extern MoveLibState gDIMbossAnimController;
 extern void (*gDIMbossAnimTable[6])(void);
 extern void (*gDIMbossHitDetectAnimTable[12])(void);
 extern f32 gDIMbossAnimScratchBase[3];
-extern u8 gDim2IcicleHitFxBuffer[0x18];
 
 
 
