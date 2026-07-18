@@ -35,8 +35,6 @@
 #define NWGEYSER_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define NWGEYSER_OBJFLAG_UPDATE_DISABLED    0x8000
 
-extern u8 lbl_803268B4[];
-
 typedef struct NwGeyserTextureScrollParams
 {
     f32 unitsPerSecond;
