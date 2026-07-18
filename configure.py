@@ -308,58 +308,6 @@ cflags_dll_nopeep = [
     "-opt", "nopeephole",
 ]
 
-# Single-pass-off TU flags (peephole/scheduler remain on): the original build
-# disabled one optimization pass across the whole TU (a per-TU compiler
-# setting, not a per-function pragma).
-cflags_dll_nocse = [
-    *cflags_base,
-    "-opt", "nocse",
-]
-
-cflags_dll_noprop = [
-    *cflags_base,
-    "-opt", "nopropagation",
-]
-
-cflags_dll_nostrength = [
-    *cflags_base,
-    "-opt", "nostrength",
-]
-
-cflags_dll_noloopinv = [
-    *cflags_base,
-    "-opt", "noloopinvariants",
-]
-
-cflags_dll_nocse_noprop = [
-    *cflags_base,
-    "-opt", "nocse,nopropagation",
-]
-
-# Inlining disabled across the whole TU (dont_inline on).
-cflags_dll_noinline = [
-    *cflags_base,
-    "-inline", "off",
-]
-
-cflags_dll_nocse_noinline = [
-    *cflags_base,
-    "-opt", "nocse",
-    "-inline", "off",
-]
-
-cflags_dll_nocse_noprop_noinline = [
-    *cflags_base,
-    "-opt", "nocse,nopropagation",
-    "-inline", "off",
-]
-
-cflags_dll_noloopinv_noinline = [
-    *cflags_base,
-    "-opt", "noloopinvariants",
-    "-inline", "off",
-]
-
 # noopt (peephole+scheduler off) base, plus additional per-TU passes off.
 cflags_dll_noopt_nocse_noprop = [
     *cflags_base,
@@ -404,12 +352,6 @@ cflags_dll_noopt_nostrength_noinline = [
 cflags_dll_noopt_nocse_noprop_noloopinv_noinline = [
     *cflags_base,
     "-opt", "nopeephole,noschedule,nocse,nopropagation,noloopinvariants",
-    "-inline", "off",
-]
-
-cflags_dll_noopt_nocse_noprop_nostrength_noloopinv_noinline = [
-    *cflags_base,
-    "-opt", "nopeephole,noschedule,nocse,nopropagation,nostrength,noloopinvariants",
     "-inline", "off",
 ]
 
