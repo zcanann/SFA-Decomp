@@ -16,6 +16,7 @@
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/object_render_legacy.h"
 #include "main/rcp_dolphin_api.h"
+#include "main/pi_dolphin_api.h"
 #include "main/dll/player_objects.h"
 #include "main/object_descriptor.h"
 
@@ -78,7 +79,6 @@ typedef enum Dim2lavacontrolPhase
 } Dim2lavacontrolPhase;
 
 extern f32 lbl_803E4B90;
-extern void fn_8004C1E4(int sfxId, f32 vol);
 extern u8 lbl_803DBF28[8];
 
 typedef void (*Dim2LavaControlGameBitSyncFn)(int id);

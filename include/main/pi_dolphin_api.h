@@ -21,6 +21,7 @@ int fn_8004B218(void* search, u32 timeout);
 int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u32 routeFlags);
 void gxTextureFn_8004bf88(void* params, u8 colorEnabled, u8 alphaEnabled, int* colorSelection,
                           int* alphaSelection);
+void fn_8004C1E4(u8 level, f32 scale);
 void* Shader_getLayer(void* shader, int layerIdx);
 void fn_8004CE0C(void* viewMtx);
 void fn_8004DA54(char* shader);
