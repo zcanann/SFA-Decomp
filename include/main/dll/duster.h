@@ -2,6 +2,13 @@
 #define MAIN_DLL_DUSTER_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
+
+void fn_80155884(int* obj, int state);
+void fn_80155948(int* obj, int state);
+void fn_801557D4(int* obj, int state);
+void fn_80155F20(GameObject* obj, int state);
+void fn_80156010(u32 obj, int state);
 
 u32 FUN_8015536c(double param_1,short *param_2,int param_3,u32 param_4);
 void FUN_801556d4(double param_1,double param_2,float *param_3,float *param_4);

@@ -52,6 +52,7 @@
 #include "main/dll/snowworm.h"
 #include "main/dll/kooshy.h"
 #include "main/dll/mikaladon.h"
+#include "main/dll/baddiewhirlpool.h"
 
 int lbl_803DBC58[2] = {2, 3};
 f32 lbl_803DBC60 = 20.0f;
@@ -110,11 +111,6 @@ extern void fn_80152514(short* obj, int state);
 extern void fn_80153040(GameObject* obj, int state);
 extern void fn_80153248(GameObject* obj, int state);
 extern void fn_80154584(GameObject* obj, int state);
-extern void fn_80155884(short* obj, int state);
-extern void fn_80155948(short* obj, int state);
-extern void fn_801557D4(short* obj, int state);
-extern void fn_80155F20(GameObject* obj, int state);
-extern void fn_80156010(short* obj, int state);
 extern void crawler_updateC(short* obj, int state);
 extern void crawler_updateB(short* obj, int state);
 extern void crawler_update(short* obj, int state);
@@ -154,7 +150,6 @@ extern void sharpClawInit(int obj, u8* state);
 extern void guardClaw_init(int obj, u8* state);
 extern void gcRobotPatrol_init(GameObject* obj, u8* state);
 extern void vambat_init(GameObject* obj, u8* state);
-extern void baddie_initWhirlpoolState(int obj, u8* state);
 extern void battleDroidInit(int obj, u8* state);
 extern void crawler_initModelVariant(int obj, u8* state);
 extern void* memset(void* p, int c, int n);
@@ -260,10 +255,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80154870((GameObject*)(obj), state);
                 break;
             case 0x25d:
-                fn_80155948(obj, state);
+                fn_80155948((int*)obj, state);
                 break;
             case 0x457:
-                fn_80156010(obj, state);
+                fn_80156010((u32)obj, state);
                 break;
             case 0x4d7:
                 fn_8015625C((u32)obj, state);
@@ -337,10 +332,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80154870((GameObject*)(obj), state);
                 break;
             case 0x25d:
-                fn_80155884(obj, state);
+                fn_80155884((int*)obj, state);
                 break;
             case 0x457:
-                fn_80156010(obj, state);
+                fn_80156010((u32)obj, state);
                 break;
             case 0x4d7:
                 fn_8015625C((u32)obj, state);
@@ -448,7 +443,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             fn_80154584((GameObject*)(obj), state);
             break;
         case 0x25d:
-            fn_801557D4(obj, state);
+            fn_801557D4((int*)obj, state);
             break;
         case 0x457:
             fn_80155F20((GameObject*)(obj), state);
@@ -2012,7 +2007,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             mutatedEbaInit((u32)obj, (int)state);
             break;
         case 2129:
-            baddie_initWhirlpoolState((int)obj, state);
+            baddie_initWhirlpoolState((int*)obj, (GroundBaddieState*)state);
             break;
         case 2114:
         case 2123:
