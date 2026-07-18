@@ -980,7 +980,7 @@ void loadLightFn_8008bbc4(void)
         {
             mmFreeTick(0);
             gameTextRun();
-            GXFlush_VoidIntLegacy(1, 0);
+            GXFlush_(1, 0);
         }
         if (gDvdErrorPauseActive != 0)
         {
