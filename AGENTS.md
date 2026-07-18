@@ -154,6 +154,11 @@ exception is paired-single `psq_l` / `psq_st` when MWCC has no intrinsic and a
 known-good donor or original binary proves the sequence. Do not trade plausible
 C for a higher match score; a clean-C 90% match is better than an asm 100% match.
 
+## Pragmas
+
+Inline pragmas are banned. `#pragma` of any kind must not appear inline in `src/main/` or `src/track/`
+source; pragmas may only be configured at the TU level via `configure.py` cflags.
+
 ## Cheap clean-C pre-checks
 
 Try these one-line source rewrites first; sometimes they're enough on their own:

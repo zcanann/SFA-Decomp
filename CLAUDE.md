@@ -45,7 +45,8 @@ These are match-hacks, not plausible 2002 source. They were purged repo-wide (se
 `docs/HACK_AUDIT.md`, tag `pre-hack-purge`) and MUST NOT re-enter:
 - **Any `#pragma`** — per-function pragma sandwiches of every kind (peephole/scheduling/dont_inline/
   inline_max_size/opt_*/ppc_unroll_*/optimization_level/fp_contract/explicit_zero_data/force_active/
-  exceptions). Compiler configuration lives in `configure.py` cflags only.
+  exceptions). Inline pragmas are banned; pragmas may only be configured at the TU level via
+  `configure.py` cflags.
 - **`goto`** — write structured control flow.
 - **`__declspec(section ...)`** and any section-forcing data placement.
 - **Match-volatiles** — `volatile` or `*(volatile T*)&` puns used to block CSE/hoisting. `volatile`
