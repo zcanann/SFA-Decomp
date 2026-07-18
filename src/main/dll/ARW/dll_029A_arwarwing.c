@@ -43,7 +43,6 @@
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/dll/path_control_interface.h"
-#include "main/maketex_sequence_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/headdisplay.h"
 #include "main/game_object.h"
@@ -681,23 +680,23 @@ void arwarwing_render(GameObject* obj, int p2, int p3, int p4, int p5)
     }
 }
 
+void fn_8008020C(f32 x, f32 y, s16 rx, s16 ry, s16 rz, f32 z, f32 w);
+
 void arwarwing_hitDetect(GameObject* obj)
 {
     ArwingState* state = (obj)->extra;
-    f32 pos[3];
+    Vec pos;
     f32 mtx[16];
 
     if (((obj)->objectFlags & ARWARWING_OBJFLAG_PARENT_SLACK) != 0 && state->aimSnapshotValid != 0)
     {
         Obj_BuildWorldTransformMatrix(obj, mtx, 0);
-        PSMTXMultVec((MtxP)mtx, (const Vec*)&state->aimOffsetX, (Vec*)pos);
-        pos[0] += playerMapOffsetX;
-        pos[2] += playerMapOffsetZ;
-        {
-            f32 posY = pos[1];
-            fn_8008020C((s16)(0x8000 - (obj)->anim.rotX + state->aimYaw), (s16)((obj)->anim.rotY + state->aimPitch),
-                        (s16)((obj)->anim.rotZ + state->aimRoll), pos[0], posY, pos[2], lbl_803E6FF8);
-        }
+        PSMTXMultVec((MtxP)mtx, (const Vec*)&state->aimOffsetX, &pos);
+        pos.x += playerMapOffsetX;
+        pos.z += playerMapOffsetZ;
+        fn_8008020C(pos.x, pos.y, (s16)(0x8000 - (obj)->anim.rotX + state->aimYaw),
+                    (s16)((obj)->anim.rotY + state->aimPitch), (s16)((obj)->anim.rotZ + state->aimRoll), pos.z,
+                    lbl_803E6FF8);
     }
 }
 
@@ -1302,7 +1301,7 @@ void arwarwing_updateBarrelRoll(GameObject* obj, ArwingState* state)
                     state->accelX / state->barrelRollAccelScale;
                 arwarwingbo_setActiveVisible((GameObject*)(state->bombObj), 0, 0);
             }
-            else if (angle > mid)
+            else if (angle <= hi && angle > mid)
             {
                 int d = angle - (u16)tgt;
                 if (d > 0x8000)
@@ -1338,7 +1337,7 @@ void arwarwing_updateBarrelRoll(GameObject* obj, ArwingState* state)
                     state->accelX / state->barrelRollAccelScale;
                 arwarwingbo_setActiveVisible((GameObject*)(state->bombObj), 0, 0);
             }
-            else if (angle > mid)
+            else if (angle >= lo && angle > mid)
             {
                 int d = angle - (u16)tgt;
                 if (d > 0x8000)
