@@ -24,10 +24,13 @@
 #include "main/object_transform.h"
 #include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
+#include "dolphin/gx/GXCull.h"
+#include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXLighting.h"
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTev.h"
+#include "dolphin/gx/GXTransform.h"
 #include "main/camera.h"
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
@@ -320,24 +323,13 @@ extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern void PSVECScale(f32* src, f32* dst, f32 s);
 extern void PSVECNormalize(f32* src, f32* dst);
 extern f32 PSVECSquareMag(f32* v);
-extern void GXLoadPosMtxImm(void* mtx, int slot);
 extern void PSMTXCopy(void* src, void* dst);
-extern void GXLoadNrmMtxImm(void* mtx, int slot);
 extern void PSMTXConcat(void* a, void* b, void* out);
-extern void GXLoadTexMtxImm(void* mtx, int slot, int type);
-extern void GXSetArray(int attr, void* base, int stride);
 extern int mapBlockRender_setShader(int a, int* obj, int* state);
 extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
 extern int shouldDrawShadows(void);
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 extern float floor(float x);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern void GXSetNumTexGens(u8 nTexGens);
-extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
-extern void GXSetCullMode(int mode);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXBegin(int type, int fmt, int count);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
 
@@ -525,15 +517,15 @@ void setupToRenderMapBlock(int* block, void* posMtx)
     f32 tmp[12];
     f32 fc;
 
-    GXLoadPosMtxImm(posMtx, GX_PNMTX0);
+    GXLoadPosMtxImm((const f32 (*)[4])posMtx, GX_PNMTX0);
     PSMTXCopy(posMtx, tmp);
     fc = lbl_803DEBCC;
     tmp[3] = fc;
     tmp[7] = fc;
     tmp[11] = fc;
-    GXLoadNrmMtxImm(tmp, GX_PNMTX0);
+    GXLoadNrmMtxImm((const f32 (*)[4])tmp, GX_PNMTX0);
     PSMTXConcat(lbl_803967F0, posMtx, out);
-    GXLoadTexMtxImm(out, GX_TEXMTX2, GX_MTX3x4);
+    GXLoadTexMtxImm((const f32 (*)[4])out, GX_TEXMTX2, GX_MTX3x4);
     GXSetArray(GX_VA_POS, *(void**)((char*)block + 0x58), 6);
     GXSetArray(GX_VA_CLR0, *(void**)((char*)block + 0x5C), 2);
     GXSetArray(GX_VA_TEX0, *(void**)((char*)block + 0x60), 4);
@@ -2922,7 +2914,7 @@ void objDrawFn_80061654(int obj, int placementObj)
             mtx[9] = lbl_803DEC58;
             mtx[10] = lbl_803DEC68;
             PSMTXConcat(viewMtx, mtx, outMtx);
-            GXLoadPosMtxImm(outMtx, GX_PNMTX9);
+            GXLoadPosMtxImm((const f32 (*)[4])outMtx, GX_PNMTX9);
             GXClearVtxDesc();
             GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
             GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
@@ -3138,7 +3130,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     Obj_BuildWorldTransformMatrix((GameObject*)obj, (f32*)mtx, 0);
     viewMtx = Camera_GetViewMatrix();
     PSMTXConcat(viewMtx, mtx, outMtx);
-    GXLoadPosMtxImm(outMtx, GX_PNMTX0);
+    GXLoadPosMtxImm((const f32 (*)[4])outMtx, GX_PNMTX0);
     if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
     {
         u32 c = *(u32*)col;
@@ -3333,7 +3325,7 @@ void renderGlows(void)
             if (sunDot > lbl_803DEBCC)
             {
                 PSMTXConcat(viewMtx, sunMtx, sunMtx);
-                GXLoadPosMtxImm(sunMtx, GX_PNMTX0);
+                GXLoadPosMtxImm((const f32 (*)[4])sunMtx, GX_PNMTX0);
                 GXSetCurrentMtx(GX_PNMTX0);
                 selectTexture((Texture*)((int)fn_8008912C()), 0);
                 getAmbientColor(0, &amb[0], &amb[1], &amb[2]);
