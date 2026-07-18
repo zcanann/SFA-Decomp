@@ -47,9 +47,9 @@ void ControlLight_hitDetect(void)
 
 void ControlLight_update(GameObject* obj)
 {
-    u8 newBit;
-    u32 bit;
     ControlLightState* state;
+    u32 bit;
+    u8 newBit;
     GameObject* self = obj;
     state = self->extra;
     newBit = mainGetBit(state->gameBit);
