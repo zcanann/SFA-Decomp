@@ -738,6 +738,7 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
     }
 }
 #pragma optimization_level reset
+#pragma optimization_level 2
 #pragma dont_inline reset
 void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
 {
@@ -845,6 +846,7 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
         }
     }
 }
+#pragma optimization_level reset
 #pragma dont_inline on
 void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
 {
@@ -1535,7 +1537,9 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     return idx;
 }
+#pragma opt_common_subs off
 #pragma opt_propagation reset
+#pragma scheduling off
 void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
 {
     u8 blend;
@@ -1658,6 +1662,8 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
         }
     }
 }
+#pragma opt_common_subs reset
+#pragma scheduling reset
 
 extern f32 gObjJointMtxTemp[];
 extern void GXSetArray(int attr, int ptr, int stride);
