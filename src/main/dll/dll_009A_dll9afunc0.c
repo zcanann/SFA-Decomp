@@ -40,6 +40,7 @@ extern f32 lbl_803E138C;
 extern f32 lbl_803E1390;
 extern f32 lbl_803E1394;
 
+#pragma opt_propagation off
 void dll_9A_func03(int target, int variant, int parent, u32 flags)
 {
     ScreenSeq seq;
@@ -236,6 +237,7 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 3, lbl_80317B98, 1, lbl_803DB958, DLL9A_EFFECT_ID, 0);
 }
+#pragma opt_propagation reset
 
 void dll_9A_func01_nop(void)
 {
