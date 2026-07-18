@@ -41,11 +41,7 @@ f32 lbl_803DB9C4 = 0.09f;
 
 #include "main/blur_filter_api.h"
 
-void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
 
-void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData);
-void CameraModeNpcSpeak_release(void);
-void CameraModeNpcSpeak_initialise(void);
 void CameraModeNpcSpeak_copyToCurrent(void)
 {
 }
