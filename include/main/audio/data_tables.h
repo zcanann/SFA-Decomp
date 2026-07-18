@@ -2,6 +2,7 @@
 #define MAIN_AUDIO_DATA_TABLES_H_
 
 #include "ghidra_import.h"
+#include "main/audio/data_ref.h"
 
 /* MusyX synthdata.c - see src/main/audio/data_tables.c */
 
@@ -17,6 +18,7 @@ void *dataGetMacro(u16 mid);
 void *dataGetCurve(u16 cid);
 void *dataGetKeymap(u16 cid);
 void *dataGetLayer(u16 cid, u16 *n);
+FX_TAB *dataGetFX(u16 fid);
 void dataInit(u32 smpBase, u32 smpLength);
 int IFFifoAlloc(int addr);
 

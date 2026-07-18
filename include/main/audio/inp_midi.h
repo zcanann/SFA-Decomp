@@ -34,5 +34,7 @@ void inpAddCtrl(McmdInputSlot* dest, u8 ctrl, s32 scale, u8 comb, u32 isVar);
 void inpFXCopyCtrl(u8 controller, int dstState, int srcState);
 void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 u8 inpGetMidiLastNote(u8 a, u8 b);
+u16 inpGetAuxA(u8 studio, u8 index, u8 midi, u8 midiSet);
+u16 inpGetAuxB(u8 studio, u8 index, u8 midi, u8 midiSet);
 
 #endif /* MAIN_AUDIO_INP_MIDI_H_ */

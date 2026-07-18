@@ -104,9 +104,6 @@ typedef struct SynthAuxInfo
 
 typedef void (*SynthAuxCallback)(u8 reason, SynthAuxInfo* info, void* user);
 
-extern u16 inpGetAuxA(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
-extern u16 inpGetAuxB(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
-
 typedef struct SynthVoiceLfo
 {
     s32 time;
@@ -1378,39 +1375,26 @@ void synthHandle(u32 deltaTime)
 /*
  * Start an FX sample by id, applying default volume/pan sentinels.
  */
-typedef struct SynthFxSampleInfo
-{
-    u8 pad00[2];
-    u16 sampleId;
-    u8 velocity;
-    u8 key;
-    u8 defaultVolume;
-    u8 defaultPan;
-    u8 flags;
-    u8 auxIndex;
-} SynthFxSampleInfo;
-
-extern SynthFxSampleInfo* dataGetFX(u32 fxId);
-
 int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux)
 {
-    SynthFxSampleInfo* sampleInfo;
+    FX_TAB* fx;
     u32 handle;
 
     handle = 0xFFFFFFFF;
-    sampleInfo = dataGetFX(fxId);
-    if (sampleInfo != (SynthFxSampleInfo*)0x0)
+    fx = dataGetFX(fxId);
+    if (fx != NULL)
     {
         if (volume == 0xff)
         {
-            volume = sampleInfo->defaultVolume;
+            volume = fx->volume;
         }
         if (pan == 0xff)
         {
-            pan = sampleInfo->defaultPan;
+            pan = fx->panning;
         }
-        handle = synthStartSound(sampleInfo->sampleId, sampleInfo->key, sampleInfo->velocity, sampleInfo->flags | 0x80,
-                                 volume, pan, 0xff, 0xff, 0, 0, 0xff, sampleInfo->auxIndex, 0, studio, studioAux);
+        handle = synthStartSound(fx->macro, fx->priority, fx->maxVoices, fx->key | 0x80,
+                                 volume, pan, 0xff, 0xff, 0, 0, 0xff, fx->vGroup,
+                                 0, studio, studioAux);
     }
     return handle;
 }
