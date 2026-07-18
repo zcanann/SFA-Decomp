@@ -7681,7 +7681,6 @@ void drawWorldMapHud(void)
             int i;
             u8* p;
             i = 0;
-            fi = -1;
             base = (u8*)(int)gGameUiTaskHintCandidates;
             p = base;
             for (; i < GAMEUI_TASK_HINT_COUNT; i++)
@@ -7692,6 +7691,10 @@ void drawWorldMapHud(void)
                     break;
                 }
                 p++;
+            }
+            if (i == GAMEUI_TASK_HINT_COUNT)
+            {
+                fi = -1;
             }
             n = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) +
                 mainGetBit(GAMEBIT_ITEM_SpellStone2_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
