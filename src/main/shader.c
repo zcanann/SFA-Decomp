@@ -2107,7 +2107,6 @@ void loadMapForCameraPos(float x, float y, float z)
 }
 
 extern int isRomListLoading(void);
-extern int saveGame_restoreObjectPosToRomList(void* object);
 
 void mapInitSetRects(s16* rect, u8* bitmap, int originX, int originY, int idx);
 
