@@ -55,7 +55,7 @@ typedef struct
     u16 padA;  /* 0xa */
 } IdleRow;
 
-int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int damage)
+int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, int arrIdx, int damage, void* wpad0, int wpad1, int wpad2, int wpad3)
 {
     u8* animRows;
     u8* rowsC;

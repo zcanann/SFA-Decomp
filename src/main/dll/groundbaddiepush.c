@@ -74,7 +74,7 @@ void fn_80151DB8(int obj, u8* state)
     }
 }
 
-void guardClawUpdateWhileFrozen(int obj, int* state)
+void guardClawUpdateWhileFrozen(int obj, int* state, int wpad0, int wpad1, int wpad2, int wpad3, void* wpad4, int wpad5)
 {
     Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_pole1_c_23);
     ((GroundBaddieState*)state)->baddie.reactionFlags |= 0x10;

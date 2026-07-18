@@ -75,7 +75,7 @@ void fn_80153640(GameObject* obj, int state)
     }
 }
 
-void kooshy_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag, int hitId, int damage)
+void kooshy_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag, int hitId, int damage, void* wpad0, int wpad1)
 {
     if ((obj)->anim.currentMove == 1)
     {

@@ -356,7 +356,7 @@ ObjectDescriptor gWispBaddieObjDescriptor = {
     wispbaddie_getExtraSize,
 };
 
-void battleDroidUpdateWhileFrozen(int obj, int* state, int arg, int code)
+void battleDroidUpdateWhileFrozen(int obj, int* state, int arg, int code, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     if (code == 0x10)
     {

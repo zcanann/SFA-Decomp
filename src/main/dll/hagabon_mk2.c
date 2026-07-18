@@ -223,7 +223,7 @@ void hagabonMK2_stopLoopSfx(int obj, u8* state)
     Sfx_StopFromObject(obj, SFXTRIG_baddie_rach_death);
 }
 
-void hagabonMK2_updateWhileFrozen(int obj, int* st, int unused, int cmd)
+void hagabonMK2_updateWhileFrozen(int obj, int* st, int unused, int cmd, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     int objI = (int)obj;
     if (cmd == 0x11)

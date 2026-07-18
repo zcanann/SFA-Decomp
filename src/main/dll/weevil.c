@@ -38,7 +38,7 @@ extern f32 lbl_803E2950;
 extern f32 lbl_803E2954;
 extern f32 lbl_803E2958;
 
-void weevil_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag)
+void weevil_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     u8 cond = 0;
     int kind = (obj)->anim.currentMove;

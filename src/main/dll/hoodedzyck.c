@@ -58,7 +58,7 @@ extern f32 lbl_803DBCE4;
 extern f32 lbl_803DBCE8;
 extern f32 lbl_803DBCEC;
 
-void hoodedZyckUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind)
+void hoodedZyckUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     if (eventKind == 0x10)
     {

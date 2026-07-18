@@ -70,7 +70,7 @@ extern const f32 lbl_803E2B0C;
 extern const f32 lbl_803E2B10;
 extern const f32 lbl_803E2B14;
 
-void wbUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind)
+void wbUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     if (eventKind != 0x11)
     {
@@ -317,7 +317,7 @@ void wbInit(u32 unused, int state)
 
 void fn_80156950(u32 obj, int state);
 
-void mutatedEbaUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind)
+void mutatedEbaUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     int move;
 

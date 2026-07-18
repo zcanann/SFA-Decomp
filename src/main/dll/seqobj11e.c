@@ -184,7 +184,7 @@ void guardClaw_init(int* obj, u8* state)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
 }
 
-void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int msg)
+void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int msg, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     int sub;
     f32 fz;
@@ -467,7 +467,7 @@ void gcRobotPatrol_init(GameObject* obj, int state)
 f32 lbl_803E2868 = 0.0f;
 f32 lbl_803E286C = 60.0f;
 
-void mikaladon_updateWhileFrozen(int obj, int state, int unused, int msg)
+void mikaladon_updateWhileFrozen(int obj, int state, int unused, int msg, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     if (msg == 16 || msg == 17)
     {

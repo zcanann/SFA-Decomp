@@ -50,7 +50,7 @@ void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int f
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 
-void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag)
+void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     if (((BaddieState*)state)->userData2 != 0)
     {

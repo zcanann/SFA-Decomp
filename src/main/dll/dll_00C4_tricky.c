@@ -52,6 +52,7 @@
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
 #include "main/dll/DR/dll_026B_drchimmey.h"
+#include "main/dll/baddie_frozen.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -261,40 +262,14 @@ extern f32 lbl_803E2590;
 extern f32 lbl_803E2594;
 extern f32 lbl_803E259C;
 extern void fn_802961FC(u8* proj, int result);
-extern int sidekickToy_handleHitMessage(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                        int sector, f32 hDist, f32 vDist);
-extern void guardClawUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                       int sector);
-extern void gcRobotPatrol_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                            int sector);
-extern void mikaladon_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                        int sector);
-extern void vambat_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                     int sector);
-extern void kooshy_updateWhileFrozen(GameObject* obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                     int sector);
-extern void weevil_updateWhileFrozen(GameObject* obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                     int sector);
-extern void Baddie_HandleHitReaction(GameObject* obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                     int sector);
 extern void rachnopUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                      int sector);
-extern void wbUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
 extern void baddieUpdateWhileFrozen_80155e10(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                              int sector);
-extern void mutatedEbaUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                        int sector);
 extern void whirlpool_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                         int sector);
 extern void snowworm_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                        int sector);
-extern void hoodedZyckUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                        int sector);
-extern void battleDroidUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                         int sector);
-extern void crawler_onHit(GameObject* obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
-extern void hagabonMK2_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                         int sector);
 extern TrickySfxPair lbl_803E23C4;
 extern f32 lbl_803E24C8;
 extern f32 lbl_803E24D8;

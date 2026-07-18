@@ -74,7 +74,7 @@ void fn_80154328(int obj, int state)
     }
 }
 
-void Baddie_HandleHitReaction(GameObject* obj, u8* state, int unused, int cmd)
+void Baddie_HandleHitReaction(GameObject* obj, u8* state, int unused, int cmd, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     int objCopy = (int)obj;
     if (cmd == 17 || cmd == 16)

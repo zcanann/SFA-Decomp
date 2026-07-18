@@ -492,7 +492,7 @@ void fn_80157CDC(int obj, int state)
     }
 }
 
-void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, int damage)
+void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, int damage, void* wpad0, int wpad1)
 {
     typedef struct
     {
