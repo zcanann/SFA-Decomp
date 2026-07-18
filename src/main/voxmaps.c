@@ -832,10 +832,10 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
 }
 int voxmaps_processRouteQueue(RouteState* state, int count)
 {
-    int nodeIdx;
+    CurveHeapNode* queue;
     int done = 0;
     int ret = 0;
-    CurveHeapNode* queue;
+    int nodeIdx;
     RouteNode* node;
 
     while (!done && count != 0)
