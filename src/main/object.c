@@ -220,7 +220,6 @@ extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();
 extern int loadModLines(int n, s16* out);
-void ObjModel_ClearRenderAttachment(u8* model);
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
 int roundUpTo32(int x);
 void ObjModel_LoadRenderOpTextures(u8* model, int arg);

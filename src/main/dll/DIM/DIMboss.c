@@ -40,6 +40,7 @@
 #include "main/player_control_interface.h"
 #include "main/obj_group.h"
 #include "main/dll/baddie_control_interface.h"
+#include "main/model.h"
 
 #define DIMBOSS_OBJGROUP 3
 
@@ -55,7 +56,6 @@ extern u8 gDim2IcicleHitFxBuffer[0x18];
 
 
 
-extern u32 ObjModel_ClearRenderAttachment();
 extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, u32 model, void* mtx,
                                                  int enabled, double scale);
 
@@ -228,7 +228,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
             DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
                 obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
             model = Obj_GetActiveModelLegacy((int)obj);
-            ObjModel_ClearRenderAttachment(model);
+            ObjModel_ClearRenderAttachment((u8*)model);
             Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE, 1);
             break;
         case DIMBOSS_EVENT_LAUNCH_LIFT:

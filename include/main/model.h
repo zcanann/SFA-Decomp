@@ -220,6 +220,7 @@ typedef struct ObjModel {
 s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex);
 s16* ObjModel_GetCurrentVertexCoords(ObjModel* model, int vertexIndex);
 void modelInitBones(f32 scale, void* model);
+void ObjModel_ClearRenderAttachment(u8* model);
 void ObjModel_SetRenderCallback(u8* model, void* callback);
 void ObjModel_SetPostRenderCallback(ObjModel* model, void* callback);
 void* ObjModel_GetRenderCallback(ObjModel* model);

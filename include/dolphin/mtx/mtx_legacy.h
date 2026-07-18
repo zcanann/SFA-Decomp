@@ -6,6 +6,7 @@
 f32 PSVECMag(f32* v);
 f32 PSVECSquareDistance(f32* a, f32* b);
 f32 PSVECDotProduct(f32* a, f32* b);
+f32 PSVECDistance(f32* a, f32* b);
 void PSVECAdd(f32* a, f32* b, f32* out);
 void PSVECCrossProduct(f32* a, f32* b, f32* out);
 void PSVECNormalize(f32* src, f32* dst);

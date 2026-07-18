@@ -14,6 +14,7 @@
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/dll/dll_801e991c.h"
+#include "dolphin/gx/GXTransform.h"
 
 #define GX_BM_BLEND       1
 #define GX_BL_SRCALPHA    4
@@ -34,9 +35,6 @@ int lbl_803DDC60;
 extern GXColor lbl_803E5AE4;
 extern const f32 lbl_803E5AE8;
 extern const f32 lbl_803E5AEC;
-
-extern void GXLoadPosMtxImm(f32* m, int id);
-extern void GXSetCurrentMtx(u32 id);
 
 /* gSPScarabObjDescriptor drift copy removed: retail home is the
  * dll_0287_spscarab target obj (defines it at .data+0, byte-equal; src twin
@@ -91,7 +89,7 @@ void fn_801E991C(int p1, char* table)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-    GXLoadPosMtxImm(Camera_GetViewMatrix(), GX_PNMTX0);
+    GXLoadPosMtxImm((const f32(*)[4])Camera_GetViewMatrix(), GX_PNMTX0);
     GXSetCurrentMtx(GX_PNMTX0);
     getAmbientColor(0, &r, &g, &b);
     i = 0;

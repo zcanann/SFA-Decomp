@@ -45,9 +45,6 @@ STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 #define GCROBOTLIGHTBEA_HIT_VOLUME_SLOT 0x17
 
 
-extern f32 PSVECDistance(void* a, void* b);
-
-
 int fn_801A0174(int* obj)
 {
     return (((GcRobotLightBeaState*)(int*)((GameObject*)obj)->extra)->hitFlags >> 7) & 1;
@@ -136,7 +133,7 @@ void gcrobotlightbea_update(int* obj)
     vec[2] = lbl_80322C38[2];
     Obj_TransformLocalVectorByWorldMatrix(obj, lbl_80322C38, vec);
     voxmaps_traceScaledVectorEnd(vec2, obj + 3, vec, lbl_803DBE5C);
-    PSVECScale(lbl_80322C38, vec2, PSVECDistance((char*)obj + 0xc, vec2));
+    PSVECScale(lbl_80322C38, vec2, PSVECDistance((f32*)((char*)obj + 0xc), vec2));
     getAmbientColor(0, &r_byte, &g_byte, &b_byte);
     if (sub->light != NULL)
     {
