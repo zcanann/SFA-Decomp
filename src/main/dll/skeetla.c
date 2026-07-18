@@ -95,7 +95,6 @@ extern u32 gSkeetlaFootstepSfxIds01;
 extern u16 gSkeetlaFootstepSfxId2;
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
-extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
 
 #pragma peephole off
 void trickyUpdateCollisionAndPathState(u8* obj)
@@ -812,7 +811,8 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
         }
     }
 
-    fn_8004B31C(state + 0x6b8, route, *(int*)&((TrickyState*)state)->targetPosPtr, pathId,
+    fn_8004B31C((PathSearch*)(state + 0x6b8), (PathPoint*)route,
+                (f32*)*(int*)&((TrickyState*)state)->targetPosPtr, pathId,
                 ((TrickyState*)state)->route.reverse);
     if (fn_8004B218(state + 0x6b8, 0x1f4) != 1)
     {
@@ -836,8 +836,8 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
     {
         if (routes[i] != 0)
         {
-            fn_8004B31C(state + 0x538 + i * 0x30, routes[i], *(int*)&((TrickyState*)state)->targetPosPtr, pathId,
-                        routeFlags[i]);
+            fn_8004B31C((PathSearch*)(state + 0x538 + i * 0x30), (PathPoint*)routes[i],
+                        (f32*)*(int*)&((TrickyState*)state)->targetPosPtr, pathId, routeFlags[i]);
         }
     }
 

@@ -96,7 +96,6 @@ extern void trickyAdvanceRouteTargetAhead(u8* obj, RomCurveWalker* route, f32 sp
 extern int curveFn_800da23c(RomCurveWalker* route, void* targetNode);
 extern void fn_800D9F38(RomCurveWalker* route);
 extern void fn_800D9EE8(RomCurveWalker* route);
-extern void fn_8004B31C(void* search, u32 route, void* target, int pathId, u32 dir);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
 
 static u8* trickyfollow_validateRouteNode(u8* node)
@@ -764,10 +763,11 @@ state_selected:
                 }
                 if (step == 4)
                 {
-                    fn_8004B31C(((TrickyState*)state)->voxBlocks[0], (u32)route->nodeA4,
-                                ((TrickyState*)state)->targetPosPtr, ((TrickyState*)state)->walkGroup, route->reverse);
-                    fn_8004B31C(((TrickyState*)state)->voxBlocks[1], (u32)route->node9C,
-                                ((TrickyState*)state)->targetPosPtr, ((TrickyState*)state)->walkGroup,
+                    fn_8004B31C((PathSearch*)((TrickyState*)state)->voxBlocks[0], (PathPoint*)route->nodeA4,
+                                (f32*)((TrickyState*)state)->targetPosPtr, ((TrickyState*)state)->walkGroup,
+                                route->reverse);
+                    fn_8004B31C((PathSearch*)((TrickyState*)state)->voxBlocks[1], (PathPoint*)route->node9C,
+                                (f32*)((TrickyState*)state)->targetPosPtr, ((TrickyState*)state)->walkGroup,
                                 route->reverse ^ 1);
                     found = 0;
                     for (i = 0; (u8)(i = i + 1) < 100 && (found != 1);)

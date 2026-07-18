@@ -5373,7 +5373,7 @@ int fn_8004B218(void* q_, u32 n_)
     return result;
 }
 
-int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u8 routeFlags)
+int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u32 routeFlags)
 {
     int i;
     PathSearchNode* node;

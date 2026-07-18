@@ -4,6 +4,9 @@
 #include "types.h"
 #include "main/pi_frame_api.h"
 
+typedef struct PathPoint PathPoint;
+typedef struct PathSearch PathSearch;
+
 double SeekTwiceBeforeRead(void);
 int loadAndDecompressDataFile();
 int mapGetDirIdx(int idx);
@@ -15,6 +18,7 @@ void fn_80050F2C(void);
 void fn_8004D230(void);
 void fn_8004D928(void);
 int fn_8004B218(void* search, u32 timeout);
+int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u32 routeFlags);
 void gxTextureFn_8004bf88(void* params, u8 colorEnabled, u8 alphaEnabled, int* colorSelection,
                           int* alphaSelection);
 void* Shader_getLayer(void* shader, int layerIdx);
