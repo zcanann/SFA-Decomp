@@ -110,7 +110,6 @@ void trackDolphin_getCurrentTrackPoint(u32 **param_1);
 void trackDolphin_getCurrentIntersectionList(int *entryCountOut,u32 *entryListOut);
 void trackDolphin_initIntersectionBuffers(void);
 void FUN_80064030(u32 param_1,u32 param_2,int param_3);
-void FUN_80064384(int param_1);
 
 
 /* extern-cleanup: defining-file public prototypes */

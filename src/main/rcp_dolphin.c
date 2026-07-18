@@ -266,38 +266,7 @@ static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights);
 
 #define RCP_DISTORT_TEXTURE_ID 0x5dc
 
-extern int FUN_8025a850();
 extern u32 GXSetBlendMode();
-extern u64 FUN_80286834();
-extern u32 FUN_80286880();
-
-void FUN_800537a0(u32 unused1, u32 unused2, int format, char param4, u32 param5, u8 wrapS, u8 wrapT, u8 minFilter,
-                  u8 magFilter)
-{
-    int tex;
-    u64 dims;
-
-    dims = FUN_80286834();
-    tex = FUN_8025a850((u32)((u64)dims >> 0x20), (u32)dims, format, param4, param5);
-    tex = FUN_80017830(tex + 0x60, 6);
-    if (tex != 0)
-    {
-        memset((void*)tex, 0, 100);
-        *(char*)&((Texture*)tex)->format = (char)format;
-        *(short*)(tex + 10) = (short)((u64)dims >> 0x20);
-        *(short*)(tex + 0xc) = (short)dims;
-        *(u16*)(tex + 0x10) = 1;
-        *(u16*)(tex + 0xe) = 0;
-        *(u8*)(tex + 0x17) = wrapS;
-        *(u8*)(tex + 0x18) = wrapT;
-        *(u8*)(tex + 0x19) = minFilter;
-        *(u8*)(tex + 0x1a) = magFilter;
-        *(u32*)(tex + 0x50) = 0;
-        FUN_800531e0(tex);
-    }
-    FUN_80286880();
-    return;
-}
 
 extern void GXLoadTexMtxImm(f32* mtx, int id, int type);
 extern void GXSetTexCoordGen2(int dst, int fn, int src, int mtx, int normalize, int pt);

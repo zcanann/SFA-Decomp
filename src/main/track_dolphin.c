@@ -367,8 +367,6 @@ extern const f32 lbl_803DECCC;
 extern const f32 lbl_803DECD0;
 extern const f32 lbl_803DECD4;
 
-extern u32 FUN_80017790();
-extern u32 FUN_8001779c();
 extern f32 PSVECDotProduct(f32* a, f32* b);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern void PSVECScale(f32* src, f32* dst, f32 s);
@@ -613,66 +611,6 @@ void setupToRenderMapBlock(int* block, void* posMtx)
     GXSetArray(GX_VA_CLR0, *(void**)((char*)block + 0x5C), 2);
     GXSetArray(GX_VA_TEX0, *(void**)((char*)block + 0x60), 4);
     GXSetArray(GX_VA_TEX1, *(void**)((char*)block + 0x60), 4);
-}
-
-void FUN_80064384(int param)
-{
-    int rowBase;
-    int colBase;
-    u32 scaled;
-    u32 texAddr;
-    u32 scale;
-    u32 col;
-    u32 colN;
-    u32 row;
-    int blockCount;
-
-    texAddr = FUN_8001779c();
-    row = 0;
-    do
-    {
-        col = 0;
-        rowBase = (row >> 2) * 0x100;
-        colBase = (row & 3) * 8;
-        scale = (row + param) * 0xff;
-        blockCount = 0x10;
-        do
-        {
-            scaled = scale;
-            if (0x3fc0 < scale)
-            {
-                scaled = 0x3fc0;
-            }
-            *(char*)(texAddr + (col & 7) + (col >> 3) * 0x20 + colBase + rowBase) = (char)(scaled * col >> 0xc);
-            colN = col + 1;
-            scaled = scale;
-            if (0x3fc0 < scale)
-            {
-                scaled = 0x3fc0;
-            }
-            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) = (char)(scaled * colN >> 0xc);
-            colN = col + 2;
-            scaled = scale;
-            if (0x3fc0 < scale)
-            {
-                scaled = 0x3fc0;
-            }
-            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) = (char)(scaled * colN >> 0xc);
-            colN = col + 3;
-            scaled = scale;
-            if (0x3fc0 < scale)
-            {
-                scaled = 0x3fc0;
-            }
-            *(char*)(texAddr + (colN & 7) + (colN >> 3) * 0x20 + colBase + rowBase) = (char)(scaled * colN >> 0xc);
-            col = col + 4;
-            blockCount = blockCount + -1;
-        } while (blockCount != 0);
-        row = row + 1;
-    } while (row < 0x40);
-    FUN_80017790(lbl_803DCFB8 + 0x60, texAddr, 0);
-    lbl_803DCF80 = param;
-    return;
 }
 
 void doNothing_80062A50(void)
