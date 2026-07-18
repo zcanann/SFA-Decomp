@@ -19,6 +19,8 @@ typedef struct EmitterCfg
     u8 pad[2];
 } EmitterCfg;
 
+extern char sModgfxAlphaDebugFormat[];
+
 void Effect2_func03_nop(void);
 void Effect2_release(void);
 void Effect2_initialise(void);
