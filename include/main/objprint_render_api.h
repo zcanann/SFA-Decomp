@@ -14,6 +14,7 @@ void objRenderFuzz(int* obj);
 void objRenderFn_800413d4(int* obj);
 void fuzzRenderFn_800412dc(int* obj);
 void renderResetFn_8003fc60(void);
+void set_shadowFlag_803dcc29(u8 enabled);
 void objRenderFn_80041018(GameObject* obj);
 void fn_800412B8(u8 red, u8 green, u8 blue);
 void objRenderModel(GameObject* obj);

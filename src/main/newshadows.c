@@ -225,7 +225,6 @@ extern f32 gMapSavedPlayerOffsetX, gMapSavedPlayerOffsetZ;
 
 extern float floor(float);
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
-extern void set_shadowFlag_803dcc29(int x);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
 extern void GXSetProjection(f32* m, int type);
 extern void GXSetScissor(int a, int b, int c, int d);
