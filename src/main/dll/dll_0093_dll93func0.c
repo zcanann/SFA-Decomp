@@ -100,9 +100,9 @@ void dll_93_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] += *(f32*)(sourceObj + 0xc);
-            buf.pos[1] += *(f32*)(sourceObj + 0x10);
-            buf.pos[2] += *(f32*)(sourceObj + 0x14);
+            buf.pos[0] += ((GameObject*)sourceObj)->anim.localPosX;
+            buf.pos[1] += ((GameObject*)sourceObj)->anim.localPosY;
+            buf.pos[2] += ((GameObject*)sourceObj)->anim.localPosZ;
         }
         else
         {

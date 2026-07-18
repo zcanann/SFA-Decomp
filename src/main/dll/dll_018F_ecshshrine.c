@@ -489,12 +489,12 @@ void ecsh_shrine_update(s16* obj)
         {
         case 0:
             ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            fv = *(f32*)(sub + 0x10) - timeDelta;
-            *(f32*)(sub + 0x10) = fv;
+            fv = ((EcshShrineState*)sub)->voiceTimer - timeDelta;
+            ((EcshShrineState*)sub)->voiceTimer = fv;
             if (fv <= zero)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_spirit_voice);
-                *(f32*)(sub + 0x10) = (f32)(int)randomGetRange(500, 1000);
+                ((EcshShrineState*)sub)->voiceTimer = (f32)(int)randomGetRange(500, 1000);
             }
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
             {
@@ -555,7 +555,7 @@ void ecsh_shrine_update(s16* obj)
             if (((EcshShrineState*)sub)->animTimer > (fv = 0.0f))
             {
                 if (((EcshShrineState*)sub)->animState == 1 && sub[0x31] == 0 &&
-                    ((EcshShrineState*)sub)->animTimer < *(f32*)(sub + 0x14))
+                    ((EcshShrineState*)sub)->animTimer < ((EcshShrineState*)sub)->shuffleSfxThreshold)
                 {
                     if ((int)randomGetRange(0, 10) > 7)
                     {
@@ -596,21 +596,21 @@ void ecsh_shrine_update(s16* obj)
                         ((EcshShrineState*)sub)->animState = 5;
                         if (sub[0x2f] == 3)
                         {
-                            *(f32*)(sub + 0xc) = 600.0f;
+                            ((EcshShrineState*)sub)->guessTimer = 600.0f;
                         }
                         else if (sub[0x2f] == 4)
                         {
-                            *(f32*)(sub + 0xc) = 600.0f;
+                            ((EcshShrineState*)sub)->guessTimer = 600.0f;
                         }
                         else
                         {
-                            *(f32*)(sub + 0xc) = 600.0f;
+                            ((EcshShrineState*)sub)->guessTimer = 600.0f;
                         }
                     }
                     else
                     {
                         sub[0x31] = 0;
-                        *(f32*)(sub + 0x14) = (f32)(int)randomGetRange(0x28, 0x3c);
+                        ((EcshShrineState*)sub)->shuffleSfxThreshold = (f32)(int)randomGetRange(0x28, 0x3c);
                         Sfx_PlayFromObject(obj, SFXTRIG_spirit_basketspin);
                         ((EcshShrineState*)sub)->animState = 0;
                         ((EcshShrineState*)sub)->animTimer = 2.0f;
@@ -768,8 +768,8 @@ void ecsh_shrine_update(s16* obj)
                     }
                     else
                     {
-                        *(f32*)(sub + 0xc) = *(f32*)(sub + 0xc) - timeDelta;
-                        if (*(f32*)(sub + 0xc) <= 0.0f)
+                        ((EcshShrineState*)sub)->guessTimer = ((EcshShrineState*)sub)->guessTimer - timeDelta;
+                        if (((EcshShrineState*)sub)->guessTimer <= 0.0f)
                         {
                             sub[0x2f] = 10;
                             (*gScreenTransitionInterface)->start(0x1e, 1);

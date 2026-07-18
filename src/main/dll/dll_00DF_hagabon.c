@@ -38,6 +38,7 @@
 #include "main/mm.h"
 #include "string.h"
 #include "main/curve.h"
+#include "main/dll/curve_walker.h"
 
 int lbl_803DBC70[2] = {2, 3};
 #define HAGABON_HIT_VOLUME_SLOT 10
@@ -123,23 +124,23 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
     else if ((*flags & HAGABON_FLAG_PATH_RETURN) != 0)
     {
         obj->anim.velocityX +=
-            (0.001f) * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
+            (0.001f) * (((RomCurveWalker*)curve)->posX - obj->anim.localPosX);
         obj->anim.velocityY +=
-            (0.001f) * (*(f32*)(curve + 0x6c) - obj->anim.localPosY);
+            (0.001f) * (((RomCurveWalker*)curve)->posY - obj->anim.localPosY);
         obj->anim.velocityZ +=
-            (0.001f) * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
+            (0.001f) * (((RomCurveWalker*)curve)->posZ - obj->anim.localPosZ);
     }
     else
     {
         obj->anim.velocityX +=
-            (0.001f) * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
+            (0.001f) * (((RomCurveWalker*)curve)->posX - obj->anim.localPosX);
         waveA = mathSinf(((3.1415927f) * (f32)(u32)state->wavePhaseB) / (32768.0f));
         waveB = mathSinf(((3.1415927f) * (f32)(u32)state->wavePhaseA) / (32768.0f));
         waveA = waveB + waveA;
-        waveA = ((10.0f * waveA) + *(f32*)(curve + 0x6c)) - obj->anim.localPosY;
+        waveA = ((10.0f * waveA) + ((RomCurveWalker*)curve)->posY) - obj->anim.localPosY;
         obj->anim.velocityY += (0.001f) * waveA;
         obj->anim.velocityZ +=
-            (0.001f) * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
+            (0.001f) * (((RomCurveWalker*)curve)->posZ - obj->anim.localPosZ);
     }
 
     obj->anim.velocityX *= (damp = 0.9f);
@@ -361,9 +362,9 @@ void Hagabon_update(int obj)
     if ((void*)oldCurve != NULL)
     {
         f32* dp = d;
-        dp[0] = *(f32*)&((GameObject*)oldCurve)->anim.dll - ((GameObject*)obj)->anim.worldPosX;
-        dp[1] = *(f32*)&((GameObject*)oldCurve)->anim.jointPoseData - ((GameObject*)obj)->anim.worldPosY;
-        dp[2] = *(f32*)(oldCurve + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
+        dp[0] = ((RomCurveWalker*)oldCurve)->posX - ((GameObject*)obj)->anim.worldPosX;
+        dp[1] = ((RomCurveWalker*)oldCurve)->posY - ((GameObject*)obj)->anim.worldPosY;
+        dp[2] = ((RomCurveWalker*)oldCurve)->posZ - ((GameObject*)obj)->anim.worldPosZ;
         state->pathDistance = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
     if (((state->flags & HAGABON_FLAG_CHASE) != 0) && (state->pathDistance > 250.0f))

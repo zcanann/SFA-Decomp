@@ -11,6 +11,7 @@
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
@@ -171,9 +172,9 @@ void dll_9B_func03(int target, int variant, int parent, u32 flags)
         }
         else
         {
-            buf.pos[0] = lbl_803E13A0 + *(f32*)(parent + 0xc);
-            buf.pos[1] = lbl_803E13A0 + *(f32*)(parent + 0x10);
-            buf.pos[2] = lbl_803E13A0 + *(f32*)(parent + 0x14);
+            buf.pos[0] = lbl_803E13A0 + ((PartFxSpawnParams*)parent)->posX;
+            buf.pos[1] = lbl_803E13A0 + ((PartFxSpawnParams*)parent)->posY;
+            buf.pos[2] = lbl_803E13A0 + ((PartFxSpawnParams*)parent)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80317BD8, 0x18, base + 0xd4, DLL9B_EFFECT_ID, 0);

@@ -8,7 +8,9 @@ typedef struct EcshShrineState
     u8 pad0[0x4 - 0x0];
     f32 animTimer;
     f32 cooldownTimer;
-    u8 padC[0x18 - 0xC];
+    f32 guessTimer;          /* 0xC: countdown to force a fail if no cup is picked (set to 600 when shuffles finish) */
+    f32 voiceTimer;          /* 0x10: idle spirit-voice replay countdown (phase 0) */
+    f32 shuffleSfxThreshold; /* 0x14: randomised (40-60) threshold vs animTimer that gates the mid-shuffle sfx */
     s16 unk18;
     s16 unk1A;
     s16 unk1C;
@@ -26,5 +28,11 @@ typedef struct EcshShrineState
     u8 pad33[0x34 - 0x33];
     s32 gameBitLatchState;
 } EcshShrineState;
+
+STATIC_ASSERT(offsetof(EcshShrineState, guessTimer) == 0xC);
+STATIC_ASSERT(offsetof(EcshShrineState, voiceTimer) == 0x10);
+STATIC_ASSERT(offsetof(EcshShrineState, shuffleSfxThreshold) == 0x14);
+STATIC_ASSERT(offsetof(EcshShrineState, spiritCup) == 0x2E);
+STATIC_ASSERT(offsetof(EcshShrineState, gameBitLatchState) == 0x34);
 
 #endif

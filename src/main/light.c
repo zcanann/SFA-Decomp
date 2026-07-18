@@ -123,6 +123,58 @@ typedef struct
     u8 exploded : 1;
     u8 _state2_lo : 6;
 } VfpDoorSwitchState;
+typedef struct VfpBlock1Placement
+{
+    u8 pad00[0x18];
+    s8 rotXByte;   /* 0x18 */
+    u8 pad19[5];
+    s16 gameBitId; /* 0x1e */
+} VfpBlock1Placement;
+typedef struct VfpPlatformPlacement
+{
+    u8 pad00[0x18];
+    s8 rotXByte;   /* 0x18 */
+    u8 axisMode;   /* 0x19 */
+    u8 pad1A[6];
+    s16 gameBitId; /* 0x20 */
+} VfpPlatformPlacement;
+typedef struct VfpDoorSwitchPlacement
+{
+    u8 pad00[0x18];
+    s8 rotXByte;   /* 0x18 */
+    s8 rotZByte;   /* 0x19 */
+    u8 pad1A[2];
+    s16 rotY;      /* 0x1c */
+    s16 gameBitId; /* 0x1e */
+} VfpDoorSwitchPlacement;
+typedef struct SeqPointPlacement
+{
+    u8 pad00[0x18];
+    s8 rotXByte;       /* 0x18 */
+    u8 mode;           /* 0x19 */
+    s16 triggerRadius; /* 0x1a */
+    s16 sequenceId;    /* 0x1c */
+    s16 conditionBit;  /* 0x1e */
+    s16 disableBit;    /* 0x20 */
+} SeqPointPlacement;
+typedef struct VfpDragHeadPlacement
+{
+    u8 pad00[0x18];
+    s8 rotXByte;   /* 0x18 */
+    s8 scaleFlag;  /* 0x19 */
+    s16 headIndex; /* 0x1a */
+    u8 pad1C[2];
+    s16 gameBitA;  /* 0x1e */
+    s16 gameBitB;  /* 0x20 */
+} VfpDragHeadPlacement;
+typedef struct SpellStonePlacement
+{
+    u8 pad00[0x18];
+    s8 rotXByte;         /* 0x18 */
+    u8 pad19[5];
+    s16 completeGameBit; /* 0x1e */
+    s16 requiredGameBit; /* 0x20 */
+} SpellStonePlacement;
 
 int VFP_Block1_getExtraSize(void)
 {
@@ -170,9 +222,10 @@ void VFP_Block1_update(GameObject* obj)
 
 void VFP_Block1_init(int obj, int data)
 {
+    VfpBlock1Placement* def = (VfpBlock1Placement*)data;
     VfpPlatformState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
-    state->gameBitId = *(s16*)(data + 0x1e);
+    ((GameObject*)obj)->anim.rotX = (((s32)def->rotXByte) << 8);
+    state->gameBitId = def->gameBitId;
     ((GameObject*)obj)->objectFlags |= (LIGHT_OBJFLAG_HIDDEN | LIGHT_OBJFLAG_HITDETECT_DISABLED);
 }
 
@@ -505,11 +558,12 @@ void VFP_Platform_update(GameObject* obj)
 
 void VFP_Platform_init(int obj, int data)
 {
+    VfpPlatformPlacement* def = (VfpPlatformPlacement*)data;
     VfpPlatformState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
-    state->gameBitId = *(s16*)(data + 0x20);
+    ((GameObject*)obj)->anim.rotX = (((s32)def->rotXByte) << 8);
+    state->gameBitId = def->gameBitId;
     state->state = 0;
-    state->axisMode = *(u8*)(data + 0x19);
+    state->axisMode = def->axisMode;
     ((GameObject*)obj)->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
@@ -606,11 +660,12 @@ void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
 
 void VFP_DoorSwitch_init(int obj, int data)
 {
+    VfpDoorSwitchPlacement* def = (VfpDoorSwitchPlacement*)data;
     VfpDoorSwitchState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
-    ((GameObject*)obj)->anim.rotZ = (((s32) * (s8*)(data + 0x19)) << 8);
-    ((GameObject*)obj)->anim.rotY = *(s16*)(data + 0x1c);
-    state->gameBitId = *(s16*)(data + 0x1e);
+    ((GameObject*)obj)->anim.rotX = (((s32)def->rotXByte) << 8);
+    ((GameObject*)obj)->anim.rotZ = (((s32)def->rotZByte) << 8);
+    ((GameObject*)obj)->anim.rotY = def->rotY;
+    state->gameBitId = def->gameBitId;
     if (mainGetBit(state->gameBitId) != 0)
     {
         ((ObjAnimSetProgressObjectFirstFn)ObjAnim_SetMoveProgress)(obj, lbl_803E611C);
@@ -794,14 +849,15 @@ void SeqPoint_update(int* obj)
 
 void SeqPoint_init(GameObject* obj, int data)
 {
+    SeqPointPlacement* def = (SeqPointPlacement*)data;
     SeqPointState* state = obj->extra;
-    *(void (**)(int))((int)obj + 0xBC) = (void (*)(int))SeqPoint_SeqFn;
-    obj->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
-    state->triggerRadius = *(s16*)(data + 0x1a);
-    state->sequenceId = *(s16*)(data + 0x1c);
-    state->mode = *(u8*)(data + 0x19);
-    state->conditionBit = *(s16*)(data + 0x1e);
-    state->disableBit = *(s16*)(data + 0x20);
+    obj->animEventCallback = SeqPoint_SeqFn;
+    obj->anim.rotX = (((s32)def->rotXByte) << 8);
+    state->triggerRadius = def->triggerRadius;
+    state->sequenceId = def->sequenceId;
+    state->mode = def->mode;
+    state->conditionBit = def->conditionBit;
+    state->disableBit = def->disableBit;
     obj->objectFlags |= LIGHT_OBJFLAG_HITDETECT_DISABLED;
 }
 
@@ -911,6 +967,7 @@ void VFPDragHead_update(int* obj)
 
 void VFPDragHead_init(GameObject* obj, int data)
 {
+    VfpDragHeadPlacement* def = (VfpDragHeadPlacement*)data;
     VfpDragHeadState* state = (obj)->extra;
     if ((obj)->anim.seqId == 0x3c5)
     {
@@ -920,13 +977,13 @@ void VFPDragHead_init(GameObject* obj, int data)
     }
     else
     {
-        (obj)->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
+        (obj)->anim.rotX = (((s32)def->rotXByte) << 8);
     }
-    state->gameBitA = *(s16*)(data + 0x1e);
-    state->gameBitB = *(s16*)(data + 0x20);
+    state->gameBitA = def->gameBitA;
+    state->gameBitB = def->gameBitB;
     state->unk_04 = 0x64;
-    state->headIndex = *(s16*)(data + 0x1a);
-    if (*(s8*)(data + 0x19) == 1)
+    state->headIndex = def->headIndex;
+    if (def->scaleFlag == 1)
     {
         (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase * lbl_803E6138;
     }
@@ -978,10 +1035,11 @@ void VFP_coreplat_update(void)
 
 void VFP_coreplat_init(GameObject* obj, int data)
 {
+    VfpPlatformPlacement* def = (VfpPlatformPlacement*)data;
     VfpPlatformState* state = obj->extra;
-    obj->anim.rotX = (((s32) * (s8*)(data + 0x18)) << 8);
-    state->gameBitId = *(s16*)(data + 0x20);
-    *(int (**)(void))((int)obj + 0xBC) = return0_801FD13C;
+    obj->anim.rotX = (((s32)def->rotXByte) << 8);
+    state->gameBitId = def->gameBitId;
+    obj->animEventCallback = return0_801FD13C;
     if (obj->anim.seqId == 0x3cb)
     {
         if (mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) != 0)
@@ -1084,11 +1142,12 @@ void dll_224_update(GameObject* obj)
 void dll_224_init(void* obj, void* other)
 {
     SpellStoneUseState* extra = ((GameObject*)obj)->extra;
-    s16 rotX = ((s8) * ((s8*)other + 0x18) << 8);
+    SpellStonePlacement* def = (SpellStonePlacement*)other;
+    s16 rotX = ((s8)def->rotXByte << 8);
     u8 hitboxFlags;
     ((GameObject*)obj)->anim.rotX = rotX;
-    extra->completeGameBit = *(s16*)((char*)other + 0x1e);
-    extra->requiredGameBit = *(s16*)((char*)other + 0x20);
+    extra->completeGameBit = def->completeGameBit;
+    extra->requiredGameBit = def->requiredGameBit;
     hitboxFlags = (*&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = hitboxFlags;
 }

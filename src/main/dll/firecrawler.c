@@ -329,7 +329,7 @@ void crawler_checkNearbyActive(GameObject* obj, u8* state)
             GameObject* e = gCrawlerNearbyObjectBuffer[objectIndex].obj;
             if (e->anim.seqId == FIRECRAWLER_SEQID_REDEYE)
             {
-                u32 flags = *(u32*)((char*)e->extra + 0x2dc);
+                u32 flags = ((BaddieState*)e->extra)->controlFlags;
                 if ((flags & 0x20000000) != 0 && (flags & 0x1800) == 0)
                 {
                     i = count;

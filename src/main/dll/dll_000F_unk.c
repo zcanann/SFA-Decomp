@@ -436,7 +436,7 @@ void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
 
 void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3)
 {
-    if (*(f32*)((char*)state + 664) > lbl_803E05B4)
+    if (((BaddieState*)state)->inputMagnitude > lbl_803E05B4)
     {
         f32 q = (f2 * f1) / f3;
         ((GameObject*)obj)->anim.rotX = (f32) * (s16*)obj + lbl_803E05B8 * q;
@@ -622,7 +622,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
             ((BaddieState*)state)->stateTag = 0;
             *(u8*)(state + 0x34c) = 0;
             ((BaddieState*)state)->moveEventFlags = 0;
-            *(s16*)(state + 0x278) = 0;
+            ((BaddieState*)state)->stateId = 0;
             if (((GameObject*)pos)->anim.hitReactState != NULL)
             {
                 *(u8*)((char*)((GameObject*)pos)->anim.hitReactState + 0x70) = 0;
@@ -647,7 +647,7 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
                 ((BaddieState*)state)->stateTag = 0;
                 *(u8*)(state + 0x34c) = 0;
                 ((BaddieState*)state)->moveEventFlags = 0;
-                *(s16*)(state + 0x278) = 0;
+                ((BaddieState*)state)->stateId = 0;
                 if (((GameObject*)pos)->anim.hitReactState != NULL)
                 {
                     *(u8*)((char*)((GameObject*)pos)->anim.hitReactState + 0x70) = 0;
@@ -723,7 +723,7 @@ void player_setState(void* ctx, void* p, int new_state)
     ((BaddieState*)p)->stateTag = 0;
     *(u8*)((char*)p + 0x34c) = 0;
     ((BaddieState*)p)->moveEventFlags = 0;
-    *(s16*)((char*)p + 0x278) = 0;
+    ((BaddieState*)p)->stateId = 0;
     q = ((GameObject*)ctx)->anim.hitReactState;
     if (q != 0)
         *(u8*)((char*)q + 0x70) = 0;

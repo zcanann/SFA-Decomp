@@ -17,6 +17,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
+#include "main/game_object.h"
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL8C_EFFECT_ID 0x5e0
@@ -52,9 +53,9 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[1].mode = 2;
     if ((u32)posSource != 0)
     {
-        e[1].x = lbl_803E10B4 * (lbl_803E10B8 * (f32) * (s16*)(posSource + 4));
-        e[1].y = lbl_803E10B4 * (lbl_803E10BC * (f32) * (s16*)(posSource + 0));
-        e[1].z = lbl_803E10B4 * (lbl_803E10B8 * (f32) * (s16*)(posSource + 4));
+        e[1].x = lbl_803E10B4 * (lbl_803E10B8 * (f32)((PartFxSpawnParams*)posSource)->unk4);
+        e[1].y = lbl_803E10B4 * (lbl_803E10BC * (f32)((PartFxSpawnParams*)posSource)->unk0);
+        e[1].z = lbl_803E10B4 * (lbl_803E10B8 * (f32)((PartFxSpawnParams*)posSource)->unk4);
     }
     else
     {
@@ -68,9 +69,9 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[2].mode = 2;
     if ((u32)posSource != 0)
     {
-        e[2].x = lbl_803E10B4 * (lbl_803E10B8 * (f32) * (s16*)(posSource + 4));
-        e[2].y = lbl_803E10B4 * (lbl_803E10C0 * (f32) * (s16*)(posSource + 0));
-        e[2].z = lbl_803E10B4 * (lbl_803E10B8 * (f32) * (s16*)(posSource + 4));
+        e[2].x = lbl_803E10B4 * (lbl_803E10B8 * (f32)((PartFxSpawnParams*)posSource)->unk4);
+        e[2].y = lbl_803E10B4 * (lbl_803E10C0 * (f32)((PartFxSpawnParams*)posSource)->unk0);
+        e[2].z = lbl_803E10B4 * (lbl_803E10B8 * (f32)((PartFxSpawnParams*)posSource)->unk4);
     }
     else
     {
@@ -100,7 +101,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[5].y = lbl_803E10B0;
     if ((u32)posSource != 0)
     {
-        e[5].z = (f32) * (s16*)(posSource + 2);
+        e[5].z = (f32)((PartFxSpawnParams*)posSource)->unk2;
     }
     else
     {
@@ -121,7 +122,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[7].y = lbl_803E10B0;
     if ((u32)posSource != 0)
     {
-        e[7].z = (f32) * (s16*)(posSource + 2);
+        e[7].z = (f32)((PartFxSpawnParams*)posSource)->unk2;
     }
     else
     {
@@ -142,7 +143,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[9].y = lbl_803E10B0;
     if ((u32)posSource != 0)
     {
-        e[9].z = (f32) * (s16*)(posSource + 2);
+        e[9].z = (f32)((PartFxSpawnParams*)posSource)->unk2;
     }
     else
     {
@@ -206,9 +207,9 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E10B0 + *(f32*)(sourceObj + 0x18);
-            buf.pos[1] = lbl_803E10B0 + *(f32*)(sourceObj + 0x1c);
-            buf.pos[2] = lbl_803E10B0 + *(f32*)(sourceObj + 0x20);
+            buf.pos[0] = lbl_803E10B0 + ((GameObject*)sourceObj)->anim.worldPosX;
+            buf.pos[1] = lbl_803E10B0 + ((GameObject*)sourceObj)->anim.worldPosY;
+            buf.pos[2] = lbl_803E10B0 + ((GameObject*)sourceObj)->anim.worldPosZ;
         }
         else
         {

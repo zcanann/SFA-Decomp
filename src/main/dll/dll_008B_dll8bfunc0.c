@@ -15,6 +15,7 @@
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/fb_cmd.h"
+#include "main/game_object.h"
 #include "main/dll/foodbag.h" /* family cross-sibling header (7C..90 convention); also supplies undefined4 + this DLL's own func03 decl */
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
@@ -223,9 +224,9 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
         {
             if ((u32)sourceObj != 0)
             {
-                buf.pos[0] = zero + *(f32*)(sourceObj + 0x18);
-                buf.pos[1] = zero + *(f32*)(sourceObj + 0x1c);
-                buf.pos[2] = zero + *(f32*)(sourceObj + 0x20);
+                buf.pos[0] = zero + ((GameObject*)sourceObj)->anim.worldPosX;
+                buf.pos[1] = zero + ((GameObject*)sourceObj)->anim.worldPosY;
+                buf.pos[2] = zero + ((GameObject*)sourceObj)->anim.worldPosZ;
             }
             else
             {

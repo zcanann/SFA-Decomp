@@ -13,6 +13,8 @@
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
+#include "main/dll/partfx_interface.h"
+#include "main/game_object.h"
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL9C_EFFECT_ID 0x154
@@ -73,9 +75,9 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
         cur->id = 0;
         cur->tex = 0;
         cur->flags = 0x80;
-        cur->x = (f32) * (s16*)(parent + 4);
-        cur->y = (f32) * (s16*)(parent + 2);
-        cur->z = (f32) * (s16*)(parent + 0);
+        cur->x = (f32)((PartFxSpawnParams*)parent)->arg2;
+        cur->y = (f32)((PartFxSpawnParams*)parent)->arg1;
+        cur->z = (f32)((PartFxSpawnParams*)parent)->arg0;
         cur++;
     }
     if (variant == 1)
@@ -85,7 +87,7 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
         cur->tex = base + 0x1b0;
         cur->flags = 2;
         cur->x = lbl_803E13D4;
-        cur->y = *(f32*)(parent + 0x10) / lbl_803E13D4;
+        cur->y = ((PartFxSpawnParams*)parent)->posY / lbl_803E13D4;
         cur->z = lbl_803E13D4;
     }
     else
@@ -185,15 +187,15 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
     {
         if ((void*)target != NULL)
         {
-            hdr.bx = lbl_803E13C8 + *(f32*)(target + 0x18);
-            hdr.by = lbl_803E13C8 + *(f32*)(target + 0x1c);
-            hdr.bz = lbl_803E13C8 + *(f32*)(target + 0x20);
+            hdr.bx = lbl_803E13C8 + ((GameObject*)target)->anim.worldPosX;
+            hdr.by = lbl_803E13C8 + ((GameObject*)target)->anim.worldPosY;
+            hdr.bz = lbl_803E13C8 + ((GameObject*)target)->anim.worldPosZ;
         }
         else
         {
-            hdr.bx = lbl_803E13C8 + *(f32*)(parent + 0xc);
-            hdr.by = lbl_803E13C8 + *(f32*)(parent + 0x10);
-            hdr.bz = lbl_803E13C8 + *(f32*)(parent + 0x14);
+            hdr.bx = lbl_803E13C8 + ((PartFxSpawnParams*)parent)->posX;
+            hdr.by = lbl_803E13C8 + ((PartFxSpawnParams*)parent)->posY;
+            hdr.bz = lbl_803E13C8 + ((PartFxSpawnParams*)parent)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, (u8*)(int)lbl_80317E00, 0x18, base + 0xd4, DLL9C_EFFECT_ID, 0);

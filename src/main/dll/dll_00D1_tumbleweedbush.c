@@ -118,7 +118,7 @@ s8 fn_801631C8(int* obj)
     idx = 0;
     freeSlot = -1;
     scan = state;
-    while (idx < (int)(u8)state[0x50] && freeSlot == -1)
+    while (idx < (int)((TumbleweedBushState*)state)->pieceCount && freeSlot == -1)
     {
         if (*(void**)(scan + 0xc) == NULL)
             freeSlot = idx;
@@ -155,7 +155,7 @@ s8 fn_801631C8(int* obj)
     ((ObjPlacement*)newObj)->color[3] = p4c[7];
     *(f32*)((char*)newObj + 0x1c) = gTumbleweedBushPieceScale;
 
-    if ((state[0x4c] & 1) != 0)
+    if ((((TumbleweedBushState*)state)->variant & 1) != 0)
     {
         switch (((ObjPlacement*)((GameObject*)obj)->anim.placementData)->mapId)
         {
@@ -307,9 +307,9 @@ void TumbleWeedBush_init(u8* obj, TumbleweedBushPlacement* params, int param3)
     int i;
 
     sub = ((GameObject*)obj)->extra;
-    *(f32*)sub = gTumbleweedBushInitScale;
+    ((TumbleweedBushState*)sub)->scale = gTumbleweedBushInitScale;
     ((TumbleweedBushState*)sub)->triggerRadius = (u16)(params->radiusByte * 2);
-    sub[0x4c] = params->variant;
+    ((TumbleweedBushState*)sub)->variant = params->variant;
     ((GameObject*)obj)->anim.rotZ = (s16)((params->rotZByte - 0x7f) << 7);
     ((GameObject*)obj)->anim.rotY = (s16)((params->rotYByte - 0x7f) << 7);
     ((GameObject*)obj)->anim.rotX = (s16)(params->rotXByte << 8);
@@ -322,11 +322,11 @@ void TumbleWeedBush_init(u8* obj, TumbleweedBushPlacement* params, int param3)
     case TUMBLEWEEDBUSH_SEQ_A:
     case TUMBLEWEEDBUSH_SEQ_C:
     case TUMBLEWEEDBUSH_SEQ_D:
-        sub[0x50] = 3;
+        ((TumbleweedBushState*)sub)->pieceCount = 3;
         idx = 0;
         break;
     case TUMBLEWEEDBUSH_SEQ_B:
-        sub[0x50] = 3;
+        ((TumbleweedBushState*)sub)->pieceCount = 3;
         idx = 1;
         break;
     }
@@ -336,7 +336,7 @@ void TumbleWeedBush_init(u8* obj, TumbleweedBushPlacement* params, int param3)
         pieceSlot = sub;
         pe = gTumbleweedBushPieceOffsetTable + idx * 0x30;
         pieceOffset = sub;
-        for (; i < sub[0x50]; i++)
+        for (; i < ((TumbleweedBushState*)sub)->pieceCount; i++)
         {
             *(int*)(pieceSlot + 0xc) = 0;
             memcpy(pieceOffset + 0x1c, pe, 0xc);

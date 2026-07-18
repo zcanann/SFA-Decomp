@@ -122,24 +122,24 @@ void Lamp_update(int obj)
 
     if ((((GameObject*)obj)->objectFlags & LAMP_OBJFLAG_RENDERED) != 0)
     {
-        *(f32*)(effectArgs + 8) = 0.35f;
-        *(s16*)(effectArgs + 6) = 0xc0d;
-        *(f32*)(effectArgs + 0xc) = 0.0f;
-        *(f32*)(effectArgs + 0x10) = -12.0f;
-        *(f32*)(effectArgs + 0x14) = 0.0f;
-        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)(effectArgs + 0xc), (f32*)(effectArgs + 0x10),
-                                      (f32*)(effectArgs + 0x14), 1);
+        ((PartFxSpawnParams*)effectArgs)->scale = 0.35f;
+        ((PartFxSpawnParams*)effectArgs)->arg3 = 0xc0d;
+        ((PartFxSpawnParams*)effectArgs)->posX = 0.0f;
+        ((PartFxSpawnParams*)effectArgs)->posY = -12.0f;
+        ((PartFxSpawnParams*)effectArgs)->posZ = 0.0f;
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &((PartFxSpawnParams*)effectArgs)->posX,
+                                      &((PartFxSpawnParams*)effectArgs)->posY, &((PartFxSpawnParams*)effectArgs)->posZ, 1);
         if (((GameObject*)obj)->anim.parent != NULL)
         {
-            *(f32*)(effectArgs + 0xc) = *(f32*)(effectArgs + 0xc) - ((GameObject*)obj)->anim.worldPosX;
-            *(f32*)(effectArgs + 0x10) = *(f32*)(effectArgs + 0x10) - ((GameObject*)obj)->anim.worldPosY;
-            *(f32*)(effectArgs + 0x14) = *(f32*)(effectArgs + 0x14) - ((GameObject*)obj)->anim.worldPosZ;
+            ((PartFxSpawnParams*)effectArgs)->posX = ((PartFxSpawnParams*)effectArgs)->posX - ((GameObject*)obj)->anim.worldPosX;
+            ((PartFxSpawnParams*)effectArgs)->posY = ((PartFxSpawnParams*)effectArgs)->posY - ((GameObject*)obj)->anim.worldPosY;
+            ((PartFxSpawnParams*)effectArgs)->posZ = ((PartFxSpawnParams*)effectArgs)->posZ - ((GameObject*)obj)->anim.worldPosZ;
         }
         else
         {
-            *(f32*)(effectArgs + 0xc) = *(f32*)(effectArgs + 0xc) - ((GameObject*)obj)->anim.localPosX;
-            *(f32*)(effectArgs + 0x10) = *(f32*)(effectArgs + 0x10) - ((GameObject*)obj)->anim.localPosY;
-            *(f32*)(effectArgs + 0x14) = *(f32*)(effectArgs + 0x14) - ((GameObject*)obj)->anim.localPosZ;
+            ((PartFxSpawnParams*)effectArgs)->posX = ((PartFxSpawnParams*)effectArgs)->posX - ((GameObject*)obj)->anim.localPosX;
+            ((PartFxSpawnParams*)effectArgs)->posY = ((PartFxSpawnParams*)effectArgs)->posY - ((GameObject*)obj)->anim.localPosY;
+            ((PartFxSpawnParams*)effectArgs)->posZ = ((PartFxSpawnParams*)effectArgs)->posZ - ((GameObject*)obj)->anim.localPosZ;
         }
         for (i = 0; i < framesThisStep; i++)
         {
