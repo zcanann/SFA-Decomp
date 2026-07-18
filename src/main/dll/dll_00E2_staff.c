@@ -226,7 +226,7 @@ void staff_free(int* obj);
 void staff_release(void);
 void staff_init(int* obj);
 void staff_initialise(void);
-volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
+#define GXWGFifo (*(volatile GenPropsWGPipe*)0xCC008000)
 
 void staff_hitDetectGeometry(int* obj);
 static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
