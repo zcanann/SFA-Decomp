@@ -43,6 +43,7 @@
 #include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
 #include "main/objprint_sound_api.h"
+#include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_play_int_u16_legacy_api.h"
 #include "track/intersect_api.h"
 
@@ -154,7 +155,6 @@ const GuardianVec gCfGuardianHitboxTemplateB = {{25, 25, 15, 5, 5}}; /* hitbox t
 extern int gCfGuardianSeqStreamTable[][2];     /* chatter sequence-stream table, 0xf states */
 const GuardianMsg gCfGuardianHeadingTemplate = {7, 8, 7, 8}; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int cfguardian_updateMain();
-extern f32 Vec_xzDistance(void* a, void* b);
 extern int gCfGuardianIdleMoveTable[]; /* per-quest-state idle move id (-1 = none) */
 
 /* cfguardianPlayEventSfx: walk this step's triggered anim events and play the
@@ -484,7 +484,7 @@ static inline f32 cfguardianAbs(f32 x)
 int cfguardian_updateMain(GameObject* obj)
 {
     CfGuardianState* sub;
-    char* player;
+    GameObject* player;
     CfGuardianMapData* def;
     struct
     {
@@ -499,7 +499,7 @@ int cfguardian_updateMain(GameObject* obj)
     sub = obj->extra;
     sub->flagsA9B &= ~GUARDIAN_FLAG_PATH_FLYING;
     sub->moveSpeed = 0.005f;
-    player = (char*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     ObjTrigger_UpdateIdBlockFlag((int)obj);
     if (def->variant == 1 && mainGetBit(GAMEBIT_GUARDIAN_CONVERGENCE) == 0)
     {
@@ -718,8 +718,7 @@ int cfguardian_updateMain(GameObject* obj)
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
     }
-        if (nearDist > 300.0f && Vec_xzDistance(player + offsetof(GameObject, anim.worldPosX),
-                                                      (char*)obj + offsetof(GameObject, anim.worldPosX)) < 80.0f)
+        if (nearDist > 300.0f && Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX) < 80.0f)
         {
             obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
             if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && gCfGuardianIdleMoveTable[sub->questState] != 0)
@@ -764,8 +763,7 @@ int cfguardian_updateMain(GameObject* obj)
             dll_2E_func04(&sub->moveLib, found);
         }
     }
-        if (nearDist > 300.0f && Vec_xzDistance(player + offsetof(GameObject, anim.worldPosX),
-                                                      (char*)obj + offsetof(GameObject, anim.worldPosX)) < 80.0f)
+        if (nearDist > 300.0f && Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX) < 80.0f)
         {
             if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && gCfGuardianIdleMoveTable[sub->questState] != 0)
             {
