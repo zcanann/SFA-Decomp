@@ -24,6 +24,7 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
+#include "main/shader_api.h"
 
 #define ObjMsg_PopLegacy(obj, msg, param, flags) ((int (*)())ObjMsg_Pop)((obj), (msg), (param), (flags))
 #define ObjGroup_FindNearestObjectLegacy(group, from, distance)                                                        \
@@ -35,10 +36,9 @@
 #define DLL19B_ENVFX_A 0xc3
 #define DLL19B_ENVFX_B 0x14
 
-extern void* return0_8005669C(int);
 extern int lbl_803DB610;
 extern int* gTitleMenuControlInterface;
-void* lbl_803DDBE0;
+u32 lbl_803DDBE0;
 extern f32 lbl_803E5188;
 extern f32 lbl_803E518C;
 extern f32 lbl_803E5190;
@@ -146,7 +146,7 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 break;
             case 9:
                 mainSetBits(0x128, 1);
-                if (lbl_803DDBE0 == NULL)
+                if (lbl_803DDBE0 == 0)
                 {
                     lbl_803DDBE0 = return0_8005669C(1);
                 }

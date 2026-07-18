@@ -645,7 +645,7 @@ int return0_80056694(void* wpad0, int wpad1)
 {
     return 0x0;
 }
-int return0_8005669C(void)
+int return0_8005669C(int unused)
 {
     return 0x0;
 }

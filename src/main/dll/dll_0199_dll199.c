@@ -22,6 +22,7 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/object_descriptor.h"
+#include "main/shader_api.h"
 
 #define ObjMsg_PopLegacy(obj, msg, param, flags) ((int (*)())ObjMsg_Pop)((obj), (msg), (param), (flags))
 #define ObjGroup_FindNearestObjectLegacy(group, from, distance)                                                        \
@@ -41,7 +42,6 @@
 #define DLL199_ENVFX_A 0xc3
 #define DLL199_ENVFX_B 0x14
 
-extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern int* gTitleMenuControlInterface;
 u32 lbl_803DDBD8;
@@ -502,4 +502,3 @@ void dll_199_release(void)
 void dll_199_initialise(void)
 {
 }
-
