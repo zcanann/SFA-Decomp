@@ -43,9 +43,6 @@
 extern int lbl_803DB610;
 extern int* gTitleMenuControlInterface;
 u32 lbl_803DDBD8;
-void dll_199_initialise(void);
-void dll_199_release(void);
-void dll_199_init(GameObject* obj, int def);
 typedef struct Dll199ObjectDef
 {
     u8 pad0[0x1A - 0x0];
@@ -53,9 +50,6 @@ typedef struct Dll199ObjectDef
     u8 pad1C[0x20 - 0x1C];
 } Dll199ObjectDef;
 void dll_199_hitDetect(void);
-void dll_199_init(GameObject* obj, int def);
-void dll_199_release(void);
-void dll_199_initialise(void);
 int dll_199_getExtraSize(void);
 int dll_199_getObjectTypeId(void);
 void dll_199_free(int* obj);
