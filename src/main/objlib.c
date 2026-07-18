@@ -9,6 +9,7 @@
 #include "main/model.h"
 #include "main/lightmap_api.h"
 #include "main/dll/player_api.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/mm.h"
 #include "main/objHitReact.h"
@@ -34,7 +35,6 @@
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
-extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);
 extern char sObjAddObjectTypeReachedMaxTypes[];
 
 #define OBJGROUP_COUNT                0x54
@@ -806,7 +806,7 @@ void ObjHitReact_UpdateResetObjects(void)
         if (((obj->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) == 0) &&
             (obj->activeHitboxMode != OBJHITREACT_DISABLED_HITBOX_MODE))
         {
-            Obj_UpdateObject(obj, obj->modelInstance);
+            Obj_UpdateObject((GameObject*)obj);
         }
         objectOffset = objectOffset + 4;
     }

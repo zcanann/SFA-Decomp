@@ -8,6 +8,7 @@ void* getTablesBinEntry(int i);
 u8* loadObjectFile(int id);
 int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags);
 void Obj_UpdateModelBlendStates(void);
+void Obj_UpdateObject(GameObject* obj);
 void Obj_FreeObject(GameObject* obj);
 ObjPlacement* Obj_AllocObjectSetup(int size, int type);
 GameObject* loadObjectAtObject(GameObject* source, ObjPlacement* setup);

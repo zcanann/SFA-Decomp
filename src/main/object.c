@@ -220,7 +220,6 @@ extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();
 extern void playerRenderQuakeSpell(void);
-extern void playerUpdate(u8* obj);
 extern void fn_80013B6C(int* p, int n);
 extern void mapLoadForObject(int id, void* obj);
 extern int loadModLines(int n, s16* out);
@@ -1312,17 +1311,17 @@ void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u
     }
 }
 
-void Obj_UpdateObject(u8* obj)
+void Obj_UpdateObject(GameObject* obj)
 {
     ObjAnimComponent* object;
     ObjHitsPriorityState* hitState;
     ObjHitsPriorityState* childHitState;
     u8* t;
     BoneParticleEffectSpawnFn cb;
-    void (*cb2)(u8*);
+    void (*cb2)(GameObject*);
 
-    object = (ObjAnimComponent*)obj;
-    if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_FREED)
+    object = &obj->anim;
+    if (obj->objectFlags & OBJECT_FLAG_FREED)
     {
         return;
     }
@@ -1340,26 +1339,26 @@ void Obj_UpdateObject(u8* obj)
         case 0x4f3:
         case 0x882:
         case 0x887:
-            cb2 = (void (*)(u8*)) * (int*)((u8*)*object->dll + 8);
+            cb2 = (void (*)(GameObject*)) * (int*)((u8*)*object->dll + 8);
             cb2(obj);
             break;
         }
         return;
     }
-    if (((GameObject*)obj)->colorFadeFlags != 0 && ((GameObject*)obj)->ownerObj == NULL &&
-        (((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE))
+    if (obj->colorFadeFlags != 0 && obj->ownerObj == NULL &&
+        (obj->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE))
     {
-        Obj_TickModelColorFadeRecursive((GameObject*)obj);
+        Obj_TickModelColorFadeRecursive(obj);
     }
-    if (((GameObject*)obj)->pendingParentObj != NULL)
+    if (obj->pendingParentObj != NULL)
     {
-        if (((GameObject*)obj)->childObjs[0] != NULL)
+        if (obj->childObjs[0] != NULL)
         {
-            t = *(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54);
+            t = *(u8**)((u8*)obj->childObjs[0] + 0x54);
             if (t != 0)
             {
-                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject = 0;
-                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->priorityHitCount = 0;
+                ((ObjHitsPriorityState*)*(u8**)((u8*)obj->childObjs[0] + 0x54))->lastHitObject = 0;
+                ((ObjHitsPriorityState*)*(u8**)((u8*)obj->childObjs[0] + 0x54))->priorityHitCount = 0;
             }
         }
         if (object->hitReactState == NULL)
@@ -1379,18 +1378,18 @@ void Obj_UpdateObject(u8* obj)
         object->previousWorldPosY = object->worldPosY;
         object->previousWorldPosZ = object->worldPosZ;
     }
-    ((GameObject*)obj)->externalVelX = object->velocityX;
-    ((GameObject*)obj)->externalVelY = object->velocityY;
-    ((GameObject*)obj)->externalVelZ = object->velocityZ;
-    if (((GameObject*)obj)->colorFadeFlags != 0 && ((GameObject*)obj)->ownerObj == NULL &&
-        (((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_FROZEN))
+    obj->externalVelX = object->velocityX;
+    obj->externalVelY = object->velocityY;
+    obj->externalVelZ = object->velocityZ;
+    if (obj->colorFadeFlags != 0 && obj->ownerObj == NULL &&
+        (obj->colorFadeFlags & OBJ_COLOR_FADE_FLAG_FROZEN))
     {
-        ((GameObject*)obj)->colorFadeFrames = (s16)((f32)((GameObject*)obj)->colorFadeFrames - timeDelta);
-        if (((GameObject*)obj)->colorFadeFrames <= 0)
+        obj->colorFadeFrames = (s16)((f32)obj->colorFadeFrames - timeDelta);
+        if (obj->colorFadeFrames <= 0)
         {
-            ((GameObject*)obj)->colorFadeFrames = 0;
-            ((GameObject*)obj)->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_FROZEN;
-            ((GameObject*)obj)->fadeCounter = 0;
+            obj->colorFadeFrames = 0;
+            obj->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_FROZEN;
+            obj->fadeCounter = 0;
             ObjModel_ClearRenderAttachment((u8*)object->banks[object->bankIndex]);
             cb = (*gBoneParticleEffectInterface)->spawnEffect;
             cb(obj, 0x7fb, NULL, 0x50, NULL);
@@ -1399,7 +1398,7 @@ void Obj_UpdateObject(u8* obj)
             Sfx_PlayFromObject((u32)obj, SFXTRIG_barrel_bounce1);
         }
     }
-    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_UPDATE_DISABLED) == 0)
+    if ((obj->objectFlags & OBJECT_OBJFLAG_UPDATE_DISABLED) == 0)
     {
         if (object->seqId == 0 || object->seqId == 0x1f)
         {
@@ -1408,7 +1407,7 @@ void Obj_UpdateObject(u8* obj)
         }
         else if (object->dll != NULL)
         {
-            cb2 = (void (*)(u8*)) * (int*)((u8*)*object->dll + 8);
+            cb2 = (void (*)(GameObject*)) * (int*)((u8*)*object->dll + 8);
             if (cb2 != 0)
             {
                 cb2(obj);
@@ -1418,21 +1417,21 @@ void Obj_UpdateObject(u8* obj)
     }
     if (object->hitReactState != NULL)
     {
-        if (((GameObject*)obj)->childObjs[0] != NULL)
+        if (obj->childObjs[0] != NULL)
         {
-            t = *(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54);
+            t = *(u8**)((u8*)obj->childObjs[0] + 0x54);
             if (t != 0)
             {
-                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->lastHitObject = 0;
-                ((ObjHitsPriorityState*)*(u8**)((u8*)((GameObject*)obj)->childObjs[0] + 0x54))->priorityHitCount = 0;
+                ((ObjHitsPriorityState*)*(u8**)((u8*)obj->childObjs[0] + 0x54))->lastHitObject = 0;
+                ((ObjHitsPriorityState*)*(u8**)((u8*)obj->childObjs[0] + 0x54))->priorityHitCount = 0;
             }
         }
         ((ObjHitsPriorityState*)object->hitReactState)->lastHitObject = 0;
         ((ObjHitsPriorityState*)object->hitReactState)->priorityHitCount = 0;
     }
-    if (*(void**)(obj + 0x58) != NULL)
+    if (*(void**)((u8*)obj + 0x58) != NULL)
     {
-        *(u8*)(*(u8**)(obj + 0x58) + 0x10f) = 0;
+        *(u8*)(*(u8**)((u8*)obj + 0x58) + 0x10f) = 0;
     }
 }
 
@@ -2384,12 +2383,12 @@ void Obj_UpdateAllObjects(u8 flags)
     obj = *(int*)((u8*)&gObjUpdateList + 4);
     while (obj != 0 && ((ObjAnimComponent*)obj)->activeHitboxMode == 0x64)
     {
-        Obj_UpdateObject((u8*)obj);
+        Obj_UpdateObject((GameObject*)obj);
         obj = *(int*)(obj + off);
     }
     while (obj != 0 && (((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE))
     {
-        Obj_UpdateObject((u8*)obj);
+        Obj_UpdateObject((GameObject*)obj);
         ((GameObject*)obj)->anim.transformMatrixIndex = Obj_BuildTransformMatrixSlot((GameObject*)obj);
         obj = *(int*)(obj + off);
     }
@@ -2404,12 +2403,12 @@ void Obj_UpdateAllObjects(u8 flags)
         {
             if ((((ObjHitsPriorityState*)t)->shapeFlags & 8) == 0 || (((ObjHitsPriorityState*)t)->flags & 1) == 0)
             {
-                Obj_UpdateObject((u8*)obj);
+                Obj_UpdateObject((GameObject*)obj);
             }
         }
         else
         {
-            Obj_UpdateObject((u8*)obj);
+            Obj_UpdateObject((GameObject*)obj);
         }
     }
     obj2 = (u8*)ObjGroup_GetObjects(0, &count1);

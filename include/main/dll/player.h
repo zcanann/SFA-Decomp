@@ -39,6 +39,7 @@ typedef struct
 STATIC_ASSERT(sizeof(EmitCtrlTbl) == 0x130);
 
 int fn_802AD2F4(GameObject* obj, int inner, int state);
+void playerUpdate(GameObject* obj);
 void playerItemGetAnimFn(int obj, int inner, int state);
 void fn_802AFB0C(int obj, int inner, int state);
 void playerDoHitDetection(int obj);
