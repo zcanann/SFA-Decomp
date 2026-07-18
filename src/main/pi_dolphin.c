@@ -997,7 +997,6 @@ extern u8 lbl_803DCD30;
 extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 dst[3][4], f32 a[3][4], f32 b[3][4]);
-extern void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, GXTexMtxType type);
 extern u8 lbl_803DCD68;
 extern int lbl_803DCD80;
 extern u8 lbl_803DCD69;
@@ -1044,9 +1043,7 @@ extern void OSStartStopwatch(void* sw);
 extern int OSGetCurrentThread(void);
 extern int Queue_GetCount(void* q);
 extern void OSSleepThread(void* q);
-extern void GXInvalidateVtxCache(void);
 extern int GXReadDrawSync(void);
-extern void VISetNextFrameBuffer(void* fb);
 extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
 extern void GXGetGPStatus(u8* a, u8* b, u8* c, u8* d, u8* e);
 extern void GXInitFifoBase(void* fifo, void* base, u32 size);
@@ -1094,7 +1091,6 @@ extern void GXInitFifoLimits(void* fifo, u32 hi, u32 lo);
 extern void Queue_Init(void* q, void* buf, int n, int stride);
 extern void OSInitThreadQueue(char* q);
 extern void GXSetBreakPtCallback(void (*cb)());
-extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void GXSetFieldMode(int field_mode, int half_aspect_ratio);
 extern void GXSetDispCopySrc(int left, int top, int wd, int ht);
 extern u32 GXSetDispCopyYScale(f32 vscale);
@@ -1102,7 +1098,6 @@ extern void GXSetDispCopyDst(int wd, int ht);
 extern void GXSetPixelFmt(int pix_fmt, int z_fmt);
 extern void GXSetDither(int dither);
 extern void GXSetDispCopyGamma(int gamma);
-extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
 extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
 extern char lbl_8035F6B8[0x78];
 extern char* lbl_803DCCE0;
@@ -5437,8 +5432,6 @@ int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, i
 }
 
 extern void GXSetTevIndRepeat(int stage);
-extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
-                              GXBool normalize, u32 pt_texmtx);
 extern void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue,
                                   GXTevColorChan alpha);
 
