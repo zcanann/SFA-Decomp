@@ -204,3 +204,13 @@ My de-inline reorder (d0c72ed309, gxTextureFn 0->63.6) was undone: rcp_dolphin's
 
 ## curve-signature restore (fa1b498f43) regressed cfguardian path-following fns (non-purge collateral)
 "Restore curve advance call signatures" changed a curve-advance function signature that cfguardian (dll_0148) calls; the new signature altered call emission in two path fns: cfguardianSteerToward 97.32->95.85 (-1.5), cfguardianFlyAlongPath 95.99->94.71 (-1.3). Proto-width-propagation class (like the earlier resource.h u16 change). If the restored signature is the authentic one, this is an accepted correctness>match tradeoff; if the old signature was also valid, worth checking whether cfguardian's callers need a cast to keep both. Caught by churn-mine (non-purge unit, real regression). Minor magnitude, flagging for awareness.
+
+## seq-playback-type recovery (5c493804fc) regressed seqStartPlay (non-purge collateral)
+"Recover shared sequence playback types" retyped seqStartPlay's params from u8* to typed
+SynthPage*/SynthMidiSetup*/u32* (synth_queue.c, 94-line body change). Type recovery is a real quality
+win, but it dropped seqStartPlay 99.857->99.664 (-0.19) — the typed pointers change load/addressing
+emission. Same proto-width-propagation class as the cfguardian curve-signature case. Net batch was
++4 ups / -1 down (the 4 sibling audio fns improved from the correct types). If the recovered types are
+authentic (they look genuinely correct), this is an accepted correctness>match tradeoff; if you want
+both, worth checking whether a single call-site addressing spelling keeps the -0.19 back. Caught by
+churn-mine (non-purge unit, real regression). Minor magnitude, flagging for awareness.
