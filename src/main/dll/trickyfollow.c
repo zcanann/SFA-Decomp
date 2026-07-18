@@ -23,6 +23,7 @@
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/objfsa.h"
+#include "main/dll/skeetla_ext.h"
 
 /* A plain XYZ point; recovered file-locally for the patch-target scratch slot
  * at TrickyState+0xD4 (an unnamed pad region in tricky_state.h). */
@@ -91,7 +92,6 @@ extern int trickyMove(u8* obj, void* moveState);
 extern void trickyRankLinkedRouteCandidates(u8* obj, u8* flags, int walkGroup, int* routes);
 extern int trickyFindReachableRouteIndex(u8* state, int* routes, u8* flags, u16 group);
 extern void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue);
-extern void trickyAdvanceRouteTargetAhead(u8* obj, RomCurveWalker* route, f32 speed);
 extern void fn_800D9F38(RomCurveWalker* route);
 extern void fn_800D9EE8(RomCurveWalker* route);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
@@ -593,7 +593,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                         ((TrickyState*)state)->speed = velBefore;
                         trickyUpdateApproachSpeed(obj, lbl_803E246C, state, &route->posX, 1);
                     }
-                    trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
+                    trickyAdvanceRouteTargetAhead((int)obj, route, ((TrickyState*)state)->speed);
                     moved = trickyMove(obj, &route->posX);
                     switch (*(s8*)(prevNode + 0x1a))
                     {
@@ -878,7 +878,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
                     trickyUpdateApproachSpeed(obj, lbl_803E246C, state, &route->posX, 1);
                 }
             }
-            trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
+            trickyAdvanceRouteTargetAhead((int)obj, route, ((TrickyState*)state)->speed);
             moved = trickyMove(obj, &route->posX);
             type = *(s8*)((u8*)route->nodeA0 + 0x1a);
             switch (type)
@@ -931,7 +931,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             ((TrickyState*)state)->speed = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, &route->posX, 1);
         }
-        trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
+        trickyAdvanceRouteTargetAhead((int)obj, route, ((TrickyState*)state)->speed);
         trickyMove(obj, &route->posX);
         dir = route->reverse;
         if (((dir == 0) && (route->atSegmentEnd != 0)) || ((dir != 0 && (route->atSegmentEnd == 0))))
@@ -1152,7 +1152,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             ((TrickyState*)state)->speed = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, &route->posX, 1);
         }
-        trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
+        trickyAdvanceRouteTargetAhead((int)obj, route, ((TrickyState*)state)->speed);
         trickyMove(obj, &route->posX);
         dir = route->reverse;
         if (((dir == 0) && (route->atSegmentEnd != 0)) || ((dir != 0 && (route->atSegmentEnd == 0))))
@@ -1210,7 +1210,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
     case 0xe:
         trickyDebugPrint(strs + 0x4d4);
         ((TrickyState*)state)->heightUpdateActive = 0;
-        trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
+        trickyAdvanceRouteTargetAhead((int)obj, route, ((TrickyState*)state)->speed);
         {
             f32 dz;
             f32 dx;
@@ -1268,7 +1268,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
             ((TrickyState*)state)->speed = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, &route->posX, 1);
         }
-        trickyAdvanceRouteTargetAhead(obj, route, ((TrickyState*)state)->speed);
+        trickyAdvanceRouteTargetAhead((int)obj, route, ((TrickyState*)state)->speed);
         trickyMove(obj, &route->posX);
         dir = route->reverse;
         if (((dir == 0) && (route->atSegmentEnd != 0)) || ((dir != 0 && (route->atSegmentEnd == 0))))
