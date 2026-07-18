@@ -296,9 +296,9 @@ void TitleMenuItem_update(TitleMenuItem* item)
     }
 }
 
-void TitleMenuItem_free(void)
+void TitleMenuItem_free(TitleMenuItem* item)
 {
-    mmFreeLegacyNoArg();
+    mm_free(item);
 }
 
 TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 minValue, s16 maxValue, s16 value)

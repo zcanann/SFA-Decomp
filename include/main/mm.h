@@ -35,6 +35,5 @@ void* mmAllocateFromFBMemoryStore(int handle, int size);
     ((void* (*)(u32, u32, void*))mmAlloc)((size), (tag), (name))
 #define testAndSetOnlyUseHeap3_u8(value) \
     ((u8 (*)(int))testAndSet_onlyUseHeap3)(value)
-#define mmFreeLegacyNoArg() ((void (*)(void))mm_free)()
 
 #endif /* MAIN_MM_H_ */

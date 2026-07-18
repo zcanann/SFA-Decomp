@@ -12,7 +12,7 @@ int TitleMenuItem_isEnabled(TitleMenuItem* item);
 void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha);
 void TitleMenuItem_update(TitleMenuItem* item);
 void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int enabled);
-void TitleMenuItem_free(void);
+void TitleMenuItem_free(TitleMenuItem* item);
 void TitleMenuItem_initialise(void);
 TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 minValue, s16 maxValue, s16 value);
 TitleMenuItem* TitleMenuItem_create(s16 x, s16 y, s16 minValue, s16 maxValue, s16 value);
