@@ -940,13 +940,13 @@ int DBprotection_getCameraState(GameObject* obj)
     return *(s8*)((char*)(int*)obj->extra + 0x70);
 }
 
-void DBprotection_updateShield(int* obj)
+void DBprotection_updateShield(GameObject* obj)
 {
     SBGalleonState* state;
     f32 angleCos;
 
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->userData1 = 7;
+    state = obj->extra;
+    obj->userData1 = 7;
 
     if (mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_ARMED) != 0 &&
         mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_USED) == 0 && mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_READY) != 0)
@@ -994,14 +994,14 @@ void DBprotection_updateShield(int* obj)
         state->shieldSfxLatch = 0;
     }
 
-    *(u16*)&((GameObject*)obj)->anim.rotZ = lbl_803E57DC * angleCos;
+    *(u16*)&obj->anim.rotZ = lbl_803E57DC * angleCos;
     state->shieldAngle = (u16)(s32)(lbl_803E57E0 * timeDelta + state->shieldAngle);
 }
 
-void SB_Galleon_onSeqFree(int* obj)
+void SB_Galleon_onSeqFree(GameObject* obj)
 {
-    SBGalleonState* state = ((GameObject*)obj)->extra;
-    state->posX = ((GameObject*)obj)->anim.localPosX;
-    state->posY = ((GameObject*)obj)->anim.localPosY;
-    state->posZ = ((GameObject*)obj)->anim.localPosZ;
+    SBGalleonState* state = obj->extra;
+    state->posX = obj->anim.localPosX;
+    state->posY = obj->anim.localPosY;
+    state->posZ = obj->anim.localPosZ;
 }

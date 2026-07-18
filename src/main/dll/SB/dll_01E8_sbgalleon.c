@@ -48,6 +48,7 @@
 #include "main/objseq.h"
 #include "main/obj_group.h"
 #include "main/obj_list.h"
+#include "main/dll/DB/DBprotection.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
 #include "main/gamebits.h"
@@ -76,7 +77,6 @@ STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
-extern void SB_Galleon_onSeqFree(int obj);
 extern const f32 lbl_803E56CC;
 
 extern f32 lbl_803E57F4;
@@ -113,8 +113,6 @@ extern f32 lbl_803E5808;
 extern f32 lbl_803E5738;
 extern f32 lbl_803E56F0;
 extern f32 lbl_803E56C8;
-extern void fn_801DFA28(int obj);
-extern void DBprotection_updateShield(int obj);
 extern f32 lbl_803E580C;
 
 /* Sequence-event opcodes consumed by SB_Galleon_SeqFn. */
@@ -586,14 +584,14 @@ void SB_Galleon_update(GameObject* obj)
         switch ((s8)state->cameraState)
         {
         case SBGALLEON_CAM_APPROACH:
-            fn_801DFA28((int)obj);
+            fn_801DFA28(obj);
             break;
         case SBGALLEON_CAM_START_INTRO:
             (*gObjectTriggerInterface)->runSequence(3, obj, -1);
             state->cameraState = SBGALLEON_CAM_SHIELD;
             break;
         case SBGALLEON_CAM_SHIELD:
-            DBprotection_updateShield((int)obj);
+            DBprotection_updateShield(obj);
             break;
         case SBGALLEON_CAM_END:
             (*gMapEventInterface)->setMapAct(SBGALLEON_MAP_PALACE, 1);
