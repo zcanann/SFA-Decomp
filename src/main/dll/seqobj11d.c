@@ -80,8 +80,7 @@ typedef struct
    player*, hud, ObjModelChain). DAT_/lbl_/PTR_ are shared .data/.sdata
    tables and FP constants. */
 
-extern int fn_8014C11C(int obj, f32 f, int a, int b, u8* tbl);
-u8 gGroundBaddieTargetSearchResult[0x80];
+EnemyTargetSearchResult gGroundBaddieTargetSearchResult[16];
 
 
 void fn_801511E8(GameObject* obj, u8* state)
@@ -137,13 +136,13 @@ void fn_801513AC(GameObject* obj, u8* state)
     base = (char*)lbl_8031F16C;
     base += state[0x33b] * 40;
     entry = *(u8**)(base + 12);
-    if (fn_8014C11C((int)obj, 100.0f, 1, 16, gGroundBaddieTargetSearchResult) >= 1)
+    if (fn_8014C11C(obj, 100.0f, 1, 16, gGroundBaddieTargetSearchResult) >= 1)
     {
-        if (*(u16*)(gGroundBaddieTargetSearchResult + 4) <= 40 && *(u16*)(state + 0x2a0) != 3 &&
+        if (gGroundBaddieTargetSearchResult[0].dist <= 40 && *(u16*)(state + 0x2a0) != 3 &&
             *(u16*)(state + 0x2a0) != 4)
         {
-            d = getAngle((obj)->anim.localPosX - *(f32*)(*(int*)gGroundBaddieTargetSearchResult + 0xc),
-                         (obj)->anim.localPosZ - *(f32*)(*(int*)gGroundBaddieTargetSearchResult + 0x14)) -
+            d = getAngle(obj->anim.localPosX - gGroundBaddieTargetSearchResult[0].obj->anim.localPosX,
+                         obj->anim.localPosZ - gGroundBaddieTargetSearchResult[0].obj->anim.localPosZ) -
                 (u16)(obj)->anim.rotX;
             if (d > 0x8000)
             {
@@ -156,7 +155,7 @@ void fn_801513AC(GameObject* obj, u8* state)
             d = (s16)((u32)(u16)d >> 13);
             state[0x33a] = (u8)(entry[8] + gGroundBaddieAngleSectorOffsets[d]);
         }
-        else if (*(u16*)(gGroundBaddieTargetSearchResult + 4) <= 70)
+        else if (gGroundBaddieTargetSearchResult[0].dist <= 70)
         {
             while ((*(u8*)(entry + state[0x33a] * 16 + 10) & 1) != 0)
             {
@@ -235,7 +234,7 @@ void fn_8015165C(GameObject* obj, u8* state)
         if ((((GroundBaddieState*)state)->baddie.controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             player = Obj_GetPlayerObject();
-            fn_8014C11C((int)obj, 100.0f, 3, 16, gGroundBaddieTargetSearchResult);
+            fn_8014C11C(obj, 100.0f, 3, 16, gGroundBaddieTargetSearchResult);
             if (*(u16*)(state + 0x338) != 0)
             {
                 {

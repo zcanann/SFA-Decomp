@@ -58,6 +58,14 @@ typedef struct EnemyState {
 
 STATIC_ASSERT(offsetof(EnemyState, aggroRange) == 0x2A8);
 
+typedef struct EnemyTargetSearchResult {
+    GameObject* obj;
+    u16 dist;
+    u8 pad6[2];
+} EnemyTargetSearchResult;
+
+STATIC_ASSERT(sizeof(EnemyTargetSearchResult) == 8);
+
 void objAnimFn_8014a9f0(short* obj, int state);
 void FUN_8014ab58(u64 param_1, double param_2, double param_3, double param_4, double param_5, double param_6,
                   double param_7, u64 param_8, u16* param_9, int* param_10, u32 param_11, u32 param_12, u32 param_13,
@@ -71,6 +79,7 @@ void FUN_8014c694(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_
                   u64 param_8, int param_9);
 void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4);
 int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate);
+int fn_8014C11C(GameObject* obj, f32 radius, u8 flags, int maxCount, EnemyTargetSearchResult* results);
 void fn_8014C66C(GameObject* obj, GameObject* target);
 void fn_8014C678(GameObject* obj, void* state, f32* direction, f32 maxSpeed, f32 speedRange, f32 maxAngle,
                  u8 adjustGroundVelocity);

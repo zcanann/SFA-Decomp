@@ -143,12 +143,6 @@ typedef struct
 {
     f32 x, y, z;
 } TrickyVec3;
-typedef struct
-{
-    short* obj;
-    s16 dist;
-} TrickyTargetRec;
-
 int enemy_getExtraSize(void);
 int enemy_getObjectTypeId(void);
 void enemy_release(void);
@@ -942,14 +936,14 @@ void sidekickToy_updateCurveTargetLatch(GameObject* obj)
     }
 }
 
-int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
+int fn_8014C11C(GameObject* obj, f32 radius, u8 flags, int max, EnemyTargetSearchResult* out)
 {
-    TrickyTargetRec* cur[1];
+    EnemyTargetSearchResult* cur[1];
     int state;
     int n;
-    short** arr;
+    GameObject** arr;
     short ang;
-    short* tgt;
+    GameObject* tgt;
     u32 diff;
     int i;
     f32 d2;
@@ -958,12 +952,12 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     void* dp = &d;
 
     cur[0] = 0;
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = *(int*)&obj->extra;
     count = 0;
     n = 0;
     if ((flags & 1) != 0)
     {
-        tgt = (short*)ObjGroup_FindNearestObject(ENEMY_OBJGROUP, (int)obj, &radius);
+        tgt = (GameObject*)ObjGroup_FindNearestObject(ENEMY_OBJGROUP, (int)obj, &radius);
         out->obj = tgt;
         if (tgt != 0)
         {
@@ -973,24 +967,24 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
             {
                 if ((((TrickyState*)state)->controlFlags & 0x8000) != 0)
                 {
-                    d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)out->obj)->anim.worldPosX;
+                    d.x = obj->anim.worldPosX - out->obj->anim.worldPosX;
                     d.y = lbl_803E2574;
-                    d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)out->obj)->anim.worldPosZ;
+                    d.z = obj->anim.worldPosZ - out->obj->anim.worldPosZ;
                 }
                 else
                 {
-                    d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)out->obj)->anim.worldPosX;
-                    d.y = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)out->obj)->anim.worldPosY;
-                    d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)out->obj)->anim.worldPosZ;
+                    d.x = obj->anim.worldPosX - out->obj->anim.worldPosX;
+                    d.y = obj->anim.worldPosY - out->obj->anim.worldPosY;
+                    d.z = obj->anim.worldPosZ - out->obj->anim.worldPosZ;
                 }
                 diff = getAngle(-d.x, -d.z) & 0xffff;
-                if (*(short**)(obj + 0x18) != 0)
+                if (obj->anim.parent != 0)
                 {
-                    ang = (s16)(((GameObject*)obj)->anim.rotX + **(short**)(obj + 0x18));
+                    ang = (s16)(obj->anim.rotX + *(s16*)obj->anim.parent);
                 }
                 else
                 {
-                    ang = ((GameObject*)obj)->anim.rotX;
+                    ang = obj->anim.rotX;
                 }
                 diff = diff - ((int)ang & 0xffffU);
                 if (0x8000 < (int)diff)
@@ -1005,8 +999,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
                 ((TrickyState*)state)->flags2DC = ((TrickyState*)state)->flags2DC & ~gEnemySelfAngleFlagClearMask[ang];
                 if ((flags & 4) != 0)
                 {
-                    *(u32*)(*(int*)(out->obj + 0x5c) + 0x2dc) =
-                        *(u32*)(*(int*)(out->obj + 0x5c) + 0x2dc) & ~gEnemyTargetAngleFlagClearMask[ang];
+                    ((TrickyState*)out->obj->extra)->flags2DC &= ~gEnemyTargetAngleFlagClearMask[ang];
                 }
             }
         }
@@ -1014,14 +1007,14 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     else
     {
         radius = radius * radius;
-        arr = (short**)ObjGroup_GetObjects(ENEMY_OBJGROUP, &count);
+        arr = (GameObject**)ObjGroup_GetObjects(ENEMY_OBJGROUP, &count);
         if (count != 0)
         {
             i = 0;
             cur[0] = out;
             for (; i < count; i++)
             {
-                d2 = vec3f_distanceSquared((f32*)(obj + 0xc), (f32*)(arr[i] + 0xc));
+                d2 = vec3f_distanceSquared(&obj->anim.worldPosX, &arr[i]->anim.worldPosX);
                 if ((d2 < radius) && (arr[i] != obj))
                 {
                     cur[0]->obj = arr[i];
@@ -1030,24 +1023,24 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
                     {
                         if ((((TrickyState*)state)->controlFlags & 0x8000) != 0)
                         {
-                            d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)cur[0]->obj)->anim.worldPosX;
+                            d.x = obj->anim.worldPosX - cur[0]->obj->anim.worldPosX;
                             d.y = lbl_803E2574;
-                            d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)cur[0]->obj)->anim.worldPosZ;
+                            d.z = obj->anim.worldPosZ - cur[0]->obj->anim.worldPosZ;
                         }
                         else
                         {
-                            d.x = ((GameObject*)obj)->anim.worldPosX - ((GameObject*)cur[0]->obj)->anim.worldPosX;
-                            d.y = ((GameObject*)obj)->anim.worldPosY - ((GameObject*)cur[0]->obj)->anim.worldPosY;
-                            d.z = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)cur[0]->obj)->anim.worldPosZ;
+                            d.x = obj->anim.worldPosX - cur[0]->obj->anim.worldPosX;
+                            d.y = obj->anim.worldPosY - cur[0]->obj->anim.worldPosY;
+                            d.z = obj->anim.worldPosZ - cur[0]->obj->anim.worldPosZ;
                         }
                         diff = getAngle(-d.x, -d.z) & 0xffff;
-                        if (*(short**)(obj + 0x18) != 0)
+                        if (obj->anim.parent != 0)
                         {
-                            ang = (s16)(((GameObject*)obj)->anim.rotX + **(short**)(obj + 0x18));
+                            ang = (s16)(obj->anim.rotX + *(s16*)obj->anim.parent);
                         }
                         else
                         {
-                            ang = ((GameObject*)obj)->anim.rotX;
+                            ang = obj->anim.rotX;
                         }
                         diff = diff - ((int)ang & 0xffffU);
                         if (0x8000 < (int)diff)
@@ -1063,8 +1056,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
                             ((TrickyState*)state)->flags2DC & ~gEnemySelfAngleFlagClearMask[ang];
                         if ((flags & 4) != 0)
                         {
-                            *(u32*)(*(int*)(cur[0]->obj + 0x5c) + 0x2dc) =
-                                *(u32*)(*(int*)(cur[0]->obj + 0x5c) + 0x2dc) & ~gEnemyTargetAngleFlagClearMask[ang];
+                            ((TrickyState*)cur[0]->obj->extra)->flags2DC &= ~gEnemyTargetAngleFlagClearMask[ang];
                         }
                     }
                     cur[0]++;

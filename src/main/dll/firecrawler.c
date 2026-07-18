@@ -127,8 +127,7 @@ extern void* gCrawlerDescriptorTable[];
 extern u8* gCrawlerReactionTables[];
 
 extern f32 gCrawlerS8Norm127;
-extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
-int gCrawlerNearbyObjectBuffer[0x20];
+EnemyTargetSearchResult gCrawlerNearbyObjectBuffer[16];
 extern f32 lbl_803DBCE0;
 extern f32 lbl_803DBCE4;
 extern f32 lbl_803DBCEC;
@@ -319,7 +318,7 @@ typedef struct
  * any entry's modelType is 0x6a3 with state[0x2dc] bit 0x20000000 set
  * AND bits 0x1800 clear, latches "found" and exits. If nothing matched,
  * loads the default triggered camera action. */
-void crawler_checkNearbyActive(int obj, u8* state)
+void crawler_checkNearbyActive(GameObject* obj, u8* state)
 {
     u8 count = fn_8014C11C(obj, 640.0f, 0, 0x28, gCrawlerNearbyObjectBuffer);
     u8 noMatch = 1;
@@ -329,10 +328,10 @@ void crawler_checkNearbyActive(int obj, u8* state)
         for (i = 0; i < count; i++)
         {
             u32 objectIndex = (u8)i;
-            int e = gCrawlerNearbyObjectBuffer[objectIndex * 2];
-            if (((GameObject*)e)->anim.seqId == FIRECRAWLER_SEQID_REDEYE)
+            GameObject* e = gCrawlerNearbyObjectBuffer[objectIndex].obj;
+            if (e->anim.seqId == FIRECRAWLER_SEQID_REDEYE)
             {
-                u32 flags = *(u32*)((char*)((GameObject*)e)->extra + 0x2dc);
+                u32 flags = *(u32*)((char*)e->extra + 0x2dc);
                 if ((flags & 0x20000000) != 0 && (flags & 0x1800) == 0)
                 {
                     i = count;
@@ -608,7 +607,7 @@ void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, in
         }
         if (((BaddieState*)state)->hitCounter == 0 && ((BaddieState*)state)->userData2 == 0)
         {
-            crawler_checkNearbyActive((int)obj, state);
+            crawler_checkNearbyActive(obj, state);
         }
         return;
     }
@@ -738,7 +737,7 @@ void crawler_updateC(s16* obj, u8* state)
         }
         if (((BaddieState*)state)->userData2 == 0)
         {
-            crawler_checkNearbyActive((int)obj, state);
+            crawler_checkNearbyActive((GameObject*)obj, state);
         }
         ((BaddieState*)state)->userData1 = 0;
     }
@@ -766,15 +765,15 @@ void crawler_updateC(s16* obj, u8* state)
         u32 flags = ((BaddieState*)state)->controlFlags;
         if ((flags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
         {
-            int count = fn_8014C11C((int)obj, 250.0f, 1, 0x28, gCrawlerNearbyObjectBuffer);
-            if (count >= 1 && (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) <= 250.0f)
+            int count = fn_8014C11C((GameObject*)obj, 250.0f, 1, 0x28, gCrawlerNearbyObjectBuffer);
+            if (count >= 1 && (f32)gCrawlerNearbyObjectBuffer[0].dist <= 250.0f)
             {
                 f32* dp = dv;
                 int rel;
                 u16 oct;
-                dp[0] = ((GameObject*)obj)->anim.worldPosX - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x18);
-                dp[1] = ((GameObject*)obj)->anim.worldPosY - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x1c);
-                dp[2] = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x20);
+                dp[0] = ((GameObject*)obj)->anim.worldPosX - gCrawlerNearbyObjectBuffer[0].obj->anim.worldPosX;
+                dp[1] = ((GameObject*)obj)->anim.worldPosY - gCrawlerNearbyObjectBuffer[0].obj->anim.worldPosY;
+                dp[2] = ((GameObject*)obj)->anim.worldPosZ - gCrawlerNearbyObjectBuffer[0].obj->anim.worldPosZ;
                 rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)*(s16*)obj & 0xffffu);
                 if (rel > 0x8000)
                 {
@@ -787,11 +786,11 @@ void crawler_updateC(s16* obj, u8* state)
                 oct = ((u32)rel & 0xffff) >> 13;
                 if (oct == 3 || oct == 4)
                 {
-                    scale = (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) / 250.0f;
+                    scale = (f32)gCrawlerNearbyObjectBuffer[0].dist / 250.0f;
                 }
                 else if (oct == 0 || oct == 7)
                 {
-                    scale = 2.0f * (1.0f - (f32) * (u16*)((char*)gCrawlerNearbyObjectBuffer + 4) / 250.0f) + 1.0f;
+                    scale = 2.0f * (1.0f - (f32)gCrawlerNearbyObjectBuffer[0].dist / 250.0f) + 1.0f;
                 }
             }
             {
@@ -985,7 +984,7 @@ void crawler_updateB(s16* obj, u8* state)
         }
     }
 
-    count = fn_8014C11C((u32)obj, 180.0f, 1, 0x28, gCrawlerNearbyObjectBuffer);
+    count = fn_8014C11C((GameObject*)obj, 180.0f, 1, 0x28, gCrawlerNearbyObjectBuffer);
     if (count >= 1)
     {
         if ((((FCVars*)state)->flagsD & 0x20) == 0 ||
@@ -1004,9 +1003,9 @@ void crawler_updateB(s16* obj, u8* state)
                 f32* dp = dv;
                 int rel;
                 u16 oct;
-                dp[0] = ((GameObject*)obj)->anim.worldPosX - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x18);
-                dp[1] = ((GameObject*)obj)->anim.worldPosY - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x1c);
-                dp[2] = ((GameObject*)obj)->anim.worldPosZ - *(f32*)(gCrawlerNearbyObjectBuffer[0] + 0x20);
+                dp[0] = ((GameObject*)obj)->anim.worldPosX - gCrawlerNearbyObjectBuffer[0].obj->anim.worldPosX;
+                dp[1] = ((GameObject*)obj)->anim.worldPosY - gCrawlerNearbyObjectBuffer[0].obj->anim.worldPosY;
+                dp[2] = ((GameObject*)obj)->anim.worldPosZ - gCrawlerNearbyObjectBuffer[0].obj->anim.worldPosZ;
                 rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)*(s16*)obj & 0xffffu);
                 if (rel > 0x8000)
                 {
@@ -1228,7 +1227,7 @@ void crawler_update(int* obj, u8* state)
                 {
                     ((BaddieState*)state)->userData1 = 0;
                 }
-                fn_8014C11C((int)obj, 250.0f, 6, 0x28, gCrawlerNearbyObjectBuffer);
+                fn_8014C11C((GameObject*)obj, 250.0f, 6, 0x28, gCrawlerNearbyObjectBuffer);
                 if ((((BaddieState*)state)->controlFlags & t9[((BaddieState*)state)->userData1].mask) == 0 &&
                     t9[((BaddieState*)state)->userData1].next != 0)
                 {
