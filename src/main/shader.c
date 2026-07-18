@@ -2890,7 +2890,7 @@ void mapDebugRender(int* state)
     }
 }
 
-int mapRectFn_8005a728(int bx, int bz, char* obj)
+int mapRectFn_8005a728(int bx, int bz, u8* obj)
 {
     f32 a1, a2, b1, b2, c1, c2;
     f32 p3;

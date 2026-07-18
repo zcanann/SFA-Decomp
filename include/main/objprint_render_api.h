@@ -10,6 +10,7 @@ typedef struct ObjModel ObjModel;
 extern ModelLightStruct* lbl_803DCC64;
 
 void objRender(int a, int b, int c, int d, GameObject* obj, int flag);
+void objRenderFn_8003d980(u8* obj, int* model);
 void objRenderFuzz(int* obj);
 void objRenderFn_800413d4(int* obj);
 void fuzzRenderFn_800412dc(int* obj);

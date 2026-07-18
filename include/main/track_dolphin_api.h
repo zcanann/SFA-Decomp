@@ -62,6 +62,7 @@ void* MapBlock_loadFromFile(int blockId);
 void setMapBlockFlag(void);
 void objFn_80065604(void);
 void setupToRenderMapBlock(int* block, void* posMtx);
+void renderMapBlock(int* block, u8 type);
 void fn_80062894(void);
 void fn_80062808(void);
 void fn_80063368(GameObject* target);

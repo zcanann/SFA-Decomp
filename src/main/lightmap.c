@@ -4,6 +4,7 @@
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
+#include "main/shader_map_api.h"
 #include "main/sky_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -50,7 +51,7 @@
 #include "dolphin/gx/GXTransform.h"
 #include "dolphin/mtx/mtx_legacy.h"
 
-char colorFilterColor[4] = "\xFF\x70\x40";
+u8 colorFilterColor[4] = {0xFF, 0x70, 0x40, 0};
 u8 colorScale = 0xFF;
 extern f32 widescreenAspect_803DEC1C;
 extern f32 lbl_803DB670;
@@ -88,23 +89,16 @@ extern FrustumPlane gViewFrustumPlanes[];
 
 extern void* gMapBlockLayerTables[];
 extern void** gMapBlocks;
-extern void fn_800704FC(int a, int b, int c);
 extern u8 lbl_803DCE98; /* count of allocated blocks */
 extern f32 lbl_803DEC18;
-extern void fn_802B4ED8(int* obj, int a, int b);
 extern u32 lbl_803DCE34;
 extern f32 lbl_803DEC10;
-extern void mapDebugRender(void* p);
 extern u16 lbl_803DCEAC;
 extern u8 lbl_803DCE06;
 extern s32 heatEffectIntensity;
 extern u8 gLightmapScreenImageEnabled;
-extern void screenImageDraw(void);
 extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
-extern void drawViewFinderAperture(f32 a, f32 b, int c, int d);
-extern int mapRectFn_8005a728(int row, int col, u8* block);
-extern void renderMapBlock(u8* block, int* p1);
 extern int lbl_8038228C[];
 extern s32 gMapLayerCellStates;
 extern s32 gMapCurRomListSlot;
@@ -117,7 +111,6 @@ typedef struct
     u32 key;
     u32 d;
 } LightSortEntry;
-extern void objRenderFn_8003d980(int* obj, int* model);
 extern void* gMapBlockIds;
 extern void* gMapBlockRefCounts;
 extern void* lbl_803DCE78;
@@ -670,7 +663,7 @@ static void fillBoxRows(u8* map, int* box)
     }
 }
 
-void renderSceneGeometry(int* p1, s8* order)
+void renderSceneGeometry(u8 renderType, s8* order)
 {
     u8 map[256];
     int box0[4];
@@ -740,7 +733,7 @@ void renderSceneGeometry(int* p1, s8* order)
                     colF = gMapBlockWorldSize * (f32)col;
                     lbl_803DCE54 = colF;
                     PSMTXTrans((f32*)(blk + 0xc), rowF, (f32)(int)((MapBlockData*)blk)->collisionYOffset, colF);
-                    renderMapBlock(blk, p1);
+                    renderMapBlock((int*)blk, renderType);
                 }
             }
         }
@@ -759,14 +752,11 @@ extern f32 lbl_803DCE4C;
 extern f32 blurFilterArea;
 extern u8 bBlurFilterUseArea;
 extern u8 bBiggerBlurFilter;
-extern void doHeatEffect(int v);
 extern u8 bEnableDistortionFilter;
 extern f32 distortionFilterAngle1;
 extern f32 distortionFilterAngle2;
-extern char distortionFilterColor;
-extern void doDistortionFilter(void* buf, f32 a2, void* color, f32 a1);
+extern u8 distortionFilterColor[3];
 extern u8 bEnableMonochromeFilter;
-extern void doColorFilter(void* color);
 extern u8 bEnableSpiritVision;
 extern u8 bEnableViewFinderHud;
 extern f32 lbl_803DEC14;
@@ -804,7 +794,7 @@ void sceneDraw(void)
         PSMTXConcat((f32*)(q + 0x3f48), (f32*)Camera_GetInverseViewMatrix(),
                     (f32*)(q + 0x3f48));
     }
-    mapDebugRender(q + 0x4164);
+    mapDebugRender((int*)(q + 0x4164));
     fn_80062894();
     fn_80062808();
     gVisibleObjectSortKeyCount = 1;
@@ -846,7 +836,7 @@ void sceneDraw(void)
     }
     if (gLightmapScreenImageEnabled != 0)
     {
-        screenImageDraw();
+        screenImageDraw(gLightmapScreenImageEnabled);
     }
     lightningRenderActive();
     (*gSky2Interface)->applyFogColor(0);
@@ -857,7 +847,7 @@ void sceneDraw(void)
     GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetChanAmbColor(GX_COLOR0, c);
     GXSetNumChans(1);
-    renderSceneGeometry((int*)0, lbl_8030E65C);
+    renderSceneGeometry(0, lbl_8030E65C);
     renderResetFn_8003fc60();
     renderObjects(buf);
     if (CameraShake_IsActive() != 0 || (int)bEnableMotionBlur != 0)
@@ -886,8 +876,8 @@ void sceneDraw(void)
         cursor += 4;
     }
     renderParticles();
-    renderSceneGeometry((int*)1, lbl_8030E66C);
-    renderSceneGeometry((int*)2, lbl_8030E66C);
+    renderSceneGeometry(1, lbl_8030E66C);
+    renderSceneGeometry(2, lbl_8030E66C);
     if (lbl_803DCE30 == 1000)
     {
         sceneDrawTransparentPolys();
@@ -927,8 +917,8 @@ void sceneDraw(void)
     if (bEnableDistortionFilter != 0)
     {
         updateReflectionTextures();
-        doDistortionFilter(q + 0x4108, distortionFilterAngle2, &distortionFilterColor,
-                           distortionFilterAngle1);
+        doDistortionFilter((f32*)(q + 0x4108), distortionFilterAngle2,
+                           distortionFilterColor, distortionFilterAngle1);
     }
     renderGlows();
     (*gCameraInterface)->minimapShowHelpTextForTarget(0, 0, 0, 0);
@@ -1289,7 +1279,7 @@ void drawFn_8005cf8c(int vertexBase, const u8* triList, int triCount)
 }
 
 
-void fn_8005D0BC(int unused, int a, int b, int c, int wpad0)
+void fn_8005D0BC(int unused, u8 a, u8 b, u8 c, int wpad0)
 {
     fn_800704FC(a, b, c);
 }
@@ -1310,7 +1300,7 @@ void doNothing_8005D148(int arg0, int arg1)
 }
 
 
-void objDrawFn_8005da48(int* obj);
+void objDrawFn_8005da48(GameObject* obj);
 void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3);
 void modelRenderFn_8005d69c(int* p1, int* obj, float* p3);
 void modelRenderFn_8005d894(int* p1, int* obj, float* p3);
@@ -1319,7 +1309,7 @@ void lightmap_sortTransparentDrawQueue(void);
 void getVisibleObjects(s8 * opacity);
 
 
-void renderSceneGeometry(int* p1, s8* order);
+void renderSceneGeometry(u8 renderType, s8* order);
 
 void doNothing_8005D14C(int arg0, int arg1)
 {
@@ -1480,7 +1470,7 @@ void sceneDrawTransparentPolys(void)
         {
         case 0:
             expgfx_renderSourcePools(e[i][0], 0);
-            objDrawFn_8005da48((int*)e[i][0]);
+            objDrawFn_8005da48((GameObject*)e[i][0]);
             expgfx_renderSourcePools(e[i][0], 1);
             break;
         case 1:
@@ -1491,7 +1481,7 @@ void sceneDrawTransparentPolys(void)
             {
                 if (playerIsDisguised((GameObject*)block) == 0)
                 {
-                    fn_802B4ED8(block, 1, 1);
+                    fn_802B4ED8((GameObject*)block, 1, 1);
                 }
             }
             else
@@ -1675,24 +1665,24 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 }
 
 
-void objDrawFn_8005da48(int* obj)
+void objDrawFn_8005da48(GameObject* obj)
 {
-    int* model = (int*)Obj_GetActiveModel((GameObject*)obj);
+    int* model = (int*)Obj_GetActiveModel(obj);
     if (*(void**)((char*)model + 0x58) != NULL)
     {
-        objRenderFn_8003d980(obj, model);
+        objRenderFn_8003d980((u8*)obj, model);
     }
     else
     {
         void* shadow;
         (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, obj);
         renderResetFn_8003fc60();
-        objRender(0, 0, 0, 0, (GameObject*)obj, 1);
+        objRender(0, 0, 0, 0, obj, 1);
         fn_8000F9B4();
-        shadow = ((GameObject*)obj)->anim.modelState;
+        shadow = obj->anim.modelState;
         if (shadow != NULL && ((ObjModelState*)shadow)->shadowCastSlot != NULL)
         {
-            objShadowFn_80062498((GameObject*)obj, 0, 0, framesThisStep);
+            objShadowFn_80062498(obj, 0, 0, framesThisStep);
         }
         else if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH)
         {

@@ -1715,7 +1715,7 @@ static inline f32 distortSqrtf(f32 x)
     return y;
 }
 
-void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
+void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     Mtx mtx_d0;

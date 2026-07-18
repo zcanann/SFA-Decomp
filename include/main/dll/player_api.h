@@ -64,6 +64,7 @@ void playerSetOverrideParentSlack(GameObject* player);
 void cameraGetPrevPos2(GameObject* player, f32* outX, f32* outY, f32* outZ);
 void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 void playerInitFuncPtrsEntry(void);
+void fn_802B4ED8(GameObject* obj, int state, int mode);
 /* The raw integer parent preserves the matched player implementation's signed comparisons. */
 void fn_80296EB4(GameObject* obj, int newParent);
 
