@@ -153,7 +153,6 @@ extern f32 lbl_803E237C;
 extern f32 lbl_803E2380;
 extern f32 lbl_803E2384;
 extern f32 lbl_803E2388;
-extern void fn_8003B228(GameObject* obj, int state);
 extern u8 lbl_803DB411;
 extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
 extern f32 lbl_803E22F0;
@@ -692,7 +691,6 @@ void TitleScreen_hitDetect(void)
 #pragma peephole off
 #pragma scheduling off
 
-typedef void (*TitleScreenObjPrintFn)(GameObject* obj, void* state);
 typedef void (*TitleScreenUpdateSfxFn)(u8* obj, u8* arr);
 
 /* Drive the title screen actor anim state machine, the per-actor
@@ -834,7 +832,7 @@ void TitleScreen_update(u8* obj)
         t = ((GameObject*)obj)->anim.seqId;
         if (t == 0x77e && ((phase = ((TitlescreenState*)state)->animPhase) == 0 || phase == 4))
         {
-            ((TitleScreenObjPrintFn)fn_8003B228)((GameObject*)obj, state);
+            fn_8003B228((GameObject*)obj, state);
         }
         else if (t >= 0x77d && t < 0x781)
         {

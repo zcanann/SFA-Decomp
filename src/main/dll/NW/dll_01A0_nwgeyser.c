@@ -55,7 +55,6 @@ __declspec(section ".sdata2") f32 lbl_803E5218 = 30.0f;
 extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points, void* scratch, f32 scaleX,
                                 f32 scaleZ);
 extern void fn_8003A168(GameObject* obj, void* p);
-extern void fn_8003B228(GameObject* obj, void* p);
 
 void fn_801CDF94(GameObject* obj, int state, int flag);
 

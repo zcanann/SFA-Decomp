@@ -60,7 +60,6 @@ extern f32 gQueenEarthWalkerTrickyFeedDistance;
 extern f32 gQueenEarthWalkerAttackTimerMin;
 extern f32 gQueenEarthWalkerAttackTimerMax;
 
-extern int fn_8003B228(GameObject* obj, void* p2);
 
 s16 gQueenEarthWalkerMoveTable[6] = {34, 34, 34, 5, 28, 0};
 f32 gQueenEarthWalkerMoveSpeedTable[5] = {0.005f, 0.005f, 0.005f, 0.01f, 0.005f};
@@ -399,5 +398,4 @@ void sh_queenearthwalker_init(GameObject* obj, QueenEarthWalkerMapData* mapData)
     obj->animEventCallback = sh_queenearthwalker_processAnimEvents;
     obj->objectFlags |= SHQUEENEARTHWALKER_OBJFLAG_HIDDEN;
 }
-
 

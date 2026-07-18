@@ -85,7 +85,6 @@ extern void warpstone_hitDetect(GameObject*);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
 extern u32 modelInitBones();
-extern void fn_8003B228(GameObject* obj, int p2);
 
 #pragma dont_inline on
 
@@ -511,7 +510,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] & SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) !=
             0)
         {
-            fn_8003B228((GameObject*)obj, (int)runtime->collisionShapeState);
+            fn_8003B228((GameObject*)obj, runtime->collisionShapeState);
         }
         else
         {

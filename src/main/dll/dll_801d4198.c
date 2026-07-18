@@ -29,7 +29,6 @@
 
 extern f32 lbl_803E53F8; /* .sdata2 const, shared with SH/dll_01AC_shqueenearthwalker.c */
 
-extern int fn_8003B228(GameObject* obj, void* p2);
 
 int sh_queenearthwalker_processAnimEvents(GameObject* obj, void* unused, ObjAnimUpdateState* animUpdate)
 {

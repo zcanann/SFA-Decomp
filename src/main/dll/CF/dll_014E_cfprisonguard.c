@@ -26,6 +26,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebit_ids.h"
 #include "main/object_descriptor.h"
+#include "main/objprint_character_api.h"
 #include "main/dll/waterfx.h"
 
 typedef struct CfPrisonGuardMapData

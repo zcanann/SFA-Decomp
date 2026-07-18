@@ -313,7 +313,6 @@ extern void fn_801B6D40(void);
 extern void fn_801FD4A8(GameObject*);
 extern void fn_801B0784(GameObject*);
 extern void fn_801DA9CC(GameObject*);
-extern void fn_8003B228(GameObject* obj, void* p);
 
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") u16 gSkeetlaFootstepSfxId2 = 0x355;

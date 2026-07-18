@@ -1255,7 +1255,7 @@ void fn_8003B0D0(GameObject* obj, GameObject* target, CharacterEyeAnimState* sta
     }
 }
 
-void fn_8003B228(GameObject* obj, int state)
+void fn_8003B228(GameObject* obj, void* state)
 {
     ObjTextureRuntimeSlot* foundA;
     ObjTextureRuntimeSlot* foundB;
@@ -1275,7 +1275,7 @@ void fn_8003B228(GameObject* obj, int state)
     }
     foundA->textureId = val;
     foundB->textureId = val;
-    *(u8*)(state + 0x1e) = 1;
+    *((u8*)state + 0x1e) = 1;
 }
 
 void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused);
