@@ -24,6 +24,7 @@
 #include "main/lightmap_api.h"
 #include "main/pi_dolphin.h"
 #include "main/track_dolphin_api.h"
+#include "main/track_dolphin_shadow_api.h"
 #include "main/shader_api.h"
 #include "main/sky_api.h"
 #include "main/track_dolphin.h"
@@ -172,8 +173,6 @@ extern u16 lbl_803DCFA0;
 extern u8 lbl_803DB668[8];
 extern f32 lbl_803DB670;
 extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
-extern u8 fn_800626C8(GameObject* obj, int frames);
-
 extern const double lbl_803DED58;
 
 extern const double lbl_803DED60;
@@ -228,7 +227,6 @@ extern float floor(float);
 extern void fn_80069EB8();
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
-extern void mapGetBlocks(int* a, int* b);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
 extern void GXSetProjection(f32* m, int type);
 extern void GXSetScissor(int a, int b, int c, int d);
@@ -1035,7 +1033,8 @@ void renderShadows(int unused0, int unused1, int unused2)
     f32 dot24[3], proj[3];
     CameraViewSlot* slot;
     NewShadowData* shadowData = (NewShadowData*)gNewShadowEntries;
-    int blkArr, blkCount;
+    void* blkArr;
+    u32 blkCount;
     s8 casterIdx;
     f32 sCamZ, savedFovY, vAx, vAz, orthoHalf;
     int texIdx, slotIdx;

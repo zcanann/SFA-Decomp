@@ -27,6 +27,7 @@
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
 #include "main/track_dolphin_api.h"
+#include "main/track_dolphin_shadow_api.h"
 #include "main/newshadows_shadow_api.h"
 #define TRACK_BBOX_IMPLEMENTATION
 #include "main/track_bbox_api.h"
@@ -1412,14 +1413,14 @@ void* shadowInit(int* obj, int size, int wpad0)
     return (char*)rounded + 0x44;
 }
 
-int fn_800626C8(int* obj, int delta)
+u8 fn_800626C8(GameObject* obj, int delta)
 {
     ObjModelState* modelState;
     s16* alphaStep;
     f32 f31;
     int v;
 
-    modelState = ((ObjAnimComponent*)obj)->modelState;
+    modelState = obj->anim.modelState;
     alphaStep = &modelState->shadowAlphaStep;
     if (modelState->flags & OBJ_MODEL_STATE_SHADOW_FADE_OUT)
     {
@@ -1445,7 +1446,7 @@ int fn_800626C8(int* obj, int delta)
     f31 = lbl_803DEC90[0] * (f32)*alphaStep;
     f31 = lbl_803DB654 * f31;
     {
-        f32 tint = objShadowFn_80062378((GameObject*)(obj), modelState->shadowTintA);
+        f32 tint = objShadowFn_80062378(obj, modelState->shadowTintA);
         v = (s16)(int)(tint * f31);
     }
     if (v > 0xff)
