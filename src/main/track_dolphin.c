@@ -12,6 +12,7 @@
 #include "main/frustum.h"
 #include "main/asset_load.h"
 #include "main/game_object.h"
+#include "main/gameloop_api.h"
 #include "main/object_api.h"
 #include "main/mm.h"
 #include "main/model_light.h"
@@ -351,7 +352,6 @@ extern void GXSetCurrentMtx(u32 id);
 extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXBegin(int type, int fmt, int count);
 extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
-extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
 

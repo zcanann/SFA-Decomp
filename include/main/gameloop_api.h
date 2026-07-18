@@ -23,6 +23,7 @@ void setTimeStop(int frames);
 void doNothing_onSaveSelectScreenExit(void);
 void fn_8001FEA8(void);
 int getButtonObjects(int** objectsOut);
+int cacheAllocAndCopy(void* src, int size, int* cacheCursor, int* outEnd, int limit);
 
 void addButtonObject(void* obj);
 
