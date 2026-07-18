@@ -18,6 +18,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_render_setup_api.h"
 #include "track/intersect_geom_api.h"
+#include "track/intersect_texture_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
@@ -533,8 +534,6 @@ void superQuakeFn_8016d9fc(f32* pos)
         ((GameObject*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->anim.alpha = 0xff;
     }
 }
-
-extern void quakeSpellTextureFn_8007366c(int param);
 
 void quakeSpellTextureFn_8016dbf4(void)
 {

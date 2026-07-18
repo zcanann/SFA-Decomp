@@ -30,7 +30,6 @@ void screenImageDraw(u8 alpha);
 void doSpiritVisionFilter(void);
 void doColorFilter(u8* mod);
 void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod);
-void quakeSpellTextureFn_8007366c(u8 alpha);
 int modelCb_80073d04(u8* obj, int* objB);
 int moonFxCb_80074110(u8* obj, int* objB, int slot);
 int modelCb_80074518(void* obj_a, void** obj_b, int param_3);
