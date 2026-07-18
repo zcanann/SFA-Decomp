@@ -572,6 +572,7 @@ void quakeSpellTextureFn_8016dbf4(void)
 }
 extern void* gStaffSwipeTextures[2];
 
+#pragma opt_common_subs off
 void staffDrawSwipe(int* obj, int* swipe)
 {
     SwipeRecord* swp;
@@ -628,6 +629,7 @@ void staffDrawSwipe(int* obj, int* swipe)
         swp++;
     }
 }
+#pragma opt_common_subs reset
 void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 {
     u8* slot;
