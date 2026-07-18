@@ -447,102 +447,8 @@ static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int 
     return found;
 }
 
-int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
-{
-    f32 buf[4];
-    f32 ratio;
-    s16 lo;
-    s16 hi;
-
-    buf[0] = a;
-    buf[1] = a;
-    buf[2] = b;
-    buf[3] = -b;
-
-    lo = curve[10];
-    hi = curve[11];
-    if (lo != hi)
-    {
-        ratio = ((f32)(s32)*state - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
-    }
-    else
-    {
-        return 1;
-    }
-
-    if (ratio > lbl_803DE99C)
-    {
-        ratio = lbl_803DE99C;
-    }
-    else if (ratio < lbl_803DE9A4)
-    {
-        ratio = lbl_803DE9A4;
-    }
-
-    {
-        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
-        if (curve[10] < curve[11])
-        {
-            rate = -rate;
-        }
-        *state = rate * timeDelta + (f32)(s32)*state;
-    }
-
-    if (lbl_803DE99C == ratio || *state >= 8191 || *state <= -8191)
-    {
-        *state = curve[10];
-        return 1;
-    }
-    return 0;
-}
-int fn_800399C0(s16* curve, s16* state)
-{
-    f32 buf[4];
-    f32 ratio;
-    s16 lo;
-    s16 hi;
-
-    buf[0] = lbl_803DE9D8;
-    buf[1] = lbl_803DE9D8;
-    buf[2] = lbl_803DE9DC;
-    buf[3] = lbl_803DE9E0;
-
-    lo = curve[10];
-    hi = curve[11];
-    if (lo != hi)
-    {
-        ratio = ((f32)(s32)state[1] - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
-    }
-    else
-    {
-        return 1;
-    }
-
-    if (ratio > lbl_803DE99C)
-    {
-        ratio = lbl_803DE99C;
-    }
-    else if (ratio < lbl_803DE9A4)
-    {
-        ratio = lbl_803DE9A4;
-    }
-
-    {
-        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
-        if (curve[10] < curve[11])
-        {
-            rate = -rate;
-        }
-        state[1] = rate * timeDelta + (f32)(s32)state[1];
-    }
-
-    if (lbl_803DE99C == ratio || state[1] >= 8191 || state[1] <= -8191)
-    {
-        state[1] = curve[10];
-        return 1;
-    }
-    return 0;
-}
+int fn_80039834(s16* curve, s16* state, f32 a, f32 b);
+int fn_800399C0(s16* curve, s16* state);
 
 void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
 {
@@ -1017,6 +923,103 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
     return (count * 2 - total) == 0;
 }
 
+int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
+{
+    f32 buf[4];
+    f32 ratio;
+    s16 lo;
+    s16 hi;
+
+    buf[0] = a;
+    buf[1] = a;
+    buf[2] = b;
+    buf[3] = -b;
+
+    lo = curve[10];
+    hi = curve[11];
+    if (lo != hi)
+    {
+        ratio = ((f32)(s32)*state - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
+    }
+    else
+    {
+        return 1;
+    }
+
+    if (ratio > lbl_803DE99C)
+    {
+        ratio = lbl_803DE99C;
+    }
+    else if (ratio < lbl_803DE9A4)
+    {
+        ratio = lbl_803DE9A4;
+    }
+
+    {
+        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
+        if (curve[10] < curve[11])
+        {
+            rate = -rate;
+        }
+        *state = rate * timeDelta + (f32)(s32)*state;
+    }
+
+    if (lbl_803DE99C == ratio || *state >= 8191 || *state <= -8191)
+    {
+        *state = curve[10];
+        return 1;
+    }
+    return 0;
+}
+int fn_800399C0(s16* curve, s16* state)
+{
+    f32 buf[4];
+    f32 ratio;
+    s16 lo;
+    s16 hi;
+
+    buf[0] = lbl_803DE9D8;
+    buf[1] = lbl_803DE9D8;
+    buf[2] = lbl_803DE9DC;
+    buf[3] = lbl_803DE9E0;
+
+    lo = curve[10];
+    hi = curve[11];
+    if (lo != hi)
+    {
+        ratio = ((f32)(s32)state[1] - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
+    }
+    else
+    {
+        return 1;
+    }
+
+    if (ratio > lbl_803DE99C)
+    {
+        ratio = lbl_803DE99C;
+    }
+    else if (ratio < lbl_803DE9A4)
+    {
+        ratio = lbl_803DE9A4;
+    }
+
+    {
+        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
+        if (curve[10] < curve[11])
+        {
+            rate = -rate;
+        }
+        state[1] = rate * timeDelta + (f32)(s32)state[1];
+    }
+
+    if (lbl_803DE99C == ratio || state[1] >= 8191 || state[1] <= -8191)
+    {
+        state[1] = curve[10];
+        return 1;
+    }
+    return 0;
+}
+
 void fn_8003A9C0(char* p, int count, s16 a, s16 b)
 {
     while (count > 0)
@@ -1435,7 +1438,6 @@ void fn_8003B608(s16 a, s16 b, s16 c)
     lbl_803DCC08 = 1;
 }
 
-int fn_80039834(s16* curve, s16* state, f32 a, f32 b);
 void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, int b, int c)
 {
     f32 va[3];
