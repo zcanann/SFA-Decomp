@@ -115,10 +115,7 @@ static u64 saveGame_checksum(u64* p, int count)
 #define MAKETEX_CAMMODE_NPCSPEAK 0x4d /* cameramode DLL dll_004D_cameramodenpcspeak */
 #define MAKETEX_CAMMODE_DEFAULT  0x42 /* default gameplay cameramode DLL */
 
-extern u8 curSeqNo;
 extern GameObject* focusedNpc;
-extern s16 seqGlobal2;
-extern s16 seqGlobal1;
 extern u8 seqGlobal3;
 extern u32 lbl_803DB714;
 extern u32 lbl_803DB71C;
@@ -131,17 +128,13 @@ extern s16 lbl_803DD0E6;
 extern s16 lbl_803DD0E4;
 extern f32 lbl_803DD0E0;
 extern s16 lbl_8030ECF8[];
-extern s16 gObjSeqSlotSeqIdTable[];
-extern int objSeqObjs;
 extern int lbl_803DD07C;
 extern u8 lbl_803DD078;
 extern u8 lbl_803DD0D9;
-extern f32 objSeqOverridePos[];
 extern u32 lbl_803DB718;
 extern SeqB4Flags lbl_803DD0B4;
 extern u8 lbl_803DD124;
 extern int gObjSeqPreemptList[][2];
-extern char sEndObjSequenceMaxFreesError[];
 extern void* lbl_803DD0B8;
 extern int lbl_803DB720;
 extern int lbl_803DD064;
@@ -150,12 +143,10 @@ extern u32 lbl_803DD054;
 extern int gSaveCardImageBuffer;
 extern u64 lbl_803DD048;
 extern u8 lbl_803DD059;
-extern int gObjSeqStreamSuppressed;
 extern int lbl_803DB728;
 extern f32 lbl_803DEFB0;
 extern f32 lbl_803DD074;
 extern int lbl_803DB724;
-extern f32 gObjSeqSlotStreamTimeTable[];
 
 int saveCb_8007e77c(u8 idx, int unused, void* dst)
 {
