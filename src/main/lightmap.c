@@ -921,7 +921,7 @@ void sceneDraw(void)
     }
     *(u32*)(((int)q + 8) + lbl_803DCE30 * 16) = 0x78000000;
     *(u32*)(((int)q + 12) + lbl_803DCE30 * 16) = 8;
-    lbl_803DCE30 = lbl_803DCE30 + 1;
+    lbl_803DCE30 = *(volatile s32*)&lbl_803DCE30 + 1;
     if (lbl_803DCE30 == 1000)
     {
         sceneDrawTransparentPolys();
@@ -929,7 +929,7 @@ void sceneDraw(void)
     }
     *(u32*)(((int)q + 8) + lbl_803DCE30 * 16) = 0x50000000;
     *(u32*)(((int)q + 12) + lbl_803DCE30 * 16) = 9;
-    lbl_803DCE30 = lbl_803DCE30 + 1;
+    lbl_803DCE30 = *(volatile s32*)&lbl_803DCE30 + 1;
     sceneDrawTransparentPolys();
     (*gModgfxInterface)->markSourceFrameUpdated(buf);
     (*gModgfxInterface)->renderEffects(NULL, 0, 0, 0, NULL);
