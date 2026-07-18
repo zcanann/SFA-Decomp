@@ -320,7 +320,6 @@ extern u8 lbl_803DC980;
 extern int gSubtitlesEnabled;
 extern int gGameTextLastDir;
 extern void* gCurTextBox;
-extern s16 gGameTextTaskTextAllowList[];
 extern int gGameTextPendingTextId;
 extern u8 gSubtitleColorR;
 extern u8 gSubtitleColorG;
@@ -348,10 +347,8 @@ extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
 extern void translateToDinoLanguage(u8* str);
 void gameTextSetWindow(u8* textBox);
-extern void loadGameTextSequence();
 extern void setLanguageFn_8001ad64(void* slot);
 extern void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box);
-extern SubtitleCmd* subtitleParseControlCmds(char* str, int* count);
 int GameText_CountPrintableChars(u8* str);
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
 
