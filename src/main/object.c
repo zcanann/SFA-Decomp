@@ -33,6 +33,7 @@
 #include "main/object.h"
 #include "main/object_update_list.h"
 #include "main/object_api.h"
+#include "main/newshadows_shadow_api.h"
 #include "main/pi_dolphin.h"
 #include "main/pi_data_file_api.h"
 #include "main/track_dolphin_api.h"
@@ -221,7 +222,6 @@ extern int modelCb_80073d04();
 extern int modelCb_80074518();
 extern void fn_802B4DE0(u8* obj, int flag);
 extern void fn_80059A50(int arg);
-extern void* textureFn_8006c5c4(void);
 extern void playerUpdateWhileTimeStopped(u8* obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8* obj);
@@ -1066,7 +1066,7 @@ void objFreeObjDef(u8* obj, int flag)
         }
         if (((ObjAnimComponent*)obj)->modelState->shadowTexture != NULL)
         {
-            curTex = textureFn_8006c5c4();
+            curTex = (void*)textureFn_8006c5c4();
             tex = ((ObjAnimComponent*)obj)->modelState->shadowTexture;
             if (tex != curTex)
             {

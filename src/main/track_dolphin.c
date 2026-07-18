@@ -27,6 +27,7 @@
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
 #include "main/track_dolphin_api.h"
+#include "main/newshadows_shadow_api.h"
 #define TRACK_BBOX_IMPLEMENTATION
 #include "main/track_bbox_api.h"
 #undef TRACK_BBOX_IMPLEMENTATION
@@ -366,7 +367,6 @@ extern void PSVECScale(f32* src, f32* dst, f32 s);
 extern void PSVECNormalize(f32* src, f32* dst);
 extern f32 PSVECSquareMag(f32* v);
 extern int textureAlloc512(void);
-extern u32 textureFn_8006c5c4(void);
 extern void GXLoadPosMtxImm(void* mtx, int slot);
 extern void PSMTXCopy(void* src, void* dst);
 extern void GXLoadNrmMtxImm(void* mtx, int slot);
