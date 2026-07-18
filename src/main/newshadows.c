@@ -171,8 +171,6 @@ extern CameraViewSlot* gNewShadowCurrentViewSlot;
 extern f32 gNewShadowReflectionScrollY, gNewShadowReflectionScrollX;
 extern u8 lbl_803DCF80;
 extern u16 lbl_803DCFA0;
-extern u8 lbl_803DB668[8];
-extern f32 lbl_803DB670;
 extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
 extern const double lbl_803DED58;
 
