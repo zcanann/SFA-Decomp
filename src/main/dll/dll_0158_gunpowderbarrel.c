@@ -506,7 +506,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
             trickyImpress((GameObject*)tricky);
         }
         ((GunpowderBarrelState*)sub)->motionFlags = (u8)(((GunpowderBarrelState*)sub)->motionFlags & ~2);
-        timer = *(int**)&((GunpowderBarrelState*)sub)->linkedTimerObject;
+        timer = (int*)((GunpowderBarrelState*)sub)->linkedTimerObject;
         if (timer != 0)
         {
             timer_clearManualFlags((GameObject*)(timer));
@@ -678,13 +678,13 @@ void gunpowderbarrel_free(GameObject *obj, int mode)
     void* child;
     extra = *(int*)&(obj)->extra;
     (*(VtableFn*)(*(int*)gCarryableInterface + 0x10))(obj);
-    child = (void*)((GunpowderBarrelState*)extra)->linkedTimerObject;
+    child = ((GunpowderBarrelState*)extra)->linkedTimerObject;
     if (child != NULL && mode == 0)
     {
         if (Obj_IsObjectAlive((GameObject*)child) != 0)
         {
             ObjLink_DetachChild(obj, ((GunpowderBarrelState*)extra)->linkedTimerObject);
-            ((GunpowderBarrelState*)extra)->linkedTimerObject = 0;
+            ((GunpowderBarrelState*)extra)->linkedTimerObject = NULL;
         }
     }
     ObjGroup_RemoveObject((int)obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
@@ -717,7 +717,7 @@ void gunpowderbarrel_render(int* obj, int p2, int p3, int p4, int p5,
     {
         objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E42DC);
     }
-    child = *(int**)&((GunpowderBarrelState*)sub)->linkedTimerObject;
+    child = (int*)((GunpowderBarrelState*)sub)->linkedTimerObject;
     if (child != 0)
     {
         (*(void (**)(int*, int, int, int, int, s8))(*(int*)(*(int*)&((GameObject*)child)->anim.dll) + 0x10))(
@@ -739,12 +739,12 @@ void gunpowderbarrel_hitDetect(int obj)
     barrel = (GameObject*)obj;
     state = barrel->extra;
 
-    if ((int)Obj_IsObjectAlive((GameObject*)state->linkedTimerObject) == 0)
+    if ((int)Obj_IsObjectAlive(state->linkedTimerObject) == 0)
     {
-        if ((void*)state->linkedTimerObject != NULL)
+        if (state->linkedTimerObject != NULL)
         {
             ObjLink_DetachChild((GameObject*)obj, state->linkedTimerObject);
-            state->linkedTimerObject = 0;
+            state->linkedTimerObject = NULL;
         }
     }
 
@@ -908,20 +908,19 @@ void gunpowderbarrel_update(GameObject *obj)
     if ((obj)->childObjs[0] == NULL)
     {
         f32 range = lbl_803E4338;
-        if ((u32)(state->linkedTimerObject = ObjGroup_FindNearestObject(TIMER_OBJGROUP, (int)obj, &range)) != 0 &&
-            timer_isEffectMode((GameObject*)(state->linkedTimerObject)) != 0 &&
-            ((GameObject*)state->linkedTimerObject)->ownerObj == NULL)
+        if ((u32)(state->linkedTimerObject =
+                      (GameObject*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, (int)obj, &range)) != 0 &&
+            timer_isEffectMode(state->linkedTimerObject) != 0 && state->linkedTimerObject->ownerObj == NULL)
         {
-            ObjLink_AttachChild((int)obj, state->linkedTimerObject, 0);
+            ObjLink_AttachChild((GameObject*)obj, state->linkedTimerObject, 0);
         }
     }
     else
     {
-        if ((int)Obj_IsObjectAlive((GameObject*)state->linkedTimerObject) == 0 &&
-            *(void* *)&state->linkedTimerObject != NULL)
+        if ((int)Obj_IsObjectAlive(state->linkedTimerObject) == 0 && state->linkedTimerObject != NULL)
         {
             ObjLink_DetachChild(obj, state->linkedTimerObject);
-            state->linkedTimerObject = 0;
+            state->linkedTimerObject = NULL;
         }
     }
     {
@@ -966,9 +965,9 @@ void gunpowderbarrel_update(GameObject *obj)
             ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, r, (s32)(-r * lbl_803E4328),
                                        (s32)(r * lbl_803E4328));
         }
-        if (*(void* *)&state->linkedTimerObject != NULL)
+        if (state->linkedTimerObject != NULL)
         {
-            timer_clearManualFlags((GameObject*)(state->linkedTimerObject));
+            timer_clearManualFlags(state->linkedTimerObject);
         }
         if (state->fuseFrames > 0x14)
         {
@@ -1107,9 +1106,9 @@ void gunpowderbarrel_update(GameObject *obj)
         state->motionFlags |= 1;
         if (state->heldByCarryInterface == 0)
         {
-            if (*(void* *)&state->linkedTimerObject != NULL)
+            if (state->linkedTimerObject != NULL)
             {
-                timer_forceStart((GameObject*)(state->linkedTimerObject));
+                timer_forceStart(state->linkedTimerObject);
             }
             ObjGroup_RemoveObject((int)obj, CFGUARDIAN_OBJGROUP);
         }
@@ -1130,9 +1129,9 @@ void gunpowderbarrel_update(GameObject *obj)
             ((GpbHeldFlags*)&state->heldFlags)->pendingThrowVelCapture = 0;
         }
     }
-    if (*(void* *)&state->linkedTimerObject != NULL)
+    if (state->linkedTimerObject != NULL)
     {
-        if (timer_hasExpired((GameObject*)(state->linkedTimerObject)) != 0)
+        if (timer_hasExpired(state->linkedTimerObject) != 0)
         {
             state->detonateTrigger = 0xa;
         }
@@ -1184,7 +1183,7 @@ void gunpowderbarrel_init(int obj, u8* def)
     state->hitRadius = (f32)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->primaryRadius;
     ((GpbHeldFlags*)&state->heldFlags)->held = 0;
     state->fallAccum = 0.0f;
-    state->linkedTimerObject = 0;
+    state->linkedTimerObject = NULL;
     (*(void (**)(GunpowderBarrelState*, int))((char*)*gCarryableInterface + 0x2c))(state, 1);
     if ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState != NULL)
     {

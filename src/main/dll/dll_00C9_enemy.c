@@ -1525,7 +1525,7 @@ void enemy_free(GameObject* obj, int flag)
         child = (obj)->childObjs[0];
         if (child != NULL)
         {
-            ObjLink_DetachChild(obj, (int)child);
+            ObjLink_DetachChild(obj, (GameObject*)child);
             if (flag == 0 || (((GameObject*)child)->objectFlags & 0x10) == 0)
             {
                 Obj_FreeObject((GameObject*)child);

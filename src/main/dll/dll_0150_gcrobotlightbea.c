@@ -73,7 +73,7 @@ void gcrobotlightbea_free(int* obj)
     }
     if (((GameObject*)obj)->ownerObj != NULL)
     {
-        ObjLink_DetachChild((GameObject*)((GameObject*)obj)->ownerObj, (int)obj);
+        ObjLink_DetachChild((GameObject*)((GameObject*)obj)->ownerObj, (GameObject*)obj);
     }
 }
 

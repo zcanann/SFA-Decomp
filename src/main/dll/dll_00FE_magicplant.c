@@ -226,7 +226,7 @@ void MagicPlant_free(GameObject* obj, int freeChildren)
     ObjGroup_RemoveObject((int)obj, MAGICPLANT_OBJGROUP_B);
     if (plant->childLinkActive != 0)
     {
-        ObjLink_DetachChild(obj, (int)state->childObject);
+        ObjLink_DetachChild(obj, state->childObject);
         if (freeChildren == 0)
         {
             Obj_FreeObject(state->childObject);
@@ -397,7 +397,7 @@ void magicPlantDropGem(int obj, void* setup, void* stateArg)
         (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3870))
     {
         state->childObject = 0;
-        ObjLink_DetachChild((GameObject*)obj, (int)childObj);
+        ObjLink_DetachChild((GameObject*)obj, (GameObject*)childObj);
 
         launchSpeed = (f32)(int)
         randomGetRange(0x27, 0x2c) / lbl_803E3874;
@@ -446,7 +446,7 @@ void MagicPlant_spawnChild(GameObject* obj, int objectId)
         childObj = Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
         if (childObj != 0)
         {
-            ObjLink_AttachChild((int)obj, (int)childObj, 0);
+            ObjLink_AttachChild(obj, childObj, 0);
             state->childObject = childObj;
         }
         else

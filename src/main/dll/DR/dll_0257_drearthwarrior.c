@@ -1063,7 +1063,7 @@ void DR_EarthWarrior_free(GameObject* obj)
     }
     if (*(void**)&inner->helperObj != NULL)
     {
-        ObjLink_DetachChild(obj, (int)inner->helperObj);
+        ObjLink_DetachChild(obj, inner->helperObj);
         Obj_FreeObject(inner->helperObj);
     }
 }
@@ -1280,7 +1280,7 @@ void DR_EarthWarrior_update(GameObject* obj)
     {
         ObjPlacement* setup = Obj_AllocObjectSetup(0x18, DREARTHWARRIOR_CHILD_OBJ_HELPER);
         GameObject* newObj = Obj_SetupObject(setup, 4, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
-        ObjLink_AttachChild((int)obj, (int)newObj, 2);
+        ObjLink_AttachChild(obj, newObj, 2);
         inner->helperObj = newObj;
     }
     inner->sub.unk986 = 5;

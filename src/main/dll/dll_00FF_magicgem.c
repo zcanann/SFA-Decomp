@@ -80,7 +80,7 @@ void MagicDust_free(GameObject* obj)
 {
     if (*(u32*)&obj->ownerObj != 0)
     {
-        ObjLink_DetachChild((GameObject*)obj->ownerObj, (int)obj);
+        ObjLink_DetachChild((GameObject*)obj->ownerObj, obj);
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
     return;

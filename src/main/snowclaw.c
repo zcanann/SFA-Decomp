@@ -520,7 +520,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
             if ((u32)near != 0 && (*(int (**)(int))((char*)*((GameObject*)near)->anim.dll + 0x24))(near) != 0 &&
                 (*(int (**)(int, int))((char*)*((GameObject*)near)->anim.dll + 0x20))(near, 0) != 0)
             {
-                ObjLink_AttachChild((int)obj, near, 0);
+                ObjLink_AttachChild(obj, (GameObject*)near, 0);
             }
         }
         objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
@@ -586,7 +586,7 @@ void snowclaw_hitDetect(GameObject* obj)
                     near = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, (int)obj, &dist);
                     if (near != 0)
                     {
-                        ObjLink_DetachChild((GameObject*)obj, (int)near);
+                        ObjLink_DetachChild(obj, (GameObject*)near);
                         (*(void (**)(int*, int))((char*)*((GameObject*)near)->anim.dll + 0x20))(near, 2);
                     }
                 }

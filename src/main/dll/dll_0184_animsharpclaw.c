@@ -43,19 +43,19 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
             child = (int)((GameObject*)obj)->childObjs[0];
             if ((void*)child != NULL)
             {
-                ObjLink_DetachChild((GameObject*)obj, child);
+                ObjLink_DetachChild((GameObject*)obj, (GameObject*)child);
                 Obj_FreeObject((GameObject*)child);
             }
             newChild = (int)Obj_AllocObjectSetup(32, ((GameObject*)obj)->userData2);
             newChild = (int)Obj_SetupObject((ObjPlacement*)newChild, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                             (void*)*(int*)&((GameObject*)obj)->anim.parent);
-            ObjLink_AttachChild(obj, newChild, 0);
+            ObjLink_AttachChild((GameObject*)obj, (GameObject*)newChild, 0);
             break;
         case 2:
             child = (int)((GameObject*)obj)->childObjs[0];
             if ((void*)child != NULL)
             {
-                ObjLink_DetachChild((GameObject*)obj, child);
+                ObjLink_DetachChild((GameObject*)obj, (GameObject*)child);
                 Obj_FreeObject((GameObject*)child);
             }
             ((GameObject*)obj)->userData2 = -1;
@@ -82,7 +82,7 @@ void animsharpclaw_free(GameObject* obj)
     child = (int)(obj)->childObjs[0];
     if ((void*)child != NULL)
     {
-        ObjLink_DetachChild(obj, child);
+        ObjLink_DetachChild(obj, (GameObject*)child);
         Obj_FreeObject((GameObject*)child);
     }
     (*gObjectTriggerInterface)->freeState(inner);

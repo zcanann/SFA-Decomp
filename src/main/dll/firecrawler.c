@@ -348,31 +348,31 @@ void crawler_checkNearbyActive(GameObject* obj, u8* state)
 
 void firecrawler_spawnFirepipe(int* obj, u8* state)
 {
-    int* child;
+    FirepipeSetup* setup;
+    GameObject* child;
     (void)state;
     if (Obj_IsLoadingLocked() != 0)
     {
-        child = (int*)Obj_AllocObjectSetup(0x24, FIREPIPE_OBJ_ID);
-        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)((char*)child + 0x8), (f32*)((char*)child + 0xc),
-                                      (f32*)((char*)child + 0x10), 0);
-        ((FirepipeSetup*)child)->head.color[0] = 1;
-        ((FirepipeSetup*)child)->head.color[1] = 4;
-        ((FirepipeSetup*)child)->head.color[2] = 0xff;
-        ((FirepipeSetup*)child)->head.color[3] = 0xff;
-        ((FirepipeSetup*)child)->unk18 = 0;
-        ((FirepipeSetup*)child)->unk19 = 0;
-        ((FirepipeSetup*)child)->unk1A = 0;
-        ((FirepipeSetup*)child)->unk1C = 0xa;
-        ((FirepipeSetup*)child)->unk1E = 0;
-        ((FirepipeSetup*)child)->unk20 = 0;
-        ((FirepipeSetup*)child)->unk22 = 3;
-        ((FirepipeSetup*)child)->unk23 = 0;
-        child = (int*)Obj_SetupObject((ObjPlacement*)child, 5, -1, -1, 0);
-        if (child != 0)
+        setup = (FirepipeSetup*)Obj_AllocObjectSetup(0x24, FIREPIPE_OBJ_ID);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &setup->head.posX, &setup->head.posY, &setup->head.posZ, 0);
+        setup->head.color[0] = 1;
+        setup->head.color[1] = 4;
+        setup->head.color[2] = 0xff;
+        setup->head.color[3] = 0xff;
+        setup->unk18 = 0;
+        setup->unk19 = 0;
+        setup->unk1A = 0;
+        setup->unk1C = 0xa;
+        setup->unk1E = 0;
+        setup->unk20 = 0;
+        setup->unk22 = 3;
+        setup->unk23 = 0;
+        child = Obj_SetupObject(&setup->head, 5, -1, -1, 0);
+        if (child != NULL)
         {
-            ObjLink_AttachChild((int)obj, (int)child, 0);
+            ObjLink_AttachChild((GameObject*)obj, child, 0);
             firepipe_setLinkedUpdateFlag((FirePipeObject*)child);
-            ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
+            child->anim.flags = (s16)(child->anim.flags | OBJANIM_FLAG_HIDDEN);
         }
     }
 }

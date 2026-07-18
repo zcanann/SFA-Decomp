@@ -117,7 +117,7 @@ void animatedobj_free(int* obj, int seqFlag)
     if (((GameObject*)obj)->anim.seqId == 0x774 && ((GameObject*)obj)->childCount != 0)
     {
         Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
-        ObjLink_DetachChild((GameObject*)obj, *(int*)&((GameObject*)obj)->childObjs[0]);
+        ObjLink_DetachChild((GameObject*)obj, (GameObject*)((GameObject*)obj)->childObjs[0]);
     }
     if (seqFlag != 0)
     {
@@ -242,7 +242,7 @@ void animatedobj_update(int* obj)
                         int* child;
                         alloc = (void*)Obj_AllocObjectSetup(0x18, ANIMATEDOBJ_CHILD_OBJ);
                         child = (int*)Obj_SetupObject((ObjPlacement*)alloc, 4, -1, -1, 0);
-                        ObjLink_AttachChild((int)obj, (int)child, 0);
+                        ObjLink_AttachChild((GameObject*)obj, (GameObject*)child, 0);
                         ObjAnim_SetCurrentMove((int)child, 0, 0.0f, 0);
                         ObjAnim_AdvanceCurrentMove(
                             (int)child, 1.0f, timeDelta, NULL);
@@ -252,7 +252,7 @@ void animatedobj_update(int* obj)
                     if (((GameObject*)obj)->childCount != 0)
                     {
                         Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
-                        ObjLink_DetachChild((GameObject*)obj, *(int*)&((GameObject*)obj)->childObjs[0]);
+                        ObjLink_DetachChild((GameObject*)obj, (GameObject*)((GameObject*)obj)->childObjs[0]);
                     }
                     break;
                 }

@@ -1275,9 +1275,8 @@ int trickyFoodFn_801437d4(GameObject* obj, int* state)
             idx = -1;
         }
         ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c = idx;
-        ((TrickyState*)state)->child =
-            (u8*)Obj_SetupObject((ObjPlacement*)e, 4, -1, -1, (obj)->anim.parent);
-        ObjLink_AttachChild((int)obj, (int)((TrickyState*)state)->child,
+        ((TrickyState*)state)->child = Obj_SetupObject((ObjPlacement*)e, 4, -1, -1, (obj)->anim.parent);
+        ObjLink_AttachChild(obj, ((TrickyState*)state)->child,
                             ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c);
         z = lbl_803E23DC;
         ((TrickyState*)state)->childPhaseTimer0 = z;

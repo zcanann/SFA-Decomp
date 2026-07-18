@@ -1165,7 +1165,7 @@ void objAnimFreeChildren(int a, int b, GameObject** c)
     {
         return;
     }
-    ObjLink_DetachChild((GameObject*)a, (int)*c);
+    ObjLink_DetachChild((GameObject*)a, *c);
     Obj_FreeObject(*c);
     *c = NULL;
     buf[0] = -1;
@@ -1190,20 +1190,20 @@ void objAnimFreeChildren(int a, int b, GameObject** c)
     {
         if (v0 != NULL)
         {
-            ObjLink_DetachChild((GameObject*)a, (int)v0);
-            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj0, 0);
+            ObjLink_DetachChild((GameObject*)a, v0);
+            ObjLink_AttachChild((GameObject*)a, (GameObject*)((TrickyImpressState*)b)->childObj0, 0);
             ((AnimSlots*)(b + 0x7bc))->s0 = 0;
         }
         else if (v1 != NULL)
         {
-            ObjLink_DetachChild((GameObject*)a, (int)v1);
-            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj1, 0);
+            ObjLink_DetachChild((GameObject*)a, v1);
+            ObjLink_AttachChild((GameObject*)a, (GameObject*)((TrickyImpressState*)b)->childObj1, 0);
             ((AnimSlots*)(b + 0x7bc))->s1 = 0;
         }
         else if (v2 != NULL)
         {
-            ObjLink_DetachChild((GameObject*)a, (int)v2);
-            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj2, 0);
+            ObjLink_DetachChild((GameObject*)a, v2);
+            ObjLink_AttachChild((GameObject*)a, (GameObject*)((TrickyImpressState*)b)->childObj2, 0);
             ((AnimSlots*)(b + 0x7bc))->s2 = 0;
         }
     }

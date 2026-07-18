@@ -126,7 +126,7 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
             if ((void*)target != NULL && (obj)->childCount != 0)
             {
                 (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)target)->anim.dll) + 0x20)))(target, 2);
-                ObjLink_DetachChild(obj, target);
+                ObjLink_DetachChild(obj, (GameObject*)target);
             }
             break;
         case 7:
@@ -546,7 +546,7 @@ void bossdrakor_free(GameObject* obj)
     ObjGroup_RemoveObject((int)obj, BOSSDRAKOR_OBJGROUP);
     if ((obj)->childObjs[0] != NULL)
     {
-        ObjLink_DetachChild(obj, *(int*)&(obj)->childObjs[0]);
+        ObjLink_DetachChild(obj, (GameObject*)obj->childObjs[0]);
     }
     if (((BossDrakorState*)inner)->lightObj != NULL)
     {

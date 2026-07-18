@@ -351,7 +351,7 @@ void fn_8013E0D0(int* obj, TrickyState* t)
                             ((TrickyPackedSlots*)((char*)t + 0x7bc))->c = free_;
                             *(int*)&t->child =
                                 (int)Obj_SetupObject((ObjPlacement*)o, 4, -1, -1, (void*)*(int*)&gobj->anim.parent);
-                            ObjLink_AttachChild((int)gobj, *(int*)&t->child,
+                            ObjLink_AttachChild(gobj, t->child,
                                                 ((TrickyPackedSlots*)((char*)t + 0x7bc))->c);
                             {
                                 f32 z3 = lbl_803E23DC;

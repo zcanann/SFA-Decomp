@@ -86,7 +86,7 @@ int CClightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
             case 1:
                 if ((obj)->childObjs[0] != NULL)
                 {
-                    ObjLink_DetachChild(obj, (int)state->childObj);
+                    ObjLink_DetachChild(obj, state->childObj);
                 }
                 break;
             case 2:
@@ -113,7 +113,7 @@ void cclightfoot_free(int* obj, int flag)
     {
         if (((GameObject*)obj)->childObjs[0] != NULL)
         {
-            ObjLink_DetachChild((GameObject*)obj, (int)sub);
+            ObjLink_DetachChild((GameObject*)obj, sub);
         }
         if (flag == 0)
         {
@@ -396,7 +396,7 @@ void cclightfoot_update(int obj)
             {
                 state->childObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, CCLIGHTFOOT_CHILD_OBJ_MARKER), 5, -1, -1,
                                                   ((GameObject*)obj)->anim.parent);
-                ObjLink_AttachChild(obj, (int)state->childObj, 0);
+                ObjLink_AttachChild((GameObject*)obj, state->childObj, 0);
             }
             state->playerObj = (int)Obj_GetPlayerObject();
             state->targetA = (int)ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_A);
@@ -570,7 +570,7 @@ void cclightfoot_update(int obj)
         {
             if (((GameObject*)obj)->childObjs[0] != NULL)
             {
-                ObjLink_DetachChild((GameObject*)obj, (int)state->childObj);
+                ObjLink_DetachChild((GameObject*)obj, state->childObj);
             }
             Obj_FreeObject(state->childObj);
             state->childObj = 0;

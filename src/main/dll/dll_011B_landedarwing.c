@@ -207,7 +207,7 @@ void landed_arwing_free(GameObject* obj)
     if (state->childObject != NULL)
     {
         Obj_FreeObject(state->childObject);
-        ObjLink_DetachChild(obj, (int)state->childObject);
+        ObjLink_DetachChild(obj, state->childObject);
     }
 }
 
@@ -497,7 +497,7 @@ void landed_arwing_update(GameObject* obj)
             state->childObject = child;
             if (state->childObject != NULL)
             {
-                ObjLink_AttachChild((int)obj, (int)state->childObject, 0);
+                ObjLink_AttachChild(obj, state->childObject, 0);
                 arwarwinggu_setTextureFrame(state->childObject, 0xaf);
                 state->childObject->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }

@@ -113,7 +113,7 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((ObjPlacement*)setup)->color[0] = 0x20;
                 ((ObjPlacement*)setup)->color[1] = 4;
                 ((ObjPlacement*)setup)->color[3] = 0xff;
-                ObjLink_AttachChild(obj, (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0), 0);
+                ObjLink_AttachChild((GameObject*)obj, Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0), 0);
                 *(f32*)(*(int*)&((GameObject*)obj)->childObjs[0] + 8) *= 1.1f;
             }
             break;
@@ -122,7 +122,7 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             int* child = ((GameObject*)obj)->childObjs[0];
             if (child != NULL)
             {
-                ObjLink_DetachChild((GameObject*)obj, (int)child);
+                ObjLink_DetachChild((GameObject*)obj, (GameObject*)child);
             }
             break;
         }
@@ -160,7 +160,7 @@ void WM_GeneralScales_free(int* obj)
 {
     int* p = (int*)obj[0xc8 / 4]; /* childObjs[0] */
     if (p != NULL)
-        ObjLink_DetachChild((GameObject*)obj, (int)p);
+        ObjLink_DetachChild((GameObject*)obj, (GameObject*)p);
 }
 
 void WM_GeneralScales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)

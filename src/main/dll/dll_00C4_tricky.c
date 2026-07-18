@@ -21,6 +21,7 @@
 #include "main/game_object.h"
 #include "main/track_bbox_api.h"
 #include "main/obj_group.h"
+#include "main/obj_link.h"
 #include "main/obj_path.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
@@ -202,8 +203,6 @@ STATIC_ASSERT(sizeof(struct VisBits16) == 0x10);
 #define BADDIE_PLACEMENT_DEATH_GAMEBIT          0x18 /* s16: gamebit incremented on defeat */
 #define BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT 0x1a /* s16: gamebit cleared on defeat */
 
-extern u64 ObjLink_DetachChild();
-extern u64 ObjLink_AttachChild();
 extern void objAudioFn_8006edcc(int obj, u16 mask, int arg5, float* points, void* aux, f32 scaleX, f32 scaleY);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
@@ -558,7 +557,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 *(int*)&((TrickyState*)state)->spawnedChild =
                     (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, -1, ((GameObject*)obj)->anim.parent);
-                ObjLink_AttachChild(obj, *(int*)&((TrickyState*)state)->spawnedChild, 3);
+                ObjLink_AttachChild((GameObject*)obj, ((TrickyState*)state)->spawnedChild, 3);
             }
             break;
         case 3:
@@ -900,7 +899,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 ((PromptSlotByte*)(state + 0x7bc))->slotB = bitVal;
                 spawnedObj = (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, 0xffffffff, ((GameObject*)objVal)->anim.parent);
                 *(u32*)(state + 0x7b0) = spawnedObj; /* raw: arrow form shifts bytes */
-                ObjLink_AttachChild(objVal, (int)((TrickyState*)state)->childB, *(u8*)(state + 0x7bc) >> 4 & 3);
+                ObjLink_AttachChild((GameObject*)objVal, ((TrickyState*)state)->childB, *(u8*)(state + 0x7bc) >> 4 & 3);
             }
         }
         else if (((TrickyState*)state)->childB != NULL)
@@ -977,7 +976,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 ((PromptSlotByte*)(state + 0x7bc))->slotA = bitVal;
                 spawnedObj = (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, 0xffffffff, ((GameObject*)objVal)->anim.parent);
                 *(u32*)(state + 0x7a8) = spawnedObj; /* raw: arrow form shifts bytes */
-                ObjLink_AttachChild(objVal, (int)((TrickyState*)state)->childA, *(u8*)(state + 0x7bc) >> 6 & 3);
+                ObjLink_AttachChild((GameObject*)objVal, ((TrickyState*)state)->childA, *(u8*)(state + 0x7bc) >> 6 & 3);
             }
         }
         else if (((TrickyState*)state)->childA != NULL)
@@ -1062,7 +1061,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
     objAnimFreeChildren((int)obj, state, (GameObject**)&((TrickyState*)state)->child);
     if (*(void**)&((TrickyState*)state)->spawnedChild != NULL)
     {
-        ObjLink_DetachChild(obj, *(int*)&((TrickyState*)state)->spawnedChild);
+        ObjLink_DetachChild(obj, ((TrickyState*)state)->spawnedChild);
         Obj_FreeObject((GameObject*)((TrickyState*)state)->spawnedChild);
     }
     if (((((TrickyState*)state)->statusFlags >> 7 & 1) != 0u) && (gTrickyHelperObject != 0))
@@ -1288,7 +1287,8 @@ void Tricky_hitDetect(GameObject* obj)
         }                                                                                                              \
         ((TrickySlotBits*)((state) + 0x7bc))->slotC = slot_;                                                           \
         *(int*)((state) + 0x7b8) = (int)Obj_SetupObject((ObjPlacement*)setup_, 4, -1, -1, *(void**)((obj) + 0x30));    \
-        ObjLink_AttachChild((obj), *(int*)((state) + 0x7b8), ((TrickySlotBits*)((state) + 0x7bc))->slotC);             \
+        ObjLink_AttachChild((GameObject*)(obj), *(GameObject**)((state) + 0x7b8),                                    \
+                            ((TrickySlotBits*)((state) + 0x7bc))->slotC);                                             \
         z = lbl_803E23DC;                                                                                              \
         *(f32*)((state) + 0x7c0) = z;                                                                                  \
         *(f32*)((state) + 0x7c4) = z;                                                                                  \
@@ -1342,7 +1342,7 @@ void Tricky_update(int obj)
         }
         *(int*)&trickyState->spawnedChild =
             (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, -1, ((GameObject*)obj)->anim.parent);
-        ObjLink_AttachChild(obj, *(int*)&trickyState->spawnedChild, 3);
+        ObjLink_AttachChild((GameObject*)obj, trickyState->spawnedChild, 3);
     }
     if ((trickyState->stateFlags & 0x40000000) != 0)
     {

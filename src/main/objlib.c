@@ -1578,7 +1578,7 @@ int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereInd
     return 0;
 }
 
-void ObjLink_DetachChild(GameObject* obj, int child)
+void ObjLink_DetachChild(GameObject* obj, GameObject* child)
 {
     int dst;
     int slot;
@@ -1587,7 +1587,7 @@ void ObjLink_DetachChild(GameObject* obj, int child)
     i = 0;
     for (slot = (int)obj; i < (int)obj->childCount; i++)
     {
-        if ((u32) * (int*)(slot + OBJLINK_CHILD_LIST_OFFSET) == child)
+        if (*(GameObject**)(slot + OBJLINK_CHILD_LIST_OFFSET) == child)
         {
             break;
         }
@@ -1602,25 +1602,25 @@ void ObjLink_DetachChild(GameObject* obj, int child)
     }
     obj->childCount--;
     *(int*)((int)obj + OBJLINK_CHILD_LIST_OFFSET + (u32)obj->childCount * 4) = 0;
-    ((GameObject*)child)->ownerObj = (void*)0;
+    child->ownerObj = (void*)0;
     return;
 }
 
-void ObjLink_AttachChild(int parent, int child, int linkMode)
+void ObjLink_AttachChild(GameObject* parent, GameObject* child, int linkMode)
 {
     int childIndex;
     GameObject* parentObj;
     GameObject* childObj;
 
-    parentObj = (GameObject*)parent;
-    childObj = (GameObject*)child;
+    parentObj = parent;
+    childObj = child;
     childIndex = (int)parentObj->childCount;
     parentObj->childCount += 1;
-    parentObj->childObjs[childIndex] = (void*)child;
-    childObj->ownerObj = (void*)parent;
+    parentObj->childObjs[childIndex] = child;
+    childObj->ownerObj = parent;
     childObj->objectFlags = (u16)(childObj->objectFlags & ~OBJLINK_FLAGS_MODE_MASK);
     childObj->objectFlags = (u16)(childObj->objectFlags | linkMode);
-    *(u8*)(child + OBJLINK_CHILD_STATE_OFFSET) = 0;
+    *(u8*)((u8*)child + OBJLINK_CHILD_STATE_OFFSET) = 0;
     return;
 }
 

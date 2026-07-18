@@ -202,16 +202,16 @@ typedef struct TrickyState {
     f32 cooldownC; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC, re-primed to lbl_803E2440; same clamp-to-floor idiom as cooldownA/B (tricky/substates/weapone6/skeetla/animobjd2/mmp) */
     f32 voiceCooldown; /* f32 countdown: -= timeDelta, clamped to floor; while > floor a TRICKY_VOICE line is (re)issued (tricky/trickyfollow/skeetla) */
     f32 sfxIntervalTimer; /* f32 countdown: -= timeDelta, on reaching floor lbl_803E23DC fires an SFX and re-primes to a randomGetRange interval (skeetla 600..1200, weapone6 150..300) */
-    u8 *childA;
+    GameObject* childA;
     u8 pad7AC[0x7B0 - 0x7AC];
-    u8 *childB;
+    GameObject* childB;
     u8 pad7B4[0x7B8 - 0x7B4];
-    u8 *child;
+    GameObject* child;
     u8 pad7BC[0x7C0 - 0x7BC];
     f32 childPhaseTimer0; /* child-object periodic phase timer: reset to floor lbl_803E23DC when the child is attached, += timeDelta while it lives, wraps at lbl_803E2550 to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
     f32 childPhaseTimer1; /* child-object periodic phase timer: += timeDelta, wraps at lbl_803E24D8/lbl_803E2440 to toggle the child's 0x4000 anim flag */
     f32 childPhaseTimer2; /* child-object periodic phase timer: += timeDelta, wraps at lbl_803E24C8, gates the child's 0x4000 anim flag via lbl_803E2408 */
-    void *spawnedChild;
+    GameObject* spawnedChild;
     u8 pad7D0[0x7D4 - 0x7D0];
     u8 *pendingFollowObj; /* target object handed off to a sibling Tricky: read into `target`, then assigned to other->followObj and other->targetPosPtr = target+0x18 (tricky_substates) */
     u8 pad7D8[0x808 - 0x7D8];

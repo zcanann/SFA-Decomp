@@ -12,7 +12,7 @@ typedef struct GunpowderBarrelState {
     u8 unk07;
     u8 pad08[4];
     GameObject* queuedHitObject;
-    int linkedTimerObject;  /* 0x10 */
+    GameObject* linkedTimerObject; /* 0x10 */
     u8 pad14;
     u8 heldByCarryInterface;
     u8 detonateTrigger; /* 0x16 non-zero arms detonation (4=armed, set on hit/

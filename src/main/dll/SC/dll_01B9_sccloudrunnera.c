@@ -157,7 +157,7 @@ void sc_cloudrunnera_update(int obj)
                 newObj = Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                          ((GameObject*)obj)->anim.parent);
                 newObj->anim.flags = (s16)(newObj->anim.flags | OBJANIM_FLAG_HIDDEN);
-                ObjLink_AttachChild(obj, (int)newObj, 0);
+                ObjLink_AttachChild((GameObject*)obj, newObj, 0);
                 Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c);
                 break;
             }
@@ -174,7 +174,7 @@ void sc_cloudrunnera_update(int obj)
                 int innerSlot = *(int*)&((GameObject*)obj)->childObjs[0];
                 if ((u32)innerSlot != 0)
                 {
-                    ObjLink_DetachChild((GameObject*)obj, innerSlot);
+                    ObjLink_DetachChild((GameObject*)obj, (GameObject*)innerSlot);
                     Obj_FreeObject((GameObject*)innerSlot);
                 }
                 break;

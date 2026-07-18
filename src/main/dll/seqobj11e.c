@@ -240,7 +240,7 @@ void fn_80152514(int* obj, u8* state)
         if (child != 0)
         {
             Obj_FreeObject((GameObject*)child);
-            ObjLink_DetachChild((GameObject*)obj, (int)((GameObject*)obj)->childObjs[0]);
+            ObjLink_DetachChild((GameObject*)obj, (GameObject*)((GameObject*)obj)->childObjs[0]);
             *(int*)&((GameObject*)obj)->childObjs[0] = 0;
         }
         *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
@@ -395,7 +395,7 @@ void fn_80152514(int* obj, u8* state)
         }
         else
         {
-            int* newObj;
+            GameObject* newObj;
             int flag;
 
             if (*(s8*)((char*)def + 0x2a) != 0)
@@ -406,19 +406,19 @@ void fn_80152514(int* obj, u8* state)
             {
                 attached = 0;
             }
-            newObj = (int*)gcRobotLight_init((GameObject*)obj, 0x639);
+            newObj = gcRobotLight_init((GameObject*)obj, 0x639);
             flag = 0;
             if (*(s8*)((char*)def + 0x2a) != 0 && !(((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW))
             {
                 flag = 1;
             }
             *(int*)((u8*)newObj + 0xf4) = flag;
-            ObjLink_AttachChild((int)obj, (int)newObj, attached);
+            ObjLink_AttachChild((GameObject*)obj, newObj, attached);
         }
     }
 }
 
-int gcRobotLight_init(GameObject* obj, int childId)
+GameObject* gcRobotLight_init(GameObject* obj, int childId)
 {
     int sub;
     u8* setup;
@@ -426,7 +426,7 @@ int gcRobotLight_init(GameObject* obj, int childId)
     sub = *(int*)&obj->anim.placementData;
     Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() == 0)
-        return 0;
+        return NULL;
     setup = (u8*)Obj_AllocObjectSetup(36, childId);
     *(s16*)(setup + 0) = childId;
     ((ObjPlacement*)setup)->color[0] = ((ObjPlacement*)sub)->color[0];
@@ -438,7 +438,7 @@ int gcRobotLight_init(GameObject* obj, int childId)
     ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
     ((Seq11EChildSetup*)setup)->unk19 = 0;
     ((Seq11EChildSetup*)setup)->unk20 = 149;
-    return (int)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
+    return Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
 }
 
 void gcRobotPatrol_init(GameObject* obj, int state)

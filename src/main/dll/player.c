@@ -11302,7 +11302,7 @@ void fn_802A93F4(GameObject* obj, int p2, int p3)
         {
             (*(void (*)(void*))(*(int*)((char*)*(int*)*(int*)((char*)found + 0x68) + 0x24)))(found);
         }
-        ObjLink_DetachChild(obj, (int)gPlayerChildObject);
+        ObjLink_DetachChild(obj, (GameObject*)gPlayerChildObject);
         Obj_FreeObject((GameObject*)gPlayerChildObject);
         gPlayerChildObject = NULL;
     }
@@ -15821,9 +15821,10 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     playerStaffInit((GameObject*)obj, (int)inner);
     if (*(void**)&gPlayerEggObject == NULL && Obj_IsLoadingLocked() != 0)
     {
-        ObjLink_AttachChild(obj,
-                            gPlayerEggObject = (int)Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x66a), 4, -1, -1,
-                                                                    ((GameObject*)obj)->anim.parent),
+        ObjLink_AttachChild((GameObject*)obj,
+                            (GameObject*)(gPlayerEggObject =
+                                (int)Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x66a), 4, -1, -1,
+                                                     ((GameObject*)obj)->anim.parent)),
                             3);
     }
     if (*(void**)&gPlayerEggObject != NULL)
@@ -16799,13 +16800,13 @@ void fn_802B4DE0(GameObject* obj, int p2)
     if ((u32)gPlayerEggObject != 0)
     {
         Obj_FreeObject((GameObject*)gPlayerEggObject);
-        ObjLink_DetachChild(obj, gPlayerEggObject);
+        ObjLink_DetachChild(obj, (GameObject*)gPlayerEggObject);
         gPlayerEggObject = 0;
     }
     if (gPlayerPathObject != NULL)
     {
         Obj_FreeObject((GameObject*)gPlayerPathObject);
-        ObjLink_DetachChild(obj, (int)gPlayerPathObject);
+        ObjLink_DetachChild(obj, (GameObject*)gPlayerPathObject);
         gPlayerPathObject = NULL;
     }
     if (gPlayerStaffObject != NULL)
@@ -17453,7 +17454,7 @@ void playerUpdate(GameObject* obj)
             {
                 gPlayerEggObject = (int)Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x66a), 4, -1, -1,
                                                         obj->anim.parent);
-                ObjLink_AttachChild((int)obj, gPlayerEggObject, 3);
+                ObjLink_AttachChild(obj, (GameObject*)gPlayerEggObject, 3);
             }
             if ((u32)gPlayerEggObject != 0)
             {
@@ -17875,7 +17876,7 @@ void playerStaffInit(GameObject* obj, int state)
     {
         child = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x69), 4, -1, -1, obj->anim.parent);
         gPlayerPathObject = child;
-        ObjLink_AttachChild((int)obj, (int)child, 2);
+        ObjLink_AttachChild(obj, child, 2);
     }
     if (gPlayerPathObject != NULL)
     {
@@ -18552,7 +18553,7 @@ void Lightfoot_UpdateAttachedChild(GameObject* obj, int inner)
     child = obj->childObjs[0];
     if (child != NULL)
     {
-        ObjLink_DetachChild(obj, (int)child);
+        ObjLink_DetachChild(obj, child);
         Obj_FreeObject(child);
     }
     if (Obj_IsLoadingLocked())
@@ -18561,7 +18562,7 @@ void Lightfoot_UpdateAttachedChild(GameObject* obj, int inner)
         {
             setup = Obj_AllocObjectSetup(0x20, *(s16*)((char*)animState + 0x28));
             child = Obj_SetupObject(setup, 4, obj->anim.mapEventSlot, -1, obj->anim.parent);
-            ObjLink_AttachChild((int)obj, (int)child, 0);
+            ObjLink_AttachChild(obj, child, 0);
             *(s16*)((char*)animState + 0x26) = *(s16*)((char*)animState + 0x28);
         }
     }

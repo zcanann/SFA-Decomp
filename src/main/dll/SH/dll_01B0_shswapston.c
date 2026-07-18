@@ -346,7 +346,7 @@ void warpstone_free(GameObject* obj, int mode)
     int* state = (obj)->extra;
     if (*(void**)state != NULL && mode == 0)
     {
-        ObjLink_DetachChild(obj, state[0]);
+        ObjLink_DetachChild(obj, (GameObject*)state[0]);
         Obj_FreeObject((GameObject*)state[0]);
     }
 }
@@ -451,7 +451,7 @@ void warpstone_update(int obj)
     child = *(int*)state;
     if ((void*)child != NULL)
     {
-        ObjLink_DetachChild((GameObject*)obj, child);
+        ObjLink_DetachChild((GameObject*)obj, (GameObject*)child);
         Obj_FreeObject(*(GameObject**)state);
         *(int*)state = 0;
     }

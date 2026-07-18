@@ -1790,7 +1790,7 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
         state->escortObj = ObjList_FindNearestObjectByDefNo(obj, 0x606, &radius);
         if (state->escortObj != NULL)
         {
-            ObjLink_AttachChild((int)obj, (int)state->escortObj, 0);
+            ObjLink_AttachChild(obj, state->escortObj, 0);
         }
     }
 
@@ -1801,7 +1801,7 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
             state->bombObj = ObjList_FindNearestObjectByDefNo(obj, 0x611, &radius);
             if (state->bombObj != NULL)
             {
-                ObjLink_AttachChild((int)obj, (int)state->bombObj, 0);
+                ObjLink_AttachChild(obj, state->bombObj, 0);
             }
         }
         if (state->gunObjL == NULL)
@@ -1809,7 +1809,7 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
             state->gunObjL = ObjList_FindNearestObjectByDefNo(obj, 0x610, &radius);
             if (state->gunObjL != NULL)
             {
-                ObjLink_AttachChild((int)obj, (int)state->gunObjL, 0);
+                ObjLink_AttachChild(obj, state->gunObjL, 0);
             }
         }
         if (state->gunObjR == NULL)
@@ -1817,7 +1817,7 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
             state->gunObjR = ObjList_FindNearestObjectByDefNo(obj, 0x615, &radius);
             if (state->gunObjR != NULL)
             {
-                ObjLink_AttachChild((int)obj, (int)state->gunObjR, 0);
+                ObjLink_AttachChild(obj, state->gunObjR, 0);
             }
         }
     }
