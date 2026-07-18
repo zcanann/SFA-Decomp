@@ -627,8 +627,6 @@ int fn_8015E8BC(GameObject* obj, GroundBaddieState* state)
 }
 
 void fn_8015EA48(GameObject* obj, GroundBaddieState* state);
-void fn_8015EB6C(GameObject* obj, int state, int target);
-void fn_8015ED1C(int obj, int state, int target);
 
 void dll_CE_func0B(GameObject* obj, int v)
 {
