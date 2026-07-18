@@ -78,7 +78,6 @@ typedef struct
     DeferredFree deferred[2000];
     MmRegion regions[8];
 } MmGlobal;
-extern void* gAttractMovieScratchBuffer;
 extern char sMmShowInfoFBMemoryStoreMessageBlock[];
 extern char sMemStatsFormat[];
 extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
