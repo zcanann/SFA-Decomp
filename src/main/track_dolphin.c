@@ -259,7 +259,6 @@ typedef union
 
 #define MAP_DYNAMIC_SLOT_COUNT 64
 
-extern int cacheAllocAndCopy(void* src, int size, int* cacheCursor, int* outEnd, int limit);
 
 extern const f32 lbl_803DEC50;
 extern f32 lbl_803DECB4;
