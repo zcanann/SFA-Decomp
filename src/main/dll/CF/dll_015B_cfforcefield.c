@@ -76,9 +76,6 @@ STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
 /* frames the collapse spin-down runs for */
 #define CFFORCEFIELD_COLLAPSE_FRAMES 60
 
-extern f32 lbl_803DBE90;   /* ring radius scale */
-extern int lbl_803DBE94;   /* burst position jitter, +/- units */
-extern int lbl_803DBE98;   /* collapse rotY rate */
 
 CfForceFieldEmitter lbl_80322ED8[3] = {
     {0x7a4, 0x7a5, 0x4000, 100, -0x1000, 1850.0f},
