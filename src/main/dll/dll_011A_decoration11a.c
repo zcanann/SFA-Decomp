@@ -152,7 +152,6 @@ void decoration11a_update(void)
 {
 }
 
-void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut);
 
 void decoration11a_init(int* obj, u8* def)
 {
