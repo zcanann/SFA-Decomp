@@ -2391,7 +2391,6 @@ void skyFn_8008a04c(void)
 {
     int part;
     int red;
-    int iofs;
     int green;
     f32* blendAlphaCurve;
     f32* ambientIntensityCurve;
@@ -2452,7 +2451,6 @@ void skyFn_8008a04c(void)
             part = 3;
         }
         i = 0;
-        iofs = i;
         part4 = part * 4;
         blendAlphaCurve = &((f32*)((u8*)vec + 0x40))[part];
         ambientIntensityCurve = &((f32*)((u8*)vec + 0x18))[part];
@@ -2464,7 +2462,7 @@ void skyFn_8008a04c(void)
         dayStart = gSkyDayStartTime;
         do
         {
-            if ((u32)((gSkyState[iofs + 0xc1] >> 7) & 1) != 0)
+            if ((u32)((gSkyState[i * 0xa4 + 0xc1] >> 7) & 1) != 0)
             {
                 blendAlpha = 0xc8;
                 ambientIntensity = 0;
@@ -2476,10 +2474,10 @@ void skyFn_8008a04c(void)
                 ambientIntensity = Curve_EvalLinearValuesFirst(ambientIntensityCurve, frac, 0);
                 lightIntensity = Curve_EvalLinearValuesFirst(lightIntensityCurve, frac, 0);
             }
-            rawR = Curve_EvalCatmullRomValuesFirst(gSkyState + iofs + part4 + 0x20, frac, 0);
-            rawG = Curve_EvalCatmullRomValuesFirst(gSkyState + iofs + greenCurveOffset + 0x20, frac, 0);
-            blue = Curve_EvalCatmullRomValuesFirst(gSkyState + iofs + blueCurveOffset + 0x20, frac, 0);
-            slot = (SkyColorBlendView*)(gSkyState + iofs);
+            rawR = Curve_EvalCatmullRomValuesFirst(gSkyState + i * 0xa4 + part4 + 0x20, frac, 0);
+            rawG = Curve_EvalCatmullRomValuesFirst(gSkyState + i * 0xa4 + greenCurveOffset + 0x20, frac, 0);
+            blue = Curve_EvalCatmullRomValuesFirst(gSkyState + i * 0xa4 + blueCurveOffset + 0x20, frac, 0);
+            slot = (SkyColorBlendView*)(gSkyState + i * 0xa4);
             blend = slot->factor;
             if (blend != zero)
             {
@@ -2536,7 +2534,6 @@ void skyFn_8008a04c(void)
                 fn_80089A60(i, -vec[3], vec[4], -vec[5], red, green, blue, ambientIntensity, lightIntensity,
                             blendAlpha);
             }
-            iofs += sizeof(SkyLight);
             i++;
         } while (i < 2);
         fn_80089A60(2, lbl_803DF058, lbl_803DF058, lbl_803DF058, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
