@@ -214,3 +214,15 @@ emission. Same proto-width-propagation class as the cfguardian curve-signature c
 authentic (they look genuinely correct), this is an accepted correctness>match tradeoff; if you want
 both, worth checking whether a single call-site addressing spelling keeps the -0.19 back. Caught by
 churn-mine (non-purge unit, real regression). Minor magnitude, flagging for awareness.
+
+## Share cache copy interface (e2de5963e4) regressed gameloop cacheAllocAndCopy 100->96.23
+The "Share cache copy interface" commit retyped cacheAllocAndCopy's params from the MATCHING form
+`u32 srcAddr, u32 size, u32* cacheCursor, u32* outEnd, u32 limit` (was 100%) to
+`void* srcPtr, int byteCount, int* cacheCursor, int* outEnd, int limit` (now 96.226) to feed the new
+gameloop_api.h shared prototype. The u32 form was the byte-matching signature; the void*/int retype
+shifts codegen (the u32->void*/int + the dropped `(void*)srcAddr` casts change addressing/extend).
+Same proto-retype-regression class as seqStartPlay (5c493804fc) and cfguardian (fa1b498f43). If the
+void*/int types are the authentic recovery, this is an accepted correctness>match tradeoff; if not,
+restoring the u32 signature returns it to 100 (the shared proto can keep u32 or the .c can cast at the
+copyToCache sites). Caught by churn-mine (non-purge unit, real -3.8 regression, likely unnoticed during
+the declaration share). Flagging for awareness.
