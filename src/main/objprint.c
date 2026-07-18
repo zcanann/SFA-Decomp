@@ -4,6 +4,7 @@
 #include "main/rcp_dolphin_api.h"
 #include "main/frame_timing.h"
 #include "main/objprint_render_api.h"
+#include "main/objprint_dolphin_api.h"
 #include "main/objprintgxcolor.h"
 #include "main/model.h"
 #include "main/object_api.h"
@@ -1542,7 +1543,6 @@ void objRenderModelAndHitVolumes(GameObject* obj, f32 scale)
 }
 
 
-extern u8 gObjAlphaCompareThreshold;
 void fn_8003B950(f32* matrix)
 {
     lbl_803DCC10 = (u32)matrix;
