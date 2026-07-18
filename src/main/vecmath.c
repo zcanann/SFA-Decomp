@@ -288,7 +288,10 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     mtx[0] = s;
     t2 = cy * sz;
     v = t2 * cx;
-    v = v + sx * cz;
+    {
+        f32 p = sx * cz;
+        v = v + p;
+    }
     mtx[1] = v;
     mtx[2] = -(cx * sy);
     mtx[3] = (u = lbl_803DE7C0);
@@ -297,9 +300,15 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     mtx[6] = cy;
     mtx[7] = u;
     v = t1 * sx;
-    mtx[8] = v + cx * sz;
+    {
+        f32 p = cx * sz;
+        mtx[8] = v + p;
+    }
     t2 = t2 * sx;
-    mtx[9] = cx * cz - t2;
+    {
+        f32 p = cx * cz;
+        mtx[9] = p - t2;
+    }
     mtx[10] = sx * sy;
     mtx[11] = u;
     x = *(f32*)((u8*)transform + 0xc);
