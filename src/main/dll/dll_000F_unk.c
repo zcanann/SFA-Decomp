@@ -153,7 +153,6 @@ void player_doProjGfx(int* obj, int unusedA, int resIdBase, int count, int unuse
     Resource_Release(res);
 }
 
-#pragma opt_common_subs off
 void player_updateSecondaryBlend(int* obj, int* ctx, int moveA, int moveB)
 {
     f32 mag;
@@ -202,7 +201,6 @@ void player_updateSecondaryBlend(int* obj, int* ctx, int moveA, int moveB)
         }
     }
 }
-#pragma opt_common_subs reset
 
 void player_setAnimIds(int unused1, int unused2, u32 a, u32 b)
 {
