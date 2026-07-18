@@ -49,30 +49,6 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 void* gRockfallResource;
 extern u8 gRockfallCfgTable[];
 
-static int crrockfall_isPlayerInRange(int* obj)
-{
-    int* desc;
-    f32 xz;
-    f32 dy;
-    int* player = (int*)Obj_GetPlayerObject();
-    if (player == NULL)
-    {
-        return 0;
-    }
-    desc = *(int**)&((GameObject*)obj)->anim.placementData;
-    xz = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
-    dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
-    if (dy < 0.0f)
-    {
-        dy = 0.0f;
-    }
-    if (xz < 4.0f * (f32)(u32)((CrrockfallPlacement*)desc)->triggerRange && dy < 300.0f)
-    {
-        return 1;
-    }
-    return 0;
-}
-
 f32 fn_801ACCFC(GameObject* obj)
 {
     CrRockfallState* state = (obj)->extra;
@@ -205,7 +181,35 @@ void crrockfall_update(int* obj)
         {
         case zcEn3_ROCKFALL_MODE_ARMED:
         {
-            if (crrockfall_isPlayerInRange(obj) != 0)
+            int* desc;
+            f32 xz;
+            f32 dy;
+            int inRange;
+            int* player = (int*)Obj_GetPlayerObject();
+            if (player == NULL)
+            {
+                inRange = 0;
+            }
+            else
+            {
+                desc = *(int**)&((GameObject*)obj)->anim.placementData;
+                xz = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
+                                    &((GameObject*)player)->anim.worldPosX);
+                dy = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
+                if (dy < 0.0f)
+                {
+                    dy = 0.0f;
+                }
+                if (xz < 4.0f * (f32)(u32)((CrrockfallPlacement*)desc)->triggerRange && dy < 300.0f)
+                {
+                    inRange = 1;
+                }
+                else
+                {
+                    inRange = 0;
+                }
+            }
+            if (inRange != 0)
             {
                 if ((state->fallDelay -= framesThisStep) <= 0)
                 {
