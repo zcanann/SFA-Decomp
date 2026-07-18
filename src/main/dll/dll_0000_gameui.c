@@ -232,6 +232,24 @@ typedef struct GameUiMatrixWorkspace
     f32 object[3][4];
 } GameUiMatrixWorkspace;
 
+typedef enum HudStatusSlot
+{
+    HUD_STATUS_HEALTH,
+    HUD_STATUS_TRICKY_FOOD,
+    HUD_STATUS_MAGIC,
+    HUD_STATUS_SCARABS,
+    HUD_STATUS_BOMB_SPORES,
+    HUD_STATUS_UNKNOWN_5,
+    HUD_STATUS_UNKNOWN_6,
+    HUD_STATUS_MAX_HEALTH,
+    HUD_STATUS_MAX_MAGIC,
+    HUD_STATUS_TRICKY_ENERGY,
+    HUD_STATUS_FIREFLIES,
+    HUD_STATUS_MOON_SEEDS,
+    HUD_STATUS_FUEL_CELLS,
+    HUD_STATUS_COUNT
+} HudStatusSlot;
+
 typedef struct TrickyHud
 {
     u8 pad000[0x1c0];
@@ -243,59 +261,23 @@ typedef struct TrickyHud
     void* icon348; /* 0x348 */
     u8 pad34C[0x354 - 0x34c];
     void* icon354; /* 0x354 */
-    u8 pad358[0xACC - 0x358];
-    f32 magicAnim; /* 0xacc */
-    u8 padAD0[0xAD4 - 0xAD0];
-    f32 spiritAnim; /* 0xad4 */
-    f32 healthAnim; /* 0xad8 */
-    u8 padADC[0xAF0 - 0xADC];
-    f32 keyAnim;    /* 0xaf0 */
-    f32 scarabAnim; /* 0xaf4 */
-    f32 trickyAnim; /* 0xaf8 */
-    f32 magicCur;   /* 0xafc */
-    f32 healthCur;  /* 0xb00 */
-    u8 padB04[0xB08 - 0xB04];
-    f32 spiritCur; /* 0xb08 */
-    f32 moneyCur;  /* 0xb0c */
-    f32 keyCur;    /* 0xb10 */
-    u8 padB14[0xB18 - 0xB14];
-    f32 scarabCur; /* 0xb18 */
-    u8 padB1C[0xB20 - 0xB1C];
-    f32 trickyCur;   /* 0xb20 */
-    f32 magicFlash;  /* 0xb24 */
-    f32 scarabFlash; /* 0xb28 */
-    f32 trickyFlash; /* 0xb2c */
-    u8 padB30[0xB74 - 0xB30];
-    int magicValue;  /* 0xb74 */
-    int healthValue; /* 0xb78 */
-    u8 padB7C[0xB80 - 0xB7C];
-    int moneyValue;  /* 0xb80 */
-    int spiritValue; /* 0xb84 */
-    u8 padB88[0xB90 - 0xB88];
-    int magicCount; /* 0xb90 */
-    u8 padB94[0xB98 - 0xB94];
-    int scarabCount; /* 0xb98 */
-    int keyValue;    /* 0xb9c */
-    int scarabValue; /* 0xba0 */
-    int trickyValue; /* 0xba4 */
+    u8 pad358[0xAC8 - 0x358];
+    f32 statusAnimation[HUD_STATUS_COUNT]; /* 0xac8 */
+    f32 statusOpacity[HUD_STATUS_COUNT];   /* 0xafc */
+    int statusPrevious[HUD_STATUS_COUNT];  /* 0xb30 */
+    u8 statusGameBitSet[HUD_STATUS_COUNT]; /* 0xb64 */
+    u8 padB71[0xB74 - 0xB71];
+    int statusValue[HUD_STATUS_COUNT]; /* 0xb74 */
 } TrickyHud;
 
 STATIC_ASSERT(offsetof(TrickyHud, icon314) == 0x314);
 STATIC_ASSERT(offsetof(TrickyHud, icon348) == 0x348);
 STATIC_ASSERT(offsetof(TrickyHud, icon354) == 0x354);
-STATIC_ASSERT(offsetof(TrickyHud, magicAnim) == 0xACC);
-STATIC_ASSERT(offsetof(TrickyHud, magicCur) == 0xAFC);
-STATIC_ASSERT(offsetof(TrickyHud, healthCur) == 0xB00);
-STATIC_ASSERT(offsetof(TrickyHud, spiritCur) == 0xB08);
-STATIC_ASSERT(offsetof(TrickyHud, keyCur) == 0xB10);
-STATIC_ASSERT(offsetof(TrickyHud, scarabCur) == 0xB18);
-STATIC_ASSERT(offsetof(TrickyHud, trickyCur) == 0xB20);
-STATIC_ASSERT(offsetof(TrickyHud, trickyFlash) == 0xB2C);
-STATIC_ASSERT(offsetof(TrickyHud, magicValue) == 0xB74);
-STATIC_ASSERT(offsetof(TrickyHud, moneyValue) == 0xB80);
-STATIC_ASSERT(offsetof(TrickyHud, magicCount) == 0xB90);
-STATIC_ASSERT(offsetof(TrickyHud, scarabCount) == 0xB98);
-STATIC_ASSERT(offsetof(TrickyHud, trickyValue) == 0xBA4);
+STATIC_ASSERT(offsetof(TrickyHud, statusAnimation) == 0xAC8);
+STATIC_ASSERT(offsetof(TrickyHud, statusOpacity) == 0xAFC);
+STATIC_ASSERT(offsetof(TrickyHud, statusPrevious) == 0xB30);
+STATIC_ASSERT(offsetof(TrickyHud, statusGameBitSet) == 0xB64);
+STATIC_ASSERT(offsetof(TrickyHud, statusValue) == 0xB74);
 
 #define TRICKY_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -834,8 +816,6 @@ extern u32 gCMenuButtons;
 extern s8 gCMenuCloseSfx;
 
 
-
-#define PAUSE_MENU_HUD_ITEM_COUNT 13
 
 s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count);
 s16 cMenuGetSelectedItem(void);
@@ -2188,7 +2168,8 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
     GXSetScissor(0, 0, 0x280, 0x1e0);
-    if (base->magicCur >= 0.0f || base->scarabCur >= 0.0f || base->keyCur >= 0.0f || cMenuFadeCounter != 0)
+    if (base->statusOpacity[HUD_STATUS_HEALTH] >= 0.0f || base->statusOpacity[HUD_STATUS_MAX_HEALTH] >= 0.0f ||
+        base->statusOpacity[HUD_STATUS_UNKNOWN_5] >= 0.0f || cMenuFadeCounter != 0)
         op = hudElementOpacity;
     else
         op = 0.0f;
@@ -2210,13 +2191,17 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
     if ((u8)alpha != 0)
     {
         int cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
-        if (!(base->magicCur > lbl_803E1F9C && base->magicCur < lbl_803E1FA8 && ((int)base->magicCur & 8)) &&
-            !(base->scarabCur > *(f32*)&lbl_803E1F9C && base->scarabCur < lbl_803E1FA8 && ((int)base->scarabCur & 8)) &&
+        if (!(base->statusOpacity[HUD_STATUS_HEALTH] > lbl_803E1F9C &&
+              base->statusOpacity[HUD_STATUS_HEALTH] < lbl_803E1FA8 &&
+              ((int)base->statusOpacity[HUD_STATUS_HEALTH] & 8)) &&
+            !(base->statusOpacity[HUD_STATUS_MAX_HEALTH] > *(f32*)&lbl_803E1F9C &&
+              base->statusOpacity[HUD_STATUS_MAX_HEALTH] < lbl_803E1FA8 &&
+              ((int)base->statusOpacity[HUD_STATUS_MAX_HEALTH] & 8)) &&
         !(cell == 0 && playerGetFocusObject((GameObject*)player) != NULL))
         {
-            for (i = 0; (int)(u8)i < (base->magicCount >> 2); i++)
+            for (i = 0; (int)(u8)i < (base->statusValue[HUD_STATUS_MAX_HEALTH] >> 2); i++)
             {
-                int b74 = base->magicValue;
+                int b74 = base->statusValue[HUD_STATUS_HEALTH];
                 u8 sel;
                 if ((int)(u8)i < (b74 >> 2))
                     sel = 0x16;
@@ -2251,13 +2236,15 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
     if ((u8)alpha != 0 && tricky != NULL)
     {
         itemTex = 0x16;
-        if (!(base->trickyCur > lbl_803E1F9C && base->trickyCur < lbl_803E1FA8 && ((int)base->trickyCur & 8)))
+        if (!(base->statusOpacity[HUD_STATUS_TRICKY_ENERGY] > lbl_803E1F9C &&
+              base->statusOpacity[HUD_STATUS_TRICKY_ENERGY] < lbl_803E1FA8 &&
+              ((int)base->statusOpacity[HUD_STATUS_TRICKY_ENERGY] & 8)))
         {
             drawTexture(base->icon314, *(f32*)&lbl_803E1F9C, lbl_803E1FB0, alpha, 0x100);
         }
         for (i = 0; (u8)i < 0x14u; i += 4)
         {
-            int b98 = base->scarabCount;
+            int b98 = base->statusValue[HUD_STATUS_TRICKY_ENERGY];
             if ((b98 & 0xfc) == (int)(u8)i && (b98 & 2) != 0)
             {
                 drawScaledTexture(base->icon31c, (f32)(int)(((u8)i * 0xf) / 4 + 0x40), lbl_803E1FB4, alpha, 0x100, 6,
@@ -2310,12 +2297,24 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
             style = 0x32;
         else
             style = 0xa;
-        hudDrawCounter(0x1e, (s16)base->moneyValue, (s16)style, (int)base->spiritAnim, (int)base->spiritCur, &hcArg, 0);
-        hudDrawCounter(0x19, (s16)base->spiritValue, 7, (int)base->healthAnim, (int)base->moneyCur, &hcArg, 0);
-        hudDrawCounter(0x1a, (s16)base->healthValue, 0xf, (int)base->magicAnim, (int)base->healthCur, &hcArg, 0);
-        hudDrawCounter(0x18, (s16)base->keyValue, 0x1f, (int)base->keyAnim, (int)base->magicFlash, &hcArg, 0);
-        hudDrawCounter(0x1b, (s16)base->scarabValue, 7, (int)base->scarabAnim, (int)base->scarabFlash, &hcArg, 0);
-        hudDrawCounter(0x1c, (s16)base->trickyValue, 0xff, (int)base->trickyAnim, (int)base->trickyFlash, &hcArg, 0);
+        hudDrawCounter(0x1e, (s16)base->statusValue[HUD_STATUS_SCARABS], (s16)style,
+                       (int)base->statusAnimation[HUD_STATUS_SCARABS],
+                       (int)base->statusOpacity[HUD_STATUS_SCARABS], &hcArg, 0);
+        hudDrawCounter(0x19, (s16)base->statusValue[HUD_STATUS_BOMB_SPORES], 7,
+                       (int)base->statusAnimation[HUD_STATUS_BOMB_SPORES],
+                       (int)base->statusOpacity[HUD_STATUS_BOMB_SPORES], &hcArg, 0);
+        hudDrawCounter(0x1a, (s16)base->statusValue[HUD_STATUS_TRICKY_FOOD], 0xf,
+                       (int)base->statusAnimation[HUD_STATUS_TRICKY_FOOD],
+                       (int)base->statusOpacity[HUD_STATUS_TRICKY_FOOD], &hcArg, 0);
+        hudDrawCounter(0x18, (s16)base->statusValue[HUD_STATUS_FIREFLIES], 0x1f,
+                       (int)base->statusAnimation[HUD_STATUS_FIREFLIES],
+                       (int)base->statusOpacity[HUD_STATUS_FIREFLIES], &hcArg, 0);
+        hudDrawCounter(0x1b, (s16)base->statusValue[HUD_STATUS_MOON_SEEDS], 7,
+                       (int)base->statusAnimation[HUD_STATUS_MOON_SEEDS],
+                       (int)base->statusOpacity[HUD_STATUS_MOON_SEEDS], &hcArg, 0);
+        hudDrawCounter(0x1c, (s16)base->statusValue[HUD_STATUS_FUEL_CELLS], 0xff,
+                       (int)base->statusAnimation[HUD_STATUS_FUEL_CELLS],
+                       (int)base->statusOpacity[HUD_STATUS_FUEL_CELLS], &hcArg, 0);
     }
 }
 
@@ -2865,20 +2864,20 @@ void pauseMenuDrawStatus(void)
     f32 thresh;
     f32 prev;
     s8 negDelta;
-    int statuses[PAUSE_MENU_HUD_ITEM_COUNT];
+    int statuses[HUD_STATUS_COUNT];
 
     base = (u8*)lbl_803A87F0;
     player = (int)Obj_GetPlayerObject();
     getTrickyObject();
     trickyStatus = (*gMapEventInterface)->getTrickyEnergy();
-    statuses[0] = Player_GetCurrentHealth(player);
-    statuses[7] = Player_GetMaxHealth(player);
-    statuses[1] = mainGetBit(GAMEBIT_ITEM_TrickyFood_Count);
-    if (((int*)(base + 0xB30))[2] - Player_GetCurrentMagic(player) < 0)
+    statuses[HUD_STATUS_HEALTH] = Player_GetCurrentHealth(player);
+    statuses[HUD_STATUS_MAX_HEALTH] = Player_GetMaxHealth(player);
+    statuses[HUD_STATUS_TRICKY_FOOD] = mainGetBit(GAMEBIT_ITEM_TrickyFood_Count);
+    if (((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - Player_GetCurrentMagic(player) < 0)
     {
         delta = -1;
     }
-    else if (((int*)(base + 0xB30))[2] - Player_GetCurrentMagic(player) > 0)
+    else if (((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - Player_GetCurrentMagic(player) > 0)
     {
         delta = 1;
     }
@@ -2886,12 +2885,12 @@ void pauseMenuDrawStatus(void)
     {
         delta = 0;
     }
-    statuses[2] = ((int*)(base + 0xB30))[2] - delta;
-    if (((int*)(base + 0xB30))[8] - Player_GetMaxMagic(player) < 0)
+    statuses[HUD_STATUS_MAGIC] = ((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - delta;
+    if (((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] - Player_GetMaxMagic(player) < 0)
     {
         delta = -1;
     }
-    else if (((int*)(base + 0xB30))[8] - Player_GetMaxMagic(player) > 0)
+    else if (((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] - Player_GetMaxMagic(player) > 0)
     {
         delta = 1;
     }
@@ -2900,29 +2899,29 @@ void pauseMenuDrawStatus(void)
         delta = 0;
     }
     negDelta = -delta;
-    statuses[8] = ((int*)(base + 0xB30))[8] + negDelta;
+    statuses[HUD_STATUS_MAX_MAGIC] = ((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] + negDelta;
     if ((negDelta != 0) && (lbl_803DD83C != lbl_803E1E3C) && (objIsCurModelNotZero((void*)player) != 0) &&
         (mainGetBit(GAMEBIT_ITEM_Magic_Got) != 0))
     {
         Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_pda_compassbeep_3f0);
     }
-    ((int*)(base + 0xB74))[2] = statuses[2];
-    ((int*)(base + 0xB74))[8] = statuses[8];
-    statuses[4] = mainGetBit(GAMEBIT_ITEM_BombSpore_Count);
-    statuses[10] = mainGetBit(GAMEBIT_ITEM_Firefly_Count);
-    if (statuses[10] != ((int*)(base + 0xB30))[10])
+    ((int*)(base + 0xB74))[HUD_STATUS_MAGIC] = statuses[HUD_STATUS_MAGIC];
+    ((int*)(base + 0xB74))[HUD_STATUS_MAX_MAGIC] = statuses[HUD_STATUS_MAX_MAGIC];
+    statuses[HUD_STATUS_BOMB_SPORES] = mainGetBit(GAMEBIT_ITEM_BombSpore_Count);
+    statuses[HUD_STATUS_FIREFLIES] = mainGetBit(GAMEBIT_ITEM_Firefly_Count);
+    if (statuses[HUD_STATUS_FIREFLIES] != ((int*)(base + 0xB30))[HUD_STATUS_FIREFLIES])
     {
         u8 flag = 0;
-        if (statuses[10] == 0)
+        if (statuses[HUD_STATUS_FIREFLIES] == 0)
         {
             flag = 1;
         }
         mainSetBits(GAMEBIT_ITEM_Firefly_Disabled, flag);
     }
-    statuses[11] = mainGetBit(GAMEBIT_ITEM_MoonSeed_Count);
-    statuses[12] = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
-    statuses[3] = playerGetMoney((GameObject*)player);
-    statuses[9] = *trickyStatus;
+    statuses[HUD_STATUS_MOON_SEEDS] = mainGetBit(GAMEBIT_ITEM_MoonSeed_Count);
+    statuses[HUD_STATUS_FUEL_CELLS] = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
+    statuses[HUD_STATUS_SCARABS] = playerGetMoney((GameObject*)player);
+    statuses[HUD_STATUS_TRICKY_ENERGY] = *trickyStatus;
     if ((((lbl_803DD792 & 1) != 0) ||
          ((lbl_803E1E3C == (*gScreenTransitionInterface)->getProgress()) &&
           ((*gCameraInterface)->getMode() != CAMMODE_VIEWFINDER) &&
@@ -2947,20 +2946,20 @@ void pauseMenuDrawStatus(void)
     {
         cMenuEnabled = 1;
     }
-    for (i = 0; i < PAUSE_MENU_HUD_ITEM_COUNT; i++)
+    for (i = 0; i < HUD_STATUS_COUNT; i++)
     {
         switch (i)
         {
-        case 1:
-        case 3:
-        case 4:
-        case 10:
-        case 11:
-        case 12:
+        case HUD_STATUS_TRICKY_FOOD:
+        case HUD_STATUS_SCARABS:
+        case HUD_STATUS_BOMB_SPORES:
+        case HUD_STATUS_FIREFLIES:
+        case HUD_STATUS_MOON_SEEDS:
+        case HUD_STATUS_FUEL_CELLS:
             if ((((f32*)(base + 0xAFC))[i] >= lbl_803E1E3C && ((*(u16*)(player + 0xB0) & 0x1000) == 0) &&
                  (pauseMenuState == 0) && ((u32)airMeter == 0) && (getHudHiddenFrameCount() == 0) &&
                  ((*gCameraInterface)->getMode() != CAMMODE_VIEWFINDER)) ||
-                ((i == 3) && ((lbl_803DD792 & 2) != 0)))
+                ((i == HUD_STATUS_SCARABS) && ((lbl_803DD792 & 2) != 0)))
             {
                 thresh = lbl_803E1FA0 * timeDelta + ((f32*)(base + 0xAC8))[i];
                 ((f32*)(base + 0xAC8))[i] = thresh;
@@ -2982,46 +2981,48 @@ void pauseMenuDrawStatus(void)
         }
     }
     i = 0;
-    statuses[6] = 0;
+    statuses[HUD_STATUS_UNKNOWN_6] = 0;
     if ((lbl_803DD840 & 1) != 0)
     {
         lbl_803DD840 = lbl_803DD840 & ~1;
-        for (j = 0; j < PAUSE_MENU_HUD_ITEM_COUNT; j++)
+        for (j = 0; j < HUD_STATUS_COUNT; j++)
         {
             ((int*)(base + 0xB74))[j] = statuses[j];
             ((int*)(base + 0xB30))[j] = statuses[j];
             ((f32*)(base + 0xAFC))[j] = gHudElemOpacityFloor;
         }
-        if ((mainGetBit(GAMEBIT_ITEM_BombSpore_ShowCount) != 0) || (statuses[4] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_BombSpore_ShowCount) != 0) ||
+            (statuses[HUD_STATUS_BOMB_SPORES] != 0))
         {
-            ((f32*)(base + 0xAFC))[4] = lbl_803E1FC0;
+            ((f32*)(base + 0xAFC))[HUD_STATUS_BOMB_SPORES] = lbl_803E1FC0;
         }
-        if ((mainGetBit(GAMEBIT_ITEM_TrickyFood_ShowCount) != 0) || (statuses[1] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_TrickyFood_ShowCount) != 0) ||
+            (statuses[HUD_STATUS_TRICKY_FOOD] != 0))
         {
-            ((f32*)(base + 0xAFC))[1] = lbl_803E1FC0;
+            ((f32*)(base + 0xAFC))[HUD_STATUS_TRICKY_FOOD] = lbl_803E1FC0;
         }
-        if ((mainGetBit(GAMEBIT_ITEM_Firefly_ShowCount) != 0) || (statuses[10] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_Firefly_ShowCount) != 0) || (statuses[HUD_STATUS_FIREFLIES] != 0))
         {
-            ((f32*)(base + 0xAFC))[10] = lbl_803E1FC0;
+            ((f32*)(base + 0xAFC))[HUD_STATUS_FIREFLIES] = lbl_803E1FC0;
         }
-        if ((mainGetBit(GAMEBIT_ITEM_MoonSeed_ShowCount) != 0) || (statuses[11] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_MoonSeed_ShowCount) != 0) || (statuses[HUD_STATUS_MOON_SEEDS] != 0))
         {
-            ((f32*)(base + 0xAFC))[11] = lbl_803E1FC0;
+            ((f32*)(base + 0xAFC))[HUD_STATUS_MOON_SEEDS] = lbl_803E1FC0;
         }
-        if ((mainGetBit(GAMEBIT_ITEM_Scarab_ShowCount) != 0) || (statuses[3] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_Scarab_ShowCount) != 0) || (statuses[HUD_STATUS_SCARABS] != 0))
         {
-            ((f32*)(base + 0xAFC))[3] = lbl_803E1FC0;
+            ((f32*)(base + 0xAFC))[HUD_STATUS_SCARABS] = lbl_803E1FC0;
         }
-        if ((mainGetBit(GAMEBIT_ITEM_FuelCell_ShowCount) != 0) || (statuses[12] != 0))
+        if ((mainGetBit(GAMEBIT_ITEM_FuelCell_ShowCount) != 0) || (statuses[HUD_STATUS_FUEL_CELLS] != 0))
         {
-            ((f32*)(base + 0xAFC))[12] = lbl_803E1FC0;
+            ((f32*)(base + 0xAFC))[HUD_STATUS_FUEL_CELLS] = lbl_803E1FC0;
         }
         lbl_803DD844 = lbl_803E1E3C;
     }
     else
     {
         thresh = lbl_803E1FA8;
-        for (; i < PAUSE_MENU_HUD_ITEM_COUNT; i++)
+        for (; i < HUD_STATUS_COUNT; i++)
         {
             ji = i;
             off = ji * sizeof(int);
@@ -3033,7 +3034,7 @@ void pauseMenuDrawStatus(void)
             {
                 switch (ji)
                 {
-                case 3:
+                case HUD_STATUS_SCARABS:
                     Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
                     dp = ((int*)(base + 0xB74)) + ji;
                     cur = *dp;
@@ -3063,22 +3064,22 @@ void pauseMenuDrawStatus(void)
                     bit = 0;
                     switch (i)
                     {
-                    case 3:
+                    case HUD_STATUS_SCARABS:
                         bit = 0xB9C;
                         break;
-                    case 4:
+                    case HUD_STATUS_BOMB_SPORES:
                         bit = 0xB98;
                         break;
-                    case 1:
+                    case HUD_STATUS_TRICKY_FOOD:
                         bit = 0xB99;
                         break;
-                    case 10:
+                    case HUD_STATUS_FIREFLIES:
                         bit = 0xB9A;
                         break;
-                    case 11:
+                    case HUD_STATUS_MOON_SEEDS:
                         bit = 0xB9B;
                         break;
-                    case 12:
+                    case HUD_STATUS_FUEL_CELLS:
                         bit = 0xD97;
                         break;
                     }
@@ -3099,12 +3100,12 @@ void pauseMenuDrawStatus(void)
             }
             switch (i)
             {
-            case 1:
-            case 3:
-            case 4:
-            case 10:
-            case 11:
-            case 12:
+            case HUD_STATUS_TRICKY_FOOD:
+            case HUD_STATUS_SCARABS:
+            case HUD_STATUS_BOMB_SPORES:
+            case HUD_STATUS_FIREFLIES:
+            case HUD_STATUS_MOON_SEEDS:
+            case HUD_STATUS_FUEL_CELLS:
                 if ((prev > lbl_803E1E3C) && (*op <= lbl_803E1E3C))
                 {
                     *op = lbl_803E1FC0;
