@@ -1,10 +1,10 @@
 #ifndef MAIN_AUDIO_ADSR_HANDLE_H_
 #define MAIN_AUDIO_ADSR_HANDLE_H_
 
-#include "ghidra_import.h"
+#include "main/audio/adsr.h"
 
-int adsrStartRelease(int state, int divisor);
-int adsrRelease(int state);
-u32 adsrHandle(int state, u16 *out1, u16 *out2);
+int adsrStartRelease(ADSR_VARS *adsr, u32 divisor);
+int adsrRelease(ADSR_VARS *adsr);
+u32 adsrHandle(ADSR_VARS *adsr, u16 *out1, u16 *out2);
 
 #endif /* MAIN_AUDIO_ADSR_HANDLE_H_ */

@@ -1,4 +1,6 @@
 #include "main/audio/hw_dspctrl.h"
+#include "main/audio/adsr_setup.h"
+#include "main/audio/adsr_handle.h"
 #include "main/unknown/autos/musyx_dsp.h"
 
 
@@ -40,11 +42,6 @@ extern int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last
                                          u16 resetMask);
 extern void HandleDepopVoice(DSPstudioinfo* stp, DSPvoice* dsp_vptr);
 extern void SortVoices(DSPvoice** voices, int l, int r);
-extern u32 adsrSetup(ADSR_VARS* adsr);
-extern u32 adsrStartRelease(ADSR_VARS* adsr, u32 rtime);
-extern int adsrRelease(ADSR_VARS* adsr);
-extern u32 adsrHandle(ADSR_VARS* adsr, u16* adsr_start, u16* adsr_delta);
-
 int salSynthSendMessage(int synth, int msg);
 void salDeactivateVoice(DSPvoice* voice);
 
@@ -255,7 +252,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                     {
                         dsp_vptr->virtualSampleID = -1;
                         dsp_vptr->pb->ve.currentDelta = 0x8000;
-                        if (adsrSetup(&dsp_vptr->adsr) != 0)
+                        if ((u32)adsrSetup(&dsp_vptr->adsr) != 0)
                         {
                             salSynthSendMessage((int)dsp_vptr, 0);
                             salDeactivateVoice(dsp_vptr);
@@ -523,7 +520,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         salDeactivateVoice(dsp_vptr);
                         continue;
                     }
-                    if (((dsp_vptr->changed[0] & 0x10) != 0) && (adsrSetup(&dsp_vptr->adsr) != 0))
+                    if (((dsp_vptr->changed[0] & 0x10) != 0) && ((u32)adsrSetup(&dsp_vptr->adsr) != 0))
                     {
                         salSynthSendMessage((int)dsp_vptr, 0);
                         salDeactivateVoice(dsp_vptr);

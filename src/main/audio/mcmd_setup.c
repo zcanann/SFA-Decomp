@@ -5,11 +5,11 @@
 #include "main/audio/voice_conv.h"
 #include "main/audio/data_tables.h"
 #include "main/audio/mcmd_setup.h"
+#include "main/audio/adsr_setup.h"
 
 extern void synthFXCloneMidiSetup(McmdVoiceState* voice, McmdVoiceState* state);
 void DoSetPitch(McmdVoiceState* svoice);
 extern void synthQueueVoiceInputUpdate(McmdVoiceState* state);
-extern int adsrSetup(McmdEnvelopeState* state);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];
 extern u8 lbl_8032EDD0[]; /* pitch ratio table (u16[13]) heads the macro data tables */
@@ -451,7 +451,7 @@ void mcmdSetPitchADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
     }
     svoice->pitchAdsr.sustain = 0xc1 - voiceAdsrDecayTable[sl];
     svoice->pitchAdsr.release = adsr.dls.rtime;
-    adsrSetup(&svoice->pitchAdsr);
+    adsrSetup((ADSR_VARS*)&svoice->pitchAdsr);
     MAC_CFLAGS(svoice) |= MAC_FLAG64(0x200, 0);
 }
 

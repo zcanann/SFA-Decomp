@@ -1,5 +1,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/adsr.h"
+#include "main/audio/adsr_setup.h"
+#include "main/audio/adsr_handle.h"
+#include "main/audio/adsr_lowprec.h"
 
 extern u8 voiceAdsrDecayTable[];
 extern u16 lbl_8032F618[];
@@ -11,9 +14,8 @@ u32 voiceConvertDbToLinear(u32 timeCents)
                              powf(2.0f, 1.2715658e-08f * (f32)(s32)timeCents));
 }
 
-int fn_8027A660(int state)
+int fn_8027A660(ADSR_VARS* adsr)
 {
-    ADSR_VARS* adsr = (ADSR_VARS*)state;
     int ret = 0;
 
     switch (adsr->mode)
@@ -88,7 +90,7 @@ int fn_8027A660(int state)
 
                 adsr->state = ADSR_STATE_HOLD;
                 adsr->currentIndex = adsr->sLevel << 16;
-                if ((idx = 0xc1 - ((*(s32*)(state + 0xc) + 0x8000) >> 16)) < 0)
+                if ((idx = 0xc1 - ((*(s32*)&adsr->currentIndex + 0x8000) >> 16)) < 0)
                 {
                     idx = 0;
                 }
@@ -106,16 +108,14 @@ int fn_8027A660(int state)
     return ret;
 }
 
-int adsrSetup(int state)
+int adsrSetup(ADSR_VARS* adsr)
 {
-    ADSR_VARS* adsr = (ADSR_VARS*)state;
     adsr->state = ADSR_STATE_ATTACK;
-    return fn_8027A660(state);
+    return fn_8027A660(adsr);
 }
 
-int adsrStartRelease(int state, u32 divisor)
+int adsrStartRelease(ADSR_VARS* adsr, u32 divisor)
 {
-    ADSR_VARS* adsr = (ADSR_VARS*)state;
     switch (adsr->mode)
     {
     case ADSR_MODE_LINEAR:
@@ -153,21 +153,19 @@ int adsrStartRelease(int state, u32 divisor)
     return 0;
 }
 
-int adsrRelease(int state)
+int adsrRelease(ADSR_VARS* adsr)
 {
-    ADSR_VARS* adsr = (ADSR_VARS*)state;
     switch (adsr->mode)
     {
     case ADSR_MODE_LINEAR:
     case ADSR_MODE_DLS:
-        return adsrStartRelease(state, *(int*)&adsr->rTime);
+        return adsrStartRelease(adsr, *(int*)&adsr->rTime);
     }
     return 0;
 }
 
-u32 adsrHandle(int state, u16* out1, u16* out2)
+u32 adsrHandle(ADSR_VARS* adsr, u16* out1, u16* out2)
 {
-    ADSR_VARS* adsr = (ADSR_VARS*)state;
     int ret = 0;
     int m = adsr->mode;
     int v8;
@@ -195,7 +193,7 @@ u32 adsrHandle(int state, u16* out1, u16* out2)
             }
             if (--*(int*)&adsr->cnt == 0)
             {
-                ret = fn_8027A660(state);
+                ret = fn_8027A660(adsr);
             }
         }
         else
@@ -239,7 +237,7 @@ u32 adsrHandle(int state, u16* out1, u16* out2)
             }
             if (--*(int*)&adsr->cnt == 0)
             {
-                ret = fn_8027A660(state);
+                ret = fn_8027A660(adsr);
             }
         }
         else
@@ -254,13 +252,13 @@ u32 adsrHandle(int state, u16* out1, u16* out2)
     return ret;
 }
 
-u32 adsrHandleLowPrecision(int state, u16* out1, u16* out2)
+u32 adsrHandleLowPrecision(ADSR_VARS* adsr, u16* out1, u16* out2)
 {
     u8 i;
 
     for (i = 0; i < 15; i++)
     {
-        if (adsrHandle(state, out1, out2) != 0)
+        if (adsrHandle(adsr, out1, out2) != 0)
         {
             return 1;
         }

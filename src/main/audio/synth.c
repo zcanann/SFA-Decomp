@@ -15,6 +15,8 @@
 #include "main/audio/hw_voice_params.h"
 #include "main/audio/hw_voice_start.h"
 #include "main/audio/hw_volume.h"
+#include "main/audio/adsr_handle.h"
+#include "main/audio/adsr_lowprec.h"
 #include "main/audio/data_tables.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/vid_init.h"
@@ -113,13 +115,6 @@ typedef struct SynthVoiceLfo
     s16 lastValue;
 } SynthVoiceLfo;
 
-typedef struct SynthVoiceAdsr
-{
-    u8 unk00[8];
-    s32 currentVolume;
-    u8 unk0C[0x28 - 0x0C];
-} SynthVoiceAdsr;
-
 /* Hardware synth voice state (MusyX SYNTH_VOICE), one 0x404-byte slot per voice. */
 typedef struct SynthHwVoice
 {
@@ -197,7 +192,7 @@ typedef struct SynthHwVoice
     u8 pbUpperKeyRange;   /* 0x1D7 */
     u16 pbLast;           /* 0x1D8 */
     u8 unk1DA[2];
-    SynthVoiceAdsr pitchADSR; /* 0x1DC */
+    ADSR_VARS pitchADSR; /* 0x1DC */
     s16 pitchADSRRange;       /* 0x204 */
     u16 curPitch;             /* 0x206 */
     u8 unk208[0x214 - 0x208];
@@ -267,8 +262,6 @@ u8 synthTrackVolume[64];
 SynthFade synthMasterFader[32];
 SynthInfo synthInfo;
 
-extern u32 adsrHandleLowPrecision(SynthVoiceAdsr* adsr, u16* start, u16* delta);
-extern u32 adsrRelease(SynthVoiceAdsr* adsr);
 extern u32 synthFlags;
 
 typedef struct LAYER
@@ -924,7 +917,7 @@ void LowPrecisionHandler(int voice)
 
         if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0)
         {
-            ccents += sv->pitchADSRRange * (sv->pitchADSR.currentVolume >> 16) >> 7;
+            ccents += sv->pitchADSRRange * ((s32)sv->pitchADSR.currentVolume >> 16) >> 7;
         }
 
         cpitch = convert_cents(sv, ccents);
@@ -1127,7 +1120,8 @@ void EventHandler(int voice)
         {
             HWVOICE_FLAGS(sv) &= ~0x90;
             hwKeyOff(voice);
-            if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0 && adsrRelease(&sv->pitchADSR))
+            if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0 &&
+                (u32)adsrRelease(&sv->pitchADSR) != 0)
             {
                 HWVOICE_FLAGS(sv) &= ~0x20000000000ULL;
             }
