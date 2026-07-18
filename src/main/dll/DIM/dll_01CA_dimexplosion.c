@@ -36,6 +36,7 @@
 #include "main/audio/sfx.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXTransform.h"
+#include "track/intersect_render_setup_api.h"
 #include "main/camera.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
@@ -118,9 +119,6 @@ const FbTexTbl gExplosionTexTable = {
     {0x5e1, 0x5f7, 0x5f8, 0x5f9}
 };
 
-extern f32 expf(f32 x);
-extern void GXSetCurrentMtx(u32 id);
-extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z);
@@ -330,7 +328,7 @@ void explosion_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
                 }
                 colB2 = colB;
                 colA2 = colA;
-                fn_80073AAC(tex, &colA2, &colB2, k);
+                fn_80073AAC(tex, &colA2, &colB2);
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 {
                     f32 fc = 1.0f;

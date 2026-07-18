@@ -1,6 +1,9 @@
 #ifndef TRACK_INTERSECT_RENDER_SETUP_API_H_
 #define TRACK_INTERSECT_RENDER_SETUP_API_H_
 
+#include "types.h"
+
+void fn_80073AAC(void* texture, u32* colorA, u32* colorB);
 void gxDebugTextureFn_80078c1c(void);
 void fn_80078DFC(void);
 void fn_80078ED0(void);

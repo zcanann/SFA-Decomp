@@ -10,6 +10,7 @@ f32 __kernel_sin(f32 x);
 f32 powf(f32 x, f32 y);
 float __fabsf(float x);
 float sqrtf(float x);
+float expf(float x);
 float fabsf(float x);
 float powfBitEstimate(float x, float y);
 float fn_80291FF4(float x);
