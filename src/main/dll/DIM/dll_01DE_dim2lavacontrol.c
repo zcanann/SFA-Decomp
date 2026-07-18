@@ -79,7 +79,6 @@ typedef enum Dim2lavacontrolPhase
 } Dim2lavacontrolPhase;
 
 extern f32 lbl_803E4B90;
-extern u8 lbl_803DBF28[8];
 
 typedef void (*Dim2LavaControlGameBitSyncFn)(int id);
 
