@@ -413,21 +413,22 @@ u8 trickyBallMove(GameObject* obj)
         state->floorDepth = state->floorHeight;
         hasFloorDepth = 1;
     }
+    else if (fltNotEqual(state->floorY, 0.0f))
+    {
+        if (obj->anim.localPosY > state->floorY)
+        {
+            state->floorY = 0.0f;
+            hasFloorDepth = 0;
+        }
+        else
+        {
+            state->floorDepth = state->floorY - obj->anim.localPosY;
+            hasFloorDepth = 1;
+        }
+    }
     else
     {
         hasFloorDepth = 0;
-        if (fltNotEqual(state->floorY, 0.0f))
-        {
-            if (obj->anim.localPosY > state->floorY)
-            {
-                state->floorY = 0.0f;
-            }
-            else
-            {
-                state->floorDepth = state->floorY - obj->anim.localPosY;
-                hasFloorDepth = 1;
-            }
-        }
     }
 
     if (hasFloorDepth != 0)
