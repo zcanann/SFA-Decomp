@@ -1,9 +1,10 @@
 #include "main/audio/synth_virtual_sample.h"
+#include "main/audio/hw_sample.h"
+#include "main/audio/hw_samplemem.h"
 #include "main/audio/aram.h"
 #include "main/audio/vsample_update.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_stream.h"
-#include "main/audio/hw_samplemem_api.h"
 
 
 SynthVirtualSampleState synthVirtualSampleState;
@@ -257,9 +258,6 @@ typedef struct
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_SHIFT        0x1000
 
 extern s16 synthLoadedGroupCount;
-
-extern u32 hwGetVirtualSampleState(int slot);
-extern u32 hwVoiceInStartup(int slot);
 
 /*
  * Periodic virtual-sample tick processor: walks 64 active voices, computes

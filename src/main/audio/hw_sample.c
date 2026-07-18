@@ -7,9 +7,9 @@ void hwSetVirtualSampleLoopBuffer(int slot, u32 valueA, u32 valueB)
     dspVoice[slot].vSampleInfo.loopBufferLength = valueB;
 }
 
-u8 hwGetVirtualSampleState(int slot)
+u32 hwGetVirtualSampleState(u32 voice)
 {
-    return dspVoice[slot].vSampleInfo.inLoopBuffer;
+    return dspVoice[voice].vSampleInfo.inLoopBuffer;
 }
 
 u8 hwGetSampleType(int slot)

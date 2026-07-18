@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 
 void hwSetVirtualSampleLoopBuffer(int slot, u32 valueA, u32 valueB);
-u8 hwGetVirtualSampleState(int slot);
+u32 hwGetVirtualSampleState(u32 voice);
 u8 hwGetSampleType(int slot);
 u16 hwGetSampleID(int slot);
 void hwSetStreamLoopPS(int slot, u8 value);

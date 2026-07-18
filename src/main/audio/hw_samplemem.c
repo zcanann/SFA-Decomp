@@ -76,11 +76,11 @@ void hwDisableHRTF(void)
     dspHRTFOn = 0;
 }
 
-int hwGetVirtualSampleID(int slot)
+u32 hwGetVirtualSampleID(u32 voice)
 {
     DSPvoice* entry;
 
-    entry = &dspVoice[slot];
+    entry = &dspVoice[voice];
     if (entry->state == 0)
     {
         return -1;
@@ -88,12 +88,7 @@ int hwGetVirtualSampleID(int slot)
     return entry->virtualSampleID;
 }
 
-int hwVoiceInStartup(int slot)
+u32 hwVoiceInStartup(u32 voice)
 {
-    u8* entry;
-
-    slot *= 0xf4;
-    entry = (u8*)dspVoice;
-    entry += slot;
-    return entry[0xec] == 1;
+    return dspVoice[voice].state == 1;
 }

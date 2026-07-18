@@ -15,7 +15,7 @@ typedef struct SalHooks {
 
 void sndSetHooks(const SalHooks *hooks);
 void hwDisableHRTF(void);
-int hwGetVirtualSampleID(int slot);
-int hwVoiceInStartup(int slot);
+u32 hwGetVirtualSampleID(u32 voice);
+u32 hwVoiceInStartup(u32 voice);
 
 #endif /* MAIN_AUDIO_HW_SAMPLEMEM_H_ */

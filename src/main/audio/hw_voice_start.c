@@ -1,17 +1,11 @@
 #include "main/audio/hw_voice_start.h"
+#include "main/audio/dsp_voice_state.h"
+#include "main/audio/hw_dspctrl.h"
 
-
-extern u8* dspVoice;
 extern u8 salTimeOffset;
-extern void salActivateVoice(void* entry, u8 studioIndex);
 
-void hwStart(int slot, u8 studioIndex)
+void hwStart(u32 voice, u8 studio)
 {
-    int offset;
-    u8 startTime;
-
-    offset = slot * 0xf4;
-    startTime = salTimeOffset;
-    dspVoice[offset + 0xd4] = startTime;
-    salActivateVoice(dspVoice + offset, studioIndex);
+    dspVoice[voice].singleOffset = salTimeOffset;
+    salActivateVoice(&dspVoice[voice], studio);
 }
