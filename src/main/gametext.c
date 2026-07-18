@@ -573,7 +573,7 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
     char* lineStr;
     int special;
 
-    if (*(int*)((u8*)gameTextFonts + 0x1c) == 1)
+    if (gameTextFonts->mode == 1)
     {
         return;
     }
