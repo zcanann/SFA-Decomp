@@ -3188,6 +3188,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     f32 kf;
     s16 s31, s30, s29;
     u32 handle;
+    u32 h2;
     int hdr;
     void* viewMtx;
 
@@ -3233,20 +3234,14 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
         else
             f30 = ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
         handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
-        if (handle == 0xFFFFFFFF)
-        {
-            u32 h2 = textureFn_8006c5c4();
-            hdr = ((MapBlockData*)blockData)->shadowTexHeader;
-            if (*(u32*)(hdr + 0x60) != h2)
-                goto drawSpecial;
-        }
+        if (handle != 0xFFFFFFFF ||
+            (h2 = textureFn_8006c5c4(), hdr = ((MapBlockData*)blockData)->shadowTexHeader,
+             *(u32*)(hdr + 0x60) == h2))
         {
             int c = *(int*)col;
             objectShadow_setupProjectedTexture(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx);
         }
-        goto afterDraw;
-    drawSpecial:
-        if (*(u8*)(hdr + 0x65) == 0xff)
+        else if (*(u8*)(hdr + 0x65) == 0xff)
         {
             int c = *(int*)col;
             fn_80077AD8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
@@ -3256,7 +3251,6 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
             int c = *(int*)col;
             fn_80077EF8((GameObject*)(((MapBlockData*)blockData)->shadowTexHeader), &c, mtx, f30);
         }
-    afterDraw:;
     }
     GXSetCullMode(GX_CULL_FRONT);
     GXSetCurrentMtx(GX_PNMTX0);
@@ -3311,16 +3305,19 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     else
     {
         int i;
-        int w[2];
+        int w0;
+        int w1;
         GXBegin(GX_TRIANGLES, GX_VTXFMT2, (slot * 3) & 0xffff);
-        w[0] = 0;
-        w[1] = w[0];
+        w0 = 0;
+        w1 = w0;
         for (i = 0; i < slot; i++)
         {
-            f32* v0 = (f32*)((char*)cache + w[1]);
+            int k;
+            f32* v0 = (f32*)((char*)cache + w1);
             GXPosition3f32(v0[0], v0[1], v0[2]);
+            for (k = 1; k < 3; k++)
             {
-                f32* v1 = (f32*)((char*)cache + (w[0] + 1) * 0xc);
+                f32* v1 = (f32*)((char*)cache + (w0 + k) * 0xc);
                 f32 b2 = v1[2];
                 f32 b1 = v1[1];
                 f32 b0 = v1[0];
@@ -3328,17 +3325,8 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
                 GXWGFifo.f32 = b1;
                 GXWGFifo.f32 = b2;
             }
-            {
-                f32* v2 = (f32*)((char*)cache + (w[0] + 2) * 0xc);
-                f32 c2 = v2[2];
-                f32 c1 = v2[1];
-                f32 c0 = v2[0];
-                GXWGFifo.f32 = c0;
-                GXWGFifo.f32 = c1;
-                GXWGFifo.f32 = c2;
-            }
-            w[0] += 3;
-            w[1] += 0x24;
+            w0 += 3;
+            w1 += 0x24;
         }
     }
     if (*(u32*)&((MapBlockData*)blockData)->flags & 0x20)
