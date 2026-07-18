@@ -311,7 +311,6 @@ extern u8* gGameTextLastEntry;
 extern int gCurTextBuffer;
 extern int gGameTextBufferIndex;
 extern const f32 gGameTextFadeLimit;
-extern char* sMapDirectoryNameTable[];
 extern void* curGameTextDir;
 extern int gGameTextSequenceMode;
 extern int gSubtitleActive;
