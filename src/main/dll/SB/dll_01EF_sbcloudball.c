@@ -111,10 +111,11 @@ void SB_CloudBall_hitDetect(GameObject* obj)
 {
     SBCloudBallState* state = obj->extra;
     int* target = (int*)ObjAnim_GetPriorityHitState(&obj->anim)->lastHitObject;
+    f32 zero = 0.0f;
 
     if ((void*)target == NULL)
         return;
-    if (state->fadeTimer != 0.0f)
+    if (state->fadeTimer != zero)
         return;
     if (((GameObject*)target)->anim.seqId == CLOUDBALL_TARGET_TYPE_ID)
     {
