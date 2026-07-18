@@ -44,6 +44,7 @@
 #include "main/vecmath_distance_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "track/intersect_api.h"
+#include "track/intersect_depth_read_api.h"
 
 f32 lbl_803DCD44;
 f32 lbl_803DCD40;
@@ -1001,8 +1002,6 @@ extern u16 lbl_803DCCAA;
 extern u8 lbl_803DCCA9;
 extern u16 gDepthReadPendingQueue[];
 extern u16 gDepthReadResults[];
-extern u16 gDepthReadPendingCount;
-extern u16 gDepthReadResultCount;
 extern u8 lbl_803DCCA8;
 extern u8 lbl_803DCC90;
 extern int lbl_803DCC88;
