@@ -27,6 +27,7 @@
 #include "main/track_dolphin.h"
 #include "main/objprint_ext.h"
 #include "main/pi_dolphin_ext2.h"
+#include "main/rcp_dolphin_kr.h"
 
 CameraViewSlot* gNewShadowCurrentViewSlot;
 u32 gNewShadowReflectionSmallTexture;
@@ -252,7 +253,6 @@ extern int FUN_80017a54();
 extern u32 FUN_8003b7dc();
 extern u32 FUN_8003b878();
 extern u32 FUN_80040cd0();
-extern int FUN_800537a0();
 extern u32 FUN_8005d00c();
 extern u32 objAudioFn_8006ef38();
 extern u32 FUN_8006f788();

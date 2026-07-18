@@ -43,6 +43,7 @@
 #include "main/frame_timing.h"
 #include "main/mm.h"
 #include "main/camera_ext.h"
+#include "main/maketex_kr.h"
 
 f32 gObjSeqCameraFov = 60.0f;
 int lbl_803DB714 = -1;
@@ -5213,7 +5214,6 @@ int gObjSeqMsgIds[] = {
     0x000F000C, 0x000F000D, 0x000F000E, 0x000F000F, 0x000F0010, 0x00130001, 0x00130002,
 };
 
-extern void ObjSeq_yield();
 
 u32 lbl_8030EC00[4] = {0x28E5, 0x28E6, 0x28E7, 0x28E8};
 u32 lbl_8030EC10[3] = {0x501C, 0x501D, 0x501E};
