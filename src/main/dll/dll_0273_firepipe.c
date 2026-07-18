@@ -114,8 +114,6 @@ typedef struct FirePipeEffectSetup
     s16 scale;         /* 0x1a */
 } FirePipeEffectSetup;
 
-int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* spawnDef);
-
 void firepipe_releaseEffectObject(GameObject* obj)
 {
     if ((obj->objectFlags & FIREPIPE_OBJFLAG_ACTIVE) != 0)
