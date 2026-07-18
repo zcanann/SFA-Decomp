@@ -641,7 +641,7 @@ void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char vi
         }
         else
         {
-            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)1.0f);
+            objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, 1.0f);
         }
     }
 }
