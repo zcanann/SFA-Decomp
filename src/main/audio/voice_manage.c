@@ -160,21 +160,24 @@ int voiceIsRegistered(int state)
     u8 slot;
     u8 channel;
     u8 voiceIdx;
-    if (voice == SYNTH_INVALID_VOICE)
-        return 0;
-    slot = voiceState->midiSlot;
-    if (slot == SYNTH_INVALID_VOICE_U8)
-        return 0;
-    channel = voiceState->midiChannel;
-    voiceIdx = voice;
-    if (channel == SYNTH_INVALID_VOICE_U8)
+    if (voice != SYNTH_INVALID_VOICE)
     {
-        if (voiceDirectSlots[voiceIdx] == voiceIdx)
-            return 1;
-        return 0;
+        slot = voiceState->midiSlot;
+        if (slot != SYNTH_INVALID_VOICE_U8)
+        {
+            channel = voiceState->midiChannel;
+            voiceIdx = voice;
+            if (channel == SYNTH_INVALID_VOICE_U8)
+            {
+                if (voiceDirectSlots[voiceIdx] == voiceIdx)
+                    return 1;
+            }
+            else if (voiceIdx == voiceMidiKeySlots[channel][slot])
+            {
+                return 1;
+            }
+        }
     }
-    if (voiceIdx == voiceMidiKeySlots[channel][slot])
-        return 1;
     return 0;
 }
 
