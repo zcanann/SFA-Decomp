@@ -55,7 +55,6 @@ char sLanguageNameSpanish[] = "Spanish";
 int utf8GetNextChar(u8* str, int* outLen);
 int isSpace(u32 c);
 static inline int gameTextIdExists(int id);
-char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH);
 static inline int textCountChars(char* lineStr);
 
 static inline int gameTextIdExists(int id)
