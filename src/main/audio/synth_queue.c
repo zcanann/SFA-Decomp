@@ -421,40 +421,31 @@ void synthQueueHandle(u32 handle)
 {
     u32 key;
     u32 found;
-    SynthVoice* sv;
     SynthVoice* voice;
 
     key = handle & 0x7fffffffu;
 
-    sv = gSynthQueuedVoices;
-    while (sv != 0)
+    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
     {
-        if (sv->handle == key)
+        if (voice->handle == key)
         {
-            found = sv->slotIndex | (handle & 0x80000000);
-            break;
-        }
-        sv = sv->next;
-    }
-
-    if (sv == 0)
-    {
-        sv = gSynthAllocatedVoices;
-        while (sv != 0)
-        {
-            if (sv->handle == key)
-            {
-                found = sv->slotIndex | (handle & 0x80000000);
-                break;
-            }
-            sv = sv->next;
-        }
-        if (sv == 0)
-        {
-            found = 0xffffffff;
+            found = voice->slotIndex | (handle & 0x80000000);
+            goto resolved;
         }
     }
 
+    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
+    {
+        if (voice->handle == key)
+        {
+            found = voice->slotIndex | (handle & 0x80000000);
+            goto resolved;
+        }
+    }
+
+    found = 0xffffffff;
+
+resolved:
     if (found == 0xffffffff)
         return;
 
