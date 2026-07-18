@@ -36,7 +36,7 @@
 #include "main/track_dolphin_api.h"
 
 s16 gDrLaserTurretIdleAnimMoves[2] = {0x13, 0x11};
-f32 gDrLaserTurretIdleAnimStepScales[3] = {0.01f, 0.0125f, 0.0f};
+__declspec(section ".sdata") f32 gDrLaserTurretIdleAnimStepScales[3] = {0.01f, 0.0125f, 0.0f};
 extern void* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
@@ -46,6 +46,7 @@ extern f32 gDrLaserTurretDefaultAnimStepScale;
 extern f32 gDrLaserTurretPi;
 extern f32 gDrLaserTurretBobPhaseScale;
 extern f32 lbl_803E59F0;
+extern const f32 lbl_803E5A10;
 
 int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* animState)
 {
@@ -120,7 +121,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     float minDist;
     int count;
     int idx;
-    double t;
+    f32 t;
     float rate;
     float target;
     float d;
@@ -187,7 +188,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         return DR_LASERTURRET_STATE_CONTINUE;
     }
     t = shopKeeperRotateFn_801e7c4c((s16*)obj, playerObj, 0);
-    rate = 0.02f;
+    rate = lbl_803E5A10;
     if (t > 80.0f)
     {
         target = -0.9f;
