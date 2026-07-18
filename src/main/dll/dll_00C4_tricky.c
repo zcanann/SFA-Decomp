@@ -54,6 +54,7 @@
 #include "main/dll/DR/dll_026B_drchimmey.h"
 #include "main/dll/baddie_frozen.h"
 #include "main/dll/Hcurves_ext.h"
+#include "main/dll/dll_80136a40_ext.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -206,7 +207,6 @@ extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
 extern int trickyFoodFn_8014460c(GameObject* obj, int state);
 extern void skeetla_spawnLinkedSparks(int obj);
-extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
 extern f32 objFn_801948c0(int obj, int coord);
 const struct VisBits16 gTrickyVisibilityBitsInit = {{0x10000, 0x20000, 0x40000, 0x80000}};
@@ -251,7 +251,6 @@ extern f32 lbl_803E25C4;
 extern f32 lbl_803E25C8;
 
 extern int fn_80138D7C(int obj, int state);
-extern void Tricky_updateBlendChannelWeight(int obj, int state);
 extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
@@ -270,7 +269,6 @@ extern f32 lbl_803E2544;
 extern f32 lbl_803E2548;
 extern f32 lbl_803E254C;
 extern f32 lbl_803E2550;
-extern int trickySelectQueuedCommandTarget(int state, int type);
 extern int trickyFoodFn_8013db3c(int obj, int state);
 extern void memmove(void* dst, void* src, int n);
 extern void fn_801B17F4(GameObject*);
@@ -581,7 +579,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     objAnimFreeChildren(obj, state, (GameObject**)(state + 0x7b0)); /* raw: arrow form shifts bytes */
     objAnimFreeChildren(obj, state, (GameObject**)&((TrickyState*)state)->child);
     fn_80138D7C(obj, state);
-    Tricky_updateBlendChannelWeight(obj, state);
+    Tricky_updateBlendChannelWeight(obj, (u8*)state);
     objAudioFn_8006ef38(obj, (int)&animUpdate->animEvents, 1, state + 0x7d8, state + 0xf8, lbl_803E23E8,
                         *(f32*)&lbl_803E23E8);
     if ((((TrickyState*)state)->stateFlags & 1) != 0)
@@ -1131,7 +1129,7 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
                 objRenderModelAndHitVolumes(*(int*)&((TrickyState*)state)->unk700, p2, p3, p4, p5, lbl_803E23E8);
             }
         }
-        Tricky_emitQueuedPathParticles((int)obj, state);
+        Tricky_emitQueuedPathParticles((u8*)obj, (u8*)state);
         ObjPath_GetPointWorldPositionArray(obj, 4, 4, (float*)((TrickyState*)state)->pad7D8);
         ((TrickyState*)state)->particleTimer = ((TrickyState*)state)->particleTimer - timeDelta;
         if (((TrickyState*)state)->particleTimer > lbl_803E23DC)
@@ -1500,7 +1498,7 @@ void Tricky_update(int obj)
                 {
                 case 1:
                     trickyState->commandPhase = 1;
-                    trickySelectQueuedCommandTarget(state, 1);
+                    trickySelectQueuedCommandTarget((u8*)state, 1);
                     TRICKY_VOICE(obj, 0x13c, 0);
                     switch (((GameObject*)trickyState->followObj)->anim.seqId)
                     {
@@ -1601,7 +1599,7 @@ void Tricky_update(int obj)
                     if (played != 0)
                     {
                         trickyState->commandPhase = 3;
-                        if (trickySelectQueuedCommandTarget(state, 3) != 0)
+                        if (trickySelectQueuedCommandTarget((u8*)state, 3) != 0)
                         {
                             switch (((GameObject*)trickyState->followObj)->anim.seqId)
                             {
@@ -1643,7 +1641,7 @@ void Tricky_update(int obj)
                     else
                     {
                         trickyState->commandPhase = 4;
-                        trickySelectQueuedCommandTarget(state, 4);
+                        trickySelectQueuedCommandTarget((u8*)state, 4);
                         trickyState->stateIndex = 7;
                         switch (((GameObject*)trickyState->followObj)->anim.seqId)
                         {
@@ -2010,7 +2008,7 @@ void Tricky_update(int obj)
         }
     }
     fn_80138D7C(obj, state);
-    Tricky_updateBlendChannelWeight(obj, state);
+    Tricky_updateBlendChannelWeight(obj, (u8*)state);
     if (trickyState->speed > lbl_803E254C)
     {
         objAudioFn_8006ef38(obj, state + 0x80c, 1, state + 0x7d8, state + 0xf8, trickyState->speed,
