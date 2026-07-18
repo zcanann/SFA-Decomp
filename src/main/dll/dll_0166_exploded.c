@@ -22,7 +22,6 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 #define EXPLODED_PHASE_ACTIVE  1 /* debris physics stepping until settled */
 #define EXPLODED_PHASE_EXPIRED 2 /* lifetime elapsed; faded out */
 
-void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, ExplodedObjectMapData* data);
 
 void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data, int computeModelCenter,
                               ExplodedObjectState* state)
