@@ -160,3 +160,13 @@ The tree-wide "strip non-original pragma spam" removed pragmas that were LOAD-BE
 - shader mapLoadUnloadObjects 97.30 -> 96.92 (-0.38)
 - andross andross_update 99.85 -> 99.78 (-0.06)
 If some of these pragmas were genuine quality-hacks, the drops are intended (authenticity > match%). But hitDetectFn -4.46 and the ~0.9 drops on modelRenderFn_setVtxDescr/fn_80060C14 suggest real matching pragmas mis-classified as spam - worth restoring those specific ones (check whether the stripped pragma was opt_propagation/scheduling/peephole off, which are the load-bearing match class, vs a truly redundant reset-only pragma). The batch also had 5 UPs (zlbDecompress +1.0, loadCharacter +0.32, dbstealerworm/animobjd2/setLanguageFn) so net effect is mixed.
+
+### RESOLVED 2026-07-17 (commits 875136dd06 / 66d114cda6 / 3e278ced01 / 90ddc99a73 / 6c0bece1b0, all DOL byte-identical `main.dol: OK`, +~10.6pp across 5 units)
+Root causes were MIXED, not all pragmas. Byte-match is truth ⇒ a retail-matching form (real pragma, volatile pun, manual unroll, goto) IS the plausible original; the strip campaign over-cleaned some of them.
+- track_dolphin: GENUINE pragma strips restored → hitDetectFn_800658a4 93.85→98.31 (`dont_inline on`), fn_80060C14 +0.90 (`opt_propagation off`), renderGlows +0.49 (`opt_dead_assignments off`), intersectModLineBuild +0.47 (`opt_loop_invariants off`). +6.32pp.
+- objprint_dolphin: target modelRenderFn_setVtxDescr's -0.90 is a `goto useZero`→`use=0` CONTROL-FLOW strip (declined — defensible clean-C tradeoff, LEFT at 98.04). But restoring load-bearing pragmas recovered TWO OTHER regressed siblings: renderOpMatrix 98.74→100.0 (`optimization_level 2`), shaderSetGxFlags 98.63→100.0 (`opt_common_subs off`+`scheduling off`). +2.63pp.
+- expgfx expgfx_updateActivePools 98.96→99.67: NOT a pragma — a manual 8×10 switch-scan CONTROL-FLOW form + `ppc_unroll_*` pragmas that only match TOGETHER (pragmas-on-plain-loop regressed further to 97.85). The committer's "-0.35pp sanctioned" bound was WRONG (real cost -0.71). Restored the switch-scan. +0.71pp.
+- lightmap sceneDraw 99.12→99.73: NOT a pragma — a `volatile s32*` CSE-defeat pun that forces a fresh reload before increment (retail `lwz;addi` vs cached `addi`), cascading regalloc across 13 regions. +0.61pp.
+- shader mapLoadUnloadObjects 96.92→97.29: NOT a pragma — a `volatile s16*` load pun at the `*w == *idPtr` compare. +0.37pp.
+- andross andross_update (-0.06): negligible, not pursued.
+LESSON for future strip waves: `volatile` puns and manual-unroll/goto control-flow forms that byte-match retail are LOAD-BEARING RECOVERED SOURCE, not "spam" — do not strip them by pattern; gate every strip on a whole-unit per-fn re-measure + `ninja ok`.
