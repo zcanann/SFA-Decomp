@@ -102,9 +102,9 @@ void nw_geyser_init(GameObject* obj)
     obj->animEventCallback = NW_geyser_SeqFn;
 }
 
-char* fn_801CDE70(int* obj)
+f32* fn_801CDE70(GameObject* obj)
 {
-    return *(char**)&((GameObject*)obj)->extra + 0xc;
+    return (f32*)((u8*)obj->extra + 0xc);
 }
 
 int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)

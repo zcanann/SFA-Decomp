@@ -28,6 +28,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/dll/dll_00F5_sidekickball.h"
+#include "main/dll/dll_01A0_nwgeyser.h"
 #include "main/dll/tricky_state.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
@@ -87,7 +88,6 @@ extern f32 lbl_803E24F4;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
-extern int fn_801CDE70(int);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
 
 void fn_8013F100(GameObject* obj, register int state)
@@ -546,7 +546,7 @@ void fn_8013FBE4(GameObject* obj, register int state)
             ((TrickyNibblePair*)&((TrickyState*)state)->unk700)->hi++;
             **(u8**)state -= 2;
         }
-        targetPos = (float*)fn_801CDE70(*(int*)&((TrickyState*)state)->followObj);
+        targetPos = fn_801CDE70((GameObject*)((TrickyState*)state)->followObj);
         trackedObj = tumbleweedbush_findNearestActive(targetPos);
         if (trackedObj != 0 && **(u8**)state != 0)
         {
