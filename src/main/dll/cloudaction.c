@@ -59,7 +59,7 @@ f32 lbl_803DD1E0;
 
 f32 gCloudActionGlareQuadSize = 8000.0f;
 
-volatile PPCWGPipe GXWGFifo : (0xCC008000);
+#define GXWGFifo (*(volatile PPCWGPipe*)0xCC008000)
 
 static inline void GXPos3f32(f32 x, f32 y, f32 z)
 {
