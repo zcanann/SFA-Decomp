@@ -19,10 +19,9 @@
  */
 #include "main/game_object.h"
 #include "dolphin/os/OSReport.h"
+#include "main/dll/dll_0126_trigger_api.h"
 #include "main/dll/mmp_gyservent.h"
 #include "main/vecmath.h"
-
-extern void objInterpretSeq(int obj, int seqArg, s8 legCode, int distSq);
 
 /* placement instance id (+0x14) of the one vent that emits a debug OSReport */
 #define MMP_GYSERVENT_DEBUG_INSTANCE_ID 0x46a31
@@ -149,7 +148,7 @@ void objSeqMoveFn_80199188(GameObject* obj, int seqArg)
     }
     leg = nearEnd ? -1 : -2;
 end:
-    objInterpretSeq((int)obj, seqArg, leg, distSqB);
+    objInterpretSeq(obj, seqArg, leg, distSqB);
 }
 
 void objSeqFn_801992ec(GameObject* obj, int seqArg)
@@ -179,5 +178,5 @@ void objSeqFn_801992ec(GameObject* obj, int seqArg)
     {
         cat = (d0 < state->nearRadiusSq) ? -1 : -2;
     }
-    objInterpretSeq((int)obj, seqArg, cat, d1);
+    objInterpretSeq(obj, seqArg, cat, d1);
 }

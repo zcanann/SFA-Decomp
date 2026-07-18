@@ -4,6 +4,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/dll_0126_trigger_api.h"
 #include "main/game_object.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_80198a00.h"
@@ -40,8 +41,6 @@ extern f32 lbl_803E40CC;
 extern f32 lbl_803E40D8;
 extern const char sMoonrockTriggerIdentFormat[];
 
-extern u32 objInterpretSeq(void* obj, int seqArg, s8 legCode, int distSq);
-
 void fn_80198A00(u8* obj, int seqArg)
 {
     MmpTriggerPlaneState* state;
@@ -65,20 +64,20 @@ void fn_80198A00(u8* obj, int seqArg)
     {
         if (rearBlocked == 0)
         {
-            objInterpretSeq(obj, seqArg, 1, (int)hitDistance);
+            objInterpretSeq((GameObject*)obj, seqArg, 1, (int)hitDistance);
         }
         else
         {
-            objInterpretSeq(obj, seqArg, 2, (int)hitDistance);
+            objInterpretSeq((GameObject*)obj, seqArg, 2, (int)hitDistance);
         }
     }
     else if (rearBlocked != 0)
     {
-        objInterpretSeq(obj, seqArg, -1, (int)hitDistance);
+        objInterpretSeq((GameObject*)obj, seqArg, -1, (int)hitDistance);
     }
     else
     {
-        objInterpretSeq(obj, seqArg, -2, (int)hitDistance);
+        objInterpretSeq((GameObject*)obj, seqArg, -2, (int)hitDistance);
     }
 }
 
@@ -209,7 +208,7 @@ void fn_80198DE8(u8* obj, int seqArg)
             (localPos[1] >= -state->clipHalfExtent) && (localPos[1] <= state->clipHalfExtent))
         {
             OSReport(sMoonrockTriggerIdentFormat, triggerState, *(u32*)(data + 0x14));
-            objInterpretSeq(obj, seqArg, triggerState, (int)farDist);
+            objInterpretSeq((GameObject*)obj, seqArg, triggerState, (int)farDist);
         }
     }
 }

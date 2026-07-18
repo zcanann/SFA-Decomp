@@ -144,7 +144,7 @@ void Trigger_init(u8* obj, u8* params)
     state[0] = (u8)(state[0] | TRIGGER_SFLAG_SEED_TARGET);
 }
 
-void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
+void objInterpretSeq(GameObject* obj, int seqArg, s8 legCode, int distSq)
 {
     char* desc = (char*)&gTriggerObjDescriptor;
     u8* state = ((GameObject*)obj)->extra;
@@ -266,11 +266,11 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                 case 4:
                     if ((s8)legCode >= 0)
                     {
-                        Sfx_PlayFromObject(obj, (u16)((p[2] << 8) | p[3]));
+                        Sfx_PlayFromObject((u32)obj, (u16)((p[2] << 8) | p[3]));
                     }
                     else
                     {
-                        Sfx_StopFromObject(obj, (u16)((p[2] << 8) | p[3]));
+                        Sfx_StopFromObject((u32)obj, (u16)((p[2] << 8) | p[3]));
                     }
                     break;
                 case 6:
@@ -361,18 +361,18 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     break;
                 case 10:
-                    getEnvfxActInt(obj, seqArg, (u16)((p[2] << 8) | p[3]), distSq);
+                    getEnvfxActInt((int)obj, seqArg, (u16)((p[2] << 8) | p[3]), distSq);
                     OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (p[2] << 8) | p[3], distSq);
                     break;
                 case 0xd:
-                    getLActions(obj, seqArg, (u16)((p[2] << 8) | p[3]), legCode, distSq, 0);
+                    getLActions((int)obj, seqArg, (u16)((p[2] << 8) | p[3]), legCode, distSq, 0);
                     break;
                 case 0xb:
                     switch (p[2])
                     {
                     case 0:
                     case 3:
-                        t = ObjGroup_FindNearestObject(TARGET_OBJGROUP, obj, 0);
+                        t = ObjGroup_FindNearestObject(TARGET_OBJGROUP, (int)obj, 0);
                         if ((void*)t != NULL)
                         {
                             (*gObjectTriggerInterface)->runSequence(p[3], (void*)t, -1);
@@ -409,7 +409,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         case 0x230:
                             if (((TriggerPlacement*)tbl)->triggerId == id)
                             {
-                                objInterpretSeq(t2, seqArg, legCode, distSq);
+                                objInterpretSeq((GameObject*)t2, seqArg, legCode, distSq);
                             }
                             break;
                         }
@@ -469,7 +469,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     OSReport(desc + 0x114, p[2], p[3]);
                     break;
                 case 0x2f:
-                    t = ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, 0);
+                    t = ObjGroup_FindNearestObject(TIMER_OBJGROUP, (int)obj, 0);
                     if ((void*)t != NULL)
                     {
                         timer_addDuration((GameObject*)(t), p[3] * 0x3c);
@@ -548,13 +548,13 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     if (ang > 0x4000)
                     {
                         (*gMapEventInterface)
-                            ->savePoint(obj + 0xc, (int)(s16)(((GameObject*)obj)->anim.rotX + 0x8000), p[3],
+                            ->savePoint((int)obj + 0xc, (int)(s16)(((GameObject*)obj)->anim.rotX + 0x8000), p[3],
                                         getCurMapLayer());
                     }
                     else
                     {
                         (*gMapEventInterface)
-                            ->savePoint(obj + 0xc, (int)((GameObject*)obj)->anim.rotX, p[3], getCurMapLayer());
+                            ->savePoint((int)obj + 0xc, (int)((GameObject*)obj)->anim.rotX, p[3], getCurMapLayer());
                     }
                     break;
                 case 0x20:
@@ -572,7 +572,8 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     {
                     case 0:
                         (*gMapEventInterface)
-                            ->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX, getCurMapLayer(), 0);
+                            ->restartPoint((void*)((int)obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
+                                           getCurMapLayer(), 0);
                         break;
                     case 1:
                         (*gMapEventInterface)->clearRestartPoint();
@@ -582,7 +583,8 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         break;
                     case 3:
                         (*gMapEventInterface)
-                            ->restartPoint((void*)(obj + 0xc), (int)((GameObject*)obj)->anim.rotX, getCurMapLayer(), 1);
+                            ->restartPoint((void*)((int)obj + 0xc), (int)((GameObject*)obj)->anim.rotX,
+                                           getCurMapLayer(), 1);
                         break;
                     }
                     break;
@@ -778,7 +780,7 @@ void Trigger_hitDetect(GameObject* obj)
         {
             if ((*state & TRIGGER_SFLAG_DISABLED) != 0)
             {
-                objInterpretSeq((int)obj, triggerObj, 1, 0);
+                objInterpretSeq(obj, triggerObj, 1, 0);
                 *state &= ~TRIGGER_SFLAG_DISABLED;
                 *state |= TRIGGER_SFLAG_ENTERED;
             }
@@ -894,7 +896,7 @@ void Trigger_hitDetect(GameObject* obj)
                     ((TriggerState*)state)->timer = *(int*)&((TriggerState*)state)->timer + framesThisStep;
                     if (((TriggerState*)state)->timer >= (u32)((TriggerPlacement*)def)->triggerDelayFrames)
                     {
-                        objInterpretSeq((int)obj, 0, 1, 0);
+                        objInterpretSeq(obj, 0, 1, 0);
                     }
                     break;
                 case 0x4d:
@@ -907,25 +909,25 @@ void Trigger_hitDetect(GameObject* obj)
                         {
                             if (wasInside == 0)
                             {
-                                objInterpretSeq((int)obj, target, 1, 0);
+                                objInterpretSeq(obj, target, 1, 0);
                             }
                             else
                             {
-                                objInterpretSeq((int)obj, target, 2, 0);
+                                objInterpretSeq(obj, target, 2, 0);
                             }
                         }
                         else if (wasInside != 0)
                         {
-                            objInterpretSeq((int)obj, target, -1, 0);
+                            objInterpretSeq(obj, target, -1, 0);
                         }
                         else
                         {
-                            objInterpretSeq((int)obj, target, -2, 0);
+                            objInterpretSeq(obj, target, -2, 0);
                         }
                     }
                     break;
                 case 0x50:
-                    objInterpretSeq((int)obj, triggerObj, 1, 0);
+                    objInterpretSeq(obj, triggerObj, 1, 0);
                     if (return1_800202BC() != 0)
                     {
                         Obj_FreeObject(obj);
@@ -946,7 +948,7 @@ void Trigger_hitDetect(GameObject* obj)
                     if (ok && ((TriggerFlags8A*)(state + 0x8a))->bit7 == 0)
                     {
                         ((TriggerFlags8A*)(state + 0x8a))->bit7 = 1;
-                        objInterpretSeq((int)obj, triggerObj, 1, 0);
+                        objInterpretSeq(obj, triggerObj, 1, 0);
                     }
                     if (!ok)
                     {

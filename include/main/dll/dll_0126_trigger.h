@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0126_TRIGGER_H_
 
 #include "global.h"
+#include "main/dll/dll_0126_trigger_api.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 
@@ -82,7 +83,6 @@ void Trigger_free(GameObject* obj);
 void Trigger_init(u8* obj, u8* params);
 int Trigger_getExtraSize(void);
 int Trigger_getObjectTypeId(void);
-void objInterpretSeq(int obj, int seqArg, int legCode, int distSq);
 void Trigger_hitDetect(GameObject* obj);
 
 #endif /* MAIN_DLL_DLL_0126_TRIGGER_H_ */
