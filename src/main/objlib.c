@@ -175,10 +175,8 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
 {
     ObjAnimComponent* obj;
     ObjHitsPriorityState* hitState;
-    int clearedState;
-    ObjHitsPriorityWorkSlot* workSlot;
     int slotIndex;
-    int slotOffset;
+    ObjHitsPriorityWorkSlot* workSlot;
     int modelCount;
 
     obj = (ObjAnimComponent*)objPtr;
@@ -196,19 +194,15 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
     {
         return;
     }
-    slotIndex = 0;
-    slotOffset = slotIndex;
-    clearedState = slotIndex;
-    for (; (s16)slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1)
+    for (slotIndex = 0; (s16)slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1)
     {
-        workSlot = (ObjHitsPriorityWorkSlot*)(gObjHitsPriorityHitStates + slotOffset);
+        workSlot = &((ObjHitsPriorityWorkSlot*)gObjHitsPriorityHitStates)[slotIndex];
         if ((workSlot->active != 0) && ((u32)workSlot->obj == (u32)obj))
         {
-            workSlot->active = clearedState;
+            workSlot->active = 0;
         }
-        slotOffset = slotOffset + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
     }
-    hitState->stateIndex = (s8)stateIndex;
+    *(s8*)&hitState->stateIndex = stateIndex;
     return;
 }
 
