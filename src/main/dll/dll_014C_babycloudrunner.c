@@ -32,6 +32,7 @@
 #include "main/maketex_random_api.h"
 #include "main/maketex_timer_api.h"
 #include "main/objprint_anim_api.h"
+#include "main/objprint_character_api.h"
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/object_descriptor.h"
@@ -90,7 +91,6 @@ extern f32 lbl_803E424C;
 extern f32 lbl_803E4250;
 extern f32 lbl_803E4254;
 
-extern void fn_8003ADC4(GameObject* obj, GameObject* target, void* state, int limit, int inverted, int mode);
 
 void babycloudrunner_release(void);
 void babycloudrunner_initialise(void);
@@ -371,7 +371,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 8:
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)player, 0);
-        fn_8003ADC4((GameObject*)obj, (GameObject*)player, sub->lookBlock, 0x28, 0, 3);
+        fn_8003ADC4((GameObject*)obj, player, sub->lookBlock, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         if (inRange != 0)
         {
@@ -385,7 +385,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 5:
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)getTrickyObject(), 0);
-        fn_8003ADC4((GameObject*)obj, (GameObject*)getTrickyObject(), sub->lookBlock, 0x28, 0, 3);
+        fn_8003ADC4((GameObject*)obj, getTrickyObject(), sub->lookBlock, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         break;
     }

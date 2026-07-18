@@ -12,6 +12,7 @@
 #include "main/object_render_legacy.h"
 #include "main/objseq.h"
 #include "main/objprint_anim_api.h"
+#include "main/objprint_character_api.h"
 #include "main/objprint_api.h"
 #include "main/objprint_sound_api.h"
 #include "main/obj_list.h"
@@ -30,7 +31,6 @@
 
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
-extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 
 /* release-sequence callback: on the cued trigger, thank Fox with a
  * one-shot +2 magic (the Power Room key comes from the script) */

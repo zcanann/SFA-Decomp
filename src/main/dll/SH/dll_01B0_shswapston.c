@@ -439,7 +439,6 @@ s16 lbl_803DDBF0;
 extern f32 lbl_803E5460;
 extern f32 lbl_803E546C;
 
-extern void fn_8003ADC4(GameObject* obj, int target, void* state, int a, int b, int c);
 
 void warpstone_update(int obj)
 {
@@ -495,7 +494,7 @@ void warpstone_update(int obj)
     }
 
     ((GameObject*)obj)->anim.localPosY += lbl_803DC040;
-    fn_8003ADC4((GameObject*)(obj), target, (void*)(state + 0x74), 0x23, 1, lbl_803DC03C);
+    fn_8003ADC4((GameObject*)(obj), (void*)target, (void*)(state + 0x74), 0x23, 1, lbl_803DC03C);
     modelVec = objModelGetVecFn_800395d8((GameObject*)(obj), 0);
     ((GameObject*)obj)->anim.localPosY -= lbl_803DC040;
 

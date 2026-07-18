@@ -24,6 +24,7 @@ void characterDoEyeAnims(GameObject* obj, CharacterEyeAnimState* state);
 void fn_8003A230(GameObject* obj, CharacterEyeAnimState* state, f32 scale);
 void fn_8003B0D0(GameObject* obj, GameObject* target, CharacterEyeAnimState* state, int maxAngle);
 void fn_8003B228(GameObject* obj, void* state);
+void fn_8003ADC4(GameObject* obj, void* target, void* state, int limit, u8 inverted, int mode);
 
 #define characterDoEyeAnimsState(obj, state) characterDoEyeAnims((obj), (CharacterEyeAnimState*)(state))
 #define characterDoEyeAnimsIntStateLegacy(obj, state)                                                          \

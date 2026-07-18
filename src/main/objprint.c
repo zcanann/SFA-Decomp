@@ -1123,7 +1123,7 @@ void objFn_8003acfc(GameObject* obj, int* keys, int count, int out)
     }
 }
 #pragma opt_loop_invariants off
-void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
+void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
 {
     s16 ang[2];
     s16* found[1];
@@ -1187,7 +1187,7 @@ void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
             ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
 
             a = (s16)(gObjPrintDegToAngle * a);
-            p[0] = p3;
+            p[0] = (char*)p3;
             ap[0] = ang;
             prodB = gObjPrintDegToAngle * b;
             minB = -(s16)(s32)prodB;
@@ -1223,8 +1223,8 @@ void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
                 p[0] += 0x30;
                 ap[0]++;
             }
-            found[0][1] = *(s16*)(p3 + 0x14);
-            found[0][0] = *(s16*)(p3 + 0x44);
+            found[0][1] = *(s16*)((u8*)p3 + 0x14);
+            found[0][0] = *(s16*)((u8*)p3 + 0x44);
         }
     }
 }
