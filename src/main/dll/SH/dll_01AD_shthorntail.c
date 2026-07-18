@@ -733,6 +733,44 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
     return linkedEventPending;
 }
 
+void SHthorntail_updateTailSwing(u32 objectId, SHthorntailRuntime* runtime)
+{
+    u8 tailSwingState;
+    int moveComplete;
+
+    tailSwingState = runtime->tailSwingState;
+    switch (tailSwingState)
+    {
+    case SHTHORNTAIL_TAIL_SWING_READY:
+        runtime->tailSwingTimer = runtime->tailSwingTimer - timeDelta;
+        if (runtime->tailSwingTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
+        {
+            Sfx_PlayFromObject(objectId, SHTHORNTAIL_TAIL_SWING_WINDUP_VOLUME_ID);
+            runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_WINDUP;
+            runtime->tailSwingTimer = SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;
+        }
+        break;
+    case SHTHORNTAIL_TAIL_SWING_WINDUP:
+        runtime->tailSwingTimer = runtime->tailSwingTimer - timeDelta;
+        if (runtime->tailSwingTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
+        {
+            Sfx_PlayFromObject(objectId, SHTHORNTAIL_TAIL_SWING_ACTIVE_VOLUME_ID);
+            runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
+        }
+        break;
+    case SHTHORNTAIL_TAIL_SWING_ACTIVE:
+        moveComplete = runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE;
+        if (moveComplete != 0)
+        {
+            runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_READY;
+            runtime->tailSwingTimer = SHTHORNTAIL_TAIL_SWING_RECOVER_TIME;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
 /* descriptor/ptr table auto 0x80327560-0x80327598 */
 u32 gWarpStoneObjDescriptor[14] = {0x00000000,
                                    0x00000000,
