@@ -147,8 +147,6 @@ void wcpushblock_hitDetect(void)
 {
 }
 
-void wcpushblock_update(GameObject* obj);
-
 ObjectDescriptor gWCPushBlockObjDescriptor = {
     0,
     0,
