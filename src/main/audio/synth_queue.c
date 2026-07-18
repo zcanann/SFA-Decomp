@@ -503,43 +503,37 @@ void synthQueueHandle(u32 handle)
  */
 void synthFreeHandle(u32 handle)
 {
-    SynthVoice* voice;
     SynthSeqRuntime* runtime;
+    SynthVoice* voice;
     u32 found;
+    u32 key;
     u32 i;
     SynthVoiceRuntimeView* runtimeView;
 
     runtime = &lbl_803AF550;
+    key = handle & 0x7fffffffu;
 
-    voice = gSynthQueuedVoices;
-    while (voice != 0)
+    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
     {
-        if (voice->handle == (handle & 0x7fffffffu))
+        if (voice->handle == key)
         {
             found = voice->slotIndex | (handle & 0x80000000);
-            break;
+            goto resolved;
         }
-        voice = voice->next;
     }
 
-    if (voice == 0)
+    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
     {
-        voice = gSynthAllocatedVoices;
-        while (voice != 0)
+        if (voice->handle == key)
         {
-            if (voice->handle == (handle & 0x7fffffffu))
-            {
-                found = voice->slotIndex | (handle & 0x80000000);
-                break;
-            }
-            voice = voice->next;
-        }
-        if (voice == 0)
-        {
-            found = 0xffffffff;
+            found = voice->slotIndex | (handle & 0x80000000);
+            goto resolved;
         }
     }
 
+    found = 0xffffffff;
+
+resolved:
     if (found == 0xffffffff)
     {
         return;
