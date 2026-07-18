@@ -2416,8 +2416,7 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
         if (ModelList_getHeader(gModelAnimCacheList, (i = id), &ptr) == 0)
         {
             u8* np;
-            int idx2;
-            v = ((u32*)gModelAnimFlagsTable)[(idx2 = i)];
+            v = ((u32*)gModelAnimFlagsTable)[id];
             loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, v, 0, (int)&size, i, 1);
             ptr = np = mmAlloc(size, 10, 0);
             loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, np, v, size, (int)&tmp, i, 0);
