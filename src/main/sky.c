@@ -591,7 +591,6 @@ void renderSky(int a, int b, int c, int d, int visible)
     skyFn_8008a04c();
 }
 
-void getAmbientColor(int slot, u8* red, u8* green, u8* blue);
 void textureColorFn_8008991c(int slot, u8* red, u8* green, u8* blue)
 {
     u8* sky;
@@ -1686,8 +1685,6 @@ void skyFn_80088e54(int mode, f32 brightness)
         }
     }
 }
-
-int getSunPos(f32* outTime);
 
 void timeOfDayFn_8008b964(void)
 {
@@ -3068,8 +3065,6 @@ void skyFn_8008aee8(void)
     }
 }
 
-void Sky_func03(int a, int b, u8* cfg);
-
 f32 gSkySunDirection[] = {0.0f, 1.0f, 0.0f};
 
 f32 gSkyMoonDirection[] = {
@@ -3152,8 +3147,6 @@ SkyDllInterface lbl_8030F414 = {
     (ObjectDescriptorCallback)getEnvFxBit2BA,
     (ObjectDescriptorCallback)return0_80088758,
 };
-
-void skyFn_80088c94(int flags, u8 mode);
 
 void Sky_func03(int a, int b, u8* cfg)
 {
