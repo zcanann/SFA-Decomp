@@ -603,7 +603,37 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
     }
 }
 
-void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData);
+void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
+{
+    NwMammothState* state = (NwMammothState*)baddie;
+
+    (void)mapData;
+    switch (state->stateIndex)
+    {
+    case 4:
+        state->triggerList = lbl_803DBFB4;
+        if (ObjTrigger_IsSetById(obj, 418) != 0)
+        {
+            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
+            mainSetBits(GAMEBIT_SnowHornArtifact19D, 1);
+            mainSetBits(GAMEBIT_ITEM_NWSnowHornArtifact_Used, 1);
+            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE5, 1);
+            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE6, 1);
+            state->stateIndex = 5;
+        }
+        break;
+    case 5:
+        state->triggerList = lbl_803DBFB8;
+        if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
+        {
+            state->stateIndex = 6;
+        }
+        break;
+    case 6:
+        state->triggerList = lbl_803DBFBC;
+        break;
+    }
+}
 
 void fn_801CEE0C(int obj, int baddie, NwMammothMapData* mapData)
 {
@@ -716,9 +746,9 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
     ObjHitReactEntry* hitReactEntries;
     u8 stateFlags;
     u8 stateIndex;
-    NwMammothTables* table = (NwMammothTables*)gNwMammothTables;
     NwMammothMapData* mapData;
     NwMammothState* state;
+    NwMammothTables* table = (NwMammothTables*)gNwMammothTables;
 
     (void)unused;
     state = obj->state;
@@ -837,67 +867,6 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
         (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
         (*gPathControlInterface)->apply(obj, state->pathState);
         (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
-    }
-}
-
-void fn_801CDF94(GameObject* obj, int state, int flag)
-{
-    if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL &&
-        ((NwMammothState*)state)->playerDistanceSq < 40000.0f)
-    {
-        ((NwMammothState*)state)->eyeTarget.enabled = 1;
-        ((NwMammothState*)state)->eyeTarget.targetX =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosX;
-        ((NwMammothState*)state)->eyeTarget.targetY =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosY;
-        ((NwMammothState*)state)->eyeTarget.targetZ =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosZ;
-    }
-    else
-    {
-        ((NwMammothState*)state)->eyeTarget.enabled = 0;
-    }
-    if ((lbl_803268B4[((NwMammothState*)state)->stateIndex] & 0x2) != 0)
-    {
-        fn_8003A168(obj, (void*)(state + 0x40c));
-        fn_8003B228(obj, (void*)(state + 0x40c));
-    }
-    else
-    {
-        fn_8003A230(obj, (CharacterEyeAnimState*)(state + 0x40c), 0.0f);
-        characterDoEyeAnimsState(obj, state + 0x40c);
-    }
-}
-
-void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
-{
-    NwMammothState* state = (NwMammothState*)baddie;
-
-    (void)mapData;
-    switch (state->stateIndex)
-    {
-    case 4:
-        state->triggerList = lbl_803DBFB4;
-        if (ObjTrigger_IsSetById(obj, 418) != 0)
-        {
-            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
-            mainSetBits(GAMEBIT_SnowHornArtifact19D, 1);
-            mainSetBits(GAMEBIT_ITEM_NWSnowHornArtifact_Used, 1);
-            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE5, 1);
-            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE6, 1);
-            state->stateIndex = 5;
-        }
-        break;
-    case 5:
-        state->triggerList = lbl_803DBFB8;
-        if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
-        {
-            state->stateIndex = 6;
-        }
-        break;
-    case 6:
-        state->triggerList = lbl_803DBFBC;
-        break;
     }
 }
 

@@ -36,6 +36,51 @@
 #define WCPUSHBLOCK_GAMEBIT_B_FADE   0x809
 #define WCPUSHBLOCK_GAMEBIT_B_COUNT  0x811
 
+void fn_802251B4(GameObject* obj, WcLevelControlState* state);
+void wcpushblock_updateLevelControlState(GameObject* obj, WcLevelControlState* state);
+void wclevelcont_syncProgressBits(WcLevelControlState* state);
+
+void wclevelcont_update(GameObject* obj)
+{
+    WcLevelControlState* state = obj->extra;
+    f32 sunTime;
+
+    if (obj->userData1 == 0)
+    {
+        if ((u32)mainGetBit(GAMEBIT_WC_MagicCaveRelated0E05) == 0)
+        {
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_A, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_B, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_C, 0);
+            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_D, 0);
+            skyFn_80088e54(0, lbl_803E6DA8);
+            mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 1);
+        }
+        obj->userData1 = 1;
+    }
+    switch ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot))
+    {
+    case 1:
+    default:
+        wcpushblock_updateLevelControlState(obj, state);
+        break;
+    case 2:
+        fn_802251B4(obj, state);
+        break;
+    }
+    wclevelcont_syncProgressBits(state);
+    if ((*gSkyInterface)->getSunPosition(&sunTime))
+    {
+        mainSetBits(0x7f3, 1);
+        mainSetBits(0x7f1, 0);
+    }
+    else
+    {
+        mainSetBits(0x7f3, 0);
+        mainSetBits(0x7f1, 1);
+    }
+}
+
 void fn_802251B4(GameObject* obj, WcLevelControlState* state)
 {
     f32 sunTime;
@@ -811,47 +856,6 @@ void wclevelcont_syncProgressBits(WcLevelControlState* state)
     }
     mainSetBits(0xf31, flag);
     SCGameBitLatch_Update(&state->gameBitLatch, 0x80, -1, -1, 0xf31, 0xaf);
-}
-
-void wclevelcont_update(GameObject* obj)
-{
-    WcLevelControlState* state = obj->extra;
-    f32 sunTime;
-
-    if (obj->userData1 == 0)
-    {
-        if ((u32)mainGetBit(GAMEBIT_WC_MagicCaveRelated0E05) == 0)
-        {
-            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_A, 0);
-            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_B, 0);
-            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_C, 0);
-            getEnvfxActImmediatelyVoid((int)obj, (int)obj, WCLEVELCONT_ENVFX_D, 0);
-            skyFn_80088e54(0, lbl_803E6DA8);
-            mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 1);
-        }
-        obj->userData1 = 1;
-    }
-    switch ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot))
-    {
-    case 1:
-    default:
-        wcpushblock_updateLevelControlState(obj, state);
-        break;
-    case 2:
-        fn_802251B4(obj, state);
-        break;
-    }
-    wclevelcont_syncProgressBits(state);
-    if ((*gSkyInterface)->getSunPosition(&sunTime))
-    {
-        mainSetBits(0x7f3, 1);
-        mainSetBits(0x7f1, 0);
-    }
-    else
-    {
-        mainSetBits(0x7f3, 0);
-        mainSetBits(0x7f1, 1);
-    }
 }
 
 void wclevelcont_init(GameObject* obj)

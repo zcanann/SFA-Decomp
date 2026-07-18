@@ -97,27 +97,7 @@ int wmwallcrawler_animEventCallback(GameObject* obj)
 /* dont_inline: defined before its update call sites (address order),
    but the retail unit keeps both bls. No same-TU callees, so the wrap
    is safe (see the dont_inline CAUTION in the playbook). */
-void wmwallcrawler_alignToFloorNormal(GameObject* obj, TrackGroundHit* floorHit)
-{
-    WcXf mtx;
-    f32 in[3];
-    u16 ang, ang2;
-    in[0] = floorHit->normalX;
-    in[1] = floorHit->normalY;
-    in[2] = floorHit->normalZ;
-    mtx.mc = 0.0f;
-    mtx.m10 = 0.0f;
-    mtx.m14 = 0.0f;
-    mtx.m8 = 1.0f;
-    mtx.r2 = 0;
-    mtx.r1 = 0;
-    mtx.r0 = obj->anim.rotX;
-    vecRotateZXY(&mtx.r0, in);
-    ang = getAngle(in[0], in[1]);
-    ang2 = getAngle(in[2], in[1]);
-    obj->anim.rotY = ang2;
-    obj->anim.rotZ = ang;
-}
+void wmwallcrawler_alignToFloorNormal(GameObject* obj, TrackGroundHit* floorHit);
 
 int wmwallcrawler_getExtraSize(void)
 {
@@ -694,6 +674,27 @@ void wmwallcrawler_update(GameObject* obj)
     }
 }
 
+void wmwallcrawler_alignToFloorNormal(GameObject* obj, TrackGroundHit* floorHit)
+{
+    WcXf mtx;
+    f32 in[3];
+    u16 ang, ang2;
+    in[0] = floorHit->normalX;
+    in[1] = floorHit->normalY;
+    in[2] = floorHit->normalZ;
+    mtx.mc = 0.0f;
+    mtx.m10 = 0.0f;
+    mtx.m14 = 0.0f;
+    mtx.m8 = 1.0f;
+    mtx.r2 = 0;
+    mtx.r1 = 0;
+    mtx.r0 = obj->anim.rotX;
+    vecRotateZXY(&mtx.r0, in);
+    ang = getAngle(in[0], in[1]);
+    ang2 = getAngle(in[2], in[1]);
+    obj->anim.rotY = ang2;
+    obj->anim.rotZ = ang;
+}
 void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData)
 {
     ObjAnimComponent* objAnim = &(obj)->anim;

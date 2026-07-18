@@ -49,31 +49,6 @@
 
 
 
-void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state)
-{
-    ObjTextureRuntimeSlot* tex;
-    int phase;
-
-    tex = objFindTexture(obj, 0, 0);
-    tex->offsetT += WCTEMPLEBRI_UV0_V_STEP;
-    if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP)
-        tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
-    tex->offsetS += WCTEMPLEBRI_UV0_U_STEP;
-    if (tex->offsetS > WCTEMPLEBRI_WARP_WRAP)
-        tex->offsetS -= WCTEMPLEBRI_WARP_WRAP;
-    tex = objFindTexture(obj, 1, 0);
-    tex->offsetT += WCTEMPLEBRI_UV1_V_STEP;
-    if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP)
-        tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
-    phase = state->wavePhaseA + (framesThisStep << WCTEMPLEBRI_WAVE_A_STEP_SHIFT);
-    if (phase > WCTEMPLEBRI_WAVE_WRAP)
-        phase = (phase - 0x10000) + 1;
-    state->wavePhaseA = phase;
-    phase = state->wavePhaseB + (framesThisStep << WCTEMPLEBRI_WAVE_B_STEP_SHIFT);
-    if (phase > WCTEMPLEBRI_WAVE_WRAP)
-        phase = (phase - 0x10000) + 1;
-    state->wavePhaseB = phase;
-}
 
 static void wctemplebri_deformVertex(ObjModel* model, ModelFileHeader* modelBase, WCTempleBriState* state, int i)
 {
@@ -88,6 +63,7 @@ static void wctemplebri_deformVertex(ObjModel* model, ModelFileHeader* modelBase
         curr[0] = (s16)((f32)base[0] - 256.0f * mathSinf(3.1415927f * idx / 32768.0f));
 }
 
+void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state);
 int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
 {
     ObjAnimComponent* objAnim = &obj->anim;
@@ -215,6 +191,31 @@ void wctemplebri_update(GameObject* obj)
     }
 }
 
+void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state)
+{
+    ObjTextureRuntimeSlot* tex;
+    int phase;
+
+    tex = objFindTexture(obj, 0, 0);
+    tex->offsetT += WCTEMPLEBRI_UV0_V_STEP;
+    if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP)
+        tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
+    tex->offsetS += WCTEMPLEBRI_UV0_U_STEP;
+    if (tex->offsetS > WCTEMPLEBRI_WARP_WRAP)
+        tex->offsetS -= WCTEMPLEBRI_WARP_WRAP;
+    tex = objFindTexture(obj, 1, 0);
+    tex->offsetT += WCTEMPLEBRI_UV1_V_STEP;
+    if (tex->offsetT > WCTEMPLEBRI_WARP_WRAP)
+        tex->offsetT -= WCTEMPLEBRI_WARP_WRAP;
+    phase = state->wavePhaseA + (framesThisStep << WCTEMPLEBRI_WAVE_A_STEP_SHIFT);
+    if (phase > WCTEMPLEBRI_WAVE_WRAP)
+        phase = (phase - 0x10000) + 1;
+    state->wavePhaseA = phase;
+    phase = state->wavePhaseB + (framesThisStep << WCTEMPLEBRI_WAVE_B_STEP_SHIFT);
+    if (phase > WCTEMPLEBRI_WAVE_WRAP)
+        phase = (phase - 0x10000) + 1;
+    state->wavePhaseB = phase;
+}
 void wctemplebri_init(GameObject* obj, WCTempleBriSetup* setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;

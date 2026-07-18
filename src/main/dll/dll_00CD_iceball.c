@@ -36,31 +36,7 @@
 
 
 
-void fn_8015FBEC(GameObject* obj)
-{
-
-    s16 mode = (obj)->anim.seqId;
-    int i;
-
-    if (mode == 0x2cb)
-    {
-        for (i = 0; i < 25; i++)
-        {
-            (*gPartfxInterface)->spawnObject((void*)obj, 834, NULL, 1, -1, NULL);
-        }
-    }
-    else if (mode == 100 || mode == 0x30a)
-    {
-        for (i = 0; i < 25; i++)
-        {
-            (*gPartfxInterface)->spawnObject((void*)obj, 836, NULL, 1, -1, NULL);
-        }
-    }
-
-    Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311_26a);
-    Camera_EnableViewYOffset();
-    CameraShake_SetAllMagnitudes(1.0f);
-}
+void fn_8015FBEC(GameObject* obj);
 
 static inline u8 scarab_isObjectInList(void* obj)
 {
@@ -203,6 +179,32 @@ void IceBall_update(u16* obj, int unused)
         ((GameObject*)objInt)->userData1 = 120;
         (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->flags &= ~1;
     }
+}
+
+void fn_8015FBEC(GameObject* obj)
+{
+
+    s16 mode = (obj)->anim.seqId;
+    int i;
+
+    if (mode == 0x2cb)
+    {
+        for (i = 0; i < 25; i++)
+        {
+            (*gPartfxInterface)->spawnObject((void*)obj, 834, NULL, 1, -1, NULL);
+        }
+    }
+    else if (mode == 100 || mode == 0x30a)
+    {
+        for (i = 0; i < 25; i++)
+        {
+            (*gPartfxInterface)->spawnObject((void*)obj, 836, NULL, 1, -1, NULL);
+        }
+    }
+
+    Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311_26a);
+    Camera_EnableViewYOffset();
+    CameraShake_SetAllMagnitudes(1.0f);
 }
 
 void IceBall_init(GameObject* obj)

@@ -433,6 +433,39 @@ void waterfx_func08(s16 id, f32 x, f32 y, f32 z, f32 w)
     gWaterfxWakeCount++;
 }
 
+void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d);
+
+void waterfx_func04(u8* objHeader, u16 limbMask, f32* impactPositions, u8* surface, f32 speed)
+{
+    u8* surf = surface;
+    f32* pos = impactPositions;
+    while (limbMask != 0)
+    {
+        if (limbMask & 1)
+        {
+            f32 px = pos[0];
+            f32 pz = pos[2];
+            if (*(f32*)(surf + 0x1b4) < lbl_803DF338)
+            {
+                if (speed > lbl_803DF33C)
+                {
+                    waterfx_spawnSplashBurst(objHeader, px, *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4), pz,
+                                             lbl_803DF300);
+                }
+            }
+            gWaterfxRippleScale = lbl_803DF318;
+            waterfx_spawnRipple(px, *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4), pz, *(s16*)objHeader,
+                                lbl_803DF300, 4);
+            gWaterfxPendingImpactPosition[0] = px;
+            gWaterfxPendingImpactPosition[1] = *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4);
+            gWaterfxPendingImpactPosition[2] = pz;
+            gWaterfxPendingImpactPositionValid = 1;
+        }
+        limbMask >>= 1;
+        pos += 3;
+    }
+}
+
 void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d)
 {
     WaterParticle* p;
@@ -708,37 +741,6 @@ void waterfx_run(void)
  * +0x10 is the object's Y (water plane) height. surface+0x1b4 is the local
  * water-surface height at the impact. impactPositions is one vec3 per limb.
  */
-void waterfx_func04(u8* objHeader, u16 limbMask, f32* impactPositions, u8* surface, f32 speed)
-{
-    u8* surf = surface;
-    f32* pos = impactPositions;
-    while (limbMask != 0)
-    {
-        if (limbMask & 1)
-        {
-            f32 px = pos[0];
-            f32 pz = pos[2];
-            if (*(f32*)(surf + 0x1b4) < lbl_803DF338)
-            {
-                if (speed > lbl_803DF33C)
-                {
-                    waterfx_spawnSplashBurst(objHeader, px, *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4), pz,
-                                             lbl_803DF300);
-                }
-            }
-            gWaterfxRippleScale = lbl_803DF318;
-            waterfx_spawnRipple(px, *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4), pz, *(s16*)objHeader,
-                                lbl_803DF300, 4);
-            gWaterfxPendingImpactPosition[0] = px;
-            gWaterfxPendingImpactPosition[1] = *(f32*)(objHeader + 0x10) + *(f32*)(surf + 0x1b4);
-            gWaterfxPendingImpactPosition[2] = pz;
-            gWaterfxPendingImpactPositionValid = 1;
-        }
-        limbMask >>= 1;
-        pos += 3;
-    }
-}
-
 void waterfx_onMapSetup(void)
 {
     int i;

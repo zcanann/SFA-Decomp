@@ -215,92 +215,7 @@ void arwarwing_readControls(GameObject* obj, ArwingState* state);
 
 void arwarwing_updateThrusters(GameObject* obj, ArwingState* state);
 
-void arwarwing_updateBarrelRoll(GameObject* obj, ArwingState* state)
-{
-    f32 zero;
-    f32 direction;
-
-    state->barrelRollAngle =
-        (int)(timeDelta * (state->barrelRollDirection * state->barrelRollSpeedScale) +
-              (f32)state->barrelRollAngle);
-    obj->anim.rotZ =
-        (s16)(timeDelta * (state->barrelRollDirection * state->barrelRollSpeedScale) +
-              (f32) * &obj->anim.rotZ);
-    direction = state->barrelRollDirection;
-    zero = 0.0f;
-    if (direction > zero)
-    {
-        {
-            int tgt = state->rotZTrimCur;
-            int angle;
-            int hi = tgt + 0xffff;
-            int mid = tgt + 0x8000;
-            angle = state->barrelRollAngle;
-            if (angle > hi)
-            {
-                state->mode = 0;
-                state->rotZTrimCur = state->barrelRollAngle - 0xffff;
-                state->rotZBlend = zero;
-                state->maxSpeedX =
-                    state->maxSpeedX / state->barrelRollMaxSpeedScale;
-                state->accelX =
-                    state->accelX / state->barrelRollAccelScale;
-                arwarwingbo_setActiveVisible((GameObject*)(state->bombObj), 0, 0);
-            }
-            else if (angle > mid)
-            {
-                int d = angle - (u16)tgt;
-                if (d > 0x8000)
-                    d -= 0xffff;
-                if (d < -0x8000)
-                    d += 0xffff;
-                if (d < 0)
-                    d = -d;
-                state->barrelRollSpeedScale = d / state->barrelRollDecelRange;
-                if (state->barrelRollSpeedScale < lbl_803E6EF8)
-                    state->barrelRollSpeedScale = lbl_803E6EF8;
-                else if (state->barrelRollSpeedScale > 1.0f)
-                    state->barrelRollSpeedScale = 1.0f;
-            }
-        }
-    }
-    else
-    {
-        {
-            int tgt = state->rotZTrimCur;
-            int angle;
-            int lo = tgt - 0xffff;
-            int mid = tgt - 0x8000;
-            angle = state->barrelRollAngle;
-            if (angle < lo)
-            {
-                state->mode = 0;
-                state->rotZTrimCur = state->barrelRollAngle + 0xffff;
-                state->rotZBlend = zero;
-                state->maxSpeedX =
-                    state->maxSpeedX / state->barrelRollMaxSpeedScale;
-                state->accelX =
-                    state->accelX / state->barrelRollAccelScale;
-                arwarwingbo_setActiveVisible((GameObject*)(state->bombObj), 0, 0);
-            }
-            else if (angle > mid)
-            {
-                int d = angle - (u16)tgt;
-                if (d > 0x8000)
-                    d -= 0xffff;
-                if (d < -0x8000)
-                    d += 0xffff;
-                if (d < 0)
-                    d = -d;
-                state->barrelRollSpeedScale = d / state->barrelRollDecelRange;
-                if (state->barrelRollSpeedScale < lbl_803E6EF8)
-                    state->barrelRollSpeedScale = lbl_803E6EF8;
-                else if (state->barrelRollSpeedScale > 1.0f)
-                    state->barrelRollSpeedScale = 1.0f;
-            }
-        }
-    }
-}
+void arwarwing_updateBarrelRoll(GameObject* obj, ArwingState* state);
 
 void arwarwing_clampToFlightBounds(GameObject* obj, ArwingState* state);
 
@@ -308,88 +223,11 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state);
 
 void arwarwing_spawnBomb(GameObject* obj, ArwingState* state, int side);
 
-void arwarwing_updateBombFire(GameObject* obj, ArwingState* state)
-{
-    ArwingState* arwing = state;
-    if (arwing->activeBombObj != NULL)
-        return;
-    {
-        f32 t = arwing->bombCooldown;
-        f32 zero = 0.0f;
-        if (t > zero)
-        {
-            arwing->bombCooldown = t - timeDelta;
-            if (arwing->bombCooldown < zero)
-            {
-                arwing->bombCooldown = zero;
-            }
-            else
-            {
-                return;
-            }
-        }
-    }
-    if (arwing->inputFlags & PAD_BUTTON_B)
-    {
-        if ((s8)arwing->bombVolleyMode == 1)
-        {
-            arwarwing_spawnBomb(obj, state, 0);
-            arwarwing_spawnBomb(obj, state, 1);
-        }
-        else
-        {
-            arwarwing_spawnBomb(obj, state, arwing->bombSide);
-            arwing->bombSide = (arwing->bombSide ^ 1) & 0xff;
-        }
-        arwing->bombCooldown = (f32)(u32) * (u16*)&arwing->bombFireDelay;
-    }
-}
+void arwarwing_updateBombFire(GameObject* obj, ArwingState* state);
 
 void arwarwing_spawnLaserShot(GameObject* obj, ArwingState* state, int side, int level, int linkEffect);
 
-void arwarwing_updateWeaponFire(GameObject* obj, ArwingState* state)
-{
-    int fire;
-    arwarwing_updateThrusters(obj, state);
-    {
-        f32 t = state->fireCooldown;
-        f32 zero = 0.0f;
-        if (t > zero)
-        {
-            state->fireCooldown = t - timeDelta;
-            if (state->fireCooldown < zero)
-                state->fireCooldown = zero;
-            else
-                return;
-        }
-    }
-    fire = 0;
-    if (state->inputFlags2 & 0x100)
-    {
-        state->fireTimer -= timeDelta;
-        if (state->fireTimer <= 0.0f)
-            fire = 1;
-    }
-    if ((state->inputFlags & 0x100) == 0 && fire == 0)
-        return;
-    state->fireTimer = gArwingFireTimerReset;
-    if ((s8)state->laserLevel == 2)
-    {
-        arwarwing_spawnLaserShot(obj, state, 0, 2, 1);
-        arwarwing_spawnLaserShot(obj, state, 1, 2, 0);
-    }
-    else if ((s8)state->laserLevel == 1)
-    {
-        arwarwing_spawnLaserShot(obj, state, 0, 1, 1);
-        arwarwing_spawnLaserShot(obj, state, 1, 1, 0);
-    }
-    else
-    {
-        arwarwing_spawnLaserShot(obj, state, state->laserSide, 0, 1);
-        state->laserSide = (state->laserSide ^ 1) & 0xff;
-    }
-    state->fireCooldown = (f32)(u32)state->fireDelay;
-}
+void arwarwing_updateWeaponFire(GameObject* obj, ArwingState* state);
 
 void arwarwing_emitDamageEffects(int obj, ArwingState* state);
 
@@ -1031,6 +869,87 @@ void arwarwing_update(GameObject* obj)
     arwarwing_emitDamageEffects((int)obj, state);
 }
 
+void arwarwing_updateBombFire(GameObject* obj, ArwingState* state)
+{
+    ArwingState* arwing = state;
+    if (arwing->activeBombObj != NULL)
+        return;
+    {
+        f32 t = arwing->bombCooldown;
+        f32 zero = 0.0f;
+        if (t > zero)
+        {
+            arwing->bombCooldown = t - timeDelta;
+            if (arwing->bombCooldown < zero)
+            {
+                arwing->bombCooldown = zero;
+            }
+            else
+            {
+                return;
+            }
+        }
+    }
+    if (arwing->inputFlags & PAD_BUTTON_B)
+    {
+        if ((s8)arwing->bombVolleyMode == 1)
+        {
+            arwarwing_spawnBomb(obj, state, 0);
+            arwarwing_spawnBomb(obj, state, 1);
+        }
+        else
+        {
+            arwarwing_spawnBomb(obj, state, arwing->bombSide);
+            arwing->bombSide = (arwing->bombSide ^ 1) & 0xff;
+        }
+        arwing->bombCooldown = (f32)(u32) * (u16*)&arwing->bombFireDelay;
+    }
+}
+
+void arwarwing_updateWeaponFire(GameObject* obj, ArwingState* state)
+{
+    int fire;
+    arwarwing_updateThrusters(obj, state);
+    {
+        f32 t = state->fireCooldown;
+        f32 zero = 0.0f;
+        if (t > zero)
+        {
+            state->fireCooldown = t - timeDelta;
+            if (state->fireCooldown < zero)
+                state->fireCooldown = zero;
+            else
+                return;
+        }
+    }
+    fire = 0;
+    if (state->inputFlags2 & 0x100)
+    {
+        state->fireTimer -= timeDelta;
+        if (state->fireTimer <= 0.0f)
+            fire = 1;
+    }
+    if ((state->inputFlags & 0x100) == 0 && fire == 0)
+        return;
+    state->fireTimer = gArwingFireTimerReset;
+    if ((s8)state->laserLevel == 2)
+    {
+        arwarwing_spawnLaserShot(obj, state, 0, 2, 1);
+        arwarwing_spawnLaserShot(obj, state, 1, 2, 0);
+    }
+    else if ((s8)state->laserLevel == 1)
+    {
+        arwarwing_spawnLaserShot(obj, state, 0, 1, 1);
+        arwarwing_spawnLaserShot(obj, state, 1, 1, 0);
+    }
+    else
+    {
+        arwarwing_spawnLaserShot(obj, state, state->laserSide, 0, 1);
+        state->laserSide = (state->laserSide ^ 1) & 0xff;
+    }
+    state->fireCooldown = (f32)(u32)state->fireDelay;
+}
+
 void arwarwing_init(GameObject* obj)
 {
     ArwingState* state;
@@ -1364,6 +1283,93 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     arwing->bobXPhase = (arwing->bobXRate * timeDelta + (f32)(u32)arwing->bobXPhase);
     arwing->bobYPhase = (arwing->bobYRate * timeDelta + (f32)(u32)arwing->bobYPhase);
     arwarwing_clampToFlightBounds(obj, state);
+}
+
+void arwarwing_updateBarrelRoll(GameObject* obj, ArwingState* state)
+{
+    f32 zero;
+    f32 direction;
+
+    state->barrelRollAngle =
+        (int)(timeDelta * (state->barrelRollDirection * state->barrelRollSpeedScale) +
+              (f32)state->barrelRollAngle);
+    obj->anim.rotZ =
+        (s16)(timeDelta * (state->barrelRollDirection * state->barrelRollSpeedScale) +
+              (f32) * &obj->anim.rotZ);
+    direction = state->barrelRollDirection;
+    zero = 0.0f;
+    if (direction > zero)
+    {
+        {
+            int tgt = state->rotZTrimCur;
+            int angle;
+            int hi = tgt + 0xffff;
+            int mid = tgt + 0x8000;
+            angle = state->barrelRollAngle;
+            if (angle > hi)
+            {
+                state->mode = 0;
+                state->rotZTrimCur = state->barrelRollAngle - 0xffff;
+                state->rotZBlend = zero;
+                state->maxSpeedX =
+                    state->maxSpeedX / state->barrelRollMaxSpeedScale;
+                state->accelX =
+                    state->accelX / state->barrelRollAccelScale;
+                arwarwingbo_setActiveVisible((GameObject*)(state->bombObj), 0, 0);
+            }
+            else if (angle > mid)
+            {
+                int d = angle - (u16)tgt;
+                if (d > 0x8000)
+                    d -= 0xffff;
+                if (d < -0x8000)
+                    d += 0xffff;
+                if (d < 0)
+                    d = -d;
+                state->barrelRollSpeedScale = d / state->barrelRollDecelRange;
+                if (state->barrelRollSpeedScale < lbl_803E6EF8)
+                    state->barrelRollSpeedScale = lbl_803E6EF8;
+                else if (state->barrelRollSpeedScale > 1.0f)
+                    state->barrelRollSpeedScale = 1.0f;
+            }
+        }
+    }
+    else
+    {
+        {
+            int tgt = state->rotZTrimCur;
+            int angle;
+            int lo = tgt - 0xffff;
+            int mid = tgt - 0x8000;
+            angle = state->barrelRollAngle;
+            if (angle < lo)
+            {
+                state->mode = 0;
+                state->rotZTrimCur = state->barrelRollAngle + 0xffff;
+                state->rotZBlend = zero;
+                state->maxSpeedX =
+                    state->maxSpeedX / state->barrelRollMaxSpeedScale;
+                state->accelX =
+                    state->accelX / state->barrelRollAccelScale;
+                arwarwingbo_setActiveVisible((GameObject*)(state->bombObj), 0, 0);
+            }
+            else if (angle > mid)
+            {
+                int d = angle - (u16)tgt;
+                if (d > 0x8000)
+                    d -= 0xffff;
+                if (d < -0x8000)
+                    d += 0xffff;
+                if (d < 0)
+                    d = -d;
+                state->barrelRollSpeedScale = d / state->barrelRollDecelRange;
+                if (state->barrelRollSpeedScale < lbl_803E6EF8)
+                    state->barrelRollSpeedScale = lbl_803E6EF8;
+                else if (state->barrelRollSpeedScale > 1.0f)
+                    state->barrelRollSpeedScale = 1.0f;
+            }
+        }
+    }
 }
 
 void arwarwing_spawnBomb(GameObject* obj, ArwingState* state, int side)

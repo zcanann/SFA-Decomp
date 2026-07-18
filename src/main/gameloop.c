@@ -225,42 +225,6 @@ void checkReset(void);
 
 int return0_8002969C(void);
 
-void loadAsset(void* reqVoid)
-{
-    u8 tmp[0x10];
-    AssetReq* req;
-
-    req = reqVoid;
-    switch (req->type)
-    {
-    case 0:
-        *(void**)req->dest = fileLoad(req->resourceId, 0);
-        break;
-    case 1:
-        fileLoadToBuffer(req->resourceId, (void*)req->dest);
-        break;
-    case 2:
-        fileLoadToBufferOffset(req->resourceId, (void*)req->dest, req->offset, req->argC);
-        break;
-    case 4:
-        *(void**)req->dest =
-            loadCharacter((s16*)req->arg18, req->arg1c, req->arg24, req->arg20, (void*)req->arg14, req->arg28);
-        break;
-    case 3:
-        *(void**)req->dest = (void*)textureLoad(req->resourceId, 0);
-        break;
-    case 5:
-        *(void**)req->dest = Resource_Acquire(req->resourceId & 0xffff, req->argC & 0xffff);
-        break;
-    case 6:
-        *(void**)req->dest = (void*)((int (*)(int, int, void*))return0_8002969C)(req->resourceId, req->argC, tmp);
-        break;
-    case 7:
-        *(void**)req->dest = loadAnimation(req->arg24, req->resourceId, (s16)req->argC, (u8*)req->arg20);
-        break;
-    }
-}
-
 void doNothing_8001F678(void)
 {
 }
@@ -320,6 +284,42 @@ void loadAssetFileById(void* out, int fileId)
     gGameLoopAssetReq.resourceId = fileId;
     gGameLoopAssetReq.dest = (int)out;
     loadAsset(&gGameLoopAssetReq);
+}
+
+void loadAsset(void* reqVoid)
+{
+    u8 tmp[0x10];
+    AssetReq* req;
+
+    req = reqVoid;
+    switch (req->type)
+    {
+    case 0:
+        *(void**)req->dest = fileLoad(req->resourceId, 0);
+        break;
+    case 1:
+        fileLoadToBuffer(req->resourceId, (void*)req->dest);
+        break;
+    case 2:
+        fileLoadToBufferOffset(req->resourceId, (void*)req->dest, req->offset, req->argC);
+        break;
+    case 4:
+        *(void**)req->dest =
+            loadCharacter((s16*)req->arg18, req->arg1c, req->arg24, req->arg20, (void*)req->arg14, req->arg28);
+        break;
+    case 3:
+        *(void**)req->dest = (void*)textureLoad(req->resourceId, 0);
+        break;
+    case 5:
+        *(void**)req->dest = Resource_Acquire(req->resourceId & 0xffff, req->argC & 0xffff);
+        break;
+    case 6:
+        *(void**)req->dest = (void*)((int (*)(int, int, void*))return0_8002969C)(req->resourceId, req->argC, tmp);
+        break;
+    case 7:
+        *(void**)req->dest = loadAnimation(req->arg24, req->resourceId, (s16)req->argC, (u8*)req->arg20);
+        break;
+    }
 }
 
 void crash(void)
@@ -1012,6 +1012,23 @@ void setTimeStop(int stop)
     timeStop = stop;
 }
 
+void Obj_FlushDeferredFreeList(void);
+
+extern void mapSetup();
+typedef struct PlayerTrailRecord
+{
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    int time;
+} PlayerTrailRecord;
+
+PlayerTrailRecord gGameLoopPlayerTrailBuffer[0x3C0 / sizeof(PlayerTrailRecord)];
+void cutsceneFadeInOut(int enter)
+{
+    cutsceneEnterExit(enter, 1);
+}
+
 void cutsceneEnterExit(int entering, int affectSounds)
 {
     if (entering != 0)
@@ -1038,23 +1055,6 @@ void cutsceneEnterExit(int entering, int affectSounds)
             }
         }
     }
-}
-
-void Obj_FlushDeferredFreeList(void);
-
-extern void mapSetup();
-typedef struct PlayerTrailRecord
-{
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    int time;
-} PlayerTrailRecord;
-
-PlayerTrailRecord gGameLoopPlayerTrailBuffer[0x3C0 / sizeof(PlayerTrailRecord)];
-void cutsceneFadeInOut(int enter)
-{
-    cutsceneEnterExit(enter, 1);
 }
 
 void gameTextInitFn_8001a234(void);

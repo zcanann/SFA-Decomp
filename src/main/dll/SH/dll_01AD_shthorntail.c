@@ -265,6 +265,91 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
     SHthorntail_updateState(obj, runtime);
 }
 
+void SHthorntail_updateTailSwing(u32 objectId, SHthorntailRuntime* runtime)
+{
+    u8 tailSwingState;
+    int moveComplete;
+
+    tailSwingState = runtime->tailSwingState;
+    switch (tailSwingState)
+    {
+    case SHTHORNTAIL_TAIL_SWING_READY:
+        runtime->tailSwingTimer = runtime->tailSwingTimer - timeDelta;
+        if (runtime->tailSwingTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
+        {
+            Sfx_PlayFromObject(objectId, SHTHORNTAIL_TAIL_SWING_WINDUP_VOLUME_ID);
+            runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_WINDUP;
+            runtime->tailSwingTimer = SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;
+        }
+        break;
+    case SHTHORNTAIL_TAIL_SWING_WINDUP:
+        runtime->tailSwingTimer = runtime->tailSwingTimer - timeDelta;
+        if (runtime->tailSwingTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD)
+        {
+            Sfx_PlayFromObject(objectId, SHTHORNTAIL_TAIL_SWING_ACTIVE_VOLUME_ID);
+            runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_ACTIVE;
+        }
+        break;
+    case SHTHORNTAIL_TAIL_SWING_ACTIVE:
+        moveComplete = runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE;
+        if (moveComplete != 0)
+        {
+            runtime->tailSwingState = SHTHORNTAIL_TAIL_SWING_READY;
+            runtime->tailSwingTimer = SHTHORNTAIL_TAIL_SWING_RECOVER_TIME;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
+{
+    SHthorntailObject** objects;
+    u32* linkedConfigRow;
+    int count;
+    int index;
+    s8 groupIndex;
+    int linkedEventPending;
+    s8 matchCount;
+
+    linkedEventPending = 0;
+    groupIndex = -1;
+    matchCount = 0;
+    linkedConfigRow = gSHthorntailDataTables[0];
+    for (index = 0; index < 6; index++)
+    {
+        if (obj->config->configToken == linkedConfigRow[0])
+        {
+            groupIndex = index;
+            break;
+        }
+        linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES);
+    }
+    objects = (SHthorntailObject**)ObjGroup_GetObjects(SHTHORNTAIL_OBJ_GROUP, &count);
+    for (index = 0; index < count; index++)
+    {
+        if ((objects[index]->objType == SHTHORNTAIL_OBJ_TYPE) &&
+            ((objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][1]) ||
+             (objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][2]) ||
+             (objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][3])))
+        {
+            fn_8014C66C((GameObject*)objects[index], (GameObject*)obj);
+            if ((vec3f_distanceSquared((f32*)&objects[index]->pos, (f32*)&obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
+                (mainGetBit(SHthorntail_GetLinkedGameBit(objects[index]->config)) == 0u))
+            {
+                linkedEventPending = 1;
+            }
+            matchCount++;
+            if (matchCount == SHTHORNTAIL_LINKED_CONFIG_COUNT)
+            {
+                break;
+            }
+        }
+    }
+    return linkedEventPending;
+}
+
 u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     SHthorntailRuntime* runtime;

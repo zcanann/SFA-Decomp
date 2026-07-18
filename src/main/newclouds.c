@@ -37,7 +37,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
-#include "string.h"
 
 u8 gNewCloudBlizzardActivePrev;
 void* lbl_803DD1C8;
@@ -71,6 +70,7 @@ typedef struct
 {
     s16 uv[6];
 } SnowFlakeUVs;
+extern void* memset(void* dst, int c, int n);
 extern char sSnowFreeSnowCloudInvalidCloudId[];
 typedef struct WindSource
 {
@@ -708,48 +708,6 @@ void snowCloudInitFlakes(f32* buf, f32 a, f32 b, int cloudId)
     }
     ((NewCloud*)gNewClouds[i])->waveWriteIdx = ((NewCloud*)gNewClouds[i])->waveWriteIdx + 0xfa0;
 }
-void snowFreeSnowCloud(int cloudId)
-{
-    u8* env;
-    u8* p;
-    int i;
-
-    env = saveGameGetEnvState();
-    if (cloudId >= 0 && cloudId <= 2 && getSaveGameLoadStatus() == 0)
-    {
-        ((s16*)(env + 0xe))[cloudId] = -1;
-        ((s8*)(env + 0x41))[cloudId] = -1;
-    }
-    for (i = 0; i < 8; i++)
-    {
-        p = gNewClouds[i];
-        if (p != NULL && cloudId == ((NewCloud*)p)->cloudId)
-        {
-            break;
-        }
-    }
-    p = gNewClouds[i];
-    if (p == NULL || i == 8)
-    {
-        return;
-    }
-    if (cloudId != ((NewCloud*)p)->cloudId)
-    {
-        debugPrintf(sSnowFreeSnowCloudInvalidCloudId, cloudId);
-        return;
-    }
-    if (*(u8**)(p + 4) != NULL)
-    {
-        mm_free(*(u8**)(p + 4));
-        *(u8**)((u8*)gNewClouds[i] + 4) = NULL;
-    }
-    if (gNewClouds[i] != NULL)
-    {
-        mm_free(gNewClouds[i]);
-        gNewClouds[i] = NULL;
-    }
-}
-
 void* gNewClouds[8];
 void snowFreeSnowCloud(int index);
 
@@ -2001,6 +1959,48 @@ void newclouds_onMapSetup(void)
     gNewCloudBlizzardActivePrev = 0;
     Music_Trigger(MUSICTRIG_crun_dungeon, 0);
 }
+
+void snowFreeSnowCloud(int cloudId)
+{
+    u8* env;
+    u8* p;
+    int i;
+
+    env = saveGameGetEnvState();
+    if (cloudId >= 0 && cloudId <= 2 && getSaveGameLoadStatus() == 0)
+    {
+        ((s16*)(env + 0xe))[cloudId] = -1;
+        ((s8*)(env + 0x41))[cloudId] = -1;
+    }
+    for (i = 0; i < 8; i++)
+    {
+        p = gNewClouds[i];
+        if (p != NULL && cloudId == ((NewCloud*)p)->cloudId)
+        {
+            break;
+        }
+    }
+    p = gNewClouds[i];
+    if (p == NULL || i == 8)
+    {
+        return;
+    }
+    if (cloudId != ((NewCloud*)p)->cloudId)
+    {
+        debugPrintf(sSnowFreeSnowCloudInvalidCloudId, cloudId);
+        return;
+    }
+    if (*(u8**)(p + 4) != NULL)
+    {
+        mm_free(*(u8**)(p + 4));
+        *(u8**)((u8*)gNewClouds[i] + 4) = NULL;
+    }
+    if (gNewClouds[i] != NULL)
+    {
+        mm_free(gNewClouds[i]);
+        gNewClouds[i] = NULL;
+    }
+}
 extern const f32 lbl_803DF27C;
 
 /*
@@ -2310,4 +2310,4 @@ char lbl_8030F670[] =
     0x61, 0x76, 0x61, 0x69, 0x6C, 0x61, 0x62, 0x6C, 0x65, 0x0A, 0x00, 0x00,
 };
 char sSnowKillSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i - in snowKillSnowCloud\n";
-
+

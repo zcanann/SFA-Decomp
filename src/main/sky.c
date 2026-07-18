@@ -708,43 +708,6 @@ ModelLightStruct* fn_80089A58(void)
     return gSkySunLight;
 }
 
-int getSunPos(f32* outTime)
-{
-    f32 time;
-
-    if (gSkyState == NULL)
-    {
-        if (outTime != NULL)
-        {
-            *outTime = lbl_803DF058;
-        }
-        return 0;
-    }
-
-    time = ((SkyState*)gSkyState)->timeOfDay;
-    if (time >= lbl_803DF088 || time < gSkyDayStartTime)
-    {
-        if (outTime != NULL)
-        {
-            if (time >= lbl_803DF088)
-            {
-                *outTime = gSkyDayStartTime + (time - lbl_803DF088);
-            }
-            else
-            {
-                *outTime = gSkyDayStartTime - time;
-            }
-        }
-        return 1;
-    }
-
-    if (outTime != NULL)
-    {
-        *outTime = lbl_803DF088 - time;
-    }
-    return 0;
-}
-
 void fn_8008B88C(int* outTimer)
 {
     u8* sky;
@@ -1703,49 +1666,6 @@ void sky2_onMapSetup(void)
     }
 }
 
-void skyFn_80088c94(int flags, u8 mode)
-{
-    u8* env;
-    u8* sky;
-    int i;
-    u8* entry;
-
-    for (i = 0; i < 2; i++)
-    {
-        if ((flags & (1 << i)) != 0)
-        {
-            if (mode != 0)
-            {
-                ((SkyBlendStateFlags*)(gSkyState + i * 0xa4 + 0xc1))->unused80 = 1;
-            }
-            else
-            {
-                entry = gSkyState;
-                entry = entry + i * 0xa4;
-                ((SkyBlendStateFlags*)(entry + 0xc1))->unused80 = 0;
-            }
-        }
-    }
-    sky = gSkyState;
-    ((SkyBlendStateFlags*)(sky + 0x209))->unused80 =
-        ((SkyBlendStateFlags*)(sky + ((SkyState*)sky)->currentLightIndex * 0xa4 + 0xc1))->unused80;
-    env = saveGameGetEnvState();
-    if (getSaveGameLoadStatus() == 0)
-    {
-        for (i = 0; i < 2; i++)
-        {
-            if (((SkyBlendStateFlags*)(gSkyState + i * 0xa4 + 0xc1))->unused80 != 0)
-            {
-                env[0x40] |= (2 << i);
-            }
-            else
-            {
-                env[0x40] &= ~(2 << i);
-            }
-        }
-    }
-}
-
 void skyFn_80088e54(int mode, f32 brightness)
 {
     u8* env;
@@ -1806,6 +1726,8 @@ void skyFn_80088e54(int mode, f32 brightness)
         }
     }
 }
+
+int getSunPos(f32* outTime);
 
 void timeOfDayFn_8008b964(void)
 {
@@ -2733,6 +2655,43 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int red, int green, int blue, in
     gSkyState[slot * 0xa4 + 0xc0] = blendAlpha;
 }
 
+int getSunPos(f32* outTime)
+{
+    f32 time;
+
+    if (gSkyState == NULL)
+    {
+        if (outTime != NULL)
+        {
+            *outTime = lbl_803DF058;
+        }
+        return 0;
+    }
+
+    time = ((SkyState*)gSkyState)->timeOfDay;
+    if (time >= lbl_803DF088 || time < gSkyDayStartTime)
+    {
+        if (outTime != NULL)
+        {
+            if (time >= lbl_803DF088)
+            {
+                *outTime = gSkyDayStartTime + (time - lbl_803DF088);
+            }
+            else
+            {
+                *outTime = gSkyDayStartTime - time;
+            }
+        }
+        return 1;
+    }
+
+    if (outTime != NULL)
+    {
+        *outTime = lbl_803DF088 - time;
+    }
+    return 0;
+}
+
 void renderSunAndMoon(int a, int b, int c, int d, int visible)
 {
     SkyRotQ q1;
@@ -3236,6 +3195,8 @@ SkyDllInterface lbl_8030F414 = {
     (ObjectDescriptorCallback)return0_80088758,
 };
 
+void skyFn_80088c94(int flags, u8 mode);
+
 void Sky_func03(int a, int b, u8* cfg)
 {
     s16* envp;
@@ -3407,6 +3368,49 @@ void Sky_func03(int a, int b, u8* cfg)
                 {
                     env2[0x40] &= ~(2 << i);
                 }
+            }
+        }
+    }
+}
+
+void skyFn_80088c94(int flags, u8 mode)
+{
+    u8* env;
+    u8* sky;
+    int i;
+    u8* entry;
+
+    for (i = 0; i < 2; i++)
+    {
+        if ((flags & (1 << i)) != 0)
+        {
+            if (mode != 0)
+            {
+                ((SkyBlendStateFlags*)(gSkyState + i * 0xa4 + 0xc1))->unused80 = 1;
+            }
+            else
+            {
+                entry = gSkyState;
+                entry = entry + i * 0xa4;
+                ((SkyBlendStateFlags*)(entry + 0xc1))->unused80 = 0;
+            }
+        }
+    }
+    sky = gSkyState;
+    ((SkyBlendStateFlags*)(sky + 0x209))->unused80 =
+        ((SkyBlendStateFlags*)(sky + ((SkyState*)sky)->currentLightIndex * 0xa4 + 0xc1))->unused80;
+    env = saveGameGetEnvState();
+    if (getSaveGameLoadStatus() == 0)
+    {
+        for (i = 0; i < 2; i++)
+        {
+            if (((SkyBlendStateFlags*)(gSkyState + i * 0xa4 + 0xc1))->unused80 != 0)
+            {
+                env[0x40] |= (2 << i);
+            }
+            else
+            {
+                env[0x40] &= ~(2 << i);
             }
         }
     }

@@ -134,6 +134,7 @@ void kytesmum_init(GameObject* obj, KytesMumSetup* setup);
 void kytesmum_release(void);
 void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible);
 void kytesmum_update(GameObject* obj);
+void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData);
 u8 gKytesMumMoveSets[] = {
     0x00, 0x00, 0x02, 0x06, 0x01, 0x27, 0x00, 0x00, 0x03, 0x0A, 0x00, 0x00, 0x00, 0x04, 0x00,
     0x05, 0x00, 0x01, 0x00, 0x08, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -157,49 +158,6 @@ u32 gKytesMumObjDescriptor[14] = {0x00000000,
                                   (u32)kytesmum_free,
                                   (u32)kytesmum_getObjectTypeId,
                                   (u32)kytesmum_getExtraSize};
-
-void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
-{
-    int i;
-    u8 flags = 0;
-    for (i = 0; i < (s8)arg[0x1b]; i++)
-    {
-        switch (*(s8*)(arg + i + 0x13))
-        {
-        case 0:
-            if (sfxData != 0)
-            {
-                Sfx_PlayFromObject(obj, sfxData[0]);
-            }
-            break;
-        case 7:
-            if (sfxData != 0)
-            {
-                Sfx_PlayFromObject(obj, sfxData[1]);
-            }
-            break;
-        case 1:
-            flags |= 1;
-            break;
-        case 2:
-            flags |= 2;
-            break;
-        case 3:
-            flags |= 4;
-            break;
-        case 4:
-            flags |= 8;
-            break;
-        case 5:
-        case 6:
-            break;
-        }
-    }
-    if (flags != 0 && sfxData != 0)
-    {
-        Sfx_PlayFromObject(obj, sfxData[3]);
-    }
-}
 
 int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
 {
@@ -384,6 +342,49 @@ void kytesmum_update(GameObject* obj)
     {
         (*(void (**)(int, int, int, int))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x28))(nearest, (int)obj,
                                                                                                      1, 2);
+    }
+}
+
+void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
+{
+    int i;
+    u8 flags = 0;
+    for (i = 0; i < (s8)arg[0x1b]; i++)
+    {
+        switch (*(s8*)(arg + i + 0x13))
+        {
+        case 0:
+            if (sfxData != 0)
+            {
+                Sfx_PlayFromObject(obj, sfxData[0]);
+            }
+            break;
+        case 7:
+            if (sfxData != 0)
+            {
+                Sfx_PlayFromObject(obj, sfxData[1]);
+            }
+            break;
+        case 1:
+            flags |= 1;
+            break;
+        case 2:
+            flags |= 2;
+            break;
+        case 3:
+            flags |= 4;
+            break;
+        case 4:
+            flags |= 8;
+            break;
+        case 5:
+        case 6:
+            break;
+        }
+    }
+    if (flags != 0 && sfxData != 0)
+    {
+        Sfx_PlayFromObject(obj, sfxData[3]);
     }
 }
 

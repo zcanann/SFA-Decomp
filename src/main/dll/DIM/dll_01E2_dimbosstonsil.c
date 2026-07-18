@@ -178,6 +178,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
                 animUpdate->sequenceEventActive = 0;
             }
             break;
+        case 0:
         default:
             animUpdate->hitVolumePair = -1;
             animUpdate->hitVolumePair &= ~0x40;

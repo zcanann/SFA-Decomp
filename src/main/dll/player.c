@@ -378,43 +378,6 @@ void playerDoTailAnims(int obj, void* statep)
         playerTailFn_80026b3c(state, v, gPlayerModelChain, playerUpdateTail);
     }
 }
-void playerUpdatePathEffectCountdown(GameObject* obj, int inner)
-{
-    f32 outvec[3];
-    struct
-    {
-        u8 pad[0xc];
-        f32 x;
-        f32 y;
-        f32 z;
-    } buf;
-    f32 mtx[12];
-    u8 cnt = ((PlayerState*)inner)->stepDustCount;
-
-    if (cnt != 0)
-    {
-        if (cnt & 1)
-        {
-            int t;
-            memcpy(mtx, (void*)ObjPath_GetPointModelMtx(obj, 5), 0x30);
-            mtx[3] = lbl_803E7EA4;
-            mtx[7] = lbl_803E7EA4;
-            mtx[11] = lbl_803E7EA4;
-            buf.x = lbl_803E7EA4;
-            buf.y = lbl_803E7EA4;
-            t = ((PlayerState*)inner)->stepDustCount;
-            buf.z = lbl_803E7EC8 * (f32)(int)randomGetRange(t + 4, t + 8);
-            PSMTXMultVec(mtx, &buf.x, outvec);
-            buf.x = lbl_803E7EA4;
-            buf.y = lbl_803E7ECC;
-            buf.z = lbl_803E7ED0;
-            ObjPath_GetPointWorldPosition((GameObject*)obj, 0xa, &buf.x, &buf.y, &buf.z, 1);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x7e5, &buf, 0x200001, -1, outvec);
-        }
-        ((PlayerState*)inner)->stepDustCount -= 1;
-    }
-}
-
 static inline ObjModel* Player_GetActiveModel(int obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -11827,39 +11790,6 @@ void playerDie(GameObject* obj)
     AudioStream_StopCurrent();
     AudioStream_Play(0x51e0, AudioStream_StartPrepared);
 }
-void fn_802AABE4(int obj)
-{
-    s16* movp;
-    f32* outp;
-    ObjModel* model;
-    short i;
-    s16 out2[3];
-    f32 out1[5];
-
-    model = (ObjModel*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex];
-
-    ObjAnim_SetCurrentMove(obj, *(s16*)((PlayerState*)((GameObject*)obj)->extra)->moveAnimTable, lbl_803E7EA4, 0);
-    ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
-    lbl_803DAF88[0] = out1[1];
-
-    ObjAnim_SetCurrentMove(obj, lbl_80332F2C[0], lbl_803E7EA4, 0);
-    ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
-    lbl_803DAF88[1] = out1[1];
-
-    i = 12;
-    movp = (s16*)((char*)lbl_80332F48 + 0x22);
-    outp = &lbl_803DAF88[i];
-    for (; i <= 15; i++)
-    {
-        ObjAnim_SetCurrentMove(obj, *movp, lbl_803E7EA4, 0);
-        ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
-        *outp = out1[1];
-        movp++;
-        outp++;
-    }
-    ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT, OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
-}
-
 void playerDrawTeleportAnim(GameObject* obj)
 {
     int state = *(int*)&obj->extra;
@@ -11983,6 +11913,43 @@ void fn_802AAF80(GameObject* obj, int inner, int a, int b, int c)
                 obj->anim.localPosZ, 0, lbl_803E80E4, 2);
             *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_WATER_SPLASH_PENDING;
         }
+    }
+}
+
+void playerUpdatePathEffectCountdown(GameObject* obj, int inner)
+{
+    f32 outvec[3];
+    struct
+    {
+        u8 pad[0xc];
+        f32 x;
+        f32 y;
+        f32 z;
+    } buf;
+    f32 mtx[12];
+    u8 cnt = ((PlayerState*)inner)->stepDustCount;
+
+    if (cnt != 0)
+    {
+        if (cnt & 1)
+        {
+            int t;
+            memcpy(mtx, (void*)ObjPath_GetPointModelMtx(obj, 5), 0x30);
+            mtx[3] = lbl_803E7EA4;
+            mtx[7] = lbl_803E7EA4;
+            mtx[11] = lbl_803E7EA4;
+            buf.x = lbl_803E7EA4;
+            buf.y = lbl_803E7EA4;
+            t = ((PlayerState*)inner)->stepDustCount;
+            buf.z = lbl_803E7EC8 * (f32)(int)randomGetRange(t + 4, t + 8);
+            PSMTXMultVec(mtx, &buf.x, outvec);
+            buf.x = lbl_803E7EA4;
+            buf.y = lbl_803E7ECC;
+            buf.z = lbl_803E7ED0;
+            ObjPath_GetPointWorldPosition((GameObject*)obj, 0xa, &buf.x, &buf.y, &buf.z, 1);
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x7e5, &buf, 0x200001, -1, outvec);
+        }
+        ((PlayerState*)inner)->stepDustCount -= 1;
     }
 }
 
@@ -16892,44 +16859,6 @@ void fn_802B4A9C(int obj, int inner, int inner2)
     }
 }
 
-void playerAnimate(int obj, int state, f32 fv)
-{
-    u8 buf[0x40];
-
-    ((PlayerState*)state)->baddie.gravity = lbl_803E7EB4;
-    ((PlayerState*)state)->baddie.moveInputX = ((PlayerState*)state)->stickXf;
-    ((PlayerState*)state)->baddie.moveInputZ = ((PlayerState*)state)->stickYf;
-    *(int*)&((PlayerState*)state)->baddie.unk31C = ((PlayerState*)state)->buttonsJustPressed;
-    *(int*)&((PlayerState*)state)->baddie.unk318 = ((PlayerState*)state)->buttonsHeld;
-    Player_GetObjHitsState((GameObject*)(obj))->hitVolumePriority = 0;
-    Player_GetObjHitsState((GameObject*)(obj))->hitVolumeId = 0;
-    Player_GetObjHitsState((GameObject*)(obj))->objectPairPriority = 0;
-    Player_GetObjHitsState((GameObject*)(obj))->objectPairHitVolume = 0;
-    ((PlayerState*)state)->baddie.physicsActive = 1;
-    *(u32*)((char*)state + 0x4) &= ~0x8100000;
-    playerShadowFn_80062a30((GameObject*)obj);
-    ((PlayerState*)state)->emissionState = 0;
-    *(u32*)&((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_NO_POS_VELOCITY;
-    *(int*)state |= 0x1000000;
-    fn_802B0EA4((GameObject*)(obj), state, state);
-    if (playerCheckIfClimbingOntoWall(obj, state, state, buf, fv, 0x60) == 8)
-    {
-        *(int*)&((PlayerState*)state)->baddie.targetObj = 0;
-        ((PlayerState*)state)->baddie.hasTarget = 0;
-        (*gCameraInterface)->setTarget(0);
-        if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)state + 0x3f4))->b40)
-        {
-            ((PlayerState*)state)->staffActionRequest = 1;
-            ((ByteFlags*)((char*)state + 0x3f4))->b08 = 1;
-        }
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 0xa);
-        *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
-    }
-    (*(void (*)(int, int, f32, f32, int*, int*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
-        obj, state, fv, fv, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
-    *(int*)state &= ~0x1000000;
-}
-
 void fn_802B4DE0(GameObject* obj)
 {
     int off;
@@ -17800,6 +17729,44 @@ void playerUpdate(GameObject* obj)
     }
 }
 
+void playerAnimate(int obj, int state, f32 fv)
+{
+    u8 buf[0x40];
+
+    ((PlayerState*)state)->baddie.gravity = lbl_803E7EB4;
+    ((PlayerState*)state)->baddie.moveInputX = ((PlayerState*)state)->stickXf;
+    ((PlayerState*)state)->baddie.moveInputZ = ((PlayerState*)state)->stickYf;
+    *(int*)&((PlayerState*)state)->baddie.unk31C = ((PlayerState*)state)->buttonsJustPressed;
+    *(int*)&((PlayerState*)state)->baddie.unk318 = ((PlayerState*)state)->buttonsHeld;
+    Player_GetObjHitsState((GameObject*)(obj))->hitVolumePriority = 0;
+    Player_GetObjHitsState((GameObject*)(obj))->hitVolumeId = 0;
+    Player_GetObjHitsState((GameObject*)(obj))->objectPairPriority = 0;
+    Player_GetObjHitsState((GameObject*)(obj))->objectPairHitVolume = 0;
+    ((PlayerState*)state)->baddie.physicsActive = 1;
+    *(u32*)((char*)state + 0x4) &= ~0x8100000;
+    playerShadowFn_80062a30((GameObject*)obj);
+    ((PlayerState*)state)->emissionState = 0;
+    *(u32*)&((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_NO_POS_VELOCITY;
+    *(int*)state |= 0x1000000;
+    fn_802B0EA4((GameObject*)(obj), state, state);
+    if (playerCheckIfClimbingOntoWall(obj, state, state, buf, fv, 0x60) == 8)
+    {
+        *(int*)&((PlayerState*)state)->baddie.targetObj = 0;
+        ((PlayerState*)state)->baddie.hasTarget = 0;
+        (*gCameraInterface)->setTarget(0);
+        if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)state + 0x3f4))->b40)
+        {
+            ((PlayerState*)state)->staffActionRequest = 1;
+            ((ByteFlags*)((char*)state + 0x3f4))->b08 = 1;
+        }
+        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 0xa);
+        *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
+    }
+    (*(void (*)(int, int, f32, f32, int*, int*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
+        obj, state, fv, fv, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
+    *(int*)state &= ~0x1000000;
+}
+
 void objLoadPlayerFromSave(int obj)
 {
     char* base = (char*)lbl_80332EC0;
@@ -17939,6 +17906,39 @@ void objLoadPlayerFromSave(int obj)
         gPlayerPendingHealth = 0;
     }
     gPlayerHeldObject = 0;
+}
+
+void fn_802AABE4(int obj)
+{
+    s16* movp;
+    f32* outp;
+    ObjModel* model;
+    short i;
+    s16 out2[3];
+    f32 out1[5];
+
+    model = (ObjModel*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex];
+
+    ObjAnim_SetCurrentMove(obj, *(s16*)((PlayerState*)((GameObject*)obj)->extra)->moveAnimTable, lbl_803E7EA4, 0);
+    ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
+    lbl_803DAF88[0] = out1[1];
+
+    ObjAnim_SetCurrentMove(obj, lbl_80332F2C[0], lbl_803E7EA4, 0);
+    ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
+    lbl_803DAF88[1] = out1[1];
+
+    i = 12;
+    movp = (s16*)((char*)lbl_80332F48 + 0x22);
+    outp = &lbl_803DAF88[i];
+    for (; i <= 15; i++)
+    {
+        ObjAnim_SetCurrentMove(obj, *movp, lbl_803E7EA4, 0);
+        ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
+        *outp = out1[1];
+        movp++;
+        outp++;
+    }
+    ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT, OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
 }
 
 void playerInitFuncPtrsEntry(int obj)
@@ -18496,50 +18496,8 @@ void Lightfoot_RecordCompletedChallengeTargetHit(GameObject* obj, int inner, int
     *(u8*)((char*)animState + 0x2e) = 0;
 }
 
-void Lightfoot_ProcessHitResponseFlags(int obj, int inner)
-{
-    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 4)
-    {
-        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~4;
-        Sfx_PlayFromObject(obj, SFXTRIG_sc_spotfox02);
-    }
-    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 2)
-    {
-        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~2;
-        Sfx_PlayFromObject(obj, SFXTRIG_sc_spotfox02);
-    }
-    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 1)
-    {
-        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~1;
-        if (randomGetRange(0, 2) == 0)
-        {
-            Sfx_PlayFromObject(obj, SFXTRIG_skeep_mumb4);
-        }
-    }
-    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x80)
-    {
-        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x80;
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_swdtest322);
-    }
-    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x200)
-    {
-        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x200;
-        Sfx_PlayFromObject(obj, SFXTRIG_sk_trwhin3);
-    }
-    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x40)
-    {
-        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x40;
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_swdtest322_135);
-    }
-    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x800)
-    {
-        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x800;
-        ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 0x19, 2, 1);
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_simp1_c);
-        CameraShake_Start(lbl_803E81CC, lbl_803E81D0, lbl_803E81D4);
-        doRumble(lbl_803E81D8);
-    }
-}
+void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state);
+void Lightfoot_ProcessHitResponseFlags(int obj, int inner);
 
 void Lightfoot_ResetScriptedPosition(GameObject* obj)
 {
@@ -18611,49 +18569,6 @@ void Lightfoot_UpdateAttachedChild(GameObject* obj, int inner)
     }
 }
 
-/*
- * Mask passed to hitDetectFn_80065e50 / hitDetectFn_800691c0 to pick what a
- * collision query tests. Low byte = behaviour flags; the high bits select the
- * map-surface type (consumed by mapLoadBlocksFn_800685cc).
- */
-void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
-{
-    int p = *(int*)((char*)inner + 0x40c);
-    int sub = *(int*)&((GameObject*)obj)->anim.placementData;
-    int mode;
-    int v;
-
-    (*(void (*)(int, int, int, void*, void*, void*))(*(int*)(*gBaddieControlInterface + 0x14)))(
-        obj, (int)Obj_GetPlayerObject(), 0x10, (char*)p + 0x1e, (char*)p + 0x20, (char*)p + 0x22);
-    ((PlayerState*)state)->baddie.targetDistance = (f32)(u32) * (u16*)((int)p + 0x22);
-    mode = ((GameObject*)obj)->userData2;
-    if (mode == 2)
-    {
-        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        ((GameObject*)obj)->userData2 = 1;
-    }
-    else if (mode == 3)
-    {
-        (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-        ((GameObject*)obj)->userData2 = 1;
-    }
-    else
-    {
-        characterDoEyeAnimsState((GameObject*)obj, inner + 0x3ac);
-        ((PlayerState*)state)->baddie.targetObj = Obj_GetPlayerObject();
-        v = *(int*)&((PlayerState*)sub)->baddie.posX;
-        if (v >= 0x49942 || v < 0x4993f)
-        {
-            (*(void (*)(int, int, f32, int))(*(int*)(*gBaddieControlInterface + 0x2c)))(obj, state, lbl_803E820C, 1);
-        }
-        ((PlayerState*)inner)->pendingParentObj = *(int*)&((GameObject*)obj)->pendingParentObj;
-        *(int*)&((GameObject*)obj)->pendingParentObj = 0;
-        (*(void (*)(int, int, f32, f32, void*, void*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
-            obj, state, timeDelta, timeDelta, lbl_803DB0DC, lbl_803DB0D0);
-        *(int*)&((GameObject*)obj)->pendingParentObj = ((PlayerState*)inner)->pendingParentObj;
-        Lightfoot_ProcessHitResponseFlags(obj, inner);
-    }
-}
 int Lightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int inner = *(int*)&obj->extra;
@@ -18724,6 +18639,95 @@ int Lightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     *(u16*)((char*)inner + 0x400) = *(u16*)((char*)inner + 0x400) | 2;
     return 0;
+}
+
+/*
+ * Mask passed to hitDetectFn_80065e50 / hitDetectFn_800691c0 to pick what a
+ * collision query tests. Low byte = behaviour flags; the high bits select the
+ * map-surface type (consumed by mapLoadBlocksFn_800685cc).
+ */
+void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
+{
+    int p = *(int*)((char*)inner + 0x40c);
+    int sub = *(int*)&((GameObject*)obj)->anim.placementData;
+    int mode;
+    int v;
+
+    (*(void (*)(int, int, int, void*, void*, void*))(*(int*)(*gBaddieControlInterface + 0x14)))(
+        obj, (int)Obj_GetPlayerObject(), 0x10, (char*)p + 0x1e, (char*)p + 0x20, (char*)p + 0x22);
+    ((PlayerState*)state)->baddie.targetDistance = (f32)(u32) * (u16*)((int)p + 0x22);
+    mode = ((GameObject*)obj)->userData2;
+    if (mode == 2)
+    {
+        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+        ((GameObject*)obj)->userData2 = 1;
+    }
+    else if (mode == 3)
+    {
+        (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
+        ((GameObject*)obj)->userData2 = 1;
+    }
+    else
+    {
+        characterDoEyeAnimsState((GameObject*)obj, inner + 0x3ac);
+        ((PlayerState*)state)->baddie.targetObj = Obj_GetPlayerObject();
+        v = *(int*)&((PlayerState*)sub)->baddie.posX;
+        if (v >= 0x49942 || v < 0x4993f)
+        {
+            (*(void (*)(int, int, f32, int))(*(int*)(*gBaddieControlInterface + 0x2c)))(obj, state, lbl_803E820C, 1);
+        }
+        ((PlayerState*)inner)->pendingParentObj = *(int*)&((GameObject*)obj)->pendingParentObj;
+        *(int*)&((GameObject*)obj)->pendingParentObj = 0;
+        (*(void (*)(int, int, f32, f32, void*, void*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
+            obj, state, timeDelta, timeDelta, lbl_803DB0DC, lbl_803DB0D0);
+        *(int*)&((GameObject*)obj)->pendingParentObj = ((PlayerState*)inner)->pendingParentObj;
+        Lightfoot_ProcessHitResponseFlags(obj, inner);
+    }
+}
+
+void Lightfoot_ProcessHitResponseFlags(int obj, int inner)
+{
+    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 4)
+    {
+        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~4;
+        Sfx_PlayFromObject(obj, SFXTRIG_sc_spotfox02);
+    }
+    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 2)
+    {
+        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~2;
+        Sfx_PlayFromObject(obj, SFXTRIG_sc_spotfox02);
+    }
+    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 1)
+    {
+        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~1;
+        if (randomGetRange(0, 2) == 0)
+        {
+            Sfx_PlayFromObject(obj, SFXTRIG_skeep_mumb4);
+        }
+    }
+    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x80)
+    {
+        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x80;
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_swdtest322);
+    }
+    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x200)
+    {
+        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x200;
+        Sfx_PlayFromObject(obj, SFXTRIG_sk_trwhin3);
+    }
+    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x40)
+    {
+        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x40;
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_swdtest322_135);
+    }
+    if (*(int*)&((PlayerState*)inner)->baddie.eventFlags & 0x800)
+    {
+        *(int*)&((PlayerState*)inner)->baddie.eventFlags &= ~0x800;
+        ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 0x19, 2, 1);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_simp1_c);
+        CameraShake_Start(lbl_803E81CC, lbl_803E81D0, lbl_803E81D4);
+        doRumble(lbl_803E81D8);
+    }
 }
 
 PlayerModelChainEntry lbl_803DC660 = {lbl_80332EC0, 5};

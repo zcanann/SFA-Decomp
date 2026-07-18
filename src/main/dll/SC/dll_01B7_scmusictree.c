@@ -134,36 +134,7 @@ typedef struct ScMusictreeState
     u8 pad4D[0x50 - 0x4D];
 } ScMusictreeState;
 
-void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 idx)
-{
-    int def = *(int*)&(obj)->anim.placementData;
-    SCMusicTreeState* state = (SCMusicTreeState*)extra;
-    int setup;
-
-    if (Obj_IsLoadingLocked() != 0)
-    {
-        setup = (int)Obj_AllocObjectSetup(0x28, SCMUSICTREE_CHILD_OBJ_AMBIENT_EFFECT);
-        ((ScMusictreeSetup*)setup)->head.color[0] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorR;
-        ((ScMusictreeSetup*)setup)->head.color[2] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorB;
-        ((ScMusictreeSetup*)setup)->head.color[1] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorG;
-        ((ScMusictreeSetup*)setup)->head.color[3] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorA - 10;
-        ((ObjPlacement*)setup)->posX = state->pathPoint[idx][0];
-        ((ObjPlacement*)setup)->posY = state->pathPoint[idx][1];
-        ((ObjPlacement*)setup)->posZ = state->pathPoint[idx][2];
-        ((ScMusictreeSetup*)setup)->unk1C = randomGetRange(0x708, 0x1770);
-        ((ScMusictreeSetup*)setup)->unk1E = 1;
-        ((ScMusictreeSetup*)setup)->unk20 = 10;
-        ((ScMusictreeSetup*)setup)->unk21 = 40;
-        ((ScMusictreeSetup*)setup)->unk22 = 50;
-        ((ScMusictreeSetup*)setup)->unk23 = 10;
-        ((ScMusictreeSetup*)setup)->unk24 = 50;
-        ((ScMusictreeSetup*)setup)->unk25 = -50;
-        ((ScMusictreeSetup*)setup)->unk26 = -1;
-        ((ScMusictreeSetup*)setup)->unk18 = 0;
-        state->ambientEffect[idx] =
-            (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, (void*)*(int*)&(obj)->anim.parent);
-    }
-}
+void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 idx);
 
 void sc_musictree_handleHitObject(GameObject* obj, int extra, int effectType)
 {
@@ -386,6 +357,37 @@ void sc_musictree_update(GameObject* obj)
             }
         }
         ((ScMusictreeState*)inner)->previousDistance = distU16;
+    }
+}
+
+void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 idx)
+{
+    int def = *(int*)&(obj)->anim.placementData;
+    SCMusicTreeState* state = (SCMusicTreeState*)extra;
+    int setup;
+
+    if (Obj_IsLoadingLocked() != 0)
+    {
+        setup = (int)Obj_AllocObjectSetup(0x28, SCMUSICTREE_CHILD_OBJ_AMBIENT_EFFECT);
+        ((ScMusictreeSetup*)setup)->head.color[0] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorR;
+        ((ScMusictreeSetup*)setup)->head.color[2] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorB;
+        ((ScMusictreeSetup*)setup)->head.color[1] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorG;
+        ((ScMusictreeSetup*)setup)->head.color[3] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorA - 10;
+        ((ObjPlacement*)setup)->posX = state->pathPoint[idx][0];
+        ((ObjPlacement*)setup)->posY = state->pathPoint[idx][1];
+        ((ObjPlacement*)setup)->posZ = state->pathPoint[idx][2];
+        ((ScMusictreeSetup*)setup)->unk1C = randomGetRange(0x708, 0x1770);
+        ((ScMusictreeSetup*)setup)->unk1E = 1;
+        ((ScMusictreeSetup*)setup)->unk20 = 10;
+        ((ScMusictreeSetup*)setup)->unk21 = 40;
+        ((ScMusictreeSetup*)setup)->unk22 = 50;
+        ((ScMusictreeSetup*)setup)->unk23 = 10;
+        ((ScMusictreeSetup*)setup)->unk24 = 50;
+        ((ScMusictreeSetup*)setup)->unk25 = -50;
+        ((ScMusictreeSetup*)setup)->unk26 = -1;
+        ((ScMusictreeSetup*)setup)->unk18 = 0;
+        state->ambientEffect[idx] =
+            (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, (void*)*(int*)&(obj)->anim.parent);
     }
 }
 

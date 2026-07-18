@@ -652,31 +652,6 @@ void gxColorFn_800523d0(void)
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
-void textureFn_800524ec(int* param)
-{
-    int sel_color;
-    int sel_alpha;
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    gxTextureFn_8004bf88(param, 0, 1, &sel_color, &sel_alpha);
-    GXSetTevKAlphaSel(lbl_803DCD90, sel_alpha);
-    if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0)
-    {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_RASC);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_KONST);
-    }
-    else
-    {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_RASC, GX_CC_ZERO);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_APREV, GX_CA_KONST, GX_CA_ZERO);
-    }
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A++;
-}
 void gxTextureFn_80052638(int* param)
 {
     int sel;
@@ -726,41 +701,6 @@ void gxColorFn_80052764(int* param)
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
-}
-void textureFn_800528bc(void)
-{
-    GXSetNumTexGens(lbl_803DCD69);
-    GXSetNumTevStages(lbl_803DCD6A);
-    GXSetNumIndStages(lbl_803DCD68);
-}
-void resetLotsOfRenderVars(void)
-{
-    lbl_803DCD58 = 30;
-    lbl_803DCD84 = 30;
-    lbl_803DCD54 = 64;
-    lbl_803DCD80 = 64;
-    lbl_803DCD64 = 0;
-    lbl_803DCD90 = 0;
-    lbl_803DCD5C = 0;
-    lbl_803DCD88 = 0;
-    lbl_803DCD60 = 0;
-    lbl_803DCD8C = 0;
-    lbl_803DCD50 = 0;
-    lbl_803DCD7C = 0;
-    lbl_803DCD4C = 4;
-    lbl_803DCD78 = 4;
-    lbl_803DCD74 = 0;
-    lbl_803DCD70 = 12;
-    lbl_803DCD6C = 28;
-    lbl_803DCD6B = 0;
-    lbl_803DCD4B = 0;
-    lbl_803DCD6A = 0;
-    lbl_803DCD4A = 0;
-    lbl_803DCD69 = 0;
-    lbl_803DCD49 = 0;
-    lbl_803DCD68 = 0;
-    lbl_803DCD48 = 0;
-    lbl_803DCD30 = 0;
 }
 extern u8 gRcpWarpDistortDisplayList[0x6640];
 
@@ -839,42 +779,6 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
     }
     GXCallDisplayList(gRcpWarpDistortDisplayList, gRcpWarpDistortListSize);
 }
-int textureFn_80052bb4(int model, f32* params)
-{
-    ModelLightStruct* la;
-    ModelLightStruct* lb;
-    la = fn_80089A58();
-    lb = fn_80089A50();
-    if (la == NULL || lb == NULL)
-    {
-        return 0;
-    }
-    modelLightChannels_reset(1);
-    modelLightChannel_configure(0, 1, 0);
-    modelLightChannel_configure(2, 0, 0);
-    modelLightStruct_setSpecularAttenuation(la, params[0], lbl_803DEB60);
-    modelLightStruct_setSpecularColor(la, 0xff, 0, 0, 0xff);
-    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
-    modelLightStruct_setSpecularAttenuation(la, params[1], lbl_803DEB60);
-    modelLightStruct_setSpecularColor(la, 0, 0, 0xff, 0xff);
-    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
-    modelLightStruct_setAngularAttenuation(la, lbl_803DEB70, lbl_803DEB60, lbl_803DEB60);
-    modelLightStruct_loadChannelLight(2, (u8*)la, (u8*)model);
-    modelLightChannel_configure(1, 1, 0);
-    modelLightChannel_configure(3, 0, 0);
-    modelLightStruct_setSpecularAttenuation(lb, params[0], lbl_803DEB60);
-    modelLightStruct_setSpecularColor(lb, 0xff, 0, 0, 0xff);
-    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
-    modelLightStruct_setSpecularAttenuation(lb, params[1], lbl_803DEB60);
-    modelLightStruct_setSpecularColor(lb, 0, 0, 0xff, 0xff);
-    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
-    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB74, lbl_803DEB60, lbl_803DEB60);
-    modelLightStruct_loadChannelLight(3, (u8*)lb, (u8*)model);
-    modelLightChannels_applyGXControls();
-    modelLightStruct_setAngularAttenuation(la, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);
-    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);
-    return 0;
-}
 void gxFn_80052dc0(void);
 
 static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
@@ -891,6 +795,10 @@ static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
     modelLightChannels_applyGXControls();
 }
 
+void textureFn_800524ec(int* param);
+void textureFn_800528bc(void);
+void resetLotsOfRenderVars(void);
+int textureFn_80052bb4(int model, f32* params);
 void gxTextureFn_80052efc(void)
 {
     union
@@ -993,6 +901,102 @@ void gxTextureFn_80052efc(void)
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
     Camera_ApplyFullViewport();
     gRcpDistortGroup = 0;
+}
+void textureFn_800524ec(int* param)
+{
+    int sel_color;
+    int sel_alpha;
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    gxTextureFn_8004bf88(param, 0, 1, &sel_color, &sel_alpha);
+    GXSetTevKAlphaSel(lbl_803DCD90, sel_alpha);
+    if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0)
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_RASC);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_KONST);
+    }
+    else
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_RASC, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_APREV, GX_CA_KONST, GX_CA_ZERO);
+    }
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+void textureFn_800528bc(void)
+{
+    GXSetNumTexGens(lbl_803DCD69);
+    GXSetNumTevStages(lbl_803DCD6A);
+    GXSetNumIndStages(lbl_803DCD68);
+}
+void resetLotsOfRenderVars(void)
+{
+    lbl_803DCD58 = 30;
+    lbl_803DCD84 = 30;
+    lbl_803DCD54 = 64;
+    lbl_803DCD80 = 64;
+    lbl_803DCD64 = 0;
+    lbl_803DCD90 = 0;
+    lbl_803DCD5C = 0;
+    lbl_803DCD88 = 0;
+    lbl_803DCD60 = 0;
+    lbl_803DCD8C = 0;
+    lbl_803DCD50 = 0;
+    lbl_803DCD7C = 0;
+    lbl_803DCD4C = 4;
+    lbl_803DCD78 = 4;
+    lbl_803DCD74 = 0;
+    lbl_803DCD70 = 12;
+    lbl_803DCD6C = 28;
+    lbl_803DCD6B = 0;
+    lbl_803DCD4B = 0;
+    lbl_803DCD6A = 0;
+    lbl_803DCD4A = 0;
+    lbl_803DCD69 = 0;
+    lbl_803DCD49 = 0;
+    lbl_803DCD68 = 0;
+    lbl_803DCD48 = 0;
+    lbl_803DCD30 = 0;
+}
+int textureFn_80052bb4(int model, f32* params)
+{
+    ModelLightStruct* la;
+    ModelLightStruct* lb;
+    la = fn_80089A58();
+    lb = fn_80089A50();
+    if (la == NULL || lb == NULL)
+    {
+        return 0;
+    }
+    modelLightChannels_reset(1);
+    modelLightChannel_configure(0, 1, 0);
+    modelLightChannel_configure(2, 0, 0);
+    modelLightStruct_setSpecularAttenuation(la, params[0], lbl_803DEB60);
+    modelLightStruct_setSpecularColor(la, 0xff, 0, 0, 0xff);
+    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
+    modelLightStruct_setSpecularAttenuation(la, params[1], lbl_803DEB60);
+    modelLightStruct_setSpecularColor(la, 0, 0, 0xff, 0xff);
+    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
+    modelLightStruct_setAngularAttenuation(la, lbl_803DEB70, lbl_803DEB60, lbl_803DEB60);
+    modelLightStruct_loadChannelLight(2, (u8*)la, (u8*)model);
+    modelLightChannel_configure(1, 1, 0);
+    modelLightChannel_configure(3, 0, 0);
+    modelLightStruct_setSpecularAttenuation(lb, params[0], lbl_803DEB60);
+    modelLightStruct_setSpecularColor(lb, 0xff, 0, 0, 0xff);
+    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
+    modelLightStruct_setSpecularAttenuation(lb, params[1], lbl_803DEB60);
+    modelLightStruct_setSpecularColor(lb, 0, 0, 0xff, 0xff);
+    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
+    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB74, lbl_803DEB60, lbl_803DEB60);
+    modelLightStruct_loadChannelLight(3, (u8*)lb, (u8*)model);
+    modelLightChannels_applyGXControls();
+    modelLightStruct_setAngularAttenuation(la, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);
+    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);
+    return 0;
 }
 void gxFn_80052dc0(void)
 {

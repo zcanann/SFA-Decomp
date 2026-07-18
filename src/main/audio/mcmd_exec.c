@@ -246,6 +246,24 @@ static inline u32 mcmdVarGet32Legacy(McmdVoiceState* state, u32 useExCtrl, u32 i
 
 #define varGet32Legacy(state, useExCtrl, index) mcmdVarGet32Legacy((state), (useExCtrl), (index))
 
+/*
+ * Write a synth register, routing high registers to the EX controller bank.
+ */
+void varSet32(McmdVoiceState* state, u32 useExCtrl, u8 index, s32 value)
+{
+    if (useExCtrl != 0)
+    {
+        inpSetExCtrl(state, index, value);
+        return;
+    }
+    index &= 0x1f;
+    if (index < 0x10)
+    {
+        state->localRegs[index] = value;
+        return;
+    }
+    SYNTH_GLOBAL_REG(index) = value;
+}
 
 static inline void varSet(McmdVoiceState* state, u8 useExCtrl, u8 index, s16 value)
 {
@@ -1210,25 +1228,6 @@ void macHandleActive(McmdVoiceState* sv)
 }
 
 /*
- * Write a synth register, routing high registers to the EX controller bank.
- */
-void varSet32(McmdVoiceState* state, u32 useExCtrl, u8 index, s32 value)
-{
-    if (useExCtrl != 0)
-    {
-        inpSetExCtrl(state, index, value);
-        return;
-    }
-    index &= 0x1f;
-    if (index < 0x10)
-    {
-        state->localRegs[index] = value;
-        return;
-    }
-    SYNTH_GLOBAL_REG(index) = value;
-}
-
-/*
  * Advance the synth voice timer queue and process active voices.
  */
 void macHandle(u32 deltaTime)
@@ -1375,6 +1374,10 @@ void TimeQueueAdd(McmdVoiceState* state)
     cur->timePrev = state;
 }
 
+/*
+ * Remove a voice from the time queue and clear its scheduled wake time.
+ */
+void TimeQueueRemove(McmdVoiceState* sv, u32 disableUpdate);
 
 /*
  * Move a yielded voice back onto the active voice list.
@@ -1594,7 +1597,7 @@ u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol, 
 }
 
 /*
- * Remove a voice from the time queue and clear its scheduled wake time.
+ * Reset the macro scheduler state and every voice slot.
  */
 void TimeQueueRemove(McmdVoiceState* sv, u32 disableUpdate)
 {
@@ -1624,10 +1627,6 @@ void TimeQueueRemove(McmdVoiceState* sv, u32 disableUpdate)
         MAC_CFLAGS(sv) &= ~MAC_FLAG64(0, 0x40004);
     }
 }
-
-/*
- * Reset the macro scheduler state and every voice slot.
- */
 void macInit(void)
 {
     u32 i;

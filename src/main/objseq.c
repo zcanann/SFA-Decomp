@@ -3102,46 +3102,6 @@ int objSeqFindLabel(u8* seq, int label)
     }
     return -1;
 }
-int objSeqFindConditional(u8* seq, u8* seqState)
-{
-    int currentLabel;
-    int commandIndex;
-    u8* command;
-    u32 packed;
-
-    currentLabel = -1;
-    commandIndex = 0;
-    while (commandIndex < ((ObjSeqState*)seq)->cmdCount)
-    {
-        command = ((ObjSeqState*)seq)->cmds + commandIndex * 4;
-        if ((s8)command[0] == 0)
-        {
-            currentLabel = *(s16*)(command + 2);
-        }
-        else if ((s8)command[0] == 0xb)
-        {
-            if (*(s16*)(command + 2) > 0)
-            {
-                packed = *(u32*)(command + 4);
-                if ((int)(packed & 0x3f) == 4 &&
-                    ObjSeq_EvaluateCondition((packed >> 6) & 0x3ff, seq, *(int*)(seqState + 0x4c)) != 0)
-                {
-                    currentLabel -= 10;
-                    if (currentLabel < 0)
-                    {
-                        currentLabel = 0;
-                    }
-                    return currentLabel;
-                }
-                commandIndex += *(s16*)(command + 2);
-            }
-        }
-        currentLabel += command[1];
-        commandIndex++;
-    }
-    return -1;
-}
-
 void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
 {
     int callbackResult;
@@ -4915,6 +4875,46 @@ int ObjSeq_update(u8* obj, f32 t)
     } while (runs-- != 0);
 
     return 0;
+}
+
+int objSeqFindConditional(u8* seq, u8* seqState)
+{
+    int currentLabel;
+    int commandIndex;
+    u8* command;
+    u32 packed;
+
+    currentLabel = -1;
+    commandIndex = 0;
+    while (commandIndex < ((ObjSeqState*)seq)->cmdCount)
+    {
+        command = ((ObjSeqState*)seq)->cmds + commandIndex * 4;
+        if ((s8)command[0] == 0)
+        {
+            currentLabel = *(s16*)(command + 2);
+        }
+        else if ((s8)command[0] == 0xb)
+        {
+            if (*(s16*)(command + 2) > 0)
+            {
+                packed = *(u32*)(command + 4);
+                if ((int)(packed & 0x3f) == 4 &&
+                    ObjSeq_EvaluateCondition((packed >> 6) & 0x3ff, seq, *(int*)(seqState + 0x4c)) != 0)
+                {
+                    currentLabel -= 10;
+                    if (currentLabel < 0)
+                    {
+                        currentLabel = 0;
+                    }
+                    return currentLabel;
+                }
+                commandIndex += *(s16*)(command + 2);
+            }
+        }
+        currentLabel += command[1];
+        commandIndex++;
+    }
+    return -1;
 }
 
 int ObjSeq_takeXrotChanged(int index)

@@ -330,54 +330,6 @@ void collectible_updateLooseMotion(int* obj)
     }
 }
 
-void collectible_updateIdleMotion(GameObject *obj)
-{
-    u8* state = (obj)->extra;
-
-    switch ((obj)->anim.seqId)
-    {
-    case COLLECTIBLE_ITEM_ENERGY_EGG:
-        if ((((CollectibleState*)state)->spinTimer -= framesThisStep) <= 0)
-        {
-            ((CollectibleState*)state)->spinSpeed = (f32)(s32)randomGetRange(600, 800);
-            ((CollectibleState*)state)->spinTimer = randomGetRange(180, 240);
-            Sfx_PlayFromObject((int*)obj, SFXTRIG_dn_boar1_c_169);
-        }
-        (obj)->anim.rotY = ((CollectibleState*)state)->spinSpeed;
-        ((CollectibleState*)state)->spinSpeed *= -0.8f;
-        if ((obj)->anim.rotY < 10 && (obj)->anim.rotY > -10)
-        {
-            (obj)->anim.rotY = 0;
-        }
-        break;
-    case 0x12d:
-    case 0x135:
-    case 0x137:
-    case 0x156:
-    case 0x246:
-        (obj)->anim.rotX = 200.0f * timeDelta + collectible_getRotX(obj);
-        break;
-    case 0x22:
-        (obj)->anim.rotX = 200.0f * timeDelta + collectible_getRotX(obj);
-        itemPickupDoParticleFxLegacy((int)obj, 1.0f, 10, 1);
-        break;
-    case 0x27f:
-        if (*(f32*)state < 200.0f)
-        {
-            if ((int)randomGetRange(0, 10) == 0)
-            {
-                (*gPartfxInterface)->spawnObject((void*)obj, COLLECTIBLE_PARTFX_IDLE, NULL, 2,
-                                                 -1, NULL);
-            }
-            (obj)->anim.rotX += (s16)(182.0f * timeDelta);
-        }
-        break;
-    case 0x5e8:
-        (obj)->anim.rotX = 200.0f * timeDelta + collectible_getRotX(obj);
-        itemPickupDoParticleFxLegacy((int)obj, 1.0f, 9, 1);
-        break;
-    }
-}
 
 int collectible_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -573,6 +525,7 @@ void collectible_hitDetect(void)
 }
 
 
+void collectible_updateIdleMotion(GameObject *obj);
 void collectible_update(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
@@ -699,6 +652,54 @@ void collectible_update(int obj)
 }
 
 
+void collectible_updateIdleMotion(GameObject *obj)
+{
+    u8* state = (obj)->extra;
+
+    switch ((obj)->anim.seqId)
+    {
+    case COLLECTIBLE_ITEM_ENERGY_EGG:
+        if ((((CollectibleState*)state)->spinTimer -= framesThisStep) <= 0)
+        {
+            ((CollectibleState*)state)->spinSpeed = (f32)(s32)randomGetRange(600, 800);
+            ((CollectibleState*)state)->spinTimer = randomGetRange(180, 240);
+            Sfx_PlayFromObject((int*)obj, SFXTRIG_dn_boar1_c_169);
+        }
+        (obj)->anim.rotY = ((CollectibleState*)state)->spinSpeed;
+        ((CollectibleState*)state)->spinSpeed *= -0.8f;
+        if ((obj)->anim.rotY < 10 && (obj)->anim.rotY > -10)
+        {
+            (obj)->anim.rotY = 0;
+        }
+        break;
+    case 0x12d:
+    case 0x135:
+    case 0x137:
+    case 0x156:
+    case 0x246:
+        (obj)->anim.rotX = 200.0f * timeDelta + collectible_getRotX(obj);
+        break;
+    case 0x22:
+        (obj)->anim.rotX = 200.0f * timeDelta + collectible_getRotX(obj);
+        itemPickupDoParticleFxLegacy((int)obj, 1.0f, 10, 1);
+        break;
+    case 0x27f:
+        if (*(f32*)state < 200.0f)
+        {
+            if ((int)randomGetRange(0, 10) == 0)
+            {
+                (*gPartfxInterface)->spawnObject((void*)obj, COLLECTIBLE_PARTFX_IDLE, NULL, 2,
+                                                 -1, NULL);
+            }
+            (obj)->anim.rotX += (s16)(182.0f * timeDelta);
+        }
+        break;
+    case 0x5e8:
+        (obj)->anim.rotX = 200.0f * timeDelta + collectible_getRotX(obj);
+        itemPickupDoParticleFxLegacy((int)obj, 1.0f, 9, 1);
+        break;
+    }
+}
 void collectible_init(GameObject *obj, int setup)
 {
     ObjAnimComponent* objAnim;

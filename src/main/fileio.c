@@ -134,38 +134,7 @@ void dvdCheckError(void)
     }
 }
 
-int DVDRead(DVDFileInfo* fileInfo, void* buf, int size, int offset)
-{
-    typedef int (*DVDReadAsyncPrioCompatFn)(void*, void*, int, int, void (*)(void*), int);
-    u8 resetSeen = 0;
-    gDvdReadCallbackResult = 0;
-    while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 || gDvdReadCallbackResult == -3)
-    {
-        ((DVDReadAsyncPrioCompatFn)DVDReadAsyncPrio)(fileInfo, buf, size, offset,
-                                                     (void (*)(void*))fileReadCb_80015954, 2);
-        while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1)
-        {
-            padUpdate();
-            checkReset();
-            if (resetSeen)
-            {
-                waitNextFrame();
-            }
-            dvdCheckError();
-            if (resetSeen)
-            {
-                mmFreeTick(0);
-                gameTextRun();
-                GXFlush_(1, 0);
-            }
-            if (gDvdErrorPauseActive != 0)
-            {
-                resetSeen = 1;
-            }
-        }
-    }
-    return gDvdReadCallbackResult;
-}
+int DVDRead(DVDFileInfo* fileInfo, void* buf, int size, int offset);
 
 void fileReadCb_80015954(s32 result, DVDFileInfo* fileInfo)
 {
@@ -266,4 +235,37 @@ void* loadFileByPath(char* path, int* outSize)
         *outSize = size;
     }
     return buf;
+}
+
+int DVDRead(DVDFileInfo* fileInfo, void* buf, int size, int offset)
+{
+    typedef int (*DVDReadAsyncPrioCompatFn)(void*, void*, int, int, void (*)(void*), int);
+    u8 resetSeen = 0;
+    gDvdReadCallbackResult = 0;
+    while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 || gDvdReadCallbackResult == -3)
+    {
+        ((DVDReadAsyncPrioCompatFn)DVDReadAsyncPrio)(fileInfo, buf, size, offset,
+                                                     (void (*)(void*))fileReadCb_80015954, 2);
+        while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1)
+        {
+            padUpdate();
+            checkReset();
+            if (resetSeen)
+            {
+                waitNextFrame();
+            }
+            dvdCheckError();
+            if (resetSeen)
+            {
+                mmFreeTick(0);
+                gameTextRun();
+                GXFlush_(1, 0);
+            }
+            if (gDvdErrorPauseActive != 0)
+            {
+                resetSeen = 1;
+            }
+        }
+    }
+    return gDvdReadCallbackResult;
 }

@@ -104,104 +104,9 @@ void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f3
 
 void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int unused);
 
-void player_applyVelocityStep(int* obj, int* ctx, f32 t)
-{
-    int flags;
-    int b;
-    MatrixTransform desc;
-    f32 mtx[16];
-    f32 outY;
-    f32 outX;
-    f32 outZ;
-    flags = ctx[0];
-    if ((flags & 0x2000000) != 0)
-    {
-        return;
-    }
-    if ((flags & 0x200000) == 0)
-    {
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E058C;
-        ((GameObject*)obj)->anim.velocityY = -(((BaddieState*)ctx)->gravity * t) + ((GameObject*)obj)->anim.velocityY;
-    }
-    b = *(s8*)((char*)ctx + 0x34c);
-    if ((b & 1) == 0 || (b & 4) != 0)
-    {
-        desc.rotX = ((GameObject*)obj)->anim.rotX;
-        desc.rotY = ((GameObject*)obj)->anim.rotY;
-        desc.rotZ = 0;
-        desc.scale = lbl_803E0588;
-        desc.x = lbl_803E0570;
-        desc.y = lbl_803E0570;
-        desc.z = lbl_803E0570;
-        setMatrixFromObjectPos(mtx, &desc);
-        if ((ctx[0] & 0x10000) != 0)
-        {
-            Matrix_TransformPoint(mtx, ((BaddieState*)ctx)->animSpeedB, *(f32*)((char*)ctx + 0x288),
-                                  -((BaddieState*)ctx)->animSpeedA, &outX, &((GameObject*)obj)->anim.velocityY, &outZ);
-        }
-        else
-        {
-            Matrix_TransformPoint(mtx, ((BaddieState*)ctx)->animSpeedB, lbl_803E0570, -((BaddieState*)ctx)->animSpeedA,
-                                  &outX, &outY, &outZ);
-        }
-        ((GameObject*)obj)->anim.velocityX = outX;
-        ((GameObject*)obj)->anim.velocityZ = outZ;
-    }
-    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * t, ((GameObject*)obj)->anim.velocityY * t,
-            ((GameObject*)obj)->anim.velocityZ * t);
-}
+void player_applyVelocityStep(int* obj, int* ctx, f32 t);
 
-void fn_800D8414(int* obj, int* ctx)
-{
-    int diff;
-    *(f32*)&((BaddieState*)ctx)->trackedObj = ((BaddieState*)ctx)->inputMagnitude;
-    ((BaddieState*)ctx)->inputMagnitude = sqrtf(((BaddieState*)ctx)->moveInputX * ((BaddieState*)ctx)->moveInputX +
-                                                ((BaddieState*)ctx)->moveInputZ * ((BaddieState*)ctx)->moveInputZ);
-    if (((BaddieState*)ctx)->inputMagnitude > lbl_803E0578)
-    {
-        ((BaddieState*)ctx)->inputMagnitude = lbl_803E0578;
-    }
-    ((BaddieState*)ctx)->inputMagnitude = ((BaddieState*)ctx)->inputMagnitude / lbl_803E0578;
-    gPlayerMoveTargetYaw = getAngle(((BaddieState*)ctx)->moveInputX, -((BaddieState*)ctx)->moveInputZ);
-    gPlayerMoveTargetYaw -= ((BaddieState*)ctx)->cameraYaw;
-    diff = gPlayerMoveTargetYaw;
-    diff -= (u16)((GameObject*)obj)->anim.rotX;
-    if (diff > 0x8000)
-    {
-        diff -= 0xffff;
-    }
-    if (diff < -0x8000)
-    {
-        diff += 0xffff;
-    }
-    *(s16*)&((BaddieState*)ctx)->turnRate = ((f32)diff / gPlayerMoveDegToAngle);
-    if (diff < 0)
-    {
-        *(s16*)((char*)ctx + 0x334) = -((BaddieState*)ctx)->turnRate;
-    }
-    else
-    {
-        *(s16*)((char*)ctx + 0x334) = ((BaddieState*)ctx)->turnRate;
-    }
-    diff += 0x10000;
-    if (((BaddieState*)ctx)->inputMagnitude < lbl_803E0594)
-    {
-        *(u8*)((char*)ctx + 0x34b) = 0;
-    }
-    else
-    {
-        diff -= 0x6000;
-        if (diff < 0)
-        {
-            diff += 0xffff;
-        }
-        if (diff > 0xffff)
-        {
-            diff -= 0xffff;
-        }
-        *(u8*)((char*)ctx + 0x34b) = (u8)(4 - diff / 0x4000);
-    }
-}
+void fn_800D8414(int* obj, int* ctx);
 
 void player_updateParticles(int* obj, int unused, int effectId, int count, int mode)
 {
@@ -1036,6 +941,103 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     }
 }
 
+void player_applyVelocityStep(int* obj, int* ctx, f32 t)
+{
+    int flags;
+    int b;
+    MatrixTransform desc;
+    f32 mtx[16];
+    f32 outY;
+    f32 outX;
+    f32 outZ;
+    flags = ctx[0];
+    if ((flags & 0x2000000) != 0)
+    {
+        return;
+    }
+    if ((flags & 0x200000) == 0)
+    {
+        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * lbl_803E058C;
+        ((GameObject*)obj)->anim.velocityY = -(((BaddieState*)ctx)->gravity * t) + ((GameObject*)obj)->anim.velocityY;
+    }
+    b = *(s8*)((char*)ctx + 0x34c);
+    if ((b & 1) == 0 || (b & 4) != 0)
+    {
+        desc.rotX = ((GameObject*)obj)->anim.rotX;
+        desc.rotY = ((GameObject*)obj)->anim.rotY;
+        desc.rotZ = 0;
+        desc.scale = lbl_803E0588;
+        desc.x = lbl_803E0570;
+        desc.y = lbl_803E0570;
+        desc.z = lbl_803E0570;
+        setMatrixFromObjectPos(mtx, &desc);
+        if ((ctx[0] & 0x10000) != 0)
+        {
+            Matrix_TransformPoint(mtx, ((BaddieState*)ctx)->animSpeedB, *(f32*)((char*)ctx + 0x288),
+                                  -((BaddieState*)ctx)->animSpeedA, &outX, &((GameObject*)obj)->anim.velocityY, &outZ);
+        }
+        else
+        {
+            Matrix_TransformPoint(mtx, ((BaddieState*)ctx)->animSpeedB, lbl_803E0570, -((BaddieState*)ctx)->animSpeedA,
+                                  &outX, &outY, &outZ);
+        }
+        ((GameObject*)obj)->anim.velocityX = outX;
+        ((GameObject*)obj)->anim.velocityZ = outZ;
+    }
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * t, ((GameObject*)obj)->anim.velocityY * t,
+            ((GameObject*)obj)->anim.velocityZ * t);
+}
+void fn_800D8414(int* obj, int* ctx)
+{
+    int diff;
+    *(f32*)&((BaddieState*)ctx)->trackedObj = ((BaddieState*)ctx)->inputMagnitude;
+    ((BaddieState*)ctx)->inputMagnitude = sqrtf(((BaddieState*)ctx)->moveInputX * ((BaddieState*)ctx)->moveInputX +
+                                                ((BaddieState*)ctx)->moveInputZ * ((BaddieState*)ctx)->moveInputZ);
+    if (((BaddieState*)ctx)->inputMagnitude > lbl_803E0578)
+    {
+        ((BaddieState*)ctx)->inputMagnitude = lbl_803E0578;
+    }
+    ((BaddieState*)ctx)->inputMagnitude = ((BaddieState*)ctx)->inputMagnitude / lbl_803E0578;
+    gPlayerMoveTargetYaw = getAngle(((BaddieState*)ctx)->moveInputX, -((BaddieState*)ctx)->moveInputZ);
+    gPlayerMoveTargetYaw -= ((BaddieState*)ctx)->cameraYaw;
+    diff = gPlayerMoveTargetYaw;
+    diff -= (u16)((GameObject*)obj)->anim.rotX;
+    if (diff > 0x8000)
+    {
+        diff -= 0xffff;
+    }
+    if (diff < -0x8000)
+    {
+        diff += 0xffff;
+    }
+    *(s16*)&((BaddieState*)ctx)->turnRate = ((f32)diff / gPlayerMoveDegToAngle);
+    if (diff < 0)
+    {
+        *(s16*)((char*)ctx + 0x334) = -((BaddieState*)ctx)->turnRate;
+    }
+    else
+    {
+        *(s16*)((char*)ctx + 0x334) = ((BaddieState*)ctx)->turnRate;
+    }
+    diff += 0x10000;
+    if (((BaddieState*)ctx)->inputMagnitude < lbl_803E0594)
+    {
+        *(u8*)((char*)ctx + 0x34b) = 0;
+    }
+    else
+    {
+        diff -= 0x6000;
+        if (diff < 0)
+        {
+            diff += 0xffff;
+        }
+        if (diff > 0xffff)
+        {
+            diff -= 0xffff;
+        }
+        *(u8*)((char*)ctx + 0x34b) = (u8)(4 - diff / 0x4000);
+    }
+}
 void player_init(int unused, void* obj, int a, int b)
 {
     memset(obj, 0, 0x35c);

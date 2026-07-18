@@ -521,43 +521,7 @@ void VFP_Platform_release(void)
 void VFP_Platform_initialise(void)
 {
 }
-void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
-{
-    VfpDoorSwitchState* state = obj->extra;
-    CameraViewSlot* camView = Camera_GetCurrentViewSlot();
-
-    if (state->activated == 0)
-    {
-        if (mainGetBit(state->gameBitId) != 0)
-        {
-            Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
-            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_10d);
-            Sfx_PlayFromObject((int)obj, SFXTRIG_gate_stops);
-            state->activated = 1;
-        }
-    }
-    if (state->activated != 0)
-    {
-        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E6118, timeDelta, NULL);
-        if (state->exploded == 0)
-        {
-            if (obj->anim.currentMoveProgress >= lbl_803E611C)
-            {
-                Vec vec;
-                PSVECSubtract(&camView->position, &obj->anim.localPos, &vec);
-                PSVECNormalize(&vec, &vec);
-                PSVECScale(&vec, &vec, lbl_803E6120);
-                PSVECAdd(&obj->anim.localPos, &vec, &obj->anim.localPos);
-                obj->anim.worldPosX = obj->anim.localPosX;
-                obj->anim.worldPosY = obj->anim.localPosY;
-                obj->anim.worldPosZ = obj->anim.localPosZ;
-                spawnExplosionLegacy((int)obj, lbl_803E6124, 1, 1, 0, 0, 0, 0, 0);
-                state->exploded = 1;
-                obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            }
-        }
-    }
-}
+void vfpdoorswitch_updateExplodingVariant(GameObject* obj);
 
 int VFP_DoorSwitch_getExtraSize(void)
 {
@@ -601,6 +565,44 @@ void VFP_DoorSwitch_update(GameObject* obj)
     Sfx_PlayFromObject((int)obj, SFXTRIG_gate_stops);
     Obj_SetActiveModelIndex(obj, 1);
     state->activated = 1;
+}
+
+void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
+{
+    VfpDoorSwitchState* state = obj->extra;
+    CameraViewSlot* camView = Camera_GetCurrentViewSlot();
+
+    if (state->activated == 0)
+    {
+        if (mainGetBit(state->gameBitId) != 0)
+        {
+            Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_10d);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_gate_stops);
+            state->activated = 1;
+        }
+    }
+    if (state->activated != 0)
+    {
+        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E6118, timeDelta, NULL);
+        if (state->exploded == 0)
+        {
+            if (obj->anim.currentMoveProgress >= lbl_803E611C)
+            {
+                Vec vec;
+                PSVECSubtract(&camView->position, &obj->anim.localPos, &vec);
+                PSVECNormalize(&vec, &vec);
+                PSVECScale(&vec, &vec, lbl_803E6120);
+                PSVECAdd(&obj->anim.localPos, &vec, &obj->anim.localPos);
+                obj->anim.worldPosX = obj->anim.localPosX;
+                obj->anim.worldPosY = obj->anim.localPosY;
+                obj->anim.worldPosZ = obj->anim.localPosZ;
+                spawnExplosionLegacy((int)obj, lbl_803E6124, 1, 1, 0, 0, 0, 0, 0);
+                state->exploded = 1;
+                obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            }
+        }
+    }
 }
 
 void VFP_DoorSwitch_init(int obj, int data)

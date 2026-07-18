@@ -13,55 +13,7 @@ typedef f32 (*CurveEvalPtrFirst)(f32* values, f32 t, f32* outTangent);
 void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, f32* outZ, int count, CurveCoeffFn coeffFn);
 f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent);
 f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
-
-void Curve_BuildSegmentLengthTable(Curve* curve, int count)
-{
-    f32 outX[21];
-    f32 outY[21];
-    f32 outZ[21];
-    int i;
-    f32* px = NULL;
-    f32* py = NULL;
-    f32* pz = NULL;
-    f32 dx, dy, dz, sq;
-    f32 zero;
-
-    if (curve->px != NULL)
-    {
-        px = curve->px + curve->idx;
-    }
-    if (curve->py != NULL)
-    {
-        py = curve->py + curve->idx;
-    }
-    if (curve->pz != NULL)
-    {
-        pz = curve->pz + curve->idx;
-    }
-    if (curve->coeffFn != 0)
-    {
-        Curve_SampleSegmentPoints(px, py, pz, outX, outY, outZ, count, curve->coeffFn);
-    }
-
-    zero = lbl_803DE658;
-    curve->totalLen = zero;
-    for (i = 0; i < count; i++)
-    {
-        dx = px != NULL ? outX[i + 1] - outX[i] : lbl_803DE658;
-        dy = py != NULL ? outY[i + 1] - outY[i] : lbl_803DE658;
-        dz = pz != NULL ? outZ[i + 1] - outZ[i] : lbl_803DE658;
-        sq = dx * dx + dy * dy + dz * dz;
-        if (sq > zero)
-        {
-            curve->segLen[i] = sqrtf(sq);
-        }
-        else
-        {
-            curve->segLen[i] = lbl_803DE67C;
-        }
-        curve->totalLen += curve->segLen[i];
-    }
-}
+void Curve_BuildSegmentLengthTable(Curve* curve, int count);
 
 void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, f32* outZ, int count,
                                CurveCoeffFn coeffFn)
@@ -412,6 +364,55 @@ void curvesMove(Curve* curve)
     if (curve->pz != NULL)
     {
         curve->sample[2] = curve->eval(curve->t, curve->pz, &curve->tangent[2]);
+    }
+}
+
+void Curve_BuildSegmentLengthTable(Curve* curve, int count)
+{
+    f32 outX[21];
+    f32 outY[21];
+    f32 outZ[21];
+    int i;
+    f32* px = NULL;
+    f32* py = NULL;
+    f32* pz = NULL;
+    f32 dx, dy, dz, sq;
+    f32 zero;
+
+    if (curve->px != NULL)
+    {
+        px = curve->px + curve->idx;
+    }
+    if (curve->py != NULL)
+    {
+        py = curve->py + curve->idx;
+    }
+    if (curve->pz != NULL)
+    {
+        pz = curve->pz + curve->idx;
+    }
+    if (curve->coeffFn != 0)
+    {
+        Curve_SampleSegmentPoints(px, py, pz, outX, outY, outZ, count, curve->coeffFn);
+    }
+
+    zero = lbl_803DE658;
+    curve->totalLen = zero;
+    for (i = 0; i < count; i++)
+    {
+        dx = px != NULL ? outX[i + 1] - outX[i] : lbl_803DE658;
+        dy = py != NULL ? outY[i + 1] - outY[i] : lbl_803DE658;
+        dz = pz != NULL ? outZ[i + 1] - outZ[i] : lbl_803DE658;
+        sq = dx * dx + dy * dy + dz * dz;
+        if (sq > zero)
+        {
+            curve->segLen[i] = sqrtf(sq);
+        }
+        else
+        {
+            curve->segLen[i] = lbl_803DE67C;
+        }
+        curve->totalLen += curve->segLen[i];
     }
 }
 

@@ -798,28 +798,7 @@ int HighTop_seqFn(GameObject* obj)
     return 0;
 }
 
-void hightop_playMovementSfx(GameObject* obj, HighTopRuntime* state2, HighTopRuntime* state)
-{
-    int flags = state->baddie.eventFlags;
-    int idx;
-    if ((flags & 0x81) != 0)
-    {
-        if (flags & 1)
-        {
-            idx = 0;
-        }
-        if (flags & 0x80)
-        {
-            idx = 1;
-        }
-        Sfx_PlayFromObject((u32)obj, (u16)gHighTopMovementSfxIds[idx]);
-    }
-    if ((s32)state->baddie.eventFlags & 0x100)
-    {
-        fn_8009A8C8(obj, 1000.0f);
-        Sfx_PlayFromObject((u32)obj, gHighTopMovementSfxIds[0]);
-    }
-}
+void hightop_playMovementSfx(GameObject* obj, HighTopRuntime* state2, HighTopRuntime* state);
 
 void HighTop_getLookTargetYaw(GameObject* obj, int mode, int* out)
 {
@@ -1151,6 +1130,29 @@ void HighTop_update(GameObject* obj)
     }
 }
 
+void hightop_playMovementSfx(GameObject* obj, HighTopRuntime* state2, HighTopRuntime* state)
+{
+    int flags = state->baddie.eventFlags;
+    int idx;
+    if ((flags & 0x81) != 0)
+    {
+        if (flags & 1)
+        {
+            idx = 0;
+        }
+        if (flags & 0x80)
+        {
+            idx = 1;
+        }
+        Sfx_PlayFromObject((u32)obj, (u16)gHighTopMovementSfxIds[idx]);
+    }
+    if ((s32)state->baddie.eventFlags & 0x100)
+    {
+        fn_8009A8C8(obj, 1000.0f);
+        Sfx_PlayFromObject((u32)obj, gHighTopMovementSfxIds[0]);
+    }
+}
+
 void HighTop_init(GameObject* obj, HighTopPlacement* placement)
 {
     u8* base = lbl_8032AAB0;
@@ -1226,7 +1228,7 @@ void HighTop_initialise(void)
     t[10] = hightop_stateHandler10;
     gHighTopDefaultStateHandler = hightop_defaultStateHandler;
 }
-
+
 
 int hightop_handleMotionEvent(int obj, u8 event)
 {

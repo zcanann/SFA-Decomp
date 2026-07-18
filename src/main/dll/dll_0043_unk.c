@@ -53,51 +53,7 @@ f32 gCamStaffAnimPi = 3.1415927f;
 f32 gCamStaffAnimHalfCircleBams = 32768.0f;
 f32 gCamStaffAnimDegToBams = 182.04445f;
 
-void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
-{
-    short targetClassId;
-    u16 buttons;
-    GameObject* targetObj;
-    int followTarget;
-    struct
-    {
-        f32 x;
-        f32 z;
-        s16 y;
-    } actionPayload;
-
-    if (*(u32*)&target->pendingParentObj == 0)
-    {
-        buttons = getButtonsJustPressed(0);
-        targetObj = (GameObject*)camera->currentTarget;
-        followTarget = 0;
-        if (targetObj != NULL)
-        {
-            targetClassId = targetObj->anim.classId;
-            if ((targetClassId == 0x1c || targetClassId == 0x2a) && target->anim.classId == 1 &&
-                objFn_80296700(target) != 0)
-            {
-                followTarget = 1;
-            }
-        }
-        if (followTarget || (camera->targetFlags & 2) != 0)
-        {
-            (*gCameraInterface)->setMode(CAMMODE_COMBAT, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
-        }
-        else if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
-                 (objFn_802962b4((GameObject*)target) != 0))
-        {
-            actionPayload.x = gCamcontrolPathState->actionParamX;
-            actionPayload.z = gCamcontrolPathState->actionParamZ;
-            actionPayload.y = gCamcontrolPathState->actionParamY;
-            (*gCameraInterface)->setMode(CAMMODE_VIEWFINDER, 1, 0, 0xc, &actionPayload, 0, 0xff);
-        }
-    }
-}
-
-void CameraModeStaffAnim_copyToCurrent(void)
-{
-}
+void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target);
 
 void camcontrol_releasePathState(void)
 {
@@ -202,6 +158,43 @@ void camclimb_update(CameraObject* cam)
                                        *(int*)&cam->anim.parent);
     }
     return;
+}
+
+void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
+{
+    u16 buttons;
+    GameObject* targetObj;
+    struct
+    {
+        f32 x;
+        f32 z;
+        s16 y;
+    } actionPayload;
+
+    if (*(u32*)&target->pendingParentObj == 0)
+    {
+        buttons = getButtonsJustPressed(0);
+        targetObj = (GameObject*)camera->currentTarget;
+        if ((targetObj != NULL &&
+             (targetObj->anim.classId == 0x1c || targetObj->anim.classId == 0x2a) && target->anim.classId == 1 &&
+             objFn_80296700(target) != 0) ||
+            (camera->targetFlags & 2) != 0)
+        {
+            (*gCameraInterface)->setMode(CAMMODE_COMBAT, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
+        }
+        else if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
+                 (objFn_802962b4((GameObject*)target) != 0))
+        {
+            actionPayload.x = gCamcontrolPathState->actionParamX;
+            actionPayload.z = gCamcontrolPathState->actionParamZ;
+            actionPayload.y = gCamcontrolPathState->actionParamY;
+            (*gCameraInterface)->setMode(CAMMODE_VIEWFINDER, 1, 0, 0xc, &actionPayload, 0, 0xff);
+        }
+    }
+}
+
+void CameraModeStaffAnim_copyToCurrent(void)
+{
 }
 
 static inline f32 CameraModeStaffAnim_angleToRadians(int angle)
