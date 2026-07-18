@@ -551,9 +551,8 @@ int ktrex_stateHandlerA03(GameObject* obj, KTRexRuntime* runtime)
     if ((s8)runtime->moveJustStartedB != 0)
     {
         (*(void (**)(GameObject*, KTRexRuntime*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 2);
-        return 0;
     }
-    if ((s8)runtime->moveDone != 0)
+    else if ((s8)runtime->moveDone != 0)
     {
         phase = (gKTRexState->timerFA >> 1) & 3;
         f5 = ((f32*)*(int*)&gKTRexState->rowBX)[phase] -
