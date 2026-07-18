@@ -53,6 +53,8 @@
 #include "main/dll/kooshy.h"
 #include "main/dll/mikaladon.h"
 #include "main/dll/baddiewhirlpool.h"
+#include "main/dll/newseqobj_baddie.h"
+#include "main/dll/dll_010B_fireflylantern.h"
 
 int lbl_803DBC58[2] = {2, 3};
 f32 lbl_803DBC60 = 20.0f;
@@ -95,7 +97,6 @@ typedef struct
 /* camera mode DLL 0x49 = dll_0049_cameramodecombat */
 #define ENEMY_CAMMODE_COMBAT 0x49
 
-extern u32 fn_80154870();
 extern void* memcpy(void* dst, void* src, int n);
 extern void tricky_handleDefeat(GameObject* obj, int state);
 extern void Tricky_resumeAfterCommand(GameObject* obj, int state);
@@ -103,8 +104,6 @@ extern void Tricky_applyFloorResponse(GameObject* obj, int state);
 
 extern void fn_8014FF20(short* obj, int state);
 extern void fn_8014FF24(short* obj, int state);
-extern void fn_80150910(short* obj, int state);
-extern void fn_80150EDC(GameObject* obj, int state);
 extern void fn_8015165C(GameObject* obj, int state);
 extern void fn_80152040(short* obj, int state);
 extern void fn_80152514(short* obj, int state);
@@ -252,7 +251,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_801540A0((int)obj, state);
                 break;
             case 0x251:
-                fn_80154870((GameObject*)(obj), state);
+                fn_80154870((GameObject*)(obj), (int*)state);
                 break;
             case 0x25d:
                 fn_80155948((int*)obj, state);
@@ -306,7 +305,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             case 0x5b9:
             case 0x5e1:
             case 0x7a6:
-                fn_80150EDC((GameObject*)(obj), state);
+                fn_80150EDC((GameObject*)(obj), (void*)state);
                 break;
             case 0xd8:
             case 0x281:
@@ -329,7 +328,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_801540A0((int)obj, state);
                 break;
             case 0x251:
-                fn_80154870((GameObject*)(obj), state);
+                fn_80154870((GameObject*)(obj), (int*)state);
                 break;
             case 0x25d:
                 fn_80155884((int*)obj, state);
@@ -417,7 +416,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
         case 0x5b9:
         case 0x5e1:
         case 0x7a6:
-            fn_80150910(obj, state);
+            fn_80150910((int*)obj, (u8*)state);
             break;
         case 0xd8:
         case 0x281:

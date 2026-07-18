@@ -10,4 +10,6 @@ void FireFlyLantern_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FireFlyLantern_update(GameObject* obj);
 void FireFlyLantern_init(GameObject* obj, int def);
 
+void fn_80154870(GameObject* obj, int* state);
+
 #endif /* MAIN_DLL_DLL_010B_FIREFLYLANTERN_H_ */

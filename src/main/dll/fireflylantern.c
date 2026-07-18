@@ -31,6 +31,7 @@
 #include "main/objhits.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_010B_fireflylantern.h"
 
 #define FIREFLYLANTERN_HIT_VOLUME_SLOT 0xe
 
