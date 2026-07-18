@@ -824,34 +824,34 @@ void LowPrecisionHandler(int voice)
         }
 
         ccents = (sv->curNote << 16) + (sv->curDetune * 0x10000) / 100;
-        if ((HWVOICE_FLAGS(sv) & 0x10030) != 0)
+        do
         {
-            if (sv->midi != 0xFF)
+            if ((HWVOICE_FLAGS(sv) & 0x10030) != 0)
             {
+                if (sv->midi == 0xFF)
+                {
+                    continue;
+                }
                 pbend = inpGetPitchBend((McmdVoiceState*)sv);
                 sv->pbLast = pbend;
             }
             else
             {
-                pbend = 0x2000;
+                pbend = sv->pbLast;
             }
-        }
-        else
-        {
-            pbend = sv->pbLast;
-        }
-        if (pbend != 0x2000)
-        {
-            pbend -= 0x2000;
-            if (pbend < 0)
+            if (pbend != 0x2000)
             {
-                ccents += sv->pbLowerKeyRange * pbend * 8;
+                pbend -= 0x2000;
+                if (pbend < 0)
+                {
+                    ccents += sv->pbLowerKeyRange * pbend * 8;
+                }
+                else
+                {
+                    ccents += sv->pbUpperKeyRange * pbend * 8;
+                }
             }
-            else
-            {
-                ccents += sv->pbUpperKeyRange * pbend * 8;
-            }
-        }
+        } while (0);
 
         if ((HWVOICE_FLAGS(sv) & 0x2000) != 0)
         {
@@ -1562,60 +1562,65 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
         sndConvertMs(&convertedTime);
     }
 
-    switch (target)
+    do
     {
-    case SYNTH_FADE_SELECTOR_ACTION_0_OR_1:
+        switch (target)
+        {
+        case SYNTH_FADE_SELECTOR_ACTION_0_OR_1:
+            for (fade = synthMasterFader, i = 0; i < SYNTH_FADE_COUNT; ++i, ++fade)
+            {
+                if (fade->type == SYNTH_FADE_TYPE_ACTION_0 || fade->type == SYNTH_FADE_TYPE_ACTION_1)
+                {
+                    SetupFader(fade, volume, convertedTime, action, SYNTH_INVALID_LINK_ID);
+                    synthMasterFaderActiveFlags |= 1U << i;
+                }
+            }
+            return;
+
+        case SYNTH_FADE_SELECTOR_ACTION_2_OR_3:
+            for (fade = synthMasterFader, i = 0; i < SYNTH_FADE_COUNT; ++i, ++fade)
+            {
+                if (fade->type == SYNTH_FADE_TYPE_ACTION_2 || fade->type == SYNTH_FADE_TYPE_ACTION_3)
+                {
+                    SetupFader(fade, volume, convertedTime, action, SYNTH_INVALID_LINK_ID);
+                    synthMasterFaderActiveFlags |= 1U << i;
+                }
+            }
+            return;
+
+        case SYNTH_FADE_SELECTOR_ACTION_2:
+            matchState = SYNTH_FADE_TYPE_ACTION_2;
+            break;
+
+        case SYNTH_FADE_SELECTOR_ACTION_3:
+            matchState = SYNTH_FADE_TYPE_ACTION_3;
+            break;
+
+        case SYNTH_FADE_SELECTOR_ACTION_0:
+            matchState = SYNTH_FADE_TYPE_ACTION_0;
+            break;
+
+        case SYNTH_FADE_SELECTOR_ACTION_1:
+            matchState = SYNTH_FADE_TYPE_ACTION_1;
+            break;
+
+        default:
+            continue;
+        }
+
         for (fade = synthMasterFader, i = 0; i < SYNTH_FADE_COUNT; ++i, ++fade)
         {
-            if (fade->type == SYNTH_FADE_TYPE_ACTION_0 || fade->type == SYNTH_FADE_TYPE_ACTION_1)
+            if (fade->type == matchState)
             {
                 SetupFader(fade, volume, convertedTime, action, SYNTH_INVALID_LINK_ID);
                 synthMasterFaderActiveFlags |= 1U << i;
             }
         }
         return;
+    } while (0);
 
-    case SYNTH_FADE_SELECTOR_ACTION_2_OR_3:
-        for (fade = synthMasterFader, i = 0; i < SYNTH_FADE_COUNT; ++i, ++fade)
-        {
-            if (fade->type == SYNTH_FADE_TYPE_ACTION_2 || fade->type == SYNTH_FADE_TYPE_ACTION_3)
-            {
-                SetupFader(fade, volume, convertedTime, action, SYNTH_INVALID_LINK_ID);
-                synthMasterFaderActiveFlags |= 1U << i;
-            }
-        }
-        return;
-
-    case SYNTH_FADE_SELECTOR_ACTION_2:
-        matchState = SYNTH_FADE_TYPE_ACTION_2;
-        break;
-
-    case SYNTH_FADE_SELECTOR_ACTION_3:
-        matchState = SYNTH_FADE_TYPE_ACTION_3;
-        break;
-
-    case SYNTH_FADE_SELECTOR_ACTION_0:
-        matchState = SYNTH_FADE_TYPE_ACTION_0;
-        break;
-
-    case SYNTH_FADE_SELECTOR_ACTION_1:
-        matchState = SYNTH_FADE_TYPE_ACTION_1;
-        break;
-
-    default:
-        SetupFader(&synthMasterFader[target], volume, convertedTime, action, handle);
-        synthMasterFaderActiveFlags |= 1U << target;
-        return;
-    }
-
-    for (fade = synthMasterFader, i = 0; i < SYNTH_FADE_COUNT; ++i, ++fade)
-    {
-        if (fade->type == matchState)
-        {
-            SetupFader(fade, volume, convertedTime, action, SYNTH_INVALID_LINK_ID);
-            synthMasterFaderActiveFlags |= 1U << i;
-        }
-    }
+    SetupFader(&synthMasterFader[target], volume, convertedTime, action, handle);
+    synthMasterFaderActiveFlags |= 1U << target;
 }
 int synthIsFadeOutActive(u8 voiceIdx)
 {
