@@ -46,6 +46,16 @@ void* lbl_803DDAF0; /* per-grid phase table */
 void* lbl_803DDAEC; /* per-cell RGB color field */
 u8 lbl_803DDAE8;    /* live-instance refcount */
 
+extern const f32 lbl_803E3F40;
+extern const f32 lbl_803E3F44;
+extern const f32 lbl_803E3F48;
+extern const f32 lbl_803E3F4C;
+extern const f32 lbl_803E3F50;
+extern const f32 lbl_803E3F54;
+extern const f32 lbl_803E3F58;
+extern const f32 lbl_803E3F5C;
+extern const f32 lbl_803E3F60;
+extern const f32 lbl_803E3F64;
 extern const union WaveAnimatorConstF32 lbl_803E3F70;
 
 void fn_801923F8(int* cfgArg);
@@ -95,18 +105,18 @@ void fn_801923F8(int* cfgArg)
     lbl_803DDAEC = mmAlloc(3 * cfg->period * cfg->period, 0xFFFFFF, 0);
 
     x = cfg->originX;
-    stepX = (s32)(((65536.0f) * cfg->spanX) / cfg->period);
+    stepX = (s32)((lbl_803E3F40 * cfg->spanX) / cfg->period);
     y = cfg->originY;
-    stepY = (s32)(((65536.0f) * cfg->spanY) / cfg->period);
+    stepY = (s32)((lbl_803E3F40 * cfg->spanY) / cfg->period);
 
-    initHeight = (0.0f);
+    initHeight = lbl_803E3F44;
     cfg->maxHeight = initHeight;
     cfg->minHeight = initHeight;
 
     i = 0;
     heightIdx = 0;
-    waveScale = (3.1415927f);
-    waveDivisor = (32768.0f);
+    waveScale = lbl_803E3F48;
+    waveDivisor = lbl_803E3F4C;
     for (; i < cfg->period; i++)
     {
         f32 xv;
@@ -142,7 +152,7 @@ void fn_801923F8(int* cfgArg)
         heightIdx = 0;
         x = heightIdx;
         i = heightIdx;
-        colorSplitZero = (0.0f);
+        colorSplitZero = lbl_803E3F44;
         for (; heightIdx < cfg->period; heightIdx++)
         {
             int src[1];
@@ -153,9 +163,9 @@ void fn_801923F8(int* cfgArg)
                 if (v < colorSplitZero)
                 {
                     t = (v - cfg->minHeight) / negMin;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0]) = (65.0f) * t + (190.0f);
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 1) = (165.0f) * t + (90.0f);
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 2) = (235.0f) * t + (20.0f);
+                    *(u8*)((u8*)lbl_803DDAEC + byte[0]) = lbl_803E3F54 * t + lbl_803E3F50;
+                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 1) = lbl_803E3F5C * t + lbl_803E3F58;
+                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 2) = lbl_803E3F64 * t + lbl_803E3F60;
                 }
                 else
                 {
