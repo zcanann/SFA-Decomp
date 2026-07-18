@@ -190,9 +190,9 @@ void camcontrol_applyQueuedAction(void)
             blendStep = gCamcontrolNormalizedMax / gCamcontrolQueuedActionBlendFrames;
             if ((blendStep <= gCamcontrolNormalizedMin) || (blendStep > gCamcontrolNormalizedMax))
             {
-                blendStep = gCamcontrolNormalizedMax;
+                blendStep = 1.0f;
             }
-            CAMCONTROL_CAMERA->blendProgress = gCamcontrolNormalizedMax;
+            CAMCONTROL_CAMERA->blendProgress = 1.0f;
             CAMCONTROL_CAMERA->blendStep = blendStep;
             CAMCONTROL_CAMERA->queuedBlendFlags = gCamcontrolQueuedActionMode;
         }
