@@ -27,6 +27,7 @@
 #include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/expgfx_resource_api.h"
 #include "main/frame_timing.h"
+#include "main/trig_ext.h"
 #include "main/object.h"
 #include "main/model_light.h"
 #include "main/object_api.h"
@@ -166,8 +167,6 @@ STATIC_ASSERT(offsetof(ExplosionSetup, unk19) == 0x19);
 STATIC_ASSERT(offsetof(ExplosionSetup, flags) == 0x1C);
 STATIC_ASSERT(sizeof(ExplosionSetup) == 0x24);
 
-extern f32 fcos16(u16 angle);
-
 void WM_newcrystalFn_800969b0(GameObject* obj, s16* state, u8 flags, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff)
 {
     ObjFxParticleParams params;
@@ -181,7 +180,7 @@ void WM_newcrystalFn_800969b0(GameObject* obj, s16* state, u8 flags, f32 period,
         state[0x12 + i] = (65535.0f / period + (f32)(i * randomGetRange(120, 127)));
         phase = state[0x12 + i];
         state[0xe + i] = (phase * timeDelta + state[0xe + i]);
-        phase = fcos16(state[0xe + i]);
+        phase = fcos16((u16)state[0xe + i]);
         phase = (1.0f + phase) / 2.0f;
         {
             f32 amp = gObjFxCrystalAmpTbl.amps[i];
