@@ -121,7 +121,6 @@ typedef struct FirepipeSetup
     u8 unk22;          /* 0x22 */
     u8 unk23;          /* 0x23 */
 } FirepipeSetup;
-extern u8 gCrawlerSeqTable[];
 extern void* gCrawlerModelChainIds[];
 extern void* gCrawlerDescriptorTable[];
 extern u8* gCrawlerReactionTables[];
@@ -137,7 +136,6 @@ void fn_80157B58(int* obj, u8* state);
 extern f32 lbl_803DBCE8;
 f32 gCrawlerHitSfxTimer;
 
-extern u8 gCrawlerSpeedThresholds[];
 
 /*
  * FCVars - file-local overlay naming the crawler/HagabonMK2-family scratch
