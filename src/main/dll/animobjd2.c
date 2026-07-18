@@ -605,23 +605,24 @@ void* trickyFindCirclingTarget(GameObject* obj, void* state)
     }
 
     target = (void*)fn_80296118((GameObject*)(*(int*)((u8*)state + 0x4)));
-    if (target == NULL)
-        return NULL;
-
-    list = (void**)ObjGroup_GetObjects(3, &count);
-    for (i = 0; i < count; i++)
+    if (target != NULL)
     {
-        if (list[i] == target)
+        list = (void**)ObjGroup_GetObjects(3, &count);
+        for (i = 0; i < count; i++)
         {
-            d1 = Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)target)->anim.worldPosX);
-            d2 = Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
-            d3 = Vec_xzDistance(&((GameObject*)target)->anim.worldPosX,
-                                &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
-            if ((d1 + d2) < lbl_803E23F8 * d3)
+            if (*list == target)
             {
-                return target;
+                d1 = Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)target)->anim.worldPosX);
+                d2 = Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
+                d3 = Vec_xzDistance(&((GameObject*)target)->anim.worldPosX,
+                                    &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
+                if ((d1 + d2) < lbl_803E23F8 * d3)
+                {
+                    return target;
+                }
+                break;
             }
-            return NULL;
+            list++;
         }
     }
     return NULL;
