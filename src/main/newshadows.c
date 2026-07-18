@@ -180,7 +180,7 @@ extern const double lbl_803DED60;
 
 extern inline float sqrtf(float x)
 {
-    float y;
+    volatile float y;
     if (x > lbl_803DED28)
     {
         double guess = __frsqrte((double)x);
@@ -1365,7 +1365,7 @@ void shadowCreate(int* obj)
         if (dist2 > lbl_803DED28)
         {
             double guess = __frsqrte((double)dist2);
-            f32 root;
+            volatile f32 root;
             guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
             guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
             guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
