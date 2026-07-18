@@ -25,6 +25,8 @@ typedef struct NAttractModeMovieDims {
 #define NATTRACTMODE_MOVIE_VOLUME_FADE_LONG 1000
 #define NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN 10
 
+extern NAttractModeMovieDims gAttractMovieDims;
+
 int n_rareware_frameStart(void);
 void n_rareware_release(void);
 void n_rareware_initialise(void);
