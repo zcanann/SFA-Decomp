@@ -16,7 +16,6 @@ CameraModeStaticState* lbl_803DD558;
 
 extern CameraModeStaticState* lbl_803DD558;
 
-#pragma dont_inline on
 void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
 {
     int* list;
@@ -54,7 +53,6 @@ void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
     }
     return best;
 }
-#pragma dont_inline reset
 
 void CameraModeStatic_copyToCurrent(void)
 {
