@@ -217,6 +217,7 @@ extern const f32 lbl_803DED0C;
 extern const f32 lbl_803DED14, lbl_803DED18;
 extern const f32 lbl_803DED20, lbl_803DED24;
 extern const f32 lbl_803DED34, lbl_803DED48;
+extern const f32 lbl_803DEDAC, lbl_803DEDB0, lbl_803DEDB4, lbl_803DEDB8, lbl_803DEDBC;
 extern const f32 gNewShadowFovY;
 extern const f32 lbl_803DED70, lbl_803DED74, gNewShadowAspectWide, gNewShadowAspectNarrow;
 extern const f32 lbl_803DED44, lbl_803DED4C, lbl_803DED50;
@@ -1681,7 +1682,7 @@ void fn_8006CB50(void)
         x = 0;
         yhi = (y >> 2) * 0x20;
         ylo = (y & 3) * 2;
-        fy = y - 127.5f;
+        fy = y - lbl_803DEDAC;
         for (; x < 0x100; x++)
         {
             u8* rowBase;
@@ -1691,24 +1692,24 @@ void fn_8006CB50(void)
             row = rowBase + yhi;
             row += (x & 3) * 8;
             addr = row + (x >> 2) * 0x800;
-            fx = x - 127.5f;
-            dist = sqrtf(fy * fy + fx * fx);
+            fx = x - lbl_803DEDAC;
+            dist = sqrtf(fx * fx + fy * fy);
             ny = fy / dist;
             fx /= dist;
-            if (dist <= 112.0f)
+            if (dist <= lbl_803DEDB8)
             {
-                t = 2.0f * (0.9f * 112.0f - 0.9f * dist);
-                s = t * 0.00390625f;
+                t = lbl_803DED34 * (lbl_803DEDB0 - lbl_803DED48 * dist);
+                s = t * lbl_803DEDB4;
             }
             else
             {
-                s = 0.0f;
+                s = lbl_803DED28;
             }
             {
                 ny = ny * s;
                 fx = fx * s;
-                py = 127.0f * ny + 128.0f;
-                px = 127.0f * fx + 128.0f;
+                py = lbl_803DEDC0 * ny + lbl_803DEDBC;
+                px = lbl_803DEDC0 * fx + lbl_803DEDBC;
                 ((NewShadowVectorTexel*)(addr + 0x60))->packedXY =
                     (u16)((int)px | (((int)py & 0xffff) << 8));
             }
