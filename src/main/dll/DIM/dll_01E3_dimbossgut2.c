@@ -30,6 +30,9 @@
 #define DIMBOSSGUT2_OBJGROUP 3
 #define DIMBOSSGUT2_PARTFX   0x32b
 
+extern f32 gDimBossGut2Pi;
+extern f32 gDimBossGut2AngleUnitToRadians;
+
 void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
 {
     Dimbossgut2Curve* curve;

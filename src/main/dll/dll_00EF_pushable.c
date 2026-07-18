@@ -769,7 +769,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     ret = 0;
     i = 5;
     p = (char*)state + 0x14;
-    while (p -= 4, i-- != 0)
+    while (p -= 4, i--)
     {
         *(f32*)(p + 0x118) = *(f32*)(p + 0x114);
         *(f32*)(p + 0x12c) = *(f32*)(p + 0x128);
@@ -1130,7 +1130,10 @@ void pushable_hitDetect(GameObject* obj)
     player = Obj_GetPlayerObject();
     state = obj->extra;
     state->timer_0x110 -= timeDelta;
-    pushableClampToZero(&state->timer_0x110);
+    if (state->timer_0x110 <= PUSHABLE_ZERO)
+    {
+        state->timer_0x110 = PUSHABLE_ZERO;
+    }
     if (state->moveFlags.b7 == 0)
     {
         f32 k;
@@ -1414,7 +1417,7 @@ void pushable_init(s16* obj, char* def)
     ((GameObject*)obj)->animEventCallback = pushable_SeqFn;
     state = ((GameObject*)obj)->extra;
     state->pointCount = 0;
-    entry = Transporter_GetActiveModel(obj);
+    entry = (int*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex];
     model = (ModelFileHeader*)*entry;
     state->unk_B0 = *(int*)&((PushableObjectDef*)def)->unk1C;
     state->scale = (f32) * &((PushableObjectDef*)def)->scaleRaw / PUSHABLE_SCALE_DENOM;

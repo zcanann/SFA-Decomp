@@ -271,19 +271,6 @@ int cfguardian_setScale(int* obj)
     return (sub->flagsA9B & GUARDIAN_FLAG_PATH_FLYING) == 0;
 }
 
-static void cfguardianKeepFlyMove(GameObject* obj)
-{
-    if (obj->anim.currentMove != GUARDIAN_MOVE_FLY)
-    {
-        ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
-    }
-}
-
-static f32 cfguardianGetYaw(GameObject* obj)
-{
-    return (f32)obj->anim.rotX;
-}
-
 /* cfguardianFlyAlongPath: fly the guardian along a rom-curve path. On the first
  * tick (userData1 == 0) it steers to the nearest curve point then opens the
  * curve walker; thereafter it advances the walker, snaps the object to
@@ -361,7 +348,10 @@ int cfguardianFlyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 t, int p
         }
         obj->anim.rotX = *(s16*)(int)obj + (yawDelta >> 3);
     }
-    cfguardianKeepFlyMove(obj);
+    if (obj->anim.currentMove != GUARDIAN_MOVE_FLY)
+    {
+        ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
+    }
     return ret;
 }
 
@@ -370,15 +360,6 @@ int cfguardianFlyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 t, int p
  * progression (path flights, landing physics, dialogue triggers and idle
  * chatter) that runs from her caged release through to the spell-stone
  * see-off. */
-
-static inline f32 cfguardianAbs(f32 x)
-{
-    if (x >= 0.0f)
-    {
-        return x;
-    }
-    return -x;
-}
 
 int cfguardian_updateMain(GameObject* obj)
 {
@@ -520,9 +501,18 @@ int cfguardian_updateMain(GameObject* obj)
             }
             else
             {
-                f32 w = cfguardianAbs(400.0f * obj->anim.velocityY);
+                f32 x = 400.0f * obj->anim.velocityY;
+                f32 w;
                 f32 r;
-                r = cfguardianGetYaw(obj);
+                if (x >= 0.0f)
+                {
+                    w = x;
+                }
+                else
+                {
+                    w = -x;
+                }
+                r = (f32)obj->anim.rotX;
                 r = r + w;
                 obj->anim.rotX = r;
                 sub->moveSpeed = 0.04f;

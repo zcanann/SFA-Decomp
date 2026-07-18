@@ -1470,7 +1470,7 @@ void textureAnimFn_80053f2c(const Texture* texture, u32* node, s32* cnt)
 }
 
 
-void fn_800541A4(Texture* texture, s16 frameStep)
+void fn_800541A4(Texture* texture, u16 frameStep)
 {
     texture->animationFrameStep = frameStep;
 }

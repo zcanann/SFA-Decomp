@@ -340,6 +340,9 @@ extern int gSubtitleLineCount;
 extern Texture* gGameTextBoxEdgeTexture;
 extern u32 lbl_80339C40[];
 
+extern void textRenderSetupFn_800795e8(void);
+extern void textBlendSetupFn_80078a7c(void);
+extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 int getGameState(void);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
 extern u16 OSGetFontEncode(void);
@@ -688,7 +691,6 @@ u8 sGameTextGlyphOrder[0x1b] = "urstovwxazbcmdefghtkilnpoq";
 int getControlCharLen(u32 c);
 void* gameTextGet(int textId);
 int gameTextFn_8001b44c(int x);
-int gameTextGetState(int i);
 int subtitleIsActive(void);
 void subtitleFn_8001b700(void);
 void dvdCancelCallback_8001b39c(s32 result, DVDCommandBlock* block);
@@ -1609,28 +1611,7 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
         s->arg2 = y;
     }
 }
-void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
-{
-    if (gameTextDrawFunc != NULL)
-    {
-        lbl_803DC9A7 = r;
-        lbl_803DC9A6 = g;
-        lbl_803DC9A5 = b;
-        lbl_803DC9A4 = a;
-    }
-    else
-    {
-        int i = gGameTextCommandCount;
-        GameTextSlot* s;
-        gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        s->opcode = 3;
-        s->arg0 = r;
-        s->arg1 = g;
-        s->arg2 = b;
-        s->arg3 = a;
-    }
-}
+void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 void gameTextLoadDir(int dirId)
 {
     GameTextSlot* cmd;
@@ -1693,34 +1674,10 @@ void gameTextLoadDir(int dirId)
     }
 }
 
-int gameTextGetCharset(void)
-{
-    return gameTextCharset;
-}
+int gameTextGetCharset(void);
+void gameTextSetCharset(int charset, int flags);
 
-void gameTextSetCharset(int charset, int flags)
-{
-    if (gameTextDrawFunc != NULL || (flags & 1))
-    {
-        gameTextFonts = (TextFont*)&gGameTextCharsets[charset];
-        gameTextCharset = charset;
-        if (charset == 2)
-        {
-            int color = gGameTextClearColor;
-            hudDrawRect(0, 0, 0xa00, 0x780, &color);
-            lbl_803DC99C = 0;
-        }
-    }
-    if (gameTextDrawFunc == NULL || (flags & 2))
-    {
-        int i = gGameTextCommandCount;
-        GameTextSlot* s;
-        gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        s->opcode = 0xf;
-        s->arg0 = charset;
-    }
-}
+void* getCurGameText(void);
 int getCurLanguage(void)
 {
     return curLanguage;
@@ -1730,6 +1687,8 @@ f32 gameTextFn_80019c00(void)
 {
     return gameTextFonts->timer;
 }
+int gameTextGetState(int i);
+
 void gameTextRun(void)
 {
     GameTextSlot* cmd;
@@ -2762,6 +2721,30 @@ void subtitleUpdateAndDraw(int a)
         }
     }
 }
+
+void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
+{
+    if (gameTextDrawFunc != NULL)
+    {
+        lbl_803DC9A7 = r;
+        lbl_803DC9A6 = g;
+        lbl_803DC9A5 = b;
+        lbl_803DC9A4 = a;
+    }
+    else
+    {
+        int i = gGameTextCommandCount;
+        GameTextSlot* s;
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
+        s->opcode = 3;
+        s->arg0 = r;
+        s->arg1 = g;
+        s->arg2 = b;
+        s->arg3 = a;
+    }
+}
+
 void mainLoopDoGameText(void)
 {
     if (gGameTextSequenceMode != 0)
@@ -2966,6 +2949,35 @@ void subtitleBuildLineTable(void)
     if (gGameTextSequenceMode != 0)
     {
         gameTextSetCharset(savedCharset, 1);
+    }
+}
+
+int gameTextGetCharset(void)
+{
+    return gameTextCharset;
+}
+
+void gameTextSetCharset(int charset, int flags)
+{
+    if (gameTextDrawFunc != NULL || (flags & 1))
+    {
+        gameTextFonts = (TextFont*)&gGameTextCharsets[charset];
+        gameTextCharset = charset;
+        if (charset == 2)
+        {
+            int color = gGameTextClearColor;
+            hudDrawRect(0, 0, 0xa00, 0x780, &color);
+            lbl_803DC99C = 0;
+        }
+    }
+    if (gameTextDrawFunc == NULL || (flags & 2))
+    {
+        int i = gGameTextCommandCount;
+        GameTextSlot* s;
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
+        s->opcode = 0xf;
+        s->arg0 = charset;
     }
 }
 
@@ -3368,16 +3380,6 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     ((GameTextBox*)box)->cursorY = savedY;
 }
 
-void* getCurGameText(void)
-{
-    return curGameTextDir;
-}
-
-int gameTextGetState(int i)
-{
-    return gGameTextCharsets[i].state;
-}
-
 void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
 {
     int x;
@@ -3556,6 +3558,16 @@ void gameTextInitFn_8001c794(void)
         y += 4;
     }
     DCFlushRange(gGameTextBoxEdgeTexture + 1, 800);
+}
+
+void* getCurGameText(void)
+{
+    return curGameTextDir;
+}
+
+int gameTextGetState(int i)
+{
+    return gGameTextCharsets[i].state;
 }
 
 u8 gGameTextBase[0x20];

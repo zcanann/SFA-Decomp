@@ -105,50 +105,6 @@ static void sc_totembond_beginOrbGame(ScTotemBondObject* obj, ScTotemBondState* 
     Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 1);
 }
 
-void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
-{
-    s32 angleOffset;
-    u8* setup;
-    u8* definition;
-    s8 i;
-    s8 orbIndex;
-
-    if (Obj_IsLoadingLocked() != 0)
-    {
-        i = 0;
-        orbIndex = 1;
-        angleOffset = 0;
-        while (i < SC_TOTEMBOND_ORB_COUNT)
-        {
-            definition = obj->definition;
-            setup = (u8*)Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE, SC_TOTEMBOND_ORB_OBJECT_ID);
-            ((ObjPlacement*)setup)->posX =
-                radius * mathSinf((3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->x;
-            ((ObjPlacement*)setup)->posY = obj->y;
-            ((ObjPlacement*)setup)->posZ =
-                radius * mathCosf((3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->z;
-            setup[0x04] = definition[0x04];
-            setup[0x05] = (definition[0x05] & ~1) | 4;
-            setup[0x06] = definition[0x06];
-            setup[0x07] = 0x1e;
-            ((TotemBondOrbPlacement*)setup)->unk18 = -1;
-            ((TotemBondOrbPlacement*)setup)->triggerEvent = SC_TOTEMBOND_ORB_TRIGGER_EVENT;
-            ((TotemBondOrbPlacement*)setup)->orbGameBit = gTotemBondOrbGameBits[orbIndex];
-            ((TotemBondOrbPlacement*)setup)->ringGameBit = gTotemBondRingGameBits[orbIndex];
-            ((TotemBondOrbPlacement*)setup)->yawByte = (s8)(((obj->yaw + 0x8000) + angleOffset) >> 8);
-            ((TotemBondOrbPlacement*)setup)->unk32 = 1;
-            Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
-            orbIndex++;
-            if (orbIndex > 7)
-            {
-                orbIndex = 0;
-            }
-            angleOffset += SC_TOTEMBOND_ORB_ANGLE_STEP;
-            i++;
-        }
-    }
-}
-
 u32 sc_totembond_SeqFn(ScTotemBondObject* obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
     ScTotemBondState* state;
@@ -352,6 +308,50 @@ void sc_totembond_update(ScTotemBondObject* obj)
     {
         (*gMapEventInterface)->setMapAct(SC_TOTEMBOND_MAP_SWAPCIRCLE, 6);
         state->eventFlags &= ~SC_TOTEMBOND_EVENT_SET_MAP_MODE;
+    }
+}
+
+void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
+{
+    s32 angleOffset;
+    u8* setup;
+    u8* definition;
+    s8 i;
+    s8 orbIndex;
+
+    if (Obj_IsLoadingLocked() != 0)
+    {
+        i = 0;
+        orbIndex = 1;
+        angleOffset = 0;
+        while (i < SC_TOTEMBOND_ORB_COUNT)
+        {
+            definition = obj->definition;
+            setup = (u8*)Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE, SC_TOTEMBOND_ORB_OBJECT_ID);
+            ((ObjPlacement*)setup)->posX =
+                radius * mathSinf((3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->x;
+            ((ObjPlacement*)setup)->posY = obj->y;
+            ((ObjPlacement*)setup)->posZ =
+                radius * mathCosf((3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->z;
+            setup[0x04] = definition[0x04];
+            setup[0x05] = (definition[0x05] & ~1) | 4;
+            setup[0x06] = definition[0x06];
+            setup[0x07] = 0x1e;
+            ((TotemBondOrbPlacement*)setup)->unk18 = -1;
+            ((TotemBondOrbPlacement*)setup)->triggerEvent = SC_TOTEMBOND_ORB_TRIGGER_EVENT;
+            ((TotemBondOrbPlacement*)setup)->orbGameBit = gTotemBondOrbGameBits[orbIndex];
+            ((TotemBondOrbPlacement*)setup)->ringGameBit = gTotemBondRingGameBits[orbIndex];
+            ((TotemBondOrbPlacement*)setup)->yawByte = (s8)(((obj->yaw + 0x8000) + angleOffset) >> 8);
+            ((TotemBondOrbPlacement*)setup)->unk32 = 1;
+            Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
+            orbIndex++;
+            if (orbIndex > 7)
+            {
+                orbIndex = 0;
+            }
+            angleOffset += SC_TOTEMBOND_ORB_ANGLE_STEP;
+            i++;
+        }
     }
 }
 

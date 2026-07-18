@@ -116,6 +116,7 @@ extern u32 lbl_803E5208;
 extern f32 gNwMammothDefaultAnimStepScale;
 
 int fn_801CE078(int* obj, u8* state);
+void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData);
 
 int NW_mammoth_getExtraSize(void);
 void NW_mammoth_free(GameObject* obj);
@@ -603,38 +604,6 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
     }
 }
 
-void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
-{
-    NwMammothState* state = (NwMammothState*)baddie;
-
-    (void)mapData;
-    switch (state->stateIndex)
-    {
-    case 4:
-        state->triggerList = lbl_803DBFB4;
-        if (ObjTrigger_IsSetById(obj, 418) != 0)
-        {
-            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
-            mainSetBits(GAMEBIT_SnowHornArtifact19D, 1);
-            mainSetBits(GAMEBIT_ITEM_NWSnowHornArtifact_Used, 1);
-            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE5, 1);
-            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE6, 1);
-            state->stateIndex = 5;
-        }
-        break;
-    case 5:
-        state->triggerList = lbl_803DBFB8;
-        if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
-        {
-            state->stateIndex = 6;
-        }
-        break;
-    case 6:
-        state->triggerList = lbl_803DBFBC;
-        break;
-    }
-}
-
 void fn_801CEE0C(int obj, int baddie, NwMammothMapData* mapData)
 {
     NwMammothState* state = (NwMammothState*)baddie;
@@ -867,6 +836,38 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
         (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
         (*gPathControlInterface)->apply(obj, state->pathState);
         (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
+    }
+}
+
+void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
+{
+    NwMammothState* state = (NwMammothState*)baddie;
+
+    (void)mapData;
+    switch (state->stateIndex)
+    {
+    case 4:
+        state->triggerList = lbl_803DBFB4;
+        if (ObjTrigger_IsSetById(obj, 418) != 0)
+        {
+            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
+            mainSetBits(GAMEBIT_SnowHornArtifact19D, 1);
+            mainSetBits(GAMEBIT_ITEM_NWSnowHornArtifact_Used, 1);
+            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE5, 1);
+            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE6, 1);
+            state->stateIndex = 5;
+        }
+        break;
+    case 5:
+        state->triggerList = lbl_803DBFB8;
+        if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
+        {
+            state->stateIndex = 6;
+        }
+        break;
+    case 6:
+        state->triggerList = lbl_803DBFBC;
+        break;
     }
 }
 

@@ -21,9 +21,6 @@
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "main/rcp_dolphin_ext.h"
 #include "main/pi_dolphin_ext.h"
-#include "main/acosf_cs.h"
-#include "dolphin/base/PPCArch.h"
-#include "string.h"
 
 int gModelTabEntryCount;
 s16* gModelResourceBuffer;
@@ -43,7 +40,9 @@ u16 gModelCopyChunkWordLimit = 0x2A0;
 #define GX_AOP_AND 0
 #define GX_LEQUAL 3
 #define GX_ALWAYS 7
+extern void* memset(void* dst, int val, int n);
 extern f32 gModelPhaseWrapPeriod;
+extern void* memcpy(void* dst, const void* src, int n);
 extern f32 lbl_803DE828;
 extern f32 lbl_803DE840;
 extern f32 lbl_803DE818;
@@ -114,6 +113,7 @@ extern void fn_80025F38(int* a, int b, u8* p, u8* q);
 extern void modelAnimFn_800246a0(u8* dst, u8* model, u8* ch, f32 t, int max, int b, int c, int d, int e, s16 f);
 extern void fn_80007F78(u8 * ch, s16 * outRot, s16 * outRot2);
 extern void PSMTXTranspose(f32 * src, f32 * dst);
+extern f32 acosf(f32 x);
 extern const f32 gModelDotClampMax;
 extern f32 gModelDotClampMin;
 extern f32 gMapSavedPlayerOffsetX;
@@ -807,33 +807,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     }
     return 0;
 }
-int modelGetAmapSize(int animId, int amapFlag, int animCount)
-{
-    int size;
-    if (amapFlag != 0)
-    {
-        size = animCount * 2 + 8;
-        while (size & 7)
-        {
-            size++;
-        }
-    }
-    else
-    {
-        {
-            int words;
-            words = animCount * 4;
-            size = words;
-        }
-        while (size & 7)
-        {
-            size++;
-        }
-        fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (animId & ~3) << 2, 0x20);
-        size += gModelAnimOffsetTable[(animId & 3) + 1] - gModelAnimOffsetTable[animId & 3];
-    }
-    return size;
-}
+int modelGetAmapSize(int animId, int amapFlag, int animCount);
 int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChannels)
 {
     u8* hdr = model;
@@ -2065,6 +2039,7 @@ void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight)
 
 typedef f32 Mtx[3][4];
 
+void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b, f32 weight, int flags);
 void ObjModel_ClearBlendChannels(ObjModel* model)
 {
     if (model->file->morphTargetPtrs != NULL)
@@ -2395,6 +2370,7 @@ void* fn_80028354(u8* modelFile, int index)
     return ((ModelFileHeader*)modelFile)->collisionTriangles + index * 8;
 }
 
+extern u32 PPCMfhid2(void);
 
 void copyToCache(void* dst, void* src, u32 count);
 
@@ -3041,6 +3017,34 @@ void* ObjModel_LoadModelData(int id)
         ((ModelFileHeader*)model)->flags |= MODEL_FLAG_VERTEX_ANIM_AREA;
     }
     return model;
+}
+
+int modelGetAmapSize(int animId, int amapFlag, int animCount)
+{
+    int size;
+    if (amapFlag != 0)
+    {
+        size = animCount * 2 + 8;
+        while (size & 7)
+        {
+            size++;
+        }
+    }
+    else
+    {
+        {
+            int words;
+            words = animCount * 4;
+            size = words;
+        }
+        while (size & 7)
+        {
+            size++;
+        }
+        fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (animId & ~3) << 2, 0x20);
+        size += gModelAnimOffsetTable[(animId & 3) + 1] - gModelAnimOffsetTable[animId & 3];
+    }
+    return size;
 }
 
 int return0_8002969C(void) { return 0x0; }

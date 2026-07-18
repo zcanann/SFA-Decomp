@@ -1115,42 +1115,6 @@ void arwarwing_updateThrusters(GameObject* obj, ArwingState* state)
     state->thrusterR->anim.rotX = 0x8000 - slot->yaw;
 }
 
-void arwarwing_clampToFlightBounds(GameObject* obj, ArwingState* state)
-{
-    ArwingState* arwing = state;
-    f32 hy;
-    f32 lx;
-    f32 hx;
-    f32 ly;
-    hx = arwing->homeX + arwing->flightHalfWidth;
-    lx = arwing->homeX - arwing->flightHalfWidth;
-    hy = arwing->homeY + arwing->flightUpperHeight;
-    ly = arwing->homeY - arwing->flightLowerHeight;
-    if (obj->anim.localPosX > hx)
-    {
-        obj->anim.localPosX = hx;
-        arwing->velX = 0.0f;
-    }
-    else if (obj->anim.localPosX < lx)
-    {
-        obj->anim.localPosX = lx;
-        arwing->velX = 0.0f;
-    }
-    if (obj->anim.localPosY > hy)
-    {
-        obj->anim.localPosY = hy;
-        arwing->velY = 0.0f;
-    }
-    else if (obj->anim.localPosY < ly)
-    {
-        obj->anim.localPosY = ly;
-        arwing->velY = 0.0f;
-    }
-    arwing->camPos[0] = obj->anim.localPosX - arwing->homeX;
-    arwing->camPos[1] = obj->anim.localPosY - arwing->homeY;
-    arwing->camPos[2] = 0.0f;
-}
-
 void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
 {
     ArwingState* arwing = state;
@@ -1283,6 +1247,42 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     arwing->bobXPhase = (arwing->bobXRate * timeDelta + (f32)(u32)arwing->bobXPhase);
     arwing->bobYPhase = (arwing->bobYRate * timeDelta + (f32)(u32)arwing->bobYPhase);
     arwarwing_clampToFlightBounds(obj, state);
+}
+
+void arwarwing_clampToFlightBounds(GameObject* obj, ArwingState* state)
+{
+    ArwingState* arwing = state;
+    f32 hy;
+    f32 lx;
+    f32 hx;
+    f32 ly;
+    hx = arwing->homeX + arwing->flightHalfWidth;
+    lx = arwing->homeX - arwing->flightHalfWidth;
+    hy = arwing->homeY + arwing->flightUpperHeight;
+    ly = arwing->homeY - arwing->flightLowerHeight;
+    if (obj->anim.localPosX > hx)
+    {
+        obj->anim.localPosX = hx;
+        arwing->velX = 0.0f;
+    }
+    else if (obj->anim.localPosX < lx)
+    {
+        obj->anim.localPosX = lx;
+        arwing->velX = 0.0f;
+    }
+    if (obj->anim.localPosY > hy)
+    {
+        obj->anim.localPosY = hy;
+        arwing->velY = 0.0f;
+    }
+    else if (obj->anim.localPosY < ly)
+    {
+        obj->anim.localPosY = ly;
+        arwing->velY = 0.0f;
+    }
+    arwing->camPos[0] = obj->anim.localPosX - arwing->homeX;
+    arwing->camPos[1] = obj->anim.localPosY - arwing->homeY;
+    arwing->camPos[2] = 0.0f;
 }
 
 void arwarwing_updateBarrelRoll(GameObject* obj, ArwingState* state)

@@ -1751,6 +1751,46 @@ void modelMtxFn_8003be38(u8* def, int* model, f32* mtxA, f32* mtxB)
     lbl_803DCC48 = 2;
 }
 
+void modelCalcVtxGroupMtxs(int def, int model);
+
+void modelInitMtxs(int def, int model)
+{
+    int cache;
+    int mtx;
+    int count;
+    u8 rem;
+
+    cache = (int)getCache();
+    if (*(u8*)(def + 0xf4) != 0)
+    {
+        modelCalcVtxGroupMtxs(def, model);
+    }
+    count = (s32)(u32) * (u8*)(def + 0xf3) + (s32)(u32) * (u8*)(def + 0xf4);
+    if (count >= 2 && count <= 0x64)
+    {
+        mtx = (int)ObjModel_GetJointMatrix((u8*)model, 0);
+        DCFlushRange((void*)mtx, count << 6);
+        rem = (u8)(count << 1);
+        cache += 0x2700;
+        while (rem >= 0x80)
+        {
+            copyToCache((void*)cache, (void*)mtx, 0);
+            rem -= 0x80;
+            mtx += 0x1000;
+            cache += 0x1000;
+        }
+        if (rem != 0)
+        {
+            copyToCache((void*)cache, (void*)mtx, rem);
+        }
+        lbl_803DCC48 = 1;
+    }
+    else
+    {
+        lbl_803DCC48 = 3;
+    }
+}
+
 void modelCalcVtxGroupMtxs(int def, int model)
 {
     Mtx ma;
@@ -1797,48 +1837,6 @@ void modelCalcVtxGroupMtxs(int def, int model)
         out[2][2] = ma[2][2] * w + mb[2][2] * wi;
         out[2][3] = ma[2][3] * w + mb[2][3] * wi;
         off += 4;
-    }
-}
-
-
-
-
-
-void modelInitMtxs(int def, int model)
-{
-    int cache;
-    int mtx;
-    int count;
-    u8 rem;
-
-    cache = (int)getCache();
-    if (*(u8*)(def + 0xf4) != 0)
-    {
-        modelCalcVtxGroupMtxs(def, model);
-    }
-    count = (s32)(u32) * (u8*)(def + 0xf3) + (s32)(u32) * (u8*)(def + 0xf4);
-    if (count >= 2 && count <= 0x64)
-    {
-        mtx = (int)ObjModel_GetJointMatrix((u8*)model, 0);
-        DCFlushRange((void*)mtx, count << 6);
-        rem = (u8)(count << 1);
-        cache += 0x2700;
-        while (rem >= 0x80)
-        {
-            copyToCache((void*)cache, (void*)mtx, 0);
-            rem -= 0x80;
-            mtx += 0x1000;
-            cache += 0x1000;
-        }
-        if (rem != 0)
-        {
-            copyToCache((void*)cache, (void*)mtx, rem);
-        }
-        lbl_803DCC48 = 1;
-    }
-    else
-    {
-        lbl_803DCC48 = 3;
     }
 }
 
