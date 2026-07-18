@@ -28,6 +28,7 @@
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "main/dll/hint_text_api.h"
 #define PAUSE_MENU_DIRECT_INT_SETUP_TITLE_CALL
 #include "main/pause_menu_api.h"
 #undef PAUSE_MENU_DIRECT_INT_SETUP_TITLE_CALL
@@ -62,8 +63,6 @@ extern s16 gWorldPlanetInputLockTimer;
 extern int gWorldPlanetLoadedMapId;
 extern f32 gWorldPlanetPathProgress;
 extern f32 lbl_803E65F8;
-extern u16 getNextTaskHintText(void);
-extern void setFrameCountdown_800202c4(int frames);
 
 extern f32 lbl_803DDD00;
 extern s16 gWorldPlanetReselectDelayTimer;

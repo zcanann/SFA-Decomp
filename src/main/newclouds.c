@@ -1,4 +1,5 @@
 #include "main/newclouds_state.h"
+#include "main/newshadows.h"
 #include "main/audio/music_api.h"
 #include "main/object_api.h"
 #include "main/newclouds.h"
@@ -65,8 +66,6 @@ f32 lbl_803DB768 = 1.0f;
 int gNewCloudWindSourcesInit = 1;
 extern const f32 lbl_803DF1A0;
 extern const f32 lbl_803DF1A4;
-extern int snowPrintSnowCloud(int arg, int x);
-extern void drawFn_80079e64(double s1, u8 mtxIdx, void* vec, double s2, u8 a0, u8 a1, double s3);
 typedef struct
 {
     s16 uv[6];
@@ -84,7 +83,6 @@ typedef struct WindSource
     s16 pad1a;
 } WindSource;
 #define NEWCLOUD_WIND_SOURCE_COUNT 6
-extern void fn_8006C51C(void* out);
 extern int gNewCloudLightningFogColor;
 extern const f32 lbl_803DF1D4;
 extern void* gNewClouds[8];
@@ -440,7 +438,7 @@ void lightningRender(LightningEffect* p)
     f32 start[3];
     f32 end[3];
     f32 diff[3];
-    char* tex;
+    Texture* tex;
     int savedSeed;
     FogColor color;
     int a;
@@ -476,7 +474,7 @@ void lightningRender(LightningEffect* p)
     textRenderSetupFn_80079804();
     fn_800788DC();
     fn_8006C51C(&tex);
-    selectTexture((Texture*)tex, 0);
+    selectTexture(tex, 0);
     GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, color);
     Camera_UpdateViewMatrices();
     GXLoadPosMtxImm(Camera_GetViewMatrix(), GX_PNMTX0);
@@ -2312,4 +2310,3 @@ char lbl_8030F670[] =
     0x61, 0x76, 0x61, 0x69, 0x6C, 0x61, 0x62, 0x6C, 0x65, 0x0A, 0x00, 0x00,
 };
 char sSnowKillSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i - in snowKillSnowCloud\n";
-

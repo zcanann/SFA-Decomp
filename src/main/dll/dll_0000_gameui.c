@@ -659,7 +659,6 @@ extern const f32 lbl_803E20C0;
 extern const f32 lbl_803E20C4;
 extern const f32 lbl_803E20CC;
 extern void boxDrawFn_8012975c(int a, int b, int c);
-extern u16 getNextTaskHintText(void);
 extern void fn_80128120(void* obj, u8 v);
 extern void fn_80128470(int v);
 extern u8 gPauseMenuTokenConfirmFlag;

@@ -35,6 +35,7 @@ void fogFn_80070404(f32 a, f32 b);
 void doSpiritVisionFilter(void);
 void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z);
 void drawRect(f32 sx, f32 sy, int x, int y);
+void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1, f32 s3);
 void fn_8007880C(void);
 void textRenderSetup(void);
 void renderMotionBlur(f32 alpha);

@@ -2,6 +2,7 @@
 #define MAIN_NEWSHADOWS_H_
 
 #include "ghidra_import.h"
+#include "main/texture.h"
 
 void updateReflectionTextures(void);
 void selectReflectionTexture(int id);
@@ -22,6 +23,7 @@ void fn_8006C5CC(u32* out);
 void newshadows_getReflectionScrollOffsets(f32* outScrollX, f32* outScrollY);
 u32 getTextureFn_8006c744(void);
 void fn_8006C4F8(u32* out);
+void fn_8006C51C(Texture** out);
 void fn_8006C534(u32* out);
 void fn_8006C540(u32* out);
 void fn_8006C5B8(u32* out);

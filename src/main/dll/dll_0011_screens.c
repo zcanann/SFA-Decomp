@@ -67,7 +67,7 @@ int hintTextMapFn_800ea264(void)
     return ret;
 }
 
-u8 getNextTaskHintText(void)
+u16 getNextTaskHintText(void)
 {
     u8* p = getLastSavedGameTexts();
     return p[5];

@@ -44,7 +44,7 @@ u32 lbl_803DCFC4;
 u32 gNewShadowRadialTexture;
 Texture* lbl_803DCFBC;
 u32 lbl_803DCFB8;
-u32 lbl_803DCFB4;
+Texture* lbl_803DCFB4;
 u32 gNewShadowRingTexture;
 f32 gNewShadowReflectionScrollX;
 f32 gNewShadowReflectionScrollY;
@@ -137,7 +137,7 @@ extern u32 gNewShadowFalloffTexture;
 extern u32 lbl_803DCFC4;
 extern u32 lbl_803DCFC8;
 extern u32 gNewShadowRingTexture;
-extern u32 lbl_803DCFB4;
+extern Texture* lbl_803DCFB4;
 extern u32 lbl_803DCFB8;
 extern Texture* lbl_803DCFBC;
 extern u32 gNewShadowRadialTexture;
@@ -981,9 +981,9 @@ void allocLotsOfTextures(void)
     DCInvalidateRange((void*)(lbl_803DCFB8 + 0x60), ((Texture*)lbl_803DCFB8)->dataSize);
     fn_80069EB8(0);
 
-    lbl_803DCFB4 = (int)textureAlloc(0x20, 4, 1, 0, 0, 0, 0, 1, 1);
+    lbl_803DCFB4 = textureAlloc(0x20, 4, 1, 0, 0, 0, 0, 1, 1);
     fillTextureCFB4();
-    DCFlushRange((void*)(lbl_803DCFB4 + 0x60), ((Texture*)lbl_803DCFB4)->dataSize);
+    DCFlushRange((u8*)lbl_803DCFB4 + 0x60, lbl_803DCFB4->dataSize);
 
     gNewShadowRingTexture = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 1, 1, 1, 1);
     fillRingTexture();
@@ -1482,7 +1482,7 @@ void fn_8006C510(u32* p)
 {
     *p = gNewShadowRingTexture;
 }
-void fn_8006C51C(u32* p)
+void fn_8006C51C(Texture** p)
 {
     *p = lbl_803DCFB4;
 }
