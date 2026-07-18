@@ -45,6 +45,7 @@
 #include "main/newshadows_ext2.h"
 #include "main/atan2f_cs.h"
 #include "main/sky_pr.h"
+#include "main/lightmap_pr.h"
 
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
@@ -415,7 +416,6 @@ extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int base);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
-extern u8* mapGetBlockIdx(int layer);
 
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);

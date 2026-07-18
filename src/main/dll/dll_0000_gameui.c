@@ -595,6 +595,7 @@ extern void drawRect(f32 sx, f32 sy, int x, int y);
 #include "main/dll/dll_8011d918_ext.h"
 #include "main/trig_cs.h"
 #include "main/dll/dll_0017_savegame_cs.h"
+#include "main/dll/dll_0011_screens_pr.h"
 extern u32 lbl_8031AE20[56];
 extern GridEntry lbl_8031BB90[];
 extern GridEntry lbl_8031BD90[];
@@ -761,7 +762,6 @@ extern const f32 lbl_803E21C0;
 extern const f32 lbl_803E21C4;
 extern const f32 lbl_803E21C8;
 extern const f32 lbl_803E21CC;
-extern GameTextDef* saveGameGetCurHint(void);
 extern u8 pauseDisabled;
 extern u8 gPauseMenuTransitionStarted;
 extern f32 lbl_803DD7DC;
