@@ -21,4 +21,6 @@ void gameTextFn_8001628c(int id, int x, int y, int* outMaxX, int* outMaxY, int* 
 
 char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH);
 
+extern char* sMapDirectoryNameTable[74];
+
 #endif /* MAIN_GAMETEXT_API_H_ */
