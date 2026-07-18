@@ -135,45 +135,7 @@ typedef struct ScMusictreeState
 } ScMusictreeState;
 
 void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 idx);
-
-void sc_musictree_handleHitObject(GameObject* obj, int extra, int effectType)
-{
-    int id = ((ObjPlacement*)obj->anim.placementData)->mapId;
-    SCMusicTreeState* state = (SCMusicTreeState*)extra;
-    (void)effectType;
-
-    switch (id)
-    {
-    case SC_MUSICTREE_MAP_TOTEM_1:
-        Sfx_PlayFromObject((int)obj, SFXTRIG_sdrstp_c);
-        Sfx_PlayFromObject((int)obj, SFXTRIG_gland2_c);
-        mainSetBits(GAMEBIT_TOTEM_COMBO_1, 1);
-        break;
-    case SC_MUSICTREE_MAP_TOTEM_2:
-        Sfx_PlayFromObject((int)obj, SFXTRIG_en_sdrstp_c);
-        Sfx_PlayFromObject((int)obj, SFXTRIG_gland2_c);
-        mainSetBits(GAMEBIT_TOTEM_COMBO_2, 1);
-        break;
-    case SC_MUSICTREE_MAP_TOTEM_3:
-        Sfx_PlayFromObject((int)obj, SFXTRIG_en_sdrstp_c_12d);
-        Sfx_PlayFromObject((int)obj, SFXTRIG_gland2_c);
-        mainSetBits(GAMEBIT_TOTEM_COMBO_3, 1);
-        break;
-    case SC_MUSICTREE_MAP_GATE_1:
-        if ((u32)mainGetBit(GAMEBIT_MUSICTREE_GATE) != 0)
-            mainSetBits(0xc41, 1);
-        break;
-    case SC_MUSICTREE_MAP_GATE_2:
-        if ((u32)mainGetBit(GAMEBIT_MUSICTREE_GATE) != 0)
-            mainSetBits(0xc43, 1);
-        break;
-    case SC_MUSICTREE_MAP_GATE_3:
-        if ((u32)mainGetBit(GAMEBIT_MUSICTREE_GATE) != 0)
-            mainSetBits(0xc45, 1);
-        break;
-    }
-    state->animSpeed = 0.0225f;
-}
+void sc_musictree_handleHitObject(GameObject* obj, int extra, int effectType);
 
 int sc_musictree_getExtraSize(void) { return 0x50; }
 int sc_musictree_getObjectTypeId(void) { return 0x0; }
@@ -360,10 +322,50 @@ void sc_musictree_update(GameObject* obj)
     }
 }
 
+void sc_musictree_handleHitObject(GameObject* obj, int extra, int effectType)
+{
+    int id = ((ObjPlacement*)obj->anim.placementData)->mapId;
+    SCMusicTreeState* state = (SCMusicTreeState*)extra;
+    (void)effectType;
+
+    switch (id)
+    {
+    case SC_MUSICTREE_MAP_TOTEM_1:
+        Sfx_PlayFromObject((int)obj, SFXTRIG_sdrstp_c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_gland2_c);
+        mainSetBits(GAMEBIT_TOTEM_COMBO_1, 1);
+        break;
+    case SC_MUSICTREE_MAP_TOTEM_2:
+        Sfx_PlayFromObject((int)obj, SFXTRIG_en_sdrstp_c);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_gland2_c);
+        mainSetBits(GAMEBIT_TOTEM_COMBO_2, 1);
+        break;
+    case SC_MUSICTREE_MAP_TOTEM_3:
+        Sfx_PlayFromObject((int)obj, SFXTRIG_en_sdrstp_c_12d);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_gland2_c);
+        mainSetBits(GAMEBIT_TOTEM_COMBO_3, 1);
+        break;
+    case SC_MUSICTREE_MAP_GATE_1:
+        if ((u32)mainGetBit(GAMEBIT_MUSICTREE_GATE) != 0)
+            mainSetBits(0xc41, 1);
+        break;
+    case SC_MUSICTREE_MAP_GATE_2:
+        if ((u32)mainGetBit(GAMEBIT_MUSICTREE_GATE) != 0)
+            mainSetBits(0xc43, 1);
+        break;
+    case SC_MUSICTREE_MAP_GATE_3:
+        if ((u32)mainGetBit(GAMEBIT_MUSICTREE_GATE) != 0)
+            mainSetBits(0xc45, 1);
+        break;
+    }
+    state->animSpeed = 0.0225f;
+}
+
 void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 idx)
 {
     int def = *(int*)&(obj)->anim.placementData;
     SCMusicTreeState* state = (SCMusicTreeState*)extra;
+    int i;
     int setup;
 
     if (Obj_IsLoadingLocked() != 0)
@@ -373,9 +375,10 @@ void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 
         ((ScMusictreeSetup*)setup)->head.color[2] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorB;
         ((ScMusictreeSetup*)setup)->head.color[1] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorG;
         ((ScMusictreeSetup*)setup)->head.color[3] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorA - 10;
-        ((ObjPlacement*)setup)->posX = state->pathPoint[idx][0];
-        ((ObjPlacement*)setup)->posY = state->pathPoint[idx][1];
-        ((ObjPlacement*)setup)->posZ = state->pathPoint[idx][2];
+        i = idx;
+        ((ObjPlacement*)setup)->posX = state->pathPoint[i][0];
+        ((ObjPlacement*)setup)->posY = state->pathPoint[i][1];
+        ((ObjPlacement*)setup)->posZ = state->pathPoint[i][2];
         ((ScMusictreeSetup*)setup)->unk1C = randomGetRange(0x708, 0x1770);
         ((ScMusictreeSetup*)setup)->unk1E = 1;
         ((ScMusictreeSetup*)setup)->unk20 = 10;
@@ -386,7 +389,7 @@ void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 
         ((ScMusictreeSetup*)setup)->unk25 = -50;
         ((ScMusictreeSetup*)setup)->unk26 = -1;
         ((ScMusictreeSetup*)setup)->unk18 = 0;
-        state->ambientEffect[idx] =
+        state->ambientEffect[i] =
             (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, (void*)*(int*)&(obj)->anim.parent);
     }
 }
