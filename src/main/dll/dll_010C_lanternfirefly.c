@@ -69,8 +69,6 @@ extern f32 lbl_803E3AD8;
 extern f32 lbl_803E3ADC;
 extern f32 lbl_803E3AE0;
 
-void fn_801868D0(GameObject* obj);
-void fn_801869DC(GameObject* obj);
 
 /* LanternFireFly_modelMtxFn: receives (obj, anchorX, anchorY, anchorZ) and
  * stores the three floats into obj->extra at +0x54/+0x58/+0x5c. */
