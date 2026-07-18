@@ -747,19 +747,19 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                 }
                 if (step == 4)
                 {
-                    fn_8004B31C((PathSearch*)state->voxBlocks[0], (PathPoint*)route->nodeA4,
+                    fn_8004B31C(&state->pathSearches[0], (PathPoint*)route->nodeA4,
                                 (f32*)state->targetPosPtr, state->walkGroup,
                                 route->reverse);
-                    fn_8004B31C((PathSearch*)state->voxBlocks[1], (PathPoint*)route->node9C,
+                    fn_8004B31C(&state->pathSearches[1], (PathPoint*)route->node9C,
                                 (f32*)state->targetPosPtr, state->walkGroup,
                                 route->reverse ^ 1);
                     found = 0;
                     for (i = 0; (u8)(i = i + 1) < 100 && (found != 1);)
                     {
-                        found = fn_8004B218(state->voxBlocks[0], 1);
+                        found = fn_8004B218(&state->pathSearches[0], 1);
                         if (found != 1)
                         {
-                            found = fn_8004B218(state->voxBlocks[1], 1);
+                            found = fn_8004B218(&state->pathSearches[1], 1);
                             if (found != 0)
                             {
                                 if (found < 0)

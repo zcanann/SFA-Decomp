@@ -2396,50 +2396,6 @@ char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern int zlbDecompress(u8* src, int size, u8* dst, void* outp);
 
-typedef struct PathPoint
-{
-    u8 padding[8];
-    f32 position[3];
-} PathPoint;
-
-typedef struct PathSearchNode
-{
-    PathPoint* point;
-    u32 distanceToTarget;
-    u32 routeDistance;
-    u8 parentIndex;
-    u8 childIndex;
-    u8 visited;
-    u8 padding;
-} PathSearchNode;
-
-typedef struct PathHeapEntry
-{
-    u32 priority;
-    u16 nodeIndex;
-    u16 padding;
-} PathHeapEntry;
-
-typedef struct PathSearch
-{
-    PathSearchNode* nodes;
-    PathHeapEntry* heap;
-    PathPoint** path;
-    f32* targetPosition;
-    s32 pathId;
-    u32 reserved14;
-    PathPoint* startPoint;
-    s32 currentNode;
-    s16 nodeCount;
-    s16 heapSize;
-    u32 closestDistance;
-    u8 routeFlags;
-    u8 padding29;
-    s16 pathCount;
-    s16 pathIndex;
-    u16 padding2E;
-} PathSearch;
-
 int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
                               u32 flagBits)
 {
@@ -5139,8 +5095,9 @@ void fn_8004AFA0(int* q, int* elem, int idx)
         p += 4;
     }
 }
-void* fn_8004B118(int* p)
+void* fn_8004B118(PathSearch* search)
 {
+    int* p = (int*)search;
     void** arr;
     int idx = *(s16*)((char*)p + 0x2c);
     if (idx < *(s16*)((char*)p + 0x2a))
@@ -5152,8 +5109,9 @@ void* fn_8004B118(int* p)
     return NULL;
 }
 
-int fn_8004B148(int* p)
+int fn_8004B148(PathSearch* search)
 {
+    int* p = (int*)search;
     int node;
     u32 cur;
     u32 prev;
@@ -5203,10 +5161,10 @@ int fn_8004B148(int* p)
     return count;
 }
 
-int fn_8004B218(void* q_, u32 n_)
+int fn_8004B218(PathSearch* search, u32 n_)
 {
     int n;
-    int* q = q_;
+    int* q = (int*)search;
     int idx;
     int done;
     int result;
@@ -5396,11 +5354,11 @@ void freeAndNull(void** p)
     }
 }
 
-void trickyVoxAllocFn_8004b5d4(int* out)
+void trickyVoxAllocFn_8004b5d4(PathSearch* search)
 {
-    out[0] = (int)mmAlloc(0x1960, 0x10, 0);
-    out[1] = out[0] + 0xfe0;
-    out[2] = out[1] + 0x7f0;
+    search->nodes = (PathSearchNode*)mmAlloc(0x1960, 0x10, 0);
+    search->heap = (PathHeapEntry*)((u8*)search->nodes + 0xfe0);
+    search->path = (PathPoint**)((u8*)search->heap + 0x7f0);
 }
 
 

@@ -93,8 +93,6 @@ extern const f32 lbl_803E2484;
 extern char lbl_8031D2E8[];
 extern u32 gSkeetlaFootstepSfxIds01;
 extern u16 gSkeetlaFootstepSfxId2;
-extern void* fn_8004B118(void* search);
-extern void fn_8004B148(void* search);
 
 void trickyUpdateCollisionAndPathState(u8* obj)
 {
@@ -850,7 +848,7 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
 
     if ((((TrickyState*)state)->cachedPathId == pathId) && (*(u32*)&((TrickyState*)state)->cachedRouteEntry == route))
     {
-        ((TrickyState*)state)->cachedRouteEntry = fn_8004B118(state + 0x6b8);
+        ((TrickyState*)state)->cachedRouteEntry = fn_8004B118((PathSearch*)(state + 0x6b8));
         if (((TrickyState*)state)->cachedRouteEntry == NULL)
         {
             return NULL;
@@ -866,13 +864,13 @@ void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId)
     fn_8004B31C((PathSearch*)(state + 0x6b8), (PathPoint*)route,
                 (f32*)*(int*)&((TrickyState*)state)->targetPosPtr, pathId,
                 ((TrickyState*)state)->route.reverse);
-    if (fn_8004B218(state + 0x6b8, 0x1f4) != 1)
+    if (fn_8004B218((PathSearch*)(state + 0x6b8), 0x1f4) != 1)
     {
         return NULL;
     }
 
-    fn_8004B148(state + 0x6b8);
-    ((TrickyState*)state)->cachedRouteEntry = fn_8004B118(state + 0x6b8);
+    fn_8004B148((PathSearch*)(state + 0x6b8));
+    ((TrickyState*)state)->cachedRouteEntry = fn_8004B118((PathSearch*)(state + 0x6b8));
     ((TrickyState*)state)->cachedPathId = pathId;
     return ((TrickyState*)state)->cachedRouteEntry;
 }
@@ -900,7 +898,7 @@ int trickyFindReachableRouteIndex(u8* state, void** routes, u8* routeFlags, int 
         {
             if (routes[j] != 0)
             {
-                status[j] = fn_8004B218(state + 0x538 + j * 0x30, 1);
+                status[j] = fn_8004B218((PathSearch*)(state + 0x538 + j * 0x30), 1);
             }
             else
             {
@@ -925,7 +923,7 @@ int trickyFindReachableRouteIndex(u8* state, void** routes, u8* routeFlags, int 
             {
                 if (routes[i] != 0)
                 {
-                    status[(int)i] = fn_8004B218(state + 0x538 + i * 0x30, 0x1f4);
+                    status[(int)i] = fn_8004B218((PathSearch*)(state + 0x538 + i * 0x30), 0x1f4);
                     if (status[(int)i] == 1)
                     {
                         return i;

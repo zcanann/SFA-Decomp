@@ -70,6 +70,7 @@
 #include "main/dll/mmp_critterspit_ext.h"
 #include "main/dll/dll_0014_unk.h"
 #include "main/pi_dolphin_texture_api.h"
+#include "main/pi_dolphin_path_api.h"
 #include "main/newshadows_audio_api.h"
 #include "string.h"
 
@@ -1018,15 +1019,15 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
     int state;
 
     state = *(int*)&obj->extra;
-    freeAndNull((void*)((TrickyState*)state)->voxBlocks[0]);
-    freeAndNull((void*)((TrickyState*)state)->voxBlocks[1]);
-    freeAndNull((void*)((TrickyState*)state)->voxBlocks[2]);
-    freeAndNull((void*)((TrickyState*)state)->voxBlocks[3]);
-    freeAndNull((void*)((TrickyState*)state)->voxBlocks[4]);
-    freeAndNull((void*)((TrickyState*)state)->voxBlocks[5]);
-    freeAndNull((void*)((TrickyState*)state)->voxBlocks[6]);
-    freeAndNull((void*)((TrickyState*)state)->voxBlocks[7]);
-    freeAndNull((void*)((TrickyState*)state)->voxBlocks[8]);
+    freeAndNull((void**)&((TrickyState*)state)->pathSearches[0].nodes);
+    freeAndNull((void**)&((TrickyState*)state)->pathSearches[1].nodes);
+    freeAndNull((void**)&((TrickyState*)state)->pathSearches[2].nodes);
+    freeAndNull((void**)&((TrickyState*)state)->pathSearches[3].nodes);
+    freeAndNull((void**)&((TrickyState*)state)->pathSearches[4].nodes);
+    freeAndNull((void**)&((TrickyState*)state)->pathSearches[5].nodes);
+    freeAndNull((void**)&((TrickyState*)state)->pathSearches[6].nodes);
+    freeAndNull((void**)&((TrickyState*)state)->pathSearches[7].nodes);
+    freeAndNull((void**)&((TrickyState*)state)->pathSearches[8].nodes);
     ObjGroup_RemoveObject((int)obj, TRICKY_OBJGROUP);
     (*gExpgfxInterface)->freeSource((u32)obj);
     if ((shouldKeepFlameChildren == 0) &&
@@ -2119,15 +2120,15 @@ void Tricky_init(GameObject* obj)
     }
     (obj)->animEventCallback = tricky_SeqFn;
     ObjGroup_AddObject((int)obj, TRICKY_OBJGROUP);
-    trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[0]);
-    trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[1]);
-    trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[2]);
-    trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[3]);
-    trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[4]);
-    trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[5]);
-    trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[6]);
-    trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[7]);
-    trickyVoxAllocFn_8004b5d4((void*)((TrickyState*)state)->voxBlocks[8]);
+    trickyVoxAllocFn_8004b5d4(&((TrickyState*)state)->pathSearches[0]);
+    trickyVoxAllocFn_8004b5d4(&((TrickyState*)state)->pathSearches[1]);
+    trickyVoxAllocFn_8004b5d4(&((TrickyState*)state)->pathSearches[2]);
+    trickyVoxAllocFn_8004b5d4(&((TrickyState*)state)->pathSearches[3]);
+    trickyVoxAllocFn_8004b5d4(&((TrickyState*)state)->pathSearches[4]);
+    trickyVoxAllocFn_8004b5d4(&((TrickyState*)state)->pathSearches[5]);
+    trickyVoxAllocFn_8004b5d4(&((TrickyState*)state)->pathSearches[6]);
+    trickyVoxAllocFn_8004b5d4(&((TrickyState*)state)->pathSearches[7]);
+    trickyVoxAllocFn_8004b5d4(&((TrickyState*)state)->pathSearches[8]);
     ((TrickyState*)state)->progressPtr = (int)(*gMapEventInterface)->getTrickyEnergy();
     ((TrickyState*)state)->playerObj = (int)Obj_GetPlayerObject();
     ((TrickyState*)state)->stateIndex = 0;

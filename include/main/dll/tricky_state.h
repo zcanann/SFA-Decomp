@@ -5,6 +5,7 @@
 #include "global.h"
 #include "main/dll/curve_walker.h"
 #include "main/game_object.h"
+#include "main/pi_dolphin_path_api.h"
 
 /* Shared TrickyState.stateFlags bits used across the Tricky sidekick / spawned
  * sibling handlers (tricky, tricky_substates, trickyfollow, tumbleweedbush,
@@ -172,7 +173,7 @@ typedef struct TrickyState {
     u16 savedWalkGroup; /* mirrored from walkGroup (dll_DF); retained group used to gate route re-seeding */
     u8 cachedRouteFlags; /* cached (routeFlagValue & 0xff): route-select memo key stored alongside cachedRouteDef; compared == (routeFlagValue & 0xff) to reuse validatedRouteEntry (skeetla) */
     u8 pad537[1];
-    u8 voxBlocks[9][0x30]; /* trickyVoxAllocFn_8004b5d4 records, 0x538..0x6E8 */
+    PathSearch pathSearches[9]; /* route-search workspaces, 0x538..0x6E8 */
     void *cachedRouteEntry; /* cached route-entry pointer (validated via skeetla_validateRouteEntry; one u32-spelled site launders) */
     int cachedPathId; /* pathId the cachedRouteEntry was resolved for */
     f32 *previousPathPoint;
@@ -236,6 +237,7 @@ STATIC_ASSERT(offsetof(TrickyState, pathRotY) == 0x290);
 STATIC_ASSERT(offsetof(TrickyState, routeSeedNode) == 0x418);
 STATIC_ASSERT(offsetof(TrickyState, route) == 0x420);
 STATIC_ASSERT(offsetof(TrickyState, route.reverse) == 0x4A0);
+STATIC_ASSERT(offsetof(TrickyState, pathSearches) == 0x538);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
