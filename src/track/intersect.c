@@ -6277,7 +6277,7 @@ void showMemCardError(u8 err)
             yy = y + ((i > 0) ? 0x64 : 0);
             for (j = 0; j < *(u16*)(t + 2); j++)
             {
-                gameTextShowStrLegacy((*(int**)(t + 8))[j], 0, 0, yy);
+                gameTextShowStr((*(char***)(t + 8))[j], 0, 0, yy);
                 yy += 0x18;
             }
             if (i == sel)

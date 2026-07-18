@@ -4,6 +4,7 @@
 #include "main/audio/sfx.h"
 #include "main/gametext_api.h"
 #include "main/gametext_charset_api.h"
+#include "main/gametext_show_str_api.h"
 #include "main/gametext_shared_internal.h"
 #include "main/gametext_task_api.h"
 #include "dolphin/gx/GXCull.h"
@@ -351,14 +352,13 @@ extern u16 OSGetFontEncode(void);
 extern void OSLoadFont(void* buf, void* tmp);
 extern void OSGetFontWidth(u8* s, int* width);
 extern void OSGetFontTexel(u8* s, void* img, int pos, int stride, int* width);
-extern void gameTextShowStr(int str, int a, int b, int c);
 
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
 extern void translateToDinoLanguage(u8* str);
 extern void loadGameTextSequence();
 extern void setLanguageFn_8001ad64(void* slot);
 extern void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box);
-extern SubtitleCmd* subtitleParseControlCmds(int str, int* count);
+extern SubtitleCmd* subtitleParseControlCmds(char* str, int* count);
 int GameText_CountPrintableChars(u8* str);
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
 
@@ -1306,7 +1306,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
     }
 }
 
-SubtitleCmd* subtitleParseControlCmds(int str, int* count)
+SubtitleCmd* subtitleParseControlCmds(char* str, int* count)
 {
     int off;
     int n;
@@ -2774,7 +2774,7 @@ int gameTextFn_8001b44c(int x)
 
 extern f32 gSubtitleLineTimes[0x100];
 
-extern int gSubtitleLineStrs[0x100];
+extern char* gSubtitleLineStrs[0x100];
 
 void subtitleUpdateAndDraw(int a)
 {
@@ -3154,7 +3154,7 @@ int subtitleIsActive(void)
     return ret;
 }
 
-int gSubtitleLineStrs[0x100];
+char* gSubtitleLineStrs[0x100];
 f32 gSubtitleLineTimes[0x100];
 
 int setSubtitlesEnabled(int enabled)

@@ -3,6 +3,7 @@
 #include "main/gametext_box_api.h"
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
+#include "main/gametext_show_str_api.h"
 #include "main/audio/music_api.h"
 #include "main/audio/audio_control_api.h"
 #include "main/audio/stream_api.h"
@@ -136,7 +137,6 @@ s8 hudHiddenFrameCount;
 u8 gGameLoopReloadRequested;
 u8 lbl_803DCA38;
 
-void* gameTextGetStr(int textId);
 extern u8 gameState;
 extern u8 timeStop;
 extern u8 shouldResetNextFrame;
@@ -326,7 +326,6 @@ void crash(void)
     *(u8*)0 = 0;
 }
 
-extern void gameTextShowStr(int str, int a, int b, int c);
 char sGameLoopResetMessages[0x50] =
     "28/03/02 12:19\000\000Version 2.8 14/12/98 15.30 L.Schuneman\000\000\377\377\377\377\000\000\000.\000\000\0000";
 
@@ -481,7 +480,7 @@ void askProgressiveScanMode(void)
         {
             gameTextSetColor(0x80, 0x80, 0x80, 0x80);
         }
-        gameTextShowStr((int)gameTextGetStr(0x3cd), 0, lbl_803DB428, 0x64);
+        gameTextShowStr(gameTextGetStr(0x3cd), 0, lbl_803DB428, 0x64);
         if ((u8)sel == 1)
         {
             gameTextSetColor(0x80, 0x80, 0x80, 0x80);
@@ -490,7 +489,7 @@ void askProgressiveScanMode(void)
         {
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         }
-        gameTextShowStr((int)gameTextGetStr(0x3cc), 0, lbl_803DB42C, 0x64);
+        gameTextShowStr(gameTextGetStr(0x3cc), 0, lbl_803DB42C, 0x64);
         gameTextRun();
         dvdCheckError();
         doNothing_endOfFrame();
