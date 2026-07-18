@@ -56,8 +56,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 union GroundAnimatorConstF32 { f32 f; };
 const union GroundAnimatorConstF32 lbl_803E3F98 = { 100.0f };
 const union GroundAnimatorConstF32 lbl_803E3F9C = { 0.0f };
-extern void fn_800605F0(void* cell, void* out);
-extern void fn_8006058C(void* cell, void* in);
 extern void fn_801A80F0(GameObject* e, int arg);
 
 extern void fn_801A80C4(GameObject* o, f32 x, f32 y, f32 z);
@@ -228,7 +226,7 @@ void groundanimator_free(int* obj, int flag)
     GroundAnimatorState* w;
     int* r21;
     void* nv;
-    int* cell;
+    s16* cell;
     f32 local[4];
     w = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     r21 = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
@@ -249,7 +247,7 @@ void groundanimator_free(int* obj, int flag)
                         nv = fn_800606DC((int*)block, mid);
                         for (inner = 0, vtx = nv, innoff = midoff; inner < 3; inner++)
                         {
-                            cell = (int*)((char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6);
+                            cell = (s16*)((char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6);
                             fn_800605F0(cell, local);
                             if (*(void**)&w->heightBuf != NULL)
                             {
