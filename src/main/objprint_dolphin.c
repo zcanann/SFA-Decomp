@@ -44,6 +44,10 @@
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_hud_api.h"
 #include "track/intersect_texture_api.h"
+#include "dolphin/os.h"
+#include "dolphin/gx/GXCull.h"
+#include "string.h"
+#include "dolphin/gx/GXBump.h"
 
 ModelLightStruct* lbl_803DCC64;
 u8 lbl_803DCC60;
@@ -126,8 +130,6 @@ typedef struct ObjModelRenderOp
 } ObjModelRenderOp;
 extern s32 gObjLevelLockSlots;
 extern volatile int lbl_803DCC80;
-extern int OSDisableInterrupts(void);
-extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern f32 lbl_803DEA04;
 extern const f32 lbl_803DEA1C;
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
@@ -142,7 +144,6 @@ extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
-extern void GXSetCullMode(int mode);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void GXLoadNrmMtxImm(f32* m, int id);
 extern void GXBegin(int prim, int fmt, u16 count);
@@ -163,7 +164,6 @@ extern f32 lbl_803DEA50;
 extern f32 lbl_803DEA54;
 extern f32 lbl_803DEA48;
 extern s16 lbl_803DCC78;
-extern void* memcpy(void*, void*, int);
 extern u32 lbl_803DCC84;
 extern s16 sMapFileNameAdjacencyTable[];
 extern char sAssetIndexOverflowError[];
@@ -190,7 +190,6 @@ extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetNumTevStages(u8 nStages);
 extern void GXSetNumIndStages(u8 nIndStages);
 extern void GXSetTevOrder(int stage, int coord, int map, int color);
-extern void GXSetTevDirect(int stage);
 extern void GXSetTevSwapMode(int stage, int ras, int tex);
 extern u32 lbl_803DB468;
 extern u32 lbl_803DB470;

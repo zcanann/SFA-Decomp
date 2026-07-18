@@ -175,6 +175,7 @@ extern volatile int lbl_803DCC80;
 #include "main/mm_ext.h"
 #include "main/newshadows_ext2.h"
 #include "main/rcp_dolphin_cs.h"
+#include "dolphin/gx/GXBump.h"
 
 struct MldfNames
 {
@@ -5386,7 +5387,6 @@ int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, i
     return 0;
 }
 
-extern void GXSetTevIndRepeat(int stage);
 extern void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue,
                                   GXTevColorChan alpha);
 
@@ -5463,10 +5463,6 @@ const IndTexMtx23 gTexIndMtxTable = {
 extern f32 Prepared_803DEAD8;
 extern f32 lbl_803DEAE0;
 extern int lbl_803DCD7C;
-extern void GXSetIndTexOrder(GXIndTexStageID ind_stage, GXTexCoordID tex_coord, GXTexMapID tex_map);
-extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format,
-                             GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s,
-                             GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);
 
 extern int __rlwnm(int, int, int, int);
 extern u8 lbl_8030C880[];
@@ -6100,7 +6096,6 @@ void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2)
 }
 
 extern void fn_8006C504(void* out);
-extern void GXSetIndTexCoordScale(GXIndTexStageID ind_state, GXIndTexScale scale_s, GXIndTexScale scale_t);
 extern f32 SaveEnd_803DEAD4;
 extern f32 lbl_803DEB04;
 extern f32 lbl_803DEB08;

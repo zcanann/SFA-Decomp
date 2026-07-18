@@ -44,6 +44,9 @@
 #include "main/mm.h"
 #include "main/camera_ext.h"
 #include "main/maketex_kr.h"
+#include "dolphin/os.h"
+#include "main/pi_dolphin_api.h"
+#include "string.h"
 
 f32 gObjSeqCameraFov = 60.0f;
 int lbl_803DB714 = -1;
@@ -167,7 +170,6 @@ extern void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mo
 extern void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq);
 extern void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq);
 extern void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq);
-extern long long OSGetTime(void);
 extern s16 gObjSeqBgCmds[];
 extern u8 objSeqXrotChanged[];
 extern s16 objSeqXrotValues[];
@@ -246,8 +248,6 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame);
 #define OBJSEQ_CAMMODE_ARWING       0x56 /* dll_0056_cameramodearwing */
 #define OBJSEQ_CAMMODE_TITLE        0x57 /* dll_0057_cameramodetitle */
 
-extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
-extern int strncmp(const char* a, const char* b, u32 n);
 extern char sObjLoadAnimdataNullACRomTabWarning[];
 
 /* GameCube controller button masks */

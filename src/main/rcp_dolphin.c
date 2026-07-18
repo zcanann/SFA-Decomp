@@ -35,6 +35,8 @@
 #include "main/newshadows_ext.h"
 #include "main/gameloop_cs.h"
 #include "main/pi_dolphin_pr.h"
+#include "main/gx_scissor_api.h"
+#include "string.h"
 
 struct LoadedTextureEntry* gLoadedTextures;
 u16* gRcpTexIdRemap;
@@ -116,7 +118,6 @@ extern u8 lbl_803DCD4A;
 extern u8 lbl_803DCD49;
 extern u8 lbl_803DCD48;
 extern u8 lbl_803DCD30;
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void GXSetTevDirect(int tev);
 extern void GXSetTevOrder(int tev, int tc, int tm, int color);
 extern void GXSetTevSwapMode(int tev, int ras, int tex);
@@ -138,7 +139,6 @@ extern f32 lbl_803DEB5C;
 extern f32 lbl_803DEB7C;
 extern void GXSetTevKAlphaSel(int tev, int sel);
 extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
-extern void* memset(void*, int, u32);
 extern void textureFn_80053d58(void* obj);
 extern void GXInitTexObj(void* obj, void* img, u16 w, u16 h, int fmt, u8 ws, u8 wt, u8 mipmap);
 extern void GXInitTexObjUserData(void* obj, void* udata);

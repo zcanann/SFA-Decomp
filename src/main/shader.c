@@ -77,6 +77,7 @@ extern const f32 gMapBlockWorldSize;
 #include "main/track_dolphin_cs.h"
 #include "main/dll/dll_0017_savegame_cs.h"
 #include "main/objprint_dolphin_pr.h"
+#include "string.h"
 
 int lbl_803DB620 = -1;
 s8 lbl_803DB624[8] = {0, -2, -1, 1, 2, 0, 0, 0};
@@ -113,7 +114,6 @@ typedef struct ShaderRomListSlot
 } ShaderRomListSlot;
 extern int lbl_803DCE7C;
 extern int gShaderMapRomBuffers[];
-extern void* memset(void* p, int v, int n);
 #define INIT_MAP_SLOT(slot)                                                                                 \
     e = (char*)gShaderMapRomBuffers[1] + (slot) * 10 + ofs[0];                                              \
     *(s8*)((char*)gShaderMapRomBuffers[3] + idx + (slot)) = -128;                                          \

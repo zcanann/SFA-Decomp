@@ -46,6 +46,7 @@
 #include "main/atan2f_cs.h"
 #include "main/sky_pr.h"
 #include "main/lightmap_pr.h"
+#include "string.h"
 
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
@@ -382,7 +383,6 @@ extern void GXLoadTexMtxImm(void* mtx, int slot, int type);
 extern void GXSetArray(int attr, void* base, int stride);
 extern int mapBlockRender_setShader(int a, int* obj, int* state);
 extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
-extern void memcpy(void* dst, void* src, int n);
 extern int shouldDrawShadows(void);
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 extern float floor(float x);

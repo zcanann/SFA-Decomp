@@ -28,6 +28,9 @@
 #include "main/objprint_ext.h"
 #include "main/pi_dolphin_ext2.h"
 #include "main/rcp_dolphin_kr.h"
+#include "main/dll/modgfx.h"
+#include "dolphin/gx/GXFrameBuffer.h"
+#include "string.h"
 
 CameraViewSlot* gNewShadowCurrentViewSlot;
 u32 gNewShadowReflectionSmallTexture;
@@ -246,7 +249,6 @@ extern double FUN_800069f8();
 extern u32 FUN_80006a00();
 extern int FUN_800176d0();
 extern u32 FUN_80017730();
-extern u32 FUN_80017814();
 extern int FUN_80017970();
 extern u32 FUN_80017a50();
 extern int FUN_80017a54();
@@ -259,7 +261,6 @@ extern u32 FUN_8006f788();
 extern u32 FUN_8006f790();
 extern u32 FUN_800709e8();
 extern u32 FUN_80080f6c();
-extern u32 FUN_802420e0();
 extern u32 FUN_802475e4();
 extern u32 FUN_80247618();
 extern u32 FUN_80247a48();
@@ -285,9 +286,6 @@ extern u32 FUN_8028680c();
 extern u32 FUN_80286858();
 extern u32 FUN_802947f8();
 extern u32 SQRT();
-extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
-extern void GXSetTexCopyDst(u16 wd, u16 ht, GXTexFmt fmt, GXBool mipmap);
-extern void GXCopyTex(void* dest, GXBool clear);
 extern void GXInvalidateTexAll(void);
 extern float floor(float);
 extern void fn_80069EB8();
@@ -296,10 +294,8 @@ extern void set_shadowFlag_803dcc29(int x);
 extern void mapGetBlocks(int* a, int* b);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
 extern void GXSetProjection(f32* m, int type);
-extern void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf, const u8 vfilter[7]);
 extern void GXSetScissor(int a, int b, int c, int d);
 extern int getDrawDistanceFlag_8005cd48(void);
-extern void* memcpy(void* d, const void* s, int n);
 
 static inline void boxBlurRow(u8* row, u8* blurred, int size, int window)
 {
