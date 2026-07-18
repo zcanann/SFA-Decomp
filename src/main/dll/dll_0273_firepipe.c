@@ -116,19 +116,19 @@ typedef struct FirePipeEffectSetup
 
 int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* spawnDef);
 
-void firepipe_releaseEffectObject(FirePipeObject* obj)
+void firepipe_releaseEffectObject(GameObject* obj)
 {
-    if ((((GameObject*)obj)->objectFlags & FIREPIPE_OBJFLAG_ACTIVE) != 0)
+    if ((obj->objectFlags & FIREPIPE_OBJFLAG_ACTIVE) != 0)
     {
-        ObjHits_DisableObject((GameObject*)obj);
-        ((GameObject*)obj)->objectFlags &= ~FIREPIPE_OBJFLAG_ACTIVE;
-        Obj_RemoveFromUpdateList((GameObject*)obj);
-        ((GameObject*)obj)->objectFlags |= FIREPIPE_OBJFLAG_UPDATE_DISABLED;
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        ObjHits_DisableObject(obj);
+        obj->objectFlags &= ~FIREPIPE_OBJFLAG_ACTIVE;
+        Obj_RemoveFromUpdateList(obj);
+        obj->objectFlags |= FIREPIPE_OBJFLAG_UPDATE_DISABLED;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     else
     {
-        Obj_FreeObject((GameObject*)obj);
+        Obj_FreeObject(obj);
     }
 }
 

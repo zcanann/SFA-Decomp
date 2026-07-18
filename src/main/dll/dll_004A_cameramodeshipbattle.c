@@ -8,6 +8,7 @@
 #include "main/object_transform.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_004A_cameramodeshipbattle.h"
+#include "main/dll/ship_battle_api.h"
 
 CameraModeShipBattleState* gCamShipBattleState;
 
@@ -26,8 +27,6 @@ extern f32 gCamShipBattleFov;
 extern f32 lbl_803E1978;
 extern f32 lbl_803E197C;
 extern f32 lbl_803E1980;
-
-extern int shipBattleFn_801eed24(GameObject* focus);
 
 void CameraModeShipBattle_copyToCurrent(void)
 {

@@ -19,6 +19,7 @@
 #include "main/mapEventTypes.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/player_api.h"
+#include "main/dll/im_world_map_api.h"
 
 
 #define PLAYER_VTABLE_GET_MODE 0x48
@@ -59,7 +60,7 @@ void fn_801AC01C(GameObject *obj)
     mainSetBits(GAMEBIT_IM_BikeRelated03B9, 0);
 }
 
-void fn_801AC108(GameObject *obj, int extra)
+void fn_801AC108(GameObject *obj, void* extra)
 {
     int mode;
     void* player;

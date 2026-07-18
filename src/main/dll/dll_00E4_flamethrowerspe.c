@@ -9,6 +9,7 @@
 #include "main/frame_timing.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
+#include "main/dll/firepipe_effect_api.h"
 
 f32 lbl_803DBD60 = 2.0f;
 int lbl_803DBD64 = 0x23;
@@ -59,7 +60,6 @@ typedef struct FlamethrowerspeState
 
 extern f32 lbl_803E33A0;
 extern f32 lbl_803DBD60;
-extern void firepipe_releaseEffectObject(int* obj);
 extern f32 lbl_803DBD68;
 extern f32 lbl_803DBD6C;
 extern int lbl_803DBD64;
@@ -138,7 +138,7 @@ void flamethrowerspe_update(int* obj)
         if (timerCountDown(&((FlamethrowerspeState*)state)->lifeTimer) != 0)
         {
             ObjHits_DisableObject((GameObject*)obj);
-            firepipe_releaseEffectObject(obj);
+            firepipe_releaseEffectObject((GameObject*)obj);
             return;
         }
         ObjHits_EnableObject((GameObject*)obj);

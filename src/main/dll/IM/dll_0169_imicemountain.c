@@ -33,6 +33,7 @@
 #include "main/rcp_dolphin.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/object_descriptor.h"
+#include "main/dll/im_world_map_api.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -68,8 +69,6 @@ extern f32 lbl_803E46E0;
 extern f32 lbl_803E46D8;
 extern f32 lbl_803E46DC;
 extern void gameBitFn_800ea2e0(int idx);
-extern void fn_801AC108(GameObject* obj, int* extra);
-extern void fn_801AC01C(GameObject* obj);
 
 void IMIceMountain_init(int* obj);
 int IMIceMountain_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
@@ -171,7 +170,7 @@ void imicemountain_updateEventState(int* obj)
         }
         break;
     case 4:
-        fn_801AC108((GameObject*)(obj), (int*)extra);
+        fn_801AC108((GameObject*)obj, extra);
         break;
     case 5:
         if ((extra->latchFlags & 1) != 0)

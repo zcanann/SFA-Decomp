@@ -7,6 +7,7 @@
 #include "main/obj_placement.h"
 #include "main/objanim_internal.h"
 #include "main/modellight_api.h"
+#include "main/dll/firepipe_effect_api.h"
 
 typedef struct FirePipeExtra {
     GameObject* effectObjs[8];
@@ -80,7 +81,6 @@ STATIC_ASSERT(offsetof(FirePipeObject, sequenceCallback) == 0xBC);
 STATIC_ASSERT(offsetof(FirePipeObject, callback) == 0xC4);
 
 int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *spawnDef);
-void firepipe_releaseEffectObject(FirePipeObject *obj);
 int firepipe_clearLinkedUpdateFlag(FirePipeObject *obj);
 int firepipe_setLinkedUpdateFlag(FirePipeObject *obj);
 void firepipe_updateState(FirePipeObject *obj);

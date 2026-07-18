@@ -42,6 +42,7 @@
 #include "main/obj_path.h"
 #include "main/pad.h"
 #include "main/object_descriptor.h"
+#include "main/dll/ship_battle_api.h"
 
 typedef struct SBCloudRunnerState
 {
@@ -355,12 +356,12 @@ void SB_CloudRunner_HandlePriorityHit(GameObject* obj, u8* state)
 
 
 /* Forward to the laser-locked target's DLL vtable (slot 0x24). */
-void shipBattleFn_801eed24(GameObject* obj)
+int shipBattleFn_801eed24(GameObject* obj)
 {
     GameObject* target = ((SBCloudRunnerState*)obj->extra)->targetObj;
     void* vt = *target->anim.dll;
-    void (*fn)(void*) = *(void (**)(void*))((char*)vt + 0x24);
-    fn(target);
+    int (*fn)(GameObject*) = *(int (**)(GameObject*))((char*)vt + 0x24);
+    return fn(target);
 }
 
 
