@@ -3,8 +3,8 @@
 
 #include "types.h"
 
-void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
+void gxSetPeControl_ZCompLoc_(u8 zCompLoc);
+void gxSetZMode_(u8 compareEnable, int compareFunc, u8 updateEnable);
 
 #define gxSetPeControl_ZCompLocByteLegacy(zCompLoc)                                                                    \
     ((void (*)(u8))gxSetPeControl_ZCompLoc_)((zCompLoc))

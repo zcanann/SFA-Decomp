@@ -39,8 +39,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/shader_api.h"
 
-typedef void (*GXSetZCompLocLegacyFn)(u32 beforeTex);
-typedef void (*GXSetZModeLegacyFn)(u32 compareEnable, int compareFunc, u32 updateEnable);
+typedef void (*GXSetZCompLocLegacyFn)(u8 beforeTex);
+typedef void (*GXSetZModeLegacyFn)(u8 compareEnable, int compareFunc, u8 updateEnable);
 typedef void (*GXInitTexObjLegacyFn)();
 
 int lbl_803DD03C;
@@ -278,8 +278,8 @@ extern f32 lbl_803DEE9C;
 extern u8 gSaveCardRetry;
 void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type);
 void fn_80070234(f32* mat);
-void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
+void gxSetPeControl_ZCompLoc_(u8 zCompLoc);
+void gxSetZMode_(u8 compareEnable, int compareFunc, u8 updateEnable);
 void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag);
 int cardProbe(u8 retry);
 void showMemCardError(u8 err);
@@ -992,9 +992,9 @@ void fn_80070234(f32* mat)
 
 
 #define GXSetZCompLoc ((GXSetZCompLocLegacyFn)GXSetZCompLoc)
-void gxSetPeControl_ZCompLoc_(u32 zCompLoc)
+void gxSetPeControl_ZCompLoc_(u8 zCompLoc)
 {
-    if ((u32)gGxZCompLocCached != (zCompLoc & 0xff) || gGxZCompLocValid == 0)
+    if (gGxZCompLocCached != zCompLoc || gGxZCompLocValid == 0)
     {
         GXSetZCompLoc(zCompLoc);
         gGxZCompLocCached = zCompLoc;
@@ -1005,10 +1005,10 @@ void gxSetPeControl_ZCompLoc_(u32 zCompLoc)
 
 
 #define GXSetZMode ((GXSetZModeLegacyFn)GXSetZMode)
-void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable)
+void gxSetZMode_(u8 compareEnable, int compareFunc, u8 updateEnable)
 {
-    if ((u32)gGxZModeCompareEnable != (compareEnable & 0xff) || gGxZModeCompareFunc != compareFunc ||
-        gGxZModeUpdateEnable != (updateEnable & 0xff) || gGxZModeValid == 0)
+    if (gGxZModeCompareEnable != compareEnable || gGxZModeCompareFunc != compareFunc ||
+        gGxZModeUpdateEnable != updateEnable || gGxZModeValid == 0)
     {
         GXSetZMode(compareEnable, compareFunc, updateEnable);
         gGxZModeCompareEnable = compareEnable;
