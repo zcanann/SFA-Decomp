@@ -1825,18 +1825,18 @@ void* textureLoad(int texId, u8 flagIn)
     return firstTex;
 }
 
-int textureCrazyPointerFollowFn_80054c30(int* p, int n)
+Texture* textureCrazyPointerFollowFn_80054c30(Texture* texture, int n)
 {
-    int limit = ((Texture*)p)->animationFrameCount;
+    int limit = texture->animationFrameCount;
     int i;
     if (n >= limit)
         n = limit - 1;
     n >>= 8;
     for (i = 0; i < n; i++)
     {
-        p = *(int**)p;
+        texture = *(Texture**)texture;
     }
-    return (int)p;
+    return texture;
 }
 void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter)
 {

@@ -78,7 +78,7 @@ void arwarwinggu_applyTextureFrame(GameObject* obj)
     model = Obj_GetActiveModel(obj);
     texture = objFindTexture(obj, 0, 0);
     anim = ObjModel_GetTexture(model->file, 0);
-    fn_800541A4Promoted(anim, (u16)state->texture.textureFrame);
+    fn_800541A4(anim, (u16)state->texture.textureFrame);
     textureAnimFn_80053f2c(anim, &state->texture.textureAnimFlags, &texture->textureId);
 }
 
@@ -127,7 +127,7 @@ void ARWArwingGu_update(GameObject* obj)
         ObjModel* model = Obj_GetActiveModel(obj);
         ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
         Texture* anim = ObjModel_GetTexture(model->file, 0);
-        fn_800541A4Promoted(anim, (u16)state->texture.textureFrame);
+        fn_800541A4(anim, (u16)state->texture.textureFrame);
         textureAnimFn_80053f2c(anim, &state->texture.textureAnimFlags, &texture->textureId);
         break;
     }

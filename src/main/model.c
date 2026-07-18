@@ -2920,7 +2920,7 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
     int i[1];
     u8* h[1];
     int off[1];
-    int tex;
+    void* tex;
     int idc;
     realId[0] = 0;
     i[0] = 0;
@@ -2943,8 +2943,8 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
         off[0] = i[0];
         for (; i[0] < h[0][0xf2]; i[0]++)
         {
-            tex = textureLoadIntLegacy(-(*(int*)(*(int*)(h[0] + 0x20) + off[0]) | 0x8000), 1);
-            *(int*)(*(int*)(h[0] + 0x20) + off[0]) = tex;
+            tex = textureLoad(-(*(int*)(*(int*)(h[0] + 0x20) + off[0]) | 0x8000), 1);
+            *(void**)(*(int*)(h[0] + 0x20) + off[0]) = tex;
             off[0] += 4;
         }
         ObjModel_ResolveRenderOpTextures(header);

@@ -751,7 +751,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 {
                     if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) && ((int)ovrByte == ovr->layerByte))
                     {
-                        texId = textureCrazyPointerFollowFn_80054c30((int*)layerTexId, base[overrideIdx].ptr);
+                        texId = (int)textureCrazyPointerFollowFn_80054c30((Texture*)layerTexId, base[overrideIdx].ptr);
                         break;
                     }
                     ovr = ovr + 1;
@@ -793,7 +793,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 {
                     if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) && ((int)ovrByte == ovr->layerByte))
                     {
-                        texId = textureCrazyPointerFollowFn_80054c30((int*)layerTexId, base[overrideIdx].ptr);
+                        texId = (int)textureCrazyPointerFollowFn_80054c30((Texture*)layerTexId, base[overrideIdx].ptr);
                         break;
                     }
                     ovr = ovr + 1;
@@ -841,7 +841,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                             if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
                                 ((int)ovrLayerByte == ovr->layerByte))
                             {
-                                texId = textureCrazyPointerFollowFn_80054c30((int*)layerTexId, base[overrideIdx].ptr);
+                                texId = (int)textureCrazyPointerFollowFn_80054c30((Texture*)layerTexId, base[overrideIdx].ptr);
                                 break;
                             }
                             ovr = ovr + 1;

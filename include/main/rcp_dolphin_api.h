@@ -37,13 +37,6 @@ void gxFn_80051fb8(Texture* texture, f32 (*texMtx)[4], int mode, struct _GXColor
 void textureFn_800524ec(struct _GXColor* color);
 void gxColorFn_80052764(struct _GXColor* color);
 void gxTextureFn_80052638(struct _GXColor* color);
-int textureCrazyPointerFollowFn_80054c30(int* texture, int frame);
-
-#define textureCrazyPointerFollowLegacy(texture, frame) \
-    (((void* (*)(void*, int))textureCrazyPointerFollowFn_80054c30)((texture), (frame)))
-#define fn_800541A4Promoted(texture, frameStep) \
-    (((void (*)(Texture*, int))fn_800541A4)((texture), (frameStep)))
-#define textureLoadIntLegacy(texId, flag) \
-    (((int (*)(int, int))textureLoad)((texId), (flag)))
+Texture* textureCrazyPointerFollowFn_80054c30(Texture* texture, int frame);
 
 #endif /* MAIN_RCP_DOLPHIN_API_H_ */

@@ -895,7 +895,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                             {
                                 if ((int)jid == q->materialIndex)
                                 {
-                                    tex = textureCrazyPointerFollowLegacy(tex, slots[k].textureId);
+                                    tex = textureCrazyPointerFollowFn_80054c30(tex, slots[k].textureId);
                                     break;
                                 }
                                 q++;
