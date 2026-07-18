@@ -1170,33 +1170,6 @@ void translateToDinoLanguage(u8* str)
         byteOff += charLen;
     }
 }
-int GameText_CountPrintableChars(u8* str)
-{
-    int count;
-    int off;
-    int len;
-    u32 ch;
-
-    count = 0;
-    off = 0;
-    if (str == NULL)
-    {
-        return 0;
-    }
-    while ((ch = utf8GetNextChar(str + off, &len)) != 0)
-    {
-        off += len;
-        if (ch >= 0xE000 && ch <= 0xF8FF)
-        {
-            off += getControlCharLen(ch) * 2;
-        }
-        else
-        {
-            count++;
-        }
-    }
-    return count;
-}
 
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang)
 {
@@ -1362,40 +1335,6 @@ SubtitleCmd* subtitleParseControlCmds(char* str, int* count)
     }
 }
 
-int GameText_FindControlCodeArgs(u8* str, u32 target, int* out)
-{
-    int off;
-    int len;
-    u32 ch;
-    int n;
-    int i;
-
-    off = 0;
-    if (str == NULL)
-    {
-        return 0;
-    }
-    while ((ch = utf8GetNextChar(str + off, &len)) != 0)
-    {
-        off += len;
-        if (ch >= 0xE000 && ch <= 0xF8FF)
-        {
-            n = getControlCharLen(ch);
-            if (ch == target)
-            {
-                for (i = 0; i < n; i++)
-                {
-                    u32 hi = str[off++];
-                    u32 lo = str[off++];
-                    out[i] = (hi << 8) | lo;
-                }
-                return 1;
-            }
-            off += n * 2;
-        }
-    }
-    return 0;
-}
 
 void* gameTextGetPhrase(int textId, int phraseIndex)
 {
@@ -2930,36 +2869,6 @@ GlyphResource802CA100 lbl_802CA100 = {
     0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6
     },
 };
-void subtitleFn_8001b700(void)
-{
-    void** slot;
-    int i;
-    int oldDelay;
-
-    if (gSubtitleActive != 0)
-    {
-        gSubtitleActive = 0;
-        i = 0;
-        slot = gSubtitleLineTable;
-        while (i < gSubtitleBlockCount)
-        {
-            if (slot[i] != NULL)
-            {
-                oldDelay = mmSetFreeDelay(0);
-                mm_free(slot[i]);
-                mmSetFreeDelay(oldDelay);
-                slot[i] = NULL;
-            }
-            i++;
-        }
-
-        if (gGameTextSavedDir != -1)
-        {
-            gameTextLoadDir(gGameTextSavedDir);
-            gGameTextSavedDir = -1;
-        }
-    }
-}
 void subtitleBuildLineTable(void)
 {
     int savedCharset;
@@ -3073,6 +2982,69 @@ void subtitleBuildLineTable(void)
     }
 }
 
+int GameText_CountPrintableChars(u8* str)
+{
+    int count;
+    int off;
+    int len;
+    u32 ch;
+
+    count = 0;
+    off = 0;
+    if (str == NULL)
+    {
+        return 0;
+    }
+    while ((ch = utf8GetNextChar(str + off, &len)) != 0)
+    {
+        off += len;
+        if (ch >= 0xE000 && ch <= 0xF8FF)
+        {
+            off += getControlCharLen(ch) * 2;
+        }
+        else
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+int GameText_FindControlCodeArgs(u8* str, u32 target, int* out)
+{
+    int off;
+    int len;
+    u32 ch;
+    int n;
+    int i;
+
+    off = 0;
+    if (str == NULL)
+    {
+        return 0;
+    }
+    while ((ch = utf8GetNextChar(str + off, &len)) != 0)
+    {
+        off += len;
+        if (ch >= 0xE000 && ch <= 0xF8FF)
+        {
+            n = getControlCharLen(ch);
+            if (ch == target)
+            {
+                for (i = 0; i < n; i++)
+                {
+                    u32 hi = str[off++];
+                    u32 lo = str[off++];
+                    out[i] = (hi << 8) | lo;
+                }
+                return 1;
+            }
+            off += n * 2;
+        }
+    }
+    return 0;
+}
+
 void subtitleStart(int x)
 {
     if (gSubtitlesEnabled != 0)
@@ -3165,6 +3137,37 @@ int setSubtitlesEnabled(int enabled)
         subtitleFn_8001b700();
     }
     return old;
+}
+
+void subtitleFn_8001b700(void)
+{
+    void** slot;
+    int i;
+    int oldDelay;
+
+    if (gSubtitleActive != 0)
+    {
+        gSubtitleActive = 0;
+        i = 0;
+        slot = gSubtitleLineTable;
+        while (i < gSubtitleBlockCount)
+        {
+            if (slot[i] != NULL)
+            {
+                oldDelay = mmSetFreeDelay(0);
+                mm_free(slot[i]);
+                mmSetFreeDelay(oldDelay);
+                slot[i] = NULL;
+            }
+            i++;
+        }
+
+        if (gGameTextSavedDir != -1)
+        {
+            gameTextLoadDir(gGameTextSavedDir);
+            gGameTextSavedDir = -1;
+        }
+    }
 }
 void gameTextInitFn_8001bd14(void)
 {

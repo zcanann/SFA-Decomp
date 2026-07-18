@@ -4,7 +4,7 @@
 #include "main/dll/LGT/lgtcontrollightrec_struct.h"
 #include "main/game_object.h"
 
-extern f32 lbl_803E5EAC;
+extern const f32 lbl_803E5EAC;
 extern f32 lbl_803E5EB0;
 extern f32 lbl_803E5EB4;
 extern f32 lbl_803E5EB8;

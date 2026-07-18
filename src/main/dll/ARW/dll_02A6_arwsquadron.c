@@ -246,33 +246,6 @@ void arwsquadron_followPath(GameObject* obj, ArwSquadronState* state)
     }
 }
 
-void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, int flag)
-{
-    f32 pz, py, px;
-    GameObject* proj;
-    ArwSquadronProjectileSetup* setup;
-    if (Obj_IsLoadingLocked() == 0)
-        return;
-    ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
-    setup = (ArwSquadronProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWSQUADRON_CHILD_OBJ_PROJECTILE);
-    ((ArwSquadronProjectileSetup*)setup)->posX = px;
-    ((ArwSquadronProjectileSetup*)setup)->posY = py;
-    ((ArwSquadronProjectileSetup*)setup)->posZ = pz;
-    ((ArwSquadronProjectileSetup*)setup)->rotZ = ((obj)->anim.rotX + 0x10000 + angle - 0x8000) >> 8;
-    ((ArwSquadronProjectileSetup*)setup)->rotY = -(obj)->anim.rotY >> 8;
-    ((ArwSquadronProjectileSetup*)setup)->rotX = 0;
-    ((ArwSquadronProjectileSetup*)setup)->field04 = 1;
-    ((ArwSquadronProjectileSetup*)setup)->field05 = 1;
-    proj = loadObjectAtObject(obj, (ObjPlacement*)setup);
-    if (proj == NULL)
-        return;
-    if ((u8)flag != 0)
-        arwprojectile_createLinkedEffect(proj, 1);
-    arwprojectile_setLifetime(proj, 0x4b);
-    arwprojectile_placeForward(proj, 40.0f);
-    Sfx_PlayFromObjectLimited((int)proj, SFXTRIG_wp_blaserhit16, 4);
-}
-
 void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
 {
     SquadCmdFlags* flags = &squad->flags.cmd;
@@ -380,6 +353,33 @@ void arwsquadron_updateVolley(GameObject* obj, ArwSquadronState* state, ArwSquad
             s16toFloat(&state->volleyCooldownTimer, setup->volleyCooldown);
         }
     }
+}
+
+void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, int flag)
+{
+    f32 pz, py, px;
+    GameObject* proj;
+    ArwSquadronProjectileSetup* setup;
+    if (Obj_IsLoadingLocked() == 0)
+        return;
+    ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
+    setup = (ArwSquadronProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWSQUADRON_CHILD_OBJ_PROJECTILE);
+    ((ArwSquadronProjectileSetup*)setup)->posX = px;
+    ((ArwSquadronProjectileSetup*)setup)->posY = py;
+    ((ArwSquadronProjectileSetup*)setup)->posZ = pz;
+    ((ArwSquadronProjectileSetup*)setup)->rotZ = ((obj)->anim.rotX + 0x10000 + angle - 0x8000) >> 8;
+    ((ArwSquadronProjectileSetup*)setup)->rotY = -(obj)->anim.rotY >> 8;
+    ((ArwSquadronProjectileSetup*)setup)->rotX = 0;
+    ((ArwSquadronProjectileSetup*)setup)->field04 = 1;
+    ((ArwSquadronProjectileSetup*)setup)->field05 = 1;
+    proj = loadObjectAtObject(obj, (ObjPlacement*)setup);
+    if (proj == NULL)
+        return;
+    if ((u8)flag != 0)
+        arwprojectile_createLinkedEffect(proj, 1);
+    arwprojectile_setLifetime(proj, 0x4b);
+    arwprojectile_placeForward(proj, 40.0f);
+    Sfx_PlayFromObjectLimited((int)proj, SFXTRIG_wp_blaserhit16, 4);
 }
 
 int ARWSquadron_getExtraSize(void)

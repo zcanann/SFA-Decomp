@@ -442,7 +442,6 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
     s32 note;
     u8 scaledVol;
     u8 mKey;
-    u32 reuse;
 
     vid = 0xFFFFFFFF;
     if ((l = dataGetLayer(layerID, &count)) == NULL)
@@ -461,7 +460,7 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
         note = mKey + l->transpose;
         note = note > 127 ? 127 : note < 0 ? 0 : note;
 
-        reuse = 0;
+        new_id = 0xFFFFFFFF;
         if ((l->id & 0xC000) == 0)
         {
             u32 rejected;
@@ -473,20 +472,15 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
             }
             else
             {
-                new_id = 0xFFFFFFFF;
                 ok = 1;
             }
             if (!ok)
             {
                 continue;
             }
-            if (new_id != 0xFFFFFFFF)
-            {
-                reuse = 1;
-            }
         }
 
-        if (reuse == 0)
+        if (new_id == 0xFFFFFFFF)
         {
             if ((l->panning & 0x80) == 0)
             {

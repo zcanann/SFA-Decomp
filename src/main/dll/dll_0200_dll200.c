@@ -54,52 +54,8 @@ void dll_200_init(int* obj, int* arg);
 void dll_200_release_nop(void);
 void dll_200_initialise_nop(void);
 
-void fn_801F20D4(GameObject* obj)
-{
-    int state;
-    ItemIdSet3 itemSet;
-
-    state = *(int*)&(obj)->extra;
-    Obj_GetPlayerObject();
-    itemSet = gArwingAttachmentItemSetIdle;
-    if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0)
-    {
-        *(u8*)&(obj)->anim.resetHitboxMode ^= INTERACT_FLAG_DISABLED;
-    }
-    if (mainGetBit(763) == 0)
-    {
-        if ((obj)->anim.currentMove != 7)
-        {
-            ObjAnim_SetCurrentMove((int)obj, 7, 0.0f, 0);
-        }
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep,
-                                                                     NULL);
-    }
-    else
-    {
-        if ((obj)->anim.currentMove != 2)
-        {
-            ObjAnim_SetCurrentMove((int)obj, 2, 0.0f, 0);
-        }
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep,
-                                                                     NULL);
-    }
-    if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && mainGetBit(763) == 0)
-    {
-        mainSetBits(763, 1);
-        *(u8*)&((Dll200State*)state)->counter27 = 0;
-        buttonDisable(0, PAD_BUTTON_A);
-    }
-    else if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
-    {
-        if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&itemSet, 3) > -1)
-        {
-            mainSetBits(784, 1);
-            *(u8*)&((Dll200State*)state)->counter27 += 1;
-            buttonDisable(0, PAD_BUTTON_A);
-        }
-    }
-}
+void fn_801F20D4(GameObject* obj);
+void fn_801F27E4(GameObject* obj);
 
 void fn_801F2290(int obj)
 {
@@ -266,51 +222,6 @@ void fn_801F2290(int obj)
     }
 }
 
-void fn_801F27E4(GameObject* obj)
-{
-    int state;
-
-    state = *(int*)&(obj)->extra;
-    if ((obj)->anim.currentMove != 2)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 2, 0.0f, 0);
-    }
-    ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep,
-                                                                 NULL);
-    ((Dll200State*)state)->latch24 = 1;
-    if (((Dll200State*)state)->latch24 == 0)
-    {
-        if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
-        {
-            mainSetBits(GAMEBIT_WM_GalleonRelated00D0, 1);
-            ((Dll200State*)state)->latch24 = 1;
-            buttonDisable(0, PAD_BUTTON_A);
-        }
-    }
-    else
-    {
-        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-        if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
-        {
-            GameObject* player = Obj_GetPlayerObject();
-            if (playerGetCurMagic(player) > 0)
-            {
-                ((Dll200State*)state)->mode25 = 2;
-                (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-                buttonDisable(0, PAD_BUTTON_A);
-            }
-            else
-            {
-                if (mainGetBit(177) == 0 || mainGetBit(178) == 0 || mainGetBit(179) == 0)
-                {
-                    ((Dll200State*)state)->mode25 = 1;
-                    (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                    buttonDisable(0, PAD_BUTTON_A);
-                }
-            }
-        }
-    }
-}
 int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* animUpdate, int unused2)
 {
     int state;
@@ -510,6 +421,99 @@ void dll_200_update(int obj)
         case 3:
         case 5:
             return;
+        }
+    }
+}
+
+void fn_801F20D4(GameObject* obj)
+{
+    int state;
+    ItemIdSet3 itemSet;
+
+    state = *(int*)&(obj)->extra;
+    Obj_GetPlayerObject();
+    itemSet = gArwingAttachmentItemSetIdle;
+    if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0)
+    {
+        *(u8*)&(obj)->anim.resetHitboxMode ^= INTERACT_FLAG_DISABLED;
+    }
+    if (mainGetBit(763) == 0)
+    {
+        if ((obj)->anim.currentMove != 7)
+        {
+            ObjAnim_SetCurrentMove((int)obj, 7, 0.0f, 0);
+        }
+        ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep,
+                                                                     NULL);
+    }
+    else
+    {
+        if ((obj)->anim.currentMove != 2)
+        {
+            ObjAnim_SetCurrentMove((int)obj, 2, 0.0f, 0);
+        }
+        ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep,
+                                                                     NULL);
+    }
+    if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && mainGetBit(763) == 0)
+    {
+        mainSetBits(763, 1);
+        *(u8*)&((Dll200State*)state)->counter27 = 0;
+        buttonDisable(0, PAD_BUTTON_A);
+    }
+    else if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+    {
+        if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&itemSet, 3) > -1)
+        {
+            mainSetBits(784, 1);
+            *(u8*)&((Dll200State*)state)->counter27 += 1;
+            buttonDisable(0, PAD_BUTTON_A);
+        }
+    }
+}
+
+void fn_801F27E4(GameObject* obj)
+{
+    int state;
+
+    state = *(int*)&(obj)->extra;
+    if ((obj)->anim.currentMove != 2)
+    {
+        ObjAnim_SetCurrentMove((int)obj, 2, 0.0f, 0);
+    }
+    ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep,
+                                                                 NULL);
+    ((Dll200State*)state)->latch24 = 1;
+    if (((Dll200State*)state)->latch24 == 0)
+    {
+        if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+        {
+            mainSetBits(GAMEBIT_WM_GalleonRelated00D0, 1);
+            ((Dll200State*)state)->latch24 = 1;
+            buttonDisable(0, PAD_BUTTON_A);
+        }
+    }
+    else
+    {
+        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+        if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+        {
+            GameObject* player = Obj_GetPlayerObject();
+            if (playerGetCurMagic(player) > 0)
+            {
+                ((Dll200State*)state)->mode25 = 2;
+                (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
+                buttonDisable(0, PAD_BUTTON_A);
+            }
+            else
+            {
+                if (mainGetBit(177) == 0 || mainGetBit(178) == 0 || mainGetBit(179) == 0)
+                {
+                    ((Dll200State*)state)->mode25 = 1;
+                    (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
+                    buttonDisable(0, PAD_BUTTON_A);
+                }
+            }
         }
     }
 }

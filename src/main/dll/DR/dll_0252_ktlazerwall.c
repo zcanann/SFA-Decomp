@@ -27,34 +27,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0252_ktlazerwall.h"
 
-void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
-{
-    KtrexfloorswitchSpawnEnergyArcState* runtime = (obj)->extra;
-    f32 pos[3];
-    f32 dir[3];
-    if (runtime->boltObj != 0)
-    {
-        mm_free(runtime->boltObj);
-        runtime->boltObj = 0;
-    }
-    pos[0] = (obj)->anim.localPosX;
-    pos[1] = (obj)->anim.localPosY;
-    pos[2] = (obj)->anim.localPosZ;
-    dir[0] = 0.0f;
-    {
-        f32 fr = angle;
-        fr = fr * runtime->angleScale;
-        dir[1] = -(fr * 0.5f);
-    }
-    dir[2] = scale;
-    vecRotateZXY(&obj->anim.rotX, dir);
-    dir[0] += (obj)->anim.localPosX;
-    dir[1] += (obj)->anim.localPosY;
-    dir[2] += (obj)->anim.localPosZ;
-    runtime->unk8 = (f32)(int)randomGetRange(10, angle);
-    runtime->boltObj = lightningCreateU16Promoted((const Vec3f*)pos, (const Vec3f*)dir, 0.1f, 0.3f,
-                                                  angle, 96, 0);
-}
+void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle);
 
 int KT_Lazerwall_getExtraSize(void)
 {
@@ -205,4 +178,33 @@ void KT_Lazerwall_release(void)
 
 void KT_Lazerwall_initialise(void)
 {
+}
+
+void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
+{
+    KtrexfloorswitchSpawnEnergyArcState* runtime = (obj)->extra;
+    f32 pos[3];
+    f32 dir[3];
+    if (runtime->boltObj != 0)
+    {
+        mm_free(runtime->boltObj);
+        runtime->boltObj = 0;
+    }
+    pos[0] = (obj)->anim.localPosX;
+    pos[1] = (obj)->anim.localPosY;
+    pos[2] = (obj)->anim.localPosZ;
+    dir[0] = 0.0f;
+    {
+        f32 fr = angle;
+        fr = fr * runtime->angleScale;
+        dir[1] = -(fr * 0.5f);
+    }
+    dir[2] = scale;
+    vecRotateZXY(&obj->anim.rotX, dir);
+    dir[0] += (obj)->anim.localPosX;
+    dir[1] += (obj)->anim.localPosY;
+    dir[2] += (obj)->anim.localPosZ;
+    runtime->unk8 = (f32)(int)randomGetRange(10, angle);
+    runtime->boltObj = lightningCreateU16Promoted((const Vec3f*)pos, (const Vec3f*)dir, 0.1f, 0.3f,
+                                                  angle, 96, 0);
 }

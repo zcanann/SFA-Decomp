@@ -11461,140 +11461,7 @@ void playerCastIceSpell(void)
         }
     }
 }
-int fn_802A97D0(GameObject* obj, int p2)
-{
-    PlayerState* inner = obj->extra;
-    void* slot;
-    u8 af;
-    u8 c;
-    s16 sel = ((PlayerState*)p2)->baddie.controlMode;
 
-    if (!((sel != 1 && sel != 2 && sel != 0x26) || !mainGetBit(GAMEBIT_STAFF_ABILITY_STAFF_BOOSTER) ||
-          (slot = inner->cameraTargetObject) == NULL || *(s16*)((char*)slot + 0x46) != 0x64f ||
-          ((af = *(u8*)((char*)slot + 0xaf)) & 4) == 0 || (af & 0x18) != 0 ||
-          ((PlayerState*)p2)->baddie.targetObj != NULL || (c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 ||
-          *(void**)((char*)inner + 0x7f8) != NULL || ((ByteFlags*)((char*)inner + 0x3f0))->b20 ||
-          ((ByteFlags*)((char*)inner + 0x3f0))->b04 || ((ByteFlags*)((char*)inner + 0x3f0))->b08 ||
-          ((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0 ||
-          *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 4) < 0xa))
-    {
-        return 1;
-    }
-    return 0;
-}
-int playerCanCastPortalOpenSpell(GameObject* obj, int p2)
-{
-    PlayerState* inner = obj->extra;
-    s16 sel = ((PlayerState*)p2)->baddie.controlMode;
-
-    if (sel == 1 || sel == 2)
-    {
-        void* slot = inner->cameraTargetObject;
-        u8 af;
-        u8 c;
-        if (slot == NULL || *(s16*)((char*)slot + 0x46) != 0x414 || ((af = *(u8*)((char*)slot + 0xaf)) & 4) == 0 ||
-            (af & 0x18) != 0)
-        {
-            return 0;
-        }
-        if (((PlayerState*)p2)->baddie.targetObj != NULL || (c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 ||
-            *(void**)((char*)inner + 0x7f8) != NULL || ((ByteFlags*)((char*)inner + 0x3f0))->b20 ||
-            ((ByteFlags*)((char*)inner + 0x3f0))->b04 || ((ByteFlags*)((char*)inner + 0x3f0))->b08 ||
-            ((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0 || *(s16*)((char*)inner->playerStatus + 4) < 0x14 ||
-            !mainGetBit(GAMEBIT_STAFF_ABILITY_OPEN_PORTAL))
-        {
-            return 0;
-        }
-        return 1;
-    }
-    return 0;
-}
-int playerCanCastQuakeSpell(GameObject* obj, int p2)
-{
-    PlayerState* inner = obj->extra;
-    int threshold;
-    if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE))
-    {
-        threshold = 0x14;
-    }
-    else
-    {
-        threshold = 0xa;
-    }
-    if (mainGetBit(GAMEBIT_STAFF_ABILITY_GROUND_QUAKE) == 0 ||
-        *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 4) < threshold || inner->curAnimId == 0x44 ||
-        *(void**)((char*)inner + 0x7f8) != NULL || ((ByteFlags*)((char*)inner + 0x3f0))->b20 ||
-        ((ByteFlags*)((char*)inner + 0x3f0))->b04 || ((ByteFlags*)((char*)inner + 0x3f0))->b08 ||
-        ((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0)
-    {
-        return 0;
-    }
-    {
-        s16 v;
-        if ((v = ((PlayerState*)p2)->baddie.controlMode) == 1 || v == 2 || v == 0x25 || v == 0x24)
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-int playerCanCastBlasterSpell(GameObject* obj, int p2, int p3)
-{
-    PlayerState* inner = obj->extra;
-    u8 c;
-    int v;
-    if ((c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 || *(void**)((char*)inner + 0x7f8) != NULL ||
-        ((ByteFlags*)((char*)inner + 0x3f0))->b20 || ((ByteFlags*)((char*)inner + 0x3f0))->b04 ||
-        ((ByteFlags*)((char*)inner + 0x3f0))->b08 || ((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0)
-    {
-        return 0;
-    }
-    if (p3 == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER)
-    {
-        if (*(s16*)((char*)inner->playerStatus + 4) < 2)
-            return 0;
-    }
-    else
-    {
-        if (*(s16*)((char*)inner->playerStatus + 4) < 1)
-            return 0;
-    }
-    if ((v = ((PlayerState*)p2)->baddie.controlMode) == 1 || v == 2 || v == 0x2a || v == 0x2c || (u16)(v - 0x2e) <= 1 ||
-        v == 0x2d)
-    {
-        return 1;
-    }
-    return 0;
-}
-
-int playerIsBlasterSpellAvailable(GameObject* obj, int p2, int p3)
-{
-    PlayerState* inner = obj->extra;
-    u8 c;
-    int v;
-    if ((c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 || *(void**)((char*)inner + 0x7f8) != NULL ||
-        ((ByteFlags*)((char*)inner + 0x3f0))->b20 || ((ByteFlags*)((char*)inner + 0x3f0))->b04 ||
-        ((ByteFlags*)((char*)inner + 0x3f0))->b08 || ((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0)
-    {
-        return 0;
-    }
-    if (p3 == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER)
-    {
-        if (*(s16*)((char*)inner->playerStatus + 4) < 2)
-            return 0;
-    }
-    else
-    {
-        if (*(s16*)((char*)inner->playerStatus + 4) < 1)
-            return 0;
-    }
-    if ((v = ((PlayerState*)p2)->baddie.controlMode) == 1 || v == 2 || (u16)(v - 0x24) <= 1 || (u16)(v - 0x2a) <= 2 ||
-        (u16)(v - 0x2e) <= 1 || v == 0x2d)
-    {
-        return 1;
-    }
-    return 0;
-}
 
 void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
 {
@@ -11909,44 +11776,6 @@ void staffShootFireball(GameObject* obj, int state, f32 unused)
     }
 }
 
-void objDoTeleportAnim(GameObject* obj)
-{
-    PlayerState* inner = obj->extra;
-    struct
-    {
-        u8 pad[0xc];
-        f32 x;
-        f32 y;
-        f32 z;
-    } buf;
-    f32 dy;
-    f32 base = lbl_803E80C4;
-    int i;
-
-    dy = base - inner->teleportAnimProgress;
-    buf.y = dy;
-    if (lbl_803DE478 < lbl_803E80D8)
-    {
-        inner->teleportAnimActive = 0;
-        return;
-    }
-    if (dy <= lbl_803E7EA4)
-    {
-        lbl_803DE478 = lbl_803DE478 - lbl_803E7F14 * timeDelta;
-        return;
-    }
-    lbl_803DE478 = base;
-    buf.y = dy + obj->anim.localPosY;
-    {
-        for (i = 0; i < 10; i++)
-        {
-            buf.x = obj->anim.localPosX + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
-            buf.z = obj->anim.localPosZ + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
-            (*gPartfxInterface)->spawnObject((void*)obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, randomGetRange(0, 2) + 0x3f7, &buf, 1, -1, NULL);
-        }
-    }
-}
 
 void playerDie(GameObject* obj)
 {
@@ -12153,6 +11982,45 @@ void fn_802AAF80(GameObject* obj, int inner, int a, int b, int c)
                 obj->anim.localPosY + ((PlayerState*)inner)->waterDepth,
                 obj->anim.localPosZ, 0, lbl_803E80E4, 2);
             *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_WATER_SPLASH_PENDING;
+        }
+    }
+}
+
+void objDoTeleportAnim(GameObject* obj)
+{
+    PlayerState* inner = obj->extra;
+    struct
+    {
+        u8 pad[0xc];
+        f32 x;
+        f32 y;
+        f32 z;
+    } buf;
+    f32 dy;
+    f32 base = lbl_803E80C4;
+    int i;
+
+    dy = base - inner->teleportAnimProgress;
+    buf.y = dy;
+    if (lbl_803DE478 < lbl_803E80D8)
+    {
+        inner->teleportAnimActive = 0;
+        return;
+    }
+    if (dy <= lbl_803E7EA4)
+    {
+        lbl_803DE478 = lbl_803DE478 - lbl_803E7F14 * timeDelta;
+        return;
+    }
+    lbl_803DE478 = base;
+    buf.y = dy + obj->anim.localPosY;
+    {
+        for (i = 0; i < 10; i++)
+        {
+            buf.x = obj->anim.localPosX + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
+            buf.z = obj->anim.localPosZ + (f32)randomGetRange(-0x64, 0x64) / lbl_803E7ED8;
+            (*gPartfxInterface)->spawnObject((void*)obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, randomGetRange(0, 2) + 0x3f7, &buf, 1, -1, NULL);
         }
     }
 }
@@ -15314,6 +15182,29 @@ void fn_802B0EA4(GameObject* obj, int inner, int state)
     ((PlayerState*)inner)->speedScale = t;
     *(u32*)&((PlayerState*)inner)->flags360 &= ~0x1800000LL;
 }
+void playerDoControls(GameObject* obj, int state, f32 fv)
+{
+    u8 c;
+
+    ((PlayerState*)state)->stickX = 0;
+    ((PlayerState*)state)->stickY = 0;
+    ((PlayerState*)state)->buttonsHeld = 0;
+    ((PlayerState*)state)->buttonsJustPressed = 0;
+    ((PlayerState*)state)->buttonsJustPressedIfNotBusy = 0;
+    if ((((PlayerState*)state)->flags360 & 0x200000) == 0u && ((PlayerState*)state)->characterId != -1 &&
+        (c = ((PlayerState*)state)->curAnimId) != 0x44 && c != 0x4e)
+    {
+        ((PlayerState*)state)->stickX = padGetStickXS8(0);
+        ((PlayerState*)state)->stickY = padGetStickYS8(0);
+        ((PlayerState*)state)->buttonsHeld = (u16)getButtonsHeld(0);
+        ((PlayerState*)state)->buttonsJustPressed = (u16)getButtonsJustPressed(0);
+        ((PlayerState*)state)->buttonsJustPressedIfNotBusy = (u16)getButtonsJustPressedIfNotBusy(0);
+    }
+    ((PlayerState*)state)->stickXf = (f32) * (int*)((char*)state + 0x6d0);
+    ((PlayerState*)state)->stickYf = (f32) * (int*)((char*)state + 0x6d4);
+    fn_802B18BC(obj, state, fv);
+}
+
 void fn_802B18BC(GameObject* obj, int state, f32 fv)
 {
     f32 v;
@@ -15354,28 +15245,142 @@ void fn_802B18BC(GameObject* obj, int state, f32 fv)
     }
 }
 
-
-void playerDoControls(GameObject* obj, int state, f32 fv)
+int fn_802A97D0(GameObject* obj, int p2)
 {
+    PlayerState* inner = obj->extra;
+    void* slot;
+    u8 af;
     u8 c;
+    s16 sel = ((PlayerState*)p2)->baddie.controlMode;
 
-    ((PlayerState*)state)->stickX = 0;
-    ((PlayerState*)state)->stickY = 0;
-    ((PlayerState*)state)->buttonsHeld = 0;
-    ((PlayerState*)state)->buttonsJustPressed = 0;
-    ((PlayerState*)state)->buttonsJustPressedIfNotBusy = 0;
-    if ((((PlayerState*)state)->flags360 & 0x200000) == 0u && ((PlayerState*)state)->characterId != -1 &&
-        (c = ((PlayerState*)state)->curAnimId) != 0x44 && c != 0x4e)
+    if (!((sel != 1 && sel != 2 && sel != 0x26) || !mainGetBit(GAMEBIT_STAFF_ABILITY_STAFF_BOOSTER) ||
+          (slot = inner->cameraTargetObject) == NULL || *(s16*)((char*)slot + 0x46) != 0x64f ||
+          ((af = *(u8*)((char*)slot + 0xaf)) & 4) == 0 || (af & 0x18) != 0 ||
+          ((PlayerState*)p2)->baddie.targetObj != NULL || (c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 ||
+          *(void**)((char*)inner + 0x7f8) != NULL || ((ByteFlags*)((char*)inner + 0x3f0))->b20 ||
+          ((ByteFlags*)((char*)inner + 0x3f0))->b04 || ((ByteFlags*)((char*)inner + 0x3f0))->b08 ||
+          ((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0 ||
+          *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 4) < 0xa))
     {
-        ((PlayerState*)state)->stickX = padGetStickXS8(0);
-        ((PlayerState*)state)->stickY = padGetStickYS8(0);
-        ((PlayerState*)state)->buttonsHeld = (u16)getButtonsHeld(0);
-        ((PlayerState*)state)->buttonsJustPressed = (u16)getButtonsJustPressed(0);
-        ((PlayerState*)state)->buttonsJustPressedIfNotBusy = (u16)getButtonsJustPressedIfNotBusy(0);
+        return 1;
     }
-    ((PlayerState*)state)->stickXf = (f32) * (int*)((char*)state + 0x6d0);
-    ((PlayerState*)state)->stickYf = (f32) * (int*)((char*)state + 0x6d4);
-    fn_802B18BC(obj, state, fv);
+    return 0;
+}
+
+int playerCanCastPortalOpenSpell(GameObject* obj, int p2)
+{
+    PlayerState* inner = obj->extra;
+    s16 sel = ((PlayerState*)p2)->baddie.controlMode;
+
+    if (sel == 1 || sel == 2)
+    {
+        void* slot = inner->cameraTargetObject;
+        u8 af;
+        u8 c;
+        if (slot == NULL || *(s16*)((char*)slot + 0x46) != 0x414 || ((af = *(u8*)((char*)slot + 0xaf)) & 4) == 0 ||
+            (af & 0x18) != 0)
+        {
+            return 0;
+        }
+        if (((PlayerState*)p2)->baddie.targetObj != NULL || (c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 ||
+            *(void**)((char*)inner + 0x7f8) != NULL || ((ByteFlags*)((char*)inner + 0x3f0))->b20 ||
+            ((ByteFlags*)((char*)inner + 0x3f0))->b04 || ((ByteFlags*)((char*)inner + 0x3f0))->b08 ||
+            ((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0 || *(s16*)((char*)inner->playerStatus + 4) < 0x14 ||
+            !mainGetBit(GAMEBIT_STAFF_ABILITY_OPEN_PORTAL))
+        {
+            return 0;
+        }
+        return 1;
+    }
+    return 0;
+}
+
+int playerCanCastQuakeSpell(GameObject* obj, int p2)
+{
+    PlayerState* inner = obj->extra;
+    int threshold;
+    if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE))
+    {
+        threshold = 0x14;
+    }
+    else
+    {
+        threshold = 0xa;
+    }
+    if (mainGetBit(GAMEBIT_STAFF_ABILITY_GROUND_QUAKE) == 0 ||
+        *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 4) < threshold || inner->curAnimId == 0x44 ||
+        *(void**)((char*)inner + 0x7f8) != NULL || ((ByteFlags*)((char*)inner + 0x3f0))->b20 ||
+        ((ByteFlags*)((char*)inner + 0x3f0))->b04 || ((ByteFlags*)((char*)inner + 0x3f0))->b08 ||
+        ((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0)
+    {
+        return 0;
+    }
+    {
+        s16 v;
+        if ((v = ((PlayerState*)p2)->baddie.controlMode) == 1 || v == 2 || v == 0x25 || v == 0x24)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int playerIsBlasterSpellAvailable(GameObject* obj, int p2, int p3)
+{
+    PlayerState* inner = obj->extra;
+    u8 c;
+    int v;
+    if ((c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 || *(void**)((char*)inner + 0x7f8) != NULL ||
+        ((ByteFlags*)((char*)inner + 0x3f0))->b20 || ((ByteFlags*)((char*)inner + 0x3f0))->b04 ||
+        ((ByteFlags*)((char*)inner + 0x3f0))->b08 || ((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0)
+    {
+        return 0;
+    }
+    if (p3 == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER)
+    {
+        if (*(s16*)((char*)inner->playerStatus + 4) < 2)
+            return 0;
+    }
+    else
+    {
+        if (*(s16*)((char*)inner->playerStatus + 4) < 1)
+            return 0;
+    }
+    if ((v = ((PlayerState*)p2)->baddie.controlMode) == 1 || v == 2 || (u16)(v - 0x24) <= 1 || (u16)(v - 0x2a) <= 2 ||
+        (u16)(v - 0x2e) <= 1 || v == 0x2d)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int playerCanCastBlasterSpell(GameObject* obj, int p2, int p3)
+{
+    PlayerState* inner = obj->extra;
+    u8 c;
+    int v;
+    if ((c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 || *(void**)((char*)inner + 0x7f8) != NULL ||
+        ((ByteFlags*)((char*)inner + 0x3f0))->b20 || ((ByteFlags*)((char*)inner + 0x3f0))->b04 ||
+        ((ByteFlags*)((char*)inner + 0x3f0))->b08 || ((ByteFlags*)((char*)inner + 0x3f4))->b40 == 0)
+    {
+        return 0;
+    }
+    if (p3 == GAMEBIT_STAFF_ABILITY_FIRE_BLASTER)
+    {
+        if (*(s16*)((char*)inner->playerStatus + 4) < 2)
+            return 0;
+    }
+    else
+    {
+        if (*(s16*)((char*)inner->playerStatus + 4) < 1)
+            return 0;
+    }
+    if ((v = ((PlayerState*)p2)->baddie.controlMode) == 1 || v == 2 || v == 0x2a || v == 0x2c || (u16)(v - 0x2e) <= 1 ||
+        v == 0x2d)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 void fn_802B1B28(GameObject* obj, f32 fv)

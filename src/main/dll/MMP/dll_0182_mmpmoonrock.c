@@ -73,28 +73,7 @@ typedef struct MmpMoonrockPlacement
     u8 pad22[0x28 - 0x22];
 } MmpMoonrockPlacement;
 
-int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2)
-{
-    TrackGroundHit** results;
-    f32* e;
-    int i;
-    int count;
-
-    count = hitDetectFn_80065e50(obj, x, y, z, &results, 0, 1);
-    *out1 = y;
-    *out2 = 0;
-    for (i = 0; i < count; i++)
-    {
-        if ((s8)results[i]->surfaceType != 0xE && y < results[i]->height &&
-            (y2 > results[i]->height || i == count - 1))
-        {
-            *out2 = (int)results[i]->object;
-            *out1 = results[i]->height;
-            return (results[i]->normalY < 0.707f) + 1;
-        }
-    }
-    return 0;
-}
+int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2);
 void fn_801A79E0(GameObject* obj)
 {
     TrackBBoxHit hitScratch;
@@ -215,36 +194,30 @@ void fn_801A7B10(GameObject* obj)
         obj->anim.velocityZ = zeroVel;
     }
 }
-void fn_801A7CC4(GameObject* obj)
+
+int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2)
 {
-    MmpMoonrockState* state = obj->extra;
-    struct
+    TrackGroundHit** results;
+    f32* e;
+    int i;
+    int count;
+
+    count = hitDetectFn_80065e50(obj, x, y, z, &results, 0, 1);
+    *out1 = y;
+    *out2 = 0;
+    for (i = 0; i < count; i++)
     {
-        s16 angleX;
-        s16 angleY;
-        s16 angleZ;
-        s16 _pad;
-        f32 length;
-        f32 x;
-        f32 y;
-        f32 z;
-    } rotIn;
-    GameObject* player = Obj_GetPlayerObject();
-    u8* playerState = player->extra;
-    f32 zeroVel = 0.0f;
-    obj->anim.velocityX = zeroVel;
-    obj->anim.velocityY = 0.75f * *(f32*)((char*)playerState + 0x298) + 2.2f;
-    obj->anim.velocityZ = -0.75f * *(f32*)((char*)playerState + 0x298) + -2.2f;
-    rotIn.x = zeroVel;
-    rotIn.y = zeroVel;
-    rotIn.z = zeroVel;
-    rotIn.length = 1.0f;
-    rotIn.angleZ = 0;
-    rotIn.angleY = 0;
-    rotIn.angleX = player->anim.rotX;
-    vecRotateZXY(&rotIn, &obj->anim.velocityX);
-    state->flags |= MOONROCK_FLAG_THROWN;
+        if ((s8)results[i]->surfaceType != 0xE && y < results[i]->height &&
+            (y2 > results[i]->height || i == count - 1))
+        {
+            *out2 = (int)results[i]->object;
+            *out1 = results[i]->height;
+            return (results[i]->normalY < 0.707f) + 1;
+        }
+    }
+    return 0;
 }
+void fn_801A7CC4(GameObject* obj);
 
 void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
 {
@@ -612,6 +585,37 @@ void mmp_moonrock_update(GameObject* obj)
     particleHeight = (int)(obj->anim.localPosY - state->baseY);
     (*gPartfxInterface)
         ->spawnObject((void*)obj, MMPMOONROCK_PARTFX, &gMoonRockSpawnParams, 0x200001, -1, &particleHeight);
+}
+
+void fn_801A7CC4(GameObject* obj)
+{
+    MmpMoonrockState* state = obj->extra;
+    struct
+    {
+        s16 angleX;
+        s16 angleY;
+        s16 angleZ;
+        s16 _pad;
+        f32 length;
+        f32 x;
+        f32 y;
+        f32 z;
+    } rotIn;
+    GameObject* player = Obj_GetPlayerObject();
+    u8* playerState = player->extra;
+    f32 zeroVel = 0.0f;
+    obj->anim.velocityX = zeroVel;
+    obj->anim.velocityY = 0.75f * *(f32*)((char*)playerState + 0x298) + 2.2f;
+    obj->anim.velocityZ = -0.75f * *(f32*)((char*)playerState + 0x298) + -2.2f;
+    rotIn.x = zeroVel;
+    rotIn.y = zeroVel;
+    rotIn.z = zeroVel;
+    rotIn.length = 1.0f;
+    rotIn.angleZ = 0;
+    rotIn.angleY = 0;
+    rotIn.angleX = player->anim.rotX;
+    vecRotateZXY(&rotIn, &obj->anim.velocityX);
+    state->flags |= MOONROCK_FLAG_THROWN;
 }
 
 void mmp_moonrock_init(GameObject* obj, int param2)

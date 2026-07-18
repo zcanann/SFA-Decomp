@@ -284,6 +284,7 @@ int audioIsResetting(void);
 void audioStopAll(void);
 void audioUpdate(void);
 int audioInit(void);
+void audioLoadTriggerData(void);
 u32 audioFlagFn_8000a188(u32 mask);
 void audioFree(void* ptr);
 void* _audioAlloc(u32 size);
@@ -449,32 +450,6 @@ static inline MusicChannel* Music_FindActiveChannelForTrack(int track)
 }
 
 
-void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3)
-{
-    int idx;
-    void* buf;
-    AudioArqRequestEntry* entry;
-    idx = gAudioArqRequestIndex;
-    gAudioArqRequestIndex = idx + 1;
-    entry = &gAudioArqRequests[idx];
-    if (idx + 1 >= 0x10)
-    {
-        gAudioArqRequestIndex = 0;
-    }
-    if ((size & 0x1f) != 0)
-    {
-        size = (size | 0x1f) + 1;
-    }
-    buf = mmAlloc(size, 0, 0);
-    *outBuf = buf;
-    entry->callback = (void (*)(int, int, int))cb;
-    entry->callbackArg1 = cbArg1;
-    entry->callbackArg2 = cbArg2;
-    entry->callbackArg3 = cbArg3;
-    DCFlushRange(buf, size);
-    gAudioArqRequestDone = 0;
-    ARQPostRequest(&entry->request, 0x64, 1, 1, (u32)source, (u32)buf, size, fn_80008EDC);
-}
 
 void fn_80008EDC(u32 request)
 {
@@ -492,28 +467,6 @@ void fn_80008EDC(u32 request)
     }
 }
 
-void fn_80008F38(void* addr, u32 dest, u32 size)
-{
-    int idx;
-    AudioArqRequestEntry* entry;
-    idx = gAudioArqRequestIndex;
-    gAudioArqRequestIndex = idx + 1;
-    entry = &gAudioArqRequests[idx];
-    if (idx + 1 >= 0x10)
-    {
-        gAudioArqRequestIndex = 0;
-    }
-    if ((size & 0x1f) != 0)
-    {
-        size = (size | 0x1f) + 1;
-    }
-    DCFlushRange(addr, size);
-    gAudioArqRequestDone = 0;
-    ARQPostRequest(&entry->request, 0x64, 0, 1, (u32)addr, dest, size, fn_80009008);
-    while (gAudioArqRequestDone == 0)
-    {
-    }
-}
 
 void fn_80009008(u32 request)
 {
@@ -796,29 +749,6 @@ void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo)
     }
 }
 
-void audioLoadTriggerData(void)
-{
-    char* base = sSampleBufferSLoadedCallbackLoadError;
-    int info;
-    int delay;
-    if (gMusicTriggersData != NULL)
-    {
-        delay = mmSetFreeDelay(0);
-        mm_free(gMusicTriggersData);
-        mm_free(gSfxTriggersData);
-        mm_free(gStreamsData);
-        mmSetFreeDelay(delay);
-    }
-    gAudioPendingLoadFlags |= AUDIO_LOAD_MUSIC_TRIGGERS;
-    gMusicTriggersData = loadFileByPathAsync(base + 0x1b4, &info, 1, musicTriggersLoadedCallback);
-    gMusicTriggersCount = (u32)info >> 4;
-    gAudioPendingLoadFlags |= AUDIO_LOAD_SFX_TRIGGERS;
-    gSfxTriggersData = loadFileByPathAsync(base + 0x1cc, &info, 1, sfxTriggersLoadedCallback);
-    gSfxTriggersCount = (u32)info >> 5;
-    gAudioPendingLoadFlags |= AUDIO_LOAD_STREAMS;
-    gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, streamsLoadedCallback);
-    gStreamsCount = info / sizeof(StreamEntry);
-}
 
 void audioSetSoundMode(int mode, u8 forceFlag)
 {
@@ -1075,15 +1005,6 @@ int audioInit(void)
     return 0;
 }
 
-u32 audioFlagFn_8000a188(u32 mask)
-{
-    s32 managed = gAudioManagedChannelMask & mask;
-    if (managed == 0)
-    {
-        return 1;
-    }
-    return (gAudioActiveChannelMask & mask) != 0;
-}
 
 void audioFree(void* ptr)
 {
@@ -1095,13 +1016,6 @@ void* _audioAlloc(u32 size)
     return mmAlloc(size, 0xb, 0);
 }
 
-int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third)
-{
-    strcpy(dst, first);
-    strcat(dst, second);
-    strcat(dst, third);
-    return 1;
-}
 
 void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
@@ -1805,25 +1719,6 @@ void Sfx_StopObjectChannel(u32 obj, u32 channel)
     }
 }
 
-void Sfx_StopFromObject(u32 obj, u32 sfxId)
-{
-    SfxObjectChannel* objectChannel;
-
-    if ((u16)sfxId != 0)
-    {
-        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
-    }
-    else
-    {
-        objectChannel = NULL;
-    }
-
-    if (objectChannel != NULL)
-    {
-        sndFXKeyOff(objectChannel->handle);
-        objectChannel->handle = (u32)-1;
-    }
-}
 
 void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale)
 {
@@ -1954,10 +1849,6 @@ void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId)
     Sfx_PlayFromObjectEx(obj, pos, 0, sfxId);
 }
 
-void Sfx_PlayFromObject(u32 obj, u16 sfxId)
-{
-    Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
-}
 
 void Sfx_UpdateObjectSounds(void)
 {
@@ -3523,3 +3414,120 @@ char sDvdCancelStreamWarning[0x3C] = "WARNING:DVDCancelStreamAsync returned FALS
 u32 gSfxLoopedObjectSoundObjects[0x80];
 u16 gSfxLoopedObjectSoundIds[0x80];
 u8 gSfxLoopedObjectSoundFlags[0x80];
+
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3)
+{
+    int idx;
+    void* buf;
+    AudioArqRequestEntry* entry;
+    idx = gAudioArqRequestIndex;
+    gAudioArqRequestIndex = idx + 1;
+    entry = &gAudioArqRequests[idx];
+    if (idx + 1 >= 0x10)
+    {
+        gAudioArqRequestIndex = 0;
+    }
+    if ((size & 0x1f) != 0)
+    {
+        size = (size | 0x1f) + 1;
+    }
+    buf = mmAlloc(size, 0, 0);
+    *outBuf = buf;
+    entry->callback = (void (*)(int, int, int))cb;
+    entry->callbackArg1 = cbArg1;
+    entry->callbackArg2 = cbArg2;
+    entry->callbackArg3 = cbArg3;
+    DCFlushRange(buf, size);
+    gAudioArqRequestDone = 0;
+    ARQPostRequest(&entry->request, 0x64, 1, 1, (u32)source, (u32)buf, size, fn_80008EDC);
+}
+
+void fn_80008F38(void* addr, u32 dest, u32 size)
+{
+    int idx;
+    AudioArqRequestEntry* entry;
+    idx = gAudioArqRequestIndex;
+    gAudioArqRequestIndex = idx + 1;
+    entry = &gAudioArqRequests[idx];
+    if (idx + 1 >= 0x10)
+    {
+        gAudioArqRequestIndex = 0;
+    }
+    if ((size & 0x1f) != 0)
+    {
+        size = (size | 0x1f) + 1;
+    }
+    DCFlushRange(addr, size);
+    gAudioArqRequestDone = 0;
+    ARQPostRequest(&entry->request, 0x64, 0, 1, (u32)addr, dest, size, fn_80009008);
+    while (gAudioArqRequestDone == 0)
+    {
+    }
+}
+
+u32 audioFlagFn_8000a188(u32 mask)
+{
+    s32 managed = gAudioManagedChannelMask & mask;
+    if (managed == 0)
+    {
+        return 1;
+    }
+    return (gAudioActiveChannelMask & mask) != 0;
+}
+
+int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third)
+{
+    strcpy(dst, first);
+    strcat(dst, second);
+    strcat(dst, third);
+    return 1;
+}
+
+void Sfx_StopFromObject(u32 obj, u32 sfxId)
+{
+    SfxObjectChannel* objectChannel;
+
+    if ((u16)sfxId != 0)
+    {
+        objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
+    }
+    else
+    {
+        objectChannel = NULL;
+    }
+
+    if (objectChannel != NULL)
+    {
+        sndFXKeyOff(objectChannel->handle);
+        objectChannel->handle = (u32)-1;
+    }
+}
+
+void Sfx_PlayFromObject(u32 obj, u16 sfxId)
+{
+    Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
+}
+
+void audioLoadTriggerData(void)
+{
+    char* base = sSampleBufferSLoadedCallbackLoadError;
+    int info;
+    int delay;
+    if (gMusicTriggersData != NULL)
+    {
+        delay = mmSetFreeDelay(0);
+        mm_free(gMusicTriggersData);
+        mm_free(gSfxTriggersData);
+        mm_free(gStreamsData);
+        mmSetFreeDelay(delay);
+    }
+    gAudioPendingLoadFlags |= AUDIO_LOAD_MUSIC_TRIGGERS;
+    gMusicTriggersData = loadFileByPathAsync(base + 0x1b4, &info, 1, musicTriggersLoadedCallback);
+    gMusicTriggersCount = (u32)info >> 4;
+    gAudioPendingLoadFlags |= AUDIO_LOAD_SFX_TRIGGERS;
+    gSfxTriggersData = loadFileByPathAsync(base + 0x1cc, &info, 1, sfxTriggersLoadedCallback);
+    gSfxTriggersCount = (u32)info >> 5;
+    gAudioPendingLoadFlags |= AUDIO_LOAD_STREAMS;
+    gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, streamsLoadedCallback);
+    gStreamsCount = info / sizeof(StreamEntry);
+}

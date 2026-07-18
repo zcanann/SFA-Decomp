@@ -144,14 +144,7 @@ void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* params)
     }
     if (params->triggerHit == 2 && ((GameObject*)obj)->userData2 == 0)
     {
-        if (fn_8029669C(player) == 0)
-        {
-            params->triggerHit = 0;
-            params->sendHoldMessage[0] = 0;
-            params->fadeTimer = 60.0f;
-            params->ballMode = SIDEKICK_BALL_FADING;
-        }
-        else
+        if (fn_8029669C(player) != 0)
         {
             params->triggerHit = 0;
             params->triggerArmed = 1;
@@ -184,6 +177,13 @@ void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* params)
 
             sidekickBallThrow((GameObject*)obj, *(f32*)((char*)obj + 36), ((GameObject*)obj)->anim.velocityY,
                         ((GameObject*)obj)->anim.velocityZ);
+        }
+        else
+        {
+            params->triggerHit = 0;
+            params->sendHoldMessage[0] = 0;
+            params->fadeTimer = 60.0f;
+            params->ballMode = SIDEKICK_BALL_FADING;
         }
     }
 

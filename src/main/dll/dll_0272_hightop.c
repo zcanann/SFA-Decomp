@@ -568,37 +568,7 @@ ObjectDescriptor24 gHighTopObjDescriptor = {
     (ObjectDescriptorCallback)HighTop_getLookTargetYaw,
 };
 
-int hightop_handleMotionEvent(int obj, u8 event)
-{
-    HighTopRuntime* runtime = ((GameObject*)obj)->extra;
-    switch (event)
-    {
-    case 0:
-        break;
-    case 5:
-        (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 8);
-        break;
-    case 6:
-        mainSetBits(0x634, 1);
-        (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
-        break;
-    case 7:
-        mainSetBits(0x634, 0);
-        mainSetBits(0x631, 1);
-        ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask |= 1;
-        runtime->flagsC40 &= ~0x140;
-        runtime->flags &= ~2;
-        (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 7);
-        break;
-    case 8:
-        (*gObjectTriggerInterface)->runSequence(7, (void*)obj, -1);
-        break;
-    case 9:
-        (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 7);
-        break;
-    }
-    return 0;
-}
+int hightop_handleMotionEvent(int obj, u8 event);
 
 int hightop_defaultStateHandler(void)
 {
@@ -1257,3 +1227,35 @@ void HighTop_initialise(void)
     gHighTopDefaultStateHandler = hightop_defaultStateHandler;
 }
 
+
+int hightop_handleMotionEvent(int obj, u8 event)
+{
+    HighTopRuntime* runtime = ((GameObject*)obj)->extra;
+    switch (event)
+    {
+    case 0:
+        break;
+    case 5:
+        (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 8);
+        break;
+    case 6:
+        mainSetBits(0x634, 1);
+        (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
+        break;
+    case 7:
+        mainSetBits(0x634, 0);
+        mainSetBits(0x631, 1);
+        ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask |= 1;
+        runtime->flagsC40 &= ~0x140;
+        runtime->flags &= ~2;
+        (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 7);
+        break;
+    case 8:
+        (*gObjectTriggerInterface)->runSequence(7, (void*)obj, -1);
+        break;
+    case 9:
+        (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 7);
+        break;
+    }
+    return 0;
+}

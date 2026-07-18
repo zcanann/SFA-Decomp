@@ -83,8 +83,6 @@ void ChukChuk_update(short* obj);
 void ChukChuk_setScale(int obj, int v);
 
 int fn_80160534(int* obj);
-void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state);
-void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state);
 
 int fn_801601C4(GameObject* obj, GroundBaddieState* state)
 {
@@ -265,6 +263,10 @@ int fn_80160690(short* out, u8* obj)
     (*gPlayerInterface)->rotateTowardTarget(out, obj, 5);
     return 0;
 }
+
+void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state);
+
+void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state);
 
 int dll_CB_seqFn(short* obj, int p2, u8* e)
 {
@@ -484,7 +486,6 @@ void dll_CB_initialise(void)
     gDllCBStateHandlers[4] = fn_8016032C;
     gDllCBStateHandlers[5] = fn_801601C4;
 }
-
 
 
 void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)

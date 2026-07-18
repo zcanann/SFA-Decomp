@@ -1915,7 +1915,7 @@ fail:
     return 1;
 }
 
-int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
+int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx)
 {
     int candidates[4];
     int neighbor;
@@ -1925,7 +1925,7 @@ int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
     for (i = 0; i < 4; i++)
     {
         neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
-        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) != 0 && neighbor != exclude)
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && neighbor != exclude)
         {
             candidates[count++] = neighbor;
         }
@@ -1943,7 +1943,8 @@ int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
     }
     return -1;
 }
-int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx)
+
+int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
 {
     int candidates[4];
     int neighbor;
@@ -1953,7 +1954,7 @@ int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx)
     for (i = 0; i < 4; i++)
     {
         neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
-        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && neighbor != exclude)
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) != 0 && neighbor != exclude)
         {
             candidates[count++] = neighbor;
         }

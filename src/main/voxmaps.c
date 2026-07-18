@@ -48,7 +48,6 @@ static void heapSiftUp(CurveHeapNode* q, int i)
     q[i].value = val;
 }
 int voxmaps_processRouteQueue(RouteState* state, int count);
-void fn_800118EC(int a1, VoxBoxArg* a2, int a3);
 
 void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentDir, u16 count, s16* box)
 {
@@ -276,12 +275,14 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
             if (nn->x == bx && nn->y == bz)
             {
                 savedFlag = nn->flag;
-                goto searched;
+                break;
             }
         }
-        foundIdx = -1;
+        if (foundIdx >= nodeCount)
+        {
+            foundIdx = -1;
+        }
     }
-searched:
     nodeCount = state->nodeCount;
 
     if (foundIdx >= 0 && savedFlag == 0)
@@ -369,6 +370,8 @@ searched:
         heapSiftUp(q, state->queueCount);
     }
 }
+
+void fn_800118EC(int a1, VoxBoxArg* a2, int a3);
 
 int fn_800119FC(s16* dest, s16* start, s16* out)
 {

@@ -152,25 +152,7 @@ void decoration11a_update(void)
 {
 }
 
-void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
-{
-    f32 component;
-    component = vertex[0];
-    if (component > maxOut[0])
-        maxOut[0] = component;
-    else if (component < minOut[0])
-        minOut[0] = component;
-    component = vertex[1];
-    if (component > maxOut[1])
-        maxOut[1] = component;
-    else if (component < minOut[1])
-        minOut[1] = component;
-    component = vertex[2];
-    if (component > maxOut[2])
-        maxOut[2] = component;
-    else if (component < minOut[2])
-        minOut[2] = component;
-}
+void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut);
 
 void decoration11a_init(int* obj, u8* def)
 {
@@ -221,4 +203,24 @@ void decoration11a_init(int* obj, u8* def)
             state[6] = maxMag;
         }
     }
+}
+
+void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
+{
+    f32 component;
+    component = vertex[0];
+    if (component > maxOut[0])
+        maxOut[0] = component;
+    else if (component < minOut[0])
+        minOut[0] = component;
+    component = vertex[1];
+    if (component > maxOut[1])
+        maxOut[1] = component;
+    else if (component < minOut[1])
+        minOut[1] = component;
+    component = vertex[2];
+    if (component > maxOut[2])
+        maxOut[2] = component;
+    else if (component < minOut[2])
+        minOut[2] = component;
 }

@@ -157,46 +157,6 @@ int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* 
     return 0;
 }
 
-void mapUnloadFn_801d7c94(void* obj, void* state)
-{
-
-    SCTotemLogPuzzleObject* puzzleObj;
-    SCTotemLogPuzzleRuntime* runtime;
-    puzzleObj = (SCTotemLogPuzzleObject*)obj;
-    runtime = (SCTotemLogPuzzleRuntime*)state;
-
-    if ((u32)mainGetBit(SCTOTEMLOGPUZ_RESET_GAMEBIT) != 0)
-    {
-        runtime->eventCountdown = SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET;
-        mainSetBits(SCTOTEMLOGPUZ_RESET_GAMEBIT, 0);
-    }
-    if (runtime->eventCountdown == 0)
-        return;
-
-    if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET)
-    {
-        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 1, 0);
-        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 4, 0);
-        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 6, 0);
-        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 7, 0);
-        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 8, 0);
-        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 9, 0);
-        mapUnload(0x13, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
-        mapUnload(0x41, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
-        mapUnload(0x43, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
-        mapUnload(0x45, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
-    }
-    if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE)
-    {
-        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 0, 1);
-        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 2, 1);
-        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 3, 1);
-        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 5, 1);
-        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 0xa, 1);
-    }
-    runtime->eventCountdown--;
-}
-
 void SCGameBitLatch_Update(SCGameBitLatchState* state, int mask, s16 clearIfSetBit, s16 clearIfClearBit, s16 latchBit,
                            int musicId)
 {
@@ -940,6 +900,46 @@ void SH_LevelControl_update(GameObject* obj)
     }
     mapUnloadFn_801d7c94((void*)obj, state);
     return;
+}
+
+void mapUnloadFn_801d7c94(void* obj, void* state)
+{
+
+    SCTotemLogPuzzleObject* puzzleObj;
+    SCTotemLogPuzzleRuntime* runtime;
+    puzzleObj = (SCTotemLogPuzzleObject*)obj;
+    runtime = (SCTotemLogPuzzleRuntime*)state;
+
+    if ((u32)mainGetBit(SCTOTEMLOGPUZ_RESET_GAMEBIT) != 0)
+    {
+        runtime->eventCountdown = SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET;
+        mainSetBits(SCTOTEMLOGPUZ_RESET_GAMEBIT, 0);
+    }
+    if (runtime->eventCountdown == 0)
+        return;
+
+    if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_RESET)
+    {
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 1, 0);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 4, 0);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 6, 0);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 7, 0);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 8, 0);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 9, 0);
+        mapUnload(0x13, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
+        mapUnload(0x41, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
+        mapUnload(0x43, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
+        mapUnload(0x45, SCTOTEMLOGPUZ_MAP_UNLOAD_FLAGS);
+    }
+    if (runtime->eventCountdown == SCTOTEMLOGPUZ_EVENT_COUNTDOWN_ENABLE)
+    {
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 0, 1);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 2, 1);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 3, 1);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 5, 1);
+        (*gMapEventInterface)->setObjGroupStatus(puzzleObj->animId, 0xa, 1);
+    }
+    runtime->eventCountdown--;
 }
 
 void SH_LevelControl_init(GameObject* obj)

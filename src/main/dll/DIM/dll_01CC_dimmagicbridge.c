@@ -32,69 +32,9 @@ STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 #define DIMMAGICBRIDGE_GAMEBIT_TRIGGER 0x1ef
 #define DIMMAGICBRIDGE_GAMEBIT_LATCH   0x1e8
 
-void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub)
-{
-    int i;
-    int cnt;
-    ModelFileHeader* mdl;
-    ObjModel* model;
-    f32 amp;
-    DimMagicBridgeState* state = (DimMagicBridgeState*)sub;
-    model = Obj_GetActiveModel((GameObject*)obj);
-    mdl = model->file;
-    i = 0;
-    amp = 65535.0f;
-    for (; cnt = mdl->vertexCount, i < cnt; i++)
-    {
-        s16* vc = ObjModel_GetCurrentVertexCoords(model, i);
-        s16* vb = ObjModel_GetBaseVertexCoords(mdl, i);
-        int wavePos = (u16)(int)(amp * ((f32)(int)vc[2] / state->minVertexY));
-        wavePos = wavePos + state->wavePhase;
-        if (*vb > 0)
-        {
-            *vc = 256.0f * mathSinf((3.1415927f * (f32)(int)wavePos) / 32768.0f) + (f32)(int)*vb;
-        }
-        else
-        {
-            *vc = -(256.0f * mathSinf((3.1415927f * (f32)(int)wavePos) / 32768.0f) - (f32)(int)*vb);
-        }
-    }
-    DCStoreRange((void*)ObjModel_GetCurrentVertexCoords(model, 0), cnt * 6);
-    (obj)->anim.alpha = state->segmentGlow[1];
-}
+void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub);
 
-void dimmagicbridge_scrollTextureChannels(int obj, u8* extra)
-{
-    DimMagicBridgeState* state = (DimMagicBridgeState*)extra;
-    ObjTextureRuntimeSlot* tex;
-    s32 phase;
-
-    tex = objFindTexture((GameObject*)obj, 0, 0);
-    tex->offsetT += 0x14;
-    if (tex->offsetT > 10000)
-    {
-        tex->offsetT -= 10000;
-    }
-    tex->offsetS += 10;
-    if (tex->offsetS > 10000)
-    {
-        tex->offsetS -= 10000;
-    }
-    tex = objFindTexture((GameObject*)obj, 1, 0);
-    tex->offsetT += 0x1e;
-    if (tex->offsetT > 10000)
-    {
-        tex->offsetT -= 10000;
-    }
-    phase = (s32)state->wavePhase + framesThisStep * 0x100;
-    if (phase > 0xffff)
-        phase = phase - 0xffff;
-    state->wavePhase = phase;
-    phase = (s32)state->wavePhaseB + framesThisStep * 0x80;
-    if (phase > 0xffff)
-        phase = phase - 0xffff;
-    state->wavePhaseB = phase;
-}
+void dimmagicbridge_scrollTextureChannels(int obj, u8* extra);
 
 int dimmagicbridge_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -274,3 +214,67 @@ const f32 lbl_803E4A28 = 3e+02f;
 const f32 lbl_803E4A2C = 0.0f;
 const f32 lbl_803E4A30[2] = {1.0f, 0.0f};
 const f32 lbl_803E4A38[2] = {1.0f, 0.0f};
+
+void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub)
+{
+    int i;
+    int cnt;
+    ModelFileHeader* mdl;
+    ObjModel* model;
+    f32 amp;
+    DimMagicBridgeState* state = (DimMagicBridgeState*)sub;
+    model = Obj_GetActiveModel((GameObject*)obj);
+    mdl = model->file;
+    i = 0;
+    amp = 65535.0f;
+    for (; cnt = mdl->vertexCount, i < cnt; i++)
+    {
+        s16* vc = ObjModel_GetCurrentVertexCoords(model, i);
+        s16* vb = ObjModel_GetBaseVertexCoords(mdl, i);
+        int wavePos = (u16)(int)(amp * ((f32)(int)vc[2] / state->minVertexY));
+        wavePos = wavePos + state->wavePhase;
+        if (*vb > 0)
+        {
+            *vc = 256.0f * mathSinf((3.1415927f * (f32)(int)wavePos) / 32768.0f) + (f32)(int)*vb;
+        }
+        else
+        {
+            *vc = -(256.0f * mathSinf((3.1415927f * (f32)(int)wavePos) / 32768.0f) - (f32)(int)*vb);
+        }
+    }
+    DCStoreRange((void*)ObjModel_GetCurrentVertexCoords(model, 0), cnt * 6);
+    (obj)->anim.alpha = state->segmentGlow[1];
+}
+
+void dimmagicbridge_scrollTextureChannels(int obj, u8* extra)
+{
+    DimMagicBridgeState* state = (DimMagicBridgeState*)extra;
+    ObjTextureRuntimeSlot* tex;
+    s32 phase;
+
+    tex = objFindTexture((GameObject*)obj, 0, 0);
+    tex->offsetT += 0x14;
+    if (tex->offsetT > 10000)
+    {
+        tex->offsetT -= 10000;
+    }
+    tex->offsetS += 10;
+    if (tex->offsetS > 10000)
+    {
+        tex->offsetS -= 10000;
+    }
+    tex = objFindTexture((GameObject*)obj, 1, 0);
+    tex->offsetT += 0x1e;
+    if (tex->offsetT > 10000)
+    {
+        tex->offsetT -= 10000;
+    }
+    phase = (s32)state->wavePhase + framesThisStep * 0x100;
+    if (phase > 0xffff)
+        phase = phase - 0xffff;
+    state->wavePhase = phase;
+    phase = (s32)state->wavePhaseB + framesThisStep * 0x80;
+    if (phase > 0xffff)
+        phase = phase - 0xffff;
+    state->wavePhaseB = phase;
+}

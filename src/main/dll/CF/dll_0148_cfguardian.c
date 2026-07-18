@@ -380,86 +380,6 @@ int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int 
     return ret;
 }
 
-/* cfguardianSteerToward: steer the object toward the target: scale its velocity
- * along the normalized delta, blend the yaw by speed over distance,
- * move it and keep the chase move playing. Returns 1 when already
- * within the closing threshold. */
-int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
-{
-    f32 dist;
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    s16 yawDelta;
-    if (target == NULL)
-    {
-        return 0;
-    }
-    dx = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-    dy = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-    dz = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-    dist = sqrtf(dz * dz + (dx * dx + dy * dy));
-    if (dist < 5.0f * speed)
-    {
-        return 1;
-    }
-    normalize(&dx, &dy, &dz);
-    ((GameObject*)obj)->anim.velocityX = timeDelta * (dx * speed);
-    ((GameObject*)obj)->anim.velocityY = timeDelta * (dy * speed);
-    ((GameObject*)obj)->anim.velocityZ = timeDelta * (dz * speed);
-    yawDelta = (((GameObject*)target)->anim.rotX + 0x8000) - (u16)((GameObject*)obj)->anim.rotX;
-    if (yawDelta > 0x8000)
-    {
-        yawDelta = yawDelta - 0xffff;
-    }
-    if (yawDelta < -0x8000)
-    {
-        yawDelta = yawDelta + 0xffff;
-    }
-    ((GameObject*)obj)->anim.rotX = (f32) * (s16*)(int)obj + ((0.5f + yawDelta) * (speed * timeDelta)) / dist;
-    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
-            ((GameObject*)obj)->anim.velocityZ);
-    if (((GameObject*)obj)->anim.currentMove != GUARDIAN_MOVE_FLY)
-    {
-        ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
-    }
-    ((int (*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, outPhase);
-    return 0;
-}
-
-int* findRomCurvePointNearObject(int* obj, int curveGroup, int* outVec, int mode)
-{
-    int* result = NULL;
-    int findParams[2];
-    int found;
-
-    if (mode == 1)
-    {
-        findParams[0] = 0;
-        findParams[1] = 0;
-    }
-    else
-    {
-        findParams[0] = 25;
-        findParams[1] = 21;
-    }
-
-    found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
-        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
-        findParams, 2, curveGroup);
-
-    if (found > -1)
-    {
-        result = (int*)(*gRomCurveInterface)->getById(found);
-        if (outVec != NULL)
-        {
-            ((f32*)outVec)[0] = ((RomCurveDef*)result)->x;
-            ((f32*)outVec)[1] = ((RomCurveDef*)result)->y;
-            ((f32*)outVec)[2] = ((RomCurveDef*)result)->z;
-        }
-    }
-    return result;
-}
 
 /* cfguardian_updateMain: the Queen's brain - the fifteen-state quest
  * progression (path flights, landing physics, dialogue triggers and idle
@@ -930,6 +850,87 @@ int cfguardian_updateMain(GameObject* obj)
         mainSetBits(GAMEBIT_GUARDIAN_QUEST_STATE, sub->questState);
     }
     return 0;
+}
+
+/* cfguardianSteerToward: steer the object toward the target: scale its velocity
+ * along the normalized delta, blend the yaw by speed over distance,
+ * move it and keep the chase move playing. Returns 1 when already
+ * within the closing threshold. */
+int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
+{
+    f32 dist;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    s16 yawDelta;
+    if (target == NULL)
+    {
+        return 0;
+    }
+    dx = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+    dy = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+    dz = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+    dist = sqrtf(dz * dz + (dx * dx + dy * dy));
+    if (dist < 5.0f * speed)
+    {
+        return 1;
+    }
+    normalize(&dx, &dy, &dz);
+    ((GameObject*)obj)->anim.velocityX = timeDelta * (dx * speed);
+    ((GameObject*)obj)->anim.velocityY = timeDelta * (dy * speed);
+    ((GameObject*)obj)->anim.velocityZ = timeDelta * (dz * speed);
+    yawDelta = (((GameObject*)target)->anim.rotX + 0x8000) - (u16)((GameObject*)obj)->anim.rotX;
+    if (yawDelta > 0x8000)
+    {
+        yawDelta = yawDelta - 0xffff;
+    }
+    if (yawDelta < -0x8000)
+    {
+        yawDelta = yawDelta + 0xffff;
+    }
+    ((GameObject*)obj)->anim.rotX = (f32) * (s16*)(int)obj + ((0.5f + yawDelta) * (speed * timeDelta)) / dist;
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
+            ((GameObject*)obj)->anim.velocityZ);
+    if (((GameObject*)obj)->anim.currentMove != GUARDIAN_MOVE_FLY)
+    {
+        ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
+    }
+    ((int (*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, outPhase);
+    return 0;
+}
+
+int* findRomCurvePointNearObject(int* obj, int curveGroup, int* outVec, int mode)
+{
+    int* result = NULL;
+    int findParams[2];
+    int found;
+
+    if (mode == 1)
+    {
+        findParams[0] = 0;
+        findParams[1] = 0;
+    }
+    else
+    {
+        findParams[0] = 25;
+        findParams[1] = 21;
+    }
+
+    found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
+        findParams, 2, curveGroup);
+
+    if (found > -1)
+    {
+        result = (int*)(*gRomCurveInterface)->getById(found);
+        if (outVec != NULL)
+        {
+            ((f32*)outVec)[0] = ((RomCurveDef*)result)->x;
+            ((f32*)outVec)[1] = ((RomCurveDef*)result)->y;
+            ((f32*)outVec)[2] = ((RomCurveDef*)result)->z;
+        }
+    }
+    return result;
 }
 
 /* cfguardian_SeqFn: the Queen's sequence message handler.

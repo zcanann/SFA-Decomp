@@ -5215,10 +5215,17 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     Camera_RebuildProjectionMatrix();
 }
 
-static inline void fn_8007BD8C_body(int handle1, int handle2, Mtx mtx_30, GXColor* temp, GXColor* temp2, GXColor* k0,
-                                    GXColor* k1, GXColor* k2, GXColor* tev1, GXColor* tev2)
+void fn_8007BD8C(int handle1, int handle2)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
+    Mtx mtx_30;
+    GXColor temp;
+    GXColor temp2;
+    GXColor k0;
+    GXColor k1;
+    GXColor k2;
+    GXColor tev1;
+    GXColor tev2;
     u8* indBase = (u8*)lbl_8030EA10;
 
     selectReflectionTexture(0);
@@ -5235,39 +5242,39 @@ static inline void fn_8007BD8C_body(int handle1, int handle2, Mtx mtx_30, GXColo
 
     if (isHeavyFogEnabled() != 0)
     {
-        ((u8*)temp)[0] = ((u8*)&gFogColor)[0];
-        ((u8*)temp)[1] = ((u8*)&gFogColor)[1];
-        ((u8*)temp)[2] = ((u8*)&gFogColor)[2];
+        ((u8*)&temp)[0] = ((u8*)&gFogColor)[0];
+        ((u8*)&temp)[1] = ((u8*)&gFogColor)[1];
+        ((u8*)&temp)[2] = ((u8*)&gFogColor)[2];
     }
     else
     {
         u8 ignoredLightColor;
         (*gSkyInterface)
-            ->getCurrentAmbientAndLightColors(&((u8*)temp)[0], &((u8*)temp)[1], &((u8*)temp)[2], &ignoredLightColor,
+            ->getCurrentAmbientAndLightColors(&((u8*)&temp)[0], &((u8*)&temp)[1], &((u8*)&temp)[2], &ignoredLightColor,
                                               &ignoredLightColor, &ignoredLightColor);
     }
 
-    *k0 = *(GXColor*)&lbl_803DB690;
-    ((void (*)(int, GXColor*))GXSetTevKColor)(0, k0);
+    k0 = *(GXColor*)&lbl_803DB690;
+    ((void (*)(int, GXColor*))GXSetTevKColor)(0, &k0);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
-    *k1 = *(GXColor*)&lbl_803DB694;
-    ((void (*)(int, GXColor*))GXSetTevKColor)(1, k1);
+    k1 = *(GXColor*)&lbl_803DB694;
+    ((void (*)(int, GXColor*))GXSetTevKColor)(1, &k1);
     GXSetTevKColorSel(GX_TEVSTAGE1, GX_TEV_KCSEL_K1);
-    *k2 = *(GXColor*)&lbl_803DB698;
-    ((void (*)(int, GXColor*))GXSetTevKColor)(2, k2);
+    k2 = *(GXColor*)&lbl_803DB698;
+    ((void (*)(int, GXColor*))GXSetTevKColor)(2, &k2);
     GXSetTevKColorSel(GX_TEVSTAGE2, GX_TEV_KCSEL_K2);
 
-    ((u8*)temp)[0] = (u8)((int)((u8*)temp)[0] >> 2);
-    ((u8*)temp)[1] = (u8)((int)((u8*)temp)[1] >> 2);
-    ((u8*)temp)[2] = (u8)((int)((u8*)temp)[2] >> 2);
-    *tev1 = *temp;
-    ((void (*)(int, GXColor*))GXSetTevColor)(1, tev1);
+    ((u8*)&temp)[0] = (u8)((int)((u8*)&temp)[0] >> 2);
+    ((u8*)&temp)[1] = (u8)((int)((u8*)&temp)[1] >> 2);
+    ((u8*)&temp)[2] = (u8)((int)((u8*)&temp)[2] >> 2);
+    tev1 = temp;
+    ((void (*)(int, GXColor*))GXSetTevColor)(1, &tev1);
 
-    ((u8*)temp2)[0] = (u8)(((u8*)temp)[0] + 0xC0);
-    ((u8*)temp2)[1] = (u8)(((u8*)temp)[1] + 0xC0);
-    ((u8*)temp2)[2] = (u8)(((u8*)temp)[2] + 0xC0);
-    *tev2 = *temp2;
-    ((void (*)(int, GXColor*))GXSetTevColor)(2, tev2);
+    ((u8*)&temp2)[0] = (u8)(((u8*)&temp)[0] + 0xC0);
+    ((u8*)&temp2)[1] = (u8)(((u8*)&temp)[1] + 0xC0);
+    ((u8*)&temp2)[2] = (u8)(((u8*)&temp)[2] + 0xC0);
+    tev2 = temp2;
+    ((void (*)(int, GXColor*))GXSetTevColor)(2, &tev2);
 
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(0, 0, 0);
@@ -5327,20 +5334,6 @@ static inline void fn_8007BD8C_body(int handle1, int handle2, Mtx mtx_30, GXColo
         gGxZCompLocValid = 1;
     }
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-}
-
-void fn_8007BD8C(int handle1, int handle2)
-{
-    Mtx mtx_30;
-    GXColor temp;
-    GXColor temp2;
-    GXColor k0;
-    GXColor k1;
-    GXColor k2;
-    GXColor tev1;
-    GXColor tev2;
-
-    fn_8007BD8C_body(handle1, handle2, mtx_30, &temp, &temp2, &k0, &k1, &k2, &tev1, &tev2);
 }
 
 void setupReflectionIndirectTev(u8 flag)

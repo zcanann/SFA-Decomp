@@ -28,9 +28,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/savegame_env_api.h"
 #include "dolphin/os/OSCache.h"
-#include "main/gx_scissor_api.h"
 #include "dolphin/gx/GXDispList.h"
-#include "dolphin/gx/GXLighting.h"
 #include "main/dll/modgfx.h"
 
 struct LoadedTextureEntry* gLoadedTextures;
@@ -113,6 +111,7 @@ extern u8 lbl_803DCD4A;
 extern u8 lbl_803DCD49;
 extern u8 lbl_803DCD48;
 extern u8 lbl_803DCD30;
+extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void GXSetTevDirect(int tev);
 extern void GXSetTevOrder(int tev, int tc, int tm, int color);
 extern void GXSetTevSwapMode(int tev, int ras, int tex);
@@ -175,7 +174,16 @@ extern u8 gRcpDistortSlotIndex;
 extern void* gRcpDistortTexture;
 extern u16* gRcpTexIdRemap;
 extern void* gRcpTexHeaderBuffer;
+typedef struct GXColor8
+{
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} GXColor8;
 extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
+extern void GXSetChanAmbColor(int chan, GXColor8 c);
+extern void GXSetChanMatColor(int chan, GXColor8 c);
 extern void GXSetTexCopyDst(int w, int h, int fmt, int mip);
 extern void textureFn_8004ff20(void* asset, f32* mtx, void* out, int p4);
 extern void GXCopyTex(void* dst, int clear);
@@ -197,6 +205,63 @@ extern void texPreGetMipmap(int word, int id, int* sizeOut, int* frameOut, int m
 void* textureLoadAsset(int asset);
 void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter);
 static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights);
+
+
+#define GX_CULL_NONE     0
+#define GX_CULL_FRONT    1
+#define GX_CULL_BACK     2
+#define GX_BM_NONE       0
+#define GX_BL_ZERO       0
+#define GX_BL_ONE        1
+#define GX_LO_NOOP       5
+#define GX_AOP_AND       0
+#define GX_ALWAYS        7
+#define GX_EQUAL         2
+#define GX_MT_XF_FLUSH   1
+#define GX_TF_RGBA8      6
+#define GX_FALSE         0
+#define GX_TF_I4         0
+#define GX_TEXMAP1       1
+#define GX_TEV_SWAP1     1
+#define GX_CH_ALPHA      3
+#define GX_VA_POS        9
+#define GX_VA_NRM        10
+#define GX_PNMTX0        0
+#define GX_TEXMTX0       0x1e
+#define GX_MTX2x4        1
+#define GX_DIRECT        1
+#define GX_TRIANGLESTRIP 0x98
+#define GX_VTXFMT4       4
+#define GX_TG_MTX2x4     1
+#define GX_IDENTITY      0x3c
+#define GX_PTIDENTITY    0x7d
+#define GX_COLOR0        0
+#define GX_COLOR0A0      4
+#define GX_COLOR1A1      5
+#define GX_TEVREG0       1
+#define GX_TEXCOORD_NULL 0xff
+#define GX_TEXMAP_NULL   0xff
+#define GX_COLOR_NULL    0xff
+#define GX_TEV_SWAP0     0
+#define GX_TEV_ADD       0
+#define GX_TB_ZERO       0
+#define GX_CS_SCALE_1    0
+#define GX_TRUE          1
+#define GX_TEVPREV       0
+#define GX_CC_CPREV      0
+#define GX_CC_APREV      1
+#define GX_CC_A0         3
+#define GX_CC_C1         4
+#define GX_CC_C2         6
+#define GX_CC_TEXC       8
+#define GX_CC_RASC       0xa
+#define GX_CC_KONST      0xe
+#define GX_CC_ZERO       0xf
+#define GX_CA_APREV      0
+#define GX_CA_TEXA       4
+#define GX_CA_RASA       5
+#define GX_CA_KONST      6
+#define GX_CA_ZERO       7
 
 #define RCP_DISTORT_TEXTURE_ID 0x5dc
 
@@ -587,6 +652,31 @@ void gxColorFn_800523d0(void)
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
+void textureFn_800524ec(int* param)
+{
+    int sel_color;
+    int sel_alpha;
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    gxTextureFn_8004bf88(param, 0, 1, &sel_color, &sel_alpha);
+    GXSetTevKAlphaSel(lbl_803DCD90, sel_alpha);
+    if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0)
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_RASC);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_KONST);
+    }
+    else
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_RASC, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_APREV, GX_CA_KONST, GX_CA_ZERO);
+    }
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
 void gxTextureFn_80052638(int* param)
 {
     int sel;
@@ -636,6 +726,41 @@ void gxColorFn_80052764(int* param)
     lbl_803DCD30 = 1;
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
+}
+void textureFn_800528bc(void)
+{
+    GXSetNumTexGens(lbl_803DCD69);
+    GXSetNumTevStages(lbl_803DCD6A);
+    GXSetNumIndStages(lbl_803DCD68);
+}
+void resetLotsOfRenderVars(void)
+{
+    lbl_803DCD58 = 30;
+    lbl_803DCD84 = 30;
+    lbl_803DCD54 = 64;
+    lbl_803DCD80 = 64;
+    lbl_803DCD64 = 0;
+    lbl_803DCD90 = 0;
+    lbl_803DCD5C = 0;
+    lbl_803DCD88 = 0;
+    lbl_803DCD60 = 0;
+    lbl_803DCD8C = 0;
+    lbl_803DCD50 = 0;
+    lbl_803DCD7C = 0;
+    lbl_803DCD4C = 4;
+    lbl_803DCD78 = 4;
+    lbl_803DCD74 = 0;
+    lbl_803DCD70 = 12;
+    lbl_803DCD6C = 28;
+    lbl_803DCD6B = 0;
+    lbl_803DCD4B = 0;
+    lbl_803DCD6A = 0;
+    lbl_803DCD4A = 0;
+    lbl_803DCD69 = 0;
+    lbl_803DCD49 = 0;
+    lbl_803DCD68 = 0;
+    lbl_803DCD48 = 0;
+    lbl_803DCD30 = 0;
 }
 extern u8 gRcpWarpDistortDisplayList[0x6640];
 
@@ -714,12 +839,58 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
     }
     GXCallDisplayList(gRcpWarpDistortDisplayList, gRcpWarpDistortListSize);
 }
-
-int textureFn_80052bb4(int model, f32* params);
+int textureFn_80052bb4(int model, f32* params)
+{
+    ModelLightStruct* la;
+    ModelLightStruct* lb;
+    la = fn_80089A58();
+    lb = fn_80089A50();
+    if (la == NULL || lb == NULL)
+    {
+        return 0;
+    }
+    modelLightChannels_reset(1);
+    modelLightChannel_configure(0, 1, 0);
+    modelLightChannel_configure(2, 0, 0);
+    modelLightStruct_setSpecularAttenuation(la, params[0], lbl_803DEB60);
+    modelLightStruct_setSpecularColor(la, 0xff, 0, 0, 0xff);
+    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
+    modelLightStruct_setSpecularAttenuation(la, params[1], lbl_803DEB60);
+    modelLightStruct_setSpecularColor(la, 0, 0, 0xff, 0xff);
+    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
+    modelLightStruct_setAngularAttenuation(la, lbl_803DEB70, lbl_803DEB60, lbl_803DEB60);
+    modelLightStruct_loadChannelLight(2, (u8*)la, (u8*)model);
+    modelLightChannel_configure(1, 1, 0);
+    modelLightChannel_configure(3, 0, 0);
+    modelLightStruct_setSpecularAttenuation(lb, params[0], lbl_803DEB60);
+    modelLightStruct_setSpecularColor(lb, 0xff, 0, 0, 0xff);
+    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
+    modelLightStruct_setSpecularAttenuation(lb, params[1], lbl_803DEB60);
+    modelLightStruct_setSpecularColor(lb, 0, 0, 0xff, 0xff);
+    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
+    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB74, lbl_803DEB60, lbl_803DEB60);
+    modelLightStruct_loadChannelLight(3, (u8*)lb, (u8*)model);
+    modelLightChannels_applyGXControls();
+    modelLightStruct_setAngularAttenuation(la, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);
+    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);
+    return 0;
+}
 void gxFn_80052dc0(void);
-void textureFn_800524ec(int* param);
-void textureFn_800528bc(void);
-void resetLotsOfRenderVars(void);
+
+static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
+{
+    s32 count;
+    int n;
+    modelLightStruct_selectObjectLights(model, lights, 8, &count, 4);
+    modelLightChannels_reset(1);
+    modelLightChannel_configure(0, 0, 0);
+    for (n = 0; n < count; n++)
+    {
+        modelLightStruct_loadChannelLight(0, (u8*)lights[n], (u8*)model);
+    }
+    modelLightChannels_applyGXControls();
+}
+
 void gxTextureFn_80052efc(void)
 {
     union
@@ -729,9 +900,9 @@ void gxTextureFn_80052efc(void)
     } mtxu;
 #define mtx mtxu.m
     ModelLightStruct* lights[8];
-    GXColor outColor;
-    GXColor texColor;
-    GXColor matColor;
+    GXColor8 outColor;
+    GXColor8 texColor;
+    GXColor8 matColor;
     u8* e;
     u8* slots[1];
     int i;
@@ -746,8 +917,8 @@ void gxTextureFn_80052efc(void)
     mtx[3] = lbl_803DEB74;
     mtx[7] = lbl_803DEB74;
     GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
-    GXSetChanAmbColor(GX_COLOR0A0, *(GXColor*)&gRcpDistortAmbColor);
-    GXSetChanAmbColor(GX_COLOR1A1, *(GXColor*)&gRcpDistortAmbColor);
+    GXSetChanAmbColor(GX_COLOR0A0, *(GXColor8*)&gRcpDistortAmbColor);
+    GXSetChanAmbColor(GX_COLOR1A1, *(GXColor8*)&gRcpDistortAmbColor);
     GXSetTexCopyDst(0x20, 0x20, GX_TF_RGBA8, GX_FALSE);
     modelTextureFn_80089970(2);
     i = 0;
@@ -780,7 +951,7 @@ void gxTextureFn_80052efc(void)
     resetLotsOfRenderVars();
     textureFn_800524ec(&gRcpDistortMatColor);
     textureFn_800528bc();
-    GXSetChanMatColor(GX_COLOR0, *(GXColor*)&gRcpDistortMatColor);
+    GXSetChanMatColor(GX_COLOR0, *(GXColor8*)&gRcpDistortMatColor);
     clearSlot = 5;
     k = 5;
     e = gRcpDistortSlots + 0x8c;
@@ -823,42 +994,6 @@ void gxTextureFn_80052efc(void)
     Camera_ApplyFullViewport();
     gRcpDistortGroup = 0;
 }
-int textureFn_80052bb4(int model, f32* params)
-{
-    ModelLightStruct* la;
-    ModelLightStruct* lb;
-    la = fn_80089A58();
-    lb = fn_80089A50();
-    if (la == NULL || lb == NULL)
-    {
-        return 0;
-    }
-    modelLightChannels_reset(1);
-    modelLightChannel_configure(0, 1, 0);
-    modelLightChannel_configure(2, 0, 0);
-    modelLightStruct_setSpecularAttenuation(la, params[0], lbl_803DEB60);
-    modelLightStruct_setSpecularColor(la, 0xff, 0, 0, 0xff);
-    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
-    modelLightStruct_setSpecularAttenuation(la, params[1], lbl_803DEB60);
-    modelLightStruct_setSpecularColor(la, 0, 0, 0xff, 0xff);
-    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
-    modelLightStruct_setAngularAttenuation(la, lbl_803DEB70, lbl_803DEB60, lbl_803DEB60);
-    modelLightStruct_loadChannelLight(2, (u8*)la, (u8*)model);
-    modelLightChannel_configure(1, 1, 0);
-    modelLightChannel_configure(3, 0, 0);
-    modelLightStruct_setSpecularAttenuation(lb, params[0], lbl_803DEB60);
-    modelLightStruct_setSpecularColor(lb, 0xff, 0, 0, 0xff);
-    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
-    modelLightStruct_setSpecularAttenuation(lb, params[1], lbl_803DEB60);
-    modelLightStruct_setSpecularColor(lb, 0, 0, 0xff, 0xff);
-    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
-    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB74, lbl_803DEB60, lbl_803DEB60);
-    modelLightStruct_loadChannelLight(3, (u8*)lb, (u8*)model);
-    modelLightChannels_applyGXControls();
-    modelLightStruct_setAngularAttenuation(la, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);
-    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);
-    return 0;
-}
 void gxFn_80052dc0(void)
 {
     f32 omtx[4][4];
@@ -884,83 +1019,6 @@ void gxFn_80052dc0(void)
     GXLoadNrmMtxImm(pmtx, GX_PNMTX0);
     GXSetCurrentMtx(GX_PNMTX0);
 }
-
-static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
-{
-    s32 count;
-    int n;
-    modelLightStruct_selectObjectLights(model, lights, 8, &count, 4);
-    modelLightChannels_reset(1);
-    modelLightChannel_configure(0, 0, 0);
-    for (n = 0; n < count; n++)
-    {
-        modelLightStruct_loadChannelLight(0, (u8*)lights[n], (u8*)model);
-    }
-    modelLightChannels_applyGXControls();
-}
-
-void textureFn_800524ec(int* param)
-{
-    int sel_color;
-    int sel_alpha;
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    gxTextureFn_8004bf88(param, 0, 1, &sel_color, &sel_alpha);
-    GXSetTevKAlphaSel(lbl_803DCD90, sel_alpha);
-    if (lbl_803DCD6A == 0 || lbl_803DCD30 == 0)
-    {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_RASC);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_KONST);
-    }
-    else
-    {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_RASC, GX_CC_ZERO);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_APREV, GX_CA_KONST, GX_CA_ZERO);
-    }
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A++;
-}
-
-void textureFn_800528bc(void)
-{
-    GXSetNumTexGens(lbl_803DCD69);
-    GXSetNumTevStages(lbl_803DCD6A);
-    GXSetNumIndStages(lbl_803DCD68);
-}
-void resetLotsOfRenderVars(void)
-{
-    lbl_803DCD58 = 30;
-    lbl_803DCD84 = 30;
-    lbl_803DCD54 = 64;
-    lbl_803DCD80 = 64;
-    lbl_803DCD64 = 0;
-    lbl_803DCD90 = 0;
-    lbl_803DCD5C = 0;
-    lbl_803DCD88 = 0;
-    lbl_803DCD60 = 0;
-    lbl_803DCD8C = 0;
-    lbl_803DCD50 = 0;
-    lbl_803DCD7C = 0;
-    lbl_803DCD4C = 4;
-    lbl_803DCD78 = 4;
-    lbl_803DCD74 = 0;
-    lbl_803DCD70 = 12;
-    lbl_803DCD6C = 28;
-    lbl_803DCD6B = 0;
-    lbl_803DCD4B = 0;
-    lbl_803DCD6A = 0;
-    lbl_803DCD4A = 0;
-    lbl_803DCD69 = 0;
-    lbl_803DCD49 = 0;
-    lbl_803DCD68 = 0;
-    lbl_803DCD48 = 0;
-    lbl_803DCD30 = 0;
-}
-
 void ShaderDef_free(int* def)
 {
     void* s;
@@ -1284,41 +1342,6 @@ void fn_80053C40(u8* tex, u8* obj)
     else
     {
         GXInitTexObjLOD(obj, ((Texture*)tex)->minFilter, ((Texture*)tex)->magFilter, 0.0f, 0.0f, 0.0f, 0, 0, 0);
-    }
-}
-
-
-void textureFn_80053d58(void* vobj)
-{
-    u8* obj = (u8*)vobj;
-    u8 mipmap = 0;
-    void* texObj;
-    *(int*)(obj + 64) = mipmap;
-    ((Texture*)obj)->preloaded = mipmap;
-    texObj = (void*)(obj + 32);
-    if ((int)((Texture*)obj)->maxLod - (int)((Texture*)obj)->minLod > 0)
-        mipmap = 1;
-    GXInitTexObj(texObj, obj + 96, ((Texture*)obj)->width, ((Texture*)obj)->height, ((Texture*)obj)->format,
-                 ((Texture*)obj)->wrapS, ((Texture*)obj)->wrapT, mipmap);
-    if (mipmap != 0)
-    {
-        GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter, (f32)(u32)obj[28],
-                        (f32)(s32)obj[29], /* minLod/maxLod */
-                        lbl_803DEB98, 0, 0, 0);
-    }
-    else
-    {
-        GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter, lbl_803DEB9C, lbl_803DEB9C,
-                        lbl_803DEB9C, 0, 0, 0);
-    }
-    GXInitTexObjUserData(texObj, obj);
-    {
-        u16 w;
-        u16 h;
-        int fmt = GXGetTexObjFmt(texObj);
-        w = GXGetTexObjWidth(texObj);
-        h = GXGetTexObjHeight(texObj);
-        *(u32*)(obj + 68) = GXGetTexBufferSize(w, h, fmt, 0, 0);
     }
 }
 
@@ -1973,6 +1996,40 @@ void* textureLoadAsset(int asset)
         return NULL;
     loadTextureFile(&out, asset);
     return out;
+}
+
+void textureFn_80053d58(void* vobj)
+{
+    u8* obj = (u8*)vobj;
+    u8 mipmap = 0;
+    void* texObj;
+    *(int*)(obj + 64) = mipmap;
+    ((Texture*)obj)->preloaded = mipmap;
+    texObj = (void*)(obj + 32);
+    if ((int)((Texture*)obj)->maxLod - (int)((Texture*)obj)->minLod > 0)
+        mipmap = 1;
+    GXInitTexObj(texObj, obj + 96, ((Texture*)obj)->width, ((Texture*)obj)->height, ((Texture*)obj)->format,
+                 ((Texture*)obj)->wrapS, ((Texture*)obj)->wrapT, mipmap);
+    if (mipmap != 0)
+    {
+        GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter, (f32)(u32)obj[28],
+                        (f32)(s32)obj[29], /* minLod/maxLod */
+                        lbl_803DEB98, 0, 0, 0);
+    }
+    else
+    {
+        GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter, lbl_803DEB9C, lbl_803DEB9C,
+                        lbl_803DEB9C, 0, 0, 0);
+    }
+    GXInitTexObjUserData(texObj, obj);
+    {
+        u16 w;
+        u16 h;
+        int fmt = GXGetTexObjFmt(texObj);
+        w = GXGetTexObjWidth(texObj);
+        h = GXGetTexObjHeight(texObj);
+        *(u32*)(obj + 68) = GXGetTexBufferSize(w, h, fmt, 0, 0);
+    }
 }
 
 void loadTextureFiles(void)

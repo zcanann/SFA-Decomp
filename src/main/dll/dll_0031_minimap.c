@@ -751,7 +751,6 @@ static inline void Minimap_freeObjectSlots(GameObject** slots, int count)
     }
 }
 
-
 void fn_80133934(void)
 {
     if (minimapTexture != NULL)
@@ -1004,6 +1003,7 @@ void Minimap_setupCompassBlip(void)
         ((GameObject*)lbl_803DBBC8[i])->anim.rootMotionScale = scale;
     }
 }
+
 void Minimap_release(void)
 {
     if (minimapTexture != NULL)

@@ -765,40 +765,7 @@ int arrayIndexOf(int* arr, int count, int target)
     }
     return -1;
 }
-void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
-{
-    int key;
-    int val;
-    int i;
-    int j;
-    int gap;
-
-    gap = 1;
-    while (gap <= (n - 1) / 9)
-    {
-        gap = gap * 3 + 1;
-    }
-    for (; gap > 0; gap /= 3)
-    {
-        for (i = gap + 1; i < n; i++)
-        {
-            key = arr[i].key;
-            val = arr[i].val;
-            j = i;
-            while (j > gap && arr[j - gap].key > key)
-            {
-                arr[j].key = arr[j - gap].key;
-                arr[j].val = arr[j - gap].val;
-                j -= gap;
-            }
-            arr[j].key = key;
-            arr[j].val = val;
-        }
-    }
-    for (i = 1; i < n; i++)
-    {
-    }
-}
+void objSeqInitFn_8007feac(SeqSortPair* arr, int n);
 
 int seqStreamLookupFn_8007fff8(void* entries, int count, int key)
 {
@@ -851,6 +818,41 @@ void objSeqInitFn_80080078(void* entries, int n)
     if (n > 0x10)
     {
         objSeqInitFn_8007feac(arr, n);
+    }
+}
+
+void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
+{
+    int key;
+    int val;
+    int i;
+    int j;
+    int gap;
+
+    gap = 1;
+    while (gap <= (n - 1) / 9)
+    {
+        gap = gap * 3 + 1;
+    }
+    for (; gap > 0; gap /= 3)
+    {
+        for (i = gap + 1; i < n; i++)
+        {
+            key = arr[i].key;
+            val = arr[i].val;
+            j = i;
+            while (j > gap && arr[j - gap].key > key)
+            {
+                arr[j].key = arr[j - gap].key;
+                arr[j].val = arr[j - gap].val;
+                j -= gap;
+            }
+            arr[j].key = key;
+            arr[j].val = val;
+        }
+    }
+    for (i = 1; i < n; i++)
+    {
     }
 }
 

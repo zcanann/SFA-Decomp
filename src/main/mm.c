@@ -84,6 +84,7 @@ extern void LCQueueWait();
 extern void* memcpy(void* dst, const void* src, int n);
 
 void mmFreeDeferred(void* p);
+int testAndSet_onlyUseHeaps1and2(int v);
 void mmFree(void* p);
 void* mmAlloc(int size, int type, int flag);
 
@@ -257,16 +258,6 @@ int mmCreateMemoryStore(int size)
     return store->handle;
 }
 
-int testAndSet_onlyUseHeaps1and2(int v)
-{
-    gMmOpCount++;
-    {
-        int old = gMmUseHeaps1and2;
-        gMmUseHeaps1and2 = v;
-        return old;
-    }
-}
-
 int testAndSet_onlyUseHeap3(int v)
 {
     gMmOpCount++;
@@ -360,46 +351,6 @@ DeferredFree gMmDeferredFreeStack[0x3E80 / sizeof(DeferredFree)];
 
 void* gMmStoreArray[0x20];
 
-void heapFree(int region, int idx)
-{
-    s16 next;
-    s16 prev;
-    HeapItem* base = (HeapItem*)gMmRegionTable[region].start;
-    next = base[idx].next;
-    prev = base[idx].prev;
-    base[idx].type = 0;
-    gMmOpCount++;
-    gMmRegionTable[region].usedBytes -= base[idx].size;
-    if (gMmRegionTable[region].usedBytes < 0 || gMmRegionTable[region].usedBytes > gMmRegionTable[region].size)
-    {
-        OSReport(sMmFreeMemoryUsageCorruptedError);
-    }
-    if (next != -1 && base[next].type == 0)
-    {
-        s16 nn;
-        base[idx].size += base[next].size;
-        nn = base[next].next;
-        base[idx].next = nn;
-        if (nn != -1)
-        {
-            base[nn].prev = idx;
-        }
-        base[--gMmRegionTable[region].slotCount].stack = next;
-    }
-    if (prev != -1 && base[prev].type == 0)
-    {
-        s16 in;
-        base[prev].size += base[idx].size;
-        in = base[idx].next;
-        base[prev].next = in;
-        if (in != -1)
-        {
-            base[in].prev = prev;
-        }
-        base[--gMmRegionTable[region].slotCount].stack = idx;
-    }
-}
-
 int mmGetRegionForPtr(u8* ptr)
 {
     int i;
@@ -470,6 +421,46 @@ void mmFree(void* p)
         } while (i != -1);
     }
     OSReport(sMmAllocFreeMessageBlock, p);
+}
+
+void heapFree(int region, int idx)
+{
+    s16 next;
+    s16 prev;
+    HeapItem* base = (HeapItem*)gMmRegionTable[region].start;
+    next = base[idx].next;
+    prev = base[idx].prev;
+    base[idx].type = 0;
+    gMmOpCount++;
+    gMmRegionTable[region].usedBytes -= base[idx].size;
+    if (gMmRegionTable[region].usedBytes < 0 || gMmRegionTable[region].usedBytes > gMmRegionTable[region].size)
+    {
+        OSReport(sMmFreeMemoryUsageCorruptedError);
+    }
+    if (next != -1 && base[next].type == 0)
+    {
+        s16 nn;
+        base[idx].size += base[next].size;
+        nn = base[next].next;
+        base[idx].next = nn;
+        if (nn != -1)
+        {
+            base[nn].prev = idx;
+        }
+        base[--gMmRegionTable[region].slotCount].stack = next;
+    }
+    if (prev != -1 && base[prev].type == 0)
+    {
+        s16 in;
+        base[prev].size += base[idx].size;
+        in = base[idx].next;
+        base[prev].next = in;
+        if (in != -1)
+        {
+            base[in].prev = prev;
+        }
+        base[--gMmRegionTable[region].slotCount].stack = idx;
+    }
 }
 
 void mmFreeTick(int arg)
@@ -921,42 +912,7 @@ void* mmAlloc(int size, int type, int flag)
     }
     return result;
 }
-void* mmInitRegion(u8* buf, int size, int numSlots)
-{
-    int regIdx = gMmRegionCount++;
-    int slotsBytes = numSlots * 0x1c;
-    int after = size - slotsBytes;
-    int i;
-    HeapItem* slot;
-    int freePtr;
-    gMmRegionTable[regIdx].numSlots = numSlots;
-    gMmRegionTable[regIdx].slotCount = 0;
-    gMmRegionTable[regIdx].start = buf;
-    gMmRegionTable[regIdx].size = size;
-    gMmRegionTable[regIdx].usedBytes = 0;
-    slot = (HeapItem*)gMmRegionTable[regIdx].start;
-    for (i = 0; i < gMmRegionTable[regIdx].numSlots; i++)
-    {
-        slot->stack = i;
-        slot++;
-    }
-    slot = (HeapItem*)gMmRegionTable[regIdx].start;
-    freePtr = (int)buf + slotsBytes;
-    if (freePtr & 0x1f)
-    {
-        *(int*)&slot->key = (freePtr & ~0x1f) + 0x20;
-    }
-    else
-    {
-        *(int*)&slot->key = freePtr;
-    }
-    slot->size = after;
-    slot->type = 0;
-    slot->prev = -1;
-    slot->next = -1;
-    gMmRegionTable[regIdx].slotCount++;
-    return gMmRegionTable[regIdx].start;
-}
+void* mmInitRegion(u8* buf, int size, int numSlots);
 
 void mmInit(void)
 {
@@ -992,6 +948,43 @@ void mmInit(void)
     gMmOpCount++;
     gMmFreeDelay = 2;
     gMmDeferredFreeCount = 0;
+}
+
+void* mmInitRegion(u8* buf, int size, int numSlots)
+{
+    int regIdx = gMmRegionCount++;
+    int slotsBytes = numSlots * 0x1c;
+    int after = size - slotsBytes;
+    int i;
+    HeapItem* slot;
+    int freePtr;
+    gMmRegionTable[regIdx].numSlots = numSlots;
+    gMmRegionTable[regIdx].slotCount = 0;
+    gMmRegionTable[regIdx].start = buf;
+    gMmRegionTable[regIdx].size = size;
+    gMmRegionTable[regIdx].usedBytes = 0;
+    slot = (HeapItem*)gMmRegionTable[regIdx].start;
+    for (i = 0; i < gMmRegionTable[regIdx].numSlots; i++)
+    {
+        slot->stack = i;
+        slot++;
+    }
+    slot = (HeapItem*)gMmRegionTable[regIdx].start;
+    freePtr = (int)buf + slotsBytes;
+    if (freePtr & 0x1f)
+    {
+        *(int*)&slot->key = (freePtr & ~0x1f) + 0x20;
+    }
+    else
+    {
+        *(int*)&slot->key = freePtr;
+    }
+    slot->size = after;
+    slot->type = 0;
+    slot->prev = -1;
+    slot->next = -1;
+    gMmRegionTable[regIdx].slotCount++;
+    return gMmRegionTable[regIdx].start;
 }
 
 void* AtomicSList_Pop(void** list)
@@ -1060,6 +1053,16 @@ void* stackCreate(int count, int size)
         cur = (void**)*cur;
     }
     return s;
+}
+
+int testAndSet_onlyUseHeaps1and2(int v)
+{
+    gMmOpCount++;
+    {
+        int old = gMmUseHeaps1and2;
+        gMmUseHeaps1and2 = v;
+        return old;
+    }
 }
 
 /* dtk-split chunk of MWCC's pooled OSReport format strings (truncated at the symbol boundary), so it is emitted as raw bytes. */

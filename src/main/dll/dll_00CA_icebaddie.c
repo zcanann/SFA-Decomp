@@ -947,29 +947,64 @@ int iceBaddie_updateOpenHitState(GameObject* obj, int state)
     return 0;
 }
 
-void iceBaddie_spawnIceBall(int* obj, int* state)
+void iceBaddie_spawnIceBall(int* obj, int* state);
+void iceBaddie_updateControlEffects(GameObject* obj, int state);
+void iceBaddie_tryAcquireTarget(int obj, int sub, int state);
+void iceBaddie_updateTargetMotion(GameObject* obj, int sub, int state);
+void iceBaddie_updateTargetCollision(int obj, int sub, int state);
+
+void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
 {
-    IceBallSetup* alloc;
-    GameObject* new_obj;
-    if ((u8)Obj_IsLoadingLocked() != 0)
+    GroundBaddieState* sub;
+    int setup;
+
+    sub = (obj)->extra;
+    setup = *(int*)&(obj)->anim.placementData;
+    if ((obj)->userData1 != 0)
     {
-        alloc = (IceBallSetup*)Obj_AllocObjectSetup(36, ICEBADDIE_CHILD_OBJ_ICEBALL);
-        alloc->head.posX = ((GroundBaddieState*)state)->baddie.posX;
-        alloc->head.posY = ((GroundBaddieState*)state)->baddie.posY;
-        alloc->head.posZ = ((GroundBaddieState*)state)->baddie.posZ;
-        alloc->head.color[0] = 1;
-        alloc->head.color[1] = 1;
-        alloc->head.color[2] = 255;
-        alloc->head.color[3] = 255;
-        alloc->gameBit = -1;
-        alloc->gameBit2 = -1;
-        new_obj = Obj_SetupObject(&alloc->head, 5, -1, -1, NULL);
-        if (new_obj != NULL)
+        if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
+            (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) != 0)
         {
-            new_obj->anim.velocityX = ((GroundBaddieState*)state)->baddie.velX;
-            new_obj->anim.velocityY = ((GroundBaddieState*)state)->baddie.velY;
-            new_obj->anim.velocityZ = ((GroundBaddieState*)state)->baddie.velZ;
-            *(int**)&new_obj->ownerObj = obj;
+            (*(void (**)(int, int, int, int, int, int, int, f32))(*(int*)gBaddieControlInterface + 0x58))(
+                (int)obj, setup, (int)sub, 14, 8, 0x102, 0x26, 20.0f);
+            sub->targetState = 0;
+            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_seal4_c_263);
+            ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
+            *(s8*)&sub->baddie.moveDone = 0;
+            (obj)->anim.alpha = 0xff;
+            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        }
+    }
+    else if ((obj)->userData2 == 0)
+    {
+        (obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
+        (obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
+        (obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
+        (*gObjectTriggerInterface)->runSequence(*(s8*)(setup + 0x2e), (void*)obj, -1);
+        (obj)->userData2 = 1;
+    }
+    else
+    {
+        if ((*(int (**)(int, int, int))(*(int*)gBaddieControlInterface + 0x30))((int)obj, (int)sub, 0) == 0)
+        {
+            sub->targetState = 0;
+        }
+        else
+        {
+            iceBaddie_updateTargetCollision((int)obj, (int)sub, (int)sub);
+            iceBaddie_updateControlEffects(obj, (int)sub);
+            if (sub->targetState == 0)
+            {
+                iceBaddie_tryAcquireTarget((int)obj, (int)sub, (int)sub);
+            }
+            else
+            {
+                iceBaddie_updateTargetMotion(obj, (int)sub, (int)sub);
+            }
+            if ((sub->configFlags & 2) != 0)
+            {
+                (obj)->anim.localPosY = ((ObjPlacement*)setup)->posY - 8.0f;
+            }
         }
     }
 }
@@ -1052,6 +1087,33 @@ void iceBaddie_updateControlEffects(GameObject* obj, int state)
         }
     }
     ((IceBaddieControl*)control)->effectFlags = 0;
+}
+
+void iceBaddie_spawnIceBall(int* obj, int* state)
+{
+    IceBallSetup* alloc;
+    GameObject* new_obj;
+    if ((u8)Obj_IsLoadingLocked() != 0)
+    {
+        alloc = (IceBallSetup*)Obj_AllocObjectSetup(36, ICEBADDIE_CHILD_OBJ_ICEBALL);
+        alloc->head.posX = ((GroundBaddieState*)state)->baddie.posX;
+        alloc->head.posY = ((GroundBaddieState*)state)->baddie.posY;
+        alloc->head.posZ = ((GroundBaddieState*)state)->baddie.posZ;
+        alloc->head.color[0] = 1;
+        alloc->head.color[1] = 1;
+        alloc->head.color[2] = 255;
+        alloc->head.color[3] = 255;
+        alloc->gameBit = -1;
+        alloc->gameBit2 = -1;
+        new_obj = Obj_SetupObject(&alloc->head, 5, -1, -1, NULL);
+        if (new_obj != NULL)
+        {
+            new_obj->anim.velocityX = ((GroundBaddieState*)state)->baddie.velX;
+            new_obj->anim.velocityY = ((GroundBaddieState*)state)->baddie.velY;
+            new_obj->anim.velocityZ = ((GroundBaddieState*)state)->baddie.velZ;
+            *(int**)&new_obj->ownerObj = obj;
+        }
+    }
 }
 
 void iceBaddie_updateEffectAnchors(GameObject* obj, int state)
@@ -1314,62 +1376,6 @@ void iceBaddie_hitDetect(int obj)
 {
     ((void (*)(int, int, u8*))((void**)*gPlayerInterface)[3])(obj, *(int*)&((GameObject*)obj)->extra,
                                                               gIceBaddieStateHandlersA);
-}
-
-void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
-{
-    GroundBaddieState* sub;
-    int setup;
-
-    sub = (obj)->extra;
-    setup = *(int*)&(obj)->anim.placementData;
-    if ((obj)->userData1 != 0)
-    {
-        if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
-            (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) != 0)
-        {
-            (*(void (**)(int, int, int, int, int, int, int, f32))(*(int*)gBaddieControlInterface + 0x58))(
-                (int)obj, setup, (int)sub, 14, 8, 0x102, 0x26, 20.0f);
-            sub->targetState = 0;
-            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_seal4_c_263);
-            ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
-            *(s8*)&sub->baddie.moveDone = 0;
-            (obj)->anim.alpha = 0xff;
-            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        }
-    }
-    else if ((obj)->userData2 == 0)
-    {
-        (obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
-        (obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
-        (obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
-        (*gObjectTriggerInterface)->runSequence(*(s8*)(setup + 0x2e), (void*)obj, -1);
-        (obj)->userData2 = 1;
-    }
-    else
-    {
-        if ((*(int (**)(int, int, int))(*(int*)gBaddieControlInterface + 0x30))((int)obj, (int)sub, 0) == 0)
-        {
-            sub->targetState = 0;
-        }
-        else
-        {
-            iceBaddie_updateTargetCollision((int)obj, (int)sub, (int)sub);
-            iceBaddie_updateControlEffects(obj, (int)sub);
-            if (sub->targetState == 0)
-            {
-                iceBaddie_tryAcquireTarget((int)obj, (int)sub, (int)sub);
-            }
-            else
-            {
-                iceBaddie_updateTargetMotion(obj, (int)sub, (int)sub);
-            }
-            if ((sub->configFlags & 2) != 0)
-            {
-                (obj)->anim.localPosY = ((ObjPlacement*)setup)->posY - 8.0f;
-            }
-        }
-    }
 }
 
 void iceBaddie_init(int obj, u8* params, int flags)

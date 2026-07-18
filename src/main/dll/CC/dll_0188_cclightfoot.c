@@ -123,37 +123,7 @@ void cclightfoot_free(int* obj, int flag)
 }
 
 
-void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
-{
-    s16 move;
-    if (CC_LIGHTFOOT_DIST_SENTINEL == dist)
-    {
-        state->state = CCLIGHTFOOT_STATE_DORMANT;
-        return;
-    }
-    if ((state->flags & 2) != 0)
-    {
-        state->state = CCLIGHTFOOT_STATE_INTRO;
-        return;
-    }
-    if (dist < 3025.0f)
-    {
-        move = ((GameObject*)targetObj)->anim.currentMove;
-        if (move == 24 && ((GameObject*)targetObj)->anim.currentMoveProgress > 0.2f)
-        {
-            state->state = CCLIGHTFOOT_STATE_PARRY;
-            return;
-        }
-        if (move == 25)
-        {
-            state->state = CCLIGHTFOOT_STATE_GUARD;
-            return;
-        }
-        state->state = CCLIGHTFOOT_STATE_REACT;
-        return;
-    }
-    state->state = CCLIGHTFOOT_STATE_APPROACH;
-}
+void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist);
 
 extern u8 gCcLightfootAnimTable[];
 u8 gCcLightfootHitCooldown[8];
@@ -627,6 +597,38 @@ void cclightfoot_update(int obj)
     {
         state->flags &= ~1;
     }
+}
+
+void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
+{
+    s16 move;
+    if (CC_LIGHTFOOT_DIST_SENTINEL == dist)
+    {
+        state->state = CCLIGHTFOOT_STATE_DORMANT;
+        return;
+    }
+    if ((state->flags & 2) != 0)
+    {
+        state->state = CCLIGHTFOOT_STATE_INTRO;
+        return;
+    }
+    if (dist < 3025.0f)
+    {
+        move = ((GameObject*)targetObj)->anim.currentMove;
+        if (move == 24 && ((GameObject*)targetObj)->anim.currentMoveProgress > 0.2f)
+        {
+            state->state = CCLIGHTFOOT_STATE_PARRY;
+            return;
+        }
+        if (move == 25)
+        {
+            state->state = CCLIGHTFOOT_STATE_GUARD;
+            return;
+        }
+        state->state = CCLIGHTFOOT_STATE_REACT;
+        return;
+    }
+    state->state = CCLIGHTFOOT_STATE_APPROACH;
 }
 
 void cclightfoot_init(int* obj, int* def)

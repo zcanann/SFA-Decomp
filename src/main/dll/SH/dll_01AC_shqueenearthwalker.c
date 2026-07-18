@@ -81,47 +81,6 @@ ObjectDescriptor gSH_queenearthwalkerObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)sh_queenearthwalker_getExtraSize,
 };
 
-void openPortalFn_801d4364(GameObject* obj, void* state)
-{
-    void* player;
-
-    player = Obj_GetPlayerObject();
-    (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
-    if (mainGetBit(0xc48) != 0)
-    {
-        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
-    }
-    else if (mainGetBit(GAMEBIT_SH_Related023C) != 0)
-    {
-        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTablePortalReady;
-    }
-    else if (mainGetBit(GAMEBIT_STAFF_ABILITY_OPEN_PORTAL) != 0)
-    {
-        (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-        if (playerHasSpell((GameObject*)(player), 3) != 0 &&
-            getXZDistance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) <
-                gQueenEarthWalkerPortalSpellDistance)
-        {
-            mainSetBits(0x23b, 1);
-        }
-    }
-    else if (mainGetBit(GAMEBIT_SH_RescuedEggs) != 0)
-    {
-        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
-    }
-    else
-    {
-        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTablePortalDefault;
-    }
-
-    player = Obj_GetPlayerObject();
-    ((u8*)state)[8] = 1;
-    ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
-    ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
-    ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
-    fn_8003B500FloatLegacy(obj, (s16*)((int)state + 0x8), lbl_803E53F8);
-}
-
 void queenFeedFn_801d44a4(GameObject* obj, void* state)
 {
     s16 triggerId;
@@ -388,6 +347,47 @@ void sh_queenearthwalker_update(GameObject* obj)
     {
         Sfx_PlayFromObject((u32)obj, SFXTRIG_thorntail);
     }
+}
+
+void openPortalFn_801d4364(GameObject* obj, void* state)
+{
+    void* player;
+
+    player = Obj_GetPlayerObject();
+    (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+    if (mainGetBit(0xc48) != 0)
+    {
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
+    }
+    else if (mainGetBit(GAMEBIT_SH_Related023C) != 0)
+    {
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTablePortalReady;
+    }
+    else if (mainGetBit(GAMEBIT_STAFF_ABILITY_OPEN_PORTAL) != 0)
+    {
+        (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        if (playerHasSpell((GameObject*)(player), 3) != 0 &&
+            getXZDistance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) <
+                gQueenEarthWalkerPortalSpellDistance)
+        {
+            mainSetBits(0x23b, 1);
+        }
+    }
+    else if (mainGetBit(GAMEBIT_SH_RescuedEggs) != 0)
+    {
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
+    }
+    else
+    {
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTablePortalDefault;
+    }
+
+    player = Obj_GetPlayerObject();
+    ((u8*)state)[8] = 1;
+    ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
+    ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
+    ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
+    fn_8003B500FloatLegacy(obj, (s16*)((int)state + 0x8), lbl_803E53F8);
 }
 
 void sh_queenearthwalker_init(GameObject* obj, QueenEarthWalkerMapData* mapData)

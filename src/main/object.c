@@ -1166,31 +1166,6 @@ static inline void Obj_FreeDeferredObjects(void)
     }
 }
 
-int loadModLines(int idx, s16* outCount)
-{
-    int result;
-    int* hdr;
-    int size;
-    int start;
-
-    result = 0;
-    if (idx > (getDataFileSize(MLDF_FILEID_MODLINES_TAB) - 4) >> 2)
-    {
-        return 0;
-    }
-    hdr = mmAlloc(0x10, 0x1a, 0);
-    fileLoadToBufferOffset(MLDF_FILEID_MODLINES_TAB, hdr, idx << 2, 8);
-    start = hdr[0];
-    size = hdr[1] - hdr[0];
-    if (size > 0)
-    {
-        result = (int)mmAlloc(size, 5, 0);
-        fileLoadToBufferOffset(MLDF_FILEID_MODLINES_BIN, (void*)result, start, size);
-    }
-    mm_free(hdr);
-    *outCount = (u32)size / 20;
-    return result;
-}
 
 u8* loadObjectFile(int id)
 {
@@ -1800,89 +1775,6 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     return roundUpTo32(size);
 }
 
-void Obj_RegisterObject(GameObject* obj, int flags)
-{
-    ObjAnimComponent* object;
-    ObjHitsPriorityState* hitState;
-    int id;
-    int prev;
-    int cur;
-    int off;
-
-    object = &obj->anim;
-    if (object->parent != NULL)
-    {
-        Obj_TransformLocalPointToWorld(object->localPosX, object->localPosY, object->localPosZ, &object->worldPosX,
-                                       &object->worldPosY, &object->worldPosZ, (u32)object->parent);
-    }
-    else
-    {
-        object->worldPosX = object->localPosX;
-        object->worldPosY = object->localPosY;
-        object->worldPosZ = object->localPosZ;
-    }
-    object->previousWorldPosX = object->worldPosX;
-    object->previousWorldPosY = object->worldPosY;
-    object->previousWorldPosZ = object->worldPosZ;
-    object->previousLocalPosX = object->localPosX;
-    object->previousLocalPosY = object->localPosY;
-    object->previousLocalPosZ = object->localPosZ;
-    Obj_RunInitCallback((u8*)obj, (int)object->placementData, 0);
-    if (object->hitReactState != NULL)
-    {
-        ((ObjHitsPriorityState*)object->hitReactState)->localPosX = object->localPosX;
-        ((ObjHitsPriorityState*)object->hitReactState)->localPosY = object->localPosY;
-        ((ObjHitsPriorityState*)object->hitReactState)->localPosZ = object->localPosZ;
-        ((ObjHitsPriorityState*)object->hitReactState)->worldPosX = object->localPosX;
-        ((ObjHitsPriorityState*)object->hitReactState)->worldPosY = object->localPosY;
-        ((ObjHitsPriorityState*)object->hitReactState)->worldPosZ = object->localPosZ;
-    }
-    id = object->modelInstance->mapLoadObjectId;
-    if (id > -1)
-    {
-        mapLoadForObject(id, obj);
-    }
-    if (object->modelInstance->flags & 0x40)
-    {
-        ObjGroup_AddObject((u32)obj, OBJECT_OBJGROUP_HITBOX);
-        if (object->activeHitboxMode != 0x5a && (object->modelInstance->flags & 0x40))
-        {
-            object->activeHitboxMode = 0x5a;
-        }
-    }
-    else
-    {
-        if (object->activeHitboxMode == 0)
-        {
-            object->activeHitboxMode = 0x50;
-        }
-    }
-    if (flags & 1)
-    {
-        obj->objectFlags |= OBJECT_FLAG_IN_UPDATE_LIST;
-        ((GameObject**)gObjList)[gObjCount++] = obj;
-        if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
-        {
-            prev = 0;
-            cur = *(int*)((u8*)&gObjUpdateList + 4);
-            off = *(s16*)((u8*)&gObjUpdateList + 2);
-            while (cur != 0 && object->activeHitboxMode < *(s8*)(cur + 0xae))
-            {
-                prev = cur;
-                cur = *(int*)(cur + off);
-            }
-            objListAdd(&gObjUpdateList, prev, obj);
-        }
-    }
-    if (object->modelInstance->group8RegistrationCount > 0)
-    {
-        ObjGroup_AddObject((u32)obj, OBJECT_OBJGROUP_GROUP8);
-    }
-    if (object->modelInstance->flags & 1)
-    {
-        gObjPartitionPivot = 0;
-    }
-}
 
 void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused)
 {
@@ -2712,3 +2604,113 @@ char sObjDebugStrings[] = {
 };
 
 char sObjSetupObjectLoadingLockedWarning[] = "<objSetupObject>  loading is locked can't setup objno %d\n";
+
+int loadModLines(int idx, s16* outCount)
+{
+    int result;
+    int* hdr;
+    int size;
+    int start;
+
+    result = 0;
+    if (idx > (getDataFileSize(MLDF_FILEID_MODLINES_TAB) - 4) >> 2)
+    {
+        return 0;
+    }
+    hdr = mmAlloc(0x10, 0x1a, 0);
+    fileLoadToBufferOffset(MLDF_FILEID_MODLINES_TAB, hdr, idx << 2, 8);
+    start = hdr[0];
+    size = hdr[1] - hdr[0];
+    if (size > 0)
+    {
+        result = (int)mmAlloc(size, 5, 0);
+        fileLoadToBufferOffset(MLDF_FILEID_MODLINES_BIN, (void*)result, start, size);
+    }
+    mm_free(hdr);
+    *outCount = (u32)size / 20;
+    return result;
+}
+
+void Obj_RegisterObject(GameObject* obj, int flags)
+{
+    ObjAnimComponent* object;
+    ObjHitsPriorityState* hitState;
+    int id;
+    int prev;
+    int cur;
+    int off;
+
+    object = &obj->anim;
+    if (object->parent != NULL)
+    {
+        Obj_TransformLocalPointToWorld(object->localPosX, object->localPosY, object->localPosZ, &object->worldPosX,
+                                       &object->worldPosY, &object->worldPosZ, (u32)object->parent);
+    }
+    else
+    {
+        object->worldPosX = object->localPosX;
+        object->worldPosY = object->localPosY;
+        object->worldPosZ = object->localPosZ;
+    }
+    object->previousWorldPosX = object->worldPosX;
+    object->previousWorldPosY = object->worldPosY;
+    object->previousWorldPosZ = object->worldPosZ;
+    object->previousLocalPosX = object->localPosX;
+    object->previousLocalPosY = object->localPosY;
+    object->previousLocalPosZ = object->localPosZ;
+    Obj_RunInitCallback((u8*)obj, (int)object->placementData, 0);
+    if (object->hitReactState != NULL)
+    {
+        ((ObjHitsPriorityState*)object->hitReactState)->localPosX = object->localPosX;
+        ((ObjHitsPriorityState*)object->hitReactState)->localPosY = object->localPosY;
+        ((ObjHitsPriorityState*)object->hitReactState)->localPosZ = object->localPosZ;
+        ((ObjHitsPriorityState*)object->hitReactState)->worldPosX = object->localPosX;
+        ((ObjHitsPriorityState*)object->hitReactState)->worldPosY = object->localPosY;
+        ((ObjHitsPriorityState*)object->hitReactState)->worldPosZ = object->localPosZ;
+    }
+    id = object->modelInstance->mapLoadObjectId;
+    if (id > -1)
+    {
+        mapLoadForObject(id, obj);
+    }
+    if (object->modelInstance->flags & 0x40)
+    {
+        ObjGroup_AddObject((u32)obj, OBJECT_OBJGROUP_HITBOX);
+        if (object->activeHitboxMode != 0x5a && (object->modelInstance->flags & 0x40))
+        {
+            object->activeHitboxMode = 0x5a;
+        }
+    }
+    else
+    {
+        if (object->activeHitboxMode == 0)
+        {
+            object->activeHitboxMode = 0x50;
+        }
+    }
+    if (flags & 1)
+    {
+        obj->objectFlags |= OBJECT_FLAG_IN_UPDATE_LIST;
+        ((GameObject**)gObjList)[gObjCount++] = obj;
+        if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
+        {
+            prev = 0;
+            cur = *(int*)((u8*)&gObjUpdateList + 4);
+            off = *(s16*)((u8*)&gObjUpdateList + 2);
+            while (cur != 0 && object->activeHitboxMode < *(s8*)(cur + 0xae))
+            {
+                prev = cur;
+                cur = *(int*)(cur + off);
+            }
+            objListAdd(&gObjUpdateList, prev, obj);
+        }
+    }
+    if (object->modelInstance->group8RegistrationCount > 0)
+    {
+        ObjGroup_AddObject((u32)obj, OBJECT_OBJGROUP_GROUP8);
+    }
+    if (object->modelInstance->flags & 1)
+    {
+        gObjPartitionPivot = 0;
+    }
+}

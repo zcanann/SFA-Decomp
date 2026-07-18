@@ -27,8 +27,6 @@ typedef struct
 s16 gRollingBarrelExplodingCount;
 const RollingBarrelInitPair gRollingBarrelCurveInitPair = { 21, 0 };
 
-void fn_801A5D88(GameObject* obj, int explosionVariant);
-
 int RollingBarrel_getExtraSize(void)
 {
     return ROLLINGBARREL_EXTRA_SIZE;

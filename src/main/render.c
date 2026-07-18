@@ -431,58 +431,55 @@ void fn_80007F78(ObjAnimState* anim, s16* dst, s16* out)
         if ((hw & 0x10) != 0)
         {
             u64 nib3;
-            int skipSecond = 0;
 
-            h = *(u16*)(u32)tp;
-            if ((h & 0x10) != 0)
+            do
             {
-                u64 nib2 = h & 0xf;
-                if (nib2 != 0)
+                h = *(u16*)(u32)tp;
+                if ((h & 0x10) != 0)
                 {
-                    bitpos += nib2;
-                    if ((s64)bitpos > 64)
+                    u64 nib2 = h & 0xf;
+                    if (nib2 != 0)
                     {
-                        RENDER_BITS_REFILL(nib2)
+                        bitpos += nib2;
+                        if ((s64)bitpos > 64)
+                        {
+                            RENDER_BITS_REFILL(nib2)
+                        }
+                        bufA <<= (nib2 & 0xFFFFFFFF);
+                        bufB <<= (nib2 & 0xFFFFFFFF);
                     }
-                    bufA <<= (nib2 & 0xFFFFFFFF);
-                    bufB <<= (nib2 & 0xFFFFFFFF);
-                }
-                tp += 2;
-                if (((u32)h & 0x20) == 0)
-                {
-                    skipSecond = 1;
-                }
-                else
-                {
+                    tp += 2;
+                    if (((u32)h & 0x20) == 0)
+                    {
+                        sample = 0;
+                        break;
+                    }
                     h = *(u16*)(u32)tp;
                 }
-            }
-            nib3 = h & 0xf;
-            if (!skipSecond && nib3 != 0)
-            {
-                u64 masked2 = h & 0xFFF0;
-                bitpos += nib3;
-                if ((s64)bitpos > 64)
+                nib3 = h & 0xf;
+                if (nib3 != 0)
                 {
-                    RENDER_BITS_REFILL(nib3)
+                    u64 masked2 = h & 0xFFF0;
+                    bitpos += nib3;
+                    if ((s64)bitpos > 64)
+                    {
+                        RENDER_BITS_REFILL(nib3)
+                    }
+                    tmp = 64 - nib3;
+                    vA = bufA >> (tmp & 0xFFFFFFFF);
+                    tmp = bufB >> (tmp & 0xFFFFFFFF);
+                    tmp = tmp - vA;
+                    tmp = tmp * frac;
+                    for (i = 14; i != 0; i--)
+                    {
+                        *q /= 2;
+                    }
+                    sample = masked2 + (vA + tmp);
+                    bufA <<= (nib3 & 0xFFFFFFFF);
+                    bufB <<= (nib3 & 0xFFFFFFFF);
                 }
-                tmp = 64 - nib3;
-                vA = bufA >> (tmp & 0xFFFFFFFF);
-                tmp = bufB >> (tmp & 0xFFFFFFFF);
-                tmp = tmp - vA;
-                tmp = tmp * frac;
-                for (i = 14; i != 0; i--)
-                {
-                    *q /= 2;
-                }
-                sample = masked2 + (vA + tmp);
-                bufA <<= (nib3 & 0xFFFFFFFF);
-                bufB <<= (nib3 & 0xFFFFFFFF);
-            }
-            if (!skipSecond)
-            {
                 tp += 2;
-            }
+            } while (0);
         }
         *dst = sample;
         dst++;
