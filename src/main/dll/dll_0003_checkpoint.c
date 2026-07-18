@@ -525,6 +525,7 @@ extern f32 lbl_803E0518; /* used by Checkpoint_func07/06 */
 
 /* Project the object onto the current checkpoint segment, stepping the route
  * cursor forward or back and returning the segment heading. */
+#pragma opt_common_subs off
 int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
 {
     s32 slotC;
@@ -631,6 +632,7 @@ int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
     }
     return ang;
 }
+#pragma opt_common_subs reset
 
 extern f64 lbl_803E0520;
 extern f32 lbl_803E051C;
