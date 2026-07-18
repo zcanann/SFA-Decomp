@@ -175,6 +175,8 @@ STATIC_ASSERT(offsetof(SnowBikeState, collisionBounceScale) == 0x4AC);
 STATIC_ASSERT(offsetof(SnowBikeState, unk530) == 0x530);
 STATIC_ASSERT(offsetof(SnowBikeState, haloPitchDrift) == 0x594);
 
+extern f32 gDrCloudCageRouteDistGate;
+
 void SnowBike_update(GameObject* obj);
 void SnowBike_resetToRomListPosition(GameObject* obj);
 void fn_801EAE4C(GameObject* obj, SnowBikeState* state);
