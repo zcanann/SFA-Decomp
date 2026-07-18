@@ -89,7 +89,6 @@ extern const f32 lbl_803E06BC;
 extern const f32 lbl_803E06C0;
 
 RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
-RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll);
 
 
 static inline u32 RomCurve_GetId(RomCurveDef* curve)
