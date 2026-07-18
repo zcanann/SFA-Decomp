@@ -135,7 +135,6 @@ typedef struct ScMusictreeState
 } ScMusictreeState;
 
 void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 idx);
-void sc_musictree_handleHitObject(GameObject* obj, int extra, int effectType);
 
 int sc_musictree_getExtraSize(void) { return 0x50; }
 int sc_musictree_getObjectTypeId(void) { return 0x0; }
