@@ -162,12 +162,10 @@ STATIC_ASSERT(offsetof(ObjSeqAnimPlacement, sequenceSlot) == 0x1F);
 STATIC_ASSERT(offsetof(ObjSeqAnimPlacement, startOnLoad) == 0x22);
 STATIC_ASSERT(sizeof(ObjSeqAnimDataHeader) == 8);
 
-extern void ObjSeq_onMapSetup(void);
 extern int ObjSeq_func20(void* obj, u8* seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
 extern int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj);
 extern void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame);
 extern void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode);
-extern void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq);
 extern void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq);
 extern void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq);
 extern s16 gObjSeqBgCmds[];
