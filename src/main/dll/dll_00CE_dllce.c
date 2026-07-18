@@ -640,7 +640,7 @@ void dll_CE_func0B(GameObject* obj, int v)
     case 0x80:
         *(u8*)(*(int*)&sub->control + 9) |= 2;
         Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_264);
-        (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))((int)obj, (int)sub2, 1);
+        (*gPlayerInterface)->setState((void*)obj, (void*)sub2, 1);
         sub2->baddie.substate = 4;
         *(s8*)&sub2->baddie.moveJustStartedB = 1;
         break;
