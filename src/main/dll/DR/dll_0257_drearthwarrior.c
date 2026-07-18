@@ -41,6 +41,7 @@
 #include "main/maketex_timer_api.h"
 #include "main/vecmath.h"
 #include "main/dll/DIM/dll_01D9_dim2prisonmammoth.h"
+#include "main/newshadows.h"
 
 #define storeZeroToFloatParamLegacy(timer) \
     ((void (*)(int))storeZeroToFloatParam)((timer))
@@ -302,7 +303,6 @@ const EWColorTbl gDREarthWarriorColors = {
     {{8, 255, 190, 120}, {8, 255, 255, 120}, {8, 180, 240, 255}, {8, 170, 255, 170}}
 };
 extern EWModelChainEntry* gEarthWarriorTailChainDesc;
-extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
 
 void fn_802BCA10(GameObject* obj, int sub, int state);
 

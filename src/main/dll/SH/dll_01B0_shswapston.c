@@ -76,7 +76,6 @@ int lbl_803DDBF4;
 
 extern int playerHasKrazoaSpirit();
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
-extern int fn_80080360(int obj, int seqId);
 
 int warpstone_testEvent(u32 obj, u32 unused, int option)
 {
@@ -403,6 +402,7 @@ void warpstone_hitDetect(GameObject* obj)
 #include "main/dll/SC/SClantern.h"
 #include "main/audio/sfx.h"
 #include "main/dll/SC/dll_01B0_shswapston.h"
+#include "main/maketex_api.h"
 
 int lbl_803DC038 = 300;
 int lbl_803DC03C = 1;
