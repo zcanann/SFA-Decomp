@@ -574,7 +574,7 @@ void askProgressiveScanMode(void)
 
 
 
-u8 getButtonObjects(void** p)
+int getButtonObjects(int** p)
 {
     *p = gGameLoopButtonObjects;
     return gGameLoopButtonObjectCount;

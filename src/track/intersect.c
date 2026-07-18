@@ -6366,7 +6366,7 @@ void cardShowLoadingMsg(u8 kind)
         padUpdate();
         mmFreeTick(0);
         waitNextFrame();
-        count = getButtonObjectsLegacy(&buttons) & 0xFF;
+        count = getButtonObjects(&buttons) & 0xFF;
         if ((u32)count != 0)
         {
             draw = (*gScreenTransitionInterface)->init;

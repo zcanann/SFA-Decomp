@@ -20,9 +20,7 @@ void cutsceneFadeInOut(int mode);
 void setTimeStop(int frames);
 void doNothing_onSaveSelectScreenExit(void);
 void fn_8001FEA8(void);
-u8 getButtonObjects(void** objectsOut);
-
-#define getButtonObjectsLegacy(objectsOut) ((int (*)(int**))getButtonObjects)(objectsOut)
+int getButtonObjects(int** objectsOut);
 
 void addButtonObject(void* obj);
 
