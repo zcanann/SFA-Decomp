@@ -95,64 +95,6 @@ void worldobj_spawnGreatFoxEffects(GameObject* obj);
 void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId);
 void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-void worldobj_spawnGreatFoxEffects(GameObject* obj)
-{
-    WorldObjEffectParams params;
-    u8 i;
-    f32 scale;
-    f32 offsetScale;
-
-    for (i = 0, offsetScale = lbl_803E6640; i < GREAT_FOX_EFFECT_COUNT; i++)
-    {
-        GreatFoxFxEntry* e;
-        scale = obj->anim.rootMotionScale;
-        e = &gGreatFoxEffects[i];
-        params.offsetX = offsetScale * (scale * e->offsetX);
-        params.offsetY = offsetScale * (scale * e->offsetY);
-        params.offsetZ = offsetScale * (scale * e->offsetZ);
-        objfx_spawnMaskedHitEffectLegacy(obj, scale * e->effectScale, 3, e->effectType, e->mask, &params);
-    }
-    params.effectScale = lbl_803E6644;
-    params.offsetX = lbl_803E6640 * (lbl_803E6648 * obj->anim.rootMotionScale);
-    params.offsetY = lbl_803E6640 * (lbl_803E664C * obj->anim.rootMotionScale);
-    params.offsetZ = lbl_803E6640 * (lbl_803E6650 * obj->anim.rootMotionScale);
-    objfx_spawnLightPulseLegacy(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
-                          lbl_803E6658, &params);
-    params.offsetX = lbl_803E665C;
-    params.offsetY = lbl_803E6640 * (lbl_803E6660 * obj->anim.rootMotionScale);
-    params.offsetZ = lbl_803E6640 * (lbl_803E6664 * obj->anim.rootMotionScale);
-    objfx_spawnLightPulseLegacy(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
-                          lbl_803E6668, &params);
-    params.offsetX = lbl_803E6640 * (lbl_803E666C * obj->anim.rootMotionScale);
-    params.offsetY = lbl_803E6640 * (lbl_803E664C * obj->anim.rootMotionScale);
-    params.offsetZ = lbl_803E6640 * (lbl_803E6650 * obj->anim.rootMotionScale);
-    objfx_spawnLightPulseLegacy(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
-                          lbl_803E6658, &params);
-}
-void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId)
-{
-    s16 rot[3];
-    f32 vec[3];
-    WorldObjEffectParams params;
-    int i;
-    f32 base;
-
-    for (i = 0, base = lbl_803E665C; i < count; i++)
-    {
-        vec[0] = base;
-        vec[1] = (f32)(int)randomGetRange(xMin, xMax);
-        vec[2] = (f32)(int)randomGetRange(yMin, yMax);
-        rot[0] = 0;
-        rot[1] = 0;
-        rot[2] = randomGetRange(-0x7fff, 0x7fff);
-        vecRotateZXY(rot, vec);
-        params.offsetX = vec[0];
-        params.offsetY = vec[1];
-        params.offsetZ = vec[2];
-        params.dispatchTimer = 0x64;
-        (*gPartfxInterface)->spawnObject((void*)obj, dispatchId, &params, 2, -1, NULL);
-    }
-}
 
 int worldobj_getExtraSize(void)
 {
@@ -560,6 +502,64 @@ void worldobj_update(GameObject* obj)
             state->controlByte = 1;
         }
         break;
+    }
+}
+void worldobj_spawnGreatFoxEffects(GameObject* obj)
+{
+    WorldObjEffectParams params;
+    u8 i;
+    f32 scale;
+    f32 offsetScale;
+
+    for (i = 0, offsetScale = lbl_803E6640; i < GREAT_FOX_EFFECT_COUNT; i++)
+    {
+        GreatFoxFxEntry* e;
+        scale = obj->anim.rootMotionScale;
+        e = &gGreatFoxEffects[i];
+        params.offsetX = offsetScale * (scale * e->offsetX);
+        params.offsetY = offsetScale * (scale * e->offsetY);
+        params.offsetZ = offsetScale * (scale * e->offsetZ);
+        objfx_spawnMaskedHitEffectLegacy(obj, scale * e->effectScale, 3, e->effectType, e->mask, &params);
+    }
+    params.effectScale = lbl_803E6644;
+    params.offsetX = lbl_803E6640 * (lbl_803E6648 * obj->anim.rootMotionScale);
+    params.offsetY = lbl_803E6640 * (lbl_803E664C * obj->anim.rootMotionScale);
+    params.offsetZ = lbl_803E6640 * (lbl_803E6650 * obj->anim.rootMotionScale);
+    objfx_spawnLightPulseLegacy(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
+                          lbl_803E6658, &params);
+    params.offsetX = lbl_803E665C;
+    params.offsetY = lbl_803E6640 * (lbl_803E6660 * obj->anim.rootMotionScale);
+    params.offsetZ = lbl_803E6640 * (lbl_803E6664 * obj->anim.rootMotionScale);
+    objfx_spawnLightPulseLegacy(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
+                          lbl_803E6668, &params);
+    params.offsetX = lbl_803E6640 * (lbl_803E666C * obj->anim.rootMotionScale);
+    params.offsetY = lbl_803E6640 * (lbl_803E664C * obj->anim.rootMotionScale);
+    params.offsetZ = lbl_803E6640 * (lbl_803E6650 * obj->anim.rootMotionScale);
+    objfx_spawnLightPulseLegacy(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
+                          lbl_803E6658, &params);
+}
+void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId)
+{
+    s16 rot[3];
+    f32 vec[3];
+    WorldObjEffectParams params;
+    int i;
+    f32 base;
+
+    for (i = 0, base = lbl_803E665C; i < count; i++)
+    {
+        vec[0] = base;
+        vec[1] = (f32)(int)randomGetRange(xMin, xMax);
+        vec[2] = (f32)(int)randomGetRange(yMin, yMax);
+        rot[0] = 0;
+        rot[1] = 0;
+        rot[2] = randomGetRange(-0x7fff, 0x7fff);
+        vecRotateZXY(rot, vec);
+        params.offsetX = vec[0];
+        params.offsetY = vec[1];
+        params.offsetZ = vec[2];
+        params.dispatchTimer = 0x64;
+        (*gPartfxInterface)->spawnObject((void*)obj, dispatchId, &params, 2, -1, NULL);
     }
 }
 void worldobj_init(GameObject* obj, int arg)
