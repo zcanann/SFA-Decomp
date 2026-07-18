@@ -46,6 +46,7 @@
 #include "main/voxmaps.h"
 #include "string.h"
 #include "main/dll/dll_0105_largecrate.h"
+#include "main/dll/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/resource.h"
@@ -84,7 +85,6 @@ s16 lbl_803DD4C0;
 CamcontrolReticleObject* gCamcontrolTargetReticle;
 s8 gCamcontrolTargetChanged;
 
-extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
 u8 gCamcontrolStateStorage[0x148];
 CamcontrolHandlerEntry* gCamcontrolHandlerEntries[20];
 extern CamcontrolBaddieControlInterface** gBaddieControlInterface;

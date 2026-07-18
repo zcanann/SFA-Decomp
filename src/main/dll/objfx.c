@@ -598,7 +598,7 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chan
     }
 }
 
-void objShowButtonGlow(void* obj, u8 mode, f32 intensity)
+void objShowButtonGlow(void* obj, f32 intensity, u8 mode)
 {
     ObjFxParticleParams params;
     int i;

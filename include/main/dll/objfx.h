@@ -135,7 +135,7 @@ extern f32 lbl_803DF3A8;
 extern f32 lbl_803DF3AC;
 extern f32 lbl_803DF3B0;
 
-void objShowButtonGlow(void* obj, u8 mode, f32 intensity);
+void objShowButtonGlow(void* obj, f32 intensity, u8 mode);
 void objfx_spawnFlaggedTrailBurst(void* obj, f32 fval, u8 mode, int f6val, int f4val, void* origin);
 
 #endif /* MAIN_DLL_OBJFX_H_ */
