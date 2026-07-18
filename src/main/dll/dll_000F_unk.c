@@ -102,12 +102,6 @@ void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f3
     }
 }
 
-void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int unused);
-
-void player_applyVelocityStep(int* obj, int* ctx, f32 t);
-
-void fn_800D8414(int* obj, int* ctx);
-
 void player_updateParticles(int* obj, int unused, int effectId, int count, int mode)
 {
     while (count != 0 && obj != NULL)
