@@ -71,7 +71,6 @@ const ModelLightCornerBlock gModelLightCornerBlock = {{
     1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
     -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
     -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f}};
-ModelLightStruct* objAllocLight(void* owner);
 
 extern void* gModelLightList[0x32];
 
@@ -603,8 +602,6 @@ int modelLightStruct_getActiveState(ModelLightStruct* p)
 {
     return p->activeState;
 }
-
-void modelLightStruct_setEnabled(ModelLightStruct* light, u8 enabled, f32 duration);
 
 void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 near, f32 far)
 {
