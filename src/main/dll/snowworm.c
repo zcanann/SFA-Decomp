@@ -207,7 +207,7 @@ void fn_8015A52C(s16* obj)
 }
 
 
-void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int sub)
+void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int sub, void* wpad0, int wpad1)
 {
     u8* base;
     u32 r;
@@ -453,6 +453,6 @@ void crawler_initVariant(int* obj, int* st)
     ((FCVars*)st)->turnDelta = (u16)(((GameObject*)obj)->anim.seqId == 0x84b);
 }
 
-void whirlpool_updateWhileFrozen(void)
+void whirlpool_updateWhileFrozen(int wpad0, void* wpad1, int wpad2, int wpad3, int wpad4, int wpad5, void* wpad6, int wpad7)
 {
 }

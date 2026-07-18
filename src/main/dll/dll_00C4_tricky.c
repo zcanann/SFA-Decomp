@@ -262,14 +262,6 @@ extern f32 lbl_803E2590;
 extern f32 lbl_803E2594;
 extern f32 lbl_803E259C;
 extern void fn_802961FC(u8* proj, int result);
-extern void rachnopUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                     int sector);
-extern void baddieUpdateWhileFrozen_80155e10(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                             int sector);
-extern void whirlpool_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                        int sector);
-extern void snowworm_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
-                                       int sector);
 extern TrickySfxPair lbl_803E23C4;
 extern f32 lbl_803E24C8;
 extern f32 lbl_803E24D8;

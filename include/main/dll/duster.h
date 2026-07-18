@@ -13,7 +13,7 @@ void fn_80156010(u32 obj, int state);
 u32 FUN_8015536c(double param_1,short *param_2,int param_3,u32 param_4);
 void FUN_801556d4(double param_1,double param_2,float *param_3,float *param_4);
 void FUN_80155830(int *param_1,int param_2);
-void rachnopUpdateWhileFrozen(u32 param_1,int param_2,u32 param_3,int param_4);
+void rachnopUpdateWhileFrozen(u32 param_1,int param_2,u32 param_3,int param_4,int param_5,int param_6,void* param_7,int param_8);
 void FUN_80155b6c(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int *param_9,int param_10);
@@ -27,7 +27,7 @@ void rachnopInit(u32 param_1,int param_2);
 void pollenFn_80155b10(u32 param_9,int param_10);
 void timeOfDayFn_80155cf8(int param_9,int param_10);
 void baddieUpdateWhileFrozen_80155e10(u32 param_9,int param_10,u32 param_11,
-                                      int param_12,u32 param_13,int param_14);
+                                      int param_12,u32 param_13,int param_14,void* param_15,int param_16);
 void FUN_8015666c(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int param_9,int param_10);

@@ -253,7 +253,7 @@ void fn_801554B4(int* obj, int state)
     }
 }
 
-void rachnopUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind)
+void rachnopUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     if (eventKind == 0x10)
     {
@@ -392,7 +392,7 @@ void rachnopInit(u32 unused, int state)
 void pollenFn_80155b10(u32 obj, int state);
 void timeOfDayFn_80155cf8(int obj, int state);
 
-void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int eventKind, u32 unused2, int damage)
+void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int eventKind, u32 unused2, int damage, void* wpad0, int wpad1)
 {
     if (eventKind == 0x10)
     {

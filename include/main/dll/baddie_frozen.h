@@ -19,4 +19,9 @@ void battleDroidUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int
 void crawler_onHit(GameObject* obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
 void hagabonMK2_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
 
+void rachnopUpdateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+void baddieUpdateWhileFrozen_80155e10(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+void whirlpool_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+void snowworm_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
+
 #endif /* MAIN_DLL_BADDIE_FROZEN_H_ */
