@@ -93,12 +93,6 @@ s16 lbl_803DC19A = 0x2D8;
 #define BOSSDRAKOR_ENVFX_B 0x10d
 #define BOSSDRAKOR_ENVFX_C 0x10e
 
-void bossdrakor_release(void);
-void bossdrakor_initialise(void);
-void bossdrakor_update(int obj);
-void bossdrakor_hitDetect(GameObject* obj);
-void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init);
-
 
 int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -384,10 +378,6 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action)
     }
 }
 
-
-int bossdrakor_getExtraSize(void);
-void bossdrakor_free(GameObject* obj);
-void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
 
 int gBossDrakorMoveStateTable[5] = {1, 2, 3, 4, 5};
 int gBossDrakorMoveSpeedTable[5] = {400, 400, 400, 600, 600};
