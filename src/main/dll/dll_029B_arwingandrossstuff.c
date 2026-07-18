@@ -74,7 +74,7 @@ void arwprojectile_createLinkedEffect(GameObject* obj, u8 enable)
     if (state->light == NULL)
         return;
     modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
-    modelLightStruct_setPosition(state->light, lbl_803E7008, lbl_803E7008, lbl_803E7008);
+    modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 0.0f);
     lightSetFieldBC_8001db14(state->light, 1);
     if ((obj)->anim.seqId == ARW_SEQID_INVINCIBLE)
     {
@@ -114,7 +114,7 @@ void arwprojectile_placeForward(GameObject* obj, f32 dist)
     src.rotZ = 0;
     src.scale = lbl_803E701C;
     setMatrixFromObjectPos(mtx, &src);
-    Matrix_TransformPoint(mtx, lbl_803E7008, *(f32*)&lbl_803E7008, state->deflectSpeedScale, &obj->anim.velocityX,
+    Matrix_TransformPoint(mtx, 0.0f, 0.0f, state->deflectSpeedScale, &obj->anim.velocityX,
                           &obj->anim.velocityY, &obj->anim.velocityZ);
     obj->anim.rotX += 0x8000;
     obj->anim.rotY = -obj->anim.rotY;
@@ -371,7 +371,7 @@ void fn_8022ECE0(GameObject* obj, f32 lifetime)
     src.rotZ = 0;
     src.scale = lbl_803E704C;
     setMatrixFromObjectPos(mtx, &src);
-    Matrix_TransformPoint(mtx, *(f32*)&lbl_803E7044, lbl_803E7044, state->lifetime, &obj->anim.velocityX,
+    Matrix_TransformPoint(mtx, 0.0f, 0.0f, state->lifetime, &obj->anim.velocityX,
                           &obj->anim.velocityY, &obj->anim.velocityZ);
 }
 
