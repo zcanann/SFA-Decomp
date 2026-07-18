@@ -842,7 +842,6 @@ void dll_06_func0D(void)
 
 void sky2_initialise(void)
 {
-    u8** states;
     u8* state;
 
     lbl_803DB610 = -1;
@@ -851,14 +850,13 @@ void sky2_initialise(void)
     {
         mm_free(gSky2State);
     }
-    states = &gSky2State;
-    state = states[1];
+    state = (&gSky2State)[1];
     if (state != NULL)
     {
         mm_free(state);
     }
     gSky2State = NULL;
-    states[1] = NULL;
+    (&gSky2State)[1] = NULL;
 }
 
 int fn_8008B71C(int slot)
@@ -997,7 +995,7 @@ void loadLightFn_8008bbc4(void)
         if (gSkySunLight != NULL)
         {
             modelLightStruct_setLightKind(gSkySunLight, MODEL_LIGHT_KIND_DIRECTIONAL);
-            modelLightStruct_setDirection(gSkySunLight, lbl_803DF058, lbl_803DF06C, lbl_803DF058);
+            modelLightStruct_setDirection(gSkySunLight, 0.0f, -1.0f, 0.0f);
             modelLightStruct_setDiffuseColor(gSkySunLight, 0xff, 0xff, 0xff, 0xff);
             modelLightStruct_setSpecularColor(gSkySunLight, 0xff, 0xff, 0xff, 0xff);
         }
@@ -1005,7 +1003,7 @@ void loadLightFn_8008bbc4(void)
         if (gSkyMoonLight != NULL)
         {
             modelLightStruct_setLightKind(gSkyMoonLight, MODEL_LIGHT_KIND_DIRECTIONAL);
-            modelLightStruct_setDirection(gSkyMoonLight, lbl_803DF058, lbl_803DF05C, lbl_803DF058);
+            modelLightStruct_setDirection(gSkyMoonLight, 0.0f, 1.0f, 0.0f);
             modelLightStruct_setDiffuseColor(gSkyMoonLight, 0xff, 0xff, 0xff, 0xff);
             modelLightStruct_setSpecularColor(gSkyMoonLight, 0xff, 0xff, 0xff, 0xff);
         }
@@ -2426,29 +2424,29 @@ void skyFn_8008a04c(void)
     }
     else
     {
-        tc = (((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay < lbl_803DF058)
-                 ? lbl_803DF058
-                 : ((((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay > lbl_803DF05C)
-                        ? lbl_803DF05C
+        tc = (((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay < 0.0f)
+                 ? 0.0f
+                 : ((((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay > 1.0f)
+                        ? 1.0f
                         : ((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay);
-        if (tc <= lbl_803DF07C)
+        if (tc <= 0.25f)
         {
-            frac = tc / lbl_803DF07C;
+            frac = tc / 0.25f;
             part = 0;
         }
-        else if (tc <= lbl_803DF068)
+        else if (tc <= 0.5f)
         {
-            frac = (tc - lbl_803DF07C) / lbl_803DF07C;
+            frac = (tc - 0.25f) / 0.25f;
             part = 1;
         }
-        else if (tc <= init_803DF080)
+        else if (tc <= 0.75f)
         {
-            frac = (tc - lbl_803DF068) / lbl_803DF07C;
+            frac = (tc - 0.5f) / 0.25f;
             part = 2;
         }
         else
         {
-            frac = (tc - init_803DF080) / lbl_803DF07C;
+            frac = (tc - 0.75f) / 0.25f;
             part = 3;
         }
         i = 0;
@@ -2537,7 +2535,7 @@ void skyFn_8008a04c(void)
             }
             i++;
         } while (i < 2);
-        fn_80089A60(2, lbl_803DF058, lbl_803DF058, lbl_803DF058, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
+        fn_80089A60(2, 0.0f, 0.0f, 0.0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
     }
 }
 
@@ -2671,9 +2669,9 @@ int getSunPos(f32* outTime)
     {
         if (outTime != NULL)
         {
-            if (time >= lbl_803DF088)
+            if (time >= 75600.0f)
             {
-                *outTime = gSkyDayStartTime + (time - lbl_803DF088);
+                *outTime = gSkyDayStartTime + (time - 75600.0f);
             }
             else
             {
@@ -2969,49 +2967,49 @@ void skyFn_8008aee8(void)
         }
         sky = *(int**)&gSkyState;
         frac = ((SkyTimeBlend*)sky)->time / gSkySecondsPerDay;
-        t = (frac < lbl_803DF058) ? lbl_803DF058 : ((frac > lbl_803DF05C) ? lbl_803DF05C : frac);
-        u = lbl_803DF058;
-        if (t >= u && t < lbl_803DF0C8)
+        t = (frac < 0.0f) ? 0.0f : ((frac > 1.0f) ? 1.0f : frac);
+        u = 0.0f;
+        if (t >= u && t < 0.125f)
         {
-            u = t / lbl_803DF0C8;
+            u = t / 0.125f;
             ((SkyTimeBlend*)sky)->phase = 0;
         }
-        else if (t >= lbl_803DF0C8 && t < lbl_803DF07C)
+        else if (t >= 0.125f && t < 0.25f)
         {
-            u = (t - lbl_803DF0C8) / lbl_803DF0C8;
+            u = (t - 0.125f) / 0.125f;
             ((SkyTimeBlend*)sky)->phase = 1;
         }
-        else if (t >= lbl_803DF07C && t < lbl_803DF0CC)
+        else if (t >= 0.25f && t < 0.375f)
         {
-            u = (t - lbl_803DF07C) / lbl_803DF0C8;
+            u = (t - 0.25f) / 0.125f;
             ((SkyTimeBlend*)sky)->phase = 2;
         }
-        else if (t >= lbl_803DF0CC && t < lbl_803DF068)
+        else if (t >= 0.375f && t < 0.5f)
         {
-            u = (t - lbl_803DF0CC) / lbl_803DF0C8;
+            u = (t - 0.375f) / 0.125f;
             ((SkyTimeBlend*)sky)->phase = 3;
         }
-        else if (t >= lbl_803DF068 && t < lbl_803DF0D0)
+        else if (t >= 0.5f && t < 0.625f)
         {
-            u = (t - lbl_803DF068) / lbl_803DF0C8;
+            u = (t - 0.5f) / 0.125f;
             ((SkyTimeBlend*)sky)->phase = 4;
         }
-        else if (t >= lbl_803DF0D0 && t < init_803DF080)
+        else if (t >= 0.625f && t < 0.75f)
         {
-            u = (t - lbl_803DF0D0) / lbl_803DF0C8;
+            u = (t - 0.625f) / 0.125f;
             ((SkyTimeBlend*)sky)->phase = 5;
         }
-        else if (t >= init_803DF080 && t < lbl_803DF0D4)
+        else if (t >= 0.75f && t < 0.875f)
         {
-            u = (t - init_803DF080) / lbl_803DF0C8;
+            u = (t - 0.75f) / 0.125f;
             ((SkyTimeBlend*)sky)->phase = 6;
         }
-        else if (t >= lbl_803DF0D4 && t <= lbl_803DF05C)
+        else if (t >= 0.875f && t <= 1.0f)
         {
-            u = (t - lbl_803DF0D4) / lbl_803DF0C8;
+            u = (t - 0.875f) / 0.125f;
             ((SkyTimeBlend*)sky)->phase = 7;
         }
-        tc = (u < lbl_803DF058) ? lbl_803DF058 : ((u > lbl_803DF05C) ? lbl_803DF05C : u);
+        tc = (u < 0.0f) ? 0.0f : ((u > 1.0f) ? 1.0f : u);
         sky = *(int**)&gSkyState;
         phase = ((SkyTimeBlend*)sky)->phase;
         if (phase != ((SkyTimeBlend*)sky)->prevPhase)
@@ -3038,7 +3036,7 @@ void skyFn_8008aee8(void)
         ((SkyBlendStateFlags*)(gSkyState + 0x255))->unused80 = 1;
         sky = *(int**)&gSkyState;
         blend = ((SkyTimeBlend*)sky)->blend;
-        if (blend != lbl_803DF058)
+        if (blend != 0.0f)
         {
             texHandle = sky[((SkyTimeBlend*)sky)->texSel + 2];
             fn_80069B1C((void*)sky[4], (void*)texHandle, blend, (void*)texHandle);
@@ -3075,16 +3073,16 @@ void skyFn_8008aee8(void)
         texC = (u8*)sky[((SkyTimeBlend*)sky)->texSel + 2];
         cam = Camera_GetCurrentViewSlot();
         frac = Camera_GetFovY();
-        frac = frac * lbl_803DF068;
+        frac = frac * 0.5f;
         widthF = (f32)(u32) * (u16*)(texC + 0xc);
-        sinProd = widthF * frac / lbl_803DF0D8;
-        sinProd *= lbl_803DF0DC;
-        sinProd *= mathCosf(gSkyPi * (f32)-cam->worldRoll / lbl_803DF0E4);
-        ang0 = widthF * lbl_803DF068 - lbl_803DF0E8 - lbl_803DF0DC * (widthF * cam->worldPitch) / lbl_803DF0E4;
+        sinProd = widthF * frac / 180.0f;
+        sinProd *= 3.0f;
+        sinProd *= mathCosf(gSkyPi * (f32)-cam->worldRoll / 32768.0f);
+        ang0 = widthF * 0.5f - 6.0f - 3.0f * (widthF * cam->worldPitch) / 32768.0f;
         angle = ang0 + sinProd;
-        angle *= lbl_803DF0EC;
+        angle *= 32.0f;
         (*gSky2Interface)->applyTextColor(0);
-        GXSetFog(GX_FOG_NONE, lbl_803DF058, lbl_803DF058, lbl_803DF058, lbl_803DF058, fogColor);
+        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, fogColor);
         selectTexture((Texture*)texC, 0);
         fn_8007880C();
         GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
@@ -3100,11 +3098,11 @@ void skyFn_8008aee8(void)
         GXSetNumTexGens(1);
         GXSetNumTevStages(1);
         screenRes = getScreenResolution();
-        sinProd *= lbl_803DF0B8;
+        sinProd *= 2.0f;
         texW = *(u16*)(texC + 0xc);
-        v = angle / (lbl_803DF0EC * (f32)(u32)texW);
-        skyDrawFn_80075d5c(0, 0, (screenRes & 0xffff) << 2, (screenRes >> 16) << 2, lbl_803DF058, v,
-                           lbl_803DF05C, v - sinProd / (f32)(u32)texW, -0x18f);
+        v = angle / (32.0f * (f32)(u32)texW);
+        skyDrawFn_80075d5c(0, 0, (screenRes & 0xffff) << 2, (screenRes >> 16) << 2, 0.0f, v,
+                           1.0f, v - sinProd / (f32)(u32)texW, -0x18f);
     }
 }
 
