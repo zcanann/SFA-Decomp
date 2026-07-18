@@ -645,30 +645,7 @@ int return0_8005669C(void)
 {
     return 0x0;
 }
-void mapTextureOverrideRelease(int key, int type)
-{
-    int i;
-    int off;
-    u32 entryKey;
-
-    for (i = 0; i < 80; i++)
-    {
-        off = i * 0x10;
-        entryKey = ((TexOverrideEntry*)lbl_803DCE6C)[i].key;
-        if (entryKey == key && ((TexOverrideEntry*)lbl_803DCE6C)[i].type == type &&
-            ((TexOverrideEntry*)lbl_803DCE6C)[i].refs > 0)
-        {
-            ((TexOverrideEntry*)lbl_803DCE6C)[i].refs -= 1;
-            if (((TexOverrideEntry*)lbl_803DCE6C)[i].refs == 0)
-            {
-                ((TexOverrideEntry*)lbl_803DCE6C)[i].data0 = 0;
-                ((TexOverrideEntry*)lbl_803DCE6C)[i].type = 0;
-                ((TexOverrideEntry*)lbl_803DCE6C)[i].key = 0;
-                ((TexOverrideEntry*)lbl_803DCE6C)[i].data1 = 0;
-            }
-        }
-    }
-}
+void mapTextureOverrideRelease(int key, int type);
 
 extern char sTrackGlobalTexanimOverflowError[];
 
@@ -2083,6 +2060,31 @@ void doPendingMapLoads(void)
             mapLoadUnloadObjects(doLoad);
             gMapPendingFileFlags = getLoadedFileFlags(0);
             renderFlags &= ~0x4000LL;
+        }
+    }
+}
+
+void mapTextureOverrideRelease(int key, int type)
+{
+    int i;
+    int off;
+    u32 entryKey;
+
+    for (i = 0; i < 80; i++)
+    {
+        off = i * 0x10;
+        entryKey = ((TexOverrideEntry*)lbl_803DCE6C)[i].key;
+        if (entryKey == key && ((TexOverrideEntry*)lbl_803DCE6C)[i].type == type &&
+            ((TexOverrideEntry*)lbl_803DCE6C)[i].refs > 0)
+        {
+            ((TexOverrideEntry*)lbl_803DCE6C)[i].refs -= 1;
+            if (((TexOverrideEntry*)lbl_803DCE6C)[i].refs == 0)
+            {
+                ((TexOverrideEntry*)lbl_803DCE6C)[i].data0 = 0;
+                ((TexOverrideEntry*)lbl_803DCE6C)[i].type = 0;
+                ((TexOverrideEntry*)lbl_803DCE6C)[i].key = 0;
+                ((TexOverrideEntry*)lbl_803DCE6C)[i].data1 = 0;
+            }
         }
     }
 }
