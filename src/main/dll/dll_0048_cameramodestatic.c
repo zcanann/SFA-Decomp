@@ -14,7 +14,6 @@ CameraModeStaticState* lbl_803DD558;
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define CAMSTATIC_CAMMODE_DEFAULT 0x42
 
-extern CameraModeStaticState* lbl_803DD558;
 
 void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
 {
