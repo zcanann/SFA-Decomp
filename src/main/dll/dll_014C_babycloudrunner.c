@@ -95,98 +95,8 @@ extern f32 lbl_803E4254;
 void babycloudrunner_release(void);
 void babycloudrunner_initialise(void);
 
-int fn_8019E3F4(int* obj)
-{
-    f32 speed;
-    BabyCloudRunnerState* sub = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.currentMove != 5 && ((GameObject*)obj)->anim.currentMove != 0xd)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject*)obj)->anim.currentMoveProgress, 0);
-    }
-    if (((GameObject*)obj)->anim.currentMove == 5 && ((GameObject*)obj)->anim.velocityY > lbl_803E422C)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject*)obj)->anim.currentMoveProgress, 0);
-    }
-    if (((GameObject*)obj)->anim.currentMove == 0xd && ((GameObject*)obj)->anim.velocityY < lbl_803E4218)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 5, ((GameObject*)obj)->anim.currentMoveProgress, 0);
-    }
-    speed = ((GameObject*)obj)->anim.velocityY * lbl_803DBE4C + lbl_803E4230;
-    speed *= lbl_803E4234;
-    if (speed < lbl_803E4218)
-    {
-        speed = lbl_803E4218;
-    }
-    if (speed > lbl_803E4234)
-    {
-        speed = lbl_803E4234;
-    }
-    if (((GameObject*)obj)->anim.currentMove == 0xd)
-    {
-        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E4234)
-        {
-            if (!((WormSpitByte*)&sub->spitFlags)->spitLatch)
-            {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_mn_heart1_c_334);
-                ((WormSpitByte*)&sub->spitFlags)->spitLatch = 1;
-            }
-        }
-        else
-        {
-            ((WormSpitByte*)&sub->spitFlags)->spitLatch = 0;
-        }
-    }
-    ObjAnim_AdvanceCurrentMove((int)obj, speed, timeDelta, 0);
-    return 1;
-}
-
-void sandworm_turnTowardTargetAnim(GameObject* obj, GameObject* target, BabyCloudRunnerState* state, int playMove)
-{
-    int yawStep;
-    fn_8003ADC4(obj, target, state->lookBlock, 0x28, 0, 3);
-    yawStep = Obj_GetYawDeltaToObject(obj, target, 0);
-    obj->anim.rotX += (yawStep >>= 3);
-    if (playMove == 0)
-        return;
-    if ((s16)yawStep > -200 && (s16)yawStep < 200)
-    {
-        if (state->turnLatch != 0)
-        {
-            state->turnLatch = 0;
-            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4218, 0);
-        }
-        else
-        {
-            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E423C, timeDelta, 0);
-        }
-    }
-    else
-    {
-        if (state->turnLatch == 0)
-        {
-            state->turnLatch = 1;
-            ObjAnim_SetCurrentMove((int)obj, 9, lbl_803E4218, 0);
-        }
-        else
-        {
-            int turnAnimStep;
-            if ((int)(s16)yawStep > 0)
-            {
-                turnAnimStep = (s16)yawStep >> 2;
-            }
-            else
-            {
-                turnAnimStep = -(s16)yawStep >> 2;
-            }
-            ObjAnim_AdvanceCurrentMove((int)obj, (f32)(s16)turnAnimStep / lbl_803E4240, timeDelta, 0);
-        }
-    }
-}
-
-
-/* Turn toward the target by a fraction of the yaw delta; when roughly aligned
- * play/advance the idle move, otherwise start or speed-scale the turn move by
- * the delta. */
+int fn_8019E3F4(int* obj);
+void sandworm_turnTowardTargetAnim(GameObject* obj, GameObject* target, BabyCloudRunnerState* state, int playMove);
 int babycloudrunner_tryCapture(void* p)
 {
     int* obj;
@@ -648,6 +558,98 @@ void babycloudrunner_update(int* obj)
 /* Pick the burrow/surface move from the vertical speed, clamp the playback
  * rate, latch the spit SFX while surfacing fast, and advance the current
  * move. */
+int fn_8019E3F4(int* obj)
+{
+    f32 speed;
+    BabyCloudRunnerState* sub = ((GameObject*)obj)->extra;
+    if (((GameObject*)obj)->anim.currentMove != 5 && ((GameObject*)obj)->anim.currentMove != 0xd)
+    {
+        ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject*)obj)->anim.currentMoveProgress, 0);
+    }
+    if (((GameObject*)obj)->anim.currentMove == 5 && ((GameObject*)obj)->anim.velocityY > lbl_803E422C)
+    {
+        ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject*)obj)->anim.currentMoveProgress, 0);
+    }
+    if (((GameObject*)obj)->anim.currentMove == 0xd && ((GameObject*)obj)->anim.velocityY < lbl_803E4218)
+    {
+        ObjAnim_SetCurrentMove((int)obj, 5, ((GameObject*)obj)->anim.currentMoveProgress, 0);
+    }
+    speed = ((GameObject*)obj)->anim.velocityY * lbl_803DBE4C + lbl_803E4230;
+    speed *= lbl_803E4234;
+    if (speed < lbl_803E4218)
+    {
+        speed = lbl_803E4218;
+    }
+    if (speed > lbl_803E4234)
+    {
+        speed = lbl_803E4234;
+    }
+    if (((GameObject*)obj)->anim.currentMove == 0xd)
+    {
+        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E4234)
+        {
+            if (!((WormSpitByte*)&sub->spitFlags)->spitLatch)
+            {
+                Sfx_PlayFromObject((int)obj, SFXTRIG_mn_heart1_c_334);
+                ((WormSpitByte*)&sub->spitFlags)->spitLatch = 1;
+            }
+        }
+        else
+        {
+            ((WormSpitByte*)&sub->spitFlags)->spitLatch = 0;
+        }
+    }
+    ObjAnim_AdvanceCurrentMove((int)obj, speed, timeDelta, 0);
+    return 1;
+}
+
+void sandworm_turnTowardTargetAnim(GameObject* obj, GameObject* target, BabyCloudRunnerState* state, int playMove)
+{
+    int yawStep;
+    fn_8003ADC4(obj, target, state->lookBlock, 0x28, 0, 3);
+    yawStep = Obj_GetYawDeltaToObject(obj, target, 0);
+    obj->anim.rotX += (yawStep >>= 3);
+    if (playMove == 0)
+        return;
+    if ((s16)yawStep > -200 && (s16)yawStep < 200)
+    {
+        if (state->turnLatch != 0)
+        {
+            state->turnLatch = 0;
+            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4218, 0);
+        }
+        else
+        {
+            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E423C, timeDelta, 0);
+        }
+    }
+    else
+    {
+        if (state->turnLatch == 0)
+        {
+            state->turnLatch = 1;
+            ObjAnim_SetCurrentMove((int)obj, 9, lbl_803E4218, 0);
+        }
+        else
+        {
+            int turnAnimStep;
+            if ((int)(s16)yawStep > 0)
+            {
+                turnAnimStep = (s16)yawStep >> 2;
+            }
+            else
+            {
+                turnAnimStep = -(s16)yawStep >> 2;
+            }
+            ObjAnim_AdvanceCurrentMove((int)obj, (f32)(s16)turnAnimStep / lbl_803E4240, timeDelta, 0);
+        }
+    }
+}
+
+
+/* Turn toward the target by a fraction of the yaw delta; when roughly aligned
+ * play/advance the idle move, otherwise start or speed-scale the turn move by
+ * the delta. */
 void babycloudrunner_init(int* obj, u8* defBytes)
 {
     BabyCloudRunnerState* sub;
