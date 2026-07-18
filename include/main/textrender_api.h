@@ -56,7 +56,6 @@ void fn_8001BDD4(int mode);
 void fn_8001BE2C(int mode);
 
 #define gameTextSetColorInt ((GameTextSetColorIntFn)gameTextSetColor)
-#define gameTextSetWindowLegacy(textBox) ((void (*)(int))gameTextSetWindow)(textBox)
 #define gameTextSetColorU8 gameTextSetColor
 #define gameTextGetLegacy ((GameTextGetLegacyFn)gameTextGet)
 

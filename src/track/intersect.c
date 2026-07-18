@@ -6360,7 +6360,7 @@ void cardShowLoadingMsg(u8 kind)
     void (*draw)(int, int, int);
     u8 mode = kind;
 
-    gameTextSetWindowLegacy(0);
+    gameTextSetWindow(0);
     for (frame = 0; frame < 0x3C; frame++)
     {
         padUpdate();
