@@ -33,4 +33,6 @@ typedef struct MenuPanelGroup {
   u8 pad39[7];
 } MenuPanelGroup;
 
+extern u8 gTitleMenuSelection;
+
 #endif /* MAIN_DLL_FRONT_TITLE_MENU_H_ */
