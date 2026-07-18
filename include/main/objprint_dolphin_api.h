@@ -4,6 +4,7 @@
 #include "types.h"
 
 s32 mapCheckCurBlocks(int v);
+int isRomListLoading(void);
 
 extern u8 gObjAlphaCompareThreshold;
 

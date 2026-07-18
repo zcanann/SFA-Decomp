@@ -2392,7 +2392,7 @@ extern f32 lbl_803DEBB8;
 
 extern WarpVec lbl_80386648[];
 
-int objShouldUnload(u8* obj)
+int objShouldUnload(GameObject* obj)
 {
     u8* def;
     u8* p;

@@ -1,12 +1,13 @@
 #include "main/dll/partfx_interface.h"
 #include "dolphin/os/OSReport.h"
-#include "dolphin/mtx/vec.h"
+#include "dolphin/mtx.h"
 #include "main/asset_load.h"
 #include "main/gameloop_api.h"
 #include "main/pi_data_file_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/pi_flush_api.h"
 #include "main/rcp_dolphin_api.h"
+#include "main/rcp_dolphin_render_api.h"
 #include "main/debug.h"
 #include "main/frustum.h"
 #include "main/shader_api.h"
@@ -88,12 +89,12 @@ extern int lbl_803822A0[5];
 extern f32 lbl_803DEBCC;
 #define ROM_LIST_PAGE_COUNT 120
 extern void* gLoadedRomListPages[];
-extern void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);
+void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);
 extern f32 gShaderLoadCenterZ;
 extern f32 gShaderLoadCenterY;
 extern f32 gShaderLoadCenterX;
 extern int gShaderCurMapEventId;
-extern int mapCoordsToId(int x, int z, int layer);
+int mapCoordsToId(int x, int z, int layer);
 extern s16* gMapBlockIds;
 extern u8 lbl_803DCE98;
 extern u8* gMapBlockRefCounts;
@@ -127,7 +128,6 @@ extern int gShaderMapRomBuffers[];
     *(s8*)(e + 9) = -128;                                                                                  \
     ((s16*)gShaderMapRomBuffers[2])[(idx + (slot)) << 1] = -1;                                             \
     ((s16*)gShaderMapRomBuffers[2])[((idx + (slot)) << 1) + 1] = -1
-extern int objShouldUnload(GameObject* obj);
 extern s8* gMapLayerCellStates;
 extern int gMapPendingFileFlags;
 extern int* gMapBlockIndexList;
@@ -889,7 +889,7 @@ extern char sTrackLoadBlockOverrunError[];
 
 char lbl_803822C8[0x41A0];
 
-extern void mapBlockFn_80059354(int p1, int p2, MapCellEnt* entry, int layer);
+void mapBlockFn_80059354(int p1, int p2, MapCellEnt* entry, int layer);
 
 
 int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
@@ -2086,8 +2086,6 @@ void loadMapForCameraPos(float x, float y, float z)
     }
 }
 
-extern int isRomListLoading(void);
-
 void mapInitSetRects(s16* rect, u8* bitmap, int originX, int originY, int idx);
 
 void initMaps(void)
@@ -2283,7 +2281,7 @@ void mapBlockFn_80059354(int x, int z, MapCellEnt* out, int layer)
     }
 }
 
-extern int mapGetRomListAndOffsets(int p1, int b);
+int mapGetRomListAndOffsets(int p1, int b);
 
 void mapLoadForObject(int mapId, GameObject* obj)
 {
@@ -3011,8 +3009,6 @@ void frustumPlanes_updateAabbCornerIndices(FrustumPlane* planes, int count)
 
 extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 lbl_803DEBF4;
-extern void PSMTXMultVec(f32* mtx, Vec* in, f32* out);
-
 void playerVecFn_8005a9b0(void)
 {
     Vec tmp;
@@ -3049,7 +3045,7 @@ void playerVecFn_8005a9b0(void)
     outPtr = gPlayerRelativeFrustumPlanes;
     for (i = 0; i < FRUSTUM_PLANE_COUNT; i++)
     {
-        PSMTXMultVec(invRotMtx, &planes.v[i], &outPtr[i].normalX);
+        PSMTXMultVec((const f32 (*)[4])invRotMtx, &planes.v[i], (Vec*)&outPtr[i].normalX);
         PSVECScale(&outPtr[i].normal, &tmp, scales.v[i]);
         PSVECAdd(&camPos, &tmp, &tmp);
         outPtr[i].distance = -PSVECDotProduct(&tmp, &outPtr[i].normal);

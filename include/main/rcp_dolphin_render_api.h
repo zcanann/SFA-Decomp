@@ -5,8 +5,9 @@
 
 struct Texture;
 struct _GXTexObj;
+typedef struct GameObject GameObject;
 
-int objShouldUnload(u8* obj);
+int objShouldUnload(GameObject* obj);
 void fn_80053C40(struct Texture* texture, struct _GXTexObj* obj);
 void Rcp_SetColorFilterEnabled(u32 x);
 

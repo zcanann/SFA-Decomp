@@ -27,6 +27,7 @@
 #include "main/loaded_file_flags.h"
 #include "main/map_load.h"
 #include "main/objprint_render_api.h"
+#include "main/objprint_dolphin_api.h"
 #include "main/objprintgxcolor.h"
 #include "main/table_file.h"
 #include "main/fileio.h"
@@ -3631,7 +3632,7 @@ void setLoadedFileFlags_blocks1(void)
     lbl_803DCC80 |= 0x100000;
     OSRestoreInterrupts(s);
 }
-u32 isRomListLoading(void)
+int isRomListLoading(void)
 {
     return lbl_803DCC74;
 }
