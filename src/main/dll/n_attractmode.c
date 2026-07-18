@@ -10,18 +10,7 @@
 #include "main/mm_ext.h"
 #include "main/dll/dll_3e_api.h"
 
-extern u8 gAttractMoviePreparePending;
-extern void* gAttractMovieBuffer0;
-extern void* gAttractMovieBuffer1;
-extern void* gAttractMovieBuffer2;
-extern void* gAttractMovieBuffer3;
-extern void* gAttractMovieOptionalBuffer;
-extern void* gAttractMovieWorkBuffer;
-extern void* gAttractMovieScratchBuffer;
 extern NAttractModeMovieDims gAttractMovieDims;
-extern int gAttractMovieOffsetX;
-extern int gAttractMovieOffsetY;
-extern u8 gAttractMovieRetraceCountdown;
 extern s32 gAttractMovieIdleFrameCount;
 extern u8 gTitleMenuSelection;
 extern u16* gRenderModeObj;
