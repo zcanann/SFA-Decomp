@@ -81,8 +81,6 @@ typedef struct CrawlerModelChainList
 
 STATIC_ASSERT(sizeof(CrawlerModelChainList) == 8);
 
-extern u8 gSnowwormSeqIndexReset[4];
-extern u8 gSnowwormSeqIndexMax[4];
 extern u8 lbl_803DBD30[4];
 
 /* group owned by another DLL, queried here */
