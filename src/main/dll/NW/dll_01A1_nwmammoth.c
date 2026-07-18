@@ -76,11 +76,6 @@ enum NwMammothRuntimeFlag
 
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5218;
-extern f32 gNwMammothPathAccel;
-extern f32 gNwMammothPathSpeedMin;
-extern f32 gNwMammothPlayerNearDistSq;
-extern f32 gNwMammothPathDecel;
-extern f32 gNwMammothPathSpeedMax;
 extern u8 lbl_803DBF70[4];
 extern u8 lbl_803DBF74[4];
 extern u8 lbl_803DBF78[4];
@@ -98,22 +93,11 @@ extern u8 lbl_803DBF98[4];
 extern u8 lbl_803DBF9C[4];
 extern u8 lbl_803DBFA0[4];
 extern u8 lbl_803DBFA4[4];
-extern f32 gNwMammothSfxInterval;
-extern f32 gNwMammothTumbleweedDistSqThreshold;
-extern f32 gNwMammothCaptureDist;
-extern f32 gNwMammothAirMeterFull;
-extern f32 gNwMammothAirMeterPerSegment;
 extern u8 lbl_803DBFA8[4];
 extern u8 lbl_803DBFAC[4];
 extern u8 lbl_803DBFB0[4];
-extern int gNwMammothBushObjectIds[];
-extern int gNwMammothBushGameBits[];
 extern f32 lbl_803E5210;
-extern u8 gNwMammothTables[];
-extern u8 gNwMammothPathSetupDataA[];
-extern u8 gNwMammothPathSetupDataB[];
 extern u32 lbl_803E5208;
-extern f32 gNwMammothDefaultAnimStepScale;
 
 int fn_801CE078(int* obj, u8* state);
 void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData);
