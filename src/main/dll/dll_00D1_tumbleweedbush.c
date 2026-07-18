@@ -393,10 +393,10 @@ GameObject* tumbleweedbush_findNearestActive(f32* p_pos)
     return bestObj;
 }
 
-void fn_80163980(int* obj)
+void fn_80163980(GameObject* obj)
 {
     u8 v = 0x7;
-    *((u8*)(int*)((GameObject*)obj)->extra + 0x278) = v;
+    *((u8*)(int*)obj->extra + 0x278) = v;
 }
 
 void fn_80163990(int* piece, u8* state)

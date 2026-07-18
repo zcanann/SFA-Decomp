@@ -27,5 +27,6 @@ extern ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor;
 /* extern-cleanup: defining-file public prototypes */
 s8 fn_801631C8(int* obj);
 struct GameObject* tumbleweedbush_findNearestActive(f32* position);
+void fn_80163980(struct GameObject* obj);
 
 #endif /* MAIN_DLL_DLL_00D1_TUMBLEWEEDBUSH_H_ */

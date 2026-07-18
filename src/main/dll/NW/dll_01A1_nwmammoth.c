@@ -107,7 +107,6 @@ extern u8 lbl_803DBFAC[4];
 extern u8 lbl_803DBFB0[4];
 extern int gNwMammothBushObjectIds[];
 extern int gNwMammothBushGameBits[];
-extern void fn_80163980(int o);
 extern f32 lbl_803E5210;
 extern u8 gNwMammothTables[];
 extern u8 gNwMammothPathSetupDataA[];
@@ -400,7 +399,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             gNwMammothCaptureDist)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_mammoth_annoyed);
-            fn_80163980((int)state->trackedObject);
+            fn_80163980(state->trackedObject);
             state->stateIndex = 0xf;
         }
         break;
