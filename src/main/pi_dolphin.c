@@ -203,9 +203,12 @@ struct MldfNames
     char fmtModTab[0x10];
 };
 
-/* Resource file table. File slots are indexed by resource fileId (0..0x57);
-   map-owned resources use paired slots (e.g. ANIMCURV 0xd/0x55) so two maps
-   can be resident at once. */
+/* Resource file table at lbl_80345E10 (0x80345E10, 0x20000 bytes). File slots are
+   indexed by resource fileId (0..0x57); map-owned resources use paired slots (e.g.
+   ANIMCURV 0xd/0x55) so two maps can be resident at once. Several arrays are also
+   addressed directly through their own symbols elsewhere in this file:
+   ids   == lbl_8035EF48 (pending mapId per slot, -1 = none; retried by loadDataFiles)
+   sizes == lbl_8035F0A8, romList == lbl_8035F208, ptrs == lbl_8035F3E8. */
 struct MldfTables
 {
     u8 pad0[0x160];
@@ -251,13 +254,21 @@ struct MldfIterators
 #define MLDF_SIZE(s)  (tbl->sizes[s])
 #define MLDF_PTR(s)   (tbl->ptrs[s])
 #define MLDF_OWNER(s) (tbl->owners[s])
+/* Runtime-index accessors. One-shot accesses use the idx-left flat spelling
+   (slwi; addis tbl; add) or plain member form; the hot ptr/size slots go through
+   per-block biased locals (see slotPtrAddr/slotSizeAddr) so the CSE web keeps the
+   ha-sum (tbl + 0x20000 + slot*4) and each access folds the lo displacement. */
 #define MLDF_ID_RT(s)    (*(int*)(((s) << 2) + ((u32) & tbl->ids[0])))
 #define MLDF_OWNER_RT(s) (*(s16*)(((s) << 1) + ((u32) & tbl->owners[0])))
 #define MLDF_FINFO4(s4)  (tbl->fileInfo[slot])
 #define MLDF_SP_ID(p)    (tbl->ids[slot])
 #define MLDF_SP_SIZE(p)  (*(int*)(slotSizeAddr - 0x6D68))
+/* first store of the block also establishes the biased size base; embedding the
+   assignment in the lvalue makes MWCC evaluate the RHS (file length) first, as target */
 #define MLDF_SP_SIZE_INIT(p) (*(int*)((slotSizeAddr = (slot << 2) + ((u32) & tbl->sizes[0] + 0x6D68)) - 0x6D68))
 #define MLDF_SP_PTR(p)       (*(u32*)(slotPtrAddr - 0x6A28))
+/* re-deref through the biased local `slotPtrAddr` on every use; the -0x6A28 displacement
+   (== &tbl->ptrs[0] relative to tbl + 0x20000) matches target addressing */
 #define MLDF_QPTR (*(u32*)(slotPtrAddr - 0x6A28))
 
 /* 16-byte header of a "ZLB"-tagged compressed stream; the deflate payload
@@ -984,7 +995,6 @@ extern u8 lbl_803DCD30;
 extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 dst[3][4], f32 a[3][4], f32 b[3][4]);
-extern void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, GXTexMtxType type);
 extern u8 lbl_803DCD68;
 extern int lbl_803DCD80;
 extern u8 lbl_803DCD69;
@@ -1031,9 +1041,7 @@ extern void OSStartStopwatch(void* sw);
 extern int OSGetCurrentThread(void);
 extern int Queue_GetCount(void* q);
 extern void OSSleepThread(void* q);
-extern void GXInvalidateVtxCache(void);
 extern int GXReadDrawSync(void);
-extern void VISetNextFrameBuffer(void* fb);
 extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
 extern void GXGetGPStatus(u8* a, u8* b, u8* c, u8* d, u8* e);
 extern void GXInitFifoBase(void* fifo, void* base, u32 size);
@@ -1081,7 +1089,6 @@ extern void GXInitFifoLimits(void* fifo, u32 hi, u32 lo);
 extern void Queue_Init(void* q, void* buf, int n, int stride);
 extern void OSInitThreadQueue(char* q);
 extern void GXSetBreakPtCallback(void (*cb)());
-extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void GXSetFieldMode(int field_mode, int half_aspect_ratio);
 extern void GXSetDispCopySrc(int left, int top, int wd, int ht);
 extern u32 GXSetDispCopyYScale(f32 vscale);
@@ -1089,7 +1096,6 @@ extern void GXSetDispCopyDst(int wd, int ht);
 extern void GXSetPixelFmt(int pix_fmt, int z_fmt);
 extern void GXSetDither(int dither);
 extern void GXSetDispCopyGamma(int gamma);
-extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
 extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
 extern char lbl_8035F6B8[0x78];
 extern char* lbl_803DCCE0;
@@ -1118,8 +1124,8 @@ u32 mapLoadDataFile(int mapId, int fileId)
     u32 result;
     int adj;
     int slot;
-    u32 slotPtrAddr;
-    u32 slotSizeAddr;
+    u32 slotPtrAddr;  /* &tbl->ptrs[slot] + 0x6A28 (ha-sum biased base) */
+    u32 slotSizeAddr; /* &tbl->sizes[slot] + 0x6D68 */
     int ok;
     u32 tmp;
     int cls[1];
@@ -1660,22 +1666,23 @@ u32 mapLoadDataFile(int mapId, int fileId)
             for (n = 0xf; n != 0; n--)
             {
                 if (mapId == grp[0])
-                    break;
+                    goto remap_found;
                 idx = idx + 1;
                 if (mapId == grp[1])
-                    break;
+                    goto remap_found;
                 idx = idx + 1;
                 if (mapId == grp[2])
-                    break;
+                    goto remap_found;
                 idx = idx + 1;
                 if (mapId == grp[3])
-                    break;
+                    goto remap_found;
                 idx = idx + 1;
                 if (mapId == grp[4])
-                    break;
+                    goto remap_found;
                 grp = grp + 5;
                 idx = idx + 1;
             }
+        remap_found:
             piRomLoadSection(0, idx, 0);
             if (mapId > 4)
             {
@@ -2413,6 +2420,7 @@ char sAssetHaltFormat[] = "HALT\t%s\n";
 char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
 
 
+
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern int zlbDecompress(u8* src, int size, u8* dst, void* outp);
 
@@ -2473,13 +2481,13 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     int intr;
     int i;
     int prev;
-    u32 slotPtrAddr;
+    u32 slotPtrAddr; /* &tbl->ptrs[fileId], biased +0x6A28 for MLDF_QPTR */
     u32 fileBuf;
     u32 alignedSize;
     int tmp;
     u32 decompSize;
     int entryByteOff;
-    u32 qptr;
+    u32 qptr;       /* MLDF_QPTR from the guard, reused for the first use of each branch */
     DVDFileInfo buf;
 
     switch (fileId)
@@ -3982,6 +3990,8 @@ void loadModelsBin(int offsetFlags, int* p1c, int* p20, int* p18, int* p4)
 }
 
 
+/* base+0x74 / base+0x78 are lbl_8035F3E8[0x1d]/[0x1e] (MldfTables.ptrs: maps info
+   bin/tab); the byte-offset spelling is codegen-load-bearing */
 void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5)
 {
     char* base = (char*)lbl_8035F3E8;
@@ -4110,7 +4120,7 @@ void loadVoxMaps(int a, int* pc, int* p8)
 
 extern u32 lbl_8035F0A8[];
 
-u32 getDataFileSize(int idx)
+s32 getDataFileSize(int idx)
 {
     if (lbl_8035F3E8[idx] != 0)
     {
@@ -4765,6 +4775,7 @@ int GXFlush_(u8 visible, int unused)
 }
 
 
+
 void viFn_8004a56c(int val)
 {
     int v = val;
@@ -5033,15 +5044,13 @@ void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
         if (scanNode->point == point)
         {
             visited = scanNode->visited;
-            break;
+            goto found;
         }
         z[1] += 0x10;
         z[0]++;
     }
-    if (n <= 0)
-    {
-        z[0] = -1;
-    }
+    z[0] = -1;
+found:
     if (z[0] >= 0 && visited == 0)
     {
         PathSearchNode* node3 = &search->nodes[z[0]];
@@ -5340,7 +5349,7 @@ int fn_8004B218(void* q_, u32 n_)
     return result;
 }
 
-int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u8 routeFlags)
+int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u32 routeFlags)
 {
     int i;
     PathSearchNode* node;
@@ -5399,8 +5408,6 @@ int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, i
 }
 
 extern void GXSetTevIndRepeat(int stage);
-extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
-                              GXBool normalize, u32 pt_texmtx);
 extern void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue,
                                   GXTevColorChan alpha);
 
@@ -5528,7 +5535,7 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
     int sym;
     int type;
     int hlit;
-    int final;
+    volatile int final;
     int hclen;
     int hdist;
     u8* curLens;
@@ -5685,9 +5692,14 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
                     u8* cnts;
                     size = 7;
                     cnts = lbl_803DCD20;
-                    while (cnts[size] == 0)
+                blscan:
                     {
-                        size--;
+                        int cb = cnts[size];
+                        if (cb == 0)
+                        {
+                            size--;
+                            goto blscan;
+                        }
                     }
                     {
                         u8* t18;
@@ -5799,10 +5811,15 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
                     u16* scan;
                     lenMax = 0xf;
                     scan = (u16*)(((u8*)cnts94 + lenMax) + lenMax);
-                    while (*scan == 0)
+                lmscan:
                     {
-                        scan -= 1;
-                        lenMax -= 1;
+                        int cs = *scan;
+                        if (cs == 0)
+                        {
+                            scan -= 1;
+                            lenMax -= 1;
+                            goto lmscan;
+                        }
                     }
                     {
                         u16* t54 = lbl_80377954;
@@ -5844,9 +5861,15 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
                     distMax = 0xf;
                     cntsB4 = lbl_803778B4;
                     t74 = lbl_80377974;
-                    while (*(u16*)(((u8*)cntsB4 + distMax) + distMax) == 0)
+                dmscan:
                     {
-                        distMax -= 1;
+                        u16* pd = (u16*)(((u8*)cntsB4 + distMax) + distMax);
+                        int cd = *pd;
+                        if (cd == 0)
+                        {
+                            distMax -= 1;
+                            goto dmscan;
+                        }
                     }
                     j = 1;
                     code = 0;
@@ -6630,6 +6653,7 @@ void gxTextureFn_8004d5b4(void* p1)
 }
 
 
+
 void fn_8004D6D8(void)
 {
     struct piIndMtx indmtx;
@@ -6685,7 +6709,8 @@ void fn_8004D6D8(void)
 }
 
 
-extern void textureFn_8006c75c(int a);
+
+
 
 void fn_8004D928(void)
 {
@@ -7920,6 +7945,9 @@ void fn_80050558(u8* texSrc, void* texMtx, int stageMode, int compMode, int vari
 }
 
 
+
+
+
 void fn_80050A28(int scale)
 {
     f32 m[3][4];
@@ -7935,6 +7963,8 @@ void fn_80050A28(int scale)
 extern int lbl_8030CEE0[];
 extern f32 lbl_803DEB38;
 extern f32 lbl_803DEB3C;
+
+
 
 
 void gxTextureFn_80050e28(u8 mode)
@@ -8058,6 +8088,10 @@ void fn_800510F0(void* p1, u8 flag2, u8 flag3)
 }
 
 
+
+
+
+
 void textureFn_80051348(void* p1, u8 p2)
 {
     f32 mtxB[3][4];
@@ -8106,6 +8140,7 @@ void textureFn_80051348(void* p1, u8 p2)
     lbl_803DCD6A += 1;
     lbl_803DCD69 += 1;
 }
+
 
 
 void fn_80051528(void* p1, void* mtx)

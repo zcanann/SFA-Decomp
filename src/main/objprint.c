@@ -642,6 +642,7 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
 }
 
 
+
 extern f32 lbl_803DE9E8;
 
 void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 val)
@@ -1117,7 +1118,7 @@ void objFn_8003acfc(GameObject* obj, int* keys, int count, int out)
         out += 0x60;
     }
 }
-void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
+void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
 {
     s16 ang[2];
     s16* found[1];
@@ -1181,7 +1182,7 @@ void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
             ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
 
             a = (s16)(gObjPrintDegToAngle * a);
-            p[0] = p3;
+            p[0] = (char*)p3;
             ap[0] = ang;
             prodB = gObjPrintDegToAngle * b;
             minB = -(s16)(s32)prodB;
@@ -1217,8 +1218,8 @@ void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
                 p[0] += 0x30;
                 ap[0]++;
             }
-            found[0][1] = *(s16*)(p3 + 0x14);
-            found[0][0] = *(s16*)(p3 + 0x44);
+            found[0][1] = *(s16*)((u8*)p3 + 0x14);
+            found[0][0] = *(s16*)((u8*)p3 + 0x44);
         }
     }
 }
@@ -1248,7 +1249,7 @@ void fn_8003B0D0(GameObject* obj, GameObject* target, CharacterEyeAnimState* sta
     }
 }
 
-void fn_8003B228(GameObject* obj, int state)
+void fn_8003B228(GameObject* obj, void* state)
 {
     ObjTextureRuntimeSlot* foundA;
     ObjTextureRuntimeSlot* foundB;
@@ -1268,7 +1269,7 @@ void fn_8003B228(GameObject* obj, int state)
     }
     foundA->textureId = val;
     foundB->textureId = val;
-    *(u8*)(state + 0x1e) = 1;
+    *((u8*)state + 0x1e) = 1;
 }
 
 void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused);
@@ -1435,7 +1436,7 @@ void fn_8003B608(s16 a, s16 b, s16 c)
 }
 
 int fn_80039834(s16* curve, s16* state, f32 a, f32 b);
-void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, int c)
+void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, int b, int c)
 {
     f32 va[3];
     f32 vb[3];
@@ -1449,7 +1450,7 @@ void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, i
     int staff;
 
     staff = staffArg;
-    obj = objArg;
+    obj = (int)objArg;
     model = modelArg;
     if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && ((GameObject*)staff)->anim.classId == 0x2d)
     {
@@ -1561,9 +1562,8 @@ void fn_8003B950(f32* matrix)
 }
 
 extern void doNothing_beforeRenderObject(int x);
-extern void doNothing_afterRenderObject(void);
 
-void objRender(int a, int b, int c, int d, int obj, int flag)
+void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
 {
     void* sub;
     int walk;
@@ -1588,12 +1588,12 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
             vfn = *(void (**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
             if (vfn != NULL)
             {
-                vfn(obj, a, b, c, d, flag);
+                vfn((int)obj, a, b, c, d, flag);
             }
         }
         else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL)
         {
-            (*(void (*)(int))objRenderModel)(obj);
+            (*(void (*)(int))objRenderModel)((int)obj);
             if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
             {
                 objRenderFn_80041018((GameObject*)obj);
@@ -1606,12 +1606,12 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         {
         case 0:
         case 0x1f:
-            playerRender(obj, a, b, c, d, flag);
+            playerRender((int)obj, a, b, c, d, flag);
             break;
         default:
             if (OBJPRINT_ACTIVE_BANK(obj) != NULL)
             {
-                (*(void (*)(int))objRenderModel)(obj);
+                (*(void (*)(int))objRenderModel)((int)obj);
                 if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
                 {
                     objRenderFn_80041018((GameObject*)obj);
@@ -1621,7 +1621,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         }
     }
     doNothing_afterRenderObject();
-    for (i = 0, walk = obj; i < (s32)(u32)((GameObject*)obj)->childCount; i++)
+    for (i = 0, walk = (int)obj; i < (s32)(u32)((GameObject*)obj)->childCount; i++)
     {
         int staff = *(int*)&((GameObject*)walk)->childObjs[0];
         if (((GameObject*)staff)->anim.classId == 0x2d)
@@ -1809,6 +1809,9 @@ void modelCalcVtxGroupMtxs(int def, int model)
         off += 4;
     }
 }
+
+
+
 
 
 void modelInitMtxs(int def, int model)

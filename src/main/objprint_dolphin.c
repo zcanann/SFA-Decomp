@@ -190,7 +190,7 @@ typedef struct ObjModelRenderOp
     u32 flags;
 } ObjModelRenderOp;
 extern s32 gObjLevelLockSlots;
-extern int lbl_803DCC80;
+extern volatile int lbl_803DCC80;
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern f32 lbl_803DEA04;
@@ -271,7 +271,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
 {
     ModelLightStruct* renderHandle;
     int obj = (int)objArg;
-    u32 savedEnvColor;
+    volatile u32 savedEnvColor;
     int shadowTable;
     int shadowStride;
     int shadowParam;
@@ -1117,17 +1117,18 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                                 ObjTextureSlotDef* q2 = modelDef2->textureSlotDefs;
                                 int n2 = modelDef2->textureSlotCount;
                                 int k2;
-                                ty = tx = lbl_803DEA04;
                                 for (k2 = 0; k2 < n2; k2++)
                                 {
                                     if ((int)jid2 == q2->materialIndex)
                                     {
                                         tx = lbl_803DEA48 * slots2[k2].offsetS;
                                         ty = lbl_803DEA48 * slots2[k2].offsetT;
-                                        break;
+                                        goto trans;
                                     }
                                     q2++;
                                 }
+                                ty = tx = lbl_803DEA04;
+                            trans:
                                 PSMTXTrans(m, tx, ty, lbl_803DEA04);
                                 mtxp = m;
                             }
@@ -1396,17 +1397,18 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 ObjTextureSlotDef* q = modelDef->textureSlotDefs;
                 int n = modelDef->textureSlotCount;
                 int k;
-                ty = tx = lbl_803DEA04;
                 for (k = 0; k < n; k++)
                 {
                     if ((int)jid == q->materialIndex)
                     {
                         tx = lbl_803DEA48 * slots[k].offsetS;
                         ty = lbl_803DEA48 * slots[k].offsetT;
-                        break;
+                        goto trans2;
                     }
                     q++;
                 }
+                ty = tx = lbl_803DEA04;
+            trans2:
                 PSMTXTrans(m2, tx, ty, lbl_803DEA04);
             }
             textureFn_8004c330(textureIdxToPtr(*(u32*)l1), m2);
