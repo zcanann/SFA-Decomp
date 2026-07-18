@@ -73,22 +73,16 @@ void SoftBody_update(GameObject* obj)
 
     if (obj == lbl_803DDD98)
     {
-        f32 phase;
-
-        phase = 0.001f * timeDelta + lbl_803DDDA0;
-        lbl_803DDDA0 = phase;
-        while (phase > 1.0f)
+        lbl_803DDDA0 = 0.001f * timeDelta + lbl_803DDDA0;
+        while (lbl_803DDDA0 > 1.0f)
         {
-            phase -= 1.0f;
+            lbl_803DDDA0 -= 1.0f;
         }
-        lbl_803DDDA0 = phase;
-        phase = 0.005f * timeDelta + lbl_803DDD9C;
-        lbl_803DDD9C = phase;
-        while (phase > 1.0f)
+        lbl_803DDD9C = 0.005f * timeDelta + lbl_803DDD9C;
+        while (lbl_803DDD9C > 1.0f)
         {
-            phase -= 1.0f;
+            lbl_803DDD9C -= 1.0f;
         }
-        lbl_803DDD9C = phase;
     }
 
     switch (object->anim.seqId)
