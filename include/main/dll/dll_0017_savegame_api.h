@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+extern u8 gSaveGameData[];
+
 void mapClearBit(int idx, int bit);
 void* getHighScoreEntry(u8 fileIdx, u8 rank);
 int saveGame_restoreObjectPosToRomList(void* object);
