@@ -21,6 +21,5 @@ float fn_80293AC4(int angle);
 void fn_80293C64(float angle, float* sinOut, float* cosOut);
 float fn_802943F4(float x);
 float fn_802945E0(float x);
-u32 countLeadingZeros(void);
 
 #endif /* DOLPHIN_MSL_C_PPCEABI_BARE_H_MATH_API_H_ */

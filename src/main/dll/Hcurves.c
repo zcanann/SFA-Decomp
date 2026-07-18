@@ -137,8 +137,6 @@ extern char sObjfsaMissingPatchExitPoint1[];
 extern f32 gFloatHalf;
 extern const f32 gRomCurveFindDistInit;
 
-extern u32 countLeadingZeros();
-
 int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx);
 int RomCurve_getControlPointId(int curve, int exclude, int pickIdx);
 int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a, RomCurveDef* b, f32 unusedW);
@@ -264,7 +262,7 @@ static inline int Objfsa_IsPointInsideWalkGroup(const float* point, const Objfsa
 
 static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, u32 currentWalkGroupIndex)
 {
-    if (((countLeadingZeros(0xff - currentWalkGroupIndex) >> 5) & patchGroupId) != 0)
+    if (((__cntlzw(0xff - currentWalkGroupIndex) >> 5) & patchGroupId) != 0)
     {
         return (patchGroupId & 0xff00) >> 8;
     }
