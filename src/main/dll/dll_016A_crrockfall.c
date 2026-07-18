@@ -77,6 +77,7 @@ f32 fn_801ACCFC(GameObject* obj)
 {
     CrRockfallState* state = (obj)->extra;
     TrackGroundHit** list;
+    TrackGroundHit** p;
     int count;
     int i;
     int bestIdx;
@@ -85,14 +86,15 @@ f32 fn_801ACCFC(GameObject* obj)
                                  0, 0);
     bestDist = 100000.0f;
     bestIdx = -1;
-    for (i = 0; i < count; i++)
+    for (i = 0, p = list; i < count; i++)
     {
         f32 dy;
-        if ((dy = (obj)->anim.localPosY - list[i]->height) > 20.0f && dy < bestDist)
+        if ((dy = (obj)->anim.localPosY - (*p)->height) > 20.0f && dy < bestDist)
         {
             bestDist = dy;
             bestIdx = i;
         }
+        p++;
     }
     if (bestIdx != -1)
     {
