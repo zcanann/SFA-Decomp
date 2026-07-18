@@ -192,7 +192,7 @@ void Ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing)
             }
         }
     }
-    state->phase = 2;
+    state->phase = RING_PHASE_PULL_TO_ARWING;
 }
 
 int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwing)
@@ -225,7 +225,7 @@ int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwi
             f32 dy = objAnim->localPosY - arwingAnim->localPosY;
             if (sqrtf(dx * dx + dy * dy) < 55.0f)
                 return 1;
-            if (state->mode == 2 && f->bit20)
+            if (state->mode == RING_MODE_GOLD && f->bit20)
                 gameTextFn_80125ba4(0xa);
         }
     }
