@@ -17,6 +17,8 @@
 #include "main/audio/vid_init.h"
 #include "main/audio/inp_ctrl.h"
 #include "main/audio/hw_keyoff.h"
+#include "main/audio/inp_midi.h"
+#include "main/audio/mcmd_exec.h"
 #include "string.h"
 
 
@@ -70,12 +72,10 @@ STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo1) == 0x30);
 extern u8 gSynthDelayBucketCursor;
 extern u8 gSynthInitialized;
 
-extern void macHandle(u32 delta);
 extern void voiceRegister(McmdVoiceState* state);
 extern void voiceKill(u32 voice);
 extern void voiceInitPriorityTables(void);
 extern void voiceInitRegistrationTables(void);
-extern void inpSetMidiLastNote(u8 channel, u8 set, u8 note);
 
 extern u32 synthMasterFaderPauseActiveFlags;
 extern u32 synthMasterFaderActiveFlags;
@@ -104,7 +104,6 @@ typedef struct SynthAuxInfo
 
 typedef void (*SynthAuxCallback)(u8 reason, SynthAuxInfo* info, void* user);
 
-extern int inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
 extern u16 inpGetAuxA(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
 extern u16 inpGetAuxB(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
 
@@ -112,9 +111,6 @@ extern u32 audioFn_8026f630(u8 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejec
 extern u32 audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 pan, u8 midi,
                                  u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio,
                                  u32 itd);
-extern u32 macStart(u16 id, u8 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
-                    u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
-
 typedef struct SynthVoiceLfo
 {
     s32 time;
@@ -282,7 +278,6 @@ extern u16 voiceScaleSampleRate(u32 rate);
 
 extern void hwSetVolume(u32 voice, u8 table, f32 vol, u32 pan, u32 span, f32 auxa, f32 auxb);
 
-extern void macSetPedalState(SynthHwVoice* sv, u32 state);
 extern u32 adsrHandleLowPrecision(SynthVoiceAdsr* adsr, u16* start, u16* delta);
 extern u32 adsrRelease(SynthVoiceAdsr* adsr);
 extern u32 synthFlags;
@@ -756,7 +751,7 @@ void LowPrecisionHandler(int voice)
     u32 ccents;
     u32 cpitch;
     u16 Modulation;
-    s32 portamentoRaw;
+    u16 portamentoRaw;
     u32 lowDeltaTime;
     SynthHwVoice* sv;
     u32 cntDelta;
@@ -1130,7 +1125,7 @@ void EventHandler(int voice)
     sv = HWVOICE(voice);
     if (hwIsActive(voice) || sv->addr != 0)
     {
-        macSetPedalState(sv, inpGetPedal((McmdVoiceState*)sv) > 0x1F80);
+        macSetPedalState((McmdVoiceState*)sv, inpGetPedal((McmdVoiceState*)sv) > 0x1F80);
 
         if ((HWVOICE_FLAGS(sv) & 0x20) != 0)
         {
@@ -1448,12 +1443,6 @@ int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux)
 #define SYNTH_FADE_TYPE_ACTION_2          2
 #define SYNTH_FADE_TYPE_ACTION_3          3
 
-extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
-extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
-extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
-extern void macSetExternalKeyoff(McmdVoiceState* slot);
-extern void macSampleEndNotify(void);
-extern void macInit(void);
 extern u32 synthMessageCallback;
 
 /*
@@ -1709,7 +1698,7 @@ int synthHWMessageHandler(int mode, u32 arg)
         {
             break;
         }
-        macSampleEndNotify();
+        macSampleEndNotify(&synthVoice[arg & 0xff]);
         break;
     }
     case 1:
