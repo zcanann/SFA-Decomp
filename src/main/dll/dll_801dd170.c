@@ -1,5 +1,6 @@
 /* DLL - SC level-control tail objects [801DBFA0-801DC310) */
 #include "main/obj_placement.h"
+#include "main/dll/SC/sctotembond.h"
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/gamebit_ids.h"
 
@@ -15,7 +16,7 @@ STATIC_ASSERT(offsetof(SCMusicTreeSetup, hearRadiusHalf) == 0x1B);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, scale) == 0x1C);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 
-int sc_totempuzzle_animEventCallback(void)
+int sc_totempuzzle_animEventCallback(ScTotemPuzzleObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int r;
     if (mainGetBit(GAMEBIT_SC_totempuzzle_running) != 0) { r = 0; }

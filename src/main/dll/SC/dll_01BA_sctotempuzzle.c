@@ -76,8 +76,6 @@ extern f32 lbl_803E5628;
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
 
-extern void sc_totempuzzle_animEventCallback(int obj);
-
 int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleState* state)
 {
     SCTotemPuzzleParticleBox particleBox;

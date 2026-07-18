@@ -28,7 +28,7 @@ typedef struct ScTotemPuzzleObject {
     u16 objectFlags;
     u8 padB2[0xB8 - 0xB2];
     ScTotemPuzzleState *state;
-    void (*animEventCallback)(int obj);
+    int (*animEventCallback)(struct ScTotemPuzzleObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 } ScTotemPuzzleObject;
 
 typedef struct ScTotemPuzzleMapData {
@@ -97,6 +97,7 @@ STATIC_ASSERT(offsetof(ScTotemBondObject, animEventCallback) == 0xBC);
 
 void sc_totempuzzle_update(ScTotemPuzzleObject *obj);
 void sc_totempuzzle_init(ScTotemPuzzleObject *obj,ScTotemPuzzleMapData *params);
+int sc_totempuzzle_animEventCallback(ScTotemPuzzleObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void sc_totempuzzle_release(void);
 void sc_totempuzzle_initialise(void);
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *state,f32 radius);
