@@ -25,45 +25,9 @@ typedef struct
 #define ROLLINGBARREL_OBJFLAG_PARENT_SLACK 0x1000
 
 s16 gRollingBarrelExplodingCount;
-RollingBarrelInitPair gRollingBarrelCurveInitPair = { 21, 0 };
+const RollingBarrelInitPair gRollingBarrelCurveInitPair = { 21, 0 };
 
-void fn_801A5D88(GameObject* obj, int explosionVariant)
-{
-    RollingBarrelState* state = (obj)->extra;
-    u32 debrisType;
-    u32 r2;
-    int player;
-    f32 dist;
-    f32 falloff;
-    gRollingBarrelExplodingCount += 1;
-    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_dsmk2_c_106);
-    if (gRollingBarrelExplodingCount > 1)
-    {
-        debrisType = randomGetRange(0, 1) & 0xff;
-        spawnExplosion((int)obj, 1, 1, 0, debrisType, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
-    }
-    else
-    {
-        debrisType = randomGetRange(0, 1) & 0xff;
-        spawnExplosion((int)obj, 1, 1, 0, debrisType, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
-    }
-    state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
-    state->timer = 0.0f;
-    (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-    ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
-                              (s32)(3.0f * (f32)(u32)(obj)->anim.modelInstance->primaryHitboxRadius));
-    player = (int)Obj_GetPlayerObject();
-    if ((((GameObject*)player)->objectFlags & ROLLINGBARREL_OBJFLAG_PARENT_SLACK) == 0)
-    {
-        dist = Vec_distance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
-        if (dist <= 500.0f)
-        {
-            falloff = 1.0f - dist / 500.0f;
-            CameraShake_Start(5.0f * falloff, 10.0f * falloff, 4.0f);
-            doRumble(15.0f * falloff);
-        }
-    }
-}
+void fn_801A5D88(GameObject* obj, int explosionVariant);
 
 int RollingBarrel_getExtraSize(void)
 {
@@ -272,6 +236,44 @@ void RollingBarrel_update(GameObject* obj)
     {
         ObjHits_DisableObject((u32)obj);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, state->hitVolumeSlot, 0, 0);
+    }
+}
+
+void fn_801A5D88(GameObject* obj, int explosionVariant)
+{
+    RollingBarrelState* state = (obj)->extra;
+    u32 debrisType;
+    u32 r2;
+    int player;
+    f32 dist;
+    f32 falloff;
+    gRollingBarrelExplodingCount += 1;
+    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_dsmk2_c_106);
+    if (gRollingBarrelExplodingCount > 1)
+    {
+        debrisType = randomGetRange(0, 1) & 0xff;
+        spawnExplosion((int)obj, 1, 1, 0, debrisType, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+    }
+    else
+    {
+        debrisType = randomGetRange(0, 1) & 0xff;
+        spawnExplosion((int)obj, 1, 1, 0, debrisType, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+    }
+    state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
+    state->timer = 0.0f;
+    (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+    ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
+                              (s32)(3.0f * (f32)(u32)(obj)->anim.modelInstance->primaryHitboxRadius));
+    player = (int)Obj_GetPlayerObject();
+    if ((((GameObject*)player)->objectFlags & ROLLINGBARREL_OBJFLAG_PARENT_SLACK) == 0)
+    {
+        dist = Vec_distance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
+        if (dist <= 500.0f)
+        {
+            falloff = 1.0f - dist / 500.0f;
+            CameraShake_Start(5.0f * falloff, 10.0f * falloff, 4.0f);
+            doRumble(15.0f * falloff);
+        }
     }
 }
 
