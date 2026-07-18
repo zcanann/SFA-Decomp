@@ -150,7 +150,6 @@ typedef struct StaffQuakeSpellState
     int* object;     /* 0x1C: spawned quake-spell object */
     u8 active;       /* 0x20: spell active flag */
 } StaffQuakeSpellState;
-extern s16 sStaffSwipeTextureIdTable[4];
 typedef struct QuakePartVec
 {
     u16 h0, h1, h2;
