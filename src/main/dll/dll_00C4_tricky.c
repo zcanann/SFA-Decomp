@@ -57,6 +57,7 @@
 #include "main/dll/dll_80136a40_ext.h"
 #include "main/dll/skeetla_ext.h"
 #include "main/dll/tricky_substates_ext.h"
+#include "main/dll/mmp_critterspit_ext.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -269,7 +270,6 @@ extern f32 lbl_803E2544;
 extern f32 lbl_803E2548;
 extern f32 lbl_803E254C;
 extern f32 lbl_803E2550;
-extern int trickyFoodFn_8013db3c(int obj, int state);
 extern void memmove(void* dst, void* src, int n);
 extern void fn_801B17F4(GameObject*);
 extern void fn_801B6D40(void);
@@ -1469,7 +1469,7 @@ void Tricky_update(int obj)
             }
             cursor += 8;
         }
-        if ((trickyState->stateFlags & 0x10) == 0 && trickyFoodFn_8013db3c(obj, state) == 2)
+        if ((trickyState->stateFlags & 0x10) == 0 && trickyFoodFn_8013db3c((u8*)obj, (u8*)state) == 2)
         {
             trickyState->stateIndex = 0x11;
         }
