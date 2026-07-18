@@ -22,6 +22,7 @@
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_010C_lanternfirefly.h"
 
 f32 lbl_803DBDD8 = 60.0f;
 
@@ -70,7 +71,6 @@ extern f32 lbl_803E3AE0;
 
 void fn_801868D0(GameObject* obj);
 void fn_801869DC(GameObject* obj);
-void LanternFireFly_update(GameObject* obj);
 
 /* LanternFireFly_modelMtxFn: receives (obj, anchorX, anchorY, anchorZ) and
  * stores the three floats into obj->extra at +0x54/+0x58/+0x5c. */
