@@ -158,7 +158,7 @@ void drakord_thornbush_hitDetect(int obj)
             }
             else
             {
-                Obj_RemoveFromUpdateList((u8*)obj);
+                Obj_RemoveFromUpdateList((GameObject*)obj);
                 ObjHits_DisableObject((GameObject*)obj);
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }

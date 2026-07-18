@@ -230,7 +230,7 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
     {
         if (animUpdate->eventIds[i] == 1 && setup->mode != 0)
         {
-            Obj_RemoveFromUpdateList((u8*)obj);
+            Obj_RemoveFromUpdateList((GameObject*)obj);
             ObjHits_DisableObject((GameObject*)obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
@@ -414,7 +414,7 @@ void kytesmum_init(GameObject* obj, KytesMumSetup* setup)
         ObjGroup_AddObject((int)obj, KYTESMUM_OBJGROUP);
         if (runtime->questComplete != 0)
         {
-            Obj_RemoveFromUpdateList((u8*)obj);
+            Obj_RemoveFromUpdateList(obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         ObjHits_RegisterActiveHitVolumeObject(obj);

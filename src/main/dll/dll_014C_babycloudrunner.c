@@ -347,7 +347,7 @@ void babycloudrunner_update(int* obj)
     {
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->flags22C &= ~1;
-        Obj_RemoveFromUpdateList((u8*)obj);
+        Obj_RemoveFromUpdateList((GameObject*)obj);
         ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
         ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
     }
@@ -369,7 +369,7 @@ void babycloudrunner_update(int* obj)
             ObjHits_DisableObject((GameObject*)obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             sub->flags22C &= ~1;
-            Obj_RemoveFromUpdateList((u8*)obj);
+            Obj_RemoveFromUpdateList((GameObject*)obj);
             ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
             ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -679,7 +679,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
         ObjHits_DisableObject((GameObject*)obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         sub->flags22C = (u8)(sub->flags22C & ~1);
-        Obj_RemoveFromUpdateList((u8*)obj);
+        Obj_RemoveFromUpdateList((GameObject*)obj);
         ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
     }
     else

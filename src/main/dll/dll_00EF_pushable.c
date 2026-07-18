@@ -1375,7 +1375,7 @@ void pushable_update(int* obj)
         }
         if (mainGetBit(GAMEBIT_PushableRelated0272) != 0)
         {
-            Obj_RemoveFromUpdateList((u8*)obj);
+            Obj_RemoveFromUpdateList((GameObject*)obj);
             ObjHits_DisableObject((GameObject*)obj);
             ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         }

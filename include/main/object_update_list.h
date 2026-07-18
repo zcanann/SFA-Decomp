@@ -1,8 +1,8 @@
 #ifndef MAIN_OBJECT_UPDATE_LIST_H_
 #define MAIN_OBJECT_UPDATE_LIST_H_
 
-#include "types.h"
+#include "main/game_object.h"
 
-void Obj_RemoveFromUpdateList(u8* obj);
+void Obj_RemoveFromUpdateList(GameObject* obj);
 
 #endif /* MAIN_OBJECT_UPDATE_LIST_H_ */

@@ -715,7 +715,7 @@ int cfguardian_updateMain(GameObject* obj)
         }
         obj->anim.alpha = 0;
         ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~1;
-        Obj_RemoveFromUpdateList((u8*)obj);
+        Obj_RemoveFromUpdateList(obj);
         obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->questState = CFGUARDIAN_PARKED_HIDDEN;
         break;
@@ -759,7 +759,7 @@ int cfguardian_updateMain(GameObject* obj)
         break;
     case CFGUARDIAN_PARKED_HIDDEN: /* parked and hidden */
         obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        Obj_RemoveFromUpdateList((u8*)obj);
+        Obj_RemoveFromUpdateList(obj);
         ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~1;
         break;
     }
@@ -1033,7 +1033,7 @@ void cfguardian_init(int* obj, u8* params)
         if (((CfGuardianMapData*)params)->variant == 0)
         {
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-            Obj_RemoveFromUpdateList((u8*)obj);
+            Obj_RemoveFromUpdateList((GameObject*)obj);
         }
     }
     else if (mainGetBit(GAMEBIT_GUARDIAN_RELEASED) != 0 && ((CfGuardianMapData*)params)->variant == 0)

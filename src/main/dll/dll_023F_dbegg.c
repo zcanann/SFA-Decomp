@@ -242,7 +242,7 @@ void dbegg_processMessages(GameObject* obj)
                 {
                     gameBitIncrement((int)config->activationEventId);
                 }
-                    Obj_RemoveFromUpdateList((u8*)obj);
+                    Obj_RemoveFromUpdateList(obj);
                 (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 ObjGroup_RemoveObject((int)obj, DBEGG_OBJGROUP);
                 break;

@@ -149,7 +149,7 @@ void FlammableVine_update(GameObject* obj)
             state->burnTimer = zero;
             state->flags = state->flags & ~1;
             state->flags = state->flags | 2;
-            Obj_RemoveFromUpdateList((u8*)obj);
+            Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
         }
     }
@@ -222,7 +222,7 @@ void FlammableVine_init(GameObject* obj, FlammablevineObjectDef* def)
 
     if (def->burnedBit != -1 && mainGetBit(def->burnedBit) != 0)
     {
-        Obj_RemoveFromUpdateList((u8*)obj);
+        Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
         (obj)->anim.alpha = 0;
         state->flags = state->flags | 2;

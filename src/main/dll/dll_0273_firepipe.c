@@ -122,7 +122,7 @@ void firepipe_releaseEffectObject(FirePipeObject* obj)
     {
         ObjHits_DisableObject((GameObject*)obj);
         ((GameObject*)obj)->objectFlags &= ~FIREPIPE_OBJFLAG_ACTIVE;
-        Obj_RemoveFromUpdateList((u8*)obj);
+        Obj_RemoveFromUpdateList((GameObject*)obj);
         ((GameObject*)obj)->objectFlags |= FIREPIPE_OBJFLAG_UPDATE_DISABLED;
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
@@ -398,7 +398,7 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, FirePipeObject* obj, void* 
             freeDelay = mmSetFreeDelay(0);
             mm_free(spawnDef);
             mmSetFreeDelay(freeDelay);
-            Obj_InsertIntoUpdateList((u8*)effectObj);
+            Obj_InsertIntoUpdateList(effectObj);
             effectObj->objectFlags &= ~FIREPIPE_OBJFLAG_UPDATE_DISABLED;
             return (int)effectObj;
         }

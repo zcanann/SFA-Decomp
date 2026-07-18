@@ -153,7 +153,7 @@ void wmwallcrawler_hitDetect(GameObject* obj)
         }
         else
         {
-            Obj_RemoveFromUpdateList((u8*)obj);
+            Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             ObjGroup_RemoveObject((int)obj, WMWALLCRAWLER_OBJGROUP);
             (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
@@ -239,7 +239,7 @@ void wmwallcrawler_update(GameObject* obj)
                 }
                 else
                 {
-                    Obj_RemoveFromUpdateList((u8*)ob);
+                    Obj_RemoveFromUpdateList((GameObject*)ob);
                     ObjHits_DisableObject((GameObject*)ob);
                     ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                     ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -269,7 +269,7 @@ void wmwallcrawler_update(GameObject* obj)
                     }
                     else
                     {
-                        Obj_RemoveFromUpdateList((u8*)ob);
+                        Obj_RemoveFromUpdateList((GameObject*)ob);
                         ObjHits_DisableObject((GameObject*)ob);
                         ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                         ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -290,7 +290,7 @@ void wmwallcrawler_update(GameObject* obj)
                 }
                 else
                 {
-                    Obj_RemoveFromUpdateList((u8*)ob);
+                    Obj_RemoveFromUpdateList((GameObject*)ob);
                     ObjHits_DisableObject((GameObject*)ob);
                     ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                     ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -337,7 +337,7 @@ void wmwallcrawler_update(GameObject* obj)
                                 }
                                 else
                                 {
-                                    Obj_RemoveFromUpdateList((u8*)ob);
+                                    Obj_RemoveFromUpdateList((GameObject*)ob);
                                     ObjHits_DisableObject((GameObject*)ob);
                                     ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                                     ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;

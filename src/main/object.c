@@ -5,6 +5,7 @@
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/model.h"
+#include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
 #include "main/asset_load.h"
 #include "dolphin/mtx/mtx_legacy.h"
@@ -63,8 +64,7 @@ void* lbl_803DCB90;
 int lbl_803DCB8C;
 void* gObjList;
 int gObjCount;
-static int sObjUnused0;
-int gObjUpdateList;
+ObjLinkedList gObjUpdateList;
 u32 gObjUpdateFlags;
 s8 gObjPtrTableCount;
 int lbl_803DCB70;
@@ -181,7 +181,6 @@ void* gObjPtrTable[20];
 extern int gObjTablesBinCount;
 extern int* gObjTablesBinIndex;
 extern u8* gObjTablesBinData;
-extern int gObjUpdateList;
 extern int gObjCount;
 extern void* gObjList;
 extern const f32 lbl_803DE890;
@@ -214,14 +213,12 @@ extern int gObjFileCount;
 extern f32 gMapSavedPlayerOffsetX;
 extern f32 gMapSavedPlayerOffsetZ;
 
-extern void objList_remove(void* list, void* item);
 extern void objFreeObjDef(u8* def, int flags);
 extern void Obj_RegisterObject(GameObject* obj, int b);
 extern void modelInitBones(f32 scale, void* model);
 extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();
-extern void fn_80013B6C(int* p, int n);
 extern int loadModLines(int n, s16* out);
 extern void intersectModLineBuild(u8* buf);
 void ObjModel_ClearRenderAttachment(u8* model);
@@ -1476,7 +1473,7 @@ void Obj_FreeObject(GameObject* obj)
         }
         if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
         {
-            objList_remove(&gObjUpdateList, obj);
+            objList_remove(&gObjUpdateList, (int)obj);
         }
         gObjPartitionPivot = 0;
     }
@@ -1538,28 +1535,28 @@ void Obj_FreeObject(GameObject* obj)
     }
 }
 
-void Obj_InsertIntoUpdateList(u8* obj)
+void Obj_InsertIntoUpdateList(GameObject* obj)
 {
-    if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
+    if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
     {
-        int* list = &gObjUpdateList;
+        ObjLinkedList* list = &gObjUpdateList;
         int prev = 0;
-        int cur = list[1];
-        int linkOff = *(s16*)((u8*)list + 2);
-        while (cur != 0 && (s8)obj[0xae] < (s8)((u8*)cur)[0xae])
+        int cur = list->head;
+        int linkOff = list->nextOffset;
+        while (cur != 0 && obj->anim.activeHitboxMode < ((GameObject*)cur)->anim.activeHitboxMode)
         {
             prev = cur;
             cur = *(int*)((u8*)cur + linkOff);
         }
-        objListAdd(&gObjUpdateList, prev, obj);
+        objListAdd(&gObjUpdateList, prev, (int)obj);
     }
 }
 
-void Obj_RemoveFromUpdateList(u8* obj)
+void Obj_RemoveFromUpdateList(GameObject* obj)
 {
-    if (((GameObject*)obj)->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
+    if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
     {
-        objList_remove(&gObjUpdateList, obj);
+        objList_remove(&gObjUpdateList, (int)obj);
     }
 }
 
@@ -2653,7 +2650,7 @@ void Obj_RegisterObject(GameObject* obj, int flags)
                 prev = cur;
                 cur = *(int*)(cur + off);
             }
-            objListAdd(&gObjUpdateList, prev, obj);
+            objListAdd(&gObjUpdateList, prev, (int)obj);
         }
     }
     if (object->modelInstance->group8RegistrationCount > 0)

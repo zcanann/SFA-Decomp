@@ -1004,7 +1004,7 @@ void gunpowderbarrel_update(GameObject *obj)
             }
             if (gen == 0)
             {
-                Obj_RemoveFromUpdateList((u8*)obj);
+                Obj_RemoveFromUpdateList(obj);
                 ObjHits_DisableObject(obj);
                 (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 s16toFloat(&state->respawnTimer, 0x3c);
@@ -1027,7 +1027,7 @@ void gunpowderbarrel_update(GameObject *obj)
                 (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 return;
             }
-            Obj_RemoveFromUpdateList((u8*)obj);
+            Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }

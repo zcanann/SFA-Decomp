@@ -176,7 +176,7 @@ void drgenerator_init(GameObject* obj, DrgeneratorPlacement* placement)
     if (mainGetBit(placement->completionGameBit) != 0)
     {
         (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        ((void (*)(void*))Obj_RemoveFromUpdateList)(obj);
+        Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
     }
     ((void (*)(void*, int))ObjGroup_AddObject)(obj, DRGENERATOR_OBJGROUP);

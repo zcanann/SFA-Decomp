@@ -298,7 +298,7 @@ void CFPrisonGuard_update(int* obj)
             (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ObjHits_DisableObject((GameObject*)obj);
-        Obj_RemoveFromUpdateList((u8*)obj);
+        Obj_RemoveFromUpdateList((GameObject*)obj);
         return;
     }
     /* 0x44: the free-the-prisoner event - once set, the guard no

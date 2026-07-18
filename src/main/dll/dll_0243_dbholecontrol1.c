@@ -167,7 +167,7 @@ void dbholecontrol1_update(int* obj)
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (mainGetBit(((Dbholecontrol1Placement*)def)->hideGameBit) != 0)
     {
-        Obj_RemoveFromUpdateList((u8*)obj);
+        Obj_RemoveFromUpdateList((GameObject*)obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     }
     else if (mainGetBit(((Dbholecontrol1Placement*)def)->triggerGameBit) != 0)

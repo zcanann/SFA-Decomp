@@ -95,7 +95,7 @@ void spellstone_update(SpellStoneObject* obj)
     {
         mainSetBits(*(lbl_803DC228 + def->eventIndex), 1);
         obj->flags = (s16)(obj->flags | SPELLSTONE_OBJFLAG_HIDDEN);
-        Obj_RemoveFromUpdateList((u8*)obj);
+        Obj_RemoveFromUpdateList((GameObject*)obj);
         (*gMapEventInterface)->setMapAct(0x1d, 2);
     }
     else
@@ -104,7 +104,7 @@ void spellstone_update(SpellStoneObject* obj)
         if (eventActive != 0)
         {
             obj->flags = (s16)(obj->flags | SPELLSTONE_OBJFLAG_HIDDEN);
-            Obj_RemoveFromUpdateList((u8*)obj);
+            Obj_RemoveFromUpdateList((GameObject*)obj);
         }
         if (state->state == SPELLSTONE_STATE_ACTIVE)
         {

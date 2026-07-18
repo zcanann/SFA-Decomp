@@ -2,8 +2,9 @@
 #define MAIN_OBJECT_EXT_H_
 
 #include "main/object_transform.h"
+#include "main/game_object.h"
 
-void Obj_InsertIntoUpdateList(u8* obj);
+void Obj_InsertIntoUpdateList(GameObject* obj);
 void Obj_ClearModelSlotIndex(u8* obj);
 void Obj_SetModelSlotIndex(u8* obj, int slotIndex);
 int objApplyVelocity(u8* obj);
