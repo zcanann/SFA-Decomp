@@ -30,6 +30,7 @@
 #include "dolphin/gx/GXLighting.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXFrameBuffer.h"
+#include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTexture.h"
 #include "dolphin/gx/GXTransform.h"
 #include "dolphin/os/OSTime.h"
@@ -154,8 +155,6 @@ u8 lbl_803DB5F8[8] = {0x28, 0x20, 0, 0xFF, 0, 0, 0, 0};
 #define GX_LEQUAL     3
 #define PAD_BUTTON_A  0x100
 #define PAD_BUTTON_B  0x200
-extern u32 GXSetBlendMode();
-
 extern int lbl_803DCD6C;
 extern int lbl_803DCD70;
 extern int lbl_803DCD74;
@@ -1016,9 +1015,6 @@ extern void GXInitFifoLimits(void* fifo, u32 hi, u32 lo);
 extern void Queue_Init(void* q, void* buf, int n, int stride);
 extern void OSInitThreadQueue(char* q);
 extern void GXSetBreakPtCallback(void (*cb)());
-extern void GXSetFieldMode(int field_mode, int half_aspect_ratio);
-extern void GXSetPixelFmt(int pix_fmt, int z_fmt);
-extern void GXSetDither(int dither);
 extern char lbl_8035F6B8[0x78];
 extern char* lbl_803DCCE0;
 extern int lbl_803DCCB8;
@@ -4602,7 +4598,6 @@ void setDisplayCopyFilter(void)
 }
 
 
-extern void GXSetAlphaUpdate(GXBool update_enable);
 extern void GXFlush(void);
 extern void Queue_Push(void* q, void* item);
 extern void GXSetDrawSync(u16 v);

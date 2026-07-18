@@ -30,6 +30,7 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSInterrupt.h"
 #include "dolphin/gx/GXDispList.h"
+#include "dolphin/gx/GXPixel.h"
 #include "main/dll/modgfx.h"
 #include "main/pi_dolphin_ext.h"
 #include "main/mm_ext.h"
@@ -202,8 +203,6 @@ static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights);
 
 
 #define RCP_DISTORT_TEXTURE_ID 0x5dc
-
-extern u32 GXSetBlendMode();
 
 extern void GXLoadTexMtxImm(f32* mtx, int id, int type);
 extern void GXSetTexCoordGen2(int dst, int fn, int src, int mtx, int normalize, int pt);
