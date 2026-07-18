@@ -59,6 +59,7 @@
 #include "main/dll/tricky_substates_ext.h"
 #include "main/dll/mmp_critterspit_ext.h"
 #include "main/dll/dll_80136a40_ext2.h"
+#include "main/dll/dll_0014_unk.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -206,9 +207,6 @@ extern void trickyVoxAllocFn_8004b5d4(void* out);
 extern void objAudioFn_8006edcc(int obj, u16 mask, int arg5, float* points, void* aux, f32 scaleX, f32 scaleY);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
-extern void doNothing_onTrickyFree(void);
-extern void doNothing_onTrickyInit(void);
-extern void walkgroupFindExitPointFn_800dc398(void);
 extern int trickyFn_8013b368();
 extern f32 objFn_801948c0(int obj, int coord);
 const struct VisBits16 gTrickyVisibilityBitsInit = {{0x10000, 0x20000, 0x40000, 0x80000}};

@@ -19,6 +19,7 @@
 #include "main/pad_api.h"
 #include "main/camera_shake_api.h"
 #include "main/frame_timing.h"
+#include "main/dll/seqobj11d_ext.h"
 
 #define WISPBADDIE_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -60,7 +61,6 @@ typedef struct
 
 extern FamilyTable lbl_8031F16C[]; /* per-family table-of-tables, 0x28-byte rows */
 extern u8 lbl_8031DD30[];          /* per-anim move-progress floats, indexed anim*4 */
-extern void fn_801513AC(GameObject* obj, u8* state);
 
 f32 lbl_803E2740 = 0.0f;
 
