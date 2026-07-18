@@ -1,5 +1,6 @@
 #include "dolphin.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 extern float lbl_803E7AB8;
 extern double lbl_803E7AC0;
@@ -43,10 +44,6 @@ extern float lbl_803E7BE4;
 extern float lbl_803E7BE8;
 extern float lbl_803E7BEC;
 extern float lbl_803E7BF0;
-
-float fastCastS16ToFloat(s16* p);
-void fastCastFloatToS16(float x, s16* p);
-
 
 float powfCoreHighPrecision(float x, float y) {
     register double mantissa;

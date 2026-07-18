@@ -1,4 +1,6 @@
 #include "dolphin.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 extern float lbl_803E7D74;
 extern float lbl_803E7D78;
@@ -35,8 +37,6 @@ extern const float lbl_803E7E24;
 extern const float lbl_803E7E28;
 extern const float lbl_803E7E2C;
 
-float fastCastS16ToFloat(s16* p);
-float trigReduceQuadrant(u16* p, float x);
 double tan(int* out_n, float x);
 
 float mathCosf(float x) {

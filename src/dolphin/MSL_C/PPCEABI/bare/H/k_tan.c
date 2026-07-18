@@ -1,5 +1,6 @@
 #include "main/fsin16_approx_api.h"
 #include "main/trig_ext.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 extern double __frsqrte(double x);
 typedef signed short s16;
@@ -19,8 +20,6 @@ extern float lbl_803E7CA0;
 extern float lbl_803E7CA4;
 extern float lbl_803E7CA8;
 extern float lbl_803E7CAC;
-
-extern float fastCastS16ToFloat(s16* p);
 
 float sqrtf_8029312c(float x) {
     float guess;

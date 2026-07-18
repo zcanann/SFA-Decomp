@@ -1,4 +1,6 @@
 #include "dolphin.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/fcos16_approx_api.h"
 #include "main/trig.h"
 #include "main/trig_ext.h"
@@ -65,9 +67,6 @@ extern float lbl_803E7DA0;
 extern float lbl_803E7DA4;
 extern float lbl_803E7DA8;
 extern float lbl_803E7DAC;
-
-float fastCastS16ToFloat(s16* p);
-float trigReduceQuadrant(u16* p, float x);
 
 float fsin16Precise(u16 angle) {
     s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);

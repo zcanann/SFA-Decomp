@@ -50,9 +50,6 @@ void fastCastFloatToU16(float x, s16* p)
     }
 }
 
-float fastCastS16ToFloat(s16* p);
-void fastCastFloatToS16(float x, s16* p);
-
 #pragma optimization_level 0
 #pragma optimize_for_size on
 float exp2f(float x)

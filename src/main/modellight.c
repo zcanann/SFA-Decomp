@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/shader_api.h"
 #include "main/dll/ivec3_struct.h"
@@ -576,8 +577,6 @@ void modelLightStruct_setLightKind(ModelLightStruct* p, int v)
 {
     p->lightKind = v;
 }
-
-extern void Vec_normalize(f32* dst, f32* src);
 
 void objSetEventName(ModelLightStruct* light, int name)
 {

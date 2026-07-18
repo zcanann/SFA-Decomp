@@ -1,4 +1,5 @@
 #include "dolphin.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 
 extern float lbl_803E7C18;
@@ -22,8 +23,6 @@ extern float lbl_803E7C60;
 extern float lbl_803E7C64;
 extern float lbl_803E7C68;
 extern float lbl_803E7C6C;
-
-float fastCastS16ToFloat(s16* p);
 
 float fn_80292DEC(float x) {
     float estimate;

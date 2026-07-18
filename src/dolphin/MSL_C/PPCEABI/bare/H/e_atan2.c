@@ -1,5 +1,7 @@
 #include "dolphin.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/k_tan.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 typedef struct Vec3f {
     float x;
@@ -8,7 +10,6 @@ typedef struct Vec3f {
 } Vec3f;
 
 
-extern float fastCastS16ToFloat(s16* p);
 extern float lbl_803E7AB8;
 extern float lbl_803E7BC8;
 extern float lbl_803E7BF4;
