@@ -49,6 +49,9 @@
 #include "main/dll/duster_wb.h"
 #include "main/dll/weevil.h"
 #include "main/dll/hoodedzyck.h"
+#include "main/dll/snowworm.h"
+#include "main/dll/kooshy.h"
+#include "main/dll/mikaladon.h"
 
 int lbl_803DBC58[2] = {2, 3};
 f32 lbl_803DBC60 = 20.0f;
@@ -104,11 +107,8 @@ extern void fn_80150EDC(GameObject* obj, int state);
 extern void fn_8015165C(GameObject* obj, int state);
 extern void fn_80152040(short* obj, int state);
 extern void fn_80152514(short* obj, int state);
-extern void fn_80152B90(short* obj, int state);
 extern void fn_80153040(GameObject* obj, int state);
 extern void fn_80153248(GameObject* obj, int state);
-extern void fn_8015383C(GameObject* obj, int state);
-extern void fn_80153BFC(GameObject* obj, int state);
 extern void fn_80154584(GameObject* obj, int state);
 extern void fn_80155884(short* obj, int state);
 extern void fn_80155948(short* obj, int state);
@@ -118,8 +118,6 @@ extern void fn_80156010(short* obj, int state);
 extern void crawler_updateC(short* obj, int state);
 extern void crawler_updateB(short* obj, int state);
 extern void crawler_update(short* obj, int state);
-extern void snowworm_update(short* obj, int state);
-extern void snowworm_applyReactionState(short* obj, int state);
 extern f32 lbl_803E256C;
 extern f32 lbl_803E2570;
 extern f32 lbl_803E2574;
@@ -155,11 +153,8 @@ void baddieTurnTowardTarget(int* node, int* sub);
 extern void sharpClawInit(int obj, u8* state);
 extern void guardClaw_init(int obj, u8* state);
 extern void gcRobotPatrol_init(GameObject* obj, u8* state);
-extern void mikaladon_init(GameObject* obj, u8* state);
 extern void vambat_init(GameObject* obj, u8* state);
-extern void kooshy_init(int obj, u8* state);
 extern void baddie_initWhirlpoolState(int obj, u8* state);
-extern void crawler_initVariant(int obj, u8* state);
 extern void battleDroidInit(int obj, u8* state);
 extern void crawler_initModelVariant(int obj, u8* state);
 extern void* memset(void* p, int c, int n);
@@ -249,7 +244,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80152514(obj, state);
                 break;
             case 0x642:
-                fn_80152B90(obj, state);
+                fn_80152B90((int*)obj, (u8*)state);
                 break;
             case 0x3fe:
             case 0x7c6:
@@ -281,7 +276,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 break;
             case 0x842:
             case 0x84b:
-                snowworm_update(obj, state);
+                snowworm_update((int*)obj, (u8*)state);
                 break;
             case 0x4ac:
                 hoodedZyck_update(obj, (u8*)state);
@@ -326,7 +321,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80152514(obj, state);
                 break;
             case 0x642:
-                fn_80152B90(obj, state);
+                fn_80152B90((int*)obj, (u8*)state);
                 break;
             case 0x3fe:
             case 0x7c6:
@@ -358,7 +353,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 break;
             case 0x842:
             case 0x84b:
-                snowworm_update(obj, state);
+                snowworm_update((int*)obj, (u8*)state);
                 break;
             case 0x4ac:
                 hoodedZyck_updateB(obj, (u8*)state);
@@ -437,7 +432,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             fn_80152514(obj, state);
             break;
         case 0x642:
-            fn_80152B90(obj, state);
+            fn_80152B90((int*)obj, (u8*)state);
             break;
         case 0x3fe:
         case 0x7c6:
@@ -469,7 +464,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             break;
         case 0x842:
         case 0x84b:
-            snowworm_applyReactionState(obj, state);
+            snowworm_applyReactionState((int*)obj, (int*)state);
             break;
         case 0x4ac:
             fn_80156DA0((GameObject*)(obj), state);
@@ -1989,14 +1984,14 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             gcRobotPatrol_init(obj, state);
             break;
         case 1602:
-            mikaladon_init(obj, state);
+            mikaladon_init(obj, (int)state);
             break;
         case 1022:
         case 1990:
             vambat_init(obj, state);
             break;
         case 1419:
-            kooshy_init((int)obj, state);
+            kooshy_init((int)obj, (int)state);
             break;
         case 873:
             fn_801542AC((int)obj, state);
@@ -2021,7 +2016,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             break;
         case 2114:
         case 2123:
-            crawler_initVariant((int)obj, state);
+            crawler_initVariant((int*)obj, (int*)state);
             break;
         case 1196:
             hoodedZyck_init((int*)obj, (int*)state);

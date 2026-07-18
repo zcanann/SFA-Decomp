@@ -71,6 +71,7 @@
 #include "main/camera_shake_api.h"
 #include "main/pad_api.h"
 #include "main/dll/dll_0273_firepipe.h"
+#include "main/dll/snowworm.h"
 
 typedef struct CrawlerModelChainList
 {

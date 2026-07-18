@@ -14,6 +14,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/voxmaps.h"
+#include "main/dll/kooshy.h"
 
 extern u8 gMagicPlantSeqEntryTable[8];
 

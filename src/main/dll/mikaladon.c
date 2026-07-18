@@ -26,6 +26,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/voxmaps.h"
+#include "main/dll/mikaladon.h"
 
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
 
