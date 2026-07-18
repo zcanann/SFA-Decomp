@@ -22,8 +22,12 @@ f32 gEffect4TickCyclePhaseSlow = 0.3f;
 
 
 
+extern const f32 lbl_803DFA88;
+extern const f32 lbl_803DFA8C;
 const f32 lbl_803DFA90 = 1.0f;
-const f32 lbl_803DFAB0 = 0.01f;
+extern const f32 gEffect4SpawnCyclePhaseSlowStep;
+extern const f32 lbl_803DFA98;
+extern const f32 lbl_803DFAB0;
 
 ObjectDescriptor6 lbl_803108A0 = {
     0,
@@ -121,12 +125,12 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     MtxBuildArg es;
     PartFxSpawn cfg;
 
-    gEffect4SpawnCyclePhaseFast = gEffect4SpawnCyclePhaseFast + (0.001f);
+    gEffect4SpawnCyclePhaseFast = gEffect4SpawnCyclePhaseFast + lbl_803DFA88;
     if (gEffect4SpawnCyclePhaseFast > *(f32*)&lbl_803DFA90)
-        gEffect4SpawnCyclePhaseFast = (0.1f);
-    gEffect4SpawnCyclePhaseSlow = gEffect4SpawnCyclePhaseSlow + (0.0003f);
+        gEffect4SpawnCyclePhaseFast = lbl_803DFA8C;
+    gEffect4SpawnCyclePhaseSlow = gEffect4SpawnCyclePhaseSlow + gEffect4SpawnCyclePhaseSlowStep;
     if (gEffect4SpawnCyclePhaseSlow > *(f32*)&lbl_803DFA90)
-        gEffect4SpawnCyclePhaseSlow = (0.3f);
+        gEffect4SpawnCyclePhaseSlow = lbl_803DFA98;
     if (sourceObj == 0)
         return -1;
     if ((spawnFlags & 0x200000) != 0)
