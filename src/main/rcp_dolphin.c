@@ -1087,7 +1087,6 @@ void shaderInit(u8* def, void** out, u8* obj, int wpad0)
 
 extern s32 lbl_803DCE00;
 
-extern f32 powfCoreHighPrecision(f32 base, f32 exp);
 extern f32 gRcpDistortScaleA;
 extern f32 gRcpDistortPowExp;
 

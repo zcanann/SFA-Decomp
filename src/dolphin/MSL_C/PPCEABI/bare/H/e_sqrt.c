@@ -1,4 +1,5 @@
 #include "dolphin.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 extern float lbl_803E7AB8;
 extern double lbl_803E7AC0;

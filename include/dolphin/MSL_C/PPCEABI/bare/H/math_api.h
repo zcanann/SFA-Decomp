@@ -8,6 +8,8 @@ double __fabs(double);
 double __frsqrte(double x);
 f32 __kernel_sin(f32 x);
 f32 powf(f32 x, f32 y);
+f32 powfCoreFast(f32 x, f32 y);
+f32 powfCoreHighPrecision(f32 x, f32 y);
 float __fabsf(float x);
 float sqrtf(float x);
 float expf(float x);

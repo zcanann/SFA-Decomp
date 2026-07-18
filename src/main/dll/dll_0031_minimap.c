@@ -21,7 +21,7 @@
 #include "main/gametext_box_api.h"
 #include "main/gametext_charset_api.h"
 #include "main/gametext_show_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
@@ -200,7 +200,6 @@ extern f32 gMinimapF60;
 extern f32 gMinimapTwo;
 extern f32 gMinimapF24576;
 extern f32 gMinimapFNeg24576;
-extern f32 powfCoreFast(f32 base, f32 exp);
 extern f32 gMinimapFltMax;
 extern f32 gMinimapOne;
 extern f32 gMinimapBlipVeryNearDist;
