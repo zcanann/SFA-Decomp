@@ -25,19 +25,19 @@ extern f32 lbl_803E17D0;
 union CamTalkConstF32 { f32 f; };
 const union CamTalkConstF32 lbl_803E177C = { 0.0f };
 const union CamTalkConstF32 lbl_803E1780 = { 0.0f };
-__declspec(section ".sdata2") f32 gCamTalkDefaultFov = 85.0f;
-__declspec(section ".sdata2") f32 lbl_803E1788 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E178C = 2e+01f;
-__declspec(section ".sdata2") f32 lbl_803E1790 = 0.1f;
-__declspec(section ".sdata2") f32 lbl_803E1794 = 12.0f;
-__declspec(section ".sdata2") f32 lbl_803E1798 = 3072.0f;
-__declspec(section ".sdata2") f32 gCamTalkPi = 3.1415927f;
-__declspec(section ".sdata2") f32 gCamTalkAngleUnitScale = 32768.0f;
-__declspec(section ".sdata2") f32 lbl_803E17A4 = 6.0f;
-__declspec(section ".sdata2") f32 lbl_803E17A8 = 0.2f;
-__declspec(section ".sdata2") f32 gCamTalkDefaultFollowDist = 5e+01f;
-__declspec(section ".sdata2") f32 lbl_803E17B0 = 25.0f;
-__declspec(section ".sdata2") f32 lbl_803E17B4 = 0.0625f;
+f32 gCamTalkDefaultFov = 85.0f;
+f32 lbl_803E1788 = 1.0f;
+f32 lbl_803E178C = 2e+01f;
+f32 lbl_803E1790 = 0.1f;
+f32 lbl_803E1794 = 12.0f;
+f32 lbl_803E1798 = 3072.0f;
+f32 gCamTalkPi = 3.1415927f;
+f32 gCamTalkAngleUnitScale = 32768.0f;
+f32 lbl_803E17A4 = 6.0f;
+f32 lbl_803E17A8 = 0.2f;
+f32 gCamTalkDefaultFollowDist = 5e+01f;
+f32 lbl_803E17B0 = 25.0f;
+f32 lbl_803E17B4 = 0.0625f;
 void CameraModeBike_copyToCurrent(f32* inputs)
 {
     gCamTalkBikeState->turnInput = inputs[0];
@@ -52,8 +52,6 @@ void CameraModeBike_free(void)
     gCamTalkBikeState = 0;
 }
 
-#pragma opt_common_subs off
-#pragma opt_propagation off
 void CameraModeBike_update(CameraObject* camera)
 {
     float rollStep;
@@ -143,9 +141,6 @@ void CameraModeBike_update(CameraObject* camera)
     return;
 }
 
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
-#pragma peephole off
 void CameraModeBike_init(CameraObject* camera)
 {
 
