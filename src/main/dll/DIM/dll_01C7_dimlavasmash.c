@@ -15,6 +15,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/map_block.h"
+#include "main/track_dolphin_map_api.h"
 #include "main/object_render_legacy.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
@@ -23,7 +24,7 @@
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 #define DIMLAVASMASH_HIT_SEQID_CANNONBALL 397 /* dimlavaball cannonball (0x18d) */
 
-void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
+void dimlavasmash_setBlockSurfaceFlags(MapBlockData* map, int disable, int surfaceType)
 {
     int clearMask;
     int i;
@@ -32,8 +33,8 @@ void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
     int got;
     for (j = 0; j < (int)*(u16*)((char*)map + 0x9a); j++)
     {
-        block = (int*)mapBlockFn_800606ec(map, j);
-        got = mapBlockFn_80060678();
+        block = mapBlockFn_800606ec(map, j);
+        got = mapBlockFn_80060678(block);
         if (surfaceType == got)
         {
             if (disable != 0)
@@ -50,7 +51,7 @@ void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
     }
     for (i = 0, clearMask = ~2; i < (int)*(u8*)((char*)map + 0xa2); i++)
     {
-        block = (int*)fn_8006070C((MapBlockData*)map, i);
+        block = (int*)fn_8006070C(map, i);
         if (surfaceType == (int)*((u8*)Shader_getLayer(block, 0) + 5))
         {
             if (disable != 0)
@@ -69,7 +70,7 @@ int dimlavasmash_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
 {
     int* def;
     int hit;
-    int block;
+    MapBlockData* block;
     int* state;
     ObjHitsPriorityState* hitState;
     state = (obj)->extra;
@@ -86,9 +87,9 @@ int dimlavasmash_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
                 {
                     ((DimlavasmashState*)state)->state = 2;
                     Sfx_PlayFromObject((int)obj, SFXTRIG_en_mushsporedisp22);
-                    block = (int)mapGetBlock(
+                    block = mapGetBlock(
                         objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
-                    if ((void*)block != NULL)
+                    if (block != NULL)
                     {
                         dimlavasmash_setBlockSurfaceFlags(block, 1, ((DimlavasmashState*)state)->surfaceLayerId);
                         dimlavasmash_setBlockSurfaceFlags(block, 0, ((DimlavasmashState*)state)->surfaceLayerId + 1);
@@ -121,9 +122,6 @@ int dimlavasmash_getObjectTypeId(void)
 
 
 extern f32 lbl_803E48F8;
-
-extern int mapBlockFn_800606ec(int map, int idx);
-extern int mapBlockFn_80060678(void);
 
 void dimlavasmash_free(void)
 {

@@ -104,8 +104,8 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
     triangleOffset[0] = coordOffset[0];
     for (; blockIndex < (int)(u32)((MapBlockData*)block)->polyGroupCount; blockIndex++)
     {
-        mapBlock = mapBlockFn_800606ec((int*)block, blockIndex);
-        blockLayer = mapBlockFn_80060678((int*)mapBlock);
+        mapBlock = mapBlockFn_800606ec((void*)block, blockIndex);
+        blockLayer = mapBlockFn_80060678(mapBlock);
         if ((int)setup->blockLayer == blockLayer)
         {
             *(s16*)(state->posABuffer + coordOffset[0]) = ((MapBlockHdr*)mapBlock)->posA;
@@ -218,8 +218,8 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     vertexOffset[0] = coordOffset[0];
     for (; blockIndex < (int)(u32)((MapBlockData*)block)->polyGroupCount; blockIndex++)
     {
-        mapBlock = mapBlockFn_800606ec((int*)block, blockIndex);
-        blockLayer = mapBlockFn_80060678((int*)mapBlock);
+        mapBlock = mapBlockFn_800606ec((void*)block, blockIndex);
+        blockLayer = mapBlockFn_80060678(mapBlock);
         if ((int)def->blockLayer == blockLayer)
         {
             ((MapBlockHdr*)mapBlock)->posA = (s16)(state->offsetY + (f32) * (s16*)(state->posABuffer + coordOffset[0]));
@@ -301,8 +301,8 @@ void XyzAnimator_update(GameObject* obj)
     {
         for (i = 0; i < ((MapBlockData*)block)->polyGroupCount; i++)
         {
-            row = mapBlockFn_800606ec((int*)block, i);
-            t = mapBlockFn_80060678((int*)row);
+            row = mapBlockFn_800606ec((void*)block, i);
+            t = mapBlockFn_80060678(row);
             if (((XyzAnimatorPlacement*)setup)->blockLayer == t)
             {
                 ((XyzAnimatorState*)state)->rowCount++;

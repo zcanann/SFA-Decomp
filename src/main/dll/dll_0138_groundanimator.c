@@ -56,8 +56,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 union GroundAnimatorConstF32 { f32 f; };
 const union GroundAnimatorConstF32 lbl_803E3F98 = { 100.0f };
 const union GroundAnimatorConstF32 lbl_803E3F9C = { 0.0f };
-extern int mapBlockFn_80060678(void* entry);
-
 extern void fn_800605F0(void* cell, void* out);
 extern void fn_8006058C(void* cell, void* in);
 extern void fn_801A80F0(GameObject* e, int arg);
@@ -170,7 +168,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     radsq = state->radius * state->radius;
     for (blkIdx = 0, off[1] = off[0]; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
     {
-        entry = mapBlockFn_800606ec((int*)block, blkIdx);
+        entry = mapBlockFn_800606ec(block, blkIdx);
         if (((GroundanimatorPlacement*)placement)->blockId == mapBlockFn_80060678(entry))
         {
             mid = *(u16*)entry;
@@ -243,7 +241,7 @@ void groundanimator_free(int* obj, int flag)
         {
             for (blkIdx = 0, off = 0; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
             {
-                entry = mapBlockFn_800606ec((int*)block, blkIdx);
+                entry = mapBlockFn_800606ec(block, blkIdx);
                 if (((GroundanimatorPlacement*)r21)->blockId == mapBlockFn_80060678(entry))
                 {
                     for (mid = *(u16*)entry, midoff = off; mid < *(u16*)((char*)entry + 0x14); mid++)
@@ -438,7 +436,7 @@ void groundanimator_update(int* obj)
             blkIdx = 0;
             for (; blkIdx < g->entryCount; blkIdx++)
             {
-                entry = mapBlockFn_800606ec((int*)block, g->blockEntries[blkIdx]);
+                entry = mapBlockFn_800606ec(block, g->blockEntries[blkIdx]);
                 mid = *(u16*)entry;
                 foffEntry = off2[0];
                 hoffEntry = off2[1];

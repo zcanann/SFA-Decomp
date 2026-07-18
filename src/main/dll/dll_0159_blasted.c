@@ -7,6 +7,7 @@
 #include "main/lightmap_api.h"
 #include "main/gamebits.h"
 #include "main/map_block.h"
+#include "main/track_dolphin_map_api.h"
 #include "main/dll/dll_0159_blasted.h"
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
@@ -15,9 +16,6 @@
 
 extern f32 lbl_803E4348;
 int lbl_803DDB18;
-
-extern u8* mapBlockFn_800606ec(void* block, int idx);
-extern int mapBlockFn_80060678(void* entry);
 
 int fn_801A27B8(GameObject* obj, int id);
 

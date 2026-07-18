@@ -50,8 +50,6 @@ STATIC_ASSERT(sizeof(AlphaAnimatorState) == 0x1C);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
-extern int mapBlockFn_80060678(void* entry);
-
 void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnimatorState* state,
                             HitAnimatorPlacement* desc);
 
@@ -166,7 +164,7 @@ void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnim
     {
         for (i = 0; i < block->polyGroupCount; i++)
         {
-            poly = mapBlockFn_800606ec((int*)block, i);
+            poly = mapBlockFn_800606ec(block, i);
             if (desc->blockEffectId == mapBlockFn_80060678(poly))
             {
                 if (state->activeBit != 0)

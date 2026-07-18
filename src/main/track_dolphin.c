@@ -689,7 +689,7 @@ void setMapBlockFlag(void)
     mapBlockFlag = 0x1;
 }
 
-void* mapBlockFn_800606ec(int* obj, int idx)
+void* mapBlockFn_800606ec(void* obj, int idx)
 {
     return (char*)((int**)obj)[0x50 / 4] + idx * 0x14;
 }
@@ -728,7 +728,7 @@ void fn_80069958(int** outOrigin)
     *outOrigin = (int*)gTrackGridOrigin;
 }
 
-u32 mapBlockFn_80060678(int* obj)
+int mapBlockFn_80060678(void* obj)
 {
     return (*(u32*)&((GameObject*)obj)->anim.localPosY & 0xff000000) >> 24;
 }

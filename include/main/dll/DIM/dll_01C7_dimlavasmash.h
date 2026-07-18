@@ -2,6 +2,7 @@
 #define MAIN_DLL_DIM_DLL_01C7_DIMLAVASMASH_H_
 
 #include "types.h"
+#include "main/map_block.h"
 #include "main/objanim_update.h"
 
 typedef struct DimlavasmashPlacement
@@ -40,7 +41,7 @@ void dimlavasmash_hitDetect(void);
 void dimlavasmash_update(int* obj);
 int dimlavasmash_getExtraSize(void);
 int dimlavasmash_getObjectTypeId(void);
-void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3);
+void dimlavasmash_setBlockSurfaceFlags(MapBlockData* block, int disable, int surfaceType);
 void dimlavasmash_init(s16* obj, s8* def);
 void dimlavasmash_release(void);
 void dimlavasmash_initialise(void);

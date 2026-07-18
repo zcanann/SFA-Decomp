@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "main/game_object.h"
+#include "main/track_dolphin_map_api.h"
 
 typedef struct TrackGroundHit
 {
@@ -67,8 +68,6 @@ void MapBlock_initHits(GameObject* obj, int index);
 int fn_80060688(GameObject* obj, int type);
 void fn_80061094(f32* vec, f32* out, f32 scale);
 int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds);
-void* mapBlockFn_800606ec(int* obj, int idx);
-
 extern int lbl_803DCF34;
 extern f32* lbl_803DCF38;
 
