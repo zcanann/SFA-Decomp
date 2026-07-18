@@ -13,9 +13,6 @@ void OSSwitchFiberEx(u32, u32, u32, u32, u32, u32);
 extern "C" {
 #endif
 
-typedef s64 OSTime;
-typedef u32 OSTick;
-
 #include <dolphin/os/OSAlloc.h>
 #include <dolphin/os/OSCache.h>
 #include <dolphin/os/OSContext.h>
@@ -143,10 +140,6 @@ OSTick OSGetTick(void);
 OSTime OSGetTime(void);
 void OSTicksToCalendarTime(OSTime ticks, OSCalendarTime* td);
 OSTime OSCalendarTimeToTicks(OSCalendarTime* td);
-BOOL OSEnableInterrupts(void);
-BOOL OSDisableInterrupts(void);
-BOOL OSRestoreInterrupts(BOOL level);
-
 #define OS_CONSOLE_MASK        0xF0000000
 #define OS_CONSOLE_RETAIL      0x00000000
 #define OS_CONSOLE_DEVELOPMENT 0x10000000

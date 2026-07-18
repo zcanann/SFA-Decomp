@@ -10,6 +10,9 @@
 extern "C" {
 #endif
 
+typedef s64 OSTime;
+typedef u32 OSTick;
+
 // Time base frequency = 1/4 bus clock
 #define OS_TIME_SPEED (OS_BUS_CLOCK / 4)
 

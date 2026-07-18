@@ -28,6 +28,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/savegame_env_api.h"
 #include "dolphin/os/OSCache.h"
+#include "dolphin/os/OSInterrupt.h"
 #include "dolphin/gx/GXDispList.h"
 #include "main/dll/modgfx.h"
 #include "main/pi_dolphin_ext.h"
@@ -195,8 +196,6 @@ extern f32 lbl_803DEB80;
 extern f32 gRcpScreenWidth;
 extern f32 gRcpScreenHeight;
 extern u8 gRcpTexAllocFailed;
-extern int OSDisableInterrupts(void);
-extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void tex1GetFrame(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
 extern void texPreGetMipmap(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
 
