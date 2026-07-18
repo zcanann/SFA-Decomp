@@ -32,10 +32,6 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 f32 gScarabTargetStandoffDist = 45.0f;
 f32 lbl_803E2EB8 = 0.0f;
 f32 lbl_803E2EBC = 1.0f;
-extern f32 lbl_803E2EF0;
-extern f32 lbl_803E2EF4;
-extern f32 lbl_803E2EF8;
-extern f32 lbl_803E2EFC;
 
 
 void ChukChuk_free(void);
