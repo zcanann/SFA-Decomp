@@ -75,6 +75,7 @@ extern const f32 gMapBlockWorldSize;
 #include "main/gameloop_ext.h"
 #include "main/rcp_dolphin_ext.h"
 #include "main/track_dolphin_cs.h"
+#include "main/dll/dll_0017_savegame_cs.h"
 
 int lbl_803DB620 = -1;
 s8 lbl_803DB624[8] = {0, -2, -1, 1, 2, 0, 0, 0};
@@ -124,7 +125,6 @@ extern void* memset(void* p, int v, int n);
     ((s16*)gShaderMapRomBuffers[2])[(idx + (slot)) << 1] = -1;                                             \
     ((s16*)gShaderMapRomBuffers[2])[((idx + (slot)) << 1) + 1] = -1
 extern int objShouldUnload(GameObject* obj);
-extern void mapClearBit(int mapId, int bit);
 extern s8* gMapLayerCellStates;
 extern int gMapPendingFileFlags;
 extern int* gMapBlockIndexList;

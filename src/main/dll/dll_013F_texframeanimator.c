@@ -9,6 +9,7 @@
 #include "main/dll/dll_0140_fogcontrol.h"
 #include "main/object_descriptor.h"
 #include "main/shader_ext.h"
+#include "main/shader_cs2.h"
 
 typedef struct TexframeanimatorPlacement
 {
@@ -69,7 +70,6 @@ extern u8 sfxplayerObj_getExtraSize[];
 extern u8 sfxplayerObj_init[];
 extern u8 sfxplayerObj_update[];
 
-extern int* mapTextureOverrideGetEntry(int idx);
 
 int TexFrameAnimator_getExtraSize(void);
 int TexFrameAnimator_getObjectTypeId(void);

@@ -30,6 +30,7 @@
 #include "main/dll/dll_0057_cameramodetitle.h"
 #include "main/dll/dll_02C0_front_ext.h"
 #include "main/dll/dll_02C0_front_cs.h"
+#include "main/dll/dll_003C_tumbleweedbush_cs.h"
 
 u8 gTitleMenuPanelOpen;
 s8 gTitleMenuLoadDelay;
@@ -68,7 +69,6 @@ typedef u8 (*TitleMenuShouldShowCreditsRenderFn)(u8* obj);
    highlighted entry, set on the rest). */
 #define TITLE_MENU_TEXT_ENTRY_HIDDEN 0x4000
 
-extern void titleScreenFn_80130464(u8 v);
 
 extern TitleMenuTextEntry lbl_8031A214[4];
 extern u8 gAttractMovieLoopCompleted;

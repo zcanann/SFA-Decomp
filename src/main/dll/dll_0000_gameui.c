@@ -593,6 +593,8 @@ extern const f32 lbl_803E2068;
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 #include "main/fsin16_approx_api.h"
 #include "main/dll/dll_8011d918_ext.h"
+#include "main/trig_cs.h"
+#include "main/dll/dll_0017_savegame_cs.h"
 extern u32 lbl_8031AE20[56];
 extern GridEntry lbl_8031BB90[];
 extern GridEntry lbl_8031BD90[];
@@ -709,7 +711,6 @@ extern const f32 lbl_803E20FC;
 extern const f32 lbl_803E2100;
 extern u8 gGameUiTaskHintCandidates[8];
 extern void MWTRACE(int boxId);
-extern float fsin16Precise(int angle);
 extern char sBabySnowwormTimerFormat[];
 extern s16 gTimeListPulseAngle;
 extern s16 gTimeListPulseAngleStep;
@@ -718,7 +719,6 @@ extern f32 gTimeListPulseBias;
 extern const f32 lbl_803E2130;
 extern const f32 lbl_803E2134;
 extern const f32 lbl_803E2138;
-extern char* getHighScoreEntry(u8 track, u8 row);
 extern HighScoreTitleIdEntry gHighScoreTitleIdTable[];
 extern s16 gHighScorePulseAngleStep;
 extern f32 gHighScorePulseAmplitude;

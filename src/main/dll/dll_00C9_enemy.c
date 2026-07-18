@@ -64,6 +64,7 @@
 #include "main/dll/dll_00C4_tricky_ext.h"
 #include "main/dll/magicplant_ext.h"
 #include "main/dll/fall_ladders_ext.h"
+#include "main/dll/dll_00C4_tricky_cs.h"
 
 int lbl_803DBC58[2] = {2, 3};
 f32 lbl_803DBC60 = 20.0f;
@@ -107,7 +108,6 @@ typedef struct
 #define ENEMY_CAMMODE_COMBAT 0x49
 
 extern void* memcpy(void* dst, void* src, int n);
-extern void tricky_handleDefeat(GameObject* obj, int state);
 
 extern f32 lbl_803E256C;
 extern f32 lbl_803E2570;
@@ -135,7 +135,6 @@ extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
 
 extern void baddie_updateWhileFrozen(GameObject* obj, u8* state, int flag);
-extern void baddieInstantiateWeapon(GameObject* obj, int state);
 
 void fn_8014B878(int* obj, int* sub);
 void baddieTurnTowardTarget(int* node, int* sub);

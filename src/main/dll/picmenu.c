@@ -28,6 +28,7 @@
 #include "string.h"
 #include "main/fileio.h"
 #include "main/dll/FRONT/picmenu.h"
+#include "main/dll/n_options_cs.h"
 
 char sPicMenuThpMagic[] = "THP";
 
@@ -55,7 +56,6 @@ extern s32 gPicMenuVideoDecodePrepareReady;
 extern s32 gAttractMovieIdleFrameCount; /* sbss slot is 8 bytes; upper word unreferenced */
 
 extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
-extern void AttractMovieAudio_DmaCallback(void);
 
 void THPRead_Reader(void);
 void AttractMovieVideo_DecoderForOnMemory(void*);
