@@ -61,6 +61,7 @@
 #include "main/dll/seqobj11d_baddie.h"
 #include "main/dll/magicplant.h"
 #include "main/dll/seqObj11D.h"
+#include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/dll_00C4_tricky_ext.h"
 #include "main/dll/magicplant_ext.h"
 #include "main/dll/fall_ladders_ext.h"
@@ -133,8 +134,6 @@ extern u32 fn_80154C24();
 extern void* lbl_803DDA50;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
-
-extern void baddie_updateWhileFrozen(GameObject* obj, u8* state, int flag);
 
 void fn_8014B878(int* obj, int* sub);
 void baddieTurnTowardTarget(int* node, int* sub);

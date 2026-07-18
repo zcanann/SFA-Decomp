@@ -9,6 +9,7 @@
  * game-bit ids.
  */
 #include "main/dll/beaconflags_types.h"
+#include "main/dll/SH/dll_01B3_shbeacon.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_ui_interface.h"

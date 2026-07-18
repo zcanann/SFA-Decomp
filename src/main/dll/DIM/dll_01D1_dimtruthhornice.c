@@ -5,6 +5,7 @@
  * offset 0x68). Also contains fn_801B6D40 (generic byte-damage helper shared by
  * this DLL group). */
 #include "main/dll/partfx_interface.h"
+#include "main/dll/DIM/dll_01D1_dimtruthhornice.h"
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/object.h"
 #include "main/dll/dimwooddoor2state_struct.h"

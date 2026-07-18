@@ -53,6 +53,11 @@
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
 #include "main/dll/DR/dll_026B_drchimmey.h"
+#include "main/dll/DIM/dll_01C4_dimicewall.h"
+#include "main/dll/DIM/dimlogfire.h"
+#include "main/dll/DIM/dll_01D1_dimtruthhornice.h"
+#include "main/dll/SH/dll_01B3_shbeacon.h"
+#include "main/main_internal.h"
 #include "main/dll/baddie_frozen.h"
 #include "main/dll/Hcurves_ext.h"
 #include "main/dll/dll_80136a40_ext.h"
@@ -267,11 +272,6 @@ extern f32 lbl_803E2548;
 extern f32 lbl_803E254C;
 extern f32 lbl_803E2550;
 extern void memmove(void* dst, void* src, int n);
-extern void fn_801B17F4(GameObject*);
-extern void fn_801B6D40(void);
-extern void fn_801FD4A8(GameObject*);
-extern void fn_801B0784(GameObject*);
-extern void fn_801DA9CC(GameObject*);
 
 u16 gSkeetlaFootstepSfxId2 = 0x355;
 f32 lbl_803E23DC = 0.0f;
