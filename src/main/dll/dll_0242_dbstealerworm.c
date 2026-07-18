@@ -1903,6 +1903,7 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
     f32 sinv;
     f32 v;
     f32 w;
+    f32 zero;
     struct
     {
         f32 range;
@@ -1915,13 +1916,14 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
     objCursor = objs;
     weightCursor = weights;
     rangeInit = 260.0f;
+    zero = 0.0f;
     for (; i < n; i++)
     {
         stk.range = rangeInit;
         nearest = ObjGroup_FindNearestObjectForObject(*objCursor, obj, &stk.range);
         if (nearest != 0)
         {
-            if (stk.range == 0.0f)
+            if (stk.range == zero)
             {
                 return 0;
             }
@@ -2257,7 +2259,8 @@ void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
     }
     {
         {
-            if (state->glowAlpha != 0.0f)
+            f32 zero = 0.0f;
+            if (state->glowAlpha != zero)
             {
                 fn_8003B5E0(0xc8, 0, 0, state->glowAlpha);
             }
