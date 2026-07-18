@@ -210,8 +210,6 @@ extern f32 gGameLoopResetHoldTimer;
 extern f32 gGameLoopResetFadeOutTimer;
 extern u8 gGameLoopHardReset;
 
-u32 mainGetBit(int eventId);
-void mainSetBits(int eventId, int value);
 void init(void);
 
 void cutsceneEnterExit(int entering, int affectSounds);
