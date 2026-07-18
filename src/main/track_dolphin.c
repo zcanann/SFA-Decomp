@@ -709,7 +709,7 @@ MapShader* fn_8006070C(MapBlockData* obj, int idx)
 
 void* fn_800606DC(int* obj, int idx);
 
-void fn_80060490(u32* outX, u32* outY, u32* outWidth, u32* outHeight)
+void fn_80060490(int* outX, int* outY, int* outWidth, int* outHeight)
 {
     *outX = gSunFlareScissorX;
     *outY = gSunFlareScissorY;

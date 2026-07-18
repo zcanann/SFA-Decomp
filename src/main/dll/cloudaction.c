@@ -39,6 +39,8 @@
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/objprint_render_api.h"
+#include "main/objprint_api.h"
+#include "main/track_dolphin_api.h"
 #include "main/model.h"
 #include "main/sky_api.h"
 #include "main/camera.h"
@@ -57,10 +59,7 @@ f32 lbl_803DD1E0;
 
 f32 gCloudActionGlareQuadSize = 8000.0f;
 
-extern void fn_800412B8(int a, int b, int c);
 extern int shouldDrawClouds(void);
-extern void fn_80060490(int* a, int* b, int* c, int* d);
-extern void fn_8003BB7C(int a);
 extern void GXSetColorUpdate(int enable);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 
