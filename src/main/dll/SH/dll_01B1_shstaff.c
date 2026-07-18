@@ -80,6 +80,7 @@ void sh_staff_free(int* obj, int flag)
 #include "main/dll/SH/dll_01B2_shstaffhaze.h"
 #include "main/dll/SH/dll_01B4_shemptytumblew.h"
 #include "dolphin/mtx/mtx_legacy.h"
+#include "main/dll/SH/dll_01B3_shbeacon.h"
 
 typedef struct ShStaffPlacement
 {
@@ -110,13 +111,6 @@ extern f32 gShStaffFizzSfxTimerInit;
 extern f32 gShStaffMapUnloadDistSq;
 extern f32 gShStaffMapLoadDistSq;
 
-extern void sh_beacon_getExtraSize(void);
-
-extern void sh_beacon_free(GameObject*);
-
-extern void sh_beacon_update(GameObject*);
-
-extern void sh_beacon_init(GameObject*);
 
 extern void PSMTXInverse(int src, f32* dst);
 extern void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int a);

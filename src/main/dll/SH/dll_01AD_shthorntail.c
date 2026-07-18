@@ -20,6 +20,7 @@
 #include "main/dll/SH/shthorntail_ai.h"
 #include "main/dll/SC/dll_01B0_shswapston.h"
 #include "main/dll/SC/SCanimobj.h"
+#include "main/dll/SH/dll_01B0_shswapston.h"
 
 typedef struct SHthorntailTailSwingEffectScratch
 {
@@ -70,11 +71,6 @@ extern u8 gSHthorntailPathData[0x4AC];
 extern u32 lbl_803E5410;
 extern SHthorntailPathControlInterface** gPathControlInterface;
 
-extern void warpstone_free(GameObject*);
-
-extern void warpstone_render(void);
-
-extern void warpstone_hitDetect(GameObject*);
 
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);

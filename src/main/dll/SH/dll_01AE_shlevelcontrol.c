@@ -93,15 +93,13 @@ extern f32 gShLevelControlHudTextDuration;
 #include "main/dll/SH/dll_01AF_shswaplift.h"
 #include "main/pad.h"
 #include "main/dll/DR/DRearthwalk.h"
+#include "main/dll/SH/dll_01B1_shstaff.h"
 
 union ShLevelControlConstF32 { f32 f; };
 
 f32 gShLevelControlBloopTimeLimit = 1e+05f;
 const union ShLevelControlConstF32 lbl_803E54B4 = { 0.0f };
 
-extern void sh_staff_getExtraSize(void);
-extern void sh_staff_free(void);
-extern void sh_staff_update(GameObject*);
 extern int isScreenTransitionActive(void);
 
 void SH_LevelControl_setMusic(short* state);
