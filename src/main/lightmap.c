@@ -991,6 +991,7 @@ void updateEnvironment(int mode)
         int z[2];
         int w[2];
         f32 deltaY;
+        f32 deltaX;
 
         envFxFn_80088884();
         (*gCloudActionInterface)->scrollTexture();
@@ -1021,7 +1022,8 @@ void updateEnvironment(int mode)
             if (*(u8*)(entry + 12) != 0)
             {
                 deltaY = (f32) * (s16*)(entry + 10) * timeDelta;
-                *(f32*)entry = *(f32*)entry + (f32) * (s16*)(entry + 8) * timeDelta;
+                deltaX = (f32) * (s16*)(entry + 8) * timeDelta;
+                *(f32*)entry = *(f32*)entry + deltaX;
                 *(f32*)(entry + 4) = *(f32*)(entry + 4) + deltaY;
             }
             w[1] += 0x10;

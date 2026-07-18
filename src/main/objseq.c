@@ -3177,9 +3177,9 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
         (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->lastHitObject = 0;
         (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->priorityHitCount = 0;
     }
-    if (*(void**)(obj + 0x58) != NULL)
+    if (((GameObject*)obj)->anim.proximityList != NULL)
     {
-        *(u8*)(*(u8**)(obj + 0x58) + 0x10f) = 0;
+        ((GameObject*)obj)->anim.proximityList->count = 0;
     }
 }
 

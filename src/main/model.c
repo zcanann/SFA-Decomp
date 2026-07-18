@@ -1757,10 +1757,7 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
         {
             idx = 0;
         }
-        {
-            u8* base = m + ((*(u16*)(m + 0x18) & 1) << 2);
-            mtx = *(u8**)(base + 0xc) + idx * 0x40;
-        }
+        mtx = ((ObjModel*)m)->jointMatrices[((ObjModel*)m)->bufferFlags & 1] + idx * 0x40;
         PSMTXConcat((f32*)out2, (f32*)mtx, (f32*)mtx);
     }
     else
