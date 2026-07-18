@@ -2308,7 +2308,7 @@ void Rcp_SetMonochromeFilterEnabled(u8 x)
     bEnableMonochromeFilter = x;
 }
 
-u8 Rcp_GetMotionBlurEnabled(void)
+int Rcp_GetMotionBlurEnabled(void)
 {
     return bEnableMotionBlur;
 }

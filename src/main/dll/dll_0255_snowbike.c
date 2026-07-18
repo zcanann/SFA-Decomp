@@ -171,7 +171,6 @@ extern f32 lbl_803E5C60;
 extern f32 lbl_803E5C64;
 extern f32 lbl_803E5C68;
 extern void drcloudcage_updateEngineFx(int obj, u8* state, f32 speed, int val, u8* p, int n);
-extern int Rcp_GetMotionBlurEnabled(void);
 extern f32 lbl_803E5B6C;
 extern f32 lbl_803E5BA0;
 extern f32 gSnowBikeBamToDeg;

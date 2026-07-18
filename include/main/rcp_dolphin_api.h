@@ -2,6 +2,7 @@
 #define MAIN_RCP_DOLPHIN_API_H_
 
 #include "types.h"
+#include "main/rcp_dolphin_state_api.h"
 #include "main/texture.h"
 
 void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);

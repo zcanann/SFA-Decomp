@@ -239,7 +239,7 @@ void screenTransition_fadeFrom(int duration, int type, f32 from)
 }
 
 
-u32 isScreenTransitionActive(void)
+int isScreenTransitionActive(void)
 {
     return gScreenTransitionAlphaMax == screenTransitionAlpha;
 }

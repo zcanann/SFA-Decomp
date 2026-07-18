@@ -100,8 +100,6 @@ union ShLevelControlConstF32 { f32 f; };
 f32 gShLevelControlBloopTimeLimit = 1e+05f;
 const union ShLevelControlConstF32 lbl_803E54B4 = { 0.0f };
 
-extern int isScreenTransitionActive(void);
-
 void SH_LevelControl_setMusic(short* state);
 
 s16 lbl_80327618[130] = {
