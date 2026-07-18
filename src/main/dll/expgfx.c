@@ -2899,13 +2899,14 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
 
         {
             int pi2 = poolIndex;
-            ExpgfxRuntimeDataLayout* poolModeBase = (ExpgfxRuntimeDataLayout*)((u8*)runtime + pi2);
             modeFlag = (config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0 ? 1 : 0;
-            poolModeBase->poolSourceModes[0] = modeFlag;
-            if (poolModeBase->poolSourceModes[0] != 0 &&
+            poolSourceModesByte = (u8*)runtime + pi2;
+            poolSourceModesByte += EXPGFX_POOL_SOURCE_MODES_OFFSET;
+            *poolSourceModesByte = modeFlag;
+            if (*poolSourceModesByte != 0 &&
                 (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) == 0)
             {
-                poolModeBase->poolSourceModes[0] = poolModeBase->poolSourceModes[0] + 1;
+                (*poolSourceModesByte)++;
             }
             runtime->poolBoundsTemplateIds[pi2] = (u8)boundsTemplateId;
         }
