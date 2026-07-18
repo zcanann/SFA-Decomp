@@ -1,4 +1,5 @@
 #include "dolphin.h"
+#include "main/fcos16_approx_api.h"
 #include "main/trig.h"
 
 extern float lbl_803E7C80;

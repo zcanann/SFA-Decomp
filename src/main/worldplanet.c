@@ -72,8 +72,8 @@ extern int lbl_803DDD10;
 extern int gWorldPlanetObjectIdTable[3][5]; /* [row][WorldPlanetSlot]; see definition for row meanings */
 /* per-planet mission-briefing speaker model (WorldMapBriefingSpeaker), indexed by WorldPlanetSlot */
 
-extern float fsin16Approx(int angle);
-extern float fcos16Approx(int angle);
+#include "main/fsin16_approx_api.h"
+#include "main/fcos16_approx_api.h"
 extern f32 gWorldPlanetPfxOffsetX;
 extern f32 gWorldPlanetPfxOffsetY;
 extern f32 gWorldPlanetPfxOffsetZ;

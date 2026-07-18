@@ -613,7 +613,7 @@ extern const f32 lbl_803E2060;
 extern const f32 lbl_803E2064;
 extern const f32 lbl_803E2068;
 extern void drawRect(f32 sx, f32 sy, int x, int y);
-extern float fsin16Approx(int angle);
+#include "main/fsin16_approx_api.h"
 extern u32 lbl_8031AE20[56];
 extern GridEntry lbl_8031BB90[];
 extern GridEntry lbl_8031BD90[];

@@ -1,3 +1,5 @@
+#include "main/fsin16_approx_api.h"
+
 extern double __frsqrte(double x);
 typedef signed short s16;
 
