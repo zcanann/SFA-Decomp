@@ -799,7 +799,7 @@ int iceBaddie_updateSpinState(GameObject* obj, int state)
 int iceBaddie_updateImpactHitState(GameObject* obj, int state)
 {
     GroundBaddieState* sub = obj->extra;
-    int control = *(int*)&sub->control;
+    IceBaddieControl* control = (IceBaddieControl*)sub->control;
 
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 10;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 1;
@@ -818,9 +818,9 @@ int iceBaddie_updateImpactHitState(GameObject* obj, int state)
     if ((s32)(((GroundBaddieState*)state)->baddie.eventFlags & BADDIE_EVENT_LANDING) != 0)
     {
         ((GroundBaddieState*)state)->baddie.eventFlags &= ~BADDIE_EVENT_LANDING;
-        ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_IMPACT;
+        control->effectFlags |= ICEBADDIE_FX_IMPACT;
     }
-    ((IceBaddieControl*)control)->effectFlags |= (ICEBADDIE_FX_BURST | ICEBADDIE_FX_PUFF);
+    control->effectFlags |= (ICEBADDIE_FX_BURST | ICEBADDIE_FX_PUFF);
     return 0;
 }
 
