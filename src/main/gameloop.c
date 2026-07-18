@@ -607,9 +607,7 @@ void removeButtonObject(u32 object)
 }
 void addButtonObject(void* obj)
 {
-    int i = gGameLoopButtonObjectCount;
-    gGameLoopButtonObjectCount = i + 1;
-    gGameLoopButtonObjects[i] = (int)obj;
+    gGameLoopButtonObjects[gGameLoopButtonObjectCount++] = (int)obj;
 }
 
 
@@ -987,12 +985,12 @@ void checkReset(void)
 
 void setShouldResetNextFrame(int reset)
 {
-    shouldResetNextFrame = reset;
+    shouldResetNextFrame = (u8)reset;
 }
 
 void setGameState(int state)
 {
-    gameState = state;
+    gameState = (u8)state;
 }
 
 
@@ -1011,7 +1009,7 @@ int getGameState(void)
 
 void setTimeStop(int stop)
 {
-    timeStop = stop;
+    timeStop = (u8)stop;
 }
 
 void Obj_FlushDeferredFreeList(void);
