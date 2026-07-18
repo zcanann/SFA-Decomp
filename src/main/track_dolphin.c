@@ -665,11 +665,6 @@ TrackBlockDescriptor gTrackBlockDescriptors[20];
 
 void* fn_80069944(u32* outVal);
 
-void fn_80069958(int** outOrigin)
-{
-    *outOrigin = (int*)gTrackGridOrigin;
-}
-
 int mapBlockFn_80060678(void* obj)
 {
     return (*(u32*)&((GameObject*)obj)->anim.localPosY & 0xff000000) >> 24;
@@ -1815,6 +1810,11 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
     }
     objDrawFn_80061f0c(cache, modelState, (int*)obj, gShadowVisibleCount, &drawScratch, buf48, yOff);
     return 0;
+}
+
+void fn_80069958(int** outOrigin)
+{
+    *outOrigin = (int*)gTrackGridOrigin;
 }
 
 void fn_80069968(int* outCount, int* outTable)
