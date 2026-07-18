@@ -25,7 +25,7 @@ int spiritdoorspirit_getObjectTypeId(void);
 void spiritdoorspirit_free(GameObject* obj);
 void spiritdoorspirit_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void spiritdoorspirit_hitDetect(void);
-void spiritdoorspirit_update(int* obj);
+void spiritdoorspirit_update(GameObject* obj);
 void spiritdoorspirit_init(GameObject* obj);
 void spiritdoorspirit_release(void);
 void spiritdoorspirit_initialise(void);

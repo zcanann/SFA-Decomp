@@ -52,39 +52,35 @@ void spiritdoorspirit_hitDetect(void)
 {
 }
 
-void spiritdoorspirit_update(int* obj)
+void spiritdoorspirit_update(GameObject* obj)
 {
-    u8* state;
-    u8* def;
+    SpiritdoorspiritPlacement* def = *(SpiritdoorspiritPlacement**)&obj->anim.placementData;
+    SpiritDoorSpiritState* state = obj->extra;
     u8 active;
 
-    state = ((GameObject*)obj)->extra;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (((SpiritDoorSpiritState*)state)->active == 0)
+    if (state->active == 0)
     {
-        ((SpiritDoorSpiritState*)state)->active =
-            active = (u8)(mainGetBit(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
+        state->active = active = (u8)(mainGetBit(def->gateGameBit) == 0);
         if (active != 0)
         {
             ObjGroup_AddObject((int)obj, SPIRITDOORSPIRIT_OBJGROUP);
         }
-        if (((GameObject*)obj)->anim.alpha != 0)
+        if (obj->anim.alpha != 0)
         {
-            ((GameObject*)obj)->anim.alpha--;
+            obj->anim.alpha--;
         }
     }
     else
     {
         fn_80098B18Legacy((int)obj, lbl_803DBE78, 5, 0, 0, 0);
-        ((SpiritDoorSpiritState*)state)->active =
-            active = (u8)(mainGetBit(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
+        state->active = active = (u8)(mainGetBit(def->gateGameBit) == 0);
         if (active == 0)
         {
             ObjGroup_RemoveObject((int)obj, SPIRITDOORSPIRIT_OBJGROUP);
         }
-        if (((GameObject*)obj)->anim.alpha < 0xff)
+        if (obj->anim.alpha < 0xff)
         {
-            ((GameObject*)obj)->anim.alpha++;
+            obj->anim.alpha++;
         }
     }
 }
