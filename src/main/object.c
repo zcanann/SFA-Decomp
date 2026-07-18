@@ -216,7 +216,6 @@ extern f32 gMapSavedPlayerOffsetZ;
 
 extern void objFreeObjDef(u8* def, int flags);
 extern void Obj_RegisterObject(GameObject* obj, int b);
-extern void modelInitBones(f32 scale, void* model);
 extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();

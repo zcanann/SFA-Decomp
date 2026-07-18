@@ -4,6 +4,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/objprint_character_api.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
@@ -74,8 +75,6 @@ extern SHthorntailPathControlInterface** gPathControlInterface;
 
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
-extern u32 modelInitBones();
-
 void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {
     int playerObj;
@@ -641,6 +640,7 @@ void SHthorntail_update(SHthorntailObject* obj)
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
 {
     SHthorntailRuntime* runtime;
+    ObjModel* model;
     u32 randomTime;
     int moveScratch;
     u32 outA[2];
@@ -673,8 +673,8 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
         break;
     }
     obj->modelScale = *(float*)((int)obj->anim.modelInstance + 4) * ((float)config->initScale / 1000.0f);
-    Obj_GetActiveModel((GameObject*)obj);
-    modelInitBones((double)obj->modelScale);
+    model = Obj_GetActiveModel((GameObject*)obj);
+    modelInitBones(obj->modelScale, model);
     moveScratch = (int)runtime->moveScratch;
     (*gSHthorntailPathControlInterface)
         ->initControl(moveScratch, SHTHORNTAIL_PATH_CONTROL_MODE, SHTHORNTAIL_PATH_CONTROL_FLAGS, 0);
