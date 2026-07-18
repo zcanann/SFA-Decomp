@@ -18,6 +18,7 @@
 #include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_01B5_lightfoot.h"
+#include "main/dll/SB/dll_01E8_sbgalleon.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/dll/viewfinder.h"
@@ -4062,7 +4063,6 @@ typedef struct
     u8 valsB[5];
 } HitDesc;
 
-extern int getSbGalleon(void);
 extern int DBprotection_getCameraState(void);
 extern f32 lbl_803E8160;
 
@@ -16462,7 +16462,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                         ((PlayerState*)inner)->moveSequence = tbl + 0x408;
                         ((PlayerState*)inner)->moveSequenceFlags = 4;
                         ObjAnim_SetCurrentMove(obj, 0x7b, 0.0f, 1);
-                        if ((u32)getSbGalleon() != 0)
+                        if (getSbGalleon() != NULL)
                         {
                             (*gCameraInterface)->setFocus((void*)va, 0);
                             (*gObjectTriggerInterface)->setCamVars(0x4a, 1, 0, 0x78);
@@ -17523,7 +17523,7 @@ void playerDoHitDetection(int obj)
             *(s16*)obj = ((PlayerState*)inner)->targetYaw;
         }
         {
-            void* g = (void*)getSbGalleon();
+            GameObject* g = getSbGalleon();
             if (g != NULL && DBprotection_getCameraState() == 2)
             {
                 ((GameObject*)obj)->anim.modelState->overrideWorldPosX =

@@ -31,6 +31,7 @@
 #include "main/dll/DB/DBprotection.h"
 #include "main/frame_timing.h"
 #include "main/dll/SB/dll_01EA_sbshiphead.h"
+#include "main/dll/SB/dll_01E8_sbgalleon.h"
 #include "main/object_descriptor.h"
 
 u8 gSbShipHeadHasFiredFireball = 1;
@@ -51,10 +52,8 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 /* object type id of the lobbed projectile spawned on the firing cue */
 #define SB_PROJECTILE_OBJID 0x138
 
-extern u32 getSbGalleon(void);
 extern u8 gSbShipHeadHasFiredFireball;
 int gSbShipHeadPrevGalleonPhase;
-u32 getSbGalleon(void);
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E5830 = 1.0f;

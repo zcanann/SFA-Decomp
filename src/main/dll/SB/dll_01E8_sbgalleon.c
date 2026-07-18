@@ -54,6 +54,7 @@
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/texture.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
+#include "main/dll/SB/dll_01E8_sbgalleon.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx.h"
 
@@ -97,7 +98,7 @@ u8 lbl_803DDC2D;
 u8 lbl_803DDC2C;
 f32 lbl_803DDC28;
 f32 lbl_803DDC24;
-u32 gSbGalleon;
+GameObject* gSbGalleon;
 int gSbGalleonSkyTexB;
 int gSbGalleonSkyTexA;
 extern f32 lbl_803E57A4;
@@ -390,7 +391,7 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-u32 getSbGalleon(void)
+GameObject* getSbGalleon(void)
 {
     return gSbGalleon;
 }
@@ -496,7 +497,7 @@ void SB_Galleon_free(GameObject* obj, int leavingMap)
     {
         state->musicLatch = 0;
     }
-    gSbGalleon = 0;
+    gSbGalleon = NULL;
     Music_Trigger(state->musicIdB, 0);
     Music_Trigger(state->musicIdA, 0);
     mainSetBits(SBGALLEON_GAMEBIT_DEFEATED, 1);
@@ -609,7 +610,7 @@ void SB_Galleon_init(GameObject* obj)
 {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     ObjHitsPriorityState* hitState;
-    gSbGalleon = (u32)obj;
+    gSbGalleon = (GameObject*)obj;
     ObjGroup_AddObject((u32)obj, SBGALLEON_OBJGROUP);
     objSetSlot((GameObject*)obj, 0x5a);
     obj->animEventCallback = SB_Galleon_SeqFn;
@@ -653,4 +654,3 @@ void SB_Galleon_release(void)
 void SB_Galleon_initialise(void)
 {
 }
-
