@@ -51,9 +51,9 @@ extern void* gBoneParticleEffectBuffers[];
 extern f32 gBoneParticleDriftVelocity;
 union BoneParticleConstF32 { f32 f; };
 const union BoneParticleConstF32 lbl_803DF4A8 = { 0.0f };
-f32 gBoneParticleDriftMax = 500.0f;
+const union BoneParticleConstF32 gBoneParticleDriftMax = { 500.0f };
 const union BoneParticleConstF32 lbl_803DF4B0 = { -1.0f };
-f32 gBoneParticleDriftMin = -500.0f;
+const union BoneParticleConstF32 gBoneParticleDriftMin = { -500.0f };
 const union BoneParticleConstF32 lbl_803DF4B8 = { 1.0f };
 const union BoneParticleConstF32 lbl_803DF4BC = { 20.02f };
 
@@ -134,16 +134,16 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
         gBoneParticleScrollOffset = gBoneParticleScrollOffset - 0x1f;
     }
     gBoneParticleDrift = gBoneParticleDriftVelocity * timeDelta + gBoneParticleDrift;
-    if (gBoneParticleDrift > gBoneParticleDriftMax)
+    if (gBoneParticleDrift > gBoneParticleDriftMax.f)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0.f;
-        gBoneParticleDrift = gBoneParticleDriftMax;
+        gBoneParticleDrift = gBoneParticleDriftMax.f;
         Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_282);
     }
-    else if (gBoneParticleDrift < gBoneParticleDriftMin)
+    else if (gBoneParticleDrift < gBoneParticleDriftMin.f)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0.f;
-        gBoneParticleDrift = gBoneParticleDriftMin;
+        gBoneParticleDrift = gBoneParticleDriftMin.f;
         Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_282);
     }
     slot = 0;
