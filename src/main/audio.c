@@ -669,22 +669,15 @@ void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo)
     else
     {
         StreamEntry* s;
-        int count;
         int i;
         DVDClose(fileInfo);
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        {
-            u32 m;
-            u32 f2 = gAudioPendingLoadFlags;
-            m = ~AUDIO_LOAD_STREAMS;
-            gAudioPendingLoadFlags = f2 & m;
-        }
+        gAudioPendingLoadFlags &= ~AUDIO_LOAD_STREAMS;
         gAudioCompletedLoadFlags |= AUDIO_LOAD_STREAMS;
         s = gStreamsData;
-        count = gStreamsCount;
-        for (i = count; i != 0; i--)
+        for (i = gStreamsCount; i != 0; i--)
         {
             s->flag = 0;
             s++;
@@ -1390,9 +1383,9 @@ s32 Music_GetActivePriority(void)
 
 u8 musicInitMidiWad(void)
 {
-    MusicTrackSlot* table;
-    MusicChannel* ch;
     int track, j;
+    MusicChannel* ch;
+    MusicTrackSlot* table;
     MusicTrackSlot* found;
     u32 size;
     int arenaOffset;
@@ -2211,36 +2204,36 @@ int d;
     }
 
     handle = ((SndFXStartExWideFn)sndFXStartEx)(a, b, c, 0);
-    if (handle == (u32)-1)
+    if (handle != (u32)-1)
     {
-        ch->handle = (u32)-1;
-        return 0;
-    }
-    if (gSfxGlobalCtrlLevel != 0 && d == 0)
-    {
-        ((SndFXCtrlWideFn)sndFXCtrl)(handle, 0x5b, gSfxGlobalCtrlLevel);
-    }
+        if (gSfxGlobalCtrlLevel != 0 && d == 0)
+        {
+            ((SndFXCtrlWideFn)sndFXCtrl)(handle, 0x5b, gSfxGlobalCtrlLevel);
+        }
 
-    ch->object = 0;
-    ch->channelMask = 0;
-    ch->paused = 0;
-    ch->hasPosition = 0;
-    ch->tracksObjectPosition = 0;
-    ch->handle = handle;
-    {
-        f32 fz = lbl_803DE570;
-        ch->x = fz;
-        ch->y = fz;
-        ch->z = fz;
-    }
-    ch->field08 = a;
-    ch->volume = 0x64;
-    ch->nearDistance = lbl_803DE590;
-    ch->farDistance = lbl_803DE594;
-    ch->globalCtrlDisabled = d;
+        ch->object = 0;
+        ch->channelMask = 0;
+        ch->paused = 0;
+        ch->hasPosition = 0;
+        ch->tracksObjectPosition = 0;
+        ch->handle = handle;
+        {
+            f32 fz = lbl_803DE570;
+            ch->x = fz;
+            ch->y = fz;
+            ch->z = fz;
+        }
+        ch->field08 = a;
+        ch->volume = 0x64;
+        ch->nearDistance = lbl_803DE590;
+        ch->farDistance = lbl_803DE594;
+        ch->globalCtrlDisabled = d;
 
-    ch->age = gSfxObjectChannelAge++;
-    return ch;
+        ch->age = gSfxObjectChannelAge++;
+        return ch;
+    }
+    ch->handle = (u32)-1;
+    return 0;
 }
 
 void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
