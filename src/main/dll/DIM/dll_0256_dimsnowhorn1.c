@@ -1549,6 +1549,7 @@ void DIMSnowHorn1_initialise(void)
 {
     s16* src;
     void** dst;
+    int i;
     ((void**)gDIMSnowHorn1StateHandlers)[0] = (void*)DIMSnowHorn1_stateHandler00;
     ((void**)gDIMSnowHorn1StateHandlers)[1] = (void*)DIMSnowHorn1_stateHandler01;
     ((void**)gDIMSnowHorn1StateHandlers)[2] = (void*)DIMSnowHorn1_stateHandler02;
@@ -1564,7 +1565,10 @@ void DIMSnowHorn1_initialise(void)
     *(void**)&gDIMSnowHorn1DefaultStateHandler = (void*)DIMSnowHorn1_defaultStateHandler;
     src = &gDIMSnowHorn1TextureId;
     dst = &gDIMSnowHorn1Texture;
-    *dst = (void*)textureLoad(*src, 0);
+    for (i = 0; i < 1; i++)
+    {
+        dst[i] = (void*)textureLoad(src[i], 0);
+    }
 }
 
 
