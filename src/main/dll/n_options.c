@@ -488,38 +488,37 @@ int ProperTimingForGettingNextFrame(void)
 
     if ((lbl_803A5D60.playFlags & 2) != 0)
     {
-        if (VIGetNextField() != 0)
+        if (VIGetNextField() == 0)
         {
-            return FALSE;
+            return TRUE;
         }
-        return TRUE;
     }
-
-    if ((lbl_803A5D60.playFlags & 4) != 0)
+    else if ((lbl_803A5D60.playFlags & 4) != 0)
     {
-        if (VIGetNextField() != 1)
+        if (VIGetNextField() == 1)
         {
-            return FALSE;
+            return TRUE;
         }
-        return TRUE;
-    }
-
-    frame = (int)(lbl_803E1D50 * lbl_803A5D60.header.mFrameRate);
-    if (VIGetTvFormat() == 1)
-    {
-        tick = lbl_803A5D60.retraceCount * frame;
-        lbl_803A5D60.curCount = tick / 5000;
     }
     else
     {
-        tick = lbl_803A5D60.retraceCount * frame;
-        lbl_803A5D60.curCount = tick / 0x176a;
-    }
+        frame = (int)(lbl_803E1D50 * lbl_803A5D60.header.mFrameRate);
+        if (VIGetTvFormat() == 1)
+        {
+            tick = lbl_803A5D60.retraceCount * frame;
+            lbl_803A5D60.curCount = tick / 5000;
+        }
+        else
+        {
+            tick = lbl_803A5D60.retraceCount * frame;
+            lbl_803A5D60.curCount = tick / 0x176a;
+        }
 
-    if (lbl_803A5D60.prevCount != lbl_803A5D60.curCount)
-    {
-        lbl_803A5D60.prevCount = lbl_803A5D60.curCount;
-        return TRUE;
+        if (lbl_803A5D60.prevCount != lbl_803A5D60.curCount)
+        {
+            lbl_803A5D60.prevCount = lbl_803A5D60.curCount;
+            return TRUE;
+        }
     }
     return FALSE;
 }
