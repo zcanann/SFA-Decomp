@@ -35,6 +35,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "stdlib.h"
 #include "track/intersect_api.h"
+#include "track/intersect_render_setup_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"

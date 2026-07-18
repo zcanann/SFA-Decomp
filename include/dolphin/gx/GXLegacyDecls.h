@@ -34,6 +34,7 @@ void GXSetTevSwapMode(int stage, int ras, int tex);
 void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, int reg);
 void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int reg);
 void GXSetBlendMode(int type, int src, int dst, int op);
+void GXSetColorUpdate(u8 enable);
 void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 void GXSetTevKColor(int id, void* color);
 void GXCallDisplayList(void* list, u32 size);

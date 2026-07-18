@@ -2,6 +2,7 @@
 #include "main/object_api.h"
 #include "main/newclouds.h"
 #include "track/intersect_api.h"
+#include "track/intersect_render_setup_api.h"
 #include "main/shader_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/objtexture.h"
