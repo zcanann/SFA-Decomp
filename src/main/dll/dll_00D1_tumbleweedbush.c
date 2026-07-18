@@ -404,7 +404,7 @@ void fn_80163990(int* piece, u8* state)
     f32 gh;
 
     ((GameObject*)piece)->anim.velocityX = ((GameObject*)piece)->anim.velocityX / 10.0f;
-    if (fn_80065684((int)piece, ((GameObject*)piece)->anim.localPosX, ((GameObject*)piece)->anim.localPosY,
+    if (fn_80065684((GameObject*)piece, ((GameObject*)piece)->anim.localPosX, ((GameObject*)piece)->anim.localPosY,
                     ((GameObject*)piece)->anim.localPosZ, &gh, 0) != 0)
     {
         if (gh > 7.0f)

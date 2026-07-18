@@ -19,6 +19,7 @@
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
+#include "main/track_dolphin_api.h"
 #include "main/objhits.h"
 #include "main/dll/dll_00FC_babycloudrunner.h"
 #include "main/dll/dll_0117_appleontree.h"
@@ -84,7 +85,6 @@ extern f32 lbl_803E3810;
 extern f32 lbl_803E3814;
 extern f32 lbl_803E3818;
 
-extern int fn_80065684(GameObject* a, f32 b, f32 val, f32 d, f32* out, int e);
 void dll_FC_free_nop(void);
 int dll_FC_getExtraSize_ret_8(void);
 int dll_FC_getObjectTypeId(void);

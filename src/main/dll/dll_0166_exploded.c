@@ -6,6 +6,7 @@
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/track_dolphin_api.h"
 #include "main/model.h"
 #include "main/object_transform.h"
 #include "main/objseq.h"
@@ -20,8 +21,6 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 #define EXPLODED_PHASE_IDLE    0 /* settled; no physics */
 #define EXPLODED_PHASE_ACTIVE  1 /* debris physics stepping until settled */
 #define EXPLODED_PHASE_EXPIRED 2 /* lifetime elapsed; faded out */
-
-extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
 
 void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, ExplodedObjectMapData* data);
 
@@ -104,7 +103,7 @@ void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, 
         u16 off = *(u16*)&data->floorOffset;
         if (off == 0)
         {
-            fn_80065684((double)obj->x, (double)(obj->y - 10.0f), (double)obj->z, obj, floorY, 0);
+            fn_80065684((GameObject*)obj, obj->x, obj->y - 10.0f, obj->z, floorY, 0);
             state->floorHeight = obj->y - floorY[0];
         }
         else

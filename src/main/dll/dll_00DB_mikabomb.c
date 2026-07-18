@@ -201,7 +201,7 @@ void MikaBomb_init(int* obj)
     ((GameObject*)obj)->anim.rotY = -0x4000;
     ((GameObject*)obj)->anim.rotX = 0;
     ((GameObject*)obj)->anim.rotZ = 0;
-    fn_80065684((int)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+    fn_80065684((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                 ((GameObject*)obj)->anim.localPosZ, &out, 0);
     ((MikabombState*)state)->groundY = ((GameObject*)obj)->anim.localPosY - out;
     if ((u8)Obj_IsLoadingLocked() != 0)

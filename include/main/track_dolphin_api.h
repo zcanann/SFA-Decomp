@@ -67,7 +67,7 @@ void MapBlock_init(GameObject* obj);
 void MapBlock_initHits(GameObject* obj, int index);
 int fn_80060688(GameObject* obj, int type);
 void fn_80061094(f32* vec, f32* out, f32 scale);
-int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds);
+int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds);
 extern int lbl_803DCF34;
 extern f32* lbl_803DCF38;
 
