@@ -79,7 +79,7 @@ void DIMbossspit_updateBurst(GameObject* obj)
     int i;
 
     state = *(int*)&(obj)->extra;
-    (obj)->anim.rootMotionScale = (obj)->anim.rootMotionScale + (0.2f);
+    (obj)->anim.rootMotionScale += (0.2f);
     (obj)->anim.rotX += 0xaaa;
     (obj)->anim.rotZ += 0x38e;
     (obj)->anim.rotY += 0x38e;

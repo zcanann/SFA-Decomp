@@ -85,25 +85,6 @@ extern f32 lbl_803E24BC;
 extern f32 lbl_803E24C0;
 extern char lbl_8031D2E8[];
 
-static u8* trickyfollow_validateRouteNode(u8* node)
-{
-    if (node == NULL)
-    {
-        return NULL;
-    }
-    if (((*(s16*)(node + 0x30) != -1) && (mainGetBit(*(s16*)(node + 0x30)) == 0)) ||
-        ((*(s16*)(node + 0x32) != -1) && (mainGetBit(*(s16*)(node + 0x32)) != 0)))
-    {
-        node = NULL;
-    }
-    else
-    {
-        return node;
-    }
-
-    return node;
-}
-
 int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
 {
     int tp;
@@ -687,7 +668,16 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         }
         else
         {
-            node = trickyfollow_validateRouteNode((u8*)state->routeSeedNode);
+            node = (u8*)state->routeSeedNode;
+            if (node == NULL)
+            {
+                node = NULL;
+            }
+            else if (((*(s16*)(node + 0x30) != -1) && (mainGetBit(*(s16*)(node + 0x30)) == 0)) ||
+                     ((*(s16*)(node + 0x32) != -1) && (mainGetBit(*(s16*)(node + 0x32)) != 0)))
+            {
+                node = NULL;
+            }
             if ((node != 0) || (wg == 0))
             {
                 state->speed = velBefore;
@@ -1363,12 +1353,14 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 baseRadius, TrickyState* sta
     f32 candidate;
     f32* otherTarget;
     TrickyState* ctx;
+    f32 minSpeed;
 
     sum = lbl_803E2420;
     v = state->speed;
     td = timeDelta;
     dec = lbl_803E241C * td;
-    while (v > lbl_803E23DC)
+    minSpeed = lbl_803E23DC;
+    while (v > minSpeed)
     {
         sum = v * td + sum;
         v = v + dec;
