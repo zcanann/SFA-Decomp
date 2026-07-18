@@ -61,7 +61,8 @@ STATIC_ASSERT(offsetof(WmwallcrawlerMapData, heightOffset) == 0x1C);
 STATIC_ASSERT(offsetof(WmwallcrawlerMapData, counterGameBit) == 0x1E);
 STATIC_ASSERT(sizeof(WmwallcrawlerMapData) == 0x20);
 
-extern f32 lbl_803E5FB4;
+union WmWallCrawlerConstF32 { f32 f; };
+extern const union WmWallCrawlerConstF32 lbl_803E5FB4;
 
 int wmwallcrawler_animEventCallback(GameObject* obj);
 void wmwallcrawler_alignToFloorNormal(GameObject* obj, TrackGroundHit* floorHit);
