@@ -18601,8 +18601,8 @@ int Lightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             scale = lbl_803E8210;
             for (; j != 0; j--)
             {
-                ((void (*)(int, f32, int, int, int, void*))fn_80098B18)(
-                    (int)obj, scale * obj->anim.rootMotionScale, 3, 0, 0, arr);
+                ((void (*)(GameObject*, f32, int, int, int, void*))fn_80098B18)(
+                    obj, scale * obj->anim.rootMotionScale, 3, 0, 0, arr);
             }
             break;
         }
