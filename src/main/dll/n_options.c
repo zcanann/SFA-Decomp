@@ -52,21 +52,6 @@ extern u32 lbl_803DD678;               /* AI DMA double-buffer index */
 extern f32 lbl_803E1D50;               /* playback time accumulator */
 extern OSMessageQueue lbl_803A5CCC[1]; /* spent texture-set queue */
 
-extern void GXSetNumTexGens(u8 nTexGens);
-extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
-extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
-extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                            GXTevRegID out_reg);
-extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                            GXTevRegID out_reg);
-extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
-extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
-extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
-extern void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue,
-                                  GXTevColorChan alpha);
-extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
-extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
-extern void GXSetNumTevStages(u8 nStages);
 extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int width, int height);
 
 u16 gAttractMovieVolumeScale[128] = {
