@@ -38,11 +38,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/WM/dll_020A_wmgeneralscales.h"
 
-int WM_LevelControl_getExtraSize(void);
-int WM_LevelControl_getObjectTypeId(void);
-void WM_LevelControl_free(int obj);
 void WM_LevelControl_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void WM_LevelControl_hitDetect(void);
 void WM_LevelControl_update(GameObject* obj);
 void WM_LevelControl_init(GameObject* obj);
 void WM_LevelControl_release(void);
