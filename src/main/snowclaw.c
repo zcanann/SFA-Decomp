@@ -7,6 +7,7 @@
 #include "main/vecmath.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/obj_link.h"
 #include "main/obj_path.h"
 #include "main/object_render_legacy.h"
@@ -98,7 +99,6 @@ typedef struct SnowClawBombSetup
     s16 launchAngle; /* 0x1a */
 } SnowClawBombSetup;
 
-extern int ObjGroup_FindNearestObject(int kind, void* obj, f32* maxDistance);
 extern u8 gSnowClawMoveTable[];
 int gSnowClawDropBombAngle;
 
@@ -113,7 +113,6 @@ s32 lbl_8032A340[4] = {150, 200, 300, 400};
 u32 gSnowClawHurtSfxTable[8] = {0x2EF, 0x2EE, 0x2ED, 0x2EC, 0x2EB, 0x0497049C, 0x03A2049C, 0x07D007D1};
 extern f32 lbl_803DC224;
 
-extern int* ObjGroup_GetObjects(int group, int* countOut);
 const u32 gSnowClawPulseTable[8] = {0, 1, 2, 3, 1, 1, 2, 2};
 const SnowClawDropObjectTable gSnowClawDropObjectTable = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
 extern s32 lbl_8032A340[];
@@ -407,7 +406,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
             break;
         case 6:
         {
-            int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
+            int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, (int)obj, &dist);
             if (found != 0)
             {
                 (*(void (**)(int*, int))((char*)*((GameObject*)found)->anim.dll + 0x20))(found, 2);
@@ -417,7 +416,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
         }
         case 7:
         {
-            int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
+            int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, (int)obj, &dist);
             if (found != 0)
             {
                 (*(void (**)(int*, int))((char*)*((GameObject*)found)->anim.dll + 0x20))(found, 0);
@@ -517,7 +516,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
         if ((obj)->childCount == 0 && (obj)->anim.seqId == 0x389 &&
             ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 != 0)
         {
-            near = ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
+            near = ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, (int)obj, &dist);
             if ((u32)near != 0 && (*(int (**)(int))((char*)*((GameObject*)near)->anim.dll + 0x24))(near) != 0 &&
                 (*(int (**)(int, int))((char*)*((GameObject*)near)->anim.dll + 0x20))(near, 0) != 0)
             {
@@ -584,7 +583,7 @@ void snowclaw_hitDetect(GameObject* obj)
                 }
                 if (obj->anim.seqId == 0x389)
                 {
-                    near = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
+                    near = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, (int)obj, &dist);
                     if (near != 0)
                     {
                         ObjLink_DetachChild((GameObject*)obj, (int)near);
@@ -639,7 +638,7 @@ void snowclaw_hitDetect(GameObject* obj)
 void snowclaw_update(GameObject* obj)
 {
     char* inner;
-    int* objects;
+    u32* objects;
     int objectCount;
     int i;
     int targetType;

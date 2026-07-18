@@ -24,6 +24,7 @@
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/objhits.h"
 #include "main/obj_link.h"
 #include "main/obj_path.h"
@@ -95,9 +96,6 @@ extern f32 gMagicPlantIdleAnimStep;
 extern f32 lbl_803E3890;
 extern f32 gMagicPlantBuzzStartDist;
 extern f32 gMagicPlantBuzzStopDist;
-
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
 
 extern f32 lbl_803E3870;
 extern f32 lbl_803E3874;
@@ -224,8 +222,8 @@ void MagicPlant_free(GameObject* obj, int freeChildren)
 
     plant = (MagicPlantObject*)obj;
     state = plant->state;
-    ObjGroup_RemoveObject(obj, MAGICPLANT_OBJGROUP_A);
-    ObjGroup_RemoveObject(obj, MAGICPLANT_OBJGROUP_B);
+    ObjGroup_RemoveObject((int)obj, MAGICPLANT_OBJGROUP_A);
+    ObjGroup_RemoveObject((int)obj, MAGICPLANT_OBJGROUP_B);
     if (plant->childLinkActive != 0)
     {
         ObjLink_DetachChild(obj, (int)state->childObject);
@@ -471,8 +469,8 @@ void MagicPlant_init(GameObject* obj, MagicPlantSetup* setup)
     plant = (MagicPlantObject*)obj;
     objAnim = &plant->objAnim;
     state = plant->state;
-    ObjGroup_AddObject(obj, MAGICPLANT_OBJGROUP_A);
-    ObjGroup_AddObject(obj, MAGICPLANT_OBJGROUP_B);
+    ObjGroup_AddObject((int)obj, MAGICPLANT_OBJGROUP_A);
+    ObjGroup_AddObject((int)obj, MAGICPLANT_OBJGROUP_B);
     noSaveTime = (*gMapEventInterface)->shouldNotSaveTime(setup->eventId);
     if (noSaveTime == 0)
     {

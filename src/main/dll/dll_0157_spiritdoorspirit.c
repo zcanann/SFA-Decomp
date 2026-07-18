@@ -10,6 +10,7 @@
  * fades alpha back to 0. It only renders while active.
  */
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/objfx.h"
 #include "main/object_render_legacy.h"
 #include "main/gamebits.h"
@@ -20,9 +21,6 @@ f32 lbl_803DBE78 = 0.7f;
 
 #define SPIRITDOORSPIRIT_OBJGROUP 0x4e
 
-
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
 
 int spiritdoorspirit_getExtraSize(void)
 {
@@ -68,7 +66,7 @@ void spiritdoorspirit_update(int* obj)
             active = (u8)(mainGetBit(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
         if (active != 0)
         {
-            ObjGroup_AddObject(obj, SPIRITDOORSPIRIT_OBJGROUP);
+            ObjGroup_AddObject((int)obj, SPIRITDOORSPIRIT_OBJGROUP);
         }
         if (((GameObject*)obj)->anim.alpha != 0)
         {
@@ -82,7 +80,7 @@ void spiritdoorspirit_update(int* obj)
             active = (u8)(mainGetBit(((SpiritdoorspiritPlacement*)def)->gateGameBit) == 0);
         if (active == 0)
         {
-            ObjGroup_RemoveObject(obj, SPIRITDOORSPIRIT_OBJGROUP);
+            ObjGroup_RemoveObject((int)obj, SPIRITDOORSPIRIT_OBJGROUP);
         }
         if (((GameObject*)obj)->anim.alpha < 0xff)
         {
