@@ -165,8 +165,6 @@ extern f32 lbl_803DEA54;
 extern f32 lbl_803DEA48;
 extern s16 lbl_803DCC78;
 extern u32 lbl_803DCC84;
-extern s16 sMapFileNameAdjacencyTable[];
-extern char sAssetIndexOverflowError[];
 
 int getLoadedFileFlags(int slot);
 s32 mapCheckCurBlocks(int v);
@@ -3597,7 +3595,6 @@ void mapLoadDataFiles(int mapIdx);
 
 extern int sMapFileNameIndexRemapTable[];
 
-extern s16 gObjMapBlockInfo[];
 s32 mapCheckCurBlocks(int v)
 {
     if (((s16*)((char*)gObjMapBlockInfo + 0x4a))[0] == v)
