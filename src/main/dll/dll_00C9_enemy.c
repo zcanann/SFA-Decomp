@@ -55,6 +55,11 @@
 #include "main/dll/baddiewhirlpool.h"
 #include "main/dll/newseqobj_baddie.h"
 #include "main/dll/dll_010B_fireflylantern.h"
+#include "main/dll/firecrawler_baddie.h"
+#include "main/dll/seqobj11e_baddie.h"
+#include "main/dll/wispbaddie_baddie.h"
+#include "main/dll/seqobj11d_baddie.h"
+#include "main/dll/magicplant.h"
 
 int lbl_803DBC58[2] = {2, 3};
 f32 lbl_803DBC60 = 20.0f;
@@ -102,17 +107,9 @@ extern void tricky_handleDefeat(GameObject* obj, int state);
 extern void Tricky_resumeAfterCommand(GameObject* obj, int state);
 extern void Tricky_applyFloorResponse(GameObject* obj, int state);
 
-extern void fn_8014FF20(short* obj, int state);
-extern void fn_8014FF24(short* obj, int state);
-extern void fn_8015165C(GameObject* obj, int state);
-extern void fn_80152040(short* obj, int state);
-extern void fn_80152514(short* obj, int state);
 extern void fn_80153040(GameObject* obj, int state);
 extern void fn_80153248(GameObject* obj, int state);
 extern void fn_80154584(GameObject* obj, int state);
-extern void crawler_updateC(short* obj, int state);
-extern void crawler_updateB(short* obj, int state);
-extern void crawler_update(short* obj, int state);
 extern f32 lbl_803E256C;
 extern f32 lbl_803E2570;
 extern f32 lbl_803E2574;
@@ -146,11 +143,6 @@ extern void baddieInstantiateWeapon(GameObject* obj, int state);
 void fn_8014B878(int* obj, int* sub);
 void baddieTurnTowardTarget(int* node, int* sub);
 extern void sharpClawInit(int obj, u8* state);
-extern void guardClaw_init(int obj, u8* state);
-extern void gcRobotPatrol_init(GameObject* obj, u8* state);
-extern void vambat_init(GameObject* obj, u8* state);
-extern void battleDroidInit(int obj, u8* state);
-extern void crawler_initModelVariant(int obj, u8* state);
 extern void* memset(void* p, int c, int n);
 typedef struct
 {
@@ -228,14 +220,14 @@ void objAnimFn_8014a9f0(short* obj, int state)
             case 0x5b9:
             case 0x5e1:
             case 0x7a6:
-                fn_8015165C((GameObject*)(obj), state);
+                fn_8015165C((GameObject*)(obj), (u8*)state);
                 break;
             case 0xd8:
             case 0x281:
-                fn_80152040(obj, state);
+                fn_80152040((int*)obj, (u8*)state);
                 break;
             case 0x613:
-                fn_80152514(obj, state);
+                fn_80152514((int*)obj, (u8*)state);
                 break;
             case 0x642:
                 fn_80152B90((int*)obj, (u8*)state);
@@ -276,20 +268,20 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 hoodedZyck_update(obj, (u8*)state);
                 break;
             case 0x427:
-                fn_8014FF24(obj, state);
+                fn_8014FF24((int)obj, state);
                 break;
             case 0x6a2:
             case 0x6a3:
             case 0x6a4:
             case 0x6a5:
-                crawler_update(obj, state);
+                crawler_update((int*)obj, (u8*)state);
                 break;
             case 0x7c8:
                 hagabonMK2_updateB(obj, (u8*)state);
                 break;
             case 0x7c7:
             default:
-                fn_8014FF24(obj, state);
+                fn_8014FF24((int)obj, state);
                 break;
             }
         }
@@ -309,10 +301,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 break;
             case 0xd8:
             case 0x281:
-                fn_80152040(obj, state);
+                fn_80152040((int*)obj, (u8*)state);
                 break;
             case 0x613:
-                fn_80152514(obj, state);
+                fn_80152514((int*)obj, (u8*)state);
                 break;
             case 0x642:
                 fn_80152B90((int*)obj, (u8*)state);
@@ -353,20 +345,20 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 hoodedZyck_updateB(obj, (u8*)state);
                 break;
             case 0x427:
-                fn_8014FF20(obj, state);
+                fn_8014FF20((int)obj, state);
                 break;
             case 0x6a2:
             case 0x6a3:
             case 0x6a4:
             case 0x6a5:
-                crawler_updateB(obj, state);
+                crawler_updateB(obj, (u8*)state);
                 break;
             case 0x7c8:
                 hagabonMK2_update(obj, (u8*)state);
                 break;
             case 0x7c7:
             default:
-                fn_8014FF20(obj, state);
+                fn_8014FF20((int)obj, state);
                 break;
             }
         }
@@ -420,10 +412,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
             break;
         case 0xd8:
         case 0x281:
-            fn_80152040(obj, state);
+            fn_80152040((int*)obj, (u8*)state);
             break;
         case 0x613:
-            fn_80152514(obj, state);
+            fn_80152514((int*)obj, (u8*)state);
             break;
         case 0x642:
             fn_80152B90((int*)obj, (u8*)state);
@@ -464,20 +456,20 @@ void objAnimFn_8014a9f0(short* obj, int state)
             fn_80156DA0((GameObject*)(obj), state);
             break;
         case 0x427:
-            fn_8014FF20(obj, state);
+            fn_8014FF20((int)obj, state);
             break;
         case 0x6a2:
         case 0x6a3:
         case 0x6a4:
         case 0x6a5:
-            crawler_updateC(obj, state);
+            crawler_updateC(obj, (u8*)state);
             break;
         case 0x7c8:
             hagabonMK2_updateB(obj, (u8*)state);
             break;
         case 0x7c7:
         default:
-            fn_8014FF20(obj, state);
+            fn_8014FF20((int)obj, state);
             break;
         }
     }
@@ -1972,17 +1964,17 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             break;
         case 216:
         case 641:
-            guardClaw_init((int)obj, state);
+            guardClaw_init((int*)obj, state);
             break;
         case 1555:
-            gcRobotPatrol_init(obj, state);
+            gcRobotPatrol_init(obj, (int)state);
             break;
         case 1602:
             mikaladon_init(obj, (int)state);
             break;
         case 1022:
         case 1990:
-            vambat_init(obj, state);
+            vambat_init(obj, (int)state);
             break;
         case 1419:
             kooshy_init((int)obj, (int)state);
@@ -2016,19 +2008,19 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             hoodedZyck_init((int*)obj, (int*)state);
             break;
         case 1063:
-            battleDroidInit((int)obj, state);
+            battleDroidInit((int)obj, (char*)state);
             break;
         case 1698:
         case 1699:
         case 1700:
         case 1701:
-            crawler_initModelVariant((int)obj, state);
+            crawler_initModelVariant((s16*)obj, state);
             break;
         case 1992:
             crawler_initTailModel((int*)obj, (int*)state);
             break;
         default:
-            battleDroidInit((int)obj, state);
+            battleDroidInit((int)obj, (char*)state);
             break;
         }
         ((EnemyState*)state)->max = *(u16*)&((EnemyState*)state)->current;

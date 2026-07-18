@@ -368,7 +368,7 @@ void battleDroidUpdateWhileFrozen(int obj, int* state, int arg, int code)
     }
 }
 
-void fn_8014FF20(void)
+void fn_8014FF20(int obj, int state)
 {
 }
 
