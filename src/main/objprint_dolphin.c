@@ -661,75 +661,7 @@ void objFn_8003dc50(u8* obj, u8* model)
         }
     }
 }
-void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
-{
-    char* cache = (char*)getCache();
-    if (lbl_803DCC48 == 1)
-    {
-        char* c2 = (char*)getCache();
-        char* src;
-        char* dst;
-        int i;
-        obj = *(u8*)(obj + 0xf3) + *(u8*)(obj + 0xf4);
-        src = c2 + 0x2700;
-        dst = c2;
-        cacheQueueWait(0);
-        for (i = 0; i < obj; i++)
-        {
-            PSMTXConcat(mtx, (f32*)src, (f32*)dst);
-            src += 0x40;
-            dst += 0x30;
-        }
-        lbl_803DCC48 = 2;
-    }
-    {
-        u8* tbl[1];
-        int i;
-        int count;
-        f32 tmp[12];
-        {
-            u32 w;
-            int pos = bs->pos;
-            int off = pos >> 3;
-            u8* p;
-            w = bs->data[off];
-            p = (u8*)(off + (char*)bs->data);
-            w |= p[1] << 8;
-            w |= p[2] << 16;
-            bs->pos = pos + 4;
-            count = (w >> (pos & 7)) & 0xf;
-        }
-        i = 0;
-        tbl[0] = gObjGxPosMtxIdTable;
-        for (; i < count; i++)
-        {
-            int idx;
-            {
-                int off;
-                u32 w;
-                int pos = bs->pos;
-                u8* p;
-                off = pos >> 3;
-                p = (u8*)(off + bs->data);
-                w = p[0];
-                w |= p[1] << 8;
-                w |= p[2] << 16;
-                bs->pos = pos + 8;
-                idx = (w >> (pos & 7)) & 0xff;
-            }
-            if (lbl_803DCC48 == 2)
-            {
-                GXLoadPosMtxImm((f32*)(cache + idx * 0x30), *tbl[0]);
-            }
-            else
-            {
-                PSMTXConcat(mtx, (f32*)ObjModel_GetJointMatrix((u8*)model, idx), tmp);
-                GXLoadPosMtxImm(tmp, *tbl[0]);
-            }
-            tbl[0]++;
-        }
-    }
-}
+void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx);
 void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
 {
     u8* tbl[1];
@@ -836,54 +768,7 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
         }
     }
 }
-void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
-{
-    u32 flags = 0;
-    if (hdr[0xf3] > 1)
-    {
-        flags |= 1;
-    }
-    {
-        u32 w;
-        int pos = bs->pos;
-        int off = pos >> 3;
-        u8* p;
-        w = bs->data[off];
-        p = (u8*)(off + (char*)bs->data);
-        w |= p[1] << 8;
-        w |= p[2] << 16;
-        bs->pos = pos + 1;
-        flags |= ((int)(w >> (pos & 7)) & 1) ? 2 : 0;
-    }
-    {
-        u32 w;
-        int pos = bs->pos;
-        int off = pos >> 3;
-        u8* p;
-        w = bs->data[off];
-        p = (u8*)(off + (char*)bs->data);
-        w |= p[1] << 8;
-        w |= p[2] << 16;
-        bs->pos = pos + 1;
-        flags |= ((int)(w >> (pos & 7)) & 1) ? 4 : 0;
-    }
-    if (gObjGxVtxDescCache != flags)
-    {
-        GXClearVtxDesc();
-        if (flags & 1)
-        {
-            GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
-        }
-        else
-        {
-            GXSetCurrentMtx(gObjGxPosMtxIdTable[0]);
-        }
-        GXSetVtxDesc(GX_VA_POS, (flags & 2) ? GX_INDEX16 : GX_INDEX8);
-        GXSetVtxDesc(GX_VA_TEX0, (flags & 4) ? GX_INDEX16 : GX_INDEX8);
-        gObjGxVtxDescCache = flags;
-    }
-}
-
+void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4);
 void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5, u8* out1, u8* out2)
 {
     int next;
@@ -1818,6 +1703,124 @@ typedef void (*ObjShadowCb)(int* obj, int* am, f32* wm);
 
 extern f32 gObjBoneMtxBuffer[0xC00];
 
+void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
+{
+    char* cache = (char*)getCache();
+    if (lbl_803DCC48 == 1)
+    {
+        char* c2 = (char*)getCache();
+        char* src;
+        char* dst;
+        int i;
+        obj = *(u8*)(obj + 0xf3) + *(u8*)(obj + 0xf4);
+        src = c2 + 0x2700;
+        dst = c2;
+        cacheQueueWait(0);
+        for (i = 0; i < obj; i++)
+        {
+            PSMTXConcat(mtx, (f32*)src, (f32*)dst);
+            src += 0x40;
+            dst += 0x30;
+        }
+        lbl_803DCC48 = 2;
+    }
+    {
+        u8* tbl[1];
+        int i;
+        int count;
+        f32 tmp[12];
+        {
+            u32 w;
+            int pos = bs->pos;
+            int off = pos >> 3;
+            u8* p;
+            w = bs->data[off];
+            p = (u8*)(off + (char*)bs->data);
+            w |= p[1] << 8;
+            w |= p[2] << 16;
+            bs->pos = pos + 4;
+            count = (w >> (pos & 7)) & 0xf;
+        }
+        i = 0;
+        tbl[0] = gObjGxPosMtxIdTable;
+        for (; i < count; i++)
+        {
+            int idx;
+            {
+                int off;
+                u32 w;
+                int pos = bs->pos;
+                u8* p;
+                off = pos >> 3;
+                p = (u8*)(off + bs->data);
+                w = p[0];
+                w |= p[1] << 8;
+                w |= p[2] << 16;
+                bs->pos = pos + 8;
+                idx = (w >> (pos & 7)) & 0xff;
+            }
+            if (lbl_803DCC48 == 2)
+            {
+                GXLoadPosMtxImm((f32*)(cache + idx * 0x30), *tbl[0]);
+            }
+            else
+            {
+                PSMTXConcat(mtx, (f32*)ObjModel_GetJointMatrix((u8*)model, idx), tmp);
+                GXLoadPosMtxImm(tmp, *tbl[0]);
+            }
+            tbl[0]++;
+        }
+    }
+}
+
+void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
+{
+    u32 flags = 0;
+    if (hdr[0xf3] > 1)
+    {
+        flags |= 1;
+    }
+    {
+        u32 w;
+        int pos = bs->pos;
+        int off = pos >> 3;
+        u8* p;
+        w = bs->data[off];
+        p = (u8*)(off + (char*)bs->data);
+        w |= p[1] << 8;
+        w |= p[2] << 16;
+        bs->pos = pos + 1;
+        flags |= ((int)(w >> (pos & 7)) & 1) ? 2 : 0;
+    }
+    {
+        u32 w;
+        int pos = bs->pos;
+        int off = pos >> 3;
+        u8* p;
+        w = bs->data[off];
+        p = (u8*)(off + (char*)bs->data);
+        w |= p[1] << 8;
+        w |= p[2] << 16;
+        bs->pos = pos + 1;
+        flags |= ((int)(w >> (pos & 7)) & 1) ? 4 : 0;
+    }
+    if (gObjGxVtxDescCache != flags)
+    {
+        GXClearVtxDesc();
+        if (flags & 1)
+        {
+            GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+        }
+        else
+        {
+            GXSetCurrentMtx(gObjGxPosMtxIdTable[0]);
+        }
+        GXSetVtxDesc(GX_VA_POS, (flags & 2) ? GX_INDEX16 : GX_INDEX8);
+        GXSetVtxDesc(GX_VA_TEX0, (flags & 4) ? GX_INDEX16 : GX_INDEX8);
+        gObjGxVtxDescCache = flags;
+    }
+}
+
 void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
 {
     f32 cm[16];
@@ -2654,56 +2657,7 @@ typedef struct
     s16 rot[3];
     s8 joints[6];
 } ChildEnt;
-void objRenderShadow(int* obj)
-{
-    if (lbl_803DEA04 == ((GameObject*)obj)->anim.rootMotionScale)
-    {
-        curObjMtx = 0;
-        return;
-    }
-    {
-        int* m = *(int**)Obj_GetActiveModel((GameObject*)obj);
-        if (*(u8*)((char*)m + 246) != 0)
-        {
-            objRenderShadow2(obj, obj, (u8*)m, 1);
-        }
-        else
-        {
-            modelDoRenderInstrs(obj, obj, (u8*)m, 1);
-        }
-    }
-    if (((GameObject*)obj)->anim.classId == 1)
-    {
-        u8* iter;
-        int i = 0;
-        iter = (u8*)obj;
-        for (; i < ((GameObject*)obj)->childCount; i++)
-        {
-            int* child = *(int**)(iter + 200);
-            if (child != NULL)
-            {
-                objRenderChild(child, obj, 1);
-            }
-            iter += 4;
-        }
-    }
-}
-
-
-/*
- * Bit-cursor over the model's render-instruction stream
- * (ModelFileHeader.instrs, bit length at header +0xD8 * 8).  Every reader
- * fetches 3 bytes little-endian around the cursor and shifts by (pos & 7).
- * Stream grammar (4-bit opcodes):
- *   1 = bind render op: 6-bit renderOps index (shader state setup)
- *   2 = draw: 8-bit display-list index -> GXCallDisplayList
- *   3 = vertex descriptor block: 1-bit pos/nrm/clr/tex size selectors
- *   4 = load matrices: 4-bit count, then 8-bit joint-matrix indices
- *   5 = end of stream
- * The stream is walked through a MtxBitStream (data at +0, cursor at +0x10).
- */
-
-
+void objRenderShadow(int* obj);
 void objRenderChild(int* child, int* parent, u8 isShadow)
 {
     f32 res[3];
@@ -2809,6 +2763,55 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
     }
 }
 
+
+void objRenderShadow(int* obj)
+{
+    if (lbl_803DEA04 == ((GameObject*)obj)->anim.rootMotionScale)
+    {
+        curObjMtx = 0;
+        return;
+    }
+    {
+        int* m = *(int**)Obj_GetActiveModel((GameObject*)obj);
+        if (*(u8*)((char*)m + 246) != 0)
+        {
+            objRenderShadow2(obj, obj, (u8*)m, 1);
+        }
+        else
+        {
+            modelDoRenderInstrs(obj, obj, (u8*)m, 1);
+        }
+    }
+    if (((GameObject*)obj)->anim.classId == 1)
+    {
+        u8* iter;
+        int i = 0;
+        iter = (u8*)obj;
+        for (; i < ((GameObject*)obj)->childCount; i++)
+        {
+            int* child = *(int**)(iter + 200);
+            if (child != NULL)
+            {
+                objRenderChild(child, obj, 1);
+            }
+            iter += 4;
+        }
+    }
+}
+
+
+/*
+ * Bit-cursor over the model's render-instruction stream
+ * (ModelFileHeader.instrs, bit length at header +0xD8 * 8).  Every reader
+ * fetches 3 bytes little-endian around the cursor and shifts by (pos & 7).
+ * Stream grammar (4-bit opcodes):
+ *   1 = bind render op: 6-bit renderOps index (shader state setup)
+ *   2 = draw: 8-bit display-list index -> GXCallDisplayList
+ *   3 = vertex descriptor block: 1-bit pos/nrm/clr/tex size selectors
+ *   4 = load matrices: 4-bit count, then 8-bit joint-matrix indices
+ *   5 = end of stream
+ * The stream is walked through a MtxBitStream (data at +0, cursor at +0x10).
+ */
 
 void objRenderModel(GameObject* obj)
 {
@@ -3662,6 +3665,42 @@ void modelsTabReadCb(s32 result, DVDFileInfo* fileInfo)
     }
 }
 
+void mapLoadDataFiles(int mapIdx);
+
+extern int sMapFileNameIndexRemapTable[];
+
+extern s16 gObjMapBlockInfo[];
+s32 mapCheckCurBlocks(int v)
+{
+    if (((s16*)((char*)gObjMapBlockInfo + 0x4a))[0] == v)
+        return 0;
+    if (((s16*)((char*)gObjMapBlockInfo + 0x8e))[0] == v)
+        return 1;
+    return -1;
+}
+
+int loadMapAndParent(int mapId)
+{
+    int idx;
+    int parent;
+    if (mapId >= 0x4b)
+    {
+        idx = 5;
+    }
+    else
+    {
+        idx = sMapFileNameIndexRemapTable[mapId];
+    }
+    parent = sMapFileNameAdjacencyTable[idx];
+    if (parent != -1 && mapCheckCurBlocks(parent) == -1)
+    {
+        mapLoadDataFiles(parent);
+        return parent;
+    }
+    mapLoadDataFiles(idx);
+    return idx;
+}
+
 void mapLoadDataFiles(int mapIdx)
 {
     if (sMapFileNameAdjacencyTable[mapIdx] != -1)
@@ -3685,40 +3724,6 @@ void mapLoadDataFiles(int mapIdx)
     mapLoadDataFile(mapIdx, MLDF_FILEID_ANIMCURV_BIN_A);
 }
 
-extern s16 gObjMapBlockInfo[];
-
-s32 mapCheckCurBlocks(int v)
-{
-    if (((s16*)((char*)gObjMapBlockInfo + 0x4a))[0] == v)
-        return 0;
-    if (((s16*)((char*)gObjMapBlockInfo + 0x8e))[0] == v)
-        return 1;
-    return -1;
-}
-
-extern int sMapFileNameIndexRemapTable[];
-
-int loadMapAndParent(int mapId)
-{
-    int idx;
-    int parent;
-    if (mapId >= 0x4b)
-    {
-        idx = 5;
-    }
-    else
-    {
-        idx = sMapFileNameIndexRemapTable[mapId];
-    }
-    parent = sMapFileNameAdjacencyTable[idx];
-    if (parent != -1 && mapCheckCurBlocks(parent) == -1)
-    {
-        mapLoadDataFiles(parent);
-        return parent;
-    }
-    mapLoadDataFiles(idx);
-    return idx;
-}
 
 void clearLoadedFileFlags_blocks1(void)
 {
