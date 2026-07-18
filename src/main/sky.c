@@ -1474,7 +1474,7 @@ void sky2_run(void)
                 r = lbl_803DF108;
             }
             cmax = lbl_803DF118;
-            if (g > *(f32*)&lbl_803DF118)
+            if (g > 255.0f)
             {
                 g = cmax;
             }
@@ -1791,11 +1791,11 @@ void timeOfDayFn_8008b964(void)
                 *(f32*)&((GameObject*)p)->extra -= *(f32*)(p + 0xb4) * timeDelta;
                 val = *(f32*)(gSkyState + (idx = i + 0xb8));
                 *(f32*)(gSkyState + idx) =
-                    (val < *(f32*)&lbl_803DF058) ? lbl_803DF058 : ((val > lbl_803DF05C) ? lbl_803DF05C : val);
+                    (val < 0.0f) ? 0.0f : ((val > lbl_803DF05C) ? lbl_803DF05C : val);
                 *(f32*)(gSkyState + (idx = i + 0xbc)) -= lbl_803DF0F0 * timeDelta;
                 val = *(f32*)(gSkyState + idx);
                 *(f32*)(gSkyState + idx) =
-                    (val < *(f32*)&lbl_803DF058) ? lbl_803DF058 : ((val > lbl_803DF05C) ? lbl_803DF05C : val);
+                    (val < 0.0f) ? 0.0f : ((val > lbl_803DF05C) ? lbl_803DF05C : val);
                 i += 0xa4;
             }
             ((SkyState*)gSkyState)->fadeFactor -= ((SkyState*)gSkyState)->fadeRate * timeDelta;
@@ -2227,7 +2227,7 @@ void fn_8008D088(int slot)
             {
                 len = dur;
             }
-            p->step = *(f32*)&lbl_803DF114 / len;
+            p->step = 1.0f / len;
             for (i = 0; i < 0x21; i++)
             {
                 (*(SkySlotAnim**)(&gSky2State + slot))->vel[i] = ((*(SkySlotAnim**)(&gSky2State + slot))->target[i] -
