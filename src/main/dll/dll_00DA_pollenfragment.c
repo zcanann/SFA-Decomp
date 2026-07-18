@@ -331,12 +331,12 @@ void pollenfragment_init(GameObject* obj, int config)
     state = *(u32**)&(obj)->extra;
     if (*(char*)(config + 0x19) == '\x01')
     {
-        *(float*)&((XyzAnimatorState*)state)->unk8 = 155.0f;
+        *(float*)&((XyzAnimatorState*)state)->edgeCount = 155.0f;
     }
     else
     {
         randomValue = randomGetRange(0xb4, 300);
-        *(float*)&((XyzAnimatorState*)state)->unk8 = (float)(int)randomValue;
+        *(float*)&((XyzAnimatorState*)state)->edgeCount = (float)(int)randomValue;
     }
     pollenType = *(s8*)(config + 0x19);
     pollenType = (pollenType < 0) ? 0 : ((pollenType > 5u) ? 5 : pollenType);
@@ -353,7 +353,7 @@ void pollenfragment_init(GameObject* obj, int config)
     } while (spawnCount-- != 0);
     if (!((PollenFragmentDef*)state[7])->timed)
     {
-        *(float*)&((XyzAnimatorState*)state)->unk8 = 60.0f;
+        *(float*)&((XyzAnimatorState*)state)->edgeCount = 60.0f;
     }
     ObjHits_SetTargetMask(obj, 4);
     ((XyzAnimatorState*)state)->unk18 = 0;

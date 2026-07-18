@@ -30,7 +30,7 @@ typedef struct XyzAnimatorState
 {
     int rowCount;
     int vertexCount; /* 0x4: accumulated per-row tex-span (row[0x14]-row[0]) x3 across matching polygroup rows; sizes the vertex-stream data buffer, gates rebuild */
-    int unk8;
+    int edgeCount; /* 0x8: MapBlockData edge count; sizes the six edgeV{0,1}{x,y,z}Buffer s16 streams */
     int dataBuffer;
     int posABuffer; /* s16 stream: per-block posA coord */
     int posBBuffer; /* s16 stream: per-block posB coord */

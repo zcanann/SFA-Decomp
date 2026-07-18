@@ -323,7 +323,7 @@ void XyzAnimator_update(GameObject* obj)
         {
             ((XyzAnimatorState*)state)->gameBitValue = mainGetBit(((XyzAnimatorPlacement*)setup)->triggerGameBit);
         }
-        ((XyzAnimatorState*)state)->unk8 = ((MapBlockData*)block)->edgeCount;
+        ((XyzAnimatorState*)state)->edgeCount = ((MapBlockData*)block)->edgeCount;
         ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->startX;
         ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->startY;
         ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->startZ;
@@ -336,7 +336,7 @@ void XyzAnimator_update(GameObject* obj)
             ((XyzAnimatorState*)state)->gameBitValue = 1;
         }
         t = ((XyzAnimatorState*)state)->vertexCount * 6 + ((XyzAnimatorState*)state)->rowCount * 0xc;
-        t = t + ((XyzAnimatorState*)state)->unk8 * 0xc;
+        t = t + ((XyzAnimatorState*)state)->edgeCount * 0xc;
         alloc = (int)mmAlloc(t, 5, 0);
         ((XyzAnimatorState*)state)->dataBuffer = alloc;
         stride = ((XyzAnimatorState*)state)->rowCount * 2;
@@ -353,7 +353,7 @@ void XyzAnimator_update(GameObject* obj)
         alloc = alloc + stride;
         ((XyzAnimatorState*)state)->unk24 = alloc;
         alloc = alloc + stride;
-        stride = ((XyzAnimatorState*)state)->unk8 * 2;
+        stride = ((XyzAnimatorState*)state)->edgeCount * 2;
         ((XyzAnimatorState*)state)->edgeV0xBuffer = alloc;
         alloc = alloc + stride;
         ((XyzAnimatorState*)state)->edgeV1xBuffer = alloc;
