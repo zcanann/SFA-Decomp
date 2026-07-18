@@ -17,8 +17,6 @@ extern float lbl_803E7BF8;
 
 void Vec_scale(void* v_in, void* v_out, float s);
 float Vec_lengthSquared(void* v);
-void fastCastFloatToU16(float x, u16* p);
-float fastCastU16ToFloat(u16* p);
 
 #pragma optimization_level 0
 #pragma optimize_for_size on

@@ -26,9 +26,9 @@ float fabsf(float x)
     return y;
 }
 
-float fastCastU16ToFloat(s16* p)
+float fastCastU16ToFloat(u16* p)
 {
-    register s16* ptr = p;
+    register u16* ptr = p;
     register float result;
 
     asm {
@@ -39,9 +39,9 @@ float fastCastU16ToFloat(s16* p)
     return result;
 }
 
-void fastCastFloatToU16(float x, s16* p)
+void fastCastFloatToU16(float x, u16* p)
 {
-    register s16* ptr = p;
+    register u16* ptr = p;
     register float value = x;
 
     asm {
@@ -137,7 +137,7 @@ float fastFloorf(float x)
 {
     float abs_x;
     float rounded;
-    s16 short_value;
+    u16 short_value;
     int int_value;
 
     abs_x = __fabsf(x);
