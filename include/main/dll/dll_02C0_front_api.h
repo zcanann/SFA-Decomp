@@ -14,4 +14,7 @@ void creditsStart_(void);
 int gameTextFn_80134be8(void);
 u8 shouldShowCredits(void);
 
+void titleScreenFn_801368a4(s8 arg);
+void fn_80135814(u32 a, u32 b);
+
 #endif /* MAIN_DLL_DLL_02C0_FRONT_API_H_ */

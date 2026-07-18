@@ -65,7 +65,6 @@
 #include "main/dll/dll_00C4_tricky_ext.h"
 #include "main/dll/magicplant_ext.h"
 #include "main/dll/fall_ladders_ext.h"
-#include "main/dll/dll_00C4_tricky_cs.h"
 #include "string.h"
 
 int lbl_803DBC58[2] = {2, 3};

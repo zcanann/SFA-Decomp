@@ -15,7 +15,6 @@
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-#include "main/dll/dll_02C0_front_cs.h"
 
 extern u16 gEnterSaveNameColorAnimTime;
 extern u32 lbl_803DD6DC;
