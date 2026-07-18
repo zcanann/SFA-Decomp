@@ -16,6 +16,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/gx/GXManage.h"
+#include "main/gx_scissor_api.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/camera.h"
 #include "main/frame_timing.h"
@@ -297,7 +298,6 @@ extern void mapGetBlocks(int* a, int* b);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
 extern void GXSetProjection(f32* m, int type);
 extern void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf, const u8 vfilter[7]);
-extern void GXSetScissor(int a, int b, int c, int d);
 extern int getDrawDistanceFlag_8005cd48(void);
 extern void* memcpy(void* d, const void* s, int n);
 
@@ -1163,7 +1163,7 @@ void renderShadows(int unused0, int unused1, int unused2)
         ObjModelState* modelState = obj->anim.modelState;
         u8 lod;
         u8 kind;
-        int screenW = 0, w = 0;
+        u32 screenW = 0, w = 0;
         NewShadowCastSlot* castSlot;
         Camera_SetCurrentViewIndex(0);
         lod = fn_800626C8(obj, framesThisStep);

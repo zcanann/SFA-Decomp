@@ -1,6 +1,6 @@
 #include "main/game_object.h"
 #include "main/screen_transition.h"
-#include "dolphin/gx/GXCull.h"
+#include "main/gx_scissor_api.h"
 #include "main/dll/dll_0016_screentransition.h"
 #include "main/camera.h"
 #include "main/frame_timing.h"
@@ -26,17 +26,16 @@ typedef struct
 } HudColor;
 
 extern f32 gScreenTransitionHoldDuration;
-extern void GXGetScissor(int* x, int* y, int* w, int* h);
 extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
 extern void setHudOpacity(int op);
 
 static inline void screenTransitionFadeBlack(void)
 {
     HudColor col;
-    int sx;
-    int sy;
-    int sw;
-    int sh;
+    u32 sx;
+    u32 sy;
+    u32 sw;
+    u32 sh;
     GXGetScissor(&sx, &sy, &sw, &sh);
     GXSetScissor(0, 0, 0x280, 0x1e0);
     col.b = 0;
@@ -50,10 +49,10 @@ static inline void screenTransitionFadeBlack(void)
 static inline void screenTransitionFadeColor(u8 r, u8 g, u8 b)
 {
     HudColor col;
-    int sx;
-    int sy;
-    int sw;
-    int sh;
+    u32 sx;
+    u32 sy;
+    u32 sw;
+    u32 sh;
     GXGetScissor(&sx, &sy, &sw, &sh);
     GXSetScissor(0, 0, 0x280, 0x1e0);
     col.r = r;
@@ -90,10 +89,10 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     s32 vy;
     u32 vr;
     s32 vb;
-    int sx;
-    int sy;
-    int sw;
-    int sh;
+    u32 sx;
+    u32 sy;
+    u32 sw;
+    u32 sh;
     HudColor col;
     u8 maxAlpha;
     u32 dist;

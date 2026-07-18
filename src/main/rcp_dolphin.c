@@ -28,6 +28,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/savegame_env_api.h"
 #include "dolphin/os/OSCache.h"
+#include "main/gx_scissor_api.h"
 #include "dolphin/gx/GXDispList.h"
 #include "main/dll/modgfx.h"
 
@@ -111,7 +112,6 @@ extern u8 lbl_803DCD4A;
 extern u8 lbl_803DCD49;
 extern u8 lbl_803DCD48;
 extern u8 lbl_803DCD30;
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void GXSetTevDirect(int tev);
 extern void GXSetTevOrder(int tev, int tc, int tm, int color);
 extern void GXSetTevSwapMode(int tev, int ras, int tex);

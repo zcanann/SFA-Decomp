@@ -31,6 +31,7 @@
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/dll/savegame_env_api.h"
+#include "main/gx_scissor_api.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_render_setup_api.h"
@@ -59,8 +60,6 @@ f32 gCloudActionGlareQuadSize = 8000.0f;
 extern void fn_800412B8(int a, int b, int c);
 extern int shouldDrawClouds(void);
 extern void fn_80060490(int* a, int* b, int* c, int* d);
-extern void GXGetScissor(int* x, int* y, int* w, int* h);
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void fn_8003BB7C(int a);
 extern void GXSetColorUpdate(int enable);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
@@ -178,10 +177,10 @@ void renderClouds(int a, int b, int c, int d)
     int clipY;
     int clipW;
     int clipH;
-    int savedClipX;
-    int savedClipY;
-    int savedClipW;
-    int savedClipH;
+    u32 savedClipX;
+    u32 savedClipY;
+    u32 savedClipW;
+    u32 savedClipH;
     f32 pos[3];
     f32 mtx[12];
     CameraViewSlot* view;

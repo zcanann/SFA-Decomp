@@ -36,6 +36,7 @@
 #include "main/vecmath.h"
 #include "main/render_envfx_api.h"
 #include "main/dll/ppcwgpipe_struct.h"
+#include "main/gx_scissor_api.h"
 #include "main/camera_interface.h"
 #include "main/camera.h"
 #include "main/dll/tricky_state.h"
@@ -84,7 +85,6 @@ typedef struct TitlescreenState
     f32 unk34;
 } TitlescreenState;
 
-extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 
 void* gTitleScreenMainTex;
