@@ -23,6 +23,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
 #include "main/camera_shake_api.h"
+#include "main/dll/seqobj11d_ext.h"
 
 int lbl_803DBC80[2] = {2, 3};
 #define WISPBADDIE_HIT_VOLUME_SLOT 10
@@ -71,7 +72,6 @@ typedef struct WispEventRow
 STATIC_ASSERT(sizeof(WispEventRow) == 0xc);
 STATIC_ASSERT(offsetof(WispEventRow, moveId) == 0x8);
 
-extern void fn_801513AC(GameObject* obj, int state);
 extern void* lbl_8031F16C[];
 extern u8 lbl_8031DD30[];
 
