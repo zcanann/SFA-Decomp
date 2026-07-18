@@ -39,8 +39,8 @@ void dll_63_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     s16* rec;
     int i;
     u32 flag;
-    GfxCmd* entries;
     GfxCmd* cmd;
+    GfxCmd* entries;
     if (variant == 1)
     {
         *(s16*)&base[0x112] = 0;
