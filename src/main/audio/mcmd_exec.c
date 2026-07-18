@@ -7,6 +7,7 @@
 #include "main/audio/snd_synth_api.h"
 #include "main/audio/voice_alloc.h"
 #include "main/audio/voice_id.h"
+#include "main/audio/voice_manage.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_channel_scale.h"
 #include "main/audio/synth_voice.h"
@@ -16,9 +17,7 @@
 extern int macActiveRoot;
 extern int macTimeQueueRoot;
 extern u64 macRealTime;
-extern void voiceKill(u32 voice);
 extern s32 synthGlobalVariable[16];
-extern u32 voiceIsRegistered(int state);
 extern void (*synthMessageCallback)(u32 id, u32 message);
 
 #define SYNTH_GLOBAL_REG(index) (synthGlobalVariable[(index) - 0x10])
@@ -94,7 +93,7 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
     args->value = 0;
     state->key = (args->flags >> 8) & 0x7f;
     state->fineTune = (s8)(args->flags >> 0x10);
-    if (voiceIsRegistered((int)state) != 0)
+    if (voiceIsRegistered(state) != 0)
     {
         inpSetMidiLastNote(state->midiSlot, state->midiEvent, state->key & 0xff);
     }
@@ -705,12 +704,12 @@ void macHandleActive(McmdVoiceState* sv)
         {
         case 0x0: /* end of macro */
             vidRemoveVoice(sv);
-            voiceFree((int)sv);
+            voiceFree(sv);
             ex = 1;
             break;
         case 0x1: /* stop */
             vidRemoveVoice(sv);
-            voiceFree((int)sv);
+            voiceFree(sv);
             ex = 1;
             break;
         case 0x2: /* if key */
@@ -754,7 +753,7 @@ void macHandleActive(McmdVoiceState* sv)
             else
             {
                 vidRemoveVoice(sv);
-                voiceFree((int)sv);
+                voiceFree(sv);
                 stop = 1;
             }
             ex = stop;
@@ -878,7 +877,7 @@ void macHandleActive(McmdVoiceState* sv)
             }
             sv->key = (s16)sv->key < 0 ? 0 : sv->key > 0x7f ? 0x7f : sv->key;
             sv->fineTune = (s8)(lbl_803DE2E8.flags >> 0x10);
-            if (voiceIsRegistered((int)sv) != 0)
+            if (voiceIsRegistered(sv) != 0)
             {
                 inpSetMidiLastNote(sv->midiSlot, sv->midiEvent, sv->key & 0xff);
             }
@@ -888,7 +887,7 @@ void macHandleActive(McmdVoiceState* sv)
         case 0x19: /* set key */
             sv->key = (cmd >> 8) & 0x7f;
             sv->fineTune = (s8)(lbl_803DE2E8.flags >> 0x10);
-            if (voiceIsRegistered((int)sv) != 0)
+            if (voiceIsRegistered(sv) != 0)
             {
                 inpSetMidiLastNote(sv->midiSlot, sv->midiEvent, sv->key & 0xff);
             }
@@ -1026,7 +1025,7 @@ void macHandleActive(McmdVoiceState* sv)
             else
             {
                 vidRemoveVoice(sv);
-                voiceFree((int)sv);
+                voiceFree(sv);
                 stop = 1;
             }
             ex = stop;
@@ -1585,7 +1584,7 @@ u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol, 
             {
                 hwBreak(voice);
             }
-            voiceFree((int)sv);
+            voiceFree(sv);
         }
     }
 

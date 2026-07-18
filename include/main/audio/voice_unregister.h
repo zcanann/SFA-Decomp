@@ -2,7 +2,8 @@
 #define MAIN_AUDIO_VOICE_UNREGISTER_H_
 
 #include "ghidra_import.h"
+#include "main/audio/mcmd.h"
 
-void voiceUnregister(int state);
+void voiceUnregister(McmdVoiceState *voice);
 
 #endif /* MAIN_AUDIO_VOICE_UNREGISTER_H_ */

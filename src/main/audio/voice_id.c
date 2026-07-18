@@ -61,7 +61,7 @@ void vidRemoveVoice(McmdVoiceState* state)
     McmdVoiceState* s = state;
     if (s->voiceHandle != 0xffffffff)
     {
-        voiceUnregister((int)state);
+        voiceUnregister(state);
         if (s->voicePrevHandle != 0xffffffff)
         {
             synthVoice[s->voicePrevHandle & 0xff].voiceNextHandle = s->voiceNextHandle;
@@ -222,9 +222,9 @@ int vidGetInternalId(u32 id)
  * voiceRemovePriority - voice priority-queue removal. Removes the active
  * voice from its group's linked list and from the sorted priority list.
  */
-void voiceRemovePriority(int state)
+void voiceRemovePriority(McmdVoiceState* state)
 {
-    McmdVoiceState* s = (McmdVoiceState*)state;
+    McmdVoiceState* s = state;
     VoicePrioBlockRec* vb;
     VoicePrioVoiceRec* vps;
     VoicePrioRootRec* pr;

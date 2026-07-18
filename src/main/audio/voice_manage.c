@@ -87,7 +87,7 @@ void voiceBreakAndFree(u32 voice)
         hwBreak(voice);
     }
     synthVoice[voice].handle = voice;
-    voiceFree((int)&synthVoice[voice]);
+    voiceFree(&synthVoice[voice]);
     synthVoice[voice].callbackActive = 0;
 }
 
@@ -103,7 +103,7 @@ void voiceKill(u32 voice)
         vidRemoveVoice(voiceState);
         *(u64*)&voiceState->inputFlags &= ~3;
         voiceState->priorityTick = 0;
-        voiceFree((int)voiceState);
+        voiceFree(voiceState);
     }
     if (voiceState->callbackActive != 0)
     {
@@ -153,9 +153,9 @@ int voiceKillById(u32 id)
  * Returns 1 if state's voice id is currently registered in the
  * appropriate slot table, else 0.
  */
-int voiceIsRegistered(int state)
+u32 voiceIsRegistered(McmdVoiceState* state)
 {
-    McmdVoiceState* voiceState = (McmdVoiceState*)state;
+    McmdVoiceState* voiceState = state;
     u32 voice = voiceState->handle;
     u8 slot;
     u8 channel;

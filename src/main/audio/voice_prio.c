@@ -2,6 +2,7 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/vidlisttables.h"
+#include "main/audio/voice_id.h"
 #include "main/audio/voice_prio.h"
 
 
@@ -42,7 +43,7 @@ void voiceSetPriority(McmdVoiceState* svoice, u8 prio)
             return;
         }
 
-        voiceRemovePriority((int)svoice);
+        voiceRemovePriority(svoice);
     }
 
     vps->user = 1;

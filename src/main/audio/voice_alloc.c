@@ -5,6 +5,7 @@
 #include "main/audio/vidlisttables.h"
 #include "main/audio/synth_config.h"
 #include "main/audio/voice_alloc.h"
+#include "main/audio/voice_id.h"
 
 
 #define VOICE_CFLAGS(i) (*(u64*)&synthVoice[i].inputFlags)
@@ -226,16 +227,15 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
  * Release a voice slot: clear voice flags, unlink from id table,
  * decrement counter, and mark id slot as free (-1).
  */
-void voiceFree(int state)
+void voiceFree(McmdVoiceState* voice)
 {
-    McmdVoiceState* vs = (McmdVoiceState*)state;
-    macMakeInactive((McmdVoiceState*)state, 2);
-    voiceRemovePriority(state);
-    *(u32*)&vs->macroBase = 0;
-    vs->priorityGroup = 0;
+    macMakeInactive(voice, 2);
+    voiceRemovePriority(voice);
+    *(u32*)&voice->macroBase = 0;
+    voice->priorityGroup = 0;
     {
-        u32 voice = vs->voiceHandle;
-        u32 v = voice & 0xff;
+        u32 voiceId = voice->voiceHandle;
+        u32 v = voiceId & 0xff;
         VoiceIdSlot* slot = &voiceFreeListSlots[v];
         if (slot->active == 0)
         {
@@ -253,7 +253,7 @@ void voiceFree(int state)
                 voiceListRoot = v;
             }
             voiceListInsert = v;
-            if (vs->streamKind != 0)
+            if (voice->streamKind != 0)
             {
                 voiceFxRunning--;
             }
@@ -263,5 +263,5 @@ void voiceFree(int state)
             }
         }
     }
-    *(int*)&vs->voiceHandle = -1;
+    *(int*)&voice->voiceHandle = -1;
 }

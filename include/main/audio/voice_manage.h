@@ -34,7 +34,7 @@ void voiceInitPriorityTables(void);
 void voiceBreakAndFree(u32 voice);
 void voiceKill(u32 voice);
 int voiceKillById(u32 id);
-int voiceIsRegistered(int state);
+u32 voiceIsRegistered(McmdVoiceState *voice);
 void voiceRegister(McmdVoiceState* state);
 
 #endif /* MAIN_AUDIO_VOICE_MANAGE_H_ */

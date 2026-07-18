@@ -5,16 +5,14 @@
 extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
 extern u8 voiceDirectSlots[];
 
-void voiceUnregister(int obj)
+void voiceUnregister(McmdVoiceState* voice)
 {
-    McmdVoiceState* voice;
     u32 voiceId;
     u32 midiSlot;
     u32 midiChannel;
     u32 vid8;
     u8* slot;
 
-    voice = (McmdVoiceState*)obj;
     voiceId = voice->handle;
     if (voiceId == SYNTH_INVALID_VOICE)
         return;
