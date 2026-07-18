@@ -142,7 +142,6 @@ extern void fn_800A1040(s16 a, int b);
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
-extern f32 gModgfxMotionStep;
 
 s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16* d, int textureAssetId,
                   void* textureResource);
@@ -262,7 +261,6 @@ void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
 
 void fn_800A02DC(ModgfxState* state, f32* in)
 {
-    extern f32 gModgfxMotionStep;
     int i;
     s32 dy, dx;
     ModgfxVertexData* slot;
@@ -437,7 +435,6 @@ void fn_800A0524(void* state, void* p, int mode)
 
 void fn_800A081C(int state, int cmd, int mode)
 {
-    extern f32 gModgfxMotionStep;
 
     if (mode == 1)
     {
@@ -523,7 +520,6 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
 }
 void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 {
-    extern f32 gModgfxMotionStep;
     int k = idx * 2;
     char* slots = (char*)state + 0x78;
     u8* bufB = *(u8**)(slots + ((ModgfxState*)state)->activeVertexBufferIndex * 4);
@@ -575,7 +571,6 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 
 void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 {
-    extern f32 gModgfxMotionStep;
     int idx2 = idx * 2;
 #define base ((char*)state + idx2 * 0xc)
     int j;
