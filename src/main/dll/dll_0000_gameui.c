@@ -8093,33 +8093,25 @@ void cMenuRun(void)
             {
                 cy = padGetCYS8(0);
             }
-            if ((cy <= -0xa && gCMenuPrevStickY > -0xa) || cy < -0x3c)
+            if (((cy <= -0xa && gCMenuPrevStickY > -0xa) || cy < -0x3c) &&
+                (gCMenuScrollTimer < 0 ? -gCMenuScrollTimer : gCMenuScrollTimer) < 8 &&
+                gCMenuScrollLock == 0 && lbl_803DD79A == 0)
             {
-                int m = gCMenuScrollTimer;
-                if (m < 0)
-                    m = -m;
-                if (m < 8 && gCMenuScrollLock == 0 && lbl_803DD79A == 0)
+                if ((s8)lbl_803DBA65 == 0)
                 {
-                    if ((s8)lbl_803DBA65 == 0)
-                    {
-                        Sfx_PlayFromObject(0, SFXTRIG_warningloop);
-                    }
-                    gCMenuScrollVel = 1;
+                    Sfx_PlayFromObject(0, SFXTRIG_warningloop);
                 }
+                gCMenuScrollVel = 1;
             }
-            else if ((cy >= 0xa && gCMenuPrevStickY < 0xa) || cy > 0x3c)
+            else if (((cy >= 0xa && gCMenuPrevStickY < 0xa) || cy > 0x3c) &&
+                     (gCMenuScrollTimer < 0 ? -gCMenuScrollTimer : gCMenuScrollTimer) < 8 &&
+                     gCMenuScrollLock == 0 && lbl_803DD79A == 0)
             {
-                int m = gCMenuScrollTimer;
-                if (m < 0)
-                    m = -m;
-                if (m < 8 && gCMenuScrollLock == 0 && lbl_803DD79A == 0)
+                if ((s8)lbl_803DBA65 == 0)
                 {
-                    if ((s8)lbl_803DBA65 == 0)
-                    {
-                        Sfx_PlayFromObject(0, SFXTRIG_warningloop);
-                    }
-                    gCMenuScrollVel = -1;
+                    Sfx_PlayFromObject(0, SFXTRIG_warningloop);
                 }
+                gCMenuScrollVel = -1;
             }
             gCMenuPrevStickY = cy;
             if (gCMenuScrollVel > 0xff)
