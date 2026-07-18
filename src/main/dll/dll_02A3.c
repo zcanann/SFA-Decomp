@@ -82,7 +82,7 @@ void dll_2A3_update(GameObject* obj)
     }
 
     alpha = (f32)(u32)obj->anim.alpha;
-    alpha = 8.0f * timeDelta + alpha;
+    alpha += 8.0f * timeDelta;
     if (alpha > 255.0f)
     {
         alpha = 255.0f;
