@@ -23,6 +23,7 @@
 #include "main/rcp_dolphin_ext.h"
 #include "main/pi_dolphin_ext.h"
 #include "main/acosf_api.h"
+#include "main/render_internal.h"
 #include "string.h"
 
 int gModelTabEntryCount;
@@ -60,7 +61,7 @@ extern void lbl_80006C6C(int* out, u8* a, void* buf, int c, int d, u8* e, int f,
     *(f32*)(stk + (J)*4 + (0x14 + (K)*4)) = *(f32*)(channel + (J)*4 + (0x14 + (K)*4));    \
     *(f32*)(stk + (J)*4 + (4 + (K)*4)) = *(f32*)(channel + (J)*4 + (4 + (K)*4));          \
     *(u32*)(stk + (J)*4 + (0x34 + (K)*4)) = *(u32*)(channel + (J)*4 + (0x34 + (K)*4));
-extern void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
+void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
 #define LOADCOLOR_BLOCK(SLOT)                                                         \
     {                                                                                 \
         int idx;                                                                      \
@@ -107,9 +108,6 @@ typedef struct ObjHitBufs
     u8* bufs[2];
     u8* cur;
 } ObjHitBufs;
-extern void PSMTXReorder(f32 * src, f32 * dst);
-extern void fn_80007F78(u8 * ch, s16 * outRot, s16 * outRot2);
-extern void PSMTXTranspose(f32 * src, f32 * dst);
 extern const f32 gModelDotClampMax;
 extern f32 gModelDotClampMin;
 extern f32 gMapSavedPlayerOffsetX;
@@ -2262,7 +2260,7 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
         }
         *(u8**)((u8*)ch + 0x2c) = anim + *(s16*)(anim + 2) + bv * n;
     }
-    fn_80007F78((u8*)ch, srot, outRot);
+    fn_80007F78(ch, srot, outRot);
     *(int*)&ch->moveFrameData = saved;
     {
         f32 k = lbl_803DE880;

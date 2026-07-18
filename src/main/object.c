@@ -213,8 +213,8 @@ extern int gObjFileCount;
 extern f32 gMapSavedPlayerOffsetX;
 extern f32 gMapSavedPlayerOffsetZ;
 
-extern void Obj_RegisterObject(GameObject* obj, int b);
-extern int loadModLines(int n, s16* out);
+void Obj_RegisterObject(GameObject* obj, int b);
+int loadModLines(int n, s16* out);
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
 void ObjModel_LoadRenderOpTextures(u8* model, int arg);
 void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);

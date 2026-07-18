@@ -137,7 +137,7 @@ extern f32 lbl_803DEB78;
 extern F32Pair lbl_803DEB58;
 extern f32 lbl_803DEB5C;
 extern f32 lbl_803DEB7C;
-extern void textureFn_80053d58(void* obj);
+void textureFn_80053d58(void* obj);
 extern f32 lbl_803DEB98;
 extern f32 lbl_803DEB9C;
 extern GXTexObj lbl_803779A0;
