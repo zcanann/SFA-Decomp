@@ -81,6 +81,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/pi_dolphin_ext.h"
 #include "main/lightmap_ext.h"
 #include "main/pi_dolphin_load_api.h"
+#include "main/pi_dolphin_fileload_api.h"
 #include "string.h"
 
 f32 gGameLoopResetFadeOutTimer;
@@ -155,7 +156,6 @@ extern u8 gGameLoopInitComplete;
 extern u8 gGameLoopButtonObjectCount;
 extern u16 gGameLoopMusicRequestCount;
 extern u8 gGameLoopPendingMusicId;
-extern void loadAsset(void* req);
 extern u8 gGameLoopReloadRequested;
 typedef struct
 {
@@ -173,6 +173,7 @@ typedef struct
     int arg24;
     int arg28;
 } AssetReq;
+void loadAsset(AssetReq* req);
 extern void* lbl_803DCAFC;
 extern u8* gGameBitTable;
 extern s16 gGameBitCount;
@@ -276,12 +277,10 @@ void loadAssetFileById(void* out, int fileId)
     loadAsset(&gGameLoopAssetReq);
 }
 
-void loadAsset(void* reqVoid)
+void loadAsset(AssetReq* req)
 {
     u8 tmp[0x10];
-    AssetReq* req;
 
-    req = reqVoid;
     switch (req->type)
     {
     case 0:
@@ -1043,9 +1042,6 @@ void cutsceneEnterExit(int entering, int affectSounds)
         }
     }
 }
-
-extern u8 initLoadFiles(void);
-
 
 u8 lbl_8033C3B8[0x3E8];
 u8 gGameLoopRenderModeCopy[0x40];

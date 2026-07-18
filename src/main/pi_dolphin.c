@@ -25,6 +25,7 @@
 #include "main/pi_data_file_api.h"
 #include "main/pi_flush_api.h"
 #include "main/pi_dolphin_texture_api.h"
+#include "main/pi_dolphin_fileload_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/os/OSResetSW.h"
 #include "dolphin/gx/GXCull.h"
@@ -4023,7 +4024,7 @@ void* fileLoad(int id, int wpad0)
     return (void*)lbl_8035F3E8[id];
 }
 
-int initLoadFiles(void)
+u8 initLoadFiles(void)
 {
     int i;
     DVDFileInfo* fileInfo;
