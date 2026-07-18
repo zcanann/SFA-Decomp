@@ -1284,15 +1284,15 @@ int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
                 }
             }
         }
-        if (best >= lbl_803DECB4)
+        if (best >= *(f32*)&lbl_803DECB4)
         {
             *outDepth = best;
             return 1;
         }
-        *outDepth = 0.0f;
+        *outDepth = lbl_803DECB4;
         return 0;
     }
-    *outDepth = 0.0f;
+    *outDepth = lbl_803DECB4;
     return 0;
 }
 
@@ -1309,13 +1309,7 @@ int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, 
     if (n != 0)
     {
         cur = y - arr[0]->height;
-        if (cur >= lbl_803DECB4)
-        {
-        }
-        else
-        {
-            cur = -cur;
-        }
+        cur = cur >= *(f32*)&lbl_803DECB4 ? cur : -cur;
         best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
@@ -1524,20 +1518,20 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
     }
     gShadowOffsetZ = c * param;
     dot = vec[0] * gPrevSunDir[0] + vec[1] * gPrevSunDir[1] + vec[2] * gPrevSunDir[2];
-    lenv = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
     lenp = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] + gPrevSunDir[2] * gPrevSunDir[2];
+    lenv = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
     mag = lenv * lenp;
     if (mag != lbl_803DEC58)
     {
         lenp = sqrtf(mag);
     }
-    lenv = lbl_803DEC58;
+    lenv = *(f32*)&lbl_803DEC58;
     if (lenp != lenv)
     {
         lenv = dot / lenp;
     }
     gSunDotCos = lenv;
-    if ((f32)gSunDotCos < lbl_803DEC58)
+    if ((f32)gSunDotCos < *(f32*)&lbl_803DEC58)
     {
         gSunDotCos = (f32)gSunDotCos * lbl_803DEC98;
     }
@@ -1670,13 +1664,7 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
     if (n != 0)
     {
         cur = y - arr[0]->height;
-        if (cur >= lbl_803DECB4)
-        {
-        }
-        else
-        {
-            cur = -cur;
-        }
+        cur = cur >= *(f32*)&lbl_803DECB4 ? cur : -cur;
         best = cur;
         bestIdx = 0;
         for (i = 1; i < n; i++)
@@ -2179,7 +2167,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
             t2 = (nB - root) / denom;
             if (t1 < lbl_803DECB4)
                 t1 = lbl_803DECC0;
-            if (t2 < lbl_803DECB4)
+            if (t2 < *(f32*)&lbl_803DECB4)
                 t2 = lbl_803DECC0;
             if (t2 < t1)
                 t1 = t2;
@@ -2636,7 +2624,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
     f32 d0[3];
     f32 d1[3];
 
-    if ((u8)type == 3)
+    if (type == 3)
     {
         f32 fa, scale;
         f32 a0, b0;
@@ -2692,7 +2680,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
                     if (lbl_803DECB4 != d)
                         y = y / d;
                     d1[0] = p[0];
-                    d1[1] = lbl_803DECB4;
+                    d1[1] = *(f32*)&lbl_803DECB4;
                     d1[2] = p[2];
                     Vec3_Normalize(d1);
                     b[0] = y * d1[0] + b[0];
@@ -2794,7 +2782,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
             f32 dd = rayDir[1] * tmp14[1];
             f32 dn = dd + rayDir[0] * tmp14[0] + rayDir[2] * tmp14[2];
             f32 r = s / dn;
-            if (r < lbl_803DECB4)
+            if (r < *(f32*)&lbl_803DECB4)
                 r = -r;
             len = len - r;
         }
