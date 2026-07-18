@@ -147,3 +147,16 @@ The `int c2 -> u8 blendAlpha` param retype (+ skyEntry u8*->SkyLightSlotView*) i
 
 ## RECURRING PATTERN: per-fn improves regress unit-siblings via shared-pool reorder (2nd instance)
 085eb7acbd "Improve objseq.ObjSeq_update 99.68->99.75" (+0.07) regressed sibling ObjSeq_ExecuteActionCommand 99.334->99.125 (-0.21) - net -0.14 for the unit. Same mechanism as the sky fn_80089A60 case (34edc7ed7c): a matching edit changes one fn's .sdata2/literal-pool footprint, reordering the TU-shared anonymous pool and shifting sibling fns' @N references in a SCORING way. This is now 2 confirmed instances. SUGGESTION for the owner's workflow: after an "Improve <fn>" edit, run the WHOLE-UNIT per-fn report (not just the target fn) before committing - the isofuzzy/objdiff per-unit proto shows all siblings. A +0.07 target gain isn't worth a -0.21 sibling loss. The churn-mine (rename-safe same-key gate) is catching these post-hoc but pre-commit whole-unit measurement would prevent them. Both ObjSeq_update and ExecuteActionCommand were previously matched via structural levers (indexed store / (int)-cast add-grouping); the pool coupling between them is tight.
+
+## Pragma-strip campaign (556a5ac0db + lanes A/B/C 156a962ec1/c94fb78dbf/41be92f09c) regressed 9 fns
+The tree-wide "strip non-original pragma spam" removed pragmas that were LOAD-BEARING for matching on these 9 fns (churn-mine same-key gate, measured post-strip):
+- track_dolphin hitDetectFn_800658a4 98.31 -> 93.85 (-4.46, LARGE - likely an over-strip, not intended spam)
+- track_dolphin fn_80060C14 98.66 -> 97.76 (-0.90)
+- objprint_dolphin modelRenderFn_setVtxDescr 98.94 -> 98.04 (-0.90)
+- expgfx expgfx_updateActivePools 99.67 -> 98.96 (-0.71)
+- lightmap sceneDraw 99.73 -> 99.12 (-0.61)
+- track_dolphin renderGlows 98.50 -> 98.01 (-0.49)
+- track_dolphin intersectModLineBuild 99.54 -> 99.07 (-0.47)
+- shader mapLoadUnloadObjects 97.30 -> 96.92 (-0.38)
+- andross andross_update 99.85 -> 99.78 (-0.06)
+If some of these pragmas were genuine quality-hacks, the drops are intended (authenticity > match%). But hitDetectFn -4.46 and the ~0.9 drops on modelRenderFn_setVtxDescr/fn_80060C14 suggest real matching pragmas mis-classified as spam - worth restoring those specific ones (check whether the stripped pragma was opt_propagation/scheduling/peephole off, which are the load-bearing match class, vs a truly redundant reset-only pragma). The batch also had 5 UPs (zlbDecompress +1.0, loadCharacter +0.32, dbstealerworm/animobjd2/setLanguageFn) so net effect is mixed.
