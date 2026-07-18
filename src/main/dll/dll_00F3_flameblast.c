@@ -44,8 +44,6 @@ typedef struct FlameblastPlacement
 
 #define FLAMEBLAST_OBJFLAG_RENDERED 0x800
 
-extern int fn_80138F90(void);
-
 int fn_8017805C(GameObject* obj, FlameblastState* state);
 
 void objSetAnimSpeedTo1(GameObject* obj)
@@ -74,7 +72,7 @@ int fn_8017805C(GameObject* obj, FlameblastState* state)
     vec.pos[0] = 1.0f;
     vec.dir[2] = tricky[2];
     vec.dir[1] = tricky[1];
-    vec.dir[0] = tricky[0] + fn_80138F90();
+    vec.dir[0] = tricky[0] + fn_80138F90((GameObject*)tricky);
     vecRotateZXY(&vec.rotation.x, &obj->anim.velocity.x);
     if ((((GameObject*)tricky)->objectFlags & FLAMEBLAST_OBJFLAG_RENDERED) != 0)
     {

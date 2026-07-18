@@ -48,7 +48,7 @@ STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 extern f32 PSVECDistance(void* a, void* b);
 
 
-u32 fn_801A0174(int* obj)
+int fn_801A0174(int* obj)
 {
     return (((GcRobotLightBeaState*)(int*)((GameObject*)obj)->extra)->hitFlags >> 7) & 1;
 }

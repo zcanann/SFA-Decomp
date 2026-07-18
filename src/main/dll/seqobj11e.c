@@ -45,6 +45,7 @@
 #include "main/dll/seqobj11d_ext.h"
 #include "main/dll/groundbaddiepush_ext.h"
 #include "main/dll/dll_00C9_enemy_ext.h"
+#include "main/dll/dll_0150_gcrobotlightbea.h"
 
 int lbl_803DBCA8[2] = {2, 3};
 f32 lbl_803DBCB0 = 0.018f;
@@ -211,7 +212,6 @@ void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int
  * landing sfx, light-pulse fx, child spark spawn. */
 
 
-extern int fn_801A0174(int* obj);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))

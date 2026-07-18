@@ -1361,18 +1361,18 @@ int trickyFn_80138f14(GameObject* obj)
 
 PPCWGPipe GXWGFifo : (0xCC008000);
 
-f32 fn_80138F78(u8* obj)
+f32 fn_80138F78(GameObject* obj)
 {
-    return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk14;
+    return ((TrickyImpressState*)obj->extra)->unk14;
 }
 
 GameObject* fn_80138F84(GameObject* obj)
 {
     return ((TrickyImpressState*)obj->extra)->stayPoint;
 }
-s16 fn_80138F90(u8* obj)
+int fn_80138F90(GameObject* obj)
 {
-    return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk414;
+    return ((TrickyImpressState*)obj->extra)->unk414;
 }
 void* trickyGetQueuedPathParticlePos(GameObject* obj)
 {

@@ -34,6 +34,7 @@
 #include "main/dll/dll_000B_dll0b.h"
 #include "track/intersect_api.h"
 #include "main/lightmap.h"
+#include "main/dll/dll_80136a40.h"
 
 int lbl_803DD278;
 int lbl_803DD274;
@@ -133,8 +134,6 @@ extern f32 gExpgfxYVelocitySlowStep;
 extern f32 gExpgfxYVelocityNegativeLimit;
 extern const f32 gExpgfxSlotMotionStep;
 
-extern f32 fn_80138F78(void* tricky);
-#define getTrickyAttractionRange fn_80138F78
 #define getPlayerAttractionRange fn_8029610C
 #define getSkyDirection          fn_800897D4
 extern u16 gExpgfxPhaseAngleA;
@@ -699,7 +698,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
         Camera_GetCurrentViewSlot();
         if (tricky != NULL)
         {
-            trickyRange = getTrickyAttractionRange(tricky);
+            trickyRange = fn_80138F78(tricky);
         }
         if (player != NULL)
         {

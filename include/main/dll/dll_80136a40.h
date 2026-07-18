@@ -10,7 +10,9 @@
  * consumers include this instead of hand-writing a local extern.
  */
 void* trickyGetQueuedPathParticlePos(GameObject* obj);
+f32 fn_80138F78(GameObject* tricky);
 GameObject* fn_80138F84(GameObject* tricky);
+int fn_80138F90(GameObject* tricky);
 int trickyFn_80138f14(GameObject* tricky);
 void trickyImpress(GameObject* obj);
 void fn_80138908(GameObject* obj, int value);
