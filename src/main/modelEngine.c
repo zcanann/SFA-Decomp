@@ -462,7 +462,7 @@ void model_adjustModelList(ModelList* list, int index)
 
     while (list->end > list->entries && list->end[-1] == -1)
     {
-        list->end = (s16*)((u8*)list->end - list->strideShorts * 2);
+        list->end -= list->strideShorts;
     }
 }
 
