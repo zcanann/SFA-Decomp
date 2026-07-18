@@ -241,24 +241,7 @@ static inline u32 mcmdVarGet32Legacy(McmdVoiceState* state, u32 useExCtrl, u32 i
 
 #define varGet32Legacy(state, useExCtrl, index) mcmdVarGet32Legacy((state), (useExCtrl), (index))
 
-/*
- * Write a synth register, routing high registers to the EX controller bank.
- */
-void varSet32(McmdVoiceState* state, u32 useExCtrl, u8 index, s32 value)
-{
-    if (useExCtrl != 0)
-    {
-        inpSetExCtrl(state, index, value);
-        return;
-    }
-    index &= 0x1f;
-    if (index < 0x10)
-    {
-        state->localRegs[index] = value;
-        return;
-    }
-    SYNTH_GLOBAL_REG(index) = value;
-}
+void varSet32(McmdVoiceState* state, u32 useExCtrl, u8 index, s32 value);
 
 static inline void varSet(McmdVoiceState* state, u8 useExCtrl, u8 index, s16 value)
 {
@@ -597,11 +580,12 @@ void macHandleActive(McmdVoiceState* sv)
     u32 ex;
     u32 cmd;
     u32* para1;
-    int lastNote;
+    u8 lastNote;
     u8* channelDefaults;
     f32 one;
     f32 dlsScaleMax;
-    u32 unused[6];
+    u32 unused[2];
+    u8* tab = lbl_8032EDD0;
 
     if (MAC_CFLAGS(sv) & 3)
     {
@@ -848,15 +832,18 @@ void macHandleActive(McmdVoiceState* sv)
         {
             f32 sScale;
             McmdDlsAdsrInfo adsr;
+            s32* row;
             sScale = voiceAdsrSustainTable[(u16)inpGetMidiCtrl(cmd >> 0x18, sv->midiSlot, sv->midiEvent) >> 7];
-            adsr.atime =
-                ((MacDataTables*)lbl_8032EDD0)->midi2TimeTab[(u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 8) & 0xff, sv->midiSlot, sv->midiEvent) >>
-                                   7];
-            adsr.dtime = ((MacDataTables*)lbl_8032EDD0)->midi2TimeTab[(u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 0x10) & 0xff, sv->midiSlot,
-                                                                sv->midiEvent) >>
-                                            7];
+            row = (s32*)(tab +
+                         ((u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 8) & 0xff, sv->midiSlot, sv->midiEvent) >> 7) * 4);
+            adsr.atime = row[7];
+            row = (s32*)(tab + ((u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 0x10) & 0xff, sv->midiSlot, sv->midiEvent) >>
+                                7) *
+                                   4);
+            adsr.dtime = row[7];
             adsr.slevel = 0xc1 - voiceAdsrDecayTable[(u32)(dlsScaleMax * sScale)];
-            adsr.rtime = ((MacDataTables*)lbl_8032EDD0)->midi2TimeTab[(u16)inpGetMidiCtrl((u8)*para1, sv->midiSlot, sv->midiEvent) >> 7];
+            row = (s32*)(tab + ((u16)inpGetMidiCtrl((u8)*para1, sv->midiSlot, sv->midiEvent) >> 7) * 4);
+            adsr.rtime = row[7];
             adsr.ascale = 0x80000000;
             adsr.dscale = 0x80000000;
             hwSetADSR(sv->voiceHandle & 0xff, &adsr, 2);
@@ -914,6 +901,7 @@ void macHandleActive(McmdVoiceState* sv)
         case 0x1d: /* pitch sweep 1 */
         {
             s32 delta;
+            McmdCommandArgs unused2;
             sv->sweepOff[0] = 0;
             sv->sweepNum[0] = (lbl_803DE2E8.flags >> 8) & 0xff;
             sv->sweepCnt[0] = sv->sweepNum[0] << 0x10;
@@ -1165,15 +1153,19 @@ void macHandleActive(McmdVoiceState* sv)
         case 0x4d: /* aux A FX select */
         {
             u8 i = *para1 >> 0x18;
-            SelectSource(sv, (McmdInputSlot*)(inpAuxA + sv->studio * 0x90 + i * 0x24), &lbl_803DE2E8,
-                         ((MacDataTables*)lbl_8032EDD0)->auxAMask[i], ((MacDataTables*)lbl_8032EDD0)->auxADirty[i]);
+            u64* mask = (u64*)(tab + i * 8);
+            u32* dirty = (u32*)(tab + i * 4);
+            SelectSource(sv, (McmdInputSlot*)(inpAuxA + sv->studio * 0x90 + i * 0x24), &lbl_803DE2E8, mask[68],
+                         dirty[144]);
             break;
         }
         case 0x4e: /* aux B FX select */
         {
             u8 i = *para1 >> 0x18;
-            SelectSource(sv, (McmdInputSlot*)(inpAuxB + sv->studio * 0x90 + i * 0x24), &lbl_803DE2E8,
-                         ((MacDataTables*)lbl_8032EDD0)->auxBMask[i], ((MacDataTables*)lbl_8032EDD0)->auxBDirty[i]);
+            u64* mask = (u64*)(tab + i * 8);
+            u32* dirty = (u32*)(tab + i * 4);
+            SelectSource(sv, (McmdInputSlot*)(inpAuxB + sv->studio * 0x90 + i * 0x24), &lbl_803DE2E8, mask[74],
+                         dirty[156]);
             break;
         }
         case 0x50: /* setup LFO */
@@ -1218,8 +1210,26 @@ void macHandleActive(McmdVoiceState* sv)
             mcmdIfVarCompare(sv, &lbl_803DE2E8, 1);
             break;
         }
-    next_command:;
     } while (ex == 0);
+}
+
+/*
+ * Write a synth register, routing high registers to the EX controller bank.
+ */
+void varSet32(McmdVoiceState* state, u32 useExCtrl, u8 index, s32 value)
+{
+    if (useExCtrl != 0)
+    {
+        inpSetExCtrl(state, index, value);
+        return;
+    }
+    index &= 0x1f;
+    if (index < 0x10)
+    {
+        state->localRegs[index] = value;
+        return;
+    }
+    SYNTH_GLOBAL_REG(index) = value;
 }
 
 /*
