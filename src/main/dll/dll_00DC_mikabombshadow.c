@@ -19,7 +19,6 @@ const f32 lbl_803E31C8 = 0.0f;
 const f32 gMikaBombGravityAccel = 0.01f;
 const f32 gMikaBombMinFallVelocity = -2.5f;
 const f32 lbl_803E31D4 = -1.0f;
-extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 int MikaBombShadow_getExtraSize(void)
 {
