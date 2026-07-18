@@ -7382,7 +7382,6 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 int hintIndex;
                 u8* candidate;
                 i = 0;
-                hintIndex = -1;
                 hintCandidates = (u8*)&gGameUiTaskHintCandidates;
                 candidate = hintCandidates;
                 for (; i < GAMEUI_TASK_HINT_COUNT; i++)
@@ -7390,10 +7389,12 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                     if (mainGetBit(gTaskHintTable[*candidate].bit_id))
                     {
                         hintIndex = (s8)gGameUiTaskHintCandidates[i];
-                        break;
+                        goto haveFirstAvailableHint;
                     }
                     candidate++;
                 }
+                hintIndex = -1;
+            haveFirstAvailableHint:
                 firstAvailableHint = (s8)hintIndex;
                 taskCount = mainGetBit(GAMEBIT_ITEM_SpellStone3_Got);
                 taskPartial = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
