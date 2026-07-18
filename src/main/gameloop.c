@@ -26,6 +26,7 @@ int lbl_803DB428 = 0xAA;
 int lbl_803DB42C = 0x16A;
 #include "dolphin/vi.h"
 #include "dolphin/dvd.h"
+#include "dolphin/gx/GXFrameBuffer.h"
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
@@ -187,8 +188,6 @@ extern u8 lbl_803DCA40;
 extern u8 gGameLoopMapLoadPending;
 extern int gGameLoopPlayerTrailIndex;
 extern u8 gGameLoopMusicActive;
-extern u8 GXNtsc480IntDf[];
-extern u8 GXNtsc480Prog[];
 extern u8 gGameLoopProgressiveMode;
 extern void* lbl_803DCA94;
 extern void* gTitleMenuControlInterface;
@@ -205,7 +204,6 @@ extern f32 lbl_803DE7B0;
 extern f32 lbl_803DE7A8;
 extern u8 lbl_803DCAC4;
 extern int lbl_803DCACC;
-extern void GXSetCopyFilter(int aa, u8* samplePattern, int vf, u8* vfilter);
 extern f32 gGameLoopResetHoldTimer;
 extern f32 gGameLoopResetFadeOutTimer;
 extern u8 gGameLoopHardReset;
@@ -516,9 +514,9 @@ void askProgressiveScanMode(void)
     VIWaitForRetrace();
     if ((u8)sel != 0)
     {
-        gRenderModeObj = (GXRenderModeObj*)GXNtsc480Prog;
+        gRenderModeObj = &GXNtsc480Prog;
         OSSetProgressiveMode(1);
-        GXSetCopyFilter(((u8*)gRenderModeObj)[0x19], (u8*)gRenderModeObj + 0x1a, 0, (u8*)gRenderModeObj + 0x32);
+        GXSetCopyFilter(gRenderModeObj->aa, gRenderModeObj->sample_pattern, GX_FALSE, gRenderModeObj->vfilter);
         VIConfigure(gRenderModeObj);
         VISetBlack(1);
         VIFlush();
@@ -526,9 +524,9 @@ void askProgressiveScanMode(void)
     }
     else
     {
-        gRenderModeObj = (GXRenderModeObj*)GXNtsc480IntDf;
+        gRenderModeObj = &GXNtsc480IntDf;
         OSSetProgressiveMode(0);
-        GXSetCopyFilter(((u8*)gRenderModeObj)[0x19], (u8*)gRenderModeObj + 0x1a, 1, (u8*)gRenderModeObj + 0x32);
+        GXSetCopyFilter(gRenderModeObj->aa, gRenderModeObj->sample_pattern, GX_TRUE, gRenderModeObj->vfilter);
         VIConfigure(gRenderModeObj);
         VISetBlack(1);
         VIFlush();
@@ -1336,11 +1334,11 @@ void init(void)
     PADInit();
     LCEnable();
     OSInitFastCast();
-    gRenderModeObj = (GXRenderModeObj*)GXNtsc480IntDf;
+    gRenderModeObj = &GXNtsc480IntDf;
     gGameLoopProgressiveMode = OSGetProgressiveMode();
     if (OSGetResetCode() != 0 && gGameLoopProgressiveMode == 1)
     {
-        gRenderModeObj = (GXRenderModeObj*)GXNtsc480Prog;
+        gRenderModeObj = &GXNtsc480Prog;
         OSSetProgressiveMode(1);
     }
     else

@@ -29,6 +29,7 @@
 #include "dolphin/os/OSArena.h"
 #include "dolphin/gx/GXLighting.h"
 #include "dolphin/gx/GXGeometry.h"
+#include "dolphin/gx/GXFrameBuffer.h"
 #include "dolphin/gx/GXTexture.h"
 #include "dolphin/gx/GXTransform.h"
 #include "dolphin/os/OSTime.h"
@@ -930,8 +931,6 @@ extern void* externalFrameBuffer0;
 extern void* externalFrameBuffer1;
 extern u8 lbl_803DCCA7;
 extern char lbl_8035F730[0x10];
-extern u8 GXNtsc480Prog[];
-extern void GXSetCopyFilter(u8 aa, u8* pat, u8 vf_en, u8* vfilter);
 extern u8 lbl_803DCD30;
 extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
@@ -1018,13 +1017,8 @@ extern void Queue_Init(void* q, void* buf, int n, int stride);
 extern void OSInitThreadQueue(char* q);
 extern void GXSetBreakPtCallback(void (*cb)());
 extern void GXSetFieldMode(int field_mode, int half_aspect_ratio);
-extern void GXSetDispCopySrc(int left, int top, int wd, int ht);
-extern u32 GXSetDispCopyYScale(f32 vscale);
-extern void GXSetDispCopyDst(int wd, int ht);
 extern void GXSetPixelFmt(int pix_fmt, int z_fmt);
 extern void GXSetDither(int dither);
-extern void GXSetDispCopyGamma(int gamma);
-extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
 extern char lbl_8035F6B8[0x78];
 extern char* lbl_803DCCE0;
 extern int lbl_803DCCB8;
@@ -4443,7 +4437,7 @@ void videoInit(void* wpad0, int wpad1)
 {
     u8 fifo[0x80];
     f32 mtx[3][4];
-    int cc;
+    GXColor cc;
     u32 lo;
     u32 hi;
     u32 next;
@@ -4555,8 +4549,8 @@ void videoInit(void* wpad0, int wpad1)
     GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_TEX3, GX_TEX_ST, GX_S16, 10);
     lbl_803DCCF4 = 0;
     GXSetCullMode(GX_CULL_NONE);
-    cc = *(int*)&lbl_803DB5D0;
-    GXSetCopyClear(&cc, 0xffffff);
+    cc = *(GXColor*)&lbl_803DB5D0;
+    GXSetCopyClear(cc, 0xffffff);
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
     GXSetNumChans(1);
     GXSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
@@ -4596,14 +4590,14 @@ extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTe
                             GXTevRegID out_reg);
 void setDisplayCopyFilter(void)
 {
-    u8* p = (u8*)gRenderModeObj;
-    if (p == GXNtsc480Prog || p[0x18] != 0)
+    GXRenderModeObj* renderMode = gRenderModeObj;
+    if (renderMode == &GXNtsc480Prog || renderMode->field_rendering != 0)
     {
-        GXSetCopyFilter(p[0x19], p + 0x1a, 0, p + 0x32);
+        GXSetCopyFilter(renderMode->aa, renderMode->sample_pattern, GX_FALSE, renderMode->vfilter);
     }
     else
     {
-        GXSetCopyFilter(p[0x19], p + 0x1a, 1, lbl_803DB5D4);
+        GXSetCopyFilter(renderMode->aa, renderMode->sample_pattern, GX_TRUE, lbl_803DB5D4);
     }
 }
 
@@ -4612,8 +4606,6 @@ extern void GXSetAlphaUpdate(GXBool update_enable);
 extern void GXFlush(void);
 extern void Queue_Push(void* q, void* item);
 extern void GXSetDrawSync(u16 v);
-extern void GXCopyDisp(void* fb, u8 clear);
-
 int GXFlush_(u8 visible, int unused)
 {
     void* fifo_get;
