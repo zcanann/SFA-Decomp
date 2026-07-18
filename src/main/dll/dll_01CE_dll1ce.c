@@ -107,13 +107,6 @@ extern u8 dim_levelcontrol_getExtraSize[];
 extern u8 dim_levelcontrol_init[];
 extern u8 dim_levelcontrol_render[];
 extern u8 dim_levelcontrol_update[];
-extern u8 dimmagicbridge_free[];
-extern u8 dimmagicbridge_getObjectTypeId[];
-extern u8 dimmagicbridge_hitDetect[];
-extern u8 dimmagicbridge_init[];
-extern u8 dimmagicbridge_initialise[];
-extern u8 dimmagicbridge_release[];
-extern u8 dimmagicbridge_render[];
 
 int dll_1CE_getExtraSize(void)
 {
