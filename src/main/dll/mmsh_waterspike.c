@@ -15,11 +15,10 @@
 #include "main/dll/mmsh_waterspike.h"
 #include "main/game_object.h"
 #include "main/frame_timing.h"
+#include "main/vecmath.h"
 
 f32 gDimBossGut2Pi = 3.1415927f;
 f32 gDimBossGut2AngleUnitToRadians = 32768.0f;
-
-extern int cos16(s16 angle);
 
 typedef struct WaterSpikeMotion
 {
@@ -65,4 +64,3 @@ void fn_801BEEA0(s16* obj, u8* state)
     motion->ySpeed = motion->ySpeed / 1.07f;
     motion->zSpin = motion->zSpin / 1.04f;
 }
-

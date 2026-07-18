@@ -35,6 +35,7 @@ void setMatrixFromObjectPos(f32 *mtx, const MatrixTransform *transform);
 int RandomTimer_UpdateRangeTrigger(void *timer, f32 lo, f32 hi);
 int randomGetRange(int min, int max);
 int getAngle(f32 deltaX, f32 deltaZ);
+int cos16(s16 angle);
 int atan2_8002178c(f32 y, f32 x);
 int atan2i(int y, int x);
 

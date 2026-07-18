@@ -147,9 +147,9 @@ f32 Vec_distance(f32* a, f32* b)
     return sqrtf(dx * dx + dy * dy + dz * dz);
 }
 
-int cos16(u16 angle)
+int cos16(s16 angle)
 {
-    return (int)(gVecMathAngleScale * fcos16(angle));
+    return (int)(gVecMathAngleScale * fcos16((u16)angle));
 }
 
 int atan2_8002178c(float y, float x)
