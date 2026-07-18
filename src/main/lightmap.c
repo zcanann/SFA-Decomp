@@ -47,6 +47,8 @@
 #include "main/tex_dolphin_ext.h"
 #include "main/acosf_api.h"
 #include "dolphin/gx/GXGeometry.h"
+#include "dolphin/gx/GXTransform.h"
+#include "dolphin/mtx/mtx_legacy.h"
 
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
@@ -84,14 +86,11 @@ extern F32Pair lbl_803DEC08;
 extern f32 lbl_803DEC0C;
 extern FrustumPlane gViewFrustumPlanes[];
 
-extern void PSMTXMultVec(int m, f32* in, f32* out);
 extern void* gMapBlockLayerTables[];
 extern void** gMapBlocks;
 extern void fn_800704FC(int a, int b, int c);
 extern u8 lbl_803DCE98; /* count of allocated blocks */
 extern f32 lbl_803DEC18;
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
-extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void fn_802B4ED8(int* obj, int a, int b);
 extern u32 lbl_803DCE34;
 extern f32 lbl_803DEC10;
@@ -105,7 +104,6 @@ extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 extern void drawViewFinderAperture(f32 a, f32 b, int c, int d);
 extern int mapRectFn_8005a728(int row, int col, u8* block);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void renderMapBlock(u8* block, int* p1);
 extern int lbl_8038228C[];
 extern s32 gMapLayerCellStates;
@@ -1347,7 +1345,7 @@ void renderShadowType3(u8* obj, u32 b, s32 offset)
         stk[1] = ((GameObject*)obj)->anim.worldPosY;
         stk[2] = ((GameObject*)obj)->anim.worldPosZ - playerMapOffsetZ;
     }
-    PSMTXMultVec((int)Camera_GetViewMatrix(), stk, stk);
+    PSMTXMultVec((f32*)Camera_GetViewMatrix(), stk, stk);
     t = (s32) - stk[2] + offset;
     v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
     lbl_8037E0C0[lbl_803DCE30 * 4] = (u32)obj;
@@ -1608,9 +1606,9 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     u8* s0;
 
     PSMTXConcat((f32*)lbl_80396850, p3, m);
-    GXLoadTexMtxImm(m, GX_TEXMTX0, GX_MTX3x4);
+    GXLoadTexMtxImm((const f32 (*)[4])m, GX_TEXMTX0, GX_MTX3x4);
     PSMTXConcat((f32*)lbl_80396820, p3, m);
-    GXLoadTexMtxImm(m, GX_TEXMTX1, GX_MTX3x4);
+    GXLoadTexMtxImm((const f32 (*)[4])m, GX_TEXMTX1, GX_MTX3x4);
     gxTextureSetupFn_8007cf7c();
     countShifted = (int)*(u16*)((char*)obj + 0x88) << 3;
     modelRenderInstrsState_initPtrLegacy(state, *(void**)&((GameObject *)obj)->anim.previousLocalPosX, countShifted,
