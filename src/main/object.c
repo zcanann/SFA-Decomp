@@ -34,6 +34,7 @@
 #include "main/object_update_list.h"
 #include "main/object_api.h"
 #include "main/pi_dolphin.h"
+#include "main/pi_data_file_api.h"
 #include "main/track_dolphin_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
@@ -219,7 +220,6 @@ extern int shadowInit(void* obj, int cursor, int arg);
 extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();
-extern int getDataFileSize(int id);
 extern void fn_802B4DE0(u8* obj, int flag);
 extern void fn_80059A50(int arg);
 extern void* textureFn_8006c5c4(void);

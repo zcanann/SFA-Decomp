@@ -1094,7 +1094,6 @@ extern void mapInitFn_8006fccc(void);
 
 extern void playerInitFuncPtrsEntry(void);
 
-extern int getDataFileSize(int id);
 
 
 u8 lbl_8033C3B8[0x3E8];

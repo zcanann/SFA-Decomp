@@ -1154,7 +1154,6 @@ void gameTextLoadForMap_800571f0(u8 force)
 }
 
 extern u8* lbl_803DCE78;
-extern u32 getDataFileSize(int idx);
 
 void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
 {
@@ -1917,7 +1916,7 @@ void doPendingMapLoads(void)
                             slot = mapProcessRomList(gShaderCurMapEventId);
                         {
                             int m2 = gShaderCurMapEventId;
-                            int sz = (int)(getDataFileSize(MLDF_FILEID_MAPINFO_BIN) >> 5);
+                            int sz = (int)((u32)getDataFileSize(MLDF_FILEID_MAPINFO_BIN) >> 5);
                             if (m2 < 0 || m2 >= sz)
                             {
                                 curMapType = 0;

@@ -4133,7 +4133,7 @@ void loadVoxMaps(int a, int* pc, int* p8)
 
 extern u32 lbl_8035F0A8[];
 
-u32 getDataFileSize(int idx)
+s32 getDataFileSize(int idx)
 {
     if (lbl_8035F3E8[idx] != 0)
     {
