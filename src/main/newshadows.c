@@ -25,6 +25,7 @@
 #include "main/pi_dolphin.h"
 #include "main/track_dolphin_api.h"
 #include "main/shader_api.h"
+#include "main/sky_api.h"
 #include "main/track_dolphin.h"
 #include "main/objprint_ext.h"
 #include "main/pi_dolphin_fileload_api.h"
@@ -172,7 +173,6 @@ extern u8 lbl_803DB668[8];
 extern f32 lbl_803DB670;
 extern int gNewShadowLightAngleX, gNewShadowLightAngleY;
 extern u8 fn_800626C8(GameObject* obj, int frames);
-extern void fn_8008923C(GameObject* obj, f32* a, f32* b, f32* c);
 
 extern const double lbl_803DED58;
 

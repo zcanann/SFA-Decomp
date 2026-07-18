@@ -134,7 +134,6 @@ void dll_06_func09(s32* x, s32* y, s32* z);
 void sky2_run(void);
 void sky2_onMapSetup(void);
 void timeOfDayFn_8008b964(void);
-void fn_8008923C(u8* obj, f32* x, f32* y, f32* z);
 void skyFn_8008a500(void);
 void sky2_update(int a, int b, u8* cfg);
 void fn_8008C9F4(u8* cfg, u8 flags);

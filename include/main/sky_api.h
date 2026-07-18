@@ -4,9 +4,11 @@
 #include "types.h"
 
 typedef struct ModelLightStruct ModelLightStruct;
+typedef struct GameObject GameObject;
 
 void envFxActFn_800887f8(u8 value);
 f32 fn_8008ED88(void);
+void fn_8008923C(GameObject* obj, f32* x, f32* y, f32* z);
 void modelTextureFn_80089970(int slot);
 void textureColorFn_8008991c(int slot, u8* red, u8* green, u8* blue);
 void objGetColor(int slot, u8* red, u8* green, u8* blue);

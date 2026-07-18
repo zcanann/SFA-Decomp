@@ -1797,7 +1797,7 @@ void timeOfDayFn_8008b964(void)
     }
 }
 
-void fn_8008923C(u8* obj, f32* x, f32* y, f32* z)
+void fn_8008923C(GameObject* obj, f32* x, f32* y, f32* z)
 {
     u8* lights[4];
     f32 dir[3];
@@ -1825,7 +1825,7 @@ void fn_8008923C(u8* obj, f32* x, f32* y, f32* z)
     }
     else
     {
-        slot = obj[0xf2];
+        slot = obj->lightColorSlot;
         if (gSkyState != NULL)
         {
             flag = ((SkyBlendStateFlags*)(gSkyState + slot * 0xa4 + 0xc1))->unused80;
@@ -1836,12 +1836,12 @@ void fn_8008923C(u8* obj, f32* x, f32* y, f32* z)
         }
         if (flag != 0)
         {
-            modelLightStruct_selectObjectLights((GameObject*)obj, (ModelLightStruct**)lights, 4, (s32*)&count, 2);
+            modelLightStruct_selectObjectLights(obj, (ModelLightStruct**)lights, 4, (s32*)&count, 2);
             if (count > 0)
             {
-                if (*(u8**)&((GameObject*)obj)->anim.modelState != NULL)
+                if (*(u8**)&obj->anim.modelState != NULL)
                 {
-                    found = *(u8**)(*(u8**)&((GameObject*)obj)->anim.modelState + 0x3c);
+                    found = *(u8**)(*(u8**)&obj->anim.modelState + 0x3c);
                 }
                 cur = lights[0];
                 if (found != lights[0] && found != NULL)
@@ -1861,9 +1861,9 @@ void fn_8008923C(u8* obj, f32* x, f32* y, f32* z)
                     }
                 }
                 modelLightStruct_getWorldPosition((ModelLightStruct*)cur, &lx, &ly, &lz);
-                dir[0] = ((GameObject*)obj)->anim.worldPosX - lx;
-                dir[1] = ((GameObject*)obj)->anim.worldPosY - ly;
-                dir[2] = ((GameObject*)obj)->anim.worldPosZ - lz;
+                dir[0] = obj->anim.worldPosX - lx;
+                dir[1] = obj->anim.worldPosY - ly;
+                dir[2] = obj->anim.worldPosZ - lz;
                 mag = PSVECMag(dir);
                 if (mag > lbl_803DF058)
                 {
@@ -1906,9 +1906,9 @@ void fn_8008923C(u8* obj, f32* x, f32* y, f32* z)
             }
         }
     }
-    if (*(u8**)&((GameObject*)obj)->anim.modelState != NULL)
+    if (*(u8**)&obj->anim.modelState != NULL)
     {
-        *(u8**)(*(u8**)&((GameObject*)obj)->anim.modelState + 0x3c) = cur;
+        *(u8**)(*(u8**)&obj->anim.modelState + 0x3c) = cur;
     }
 }
 

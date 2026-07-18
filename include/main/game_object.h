@@ -67,7 +67,9 @@ typedef struct GameObject
     u8 colorFadeBlue;
     u8 colorFadeAlpha; /* obj+0xEF written from the fade alpha each tick */
     u8 fadeCounter;    /* obj+0xF0 ++ toward the fade limit each tick */
-    u8 unkF1[3];
+    u8 unkF1;
+    u8 lightColorSlot; /* obj+0xF2: sky-light / ambient object-color slot */
+    u8 unkF3;
     s32 userData1; /* obj+0xF4/0xF8: two generic per-instance scratch words. No
         engine file reads or writes them - every access is in an object-class
         file, and each class picks its own role and width: countdown timer
@@ -133,6 +135,7 @@ STATIC_ASSERT(offsetof(GameObject, colorFadeAlpha) == 0xEF);
 STATIC_ASSERT(offsetof(GameObject, colorFadeRed) == 0xEC);
 STATIC_ASSERT(offsetof(GameObject, colorFadeGreen) == 0xED);
 STATIC_ASSERT(offsetof(GameObject, colorFadeBlue) == 0xEE);
+STATIC_ASSERT(offsetof(GameObject, lightColorSlot) == 0xF2);
 STATIC_ASSERT(offsetof(GameObject, userData1) == 0xF4);
 STATIC_ASSERT(offsetof(GameObject, externalVelZ) == 0x104);
 
