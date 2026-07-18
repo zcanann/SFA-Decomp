@@ -907,25 +907,21 @@ void gameUiLoadResources(void)
         }
 
         {
-            GameObject* object = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, NULL);
-            GameObject** objects = lbl_803DD868;
-            objects[0] = object;
-            objects[0]->anim.localPosX = lbl_803E1E3C;
-            objects[0]->anim.localPosY = lbl_803E1E48;
-            objects[0]->anim.localPosZ = lbl_803E1E4C;
-            objects[0]->anim.rotX = 0x7447;
-            *(f32*)((u8*)objects[0] + 0x8) = lbl_803E1E50;
+            lbl_803DD868[0] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, NULL);
+            lbl_803DD868[0]->anim.localPosX = lbl_803E1E3C;
+            lbl_803DD868[0]->anim.localPosY = lbl_803E1E48;
+            lbl_803DD868[0]->anim.localPosZ = lbl_803E1E4C;
+            lbl_803DD868[0]->anim.rotX = 0x7447;
+            lbl_803DD868[0]->anim.rootMotionScale = lbl_803E1E50;
         }
 
         {
-            GameObject* object = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, NULL);
-            GameObject** objects = lbl_803DD868;
-            objects[1] = object;
-            objects[1]->anim.localPosX = lbl_803E1E3C;
-            objects[1]->anim.localPosY = lbl_803E1E54;
-            objects[1]->anim.localPosZ = lbl_803E1E4C;
-            objects[1]->anim.rotX = 0x7447;
-            *(f32*)((u8*)objects[1] + 0x8) = lbl_803E1E58;
+            lbl_803DD868[1] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, NULL);
+            lbl_803DD868[1]->anim.localPosX = lbl_803E1E3C;
+            lbl_803DD868[1]->anim.localPosY = lbl_803E1E54;
+            lbl_803DD868[1]->anim.localPosZ = lbl_803E1E4C;
+            lbl_803DD868[1]->anim.rotX = 0x7447;
+            lbl_803DD868[1]->anim.rootMotionScale = lbl_803E1E58;
         }
 
         p = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x755), 4, -1, -1, NULL);
@@ -933,11 +929,8 @@ void gameUiLoadResources(void)
         ObjModel_SetRenderCallback(*(void**)*(int*)(p + 0x7c), fn_8011E0D8);
 
         {
-            GameObject* object = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x756), 4, -1, -1, NULL);
-            GameObject** objects = lbl_803DD860;
-            objects[1] = object;
-            p = (char*)objects[1];
-            ObjModel_SetRenderCallback(*(void**)*(int*)(p + 0x7c), fn_8011E0D8);
+            lbl_803DD860[1] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x756), 4, -1, -1, NULL);
+            ObjModel_SetRenderCallback(*(void**)*(int*)((u8*)lbl_803DD860[1] + 0x7c), fn_8011E0D8);
         }
 
         j = 4;
@@ -8633,12 +8626,130 @@ void showHelpText(s16 val)
     gGameUiHelpTextId = val;
 }
 
+static inline void gameUiDispatchCMenuInput(int flags, u8* tricky, u8 trickyProximity, s16 cx, s16 angDelta)
+{
+    int closed;
+    s8 sectionTarget;
+
+    if ((flags & 0x20000) && tricky != NULL && (s8)cMenuState != 2)
+    {
+        if (*(s8*)&cMenuOpen != 0)
+            closed = 0;
+        else if (gCMenuOpenAnim != 0)
+            closed = 0;
+        else
+            closed = 1;
+        if (closed)
+        {
+            buttonDisable(0, 0x20000);
+            lbl_803DD79C = 0;
+            lbl_803DD79E = 0;
+            shouldOpenCMenu = 2;
+            lbl_803DD8B7 = 2;
+            gCMenuCurSection = 2;
+            cMenuSelectFirstEnabledItem(2, 1);
+            return;
+        }
+    }
+    if ((flags & 0x80000) && (s8)cMenuState != 3)
+    {
+        if (*(s8*)&cMenuOpen != 0)
+            closed = 0;
+        else if (gCMenuOpenAnim != 0)
+            closed = 0;
+        else
+            closed = 1;
+        if (closed)
+        {
+            buttonDisable(0, 0x80000);
+            lbl_803DD79C = -0x5556;
+            lbl_803DD79E = -0x5556;
+            shouldOpenCMenu = 3;
+            lbl_803DD8B7 = 0;
+            gCMenuCurSection = 0;
+            cMenuSelectFirstEnabledItem(0, 0);
+            if (trickyProximity != 0)
+                cMenuSelectItemByTarget(0, 0xc1, 0);
+            return;
+        }
+    }
+    if ((flags & 0x40000) && (s8)cMenuState != 4)
+    {
+        if (*(s8*)&cMenuOpen != 0)
+            closed = 0;
+        else if (gCMenuOpenAnim != 0)
+            closed = 0;
+        else
+            closed = 1;
+        if (closed)
+        {
+            buttonDisable(0, 0x40000);
+            lbl_803DD79C = 0x5555;
+            lbl_803DD79E = 0x5555;
+            shouldOpenCMenu = 4;
+            lbl_803DD8B7 = 1;
+            gCMenuCurSection = 1;
+            cMenuSelectFirstEnabledItem(1, 0);
+            return;
+        }
+    }
+
+    {
+        int absCx = cx < 0 ? -cx : cx;
+        int absPrev = lbl_803DD78E < 0 ? -lbl_803DD78E : lbl_803DD78E;
+        int absAng = angDelta < 0 ? -angDelta : angDelta;
+        if (*(s8*)&cMenuOpen == 0)
+            closed = 0;
+        else
+            closed = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
+        if (absCx >= 0xf && absPrev < 0xf && gCMenuScrollTimer == 0 && closed && absAng < 0x2710)
+        {
+            int dir = 1;
+            u8 next = cMenuState;
+            lbl_803DD79A = -1;
+            if (cx < 0)
+            {
+                dir = -1;
+                lbl_803DD79A = 1;
+            }
+            next += dir;
+            if (next > 4)
+                next = 2;
+            if (next < 2)
+                next = 4;
+            switch (next)
+            {
+            case 4:
+                lbl_803DD79E = 0x5555;
+                sectionTarget = 1;
+                break;
+            case 3:
+                lbl_803DD79E = -0x5556;
+                sectionTarget = 0;
+                break;
+            case 2:
+                lbl_803DD79E = 0;
+                sectionTarget = 2;
+                break;
+            }
+            if (next != (s8)cMenuState)
+            {
+                *(s8*)&shouldOpenCMenu = (s8)next;
+                lbl_803DD8B7 = sectionTarget;
+            }
+            return;
+        }
+    }
+
+    if ((*gCameraInterface)->getMode() == CAMMODE_WORLDMAP)
+        cMenuOpen = 0;
+}
+
 /* Per-frame UI/pause-menu update + dispatch. */
 void GameUI_update(void)
 {
     u8* player = (u8*)Obj_GetPlayerObject();
     u8* tricky = (u8*)getTrickyObject();
-    s8 sectionTarget;
     s16 cx;
     s16 angDelta;
     u8 trickyProximity = 0;
@@ -8731,7 +8842,6 @@ void GameUI_update(void)
         if (allowCStickTarget != 0)
         {
             int cxa, cya;
-            int stickMoved = 1;
             if ((s8)padGetCXS8(0) < 0)
                 cxa = -padGetCXS8(0);
             else
@@ -8742,10 +8852,8 @@ void GameUI_update(void)
                     cya = -padGetCYS8(0);
                 else
                     cya = padGetCYS8(0);
-                if (cya <= 5)
-                    stickMoved = 0;
             }
-            if (stickMoved)
+            if (cxa > 5 || cya > 5)
             {
                 int closed;
                 if (*(s8*)&cMenuOpen != 0)
@@ -8812,122 +8920,7 @@ void GameUI_update(void)
         }
 
         flags = gCMenuButtons;
-        {
-            int closed;
-            int dispatched = 0;
-            if ((flags & 0x20000) && tricky != 0 && (s8)cMenuState != 2)
-            {
-                if (*(s8*)&cMenuOpen != 0)
-                    closed = 0;
-                else if (gCMenuOpenAnim != 0)
-                    closed = 0;
-                else
-                    closed = 1;
-                if (closed)
-                {
-                    buttonDisable(0, 0x20000);
-                    lbl_803DD79C = 0;
-                    lbl_803DD79E = 0;
-                    shouldOpenCMenu = 2;
-                    lbl_803DD8B7 = 2;
-                    gCMenuCurSection = 2;
-                    cMenuSelectFirstEnabledItem(2, 1);
-                    dispatched = 1;
-                }
-            }
-            if (!dispatched && (flags & 0x80000) && (s8)cMenuState != 3)
-            {
-                if (*(s8*)&cMenuOpen != 0)
-                    closed = 0;
-                else if (gCMenuOpenAnim != 0)
-                    closed = 0;
-                else
-                    closed = 1;
-                if (closed)
-                {
-                    buttonDisable(0, 0x80000);
-                    lbl_803DD79C = -0x5556;
-                    lbl_803DD79E = -0x5556;
-                    shouldOpenCMenu = 3;
-                    lbl_803DD8B7 = 0;
-                    gCMenuCurSection = 0;
-                    cMenuSelectFirstEnabledItem(0, 0);
-                    if (trickyProximity != 0)
-                        cMenuSelectItemByTarget(0, 0xc1, 0);
-                    dispatched = 1;
-                }
-            }
-            if (!dispatched && (flags & 0x40000) && (s8)cMenuState != 4)
-            {
-                if (*(s8*)&cMenuOpen != 0)
-                    closed = 0;
-                else if (gCMenuOpenAnim != 0)
-                    closed = 0;
-                else
-                    closed = 1;
-                if (closed)
-                {
-                    buttonDisable(0, 0x40000);
-                    lbl_803DD79C = 0x5555;
-                    lbl_803DD79E = 0x5555;
-                    shouldOpenCMenu = 4;
-                    lbl_803DD8B7 = 1;
-                    gCMenuCurSection = 1;
-                    cMenuSelectFirstEnabledItem(1, 0);
-                    dispatched = 1;
-                }
-            }
-
-            if (!dispatched)
-            {
-                int absCx = cx < 0 ? -cx : cx;
-                int absPrev = lbl_803DD78E < 0 ? -lbl_803DD78E : lbl_803DD78E;
-                int absAng = angDelta < 0 ? -angDelta : angDelta;
-                if (*(s8*)&cMenuOpen == 0)
-                    closed = 0;
-                else
-                    closed = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
-                if (absCx >= 0xf && absPrev < 0xf && gCMenuScrollTimer == 0 && closed && absAng < 0x2710)
-                {
-                    int dir = 1;
-                    u8 next = cMenuState;
-                    lbl_803DD79A = -1;
-                    if (cx < 0)
-                    {
-                        dir = -1;
-                        lbl_803DD79A = 1;
-                    }
-                    next += dir;
-                    if (next > 4)
-                        next = 2;
-                    if (next < 2)
-                        next = 4;
-                    switch (next)
-                    {
-                    case 4:
-                        lbl_803DD79E = 0x5555;
-                        sectionTarget = 1;
-                        break;
-                    case 3:
-                        lbl_803DD79E = -0x5556;
-                        sectionTarget = 0;
-                        break;
-                    case 2:
-                        lbl_803DD79E = 0;
-                        sectionTarget = 2;
-                        break;
-                    }
-                    if (next != (s8)cMenuState)
-                    {
-                        *(s8*)&shouldOpenCMenu = (s8)next;
-                        lbl_803DD8B7 = sectionTarget;
-                    }
-                    dispatched = 1;
-                }
-            }
-            if (!dispatched && (*gCameraInterface)->getMode() == CAMMODE_WORLDMAP)
-                cMenuOpen = 0;
-        }
+        gameUiDispatchCMenuInput(flags, tricky, trickyProximity, cx, angDelta);
 
         if ((s8)shouldOpenCMenu != 0)
         {
