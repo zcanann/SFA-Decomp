@@ -50,7 +50,6 @@ enum
     CPMSG_UNREGISTER = 0xf0008 /* member -> controller: remove */
 };
 
-extern s8 lbl_803DBE08;  /* curve-system one-shot init flag */
 extern f32 lbl_803E4108; /* render scale */
 int lbl_803DDB0C; /* cached rom-curve handle */
 s8 lbl_803DDB09;  /* registered-target list count */
