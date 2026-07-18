@@ -17,6 +17,7 @@
  * 2-slot live-objects table at lbl_803DBBC8.
  */
 #include "main/texture.h"
+#include "track/intersect_hud_api.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_charset_api.h"
 #include "main/gametext_show_api.h"
@@ -138,7 +139,6 @@ void Minimap_drawCompassBlip(void);
 void Minimap_setupCompassBlip(void);
 void fn_8013351C(void);
 
-extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32* color);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, u32 w, u32 h, u32 u, u32 v);

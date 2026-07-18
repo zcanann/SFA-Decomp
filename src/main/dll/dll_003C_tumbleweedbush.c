@@ -18,6 +18,7 @@
  * LINK_FLAG_DISABLE_NAV_TO / LINK_FLAG_NO_ACCEPT. GameBit 0x44f gates accept.
  */
 #include "dolphin/os/OSReport.h"
+#include "track/intersect_hud_api.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_command_api.h"
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
@@ -55,7 +56,6 @@ extern char sTumbleweedBushSlotOverflowErr[]; /* "too many slots" overflow error
 extern char sTumbleweedBushNavLinkRangeErr[]; /* base of the nav-link out-of-range error format strings */
 
 extern u8 lbl_802C8680[];
-extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
 extern void MWTRACE(int boxId);
 #define PAD_BUTTON_A     0x100
 #define PAD_BUTTON_B     0x200
@@ -574,7 +574,7 @@ void Link_render(void)
                         {
                             alpha = linkItemOpacity;
                         }
-                        drawTexture(drawItem->texture, (f32)(drawItem->x + 11), drawItem->y, alpha, 0x100);
+                        drawTexture(drawItem->texture, (f32)(drawItem->x + 11), drawItem->y, (u8)alpha, 0x100);
                     }
                     else
                     {
@@ -586,7 +586,7 @@ void Link_render(void)
                         {
                             alpha = linkItemOpacity;
                         }
-                        drawTexture(drawItem->texture, drawItem->x, drawItem->y, alpha, 0x100);
+                        drawTexture(drawItem->texture, drawItem->x, drawItem->y, (u8)alpha, 0x100);
                     }
                 }
 

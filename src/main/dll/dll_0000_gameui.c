@@ -399,7 +399,6 @@ extern char sTrickyDebugXCoordFormat[];
 
 extern int fn_8011E0D8();
 extern void* memset(void* p, int v, int n);
-extern void drawTexture(void* texture, f32 x, f32 y, int alpha, int scale);
 extern void drawScaledTexture(void* texture, f32 x, f32 y, int alpha, int scale, int width, int height, int flags);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
@@ -4281,7 +4280,6 @@ typedef struct HeadDisplayEntry
 
 void drawFn_80125424(void)
 {
-    extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, int scale);
     extern void drawScaledTexture(void* texture, f32 x, f32 y, u8 alpha, int scale, int width, int height,
                                   int flags);
     u32 width;
@@ -7319,7 +7317,6 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
  * map layout with location labels. */
 void mapScreenDrawHud(int p1, int p2, int p3)
 {
-    extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, int scale);
     extern void drawScaledTexture(void* texture, f32 x, f32 y, u8 alpha, int scale, int width, int height, int flags);
     u8* hintCandidates;
     if (pauseMenuState != 0)

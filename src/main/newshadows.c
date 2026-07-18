@@ -1,5 +1,6 @@
 #include "main/game_object.h"
 #include "track/intersect_depth_state_api.h"
+#include "track/intersect_hud_api.h"
 #define INTERSECT_SCREEN_DIRECT_SIGNED_WIDTH_CALL
 #include "track/intersect_screen_api.h"
 #undef INTERSECT_SCREEN_DIRECT_SIGNED_WIDTH_CALL
@@ -283,7 +284,6 @@ extern u32 FUN_8028680c();
 extern u32 FUN_80286858();
 extern u32 FUN_802947f8();
 extern u32 SQRT();
-extern void drawTexture(void* p, f32 f1, f32 f2, int a, int b);
 extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
 extern void GXSetTexCopyDst(u16 wd, u16 ht, GXTexFmt fmt, GXBool mipmap);
 extern void GXCopyTex(void* dest, GXBool clear);

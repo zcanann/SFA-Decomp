@@ -16,6 +16,7 @@
  * constants (0.3f/F4/F8) live in the front-menu DLL.
  */
 #include "main/audio/sfx_ids.h"
+#include "track/intersect_hud_api.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
 #include "main/pad.h"
 #include "main/texture.h"
@@ -49,9 +50,6 @@ extern f32 lbl_803DD91C;
 extern s8 lbl_803DD920;
 void* lbl_803A9DB8[TITLE_MENU_ITEM_TEXTURE_COUNT]; /* cached menu textures */
 extern s16 lbl_8031C2A8[TITLE_MENU_ITEM_TEXTURE_COUNT];   /* texture asset ids for the cache */
-
-extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
-
 
 void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
 {
@@ -151,7 +149,7 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
         {
             drawAlpha = (u8)alpha;
         }
-        drawTexture(lbl_803A9DB8[textureIndex], item->x, item->y, drawAlpha, 0x100);
+        drawTexture(lbl_803A9DB8[textureIndex], item->x, item->y, (u8)drawAlpha, 0x100);
         break;
     case TITLE_MENU_KIND_WINDOW:
         phrase = gameTextGetPhrase(item->extra.window.phraseId,
@@ -413,4 +411,3 @@ void TitleMenuItem_initialise(void)
     slots[4] = NULL;
     slots[5] = NULL;
 }
-

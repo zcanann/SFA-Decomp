@@ -73,8 +73,6 @@ extern f32 gTitleScreenInitAlphaMax;
 extern f32 gTitleScreenInitFadeFrames;
 extern f32 lbl_803E1D00;
 
-extern void drawTexture(double x, double y, int texture, u32 alpha, u32 flags);
-
 void runLoadingScreens(void)
 {
     int textureSlot;
@@ -137,9 +135,10 @@ void runLoadingScreens(void)
             alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0x1e0 - gTitleScreenInitLoadingFrameCounter)) /
                           gTitleScreenInitFadeFrames);
         }
-        drawTexture((double)(f32)(u32)((int)(0x280 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[1] + 0xa)) >> 1),
-                    (double)(f32)(u32)((int)(0x1e0 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[1] + 0xc)) >> 1),
-                    gTitleScreenInitLoadingTextures[1], alpha, 0x119);
+        drawTexture((void*)gTitleScreenInitLoadingTextures[1],
+                    (f32)(u32)((int)(0x280 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[1] + 0xa)) >> 1),
+                    (f32)(u32)((int)(0x1e0 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[1] + 0xc)) >> 1), alpha,
+                    0x119);
     }
     else if (gTitleScreenInitLoadingFrameCounter < 0x258)
     {
@@ -158,9 +157,10 @@ void runLoadingScreens(void)
             alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0x258 - gTitleScreenInitLoadingFrameCounter)) /
                           gTitleScreenInitFadeFrames);
         }
-        drawTexture((double)(f32)(u32)((int)(0x280 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[2] + 0xa)) >> 1),
-                    (double)(f32)(u32)((int)(0x1e0 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[2] + 0xc)) >> 1),
-                    gTitleScreenInitLoadingTextures[2], alpha, 0x119);
+        drawTexture((void*)gTitleScreenInitLoadingTextures[2],
+                    (f32)(u32)((int)(0x280 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[2] + 0xa)) >> 1),
+                    (f32)(u32)((int)(0x1e0 - (u32) * (u16*)(gTitleScreenInitLoadingTextures[2] + 0xc)) >> 1), alpha,
+                    0x119);
     }
 
     dvdErrorActive = gDvdErrorPauseActive;

@@ -14,6 +14,7 @@
  * frees them. Drawn alpha follows lbl_803DD97C throughout.
  */
 #include "main/texture.h"
+#include "track/intersect_hud_api.h"
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
 #include "main/textrender_api.h"
@@ -50,8 +51,6 @@ extern f32 lbl_803E22D8;
 extern f32 lbl_803E22DC;
 extern u8 gWarpStoneUiMenuItemTemplates[];
 extern int* gTitleMenuLinkInterface;
-
-extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 
 WarpstoneMenuItem gWarpStoneUiMenuItems[WARPSTONE_UI_ENTRY_COUNT];
 WarpstoneEntry gWarpStoneUiEntryTable[WARPSTONE_UI_ENTRY_COUNT] = {

@@ -6,6 +6,7 @@
 struct Texture;
 struct _GXColor;
 
+void drawTexture(void* texture, f32 x, f32 y, int alpha, int scale);
 void hudDrawColored(struct Texture* texture, int x, int y, struct _GXColor* color, u16 scale, u8 flags);
 
 /* Preserve the untyped texture-handle view used by older callers. */

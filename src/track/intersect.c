@@ -280,7 +280,6 @@ void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type);
 void fn_80070234(f32* mat);
 void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale);
 void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag);
 int cardProbe(u8 retry);
 void showMemCardError(u8 err);
@@ -3560,7 +3559,7 @@ void hudDrawColored(Texture* obj, int x, int y, GXColor* color, u16 scale, u8 fl
  * tex stage that further K-multiplies by the texture. Final width and
  * height are 4 * asset_dim * scale >> 8 in screen pixels at z=-8.
  */
-void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
+void drawTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale)
 {
     extern const f32 lbl_803DEEDC;
     extern const f32 lbl_803DEEE4;
@@ -3570,7 +3569,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     c.r = 0xFF;
     c.g = 0xFF;
     c.b = 0xFF;
-    c.a = (u8)(((s32)alpha_mod * gHudTintAlpha) >> 8);
+    c.a = (u8)(((s32)(u8)alpha_mod * gHudTintAlpha) >> 8);
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -3619,8 +3618,8 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    w = ((((u16*)obj)[5] << 2) * scale) / 256;
-    h = ((((u16*)obj)[6] << 2) * scale) / 256;
+    w = ((((u16*)obj)[5] << 2) * (u16)scale) / 256;
+    h = ((((u16*)obj)[6] << 2) * (u16)scale) / 256;
     sx = hudScale * sx;
     sy = hudScale * sy;
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);

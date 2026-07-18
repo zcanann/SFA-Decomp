@@ -13,6 +13,7 @@
  * (HH:MM:SS derived from playTimeSeconds), life count and magic count.
  */
 #include "main/audio/sfx_ids.h"
+#include "track/intersect_hud_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/FRONT/frontend_control.h"
@@ -44,7 +45,6 @@ extern f32 lbl_803E1D60;
 extern char sFrontendTimeFormat[];
 extern char sFrontendCompletionPercentFormat[5];
 extern char sFrontendSingleDigitFormat[4];
-extern void drawTexture(void* tex, f32 x, f32 y, int p2, int alpha);
 
 void saveFileSelect_checkCheatCodes(void)
 {

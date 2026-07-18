@@ -46,7 +46,6 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
                         int v_offset);
 void drawRect(f32 sx, f32 sy, int x, int y);
 void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, u8 flags);
-void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale);
 void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
 void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
 void trackIntersect_drawColorBand(void);

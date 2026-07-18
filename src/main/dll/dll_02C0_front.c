@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/dll/dll_02C0_front.h"
+#include "track/intersect_hud_api.h"
 #include "main/dll/front_game_text_box_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/texture.h"
@@ -84,8 +85,6 @@ typedef struct TitlescreenState
     u8 pad32[0x34 - 0x32];
     f32 unk34;
 } TitlescreenState;
-
-extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 
 void* gTitleScreenMainTex;
 f32 lbl_803DD9D0;
