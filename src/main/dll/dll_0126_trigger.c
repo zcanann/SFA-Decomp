@@ -54,6 +54,7 @@
 #include "main/render_lactions_api.h"
 #undef RENDER_LACTIONS_DIRECT_UNPROTOTYPED_CALL
 #include "main/gamebit_ids.h"
+#include "main/gamebits_api.h"
 #include "main/dll/dll_0126_trigger.h"
 #include "main/dll/dll_02B5_timer.h"
 #include "main/dll/headdisplay.h"
@@ -87,7 +88,6 @@
 #define TRIGGER_CMD_UNCONDITIONAL     0x10 /* ignore enter/exit gating */
 #define TRIGGER_CMD_OVERRIDE_DISABLED 0x20 /* run even when SFLAG_DISABLED is set */
 extern f32 lbl_803E40D8;
-extern int mainGetBit(int eventId);
 
 #define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
 
@@ -138,7 +138,7 @@ void Trigger_init(u8* obj, u8* params)
         break;
     }
     ((TriggerState*)state)->gameBit = ((TriggerPlacement*)params)->gameBitSrc;
-    if (mainGetBit(((TriggerState*)state)->gameBit) == 1)
+    if ((int)mainGetBit(((TriggerState*)state)->gameBit) == 1)
     {
         state[0] = (u8)(state[0] | TRIGGER_SFLAG_DISABLED);
     }
