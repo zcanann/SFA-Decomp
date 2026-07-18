@@ -153,7 +153,7 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
             slot = (u8*)state + i * 4;
             if (*(void**)(slot + 8) != NULL)
             {
-                lightningRenderLegacy(*(LightningEffect**)(slot + 8));
+                lightningRender(*(LightningEffect**)(slot + 8));
                 if (getHudHiddenFrameCount() == 0)
                 {
                     *(f32*)(slot + 0x34) += timeDelta;

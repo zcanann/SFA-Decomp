@@ -71,7 +71,7 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
             state->handle->end[1] = 15.0f + player->anim.localPosY;
             state->handle->end[2] = player->anim.localPosZ;
         }
-        lightningRenderLegacy(state->handle);
+        lightningRender(state->handle);
         state->handle->timer += 1;
         if (state->handle->timer >= state->handle->lifetime)
         {

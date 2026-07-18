@@ -54,7 +54,6 @@ void lightningRender(LightningEffect* effect);
 #define lightningCreateU16Promoted(start, end, radiusX, radiusY, lifetime, width, flags) \
     (((LightningEffect* (*)(const Vec3f*, const Vec3f*, f32, f32, u16, int, int))lightningCreate)( \
         (start), (end), (radiusX), (radiusY), (lifetime), (width), (flags)))
-#define lightningRenderLegacy(effect) (((void (*)(void*))lightningRender)((void*)(effect)))
 void titleScreenDrawFn_80093db4(void);
 void drawSkyStars(void);
 void cloudClearOverridePosition(void);
