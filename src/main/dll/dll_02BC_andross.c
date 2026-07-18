@@ -72,6 +72,13 @@ f32 gAndrossDistortPhase;
 
 #define ANDROSS_MAP_SHRINE 0xb /* Krazoa shrine map warped to on fight completion */
 
+enum AndrossPartSignal
+{
+    ANDROSS_SIGNAL_BRAIN_HIT = 1,       /* a part reported a hit (androssbrain/androsshand -> setPartSignal) */
+    ANDROSS_SIGNAL_BOTH_HANDS_DEAD = 6, /* handObjA + handObjB dead bits, tested/set/cleared as a unit */
+    ANDROSS_SIGNAL_BRAIN_DEFEATED = 8   /* brain destroyed -> victory path (androssbrain) */
+};
+
 typedef struct AndrossChildSetup
 {
     ObjPlacement base;
@@ -676,7 +683,7 @@ void andross_update(int obj)
     case 2:
         if (phaseChanged)
         {
-            state->signalFlags &= ~0x6;
+            state->signalFlags &= ~ANDROSS_SIGNAL_BOTH_HANDS_DEAD;
             if (state->actionState == 0x16)
             {
                 androsshand_setState(state->handObjA, 1, 1);
@@ -1108,9 +1115,9 @@ void andross_update(int obj)
         state->targetPosZ = state->homePosZ;
         signalReceived = 0;
         signalState = boss->extra;
-        if ((signalState->signalFlags & 1) != 0)
+        if ((signalState->signalFlags & ANDROSS_SIGNAL_BRAIN_HIT) != 0)
         {
-            signalState->signalFlags &= ~1;
+            signalState->signalFlags &= ~ANDROSS_SIGNAL_BRAIN_HIT;
             signalReceived = 1;
         }
         if (signalReceived)
@@ -1137,9 +1144,9 @@ void andross_update(int obj)
         state->targetPosZ = state->homePosZ;
         signalReceived = 0;
         signalState = boss->extra;
-        if ((signalState->signalFlags & 1) != 0)
+        if ((signalState->signalFlags & ANDROSS_SIGNAL_BRAIN_HIT) != 0)
         {
-            signalState->signalFlags &= ~1;
+            signalState->signalFlags &= ~ANDROSS_SIGNAL_BRAIN_HIT;
             signalReceived = 1;
         }
         if (signalReceived)
@@ -1166,9 +1173,9 @@ void andross_update(int obj)
         state->targetPosZ = state->homePosZ;
         signalReceived = 0;
         signalState = boss->extra;
-        if ((signalState->signalFlags & 1) != 0)
+        if ((signalState->signalFlags & ANDROSS_SIGNAL_BRAIN_HIT) != 0)
         {
-            signalState->signalFlags &= ~1;
+            signalState->signalFlags &= ~ANDROSS_SIGNAL_BRAIN_HIT;
             signalReceived = 1;
         }
         if (signalReceived)
@@ -1195,9 +1202,9 @@ void andross_update(int obj)
         state->targetPosZ = state->homePosZ;
         signalReceived = 0;
         signalState = boss->extra;
-        if ((signalState->signalFlags & 1) != 0)
+        if ((signalState->signalFlags & ANDROSS_SIGNAL_BRAIN_HIT) != 0)
         {
-            signalState->signalFlags &= ~1;
+            signalState->signalFlags &= ~ANDROSS_SIGNAL_BRAIN_HIT;
             signalReceived = 1;
         }
         if (signalReceived)
@@ -1206,7 +1213,7 @@ void andross_update(int obj)
         }
         break;
     case 10:
-        if ((state->signalFlags & 6) == 6)
+        if ((state->signalFlags & ANDROSS_SIGNAL_BOTH_HANDS_DEAD) == ANDROSS_SIGNAL_BOTH_HANDS_DEAD)
         {
             state->fightPhase++;
             if (state->fightPhase < 5)
@@ -1237,9 +1244,9 @@ void andross_update(int obj)
             }
             signalReceived = 0;
             signalState = boss->extra;
-            if ((signalState->signalFlags & 1) != 0)
+            if ((signalState->signalFlags & ANDROSS_SIGNAL_BRAIN_HIT) != 0)
             {
-                signalState->signalFlags &= ~1;
+                signalState->signalFlags &= ~ANDROSS_SIGNAL_BRAIN_HIT;
                 signalReceived = 1;
             }
             if (signalReceived)
@@ -1266,7 +1273,7 @@ void andross_update(int obj)
             {
                 androsshand_setState(state->handObjA, 9, 1);
                 androsshand_setState(state->handObjB, 9, 1);
-                state->signalFlags |= 6;
+                state->signalFlags |= ANDROSS_SIGNAL_BOTH_HANDS_DEAD;
             }
         }
         if ((state->fightPhase == 5) && (state->actionState == 0xb))
@@ -1964,7 +1971,7 @@ void andross_update(int obj)
                     (f32)(int)randomGetRange((int)-gAndrossSpawnRandZ, gAndrossSpawnRandZ) + state->homePosZ;
             }
         }
-        if ((state->signalFlags & 8) != 0)
+        if ((state->signalFlags & ANDROSS_SIGNAL_BRAIN_DEFEATED) != 0)
         {
             arwingHudSetVisible(2);
             mainSetBits(1, 1);
@@ -2121,7 +2128,7 @@ void andross_update(int obj)
                 state->targetRotX = 0;
                 androsshand_setState(state->handObjA, 1, (state->fightPhase == 4) + 1);
                 androsshand_setState(state->handObjB, 1, (state->fightPhase == 4) + 1);
-                state->signalFlags &= ~0x6;
+                state->signalFlags &= ~ANDROSS_SIGNAL_BOTH_HANDS_DEAD;
             }
         }
         break;
