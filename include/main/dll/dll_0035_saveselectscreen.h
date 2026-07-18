@@ -35,5 +35,7 @@ extern u8 saveFileSelect_saveDirty;
 extern struct FrontendSaveSlot* saveFileSelect_saveSlotsBase;
 extern struct FrontendSaveSlot* saveFileSelect_saveSlots;
 extern u16 saveFileSelect_slotCheatSequence[6];
+extern char sFrontendCompletionPercentFormat[5];
+extern char sFrontendSingleDigitFormat[4];
 
 #endif /* MAIN_DLL_DLL_47_H_ */
