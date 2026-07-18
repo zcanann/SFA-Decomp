@@ -706,7 +706,7 @@ void skyFn_80089710(int flags, u8 enabled, int startComplete)
 {
     u8* sky;
     u32 flagBit;
-    u32 stateActive;
+    u8 stateActive;
 
     sky = gSkyState;
     if (sky == NULL)
@@ -720,7 +720,7 @@ void skyFn_80089710(int flags, u8 enabled, int startComplete)
         {
             sky = gSkyState;
             stateActive = ((SkyBlendStateFlags*)(sky + flagBit * 0xa4 + 0xc1))->active;
-            if (stateActive != (u8)enabled)
+            if (stateActive != enabled)
             {
                 if (startComplete != 0)
                 {
