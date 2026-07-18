@@ -42,6 +42,7 @@
 #include "main/dll/player.h"
 #include "string.h"
 #include "main/track_dolphin_ext.h"
+#include "main/dll/player_ext.h"
 
 s16 gObjPartitionPivot;
 void* lbl_803DCBC0;
@@ -219,7 +220,6 @@ extern void modelInitBones(f32 scale, void* model);
 extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();
-extern void fn_802B4DE0(u8* obj, int flag);
 extern void playerUpdateWhileTimeStopped(u8* obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8* obj);

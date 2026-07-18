@@ -168,7 +168,7 @@ void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle);
 void playerDoTailAnims(int obj, void* statep);
 void playerUpdatePathEffectCountdown(GameObject* obj, int inner);
 int playerStopRidingObject(GameObject* obj);
-void fn_802960E4(void);
+void fn_802960E4(int a, f32 b, f32 c);
 void fn_802961FC(int a, u8 type);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
 int fn_80297498(void);
@@ -293,7 +293,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt);
 void fn_802B2DA4(void);
 void fn_802B4A9C(int obj, int inner, int inner2);
 void playerAnimate(int obj, int state, f32 fv);
-void fn_802B4DE0(GameObject* obj);
+void fn_802B4DE0(GameObject* obj, int p2);
 void fn_802B4ED8(GameObject* obj, int p2, int mode);
 void playerUpdateWhileTimeStopped(int obj);
 void objLoadPlayerFromSave(int obj);
@@ -716,7 +716,7 @@ int fn_8029605C(GameObject* obj, f32* p2, f32* p3)
 #define PAD_BUTTON_Y  0x800
 #define PAD_TRIGGER_L 0x40
 
-void fn_802960E4(void)
+void fn_802960E4(int a, f32 b, f32 c)
 {
 }
 
@@ -16859,7 +16859,7 @@ void fn_802B4A9C(int obj, int inner, int inner2)
     }
 }
 
-void fn_802B4DE0(GameObject* obj)
+void fn_802B4DE0(GameObject* obj, int p2)
 {
     int off;
     int i;

@@ -9,6 +9,7 @@
 #include "main/dll/infopoint.h"
 #include "main/dll/trickycurve_object.h"
 #include "main/object_api.h"
+#include "main/dll/player_ext.h"
 
 typedef struct TrickyCurveState
 {
@@ -18,7 +19,6 @@ typedef struct TrickyCurveState
 } TrickyCurveState;
 
 extern f32 lbl_803E644C;
-extern void fn_802960E4(int obj, f32 xVelocity, f32 zVelocity);
 
 void TrickyCurve_updateCooldownTrigger(int obj)
 {
