@@ -59,7 +59,6 @@ f32 lbl_803DD1E0;
 
 f32 gCloudActionGlareQuadSize = 8000.0f;
 
-extern int shouldDrawClouds(void);
 extern void GXSetColorUpdate(int enable);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 

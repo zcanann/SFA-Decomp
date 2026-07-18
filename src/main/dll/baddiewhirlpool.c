@@ -36,11 +36,10 @@
 #include "main/voxmaps.h"
 #include "main/obj_group.h"
 #include "main/dll/baddiewhirlpool.h"
+#include "track/intersect_whirlpool_api.h"
 
 #define ICEBADDIE_OBJGROUP_SECONDARY 80
 #define ICEBADDIE_HIT_VOLUME_SLOT    10
-
-extern void renderWhirlpool(void);
 
 void iceBaddie_enterWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
 {
@@ -88,4 +87,3 @@ void baddie_initWhirlpoolState(int* obj, GroundBaddieState* state)
     state->baddie.userData2 = 0;
     ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel((GameObject*)obj), renderWhirlpool);
 }
-

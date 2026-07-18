@@ -53,6 +53,8 @@ typedef struct ObjectTriggerInterface {
 
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 
+int ObjSeq_takeXrotChanged(int index);
+
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, onMapSetup) == 0x04);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, addBgCommand) == 0x08);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, setFlag) == 0x0C);

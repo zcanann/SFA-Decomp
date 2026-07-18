@@ -36,7 +36,6 @@ u16 lbl_803DC070[4] = {0x2B6, 0x2D7, 0x2D8, 0};
 
 
 extern void fn_801DE320(void* dst, int val);
-extern int ObjSeq_takeXrotChanged(int index);
 int gTotemStrengthDeactivateTimer;
 
 /* Camera mode id passed to setMode()/getMode() (== the target camera-mode DLL number). */

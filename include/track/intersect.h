@@ -10,6 +10,7 @@
 #include "track/intersect_render_setup_api.h"
 #include "track/intersect_screen_api.h"
 #include "track/intersect_texture_api.h"
+#include "track/intersect_whirlpool_api.h"
 #include "ghidra_import.h"
 
 void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unused, f32 scale);
@@ -26,7 +27,6 @@ void resetSomeGxFlags(void);
 void setHudOpacity(u8 param_1);
 void fogFn_80070404(f32 a, f32 b);
 void fn_800704FC(u8 param_1, u8 param_2, u8 param_3);
-int renderWhirlpool(void* obj_a, void** obj_b, int param_3);
 void screenImageDraw(u8 alpha);
 void doSpiritVisionFilter(void);
 void doColorFilter(u8* mod);

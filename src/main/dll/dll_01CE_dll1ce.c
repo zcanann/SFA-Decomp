@@ -10,6 +10,7 @@
  * declarations and the descriptor that combines them live in this object's DLL.
  */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/dll/dimmagicbridge_api.h"
 #include "main/dll/dll1ceplacement_struct.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
@@ -101,8 +102,6 @@ extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
-extern void dimmagicbridge_update(GameObject*);
-int dimmagicbridge_getExtraSize(void);
 extern u8 dim_levelcontrol_free[];
 extern u8 dim_levelcontrol_getExtraSize[];
 extern u8 dim_levelcontrol_init[];

@@ -224,7 +224,6 @@ void* ObjSeq_FindTargetObject(u8* obj);
 void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq);
 void ObjSeq_release(void);
 void ObjSeq_initialise(void);
-int ObjSeq_takeXrotChanged(int index);
 void fn_80088730(u8* out);
 void envFxFn_800887cc(void);
 void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode* curve, RomCurveNode* next, f32 t,
