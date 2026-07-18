@@ -35,6 +35,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/resource.h"
 #include "main/maketex.h"
+#include "main/camera_ext.h"
 
 typedef struct PushablePlacement
 {
@@ -177,7 +178,6 @@ ObjectDescriptor14 gPushableObjDescriptor = {
 
 char sPushPullObjectHitpointOverflow[] = "PUSHPULL OBJECT: hitpoint overflow\n";
 const PushableRadii gPushableDefaultBox = {{0.0f, 0.0f, 0.0f, 0.0f}};
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
 
 static void pushableClampToZero(f32* value)
 {
@@ -917,7 +917,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
             for (; j < state->pointCount; j++)
             {
                 Obj_TransformLocalPointToWorld(*(f32*)((char*)e2 + 0x18), *(f32*)((char*)e2 + 0x1c),
-                                               *(f32*)((char*)e2 + 0x20), w, w + 1, w + 2, obj);
+                                               *(f32*)((char*)e2 + 0x20), w, w + 1, w + 2, (u32)obj);
                 d[0] = ((GameObject*)obj)->anim.localPosX - w[0];
                 d[1] = ((GameObject*)obj)->anim.localPosY - w[1];
                 d[2] = ((GameObject*)obj)->anim.localPosZ - w[2];
@@ -1212,7 +1212,7 @@ void pushable_hitDetect(GameObject* obj)
         for (i = 0; i < state->pointCount; i++)
         {
             Obj_TransformLocalPointToWorld(state->cornerLocal[i].x, state->cornerLocal[i].y, state->cornerLocal[i].z,
-                                           &worldPoints[i].x, &worldPoints[i].y, &worldPoints[i].z, obj);
+                                           &worldPoints[i].x, &worldPoints[i].y, &worldPoints[i].z, (u32)obj);
         }
         hitDetect_calcSweptSphereBounds(&sweep, (f32*)state->cornerWorld, (f32*)worldPoints, radii.values, 4);
         sweep.minY -= PUSHABLE_SWEEP_Y_PADDING;
@@ -1296,7 +1296,7 @@ void pushable_hitDetect(GameObject* obj)
     {
         Obj_TransformLocalPointToWorld(state->probeLocal[i].x, state->probeLocal[i].y, state->probeLocal[i].z,
                                        &state->cornerWorld[i].x, &state->cornerWorld[i].y, &state->cornerWorld[i].z,
-                                       obj);
+                                       (u32)obj);
     }
 }
 
