@@ -19,9 +19,6 @@
 #include "main/dll/tricky_api.h"
 #include "main/object_descriptor.h"
 
-extern void setScreenTransitionPause(int v);
-extern void addButtonObject(int* obj);
-extern void removeButtonObject(int* obj);
 /* .sdata2 constant pool */
 static const f32 lbl_803E3D18 = 50.0f;
 static const f32 lbl_803E3D1C = 0.0f;
@@ -52,7 +49,7 @@ void DeathSeq_free(int* obj)
 {
     setScreenTransitionPause(0);
     setPendingMapLoad(0);
-    removeButtonObject(obj);
+    removeButtonObject((u32)obj);
 }
 
 void DeathSeq_render(void)

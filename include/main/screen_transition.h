@@ -28,4 +28,6 @@ STATIC_ASSERT(offsetof(ScreenTransitionInterface, getProgress) == 0x18);
 
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 
+void setScreenTransitionPause(u32 pause);
+
 #endif

@@ -24,4 +24,8 @@ u8 getButtonObjects(void** objectsOut);
 
 #define getButtonObjectsLegacy(objectsOut) ((int (*)(int**))getButtonObjects)(objectsOut)
 
+void addButtonObject(void* obj);
+
+void removeButtonObject(u32 object);
+
 #endif /* MAIN_GAMELOOP_API_H_ */
