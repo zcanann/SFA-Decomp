@@ -10581,8 +10581,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             else
             {
                 ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, &pfx.x, &pfx.y, &pfx.z, 0);
-                ((void (*)(int, int, int, int, int, f32, f32, f32))ObjHits_RecordPositionHit)(obj, 0, 8, 1, -1, pfx.x,
-                                                                                              pfx.y, pfx.z);
+                ObjHits_RecordPositionHit((GameObject*)obj, NULL, 8, 1, -1, pfx.x, pfx.y, pfx.z);
             }
             break;
         }
@@ -12854,7 +12853,7 @@ int fn_802AD2F4(GameObject* obj, int inner, int state)
             {
                 hv = 2;
             }
-            ObjHits_RecordPositionHit(obj, 0, hv, 1, 0, v[3], v[4], v[5]);
+            ObjHits_RecordPositionHit(obj, NULL, hv, 1, 0, v[3], v[4], v[5]);
             ((ByteFlags*)(((char*)inner) + 0x3f2))->b04 = 1;
         }
         if ((*((s8*)(&((PlayerState*)state)->baddie.moveDone))) != 0)
@@ -12954,7 +12953,7 @@ int fn_802AD2F4(GameObject* obj, int inner, int state)
             {
                 hv = 2;
             }
-            ObjHits_RecordPositionHit(obj, 0, hv, 2, 0, v[3], v[4], v[5]);
+            ObjHits_RecordPositionHit(obj, NULL, hv, 2, 0, v[3], v[4], v[5]);
             ((ByteFlags*)(((char*)inner) + 0x3f2))->b08 = 0;
             if (ps->waterDepth > lbl_803E7FC4)
             {
@@ -14615,7 +14614,7 @@ void fn_802B066C(GameObject* obj, int state)
     if (((PlayerState*)state)->knockbackHitTimer <= zero)
     {
         ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, &posWork[3], &posWork[4], &posWork[5], 0);
-        ObjHits_RecordPositionHit(obj, 0, 0x1f, 1, -1, posWork[3], posWork[4], posWork[5]);
+        ObjHits_RecordPositionHit(obj, NULL, 0x1f, 1, -1, posWork[3], posWork[4], posWork[5]);
         ((PlayerState*)state)->knockbackHitTimer = lbl_803E8050;
     }
 }
@@ -15429,8 +15428,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
             {
                 *(s16*)&((PlayerState*)state)->hitIntervalTimer = 0x3c;
                 ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
-                ((void (*)(int, int, int, int, int, f32, f32, f32))ObjHits_RecordPositionHit)(
-                    (int)obj, 0, 0x14, 2, 0xffffffff, pos[0], pos[1], pos[2]);
+                ObjHits_RecordPositionHit(obj, NULL, 0x14, 2, -1, pos[0], pos[1], pos[2]);
             }
             break;
         case SURFACE_INSTANT_DEATH:
@@ -15444,8 +15442,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
                 {
                     ((PlayerState*)state)->periodicHitTimer -= 0x78;
                     ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, &pos[0], &pos[1], &pos[2], 0);
-                    ((void (*)(int, int, int, int, int, f32, f32, f32))ObjHits_RecordPositionHit)(
-                        (int)obj, 0, 0x16, 2, 0xffffffff, pos[0], pos[1], pos[2]);
+                    ObjHits_RecordPositionHit(obj, NULL, 0x16, 2, -1, pos[0], pos[1], pos[2]);
                 }
             }
             break;

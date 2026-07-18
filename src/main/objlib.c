@@ -698,15 +698,18 @@ int ObjHits_RecordObjectHit(GameObject* obj, GameObject* hitObj, s8 priority, in
     return 1;
 }
 
-int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, int hitObj, s8 priority, s8 hitVolume,
-                              s8 sphereIndex)
+int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, int priority, int hitVolume, s8 sphereIndex,
+                              f32 hitPosX, f32 hitPosY, f32 hitPosZ)
 {
     ObjAnimComponent* sourceObj;
     ObjAnimComponent* targetObj;
     ObjHitsPriorityState* hitState;
     int hitSlot;
+    s8 priorityId;
+    u8 hitVolumeId;
 
-    if (priority == '\0')
+    priorityId = priority;
+    if (priorityId == '\0')
     {
         return 0;
     }
@@ -719,18 +722,19 @@ int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, in
     }
     if ((targetObj != NULL) && (targetObj->hitReactState != NULL))
     {
-        ((ObjHitsPriorityState*)targetObj->hitReactState)->lastHitObject = obj;
+        ((ObjHitsPriorityState*)targetObj->hitReactState)->lastHitObject = (u32)obj;
     }
     hitSlot = 0;
+    hitVolumeId = hitVolume;
     while (hitSlot < hitState->priorityHitCount)
     {
         if ((void*)hitState->hitObjects[hitSlot] == (void*)hitObj)
         {
-            if (hitState->priorities[hitSlot] > priority)
+            if (hitState->priorities[hitSlot] > priorityId)
             {
                 hitState->sphereIndices[hitSlot] = sphereIndex;
-                hitState->priorities[hitSlot] = priority;
-                hitState->hitVolumes[hitSlot] = hitVolume;
+                hitState->priorities[hitSlot] = priorityId;
+                hitState->hitVolumes[hitSlot] = hitVolumeId;
                 hitState->hitPosX[hitSlot] = hitPosX;
                 hitState->hitPosY[hitSlot] = hitPosY;
                 hitState->hitPosZ[hitSlot] = hitPosZ;
@@ -742,9 +746,9 @@ int ObjHits_RecordPositionHit(f32 hitPosX, f32 hitPosY, f32 hitPosZ, int obj, in
     if ((hitSlot == hitState->priorityHitCount) && (hitState->priorityHitCount < OBJHITS_PRIORITY_HIT_COUNT))
     {
         hitState->sphereIndices[hitState->priorityHitCount] = sphereIndex;
-        hitState->priorities[hitState->priorityHitCount] = priority;
-        hitState->hitVolumes[hitState->priorityHitCount] = hitVolume;
-        hitState->hitObjects[hitState->priorityHitCount] = hitObj;
+        hitState->priorities[hitState->priorityHitCount] = priorityId;
+        hitState->hitVolumes[hitState->priorityHitCount] = hitVolumeId;
+        hitState->hitObjects[hitState->priorityHitCount] = (int)hitObj;
         hitState->hitPosX[hitState->priorityHitCount] = hitPosX;
         hitState->hitPosY[hitState->priorityHitCount] = hitPosY;
         hitState->hitPosZ[hitState->priorityHitCount] = hitPosZ;
