@@ -44,6 +44,7 @@
 #include "main/maketex_sequence_api.h"
 #include "main/textrender_api.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_spirit_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/SC/SCchieflightfoot.h"
 #include "main/dll/SC/SClantern.h"
@@ -73,9 +74,6 @@ typedef struct WarpstoneUpdateMenuAnimObjState
 
 extern int lbl_803DC050;
 int lbl_803DDBF4;
-
-extern int playerHasKrazoaSpirit();
-extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 
 int warpstone_testEvent(u32 obj, u32 unused, int option)
 {

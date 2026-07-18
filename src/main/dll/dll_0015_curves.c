@@ -1673,7 +1673,7 @@ void dll_15_initialise_nop(void)
 {
 }
 
-u32 playerHasKrazoaSpirit(u8 checkStoryBits, u32 bit)
+int playerHasKrazoaSpirit(u8 checkStoryBits, u32 bit)
 {
     if (checkStoryBits == 0)
     {

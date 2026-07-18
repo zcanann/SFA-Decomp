@@ -16,6 +16,7 @@ int fn_80295C5C(GameObject* player);
 int fn_80295C88(GameObject* player);
 int fn_80295CBC(GameObject* player);
 int playerIsPathFollowing(GameObject* player);
+void playerRender(int obj, int a, int b, int c, int d, int flag);
 void playerLock(GameObject* player, int lock);
 int fn_8029605C(GameObject* player, f32* outX, f32* outY);
 void fn_802960E8(GameObject* player, s16 effectId);

@@ -16889,7 +16889,7 @@ void fn_802B4ED8(GameObject* obj, int p2, int mode)
         obj->anim.localPosZ = sz;
     }
 }
-void playerRender(int obj, int a, int b, int c, int d, s8 flag)
+void playerRender(int obj, int a, int b, int c, int d, int flag)
 {
     int in2;
     int inner = *(int*)&((GameObject*)obj)->extra;
@@ -16914,7 +16914,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
     } pfx;
     f32 vel[3];
 
-    if (flag == -1 || (*(u32*)&((PlayerState*)inner)->flags360 & 0x4001) == 0)
+    if ((s8)flag == -1 || (*(u32*)&((PlayerState*)inner)->flags360 & 0x4001) == 0)
     {
         if (*(void**)((char*)inner + 0x7f0) != NULL &&
             ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
@@ -16955,7 +16955,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             ((GameObject*)obj)->anim.localPosY = sy;
             ((GameObject*)obj)->anim.localPosZ = sz;
         }
-        if (flag != 0)
+        if ((s8)flag != 0)
         {
             fn_802AAF80((GameObject*)obj, inner, a, b, c);
         }

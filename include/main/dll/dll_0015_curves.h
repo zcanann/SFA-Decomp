@@ -8,6 +8,7 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/savegame_object_api.h"
+#include "main/dll/player_spirit_api.h"
 
 typedef struct GameObject GameObject;
 
@@ -279,7 +280,6 @@ void FUN_800e65c8(CurvesCollisionState* state, u8 pointCount, f32* localPointPos
 void curves_setLocalPointCollisionEx(CurvesCollisionState* state, int pointCount, f32* localPointPositions,
                                      f32* localPointRadii, int primaryHitType, int secondaryHitType);
 void curves_clear(CurvesCollisionState* state, int updateMode, u32 flags, int subtype);
-u32 playerHasKrazoaSpirit(u8 checkStoryBits, u32 bit);
 void saveFileStruct_setCheatActive(u8 param_1, u8 param_2);
 
 /* extern-cleanup: defining-file public prototypes */

@@ -36,6 +36,7 @@
 #include "track/intersect_fog_api.h"
 #include "main/newshadows_shadow_api.h"
 #include "main/object_ext.h"
+#include "main/dll/player_api.h"
 
 s16 lbl_803DCC18;
 s16 lbl_803DCC16;
@@ -76,7 +77,6 @@ extern int lbl_803DCC48;
 extern void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 x);
 extern f32 lbl_803DB464;
 extern f32 lbl_803DEA04;
-extern void playerRender(int obj, int a, int b, int c, int d, int flag);
 extern f32 lbl_803DE9E4;
 extern f32 gObjPrintDegToAngle;
 typedef struct ObjPrintFlipFlag
