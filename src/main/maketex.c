@@ -803,8 +803,9 @@ void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
 }
 #pragma dont_inline reset
 
-int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
+int seqStreamLookupFn_8007fff8(void* entries, int count, int key)
 {
+    int (*arr)[2] = entries;
     int lo, mid;
     int i;
     if (count <= 16)
@@ -838,8 +839,9 @@ int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
 }
 
 /* Spin-delay then sort when the pair list is large enough. */
-void objSeqInitFn_80080078(SeqSortPair* arr, int n)
+void objSeqInitFn_80080078(void* entries, int n)
 {
+    SeqSortPair* arr = entries;
     int i;
     int j;
 

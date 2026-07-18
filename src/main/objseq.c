@@ -160,7 +160,6 @@ STATIC_ASSERT(offsetof(ObjSeqAnimPlacement, startOnLoad) == 0x22);
 STATIC_ASSERT(sizeof(ObjSeqAnimDataHeader) == 8);
 
 extern void ObjSeq_onMapSetup(void);
-extern void objSeqInitFn_80080078(void* entries, int count);
 extern int ObjSeq_func20(void* obj, u8* seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
 extern int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj);
 extern void Obj_GetWorldPosition(void* obj, f32* x, f32* y, f32* z);
@@ -285,7 +284,6 @@ extern s8 gObjSeqJumpLatch[];
 int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag);
 extern void Rcp_SetMonochromeFilterEnabled(int enabled);
 extern int seqStreamFn_8008023c(int slot);
-extern int* seqStreamLookupFn_8007fff8(void* table, int count, int key);
 
 extern int gObjSeqStreamTableB[];
 extern u32 gObjSeqCurrentTrackId;
@@ -2534,7 +2532,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         {
             trackId = (u32)(((s16*)(base + 0x3a98))[slot] - 1) & 0x3fff;
             gObjSeqCurrentTrackId = trackId;
-            streams = seqStreamLookupFn_8007fff8(gObjSeqStreamTableA, 5, trackId);
+            streams = (int*)seqStreamLookupFn_8007fff8(gObjSeqStreamTableA, 5, trackId);
             if (streams != NULL)
             {
                 off = cmdArg * 4;
@@ -2542,7 +2540,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
                 {
                     lbl_803DB720 = slot;
                 }
-                streams = seqStreamLookupFn_8007fff8(gObjSeqStreamTableB, 5, trackId);
+                streams = (int*)seqStreamLookupFn_8007fff8(gObjSeqStreamTableB, 5, trackId);
                 if (streams != NULL)
                 {
                     lbl_803DB718 = *(int*)((u8*)streams + off);

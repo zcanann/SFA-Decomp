@@ -11,6 +11,7 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
+#include "main/maketex_sequence_api.h"
 
 /*
  * Low 2 bits of ProjectileSwitchPlacement.modelIndexAndMode select switch behaviour;
@@ -29,7 +30,6 @@
 #define PROJECTILESWITCH_PLACEMENT_CUSTOM_COLOR 1
 
 
-extern int seqStreamLookupFn_8007fff8(void* table, int mode, int seq);
 u32 lbl_80321008[4] = {0x00031ccf, 0x00000522, 0x00031ce0, 0x00000e6e};
 
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }

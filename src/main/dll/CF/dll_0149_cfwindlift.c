@@ -22,6 +22,7 @@
 #include "main/vecmath.h"
 #include "main/object_render_legacy.h"
 #include "main/frame_timing.h"
+#include "main/maketex_sequence_api.h"
 #include "main/dll/CF/dll_0149_cfwindlift.h"
 #include "main/dll/CF/dll_014A_cfpowerbase.h"
 #include "main/dll/CF/dll_014B_cfmaincrystal.h"
@@ -85,8 +86,6 @@ extern f32 lbl_803E41B0;
 extern f32 lbl_803E41B4;
 extern f32 lbl_803E41B8;
 extern f32 lbl_803E41BC;
-
-extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 
 /* fn_8019C784: per-rider wind lift physics - track the rider while
  * above the lift and in range, send the lift/drop messages on state

@@ -19,6 +19,7 @@
 #include "main/objseq.h"
 #include "main/obj_placement.h"
 #include "main/maketex_random_api.h"
+#include "main/maketex_sequence_api.h"
 #include "main/maketex_timer_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/shader_api.h"
@@ -99,7 +100,6 @@ typedef struct SnowClawBombSetup
 extern int ObjGroup_FindNearestObject(int kind, void* obj, f32* maxDistance);
 extern u8 gSnowClawMoveTable[];
 int gSnowClawDropBombAngle;
-extern void objSeqInitFn_80080078(void* table, int n);
 
 typedef s8 (*ObjUpdateOpacityS8Fn)(int obj);
 
@@ -117,7 +117,6 @@ u32 gSnowClawHurtSfxTable[8] = {0x2EF, 0x2EE, 0x2ED, 0x2EC, 0x2EB, 0x0497049C, 0
 extern f32 lbl_803DC224;
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
-extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern int fn_801EC9F4(GameObject* obj);
 extern int fn_801EC9BC(GameObject* obj);
 const u32 gSnowClawPulseTable[8] = {0, 1, 2, 3, 1, 1, 2, 2};
@@ -852,4 +851,3 @@ void snowclaw_release(void)
 void snowclaw_initialise(void)
 {
 }
-
