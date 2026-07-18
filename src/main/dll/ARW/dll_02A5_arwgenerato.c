@@ -40,6 +40,58 @@ typedef struct SquadronShipSetup
 /* spawned squadron-ship extra block; fields written at +0x4,0x5,0x8,0xc,0x10,0x18..0x1a */
 #define SPAWN_EXTRA_SIZE 0x20
 
+void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
+void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup);
+
+int arwgenerato_getExtraSize(void)
+{
+    return 4;
+}
+
+int arwgenerato_getObjectTypeId(void)
+{
+    return 0;
+}
+
+void arwgenerato_free(void)
+{
+}
+
+void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+}
+
+void arwgenerato_hitDetect(void)
+{
+}
+
+void arwgenerato_update(GameObject* obj)
+{
+    ARWGeneratorState* state = (obj)->extra;
+    ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)(obj)->anim.placementData;
+    f32 timer = state->spawnTimer;
+    f32 thr = 0.0f;
+
+    if (timer > thr)
+    {
+        state->spawnTimer = timer - timeDelta;
+        if (state->spawnTimer <= thr)
+        {
+            switch (mapData->spawnMode)
+            {
+            case 0:
+                fn_802317A8(obj, state, mapData);
+                break;
+            case 1:
+                fn_802315EC(obj, state, mapData);
+                break;
+            }
+            state->spawnTimer = (f32)(u32)mapData->spawnInterval;
+        }
+    }
+}
+
 void fn_802315EC(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
 {
     SquadronShipSetup* newObj;
@@ -99,55 +151,6 @@ void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* s
         dir.z = setup->velocityZ / *(f32*)&lbl_803E7140;
         fn_80231058((GameObject*)(newObj), &dir);
         fn_80231028((GameObject*)(newObj), setup->projectileSpeed);
-    }
-}
-
-int arwgenerato_getExtraSize(void)
-{
-    return 4;
-}
-
-int arwgenerato_getObjectTypeId(void)
-{
-    return 0;
-}
-
-void arwgenerato_free(void)
-{
-}
-
-void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
-{
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
-}
-
-void arwgenerato_hitDetect(void)
-{
-}
-
-void arwgenerato_update(GameObject* obj)
-{
-    ARWGeneratorState* state = (obj)->extra;
-    ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)(obj)->anim.placementData;
-    f32 timer = state->spawnTimer;
-    f32 thr = 0.0f;
-
-    if (timer > thr)
-    {
-        state->spawnTimer = timer - timeDelta;
-        if (state->spawnTimer <= thr)
-        {
-            switch (mapData->spawnMode)
-            {
-            case 0:
-                fn_802317A8(obj, state, mapData);
-                break;
-            case 1:
-                fn_802315EC(obj, state, mapData);
-                break;
-            }
-            state->spawnTimer = (f32)(u32)mapData->spawnInterval;
-        }
     }
 }
 
