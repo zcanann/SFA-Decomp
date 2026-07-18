@@ -9,6 +9,7 @@
 #include "main/camera.h"
 #include "main/texture.h"
 #include "main/frame_timing.h"
+#include "main/object_transform.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 
 int gModelLightNextGXLightId;
@@ -84,7 +85,6 @@ extern void GXInitLightDistAttn(u8* lt_obj, f32 ref_dist, f32 ref_br, int dist_f
 extern void GXGetLightAttnK(u8* lt_obj, f32* k0, f32* k1, f32* k2);
 extern void GXInitLightAttnA(u8* lt_obj, f32 a0, f32 a1, f32 a2);
 extern void GXInitLightAttn(u8* lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
-extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
 extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int lightMask, int diffFn, int attnFn);
 extern void GXInitLightSpot(u8* lt_obj, f32 cutoff, int spot_func);

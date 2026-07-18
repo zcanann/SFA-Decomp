@@ -383,7 +383,6 @@ extern u16 modelFileHeaderGetCullDistance(u8* modelFile);
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 extern f32 fn_802925C4(f32 x, f32 y);
 extern float floor(float x);
-extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);
 extern void GXSetNumTexGens(u8 nTexGens);
@@ -3107,7 +3106,7 @@ int hitDetectFn_80067958(GameObject* contactSrc, f32* startPos, f32* endPos, int
     {
         if (pp[i + 0x17] != NULL)
         {
-            Obj_TransformLocalVectorByWorldMatrix((int)pp[i + 0x17], &fp[i * 4], &fp[i * 4]);
+            Obj_TransformLocalVectorByWorldMatrix(pp[i + 0x17], &fp[i * 4], &fp[i * 4]);
             if (contactSrc != NULL)
             {
                 ObjHits_AddContactObject((int)pp[i + 0x17], (int)contactSrc);

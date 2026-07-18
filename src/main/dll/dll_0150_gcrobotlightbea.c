@@ -30,6 +30,7 @@
 #include "main/model_light.h"
 #include "main/dll/dll_0150_gcrobotlightbea.h"
 #include "main/object_descriptor.h"
+#include "main/object_transform.h"
 #include "dolphin/mtx/mtx_legacy.h"
 
 f32 lbl_803DBE58 = 50.0f;
@@ -43,7 +44,6 @@ STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 #define GCROBOTLIGHTBEA_HIT_VOLUME_SLOT 0x17
 
 
-extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);
 extern f32 PSVECDistance(void* a, void* b);
 

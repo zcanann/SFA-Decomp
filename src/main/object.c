@@ -208,7 +208,6 @@ extern f32 gMapSavedPlayerOffsetX;
 extern f32 gMapSavedPlayerOffsetZ;
 
 extern void* memset(void* dst, int val, int n);
-extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
 extern void objList_remove(void* list, void* item);
 extern void* memcpy(void* dst, const void* src, int n);

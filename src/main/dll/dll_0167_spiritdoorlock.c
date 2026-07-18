@@ -42,6 +42,7 @@
 #include "main/frame_timing.h"
 #include "main/model_light.h"
 #include "main/object_descriptor.h"
+#include "main/object_transform.h"
 
 s16 gSpiritDoorLockSpinSpeed = -256;
 s32 gSpiritDoorLockTexScrollSpeed = 40;
@@ -64,7 +65,6 @@ extern f32 gSpiritDoorLockScaleDecay;
 extern f32 gSpiritDoorLockSpinDownRate;
 extern f32 gSpiritDoorLockOrbitOffsetY;
 extern const f32 gSpiritDoorLockOrbitMaxDist;
-extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
 
 int SpiritDoorLock_getExtraSize(void)
 {
@@ -193,7 +193,7 @@ void SpiritDoorLock_update(GameObject* obj)
                 continue;
             }
             (obj)->anim.rotZ = angle;
-            Obj_TransformLocalVectorByWorldMatrix((int)obj, orbitOffset, worldOffset);
+            Obj_TransformLocalVectorByWorldMatrix(obj, orbitOffset, worldOffset);
             PSVECAdd(&(obj)->anim.localPosX, worldOffset, &((GameObject*)orbitObjs[i])->anim.localPosX);
             ((GameObject*)orbitObjs[i])->anim.rotX = (obj)->anim.rotX;
             ((GameObject*)orbitObjs[i])->anim.rotZ = (s16)(angle + 0x8000);

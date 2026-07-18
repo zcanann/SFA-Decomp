@@ -24,6 +24,7 @@ void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, 
 void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj);
 void Obj_GetWorldPosition(u32 obj, f32 *outX, f32 *outY, f32 *outZ);
 void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
+void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 void objWorldToLocalPos(f32* out, ObjLocalTransform* transform, f32* in);
 
 #endif /* MAIN_OBJECT_TRANSFORM_H_ */
