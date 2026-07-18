@@ -432,7 +432,6 @@ void waterfx_func08(s16 id, f32 x, f32 y, f32 z, f32 w)
     gWaterfxWakeCount++;
 }
 
-void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d);
 
 void waterfx_func04(u8* objHeader, u16 limbMask, f32* impactPositions, u8* surface, f32 speed)
 {
