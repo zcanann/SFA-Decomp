@@ -14,8 +14,6 @@ f32 gScreenTransitionHoldTimer;
 f32 gScreenTransitionAlphaStep;
 f32 screenTransitionAlpha;
 
-extern u8 gScreenTransitionDone;
-
 
 typedef struct
 {
@@ -207,7 +205,6 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 }
 
 
-extern u8 screenTransitionPause;
 void setScreenTransitionPause(u32 pause)
 {
     screenTransitionPause = pause;
@@ -218,7 +215,6 @@ u8 screenTransition_func07(void)
     return gScreenTransitionDone;
 }
 
-extern f32 screenTransitionAlpha;
 f32 screenTransition_getAlpha(void)
 {
     return screenTransitionAlpha;
@@ -227,10 +223,6 @@ f32 screenTransition_getAlpha(void)
 extern f32 gScreenTransitionAlphaMax;
 extern f32 lbl_803E0564;
 extern f32 lbl_803E055C;
-extern f32 gScreenTransitionAlphaStep;
-extern f32 gScreenTransitionHoldTimer;
-extern u8 gScreenTransitionType;
-extern u8 gScreenTransitionDelay;
 
 void screenTransition_fadeFrom(int duration, int type, f32 from)
 {
