@@ -1331,7 +1331,7 @@ void fn_800E5CBC(short* obj, int state)
         matrixBuf[2] = lbl_803E0668;
         matrixBuf[3] = lbl_803E0668;
         mtxRotateByVec3s(&matrixBuf[4], outVec);
-        Matrix_TransformPoint(&matrixBuf[4], (double)collision->surfaceNormalX, (double)collision->surfaceNormalY,
+        Matrix_TransformPoint((f32*)((u8*)matrixBuf + 0x10), (double)collision->surfaceNormalX, (double)collision->surfaceNormalY,
                               (double)collision->surfaceNormalZ, &dy, &dx, &dz);
         angle = getAngle(dx, dz);
         pitch = 0x4000 - angle;
