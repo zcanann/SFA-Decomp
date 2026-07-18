@@ -3808,7 +3808,6 @@ int playerStateAimStaff(int obj, int state)
 
 extern u8 lbl_803DC6A8[8];
 extern u8 lbl_803DC6B0[2];
-extern const int lbl_802C2C50[];
 extern f32 lbl_803E8164;
 
 typedef struct
@@ -14141,7 +14140,6 @@ void playerRunActiveSpells(GameObject* obj, int state)
 }
 
 
-extern const int lbl_802C2C68[];
 extern f32 lbl_803E8134;
 
 void fn_802AFB0C(int obj, int inner, int state)
