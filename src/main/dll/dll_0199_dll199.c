@@ -14,9 +14,7 @@
 #include "main/obj_message.h"
 #include "main/object.h"
 #include "main/objseq.h"
-#define dll_199_update dll_199_update_owner_signature
 #include "main/dll/dimmagicbridge.h"
-#undef dll_199_update
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
@@ -48,7 +46,6 @@ u32 lbl_803DDBD8;
 void dll_199_initialise(void);
 void dll_199_release(void);
 void dll_199_init(GameObject* obj, int def);
-void dll_199_update(int obj);
 typedef struct Dll199ObjectDef
 {
     u8 pad0[0x1A - 0x0];
@@ -216,7 +213,7 @@ void dll_199_hitDetect(void)
 {
 }
 
-void dll_199_update(int obj)
+void dll_199_update(GameObject* obj)
 {
     short* state;
     GameObject* player;
@@ -230,13 +227,13 @@ void dll_199_update(int obj)
     u32 brightness;
     int delta;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     player = Obj_GetPlayerObject();
     dist = 1000.0f;
-    ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
-    queue = *(int*)&((GameObject*)obj)->extra;
+    obj->anim.worldPosX = obj->anim.localPosX;
+    obj->anim.worldPosY = obj->anim.localPosY;
+    obj->anim.worldPosZ = obj->anim.localPosZ;
+    queue = *(int*)&obj->extra;
     flags = 0;
     while (ObjMsg_PopLegacy(obj, &msg, &param, &flags) != 0)
     {
@@ -335,19 +332,19 @@ void dll_199_update(int obj)
                 mainSetBits(0x5b5, 1);
             }
             mainSetBits(0x5b9, 0);
-            if (Vec_distance((f32*)(obj + 0x18), (f32*)((u8*)player + 0x18)) < state[0])
+            if (Vec_distance((f32*)((int)obj + 0x18), (f32*)((u8*)player + 0x18)) < state[0])
             {
                 ((Dll199State*)state)->phase = 1;
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
-                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 0xffffffff);
+                (*gObjectTriggerInterface)->runSequence(0, obj, 0xffffffff);
                 {
                     int* res = Resource_Acquire(0x83, 1);
-                    (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
+                    (**(void (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 1, 0xffffffff, 0);
                     Resource_Release(res);
                 }
                 {
                     int* res = Resource_Acquire(0x84, 1);
-                    (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
+                    (**(void (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 1, 0xffffffff, 0);
                     Resource_Release(res);
                 }
                 mainSetBits(0x126, 0);
@@ -372,18 +369,18 @@ void dll_199_update(int obj)
                 state[1] = 100;
                 if (((Dll199State*)state)->unlockCount == 1)
                 {
-                    (*gObjectTriggerInterface)->runSequence(3, (void*)obj, 0xffffffff);
+                    (*gObjectTriggerInterface)->runSequence(3, obj, 0xffffffff);
                 }
             }
             break;
         case 7:
-            (*gObjectTriggerInterface)->runSequence(5, (void*)obj, 0xffffffff);
+            (*gObjectTriggerInterface)->runSequence(5, obj, 0xffffffff);
             ((Dll199State*)state)->phase = 3;
             state[1] = 0;
             state[5] = -3;
             break;
         case 8:
-            (*gObjectTriggerInterface)->runSequence(4, (void*)obj, 0xffffffff);
+            (*gObjectTriggerInterface)->runSequence(4, obj, 0xffffffff);
             ((Dll199State*)state)->phase = 6;
             state[1] = 0;
             state[5] = -3;
@@ -392,9 +389,9 @@ void dll_199_update(int obj)
             (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x35, 0x50, state[4] & 0xff,
                                                                                          0);
             state[5] = 1;
-            (*gObjectTriggerInterface)->runSequence(2, (void*)obj, 0xffffffff);
+            (*gObjectTriggerInterface)->runSequence(2, obj, 0xffffffff);
             dist = 10000.0f;
-            found = ObjGroup_FindNearestObjectLegacy(DLL199_TARGET_OBJGROUP_2, (GameObject*)obj, &dist);
+            found = ObjGroup_FindNearestObjectLegacy(DLL199_TARGET_OBJGROUP_2, obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);
@@ -408,7 +405,8 @@ void dll_199_update(int obj)
             mainSetBits(0x5b9, 1);
             {
                 int* res = Resource_Acquire(0x6a, 1);
-                state[6] = (**(short (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 0x402, 0xffffffff, 0);
+                state[6] =
+                    (**(short (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 0x402, 0xffffffff, 0);
                 Resource_Release(res);
             }
             mainSetBits(0x1cd, 0);
@@ -417,7 +415,7 @@ void dll_199_update(int obj)
             break;
         case 3:
             dist = 10000.0f;
-            found = ObjGroup_FindNearestObjectLegacy(DLL199_TARGET_OBJGROUP_2, (GameObject*)obj, &dist);
+            found = ObjGroup_FindNearestObjectLegacy(DLL199_TARGET_OBJGROUP_2, obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);
@@ -437,7 +435,7 @@ void dll_199_update(int obj)
                 (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2a, 0x50,
                                                                                              state[4] & 0xff, 0);
                 state[5] = 1;
-                (*gObjectTriggerInterface)->runSequence(1, (void*)obj, 0xffffffff);
+                (*gObjectTriggerInterface)->runSequence(1, obj, 0xffffffff);
             }
             break;
         case 4:
