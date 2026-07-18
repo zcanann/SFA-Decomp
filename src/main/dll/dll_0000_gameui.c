@@ -7348,7 +7348,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     {
         int height;
         s16 revealedHeight;
-        s16 voiceoverTimer, panelAlpha, width, panelX, panelY;
+        s16 voiceoverTimer, panelAlpha, panelX, panelY, width;
         voiceoverTimer = gWorldMapVoiceoverTimer;
         panelAlpha = voiceoverTimer;
         panelAlpha *= 0xf;
