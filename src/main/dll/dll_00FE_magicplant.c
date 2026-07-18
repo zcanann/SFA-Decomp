@@ -195,7 +195,6 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, Magic
     }
 }
 
-void MagicPlant_spawnChild(GameObject* obj, int objectId);
 
 int MagicPlant_SeqFn(u8* obj)
 {
