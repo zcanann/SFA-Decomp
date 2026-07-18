@@ -34,6 +34,7 @@
 #include "main/dll/dll_000B_dll0b.h"
 #include "track/intersect_api.h"
 #include "main/lightmap.h"
+#include "ext_min/intersect_min.h"
 
 int lbl_803DD278;
 int lbl_803DD274;
@@ -158,7 +159,6 @@ extern const f32 lbl_803DF404;
 extern const f32 lbl_803DF408;
 extern const f32 lbl_803DF40C;
 extern const f32 gExpgfxU16ToUnitScale;
-extern void setupReflectionIndirectTev(u32 flag);
 #define setupAlphaTextureTev fn_80079180
 #define setupExpgfxRenderState fn_8007D670
 #define applyDepthModeOverrideViewport fn_8000F83C

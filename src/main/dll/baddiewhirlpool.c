@@ -36,11 +36,11 @@
 #include "main/voxmaps.h"
 #include "main/obj_group.h"
 #include "main/dll/baddiewhirlpool.h"
+#include "ext_min/intersect_min.h"
 
 #define ICEBADDIE_OBJGROUP_SECONDARY 80
 #define ICEBADDIE_HIT_VOLUME_SLOT    10
 
-extern void renderWhirlpool(void);
 
 void iceBaddie_enterWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
 {

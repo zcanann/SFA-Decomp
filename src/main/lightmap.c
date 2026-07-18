@@ -46,6 +46,7 @@
 #include "main/tex_dolphin_ext.h"
 #include "main/acosf_cs.h"
 #include "dolphin/gx/GXGeometry.h"
+#include "ext_min/intersect_min.h"
 
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
@@ -105,7 +106,6 @@ extern u8 gLightmapScreenImageEnabled;
 extern void screenImageDraw(void);
 extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
-extern void drawViewFinderAperture(f32 a, f32 b, int c, int d);
 extern int mapRectFn_8005a728(int row, int col, u8* block);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void renderMapBlock(u8* block, int* p1);
@@ -760,7 +760,6 @@ extern f32 lbl_803DCE4C;
 extern f32 blurFilterArea;
 extern u8 bBlurFilterUseArea;
 extern u8 bBiggerBlurFilter;
-extern void doHeatEffect(int v);
 extern u8 bEnableDistortionFilter;
 extern f32 distortionFilterAngle1;
 extern f32 distortionFilterAngle2;

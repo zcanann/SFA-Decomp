@@ -43,6 +43,7 @@
 #include "string.h"
 #include "main/track_dolphin_ext.h"
 #include "main/dll/player_ext.h"
+#include "ext_min/intersect_min.h"
 
 s16 gObjPartitionPivot;
 void* lbl_803DCBC0;
@@ -216,9 +217,6 @@ extern void objList_remove(void* list, void* item);
 extern void objFreeObjDef(u8* def, int flags);
 extern void Obj_RegisterObject(GameObject* obj, int b);
 extern void modelInitBones(f32 scale, void* model);
-extern int objCallback_80074d04();
-extern int modelCb_80073d04();
-extern int modelCb_80074518();
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8* obj);
 extern void fn_80013B6C(int* p, int n);
