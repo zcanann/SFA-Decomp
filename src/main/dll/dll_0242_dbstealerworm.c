@@ -294,7 +294,7 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
             i = 3;
             found = 0;
             p = &lbl_803296FC[3];
-            for (; p--, --i >= 0;)
+            for (; (p--, --i) >= 0;)
             {
                 nearest = ObjGroup_FindNearestObjectForObject(*p, obj, &range);
                 if (nearest != 0)
