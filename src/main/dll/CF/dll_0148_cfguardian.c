@@ -468,7 +468,7 @@ int cfguardian_updateMain(GameObject* obj)
                 hitDetectFn_800658a4(obj, obj->anim.localPosX, obj->anim.localPosY,
                                      obj->anim.localPosZ, &ground, 0);
                 obj->anim.rotX = (s16)((0xc0 << (obj->anim.rotX + 8)) >> 1);
-                ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~0x400;
+                ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~0x400;
                 if (ground <= 1.0f)
                 {
                     sub->landingPhase = 2;
@@ -696,7 +696,7 @@ int cfguardian_updateMain(GameObject* obj)
             sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         obj->anim.alpha = 0;
-        ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~1;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~1;
         Obj_RemoveFromUpdateList(obj);
         obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->questState = CFGUARDIAN_PARKED_HIDDEN;
@@ -742,7 +742,7 @@ int cfguardian_updateMain(GameObject* obj)
     case CFGUARDIAN_PARKED_HIDDEN: /* parked and hidden */
         obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         Obj_RemoveFromUpdateList(obj);
-        ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~1;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~1;
         break;
     }
     dll_2E_func03((GameObject*)obj, (MoveLibState*)sub);
@@ -757,7 +757,7 @@ int cfguardian_updateMain(GameObject* obj)
         {
             int* tbl = (int*)seqStreamLookupFn_8007fff8(gCfGuardianSeqStreamTable, 0xf, sub->questState);
             int pick;
-            if (Player_GetCurrentMagic((int)player) > 3)
+            if (playerGetCurMagic(player) > 3)
             {
                 pick = tbl[0];
             }
