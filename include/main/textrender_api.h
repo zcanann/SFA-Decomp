@@ -23,6 +23,7 @@ extern GameTextSlot lbl_8033A540[];
 
 void subtitleFn_8001b700(void);
 void subtitleStart(int x);
+void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
 void subtitleUpdateAndDraw(int mode);
 void subtitleBuildLineTable(void);
 int subtitleIsActive(void);
