@@ -368,16 +368,11 @@ int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
     {
         result = drakorhoverpad_pickUnmaskedNextPoint(*(int**)&((GameObject*)p)->anim.currentMove, -1, maxIndex);
     }
-    if (result == -1)
+    if (result != -1)
     {
-        ((GameObject*)p)->anim.targetObj = NULL;
-        return 1;
-    }
-    ((GameObject*)p)->anim.targetObj = (*gRomCurveInterface)->getById(result);
-    if (((GameObject*)p)->anim.targetObj == NULL)
-    {
-        return 1;
-    }
+        ((GameObject*)p)->anim.targetObj = (*gRomCurveInterface)->getById(result);
+        if (((GameObject*)p)->anim.targetObj != NULL)
+        {
 #define CM_SLOT  ((DrakorCurveNode**)&((GameObject*)p)->anim.currentMove)
 #define AMP_SLOT ((DrakorCurveNode**)&((GameObject*)p)->anim.activeMoveProgress)
 #define TGT_SLOT ((DrakorCurveNode**)&((GameObject*)p)->anim.targetObj)
@@ -445,6 +440,13 @@ int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
         Curve_AdvanceAlongPath(&curve->curve, 1.0f);
     }
     return 0;
+        }
+    }
+    else
+    {
+        ((GameObject*)p)->anim.targetObj = NULL;
+    }
+    return 1;
 }
 
 ObjectDescriptor24 gDrakorHoverPadObjDescriptor = {
