@@ -379,8 +379,6 @@ int fn_80136A40(int unused, int c)
     return c;
 }
 
-#define debugPrintDrawGlyph fn_80136A40
-
 int debugPrintDrawRecord(int color, u8* p)
 {
     u8* start = p;
@@ -557,7 +555,7 @@ int debugPrintDrawRecord(int color, u8* p)
             }
             break;
         default:
-            w = debugPrintDrawGlyph(color, c);
+            w = fn_80136A40(color, c);
             break;
         }
         if (gDebugFixedWidthMode != 0 && c >= 0x20 && c <= 0x7f)
@@ -605,7 +603,6 @@ int debugPrintDrawRecord(int color, u8* p)
     }
     return p - start;
 }
-#undef debugPrintDrawGlyph
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     int n;

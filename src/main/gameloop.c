@@ -180,7 +180,6 @@ extern u8* gGameBitSaveData;
 #define GAMEBIT_FLAG_SYNC       0x20 /* request a save-sync when this bit is written */
 #define GAMEBIT_FLAG_BANK_SHIFT 6    /* top bits select one of four save-data banks */
 extern char sGameBitSetDuringSaveLoadWarning[];
-#define GameBit_RequestSync gameBitFn_800ea2e0
 extern u8 lbl_803DCA38;
 extern int gGameLoopPendingMapId;
 extern int gGameLoopPendingMapDataFileId;
@@ -800,7 +799,7 @@ void mainSetBits(int eventId, int value)
     }
     if (flags & GAMEBIT_FLAG_SYNC)
     {
-        GameBit_RequestSync(gGameBitTable[id * 4 + 3]);
+        gameBitFn_800ea2e0(gGameBitTable[id * 4 + 3]);
     }
     start = *(u16*)(gGameBitTable + id * 4);
     bit = 1;

@@ -134,8 +134,6 @@ extern f32 gExpgfxYVelocitySlowStep;
 extern f32 gExpgfxYVelocityNegativeLimit;
 extern const f32 gExpgfxSlotMotionStep;
 
-#define getPlayerAttractionRange fn_8029610C
-#define getSkyDirection          fn_800897D4
 extern u16 gExpgfxPhaseAngleA;
 extern u16 gExpgfxPhaseAngleB;
 extern const f32 lbl_803DF3C8;
@@ -158,9 +156,6 @@ extern const f32 lbl_803DF408;
 extern const f32 lbl_803DF40C;
 extern const f32 gExpgfxU16ToUnitScale;
 extern void setupReflectionIndirectTev(u32 flag);
-#define setupAlphaTextureTev fn_80079180
-#define setupExpgfxRenderState fn_8007D670
-#define applyDepthModeOverrideViewport fn_8000F83C
 extern const f32 lbl_803DF414;
 extern const f32 lbl_803DF41C;
 extern const f32 lbl_803DF420;
@@ -665,7 +660,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     gExpgfxPhaseAngleA += (u16)(lbl_803DF3C8 * timeDelta);
     gExpgfxPhaseAngleB += (u16)(lbl_803DF3CC * timeDelta);
     sky = getSkyStructField24C();
-    getSkyDirection(sky, &camDir[0], &camDir[1], &camDir[2]);
+    fn_800897D4(sky, &camDir[0], &camDir[1], &camDir[2]);
     PSMTXMultVec((void*)Camera_GetViewRotationMatrix(), (void*)camDir, (void*)camDir);
     camScale = -camDir[2];
     if (camScale < lbl_803DF3D0)
@@ -702,7 +697,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
         }
         if (player != NULL)
         {
-            playerRange = getPlayerAttractionRange(player);
+            playerRange = fn_8029610C(player);
         }
         prefetched = 0;
         ambRPlus1 = ambScaled[2] + 1;
@@ -1796,7 +1791,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     viewMatrix = (MtxPtr)Camera_GetViewMatrix();
     GXLoadPosMtxImm(viewMatrix, GX_PNMTX0);
     PSMTXCopy(viewMatrix, lbl_803967C0);
-    setupExpgfxRenderState();
+    fn_8007D670();
     _gxSetFogParams();
     if ((short)renderModeSetOrGet(-1) == 1)
     {
@@ -2004,7 +1999,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 if (alphaMode != 0)
                 {
                     textureSetupFn_800799c0();
-                    setupAlphaTextureTev();
+                    fn_80079180();
                     textRenderSetupFn_80079804();
                     alphaMode = 0;
                 }
@@ -2054,7 +2049,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             {
                 if (zMode != 1)
                 {
-                    applyDepthModeOverrideViewport();
+                    fn_8000F83C();
                     gxSetZMode_(1, 3, 0);
                     zMode = 1;
                 }
