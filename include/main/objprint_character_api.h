@@ -27,7 +27,5 @@ void fn_8003B228(GameObject* obj, void* state);
 void fn_8003ADC4(GameObject* obj, void* target, void* state, int limit, u8 inverted, int mode);
 
 #define characterDoEyeAnimsState(obj, state) characterDoEyeAnims((obj), (CharacterEyeAnimState*)(state))
-#define characterDoEyeAnimsIntStateLegacy(obj, state)                                                          \
-    ((void (*)(GameObject*, int))characterDoEyeAnims)((obj), (state))
 
 #endif /* MAIN_OBJPRINT_CHARACTER_API_H_ */
