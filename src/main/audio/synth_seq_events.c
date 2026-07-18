@@ -33,93 +33,91 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
         ev->channel = channel;
         ev->state = pattern;
 
-        if (pattern->stream != 0)
+        for (;;)
         {
+            if (pattern->stream == 0)
+            {
+                if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_END)
+                {
+                    track->current = 0;
+                    return 0;
+                }
+
+                if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_JUMP)
+                {
+                    if (SYNTH_KEYGROUP_MAP(gSynthCurrentVoice) == 0)
+                    {
+                        if (KEYGROUP_STATE(gSynthCurrentVoice, 0).active)
+                        {
+                            track->current = 0;
+                            return 0;
+                        }
+                    }
+                    else if (KEYGROUP_STATE(gSynthCurrentVoice, SYNTH_KEYGROUP_MAP(gSynthCurrentVoice)[trackId]).active)
+                    {
+                        track->current = 0;
+                        return 0;
+                    }
+
+                    ev->type = 3;
+                    ev->value = TRACK_CMD(track)->value0;
+                    track->current = track->base + TRACK_CMD(track)->arg * sizeof(SynthTrackCommand);
+                    return ev;
+                }
+
+                ev->type = 4;
+                ev->value = TRACK_CMD(track)->value0;
+                ev->eventData = track->current;
+                track->current = TRACK_CMD(track) + 1;
+                return ev;
+            }
+
             pitchTime = pattern->primaryLimit;
             modTime = pattern->secondaryLimit;
 
             for (;;)
             {
                 patternTime = *(u16*)pattern->stream + pattern->currentValue;
-                if (patternTime >= pitchTime)
+                if (patternTime < pitchTime && patternTime < modTime)
                 {
-                    if (pitchTime < modTime)
+                    if (pattern->stream[2] == 0xFF && pattern->stream[3] == 0xFF)
                     {
-                        ev->value = pitchTime + pattern->valueOffset;
-                        ev->type = 2;
-                        return ev;
+                        pattern->stream = 0;
+                        break;
                     }
-                    ev->value = modTime + pattern->valueOffset;
-                    ev->type = 1;
-                    return ev;
-                }
-                if (patternTime >= modTime)
-                {
-                    ev->value = modTime + pattern->valueOffset;
-                    ev->type = 1;
-                    return ev;
-                }
-                if (pattern->stream[2] == 0xFF && pattern->stream[3] == 0xFF)
-                {
-                    pattern->stream = 0;
-                    break;
-                }
 
-                ev->eventData = pattern->stream;
-                pattern->currentValue = patternTime;
+                    ev->eventData = pattern->stream;
+                    pattern->currentValue = patternTime;
 
-                if ((pattern->stream[2] & 0x80) != 0)
-                {
-                    pattern->stream += 4;
+                    if ((pattern->stream[2] & 0x80) != 0)
+                    {
+                        pattern->stream += 4;
+                    }
+                    else if ((pattern->stream[2] | pattern->stream[3]) == 0)
+                    {
+                        pattern->stream += 4;
+                        continue;
+                    }
+                    else
+                    {
+                        pattern->stream += 6;
+                    }
                     ev->type = 0;
                     ev->value = patternTime + pattern->valueOffset;
-                    return ev;
                 }
-                if ((pattern->stream[2] | pattern->stream[3]) == 0)
+                else if (pitchTime < modTime)
                 {
-                    pattern->stream += 4;
-                    continue;
+                    ev->value = pitchTime + pattern->valueOffset;
+                    ev->type = 2;
                 }
-                pattern->stream += 6;
-                ev->type = 0;
-                ev->value = patternTime + pattern->valueOffset;
+                else
+                {
+                    ev->value = modTime + pattern->valueOffset;
+                    ev->type = 1;
+                }
                 return ev;
             }
         }
-
-        if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_END)
-        {
-            track->current = 0;
-            return 0;
-        }
-
-        if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_JUMP)
-        {
-            if (SYNTH_KEYGROUP_MAP(gSynthCurrentVoice) == 0)
-            {
-                if (KEYGROUP_STATE(gSynthCurrentVoice, 0).active)
-                {
-                    track->current = 0;
-                    return 0;
-                }
-            }
-            else if (KEYGROUP_STATE(gSynthCurrentVoice, SYNTH_KEYGROUP_MAP(gSynthCurrentVoice)[trackId]).active)
-            {
-                track->current = 0;
-                return 0;
-            }
-
-            ev->type = 3;
-            ev->value = TRACK_CMD(track)->value0;
-            track->current = track->base + TRACK_CMD(track)->arg * sizeof(SynthTrackCommand);
-            return ev;
-        }
-
-        ev->type = 4;
-        ev->value = TRACK_CMD(track)->value0;
-        ev->eventData = track->current;
-        track->current = TRACK_CMD(track) + 1;
-        return ev;
     }
 
     return 0;
