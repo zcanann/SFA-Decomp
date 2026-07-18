@@ -2841,7 +2841,7 @@ void objRenderModel(GameObject* obj)
     gObjShadowColor[3] = obj->anim.modelState->shadowAlpha;
     objShadowFn_8006c5f0Legacy(obj, &d1, &d2, &d3, &d4);
     col = *(u32*)gObjShadowColor;
-    hudDrawColoredLegacy(d1, d3, d4, &col, (s32)(lbl_803DEA6C * d2), 1);
+    hudDrawColored(d1, d3, d4, &col, (s32)(lbl_803DEA6C * d2), 1);
 }
 
 void set_shadowFlag_803dcc29(u8 x)

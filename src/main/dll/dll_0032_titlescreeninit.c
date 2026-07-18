@@ -116,7 +116,7 @@ void runLoadingScreens(void)
         }
         colorBuf.bytes[3] = alpha;
         color = colorBuf.word;
-        hudDrawColoredLegacy(textureSlot, 0x85, 0xaa, &color, 0x100, 0);
+        hudDrawColored(textureSlot, 0x85, 0xaa, &color, 0x100, 0);
     }
     else if (gTitleScreenInitLoadingFrameCounter < 0x1e0)
     {

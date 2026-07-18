@@ -5843,7 +5843,7 @@ void pauseMenuDoSave(void)
             {
                 objShadowFn_8006c5f0(lbl_803A9410[i], &texture, &scale, &x, &y);
                 colorA = colorB;
-                hudDrawColoredLegacy(texture, x, y, (u32*)&colorA, (s32)(lbl_803E20B8 * scale), 1);
+                hudDrawColored(texture, x, y, (u32*)&colorA, (s32)(lbl_803E20B8 * scale), 1);
             }
         }
     }

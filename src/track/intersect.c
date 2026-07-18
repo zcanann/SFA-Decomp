@@ -3454,7 +3454,7 @@ void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int 
  * "raster passthrough" (TevColorIn 0xF/0xF/0xF/0xE) and "K-tint replace"
  * (TevColorIn 0xF/0xE/0x8/0xF).
  */
-void hudDrawColored(Texture* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
+void hudDrawColored(int obj, int x, int y, u32* color, int scale, int flag)
 {
     extern const f32 lbl_803DEEDC;
     extern const f32 lbl_803DEEE4;
@@ -3463,13 +3463,13 @@ void hudDrawColored(Texture* obj, int x, int y, GXColor* color, u16 scale, u8 fl
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-    color->a = (u8)(((s32)color->a * gHudTintAlpha) >> 8);
-    GXSetTevKColor(0, *color);
+    ((GXColor*)color)->a = (u8)(((s32)((GXColor*)color)->a * gHudTintAlpha) >> 8);
+    GXSetTevKColor(0, *(GXColor*)color);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
     GXSetTevDirect(GX_TEVSTAGE0);
-    if (flag != 0)
+    if ((u8)flag != 0)
     {
         GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_KONST);
     }
@@ -3481,7 +3481,7 @@ void hudDrawColored(Texture* obj, int x, int y, GXColor* color, u16 scale, u8 fl
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_4, GX_TRUE, GX_TEVPREV);
-    if ((u32)obj->imageOffset != 0)
+    if ((u32)((Texture*)obj)->imageOffset != 0)
     {
         GXSetTevKAlphaSel(GX_TEVSTAGE1, GX_TEV_KASEL_K0_A);
         GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR_NULL);
@@ -3502,7 +3502,7 @@ void hudDrawColored(Texture* obj, int x, int y, GXColor* color, u16 scale, u8 fl
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    textureFn_8004c264(obj, 0);
+    textureFn_8004c264((Texture*)obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
@@ -3513,7 +3513,7 @@ void hudDrawColored(Texture* obj, int x, int y, GXColor* color, u16 scale, u8 fl
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if (flag != 0)
+    if ((u8)flag != 0)
     {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
     }
@@ -3523,8 +3523,8 @@ void hudDrawColored(Texture* obj, int x, int y, GXColor* color, u16 scale, u8 fl
     }
     {
         s32 w, h;
-        w = ((obj->width << 2) * scale) / 256;
-        h = ((obj->height << 2) * scale) / 256;
+        w = ((((Texture*)obj)->width << 2) * (u16)scale) / 256;
+        h = ((((Texture*)obj)->height << 2) * (u16)scale) / 256;
         GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
         GXWGFifo.u8 = 0x3C;
@@ -6197,7 +6197,7 @@ void showMemCardError(u8 err)
     int opts[8];
     int msgs[8];
     int count;
-    int saved;
+    u32 saved;
     int sel;
     u8 submenu;
     int timer;
@@ -6227,7 +6227,7 @@ void showMemCardError(u8 err)
         timer += 0x3e8;
         waitNextFrame();
         saved = lbl_803DB708;
-        hudDrawColoredLegacy(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
+        hudDrawColored(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
         if (submenu != 0)
         {
             opts[0] = 6;
@@ -6352,7 +6352,7 @@ void showMemCardError(u8 err)
 void cardShowLoadingMsg(u8 kind)
 {
     int* buttons;
-    int saved;
+    u32 saved;
     int frame;
     int j;
     int count;
@@ -6382,7 +6382,7 @@ void cardShowLoadingMsg(u8 kind)
         else
         {
             saved = lbl_803DB708;
-            hudDrawColoredLegacy(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
+            hudDrawColored(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
         }
         gameTextSetColorInt(0xFF, 0xFF, 0xFF, 0xFF);
         if (mode == 1)
