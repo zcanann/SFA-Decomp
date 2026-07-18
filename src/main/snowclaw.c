@@ -99,7 +99,6 @@ typedef struct SnowClawBombSetup
     s16 launchAngle; /* 0x1a */
 } SnowClawBombSetup;
 
-extern u8 gSnowClawMoveTable[];
 int gSnowClawDropBombAngle;
 
 u8 gSnowClawMoveTable[] = {
@@ -111,14 +110,9 @@ u8 gSnowClawMoveTable[] = {
 s32 lbl_8032A340[4] = {150, 200, 300, 400};
 
 u32 gSnowClawHurtSfxTable[8] = {0x2EF, 0x2EE, 0x2ED, 0x2EC, 0x2EB, 0x0497049C, 0x03A2049C, 0x07D007D1};
-extern f32 lbl_803DC224;
 
 const u32 gSnowClawPulseTable[8] = {0, 1, 2, 3, 1, 1, 2, 2};
 const SnowClawDropObjectTable gSnowClawDropObjectTable = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
-extern s32 lbl_8032A340[];
-extern int lbl_803DC220;
-extern f32 lbl_803DC218;
-extern f32 lbl_803DC21C;
 
 int snowclaw_getExtraSize(void);
 int snowclaw_getObjectTypeId(void);
