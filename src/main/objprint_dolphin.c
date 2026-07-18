@@ -33,6 +33,7 @@
 #include "main/vecmath.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXDispList.h"
+#include "dolphin/gx/GXLighting.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -99,73 +100,6 @@ const int lbl_802C1B70[56] = {
 void objRenderShadow2(int* obj, int* obj2, u8* m, int p4);
 void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode);
 void objRenderChild(int* child, int* parent, u8 isShadow);
-
-#define GX_AOP_AND        0
-#define GX_BL_ZERO        0
-#define GX_BM_NONE        0
-#define GX_COLOR0         0
-#define GX_CS_SCALE_1     0
-#define GX_DF_NONE        0
-#define GX_FALSE          0
-#define GX_SRC_REG        0
-#define GX_TB_ZERO        0
-#define GX_TEVPREV        0
-#define GX_TEV_ADD        0
-#define GX_BL_ONE         1
-#define GX_BM_BLEND       1
-#define GX_SRC_VTX        1
-#define GX_TRUE           1
-#define GX_AF_NONE        2
-#define GX_ALPHA0         2
-#define GX_BM_LOGIC       2
-#define GX_CA_A2          3
-#define GX_BL_SRCALPHA    4
-#define GX_COLOR0A0       4
-#define GX_GREATER        4
-#define GX_BL_INVSRCALPHA 5
-#define GX_COLOR1A1       5
-#define GX_LO_NOOP        5
-#define GX_CC_C2          6
-#define GX_ALWAYS         7
-#define GX_CA_ZERO        7
-#define GX_LO_OR          7
-#define GX_CC_ZERO        0xf
-#define GX_TEXCOORD_NULL  0xff
-#define GX_TEXMAP_NULL    0xff
-#define GX_TEVSTAGE0      0
-#define GX_TEV_SWAP0      0
-#define GX_TEXMAP0        0
-#define GX_TEXCOORD1      1
-#define GX_CS_DIVIDE_2    3
-#define GX_CA_TEXA        4
-#define GX_CA_RASA        5
-#define GX_CC_KONST       0xe
-#define GX_TEV_KCSEL_K0   0xc
-#define GX_TEV_KASEL_K0_A 0x1c
-#define GX_TG_MTX2x4      1
-#define GX_TG_TEX0        4
-#define GX_IDENTITY       0x3c
-#define GX_PTTEXMTX0      0x40
-#define GX_FOG_NONE       0
-#define GX_VA_PNMTXIDX    0
-#define GX_VA_TEX0MTXIDX  1
-#define GX_VA_TEX1MTXIDX  2
-#define GX_DIRECT         1
-#define GX_INDEX8         2
-#define GX_INDEX16        3
-#define GX_VA_POS         9
-#define GX_VA_NRM         10
-#define GX_VA_CLR0        11
-#define GX_VA_TEX0        13
-#define GX_VA_TEX1        14
-#define GX_VA_NBT         25
-#define GX_TRIANGLES      0x90
-#define GX_VTXFMT7        7
-#define GX_CULL_NONE      0
-#define GX_CULL_FRONT     1
-#define GX_CULL_BACK      2
-#define GX_TEVREG2        3
-#define GX_KCOLOR0        0
 
 /*
  * One render op ("shader") record from the model file's renderOps array,
@@ -249,8 +183,6 @@ s32 mapCheckCurBlocks(int v);
 #define OBJPRINT_MODEL_DEF(obj)         (((ObjAnimComponent*)(obj))->modelInstance)
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent*)(obj))->bankIndex)
 
-extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
-extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
 extern u32 GXSetTevKColorSel();
 extern u32 GXSetBlendMode();
 extern void GXSetTevKColor(int id, ObjGXColor color);
@@ -286,8 +218,8 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
         modelLightStruct_setDiffuseColor(renderHandle, 0xff, 0xff, 0xff, 0xff);
         modelLightChannels_reset(0);
         modelLightChannel_configure(2, 0, 0);
-        GXSetChanAmbColor(2, *(ObjGXColor*)&lbl_803DB470);
-        GXSetChanMatColor(2, *(ObjGXColor*)&lbl_803DB468);
+        GXSetChanAmbColor(GX_ALPHA0, *(GXColor*)&lbl_803DB470);
+        GXSetChanMatColor(GX_ALPHA0, *(GXColor*)&lbl_803DB468);
         modelLightStruct_loadChannelLight(2, (u8*)renderHandle, (u8*)obj);
         modelLightChannels_applyGXControls();
         ModelLightStruct_free(renderHandle);
@@ -487,9 +419,6 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     }
 }
 
-extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
-extern void GXSetNumChans(u8 nChans);
-
 void objFn_8003dc50(u8* obj, u8* model)
 {
     int t2;
@@ -501,7 +430,7 @@ void objFn_8003dc50(u8* obj, u8* model)
     u8 b;
     ModelLightStruct* larr[6];
     s32 count;
-    ObjGXColor c;
+    GXColor c;
 
     count = 0;
     lbl_803DCC5C = 0;
@@ -522,7 +451,7 @@ void objFn_8003dc50(u8* obj, u8* model)
         if (t2 || t10)
         {
             ((u8*)&gObjCurChanColor)[3] = 0;
-            GXSetChanAmbColor(chan, *(ObjGXColor*)&gObjCurChanColor);
+            GXSetChanAmbColor(chan, *(GXColor*)&gObjCurChanColor);
             GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetNumChans(1);
@@ -546,7 +475,7 @@ void objFn_8003dc50(u8* obj, u8* model)
             if (f & 0xc)
             {
                 mode = 2;
-                GXSetChanAmbColor(ch, *(ObjGXColor*)&gObjGxDefaultChanColor);
+                GXSetChanAmbColor(ch, *(GXColor*)&gObjGxDefaultChanColor);
             }
             else
             {
@@ -574,11 +503,11 @@ void objFn_8003dc50(u8* obj, u8* model)
             }
             if (count == 0)
             {
-                GXSetChanMatColor(ch, *(ObjGXColor*)&gObjGxDefaultChanColor);
+                GXSetChanMatColor(ch, *(GXColor*)&gObjGxDefaultChanColor);
             }
             else
             {
-                GXSetChanMatColor(ch, *(ObjGXColor*)&lbl_803DB468);
+                GXSetChanMatColor(ch, *(GXColor*)&lbl_803DB468);
             }
             {
                 int i;
@@ -596,11 +525,11 @@ void objFn_8003dc50(u8* obj, u8* model)
         {
             if (f & 1)
             {
-                GXSetChanMatColor(chan, *(ObjGXColor*)&lbl_803DB468);
+                GXSetChanMatColor(chan, *(GXColor*)&lbl_803DB468);
             }
             else
             {
-                GXSetChanMatColor(chan, *(ObjGXColor*)&gObjGxDefaultChanColor);
+                GXSetChanMatColor(chan, *(GXColor*)&gObjGxDefaultChanColor);
             }
         }
         {
@@ -639,8 +568,8 @@ void objFn_8003dc50(u8* obj, u8* model)
                         }
                         modelLightChannel_configure(*sp, 2, 0);
                         modelLightStruct_loadChannelLight(*sp, (u8*)*lp, model);
-                        GXSetChanAmbColor(*sp, *(ObjGXColor*)&lbl_803DB470);
-                        GXSetChanMatColor(*sp, *(ObjGXColor*)&lbl_803DB468);
+                        GXSetChanAmbColor(*sp, *(GXColor*)&lbl_803DB470);
+                        GXSetChanMatColor(*sp, *(GXColor*)&lbl_803DB468);
                         lp++;
                         sp++;
                     }

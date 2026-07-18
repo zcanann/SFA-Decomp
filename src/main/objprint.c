@@ -49,10 +49,6 @@ u8 lbl_803DCC08;
 int lbl_803DB460 = 100;
 f32 lbl_803DB464 = 20.0f;
 
-#define GX_CULL_NONE  0
-#define GX_CULL_FRONT 1
-#define GX_CULL_BACK  2
-
 #define OBJPRINT_OBJECT(obj)            ((ObjAnimComponent*)(obj))
 #define OBJPRINT_MODEL_INSTANCE(obj)    (OBJPRINT_OBJECT(obj)->modelInstance)
 #define OBJPRINT_BANK_TABLE(obj)        ((int**)OBJPRINT_OBJECT(obj)->banks)
@@ -96,9 +92,6 @@ extern f32 lbl_803DEA2C;
 extern f32 lbl_803DEA30;
 extern f32 lbl_803DEA04;
 extern f32 lbl_803DEA1C;
-#define GXSetTevKColor ((ObjPrintSetTevKColorFn)GXSetTevKColor)
-#define GXSetIndTexMtx ((ObjPrintSetIndTexMtxFn)GXSetIndTexMtx)
-#define GXSetFog ((ObjPrintSetFogFn)GXSetFog)
 #define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 
 static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int kind);
@@ -147,8 +140,6 @@ extern f32 lbl_803DE9A4;
 extern f32 lbl_803DE9C8;
 extern f32 lbl_803DE99C;
 
-typedef void (*ObjPrintSetTevKColorFn)(int id, ObjPrintGXColor color);
-typedef void (*ObjPrintSetFogFn)(int type, f32 startZ, f32 endZ, f32 nearZ, f32 farZ, ObjPrintGXColor color);
 typedef void (*ObjPrintLoadTexMtxFn)(f32* mtx, int id, int type);
 
 void objAnimFn_80038f38(GameObject* obj, char* state)
@@ -1855,17 +1846,15 @@ void modelInitMtxs(int def, int model)
 
 typedef struct IndTexMtx23
 {
-    f32 m[6];
+    f32 m[2][3];
 } IndTexMtx23;
 
 STATIC_ASSERT(sizeof(IndTexMtx23) == 0x18);
 
-typedef void (*ObjPrintSetIndTexMtxFn)(int id, IndTexMtx23* mtx, int scale);
-
-const IndTexMtx23 lbl_802C1B10 = {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}};
-const IndTexMtx23 lbl_802C1B28 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
-const IndTexMtx23 lbl_802C1B40 = {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}};
-const IndTexMtx23 lbl_802C1B58 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
+const IndTexMtx23 lbl_802C1B10 = {{{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
+const IndTexMtx23 lbl_802C1B28 = {{{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.5f}}};
+const IndTexMtx23 lbl_802C1B40 = {{{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
+const IndTexMtx23 lbl_802C1B58 = {{{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.5f}}};
 
 extern int lbl_803DCC44;
 extern u8 lbl_803DCC3E;
@@ -1883,12 +1872,6 @@ extern f32 lbl_803DEA34;
 extern f32 lbl_803DEA38;
 extern f32 lbl_803DEA1C;
 
-#undef GXSetTevKColor
-#define GXSetTevKColor ((ObjPrintSetTevKColorFn)GXSetTevKColor)
-#undef GXSetIndTexMtx
-#define GXSetIndTexMtx ((ObjPrintSetIndTexMtxFn)GXSetIndTexMtx)
-#undef GXSetFog
-#define GXSetFog ((ObjPrintSetFogFn)GXSetFog)
 #undef GXLoadTexMtxImm
 #define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
@@ -1900,13 +1883,13 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     f32 mtx5[12];
     IndTexMtx23 mtxA;
     IndTexMtx23 mtxB;
-    ObjPrintGXColor kc;
+    GXColor kc;
     int texTbl;
     int texCnt;
     int t164;
     f32 sx;
     f32 sy;
-    ObjPrintGXColor kc2;
+    GXColor kc2;
     int a174;
     int b178;
     int stk380;
@@ -1914,7 +1897,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     f32 fz;
     u8 v;
 
-    kc = *(ObjPrintGXColor*)&lbl_803DE9FC;
+    kc = *(GXColor*)&lbl_803DE9FC;
     mtxA = lbl_802C1B40;
     mtxB = lbl_802C1B58;
     rop = (u8*)ObjModel_GetRenderOp((ModelFileHeader*)*model, ropIdx);
@@ -1973,9 +1956,9 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP4);
     GXSetIndTexCoordScale(0, 0, 0);
-    mtxA.m[0] = fz;
-    mtxA.m[4] = fz;
-    GXSetIndTexMtx(GX_ITM_0, &mtxA, (s8)lbl_803DB498);
+    mtxA.m[0][0] = fz;
+    mtxA.m[1][1] = fz;
+    GXSetIndTexMtx(GX_ITM_0, mtxA.m, (s8)lbl_803DB498);
     GXSetTevIndirect(2, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
     GXSetTevSwapMode(GX_TEVSTAGE2, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -1987,9 +1970,9 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
     GXSetIndTexCoordScale(1, 0, 0);
-    mtxB.m[1] = fz;
-    mtxB.m[5] = fz;
-    GXSetIndTexMtx(GX_ITM_1, &mtxB, (s8)lbl_803DB49C);
+    mtxB.m[0][1] = fz;
+    mtxB.m[1][2] = fz;
+    GXSetIndTexMtx(GX_ITM_1, mtxB.m, (s8)lbl_803DB49C);
     GXSetTevIndirect(3, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     selectTexture((Texture*)(*(void**)(texTbl + lbl_803DCC44 * 4)), 3);
     PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
@@ -2011,7 +1994,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     else
     {
         ModelLightStruct* lt;
-        kc2 = *(ObjPrintGXColor*)&lbl_803DEA00;
+        kc2 = *(GXColor*)&lbl_803DEA00;
         lt = objCreateLight((void*)obj, 0);
         if (lt != NULL)
         {
@@ -2054,15 +2037,13 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     }
     GXSetCullMode(GX_CULL_BACK);
     {
-        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjPrintGXColor*)&lbl_803DB468);
+        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
     }
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     return 1;
 }
-
-typedef void (*ObjPrintSetTevColorS10Fn)(int id, GXColorS10 color);
 
 extern GXColorS10 lbl_803DE9F4;
 extern ObjPrintGXColor lbl_803DB494;
@@ -2081,14 +2062,6 @@ static inline int shaderProjDisabled(ModelLightStruct* light)
     return flag;
 }
 
-#undef GXSetTevKColor
-#define GXSetTevKColor ((ObjPrintSetTevKColorFn)GXSetTevKColor)
-#undef GXSetTevColorS10
-#define GXSetTevColorS10 ((ObjPrintSetTevColorS10Fn)GXSetTevColorS10)
-#undef GXSetIndTexMtx
-#define GXSetIndTexMtx ((ObjPrintSetIndTexMtxFn)GXSetIndTexMtx)
-#undef GXSetFog
-#define GXSetFog ((ObjPrintSetFogFn)GXSetFog)
 #undef GXLoadTexMtxImm
 #define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
@@ -2163,7 +2136,7 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
             lbl_803DB494.r = lbl_803DB494.b;
             GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_ZERO, GX_CC_KONST, GX_CC_ZERO);
         }
-        GXSetTevKColor(GX_KCOLOR1, lbl_803DB494);
+        GXSetTevKColor(GX_KCOLOR1, *(GXColor*)&lbl_803DB494);
         GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K1_A);
         GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K1);
     }
@@ -2180,7 +2153,7 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
         s10.r = v;
         s10.a = obj->anim.pad37[0] - 0xff;
     }
-    GXSetTevColorS10(3, s10);
+    GXSetTevColorS10(GX_TEVREG2, s10);
     PSMTXScale(mtx3, lbl_803DEA2C, *(f32*)&lbl_803DEA2C, lbl_803DEA04);
     PSMTXTrans(mtx2, lbl_803DEA28, *(f32*)&lbl_803DEA28, lbl_803DEA1C);
     PSMTXConcat(mtx2, mtx3, mtx3);
@@ -2266,9 +2239,9 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
     GXSetTexCoordGen2(coord, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, coord, GX_TEXMAP4);
     GXSetIndTexCoordScale(0, 0, 0);
-    mtxA.m[0] = fz;
-    mtxA.m[4] = fz;
-    GXSetIndTexMtx(GX_ITM_0, &mtxA, (s8)lbl_803DB48C);
+    mtxA.m[0][0] = fz;
+    mtxA.m[1][1] = fz;
+    GXSetIndTexMtx(GX_ITM_0, mtxA.m, (s8)lbl_803DB48C);
     GXSetTevIndirect(stage, 0, 0, 7, 1, 6, 6, 0, 0, 0);
     GXSetTevOrder(stage, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
     GXSetTevSwapMode(stage, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -2282,18 +2255,18 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
         GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
         GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
         GXSetIndTexCoordScale(1, 0, 0);
-        mtxB.m[1] = fz;
-        mtxB.m[5] = fz;
-        GXSetIndTexMtx(GX_ITM_1, &mtxB, (s8)lbl_803DB490);
+        mtxB.m[0][1] = fz;
+        mtxB.m[1][2] = fz;
+        GXSetIndTexMtx(GX_ITM_1, mtxB.m, (s8)lbl_803DB490);
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 1);
     }
     else
     {
         GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD3, GX_TEXMAP2);
         GXSetIndTexCoordScale(1, 0, 0);
-        mtxB.m[1] = lbl_803DEA04;
-        mtxB.m[5] = lbl_803DEA04;
-        GXSetIndTexMtx(GX_ITM_1, &mtxB, -0xf);
+        mtxB.m[0][1] = lbl_803DEA04;
+        mtxB.m[1][2] = lbl_803DEA04;
+        GXSetIndTexMtx(GX_ITM_1, mtxB.m, -0xf);
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 0);
     }
     selectTexture((Texture*)(*(void**)(texTbl + lbl_803DCC44 * 4)), 3);
@@ -2329,7 +2302,7 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
     GXSetCullMode(GX_CULL_BACK);
     if ((model->file->flags & 0x100) != 0)
     {
-        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjPrintGXColor*)&lbl_803DB468);
+        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
     }
     else
     {
