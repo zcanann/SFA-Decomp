@@ -151,10 +151,6 @@ u8 lbl_803DB5F8[8] = {0x28, 0x20, 0, 0xFF, 0, 0, 0, 0};
 #define GX_LEQUAL     3
 #define PAD_BUTTON_A  0x100
 #define PAD_BUTTON_B  0x200
-extern u32 FUN_80259858();
-extern u32 FUN_8025aeac();
-extern u32 FUN_8025b054();
-extern u32 FUN_8025c510();
 extern u32 GXSetBlendMode();
 
 extern int lbl_803DCD6C;
