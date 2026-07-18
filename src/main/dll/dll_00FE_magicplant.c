@@ -326,7 +326,7 @@ void MagicPlant_update(int obj)
             {
                 progress = lbl_803E385C;
             }
-            state->animProgress = lbl_803E3858 - progress;
+            state->animProgress = *(f32*)&lbl_803E3858 - progress;
         }
         if (plant->objAnim.currentMove != MAGICPLANT_MOVE_CLOSED)
         {
