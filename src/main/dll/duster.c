@@ -90,6 +90,7 @@ typedef struct DusterState
 extern f32 gDusterWallProbeOffsets[];
 extern u8 gDusterEbaMoveTable[];
 extern f32 lbl_803E2A00;
+extern const f32 lbl_803E2A30;
 extern f32 lbl_803E2A04;
 struct DusterConstF32Pair { f32 f; f32 secondary; };
 const struct DusterConstF32Pair lbl_803E2A40 = { 1.5f, 0.0f };
@@ -322,7 +323,7 @@ void fn_80155948(int* obj, int state)
         }
         else if ((move == 0) || (move == 1))
         {
-            fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)(0.5f));
+            fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)lbl_803E2A30);
         }
         fn_80154D0C((int)obj, state, outIds, outVec);
         if (((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) ||
@@ -331,11 +332,11 @@ void fn_80155948(int* obj, int state)
             if (outIds[0] < 0x5dc)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_251);
-                Baddie_SetMove((int)obj, state, 1, (0.5f), 0, 0);
+                Baddie_SetMove((int)obj, state, 1, lbl_803E2A30, 0, 0);
             }
             else
             {
-                Baddie_SetMove((int)obj, state, 3, (0.5f), 0, 0);
+                Baddie_SetMove((int)obj, state, 3, lbl_803E2A30, 0, 0);
             }
         }
     }
