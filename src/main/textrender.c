@@ -1431,6 +1431,7 @@ void* gameTextGet(int textId)
         {
             gGameTextBufferIndex = 0;
         }
+        gameTextBase = gGameTextBase;
         gGameTextLastEntry = gameTextBase + gGameTextBufferIndex * 0xc + 0x40;
         gCurTextBuffer = *(int*)*(int**)(gGameTextLastEntry + 8);
         *(u16*)gGameTextLastEntry = 0xffff;
@@ -1494,6 +1495,7 @@ void* gameTextGet(int textId)
     {
         gGameTextBufferIndex = 0;
     }
+    gameTextBase = gGameTextBase;
     gGameTextLastEntry = gameTextBase + gGameTextBufferIndex * 0xc + 0x40;
     gCurTextBuffer = *(int*)*(int**)(gGameTextLastEntry + 8);
     *(u16*)gGameTextLastEntry = 0xffff;
