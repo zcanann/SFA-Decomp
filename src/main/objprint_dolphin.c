@@ -11,6 +11,7 @@
 #include "main/pi_frame_api.h"
 #include "main/pi_data_file_api.h"
 #include "main/pi_dolphin_api.h"
+#include "main/pi_dolphin_ext.h"
 #include "main/pi_flush_api.h"
 #include "main/shader_api.h"
 #include "main/sky_api.h"
@@ -164,7 +165,6 @@ extern f32 lbl_803DEA48;
 extern s16 lbl_803DCC78;
 extern void* memcpy(void*, void*, int);
 extern u32 lbl_803DCC84;
-extern void* lbl_803DCC8C;
 extern s16 sMapFileNameAdjacencyTable[];
 extern char sAssetIndexOverflowError[];
 

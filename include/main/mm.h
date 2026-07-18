@@ -36,9 +36,5 @@ void* mmAllocateFromFBMemoryStore(int handle, int size);
 #define testAndSetOnlyUseHeap3_u8(value) \
     ((u8 (*)(int))testAndSet_onlyUseHeap3)(value)
 #define mmFreeLegacyNoArg() ((void (*)(void))mm_free)()
-#define AtomicSList_PushIntLegacy(list, node) \
-    (((void (*)(int, int))AtomicSList_Push)((list), (node)))
-#define AtomicSList_PopIntLegacy(list) \
-    (((int (*)(int))AtomicSList_Pop)((list)))
 
 #endif /* MAIN_MM_H_ */

@@ -3,6 +3,8 @@
 
 #include "dolphin/types.h"
 
+extern void** lbl_803DCC8C;
+
 void loadModelsBin(int fileOffset, int* animCount, int* headerSize, int* amapFlag, int* dataLen, int id);
 void* fileLoad(int id, int heap);
 void videoInit(void* rmode, int arg);
