@@ -492,33 +492,33 @@ void worldplanet_update(GameObject* obj)
 void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
 {
     WorldPlanetState* state = obj->extra;
-    int stickX;
-    int stickY;
+    s8 stickX;
+    s8 stickY;
     s8 resX;
     s8 resY;
 
-    stickX = padGetStickXInt(0);
-    stickY = padGetStickYInt(0);
+    stickX = padGetStickXS8(0);
+    stickY = padGetStickYS8(0);
     resX = 0;
     resY = 0;
     if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0)
     {
-        if ((s8)stickX < -WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickX >= -WORLDPLANET_INPUT_STICK_THRESHOLD)
+        if (stickX < -WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickX >= -WORLDPLANET_INPUT_STICK_THRESHOLD)
         {
             resX = -1;
             state->stickXRepeatFrames = 0;
         }
-        if ((s8)stickX > WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickX <= WORLDPLANET_INPUT_STICK_THRESHOLD)
+        if (stickX > WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickX <= WORLDPLANET_INPUT_STICK_THRESHOLD)
         {
             resX = 1;
             state->stickXRepeatFrames = 0;
         }
-        if ((s8)stickY < -WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickY >= -WORLDPLANET_INPUT_STICK_THRESHOLD)
+        if (stickY < -WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickY >= -WORLDPLANET_INPUT_STICK_THRESHOLD)
         {
             resY = -1;
             state->stickYRepeatFrames = 0;
         }
-        if ((s8)stickY > WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickY <= WORLDPLANET_INPUT_STICK_THRESHOLD)
+        if (stickY > WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickY <= WORLDPLANET_INPUT_STICK_THRESHOLD)
         {
             resY = 1;
             state->stickYRepeatFrames = 0;
