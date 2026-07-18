@@ -31,7 +31,7 @@ void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 u8 *inpGetChannelDefaults(u8 a, u8 b);
 void inpResetChannelDefaults(u8 a, u8 b);
 void inpAddCtrl(McmdInputSlot* dest, u8 ctrl, s32 scale, u8 comb, u32 isVar);
-void inpFXCopyCtrl(u8 controller, int dstState, int srcState);
+void inpFXCopyCtrl(u8 controller, McmdVoiceState *dstVoice, McmdVoiceState *srcVoice);
 void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 u8 inpGetMidiLastNote(u8 a, u8 b);
 u16 inpGetAuxA(u8 studio, u8 index, u8 midi, u8 midiSet);

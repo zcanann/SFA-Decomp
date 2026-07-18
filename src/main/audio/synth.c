@@ -19,6 +19,7 @@
 #include "main/audio/adsr_lowprec.h"
 #include "main/audio/data_tables.h"
 #include "main/audio/sal_dsp.h"
+#include "main/audio/synth_delay.h"
 #include "main/audio/vid_init.h"
 #include "main/audio/inp_ctrl.h"
 #include "main/audio/hw_keyoff.h"
@@ -42,8 +43,8 @@ typedef void (*SynthDelayedBucketCallback)(int voiceIndex);
 
 /*
  * Overlay for the 64-bit update-time stamps that live past the embedded
- * SynthDelayedNode header inside a voice handle (fn_802712C8 writes these
- * back-to-back as two hi/lo pairs).
+ * SynthDelayedNode header inside a voice handle. synthStartSynthJobHandling
+ * writes these back-to-back as two hi/lo pairs.
  */
 typedef struct SynthVoiceTimers
 {
@@ -1216,31 +1217,31 @@ void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay)
  * Reset four pos/timer fields on the handle, then advance both
  * channels (modes 0 and 1).
  */
-void fn_802712C8(SynthDelayedNode* fade)
+void synthStartSynthJobHandling(McmdVoiceState* voice)
 {
-    SynthVoiceTimers* timers = (SynthVoiceTimers*)fade;
+    SynthVoiceTimers* timers = (SynthVoiceTimers*)voice;
 
     *(u64*)&timers->updateTimeHi0 = synthRealTime;
     *(u64*)&timers->updateTimeHi1 = synthRealTime;
-    synthQueueDelayedUpdate(fade, 0, 0);
-    synthQueueDelayedUpdate(fade, 1, 0);
+    synthQueueDelayedUpdate((SynthDelayedNode*)voice, 0, 0);
+    synthQueueDelayedUpdate((SynthDelayedNode*)voice, 1, 0);
 }
 
 /*
  * Advance both channels (modes 0 and 1) of the handle.
  */
-void synthQueueVoicePrimaryUpdates(SynthDelayedNode* fade)
+void synthQueueVoicePrimaryUpdates(McmdVoiceState* voice)
 {
-    synthQueueDelayedUpdate(fade, 0, 0);
-    synthQueueDelayedUpdate(fade, 1, 0);
+    synthQueueDelayedUpdate((SynthDelayedNode*)voice, 0, 0);
+    synthQueueDelayedUpdate((SynthDelayedNode*)voice, 1, 0);
 }
 
 /*
  * Wrapper for synthQueueDelayedUpdate(handle, 2, 0).
  */
-void synthQueueVoiceInputUpdate(SynthDelayedNode* fade)
+void synthQueueVoiceInputUpdate(McmdVoiceState* voice)
 {
-    synthQueueDelayedUpdate(fade, 2, 0);
+    synthQueueDelayedUpdate((SynthDelayedNode*)voice, 2, 0);
 }
 
 /*
@@ -1489,13 +1490,13 @@ u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value)
  * synthFXCloneMidiSetup - copies the five FX-stage controllers
  * (volume, pan, expression, reverb, chorus) between two handles.
  */
-void synthFXCloneMidiSetup(u32 dstHandle, u32 srcHandle)
+void synthFXCloneMidiSetup(McmdVoiceState* dstVoice, McmdVoiceState* srcVoice)
 {
-    inpFXCopyCtrl(0x07, dstHandle, srcHandle);
-    inpFXCopyCtrl(0x0A, dstHandle, srcHandle);
-    inpFXCopyCtrl(0x5B, dstHandle, srcHandle);
-    inpFXCopyCtrl(0x80, dstHandle, srcHandle);
-    inpFXCopyCtrl(0x84, dstHandle, srcHandle);
+    inpFXCopyCtrl(0x07, dstVoice, srcVoice);
+    inpFXCopyCtrl(0x0A, dstVoice, srcVoice);
+    inpFXCopyCtrl(0x5B, dstVoice, srcVoice);
+    inpFXCopyCtrl(0x80, dstVoice, srcVoice);
+    inpFXCopyCtrl(0x84, dstVoice, srcVoice);
 }
 
 /*

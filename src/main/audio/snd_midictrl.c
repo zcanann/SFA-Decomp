@@ -1,6 +1,7 @@
 #include "main/audio/inp_midi.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/synth_config.h"
+#include "main/audio/synth_voice.h"
 #include "string.h"
 
 
@@ -23,7 +24,6 @@ static u32 lbl_803D3CA0[8][INP_MIDI_SLOT_COUNT];
 static u8 gInpChannelDefaultsByKey[8][INP_MIDI_SLOT_COUNT];
 static u8 gInpChannelDefaults[64];
 
-extern void synthQueueVoiceInputUpdate(McmdVoiceState* voice);
 u8 inpTranslateExCtrl(u8 ctrl);
 
 static inline void inpSetRPNHi(u8 set, u8 channel, u8 value)
@@ -391,7 +391,7 @@ void inpAddCtrl(McmdInputSlot* dest, u8 ctrl, s32 scale, u8 comb, u32 isVar)
 /*
  * Copy one FX controller value between two voice slots' global controller banks.
  */
-void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
+void inpFXCopyCtrl(u8 controller, McmdVoiceState* dstState, McmdVoiceState* srcState)
 {
     u32 ctrl;
     u32 dstVoice;
@@ -401,8 +401,8 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
 
     ctrl = controller & 0xff;
     stateBase = (u8*)lbl_803CD760;
-    dstVoice = ((McmdVoiceState*)dstState)->voiceHandle & 0xff;
-    srcVoice = ((McmdVoiceState*)srcState)->voiceHandle & 0xff;
+    dstVoice = dstState->voiceHandle & 0xff;
+    srcVoice = srcState->voiceHandle & 0xff;
 
     if (ctrl < 0x40)
     {

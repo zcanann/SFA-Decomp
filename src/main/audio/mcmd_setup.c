@@ -7,10 +7,10 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/mcmd_setup.h"
 #include "main/audio/adsr_setup.h"
+#include "main/audio/synth_delay.h"
+#include "main/audio/synth_voice.h"
 
-extern void synthFXCloneMidiSetup(McmdVoiceState* voice, McmdVoiceState* state);
 void DoSetPitch(McmdVoiceState* svoice);
-extern void synthQueueVoiceInputUpdate(McmdVoiceState* state);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];
 extern u8 lbl_8032EDD0[]; /* pitch ratio table (u16[13]) heads the macro data tables */

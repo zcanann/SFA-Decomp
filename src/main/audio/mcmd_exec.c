@@ -9,13 +9,13 @@
 #include "main/audio/voice_id.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_channel_scale.h"
+#include "main/audio/synth_voice.h"
 #include "main/audio/mcmd_wait.h"
 #include "main/audio/synth_config.h"
 #include "main/audio/mcmd_loop.h"
 extern int macActiveRoot;
 extern int macTimeQueueRoot;
 extern u64 macRealTime;
-extern void synthQueueVoicePrimaryUpdates(void* state);
 extern void voiceKill(u32 voice);
 extern s32 synthGlobalVariable[16];
 extern u32 voiceIsRegistered(int state);
@@ -48,10 +48,6 @@ extern const f32 lbl_803E7810;       /* 1023.0f */
 extern const f32 lbl_803E7814;       /* 1.0f */
 extern f32 voiceAdsrSustainTable[];
 extern u8 voiceAdsrDecayTable[];
-extern void synthQueueVoiceInputUpdate(McmdVoiceState* state);
-extern void fn_802712C8(McmdVoiceState* state); /* synthStartSynthJobHandling */
-
-
 /*
  * Choose a randomized note/velocity command and dispatch it through the
  * normal set-key handler.
@@ -684,7 +680,7 @@ void macHandleActive(McmdVoiceState* sv)
         memset(sv->localRegs, 0, sizeof(sv->localRegs));
         *(u64*)&sv->activeTimeHi = macRealTime;
         *(u64*)&sv->startTimeHi = macRealTime;
-        fn_802712C8(sv);
+        synthStartSynthJobHandling(sv);
     }
 
     lbl_803DE2D0 = 0;

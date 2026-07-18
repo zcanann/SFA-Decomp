@@ -403,7 +403,7 @@ void synthSetControllerValue(u8 controller, u8 studioIndex, u8 channelIndex, u8 
 void synthSetControllerValue14Bit(u8 controller, u8 studioIndex, u8 channelIndex, u32 value);
 u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value);
 u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
-void synthFXCloneMidiSetup(u32 dstHandle, u32 srcHandle);
+void synthFXCloneMidiSetup(McmdVoiceState *dstVoice, McmdVoiceState *srcVoice);
 u32 synthSendKeyOff(u32 handle);
 void synthUpdateHandle(u8 volume, u16 time, u32 handle, u8 mode);
 u32 synthCancelCallbackVoices(u32 callbackId);
