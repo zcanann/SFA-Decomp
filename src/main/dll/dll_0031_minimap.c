@@ -198,7 +198,6 @@ extern f32 gMinimapFNeg15;
 extern f32 gMinimapFNeg9_8;
 extern f32 gMinimapFNeg40;
 extern f32 gMinimapF0_05;
-extern void viewFn_80129cbc(f32 a, f32 b, f32 c);
 
 extern f32 gMinimapF110;
 extern f32 gMinimapF43;

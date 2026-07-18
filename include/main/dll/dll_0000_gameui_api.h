@@ -22,4 +22,7 @@ void setShowWorldMapHud(u8 visible);
 
 #define cMenuGetSelectedItemInt() (((CMenuGetSelectedItemIntFn)cMenuGetSelectedItem)())
 
+void forceAButtonIcon(int icon);
+void viewFn_80129cbc(f32 fov, f32 x, f32 y);
+
 #endif /* MAIN_DLL_DLL_0000_GAMEUI_API_H_ */

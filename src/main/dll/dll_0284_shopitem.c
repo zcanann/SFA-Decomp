@@ -105,8 +105,6 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 #define GX_ALWAYS      7
 #define GX_AOP_AND     0
 
-extern void forceAButtonIcon(int icon);
-
 /* .sdata2 constant pool */
 static const f32 lbl_803E5A30 = 1.0f;
 static const f32 lbl_803E5A34 = 3.5f;
