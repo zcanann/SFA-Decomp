@@ -45,6 +45,7 @@
 #include "main/model_light.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
+#include "main/dll/hagabon_mk2.h"
 
 int lbl_803DBC58[2] = {2, 3};
 f32 lbl_803DBC60 = 20.0f;
@@ -123,8 +124,6 @@ extern void hoodedZyck_update(short* obj, int state);
 extern void crawler_updateC(short* obj, int state);
 extern void crawler_updateB(short* obj, int state);
 extern void crawler_update(short* obj, int state);
-extern void hagabonMK2_updateB(short* obj, int state);
-extern void hagabonMK2_update(short* obj, int state);
 extern void snowworm_update(short* obj, int state);
 extern void snowworm_applyReactionState(short* obj, int state);
 extern f32 lbl_803E256C;
@@ -137,7 +136,6 @@ extern f32 lbl_803E25D0;
 extern f32 lbl_803E25D4;
 extern f32 lbl_803E2598;
 
-extern void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5, u32 int_deg);
 extern u8 baddieTargetFn_8014a150(GameObject* obj, u8* state, f32* pos, void* dataOffset);
 extern f32 lbl_803E25DC;
 extern u32 gEnemySelfAngleFlagClearMask[];
@@ -154,7 +152,6 @@ extern u32 fn_80154C24();
 extern void* lbl_803DDA50;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
-extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 
 extern void baddie_updateWhileFrozen(GameObject* obj, u8* state, int flag);
 extern void baddieInstantiateWeapon(GameObject* obj, int state);
@@ -174,7 +171,6 @@ extern void crawler_initVariant(int obj, u8* state);
 extern void hoodedZyck_init(int obj, u8* state);
 extern void battleDroidInit(int obj, u8* state);
 extern void crawler_initModelVariant(int obj, u8* state);
-extern void crawler_initTailModel(int obj, u8* state);
 extern void* memset(void* p, int c, int n);
 typedef struct
 {
@@ -309,7 +305,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 crawler_update(obj, state);
                 break;
             case 0x7c8:
-                hagabonMK2_updateB(obj, state);
+                hagabonMK2_updateB(obj, (u8*)state);
                 break;
             case 0x7c7:
             default:
@@ -386,7 +382,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 crawler_updateB(obj, state);
                 break;
             case 0x7c8:
-                hagabonMK2_update(obj, state);
+                hagabonMK2_update(obj, (u8*)state);
                 break;
             case 0x7c7:
             default:
@@ -497,7 +493,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             crawler_updateC(obj, state);
             break;
         case 0x7c8:
-            hagabonMK2_updateB(obj, state);
+            hagabonMK2_updateB(obj, (u8*)state);
             break;
         case 0x7c7:
         default:
@@ -2049,7 +2045,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             crawler_initModelVariant((int)obj, state);
             break;
         case 1992:
-            crawler_initTailModel((int)obj, state);
+            crawler_initTailModel((int*)obj, (int*)state);
             break;
         default:
             battleDroidInit((int)obj, state);

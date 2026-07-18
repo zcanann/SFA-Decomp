@@ -46,6 +46,7 @@
 #include "main/camera_shake_api.h"
 #include "main/pad_api.h"
 #include "main/dll/dll_0273_firepipe.h"
+#include "main/dll/hagabon_mk2.h"
 
 extern int lbl_803DBCF8[2];
 
@@ -217,7 +218,7 @@ void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5,
     PSMTXMultVecSR(mtx, vec, vec);
 }
 
-void hagabonMK2_stopLoopSfx(int obj)
+void hagabonMK2_stopLoopSfx(int obj, u8* state)
 {
     Sfx_StopFromObject(obj, SFXTRIG_baddie_rach_death);
 }
