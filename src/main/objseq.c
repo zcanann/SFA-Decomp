@@ -54,9 +54,7 @@ int objSeqObjs = -1;
 f32 gObjSeqShakeAmplitude = 0.2f;
 char sSeqAAnimDataTag[] = "SEQA";
 char sSeqBAnimDataTag[] = "SEQB";
-#pragma explicit_zero_data on
 int lbl_803DB744 = 0;
-#pragma explicit_zero_data off
 u8 lbl_803DB748[4] = {0x20, 0x20, 0x20, 0xFF};
 
 #define ObjMsg_SendToObjectsLegacy(target, flags, sender, message, param) \
@@ -596,17 +594,16 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
     mon = base + 0x3d4c;
     walk = mon;
     n = (s8)lbl_803DD124;
+    found = 0;
     for (i = 0; i < n; i++)
     {
         if (*(u8**)walk == obj)
         {
             found = 1;
-            goto checked;
+            break;
         }
         walk += 8;
     }
-    found = 0;
-checked:
     if (found == 0)
     {
         lbl_803DB714 = seqIdx;
@@ -866,6 +863,7 @@ checked:
     base[((GameObject*)obj)->seqIndex + 0x3590] = 0;
     base[((GameObject*)obj)->seqIndex + 0x338c] = 0;
     n = (s8)lbl_803DD124;
+    seqFlags = 0;
     for (; j < n; j++)
     {
         if (*(u8**)mon == obj)
@@ -880,12 +878,10 @@ checked:
                 *(int*)(p + 4) = v;
                 p += 8;
             }
-            goto gotFlags;
+            break;
         }
         mon += 8;
     }
-    seqFlags = 0;
-gotFlags:
     if (seqFlags != 0)
     {
         st->cmdFlags[((GameObject*)obj)->seqIndex] |= 0x10;
@@ -1040,17 +1036,16 @@ int ObjSeq_resolveTargetObject(u8* obj)
                 j = 0;
                 slotBase = lbl_80396918 + (s8)seqObj[0x57] * 0x80;
                 entry = slotBase;
+                linked = NULL;
                 for (; j < 16; j++)
                 {
                     if (*(u8**)entry == candidate)
                     {
                         linked = *(u8**)(slotBase + j * 8 + 4);
-                        goto check;
+                        break;
                     }
                     entry += 8;
                 }
-                linked = NULL;
-            check:
                 if (linked == obj)
                 {
                     ((ObjSeqState*)seqObj)->targetObj = candidate;
@@ -1477,7 +1472,6 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, s8 flags, void
     return 0;
 }
 
-#pragma dont_inline on
 void* ObjSeq_FindTargetObject(u8* obj)
 {
     int objectCount;
@@ -1533,7 +1527,6 @@ void* ObjSeq_FindTargetObject(u8* obj)
     }
     return bestObj;
 }
-#pragma dont_inline off
 
 #define ObjSeq_GetObjects(unused, count) ((GameObject**)ObjList_GetObjects((unused), (count)))
 #define ObjSeq_FindGameObjectTarget(obj)  ObjSeq_FindTargetObject((u8*)(obj))
@@ -1740,7 +1733,6 @@ void ObjSeq_seqState_free(u8* seq)
 }
 
 
-#pragma dont_inline on
 void ObjSeq_seqState_init(u8* seq)
 {
     int animIndex;
@@ -1785,7 +1777,6 @@ void ObjSeq_seqState_init(u8* seq)
         commandIndex++;
     }
 }
-#pragma dont_inline off
 
 void ObjSeq_objLoadAnimdata(ObjSeqState* seq, ObjSeqAnimPlacement* placement)
 {
@@ -2057,7 +2048,6 @@ void ObjSeq_updateCamera(void)
     lbl_803DD0F8 = 0;
 }
 
-#pragma dont_inline on
 void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
 {
     void (*callback)(void* ctx, u8* obj);
@@ -2107,7 +2097,6 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
 
     ((ObjSeqState*)seq)->runState = 0;
 }
-#pragma dont_inline off
 
 f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
 {
@@ -3225,8 +3214,6 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
     object->anim.localPosX = angleCos * dz + (angleSin * dx + placement->baseX);
     object->anim.localPosZ = -(angleCos * dx - (angleSin * dz + placement->baseZ));
 }
-#pragma dont_inline on
-#pragma ppc_unroll_speculative on
 int objSeqFindLabel(u8* seq, int label)
 {
     int commandCount;
@@ -3302,7 +3289,6 @@ int objSeqFindConditional(u8* seq, u8* seqState)
     }
     return -1;
 }
-#pragma dont_inline reset
 
 void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
 {
@@ -3727,8 +3713,6 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
         }
     }
 }
-#pragma opt_loop_invariants off
-#pragma opt_propagation off
 void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
 {
     struct
@@ -3980,7 +3964,6 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     }
 }
 
-#pragma opt_propagation reset
 void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 {
     u8* model;
@@ -4458,7 +4441,6 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
         gObjSeqLinkedTransformValid = 1;
     }
 }
-#pragma opt_loop_invariants reset
 
 void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
 {
@@ -4534,9 +4516,6 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
     Obj_GetWorldPosition(seqObj, &((GameObject*)seqObj)->anim.worldPosX, &((GameObject*)seqObj)->anim.worldPosY,
                          &((GameObject*)seqObj)->anim.worldPosZ);
 }
-#pragma opt_loop_invariants off
-#pragma opt_propagation off
-#pragma opt_strength_reduction off
 int ObjSeq_update(u8* obj, f32 t)
 {
     u8* base = lbl_80396918;
@@ -4912,14 +4891,16 @@ int ObjSeq_update(u8* obj, f32 t)
             case 0x12:
                 if ((getButtonsJustPressed(0) & PAD_BUTTON_A) == 0)
                 {
-                    goto set_pressed_zero;
+                    pressed = 0;
+                    break;
                 }
                 pressed = 1;
                 break;
             case 0x13:
                 if ((getButtonsJustPressed(0) & PAD_BUTTON_B) == 0)
                 {
-                    goto set_pressed_zero;
+                    pressed = 0;
+                    break;
                 }
                 pressed = 1;
                 break;
@@ -4935,12 +4916,12 @@ int ObjSeq_update(u8* obj, f32 t)
                     pressed = cb(state->callbackContext, obj);
                     break;
                 }
-                goto set_pressed_zero;
+                pressed = 0;
+                break;
             case 0x1a:
                 pressed = isTalkingToNpc() == 0;
                 break;
             default:
-            set_pressed_zero:
                 pressed = 0;
                 break;
             }
@@ -5083,10 +5064,6 @@ int ObjSeq_update(u8* obj, f32 t)
 
     return 0;
 }
-#pragma opt_loop_invariants reset
-#pragma opt_propagation reset
-#pragma opt_strength_reduction reset
-#pragma ppc_unroll_speculative on
 
 int ObjSeq_takeXrotChanged(int index)
 {
@@ -5152,8 +5129,6 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
     gObjSeqBgCmds[count * 3 + 2] = shortYrot;
     gObjSeqBgCmds[gObjSeqBgCmdCount++ * 3 + 1] = shortXrot;
 }
-#pragma optimization_level 3
-#pragma ppc_unroll_speculative off
 void ObjSeq_onMapSetup(void)
 {
     u8* base = lbl_80396918;
@@ -5338,8 +5313,6 @@ void ObjSeq_onMapSetup(void)
     lbl_803DD0F8 = 0;
     gObjSeqBgCmdCount = 0;
 }
-#pragma optimization_level reset
-#pragma ppc_unroll_speculative on
 
 void ObjSeq_release(void)
 {

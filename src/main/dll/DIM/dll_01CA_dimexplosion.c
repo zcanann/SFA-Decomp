@@ -126,9 +126,6 @@ volatile FbWGPipe GXWGFifo : (0xCC008000);
 void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z);
 void explosion_computeColor(f32 age, f32 lifetime, u8 mode, u8* out);
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_propagation off
 void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
 {
     s16* placement = (obj)->anim.placementData;
@@ -172,21 +169,14 @@ void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
             else
             {
                 s8 m = (obj)->anim.mapEventSlot;
-                if (m < 0x3a)
+                if (m == 0x2c || (m >= 0x3a && m < 0x3f))
                 {
-                    if (m == 0x2c)
-                    {
-                        goto playLimited;
-                    }
-                }
-                else if (m < 0x3f)
-                {
-                playLimited:
                     Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_wp_sexpl2_c_4b8, 2);
-                    goto done;
                 }
-                Sfx_PlayFromObject((int)obj, SFXTRIG_sexpl2_c);
-            done:;
+                else
+                {
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_sexpl2_c);
+                }
             }
         }
     }
@@ -211,8 +201,6 @@ void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
         flames[idx].active = 1;
     }
 }
-#pragma opt_propagation on
-#pragma dont_inline on
 void explosion_computeColor(f32 age, f32 lifetime, u8 mode, u8* out)
 {
     s16 r;
@@ -251,16 +239,12 @@ void explosion_computeColor(f32 age, f32 lifetime, u8 mode, u8* out)
         break;
     }
 }
-#pragma dont_inline reset
 
-#pragma scheduling on
-#pragma peephole on
 int explosion_getExtraSize(void)
 {
     return sizeof(ExplosionState);
 }
 
-#pragma scheduling off
 int explosion_getObjectTypeId(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -272,7 +256,6 @@ int explosion_getObjectTypeId(GameObject* obj)
     return (idx << 11) | 0x400;
 }
 
-#pragma scheduling on
 void explosion_free(GameObject* obj)
 {
     ModelLightStruct* light = *(ModelLightStruct**)(*(int*)&obj->extra + 0xa40);
@@ -282,8 +265,6 @@ void explosion_free(GameObject* obj)
     }
 }
 
-#pragma scheduling off
-#pragma peephole off
 void explosion_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u32 colA;
@@ -397,15 +378,10 @@ void explosion_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
     renderResetFn_8003fc60();
 }
 
-#pragma scheduling on
-#pragma peephole on
 void explosion_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_propagation off
 void explosion_update(GameObject* obj)
 {
     ExplosionPartfxSource fake;
@@ -639,7 +615,6 @@ void explosion_update(GameObject* obj)
     }
 }
 
-#pragma opt_propagation on
 void explosion_init(GameObject* obj, int def)
 {
     f32 vsp[3];
@@ -834,8 +809,6 @@ void explosion_initialise(void)
     }
 }
 
-#pragma scheduling on
-#pragma peephole on
 
 f32 gExplosionSpreadDirs[] = {
     1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,

@@ -348,7 +348,6 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
     }
 }
 
-#pragma dont_inline on
 void arwsquadron_updateVolley(GameObject* obj, ArwSquadronState* state, ArwSquadronSetup* setup)
 {
     SquadCmdFlags* flags = &state->flags.cmd;
@@ -383,7 +382,6 @@ void arwsquadron_updateVolley(GameObject* obj, ArwSquadronState* state, ArwSquad
     }
 }
 
-#pragma dont_inline reset
 int ARWSquadron_getExtraSize(void)
 {
     return 0x164;
@@ -415,7 +413,6 @@ void ARWSquadron_hitDetect(void)
 {
 }
 
-#pragma dont_inline on
 void ARWSquadron_update(int obj)
 {
     ArwSquadronState* state = *(ArwSquadronState**)&((GameObject*)obj)->extra;
@@ -460,8 +457,8 @@ void ARWSquadron_update(int obj)
                 state->leaderObj = ObjList_FindObjectById(setupL->leaderObjectId);
             leader = state->leaderObj;
         }
-        if (leader == NULL)
-            goto enable0;
+        enable = 0;
+        if (leader != NULL)
         {
             f32 thr = state->activationDistance;
             GameObject* aim = (GameObject*)getArwing();
@@ -471,32 +468,29 @@ void ARWSquadron_update(int obj)
                 aim = Obj_GetPlayerObject();
             deltaZ = leader->anim.localPosZ - aim->anim.localPosZ;
             inRange = (deltaZ < thr && deltaZ > -100.0f);
-            if (!inRange)
-                goto enable0;
-            if (setupL->gameBit > 0)
-                goto enableCheckBit;
+            if (inRange)
             {
-                f32 thr2 = state->exitDistance;
-                GameObject* aim2 = (GameObject*)getArwing();
-                f32 d2;
-                int inRange2;
-                if (aim2 == NULL)
-                    aim2 = Obj_GetPlayerObject();
-                d2 = leader->anim.localPosZ - aim2->anim.localPosZ;
-                inRange2 = (d2 < thr2 && d2 > -100.0f);
-                if (inRange2)
-                    goto enable1;
+                if (setupL->gameBit > 0)
+                {
+                    enable = mainGetBit(setupL->gameBit) != 0;
+                }
+                else
+                {
+                    f32 thr2 = state->exitDistance;
+                    GameObject* aim2 = (GameObject*)getArwing();
+                    f32 d2;
+                    int inRange2;
+                    if (aim2 == NULL)
+                        aim2 = Obj_GetPlayerObject();
+                    d2 = leader->anim.localPosZ - aim2->anim.localPosZ;
+                    inRange2 = (d2 < thr2 && d2 > -100.0f);
+                    if (inRange2)
+                        enable = 1;
+                    else
+                        enable = mainGetBit(setupL->gameBit) != 0;
+                }
             }
-        enableCheckBit:
-            if (mainGetBit(setupL->gameBit) == 0)
-                goto enable0;
         }
-    enable1:
-        enable = 1;
-        goto enableDone;
-    enable0:
-        enable = 0;
-    enableDone:
         if (enable)
         {
             ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
@@ -525,8 +519,8 @@ void ARWSquadron_update(int obj)
         leader = (GameObject*)obj;
         if (state->leaderObj != NULL)
             leader = state->leaderObj;
-        if (leader == NULL)
-            goto disable0;
+        disable = 0;
+        if (leader != NULL)
         {
             f32 thr = state->activationDistance;
             GameObject* aim = (GameObject*)getArwing();
@@ -536,32 +530,29 @@ void ARWSquadron_update(int obj)
                 aim = Obj_GetPlayerObject();
             deltaZ = leader->anim.localPosZ - aim->anim.localPosZ;
             inRange = (deltaZ < thr && deltaZ > -100.0f);
-            if (inRange)
-                goto disable0;
-            if (setupL->gameBit > 0)
-                goto disableCheckBit;
+            if (!inRange)
             {
-                f32 thr2 = state->exitDistance;
-                GameObject* aim2 = (GameObject*)getArwing();
-                f32 d2;
-                int inRange2;
-                if (aim2 == NULL)
-                    aim2 = Obj_GetPlayerObject();
-                d2 = leader->anim.localPosZ - aim2->anim.localPosZ;
-                inRange2 = (d2 < thr2 && d2 > -100.0f);
-                if (!inRange2)
-                    goto disable1;
+                if (setupL->gameBit > 0)
+                {
+                    disable = mainGetBit(setupL->gameBit) == 0;
+                }
+                else
+                {
+                    f32 thr2 = state->exitDistance;
+                    GameObject* aim2 = (GameObject*)getArwing();
+                    f32 d2;
+                    int inRange2;
+                    if (aim2 == NULL)
+                        aim2 = Obj_GetPlayerObject();
+                    d2 = leader->anim.localPosZ - aim2->anim.localPosZ;
+                    inRange2 = (d2 < thr2 && d2 > -100.0f);
+                    if (!inRange2)
+                        disable = 1;
+                    else
+                        disable = mainGetBit(setupL->gameBit) == 0;
+                }
             }
-        disableCheckBit:
-            if (mainGetBit(setupL->gameBit) != 0)
-                goto disable0;
         }
-    disable1:
-        disable = 1;
-        goto disableDone;
-    disable0:
-        disable = 0;
-    disableDone:
         if (disable)
         {
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -612,7 +603,6 @@ void ARWSquadron_update(int obj)
         ObjAnim_AdvanceCurrentMove((int)obj, 0.01f, timeDelta, 0);
 }
 
-#pragma dont_inline reset
 void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
 {
     SquadFlags* flags;

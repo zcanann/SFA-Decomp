@@ -54,9 +54,7 @@ const MusicSeqStartParams gMusicSeqStartParamsDefault = {
     4, {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}, 0x100, 0, 0x7F, {0}};
 
 s8 gAudioSoundMode = -1;
-#pragma explicit_zero_data on
 s32 lbl_803DB1EC = 0;
-#pragma explicit_zero_data off
 char sMusicTrackNameBarren[] = "barren";
 char sMusicTrackNameBarrels[] = "barrels";
 char sMusicTrackNameBloop[] = "bloop";
@@ -458,7 +456,6 @@ static inline MusicChannel* Music_FindActiveChannelForTrack(int track)
 }
 
 
-#pragma dont_inline on
 void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3)
 {
     int idx;
@@ -485,7 +482,6 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cb
     gAudioArqRequestDone = 0;
     ARQPostRequest(&entry->request, 0x64, 1, 1, (u32)source, (u32)buf, size, fn_80008EDC);
 }
-#pragma dont_inline reset
 
 void fn_80008EDC(u32 request)
 {
@@ -503,7 +499,6 @@ void fn_80008EDC(u32 request)
     }
 }
 
-#pragma dont_inline on
 void fn_80008F38(void* addr, u32 dest, u32 size)
 {
     int idx;
@@ -526,7 +521,6 @@ void fn_80008F38(void* addr, u32 dest, u32 size)
     {
     }
 }
-#pragma dont_inline reset
 
 void fn_80009008(u32 request)
 {
@@ -727,7 +721,6 @@ void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
     }
 }
 
-#pragma opt_propagation off
 void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
@@ -765,7 +758,6 @@ void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo)
     }
 }
 
-#pragma opt_propagation reset
 
 void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
@@ -811,7 +803,6 @@ void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo)
     }
 }
 
-#pragma dont_inline on
 void audioLoadTriggerData(void)
 {
     char* base = sSampleBufferSLoadedCallbackLoadError;
@@ -835,7 +826,6 @@ void audioLoadTriggerData(void)
     gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, streamsLoadedCallback);
     gStreamsCount = info / sizeof(StreamEntry);
 }
-#pragma dont_inline reset
 
 void audioSetSoundMode(int mode, u8 forceFlag)
 {
@@ -920,12 +910,10 @@ void audioReset(void)
     AIReset();
 }
 
-#pragma dont_inline on
 int audioIsResetting(void)
 {
     return gAudioResetting;
 }
-#pragma dont_inline reset
 
 void audioStopAll(void)
 {
@@ -1094,7 +1082,6 @@ int audioInit(void)
     return 0;
 }
 
-#pragma dont_inline on
 u32 audioFlagFn_8000a188(u32 mask)
 {
     s32 managed = gAudioManagedChannelMask & mask;
@@ -1104,7 +1091,6 @@ u32 audioFlagFn_8000a188(u32 mask)
     }
     return (gAudioActiveChannelMask & mask) != 0;
 }
-#pragma dont_inline reset
 
 void audioFree(void* ptr)
 {
@@ -1116,7 +1102,6 @@ void* _audioAlloc(u32 size)
     return mmAlloc(size, 0xb, 0);
 }
 
-#pragma dont_inline on
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third)
 {
     strcpy(dst, first);
@@ -1124,7 +1109,6 @@ int concatThreeStrings(char* dst, void* unused, const char* first, const char* s
     strcat(dst, third);
     return 1;
 }
-#pragma dont_inline reset
 
 void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
@@ -1504,14 +1488,11 @@ void Music_Update(void)
     } while (i-- != 0);
 }
 
-#pragma dont_inline on
 s32 Music_GetActivePriority(void)
 {
     return gMusicActivePriority;
 }
-#pragma dont_inline reset
 
-#pragma opt_strength_reduction off
 int musicInitMidiWad(void)
 {
     MusicTrackSlot* table;
@@ -1591,7 +1572,6 @@ int musicInitMidiWad(void)
     }
     return 0;
 }
-#pragma opt_strength_reduction reset
 
 void Music_LoadChannelForTrigger(MusicTrigger* trigger)
 {
@@ -1728,7 +1708,6 @@ s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel)
     return 0;
 }
 
-#pragma dont_inline on
 s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
 {
     SfxObjectChannel* objectChannel;
@@ -1748,9 +1727,7 @@ s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
     }
     return 0;
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void Sfx_StopAllObjectSounds(void)
 {
     s32 i;
@@ -1768,7 +1745,6 @@ void Sfx_StopAllObjectSounds(void)
         objectChannel++;
     }
 }
-#pragma dont_inline reset
 
 void audioFn_8000b694(u32 value)
 {
@@ -1836,7 +1812,6 @@ void Sfx_StopObjectChannel(u32 obj, u32 channel)
     }
 }
 
-#pragma dont_inline on
 void Sfx_StopFromObject(u32 obj, u32 sfxId)
 {
     SfxObjectChannel* objectChannel;
@@ -1856,7 +1831,6 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId)
         objectChannel->handle = (u32)-1;
     }
 }
-#pragma dont_inline reset
 
 void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale)
 {
@@ -1987,12 +1961,10 @@ void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId)
     Sfx_PlayFromObjectEx(obj, pos, 0, sfxId);
 }
 
-#pragma dont_inline on
 void Sfx_PlayFromObject(u32 obj, u16 sfxId)
 {
     Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
 }
-#pragma dont_inline reset
 
 void Sfx_UpdateObjectSounds(void)
 {
@@ -2101,7 +2073,6 @@ void Sfx_UpdateObjectSounds(void)
     }
 }
 
-#pragma dont_inline on
 void Sfx_InitObjectChannels(void)
 {
     SfxObjectChannel* objectChannel;
@@ -2110,14 +2081,10 @@ void Sfx_InitObjectChannels(void)
 
     n = SFX_OBJECT_CHANNEL_COUNT;
     objectChannel = &gSfxObjectChannels[SFX_OBJECT_CHANNEL_COUNT];
-    goto checkNextChannel;
-setChannelFree:
-    objectChannel->handle = (u32)-1;
-checkNextChannel:
-    objectChannel--;
-    if (n-- != 0)
+    while (n-- != 0)
     {
-        goto setChannelFree;
+        objectChannel--;
+        objectChannel->handle = (u32)-1;
     }
 
     gSfxObjectChannelAge = 0;
@@ -2133,7 +2100,6 @@ checkNextChannel:
         objectChannel++;
     } while (i-- != 0);
 }
-#pragma dont_inline reset
 
 void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
 {
@@ -2357,7 +2323,6 @@ int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f3
     return 1;
 }
 
-#pragma dont_inline on
 SfxTrigger* Sfx_FindTrigger(u16 id)
 {
     SfxTrigger* low = (SfxTrigger*)gSfxTriggersData;
@@ -2389,7 +2354,6 @@ SfxTrigger* Sfx_FindTrigger(u16 id)
     }
     return NULL;
 }
-#pragma dont_inline reset
 
 SfxObjectChannel* Sfx_AllocObjectChannel(a, b, pitch, c, d)
 s16 a;
@@ -2417,7 +2381,8 @@ int d;
     handle = ((SndFXStartExWideFn)sndFXStartEx)(a, b, c, 0);
     if (handle == (u32)-1)
     {
-        goto fail;
+        ch->handle = (u32)-1;
+        return 0;
     }
     if (gSfxGlobalCtrlLevel != 0 && d == 0)
     {
@@ -2444,9 +2409,6 @@ int d;
 
     ch->age = gSfxObjectChannelAge++;
     return ch;
-fail:
-    ch->handle = (u32)-1;
-    return 0;
 }
 
 void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel)
@@ -2599,8 +2561,6 @@ void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v)
     v[2] = p;
 }
 
-#pragma dont_inline on
-#pragma opt_common_subs off
 f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
 {
     f32 v[3];
@@ -2619,7 +2579,7 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
     {
         if (slot == NULL)
         {
-            goto retDefault;
+            return lbl_803DE570;
         }
         if (player != NULL)
         {
@@ -2641,16 +2601,10 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
         {
             listener = (f32*)((u8*)slot + 0x44);
         }
-        goto common;
-    retDefault:
-        return lbl_803DE570;
     }
-common:
     PSVECSubtract(listener, soundPos, outDelta);
     return PSVECMag(outDelta);
 }
-#pragma opt_common_subs reset
-#pragma dont_inline reset
 
 SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode)
 {
@@ -2752,7 +2706,6 @@ void doNothing_8000CF54(void)
 {
 }
 
-#pragma dont_inline on
 u32 AudioStream_GetMusicFadeFlagA(void)
 {
     if (gAudioStreamPos > gAudioStreamEndPos)
@@ -2761,9 +2714,7 @@ u32 AudioStream_GetMusicFadeFlagA(void)
     }
     return gAudioStreamMusicFadeFlagA;
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 u32 AudioStream_GetMusicFadeFlagB(void)
 {
     if (gAudioStreamPos > gAudioStreamEndPos)
@@ -2772,7 +2723,6 @@ u32 AudioStream_GetMusicFadeFlagB(void)
     }
     return gAudioStreamMusicFadeFlagB;
 }
-#pragma dont_inline reset
 
 u32 AudioStream_GetCurrentId(void)
 {
@@ -2784,7 +2734,6 @@ u8 AudioStream_IsPreparing(void)
     return gAudioStreamDvdState;
 }
 
-#pragma dont_inline on
 void AudioStream_SetVolume(u8 volume)
 {
     gAudioStreamVolumeLeft = volume;
@@ -2792,7 +2741,6 @@ void AudioStream_SetVolume(u8 volume)
     AISetStreamVolLeft(volume);
     AISetStreamVolRight(volume);
 }
-#pragma dont_inline reset
 
 void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block)
 {
@@ -2949,7 +2897,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
 
     if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name, sAdpExtension) == 0)
     {
-        goto ret0;
+        return 0;
     }
     if (((DVDOpenCompatFn)DVDOpen)(path, dvd[0] + offsetof(AudioDvdStreamStorage, prepared.fileInfo)) == 0)
     {
@@ -3029,8 +2977,6 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     ((DVDStopStreamAtEndAsyncCompatFn)DVDStopStreamAtEndAsync)(
         dvd[0] + offsetof(AudioDvdStreamStorage, prepared.stopAtEndCommand), 0);
     return 1;
-ret0:
-    return 0;
 }
 
 void AudioStream_UpdateFadeTimer(void)
@@ -3051,7 +2997,6 @@ void AudioStream_SetDefaultVolume(u8 volume)
     gAudioStreamDefaultVolume = volume;
 }
 
-#pragma dont_inline on
 void AudioStream_Init(void)
 {
     AISetStreamVolLeft(0);
@@ -3062,7 +3007,6 @@ void AudioStream_Init(void)
     gAudioStreamDefaultVolume = 0x7f;
     gAudioStreamStartWhenPrepared = 0;
 }
-#pragma dont_inline reset
 
 void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo)
 {
@@ -3100,7 +3044,6 @@ void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo)
     }
     gAudioStreamDvdState = 0;
 }
-
 
 
 void AudioStream_PlayAddrCallback(u32 result)
@@ -3190,10 +3133,6 @@ void Sfx_UpdateLoopedObjectSounds(void)
     }
 }
 
-#pragma opt_loop_invariants reset
-#pragma opt_strength_reduction reset
-
-
 
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 {
@@ -3236,18 +3175,17 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 
     if (sameSfxCount <= limit)
     {
+        found = 0;
         for (j = 0; j < count; j++)
         {
             if ((*objects == obj) && (sfxId == *ids))
             {
                 found = 1;
-                goto checked;
+                break;
             }
             objects++;
             ids++;
         }
-        found = 0;
-    checked:
         if ((found == 0) && (count != sizeof(table->flags)))
         {
             table->objects[count] = obj;
@@ -3346,18 +3284,17 @@ void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
     objectIt = table->objects;
     idIt = table->ids;
     count = gSfxLoopedObjectSoundCount;
+    found = 0;
     for (; i < count; i++)
     {
         if ((*objectIt == obj) && (sfxId == *idIt))
         {
             found = 1;
-            goto checked;
+            break;
         }
         objectIt++;
         idIt++;
     }
-    found = 0;
-checked:
     if ((found == 0) && (count != sizeof(table->flags)))
     {
         table->objects[count] = obj;
@@ -3580,9 +3517,7 @@ MusicTrackSlot sMusicTrackTable[] = {
 
 char sMidiWadLoadedCallbackLoadError[] = "MIDIWADLoadedCallback load error\n";
 char sMidiWadPath[] = "audio/midi.wad";
-#pragma explicit_zero_data on
-__declspec(section ".data") static u32 sMidiWadPathPad = 0;
-#pragma explicit_zero_data off
+static u32 sMidiWadPathPad = 0;
 
 SfxTriggerCacheEntry gSfxTriggerLookupCache[16] = {
     {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0}, {0xFFFF, 0},

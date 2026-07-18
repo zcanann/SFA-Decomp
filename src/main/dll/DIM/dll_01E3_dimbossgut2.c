@@ -30,9 +30,6 @@
 #define DIMBOSSGUT2_OBJGROUP 3
 #define DIMBOSSGUT2_PARTFX   0x32b
 
-extern f32 lbl_803E4D04;
-extern f32 lbl_803E4D10;
-
 void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
 {
     Dimbossgut2Curve* curve;
@@ -76,15 +73,15 @@ void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
         {
             angleMag = -angleMag;
         }
-        angleScale = (f32)(s32)angleMag * lbl_803E4CD4;
-        if (angleScale > lbl_803E4CF0)
+        angleScale = (f32)(s32)angleMag * 0.25f;
+        if (angleScale > 1.0f)
         {
             curve->f10 = curve->f10 / angleScale;
             curve->f8 += 0.01f;
         }
-        if (curve->f8 > lbl_803E4CD8)
+        if (curve->f8 > 0.0f)
         {
-            curve->f8 = curve->f8 / lbl_803E4D10;
+            curve->f8 = curve->f8 / 1.04f;
         }
         (obj)->anim.localPosX = pathWalker->posX;
         (obj)->anim.localPosZ = pathWalker->posZ;
@@ -156,7 +153,7 @@ void DIM_BossGut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4CF0);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
         light = (u8*)((Dimbossgut2Curve*)((Dimbossgut2State*)light)->curveData)->light;
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))
         {
@@ -205,22 +202,22 @@ void DIM_BossGut2_update(GameObject* obj)
             result = ObjMsg_Pop(obj, (u32*)&msgA, (u32*)&msgB, (u32*)&msgC);
         } while (result != 0);
         posData = state->curveData;
-        if ((posData->f0 < lbl_803E4CD0) && (posData->f10 < lbl_803E4CD4))
+        if ((posData->f0 < -0.025f) && (posData->f10 < 0.25f))
         {
             heightDiff = posData->fC - (obj)->anim.localPosY;
-            if (heightDiff < lbl_803E4CD8)
+            if (heightDiff < 0.0f)
             {
                 heightDiff = -heightDiff;
             }
-            if ((heightDiff < lbl_803E4CDC) && (stk.f4c = posData->fC, randomThreshold = randomGetRange(0x1e, 0x3c),
+            if ((heightDiff < 14.0f) && (stk.f4c = posData->fC, randomThreshold = randomGetRange(0x1e, 0x3c),
                                                 (int)(u32)posData->timer16 > (int)randomThreshold))
             {
-                xyScale = lbl_803E4CE0 * posData->f10;
+                xyScale = 20.0f * posData->f10;
                 stk.f50 = (obj)->anim.localPosX -
                           xyScale * mathSinf(gDimBossGut2Pi * (f32)(obj)->anim.rotX / gDimBossGut2AngleUnitToRadians);
                 stk.f48 = (obj)->anim.localPosZ -
                           xyScale * mathCosf(gDimBossGut2Pi * (f32)(obj)->anim.rotX / gDimBossGut2AngleUnitToRadians);
-                stk.f54 = lbl_803E4CEC * (lbl_803E4CF0 - heightDiff / lbl_803E4CDC);
+                stk.f54 = 0.65f * (1.0f - heightDiff / 14.0f);
                 (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSGUT2_PARTFX, &stk, 1, -1, NULL);
                 posData->timer16 = 0;
             }
@@ -269,20 +266,20 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
         flags |= 1;
     }
     (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
-        (int)obj, def, (int)state, 0, 0, 0x102, flags, lbl_803E4CE0);
+        (int)obj, def, (int)state, 0, 0, 0x102, flags, 20.0f);
     (obj)->animEventCallback = NULL;
     curve = state->curveData;
-    z = lbl_803E4CD8;
+    z = 0.0f;
     curve->f0 = z;
     curve->f4 = z;
     curve->s14 = randomGetRange(-0x7fff, 0x7fff);
-    z = lbl_803E4CD8;
+    z = 0.0f;
     curve->f8 = z;
     curve->timer16 = 0;
     curve->f10 = z;
     count = hitDetectFn_80065e50(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &list,
                                  0, 0);
-    curve->fC = lbl_803E4CD8;
+    curve->fC = 0.0f;
     if (count != 0)
     {
         curve->fC = -9999.0f;
@@ -307,9 +304,9 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
         modelLightStruct_setLightKind(curve->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(curve->light, 0, 255, 0, 0);
         lightSetFieldBC_8001db14(curve->light, 1);
-        modelLightStruct_setDistanceAttenuation(curve->light, 10.0f, lbl_803E4CE0);
+        modelLightStruct_setDistanceAttenuation(curve->light, 10.0f, 20.0f);
         modelLightStruct_setupGlow(curve->light, 0, 0, 255, 0, 127, 15.0f);
-        modelLightStruct_setGlowProjectionRadius(curve->light, lbl_803E4D04);
+        modelLightStruct_setGlowProjectionRadius(curve->light, 50.0f);
     }
 }
 

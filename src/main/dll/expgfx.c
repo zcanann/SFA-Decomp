@@ -45,7 +45,7 @@ f32 gExpgfxFrameTimerA;
 int gExpgfxTextureFreeInProgress;
 u8 gExpgfxRenderResetPending;
 u8 lbl_803DD253;
-volatile u8 gExpgfxFrameParityBit;
+u8 gExpgfxFrameParityBit;
 s16 gExpgfxSequenceCounter;
 
 f32 lbl_803DB790 = -50.0f;
@@ -91,6 +91,52 @@ typedef union Dll0BDescriptorTable
     u32 words[30];
     u64 align8;
 } Dll0BDescriptorTable;
+
+extern void dll_0B_func18(void);
+
+extern void dll_0B_func17(void);
+
+extern void dll_0B_func16(void);
+
+extern void dll_0B_func15(void);
+
+extern void dll_0B_func14(void);
+
+extern void dll_0B_func13(void);
+
+extern void dll_0B_func12(void);
+
+extern void dll_0B_func11(void);
+
+extern void dll_0B_func10(void);
+
+extern void dll_0B_func0F(void);
+
+extern void dll_0B_func0E(void);
+
+extern void dll_0B_func0D(void);
+
+extern void dll_0B_func0C(void);
+
+extern void dll_0B_func0B(void);
+
+extern void dll_0B_func0A(void);
+
+extern void dll_0B_func09(void);
+
+extern void dll_0B_func08(void);
+
+extern void dll_0B_func07(void);
+
+extern void dll_0B_func06(void);
+
+extern void dll_0B_func05(void);
+
+extern void dll_0B_onMapSetup(void);
+
+extern void dll_0B_release(void);
+
+extern void dll_0B_initialise(void);
 
 #define GX_BM_NONE        0
 #define GX_BM_BLEND       1
@@ -224,9 +270,6 @@ static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
     return currentSource;
 }
 
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_propagation off
 void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -293,9 +336,7 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
         gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
     }
 }
-#pragma opt_propagation reset
 
-#pragma opt_propagation off
 static inline void expgfxRemoveAllBody(void)
 {
     ExpgfxTableEntry* expTabEntry;
@@ -378,12 +419,7 @@ void expgfxRemoveAll(void)
 {
     expgfxRemoveAllBody();
 }
-#pragma opt_propagation reset
 
-#pragma ppc_unroll_speculative on
-#pragma ppc_unroll_factor_limit 5
-#pragma ppc_unroll_instructions_limit 120
-#pragma opt_strength_reduction off
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, u32 sourceId)
 {
     u32 currentMask;
@@ -421,11 +457,14 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
             {
                 foundPoolIndex = searchIndex;
                 foundPool = 1;
-                goto poolSearchDone;
+                break;
             }
         }
+        if (foundPool)
+        {
+            break;
+        }
     }
-poolSearchDone:
 
     if (foundPool)
     {
@@ -495,8 +534,6 @@ poolSearchDone:
 
     return EXPGFX_INVALID_POOL_INDEX;
 }
-#pragma ppc_unroll_factor_limit 4
-#pragma ppc_unroll_instructions_limit 256
 
 void expgfx_initSlotQuad(void* slotPtr)
 {
@@ -614,7 +651,6 @@ void expgfx_initSlotQuad(void* slotPtr)
     quad[3].texT = texT1;
 }
 
-#pragma opt_propagation off
 void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameState)
 {
     ExpgfxBounds* bounds;
@@ -696,94 +732,14 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     ambScaled[1] = (f32)ambG8 * camScale;
     ambScaled[0] = (f32)ambB8 * camScale;
 
-    next = 0;
     scan = runtime->poolActiveCounts;
-    for (batch = 8; batch != 0; batch--)
+    for (next = 0; next < EXPGFX_POOL_COUNT; next++)
     {
-        switch (scan[0])
-        {
-        case 0:
+        if (scan[next] != 0)
             break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[1])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[2])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[3])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[4])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[5])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[6])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[7])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[8])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        next++;
-        switch (scan[9])
-        {
-        case 0:
-            break;
-        default:
-            goto foundFirst;
-        }
-        scan += 10;
-        next++;
     }
-    next = -1;
-foundFirst:
+    if (next == EXPGFX_POOL_COUNT)
+        next = -1;
     pool = next;
     if (pool != -1)
     {
@@ -826,17 +782,12 @@ foundFirst:
             scan = (s8*)(curPoolBuf + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
             for (; next < EXPGFX_POOL_COUNT; next++)
             {
-                switch (*scan)
-                {
-                case 0:
+                if (*scan != 0)
                     break;
-                default:
-                    goto foundNext;
-                }
                 scan++;
             }
-            next = -1;
-        foundNext:
+            if (next == EXPGFX_POOL_COUNT)
+                next = -1;
             slot = (ExpgfxSlot*)curCache;
             if (next > -1)
             {
@@ -1716,10 +1667,7 @@ foundFirst:
         cacheQueueWait(0);
     }
 }
-#pragma opt_propagation reset
 
-#pragma dont_inline on
-#pragma opt_strength_reduction on
 int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s16 resourceId)
 {
     ExpgfxTableEntry* entry;
@@ -1758,11 +1706,7 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
     debugPrintf(sExpgfxExpTabIsFull);
     return EXPGFX_INVALID_TABLE_INDEX;
 }
-#pragma opt_strength_reduction off
-#pragma dont_inline reset
 
-#pragma opt_propagation off
-#pragma opt_strength_reduction on
 int expgfx_updateSourceFrameFlags(void* sourceObject)
 {
     s16 signedPoolIndex;
@@ -1816,8 +1760,6 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
 
     return result;
 }
-#pragma opt_strength_reduction reset
-#pragma opt_propagation reset
 
 void expgfx_ownerFree3(u32 sourceId)
 {
@@ -1883,13 +1825,6 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
     }
 }
 
-#pragma optimization_level 3
-#pragma opt_propagation off
-#pragma opt_common_subs off
-#pragma opt_loop_invariants off
-#pragma opt_lifetimes off
-#pragma ppc_unroll_speculative off
-#pragma ppc_unroll_factor_limit 1
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
     s16 angleB;
@@ -1964,26 +1899,25 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     cacheQueueWait(0);
 
     slot = cachedSlots - 1;
-    slotIndex = 0;
     activeMasks = &gExpgfxSlotActiveMasks[poolIndex];
     tabBase = gExpgfxTableEntries;
-    do
+    for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
     {
         slot++;
         tabEntry = &tabBase[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
         sourceObject = (ExpgfxSourceObject*)tabEntry->sourceId;
         texture = tabEntry->resource;
         if ((1U << slotIndex & *activeMasks) == 0)
-            goto next_slot;
+            continue;
         state = slot->stateBits.value;
         if (((state >> 2) & 3) != 0)
-            goto next_slot;
+            continue;
         if (((state >> 1) & 1) == 0)
-            goto next_slot;
+            continue;
         if (slot->sequenceId == EXPGFX_INVALID_SEQUENCE_ID)
-            goto next_slot;
+            continue;
         if ((state & 1) != 0)
-            goto next_slot;
+            continue;
 
         lifeFraction = lbl_803DF358 * (f32)slot->lifetimeFrameLimit;
         behaviorFlags = slot->behaviorFlags;
@@ -2302,9 +2236,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             vertexStream++;
         }
 
-    next_slot:
-        slotIndex++;
-    } while (slotIndex < EXPGFX_SLOTS_PER_POOL);
+    }
 
     if (gExpgfxRenderResetPending != 0)
     {
@@ -2312,13 +2244,6 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         gExpgfxRenderResetPending = 0;
     }
 }
-#pragma ppc_unroll_speculative on
-#pragma ppc_unroll_factor_limit 4
-#pragma opt_lifetimes reset
-#pragma opt_loop_invariants reset
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
-#pragma optimization_level reset
 
 static inline void renderParticlesBody(void)
 {
@@ -2476,7 +2401,6 @@ static inline void expgfx_clearResourceTable(ExpgfxResourceEntry* resourceEntry,
     }
 }
 
-#pragma opt_propagation off
 void expgfx_resetAllPools(void)
 {
     u16* refCountPtr;
@@ -2576,7 +2500,6 @@ void expgfx_resetAllPools(void)
         expgfx_clearResourceTable(resourceEntry, 0, 0, 0, 0, 0);
     }
 }
-#pragma opt_propagation reset
 
 void expgfx_updateFrameState(int sourceMode, int sourceId)
 {
@@ -2842,7 +2765,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             slot->sourceVecY = config->sourceVecY;
             slot->sourceVecX = config->sourceVecX;
         }
-        slot->stateBits.bits.frameParity = *(u8*)&gExpgfxFrameParityBit;
+        slot->stateBits.bits.frameParity = gExpgfxFrameParityBit;
 
         if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0)
         {
@@ -2954,10 +2877,6 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
     }
 }
 
-#pragma ppc_unroll_speculative off
-#pragma ppc_unroll_factor_limit 1
-#pragma ppc_unroll_instructions_limit 120
-#pragma dont_inline on
 void expgfx_onMapSetup(void)
 {
     ExpgfxRuntimeDataLayout* runtime[1];
@@ -3022,12 +2941,7 @@ void expgfx_onMapSetup(void)
     }
     gExpgfxTextureFreeInProgress = 0;
 }
-#pragma dont_inline reset
-#pragma ppc_unroll_speculative on
-#pragma ppc_unroll_factor_limit 5
-#pragma ppc_unroll_instructions_limit 120
 
-#pragma dont_inline on
 void expgfx_release(void)
 {
     int poolIndex;
@@ -3041,11 +2955,7 @@ void expgfx_release(void)
     } while (poolIndex < EXPGFX_POOL_COUNT);
     return;
 }
-#pragma dont_inline reset
 
-#pragma ppc_unroll_speculative off
-#pragma ppc_unroll_factor_limit 1
-#pragma ppc_unroll_instructions_limit 120
 void expgfx_initialise(void)
 {
     ExpgfxRuntimeDataLayout* runtime;
@@ -3105,9 +3015,6 @@ void expgfx_initialise(void)
     memset(runtime->expTab, 0, EXPGFX_EXPTAB_BYTES);
     return;
 }
-#pragma ppc_unroll_speculative on
-#pragma ppc_unroll_factor_limit 5
-#pragma ppc_unroll_instructions_limit 120
 
 u8 gExpgfxRuntimeData[0x980];
 ExpgfxTableEntry gExpgfxTableEntries[0x550 / sizeof(ExpgfxTableEntry)];

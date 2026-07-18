@@ -311,8 +311,6 @@ static inline void errDisplayFillBackdrop(int xcb, int x)
 }
 void errDisplayThreadMain(void);
 
-#pragma peephole off
-
 int fn_80136A40(int unused, int c)
 {
     u8* tbl;
@@ -609,7 +607,6 @@ int debugPrintDrawRecord(int color, u8* p)
     return p - start;
 }
 #undef debugPrintDrawGlyph
-#pragma peephole on
 void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     int n;
@@ -650,7 +647,6 @@ void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
     debugLogEnd = termCursor + 1;
     *termCursor = term;
 }
-#pragma peephole off
 void debugPrintReset(void)
 {
     u32 yp;
@@ -661,9 +657,6 @@ void debugPrintReset(void)
     xp = gDebugPrintOriginX & 0xffff;
     debugPrintXpos = xp;
 }
-#pragma opt_propagation off
-#pragma opt_strength_reduction on
-#pragma ppc_unroll_instructions_limit 64
 
 /* Lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
@@ -766,10 +759,6 @@ void debugPrintDraw(int ctx)
 /* When b->_54 carries the spawn flag, build a particle descriptor on the stack from a's heading
  * and the delta to b's position, then emit it 20 times via the partfx
  * interface and clear the flag. */
-#pragma opt_propagation reset
-#pragma opt_strength_reduction reset
-#pragma peephole on
-#pragma ppc_unroll_instructions_limit 100
 void debugPrintf(char* fmt, ...)
 {
     va_list args;
@@ -780,7 +769,6 @@ void debugPrintf(char* fmt, ...)
         vsprintf(debugLogEnd, fmt, args);
     }
 }
-
 
 void logPrintf(char* fmt, ...)
 {
@@ -802,8 +790,6 @@ void debugPrintInit(void)
 /* Title-screen system init. Calls getScreenResolution, primes the two float counters, clears
  * two state bytes, acquires three sized buffers (605/1/2 bytes) and primes the
  * debugLogEnd cursor to the start of the 0x1100-byte arena. */
-#pragma opt_strength_reduction off
-#pragma peephole off
 void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused)
 {
     int c1;
@@ -855,7 +841,6 @@ void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused)
 
 /* Emit a SetColor record (tag 0x81 + 4 RGBA bytes + 0 terminator) into the debug log; aborts
  * when the record counter at gDebugRecordCount has already exceeded 0xFA. */
-#pragma opt_strength_reduction reset
 
 void debugPrintfxy(int x, int y, char* fmt, ...)
 {
@@ -931,15 +916,9 @@ void errDisplayInstallHandlers(void)
     OSCreateThread(gErrDisplayThread, errDisplayThreadMain, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
 }
 
-#pragma peephole reset
-
 void reportAllocFail(void)
 {
 }
-#pragma opt_propagation off
-#pragma opt_strength_reduction off
-#pragma peephole off
-#pragma ppc_unroll_instructions_limit 64
 void errDisplayThreadMain(void)
 {
     char* strs = (char*)gDebugFontGlyphs;
@@ -1163,9 +1142,6 @@ void errDisplayThreadMain(void)
         }
     }
 }
-#pragma opt_propagation reset
-#pragma opt_strength_reduction reset
-#pragma ppc_unroll_instructions_limit 100
 
 /* Stash 4 args to four globals and resume
  * the thread at &gErrDisplayThread. */
@@ -1385,7 +1361,6 @@ void fn_80138D7C(int obj, int state)
         }
     }
 }
-#pragma peephole on
 
 /* Set bit 0x80000000 of obj->_b8->_54
  * and store lbl_803E2408 into obj->_b8->_808. */
@@ -1395,7 +1370,6 @@ void trickyImpress(GameObject* obj)
     ((TrickyImpressState*)b)->flags54 |= 0x80000000;
     ((TrickyImpressState*)b)->unk808 = lbl_803E2408;
 }
-#pragma peephole off
 /* GameBit-gated bit toggle on obj->_b8->_54: requires mainGetBit(GAMEBIT_Tricky_Usable); sets bit 0x10000 then
  * checks bit 0x10. Returns 1 only when the post-OR check passes. */
 int trickyFn_80138f14(GameObject* obj)
@@ -1413,7 +1387,6 @@ int trickyFn_80138f14(GameObject* obj)
 }
 
 PPCWGPipe GXWGFifo : (0xCC008000);
-#pragma peephole reset
 
 f32 fn_80138F78(u8* obj)
 {
@@ -1433,8 +1406,6 @@ void* trickyGetQueuedPathParticlePos(GameObject* obj)
     return &((TrickyImpressState*)obj->extra)->renderPosX;
 }
 
-#pragma peephole off
-
 int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTypes)
 {
     int* objs;
@@ -1451,7 +1422,7 @@ int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTyp
     i = 0;
     objs = tmpList;
 
-    for (; i < count; i++)
+    for (; i < count; i++, objs++)
     {
         int* data;
         f32 obj_extra;
@@ -1498,7 +1469,7 @@ int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTyp
                     {
                         s16 m = ((GameObject*)*objs)->anim.seqId;
                         if (m == 1022 || m == 1239 || m == 636 || m == 593)
-                            goto next;
+                            continue;
                     }
                     {
                         f32 dist = vec3f_distanceSquared((f32*)(origin + 0x18), (f32*)(*objs + 0x18));
@@ -1511,12 +1482,9 @@ int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTyp
                 }
             }
         }
-    next:
-        objs++;
     }
     return closest;
 }
-
 
 void Tricky_emitQueuedPathParticles(u8* a, u8* b)
 {

@@ -60,7 +60,6 @@ extern const f32 lbl_803E05BC;
 extern const f32 lbl_803E05C0;
 extern const f32 lbl_803E05C4;
 
-#pragma opt_common_subs off
 void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd)
 {
     f32 dx;
@@ -102,9 +101,7 @@ void player_moveTowardPoint(int* a, int* ctx, f32 px, f32 pz, f32 lo, f32 hi, f3
         ((BaddieState*)ctx)->moveInputZ = lbl_803E057C;
     }
 }
-#pragma opt_common_subs reset
 
-#pragma opt_common_subs off
 void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int unused)
 {
     f32 dx, dz, dist, max;
@@ -147,9 +144,7 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int unused)
         ((BaddieState*)state)->moveInputZ = lbl_803E057C;
     }
 }
-#pragma opt_common_subs reset
 
-#pragma dont_inline on
 void player_applyVelocityStep(int* obj, int* ctx, f32 t)
 {
     int flags;
@@ -197,7 +192,6 @@ void player_applyVelocityStep(int* obj, int* ctx, f32 t)
             ((GameObject*)obj)->anim.velocityZ * t);
 }
 
-#pragma opt_propagation off
 void fn_800D8414(int* obj, int* ctx)
 {
     int diff;
@@ -206,7 +200,7 @@ void fn_800D8414(int* obj, int* ctx)
                                                 ((BaddieState*)ctx)->moveInputZ * ((BaddieState*)ctx)->moveInputZ);
     if (((BaddieState*)ctx)->inputMagnitude > lbl_803E0578)
     {
-        ((BaddieState*)ctx)->inputMagnitude = *(f32*)&lbl_803E0578;
+        ((BaddieState*)ctx)->inputMagnitude = lbl_803E0578;
     }
     ((BaddieState*)ctx)->inputMagnitude = ((BaddieState*)ctx)->inputMagnitude / lbl_803E0578;
     gPlayerMoveTargetYaw = getAngle(((BaddieState*)ctx)->moveInputX, -((BaddieState*)ctx)->moveInputZ);
@@ -249,8 +243,6 @@ void fn_800D8414(int* obj, int* ctx)
         *(u8*)((char*)ctx + 0x34b) = (u8)(4 - diff / 0x4000);
     }
 }
-#pragma opt_propagation reset
-#pragma dont_inline reset
 
 void player_updateParticles(int* obj, int unused, int effectId, int count, int mode)
 {
@@ -297,7 +289,6 @@ void player_doProjGfx(int* obj, int unusedA, int resIdBase, int count, int unuse
     Resource_Release(res);
 }
 
-#pragma opt_common_subs off
 void player_updateSecondaryBlend(int* obj, int* ctx, int moveA, int moveB)
 {
     f32 mag;
@@ -346,7 +337,6 @@ void player_updateSecondaryBlend(int* obj, int* ctx, int moveA, int moveB)
         }
     }
 }
-#pragma opt_common_subs reset
 
 void player_setAnimIds(int unused1, int unused2, u32 a, u32 b)
 {
@@ -364,7 +354,6 @@ void player_clearXZvel(int* obj, int* state)
     ((BaddieState*)state)->animSpeedB = z;
 }
 
-#pragma opt_common_subs off
 void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 {
     f32 ang, vx, vz, q, w, dist, c, s;
@@ -408,13 +397,11 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
     ((BaddieState*)state)->animSpeedA =
         -((GameObject*)obj)->anim.velocityZ * s - ((GameObject*)obj)->anim.velocityX * c;
 }
-#pragma opt_common_subs reset
 
 void dll_0F_func19_nop(void)
 {
 }
 
-#pragma dont_inline on
 void player_updateCurve(int* obj, int* state, f32 t)
 {
     int idx = *(int*)((char*)state + 828);
@@ -435,9 +422,7 @@ void player_updateCurve(int* obj, int* state, f32 t)
         }
     }
 }
-#pragma dont_inline reset
 
-#pragma optimization_level 1
 void player_findCurve(int* obj, int* state, int curveId)
 {
     f32 px = ((GameObject*)obj)->anim.localPosX;
@@ -445,7 +430,6 @@ void player_findCurve(int* obj, int* state, int curveId)
     f32 pz = ((GameObject*)obj)->anim.localPosZ;
     *(int*)((char*)state + 0x33c) = (*gRomCurveInterface)->find(&curveId, 1, *(s8*)((char*)state + 0x344), px, py, pz);
 }
-#pragma optimization_level reset
 
 void player_playSoundFn10(int* obj, int* state, int bit, int idx, int* sfxTable)
 {
@@ -473,7 +457,6 @@ void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable)
     }
 }
 
-#pragma opt_common_subs off
 void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
 {
     GameObject* enemy;
@@ -506,7 +489,6 @@ void player_rotateTowardEnemy(int* obj, int* ctx, int spd)
             (s16)(((GameObject*)obj)->anim.rotX + (int)((f32)diff * timeDelta / (lbl_803E0584 * spd)));
     }
 }
-#pragma opt_common_subs reset
 
 void player_render2(s16* obj, int* state, f32 f1, f32 f2)
 {
@@ -816,20 +798,20 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
 void player_setState(void* ctx, void* p, int new_state)
 {
     void* q;
-    if (((BaddieState*)p)->controlMode == new_state)
-        goto end;
-    ((BaddieState*)p)->prevControlMode = ((BaddieState*)p)->controlMode;
-    ((BaddieState*)p)->controlMode = new_state;
+    if (((BaddieState*)p)->controlMode != new_state)
     {
-        void (*fn)(void) = *(void (**)(void))((char*)p + 0x304);
-        if (fn != 0)
+        ((BaddieState*)p)->prevControlMode = ((BaddieState*)p)->controlMode;
+        ((BaddieState*)p)->controlMode = new_state;
         {
-            fn();
-            *(void**)&((BaddieState*)p)->unk304 = 0;
+            void (*fn)(void) = *(void (**)(void))((char*)p + 0x304);
+            if (fn != 0)
+            {
+                fn();
+                *(void**)&((BaddieState*)p)->unk304 = 0;
+            }
         }
+        *(void**)&((BaddieState*)p)->unk304 = *(void**)&((BaddieState*)p)->unk308;
     }
-    *(void**)&((BaddieState*)p)->unk304 = *(void**)&((BaddieState*)p)->unk308;
-end:
     *(s16*)((char*)p + 0x338) = 0;
     ((BaddieState*)p)->moveJustStartedA = 1;
     ((BaddieState*)p)->stateTag = 0;
@@ -937,13 +919,13 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
         setMatrixFromObjectPos(matrix, &localTransform);
 
         attachment = *(int*)(state + 0x27c);
-        Matrix_TransformPoint(matrix, lbl_803E0570, *(f32*)&lbl_803E0570, lbl_803E0588, (f32*)(attachment + 0x0),
+        Matrix_TransformPoint(matrix, lbl_803E0570, lbl_803E0570, lbl_803E0588, (f32*)(attachment + 0x0),
                               (f32*)(attachment + 0x4), (f32*)(attachment + 0x8));
         attachment = *(int*)(state + 0x27c);
-        Matrix_TransformPoint(matrix, lbl_803E0570, lbl_803E0588, *(f32*)&lbl_803E0570, (f32*)(attachment + 0xc),
+        Matrix_TransformPoint(matrix, lbl_803E0570, lbl_803E0588, lbl_803E0570, (f32*)(attachment + 0xc),
                               (f32*)(attachment + 0x10), (f32*)(attachment + 0x14));
         attachment = *(int*)(state + 0x27c);
-        Matrix_TransformPoint(matrix, lbl_803E0588, lbl_803E0570, *(f32*)&lbl_803E0570, (f32*)(attachment + 0x18),
+        Matrix_TransformPoint(matrix, lbl_803E0588, lbl_803E0570, lbl_803E0570, (f32*)(attachment + 0x18),
                               (f32*)(attachment + 0x1c), (f32*)(attachment + 0x20));
     }
 

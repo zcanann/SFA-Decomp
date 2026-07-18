@@ -36,19 +36,10 @@
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E7450 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E7454 = 5.0f;
-__declspec(section ".sdata2") f32 lbl_803E7458 = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E745C = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E7460 = -0.1f;
-__declspec(section ".sdata2") f32 lbl_803E7464 = -0.5f;
-__declspec(section ".sdata2") f32 lbl_803E7468 = -0.2f;
-__declspec(section ".sdata2") f32 lbl_803E746C = 476.0f;
-__declspec(section ".sdata2") f32 lbl_803E7470 = 112.5f;
-__declspec(section ".sdata2") f32 lbl_803E7474 = 150.0f;
-__declspec(section ".sdata2") f32 lbl_803E7478 = 180.0f;
+f32 lbl_803E7450 = 0.0f;
+f32 lbl_803E7454 = 5.0f;
+f32 lbl_803E7458 = 0.5f;
+f32 lbl_803E745C = 1.0f;
 
 /* sequence event opcodes consumed by gf_levelcon_SeqFn */
 #define GFLEVELCON_SEQEV_NONE          0
@@ -86,7 +77,6 @@ __declspec(section ".sdata2") f32 lbl_803E7478 = 180.0f;
 #define GFLEVELCON_ENVFX_B 0x21d
 #define GFLEVELCON_ENVFX_C 0x21e
 
-#pragma opt_loop_invariants off
 int gf_levelcon_getExtraSize(void);
 int gf_levelcon_getObjectTypeId(void);
 void gf_levelcon_hitDetect(void);
@@ -114,7 +104,6 @@ ObjectDescriptor gGF_LevelConObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)gf_levelcon_getExtraSize,
 };
 
-#pragma dont_inline on
 void gf_levelcon_findLinkedObjects(GameObject* obj)
 {
     GfLevelconFindLinkedObjectsState* state = obj->extra;
@@ -147,7 +136,6 @@ void gf_levelcon_findLinkedObjects(GameObject* obj)
         }
     }
 }
-#pragma dont_inline reset
 
 int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpdate)
 {
@@ -164,16 +152,16 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
         case GFLEVELCON_SEQEV_SKY_PRESET_A:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, lbl_803E7460, lbl_803E7464, lbl_803E7468);
+            skyFn_800894a8(7, -0.1f, -0.5f, -0.2f);
             getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_START_PROMPT:
-            state->promptTimer = lbl_803E746C;
+            state->promptTimer = 476.0f;
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_B:
             skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
-            skyFn_800894a8(7, lbl_803E7464, -1.0f, *(f32*)&lbl_803E7464);
+            skyFn_800895e0(7, 112.5f, 150.0f, 180.0f, 0, 0);
+            skyFn_800894a8(7, -0.5f, -1.0f, -0.5f);
             getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_B, 0);
             break;
         case GFLEVELCON_SEQEV_LIGHT_ON:
@@ -193,7 +181,7 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
         case GFLEVELCON_SEQEV_SKY_PRESET_C:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, 1.0f, -1.0f, lbl_803E7464);
+            skyFn_800894a8(7, 1.0f, -1.0f, -0.5f);
             getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_C, 0);
             break;
         case GFLEVELCON_SEQEV_LOAD_MAP:
@@ -213,13 +201,13 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
         case GFLEVELCON_SEQEV_SKY_PRESET_D:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, 0.5f, -1.0f, lbl_803E7464);
+            skyFn_800894a8(7, 0.5f, -1.0f, -0.5f);
             getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_E:
             skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
-            skyFn_800894a8(7, 0.5f, -1.0f, lbl_803E7464);
+            skyFn_800895e0(7, 112.5f, 150.0f, 180.0f, 0, 0);
+            skyFn_800894a8(7, 0.5f, -1.0f, -0.5f);
             getEnvfxActVoid((int)obj, (int)obj, GFLEVELCON_ENVFX_B, 0);
             break;
         }
@@ -251,7 +239,6 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
     }
     return 0;
 }
-#pragma opt_loop_invariants reset
 
 int gf_levelcon_getExtraSize(void)
 {
@@ -298,5 +285,4 @@ void gf_levelcon_release(void)
 void gf_levelcon_initialise(void)
 {
 }
-
 

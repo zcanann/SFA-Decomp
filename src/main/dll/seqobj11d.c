@@ -84,11 +84,6 @@ extern int fn_8014C11C(int obj, f32 f, int a, int b, u8* tbl);
 u8 gGroundBaddieTargetSearchResult[0x80];
 
 
-
-__declspec(section ".sdata2") f32 lbl_803E27A4 = 0.6f;
-__declspec(section ".sdata2") f32 lbl_803E27A8 = 0.8f;
-
-#pragma dont_inline on
 void fn_801511E8(GameObject* obj, u8* state)
 {
     u8* entry;
@@ -98,9 +93,9 @@ void fn_801511E8(GameObject* obj, u8* state)
     base = (char*)lbl_8031F16C;
     base += state[0x33b] * 40;
     entry = *(u8**)(base + 12);
-    if ((f32) * (u16*)(state + 0x2a4) > lbl_803E27A4 * ((GroundBaddieState*)state)->baddie.speedScale)
+    if ((f32) * (u16*)(state + 0x2a4) > 0.6f * ((GroundBaddieState*)state)->baddie.speedScale)
     {
-        if ((f32) * (u16*)(state + 0x2a4) > lbl_803E27A8 * ((GroundBaddieState*)state)->baddie.speedScale)
+        if ((f32) * (u16*)(state + 0x2a4) > 0.8f * ((GroundBaddieState*)state)->baddie.speedScale)
         {
             state[0x33a] = (u8)(entry[8] + 2);
         }
@@ -130,9 +125,7 @@ void fn_801511E8(GameObject* obj, u8* state)
         state[0x33a] = 1;
     }
 }
-#pragma dont_inline reset
 
-__declspec(section ".sdata2") f32 lbl_803E27AC = 100.0f;
 
 void fn_801513AC(GameObject* obj, u8* state)
 {
@@ -144,7 +137,7 @@ void fn_801513AC(GameObject* obj, u8* state)
     base = (char*)lbl_8031F16C;
     base += state[0x33b] * 40;
     entry = *(u8**)(base + 12);
-    if (fn_8014C11C((int)obj, lbl_803E27AC, 1, 16, gGroundBaddieTargetSearchResult) >= 1)
+    if (fn_8014C11C((int)obj, 100.0f, 1, 16, gGroundBaddieTargetSearchResult) >= 1)
     {
         if (*(u16*)(gGroundBaddieTargetSearchResult + 4) <= 40 && *(u16*)(state + 0x2a0) != 3 &&
             *(u16*)(state + 0x2a0) != 4)
@@ -175,7 +168,7 @@ void fn_801513AC(GameObject* obj, u8* state)
             }
         }
     }
-    if ((f32) * (u16*)(state + 0x2a4) < lbl_803E27A8 * ((GroundBaddieState*)state)->baddie.speedScale)
+    if ((f32) * (u16*)(state + 0x2a4) < 0.8f * ((GroundBaddieState*)state)->baddie.speedScale)
     {
         state[0x33a] = (u8)(entry[8] + 1);
     }
@@ -242,7 +235,7 @@ void fn_8015165C(GameObject* obj, u8* state)
         if ((((GroundBaddieState*)state)->baddie.controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             player = Obj_GetPlayerObject();
-            fn_8014C11C((int)obj, lbl_803E27AC, 3, 16, gGroundBaddieTargetSearchResult);
+            fn_8014C11C((int)obj, 100.0f, 3, 16, gGroundBaddieTargetSearchResult);
             if (*(u16*)(state + 0x338) != 0)
             {
                 {
@@ -295,15 +288,6 @@ void fn_8015165C(GameObject* obj, u8* state)
     }
 }
 
-__declspec(section ".sdata2") f32 lbl_803E27B0 = 0.17f;
-__declspec(section ".sdata2") f32 lbl_803E27B4 = 0.97f;
-__declspec(section ".sdata2") f32 lbl_803E27B8 = 1.25f;
-__declspec(section ".sdata2") f32 lbl_803E27BC = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E27C0 = 110.0f;
-__declspec(section ".sdata2") f32 lbl_803E27C4 = 120.0f;
-__declspec(section ".sdata2") f32 lbl_803E27C8 = 0.15f;
-__declspec(section ".sdata2") f32 lbl_803E27CC = 0.75f;
-__declspec(section ".sdata2") f32 lbl_803E27D0 = -0.05f;
 
 void sharpClawInit(int obj, u8* state)
 {
@@ -318,16 +302,16 @@ void sharpClawInit(int obj, u8* state)
     *(u32*)&((GroundBaddieState*)state)->baddie.unk2E4 |= 0x40300000LL;
     *(u32*)&((GroundBaddieState*)state)->baddie.unk2E4 |= 0xC00;
     ((GroundBaddieState*)state)->baddie.unk308 = 0.005f;
-    ((GroundBaddieState*)state)->baddie.animDeltaScale = lbl_803E27B0;
-    ((GroundBaddieState*)state)->baddie.unk304 = lbl_803E27B4;
+    ((GroundBaddieState*)state)->baddie.animDeltaScale = 0.17f;
+    ((GroundBaddieState*)state)->baddie.unk304 = 0.97f;
     state[0x320] = 35;
     fz = 1.0f;
     *(f32*)&((GroundBaddieState*)state)->baddie.eventFlags = fz;
     state[0x321] = 34;
-    ((GroundBaddieState*)state)->baddie.unk318 = lbl_803E27B8;
+    ((GroundBaddieState*)state)->baddie.unk318 = 1.25f;
     state[0x322] = 6;
     ((GroundBaddieState*)state)->baddie.unk31C = fz;
-    ((GroundBaddieState*)state)->baddie.pathStep *= lbl_803E27BC;
+    ((GroundBaddieState*)state)->baddie.pathStep *= 10.0f;
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 314:
@@ -335,7 +319,7 @@ void sharpClawInit(int obj, u8* state)
         {
             *(s16*)(state + 0x2b6) = 51;
         }
-        ((GroundBaddieState*)state)->baddie.speedScale = lbl_803E27C0;
+        ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 40;
         state[0x33b] = 0;
         break;
@@ -344,7 +328,7 @@ void sharpClawInit(int obj, u8* state)
         {
             *(s16*)(state + 0x2b6) = 51;
         }
-        ((GroundBaddieState*)state)->baddie.speedScale = lbl_803E27C0;
+        ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 40;
         state[0x33b] = 1;
         break;
@@ -353,7 +337,7 @@ void sharpClawInit(int obj, u8* state)
         {
             *(s16*)(state + 0x2b6) = 1529;
         }
-        ((GroundBaddieState*)state)->baddie.speedScale = lbl_803E27C0;
+        ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 50;
         state[0x33b] = 2;
         break;
@@ -362,7 +346,7 @@ void sharpClawInit(int obj, u8* state)
         {
             *(s16*)(state + 0x2b6) = 1530;
         }
-        ((GroundBaddieState*)state)->baddie.speedScale = lbl_803E27C4;
+        ((GroundBaddieState*)state)->baddie.speedScale = 120.0f;
         *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 50;
         state[0x33b] = 3;
         break;
@@ -371,7 +355,7 @@ void sharpClawInit(int obj, u8* state)
         {
             *(s16*)(state + 0x2b6) = 1534;
         }
-        ((GroundBaddieState*)state)->baddie.speedScale = lbl_803E27C0;
+        ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 60;
         state[0x33b] = 4;
         break;
@@ -380,7 +364,7 @@ void sharpClawInit(int obj, u8* state)
         {
             *(s16*)(state + 0x2b6) = 51;
         }
-        ((GroundBaddieState*)state)->baddie.speedScale = lbl_803E27C0;
+        ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 1;
         state[0x33b] = 1;
         break;
@@ -389,7 +373,7 @@ void sharpClawInit(int obj, u8* state)
         {
             *(s16*)(state + 0x2b6) = 1957;
         }
-        ((GroundBaddieState*)state)->baddie.speedScale = lbl_803E27C0;
+        ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 160;
         state[0x33b] = 5;
         z = 0;
@@ -397,11 +381,11 @@ void sharpClawInit(int obj, u8* state)
         fz2 = 1.0f;
         *(f32*)&((GroundBaddieState*)state)->baddie.eventFlags = fz2;
         state[0x321] = 21;
-        ((GroundBaddieState*)state)->baddie.unk318 = lbl_803E27B8;
+        ((GroundBaddieState*)state)->baddie.unk318 = 1.25f;
         state[0x322] = z;
         ((GroundBaddieState*)state)->baddie.unk31C = fz2;
         *(int*)(state + 0x36c) = (int)ObjModelChain_Alloc(&gGroundBaddieModelChainDesc, 1);
-        ObjModelChain_SetOrigin((ObjModelChain*)*(int*)(state + 0x36c), lbl_803E27C8, lbl_803E27CC, lbl_803E27D0);
+        ObjModelChain_SetOrigin((ObjModelChain*)*(int*)(state + 0x36c), 0.15f, 0.75f, -0.05f);
         *(int*)(obj + 0x108) = (int)baddieAfterUpdateBonesCb;
         ObjModelChain_SetEnabled((ObjModelChain*)*(int*)(state + 0x36c), 1);
         break;

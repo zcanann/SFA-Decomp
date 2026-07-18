@@ -16,22 +16,8 @@
 #include "main/game_object.h"
 #include "main/frame_timing.h"
 
-__declspec(section ".sdata2") f32 lbl_803E4CD0 = -0.025f;
-__declspec(section ".sdata2") f32 lbl_803E4CD4 = 0.25f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E4CD8 = 0.0f;
-#pragma explicit_zero_data reset
-__declspec(section ".sdata2") f32 lbl_803E4CDC = 14.0f;
-__declspec(section ".sdata2") f32 lbl_803E4CE0 = 20.0f;
-__declspec(section ".sdata2") f32 gDimBossGut2Pi = 3.1415927f;
-__declspec(section ".sdata2") f32 gDimBossGut2AngleUnitToRadians = 32768.0f;
-__declspec(section ".sdata2") f32 lbl_803E4CEC = 0.65f;
-__declspec(section ".sdata2") f32 lbl_803E4CF0 = 1.0f;
-extern f32 lbl_803E4D00;
-extern f32 lbl_803E4D04;
-extern f32 lbl_803E4D08;
-extern f32 lbl_803E4D0C;
-extern f32 lbl_803E4D10;
+f32 gDimBossGut2Pi = 3.1415927f;
+f32 gDimBossGut2AngleUnitToRadians = 32768.0f;
 
 extern int cos16(s16 angle);
 
@@ -45,7 +31,6 @@ typedef struct WaterSpikeMotion
     /* 0x14 */ s16 phase; /* bob phase angle, advanced +0x400/frame */
 } WaterSpikeMotion;
 
-#pragma dont_inline on
 void fn_801BEEA0(s16* obj, u8* state)
 {
     WaterSpikeMotion* motion;
@@ -56,13 +41,13 @@ void fn_801BEEA0(s16* obj, u8* state)
     heightDelta = motion->baseY - ((GameObject*)obj)->anim.localPosY;
 
     motion->phase += 0x400;
-    heightDelta = heightDelta + (f32)(int)cos16(motion->phase) / lbl_803E4D00;
+    heightDelta = heightDelta + (f32)(int)cos16(motion->phase) / 65535.0f;
 
-    motion->ySpeed = timeDelta * (heightDelta / lbl_803E4D04 - motion->targetY) + motion->ySpeed;
+    motion->ySpeed = timeDelta * (heightDelta / 50.0f - motion->targetY) + motion->ySpeed;
 
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + motion->ySpeed;
 
-    ((GameObject*)obj)->anim.rotY = (s16)(lbl_803E4D08 * motion->ySpeed);
+    ((GameObject*)obj)->anim.rotY = (s16)(2048.0f * motion->ySpeed);
 
     turnDelta = (s16) - (u16)((GameObject*)obj)->anim.rotZ;
     if (turnDelta > 0x8000)
@@ -77,13 +62,7 @@ void fn_801BEEA0(s16* obj, u8* state)
     motion->zSpin = motion->zSpin + (f32)((int)(turnDelta / 16) * framesThisStep);
     ((GameObject*)obj)->anim.rotZ = (s16)((f32)(int)((GameObject*)obj)->anim.rotZ + motion->zSpin);
 
-    motion->ySpeed = motion->ySpeed / lbl_803E4D0C;
-    motion->zSpin = motion->zSpin / lbl_803E4D10;
+    motion->ySpeed = motion->ySpeed / 1.07f;
+    motion->zSpin = motion->zSpin / 1.04f;
 }
-#pragma dont_inline reset
 
-__declspec(section ".sdata2") f32 lbl_803E4D00 = 65535.0f;
-__declspec(section ".sdata2") f32 lbl_803E4D04 = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E4D08 = 2048.0f;
-__declspec(section ".sdata2") f32 lbl_803E4D0C = 1.07f;
-__declspec(section ".sdata2") f32 lbl_803E4D10 = 1.04f;

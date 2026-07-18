@@ -58,13 +58,8 @@ extern float fcos16Precise(int angle);
 extern const f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
 extern f32 lbl_803E3004;
-__declspec(section ".sdata2") f32 lbl_803E3020 = 100.0f;
-__declspec(section ".sdata2") f32 gStaffActionVelocityDamping = 0.97f;
-__declspec(section ".sdata2") f32 lbl_803E3028 = 4.0f;
-__declspec(section ".sdata2") f32 lbl_803E302C = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E3030 = 6.0f;
-__declspec(section ".sdata2") f32 gStaffActionBoundsSearchRadius = 1e+06f;
-__declspec(section ".sdata2") f32 lbl_803E3038 = 0.014f;
+f32 gStaffActionVelocityDamping = 0.97f;
+f32 gStaffActionBoundsSearchRadius = 1e+06f;
 
 typedef struct StaffBits
 {
@@ -149,7 +144,7 @@ void fn_80165B3C(GameObject* obj, int state)
     f32 damping;
     int hitFound;
 
-    radius = lbl_803E3020;
+    radius = 100.0f;
     (obj)->anim.velocityY = (obj)->anim.velocityY - lbl_803E2FF4;
     (obj)->anim.velocityX = (obj)->anim.velocityX * (damping = gStaffActionVelocityDamping);
     (obj)->anim.velocityY = (obj)->anim.velocityY * damping;
@@ -524,7 +519,7 @@ void fn_80166444(int obj, int state)
     end[0] = start[0] + ((GameObject*)obj)->anim.velocityX;
     end[1] = start[1] + ((GameObject*)obj)->anim.velocityY;
     end[2] = start[2] + ((GameObject*)obj)->anim.velocityZ;
-    radius = lbl_803E3020;
+    radius = 100.0f;
     hitDetect_calcSweptSphereBounds(&bounds, start, end, &radius, 1);
     hitDetectFn_800691c0((GameObject*)obj, &bounds, 0, 1);
     one = lbl_803E2FF4;
@@ -558,9 +553,9 @@ void fn_80166444(int obj, int state)
     start[0] = ((GameObject*)obj)->anim.localPosX;
     start[1] = ((GameObject*)obj)->anim.localPosY;
     start[2] = ((GameObject*)obj)->anim.localPosZ;
-    end[0] = -(*(f32*)&lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalX - start[0]);
-    end[1] = -(lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalY - start[1]);
-    end[2] = -(lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalZ - start[2]);
+    end[0] = -(4.0f * ((LandedArwingState*)state)->surfaceNormalX - start[0]);
+    end[1] = -(4.0f * ((LandedArwingState*)state)->surfaceNormalY - start[1]);
+    end[2] = -(4.0f * ((LandedArwingState*)state)->surfaceNormalZ - start[2]);
     hitScratch.hitRadius = lbl_803E2FDC;
     hitScratch.hitType = 3;
     hitFound = hitDetectFn_80067958((GameObject*)obj, start, end, 1, hitScratch.hit, 0x20);
@@ -589,9 +584,9 @@ void fn_80166444(int obj, int state)
         end[1] = -((GameObject*)obj)->anim.velocityY;
         end[2] = -((GameObject*)obj)->anim.velocityZ;
         Vec3_Normalize(end);
-        end[0] = lbl_803E302C * end[0] + start[0];
-        end[1] = lbl_803E302C * end[1] + start[1];
-        end[2] = lbl_803E302C * end[2] + start[2];
+        end[0] = 10.0f * end[0] + start[0];
+        end[1] = 10.0f * end[1] + start[1];
+        end[2] = 10.0f * end[2] + start[2];
         hitScratch.hitRadius = lbl_803E2FDC;
         hitScratch.hitType = 3;
         hitFound = hitDetectFn_80067958((GameObject*)obj, start, end, 1, hitScratch.hit, 0x20);
@@ -601,7 +596,7 @@ void fn_80166444(int obj, int state)
         }
         else
         {
-            speed = lbl_803E3030;
+            speed = 6.0f;
             ((GameObject*)obj)->anim.velocityX = speed * ((LandedArwingState*)state)->surfaceNormalX;
             ((GameObject*)obj)->anim.velocityY = speed * ((LandedArwingState*)state)->surfaceNormalY;
             ((GameObject*)obj)->anim.velocityZ = speed * ((LandedArwingState*)state)->surfaceNormalZ;
@@ -632,7 +627,7 @@ void fn_80166840(GameObject* obj, int state, f32* hit, f32* end)
     f32 objZ;
     f32 len;
 
-    scale = lbl_803E3020;
+    scale = 100.0f;
     stateX = scale * ((LandedArwingState*)state)->surfaceNormalX + (objX = obj->anim.localPosX);
     stateY = scale * ((LandedArwingState*)state)->surfaceNormalY + (objY = obj->anim.localPosY);
     stateZ = scale * ((LandedArwingState*)state)->surfaceNormalZ + (objZ = obj->anim.localPosZ);
@@ -817,7 +812,6 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-#pragma dont_inline on
 void fn_80166E38(f32* out, f32* forward, f32* up)
 {
     f32 rt[3];
@@ -844,7 +838,6 @@ void fn_80166E38(f32* out, f32* forward, f32* up)
         mat[2][2] = -fwd[2];
     }
 }
-#pragma dont_inline reset
 
 void dll_D3_hitDetect_nop(void)
 {
@@ -874,8 +867,6 @@ void* gLandedArwingStateHandlers[6];
 int gStaffActionHitLightParams[6];
 void* gLandedArwingDefaultStateHandler;
 
-#pragma fp_contract off
-#pragma opt_common_subs off
 void dll_D3_update(int* obj)
 {
     int trans;
@@ -991,7 +982,7 @@ void dll_D3_update(int* obj)
             *(f32*)((char*)gStaffActionHitLightParams + 0xc) = ((GameObject*)obj)->anim.localPosX;
             *(f32*)((char*)gStaffActionHitLightParams + 0x10) = ((GameObject*)obj)->anim.localPosY;
             *(f32*)((char*)gStaffActionHitLightParams + 0x14) = ((GameObject*)obj)->anim.localPosZ;
-            objLightFn_8009a1dc(obj, lbl_803E3038, gStaffActionHitLightParams, 1, 0);
+            objLightFn_8009a1dc(obj, 0.014f, gStaffActionHitLightParams, 1, 0);
         }
     }
 
@@ -1009,7 +1000,7 @@ void dll_D3_update(int* obj)
     if (((StaffBits*)&extra->flags92)->b0 == 0u && extra->surfaceMode == 6)
     {
         hitCount = objBboxFn_800640cc((f32*)((char*)obj + 0x80), &((GameObject*)obj)->anim.localPosX,
-                                      lbl_803E3030, 0, (TrackBBoxHit*)hitResult, (GameObject*)obj, -0x7c, -1, 0xff,
+                                      6.0f, 0, (TrackBBoxHit*)hitResult, (GameObject*)obj, -0x7c, -1, 0xff,
                                       0);
         if (hitCount != 0 && *(s8*)((char*)hitResult + 0x50) == 13)
         {
@@ -1022,10 +1013,7 @@ void dll_D3_update(int* obj)
 #undef dx
 #undef dy
 #undef dz
-#pragma opt_common_subs reset
-#pragma fp_contract on
 
-__declspec(section ".sdata2") f32 lbl_803E3048 = 20.0f;
 
 void dll_D3_init(GameObject* obj, int def, int flag)
 {
@@ -1042,7 +1030,7 @@ void dll_D3_init(GameObject* obj, int def, int flag)
         setupFlags |= 1;
     }
     ((void (*)(int, int, int, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(
-        (int)obj, def, state, 5, 1, 0x108, setupFlags, lbl_803E3048);
+        (int)obj, def, state, 5, 1, 0x108, setupFlags, 20.0f);
     (obj)->animEventCallback = NULL;
 
     extra = (LandedArwingState*)((GroundBaddieState*)state)->control;

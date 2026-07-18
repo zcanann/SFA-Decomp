@@ -70,9 +70,7 @@ u8 lbl_803DCC20;
 
 u32 lbl_803DB468 = 0xFFFFFFFF;
 u32 gObjGxDefaultChanColor = 0xFF;
-#pragma explicit_zero_data on
 u32 lbl_803DB470 = 0;
-#pragma explicit_zero_data off
 u32 gObjGxVtxDescCache = 0xFFFFFFFF;
 u8 gObjGxBlendModeCache = 0xFF;
 u8 gObjGxZCompLocCache = 0xFF;
@@ -80,9 +78,7 @@ u32 gObjGxAlphaCompareCache = 0xFFFFFFFF;
 u8 gObjGxZWriteCache = 0xFF;
 u8 gObjGxZCompareCache = 0xFF;
 u8 gObjGxCullModeCache = 0xFF;
-#pragma explicit_zero_data on
 u8 gObjGxKColorCache[4] = {0};
-#pragma explicit_zero_data off
 u8 gObjShadowColor[4] = {0x20, 0x30, 0xFF, 0xFF};
 int lbl_803DB48C = -1;
 int lbl_803DB490 = -1;
@@ -194,7 +190,7 @@ typedef struct ObjModelRenderOp
     u32 flags;
 } ObjModelRenderOp;
 extern s32 gObjLevelLockSlots;
-extern volatile int lbl_803DCC80;
+extern int lbl_803DCC80;
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern f32 lbl_803DEA04;
@@ -275,7 +271,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
 {
     ModelLightStruct* renderHandle;
     int obj = (int)objArg;
-    volatile u32 savedEnvColor;
+    u32 savedEnvColor;
     int shadowTable;
     int shadowStride;
     int shadowParam;
@@ -665,9 +661,6 @@ void objFn_8003dc50(u8* obj, u8* model)
         }
     }
 }
-#pragma optimization_level 2
-#pragma dont_inline on
-#pragma inline_max_size(4000)
 void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
 {
     char* cache = (char*)getCache();
@@ -737,9 +730,6 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
         }
     }
 }
-#pragma optimization_level reset
-#pragma optimization_level 2
-#pragma dont_inline reset
 void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
 {
     u8* tbl[1];
@@ -846,8 +836,6 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
         }
     }
 }
-#pragma optimization_level reset
-#pragma dont_inline on
 void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
 {
     u32 flags = 0;
@@ -895,7 +883,6 @@ void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
         gObjGxVtxDescCache = flags;
     }
 }
-#pragma dont_inline reset
 
 void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5, u8* out1, u8* out2)
 {
@@ -1053,7 +1040,6 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         }
     }
 }
-#pragma opt_propagation off
 u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6)
 {
     u16 alpha;
@@ -1131,18 +1117,17 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                                 ObjTextureSlotDef* q2 = modelDef2->textureSlotDefs;
                                 int n2 = modelDef2->textureSlotCount;
                                 int k2;
+                                ty = tx = lbl_803DEA04;
                                 for (k2 = 0; k2 < n2; k2++)
                                 {
                                     if ((int)jid2 == q2->materialIndex)
                                     {
                                         tx = lbl_803DEA48 * slots2[k2].offsetS;
                                         ty = lbl_803DEA48 * slots2[k2].offsetT;
-                                        goto trans;
+                                        break;
                                     }
                                     q2++;
                                 }
-                                ty = tx = lbl_803DEA04;
-                            trans:
                                 PSMTXTrans(m, tx, ty, lbl_803DEA04);
                                 mtxp = m;
                             }
@@ -1411,18 +1396,17 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 ObjTextureSlotDef* q = modelDef->textureSlotDefs;
                 int n = modelDef->textureSlotCount;
                 int k;
+                ty = tx = lbl_803DEA04;
                 for (k = 0; k < n; k++)
                 {
                     if ((int)jid == q->materialIndex)
                     {
                         tx = lbl_803DEA48 * slots[k].offsetS;
                         ty = lbl_803DEA48 * slots[k].offsetT;
-                        goto trans2;
+                        break;
                     }
                     q++;
                 }
-                ty = tx = lbl_803DEA04;
-            trans2:
                 PSMTXTrans(m2, tx, ty, lbl_803DEA04);
             }
             textureFn_8004c330(textureIdxToPtr(*(u32*)l1), m2);
@@ -1537,9 +1521,6 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     return idx;
 }
-#pragma opt_common_subs off
-#pragma opt_propagation reset
-#pragma scheduling off
 void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
 {
     u8 blend;
@@ -1662,8 +1643,6 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
         }
     }
 }
-#pragma opt_common_subs reset
-#pragma scheduling reset
 
 extern f32 gObjJointMtxTemp[];
 extern void GXSetArray(int attr, int ptr, int stride);
@@ -1837,7 +1816,6 @@ typedef void (*ObjShadowCb)(int* obj, int* am, f32* wm);
 
 extern f32 gObjBoneMtxBuffer[0xC00];
 
-#pragma opt_dead_assignments off
 void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
 {
     f32 cm[16];
@@ -2493,7 +2471,6 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     }
 }
 
-#pragma opt_dead_assignments reset
 
 void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e);
 
@@ -2675,7 +2652,6 @@ typedef struct
     s16 rot[3];
     s8 joints[6];
 } ChildEnt;
-#pragma dont_inline on
 void objRenderShadow(int* obj)
 {
     if (lbl_803DEA04 == ((GameObject*)obj)->anim.rootMotionScale)
@@ -2725,7 +2701,6 @@ void objRenderShadow(int* obj)
  * The stream is walked through a MtxBitStream (data at +0, cursor at +0x10).
  */
 
-#pragma dont_inline reset
 
 void objRenderChild(int* child, int* parent, u8 isShadow)
 {
@@ -3037,7 +3012,6 @@ int getLoadedFileFlags(int slot)
     return v;
 }
 
-#pragma optimization_level 2
 extern u8 lbl_80345E10[0x160];
 
 void defragMemory(int mode)
@@ -3260,7 +3234,6 @@ void defragMemory(int mode)
 }
 
 f32 gObjBoneMtxBuffer[0xC00];
-#pragma optimization_level reset
 
 extern u32 gObjBlockStatus[0x63F6];
 
@@ -3687,7 +3660,6 @@ void modelsTabReadCb(s32 result, DVDFileInfo* fileInfo)
     }
 }
 
-#pragma dont_inline on
 void mapLoadDataFiles(int mapIdx)
 {
     if (sMapFileNameAdjacencyTable[mapIdx] != -1)
@@ -3710,7 +3682,6 @@ void mapLoadDataFiles(int mapIdx)
     mapLoadDataFile(mapIdx, MLDF_FILEID_ANIMCURV_TAB_A);
     mapLoadDataFile(mapIdx, MLDF_FILEID_ANIMCURV_BIN_A);
 }
-#pragma dont_inline reset
 
 extern s16 gObjMapBlockInfo[];
 
@@ -3976,8 +3947,6 @@ void* getCurrentDataFile(int id)
 }
 
 
-#pragma opt_common_subs off
-#pragma opt_loop_invariants off
 int mapUnload(int mapId, int flags)
 {
     char* hi;
@@ -4165,9 +4134,6 @@ int mapUnload(int mapId, int flags)
     return 1;
 }
 
-#pragma opt_common_subs reset
-#pragma opt_lifetimes off
-#pragma opt_loop_invariants reset
 int mergeTableFiles(u32* tbl, int id, int idx, int count_)
 {
     u8* base = lbl_80345E10;
@@ -4448,7 +4414,6 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     return 1;
 }
 #undef MAPTBLP
-#pragma opt_lifetimes reset
 
 
 f32 gObjJointMtxTemp[24] = {

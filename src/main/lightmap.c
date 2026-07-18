@@ -181,9 +181,6 @@ static inline void GXTexCoord2s16(const s16 s, const s16 t)
 }
 static inline void GXPosition1x8(const u8 x) { GXWGFifo.u8 = x; }
 
-#pragma opt_propagation off
-#pragma peephole off
-#pragma scheduling off
 void updateVisibleGeometry(void)
 {
     u8* cam;
@@ -260,7 +257,6 @@ void updateVisibleGeometry(void)
     pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
-#pragma opt_propagation reset
 
 MapBlockData* mapGetBlock(int i)
 {
@@ -430,7 +426,6 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
     return NULL;
 }
 
-#pragma dont_inline on
 void sortVisibleObjectKeysDescending(u32* arr, int n)
 {
     int i, j;
@@ -454,7 +449,6 @@ void sortVisibleObjectKeysDescending(u32* arr, int n)
         gap /= 3;
     }
 }
-#pragma dont_inline off
 void getVisibleObjects(s8* opacity)
 {
     int part;
@@ -996,7 +990,6 @@ void sceneRender(void)
 void doNothing_beforeTitleScreen(void)
 {
 }
-#pragma fp_contract off
 void updateEnvironment(int mode)
 {
     if (mode == 0)
@@ -1065,8 +1058,6 @@ void updateEnvironment(int mode)
         }
     }
 }
-#pragma fp_contract reset
-#pragma opt_propagation off
 void initMapBlocks(void)
 {
     u8* mb = (u8*)lbl_8037E0C0;
@@ -1087,16 +1078,16 @@ void initMapBlocks(void)
 
     *(u32*)(mb + 0x41f8) = *(u32*)(mb + 0x41f4) + 0x100;
     *(u32*)(mb + 0x41e4) = *(u32*)(mb + 0x41e0) + 0xc00;
-    *(u32*)(mb + 0x41d0) = *(volatile u32*)(mb + 0x41cc) + 0x100;
-    *(u32*)(mb + 0x41fc) = *(volatile u32*)(mb + 0x41f8) + 0x100;
-    *(u32*)(mb + 0x41e8) = *(volatile u32*)(mb + 0x41e4) + 0xc00;
-    *(u32*)(mb + 0x41d4) = *(volatile u32*)(mb + 0x41d0) + 0x100;
-    *(u32*)(mb + 0x4200) = *(volatile u32*)(mb + 0x41fc) + 0x100;
-    *(u32*)(mb + 0x41ec) = *(volatile u32*)(mb + 0x41e8) + 0xc00;
-    *(u32*)(mb + 0x41d8) = *(volatile u32*)(mb + 0x41d4) + 0x100;
-    *(u32*)(mb + 0x4204) = *(volatile u32*)(mb + 0x4200) + 0x100;
-    *(u32*)(mb + 0x41f0) = *(volatile u32*)(mb + 0x41ec) + 0xc00;
-    *(u32*)(mb + 0x41dc) = *(volatile u32*)(mb + 0x41d8) + 0x100;
+    *(u32*)(mb + 0x41d0) = *(u32*)(mb + 0x41cc) + 0x100;
+    *(u32*)(mb + 0x41fc) = *(u32*)(mb + 0x41f8) + 0x100;
+    *(u32*)(mb + 0x41e8) = *(u32*)(mb + 0x41e4) + 0xc00;
+    *(u32*)(mb + 0x41d4) = *(u32*)(mb + 0x41d0) + 0x100;
+    *(u32*)(mb + 0x4200) = *(u32*)(mb + 0x41fc) + 0x100;
+    *(u32*)(mb + 0x41ec) = *(u32*)(mb + 0x41e8) + 0xc00;
+    *(u32*)(mb + 0x41d8) = *(u32*)(mb + 0x41d4) + 0x100;
+    *(u32*)(mb + 0x4204) = *(u32*)(mb + 0x4200) + 0x100;
+    *(u32*)(mb + 0x41f0) = *(u32*)(mb + 0x41ec) + 0xc00;
+    *(u32*)(mb + 0x41dc) = *(u32*)(mb + 0x41d8) + 0x100;
 
     loadAssetFileById(&lbl_803DCE7C, MLDF_FILEID_MAPS_TAB);
     loadAssetFileById(&lbl_803DCE80, MLDF_FILEID_HITS_TAB);
@@ -1172,7 +1163,6 @@ void initMapBlocks(void)
     memset(mb + 0x8818, 0, 0xfa0);
     *(u32*)(mb + 0x8818) = -1;
 }
-#pragma opt_propagation reset
 
 void gameFlagFn_8005cd24(int v)
 {
@@ -1269,7 +1259,6 @@ void setPendingMapLoad(int v)
     if (v != 0) renderFlags |= RENDERFLAG_PENDING_MAP_LOAD;
     else renderFlags &= ~RENDERFLAG_PENDING_MAP_LOAD;
 }
-#pragma peephole on
 typedef struct LightmapVertex
 {
     s16 x;
@@ -1300,7 +1289,7 @@ void drawFn_8005cf8c(int vertexBase, const u8* triList, int triCount)
     GXBegin(GX_TRIANGLES, GX_VTXFMT0, triCount * 3 & 0xffff);
     for (tri = 0; tri < triCount; tri++)
     {
-        volatile u8* list = (volatile u8*)triList;
+        const u8* list = triList;
         for (vtx = 0; vtx < 3; vtx++)
         {
             GXPosition1x8(0);
@@ -1316,15 +1305,10 @@ void drawFn_8005cf8c(int vertexBase, const u8* triList, int triCount)
 }
 
 
-#pragma peephole off
-
-
 void fn_8005D0BC(int unused, int a, int b, int c)
 {
     fn_800704FC(a, b, c);
 }
-
-
 
 
 void _textSetColor(int unused, int a, int b, int c, int d)
@@ -1346,7 +1330,6 @@ void objDrawFn_8005da48(int* obj);
 void lightmap_sortTransparentDrawQueue(void);
 
 void getVisibleObjects(s8 * opacity);
-
 
 
 void renderSceneGeometry(int* p1, s8* order);
@@ -1395,7 +1378,6 @@ typedef union
 } F64Cvt;
 
 
-#pragma dont_inline on
 void lightmap_sortTransparentDrawQueue(void)
 {
     int i, j;
@@ -1419,7 +1401,6 @@ void lightmap_sortTransparentDrawQueue(void)
         gap /= 3;
     }
 }
-#pragma dont_inline off
 
 
 extern f32 lbl_803DEC20;
@@ -1514,7 +1495,6 @@ _store:
 
 void sortVisibleObjectKeysDescending(u32* arr, int n);
 
-#pragma dont_inline on
 void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
 {
     int state[5];
@@ -1635,8 +1615,6 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 }
 
 
-
-
 void objDrawFn_8005da48(int* obj)
 {
     int* model = (int*)Obj_GetActiveModel((GameObject*)obj);
@@ -1663,14 +1641,6 @@ void objDrawFn_8005da48(int* obj)
         Camera_ApplyFullViewport();
     }
 }
-#pragma dont_inline off
-
-
-
-
-
-
-
 
 
 void sceneDrawTransparentPolys(void)
@@ -1769,8 +1739,6 @@ void sceneDrawTransparentPolys(void)
         }
     }
 }
-
-
 
 
 void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32* p)

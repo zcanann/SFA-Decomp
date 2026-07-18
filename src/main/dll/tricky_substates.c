@@ -121,7 +121,6 @@ extern f32 lbl_803E2534;
 extern f32 lbl_803E24A8;
 extern f32 lbl_803E24EC;
 
-#pragma opt_propagation off
 static inline void trickyPlayWhineSfx(u32 id, u8* obj)
 {
     u8* ptr = ((GameObject*)obj)->extra;
@@ -358,9 +357,7 @@ void trickyDigTunnel(u8* obj, u8* state)
         break;
     }
 }
-#pragma opt_propagation reset
 
-#pragma opt_propagation off
 void trickyFn_80141fec(u8* obj, u8* state)
 {
     u32 sfxTable;
@@ -709,7 +706,6 @@ void trickyFn_80142524(u8* obj, u8* state)
     }
 }
 
-#pragma opt_propagation reset
 int trickyFn_80142a14(int obj, int state)
 {
     int tex;
@@ -813,7 +809,6 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
     return 1;
 }
 
-#pragma opt_propagation off
 int trickyFoodFn_80142d2c(GameObject* obj, int state)
 {
     int tex;
@@ -835,19 +830,8 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
         return 1;
     }
     result = (*gGameUIInterface)->isOneOfItemsBeingUsed(buf.ids, TRICKY_ITEM_ID_COUNT);
-    if (result != 2)
+    if (result != 2 && result >= 0 && result < 6)
     {
-        if (result < 2)
-        {
-            if (result >= 0)
-                goto dobody;
-            goto skip;
-        }
-        else if (result >= 6)
-        {
-            goto skip;
-        }
-    dobody:;
         tex = *(int*)&(obj)->extra;
         if (((*(u8*)(tex + 0x58) >> 6) & 1) == 0u)
         {
@@ -861,7 +845,6 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
             }
         }
     }
-skip:
     if (lbl_803E23DC == ((TrickyState*)state)->cooldownB)
     {
         {
@@ -966,7 +949,6 @@ int trickyFn_80142eb0(GameObject* obj, int state)
     return 1;
 }
 
-#pragma opt_propagation reset
 int trickyFn_801430e0(u8* obj, u8* state)
 {
     u8* ptr;
@@ -1069,7 +1051,6 @@ u32 trickyFn_801432cc(GameObject* obj, int* trickyState)
     return 1;
 }
 
-#pragma optimization_level 2
 u32 trickyFn_80143388(GameObject* obj, int* trickyState)
 {
     int ref;
@@ -1109,9 +1090,7 @@ u32 trickyFn_80143388(GameObject* obj, int* trickyState)
     }
     return 1;
 }
-#pragma optimization_level reset
 
-#pragma opt_propagation off
 int trickyFn_801434b0(GameObject* obj, int* trickyState)
 {
     char bval;
@@ -1227,7 +1206,6 @@ int trickyFn_801434b0(GameObject* obj, int* trickyState)
     return 1;
 }
 
-#pragma opt_propagation reset
 int trickyFoodFn_801437d4(GameObject* obj, int* state)
 {
     s8 slots[4];
@@ -1365,7 +1343,6 @@ u32 trickyFn_80143b78(GameObject* obj, int* trickyState)
     return 0;
 }
 
-#pragma opt_propagation off
 int trickyFn_80143c04(GameObject* obj, int state)
 {
     int tex;
@@ -1453,7 +1430,6 @@ int trickyFn_80143c04(GameObject* obj, int state)
     return 1;
 }
 
-#pragma opt_propagation reset
 u32 fn_80143DD4(int obj, int* trickyState)
 {
     int done;
@@ -1573,7 +1549,6 @@ u32 fn_80143DD4(int obj, int* trickyState)
     return 0;
 }
 
-#pragma opt_propagation off
 void objAnimFn_801441c0(u8* obj, u8* state)
 {
     f32 arr[2];
@@ -1658,7 +1633,6 @@ void objAnimFn_801441c0(u8* obj, u8* state)
     }
 }
 
-#pragma opt_propagation reset
 void tricky_startRandomIdleMove(GameObject* obj, int trickyState)
 {
     int val;

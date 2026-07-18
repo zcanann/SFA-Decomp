@@ -43,31 +43,12 @@ int lbl_803DBCC8[2] = {2, 3};
 #define MAGICPLANT_PARTFX          0x802
 #define MAGICPLANT_HIT_VOLUME_SLOT 0xe
 
-
-union MagicPlantConstF32 { f32 f; };
-const union MagicPlantConstF32 lbl_803E28B0 = { 0.0f };
-__declspec(section ".sdata2") f32 lbl_803E28B4 = 6e+01f;
-__declspec(section ".sdata2") f32 lbl_803E28B8 = 7e+02f;
-__declspec(section ".sdata2") f32 lbl_803E28BC = 1.5f;
-__declspec(section ".sdata2") f32 lbl_803E28C0 = 0.75f;
-__declspec(section ".sdata2") f32 lbl_803E28C4 = 0.15f;
-__declspec(section ".sdata2") f32 lbl_803E28C8 = 3.6e+02f;
-__declspec(section ".sdata2") f32 lbl_803E28CC = 1e+01f;
-__declspec(section ".sdata2") f32 lbl_803E28D0 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E28D4 = 2.0f;
-__declspec(section ".sdata2") f32 lbl_803E28D8 = 25.0f;
-__declspec(section ".sdata2") f32 lbl_803E28DC = 4e+01f;
-__declspec(section ".sdata2") f32 lbl_803E28E0 = 0.02f;
-__declspec(section ".sdata2") f32 lbl_803E28E4 = 0.1f;
-__declspec(section ".sdata2") f32 lbl_803E28E8 = 0.97f;
-const union MagicPlantConstF32 lbl_803E28EC = { 0.0f };
 void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
     fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
 extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
-
 
 void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag)
 {
@@ -118,7 +99,7 @@ void fn_80153040(GameObject* obj, int state)
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
                 if ((*gRomCurveInterface)
-                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8, lbl_803DBCB8, -1) != 0)
+                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, 7e+02f, lbl_803DBCB8, -1) != 0)
                 {
                     ((BaddieState*)state)->controlFlags =
                         ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
@@ -131,25 +112,25 @@ void fn_80153040(GameObject* obj, int state)
         vec[0] = curve->posX - (obj)->anim.localPosX;
         vec[1] = curve->posY - (obj)->anim.localPosY;
         vec[2] = curve->posZ - (obj)->anim.localPosZ;
-        fn_8014C678((int)obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
+        fn_8014C678((int)obj, state, vec, 1.5f, 0.75f, 0.15f, 1);
 
         *(f32*)(state + 0x324) = *(f32*)(state + 0x324) + timeDelta;
-        if (*(f32*)(state + 0x324) > lbl_803E28C8)
+        if (*(f32*)(state + 0x324) > 3.6e+02f)
         {
             *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~(u64)0x10000;
-            *(f32*)(state + 0x324) = lbl_803E28B0.f;
+            *(f32*)(state + 0x324) = 0.0f;
         }
     }
 
-    fn_8014CD1C((int)obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
+    fn_8014CD1C((int)obj, state, 0xf, 1e+01f, 1.0f, 0);
 
     *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
-    if (*(f32*)(state + 0x328) <= lbl_803E28B0.f)
+    if (*(f32*)(state + 0x328) <= 0.0f)
     {
-        *(f32*)(state + 0x328) = lbl_803E28B4;
+        *(f32*)(state + 0x328) = 6e+01f;
         Sfx_PlayFromObject((int)obj, SFXTRIG_mn_heart1_c);
     }
-    *(f32*)(state + 0x32c) = lbl_803E28B0.f;
+    *(f32*)(state + 0x32c) = 0.0f;
 }
 
 void fn_80153248(GameObject* obj, int state)
@@ -173,13 +154,13 @@ void fn_80153248(GameObject* obj, int state)
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
-        if (Curve_AdvanceAlongPath(curve, lbl_803E28D4 * ((BaddieState*)state)->pathStep) != 0 ||
+        if (Curve_AdvanceAlongPath(curve, 2.0f * ((BaddieState*)state)->pathStep) != 0 ||
             curve->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
                 if ((*gRomCurveInterface)
-                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8, lbl_803DBCB8, -1) != 0)
+                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, 7e+02f, lbl_803DBCB8, -1) != 0)
                 {
                     ((BaddieState*)state)->controlFlags =
                         ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
@@ -190,15 +171,15 @@ void fn_80153248(GameObject* obj, int state)
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, MAGICPLANT_HIT_VOLUME_SLOT, 1, 0);
     trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
     vec[0] = ((GameObject*)trackedObj)->anim.localPosX - (obj)->anim.localPosX;
-    vec[1] = (lbl_803E28D8 + ((GameObject*)trackedObj)->anim.localPosY) - (obj)->anim.localPosY;
+    vec[1] = (25.0f + ((GameObject*)trackedObj)->anim.localPosY) - (obj)->anim.localPosY;
     vec[2] = ((GameObject*)trackedObj)->anim.localPosZ - (obj)->anim.localPosZ;
     PSVECMag(vec);
     *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) + timeDelta;
-    if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > lbl_803E28C8)
+    if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > 3.6e+02f)
     {
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-        *(f32*)(state + 0x324) = lbl_803E28B0.f;
-        *(f32*)(state + 0x32c) = lbl_803E28B0.f;
+        *(f32*)(state + 0x324) = 0.0f;
+        *(f32*)(state + 0x32c) = 0.0f;
     }
     else
     {
@@ -218,13 +199,13 @@ void fn_80153248(GameObject* obj, int state)
             if (voxmaps_traceIntGrid(gridB, gridA, NULL, &hitOut, 0) == 0)
             {
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-                *(f32*)(state + 0x324) = lbl_803E28B0.f;
-                *(f32*)(state + 0x32c) = lbl_803E28B0.f;
+                *(f32*)(state + 0x324) = 0.0f;
+                *(f32*)(state + 0x32c) = 0.0f;
             }
         }
     }
-    fn_8014C678((int)obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
-    fn_8014CD1C((int)obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
+    fn_8014C678((int)obj, state, vec, 1.5f, 0.75f, 0.15f, 1);
+    fn_8014CD1C((int)obj, state, 0xf, 1e+01f, 1.0f, 0);
 }
 
 void vambat_init(GameObject* obj, int state)
@@ -233,20 +214,20 @@ void vambat_init(GameObject* obj, int state)
     f32 zero;
     f32 pathStepInit;
 
-    ((BaddieState*)state)->speedScale = lbl_803E28DC;
+    ((BaddieState*)state)->speedScale = 4e+01f;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0x1009;
-    ((BaddieState*)state)->unk308 = lbl_803E28E0;
-    ((BaddieState*)state)->animDeltaScale = lbl_803E28E4;
-    ((BaddieState*)state)->unk304 = lbl_803E28E8;
+    ((BaddieState*)state)->unk308 = 0.02f;
+    ((BaddieState*)state)->animDeltaScale = 0.1f;
+    ((BaddieState*)state)->unk304 = 0.97f;
     ((BaddieState*)state)->unk320 = 0;
-    initSpeed = lbl_803E28BC;
+    initSpeed = 1.5f;
     *(f32*)&((BaddieState*)state)->eventFlags = initSpeed;
     ((BaddieState*)state)->unk321 = 1;
-    pathStepInit = lbl_803E28D0;
+    pathStepInit = 1.0f;
     ((BaddieState*)state)->unk318 = pathStepInit;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = initSpeed;
-    zero = lbl_803E28B0.f;
+    zero = 0.0f;
     *(f32*)(state + 0x324) = zero;
     *(f32*)(state + 0x328) = zero;
     *(f32*)(state + 0x32c) = zero;

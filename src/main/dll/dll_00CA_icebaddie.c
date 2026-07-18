@@ -342,7 +342,6 @@ int iceBaddie_stateHandlerB03(GameObject* obj, int state)
     return 0;
 }
 
-#pragma opt_common_subs off
 int iceBaddie_stateHandlerB02(GameObject* obj, int state)
 {
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
@@ -367,7 +366,6 @@ int iceBaddie_stateHandlerB02(GameObject* obj, int state)
     return 0;
 }
 
-#pragma opt_common_subs reset
 int iceBaddie_stateHandlerB01(int* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
@@ -400,7 +398,7 @@ int iceBaddie_checkTargetState(int obj, int state)
     f32 neutralBlend;
 
     if (((GroundBaddieState*)state)->baddie.targetObj == NULL)
-        goto return0;
+        return 0;
 
     if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
     {
@@ -426,7 +424,7 @@ int iceBaddie_checkTargetState(int obj, int state)
     }
 
     if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveDone == 0)
-        goto return0;
+        return 0;
 
     (**(void (**)(int, int, f32, int))((char*)(*gPlayerInterface) + 0x30))(obj, state, timeDelta, 4);
     if (((u8)(**(int (**)(int, int, f32))((char*)(*gBaddieControlInterface) + 0x18))(obj, state, 75.0f) & 1) ==
@@ -441,9 +439,6 @@ int iceBaddie_checkTargetState(int obj, int state)
         return 8;
     }
     return 7;
-
-return0:
-    return 0;
 }
 
 int iceBaddie_updateLandingState(GameObject* obj, int state)
@@ -665,7 +660,6 @@ int iceBaddie_updateHeightBlendState(GameObject* obj, int state)
     return 0;
 }
 
-#pragma opt_common_subs off
 int iceBaddie_stateHandlerA06(GameObject* obj, int state)
 {
     GroundBaddieState* sub = obj->extra;
@@ -777,7 +771,6 @@ int iceBaddie_stateHandlerA05(GameObject* obj, int state)
     return 0;
 }
 
-#pragma opt_common_subs reset
 int iceBaddie_updateSpinState(GameObject* obj, int state)
 {
     GroundBaddieState* sub = (obj)->extra;
@@ -803,7 +796,6 @@ int iceBaddie_updateSpinState(GameObject* obj, int state)
     return 0;
 }
 
-#pragma opt_common_subs off
 int iceBaddie_updateImpactHitState(GameObject* obj, int state)
 {
     GroundBaddieState* sub = obj->extra;
@@ -832,7 +824,6 @@ int iceBaddie_updateImpactHitState(GameObject* obj, int state)
     return 0;
 }
 
-#pragma opt_common_subs reset
 int iceBaddie_updateHideResetState(GameObject* obj, int state)
 {
     GroundBaddieState* sub = (obj)->extra;
@@ -910,7 +901,6 @@ int iceBaddie_updateOpenState(GameObject* obj, int state)
     return 0;
 }
 
-#pragma opt_common_subs off
 int iceBaddie_updateOpenHitState(GameObject* obj, int state)
 {
     GroundBaddieState* sub;
@@ -957,8 +947,6 @@ int iceBaddie_updateOpenHitState(GameObject* obj, int state)
     return 0;
 }
 
-#pragma opt_common_subs reset
-#pragma dont_inline on
 void iceBaddie_spawnIceBall(int* obj, int* state)
 {
     IceBallSetup* alloc;
@@ -1290,7 +1278,6 @@ int iceBaddie_getObjectTypeId(void)
     return 0x49;
 }
 
-#pragma opt_common_subs off
 void iceBaddie_free(GameObject* obj)
 {
     GroundBaddieState* state = obj->extra;
@@ -1305,7 +1292,6 @@ void iceBaddie_free(GameObject* obj)
     ((void (*)(int, int, int))((void**)*gBaddieControlInterface)[16])((int)obj, (int)state, 0x20);
 }
 
-#pragma opt_common_subs reset
 void iceBaddie_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible)
 {
     GroundBaddieState* state = (obj)->extra;
@@ -1386,7 +1372,6 @@ void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
     }
 }
 
-#pragma dont_inline reset
 void iceBaddie_init(int obj, u8* params, int flags)
 {
     GroundBaddieState* sub;

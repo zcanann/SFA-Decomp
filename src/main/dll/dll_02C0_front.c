@@ -179,8 +179,6 @@ void TitleScreen_init(u8* obj, u8* def);
 void TitleScreen_free(u8* obj);
 void TitleScreen_update(u8* obj);
 
-#pragma peephole off
-#pragma scheduling off
 
 void fn_80134870(int obj, u8* arr)
 {
@@ -302,8 +300,6 @@ u8 shouldShowCredits(void)
 {
     return showCredits;
 }
-#pragma peephole on
-#pragma scheduling off
 
 
 /* Reset the per-frame state group: latch showCredits = 1 and zero five
@@ -329,7 +325,6 @@ int gameTextFn_80134be8(void)
     }
     return 0;
 }
-#pragma peephole off
 void titleScreenShowCopyright(u8 arg)
 {
     void* tb;
@@ -392,8 +387,6 @@ void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
 /* Free the main buffer at gTitleScreenMainTex and walk the 19-slot table at
  * gTitleScreenTextures releasing each non-null entry, then clear the busy
  * byte at gTitleScreenSetupDone. */
-#pragma opt_common_subs off
-#pragma opt_propagation off
 void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
 {
     int i;
@@ -535,8 +528,6 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
 }
 
 u8 gTitleScreenMtx[0x34];
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
 
 /* Two-word setter for state pair. */
 void fn_80135814(u32 a, u32 b)
@@ -544,8 +535,6 @@ void fn_80135814(u32 a, u32 b)
     lbl_803DD9BC = a;
     lbl_803DD9B8 = b;
 }
-#pragma peephole on
-#pragma scheduling off
 void titleScreenPositionElements(f32 a, f32 b)
 {
     PSMTXTrans(gTitleScreenMtx, a, b, lbl_803E22F8);
@@ -554,7 +543,6 @@ void titleScreenPositionElements(f32 a, f32 b)
     gTitleScreenCursorX = lbl_803E2318 - gTitleScreenCursorY;
 }
 
-#pragma peephole off
 
 void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
 {
@@ -591,7 +579,6 @@ void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
     GXSetScissor(0, 0, 0x280, 0x1e0);
     Camera_RebuildProjectionMatrix();
 }
-
 
 
 /* Set up the title-screen translation matrix at gTitleScreenMtx and derive
@@ -643,8 +630,6 @@ int TitleScreen_getObjectTypeId(u8* obj)
         return 74;
     return 0;
 }
-#pragma peephole on
-#pragma scheduling off
 
 /* If seqId == 0x77d, trigger Music_Trigger(MUSICTRIG_lose_ice_race, 0)
  * and clear showCredits. */
@@ -657,7 +642,6 @@ void TitleScreen_free(u8* obj)
         showCredits = 0;
     }
 }
-#pragma peephole off
 
 
 /* When visible and ready, render via objRenderFn; once the credits flag
@@ -688,8 +672,6 @@ void TitleScreen_hitDetect(void)
 
 
 /* Drive the copyright/title text fade and push text box 0x3d9. */
-#pragma peephole off
-#pragma scheduling off
 
 typedef void (*TitleScreenUpdateSfxFn)(u8* obj, u8* arr);
 
@@ -1008,9 +990,6 @@ void TitleScreen_update(u8* obj)
 }
 
 
-
-
-
 /* Seed the object's state from its seqId, pick the anim move and blend
  * float per id range, and for the attract id install the movie draw
  * callback. */
@@ -1044,7 +1023,6 @@ void TitleScreen_init(u8* obj, u8* def)
         }
     }
 }
-#pragma peephole on
 
 /* Two-byte state push: if arg differs from lbl_803DD991, save old to
  * lbl_803DBC09 and set new. */
@@ -1074,8 +1052,6 @@ void titleScreenFn_801368d4(void)
 }
 
 
-#pragma peephole off
-#pragma scheduling off
 void TitleScreen_release(void)
 {
     int i;

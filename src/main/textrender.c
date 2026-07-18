@@ -31,7 +31,6 @@ extern char sDiscInsertPromptLine[];
 extern char sDiscInsertGameDiscLine[];
 
 void* lbl_803DB378 = (void*)-1;
-#pragma explicit_zero_data on
 char lbl_803DB37C[4] = {0};
 char lbl_803DB380[4] = {0};
 char lbl_803DB384[4] = {0};
@@ -40,9 +39,7 @@ char lbl_803DB38C[4] = {0};
 char lbl_803DB390[4] = {0};
 char lbl_803DB394[4] = {0};
 char lbl_803DB398[4] = {0};
-#pragma explicit_zero_data off
 char lbl_803DB39C[4] = "\xE3\x80\x80";
-#pragma explicit_zero_data on
 char* lbl_803DB3A0[1] = {(char*)&lbl_802C981C};
 char lbl_803DB3A4[4] = {0};
 char lbl_803DB3A8[4] = {0};
@@ -51,19 +48,14 @@ char lbl_803DB3B0[4] = {0};
 char* lbl_803DB3B4[2] = {sDiscInsertPromptLine, sDiscInsertGameDiscLine};
 char lbl_803DB3BC[4] = {0};
 char* lbl_803DB3C0[1] = {(char*)&sDiscStatusMessageTable};
-#pragma explicit_zero_data off
 int lbl_803DB3C4 = 0x800;
 int gGameTextClearColor = 0xC0;
 int lbl_803DB3CC = 3;
 f32 lbl_803DB3D0 = 0.4f;
 char lbl_803DB3D4[] = "    ";
-#pragma explicit_zero_data on
 int lbl_803DB3DC = 0;
-#pragma explicit_zero_data off
 int gGameTextSavedDir = -1;
-#pragma explicit_zero_data on
 int lbl_803DB3E4 = 0;
-#pragma explicit_zero_data off
 s16 gGameTextBoxTexAssets = 0x1C4;
 int gGameTextBoxCornerInset = 2;
 int gGameTextBoxInset = 0xE;
@@ -71,9 +63,7 @@ int gGameTextBoxColorR = 0xFF;
 int gGameTextBoxColorG = 0xFF;
 int gGameTextBoxColorB = 0xFF;
 int gGameTextBoxColorA = 0xFF;
-#pragma explicit_zero_data on
 int lbl_803DB404 = 0;
-#pragma explicit_zero_data off
 
 typedef struct
 {
@@ -308,11 +298,6 @@ extern int gGameTextShadowOffsetY;
 extern int gameTextCharset;
 extern CtrlCharEntry lbl_802C86F0[];
 
-/*
- * Shared disc-status lines living outside this unit (0x803DB37C..): mostly
- * empty/spacer lines reused by every message.
- */
-
 extern u8 gGameTextBase[];
 extern u8 lbl_803399A0[];
 extern int gGameTextFallbackBuf;
@@ -378,12 +363,10 @@ int GameText_CountPrintableChars(u8* str);
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
 
 /*
- * Retail .data begins here with the disc-error/loading screens'
- * self-contained resources: the SJIS->glyph remap table, the built-in font
- * metrics, and the Japanese and English disc-status message text. These
- * screens must be able to draw without loading anything from disc, so the
- * whole resource lives in the executable. Kept ahead of textRenderStr so
- * the section layout matches retail.
+ * The disc-error/loading screens' self-contained resources: the SJIS->glyph
+ * remap table, the built-in font metrics, and the Japanese and English
+ * disc-status message text. These screens must be able to draw without
+ * loading anything from disc, so the whole resource lives in the executable.
  */
 
 u16 gGameTextSjisGlyphTable[256] = {
@@ -719,10 +702,6 @@ void gameTextLoadForCurMap(int sourceId);
 void gameTextLoadGraphicsFn_8001a918(void);
 void gameTextInitFn_8001c794(void);
 void subtitleBuildLineTable(void);
-
-#pragma dont_inline off
-#pragma peephole off
-#pragma scheduling off
 
 int getControlCharLen(u32 c)
 {
@@ -1220,7 +1199,6 @@ int GameText_CountPrintableChars(u8* str)
     return count;
 }
 
-
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang)
 {
     int byteOff;
@@ -1385,7 +1363,6 @@ SubtitleCmd* subtitleParseControlCmds(int str, int* count)
     }
 }
 
-
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out)
 {
     int off;
@@ -1438,20 +1415,20 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        gGameTextFallbackBuf = (int)(lbl_803399A0 + *(volatile int*)&gGameTextBufferIndex * 4);
+        gGameTextFallbackBuf = (int)(lbl_803399A0 + gGameTextBufferIndex * 4);
         switch (gameTextFonts->mode)
         {
         case 0:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xec4);
+            sprintf((char*)gCurTextBuffer, strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xed4);
+            sprintf((char*)gCurTextBuffer, strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xee0);
+            sprintf((char*)gCurTextBuffer, strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xef0);
+            sprintf((char*)gCurTextBuffer, strings + 0xef0);
             break;
         }
         return gGameTextLastEntry;
@@ -1469,8 +1446,8 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        gGameTextFallbackBuf = (int)(lbl_803399A0 + *(volatile int*)&gGameTextBufferIndex * 4);
-        sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xefc, textId,
+        gGameTextFallbackBuf = (int)(lbl_803399A0 + gGameTextBufferIndex * 4);
+        sprintf((char*)gCurTextBuffer, strings + 0xefc, textId,
                 sMapDirectoryNameTable[(int)curGameTextDir]);
         return gGameTextLastEntry;
     }
@@ -1486,8 +1463,8 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
-        gGameTextFallbackBuf = (int)(lbl_803399A0 + *(volatile int*)&gGameTextBufferIndex * 4);
-        sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xf10, textId, phraseIndex);
+        gGameTextFallbackBuf = (int)(lbl_803399A0 + gGameTextBufferIndex * 4);
+        sprintf((char*)gCurTextBuffer, strings + 0xf10, textId, phraseIndex);
         return gGameTextLastEntry;
     }
 
@@ -1512,20 +1489,20 @@ void* gameTextGetStr(int textId)
         gGameTextLastEntry = entry;
         gCurTextBuffer = *(int*)*(int**)(entry + 8);
         *(u16*)entry = 0xffff;
-        gGameTextFallbackBuf = (int)(lbl_803399A0 + *(volatile int*)&gGameTextBufferIndex * 4);
+        gGameTextFallbackBuf = (int)(lbl_803399A0 + gGameTextBufferIndex * 4);
         switch (gameTextFonts->mode)
         {
         case 0:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xec4);
+            sprintf((char*)gCurTextBuffer, strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xed4);
+            sprintf((char*)gCurTextBuffer, strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xee0);
+            sprintf((char*)gCurTextBuffer, strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xef0);
+            sprintf((char*)gCurTextBuffer, strings + 0xef0);
             break;
         }
         return gGameTextLastEntry;
@@ -1558,30 +1535,30 @@ void* gameTextGet(int textId)
             gGameTextBufferIndex = 0;
         }
         {
-            u8* slotBase = gameTextBase + *(volatile int*)&gGameTextBufferIndex * 0xc;
+            u8* slotBase = gameTextBase + gGameTextBufferIndex * 0xc;
             entry = (u16*)(slotBase + 0x40);
         }
         gGameTextLastEntry = (u8*)entry;
         gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
         *entry = 0xffff;
         {
-            u8* fb = gameTextBase + *(volatile int*)&gGameTextBufferIndex * 4;
+            u8* fb = gameTextBase + gGameTextBufferIndex * 4;
             gGameTextFallbackBuf = (int)(fb + 0x20);
         }
 
         switch (gameTextFonts->mode)
         {
         case 0:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xec4);
+            sprintf((char*)gCurTextBuffer, strings + 0xec4);
             break;
         case 1:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xed4);
+            sprintf((char*)gCurTextBuffer, strings + 0xed4);
             break;
         case 3:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xee0);
+            sprintf((char*)gCurTextBuffer, strings + 0xee0);
             break;
         case 4:
-            sprintf((char*)*(volatile int*)&gCurTextBuffer, strings + 0xef0);
+            sprintf((char*)gCurTextBuffer, strings + 0xef0);
             break;
         }
         return gGameTextLastEntry;
@@ -1628,17 +1605,17 @@ void* gameTextGet(int textId)
         gGameTextBufferIndex = 0;
     }
     {
-        u8* slotBase = gameTextBase + *(volatile int*)&gGameTextBufferIndex * 0xc;
+        u8* slotBase = gameTextBase + gGameTextBufferIndex * 0xc;
         entry = (u16*)(slotBase + 0x40);
     }
     gGameTextLastEntry = (u8*)entry;
     gCurTextBuffer = *(int*)*(int**)((u8*)entry + 8);
     *entry = 0xffff;
     {
-        u8* fb = gameTextBase + *(volatile int*)&gGameTextBufferIndex * 4;
+        u8* fb = gameTextBase + gGameTextBufferIndex * 4;
         gGameTextFallbackBuf = (int)(fb + 0x20);
     }
-    sprintf((char*)*(volatile int*)&gCurTextBuffer, lbl_803DB3D4, textId, sMapDirectoryNameTable[(int)curGameTextDir]);
+    sprintf((char*)gCurTextBuffer, lbl_803DB3D4, textId, sMapDirectoryNameTable[(int)curGameTextDir]);
     *(u16*)gGameTextLastEntry = textId;
     *(f32*)gGameTextFallbackBuf = lbl_803DE704;
     return gGameTextLastEntry;
@@ -1659,7 +1636,6 @@ void gameTextResetCursor(int flags)
 }
 
 GameTextStateElem gGameTextCharsets[0xA0 / sizeof(GameTextStateElem)];
-
 
 void gameTextSetCursor(u16 x, u16 y, int flags)
 {
@@ -1699,7 +1675,6 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
         s->arg2 = y;
     }
 }
-#pragma dont_inline on
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     if (gameTextDrawFunc != NULL)
@@ -1722,7 +1697,6 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
         s->arg3 = a;
     }
 }
-#pragma dont_inline off
 void gameTextLoadDir(int dirId)
 {
     GameTextSlot* cmd;
@@ -1785,8 +1759,6 @@ void gameTextLoadDir(int dirId)
     }
 }
 
-#pragma dont_inline on
-
 int gameTextGetCharset(void)
 {
     return gameTextCharset;
@@ -1823,20 +1795,15 @@ int getCurLanguage(void)
 {
     return curLanguage;
 }
-#pragma dont_inline off
 
 f32 gameTextFn_80019c00(void)
 {
     return gameTextFonts->timer;
 }
-#pragma dont_inline on
 int gameTextGetState(int i)
 {
     return gGameTextCharsets[i].state;
 }
-
-#pragma dont_inline off
-#pragma opt_unroll_loops on
 
 void gameTextRun(void)
 {
@@ -2101,7 +2068,6 @@ void gameTextInit(void)
     gameTextLoadDir(0x1c);
 }
 
-
 void gameTextInitFn_8001a234(void)
 {
     u8* clearPtr;
@@ -2201,7 +2167,6 @@ void gameTextInitFn_8001a234(void)
     lbl_803DB378 = (void*)mmCreateMemoryStore(0x800);
 }
 
-
 extern char sGameTextSequencePathFormat[];
 
 void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
@@ -2281,7 +2246,6 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
 }
 
 void* gSubtitleLineTable[0x100];
-
 
 void gameTextLoadForCurMap(int sourceId)
 {
@@ -2377,9 +2341,6 @@ void gameTextLoadForCurMap(int sourceId)
     testAndSet_onlyUseHeap3(oldHeap);
 }
 
-#pragma opt_loop_invariants off
-#pragma ppc_unroll_instructions_limit 32
-#pragma ppc_unroll_speculative off
 void gameTextLoadGraphicsFn_8001a918(void)
 {
     int wbytes;
@@ -2461,18 +2422,17 @@ void gameTextLoadGraphicsFn_8001a918(void)
             u8 lo;
             c = *(int*)glyph;
             p[0] = gGameTextSjisGlyphTable;
+            val = 0;
             i = 0xfe;
             while (i--)
             {
                 if (p[0][0] == c)
                 {
                     val = p[0][1];
-                    goto found;
+                    break;
                 }
                 p[0]++;
             }
-            val = 0;
-        found:
             hi = (val >> 8) & 0xff;
             lo = val;
             if (hi == 0)
@@ -2575,9 +2535,6 @@ void gameTextLoadGraphicsFn_8001a918(void)
     *(int*)(base31 + 0x6c) = 2;
 }
 
-#pragma opt_loop_invariants reset
-#pragma ppc_unroll_instructions_limit 70
-#pragma ppc_unroll_speculative on
 void setLanguageFn_8001ad64(void* reqp)
 {
     u8* req = reqp;
@@ -2974,8 +2931,6 @@ GlyphResource802CA100 lbl_802CA100 = {
     0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6
     },
 };
-#pragma dont_inline on
-#pragma opt_unroll_loops on
 void subtitleFn_8001b700(void)
 {
     void** slot;
@@ -3006,10 +2961,6 @@ void subtitleFn_8001b700(void)
         }
     }
 }
-#pragma ppc_unroll_instructions_limit 96
-#pragma opt_strength_reduction on
-#pragma optimization_level 1
-#pragma peephole off
 void subtitleBuildLineTable(void)
 {
     int savedCharset;
@@ -3123,11 +3074,6 @@ void subtitleBuildLineTable(void)
     }
 }
 
-#pragma dont_inline off
-#pragma opt_strength_reduction reset
-#pragma optimization_level reset
-#pragma ppc_unroll_instructions_limit 70
-
 void subtitleStart(int x)
 {
     if (gSubtitlesEnabled != 0)
@@ -3157,16 +3103,15 @@ void gameTextLoadTaskText(int taskId)
         if (gSubtitlesEnabled == 0)
         {
             taskList = gGameTextTaskTextAllowList;
+            allowed = 0;
             for (count = 0; count < 0xb; count++)
             {
                 if (taskId == taskList[count])
                 {
                     allowed = 1;
-                    goto checkAllowed;
+                    break;
                 }
             }
-            allowed = 0;
-        checkAllowed:
             if (allowed == 0)
             {
                 return;
@@ -3193,7 +3138,6 @@ void gameTextLoadTaskText(int taskId)
         gSubtitleColorA = 0xff;
     }
 }
-
 
 int subtitleIsActive(void)
 {
@@ -3260,7 +3204,6 @@ void fn_8001BDD4(int mode)
     }
 }
 
-
 void fn_8001BE2C(int mode)
 {
     switch (mode)
@@ -3273,7 +3216,6 @@ void fn_8001BE2C(int mode)
     }
 }
 
-#pragma dont_inline on
 void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
 {
     u32 colorB;
@@ -3436,7 +3378,6 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
     ((GameTextBox*)box)->cursorX = savedX;
     ((GameTextBox*)box)->cursorY = savedY;
 }
-#pragma dont_inline off
 
 void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
 {
@@ -3473,11 +3414,6 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
     ((void (*)(void*, f32, f32, int, int, int, int, int))drawScaledTexture)(
         gGameTextBoxEdgeTexture, midX, midY, alpha, 0x100, halfW + gGameTextBoxInset, halfH + gGameTextBoxInset, 3);
 }
-#pragma opt_common_subs off
-#pragma opt_lifetimes off
-#pragma opt_loop_invariants off
-#pragma opt_propagation off
-#pragma opt_strength_reduction off
 void gameTextInitFn_8001c794(void)
 {
     Texture** q;

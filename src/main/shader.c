@@ -171,7 +171,6 @@ int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)
     f32 z;
     f32 x;
     int t;
-    int ok;
     int bx;
     int bz;
     s8 found;
@@ -197,8 +196,7 @@ int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)
     t = (*gMapEventInterface)->getMapAct(mapEventGroup);
     if (t == -1)
     {
-        ok = 0;
-        goto test;
+        return 0;
     }
     if (t != 0)
     {
@@ -206,24 +204,16 @@ int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)
         {
             if ((*(u8*)(obj + 3) >> (t - 1)) & 1)
             {
-                ok = 0;
-                goto test;
+                return 0;
             }
         }
         else
         {
             if ((*(u8*)(obj + 5) >> (16 - t)) & 1)
             {
-                ok = 0;
-                goto test;
+                return 0;
             }
         }
-    }
-    ok = 1;
-test:
-    if (ok == 0)
-    {
-        return 0;
     }
     if (*(u8*)(obj + 4) & 1)
     {
@@ -325,7 +315,6 @@ test:
     }
     return 0;
 }
-#pragma opt_propagation off
 void mapLoadUnloadObjects(int flag)
 {
     int grpBit;
@@ -600,8 +589,6 @@ void mapLoadUnloadObjects(int flag)
         }
     }
 }
-#pragma opt_propagation reset
-
 
 void playerUpdateFn_8005649c(void)
 {
@@ -659,7 +646,6 @@ int return0_8005669C(void)
 {
     return 0x0;
 }
-#pragma dont_inline on
 void mapTextureOverrideRelease(int key, int type)
 {
     int i;
@@ -684,7 +670,6 @@ void mapTextureOverrideRelease(int key, int type)
         }
     }
 }
-#pragma dont_inline reset
 
 extern char sTrackGlobalTexanimOverflowError[];
 
@@ -918,7 +903,6 @@ extern int* gMapBlocks;
 
 extern char sTrackLoadBlockOverrunError[];
 
-#pragma dont_inline on
 void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
 {
     int i;
@@ -950,7 +934,6 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     gMapBlockRefCounts[i] = 1;
     setMapBlockFlag();
 }
-#pragma dont_inline off
 
 char lbl_803822C8[0x41A0];
 
@@ -1594,7 +1577,6 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
 
 /* 16-byte texture-override table entry (array at lbl_803DCE6C, 80 slots). */
 
-
 void goToPrevMapLayer(void)
 {
     curMapLayer--;
@@ -1630,10 +1612,6 @@ static inline void mapMarkRectRows(char* g3, int* rect)
     }
 }
 
-#pragma opt_dead_assignments off
-#pragma opt_propagation off
-#pragma opt_unroll_loops off
-#pragma ppc_unroll_factor_limit 1
 extern char sTrackPiLockedFormat[];
 
 typedef struct MapShaderLayerCleanup
@@ -2109,11 +2087,6 @@ void doPendingMapLoads(void)
         }
     }
 }
-#pragma opt_dead_assignments reset
-#pragma opt_propagation reset
-#pragma opt_unroll_loops reset
-#pragma ppc_unroll_factor_limit 8
-
 
 void loadMapForCameraPos(float x, float y, float z)
 {
@@ -2132,7 +2105,6 @@ void loadMapForCameraPos(float x, float y, float z)
 extern int isRomListLoading(void);
 extern int saveGame_restoreObjectPosToRomList(void* object);
 
-#pragma dont_inline on
 void mapInitSetRects(s16* rect, u8* bitmap, int originX, int originY, int idx)
 {
     u8* self = lbl_803DCE78;
@@ -2159,7 +2131,6 @@ void mapInitSetRects(s16* rect, u8* bitmap, int originX, int originY, int idx)
         }
     }
 }
-#pragma dont_inline reset
 
 void initMaps(void)
 {
@@ -2216,7 +2187,6 @@ void initMaps(void)
     mm_free(data);
 }
 
-
 extern int lbl_803DB648;
 extern void* lbl_803DCEA0;
 
@@ -2243,7 +2213,6 @@ MapRomList* mapBlockFn_800592e4(void)
         return res;
     }
 }
-
 
 void* fn_80059334(int a, int b)
 {
@@ -2354,8 +2323,6 @@ void mapLoadForObject(int mapId, char* obj)
     (*gMapEventInterface)->updateObjGroups(slot);
     gShaderCurMapEventId = saved;
 }
-
-
 
 void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
 {
@@ -2531,7 +2498,6 @@ int mapCoordsToId(int x, int z, int layerIdx)
     return -1;
 }
 
-
 char sShaderDebugStrings[172] = {
     0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 56, 0, 0, 0, 52, 0, 0, 0, 60,
     0, 0, 0, 56, 0, 0, 0, 60, 0, 0, 0, 64, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52, 0, 0, 0, 52,
@@ -2688,7 +2654,6 @@ int mapProcessRomList(int slot)
     return i;
 }
 
-
 int mapGetRomListAndOffsets(int p1, int flag)
 {
     int words = p1 * 7;
@@ -2751,8 +2716,6 @@ int ViewFrustum_IsSphereVisible(float* center, float radius)
     }
     return 1;
 }
-
-
 
 extern f32 lbl_803DEBB8;
 extern f32 lbl_803DEBD4;
@@ -2858,8 +2821,6 @@ int objUpdateOpacity(GameObject* obj)
     }
     return 1;
 }
-#pragma optimization_level 2
-#pragma ppc_unroll_factor_limit 4
 void mapDebugRender(int* state)
 {
     int y1;
@@ -2943,11 +2904,6 @@ void mapDebugRender(int* state)
         }
     }
 }
-
-
-
-#pragma optimization_level reset
-#pragma ppc_unroll_factor_limit 8
 
 int mapRectFn_8005a728(int bx, int bz, char* obj)
 {
@@ -3067,7 +3023,6 @@ void frustumPlanes_updateAabbCornerIndices(FrustumPlane* planes, int count)
         planes++;
     }
 }
-
 
 extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 lbl_803DEBF4;

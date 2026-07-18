@@ -631,7 +631,6 @@ void renderSky(void)
     skyFn_8008a04c();
 }
 
-#pragma dont_inline on
 void getAmbientColor(int slot, u8* red, u8* green, u8* blue)
 {
     u8* sky;
@@ -651,7 +650,6 @@ void getAmbientColor(int slot, u8* red, u8* green, u8* blue)
     *green = gSkyState[offset + 0x79];
     *blue = gSkyState[offset + 0x7a];
 }
-#pragma dont_inline reset
 
 void textureColorFn_8008991c(int slot, u8* red, u8* green, u8* blue)
 {
@@ -710,8 +708,6 @@ ModelLightStruct* fn_80089A58(void)
     return gSkySunLight;
 }
 
-#pragma opt_common_subs off
-#pragma dont_inline on
 int getSunPos(f32* outTime)
 {
     f32 time;
@@ -748,7 +744,6 @@ int getSunPos(f32* outTime)
     }
     return 0;
 }
-#pragma dont_inline reset
 
 void fn_8008B88C(int* outTimer)
 {
@@ -763,7 +758,6 @@ void fn_8008B88C(int* outTimer)
     *outTimer = ((SkyState*)sky)->timer;
 }
 
-#pragma opt_loop_invariants off
 void skyFn_80089710(int flags, u8 enabled, int startComplete)
 {
     u8* sky;
@@ -798,7 +792,6 @@ void skyFn_80089710(int flags, u8 enabled, int startComplete)
         }
     }
 }
-#pragma opt_loop_invariants reset
 
 void fn_800897D4(int slot, f32* x, f32* y, f32* z)
 {
@@ -1177,7 +1170,6 @@ void fn_8008DAE8(int obj)
     }
 }
 
-#pragma optimization_level 3
 void playerEnvFxFn_80088ad4(u8 idx)
 {
     void* player;
@@ -1221,7 +1213,6 @@ void playerEnvFxFn_80088ad4(u8 idx)
         }
     }
 }
-#pragma optimization_level reset
 
 void dll_06_func09(s32* x, s32* y, s32* z)
 {
@@ -1265,8 +1256,6 @@ void dll_06_func09(s32* x, s32* y, s32* z)
     *z = (s32)(fz * blend + oldZ);
 }
 
-#pragma opt_propagation off
-#pragma opt_common_subs off
 void sky2_run(void)
 {
     SkyRotQ q;
@@ -1674,8 +1663,6 @@ void sky2_run(void)
         i++;
     } while (i < 2);
 }
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
 
 void sky2_onMapSetup(void)
 {
@@ -1716,7 +1703,6 @@ void sky2_onMapSetup(void)
     }
 }
 
-#pragma dont_inline on
 void skyFn_80088c94(int flags, int mode)
 {
     u8* env;
@@ -1759,7 +1745,6 @@ void skyFn_80088c94(int flags, int mode)
         }
     }
 }
-#pragma dont_inline reset
 
 void skyFn_80088e54(int mode, f32 brightness)
 {
@@ -2480,7 +2465,6 @@ void fn_8008BDA8(void)
     } while (i < 3);
 }
 
-#pragma opt_common_subs off
 void skyFn_8008a04c(void)
 {
     int part;
@@ -2636,7 +2620,6 @@ void skyFn_8008a04c(void)
         fn_80089A60(2, lbl_803DF058, lbl_803DF058, lbl_803DF058, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
     }
 }
-#pragma opt_common_subs reset
 
 void fn_80089A60(int slot, f32 x, f32 y, f32 z, int red, int green, int blue, int ambientIntensity,
                  int lightIntensity, u8 blendAlpha)
@@ -2983,9 +2966,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         Camera_RebuildProjectionMatrix();
     }
 }
-#pragma opt_common_subs reset
 
-#pragma opt_common_subs off
 void skyFn_8008aee8(void)
 {
     int* sky;
@@ -3169,7 +3150,6 @@ void skyFn_8008aee8(void)
                            lbl_803DF05C, v - sinProd / (f32)(u32)texW, -0x18f);
     }
 }
-#pragma opt_common_subs reset
 
 void Sky_func03(int a, int b, u8* cfg);
 

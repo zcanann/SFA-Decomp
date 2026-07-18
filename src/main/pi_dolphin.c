@@ -137,9 +137,7 @@ u16 lbl_803DB5CE = 1;
 u8 lbl_803DB5D0[4] = {0, 0, 0, 0xFF};
 u8 lbl_803DB5D4[8] = {7, 7, 0xC, 0xC, 0xC, 7, 7, 0};
 char sProgramCounterFormat[] = "PC: %x";
-#pragma explicit_zero_data on
 int lbl_803DB5E4 = 0;
-#pragma explicit_zero_data off
 u8 lbl_803DB5E8 = 0xFF;
 u32 lbl_803DB5EC = 0xFFFFFFC0;
 f32 lbl_803DB5F0 = 1.0f;
@@ -205,12 +203,9 @@ struct MldfNames
     char fmtModTab[0x10];
 };
 
-/* Resource file table at lbl_80345E10 (0x80345E10, 0x20000 bytes). File slots are
-   indexed by resource fileId (0..0x57); map-owned resources use paired slots (e.g.
-   ANIMCURV 0xd/0x55) so two maps can be resident at once. Several arrays are also
-   addressed directly through their own symbols elsewhere in this file:
-   ids   == lbl_8035EF48 (pending mapId per slot, -1 = none; retried by loadDataFiles)
-   sizes == lbl_8035F0A8, romList == lbl_8035F208, ptrs == lbl_8035F3E8. */
+/* Resource file table. File slots are indexed by resource fileId (0..0x57);
+   map-owned resources use paired slots (e.g. ANIMCURV 0xd/0x55) so two maps
+   can be resident at once. */
 struct MldfTables
 {
     u8 pad0[0x160];
@@ -256,21 +251,13 @@ struct MldfIterators
 #define MLDF_SIZE(s)  (tbl->sizes[s])
 #define MLDF_PTR(s)   (tbl->ptrs[s])
 #define MLDF_OWNER(s) (tbl->owners[s])
-/* Runtime-index accessors. One-shot accesses use the idx-left flat spelling
-   (slwi; addis tbl; add) or plain member form; the hot ptr/size slots go through
-   per-block biased locals (see slotPtrAddr/slotSizeAddr) so the CSE web keeps the
-   ha-sum (tbl + 0x20000 + slot*4) and each access folds the lo displacement. */
 #define MLDF_ID_RT(s)    (*(int*)(((s) << 2) + ((u32) & tbl->ids[0])))
 #define MLDF_OWNER_RT(s) (*(s16*)(((s) << 1) + ((u32) & tbl->owners[0])))
 #define MLDF_FINFO4(s4)  (tbl->fileInfo[slot])
 #define MLDF_SP_ID(p)    (tbl->ids[slot])
 #define MLDF_SP_SIZE(p)  (*(int*)(slotSizeAddr - 0x6D68))
-/* first store of the block also establishes the biased size base; embedding the
-   assignment in the lvalue makes MWCC evaluate the RHS (file length) first, as target */
 #define MLDF_SP_SIZE_INIT(p) (*(int*)((slotSizeAddr = (slot << 2) + ((u32) & tbl->sizes[0] + 0x6D68)) - 0x6D68))
 #define MLDF_SP_PTR(p)       (*(u32*)(slotPtrAddr - 0x6A28))
-/* re-deref through the biased local `slotPtrAddr` on every use; the -0x6A28 displacement
-   (== &tbl->ptrs[0] relative to tbl + 0x20000) matches target addressing */
 #define MLDF_QPTR (*(u32*)(slotPtrAddr - 0x6A28))
 
 /* 16-byte header of a "ZLB"-tagged compressed stream; the deflate payload
@@ -997,6 +984,7 @@ extern u8 lbl_803DCD30;
 extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 dst[3][4], f32 a[3][4], f32 b[3][4]);
+extern void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, GXTexMtxType type);
 extern u8 lbl_803DCD68;
 extern int lbl_803DCD80;
 extern u8 lbl_803DCD69;
@@ -1043,7 +1031,9 @@ extern void OSStartStopwatch(void* sw);
 extern int OSGetCurrentThread(void);
 extern int Queue_GetCount(void* q);
 extern void OSSleepThread(void* q);
+extern void GXInvalidateVtxCache(void);
 extern int GXReadDrawSync(void);
+extern void VISetNextFrameBuffer(void* fb);
 extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
 extern void GXGetGPStatus(u8* a, u8* b, u8* c, u8* d, u8* e);
 extern void GXInitFifoBase(void* fifo, void* base, u32 size);
@@ -1091,6 +1081,7 @@ extern void GXInitFifoLimits(void* fifo, u32 hi, u32 lo);
 extern void Queue_Init(void* q, void* buf, int n, int stride);
 extern void OSInitThreadQueue(char* q);
 extern void GXSetBreakPtCallback(void (*cb)());
+extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void GXSetFieldMode(int field_mode, int half_aspect_ratio);
 extern void GXSetDispCopySrc(int left, int top, int wd, int ht);
 extern u32 GXSetDispCopyYScale(f32 vscale);
@@ -1098,6 +1089,7 @@ extern void GXSetDispCopyDst(int wd, int ht);
 extern void GXSetPixelFmt(int pix_fmt, int z_fmt);
 extern void GXSetDither(int dither);
 extern void GXSetDispCopyGamma(int gamma);
+extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
 extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
 extern char lbl_8035F6B8[0x78];
 extern char* lbl_803DCCE0;
@@ -1116,9 +1108,6 @@ int GXFlush_(u8 visible, int unused);
 void loadDataFiles(int arg);
 void waitNextFrame(void);
 
-#pragma optimize_for_size on
-#pragma peephole off
-#pragma scheduling off
 
 u32 mapLoadDataFile(int mapId, int fileId)
 {
@@ -1129,8 +1118,8 @@ u32 mapLoadDataFile(int mapId, int fileId)
     u32 result;
     int adj;
     int slot;
-    u32 slotPtrAddr;  /* &tbl->ptrs[slot] + 0x6A28 (ha-sum biased base) */
-    u32 slotSizeAddr; /* &tbl->sizes[slot] + 0x6D68 */
+    u32 slotPtrAddr;
+    u32 slotSizeAddr;
     int ok;
     u32 tmp;
     int cls[1];
@@ -1671,23 +1660,22 @@ u32 mapLoadDataFile(int mapId, int fileId)
             for (n = 0xf; n != 0; n--)
             {
                 if (mapId == grp[0])
-                    goto remap_found;
+                    break;
                 idx = idx + 1;
                 if (mapId == grp[1])
-                    goto remap_found;
+                    break;
                 idx = idx + 1;
                 if (mapId == grp[2])
-                    goto remap_found;
+                    break;
                 idx = idx + 1;
                 if (mapId == grp[3])
-                    goto remap_found;
+                    break;
                 idx = idx + 1;
                 if (mapId == grp[4])
-                    goto remap_found;
+                    break;
                 grp = grp + 5;
                 idx = idx + 1;
             }
-        remap_found:
             piRomLoadSection(0, idx, 0);
             if (mapId > 4)
             {
@@ -2425,7 +2413,6 @@ char sAssetHaltFormat[] = "HALT\t%s\n";
 char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
 
 
-
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern int zlbDecompress(u8* src, int size, u8* dst, void* outp);
 
@@ -2473,7 +2460,6 @@ typedef struct PathSearch
     u16 padding2E;
 } PathSearch;
 
-#pragma optimize_for_size reset
 int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
                               u32 flagBits)
 {
@@ -2487,13 +2473,13 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     int intr;
     int i;
     int prev;
-    u32 slotPtrAddr; /* &tbl->ptrs[fileId], biased +0x6A28 for MLDF_QPTR */
+    u32 slotPtrAddr;
     u32 fileBuf;
     u32 alignedSize;
     int tmp;
     u32 decompSize;
     int entryByteOff;
-    u32 qptr;       /* MLDF_QPTR from the guard, reused for the first use of each branch */
+    u32 qptr;
     DVDFileInfo buf;
 
     switch (fileId)
@@ -3995,10 +3981,7 @@ void loadModelsBin(int offsetFlags, int* p1c, int* p20, int* p18, int* p4)
     }
 }
 
-#pragma peephole reset
 
-/* base+0x74 / base+0x78 are lbl_8035F3E8[0x1d]/[0x1e] (MldfTables.ptrs: maps info
-   bin/tab); the byte-offset spelling is codegen-load-bearing */
 void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5)
 {
     char* base = (char*)lbl_8035F3E8;
@@ -4012,7 +3995,6 @@ void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5)
     *out2 = *(s16*)(e + 0x1e);
     *out3 = *(int*)(*(char**)(base + 0x74) + *(int*)(*(char**)(base + 0x78) + p5 * 4 + 0x18) + 4);
 }
-#pragma peephole off
 
 void checkLoadBlock(int a, int* pc, int* p8)
 {
@@ -4128,7 +4110,7 @@ void loadVoxMaps(int a, int* pc, int* p8)
 
 extern u32 lbl_8035F0A8[];
 
-s32 getDataFileSize(int idx)
+u32 getDataFileSize(int idx)
 {
     if (lbl_8035F3E8[idx] != 0)
     {
@@ -4172,7 +4154,6 @@ int fileLoadToBufferOffset(int id, void* buffer, int offset, int size)
     DCStoreRange(buffer, size);
     return size;
 }
-#pragma peephole reset
 
 int fileLoadToBuffer(int id, void* buffer)
 {
@@ -4205,7 +4186,6 @@ void* fileLoad(int id)
     DVDClose(&fileInfo);
     return (void*)lbl_8035F3E8[id];
 }
-#pragma peephole off
 
 int initLoadFiles(void)
 {
@@ -4335,7 +4315,6 @@ int initLoadFiles(void)
     }
     return 0;
 }
-#pragma peephole reset
 void tvInit(void)
 {
     gRenderModeObj->viWidth = 0x294;
@@ -4358,7 +4337,6 @@ typedef union
 
 extern volatile PiWGPipe GXWGFifo : (0xCC008000);
 extern void GXSetGPMetric(int perf0, int perf1);
-#pragma peephole off
 
 extern u8 enableDebugText;
 
@@ -4453,7 +4431,6 @@ void gpuErrorHandler(u32 retraceCount)
         debugPrintfxy(0x32, 0xa0, sProgramCounterFormat, *(int*)(lbl_803DCCDC + 0x198));
     }
 }
-#pragma peephole reset
 void logGpuHang(void);
 
 void videoSwapFrameBuffers(u32 retraceCount)
@@ -4559,7 +4536,6 @@ void videoFn_800499e8(void)
         }
     }
 }
-#pragma peephole off
 
 extern f32 lbl_803DEA70;
 extern f32 lbl_803DEA78;
@@ -4572,8 +4548,6 @@ void initViewport(void)
 {
     C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, *(f32*)&lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
 }
-#pragma opt_common_subs off
-#pragma opt_propagation off
 void videoInit(void)
 {
     u8 fifo[0x80];
@@ -4711,8 +4685,6 @@ void videoInit(void)
     PPCMtmsr(PPCMfmsr() | MSR_PM);
     PPCMthid0(PPCMfhid0() | HID0_SPD);
 }
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
 
 void setColor_803db5d0(u8 r, u8 g, u8 b)
 {
@@ -4732,7 +4704,6 @@ extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTe
                             GXTevRegID out_reg);
 extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
                             GXTevRegID out_reg);
-#pragma peephole reset
 void setDisplayCopyFilter(void)
 {
     u8* p = (u8*)gRenderModeObj;
@@ -4746,7 +4717,6 @@ void setDisplayCopyFilter(void)
     }
 }
 
-#pragma peephole off
 
 extern void GXSetAlphaUpdate(GXBool update_enable);
 extern void GXFlush(void);
@@ -4793,7 +4763,6 @@ int GXFlush_(u8 visible, int unused)
     }
     return 0;
 }
-
 
 
 void viFn_8004a56c(int val)
@@ -4845,7 +4814,6 @@ void logGpuHang(void)
         OSReport(strs + 0x4019c);
     }
 }
-#pragma dont_inline on
 void gxPerfFn_8004a77c(int enabled)
 {
     if ((u8)enabled != 0)
@@ -4872,7 +4840,6 @@ void gxPerfFn_8004a77c(int enabled)
         GXWGFifo.u32 = 0;
     }
 }
-#pragma dont_inline reset
 
 
 void gxTransformFn_8004a83c(void)
@@ -4935,7 +4902,6 @@ void waitNextFrame(void)
     GXInvalidateTexAll();
 }
 
-#pragma dont_inline on
 int fn_8004AA24(int* ctx, int* ref)
 {
     int* node;
@@ -5009,7 +4975,6 @@ void fn_8004AAD4(u8* arr, int size, int idx)
     *(u32*)((int)arr + idx * 8) = key;
     h[idx * 4 + 2] = val;
 }
-#pragma dont_inline reset
 
 void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
 {
@@ -5068,13 +5033,15 @@ void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
         if (scanNode->point == point)
         {
             visited = scanNode->visited;
-            goto found;
+            break;
         }
         z[1] += 0x10;
         z[0]++;
     }
-    z[0] = -1;
-found:
+    if (n <= 0)
+    {
+        z[0] = -1;
+    }
     if (z[0] >= 0 && visited == 0)
     {
         PathSearchNode* node3 = &search->nodes[z[0]];
@@ -5373,7 +5340,7 @@ int fn_8004B218(void* q_, u32 n_)
     return result;
 }
 
-int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u32 routeFlags)
+int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u8 routeFlags)
 {
     int i;
     PathSearchNode* node;
@@ -5432,6 +5399,8 @@ int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, i
 }
 
 extern void GXSetTevIndRepeat(int stage);
+extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
+                              GXBool normalize, u32 pt_texmtx);
 extern void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue,
                                   GXTevColorChan alpha);
 
@@ -5443,7 +5412,6 @@ void freeAndNull(void** p)
         *p = NULL;
     }
 }
-#pragma peephole reset
 
 void trickyVoxAllocFn_8004b5d4(int* out)
 {
@@ -5451,7 +5419,6 @@ void trickyVoxAllocFn_8004b5d4(int* out)
     out[1] = out[0] + 0xfe0;
     out[2] = out[1] + 0x7f0;
 }
-#pragma peephole off
 
 
 void allocSomething32bytes(void)
@@ -5515,12 +5482,6 @@ extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, 
                              GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s,
                              GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);
 
-#pragma optimize_for_size on
-#pragma optimization_level 1
-#pragma opt_common_subs off
-#pragma opt_propagation off
-#pragma peephole on
-#pragma use_lmw_stmw on
 extern int __rlwnm(int, int, int, int);
 extern u8 lbl_8030C880[];
 extern u16 lbl_8030C9A0[];
@@ -5567,7 +5528,7 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
     int sym;
     int type;
     int hlit;
-    volatile int final;
+    int final;
     int hclen;
     int hdist;
     u8* curLens;
@@ -5724,14 +5685,9 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
                     u8* cnts;
                     size = 7;
                     cnts = lbl_803DCD20;
-                blscan:
+                    while (cnts[size] == 0)
                     {
-                        int cb = cnts[size];
-                        if (cb == 0)
-                        {
-                            size--;
-                            goto blscan;
-                        }
+                        size--;
                     }
                     {
                         u8* t18;
@@ -5843,15 +5799,10 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
                     u16* scan;
                     lenMax = 0xf;
                     scan = (u16*)(((u8*)cnts94 + lenMax) + lenMax);
-                lmscan:
+                    while (*scan == 0)
                     {
-                        int cs = *scan;
-                        if (cs == 0)
-                        {
-                            scan -= 1;
-                            lenMax -= 1;
-                            goto lmscan;
-                        }
+                        scan -= 1;
+                        lenMax -= 1;
                     }
                     {
                         u16* t54 = lbl_80377954;
@@ -5893,15 +5844,9 @@ int zlbDecompress(u8* src, int size, u8* dst, void* outp)
                     distMax = 0xf;
                     cntsB4 = lbl_803778B4;
                     t74 = lbl_80377974;
-                dmscan:
+                    while (*(u16*)(((u8*)cntsB4 + distMax) + distMax) == 0)
                     {
-                        u16* pd = (u16*)(((u8*)cntsB4 + distMax) + distMax);
-                        int cd = *pd;
-                        if (cd == 0)
-                        {
-                            distMax -= 1;
-                            goto dmscan;
-                        }
+                        distMax -= 1;
                     }
                     j = 1;
                     code = 0;
@@ -6047,12 +5992,6 @@ extern int lbl_803DCD74;
 extern int lbl_803DCD70;
 extern int lbl_803DCD6C;
 
-#pragma optimization_level reset
-#pragma peephole off
-#pragma ppc_unroll_speculative on
-#pragma scheduling off
-#pragma use_lmw_stmw reset
-#pragma optimize_for_size reset
 
 void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2)
 {
@@ -6184,7 +6123,6 @@ extern f32 lbl_803DEB10;
 extern f32 lbl_803DEB14;
 extern f32 lbl_803DEB18;
 
-#pragma peephole reset
 void fn_8004C1E4(u8 b, f32 scale)
 {
     ((u8*)&lbl_803DB5EC)[3] = b;
@@ -6195,14 +6133,11 @@ void fn_8004C1E4(u8 b, f32 scale)
     }
 }
 
-#pragma scheduling reset
 
 void disableHeavyFog(void)
 {
     lbl_803DCD28 = 0x0;
 }
-#pragma peephole off
-#pragma scheduling off
 
 void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode)
 {
@@ -6214,8 +6149,6 @@ void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode)
     lbl_803DCD34 = e;
     lbl_803DCD31 = mode;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 void fn_8004C234(f32* p1, f32* p2)
@@ -6228,8 +6161,6 @@ u8 isHeavyFogEnabled(void)
 {
     return lbl_803DCD28;
 }
-#pragma peephole off
-#pragma scheduling off
 
 void* Shader_getLayer(void* base, int idx)
 {
@@ -6271,7 +6202,6 @@ void selectTexture(Texture* texture, int mapId)
         GXLoadTexObj(base, mapId);
     }
 }
-#pragma opt_lifetimes off
 void textureFn_8004c330(void* p1, void* mtx)
 {
     IndTexMtx23 m;
@@ -6380,8 +6310,6 @@ void textureFn_8004c330(void* p1, void* mtx)
     lbl_803DCD69 += 1;
     lbl_803DCD68 += 1;
 }
-#pragma opt_common_subs off
-#pragma opt_lifetimes reset
 void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
 {
     u8 buf5c[0x20];
@@ -6674,7 +6602,6 @@ void fn_8004D230(void)
     lbl_803DCD6A += 2;
     lbl_803DCD69 += 2;
 }
-#pragma opt_common_subs reset
 
 void gxTextureFn_8004d5b4(void* p1)
 {
@@ -6701,7 +6628,6 @@ void gxTextureFn_8004d5b4(void* p1)
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
-
 
 
 void fn_8004D6D8(void)
@@ -6759,9 +6685,7 @@ void fn_8004D6D8(void)
 }
 
 
-
-#pragma peephole reset
-
+extern void textureFn_8006c75c(int a);
 
 void fn_8004D928(void)
 {
@@ -6784,8 +6708,6 @@ void fn_8004D928(void)
     lbl_803DCD69++;
 }
 
-#pragma opt_common_subs off
-#pragma peephole off
 void fn_8004DA54(char* p1)
 {
     f32 mtxf4[3][4];
@@ -6947,7 +6869,6 @@ void fn_8004DA54(char* p1)
     lbl_803DCD6C = 0x1d;
 }
 
-#pragma opt_common_subs reset
 
 extern void fn_8006C510(void* out);
 extern f32 lbl_803DEB1C;
@@ -7292,7 +7213,6 @@ void renderHeavyFog(void* fogColor)
     lbl_803DCD70 = lbl_803DCD70 + 1;
     lbl_803DCD6C = lbl_803DCD6C + 1;
 }
-#pragma peephole reset
 void fn_8004EECC(void)
 {
     GXSetTevDirect(lbl_803DCD90);
@@ -7365,7 +7285,6 @@ void fn_8004F2B0(void)
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
-#pragma peephole off
 extern int lbl_8030CEE0[];
 
 extern f32 lbl_803DEB38;
@@ -7707,7 +7626,6 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
         lbl_803DCD6A += 2;
     }
 }
-#pragma peephole reset
 
 void fn_8004FDA0(u8* texSrc, void* texMtx)
 {
@@ -7744,7 +7662,6 @@ void fn_8004FDA0(u8* texSrc, void* texMtx)
     lbl_803DCD6A++;
     lbl_803DCD69++;
 }
-#pragma peephole off
 
 void textureFn_8004ff20(void* p1)
 {
@@ -8003,10 +7920,6 @@ void fn_80050558(u8* texSrc, void* texMtx, int stageMode, int compMode, int vari
 }
 
 
-
-
-#pragma peephole reset
-
 void fn_80050A28(int scale)
 {
     f32 m[3][4];
@@ -8018,13 +7931,10 @@ void fn_80050A28(int scale)
     lbl_803DCD88++;
     lbl_803DCD69++;
 }
-#pragma peephole off
 
 extern int lbl_8030CEE0[];
 extern f32 lbl_803DEB38;
 extern f32 lbl_803DEB3C;
-
-
 
 
 void gxTextureFn_80050e28(u8 mode)
@@ -8148,10 +8058,6 @@ void fn_800510F0(void* p1, u8 flag2, u8 flag3)
 }
 
 
-
-
-
-
 void textureFn_80051348(void* p1, u8 p2)
 {
     f32 mtxB[3][4];
@@ -8200,7 +8106,6 @@ void textureFn_80051348(void* p1, u8 p2)
     lbl_803DCD6A += 1;
     lbl_803DCD69 += 1;
 }
-
 
 
 void fn_80051528(void* p1, void* mtx)

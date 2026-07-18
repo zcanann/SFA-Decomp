@@ -128,9 +128,6 @@ asm void ObjModel_TransformVerticesLinear(register u8* m1, register u8* m2, regi
 asm void ObjModel_TransformQuadVerticesLinear(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count);
 static int boneBlendSlotLimit(u8* model);
 
-#pragma peephole off
-#pragma scheduling off
-
 asm void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16 pos)
 {
     // clang-format off
@@ -284,7 +281,6 @@ lbl_BTN_z:
     blr
 }
 
-
 void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
 {
     u8* animChan;
@@ -433,7 +429,6 @@ void modelAnimFn_800246a0(u8* dst, u8* model, u8* channel, f32 t, int flags, int
     }
     lbl_80006C6C(&mtxBuf, dst, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, (u8)mode);
 }
-#pragma ppc_unroll_speculative off
 void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int flags)
 {
     /* channel points at an ObjAnimState; stk is an on-stack working copy of one */
@@ -600,7 +595,6 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
         }
     }
 }
-#pragma ppc_unroll_speculative on
 
 void* animationLoad(int id, int a, int b, int e, int f);
 
@@ -663,7 +657,6 @@ void modelAnimResetState(void* m, void* data)
         channel->prevBlendCacheSlot = channel->moveCacheSlot;
     }
 }
-#pragma opt_loop_invariants off
 int modelLoadAnimations(void* model, int id, void* animBase)
 {
     int tabBase;
@@ -814,8 +807,6 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     }
     return 0;
 }
-#pragma opt_propagation off
-#pragma opt_loop_invariants reset
 int modelGetAmapSize(int animId, int amapFlag, int animCount)
 {
     int size;
@@ -843,8 +834,6 @@ int modelGetAmapSize(int animId, int amapFlag, int animCount)
     }
     return size;
 }
-#pragma opt_propagation reset
-#pragma opt_lifetimes off
 int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChannels)
 {
     u8* hdr = model;
@@ -936,7 +925,6 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     }
     return roundUpTo32(((total + 0x2f) & ~0xf) + 0x10);
 }
-#pragma opt_lifetimes reset
 
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
 {
@@ -1129,8 +1117,6 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     ((ObjModel*)out2)->unk60 = 0;
     return out2;
 }
-#pragma scheduling on
-#pragma peephole on
 static int boneBlendSlotLimit(u8* model)
 {
     u8* p = *(u8**)model;
@@ -1140,8 +1126,6 @@ static int boneBlendSlotLimit(u8* model)
     }
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void fn_80025F38(int* a, int b, u8* blend, u8* chain)
 {
@@ -1342,7 +1326,6 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
         *(f32*)(*(u8**)chain + i * 0x54 + 8) = work[2];
     }
 }
-#pragma dont_inline on
 void modelAnimFn_80026790(ObjModel* model, int unused, ObjModelChain* chain, ObjModelChainEntry* entry)
 {
     extern f32 lbl_803DCB48;
@@ -1501,7 +1484,6 @@ void fn_80026928(int* obj, int b, int* desc)
         PSMTXMultVec((f32*)(obj[(*(u16*)((u8*)obj + 0x18) & 1) + 3] + lastJointIdx * 0x40), (f32*)(lastEntry + 0x18), (f32*)lastEntry);
     }
 }
-#pragma dont_inline off
 void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
 {
     int off;
@@ -1532,14 +1514,11 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
         ((ObjModelChain*)p)->unk19 = 1;
     }
 }
-#pragma peephole on
-#pragma scheduling on
 
 void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled)
 {
     chain->enabled = enabled;
 }
-
 
 void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z)
 {
@@ -1551,8 +1530,6 @@ void __set_debug_bba(u8* p)
 {
     p[0x19] = 0;
 }
-#pragma peephole off
-#pragma scheduling off
 void ObjModelChain_AdvancePhase(ObjModelChain* chain)
 {
     chain->updateFlag = 0;
@@ -1628,8 +1605,6 @@ void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out)
         out[2] = vertex[2] * gModelVertexScale;
     }
 }
-
-
 
 int loadModelAndAnimTabs(void)
 {
@@ -1756,14 +1731,10 @@ void model_multMtxs(u8* model, f32* out)
 
 int alignUp2(int x);
 
-
 void* getCache(void);
-
 
 void cacheQueueWait(int sync);
 
-#pragma scheduling on
-#pragma peephole on
 static inline void* modelGetBoneMtx(ObjModel* model, int idx)
 {
     int lim;
@@ -1780,9 +1751,6 @@ static inline void* modelGetBoneMtx(ObjModel* model, int idx)
     base = model->jointMatrices[model->bufferFlags & 1];
     return base + joint * 0x40;
 }
-
-#pragma scheduling reset
-#pragma peephole reset
 
 void modelInitBoneMtxs(ObjModel* model, f32* out)
 {
@@ -1802,7 +1770,6 @@ void modelInitBoneMtxs(ObjModel* model, f32* out)
         PSMTXReorder(tmp, out + i * 12);
     }
 }
-#pragma opt_propagation off
 void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
 {
     u8* dst;
@@ -1858,7 +1825,6 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
         }
     }
 }
-#pragma opt_propagation reset
 
 extern f32 lbl_803DE868;
 extern f32 lbl_803DE86C;
@@ -2020,7 +1986,6 @@ void ObjModel_ApplyBlendChannels(ObjModel* model)
     }
 }
 
-#pragma scheduling on
 void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
 {
     int i;
@@ -2056,7 +2021,6 @@ void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
     }
 }
 
-#pragma scheduling off
 int ObjModel_HasActiveBlendChannels(ObjModel* model)
 {
     ObjModelBlendChannel* ch;
@@ -2099,9 +2063,6 @@ void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight)
 
 typedef f32 Mtx[3][4];
 
-
-
-#pragma dont_inline on
 void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b, f32 weight, int flags)
 {
     ObjModelBlendChannel* ch;
@@ -2158,7 +2119,6 @@ void ObjModel_ClearBlendChannels(ObjModel* model)
     }
 }
 
-#pragma opt_loop_invariants off
 void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u8* obj)
 {
     extern f32 gMapSavedPlayerOffsetX;
@@ -2270,8 +2230,6 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
         prevSphere += 0x10;
     }
 }
-#pragma opt_loop_invariants reset
-
 
 extern f32 lbl_803DE880;
 
@@ -2365,7 +2323,6 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
     outPos[2] *= s;
 }
 
-#pragma opt_common_subs off
 void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
 {
     int size;
@@ -2395,9 +2352,7 @@ void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
     }
     return buf;
 }
-#pragma opt_common_subs reset
 
-#pragma dont_inline off
 void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
 {
     int tmp;
@@ -2439,7 +2394,6 @@ void* fn_80028354(u8* modelFile, int index)
 
 extern u32 PPCMfhid2(void);
 
-
 void copyToCache(void* dst, void* src, u32 count);
 
 void* fn_80028364(u8* modelFile, int index)
@@ -2451,7 +2405,6 @@ void* modelFileGetDisplayList(u8* modelFile, int displayListIndex)
 {
     return ((ModelFileHeader*)modelFile)->displayLists + displayListIndex * 0x1c;
 }
-
 
 void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out)
 {
@@ -2497,7 +2450,6 @@ u16 modelFileHeaderGetCullDistance(ModelFileHeader* modelFile)
 u8* gModelCacheBuffersA[4];
 u8* gModelCacheBuffersB[6];
 
-
 void ObjModel_ClearRenderAttachment(u8* model)
 {
     if (((ObjModel*)model)->renderAttachment != NULL)
@@ -2510,7 +2462,6 @@ void ObjModel_ClearRenderAttachment(u8* model)
         ((ObjModel*)model)->renderCallback = NULL;
     }
 }
-
 
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale)
 {
@@ -2530,8 +2481,6 @@ void* ObjModel_GetPostRenderCallback(ObjModel* model)
     return model->postRenderCallback;
 }
 
-
-
 void postRenderSetAlphaBlendState(void)
 {
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
@@ -2539,7 +2488,6 @@ void postRenderSetAlphaBlendState(void)
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
-
 
 void ObjModel_SetPostRenderCallback(ObjModel* model, void* callback)
 {
@@ -2621,8 +2569,6 @@ void ObjModel_LoadRenderOpTextures(u8* model, int arg)
     }
 }
 
-
-
 void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
 {
     ObjAnimComponent* objAnim;
@@ -2678,8 +2624,6 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
     ((s16*)gModelJointScratchBuffer)[outPos++] = 0x1000;
     ((s16*)gModelJointScratchBuffer)[outPos] = 0x1000;
 }
-
-
 
 extern s16 gModelRootRotX;
 extern s16 gModelRootRotY;
@@ -2806,7 +2750,6 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
         }
     }
 }
-#pragma dont_inline on
 void ObjModel_RelocateAnimData(u8* m, u8* dst)
 {
     int i;
@@ -2836,10 +2779,6 @@ void ObjModel_RelocateAnimData(u8* m, u8* dst)
         }
     }
 }
-
-
-#pragma dont_inline off
-
 
 void ObjModel_RelocateModelData(u8* m)
 {
@@ -2936,7 +2875,6 @@ void ObjModel_RelocateModelData(u8* m)
     }
 }
 
-#pragma dont_inline on
 void* ObjModel_LoadModelData(int id)
 {
     int fileOffset, dataLen, animCount, headerSize, amapFlag;
@@ -2968,10 +2906,6 @@ void* ObjModel_LoadModelData(int id)
     return model;
 }
 
-
-#pragma dont_inline off
-
-
 void modelFn_800292e0(void)
 {
     u8 buf[8];
@@ -2990,7 +2924,6 @@ void modelFn_800292e0(void)
         gModelList->iter += gModelList->strideShorts;
     }
 }
-
 
 void ObjModel_Release(u8* model)
 {
@@ -3057,9 +2990,6 @@ typedef struct
     u8* buf;
 } AnimBufSel;
 
-
-
-
 void* ObjModel_Load(int id, int loadFlag, int* outSize)
 {
     int sizes[7];
@@ -3107,15 +3037,7 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
     return header;
 }
 
-
-
 int return0_8002969C(void) { return 0x0; }
-
-
-
-#pragma peephole off
-#pragma scheduling off
-
 
 void ObjModel_InitResourceCaches(void)
 {
@@ -3129,7 +3051,6 @@ void ObjModel_InitResourceCaches(void)
     loadModelAndAnimTabs();
 }
 
-#pragma dont_inline on
 void ObjModel_InitScratchBuffers(void)
 {
     u8* c = getCache();
@@ -3146,8 +3067,6 @@ void ObjModel_InitScratchBuffers(void)
     gModelCacheBuffersB[5] = c + 0x3800;
 }
 
-#pragma dont_inline off
-
 void ObjModel_InitRenderBuffers(void)
 {
     if ((PPCMfhid2() & 0x10000000) == 0)
@@ -3159,8 +3078,6 @@ void ObjModel_InitRenderBuffers(void)
     ObjModel_InitScratchBuffers();
     setGQR6_2(7, 4, 7, 4);
 }
-
-
 
 void ObjModel_BlendNormalStream(u8* mtxs, u8* hdr, u8* data, u8** outs, int quad)
 {
@@ -3242,7 +3159,6 @@ void ObjModel_BlendNormalStream(u8* mtxs, u8* hdr, u8* data, u8** outs, int quad
         cacheQueueWait(0);
     }
 }
-
 
 void ObjModel_BlendVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u8* out)
 {
@@ -3706,12 +3622,10 @@ void setGQR7(register u32 v)
     mtspr GQR7, v
     blr
 }
-#pragma dont_inline on
 void setGQR7Packed(int a, int b, int c, int d)
 {
     setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
 }
-#pragma dont_inline off
 
 void setGQR6_2(int a, int b, int c, int d)
 {
@@ -3767,11 +3681,7 @@ void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize)
     }
 }
 
-
-
 int return0_8002A5B8(void) { return 0x0; }
-#pragma peephole off
-#pragma scheduling off
 
 int ObjModel_GetUnpackedResourceSize(u8* resource, int baseSize)
 {

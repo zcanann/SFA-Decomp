@@ -313,39 +313,37 @@ extern void fn_801FD4A8(GameObject*);
 extern void fn_801B0784(GameObject*);
 extern void fn_801DA9CC(GameObject*);
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") u16 gSkeetlaFootstepSfxId2 = 0x355;
-__declspec(section ".sdata2") f32 lbl_803E23DC = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E23E0 = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E23E4 = 0.004f;
-__declspec(section ".sdata2") f32 lbl_803E23E8 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E23EC = 0.01f;
-__declspec(section ".sdata2") f32 lbl_803E23F0 = 0.7f;
-__declspec(section ".sdata2") f32 lbl_803E23F4 = -0.01f;
-__declspec(section ".sdata2") f32 lbl_803E23F8 = 2.0f;
+u16 gSkeetlaFootstepSfxId2 = 0x355;
+f32 lbl_803E23DC = 0.0f;
+f32 lbl_803E23E0 = 10.0f;
+f32 lbl_803E23E4 = 0.004f;
+f32 lbl_803E23E8 = 1.0f;
+f32 lbl_803E23EC = 0.01f;
+f32 lbl_803E23F0 = 0.7f;
+f32 lbl_803E23F4 = -0.01f;
+f32 lbl_803E23F8 = 2.0f;
 const f64 gTrickyU32ToDoubleBias = 4503599627370496.0;
-__declspec(section ".sdata2") f32 lbl_803E2408 = 20.0f;
-__declspec(section ".sdata2") f32 lbl_803E240C = 196.0f;
-__declspec(section ".sdata2") f32 lbl_803E2410 = -100000.0f;
-__declspec(section ".sdata2") f32 lbl_803E2414 = 8.0f;
-__declspec(section ".sdata2") f32 lbl_803E2418 = 3.4028235e38f;
-__declspec(section ".sdata2") f32 lbl_803E241C = -0.15f;
-__declspec(section ".sdata2") f32 lbl_803E2420 = 0.05f;
-__declspec(section ".sdata2") f32 lbl_803E2424 = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E2428 = -0.17f;
-__declspec(section ".sdata2") f32 lbl_803E242C = 40.0f;
-__declspec(section ".sdata2") f32 lbl_803E2430 = 400.0f;
-__declspec(section ".sdata2") f32 lbl_803E2434 = 0.014f;
-__declspec(section ".sdata2") f32 lbl_803E2438 = 300.0f;
-__declspec(section ".sdata2") f32 lbl_803E243C = 0.02f;
-__declspec(section ".sdata2") f32 lbl_803E2440 = 600.0f;
-__declspec(section ".sdata2") f32 lbl_803E2444 = 0.005f;
-__declspec(section ".sdata2") f32 lbl_803E2448 = -2.0f;
-__declspec(section ".sdata2") f32 lbl_803E244C = 1.5f;
-__declspec(section ".sdata2") f32 lbl_803E2450 = 512.0f;
-__declspec(section ".sdata2") f32 lbl_803E2454 = 3.1415927f;
-__declspec(section ".sdata2") f32 lbl_803E2458 = 32768.0f;
-#pragma explicit_zero_data off
+f32 lbl_803E2408 = 20.0f;
+f32 lbl_803E240C = 196.0f;
+f32 lbl_803E2410 = -100000.0f;
+f32 lbl_803E2414 = 8.0f;
+f32 lbl_803E2418 = 3.4028235e38f;
+f32 lbl_803E241C = -0.15f;
+f32 lbl_803E2420 = 0.05f;
+f32 lbl_803E2424 = 100.0f;
+f32 lbl_803E2428 = -0.17f;
+f32 lbl_803E242C = 40.0f;
+f32 lbl_803E2430 = 400.0f;
+f32 lbl_803E2434 = 0.014f;
+f32 lbl_803E2438 = 300.0f;
+f32 lbl_803E243C = 0.02f;
+f32 lbl_803E2440 = 600.0f;
+f32 lbl_803E2444 = 0.005f;
+f32 lbl_803E2448 = -2.0f;
+f32 lbl_803E244C = 1.5f;
+f32 lbl_803E2450 = 512.0f;
+f32 lbl_803E2454 = 3.1415927f;
+f32 lbl_803E2458 = 32768.0f;
 
 void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val);
 void Tricky_findNearbyFloorHeights(GameObject* obj, int state, f32* nearestFloorY, f32* nearestSpecialY);
@@ -459,7 +457,6 @@ void trickyFn_80144f50(GameObject* obj, int state)
     }
 }
 
-#pragma opt_common_subs off
 void trickyFn_801451d8(GameObject* obj, int state)
 {
     u8 pathBytes[16];
@@ -497,7 +494,6 @@ void trickyFn_801451d8(GameObject* obj, int state)
     }
     ((TrickyByteFlags*)&((TrickyState*)state)->statusFlags)->bit7 = 1;
 }
-#pragma opt_common_subs reset
 
 int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -665,7 +661,6 @@ int Tricky_func12(int* obj)
     return result;
 }
 
-#pragma opt_propagation off
 int Tricky_func10(int* obj, int targetObj)
 {
     int* state = (int*)obj[0xb8 / 4];
@@ -700,9 +695,7 @@ int Tricky_func10(int* obj, int targetObj)
     }
     return 1;
 }
-#pragma opt_propagation reset
 
-#pragma optimization_level 1
 void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
 {
     register int* state = (int*)obj[0xb8 / 4];
@@ -743,7 +736,6 @@ void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
         *(u32*)&state[0x54 / 4] |= 0x10000LL;
     }
 }
-#pragma optimization_level reset
 
 u8 Tricky_func0E(int* obj)
 {
@@ -1061,7 +1053,6 @@ int Tricky_getExtraSize(void)
     return 0x83c;
 }
 
-#pragma opt_common_subs off
 void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
 {
     int i;
@@ -1120,7 +1111,6 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
     }
     return;
 }
-#pragma opt_common_subs reset
 
 void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRender)
 {
@@ -1344,7 +1334,6 @@ void Tricky_hitDetect(GameObject* obj)
         *(f32*)((state) + 0x7c8) = z;                                                                                  \
     }
 
-#pragma opt_propagation off
 void Tricky_update(int obj)
 {
     char* base;
@@ -2155,7 +2144,6 @@ void Tricky_update(int obj)
     }
 }
 
-#pragma opt_propagation reset
 
 void Tricky_init(GameObject* obj)
 {

@@ -196,7 +196,6 @@ ObjectDescriptor gARWArwingObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)arwarwing_getExtraSize,
 };
 
-#pragma dont_inline off
 static inline f32 clampPos(f32 v, f32 lo, f32 hi)
 {
     return (v < lo) ? lo : ((v > hi) ? hi : v);
@@ -314,8 +313,6 @@ void arwarwing_updateThrusters(GameObject* obj, ArwingState* state)
     state->thrusterR->anim.rotX = 0x8000 - slot->yaw;
 }
 
-#pragma dont_inline on
-#pragma opt_propagation off
 void arwarwing_updateBarrelRoll(GameObject* obj, ArwingState* state)
 {
     f32 zero;
@@ -402,7 +399,6 @@ void arwarwing_updateBarrelRoll(GameObject* obj, ArwingState* state)
         }
     }
 }
-#pragma opt_propagation reset
 
 void arwarwing_clampToFlightBounds(GameObject* obj, ArwingState* state)
 {
@@ -574,7 +570,6 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     arwarwing_clampToFlightBounds(obj, state);
 }
 
-#pragma dont_inline off
 void arwarwing_spawnBomb(GameObject* obj, ArwingState* state, int side)
 {
     ArwingState* arwing = state;
@@ -606,7 +601,6 @@ void arwarwing_spawnBomb(GameObject* obj, ArwingState* state, int side)
     Sfx_PlayFromObject((int)obj, SFXTRIG_ar_badhit16);
 }
 
-#pragma dont_inline on
 void arwarwing_updateBombFire(GameObject* obj, ArwingState* state)
 {
     ArwingState* arwing = state;
@@ -643,8 +637,6 @@ void arwarwing_updateBombFire(GameObject* obj, ArwingState* state)
         arwing->bombCooldown = (f32)(u32) * (u16*)&arwing->bombFireDelay;
     }
 }
-
-#pragma dont_inline reset
 
 void arwarwing_spawnLaserShot(GameObject* obj, ArwingState* state, int side, int level, int linkEffect)
 {
@@ -696,7 +688,6 @@ void arwarwing_spawnLaserShot(GameObject* obj, ArwingState* state, int side, int
     arwprojectile_placeForward((GameObject*)(proj), state->projSpeed);
 }
 
-#pragma dont_inline on
 void arwarwing_updateWeaponFire(GameObject* obj, ArwingState* state)
 {
     int fire;
@@ -740,7 +731,6 @@ void arwarwing_updateWeaponFire(GameObject* obj, ArwingState* state)
     }
     state->fireCooldown = (f32)(u32)state->fireDelay;
 }
-#pragma dont_inline off
 
 void arwarwing_emitDamageEffects(int obj, ArwingState* state)
 {
@@ -843,7 +833,6 @@ void arwarwing_handlePathDamage(GameObject* obj, ArwingState* state)
     }
 }
 
-#pragma opt_common_subs off
 void arwarwing_handleObjectDamage(GameObject* obj, ArwingState* state)
 {
     int hitVol;
@@ -904,7 +893,6 @@ void arwarwing_handleObjectDamage(GameObject* obj, ArwingState* state)
         Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_bomb_pickup);
     }
 }
-#pragma opt_common_subs reset
 
 void arwarwing_updateRollAndEngine(int obj, ArwingState* state)
 {
@@ -1066,7 +1054,6 @@ void arwarwing_clearAimSnapshot(GameObject* obj)
     (*(ArwingState**)&obj->extra)->aimSnapshotValid = 0;
 }
 
-#pragma dont_inline on
 int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -1227,7 +1214,6 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma dont_inline off
 
 void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
 {
@@ -1709,14 +1695,13 @@ void arwarwing_hitDetect(GameObject* obj)
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;
         {
-            f32 posY = *(volatile f32*)&pos[1];
+            f32 posY = pos[1];
             fn_8008020C((s16)(0x8000 - (obj)->anim.rotX + state->aimYaw), (s16)((obj)->anim.rotY + state->aimPitch),
                         (s16)((obj)->anim.rotZ + state->aimRoll), pos[0], posY, pos[2], lbl_803E6FF8);
         }
     }
 }
 
-#pragma dont_inline on
 void arwarwing_update(GameObject* obj)
 {
     ArwingState* state = obj->extra;
@@ -1869,7 +1854,6 @@ void arwarwing_update(GameObject* obj)
     arwarwing_handleObjectDamage(obj, state);
     arwarwing_emitDamageEffects((int)obj, state);
 }
-#pragma dont_inline off
 
 void arwarwing_init(GameObject* obj)
 {

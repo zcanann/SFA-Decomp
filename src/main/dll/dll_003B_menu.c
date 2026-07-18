@@ -37,22 +37,17 @@ f32 lbl_803DD8EC; /* scroll timer */
 s8 lbl_803DD8E8;  /* armed flag (ignore input for one frame after build) */
 extern f32 lbl_803E21D8; /* scroll timer wrap period */
 
-
 s32 Menu_func0B(void)
 {
     return lbl_803DD8F0;
 }
-#pragma peephole off
 void Menu_func0A(int v)
 {
     lbl_803DD8E8 = v;
 }
-#pragma peephole reset
 void Menu_func09_nop(void)
 {
 }
-#pragma scheduling off
-#pragma peephole off
 int Menu_func08(int* sel)
 {
     s8 yInput;
@@ -102,16 +97,10 @@ int Menu_func08(int* sel)
     lbl_803DD8E8 = 1;
     return -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
-#pragma peephole off
 void Menu_func07(int v)
 {
     lbl_803DD8F4 = v;
 }
-#pragma peephole reset
-#pragma scheduling off
-#pragma peephole off
 void Menu_func06(int resultId, int unused2, int unused3, int itemWidth, int defaultIndex)
 {
     if (defaultIndex == lbl_803DD8F0)
@@ -131,8 +120,6 @@ void Menu_func05(int resultId, int unused2, int itemWidth, int defaultIndex)
     lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + itemWidth);
     lbl_803DD8F0++;
 }
-#pragma peephole reset
-#pragma peephole off
 void Menu_func04(int unused, int v)
 {
     getScreenResolution();
@@ -140,16 +127,12 @@ void Menu_func04(int unused, int v)
     lbl_803DD8F0 = 0;
     lbl_803DD8F4 = -1;
 }
-#pragma peephole reset
-#pragma peephole off
 void Menu_func03(int v)
 {
     lbl_803DD8F2 = v;
     lbl_803DD8F0 = 0;
     lbl_803DD8F4 = -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 void Menu_release(void)
 {
 }

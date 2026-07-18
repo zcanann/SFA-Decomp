@@ -49,8 +49,6 @@ static void heapSiftUp(CurveHeapNode* q, int i)
 }
 int voxmaps_processRouteQueue(RouteState* state, int count);
 
-#pragma opt_dead_assignments off
-#pragma opt_strength_reduction off
 void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentDir, u16 count, s16* box)
 {
     int foundIdx;
@@ -277,12 +275,14 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
             if (nn->x == bx && nn->y == bz)
             {
                 savedFlag = nn->flag;
-                goto searched;
+                break;
             }
         }
-        foundIdx = -1;
+        if (foundIdx >= nodeCount)
+        {
+            foundIdx = -1;
+        }
     }
-searched:
     nodeCount = state->nodeCount;
 
     if (foundIdx >= 0 && savedFlag == 0)
@@ -370,8 +370,6 @@ searched:
         heapSiftUp(q, state->queueCount);
     }
 }
-#pragma opt_dead_assignments reset
-#pragma opt_strength_reduction reset
 
 void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
 {
@@ -851,8 +849,6 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
     nav->flag25 = flag;
     return ret;
 }
-#pragma dont_inline on
-#pragma opt_loop_invariants off
 int voxmaps_processRouteQueue(RouteState* state, int count)
 {
     int nodeIdx;
@@ -899,8 +895,6 @@ int voxmaps_processRouteQueue(RouteState* state, int count)
     }
     return ret;
 }
-#pragma dont_inline reset
-#pragma opt_loop_invariants reset
 
 void voxmaps_freeRouteWork(RouteState* state)
 {
@@ -1208,8 +1202,6 @@ int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int 
     }
     return nodeBase + count;
 }
-#pragma opt_propagation off
-#pragma opt_strength_reduction off
 int* voxmaps_updateActiveMap(VoxPos* obj)
 {
     VoxMaps* vm = &gVoxMaps;
@@ -1230,8 +1222,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
 
     vm->blockOriginWorldX = gMapBlockOriginWorldX + gridX * 640;
     vm->blockOriginWorldZ = gMapBlockOriginWorldZ + gridY * 640;
-    vm->blockOriginGridX = *(volatile int*)&vm->blockOriginWorldX / 10;
-    vm->blockOriginGridZ = *(volatile int*)&vm->blockOriginWorldZ / 10;
+    vm->blockOriginGridX = vm->blockOriginWorldX / 10;
+    vm->blockOriginGridZ = vm->blockOriginWorldZ / 10;
 
     blockId = -1;
     if (mapGetBlockAtPos(gridX, gridY, 0) != NULL)
@@ -1292,8 +1284,6 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     }
     return &vm->blockOriginWorldX;
 }
-#pragma opt_propagation reset
-#pragma opt_strength_reduction reset
 
 void* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
 {
@@ -1394,7 +1384,6 @@ void voxmaps_resetLoadedMaps(void)
     }
 }
 
-
 void voxmaps_initialise(void)
 {
     VoxMaps* mgr = &gVoxMaps;
@@ -1422,7 +1411,7 @@ void voxmaps_initialise(void)
         mgr->slotOrigin[i].gridZ = 0;
     }
 
-    gVoxMapsScratchBufferPtr = *(void* volatile*)&gVoxMapsScratchBuffer;
+    gVoxMapsScratchBufferPtr = gVoxMapsScratchBuffer;
     gVoxMapsTransformObj = 0;
     gVoxMapsLargeTextures[0] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
     gVoxMapsLargeTextures[1] = textureAlloc(64, 64, 4, 0, 0, 0, 0, 0, 0);
@@ -1439,7 +1428,6 @@ BOOL Queue_IsEmpty(RingBufferQueue* queue)
 {
     return queue->count == 0;
 }
-
 
 void Queue_Peek(RingBufferQueue* queue, void* dst)
 {
@@ -1476,13 +1464,10 @@ void Queue_Init(RingBufferQueue* queue, void* data, int capacity, int elemSize)
     queue->readIndex = 0;
 }
 
-
-
 BOOL Stack_IsEmpty(RingBufferQueue* stack)
 {
     return stack->count == 0;
 }
-
 
 BOOL Stack_IsFull(RingBufferQueue* stack)
 {

@@ -176,10 +176,6 @@ STATIC_ASSERT(sizeof(DrakorHoverpadState) == 0x17c);
 /* group owned by another DLL, queried here */
 #define BOSSDRAKOR_OBJGROUP 0x45 /* DLL 0x24D bossdrakor */
 
-#pragma fp_contract reset
-#pragma opt_common_subs reset
-#pragma opt_dead_assignments reset
-
 int drakorhoverpad_setScale(GameObject* obj);
 int drakorhoverpad_render2(GameObject* obj);
 void drakorhoverpad_func12(int obj, f32* outFloat, int* outFlag);
@@ -340,7 +336,6 @@ static f32 drakorhoverpad_nodeWobbleCos(DrakorCurveNode** slot, int angle)
     return (*(f32*)&gDrakorHoverpadSpeedStep) * ((f32)(u32)(*slot)->tangentMag * mathCosf(3.1415927f * (f32)angle / 32768.0f));
 }
 
-#pragma dont_inline on
 int drakorhoverpad_pickMaskedNextPoint(int* pad, int exclude, int maxIndex)
 {
     int collected[4];
@@ -409,7 +404,6 @@ int drakorhoverpad_pickUnmaskedNextPoint(int* pad, int exclude, int maxIndex)
     return -1;
 }
 
-#pragma dont_inline reset
 int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
 {
     u8* p = (u8*)curve;
@@ -440,15 +434,14 @@ int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
     }
     if (result == -1)
     {
-        goto set_null;
+        ((GameObject*)p)->anim.targetObj = NULL;
+        return 1;
     }
     ((GameObject*)p)->anim.targetObj = (*gRomCurveInterface)->getById(result);
     if (((GameObject*)p)->anim.targetObj == NULL)
     {
-        goto ret1;
+        return 1;
     }
-/* Each field access re-reads the node pointer out of the anim slot (the
- * original never cached it in a local); these macros keep that reload. */
 #define CM_SLOT  ((DrakorCurveNode**)&((GameObject*)p)->anim.currentMove)
 #define AMP_SLOT ((DrakorCurveNode**)&((GameObject*)p)->anim.activeMoveProgress)
 #define TGT_SLOT ((DrakorCurveNode**)&((GameObject*)p)->anim.targetObj)
@@ -516,12 +509,7 @@ int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
         Curve_AdvanceAlongPath(&curve->curve, 1.0f);
     }
     return 0;
-set_null:
-    ((GameObject*)p)->anim.targetObj = NULL;
-ret1:
-    return 1;
 }
-
 
 ObjectDescriptor24 gDrakorHoverPadObjDescriptor = {
     0,
@@ -553,7 +541,6 @@ ObjectDescriptor24 gDrakorHoverPadObjDescriptor = {
     (ObjectDescriptorCallback)drakorhoverpad_renderGroundMarker,
     (ObjectDescriptorCallback)drakorhoverpad_func17,
 };
-#pragma dont_inline on
 int drakorhoverpad_init(GameObject* obj)
 {
     u8* p = (obj)->extra;
@@ -595,7 +582,6 @@ int drakorhoverpad_init(GameObject* obj)
     return 0;
 }
 
-#pragma dont_inline reset
 int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCode, void* out)
 {
     u8* p = (obj)->extra;
@@ -917,9 +903,6 @@ void drakorhoverpad_hitDetect(void)
 {
 }
 
-#pragma fp_contract off
-#pragma opt_common_subs off
-#pragma opt_dead_assignments off
 void drakorhoverpad_updateMain(GameObject* obj)
 {
     u8* p = (obj)->extra;
@@ -1110,9 +1093,6 @@ void drakorhoverpad_updateMain(GameObject* obj)
     PSVECAdd(&(obj)->anim.localPosX, &(obj)->anim.velocityX, &(obj)->anim.localPosX);
 }
 
-#pragma fp_contract reset
-#pragma opt_common_subs reset
-#pragma opt_dead_assignments reset
 void drakorhoverpad_initMain(GameObject* obj, void* desc)
 {
     u8* p = (obj)->extra;
@@ -1155,7 +1135,6 @@ void drakorhoverpad_release(void)
 void drakorhoverpad_initialise(void)
 {
 }
-
 
 u8 lbl_8032AAB0[0x80] = {
     0x04, 0x30, 0x0B, 0x00, 0x03, 0x00, 0x04, 0x31, 0x05, 0x00, 0x02, 0x00, 0x04, 0x32, 0x0B, 0x00,

@@ -67,9 +67,7 @@ extern f32 lbl_803DE76C;
 extern f32 lbl_803DE790;
 extern f32 lbl_803DE79C;
 extern f32 lbl_803DE7A0;
-#pragma explicit_zero_data on
 u8 gModelLightColorTable[8] = {0};
-#pragma explicit_zero_data off
 extern f32 lbl_803DE764;
 extern f32 lbl_803DE778;
 extern f32 lbl_803DE78C;
@@ -92,7 +90,6 @@ extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 
 
 ModelLightStruct* objAllocLight(void* owner);
 
-#pragma opt_loop_invariants off
 extern void* gModelLightList[0x32];
 
 void modelLightStruct_freeSlot(ModelLightStruct** lightSlot)
@@ -130,7 +127,6 @@ void modelLightStruct_freeSlot(ModelLightStruct** lightSlot)
         *lightSlot = NULL;
     }
 }
-#pragma opt_loop_invariants reset
 
 ModelLightStruct* modelLightStruct_createPointLight(void* owner, u8 red, u8 green, u8 blue, u8 setFlag)
 {
@@ -215,7 +211,7 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
         {
             return 0;
         }
-        goto found;
+        return 1;
     }
 
     if (localPos[2] - ((GameObject*)obj)->anim.hitboxScale > ((ModelLightStruct*)light)->projectionFarZ ||
@@ -278,11 +274,7 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     }
 
     return 0;
-
-found:
-    return 1;
 }
-#pragma dont_inline on
 f32 modelLightStruct_getObjectIntensity(u8* light, u8* obj)
 {
     f32 delta[3];
@@ -320,7 +312,6 @@ f32 modelLightStruct_getObjectIntensity(u8* light, u8* obj)
 
     return amount;
 }
-#pragma dont_inline reset
 
 void modelLightStruct_updateColorFade(ModelLightStruct* light)
 {
@@ -392,7 +383,6 @@ void modelLightStruct_updateColorFade(ModelLightStruct* light)
     light->specularColor[3] = ((f32)light->specularColor[3] * light->activeIntensity);
 }
 
-#pragma dont_inline on
 void modelLightStruct_startColorFade(ModelLightStruct* light, int mode, s16 frames)
 {
     f32 denom;
@@ -420,7 +410,6 @@ void modelLightStruct_startColorFade(ModelLightStruct* light, int mode, s16 fram
         light->colorFadeTimer = denom;
     }
 }
-#pragma dont_inline off
 
 void modelLightStruct_updateGlowAlpha(ModelLightStruct* light)
 {
@@ -522,7 +511,6 @@ void modelLightStruct_setProjectionNearZ(ModelLightStruct* p, f32 v)
     p->projectionNearZ = (v < lbl_803DE78C) ? lbl_803DE78C : ((v > p->projectionFarZ) ? p->projectionFarZ : v);
 }
 
-#pragma opt_common_subs off
 void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 fovY, f32 aspect)
 {
     f32 z;
@@ -554,7 +542,6 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 top, f32 b
     C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom, obj->projectionLeft,
                     obj->projectionRight, unit, unit, unit, unit);
 }
-#pragma opt_common_subs reset
 
 void* modelLightStruct_getProjectionTexture(ModelLightStruct* p)
 {
@@ -566,7 +553,6 @@ void modelLightStruct_setProjectionTexture(ModelLightStruct* p, void* v)
 {
     p->projectionTexture = v;
 }
-#pragma opt_propagation off
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f32 brightness)
 {
     u8* lightObj;
@@ -580,7 +566,6 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct* obj, f32 scale, f
     zero = lbl_803DE75C;
     GXInitLightAttn(lightObj, zero, zero, lbl_803DE760, atten, zero, *(f32*)&lbl_803DE760 - atten);
 }
-#pragma opt_propagation reset
 
 void modelLightStruct_setSpecularTargetColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
 {
@@ -712,7 +697,6 @@ int modelLightStruct_getActiveState(ModelLightStruct* p)
     return p->activeState;
 }
 
-#pragma dont_inline on
 void modelLightStruct_setEnabled(ModelLightStruct* light, u8 enabled, f32 duration)
 {
     f32 zero;
@@ -754,7 +738,6 @@ void modelLightStruct_setEnabled(ModelLightStruct* light, u8 enabled, f32 durati
     light->activeIntensityStep = lbl_803DE798 / (lbl_803DE794 * duration);
     light->activeIntensity = lbl_803DE760;
 }
-#pragma dont_inline off
 
 void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 near, f32 far)
 {
@@ -858,7 +841,6 @@ void modelLightStruct_setPosition(ModelLightStruct* s, f32 x, f32 y, f32 z)
         }
     }
 }
-#pragma opt_common_subs off
 ModelLightStruct* objAllocLight(void* owner)
 {
     u8* light;
@@ -995,7 +977,6 @@ ModelLightStruct* objAllocLight(void* owner)
     return (ModelLightStruct*)light;
 }
 
-#pragma opt_common_subs reset
 
 void modelLightStruct_loadDiffuseGXLight(u8* light, u8* obj, int lightId)
 {
@@ -1149,8 +1130,6 @@ void modelLightChannel_configure(int i, int mode, int matSrc)
     gModelLightChannelStates[i].matSrc = matSrc;
     gModelLightChannelStates[i].active = 1;
 }
-#pragma optimization_level 2
-#pragma opt_lifetimes on
 void modelLightChannels_applyGXControls(void)
 {
     ModelLightChannelState* entry = NULL;
@@ -1227,8 +1206,6 @@ void modelLightChannels_applyGXControls(void)
         GXSetNumChans(0);
     }
 }
-#pragma opt_lifetimes reset
-#pragma optimization_level reset
 
 void modelLightChannels_reset(u8 useModelRelative)
 {

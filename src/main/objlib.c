@@ -37,7 +37,6 @@ extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInsta
 extern void fn_80054F74(int obj, float* pos);
 extern char sObjAddObjectTypeReachedMaxTypes[];
 
-
 #define OBJGROUP_COUNT                0x54
 #define OBJGROUP_OFFSET_CLEAR_COUNT   (OBJGROUP_COUNT + 1)
 #define OBJGROUP_MAX_OBJECTS          0x100
@@ -172,7 +171,6 @@ typedef struct ObjPathPoint
     s8 modelIndex[6];
 } ObjPathPoint;
 
-#pragma scheduling off
 void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
 {
     ObjAnimComponent* obj;
@@ -214,7 +212,6 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
     return;
 }
 
-#pragma peephole off
 void ObjHits_SetTargetMask(int objPtr, u8 targetMask)
 {
     ObjHitsPriorityState* hitState;
@@ -796,7 +793,6 @@ void ObjHits_AddContactObject(int obj, int contactObj)
     return;
 }
 
-#pragma dont_inline on
 int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume,
                                        float* outHitPosX, float* outHitPosY, float* outHitPosZ)
 {
@@ -899,7 +895,6 @@ int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereInd
     }
     return 0;
 }
-#pragma dont_inline reset
 
 void ObjHitReact_UpdateResetObjects(void)
 {
@@ -944,7 +939,6 @@ ObjAnimComponent** ObjHitReact_GetResetObjects(int* outObjectCount)
     return gObjHitReactResetObjects;
 }
 
-#pragma peephole on
 void ObjHits_InitWorkBuffers(void)
 {
     int hitVolumeIndex;
@@ -965,7 +959,6 @@ void ObjHits_InitWorkBuffers(void)
     ((int*)(int)gObjHitsActiveHitVolumeObjects)[++hitVolumeIndex] = 0;
     return;
 }
-#pragma peephole reset
 
 int ObjGroup_ContainsObject(u32 obj, int group)
 {
@@ -991,7 +984,6 @@ int ObjGroup_ContainsObject(u32 obj, int group)
     return (u32)(halfDiff - limitXorIndex) >> 0x1f;
 }
 
-#pragma opt_loop_invariants off
 int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistance)
 {
     u32* entry;
@@ -1030,9 +1022,7 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
     }
     return nearest;
 }
-#pragma opt_loop_invariants reset
 
-#pragma opt_loop_invariants off
 int ObjGroup_FindNearestObjectForObject(int group, int obj, float* maxDistance)
 {
     u32* entry;
@@ -1126,7 +1116,6 @@ int ObjGroup_FindNearestObject(int group, int obj, float* maxDistance)
     }
     return nearest;
 }
-#pragma opt_loop_invariants reset
 
 u32* ObjGroup_GetObjects(int group, int* countOut)
 {
@@ -1329,7 +1318,6 @@ int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam)
     return 0;
 }
 
-#pragma opt_loop_invariants off
 void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, void* sender, u32 message, u32 param)
 {
     int* objects;
@@ -1374,7 +1362,6 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, void* sen
     }
     return;
 }
-#pragma opt_loop_invariants reset
 
 void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u32 param)
 {
@@ -1789,7 +1776,6 @@ int ObjTrigger_IsSet(int objPtr)
     return 0;
 }
 
-#pragma opt_loop_invariants off
 GameObject* ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* maxDistanceSq)
 {
     int startIndex;
@@ -1847,7 +1833,6 @@ GameObject* ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* 
 
     return foundObj;
 }
-#pragma opt_loop_invariants reset
 
 int ObjList_ContainsObject(int obj)
 {

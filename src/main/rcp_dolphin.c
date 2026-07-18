@@ -71,9 +71,7 @@ u8 lbl_803DCD4A;
 u8 lbl_803DCD49;
 u8 lbl_803DCD48;
 
-#pragma explicit_zero_data on
 u32 gRcpDistortAmbColor = 0;
-#pragma explicit_zero_data off
 int gRcpDistortMatColor = -1;
 u32 gRcpTexAllocTag = 6;
 char sDebugIntLineFormat[] = "%d\n";
@@ -299,8 +297,6 @@ void FUN_800537a0(u32 unused1, u32 unused2, int format, char param4, u32 param5,
     FUN_80286880();
     return;
 }
-#pragma peephole off
-#pragma scheduling off
 
 extern void GXLoadTexMtxImm(f32* mtx, int id, int type);
 extern void GXSetTexCoordGen2(int dst, int fn, int src, int mtx, int normalize, int pt);
@@ -656,7 +652,6 @@ void gxColorFn_800523d0(void)
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
-#pragma dont_inline on
 void textureFn_800524ec(int* param)
 {
     int sel_color;
@@ -682,7 +677,6 @@ void textureFn_800524ec(int* param)
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
-#pragma dont_inline reset
 void gxTextureFn_80052638(int* param)
 {
     int sel;
@@ -733,15 +727,12 @@ void gxColorFn_80052764(int* param)
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
-#pragma dont_inline on
-#pragma peephole reset
 void textureFn_800528bc(void)
 {
     GXSetNumTexGens(lbl_803DCD69);
     GXSetNumTevStages(lbl_803DCD6A);
     GXSetNumIndStages(lbl_803DCD68);
 }
-#pragma peephole off
 void resetLotsOfRenderVars(void)
 {
     lbl_803DCD58 = 30;
@@ -771,9 +762,6 @@ void resetLotsOfRenderVars(void)
     lbl_803DCD48 = 0;
     lbl_803DCD30 = 0;
 }
-#pragma dont_inline reset
-#pragma opt_loop_invariants off
-#pragma opt_propagation off
 extern u8 gRcpWarpDistortDisplayList[0x6640];
 
 void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) */
@@ -851,10 +839,6 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
     }
     GXCallDisplayList(gRcpWarpDistortDisplayList, gRcpWarpDistortListSize);
 }
-#pragma dont_inline on
-#pragma opt_common_subs off
-#pragma opt_loop_invariants reset
-#pragma opt_propagation reset
 int textureFn_80052bb4(int model, f32* params)
 {
     ModelLightStruct* la;
@@ -916,7 +900,6 @@ void gxFn_80052dc0(void)
     GXLoadNrmMtxImm(pmtx, GX_PNMTX0);
     GXSetCurrentMtx(GX_PNMTX0);
 }
-#pragma dont_inline reset
 
 static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
 {
@@ -995,7 +978,7 @@ void gxTextureFn_80052efc(void)
     GXSetChanMatColor(GX_COLOR0, *(GXColor8*)&gRcpDistortMatColor);
     clearSlot = 5;
     k = 5;
-    e = gRcpDistortSlots + 0x8c; /* &slots[5]; +0 texture, +0xe tex refCount, +0x1a group, +0x1b mode */
+    e = gRcpDistortSlots + 0x8c;
     group = gRcpDistortGroup;
     for (; k >= 0; k--)
     {
@@ -1035,8 +1018,6 @@ void gxTextureFn_80052efc(void)
     Camera_ApplyFullViewport();
     gRcpDistortGroup = 0;
 }
-#pragma opt_common_subs reset
-#pragma peephole on
 void ShaderDef_free(int* def)
 {
     void* s;
@@ -1050,7 +1031,7 @@ void ShaderDef_free(int* def)
     {
         for (i = 0; i < 6; i++)
         {
-            s = *(void**)(gRcpDistortSlots + i * 0x1C); /* RcpDistortSlot.texture (typedef declared later) */
+            s = *(void**)(gRcpDistortSlots + i * 0x1C);
             if (((Texture*)s)->refCount != 0 && s == p1)
             {
                 (((Texture*)*(void**)(gRcpDistortSlots + i * 0x1C))->refCount)--;
@@ -1072,7 +1053,6 @@ void ShaderDef_free(int* def)
     }
 }
 
-#pragma peephole off
 void shaderInit(u8* def, void** out, u8* obj)
 {
     void** slot;
@@ -1365,17 +1345,14 @@ void fn_80053C40(u8* tex, u8* obj)
 }
 
 
-#pragma dont_inline on
-#pragma opt_common_subs off
-#pragma opt_propagation off
 void textureFn_80053d58(void* vobj)
 {
     u8* obj = (u8*)vobj;
     u8 mipmap = 0;
     void* texObj;
-    *(int*)(obj + 64) = mipmap; /* clears Texture.tmemAddr (0x40) */
+    *(int*)(obj + 64) = mipmap;
     ((Texture*)obj)->preloaded = mipmap;
-    texObj = (void*)(obj + 32); /* 0x20: embedded GXTexObj, not named in Texture */
+    texObj = (void*)(obj + 32);
     if ((int)((Texture*)obj)->maxLod - (int)((Texture*)obj)->minLod > 0)
         mipmap = 1;
     GXInitTexObj(texObj, obj + 96, ((Texture*)obj)->width, ((Texture*)obj)->height, ((Texture*)obj)->format,
@@ -1403,8 +1380,6 @@ void textureFn_80053d58(void* vobj)
 }
 
 
-#pragma dont_inline reset
-#pragma opt_common_subs reset
 void fn_80053EBC(u32 bits)
 {
     u32 nb;
@@ -1413,9 +1388,6 @@ void fn_80053EBC(u32 bits)
     nb = ~bits;
     gRcpRenderFlags = v & nb;
 }
-#pragma opt_propagation reset
-#pragma peephole reset
-#pragma scheduling reset
 
 
 void fn_80053ED0(u32 bits)
@@ -1423,8 +1395,6 @@ void fn_80053ED0(u32 bits)
     gRcpRenderFlags = gRcpRenderFlags | bits;
 }
 
-#pragma peephole off
-#pragma scheduling off
 
 void* getLoadedTexture(int key)
 {
@@ -1529,15 +1499,11 @@ void textureAnimFn_80053f2c(const Texture* texture, u32* node, s32* cnt)
     }
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 void fn_800541A4(Texture* texture, s16 frameStep)
 {
     texture->animationFrameStep = frameStep;
 }
-#pragma peephole off
-#pragma scheduling off
 
 void textureFn_800541ac(int p1 /* unused */, int* tex, void* forceTex, int flags, int packed)
 {
@@ -1606,7 +1572,6 @@ void textureFn_800541ac(int p1 /* unused */, int* tex, void* forceTex, int flags
     selectTexture((Texture*)((int)cur), 0);
     selectTexture((Texture*)((int)result), 1);
 }
-#pragma peephole reset
 
 void fn_800542F4(void)
 {
@@ -1616,8 +1581,6 @@ void fn_800542F4(void)
 }
 
 
-
-#pragma peephole on
 void textureFree(Texture* tex)
 {
     u8* iter;
@@ -1677,8 +1640,6 @@ void textureFree(Texture* tex)
         }
     }
 }
-#pragma opt_propagation off
-#pragma peephole off
 extern int gRcpTexBankCount[3];
 
 extern int* gRcpTexBankTable[3];
@@ -1753,20 +1714,14 @@ void* textureLoad(int texId, u8 flagIn)
     {
         texId = -texId;
     }
+    else if (texId >= 0xbb8 && (remapped = gRcpTexIdRemap[texId]) != 0)
+    {
+        texId = remapped + 1;
+    }
     else
     {
-        if (texId >= 0xbb8)
-        {
-            remapped = gRcpTexIdRemap[texId];
-            if (remapped != 0)
-            {
-                texId = remapped + 1;
-                goto resolved;
-            }
-        }
         texId = gRcpTexIdRemap[texId];
     }
-resolved:
     id16 = texId & 0xffff;
     if (texId & 0x8000)
     {
@@ -1792,30 +1747,26 @@ resolved:
     bankPtr = getCurrentDataFile(MLDF_FILEID_TEX0_TAB_A);
     gRcpTexBankTable[0] = bankPtr;
     if (gRcpTexBankTable != NULL)
-        goto countBank0;
-    goto doneBank0;
-countBank0:
-    while (*bankPtr != -1)
     {
-        bankPtr++;
-        n++;
+        while (*bankPtr != -1)
+        {
+            bankPtr++;
+            n++;
+        }
+        gRcpTexBankCount[0] = n - 1;
     }
-    gRcpTexBankCount[0] = n - 1;
-doneBank0:
     n = 0;
     bankPtr = getCurrentDataFile(MLDF_FILEID_TEX1_TAB_A);
     gRcpTexBankTable[1] = bankPtr;
     if (gRcpTexBankTable != NULL)
-        goto countBank1;
-    goto doneBank1;
-countBank1:
-    while (*bankPtr != -1)
     {
-        bankPtr++;
-        n++;
+        while (*bankPtr != -1)
+        {
+            bankPtr++;
+            n++;
+        }
+        gRcpTexBankCount[1] = n - 1;
     }
-    gRcpTexBankCount[1] = n - 1;
-doneBank1:
     bankWord = gRcpTexBankTable[bank][id16];
     mips = (bankWord >> TEX_TAB_MIP_COUNT_SHIFT) & TEX_TAB_MIP_COUNT_MASK;
     bankWordSaved = bankWord;
@@ -2037,8 +1988,6 @@ doneBank1:
     return firstTex;
 }
 
-#pragma opt_propagation reset
-#pragma scheduling on
 int textureCrazyPointerFollowFn_80054c30(int* p, int n)
 {
     int limit = *(u16*)((char*)p + 16);
@@ -2052,8 +2001,6 @@ int textureCrazyPointerFollowFn_80054c30(int* p, int n)
     }
     return (int)p;
 }
-#pragma dont_inline on
-#pragma scheduling off
 void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter)
 {
     u8* obj;
@@ -2065,7 +2012,7 @@ void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
     ((Texture*)obj)->format = fmt;
     ((Texture*)obj)->width = w;
     ((Texture*)obj)->height = h;
-    *(u16*)(obj + 16) = 1; /* 0x10: mip-chain word (count<<8), not named in Texture */
+    *(u16*)(obj + 16) = 1;
     ((Texture*)obj)->refCount = 0;
     ((Texture*)obj)->wrapS = wrapS;
     ((Texture*)obj)->wrapT = wrapT;
@@ -2085,7 +2032,6 @@ void* textureLoadAsset(int asset)
     return out;
 }
 
-#pragma dont_inline reset
 void loadTextureFiles(void)
 {
     int* p;
@@ -2098,30 +2044,26 @@ void loadTextureFiles(void)
     p = getCurrentDataFile(MLDF_FILEID_TEX0_TAB_A);
     gRcpTexBankTable[0] = p;
     if (gRcpTexBankTable != NULL)
-        goto countBank0;
-    goto doneBank0;
-countBank0:
-    while (p[0] != -1)
     {
-        p++;
-        n++;
+        while (p[0] != -1)
+        {
+            p++;
+            n++;
+        }
+        gRcpTexBankCount[0] = n - 1;
     }
-    gRcpTexBankCount[0] = n - 1;
-doneBank0:
     n = 0;
     p = getCurrentDataFile(MLDF_FILEID_TEX1_TAB_A);
     gRcpTexBankTable[1] = p;
     if (gRcpTexBankTable != NULL)
-        goto countBank1;
-    goto doneBank1;
-countBank1:
-    while (p[0] != -1)
     {
-        p++;
-        n++;
+        while (p[0] != -1)
+        {
+            p++;
+            n++;
+        }
+        gRcpTexBankCount[1] = n - 1;
     }
-    gRcpTexBankCount[1] = n - 1;
-doneBank1:
     n = 0;
     p = getCurrentDataFile(MLDF_FILEID_TEXPRE_TAB);
     gRcpTexBankTable[2] = p;
@@ -2152,7 +2094,6 @@ doneBank1:
 }
 
 
-
 extern u32 bEnableColorFilter;
 extern u8 bEnableViewFinderHud;
 extern u8 bEnableSpiritVision;
@@ -2168,8 +2109,6 @@ void Rcp_SetColorFilterEnabled(u32 x)
     bEnableColorFilter = x;
 }
 
-#pragma peephole on
-#pragma scheduling off
 void fn_80054F74(int* p, f32* vec)
 {
     if (*(void**)((char*)p + 0x30) != NULL)
@@ -2184,8 +2123,6 @@ void Rcp_DisableDistortionFilter(void)
 {
     bEnableDistortionFilter = 0x0;
 }
-#pragma peephole off
-#pragma scheduling off
 
 extern f32 distortionFilterVector[3];
 extern f32 distortionFilterAngle1;
@@ -2221,12 +2158,10 @@ void timeOfDayFn_80055038(void)
     lbl_803DCE00 = 1;
     p[0x40] = (u8)(p[0x40] | 0x20);
 }
-#pragma peephole reset
 void Rcp_DisableBlurFilter(void)
 {
     bEnableBlurFilter = 0x0;
 }
-#pragma scheduling off
 
 extern f32 lbl_803DCE50;
 extern f32 lbl_803DCE4C;
@@ -2243,7 +2178,6 @@ void turnOnBlurFilter(u8 useArea, u8 bigger, f32 a, f32 b, f32 area)
     bBlurFilterUseArea = useArea;
     bBiggerBlurFilter = bigger;
 }
-
 
 
 char sThreadStateAttrSuspendFormat[] = "thread: state=%d attr=%d suspend=%d\n";
@@ -2347,7 +2281,6 @@ TevSwapEntry gRcpTevSwapTable[24] = {
 RcpDistortConfig lbl_8030D028[6] ALIGN_DECL(8) = {
     {0.5f, 1.0f}, {0.5f, 0.5f}, {0.4f, 1.0f}, {0.3f, 0.8f}, {0.2f, 1.0f}, {0.4f, 0.5f},
 };
-#pragma scheduling reset
 u8 Rcp_GetViewFinderHudEnabled(void)
 {
     return bEnableViewFinderHud;
@@ -2386,8 +2319,6 @@ void setMotionBlur(u8 enabled, f32 amount)
     bEnableMotionBlur = enabled;
     lbl_803DB62C = amount;
 }
-#pragma peephole off
-#pragma scheduling off
 
 
 void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2)
@@ -2452,7 +2383,6 @@ void loadNextMap(void)
 }
 
 
-
 void warpToMap(int idx, s8 transType)
 {
     u8* p = lbl_803DCE78;
@@ -2472,7 +2402,6 @@ void warpToMap(int idx, s8 transType)
     Pause_SetDisabled(1);
 }
 #undef mtx
-#pragma opt_dead_assignments off
 void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
 {
     int* seg = (int*)(lbl_803822C8 + mapId * 0x8c);
@@ -2548,7 +2477,7 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
                     if ((*(u8*)(obj + 3) >> (v - 1)) & 1)
                         flag = 0;
                     else
-                        goto flag1;
+                        flag = 1;
                 }
                 else if ((*(u8*)(obj + 5) >> (0x10 - v)) & 1)
                 {
@@ -2556,13 +2485,12 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
                 }
                 else
                 {
-                flag1:
                     flag = 1;
                 }
             }
             else
             {
-                goto flag1;
+                flag = 1;
             }
             if (flag != 0)
             {
@@ -2584,8 +2512,6 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
     }
 }
 
-
-#pragma opt_dead_assignments reset
 
 extern f32 gMapBlockWorldSize;
 #define MAP_BLOCK_LAYER_COUNT 5
@@ -2637,7 +2563,7 @@ int objShouldUnload(u8* obj)
             }
             else
             {
-                goto keep1;
+                keep = 1;
             }
         }
         else if ((def[5] >> (0x10 - m)) & 1)
@@ -2646,13 +2572,12 @@ int objShouldUnload(u8* obj)
         }
         else
         {
-        keep1:
             keep = 1;
         }
     }
     else
     {
-        goto keep1;
+        keep = 1;
     }
     if (keep == 0)
     {

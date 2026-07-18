@@ -52,22 +52,8 @@ STATIC_ASSERT(sizeof(Dll16CChildObjectIdTable) == 0xA);
 const Dll16CChildObjectIdTable lbl_802C2308 = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
 union Dll16cConstF32 { f32 f; };
 const union Dll16cConstF32 lbl_803E4748 = { 0.0f };
-__declspec(section ".sdata2") f32 lbl_803E474C = 0.01f;
-extern f32 lbl_803E4758;
-extern f32 lbl_803E475C;
-extern f32 lbl_803E4760;
-extern f32 lbl_803E4764;
-extern f32 lbl_803E4758;
-extern f32 lbl_803E475C;
-extern f32 lbl_803E4760;
-extern f32 lbl_803E4764;
-
-
-#pragma peephole off
-#pragma scheduling off
 /* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
  * extra block, optionally re-issuing a move on the sub-object first. */
-#pragma auto_inline off
 void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, int p2, int p3, int p4, int visible,
                                     int opacity, int reissueMove)
 {
@@ -102,7 +88,6 @@ void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, in
     dst->anim.velocityZ = src->anim.velocityZ;
 }
 
-#pragma auto_inline on
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
 int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -149,7 +134,7 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (linkedObj != NULL && animUpdate->triggerCommand == 2)
     {
-        extra->unk04 = lbl_803E4758;
+        extra->unk04 = 1.0f;
         extra->snapX = extra->pathPointX;
         extra->snapY = extra->pathPointY;
         extra->snapZ = extra->pathPointZ;
@@ -178,8 +163,6 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 int dll_16C_getExtraSize(void)
 {
     return 0x24;
@@ -197,8 +180,6 @@ void dll_16C_free(GameObject* obj)
         Obj_FreeObject(child);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     Dll16CState* extra;
@@ -240,7 +221,7 @@ void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
                 *(u8*)((char*)obj + 0x37) = extra->opacity;
             }
             ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4,
-                                                                                        lbl_803E4758);
+                                                                                        1.0f);
             ObjPath_GetPointWorldPosition(obj, 1, &extra->pathPointX, &extra->pathPointY, &extra->pathPointZ, 0);
             *(u8*)((char*)obj + 0x37) = saved;
         }
@@ -248,7 +229,7 @@ void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
     else
     {
         ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4,
-                                                                                    lbl_803E4758);
+                                                                                    1.0f);
     }
 }
 
@@ -337,7 +318,7 @@ void dll_16C_update(GameObject* obj)
             ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748.f, 0);
         }
         (*(void (**)(GameObject*, f32*))(**(int**)((char*)sub + 0x68) + 0x44))(sub, &blend);
-        blend = lbl_803E474C;
+        blend = 0.01f;
         (*(void (**)(GameObject*, f32*, f32*))(**(int**)((char*)sub + 0x68) + 0x40))(sub, &a, &b);
         ObjAnim_AdvanceCurrentMove((int)obj, blend, (f32)(u32)framesThisStep, NULL);
         if (extra->linkedObj != NULL)
@@ -345,17 +326,17 @@ void dll_16C_update(GameObject* obj)
             f32 fade;
             GameObject* player = Obj_GetPlayerObject();
             fade = Vec_distance(&extra->linkedObj->anim.worldPosX, &player->anim.worldPosX);
-            fade = (fade - lbl_803E475C) / lbl_803E4760;
+            fade = (fade - 600.0f) / 50.0f;
             if (fade < lbl_803E4748.f)
             {
                 fade = lbl_803E4748.f;
             }
-            else if (fade > lbl_803E4758)
+            else if (fade > 1.0f)
             {
-                fade = lbl_803E4758;
+                fade = 1.0f;
             }
-            fade = lbl_803E4758 - fade;
-            extra->opacity = lbl_803E4764 * fade;
+            fade = 1.0f - fade;
+            extra->opacity = 255.0f * fade;
             if (obj->anim.modelState != NULL)
             {
                 obj->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
@@ -388,8 +369,6 @@ void dll_16C_init(GameObject* obj, void* placement)
     extra->opacity = 0xff;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 void dll_16C_release(void)
 {
 }
@@ -416,7 +395,3 @@ ObjectDescriptor lbl_80323740 = {
     dll_16C_getExtraSize,
 };
 
-__declspec(section ".sdata2") f32 lbl_803E4758 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E475C = 600.0f;
-__declspec(section ".sdata2") f32 lbl_803E4760 = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E4764 = 255.0f;

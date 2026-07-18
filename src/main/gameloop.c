@@ -222,8 +222,6 @@ void init(void);
 void cutsceneEnterExit(int entering, int affectSounds);
 void checkReset(void);
 
-#pragma peephole off
-#pragma scheduling off
 int return0_8002969C(void);
 
 void loadAsset(void* reqVoid)
@@ -265,12 +263,9 @@ void loadAsset(void* reqVoid)
 void doNothing_8001F678(void)
 {
 }
-#pragma dont_inline on
 void doNothing_startOfFrame(void)
 {
 }
-#pragma peephole off
-#pragma scheduling off
 extern AssetReq gGameLoopAssetReq;
 
 void* animationLoad(int id, s16 animId, s16 moveIndex, int cache, int animDef)
@@ -325,7 +320,6 @@ void loadAssetFileById(void* out, int fileId)
     gGameLoopAssetReq.dest = (int)out;
     loadAsset(&gGameLoopAssetReq);
 }
-#pragma dont_inline off
 
 void crash(void)
 {
@@ -575,8 +569,6 @@ void askProgressiveScanMode(void)
         GXFlush_(0, 0);
     } while (counter < 0xf0);
 }
-#pragma peephole on
-#pragma scheduling reset
 
 
 
@@ -585,7 +577,6 @@ u8 getButtonObjects(void** p)
     *p = gGameLoopButtonObjects;
     return gGameLoopButtonObjectCount;
 }
-#pragma scheduling off
 void removeButtonObject(u32 object)
 {
     int* buttonObjects;
@@ -620,7 +611,6 @@ void addButtonObject(void* obj)
 }
 
 
-#pragma peephole off
 void fn_8001FE90(void)
 {
     lbl_803DCA42++;
@@ -657,8 +647,6 @@ void doNothing_onSaveSelectScreenExit(void)
 
 
 AssetReq gGameLoopAssetReq;
-#pragma peephole off
-#pragma scheduling off
 
 int gameBitDecrement(int bit)
 {
@@ -847,13 +835,10 @@ int return1_800202BC(void)
 
 typedef f32 Mtx[3][4];
 
-#pragma peephole on
 void setFrameCountdown_800202c4(u8 count)
 {
     frameCountdown = count;
 }
-#pragma peephole reset
-#pragma scheduling off
 
 extern void AISetStreamVolLeft(int vol);
 extern void AISetStreamVolRight(int vol);
@@ -1000,8 +985,6 @@ void checkReset(void)
         break;
     }
 }
-#pragma peephole off
-#pragma scheduling reset
 
 void setShouldResetNextFrame(int reset)
 {
@@ -1031,9 +1014,7 @@ void setTimeStop(int stop)
 {
     timeStop = stop;
 }
-#pragma scheduling off
 
-#pragma dont_inline on
 void cutsceneEnterExit(int entering, int affectSounds)
 {
     if (entering != 0)
@@ -1061,7 +1042,6 @@ void cutsceneEnterExit(int entering, int affectSounds)
         }
     }
 }
-#pragma dont_inline off
 
 void Obj_FlushDeferredFreeList(void);
 
@@ -1101,7 +1081,6 @@ u8 lbl_8033C3B8[0x3E8];
 u8 gGameLoopRenderModeCopy[0x40];
 extern char sMainFinishedInitMessage[];
 
-#pragma peephole on
 
 
 
@@ -1118,14 +1097,11 @@ extern void updateEnvironment(int a);
 extern void sceneRender(int a, int b, int c, int d, int e, int f);
 extern f32 lbl_803DE7B8;
 
-#pragma scheduling reset
 
 int getHudHiddenFrameCount(void)
 {
     return hudHiddenFrameCount;
 }
-#pragma peephole off
-#pragma scheduling off
 void mapReload(void)
 {
     mapReloadWithFadeout();
@@ -1550,8 +1526,6 @@ void init(void)
     tvInit();
     OSReport(sMainFinishedInitMessage);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 void main(void)

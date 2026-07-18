@@ -183,7 +183,7 @@ extern const double lbl_803DED60;
 
 extern inline float sqrtf(float x)
 {
-    volatile float y;
+    float y;
     if (x > lbl_803DED28)
     {
         double guess = __frsqrte((double)x);
@@ -525,9 +525,6 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
     DCFlushRange(data, size * size);
 }
 
-#pragma peephole off
-#pragma ppc_unroll_speculative on
-#pragma scheduling off
 
 extern u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 
@@ -584,8 +581,6 @@ void shadowRenderFn_8006b558(int* obj)
     ((f32*)obj[0x64 / 4])[5] = ((f32*)obj[0x64 / 4])[5] - lbl_803DED1C * ((f32*)obj[0x64 / 4])[0];
     ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] - lbl_803DED1C * ((f32*)obj[0x64 / 4])[0];
 }
-#pragma dont_inline on
-#pragma ppc_unroll_speculative on
 void fn_8006B830(ShadowSortEntry* arr, int count)
 {
     int gap = 1;
@@ -610,10 +605,6 @@ void fn_8006B830(ShadowSortEntry* arr, int count)
         gap /= 3;
     }
 }
-#pragma dont_inline reset
-#pragma opt_loop_invariants off
-#pragma opt_propagation off
-#pragma ppc_unroll_speculative off
 extern NewShadowEntry gNewShadowEntries[0x294 / sizeof(NewShadowEntry)];
 
 static void fillDiskTexture(void)
@@ -1116,13 +1107,7 @@ void allocLotsOfTextures(void)
     GXInvalidateTexAll();
     testAndSet_onlyUseHeap3(saved);
 }
-#pragma opt_loop_invariants reset
-#pragma opt_propagation reset
 
-#pragma opt_common_subs off
-#pragma opt_dead_assignments off
-#pragma opt_loop_invariants off
-#pragma ppc_unroll_speculative on
 extern NewShadowEntry gNewShadowEntries[0x294 / sizeof(NewShadowEntry)];
 
 void renderShadows(int unused0, int unused1, int unused2)
@@ -1430,9 +1415,6 @@ void renderShadows(int unused0, int unused1, int unused2)
     Camera_ApplyFullViewport();
     Camera_EnableViewYOffset();
 }
-#pragma opt_common_subs reset
-#pragma opt_dead_assignments reset
-#pragma opt_loop_invariants reset
 extern NewShadowCaster gNewShadowCasterTable[NEW_SHADOW_MAX_QUEUED_CASTERS];
 
 void shadowCreate(int* obj)
@@ -1450,7 +1432,7 @@ void shadowCreate(int* obj)
         if (dist2 > lbl_803DED28)
         {
             double guess = __frsqrte((double)dist2);
-            volatile f32 root;
+            f32 root;
             guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
             guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
             guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
@@ -1474,8 +1456,6 @@ void shadowCreate(int* obj)
         gNewShadowCasterCount++;
     }
 }
-#pragma opt_common_subs reset
-#pragma ppc_unroll_speculative on
 extern u8 lbl_8038E1E8[0x80];
 
 void newshadows_getShadowTextureTable4x8(int* p1, int* p2, int* p3)
@@ -1492,8 +1472,6 @@ void textureFn_8006c4e0(int* p1, int* p2)
     *p1 = (int)gNewShadowNoiseTexFrames;
     *p2 = 0x10;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void fn_8006C4F8(u32* p)
 {
@@ -1523,8 +1501,6 @@ void fn_8006C540(u32* p)
 {
     *p = gNewShadowRadialTexture;
 }
-#pragma peephole off
-#pragma scheduling off
 
 void* textureAlloc512(void)
 {
@@ -1533,8 +1509,6 @@ void* textureAlloc512(void)
     DCFlushRange((char*)tex + 0x60, *(u32*)((char*)tex + 0x44));
     return tex;
 }
-#pragma peephole reset
-#pragma scheduling reset
 void fn_8006C5B8(u32* p)
 {
     *p = gNewShadowRampTexture;
@@ -1558,8 +1532,6 @@ void getTextureFn_8006c5e4(u32* p)
 }
 
 u8 lbl_8038E1E8[0x80];
-#pragma peephole off
-#pragma scheduling off
 
 void objShadowFn_8006c5f0(GameObject* obj, u32* outTable, f32* outF, int* outX, int* outY)
 {
@@ -1571,15 +1543,11 @@ void objShadowFn_8006c5f0(GameObject* obj, u32* outTable, f32* outF, int* outX, 
 }
 
 Texture* gNewShadowNoiseTexFrames[0x10];
-#pragma peephole reset
-#pragma scheduling reset
 
 f32 fn_8006C670(void)
 {
     return lbl_803DCFA4;
 }
-#pragma peephole off
-#pragma scheduling off
 
 void fn_8006C678(int id)
 {
@@ -1613,8 +1581,6 @@ void selectReflectionTexture(int id)
         GXLoadTexObj((char*)p + 0x20, idCopy);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 u32 getReflectionTexture1(void)
 {
     return (u32)gNewShadowReflectionTexture;
@@ -1636,8 +1602,6 @@ u32 fn_8006C754(void)
     return gNewShadowFalloffTexture;
 }
 
-#pragma peephole off
-#pragma scheduling off
 
 void textureFn_8006c75c(int id)
 {
@@ -1652,7 +1616,6 @@ void textureFn_8006c75c(int id)
         GXLoadTexObj((char*)p + 0x20, idCopy);
     }
 }
-#pragma optimization_level 2
 void drawReflectionTexture(void)
 {
     char* texture = gNewShadowReflectionTexture;
@@ -1667,7 +1630,6 @@ void drawReflectionTexture(void)
     }
 }
 
-#pragma optimization_level reset
 
 void updateReflectionTextures(void)
 {
@@ -1694,7 +1656,6 @@ void updateReflectionTextures(void)
     }
     GXPixModeSync();
 }
-#pragma ppc_unroll_speculative on
 
 void maybeHudFn_8006c91c(void)
 {
@@ -1734,11 +1695,8 @@ void maybeHudFn_8006c91c(void)
 NewShadowCaster gNewShadowCasterTable[NEW_SHADOW_MAX_QUEUED_CASTERS];
 NewShadowCastSlot gNewShadowCastSlots[NEW_SHADOW_MAX_CASTERS];
 u32 gNewShadowCastTextures[NEW_SHADOW_MAX_CAST_TEXTURES];
-#pragma ppc_unroll_speculative on
 
 
-#pragma peephole reset
-#pragma scheduling reset
 
 void newshadows_getReflectionScrollOffsets(f32* outScrollX, f32* outScrollY)
 {
@@ -1751,8 +1709,6 @@ f32 gNewShadowPlacements[0x112];
 /* Builds the animated water-noise assets: scatters up to 50 non-overlapping random
    placements ([0]=lifetime 8..16 frames, [1..2]=pos, [3]=outer size, [4]=inner size),
    renders 16 noise animation frames through fn_8006CD20, then the caustic texture. */
-#pragma peephole off
-#pragma scheduling off
 
 void findSomething(void* needle)
 {
@@ -1767,19 +1723,12 @@ void findSomething(void* needle)
     }
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 void fn_8006CB24(void)
 {
     mm_free(lbl_803DCFBC);
     lbl_803DCFBC = 0;
 }
-#pragma opt_loop_invariants off
-#pragma opt_propagation reset
-#pragma peephole off
-#pragma ppc_unroll_speculative on
-#pragma scheduling off
 void fn_8006CB50(void)
 {
     int yhi;
@@ -1834,9 +1783,6 @@ void fn_8006CB50(void)
     }
     DCFlushRange(lbl_803DCFBC + 1, lbl_803DCFBC->dataSize);
 }
-#pragma opt_loop_invariants reset
-#pragma opt_propagation reset
-#pragma ppc_unroll_speculative on
 /* Sample the animated noise field built from gNewShadowPlacements: sums the
    contribution of every active placement at texel (px,pz) for animation frame
    `frame`. out2 = sparkle intensity (0..1), out1 = accumulated shift term. */
@@ -1911,9 +1857,6 @@ void fn_8006CD20(f32 px, f32 pz, f32 frame, f32* placements, int count, f32* out
     *out1 = lbl_803DED40 * acc6 + lbl_803DEDD4;
     *out2 = acc5;
 }
-#pragma opt_common_subs off
-#pragma opt_lifetimes off
-#pragma opt_loop_invariants off
 void initFn_8006d020(void)
 {
     u8 saved;
@@ -2039,14 +1982,7 @@ void initFn_8006d020(void)
     gNewShadowReflectionScrollY = lbl_803DED28;
     testAndSet_onlyUseHeap3(saved);
 }
-#pragma opt_common_subs reset
-#pragma opt_lifetimes reset
-#pragma opt_propagation off
-#pragma ppc_unroll_speculative off
 
-#pragma opt_loop_invariants reset
-#pragma opt_propagation reset
-#pragma ppc_unroll_speculative on
 
 u16 audioPickSoundEffect_8006ed24(s8 a, u8 b)
 {
@@ -2095,7 +2031,6 @@ u16 audioPickSoundEffect_8006ed24(s8 a, u8 b)
     return *(u16*)(base + v * 2);
 }
 
-#pragma ppc_unroll_speculative on
 
 void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2)
 {

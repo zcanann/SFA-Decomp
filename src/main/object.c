@@ -264,8 +264,6 @@ void doNothing_beforeRenderObject(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
 
 void fn_8002A5DC(u8* obj)
 {
@@ -410,17 +408,12 @@ void Obj_TickModelColorFadeRecursive(GameObject* obj)
     }
 }
 
-#pragma peephole on
-#pragma scheduling on
 
 int objGetFlagsE5_2(u8* obj)
 {
     return ((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE;
 }
 
-#pragma dont_inline on
-#pragma peephole off
-#pragma scheduling off
 void Obj_SetModelColorFadeRecursive(GameObject* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf)
 {
     int i;
@@ -455,7 +448,6 @@ void Obj_SetModelColorFadeRecursive(GameObject* obj, int frames, u8 red, u8 gree
         i++;
     }
 }
-#pragma dont_inline off
 void Obj_SetModelColorOverrideRecursive(GameObject* obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled)
 {
     u8* childScan;
@@ -622,7 +614,6 @@ void Obj_BuildInverseWorldTransformMatrix(GameObject* obj, f32* out)
     }
 }
 
-#pragma dont_inline on
 void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags)
 {
     f32 savedZ;
@@ -660,7 +651,6 @@ void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags)
     }
 }
 
-#pragma dont_inline reset
 
 GameObject* loadObjectAtObject(GameObject* src, ObjPlacement* setup)
 {
@@ -772,14 +762,12 @@ void fn_8002B758(void* v)
     }
     gObjPtrTableCount--;
 }
-#pragma peephole on
 void fn_8002B860(void* v)
 {
     s8 i = gObjPtrTableCount;
     gObjPtrTableCount = i + 1;
     gObjPtrTable[i] = v;
 }
-#pragma peephole off
 
 void Obj_SetActiveModelIndex(GameObject* obj, int idx)
 {
@@ -960,8 +948,6 @@ ObjPlacement* Obj_AllocObjectSetup(int size, int type)
     p->size = size;
     return p;
 }
-#pragma opt_common_subs off
-#pragma opt_loop_invariants off
 void objFreeObjDef(u8* obj, int flag)
 {
     int defs[40];
@@ -1165,8 +1151,6 @@ void objFreeObjDef(u8* obj, int flag)
     }
     mm_free(obj);
 }
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
 
 static inline void Obj_FreeDeferredObjects(void)
 {
@@ -1182,7 +1166,6 @@ static inline void Obj_FreeDeferredObjects(void)
     }
 }
 
-#pragma dont_inline on
 int loadModLines(int idx, s16* outCount)
 {
     int result;
@@ -1208,7 +1191,6 @@ int loadModLines(int idx, s16* outCount)
     *outCount = (u32)size / 20;
     return result;
 }
-#pragma dont_inline off
 
 u8* loadObjectFile(int id)
 {
@@ -1448,27 +1430,21 @@ void Obj_UpdateObject(u8* obj)
     }
     if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_UPDATE_DISABLED) == 0)
     {
-        switch (object->seqId)
+        if (object->seqId == 0 || object->seqId == 0x1f)
         {
-        case 0:
-        case 0x1f:
             playerUpdate(obj);
-            break;
-        default:
-            if (object->dll == NULL)
-            {
-                goto skip;
-            }
+            Obj_GetWorldPosition((u32)obj, &object->worldPosX, &object->worldPosY, &object->worldPosZ);
+        }
+        else if (object->dll != NULL)
+        {
             cb2 = (void (*)(u8*)) * (int*)((u8*)*object->dll + 8);
             if (cb2 != 0)
             {
                 cb2(obj);
             }
-            break;
+            Obj_GetWorldPosition((u32)obj, &object->worldPosX, &object->worldPosY, &object->worldPosZ);
         }
-        Obj_GetWorldPosition((u32)obj, &object->worldPosX, &object->worldPosY, &object->worldPosZ);
     }
-skip:
     if (object->hitReactState != NULL)
     {
         if (((GameObject*)obj)->childObjs[0] != NULL)
@@ -1765,19 +1741,15 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
         extra = 0x8e0;
         break;
     default:
-        if (*(int**)((u8*)tmpl + 0x68) == 0)
-        {
-            goto none;
-        }
-        cb = (int (*)(void*, int)) * (int*)(**(int**)((u8*)tmpl + 0x68) + 0x1c);
-        if (cb == 0)
-        {
-            goto none;
-        }
-        extra = cb(tmpl, size);
-        break;
-    none:
         extra = 0;
+        if (*(int**)((u8*)tmpl + 0x68) != 0)
+        {
+            cb = (int (*)(void*, int)) * (int*)(**(int**)((u8*)tmpl + 0x68) + 0x1c);
+            if (cb != 0)
+            {
+                extra = cb(tmpl, size);
+            }
+        }
         break;
     }
     size += extra;
@@ -1828,7 +1800,6 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     return roundUpTo32(size);
 }
 
-#pragma dont_inline on
 void Obj_RegisterObject(GameObject* obj, int flags)
 {
     ObjAnimComponent* object;
@@ -2264,7 +2235,6 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     obj->parent = parent;
     return obj;
 }
-#pragma dont_inline off
 
 GameObject* Obj_SetupObject(ObjPlacement* data, int flags, int mapLayer, int objIndex, void* parent)
 {
@@ -2620,29 +2590,26 @@ void Obj_UpdateAllObjects(u8 flags)
         {
             if ((((GameObject*)obj3)->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0)
             {
-                switch (((GameObject*)obj3)->anim.seqId)
+                if (((GameObject*)obj3)->anim.seqId == 0 || ((GameObject*)obj3)->anim.seqId == 0x1f)
                 {
-                case 0:
-                case 0x1f:
                     playerDoHitDetection(obj3);
-                    break;
-                default:
+                }
+                else
+                {
                     if (((GameObject*)obj3)->anim.dll == 0)
                     {
-                        goto next;
+                        continue;
                     }
                     cb = (void (*)(int)) * (int*)((u8*)*((GameObject*)obj3)->anim.dll + 0xc);
                     if (cb == 0)
                     {
-                        goto next;
+                        continue;
                     }
                     cb(obj3);
-                    break;
                 }
                 Obj_GetWorldPosition((u32)obj3, &((GameObject*)obj3)->anim.worldPosX,
                                      &((GameObject*)obj3)->anim.worldPosY, &((GameObject*)obj3)->anim.worldPosZ);
             }
-        next:;
         }
         obj2 = (u8*)ObjGroup_GetObjects(0, &count2);
         obj2 = (count2 != 0) ? *(u8**)obj2 : 0;
@@ -2652,29 +2619,23 @@ void Obj_UpdateAllObjects(u8 flags)
             child = *(int*)&((GameObject*)obj2)->childObjs[0];
             if ((((GameObject*)child)->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0)
             {
-                switch (((GameObject*)child)->anim.seqId)
+                if (((GameObject*)child)->anim.seqId == 0 || ((GameObject*)child)->anim.seqId == 0x1f)
                 {
-                case 0:
-                case 0x1f:
                     playerDoHitDetection(child);
-                    break;
-                default:
-                    if (((GameObject*)child)->anim.dll == 0)
-                    {
-                        goto done;
-                    }
-                    cb = (void (*)(int)) * (int*)((u8*)*((GameObject*)child)->anim.dll + 0xc);
-                    if (cb == 0)
-                    {
-                        goto done;
-                    }
-                    cb(child);
-                    break;
+                    Obj_GetWorldPosition((u32)child, (f32*)(child + 0x18), (f32*)(child + 0x1c), (f32*)(child + 0x20));
                 }
-                Obj_GetWorldPosition((u32)child, (f32*)(child + 0x18), (f32*)(child + 0x1c), (f32*)(child + 0x20));
+                else if (((GameObject*)child)->anim.dll != 0)
+                {
+                    cb = (void (*)(int)) * (int*)((u8*)*((GameObject*)child)->anim.dll + 0xc);
+                    if (cb != 0)
+                    {
+                        cb(child);
+                        Obj_GetWorldPosition((u32)child, (f32*)(child + 0x18), (f32*)(child + 0x1c),
+                                             (f32*)(child + 0x20));
+                    }
+                }
             }
         }
-    done:
         Waterfx_RunFrameLegacy((*gWaterfxInterface), framesThisStep);
     }
     if ((updateFlags & 2) == 0)

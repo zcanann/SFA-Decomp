@@ -69,21 +69,6 @@ void* gDllCBStateHandlers[6];
 extern u8 lbl_80320008[];
 extern u8 lbl_80320080[];
 
-union DllCBConstF32 { f32 f; };
-const union DllCBConstF32 lbl_803E2E68 = { 0.0f };
-__declspec(section ".sdata2") f32 lbl_803E2E6C = 5e+01f;
-__declspec(section ".sdata2") f32 lbl_803E2E70 = 6e+01f;
-__declspec(section ".sdata2") f32 lbl_803E2E74 = 15.0f;
-__declspec(section ".sdata2") f32 lbl_803E2E78 = 3e+01f;
-__declspec(section ".sdata2") f32 lbl_803E2E7C = 5.0f;
-__declspec(section ".sdata2") f64 lbl_803E2E80 = 0.25;
-__declspec(section ".sdata2") f32 lbl_803E2E88 = 1.1f;
-__declspec(section ".sdata2") f32 lbl_803E2E8C = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E2E90 = 12.0f;
-__declspec(section ".sdata2") f32 lbl_803E2E94 = 0.075f;
-__declspec(section ".sdata2") f32 lbl_803E2E98 = 0.1f;
-__declspec(section ".sdata2") f32 lbl_803E2E9C = 0.17f;
-
 extern void* memcpy(void* dst, const void* src, int n);
 extern int Curve_AdvanceAlongPath(int* p, f32 t);
 void ChukChuk_free(void);
@@ -99,9 +84,6 @@ void ChukChuk_setScale(int obj, int v);
 
 int fn_80160534(int* obj);
 
-
-#pragma peephole off
-#pragma scheduling off
 int fn_801601C4(GameObject* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub;
@@ -113,27 +95,27 @@ int fn_801601C4(GameObject* obj, GroundBaddieState* state)
     {
         (*gPlayerInterface)->setState((void*)obj, state, 1);
         routePath = (char*)&sub->routeNav;
-        zero = lbl_803E2E68.f;
+        zero = 0.0f;
         state->baddie.moveInputX = zero;
         state->baddie.moveInputZ = zero;
         memcpy(routePath, &obj->anim.localPosX, 12);
         memcpy((void*)sub->routeNav.curPos, (void*)&((GameObject*)state->baddie.targetObj)->anim.localPosX, 12);
         voxmaps_updateRoutePath(&sub->routeNav, &sub->routeState);
-        if (state->baddie.targetDistance < lbl_803E2E6C && sub->subMode == 2)
+        if (state->baddie.targetDistance < 5e+01f && sub->subMode == 2)
         {
             return 5;
         }
         if (*(u8*)(routePath + 0x25) == 0)
         {
             (*gPlayerInterface)
-                ->moveTowardPoint((void*)obj, state, *(f32*)(routePath + 0x18), *(f32*)(routePath + 0x20), lbl_803E2E68.f,
-                                  *(f32*)&lbl_803E2E68.f, lbl_803E2E70);
+                ->moveTowardPoint((void*)obj, state, *(f32*)(routePath + 0x18), *(f32*)(routePath + 0x20), 0.0f,
+                                  0.0f, 6e+01f);
         }
         else
         {
             (*gPlayerInterface)
-                ->moveTowardPoint((void*)obj, state, *(f32*)(routePath + 0x18), *(f32*)(routePath + 0x20), lbl_803E2E74,
-                                  lbl_803E2E78, lbl_803E2E70);
+                ->moveTowardPoint((void*)obj, state, *(f32*)(routePath + 0x18), *(f32*)(routePath + 0x20), 15.0f,
+                                  3e+01f, 6e+01f);
         }
     }
     else
@@ -150,21 +132,21 @@ int fn_8016032C(int* obj, GroundBaddieState* state)
     {
         f32 fz;
         (*gPlayerInterface)->setState(obj, state, 0);
-        fz = lbl_803E2E7C;
+        fz = 5.0f;
         ((GameObject*)obj)->anim.velocityY = fz;
         state->baddie.animSpeedA = fz;
         state->baddie.animSpeedC = fz;
     }
-    if (((GameObject*)obj)->anim.velocityY < lbl_803E2E80)
+    if (((GameObject*)obj)->anim.velocityY < 0.25)
     {
-        f32 fz = lbl_803E2E68.f;
+        f32 fz = 0.0f;
         ((GameObject*)obj)->anim.velocityY = fz;
         state->baddie.animSpeedA = fz;
         state->baddie.animSpeedC = fz;
         return 6;
     }
     {
-        f32 d = lbl_803E2E88;
+        f32 d = 1.1f;
         ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY / d;
         state->baddie.animSpeedA = state->baddie.animSpeedA / d;
         state->baddie.animSpeedC = state->baddie.animSpeedC / d;
@@ -182,8 +164,6 @@ int fn_801603E8(int* obj, u8* obj2)
     return 0;
 }
 
-
-#pragma dont_inline on
 int fn_8016043C(GameObject* obj, GroundBaddieState* state)
 {
     ObjHitsPriorityState* hitState;
@@ -223,7 +203,6 @@ int fn_8016052C(void)
     return 0x6;
 }
 
-#pragma peephole on
 int fn_80160534(int* obj)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
@@ -246,7 +225,7 @@ int fn_80160534(int* obj)
 
 int fn_801605A8(short* out, u8* obj)
 {
-    f32 f = lbl_803E2E68.f;
+    f32 f = 0.0f;
     ((BaddieState*)obj)->animSpeedA = f;
     ((BaddieState*)obj)->animSpeedB = f;
     ((BaddieState*)obj)->physicsActive = 1;
@@ -255,28 +234,26 @@ int fn_801605A8(short* out, u8* obj)
     return 0;
 }
 
-#pragma peephole off
 int fn_801605D4(int* obj, GroundBaddieState* def)
 {
     GroundBaddieState* state = ((GameObject*)obj)->extra;
     if ((s8)def->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2E68.f, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
         *(s8*)&def->baddie.moveDone = 0;
     }
     *(s8*)&def->baddie.physicsActive = 1;
     ((GameObject*)obj)->anim.rotZ = def->baddie.spawnRotZ;
     ((GameObject*)obj)->anim.rotY = def->baddie.spawnRotY;
     ((void (*)(int*, u8*, int*, f32, f32))((void**)*gBaddieControlInterface)[4])(obj, (u8*)def, (int*)state,
-                                                                                 lbl_803E2E8C, lbl_803E2E90);
-    def->baddie.moveSpeed = lbl_803E2E94 * def->baddie.animSpeedA;
+                                                                                 1.0f, 12.0f);
+    def->baddie.moveSpeed = 0.075f * def->baddie.animSpeedA;
     return 0;
 }
 
-#pragma peephole on
 int fn_80160690(short* out, u8* obj)
 {
-    f32 f = lbl_803E2E68.f;
+    f32 f = 0.0f;
     ((BaddieState*)obj)->animSpeedA = f;
     ((BaddieState*)obj)->animSpeedB = f;
     ((BaddieState*)obj)->moveSpeed = f;
@@ -287,7 +264,6 @@ int fn_80160690(short* out, u8* obj)
     return 0;
 }
 
-#pragma peephole off
 void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)
 {
     int setup;
@@ -312,15 +288,12 @@ void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)
             *(int*)&state->baddie.targetObj = 0;
         }
     }
-    (*(void (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, (u8*)state, lbl_803E2E9C, 1);
+    (*(void (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, (u8*)state, 0.17f, 1);
     ((GroundBaddieState*)sub)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
     (*gPlayerInterface)->update((void*)obj, state, timeDelta, timeDelta, gDllCBMoveHandlers, gDllCBStateHandlers);
     *(int*)&((GameObject*)obj)->pendingParentObj = ((GroundBaddieState*)sub)->savedObjC0;
 }
-
-__declspec(section ".sdata2") f32 lbl_803E2EA8 = 2e+01f;
-const union DllCBConstF32 lbl_803E2EAC = { 0.0f };
 
 void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
 {
@@ -361,7 +334,6 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
     }
 }
 
-#pragma dont_inline reset
 int dll_CB_seqFn(short* obj, int p2, u8* e)
 {
     int setup;
@@ -395,7 +367,7 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             {
                 ((GroundBaddieState*)sub)->baddie.substate = 5;
                 (*gPlayerInterface)
-                    ->update(obj, (void*)sub, lbl_803E2E8C, *(f32*)&lbl_803E2E8C, gDllCBMoveHandlers,
+                    ->update(obj, (void*)sub, 1.0f, 1.0f, gDllCBMoveHandlers,
                              gDllCBStateHandlers);
                 ((ObjSeqState*)e)->movementState = 0;
             }
@@ -404,7 +376,7 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             if ((*(int (**)(short*, u8*, int, void*, void*, int))(*(int*)gBaddieControlInterface + 0x34))(
                     obj, e, sub, gDllCBMoveHandlers, gDllCBStateHandlers, 0) != 0)
             {
-                (*(void (**)(short*, int, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, sub, lbl_803E2E9C, 1);
+                (*(void (**)(short*, int, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, sub, 0.17f, 1);
             }
             break;
         case 0:
@@ -420,7 +392,7 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
                 {
                     ((GroundBaddieState*)sub)->flags400 &= ~BADDIE_FLAG400_PATH_ACTIVE;
                 }
-                ((GroundBaddieState*)sub)->baddie.animSpeedA = lbl_803E2E98;
+                ((GroundBaddieState*)sub)->baddie.animSpeedA = 0.1f;
                 ((GameObject*)obj)->anim.rotX = getAngle(path->tangentX, path->tangentZ) + 0x8000;
                 ((GameObject*)obj)->anim.rotY = getAngle(path->tangentZ, path->tangentY) + 0x4000;
                 ((GameObject*)obj)->anim.rotZ = getAngle(path->tangentY, path->tangentX) + 0x4000;
@@ -481,7 +453,7 @@ void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->userData1)
         {
         case 0:
-            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E2E8C);
+            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
             break;
         }
     }
@@ -530,7 +502,7 @@ void dll_CB_update(int* obj)
             sub->flags400 = (u16)(sub->flags400 & ~BADDIE_FLAG400_PATH_ACTIVE);
         }
     }
-    sub->baddie.animSpeedA = lbl_803E2E98;
+    sub->baddie.animSpeedA = 0.1f;
     ((GameObject*)obj)->anim.rotX = (s16)(getAngle(path->tangentX, path->tangentZ) + 0x8000);
     ((GameObject*)obj)->anim.rotY = (s16)(getAngle(path->tangentZ, path->tangentY) + 0x4000);
     ((GameObject*)obj)->anim.rotZ = (s16)(getAngle(path->tangentY, path->tangentX) + 0x4000);
@@ -553,7 +525,7 @@ void dll_CB_init(int* obj, u8* params, int extra)
     ((GameObject*)obj)->anim.rotY = (s16)((s8)params[0x28] << 8);
     ((GameObject*)obj)->anim.rotZ = (s16)((s8)params[0x27] << 8);
     ((void (*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(
-        obj, params, (u8*)sub, 4, 6, 0x82, flags, lbl_803E2EA8);
+        obj, params, (u8*)sub, 4, 6, 0x82, flags, 2e+01f);
     ((GameObject*)obj)->animEventCallback = dll_CB_seqFn;
     (*gPlayerInterface)->setState(obj, sub, 0);
     sub->baddie.substate = 0;
@@ -580,5 +552,4 @@ void dll_CB_initialise(void)
     gDllCBStateHandlers[4] = fn_8016032C;
     gDllCBStateHandlers[5] = fn_801601C4;
 }
-
 

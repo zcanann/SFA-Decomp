@@ -73,9 +73,6 @@ static int crrockfall_isPlayerInRange(int* obj)
     return 0;
 }
 
-#pragma peephole off
-#pragma scheduling off
-#pragma dont_inline on
 f32 fn_801ACCFC(GameObject* obj)
 {
     CrRockfallState* state = (obj)->extra;
@@ -104,9 +101,6 @@ f32 fn_801ACCFC(GameObject* obj)
     }
     return (obj)->anim.localPosY;
 }
-#pragma dont_inline reset
-#pragma scheduling on
-#pragma peephole on
 
 int crrockfall_getExtraSize(void)
 {
@@ -121,7 +115,6 @@ void crrockfall_free(void)
 {
 }
 
-#pragma peephole off
 void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     CrRockfallState* state = ((GameObject*)obj)->extra;
@@ -130,15 +123,11 @@ void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, 1.0f);
     }
 }
-#pragma peephole on
 
 void crrockfall_hitDetect(void)
 {
 }
 
-#pragma peephole off
-#pragma scheduling off
-#pragma opt_propagation off
 void crrockfall_update(int* obj)
 {
     CrRockfallState* state = ((GameObject*)obj)->extra;
@@ -287,7 +276,6 @@ void crrockfall_update(int* obj)
         ((GameObject*)obj)->anim.velocityZ = z;
     }
 }
-#pragma opt_propagation reset
 
 void crrockfall_init(int* obj, CrrockfallPlacement* params)
 {
@@ -329,8 +317,6 @@ void crrockfall_init(int* obj, CrrockfallPlacement* params)
         state->cfg = (CrRockfallCfgEntry*)gRockfallCfgTable;
     }
 }
-#pragma scheduling on
-#pragma peephole on
 
 void crrockfall_release(void)
 {

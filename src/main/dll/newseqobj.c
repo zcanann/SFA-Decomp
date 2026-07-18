@@ -32,9 +32,6 @@
 extern void sidekickToy_updateCurveTargetLatch(GameObject* obj);
 
 
-__declspec(section ".sdata2") f32 lbl_803E2768 = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E276C = 30.0f;
-
 /* per-family anim-table row: speed + flags + anim ids and chain links */
 typedef struct
 {
@@ -142,11 +139,11 @@ int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, 
         {
             if (state[0x2f1] & 1)
             {
-                *(f32*)(state + 0x334) = lbl_803E2768;
+                *(f32*)(state + 0x334) = 50.0f;
             }
             else
             {
-                *(f32*)(state + 0x334) = lbl_803E276C;
+                *(f32*)(state + 0x334) = 30.0f;
             }
         }
         else
@@ -222,16 +219,11 @@ int sidekickToy_handleHitMessage(int* obj, u8* state, int* attacker, int msgId, 
     return ret;
 }
 
-__declspec(section ".sdata2") f32 lbl_803E2778 = 64.0f;
-__declspec(section ".sdata2") f32 gSidekickToyDistToSpeedScale = 0.015625f;
-__declspec(section ".sdata2") f32 lbl_803E2780 = 0.25f;
-__declspec(section ".sdata2") f32 gSidekickToyAngleWrapNegFull = -65535.0f;
-__declspec(section ".sdata2") f32 gSidekickToyAngleWrapHalf = 32768.0f;
-__declspec(section ".sdata2") f32 gSidekickToyAngleWrapFull = 65535.0f;
-__declspec(section ".sdata2") f32 gSidekickToyAngleWrapNegHalf = -32768.0f;
-__declspec(section ".sdata2") f32 lbl_803E2794 = 0.0001f;
-__declspec(section ".sdata2") f32 lbl_803E2798 = 1.2f;
-__declspec(section ".sdata2") f32 lbl_803E279C = 0.01f;
+f32 gSidekickToyDistToSpeedScale = 0.015625f;
+f32 gSidekickToyAngleWrapNegFull = -65535.0f;
+f32 gSidekickToyAngleWrapHalf = 32768.0f;
+f32 gSidekickToyAngleWrapFull = 65535.0f;
+f32 gSidekickToyAngleWrapNegHalf = -32768.0f;
 
 /* sidekick-toy main update: timer-driven 16-stride anim chain, curve chase
  * with speed/turn shaping, idle anims. */
@@ -309,18 +301,18 @@ void fn_80150910(int* obj, u8* state)
             f32 dz = path->posZ - ((GameObject*)obj)->anim.localPosZ;
             d = sqrtf(dx * dx + dz * dz);
         }
-        if (d > lbl_803E2778)
+        if (d > 64.0f)
         {
-            d = lbl_803E2778;
+            d = 64.0f;
         }
         {
-            f32 diff = *(f32*)&lbl_803E2778 - d;
+            f32 diff = 64.0f - d;
             f32 spd = diff * gSidekickToyDistToSpeedScale;
             *(f32*)(state + 0x310) = spd * ((BaddieState*)state)->pathStep;
         }
-        if (*(f32*)(state + 0x310) < lbl_803E2780)
+        if (*(f32*)(state + 0x310) < 0.25f)
         {
-            *(f32*)(state + 0x310) = *(f32*)&lbl_803E2780;
+            *(f32*)(state + 0x310) = 0.25f;
         }
         if (Curve_AdvanceAlongPath(path, *(f32*)(state + 0x310)) != 0 || path->atSegmentEnd != 0)
         {
@@ -357,12 +349,12 @@ void fn_80150910(int* obj, u8* state)
                     (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + tbl1c[*(u16*)(state + 0x338) * 16 + 8] * 4));
                 *(u16*)(state + 0x338) = tbl1c[*(u16*)(state + 0x338) * 16 + 9];
             }
-            else if (*(f32*)(state + 0x310) > lbl_803E2794)
+            else if (*(f32*)(state + 0x310) > 0.0001f)
             {
                 state[0x2f2] = 0;
                 state[0x2f3] = 0;
                 state[0x2f4] = 0;
-                if (*(f32*)(state + 0x310) > lbl_803E2798)
+                if (*(f32*)(state + 0x310) > 1.2f)
                 {
                     state[0x323] = 1;
                     ObjAnim_SetCurrentMove((int)obj, tbl0[0x20], lbl_803E2740, 0);
@@ -379,7 +371,7 @@ void fn_80150910(int* obj, u8* state)
                 state[0x2f3] = 0;
                 state[0x2f4] = 0;
                 state[0x323] = 1;
-                *(f32*)(state + 0x308) = lbl_803E279C;
+                *(f32*)(state + 0x308) = 0.01f;
                 ObjAnim_SetCurrentMove((int)obj, tbl0[8], lbl_803E2740, 0);
                 *(f32*)(state + 0x310) = lbl_803E2740;
             }
@@ -423,7 +415,6 @@ void fn_80150910(int* obj, u8* state)
     }
 }
 
-__declspec(section ".sdata2") f32 lbl_803E27A0 = 0.03f;
 
 /* sidekick-toy anim-chain advance: timer-driven 16-stride SeqRow16 chain +
  * curve-follow speed shaping, called from the fn_80150910 update path. */
@@ -517,9 +508,9 @@ void fn_80150EDC(GameObject* obj, void* state)
             ((BaddieState*)state)->pathStep *
             (((f32)(u32) * (u16*)((u8*)state + 0x2a4) / ((BaddieState*)state)->unk2A8 / 60.0f) *
              ((f32*)(table + 0x1538))[((BaddieState*)state)->userData2]);
-        if (((BaddieState*)state)->unk308 < lbl_803E27A0)
+        if (((BaddieState*)state)->unk308 < 0.03f)
         {
-            ((BaddieState*)state)->unk308 = *(f32*)&lbl_803E27A0;
+            ((BaddieState*)state)->unk308 = 0.03f;
         }
     }
 

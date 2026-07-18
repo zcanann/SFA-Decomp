@@ -192,8 +192,6 @@ int grimble_stateHandlerA01(GameObject* obj, char* state, f32 arg)
     return 0;
 }
 
-#pragma opt_common_subs off
-#pragma fp_contract off
 int grimble_stateHandlerA00(GameObject* obj, char* state, f32 arg)
 {
     u16 zone;
@@ -257,15 +255,13 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 arg)
     obj->anim.rotY = angle * ((((GrimbleControl*)sub)->reversed << 1) - 1);
     return 0;
 }
-#pragma opt_common_subs reset
-#pragma fp_contract reset
 
 int grimble_animEventCallback(void)
 {
     return 0x0;
 }
 
-__declspec(section ".sdata2") f32 gGrimblePathSearchMaxDist = 200.0f;
+f32 gGrimblePathSearchMaxDist = 200.0f;
 
 void fn_801627F4(GameObject* obj)
 {
@@ -392,7 +388,6 @@ void grimble_hitDetect(int obj)
                                                                     gGrimbleStateHandlersA);
 }
 
-#pragma opt_common_subs off
 void grimble_update(GameObject* obj)
 {
     char* state;
@@ -461,7 +456,6 @@ void grimble_update(GameObject* obj)
         }
     }
 }
-#pragma opt_common_subs reset
 
 void grimble_init(int obj, int def, int flag)
 {

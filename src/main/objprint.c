@@ -447,7 +447,6 @@ static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int 
     return found;
 }
 
-#pragma dont_inline on
 int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
 {
     f32 buf[4];
@@ -544,7 +543,6 @@ int fn_800399C0(s16* curve, s16* state)
     }
     return 0;
 }
-#pragma dont_inline reset
 
 void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
 {
@@ -642,7 +640,6 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
         break;
     }
 }
-
 
 
 extern f32 lbl_803DE9E8;
@@ -836,7 +833,6 @@ void fn_8003A230(GameObject* obj, CharacterEyeAnimState* state, f32 val)
         *(s16*)((char*)state + 0x1a) = (s16)(*(s16*)((char*)state + 0x1a) | (flag << 8));
     }
 }
-#pragma opt_loop_invariants off
 int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk6, int p7, f32 yOff)
 {
     s16 src[2];
@@ -991,7 +987,6 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
     }
     return src[0];
 }
-#pragma opt_loop_invariants reset
 
 int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
 {
@@ -1122,8 +1117,7 @@ void objFn_8003acfc(GameObject* obj, int* keys, int count, int out)
         out += 0x60;
     }
 }
-#pragma opt_loop_invariants off
-void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
+void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
 {
     s16 ang[2];
     s16* found[1];
@@ -1187,7 +1181,7 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
             ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
 
             a = (s16)(gObjPrintDegToAngle * a);
-            p[0] = (char*)p3;
+            p[0] = p3;
             ap[0] = ang;
             prodB = gObjPrintDegToAngle * b;
             minB = -(s16)(s32)prodB;
@@ -1223,12 +1217,11 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
                 p[0] += 0x30;
                 ap[0]++;
             }
-            found[0][1] = *(s16*)((u8*)p3 + 0x14);
-            found[0][0] = *(s16*)((u8*)p3 + 0x44);
+            found[0][1] = *(s16*)(p3 + 0x14);
+            found[0][0] = *(s16*)(p3 + 0x44);
         }
     }
 }
-#pragma opt_loop_invariants reset
 
 
 void fn_8003B0D0(GameObject* obj, GameObject* target, CharacterEyeAnimState* state, int maxAngle)
@@ -1255,7 +1248,7 @@ void fn_8003B0D0(GameObject* obj, GameObject* target, CharacterEyeAnimState* sta
     }
 }
 
-void fn_8003B228(GameObject* obj, void* state)
+void fn_8003B228(GameObject* obj, int state)
 {
     ObjTextureRuntimeSlot* foundA;
     ObjTextureRuntimeSlot* foundB;
@@ -1275,7 +1268,7 @@ void fn_8003B228(GameObject* obj, void* state)
     }
     foundA->textureId = val;
     foundB->textureId = val;
-    *((u8*)state + 0x1e) = 1;
+    *(u8*)(state + 0x1e) = 1;
 }
 
 void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused);
@@ -1442,9 +1435,7 @@ void fn_8003B608(s16 a, s16 b, s16 c)
 }
 
 int fn_80039834(s16* curve, s16* state, f32 a, f32 b);
-#pragma opt_common_subs off
-#pragma opt_propagation off
-void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, int b, int c)
+void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, int c)
 {
     f32 va[3];
     f32 vb[3];
@@ -1458,7 +1449,7 @@ void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, 
     int staff;
 
     staff = staffArg;
-    obj = (int)objArg;
+    obj = objArg;
     model = modelArg;
     if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && ((GameObject*)staff)->anim.classId == 0x2d)
     {
@@ -1533,8 +1524,6 @@ void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, 
     }
 }
 
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
 
 extern void objRenderShadow(void* obj);
 
@@ -1572,8 +1561,9 @@ void fn_8003B950(f32* matrix)
 }
 
 extern void doNothing_beforeRenderObject(int x);
+extern void doNothing_afterRenderObject(void);
 
-void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
+void objRender(int a, int b, int c, int d, int obj, int flag)
 {
     void* sub;
     int walk;
@@ -1598,12 +1588,12 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
             vfn = *(void (**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
             if (vfn != NULL)
             {
-                vfn((int)obj, a, b, c, d, flag);
+                vfn(obj, a, b, c, d, flag);
             }
         }
         else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL)
         {
-            (*(void (*)(int))objRenderModel)((int)obj);
+            (*(void (*)(int))objRenderModel)(obj);
             if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
             {
                 objRenderFn_80041018((GameObject*)obj);
@@ -1616,12 +1606,12 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
         {
         case 0:
         case 0x1f:
-            playerRender((int)obj, a, b, c, d, flag);
+            playerRender(obj, a, b, c, d, flag);
             break;
         default:
             if (OBJPRINT_ACTIVE_BANK(obj) != NULL)
             {
-                (*(void (*)(int))objRenderModel)((int)obj);
+                (*(void (*)(int))objRenderModel)(obj);
                 if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
                 {
                     objRenderFn_80041018((GameObject*)obj);
@@ -1631,7 +1621,7 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
         }
     }
     doNothing_afterRenderObject();
-    for (i = 0, walk = (int)obj; i < (s32)(u32)((GameObject*)obj)->childCount; i++)
+    for (i = 0, walk = obj; i < (s32)(u32)((GameObject*)obj)->childCount; i++)
     {
         int staff = *(int*)&((GameObject*)walk)->childObjs[0];
         if (((GameObject*)staff)->anim.classId == 0x2d)
@@ -1651,7 +1641,6 @@ void fn_8003BB7C(u8 x)
     lbl_803DCC3C = x;
 }
 
-#pragma opt_common_subs off
 int fn_8003BB84(f32* m, f32* out)
 {
     f32 v3[3];
@@ -1695,7 +1684,6 @@ int fn_8003BB84(f32* m, f32* out)
     out[11] = zero;
     return 1;
 }
-#pragma opt_common_subs reset
 
 extern f32 gObjPrintHalfPi;
 extern f32 gObjPrintNegHalfPi;
@@ -1773,7 +1761,6 @@ void modelMtxFn_8003be38(int def, int p2, int mtxA, int mtxB)
     lbl_803DCC48 = 2;
 }
 
-#pragma dont_inline on
 void modelCalcVtxGroupMtxs(int def, int model)
 {
     f32 ma[12];
@@ -1822,10 +1809,6 @@ void modelCalcVtxGroupMtxs(int def, int model)
         off += 4;
     }
 }
-#pragma dont_inline reset
-
-
-
 
 
 void modelInitMtxs(int def, int model)
