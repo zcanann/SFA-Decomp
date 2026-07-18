@@ -1629,6 +1629,7 @@ void fn_8003BB7C(u8 x)
     lbl_803DCC3C = x;
 }
 
+#pragma opt_common_subs off
 int fn_8003BB84(f32* m, f32* out)
 {
     Vec v3;
@@ -1672,6 +1673,7 @@ int fn_8003BB84(f32* m, f32* out)
     out[11] = zero;
     return 1;
 }
+#pragma opt_common_subs reset
 
 extern f32 gObjPrintHalfPi;
 extern f32 gObjPrintNegHalfPi;
