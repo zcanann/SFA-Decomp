@@ -73,7 +73,6 @@ typedef struct MmpMoonrockPlacement
     u8 pad22[0x28 - 0x22];
 } MmpMoonrockPlacement;
 
-int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2);
 void fn_801A79E0(GameObject* obj)
 {
     TrackBBoxHit hitScratch;
