@@ -8,6 +8,7 @@
 #include "main/mm.h"
 #include "main/pi_dolphin_api.h"
 #include "main/pi_flush_api.h"
+#include "string.h"
 
 u8 gMmRegionCount;
 s16 gMmDeferredFreeCount;
@@ -81,7 +82,6 @@ extern char sMemStatsFormat[];
 extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
 extern char sMmMemoryStoreMessageBlock[];
 extern void LCQueueWait();
-extern void* memcpy(void* dst, const void* src, int n);
 
 void mmFreeDeferred(void* p);
 int testAndSet_onlyUseHeaps1and2(int v);
@@ -92,7 +92,7 @@ void memcpyToCache(void* dst, void* src, u32 count)
 {
     if (gAttractMovieState != 4 && gAttractMovieState != 0)
     {
-        int len;
+        size_t len;
         if (count != 0)
         {
             len = count << 5;
@@ -122,7 +122,7 @@ void copyToCache(void* dst, void* src, u32 count)
 {
     if (gAttractMovieState != 4 && gAttractMovieState != 0)
     {
-        int len;
+        size_t len;
         if (count != 0)
         {
             len = count << 5;
