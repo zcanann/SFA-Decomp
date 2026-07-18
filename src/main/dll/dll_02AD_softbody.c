@@ -109,7 +109,7 @@ void SoftBody_init(GameObject* obj, SoftBodySetup* setup)
     if (setupData->scale != 0)
     {
         object->anim.rootMotionScale = (f32)(u32)setupData->scale / 255.0f;
-        if (object->anim.rootMotionScale == 0.0f)
+        if (!object->anim.rootMotionScale)
         {
             object->anim.rootMotionScale = 1.0f;
         }

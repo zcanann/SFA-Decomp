@@ -171,7 +171,10 @@ void decoration11a_init(int* obj, u8* def)
     }
     {
         s16 model = ((GameObject*)obj)->anim.seqId;
-        if (model == DECOR11A_MODEL_A || model == DECOR11A_MODEL_B || model == DECOR11A_MODEL_C)
+        if (model != DECOR11A_MODEL_A && model != DECOR11A_MODEL_B && model != DECOR11A_MODEL_C)
+        {
+            return;
+        }
         {
             int i;
             ModelFileHeader* m;
