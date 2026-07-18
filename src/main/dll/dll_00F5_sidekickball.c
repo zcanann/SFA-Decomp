@@ -59,9 +59,6 @@ enum SidekickBallMode
     SIDEKICK_BALL_FADING = 5,
 };
 
-void fn_8017962C(GameObject* obj);
-int fn_80179650(GameObject* obj);
-void fn_80179678(GameObject* obj, GameObject* source);
 
 
 static inline int fltEqual(f32 a, f32 b)
