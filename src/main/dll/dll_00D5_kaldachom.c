@@ -91,9 +91,6 @@ extern f32 lbl_803E30C8;
 extern f32 lbl_803E30CC;
 u8 gKaldachomHitLightWork[0x18];
 
-void kaldaChomFn_8016821c(GameObject* obj, KaldaChomControl* control);
-void kaldaChomFn_80168374(GameObject* obj, int state, u8 useUpperMouthPoint);
-
 void kaldachom_handleAnimEvents(GameObject* obj, int state, int eventStateArg)
 {
     KaldaChomControl* control = ((CampfireState*)state)->control;
