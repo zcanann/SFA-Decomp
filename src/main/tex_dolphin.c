@@ -754,6 +754,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 overrideIdx = 0;
                 base = (TexOverride*)lbl_803DCE6C;
                 ovr = base;
+                texId = layerTexId;
                 for (remain = 0x50; remain != 0; remain--)
                 {
                     if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) && ((int)ovrByte == ovr->layerByte))
@@ -763,10 +764,6 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                     }
                     ovr = ovr + 1;
                     overrideIdx = overrideIdx + 1;
-                }
-                if (remain == 0)
-                {
-                    texId = layerTexId;
                 }
             }
             else
@@ -800,6 +797,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 overrideIdx = 0;
                 base = (TexOverride*)lbl_803DCE6C;
                 ovr = base;
+                texId = layerTexId;
                 for (remain = 0x50; remain != 0; remain--)
                 {
                     if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) && ((int)ovrByte == ovr->layerByte))
@@ -809,10 +807,6 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                     }
                     ovr = ovr + 1;
                     overrideIdx = overrideIdx + 1;
-                }
-                if (remain == 0)
-                {
-                    texId = layerTexId;
                 }
             }
             else
@@ -851,6 +845,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                         overrideIdx = 0;
                         base = (TexOverride*)lbl_803DCE6C;
                         ovr = base;
+                        texId = layerTexId;
                         for (remain = 0x50; remain != 0; remain--)
                         {
                             if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
@@ -861,10 +856,6 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                             }
                             ovr = ovr + 1;
                             overrideIdx = overrideIdx + 1;
-                        }
-                        if (remain == 0)
-                        {
-                            texId = layerTexId;
                         }
                     }
                     else
