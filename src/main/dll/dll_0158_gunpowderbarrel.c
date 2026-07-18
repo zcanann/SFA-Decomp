@@ -54,6 +54,7 @@
 #include "main/frame_timing.h"
 #include "main/object_descriptor.h"
 #include "main/carryable_interface.h"
+#include "main/track_dolphin_ext.h"
 
 f32 lbl_803DBE80 = 10.0f;
 f32 lbl_803DBE84 = 0.4f;
@@ -86,7 +87,6 @@ typedef struct GunpowderbarrelPlacement
     s16 unk1E;
 } GunpowderbarrelPlacement;
 
-extern int findSurfaceInYRange(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
 
 extern void memset(void* p, int c, int n);
 
@@ -590,8 +590,8 @@ void gunpowderbarrel_updatePhysics(int* obj)
         {
             top += lbl_803E4318;
         }
-        result = findSurfaceInYRange(obj, ((GameObject*)obj)->anim.localPosX, top, ((GameObject*)obj)->anim.localPosZ,
-                             bottom, &outY, &contact);
+        result = findSurfaceInYRange((int)obj, ((GameObject*)obj)->anim.localPosX, top, ((GameObject*)obj)->anim.localPosZ,
+                             bottom, &outY, (int*)&contact);
         if (result != 0)
         {
             if (result == 2)

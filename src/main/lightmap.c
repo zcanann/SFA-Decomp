@@ -41,6 +41,7 @@
 #include "main/sky.h"
 #include "track/intersect_api.h"
 #include "main/dll/cloudaction_ext.h"
+#include "main/track_dolphin_ext.h"
 
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
@@ -94,7 +95,6 @@ extern int mapBlockRender_setShader(int p1, int* obj, int* state);
 extern void mapBlockRender_callList(int p1, int p2, int* obj, int v, int* state, float* p3);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
-extern void objDrawFn_80061654(int* obj, int* model);
 extern void fn_802B4ED8(int* obj, int a, int b);
 extern u32 lbl_803DCE34;
 extern f32 lbl_803DEC10;
@@ -1630,7 +1630,7 @@ void objDrawFn_8005da48(int* obj)
         }
         else if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH)
         {
-            objDrawFn_80061654(obj, model);
+            objDrawFn_80061654((int)obj, (int)model);
         }
         Camera_ApplyFullViewport();
     }
@@ -1683,7 +1683,7 @@ void sceneDrawTransparentPolys(void)
             break;
         case 3:
             fn_8000F9B4();
-            objDrawFn_80061654((int*)e[i][0], (int*)Obj_GetActiveModel((GameObject*)e[i][0]));
+            objDrawFn_80061654((int)e[i][0], (int)Obj_GetActiveModel((GameObject*)e[i][0]));
             Camera_ApplyFullViewport();
             break;
         case 4:
