@@ -54,7 +54,7 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 #define GROUNDANIMATOR_TARGET_OBJGROUP 0x4
 
 union GroundAnimatorConstF32 { f32 f; };
-__declspec(section ".sdata2") f32 lbl_803E3F98 = 100.0f;
+f32 lbl_803E3F98 = 100.0f;
 const union GroundAnimatorConstF32 lbl_803E3F9C = { 0.0f };
 extern int mapBlockFn_80060678(void* entry);
 
@@ -78,14 +78,14 @@ u8 groundanimator_isFullySunk(int* obj)
     return depth > lbl_803E3F98 * maxDepth;
 }
 
-__declspec(section ".sdata2") f32 lbl_803E3FA8 = -20.0f;
-__declspec(section ".sdata2") f32 lbl_803E3FAC = 20.0f;
+f32 lbl_803E3FA8 = -20.0f;
+f32 lbl_803E3FAC = 20.0f;
 const union GroundAnimatorConstF32 lbl_803E3FB0 = { 0.0f };
-__declspec(section ".sdata2") f32 lbl_803E3FB4 = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E3FB8 = -1.0f;
-__declspec(section ".sdata2") f32 lbl_803E3FBC = 5.0f;
-__declspec(section ".sdata2") f32 lbl_803E3FC0 = 640.0f;
-__declspec(section ".sdata2") f32 lbl_803E3FC4 = 1.0f;
+f32 lbl_803E3FB4 = 10.0f;
+f32 lbl_803E3FB8 = -1.0f;
+f32 lbl_803E3FBC = 5.0f;
+f32 lbl_803E3FC0 = 640.0f;
+f32 lbl_803E3FC4 = 1.0f;
 
 f32 groundanimator_setScale(int* obj, int* target)
 {
@@ -282,7 +282,6 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3FC4);
 }
 
-#pragma fp_contract off
 void groundanimator_update(int* obj)
 {
     int off2[2];
@@ -506,7 +505,6 @@ void groundanimator_update(int* obj)
     objRenderFn_80041018((GameObject*)obj);
 }
 
-#pragma fp_contract on
 void groundanimator_init(int* obj, int* desc)
 {
     GroundAnimatorState* vstate = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;

@@ -154,7 +154,6 @@ ObjectDescriptor gSnowClawObjDescriptor = {
 };
 
 
-#pragma dont_inline on
 void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int userData1Value)
 {
     int player;
@@ -203,7 +202,6 @@ void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int us
     }
 }
 
-#pragma dont_inline reset
 void snowclaw_updateMountAttack(GameObject* obj, int mount)
 {
     char* inner;
@@ -285,7 +283,6 @@ void snowclaw_updateMountAttack(GameObject* obj, int mount)
     }
 }
 
-#pragma dont_inline on
 void snowclaw_syncMountTransform(GameObject* obj, GameObject* mount, int p2, int p3, int p4, int p5, int opacity,
                                  int mountAlpha, int enabled)
 {
@@ -321,7 +318,6 @@ void snowclaw_syncMountTransform(GameObject* obj, GameObject* mount, int p2, int
     obj->anim.velocityZ = mount->anim.velocityZ;
 }
 
-#pragma dont_inline reset
 int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
 {
     int* sub;
@@ -640,9 +636,6 @@ void snowclaw_hitDetect(GameObject* obj)
     }
 }
 
-#pragma opt_common_subs off
-#pragma opt_dead_assignments off
-#pragma opt_strength_reduction on
 void snowclaw_update(GameObject* obj)
 {
     char* inner;
@@ -790,9 +783,6 @@ void snowclaw_update(GameObject* obj)
     }
 }
 
-#pragma opt_common_subs reset
-#pragma opt_dead_assignments reset
-#pragma opt_strength_reduction reset
 void snowclaw_init(int* obj, u8* init)
 {
     u8* table;
