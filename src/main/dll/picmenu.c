@@ -52,7 +52,7 @@ extern u32 lbl_803DD678;
 extern s32 gPicMenuReadThreadCreated; /* sbss slot is 8 bytes; upper word unreferenced */
 extern s32 gPicMenuVideoDecodeThreadCreated;
 extern s32 gPicMenuVideoDecodePrepareReady;
-extern u32 gAttractMovieIdleFrameCount; /* sbss slot is 8 bytes; upper word unreferenced */
+extern s32 gAttractMovieIdleFrameCount; /* sbss slot is 8 bytes; upper word unreferenced */
 
 extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
 extern void AttractMovieAudio_DmaCallback(void);
