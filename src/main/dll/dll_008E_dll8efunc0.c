@@ -25,7 +25,6 @@
 
 extern u8 gDll8EEffectHwParams[];
 extern u8 gDll8EEffectVtxColorTable[];
-extern u8 gDll8EEffectSpawnResource[8];
 #include "main/dll/dll_008F_dll8ffunc0.h"
 
 u8 gDll8EEffectSpawnResource[8] = {0, 0, 0, 1, 0, 2, 0, 0};
