@@ -40,7 +40,8 @@ typedef struct CfGuardianState {
     u8 eyeBlock[0x38];    /* 0x654: characterDoEyeAnims block */
     int linkedObjs[6];    /* 0x68c: freed with the guardian */
     u8 pad6A4[0x18];
-    u8 pathBlock[0x140];  /* 0x6bc: cfguardianFlyAlongPath path-flight block */
+    RomCurveWalker path;  /* 0x6bc: curve walker used by cfguardianFlyAlongPath */
+    u8 pathPad[0x38];
     f32 moveSpeed;        /* 0x7fc */
     u8 pad800[0x25e];
     u8 bounceLatch;            /* bounce-velocity latch while landing */
@@ -59,7 +60,7 @@ typedef struct CfGuardianState {
 STATIC_ASSERT(offsetof(CfGuardianState, audioBlock) == 0x624);
 STATIC_ASSERT(offsetof(CfGuardianState, eyeBlock) == 0x654);
 STATIC_ASSERT(offsetof(CfGuardianState, linkedObjs) == 0x68c);
-STATIC_ASSERT(offsetof(CfGuardianState, pathBlock) == 0x6bc);
+STATIC_ASSERT(offsetof(CfGuardianState, path) == 0x6bc);
 STATIC_ASSERT(offsetof(CfGuardianState, moveSpeed) == 0x7fc);
 STATIC_ASSERT(offsetof(CfGuardianState, home) == 0xa68);
 STATIC_ASSERT(offsetof(CfGuardianState, home.x) == 0xa74);
@@ -69,7 +70,8 @@ STATIC_ASSERT(offsetof(CfGuardianState, flagsA9B) == 0xa9b);
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
 int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
-int cfguardianSteerToward(int* obj, int* target, f32 speed, int p4);
+int cfguardianFlyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 speed, int pointId, f32* outPhase);
+int cfguardianSteerToward(GameObject* obj, MoveLibTarget* target, f32 speed, f32* outPhase);
 int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 int cfguardian_setScale(int* obj);
 int cfguardian_getExtraSize(void);

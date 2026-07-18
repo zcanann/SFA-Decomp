@@ -19,6 +19,7 @@
 #include "main/object_update_list.h"
 #include "main/frame_timing.h"
 #include "main/pad_api.h"
+#include "main/curve.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
@@ -54,18 +55,6 @@ u8 lbl_803DBE20[8] = {0, 0xDD, 0, 0xDE, 0, 0xE0, 0, 0};
 
 #define PAD_BUTTON_A 0x100
 
-/* the rom-curve walker block the guardian flies along (sub->pathBlock);
-   only the fields this DLL touches are mapped. */
-typedef struct CfCurveWalker
-{
-    u8 pad00[0x10];
-    int atEnd; /* 0x10: non-zero once the curve runs out */
-    u8 pad14[0x54];
-    f32 posX; /* 0x68: sampled curve position */
-    f32 posY; /* 0x6C */
-    f32 posZ; /* 0x70 */
-} CfCurveWalker;
-
 /* hitbox/heading template (gCfGuardianHitboxTemplateA/B), copied to the stack at init */
 typedef struct
 {
@@ -91,11 +80,8 @@ STATIC_ASSERT(offsetof(CfGuardianMapData, variant) == 0x19);
 STATIC_ASSERT(sizeof(GuardianVec) == 0xa);
 STATIC_ASSERT(sizeof(GuardianMsg) == 0x10);
 
-/* cfguardianPlayEventSfx/cfguardianFlyAlongPath are defined below taking
- * obj as an int; cfguardian_updateMain calls them through these pointer-first
- * fn-ptr casts. */
+/* cfguardianPlayEventSfx is defined below taking obj as an int. */
 typedef void (*CfPlayEventSfxFn)(int* obj, void* evbuf, void* sfxIds);
-typedef int (*CfFlyAlongPathFn)(int* obj, void* path, f32 f, int phase, void* spd);
 
 /* sub->flagsA9B bits */
 #define GUARDIAN_FLAG_MOVE_LATCHED 0x1 /* a one-shot move is running */
@@ -148,7 +134,6 @@ enum
 #define GUARDIAN_SFX_FLAP    0xe1
 #define GUARDIAN_SFX_CHATTER 0xdf
 
-extern int Curve_AdvanceAlongPath(int p1);
 const GuardianVec gCfGuardianHitboxTemplateA = {{5, 15, 15, 0, 0}}; /* hitbox template copied at init */
 const GuardianVec gCfGuardianHitboxTemplateB = {{25, 25, 15, 5, 5}}; /* hitbox template copied at init */
 extern int gCfGuardianSeqStreamTable[][2];     /* chatter sequence-stream table, 0xf states */
@@ -304,7 +289,7 @@ static f32 cfguardianGetYaw(GameObject* obj)
  * curve walker; thereafter it advances the walker, snaps the object to
  * the sampled position, sticks to the ground and blends the yaw toward
  * the heading of travel. Returns 1 once the path is exhausted. */
-int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int outPhase)
+int cfguardianFlyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 t, int pointId, f32* outPhase)
 {
     int ret;
     int moved;
@@ -330,11 +315,11 @@ int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int 
         tgt.y = ((RomCurvePlacementDef*)pt)->base.y;
         tgt.z = ((RomCurvePlacementDef*)pt)->base.z;
         tgt.angle = ((RomCurvePlacementDef*)pt)->rotZ << 8;
-        if (cfguardianSteerToward((int*)obj, (int*)&tgt.angle, t, outPhase) != 0)
+        if (cfguardianSteerToward(obj, &tgt, t, outPhase) != 0)
         {
             curveArgs[0] = 0x19;
             curveArgs[1] = 0x15;
-            (*gRomCurveInterface)->initCurve((void*)walker, (void*)obj, 200.0f, curveArgs, sel);
+            (*gRomCurveInterface)->initCurve(walker, obj, 200.0f, curveArgs, sel);
             obj->userData1 = 1;
             moved = 1;
         }
@@ -342,13 +327,13 @@ int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int 
     else
     {
         ret = 0;
-        if (Curve_AdvanceAlongPath(walker) != 0 || ((CfCurveWalker*)walker)->atEnd != 0)
+        if (Curve_AdvanceAlongPath(&walker->curve, t) != 0 || walker->atSegmentEnd != 0)
         {
-            ret = (*gRomCurveInterface)->goNextPoint((void*)walker);
+            ret = (*gRomCurveInterface)->goNextPoint(walker);
         }
-        obj->anim.localPosX = ((CfCurveWalker*)walker)->posX;
-        obj->anim.localPosY = ((CfCurveWalker*)walker)->posY;
-        obj->anim.localPosZ = ((CfCurveWalker*)walker)->posZ;
+        obj->anim.localPosX = walker->posX;
+        obj->anim.localPosY = walker->posY;
+        obj->anim.localPosZ = walker->posZ;
         if (ret != 0)
         {
             obj->userData1 = -1;
@@ -359,7 +344,7 @@ int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int 
             obj->anim.localPosY = obj->anim.localPosY - ground;
         }
     }
-    ((int (*)(void*, f32, float*))ObjAnim_SampleRootCurvePhase)(obj, t, (float*)outPhase);
+    ObjAnim_SampleRootCurvePhase(t, &obj->anim, outPhase);
     if (moved != 0)
     {
         yawDelta = (s16)(getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
@@ -456,8 +441,7 @@ int cfguardian_updateMain(GameObject* obj)
             sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         sub->flagsA9B |= GUARDIAN_FLAG_PATH_FLYING;
-        if (((CfFlyAlongPathFn)cfguardianFlyAlongPath)((int*)obj, sub->pathBlock, 0.3f, 0, &sub->moveSpeed) !=
-            0)
+        if (cfguardianFlyAlongPath(obj, &sub->path, 0.3f, 0, &sub->moveSpeed) != 0)
         {
             sub->flagsA9B &= ~GUARDIAN_FLAG_MOVE_LATCHED;
             sub->questState = CFGUARDIAN_ROOST;
@@ -616,8 +600,7 @@ int cfguardian_updateMain(GameObject* obj)
             sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         sub->flagsA9B |= GUARDIAN_FLAG_PATH_FLYING;
-        if (((CfFlyAlongPathFn)cfguardianFlyAlongPath)((int*)obj, sub->pathBlock, 0.3f, 1, &sub->moveSpeed) !=
-            0)
+        if (cfguardianFlyAlongPath(obj, &sub->path, 0.3f, 1, &sub->moveSpeed) != 0)
         {
             sub->questState = CFGUARDIAN_TALK_1;
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
@@ -658,7 +641,7 @@ int cfguardian_updateMain(GameObject* obj)
             }
         }
         if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0 &&
-            cfguardianSteerToward((int*)obj, (int*)&sub->home, 0.5f, (int)&sub->moveSpeed) != 0)
+            cfguardianSteerToward(obj, &sub->home, 0.5f, &sub->moveSpeed) != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
             sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
@@ -702,7 +685,7 @@ int cfguardian_updateMain(GameObject* obj)
             }
         }
         if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0 &&
-            cfguardianSteerToward((int*)obj, (int*)&sub->home, 0.5f, (int)&sub->moveSpeed) != 0)
+            cfguardianSteerToward(obj, &sub->home, 0.5f, &sub->moveSpeed) != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
             sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
@@ -720,8 +703,7 @@ int cfguardian_updateMain(GameObject* obj)
             sub->chatterState = GUARDIAN_CHATTER_READY;
         }
         sub->flagsA9B |= GUARDIAN_FLAG_PATH_FLYING;
-        if (((CfFlyAlongPathFn)cfguardianFlyAlongPath)((int*)obj, sub->pathBlock, 0.6f, 2, &sub->moveSpeed) !=
-            0)
+        if (cfguardianFlyAlongPath(obj, &sub->path, 0.6f, 2, &sub->moveSpeed) != 0)
         {
             sub->questState = CFGUARDIAN_VANISH;
         }
@@ -856,7 +838,7 @@ int cfguardian_updateMain(GameObject* obj)
  * along the normalized delta, blend the yaw by speed over distance,
  * move it and keep the chase move playing. Returns 1 when already
  * within the closing threshold. */
-int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
+int cfguardianSteerToward(GameObject* obj, MoveLibTarget* target, f32 speed, f32* outPhase)
 {
     f32 dist;
     f32 dx;
@@ -867,19 +849,19 @@ int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
     {
         return 0;
     }
-    dx = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-    dy = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-    dz = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+    dx = target->x - obj->anim.localPosX;
+    dy = target->y - obj->anim.localPosY;
+    dz = target->z - obj->anim.localPosZ;
     dist = sqrtf(dz * dz + (dx * dx + dy * dy));
     if (dist < 5.0f * speed)
     {
         return 1;
     }
     normalize(&dx, &dy, &dz);
-    ((GameObject*)obj)->anim.velocityX = timeDelta * (dx * speed);
-    ((GameObject*)obj)->anim.velocityY = timeDelta * (dy * speed);
-    ((GameObject*)obj)->anim.velocityZ = timeDelta * (dz * speed);
-    yawDelta = (((GameObject*)target)->anim.rotX + 0x8000) - (u16)((GameObject*)obj)->anim.rotX;
+    obj->anim.velocityX = timeDelta * (dx * speed);
+    obj->anim.velocityY = timeDelta * (dy * speed);
+    obj->anim.velocityZ = timeDelta * (dz * speed);
+    yawDelta = (target->angle + 0x8000) - (u16)obj->anim.rotX;
     if (yawDelta > 0x8000)
     {
         yawDelta = yawDelta - 0xffff;
@@ -888,14 +870,13 @@ int cfguardianSteerToward(int* obj, int* target, f32 speed, int outPhase)
     {
         yawDelta = yawDelta + 0xffff;
     }
-    ((GameObject*)obj)->anim.rotX = (f32) * (s16*)(int)obj + ((0.5f + yawDelta) * (speed * timeDelta)) / dist;
-    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
-            ((GameObject*)obj)->anim.velocityZ);
-    if (((GameObject*)obj)->anim.currentMove != GUARDIAN_MOVE_FLY)
+    obj->anim.rotX = (f32)obj->anim.rotX + ((0.5f + yawDelta) * (speed * timeDelta)) / dist;
+    objMove(obj, obj->anim.velocityX, obj->anim.velocityY, obj->anim.velocityZ);
+    if (obj->anim.currentMove != GUARDIAN_MOVE_FLY)
     {
         ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
     }
-    ((int (*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, outPhase);
+    ObjAnim_SampleRootCurvePhase(speed, &obj->anim, outPhase);
     return 0;
 }
 

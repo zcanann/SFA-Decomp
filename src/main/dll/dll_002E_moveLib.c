@@ -24,6 +24,7 @@
 #include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/objprint_api.h"
+#include "main/curve.h"
 #include "main/curve_eval.h"
 #include "main/object_descriptor.h"
 #include "main/dll/curve_walker.h"
@@ -59,8 +60,6 @@
 #define MOVELIB_CURVE_WALK_DONE 0x10
 
 extern u8 gMoveLibDefaultMoveData[];
-
-extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
 
 /* Animation-channel helpers implemented by objprint.c. */
 void objFn_8003acfc(GameObject* obj, int* types, int count, char* out);
@@ -303,7 +302,7 @@ int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, MoveLibHerm
     else
     {
         hit = 0;
-        if (Curve_AdvanceAlongPath(route) != 0 || route->atSegmentEnd != 0)
+        if (Curve_AdvanceAlongPath(&route->curve, phase) != 0 || route->atSegmentEnd != 0)
         {
             hit = (*gRomCurveInterface)->goNextPoint(route);
         }
