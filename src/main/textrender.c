@@ -3009,29 +3009,32 @@ void subtitleStart(int x)
     }
 }
 
+static int gameTextIsTaskTextAllowed(int taskId)
+{
+    s16* taskList;
+    int count;
+
+    taskList = gGameTextTaskTextAllowList;
+    for (count = 0; count < 0xb; count++)
+    {
+        if (taskId == taskList[count])
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void gameTextLoadTaskText(int taskId)
 {
     int textId;
     int dirId;
-    s16* taskList;
-    int count;
-    int allowed;
 
     if (gameTextGetTaskText(taskId, &textId, &dirId) != 0)
     {
         if (gSubtitlesEnabled == 0)
         {
-            taskList = gGameTextTaskTextAllowList;
-            allowed = 0;
-            for (count = 0; count < 0xb; count++)
-            {
-                if (taskId == taskList[count])
-                {
-                    allowed = 1;
-                    break;
-                }
-            }
-            if (allowed == 0)
+            if (gameTextIsTaskTextAllowed(taskId) == 0)
             {
                 return;
             }
