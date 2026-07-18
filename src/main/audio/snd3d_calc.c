@@ -67,7 +67,7 @@ typedef struct SndFVector
 
 extern inline f32 sqrtf(f32 x)
 {
-    f32 y;
+    volatile f32 y;
 
     if (x > 0.0f)
     {
@@ -75,7 +75,7 @@ extern inline f32 sqrtf(f32 x)
         guess = 0.5 * guess * (3.0 - guess * guess * x);
         guess = 0.5 * guess * (3.0 - guess * guess * x);
         guess = 0.5 * guess * (3.0 - guess * guess * x);
-        y = (f32)((f64)x * guess);
+        y = (f32)(x * guess);
         return y;
     }
     return x;
@@ -387,8 +387,6 @@ void s3dStartQueuedEmitters(void)
     int groupIndex;
     S3DActiveNode* node;
     Snd3DEmitter* emitter;
-    u32 handle;
-    u8 studio;
     f32 distanceDelta;
 
     for (groupIndex = 0; groupIndex < lbl_803DE36B; groupIndex++)
@@ -420,29 +418,11 @@ void s3dStartQueuedEmitters(void)
             }
 
             emitter = node->emitter;
-            if ((emitter->entry != (SndSpatialEntry*)0x0) && (emitter->entry->assignedVoice == 0xff))
-            {
-                if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) == 0)
-                {
-                    emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
-                    emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
-                }
-                continue;
-            }
-
-            if (emitter->entry != (SndSpatialEntry*)0x0)
-            {
-                studio = emitter->entry->assignedVoice;
-            }
-            else
-            {
-                studio = emitter->studio;
-            }
-
-            handle = synthFXStart(emitter->fxId, 0x7f, 0x40, studio,
-                                  (emitter->flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0);
-            emitter->handle = handle;
-            if (handle == S3D_INVALID_FX_HANDLE)
+            if (((emitter->entry != (SndSpatialEntry*)0x0) && (emitter->entry->assignedVoice == 0xff)) ||
+                ((emitter->handle = synthFXStart(
+                      emitter->fxId, 0x7f, 0x40,
+                      (emitter->entry != (SndSpatialEntry*)0x0) ? emitter->entry->assignedVoice : emitter->studio,
+                      (emitter->flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0)) == S3D_INVALID_FX_HANDLE))
             {
                 if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) == 0)
                 {
