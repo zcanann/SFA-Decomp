@@ -6230,7 +6230,7 @@ void pauseMenuFn_80129ee0(void)
             u16 b2;
             padGetAnalogInput(0, &analogX, &analogY);
             pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
-            if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentIdLegacy() == 0 && AudioStream_IsPreparing() == 0)
+            if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentId() == 0 && AudioStream_IsPreparing() == 0)
             {
                 ObjAnim_SetCurrentMove((int)hud->anims[(s8)lbl_803DD781], 0, lbl_803E1E3C, 0);
                 lbl_803DD781 = 0;

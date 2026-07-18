@@ -322,22 +322,10 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v);
 f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta);
 SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
-void AudioStream_StopAll(void);
 void doNothing_8000CF54(void);
-u32 AudioStream_GetMusicFadeFlagA(void);
-u32 AudioStream_GetMusicFadeFlagB(void);
-u32 AudioStream_GetCurrentId(void);
-u8 AudioStream_IsPreparing(void);
-void AudioStream_SetVolume(u8 volume);
 void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block);
-void AudioStream_StopCurrent(void);
 void fn_8000D0B4(s32 result, DVDCommandBlock* block);
-void AudioStream_CancelPrepared(void);
-void AudioStream_StartPrepared(void);
-int AudioStream_Play(int id, void (*preparedCallback)(void));
 void AudioStream_UpdateFadeTimer(void);
-void AudioStream_SetDefaultVolume(u8 volume);
-void AudioStream_Init(void);
 void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo);
 void AudioStream_PlayAddrCallback(u32 result);
 void Sfx_ClearLoopedObjectSounds(void);
@@ -2570,7 +2558,7 @@ u32 AudioStream_GetMusicFadeFlagB(void)
     return gAudioStreamMusicFadeFlagB;
 }
 
-u32 AudioStream_GetCurrentId(void)
+s32 AudioStream_GetCurrentId(void)
 {
     return gAudioStreamCurrentId;
 }
