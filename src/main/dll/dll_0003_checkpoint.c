@@ -810,6 +810,7 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
         }
     }
 }
+#pragma opt_common_subs off
 void Checkpoint_Remove(CheckpointRouteEntry* obj)
 {
     int count;
@@ -834,6 +835,7 @@ void Checkpoint_Remove(CheckpointRouteEntry* obj)
         i++;
     }
 }
+#pragma opt_common_subs reset
 
 u32 gCheckpointPartFxListBuffer[0x14];
 
