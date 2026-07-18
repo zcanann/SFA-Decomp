@@ -452,14 +452,13 @@ void modelLightStruct_setProjectionNearZ(ModelLightStruct* p, f32 v)
 
 void modelLightStruct_setupPerspectiveProjection(ModelLightStruct* obj, f32 fovY, f32 aspect)
 {
-    f32 z;
     obj->projectionFovY = fovY;
     obj->projectionAspect = aspect;
     obj->projectionType = 1;
-    z = lbl_803DE790;
-    C_MTXLightPerspective(obj->lightProjectionTexMtx, obj->projectionFovY, obj->projectionAspect, z, z, z, z);
-    z = lbl_803DE790;
-    C_MTXLightPerspective(obj->lightProjectionClipMtx, obj->projectionFovY, obj->projectionAspect, z, z, z, z);
+    C_MTXLightPerspective(obj->lightProjectionTexMtx, obj->projectionFovY, obj->projectionAspect, 0.5f, 0.5f, 0.5f,
+                          0.5f);
+    C_MTXLightPerspective(obj->lightProjectionClipMtx, obj->projectionFovY, obj->projectionAspect, 0.5f, 0.5f, 0.5f,
+                          0.5f);
 }
 void modelLightStruct_setupOrthoProjection(ModelLightStruct* obj, f32 top, f32 bottom, f32 left, f32 right, f32 scaleT,
                                            f32 scaleS)
