@@ -1,6 +1,7 @@
 #include "main/newclouds_state.h"
 #include "main/object_api.h"
 #include "main/newclouds.h"
+#include "track/intersect_api.h"
 #include "main/shader_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/objtexture.h"
@@ -29,8 +30,6 @@ u8 gNewCloudStarAlphaRanges[8] = {0xA0, 0xAA, 0x82, 0x8C, 0x64, 0x6E, 0x50, 0x5A
 #pragma explicit_zero_data on
 int gNewCloudStarFogColor = 0;
 #pragma explicit_zero_data off
-
-extern void fn_800790AC(void);
 
 static inline void starFifoPosition3s16(s16 x, s16 y, s16 z)
 {

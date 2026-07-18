@@ -84,7 +84,6 @@ typedef struct WindSource
     s16 pad1a;
 } WindSource;
 #define NEWCLOUD_WIND_SOURCE_COUNT 6
-extern void fn_800788DC(void);
 extern void fn_8006C51C(void* out);
 extern int gNewCloudLightningFogColor;
 extern const f32 lbl_803DF1D4;
@@ -1976,9 +1975,6 @@ void dll_07_func06(void)
         Music_Trigger(MUSICTRIG_crun_dungeon, 0);
     }
 }
-
-
-extern void fn_800790AC(void);
 
 
 

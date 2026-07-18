@@ -24,5 +24,7 @@ void fn_8007BD8C(int handle1, int handle2);
 void fn_8007C664(int textureHandle);
 void fn_8007CAF4(void);
 void fn_8007D670(void);
+void fn_800788DC(void);
+void fn_800790AC(void);
 
 #endif /* TRACK_INTERSECT_API_H_ */
