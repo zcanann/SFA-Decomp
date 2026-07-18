@@ -201,6 +201,7 @@ void XyzAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
 {
     VertexS16* vtx;
+    MapBlockData* mb = (MapBlockData*)block;
     int vertexOffset[1];
     int vertexIndex;
     int blockIndex;
@@ -209,7 +210,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     u16* mapBlock;
     f32 scale;
     int triangle;
-    u16 blockEnd;
+    int blockEnd;
     int edgeIndex;
     int coordOffset[1];
     void* shader;
@@ -217,7 +218,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     blockIndex = 0;
     coordOffset[0] = 0;
     vertexOffset[0] = coordOffset[0];
-    for (; blockIndex < (int)(u32)((MapBlockData*)block)->polyGroupCount; blockIndex++)
+    for (; blockIndex < (int)(u32)mb->polyGroupCount; blockIndex++)
     {
         mapBlock = mapBlockFn_800606ec((void*)block, blockIndex);
         blockLayer = mapBlockFn_80060678(mapBlock);
@@ -230,13 +231,13 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
             triangle = *mapBlock;
             vertexIndex = vertexOffset[0];
             scale = 8.0f;
-            for (; triangle < (int)(u32)blockEnd; triangle++)
+            for (; triangle < blockEnd; triangle++)
             {
                 mapBlock = fn_800606DC((int*)block, triangle);
                 edgeOffset = vertexIndex;
                 for (edgeIndex = 3; edgeIndex != 0; edgeIndex--)
                 {
-                    vtx = (VertexS16*)(((MapBlockData*)block)->vertices + (u32)*mapBlock * 6);
+                    vtx = (VertexS16*)(mb->vertices + (u32)*mapBlock * 6);
                     vtx->x = (s16)(scale * state->offsetX + (f32) * (s16*)(state->dataBuffer + edgeOffset));
                     vtx->y = (s16)(scale * state->offsetY + (f32) * (s16*)(state->dataBuffer + edgeOffset + 2));
                     vtx->z = (s16)(scale * state->offsetZ + (f32) * (s16*)(state->dataBuffer + edgeOffset + 4));
@@ -248,10 +249,10 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
             }
         }
     }
-    DCStoreRange((void*)((MapBlockData*)block)->vertices, (u32)((MapBlockData*)block)->vertexCount * 6);
+    DCStoreRange((void*)mb->vertices, (u32)mb->vertexCount * 6);
     edgeIndex = 0;
     edgeOffset = edgeIndex;
-    for (; edgeIndex < (int)(u32)((MapBlockData*)block)->edgeCount; edgeIndex++)
+    for (; edgeIndex < (int)(u32)mb->edgeCount; edgeIndex++)
     {
         vertexOffset[0] = (int)fn_800606FC((int*)block, edgeIndex);
         shader = fn_8006070C((MapBlockData*)block, *(u8*)(vertexOffset[0] + 0x13));
