@@ -1,4 +1,5 @@
 #include "dolphin/os/OSReport.h"
+#include "dolphin/os.h"
 #include "ghidra_import.h"
 #include "main/dll/savegame.h"
 #include "main/attract_movie_api.h"
@@ -292,16 +293,13 @@ extern char sMmFreeInvalidLocationError[];
 extern char sMmAllocFreeMessageBlock[];
 extern char sMmStbfStackTooDeepError[];
 
-extern int __OSCurrHeap;
 extern void* lbl_803DD498;
 extern void* lbl_803DCAFC;
 extern char sMmSpawnedUnalignedSlotWarning[];
 extern int lbl_803DCC7C;
 extern char sMmFreeMemoryUsageCorruptedError[];
 
-extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void heapFree(int region, int slotIdx);
-extern void* OSAllocFromHeap(int heap, int size);
 extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);
 
 int roundUpTo4(int x)
