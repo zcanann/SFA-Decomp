@@ -728,9 +728,9 @@ TrackBlockDescriptor gTrackBlockDescriptors[20];
 
 void* fn_80069944(u32* outVal);
 
-void fn_80069958(void** out)
+void fn_80069958(int** outOrigin)
 {
-    *out = gTrackGridOrigin;
+    *outOrigin = (int*)gTrackGridOrigin;
 }
 
 u32 mapBlockFn_80060678(int* obj)
@@ -765,7 +765,7 @@ void fn_80062894(void)
     lbl_803DCEE8 = 0;
 }
 
-void fn_80069968(s32* out1, u32* out2);
+void fn_80069968(int* outCount, int* outTable);
 
 int fn_80065640(void)
 {
@@ -1865,8 +1865,8 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
         vecGetRanges((f32*)buf48, base, modelState->shadowScale, (int*)&ranges);
 
         hitDetectFn_800691c0(obj, &ranges, 0x81, 0);
-        fn_80069958((void**)&vtx);
-        fn_80069968((s32*)&idxOut, (u32*)&alphaOut);
+        fn_80069958((int**)&vtx);
+        fn_80069968(&idxOut, &alphaOut);
 
         alpha = alphaOut;
         idxOut = fn_80060C14((int*)obj, alpha, gShadowDrawScratch, gShadowVolumeBuffer, idxOut, (f32)(int)vtx[0],
@@ -1882,11 +1882,11 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
     return 0;
 }
 
-void fn_80069968(s32* out1, u32* out2)
+void fn_80069968(int* outCount, int* outTable)
 {
     TrackBlockDescriptor* descriptors = gTrackBlockDescriptors;
-    *out1 = descriptors[gActiveTrackBlockCount].firstTriangle;
-    *out2 = gTrackTriangleBuffer;
+    *outCount = descriptors[gActiveTrackBlockCount].firstTriangle;
+    *outTable = gTrackTriangleBuffer;
 }
 
 void vecGetRanges(f32* pts, f32* base, f32 scale, int* out)

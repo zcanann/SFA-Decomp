@@ -44,6 +44,8 @@ void doNothing_80062A50();
 void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode);
 void playerShadowFn_80062a30(GameObject* obj);
 void setShadowFlag_803db658(s32 value);
+void fn_80069958(int** outOrigin);
+void fn_80069968(int* outCount, int* outTable);
 void mapInitFn_80069990(void);
 void trackIntersect(void);
 void mapBlockRender_setVtxDcrs(int flag, int* obj, int shader, int* blockState);

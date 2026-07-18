@@ -12,8 +12,6 @@ u32 mapBlockFn_80060678(int* obj);
 void fn_800605F0(s16* in, f32* out);
 void fn_8006058C(short* out, float* vec);
 void fn_80060490(u32* outX, u32* outY, u32* outWidth, u32* outHeight);
-void fn_80069968(s32* out1, u32* out2);
-void fn_80069958(void** out);
 void* mapBlockFn_800606ec(int* obj, int idx);
 
 #endif /* MAIN_TRACK_DOLPHIN_CS_H_ */
