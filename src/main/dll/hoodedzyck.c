@@ -30,6 +30,7 @@
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
+#include "main/dll/hoodedzyck.h"
 
 typedef struct DusterState
 {

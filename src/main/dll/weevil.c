@@ -23,6 +23,7 @@
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/weevil.h"
 
 #define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 

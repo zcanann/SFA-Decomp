@@ -23,6 +23,7 @@
 #include "main/dll/objfsa.h"
 #include "main/frame_timing.h"
 #include "main/dll/player_api.h"
+#include "main/dll/duster_wb.h"
 
 typedef struct DusterState
 {
