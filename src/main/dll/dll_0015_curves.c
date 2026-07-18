@@ -466,87 +466,8 @@ void fn_800E58FC(GameObject* obj, CurvesCollisionState* collision)
     }
 }
 
-void fn_800E5CBC(short* obj, int state)
-{
-    CurvesCollisionState* collision;
-    f32 normalZ;
-    short pitch;
-    int angle;
-    f32 dy;
-    f32 dx;
-    f32 dz;
-    short outVec[4];
-    f32 matrixBuf[20];
-
-    collision = (CurvesCollisionState*)state;
-    if (((s8)collision->surfaceFlags & 0x10) != 0)
-    {
-        outVec[0] = -*obj;
-        if (*(short**)(obj + 0x18) != NULL)
-        {
-            outVec[0] = outVec[0] - **(short**)(obj + 0x18);
-        }
-        outVec[1] = 0;
-        outVec[2] = 0;
-        matrixBuf[0] = lbl_803E068C;
-        matrixBuf[1] = lbl_803E0668;
-        matrixBuf[2] = lbl_803E0668;
-        matrixBuf[3] = lbl_803E0668;
-        mtxRotateByVec3s(&matrixBuf[4], outVec);
-        Matrix_TransformPoint(&matrixBuf[4], (double)collision->surfaceNormalX, (double)collision->surfaceNormalY,
-                              (double)collision->surfaceNormalZ, &dy, &dx, &dz);
-        angle = getAngle(dx, dz);
-        pitch = 0x4000 - angle;
-        collision->tiltPitchTarget = pitch;
-        collision->tiltPitch =
-            collision->tiltPitch + ((int)((u32)framesThisStep * ((int)pitch - collision->tiltPitch)) >> 3);
-        angle = getAngle(dx, dy);
-        pitch = -(0x4000 - angle);
-        collision->tiltRollTarget = pitch;
-        collision->tiltRoll =
-            collision->tiltRoll + ((int)((u32)framesThisStep * ((int)pitch - collision->tiltRoll)) >> 3);
-    }
-    else
-    {
-        collision->tiltPitch = collision->tiltPitch - ((int)((int)collision->tiltPitch * framesThisStep) >> 3);
-        collision->tiltRoll = collision->tiltRoll - ((int)((int)collision->tiltRoll * framesThisStep) >> 3);
-        normalZ = lbl_803E0668;
-        collision->surfaceNormalX = lbl_803E0668;
-        collision->surfaceNormalY = lbl_803E068C;
-        collision->surfaceNormalZ = normalZ;
-    }
-}
-
-void fn_800E5E38(GameObject* obj, CurvesCollisionState* collision)
-{
-    u32 hitCount;
-    int hitIndex;
-    f32 currentY;
-    f32 window;
-    RomCurvePoint* point;
-
-    point = curves_getCurves(obj, collision->points[0][0], collision->points[0][2], &hitCount, 0);
-    hitIndex = hitCount - 1;
-    currentY = (obj)->anim.worldPosY;
-    window = lbl_803E06A0;
-    while (hitIndex >= 0)
-    {
-        if ((s8)point[hitIndex].type != ROMCURVE_POINT_TYPE_WATER)
-        {
-            if ((currentY <= point[hitIndex].x) && (currentY >= (point[hitIndex].x - window)))
-            {
-                (obj)->anim.worldPosY = point[hitIndex].x;
-                collision->surfaceNormalX = point[hitIndex].y;
-                collision->surfaceNormalY = point[hitIndex].z;
-                collision->surfaceNormalZ = point[hitIndex].w;
-                *(s8*)&collision->surfaceFlags |= 0x11;
-                collision->surfaceCounter++;
-            }
-            window = lbl_803E0688;
-        }
-        hitIndex--;
-    }
-}
+void fn_800E5CBC(short* obj, int state);
+void fn_800E5E38(GameObject* obj, CurvesCollisionState* collision);
 
 void fn_800E5F1C(GameObject* obj, CurvesCollisionState* collision)
 {
@@ -996,39 +917,6 @@ f32 dll_15_func0B(GameObject* obj, f32 x, f32 baseY, f32 z, f32 height)
     return baseY;
 }
 
-RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll)
-{
-    int pairCount;
-    RomCurvePoint* outPoint;
-    TrackGroundHit** hitPointCursor;
-    TrackGroundHit** hitPoints;
-
-    if (obj != sCurvesCachedHitObj)
-    {
-        sCurvesCachedHitObj = obj;
-        sCurvesCachedHitCount =
-            hitDetectFn_80065e50(obj, x, obj->anim.worldPosY, z, &hitPoints, queryAll != 0 ? 1 : -2, 0);
-        if (ROMCURVE_GETCURVES_MAX_POINTS < sCurvesCachedHitCount)
-        {
-            sCurvesCachedHitCount = ROMCURVE_GETCURVES_MAX_POINTS;
-        }
-        hitPointCursor = hitPoints;
-        outPoint = sCurvesHitPoints;
-        for (pairCount = 0; pairCount < sCurvesCachedHitCount; pairCount++)
-        {
-            outPoint[pairCount].x = hitPointCursor[0]->height;
-            outPoint[pairCount].y = hitPointCursor[0]->normalX;
-            outPoint[pairCount].z = hitPointCursor[0]->normalY;
-            outPoint[pairCount].w = hitPointCursor[0]->normalZ;
-            outPoint[pairCount].object = hitPointCursor[0]->object;
-            outPoint[pairCount].type = hitPointCursor[0]->surfaceType;
-            hitPointCursor++;
-        }
-    }
-    *outCount = sCurvesCachedHitCount;
-    return sCurvesHitPoints;
-}
-
 void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, u32 updateValue, f32 step)
 {
     int flags;
@@ -1416,6 +1304,121 @@ void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, u32 update
         curveObj->anim.localPosY = curveObj->anim.worldPosY;
         curveObj->anim.localPosZ = curveObj->anim.worldPosZ;
     }
+}
+
+void fn_800E5CBC(short* obj, int state)
+{
+    CurvesCollisionState* collision;
+    f32 normalZ;
+    short pitch;
+    int angle;
+    f32 dy;
+    f32 dx;
+    f32 dz;
+    short outVec[4];
+    f32 matrixBuf[20];
+
+    collision = (CurvesCollisionState*)state;
+    if (((s8)collision->surfaceFlags & 0x10) != 0)
+    {
+        outVec[0] = -*obj;
+        if (*(short**)(obj + 0x18) != NULL)
+        {
+            outVec[0] = outVec[0] - **(short**)(obj + 0x18);
+        }
+        outVec[1] = 0;
+        outVec[2] = 0;
+        matrixBuf[0] = lbl_803E068C;
+        matrixBuf[1] = lbl_803E0668;
+        matrixBuf[2] = lbl_803E0668;
+        matrixBuf[3] = lbl_803E0668;
+        mtxRotateByVec3s(&matrixBuf[4], outVec);
+        Matrix_TransformPoint(&matrixBuf[4], (double)collision->surfaceNormalX, (double)collision->surfaceNormalY,
+                              (double)collision->surfaceNormalZ, &dy, &dx, &dz);
+        angle = getAngle(dx, dz);
+        pitch = 0x4000 - angle;
+        collision->tiltPitchTarget = pitch;
+        collision->tiltPitch =
+            collision->tiltPitch + ((int)((u32)framesThisStep * ((int)pitch - collision->tiltPitch)) >> 3);
+        angle = getAngle(dx, dy);
+        pitch = -(0x4000 - angle);
+        collision->tiltRollTarget = pitch;
+        collision->tiltRoll =
+            collision->tiltRoll + ((int)((u32)framesThisStep * ((int)pitch - collision->tiltRoll)) >> 3);
+    }
+    else
+    {
+        collision->tiltPitch = collision->tiltPitch - ((int)((int)collision->tiltPitch * framesThisStep) >> 3);
+        collision->tiltRoll = collision->tiltRoll - ((int)((int)collision->tiltRoll * framesThisStep) >> 3);
+        normalZ = lbl_803E0668;
+        collision->surfaceNormalX = lbl_803E0668;
+        collision->surfaceNormalY = lbl_803E068C;
+        collision->surfaceNormalZ = normalZ;
+    }
+}
+
+void fn_800E5E38(GameObject* obj, CurvesCollisionState* collision)
+{
+    u32 hitCount;
+    int hitIndex;
+    f32 currentY;
+    f32 window;
+    RomCurvePoint* point;
+
+    point = curves_getCurves(obj, collision->points[0][0], collision->points[0][2], &hitCount, 0);
+    hitIndex = hitCount - 1;
+    currentY = (obj)->anim.worldPosY;
+    window = lbl_803E06A0;
+    while (hitIndex >= 0)
+    {
+        if ((s8)point[hitIndex].type != ROMCURVE_POINT_TYPE_WATER)
+        {
+            if ((currentY <= point[hitIndex].x) && (currentY >= (point[hitIndex].x - window)))
+            {
+                (obj)->anim.worldPosY = point[hitIndex].x;
+                collision->surfaceNormalX = point[hitIndex].y;
+                collision->surfaceNormalY = point[hitIndex].z;
+                collision->surfaceNormalZ = point[hitIndex].w;
+                *(s8*)&collision->surfaceFlags |= 0x11;
+                collision->surfaceCounter++;
+            }
+            window = lbl_803E0688;
+        }
+        hitIndex--;
+    }
+}
+
+RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll)
+{
+    int pairCount;
+    RomCurvePoint* outPoint;
+    TrackGroundHit** hitPointCursor;
+    TrackGroundHit** hitPoints;
+
+    if (obj != sCurvesCachedHitObj)
+    {
+        sCurvesCachedHitObj = obj;
+        sCurvesCachedHitCount =
+            hitDetectFn_80065e50(obj, x, obj->anim.worldPosY, z, &hitPoints, queryAll != 0 ? 1 : -2, 0);
+        if (ROMCURVE_GETCURVES_MAX_POINTS < sCurvesCachedHitCount)
+        {
+            sCurvesCachedHitCount = ROMCURVE_GETCURVES_MAX_POINTS;
+        }
+        hitPointCursor = hitPoints;
+        outPoint = sCurvesHitPoints;
+        for (pairCount = 0; pairCount < sCurvesCachedHitCount; pairCount++)
+        {
+            outPoint[pairCount].x = hitPointCursor[0]->height;
+            outPoint[pairCount].y = hitPointCursor[0]->normalX;
+            outPoint[pairCount].z = hitPointCursor[0]->normalY;
+            outPoint[pairCount].w = hitPointCursor[0]->normalZ;
+            outPoint[pairCount].object = hitPointCursor[0]->object;
+            outPoint[pairCount].type = hitPointCursor[0]->surfaceType;
+            hitPointCursor++;
+        }
+    }
+    *outCount = sCurvesCachedHitCount;
+    return sCurvesHitPoints;
 }
 
 void dll_15_func07(void* obj, CurvesCollisionState* state)
