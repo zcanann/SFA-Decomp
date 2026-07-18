@@ -45,6 +45,7 @@
 #include "main/trig_ext.h"
 #include "main/tex_dolphin_ext.h"
 #include "main/acosf_cs.h"
+#include "dolphin/gx/GXGeometry.h"
 
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
@@ -132,9 +133,6 @@ extern s16 lbl_803DCEBA;
 extern s16 lbl_803DCEB8;
 extern void* lbl_803DCE6C;
 extern void* lbl_803DCE68;
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
-extern void GXBegin(GXPrimitive type, GXVtxFmt vtxfmt, u16 nverts);
 extern void* gMinimapInterface;
 extern void* lbl_803DCAB0;
 extern s32 lbl_803DCE00;

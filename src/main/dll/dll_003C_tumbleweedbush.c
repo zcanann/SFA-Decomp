@@ -32,6 +32,7 @@
 #include "main/pad.h"
 #include "main/textrender_api.h"
 #include "main/frame_timing.h"
+#include "string.h"
 
 #define LINK_ITEM_SLOTS 25 /* per-item icon-strip slot capacity */
 
@@ -62,7 +63,6 @@ extern void MWTRACE(int boxId);
 #define PAD_BUTTON_START 0x1000
 #define PAD_ACCEPT_MASK  (PAD_BUTTON_A | PAD_BUTTON_START)
 
-extern void* memcpy(void* dst, const void* src, int size);
 
 typedef struct LinkMenuItemDB
 {

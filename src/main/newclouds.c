@@ -37,6 +37,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "string.h"
 
 u8 gNewCloudBlizzardActivePrev;
 void* lbl_803DD1C8;
@@ -70,7 +71,6 @@ typedef struct
 {
     s16 uv[6];
 } SnowFlakeUVs;
-extern void* memset(void* dst, int c, int n);
 extern char sSnowFreeSnowCloudInvalidCloudId[];
 typedef struct WindSource
 {

@@ -36,6 +36,7 @@
 #include "main/resource.h"
 #include "main/maketex.h"
 #include "main/camera_ext.h"
+#include "string.h"
 
 typedef struct PushablePlacement
 {
@@ -141,7 +142,6 @@ typedef void (*PushableAddContactObjectFn)(int obj, void* contactObj);
 #define MAGIC_GEM_EYE_POSITION_MAX 255.0f
 #define MAGIC_GEM_BLINK_SCALE_BASE 0.25f
 
-extern void memcpy(void* dst, void* src, int n);
 int gPushableSavedMapIdCount;
 int gPushableSavedMapIds[0x28];
 extern void pushable_savePos(int* obj);

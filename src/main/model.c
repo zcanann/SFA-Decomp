@@ -22,6 +22,7 @@
 #include "main/rcp_dolphin_ext.h"
 #include "main/pi_dolphin_ext.h"
 #include "main/acosf_cs.h"
+#include "dolphin/base/PPCArch.h"
 
 int gModelTabEntryCount;
 s16* gModelResourceBuffer;
@@ -2392,7 +2393,6 @@ void* fn_80028354(u8* modelFile, int index)
     return ((ModelFileHeader*)modelFile)->collisionTriangles + index * 8;
 }
 
-extern u32 PPCMfhid2(void);
 
 void copyToCache(void* dst, void* src, u32 count);
 

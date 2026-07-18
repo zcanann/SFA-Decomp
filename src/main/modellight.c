@@ -12,6 +12,7 @@
 #include "main/object_transform.h"
 #include "main/object_api.h"
 #include "dolphin/gx/GXLegacyDecls.h"
+#include "string.h"
 
 int gModelLightNextGXLightId;
 u8 gModelLightUseModelRelativePositions;
@@ -600,7 +601,6 @@ void modelLightStruct_setLightKind(ModelLightStruct* p, int v)
     p->lightKind = v;
 }
 
-extern void* memset(void* dst, int val, int n);
 extern void Vec_normalize(f32* dst, f32* src);
 extern void GXInitSpecularDir(u8* lt_obj, f32 x, f32 y, f32 z);
 extern void GXInitLightColor(u8* lt_obj, void* color);

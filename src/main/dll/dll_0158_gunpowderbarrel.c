@@ -55,6 +55,7 @@
 #include "main/object_descriptor.h"
 #include "main/carryable_interface.h"
 #include "main/track_dolphin_ext.h"
+#include "string.h"
 
 f32 lbl_803DBE80 = 10.0f;
 f32 lbl_803DBE84 = 0.4f;
@@ -88,7 +89,6 @@ typedef struct GunpowderbarrelPlacement
 } GunpowderbarrelPlacement;
 
 
-extern void memset(void* p, int c, int n);
 
 /* Bit flags at GunpowderBarrelState+0x4a (heldFlags). */
 typedef struct

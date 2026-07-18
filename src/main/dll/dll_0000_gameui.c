@@ -398,7 +398,6 @@ extern GXColor gViewFinderLineColor;
 extern char sTrickyDebugXCoordFormat[];
 
 extern int fn_8011E0D8();
-extern void* memset(void* p, int v, int n);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 extern void hudDrawCounter(int id, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget);
 extern void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, GXColor* color);
@@ -547,7 +546,6 @@ extern const f32 lbl_803E2020;
 extern const f32 lbl_803E2024;
 extern const f64 lbl_803E2028;
 extern const f64 lbl_803E2030;
-extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
 extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
 extern void hudDrawTimedElement(int obj, void* p);
 extern u8 gHeadDisplayActive;
@@ -590,12 +588,14 @@ extern const f32 lbl_803E1FAC;
 extern const f32 lbl_803E2060;
 extern const f32 lbl_803E2064;
 extern const f32 lbl_803E2068;
-extern void drawRect(f32 sx, f32 sy, int x, int y);
 #include "main/fsin16_approx_api.h"
 #include "main/dll/dll_8011d918_ext.h"
 #include "main/trig_cs.h"
 #include "main/dll/dll_0017_savegame_cs.h"
 #include "main/dll/dll_0011_screens_pr.h"
+#include "string.h"
+#include "dolphin/gx/GXPixel.h"
+#include "track/intersect_api.h"
 extern u32 lbl_8031AE20[56];
 extern GridEntry lbl_8031BB90[];
 extern GridEntry lbl_8031BD90[];

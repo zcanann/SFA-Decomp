@@ -27,6 +27,7 @@
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_004B_cameramodeclimb.h"
+#include "string.h"
 
 CameraModeClimbState* gCamClimbState;
 
@@ -53,7 +54,6 @@ extern f32 gCamClimbDefaultEndMaxHeight;
 extern f32 lbl_803E19C4;
 extern f32 gCamClimbDefaultHeightAdjustRate;
 
-extern void memset(void* dst, int val, int size);
 
 void CameraModeClimb_copyToCurrent(void)
 {

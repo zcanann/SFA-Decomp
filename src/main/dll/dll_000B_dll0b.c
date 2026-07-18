@@ -41,6 +41,7 @@
 #include "dolphin/gx/GXEnum.h"
 #include "main/render_mode_api.h"
 #include "dolphin/gx/GXLegacyDecls.h"
+#include "track/intersect_api.h"
 
 ModgfxPendingSpawn* gModgfxPendingSpawnStartCursor;
 ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
@@ -256,8 +257,6 @@ void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
 
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
-extern void gxTexColorFn_80079254(void);
-extern void gxBlendFn_80078b4c(void);
 
 /* Per-bone particle vertex update + draw. */
 
@@ -739,7 +738,6 @@ void dll_0B_func0A(s16* p)
 extern void gxTevAddTextureFrameBlendStages(void);
 extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);
-extern void textBlendSetupFn_80078a7c(void);
 
 int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
 {
