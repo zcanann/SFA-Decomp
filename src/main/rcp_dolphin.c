@@ -33,6 +33,7 @@
 #include "main/pi_dolphin_ext.h"
 #include "main/mm_ext.h"
 #include "main/newshadows_ext.h"
+#include "main/gameloop_cs.h"
 
 struct LoadedTextureEntry* gLoadedTextures;
 u16* gRcpTexIdRemap;
@@ -2341,7 +2342,6 @@ void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2)
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 extern u8 lbl_803DCA40;
-extern void blankScreen(int);
 
 void loadNextMap(void)
 {

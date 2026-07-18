@@ -44,6 +44,7 @@
 #include "main/track_dolphin_ext.h"
 #include "main/trig_ext.h"
 #include "main/tex_dolphin_ext.h"
+#include "main/acosf_cs.h"
 
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
@@ -78,7 +79,6 @@ extern f32 gLightmapDegToBamScale;
 extern F32Pair lbl_803DEC08;
 extern f32 lbl_803DEC0C;
 extern FrustumPlane gViewFrustumPlanes[];
-extern f32 fn_80292248(f32 v);
 extern float floor(float x);
 
 extern void PSMTXMultVec(int m, f32* in, f32* out);

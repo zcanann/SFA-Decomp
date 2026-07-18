@@ -43,6 +43,7 @@
 #include "main/sky_ext.h"
 #include "main/pi_dolphin_ext2.h"
 #include "main/newshadows_ext2.h"
+#include "main/atan2f_cs.h"
 
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
@@ -382,7 +383,6 @@ extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* sta
 extern void memcpy(void* dst, void* src, int n);
 extern int shouldDrawShadows(void);
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
-extern f32 fn_802925C4(f32 x, f32 y);
 extern float floor(float x);
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(int attr, int type);

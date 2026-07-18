@@ -21,6 +21,7 @@
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "main/rcp_dolphin_ext.h"
 #include "main/pi_dolphin_ext.h"
+#include "main/acosf_cs.h"
 
 int gModelTabEntryCount;
 s16* gModelResourceBuffer;
@@ -113,7 +114,6 @@ extern void fn_80025F38(int* a, int b, u8* p, u8* q);
 extern void modelAnimFn_800246a0(u8* dst, u8* model, u8* ch, f32 t, int max, int b, int c, int d, int e, s16 f);
 extern void fn_80007F78(u8 * ch, s16 * outRot, s16 * outRot2);
 extern void PSMTXTranspose(f32 * src, f32 * dst);
-extern f32 acosf(f32 x);
 extern const f32 gModelDotClampMax;
 extern f32 gModelDotClampMin;
 extern f32 gMapSavedPlayerOffsetX;

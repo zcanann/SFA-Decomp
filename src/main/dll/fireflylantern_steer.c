@@ -13,8 +13,8 @@
 #include "main/vecmath.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/objfsa.h"
+#include "main/dll/duster_cs.h"
 
-extern void fn_8015536C(f32* out, f32* axis, f32 a, f32 b);
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
 extern f32 lbl_803E2A08;

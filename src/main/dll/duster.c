@@ -48,6 +48,7 @@
 #include "main/dll/player_api.h"
 #include "main/dll/fireflyLantern.h"
 #include "main/dll/duster.h"
+#include "main/dll/dll_00D8_pinponspike_cs.h"
 
 int lbl_803DBCD8[2] = {2, 3};
 
@@ -118,7 +119,6 @@ extern const f32 lbl_803E2A88;
 extern const f32 lbl_803E2A8C;
 extern const f32 lbl_803E2A90;
 
-extern int fn_80169EF4(float* src, float* dst, f32 speed, char flag, f32 arc);
 #pragma opt_common_subs off
 void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
 {

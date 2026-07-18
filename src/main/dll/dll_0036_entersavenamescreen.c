@@ -15,7 +15,7 @@
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-extern void fn_80135814(int p1, int p2);
+#include "main/dll/dll_02C0_front_cs.h"
 extern void nameEntryTextDrawFunc(void);
 
 extern u16 gEnterSaveNameColorAnimTime;

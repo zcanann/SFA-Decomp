@@ -28,6 +28,7 @@
 #include "main/pad.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
+#include "main/dll/dll_0000_gameui_cs.h"
 
 CameraModeWorldMapState* gCamWorldMapState;
 
@@ -44,7 +45,6 @@ extern f32 lbl_803E1A28;
 extern f32 lbl_803E1A80;
 
 
-extern void fn_8012DDB8(int mode);
 extern f32 lbl_80319DF8[];
 extern f32 lbl_803E1A2C;
 extern f32 lbl_803E1A30;
