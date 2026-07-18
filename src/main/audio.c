@@ -45,7 +45,7 @@
 extern f32 lbl_803DE594;
 
 const MusicSeqStartParams gMusicSeqStartParamsDefault = {
-    4, {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}, 0x100, 0, 0x7F, {0}};
+    4, {0xFFFFFFFF, 0xFFFFFFFF}, 0x100, {0, 0x7F}, 0, NULL, 0, NULL};
 
 s8 gAudioSoundMode = -1;
 s32 lbl_803DB1EC = 0;
@@ -1538,7 +1538,7 @@ void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTr
             int voice;
             if (trigger->field_6 != -1)
             {
-                params.field_c = trigger->field_6;
+                params.speed = trigger->field_6;
                 params.flags |= 2;
             }
             if (trigger->field_c != -1)
@@ -1549,8 +1549,8 @@ void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTr
             {
                 voice = 0x7f;
             }
-            params.field_10 = 0;
-            params.field_e = 0;
+            params.volume.target = 0;
+            params.volume.time = 0;
             params.flags |= 4;
             seqHandle = sndSeqPlayEx(bank->field_2, trigger->field_2, channel->bankData, &params, 0);
             sndSeqVolume(voice, 0x1f4, seqHandle, 0);

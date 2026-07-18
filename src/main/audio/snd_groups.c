@@ -3,6 +3,7 @@
 #include "main/audio/sal_dsp.h"
 #include "main/audio/data_tables.h"
 #include "main/audio/synth_jobs.h"
+#include "main/audio/synth_queue.h"
 
 
 typedef struct GROUP_DATA
@@ -74,16 +75,9 @@ typedef struct FX_DATA
     u8 fx[1];
 } FX_DATA;
 
-typedef struct MIDISETUP
-{
-    u16 songId;
-    u8 reserved[0x52];
-} MIDISETUP;
-
 extern u32 hwInitStream(void* samples);
 extern u32 dataInsertSDir(void* sdir, u32 addr);
 extern void dataInsertFX(u16 gid, void* fx, u16 num);
-extern u32 seqStartPlay(void* norm, void* drum, void* midiSetup, void* arrfile, void* para, u8 studio, u16 sgid);
 extern u8 gSynthInitialized;
 extern s16 synthLoadedGroupCount;
 GSTACK synthLoadedGroupTable[128];
@@ -310,13 +304,13 @@ void audioFn_8027b690(u16* ref, void* data, u8 dataType, u32 remove)
     }
 }
 
-u32 seqPlaySong(u16 sgid, u16 sid, void* arrfile, void* para, u8 irq_call, u8 studio)
+u32 seqPlaySong(u16 sgid, u16 sid, void* arrfile, SynthPlayParams* para, u8 irq_call, u8 studio)
 {
     int i;
     GROUP_DATA* g;
-    void* norm;
-    void* drum;
-    MIDISETUP* midiSetup;
+    SynthPage* norm;
+    SynthPage* drum;
+    SynthMidiSetup* midiSetup;
     u32 seqId;
     void* prj;
     GSTACK* gs = synthLoadedGroupTable;
@@ -332,21 +326,21 @@ u32 seqPlaySong(u16 sgid, u16 sid, void* arrfile, void* para, u8 irq_call, u8 st
         {
             g = gs[i].gAddr;
             prj = gs[i].prjAddr;
-            norm = (u8*)prj + g->data.song.normpageOff;
-            drum = (u8*)prj + g->data.song.drumpageOff;
-            midiSetup = (MIDISETUP*)((u8*)prj + g->data.song.midiSetupOff);
+            norm = (SynthPage*)((u8*)prj + g->data.song.normpageOff);
+            drum = (SynthPage*)((u8*)prj + g->data.song.drumpageOff);
+            midiSetup = (SynthMidiSetup*)((u8*)prj + g->data.song.midiSetupOff);
             while (midiSetup->songId != 0xFFFF)
             {
                 if (midiSetup->songId == sid)
                 {
                     if (irq_call != 0)
                     {
-                        seqId = seqStartPlay(norm, drum, midiSetup, arrfile, para, studio, sgid);
+                        seqId = seqStartPlay(norm, drum, midiSetup, (u32*)arrfile, para, studio, sgid);
                     }
                     else
                     {
                         sndBegin();
-                        seqId = seqStartPlay(norm, drum, midiSetup, arrfile, para, studio, sgid);
+                        seqId = seqStartPlay(norm, drum, midiSetup, (u32*)arrfile, para, studio, sgid);
                         sndEnd();
                     }
                     return seqId;
@@ -366,7 +360,7 @@ u32 seqPlaySong(u16 sgid, u16 sid, void* arrfile, void* para, u8 irq_call, u8 st
     return 0xffffffff;
 }
 
-u32 sndSeqPlayEx(u16 sgid, u16 sid, void* arrfile, void* para, u8 studio)
+u32 sndSeqPlayEx(u16 sgid, u16 sid, void* arrfile, SynthPlayParams* para, u8 studio)
 {
     return seqPlaySong(sgid, sid, arrfile, para, 0, studio);
 }

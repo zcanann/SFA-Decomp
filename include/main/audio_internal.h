@@ -4,6 +4,7 @@
 #include "global.h"
 #include "dolphin/ar.h"
 #include "dolphin/dvd.h"
+#include "main/audio/synth_queue.h"
 
 #define SFX_OBJECT_CHANNEL_COUNT 56
 #define SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE 1
@@ -97,14 +98,7 @@ typedef struct SfxObjectChannel {
     u64 age;
 } SfxObjectChannel;
 
-typedef struct MusicSeqStartParams {
-    u32 flags;
-    u8 pad4[8];
-    u16 field_c;
-    u16 field_e;
-    u8 field_10;
-    u8 pad11[0xf];
-} MusicSeqStartParams;
+typedef SynthPlayParams MusicSeqStartParams;
 
 typedef struct MusicChannel {
     u32 field_0;
@@ -281,7 +275,7 @@ extern f32 lbl_803DE554;
 extern f32 lbl_803DE558;
 extern f32 lbl_803DE55C;
 
-int sndSeqPlayEx(int a, int b, void* bank, MusicSeqStartParams* params, int e);
+u32 sndSeqPlayEx(u16 groupId, u16 songId, void* arrangement, SynthPlayParams* params, u8 studio);
 SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
 void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
 void Music_Update(void);

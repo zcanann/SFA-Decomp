@@ -1632,13 +1632,13 @@ int synthIsFadeOutActive(u8 voiceIdx)
 /*
  * Set a single byte field on a voice slot.
  */
-void synthSetMusicVolumeType(u32 voiceIdx, u8 value)
+void synthSetMusicVolumeType(u8 voiceIdx, u8 value)
 {
     if (gSynthInitialized == 0)
     {
         return;
     }
-    synthMasterFader[voiceIdx & 0xff].type = value;
+    synthMasterFader[voiceIdx].type = value;
 }
 
 /*

@@ -1,19 +1,7 @@
 #include "src/main/audio/synth_internal.h"
 #include "main/audio/snd_synth_legacy.h"
 #include "main/audio/synth_handle.h"
-
-typedef struct SynthStartParams
-{
-    u32 flags;
-    u32 muteValue;
-    u32 muteTime;
-    u16 speed;
-    u16 volumeTime;
-    u8 volume;
-    u8 pad11[7];
-    u8 active;
-    u8 pad25[3];
-} SynthStartParams;
+#include "main/audio/snd_groups.h"
 
 #undef SYNTH_VOICE_RUNTIME
 #define SYNTH_VOICE_RUNTIME() (&lbl_803AF550)
@@ -34,8 +22,6 @@ extern SynthVoiceRuntime lbl_803AF550;
 extern void synthVolume(u32 value0, u32 value1, u8 studio, u32 mode, u32 handle);
 extern void sndSeqSpeed(u32 handle, u16 speed);
 extern u32 synthResolveHandle(u32 handle);
-extern u32 seqPlaySong(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 noLock, u8 studio);
-extern u32 sndSeqPlayEx(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 studio);
 
 /*
  * sndSeqVolume backend. Resolves a sequence handle across queued and active
@@ -154,7 +140,7 @@ static inline u32 resolveHandle(u32 handle)
 void synthStartHandleFromRequest(SynthStartRequest* request, u32* outHandle, u8 noLock)
 {
     SynthVoiceRuntime* runtime;
-    SynthStartParams params;
+    SynthPlayParams params;
     u32 deadSlot0;
     u32 deadSlot1;
     u32 deadSlot2;
@@ -316,16 +302,17 @@ void synthStartHandleFromRequest(SynthStartRequest* request, u32* outHandle, u8 
     if ((request->flags & SYNTH_START_FLAG_MUTE) != 0)
     {
         params.flags |= 1;
-        params.muteValue = request->mixValue0;
-        params.muteTime = request->mixValue1;
+        params.trackMute[0] = request->mixValue0;
+        params.trackMute[1] = request->mixValue1;
     }
-    params.volumeTime = request->volumeTime;
-    params.volume = request->volume;
-    params.active = 0;
+    params.volume.time = request->volumeTime;
+    params.volume.target = request->volume;
+    params.numFaded = 0;
 
     if (noLock != 0)
     {
-        newHandle = seqPlaySong(request->groupId, request->sampleId, request->seqId, &params, 1, request->startStudio);
+        newHandle = seqPlaySong(request->groupId, request->sampleId, (void*)request->seqId,
+                                &params, 1, request->startStudio);
         *outHandle = newHandle;
         if ((newHandle != SYNTH_HANDLE_INVALID) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0))
         {
@@ -349,7 +336,8 @@ void synthStartHandleFromRequest(SynthStartRequest* request, u32* outHandle, u8 
     }
     else
     {
-        newHandle = sndSeqPlayEx(request->groupId, request->sampleId, request->seqId, &params, request->startStudio);
+        newHandle = sndSeqPlayEx(request->groupId, request->sampleId, (void*)request->seqId,
+                                 &params, request->startStudio);
         *outHandle = newHandle;
         if ((newHandle != SYNTH_HANDLE_INVALID) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0))
         {

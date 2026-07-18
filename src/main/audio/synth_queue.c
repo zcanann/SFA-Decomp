@@ -1,4 +1,9 @@
 #include "src/main/audio/synth_internal.h"
+#include "main/audio/synth_seq_dispatch.h"
+#include "main/audio/synth_volume.h"
+#include "main/audio/inp_midi.h"
+#include "main/audio/voice_manage.h"
+#include "main/audio/synth_queue.h"
 
 typedef union SynthSeqRuntime
 {
@@ -16,55 +21,11 @@ typedef struct SynthVoiceRuntimeView
     SynthVoice voice;
 } SynthVoiceRuntimeView;
 
-/* MusyX sequencer arrangement data (ARR). */
-typedef struct SynthArrangement
-{
-    u32 trackTableOffset;
-    u8 unk04[8];
-    u32 masterTrackOffset;
-    u32 info;
-    u8 unk14[0x40];
-    u32 trackSectionTableOffset;
-} SynthArrangement;
-
-typedef struct SynthSeqVolDef
-{
-    u8 track;
-    u8 volGroup;
-} SynthSeqVolDef;
-
-typedef struct SynthPlayPara
-{
-    u32 flags;
-    u32 trackMute[2];
-    u16 speed;
-
-    struct
-    {
-        u16 time;
-        u8 target;
-    } volume;
-
-    u8 numSeqVolDef;
-    SynthSeqVolDef* seqVolDef;
-    u8 numFaded;
-    u8* faded;
-} SynthPlayPara;
-
 typedef struct SynthMasterTrackEvent
 {
     u32 time;
     u32 bpm;
 } SynthMasterTrackEvent;
-
-typedef struct SynthPage
-{
-    u16 macro;
-    u8 prio;
-    u8 maxVoices;
-    u8 index;
-    u8 reserved;
-} SynthPage;
 
 /* SynthVoice.state - which intrusive list the voice sits on */
 #define SYNTH_VOICE_STATE_FREE      0 /* unallocated */
@@ -74,15 +35,6 @@ typedef struct SynthPage
 extern SynthSeqRuntime lbl_803AF550;
 extern u8 synthTrackVolume[0x40];
 extern int gSynthCurrentVoiceSlotIndex;
-extern void fn_8026E864(void);
-extern void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
-extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
-extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
-extern void inpResetChannelDefaults(u8 a, u8 b);
-/*
- * Start playback of a sequence arrangement.
- */
-extern int voiceKillById(u32 id);
 
 static inline void BuildTransTab(u8* tab, SynthPage* page)
 {
@@ -99,19 +51,20 @@ static inline void BuildTransTab(u8* tab, SynthPage* page)
     }
 }
 
-u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* para, u8 studio, u16 sgid)
+u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u32* song,
+                 SynthPlayParams* para, u8 studio, u16 sgid)
 {
-    u8 seqId;
+    u32 seqId;
     SynthVoice* oldCSeq;
     u32 bpm;
     SynthVoice* nseq;
-    u8* ms;
+    u8* midiData;
     long i;
     u32* tracktab;
     SynthArrangement* arr;
     u8 prg;
 
-    ms = midiSetup;
+    midiData = (u8*)midiSetup;
     if ((nseq = gSynthFreeVoices) == 0)
     {
         return SYNTH_HANDLE_INVALID;
@@ -134,9 +87,9 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
 
     seqId = nseq->slotIndex;
     nseq->pendingStartActive = 0;
-    nseq->normtab = norm;
-    nseq->drumtab = drum;
-    nseq->arrbase = song;
+    nseq->normtab = (u8*)norm;
+    nseq->drumtab = (u8*)drum;
+    nseq->arrbase = (u8*)song;
     nseq->groupId = sgid;
 
     BuildTransTab(nseq->normTrans, (SynthPage*)nseq->normtab);
@@ -189,10 +142,11 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
 
         if (para->flags & 8)
         {
-            for (i = 0; i < para->numSeqVolDef; i++)
+            for (i = 0; i < para->numSeqVolumeDefinitions; i++)
             {
-                nseq->studioMap[para->seqVolDef[i].track] = para->seqVolDef[i].volGroup;
-                synthSetMusicVolumeType(para->seqVolDef[i].volGroup, 0);
+                nseq->studioMap[para->seqVolumeDefinitions[i].track] =
+                    para->seqVolumeDefinitions[i].volumeGroup;
+                synthSetMusicVolumeType(para->seqVolumeDefinitions[i].volumeGroup, 0);
             }
         }
 
@@ -271,11 +225,11 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
         inpResetChannelDefaults((u8)i, seqId);
     }
 
-    if (ms != 0)
+    if (midiData != NULL)
     {
         for (i = 0; i < 16; i++)
         {
-            prg = ms[4];
+            prg = midiData[4];
             gSynthVoiceNotes[gSynthCurrentVoiceSlotIndex][(u8)i] = 0xFFFF;
             if ((u8)i != 9)
             {
@@ -297,11 +251,11 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
                     nseq->prgState[(u8)i].maxVoices = nseq->drumtab[prg * 6 + 3];
                 }
             }
-            inpSetMidiCtrl(MCMD_CTRL_VOLUME, i, seqId, ms[5]);
-            inpSetMidiCtrl(MCMD_CTRL_PANNING, i, seqId, ms[6]);
-            inpSetMidiCtrl(MCMD_CTRL_REVERB, i, seqId, ms[7]);
-            inpSetMidiCtrl(MCMD_CTRL_POST_AUX_B, i, seqId, ms[8]);
-            ms += 5;
+            inpSetMidiCtrl(MCMD_CTRL_VOLUME, i, seqId, midiData[5]);
+            inpSetMidiCtrl(MCMD_CTRL_PANNING, i, seqId, midiData[6]);
+            inpSetMidiCtrl(MCMD_CTRL_REVERB, i, seqId, midiData[7]);
+            inpSetMidiCtrl(MCMD_CTRL_POST_AUX_B, i, seqId, midiData[8]);
+            midiData += sizeof(SynthMidiChannelSetup);
         }
     }
 
