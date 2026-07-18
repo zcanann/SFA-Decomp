@@ -19,8 +19,6 @@
 #include "main/mapEventTypes.h"
 
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
-extern char sSHthorntailSourceFile[];
-extern char sThorntailEnteredInvalidState[];
 
 
 void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime)
