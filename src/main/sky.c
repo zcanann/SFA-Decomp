@@ -107,7 +107,6 @@ extern const f32 lbl_803DF058;
 extern const f32 lbl_803DF05C;
 extern f32 lbl_803DF060;
 extern const f32 lbl_803DF06C;
-extern f32 init_803DF080;
 extern f32 gSkyDayStartTime;
 extern f32 lbl_803DF064;
 extern f32 lbl_803DF068;
