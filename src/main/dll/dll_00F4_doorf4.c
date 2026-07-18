@@ -37,7 +37,7 @@
 #define ObjMsg_PopLegacy(obj, msg, param, flags) \
     ((int (*)())ObjMsg_Pop)((obj), (msg), (param), (flags))
 #define ObjMsg_SendToNearbyObjectsLegacy(type, distance, group, sender, message, param) \
-    ((void (*)())ObjMsg_SendToNearbyObjects)((type), (distance), (group), (sender), (message), (param))
+    ((void (*)(int, f32, u32, void*, u32, u32))ObjMsg_SendToNearbyObjects)((type), (distance), (group), (void*)(sender), (message), (param))
 #include "main/gamebits.h"
 #include "main/camera.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
