@@ -30,7 +30,7 @@
 #include "main/dll/dll_0057_cameramodetitle.h"
 #include "main/dll/dll_02C0_front_ext.h"
 #include "main/dll/dll_02C0_front_cs.h"
-#include "main/dll/dll_003C_tumbleweedbush_cs.h"
+#include "main/dll/dll_003C_tumbleweedbush_api.h"
 
 u8 gTitleMenuPanelOpen;
 s8 gTitleMenuLoadDelay;

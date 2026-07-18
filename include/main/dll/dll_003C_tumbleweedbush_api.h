@@ -1,0 +1,8 @@
+#ifndef MAIN_DLL_DLL_003C_TUMBLEWEEDBUSH_API_H_
+#define MAIN_DLL_DLL_003C_TUMBLEWEEDBUSH_API_H_
+
+#include "types.h"
+
+void titleScreenFn_80130464(u8 v);
+
+#endif /* MAIN_DLL_DLL_003C_TUMBLEWEEDBUSH_API_H_ */

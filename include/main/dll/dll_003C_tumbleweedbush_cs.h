@@ -1,8 +1,0 @@
-#ifndef MAIN_DLL_DLL_003C_TUMBLEWEEDBUSH_CS_H_
-#define MAIN_DLL_DLL_003C_TUMBLEWEEDBUSH_CS_H_
-
-#include "types.h"
-
-void titleScreenFn_80130464(u8 v);
-
-#endif /* MAIN_DLL_DLL_003C_TUMBLEWEEDBUSH_CS_H_ */
