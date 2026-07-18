@@ -17,7 +17,7 @@
 
 #define DEPTHOFFIELDPOINT_OBJFLAG_HIDDEN 0x4000
 
-extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
+#include "main/blur_filter_api.h"
 
 typedef struct DofState
 {

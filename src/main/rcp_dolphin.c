@@ -2169,11 +2169,13 @@ extern f32 blurFilterArea;
 extern u8 bBlurFilterUseArea;
 extern u8 bBiggerBlurFilter;
 
-void turnOnBlurFilter(u8 useArea, u8 bigger, f32 a, f32 b, f32 area)
+#include "main/blur_filter_api.h"
+
+void turnOnBlurFilter(f32 x, f32 y, f32 area, int useArea, int bigger)
 {
     bEnableBlurFilter = 1;
-    lbl_803DCE50 = a;
-    lbl_803DCE4C = b;
+    lbl_803DCE50 = x;
+    lbl_803DCE4C = y;
     blurFilterArea = area;
     bBlurFilterUseArea = useArea;
     bBiggerBlurFilter = bigger;
