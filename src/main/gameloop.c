@@ -407,18 +407,16 @@ void cardShowMessage(void)
 
 
 
-int cacheAllocAndCopy(void* srcPtr, int byteCount, int* cacheCursor, int* outEnd, int limit)
+int cacheAllocAndCopy(void* srcPtr, u32 size, int* cacheCursor, int* outEnd, int limit)
 {
-    u32 alignOffset;
-    u32 size;
-    u8* src;
     u8* dst;
+    u8* src;
+    u32 alignOffset;
 
     src = srcPtr;
-    size = byteCount;
     dst = getCache();
     alignOffset = (u32)src & 0x1f;
-    size = size + alignOffset;
+    size += alignOffset;
     size += 0x1f;
     size &= ~0x1f;
     if (*cacheCursor + size <= limit)
