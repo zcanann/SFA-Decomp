@@ -170,3 +170,13 @@ Root causes were MIXED, not all pragmas. Byte-match is truth ⇒ a retail-matchi
 - shader mapLoadUnloadObjects 96.92→97.29: NOT a pragma — a `volatile s16*` load pun at the `*w == *idPtr` compare. +0.37pp.
 - andross andross_update (-0.06): negligible, not pursued.
 LESSON for future strip waves: `volatile` puns and manual-unroll/goto control-flow forms that byte-match retail are LOAD-BEARING RECOVERED SOURCE, not "spam" — do not strip them by pattern; gate every strip on a whole-unit per-fn re-measure + `ninja ok`.
+
+## Pragma-strip UPDATE: track/expgfx/lightmap/shader RESTORED (thanks), gameui cluster still stripped
+Good: the 7 flagged track_dolphin/expgfx/lightmap/shader regressions are all restored to their pre-strip values (hitDetectFn_800658a4 back to 98.31 etc). Remaining from the SAME campaign (lane C 41be92f09c, gameui was in the 91-file set), not yet restored:
+- gameui cMenuSetItems 98.222 -> 96.374 (-1.85, LARGE)
+- gameui boxDrawFn_8012975c 99.494 -> 99.051 (-0.44)
+- gameui pauseMenuFn_80129ee0 99.957 -> 99.567 (-0.39)
+- gameui mapScreenDrawHud 99.583 -> 99.334 (-0.25)
+- gameui drawFn_80125424 98.562 -> 98.344 (-0.22)
+- gameui hudDrawButtons 98.467 -> 98.347 (-0.12)
+Same triage: restore the opt_propagation/scheduling/peephole-off pragmas that were load-bearing; cMenuSetItems -1.85 is the priority. (Note: the "Match pauseMenuTextDrawFn" edit in the same batch may compound the pool reorder, but the magnitudes match the pragma-strip class.)
