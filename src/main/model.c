@@ -50,7 +50,6 @@ extern f32 lbl_803DE818;
 extern f32 lbl_803DE874;
 extern f32 lbl_803DE878;
 extern f32 lbl_803DE87C;
-extern int modelLoad_calcSizes(void* model, int arg, int* out, int flag);
 #define MODEL_BONEXFORM_HAS_X 0x2000
 #define MODEL_BONEXFORM_HAS_Y 0x4000
 #define MODEL_BONEXFORM_HAS_Z 0x8000
@@ -109,9 +108,6 @@ typedef struct ObjHitBufs
     u8* cur;
 } ObjHitBufs;
 extern void PSMTXReorder(f32 * src, f32 * dst);
-extern void fn_80026308(int* a, int b, u8* p, u8* q, int d, int i);
-extern void fn_80025F38(int* a, int b, u8* p, u8* q);
-extern void modelAnimFn_800246a0(u8* dst, u8* model, u8* ch, f32 t, int max, int b, int c, int d, int e, s16 f);
 extern void fn_80007F78(u8 * ch, s16 * outRot, s16 * outRot2);
 extern void PSMTXTranspose(f32 * src, f32 * dst);
 extern const f32 gModelDotClampMax;
@@ -1611,7 +1607,6 @@ int loadModelAndAnimTabs(void)
    then writing transformed verts (6 bytes each) back to dstVtx. */
 void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA, u8* targetB, int blendScale)
 {
-    extern u16 gModelCopyChunkWordLimit;
     u16 vtxPos;
     u16 chunk;
     u16 words;
