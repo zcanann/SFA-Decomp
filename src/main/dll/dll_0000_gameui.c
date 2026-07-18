@@ -7371,23 +7371,23 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         panelY = *(s16*)(gTextBoxes + 0x196);
         height = revealedHeight;
         width = (s16) * (u16*)(gTextBoxes + 0x182);
-        drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5), (f32)(panelY - 5), (u8)panelAlpha,
+        drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5), (f32)(panelY - 5), panelAlpha,
                     0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY - 5), (u8)panelAlpha, 0x100,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY - 5), panelAlpha, 0x100,
                           width, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX - 5), panelY, (u8)panelAlpha, 0x100, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX - 5), panelY, panelAlpha, 0x100, 5,
                           height, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, panelX, panelY, (u8)panelAlpha, 0x100, width, height, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY + height), (u8)panelAlpha, 0x100,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex30, panelX, panelY, panelAlpha, 0x100, width, height, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY + height), panelAlpha, 0x100,
                           width, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX + width), panelY, (u8)panelAlpha, 0x100, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX + width), panelY, panelAlpha, 0x100, 5,
                           height, 1);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX + width), (f32)(panelY + height),
-                          (u8)panelAlpha, 0x100, 5, 5, 3);
+                          panelAlpha, 0x100, 5, 5, 3);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX + width), (f32)(panelY - 5),
-                          (u8)panelAlpha, 0x100, 5, 5, 1);
+                          panelAlpha, 0x100, 5, 5, 1);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5), (f32)(panelY + height),
-                          (u8)panelAlpha, 0x100, 5, 5, 2);
+                          panelAlpha, 0x100, 5, 5, 2);
         *(u16*)(gTextBoxes + 0x18a) = revealedHeight;
         {
             s8 firstAvailableHint;
@@ -7400,7 +7400,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 int hintIndex;
                 u8* candidate;
                 i = 0;
-                hintCandidates = (u8*)(int)gGameUiTaskHintCandidates;
+                hintCandidates = (u8*)&gGameUiTaskHintCandidates;
                 candidate = hintCandidates;
                 for (; i < GAMEUI_TASK_HINT_COUNT; i++)
                 {
@@ -7507,20 +7507,20 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             }
         }
         lbl_803DD77C++;
-        drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E219C, (u8)panelAlpha, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E219C, (u8)panelAlpha, 0x100, 0x82,
+        drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E219C, panelAlpha, 0x100);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E219C, panelAlpha, 0x100, 0x82,
                           5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2198, lbl_803E1E9C, (u8)panelAlpha, 0x100, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2198, lbl_803E1E9C, panelAlpha, 0x100, 5,
                           0x96, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E1ECC, (u8)panelAlpha, 0x100, 0x82,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E1ECC, panelAlpha, 0x100, 0x82,
                           5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2058, lbl_803E1E9C, (u8)panelAlpha, 0x100, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2058, lbl_803E1E9C, panelAlpha, 0x100, 5,
                           0x96, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E1ECC, (u8)panelAlpha, 0x100, 5, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E1ECC, panelAlpha, 0x100, 5, 5,
                           3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E219C, (u8)panelAlpha, 0x100, 5, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E219C, panelAlpha, 0x100, 5, 5,
                           1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E1ECC, (u8)panelAlpha, 0x100, 5, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E1ECC, panelAlpha, 0x100, 5, 5,
                           2);
         {
             int row;
@@ -9176,11 +9176,6 @@ void GameUI_release(void)
     GameUiHud* gameUi;
     int i;
     void** texture;
-    void** itemTexture;
-    int index;
-    u8 slot;
-    s16* itemSlot;
-    u8* itemFlag;
 
     gameUi = (GameUiHud*)lbl_803A87F0;
     for (i = 0, texture = gameUi->hudTextures; i < ARRAY_COUNT(gameUi->hudTextures); texture++, i++)
@@ -9192,21 +9187,7 @@ void GameUI_release(void)
     }
 
     gameUiReleaseMenuResources(gameUi);
-
-    for (slot = 0; slot < ARRAY_COUNT(gameUi->itemTextures); slot++)
-    {
-        index = slot;
-        itemTexture = (void**)((u8*)&gameUi->itemTextures + index * sizeof(void*));
-        if (*itemTexture != NULL)
-        {
-            textureFree((Texture*)*itemTexture);
-            *itemTexture = NULL;
-        }
-        itemSlot = (s16*)((u8*)&gameUi->itemSlots + index * sizeof(s16));
-        *itemSlot = -1;
-        itemFlag = (u8*)&gameUi->itemFlags + index;
-        *itemFlag = 1;
-    }
+    gameUiClearItemSlots(gameUi);
 
     textureFree((Texture*)((u8*)gGameUiBlinkTexture));
 }
