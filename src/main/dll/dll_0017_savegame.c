@@ -218,7 +218,6 @@ typedef struct SaveGameMapState
     u32 groupStatuses[SAVEGAME_MAP_COUNT];                       /* 0x03C */
     u8 extendedMapActLookup[40];                                 /* 0x21C */
 } SaveGameMapState;
-void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value);
 
 #define gSaveGameMapState (*(SaveGameMapState*)gTransientMapBits)
 
