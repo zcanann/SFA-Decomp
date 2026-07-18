@@ -241,29 +241,6 @@ void InsertData(u16 id, void* data, u8 dataType, u32 remove)
     }
 }
 
-void audioFn_8027b690(u16* ref, void* data, u8 dataType, u32 remove)
-{
-    u16 id;
-
-    while (*ref != 0xFFFF)
-    {
-        if ((*ref & 0x8000))
-        {
-            id = *ref & 0x3fff;
-            while (id <= ref[1])
-            {
-                InsertData(id, data, dataType, remove);
-                ++id;
-            }
-            ref += 2;
-        }
-        else
-        {
-            InsertData(*ref++, data, dataType, remove);
-        }
-    }
-}
-
 s32 sndPushGroup(void* prj_data, u16 gid, void* samples, void* sdir, void* pool)
 {
     GROUP_DATA* g;
@@ -308,6 +285,29 @@ s32 sndPushGroup(void* prj_data, u16 gid, void* samples, void* sdir, void* pool)
     }
 
     return 0;
+}
+
+void audioFn_8027b690(u16* ref, void* data, u8 dataType, u32 remove)
+{
+    u16 id;
+
+    while (*ref != 0xFFFF)
+    {
+        if ((*ref & 0x8000))
+        {
+            id = *ref & 0x3fff;
+            while (id <= ref[1])
+            {
+                InsertData(id, data, dataType, remove);
+                ++id;
+            }
+            ref += 2;
+        }
+        else
+        {
+            InsertData(*ref++, data, dataType, remove);
+        }
+    }
 }
 
 u32 seqPlaySong(u16 sgid, u16 sid, void* arrfile, void* para, u8 irq_call, u8 studio)
