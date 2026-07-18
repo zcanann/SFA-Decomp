@@ -96,8 +96,6 @@ void WM_Galleon_release(void);
 void WM_Galleon_init(int* obj, WMGalleonSetup* setup);
 void WM_Galleon_update(int* obj);
 void WM_Galleon_hitDetect(void);
-void WM_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void WM_Galleon_free(int* obj, int leavingMap);
 int WM_Galleon_getObjectTypeId(void);
 int WM_Galleon_getExtraSize(void);
 
