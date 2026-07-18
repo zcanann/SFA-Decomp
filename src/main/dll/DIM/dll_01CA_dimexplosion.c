@@ -169,7 +169,7 @@ void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
             else
             {
                 s8 m = (obj)->anim.mapEventSlot;
-                if (m == 0x2c || (m >= 0x3a && m < 0x3f))
+                if ((m >= 0x3a && m < 0x3f) || m == 0x2c)
                 {
                     Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_wp_sexpl2_c_4b8, 2);
                 }
