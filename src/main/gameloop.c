@@ -74,6 +74,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
 #include "main/dll/dll_BC.h"
 #include "track/intersect_api.h"
+#include "dolphin/ai.h"
 
 f32 gGameLoopResetFadeOutTimer;
 void* lbl_803DCAFC;
@@ -839,9 +840,6 @@ void setFrameCountdown_800202c4(u8 count)
     frameCountdown = count;
 }
 
-extern void AISetStreamVolLeft(int vol);
-extern void AISetStreamVolRight(int vol);
-extern void AISetStreamPlayState(int state);
 #define AI_STREAM_STOP 0
 extern u8 lbl_803DCCA6;
 extern f32 lbl_803DE7AC;

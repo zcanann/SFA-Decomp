@@ -60,6 +60,7 @@
 #include "main/dll/wispbaddie_baddie.h"
 #include "main/dll/seqobj11d_baddie.h"
 #include "main/dll/magicplant.h"
+#include "main/dll/seqObj11D.h"
 
 int lbl_803DBC58[2] = {2, 3};
 f32 lbl_803DBC60 = 20.0f;
@@ -142,7 +143,6 @@ extern void baddieInstantiateWeapon(GameObject* obj, int state);
 
 void fn_8014B878(int* obj, int* sub);
 void baddieTurnTowardTarget(int* node, int* sub);
-extern void sharpClawInit(int obj, u8* state);
 extern void* memset(void* p, int c, int n);
 typedef struct
 {

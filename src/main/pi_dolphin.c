@@ -170,6 +170,7 @@ extern volatile int lbl_803DCC80;
 extern int lbl_803DCC8C;
 
 #include "main/objprint_load_api.h"
+#include "dolphin/os/OSAlloc.h"
 
 struct MldfNames
 {
@@ -1064,9 +1065,6 @@ extern void* lbl_803DCCE4;
 extern void* displayFrameBuffer;
 extern u8 lbl_803DCCA6;
 extern u8 lbl_803DCCA4;
-extern void* OSInitAlloc(void* lo, void* hi, int numHeaps);
-extern int OSCreateHeap(void* start, void* end);
-extern void OSSetCurrentHeap(int heap);
 extern void GXInitFifoLimits(void* fifo, u32 hi, u32 lo);
 extern void Queue_Init(void* q, void* buf, int n, int stride);
 extern void OSInitThreadQueue(char* q);

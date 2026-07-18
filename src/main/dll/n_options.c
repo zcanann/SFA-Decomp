@@ -31,6 +31,7 @@
 #include "dolphin/gx/GXTev.h"
 #include "main/dll/FRONT/picmenu.h"
 #include "main/dll/FRONT/n_options.h"
+#include "dolphin/gx/GXGeometry.h"
 
 static const GXColorS10 sMovieTevColor0 = {-90, 0, -114, 135};
 static const GXColor sMovieKColor0 = {0x00, 0x00, 0xE2, 0x58};
@@ -51,8 +52,6 @@ extern u32 lbl_803DD678;               /* AI DMA double-buffer index */
 extern f32 lbl_803E1D50;               /* playback time accumulator */
 extern OSMessageQueue lbl_803A5CCC[1]; /* spent texture-set queue */
 
-extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
-                              GXBool normalize, u32 pt_texmtx);
 extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
 extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
