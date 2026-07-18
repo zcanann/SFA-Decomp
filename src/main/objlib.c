@@ -30,11 +30,11 @@
 #include "main/frame_timing.h"
 #include "main/pad_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
+#include "main/rcp_dolphin_ext.h"
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
 extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);
-extern void fn_80054F74(int obj, float* pos);
 extern char sObjAddObjectTypeReachedMaxTypes[];
 
 #define OBJGROUP_COUNT                0x54
@@ -1424,7 +1424,7 @@ int ObjHits_PollPriorityHitWithCooldown(GameObject* obj, float* cooldown, int* o
                                                                outHitPos + 2);
             if (collisionType != 0)
             {
-                fn_80054F74((int)obj, outHitPos);
+                fn_80054F74((int*)obj, outHitPos);
             }
         }
         else
