@@ -190,14 +190,11 @@ extern void GXSetChanMatColor(int chan, GXColor8 c);
 extern void GXSetTexCopyDst(int w, int h, int fmt, int mip);
 extern void GXCopyTex(void* dst, int clear);
 extern void GXPreLoadEntireTexture(void* obj, u32* region);
-extern u32 gRcpDistortAmbColor;
-extern int gRcpDistortMatColor;
 extern u8 gRcpDistortGroup;
 extern f32 lbl_803DEB80;
 extern f32 gRcpScreenWidth;
 extern f32 gRcpScreenHeight;
 extern u8 gRcpTexAllocFailed;
-extern u32 gRcpTexAllocTag;
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void tex1GetFrame(int word, int id, int* sizeOut, int* frameOut, int mip, void* hdr, int mode);
@@ -2590,52 +2587,6 @@ int objShouldUnload(u8* obj)
 char sRcpTexRestructStrings[] = {
     0xFC, 0x12, 0x16, 0x03, 0xFF, 0xFF, 0xFF, 0xF8, 0xFC, 0x12, 0x16, 0x03, 0xFF, 0xFF, 0xFF, 0xF8,
 };
-extern u32 lbl_8030D068[];
-extern u32 lbl_8030D0E8[];
-extern u32 lbl_8030D168[];
-extern u32 lbl_8030D178[];
-extern u32 lbl_8030D1F8[];
-extern u32 lbl_8030D208[];
-extern u32 lbl_8030D288[];
-extern u32 lbl_8030D298[];
-extern u32 lbl_8030D318[];
-extern u32 lbl_8030D328[];
-extern u32 lbl_8030D368[];
-extern u32 lbl_8030D378[];
-extern u32 lbl_8030D3B8[];
-extern u32 lbl_8030D3C8[];
-extern u32 lbl_8030D408[];
-extern u32 lbl_8030D418[];
-extern u32 lbl_8030D458[];
-extern u32 lbl_8030D468[];
-extern u32 lbl_8030D4E8[];
-extern u32 lbl_8030D4F8[];
-extern u32 lbl_8030D578[];
-extern u32 lbl_8030D588[];
-extern u32 lbl_8030D598[];
-extern u32 lbl_8030D5A8[];
-extern u32 lbl_8030D5B8[];
-extern u32 lbl_8030D5C8[];
-extern u32 lbl_8030D648[];
-extern u32 lbl_8030D6C8[];
-extern u32 lbl_8030D748[];
-extern u32 lbl_8030D758[];
-extern u32 lbl_8030D7D8[];
-extern u32 lbl_8030D858[];
-extern u32 lbl_8030D868[];
-extern u32 lbl_8030D8E8[];
-extern u32 lbl_8030D8F8[];
-extern u32 lbl_8030D978[];
-extern u32 lbl_8030D9B8[];
-extern u32 lbl_8030D9C8[];
-extern u32 lbl_8030DA48[];
-extern u32 lbl_8030DA58[];
-extern u32 lbl_8030DAD8[];
-extern u32 lbl_8030DAE8[];
-extern u32 lbl_8030DB68[];
-extern u32 lbl_8030DB78[];
-extern u32 lbl_8030DBF8[];
-extern u32 lbl_8030DC08[];
 
 u32 lbl_8030D068[32] = {0xef182c00, 0x03024000, 0xef182c00, 0x00112008, 0xef182c00, 0x00112230, 0xef182c00, 0x00112038,
                         0xef182c00, 0x00104240, 0xef182c00, 0x001041c8, 0xef182c00, 0x00104a50, 0xef182c00, 0x001049d8,
