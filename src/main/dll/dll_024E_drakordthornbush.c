@@ -244,7 +244,7 @@ void drakord_thornbush_init(GameObject* obj, u8* init)
 {
     int inner = *(int*)&(obj)->extra;
     ((DrakordThornbushState*)inner)->health = 0;
-        ObjHits_SetTargetMask((int)obj, 4);
+        ObjHits_SetTargetMask(obj, 4);
     (obj)->anim.rotY = (s16)((s8)init[0x18] << 8);
     if (*(u32*)&((ObjPlacement*)init)->mapId == 0xffffffff)
     {

@@ -482,7 +482,7 @@ void AndrossHand_init(int obj, AndrossHandSetup* setup)
     ObjAnim_SetCurrentMove(obj, 4, *(f32*)&lbl_803E75AC, 0);
     state->animSpeed = gAndrossHandMoveAnimSpeeds[4];
     gobj->anim.currentMoveProgress = 1.0f;
-    ObjHits_SetTargetMask(obj, 4);
+    ObjHits_SetTargetMask((GameObject*)obj, 4);
 }
 
 const f32 lbl_803E75FC = 0.0f;

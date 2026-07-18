@@ -206,11 +206,11 @@ void ObjHitbox_SetStateIndex(int objPtr, int hitStatePtr, int stateIndex)
     return;
 }
 
-void ObjHits_SetTargetMask(int objPtr, u8 targetMask)
+void ObjHits_SetTargetMask(GameObject* obj, u8 targetMask)
 {
     ObjHitsPriorityState* hitState;
 
-    hitState = (ObjHitsPriorityState*)((ObjAnimComponent*)objPtr)->hitReactState;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (hitState == 0)
     {
         return;

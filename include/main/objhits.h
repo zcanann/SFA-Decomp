@@ -295,9 +295,7 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                                void* scratchE, int depth);
 void ObjHits_CheckTrackContact(int objA, int objB);
 void ObjHits_Update(int objectCount);
-#ifndef OBJHITS_IMPLEMENTATION
-void ObjHits_SetTargetMask();
-#endif
+void ObjHits_SetTargetMask(GameObject* obj, u8 targetMask);
 void ObjHits_ClearHitVolumes(ObjAnimComponent* obj);
 void ObjHits_SetHitVolumeMasks(ObjAnimComponent* obj, int hitVolume, int hitType, int sourceMask);
 void ObjHits_SetHitVolumeSlot(ObjAnimComponent* obj, int hitVolume, int hitType, int sourceSlot);

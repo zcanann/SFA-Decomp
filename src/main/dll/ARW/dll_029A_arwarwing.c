@@ -966,7 +966,7 @@ void arwarwing_init(GameObject* obj)
     (*gPathControlInterface)->attachObject((void*)obj, pathBlock);
     ObjGroup_AddObject((int)obj, ARWARWING_OBJGROUP);
     gArwing = obj;
-    ObjHits_SetTargetMask((int)obj, 1);
+    ObjHits_SetTargetMask(obj, 1);
     state->fullLoadout = 1;
     switch ((obj)->anim.mapEventSlot - 0x26)
     {

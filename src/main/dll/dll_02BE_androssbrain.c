@@ -179,7 +179,7 @@ void AndrossBrain_init(GameObject* obj)
     AndrossBrainState* state = (obj)->extra;
 
     state->health = BRAIN_MAX_HEALTH;
-    ObjHits_SetTargetMask((int)obj, 4);
+    ObjHits_SetTargetMask(obj, 4);
 }
 
 ObjectDescriptor gAndrossBrainObjDescriptor = {

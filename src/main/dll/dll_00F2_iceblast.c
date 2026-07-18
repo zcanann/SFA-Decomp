@@ -100,7 +100,7 @@ void iceblast_init(GameObject* obj, IceblastPlacement* def)
 {
     IceblastState* state = obj->extra;
     state->timer = def->initialTimer;
-    ObjHits_SetTargetMask((int)obj, 1);
+    ObjHits_SetTargetMask(obj, 1);
 }
 
 void iceblast_release(void)

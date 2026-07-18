@@ -627,7 +627,7 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
     state->rotXSpeed = setupData->rotXSpeed << 4;
     state->rotYSpeed = setupData->rotYSpeed << 4;
     state->rotZSpeed = setupData->rotZSpeed << 4;
-    ObjHits_SetTargetMask((int)obj, 4);
+    ObjHits_SetTargetMask(obj, 4);
 
     if (setupData->objectId == 0x616 || setupData->objectId == 0x617)
     {
@@ -739,4 +739,3 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
     state->rollAmplitude = (f32)(int)randomGetRange(0x3e8, 0x7d0);
     state->dialogueVariant = setupData->dialogueVariant;
 }
-

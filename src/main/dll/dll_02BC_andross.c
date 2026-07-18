@@ -2421,7 +2421,7 @@ void andross_init(int obj, ObjPlacement* setup)
     ((AndrossState*)state)->springStiffness = 0.003f;
     ((AndrossState*)state)->springDamping = 0.93f;
     ((AndrossState*)state)->handsInitialized = 1;
-    ObjHits_SetTargetMask(obj, 4);
+    ObjHits_SetTargetMask((GameObject*)obj, 4);
     ((GameObject*)obj)->animEventCallback = andross_SeqFn;
     fn_8006CB50();
     i = (int)Obj_GetActiveModel((GameObject*)obj);

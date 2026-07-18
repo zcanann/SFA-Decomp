@@ -313,17 +313,17 @@ void arwingandrossstuff_init(GameObject* obj, ArwProjectileSetup* setup)
         state->rotYSpeed = randomGetRange(-0x1f4, 0x1f4);
     case ARW_SEQID_INVINCIBLE:
     case ARW_SEQID_CHARGE:
-        ObjHits_SetTargetMask((int)obj, 4);
+        ObjHits_SetTargetMask(obj, 4);
         state->param0.particleKind = 4;
         state->hitVolumeMode = 2;
         break;
     case ARW_SEQID_LASER_GREEN:
-        ObjHits_SetTargetMask((int)obj, 1);
+        ObjHits_SetTargetMask(obj, 1);
         state->param0.particleKind = 0;
         state->hitVolumeMode = 1;
         break;
     case ARW_SEQID_LASER_BASIC:
-        ObjHits_SetTargetMask((int)obj, 1);
+        ObjHits_SetTargetMask(obj, 1);
         if (((ObjAnimComponent*)obj)->bankIndex != 0)
         {
             state->param0.particleKind = 2;
@@ -336,7 +336,7 @@ void arwingandrossstuff_init(GameObject* obj, ArwProjectileSetup* setup)
         }
         break;
     default:
-        ObjHits_SetTargetMask((int)obj, 1);
+        ObjHits_SetTargetMask(obj, 1);
         state->param0.particleKind = 2;
         break;
     }
