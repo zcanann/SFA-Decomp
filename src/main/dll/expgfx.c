@@ -159,7 +159,6 @@ extern const f32 lbl_803DF408;
 extern const f32 lbl_803DF40C;
 extern const f32 gExpgfxU16ToUnitScale;
 extern void setupReflectionIndirectTev(u32 flag);
-extern void fn_80079180(void);
 #define setupAlphaTextureTev fn_80079180
 #define setupExpgfxRenderState fn_8007D670
 #define applyDepthModeOverrideViewport fn_8000F83C

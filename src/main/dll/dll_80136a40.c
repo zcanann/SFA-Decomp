@@ -199,7 +199,6 @@ extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, 
 #define Obj_SetModelColorOverrideRecursivePromoted(obj, red, green, blue, alpha, enabled)                         \
     ((void (*)(GameObject*, int, int, int, int, int))Obj_SetModelColorOverrideRecursive)(                        \
         (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
-extern void gxDebugTextureFn_80078c1c(void);
 extern void GXSetTevColor(int id, GXColor* color);
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);

@@ -735,10 +735,6 @@ void dll_0B_func0A(s16* p)
     *p = -1;
 }
 
-extern void gxTevAddTextureFrameBlendStages(void);
-extern void fn_80078DFC(void);
-extern void fn_80078ED0(void);
-
 int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
 {
     u8 ar;
