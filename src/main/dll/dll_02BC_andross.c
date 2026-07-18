@@ -86,8 +86,6 @@ typedef struct AndrossChildSetup
     s16 flags;
 } AndrossChildSetup;
 
-extern void turnOnDistortionFilter(f32* pos, f32 a, u32* color, f32 c);
-
 void fn_80239EAC(GameObject* obj, AndrossState* state)
 {
     f32 dx, dy, dz;
