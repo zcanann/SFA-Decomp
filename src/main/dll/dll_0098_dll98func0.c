@@ -163,13 +163,13 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
         {
             buf.pos[0] += ((GameObject*)(buf.ctx))->anim.worldPosX;
             buf.pos[1] += ((GameObject*)(buf.ctx))->anim.worldPosY;
-            buf.pos[2] = 0.0f + ((GameObject*)(buf.ctx))->anim.worldPosZ;
+            buf.pos[2] += ((GameObject*)(buf.ctx))->anim.worldPosZ;
         }
         else
         {
             buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
             buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = 0.0f + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     if (variant == 0)
