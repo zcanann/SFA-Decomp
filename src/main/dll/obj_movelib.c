@@ -142,7 +142,7 @@ int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, const Vec3f* targetPos, V
     {
         PSVECScale((const Vec*)vel, (Vec*)step,
                    PSVECDistance((const Vec*)pos, (const Vec*)targetPos) / dt);
-        PSVECAdd((const Vec*)((int)obj + 0xc), (const Vec*)step, (Vec*)pos);
+        PSVECAdd((const Vec*)&obj->anim.localPosX, (const Vec*)step, (Vec*)pos);
     }
     outPos->x = pos[0];
     outPos->y = pos[1];
