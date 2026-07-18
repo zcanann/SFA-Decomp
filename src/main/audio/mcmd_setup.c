@@ -4,6 +4,7 @@
 #include "main/audio/inp_ctrl.h"
 #include "main/audio/voice_conv.h"
 #include "main/audio/data_tables.h"
+#include "main/audio/hw_init.h"
 #include "main/audio/mcmd_setup.h"
 #include "main/audio/adsr_setup.h"
 
@@ -13,22 +14,6 @@ extern void synthQueueVoiceInputUpdate(McmdVoiceState* state);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];
 extern u8 lbl_8032EDD0[]; /* pitch ratio table (u16[13]) heads the macro data tables */
-
-typedef struct SampleInfo
-{
-    u32 info;
-    u32 addr;
-    u32 extraData;
-    u32 offset;
-    u32 length;
-    u32 loop;
-    u32 loopLength;
-    u32 compType;
-} SampleInfo;
-
-extern int dataGetSample(u16 key, SampleInfo* out);
-extern void hwInitSamplePlayback(u32 voice, u16 sampleId, SampleInfo* sampleInfo, u32 noKeySync, u32 priority,
-                                 u32 handle, u32 noStartOffset, u8 itdMode);
 
 typedef union McmdAdsrData
 {
@@ -123,7 +108,7 @@ void mcmdPlayMacro(McmdVoiceState* svoice, McmdCommandArgs* cstep)
  */
 void mcmdStartSample(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 {
-    static SampleInfo newsmp;
+    static SAMPLE_INFO newsmp;
     u16 smp;
 
     smp = cstep->flags >> 8;

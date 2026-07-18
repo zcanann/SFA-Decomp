@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void hwSetPitch(int slot, u32 value);
+void hwSetPitch(u32 voice, u16 pitch);
 void hwSetSRCType(u32 slot, u8 value);
 void hwSetPolyPhaseFilter(u32 slot, u8 value);
 void hwSetITDMode(u32 slot, u8 value);

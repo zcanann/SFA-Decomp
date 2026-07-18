@@ -4,7 +4,8 @@
 #include "ghidra_import.h"
 
 void aramQueueCallback(void *req);
-void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 callbackArg);
+void aramUploadData(void *src, u32 dst, u32 size, u32 mode,
+                    void (*callback)(u32), u32 callbackArg);
 void aramSyncTransferQueue(void);
 void aramInit(u32 extraSize);
 void aramGetZeroBuffer(void);

@@ -33,7 +33,7 @@ void aramQueueCallback(void* req)
  * ARQPostRequest, then bumps the head/count and restores interrupts.
  * If the queue is full, just unlocks and retries (busy-loop).
  */
-void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 callbackArg)
+void aramUploadData(void* src, u32 dst, u32 size, u32 mode, void (*callback)(u32), u32 callbackArg)
 {
     AramTransferQueue* queue;
     BOOL irq;
@@ -48,12 +48,12 @@ void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 call
             queue->slots[queue->head].owner = 0x2a;
             queue->slots[queue->head].type = 0;
             queue->slots[queue->head].priority = (mode != 0) ? 1 : 0;
-            queue->slots[queue->head].src = src;
+            queue->slots[queue->head].src = (u32)src;
             queue->slots[queue->head].dst = dst;
             queue->slots[queue->head].size = size;
             queue->slots[queue->head].arqCallback = aramQueueCallback;
-            queue->slots[queue->head].callback = (void (*)(void*))callback;
-            queue->slots[queue->head].callbackArg = (void*)callbackArg;
+            queue->slots[queue->head].callback = callback;
+            queue->slots[queue->head].callbackArg = callbackArg;
             ARQPostRequest(&queue->slots[queue->head], queue->slots[queue->head].owner, queue->slots[queue->head].type,
                            queue->slots[queue->head].priority, queue->slots[queue->head].src,
                            queue->slots[queue->head].dst, queue->slots[queue->head].size,

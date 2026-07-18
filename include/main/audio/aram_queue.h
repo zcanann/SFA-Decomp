@@ -13,8 +13,8 @@ typedef struct AramQueueSlot
     u32 dst;
     u32 size;
     void (*arqCallback)(void*);
-    void (*callback)(void*);
-    void* callbackArg;
+    void (*callback)(u32);
+    u32 callbackArg;
 } AramQueueSlot;
 
 typedef struct AramTransferQueue
@@ -25,7 +25,8 @@ typedef struct AramTransferQueue
 } AramTransferQueue;
 
 void aramQueueCallback(void* req);
-void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 callbackArg);
+void aramUploadData(void *src, u32 dst, u32 size, u32 mode,
+                    void (*callback)(u32), u32 callbackArg);
 void aramSyncTransferQueue(void);
 
 #endif /* MAIN_AUDIO_ARAM_QUEUE_H_ */

@@ -14,7 +14,7 @@ extern u8 salTimeOffset;
 extern u16 lbl_803DC618[4];
 extern u16 lbl_803DC620[4];
 
-void hwSetPitch(int slot, u32 pitch)
+void hwSetPitch(u32 slot, u16 pitch)
 {
     DSPvoice* entry;
     u8* channelEntry;
@@ -22,7 +22,7 @@ void hwSetPitch(int slot, u32 pitch)
     u32 channel;
 
     entry = (DSPvoice*)((u8*)dspVoice + slot * DSP_VOICE_STRIDE);
-    if ((u16)pitch >= 0x4000)
+    if (pitch >= 0x4000)
     {
         pitch = 0x3fff;
     }
@@ -30,14 +30,13 @@ void hwSetPitch(int slot, u32 pitch)
     if (channel != 0xff)
     {
         val = entry->pitch[channel];
-        if (val == ((u16)pitch << 4))
+        if (val == (pitch << 4))
         {
             return;
         }
     }
     channel = salTimeOffset;
-    pitch = (u16)pitch << 4;
-    entry->pitch[channel] = pitch;
+    entry->pitch[channel] = pitch << 4;
     channel = salTimeOffset;
     channel = channel << 2;
     channelEntry = (u8*)entry + channel;

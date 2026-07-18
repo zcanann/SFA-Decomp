@@ -134,8 +134,8 @@ void hwSetPriority(int slot, u32 value)
     ((DSPvoice*)entry)->prio = value;
 }
 
-void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32 priority, u32 value18, u32 resetSrc,
-                          u32 itdMode)
+void hwInitSamplePlayback(u32 voice, u16 sampleId, SAMPLE_INFO* sampleInfo, u32 resetAdsr, u32 priority,
+                          u32 callbackUserValue, u32 resetSrc, u32 itdMode)
 {
     u8 i;
     u32 flags;
@@ -143,35 +143,35 @@ void hwInitSamplePlayback(int slot, u16 value70, u32* values, u32 resetAdsr, u32
     flags = 0;
     for (i = 0; i <= salTimeOffset; i++)
     {
-        flags |= dspVoice[slot].changed[i] & 0x20;
-        dspVoice[slot].changed[i] = 0;
+        flags |= dspVoice[voice].changed[i] & 0x20;
+        dspVoice[voice].changed[i] = 0;
     }
 
-    dspVoice[slot].changed[0] = flags;
-    dspVoice[slot].prio = priority;
-    dspVoice[slot].mesgCallBackUserValue = value18;
-    dspVoice[slot].flags = 0;
-    dspVoice[slot].smp_id = value70;
-    dspVoice[slot].smp_info = *(SAMPLE_INFO*)values;
+    dspVoice[voice].changed[0] = flags;
+    dspVoice[voice].prio = priority;
+    dspVoice[voice].mesgCallBackUserValue = callbackUserValue;
+    dspVoice[voice].flags = 0;
+    dspVoice[voice].smp_id = sampleId;
+    dspVoice[voice].smp_info = *sampleInfo;
 
     if (resetAdsr != 0)
     {
-        dspVoice[slot].adsr.mode = 0;
-        dspVoice[slot].adsr.aTime = 0;
-        dspVoice[slot].adsr.dTime = 0;
-        dspVoice[slot].adsr.sLevel = 0x7fff;
-        dspVoice[slot].adsr.rTime = 0;
+        dspVoice[voice].adsr.mode = 0;
+        dspVoice[voice].adsr.aTime = 0;
+        dspVoice[voice].adsr.dTime = 0;
+        dspVoice[voice].adsr.sLevel = 0x7fff;
+        dspVoice[voice].adsr.rTime = 0;
     }
 
-    dspVoice[slot].lastUpdate.pitch = 0xff;
-    dspVoice[slot].lastUpdate.vol = 0xff;
-    dspVoice[slot].lastUpdate.volA = 0xff;
-    dspVoice[slot].lastUpdate.volB = 0xff;
+    dspVoice[voice].lastUpdate.pitch = 0xff;
+    dspVoice[voice].lastUpdate.vol = 0xff;
+    dspVoice[voice].lastUpdate.volA = 0xff;
+    dspVoice[voice].lastUpdate.volB = 0xff;
 
     if (resetSrc != 0)
     {
-        hwSetSRCType(slot, 0);
-        hwSetPolyPhaseFilter(slot, 1);
+        hwSetSRCType(voice, 0);
+        hwSetPolyPhaseFilter(voice, 1);
     }
-    hwSetITDMode(slot, itdMode);
+    hwSetITDMode(voice, itdMode);
 }

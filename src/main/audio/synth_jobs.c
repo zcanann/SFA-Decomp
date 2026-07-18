@@ -7,42 +7,27 @@
 #include "main/audio/hw_voice_start.h"
 #include "dolphin/os/OSCache.h"
 #include "main/audio/hw_sample.h"
+#include "main/audio/hw_init.h"
+#include "main/audio/hw_stream.h"
 #include "main/audio/hw_volume.h"
+#include "main/audio/hw_voice_params.h"
 #include "main/audio/synth_jobs.h"
 
 
 typedef u32 (*SynthStreamUpdateFn)(u8* buffer, u32 length, u8* buffer2, u32 length2, u32 user);
-
-typedef struct SynthSampleInfo
-{
-    u32 info;
-    void* addr;
-    void* extraData;
-    u32 offset;
-    u32 length;
-    u32 loop;
-    u32 loopLength;
-    u8 compType;
-} SynthSampleInfo;
 
 extern SynthJob streamInfo[];
 extern u32 synthFlags;
 extern f32 lbl_803E77D8;
 extern u8 streamCallCnt;
 extern u8 streamCallDelay;
-extern void* hwFlushStream(u8 handle); /* gets the stream play buffer */
-extern int hwChangeStudio(int slot);   /* gets the stream playback position */
-extern void hwGetPos(u8* buffer, u32 offset, u32 length, u8 handle, u32 callback, u32 user); /* flushes stream data */
-extern void hwInitSamplePlayback(u32 voice, u32 keyInfo, SynthSampleInfo* sample, u32 a, s32 b, u32 voiceId, u32 c,
-                                 u32 d);
-extern void hwSetPitch(u32 voice, s32 pitch);
 
 void streamHandle(void)
 {
     u32 i;
     u32 cpos;
     u32 len;
-    SynthSampleInfo newsmp;
+    SAMPLE_INFO newsmp;
     SynthJob* si;
     f32 f;
 

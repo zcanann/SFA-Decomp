@@ -2,18 +2,17 @@
 
 #include "main/audio/dsp_voice_state.h"
 #include "main/audio/hw_dspctrl.h"
+#include "main/audio/aram.h"
 #include "dolphin/os/OSCache.h"
 
 extern DSPstudioinfo dspStudio[8];
-extern int aramGetStreamBufferAddress(int stream, void* out);
-extern void aramUploadData(int dest, int src, u32 size, int mode, u32 callback, u32 callbackArg);
 
 u32 hwRemoveInput(u8 studio, SND_STUDIO_INPUT* input)
 {
     return salRemoveStudioInput(&dspStudio[studio], input);
 }
 
-int hwChangeStudio(int slot)
+u32 hwChangeStudio(u32 slot)
 {
     int mode;
     u32 pos;
@@ -53,25 +52,25 @@ int hwChangeStudio(int slot)
     }
 }
 
-void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, u32 callback, u32 callbackArg)
+void hwGetPos(void* buffer, u32 streamPos, u32 byteCount, u8 streamHandle, void (*callback)(u32), u32 callbackArg)
 {
-    int offset;
+    u32 offset;
     u8* addr;
-    u8 stack[8];
+    u32 streamLength;
 
-    addr = (u8*)dest;
-    offset = aramGetStreamBufferAddress(stream, stack);
+    addr = buffer;
+    offset = aramGetStreamBufferAddress(streamHandle, &streamLength);
     byteCount += streamPos & 0x1f;
     streamPos &= 0xffffffe0;
     byteCount = (byteCount + 0x1f) & ~0x1f;
     addr += streamPos;
     DCStoreRange(addr, byteCount);
-    aramUploadData((int)addr, offset + streamPos, byteCount, 1, callback, callbackArg);
+    aramUploadData(addr, offset + streamPos, byteCount, 1, callback, callbackArg);
 }
 
-void hwFlushStream(int stream)
+void* hwFlushStream(u8 streamHandle)
 {
-    aramGetStreamBufferAddress(stream, 0);
+    return (void*)aramGetStreamBufferAddress(streamHandle, 0);
 }
 
 void hwInitStream(void)

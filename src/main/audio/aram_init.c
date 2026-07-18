@@ -36,7 +36,7 @@ void aramInit(u32 extraSize)
     status[0x280] = 0;
     status[0x505] = 0;
     status[0x504] = 0;
-    aramUploadData((u32)buf, arBase, 0x500, 0, 0, 0);
+    aramUploadData(buf, arBase, 0x500, 0, 0, 0);
     while (*flag != 0)
     {
     }

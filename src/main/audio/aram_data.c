@@ -39,7 +39,7 @@ u32 aramStoreData(void* src, u32 size)
     if (aramChunkCallback == NULL)
     {
         DCFlushRange(src, alignedSize);
-        aramUploadData((u32)src, aramWrite, alignedSize, 0, 0, 0);
+        aramUploadData(src, aramWrite, alignedSize, 0, 0, 0);
         aramWrite += alignedSize;
         return startPos;
     }
@@ -49,7 +49,7 @@ u32 aramStoreData(void* src, u32 size)
         chunk = (alignedSize >= aramChunkSize) ? aramChunkSize : alignedSize;
         piece = aramChunkCallback(src, chunk);
         DCFlushRange(piece, chunk);
-        aramUploadData((u32)piece, aramWrite, chunk, 0, 0, 0);
+        aramUploadData(piece, aramWrite, chunk, 0, 0, 0);
         alignedSize -= chunk;
         src = (u8*)src + chunk;
         aramWrite += chunk;
