@@ -393,7 +393,7 @@ void fn_801EB634(GameObject* obj, int stateRaw)
         else
         {
             ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
-            ((void (*)(void*))ObjHits_SyncObjectPositionIfDirty)(obj);
+            ObjHits_SyncObjectPositionIfDirty(obj);
         }
         hitKind = ObjHits_GetPriorityHit(obj, &hitObj, &hitOutB, &hitOutC);
         switch (hitKind)
