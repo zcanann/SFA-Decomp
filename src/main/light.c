@@ -574,7 +574,6 @@ void VFP_Platform_release(void)
 void VFP_Platform_initialise(void)
 {
 }
-void vfpdoorswitch_updateExplodingVariant(GameObject* obj);
 
 int VFP_DoorSwitch_getExtraSize(void)
 {
