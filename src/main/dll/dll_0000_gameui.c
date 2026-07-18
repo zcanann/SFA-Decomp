@@ -1789,6 +1789,76 @@ static inline void drawViewFinderSegment(f32 startX, f32 startY, f32 endX, f32 e
                        endX - xOffset, endY + yOffset, endX + xOffset, endY - yOffset, &lineColor);
 }
 
+static inline void drawViewFinderHorizontal(f32 directionX, f32 directionY, f32 y, f32 startX, f32 endX, f32 fade)
+{
+    GXColor color;
+    GXColor lineColor;
+    s16 angle;
+    f32 radians;
+    f32 sine;
+    f32 cosine;
+    f32 yOffset;
+    f32 xOffset;
+    f32 top;
+    f32 bottom;
+    f32 startRight;
+    f32 startLeft;
+    f32 endLeft;
+    f32 endRight;
+
+    color = gViewFinderLineColor;
+    color.a = hudElementOpacity * fade;
+    angle = getAngle(directionX, directionY);
+    radians = lbl_803E1EC8 * angle / lbl_803E1E94;
+    sine = mathSinf(radians);
+    cosine = mathCosf(radians);
+    lineColor = color;
+    yOffset = lbl_803E1E68 * sine;
+    xOffset = lbl_803E1E68 * cosine;
+    top = y + yOffset;
+    bottom = y - yOffset;
+    startRight = startX + xOffset;
+    startLeft = startX - xOffset;
+    endLeft = endX - xOffset;
+    endRight = endX + xOffset;
+    drawViewFinderLine(startRight, bottom, startLeft, top, endLeft, top, endRight, bottom, &lineColor);
+}
+
+static inline void drawViewFinderVertical(f32 directionX, f32 directionY, f32 x, f32 startY, f32 endY, f32 fade)
+{
+    GXColor color;
+    GXColor lineColor;
+    s16 angle;
+    f32 radians;
+    f32 sine;
+    f32 cosine;
+    f32 yOffset;
+    f32 xOffset;
+    f32 left;
+    f32 right;
+    f32 startTop;
+    f32 startBottom;
+    f32 endBottom;
+    f32 endTop;
+
+    color = gViewFinderLineColor;
+    color.a = hudElementOpacity * fade;
+    angle = getAngle(directionX, directionY);
+    radians = lbl_803E1EC8 * angle / lbl_803E1E94;
+    sine = mathSinf(radians);
+    cosine = mathCosf(radians);
+    lineColor = color;
+    yOffset = lbl_803E1E68 * sine;
+    xOffset = lbl_803E1E68 * cosine;
+    left = x - xOffset;
+    right = x + xOffset;
+    startTop = startY - yOffset;
+    startBottom = startY + yOffset;
+    endBottom = endY + yOffset;
+    endTop = endY - yOffset;
+    drawViewFinderLine(right, startTop, left, startBottom, left, endBottom, right, endTop, &lineColor);
+}
+
 void drawViewFinderHud(void)
 {
     f32 fovY;
@@ -1815,22 +1885,21 @@ void drawViewFinderHud(void)
     gViewFinderBaseY = (f32)(lbl_803E1EB0 - lbl_803E1EB8 * fadeLevel);
     gViewFinderCamAngle = -view->yaw;
 
-    drawViewFinderSegment(lbl_803E1ED0, lbl_803E1ECC, lbl_803E1ED4, lbl_803E1ECC,
-                          lbl_803E1EC4, lbl_803E1E3C, lbl_803E1E68, hudElementOpacity * fadeLevel);
-    drawViewFinderSegment(lbl_803E1EDC, lbl_803E1ECC, lbl_803E1EE0, lbl_803E1ECC,
-                          lbl_803E1ED8, lbl_803E1E3C, lbl_803E1E68, hudElementOpacity * gViewFinderFadeLevel);
-    drawViewFinderSegment(lbl_803E1ED0, lbl_803E1EE4, lbl_803E1ED4, lbl_803E1EE4,
-                          lbl_803E1EC4, lbl_803E1E3C, lbl_803E1E68, hudElementOpacity * gViewFinderFadeLevel);
-    drawViewFinderSegment(lbl_803E1EDC, lbl_803E1EE4, lbl_803E1EE0, lbl_803E1EE4,
-                          lbl_803E1ED8, lbl_803E1E3C, lbl_803E1E68, hudElementOpacity * gViewFinderFadeLevel);
-    drawViewFinderSegment(lbl_803E1ED0, lbl_803E1ECC, lbl_803E1ED0, lbl_803E1EE8,
-                          lbl_803E1E3C, lbl_803E1EC4, lbl_803E1E68, hudElementOpacity * gViewFinderFadeLevel);
-    drawViewFinderSegment(lbl_803E1ED0, lbl_803E1EE4, lbl_803E1ED0, lbl_803E1ED4,
-                          lbl_803E1E3C, lbl_803E1ED8, lbl_803E1E68, hudElementOpacity * gViewFinderFadeLevel);
-    drawViewFinderSegment(lbl_803E1EDC, lbl_803E1ECC, lbl_803E1EDC, lbl_803E1EE8,
-                          lbl_803E1E3C, lbl_803E1EC4, lbl_803E1E68, hudElementOpacity * gViewFinderFadeLevel);
-    drawViewFinderSegment(lbl_803E1EDC, lbl_803E1EE4, lbl_803E1EDC, lbl_803E1ED4,
-                          lbl_803E1E3C, lbl_803E1ED8, lbl_803E1E68, hudElementOpacity * gViewFinderFadeLevel);
+    drawViewFinderHorizontal(lbl_803E1EC4, lbl_803E1E3C, lbl_803E1ECC, lbl_803E1ED0, lbl_803E1ED4, fadeLevel);
+    drawViewFinderHorizontal(lbl_803E1ED8, lbl_803E1E3C, lbl_803E1ECC, lbl_803E1EDC, lbl_803E1EE0,
+                             gViewFinderFadeLevel);
+    drawViewFinderHorizontal(lbl_803E1EC4, lbl_803E1E3C, lbl_803E1EE4, lbl_803E1ED0, lbl_803E1ED4,
+                             gViewFinderFadeLevel);
+    drawViewFinderHorizontal(lbl_803E1ED8, lbl_803E1E3C, lbl_803E1EE4, lbl_803E1EDC, lbl_803E1EE0,
+                             gViewFinderFadeLevel);
+    drawViewFinderVertical(lbl_803E1E3C, lbl_803E1EC4, lbl_803E1ED0, lbl_803E1ECC, lbl_803E1EE8,
+                           gViewFinderFadeLevel);
+    drawViewFinderVertical(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1ED0, lbl_803E1EE4, lbl_803E1ED4,
+                           gViewFinderFadeLevel);
+    drawViewFinderVertical(lbl_803E1E3C, lbl_803E1EC4, lbl_803E1EDC, lbl_803E1ECC, lbl_803E1EE8,
+                           gViewFinderFadeLevel);
+    drawViewFinderVertical(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE4, lbl_803E1ED4,
+                           gViewFinderFadeLevel);
 
     {
         char buf[56];
