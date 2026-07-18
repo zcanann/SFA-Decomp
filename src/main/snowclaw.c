@@ -3,6 +3,7 @@
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
 #include "main/dll/player_api.h"
+#include "main/dll/dll_0255_snowbike.h"
 #include "main/vecmath.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
@@ -117,8 +118,6 @@ u32 gSnowClawHurtSfxTable[8] = {0x2EF, 0x2EE, 0x2ED, 0x2EC, 0x2EB, 0x0497049C, 0
 extern f32 lbl_803DC224;
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
-extern int fn_801EC9F4(GameObject* obj);
-extern int fn_801EC9BC(GameObject* obj);
 const u32 gSnowClawPulseTable[8] = {0, 1, 2, 3, 1, 1, 2, 2};
 const SnowClawDropObjectTable gSnowClawDropObjectTable = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
 extern s32 lbl_8032A340[];

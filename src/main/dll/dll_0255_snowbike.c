@@ -325,12 +325,12 @@ void fn_801EC928(int obj, int state)
 }
 
 #pragma dont_inline reset
-void fn_801EC9BC(GameObject* obj)
+s32 fn_801EC9BC(GameObject* obj)
 {
-    (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&obj->extra + 0x28));
+    return (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&obj->extra + 0x28));
 }
 
-u32 fn_801EC9F4(GameObject* obj)
+s32 fn_801EC9F4(GameObject* obj)
 {
     int result = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&obj->extra + 0x28));
     if (result == 3)
