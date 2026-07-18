@@ -30,6 +30,7 @@
 #include "main/obj_group.h"
 #include "main/obj_message.h"
 #include "main/obj_path.h"
+#include "main/dll/DIM/dimwooddoor_aim_api.h"
 
 f32 lbl_803DBEF0 = 6.0f;
 f32 gDimCannonAnimAdvanceSpeedCur = 0.025f;
@@ -60,8 +61,7 @@ void* lbl_803DDB50;
 
 extern f32 lbl_803E48B8;
 
-extern void DIMwooddoor_updateShardAim(GameObject* obj, f32 a, f32 b, f32 c, f32 d);
-extern void DIMwooddoor_spawnShard(int* obj, int p2);
+extern void DIMwooddoor_spawnShard(int* obj, int variant);
 
 extern f32 lbl_803E48EC;
 extern f32 gDimCannonAnimAdvanceSpeed;

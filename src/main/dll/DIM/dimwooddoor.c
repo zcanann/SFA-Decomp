@@ -15,6 +15,7 @@
 #include "main/objprint_api.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/dll/DIM/DIMwooddoor.h"
 
 #define DIMWOODDOOR_OBJFLAG_PARENT_SLACK 0x1000
 #define DIMWOODDOOR_CHILD_OBJ_SHARD      0x1d6 /* debris shard projectile spawned by DIMwooddoor_spawnShard */
@@ -142,7 +143,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     Sfx_PlayFromObject(obj, SFXTRIG_tr_jrumbalp);
 }
 
-void DIMwooddoor_updateShardAim(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ)
+void DIMwooddoor_updateShardAim(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ, f32 distance)
 {
     DIMWoodDoorState* state;
     DIMWoodDoorConfig* config;

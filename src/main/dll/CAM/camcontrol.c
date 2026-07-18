@@ -49,6 +49,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/resource.h"
+#include "main/dll/dll_0019_dll19func0.h"
 
 u8* pCamera;
 u8 gCamcontrolHandlerCount;
@@ -84,7 +85,6 @@ CamcontrolReticleObject* gCamcontrolTargetReticle;
 s8 gCamcontrolTargetChanged;
 
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
-extern int dll_19_func1B(GameObject* p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
 u8 gCamcontrolStateStorage[0x148];
 CamcontrolHandlerEntry* gCamcontrolHandlerEntries[20];
 extern CamcontrolBaddieControlInterface** gBaddieControlInterface;

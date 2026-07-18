@@ -45,6 +45,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
+#include "main/dll/ship_battle_api.h"
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING  0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING  0xa3d
@@ -142,9 +143,6 @@ extern f32 lbl_803E57AC;
 extern f32 lbl_803E57B0;
 extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
-
-extern void fn_801EED5C(GameObject* obj, f32* x, f32* y, f32* z);
-
 
 ObjectDescriptor15 gSB_GalleonObjDescriptor = {
     0,
