@@ -107,7 +107,7 @@ void CampFire_update(int obj)
         mode = 0;
         if (state->sfxPlaying == 0)
         {
-            Sfx_AddLoopedObjectSoundIntLegacy(obj, SFXTRIG_forcecryslp11);
+            Sfx_AddLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
             state->sfxPlaying = 1;
         }
     }

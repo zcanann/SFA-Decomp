@@ -439,7 +439,7 @@ void fn_8013E0D0(int* obj, TrickyState* t)
                     }
                 }
                 Sfx_PlayFromObject((int*)gobj, SFXTRIG_en_cvdrip1c_3db);
-                Sfx_AddLoopedObjectSoundPtrIntLegacy((int*)gobj, SFXTRIG_trpopn_c);
+                Sfx_AddLoopedObjectSound((u32)gobj, SFXTRIG_trpopn_c);
             }
             **(u8**)&t->progressPtr -= 2;
             t->substate = ANIMOBJD2_SUBSTATE_FINISH;
@@ -464,7 +464,7 @@ void fn_8013E0D0(int* obj, TrickyState* t)
                     p += 4;
                 }
             }
-            Sfx_RemoveLoopedObjectSoundPtrIntLegacy((int*)gobj, SFXTRIG_trpopn_c);
+            Sfx_RemoveLoopedObjectSound((u32)gobj, SFXTRIG_trpopn_c);
             TRICKY_BARK((int*)gobj, 0x29d, 0);
             {
                 u32 m;

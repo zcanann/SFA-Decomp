@@ -268,7 +268,7 @@ void FuelCell_update(GameObject* obj)
                 f32 dy;
                 if (!state->lit)
                 {
-                    Sfx_AddLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_pk_fuelcell_fizz);
+                    Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_pk_fuelcell_fizz);
                     state->lit = 1;
                     ObjGroup_AddObject((int)obj, FUELCELL_OBJGROUP);
                 }
@@ -297,7 +297,7 @@ void FuelCell_update(GameObject* obj)
         else if (state->lit)
         {
             state->lit = 0;
-            Sfx_RemoveLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_pk_fuelcell_fizz);
+            Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_pk_fuelcell_fizz);
             ObjGroup_RemoveObject((int)obj, FUELCELL_OBJGROUP);
         }
     }
