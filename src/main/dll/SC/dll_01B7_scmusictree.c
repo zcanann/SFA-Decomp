@@ -63,22 +63,20 @@ typedef struct ScMusictreeSpawnAmbientEffectPlacement
  * Head is the common ObjPlacement; tail (0x18..0x27) is file-local. */
 typedef struct ScMusictreeSetup
 {
-    ObjPlacement head; /* 0x00..0x17 */
-    int unk18;         /* 0x18 */
-    u16 unk1C;         /* 0x1C */
-    u16 unk1E;         /* 0x1E */
-    u8 unk20;          /* 0x20 */
-    u8 unk21;          /* 0x21 */
-    u8 unk22;          /* 0x22 */
-    u8 unk23;          /* 0x23 */
-    u8 unk24;          /* 0x24 */
-    s8 unk25;          /* 0x25 */
-    s16 unk26;         /* 0x26 */
+    ObjPlacement head;  /* 0x00..0x17 */
+    int sourceObject;   /* 0x18 */
+    u16 animFrame;      /* 0x1C */
+    u16 unk1E;          /* 0x1E */
+    u8 colorA[3];       /* 0x20 */
+    u8 colorB[2];       /* 0x23 */
+    s8 verticalDrift;   /* 0x25 */
+    s16 modelId;        /* 0x26 */
 } ScMusictreeSetup;
 
-STATIC_ASSERT(offsetof(ScMusictreeSetup, unk18) == 0x18);
-STATIC_ASSERT(offsetof(ScMusictreeSetup, unk1C) == 0x1C);
-STATIC_ASSERT(offsetof(ScMusictreeSetup, unk26) == 0x26);
+STATIC_ASSERT(offsetof(ScMusictreeSetup, sourceObject) == 0x18);
+STATIC_ASSERT(offsetof(ScMusictreeSetup, animFrame) == 0x1C);
+STATIC_ASSERT(offsetof(ScMusictreeSetup, colorA) == 0x20);
+STATIC_ASSERT(offsetof(ScMusictreeSetup, modelId) == 0x26);
 
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
@@ -150,16 +148,16 @@ void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 
         ((ObjPlacement*)setup)->posX = state->pathPoint[i][0];
         ((ObjPlacement*)setup)->posY = state->pathPoint[i][1];
         ((ObjPlacement*)setup)->posZ = state->pathPoint[i][2];
-        ((ScMusictreeSetup*)setup)->unk1C = randomGetRange(0x708, 0x1770);
+        ((ScMusictreeSetup*)setup)->animFrame = randomGetRange(0x708, 0x1770);
         ((ScMusictreeSetup*)setup)->unk1E = 1;
-        ((ScMusictreeSetup*)setup)->unk20 = 10;
-        ((ScMusictreeSetup*)setup)->unk21 = 40;
-        ((ScMusictreeSetup*)setup)->unk22 = 50;
-        ((ScMusictreeSetup*)setup)->unk23 = 10;
-        ((ScMusictreeSetup*)setup)->unk24 = 50;
-        ((ScMusictreeSetup*)setup)->unk25 = -50;
-        ((ScMusictreeSetup*)setup)->unk26 = -1;
-        ((ScMusictreeSetup*)setup)->unk18 = 0;
+        ((ScMusictreeSetup*)setup)->colorA[0] = 10;
+        ((ScMusictreeSetup*)setup)->colorA[1] = 40;
+        ((ScMusictreeSetup*)setup)->colorA[2] = 50;
+        ((ScMusictreeSetup*)setup)->colorB[0] = 10;
+        ((ScMusictreeSetup*)setup)->colorB[1] = 50;
+        ((ScMusictreeSetup*)setup)->verticalDrift = -50;
+        ((ScMusictreeSetup*)setup)->modelId = -1;
+        ((ScMusictreeSetup*)setup)->sourceObject = 0;
         state->ambientEffect[i] =
             (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, (void*)*(int*)&(obj)->anim.parent);
     }
