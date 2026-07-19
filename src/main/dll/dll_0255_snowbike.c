@@ -898,18 +898,17 @@ void fn_801EC7A0(int obj, int state)
 
 void fn_801EC928(int obj, int state);
 
-void SnowBike_init(int obj, u8* paramsRaw, int flag)
+void SnowBike_init(int obj, SnowBikePlacement* params, int flag)
 {
-    SnowBikePlacement* params = (SnowBikePlacement*)paramsRaw;
     f32 fv;
     f32 fz;
     s16 rot;
-    int i;
     u8* path;
+    int i;
     u8* alloc;
     u32 pathParam;
-    u8* state;
     char* base = lbl_803284E0;
+    u8* state;
 
     pathParam = lbl_803E5AE0;
     state = ((GameObject*)obj)->extra;
