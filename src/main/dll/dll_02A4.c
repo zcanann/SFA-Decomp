@@ -64,12 +64,12 @@ void dll_2A4_update(GameObject* obj)
 {
     Dll2A4State* state = obj->extra;
 
-    if (state->fadeTimer > lbl_803E713C)
+    if (state->lifetime > lbl_803E713C)
     {
-        state->fadeTimer -= timeDelta;
-        if (state->fadeTimer <= lbl_803E713C)
+        state->lifetime -= timeDelta;
+        if (state->lifetime <= lbl_803E713C)
         {
-            state->fadeTimer = lbl_803E713C;
+            state->lifetime = lbl_803E713C;
             Obj_FreeObject(obj);
             return;
         }

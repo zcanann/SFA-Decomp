@@ -6,7 +6,7 @@
 
 typedef struct Dll2A4State
 {
-    f32 fadeTimer;
+    f32 lifetime;
     s16 spinRateX;
     s16 spinRateY;
     s16 spinRateZ;
