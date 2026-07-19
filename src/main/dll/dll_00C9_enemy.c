@@ -220,16 +220,16 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80154870((GameObject*)(obj), (int*)state);
                 break;
             case 0x25d:
-                fn_80155948((int*)obj, state);
+                rachnopUpdateAttack((int*)obj, state);
                 break;
             case 0x457:
                 fn_80156010((u32)obj, state);
                 break;
             case 0x4d7:
-                fn_8015625C((u32)obj, state);
+                wbUpdateEngaged((u32)obj, state);
                 break;
             case 0x458:
-                fn_80156B0C((u32)obj, state);
+                mutatedEbaUpdateEngaged((u32)obj, state);
                 break;
             case 0x851:
                 iceBaddie_enterWhirlpoolGroup((GameObject*)obj, (GroundBaddieState*)state);
@@ -297,16 +297,16 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 fn_80154870((GameObject*)(obj), (int*)state);
                 break;
             case 0x25d:
-                fn_80155884((int*)obj, state);
+                rachnopUpdateApproach((int*)obj, state);
                 break;
             case 0x457:
                 fn_80156010((u32)obj, state);
                 break;
             case 0x4d7:
-                fn_8015625C((u32)obj, state);
+                wbUpdateEngaged((u32)obj, state);
                 break;
             case 0x458:
-                fn_80156B0C((u32)obj, state);
+                mutatedEbaUpdateEngaged((u32)obj, state);
                 break;
             case 0x851:
                 iceBaddie_enterWhirlpoolGroup((GameObject*)obj, (GroundBaddieState*)state);
@@ -408,16 +408,16 @@ void objAnimFn_8014a9f0(short* obj, int state)
             waterBaddieFollowCurveUpdate((GameObject*)(obj), state);
             break;
         case 0x25d:
-            fn_801557D4((int*)obj, state);
+            rachnopUpdateIdle((int*)obj, state);
             break;
         case 0x457:
             fn_80155F20((GameObject*)(obj), state);
             break;
         case 0x4d7:
-            fn_8015652C((u32)obj, state);
+            wbUpdateIdle((u32)obj, state);
             break;
         case 0x458:
-            fn_80156C34((u32)obj, state);
+            mutatedEbaUpdateIdle((u32)obj, state);
             break;
         case 0x851:
             iceBaddie_leaveWhirlpoolGroup((GameObject*)obj, (GroundBaddieState*)state);

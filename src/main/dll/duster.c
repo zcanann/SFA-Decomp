@@ -3,7 +3,7 @@
  * drive the shared BaddieState control record (obj+0xB8 extra block,
  * accessed via gBaddieControlInterface). Each creature contributes its
  * own init/update/freeze-event handlers:
- *   - rachnop (rachnopInit / fn_801557D4 / fn_80155884 / fn_80155948 /
+ *   - rachnop (rachnopInit / rachnopUpdateIdle / rachnopUpdateApproach / rachnopUpdateAttack /
  *     rachnopUpdateWhileFrozen): wall-crawling spider; rachnopFindWallPlane probes
  *     the surrounding geometry (objBboxFn_800640cc) to find a wall face,
  *     then drives roll/charge moves toward the tracked player.
@@ -13,10 +13,10 @@
  *   - day/night gated mover (baddieInit_80156188 / fn_80155F20 /
  *     fn_80156010 / timeOfDayFn_80155cf8 / baddieUpdateWhileFrozen_80155e10):
  *     switches move sets by sky time-of-day.
- *   - whirlpool/water creature (wbInit / fn_8015625C / fn_8015652C /
+ *   - whirlpool/water creature (wbInit / wbUpdateEngaged / wbUpdateIdle /
  *     wbUpdateWhileFrozen): path-following (RomCurveWalker) flyer/swimmer
  *     with buoyancy clamping and periodic decoy sfx.
- *   - mutated EBA (mutatedEbaInit / fn_80156B0C / fn_80156C34 / fn_80156950
+ *   - mutated EBA (mutatedEbaInit / mutatedEbaUpdateEngaged / mutatedEbaUpdateIdle / mutatedEbaPlayMoveSfx
  *     / mutatedEbaUpdateWhileFrozen): move-table sequenced attacker
  *     (gDusterEbaMoveTable entries, 0xC bytes each).
  *   - hooded Zyck flyer (fn_80156DA0 / hoodedZyckUpdateWhileFrozen):
@@ -252,7 +252,7 @@ void rachnopUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int
     return;
 }
 
-void fn_801557D4(int* obj, int state)
+void rachnopUpdateIdle(int* obj, int state)
 {
     int cond;
 
@@ -276,7 +276,7 @@ void fn_801557D4(int* obj, int state)
     return;
 }
 
-void fn_80155884(int* obj, int state)
+void rachnopUpdateApproach(int* obj, int state)
 {
     int cond;
 
@@ -301,7 +301,7 @@ void fn_80155884(int* obj, int state)
     return;
 }
 
-void fn_80155948(int* obj, int state)
+void rachnopUpdateAttack(int* obj, int state)
 {
     short move;
     int cond;

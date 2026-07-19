@@ -1,10 +1,10 @@
 /*
  * duster_wb - the whirlpool/water-baddie and mutated-EBA behaviours that share
  * the duster family's BaddieState control record:
- *   - whirlpool/water creature (wbInit / fn_8015625C / fn_8015652C /
+ *   - whirlpool/water creature (wbInit / wbUpdateEngaged / wbUpdateIdle /
  *     wbUpdateWhileFrozen): path-following (RomCurveWalker) flyer/swimmer with
  *     buoyancy clamping and periodic decoy sfx.
- *   - mutated EBA (mutatedEbaInit / fn_80156B0C / fn_80156C34 / fn_80156950 /
+ *   - mutated EBA (mutatedEbaInit / mutatedEbaUpdateEngaged / mutatedEbaUpdateIdle / mutatedEbaPlayMoveSfx /
  *     mutatedEbaUpdateWhileFrozen): move-table sequenced attacker
  *     (gDusterEbaMoveTable entries, 0xC bytes each).
  */
@@ -88,7 +88,7 @@ void wbUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad
     return;
 }
 
-void fn_8015625C(u32 obj, int state)
+void wbUpdateEngaged(u32 obj, int state)
 {
     u32 randVal;
     GameObject* tracked;
@@ -181,7 +181,7 @@ void fn_8015625C(u32 obj, int state)
     fn_8014CD1C((GameObject*)obj, (void*)state, 0x2d, lbl_803E2A98, *(f32*)&lbl_803E2A98, 0);
 }
 
-void fn_8015652C(u32 obj, int state)
+void wbUpdateIdle(u32 obj, int state)
 {
     u32 randVal;
     RomCurveWalker* route;
@@ -315,7 +315,7 @@ void wbInit(u32 unused, int state)
     return;
 }
 
-void fn_80156950(u32 obj, int state);
+void mutatedEbaPlayMoveSfx(u32 obj, int state);
 
 void mutatedEbaUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
@@ -346,7 +346,7 @@ void mutatedEbaUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, 
     return;
 }
 
-void fn_80156B0C(u32 obj, int state)
+void mutatedEbaUpdateEngaged(u32 obj, int state)
 {
     int tblOff;
 
@@ -376,11 +376,11 @@ void fn_80156B0C(u32 obj, int state)
             Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 9], *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
         }
     }
-    fn_80156950(obj, state);
+    mutatedEbaPlayMoveSfx(obj, state);
     return;
 }
 
-void fn_80156C34(u32 obj, int state)
+void mutatedEbaUpdateIdle(u32 obj, int state)
 {
     int tblOff;
     u32 phase;
@@ -399,11 +399,11 @@ void fn_80156C34(u32 obj, int state)
         tblOff = (u32)((BaddieState*)state)->userData1 * 0xc;
         Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 8], *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
     }
-    fn_80156950(obj, state);
+    mutatedEbaPlayMoveSfx(obj, state);
     return;
 }
 
-void fn_80156950(u32 obj, int state)
+void mutatedEbaPlayMoveSfx(u32 obj, int state)
 {
     switch (((GameObject*)obj)->anim.currentMove)
     {

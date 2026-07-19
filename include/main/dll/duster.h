@@ -4,9 +4,9 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 
-void fn_80155884(int* obj, int state);
-void fn_80155948(int* obj, int state);
-void fn_801557D4(int* obj, int state);
+void rachnopUpdateApproach(int* obj, int state);
+void rachnopUpdateAttack(int* obj, int state);
+void rachnopUpdateIdle(int* obj, int state);
 void fn_80155F20(GameObject* obj, int state);
 void fn_80156010(u32 obj, int state);
 
