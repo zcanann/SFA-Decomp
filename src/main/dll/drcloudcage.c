@@ -452,8 +452,8 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
             {
                 vol = 0;
             }
-            Sfx_SetObjectChannelVolumePtrU32Legacy(obj, 8, vol & 0xff,
-                                                   lbl_803E5B20 + gDrCloudCageWindVolume / lbl_803E5B08);
+            Sfx_SetObjectChannelVolume((u32)obj, 8, vol & 0xff,
+                                       lbl_803E5B20 + gDrCloudCageWindVolume / lbl_803E5B08);
         }
     }
     if (channelFlags & 2)
@@ -486,8 +486,7 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
                 {
                     vol = 0;
                 }
-                Sfx_SetObjectChannelVolumePtrU32Legacy(obj, 1, vol & 0xff,
-                                                       lbl_803E5B20 + gDrCloudCageWindVolume);
+                Sfx_SetObjectChannelVolume((u32)obj, 1, vol & 0xff, lbl_803E5B20 + gDrCloudCageWindVolume);
             }
         }
     }
@@ -516,7 +515,7 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
             ((DRCloudCageState*)state)->channel2Vol = lbl_803E5B30;
         }
         v = ((DRCloudCageState*)state)->channel2Vol;
-        Sfx_SetObjectChannelVolumePtrU32Legacy(obj, 2, (int)v, v * lbl_803E5B38 + lbl_803E5B34);
+        Sfx_SetObjectChannelVolume((u32)obj, 2, v, v * lbl_803E5B38 + lbl_803E5B34);
         if (intensity > 5)
         {
             ((DRCloudCageState*)state)->channel4Vol = lbl_803E5B3C + intensity;
@@ -538,7 +537,7 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
             ((DRCloudCageState*)state)->channel4Vol = lbl_803E5B44;
         }
         v = ((DRCloudCageState*)state)->channel4Vol;
-        Sfx_SetObjectChannelVolumePtrU32Legacy(obj, 4, (int)v, v / lbl_803E5B48);
+        Sfx_SetObjectChannelVolume((u32)obj, 4, v, v / lbl_803E5B48);
         pulse.unkC = lbl_803E5B4C;
         pulse.unk10 = lbl_803E5B50;
         pulse.unk14 = lbl_803E5B54;

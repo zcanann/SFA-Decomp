@@ -192,12 +192,10 @@ void SwarmBaddie_update(GameObject* obj)
         state->hitVolumeEnvelope = state->hitVolumeEnvelope - (0.005f);
     }
     volume = state->hitVolumeEnvelope;
-    Sfx_SetObjectChannelVolumeScaleFirstLegacy(
-        0.05f *
-                mathSinf((SWARM_BADDIE_PI * (f32)(state->yawWavePhase + state->rollWavePhase)) /
-                         SWARM_BADDIE_S16_ANGLE_SCALE) +
-            volume,
-        (int)obj, 0x40, (int)((63.0f) * volume));
+    Sfx_SetObjectChannelVolume(
+        (u32)obj, 0x40, 63.0f * volume,
+        0.05f * mathSinf((SWARM_BADDIE_PI * (f32)(state->yawWavePhase + state->rollWavePhase)) /
+                         SWARM_BADDIE_S16_ANGLE_SCALE) + volume);
     (*gPartfxInterface)->spawnObject((void*)obj, SWARMBADDIE_PARTFX, NULL, 2, -1, &state->hitVolumeEnvelope);
     state->player = Obj_GetPlayerObject();
     if (state->player != NULL)
@@ -278,4 +276,3 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
     (ObjectDescriptorCallback)SwarmBaddie_getObjectTypeId,
     SwarmBaddie_getExtraSize,
 };
-

@@ -237,8 +237,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
 
     if (DFSH_LASER_ACTIVE(runtime) != 0)
     {
-        Sfx_SetObjectChannelVolumePtrIntLegacy(obj, 0x40, (int)((127.0f) * runtime->beamVolumeScale),
-                                               (0.5f));
+        Sfx_SetObjectChannelVolume((u32)obj, 0x40, 127.0f * runtime->beamVolumeScale, 0.5f);
     }
 
     range = (f32)(int)config->rangeAngle;

@@ -137,7 +137,7 @@ void mmp_asteroid_re_update(int obj)
             {
                 vol = 0x7F;
             }
-            Sfx_SetObjectChannelVolumeIntU8Legacy(obj, 0x40, vol, 0.5f);
+            Sfx_SetObjectChannelVolume(obj, 0x40, vol, 0.5f);
         }
         if (state->intensity != 0)
         {

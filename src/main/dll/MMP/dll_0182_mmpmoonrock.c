@@ -579,7 +579,7 @@ void mmp_moonrock_update(GameObject* obj)
         state->raised = 0;
     }
     Sfx_PlayFromObject((u32)obj, SFXTRIG_en_diallp_c);
-    Sfx_SetObjectChannelVolumePtrU8Legacy(obj, 0x40, state->raised * 0x20 + 0x20, 0.5f);
+    Sfx_SetObjectChannelVolume((u32)obj, 0x40, state->raised * 0x20 + 0x20, 0.5f);
     {
         f32 speed = obj->anim.velocityY;
         if (speed < 0.1f * ((20.0f * state->raised + state->baseY) - obj->anim.localPosY))
