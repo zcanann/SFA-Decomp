@@ -399,7 +399,7 @@ extern u16 gViewFinderCamAngle;
 extern GXColor gViewFinderLineColor;
 extern char sTrickyDebugXCoordFormat[];
 
-extern int fn_8011E0D8();
+int fn_8011E0D8(int* this, int* p2, int p3);
 extern void hudDrawCounter(int id, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget);
 char sHudCounterFmt02d[] = "%02d";
 char sHudCounterFmt03d[] = "%03d";
