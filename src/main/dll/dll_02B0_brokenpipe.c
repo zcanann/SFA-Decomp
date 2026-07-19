@@ -12,8 +12,6 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 
-f32 lbl_803E733C = 0.0f;
-
 #define BROKENPIPE_OBJFLAG_HIDDEN 0x4000
 
 int brokenpipe_getExtraSize(void)
@@ -32,6 +30,7 @@ void brokenpipe_init(GameObject* obj, BrokenPipeSetup* setup)
 {
     GameObject* object = obj;
     BrokenPipeSetup* setupData = setup;
+    f32 minScale = 0.0f;
 
     object->anim.rotZ = (s16)(setupData->rotZ << 8);
     object->anim.rotY = (s16)(setupData->rotY << 8);
@@ -39,7 +38,7 @@ void brokenpipe_init(GameObject* obj, BrokenPipeSetup* setup)
     if (setupData->scale != 0)
     {
         object->anim.rootMotionScale = (f32)(u32)setupData->scale / 255.0f;
-        if (object->anim.rootMotionScale == lbl_803E733C)
+        if (object->anim.rootMotionScale == minScale)
         {
             object->anim.rootMotionScale = 1.0f;
         }
