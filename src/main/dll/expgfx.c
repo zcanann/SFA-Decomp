@@ -951,10 +951,10 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             slot->velocityX *= gExpgfxSlotMotionStep;
                             slot->velocityZ *= gExpgfxSlotMotionStep;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT | 0LL;
-                            if (slot->soundHandle != -1)
+                            if (slot->impactEffectId != -1)
                             {
-                                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rotParams, 0x200001, -1, 0);
-                                slot->soundHandle = -1;
+                                (*gPartfxInterface)->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
+                                slot->impactEffectId = -1;
                             }
                         }
                         else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1) != 0)
@@ -979,11 +979,11 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             slot->scaleCurrent = (f32)slot->scaleCurrent * lbl_803DF3F4;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
-                            if (slot->soundHandle != -1)
+                            if (slot->impactEffectId != -1)
                             {
-                                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rotParams, 0x200001, -1, 0);
+                                (*gPartfxInterface)->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
                             }
-                            slot->soundHandle = -1;
+                            slot->impactEffectId = -1;
                         }
                         else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4) != 0)
                         {
@@ -999,9 +999,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             slot->scaleCurrent = (f32)slot->scaleCurrent * lbl_803DF3F4;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
-                            if (slot->soundHandle != -1)
+                            if (slot->impactEffectId != -1)
                             {
-                                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rotParams, 0x200001, -1, 0);
+                                (*gPartfxInterface)->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
                             }
                         }
                         gExpgfxFrameParityBit = 0;
@@ -1009,7 +1009,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT) != 0 &&
                              slot->velocityY * timeDelta + slot->posY.value < 0.0f)
                     {
-                        if (slot->soundHandle != -1)
+                        if (slot->impactEffectId != -1)
                         {
                             rotParams.scale = 1.0f;
                             rotParams.angleZ = 0;
@@ -1041,7 +1041,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             {
                                 Sfx_PlayFromObject((u32)srcObj, SFXTRIG_blkscrp6);
                             }
-                            slot->soundHandle = -1;
+                            slot->impactEffectId = -1;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT | 0LL;
                             slot->lifetimeFrame = 0;
                             gExpgfxFrameParityBit = 0;
@@ -1049,7 +1049,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     }
                     else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_MASK) == 0 &&
                              (slot->behaviorFlags & EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT) == 0 &&
-                             slot->soundHandle != -1)
+                             slot->impactEffectId != -1)
                     {
                         rotParams.scale = 1.0f;
                         rotParams.angleZ = 0;
@@ -1074,7 +1074,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             rotParams.z = slot->posZ.value;
                         }
                         gExpgfxFrameParityBit = 1;
-                        (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rotParams, 0x200001, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, NULL);
                         gExpgfxFrameParityBit = 0;
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && randomGetRange(0, 4) == 1)
