@@ -822,9 +822,7 @@ ModelLightStruct* objAllocLight(void* owner)
     ((ModelLightStruct*)light)->specularAttenuationScale = lbl_803DE7A0;
     ((ModelLightStruct*)light)->specularBrightness = lbl_803DE76C;
     atten = ((ModelLightStruct*)light)->specularAttenuationScale * lbl_803DE790;
-    zero = lbl_803DE75C;
-    GXInitLightAttn((GXLightObj*)(light + 0xc0), zero, zero, lbl_803DE760, atten, zero,
-                    *(f32*)&lbl_803DE760 - atten);
+    GXInitLightAttn((GXLightObj*)(light + 0xc0), 0.0f, 0.0f, 1.0f, atten, 0.0f, 1.0f - atten);
     modelLightStruct_startColorFade((ModelLightStruct*)light, 0, 0);
     light[0xb0] = 0xff;
     light[0xb1] = 0xff;
