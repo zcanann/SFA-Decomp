@@ -12,7 +12,7 @@ extern DVDFileInfo* gFileInfo;
 extern volatile int gDvdReadCallbackResult;
 
 void dvdCheckError(void);
-int DVDRead(DVDFileInfo* fileInfo, void* buf, int size, int offset);
+int DVDRead(DVDFileInfo* fileInfo, void* buf, s32 size, s32 offset);
 void fileReadCb_80015954(s32 result, DVDFileInfo* fileInfo);
 void setFileInfo(DVDFileInfo* fileInfo);
 void* loadFileByPath(char* path, int* outSize, int unused);

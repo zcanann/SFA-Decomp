@@ -235,7 +235,7 @@ void* loadFileByPath(char* path, int* outSize, int unused)
     return buf;
 }
 
-int DVDRead(DVDFileInfo* fileInfo, void* buf, int size, int offset)
+int DVDRead(DVDFileInfo* fileInfo, void* buf, s32 size, s32 offset)
 {
     u8 resetSeen = 0;
     gDvdReadCallbackResult = 0;
