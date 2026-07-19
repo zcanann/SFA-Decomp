@@ -290,6 +290,27 @@ void drakorhoverpad_func0F(int obj, f32* ox, f32* oy, f32* oz)
     Matrix_TransformPoint(mtx, 0.0f, lbl_803DC300, lbl_803DC304, ox, oy, oz);
 }
 
+static const f32 gDrakorHoverpadPathCurveLength[1] = { 300.0f };
+static const f32 gDrakorHoverpadPathCurveStart[1] = { 0.01f };
+
+static inline void drakorhoverpad_initPathCurve(GameObject* obj, u8* p)
+{
+    int curveArg = 0x2a;
+
+    (*gRomCurveInterface)->initCurve(&((DrakorHoverpadState*)p)->curve, (void*)obj, gDrakorHoverpadPathCurveLength[0], &curveArg, -1);
+    Curve_AdvanceAlongPath((Curve*)(p + 4), gDrakorHoverpadPathCurveStart[0]);
+}
+
+static inline f32 drakorhoverpad_nodeWobbleSin(DrakorCurveNode** slot, int angle)
+{
+    return (*(f32*)&gDrakorHoverpadSpeedStep) * ((f32)(u32)(*slot)->tangentMag * mathSinf(3.1415927f * (f32)angle / 32768.0f));
+}
+
+static inline f32 drakorhoverpad_nodeWobbleCos(DrakorCurveNode** slot, int angle)
+{
+    return (*(f32*)&gDrakorHoverpadSpeedStep) * ((f32)(u32)(*slot)->tangentMag * mathCosf(3.1415927f * (f32)angle / 32768.0f));
+}
+
 int drakorhoverpad_func0E(void)
 {
     return 0x1;
@@ -319,27 +340,77 @@ int drakorhoverpad_setScale(GameObject* obj)
     return (p[0x179] >> 2) & 1;
 }
 
-static void drakorhoverpad_initPathCurve(GameObject* obj, u8* p)
-{
-    int curveArg = 0x2a;
-
-    (*gRomCurveInterface)->initCurve(&((DrakorHoverpadState*)p)->curve, (void*)obj, 300.0f, &curveArg, -1);
-    Curve_AdvanceAlongPath((Curve*)(p + 4), 0.01f);
-}
-
-static f32 drakorhoverpad_nodeWobbleSin(DrakorCurveNode** slot, int angle)
-{
-    return (*(f32*)&gDrakorHoverpadSpeedStep) * ((f32)(u32)(*slot)->tangentMag * mathSinf(3.1415927f * (f32)angle / 32768.0f));
-}
-
-static f32 drakorhoverpad_nodeWobbleCos(DrakorCurveNode** slot, int angle)
-{
-    return (*(f32*)&gDrakorHoverpadSpeedStep) * ((f32)(u32)(*slot)->tangentMag * mathCosf(3.1415927f * (f32)angle / 32768.0f));
-}
-
 int drakorhoverpad_pickMaskedNextPoint(int* pad, int exclude, int maxIndex);
 
 int drakorhoverpad_pickUnmaskedNextPoint(int* pad, int exclude, int maxIndex);
+
+int drakorhoverpad_pickMaskedNextPoint(int* pad, int exclude, int maxIndex)
+{
+    int collected[4];
+    int pt;
+    int count;
+    u32 bit;
+    int i;
+
+    count = 0;
+    bit = 1;
+    for (i = 0; i < 4; i++)
+    {
+        pt = pad[7 + i];
+        if (pt > -1 && (*(s8*)((char*)pad + 0x1b) & bit) != 0 && pt != exclude)
+        {
+            collected[count++] = pt;
+        }
+        bit <<= 1;
+    }
+    if (count != 0)
+    {
+        if (maxIndex != -1 && maxIndex > count - 1)
+        {
+            maxIndex = count - 1;
+        }
+        if (maxIndex == -1)
+        {
+            maxIndex = randomGetRange(0, count - 1);
+        }
+        return collected[maxIndex];
+    }
+    return -1;
+}
+
+int drakorhoverpad_pickUnmaskedNextPoint(int* pad, int exclude, int maxIndex)
+{
+    int collected[4];
+    int pt;
+    int count;
+    u32 bit;
+    int i;
+
+    count = 0;
+    bit = 1;
+    for (i = 0; i < 4; i++)
+    {
+        pt = pad[7 + i];
+        if (pt > -1 && (*(s8*)((char*)pad + 0x1b) & bit) == 0 && pt != exclude)
+        {
+            collected[count++] = pt;
+        }
+        bit <<= 1;
+    }
+    if (count != 0)
+    {
+        if (maxIndex != -1 && maxIndex > count - 1)
+        {
+            maxIndex = count - 1;
+        }
+        if (maxIndex == -1)
+        {
+            maxIndex = randomGetRange(0, count - 1);
+        }
+        return collected[maxIndex];
+    }
+    return -1;
+}
 
 int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
 {
@@ -480,6 +551,47 @@ ObjectDescriptor24 gDrakorHoverPadObjDescriptor = {
     (ObjectDescriptorCallback)drakorhoverpad_renderGroundMarker,
     (ObjectDescriptorCallback)drakorhoverpad_func17,
 };
+int drakorhoverpad_init(GameObject* obj)
+{
+    u8* p = (obj)->extra;
+    DrakorHoverpadFlags* f = (DrakorHoverpadFlags*)(p + 0x178);
+
+    if (f->b40 == 0)
+    {
+        if (f->state > 3)
+        {
+            if (0.0f == ((DrakorHoverpadState*)p)->speed)
+            {
+                f->state = 0;
+            }
+        }
+    }
+    if (f->b01 != mainGetBit(1654))
+    {
+        f->b01 ^= 1;
+        *(f32*)p = -*(f32*)p;
+        if (f->state == 3)
+        {
+            f->state = 0;
+            *(f32*)p = (*(f32*)&gDrakorHoverpadSpeedStep);
+        }
+        if (f->state == 4)
+        {
+            f->state = 0;
+            *(f32*)p = -2.0f;
+        }
+        if (f->b40 != 0)
+        {
+            if (0.0f == *(f32*)p)
+            {
+                *(f32*)p = (f->b01 != 0) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
+            }
+        }
+        Sfx_PlayFromObject((int)obj, SFXTRIG_id_309);
+    }
+    return 0;
+}
+
 int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCode, void* out)
 {
     u8* p = (obj)->extra;
@@ -991,47 +1103,6 @@ void drakorhoverpad_updateMain(GameObject* obj)
     PSVECAdd(&(obj)->anim.localPosX, &(obj)->anim.velocityX, &(obj)->anim.localPosX);
 }
 
-int drakorhoverpad_init(GameObject* obj)
-{
-    u8* p = (obj)->extra;
-    DrakorHoverpadFlags* f = (DrakorHoverpadFlags*)(p + 0x178);
-
-    if (f->b40 == 0)
-    {
-        if (f->state > 3)
-        {
-            if (0.0f == ((DrakorHoverpadState*)p)->speed)
-            {
-                f->state = 0;
-            }
-        }
-    }
-    if (f->b01 != mainGetBit(1654))
-    {
-        f->b01 ^= 1;
-        *(f32*)p = -*(f32*)p;
-        if (f->state == 3)
-        {
-            f->state = 0;
-            *(f32*)p = (*(f32*)&gDrakorHoverpadSpeedStep);
-        }
-        if (f->state == 4)
-        {
-            f->state = 0;
-            *(f32*)p = -2.0f;
-        }
-        if (f->b40 != 0)
-        {
-            if (0.0f == *(f32*)p)
-            {
-                *(f32*)p = (f->b01 != 0) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
-            }
-        }
-        Sfx_PlayFromObject((int)obj, SFXTRIG_id_309);
-    }
-    return 0;
-}
-
 void drakorhoverpad_initMain(GameObject* obj, void* desc)
 {
     u8* p = (obj)->extra;
@@ -1085,71 +1156,3 @@ u8 lbl_8032AAB0[0x80] = {
     0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x02,
     0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x05,
 };
-
-int drakorhoverpad_pickMaskedNextPoint(int* pad, int exclude, int maxIndex)
-{
-    int collected[4];
-    int pt;
-    int count;
-    u32 bit;
-    int i;
-
-    count = 0;
-    bit = 1;
-    for (i = 0; i < 4; i++)
-    {
-        pt = pad[7 + i];
-        if (pt > -1 && (*(s8*)((char*)pad + 0x1b) & bit) != 0 && pt != exclude)
-        {
-            collected[count++] = pt;
-        }
-        bit <<= 1;
-    }
-    if (count != 0)
-    {
-        if (maxIndex != -1 && maxIndex > count - 1)
-        {
-            maxIndex = count - 1;
-        }
-        if (maxIndex == -1)
-        {
-            maxIndex = randomGetRange(0, count - 1);
-        }
-        return collected[maxIndex];
-    }
-    return -1;
-}
-
-int drakorhoverpad_pickUnmaskedNextPoint(int* pad, int exclude, int maxIndex)
-{
-    int collected[4];
-    int pt;
-    int count;
-    u32 bit;
-    int i;
-
-    count = 0;
-    bit = 1;
-    for (i = 0; i < 4; i++)
-    {
-        pt = pad[7 + i];
-        if (pt > -1 && (*(s8*)((char*)pad + 0x1b) & bit) == 0 && pt != exclude)
-        {
-            collected[count++] = pt;
-        }
-        bit <<= 1;
-    }
-    if (count != 0)
-    {
-        if (maxIndex != -1 && maxIndex > count - 1)
-        {
-            maxIndex = count - 1;
-        }
-        if (maxIndex == -1)
-        {
-            maxIndex = randomGetRange(0, count - 1);
-        }
-        return collected[maxIndex];
-    }
-    return -1;
-}
