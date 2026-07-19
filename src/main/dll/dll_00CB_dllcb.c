@@ -71,7 +71,7 @@ void* gDllCBStateHandlers[6];
 extern u8 lbl_80320008[];
 extern u8 lbl_80320080[];
 
-int fn_801601C4(GameObject* obj, GroundBaddieState* state)
+int dll_CB_stateHandler5(GameObject* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub;
     char* routePath;
@@ -113,7 +113,7 @@ int fn_801601C4(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8016032C(int* obj, GroundBaddieState* state)
+int dll_CB_stateHandler4(int* obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
@@ -141,7 +141,7 @@ int fn_8016032C(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_801603E8(int* obj, u8* obj2)
+int dll_CB_stateHandler3(int* obj, u8* obj2)
 {
     GroundBaddieState* x = ((GameObject*)obj)->extra;
     if ((s8)obj2[0x27b] != 0)
@@ -151,7 +151,7 @@ int fn_801603E8(int* obj, u8* obj2)
     return 0;
 }
 
-int fn_8016043C(GameObject* obj, GroundBaddieState* state)
+int dll_CB_stateHandler2(GameObject* obj, GroundBaddieState* state)
 {
     ObjHitsPriorityState* hitState;
 
@@ -178,19 +178,19 @@ int fn_8016043C(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8016050C(int p1, u8* obj)
+int dll_CB_stateHandler1(int p1, u8* obj)
 {
     if ((s8)obj[0x354] < 1)
         return 3;
     return 6;
 }
 
-int fn_8016052C(void)
+int dll_CB_stateHandler0(void)
 {
     return 0x6;
 }
 
-int fn_80160534(int* obj)
+int dll_CB_moveHandler3(int* obj)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     u8 step;
@@ -210,7 +210,7 @@ int fn_80160534(int* obj)
     return 0;
 }
 
-int fn_801605A8(short* out, u8* obj)
+int dll_CB_moveHandler2(short* out, u8* obj)
 {
     f32 f = 0.0f;
     ((BaddieState*)obj)->animSpeedA = f;
@@ -221,7 +221,7 @@ int fn_801605A8(short* out, u8* obj)
     return 0;
 }
 
-int fn_801605D4(int* obj, GroundBaddieState* def)
+int dll_CB_moveHandler1(int* obj, GroundBaddieState* def)
 {
     GroundBaddieState* state = ((GameObject*)obj)->extra;
     if ((s8)def->baddie.moveJustStartedA != 0)
@@ -238,7 +238,7 @@ int fn_801605D4(int* obj, GroundBaddieState* def)
     return 0;
 }
 
-int fn_80160690(short* out, u8* obj)
+int dll_CB_moveHandler0(short* out, u8* obj)
 {
     f32 f = 0.0f;
     ((BaddieState*)obj)->animSpeedA = f;
@@ -251,11 +251,11 @@ int fn_80160690(short* out, u8* obj)
     return 0;
 }
 
-void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state);
+void dll_CB_seekAndUpdate(int obj, void* seq, int sub, GroundBaddieState* state);
 
-void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state);
+void dll_CB_advanceAI(int* obj, GroundBaddieState* sub, GroundBaddieState* state);
 
-void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)
+void dll_CB_seekAndUpdate(int obj, void* seq, int sub, GroundBaddieState* state)
 {
     int setup;
 
@@ -286,7 +286,7 @@ void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)
     *(int*)&((GameObject*)obj)->pendingParentObj = ((GroundBaddieState*)sub)->savedObjC0;
 }
 
-void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
+void dll_CB_advanceAI(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
 {
     char* targetObj;
     int stateResult;
@@ -343,7 +343,7 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
         {
             return 1;
         }
-        fn_8016083C((int*)obj, (GroundBaddieState*)sub, (GroundBaddieState*)sub);
+        dll_CB_advanceAI((int*)obj, (GroundBaddieState*)sub, (GroundBaddieState*)sub);
         if (((GroundBaddieState*)sub)->gameBitC != -1 && mainGetBit(((GroundBaddieState*)sub)->gameBitC) != 0)
         {
             (*gObjectTriggerInterface)->yield((ObjSeqState*)e, ((DllCBPlacement*)setup)->gameBitId);
@@ -353,7 +353,7 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
         {
         case 2:
             ((ObjSeqState*)e)->flags = 0;
-            fn_801606F0((int)obj, e, sub, (GroundBaddieState*)sub);
+            dll_CB_seekAndUpdate((int)obj, e, sub, (GroundBaddieState*)sub);
             if (((GroundBaddieState*)sub)->subMode == 1)
             {
                 ((GroundBaddieState*)sub)->baddie.substate = 5;
@@ -482,7 +482,7 @@ void dll_CB_update(int* obj)
     }
     if (((int (*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, (u8*)sub, 1) == 0)
         return;
-    fn_8016083C(obj, sub, sub);
+    dll_CB_advanceAI(obj, sub, sub);
     path = (RomCurveWalker*)sub->path;
     if ((sub->flags400 & BADDIE_FLAG400_PATH_ACTIVE) == 0)
         return;
@@ -532,14 +532,14 @@ void dll_CB_release_nop(void)
 
 void dll_CB_initialise(void)
 {
-    ((void**)gDllCBMoveHandlers)[0] = fn_80160690;
-    ((void**)gDllCBMoveHandlers)[1] = fn_801605D4;
-    ((void**)gDllCBMoveHandlers)[2] = fn_801605A8;
-    ((void**)gDllCBMoveHandlers)[3] = fn_80160534;
-    gDllCBStateHandlers[0] = fn_8016052C;
-    gDllCBStateHandlers[1] = fn_8016050C;
-    gDllCBStateHandlers[2] = fn_8016043C;
-    gDllCBStateHandlers[3] = fn_801603E8;
-    gDllCBStateHandlers[4] = fn_8016032C;
-    gDllCBStateHandlers[5] = fn_801601C4;
+    ((void**)gDllCBMoveHandlers)[0] = dll_CB_moveHandler0;
+    ((void**)gDllCBMoveHandlers)[1] = dll_CB_moveHandler1;
+    ((void**)gDllCBMoveHandlers)[2] = dll_CB_moveHandler2;
+    ((void**)gDllCBMoveHandlers)[3] = dll_CB_moveHandler3;
+    gDllCBStateHandlers[0] = dll_CB_stateHandler0;
+    gDllCBStateHandlers[1] = dll_CB_stateHandler1;
+    gDllCBStateHandlers[2] = dll_CB_stateHandler2;
+    gDllCBStateHandlers[3] = dll_CB_stateHandler3;
+    gDllCBStateHandlers[4] = dll_CB_stateHandler4;
+    gDllCBStateHandlers[5] = dll_CB_stateHandler5;
 }
