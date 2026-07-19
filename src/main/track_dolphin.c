@@ -38,9 +38,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/track_dolphin_shadow_api.h"
 #include "main/newshadows_shadow_api.h"
-#define TRACK_BBOX_IMPLEMENTATION
 #include "main/track_bbox_api.h"
-#undef TRACK_BBOX_IMPLEMENTATION
 #include "main/dll/player_api.h"
 #include "main/pause_menu_api.h"
 #include "main/pi_dolphin.h"
@@ -2813,7 +2811,7 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 }
 
 int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameObject* self, int p8, int p9,
-                      u8 slot, u8 arg8)
+                      int slot, int arg8)
 {
     f32 w0[3];
     f32 w1[3];
