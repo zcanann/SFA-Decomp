@@ -78,7 +78,7 @@ const ArwInitCfg gArwingInitConfig = {0x05030303, 0x03030303, 0x0303};
 typedef struct ArwarwingState
 {
     u8 pad0[0x47C - 0x0];
-    u16 bonusScore; /* 0x47C: bonus score, +200 per pickup, capped at 9999 */
+    u16 score; /* 0x47C: u16 view of ArwingState.score; +200 per pickup, capped at 9999 */
     u8 pad47E[0x498 - 0x47E];
 } ArwarwingState;
 
@@ -1209,11 +1209,11 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 ArwarwingState* scoreView = obj->extra;
                 int clampedScore;
-                scoreView->bonusScore += 0xc8;
-                clampedScore = scoreView->bonusScore;
+                scoreView->score += 0xc8;
+                clampedScore = scoreView->score;
                 if ((u16)clampedScore > 0x270f)
                     clampedScore = 0x270f;
-                scoreView->bonusScore = clampedScore;
+                scoreView->score = clampedScore;
             }
             registerNewScore((s8)state->scoreSlot, state->score,
                              state->collectedRings, 2);
