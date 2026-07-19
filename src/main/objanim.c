@@ -404,7 +404,7 @@ Object_ObjAnimSetMove(int objAnimHandle, int moveId, f32 moveProgress, int moveC
     return 0;
 }
 
-u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent* objAnim)
+int ObjAnim_GetCurrentEventCountdown(ObjAnimComponent* objAnim)
 {
     return ObjAnim_GetCurrentState(objAnim)->eventCountdown;
 }
