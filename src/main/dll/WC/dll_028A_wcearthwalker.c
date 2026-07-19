@@ -80,10 +80,10 @@ int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int s
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            getEnvfxActImmediatelyVoid(obj, obj, 509, 0);
+            getEnvfxActImmediately((void*)obj, (void*)obj, 509, 0);
             break;
         case 2:
-            getEnvfxActImmediatelyVoid(obj, obj, 512, 0);
+            getEnvfxActImmediately((void*)obj, (void*)obj, 512, 0);
             break;
         }
     }
