@@ -280,14 +280,6 @@ const f32 lbl_803E14F8 = 10.0f;
 const f32 lbl_803E14FC = 1.0f;
 const f32 lbl_803E1500 = -4.0f;
 const f32 lbl_803E1504 = 0.0f;
-const f32 lbl_803E1508 = 0.0f;
-const f32 lbl_803E150C = 1.0f;
-const f32 lbl_803E1510 = 1.26f;
-const f32 lbl_803E1514 = 1.9f;
-const f32 lbl_803E1518 = 255.0f;
-const f32 lbl_803E151C = 3.0f;
-const f32 lbl_803E1520 = 2.0f;
-const f32 lbl_803E1524 = 25.0f;
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* lbl_80318690[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
