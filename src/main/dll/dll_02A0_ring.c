@@ -284,7 +284,7 @@ void ring_update(GameObject* obj)
     int hit;
     int ang;
     f32 dir[3];
-    f32 spawnBuf[6];
+    PartFxSpawnParams spawnBuf;
     f32 mtx[12];
 
     arwing = (GameObject*)getArwing();
@@ -421,17 +421,17 @@ void ring_update(GameObject* obj)
                                                  32768.0f);
                             dir[2] = 0.0f;
                             PSMTXMultVecSR((MtxP)mtx, (const Vec*)dir, (Vec*)dir);
-                            spawnBuf[3] = dir[0] + obj->anim.localPosX;
-                            spawnBuf[4] = dir[1] + obj->anim.localPosY;
-                            spawnBuf[5] = dir[2] + obj->anim.localPosZ;
+                            spawnBuf.posX = dir[0] + obj->anim.localPosX;
+                            spawnBuf.posY = dir[1] + obj->anim.localPosY;
+                            spawnBuf.posZ = dir[2] + obj->anim.localPosZ;
                             (*gPartfxInterface)
-                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, spawnBuf, RING_PARTFX_FLAGS, -1,
+                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf, RING_PARTFX_FLAGS, -1,
                                               &obj->anim.velocityX);
                             (*gPartfxInterface)
-                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, spawnBuf, RING_PARTFX_FLAGS, -1,
+                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf, RING_PARTFX_FLAGS, -1,
                                               &obj->anim.velocityX);
                             (*gPartfxInterface)
-                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, spawnBuf, RING_PARTFX_FLAGS, -1,
+                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, &spawnBuf, RING_PARTFX_FLAGS, -1,
                                               &obj->anim.velocityX);
                         }
                     }
