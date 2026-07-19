@@ -759,7 +759,8 @@ void gxTextureFn_80052efc(void)
             lightGetColor(0, &outColor.r, &outColor.g, &outColor.b);
             GXSetChanAmbColor(GX_COLOR0, outColor);
             lightFn_80052974((f32)(i * 0x20), lbl_803DEB60);
-            GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + 0x60, (i == clearSlot) ? 1 : 0);
+            GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + 0x60,
+                      (i == clearSlot) ? GX_TRUE : GX_FALSE);
             tex = ((RcpDistortSlot*)slots[0])[i].texture;
             if (((Texture*)tex)->preloaded != 0)
             {

@@ -1068,7 +1068,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     u8 ignoredLightColor;
     Mtx scaleMtx;
     f32 fA, fB;
-    int wrapBit;
+    GXBool wrapBit;
     void (*pcb)(void*, void**, int);
 
     model = obj_b[0];
@@ -1077,7 +1077,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     selectTexture((Texture*)textureIdxToPtr(handle1), 0);
     selectReflectionTexture(1);
     tex2 = textureIdxToPtr(((ModelRenderOp*)renderOp)->layer0TextureId);
-    wrapBit = (((Texture*)tex2)->maxLod - ((Texture*)tex2)->minLod > 0) ? 1 : 0;
+    wrapBit = (((Texture*)tex2)->maxLod - ((Texture*)tex2)->minLod > 0) ? GX_TRUE : GX_FALSE;
     GXInitTexObj((void*)((u8*)tex2 + 0x20), (u8*)tex2 + 0x60, ((Texture*)tex2)->width, ((Texture*)tex2)->height,
                  ((Texture*)tex2)->format, GX_REPEAT, GX_REPEAT, wrapBit);
     selectTexture((Texture*)tex2, 2);
