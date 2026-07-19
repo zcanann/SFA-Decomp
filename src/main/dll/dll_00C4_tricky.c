@@ -1008,13 +1008,13 @@ int Tricky_getExtraSize(void)
     return 0x83c;
 }
 
-void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
+void Tricky_free(int obj, int shouldKeepFlameChildren)
 {
     int i;
     int childSlot;
     int state;
 
-    state = *(int*)&obj->extra;
+    state = *(int*)&((GameObject*)obj)->extra;
     freeAndNull((void**)&((TrickyState*)state)->pathSearches[0].nodes);
     freeAndNull((void**)&((TrickyState*)state)->pathSearches[1].nodes);
     freeAndNull((void**)&((TrickyState*)state)->pathSearches[2].nodes);
@@ -1024,8 +1024,8 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
     freeAndNull((void**)&((TrickyState*)state)->pathSearches[6].nodes);
     freeAndNull((void**)&((TrickyState*)state)->pathSearches[7].nodes);
     freeAndNull((void**)&((TrickyState*)state)->pathSearches[8].nodes);
-    ObjGroup_RemoveObject((int)obj, TRICKY_OBJGROUP);
-    (*gExpgfxInterface)->freeSource((u32)obj);
+    ObjGroup_RemoveObject(obj, TRICKY_OBJGROUP);
+    (*gExpgfxInterface)->freeSource(obj);
     if ((shouldKeepFlameChildren == 0) &&
         ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0))
     {
@@ -1041,22 +1041,22 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
             childSlot = childSlot + 4;
             i = i + 1;
         } while (i < 7);
-        Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_trpopn_c);
-        childSlot = *(int*)&obj->extra;
+        Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
+        childSlot = *(int*)&((GameObject*)obj)->extra;
         if (((*(u8*)(childSlot + 0x58) >> 6 & 1) == 0u) &&
-            (((obj->anim.currentMove >= 0x30 || (obj->anim.currentMove < 0x29)) &&
-              (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0))))
+            (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
+              (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))))
         {
-            objAudioFn_800393f8(obj, &((TrickyState*)childSlot)->soundState, 0x29d, 0, 0xffffffff, 0);
+            objAudioFn_800393f8((GameObject*)obj, &((TrickyState*)childSlot)->soundState, 0x29d, 0, 0xffffffff, 0);
         }
     }
     doNothing_onTrickyFree();
-    objAnimFreeChildren((int)obj, state, (GameObject**)(state + 0x7a8)); /* raw: arrow form shifts bytes */
-    objAnimFreeChildren((int)obj, state, (GameObject**)(state + 0x7b0)); /* raw: arrow form shifts bytes */
-    objAnimFreeChildren((int)obj, state, (GameObject**)&((TrickyState*)state)->child);
+    objAnimFreeChildren(obj, state, (GameObject**)(state + 0x7a8)); /* raw: arrow form shifts bytes */
+    objAnimFreeChildren(obj, state, (GameObject**)(state + 0x7b0)); /* raw: arrow form shifts bytes */
+    objAnimFreeChildren(obj, state, (GameObject**)&((TrickyState*)state)->child);
     if (*(void**)&((TrickyState*)state)->spawnedChild != NULL)
     {
-        ObjLink_DetachChild(obj, ((TrickyState*)state)->spawnedChild);
+        ObjLink_DetachChild((GameObject*)obj, ((TrickyState*)state)->spawnedChild);
         Obj_FreeObject((GameObject*)((TrickyState*)state)->spawnedChild);
     }
     if (((((TrickyState*)state)->statusFlags >> 7 & 1) != 0u) && (gTrickyHelperObject != 0))

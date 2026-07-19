@@ -40,7 +40,7 @@ void Tricky_commandPlayBall(int* obj, int commandEnabled, int targetObj);
 void sideCommandEnable(GameObject* obj, int targetObj, int commandKind, int commandType);
 int Tricky_updateSideCommandPrompts(int obj);
 u32 FUN_80146874(void);
-void Tricky_free(GameObject* obj, int shouldKeepFlameChildren);
+void Tricky_free(int obj, int shouldKeepFlameChildren);
 void Tricky_init(GameObject* obj);
 int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void Tricky_update(int obj);
