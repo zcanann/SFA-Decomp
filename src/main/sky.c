@@ -2933,7 +2933,7 @@ void sky2_run(void)
                 r = *(f32*)&((GameObject*)p)->anim.textureSlots;
                 g = ((GameObject*)p)->anim.activeMoveProgress;
                 b = *(f32*)&((GameObject*)p)->childObjs[0];
-                sa = *(f32*)(p + 0x1fc);
+                sa = ((SkySlotAnim*)p)->cur2[0];
                 sb = *(f32*)(p + 0x228);
             }
             else if ((*(u16*)&((GameObject*)p)->anim.flags & 0x20) != 0)
@@ -3077,16 +3077,16 @@ void sky2_run(void)
             p = *pp;
             if ((*(u16*)&((GameObject*)p)->anim.flags & 0x40) != 0)
             {
-                if (*(s8*)(p + 0x314) == -1)
+                if (((SkySlotAnim*)p)->b314 == -1)
                 {
-                    *(u8*)(p + 0x314) = 1;
+                    ((SkySlotAnim*)p)->b314 = 1;
                     frzero = lbl_803DF108;
                     *(f32*)(*pp + 0x6c) = frzero;
                     diff = sb - sa;
                     *(f32*)(*pp + 0x68) = randomGetRange((int)(-diff * lbl_803DF168), (int)(diff * lbl_803DF168));
                     *(f32*)(*pp + 0x64) = lbl_803DF17C * randomGetRange(1, 10);
                 }
-                else if (*(s8*)(p + 0x314) == 1)
+                else if (((SkySlotAnim*)p)->b314 == 1)
                 {
                     hv = *(f32*)&((GameObject*)p)->anim.jointPoseData;
                     sa = sa + hv;
@@ -3094,7 +3094,7 @@ void sky2_run(void)
                     p = *pp;
                     if (*(f32*)&((GameObject*)p)->anim.jointPoseData > *(f32*)&((GameObject*)p)->anim.dll)
                     {
-                        *(s8*)(p + 0x314) = (s8)(1 - *(s8*)(p + 0x314));
+                        ((SkySlotAnim*)p)->b314 = (s8)(1 - ((SkySlotAnim*)p)->b314);
                     }
                 }
                 else
@@ -3105,7 +3105,7 @@ void sky2_run(void)
                     p = *pp;
                     if (*(f32*)&((GameObject*)p)->anim.jointPoseData < (frzero = lbl_803DF108))
                     {
-                        *(s8*)(p + 0x314) = (s8)(1 - *(s8*)(p + 0x314));
+                        ((SkySlotAnim*)p)->b314 = (s8)(1 - ((SkySlotAnim*)p)->b314);
                         *(f32*)(*pp + 0x6c) = frzero;
                         amp = (s16)(int)(sb - sa);
                         *(f32*)(*pp + 0x68) = randomGetRange(-amp / 2, amp / 2);
