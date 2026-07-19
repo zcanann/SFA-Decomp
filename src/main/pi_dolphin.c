@@ -925,7 +925,7 @@ extern f32 lbl_803DCD34;
 extern f32 lbl_803DCD38;
 extern f32 lbl_803DCD3C;
 extern u8 lbl_803DCCB0;
-extern void gxPerfFn_8004a77c(int);
+void gxPerfFn_8004a77c(int);
 extern void* lbl_803DCD10;
 extern char* lbl_803DCD08;
 extern void* renderFrameBuffer;
@@ -2296,7 +2296,7 @@ char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
 
 
 
-extern int zlbDecompress(u8* src, int size, u8* dst, void* outp);
+int zlbDecompress(u8* src, int size, u8* dst, void* outp);
 
 int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
                               u32 flagBits)

@@ -294,7 +294,7 @@ extern char sMmSpawnedUnalignedSlotWarning[];
 extern int lbl_803DCC7C;
 extern char sMmFreeMemoryUsageCorruptedError[];
 
-extern void heapFree(int region, int slotIdx);
+void heapFree(int region, int slotIdx);
 
 int roundUpTo4(int x)
 {

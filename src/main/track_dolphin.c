@@ -322,12 +322,12 @@ extern const f32 lbl_803DECD0;
 extern const f32 lbl_803DECD4;
 
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
-extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
-extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1,
-                       f32 y1, f32 z1, u8 flags);
-extern int hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots,
-                             int flagsArg);
-extern int doLotsOfMath(void* a, void* b, f32 f, int c, void* d, int* e, int g, int h, int i, int self);
+int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
+int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1,
+                f32 y1, f32 z1, u8 flags);
+int hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots,
+                      int flagsArg);
+int doLotsOfMath(void* a, void* b, f32 f, int c, void* d, int* e, int g, int h, int i, int self);
 
 typedef int (*HitDetectIntFn)(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
                               int flagsArg);

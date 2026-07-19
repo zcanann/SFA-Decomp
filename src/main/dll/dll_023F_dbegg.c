@@ -73,7 +73,7 @@
 #define DBEGG_PARTFX_HOMING_TRAIL 0x345
 extern const f32 lbl_803E61C8;
 extern const f32 gDbEggSpeedByteScale;
-extern int fn_801FE560(GameObject* obj, f32* out, f32 a, f32 b, int p3);
+int fn_801FE560(GameObject* obj, f32* out, f32 a, f32 b, int p3);
 extern const f32 lbl_803E61CC;
 extern const f32 lbl_803E6218;
 extern const f32 lbl_803E621C;

@@ -112,7 +112,7 @@ extern f32 gShStaffMapUnloadDistSq;
 extern f32 gShStaffMapLoadDistSq;
 
 
-extern void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int a);
+void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int a);
 
 void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {

@@ -139,7 +139,7 @@ STATIC_ASSERT(offsetof(PartfxEffectState, textureIsBorrowed) == 0x13F);
 
 u8 gModgfxSpawnContextStorage[0x60];
 ModgfxPendingSpawn gModgfxPendingSpawnQueue[0x300 / sizeof(ModgfxPendingSpawn)];
-extern void fn_800A1040(s16 a, int b);
+void fn_800A1040(s16 a, int b);
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
 
