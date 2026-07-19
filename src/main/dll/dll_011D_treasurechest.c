@@ -162,7 +162,7 @@ void TreasureChest_update(GameObject* obj)
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
             playerPullOutStaff((GameObject*)(Obj_GetPlayerObject()), 1);
-            nearestObject = ObjGroup_FindNearestObject(TREASURECHEST_TARGET_OBJGROUP, (int)obj, &nearestDist);
+            nearestObject = ObjGroup_FindNearestObject(TREASURECHEST_TARGET_OBJGROUP, obj, &nearestDist);
             if (nearestObject != 0)
             {
                 (*gObjectTriggerInterface)->setObjects((int)((GameObject*)nearestObject)->anim.seqId, 0, 0);

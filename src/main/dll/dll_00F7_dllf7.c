@@ -223,7 +223,7 @@ void dll_F7_update(int* obj)
         {
             int* near;
             radius = 50.0f;
-            near = (int*)ObjGroup_FindNearestObject(DLLF7_TARGET_OBJGROUP, (int)obj, &radius);
+            near = (int*)ObjGroup_FindNearestObject(DLLF7_TARGET_OBJGROUP, (GameObject*)obj, &radius);
             if (near != NULL)
             {
                 ((GameObject*)near)->anim.localPosX = ((GameObject*)near)->anim.worldPosX =

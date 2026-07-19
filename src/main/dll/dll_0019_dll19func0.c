@@ -639,7 +639,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
                 }
             }
             nearDist = *(f32*)&lbl_803E1C58;
-            gDll19NearestObj = (GameObject*)ObjGroup_FindNearestObject(DLL19_TARGET_OBJGROUP, (int)obj, &nearDist);
+            gDll19NearestObj = (GameObject*)ObjGroup_FindNearestObject(DLL19_TARGET_OBJGROUP, (GameObject*)obj, &nearDist);
             source->anim.worldPosX = savedX;
             source->anim.worldPosY = savedY;
             source->anim.worldPosZ = savedZ;

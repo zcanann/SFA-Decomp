@@ -156,7 +156,7 @@ void VFP_flamepoint_update(GameObject* obj)
             if (tricky != NULL)
             {
                 f32 dist = lbl_803E6158;
-                if (d->noCheck || (void*)ObjGroup_FindNearestObject(5, (int)obj, &dist) == NULL)
+                if (d->noCheck || (void*)ObjGroup_FindNearestObject(5, obj, &dist) == NULL)
                 {
                     if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE)
                     {

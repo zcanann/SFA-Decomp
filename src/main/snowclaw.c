@@ -412,7 +412,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
             break;
         case 6:
         {
-            int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, (int)obj, &dist);
+            int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
             if (found != 0)
             {
                 (*(void (**)(int*, int))((char*)*((GameObject*)found)->anim.dll + 0x20))(found, 2);
@@ -422,7 +422,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
         }
         case 7:
         {
-            int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, (int)obj, &dist);
+            int* found = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
             if (found != 0)
             {
                 (*(void (**)(int*, int))((char*)*((GameObject*)found)->anim.dll + 0x20))(found, 0);
@@ -522,7 +522,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
         if ((obj)->childCount == 0 && (obj)->anim.seqId == SNOWCLAW_SEQID_CR_SNOWCLAW &&
             ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 != 0)
         {
-            near = ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, (int)obj, &dist);
+            near = ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
             if ((u32)near != 0 && (*(int (**)(int))((char*)*((GameObject*)near)->anim.dll + 0x24))(near) != 0 &&
                 (*(int (**)(int, int))((char*)*((GameObject*)near)->anim.dll + 0x20))(near, 0) != 0)
             {
@@ -589,7 +589,7 @@ void snowclaw_hitDetect(GameObject* obj)
                 }
                 if (obj->anim.seqId == SNOWCLAW_SEQID_CR_SNOWCLAW)
                 {
-                    near = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, (int)obj, &dist);
+                    near = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
                     if (near != 0)
                     {
                         ObjLink_DetachChild(obj, (GameObject*)near);

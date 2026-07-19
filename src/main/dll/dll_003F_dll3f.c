@@ -50,7 +50,7 @@ void dll_3F_updateTimerReadout(void* obj)
         gameTimerRun(obj);
     }
     player = Obj_GetPlayerObject();
-    nearest = (void*)ObjGroup_FindNearestObject(9, (int)player, &maxDist);
+    nearest = (void*)ObjGroup_FindNearestObject(9, player, &maxDist);
     if (nearest != NULL)
     {
         ((void (*)(void*, int*, int*, int*))(*(void***)((GameObject*)nearest)->anim.dll)[21])(nearest, &start, &elapsed,

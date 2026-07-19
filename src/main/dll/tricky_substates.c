@@ -1571,7 +1571,7 @@ void tricky_pickAmbientActivity(u8* obj, u8* state)
     lo = 1;
     hi = 3;
     arr[0] = lbl_803E2524;
-    found = (u8*)ObjGroup_FindNearestObject(THORNTAIL_OBJGROUP, (int)obj, arr);
+    found = (u8*)ObjGroup_FindNearestObject(THORNTAIL_OBJGROUP, (GameObject*)obj, arr);
     if (found != NULL && (((GameObject*)found)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0)
     {
         lo = 0;

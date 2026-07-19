@@ -291,7 +291,7 @@ int fn_80174668(GameObject* obj, PushableState* state)
     }
     if (state->nearestObj == NULL)
     {
-        state->nearestObj = (void*)ObjGroup_FindNearestObject(MAGICGEM_TARGET_OBJGROUP, (u32)obj, dist);
+        state->nearestObj = (void*)ObjGroup_FindNearestObject(MAGICGEM_TARGET_OBJGROUP, obj, dist);
     }
     if (state->nearestObj == NULL)
     {

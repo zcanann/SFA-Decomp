@@ -116,7 +116,7 @@ void dll_FC_update(GameObject* obj)
 
     if (state->target == NULL)
     {
-        state->target = (GameObject*)ObjGroup_FindNearestObject(placement->targetGroup, (int)obj, &maxDist);
+        state->target = (GameObject*)ObjGroup_FindNearestObject(placement->targetGroup, obj, &maxDist);
         if (state->target == NULL)
             return;
         if ((int)placement->rememberedGameBit == -1)

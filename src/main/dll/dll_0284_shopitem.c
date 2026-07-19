@@ -344,7 +344,7 @@ void shopitem_update(GameObject* obj)
         if (*(u32*)&((ShopItemState*)state)->vendorObj == 0)
         {
             int item;
-            ((ShopItemState*)state)->vendorObj = ObjGroup_FindNearestObject(SHOPITEM_TARGET_OBJGROUP, (int)obj, &range);
+            ((ShopItemState*)state)->vendorObj = ObjGroup_FindNearestObject(SHOPITEM_TARGET_OBJGROUP, obj, &range);
             item = ((ShopItemState*)state)->vendorObj;
             if ((u32)item != 0)
             {

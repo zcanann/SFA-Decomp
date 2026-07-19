@@ -220,7 +220,7 @@ void gunpowderbarrel_launchAtTarget(GameObject *obj, u8 flag)
         }
         else
         {
-            target = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, (int)obj, 0);
+            target = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, obj, 0);
         }
         if ((void*)target != NULL)
         {
@@ -298,7 +298,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     char* near;
     f32 radius = 300.0f;
     player = (char*)Obj_GetPlayerObject();
-    near = (char*)ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, (u32)obj, &radius);
+    near = (char*)ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, (GameObject*)obj, &radius);
     if (near == NULL)
     {
         return;
@@ -427,7 +427,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
             }
             else
             {
-                best = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, (int)obj, 0);
+                best = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, obj, 0);
             }
             if ((void*)best != NULL)
             {
@@ -881,7 +881,7 @@ void gunpowderbarrel_update(GameObject *obj)
     {
         f32 range = 50.0f;
         if ((u32)(state->linkedTimerObject =
-                      (GameObject*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, (int)obj, &range)) != 0 &&
+                      (GameObject*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, &range)) != 0 &&
             timer_isEffectMode(state->linkedTimerObject) != 0 && state->linkedTimerObject->ownerObj == NULL)
         {
             ObjLink_AttachChild((GameObject*)obj, state->linkedTimerObject, 0);
@@ -972,7 +972,7 @@ void gunpowderbarrel_update(GameObject *obj)
             }
             else
             {
-                gen = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, (int)obj, 0);
+                gen = ObjGroup_FindNearestObject(GUNPOWDERBARREL_OBJGROUP, obj, 0);
             }
             if (gen == 0)
             {

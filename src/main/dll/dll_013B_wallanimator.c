@@ -185,7 +185,7 @@ void wallanimator_update(GameObject* obj)
     if ((void*)tricky != NULL)
     {
         nearestDistance[0] = 35.0f;
-        nearby = ObjGroup_FindNearestObject(WALLANIMATOR_NEARBY_GROUP, (int)obj, nearestDistance);
+        nearby = ObjGroup_FindNearestObject(WALLANIMATOR_NEARBY_GROUP, obj, nearestDistance);
         if ((void*)nearby == NULL)
         {
             *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;

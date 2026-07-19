@@ -671,7 +671,7 @@ int cfguardian_updateMain(GameObject* obj)
         break;
     case CFGUARDIAN_TALK_1: /* talk spot: greet and head-track the player; 0x43 advances */
     {
-        void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, (u32)obj, &nearDist);
+        void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, obj, &nearDist);
         if (found != NULL && nearDist < 300.0f)
         {
             dll_2E_func04(&sub->moveLib, found);
@@ -717,7 +717,7 @@ int cfguardian_updateMain(GameObject* obj)
         break;
     case CFGUARDIAN_TALK_2: /* second talk loop; 0x4be sends her onward */
     {
-        void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, (u32)obj, &nearDist);
+        void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, obj, &nearDist);
         if (found != NULL && nearDist < 300.0f)
         {
             dll_2E_func04(&sub->moveLib, found);

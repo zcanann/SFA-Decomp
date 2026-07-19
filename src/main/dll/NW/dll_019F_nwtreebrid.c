@@ -156,7 +156,7 @@ void treebird_update(GameObject* obj)
     dist = 100.0f;
     if (state->searchDelay != 0)
     {
-        state->targetObj = (void*)ObjGroup_FindNearestObject(NWTREEBRID_TARGET_OBJGROUP, (int)obj, &dist);
+        state->targetObj = (void*)ObjGroup_FindNearestObject(NWTREEBRID_TARGET_OBJGROUP, obj, &dist);
         if ((u32)state->targetObj != 0)
         {
             state->searchDelay = 0;

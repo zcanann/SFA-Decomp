@@ -93,7 +93,7 @@ void dll_FD_update(u16* obj)
     state = (Dll14DState*)((GameObject*)obj)->extra;
     if (*(void**)&state->anchorObj == NULL)
     {
-        found = ObjGroup_FindNearestObject((u32)placement->groupId, (int)obj, &dist);
+        found = ObjGroup_FindNearestObject((u32)placement->groupId, (GameObject*)obj, &dist);
         state->anchorObj = found;
         if (*(void**)&state->anchorObj == NULL)
         {

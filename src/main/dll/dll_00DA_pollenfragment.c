@@ -232,7 +232,7 @@ void pollenfragment_update(int obj)
         (*gPartfxInterface)
             ->spawnObject((void*)obj, (int)(((PollenFragmentExtra*)extra)->def)->auraFx, NULL, 1, -1, NULL);
     }
-    nearObj = (u8*)ObjGroup_FindNearestObject((int)(((PollenFragmentExtra*)extra)->def)->targetGroup, (int)obj, 0);
+    nearObj = (u8*)ObjGroup_FindNearestObject((int)(((PollenFragmentExtra*)extra)->def)->targetGroup, (GameObject*)obj, 0);
     if (nearObj != NULL &&
         (!(def = ((PollenFragmentExtra*)extra)->def)->timed || ((PollenFragmentExtra*)extra)->timer < 210.0f))
     {

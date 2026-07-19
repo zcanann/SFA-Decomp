@@ -166,7 +166,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
             ObjHits_DisableObject(obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             bf31->b0 = 1;
-            nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, (int)obj, &maxDist);
+            nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, obj, &maxDist);
             if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == DRCAGEWITH_CLOUDRUNNER_OBJ)
             {
                 ((GameObject*)nearest)->userData1 = 0;
@@ -193,7 +193,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
         if (state->spawnedObject != NULL)
         {
             state->spawnedObject->anim.rotZ = (s16)state->angularVel;
-            nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, (int)obj, &maxDist);
+            nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, obj, &maxDist);
             if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == DRCAGEWITH_CLOUDRUNNER_OBJ)
             {
                 ((GameObject*)nearest)->userData1 = 1;

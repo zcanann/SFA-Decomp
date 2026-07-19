@@ -82,7 +82,7 @@ void drearthcal_update(GameObject* obj)
                     }
                 }
             }
-        if ((u32)ObjGroup_FindNearestObject(DREARTHCAL_MOUNT_OBJGROUP, (int)obj, &searchDist) == 0)
+        if ((u32)ObjGroup_FindNearestObject(DREARTHCAL_MOUNT_OBJGROUP, obj, &searchDist) == 0)
         {
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }

@@ -104,7 +104,7 @@ void drgenerator_hitDetect(GameObject* obj)
     ((BitFlags8*)(state + 0x19b))->b0 = 1;
     mainSetBits(((DrgeneratorPlacement*)placement)->completionGameBit, 1);
     if ((obj)->anim.seqId == DRGENERATOR_OBJ &&
-        (found = (void*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, (int)obj, NULL)) != NULL)
+        (found = (void*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, NULL)) != NULL)
     {
         timer_addDuration((GameObject*)found, ((DrgeneratorState*)state)->timerDuration);
     }

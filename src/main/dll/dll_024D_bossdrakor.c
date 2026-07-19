@@ -514,7 +514,7 @@ void bossdrakor_handleActionEvent(GameObject* obj, int state, int action)
             ((BossDrakorState*)state)->curveFollowState = 1;
         }
     case 24:
-        found = ObjGroup_FindNearestObject(DRAKORHOVERPAD_OBJGROUP, (int)obj, 0);
+        found = ObjGroup_FindNearestObject(DRAKORHOVERPAD_OBJGROUP, obj, 0);
         if ((void*)found != NULL)
         {
             drakorhoverpad_resetPendingMotion((GameObject*)(found));

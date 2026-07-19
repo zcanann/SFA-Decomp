@@ -124,7 +124,7 @@ void WM_Column_update(int obj)
             }
         }
         playerFlags = (int)Obj_GetPlayerObject();
-        ObjGroup_FindNearestObject(WMCOLUMN_TARGET_OBJGROUP, obj, &nearest);
+        ObjGroup_FindNearestObject(WMCOLUMN_TARGET_OBJGROUP, (GameObject*)obj, &nearest);
         playerFlags = playerGetStateFlag310((GameObject*)playerFlags);
         if (((playerFlags & 0x4000) != 0) && (nearest > 60.0f))
         {

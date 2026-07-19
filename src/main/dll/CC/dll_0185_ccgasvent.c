@@ -41,7 +41,7 @@ void ccgasvent_update(int* obj)
     u8* state = ((GameObject*)obj)->extra;
     if (mainGetBit(CCGASVENT_GAS_GAMEBIT) != 0)
     {
-        ObjGroup_FindNearestObject(CCGASVENT_TARGET_OBJGROUP, (u32)obj, &dist);
+        ObjGroup_FindNearestObject(CCGASVENT_TARGET_OBJGROUP, (GameObject*)obj, &dist);
         switch (state[0])
         {
         case CCGASVENT_STATE_IDLE:

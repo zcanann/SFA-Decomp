@@ -966,7 +966,7 @@ int fn_8014C11C(GameObject* obj, f32 radius, u8 flags, int max, EnemyTargetSearc
     n = 0;
     if ((flags & 1) != 0)
     {
-        tgt = (GameObject*)ObjGroup_FindNearestObject(ENEMY_OBJGROUP, (int)obj, &radius);
+        tgt = (GameObject*)ObjGroup_FindNearestObject(ENEMY_OBJGROUP, obj, &radius);
         out->obj = tgt;
         if (tgt != 0)
         {

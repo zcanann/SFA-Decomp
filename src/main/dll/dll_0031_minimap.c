@@ -940,7 +940,7 @@ void Minimap_frameStart(void)
                     Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
                     gMinimapZoomSfxActive = 0;
                 }
-                lbl_803DD934 = ObjGroup_FindNearestObject(FUELCELL_OBJGROUP, player, &dist);
+                lbl_803DD934 = ObjGroup_FindNearestObject(FUELCELL_OBJGROUP, (GameObject*)player, &dist);
                 if ((void*)lbl_803DD934 != NULL)
                 {
                     if (dist < gMinimapBlipNearDist)

@@ -369,7 +369,7 @@ void kytesmum_update(GameObject* obj)
     kytesmum_playAnimationEventSfx((u32)obj, runtime->animEvents, runtime->eventSfxTable);
     characterDoEyeAnimsState(obj, runtime->eyeAnimState);
     objAnimFn_80038f38(obj, (char*)&runtime->modelSoundState);
-    nearest = ObjGroup_FindNearestObject(KYTESMUM_TARGET_OBJGROUP, (u32)obj, &nearDist);
+    nearest = ObjGroup_FindNearestObject(KYTESMUM_TARGET_OBJGROUP, obj, &nearDist);
     if ((void*)nearest != NULL)
     {
         (*(void (**)(int, int, int, int))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x28))(nearest, (int)obj,

@@ -631,7 +631,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
             targetObj = s->lockTarget;
             target = (u32)(targetObj != NULL ? targetObj
                                              : (targetObj = (void*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP,
-                                                                                              (int)obj, (f32*)&sv)));
+                                                                                              obj, (f32*)&sv)));
             if (targetObj != NULL)
             {
                 if ((s->modeBits & 0x20) != 0)

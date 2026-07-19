@@ -97,7 +97,7 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
         thr = CCGASVENTCONTROL_CLEAR_DISTANCE;
         for (; i < 4; i++)
         {
-            int other = ObjGroup_FindNearestObject(CCGASVENTCONTROL_TARGET_OBJGROUP, list[i], 0);
+            int other = ObjGroup_FindNearestObject(CCGASVENTCONTROL_TARGET_OBJGROUP, (GameObject*)list[i], 0);
             if (getXZDistance((f32*)(list[i] + 0x18), (f32*)(other + 0x18)) > thr)
             {
                 count = count + 1u;

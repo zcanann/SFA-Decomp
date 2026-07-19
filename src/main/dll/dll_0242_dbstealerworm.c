@@ -866,7 +866,7 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     if (found == 0)
     {
         if ((u32)obj ==
-            ObjGroup_FindNearestObject(DBSTEALERWORM_OBJGROUP, *(int*)&((BaddieState*)baddie)->targetObj, 0))
+            ObjGroup_FindNearestObject(DBSTEALERWORM_OBJGROUP, (GameObject*)*(int*)&((BaddieState*)baddie)->targetObj, 0))
         {
             sub->savedTargetObj = *(int*)&((BaddieState*)baddie)->targetObj;
             {
@@ -2144,12 +2144,12 @@ void fn_80203144(GameObject* obj, int groundState, int baddie)
                                                                                      0x8000);
     if (near == 0 && (st->configFlags & 0x10) != 0)
     {
-        near = ObjGroup_FindNearestObject(DBEGG_OBJGROUP, (int)obj, &stk.range);
+        near = ObjGroup_FindNearestObject(DBEGG_OBJGROUP, obj, &stk.range);
     }
     if (near == 0 && (st->configFlags & 0x10) != 0 && (st->configFlags & 2) == 0 &&
         (((DbstealerwormPlacement*)data)->configFlags & 2) != 0)
     {
-        near = ObjGroup_FindNearestObject(DBEGG_OBJGROUP, (int)obj, 0);
+        near = ObjGroup_FindNearestObject(DBEGG_OBJGROUP, obj, 0);
     }
     if (near != 0 && (st->configFlags & 2) == 0)
     {

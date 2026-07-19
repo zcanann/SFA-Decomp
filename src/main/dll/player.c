@@ -806,7 +806,7 @@ int fn_80295C5C(GameObject* obj)
 int fn_80295C88(GameObject* player)
 {
     f32 dist = lbl_803E7EDC;
-    return ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, (int)player, &dist);
+    return ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, player, &dist);
 }
 
 int fn_80295CBC(GameObject* obj)
@@ -3066,8 +3066,8 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
 int playerState31(GameObject* obj, int p2)
 {
     PlayerState* inner = obj->extra;
-    u8 state29 = 0x1a;
     u8 state30 = 0x1a;
+    u8 state29 = 0x1a;
     void* near;
     f32 dist;
     f32 dir[3];
@@ -3075,7 +3075,7 @@ int playerState31(GameObject* obj, int p2)
     f32 sinv;
     f32 fz;
     dist = lbl_803E7F5C;
-    near = (void*)ObjGroup_FindNearestObject(MAGICPLANT_OBJGROUP_B, (int)obj, &dist);
+    near = (void*)ObjGroup_FindNearestObject(MAGICPLANT_OBJGROUP_B, obj, &dist);
     ((ByteFlags*)((char*)inner + 0x3f4))->b20 = 1;
     fz = lbl_803E7EA4;
     inner->buttonHoldTimer = fz;
@@ -8660,7 +8660,7 @@ int playerState08(GameObject* obj, int state, f32 fv)
             char* found;
             s16* def = NULL;
             buttonDisable(0, PAD_BUTTON_A);
-            found = (char*)ObjGroup_FindNearestObject(0xf, (int)obj, &dist);
+            found = (char*)ObjGroup_FindNearestObject(0xf, obj, &dist);
             if (found != NULL)
             {
                 def = *(s16**)((char*)found + 0x4c);
@@ -10635,7 +10635,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
                 continue;
             }
             nearDist = lbl_803E808C;
-            t8 = ObjGroup_FindNearestObject(0x23, (int)obj, &nearDist);
+            t8 = ObjGroup_FindNearestObject(0x23, (GameObject*)obj, &nearDist);
             ok2 = 1;
             if ((u32)t8 != 0)
             {
@@ -11385,7 +11385,7 @@ void fn_802A93F4(GameObject* obj, int p2, int p3)
     inner->timeScaleMode = 2;
     if (gPlayerChildObject != NULL)
     {
-        found = (void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, (int)obj, &dist);
+        found = (void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, obj, &dist);
         if (found != NULL)
         {
             (*(void (*)(void*))(*(int*)((char*)*(int*)*(int*)((char*)found + 0x68) + 0x24)))(found);
@@ -15497,7 +15497,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
             break;
         case SURFACE_CONVEYOR:
             queryParams[0] = lbl_803E8150;
-            found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_OBJGROUP, (int)obj, queryParams);
+            found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_OBJGROUP, obj, queryParams);
             if (found != 0)
             {
                 (*(void (*)(int, int, f32, f32*, f32*))(*(int*)(*(int*)(*(int*)((char*)found + 0x68)) + 0x20)))(
@@ -16542,7 +16542,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             {
                 int t;
                 nearArg = 400.0f;
-                t = ObjGroup_FindNearestObject(6, (int)obj, &nearArg);
+                t = ObjGroup_FindNearestObject(6, (GameObject*)obj, &nearArg);
                 if ((u32)t != 0)
                 {
                     objHitDetectFn_80062e84((GameObject*)obj, (GameObject*)t, 1);
@@ -16822,7 +16822,7 @@ void fn_802B4A9C(int obj, int inner, int inner2)
             else
             {
                 f32 dist = lbl_803E8150;
-                *(int*)&((PlayerState*)inner2)->baddie.targetObj = ObjGroup_FindNearestObject(3, (int)obj, &dist);
+                *(int*)&((PlayerState*)inner2)->baddie.targetObj = ObjGroup_FindNearestObject(3, (GameObject*)obj, &dist);
             }
         }
         else

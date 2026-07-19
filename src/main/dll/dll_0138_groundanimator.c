@@ -335,7 +335,7 @@ void groundanimator_update(int* obj)
         if (*(void**)&g->linkedObj == NULL)
         {
             nd = (100.0f);
-            g->linkedObj = ObjGroup_FindNearestObject(GROUNDANIMATOR_TARGET_OBJGROUP, (int)obj, &nd);
+            g->linkedObj = ObjGroup_FindNearestObject(GROUNDANIMATOR_TARGET_OBJGROUP, (GameObject*)obj, &nd);
             near = (void*)g->linkedObj;
             if (near != NULL)
             {

@@ -68,7 +68,7 @@ void spitembeam_update(int* obj)
     if (shop == NULL)
     {
         *(int**)&((GameObject*)obj)->userData1 =
-            (int*)ObjGroup_FindNearestObject(SPITEMBEAM_TARGET_OBJGROUP, (int)obj, &searchRadius);
+            (int*)ObjGroup_FindNearestObject(SPITEMBEAM_TARGET_OBJGROUP, (GameObject*)obj, &searchRadius);
     }
     else
     {

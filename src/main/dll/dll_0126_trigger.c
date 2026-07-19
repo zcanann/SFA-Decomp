@@ -315,7 +315,7 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int distSq
                     {
                     case 0:
                     case 3:
-                        t = ObjGroup_FindNearestObject(TARGET_OBJGROUP, (int)obj, 0);
+                        t = ObjGroup_FindNearestObject(TARGET_OBJGROUP, obj, 0);
                         if ((void*)t != NULL)
                         {
                             (*gObjectTriggerInterface)->runSequence(p[3], (void*)t, -1);
@@ -412,7 +412,7 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int distSq
                     OSReport(desc + 0x114, p[2], p[3]);
                     break;
                 case 0x2f:
-                    t = ObjGroup_FindNearestObject(TIMER_OBJGROUP, (int)obj, 0);
+                    t = ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, 0);
                     if ((void*)t != NULL)
                     {
                         timer_addDuration((GameObject*)(t), p[3] * 0x3c);
@@ -544,10 +544,10 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int distSq
                             Obj_FreeObject(getTrickyObject());
                             break;
                         case 2:
-                            t2 = ObjGroup_FindNearestObject(TRICKY_TARGET_OBJGROUP, t, 0);
+                            t2 = ObjGroup_FindNearestObject(TRICKY_TARGET_OBJGROUP, (GameObject*)t, 0);
                             if ((void*)t2 == NULL)
                             {
-                                t2 = ObjGroup_FindNearestObject(TRICKY_TARGET_OBJGROUP_FALLBACK, t, 0);
+                                t2 = ObjGroup_FindNearestObject(TRICKY_TARGET_OBJGROUP_FALLBACK, (GameObject*)t, 0);
                             }
                             if ((void*)t2 != NULL)
                             {
@@ -733,7 +733,7 @@ void Trigger_hitDetect(GameObject* obj)
                 targetKind = ((TriggerPlacement*)def)->target;
                 if (targetKind > 2)
                 {
-                    target = (GameObject*)ObjGroup_FindNearestObject(targetKind - 1, (int)obj, dist);
+                    target = (GameObject*)ObjGroup_FindNearestObject(targetKind - 1, obj, dist);
                     if (target == NULL)
                     {
                         ok = 0;

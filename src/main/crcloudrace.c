@@ -62,7 +62,7 @@ void crcloudrace_updateCompletionState(int obj, CrCloudRaceState* state)
         if (mainGetBit(CRCLOUDRACE_GAMEBIT_RACE_CAN_FINISH) != 0 &&
             playerGetFocusObject((GameObject*)player) == NULL)
         {
-            near = ObjGroup_FindNearestObject(CRCLOUDRACE_NEARBY_TOTEM_GROUP, obj, &dist);
+            near = ObjGroup_FindNearestObject(CRCLOUDRACE_NEARBY_TOTEM_GROUP, (GameObject*)obj, &dist);
             if (near != 0)
             {
                 (*(void (**)(int, int))((char*)*((GameObject*)near)->anim.dll + 0x20))(near, 1);

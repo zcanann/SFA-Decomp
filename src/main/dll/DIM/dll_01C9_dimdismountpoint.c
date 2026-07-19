@@ -88,7 +88,7 @@ void DIMDismountPoint_update(int* obj)
     f32 dist;
 
     dist = 500.0f;
-    nearest = (int*)ObjGroup_FindNearestObject(DIMCONVEYOR_GROUP, (u32)obj, &dist);
+    nearest = (int*)ObjGroup_FindNearestObject(DIMCONVEYOR_GROUP, (GameObject*)obj, &dist);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
     if (mainGetBit(DIMDISMOUNT_GAMEBIT_DONE) != 0)
     {

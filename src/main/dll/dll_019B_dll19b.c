@@ -264,7 +264,7 @@ void dll_19B_update(int obj)
     }
     else
     {
-        near = ObjGroup_FindNearestObject(DLL19B_TARGET_OBJGROUP, player, &dist);
+        near = ObjGroup_FindNearestObject(DLL19B_TARGET_OBJGROUP, (GameObject*)player, &dist);
         if ((u32)near != 0 && dist < lbl_803E5190 && dist > lbl_803E5194)
         {
             dy = ((GameObject*)near)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;

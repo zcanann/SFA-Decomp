@@ -261,7 +261,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         if (fn_80295C88(Obj_GetPlayerObject()) != 0)
         {
             range = 100.0f;
-            other = (GameObject*)ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, (int)obj, &range);
+            other = (GameObject*)ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, (GameObject*)obj, &range);
             if (other != NULL)
             {
                 s16 yaw = Obj_GetYawDeltaToObject((GameObject*)obj, other, &range);

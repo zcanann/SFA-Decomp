@@ -214,7 +214,7 @@ static void landed_arwing_runTargetSequence(GameObject* obj)
     int nearest;
     int def;
     def = *(int*)&(obj)->anim.placementData;
-    nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, (int)obj, NULL);
+    nearest = ObjGroup_FindNearestObject(LANDEDARWING_TARGET_OBJGROUP, obj, NULL);
     if ((obj)->anim.mapEventSlot == 0xd && mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
     {
         ((GameObject*)nearest)->anim.localPosY += 20.0f;
@@ -606,7 +606,7 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingObjectState* s
                 break;
             case 1:
                 range = lbl_803E3BC0;
-                other = ObjGroup_FindNearestObject(STAFFACTIVATED_OBJ_GROUP, (int)obj, &range);
+                other = ObjGroup_FindNearestObject(STAFFACTIVATED_OBJ_GROUP, obj, &range);
                 if ((void*)other != NULL)
                 {
                     otherState = ((GameObject*)other)->extra;

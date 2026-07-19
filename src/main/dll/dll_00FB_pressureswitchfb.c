@@ -224,7 +224,7 @@ void PressureSwitchFB_update(GameObject* obj)
             state->contactTimer = 0;
         }
         nearDist = lbl_803E3758;
-        nearest = ObjGroup_FindNearestObject(PRESSURESWITCHFB_TARGET_OBJGROUP, (int)obj, &nearDist);
+        nearest = ObjGroup_FindNearestObject(PRESSURESWITCHFB_TARGET_OBJGROUP, obj, &nearDist);
         if (nearest != 0)
         {
             state->contactTimer = 5;

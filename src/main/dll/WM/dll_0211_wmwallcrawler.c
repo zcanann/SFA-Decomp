@@ -206,7 +206,7 @@ void wmwallcrawler_hitDetect(GameObject* obj)
         }
         else
         {
-            target = ObjGroup_FindNearestObject(WMWALLCRAWLER_TARGET_OBJGROUP, (int)obj, &stk);
+            target = ObjGroup_FindNearestObject(WMWALLCRAWLER_TARGET_OBJGROUP, obj, &stk);
         }
         ObjHits_RecordObjectHit((GameObject*)target, obj, 0xb, 1, 0);
         state->mode = WMWALLCRAWLER_MODE_DIE;
@@ -245,7 +245,7 @@ void wmwallcrawler_update(GameObject* obj)
     best = lbl_803E5FBC.f;
     player = (state->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0
                  ? (u32)Obj_GetPlayerObject()
-                 : ObjGroup_FindNearestObject(WMWALLCRAWLER_TARGET_OBJGROUP, ob, &best);
+                 : ObjGroup_FindNearestObject(WMWALLCRAWLER_TARGET_OBJGROUP, (GameObject*)ob, &best);
     if (player != 0)
     {
         sq = mainGetBit(0x789);

@@ -99,7 +99,7 @@ void ecsh_cup_update(short* obj)
     buf[0] = 0;
     if (gEcShCupNearestObject == 0)
     {
-        gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, (int)obj, &dist);
+        gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, (GameObject*)obj, &dist);
     }
     if (gEcShCupNearestObject != 0 && ((GameObject*)gEcShCupNearestObject)->anim.classId != 0)
     {
@@ -279,7 +279,7 @@ void ecsh_cup_init(int obj, int def)
     ((EcshCupState*)state)->spawnTimer = 0.0f;
     if (gEcShCupNearestObject == 0)
     {
-        gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, obj, &dist);
+        gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, (GameObject*)obj, &dist);
     }
     ObjHits_EnableObject((GameObject*)obj);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);

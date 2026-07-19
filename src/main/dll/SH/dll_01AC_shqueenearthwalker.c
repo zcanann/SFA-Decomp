@@ -306,7 +306,7 @@ void sh_queenearthwalker_update(GameObject* obj)
         switch (action)
         {
         case 1:
-            target = (void*)ObjGroup_FindNearestObject(SHQUEENEARTHWALKER_TARGET_OBJGROUP, (int)obj, NULL);
+            target = (void*)ObjGroup_FindNearestObject(SHQUEENEARTHWALKER_TARGET_OBJGROUP, obj, NULL);
             (*gObjectTriggerInterface)->preempt((int)target, 0x1324);
             (*gObjectTriggerInterface)->runSequence(1, target, 0x10);
             ((QueenEarthWalkerState*)state)->flags |= (QEW_FLAG_LATCHED | QEW_FLAG_EYE_ANIMS);
@@ -339,7 +339,7 @@ void sh_queenearthwalker_update(GameObject* obj)
             ((QueenEarthWalkerState*)state)->stateIndex = 3;
             break;
         case 8:
-            target = (void*)ObjGroup_FindNearestObject(SHQUEENEARTHWALKER_TARGET_OBJGROUP, (int)obj, NULL);
+            target = (void*)ObjGroup_FindNearestObject(SHQUEENEARTHWALKER_TARGET_OBJGROUP, obj, NULL);
             (*gObjectTriggerInterface)->preempt((int)target, 0x6a4);
             (*gObjectTriggerInterface)->runSequence(7, target, 8);
             ((QueenEarthWalkerState*)state)->stateIndex = 4;

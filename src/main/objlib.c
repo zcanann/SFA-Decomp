@@ -1067,7 +1067,7 @@ GameObject* ObjGroup_FindNearestObjectForObject(int group, GameObject* obj, floa
     return nearest;
 }
 
-int ObjGroup_FindNearestObject(int group, int obj, float* maxDistance)
+int ObjGroup_FindNearestObject(int group, GameObject* obj, float* maxDistance)
 {
     u32* entry;
     u32 nearest;
@@ -1090,7 +1090,7 @@ int ObjGroup_FindNearestObject(int group, int obj, float* maxDistance)
     {
         bestDistanceSq = lbl_803DE968;
     }
-    o = (GameObject*)obj;
+    o = obj;
     index = gObjGroupOffsets[group];
     limit = gObjGroupOffsets[group + 1];
     entry = gObjGroupObjects + index;

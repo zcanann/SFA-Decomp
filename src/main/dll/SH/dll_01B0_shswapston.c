@@ -494,7 +494,7 @@ void warpstone_update(int obj)
     }
     else
     {
-        target = ObjGroup_FindNearestObject(SHSWAPSTON_TARGET_OBJGROUP, obj, 0);
+        target = ObjGroup_FindNearestObject(SHSWAPSTON_TARGET_OBJGROUP, (GameObject*)obj, 0);
     }
 
     ((GameObject*)obj)->anim.localPosY += lbl_803DC040;

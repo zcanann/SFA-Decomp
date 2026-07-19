@@ -49,7 +49,7 @@ int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
         result = 1;
     }
 
-    if ((u8*)ObjGroup_FindNearestObject(PRESSURESWITCHFB_REMOVE_GROUP_ID, (int)tricky, &dist) != NULL)
+    if ((u8*)ObjGroup_FindNearestObject(PRESSURESWITCHFB_REMOVE_GROUP_ID, (GameObject*)tricky, &dist) != NULL)
     {
         return 0;
     }

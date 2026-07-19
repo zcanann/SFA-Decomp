@@ -2719,7 +2719,7 @@ int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAl
                 (obj)->anim.worldPosZ = ((ObjPlacement*)parentSetup)->posZ;
             }
             nearestDistance = lbl_803E25A8;
-            gTrickyNearestObject = ObjGroup_FindNearestObject(4, (int)obj, &nearestDistance);
+            gTrickyNearestObject = ObjGroup_FindNearestObject(4, obj, &nearestDistance);
             (obj)->anim.worldPosX = savedX;
             (obj)->anim.worldPosY = savedY;
             (obj)->anim.worldPosZ = savedZ;

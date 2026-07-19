@@ -180,7 +180,7 @@ void wcpushblock_update(GameObject* obj)
     if ((void*)WCPUSHBLOCK_CONTROLLER(state) == 0)
     {
         WCPUSHBLOCK_CONTROLLER(state) =
-            (GameObject*)ObjGroup_FindNearestObject(WCPUSHBLOCK_CONTROLLER_GROUP, (int)obj, &range);
+            (GameObject*)ObjGroup_FindNearestObject(WCPUSHBLOCK_CONTROLLER_GROUP, obj, &range);
         objAnim->alpha = 0;
         return;
     }

@@ -254,7 +254,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     }
 
     if ((coordsToMapCell(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ) == 0xe) ||
-        ((u32)ObjGroup_FindNearestObject(SKEETLA_TARGET_OBJGROUP, (int)obj, &nearestDistance) != 0u))
+        ((u32)ObjGroup_FindNearestObject(SKEETLA_TARGET_OBJGROUP, (GameObject*)obj, &nearestDistance) != 0u))
     {
         state->pathControlFlags &= ~4;
     }

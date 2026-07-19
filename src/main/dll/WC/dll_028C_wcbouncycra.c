@@ -54,7 +54,7 @@ void WCBouncyCra_update(GameObject* obj)
             f32 dist;
             f32 v = gBouncyCrateTriggerSearchRadius;
 
-            if ((void*)ObjGroup_FindNearestObject(WBOUNCY_TRIGGER_GROUP, (int)obj, &v) == NULL)
+            if ((void*)ObjGroup_FindNearestObject(WBOUNCY_TRIGGER_GROUP, obj, &v) == NULL)
             {
                 dist = lbl_803E6D24;
             }

@@ -2276,7 +2276,7 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
         int c2 = 0, c1 = 0, c0 = 0;
         f32 radius = gTrickyHudNearestObjMaxDist;
         int* near;
-        near = (int*)ObjGroup_FindNearestObject(9, (int)Obj_GetPlayerObject(), &radius);
+        near = (int*)ObjGroup_FindNearestObject(9, Obj_GetPlayerObject(), &radius);
         if (near != NULL && pauseMenuState == 0)
         {
             (*(void (*)(int*, int*, int*, int*)) *
