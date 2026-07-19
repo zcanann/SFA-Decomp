@@ -84,6 +84,7 @@ extern f32 lbl_803E4960;
 extern f64 lbl_803E4968;
 extern f32 lbl_803E4970;
 extern f32 lbl_803E4974;
+extern f32 lbl_803E4988;
 extern f32 lbl_803E4998;
 extern f32 lbl_803E499C;
 extern f32 lbl_803E49A0;
@@ -321,15 +322,13 @@ void explosion_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
                 fn_80073AAC(tex, &colA2, &colB2);
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 {
-                    f32 fc = 1.0f;
-                    f32 fb = 0.0f;
-                    f32 fa = -1.0f;
+                    f32 fc, fb, fa;
+                    GXWGFifo.f32 = (fa = lbl_803E4988);
                     GXWGFifo.f32 = fa;
-                    GXWGFifo.f32 = fa;
+                    GXWGFifo.f32 = (fb = lbl_803E4960);
                     GXWGFifo.f32 = fb;
                     GXWGFifo.f32 = fb;
-                    GXWGFifo.f32 = fb;
-                    GXWGFifo.f32 = fc;
+                    GXWGFifo.f32 = (fc = lbl_803E492C);
                     GXWGFifo.f32 = fa;
                     GXWGFifo.f32 = fb;
                     GXWGFifo.f32 = fc;
