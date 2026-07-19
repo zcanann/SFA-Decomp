@@ -12,7 +12,7 @@
  *
  * The extra-state byte at +0 is the state-machine index (0..7).
  */
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/vecmath.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
@@ -145,7 +145,7 @@ void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, CCGASVENTCONTROL_RENDER_SCALE);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, CCGASVENTCONTROL_RENDER_SCALE);
 }
 
 void ccgasventcontrol_init(GameObject* obj, u8* def);

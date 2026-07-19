@@ -12,7 +12,7 @@
  */
 #include "main/sky_interface.h"
 #include "main/audio/music_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object.h"
 #include "main/render_envfx_api.h"
 #include "main/camera_interface.h"
@@ -82,7 +82,7 @@ void cclevcontrol_free(void)
 
 void cclevcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }
 
 void cclevcontrol_update(GameObject* obj)

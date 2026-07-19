@@ -14,7 +14,7 @@
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/audio/music_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_api.h"
 #define RENDER_ENVFX_DIRECT_INT_CALL
 #include "main/render_envfx_api.h"
@@ -95,7 +95,7 @@ void MMP_levelcontrol_render(int obj, int p2, int p3, int p4, int p5, s8 visible
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void MMP_levelcontrol_hitDetect(void)

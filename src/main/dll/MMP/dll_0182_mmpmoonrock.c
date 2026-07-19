@@ -18,7 +18,7 @@
 #include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_channel_volume_api.h"
 #include "main/audio/sfx_play_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/object_api.h"
 #include "main/track_dolphin_api.h"
@@ -421,7 +421,7 @@ void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
