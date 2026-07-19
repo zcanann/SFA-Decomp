@@ -55,6 +55,8 @@ typedef struct WispTriggerDistanceParams
     f32 minimum;
 } WispTriggerDistanceParams;
 
+extern const WispTriggerDistanceParams lbl_803E2720;
+
 const union WispBaddieConstF32 lbl_803E26E8 = {0.006f};
 int gWispBaddieLastSegmentEnd;
 
@@ -301,7 +303,6 @@ void wispbaddie_update(GameObject* obj)
 
 void wispbaddie_init(GameObject* obj, int setup, int initialised)
 {
-    extern const WispTriggerDistanceParams lbl_803E2720;
     WispBaddieState* state;
     f32 value;
 

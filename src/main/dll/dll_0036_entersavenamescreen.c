@@ -42,10 +42,10 @@ extern u8 lbl_803DD6EC;
 extern u8 lbl_803DD6ED;
 extern int* gTitleMenuLinkInterface;
 extern char gEnterSaveNameBuffer[4];
+extern s32 gEnterSaveNameSelectedIndex;
 
 void EnterSaveNameScreen_render(void)
 {
-    extern int gEnterSaveNameSelectedIndex;
     u8 buf[2];
     int i;
 
@@ -84,8 +84,6 @@ void EnterSaveNameScreen_render(void)
 void EnterSaveNameScreen_frameEnd(void)
 {
 }
-
-extern s32 gEnterSaveNameSelectedIndex;
 
 #define ENTER_SAVE_NAME_CHAR_COUNT   40
 #define ENTER_SAVE_NAME_DELETE_INDEX 38
