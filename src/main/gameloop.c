@@ -209,13 +209,6 @@ extern f32 gGameLoopResetHoldTimer;
 extern f32 gGameLoopResetFadeOutTimer;
 extern u8 gGameLoopHardReset;
 
-void init(void);
-
-void cutsceneEnterExit(int entering, int affectSounds);
-void checkReset(void);
-
-int return0_8002969C(void);
-
 void doNothing_8001F678(int wpad0, int wpad1)
 {
 }
@@ -612,8 +605,6 @@ void fn_8001FEA8(void)
     gGameLoopMusicRequestCount++;
     gGameLoopPendingMusicId = 0xc9;
 }
-
-void mainLoopDoGameText(void);
 
 void blankScreen(int frames)
 {

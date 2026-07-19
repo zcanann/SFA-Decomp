@@ -42,6 +42,7 @@ f32 gameTextFn_80019c00(void);
 void gameTextRun(void);
 void* gameTextGet(int textId);
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+void mainLoopDoGameText(void);
 void gameTextLoadDir(int dirId);
 int gameTextFn_8001b44c(int x);
 void gameTextLoadForCurMap(int sourceId);

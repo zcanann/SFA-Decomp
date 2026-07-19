@@ -284,8 +284,6 @@ void ObjModelChain_SetEnabled(ObjModelChain *chain, u8 enabled);
 void ObjModelChain_AdvancePhase(ObjModelChain *chain);
 void ObjModelChain_Free(ObjModelChain *chain);
 
-
-/* extern-cleanup: defining-file public prototypes */
 void setGQR6_2(int a, int b, int c, int d);
 void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA, u8* targetB, int blendScale);
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c);
@@ -301,6 +299,7 @@ void ObjModel_InitRenderBuffers(void);
 void ObjModel_InitResourceCaches(void);
 void ObjModel_InitScratchBuffers(void);
 void modelFn_800292e0(void);
+int return0_8002969C(void);
 void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 
 int loadModelAndAnimTabs(void);
