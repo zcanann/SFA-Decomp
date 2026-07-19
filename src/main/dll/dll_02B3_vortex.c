@@ -22,9 +22,16 @@ s16 gVortexRotZTable[2] = {-1024, 1024};
 #define VORTEX_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* partfx ids emitted per vortex visual variant on the particle-timer tick
-   (index-style; roles opaque). A for the 0x835/0x838 seqId form; B for the default form. */
+   (index-style; roles opaque). A for the WndLiftS/WndLiftC form; B for the default form. */
 #define VORTEX_PARTFX_A 0x7f7
 #define VORTEX_PARTFX_B 0x7c2
+
+/* the five vortex variants this DLL drives; retail OBJECTS.bin names, all DLL 0x2B3 */
+#define VORTEX_OBJ_WNDLIFTS  0x835 /* WndLiftS */
+#define VORTEX_OBJ_WNDLIFTC  0x838 /* WndLiftC */
+#define VORTEX_OBJ_DIMPIT    0x83d /* DIM_PitVort (name field truncated at 11 chars) */
+#define VORTEX_OBJ_SKYVORTC  0x29a /* SkyVortC */
+#define VORTEX_OBJ_SKYVORTS  0x829 /* SkyVortS */
 
 int Vortex_getExtraSize(void)
 {
@@ -76,7 +83,7 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         return;
     }
 
-    if (obj->anim.seqId == 0x835 || obj->anim.seqId == 0x838)
+    if (obj->anim.seqId == VORTEX_OBJ_WNDLIFTS || obj->anim.seqId == VORTEX_OBJ_WNDLIFTC)
     {
         texture = objFindTexture((GameObject*)obj, 0, 0);
         if (texture != NULL)
@@ -139,7 +146,7 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         obj->anim.rotX = objRotY;
         obj->anim.localPosY = objZ;
     }
-    else if (obj->anim.seqId == 0x83d)
+    else if (obj->anim.seqId == VORTEX_OBJ_DIMPIT)
     {
         texture = objFindTexture((GameObject*)obj, 0, 0);
         if (texture != NULL)
@@ -235,7 +242,7 @@ void Vortex_update(GameObject* obj)
         state->flags.active = mainGetBit(setup->activeGameBit);
     }
 
-    if (obj->anim.seqId == 0x29a || obj->anim.seqId == 0x829)
+    if (obj->anim.seqId == VORTEX_OBJ_SKYVORTC || obj->anim.seqId == VORTEX_OBJ_SKYVORTS)
     {
         if (state->flags.active != 0)
         {
@@ -286,7 +293,7 @@ void Vortex_init(GameObject* obj, VortexSetup* setup)
     {
         state->flags.active = mainGetBit(setup->activeGameBit);
     }
-    if (o->anim.seqId == 0x835)
+    if (o->anim.seqId == VORTEX_OBJ_WNDLIFTS)
     {
         for (i = 0; i < 2; i++)
         {
@@ -295,7 +302,7 @@ void Vortex_init(GameObject* obj, VortexSetup* setup)
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
-    else if (o->anim.seqId == 0x838)
+    else if (o->anim.seqId == VORTEX_OBJ_WNDLIFTC)
     {
         for (i = 0; i < 2; i++)
         {
@@ -304,7 +311,7 @@ void Vortex_init(GameObject* obj, VortexSetup* setup)
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
-    else if (o->anim.seqId == 0x83d)
+    else if (o->anim.seqId == VORTEX_OBJ_DIMPIT)
     {
         for (i = 0; i < 3; i++)
         {

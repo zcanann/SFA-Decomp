@@ -30,6 +30,13 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/track_dolphin_api.h"
 
+/* the scarab pickup variants this DLL drives; retail OBJECTS.bin names, all DLL 0x106 */
+#define SCARAB_OBJ_GREEN 0x3d3 /* GreenScarab */
+#define SCARAB_OBJ_RED   0x3d4 /* RedScarab */
+#define SCARAB_OBJ_GOLD  0x3d5 /* GoldScarab */
+#define SCARAB_OBJ_RAIN  0x3d6 /* RainScarab */
+#define SCARAB_OBJ_BEAN  0x3df /* Blue_bean */
+
 u8 gScarabColorVariantsA[4] = {2, 0x13, 0x16, 0};
 u8 gScarabColorVariantsB[4] = {0x14, 0x17, 0, 0};
 u8 gScarabColorVariantsC[4] = {0, 0, 0, 0x0C};
@@ -272,7 +279,7 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 
     state = *(int*)&obj->extra;
     model = Obj_GetActiveModel(obj);
-    if (obj->anim.seqId == 0x3d6)
+    if (obj->anim.seqId == SCARAB_OBJ_RAIN)
     {
         i = 0;
         shellColors = gScarabColorVariantsD;
@@ -443,7 +450,7 @@ void Scarab_update(GameObject* obj)
                 obj->anim.rotZ = 0;
                 state->phase = 1;
                 state->spawnYaw = obj->anim.rotX;
-                if (obj->anim.seqId == 0x3d3)
+                if (obj->anim.seqId == SCARAB_OBJ_GREEN)
                 {
                     {
                         f32 k = lbl_803E3A10;
@@ -451,7 +458,7 @@ void Scarab_update(GameObject* obj)
                         state->velZ = k * obj->anim.velocityZ;
                     }
                 }
-                else if (obj->anim.seqId == 0x3d4)
+                else if (obj->anim.seqId == SCARAB_OBJ_RED)
                 {
                     {
                         f32 k = lbl_803E3A14;
@@ -459,7 +466,7 @@ void Scarab_update(GameObject* obj)
                         state->velZ = k * obj->anim.velocityZ;
                     }
                 }
-                else if (obj->anim.seqId == 0x3d5)
+                else if (obj->anim.seqId == SCARAB_OBJ_GOLD)
                 {
                     {
                         f32 k = lbl_803E3A18;
@@ -467,7 +474,7 @@ void Scarab_update(GameObject* obj)
                         state->velZ = k * obj->anim.velocityZ;
                     }
                 }
-                else if (obj->anim.seqId == 0x3d6)
+                else if (obj->anim.seqId == SCARAB_OBJ_RAIN)
                 {
                     {
                         f32 k = lbl_803E3A1C;
@@ -475,7 +482,7 @@ void Scarab_update(GameObject* obj)
                         state->velZ = k * obj->anim.velocityZ;
                     }
                 }
-                else if (obj->anim.seqId == 0x3df)
+                else if (obj->anim.seqId == SCARAB_OBJ_BEAN)
                 {
                     f32 fz = lbl_803E39F8;
                     state->velX = fz;
@@ -599,7 +606,7 @@ void Scarab_update(GameObject* obj)
                 {
                     obj->anim.localPosY = state->baseY;
                 }
-                if (obj->anim.seqId != 0x3d6)
+                if (obj->anim.seqId != SCARAB_OBJ_RAIN)
                 {
                     obj->anim.rotX = (s16)(obj->anim.rotX + randomGetRange(-1460, 1460));
                 }
@@ -706,7 +713,7 @@ void Scarab_update(GameObject* obj)
                     state->fleeTimer = 0;
                 }
             }
-            if ((state->fleeTimer != 0 || obj->anim.seqId != 0x3d6) &&
+            if ((state->fleeTimer != 0 || obj->anim.seqId != SCARAB_OBJ_RAIN) &&
                 Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX) < lbl_803E3A38)
             {
                 deltaY = obj->anim.localPosY - player->anim.localPosY;
@@ -737,7 +744,7 @@ void Scarab_update(GameObject* obj)
                     itemPickupDoParticleFxLegacy(obj, lbl_803E3A00, state->particleId, 0x28);
                 }
             }
-            if (state->fleeTimer == 0 && obj->anim.seqId == 0x3d6)
+            if (state->fleeTimer == 0 && obj->anim.seqId == SCARAB_OBJ_RAIN)
             {
                 if (Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX) < lbl_803E3A3C)
                 {
@@ -763,7 +770,7 @@ void Scarab_update(GameObject* obj)
                     Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c);
                 }
             }
-            else if (state->fleeTimer != 0 && obj->anim.seqId == 0x3d6 &&
+            else if (state->fleeTimer != 0 && obj->anim.seqId == SCARAB_OBJ_RAIN &&
                      ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
             {
                 Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_46);

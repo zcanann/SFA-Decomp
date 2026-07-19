@@ -12,6 +12,10 @@
 #define CRFUELTANK_OBJFLAG_HIDDEN  0x4000
 #define CRFUELTANK_HIT_VOLUME_SLOT 0x1d
 
+/* only the CloudRunner snowbike detonates a fuel tank; retail OBJECTS.bin name
+   "CRSnowBike" (DLL 0x255) */
+#define CRFUELTANK_TRIGGER_OBJ 0x38c
+
 extern f32 lbl_803E6760;
 
 
@@ -52,7 +56,7 @@ void crfueltank_hitDetect(CrFuelTankObject* obj)
     if ((collider != NULL) && (collider->hitObj != NULL))
     {
         hitObj = collider->hitObj;
-        if (hitObj->objType == 0x38c)
+        if (hitObj->objType == CRFUELTANK_TRIGGER_OBJ)
         {
             ObjHits_DisableObject((GameObject*)obj);
             Sfx_PlayFromObject((u32)Obj_GetPlayerObject(), SFXTRIG_ar_barrel16);

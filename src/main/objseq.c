@@ -236,6 +236,12 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame);
 /* retail OBJECTS.bin name "VariableObj" (DLL 0xC6) */
 #define OBJSEQ_VARIABLE_OBJ 0x443
 
+/* playable-character placement ids; a seq actor carrying either one drives the
+   live player object instead of spawning its own. retail OBJECTS.bin names
+   "Sabre" and "Krystal" (no owning DLL) */
+#define OBJSEQ_SABRE_OBJ   0x0
+#define OBJSEQ_KRYSTAL_OBJ 0x1f
+
 #define OBJSEQ_CAMMODE_DEFAULT      0x42 /* default gameplay cameramode DLL */
 #define OBJSEQ_CAMMODE_VIEWFINDER   0x44 /* dll_0044 viewfinder */
 #define OBJSEQ_CAMMODE_CAMTALK      0x45 /* dll_0045_camTalk */
@@ -641,7 +647,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
         if ((flags & (bit << i)) && (*(u16*)(walk + 4) & 0x4000))
         {
             objIdU = *(u16*)(walk + 6);
-            if (objIdU == 0x1f || objIdU == 0)
+            if (objIdU == OBJSEQ_KRYSTAL_OBJ || objIdU == OBJSEQ_SABRE_OBJ)
             {
                 if (playerStatusIsPositive((GameObject*)(Obj_GetPlayerObject())) == 0)
                 {
@@ -661,7 +667,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
         {
             setup = (ObjSeqAnimPlacement*)Obj_AllocObjectSetup(0x28, OBJSEQ_OVERRIDE_OBJ);
             objId = *(u16*)(walk2 + 6);
-            if (objId == 0x1f || objId == 0)
+            if (objId == OBJSEQ_KRYSTAL_OBJ || objId == OBJSEQ_SABRE_OBJ)
             {
                 GameObject* pp = Obj_GetPlayerObject();
                 pp->objectFlags |= OBJECT_OBJFLAG_SEQ_ATTACHED;
@@ -687,7 +693,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
                 if (*(u16*)(walk2 + 4) & 0x4000)
                 {
                     setup->base.objectId = OBJSEQ_OVERRIDE_OBJ;
-                    if (objId == 0x443)
+                    if (objId == OBJSEQ_VARIABLE_OBJ)
                     {
                         if (objSeqObjs != -1)
                         {
@@ -820,7 +826,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
             {
                 *(s8*)&((ObjSeqState*)seq)->movementState = -1;
             }
-            if ((objId == 0x1f || objId == 0) && (((ObjSeqState*)seq)->flags & 1))
+            if ((objId == OBJSEQ_KRYSTAL_OBJ || objId == OBJSEQ_SABRE_OBJ) && (((ObjSeqState*)seq)->flags & 1))
             {
                 playerSetInCutscene((GameObject*)(player));
             }
@@ -1004,7 +1010,7 @@ int ObjSeq_resolveTargetObject(u8* obj)
     default:
         ((ObjSeqState*)seqObj)->targetObj = NULL;
         objType = model->targetType - 4;
-        if (objType == 0x1f || objType == 0)
+        if (objType == OBJSEQ_KRYSTAL_OBJ || objType == OBJSEQ_SABRE_OBJ)
         {
             ((ObjSeqState*)seqObj)->targetObj = Obj_GetPlayerObject();
         }

@@ -32,6 +32,10 @@ f32 lbl_803DC24C = 0.5f;
 
 #define PROXIMITYMINE_PARTFX 0x51c
 
+/* the proximity-triggered variant; the same code also drives contact-only mines
+   spawned under other ids. retail OBJECTS.bin name "ProximityMi" (DLL 0x260) */
+#define PROXIMITYMINE_OBJ 0x789
+
 extern f32 lbl_803E6768;
 extern f32 lbl_803E6778;
 extern f32 lbl_803E677C;
@@ -350,7 +354,7 @@ void ProximityMine_init(ProximityMineObject* obj, ProximityMineDef* def)
     ProximityMineState* state;
 
     state = obj->state;
-    if (obj->objId == 0x789)
+    if (obj->objId == PROXIMITYMINE_OBJ)
     {
         def->mode = PROXIMITYMINE_SPAWN_PROXIMITY;
     }
