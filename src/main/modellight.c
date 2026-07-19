@@ -617,7 +617,12 @@ void modelLightStruct_getDiffuseColor(ModelLightStruct* p, u8* r, u8* g, u8* b, 
     *a = p->diffuseColor[3];
 }
 
-void modelLightStruct_setDiffuseColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
+void modelLightStruct_setDiffuseColor(p, r, g, b, a)
+ModelLightStruct* p;
+u8 r;
+u8 g;
+u8 b;
+u8 a;
 {
     p->diffuseFadeStartColor[0] = r;
     p->diffuseColor[0] = r;

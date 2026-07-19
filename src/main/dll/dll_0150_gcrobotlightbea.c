@@ -137,9 +137,9 @@ void gcrobotlightbea_update(int* obj)
     getAmbientColor(0, &r_byte, &g_byte, &b_byte);
     if (sub->light != NULL)
     {
-        ((void (*)(ModelLightStruct*, int, int, int, int))modelLightStruct_setDiffuseColor)(
-            sub->light, (s32)(0.7f * (f32)(u32)r_byte), (s32)(0.7f * (f32)(u32)g_byte),
-            (s32)(0.7f * (f32)(u32)b_byte), 0xff);
+        modelLightStruct_setDiffuseColor(sub->light, (s32)(0.7f * (f32)(u32)r_byte),
+                                         (s32)(0.7f * (f32)(u32)g_byte),
+                                         (s32)(0.7f * (f32)(u32)b_byte), 0xff);
         modelLightStruct_setPosition(sub->light, vec2[0], vec2[1], vec2[2]);
     }
 }
