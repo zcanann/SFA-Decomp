@@ -16,6 +16,7 @@
 #include "main/texture.h"
 #include "track/intersect_hud_api.h"
 #include "main/gametext_command_api.h"
+#include "main/gametext_color_api.h"
 #include "main/gametext_show_api.h"
 #include "main/textrender_api.h"
 #include "main/mapEventTypes.h"
