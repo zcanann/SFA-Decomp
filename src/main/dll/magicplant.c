@@ -51,10 +51,6 @@ static const f32 gVambatHeartbeatPeriod[1] = {6e+01f};
 #define MAGICPLANT_PARTFX          0x802
 #define MAGICPLANT_HIT_VOLUME_SLOT 0xe
 
-void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
-#define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
-    fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
-
 void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     if (((BaddieState*)state)->userData2 != 0)

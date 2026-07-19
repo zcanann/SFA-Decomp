@@ -47,10 +47,6 @@
 extern f32 lbl_803E2868;
 extern f32 lbl_803E286C;
 
-void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
-#define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
-    fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
-
 static f32 seq11e_intToFloat(int n)
 {
     return (f32)n;
