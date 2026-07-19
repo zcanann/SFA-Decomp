@@ -985,7 +985,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
     PSVECSubtract(curvePos, &(obj)->anim.localPosX, diff);
     /* snapshot the shared steer speed before building the call args (the
      * through-pointer read keeps the load at this statement) */
-    spd = *(f32*)&lbl_803DC2F8;
+    spd = lbl_803DC2F8;
     Obj_SteerVelocityTowardVector(obj, (Vec3f*)&obj->anim.velocityX, (Vec3f*)diff, spd, spd / 30.0f,
                                   0.3f);
     PSVECAdd(&(obj)->anim.localPosX, &(obj)->anim.velocityX, &(obj)->anim.localPosX);
