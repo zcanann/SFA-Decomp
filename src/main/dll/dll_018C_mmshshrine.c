@@ -311,6 +311,54 @@ void fn_801C4664(void* objArg)
  */
 int fn_801C49B8(void* objArg);
 
+int fn_801C49B8(void* objArg)
+{
+    DFSHLaserBeamObject* obj;
+    DFSHLaserBeamRuntime* runtime;
+    f32 stickAccel;
+    f32 target;
+    f32 zero;
+    int swayValue;
+
+    obj = (DFSHLaserBeamObject*)objArg;
+    runtime = obj->runtime;
+    if ((DFSH_LASER_FLAGS(runtime) & 0x20) == 0)
+    {
+        fearTestMeterSetFadeIn(1);
+        DFSH_LASER_FLAGS(runtime) |= 0x20;
+        zero = 0.0f;
+        runtime->swayPhase = zero;
+        runtime->swayVelocity = zero;
+        runtime->swayAccel = zero;
+    }
+
+    stickAccel = (f32)(s8)padGetStickX(0) / 72.0f;
+    stickAccel = stickAccel * 0.0010416667209938169f;
+    runtime->swayVelocity += stickAccel * timeDelta;
+
+    target = runtime->swayTarget;
+    if (target < 0.0f && runtime->swayAccel > target)
+    {
+        runtime->swayAccel -= 0.0010416667209938169f * timeDelta;
+    }
+    else if (target > 0.0f)
+    {
+        if (runtime->swayAccel < target)
+        {
+            runtime->swayAccel += 0.0010416667209938169f * timeDelta;
+        }
+    }
+
+    runtime->swayPhase += timeDelta * (runtime->swayVelocity + runtime->swayAccel);
+    swayValue = (int)(96.0f * runtime->swayPhase);
+    fearTestMeterSetRange(0x60, 0x39, swayValue);
+    if ((swayValue > 0x39) || (swayValue < -0x39))
+    {
+        return 1;
+    }
+    return 0;
+}
+
 int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
 {
     MMSHShrineRuntime* runtime;
@@ -394,54 +442,6 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
         return MMSH_SHRINE_SEQ_RESULT_COMPLETE;
     }
     runtime->latch.activeMask |= MMSH_SHRINE_LATCH_FLAG_OPEN_READY;
-    return 0;
-}
-
-int fn_801C49B8(void* objArg)
-{
-    DFSHLaserBeamObject* obj;
-    DFSHLaserBeamRuntime* runtime;
-    f32 stickAccel;
-    f32 target;
-    f32 zero;
-    int swayValue;
-
-    obj = (DFSHLaserBeamObject*)objArg;
-    runtime = obj->runtime;
-    if ((DFSH_LASER_FLAGS(runtime) & 0x20) == 0)
-    {
-        fearTestMeterSetFadeIn(1);
-        DFSH_LASER_FLAGS(runtime) |= 0x20;
-        zero = 0.0f;
-        runtime->swayPhase = zero;
-        runtime->swayVelocity = zero;
-        runtime->swayAccel = zero;
-    }
-
-    stickAccel = (f32)(s8)padGetStickX(0) / 72.0f;
-    stickAccel = stickAccel * 0.0010416667209938169f;
-    runtime->swayVelocity += stickAccel * timeDelta;
-
-    target = runtime->swayTarget;
-    if (target < 0.0f && runtime->swayAccel > target)
-    {
-        runtime->swayAccel -= 0.0010416667209938169f * timeDelta;
-    }
-    else if (target > 0.0f)
-    {
-        if (runtime->swayAccel < target)
-        {
-            runtime->swayAccel += 0.0010416667209938169f * timeDelta;
-        }
-    }
-
-    runtime->swayPhase += timeDelta * (runtime->swayVelocity + runtime->swayAccel);
-    swayValue = (int)(96.0f * runtime->swayPhase);
-    fearTestMeterSetRange(0x60, 0x39, swayValue);
-    if ((swayValue > 0x39) || (swayValue < -0x39))
-    {
-        return 1;
-    }
     return 0;
 }
 

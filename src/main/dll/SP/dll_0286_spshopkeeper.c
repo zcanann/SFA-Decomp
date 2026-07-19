@@ -279,6 +279,57 @@ int ShopKeeper_SeqFn(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
     return 0;
 }
 
+f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
+{
+    f32 dist;
+    f32 dx;
+    f32 dz;
+    int diff;
+
+    dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+    dz = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+    dist = sqrtf(dx * dx + dz * dz);
+    if (dist != lbl_803E59DC)
+    {
+        dx /= dist;
+        dz /= dist;
+    }
+    if (dist > 10.0f)
+    {
+        diff = getAngle(dx, dz) & 0xffff;
+        if (mode != 0)
+        {
+            *obj = diff;
+        }
+        else
+        {
+            diff = diff - (u16)*obj;
+            if (diff > 0x8000)
+            {
+                diff -= 0xFFFF;
+            }
+            if (diff < -0x8000)
+            {
+                diff += 0xFFFF;
+            }
+            if (diff > 0x2000)
+            {
+                diff -= 0x2000;
+            }
+            else if (diff < -0x2000)
+            {
+                diff += 0x2000;
+            }
+            else
+            {
+                diff = 0;
+            }
+            *obj = (s16)((f32)(diff >> 3) * timeDelta + (f32) * (s16*)obj);
+        }
+    }
+    return dist;
+}
+
 void ShopKeeper_spawnScarabs(GameObject* obj, int state, int count)
 {
     int i;
@@ -396,57 +447,6 @@ void ShopKeeper_update(GameObject* obj)
     dll_2E_func03(obj, (MoveLibState*)(state + 0x35C));
     characterDoEyeAnimsState(obj, state + 0x980);
     (obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
-}
-
-f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
-{
-    f32 dist;
-    f32 dx;
-    f32 dz;
-    int diff;
-
-    dx = ((GameObject*)player)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-    dz = ((GameObject*)player)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-    dist = sqrtf(dx * dx + dz * dz);
-    if (dist != lbl_803E59DC)
-    {
-        dx /= dist;
-        dz /= dist;
-    }
-    if (dist > 10.0f)
-    {
-        diff = getAngle(dx, dz) & 0xffff;
-        if (mode != 0)
-        {
-            *obj = diff;
-        }
-        else
-        {
-            diff = diff - (u16)*obj;
-            if (diff > 0x8000)
-            {
-                diff -= 0xFFFF;
-            }
-            if (diff < -0x8000)
-            {
-                diff += 0xFFFF;
-            }
-            if (diff > 0x2000)
-            {
-                diff -= 0x2000;
-            }
-            else if (diff < -0x2000)
-            {
-                diff += 0x2000;
-            }
-            else
-            {
-                diff = 0;
-            }
-            *obj = (s16)((f32)(diff >> 3) * timeDelta + (f32) * (s16*)obj);
-        }
-    }
-    return dist;
 }
 
 void ShopKeeper_init(GameObject* obj)
