@@ -9,7 +9,7 @@
 #include "main/gamebits.h"
 #include "main/gameloop_gamebit_api.h"
 #include "main/obj_group.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 /* object group this object belongs to */
 #define FIREFLYLANTERN_OBJGROUP 0xf
@@ -107,7 +107,7 @@ void FireFlyLantern_free(int obj)
 
 void FireFlyLantern_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3AF0);
+    objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E3AF0);
 }
 
 void FireFlyLantern_update(GameObject* obj)

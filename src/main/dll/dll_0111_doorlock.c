@@ -22,7 +22,7 @@
 #include "main/objseq.h"
 #include "main/dll/dll_0111_doorlock.h"
 #include "main/gamebits.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 #include "main/pad.h"
 
@@ -92,7 +92,7 @@ void Lock_DoorLock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderFn_80041018((GameObject*)obj);
         return;
     }
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void Lock_DoorLock_update(GameObject* obj)

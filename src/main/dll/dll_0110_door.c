@@ -1,7 +1,7 @@
 /* DLL 0x0110 - door objects [0x8017B5C8-0x8017BB80). */
 
 #include "main/game_object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
@@ -190,7 +190,7 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
 int Door_getExtraSize(void) { return 0x8; }
 
-void Door_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f); }
+void Door_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f); }
 
 void Door_update(GameObject *obj)
 {

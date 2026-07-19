@@ -20,7 +20,7 @@
 #include "main/dll/modgfx_interface.h"
 #include "main/camera_interface.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -454,7 +454,7 @@ void largecrate_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 rende
             (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
             return;
         }
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

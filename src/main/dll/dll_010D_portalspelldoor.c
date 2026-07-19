@@ -3,7 +3,7 @@
  * TU = 0x80186498..0x80186704.
  */
 #include "main/game_object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/player_api.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
@@ -62,7 +62,7 @@ void PortalSpellDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3A88);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E3A88);
 }
 
 void PortalSpellDoor_hitDetect(void)

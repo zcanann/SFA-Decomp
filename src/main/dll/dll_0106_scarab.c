@@ -20,7 +20,7 @@
 #include "main/obj_message.h"
 #include "main/object.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -313,7 +313,7 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             return;
         }
 
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E3A00);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3A00);
         if ((visible != 0) && (obj->anim.alpha != 0))
         {
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, ((ScarabState*)state)->burstModel, 1, 0x14,

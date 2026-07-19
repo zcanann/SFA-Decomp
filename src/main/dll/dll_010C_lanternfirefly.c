@@ -3,7 +3,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/dll/CF/CFcrystal.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/vecmath.h"
 #include "main/dll/windlift107state_struct.h"
 #include "main/dll/portalspelldoorstate_struct.h"
@@ -260,7 +260,7 @@ void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3AA0);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E3AA0);
 }
 
 void LanternFireFly_hitDetect(void)
@@ -470,4 +470,3 @@ void LanternFireFly_release(void)
 void LanternFireFly_initialise(void)
 {
 }
-

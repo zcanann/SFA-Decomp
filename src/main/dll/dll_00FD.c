@@ -1,6 +1,6 @@
 /* DLL 0x00FD - baby CloudRunner objects [8017EF6C-8017F4F4) */
 #include "main/game_object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objprint_render_api.h"
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
@@ -65,7 +65,7 @@ void dll_FD_free(void)
 void dll_FD_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3850);
+    if (v != 0) objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E3850);
 }
 
 void dll_FD_hitDetect(GameObject *obj)

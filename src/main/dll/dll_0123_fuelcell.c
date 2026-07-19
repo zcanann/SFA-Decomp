@@ -2,7 +2,7 @@
 #include "main/dll/dll_0123_fuelcell.h"
 #include "track/intersect_depth_state_api.h"
 #include "main/objseq.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
@@ -146,7 +146,7 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
             ModelRenderOp* op = ObjModel_GetRenderOp(Obj_GetActiveModel((GameObject*)obj)->file, 0);
             op->alphaOverride = 0x7f;
         }
-        ((void(*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 
         for (i = 0; i < 10; i++)
         {

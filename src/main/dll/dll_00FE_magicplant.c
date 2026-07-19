@@ -20,7 +20,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -320,7 +320,7 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     state = plant->state;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3858);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E3858);
         child = state->childObject;
         if (child != NULL)
         {
