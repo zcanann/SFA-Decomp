@@ -3508,10 +3508,10 @@ int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
             *outDepth = best;
             return 1;
         }
-        *outDepth = 0.0f;
+        *outDepth = lbl_803DECB4;
         return 0;
     }
-    *outDepth = 0.0f;
+    *outDepth = lbl_803DECB4;
     return 0;
 }
 
