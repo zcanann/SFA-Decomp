@@ -269,68 +269,68 @@ lbl_BTN_z:
     blr
 }
 
-void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
+void modelAnimUpdateChannels(u8* hdr, u8* work, int chanCount)
 {
-    u8* animChan;
-    u8* blendChan;
+    u8* slotCur;
+    u8* chanCur;
     int i;
-    u8* blendSrc;
-    u8* blendDst;
-    u8* jointTypeSrc;
-    int cmdStep;
-    int jointOff;
-    int jointIdx;
-    int frameInt;
-    int dataOff;
-    f32 frameFlt;
+    u8* mtxSlotRow;
+    u8* frameStream;
+    u8* slotByte;
+    int frameStride;
+    int boneByteOff;
+    int boneIdx;
+    int frameIdx;
+    int streamOff;
+    f32 frameIdxF;
 
     i = 0;
-    animChan = stk;
-    blendChan = stk;
-    for (; i < n; i++)
+    slotCur = work;
+    chanCur = work;
+    for (; i < chanCount; i++)
     {
         if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
         {
-            blendDst = *(u8**)(stk + *(u16*)(animChan + 0x44) * 4 + 0x1c);
-            blendSrc = blendDst;
-            blendDst += 0x80;
+            frameStream = *(u8**)(work + *(u16*)(slotCur + 0x44) * 4 + 0x1c);
+            mtxSlotRow = frameStream;
+            frameStream += 0x80;
         }
         else
         {
             /* hdr + 0x68 / 0x64 are ModelFileHeader animationDataSection /
                animationModelPtrs */
-            blendSrc = *(u8**)(hdr + 0x68) + *(u16*)(animChan + 0x44) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
-            blendDst = *(u8**)(*(u8**)(hdr + 0x64) + *(u16*)(animChan + 0x44) * 4);
+            mtxSlotRow = *(u8**)(hdr + 0x68) + *(u16*)(slotCur + 0x44) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
+            frameStream = *(u8**)(*(u8**)(hdr + 0x64) + *(u16*)(slotCur + 0x44) * 4);
         }
-        cmdStep = *(u8*)(*(u8**)(blendChan + 0x34) + 2);
-        jointIdx = 0;
-        jointOff = 0;
-        jointTypeSrc = blendSrc;
-        while (jointIdx < ((ModelFileHeader*)hdr)->jointCount)
+        frameStride = *(u8*)(*(u8**)(chanCur + 0x34) + 2);
+        boneIdx = 0;
+        boneByteOff = 0;
+        slotByte = mtxSlotRow;
+        while (boneIdx < ((ModelFileHeader*)hdr)->jointCount)
         {
-            *(u8*)(i + *(int*)&((ModelFileHeader*)hdr)->jointData + jointOff + 2) = *jointTypeSrc;
-            jointOff += 0x1c;
-            jointIdx++;
-            jointTypeSrc++;
+            *(u8*)(i + *(int*)&((ModelFileHeader*)hdr)->jointData + boneByteOff + 2) = *slotByte;
+            boneByteOff += 0x1c;
+            boneIdx++;
+            slotByte++;
         }
-        frameInt = (int)*(f32*)(blendChan + 4);
-        frameFlt = frameInt;
-        if (frameFlt != *(f32*)(blendChan + 4))
+        frameIdx = (int)*(f32*)(chanCur + 4);
+        frameIdxF = frameIdx;
+        if (frameIdxF != *(f32*)(chanCur + 4))
         {
-            *(s16*)(animChan + 0x4c) = cmdStep;
+            *(s16*)(slotCur + 0x4c) = frameStride;
         }
         else
         {
-            *(s16*)(animChan + 0x4c) = 0;
+            *(s16*)(slotCur + 0x4c) = 0;
         }
-        if (*(s8*)(stk + i + 0x60) != 0 && frameFlt == *(f32*)(blendChan + 0x14) - lbl_803DE818)
+        if (*(s8*)(work + i + 0x60) != 0 && frameIdxF == *(f32*)(chanCur + 0x14) - lbl_803DE818)
         {
-            *(s16*)(animChan + 0x4c) = (s16)(-cmdStep * frameInt);
+            *(s16*)(slotCur + 0x4c) = (s16)(-frameStride * frameIdx);
         }
-        dataOff = *(s16*)(blendDst + 2) + cmdStep * frameInt;
-        *(u8**)(blendChan + 0x2c) = blendDst + dataOff;
-        animChan += 2;
-        blendChan += 4;
+        streamOff = *(s16*)(frameStream + 2) + frameStride * frameIdx;
+        *(u8**)(chanCur + 0x2c) = frameStream + streamOff;
+        slotCur += 2;
+        chanCur += 4;
     }
 }
 
