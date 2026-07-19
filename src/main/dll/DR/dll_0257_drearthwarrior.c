@@ -201,7 +201,7 @@ typedef struct EarthWarriorSub
     u8 pad988[2];
     s16 health; /* 0x98a */
     u16 flags98C;
-    u8 rideState; /* 0x98E: interaction mode set by func17(param); 2 = stunned/ridden (A-button icon, interaction disabled), 0 = normal */
+    u8 rideState; /* 0x98E: interaction mode set by setRiderMode(param); 2 = stunned/ridden (A-button icon, interaction disabled), 0 = normal */
     u8 pad98F;
     u8 unk990;
     u8 pad991;
@@ -314,7 +314,7 @@ const EWColorTbl gDREarthWarriorColors = {
 };
 extern EWModelChainEntry* gEarthWarriorTailChainDesc;
 
-void fn_802BCA10(GameObject* obj, int sub, int state);
+void DR_EarthWarrior_updateLookAtBones(GameObject* obj, int sub, int state);
 
 void DR_EarthWarrior_func23(GameObject* obj, int mode)
 {
@@ -332,7 +332,7 @@ void DR_EarthWarrior_func23(GameObject* obj, int mode)
     }
 }
 
-int fn_802BC830(GameObject* obj, int sub, int state)
+int DR_EarthWarrior_updateLeap(GameObject* obj, int sub, int state)
 {
     *(u32*)&((EarthWarriorSub*)sub)->unk360 |= 0x1000000LL;
     ((BaddieState*)state)->moveSpeed = lbl_803E82EC;
@@ -375,7 +375,7 @@ int fn_802BC830(GameObject* obj, int sub, int state)
     return 0;
 }
 
-void fn_802BCA10(GameObject* obj, int sub, int state)
+void DR_EarthWarrior_updateLookAtBones(GameObject* obj, int sub, int state)
 {
     int angle;
     int delta;
@@ -472,7 +472,7 @@ void fn_802BCA10(GameObject* obj, int sub, int state)
         vec9[0] = (s16)(t >> 1);
     }
 }
-int fn_802BC830(GameObject* obj, int sub, int state);
+int DR_EarthWarrior_updateLeap(GameObject* obj, int sub, int state);
 int DR_EarthWarrior_defaultStateHandler(void)
 {
     return 0x0;
@@ -593,7 +593,7 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, int state)
     }
     else if (((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80)
     {
-        if (fn_802BC830(obj, q, state) != 0)
+        if (DR_EarthWarrior_updateLeap(obj, q, state) != 0)
         {
             return 2;
         }
@@ -785,7 +785,7 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, int state)
             ((EarthWarriorState*)state)->baddie.moveSpeed = lbl_803E8354;
         }
     }
-    fn_802BCA10(obj, q, state);
+    DR_EarthWarrior_updateLookAtBones(obj, q, state);
     return 0;
 }
 #undef hitState
@@ -887,7 +887,7 @@ int DR_EarthWarrior_stateHandler01(GameObject* obj, int baddie)
         }
         *(s16*)&q->currentYaw = (gEarthWarriorDegToAngle * v + (f32)(s32)q->currentYaw);
     }
-    fn_802BCA10(obj, (int)q, baddie);
+    DR_EarthWarrior_updateLookAtBones(obj, (int)q, baddie);
     return 0;
 }
 
@@ -956,7 +956,7 @@ void DR_EarthWarrior_func22(GameObject* obj, f32 scale)
     fn_8003B950(gEarthWarriorMatrix);
 }
 
-void DR_EarthWarrior_func21(void)
+void DR_EarthWarrior_resetToRomListPosition(void)
 {
 }
 
@@ -974,14 +974,14 @@ f32 DR_EarthWarrior_func19(GameObject* obj, f32* out)
     return 0.0f;
 }
 
-void DR_EarthWarrior_func18(GameObject* obj, f32* a, int* b)
+void DR_EarthWarrior_getAimAngles(GameObject* obj, f32* a, int* b)
 {
     EarthWarriorState* inner = obj->extra;
     *a = (f32)(s32)inner->sub.aimAccumY;
     *b = inner->sub.aimAccumX;
 }
 
-void DR_EarthWarrior_func17(GameObject* obj, int param)
+void DR_EarthWarrior_setRiderMode(GameObject* obj, int param)
 {
     EarthWarriorState* inner = obj->extra;
     inner->sub.rideState = param;
@@ -1006,12 +1006,12 @@ void DR_EarthWarrior_func17(GameObject* obj, int param)
     }
 }
 
-int DR_EarthWarrior_func16(void)
+int DR_EarthWarrior_getRiderMode(void)
 {
     return 0x0;
 }
 
-void DR_EarthWarrior_func15(GameObject* obj, f32* x, f32* y, f32* z)
+void DR_EarthWarrior_mount(GameObject* obj, f32* x, f32* y, f32* z)
 {
     *x = obj->anim.localPosX;
     *y = obj->anim.localPosY;
@@ -1236,7 +1236,7 @@ void DR_EarthWarrior_hitDetect(GameObject* obj)
     }
 }
 
-void fn_802BE6E8(GameObject* obj, int t, int p3)
+void DR_EarthWarrior_runController(GameObject* obj, int t, int p3)
 {
     int inner = *(int*)&obj->extra;
     int sub;
@@ -1308,7 +1308,7 @@ void DR_EarthWarrior_update(GameObject* obj)
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         hitState->lateralResponseWeight = 0xf4;
         hitState->axialResponseWeight = 0xf4;
-        fn_802BE6E8(obj, timeDelta, -1);
+        DR_EarthWarrior_runController(obj, timeDelta, -1);
     }
     else
     {
@@ -1322,7 +1322,7 @@ void DR_EarthWarrior_update(GameObject* obj)
         (obj)->anim.velocityX = z;
         (obj)->anim.velocityY = z;
         (obj)->anim.velocityZ = z;
-        fn_802BE6E8(obj, framesThisStep, -1);
+        DR_EarthWarrior_runController(obj, framesThisStep, -1);
     }
     characterDoEyeAnimsState(obj, (char*)inner + 0x38c);
     objAnimFn_80038f38(obj, (char*)inner + 0x3bc);
@@ -1573,13 +1573,13 @@ void* gDR_EarthWarriorObjDescriptor[29] = {(void*)0x00000000,
                                            DR_EarthWarrior_modelMtxFn,
                                            DR_EarthWarrior_render2,
                                            DR_EarthWarrior_func14,
-                                           DR_EarthWarrior_func15,
-                                           DR_EarthWarrior_func16,
-                                           DR_EarthWarrior_func17,
-                                           DR_EarthWarrior_func18,
+                                           DR_EarthWarrior_mount,
+                                           DR_EarthWarrior_getRiderMode,
+                                           DR_EarthWarrior_setRiderMode,
+                                           DR_EarthWarrior_getAimAngles,
                                            DR_EarthWarrior_func19,
                                            DR_EarthWarrior_func20,
-                                           DR_EarthWarrior_func21,
+                                           DR_EarthWarrior_resetToRomListPosition,
                                            DR_EarthWarrior_func22,
                                            DR_EarthWarrior_func23,
                                            (void*)0x00000000};
