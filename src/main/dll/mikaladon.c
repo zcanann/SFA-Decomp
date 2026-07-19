@@ -44,8 +44,8 @@
  * the dropper via +0xC4 and announced with SFX 0x249. */
 #define SEQOBJ11E_GCROBOT_DROP_OBJ 0x6b5
 
-extern f32 lbl_803E2868;
-extern f32 lbl_803E286C;
+extern const f32 lbl_803E2868;
+extern const f32 lbl_803E286C;
 
 static f32 seq11e_intToFloat(int n)
 {
