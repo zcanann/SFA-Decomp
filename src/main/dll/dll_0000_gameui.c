@@ -1283,8 +1283,8 @@ void pauseMenuDrawElement(void* element, f32 fx, f32 fy, int depthZ, u8 paletteI
     int dx, dy;
     f32 c0, c1;
     pauseMenuMapFn_8011de20(element, paletteIndex, depthZ, drawFlags);
-    dx = (*(u16*)((char*)element + 0xa) << 2) * (u16)scalePercent / 256;
-    dy = (*(u16*)((char*)element + 0xc) << 2) * (u16)scalePercent / 256;
+    dx = (((Texture*)element)->width << 2) * (u16)scalePercent / 256;
+    dy = (((Texture*)element)->height << 2) * (u16)scalePercent / 256;
     fx = 4.0f * fx;
     fy = 4.0f * fy;
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
