@@ -100,18 +100,18 @@ void CameraModeArwing_free(void)
 }
 void CameraModeArwing_update(u8* obj)
 {
-    int yaw0, pitch0;
-    u8* state = *(u8**)&((GameObject*)obj)->anim.targetObj;
+    int targetYaw, targetPitch;
+    u8* targetObj = *(u8**)&((GameObject*)obj)->anim.targetObj;
     int angleDelta;
 
     ((GameObject*)obj)->anim.worldPosX = gCamArwingWork[0] * ((CameraArwingWork*)gCamArwingWork)->xScale;
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.worldPosX + ((CameraArwingWork*)gCamArwingWork)->basePosX;
     ((GameObject*)obj)->anim.worldPosY = gCamArwingWork[1] * ((CameraArwingWork*)gCamArwingWork)->yScale;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.worldPosY + ((CameraArwingWork*)gCamArwingWork)->basePosY;
-    ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)state)->anim.worldPosZ + ((CameraArwingWork*)gCamArwingWork)->
+    ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)targetObj)->anim.worldPosZ + ((CameraArwingWork*)gCamArwingWork)->
         posZOffset;
 
-    if ((s8)state[0xac] != 0x26)
+    if ((s8)targetObj[0xac] != 0x26)
     {
         f32 t = ((CameraArwingWork*)gCamArwingWork)->zEaseNum / ((CameraArwingWork*)gCamArwingWork)->zEaseDenom;
         t = t - lbl_803E1BA0;
@@ -127,23 +127,23 @@ void CameraModeArwing_update(u8* obj)
         }
     }
 
-    yaw0 = (s32)((f32)((CameraArwingWork*)gCamArwingWork)->inputYaw *
+    targetYaw = (s32)((f32)((CameraArwingWork*)gCamArwingWork)->inputYaw *
         ((CameraArwingWork*)gCamArwingWork)->yawScale);
-    pitch0 = (s32)((f32)((CameraArwingWork*)gCamArwingWork)->inputPitch *
+    targetPitch = (s32)((f32)((CameraArwingWork*)gCamArwingWork)->inputPitch *
         ((CameraArwingWork*)gCamArwingWork)->pitchScale);
 
-    if (arwarwing_isDead((GameObject*)state) != 0)
+    if (arwarwing_isDead((GameObject*)targetObj) != 0)
     {
-        f32 va, vb, vc, vd;
+        f32 relX, relY, relZ, relDist;
         int step;
         CameraArwingWork* work;
         ((CameraArwingWork*)gCamArwingWork)->rollRate = lbl_803E1BA8;
         work = (CameraArwingWork*)gCamArwingWork;
-        (*gCameraInterface)->getRelativePosition(obj, &va, &vb, &vc, &vd, lbl_803E1BA4, 0);
+        (*gCameraInterface)->getRelativePosition(obj, &relX, &relY, &relZ, &relDist, lbl_803E1BA4, 0);
         ((GameObject*)obj)->anim.rotZ = work->rollRate * timeDelta +
             (f32)((GameObject*)obj)->anim.rotZ;
-        angleDelta = 0x8000 - (u16)getAngle(va, vc);
-        yaw0 = (u16)getAngle(vb, vd);
+        angleDelta = 0x8000 - (u16)getAngle(relX, relZ);
+        targetYaw = (u16)getAngle(relY, relDist);
         angleDelta -= (u16)((GameObject*)obj)->anim.rotX;
         if (angleDelta > 0x8000)
         {
@@ -155,7 +155,7 @@ void CameraModeArwing_update(u8* obj)
         }
         step = (s32)((f32)angleDelta * timeDelta);
         ((GameObject*)obj)->anim.rotX = step * gCamArwingRotEaseScale + (f32) * (s16*)obj;
-        angleDelta = yaw0 - (u16)((GameObject*)obj)->anim.rotY;
+        angleDelta = targetYaw - (u16)((GameObject*)obj)->anim.rotY;
         if (angleDelta > 0x8000)
         {
             angleDelta = angleDelta - 0xffff;
@@ -167,49 +167,49 @@ void CameraModeArwing_update(u8* obj)
         step = (s32)((f32)angleDelta * timeDelta);
         ((GameObject*)obj)->anim.rotY = step * gCamArwingRotEaseScale + (f32)((GameObject*)obj)->anim.rotY;
     }
-    else if (arwarwing_isExplodingOrWarping((GameObject*)state) != 0)
+    else if (arwarwing_isExplodingOrWarping((GameObject*)targetObj) != 0)
     {
-        f32 nv = ((CameraArwingWork*)gCamArwingWork)->rollRate * gCamArwingRollDecay;
-        ((CameraArwingWork*)gCamArwingWork)->rollRate = nv;
-        ((GameObject*)obj)->anim.rotZ = nv * timeDelta + (f32)((GameObject*)obj)->anim.rotZ;
+        f32 rollVel = ((CameraArwingWork*)gCamArwingWork)->rollRate * gCamArwingRollDecay;
+        ((CameraArwingWork*)gCamArwingWork)->rollRate = rollVel;
+        ((GameObject*)obj)->anim.rotZ = rollVel * timeDelta + (f32)((GameObject*)obj)->anim.rotZ;
     }
     else
     {
         f32 step;
-        int roll0 = (s32)((f32)((CameraArwingWork*)gCamArwingWork)->inputRoll *
+        int targetRoll = (s32)((f32)((CameraArwingWork*)gCamArwingWork)->inputRoll *
             ((CameraArwingWork*)gCamArwingWork)->rollScale);
-        roll0 = roll0 - (u16)((GameObject*)obj)->anim.rotZ;
-        if (roll0 > 0x8000)
+        targetRoll = targetRoll - (u16)((GameObject*)obj)->anim.rotZ;
+        if (targetRoll > 0x8000)
         {
-            roll0 = roll0 - 0xffff;
+            targetRoll = targetRoll - 0xffff;
         }
-        if (roll0 < -0x8000)
+        if (targetRoll < -0x8000)
         {
-            roll0 = roll0 + 0xffff;
+            targetRoll = targetRoll + 0xffff;
         }
-        step = (f32)roll0 * timeDelta;
+        step = (f32)targetRoll * timeDelta;
         ((GameObject*)obj)->anim.rotZ = step * gCamArwingRotEaseScale + (f32)((GameObject*)obj)->anim.rotZ;
-        yaw0 = yaw0 - (u16)((GameObject*)obj)->anim.rotX;
-        if (yaw0 > 0x8000)
+        targetYaw = targetYaw - (u16)((GameObject*)obj)->anim.rotX;
+        if (targetYaw > 0x8000)
         {
-            yaw0 = yaw0 - 0xffff;
+            targetYaw = targetYaw - 0xffff;
         }
-        if (yaw0 < -0x8000)
+        if (targetYaw < -0x8000)
         {
-            yaw0 = yaw0 + 0xffff;
+            targetYaw = targetYaw + 0xffff;
         }
-        step = (f32)yaw0 * timeDelta;
+        step = (f32)targetYaw * timeDelta;
         ((GameObject*)obj)->anim.rotX = step * gCamArwingRotEaseScale + (f32) * (s16*)obj;
-        pitch0 = pitch0 - (u16)((GameObject*)obj)->anim.rotY;
-        if (pitch0 > 0x8000)
+        targetPitch = targetPitch - (u16)((GameObject*)obj)->anim.rotY;
+        if (targetPitch > 0x8000)
         {
-            pitch0 = pitch0 - 0xffff;
+            targetPitch = targetPitch - 0xffff;
         }
-        if (pitch0 < -0x8000)
+        if (targetPitch < -0x8000)
         {
-            pitch0 = pitch0 + 0xffff;
+            targetPitch = targetPitch + 0xffff;
         }
-        step = (f32)pitch0 * timeDelta;
+        step = (f32)targetPitch * timeDelta;
         ((GameObject*)obj)->anim.rotY = step * gCamArwingRotEaseScale + (f32)((GameObject*)obj)->anim.rotY;
     }
     Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
