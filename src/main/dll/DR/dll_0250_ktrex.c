@@ -80,20 +80,22 @@ static inline u8 ktrex_getLaneMaskForTimer(int timer)
     return laneMasks[timer];
 }
 
+static const f32 kKTRexSmallDelta[1] = { 0.1f };
+
 static inline u8 ktrex_hasLaneLerpOvershot(void)
 {
     if ((gKTRexState->currentLaneMask & gKTRexState->activeLaneMask) != 0)
     {
         if ((gKTRexState->timerFA & 1) != 0)
         {
-            if (gKTRexState->laneLerpT - gKTRexState->laneFrac > 0.1f)
+            if (gKTRexState->laneLerpT - gKTRexState->laneFrac > kKTRexSmallDelta[0])
             {
                 return 1;
             }
         }
         else
         {
-            if (gKTRexState->laneFrac - gKTRexState->laneLerpT > 0.1f)
+            if (gKTRexState->laneFrac - gKTRexState->laneLerpT > kKTRexSmallDelta[0])
             {
                 return 1;
             }
@@ -182,7 +184,7 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
     point2[2] = point2[2] + playerMapOffsetZ;
 
     ((void**)((char*)gKTRexState + 0x17c))[slot] =
-        lightningCreateU16Promoted((const Vec3f*)point1, (const Vec3f*)point2, 0.1f, 0.3f, angle, 96,
+        lightningCreateU16Promoted((const Vec3f*)point1, (const Vec3f*)point2, kKTRexSmallDelta[0], 0.3f, angle, 96,
                                    0);
 }
 
@@ -1172,7 +1174,7 @@ void ktrex_updateAttackEffects(GameObject* obj)
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_dn_rexfoot11);
         doRumble(4.0f);
-        if (mag > 0.1f)
+        if (mag > kKTRexSmallDelta[0])
         {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(mag);
@@ -1183,7 +1185,7 @@ void ktrex_updateAttackEffects(GameObject* obj)
     {
         doRumble(8.0f);
         Sfx_PlayFromObject((int)obj, SFXTRIG_dn_rexfoot11_91);
-        if (mag > 0.1f)
+        if (mag > kKTRexSmallDelta[0])
         {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(2.0f * mag);
@@ -1194,7 +1196,7 @@ void ktrex_updateAttackEffects(GameObject* obj)
     {
         doRumble(12.0f);
         Sfx_PlayFromObject((int)obj, SFXTRIG_dn_rexfoot11_92);
-        if (mag > 0.1f)
+        if (mag > kKTRexSmallDelta[0])
         {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(3.0f * mag);
@@ -1531,8 +1533,8 @@ void ktrex_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     ObjPath_GetPointWorldPosition(obj, 0, (f32*)((char*)gKTRexState + 0x118), (f32*)((char*)gKTRexState + 0x11c),
                                   (f32*)((char*)gKTRexState + 0x120), 0);
     memcpy(m, (void*)ObjPath_GetPointModelMtx(obj, 4), 48);
-    gKTRexState->vecX = 0.1f * (f32)(int)randomGetRange(-50, 50);
-    gKTRexState->vecY = 0.1f * (f32)(int)randomGetRange(60, 120);
+    gKTRexState->vecX = kKTRexSmallDelta[0] * (f32)(int)randomGetRange(-50, 50);
+    gKTRexState->vecY = kKTRexSmallDelta[0] * (f32)(int)randomGetRange(60, 120);
     gKTRexState->vecZ = -0.25f * (f32)(int)randomGetRange(100, 150);
     PSMTXMultVecSR(m, &gKTRexState->vecX, &gKTRexState->vecX);
     *(u32*)&gKTRexState->phaseFlags |= 0x100000LL;
