@@ -82,22 +82,23 @@ enum
 
 extern OSMessageQueue lbl_803A5CCC;
 extern char lbl_803A57C0[];
-extern void (*lbl_803DD664)(void);
 extern u8 gAttractMovieLoopCompleted;
 extern OSMessageQueue lbl_803A5CEC;
 extern OSMessage lbl_803DD67C;
 void InitAllMessageQueue(void);
 
-void PlayControl(void)
+static VIRetraceCallback OldVIPostCallback;
+
+static void PlayControl(u32 retraceCount)
 {
     AttractMovieTextureSet* decodedTexture;
     s32 frame;
     int allowPop;
     s32 modResult;
 
-    if (lbl_803DD664 != NULL)
+    if (OldVIPostCallback != NULL)
     {
-        lbl_803DD664();
+        OldVIPostCallback(retraceCount);
     }
 
     decodedTexture = (AttractMovieTextureSet*)-1;
@@ -257,7 +258,7 @@ void THPPlayerStop(void)
     {
         lbl_803A5D60.internalState = 0;
         lbl_803A5D60.state = 0;
-        VISetPostRetraceCallback((void (*)(u32))lbl_803DD664);
+        VISetPostRetraceCallback(OldVIPostCallback);
 
         if (lbl_803A5D60.isOnMemory == 0)
         {
@@ -388,7 +389,7 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
         ctrl->field690 = 0;
         ctrl->field684 = 0;
         ctrl->field688 = 0;
-        lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
+        OldVIPostCallback = VISetPostRetraceCallback(PlayControl);
         return TRUE;
     }
     return FALSE;
