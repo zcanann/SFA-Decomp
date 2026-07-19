@@ -5171,20 +5171,20 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     f32 frac;
     f32 ndot;
     f32 dS;
-    f32 dE;
     f32 dotv;
     f32 sq;
     f32 disc;
     f32 root;
     f32 tt;
     f32 rr;
+    f32 dE;
     u8 vertexBit;
     u8 nextBit;
+    u8 bounces;
     s16 hit;
     TrackTriangle* tri;
     u32 objmtx;
     TrackBlockDescriptor* desc;
-    u8 bounces;
     f32 eps;
     f32 negStep, radius, maxStep;
     f32 offX, offZ;
@@ -5192,8 +5192,8 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     TrackBlockDescriptor* descEnd;
 
     slotBase = (u8*)slots;
+    descEnd = gTrackBlockDescriptors + gActiveTrackBlockCount;
     descBase = gTrackBlockDescriptors;
-    descEnd = descBase + gActiveTrackBlockCount;
     offX = (f32) * (int*)gTrackGridOrigin;
     offZ = (f32) * (int*)(gTrackGridOrigin + 8);
     i = 0;
@@ -5576,7 +5576,8 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         cur[0] = cur[0] - offX;
                         cur[2] = cur[2] - offZ;
                     }
-                    pen = (norm4[3] + (cur[2] * norm4[2] + (cur[0] * norm4[0] + cur[1] * norm4[1]))) - radius;
+                    pen = norm4[3] + (cur[2] * norm4[2] + (cur[0] * norm4[0] + cur[1] * norm4[1]));
+                    pen = pen - radius;
                     fn_800660C8(svWorld, cur, svHit, norm4, pen, maxStep, type);
                     if (objmtx != 0)
                     {
