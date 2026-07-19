@@ -4,6 +4,7 @@
 #include "global.h"
 #include "main/dll/curve_walker.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 extern f32 lbl_803E6CA0;
 extern f32 lbl_803E6CA4;
@@ -35,7 +36,7 @@ typedef struct DrBarrelGrFlags
 
 typedef struct DrbarrelgrPlacement
 {
-    u8 pad0[0x18];
+    ObjPlacement head; /* 0x00 */
     s8 spawnYawByte;
     u8 speed;
     s16 range;
