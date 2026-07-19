@@ -60,11 +60,6 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 #include "main/object_render.h"
 #include "main/audio/sfx.h"
 
-f32 lbl_803E4848 = 1.0f;
-f32 lbl_803E484C = 0.0625f;
-extern const f32 lbl_803E4850;
-f32 lbl_803E4854 = 1000.0f;
-
 s16 lbl_803DBEE8 = 0x3E6;
 
 #define DIMSNOWBALL_OBJFLAG_PARENT_SLACK 0x1000
@@ -91,7 +86,7 @@ void dimsnowball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E4848);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dimsnowball_hitDetect(int* obj)
@@ -158,58 +153,58 @@ void dimsnowball_update(GameObject* obj)
     idx[0] *= 3;
     {
         f32 cc1 = gDimSnowballCoords[idx[0]];
-        x[0] = cc1 * *(f32*)&lbl_803E484C;
+        x[0] = cc1 / 16.0f;
     }
     {
         f32 cc2 = gDimSnowballCoords[idx[0] + 1];
-        y[0] = cc2 * lbl_803E484C;
+        y[0] = cc2 / 16.0f;
     }
     {
         f32 cc3 = gDimSnowballCoords[idx[0] + 2];
-        z[0] = cc3 * lbl_803E484C;
+        z[0] = cc3 / 16.0f;
     }
     idx[1] *= 3;
     {
         f32 cc4 = gDimSnowballCoords[idx[1]];
-        x[1] = cc4 * lbl_803E484C;
+        x[1] = cc4 / 16.0f;
     }
     {
         f32 cc5 = gDimSnowballCoords[idx[1] + 1];
-        y[1] = cc5 * lbl_803E484C;
+        y[1] = cc5 / 16.0f;
     }
     {
         f32 cc6 = gDimSnowballCoords[idx[1] + 2];
-        z[1] = cc6 * lbl_803E484C;
+        z[1] = cc6 / 16.0f;
     }
     idx[2] *= 3;
     {
         f32 cc7 = gDimSnowballCoords[idx[2]];
-        x[2] = cc7 * lbl_803E484C;
+        x[2] = cc7 / 16.0f;
     }
     {
         f32 cc8 = gDimSnowballCoords[idx[2] + 1];
-        y[2] = cc8 * lbl_803E484C;
+        y[2] = cc8 / 16.0f;
     }
     {
         f32 cc9 = gDimSnowballCoords[idx[2] + 2];
-        z[2] = cc9 * lbl_803E484C;
+        z[2] = cc9 / 16.0f;
     }
     idx[3] *= 3;
     {
         f32 cc10 = gDimSnowballCoords[idx[3]];
-        x[3] = cc10 * lbl_803E484C;
+        x[3] = cc10 / 16.0f;
     }
     {
         f32 cc11 = gDimSnowballCoords[idx[3] + 1];
-        y[3] = cc11 * lbl_803E484C;
+        y[3] = cc11 / 16.0f;
     }
     {
         f32 cc12 = gDimSnowballCoords[idx[3] + 2];
-        z[3] = cc12 * lbl_803E484C;
+        z[3] = cc12 / 16.0f;
     }
     dy1 = y[1] - y[0];
     dy2 = y[2] - y[3];
-    if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && ((DimsnowballState*)state)->jingleCooldown <= 0)
+    if (dy2 <= 0.0f && dy1 <= 0.0f && ((DimsnowballState*)state)->jingleCooldown <= 0)
     {
         sqrtf((obj)->anim.velocityZ * (obj)->anim.velocityZ +
               ((obj)->anim.velocityX * (obj)->anim.velocityX + (obj)->anim.velocityY * (obj)->anim.velocityY));
@@ -219,9 +214,10 @@ void dimsnowball_update(GameObject* obj)
         }
         ((DimsnowballState*)state)->jingleCooldown = 0x1e;
     }
-    (obj)->anim.localPosX = x[1] + lbl_803E4850 * (x[2] - x[1]);
-    (obj)->anim.localPosY = y[1] + lbl_803E4850 * (y[2] - y[1]);
-    (obj)->anim.localPosZ = z[1] + lbl_803E4850 * (z[2] - z[1]);
+    dy1 = 0.0f;
+    (obj)->anim.localPosX = x[1] + dy1 * (x[2] - x[1]);
+    (obj)->anim.localPosY = y[1] + dy1 * (y[2] - y[1]);
+    (obj)->anim.localPosZ = z[1] + dy1 * (z[2] - z[1]);
     (obj)->anim.localPosX = (obj)->anim.localPosX + ((GameObject*)*state)->anim.localPosX;
     (obj)->anim.localPosY = (obj)->anim.localPosY + ((GameObject*)*state)->anim.localPosY;
     (obj)->anim.localPosZ = (obj)->anim.localPosZ + ((GameObject*)*state)->anim.localPosZ;
@@ -234,7 +230,7 @@ void dimsnowball_update(GameObject* obj)
         ((DimsnowballState*)state)->jingleCooldown -= frames;
     }
     v24 = (obj)->anim.velocityX;
-    dy2 = lbl_803E4854;
+    dy2 = 1000.0f;
     (obj)->anim.rotY = -(dy2 * -(obj)->anim.velocityZ - (f32)(obj)->anim.rotY);
     (obj)->anim.rotZ = -(dy2 * v24 - (f32)(obj)->anim.rotZ);
     model = *(u8**)&(obj)->anim.hitReactState;
