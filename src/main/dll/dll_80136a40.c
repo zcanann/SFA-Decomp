@@ -33,8 +33,11 @@
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "dolphin/gx/GXMisc.h"
+#include "dolphin/gx/GXFifo.h"
 #include "dolphin/os/OSContext.h"
+#include "dolphin/os/OSError.h"
 #include "dolphin/os/OSInterrupt.h"
+#include "dolphin/os/OSThread.h"
 #include "dolphin/gx/GXStruct.h"
 #include "dolphin/gx/GXTev.h"
 #include "main/object_api.h"
@@ -118,16 +121,6 @@ typedef struct
 /* debug font glyph-atlas texture asset (gDebugFontTex0) */
 #define DEBUG_FONT_TEXTURE0_ID 0x25D
 
-// OSSetErrorHandler() error kinds (OSError)
-#define OS_ERROR_SYSTEM_RESET       0
-#define OS_ERROR_MACHINE_CHECK      1
-#define OS_ERROR_DSI                2
-#define OS_ERROR_ISI                3
-#define OS_ERROR_ALIGNMENT          5
-#define OS_ERROR_PERFORMACE_MONITOR 11
-#define OS_ERROR_SYSTEM_INTERRUPT   13
-#define OS_ERROR_PROTECTION         15
-
 /* The one partfx effect emitted along Tricky's queued impress path. */
 #define TRICKY_PATH_PARTFX 0x533
 
@@ -192,20 +185,18 @@ extern u16 gDebugScreenHeight;
 extern u32 gDebugMarginRight;
 extern u32 gDebugMarginBottom;
 
-extern void OSResumeThread(u8* thread);
-extern void OSSetErrorHandler(int kind, void* handler);
-extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
 #define Obj_SetModelColorOverrideRecursivePromoted(obj, red, green, blue, alpha, enabled)                         \
     ((void (*)(GameObject*, int, int, int, int, int))Obj_SetModelColorOverrideRecursive)(                        \
         (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
-extern void GXSetBreakPtCallback(void* cb);
 int TitleScreen_getObjectTypeId(u8* obj);
 
 u8 debugLogBuffer[0x1100];
 
-u8 gErrDisplayThread[0x310];
+OSThread gErrDisplayThread;
 
 u8 gErrDisplayThreadStack[0x1000];
+
+STATIC_ASSERT(sizeof(OSThread) == 0x310);
 
 u8 gDebugGlyphMetricsTable[192] = {
     0x02, 0x04, 0x06, 0x08, 0x0A, 0x0F, 0x11, 0x15, 0x17, 0x1F, 0x21, 0x27, 0x29, 0x2B, 0x2D, 0x2F, 0x31, 0x33,
@@ -299,7 +290,7 @@ static inline void errDisplayFillBackdrop(int xcb, int x)
         x++;
     } while (x < 0x280);
 }
-void errDisplayThreadMain(void);
+void* errDisplayThreadMain(void* unused);
 
 int fn_80136A40(int unused, int c)
 {
@@ -856,15 +847,16 @@ void debugPrintfxy(int x, int y, char* fmt, ...)
 
 void errDisplayInstallHandlers(void)
 {
-    OSSetErrorHandler(OS_ERROR_SYSTEM_RESET, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_MACHINE_CHECK, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_DSI, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_PERFORMACE_MONITOR, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_SYSTEM_INTERRUPT, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_PROTECTION, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_ISI, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_ALIGNMENT, errDisplayHandler);
-    OSCreateThread(gErrDisplayThread, errDisplayThreadMain, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
+    OSSetErrorHandler(OS_ERROR_SYSTEM_RESET, (OSErrorHandler)errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_MACHINE_CHECK, (OSErrorHandler)errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_DSI, (OSErrorHandler)errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_PERFORMACE_MONITOR, (OSErrorHandler)errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_SYSTEM_INTERRUPT, (OSErrorHandler)errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_PROTECTION, (OSErrorHandler)errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_ISI, (OSErrorHandler)errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_ALIGNMENT, (OSErrorHandler)errDisplayHandler);
+    OSCreateThread(&gErrDisplayThread, errDisplayThreadMain, 0, gErrDisplayThreadStack + 4096, 4096, 0,
+                   OS_THREAD_ATTR_DETACH);
 }
 
 void reportAllocFail(int region0SizeKb, int region0FreeKb, int region1SizeKb, int region1FreeKb, int region2SizeKb,
@@ -872,10 +864,10 @@ void reportAllocFail(int region0SizeKb, int region0FreeKb, int region1SizeKb, in
                      int largestFree1)
 {
 }
-void errDisplayThreadMain(void)
+void* errDisplayThreadMain(void* unused)
 {
     char* strs = (char*)gDebugFontGlyphs;
-    void (*self[1])(void);
+    void* (*self[1])(void*);
     int y;
     u32* sp;
     int depth;
@@ -1104,7 +1096,7 @@ void errDisplayHandler(s16 a, OSContext* b, u32 c, u32 d)
     gErrContext = b;
     lbl_803DDA38 = c;
     lbl_803DDA34 = d;
-    OSResumeThread(gErrDisplayThread);
+    OSResumeThread(&gErrDisplayThread);
 }
 
 /* Reset debug log/print state: rewind
