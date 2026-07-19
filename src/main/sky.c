@@ -2886,7 +2886,7 @@ void sky2_run(void)
     q.y = zv;
     q.z = zv;
     q.w = lbl_803DF114;
-    *(s16*)&q.rx = -cam->yaw;
+    q.rx = -cam->yaw;
     q.rz = 0;
     q.ry = 0;
     vecRotateZXY(&q.rx, vec);
