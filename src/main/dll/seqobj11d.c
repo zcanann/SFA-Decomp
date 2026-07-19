@@ -233,7 +233,7 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state)
             *(u16*)(state + 0x338) = (p28 + *(u16*)(state + 0x338) * 16)[10];
         }
     }
-    if ((u8)((u8 (*)(GameObject*, u8*, int))fn_8014FFB4)(obj, state, 1) == 0)
+    if ((u8)fn_8014FFB4(obj, state, 1) == 0)
     {
         if ((((GroundBaddieState*)state)->baddie.controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
