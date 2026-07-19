@@ -60,7 +60,6 @@ STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 
-extern f32 lbl_803E4A20;
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
@@ -69,8 +68,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define DIMLEVELCONTROL_MUSIC_DAY   0xc5
 #define DIMLEVELCONTROL_MUSIC_NIGHT 0xe2
 
-extern f32 lbl_803E4A24;
-extern f32 lbl_803E4A28;
 
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 
@@ -84,7 +81,7 @@ void dim_levelcontrol_free(GameObject *obj)
 void dim_levelcontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4A20);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 FbWGPipe GXWGFifo : (0xCC008000);
@@ -178,14 +175,14 @@ void dim_levelcontrol_update(GameObject *obj)
             st->groupStatus = 1;
         }
     }
-    if (st->timer > lbl_803E4A24)
+    if (st->timer > 0.0f)
     {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShow(0x430);
         st->timer = st->timer - timeDelta;
-        if (st->timer < *(f32*)&lbl_803E4A24)
+        if (st->timer < 0.0f)
         {
-            st->timer = lbl_803E4A24;
+            st->timer = 0.0f;
         }
     }
     if (st->dialogueFired == 0)
@@ -256,7 +253,7 @@ void dim_levelcontrol_init(GameObject *obj)
     randomGetRange(0, 11);
     st = (obj)->extra;
     st->saveState = 0;
-    st->timer = lbl_803E4A28;
+    st->timer = 300.0f;
     if (getSaveGameLoadStatus() != 0)
     {
         (obj)->userData1 = 2;

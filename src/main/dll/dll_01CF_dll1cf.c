@@ -55,7 +55,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 /* objectFlags bits set in dll_1CF_init. */
 #define DLL1CF_OBJECT_FLAGS 0xe000
 
-extern f32 lbl_803E4A30;
 
 /* The entry points compile with both passes OFF; the surrounding TU state is
  * the default, so no reset pair is needed. */
@@ -76,7 +75,7 @@ void dll_1CF_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 visibleInt = visible;
     if (visibleInt != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4A30);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1CF_hitDetect(void)
