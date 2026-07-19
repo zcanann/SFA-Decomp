@@ -24,6 +24,27 @@ typedef struct TrickyPackedSlots
     u8 d : 2;
 } TrickyPackedSlots;
 
+typedef struct TrickyPoint3
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} TrickyPoint3;
+
+typedef struct TrickyJumpArc
+{
+    f32 duration;  /* 0x64: horizontal distance / lbl_803E24A4 */
+    f32 time;      /* 0x68: elapsed arc time (init 0, += timeDelta) */
+    f32 riseCoeff; /* 0x6C: linear vertical coefficient */
+    f32 baseY;     /* 0x70: launch worldPosY */
+    f32 baseX;     /* 0x74: launch worldPosX */
+    f32 baseZ;     /* 0x78: launch worldPosZ */
+    f32 landX;     /* 0x7C: landing node x */
+    f32 landZ;     /* 0x80: landing node z */
+} TrickyJumpArc;
+
+struct ObjfsaRomCurveDef;
+
 /*
  * TrickyState - the obj+0xB8 extra record for the Tricky sidekick handlers
  * in grenade.c (trickyFn_* / trickyFoodFn_* / trickyFlameFn_* take it as
@@ -64,20 +85,20 @@ typedef struct TrickyState {
     s16 targetYaw; /* target facing angle: set from targetYaw (skeetla); tricky interpolates anim.rotX toward it (diff = targetYaw - rotX) under TRICKY_STATE_FLAG_ROTATE */
     u32 heightTrackObjId;
     f32 trackedHeight;
-    u8 pad64[0x8C - 0x64];
+    TrickyJumpArc jumpArc;
+    u8 pad84[0x8C - 0x84];
     f32 prevLocalPosX;
     f32 prevLocalPosY;
     f32 prevLocalPosZ;
-    u16 patch[4]; /* curve-walk patch values (dll_DF trickyFn_8013b368); the
-                     indexed s16 copy loop stays raw */
-    u8 padA0[0xD0 - 0xA0]; /* 0xA0: f32 triples at stride 0xC (walker, raw) */
+    s16 patch[4]; /* curve-walk patch values (dll_DF trickyFn_8013b368) */
+    TrickyPoint3 patchTargets[4];
     u16 activeWalkGroup; /* current active walk-group id (getPatchGroup/walkGroupFn arg; tracked vs targetWg) */
-    u16 linkedWalkGroup; /* walk-group/patch id linked to activeWalkGroup: set to the intersected walk-group product, compared == targetWg/getPatchGroup results, cleared to 0 (trickyfollow/tricky_substates) */
-    u8 padD4[0xE0 - 0xD4];
+    s16 linkedWalkGroup; /* walk-group/patch id linked to activeWalkGroup: set to the intersected walk-group product, compared == targetWg/getPatchGroup results, cleared to 0 (trickyfollow/tricky_substates) */
+    TrickyPoint3 linkedPatchPos;
     f32 homePosX; /* home position, init from obj world pos */
     f32 homePosY;
     f32 homePosZ;
-    u8 padEC[0xF8 - 0xEC];
+    TrickyPoint3 patchExitPos;
     u32 pathControlFlags; /* head word of the embedded gPathControlInterface record */
     u8 pathControlData[0x1B8 - 0xFC]; /* embedded gPathControlInterface record (0xF8..0x1B8) */
     f32 nearestSpecialDeltaY; /* signed dy to the nearest special-surface (type 0xe) floor hit */
@@ -161,7 +182,7 @@ typedef struct TrickyState {
     f32 renderPosY;
     f32 renderPosZ;
     u8 pad414[0x418 - 0x414];
-    void *routeSeedNode; /* candidate route node chosen before seeding route */
+    struct ObjfsaRomCurveDef *routeSeedNode; /* candidate route node chosen before seeding route */
     u8 routeSeedDir;
     u8 pad41D[0x420 - 0x41D];
     RomCurveWalker route;
@@ -233,6 +254,9 @@ typedef struct TrickyState {
 
 STATIC_ASSERT(sizeof(TrickyState) == 0x840);
 STATIC_ASSERT(offsetof(TrickyState, stateFlags) == 0x54);
+STATIC_ASSERT(offsetof(TrickyState, patchTargets) == 0xA0);
+STATIC_ASSERT(offsetof(TrickyState, linkedPatchPos) == 0xD4);
+STATIC_ASSERT(offsetof(TrickyState, patchExitPos) == 0xEC);
 STATIC_ASSERT(offsetof(TrickyState, pathRotY) == 0x290);
 STATIC_ASSERT(offsetof(TrickyState, routeSeedNode) == 0x418);
 STATIC_ASSERT(offsetof(TrickyState, route) == 0x420);
