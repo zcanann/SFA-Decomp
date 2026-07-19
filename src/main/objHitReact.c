@@ -6,7 +6,7 @@
 #include "main/mm.h"
 #include "main/objanim_internal.h"
 #include "main/objfx.h"
-#include "main/objHitReact.h"
+#include "main/objHitReact_types.h"
 #include "main/objhits.h"
 #include "main/obj_list.h"
 #include "main/resource.h"
@@ -18,7 +18,7 @@ char sObjHitReactResetString[7] = "reset\n";
 
 const ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs = {8, 0xB4, 0xF0, 0xFF};
 
-u8 ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount, u32 reactionState,
+u32 ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount, u32 reactionState,
                       float* reactionStepScale)
 {
     ObjAnimDef* animDef;
