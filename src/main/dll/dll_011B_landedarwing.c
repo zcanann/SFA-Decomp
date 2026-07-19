@@ -24,7 +24,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 #include "main/gamebits.h"
 #include "main/mapEvent.h"
@@ -232,8 +232,8 @@ void landed_arwing_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
     s32 v = visible;
     if (v != 0)
     {
-        ((void (*)(f32))objRenderModelAndHitVolumes)(1.0f);
-        landed_arwing_renderPathEffects((GameObject*)obj);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        landed_arwing_renderPathEffects(obj);
     }
 }
 

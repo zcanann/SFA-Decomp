@@ -13,6 +13,7 @@
 typedef struct LandedArwingObjectState LandedArwingObjectState;
 
 void landed_arwing_renderPathEffects(GameObject* obj);
+void landed_arwing_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingObjectState* state);
 void landed_arwing_updateDamageTexture(GameObject* obj, LandedArwingObjectState* state);
 
