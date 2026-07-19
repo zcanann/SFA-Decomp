@@ -26,6 +26,7 @@
 #include "main/object_transform.h"
 #include "main/loaded_file_flags.h"
 #include "main/map_load.h"
+#include "main/objprint_load_api.h"
 #include "main/objprint_render_api.h"
 #include "main/objprint_dolphin_api.h"
 #include "main/objprintgxcolor.h"
@@ -3842,8 +3843,6 @@ int getTableFileEntry(int fileId, int index, int* out)
     return 0;
 }
 
-int mergeTableFiles(u32* tbl, int id, int idx, int count_);
-
 struct MldfTables
 {
     u8 pad0[0x160];
@@ -4080,8 +4079,9 @@ int mapUnload(int mapId, int flags)
     return 1;
 }
 
-int mergeTableFiles(u32* tbl, int id, int idx, int count_)
+int mergeTableFiles(void* table, int id, int idx, int count_)
 {
+    u32* tbl = table;
     u8* base = lbl_80345E10;
     int i = 0;
     int e1 = 0;
