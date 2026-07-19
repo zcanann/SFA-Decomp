@@ -444,7 +444,7 @@ static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
 }
 int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGroupIndex)
 {
-    u8 k;
+    ObjfsaPatch* lp;
     u8* lwg;
     ObjfsaWalkGroup* wg;
     u32 lpidx;
@@ -458,7 +458,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
     u8 k2;
     ObjfsaPatch* patch;
     int lidx;
-    ObjfsaPatch* lp;
+    u8 k;
     f32 y;
     for (k = 0, wg = &gObjfsaWalkGroups[currentWalkGroupIndex]; k < 4; k++)
     {
@@ -2229,12 +2229,12 @@ fail:
 }
 int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode)
 {
-    int curveIndex;
+    f32 bestDistance;
+    f32 bestActionDistance;
     ObjfsaRomCurveDef* curve;
     ObjfsaRomCurveDef* bestCurve;
     ObjfsaRomCurveDef* bestActionCurve;
-    f32 bestDistance;
-    f32 bestActionDistance;
+    int curveIndex;
     f32 dx;
     f32 dy;
     f32 dz;
