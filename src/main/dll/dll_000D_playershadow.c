@@ -36,10 +36,6 @@ f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
  * 0x10-0x17, spawns footfall particle effects at a random barycentric point
  * on each struck triangle. offsX/offsZ = obj position minus the tile origin,
  * so (vert - offs) + objPos recovers the world-space triangle corners. */
-extern const f32 lbl_803DF468;
-extern const f32 lbl_803DF470;
-extern const f32 lbl_803DF474;
-extern const f32 lbl_803DF478;
 
 void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj)
 {
@@ -91,7 +87,7 @@ void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f3
                 f32 dydy = dy * dy;
                 len = sqrtf(dydy + dx * dx + dz * dz);
             }
-            sc = lbl_803DF468 * len;
+            sc = 0.1f * len;
             if (0.0f != len)
             {
                 dx = dx / len;
@@ -104,7 +100,7 @@ void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f3
             data.posX = 0.0f;
             data.posY = 0.0f;
             data.posZ = 0.0f;
-            data.scale = lbl_803DF470;
+            data.scale = 1.0f;
             data.unk4 = 0;
             data.unk2 = 0;
             data.unk0 = 0;
@@ -132,19 +128,19 @@ void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f3
                 p2x = obj->anim.localPosX + ((f32)hit->vertX[2] - offsX);
                 p2y = (f32)hit->vertY[2];
                 p2z = obj->anim.localPosZ + ((f32)hit->vertZ[2] - offsZ);
-                r1 = randomGetRange(1, 1000) / lbl_803DF474;
-                r2 = randomGetRange(1, 1000) / lbl_803DF474;
+                r1 = randomGetRange(1, 1000) / 1000.0f;
+                r2 = randomGetRange(1, 1000) / 1000.0f;
                 sqrtR2 = sqrtf(r2);
-                w0 = lbl_803DF470 - sqrtR2;
+                w0 = 1.0f - sqrtR2;
                 {
-                    f32 omr = lbl_803DF470 - r1;
+                    f32 omr = 1.0f - r1;
                     w1 = omr * sqrtR2;
                 }
                 w2 = r1 * sqrtR2;
                 data.posX = w0 * p0x + w1 * p1x + w2 * p2x;
                 data.posY = w0 * p0y + w1 * p1y + w2 * p2y;
                 data.posZ = w0 * p0z + w1 * p1z + w2 * p2z;
-                data.posY = data.posY + lbl_803DF478;
+                data.posY += 0.35f;
                 rt = (s8)hit->surfaceType;
                 if (rt == 0x12 || rt == 0x10)
                 {
