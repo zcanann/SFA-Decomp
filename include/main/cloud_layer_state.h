@@ -4,16 +4,12 @@
 #include "global.h"
 #include "main/game_object.h"
 
-extern f32 lbl_803DD1E0;
-extern f32 lbl_803DD1E4;
-extern f32 lbl_803DD1E8;
-extern u8 cloudOverridePosition;
+extern f32 gCloudOverridePositionZ;
+extern f32 gCloudOverridePositionY;
+extern f32 gCloudOverridePositionX;
+extern u8 gCloudOverridePositionValid;
 extern GameObject *lbl_803DD1F0[2];
 
-#define gCloudOverridePositionZ lbl_803DD1E0
-#define gCloudOverridePositionY lbl_803DD1E4
-#define gCloudOverridePositionX lbl_803DD1E8
-#define gCloudOverridePositionValid cloudOverridePosition
 #define gCloudOverrideObject lbl_803DD1F0[0]
 
 #endif
