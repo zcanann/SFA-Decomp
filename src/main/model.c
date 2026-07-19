@@ -2324,7 +2324,7 @@ void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
     int stride;
 
     flags = 0;
-    fileLoadToBufferOffset(MLDF_FILEID_PREANIM_TAB, &flags, id << 2, 4);
+    fileLoadToBufferOffset(MLDF_FILEID_PREANIM_TAB, &flags, id * sizeof(u32), 4);
     if (flags & 0x10000000)
     {
         loadAndDecompressDataFile(MLDF_FILEID_PREANIM_BIN, 0, flags, 0, (int)&size, id, 1);
