@@ -468,8 +468,6 @@ typedef struct
 } ColPair;
 
 extern ColPair lbl_803E7E78;
-extern f32 lbl_803E7FDC;
-extern f32 lbl_803E7FE0;
 extern f32 lbl_803E7FE4;
 
 extern u8 lbl_803DC6A8[8];
@@ -5243,11 +5241,11 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
 
         if (yc > lbl_803E7F14)
         {
-            xT = lbl_803E7FDC - lbl_803E7F48 * yc;
+            xT = -0.05f - lbl_803E7F48 * yc;
             inner->stickTargetY = yT = lbl_803E7EA4;
             inner->stickDirection = 1;
         }
-        else if (yc < lbl_803E7FE0)
+        else if (yc < -0.2f)
         {
             xT = lbl_803E7F6C - lbl_803E7F48 * yc;
             inner->stickTargetY = yT = lbl_803E7EA4;
@@ -5259,19 +5257,19 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
             yT = lbl_803E7EAC * xc + lbl_803E7F6C;
             inner->stickDirection = 3;
         }
-        else if (xc < lbl_803E7FE0)
+        else if (xc < -0.2f)
         {
             inner->stickTargetX = xT = lbl_803E7EA4;
-            yT = lbl_803E7EAC * xc + lbl_803E7FDC;
+            yT = lbl_803E7EAC * xc + (-0.05f);
             inner->stickDirection = 4;
         }
         else
         {
             component = inner->stickTargetX;
-            if (component <= lbl_803E7F6C && component >= lbl_803E7FDC)
+            if (component <= lbl_803E7F6C && component >= -0.05f)
             {
                 component = inner->stickTargetY;
-                if (component <= lbl_803E7F6C && component >= lbl_803E7FDC)
+                if (component <= lbl_803E7F6C && component >= -0.05f)
                 {
                     inner->stickDirection = 0;
                     nextMove = 0x5f;

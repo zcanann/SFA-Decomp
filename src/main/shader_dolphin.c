@@ -123,7 +123,6 @@ extern f32 lbl_803DEADC;
 extern int lbl_803DCD78;
 extern f32 lbl_803DEAE4;
 extern u8 lbl_803DCD6B;
-extern f32 lbl_803DEAF8;
 extern f32 lbl_803DEAFC;
 extern f32 lbl_803DEB00;
 extern int lbl_803DCD84;
@@ -642,7 +641,7 @@ void fn_8004D230(void)
     f32 t;
 
     obj1 = (u8*)fn_8006C754();
-    C_MTXLightOrtho(mtx1, 25.0f, lbl_803DEAF8, lbl_803DEAF8, 25.0f, lbl_803DEADC, lbl_803DEADC,
+    C_MTXLightOrtho(mtx1, 25.0f, -25.0f, -25.0f, 25.0f, lbl_803DEADC, lbl_803DEADC,
                     lbl_803DEADC, lbl_803DEADC);
     GXLoadTexMtxImm(mtx1, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);

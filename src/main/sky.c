@@ -158,7 +158,6 @@ extern f32 gSkyMoonDirection[];
 extern f32 lbl_803DF14C;
 extern f32 lbl_803DF148;
 extern const f32 lbl_803DF150;
-extern const f32 lbl_803DF154;
 extern const f32 lbl_803DF15C;
 extern const f32 lbl_803DF160;
 extern const f32 lbl_803DF168;
@@ -2849,7 +2848,7 @@ void sky2_run(void)
         c150 = lbl_803DF150;
         dst[3] = c150;
         dst[4] = z;
-        c154 = lbl_803DF154;
+        c154 = 0.707f;
         dst[5] = c154;
         c158 = (-1.0f);
         dst[6] = c158;
