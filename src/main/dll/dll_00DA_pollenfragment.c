@@ -31,9 +31,6 @@
 f32 lbl_803DBD48 = 1024.0f;
 f32 lbl_803DBD4C = 512.0f;
 
-#define s16toFloatLegacy(timer, duration) \
-    ((void (*)(void*, int))s16toFloat)((timer), (duration))
-
 typedef struct
 {
     s16 unk00;         /* 0x00 */
@@ -146,7 +143,7 @@ void pollenfragment_hitDetect(GameObject* obj)
                     (u32)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
             ObjHits_DisableObject(obj);
-            s16toFloatLegacy(extra + 0x20, 0x78);
+            s16toFloat((f32*)(extra + 0x20), 0x78);
         }
         if (((ObjHitsPriorityState*)(obj)->anim.hitReactState)->contactFlags != 0)
         {
@@ -158,7 +155,7 @@ void pollenfragment_hitDetect(GameObject* obj)
                 Sfx_PlayFromObjectLimited(
                     (u32)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
-            s16toFloatLegacy(extra + 0x20, 0x78);
+            s16toFloat((f32*)(extra + 0x20), 0x78);
         }
     }
 }
@@ -192,7 +189,7 @@ void pollenfragment_update(int obj)
     }
     if (timerCountDown(&((PollenFragmentExtra*)extra)->lifetimeTimer) != 0)
     {
-        s16toFloatLegacy(extra + 0x20, 0x78);
+        s16toFloat((f32*)(extra + 0x20), 0x78);
     }
     if (*(void**)&((GameObject*)obj)->ownerObj != NULL)
     {
@@ -313,7 +310,7 @@ void pollenfragment_update(int obj)
             Sfx_PlayFromObjectLimited(
                 obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
         }
-        s16toFloatLegacy(extra + 0x20, 0x78);
+        s16toFloat((f32*)(extra + 0x20), 0x78);
     }
 }
 
