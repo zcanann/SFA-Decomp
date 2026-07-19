@@ -5910,14 +5910,14 @@ int cardDeleteFn_8007d99c(void)
     return 0;
 }
 
-int _saveGame(int a, int b, int c)
+int _saveGame(int slot, void* save, void* data)
 {
     int ret;
     gSaveCardRetry = 0;
     cardShowLoadingMsg(1);
     do
     {
-        ret = saveGame_prepareAndWrite(0, a, 0, b, c, (SaveGameCallback)cardCb_8007e6d4);
+        ret = saveGame_prepareAndWrite(0, slot, 0, save, data, (SaveGameCallback)cardCb_8007e6d4);
         showMemCardError(0);
         if (gSaveCardRetry != 0)
         {
@@ -5927,14 +5927,14 @@ int _saveGame(int a, int b, int c)
     return ret;
 }
 
-int maybeTryLoadSave(int a)
+int maybeTryLoadSave(void* data)
 {
     int ret;
     gSaveCardRetry = 0;
     cardShowLoadingMsg(0);
     do
     {
-        ret = saveGame_prepareAndWrite(1, 0, 0, a, 0, (SaveGameCallback)saveCb_8007e748);
+        ret = saveGame_prepareAndWrite(1, 0, 0, data, NULL, (SaveGameCallback)saveCb_8007e748);
         showMemCardError(1);
         if (gSaveCardRetry != 0)
         {
@@ -5944,14 +5944,14 @@ int maybeTryLoadSave(int a)
     return ret;
 }
 
-int loadSaveGame(int a, int b)
+int loadSaveGame(int slot, void* save)
 {
     int ret;
     gSaveCardRetry = 0;
     cardShowLoadingMsg(0);
     do
     {
-        ret = saveGame_prepareAndWrite(1, a, 0, b, 0, (SaveGameCallback)saveCb_8007e77c);
+        ret = saveGame_prepareAndWrite(1, slot, 0, save, NULL, (SaveGameCallback)saveCb_8007e77c);
         showMemCardError(0);
         if (gSaveCardRetry != 0)
         {
@@ -5986,7 +5986,7 @@ int memCardFn_8007dd04(u8 retry)
             lbl_803DB700 = 13;
             if (ret == 2)
             {
-                ret = saveGame_prepareAndWrite(0, 0, 0, 0, 0, NULL);
+                ret = saveGame_prepareAndWrite(0, 0, 0, NULL, NULL, NULL);
             }
         }
         if (retry != 0)
