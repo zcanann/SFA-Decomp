@@ -1485,7 +1485,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
     }
     PSMTXConcat(Camera_GetViewMatrix(), wm, cm);
-    if (!(*(u16*)((char*)am + 0x18) & 8))
+    if (!(((ObjModel*)am)->bufferFlags & 8))
     {
         ((ObjDef*)am)->hitboxStateIndex = 0;
         if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
@@ -1518,7 +1518,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
                 }
             }
         }
-        *(u16*)((char*)am + 0x18) |= 8;
+        ((ObjModel*)am)->bufferFlags |= 8;
     }
     modelRenderInstrsState_init((ModelRenderInstrsState*)&bs, ((ModelFileHeader*)m)->instrs,
                                 ((ModelFileHeader*)m)->instrsBitLenWords << 3,
@@ -1586,7 +1586,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
     if (gObjCachedModel != (u32)m)
     {
         GXSetArray(GX_VA_POS,
-                   (void*)((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
+                   (void*)((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1], 6);
         GXSetArray(GX_VA_TEX0, ((ModelFileHeader*)m)->texCoords, 4);
         gObjCachedModel = (u32)m;
     }
@@ -1781,7 +1781,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     {
         Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
     }
-    if (!(*(u16*)((char*)am + 0x18) & 8))
+    if (!(((ObjModel*)am)->bufferFlags & 8))
     {
         did = 0;
         *(u8*)((char*)am + 0x60) = 0;
@@ -1821,12 +1821,12 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         {
             int vtx;
             vtx = *(u8*)((char*)am + 0x60) != 0
-                ? ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]
+                ? ((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1]
                 : *(int*)&((ModelFileHeader*)m)->vertices;
             ObjModel_BlendVertexStream(
                 (u8*)gObjBoneMtxBuffer, m + 0x88, (u8*)vtx,
                 (int*)*(int*)&((ModelFileHeader*)am)->jointBlendData,
-                (u8*)((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
+                (u8*)((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1]);
             ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, m + 0xac,
                                        (u8*)*(int*)&((ModelFileHeader*)m)->normals,
                                        (u8**)*(int*)((char*)am + 0x44),
@@ -1848,7 +1848,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
                 }
             }
         }
-        *(u16*)((char*)am + 0x18) |= 8;
+        ((ObjModel*)am)->bufferFlags |= 8;
     }
     modelInitMtxs((ModelFileHeader*)m, (ObjModel*)am);
     modelRenderInstrsState_init((ModelRenderInstrsState*)&bs, ((ModelFileHeader*)m)->instrs,
@@ -1918,7 +1918,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         GXSetCullMode(GX_CULL_NONE);
     }
     GXSetArray(GX_VA_POS,
-               (void*)((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
+               (void*)((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1], 6);
     done = 0;
     while (!done)
     {
@@ -2092,7 +2092,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         fade = lbl_803DEA50;
     }
     did = 0;
-    if (!(*(u16*)((char*)am + 0x18) & 8))
+    if (!(((ObjModel*)am)->bufferFlags & 8))
     {
         *(u8*)((char*)am + 0x60) = 0;
         ObjModel_ToggleVertexBuffer((ObjModel*)am);
@@ -2140,12 +2140,12 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             {
                 int vtx;
                 vtx = *(u8*)((char*)am + 0x60) != 0
-                    ? ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]
+                    ? ((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1]
                     : *(int*)&((ModelFileHeader*)m)->vertices;
                 ObjModel_BlendVertexStream(
                     (u8*)gObjBoneMtxBuffer, m + 0x88, (u8*)vtx,
                     (int*)*(int*)&((ModelFileHeader*)am)->jointBlendData,
-                    (u8*)((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
+                    (u8*)((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1]);
                 ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, m + 0xac,
                                            (u8*)*(int*)&((ModelFileHeader*)m)->normals,
                                            (u8**)*(int*)((char*)am + 0x44),
@@ -2168,7 +2168,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 }
             }
         }
-        *(u16*)((char*)am + 0x18) |= 8;
+        ((ObjModel*)am)->bufferFlags |= 8;
     }
     m2 = mode8 & 2;
     if (m2 || m4 || (mode8 & 8))
@@ -2322,7 +2322,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         }
     }
     GXSetArray(GX_VA_POS,
-               (void*)((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
+               (void*)((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1], 6);
     if (((ModelFileHeader*)m)->flags24 & 8)
     {
         GXSetArray(GX_VA_NRM, ((ObjModel*)am)->normalBuf, 9);
