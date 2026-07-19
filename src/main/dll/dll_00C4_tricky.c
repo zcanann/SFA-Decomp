@@ -453,8 +453,8 @@ void tricky_attachToWalkGroup(GameObject* obj, int state)
 
 int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int state;
     int i;
+    int state;
     int slot;
     int j;
     int k;
