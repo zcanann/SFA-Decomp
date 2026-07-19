@@ -335,7 +335,7 @@ void fn_8013F100(GameObject* obj, register int state)
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                     *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
                 }
-                *(short*)&((TrickyState*)state)->linkedWalkGroup = 0;
+                ((TrickyState*)state)->linkedWalkGroup = 0;
             }
         }
         break;
@@ -398,7 +398,7 @@ void fn_8013F100(GameObject* obj, register int state)
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                     *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
                 }
-                *(short*)&((TrickyState*)state)->linkedWalkGroup = 0;
+                ((TrickyState*)state)->linkedWalkGroup = 0;
             }
             ((TrickyState*)state)->substate = 5;
         case 5:
@@ -558,7 +558,7 @@ void fn_8013FBE4(GameObject* obj, register int state)
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                     *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
                 }
-                *(short*)&((TrickyState*)state)->linkedWalkGroup = 0;
+                ((TrickyState*)state)->linkedWalkGroup = 0;
             }
             dx = *targetPos - obj->anim.worldPosX;
             dz = targetPos[2] - obj->anim.worldPosZ;

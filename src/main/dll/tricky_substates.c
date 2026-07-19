@@ -1362,7 +1362,7 @@ int trickyFn_80143c04(GameObject* obj, int state)
             m = ~0x400;
             *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
         }
-        *(short*)&((TrickyState*)state)->linkedWalkGroup = 0;
+        ((TrickyState*)state)->linkedWalkGroup = 0;
     }
     if (lbl_803E23DC == ((TrickyState*)state)->cooldownA)
     {
