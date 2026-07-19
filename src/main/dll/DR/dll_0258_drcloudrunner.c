@@ -1101,13 +1101,13 @@ void DR_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
     {
         if (vis == -1)
         {
-            objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E83A8);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E83A8);
             ObjPath_GetPointWorldPosition(obj, 3, (f32*)((char*)inner + 0xae8), (f32*)((char*)inner + 0xaec),
                                           (f32*)((char*)inner + 0xaf0), 0);
         }
         if (inner->flightState != CLOUDRUNNER_FLIGHT_MOUNTED && vis != 0)
         {
-            objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E83A8);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E83A8);
             dll_2E_func06(obj, (MoveLibState*)((char*)inner + 0x4c4), 0);
         }
     }

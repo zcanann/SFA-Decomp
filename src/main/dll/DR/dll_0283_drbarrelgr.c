@@ -28,7 +28,7 @@
 #include "main/dll/DR/dll_0283_drbarrelgr.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objfx.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 f32 lbl_803DC3B0 = 2.0f;
@@ -83,7 +83,7 @@ void DR_BarrelGr_render(GameObject* obj, int p2, int p3, int p4, int p5)
     f32 pathPoint[3];
     DrBarrelGrRenderParams params;
 
-    ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E6CA0);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6CA0);
     ObjPath_GetPointWorldPosition(obj, 0, &state->grabX, &state->grabY, &state->grabZ, 0);
     params.a = 0;
     params.c = 0;
@@ -114,7 +114,7 @@ void DR_BarrelGr_render(GameObject* obj, int p2, int p3, int p4, int p5)
             state->heldBarrel->anim.localPosX = state->grabX;
             state->heldBarrel->anim.localPosY = state->grabY;
             state->heldBarrel->anim.localPosZ = state->grabZ;
-            objRenderModelAndHitVolumes((int)state->heldBarrel, p2, p3, p4, p5, lbl_803E6CA0);
+            objRenderModelAndHitVolumes(state->heldBarrel, p2, p3, p4, p5, lbl_803E6CA0);
         }
     }
 }

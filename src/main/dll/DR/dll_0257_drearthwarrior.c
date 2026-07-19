@@ -1092,14 +1092,14 @@ void DR_EarthWarrior_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 
     EarthWarriorState* inner = (obj)->extra;
     if (vis == -1)
     {
-        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E8338);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E8338);
         ObjPath_GetPointWorldPosition(obj, 0xb, (f32*)((char*)inner + 0x1438), (f32*)((char*)inner + 0x143c),
                                       (f32*)((char*)inner + 0x1440), 0);
         ObjPath_GetPointWorldPositionArray(obj, 3, 4, (f32*)((char*)inner + 0xb18));
     }
     else if (vis != 0)
     {
-        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E8338);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E8338);
         ObjPath_GetPointWorldPosition(obj, 0xb, (f32*)((char*)inner + 0x1438), (f32*)((char*)inner + 0x143c),
                                       (f32*)((char*)inner + 0x1440), 0);
         ObjPath_GetPointWorldPositionArray(obj, 3, 4, (f32*)((char*)inner + 0xb18));

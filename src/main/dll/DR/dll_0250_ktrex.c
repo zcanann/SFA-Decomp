@@ -1523,7 +1523,7 @@ void ktrex_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     {
         fn_8003B5E0(200, 0, 0, (int)gKTRexRuntime->bobPhase);
     }
-    objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     ObjPath_GetPointWorldPosition(obj, 1, (f32*)((char*)gKTRexState + 0x130), (f32*)((char*)gKTRexState + 0x134),
                                   (f32*)((char*)gKTRexState + 0x138), 0);
     ObjPath_GetPointWorldPosition(obj, 2, (f32*)((char*)gKTRexState + 0x148), (f32*)((char*)gKTRexState + 0x14c),
