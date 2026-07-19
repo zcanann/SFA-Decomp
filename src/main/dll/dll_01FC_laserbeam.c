@@ -31,7 +31,7 @@
 #include "main/resource.h"
 #include "main/obj_message.h"
 #include "main/gamebits.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_position_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll1fbsetup_struct.h"
@@ -144,7 +144,7 @@ void LaserBeam_update(int obj2)
     GameObject* player;
     u8 beamKind;
     int i;
-    u16 sfx;
+    int sfx;
     f32 dz;
     f32 dz2;
     f32 sinv;
@@ -384,7 +384,7 @@ void LaserBeam_update(int obj2)
                         {
                             sfx = 35;
                         }
-                        Sfx_PlayFromObject((int)player, sfx);
+                        Sfx_PlayFromObject((u32)player, sfx);
                         for (i = 0; i < 4; i++)
                         {
                             (*gPartfxInterface)
