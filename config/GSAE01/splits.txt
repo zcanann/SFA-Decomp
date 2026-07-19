@@ -3172,8 +3172,7 @@ main/dll/WM/dll_020E_wmsun.c:
 	.text       start:0x801F6E8C end:0x801F7C50
 	.rodata     start:0x802C24E8 end:0x802C2500
 	.data       start:0x80328D28 end:0x80328D60
-	.sdata2     start:0x803E5F20 end:0x803E5F6C
-	.sdata2     start:0x803E5F70 end:0x803E5F90
+	.sdata2     start:0x803E5F20 end:0x803E5F90
 
 main/dll/WM/dll_020F_wmspiritset.c:
 	.text       start:0x801F7C50 end:0x801F7D34
@@ -3760,8 +3759,7 @@ main/dll/LGT/dll_02AA_lgtdirectionallight.c:
 	.text       start:0x8023404C end:0x80234748
 	.rodata     start:0x802C2608 end:0x802C2618
 	.data       start:0x8032B9C8 end:0x8032BB00
-	.sdata2     start:0x803E7250 end:0x803E7258
-	.sdata2     start:0x803E7258 end:0x803E7260
+	.sdata2     start:0x803E7250 end:0x803E7260
 
 main/dll/LGT/dll_02AB_lgtprojectedlight.c:
 	.text       start:0x80234748 end:0x80234C10

@@ -57,7 +57,6 @@
 #define WMSUN_ENVFX_B 0x34
 
 #define WM_SUN_PI 3.1415927f
-f32 lbl_803E5F20 = 0.0f;
 const WmSunVec3 gWmSunGlareDir = {0.0f, 0.0f, -1.0f};
 const WmSunVec3 gWmSunGlareSun = {0.0f, 0.0f, -1.0f};
 
@@ -87,9 +86,9 @@ void wmsun_updateGlare(GameObject* obj)
     dir = gWmSunGlareDir;
     sun = gWmSunGlareSun;
     obj->anim.rotX += 400;
-    g.vx = lbl_803E5F20;
-    g.vy = lbl_803E5F20;
-    g.vz = lbl_803E5F20;
+    g.vx = 0.0f;
+    g.vy = 0.0f;
+    g.vz = 0.0f;
     g.intensity = 1.0f;
     g.ang[2] = 0;
     g.ang[1] = 0;
@@ -103,7 +102,7 @@ void wmsun_updateGlare(GameObject* obj)
         dy = obj->anim.localPosY - cam->y;
         dz = obj->anim.localPosZ - cam->z;
         len = sqrtf(dz * dz + (dx * dx + dy * dy));
-        if (*(f32*)&lbl_803E5F20 != len)
+        if (0.0f != len)
         {
             dx = dx / len;
             dy = dy / len;
@@ -111,11 +110,11 @@ void wmsun_updateGlare(GameObject* obj)
         }
         dot = dz * sun.z + (dx * sun.x + dy * sun.y);
         prod = (dz * dz + (dx * dx + dy * dy)) * (denom = sun.z * sun.z + (sun.x * sun.x + sun.y * sun.y));
-        if (prod != lbl_803E5F20)
+        if (prod)
         {
             denom = sqrtf(prod);
         }
-        cz = lbl_803E5F20;
+        cz = 0.0f;
         if (denom != cz)
         {
             cosang = dot / denom;
@@ -124,13 +123,13 @@ void wmsun_updateGlare(GameObject* obj)
         {
             cosang = cz;
         }
-        hy = *(f32*)&lbl_803E5F20;
+        hy = 0.0f;
         if (cosang > hy)
         {
             dot = obj->anim.localPosX - cam->x;
             hz = obj->anim.localPosZ - cam->z;
             hlen = sqrtf(hz * hz + (dot * dot + hy));
-            if (*(f32*)&lbl_803E5F20 != hlen)
+            if (0.0f != hlen)
             {
                 dot = dot / hlen;
                 hy = hy / hlen;
@@ -140,14 +139,14 @@ void wmsun_updateGlare(GameObject* obj)
             f = dir.z;
             prod = f * f + (dir.x * dir.x + len * len);
             prod = prod * (hz * hz + (dot * dot + hy * hy));
-            if (prod != lbl_803E5F20)
+            if (prod)
             {
                 sqrtf(prod);
             }
             if (cosang > 0.5f)
             {
                 g.vx = 20.0f * dot;
-                g.vy = lbl_803E5F20;
+                g.vy = 0.0f;
                 g.vz = 20.0f * hz;
                 f = mathSinf(WM_SUN_PI * (32767.0f * (cosang - 0.5f)) / 32768.0f) - gWmSunGlareIntensity;
                 if (f > 0.1f || f < -0.1f)
@@ -183,7 +182,7 @@ void wmsun_updateGlare(GameObject* obj)
             }
             else
             {
-                f = lbl_803E5F20 - gWmSunGlareIntensity;
+                f = cz - gWmSunGlareIntensity;
                 if (f > 0.001f)
                 {
                     gWmSunGlareIntensity = oneOverTimeDelta * f + gWmSunGlareIntensity;
@@ -192,12 +191,12 @@ void wmsun_updateGlare(GameObject* obj)
                 {
                     gWmSunGlareIntensity = oneOverTimeDelta * f + gWmSunGlareIntensity;
                 }
-                if (gWmSunGlareDamping > *(f32*)&lbl_803E5F20)
+                if (gWmSunGlareDamping > 0.0f)
                 {
                     gWmSunGlareDamping = -(0.01f * timeDelta - gWmSunGlareDamping);
-                    if (gWmSunGlareDamping < *(f32*)&lbl_803E5F20)
+                    if (gWmSunGlareDamping < 0.0f)
                     {
-                        gWmSunGlareDamping = *(f32*)&lbl_803E5F20;
+                        gWmSunGlareDamping = 0.0f;
                     }
                 }
             }
@@ -266,7 +265,7 @@ void wmsun_update(GameObject* obj)
     objAnim = (ObjAnimComponent*)obj;
     thresh = 0;
     mult = 1;
-    spd = lbl_803E5F20;
+    spd = 0.0f;
     if ((obj)->anim.seqId == WMSUN_SEQID_CRYSTAL) /* WM_Crystal */
     {
         if (mainGetBit(0x38f) != 0)
