@@ -146,11 +146,11 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
 
     if (b->flag_40)
     {
-        objfx_spawnDirectionalBurstLegacy(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A34, 0, 0);
+        objfx_spawnDirectionalBurst((void*)obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A34, NULL, 0);
     }
     else
     {
-        objfx_spawnDirectionalBurstLegacy(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, 0, 0);
+        objfx_spawnDirectionalBurst((void*)obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, NULL, 0);
     }
     {
         ModelRenderOp* renderOp = ObjModel_GetRenderOp(Obj_GetActiveModel((GameObject*)obj)->file, 0);

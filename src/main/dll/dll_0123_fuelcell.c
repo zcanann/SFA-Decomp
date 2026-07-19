@@ -136,11 +136,11 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
     {
         if (state->unkBit5)
         {
-            objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 1, 1, 0x14, 3.5f, 0, 0);
+            objfx_spawnDirectionalBurst(obj, 5, 1.0f, 1, 1, 0x14, 3.5f, NULL, 0);
         }
         else
         {
-            objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 1, 1, 0x14, 4.5f, 0, 0);
+            objfx_spawnDirectionalBurst(obj, 5, 1.0f, 1, 1, 0x14, 4.5f, NULL, 0);
         }
         {
             ModelRenderOp* op = ObjModel_GetRenderOp(Obj_GetActiveModel((GameObject*)obj)->file, 0);

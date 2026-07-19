@@ -262,7 +262,7 @@ static inline void collectible_updateSeqEffects(GameObject* obj)
     switch ((obj)->anim.seqId)
     {
     case 0x6a6:
-        objfx_spawnDirectionalBurstLegacy((int)obj, 5, 1.0f, 6, 1, 0x14, 3.0f, 0, 0);
+        objfx_spawnDirectionalBurst(obj, 5, 1.0f, 6, 1, 0x14, 3.0f, NULL, 0);
         break;
     }
 }
@@ -567,7 +567,7 @@ void collectible_render(GameObject *obj, int a, int b, int c, int d, s8 visible)
         objRenderModelAndHitVolumes((int)obj, a, b, c, d, 1.0f);
         if ((obj)->anim.seqId == COLLECTIBLE_FIRECRYSTAL_OBJ)
         {
-            objfx_spawnDirectionalBurstLegacy((int)obj, 7, 1.0f, 5, 1, 10, 4.0f, 0, 0x20000000);
+            objfx_spawnDirectionalBurst(obj, 7, 1.0f, 5, 1, 10, 4.0f, NULL, 0x20000000);
         }
     }
 }
@@ -615,7 +615,7 @@ void collectible_update(int obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x6a6:
-        objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 6, 1, 0x14, 3.0f, 0, 0);
+        objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 6, 1, 0x14, 3.0f, NULL, 0);
         break;
     }
     timer = ((CollectibleState*)state)->lifetimeTimer;

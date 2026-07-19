@@ -164,7 +164,7 @@ void dim2roofrub_spawnEffects(int* obj)
     }
     if (((GameObject*)obj)->anim.seqId == DIM2ROOFRUB_SEQID_SLIDE)
     {
-        objfx_spawnDirectionalBurstLegacy(obj, 7, (1.0f), 5, 1, 10, (6.0f), 0, 0x20000000);
+        objfx_spawnDirectionalBurst(obj, 7, (1.0f), 5, 1, 10, (6.0f), NULL, 0x20000000);
     }
     else if (((GameObject*)obj)->anim.seqId == DIM2ROOFRUB_SEQID_TREAD)
     {
@@ -172,7 +172,7 @@ void dim2roofrub_spawnEffects(int* obj)
         *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = 2;
         if ((((GameObject*)obj)->objectFlags & DIM2ROOFRUB_OBJFLAG_RENDERED) != 0)
         {
-            objfx_spawnDirectionalBurstLegacy(obj, 5, (1.0f), 2, 1, 20, (2.5f), 0, 0);
+            objfx_spawnDirectionalBurst(obj, 5, (1.0f), 2, 1, 20, (2.5f), NULL, 0);
         }
     }
 }

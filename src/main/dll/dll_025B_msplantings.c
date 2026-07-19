@@ -263,13 +263,13 @@ void MoonSeedPlantingSpot_update(int obj)
             if (player != NULL &&
                 getXZDistance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <= 10000.0f)
             {
-                objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 5, 1, 0x28, 7.0f, 0, 0);
+                objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 5, 1, 0x28, 7.0f, NULL, 0);
                 (*(void (*)(int, int, int, int))(*(int*)(*(int*)(*(int*)((char*)tricky + 0x68)) + 0x28)))(tricky, obj,
                                                                                                           1, 4);
             }
             else
             {
-                objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, 0, 0);
+                objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 6, 1, 0x28, 5.0f, NULL, 0);
             }
             if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) == MSPLANTING_HIT_CUT)
             {
@@ -287,11 +287,11 @@ void MoonSeedPlantingSpot_update(int obj)
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
         if (getXZDistance(&((GameObject*)tricky)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <= 10000.0f)
         {
-            objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 5, 1, 0x28, 7.0f, 0, 0);
+            objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 5, 1, 0x28, 7.0f, NULL, 0);
         }
         else
         {
-            objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 6, 1, 0x28, 5.0f, 0, 0);
+            objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 6, 1, 0x28, 5.0f, NULL, 0);
         }
         if (((MoonSeedPlantingSpotState*)ex)->growthTimer <= 0.0f &&
             mainGetBit(((MoonSeedPlantingSpotState*)ex)->plantedGameBit) != 0 &&

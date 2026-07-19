@@ -148,8 +148,8 @@ void SPScarab_update(int obj)
     {
         if (((SpscarabState*)state)->burstCount != 0)
         {
-            objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, (u8)((SpscarabState*)state)->burstCount,
-                                        1, 0x14, 2.5f, 0, 0);
+            objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, ((SpscarabState*)state)->burstCount, 1, 0x14,
+                                        2.5f, NULL, 0);
         }
     }
 }

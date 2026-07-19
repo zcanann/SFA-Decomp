@@ -473,8 +473,8 @@ void mmp_moonrock_update(GameObject* obj)
         }
         return;
     }
-    objfx_spawnDirectionalBurstLegacy(obj, 1, 1.0f, 5, 1, 0xA, 8.0f, 0, 0);
-    objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, 5, 1, 0x14, 8.0f, 0, 0);
+    objfx_spawnDirectionalBurst(obj, 1, 1.0f, 5, 1, 0xA, 8.0f, NULL, 0);
+    objfx_spawnDirectionalBurst(obj, 5, 1.0f, 5, 1, 0x14, 8.0f, NULL, 0);
     if ((state->flags & MOONROCK_FLAG_THROWN) != 0)
     {
         fn_801A7B10(obj);

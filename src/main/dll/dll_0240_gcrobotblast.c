@@ -37,8 +37,8 @@ int GCRobotBlast_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
         {
         case 0:
         case 1:
-            objfx_spawnDirectionalBurstLegacy((int)obj, 7, lbl_803E6270, 5, 6, 0x64, lbl_803E6274, 0, 0x200000);
-            objfx_spawnDirectionalBurstLegacy((int)obj, 6, lbl_803E6270, 1, 6, 0x64, lbl_803E6274, 0, 0x200000);
+            objfx_spawnDirectionalBurst(obj, 7, lbl_803E6270, 5, 6, 0x64, lbl_803E6274, NULL, 0x200000);
+            objfx_spawnDirectionalBurst(obj, 6, lbl_803E6270, 1, 6, 0x64, lbl_803E6274, NULL, 0x200000);
             break;
         }
     }

@@ -37,10 +37,6 @@ void spawnExplosion(GameObject* source, f32 scale, u8 kind, u8 flag4, u8 flag8, 
                     u8 initialFlags);
 #endif
 
-#define objfx_spawnDirectionalBurstLegacy(obj, idx, scale, kind, mode, chance, mult, origin, flags)               \
-    ((void (*)(void*, int, f32, int, int, int, f32, void*, int))objfx_spawnDirectionalBurst)(                    \
-        (void*)(obj), (idx), (scale), (kind), (mode), (chance), (mult), (void*)(origin), (flags))
-
 #define objfx_spawnArcedBurstLegacy(obj, idx, scale, kind, mode, chance, angleBase, angleLow, angleHigh, origin,   \
                                     flags)                                                                        \
     ((void (*)(void*, int, f32, int, int, int, f32, f32, f32, void*, int))objfx_spawnArcedBurst)(                \

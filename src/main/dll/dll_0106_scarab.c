@@ -316,7 +316,7 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E3A00);
         if ((visible != 0) && (obj->anim.alpha != 0))
         {
-            objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, (u8)((ScarabState*)state)->burstModel, 1, 0x14,
+            objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, ((ScarabState*)state)->burstModel, 1, 0x14,
                                         lbl_803E3A04, 0, 0);
         }
     }
