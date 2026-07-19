@@ -769,7 +769,7 @@ void fn_8006FC00(int enable)
         b[i * 0x80 + 0x7E] = 0;
     }
     gWaterQuadWriteIdx = 0;
-    *(u8*)&gWaterRippleWriteIdx = 0;
+    gWaterRippleWriteIdx = 0;
 }
 
 void mapInitFn_8006fccc(void)
