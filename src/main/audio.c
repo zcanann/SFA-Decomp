@@ -2311,14 +2311,14 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
         if (player != NULL)
         {
             PSVECSubtract((f32*)((u8*)slot + 0x44), &player->anim.worldPosX, v);
-            t = (PSVECMag(v) - lbl_803DE5B4) / lbl_803DE5B8;
-            if (lbl_803DE5C0 < (t > lbl_803DE5C8 ? t : lbl_803DE5C8))
+            t = (PSVECMag(v) - 150.0f) / 250.0f;
+            if (1.0 < (t > 0.0 ? t : 0.0))
             {
-                t2 = lbl_803DE5C0;
+                t2 = 1.0;
             }
             else
             {
-                t2 = (t > lbl_803DE5C8 ? t : lbl_803DE5C8);
+                t2 = (t > 0.0 ? t : 0.0);
             }
             PSVECScale(v, v, t2);
             PSVECAdd(&player->anim.worldPosX, v, v);
