@@ -118,21 +118,6 @@ typedef struct TrickyStatusFlags58
     u8 bit0 : 1;
 } TrickyStatusFlags58;
 
-typedef struct PromptSlotByte
-{
-    u8 slotA : 2;
-    u8 slotB : 2;
-    u8 unk4 : 4;
-} PromptSlotByte;
-
-typedef struct
-{
-    u8 slotA : 2;
-    u8 slotB : 2;
-    u8 slotC : 2;
-    u8 slotD : 2;
-} TrickySlotBits;
-
 typedef void (*TrickyHandlerFn)(int obj, int state);
 
 typedef struct
@@ -316,7 +301,7 @@ f32 lbl_803E2450 = 512.0f;
 f32 lbl_803E2454 = 3.1415927f;
 f32 lbl_803E2458 = 32768.0f;
 
-void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val);
+void baddie_decodePlayerAttackFlags(int* obj, u32 flags, f32 f, u16 val);
 void Tricky_findNearbyFloorHeights(GameObject* obj, int state, f32* nearestFloorY, f32* nearestSpecialY);
 
 u8* Tricky_findNearestGroup4BObject(u8* obj, TrickyState* state)
@@ -351,14 +336,14 @@ u8* Tricky_findNearestGroup4BObject(u8* obj, TrickyState* state)
     return result;
 }
 
-void trickyFn_80144f50(GameObject* obj, int state)
+void tricky_stateIdleWander(GameObject* obj, int state)
 {
     int sfxState;
     int isInWater;
     u32 sfxDisabled;
     u32 transitionFlag;
 
-    if (trickyFoodFn_8014460c(obj, (int*)state) == 0)
+    if (tricky_handleFeedOrTalk(obj, (int*)state) == 0)
     {
         ((TrickyState*)state)->wanderTargetX =
             (obj)->anim.worldPosX - mathSinf((lbl_803E2454 * (f32) * (s16*)obj) / lbl_803E2458);
@@ -428,7 +413,7 @@ void trickyFn_80144f50(GameObject* obj, int state)
     }
 }
 
-void trickyFn_801451d8(GameObject* obj, int state)
+void tricky_attachToWalkGroup(GameObject* obj, int state)
 {
     u8 pathBytes[16];
     u32 pathByte = (u8)Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
@@ -599,7 +584,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void Tricky_func11(int* obj)
+void Tricky_requestRecall(int* obj)
 {
     register u32* p = (u32*)obj[0xb8 / 4];
     if (mainGetBit(GAMEBIT_Tricky_Usable))
@@ -616,7 +601,7 @@ int Tricky_func13(int* obj)
     return 0;
 }
 
-int Tricky_func12(int* obj)
+int Tricky_isPlayingBall(int* obj)
 {
     u8 mode;
     int result;
@@ -633,7 +618,7 @@ int Tricky_func12(int* obj)
     return result;
 }
 
-int Tricky_func10(int* obj, int targetObj)
+int Tricky_requestMoveToObject(int* obj, int targetObj)
 {
     int* state = (int*)obj[0xb8 / 4];
     s32 objBlocked = ((GameObject*)obj)->objectFlags & TRICKY_OBJFLAG_PARENT_SLACK;
@@ -663,7 +648,7 @@ int Tricky_func10(int* obj, int targetObj)
     return 1;
 }
 
-void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
+void Tricky_commandPlayBall(int* obj, int commandEnabled, int targetObj)
 {
     register int* state = (int*)obj[0xb8 / 4];
 
@@ -704,11 +689,11 @@ void Tricky_func0F(int* obj, int commandEnabled, int targetObj)
     }
 }
 
-u8 Tricky_func0E(int* obj)
+u8 Tricky_getEnergyMax(int* obj)
 {
     return *((u8*)((int**)obj)[0xb8 / 4][0x0 / 4] + 0x1);
 }
-u8 Tricky_render2(int* obj)
+u8 Tricky_getEnergy(int* obj)
 {
     return *((u8*)((int**)obj)[0xb8 / 4][0x0 / 4] + 0x0);
 }
@@ -904,7 +889,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 {
                     bitVal = 0xffffffff;
                 }
-                ((PromptSlotByte*)(state + 0x7bc))->slotB = bitVal;
+                ((TrickyPackedSlots*)(state + 0x7bc))->promptBSlot = bitVal;
                 spawnedObj = (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, 0xffffffff, ((GameObject*)objVal)->anim.parent);
                 *(u32*)(state + 0x7b0) = spawnedObj; /* raw: arrow form shifts bytes */
                 ObjLink_AttachChild((GameObject*)objVal, ((TrickyState*)state)->childB, *(u8*)(state + 0x7bc) >> 4 & 3);
@@ -983,7 +968,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 {
                     bitVal = 0xffffffff;
                 }
-                ((PromptSlotByte*)(state + 0x7bc))->slotA = bitVal;
+                ((TrickyPackedSlots*)(state + 0x7bc))->promptASlot = bitVal;
                 spawnedObj = (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, 0xffffffff, ((GameObject*)objVal)->anim.parent);
                 *(u32*)(state + 0x7a8) = spawnedObj; /* raw: arrow form shifts bytes */
                 ObjLink_AttachChild((GameObject*)objVal, ((TrickyState*)state)->childA, *(u8*)(state + 0x7bc) >> 6 & 3);
@@ -1136,7 +1121,7 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
             }
         }
         Tricky_emitQueuedPathParticles((u8*)obj, (u8*)state);
-        ObjPath_GetPointWorldPositionArray(obj, 4, 4, (float*)((TrickyState*)state)->pad7D8);
+        ObjPath_GetPointWorldPositionArray(obj, 4, 4, (float*)((TrickyState*)state)->footPoints);
         ((TrickyState*)state)->particleTimer = ((TrickyState*)state)->particleTimer - timeDelta;
         if (((TrickyState*)state)->particleTimer > lbl_803E23DC)
         {
@@ -1263,15 +1248,15 @@ void Tricky_hitDetect(GameObject* obj)
         used_[2] = -1;                                                                                                 \
         if (*(void**)((state) + 0x7a8) != NULL)                                                                        \
         {                                                                                                              \
-            used_[((TrickySlotBits*)((state) + 0x7bc))->slotA] = 1;                                                    \
+            used_[((TrickyPackedSlots*)((state) + 0x7bc))->promptASlot] = 1;                                                    \
         }                                                                                                              \
         if (*(void**)((state) + 0x7b0) != NULL)                                                                        \
         {                                                                                                              \
-            used_[((TrickySlotBits*)((state) + 0x7bc))->slotB] = 1;                                                    \
+            used_[((TrickyPackedSlots*)((state) + 0x7bc))->promptBSlot] = 1;                                                    \
         }                                                                                                              \
         if (*(void**)((state) + 0x7b8) != NULL)                                                                        \
         {                                                                                                              \
-            used_[((TrickySlotBits*)((state) + 0x7bc))->slotC] = 1;                                                    \
+            used_[((TrickyPackedSlots*)((state) + 0x7bc))->zzzSlot] = 1;                                                    \
         }                                                                                                              \
         if (used_[0] == -1)                                                                                            \
         {                                                                                                              \
@@ -1293,10 +1278,10 @@ void Tricky_hitDetect(GameObject* obj)
         {                                                                                                              \
             slot_ = -1;                                                                                                \
         }                                                                                                              \
-        ((TrickySlotBits*)((state) + 0x7bc))->slotC = slot_;                                                           \
+        ((TrickyPackedSlots*)((state) + 0x7bc))->zzzSlot = slot_;                                                           \
         *(int*)((state) + 0x7b8) = (int)Obj_SetupObject((ObjPlacement*)setup_, 4, -1, -1, *(void**)((obj) + 0x30));    \
         ObjLink_AttachChild((GameObject*)(obj), *(GameObject**)((state) + 0x7b8),                                    \
-                            ((TrickySlotBits*)((state) + 0x7bc))->slotC);                                             \
+                            ((TrickyPackedSlots*)((state) + 0x7bc))->zzzSlot);                                             \
         z = lbl_803E23DC;                                                                                              \
         *(f32*)((state) + 0x7c0) = z;                                                                                  \
         *(f32*)((state) + 0x7c4) = z;                                                                                  \
@@ -2245,24 +2230,24 @@ void tricky_handleDefeat(GameObject* obj, int state)
         {
             if ((((TrickyState*)state)->controlFlags & 0x100000) != 0)
             {
-                collectibleFn_80149cec(obj, state, ((TrickyState*)state)->spawnBits, 0, 4);
+                baddie_spawnRewardDrops(obj, state, ((TrickyState*)state)->spawnBits, 0, 4);
             }
             else
             {
                 spawnBits = *(s16*)(setup + 0x22) & 0xf00;
                 if (spawnBits != 0)
                 {
-                    collectibleFn_80149cec(obj, state, spawnBits, 0, 1);
+                    baddie_spawnRewardDrops(obj, state, spawnBits, 0, 1);
                 }
                 spawnBits = *(s16*)(setup + 0x22) & 0xf000;
                 if (spawnBits != 0)
                 {
-                    collectibleFn_80149cec(obj, state, spawnBits, 0, 2);
+                    baddie_spawnRewardDrops(obj, state, spawnBits, 0, 2);
                 }
                 spawnBits = *(s16*)(setup + 0x22) & 0xff;
                 if (spawnBits != 0)
                 {
-                    collectibleFn_80149cec(obj, state, spawnBits, 0, 3);
+                    baddie_spawnRewardDrops(obj, state, spawnBits, 0, 3);
                 }
             }
         }
@@ -2369,7 +2354,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
             ((TrickyState*)state)->freezeRecoverTimer = lbl_803E2574;
         }
         fn_802972B4((GameObject*)(player), &hitEffects, &fxA, &fxB, &fxC, &impactSfx);
-        frozenEnemyFn_80149bb4((int*)state, hitEffects, fxA, impactSfx);
+        baddie_decodePlayerAttackFlags((int*)state, hitEffects, fxA, impactSfx);
         if (hit != 0)
         {
             if (fromHit)
@@ -2606,7 +2591,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
     }
 }
 
-void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val)
+void baddie_decodePlayerAttackFlags(int* obj, u32 flags, f32 f, u16 val)
 {
     *((u8*)obj + 0x2f1) = 0;
     if ((flags & 0x2) != 0)
@@ -2656,7 +2641,7 @@ void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val)
     *(u16*)((char*)obj + 0x2ec) = val;
 }
 
-int collectibleFn_80149cec(GameObject* obj, int state, int spawnBits, u32 useAltMode, u32 mode)
+int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAltMode, u32 mode)
 {
     u32 commandSpawnIds[2];
     struct TrickyRewardSpawnTail
@@ -2829,7 +2814,7 @@ void baddieInstantiateWeapon(GameObject* obj, int state)
     }
 }
 
-u8 baddieTargetFn_8014a150(GameObject* obj, int state, void* from, void* to)
+u8 baddie_canSeeTarget(GameObject* obj, int state, void* from, void* to)
 {
     u8 traceHit[4];
     s16 toGrid[4];
@@ -2886,7 +2871,7 @@ u8 baddieTargetFn_8014a150(GameObject* obj, int state, void* from, void* to)
     return visible;
 }
 
-void baddieFn_8014a304(int obj, int state, f32 radius)
+void baddie_updateSightQuadrants(int obj, int state, f32 radius)
 {
     u8 traceHit[4];
     s16 probeGrid[4];

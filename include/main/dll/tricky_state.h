@@ -19,11 +19,20 @@
 
 typedef struct TrickyPackedSlots
 {
-    u8 a : 2;
-    u8 b : 2;
-    u8 c : 2;
+    u8 promptASlot : 2;
+    u8 promptBSlot : 2;
+    u8 zzzSlot : 2;
     u8 d : 2;
 } TrickyPackedSlots;
+
+typedef struct TrickyCommand
+{
+    GameObject* targetObj;
+    s8 kind;
+    s8 type;
+    u8 ttl;
+    u8 pad7;
+} TrickyCommand;
 
 typedef struct TrickyPoint3
 {
@@ -133,7 +142,8 @@ typedef struct TrickyState {
     u32 flags2E0; /* flag word tested alongside flags2DC (bits 0x100/0x800/0x1000) */
     u32 controlFlags; /* TRICKY_CONTROL_FLAG_* (collectable.c macro set) */
     u32 flags2E8; /* control/state flag word (bits 1/4/0x10/0x20/0x200/0x208) */
-    u8 pad2EC[0x2EF - 0x2EC];
+    u16 impactSfxId;
+    u8 pad2EE[0x2EF - 0x2EE];
     u8 actionId; /* current action/move selector (0..5); compared against prevActionId to detect change */
     u8 prevActionId; /* previous frame's actionId */
     u8 flags2F1; /* bit flags (0x8/0x10/0x80) gating the spawn/anim paths */
@@ -183,7 +193,8 @@ typedef struct TrickyState {
     f32 renderPosX; /* copied to a child object's localPos during Tricky_render */
     f32 renderPosY;
     f32 renderPosZ;
-    u8 pad414[0x418 - 0x414];
+    s16 modelAnchorRotY;
+    u8 pad416[0x418 - 0x416];
     struct ObjfsaRomCurveDef *routeSeedNode; /* candidate route node chosen before seeding route */
     u8 routeSeedDir;
     u8 pad41D[0x420 - 0x41D];
@@ -220,25 +231,27 @@ typedef struct TrickyState {
     f32 sfxRepeatTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an SFX and re-primes to lbl_803E2440 (tricky_substates) */
     f32 unk73C;
     f32 idleSfxTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an idle vocalization SFX and re-primes to randomGetRange(500,750) (tricky/substates/weapone6) */
-    u8 pad744[0x798 - 0x744];
+    f32 sparkleFxTimer;
+    TrickyCommand commands[10];
     u8 commandCount; /* number of queued Tricky commands (0..10); index into the command records at 0x748 (stride 8), bumped on enqueue / dropped on dequeue, used as the scan loop bound (tricky) */
     u8 pad799[0x79C - 0x799];
     f32 cooldownC; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC, re-primed to lbl_803E2440; same clamp-to-floor idiom as cooldownA/B (tricky/substates/weapone6/skeetla/animobjd2/mmp) */
     f32 voiceCooldown; /* f32 countdown: -= timeDelta, clamped to floor; while > floor a TRICKY_VOICE line is (re)issued (tricky/trickyfollow/skeetla) */
     f32 sfxIntervalTimer; /* f32 countdown: -= timeDelta, on reaching floor lbl_803E23DC fires an SFX and re-primes to a randomGetRange interval (skeetla 600..1200, weapone6 150..300) */
     GameObject* childA;
-    u8 pad7AC[0x7B0 - 0x7AC];
+    f32 promptADespawnTimer;
     GameObject* childB;
-    u8 pad7B4[0x7B8 - 0x7B4];
+    f32 promptBDespawnTimer;
     GameObject* child;
     u8 pad7BC[0x7C0 - 0x7BC];
     f32 childPhaseTimer0; /* child-object periodic phase timer: reset to floor lbl_803E23DC when the child is attached, += timeDelta while it lives, wraps at lbl_803E2550 to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
     f32 childPhaseTimer1; /* child-object periodic phase timer: += timeDelta, wraps at lbl_803E24D8/lbl_803E2440 to toggle the child's 0x4000 anim flag */
     f32 childPhaseTimer2; /* child-object periodic phase timer: += timeDelta, wraps at lbl_803E24C8, gates the child's 0x4000 anim flag via lbl_803E2408 */
     GameObject* spawnedChild;
-    u8 pad7D0[0x7D4 - 0x7D0];
+    u8 pendingFollowRequest;
+    u8 pad7D1[0x7D4 - 0x7D1];
     u8 *pendingFollowObj; /* target object handed off to a sibling Tricky: read into `target`, then assigned to other->followObj and other->targetPosPtr = target+0x18 (tricky_substates) */
-    u8 pad7D8[0x808 - 0x7D8];
+    f32 footPoints[4][3];
     f32 impressTimer; /* impress-move countdown: primed to lbl_803E2408 by trickyImpress (which sets stateFlags 0x80000000); while that flag is set, -= timeDelta each cycle, and on reaching floor lbl_803E23DC the flag is cleared and a TRICKY_VOICE line fires (tricky) */
     f32 sidestepScale; /* per-axis scale applied to sidestepDelta under TRICKY_STATE_FLAG_SIDESTEP: localPos += sidestepDelta * (dir * sidestepScale) */
     f32 verticalScale; /* scale applied to verticalDelta under TRICKY_STATE_FLAG_VERTICAL_MOVE: localPosY += verticalScale * verticalDelta */
@@ -268,6 +281,10 @@ STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
 STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
+STATIC_ASSERT(offsetof(TrickyState, commands) == 0x748);
+STATIC_ASSERT(offsetof(TrickyState, commandCount) == 0x798);
+STATIC_ASSERT(offsetof(TrickyState, footPoints) == 0x7D8);
+STATIC_ASSERT(offsetof(TrickyState, impressTimer) == 0x808);
 
 typedef struct
 {

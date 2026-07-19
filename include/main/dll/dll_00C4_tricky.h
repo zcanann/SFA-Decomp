@@ -31,12 +31,12 @@ void FUN_801455e8(u64 param_1, double param_2, double param_3, u64 param_4, u64 
 void FUN_801457a4(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, u32 param_10, int param_11, u32 param_12, u32 param_13, u32 param_14,
                   u32 param_15, u32 param_16);
-void trickyFn_801451d8(GameObject* obj, int state);
-void trickyFn_80144f50(GameObject* obj, int state);
+void tricky_attachToWalkGroup(GameObject* obj, int state);
+void tricky_stateIdleWander(GameObject* obj, int state);
 void FUN_80145ea4(int param_1);
 void FUN_80145ee8(int param_1, int param_2, int param_3);
-int Tricky_func10(int* obj, int targetObj);
-void Tricky_func0F(int* obj, int commandEnabled, int targetObj);
+int Tricky_requestMoveToObject(int* obj, int targetObj);
+void Tricky_commandPlayBall(int* obj, int commandEnabled, int targetObj);
 void sideCommandEnable(GameObject* obj, int targetObj, int commandKind, int commandType);
 int Tricky_updateSideCommandPrompts(int obj);
 u32 FUN_80146874(void);
@@ -46,9 +46,9 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void Tricky_update(int obj);
 void fn_80148C18(int obj, int state);
 void tricky_handleDefeat(GameObject* obj, int state);
-int collectibleFn_80149cec(GameObject* obj, int state, int spawnBits, u32 useAltMode, u32 mode);
-u8 baddieTargetFn_8014a150(GameObject* obj, int state, void* from, void* to);
-void baddieFn_8014a304(int obj, int state, float radius);
+int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAltMode, u32 mode);
+u8 baddie_canSeeTarget(GameObject* obj, int state, void* from, void* to);
+void baddie_updateSightQuadrants(int obj, int state, float radius);
 void fn_8014A5FC(int obj, int state);
 void fn_8014A86C(int obj, int state, float* nearestFloorY, float* nearestSpecialY);
 void Tricky_render(GameObject* obj, int param_2, int param_3, int param_4, int param_5, char doRender);
@@ -79,12 +79,12 @@ void FUN_80147a70(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_
                   u64 param_8);
 void FUN_80147d2c(int param_1, int param_2);
 int Tricky_getExtraSize(void);
-u8 Tricky_func0E(int* obj);
-u8 Tricky_render2(int* obj);
+u8 Tricky_getEnergyMax(int* obj);
+u8 Tricky_getEnergy(int* obj);
 int Tricky_getCurrentCommandType(int* obj, int* out);
-void Tricky_func11(int* obj);
+void Tricky_requestRecall(int* obj);
 int Tricky_func13(int* obj);
-int Tricky_func12(int* obj);
+int Tricky_isPlayingBall(int* obj);
 int Tricky_getAvailableCommands(void);
 
 #endif /* MAIN_DLL_DLL_00C4_TRICKY_H_ */

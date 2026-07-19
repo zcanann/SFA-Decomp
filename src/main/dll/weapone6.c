@@ -450,7 +450,7 @@ void fn_8013F9E4(GameObject* obj, int state)
     int inWater;
     s16 move;
 
-    if (trickyFoodFn_8014460c(obj, (int*)state) == 0)
+    if (tricky_handleFeedOrTalk(obj, (int*)state) == 0)
     {
         if (trickyFn_8013b368(obj, lbl_803E2488, (TrickyState*)state) == 0)
         {

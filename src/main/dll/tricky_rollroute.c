@@ -1,6 +1,6 @@
 /*
  * tricky_rollroute - Tricky (DLL 0x00C4) rom-curve route-walker sub-TU; Tricky
- * cluster code sharing gTrickyObjDescriptor-adjacent data. trickyFn_80141290 is the
+ * cluster code sharing gTrickyObjDescriptor-adjacent data. tricky_updateBallRoll is the
  * per-frame update that rolls the object along its rom-curve route.
  *
  * Before init (init-done byte 0x0a == 0): the ball homes onto its curve
@@ -47,7 +47,7 @@ extern f32 lbl_803E2488;
 extern f32 lbl_803E2508;
 extern f32 lbl_803E250C;
 
-void trickyFn_80141290(int obj, int ball)
+void tricky_updateBallRoll(int obj, int ball)
 {
     TrickyState* ts = (TrickyState*)ball;
     int toNode;

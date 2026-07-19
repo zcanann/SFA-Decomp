@@ -3,11 +3,11 @@
  *
  * Each function here is one entry of Tricky's per-frame substate machine,
  * dispatched off state[0xa] (the substate index) either directly or through
- * the function-pointer table walked in trickyFn_80142524
+ * the function-pointer table walked in tricky_stateFollowPlayer
  * (((TrickyFnRow*)(base + state[0xa]*4))->fn). They drive Tricky along ROM
  * curve paths (rom_curve_interface), follow/feed the player, run the dig
  * and flame-breath sequences, pick random idle moves and emit the matching
- * object sounds (audio/sfx). trickyFoodFn_8014460c handles the shared
+ * object sounds (audio/sfx). tricky_handleFeedOrTalk handles the shared
  * feeding/Y-button-item interaction and is called as a guard at the top of
  * most states. Water-vs-land animation selection (the repeated
  * waterLevel/unk2B0/unk2B4 ladder) chooses swim vs walk anims throughout.
@@ -71,7 +71,8 @@ typedef struct TrickyCurveNode
     f32 y;  /* 0x0c */
     f32 z;  /* 0x10 */
     u32 id; /* 0x14 */
-    u8 pad18[4];
+    u8 pad18[3];
+    u8 linkDirMask;
     s32 links[4]; /* 0x1c linked curve ids */
 } TrickyCurveNode;
 
@@ -105,7 +106,7 @@ extern u32 gTrickySubstateSfxIdPairA;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E2514;
 extern f32 lbl_803E24F8;
-void fn_80144B50(u8* obj, u8* state);
+void tricky_handlePlayerContact(u8* obj, u8* state);
 extern f32 lbl_803E24C8;
 extern f32 lbl_803E24AC;
 extern f32 lbl_803E23E4;
@@ -362,7 +363,7 @@ void trickyDigTunnel(u8* obj, u8* state)
     }
 }
 
-void trickyFn_80141fec(u8* obj, u8* state)
+void tricky_stateFindSecretDig(u8* obj, u8* state)
 {
     u32 sfxTable;
     u8* ptr;
@@ -517,7 +518,7 @@ typedef struct
     u8 rest : 5;
 } FlagByte728;
 
-void trickyFn_80142524(u8* obj, u8* state)
+void tricky_stateFollowPlayer(u8* obj, u8* state)
 {
     u8* base;
     u8* found;
@@ -565,7 +566,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                         ((TrickyState*)other)->stateFlags |= 0x10000LL;
                     }
                 }
-                if (trickyFoodFn_8014460c((GameObject*)obj, (int*)state) == 0 &&
+                if (tricky_handleFeedOrTalk((GameObject*)obj, (int*)state) == 0 &&
                     trickyFn_8013b368((GameObject*)obj, lbl_803E2488, (TrickyState*)state) == 0)
                 {
                     ((TrickyState*)state)->idleSfxTimer -= timeDelta;
@@ -676,7 +677,7 @@ void trickyFn_80142524(u8* obj, u8* state)
         {
             ((TrickyState*)state)->cooldownA = lbl_803E23DC;
         }
-        fn_80144B50(obj, state);
+        tricky_handlePlayerContact(obj, state);
         {
             if (((int (**)(u8*, u8*))(base + 0x6c))[state[0xa]](obj, state) == 0)
             {
@@ -711,7 +712,7 @@ void trickyFn_80142524(u8* obj, u8* state)
     }
 }
 
-int trickyFn_80142a14(int obj, int state)
+int tricky_substateApproachThorntail(int obj, int state)
 {
     int tex;
     short move;
@@ -754,7 +755,7 @@ int trickyFn_80142a14(int obj, int state)
     return 1;
 }
 
-int trickyFlameFn_80142b6c(u8* obj, u8* state)
+int tricky_substateFlameBreath(u8* obj, u8* state)
 {
     int i;
     int j;
@@ -814,7 +815,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
     return 1;
 }
 
-int trickyFoodFn_80142d2c(GameObject* obj, int state)
+int tricky_substateBegForFood(GameObject* obj, int state)
 {
     int tex;
     int result;
@@ -822,7 +823,7 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
     TrickyItemIdList buf;
 
     buf = gTrickyFoodItemIds;
-    if (trickyFoodFn_8014460c(obj, (int*)state) != 0)
+    if (tricky_handleFeedOrTalk(obj, (int*)state) != 0)
     {
         ((TrickyState*)state)->cooldownB = lbl_803E23DC;
         {
@@ -873,7 +874,7 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
     return 0;
 }
 
-int trickyFn_80142eb0(GameObject* obj, int state)
+int tricky_substateDigForFood(GameObject* obj, int state)
 {
     short move;
     int b;
@@ -886,7 +887,7 @@ int trickyFn_80142eb0(GameObject* obj, int state)
         f32 z;
     } spawnBuf;
 
-    if (trickyFoodFn_8014460c(obj, (int*)state) != 0)
+    if (tricky_handleFeedOrTalk(obj, (int*)state) != 0)
     {
         return 1;
     }
@@ -960,11 +961,11 @@ int trickyFn_80142eb0(GameObject* obj, int state)
     return 1;
 }
 
-int trickyFn_801430e0(u8* obj, u8* state)
+int tricky_substateIdlePick(u8* obj, u8* state)
 {
     u8* ptr;
 
-    if (trickyFoodFn_8014460c((GameObject*)obj, (int*)state) != 0)
+    if (tricky_handleFeedOrTalk((GameObject*)obj, (int*)state) != 0)
     {
         return 1;
     }
@@ -994,7 +995,7 @@ int trickyFn_801430e0(u8* obj, u8* state)
                 tricky_startRandomIdleMove((GameObject*)obj, (int)state);
                 break;
             default:
-                objAnimFn_801441c0(obj, state);
+                tricky_pickAmbientActivity(obj, state);
                 break;
             }
         }
@@ -1002,12 +1003,12 @@ int trickyFn_801430e0(u8* obj, u8* state)
     return 1;
 }
 
-u32 trickyFn_80143210(GameObject* obj, int* trickyState)
+u32 tricky_substateFidgetA(GameObject* obj, int* trickyState)
 {
     short move;
     int foodResult;
 
-    foodResult = trickyFoodFn_8014460c(obj, trickyState);
+    foodResult = tricky_handleFeedOrTalk(obj, trickyState);
     if (foodResult != 0)
     {
         return 1;
@@ -1032,12 +1033,12 @@ u32 trickyFn_80143210(GameObject* obj, int* trickyState)
     return 1;
 }
 
-u32 trickyFn_801432cc(GameObject* obj, int* trickyState)
+u32 tricky_substateFidgetB(GameObject* obj, int* trickyState)
 {
     short move;
     int foodResult;
 
-    foodResult = trickyFoodFn_8014460c(obj, trickyState);
+    foodResult = tricky_handleFeedOrTalk(obj, trickyState);
     if (foodResult != 0)
     {
         return 1;
@@ -1062,12 +1063,12 @@ u32 trickyFn_801432cc(GameObject* obj, int* trickyState)
     return 1;
 }
 
-u32 trickyFn_80143388(GameObject* obj, int* trickyState)
+u32 tricky_substateWaitMoveEnd(GameObject* obj, int* trickyState)
 {
     int ref;
     int val;
 
-    if (trickyFoodFn_8014460c(obj, trickyState) != 0)
+    if (tricky_handleFeedOrTalk(obj, trickyState) != 0)
     {
         return 1;
     }
@@ -1086,7 +1087,7 @@ u32 trickyFn_80143388(GameObject* obj, int* trickyState)
             }
         }
     }
-    if (trickyFoodFn_8014460c(obj, trickyState) != 0)
+    if (tricky_handleFeedOrTalk(obj, trickyState) != 0)
     {
         return 1;
     }
@@ -1100,7 +1101,7 @@ u32 trickyFn_80143388(GameObject* obj, int* trickyState)
     return 1;
 }
 
-int trickyFn_801434b0(GameObject* obj, int* trickyState)
+int tricky_substateHowlCall(GameObject* obj, int* trickyState)
 {
     char bval;
     short move;
@@ -1112,7 +1113,7 @@ int trickyFn_801434b0(GameObject* obj, int* trickyState)
     float fa;
     int ib;
 
-    if (trickyFoodFn_8014460c(obj, trickyState) != 0)
+    if (tricky_handleFeedOrTalk(obj, trickyState) != 0)
     {
         return 1;
     }
@@ -1215,7 +1216,7 @@ int trickyFn_801434b0(GameObject* obj, int* trickyState)
     return 1;
 }
 
-int trickyFoodFn_801437d4(GameObject* obj, int* state)
+int tricky_substateSleep(GameObject* obj, int* state)
 {
     s8 slots[4];
     u8* ptr;
@@ -1223,7 +1224,7 @@ int trickyFoodFn_801437d4(GameObject* obj, int* state)
     int idx;
     f32 z;
 
-    if (trickyFoodFn_8014460c(obj, state) != 0)
+    if (tricky_handleFeedOrTalk(obj, state) != 0)
     {
         ((u8*)state)[0xa] = 0;
         return 1;
@@ -1253,15 +1254,15 @@ int trickyFoodFn_801437d4(GameObject* obj, int* state)
         slots[2] = -1;
         if (((TrickyState*)state)->childA != NULL)
         {
-            slots[((TrickyPackedSlots*)((u8*)state + 0x7bc))->a] = 1;
+            slots[((TrickyPackedSlots*)((u8*)state + 0x7bc))->promptASlot] = 1;
         }
         if (((TrickyState*)state)->childB != NULL)
         {
-            slots[((TrickyPackedSlots*)((u8*)state + 0x7bc))->b] = 1;
+            slots[((TrickyPackedSlots*)((u8*)state + 0x7bc))->promptBSlot] = 1;
         }
         if (((TrickyState*)state)->child != NULL)
         {
-            slots[((TrickyPackedSlots*)((u8*)state + 0x7bc))->c] = 1;
+            slots[((TrickyPackedSlots*)((u8*)state + 0x7bc))->zzzSlot] = 1;
         }
         if (slots[0] == -1)
         {
@@ -1283,10 +1284,10 @@ int trickyFoodFn_801437d4(GameObject* obj, int* state)
         {
             idx = -1;
         }
-        ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c = idx;
+        ((TrickyPackedSlots*)((u8*)state + 0x7bc))->zzzSlot = idx;
         ((TrickyState*)state)->child = Obj_SetupObject((ObjPlacement*)e, 4, -1, -1, (obj)->anim.parent);
         ObjLink_AttachChild(obj, ((TrickyState*)state)->child,
-                            ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c);
+                            ((TrickyPackedSlots*)((u8*)state + 0x7bc))->zzzSlot);
         z = lbl_803E23DC;
         ((TrickyState*)state)->childPhaseTimer0 = z;
         ((TrickyState*)state)->childPhaseTimer1 = z;
@@ -1310,11 +1311,11 @@ int trickyFoodFn_801437d4(GameObject* obj, int* state)
     return 1;
 }
 
-u32 trickyFn_80143b04(GameObject* obj, int* trickyState)
+u32 tricky_substateWaitQueuedMove(GameObject* obj, int* trickyState)
 {
     int val;
 
-    val = trickyFoodFn_8014460c(obj, trickyState);
+    val = tricky_handleFeedOrTalk(obj, trickyState);
     if (val != 0)
     {
         return 1;
@@ -1329,11 +1330,11 @@ u32 trickyFn_80143b04(GameObject* obj, int* trickyState)
     return 1;
 }
 
-u32 trickyFn_80143b78(GameObject* obj, int* trickyState)
+u32 tricky_substateReturnToHeel(GameObject* obj, int* trickyState)
 {
     int val;
 
-    val = trickyFoodFn_8014460c(obj, trickyState);
+    val = tricky_handleFeedOrTalk(obj, trickyState);
     if (val != 0)
     {
         return 1;
@@ -1351,7 +1352,7 @@ u32 trickyFn_80143b78(GameObject* obj, int* trickyState)
     return 0;
 }
 
-int trickyFn_80143c04(GameObject* obj, int state)
+int tricky_substateFollowIdle(GameObject* obj, int state)
 {
     int tex;
     short move;
@@ -1432,19 +1433,19 @@ int trickyFn_80143c04(GameObject* obj, int state)
         {
             return 0;
         }
-        return fn_80143DD4((int)obj, (int*)state);
+        return tricky_updateIdleBehavior((int)obj, (int*)state);
     }
     ((FlagByte728*)(state + 0x728))->bf7 = 1;
     return 1;
 }
 
-u32 fn_80143DD4(int obj, int* trickyState)
+u32 tricky_updateIdleBehavior(int obj, int* trickyState)
 {
     int done;
     int extra;
     u32 bitVal;
 
-    done = trickyFoodFn_8014460c((GameObject*)(obj), trickyState);
+    done = tricky_handleFeedOrTalk((GameObject*)(obj), trickyState);
     if (done != 0)
     {
         return 1;
@@ -1547,7 +1548,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
                     tricky_startRandomIdleMove((GameObject*)(obj), (int)trickyState);
                     break;
                 default:
-                    objAnimFn_801441c0((u8*)obj, (u8*)trickyState);
+                    tricky_pickAmbientActivity((u8*)obj, (u8*)trickyState);
                     break;
                 }
             }
@@ -1557,7 +1558,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
     return 0;
 }
 
-void objAnimFn_801441c0(u8* obj, u8* state)
+void tricky_pickAmbientActivity(u8* obj, u8* state)
 {
     f32 arr[2];
     u8* ptr;
@@ -1683,7 +1684,7 @@ void tricky_startRandomIdleMove(GameObject* obj, int trickyState)
     }
 }
 
-int trickyFoodFn_8014460c(GameObject* obj, int* state)
+int tricky_handleFeedOrTalk(GameObject* obj, int* state)
 {
     u8* b;
     u8 gu;
@@ -1877,7 +1878,7 @@ int trickyFoodFn_8014460c(GameObject* obj, int* state)
     return 0;
 }
 
-void fn_80144B50(u8* obj, u8* state)
+void tricky_handlePlayerContact(u8* obj, u8* state)
 {
     int hit[1];
     u8* ptr;

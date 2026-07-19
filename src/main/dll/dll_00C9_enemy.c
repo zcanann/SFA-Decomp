@@ -702,7 +702,7 @@ void fn_8014B878(int* obj, int* sub)
     {
         if ((((TrickyState*)sub)->controlFlags & 0x1000) != 0)
         {
-            u8 r = baddieTargetFn_8014a150((GameObject*)obj, (int)sub, (f32*)((char*)obj + 0x18),
+            u8 r = baddie_canSeeTarget((GameObject*)obj, (int)sub, (f32*)((char*)obj + 0x18),
                                            (u8*)((TrickyState*)sub)->actionTargetObj + 0x18);
             if (r != 0)
                 ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
@@ -742,7 +742,7 @@ void fn_8014B878(int* obj, int* sub)
         {
             if ((((TrickyState*)sub)->controlFlags & 0x40) != 0)
             {
-                baddieFn_8014a304((int)obj, (int)sub, ((TrickyState*)sub)->waterLevel);
+                baddie_updateSightQuadrants((int)obj, (int)sub, ((TrickyState*)sub)->waterLevel);
             }
             else
             {
@@ -919,7 +919,7 @@ int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate)
 }
 
 /* sidekickToy_updateCurveTargetLatch: pre-curve probe + state-bit gate. If state's 0x2000 bit is
- * set, ask baddieTargetFn_8014a150 whether the target is locked on; on hit,
+ * set, ask baddie_canSeeTarget whether the target is locked on; on hit,
  * leave state[0x2dc] alone. Otherwise initialise the rom-curve walker with
  * (data, obj, lbl_803E25DC, &lbl_803DBC58, -1) and toggle
  * the 0x2000 bit based on the u8 result. */
@@ -929,7 +929,7 @@ void sidekickToy_updateCurveTargetLatch(GameObject* obj)
     u8* data = *(u8**)state;
     if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
-        if ((u8)baddieTargetFn_8014a150((GameObject*)obj, (int)state, &(obj)->anim.worldPosX, data + 0x68) != 0)
+        if ((u8)baddie_canSeeTarget((GameObject*)obj, (int)state, &(obj)->anim.worldPosX, data + 0x68) != 0)
         {
             return;
         }

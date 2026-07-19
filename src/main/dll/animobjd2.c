@@ -319,15 +319,15 @@ void fn_8013E0D0(int* obj, TrickyState* t)
                             slots[2] = -1;
                             if (t->childA != NULL)
                             {
-                                slots[((TrickyPackedSlots*)((char*)t + 0x7bc))->a] = 1;
+                                slots[((TrickyPackedSlots*)((char*)t + 0x7bc))->promptASlot] = 1;
                             }
                             if (t->childB != NULL)
                             {
-                                slots[((TrickyPackedSlots*)((char*)t + 0x7bc))->b] = 1;
+                                slots[((TrickyPackedSlots*)((char*)t + 0x7bc))->promptBSlot] = 1;
                             }
                             if (t->child != NULL)
                             {
-                                slots[((TrickyPackedSlots*)((char*)t + 0x7bc))->c] = 1;
+                                slots[((TrickyPackedSlots*)((char*)t + 0x7bc))->zzzSlot] = 1;
                             }
                             if (slots[0] == -1)
                             {
@@ -349,11 +349,11 @@ void fn_8013E0D0(int* obj, TrickyState* t)
                             {
                                 free_ = -1;
                             }
-                            ((TrickyPackedSlots*)((char*)t + 0x7bc))->c = free_;
+                            ((TrickyPackedSlots*)((char*)t + 0x7bc))->zzzSlot = free_;
                             *(int*)&t->child =
                                 (int)Obj_SetupObject((ObjPlacement*)o, 4, -1, -1, (void*)*(int*)&gobj->anim.parent);
                             ObjLink_AttachChild(gobj, t->child,
-                                                ((TrickyPackedSlots*)((char*)t + 0x7bc))->c);
+                                                ((TrickyPackedSlots*)((char*)t + 0x7bc))->zzzSlot);
                             {
                                 f32 z3 = lbl_803E23DC;
                                 t->childPhaseTimer0 = z3;
