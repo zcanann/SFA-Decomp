@@ -4,6 +4,7 @@
 #include "main/hud_visibility_api.h"
 #include "main/audio/sfx.h"
 #include "main/gametext_api.h"
+#include "main/gametext_color_api.h"
 #include "main/gameloop_api.h"
 #include "main/gametext_charset_api.h"
 #include "main/gametext_show_str_api.h"
@@ -1554,7 +1555,6 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
         s->arg2 = y;
     }
 }
-void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 void gameTextLoadDir(int dirId)
 {
     GameTextSlot* cmd;
@@ -2658,7 +2658,7 @@ void subtitleUpdateAndDraw(int a)
     }
 }
 
-void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
+void gameTextSetColor(int r, int g, int b, int a)
 {
     if (gameTextDrawFunc != NULL)
     {
