@@ -45,7 +45,7 @@ void dll_3F_updateTimerReadout(void* obj)
     start = 0;
     elapsed = 0;
     total = 0;
-    if (gameTimerIsRunningU8())
+    if (gameTimerIsRunning())
     {
         gameTimerRunContext(obj);
     }

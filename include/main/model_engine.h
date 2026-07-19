@@ -40,7 +40,6 @@ typedef struct UiDllVTable {
 } UiDllVTable;
 
 typedef int (*ModelEngineGetDll16IntFn)(void);
-typedef u8 (*GameTimerIsRunningU8Fn)(void);
 typedef u8 (*GameTimerIsRunningContextFn)(void* context, int arg1, int arg2);
 typedef void (*GameTimerContextFn)(void* context);
 
@@ -107,7 +106,6 @@ void gameTimerRun(void);
 
 /* Preserve the integer handle view used by legacy callers. */
 #define getDLL16Int() (((ModelEngineGetDll16IntFn)getDLL16)())
-#define gameTimerIsRunningU8() (((GameTimerIsRunningU8Fn)gameTimerIsRunning)())
 #define gameTimerIsRunningContext(context, arg1, arg2) \
     (((GameTimerIsRunningContextFn)gameTimerIsRunning)((context), (arg1), (arg2)))
 #define gameTimerRunContext(context) (((GameTimerContextFn)gameTimerRun)((context)))
