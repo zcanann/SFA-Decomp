@@ -795,11 +795,11 @@ int snowPrintSnowCloud(int arg, int cloudId)
                 : ((driftX > lbl_803DF214 * ((NewCloud*)p)->driftSpeed)
                        ? lbl_803DF214 * ((NewCloud*)p)->driftSpeed
                        : driftX);
-    driftZ = gSnowFlakeSize * (((NewCloud*)p)->curPosZ - ((NewCloud*)p)->lastPosZ);
-    stepZ = (driftZ < lbl_803DF214 * ((NewCloud*)p)->flakeMinZ)
-                ? lbl_803DF214 * ((NewCloud*)p)->flakeMinZ
-                : ((driftZ > lbl_803DF214 * ((NewCloud*)p)->flakeMaxZ)
-                       ? lbl_803DF214 * ((NewCloud*)p)->flakeMaxZ
+    driftZ = *(f32*)&gSnowFlakeSize * (((NewCloud*)p)->curPosZ - ((NewCloud*)p)->lastPosZ);
+    stepZ = (driftZ < *(f32*)&lbl_803DF214 * ((NewCloud*)p)->flakeMinZ)
+                ? *(f32*)&lbl_803DF214 * ((NewCloud*)p)->flakeMinZ
+                : ((driftZ > *(f32*)&lbl_803DF214 * ((NewCloud*)p)->flakeMaxZ)
+                       ? *(f32*)&lbl_803DF214 * ((NewCloud*)p)->flakeMaxZ
                        : driftZ);
     if (((NewCloud*)p)->cloudType == 4)
     {
