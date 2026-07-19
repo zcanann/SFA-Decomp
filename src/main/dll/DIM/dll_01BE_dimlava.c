@@ -56,12 +56,6 @@ typedef struct
 } LavaVec;
 
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
-
-f32 gDimLavaDebrisGravity = 0.05f;
-f32 gDimLavaDebrisRootMotionScale = 0.25f;
-f32 gDimLavaVelocityScale = 0.1f;
-f32 gDimLavaPi = 3.14159274f;
-f32 gDimLavaAngleUnitsHalfCircle = 32768.0f;
 const LavaVec gDimLavaDebrisBaseVec = {1.2f, 0.0f, 0.0f};
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
@@ -79,7 +73,7 @@ void lavaball1be_relaunch(s16* obj, int vertSpeed, int horizSpeed)
 
     state = ((GameObject*)obj)->extra;
     setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-    vxz = gDimLavaVelocityScale * horizSpeed;
+    vxz = 0.1f * horizSpeed;
     x = state->targetObj->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosX = x;
     ((GameObject*)obj)->anim.localPosX = x;
@@ -100,19 +94,14 @@ void lavaball1be_relaunch(s16* obj, int vertSpeed, int horizSpeed)
     ((GameObject*)obj)->anim.previousLocalPosZ = x;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)((Lavaball1bePlacement*)setup)->spawnRotX << 8);
     ((GameObject*)obj)->anim.velocityX =
-        vxz * -mathSinf(gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
-    ((GameObject*)obj)->anim.velocityY = gDimLavaVelocityScale * vertSpeed;
+        vxz * -mathSinf(3.14159274f * (f32)((GameObject*)obj)->anim.rotX / 32768.0f);
+    ((GameObject*)obj)->anim.velocityY = 0.1f * vertSpeed;
     ((GameObject*)obj)->anim.velocityZ =
-        vxz * -mathCosf(gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
+        vxz * -mathCosf(3.14159274f * (f32)((GameObject*)obj)->anim.rotX / 32768.0f);
     ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     ObjHits_EnableObject((GameObject*)obj);
     state->flags &= ~LAVA1BE_FLAG_INACTIVE;
 }
-
-f32 gDimLavaGravity = -0.09f;
-f32 gDimLavaLightAttenNear = 30.0f;
-f32 gDimLavaLightAttenFar = 50.0f;
-f32 gDimLavaGlowRadius = 20.0f;
 
 u32 lavaball1be_isInactive(int* obj)
 {
@@ -176,7 +165,7 @@ void lavaball1be_update(s16* obj)
         (*gPartfxInterface)->spawnObject(obj, LAVA1BE_PARTFX, NULL, 1, -1, NULL);
         ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + framesThisStep * 0x374;
         ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 0x12c;
-        ((GameObject*)obj)->anim.velocityY = -(gDimLavaDebrisGravity * timeDelta - ((GameObject*)obj)->anim.velocityY);
+        ((GameObject*)obj)->anim.velocityY = -(0.05f * timeDelta - ((GameObject*)obj)->anim.velocityY);
         ((GameObject*)obj)->userData1 = ((GameObject*)obj)->userData1 - framesThisStep;
         if (((GameObject*)obj)->userData1 < 0)
         {
@@ -200,7 +189,7 @@ void lavaball1be_update(s16* obj)
             }
             ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + (steps << 6);
             ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY - (steps << 9);
-            ((GameObject*)obj)->anim.velocityY = gDimLavaGravity * dt + ((GameObject*)obj)->anim.velocityY;
+            ((GameObject*)obj)->anim.velocityY = -0.09f * dt + ((GameObject*)obj)->anim.velocityY;
             objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
                     ((GameObject*)obj)->anim.velocityZ * dt);
             if (((GameObject*)obj)->anim.velocityY < 2.0f)
@@ -280,8 +269,7 @@ void lavaball1be_init(s16* obj, u8* p)
         ((GameObject*)obj)->anim.velocityX = s.vec.x;
         ((GameObject*)obj)->anim.velocityY = s.vec.y;
         ((GameObject*)obj)->anim.velocityZ = s.vec.z;
-        ((GameObject*)obj)->anim.rootMotionScale =
-            ((GameObject*)obj)->anim.rootMotionScale * gDimLavaDebrisRootMotionScale;
+        ((GameObject*)obj)->anim.rootMotionScale *= 0.25f;
     }
     else
     {
@@ -293,16 +281,16 @@ void lavaball1be_init(s16* obj, u8* p)
 
         ((GameObject*)obj)->anim.rotX = (s16)((s32)placement->spawnRotX << 8);
         state = ((GameObject*)obj)->extra;
-        vy = gDimLavaVelocityScale * (f32)placement->velScaleY;
-        vxz = gDimLavaVelocityScale * (f32)placement->velScaleXZ;
+        vy = 0.1f * (f32)placement->velScaleY;
+        vxz = 0.1f * (f32)placement->velScaleXZ;
         state->floorY = ((GameObject*)obj)->anim.localPosY;
         state->linkedId = placement->linkedId;
         placement->linkedId = -1;
         ((GameObject*)obj)->anim.velocityX =
-            vxz * -mathSinf(gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
+            vxz * -mathSinf(3.14159274f * (f32)((GameObject*)obj)->anim.rotX / 32768.0f);
         ((GameObject*)obj)->anim.velocityY = vy;
         ((GameObject*)obj)->anim.velocityZ =
-            vxz * -mathCosf(gDimLavaPi * (f32)((GameObject*)obj)->anim.rotX / gDimLavaAngleUnitsHalfCircle);
+            vxz * -mathCosf(3.14159274f * (f32)((GameObject*)obj)->anim.rotX / 32768.0f);
         sub = *(int**)&((GameObject*)obj)->anim.hitReactState;
         if (sub != NULL)
         {
@@ -323,10 +311,10 @@ void lavaball1be_init(s16* obj, u8* p)
         {
             modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(state->light, 0xff, 0x80, 0, 0);
-            modelLightStruct_setDistanceAttenuation(state->light, gDimLavaLightAttenNear,
-                                                    gDimLavaLightAttenFar);
-            modelLightStruct_setupGlow(state->light, 0, 0xff, 0x80, 0, 0x64, gDimLavaGlowRadius);
-            modelLightStruct_setGlowProjectionRadius(state->light, gDimLavaGlowRadius);
+            modelLightStruct_setDistanceAttenuation(state->light, 30.0f,
+                                                    50.0f);
+            modelLightStruct_setupGlow(state->light, 0, 0xff, 0x80, 0, 0x64, 20.0f);
+            modelLightStruct_setGlowProjectionRadius(state->light, 20.0f);
         }
     }
 }

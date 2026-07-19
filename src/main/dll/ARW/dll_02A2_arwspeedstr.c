@@ -35,7 +35,7 @@ void ARWSpeedStr_free(void)
 
 void ARWSpeedStr_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7100);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void ARWSpeedStr_hitDetect(void)
@@ -55,11 +55,11 @@ void ARWSpeedStr_update(GameObject* obj)
         (obj)->anim.localPosX += playerMapOffsetX;
         (obj)->anim.localPosZ += playerMapOffsetZ;
         state->flags = (state->flags | 1) & 0xff;
-        state->alpha = lbl_803E7104;
+        state->alpha = 0.0f;
     }
     {
         f32 lifeTimer = state->lifeTimer;
-        f32 zero = lbl_803E7104;
+        f32 zero = 0.0f;
         if (lifeTimer > zero)
         {
             state->lifeTimer = lifeTimer - timeDelta;
@@ -75,9 +75,9 @@ void ARWSpeedStr_update(GameObject* obj)
             return;
         }
         objMove((GameObject*)obj, zero, zero, state->speed * timeDelta);
-        state->alpha = lbl_803E7108 * timeDelta + state->alpha;
-        if (state->alpha > *(f32*)&lbl_803E710C)
-            state->alpha = lbl_803E710C;
+        state->alpha = 2.0f * timeDelta + state->alpha;
+        if (state->alpha > 140.0f)
+            state->alpha = 140.0f;
         (obj)->anim.alpha = state->alpha;
     }
 }
@@ -103,8 +103,3 @@ ObjectDescriptor gARWSpeedStrObjDescriptor = {
     (ObjectDescriptorCallback)ARWSpeedStr_free, (ObjectDescriptorCallback)ARWSpeedStr_getObjectTypeId,
     ARWSpeedStr_getExtraSize,
 };
-
-f32 lbl_803E7100 = 1.0f;
-f32 lbl_803E7104 = 0.0f;
-f32 lbl_803E7108 = 2.0f;
-f32 lbl_803E710C = 1.4e+02f;
