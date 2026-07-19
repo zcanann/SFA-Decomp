@@ -345,7 +345,7 @@ void modelAnimEvalSlotPair(u8* dst, u8* model, u8* channel, f32 t, int flags, in
     int cacheOff;
     u8* p;
 
-    hdr = *(u8**)model;
+    hdr = (u8*)((ObjModel*)model)->file;
     {
         u32 sel = ((ObjModel*)model)->bufferFlags & 1;
         u8* pb = model + 12;
@@ -434,7 +434,7 @@ void modelAnimEvalChannels(u8* dst, u8* model, u8* channel, f32 blend, int flags
     f32 slotPhase;
     f32 slotLength;
 
-    hdr = *(u8**)model;
+    hdr = (u8*)((ObjModel*)model)->file;
     {
         u8* mtxBufs = model + 12;
         mtxBuf = *(int*)(mtxBufs + (((ObjModel*)model)->bufferFlags & 1) * 4);
@@ -1074,7 +1074,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
 }
 static inline int boneBlendSlotLimit(u8* model)
 {
-    u8* p = *(u8**)model;
+    u8* p = (u8*)((ObjModel*)model)->file;
     if (p[0xf3] != 0)
     {
         return p[0xf3] + p[0xf4];
@@ -1652,12 +1652,12 @@ void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA,
 
 void model_multMtxs(u8* model, f32* out)
 {
-    u8* hdr = *(u8**)model;
+    u8* hdr = (u8*)((ObjModel*)model)->file;
     u32 i;
     for (i = 0; i < hdr[0xf3]; i++)
     {
         int j = i;
-        u8* h = *(u8**)model;
+        u8* h = (u8*)((ObjModel*)model)->file;
         u32 cnt = h[0xf3];
         int lim;
         f32* base;
@@ -2257,9 +2257,9 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
         outPos[1] = k * srot[1];
         outPos[2] = k * srot[2];
     }
-    outPos[0] = outPos[0] + *(f32*)(*(u8**)(*(u8**)model + 0x3c) + 4);
-    outPos[1] = outPos[1] + *(f32*)(*(u8**)(*(u8**)model + 0x3c) + 8);
-    outPos[2] = outPos[2] + *(f32*)(*(u8**)(*(u8**)model + 0x3c) + 0xc);
+    outPos[0] = outPos[0] + *(f32*)(*(u8**)((u8*)((ObjModel*)model)->file + 0x3c) + 4);
+    outPos[1] = outPos[1] + *(f32*)(*(u8**)((u8*)((ObjModel*)model)->file + 0x3c) + 8);
+    outPos[2] = outPos[2] + *(f32*)(*(u8**)((u8*)((ObjModel*)model)->file + 0x3c) + 0xc);
     outPos[0] *= s;
     outPos[1] *= s;
     outPos[2] *= s;
@@ -2492,13 +2492,13 @@ u8 gModelJointScratchBuffer[0x140];
 void ObjModel_LoadRenderOpTextures(u8* model, GameObject* object)
 {
     int i;
-    u8* hdr = *(u8**)model;
+    u8* hdr = (u8*)((ObjModel*)model)->file;
     if (((ObjModel*)model)->bufferFlags & OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED)
     {
         return;
     }
     ((ObjModel*)model)->bufferFlags |= OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
-    for (i = 0; i < (*(u8**)model)[0xf8]; i++)
+    for (i = 0; i < ((u8*)((ObjModel*)model)->file)[0xf8]; i++)
     {
         shaderInit((u8*)&((ModelFileHeader*)hdr)->renderOps[i], &((ObjModel*)model)->textureRefs[i], object,
                    ((ModelFileHeader*)hdr)->shaderFlags);
@@ -2583,7 +2583,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
         gModelRootRotY = rot[1];
         gModelRootRotZ = rot[2];
     }
-    if (*(u16*)(*(u8**)model + 2) & 8)
+    if (*(u16*)((u8*)((ObjModel*)model)->file + 2) & 8)
     {
         modelAnimEvalChannels((u8*)dst, (u8*)model, *(u8**)((u8*)model + 0x2c),
                                  ((GameObject*)obj)->anim.currentMoveProgress, 0x7f);
@@ -2812,12 +2812,12 @@ void ObjModel_Release(u8* model)
     {
         ((ObjModel*)model)->bufferFlags &= ~OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
         z[0] = 0;
-        for (z[1] = z[0]; z[0] < (*(u8**)model)[0xf8]; z[1] += 0xc, z[0]++)
+        for (z[1] = z[0]; z[0] < ((u8*)((ObjModel*)model)->file)[0xf8]; z[1] += 0xc, z[0]++)
         {
             ShaderDef_free((int*)&((ObjModel*)model)->textureRefs[z[0]]);
         }
     }
-    header = *(u8**)model;
+    header = (u8*)((ObjModel*)model)->file;
     if (((ObjModel*)model)->renderAttachment != NULL)
     {
         mm_free(((ObjModel*)model)->renderAttachment);
