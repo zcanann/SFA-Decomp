@@ -696,8 +696,8 @@ int ktrex_stateHandlerA01(GameObject* obj, KTRexRuntime* runtime)
     if ((s8)runtime->moveJustStartedB != 0)
     {
         *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        runtime->unk349 = 0;
-        runtime->unk25F = 0;
+        runtime->hasTarget = 0;
+        runtime->physicsActive = 0;
         gKTRexState->stateTimer = 60.0f;
     }
     else
@@ -1576,7 +1576,7 @@ void ktrex_update(int obj)
     {
         Music_Trigger(MUSICTRIG_mammoth_walk, 1);
         ((GameObject*)obj)->userData2 = 2;
-        runtime->unk270 = 11;
+        runtime->substate = 11;
         runtime->moveJustStartedB = 1;
     }
     ObjHits_RegisterActiveHitVolumeObject((GameObject*)obj);
@@ -1674,10 +1674,10 @@ void ktrex_init(GameObject* obj, char* arg, int flag)
     (obj)->animEventCallback = ktrex_animEventCallback;
     rt = (KTRexRuntime*)gKTRexRuntime;
     (*gPlayerInterface)->setState(obj, rt, 0);
-    rt->unk270 = 2;
+    rt->substate = 2;
     *(int*)&rt->playerObj = 0;
-    rt->unk25F = 0;
-    rt->unk349 = 0;
+    rt->physicsActive = 0;
+    rt->hasTarget = 0;
     *(u8*)&(obj)->anim.resetHitboxMode |= 0x88;
     ObjHits_EnableObject(obj);
     if ((obj)->anim.modelState != NULL)
