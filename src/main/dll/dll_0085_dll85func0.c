@@ -256,7 +256,7 @@ u8 gFoodbagEffectTemplate[88] = {
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* lbl_80316000[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_85_func00_nop, dll_85_func01_nop, (void*)0x00000000, dll_85_func03};
-u8 lbl_80316020[16] = {0, 0, 0, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+s16 lbl_80316020[8] = {0, 255, 0, 0, 0, 0, 0, 0};
 void* lbl_80316030[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_86_func00_nop, dll_86_func01_nop, (void*)0x00000000, dll_86_func03};
 u8 lbl_80316050[464] = {

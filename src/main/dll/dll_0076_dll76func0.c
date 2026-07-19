@@ -15,7 +15,7 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0076_dll76func0.h"
 
-extern u8 lbl_80314950[];
+extern s16 lbl_80314950[];
 
 static const f32 c999 = 999.0f;
 static const f32 c83 = 83.0f;
@@ -86,13 +86,13 @@ void dll_76_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v5a = 0;
     buf.v5b = 0;
     buf.count = (e + 6) - buf.entries;
-    buf.hw[0] = *(s16*)&lbl_80314950[0];
-    buf.hw[1] = *(s16*)&lbl_80314950[2];
-    buf.hw[2] = *(s16*)&lbl_80314950[4];
-    buf.hw[3] = *(s16*)&lbl_80314950[6];
-    buf.hw[4] = *(s16*)&lbl_80314950[8];
-    buf.hw[5] = *(s16*)&lbl_80314950[10];
-    buf.hw[6] = *(s16*)&lbl_80314950[12];
+    buf.hw[0] = lbl_80314950[0];
+    buf.hw[1] = lbl_80314950[1];
+    buf.hw[2] = lbl_80314950[2];
+    buf.hw[3] = lbl_80314950[3];
+    buf.hw[4] = lbl_80314950[4];
+    buf.hw[5] = lbl_80314950[5];
+    buf.hw[6] = lbl_80314950[6];
     buf.cmds = buf.entries;
     buf.flags = 0x10c00;
     buf.flags |= flags;

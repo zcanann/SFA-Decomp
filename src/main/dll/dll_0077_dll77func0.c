@@ -12,7 +12,7 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0077_dll77func0.h"
 
-extern u8 lbl_80314980[];
+extern s16 lbl_80314980[];
 
 /* referenced via *(f32*)& so the 0.0 base keeps its additive fadds (a literal
    0.0f + pos folds away) and the pool stays in address order */
@@ -87,13 +87,13 @@ void dll_77_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v5a = 0;
     buf.v5b = 0;
     buf.count = (e + 6) - buf.entries;
-    buf.hw[0] = *(s16*)&lbl_80314980[0];
-    buf.hw[1] = *(s16*)&lbl_80314980[2];
-    buf.hw[2] = *(s16*)&lbl_80314980[4];
-    buf.hw[3] = *(s16*)&lbl_80314980[6];
-    buf.hw[4] = *(s16*)&lbl_80314980[8];
-    buf.hw[5] = *(s16*)&lbl_80314980[10];
-    buf.hw[6] = *(s16*)&lbl_80314980[12];
+    buf.hw[0] = lbl_80314980[0];
+    buf.hw[1] = lbl_80314980[1];
+    buf.hw[2] = lbl_80314980[2];
+    buf.hw[3] = lbl_80314980[3];
+    buf.hw[4] = lbl_80314980[4];
+    buf.hw[5] = lbl_80314980[5];
+    buf.hw[6] = lbl_80314980[6];
     buf.cmds = buf.entries;
     buf.flags = 0x10c00;
     buf.flags |= flags;

@@ -203,10 +203,10 @@ void dll_75_func00_nop(void)
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* lbl_80314930[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_75_func00_nop, dll_75_func01_nop, (void*)0x00000000, dll_75_func03};
-u8 lbl_80314950[16] = {0, 0, 0, 155, 0, 200, 0, 1, 0, 155, 0, 0, 0, 0, 0, 0};
+s16 lbl_80314950[8] = {0, 155, 200, 1, 155, 0, 0, 0};
 void* lbl_80314960[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_76_func00_nop, dll_76_func01_nop, (void*)0x00000000, dll_76_func03};
-u8 lbl_80314980[16] = {0, 0, 0, 155, 0, 200, 0, 1, 0, 155, 0, 0, 0, 0, 0, 0};
+s16 lbl_80314980[8] = {0, 155, 200, 1, 155, 0, 0, 0};
 void* lbl_80314990[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_77_func00_nop, dll_77_func01_nop, (void*)0x00000000, dll_77_func03};
 u8 lbl_803149B0[288] = {

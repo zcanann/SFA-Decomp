@@ -16,13 +16,13 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
-extern u8 lbl_80316020[];
+extern s16 lbl_80316020[];
 
 void dll_86_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
     FbCmd* e;
-    u8* base;
+    s16* base;
     f32 fx = 81.0f;
     f32 fy = 82.0f;
     int fl = 0x64;
@@ -108,13 +108,13 @@ void dll_86_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v5b = 0;
     buf.count = (FbCmd*)((u8*)e + 0x78) - e;
     base = lbl_80316020;
-    buf.hw[0] = *(s16*)(base + 0);
-    buf.hw[1] = *(s16*)(base + 2);
-    buf.hw[2] = *(s16*)(base + 4);
-    buf.hw[3] = *(s16*)(base + 6);
-    buf.hw[4] = *(s16*)(base + 8);
-    buf.hw[5] = *(s16*)(base + 0xa);
-    buf.hw[6] = *(s16*)(base + 0xc);
+    buf.hw[0] = base[0];
+    buf.hw[1] = base[1];
+    buf.hw[2] = base[2];
+    buf.hw[3] = base[3];
+    buf.hw[4] = base[4];
+    buf.hw[5] = base[5];
+    buf.hw[6] = base[6];
     buf.cmds = (FbCmd*)((u8*)&buf + 0x60);
     buf.flags = 0x10400;
     buf.flags |= flags;
