@@ -59,9 +59,6 @@
 
 #define PAD_BUTTON_A 0x100
 
-typedef u8 (*EarthWalkerHitReactUpdateFn)(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
-                                          u32 reactionState, float* reactionStepScale);
-
 int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int shouldAdvanceMove)
 {
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
@@ -155,8 +152,8 @@ void earthwalker_update(int obj)
     EarthWalkerState* ewState = ewObj->state;
     int prevAnim;
 
-    if ((ewState->hitReactState = ((EarthWalkerHitReactUpdateFn)ObjHitReact_Update)(
-             obj, gEarthWalkerHitReactEntries, 1, ewState->hitReactState, &ewState->hitReactStepScale)) != 0)
+    if ((ewState->hitReactState = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1, ewState->hitReactState,
+                                                     &ewState->hitReactStepScale)) != 0)
     {
         return;
     }

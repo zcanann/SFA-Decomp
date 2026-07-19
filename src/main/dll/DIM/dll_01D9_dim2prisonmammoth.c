@@ -194,9 +194,8 @@ void dim2prisonmammoth_update(int obj)
     if ((gPrisonMammothStateFlagsTable[((Dim2prisonmammothState*)inner)->stateIndex] & 8) == 0)
     {
         ((Dim2prisonmammothState*)inner)->hitReactState =
-            ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(
-                obj, gPrisonMammothHitReactEntry, 1, ((Dim2prisonmammothState*)inner)->hitReactState,
-                (f32*)(inner + 0x390));
+            ObjHitReact_Update(obj, gPrisonMammothHitReactEntry, 1, ((Dim2prisonmammothState*)inner)->hitReactState,
+                               (f32*)(inner + 0x390));
         if (((Dim2prisonmammothState*)inner)->hitReactState != 0)
         {
             fn_8003A168((GameObject*)(obj), (void*)(inner + 0x35c));

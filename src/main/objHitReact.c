@@ -18,8 +18,8 @@ char sObjHitReactResetString[7] = "reset\n";
 
 const ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs = {8, 0xB4, 0xF0, 0xFF};
 
-int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount, u32 reactionState,
-                       float* reactionStepScale)
+u8 ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount, u32 reactionState,
+                      float* reactionStepScale)
 {
     ObjAnimDef* animDef;
     ObjAnimComponent* objAnim;

@@ -30,8 +30,6 @@ typedef struct SHthorntailTailSwingEffectScratch
     Vec position;
 } SHthorntailTailSwingEffectScratch;
 
-typedef u8 (*SHThorntailHitReactUpdateFn)(int obj, ObjHitReactEntry* table, u32 count, u8 state, float* scratch);
-
 #define THORNTAIL_OBJGROUP 0x4d
 
 #define SHTHORNTAIL_OBJFLAG_RENDERED 0x800
@@ -470,8 +468,8 @@ void SHthorntail_update(SHthorntailObject* obj)
         hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
     }
     val = 0x19;
-    hitResult = runtime->hitReactState = ((SHThorntailHitReactUpdateFn)ObjHitReact_Update)(
-        (int)obj, hitReactEntries, val, runtime->hitReactState, (float*)runtime->hitReactScratch);
+    hitResult = runtime->hitReactState =
+        ObjHitReact_Update((int)obj, hitReactEntries, val, runtime->hitReactState, (float*)runtime->hitReactScratch);
     if (hitResult == 0)
     {
         mode = (*gMapEventInterface)->getMapAct((int)obj->animObjId);

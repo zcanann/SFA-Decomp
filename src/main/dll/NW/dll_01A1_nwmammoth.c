@@ -665,9 +665,6 @@ enum NwMammothStateFlag
     NW_MAMMOTH_STATE_FLAG_SOLID = 0x20,
 };
 
-typedef u8 (*NwMammothHitReactUpdateFn)(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
-                                        u32 reactionState, float* reactionStepScale);
-
 void NW_mammoth_update(NwMammothObject* obj, int unused)
 {
     int triggerIndex;
@@ -715,8 +712,8 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
         {
             hitReactEntries = &table->normalHitReactEntry;
         }
-        state->hitReactState = ((NwMammothHitReactUpdateFn)ObjHitReact_Update)(
-            (int)obj, hitReactEntries, 1, state->hitReactState, &state->hitReactStepScale);
+        state->hitReactState =
+            ObjHitReact_Update((int)obj, hitReactEntries, 1, state->hitReactState, &state->hitReactStepScale);
         if (state->hitReactState != 0)
         {
             fn_8003A168((GameObject*)obj, state->eyeAnimState);
