@@ -178,7 +178,7 @@ void trickyGrowl(void* obj, void* trickyState)
             {
                 f32 resetValue = lbl_803E23DC;
                 ((TrickyState*)trickyState)->cooldownA = resetValue;
-                ((TrickyState*)trickyState)->cooldownB = resetValue;
+                ((TrickyState*)trickyState)->cooldownB.f = resetValue;
             }
             ((TrickyState*)trickyState)->stateFlags &= ~0x10LL;
             ((TrickyState*)trickyState)->stateFlags &= ~0x10000LL;

@@ -230,7 +230,7 @@ typedef struct TrickyState {
     TrickyScratch scratch710;
     u8 pad714[0x71C - 0x714];
     f32 cooldownA; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC; == floor gates a state/anim transition (tricky/substates/weapone6/tumbleweedbush/mmp) */
-    f32 cooldownB; /* f32 countdown paired with cooldownA: -= timeDelta, clamped to floor; == floor gates a move, > floor gates fidget/contact-sfx (tricky/substates/weapone6/tumbleweedbush) */
+    TrickyScratch cooldownB; /* .f: countdown paired with cooldownA: -= timeDelta, clamped to floor; == floor gates a move, > floor gates fidget/contact-sfx (tricky/substates/weapone6/tumbleweedbush). .ptr: reused in the animobjd2 orbit substate to hold the circling-target object, copied into followObj */
     void *unk724;
     u8 stateFlags728; /* flag byte: 0/1 boolean sets (tricky/animobjd2) plus a bit-5 test (tricky_substates) */
     u8 pad729[0x72C - 0x729];

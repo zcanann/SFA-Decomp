@@ -158,7 +158,7 @@ void fn_8013F100(GameObject* obj, register int state)
                 ((TrickyState*)state)->substate = 0;
                 resetTimer = lbl_803E23DC;
                 ((TrickyState*)state)->cooldownA = resetTimer;
-                ((TrickyState*)state)->cooldownB = resetTimer;
+                ((TrickyState*)state)->cooldownB.f = resetTimer;
                 TRICKY_CLEAR_RESET_FLAGS(state);
             }
         }
@@ -610,7 +610,7 @@ void fn_8013FBE4(GameObject* obj, register int state)
             ((TrickyState*)state)->substate = 0;
             resetTimer = lbl_803E23DC;
             ((TrickyState*)state)->cooldownA = resetTimer;
-            ((TrickyState*)state)->cooldownB = resetTimer;
+            ((TrickyState*)state)->cooldownB.f = resetTimer;
             TRICKY_CLEAR_RESET_FLAGS(state);
         }
         break;

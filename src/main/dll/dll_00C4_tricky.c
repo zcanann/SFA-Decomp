@@ -436,7 +436,7 @@ void tricky_attachToWalkGroup(GameObject* obj, int state)
         ((TrickyState*)state)->substate = 0;
         resetTimer = lbl_803E23DC;
         ((TrickyState*)state)->cooldownA = resetTimer;
-        ((TrickyState*)state)->cooldownB = resetTimer;
+        ((TrickyState*)state)->cooldownB.f = resetTimer;
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & (u64)~0x10u;
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & (u64)~0x10000u;
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & (u64)~0x20000u;

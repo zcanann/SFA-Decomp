@@ -45,7 +45,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
         ((TrickyState*)state)->substate = 0;
         z = lbl_803E23DC;
         ((TrickyState*)state)->cooldownA = z;
-        ((TrickyState*)state)->cooldownB = z;
+        ((TrickyState*)state)->cooldownB.f = z;
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & (u64)~0x10u;
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & (u64)~0x10000u;
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & (u64)~0x20000u;

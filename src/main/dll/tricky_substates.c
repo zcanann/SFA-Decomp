@@ -348,7 +348,7 @@ void trickyDigTunnel(u8* obj, u8* state)
             state[0xa] = 0;
             z = lbl_803E23DC;
             ((TrickyState*)state)->cooldownA = z;
-            ((TrickyState*)state)->cooldownB = z;
+            ((TrickyState*)state)->cooldownB.f = z;
             ((TrickyState*)state)->stateFlags &= ~0x10LL;
             ((TrickyState*)state)->stateFlags &= ~0x10000LL;
             ((TrickyState*)state)->stateFlags &= ~0x20000LL;
@@ -423,7 +423,7 @@ void tricky_stateFindSecretDig(u8* obj, u8* state)
             state[0xa] = 0;
             z = lbl_803E23DC;
             ((TrickyState*)state)->cooldownA = z;
-            ((TrickyState*)state)->cooldownB = z;
+            ((TrickyState*)state)->cooldownB.f = z;
             ((TrickyState*)state)->stateFlags &= ~0x10LL;
             ((TrickyState*)state)->stateFlags &= ~0x10000LL;
             ((TrickyState*)state)->stateFlags &= ~0x20000LL;
@@ -488,7 +488,7 @@ void tricky_stateFindSecretDig(u8* obj, u8* state)
             state[0xa] = 0;
             z = lbl_803E23DC;
             ((TrickyState*)state)->cooldownA = z;
-            ((TrickyState*)state)->cooldownB = z;
+            ((TrickyState*)state)->cooldownB.f = z;
             ((TrickyState*)state)->stateFlags &= ~0x10LL;
             ((TrickyState*)state)->stateFlags &= ~0x10000LL;
             ((TrickyState*)state)->stateFlags &= ~0x20000LL;
@@ -642,7 +642,7 @@ void tricky_stateFollowPlayer(u8* obj, u8* state)
         state[0xa] = 0;
         z = lbl_803E23DC;
         ((TrickyState*)state)->cooldownA = z;
-        ((TrickyState*)state)->cooldownB = z;
+        ((TrickyState*)state)->cooldownB.f = z;
         ((TrickyState*)state)->stateFlags &= ~0x10LL;
         ((TrickyState*)state)->stateFlags &= ~0x10000LL;
         ((TrickyState*)state)->stateFlags &= ~0x20000LL;
@@ -825,7 +825,7 @@ int tricky_substateBegForFood(GameObject* obj, int state)
     buf = gTrickyFoodItemIds;
     if (tricky_handleFeedOrTalk(obj, (int*)state) != 0)
     {
-        ((TrickyState*)state)->cooldownB = lbl_803E23DC;
+        ((TrickyState*)state)->cooldownB.f = lbl_803E23DC;
         {
             u32 m;
             u32 f2 = ((TrickyState*)state)->stateFlags;
@@ -857,7 +857,7 @@ int tricky_substateBegForFood(GameObject* obj, int state)
         }
         break;
     }
-    if (lbl_803E23DC == ((TrickyState*)state)->cooldownB)
+    if (lbl_803E23DC == ((TrickyState*)state)->cooldownB.f)
     {
         {
             u32 m;
@@ -906,7 +906,7 @@ int tricky_substateDigForFood(GameObject* obj, int state)
     {
         if (((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) &&
             (((((TrickyState*)state)->stateFlags & 0x10000) != 0 || randomGetRange(0, 2) == 0) ||
-             ((TrickyState*)state)->cooldownB > lbl_803E23DC))
+             ((TrickyState*)state)->cooldownB.f > lbl_803E23DC))
         {
             objAnimFn_8013a3f0((int)obj, 47, lbl_803E23EC, 0);
         }
@@ -1131,7 +1131,7 @@ int tricky_substateHowlCall(GameObject* obj, int* trickyState)
         ((TrickyState*)trickyState)->moveHoldTimer = ((TrickyState*)trickyState)->moveHoldTimer - timeDelta;
         if (((TrickyState*)trickyState)->moveHoldTimer <= lbl_803E23DC)
         {
-            if (((((TrickyState*)trickyState)->stateFlags & 0x10000) != 0) || (((TrickyState*)trickyState)->cooldownB > lbl_803E23DC))
+            if (((((TrickyState*)trickyState)->stateFlags & 0x10000) != 0) || (((TrickyState*)trickyState)->cooldownB.f > lbl_803E23DC))
             {
                 objAnimFn_8013a3f0((int)obj, 0x2b, lbl_803E23EC, 0);
             }
@@ -1885,18 +1885,18 @@ void tricky_handlePlayerContact(u8* obj, u8* state)
     f32 fv;
     int inWater;
 
-    ((TrickyState*)state)->cooldownB -= timeDelta;
-    if (((TrickyState*)state)->cooldownB < *(f32*)&lbl_803E23DC)
+    ((TrickyState*)state)->cooldownB.f -= timeDelta;
+    if (((TrickyState*)state)->cooldownB.f < *(f32*)&lbl_803E23DC)
     {
-        ((TrickyState*)state)->cooldownB = lbl_803E23DC;
+        ((TrickyState*)state)->cooldownB.f = lbl_803E23DC;
     }
     if (ObjHits_GetPriorityHit((GameObject*)obj, hit, 0, 0) != 0 && *(u8**)(hit[0] + 0xc4) != NULL &&
         *(s16*)(*(u8**)(hit[0] + 0xc4) + 0x44) == 1)
     {
-        fv = ((TrickyState*)state)->cooldownB;
+        fv = ((TrickyState*)state)->cooldownB.f;
         if (fv <= lbl_803E23DC)
         {
-            ((TrickyState*)state)->cooldownB = fv + lbl_803E24EC;
+            ((TrickyState*)state)->cooldownB.f = fv + lbl_803E24EC;
             ptr = ((GameObject*)obj)->extra;
             if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0 &&
                 (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
@@ -1907,14 +1907,14 @@ void tricky_handlePlayerContact(u8* obj, u8* state)
         }
         else
         {
-            ((TrickyState*)state)->cooldownB = fv + lbl_803E2440;
+            ((TrickyState*)state)->cooldownB.f = fv + lbl_803E2440;
             if (state[0xa] != 0xb)
             {
                 if (((TrickyState*)state)->stateFlags & 0x10)
                 {
-                    if (((TrickyState*)state)->cooldownB > lbl_803E2534)
+                    if (((TrickyState*)state)->cooldownB.f > lbl_803E2534)
                     {
-                        ((TrickyState*)state)->cooldownB *= lbl_803E24A8;
+                        ((TrickyState*)state)->cooldownB.f *= lbl_803E24A8;
                         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0)
                         {
                             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)

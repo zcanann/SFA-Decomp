@@ -200,10 +200,10 @@ void fn_8013E0D0(int* obj, TrickyState* t)
             {
                 {
                     void* ct = trickyFindCirclingTarget((GameObject*)(gobj), t);
-                    *(void**)&t->cooldownB = ct;
+                    t->cooldownB.ptr = ct;
                     if (ct != NULL)
                     {
-                        *(int*)&t->followObj = *(int*)&t->cooldownB;
+                        *(int*)&t->followObj = t->cooldownB.i;
                         *(int*)&t->unk724 = 0;
                         t->substate = ANIMOBJD2_SUBSTATE_ORBIT;
                         break;
@@ -281,10 +281,10 @@ void fn_8013E0D0(int* obj, TrickyState* t)
             {
                 {
                     void* ct = trickyFindCirclingTarget((GameObject*)(gobj), t);
-                    *(void**)&t->cooldownB = ct;
+                    t->cooldownB.ptr = ct;
                     if (ct != NULL)
                     {
-                        *(int*)&t->followObj = *(int*)&t->cooldownB;
+                        *(int*)&t->followObj = t->cooldownB.i;
                         *(int*)&t->unk724 = 0;
                         t->substate = ANIMOBJD2_SUBSTATE_ORBIT;
                         break;
@@ -489,7 +489,7 @@ void fn_8013E0D0(int* obj, TrickyState* t)
         {
             tgt = (GameObject*)Player_GetTargetObject(t->playerObj);
         }
-        if ((u32)tgt != *(u32*)&t->cooldownB || *(int*)&t->stateFlags728 != 0)
+        if ((u32)tgt != t->cooldownB.u || *(int*)&t->stateFlags728 != 0)
         {
             TRICKY_RETARGET((u8*)t, *(int*)&t->followObj);
             t->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;
