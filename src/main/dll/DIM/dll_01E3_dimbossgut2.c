@@ -46,7 +46,7 @@ void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
     pathWalker = state->curvePath;
     if ((state->flags400 & 8) != 0)
     {
-        if ((Curve_AdvanceAlongPath(&pathWalker->curve, curve->f10) != 0) || pathWalker->atSegmentEnd != 0)
+        if ((Curve_AdvanceAlongPath(&pathWalker->curve, curve->pathSpeed) != 0) || pathWalker->atSegmentEnd != 0)
         {
             if ((*gRomCurveInterface)->goNextPoint((void*)pathWalker) != 0)
             {
@@ -64,10 +64,10 @@ void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
             delta = (s16)(delta + 0xffff);
         }
         (obj)->anim.rotX = angle;
-        curve->f4 = curve->f4 + (f32)(delta >> 4);
-        if (curve->f10 < 0.15f)
+        curve->leanAngle = curve->leanAngle + (f32)(delta >> 4);
+        if (curve->pathSpeed < 0.15f)
         {
-            curve->f10 += 0.002f;
+            curve->pathSpeed += 0.002f;
         }
         angleMag = delta / 0xb6;
         if (angleMag < 0)
@@ -78,12 +78,12 @@ void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
         angleScale = angleScale * 0.25f;
         if (angleScale > 1.0f)
         {
-            curve->f10 = curve->f10 / angleScale;
-            curve->f8 += 0.01f;
+            curve->pathSpeed = curve->pathSpeed / angleScale;
+            curve->turnWobble += 0.01f;
         }
-        if (curve->f8 > 0.0f)
+        if (curve->turnWobble > 0.0f)
         {
-            curve->f8 = curve->f8 / 1.04f;
+            curve->turnWobble = curve->turnWobble / 1.04f;
         }
         (obj)->anim.localPosX = pathWalker->posX;
         (obj)->anim.localPosZ = pathWalker->posZ;
@@ -142,7 +142,7 @@ void DIM_BossGut2_free(int objArg)
     if (childObj != 0)
     {
         Obj_FreeObject(childObj);
-        *(u32*)(obj + 200) = 0;
+        ((GameObject*)obj)->childObjs[0] = NULL;
     }
     (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, state, 0);
     return;
@@ -204,27 +204,27 @@ void DIM_BossGut2_update(GameObject* obj)
             result = ObjMsg_Pop(obj, (u32*)&msgA, (u32*)&msgB, (u32*)&msgC);
         } while (result != 0);
         posData = state->curveData;
-        if ((posData->f0 < -0.025f) && (posData->f10 < 0.25f))
+        if ((posData->f0 < -0.025f) && (posData->pathSpeed < 0.25f))
         {
-            heightDiff = posData->fC - (obj)->anim.localPosY;
+            heightDiff = posData->lavaSurfaceY - (obj)->anim.localPosY;
             if (heightDiff < 0.0f)
             {
                 heightDiff = -heightDiff;
             }
-            if ((heightDiff < 14.0f) && (stk.f4c = posData->fC, randomThreshold = randomGetRange(0x1e, 0x3c),
-                                                (int)(u32)posData->timer16 > (int)randomThreshold))
+            if ((heightDiff < 14.0f) && (stk.f4c = posData->lavaSurfaceY, randomThreshold = randomGetRange(0x1e, 0x3c),
+                                                (int)(u32)posData->breathFxTimer > (int)randomThreshold))
             {
-                xyScale = 20.0f * posData->f10;
+                xyScale = 20.0f * posData->pathSpeed;
                 stk.f50 = (obj)->anim.localPosX -
                           xyScale * mathSinf(3.1415927f * (f32)(obj)->anim.rotX / 32768.0f);
                 stk.f48 = (obj)->anim.localPosZ -
                           xyScale * mathCosf(3.1415927f * (f32)(obj)->anim.rotX / 32768.0f);
                 stk.f54 = 0.65f * (1.0f - heightDiff / 14.0f);
                 (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSGUT2_PARTFX, &stk, 1, -1, NULL);
-                posData->timer16 = 0;
+                posData->breathFxTimer = 0;
             }
         }
-        posData->timer16 += framesThisStep;
+        posData->breathFxTimer += framesThisStep;
         fn_801BEEA0((s16*)obj, (u8*)state);
         dimbossgut2_updateTracking(obj, state);
         ObjAnim_AdvanceCurrentMove((int)obj, 0.015f, timeDelta, NULL);
@@ -273,31 +273,31 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
     curve = state->curveData;
     z = 0.0f;
     curve->f0 = z;
-    curve->f4 = z;
-    curve->s14 = randomGetRange(-0x7fff, 0x7fff);
+    curve->leanAngle = z;
+    curve->randomPhase = randomGetRange(-0x7fff, 0x7fff);
     z = 0.0f;
-    curve->f8 = z;
-    curve->timer16 = 0;
-    curve->f10 = z;
+    curve->turnWobble = z;
+    curve->breathFxTimer = 0;
+    curve->pathSpeed = z;
     count = hitDetectFn_80065e50(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &list,
                                  0, 0);
-    curve->fC = 0.0f;
+    curve->lavaSurfaceY = 0.0f;
     if (count != 0)
     {
-        curve->fC = -9999.0f;
+        curve->lavaSurfaceY = -9999.0f;
         for (i = 0; i < count; i++)
         {
             f32 d = list[i]->height - (obj)->anim.localPosY;
             if ((s8)list[i]->surfaceType == 0xe)
             {
-                if (d > curve->fC)
+                if (d > curve->lavaSurfaceY)
                 {
-                    curve->fC = d;
+                    curve->lavaSurfaceY = d;
                 }
             }
         }
     }
-    curve->fC += (obj)->anim.localPosY;
+    curve->lavaSurfaceY += (obj)->anim.localPosY;
     ObjAnim_SetCurrentMove((int)obj, 0, (f32)(int)randomGetRange(0, 0x63) / 100.0f, 0);
     ObjAnim_AdvanceCurrentMove((int)obj, 0.015f, timeDelta, NULL);
     curve->light = objCreateLight(obj, 1);
