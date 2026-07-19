@@ -1014,7 +1014,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/audio/hw_samplemem.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(NonMatching, "main/dll/player.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
             Object(NonMatching, "main/dll/dll_01B5_lightfoot.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/DIM/dll_0256_dimsnowhorn1.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(Matching, "main/dll/DIM/dll_0256_dimsnowhorn1.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/dll/DIM/dll_01D9_dim2prisonmammoth.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DR/dll_0257_drearthwarrior.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DR/dll_0258_drcloudrunner.c", cflags=cflags_dll_noopt_noloopinv),

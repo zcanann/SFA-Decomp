@@ -21,7 +21,7 @@
 #include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/audio/sfx_play_api.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
@@ -1048,7 +1048,7 @@ int DIMSnowHorn1_setScale(GameObject* obj)
     return 0;
 }
 
-void fn_802BB998(u32 obj, DIMSnowHorn1State* pointState, DIMSnowHorn1State* inputState)
+void fn_802BB998(int obj, DIMSnowHorn1State* pointState, DIMSnowHorn1State* inputState)
 {
     u8 flags;
     u8 pointIndex;
@@ -1215,7 +1215,7 @@ void fn_802BB4B4(GameObject* obj, int frameStep, int slot)
 
     (*(void (**)(int, int, f32, f32, int*, f32*))(*(int*)gPlayerInterface + 0x8))(
         (int)obj, (int)state, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers, &gDIMSnowHorn1DefaultStateHandler);
-    fn_802BB998((u32)obj, state, state);
+    fn_802BB998((int)obj, state, state);
 }
 
 static inline s16 DIMSnowHorn1_angleTo(GameObject* obj, char* found)
