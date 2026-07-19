@@ -5273,7 +5273,7 @@ int pauseMenuIsFox(void);
 void timeListFn_8012be84(void);
 void pauseMenuAnimateCarousel(void);
 void pauseMenuInit(void);
-void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag);
+void drawHudBox(s16 x, s16 y, s16 w, s16 h, u8 alpha, u8 flag);
 void mapScreenDrawHud(int p1, int p2, int p3);
 void drawWorldMapHud(void);
 void setShowWorldMapHud(u8 param);
@@ -7280,7 +7280,7 @@ void pauseMenuInit(void)
 
 /* Draws a 9-patch HUD box: center fill, the
  * four edges (stretched), and the four 5x5 corners, from hudTextures. */
-void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
+void drawHudBox(s16 x, s16 y, s16 w, s16 h, u8 alpha, u8 flag)
 {
     drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
     drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
