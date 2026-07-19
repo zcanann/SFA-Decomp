@@ -170,14 +170,14 @@ void ARWBombColl_update(int obj)
                     arwarwing_addScore(arw, 0xf);
                     flags->b40 = 1;
                     Obj_SetActiveModelIndex((GameObject*)obj, 1);
-                    spawnExplosionLegacy(obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
+                    spawnExplosion((GameObject*)obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
                 }
                 if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
                     (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
                 {
                     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     ObjHits_DisableObject((GameObject*)obj);
-                    spawnExplosionLegacy(obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
+                    spawnExplosion((GameObject*)obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
                 }
             }
             if (arw != NULL && flags->b80 != 0)
@@ -235,4 +235,3 @@ void ARWBombColl_release(void)
 void ARWBombColl_initialise(void)
 {
 }
-

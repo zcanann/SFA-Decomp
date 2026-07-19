@@ -38,7 +38,7 @@ int cnthitobjec_SeqFn(int obj, int unused, CntHitObjectAnimEvent* event)
     int i;
     for (i = 0; i < event->explosionCount; i++)
     {
-        spawnExplosionLegacy(obj, (f32)(u32)event->explosionIds[i], 1, 1, 1, 1, 0, 1, 0);
+        spawnExplosion((GameObject*)obj, (f32)(u32)event->explosionIds[i], 1, 1, 1, 1, 0, 1, 0);
     }
     return 0;
 }
@@ -230,4 +230,3 @@ ObjectDescriptor11ExtraSize gCNThitObjecObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)cnthitobjec_getExtraSize,
     0,
 };
-

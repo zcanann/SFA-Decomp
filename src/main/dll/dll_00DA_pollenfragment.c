@@ -311,7 +311,7 @@ void pollenfragment_update(int obj)
         ObjHits_DisableObject((GameObject*)obj);
         if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
         {
-            spawnExplosionLegacy(obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
+            spawnExplosion((GameObject*)obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
             Sfx_PlayFromObjectLimited(
                 obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
         }

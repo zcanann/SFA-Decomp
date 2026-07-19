@@ -204,7 +204,7 @@ void mmp_asteroid_re_update(int obj)
                 (*gPartfxInterface)->spawnObject((void*)obj, MMPASTEROIDRE_PARTFX_EXPLODE_DEBRIS, NULL, 1, -1, NULL);
                 count--;
             } while (count != 0);
-            spawnExplosionLegacy(obj, 100.0f, 1, 1, 0, 1, 0, 1, 0);
+            spawnExplosion((GameObject*)obj, 100.0f, 1, 1, 0, 1, 0, 1, 0);
             CameraShake_Start(5.0f, 10.0f, 4.0f);
             {
                 f32 rumble = 22.0f;

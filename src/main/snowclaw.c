@@ -581,7 +581,7 @@ void snowclaw_hitDetect(GameObject* obj)
             {
                 int* sub2;
 
-                spawnExplosionLegacy(obj, 60.0f, 1, 1, 1, 1, 0, 1, 0);
+                spawnExplosion((GameObject*)obj, 60.0f, 1, 1, 1, 1, 0, 1, 0);
                 sub2 = *(int**)inner;
                 if (sub2 != 0)
                 {

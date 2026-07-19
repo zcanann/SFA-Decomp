@@ -108,7 +108,7 @@ void arwarwingbo_update(int obj)
             state->control.fuseTimer = lbl_803E7044;
             objAnim->alpha = 0;
             (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
-            spawnExplosionLegacy(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
+            spawnExplosion((GameObject*)obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x280);
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
             objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;
@@ -132,7 +132,7 @@ void arwarwingbo_update(int obj)
         state->control.fuseTimer = lbl_803E7044;
         objAnim->alpha = 0;
         (*(ObjHitsPriorityState**)&objAnim->hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
-        spawnExplosionLegacy(obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
+        spawnExplosion((GameObject*)obj, lbl_803E7048, 1, 0, 1, 1, 0, 1, 0);
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x280);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWARWINGBO_HIT_VOLUME_SLOT, 5, 0);
         objAnim->velocityZ = objAnim->velocityY = objAnim->velocityX = lbl_803E7044;

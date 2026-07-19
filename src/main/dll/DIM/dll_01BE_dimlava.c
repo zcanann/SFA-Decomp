@@ -215,19 +215,19 @@ void lavaball1be_update(s16* obj)
                 {
                     if (state->explodeCooldown != 0)
                     {
-                        spawnExplosionLegacy(obj, 60.0f, 0, 1, 0, 0, 0, 0, 0);
+                        spawnExplosion((GameObject*)obj, 60.0f, 0, 1, 0, 0, 0, 0, 0);
                     }
                     else
                     {
                         state->explodeCooldown = 0xa;
-                        spawnExplosionLegacy(obj, 60.0f, 1, 1, 0, 0, 0, 0, 0);
+                        spawnExplosion((GameObject*)obj, 60.0f, 1, 1, 0, 0, 0, 0, 0);
                     }
                     state->flags |= LAVA1BE_FLAG_INACTIVE;
                     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
                 if (((ObjAnimComponent*)sub)->bankIndex & 1)
                 {
-                    spawnExplosionLegacy(obj, 60.0f, 1, 1, 0, 0, 0, 0, 0);
+                    spawnExplosion((GameObject*)obj, 60.0f, 1, 1, 0, 0, 0, 0, 0);
                     state->flags |= LAVA1BE_FLAG_INACTIVE;
                     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     return;

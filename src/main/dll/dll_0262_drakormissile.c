@@ -382,11 +382,11 @@ void drakormissile_update(int obj)
             }
             if (((GameObject*)obj)->anim.mapEventSlot == 2)
             {
-                spawnExplosionLegacy(obj, 50.0f, 3, 0, 0, 0, 0, 0, 3);
+                spawnExplosion((GameObject*)obj, 50.0f, 3, 0, 0, 0, 0, 0, 3);
             }
             else
             {
-                spawnExplosionLegacy(obj, 50.0f, 1, 0, 0, 0, 0, 0, 3);
+                spawnExplosion((GameObject*)obj, 50.0f, 1, 0, 0, 0, 0, 0, 3);
             }
             if (state->light != NULL)
             {

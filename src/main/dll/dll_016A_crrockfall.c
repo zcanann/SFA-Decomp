@@ -270,7 +270,7 @@ void crrockfall_update(int* obj)
             else
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_jbike_bombbeep);
-                spawnExplosionLegacy(obj, (f32)(u32)((CrrockfallPlacement*)placement)->scaleByte, 1, 1, 0, 1,
+                spawnExplosion((GameObject*)obj, (f32)(u32)((CrrockfallPlacement*)placement)->scaleByte, 1, 1, 0, 1,
                                      1, 1, 1);
             }
         }

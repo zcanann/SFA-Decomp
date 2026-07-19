@@ -64,7 +64,7 @@ int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     if (animUpdate->eventCount != 0)
     {
-        spawnExplosionLegacy(obj, 50.0f, 1, 1, 0, 1, 1, 1, 0);
+        spawnExplosion((GameObject*)obj, 50.0f, 1, 1, 0, 1, 1, 1, 0);
     }
     return 0;
 }

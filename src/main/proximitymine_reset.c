@@ -36,7 +36,7 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
     fn_8009A8C8((GameObject*)obj, lbl_803E676C);
     {
         f32 dist = state->triggerDistance - lbl_803E6774;
-        spawnExplosionLegacy(obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);
+        spawnExplosion((GameObject*)obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);
     }
     ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, state->triggerDistance, -5, 10);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, PROXIMITYMINE_HIT_VOLUME_SLOT, 1, 0);
