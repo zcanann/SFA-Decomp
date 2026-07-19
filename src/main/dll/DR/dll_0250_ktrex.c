@@ -153,6 +153,39 @@ int ktrex_shouldAdvanceArenaPhase(void)
 
 void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot);
 
+void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
+{
+    int* model;
+    f32 point1[3];
+    f32 point2[3];
+    f32 localPoint[3];
+
+    if (((void**)((char*)gKTRexState + 0x17c))[slot] != NULL)
+    {
+        mm_free(((void**)((char*)gKTRexState + 0x17c))[slot]);
+        ((void**)((char*)gKTRexState + 0x17c))[slot] = NULL;
+    }
+    model = (int*)Obj_GetActiveModel((GameObject*)obj);
+    localPoint[0] = 0.0f;
+    localPoint[1] = 0.0f;
+    localPoint[2] = 0.0f;
+
+    PSMTXMultVec((f32*)ObjModel_GetJointMatrix((u8*)model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)), localPoint,
+                 point1);
+    point1[0] = point1[0] + playerMapOffsetX;
+    point1[1] += 50.0f;
+    point1[2] = point1[2] + playerMapOffsetZ;
+
+    PSMTXMultVec((f32*)ObjModel_GetJointMatrix((u8*)model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)), localPoint,
+                 point2);
+    point2[0] = point2[0] + playerMapOffsetX;
+    point2[2] = point2[2] + playerMapOffsetZ;
+
+    ((void**)((char*)gKTRexState + 0x17c))[slot] =
+        lightningCreateU16Promoted((const Vec3f*)point1, (const Vec3f*)point2, 0.1f, 0.3f, angle, 96,
+                                   0);
+}
+
 int ktrex_stateHandlerA11(GameObject* obj, KTRexRuntime* runtime)
 {
     int phase;
@@ -1243,39 +1276,6 @@ void ktrex_updateAttackEffects(GameObject* obj)
     {
         Sfx_PlayFromObject((int)Obj_GetPlayerObject(), SFXTRIG_mv_bflconc1_2b9);
     }
-}
-
-void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
-{
-    int* model;
-    f32 point1[3];
-    f32 point2[3];
-    f32 localPoint[3];
-
-    if (((void**)((char*)gKTRexState + 0x17c))[slot] != NULL)
-    {
-        mm_free(((void**)((char*)gKTRexState + 0x17c))[slot]);
-        ((void**)((char*)gKTRexState + 0x17c))[slot] = NULL;
-    }
-    model = (int*)Obj_GetActiveModel((GameObject*)obj);
-    localPoint[0] = 0.0f;
-    localPoint[1] = 0.0f;
-    localPoint[2] = 0.0f;
-
-    PSMTXMultVec((f32*)ObjModel_GetJointMatrix((u8*)model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)), localPoint,
-                 point1);
-    point1[0] = point1[0] + playerMapOffsetX;
-    point1[1] += 50.0f;
-    point1[2] = point1[2] + playerMapOffsetZ;
-
-    PSMTXMultVec((f32*)ObjModel_GetJointMatrix((u8*)model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)), localPoint,
-                 point2);
-    point2[0] = point2[0] + playerMapOffsetX;
-    point2[2] = point2[2] + playerMapOffsetZ;
-
-    ((void**)((char*)gKTRexState + 0x17c))[slot] =
-        lightningCreateU16Promoted((const Vec3f*)point1, (const Vec3f*)point2, 0.1f, 0.3f, angle, 96,
-                                   0);
 }
 
 int ktrex_animEventCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
