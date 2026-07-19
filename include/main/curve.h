@@ -17,7 +17,6 @@ void curvesSetupMoveNetworkCurve(Curve* curve);
 void curvesMove(Curve *curve);
 void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index);
 
-extern f32 gCurveSegmentCount;
 extern f32 gCurveForwardDiffStep;
 extern int gCurveCachedSampleCount;
 extern f32 gCurveForwardDiffCoeffs[];

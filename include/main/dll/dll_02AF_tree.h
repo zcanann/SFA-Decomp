@@ -76,7 +76,6 @@ STATIC_ASSERT(offsetof(TreeState, flags) == 0x58);
 STATIC_ASSERT(sizeof(TreeState) == 0x5c);
 
 extern f32 gTreeEffectColors[];
-extern const f32 gTreeScaleByteNormalizer;
 
 extern ObjectDescriptor gTreeObjDescriptor;
 

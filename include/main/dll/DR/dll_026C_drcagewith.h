@@ -60,8 +60,4 @@ void DR_CageWith_init(GameObject* obj, DrcagewithPlacement* placement);
 void DR_CageWith_release(void);
 void DR_CageWith_initialise(void);
 
-extern f32 gDrCageWithFindObjMaxDist;
-extern f32 gDrCageWithAngVelRateMin;
-extern f32 gDrCageWithAngVelRateMax;
-
 #endif /* MAIN_DLL_DR_DLL_026C_DRCAGEWITH_H_ */

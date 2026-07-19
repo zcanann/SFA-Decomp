@@ -250,7 +250,6 @@ extern u8 gSHthorntailRootControlMode2Locomotion8ImpactSfxTable[];
 extern u8 gSHthorntailRootControlMode3Locomotion1ImpactSfxTable[2];
 extern u8 gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable[5];
 extern u8 gSHthorntailRootControlMode3Locomotion2ImpactSfxTable[2];
-extern u8 gSHthorntailRootControlMode3Locomotion2AltImpactSfxTable[];
 extern u8 gSHthorntailRootControlMode3Locomotion3ImpactSfxTable[2];
 extern u8 gSHthorntailRootControlMode3Locomotion4ImpactSfxTable[2];
 extern u8 gSHthorntailRootControlMode3Locomotion5IdleImpactSfxTable[2];
