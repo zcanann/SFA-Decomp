@@ -123,11 +123,9 @@ typedef union Dll0BDescriptorTable
 
 ExpgfxWGPipe GXWGFifo : (0xCC008000);
 
-extern u64 FUN_80286830();
 extern ExpgfxBounds gExpgfxPoolBounds[];
 extern u8 lbl_803DD253;
 extern f32 lbl_803DF418;
-extern f64 gExpgfxU16ToDoubleBias;
 extern f32 gExpgfxYVelocityPositiveLimit;
 extern f32 gExpgfxYVelocityFastStep;
 extern f32 gExpgfxYVelocitySlowStep;
@@ -194,25 +192,6 @@ static inline ExpgfxBounds* Expgfx_GetPoolBounds(int poolIndex)
 
 #define EXPGFX_POOL_ACTIVE_MASK_PTR(runtime, poolIndex) \
     ((u32*)((u8*)(runtime)->poolActiveMasks + (poolIndex) * sizeof(u32)))
-
-static inline f64 Expgfx_U16AsDouble(u16 value)
-{
-    u64 bits;
-
-    bits = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(value)));
-    return *(f64*)&bits - gExpgfxU16ToDoubleBias;
-}
-
-static inline ExpgfxCurrentSource Expgfx_GetCurrentSource(void)
-{
-    u64 rawSource;
-    ExpgfxCurrentSource currentSource;
-
-    rawSource = FUN_80286830();
-    currentSource.sourceId = (int)((u64)rawSource >> 0x20);
-    currentSource.sourceMode = rawSource;
-    return currentSource;
-}
 
 void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextureFree, int flushSlot)
 {

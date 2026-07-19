@@ -155,11 +155,6 @@ typedef struct ExpgfxBounds {
   float maxZ;
 } ExpgfxBounds;
 
-typedef struct ExpgfxCurrentSource {
-  int sourceId;
-  int sourceMode;
-} ExpgfxCurrentSource;
-
 typedef struct ExpgfxSourceObject {
   s16 rotX;
   s16 rotY;
