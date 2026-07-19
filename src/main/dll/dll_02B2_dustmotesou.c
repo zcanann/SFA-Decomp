@@ -25,10 +25,6 @@
 #include "main/gamebits.h"
 #include "main/objfx.h"
 
-#define objfx_spawnMaskedHitEffectSharedOrder(obj, type, mode, scale, mask, origin)                               \
-    ((void (*)(void*, int, int, f32, int, void*))objfx_spawnMaskedHitEffect)(                                    \
-        (void*)(obj), (type), (mode), (scale), (mask), (origin))
-
 int dustmotesou_getExtraSize(void)
 {
     return 0;
@@ -70,8 +66,8 @@ void dustmotesou_update(DustMoteSouObject* source)
         {
             return;
         }
-        objfx_spawnMaskedHitEffectSharedOrder(source, mapData->effectId, mapData->effectParamA, mapData->scale,
-                                              mapData->effectParamB, 0);
+        objfx_spawnMaskedHitEffect(source, mapData->scale, mapData->effectId, mapData->effectParamA,
+                                   mapData->effectParamB, 0);
         return;
     }
     if (source->objAnim.seqId == DUSTMOTESOU_SEQ_FIREWORK)
@@ -143,4 +139,3 @@ ObjectDescriptor gDustMoteSouObjDescriptor = {
     (ObjectDescriptorCallback)dustmotesou_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)dustmotesou_getExtraSize,
 };
-

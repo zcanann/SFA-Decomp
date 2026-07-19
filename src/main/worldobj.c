@@ -80,10 +80,6 @@ extern f32 lbl_803E66A8;
 extern f32 lbl_803E66B0;
 extern f32 lbl_803E66B8;
 
-#define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
-    ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
-        (void*)(obj), (scale), (type), (mode), (mask), (origin))
-
 int worldobj_getExtraSize(void);
 void worldobj_hitDetect(void);
 void worldobj_release(void);
@@ -519,7 +515,7 @@ void worldobj_spawnGreatFoxEffects(GameObject* obj)
         params.offsetX = offsetScale * (scale * e->offsetX);
         params.offsetY = offsetScale * (scale * e->offsetY);
         params.offsetZ = offsetScale * (scale * e->offsetZ);
-        objfx_spawnMaskedHitEffectLegacy(obj, scale * e->effectScale, 3, e->effectType, e->mask, &params);
+        objfx_spawnMaskedHitEffect(obj, scale * e->effectScale, 3, e->effectType, e->mask, &params);
     }
     params.effectScale = lbl_803E6644;
     params.offsetX = lbl_803E6640 * (lbl_803E6648 * obj->anim.rootMotionScale);

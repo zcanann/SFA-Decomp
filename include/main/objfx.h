@@ -9,7 +9,7 @@ void objLightFn_8009a1dc(void *obj, f32 scale, void *origin, u8 type, void *ligh
 void WM_newcrystalFn_800969b0(GameObject* obj, s16* state, f32 period, f32 xMul, f32 yMul, f32 xOff,
                              f32 yOff, u8 flags);
 void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagByte, f32 mult);
-void objfx_spawnMaskedHitEffect(void* obj, u8 type, u8 mode, u8 mask, void* origin, f32 scale);
+void objfx_spawnMaskedHitEffect(void* obj, f32 scale, u8 type, u8 mode, u8 mask, void* origin);
 void objfx_spawnLightPulse(GameObject* obj, u8 type, int colorIndex, u8 mode, void* light, f32 radius,
                            f32 intensity);
 void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 mult,

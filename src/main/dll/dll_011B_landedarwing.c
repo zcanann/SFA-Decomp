@@ -140,9 +140,6 @@ struct LandedArwingObjectState
 };
 
 extern LandedArwingFxPoint gLandedArwingPathFxTable[];
-#define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
-    ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
-        (void*)(obj), (scale), (type), (mode), (mask), (origin))
 void landed_arwing_renderPathEffects(GameObject* obj)
 {
     LandedArwingObjectState* state;
@@ -161,9 +158,9 @@ void landed_arwing_renderPathEffects(GameObject* obj)
             scratch.x -= (obj)->anim.localPosX;
             scratch.y -= (obj)->anim.localPosY;
             scratch.z -= (obj)->anim.localPosZ;
-            objfx_spawnMaskedHitEffectLegacy(obj, (obj)->anim.rootMotionScale * gLandedArwingPathFxTable[i].scale,
-                                             4, gLandedArwingPathFxTable[i].mode,
-                                             gLandedArwingPathFxTable[i].mask, scratch.effectPos);
+            objfx_spawnMaskedHitEffect(obj, (obj)->anim.rootMotionScale * gLandedArwingPathFxTable[i].scale, 4,
+                                       gLandedArwingPathFxTable[i].mode, gLandedArwingPathFxTable[i].mask,
+                                       scratch.effectPos);
             i++;
         }
     }

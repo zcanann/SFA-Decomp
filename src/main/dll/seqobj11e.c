@@ -212,9 +212,6 @@ void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int
  * landing sfx, light-pulse fx, child spark spawn. */
 
 
-#define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
-    ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
-        (void*)(obj), (scale), (type), (mode), (mask), (origin))
 typedef struct
 {
     u8 pad[8];
@@ -348,7 +345,7 @@ void fn_80152514(int* obj, u8* state)
         fx.a = 1.0f;
         objfx_spawnLightPulseLegacy((GameObject*)(obj), 0.5f, 2, 0, 6, 0.25f, &fx);
         fx.c = 12.0f;
-        objfx_spawnMaskedHitEffectLegacy(obj, 0.4f, 1, 6, 0x20, &fx);
+        objfx_spawnMaskedHitEffect(obj, 0.4f, 1, 6, 0x20, &fx);
         fx.b = 0.0f;
         z = -30.0f;
         fx.c = z;

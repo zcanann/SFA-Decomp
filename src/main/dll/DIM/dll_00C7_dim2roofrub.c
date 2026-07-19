@@ -77,9 +77,6 @@ typedef struct Dim2roofrubState
 
 extern void** gTitleMenuControlInterfaceCopy;
 
-#define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
-    ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
-        (void*)(obj), (scale), (type), (mode), (mask), (origin))
 typedef struct Dim2FxRow
 {
     f32 x;
@@ -133,7 +130,7 @@ void dim2roofrub_spawnEffects(int* obj)
             v.x = scale * (f * row->x);
             v.y = scale * (f * row->y);
             v.z = scale * (f * row->z);
-            objfx_spawnMaskedHitEffectLegacy(obj, f * row->w, 3, row->b1, row->b2, &v);
+            objfx_spawnMaskedHitEffect(obj, f * row->w, 3, row->b1, row->b2, &v);
         }
     }
     v.fade = (-1.0f);
@@ -416,4 +413,3 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
-

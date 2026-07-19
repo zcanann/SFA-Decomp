@@ -320,7 +320,7 @@ void hitDetectFn_80097070(GameObject* obj, u8 a, u8 b, u8 count, GameObject* ori
     }
 }
 
-void objfx_spawnMaskedHitEffect(void* obj, u8 type, u8 mode, u8 mask, void* origin, f32 scale)
+void objfx_spawnMaskedHitEffect(void* obj, f32 scale, u8 type, u8 mode, u8 mask, void* origin)
 {
     ObjFxParticleParams params;
     ObjFxU16Table11 table1 = lbl_802C20EC;
