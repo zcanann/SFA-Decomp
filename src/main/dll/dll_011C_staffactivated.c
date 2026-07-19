@@ -343,7 +343,7 @@ void staffactivated_init(GameObject* obj, StaffActivatedSetup* setupData)
             switch (setupData->mode)
             {
             case STAFFACTIVATED_MODE_HIT_REACTION:
-                ((void (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E3BBC);
+                ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, lbl_803E3BBC);
                 break;
             case STAFFACTIVATED_MODE_DAMAGE_FIRST:
                 flags->b6 = 0;

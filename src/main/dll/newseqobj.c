@@ -132,8 +132,8 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
                 Baddie_SetMove(obj, state, rows[state[0x33c]].anim, *(f32*)(rowsC + state[0x33c] * 12), 0,
                                (u8)rows[state[0x33c]].flags);
             }
-            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + rowsC[state[0x33c] * 12 + 8] * 4));
+            ObjAnim_SetMoveProgress((ObjAnimComponent*)obj,
+                                    *(f32*)(lbl_8031DD30 + rowsC[state[0x33c] * 12 + 8] * 4));
             if (rowsC[state[0x33c] * 12 + 0xa] != 0)
             {
                 state[0x33a] = rowsC[state[0x33c] * 12 + 0xa];
@@ -187,7 +187,7 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
                                *(f32*)(rowsB + rowsB[((SeqObj11EState*)state)->seqNode * 16 + 0xb] * 16), 0,
                                (u8)rows[rowsB[((SeqObj11EState*)state)->seqNode * 16 + 0xb]].flags);
             }
-            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+            ObjAnim_SetMoveProgress(
                 (ObjAnimComponent*)obj,
                 *(f32*)(lbl_8031DD30 + rowsB[rowsB[((SeqObj11EState*)state)->seqNode * 16 + 0xb] * 16 + 8] * 4));
         }
@@ -198,8 +198,8 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
 
             Baddie_SetMove(obj, state, rows[(u8)amount].anim, *(f32*)(animRows + (u8)amount * 12), 0,
                            (u8)rows[(u8)amount].flags);
-            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + rows[(u8)amount].anim * 4));
+            ObjAnim_SetMoveProgress((ObjAnimComponent*)obj,
+                                    *(f32*)(lbl_8031DD30 + rows[(u8)amount].anim * 4));
             ((SeqObj11EState*)state)->seqNode = animRows[off + 9];
             ((SeqObj11EState*)state)->seqTimer = (f32)(u32) * (u16*)(state + 0x2ec);
         }
@@ -304,8 +304,8 @@ void sharpClawUpdateIdle(int* obj, u8* state)
                 Baddie_SetMove(obj, state, idleRows[state[0x33d]].anim, *(f32*)(tbl4 + state[0x33d] * 12), 0,
                                (u8)idleRows[state[0x33d]].flags);
             }
-            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + tbl4[state[0x33d] * 12 + 8] * 4));
+            ObjAnim_SetMoveProgress((ObjAnimComponent*)obj,
+                                    *(f32*)(lbl_8031DD30 + tbl4[state[0x33d] * 12 + 8] * 4));
             state[0x33d] = tbl4[state[0x33d] * 12 + 9];
             state[0x33e] = 0;
         }
@@ -373,8 +373,9 @@ void sharpClawUpdateIdle(int* obj, u8* state)
                 Baddie_SetMove(obj, state, seqRow16[((SeqObj11EState*)state)->seqNode].anim,
                                *(f32*)(tbl1c + ((SeqObj11EState*)state)->seqNode * 16), 0,
                                (u8)seqRow16[((SeqObj11EState*)state)->seqNode].flags);
-                ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                    (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + tbl1c[((SeqObj11EState*)state)->seqNode * 16 + 8] * 4));
+                ObjAnim_SetMoveProgress(
+                    (ObjAnimComponent*)obj,
+                    *(f32*)(lbl_8031DD30 + tbl1c[((SeqObj11EState*)state)->seqNode * 16 + 8] * 4));
                 ((SeqObj11EState*)state)->seqNode = tbl1c[((SeqObj11EState*)state)->seqNode * 16 + 9];
             }
             else if (*(f32*)(state + 0x310) > 0.0001f)
@@ -420,8 +421,9 @@ void sharpClawUpdateIdle(int* obj, u8* state)
                                    *(f32*)(tbl1c + ((SeqObj11EState*)state)->seqNode * 16), 0,
                                    (u8)seqRow16[((SeqObj11EState*)state)->seqNode].flags);
                 }
-                ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                    (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + tbl1c[((SeqObj11EState*)state)->seqNode * 16 + 8] * 4));
+                ObjAnim_SetMoveProgress(
+                    (ObjAnimComponent*)obj,
+                    *(f32*)(lbl_8031DD30 + tbl1c[((SeqObj11EState*)state)->seqNode * 16 + 8] * 4));
                 ((SeqObj11EState*)state)->seqNode = tbl1c[((SeqObj11EState*)state)->seqNode * 16 + 9];
             }
             else
@@ -435,8 +437,8 @@ void sharpClawUpdateIdle(int* obj, u8* state)
                     state[0x2f3] = 0;
                     state[0x2f4] = 0;
                     Baddie_SetMove(obj, state, row->anim, *(f32*)(tbl4 + off), 0, 3);
-                    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj,
-                                                                               *(f32*)(lbl_8031DD30 + row->anim * 4));
+                    ObjAnim_SetMoveProgress((ObjAnimComponent*)obj,
+                                            *(f32*)(lbl_8031DD30 + row->anim * 4));
                 }
             }
         }
@@ -504,7 +506,7 @@ void sharpClawUpdateApproach(GameObject* obj, void* state)
             Baddie_SetMove(obj, state, seqRow16[((SeqObj11EState*)state)->seqNode].anim,
                            *(f32*)(seqRows + (((SeqObj11EState*)state)->seqNode << 4)), 0,
                            (u8)seqRow16[((SeqObj11EState*)state)->seqNode].flags);
-            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+            ObjAnim_SetMoveProgress(
                 (ObjAnimComponent*)obj, *(f32*)(table + (seqRow16[((SeqObj11EState*)state)->seqNode].anim << 2)));
             ((SeqObj11EState*)state)->seqNode = seqRow16[((SeqObj11EState*)state)->seqNode].next;
         }
@@ -524,7 +526,7 @@ void sharpClawUpdateApproach(GameObject* obj, void* state)
             else
             {
                 Baddie_SetMove(obj, state, idleAnim, idleRows[*(u16*)((u8*)state + 0x2a0)].speed, 0, 0xb);
-                ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+                ObjAnim_SetMoveProgress(
                     (ObjAnimComponent*)obj, *(f32*)(table + (idleRows[*(u16*)((u8*)state + 0x2a0)].anim << 2)));
             }
         }

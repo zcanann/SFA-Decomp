@@ -435,7 +435,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
         }
     }
     Lightfoot_ResetScriptedPosition(obj);
-    ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C, (ObjAnimComponent*)obj);
+    ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C);
     ((LightfootSub*)sub)->unk2A = (u16)(randomGetRange(0, 1) != 0 ? 0x133 : 0x134);
     ((LightfootSub*)sub)->animTimer = lbl_803E81C0;
     if ((obj)->userData1 != 0)

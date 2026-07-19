@@ -40,7 +40,7 @@ void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordI
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,u32 frameCount);
 int ObjAnim_SampleRootCurvePhase(ObjAnimComponent *objAnim,f32 distance,float *phaseOut);
 int ObjAnim_AdvanceCurrentMove(int objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events);
-int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
+int ObjAnim_SetMoveProgress(ObjAnimComponent *objAnim,f32 moveProgress);
 int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int moveControlFlags);
 void *ObjAnim_LoadCachedMove(int animId,int moveIndex,u8 *cache,ObjAnimDef *animDef);
 void objGetWeaponDa(u8 *objAnim,int objType,ObjWeaponDaTable *weaponDaTable,int key,u8 load);

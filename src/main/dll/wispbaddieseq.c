@@ -177,8 +177,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
             ((HagabonAnimState*)state)->unk2F3 = 0;
             ((HagabonAnimState*)state)->unk2F4 = 0;
             Baddie_SetMove(obj, state, row->moveId, blendScale * row->blend, 0, row->flags & 0xff);
-            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj,
-                                                                       *(f32*)(base + row->moveId * 4));
+            ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, *(f32*)(base + row->moveId * 4));
             ((HagabonAnimState*)state)->activeEventIndex = eventIndex;
             return 1;
         }
@@ -202,7 +201,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
             Baddie_SetMove(obj, state, eventRows[eventTableIndex].moveId,
                            eventRows[((HagabonAnimState*)state)->activeEventIndex].blend, 0,
                            eventRows[eventTableIndex].flags & 0xff);
-            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+            ObjAnim_SetMoveProgress(
                 (ObjAnimComponent*)obj, *(f32*)(base + eventRows[((HagabonAnimState*)state)->activeEventIndex].moveId * 4));
         }
         ((HagabonAnimState*)state)->moveHoldTimer = ((HagabonAnimState*)state)->moveHoldTimer - timeDelta;

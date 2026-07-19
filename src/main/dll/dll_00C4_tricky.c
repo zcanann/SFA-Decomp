@@ -1801,7 +1801,7 @@ void Tricky_update(int obj)
     }
     if (trickyState->moveProgress == lbl_803E23DC)
     {
-        ((ObjAnimSetProgressObjectFirstFn)ObjAnim_SetMoveProgress)(obj, trickyState->arcMoveProgress);
+        ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, trickyState->arcMoveProgress);
     }
     if (ObjAnim_AdvanceCurrentMove((int)obj, trickyState->moveProgress, timeDelta,
                                                                     (void*)(state + 0x80c)) != 0)

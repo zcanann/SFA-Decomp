@@ -107,8 +107,7 @@ void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state
     }
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitCooldown);
     state->previousLiftHeight = state->liftHeight;
-    ((void (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj,
-                                                                state->liftHeight / 2048.0f);
+    ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, state->liftHeight / 2048.0f);
 }
 
 void cfPrisonGuard_setGameBitMirror(GameObject* obj, u8 flag)

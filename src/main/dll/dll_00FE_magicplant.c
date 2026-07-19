@@ -333,7 +333,7 @@ void MagicPlant_update(int obj)
         {
             ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_CLOSED, state->animProgress, 0);
         }
-        ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, state->animProgress);
+        ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, state->animProgress);
         break;
 
     case MAGICPLANT_MODE_ACTIVE:
@@ -357,7 +357,7 @@ void MagicPlant_update(int obj)
                 state->animProgress = resetProgress;
                 state->animStepScale = resetProgress;
                 ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_CLOSED, resetProgress, 0);
-                ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E385C);
+                ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, lbl_803E385C);
             }
             plant->objAnim.alpha = alpha;
         }
@@ -496,7 +496,7 @@ void MagicPlant_init(GameObject* obj, MagicPlantSetup* setup)
     }
     state->mode = MAGICPLANT_MODE_WAIT_FOR_EVENT;
     state->animStepScale = lbl_803E385C;
-    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, state->animProgress);
+    ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, state->animProgress);
     objAnim->rotX = (s16)((u32)setup->yawByte << 8);
     plant->objectFlags |= MAGICPLANT_OBJECT_FLAGS_CHILD_EFFECTS;
     objAnim->bankIndex = setup->modelIndex;

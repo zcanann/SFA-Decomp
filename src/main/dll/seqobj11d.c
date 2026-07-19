@@ -143,8 +143,8 @@ void fn_801513AC(GameObject* obj, u8* state)
     *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
     *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
     fn_8014D08C(obj, (int)state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
-    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-        (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
+    ObjAnim_SetMoveProgress((ObjAnimComponent*)obj,
+                            *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
     (((GroundBaddieState*)state)->baddie.userData1)++;
     if (state[0x33a] > entry[8])
     {
@@ -203,8 +203,9 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state)
                 fn_8014D08C(obj, (int)state, (p28 + *(u16*)(state + 0x338) * 16)[8],
                             ((SeqEntry*)(p28 + *(u16*)(state + 0x338) * 16))->speed, 0,
                             (u8) * (u32*)(&p28[*(u16*)(state + 0x338) * 16 + 4]));
-                ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-                    (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + (p28 + *(u16*)(state + 0x338) * 16)[8] * 4));
+                ObjAnim_SetMoveProgress(
+                    (ObjAnimComponent*)obj,
+                    *(f32*)(lbl_8031DD30 + (p28 + *(u16*)(state + 0x338) * 16)[8] * 4));
                 *(u16*)(state + 0x338) = (p28 + *(u16*)(state + 0x338) * 16)[9];
             }
             else
@@ -281,8 +282,8 @@ void fn_801511E8(GameObject* obj, u8* state)
     *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
     *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
     fn_8014D08C(obj, (int)state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
-    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
-        (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
+    ObjAnim_SetMoveProgress((ObjAnimComponent*)obj,
+                            *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
     (((GroundBaddieState*)state)->baddie.userData1)++;
     if (state[0x33a] > entry[8])
     {

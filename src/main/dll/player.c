@@ -1596,7 +1596,7 @@ int playerState41(GameObject* obj, int state, f32 fv)
         w = v * lbl_803E7E98;
         o = (ObjAnimComponent*)obj;
         clamped = (w < lbl_803E7EA4) ? lbl_803E7EA4 : ((w > lbl_803E7EE0) ? lbl_803E7EE0 : w);
-        ObjAnim_SetMoveProgress(lbl_803E7EE0 - clamped, o);
+        ObjAnim_SetMoveProgress(o, lbl_803E7EE0 - clamped);
     }
     (*(void (*)(int, int, f32, f32, int))(*(int*)((char*)*gPlayerInterface + 0x44)))((int)obj, state, fv, lbl_803E7EE0,
                                                                               inner->inputHeading);
@@ -2547,8 +2547,8 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
         }
         else
         {
-            ObjAnim_SetMoveProgress(prog + (f32)(int)randomGetRange(-0x64, 0x64) / lbl_803E7F70,
-                                    (ObjAnimComponent*)obj);
+            ObjAnim_SetMoveProgress((ObjAnimComponent*)obj,
+                                    prog + (f32)(int)randomGetRange(-0x64, 0x64) / lbl_803E7F70);
         }
         cfPrisonGuard_setLiftHeight(gPlayerInteractTarget, count);
         break;
@@ -5883,7 +5883,7 @@ int playerStateOnBike(GameObject* obj, int state)
     }
     if ((inner->moveSequenceFlags & 0x4) != 0)
     {
-        ((void (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, *(f32*)((char*)sub + 0x98));
+        ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, *(f32*)((char*)sub + 0x98));
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EA4;
     }
     else
@@ -7268,11 +7268,11 @@ int playerStateOnLadder(int obj, int state)
     case 5:
         if (((PlayerState*)state)->baddie.moveInputZ > lbl_803E7F10)
         {
-            ((void (*)(int, f32))ObjAnim_SetMoveProgress)(obj, lbl_803E7EA4);
+            ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, lbl_803E7EA4);
         }
         else if (((PlayerState*)state)->baddie.moveInputZ < lbl_803E801C)
         {
-            ((void (*)(int, f32))ObjAnim_SetMoveProgress)(obj, lbl_803E7EA4);
+            ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, lbl_803E7EA4);
         }
         else
         {

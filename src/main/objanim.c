@@ -1007,7 +1007,7 @@ int ObjAnim_AdvanceCurrentMove(int objAnimHandle, f32 moveStepScale, f32 deltaTi
     return wrapped;
 }
 
-int ObjAnim_SetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
+int ObjAnim_SetMoveProgress(ObjAnimComponent* objAnim, f32 moveProgress)
 {
     if (moveProgress > gObjAnimSetMoveProgressMax)
     {
