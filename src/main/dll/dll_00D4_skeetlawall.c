@@ -9,7 +9,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/dll/dll_00D4_skeetlawall.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 typedef struct SkeetlaWallState
 {
@@ -66,7 +66,7 @@ void SkeetlaWall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->userData1)
         {
         case 0:
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+            objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
             break;
         }
     }

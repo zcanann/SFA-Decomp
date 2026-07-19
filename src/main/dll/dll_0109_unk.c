@@ -21,7 +21,7 @@
 #include "main/objhits.h"
 #include "main/object.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/audio/sfx.h"
 #define UNK0109_HIT_VOLUME_SLOT 5
 
@@ -78,7 +78,7 @@ void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     {
         if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
         {
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, 1.0f);
+            objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, 1.0f);
         }
     }
 }

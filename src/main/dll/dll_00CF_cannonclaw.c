@@ -16,7 +16,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 #define CANNONCLAW_OBJID_TRICKY 0x1723
 #define CANNONCLAW_MOVE_ARM     0x208
@@ -67,7 +67,7 @@ void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->userData1)
         {
         case 0:
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E2F30);
+            objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E2F30);
             break;
         default:
             break;

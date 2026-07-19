@@ -9,7 +9,7 @@
  */
 #include "main/camera_interface.h"
 #include "main/dll/objfx_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
@@ -1563,8 +1563,7 @@ void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->userData1)
         {
         case 0:
-            ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)((int*)obj, p2, p3, p4, p5,
-                                                                                   lbl_803E256C);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E256C);
             {
                 u32 flags = *(u32*)&((EnemyState*)state)->flags2E8;
                 if ((flags & 3) != 0)

@@ -1,5 +1,5 @@
 /* DLL 0xC6 - animated object [8016984C-801713AC) */
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/shader_api.h"
 #include "main/objprint_render_api.h"
@@ -173,7 +173,7 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     else
     {
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

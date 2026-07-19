@@ -11,7 +11,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_channel_volume_api.h"
 #include "main/audio/sfx_play_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -106,7 +106,7 @@ void KaldaChompSpit_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
     }
     if (visible != 0)
     {
-        ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
