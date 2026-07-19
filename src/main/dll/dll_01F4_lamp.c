@@ -13,7 +13,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_channel_query_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/object_render.h"
 #include "main/objanim_update.h"
@@ -102,7 +102,7 @@ void Lamp_update(int obj)
     {
         if (distance < 100.0f)
         {
-            Sfx_PlayFromObject((int*)obj, SFXTRIG_mushdizzylp12);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_mushdizzylp12);
         }
     }
     else if (distance >= 100.0f)

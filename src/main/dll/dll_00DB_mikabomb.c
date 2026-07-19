@@ -9,7 +9,7 @@
  * Resource 0x5b is acquired at init.
  */
 #include "main/dll/dll_00DB_mikabomb_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -143,7 +143,7 @@ void MikaBomb_update(int* obj)
                 int* st = ((GameObject*)obj)->extra;
                 u32 rnd;
                 localB = lbl_803E31A0;
-                Sfx_PlayFromObject(obj, SFXTRIG_dsmk2_c);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_dsmk2_c);
                 rnd = randomGetRange(0, 2);
                 ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(
                     obj, rnd, 0, 2, -1, &localB);
@@ -166,7 +166,7 @@ void MikaBomb_update(int* obj)
                 int* st = ((GameObject*)obj)->extra;
                 u32 rnd;
                 localA = lbl_803E31A0;
-                Sfx_PlayFromObject(obj, SFXTRIG_dsmk2_c);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_dsmk2_c);
                 rnd = randomGetRange(0, 2);
                 ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(
                     obj, rnd, 0, 2, -1, &localA);

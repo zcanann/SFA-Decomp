@@ -13,7 +13,7 @@
 #include "main/gamebit_ids.h"
 #include "main/gameloop_api.h"
 #include "main/audio/sfx_looped_object_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/newclouds.h"
@@ -290,7 +290,7 @@ void FuelCell_update(GameObject* obj)
                     ObjMsg_SendToObject(player, FUELCELL_MSG_IN_RANGE, obj, (u32)state);
                     state->grabbed = 1;
                     mainSetBits(FUELCELL_GAMEBIT_CARRIED, 1);
-                    Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_lockoff22);
                 }
             }
         }

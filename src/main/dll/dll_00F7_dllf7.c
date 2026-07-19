@@ -9,7 +9,7 @@
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_position_api.h"
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"
@@ -200,7 +200,7 @@ void dll_F7_update(int* obj)
         }
         state->byte9 = 1;
         state->byte8 = 0;
-        Sfx_PlayFromObject(obj, SFXTRIG_dsmk2_c);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_dsmk2_c);
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
         if ((int)((DllF7Placement*)params)->completeGameBit != -1)
         {
