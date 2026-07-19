@@ -321,12 +321,12 @@ void CFCrate_update(GameObject* obj)
         if (dist < 75.0f && state->proximityLatch == 1)
         {
             state->proximityLatch = 0;
-            getLActionsVoid6((int)obj, (int)obj, 0x5c, 0, 0, 0);
+            getLActions(obj, obj, 0x5c, 0, 0, 0);
         }
         else if ((dist > 75.0f) && (state->proximityLatch == 0))
         {
             state->proximityLatch = 1;
-            getLActionsVoid6((int)obj, (int)obj, 0x5d, 0, 0, 0);
+            getLActions(obj, obj, 0x5d, 0, 0, 0);
         }
         break;
     }

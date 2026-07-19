@@ -50,12 +50,12 @@ int MagicLight_SeqFn(int* obj)
     if (dist < state->triggerRadius && state->inRange == 0)
     {
         state->inRange = 1;
-        getLActionsInt6(obj, obj, (u16)state->enterAction, 0, 0, 0);
+        getLActions(obj, obj, (u16)state->enterAction, 0, 0, 0);
     }
     else if (dist > 10.0f + state->triggerRadius && state->inRange != 0)
     {
         state->inRange = 0;
-        getLActionsInt6(obj, obj, (u16)state->leaveAction, 0, 0, 0);
+        getLActions(obj, obj, (u16)state->leaveAction, 0, 0, 0);
     }
     return 0;
 }
@@ -79,7 +79,7 @@ void MagicLight_free(GameObject* obj)
     {
         if ((s8)state->inRange != 0)
         {
-            getLActionsInt6(obj, obj, (u16)state->leaveAction, 0, 0, 0);
+            getLActions(obj, obj, (u16)state->leaveAction, 0, 0, 0);
         }
         (*gExpgfxInterface)->freeSource2((u32)obj);
     }

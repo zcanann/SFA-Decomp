@@ -99,7 +99,7 @@ int dll_22C_getObjectTypeId(void)
 void dll_22C_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    getLActionsInt6(obj, obj, 0, 0, 0, 0);
+    getLActions((void*)obj, (void*)obj, 0, 0, 0, 0);
 }
 
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

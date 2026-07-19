@@ -51,9 +51,7 @@
 #include "main/model.h"
 #include "main/sky_api.h"
 #include "main/render_envfx_api.h"
-#define RENDER_LACTIONS_DIRECT_UNPROTOTYPED_CALL
 #include "main/render_lactions_api.h"
-#undef RENDER_LACTIONS_DIRECT_UNPROTOTYPED_CALL
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "main/dll/dll_0126_trigger.h"
@@ -364,7 +362,7 @@ void objInterpretSeq(GameObject* obj, int seqArg, s8 legCode, int distSq)
                     OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (p[2] << 8) | p[3], distSq);
                     break;
                 case 0xd:
-                    getLActions((int)obj, seqArg, (u16)((p[2] << 8) | p[3]), legCode, distSq, 0);
+                    getLActions(obj, (void*)seqArg, (u16)((p[2] << 8) | p[3]), legCode, distSq, 0);
                     break;
                 case 0xb:
                     switch (p[2])

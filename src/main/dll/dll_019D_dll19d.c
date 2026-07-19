@@ -51,7 +51,7 @@ void dll_19D_free(GameObject *obj)
     register int state = *(int*)&((GameObject*)self)->extra;
     if ((((Dll19DState*)state)->flags & 2) == 0)
     {
-        getLActionsInt6(self, self, 1, 0, 0, 0);
+        getLActions((void*)self, (void*)self, 1, 0, 0, 0);
         ((Dll19DState*)state)->flags = (u8)((u32)((Dll19DState*)state)->flags | 0x2);
     }
     (*gExpgfxInterface)->freeSource2((u32)self);
@@ -129,7 +129,7 @@ void dll_19D_update(GameObject* obj)
     {
         if ((((Dll19DState*)state)->flags & 2) == 0)
         {
-            getLActionsInt6(self, self, 1, 0, 0, 0);
+            getLActions((void*)self, (void*)self, 1, 0, 0, 0);
             ((Dll19DState*)state)->flags = (u8)((u32)((Dll19DState*)state)->flags | 2);
         }
         zero = 0.0f;
@@ -199,15 +199,15 @@ void dll_19D_init(GameObject* obj)
 
     if ((int)(signed char)((Dll19DPlacement*)state2)->variant == 1)
     {
-        getLActionsInt6(self, self, 0x203, 0, 0, 0);
+        getLActions((void*)self, (void*)self, 0x203, 0, 0, 0);
     }
     else if ((int)(signed char)((Dll19DPlacement*)state2)->variant == 2)
     {
-        getLActionsInt6(self, self, 0x204, 0, 0, 0);
+        getLActions((void*)self, (void*)self, 0x204, 0, 0, 0);
     }
     else
     {
-        getLActionsInt6(self, self, 0x201, 0, 0, 0);
+        getLActions((void*)self, (void*)self, 0x201, 0, 0, 0);
     }
 }
 

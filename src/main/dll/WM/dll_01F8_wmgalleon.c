@@ -1,9 +1,7 @@
 /* DLL 0x01F8 (wmgalleon) - WM galleon and object creator [0x801EFF7C-0x801F06D8). */
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/object_descriptor.h"
-#define RENDER_LACTIONS_DIRECT_VOID6_CALL
 #include "main/render_lactions_api.h"
-#undef RENDER_LACTIONS_DIRECT_VOID6_CALL
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -146,9 +144,9 @@ int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             mainSetBits(WM_GALLEON_GAMEBIT_CLEAR_DOOR, 0);
             break;
         case WM_GALLEON_COMMAND_CLEAR_LACTIONS:
-            getLActions(obj, obj, 0x77, 0, 0, 0);
-            getLActions(obj, obj, 0x78, 0, 0, 0);
-            getLActions(obj, obj, 0x80, 0, 0, 0);
+            getLActions((void*)obj, (void*)obj, 0x77, 0, 0, 0);
+            getLActions((void*)obj, (void*)obj, 0x78, 0, 0, 0);
+            getLActions((void*)obj, (void*)obj, 0x80, 0, 0, 0);
             break;
         case WM_GALLEON_COMMAND_SCREEN_FADE:
             (*(void (**)(int, int, int))((u8*)*lbl_803DCA94 + 0x14))(0, 0x1e, 0x50);

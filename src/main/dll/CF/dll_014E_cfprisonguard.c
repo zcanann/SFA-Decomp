@@ -215,7 +215,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (animUpdate->triggerCommand == 1)
     {
-        getLActionsInt6(obj, obj, 0x18, 0, 0, 0);
+        getLActions(obj, obj, 0x18, 0, 0, 0);
         animUpdate->triggerCommand = 0;
     }
     return 0;

@@ -161,10 +161,10 @@ void imicemountain_updateEventState(int* obj)
             getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_A, 0);
             getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_B, 0);
             getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_C, 0);
-            getLActionsVoid6(obj, obj, 0x15b, 0, 0, 0);
-            getLActionsVoid6(obj, obj, 0x15c, 0, 0, 0);
-            getLActionsVoid6(obj, obj, 0x17c, 0, 0, 0);
-            getLActionsVoid6(obj, obj, 0x17b, 0, 0, 0);
+            getLActions(obj, obj, 0x15b, 0, 0, 0);
+            getLActions(obj, obj, 0x15c, 0, 0, 0);
+            getLActions(obj, obj, 0x17c, 0, 0, 0);
+            getLActions(obj, obj, 0x17b, 0, 0, 0);
             (*gCloudActionInterface)->func09Nop(1);
             ((GameObject*)obj)->userData1 = 1;
         }

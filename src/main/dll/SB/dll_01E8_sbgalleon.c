@@ -618,7 +618,7 @@ void SB_Galleon_init(GameObject* obj)
     gSbGalleonSkyTexB = (int)textureLoadAsset(SBGALLEON_TEXTURE_SKY_B);
     state->unk84 = 100;
     (*gMapEventInterface)->setMapAct(obj->anim.mapEventSlot, 1);
-    getLActionsInt6(obj, obj, 0x58, 0, 0, 0);
+    getLActions(obj, obj, 0x58, 0, 0, 0);
     state->wanderTimerA = lbl_803E56CC;
     state->wanderTimerB = lbl_803E580C;
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;

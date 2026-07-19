@@ -218,8 +218,8 @@ void SB_KyteCage_init(GameObject* obj, int* params)
     state->seqLatch = 0;
     if ((u32)mainGetBit(GAMEBIT_KYTE_CAGED) == 0u)
     {
-        getLActionsInt6(obj, obj, SB_KYTECAGE_LACTION_A, 0, 0, 0);
-        getLActionsInt6(obj, obj, SB_KYTECAGE_LACTION_B, 0, 0, 0);
+        getLActions(obj, obj, SB_KYTECAGE_LACTION_A, 0, 0, 0);
+        getLActions(obj, obj, SB_KYTECAGE_LACTION_B, 0, 0, 0);
     }
 }
 
