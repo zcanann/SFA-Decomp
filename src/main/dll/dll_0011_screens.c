@@ -26,13 +26,13 @@
 #include "main/textrender_api.h"
 #include "main/dll/hint_text_api.h"
 #include "main/dll/dll_0011_screens.h"
+#include "main/gametext_api.h"
 
 u32 lbl_803DD4AC;
 u32 lbl_803DD4A8;
 u32 lbl_803DD4A4;
 u32 lbl_803DD4A0;
 
-extern char* sMapDirectoryNameTable[];
 extern u8 lbl_803A4218[];
 extern s16 lbl_803119E0[];
 
