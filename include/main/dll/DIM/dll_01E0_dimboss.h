@@ -180,14 +180,38 @@ typedef struct DIMbossTopState {
   DIMbossSteamFlags steamFlags;
 } DIMbossTopState;
 
+typedef struct DIMbossAnimHandlerTable {
+  int (*selectTargetControlMode)(int *obj);
+  int (*returnToIdleWhenDone)(int obj, int state);
+  int (*hasMoveDone)(int unused, int *state);
+  int (*finishDefeat)(GameObject *obj, int state);
+  int (*updatePlayerHitReaction)(GameObject *obj, int state);
+  int (*updateBossHitReaction)(int obj, int state);
+} DIMbossAnimHandlerTable;
+
+typedef struct DIMbossHitDetectAnimHandlerTable {
+  int (*resetIdleMove)(int *obj, u8 *state);
+  int (*applyForwardMove)(int *obj, u8 *state, f32 weight);
+  int (*trackTargetMove)(GameObject *obj, int state, f32 weight);
+  int (*randomSwipe)(GameObject *obj, int state, f32 weight);
+  int (*blueWhiteEventCapture)(GameObject *obj, int state, f32 weight);
+  int (*blueWhiteCapture)(GameObject *obj, int state, f32 weight);
+  int (*breathBurst)(GameObject *obj, int state, f32 weight);
+  int (*lungeAttack)(GameObject *obj, int state, f32 weight);
+  int (*chooseIdleTaunt)(GameObject *obj, int state);
+  int (*liftImpact)(int obj, int state);
+  int (*liftSlam)(GameObject *obj, int state);
+  int (*tonsilSlam)(GameObject *obj, int state);
+} DIMbossHitDetectAnimHandlerTable;
+
 typedef struct DIMbossAnimScratch {
   union {
     f32 effectVelocity[3];
     u8 pad000[DIMBOSS_ANIM_CONTROLLER_OFFSET];
   };
   u8 animController[DIMBOSS_ANIM_CONTROLLER_SIZE];
-  void (*animTable[DIMBOSS_ANIM_TABLE_COUNT])(void);
-  void (*hitDetectAnimTable[DIMBOSS_HITDETECT_ANIM_TABLE_COUNT])(void);
+  DIMbossAnimHandlerTable animTable;
+  DIMbossHitDetectAnimHandlerTable hitDetectAnimTable;
 } DIMbossAnimScratch;
 
 typedef struct DIMbossRuntime {
@@ -290,6 +314,10 @@ STATIC_ASSERT(offsetof(DIMbossTopState, defeatTimer) == 0xB0);
 STATIC_ASSERT(offsetof(DIMbossTopState, stompDustDelay) == 0xB4);
 STATIC_ASSERT(offsetof(DIMbossTopState, steamFlags) == 0xB6);
 
+STATIC_ASSERT(sizeof(DIMbossAnimHandlerTable) == DIMBOSS_ANIM_TABLE_COUNT * sizeof(void *));
+STATIC_ASSERT(sizeof(DIMbossHitDetectAnimHandlerTable) ==
+              DIMBOSS_HITDETECT_ANIM_TABLE_COUNT * sizeof(void *));
+
 STATIC_ASSERT(sizeof(DIMbossAnimScratch) == 0x6D8);
 STATIC_ASSERT(offsetof(DIMbossAnimScratch, effectVelocity) == 0x00);
 STATIC_ASSERT(offsetof(DIMbossAnimScratch, animController) == DIMBOSS_ANIM_CONTROLLER_OFFSET);
@@ -359,6 +387,8 @@ void DIMboss_release(void);
 void DIMboss_initialise(void);
 void DIMboss_initialiseAnimTables(void);
 extern ObjectDescriptor12 gDIM_BossObjDescriptor;
+extern DIMbossAnimHandlerTable gDIMbossAnimTable;
+extern DIMbossHitDetectAnimHandlerTable gDIMbossHitDetectAnimTable;
 extern f32 gDIMbossAnimScratchBase[3];
 extern u8 gDim2IcicleHitFxBuffer[];
 

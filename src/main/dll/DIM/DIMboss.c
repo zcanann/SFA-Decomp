@@ -16,6 +16,7 @@
 #include "main/object_render.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/dll/DIM/DIM2lift.h"
+#include "main/dll/dll_801b9ecc.h"
 #include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/objseq.h"
@@ -46,8 +47,6 @@
 
 extern u32 gDIMbossRenderMtx[12];
 extern MoveLibState gDIMbossAnimController;
-extern void (*gDIMbossAnimTable[6])(void);
-extern void (*gDIMbossHitDetectAnimTable[12])(void);
 
 
 
@@ -61,15 +60,6 @@ extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, u32 model, 
 
 
 
-
-
-
-
-
-
-
-
-extern void fn_801B9ECC(void);
 
 /* Env-fx ids co-activated on the steam/warp transition (getEnvfxAct 3rd arg) */
 #define DIMBOSS_ENVFX_A 0xdb
@@ -113,7 +103,8 @@ char sDIMBossLoadingAssetsForDIMTop[] = "<DIMBoss.c> loading assets for DIMTop\n
 typedef void (*DIMbossAnimSetupFn)(DIMbossObject* obj, u32 p2, DIMbossRuntime* runtime,
                                    int p4, int p5, int p6, u8 p7, float scale);
 typedef void (*DIMbossPlayerHitReactFn)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 x, f32 y,
-                                        void* hitDetectAnimTable, void* animTable);
+                                        DIMbossHitDetectAnimHandlerTable* hitDetectAnimTable,
+                                        DIMbossAnimHandlerTable* animTable);
 
 typedef struct DIMbossInitVec
 {
@@ -130,7 +121,9 @@ typedef struct DIMbossBaddieControlInterface
     void (*applyHitReact)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 amount, int flag);
     int (*updateState)(DIMbossObject* obj, DIMbossRuntime* runtime, int flags);
     int (*updateHitDetect)(DIMbossObject* obj, ObjAnimUpdateState* animUpdate,
-                           DIMbossRuntime* runtime, void* hitDetectAnimTable, void* animTable,
+                           DIMbossRuntime* runtime,
+                           DIMbossHitDetectAnimHandlerTable* hitDetectAnimTable,
+                           DIMbossAnimHandlerTable* animTable,
                            int flags);
     u8 pad38[0x40 - 0x38];
     void (*releaseState)(DIMbossObject* obj, DIMbossRuntime* runtime, int flags);
@@ -142,7 +135,8 @@ typedef struct DIMbossPlayerInterface
 {
     u8 pad00[0x08];
     DIMbossPlayerHitReactFn applyHitReact;
-    void (*updateHitDetect)(DIMbossObject* obj, DIMbossRuntime* runtime, void* hitDetectAnimTable);
+    void (*updateHitDetect)(DIMbossObject* obj, DIMbossRuntime* runtime,
+                            DIMbossHitDetectAnimHandlerTable* hitDetectAnimTable);
     u8 pad10[0x14 - 0x10];
     void (*init)(DIMbossObject* obj, DIMbossRuntime* runtime, int mode);
 } DIMbossPlayerInterface;
@@ -384,14 +378,14 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
                 runtime->field270 = 0;
                 DIMboss_GetPlayerInterface()->applyHitReact(
                     obj, runtime, lbl_803E4C44, *(f32*)&lbl_803E4C44,
-                    animScratch->hitDetectAnimTable, animScratch->animTable);
+                    &animScratch->hitDetectAnimTable, &animScratch->animTable);
                 animUpdate->sequenceEventActive = 0;
             }
             break;
         case 1:
             baddieResult = DIMboss_GetBaddieControlInterface()->updateHitDetect(
                 obj, animUpdate, runtime,
-                animScratch->hitDetectAnimTable, animScratch->animTable, 0);
+                &animScratch->hitDetectAnimTable, &animScratch->animTable, 0);
             if (baddieResult != 0)
             {
                 DIMboss_GetBaddieControlInterface()->applyHitReact(obj, runtime, lbl_803E4C70, 1);
@@ -493,7 +487,7 @@ void DIMboss_render(DIMbossObject* obj, u32 p2, u32 p3, u32 p4,
 
 void DIMboss_hitDetect(DIMbossObject* obj)
 {
-    DIMboss_GetPlayerInterface()->updateHitDetect(obj, obj->runtime, gDIMbossHitDetectAnimTable);
+    DIMboss_GetPlayerInterface()->updateHitDetect(obj, obj->runtime, &gDIMbossHitDetectAnimTable);
 }
 
 void DIMboss_update(DIMbossObject* obj)
@@ -700,34 +694,34 @@ void DIMboss_initialise(void)
 
 void DIMboss_initialiseAnimTables(void)
 {
-    typedef void (*DIMbossRawAnimCallback)(void);
-    DIMbossRawAnimCallback *table;
+    DIMbossHitDetectAnimHandlerTable* hitDetectAnimTable;
+    DIMbossAnimHandlerTable* animTable;
 
-    table = gDIMbossHitDetectAnimTable;
-    table[0] = (DIMbossRawAnimCallback)DIMbossHitDetect_resetIdleMove;
-    table[1] = (DIMbossRawAnimCallback)DIMbossHitDetect_applyForwardMove;
-    table[2] = (DIMbossRawAnimCallback)DIMbossHitDetect_trackTargetMove;
-    table[3] = (DIMbossRawAnimCallback)DIMbossHitDetect_randomSwipe;
-    table[4] = (DIMbossRawAnimCallback)DIMbossHitDetect_blueWhiteEventCapture;
-    table[5] = (DIMbossRawAnimCallback)DIMbossHitDetect_blueWhiteCapture;
-    table[6] = (DIMbossRawAnimCallback)DIMbossHitDetect_breathBurst;
-    table[7] = (DIMbossRawAnimCallback)DIMbossHitDetect_lungeAttack;
-    table[8] = (DIMbossRawAnimCallback)DIMbossHitDetect_chooseIdleTaunt;
-    table[9] = (DIMbossRawAnimCallback)DIMbossHitDetect_liftImpact;
-    table[10] = (DIMbossRawAnimCallback)DIMbossHitDetect_liftSlam;
-    table[11] = (DIMbossRawAnimCallback)DIMbossHitDetect_tonsilSlam;
+    hitDetectAnimTable = &gDIMbossHitDetectAnimTable;
+    hitDetectAnimTable->resetIdleMove = DIMbossHitDetect_resetIdleMove;
+    hitDetectAnimTable->applyForwardMove = DIMbossHitDetect_applyForwardMove;
+    hitDetectAnimTable->trackTargetMove = DIMbossHitDetect_trackTargetMove;
+    hitDetectAnimTable->randomSwipe = DIMbossHitDetect_randomSwipe;
+    hitDetectAnimTable->blueWhiteEventCapture = DIMbossHitDetect_blueWhiteEventCapture;
+    hitDetectAnimTable->blueWhiteCapture = DIMbossHitDetect_blueWhiteCapture;
+    hitDetectAnimTable->breathBurst = DIMbossHitDetect_breathBurst;
+    hitDetectAnimTable->lungeAttack = DIMbossHitDetect_lungeAttack;
+    hitDetectAnimTable->chooseIdleTaunt = DIMbossHitDetect_chooseIdleTaunt;
+    hitDetectAnimTable->liftImpact = DIMbossHitDetect_liftImpact;
+    hitDetectAnimTable->liftSlam = DIMbossHitDetect_liftSlam;
+    hitDetectAnimTable->tonsilSlam = DIMbossHitDetect_tonsilSlam;
 
-    table = gDIMbossAnimTable;
-    table[0] = (DIMbossRawAnimCallback)DIMbossAnim_selectTargetControlMode;
-    table[1] = (DIMbossRawAnimCallback)DIMbossAnim_returnToIdleWhenDone;
-    table[2] = (DIMbossRawAnimCallback)DIMbossAnim_hasMoveDone;
-    table[3] = (DIMbossRawAnimCallback)DIMbossAnim_finishDefeat;
-    table[4] = (DIMbossRawAnimCallback)DIMbossAnim_updatePlayerHitReaction;
-    table[5] = fn_801B9ECC;
+    animTable = &gDIMbossAnimTable;
+    animTable->selectTargetControlMode = DIMbossAnim_selectTargetControlMode;
+    animTable->returnToIdleWhenDone = DIMbossAnim_returnToIdleWhenDone;
+    animTable->hasMoveDone = DIMbossAnim_hasMoveDone;
+    animTable->finishDefeat = DIMbossAnim_finishDefeat;
+    animTable->updatePlayerHitReaction = DIMbossAnim_updatePlayerHitReaction;
+    animTable->updateBossHitReaction = fn_801B9ECC;
 }
 
-void (*gDIMbossHitDetectAnimTable[12])(void);
-void (*gDIMbossAnimTable[6])(void);
+DIMbossHitDetectAnimHandlerTable gDIMbossHitDetectAnimTable;
+DIMbossAnimHandlerTable gDIMbossAnimTable;
 MoveLibState gDIMbossAnimController;
 u32 gDIMbossRenderMtx[12];
 u8 gDim2IcicleHitFxBuffer[0x18];

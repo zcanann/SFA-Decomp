@@ -46,9 +46,6 @@ static inline int* DIM2Icicle_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-
-extern u32 gDIMbossAnimTable[];
-extern u32 gDIMbossHitDetectAnimTable[];
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4BC8;
 extern f32 lbl_803E4BD8;
@@ -723,7 +720,8 @@ void DIM2icicle_updateCombatState(DIMbossObject* obj, ObjAnimUpdateState* animUp
     runtime->savedPendingParentObj = *(int*)&gameObj->pendingParentObj;
     *(int*)&gameObj->pendingParentObj = 0;
     (*gPlayerInterface)
-        ->update((void*)obj, updateRuntime, timeDelta, timeDelta, gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
+        ->update((void*)obj, updateRuntime, timeDelta, timeDelta, &gDIMbossHitDetectAnimTable,
+                 &gDIMbossAnimTable);
     *(int*)&gameObj->pendingParentObj = runtime->savedPendingParentObj;
 }
 
