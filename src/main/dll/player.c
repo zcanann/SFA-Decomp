@@ -33,16 +33,8 @@
 #include "main/track_bbox_api.h"
 #include "main/vecmath_distance_api.h"
 
-#define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
-    ((int (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
-#define ObjModel_SampleJointTransformLegacy(model, animState, frameSource, phase, rootMotionScale, outPosition, outRotation) \
-    ((void (*)(int, int, int, f32, f32, void*, void*))ObjModel_SampleJointTransform)( \
-        (model), (animState), (frameSource), (phase), (rootMotionScale), (outPosition), (outRotation))
-
-typedef s16 (*PlayerBlendEventLegacyFn)(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
 typedef void (*PSVECScaleLegacyFn)(f32 scale, f32* src, f32* dst);
 
-#define fn_802A71E0Legacy ((PlayerBlendEventLegacyFn)fn_802A71E0)
 #define PSVECScaleLegacy  ((PSVECScaleLegacyFn)PSVECScale)
 #include "main/object_api.h"
 #include "main/curve_eval.h"
@@ -241,7 +233,7 @@ int playerState04(int obj, int state, f32 fv);
 int playerStateIceSpell(int obj, int state, f32 fv);
 void fn_802A514C(GameObject* obj, int state);
 int playerState00(int obj, int state);
-int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
+s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
 void fn_802A81B8(GameObject* obj, int state, f32* out);
 int fn_802A8350(int obj, int p4, int src, int dst, int flag);
 int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag);
@@ -2851,7 +2843,7 @@ int playerState31(GameObject* obj, int p2)
     f32 sinv;
     f32 fz;
     dist = lbl_803E7F5C;
-    near = (void*)ObjGroup_FindNearestObjectLegacy(MAGICPLANT_OBJGROUP_B, obj, &dist);
+    near = (void*)((int (*)())ObjGroup_FindNearestObject)(MAGICPLANT_OBJGROUP_B, obj, &dist);
     ((ByteFlags*)((char*)inner + 0x3f4))->b20 = 1;
     fz = lbl_803E7EA4;
     inner->buttonHoldTimer = fz;
@@ -6057,8 +6049,10 @@ int playerStateMountBike(GameObject* obj, int state, f32 fv)
         inner->yaw = inner->targetYaw;
         ObjAnim_SetCurrentMove((int)obj, ((s16*)inner->moveSequence)[sel], lbl_803E7EA4, 4);
         joint = Player_GetActiveModel((int)obj);
-        ObjModel_SampleJointTransformLegacy((int)joint, 0, 0, lbl_803E7EA4, obj->anim.rootMotionScale, j0, scratch);
-        ObjModel_SampleJointTransformLegacy((int)joint, 0, 0, lbl_803E7EE0, obj->anim.rootMotionScale, j1, scratch);
+        ObjModel_SampleJointTransform(
+            joint, 0, 0, lbl_803E7EA4, obj->anim.rootMotionScale, j0, (s16*)scratch);
+        ObjModel_SampleJointTransform(
+            joint, 0, 0, lbl_803E7EE0, obj->anim.rootMotionScale, j1, (s16*)scratch);
         (*(void (*)(int, void*, void*, void*))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x28)))(
             sub, &wpos[0], &wpos[1], &wpos[2]);
         wpos[0] = wpos[0] - obj->anim.localPosX;
@@ -6773,8 +6767,8 @@ int playerStateClimbOntoWall(GameObject* obj, int state)
         }
         {
             inner->animEventState =
-                fn_802A71E0Legacy((int)obj, tbl[0], tbl[1], (int*)((char*)inner + 0x598),
-                                  (int*)((char*)inner + 0x56c), lbl_803E7EA4, *(f32*)&lbl_803E7EA4, 2, (u8)flags);
+                fn_802A71E0((int)obj, tbl[0], tbl[1], (int*)((char*)inner + 0x598),
+                            (int*)((char*)inner + 0x56c), lbl_803E7EA4, *(f32*)&lbl_803E7EA4, 2, (u8)flags);
         }
         model = Player_GetActiveModel((int)obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0, obj->anim.rootMotionScale, buf1, buf2);
@@ -7691,19 +7685,19 @@ int playerStateClimbOntoLadder(GameObject* obj, int state, f32 fv)
             tbl = lbl_80332F78;
         }
         inner->eventCountdown =
-            fn_802A71E0Legacy((int)obj, tbl[sel], tbl[sel + 2], (int*)inner->blendAnchor, (int*)&vb.vx,
-                              lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
+            fn_802A71E0((int)obj, tbl[sel], tbl[sel + 2], (int*)inner->blendAnchor, (int*)&vb.vx,
+                        lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
         {
             int f9 = 0x34;
             if (flag)
             {
                 f9 |= 0x40;
             }
-            fn_802A71E0Legacy((int)obj, tbl[sel], tbl[sel + 1], (int*)inner->blendAnchor, (int*)inner->pad51C,
-                              lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 0, (u8)f9);
+            fn_802A71E0((int)obj, tbl[sel], tbl[sel + 1], (int*)inner->blendAnchor, (int*)inner->pad51C,
+                        lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 0, (u8)f9);
         }
-        fn_802A71E0Legacy((int)obj, tbl[sel + 2], tbl[sel + 3], (int*)inner->blendAnchor, (int*)inner->pad51C,
-                          lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
+        fn_802A71E0((int)obj, tbl[sel + 2], tbl[sel + 3], (int*)inner->blendAnchor, (int*)inner->pad51C,
+                    lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
         inner->climbTargetY = inner->climbStepHeight * (f32)(int)inner->climbStep + inner->climbBaseY;
         inner->climbStartY = obj->anim.localPosY;
         {
@@ -9989,7 +9983,7 @@ int playerState00(int obj, int state)
     return 2;
 }
 
-int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags)
+s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags)
 {
     ObjModel* model;
     int uf;
