@@ -29,9 +29,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
-
-void drawTexture(void* texture, f32 x, f32 y, int alpha, int scale);
-void drawScaledTexture(void* texture, f32 x, f32 y, int alpha, int scale, int width, int height, int flags);
+#include "track/intersect_hud_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/object_render_legacy.h"
 #include "main/audio/stream_api.h"
