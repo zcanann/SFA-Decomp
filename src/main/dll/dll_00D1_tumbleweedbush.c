@@ -22,7 +22,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/audio/sfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -230,7 +230,7 @@ void TumbleWeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, TUMBLEWEED_BUSH_RENDER_SCALE);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, TUMBLEWEED_BUSH_RENDER_SCALE);
 }
 
 void TumbleWeedBush_hitDetect(void)

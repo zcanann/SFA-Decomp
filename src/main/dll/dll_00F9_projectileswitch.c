@@ -9,7 +9,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 #include "main/maketex_sequence_api.h"
 
@@ -91,7 +91,7 @@ void ProjectileSwitch_render(GameObject *obj, int p2, int p3, int p4, int p5, ch
                         ((ProjectileSwitchPlacement*)placement)->colorG,
                         ((ProjectileSwitchPlacement*)placement)->colorB);
         }
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

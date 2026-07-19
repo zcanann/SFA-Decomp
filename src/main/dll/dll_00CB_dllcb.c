@@ -24,7 +24,7 @@
 #include "main/obj_message.h"
 #include "main/object.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/curve_walker.h"
 #include "main/objseq.h"
@@ -444,7 +444,7 @@ void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->userData1)
         {
         case 0:
-            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+            objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
             break;
         }
     }
@@ -543,4 +543,3 @@ void dll_CB_initialise(void)
     gDllCBStateHandlers[4] = fn_8016032C;
     gDllCBStateHandlers[5] = fn_801601C4;
 }
-

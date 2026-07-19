@@ -23,7 +23,7 @@
 #include "main/objhits.h"
 #include "main/obj_group.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -55,7 +55,7 @@ void FlammableVine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }
 
 void FlammableVine_hitDetect(GameObject* obj)

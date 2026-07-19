@@ -33,7 +33,7 @@
 #include "main/frame_timing.h"
 #include "main/objprint_api.h"
 #include "main/object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
@@ -1316,7 +1316,7 @@ void iceBaddie_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, in
     {
         fn_8003B5E0(0xc8, 0, 0, state->glowAlpha);
     }
-    objRenderModelAndHitVolumes((int)obj, fwdArg2, fwdArg3, fwdArg4, fwdArg5, 1.0f);
+    objRenderModelAndHitVolumes(obj, fwdArg2, fwdArg3, fwdArg4, fwdArg5, 1.0f);
     iceBaddie_updateEffectAnchors((GameObject*)obj, (int)state);
 }
 

@@ -29,7 +29,7 @@
 #include "main/mapEventTypes.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/audio/sfx.h"
 #include "main/player_control_interface.h"
 #include "main/dll/baddie_control_interface.h"
@@ -359,7 +359,7 @@ void grimble_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     if (((GrimbleControl*)sub)->unk50 > 0.0f)
     {
         (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x52a, NULL, 0x64, NULL);

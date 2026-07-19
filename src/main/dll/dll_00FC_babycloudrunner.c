@@ -18,7 +18,7 @@
  *   0x4 = pick the trigger sequence id randomly in [triggerIdMin..Max]
  */
 #include "main/dll/dll_0117_appleontree.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objprint_render_api.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
@@ -89,7 +89,7 @@ void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
     if (isVisible != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_FC_hitDetect(int* obj)

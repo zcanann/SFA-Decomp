@@ -5,7 +5,7 @@
 #include "main/audio/sfx_looped_object_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -1080,7 +1080,7 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
     if (doRender != '\0')
     {
         state = *(int*)&(obj)->extra;
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E23E8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E23E8);
         pathState = *(int*)&(obj)->extra;
         i = 0;
         pathPoint = pathState;
@@ -1118,7 +1118,7 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
                     ((TrickyState*)state)->scratch700.obj->anim.localPosY = ((TrickyState*)state)->renderPosY;
                     ((TrickyState*)state)->scratch700.obj->anim.localPosZ = ((TrickyState*)state)->renderPosZ;
                 }
-                objRenderModelAndHitVolumes(((TrickyState*)state)->scratch700.i, p2, p3, p4, p5, lbl_803E23E8);
+                objRenderModelAndHitVolumes(((TrickyState*)state)->scratch700.obj, p2, p3, p4, p5, lbl_803E23E8);
             }
         }
         Tricky_emitQueuedPathParticles((u8*)obj, (u8*)state);

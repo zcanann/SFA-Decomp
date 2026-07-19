@@ -23,7 +23,7 @@
 #include "main/object.h"
 #include "main/object_descriptor.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/obj_list.h"
 #include "main/dll/pushable.h"
 #include "main/dll/dll_00EF_pushable.h"
@@ -85,7 +85,7 @@ void InvHit_free(GameObject* obj)
 }
 void InvHit_render(int* obj, int a, int b, int c, int d)
 {
-    objRenderModelAndHitVolumes((int)obj, a, b, c, d, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, a, b, c, d, 1.0f);
 }
 
 void InvHit_hitDetect(void)

@@ -18,7 +18,7 @@
 #include "main/sky_interface.h"
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/track_dolphin_api.h"
 
 u8 gTumbleweedCollisionPointData[8] = {0x41, 0xC8, 0, 0, 0, 0, 0, 0};
@@ -228,7 +228,7 @@ void tumbleweed_free(int* obj)
 
 void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if ((s32)visible >= 1) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if ((s32)visible >= 1) objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }
 void tumbleweed_updateStateMachine(GameObject* obj)
 {

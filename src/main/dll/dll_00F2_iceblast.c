@@ -19,7 +19,7 @@
 #include "main/obj_path.h"
 #include "main/frame_timing.h"
 #include "main/dll/vecrotatezxy.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 STATIC_ASSERT(offsetof(IceblastPlacement, useAltHitVolume) == 0x19);
 STATIC_ASSERT(offsetof(IceblastPlacement, initialTimer) == 0x1a);
@@ -43,7 +43,7 @@ void iceblast_free(void)
 
 void iceblast_render(GameObject* obj, int p1, int p2, int p3, int p4)
 {
-    objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, 1.0f);
+    objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
 }
 
 void iceblast_hitDetect(void)

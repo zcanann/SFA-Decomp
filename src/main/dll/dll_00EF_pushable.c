@@ -8,7 +8,7 @@
 #include "main/dll/player_api.h"
 #include "main/track_bbox_api.h"
 #include "main/object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_update_list.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
@@ -1109,7 +1109,7 @@ void pushable_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             char* hdr = (char*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex];
             *(u16*)(*(char**)hdr + 2) = *(u16*)(*(char**)hdr + 2) | 2;
         }
-        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, PUSHABLE_UNIT_SCALE);
+        objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, PUSHABLE_UNIT_SCALE);
     }
 }
 void pushable_hitDetect(GameObject* obj)

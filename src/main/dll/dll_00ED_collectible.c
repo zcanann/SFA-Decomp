@@ -39,7 +39,7 @@
 #include "main/gameloop_gamebit_api.h"
 #include "main/dll/dll_00ED_collectible_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define COLLECTIBLE_OBJGROUP 4
 #define COLLECTIBLE_FIRECRYSTAL_OBJ 0xa8
@@ -564,7 +564,7 @@ void collectible_render(GameObject *obj, int a, int b, int c, int d, s8 visible)
         {
             fn_8003B608(((CollectibleState*)state)->colorR, ((CollectibleState*)state)->colorG, ((CollectibleState*)state)->colorB);
         }
-        objRenderModelAndHitVolumes((int)obj, a, b, c, d, 1.0f);
+        objRenderModelAndHitVolumes(obj, a, b, c, d, 1.0f);
         if ((obj)->anim.seqId == COLLECTIBLE_FIRECRYSTAL_OBJ)
         {
             objfx_spawnDirectionalBurst(obj, 7, 1.0f, 5, 1, 10, 4.0f, NULL, 0x20000000);
