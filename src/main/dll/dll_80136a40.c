@@ -136,8 +136,6 @@ typedef struct
 #define TUMBLEWEED_BLEND_WEIGHT_OFFSET   0x830
 #define TUMBLEWEED_BLEND_VELOCITY_OFFSET 0x834
 
-extern const f32 lbl_803E23E8;
-extern f32 gDebugInitialScale;
 extern f32 gDebugScaleX;
 extern f32 gDebugScaleY;
 extern u8 gDebugScaleBiasX;
@@ -172,12 +170,6 @@ extern u32 gDebugCurrentFontSet;
 extern int gDebugDrawPass;
 extern f32 gDebugGlyphVScale;
 extern f32 gDebugGlyphUScale;
-extern f32 lbl_803E2390;
-extern f32 gDebugGlyphCellTexels;
-extern f32 lbl_803E2398;
-extern f32 lbl_803E239C;
-extern f32 lbl_803E23A0;
-extern f32 lbl_803E23A4;
 extern u16 gDebugRectStartX;
 extern u16 gDebugRectStartY;
 extern u8 gDebugTextColorA;
@@ -307,9 +299,9 @@ int fn_80136A40(int unused, int c)
             if (gDebugDrawPass != 0)
             {
                 selectTexture((Texture*)((char*)gDebugFontTex0), 0);
-                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex0)->width);
+                gDebugGlyphUScale = 1.0f / (32.0f * (f32)((Texture*)gDebugFontTex0)->width);
                 gDebugGlyphVScale =
-                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex0)->height);
+                    1.0f / (32.0f * (f32)((Texture*)gDebugFontTex0)->height);
             }
             gDebugCurrentFontSet = 0;
         }
@@ -322,9 +314,9 @@ int fn_80136A40(int unused, int c)
             if (gDebugDrawPass != 0)
             {
                 selectTexture((Texture*)((char*)gDebugFontTex1), 0);
-                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex1)->width);
+                gDebugGlyphUScale = 1.0f / (32.0f * (f32)((Texture*)gDebugFontTex1)->width);
                 gDebugGlyphVScale =
-                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex1)->height);
+                    1.0f / (32.0f * (f32)((Texture*)gDebugFontTex1)->height);
             }
             gDebugCurrentFontSet = 1;
         }
@@ -337,9 +329,9 @@ int fn_80136A40(int unused, int c)
             if (gDebugDrawPass != 0)
             {
                 selectTexture((Texture*)((char*)gDebugFontTex2), 0);
-                gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex2)->width);
+                gDebugGlyphUScale = 1.0f / (32.0f * (f32)((Texture*)gDebugFontTex2)->width);
                 gDebugGlyphVScale =
-                    lbl_803E2390 / (gDebugGlyphCellTexels * (f32)((Texture*)gDebugFontTex2)->height);
+                    1.0f / (32.0f * (f32)((Texture*)gDebugFontTex2)->height);
             }
             gDebugCurrentFontSet = 2;
         }
@@ -354,10 +346,10 @@ int fn_80136A40(int unused, int c)
         py = (int)((f32)debugPrintXpos * (gDebugScaleY + gDebugScaleBiasY));
         gxDebugTextureFn_80078c1c();
         textRenderChar(px << 2, py << 2,
-                       (int)(*(f32*)&lbl_803E2398 * ((f32)c * (gDebugScaleX + gDebugScaleBiasX) + px)),
-                       (int)(lbl_803E2398 * (lbl_803E239C * (gDebugScaleY + gDebugScaleBiasY) + py)),
-                       (f32)(first << 5) * gDebugGlyphUScale, lbl_803E23A0, gDebugGlyphUScale * (f32)((first + c) << 5),
-                       lbl_803E23A4 * gDebugGlyphVScale);
+                       (int)(4.0f * ((f32)c * (gDebugScaleX + gDebugScaleBiasX) + px)),
+                       (int)(4.0f * (10.0f * (gDebugScaleY + gDebugScaleBiasY) + py)),
+                       (f32)(first << 5) * gDebugGlyphUScale, 0.0f, gDebugGlyphUScale * (f32)((first + c) << 5),
+                       320.0f * gDebugGlyphVScale);
     }
     return c;
 }
@@ -720,8 +712,8 @@ void logPrintf(char* fmt, ...)
 void debugPrintInit(void)
 {
     getScreenResolution();
-    gDebugScaleX = gDebugInitialScale;
-    gDebugScaleY = gDebugInitialScale;
+    gDebugScaleX = 1.5f;
+    gDebugScaleY = 1.5f;
     gDebugScaleBiasX = 0;
     gDebugScaleBiasY = 0;
     gDebugFontTex0 = textureLoadAsset(DEBUG_FONT_TEXTURE0_ID);
