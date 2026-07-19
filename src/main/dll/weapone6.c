@@ -571,7 +571,7 @@ void fn_8013FBE4(GameObject* obj, register int state)
             distance = lbl_803E24D4;
             ((TrickyState*)state)->scratch704.f = -(distance * dx - trackedObj->anim.worldPosX);
             ((TrickyState*)state)->scratch708.f = trackedObj->anim.worldPosY;
-            *(float*)&((TrickyState*)state)->unk70C = -(distance * dz - trackedObj->anim.worldPosZ);
+            ((TrickyState*)state)->scratch70C.f = -(distance * dz - trackedObj->anim.worldPosZ);
             if (trickyFn_8013b368(obj, lbl_803E2488, (TrickyState*)state) == 0)
             {
                 if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)

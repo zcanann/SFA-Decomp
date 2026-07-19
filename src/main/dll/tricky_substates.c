@@ -241,15 +241,15 @@ void trickyDigTunnel(u8* obj, u8* state)
         ((TrickyState*)state)->dirZ =
             ((TrickyCurveNode*)((TrickyState*)state)->scratch704.ptr)->z - ((TrickyCurveNode*)((TrickyState*)state)->scratch700.ptr)->z;
         Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_trwhin1);
-        *(f32*)&((TrickyState*)state)->unk70C = (f32)(int)randomGetRange(0x14, 0xb4);
+        ((TrickyState*)state)->scratch70C.f = (f32)(int)randomGetRange(0x14, 0xb4);
         state[0xa] = 4;
     case 4:
         trickyDebugPrint((char*)(base + 0x7e4));
-        *(f32*)&((TrickyState*)state)->unk70C -= timeDelta;
-        if (*(f32*)&((TrickyState*)state)->unk70C <= lbl_803E23DC)
+        ((TrickyState*)state)->scratch70C.f -= timeDelta;
+        if (((TrickyState*)state)->scratch70C.f <= lbl_803E23DC)
         {
-            *(f32*)&((TrickyState*)state)->unk70C = (f32)(int)randomGetRange(0x14, 0xb4);
-            *(f32*)&((TrickyState*)state)->unk70C *= lbl_803E2424;
+            ((TrickyState*)state)->scratch70C.f = (f32)(int)randomGetRange(0x14, 0xb4);
+            ((TrickyState*)state)->scratch70C.f *= lbl_803E2424;
             ptr = ((GameObject*)obj)->extra;
             if (((u32)((TrickyState*)ptr)->statusFlags >> 6 & 1) == 0 &&
                 (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
@@ -378,23 +378,23 @@ void tricky_stateFindSecretDig(u8* obj, u8* state)
     switch (state[0xa])
     {
     case 0:
-        ((TrickyState*)state)->unk70C =
+        ((TrickyState*)state)->scratch70C.ptr =
             Objfsa_FindNearestEnabledCurveType24((f32*)(((TrickyState*)state)->followObj + 0x18), -1, 2);
-        if (((TrickyState*)state)->unk70C != NULL &&
+        if (((TrickyState*)state)->scratch70C.ptr != NULL &&
             getXZDistance((float*)(((TrickyState*)state)->followObj + 0x18),
-                          &((TrickyCurveNode*)((TrickyState*)state)->unk70C)->x) > lbl_803E2514)
+                          &((TrickyCurveNode*)((TrickyState*)state)->scratch70C.ptr)->x) > lbl_803E2514)
         {
-            ((TrickyState*)state)->unk70C = NULL;
+            ((TrickyState*)state)->scratch70C.ptr = NULL;
         }
         state[0xa] = 1;
     case 1:
         ret = trickyFn_8013b368((GameObject*)obj, lbl_803E2488, (TrickyState*)state);
         if (ret == 0)
         {
-            if (((TrickyState*)state)->unk70C != NULL)
+            if (((TrickyState*)state)->scratch70C.ptr != NULL)
             {
                 state[0xa] = 2;
-                ptr = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk70C)->x;
+                ptr = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->scratch70C.ptr)->x;
                 if (((TrickyState*)state)->targetPosPtr != ptr)
                 {
                     ((TrickyState*)state)->targetPosPtr = ptr;
@@ -453,7 +453,7 @@ void tricky_stateFindSecretDig(u8* obj, u8* state)
             state[0xa] = 4;
             ((TrickyState*)state)->scratch704.f = ((GameObject*)obj)->anim.worldPosX;
             ((TrickyState*)state)->scratch708.f = ((GameObject*)obj)->anim.worldPosZ;
-            ptr = ((TrickyState*)state)->unk70C;
+            ptr = ((TrickyState*)state)->scratch70C.ptr;
             if (ptr != NULL)
             {
                 pc = ((TrickyState*)state)->followObj;

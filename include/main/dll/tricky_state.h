@@ -226,7 +226,7 @@ typedef struct TrickyState {
     TrickyScratch scratch700;
     TrickyScratch scratch704;
     TrickyScratch scratch708;
-    u8 *unk70C;
+    TrickyScratch scratch70C;
     f32 unk710;
     u8 pad714[0x71C - 0x714];
     f32 cooldownA; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC; == floor gates a state/anim transition (tricky/substates/weapone6/tumbleweedbush/mmp) */
