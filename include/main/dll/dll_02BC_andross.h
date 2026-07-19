@@ -144,8 +144,6 @@ extern s16 gGfLevelConProjectileYaw;
 extern s16 gGfLevelConRingProjectilePitchSource;
 extern f32 gAndrossMoveAnimSpeeds[23];
 extern f32 gAndrossZero;
-extern f32 gAndrossSwayAmplitudeX;
-extern f32 gAndrossSwayAmplitudeY;
 extern f32 gAndrossMissileClampRange;
 extern f32 gAndrossMissileVelocityScale;
 extern f32 gAndrossMissileForwardVelocity;

@@ -50,7 +50,6 @@ typedef struct SCTotemPuzzleParticleBox
 #define SC_TOTEMPUZZLE_OBJFLAG_HIDDEN             0x4000
 #define SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-f32 gTotemPuzzleAngleStep = 8192.0f;
 f32 lbl_803E55F4 = 0.0f;
 extern f32 lbl_803E5618;
 extern const f32 lbl_803E561C;
@@ -93,7 +92,7 @@ u8 sc_totempuzzle_checkSolvedSequence(ScTotemPuzzleObject* obj, ScTotemPuzzleSta
                         solvedCount++;
                         if (peer == obj)
                         {
-                            state->angle = gTotemPuzzleAngleStep * (f32)(state->stepIndex + 1);
+                            state->angle = 8192.0f * (f32)(state->stepIndex + 1);
                             obj->yaw = (s16)(s32)state->angle;
                             solvedThisObject = 1;
                         }
@@ -108,7 +107,7 @@ u8 sc_totempuzzle_checkSolvedSequence(ScTotemPuzzleObject* obj, ScTotemPuzzleSta
                     solvedCount++;
                     if (peer == obj)
                     {
-                        state->angle = gTotemPuzzleAngleStep * state->stepIndex;
+                        state->angle = 8192.0f * state->stepIndex;
                         obj->yaw = (s16)(s32)state->angle;
                         solvedThisObject = 1;
                     }
@@ -303,12 +302,12 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     else
     {
         if (((state->flags & SC_TOTEMPUZZLE_REVERSED_FLAG) != 0) &&
-            (state->angle > (gTotemPuzzleAngleStep * (f32)(s32)(state->stepIndex + 1))))
+            (state->angle > (8192.0f * (f32)(s32)(state->stepIndex + 1))))
         {
             f32 step = lbl_803E5628 * state->peerPhaseOffset;
             state->angle -= step * timeDelta;
         }
-        else if (state->angle < (gTotemPuzzleAngleStep * (f32)(s32)state->stepIndex))
+        else if (state->angle < (8192.0f * (f32)(s32)state->stepIndex))
         {
             f32 step = lbl_803E5628 * state->peerPhaseOffset;
             state->angle += step * timeDelta;

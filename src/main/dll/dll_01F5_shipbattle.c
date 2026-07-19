@@ -25,9 +25,6 @@
 #include "main/model_light.h"
 #include "main/dll/dll_01F5_shipbattle.h"
 #include "main/object_descriptor.h"
-
-f32 lbl_803E5958 = 0.0f;
-
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
@@ -181,7 +178,7 @@ void ShipBattle_init(GameObject* obj, int def)
         obj->userData2 = light;
     }
 
-    lbl_803DDC50[0] = lbl_803E5958;
+    lbl_803DDC50[0] = 0.0f;
     *(u8*)&lbl_803DDC50[1] = 0;
 }
 

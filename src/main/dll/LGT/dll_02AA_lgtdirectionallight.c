@@ -29,9 +29,6 @@ const f32 lbl_802C2608[4] = {0.0f, 0.0f, 1.0f, 0.0f};
 
 #define DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
 #define DIRECTIONALLIGHT_DEBUG_FIELD_COUNT      8
-
-f32 lbl_803E7250 = 0.0f;
-
 struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor = {
     0,
     0,
@@ -289,7 +286,7 @@ void directionallight_init(GameObject* obj, DirectionalLightSetup* setup)
                                                    setupData->targetB, 0xff);
         }
 
-        modelLightStruct_setEnabled(state->light, setupData->enabled, lbl_803E7250);
+        modelLightStruct_setEnabled(state->light, setupData->enabled, 0.0f);
         state->enabled = setupData->enabled;
         modelLightStruct_startColorFade(state->light, setupData->colorFadeSpeed, setupData->colorFadeFrames);
 

@@ -22,9 +22,6 @@ const f32 lbl_802C2618[4] = {0.0f, 0.0f, 1.0f, 0.0f};
 
 #define PROJECTEDLIGHT_DEFAULT_TEXTURE_ASSET 0x5dc
 #define PROJECTEDLIGHT_PROJECTION_ORTHO      0
-
-f32 lbl_803E7260 = 1.0f;
-
 int ProjectedLight_getExtraSize(void)
 {
     return sizeof(ProjectedLightState);

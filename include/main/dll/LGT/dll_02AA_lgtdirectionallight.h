@@ -77,7 +77,6 @@ struct DirectionalLightObjDescriptorLayout
 };
 
 extern const f32 lbl_802C2608[4];
-extern f32 lbl_803E7250;
 extern struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor;
 
 void directionallight_debugEdit(GameObject* obj, DirectionalLightState* state);

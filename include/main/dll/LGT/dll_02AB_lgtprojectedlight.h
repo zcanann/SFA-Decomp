@@ -7,7 +7,6 @@
 #include "main/texture.h"
 
 extern const f32 lbl_802C2618[4];
-extern f32 lbl_803E7260;
 
 typedef struct ProjectedLightSetup
 {

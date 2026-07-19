@@ -47,13 +47,6 @@ int gKTrexFloorSwitchCurveFindResult = 0x19;
 #define KTREXFLOORSWITCH_PARTFX_MOVING  0x488 /* emitted each frame the plate is actively rising/sinking */
 #define KTREXFLOORSWITCH_PARTFX_SETTLED 0x486 /* emitted once the plate has stopped moving */
 
-f64 gKTrexFloorSwitchPi = 3.142;
-f64 gKTrexFloorSwitchBamHalfCircle = 32768.0;
-f32 gKTrexFloorSwitchTriggerBoxInset = 5.0f;
-f32 gKTrexFloorSwitchRiseSpeed = 0.075f;
-f32 gKTrexFloorSwitchRetractSpeed = 0.125f;
-f32 gKTrexFloorSwitchScrollSpeed = 8.0f;
-
 int KT_RexFloorSwitch_getExtraSize(void)
 {
     return 0x14;
@@ -174,7 +167,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
         player = Obj_GetPlayerObject();
         if (player != 0)
         {
-            PSMTXRotRad(mtx, 0x79, (f32)(gKTrexFloorSwitchPi * (f64)(obj)->anim.rotX / gKTrexFloorSwitchBamHalfCircle));
+            PSMTXRotRad(mtx, 0x79, (f32)(3.142 * (f64)(obj)->anim.rotX / 32768.0));
             PSMTXMultVecSR(mtx, vecA, vecA);
             PSMTXMultVecSR(mtx, vecB, vecB);
             cx = (obj)->anim.localPosX;
@@ -195,10 +188,10 @@ void KT_RexFloorSwitch_update(GameObject* obj)
                 zHi = zLo;
                 zLo = t;
             }
-            xLo += gKTrexFloorSwitchTriggerBoxInset;
-            xHi -= gKTrexFloorSwitchTriggerBoxInset;
-            zLo += gKTrexFloorSwitchTriggerBoxInset;
-            zHi -= gKTrexFloorSwitchTriggerBoxInset;
+            xLo += 5.0f;
+            xHi -= 5.0f;
+            zLo += 5.0f;
+            zHi -= 5.0f;
             if (player->anim.localPosX >= xLo && player->anim.localPosX <= xHi && player->anim.localPosZ >= zLo &&
                 player->anim.localPosZ <= zHi)
             {
@@ -213,7 +206,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
                  (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
         if ((obj)->anim.localPosY > height)
         {
-            (obj)->anim.localPosY = (obj)->anim.localPosY - gKTrexFloorSwitchRiseSpeed * timeDelta;
+            (obj)->anim.localPosY = (obj)->anim.localPosY - 0.075f * timeDelta;
             if ((obj)->anim.localPosY <= height)
             {
                 (obj)->anim.localPosY = height;
@@ -230,7 +223,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
     {
         if ((obj)->anim.localPosY < ((KtrexfloorswitchPlacement*)placement)->baseHeight)
         {
-            (obj)->anim.localPosY = gKTrexFloorSwitchRiseSpeed * timeDelta + (obj)->anim.localPosY;
+            (obj)->anim.localPosY = 0.075f * timeDelta + (obj)->anim.localPosY;
             if ((obj)->anim.localPosY >= ((KtrexfloorswitchPlacement*)placement)->baseHeight)
             {
                 (obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight;
@@ -250,7 +243,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
                  (f32)(u32)((KtrexfloorswitchPlacement*)placement)->retractDepth;
         if ((obj)->anim.localPosY > height)
         {
-            (obj)->anim.localPosY = (obj)->anim.localPosY - gKTrexFloorSwitchRetractSpeed * timeDelta;
+            (obj)->anim.localPosY = (obj)->anim.localPosY - 0.125f * timeDelta;
             if ((obj)->anim.localPosY < height)
             {
                 (obj)->anim.localPosY = height;
@@ -295,7 +288,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
     }
     else
     {
-        (obj)->anim.localPosY = gKTrexFloorSwitchRetractSpeed * timeDelta + (obj)->anim.localPosY;
+        (obj)->anim.localPosY = 0.125f * timeDelta + (obj)->anim.localPosY;
         if ((obj)->anim.localPosY > ((KtrexfloorswitchPlacement*)placement)->baseHeight)
         {
             (obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight;
@@ -343,7 +336,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
         {
             if (0.0f == ((KtrexfloorswitchState*)state)->scrollSpeed)
             {
-                ((KtrexfloorswitchState*)state)->scrollSpeed = gKTrexFloorSwitchScrollSpeed;
+                ((KtrexfloorswitchState*)state)->scrollSpeed = 8.0f;
             }
             scroll = (int)(timeDelta * ((KtrexfloorswitchState*)state)->scrollSpeed + tex->textureId);
             if (scroll > 0x200)

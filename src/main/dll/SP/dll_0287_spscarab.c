@@ -27,16 +27,7 @@
 
 u16 gSpScarabPaletteBytesA = 0x0213;
 u8 gSpScarabPaletteByteB = 0x16;
-f32 gSpScarabGravity = 0.1f;
 const f32 gSpScarabBounceVelocityY = 0.0f;
-f32 gSpScarabCollisionRadius = 3.0f;
-f32 gSpScarabPickupRadius = 100.0f;
-f32 gSpScarabPickupParticleScale = 1.0f;
-f32 gSpScarabDustBurstScale = 2.5f;
-f32 gSpScarabPi = 3.1415927f;
-f32 gSpScarabAngleToRadiansDivisor = 32768.0f;
-f32 gSpScarabBaseSpeedScale = 0.4f;
-
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
@@ -69,7 +60,6 @@ STATIC_ASSERT(sizeof(SpscarabState) == 0x14);
 #define SPSCARAB_OBJFLAG_HIDDEN             0x4000
 #define SPSCARAB_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SPSCARAB_OBJFLAG_UPDATE_DISABLED    0x8000
-
 
 int SPScarab_getExtraSize(void)
 {
@@ -108,7 +98,7 @@ void SPScarab_update(int obj)
 
     if (((GameObject*)obj)->anim.localPosY > ((SpscarabState*)state)->groundY)
     {
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - gSpScarabGravity * timeDelta;
+        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - 0.1f * timeDelta;
     }
 
     objMove((GameObject*)obj, timeDelta * (((GameObject*)obj)->anim.velocityX * ((SpscarabState*)state)->speedScale),
@@ -127,7 +117,7 @@ void SPScarab_update(int obj)
         ((GameObject*)obj)->anim.velocityY = *(f32*)&gSpScarabBounceVelocityY;
     }
 
-    if (objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), gSpScarabCollisionRadius, 0,
+    if (objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), 3.0f, 0,
                            (TrackBBoxHit*)&hit_buf[0], (GameObject*)obj, 8, -1, 0xff, 0xa) != 0)
     {
         Vec3_ReflectAgainstNormal((f32*)&hit_buf[7], (f32*)(obj + 0x24), outV);
@@ -139,10 +129,10 @@ void SPScarab_update(int obj)
 
     if (getXZDistance(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX,
                       &((GameObject*)obj)->anim.worldPosX) <
-        gSpScarabPickupRadius)
+        100.0f)
     {
         Sfx_PlayFromObject(obj, (u16)((SpscarabState*)state)->sfxId);
-        itemPickupDoParticleFxLegacy(obj, gSpScarabPickupParticleScale, ((SpscarabState*)state)->mode, 0x28);
+        itemPickupDoParticleFxLegacy(obj, 1.0f, ((SpscarabState*)state)->mode, 0x28);
         ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | SPSCARAB_OBJFLAG_UPDATE_DISABLED;
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
 
@@ -158,8 +148,8 @@ void SPScarab_update(int obj)
     {
         if (((SpscarabState*)state)->burstCount != 0)
         {
-            objfx_spawnDirectionalBurstLegacy(obj, 5, gSpScarabPickupParticleScale, (u8)((SpscarabState*)state)->burstCount,
-                                        1, 0x14, gSpScarabDustBurstScale, 0, 0);
+            objfx_spawnDirectionalBurstLegacy(obj, 5, 1.0f, (u8)((SpscarabState*)state)->burstCount,
+                                        1, 0x14, 2.5f, 0, 0);
         }
     }
 }
@@ -183,13 +173,13 @@ void SPScarab_init(GameObject* obj, int def)
     (obj)->objectFlags = (obj)->objectFlags | (SPSCARAB_OBJFLAG_HIDDEN | SPSCARAB_OBJFLAG_HITDETECT_DISABLED);
     (obj)->anim.rotX = (s16)((s32)(s8) * (u8*)(def + 0x18) << 8);
 
-    (obj)->anim.velocityX = -mathSinf(gSpScarabPi * (f32)(s32)(obj)->anim.rotX / gSpScarabAngleToRadiansDivisor);
-    (obj)->anim.velocityZ = -mathCosf(gSpScarabPi * (f32)(s32)(obj)->anim.rotX / gSpScarabAngleToRadiansDivisor);
+    (obj)->anim.velocityX = -mathSinf(3.1415927f * (f32)(s32)(obj)->anim.rotX / 32768.0f);
+    (obj)->anim.velocityZ = -mathCosf(3.1415927f * (f32)(s32)(obj)->anim.rotX / 32768.0f);
 
     objAnim->bankIndex = (s8)(1 - *(u8*)(def + 0x19));
 
     ((SpscarabState*)state)->groundY = (f32)(s32) * (s16*)(def + 0x1a);
-    ((SpscarabState*)state)->speedScale = gSpScarabBaseSpeedScale + randomGetRange(0, 0x64) / gSpScarabPickupRadius;
+    ((SpscarabState*)state)->speedScale = 0.4f + randomGetRange(0, 0x64) / 100.0f;
     ((SpscarabState*)state)->vendorObj = *(int*)(def + 0x14);
     *(int*)(def + 0x14) = -1;
 

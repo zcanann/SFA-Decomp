@@ -72,8 +72,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 #define SB_CLOUD_BALL_VELOCITY_SCALE 2.0f
 #define SB_CLOUD_BALL_TRAIL_VEL_SCALE 0.1f
 #define SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE 0.22f
-extern f32 gSbCloudBallLightAttenNear;
-extern f32 gSbCloudBallLightAttenFar;
 
 static const union {
     f32 f;
@@ -220,8 +218,8 @@ void SB_CloudBall_init(GameObject* obj)
             modelLightStruct_setLightKind((ModelLightStruct*)state->light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor((ModelLightStruct*)state->light, 0, 90, 150, 0);
             lightSetFieldBC_8001db14((ModelLightStruct*)state->light, 1);
-            modelLightStruct_setDistanceAttenuation((ModelLightStruct*)state->light, gSbCloudBallLightAttenNear,
-                                                    gSbCloudBallLightAttenFar);
+            modelLightStruct_setDistanceAttenuation((ModelLightStruct*)state->light, 150.0f,
+                                                    250.0f);
         }
     }
 }
@@ -250,6 +248,3 @@ ObjectDescriptor gSB_CloudBallObjDescriptor = {
     (ObjectDescriptorCallback)SB_CloudBall_getObjectTypeId,
     SB_CloudBall_getExtraSize,
 };
-
-f32 gSbCloudBallLightAttenNear = 150.0f;
-f32 gSbCloudBallLightAttenFar = 250.0f;

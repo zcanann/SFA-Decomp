@@ -385,9 +385,7 @@ int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
     return result;
 }
 const f32 gAndrossAlpha255 = 255.0f;
-f32 gAndrossSwayAmplitudeX = 200.0f;
 const f32 gAndrossDistortPhaseWrap = 6.28318f;
-
 
 void fn_8023A87C(GameObject* obj, AndrossState* andross)
 {
@@ -424,8 +422,6 @@ void fn_8023A87C(GameObject* obj, AndrossState* andross)
 }
 
 const f32 gAndrossPathPosOffset = 30.0f;
-f32 gAndrossSwayAmplitudeY = 20.0f;
-
 int andross_SeqFn(GameObject* obj)
 {
     AndrossState* state = obj->extra;
@@ -861,9 +857,9 @@ void andross_update(int obj)
         fc = (fb < -300.0f) ? -300.0f : ((fb > 300.0f) ? 300.0f : fb);
         fb = (fa < -50.0f) ? -50.0f : ((fa > 50.0f) ? 50.0f : fa);
         fa = mathSinf(3.1415927f * gAndrossSwayPhaseX / 32768.0f);
-        state->targetPosX = gAndrossSwayAmplitudeX * fa + (state->homePosX + fc);
+        state->targetPosX = 200.0f * fa + (state->homePosX + fc);
         fc = mathSinf(3.1415927f * gAndrossSwayPhaseY / 32768.0f);
-        state->targetPosY = gAndrossSwayAmplitudeY * fc + (state->homePosY + fb);
+        state->targetPosY = 20.0f * fc + (state->homePosY + fb);
         state->targetPosZ = state->homePosZ;
         state->durationTimer -= timeDelta;
         if (state->durationTimer < gAndrossZero)
@@ -897,9 +893,9 @@ void andross_update(int obj)
         fc = (fb < -300.0f) ? -300.0f : ((fb > 300.0f) ? 300.0f : fb);
         fb = (fa < -50.0f) ? -50.0f : ((fa > 50.0f) ? 50.0f : fa);
         fa = mathSinf(3.1415927f * gAndrossSwayPhaseX / 32768.0f);
-        state->targetPosX = gAndrossSwayAmplitudeX * fa + (state->homePosX + fc);
+        state->targetPosX = 200.0f * fa + (state->homePosX + fc);
         fc = mathSinf(3.1415927f * gAndrossSwayPhaseY / 32768.0f);
-        state->targetPosY = gAndrossSwayAmplitudeY * fc + (state->homePosY + fb);
+        state->targetPosY = 20.0f * fc + (state->homePosY + fb);
         state->targetPosZ = state->homePosZ;
         if (boss->anim.currentMoveProgress >= 1.0f)
         {
@@ -935,9 +931,9 @@ void andross_update(int obj)
         fc = fb < -300.0f ? -300.0f : fb > 300.0f ? 300.0f : fb;
         fb = fa < -50.0f ? -50.0f : fa > 50.0f ? 50.0f : fa;
         fa = mathSinf(3.1415927f * gAndrossSwayPhaseX / 32768.0f);
-        state->targetPosX = gAndrossSwayAmplitudeX * fa + (state->homePosX + fc);
+        state->targetPosX = 200.0f * fa + (state->homePosX + fc);
         fc = mathSinf(3.1415927f * gAndrossSwayPhaseY / 32768.0f);
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_roar1);
         state->actionTimer -= framesThisStep;
@@ -978,11 +974,11 @@ void andross_update(int obj)
         fa = (state->arwingObj->anim.localPosY - state->homePosY);
         fc = (fb < -300.0f) ? -300.0f : ((fb > 300.0f) ? 300.0f : fb);
         fb = (fa < -200.0f) ? -200.0f
-                                        : ((fa > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fa);
+                                        : ((fa > 200.0f) ? 200.0f : fa);
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
-        state->targetPosX = (gAndrossSwayAmplitudeX * fa + (state->homePosX + fc));
+        state->targetPosX = (200.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         if (boss->anim.currentMoveProgress >= 1.0f)
         {
@@ -1006,11 +1002,11 @@ void andross_update(int obj)
         fa = (state->arwingObj->anim.localPosY - state->homePosY);
         fc = (fb < -300.0f) ? -300.0f : ((fb > 300.0f) ? 300.0f : fb);
         fb = (fa < -200.0f) ? -200.0f
-                                        : ((fa > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fa);
+                                        : ((fa > 200.0f) ? 200.0f : fa);
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
-        state->targetPosX = (gAndrossSwayAmplitudeX * fa + (state->homePosX + fc));
+        state->targetPosX = (200.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         state->durationTimer -= timeDelta;
         if (state->durationTimer < gAndrossZero)
@@ -1065,11 +1061,11 @@ void andross_update(int obj)
         fa = (state->arwingObj->anim.localPosY - state->homePosY);
         fc = (fb < -300.0f) ? -300.0f : ((fb > 300.0f) ? 300.0f : fb);
         fb = (fa < -200.0f) ? -200.0f
-                                        : ((fa > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fa);
+                                        : ((fa > 200.0f) ? 200.0f : fa);
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
-        state->targetPosX = (gAndrossSwayAmplitudeX * fa + (state->homePosX + fc));
+        state->targetPosX = (200.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         state->durationTimer -= timeDelta;
         if (state->durationTimer < gAndrossZero)
@@ -1098,7 +1094,7 @@ void andross_update(int obj)
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
         state->targetPosX = (100.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         signalReceived = 0;
         signalState = boss->extra;
@@ -1127,7 +1123,7 @@ void andross_update(int obj)
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
         state->targetPosX = (100.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         signalReceived = 0;
         signalState = boss->extra;
@@ -1152,11 +1148,11 @@ void andross_update(int obj)
         fa = (state->arwingObj->anim.localPosY - state->homePosY);
         fc = (fb < -300.0f) ? -300.0f : ((fb > 300.0f) ? 300.0f : fb);
         fb = (fa < -200.0f) ? -200.0f
-                                        : ((fa > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fa);
+                                        : ((fa > 200.0f) ? 200.0f : fa);
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
-        state->targetPosX = (gAndrossSwayAmplitudeX * fa + (state->homePosX + fc));
+        state->targetPosX = (200.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         signalReceived = 0;
         signalState = boss->extra;
@@ -1181,11 +1177,11 @@ void andross_update(int obj)
         fa = (state->arwingObj->anim.localPosY - state->homePosY);
         fc = (fb < -300.0f) ? -300.0f : ((fb > 300.0f) ? 300.0f : fb);
         fb = (fa < -200.0f) ? -200.0f
-                                        : ((fa > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fa);
+                                        : ((fa > 200.0f) ? 200.0f : fa);
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
-        state->targetPosX = (gAndrossSwayAmplitudeX * fa + (state->homePosX + fc));
+        state->targetPosX = (200.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         signalReceived = 0;
         signalState = boss->extra;
@@ -1222,7 +1218,7 @@ void andross_update(int obj)
             fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
             state->targetPosX = (100.0f * fa + (state->homePosX + fc));
             fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-            state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+            state->targetPosY = (20.0f * fc + (state->homePosY + fb));
             state->targetPosZ = state->homePosZ;
             if (actionChanged)
             {
@@ -1288,10 +1284,10 @@ void andross_update(int obj)
         fb = (state->arwingObj->anim.localPosX - state->homePosX);
         fa = (state->arwingObj->anim.localPosY - state->homePosY);
         fc = (fb < -20.0f) ? -20.0f
-                           : ((fb > gAndrossSwayAmplitudeY) ? gAndrossSwayAmplitudeY : fb);
+                           : ((fb > 20.0f) ? 20.0f : fb);
         fb = (fa < -50.0f) ? -50.0f : ((fa > 50.0f) ? 50.0f : fa);
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
-        state->targetPosX = (gAndrossSwayAmplitudeY * fa + (state->homePosX + fc));
+        state->targetPosX = (20.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
         state->targetPosY = (10.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
@@ -1319,7 +1315,7 @@ void andross_update(int obj)
         }
         else
         {
-            fc = gAndrossSwayAmplitudeX;
+            fc = 200.0f;
         }
         gAndrossDistortPhase += gAndrossDistortPhaseStep;
         if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
@@ -1340,7 +1336,7 @@ void andross_update(int obj)
         }
         else
         {
-            fc = gAndrossSwayAmplitudeX;
+            fc = 200.0f;
         }
         gAndrossDistortPhase += gAndrossDistortPhaseStep;
         if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
@@ -1368,7 +1364,7 @@ void andross_update(int obj)
         fb = (fa < -150.0f) ? -150.0f
                                           : ((fa > 150.0f) ? 150.0f : fa);
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
-        state->targetPosX = (gAndrossSwayAmplitudeY * fa + (state->homePosX + fc));
+        state->targetPosX = (20.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
         state->targetPosY = (10.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
@@ -1413,7 +1409,7 @@ void andross_update(int obj)
         }
         else
         {
-            fc = gAndrossSwayAmplitudeX;
+            fc = 200.0f;
         }
         gAndrossDistortPhase += gAndrossDistortPhaseStep;
         if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
@@ -1461,9 +1457,9 @@ void andross_update(int obj)
         fb = (state->arwingObj->anim.localPosX - state->homePosX);
         fa = (state->arwingObj->anim.localPosY - state->homePosY);
         fc = (fb < -50.0f) ? -50.0f : ((fb > 50.0f) ? 50.0f : fb);
-        fb = (fa < -20.0f) ? -20.0f : ((fa > gAndrossSwayAmplitudeY) ? gAndrossSwayAmplitudeY : fa);
+        fb = (fa < -20.0f) ? -20.0f : ((fa > 20.0f) ? 20.0f : fa);
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
-        state->targetPosX = (gAndrossSwayAmplitudeY * fa + (state->homePosX + fc));
+        state->targetPosX = (20.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
         state->targetPosY = (10.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
@@ -1557,12 +1553,12 @@ void andross_update(int obj)
         fb = (state->arwingObj->anim.localPosX - state->homePosX);
         fa = (state->arwingObj->anim.localPosY - state->homePosY);
         fc = (fb < -200.0f) ? -200.0f
-                                        : ((fb > gAndrossSwayAmplitudeX) ? gAndrossSwayAmplitudeX : fb);
+                                        : ((fb > 200.0f) ? 200.0f : fb);
         fb = (fa < -50.0f) ? -50.0f : ((fa > 50.0f) ? 50.0f : fa);
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
         state->targetPosX = (100.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         if (boss->anim.currentMoveProgress >= 1.0f)
         {
@@ -1702,7 +1698,7 @@ void andross_update(int obj)
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
         state->targetPosX = (100.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         if (boss->anim.currentMoveProgress >= 1.0f)
         {
@@ -1759,7 +1755,7 @@ void andross_update(int obj)
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
         state->targetPosX = (100.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         state->actionTimer -= framesThisStep;
         durationBeforeStep = state->durationTimer;
@@ -1844,9 +1840,9 @@ void andross_update(int obj)
         fb = (fa < -100.0f) ? -100.0f
                                            : ((fa > 100.0f) ? 100.0f : fa);
         fa = mathSinf(((3.1415927f * gAndrossSwayPhaseX) / 32768.0f));
-        state->targetPosX = (gAndrossSwayAmplitudeX * fa + (state->homePosX + fc));
+        state->targetPosX = (200.0f * fa + (state->homePosX + fc));
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
-        state->targetPosY = (gAndrossSwayAmplitudeY * fc + (state->homePosY + fb));
+        state->targetPosY = (20.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
         if (boss->anim.currentMoveProgress >= 1.0f)
         {

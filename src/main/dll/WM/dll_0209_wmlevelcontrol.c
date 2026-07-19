@@ -109,12 +109,6 @@ STATIC_ASSERT(sizeof(WmLevelControlSkyVecTable) == 0x30);
 
 /* LightFoot Village map-event id (seeded from the palace spirit chain). */
 #define WMLEVELCONTROL_MAP_LIGHTFOOT 0xe
-
-f32 gWmLevelControlBlendDecayPerTick = 0.02f;
-f32 gWmLevelControlLightIntensityBase = 32.0f;
-f32 gWmLevelControlLightIntensityRange = 128.0f;
-f32 gWmLevelControlOverrideLightIntensity = 100.0f;
-extern f32 gWmLevelControlIntroMessageDuration;   /* 300.0: intro-message duration */
 const WmLevelControlSkyVecTable gWmLevelControlSkyVecTable = {{
     {-1.0f, -2.0f, -1.0f},
     {1.0f, -2.0f, 1.0f},
@@ -173,7 +167,7 @@ void fn_801F3F18(GameObject* obj)
         gWmLevelControlBlendHold = 1.0f;
         gWmLevelControlBlendFactor = 1.0f;
     }
-    decay = -(gWmLevelControlBlendDecayPerTick * timeDelta - gWmLevelControlBlendFactor);
+    decay = -(0.02f * timeDelta - gWmLevelControlBlendFactor);
     gWmLevelControlBlendFactor = decay;
     if (decay < 0.0f)
     {
@@ -215,12 +209,12 @@ void fn_801F3F18(GameObject* obj)
                 gWmLevelControlBlendedFogColor[2]);
 
     gWmLevelControlBlendedLightIntensity =
-        gWmLevelControlBlendFactor * gWmLevelControlLightIntensityRange + gWmLevelControlLightIntensityBase;
+        gWmLevelControlBlendFactor * 128.0f + 32.0f;
     skySetOverrideLightDirectionEnabled(1);
     skySetOverrideLightDirection(gWmLevelControlBlendFactor * (L.light.x - L.color.x) + L.color.x,
                                  gWmLevelControlBlendFactor * (L.light.y - L.color.y) + L.color.y,
                                  gWmLevelControlBlendFactor * (L.light.z - L.color.z) + L.color.z,
-                                 gWmLevelControlOverrideLightIntensity);
+                                 100.0f);
     skyFn_800894a8(1, L.fog.x, L.fog.y, L.fog.z);
 }
 
@@ -306,7 +300,7 @@ void WM_LevelControl_init(GameObject* obj)
     state = obj->extra;
     state->unk0B = 0;
     state->unk06 = 0x1e;
-    state->messageTimer = gWmLevelControlIntroMessageDuration;
+    state->messageTimer = 300.0f;
     state->latch.activeMask = 0;
     lockLevel(0xf, 0);
     /* the 0xD1B..0xD1F chain marks how many Krazoa spirits the palace
@@ -375,5 +369,3 @@ void WM_LevelControl_release(void)
 void WM_LevelControl_initialise(void)
 {
 }
-
-f32 gWmLevelControlIntroMessageDuration = 300.0f;
