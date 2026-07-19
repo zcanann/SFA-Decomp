@@ -117,7 +117,7 @@ IMM16 = {R_SDA21, R_ADDR16_HA, R_ADDR16_LO, R_ADDR16, 6, 7}
 
 
 def dol_spans():
-    d = open(os.path.join(ROOT, "build/GSAE01/main.dol"), "rb").read()
+    d = open(os.path.join(ROOT, "orig/GSAE01/sys/main.dol"), "rb").read()
     offs = struct.unpack(">18I", d[0x00:0x48])
     addrs = struct.unpack(">18I", d[0x48:0x90])
     sizes = struct.unpack(">18I", d[0x90:0xD8])
