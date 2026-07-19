@@ -22,7 +22,7 @@ int attractor_setScale(int* obj);
 int attractor_getExtraSize(void);
 int attractor_getObjectTypeId(void);
 void attractor_free(int obj);
-void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void attractor_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void attractor_hitDetect(void);
 void attractor_update(void);
 void attractor_init(GameObject* obj, AttractorMapData* data);

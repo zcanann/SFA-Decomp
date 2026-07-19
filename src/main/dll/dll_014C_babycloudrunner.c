@@ -4,7 +4,7 @@
  * defined in dll_0148_cfguardian.c and dll_0149_cfwindlift.c; their
  * definitions here are collapsed to forward prototypes.
  */
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/vecmath.h"
@@ -248,7 +248,7 @@ int babycloudrunner_setScale(int* obj)
 int babycloudrunner_getExtraSize(void);
 int babycloudrunner_getObjectTypeId(void);
 void babycloudrunner_free(int* obj);
-void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void babycloudrunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void babycloudrunner_hitDetect(void);
 void babycloudrunner_update(int* obj);
 void babycloudrunner_init(int* obj, u8* defBytes);
@@ -404,7 +404,7 @@ void babycloudrunner_free(int* obj)
     ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
     ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
 }
-void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void babycloudrunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible;
 

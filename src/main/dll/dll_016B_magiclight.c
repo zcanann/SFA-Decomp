@@ -10,7 +10,7 @@
  * radius plus hysteresis fires the leave action. MagicLight_update kicks
  * off trigger sequence 0 once, on the first update.
  */
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/vecmath.h"
 #include "main/render_lactions_api.h"
 #include "main/dll_000A_expgfx.h"
@@ -89,7 +89,7 @@ void MagicLight_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visib
 {
     if ((obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW && visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, 1.0f);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
     }
 }
 

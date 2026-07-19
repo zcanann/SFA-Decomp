@@ -22,7 +22,7 @@
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 extern u8 lbl_803DB411;
@@ -96,16 +96,16 @@ void SpiritPrize_free(GameObject* obj)
     (*gObjectTriggerInterface)->freeState((u8*)state);
 }
 
-void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void SpiritPrize_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     SpiritPrizeState* state;
     s32 isVisible;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     isVisible = visible;
     if (isVisible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         if (state->useDetachedLight != 0)
         {
             objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f, state->light);

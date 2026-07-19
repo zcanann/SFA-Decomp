@@ -114,7 +114,7 @@ u8 exploded_setScale(int* obj);
 int exploded_getExtraSize(void);
 u32 exploded_getObjectTypeId(ExplodedObject* obj);
 void exploded_free(void);
-void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void exploded_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void exploded_hitDetect(void);
 int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state);
 void exploded_update(int* obj);

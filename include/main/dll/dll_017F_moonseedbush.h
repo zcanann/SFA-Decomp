@@ -29,7 +29,7 @@ int MoonSeedBush_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
 int MoonSeedBush_getExtraSize(void);
 int MoonSeedBush_getObjectTypeId(void);
 void MoonSeedBush_free(void);
-void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void MoonSeedBush_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void MoonSeedBush_hitDetect(void);
 void MoonSeedBush_update(GameObject* obj);
 void MoonSeedBush_init(GameObject* obj, int data);

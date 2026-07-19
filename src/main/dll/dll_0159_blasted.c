@@ -9,7 +9,7 @@
 #include "main/map_block.h"
 #include "main/track_dolphin_map_api.h"
 #include "main/dll/dll_0159_blasted.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define BLASTED_GAMEBIT_DAMAGE_BASE 0x2de /* base of per-damage-step progress GameBit array */
@@ -72,12 +72,12 @@ void blasted_free(void)
 {
 }
 
-void blasted_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void blasted_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int* state = ((GameObject*)obj)->extra;
+    int* state = obj->extra;
     if (visible != 0 && state[3] == 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4348);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4348);
     }
 }
 

@@ -43,7 +43,7 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerState, soundState) == 0x6C);
 int babycloudrunner_getExtraSize(void);
 int babycloudrunner_getObjectTypeId(void);
 void babycloudrunner_free(int* obj);
-void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void babycloudrunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void babycloudrunner_hitDetect(void);
 void babycloudrunner_update(int* obj);
 void babycloudrunner_init(int* obj, u8* def);

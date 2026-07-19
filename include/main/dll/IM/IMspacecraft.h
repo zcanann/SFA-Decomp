@@ -100,7 +100,7 @@ STATIC_ASSERT(offsetof(RollingBarrelMapData, curveSpeed) == 0x1C);
 int SpiritDoorLock_getExtraSize(void);
 int SpiritDoorLock_getObjectTypeId(void);
 void SpiritDoorLock_free(GameObject* obj);
-void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void SpiritDoorLock_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void SpiritDoorLock_hitDetect(void);
 void SpiritDoorLock_update(GameObject* obj);
 void SpiritDoorLock_init(GameObject* obj, SpiritDoorLockMapData* params, int mode);

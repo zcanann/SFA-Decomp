@@ -38,7 +38,7 @@
 #include "main/objfx.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gunpowderbarrel_state.h"
@@ -670,27 +670,27 @@ void gunpowderbarrel_free(GameObject *obj, int mode)
     }
 }
 
-void gunpowderbarrel_render(int* obj, int p2, int p3, int p4, int p5,
+void gunpowderbarrel_render(GameObject* obj, int p2, int p3, int p4, int p5,
                             s8 visFlag)
 {
     u8* sub;
     int result;
     int* child;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = obj->extra;
     if (((GunpowderBarrelState*)sub)->fuseFrames != 0 || ((GpbHeldFlags*)&((GunpowderBarrelState*)sub)->heldFlags)->held)
     {
         return;
     }
     if (((GunpowderBarrelState*)sub)->heldByCarryInterface != 0)
     {
-        ((GameObject*)obj)->anim.rotZ = 0;
-        ((GameObject*)obj)->anim.rotY = 0;
+        obj->anim.rotZ = 0;
+        obj->anim.rotY = 0;
     }
-    result = (*(int (**)(int*, int))(*(int*)gCarryableInterface + 0xc))(obj, visFlag);
+    result = (*(int (**)(int*, int))(*(int*)gCarryableInterface + 0xc))((int*)obj, visFlag);
     if (result != 0 || visFlag == -1)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
     child = (int*)((GunpowderBarrelState*)sub)->linkedTimerObject;
     if (child != 0)

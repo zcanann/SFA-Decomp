@@ -19,7 +19,7 @@
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 #include "main/dll/dll_017F_moonseedbush.h"
 
@@ -89,11 +89,11 @@ void MoonSeedBush_free(void)
 {
 }
 
-void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void MoonSeedBush_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 static const f32 sMoonSeedBushScaleByteToScale[1] = {0.015625f};

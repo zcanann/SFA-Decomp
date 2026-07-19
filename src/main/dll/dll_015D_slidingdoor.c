@@ -29,7 +29,7 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 #include "main/objseq.h"
 #include "main/object_api.h"
 #include "main/vecmath_distance_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/dll_015D_slidingdoor.h"
 
 
@@ -137,10 +137,10 @@ void SlidingDoor_free(void)
 {
 }
 
-void SlidingDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void SlidingDoor_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void SlidingDoor_hitDetect(void)

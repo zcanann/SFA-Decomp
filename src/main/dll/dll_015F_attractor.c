@@ -20,7 +20,7 @@
 #include "main/obj_group.h"
 #include "main/object_api.h"
 #include "main/object_descriptor.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/dll_015F_attractor.h"
 #include "main/vecmath.h"
 
@@ -79,11 +79,11 @@ void attractor_free(int obj)
     ObjGroup_RemoveObject(obj, ATTRACTOR_OBJ_GROUP);
 }
 
-void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void attractor_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void attractor_hitDetect(void)

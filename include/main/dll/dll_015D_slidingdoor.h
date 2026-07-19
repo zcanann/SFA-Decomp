@@ -36,7 +36,7 @@ int SlidingDoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate);
 int SlidingDoor_getExtraSize(void);
 int SlidingDoor_getObjectTypeId(void);
 void SlidingDoor_free(void);
-void SlidingDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void SlidingDoor_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void SlidingDoor_hitDetect(void);
 void SlidingDoor_update(u8* obj);
 void SlidingDoor_init(u8* obj, u8* data);
