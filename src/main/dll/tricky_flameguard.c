@@ -125,7 +125,7 @@ extern f32 lbl_803E2504;
 
 int trickyGuardFindBaddieTarget(TrickyRuntime* state);
 
-static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
+static inline int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
 {
     u32 target = (u32)trickyState->guardTarget;
     int count;

@@ -95,7 +95,7 @@ static inline int maketex_indexOf(int* p, int n, int target)
 }
 void loadMemCardImages(void);
 int saveGame(int writeImages);
-static u64 saveGame_checksum(u64* p, int count)
+static inline u64 saveGame_checksum(u64* p, int count)
 {
     u64 x[1];
     u16 i[1];

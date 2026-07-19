@@ -177,7 +177,7 @@ extern f32 gRcpScreenHeight;
 extern u8 gRcpTexAllocFailed;
 void* textureLoadAsset(int asset);
 void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter);
-static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights);
+static inline void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights);
 
 
 #define RCP_DISTORT_TEXTURE_ID 0x5dc
@@ -654,7 +654,7 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
 }
 void gxFn_80052dc0(void);
 
-static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
+static inline void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
 {
     s32 count;
     int n;

@@ -74,7 +74,7 @@ const ModelLightCornerBlock gModelLightCornerBlock = {{
 
 extern void* gModelLightList[0x32];
 
-static void modelLightRemoveAndFree(ModelLightStruct* light)
+static inline void modelLightRemoveAndFree(ModelLightStruct* light)
 {
     int i;
     int count;

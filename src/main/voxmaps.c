@@ -28,7 +28,7 @@ int gVoxMapsMaxMapIndex;
 void* gVoxMapsLargeTextures[2];
 void* gVoxMapsSmallTextures[2];
 
-static void heapSiftUp(CurveHeapNode* q, int i)
+static inline void heapSiftUp(CurveHeapNode* q, int i)
 {
     u16 key = q[i].priority;
     u16 val = q[i].value;

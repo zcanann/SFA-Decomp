@@ -114,7 +114,7 @@ static inline void* modelGetBoneMtx(ObjModel* model, int idx);
 asm void ObjModel_TransformVerticesWithTranslation(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count);
 asm void ObjModel_TransformVerticesLinear(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count);
 asm void ObjModel_TransformQuadVerticesLinear(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count);
-static int boneBlendSlotLimit(u8* model);
+static inline int boneBlendSlotLimit(u8* model);
 
 asm void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16 pos)
 {
@@ -1074,7 +1074,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     ((ObjModel*)out2)->unk60 = 0;
     return out2;
 }
-static int boneBlendSlotLimit(u8* model)
+static inline int boneBlendSlotLimit(u8* model)
 {
     u8* p = *(u8**)model;
     if (p[0xf3] != 0)

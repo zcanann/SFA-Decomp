@@ -372,7 +372,7 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw)
     return delta;
 }
 
-static int skeetla_isInWater(u8* state)
+static inline int skeetla_isInWater(u8* state)
 {
     if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
     {
@@ -389,7 +389,7 @@ static int skeetla_isInWater(u8* state)
     return 0;
 }
 
-static f32 skeetla_pathSpeedDelta(u8* obj)
+static inline f32 skeetla_pathSpeedDelta(u8* obj)
 {
     TrickyState* state = (TrickyState*)((GameObject*)obj)->extra;
     f32* currentPathPoint;
@@ -413,7 +413,7 @@ static f32 skeetla_pathSpeedDelta(u8* obj)
     return lbl_803E23DC;
 }
 
-static void skeetla_updateFacingFromMoveVector(u8* obj, s16* turnDeltaOut)
+static inline void skeetla_updateFacingFromMoveVector(u8* obj, s16* turnDeltaOut)
 {
     u8* state;
     int yaw;
@@ -429,7 +429,7 @@ static void skeetla_updateFacingFromMoveVector(u8* obj, s16* turnDeltaOut)
     }
 }
 
-static void skeetla_playFootstepSfx(u8* obj, u16 sfxId)
+static inline void skeetla_playFootstepSfx(u8* obj, u16 sfxId)
 {
     u8* state = ((GameObject*)obj)->extra;
     if (((((TrickyState*)((GameObject*)obj)->extra)->statusFlags >> 6) & 1) == 0u &&
@@ -697,7 +697,7 @@ int objAnimFn_8013a3f0(int obj, int newState, f32 speed, u32 flags)
     return 0;
 }
 
-static void* skeetla_validateRouteEntry(void* entry)
+static inline void* skeetla_validateRouteEntry(void* entry)
 {
     if (entry == NULL)
     {

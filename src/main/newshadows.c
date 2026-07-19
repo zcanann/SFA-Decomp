@@ -506,7 +506,7 @@ void shadowRenderFn_8006b558(int* obj)
 }
 extern NewShadowEntry gNewShadowEntries[0x294 / sizeof(NewShadowEntry)];
 
-static void fillDiskTexture(void)
+static inline void fillDiskTexture(void)
 {
     int j;
     int i;
@@ -539,7 +539,7 @@ static void fillDiskTexture(void)
     }
 }
 
-static void fillSmallDiskTexture(void)
+static inline void fillSmallDiskTexture(void)
 {
     int j;
     int i;
@@ -580,7 +580,7 @@ static void fillSmallDiskTexture(void)
     }
 }
 
-static void fillRampTexture(void)
+static inline void fillRampTexture(void)
 {
     int i;
     for (i = 0; i < 0x100; i++)
@@ -601,7 +601,7 @@ static void fillRampTexture(void)
     }
 }
 
-static void fillFalloffTexture(void)
+static inline void fillFalloffTexture(void)
 {
     int j;
     int i;
@@ -634,7 +634,7 @@ static void fillFalloffTexture(void)
     }
 }
 
-static void fillTextureCFB4(void)
+static inline void fillTextureCFB4(void)
 {
     int j;
     int i;
@@ -663,7 +663,7 @@ static void fillTextureCFB4(void)
     }
 }
 
-static void fillRingTexture(void)
+static inline void fillRingTexture(void)
 {
     int j;
     int i;
@@ -709,7 +709,7 @@ static void fillRingTexture(void)
     }
 }
 
-static void fillInverseRampTexture(void)
+static inline void fillInverseRampTexture(void)
 {
     int i;
     for (i = 0; i < 0x100; i++)

@@ -646,7 +646,7 @@ void renderObjects(s8* opacity)
         }
     }
 }
-static void fillBoxRows(u8* map, int* box)
+static inline void fillBoxRows(u8* map, int* box)
 {
     int y, x0;
     int xs, xe;
