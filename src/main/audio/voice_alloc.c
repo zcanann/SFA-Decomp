@@ -18,11 +18,11 @@
 
 VoiceIdSlot voiceFreeListSlots[64];
 extern u8 synthIdleWaitActive;
-extern u16 voicePrioSortRootListRoot;
+extern u16 voicePrioSortedRoot;
 extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
-extern u8 voiceListInsert;
-extern u8 voiceListRoot;
+extern u8 voiceFreeListTail;
+extern u8 voiceFreeListRoot;
 extern u8 vidListNodes[];
 
 /*
@@ -65,7 +65,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             num = 0;
             voice = -1;
 
-            prioNode = voicePrioSortRootListRoot;
+            prioNode = voicePrioSortedRoot;
             while (prioNode != 0xFFFF && priority >= prioNode && voice == -1)
             {
                 u32 pn1 = prioNode;
@@ -121,18 +121,18 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
     steal:
         {
             voice = -1;
-            if (voiceListRoot != 0xff && type_alloc == 0)
+            if (voiceFreeListRoot != 0xff && type_alloc == 0)
             {
-                voice = voiceListRoot;
+                voice = voiceFreeListRoot;
             }
             else
             {
-                if (priority < voicePrioSortRootListRoot)
+                if (priority < voicePrioSortedRoot)
                 {
                     return -1;
                 }
 
-                prioNode = voicePrioSortRootListRoot;
+                prioNode = voicePrioSortedRoot;
 
                 while (prioNode != 0xFFFF && priority >= prioNode && voice == -1)
                 {
@@ -188,7 +188,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             }
             else
             {
-                voiceListRoot = sfv->next;
+                voiceFreeListRoot = sfv->next;
             }
 
             i = sfv->next;
@@ -197,9 +197,9 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                 vb->freeList[i].prev = sfv->prev;
             }
 
-            if (voice == voiceListInsert)
+            if (voice == voiceFreeListTail)
             {
-                voiceListInsert = sfv->prev;
+                voiceFreeListTail = sfv->prev;
             }
 
             sfv->user = 0;
@@ -244,19 +244,19 @@ void voiceFree(McmdVoiceState* voice)
         if (slot->active == 0)
         {
             slot->active = 1;
-            if (voiceListRoot != 0xff)
+            if (voiceFreeListRoot != 0xff)
             {
                 slot->next = 0xff;
-                slot->prev = voiceListInsert;
-                voiceFreeListSlots[voiceListInsert].next = v;
+                slot->prev = voiceFreeListTail;
+                voiceFreeListSlots[voiceFreeListTail].next = v;
             }
             else
             {
                 slot->next = 0xff;
                 slot->prev = 0xff;
-                voiceListRoot = v;
+                voiceFreeListRoot = v;
             }
-            voiceListInsert = v;
+            voiceFreeListTail = v;
             if (voice->streamKind != 0)
             {
                 voiceFxRunning--;

@@ -1106,7 +1106,7 @@ void loadMapForCurrentSaveGame(void)
     {
         loadUiDll(1);
     }
-    screenTransitionFn_800d7b04(0x1e, 1);
+    screenTransition_holdThenFadeIn(0x1e, 1);
     saveGameLoadStatus = 2;
 }
 

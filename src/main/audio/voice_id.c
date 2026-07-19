@@ -30,7 +30,7 @@ extern u8 vidListNodes[];
 extern u32 vidCurrentId;
 extern void* vidRoot;
 extern void* vidFree;
-extern u16 voicePrioSortRootListRoot;
+extern u16 voicePrioSortedRoot;
 
 /*
  * Remove a voice from the vid id list, recycling any allocated id-list nodes.
@@ -259,7 +259,7 @@ void voiceRemovePriority(McmdVoiceState* state)
         }
         else
         {
-            voicePrioSortRootListRoot = pr->next;
+            voicePrioSortedRoot = pr->next;
         }
         if (pr->next != 0xffff)
         {

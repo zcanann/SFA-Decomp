@@ -64,7 +64,7 @@ typedef struct SynthMidiSetup
 u32 seqStartPlay(SynthPage* normalPage, SynthPage* drumPage, SynthMidiSetup* midiSetup,
                  u32* arrangement, SynthPlayParams* params, u8 studio, u16 groupId);
 
-void fn_8026CF78(u8 sectionIndex);
+void seqHandleMasterTrack(u8 sectionIndex);
 void synthQueueHandle(u32 handle);
 void synthFreeHandle(u32 handle);
 

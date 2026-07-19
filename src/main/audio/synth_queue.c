@@ -280,7 +280,7 @@ u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u3
 /*
  * Advance the master (tempo) track of one sequence section (HandleMasterTrack).
  */
-void fn_8026CF78(u8 secIndex)
+void seqHandleMasterTrack(u8 secIndex)
 {
     SynthSequenceQueue* section;
 

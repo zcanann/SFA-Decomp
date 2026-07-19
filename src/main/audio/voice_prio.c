@@ -18,7 +18,7 @@ typedef struct VoicePrioPrev
 #define VB_PRIO_SORT_PREV(vb, p) (((VoicePrioPrev*)((u8*)&(vb)->prioritySortLinks[0] + 2))[p].prev)
 
 extern u8 vidListNodes[];
-extern u16 voicePrioSortRootListRoot;
+extern u16 voicePrioSortedRoot;
 
 /*
  * Insert the voice into the new priority group's list and keep the global
@@ -52,7 +52,7 @@ void voiceSetPriority(McmdVoiceState* svoice, u8 prio)
     {
         VB_PRIO_LINK(vb, VB_PRIO_HEAD(vb, prio))->prev = voiceIdx;
     }
-    else if (root = voicePrioSortRootListRoot, root != 0xFFFF)
+    else if (root = voicePrioSortedRoot, root != 0xFFFF)
     {
         if (prio >= root)
         {
@@ -78,14 +78,14 @@ void voiceSetPriority(McmdVoiceState* svoice, u8 prio)
             VB_PRIO_SORT_NEXT(vb, prio) = root;
             VB_PRIO_SORT_PREV(vb, prio) = 0xFFFF;
             VB_PRIO_SORT_PREV(vb, root) = prio;
-            voicePrioSortRootListRoot = prio;
+            voicePrioSortedRoot = prio;
         }
     }
     else
     {
         VB_PRIO_SORT_NEXT(vb, prio) = 0xFFFF;
         VB_PRIO_SORT_PREV(vb, prio) = 0xFFFF;
-        voicePrioSortRootListRoot = prio;
+        voicePrioSortedRoot = prio;
     }
 
     VB_PRIO_HEAD(vb, prio) = voiceIdx;

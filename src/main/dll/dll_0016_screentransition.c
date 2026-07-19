@@ -71,7 +71,7 @@ extern f32 gScreenTransitionEdgeScale;
  * Note the (r, b, g) argument order on the fallback call is genuine retail
  * behavior (harmless: only ever invoked with r==g==b==0xFF).
  */
-void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
+void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 {
     u32 height;
     s32 vx;
@@ -204,7 +204,7 @@ void setScreenTransitionPause(u32 pause)
     screenTransitionPause = pause;
 }
 
-u8 screenTransition_func07(void)
+u8 screenTransition_isDone(void)
 {
     return gScreenTransitionDone;
 }
@@ -234,7 +234,7 @@ int isScreenTransitionActive(void)
 }
 
 
-void screenTransitionFn_800d7b04(int duration, int type)
+void screenTransition_holdThenFadeIn(int duration, int type)
 {
     screenTransitionAlpha = gScreenTransitionAlphaMax;
     gScreenTransitionAlphaStep = lbl_803E0564 / duration;
@@ -326,7 +326,7 @@ void screenTransition_update(int p1, int p2, int p3)
         break;
     }
     case SCREEN_TRANSITION_WHITE_WIPE:
-        screenRectFn_800d7568(p1, p2, p3, 0xff, 0xff, 0xff);
+        screenTransition_drawWhiteWipe(p1, p2, p3, 0xff, 0xff, 0xff);
         break;
     case SCREEN_TRANSITION_RED:
     {
@@ -342,6 +342,6 @@ void screenTransition_update(int p1, int p2, int p3)
 u32 lbl_80311340[14] = {
     0, 0, 0, 0x00080000,
     0, 0, 0, (u32)screenTransition_update,
-    (u32)screenTransition_fadeOut, (u32)screenTransition_fadeIn, (u32)screenTransition_fadeFrom, (u32)screenTransition_func07,
+    (u32)screenTransition_fadeOut, (u32)screenTransition_fadeIn, (u32)screenTransition_fadeFrom, (u32)screenTransition_isDone,
     (u32)screenTransition_getAlpha, 0,
 };

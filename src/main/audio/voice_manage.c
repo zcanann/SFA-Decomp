@@ -18,11 +18,11 @@ typedef struct VoiceListNode
 extern u8 gSynthInitialized;
 extern u8 voiceDirectSlots[];
 extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
-extern u16 voicePrioSortRootListRoot;
+extern u16 voicePrioSortedRoot;
 extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
-extern u8 voiceListInsert;
-extern u8 voiceListRoot;
+extern u8 voiceFreeListTail;
+extern u8 voiceFreeListRoot;
 
 static u8 vidListNodes[0x800];
 static u8 midiKeySlots[0x80];
@@ -44,8 +44,8 @@ static inline void voiceInitFreeList(void)
     }
     freeList[0].prev = 0xff;
     freeList[synthInfo.voiceCount - 1].next = 0xff;
-    voiceListRoot = 0;
-    voiceListInsert = synthInfo.voiceCount - 1;
+    voiceFreeListRoot = 0;
+    voiceFreeListTail = synthInfo.voiceCount - 1;
 }
 
 static inline void voiceInitPrioSort(void)
@@ -60,7 +60,7 @@ static inline void voiceInitPrioSort(void)
     {
         priorityGroupHeads[i] = 0xff;
     }
-    voicePrioSortRootListRoot = 0xffff;
+    voicePrioSortedRoot = 0xffff;
 }
 
 /*

@@ -438,7 +438,7 @@ u32 synthProcessChannelEventQueue(u8 voice, u32 param)
                 if (*(void**)(voiceState + 0x14e8) != NULL)
                 {
                     *(int*)(voiceState + 0x14ec) = *(int*)(voiceState + 0x14e8);
-                    fn_8026CF78(voice);
+                    seqHandleMasterTrack(voice);
                     seqSetTickDelta((SynthSequenceQueue*)((u8*)gSynthCurrentVoice + voice * 56 + 0x14e8), param);
                 }
             }
