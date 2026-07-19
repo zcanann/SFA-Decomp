@@ -346,7 +346,7 @@ void worldobj_update(GameObject* obj)
     case 0x5e3:
         if (state->controlByte != ((ObjAnimComponent*)obj)->bankIndex)
         {
-            ((void (*)(void*, int))Obj_SetActiveModelIndex)(obj, state->controlByte);
+            Obj_SetActiveModelIndex(obj, state->controlByte);
         }
         if (state->spinZStep != (gAudioStreamCurrentId != 0))
         {

@@ -14,6 +14,7 @@
 #include "main/obj_placement.h"
 #include "main/frustum.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/dll/player_api.h"
 #include "main/track_bbox_api.h"
 #include "main/obj_message.h"
@@ -265,26 +266,26 @@ void Scarab_free(void)
 void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int state;
-    int model;
+    ObjModel* model;
     u8* shellColors;
     int i;
 
     state = *(int*)&obj->extra;
-    model = ((int (*)(void*))Obj_GetActiveModel)(obj);
+    model = Obj_GetActiveModel(obj);
     if (obj->anim.seqId == 0x3d6)
     {
         i = 0;
         shellColors = gScarabColorVariantsD;
         for (; i < 7; i++)
         {
-            if (*shellColors == *(u8*)(*(int*)(model + 0x34) + 8))
+            if (*shellColors == model->textureRefs->unk08)
             {
                 i++;
                 if (i == 7)
                 {
                     i = 0;
                 }
-                *(u8*)(*(int*)(model + 0x34) + 8) = (gScarabColorVariantsD)[i];
+                model->textureRefs->unk08 = (gScarabColorVariantsD)[i];
                 break;
             }
             shellColors++;
