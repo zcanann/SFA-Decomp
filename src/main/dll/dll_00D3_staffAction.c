@@ -988,7 +988,7 @@ void dll_D3_update(int* obj)
 
     if (((StaffBits*)&extra->flags92)->b0 == 0u && extra->surfaceMode == 6)
     {
-        hitCount = objBboxFn_800640cc((f32*)((char*)obj + 0x80), &((GameObject*)obj)->anim.localPosX,
+        hitCount = objBboxFn_800640cc(&((GameObject*)obj)->anim.previousLocalPosX, &((GameObject*)obj)->anim.localPosX,
                                       6.0f, 0, (TrackBBoxHit*)hitResult, (GameObject*)obj, -0x7c, -1, 0xff,
                                       0);
         if (hitCount != 0 && *(s8*)((char*)hitResult + 0x50) == 13)
