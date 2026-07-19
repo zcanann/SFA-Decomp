@@ -267,8 +267,6 @@ void LanternFireFly_hitDetect(void)
 {
 }
 
-#define LANTERN_SPAWN_FX(obj, id, a, b, c, d) (*gPartfxInterface)->spawnObject((void*)obj, id, a, b, c, d)
-
 #define LANTERN_FIREFLY_MODE(state)      (((u32)(state)->modeFlags >> 6) & 3)
 #define LANTERN_FIREFLY_IS_ACTIVE(state) (LANTERN_FIREFLY_MODE(state) == 1u)
 
@@ -367,12 +365,12 @@ void LanternFireFly_update(GameObject* obj)
         {
             if (state->stateId == 1 || state->stateId == 4)
             {
-                LANTERN_SPAWN_FX(obj, 0x19f, 0, 1, -1, 0);
-                LANTERN_SPAWN_FX(obj, 0x1a0, 0, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x19f, 0, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x1a0, 0, 1, -1, 0);
             }
             else
             {
-                LANTERN_SPAWN_FX(obj, 0x1bd, 0, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x1bd, 0, 1, -1, 0);
             }
         }
         if ((state->timer -= framesThisStep) < 0)
@@ -405,12 +403,11 @@ void LanternFireFly_update(GameObject* obj)
     }
     else
     {
-        LANTERN_SPAWN_FX(obj, 0x19f, 0, 1, -1, 0);
-        LANTERN_SPAWN_FX(obj, 0x1a0, 0, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject((void*)obj, 0x19f, 0, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject((void*)obj, 0x1a0, 0, 1, -1, 0);
     }
 }
 
-#undef LANTERN_SPAWN_FX
 #undef LANTERN_FIREFLY_IS_ACTIVE
 #undef LANTERN_FIREFLY_MODE
 
