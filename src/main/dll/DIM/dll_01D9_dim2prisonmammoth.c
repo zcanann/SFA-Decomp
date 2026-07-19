@@ -199,11 +199,11 @@ void dim2prisonmammoth_update(int obj)
         if (((Dim2prisonmammothState*)inner)->hitReactState != 0)
         {
             fn_8003A168((GameObject*)(obj), (void*)(inner + 0x35c));
-            characterDoEyeAnimsState((GameObject*)obj, inner + 0x35c);
+            characterDoEyeAnims((GameObject*)obj, (void*)(inner + 0x35c));
             return;
         }
     }
-    characterDoEyeAnimsState((GameObject*)obj, inner + 0x35c);
+    characterDoEyeAnims((GameObject*)obj, (void*)(inner + 0x35c));
     v.x = ((GameObject*)obj)->anim.localPosX;
     v.y = ((GameObject*)obj)->anim.localPosY;
     v.z = ((GameObject*)obj)->anim.localPosZ;

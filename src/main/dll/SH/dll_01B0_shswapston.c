@@ -556,7 +556,7 @@ void warpstone_update(int obj)
     }
 
     objAnimFn_80038f38((GameObject*)obj, (char*)(state + 0x14));
-    characterDoEyeAnimsState((GameObject*)obj, state + 0x44);
+    characterDoEyeAnims((GameObject*)obj, (void*)(state + 0x44));
     if (mainGetBit(GAMEBIT_SH_SawWarpStoneIntro) == 0)
     {
         ((WarpstoneState*)state)->activated = 0;

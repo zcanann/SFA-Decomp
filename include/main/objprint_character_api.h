@@ -48,12 +48,10 @@ typedef struct ObjJointTrackPair
 STATIC_ASSERT(sizeof(ObjJointTrackChannel) == 0x30);
 STATIC_ASSERT(sizeof(ObjJointTrackPair) == 0x60);
 
-void characterDoEyeAnims(GameObject* obj, CharacterEyeAnimState* state);
+void characterDoEyeAnims(GameObject* obj, void* state);
 void fn_8003A230(GameObject* obj, CharacterEyeAnimState* state, f32 scale);
 void fn_8003B0D0(GameObject* obj, GameObject* target, CharacterEyeAnimState* state, int maxAngle);
 void fn_8003B228(GameObject* obj, void* state);
 void fn_8003ADC4(GameObject* obj, void* target, void* state, int limit, u8 inverted, int mode);
-
-#define characterDoEyeAnimsState(obj, state) characterDoEyeAnims((obj), (CharacterEyeAnimState*)(state))
 
 #endif /* MAIN_OBJPRINT_CHARACTER_API_H_ */

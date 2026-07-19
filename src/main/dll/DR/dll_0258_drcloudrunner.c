@@ -1250,7 +1250,7 @@ void DR_CloudRunner_update(GameObject* obj)
     dll_2E_func03(obj, (MoveLibState*)((char*)inner + 0x4c4));
     objAnimFn_80038f38(obj, (char*)((int)inner + 0x494));
     fn_8003B500(obj, (s16*)((char*)inner + 0x464), lbl_803E83A4);
-    characterDoEyeAnimsState(obj, (int)inner + 0x464);
+    characterDoEyeAnims(obj, (void*)((int)inner + 0x464));
     if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         if (inner->flightState == CLOUDRUNNER_FLIGHT_GROUNDED)

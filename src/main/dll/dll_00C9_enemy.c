@@ -196,7 +196,7 @@ void enemyObjAnimUpdate(short* obj, int state)
     memcpy((void*)(state + 0x2b8), obj + 0x12, 0xc);
     if ((((TrickyState*)state)->controlFlags & 0x400) != 0)
     {
-        characterDoEyeAnimsState((GameObject*)obj, state + 0x26c);
+        characterDoEyeAnims((GameObject*)obj, (void*)(state + 0x26c));
     }
     if ((((TrickyState*)state)->actionTargetObj != NULL) && ((((TrickyState*)state)->controlFlags & 0x800) != 0))
     {

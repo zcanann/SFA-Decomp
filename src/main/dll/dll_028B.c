@@ -86,7 +86,7 @@ void dll_28B_update(GameObject* obj)
         state->moveLib.modeBits |= 1;
     }
     dll_2E_func03(obj, &state->moveLib);
-    characterDoEyeAnimsState(obj, state->eyeAnim);
+    characterDoEyeAnims(obj, state->eyeAnim);
     xform.x = obj->anim.localPosX;
     xform.y = obj->anim.localPosY;
     xform.z = obj->anim.localPosZ;

@@ -141,7 +141,7 @@ void fn_801CDF94(GameObject* obj, int state, int flag)
     else
     {
         fn_8003A230(obj, (CharacterEyeAnimState*)(state + 0x40c), 0.0f);
-        characterDoEyeAnimsState(obj, state + 0x40c);
+        characterDoEyeAnims(obj, (void*)(state + 0x40c));
     }
 }
 
@@ -771,7 +771,7 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
         if (state->hitReactState != 0)
         {
             fn_8003A168((GameObject*)obj, state->eyeAnimState);
-            characterDoEyeAnimsState((GameObject*)obj, state->eyeAnimState);
+            characterDoEyeAnims((GameObject*)obj, state->eyeAnimState);
             return;
         }
     }

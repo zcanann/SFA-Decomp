@@ -889,7 +889,7 @@ int cfguardian_updateMain(GameObject* obj)
         objAudioFn_800393f8(obj, &sub->soundState, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);
     }
     objAnimFn_80038f38(obj, (char*)&sub->soundState);
-    characterDoEyeAnimsState(obj, sub->eyeBlock);
+    characterDoEyeAnims(obj, sub->eyeBlock);
     if (sub->questState != mainGetBit(GAMEBIT_GUARDIAN_QUEST_STATE))
     {
         mainSetBits(GAMEBIT_GUARDIAN_QUEST_STATE, sub->questState);

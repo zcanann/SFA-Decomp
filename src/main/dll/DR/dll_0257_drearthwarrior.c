@@ -1324,7 +1324,7 @@ void DR_EarthWarrior_update(GameObject* obj)
         (obj)->anim.velocityZ = z;
         DR_EarthWarrior_runController(obj, framesThisStep, -1);
     }
-    characterDoEyeAnimsState(obj, (char*)inner + 0x38c);
+    characterDoEyeAnims(obj, (char*)inner + 0x38c);
     objAnimFn_80038f38(obj, (char*)inner + 0x3bc);
     dll_2E_func03(obj, (MoveLibState*)((char*)inner + 0x3ec));
     if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)

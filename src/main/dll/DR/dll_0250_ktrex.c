@@ -1591,7 +1591,7 @@ void ktrex_update(int obj)
         }
         runtime->playerDist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
-    characterDoEyeAnimsState((GameObject*)obj, (char*)gKTRexRuntime + 0x3ac);
+    characterDoEyeAnims((GameObject*)obj, (char*)gKTRexRuntime + 0x3ac);
     zm[0] = 0;
     zc[0] = zm[0];
     bitA = lbl_803DC290;

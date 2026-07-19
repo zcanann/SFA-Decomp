@@ -286,7 +286,7 @@ u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjA
             return 0;
         }
         animUpdate->hitVolumePair &= ~SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG;
-        characterDoEyeAnimsState((GameObject*)obj, runtime->collisionShapeState);
+        characterDoEyeAnims((GameObject*)obj, runtime->collisionShapeState);
     }
     runtime->activeMoveValid = 0;
     objAudioFn_8006ef38((GameObject*)obj, &animUpdate->animEvents, 8, runtime->renderPathPoints,
@@ -490,7 +490,7 @@ void SHthorntail_update(int obj)
         }
         else
         {
-            characterDoEyeAnimsState((GameObject*)obj, runtime->collisionShapeState);
+            characterDoEyeAnims((GameObject*)obj, runtime->collisionShapeState);
         }
         runtime->behaviorFlags = runtime->behaviorFlags & ~2;
         if (((runtime->behaviorFlags & 4) == 0) && (val = ObjTrigger_IsSet(obj), val != 0))

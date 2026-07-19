@@ -1110,7 +1110,7 @@ void HighTop_update(GameObject* obj)
     (*(void (**)(int, char*, f32, f32, void**, void*))((char*)*gPlayerInterface + 0x8))(
         self, state, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);
     hightop_playMovementSfx((GameObject*)self, runtime, runtime);
-    characterDoEyeAnimsState((GameObject*)self, state + 0x38c);
+    characterDoEyeAnims((GameObject*)self, state + 0x38c);
     objAnimFn_80038f38((GameObject*)(self), (char*)(state + 0x3bc));
     dll_2E_func03((GameObject*)self, (MoveLibState*)(state + 0x3ec));
     if (ObjTrigger_IsSet(self) != 0)

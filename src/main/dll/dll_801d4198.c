@@ -85,7 +85,7 @@ int sh_queenearthwalker_processAnimEvents(GameObject* obj, void* unused, ObjAnim
         }
         else
         {
-            characterDoEyeAnimsState(obj, (u8*)state + 0x8);
+            characterDoEyeAnims(obj, (u8*)state + 0x8);
         }
     }
     return 0;

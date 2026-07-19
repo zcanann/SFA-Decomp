@@ -1290,7 +1290,7 @@ void DIMSnowHorn1_update(GameObject* obj)
         if (((DIMSnowHorn1State*)data)->hitReactState != 0)
         {
             fn_8003A168(obj, (void*)(data + 0x980));
-            characterDoEyeAnimsState(obj, data + 0x980);
+            characterDoEyeAnims(obj, (void*)(data + 0x980));
             return;
         }
     }
@@ -1437,7 +1437,7 @@ void DIMSnowHorn1_update(GameObject* obj)
         }
         break;
     }
-    characterDoEyeAnimsState(obj, data + 0x980);
+    characterDoEyeAnims(obj, (void*)(data + 0x980));
     DIMSnowHorn1_updateOverridePos(obj);
 }
 

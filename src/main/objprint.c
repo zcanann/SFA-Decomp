@@ -1328,8 +1328,9 @@ void fn_8003B228(GameObject* obj, void* state)
 
 void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused);
 
-void characterDoEyeAnims(GameObject* obj, CharacterEyeAnimState* state)
+void characterDoEyeAnims(GameObject* obj, void* stateData)
 {
+    CharacterEyeAnimState* state = stateData;
     ObjTextureRuntimeSlot* a;
     ObjTextureRuntimeSlot* b;
 

@@ -308,7 +308,7 @@ void dll_CB_advanceAI(int* obj, GroundBaddieState* sub, GroundBaddieState* state
         d.z = ((GameObject*)targetObj)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         state->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
-    characterDoEyeAnimsState((GameObject*)obj, sub->eyeAnimState);
+    characterDoEyeAnims((GameObject*)obj, sub->eyeAnimState);
     if ((sub->configFlags & 1) == 0)
     {
         (*(void (**)(int*, u8*, u8*, int, int, int, int))(*(int*)gBaddieControlInterface + 0x3c))(

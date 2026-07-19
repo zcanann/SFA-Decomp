@@ -66,7 +66,7 @@ int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int s
     int i;
 
     ewState->flags &= ~1;
-    characterDoEyeAnimsState((GameObject*)obj, ewState->eyeAnimState);
+    characterDoEyeAnims((GameObject*)obj, ewState->eyeAnimState);
     if (dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)ewState, 0, 0) != 0)
     {
         return 0;
@@ -180,7 +180,7 @@ void earthwalker_update(int obj)
         Sfx_PlayFromObject(obj, SFXTRIG_mammoth);
     }
 
-    characterDoEyeAnimsState((GameObject*)obj, ewState->eyeAnimState);
+    characterDoEyeAnims((GameObject*)obj, ewState->eyeAnimState);
     if (ewState->flags & 1)
     {
         return;
