@@ -1077,10 +1077,10 @@ int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32
 {
     int j;
     f32 lm[12];
-    int grp;
     u8* descBytes = fn_80069944((u32*)&j);
     u8* end = descBytes + j * 0x18;
     int total;
+    int grp;
     int outOff;
 
     grp = 0;
