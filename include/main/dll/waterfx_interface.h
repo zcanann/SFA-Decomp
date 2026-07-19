@@ -11,7 +11,7 @@ typedef void (*WaterfxSpawnSplashBurstFn)(void* sourceObject, f32 x, f32 y, f32 
                                           f32 radius);
 typedef void (*WaterfxSpawnRippleFn)(f32 x, f32 y, f32 z, s16 sourceId, f32 radius,
                                      int intensity);
-typedef void (*WaterfxSpawnSimpleRippleFn)(s16 sourceId, f32 x, f32 y, f32 z,
+typedef void (*WaterfxSpawnSimpleRippleFn)(f32 x, f32 y, f32 z, s16 sourceId,
                                            f32 radius);
 typedef void (*WaterfxOnMapSetupFn)(void);
 typedef void (*WaterfxSetRippleScaleFn)(int flag, f32 value);

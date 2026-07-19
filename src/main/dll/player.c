@@ -71,9 +71,6 @@ typedef void (*PSVECScaleLegacyFn)(f32 scale, f32* src, f32* dst);
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/waterfx_interface.h"
 
-#define Waterfx_SpawnSimpleRippleLegacy(interface, x, y, z, sourceId, radius) \
-    ((void (*)(f32, f32, f32, s16, f32))(interface)->spawnSimpleRipple)(      \
-        (x), (y), (z), (sourceId), (radius))
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/mm.h"
@@ -13286,8 +13283,8 @@ void fn_802ADE80(GameObject* obj, int inner, int state)
         {
             u16 ang = ((PlayerState*)inner)->targetYaw -
                       getAngle(((PlayerState*)state)->baddie.animSpeedB, ((PlayerState*)state)->baddie.animSpeedA);
-            Waterfx_SpawnSimpleRippleLegacy((*gWaterfxInterface), t[0],
-                                            ((PlayerState*)inner)->waterSurfaceY, t[2], ang, lbl_803E7EA4);
+            (*gWaterfxInterface)->spawnSimpleRipple(
+                t[0], ((PlayerState*)inner)->waterSurfaceY, t[2], ang, lbl_803E7EA4);
         }
     }
     ObjPath_GetPointWorldPosition((GameObject*)obj, 0x13, &v.x, &v.y, &v.z, 0);

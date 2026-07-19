@@ -378,7 +378,7 @@ void waterfx_setRippleScale(int flag, f32 val)
     gWaterfxRippleScale = val;
 }
 
-void waterfx_func08(s16 id, f32 x, f32 y, f32 z, f32 w)
+void waterfx_func08(f32 x, f32 y, f32 z, s16 id, f32 w)
 {
     int i = 0;
     WaterEntry* p = gWaterfxWakePool;
