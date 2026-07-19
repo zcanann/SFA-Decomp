@@ -5520,13 +5520,15 @@ void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                     rowDataOffset = (int)wd * w * 2;
                     pa += rowDataOffset;
                     pixelA = *(u16*)(pa + 0x60);
-                    redA = (u8)(((int)(pixelA & 0xf800) >> 8) | ((int)(pixelA & 0xe000) >> 13));
+                    redA = (int)(pixelA & 0xf800) >> 8;
+                    redA = (u8)(redA | ((int)(pixelA & 0xe000) >> 13));
                     pb = (u8*)src2 + pixelColumnOffset;
                     pb += tileColumnOffset;
                     pb += h;
                     pb += rowDataOffset;
                     pixelB = *(u16*)(pb + 0x60);
-                    redB = (u8)(((int)(pixelB & 0xf800) >> 8) | ((int)(pixelB & 0xe000) >> 13));
+                    redB = (int)(pixelB & 0xf800) >> 8;
+                    redB = (u8)(redB | ((int)(pixelB & 0xe000) >> 13));
                     blue = ((u8)(((int)(wA * (u8)(((pixelA & 0x1f) << 3) | ((int)(pixelA & 0x1c) >> 2))) >> 8) +
                                ((int)(wB * (u8)(((pixelB & 0x1f) << 3) | ((int)(pixelB & 0x1c) >> 2))) >> 8)) &
                            0xf8) >>
@@ -5568,12 +5570,16 @@ void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                     bt += tileColumnOffset;
                     bt += tileRowOffset;
                     bd = bt + rowDataOffset;
-                    aLo = (u8) * (u16*)(ad + 0x60);
-                    bLo = (u8) * (u16*)(bd + 0x60);
+                    aLo = *(u16*)(ad + 0x60);
+                    aLo = (u8)aLo;
+                    bLo = *(u16*)(bd + 0x60);
+                    bLo = (u8)bLo;
                     pixelA = *(u16*)(ad + 0x80);
-                    aHi = (u8)((int)(pixelA & 0xff00) >> 8);
+                    aHi = (int)(pixelA & 0xff00) >> 8;
+                    aHi = (u8)aHi;
                     pixelB = *(u16*)(bd + 0x80);
-                    bHi = (u8)((int)(pixelB & 0xff00) >> 8);
+                    bHi = (int)(pixelB & 0xff00) >> 8;
+                    bHi = (u8)bHi;
                     ct = (u8*)dst + pixelColumnOffset;
                     cd = ct + tileColumnOffset;
                     cd += tileRowOffset;
