@@ -44,11 +44,6 @@
 #include "main/newshadows.h"
 #include "main/newshadows_audio_api.h"
 
-#define storeZeroToFloatParamLegacy(timer) \
-    ((void (*)(int))storeZeroToFloatParam)((timer))
-#define s16toFloatLegacy(timer, duration) \
-    ((void (*)(int, int))s16toFloat)((timer), (duration))
-
 typedef int (*DREarthWarriorEventCountdownFn)(ObjAnimComponent* objAnim);
 
 typedef struct DREarthWarriorPlacement
@@ -1460,8 +1455,8 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     }
     ((ByteFlags*)((char*)inner + 0x14ec))->b08 = 0;
     *(u8*)&((DREarthWarriorState*)inner)->unk14F4 = 2;
-    storeZeroToFloatParamLegacy(inner + 0x14f0);
-    s16toFloatLegacy(inner + 0x14f0, 0x1e);
+    storeZeroToFloatParam(&((DREarthWarriorState*)inner)->airMeterTimer);
+    s16toFloat((f32*)(inner + 0x14f0), 0x1e);
     ((ByteFlags*)((char*)inner + 0x14ec))->b02 = 0;
     ((DREarthWarriorState*)inner)->unk14F5 = 1;
     ((DREarthWarriorState*)inner)->helperObj = NULL;
