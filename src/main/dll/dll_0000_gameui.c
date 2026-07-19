@@ -1361,6 +1361,27 @@ void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
         lbl_803DD860[i]->anim.rotX = c;
     }
 }
+static inline void gameUiFreeHudAnims(GameObject** anims)
+{
+    int index;
+    GameObject** anim;
+
+    for (index = 0, anim = anims; index < 4; anim++, index++)
+    {
+        if (*anim != NULL)
+        {
+            (*anim)->anim.modelState->shadowTexture = NULL;
+            (*anim)->anim.modelState->shadowWorkBuffer = NULL;
+            if ((u32)(*anim)->anim.placementData > 0x90000000)
+            {
+                (*anim)->anim.placementData = NULL;
+            }
+            Obj_FreeObject(*anim);
+            *anim = NULL;
+        }
+    }
+}
+
 void gameUiResetMenuState(void)
 {
     int objectIndex;
@@ -6380,26 +6401,7 @@ void pauseMenuFn_80129ee0(void)
                 {
                     AudioStream_StopCurrent();
                 }
-                {
-                    int index;
-                    GameObject** anim;
-
-                    anim = &hud->anims[0];
-                    for (index = 0; index < 4; index++, anim++)
-                    {
-                        if (*anim != NULL)
-                        {
-                            (*anim)->anim.modelState->shadowTexture = NULL;
-                            (*anim)->anim.modelState->shadowWorkBuffer = NULL;
-                            if ((u32)(*anim)->anim.placementData > 0x90000000)
-                            {
-                                (*anim)->anim.placementData = NULL;
-                            }
-                            Obj_FreeObject(*anim);
-                            *anim = NULL;
-                        }
-                    }
-                }
+                gameUiFreeHudAnims(&hud->anims[0]);
                 Music_Trigger(MUSICTRIG_cldrnr_tune1, 0);
                 pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 4, 3);
             }
