@@ -78,7 +78,6 @@ typedef enum Dim2lavacontrolPhase
     DIM2LAVACONTROL_PHASE_TRIGGERED = 1, /* unlock bit set; control latched */
 } Dim2lavacontrolPhase;
 
-extern f32 lbl_803E4B90;
 
 void dim2lavacontrol_setScale(GameObject *obj)
 {
@@ -102,7 +101,7 @@ int dim2lavacontrol_getExtraSize(void) { return 0x10; }
 
 void dim2lavacontrol_free(void)
 {
-    fn_8004C1E4(0xC0, lbl_803E4B90);
+    fn_8004C1E4(0xC0, 1.0f);
     Music_Trigger(MUSICTRIG_PU3_Adventure_c4, 0);
     timeOfDayFn_80055000();
 }
@@ -110,7 +109,7 @@ void dim2lavacontrol_free(void)
 void dim2lavacontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4B90);
+    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dim2lavacontrol_update(int obj)
@@ -159,7 +158,7 @@ void dim2lavacontrol_update(int obj)
         {
             ((Dim2lavacontrolState*)obj)->sfxLevel += 1;
         }
-        fn_8004C1E4(((Dim2lavacontrolState*)obj)->sfxLevel, lbl_803E4B90);
+        fn_8004C1E4(((Dim2lavacontrolState*)obj)->sfxLevel, 1.0f);
     }
     if (Player_GetHeldObject(Obj_GetPlayerObject(), &heldObj) != 0)
     {
@@ -224,13 +223,13 @@ void dim2lavacontrol_init(GameObject *obj, int param2)
     {
         *(u8*)&((Dim2lavacontrolState*)state)->countdown = 0;
         ((Dim2lavacontrolState*)state)->sfxLevel = lbl_803DBF28[0];
-        fn_8004C1E4(lbl_803DBF28[0], lbl_803E4B90);
+        fn_8004C1E4(lbl_803DBF28[0], 1.0f);
     }
     else
     {
         *(u8*)&((Dim2lavacontrolState*)state)->countdown = 3;
         ((Dim2lavacontrolState*)state)->sfxLevel = lbl_803DBF28[3];
-        fn_8004C1E4(lbl_803DBF28[3], lbl_803E4B90);
+        fn_8004C1E4(lbl_803DBF28[3], 1.0f);
     }
     Music_Trigger(MUSICTRIG_WLC_Corridors, 1);
     envFxActFn_800887f8(0);

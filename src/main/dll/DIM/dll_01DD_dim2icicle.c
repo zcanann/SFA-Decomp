@@ -228,4 +228,3 @@ ObjectDescriptor gDIM2IcicleObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)dim2icicle_getExtraSize,
 };
 
-const f32 lbl_803E4B90[2] = {1.0f, 0.0f};

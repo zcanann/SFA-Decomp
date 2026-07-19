@@ -2510,12 +2510,13 @@ main/dll/DIM/dll_01DC_dim2icefloe.c:
 main/dll/DIM/dll_01DD_dim2icicle.c:
 	.text       start:0x801B93FC end:0x801B9810
 	.data       start:0x803258B0 end:0x803258E8
-	.sdata2     start:0x803E4B68 end:0x803E4B98
+	.sdata2     start:0x803E4B68 end:0x803E4B90
 
 main/dll/DIM/dll_01DE_dim2lavacontrol.c:
 	.text       start:0x801B9810 end:0x801B9CB4
 	.data       start:0x803258E8 end:0x80325928
 	.sdata      start:0x803DBF28 end:0x803DBF30
+	.sdata2     start:0x803E4B90 end:0x803E4B94
 
 main/dll/dll_01DF_dll1df.c:
 	.text       start:0x801B9CB4 end:0x801B9ECC
