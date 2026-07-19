@@ -4338,16 +4338,14 @@ void videoFn_800499e8(void)
     }
     Queue_Peek(&lbl_8035F730, &peek);
     i = 0;
-    src = gDepthReadPendingQueue;
-    dst = gDepthReadResults;
     for (; i < (int)(u32)gDepthReadPendingCount; i++)
     {
+        src = &gDepthReadPendingQueue[i];
+        dst = &gDepthReadResults[i];
         dst->x = src->x;
         dst->y = src->y;
         dst->key = src->key;
         GXPeekZ(dst->x, dst->y, &dst->value);
-        src++;
-        dst++;
     }
     gDepthReadResultCount = gDepthReadPendingCount;
     gDepthReadPendingCount = 0;
