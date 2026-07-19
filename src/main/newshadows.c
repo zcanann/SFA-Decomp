@@ -1,9 +1,7 @@
 #include "main/game_object.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_hud_api.h"
-#define INTERSECT_SCREEN_DIRECT_SIGNED_WIDTH_CALL
 #include "track/intersect_screen_api.h"
-#undef INTERSECT_SCREEN_DIRECT_SIGNED_WIDTH_CALL
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/model.h"
