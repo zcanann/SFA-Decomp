@@ -4,6 +4,7 @@
  * a sequence callback for animation events, and tracks a hit-strength counter
  * that douses the flame when depleted.
  */
+#include "main/model.h"
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/object.h"
@@ -127,7 +128,7 @@ void DIMLogFire_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
         if (subobj != NULL)
         {
             int* q = (int*)((ObjAnimComponent*)subobj)->banks[((ObjAnimComponent*)subobj)->bankIndex];
-            *(u16*)((char*)q + 0x18) = (u16)(*(u16*)((char*)q + 0x18) & ~0x8);
+            ((ObjModel*)q)->bufferFlags = (u16)(((ObjModel*)q)->bufferFlags & ~0x8);
             *(u8*)((char*)(int*)state->subObj + 0x37) = *(u8*)((char*)obj + 0x37);
             objRenderModelAndHitVolumes((GameObject*)state->subObj, p2, p3, p4, p5, 1.0f);
         }

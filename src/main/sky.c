@@ -1626,7 +1626,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             if (vis == 0 && (u8)visible != 0)
             {
                 model = (u8*)Obj_GetActiveModel((GameObject*)gSkySunObject);
-                *(u16*)(model + 0x18) &= ~8;
+                ((ObjModel*)model)->bufferFlags &= ~8;
                 objRender(a, b, c, d, (GameObject*)gSkySunObject, 1);
             }
         }
@@ -1643,7 +1643,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             if (vis == 0 && (u8)visible != 0)
             {
                 model = (u8*)Obj_GetActiveModel(gSkyMoonObject);
-                *(u16*)(model + 0x18) &= ~8;
+                ((ObjModel*)model)->bufferFlags &= ~8;
                 objRender(a, b, c, d, (GameObject*)gSkyMoonObject, 1);
             }
         }

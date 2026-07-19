@@ -347,7 +347,7 @@ void modelAnimEvalSlotPair(u8* dst, u8* model, u8* channel, f32 t, int flags, in
 
     hdr = *(u8**)model;
     {
-        u32 sel = *(u16*)(model + 0x18) & 1;
+        u32 sel = ((ObjModel*)model)->bufferFlags & 1;
         u8* pb = model + 12;
         mtxBuf = *(int*)(pb + sel * 4);
     }
@@ -437,7 +437,7 @@ void modelAnimEvalChannels(u8* dst, u8* model, u8* channel, f32 blend, int flags
     hdr = *(u8**)model;
     {
         u8* mtxBufs = model + 12;
-        mtxBuf = *(int*)(mtxBufs + (*(u16*)(model + 0x18) & 1) * 4);
+        mtxBuf = *(int*)(mtxBufs + (((ObjModel*)model)->bufferFlags & 1) * 4);
     }
     ((ObjAnimState*)channel)->framePhase = blend * ((ObjAnimState*)channel)->frameLength;
     outFlags = 0;
