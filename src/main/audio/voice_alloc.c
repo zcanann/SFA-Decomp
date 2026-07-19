@@ -235,7 +235,7 @@ void voiceFree(McmdVoiceState* voice)
 {
     macMakeInactive(voice, 2);
     voiceRemovePriority(voice);
-    *(u32*)&voice->macroBase = 0;
+    voice->macroBase = NULL;
     voice->priorityGroup = 0;
     {
         u32 voiceId = voice->voiceHandle;
