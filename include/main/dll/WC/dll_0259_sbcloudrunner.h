@@ -24,5 +24,7 @@ void FUN_801ef980(u64 param_1, double param_2, double param_3, u64 param_4, u64 
                   u32 param_15, u32 param_16);
 void FUN_801ef984(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 int SB_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+void SB_CloudRunner_UpdateSteer(s16* obj, u8* state);
+void SB_CloudRunner_HandlePriorityHit(GameObject* obj, u8* state);
 
 #endif /* MAIN_DLL_WC_WCLEVCONTROL_H_ */

@@ -31,6 +31,7 @@
 #include "main/objprint_render_api.h"
 #include "main/object_api.h"
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"
+#include "main/dll/WC/WCpushblock.h"
 #include "main/dll/bwalphaanim.h"
 #include "main/objhits.h"
 #include "main/resource.h"
@@ -275,7 +276,7 @@ void SB_CloudRunner_UpdateSteer(s16* obj, u8* state)
     }
     if (doSpawn)
     {
-        ((void (*)(s16*, u8*))WCPushBlock_SpawnFromPath)(obj, state);
+        WCPushBlock_SpawnFromPath(obj, state);
     }
 }
 
@@ -567,11 +568,11 @@ void SB_CloudRunner_update(GameObject* obj)
     switch (state->rideSubState)
     {
     case RIDE_SUBSTATE_STEER:
-        ((void (*)(int, int))SB_CloudRunner_UpdateSteer)((int)obj, (int)state);
+        SB_CloudRunner_UpdateSteer((s16*)obj, (u8*)state);
         ((void (*)(int, int))SB_CloudRunner_HandlePriorityHit)((int)obj, (int)state);
         break;
     case RIDE_SUBSTATE_TILT:
-        ((void (*)(int, int))WCPushBlock_UpdateRideTilt)((int)obj, (int)state);
+        WCPushBlock_UpdateRideTilt((WCPushBlockObject*)obj, (WCPushBlockState*)state);
         break;
     case RIDE_SUBSTATE_DISMOUNT_A:
     case RIDE_SUBSTATE_DISMOUNT_B:

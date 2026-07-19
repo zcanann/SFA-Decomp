@@ -131,7 +131,7 @@ extern f32 lbl_803E5C98;
 extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
 
-void WCPushBlock_SpawnFromPath(s16* path)
+void WCPushBlock_SpawnFromPath(s16* path, u8* unusedState)
 {
     WCPushBlockObjectSetup* setup;
     WCPushBlockObject* block;

@@ -217,9 +217,8 @@ void sc_musictree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis
     SCMusicTreeState* state = obj->extra;
     int i;
     if (visible == 0) return;
-    ((void (*)(int, int, int))fn_8003B608)((int)((ScMusictreePlacement*)def)->colorR,
-                                            (int)((ScMusictreePlacement*)def)->colorG,
-                                            (int)((ScMusictreePlacement*)def)->colorB);
+    fn_8003B608(((ScMusictreePlacement*)def)->colorR, ((ScMusictreePlacement*)def)->colorG,
+                 ((ScMusictreePlacement*)def)->colorB);
     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, 1.0f);
     if ((state->flags & SCMUSICTREE_FLAG_SATELLITES) != 0)
     {
