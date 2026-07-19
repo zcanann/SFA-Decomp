@@ -10,7 +10,7 @@
  * player) plus the active CamcontrolModeSettings (cameraMtxVar57) and
  * return the desired camera position / yaw.
  *
- * cameraFn_80103b40 and camMoveFn_80104040 sweep candidate camera
+ * cameraFn_80103b40 and camcontrol_updateWallAvoidance sweep candidate camera
  * positions in fan steps around the target to slide the camera around
  * walls, writing the resulting yaw nudge into
  * cameraMtxVar57->avoidanceYawOffset.
@@ -462,7 +462,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
  * the camera around the target and decays the offset by 0.9 per frame
  * (snapping to zero inside +/-0.5).
  */
-void camMoveFn_80104040(CameraObject* camera, GameObject* target)
+void camcontrol_updateWallAvoidance(CameraObject* camera, GameObject* target)
 {
     float path[39];
     float endPts[13][3];

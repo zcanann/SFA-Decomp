@@ -711,7 +711,7 @@ void CameraModeNormal_update(u8* obj)
     }
     camera->unk13E = 0;
     camcontrol_updateModeSettings((int)camera);
-    camMoveFn_80104040(camera, target[0]);
+    camcontrol_updateWallAvoidance(camera, target[0]);
     CameraModeNormal_follow(camera, &target[0]->anim);
     Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                    &camera->anim.worldPosX, &camera->anim.worldPosY, &camera->anim.worldPosZ,
