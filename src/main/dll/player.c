@@ -8522,7 +8522,7 @@ int playerState08(GameObject* obj, int state, f32 fv)
             }
         }
     }
-    ((void (*)(int, int*))ObjGroup_GetObjects)(BABYCLOUDRUNNER_OBJGROUP, &cnt20);
+    ObjGroup_GetObjects(BABYCLOUDRUNNER_OBJGROUP, &cnt20);
     mainSetBits(GAMEBIT_ITEM_Flute_Disabled, !cnt20);
     if ((*gGameUIInterface)->isCurrentTriggerClear() != 0)
     {
@@ -8579,7 +8579,7 @@ int playerState08(GameObject* obj, int state, f32 fv)
     }
     if (inner->curAnimId != 0x44 && (*gGameUIInterface)->isCurrentTriggerClear() != 0 &&
         (*gGameUIInterface)->isEventReady(0x13e) != 0 &&
-        (((void (*)(int, int*))ObjGroup_GetObjects)(LANTERNFIREFLY_OBJGROUP, &cnt30), cnt30 == 0))
+        (ObjGroup_GetObjects(LANTERNFIREFLY_OBJGROUP, &cnt30), cnt30 == 0))
     {
         gameBitDecrement(0x13d);
         if (Obj_IsLoadingLocked() != 0)
@@ -14161,7 +14161,7 @@ void fn_802AFB0C(int obj, int inner, int state)
     {
         **(s8**)&((PlayerState*)inner)->playerStatus = 1;
     }
-    if ((*(int (*)(int))ObjHits_IsObjectEnabled)(obj) == 0 || objGetFlagsE5_2((u8*)obj) != 0 ||
+    if (ObjHits_IsObjectEnabled((ObjAnimComponent*)obj) == 0 || objGetFlagsE5_2((u8*)obj) != 0 ||
         ((ByteFlags*)((char*)inner + 0x3f3))->b20 != 0 ||
         (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK))
     {

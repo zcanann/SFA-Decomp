@@ -181,7 +181,7 @@ void drgenerator_init(GameObject* obj, DrgeneratorPlacement* placement)
         Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
     }
-    ((void (*)(void*, int))ObjGroup_AddObject)(obj, DRGENERATOR_OBJGROUP);
+    ObjGroup_AddObject((int)obj, DRGENERATOR_OBJGROUP);
     *(int*)state = 0;
     state->flags.b3 = 1;
     (obj)->anim.rotX = (s16)(placement->initialYaw << 8);

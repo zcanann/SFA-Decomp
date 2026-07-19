@@ -589,7 +589,7 @@ void DR_LaserCannon_init(GameObject* obj, DrLaserCannonSetup* setup)
         Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
     }
-    ((void (*)(void*, int))ObjGroup_AddObject)(obj, DR_LASERCANNON_GROUP_ID);
+    ObjGroup_AddObject((int)obj, DR_LASERCANNON_GROUP_ID);
     state->beamObject = 0;
     state->flags.b3 = 0;
     (obj)->anim.rotX = (s16)(setup->initialYaw << 8);

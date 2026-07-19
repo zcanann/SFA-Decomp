@@ -911,7 +911,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
                               &tmpY, (f32*)((char*)obj + 0x2c));
         state->moveFlags.b7 = 1;
         objMove((GameObject*)obj, ((PushableObjPos*)obj)->vx, PUSHABLE_ZERO, ((PushableObjPos*)obj)->vz);
-        ((void (*)(int*))Obj_BuildTransformMatrices)(obj);
+        Obj_BuildTransformMatrices((GameObject*)obj);
         {
             int j;
             j = 0;
@@ -934,7 +934,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         {
             fn_80174BFC((GameObject*)obj, state);
         }
-        ((void (*)(int*))Obj_BuildTransformMatrices)(obj);
+        Obj_BuildTransformMatrices((GameObject*)obj);
         if (PUSHABLE_ZERO != state->pushAmountX || PUSHABLE_ZERO != state->pushAmountZ)
         {
             PushableState* st2;

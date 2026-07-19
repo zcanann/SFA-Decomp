@@ -383,7 +383,7 @@ void fn_801EB634(GameObject* obj, int stateRaw)
     f32 velNrm[3];
 
     hitReact = *(int*)&obj->anim.hitReactState;
-    if (((int (*)(void*))ObjHits_IsObjectEnabled)(obj) != 0)
+    if (ObjHits_IsObjectEnabled((ObjAnimComponent*)obj) != 0)
     {
         if ((u32)(st->flags428 >> 1 & 1) == 0)
         {
