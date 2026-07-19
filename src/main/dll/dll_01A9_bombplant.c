@@ -38,8 +38,6 @@
 #define BOMBPLANT_GAMEBIT_INTRO_SEEN 0x189 /* one-shot: run intro sequence on first approach */
 #define BOMBPLANT_CHILD_OBJ_SPORE 0x198 /* spore object spawned by bombplant_throwSpore */
 
-typedef void (*BombPlantExplodeUpdateFn)(void* obj, void* stateEntry, void* state);
-
 extern u8 gBombPlantStateTable[];
 
 
@@ -181,7 +179,7 @@ void bombplant_hitDetect(void)
 {
 }
 
-void bombplant_explode(int* obj, int unused, int* p3)
+void bombplant_explode(int* obj, u8* unused, int* p3)
 {
     BombplantPlacement* p4 = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
     void* trickyObj = getTrickyObject();
@@ -310,7 +308,7 @@ void bombplant_update(void* obj)
         break;
 
     case 4:
-        ((BombPlantExplodeUpdateFn)bombplant_explode)(obj, entry, state);
+        bombplant_explode(obj, entry, state);
         break;
 
     case 0:

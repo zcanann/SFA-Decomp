@@ -43,7 +43,6 @@
 #include "main/dll/DIM/dll_01CA_dimexplosion.h"
 
 typedef void (*ExplosionSpawnFlameSpdFirst)(int obj, f32 spd, int gen, f32 x, f32 y, f32 z);
-typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p3);
 
 typedef struct ExplosionPlacement
 {
@@ -649,9 +648,8 @@ void explosion_init(GameObject* obj, int def)
         ((ExplosionState*)state)->driftYSpeed = lbl_803E4960;
     }
     ((ExplosionState*)state)->nearGround = 0;
-    if (((HitDetectFloatsFirst)hitDetectFn_800658a4)((int)obj, obj->anim.localPosX,
-                                                     lbl_803E49B0 + obj->anim.localPosY, obj->anim.localPosZ,
-                                                     state + 0x960, 0) == 0)
+    if (hitDetectFn_800658a4(obj, obj->anim.localPosX, lbl_803E49B0 + obj->anim.localPosY,
+                            obj->anim.localPosZ, (f32*)(state + 0x960), 0) == 0)
     {
         if (((ExplosionState*)state)->groundY < lbl_803E49B4)
         {
