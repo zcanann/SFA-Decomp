@@ -1,5 +1,7 @@
 #include "main/audio/sal_volume.h"
 
+const f32 gSnd3dRoomVolIndexScale[1] = {127.0f};
+
 typedef struct
 {
     f32 vol[129];
@@ -66,14 +68,14 @@ typedef struct SAL_PANINFO
 } SAL_PANINFO;
 
 /* The +1 pan lookups read the global directly so &pan[1] stays one shared address constant. */
-static inline void CalcBus(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
+static void CalcBus(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
 {
     u32 i;
     f32 level;
     f32 frac;
 
-    i = 127.0f * vol;
-    frac = (127.0f * vol) - (f32)i;
+    i = gSnd3dRoomVolIndexScale[0] * vol;
+    frac = (gSnd3dRoomVolIndexScale[0] * vol) - (f32)i;
     level = (1.0f - frac) * vol_tab[i] + frac * vol_tab[i + 1];
     v_out[2] =
         0.7079f *
@@ -85,15 +87,15 @@ static inline void CalcBus(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, S
         level * ((1.0f - pi->pan_fm) * tabs->pan[pi->pan_im] + pi->pan_fm * gSnd3dRoomVolTable.pan[pi->pan_im + 1]);
 }
 
-static inline void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
+static void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
 {
     u32 i;
     f32 frac;
     f32 level;
     f32 surround;
 
-    i = 127.0f * vol;
-    frac = (127.0f * vol) - (f32)i;
+    i = gSnd3dRoomVolIndexScale[0] * vol;
+    frac = (gSnd3dRoomVolIndexScale[0] * vol) - (f32)i;
     level = (1.0f - frac) * vol_tab[i] + frac * vol_tab[i + 1];
     surround =
         level * ((1.0f - pi->span_f) * tabs->pan[pi->span_i] + pi->span_f * gSnd3dRoomVolTable.pan[pi->span_i + 1]);
@@ -107,6 +109,8 @@ static inline void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* p
     v_out[6] = surround * ((1.0f - pi->rpan_fm) * tabs->pan_dpl2[pi->rpan_im] +
                            pi->rpan_fm * gSnd3dRoomVolTable.pan[pi->rpan_im + 1]);
 }
+
+const f32 gSnd3dRoomPanFixedToFloat[1] = {2.4220301e-07f};
 
 void salCalcVolumeMatrix(u8 volumeTable, f32* out, u32 pan, u32 surroundPan, u32 itd, u32 dpl2, f32 volume,
                          f32 auxA, f32 auxB)
@@ -143,8 +147,8 @@ void salCalcVolumeMatrix(u8 volumeTable, f32* out, u32 pan, u32 surroundPan, u32
         spanAdj = surroundPan - 0x10000;
     }
 
-    panPos = 2.4220301e-07f * panAdj;
-    spanPos = 2.4220301e-07f * spanAdj;
+    panPos = gSnd3dRoomPanFixedToFloat[0] * panAdj;
+    spanPos = gSnd3dRoomPanFixedToFloat[0] * spanAdj;
 
     if (dpl2 != 0)
     {
