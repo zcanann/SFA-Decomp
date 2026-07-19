@@ -70,13 +70,13 @@ typedef struct TumbleweedBushPlacement
 } TumbleweedBushPlacement;
 
 
-f32 gTumbleweedBushPieceScale = 64.0f;
-f32 gTumbleweedBushRenderScale = 1.0f;
-f32 gTumbleweedBushInitScale = 0.0f;
-f32 gTumbleweedBushHitRadius = 15.0f;
-f32 gTumbleweedBushHitYMin = -5.0f;
-f32 gTumbleweedBushHitYMax = 100.0f;
-f32 gTumbleweedBushNearestInitDist = 3.4028235e38f;
+#define TUMBLEWEED_BUSH_PIECE_SCALE 64.0f
+#define TUMBLEWEED_BUSH_RENDER_SCALE 1.0f
+#define TUMBLEWEED_BUSH_INIT_SCALE 0.0f
+#define TUMBLEWEED_BUSH_HIT_RADIUS 15.0f
+#define TUMBLEWEED_BUSH_HIT_Y_MIN -5.0f
+#define TUMBLEWEED_BUSH_HIT_Y_MAX 100.0f
+#define TUMBLEWEED_BUSH_NEAREST_INIT_DIST 3.4028235e38f
 extern u8 gTumbleweedBushPieceOffsetTable[];
 u8 gTumbleweedBushHitCooldownState;
 
@@ -153,7 +153,7 @@ s8 fn_801631C8(int* obj)
     ((ObjPlacement*)newObj)->color[1] = p4c[5];
     ((ObjPlacement*)newObj)->color[2] = p4c[6];
     ((ObjPlacement*)newObj)->color[3] = p4c[7];
-    *(f32*)((char*)newObj + 0x1c) = gTumbleweedBushPieceScale;
+    *(f32*)((char*)newObj + 0x1c) = TUMBLEWEED_BUSH_PIECE_SCALE;
 
     if ((((TumbleweedBushState*)state)->variant & 1) != 0)
     {
@@ -230,7 +230,7 @@ void TumbleWeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, gTumbleweedBushRenderScale);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, TUMBLEWEED_BUSH_RENDER_SCALE);
 }
 
 void TumbleWeedBush_hitDetect(void)
@@ -307,7 +307,7 @@ void TumbleWeedBush_init(u8* obj, TumbleweedBushPlacement* params, int param3)
     int i;
 
     sub = ((GameObject*)obj)->extra;
-    ((TumbleweedBushState*)sub)->scale = gTumbleweedBushInitScale;
+    ((TumbleweedBushState*)sub)->scale = TUMBLEWEED_BUSH_INIT_SCALE;
     ((TumbleweedBushState*)sub)->triggerRadius = (u16)(params->radiusByte * 2);
     ((TumbleweedBushState*)sub)->variant = params->variant;
     ((GameObject*)obj)->anim.rotZ = (s16)((params->rotZByte - 0x7f) << 7);
@@ -315,8 +315,8 @@ void TumbleWeedBush_init(u8* obj, TumbleweedBushPlacement* params, int param3)
     ((GameObject*)obj)->anim.rotX = (s16)(params->rotXByte << 8);
     ((GameObject*)obj)->anim.rootMotionScale = params->scale;
     t = ((GameObject*)obj)->anim.rootMotionScale;
-    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (s32)(gTumbleweedBushHitRadius * t), (s32)(gTumbleweedBushHitYMin * t),
-                               (s32)(gTumbleweedBushHitYMax * t));
+    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (s32)(TUMBLEWEED_BUSH_HIT_RADIUS * t), (s32)(TUMBLEWEED_BUSH_HIT_Y_MIN * t),
+                               (s32)(TUMBLEWEED_BUSH_HIT_Y_MAX * t));
     switch (((GameObject*)obj)->anim.seqId)
     {
     case TUMBLEWEEDBUSH_SEQ_A:
@@ -366,7 +366,7 @@ GameObject* tumbleweedbush_findNearestActive(f32* p_pos)
     f32 bestDist;
     int i;
     void* bestObj;
-    bestDist = gTumbleweedBushNearestInitDist;
+    bestDist = TUMBLEWEED_BUSH_NEAREST_INIT_DIST;
     bestObj = NULL;
     {
     void** tmp = (void**)ObjGroup_GetObjects(TUMBLEWEEDBUSH_OBJGROUP, &count);
