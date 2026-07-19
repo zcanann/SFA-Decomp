@@ -4,8 +4,8 @@
  * table of ScreenFxPart entries describing an animated multi-part
  * screen effect, then hands it to the modgfx interface to spawn.
  *
- * The seven-element animation template (ScreenSeq) is read from the
- * gScreenFx9AAnimTemplate blob and jittered with randomGetRange; the part table
+ * The seven-element animation template (ScreenSeq) is read from
+ * gScreenFx9AAnimTemplate and jittered with randomGetRange; the part table
  * is built in two variants selected by `variant` (0 or 1), and the
  * header is anchored to the target/parent object positions when its
  * low flag bit is set.
@@ -28,8 +28,7 @@ typedef struct
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL9A_EFFECT_ID 0x31
 
-const u8 gScreenFx9AAnimTemplate[16] = {
-    0x00, 0x00, 0x00, 0x0A, 0x00, 0x28, 0x00, 0x3C, 0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+const s16 gScreenFx9AAnimTemplate[8] = {0, 10, 40, 60, 40, 0, 0, 0};
 extern u8 lbl_80317B98[];
 
 void dll_9A_func03(int target, int variant, int parent, u32 flags)
