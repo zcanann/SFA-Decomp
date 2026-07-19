@@ -53,6 +53,8 @@ static f32 seq11e_intToFloat(int n)
 }
 
 
+static const f32 MIKALADON_DROP_HEIGHT_OFFSET[1] = { 5.0f };
+
 /* mikaladon_update: firefly hover update: circle drift, bob between heights,
  * periodically drop a spawned object, ambient sfx timers. */
 void mikaladon_update(int* obj, u8* state)
@@ -99,7 +101,7 @@ void mikaladon_update(int* obj, u8* state)
 
                     setup = (u8*)Obj_AllocObjectSetup(0x24, SEQOBJ11E_GCROBOT_DROP_OBJ);
                     ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                    ((ObjPlacement*)setup)->posY = 5.0f + ((GameObject*)obj)->anim.localPosY;
+                    ((ObjPlacement*)setup)->posY = MIKALADON_DROP_HEIGHT_OFFSET[0] + ((GameObject*)obj)->anim.localPosY;
                     ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
                     ((ObjPlacement*)setup)->color[0] = 1;
                     ((ObjPlacement*)setup)->color[1] = 1;
