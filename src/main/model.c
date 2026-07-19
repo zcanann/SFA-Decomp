@@ -3020,7 +3020,7 @@ int modelGetAmapSize(int animId, int amapFlag, int animCount)
     return size;
 }
 
-int return0_8002969C(void) { return 0x0; }
+void* return0_8002969C(int resourceId, int arg, void* buffer) { return NULL; }
 
 void ObjModel_InitResourceCaches(void)
 {

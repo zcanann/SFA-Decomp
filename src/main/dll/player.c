@@ -14064,7 +14064,7 @@ void playerRunActiveSpells(GameObject* obj, int state)
     case GAMEBIT_STAFF_ABILITY_FIRE_BLASTER:
         break;
     case GAMEBIT_STAFF_ABILITY_SHARPCLAW_DISGUISE:
-        if ((((u32 (*)(int))getButtonsJustPressed)(0) & 0x200) != 0 && ((ByteFlags*)((char*)state + 0x3f3))->b08 != 0 &&
+        if ((getButtonsJustPressed(0) & 0x200) != 0 && ((ByteFlags*)((char*)state + 0x3f3))->b08 != 0 &&
             ((PlayerState*)state)->curAnimId != 0x44)
         {
             playerSetDisguised(obj, 0);
@@ -16630,7 +16630,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     getEnvfxActImmediatelyVoid(obj, obj, 0x84, 0);
                     getEnvfxActImmediatelyVoid(obj, obj, 0x8a, 0);
                 }
-                ((void (*)(int, f32))skyFn_80088e54)(0, 0.0f);
+                skyFn_80088e54(0, 0.0f);
                 break;
             case 0x2d:
                 Rcp_SetSpiritVisionEnabled(1);

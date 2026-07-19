@@ -296,7 +296,7 @@ void loadAsset(AssetReq* req)
         *(void**)req->dest = Resource_Acquire(req->resourceId & 0xffff, req->argC & 0xffff);
         break;
     case 6:
-        *(void**)req->dest = (void*)((int (*)(int, int, void*))return0_8002969C)(req->resourceId, req->argC, tmp);
+        *(void**)req->dest = return0_8002969C(req->resourceId, req->argC, tmp);
         break;
     case 7:
         *(void**)req->dest = loadAnimation(req->arg24, req->resourceId, (s16)req->argC, (u8*)req->arg20);
