@@ -229,8 +229,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
         }
         ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
         ((ShieldState*)state)->fadeRate = lbl_803E33B4;
-        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lrope_powerup);
-        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lockon3_on);
+        Sfx_StopFromObject((u32)obj, SFXTRIG_lrope_powerup);
+        Sfx_StopFromObject((u32)obj, SFXTRIG_lockon3_on);
         break;
     case 1:
         if (lbl_803E33AC == ((ShieldState*)state)->fadeTarget)
@@ -317,8 +317,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
         {
             modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 0, lbl_803E33A8);
         }
-        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lrope_powerup);
-        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lockon3_on);
+        Sfx_StopFromObject((u32)obj, SFXTRIG_lrope_powerup);
+        Sfx_StopFromObject((u32)obj, SFXTRIG_lockon3_on);
         break;
     case 3:
         if (glow != NULL)
@@ -386,8 +386,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
         ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
         ((ShieldState*)state)->fadeRate = lbl_803E33B4;
         *(f32*)&((ShieldState*)state)->fadeMax = lbl_803E33CC;
-        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lrope_powerup);
-        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lockon3_on);
+        Sfx_StopFromObject((u32)obj, SFXTRIG_lrope_powerup);
+        Sfx_StopFromObject((u32)obj, SFXTRIG_lockon3_on);
         break;
     case 4:
     {
@@ -484,8 +484,8 @@ void Shield_free(GameObject* obj)
         ModelLightStruct_free((ModelLightStruct*)state[0]);
         state[0] = NULL;
     }
-    Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lrope_powerup);
-    Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lockon3_on);
+    Sfx_StopFromObject((u32)obj, SFXTRIG_lrope_powerup);
+    Sfx_StopFromObject((u32)obj, SFXTRIG_lockon3_on);
 }
 
 typedef struct ShieldFxVec
