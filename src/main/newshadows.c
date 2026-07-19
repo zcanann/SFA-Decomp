@@ -197,28 +197,45 @@ extern const f32 lbl_803DED90;
 extern const double lbl_803DED58;
 extern const double lbl_803DED60;
 extern const f32 lbl_803DED38;
-extern const f32 lbl_803DED3C, lbl_803DED40;
+extern const f32 lbl_803DED3C;
+extern const f32 lbl_803DED40;
 extern const f32 lbl_803DED2C;
 extern const f32 lbl_803DEDC0;
 extern const f32 lbl_803DEDD0;
 extern const f32 lbl_803DEDD4;
 extern const f32 lbl_803DEE00;
 extern const f32 lbl_803DEDE0;
-extern const f32 lbl_803DEDE4, lbl_803DEDE8;
-extern const f32 lbl_803DEDD8, lbl_803DEDDC;
+extern const f32 lbl_803DEDE4;
+extern const f32 lbl_803DEDE8;
+extern const f32 lbl_803DEDD8;
+extern const f32 lbl_803DEDDC;
 extern const f32 lbl_803DED10;
 extern const f32 lbl_803DED1C;
-extern const f32 lbl_803DEDEC, lbl_803DEDF0, lbl_803DEDF4, lbl_803DEDF8, lbl_803DEDFC;
+extern const f32 lbl_803DEDEC;
+extern const f32 lbl_803DEDF0;
+extern const f32 lbl_803DEDF4;
+extern const f32 lbl_803DEDF8;
+extern const f32 lbl_803DEDFC;
 extern const f32 lbl_803DEE04;
-extern const f32 lbl_803DEE14, lbl_803DEE18, lbl_803DEE1C;
+extern const f32 lbl_803DEE14;
+extern const f32 lbl_803DEE18;
+extern const f32 lbl_803DEE1C;
 extern const f32 lbl_803DED0C;
-extern const f32 lbl_803DED14, lbl_803DED18;
-extern const f32 lbl_803DED20, lbl_803DED24;
-extern const f32 lbl_803DED34, lbl_803DED48;
-extern const f32 lbl_803DEDAC, lbl_803DEDB0, lbl_803DEDB4, lbl_803DEDB8, lbl_803DEDBC;
+extern const f32 lbl_803DED14;
+extern const f32 lbl_803DED18;
+extern const f32 lbl_803DED20;
+extern const f32 lbl_803DED24;
+extern const f32 lbl_803DED34;
+extern const f32 lbl_803DED48;
+extern const f32 lbl_803DEDAC;
+extern const f32 lbl_803DEDB0;
+extern const f32 lbl_803DEDB4;
+extern const f32 lbl_803DEDB8;
+extern const f32 lbl_803DEDBC;
 extern const f32 gNewShadowFovY;
 extern const f32 lbl_803DED70, lbl_803DED74, gNewShadowAspectWide, gNewShadowAspectNarrow;
-extern const f32 lbl_803DED44, lbl_803DED4C, lbl_803DED50;
+extern const f32 lbl_803DED44;
+extern const f32 lbl_803DED4C;
 extern const f32 lbl_803DED68;
 extern const f32 lbl_803DED6C;
 extern f32 gMapSavedPlayerOffsetX, gMapSavedPlayerOffsetZ;
@@ -874,9 +891,9 @@ void renderShadows(int unused0, int unused1, int unused2)
                     }
                 }
             }
-            if (vA[1] > lbl_803DED50)
+            if (vA[1] > (-0.707f))
             {
-                vA[1] = lbl_803DED50;
+                vA[1] = (-0.707f);
                 PSVECNormalize(vA, vA);
             }
             vAx = vA[0];

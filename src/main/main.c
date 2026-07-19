@@ -105,7 +105,6 @@ extern f32 lbl_803E6158;
 extern f32 lbl_803E6160;
 extern f32 lbl_803E6164;
 extern f32 lbl_803E616C;
-extern f32 lbl_803E6170;
 extern f32 gVfpLavaPoolPi;
 extern f32 lbl_803E6178;
 extern f32 lbl_803E617C;
@@ -216,7 +215,7 @@ void fn_801FD6B4(GameObject* obj)
         state->amplitude = lbl_803E6168 / ((f32)(int)*(s16*)(def + 0x1a) / (f32)(int)randomGetRange(0x15e, 800));
         state->phase = lbl_803E616C;
         Sfx_PlayFromObject((u32)obj, SFXTRIG_id_111);
-        speed = lbl_803E6170;
+        speed = 255.0f;
     }
     gVfpLavaPoolWaveSin = wave = mathSinf((gVfpLavaPoolPi * (f32)(s16)(int)state->phase) / lbl_803E6178);
     obj->anim.rootMotionScale = lbl_803E617C * state->amplitude + lbl_803E6180 * state->amplitude * wave;
@@ -232,13 +231,13 @@ void fn_801FD6B4(GameObject* obj)
     phase = state->phase;
     if (phase > lbl_803E618C)
     {
-        speed = (f32)(s16)(int)(lbl_803E6170 * gVfpLavaPoolWaveSin);
+        speed = (f32)(s16)(int)(255.0f * gVfpLavaPoolWaveSin);
     }
     if (phase < lbl_803E6190)
     {
-        speed = lbl_803E6170 * (phase / lbl_803E6190);
+        speed = 255.0f * (phase / lbl_803E6190);
     }
-    obj->anim.alpha = ((speed < lbl_803E616C) ? lbl_803E616C : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
+    obj->anim.alpha = ((speed < lbl_803E616C) ? lbl_803E616C : ((speed > 255.0f) ? 255.0f : speed));
     tex = objFindTexture((GameObject*)obj, 0, 0);
     if (tex != NULL)
     {
