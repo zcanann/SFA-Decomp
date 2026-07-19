@@ -168,12 +168,12 @@ int gArwingPathSetupData[30] = {
     1095761920,  1097859072,  -1044381696, -1051721728, 1097859072,  -1044381696,
 };
 
-int sArwingPathName[] = {
+int sArwingPathSpeeds[] = {
     1097859072, 1082130432, 1082130432, 1082130432, 1092616192,
     1092616192, 1092616192, 1092616192, 1084227584, 1084227584,
 };
 
-f32 lbl_8032B4A8[30] = {
+f32 sDamageStickBlendRamp[30] = {
     0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f,
     1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
     1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
@@ -242,7 +242,7 @@ void arwarwing_readControls(GameObject* obj, ArwingState* state)
         knockX = -aw->knockVelX;
         knockY = -aw->knockVelZ;
         aw->damageFlashTimer = aw->damageFlashTimer - timeDelta;
-        knockBlend = lbl_8032B4A8[(int)aw->damageFlashTimer];
+        knockBlend = sDamageStickBlendRamp[(int)aw->damageFlashTimer];
         if (aw->damageFlashTimer <= zero)
         {
             aw->hitShake = 0;
@@ -1880,7 +1880,7 @@ void arwarwing_init(GameObject* obj)
     pathBlock = state->pathBlock;
     (obj)->animEventCallback = arwarwing_SeqFn;
     (*gPathControlInterface)->init(pathBlock, 4, 0x1040006, 1);
-    (*gPathControlInterface)->setup(pathBlock, 3, gArwingPathSetupData, sArwingPathName, &cfg);
+    (*gPathControlInterface)->setup(pathBlock, 3, gArwingPathSetupData, sArwingPathSpeeds, &cfg);
     (*gPathControlInterface)->attachObject((void*)obj, pathBlock);
     ObjGroup_AddObject((int)obj, ARWARWING_OBJGROUP);
     gArwing = obj;
