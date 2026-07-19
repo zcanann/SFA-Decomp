@@ -2454,7 +2454,7 @@ main/dll/dll_01CE_dll1ce.c:
 
 main/dll/DIM/dll_01CC_dimmagicbridge.c:
 	.text       start:0x801B5D48 end:0x801B63F4
-	.sdata2     start:0x803E4A00 end:0x803E4A40
+	.sdata2     start:0x803E4A00 end:0x803E4A38
 
 main/dll/DIM/dll_01CD_dimlevelcontrol.c:
 	.text       start:0x801B63F4 end:0x801B6B44
@@ -2466,6 +2466,7 @@ main/dll/dll_01CF_dll1cf.c:
 main/dll/DIM/dll_01D0_dimtricky.c:
 	.text       start:0x801B6C2C end:0x801B6D40
 	.data       start:0x803256A8 end:0x803256E0
+	.sdata2     start:0x803E4A38 end:0x803E4A3C
 
 main/dll/DIM/dll_01D1_dimtruthhornice.c:
 	.text       start:0x801B6D40 end:0x801B7154

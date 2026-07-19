@@ -48,7 +48,6 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
-extern f32 lbl_803E4A38;
 
 #define DIMTRICKY_STATE_WAIT_TRIGGER 0
 #define DIMTRICKY_STATE_HAND_CONTROL 1
@@ -68,7 +67,7 @@ void dim_tricky_free(void)
 {
 }
 
-void dim_tricky_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumesFwdLegacy(p1, p2, p3, p4, p5, lbl_803E4A38); }
+void dim_tricky_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumesFwdLegacy(p1, p2, p3, p4, p5, 1.0f); }
 
 void dim_tricky_hitDetect(void)
 {
