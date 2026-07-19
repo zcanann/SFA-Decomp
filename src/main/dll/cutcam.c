@@ -72,7 +72,7 @@ void doNothing_80103660(int unused)
 {
 }
 
-u8 camcontrol_traceFromTarget(float* fromPos, GameObject* target, float* outPos)
+u8 camcontrol_traceFromTarget(float* fromPos, GameObject* target, float* outPos, void* unused)
 {
     float targetPos[3];
     u8 traceRec[111];

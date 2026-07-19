@@ -12,6 +12,7 @@
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/dll/player_motion.h"
+#include "main/dll/CAM/cutCam.h"
 #include "main/frame_timing.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
@@ -34,8 +35,6 @@ extern f32 gCamForceBehindActiveHeightOffset; /* active height offset */
 extern f32 gCamForceBehindTraceDistance;      /* derived horizontal trace distance */
 extern f32 gCamForceBehindPlacementRadius;    /* derived orbit radius used to place the camera */
 extern f32 gCamForceBehindEaseRate;           /* yaw/pitch ease rate fed to interpolate() */
-extern void camcontrol_traceFromTarget();
-
 void CameraModeForceBehind_copyToCurrent(void)
 {
 }
