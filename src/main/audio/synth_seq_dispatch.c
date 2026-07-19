@@ -237,14 +237,7 @@ SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 voice
                         u8 vt;
                         u8 tid;
 
-                        if (gSynthCurrentFadeOutState != 0)
-                        {
-                            mod = -1;
-                        }
-                        else
-                        {
-                            mod = 0;
-                        }
+                        mod = gSynthCurrentFadeOutState != 0 ? -1 : 0;
                         sv2 = gSynthCurrentVoice;
                         tid = event->trackId;
                         vt = sv2->defStudio;
