@@ -134,8 +134,6 @@ const ObjFxRandomBurstTable gObjFxRandomBurstTbl = {
 
 #define OBJFX_OBJFLAG_PARENT_SLACK 0x1000
 
-typedef void (*ObjFxNdcToScreenFn)(f32 x, f32 y, f32 z, int* screenX, int* screenY, int* screenZ);
-
 /* Shared explosion object spawned by spawnExplosion / DIMexplosionFn_8009a96c
  * (type 0x24, id 0x253; buffer cast to ExplosionSetup). */
 #define OBJFX_CHILD_OBJ_EXPLOSION 0x253
@@ -692,7 +690,7 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
     ObjFxParticleParams params;
     f32 lvec[6];
     f32 proj[3];
-    int screen[3];
+    s32 screen[3];
     int i;
     int depth;
     u8 n;
@@ -774,7 +772,7 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
                                                (obj)->anim.worldPosZ - playerMapOffsetZ, 10.0f, &proj[2],
                                                &proj[1], &proj[0]);
         }
-        ((ObjFxNdcToScreenFn)Camera_NdcToScreen)(proj[2], proj[1], proj[0], &screen[2], &screen[1], &screen[0]);
+        Camera_NdcToScreen(proj[2], proj[1], proj[0], &screen[2], &screen[1], &screen[0]);
         depth = depthReadRequestPoll(screen[2], screen[1], obj);
         if (screen[0] > depth)
         {
