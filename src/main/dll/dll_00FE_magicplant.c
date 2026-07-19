@@ -295,13 +295,11 @@ void MagicPlant_free(GameObject* obj, int freeChildren)
 {
     MagicPlantObject* plant;
     MagicPlantState* state;
-    int objId;
 
     plant = (MagicPlantObject*)obj;
     state = plant->state;
-    objId = (int)obj;
-    ObjGroup_RemoveObject(objId, MAGICPLANT_OBJGROUP_A);
-    ObjGroup_RemoveObject(objId, MAGICPLANT_OBJGROUP_B);
+    ObjGroup_RemoveObject((int)obj, MAGICPLANT_OBJGROUP_A);
+    ObjGroup_RemoveObject((int)obj, MAGICPLANT_OBJGROUP_B);
     if (plant->childLinkActive != 0)
     {
         ObjLink_DetachChild(obj, state->childObject);
