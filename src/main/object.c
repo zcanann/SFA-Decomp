@@ -46,7 +46,6 @@
 #include "main/dll/player.h"
 #include "string.h"
 #include "main/track_dolphin_ext.h"
-#include "main/dll/player_ext.h"
 #include "main/dll/dll_0004_dummy04.h"
 
 s16 gObjPartitionPivot;
@@ -947,7 +946,7 @@ void objFreeObjDef(u8* obj, int flag)
     {
     case 0:
     case 0x1f:
-        fn_802B4DE0(obj, flag);
+        fn_802B4DE0((GameObject*)obj, flag);
         break;
     default:
         if (((GameObject*)obj)->anim.dll != NULL)

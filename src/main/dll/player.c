@@ -162,7 +162,6 @@ void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle);
 void playerDoTailAnims(int obj, void* statep);
 void playerUpdatePathEffectCountdown(GameObject* obj, int inner);
 int playerStopRidingObject(GameObject* obj);
-void fn_802960E4(int a, f32 b, f32 c);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
 int fn_80297498(void);
 int playerState41(GameObject* obj, int state, f32 fv);
@@ -285,10 +284,7 @@ void playerDoControls(GameObject* obj, int state, f32 fv);
 void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt);
 void fn_802B4A9C(GameObject* obj, int inner, int inner2);
 void playerAnimate(GameObject* obj, int state, f32 fv);
-void fn_802B4DE0(GameObject* obj, int p2);
 void fn_802B4ED8(GameObject* obj, int p2, int mode);
-void playerUpdateWhileTimeStopped(int obj);
-void objLoadPlayerFromSave(int obj);
 void playerInitFuncPtrs(void);
 #define LANTERNFIREFLY_OBJGROUP  0x30 /* DLL 0x10C lanternfirefly */
 typedef struct

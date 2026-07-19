@@ -20,6 +20,7 @@ void playerRender(int obj, int a, int b, int c, int d, int flag);
 void playerLock(GameObject* player, int lock);
 int fn_8029605C(GameObject* player, f32* outX, f32* outY);
 void fn_802960E8(GameObject* player, s16 effectId);
+void fn_802960E4(int obj, f32 xVelocity, f32 zVelocity);
 void fn_802960F4(GameObject* player, f32** outFxOffsets);
 void objSetPos(GameObject* player, f32 x, f32 y, f32 z);
 f32 fn_8029610C(GameObject* obj);
@@ -65,6 +66,9 @@ void cameraGetPrevPos2(GameObject* player, f32* outX, f32* outY, f32* outZ);
 void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 void playerInitFuncPtrsEntry(void);
 void fn_802B4ED8(GameObject* obj, int state, int mode);
+void fn_802B4DE0(GameObject* obj, int flag);
+void playerUpdateWhileTimeStopped(int obj);
+void objLoadPlayerFromSave(int obj);
 /* The raw integer parent preserves the matched player implementation's signed comparisons. */
 void fn_80296EB4(GameObject* obj, int newParent);
 
