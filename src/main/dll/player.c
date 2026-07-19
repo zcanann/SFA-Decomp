@@ -8573,7 +8573,7 @@ int playerState08(GameObject* obj, int state, f32 fv)
                 att = Obj_SetupObject(setup, 4, player->anim.mapEventSlot, -1, player->anim.parent);
                 gPlayerChildObject = att;
             }
-            ((void (*)(int, void*, int))ObjLink_AttachChild)((int)obj, att, 1);
+            ObjLink_AttachChild((GameObject*)obj, (GameObject*)att, 1);
             (*gObjectTriggerInterface)->runSequence(0xd, (void*)obj, -1);
         }
     }

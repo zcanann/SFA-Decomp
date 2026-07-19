@@ -391,7 +391,7 @@ void DR_LaserCannon_update(GameObject* obj)
                  DR_LASERCANNON_FIREPIPE_GROUP_ID, obj, &nearDist)) != 0u)
         {
             state->hasFirepipe = 1;
-            ((void (*)(GameObject*, FirePipeObject*, int))ObjLink_AttachChild)(obj, state->firepipeObject, 0);
+            ObjLink_AttachChild(obj, (GameObject*)state->firepipeObject, 0);
             firepipe_setLinkedUpdateFlag(state->firepipeObject);
         }
         state->flags.b7 = 0;
