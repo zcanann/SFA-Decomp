@@ -101,7 +101,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            if (mainGetBit((s32)(s8) * (u8*)(data + 0x19) + 2601) != 0)
+            if (mainGetBit((s32)((Dbholecontrol1Placement*)data)->triggerSeqId + 2601) != 0)
                 continue;
             if (Obj_IsLoadingLocked() == 0)
                 continue;

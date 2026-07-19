@@ -794,7 +794,7 @@ void fn_8004D6D8(void)
         void* obj = (char*)tex + 0x20;
         if (((Texture*)tex)->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)tex + 0x40), id);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, (GXTexRegion*)((Texture*)tex)->tmemAddr, id);
         }
         else
         {
