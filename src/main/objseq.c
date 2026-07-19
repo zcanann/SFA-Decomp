@@ -1971,14 +1971,14 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         break;
     case 33:
         ((ObjSeqState*)seq)->flags = ((ObjSeqState*)seq)->flags | 0x400;
-        ((SeqByte136*)(seq + 0x136))->modelSlot = cmdArg;
+        ((SeqByte136*)&((ObjSeqState*)seq)->flags136[0])->modelSlot = cmdArg;
         break;
     case 34:
         ((ObjSeqState*)seq)->flags = ((ObjSeqState*)seq)->flags & ~0x400;
-        ((SeqByte136*)(seq + 0x136))->modelSlot = 0;
+        ((SeqByte136*)&((ObjSeqState*)seq)->flags136[0])->modelSlot = 0;
         break;
     case 35:
-        ((SeqByte136*)(seq + 0x136))->mapEvent = 1;
+        ((SeqByte136*)&((ObjSeqState*)seq)->flags136[0])->mapEvent = 1;
         break;
     case 36:
         (*gMapEventInterface)->savePoint(0, 0, 1, getCurMapLayer());
@@ -4301,7 +4301,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 
                 if ((((ObjSeqState*)seq)->flags & 0x400) != 0)
                 {
-                    slots = ((SeqByte136*)(seq + 0x136))->modelSlot;
+                    slots = ((SeqByte136*)&((ObjSeqState*)seq)->flags136[0])->modelSlot;
                     modelIds = seqFn_800394a0();
                     if (slots == 0)
                     {
