@@ -788,9 +788,9 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                             first = 0;
                         }
                         vp = *(u8**)slot + *(u16*)(slot + 0xe) * 20;
-                        ((SwipeVertex*)vp)[0].x = Curve_EvalBSplineValuesFirst(ptBx, frac, NULL);
-                        ((SwipeVertex*)vp)[0].y = Curve_EvalBSplineValuesFirst(ptBy, frac, NULL);
-                        ((SwipeVertex*)vp)[0].z = Curve_EvalBSplineValuesFirst(ptBz, frac, NULL);
+                        ((SwipeVertex*)vp)[0].x = Curve_EvalBSpline(ptBx, frac, NULL);
+                        ((SwipeVertex*)vp)[0].y = Curve_EvalBSpline(ptBy, frac, NULL);
+                        ((SwipeVertex*)vp)[0].z = Curve_EvalBSpline(ptBz, frac, NULL);
                         ((SwipeVertex*)vp)[0].x += ((StaffState*)swipe)->anchorX + acc * (((GameObject*)obj)->anim.worldPosX - ((StaffState*)swipe)->anchorX);
                         ((SwipeVertex*)vp)[0].y += ((StaffState*)swipe)->anchorY + acc * (((GameObject*)obj)->anim.worldPosY - ((StaffState*)swipe)->anchorY);
                         ((SwipeVertex*)vp)[0].z += ((StaffState*)swipe)->anchorZ + acc * (((GameObject*)obj)->anim.worldPosZ - ((StaffState*)swipe)->anchorZ);
@@ -815,9 +815,9 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                             }
                             ((SwipeVertex*)vp)[0].alpha = k - clamped;
                         }
-                        ((SwipeVertex*)vp)[1].x = Curve_EvalBSplineValuesFirst(ptAx, frac, NULL);
-                        ((SwipeVertex*)vp)[1].y = Curve_EvalBSplineValuesFirst(ptAy, frac, NULL);
-                        ((SwipeVertex*)vp)[1].z = Curve_EvalBSplineValuesFirst(ptAz, frac, NULL);
+                        ((SwipeVertex*)vp)[1].x = Curve_EvalBSpline(ptAx, frac, NULL);
+                        ((SwipeVertex*)vp)[1].y = Curve_EvalBSpline(ptAy, frac, NULL);
+                        ((SwipeVertex*)vp)[1].z = Curve_EvalBSpline(ptAz, frac, NULL);
                         ((SwipeVertex*)vp)[1].x += ((StaffState*)swipe)->anchorX + acc * (((GameObject*)obj)->anim.worldPosX - ((StaffState*)swipe)->anchorX);
                         ((SwipeVertex*)vp)[1].y += ((StaffState*)swipe)->anchorY + acc * (((GameObject*)obj)->anim.worldPosY - ((StaffState*)swipe)->anchorY);
                         ((SwipeVertex*)vp)[1].z += ((StaffState*)swipe)->anchorZ + acc * (((GameObject*)obj)->anim.worldPosZ - ((StaffState*)swipe)->anchorZ);

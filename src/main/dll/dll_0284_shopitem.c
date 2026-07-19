@@ -262,9 +262,12 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
         }
     }
         {
-            (obj)->anim.localPosX = Curve_EvalBSplineValuesFirst(sub + 4, ((ShopItemState*)sub)->splineT, 0);
-            (obj)->anim.localPosY = Curve_EvalBSplineValuesFirst(sub + 0x14, ((ShopItemState*)sub)->splineT, 0);
-            (obj)->anim.localPosZ = Curve_EvalBSplineValuesFirst(sub + 0x24, ((ShopItemState*)sub)->splineT, 0);
+            (obj)->anim.localPosX =
+                Curve_EvalBSpline(((ShopItemState*)sub)->controlX, ((ShopItemState*)sub)->splineT, 0);
+            (obj)->anim.localPosY =
+                Curve_EvalBSpline(((ShopItemState*)sub)->controlY, ((ShopItemState*)sub)->splineT, 0);
+            (obj)->anim.localPosZ =
+                Curve_EvalBSpline(((ShopItemState*)sub)->controlZ, ((ShopItemState*)sub)->splineT, 0);
             ((ShopItemState*)sub)->splineT =
                 ((ShopItemState*)sub)->splineSpeed * timeDelta + ((ShopItemState*)sub)->splineT;
             (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
@@ -415,9 +418,12 @@ void shopitem_update(GameObject* obj)
                     }
                     fn_801F4ECC(obj, (BoulderShakeRec*)state);
                 }
-                (obj)->anim.localPosX = Curve_EvalBSplineValuesFirst(state + 4, ((ShopItemState*)state)->splineT, 0);
-                (obj)->anim.localPosY = Curve_EvalBSplineValuesFirst(state + 0x14, ((ShopItemState*)state)->splineT, 0);
-                (obj)->anim.localPosZ = Curve_EvalBSplineValuesFirst(state + 0x24, ((ShopItemState*)state)->splineT, 0);
+                (obj)->anim.localPosX =
+                    Curve_EvalBSpline(((ShopItemState*)state)->controlX, ((ShopItemState*)state)->splineT, 0);
+                (obj)->anim.localPosY =
+                    Curve_EvalBSpline(((ShopItemState*)state)->controlY, ((ShopItemState*)state)->splineT, 0);
+                (obj)->anim.localPosZ =
+                    Curve_EvalBSpline(((ShopItemState*)state)->controlZ, ((ShopItemState*)state)->splineT, 0);
                 ((ShopItemState*)state)->splineT =
                     ((ShopItemState*)state)->splineSpeed * timeDelta + ((ShopItemState*)state)->splineT;
                 (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,

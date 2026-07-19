@@ -511,7 +511,7 @@ void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients)
     coefficients[3] *= 0.16666667f;
 }
 
-f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent)
+f32 Curve_EvalBSpline(f32* values, f32 t, f32* outTangent)
 {
     f32 cubic;
     f32 quadratic;

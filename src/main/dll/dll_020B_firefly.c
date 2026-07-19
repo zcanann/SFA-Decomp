@@ -120,9 +120,9 @@ void firefly_activeTick(GameObject* obj)
         state->splineY[3] = state->targetY;
         state->splineZ[3] = state->targetZ;
     }
-    (obj)->anim.localPosX = Curve_EvalBSplineValuesFirst(state->splineX, state->splineT, 0);
-    (obj)->anim.localPosY = Curve_EvalBSplineValuesFirst(state->splineY, state->splineT, 0);
-    (obj)->anim.localPosZ = Curve_EvalBSplineValuesFirst(state->splineZ, state->splineT, 0);
+    (obj)->anim.localPosX = Curve_EvalBSpline(state->splineX, state->splineT, 0);
+    (obj)->anim.localPosY = Curve_EvalBSpline(state->splineY, state->splineT, 0);
+    (obj)->anim.localPosZ = Curve_EvalBSpline(state->splineZ, state->splineT, 0);
     state->splineT = state->splineSpeed * timeDelta + state->splineT;
     (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
                                 (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);

@@ -309,9 +309,9 @@ void LanternFireFly_update(GameObject* obj)
         LanternFireFly_advanceControlRing(obj);
     }
 
-    (obj)->anim.localPosX = state->anchorX + Curve_EvalBSplineValuesFirst(state->controlX, state->splineT, 0);
-    (obj)->anim.localPosY = state->anchorY + Curve_EvalBSplineValuesFirst(state->controlY, state->splineT, 0);
-    (obj)->anim.localPosZ = state->anchorZ + Curve_EvalBSplineValuesFirst(state->controlZ, state->splineT, 0);
+    (obj)->anim.localPosX = state->anchorX + Curve_EvalBSpline(state->controlX, state->splineT, 0);
+    (obj)->anim.localPosY = state->anchorY + Curve_EvalBSpline(state->controlY, state->splineT, 0);
+    (obj)->anim.localPosZ = state->anchorZ + Curve_EvalBSpline(state->controlZ, state->splineT, 0);
 
     if (LANTERN_FIREFLY_IS_ACTIVE(state))
     {

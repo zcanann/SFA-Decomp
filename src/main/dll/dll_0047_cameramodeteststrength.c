@@ -272,9 +272,9 @@ void CameraModeTestStrength_update(short* cam)
         }
         t = lbl_803E18BC * (param - lbl_803DD560->pathProgress) + lbl_803DD560->pathProgress;
         lbl_803DD560->pathProgress = t;
-        ((CameraObject*)cam)->anim.worldPosX = Curve_EvalBSplineValuesFirst(x, t, 0);
-        ((CameraObject*)cam)->anim.worldPosY = Curve_EvalBSplineValuesFirst(y, t, 0);
-        ((CameraObject*)cam)->anim.worldPosZ = Curve_EvalBSplineValuesFirst(z, t, 0);
+        ((CameraObject*)cam)->anim.worldPosX = Curve_EvalBSpline(x, t, 0);
+        ((CameraObject*)cam)->anim.worldPosY = Curve_EvalBSpline(y, t, 0);
+        ((CameraObject*)cam)->anim.worldPosZ = Curve_EvalBSpline(z, t, 0);
         node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->prevNodeId);
         flags = *(u8*)(node2 + 0x3b);
         lockPitch = flags & 1;
@@ -292,7 +292,7 @@ void CameraModeTestStrength_update(short* cam)
         {
             cam[2] = Curve_EvalCatmullRom(rollS, t, 0);
         }
-        ((CameraObject*)cam)->fov = Curve_EvalBSplineValuesFirst(fov, t, 0);
+        ((CameraObject*)cam)->fov = Curve_EvalBSpline(fov, t, 0);
         if (lbl_803DD560->transitionComplete == 0 && (s32)fn_8010AEA8((CameraObject*)cam, (u32)flags) != 0)
         {
             lbl_803DD560->transitionComplete = 1;
@@ -415,9 +415,9 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     {
         t = lbl_803E188C;
     }
-    px = Curve_EvalBSplineValuesFirst(xS, t, 0);
-    py = Curve_EvalBSplineValuesFirst(yS, t, 0);
-    pz = Curve_EvalBSplineValuesFirst(zS, t, 0);
+    px = Curve_EvalBSpline(xS, t, 0);
+    py = Curve_EvalBSpline(yS, t, 0);
+    pz = Curve_EvalBSpline(zS, t, 0);
     dx = px - ((GameObject*)obj)->anim.worldPosX;
     dy = py - ((GameObject*)obj)->anim.worldPosY;
     dz = pz - ((GameObject*)obj)->anim.worldPosZ;
@@ -446,7 +446,7 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     {
         yaw = Curve_EvalCatmullRom(yawS, t, 0);
     }
-    fov = Curve_EvalBSplineValuesFirst(fovS, t, 0);
+    fov = Curve_EvalBSpline(fovS, t, 0);
     pos[0] = px;
     pos[1] = py;
     pos[2] = pz;

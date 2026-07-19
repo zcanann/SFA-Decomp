@@ -360,7 +360,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
         gCamcontrolPathState->pathCurve.px = gCamcontrolPathState->pointsX;
         gCamcontrolPathState->pathCurve.py = gCamcontrolPathState->pointsY;
         gCamcontrolPathState->pathCurve.pz = gCamcontrolPathState->pointsZ;
-        gCamcontrolPathState->pathCurve.eval = Curve_EvalBSpline;
+        gCamcontrolPathState->pathCurve.eval = (CurveEvalFn)Curve_EvalBSpline;
         gCamcontrolPathState->pathCurve.coeffFn = Curve_BuildBSplineCoeffs;
 
         camcontrol_buildPathPoints(baseX, baseZ, camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
