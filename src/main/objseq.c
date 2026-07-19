@@ -4326,10 +4326,11 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
 int ObjSeq_update(u8* obj, f32 t)
 {
     u8* base = lbl_80396918;
-    u8* cmd;
-    u8* action;
     u8* activeObj;
-    f32 scratch[2];
+    u8* action;
+    u8* cmd;
+    f32 moveProgress;
+    f32 groundY;
     ObjSeqPlacement* placement;
     u8* seq;
     ObjSeqState* state;
@@ -4412,7 +4413,7 @@ int ObjSeq_update(u8* obj, f32 t)
             if (*(s16*)(p + 0x30) <= 0)
             {
                 *(s16*)(p + 0x30) = 0;
-                Sfx_RemoveLoopedObjectSound((u32)obj, (u16) * (s16*)(p + 0x38));
+                Sfx_RemoveLoopedObjectSoundPtrU16Legacy(obj, *(s16*)(p + 0x38));
             }
         }
     }
@@ -4575,24 +4576,24 @@ int ObjSeq_update(u8* obj, f32 t)
                     f32 dx = px - prevX;
                     f32 dz = pz - prevZ;
                     if (ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)activeObj, sqrtf(dx * dx + dz * dz),
-                                                     &scratch[1]) == 0)
+                                                     &moveProgress) == 0)
                     {
                         i = state->curFrame - 1;
                         val = ObjSeq_SampleTrackCurve(seq, 9, i);
-                        scratch[1] = 0.0004f * val;
+                        moveProgress = 0.0004f * val;
                     }
                 }
                 else
                 {
                     i = state->curFrame - 1;
                     val = ObjSeq_SampleTrackCurve(seq, 9, i);
-                    scratch[1] = 0.0004f * val;
+                    moveProgress = 0.0004f * val;
                 }
 
                 if (action != NULL)
                 {
                     ObjAnim_AdvanceCurrentMove(
-                        (int)activeObj, scratch[1], lbl_803DEFC8, &state->animEvents);
+                        (int)activeObj, moveProgress, lbl_803DEFC8, &state->animEvents);
                     if (state->fade > lbl_803DEFB0)
                     {
                         if (state->trackRunLength[10] != 0)
@@ -4619,7 +4620,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 }
                 else
                 {
-                    ((GameObject*)activeObj)->anim.currentMoveProgress += scratch[1];
+                    ((GameObject*)activeObj)->anim.currentMoveProgress += moveProgress;
                     fval = lbl_803DEFC8;
                     while (((GameObject*)activeObj)->anim.currentMoveProgress > fval)
                     {
@@ -4780,11 +4781,11 @@ int ObjSeq_update(u8* obj, f32 t)
         ObjSeq_UpdateCurvePosition(obj, seq);
         if ((s8)state->groundSnapEnabled == 1 &&
             hitDetectFn_800658a4((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, scratch, 0) == 0)
+                                 ((GameObject*)obj)->anim.localPosZ, &groundY, 0) == 0)
         {
             ((GameObject*)obj)->anim.localPosY =
                 ((GameObject*)obj)->anim.localPosY +
-                ((((GameObject*)obj)->anim.localPosY - scratch[0]) - placement->groundOffset);
+                ((((GameObject*)obj)->anim.localPosY - groundY) - placement->groundOffset);
         }
         ((GameObject*)obj)->anim.rotX += state->heading;
         ObjSeq_ApplyLinkedObjectTransform(obj, activeObj, seq);
