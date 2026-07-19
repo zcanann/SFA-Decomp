@@ -9,7 +9,7 @@
 #include "main/gamebits.h"
 #include "main/render_envfx_api.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/maketex_timer_api.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"

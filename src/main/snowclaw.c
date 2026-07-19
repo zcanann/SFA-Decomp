@@ -10,7 +10,7 @@
 #include "main/obj_group.h"
 #include "main/obj_link.h"
 #include "main/obj_path.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/obj_query.h"
@@ -529,7 +529,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
                 ObjLink_AttachChild(obj, (GameObject*)near, 0);
             }
         }
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         ObjPath_GetPointWorldPosition(obj, 1, &((SnowclawState*)inner)->posX, &((SnowclawState*)inner)->posY,
                                       &((SnowclawState*)inner)->posZ, 0);
         obj->anim.renderAlpha = oldFlag;

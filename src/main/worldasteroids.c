@@ -1,7 +1,7 @@
 #include "main/worldasteroids.h"
 #include "main/fcos16_approx_api.h"
 #include "main/fsin16_approx_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
 
@@ -34,7 +34,7 @@ void worldasteroids_free(void)
     return;
 }
 
-void worldasteroids_render(u32 obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
+void worldasteroids_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)

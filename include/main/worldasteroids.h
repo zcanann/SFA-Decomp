@@ -2,6 +2,7 @@
 #define MAIN_WORLDASTEROIDS_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/object_descriptor.h"
 
 #define WORLD_ASTEROIDS_CENTER_OBJECT_ID 0x42fe7
@@ -36,7 +37,7 @@ extern ObjectDescriptor gWorldAsteroidsObjDescriptor;
 int worldasteroids_getExtraSize(void);
 int worldasteroids_getObjectTypeId(void);
 void worldasteroids_free(void);
-void worldasteroids_render(u32 param_1,u32 param_2,u32 param_3,
+void worldasteroids_render(GameObject* obj,u32 param_2,u32 param_3,
                            u32 param_4,u32 param_5,s8 visible);
 void worldasteroids_hitDetect(void);
 void worldasteroids_update(WorldAsteroidsObject *obj);

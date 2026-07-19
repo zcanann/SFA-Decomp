@@ -69,7 +69,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/frame_timing.h"
 #include "main/fileio.h"
 #include "main/textrender_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/dll_0011_screens.h"
 #include "main/dll/dll_000D_playershadow.h"
 #include "main/voxmaps.h"
@@ -1281,7 +1281,7 @@ void gameLoop(void)
                 p = (int*)&gGameLoopButtonObjects;
                 for (; i < gGameLoopButtonObjectCount; i++)
                 {
-                    objRenderModelAndHitVolumes(*p, 0, 0, 0, 0, lbl_803DE7A8);
+                    objRenderModelAndHitVolumes((GameObject*)*p, 0, 0, 0, 0, lbl_803DE7A8);
                     if (((GameObject*)*p)->anim.seqId == GAMELOOP_SEQID_DIE_FOX ||
                         ((GameObject*)*p)->anim.seqId == GAMELOOP_SEQID_DIE_KRYSTAL)
                     {

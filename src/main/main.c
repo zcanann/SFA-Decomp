@@ -1,7 +1,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/CF/laser.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
@@ -284,12 +284,12 @@ extern f32 lbl_803E61B4;
 void VFP_lavapool_free_nop(void)
 {
 }
-void VFP_lavapool_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void VFP_lavapool_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     if (visible != 0)
     {
         fn_8003B608(0xff, 0xe6, 0xd7);
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E6168);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E6168);
     }
 }
 

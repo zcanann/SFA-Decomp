@@ -6,7 +6,7 @@
 #include "main/model_light.h"
 #include "main/object.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
@@ -171,7 +171,7 @@ void worldobj_free(GameObject* obj);
 void worldobj_init(GameObject* obj, int arg);
 void worldobj_spawnGreatFoxEffects(GameObject* obj);
 void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId);
-void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void worldobj_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 
 int worldobj_getExtraSize(void)
@@ -199,10 +199,10 @@ void worldobj_free(GameObject* obj)
     (*gExpgfxInterface)->freeSource((int)obj);
 }
 
-void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void worldobj_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    WorldObjState* state = ((GameObject*)p1)->extra;
-    int modelId = ((WorldObjSetup*)((GameObject*)p1)->anim.placementData)->objectId;
+    WorldObjState* state = obj->extra;
+    int modelId = ((WorldObjSetup*)obj->anim.placementData)->objectId;
 
     if (modelId == WORLDOBJ_SKYSCAPE_OBJ)
     {
@@ -227,7 +227,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         if (randomGetRange(0, 0x19) != 0 && state->effectState != 0)
         {
             GXSetScissor(0x1e0, 0x32, 0x82, 0x96);
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E6678);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6678);
             Camera_ApplyCurrentViewport((void*)p2);
         }
         break;
@@ -241,7 +241,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
             }
             else
             {
-                ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E6678);
+                objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6678);
             }
         }
         else
@@ -254,12 +254,12 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         {
             queueGlowRender(state->light);
         }
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E6678);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6678);
         break;
     case WORLDOBJ_SUNRAY_OBJ:
     case WORLDOBJ_SUNFLARE_OBJ:
     default:
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E6678);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6678);
         break;
     }
 }
