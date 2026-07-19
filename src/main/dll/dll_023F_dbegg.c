@@ -24,7 +24,7 @@
 #include "main/game_object.h"
 #include "main/object_update_list.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/debug.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_api.h"
@@ -517,7 +517,7 @@ void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         u32 t = ((DbEggState*)inner)->mode;
         if (t != 0xc && t != 4 && t != 0xb)
         {
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E61CC);
+            objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, lbl_803E61CC);
         }
     }
 }

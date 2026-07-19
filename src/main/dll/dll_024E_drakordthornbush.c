@@ -84,8 +84,7 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         Obj_UpdateLightningCluster((GameObject*)p1, ((DrakordThornbushState*)inner)->lightningEntries, 3, lightScale,
                                    &((DrakordThornbushState*)inner)->light);
     }
-    ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(
-        (GameObject*)p1, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }
 
 void drakord_thornbush_hitDetect(int obj)

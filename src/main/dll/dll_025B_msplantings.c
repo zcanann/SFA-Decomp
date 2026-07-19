@@ -14,7 +14,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll/DIM/dimlogfire.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object.h"
 #include "main/vecmath.h"
 #include "main/obj_placement.h"
@@ -159,7 +159,7 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
         {
             fn_8003B608(0xff, 0xff, 0xff);
         }
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
     }
 }
 

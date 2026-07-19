@@ -18,7 +18,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "track/intersect_depth_state_api.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objprint_render_api.h"
 #include "main/vecmath.h"
 #include "main/dll/shopkeeperstate_struct.h"
@@ -155,7 +155,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
         ModelRenderOp* renderOp = ObjModel_GetRenderOp(Obj_GetActiveModel((GameObject*)obj)->file, 0);
         renderOp->alphaOverride = 0x7F;
     }
-    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5A30);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E5A30);
     for (i = 0; i < 10; i++)
     {
         if (state->lightningHandles[i] != NULL)
@@ -307,7 +307,7 @@ void shopitem_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
         }
         else
         {
-            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5A30);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5A30);
         }
     }
 }

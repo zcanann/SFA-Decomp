@@ -29,7 +29,7 @@
 #include "main/objanim.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/debug.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
@@ -2281,8 +2281,7 @@ void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
             {
                 fn_8003B5E0(0xc8, 0, 0, state->glowAlpha);
             }
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5,
-                                                                                  1.0f);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
             if ((state->flags400 & 0x60) != 0)
             {
                 objParticleFn_80099d84((GameObject*)obj, 1.0f, 3, state->glowAlpha, 0);
@@ -2291,8 +2290,7 @@ void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
             if (path != NULL && *(void**)(path + 0x50) != NULL)
             {
                 ObjPath_GetPointWorldPosition(obj, 3, (f32*)(path + 0xc), (f32*)(path + 0x10), (f32*)(path + 0x14), 0);
-                ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->linkedObj, p2, p3, p4, p5,
-                                                                                      1.0f);
+                objRenderModelAndHitVolumes((GameObject*)sub->linkedObj, p2, p3, p4, p5, 1.0f);
             }
         }
     }
