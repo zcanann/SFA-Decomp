@@ -72,10 +72,6 @@ enum NwMammothRuntimeFlag
     NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
 };
 
-extern f32 lbl_803E520C;
-extern f32 lbl_803E5218;
-extern f32 lbl_803E5210;
-extern u32 lbl_803E5208;
 
 int fn_801CE078(int* obj, u8* state);
 void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData);
@@ -122,6 +118,35 @@ typedef struct
     f32 pos[3];
 } WoPartfxBlock;
 
+void fn_801CDF94(GameObject* obj, int state, int flag)
+{
+    if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL &&
+        ((NwMammothState*)state)->playerDistanceSq < 40000.0f)
+    {
+        ((NwMammothState*)state)->eyeTarget.enabled = 1;
+        ((NwMammothState*)state)->eyeTarget.targetX =
+            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosX;
+        ((NwMammothState*)state)->eyeTarget.targetY =
+            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosY;
+        ((NwMammothState*)state)->eyeTarget.targetZ =
+            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosZ;
+    }
+    else
+    {
+        ((NwMammothState*)state)->eyeTarget.enabled = 0;
+    }
+    if ((lbl_803268B4[((NwMammothState*)state)->stateIndex] & 0x2) != 0)
+    {
+        fn_8003A168(obj, (void*)(state + 0x40c));
+        fn_8003B228(obj, (void*)(state + 0x40c));
+    }
+    else
+    {
+        fn_8003A230(obj, (CharacterEyeAnimState*)(state + 0x40c), kNwMammothZero[0]);
+        characterDoEyeAnimsState(obj, state + 0x40c);
+    }
+}
+
 int fn_801CE078(int* obj, u8* st)
 {
     u8 night;
@@ -143,7 +168,7 @@ int fn_801CE078(int* obj, u8* st)
     {
         if (night != 0)
         {
-            if (state->pathSpeed > lbl_803E520C)
+            if (state->pathSpeed > kNwMammothZero[0])
             {
                 return -1;
             }
@@ -174,14 +199,14 @@ int fn_801CE078(int* obj, u8* st)
             Sfx_PlayFromObject((u32)obj, SFXTRIG_sa_off);
         }
         state->stateTimer -= timeDelta;
-        if (night == 0 && state->stateTimer <= lbl_803E520C)
+        if (night == 0 && state->stateTimer <= kNwMammothZero[0])
         {
             state->stateIndex = 0x16;
         }
         {
             f32 t = state->partfxTimer - timeDelta;
             state->partfxTimer = t;
-            if (t <= lbl_803E520C)
+            if (t <= kNwMammothZero[0])
             {
                 if (((GameObject*)obj)->objectFlags & NWMAMMOTH_OBJFLAG_RENDERED)
                 {
@@ -190,7 +215,7 @@ int fn_801CE078(int* obj, u8* st)
                     blk.pos[2] = state->spawnPosZ;
                     (*gPartfxInterface)->spawnObject(obj, NWMAMMOTH_PARTFX, &blk, 0x200001, -1, NULL);
                 }
-                state->partfxTimer = lbl_803E5218;
+                state->partfxTimer = 30.0f;
             }
         }
         break;
@@ -208,17 +233,16 @@ int fn_801CE078(int* obj, u8* st)
     return 1;
 }
 
-f32 gNwMammothSfxInterval = 900.0f;
-f32 gNwMammothTumbleweedDistSqThreshold = 250000.0f;
-f32 gNwMammothCaptureDist = 6.25f;
-f32 gNwMammothAirMeterFull = 200.0f;
-f32 gNwMammothAirMeterPerSegment = 66.666664f;
-f32 gNwMammothPathAccel = 0.01f;
-f32 gNwMammothPathSpeedMin = 0.05f;
-f32 gNwMammothPlayerNearDistSq = 6400.0f;
-f32 gNwMammothPathDecel = 0.02f;
-f32 gNwMammothPathSpeedMax = 0.5f;
-f32 gNwMammothDefaultAnimStepScale = 0.005f;
+const f32 gNwMammothSfxInterval[1] = {900.0f};
+const f32 gNwMammothTumbleweedDistSqThreshold[1] = {250000.0f};
+const f32 gNwMammothCaptureDist[1] = {6.25f};
+const f32 gNwMammothAirMeterFull[1] = {200.0f};
+const f32 gNwMammothAirMeterPerSegment[1] = {66.666664f};
+const f32 gNwMammothPathAccel[1] = {0.01f};
+const f32 gNwMammothPathSpeedMin[1] = {0.05f};
+const f32 gNwMammothPlayerNearDistSq[1] = {6400.0f};
+const f32 gNwMammothPathDecel[1] = {0.02f};
+const f32 gNwMammothPathSpeedMax[1] = {0.5f};
 
 void fn_801CE2BC(int* obj, u8* st, short* objDef)
 {
@@ -230,10 +254,10 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     {
     case 9:
         state->sfxTimer += timeDelta;
-        if (state->sfxTimer > gNwMammothSfxInterval)
+        if (state->sfxTimer > gNwMammothSfxInterval[0])
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_skeep_mumb);
-            state->sfxTimer -= gNwMammothSfxInterval;
+            state->sfxTimer -= gNwMammothSfxInterval[0];
         }
         if (state->playerDistanceSq < (f32)(s32)(objDef[0xc] * objDef[0xc]))
         {
@@ -248,10 +272,10 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         break;
     case 0xb:
         state->sfxTimer += timeDelta;
-        if (state->sfxTimer > gNwMammothSfxInterval)
+        if (state->sfxTimer > gNwMammothSfxInterval[0])
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_skeep_mumb);
-            state->sfxTimer -= gNwMammothSfxInterval;
+            state->sfxTimer -= gNwMammothSfxInterval[0];
         }
         if (ObjTrigger_IsSet((int)obj) != 0)
         {
@@ -296,10 +320,10 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                     {
                         tw = tumbleweedbush_findNearestActive(&((GameObject*)o2)->anim.worldPosX);
                         if (tw == NULL || vec3f_distanceSquared(&tw->anim.worldPosX, (f32*)&o2[6]) >=
-                                              gNwMammothTumbleweedDistSqThreshold)
+                                              gNwMammothTumbleweedDistSqThreshold[0])
                         {
                             if (vec3f_distanceSquared(&((GameObject*)state->playerObject)->anim.worldPosX,
-                                                      (f32*)&o2[6]) >= gNwMammothTumbleweedDistSqThreshold)
+                                                      (f32*)&o2[6]) >= gNwMammothTumbleweedDistSqThreshold[0])
                             {
                                 enemy_setTrackedObj((GameObject*)o2, (GameObject*)obj);
                             }
@@ -358,7 +382,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     }
     case 0xe:
         if (getXZDistance(&state->spawnPosX, &state->trackedObject->anim.worldPosX) <
-            gNwMammothCaptureDist)
+            gNwMammothCaptureDist[0])
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_mammoth_annoyed);
             fn_80163980(state->trackedObject);
@@ -396,7 +420,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         break;
     case 0x11:
         if (!(((GameObject*)state->playerObject)->objectFlags & NWMAMMOTH_OBJFLAG_PARENT_SLACK) &&
-            state->airMeterValue >= gNwMammothAirMeterFull)
+            state->airMeterValue >= gNwMammothAirMeterFull[0])
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_menuups16k);
             (*gScreenTransitionInterface)->start(0x14, 1);
@@ -437,11 +461,11 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     }
     if (state->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE)
     {
-        if (state->airMeterValue < gNwMammothAirMeterPerSegment * state->uiMessageCount)
+        if (state->airMeterValue < gNwMammothAirMeterPerSegment[0] * state->uiMessageCount)
         {
             state->airMeterValue += timeDelta;
         }
-        if (state->airMeterValue >= gNwMammothAirMeterFull)
+        if (state->airMeterValue >= gNwMammothAirMeterFull[0])
         {
             (*gGameUIInterface)->runAirMeter(0xc8);
         }
@@ -458,27 +482,27 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
     switch (fn_801CE078((int*)obj, st))
     {
     case -1:
-        state->pathSpeed -= gNwMammothPathAccel * timeDelta;
-        if (state->pathSpeed < gNwMammothPathSpeedMin)
+        state->pathSpeed -= gNwMammothPathAccel[0] * timeDelta;
+        if (state->pathSpeed < gNwMammothPathSpeedMin[0])
         {
-            state->pathSpeed = lbl_803E520C;
+            state->pathSpeed = kNwMammothZero[0];
         }
         break;
     case 0:
-        if ((((NwMammothObject*)obj)->hitboxFlags & 4) || state->playerDistanceSq < gNwMammothPlayerNearDistSq)
+        if ((((NwMammothObject*)obj)->hitboxFlags & 4) || state->playerDistanceSq < gNwMammothPlayerNearDistSq[0])
         {
-            state->pathSpeed -= gNwMammothPathDecel * timeDelta;
-            if (state->pathSpeed < gNwMammothPathSpeedMin)
+            state->pathSpeed -= gNwMammothPathDecel[0] * timeDelta;
+            if (state->pathSpeed < gNwMammothPathSpeedMin[0])
             {
-                state->pathSpeed = lbl_803E520C;
+                state->pathSpeed = kNwMammothZero[0];
             }
         }
         else
         {
-            state->pathSpeed += gNwMammothPathAccel * timeDelta;
-            if (state->pathSpeed > gNwMammothPathSpeedMax)
+            state->pathSpeed += gNwMammothPathAccel[0] * timeDelta;
+            if (state->pathSpeed > gNwMammothPathSpeedMax[0])
             {
-                state->pathSpeed = *(f32*)&gNwMammothPathSpeedMax;
+                state->pathSpeed = *(f32*)&gNwMammothPathSpeedMax[0];
             }
         }
         break;
@@ -504,7 +528,7 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
         ((GameObject*)obj)->anim.rotX = (s16)(getAngle(cv->tangent[0], cv->tangent[2]) + 0x8000);
         ((GameObject*)obj)->anim.localPosX = cv->sample[0];
         ((GameObject*)obj)->anim.localPosZ = cv->sample[2];
-        if (state->pathSpeed <= lbl_803E520C)
+        if (state->pathSpeed <= kNwMammothZero[0])
         {
             state->stateIndex = 7;
         }
@@ -562,6 +586,38 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
         {
             state->triggerList = lbl_803DBF94;
         }
+    }
+}
+
+void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
+{
+    NwMammothState* state = (NwMammothState*)baddie;
+
+    (void)mapData;
+    switch (state->stateIndex)
+    {
+    case 4:
+        state->triggerList = lbl_803DBFB4;
+        if (ObjTrigger_IsSetById(obj, 418) != 0)
+        {
+            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
+            mainSetBits(GAMEBIT_SnowHornArtifact19D, 1);
+            mainSetBits(GAMEBIT_ITEM_NWSnowHornArtifact_Used, 1);
+            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE5, 1);
+            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE6, 1);
+            state->stateIndex = 5;
+        }
+        break;
+    case 5:
+        state->triggerList = lbl_803DBFB8;
+        if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
+        {
+            state->stateIndex = 6;
+        }
+        break;
+    case 6:
+        state->triggerList = lbl_803DBFBC;
+        break;
     }
 }
 
@@ -644,7 +700,7 @@ void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vis
     void* node;
 
     node = (obj)->extra;
-    objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E5210);
+    objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)gNwMammothAnimSpeedNormal[0]);
     for (i = 0; i < 4; i++)
     {
         ObjPath_GetPointWorldPosition(obj, i, (f32*)((char*)node + i * 0xc + 0x45c),
@@ -760,13 +816,13 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
     if (obj->currentMove != (currentMove = table->stateMoveIds[stateIndex]))
     {
         stepScale = table->stateMoveStepScales[stateIndex];
-        if (stepScale > lbl_803E520C)
+        if (stepScale > kNwMammothZero[0])
         {
-            ObjAnim_SetCurrentMove((int)obj, currentMove, lbl_803E520C, 0);
+            ObjAnim_SetCurrentMove((int)obj, currentMove, kNwMammothZero[0], 0);
         }
         else
         {
-            ObjAnim_SetCurrentMove((int)obj, currentMove, lbl_803E5210, 0);
+            ObjAnim_SetCurrentMove((int)obj, currentMove, gNwMammothAnimSpeedNormal[0], 0);
         }
         state->animStepScale = table->stateMoveStepScales[state->stateIndex];
     }
@@ -779,8 +835,8 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
     {
         state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_ANIM_ENDED);
     }
-    objAudioFn_8006ef38((GameObject*)obj, &state->animEvents, 8, state->pathPoints, state->pathState, lbl_803E5210,
-                        *(f32*)&lbl_803E5210);
+    objAudioFn_8006ef38((GameObject*)obj, &state->animEvents, 8, state->pathPoints, state->pathState, gNwMammothAnimSpeedNormal[0],
+                        gNwMammothAnimSpeedNormal[0]);
     fn_801CDF94((GameObject*)obj, (int)state, table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
     state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
     if (((state->runtimeFlags & NW_MAMMOTH_RUNTIME_MENU_LOCK) == 0) && (ObjTrigger_IsSet((int)obj) != 0))
@@ -797,66 +853,8 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
     }
 }
 
-void fn_801CDF94(GameObject* obj, int state, int flag)
-{
-    if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL &&
-        ((NwMammothState*)state)->playerDistanceSq < 40000.0f)
-    {
-        ((NwMammothState*)state)->eyeTarget.enabled = 1;
-        ((NwMammothState*)state)->eyeTarget.targetX =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosX;
-        ((NwMammothState*)state)->eyeTarget.targetY =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosY;
-        ((NwMammothState*)state)->eyeTarget.targetZ =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosZ;
-    }
-    else
-    {
-        ((NwMammothState*)state)->eyeTarget.enabled = 0;
-    }
-    if ((lbl_803268B4[((NwMammothState*)state)->stateIndex] & 0x2) != 0)
-    {
-        fn_8003A168(obj, (void*)(state + 0x40c));
-        fn_8003B228(obj, (void*)(state + 0x40c));
-    }
-    else
-    {
-        fn_8003A230(obj, (CharacterEyeAnimState*)(state + 0x40c), 0.0f);
-        characterDoEyeAnimsState(obj, state + 0x40c);
-    }
-}
-
-void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
-{
-    NwMammothState* state = (NwMammothState*)baddie;
-
-    (void)mapData;
-    switch (state->stateIndex)
-    {
-    case 4:
-        state->triggerList = lbl_803DBFB4;
-        if (ObjTrigger_IsSetById(obj, 418) != 0)
-        {
-            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
-            mainSetBits(GAMEBIT_SnowHornArtifact19D, 1);
-            mainSetBits(GAMEBIT_ITEM_NWSnowHornArtifact_Used, 1);
-            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE5, 1);
-            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE6, 1);
-            state->stateIndex = 5;
-        }
-        break;
-    case 5:
-        state->triggerList = lbl_803DBFB8;
-        if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
-        {
-            state->stateIndex = 6;
-        }
-        break;
-    case 6:
-        state->triggerList = lbl_803DBFBC;
-        break;
-    }
-}
+const f32 kNwMammothPathCurveLength[1] = { 1000.0f };
+const f32 gNwMammothDefaultAnimStepScale[1] = { 0.005f };
 
 void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isReload)
 {
@@ -865,14 +863,14 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     int curveParam;
 
     state = obj->state;
-    pathParam = lbl_803E5208;
+    pathParam = kNwMammothPathParamDefault[0];
     obj->rotX = (s16)(mapData->modelIndex << 8);
     obj->seqCallback = nw_mammoth_SeqFn;
     if (isReload != 0)
     {
         return;
     }
-    state->animStepScale = gNwMammothDefaultAnimStepScale;
+    state->animStepScale = gNwMammothDefaultAnimStepScale[0];
     switch (mapData->behaviorMode)
     {
     case 0:
@@ -897,12 +895,12 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     case 3:
         curveParam = NW_MAMMOTH_CURVE_PARAM;
         state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_PATH_CONTROL);
-        if ((u8)(*gRomCurveInterface)->initCurve(&state->curveState, obj, 1000.0f, &curveParam, -1) == 0)
+        if ((u8)(*gRomCurveInterface)->initCurve(&state->curveState, obj, kNwMammothPathCurveLength[0], &curveParam, -1) == 0)
         {
             obj->localPosX = state->curveState.pointX;
             obj->localPosZ = state->curveState.pointZ;
             state->stateIndex = 8;
-            state->pathSpeed = gNwMammothPathSpeedMax;
+            state->pathSpeed = gNwMammothPathSpeedMax[0];
         }
         break;
     case 4:
