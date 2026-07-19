@@ -95,13 +95,7 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 /* Subtype of the contents object spawned on unlock (docblock: "contents object (subtype 0x246)"). */
 #define DLL1CE_CONTENTS_SUBTYPE 0x246 /* retail "DIMBridgeCo..." (DLL 0xED) */
 
-extern f32 lbl_803E49E8;
 void* lbl_803DDB78;
-extern f32 lbl_803E49F0;
-extern f32 lbl_803E49EC;
-extern f32 lbl_803E49F4;
-extern f32 lbl_803E49F8;
-extern f32 lbl_803E49FC;
 
 extern u8 dim_levelcontrol_free[];
 extern u8 dim_levelcontrol_getExtraSize[];
@@ -131,7 +125,7 @@ void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E49E8);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1CE_hitDetect(void)
@@ -156,15 +150,15 @@ void dll_1CE_update(int* obj)
         if (sub->opened == 1)
         {
             sub->openProgress = sub->openVelocity * timeDelta + sub->openProgress;
-            if (sub->openProgress > lbl_803E49EC)
+            if (sub->openProgress > 82.0f)
             {
-                sub->openProgress = lbl_803E49EC;
-                sub->openVelocity = lbl_803E49F0;
+                sub->openProgress = 82.0f;
+                sub->openVelocity = -0.1f;
             }
-            else if (sub->openProgress < lbl_803E49F4)
+            else if (sub->openProgress < -5.0f)
             {
-                sub->openProgress = lbl_803E49F4;
-                sub->openVelocity = lbl_803E49F8;
+                sub->openProgress = -5.0f;
+                sub->openVelocity = 0.1f;
             }
         }
     }
@@ -206,7 +200,7 @@ void dll_1CE_update(int* obj)
     {
         int* no = (int*)Obj_AllocObjectSetup(0x30, DLL1CE_CONTENTS_SUBTYPE);
         ((Dll1CESpawnSetup*)no)->posX = ((Dll1CEPlacement*)q)->posX;
-        ((Dll1CESpawnSetup*)no)->posY = lbl_803E49FC + ((Dll1CEPlacement*)q)->posYOffset;
+        ((Dll1CESpawnSetup*)no)->posY = 8.0f + ((Dll1CEPlacement*)q)->posYOffset;
         ((Dll1CESpawnSetup*)no)->posZ = ((Dll1CEPlacement*)q)->posZ;
         ((Dll1CESpawnSetup*)no)->color[0] = ((Dll1CEPlacement*)q)->color[0];
         ((Dll1CESpawnSetup*)no)->color[1] = ((Dll1CEPlacement*)q)->color[1];
@@ -236,7 +230,7 @@ void dll_1CE_init(u8* obj, u8* params)
         hitState->flags &= ~1;
         ((GameObject*)obj)->anim.alpha = 0;
     }
-    sub->openVelocity = lbl_803E49F0;
+    sub->openVelocity = -0.1f;
 }
 
 void dll_1CE_release(void)
