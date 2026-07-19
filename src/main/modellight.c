@@ -1105,7 +1105,6 @@ void modelLightChannels_applyGXControls(void)
     ModelLightChannelState* entry;
     int channel;
     u8 activeMask;
-    int lightMask;
     int attnFn;
 
     activeMask = 0;
@@ -1116,22 +1115,19 @@ void modelLightChannels_applyGXControls(void)
         {
             if (entry->mode == 0)
             {
-                lightMask = entry->lightMask;
-                attnFn = lightMask != 0 ? 1 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, GX_SRC_REG, entry->matSrc, lightMask,
-                              lightMask != 0 ? GX_DF_CLAMP : GX_DF_NONE, attnFn);
+                attnFn = entry->lightMask != 0 ? 1 : 2;
+                GXSetChanCtrl(channel, entry->lightMask != 0, GX_SRC_REG, entry->matSrc, entry->lightMask,
+                              entry->lightMask != 0 ? GX_DF_CLAMP : GX_DF_NONE, attnFn);
             }
             else if (entry->mode == 2)
             {
-                lightMask = entry->lightMask;
-                attnFn = lightMask != 0 ? 1 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, GX_SRC_REG, entry->matSrc, lightMask, GX_DF_NONE, attnFn);
+                attnFn = entry->lightMask != 0 ? 1 : 2;
+                GXSetChanCtrl(channel, entry->lightMask != 0, GX_SRC_REG, entry->matSrc, entry->lightMask, GX_DF_NONE, attnFn);
             }
             else
             {
-                lightMask = entry->lightMask;
-                attnFn = lightMask != 0 ? 0 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, GX_SRC_REG, entry->matSrc, lightMask, GX_DF_NONE, attnFn);
+                attnFn = entry->lightMask != 0 ? 0 : 2;
+                GXSetChanCtrl(channel, entry->lightMask != 0, GX_SRC_REG, entry->matSrc, entry->lightMask, GX_DF_NONE, attnFn);
             }
             activeMask |= 1 << channel;
         }
