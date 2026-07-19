@@ -374,29 +374,29 @@ void fn_801EED5C(GameObject* obj, f32* x, f32* y, f32* z)
     *z = state->spawnPosZ;
 }
 
-void fn_801EED7C(void)
+void SB_CloudRunner_func23(void)
 {
 }
 
 
-void fn_801EED80(void* obj)
+void SB_CloudRunner_setGroundMarkerMatrix(void* obj)
 {
     objSetMtxFn_800412d4(ObjPath_GetPointModelMtx(obj, 3));
 }
 
 
-void fn_801EEDA8(void)
+void SB_CloudRunner_func21(void)
 {
 }
 
 
-int fn_801EEDAC(void)
+int SB_CloudRunner_func20(void)
 {
     return 0x0;
 }
 
 
-f32 fn_801EEDB4(int unused, f32* p)
+f32 SB_CloudRunner_func19(int unused, f32* p)
 {
     f32 v = lbl_803E5C70;
     *p = v;
@@ -404,42 +404,42 @@ f32 fn_801EEDB4(int unused, f32* p)
 }
 
 
-void fn_801EEDC0(int obj, f32* out, int* outInt)
+void SB_CloudRunner_func18(int obj, f32* out, int* outInt)
 {
     *out = lbl_803E5C70;
     *outInt = 0;
 }
 
 
-void fn_801EEDD4(void)
+void SB_CloudRunner_func17(void)
 {
 }
 
-int fn_801EEDD8(void)
+int SB_CloudRunner_func16(void)
 {
     return 0x2;
 }
 
 
-void fn_801EEDE0(GameObject* src, f32* out_x, f32* out_y, f32* out_z)
+void SB_CloudRunner_func15(GameObject* src, f32* out_x, f32* out_y, f32* out_z)
 {
     *out_x = src->anim.localPosX;
     *out_y = src->anim.localPosY;
     *out_z = src->anim.localPosZ;
 }
 
-int fn_801EEDFC(void)
+int SB_CloudRunner_func14(void)
 {
     return 0x0;
 }
 
-int fn_801EEE04(void)
+int SB_CloudRunner_render2(void)
 {
     return 0x0;
 }
 
 
-void fn_801EEE0C(int* obj, f32* x, f32* y, f32* z)
+void SB_CloudRunner_modelMtxFn(int* obj, f32* x, f32* y, f32* z)
 {
     f32* p = ((GameObject*)obj)->extra;
     *x = p[0];
@@ -447,12 +447,12 @@ void fn_801EEE0C(int* obj, f32* x, f32* y, f32* z)
     *z = p[2];
 }
 
-int fn_801EEE2C(void)
+int SB_CloudRunner_func11(void)
 {
     return 0x0;
 }
 
-int fn_801EEE34(void)
+int SB_CloudRunner_setScale(void)
 {
     return 0x0;
 }
@@ -636,18 +636,18 @@ ObjectDescriptor24 gSB_CloudRunnerObjDescriptor = {
     (ObjectDescriptorCallback)SB_CloudRunner_free,
     (ObjectDescriptorCallback)SB_CloudRunner_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)SB_CloudRunner_getExtraSize,
-    (ObjectDescriptorCallback)fn_801EEE34,
-    (ObjectDescriptorCallback)fn_801EEE2C,
-    (ObjectDescriptorCallback)fn_801EEE0C,
-    (ObjectDescriptorCallback)fn_801EEE04,
-    (ObjectDescriptorCallback)fn_801EEDFC,
-    (ObjectDescriptorCallback)fn_801EEDE0,
-    (ObjectDescriptorCallback)fn_801EEDD8,
-    (ObjectDescriptorCallback)fn_801EEDD4,
-    (ObjectDescriptorCallback)fn_801EEDC0,
-    (ObjectDescriptorCallback)fn_801EEDB4,
-    (ObjectDescriptorCallback)fn_801EEDAC,
-    (ObjectDescriptorCallback)fn_801EEDA8,
-    (ObjectDescriptorCallback)fn_801EED80,
-    (ObjectDescriptorCallback)fn_801EED7C,
+    (ObjectDescriptorCallback)SB_CloudRunner_setScale,
+    (ObjectDescriptorCallback)SB_CloudRunner_func11,
+    (ObjectDescriptorCallback)SB_CloudRunner_modelMtxFn,
+    (ObjectDescriptorCallback)SB_CloudRunner_render2,
+    (ObjectDescriptorCallback)SB_CloudRunner_func14,
+    (ObjectDescriptorCallback)SB_CloudRunner_func15,
+    (ObjectDescriptorCallback)SB_CloudRunner_func16,
+    (ObjectDescriptorCallback)SB_CloudRunner_func17,
+    (ObjectDescriptorCallback)SB_CloudRunner_func18,
+    (ObjectDescriptorCallback)SB_CloudRunner_func19,
+    (ObjectDescriptorCallback)SB_CloudRunner_func20,
+    (ObjectDescriptorCallback)SB_CloudRunner_func21,
+    (ObjectDescriptorCallback)SB_CloudRunner_setGroundMarkerMatrix,
+    (ObjectDescriptorCallback)SB_CloudRunner_func23,
 };
