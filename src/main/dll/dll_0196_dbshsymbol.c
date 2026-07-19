@@ -76,7 +76,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
 
     state = ((GameObject*)obj)->extra;
     player = (int)Obj_GetPlayerObject();
-    Sfx_SetObjectSfxVolumeIntLegacy(obj, SFXTRIG_blockscrape_lp, 10, lbl_803E50E0);
+    Sfx_SetObjectSfxVolume(obj, SFXTRIG_blockscrape_lp, 10, lbl_803E50E0);
     Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_blockscrape_lp);
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -217,7 +217,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
         {
             volume = 100;
         }
-        Sfx_SetObjectSfxVolumeIntLegacy(obj, SFXTRIG_blockscrape_lp, (u8)volume, lbl_803E50E0);
+        Sfx_SetObjectSfxVolume(obj, SFXTRIG_blockscrape_lp, (u8)volume, lbl_803E50E0);
     }
     return 0;
 }
