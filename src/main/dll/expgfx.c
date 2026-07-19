@@ -125,37 +125,15 @@ ExpgfxWGPipe GXWGFifo : (0xCC008000);
 
 extern ExpgfxBounds gExpgfxPoolBounds[];
 extern u8 lbl_803DD253;
-extern f32 lbl_803DF418;
 extern f32 gExpgfxYVelocityPositiveLimit;
 extern f32 gExpgfxYVelocityFastStep;
 extern f32 gExpgfxYVelocitySlowStep;
 extern f32 gExpgfxYVelocityNegativeLimit;
 extern const f32 gExpgfxSlotMotionStep;
 
-extern const f32 lbl_803DF3C8;
-extern const f32 lbl_803DF3CC;
-extern const f32 lbl_803DF3D0;
 extern const f32 gExpgfxBoundsInitMin;
 extern const f32 gExpgfxBoundsInitMax;
-extern const f32 lbl_803DF3DC;
-extern const f32 lbl_803DF3E0;
-extern const f32 lbl_803DF3E4;
-extern const f32 lbl_803DF3E8;
-extern const f32 lbl_803DF3EC;
-extern const f32 lbl_803DF3F0;
-extern const f32 lbl_803DF3F4;
-extern const f32 lbl_803DF3F8;
-extern const f32 lbl_803DF3FC;
-extern const f32 lbl_803DF400;
-extern const f32 lbl_803DF404;
-extern const f32 lbl_803DF408;
-extern const f32 lbl_803DF40C;
 extern const f32 gExpgfxU16ToUnitScale;
-extern const f32 lbl_803DF414;
-extern const f32 lbl_803DF41C;
-extern const f32 lbl_803DF420;
-extern const f32 lbl_803DF424;
-extern const f32 lbl_803DF428;
 extern int gExpgfxSlotType1Count;
 extern int lbl_803DD274;
 extern int gExpgfxSlotType1Average;
@@ -629,21 +607,21 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     f32 attractRatio; /* attract speed ratio; reused as cross-product Z lane and trail inv-scale */
     staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
-    attractRatio = lbl_803DF354;
-    trickyRange = lbl_803DF35C;
+    attractRatio = 1.0f;
+    trickyRange = 0.0f;
     playerRange = trickyRange;
     player = (GameObject*)Obj_GetPlayerObject();
     tricky = (GameObject*)getTrickyObject();
     cache = getCache();
-    gExpgfxPhaseAngleA += (u16)(lbl_803DF3C8 * timeDelta);
-    gExpgfxPhaseAngleB += (u16)(lbl_803DF3CC * timeDelta);
+    gExpgfxPhaseAngleA += (u16)(120.0f * timeDelta);
+    gExpgfxPhaseAngleB += (u16)(480.0f * timeDelta);
     sky = getSkyStructField24C();
     fn_800897D4(sky, &skyLightDir[0], &skyLightDir[1], &skyLightDir[2]);
     PSMTXMultVec((void*)Camera_GetViewRotationMatrix(), (void*)skyLightDir, (void*)skyLightDir);
     ambientScale = -skyLightDir[2];
-    if (ambientScale < lbl_803DF3D0)
+    if (ambientScale < 0.75f)
     {
-        ambientScale = lbl_803DF3D0;
+        ambientScale = 0.75f;
     }
     getAmbientColor(sky, &ambR8, &ambG8, &ambB8);
     ambientScaled[2] = (f32)ambR8 * ambientScale;
@@ -794,18 +772,18 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                 }
                 if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) != 0)
                 {
-                    workB = lbl_803DF3DC;
+                    workB = 1000000.0f;
                     workA = workB;
                     if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0 && player != NULL &&
-                        srcObj != NULL && playerRange > lbl_803DF3E0)
+                        srcObj != NULL && playerRange > 0.2f)
                     {
                         workVec[0] = player->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
                         workVec[2] = player->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
                         workB = workVec[0] * workVec[0] + workVec[2] * workVec[2];
                         attractRatio = playerRange / workB;
                     }
-                    if (workB > lbl_803DF3B0 && (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0 &&
-                        tricky != NULL && srcObj != NULL && trickyRange > lbl_803DF3E0)
+                    if (workB > 300.0f && (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0 &&
+                        tricky != NULL && srcObj != NULL && trickyRange > 0.2f)
                     {
                         workVec[0] = tricky->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
                         workVec[2] = tricky->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
@@ -816,7 +794,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     {
                         workB = workA;
                     }
-                    if (workB < lbl_803DF3B0)
+                    if (workB < 300.0f)
                     {
                         if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0)
                         {
@@ -842,27 +820,27 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                 {
                     if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_A) != 0)
                     {
-                        slot->velocityX += lbl_803DF3E4 * slot->velocityX;
-                        slot->velocityY += lbl_803DF3E4 * slot->velocityY;
-                        slot->velocityZ += lbl_803DF3E4 * slot->velocityZ;
+                        slot->velocityX += 0.01f * slot->velocityX;
+                        slot->velocityY += 0.01f * slot->velocityY;
+                        slot->velocityZ += 0.01f * slot->velocityZ;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_B) != 0)
                     {
-                        slot->velocityX += lbl_803DF3E8 * slot->velocityX;
-                        slot->velocityY += lbl_803DF3E8 * slot->velocityY;
-                        slot->velocityZ += lbl_803DF3E8 * slot->velocityZ;
+                        slot->velocityX += 0.02f * slot->velocityX;
+                        slot->velocityY += 0.02f * slot->velocityY;
+                        slot->velocityZ += 0.02f * slot->velocityZ;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_C) != 0)
                     {
-                        slot->velocityX += lbl_803DF3EC * slot->velocityX;
-                        slot->velocityY += lbl_803DF3EC * slot->velocityY;
-                        slot->velocityZ += lbl_803DF3EC * slot->velocityZ;
+                        slot->velocityX += 0.04f * slot->velocityX;
+                        slot->velocityY += 0.04f * slot->velocityY;
+                        slot->velocityZ += 0.04f * slot->velocityZ;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_DAMP) != 0)
                     {
-                        slot->velocityX = lbl_803DF3F0 * slot->velocityX;
-                        slot->velocityY = lbl_803DF3F0 * slot->velocityY;
-                        slot->velocityZ = lbl_803DF3F0 * slot->velocityZ;
+                        slot->velocityX = 0.99f * slot->velocityX;
+                        slot->velocityY = 0.99f * slot->velocityY;
+                        slot->velocityZ = 0.99f * slot->velocityZ;
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 &&
                         slot->velocityY < gExpgfxYVelocityPositiveLimit)
@@ -928,11 +906,11 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         f32 fade;
 
                         rnd = randomGetRange(0, 5);
-                        fade = -((f32)(int)rnd * lbl_803DF3E4 + lbl_803DF38C);
+                        fade = -((f32)(int)rnd * 0.01f + 0.25f);
                         slot->velocityY *= fade;
-                        if (slot->velocityY > lbl_803DF390)
+                        if (slot->velocityY > 0.3f)
                         {
-                            slot->velocityY = lbl_803DF390;
+                            slot->velocityY = 0.3f;
                         }
                         rotParams.scale = 1.0f;
                         rotParams.angleZ = 0;
@@ -967,14 +945,14 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         {
                             slot->velocityX *= 0.5f;
                             slot->velocityZ *= 0.5f;
-                            slot->scaleCurrent = (f32)slot->scaleCurrent * lbl_803DF3F4;
+                            slot->scaleCurrent = (f32)slot->scaleCurrent * 0.65f;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1 | 0LL;
                         }
                         else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2) != 0)
                         {
                             slot->velocityX *= 0.5f;
                             slot->velocityZ *= 0.5f;
-                            slot->scaleCurrent = (f32)slot->scaleCurrent * lbl_803DF3F4;
+                            slot->scaleCurrent = (f32)slot->scaleCurrent * 0.65f;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
                         }
@@ -982,7 +960,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         {
                             slot->velocityX *= 0.5f;
                             slot->velocityZ *= 0.5f;
-                            slot->scaleCurrent = (f32)slot->scaleCurrent * lbl_803DF3F4;
+                            slot->scaleCurrent = (f32)slot->scaleCurrent * 0.65f;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
                             if (slot->impactEffectId != -1)
@@ -1002,7 +980,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                                 v = slot->velocityZ;
                                 slot->velocityZ = v * (st - v);
                             }
-                            slot->scaleCurrent = (f32)slot->scaleCurrent * lbl_803DF3F4;
+                            slot->scaleCurrent = (f32)slot->scaleCurrent * 0.65f;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
                             if (slot->impactEffectId != -1)
@@ -1085,26 +1063,26 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && randomGetRange(0, 4) == 1)
                     {
-                        slot->velocityX += lbl_803DF3F8 - (f32)(int)randomGetRange(0, 9) / lbl_803DF3FC;
-                        slot->velocityZ += lbl_803DF3F8 - (f32)(int)randomGetRange(0, 9) / lbl_803DF3FC;
+                        slot->velocityX += 0.045f - (f32)(int)randomGetRange(0, 9) / 100.0f;
+                        slot->velocityZ += 0.045f - (f32)(int)randomGetRange(0, 9) / 100.0f;
                     }
                     if ((slot->renderFlags & EXPGFX_RENDER_RANDOM_VELOCITY_BURST) != 0 && randomGetRange(0, 10) == 1)
                     {
                         if (slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame)
                         {
-                            slot->velocityX += lbl_803DF400 * (f32)(int)randomGetRange(-800, 800) + lbl_803DF3E8;
-                            slot->velocityY += lbl_803DF400 * (f32)(int)randomGetRange(-800, 800) + lbl_803DF3E8;
-                            slot->velocityZ += lbl_803DF400 * (f32)(int)randomGetRange(-800, 800) + lbl_803DF3E8;
+                            slot->velocityX += 0.0004f * (f32)(int)randomGetRange(-800, 800) + 0.02f;
+                            slot->velocityY += 0.0004f * (f32)(int)randomGetRange(-800, 800) + 0.02f;
+                            slot->velocityZ += 0.0004f * (f32)(int)randomGetRange(-800, 800) + 0.02f;
                         }
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH) != 0)
                     {
-                        if (lbl_803DF38C * slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame)
+                        if (0.25f * slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame)
                         {
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH | 0LL;
-                            slot->velocityX *= lbl_803DF404;
-                            slot->velocityY *= lbl_803DF404;
-                            slot->velocityZ *= lbl_803DF404;
+                            slot->velocityX *= -3.0f;
+                            slot->velocityY *= -3.0f;
+                            slot->velocityZ *= -3.0f;
                         }
                     }
                     if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0)
@@ -1248,10 +1226,10 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         {
                             norm = 1.0f;
                         }
-                        axisX = lbl_803DF408 * (workA / norm);
-                        axisY = lbl_803DF408 * (workB / norm);
-                        axisZ = lbl_803DF408 * (attractRatio / norm);
-                        attractRatio = lbl_803DF40C / (gExpgfxU16ToUnitScale * (f32)(u16)slot->scaleTarget);
+                        axisX = 250.0f * (workA / norm);
+                        axisY = 250.0f * (workB / norm);
+                        axisZ = 250.0f * (attractRatio / norm);
+                        attractRatio = 2.0f / (gExpgfxU16ToUnitScale * (f32)(u16)slot->scaleTarget);
                         quad[0].x = (s16)axisX;
                         quad[0].y = (s16)axisY;
                         quad[0].z = (s16)axisZ;
@@ -1841,18 +1819,18 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             if (((stateBitsValue >> 2) & 3) == 0 && ((stateBitsValue >> 1) & 1) != 0 &&
                 slot->sequenceId != EXPGFX_INVALID_SEQUENCE_ID && (stateBitsValue & 1) == 0)
             {
-                halfLifeFrames = lbl_803DF358 * (f32)slot->lifetimeFrameLimit;
+                halfLifeFrames = 0.5f * (f32)slot->lifetimeFrameLimit;
                 behaviorFlags = slot->behaviorFlags;
                 if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_TO_OPAQUE) != 0)
                 {
                     f32 ratio = (f32)slot->lifetimeFrame / (f32)slot->lifetimeFrameLimit;
-                    if (ratio < lbl_803DF35C)
+                    if (ratio < 0.0f)
                     {
-                        ratio = lbl_803DF35C;
+                        ratio = 0.0f;
                     }
-                    else if (ratio > lbl_803DF354)
+                    else if (ratio > 1.0f)
                     {
-                        ratio = lbl_803DF354;
+                        ratio = 1.0f;
                     }
                     {
                         u32 baseAlpha = slot->initialAlpha;
@@ -1862,13 +1840,13 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_OUT) != 0)
                 {
                     f32 ratio = (f32)slot->lifetimeFrame / (f32)slot->lifetimeFrameLimit;
-                    if (ratio < lbl_803DF35C)
+                    if (ratio < 0.0f)
                     {
-                        ratio = lbl_803DF35C;
+                        ratio = 0.0f;
                     }
-                    else if (ratio > lbl_803DF354)
+                    else if (ratio > 1.0f)
                     {
-                        ratio = lbl_803DF354;
+                        ratio = 1.0f;
                     }
                     alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
                 }
@@ -1876,13 +1854,13 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                          (f32)slot->lifetimeFrame <= halfLifeFrames)
                 {
                     f32 ratio = (f32)slot->lifetimeFrame / halfLifeFrames;
-                    if (ratio < lbl_803DF35C)
+                    if (ratio < 0.0f)
                     {
-                        ratio = lbl_803DF35C;
+                        ratio = 0.0f;
                     }
-                    else if (ratio > lbl_803DF354)
+                    else if (ratio > 1.0f)
                     {
-                        ratio = lbl_803DF354;
+                        ratio = 1.0f;
                     }
                     alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
                 }
@@ -1892,26 +1870,26 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     if (pulse != 0 && (f32)slot->lifetimeFrame <= halfLifeFrames)
                     {
                         f32 ratio = (f32)slot->lifetimeFrame / halfLifeFrames;
-                        if (ratio < lbl_803DF35C)
+                        if (ratio < 0.0f)
                         {
-                            ratio = lbl_803DF35C;
+                            ratio = 0.0f;
                         }
-                        else if (ratio > lbl_803DF354)
+                        else if (ratio > 1.0f)
                         {
-                            ratio = lbl_803DF354;
+                            ratio = 1.0f;
                         }
                         alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
                     }
                     else if (pulse != 0)
                     {
                         f32 ratio = (halfLifeFrames - ((f32)slot->lifetimeFrame - halfLifeFrames)) / halfLifeFrames;
-                        if (ratio < lbl_803DF35C)
+                        if (ratio < 0.0f)
                         {
-                            ratio = lbl_803DF35C;
+                            ratio = 0.0f;
                         }
-                        else if (ratio > lbl_803DF354)
+                        else if (ratio > 1.0f)
                         {
-                            ratio = lbl_803DF354;
+                            ratio = 1.0f;
                         }
                         alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
                     }
@@ -1929,7 +1907,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)slot->scaleCurrent;
                 if ((behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && hudHiddenFrameCount == 0)
                 {
-                    f32 base = lbl_803DF358 * scaleSize;
+                    f32 base = 0.5f * scaleSize;
                     f32 rnd = (f32)randomGetRange(1, 10);
                     scaleFactor = base + base / rnd;
                 }
@@ -2130,7 +2108,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                                 viewMatrix[2][3];
                     if (viewDepth > gExpgfxNearFadeDepth)
                     {
-                        alpha = (int)((f32)alpha * ((-viewDepth) - lbl_803DF414) / ((-gExpgfxNearFadeDepth) - lbl_803DF414));
+                        alpha = (int)((f32)alpha * ((-viewDepth) - 2.5f) / ((-gExpgfxNearFadeDepth) - 2.5f));
                     }
                     GXWGFifo.f32 = worldX;
                     GXWGFifo.f32 = worldY;
@@ -2433,13 +2411,13 @@ void expgfx_updateFrameState(int sourceMode, int sourceId)
     {
         frameValue = gExpgfxFrameTimerA + (frameStep = timeDelta);
         gExpgfxFrameTimerA = frameValue;
-        if (frameValue >= lbl_803DF418)
+        if (frameValue >= 1024.0f)
         {
             gExpgfxFrameTimerA = 0.0f;
         }
         frameValue = gExpgfxFrameTimerB + frameStep;
         gExpgfxFrameTimerB = frameValue;
-        if (frameValue >= lbl_803DF384)
+        if (frameValue >= 10.0f)
         {
             gExpgfxFrameTimerB = 0.0f;
         }
@@ -2653,7 +2631,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         {
             debugPrintf(sExpgfxScaleOverflow);
         }
-        scaleVal = lbl_803DF350 * config->scale;
+        scaleVal = 65535.0f * config->scale;
 
         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0)
         {
@@ -2690,12 +2668,12 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0)
         {
             slot->renderFlags = slot->renderFlags ^ (EXPGFX_RENDER_BACKDATE_MOTION + 0LL);
-            slot->posX.value = slot->velocityX * (lbl_803DF41C * (f32)(s32)slot->lifetimeFrame) + slot->posX.value;
-            slot->posY.value = slot->velocityY * (lbl_803DF41C * (f32)(s32)slot->lifetimeFrame) + slot->posY.value;
-            slot->posZ.value = slot->velocityZ * (lbl_803DF41C * (f32)(s32)slot->lifetimeFrame) + slot->posZ.value;
-            slot->velocityX = slot->velocityX * lbl_803DF420;
-            slot->velocityY = slot->velocityY * lbl_803DF420;
-            slot->velocityZ = slot->velocityZ * lbl_803DF420;
+            slot->posX.value = slot->velocityX * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posX.value;
+            slot->posY.value = slot->velocityY * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posY.value;
+            slot->posZ.value = slot->velocityZ * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posZ.value;
+            slot->velocityX = slot->velocityX * -1.0f;
+            slot->velocityY = slot->velocityY * -1.0f;
+            slot->velocityZ = slot->velocityZ * -1.0f;
         }
 
         if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_ACTOR) != 0)
@@ -2711,12 +2689,12 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
                 dx = playerObj->anim.worldPosX - slot->startPosX.value;
                 dz = playerObj->anim.worldPosZ - slot->startPosZ.value;
                 distSq = dx * dx + dz * dz;
-                if (distSq < lbl_803DF424 && 0.0f != playerObj->anim.velocityX &&
+                if (distSq < 3600.0f && 0.0f != playerObj->anim.velocityX &&
                     0.0f != playerObj->anim.velocityZ)
                 {
                     slot->velocityX = slot->velocityX + dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
                     slot->velocityY =
-                        slot->velocityY + ((lbl_803DF428 + playerObj->anim.worldPosY) - slot->startPosY.value) /
+                        slot->velocityY + ((30.0f + playerObj->anim.worldPosY) - slot->startPosY.value) /
                                               (f32)(s32)((int)slot->lifetimeFrame << 1);
                     slot->velocityZ = slot->velocityZ + (playerObj->anim.worldPosZ - slot->startPosZ.value) /
                                                             (f32)(s32)((int)slot->lifetimeFrame << 1);
@@ -2727,12 +2705,12 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
                 dx = playerObj->anim.worldPosX - (slot->startPosX.value + attachedSource->localPosX);
                 dz = playerObj->anim.worldPosZ - (slot->startPosZ.value + attachedSource->localPosZ);
                 distSq = dx * dx + dz * dz;
-                if (distSq < lbl_803DF424 && 0.0f != playerObj->anim.velocityX &&
+                if (distSq < 3600.0f && 0.0f != playerObj->anim.velocityX &&
                     0.0f != playerObj->anim.velocityZ)
                 {
                     slot->velocityX = slot->velocityX - dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
                     slot->velocityY =
-                        slot->velocityY - ((lbl_803DF428 + playerObj->anim.worldPosY) -
+                        slot->velocityY - ((30.0f + playerObj->anim.worldPosY) -
                                            (slot->startPosY.value + attachedSource->localPosY)) /
                                               (f32)(s32)((int)slot->lifetimeFrame << 1);
                     slot->velocityZ =
