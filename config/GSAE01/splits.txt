@@ -409,8 +409,7 @@ main/dll/dll_0027_effect14.c:
 	.text       start:0x800C65B4 end:0x800C8008
 	.data       start:0x80310DE8 end:0x80310E88
 	.bss        start:0x8039C3F8 end:0x8039C410
-	.sdata2     start:0x803E0000 end:0x803E0084
-	.sdata2     start:0x803E0088 end:0x803E00A8
+	.sdata2     start:0x803E0000 end:0x803E00A8
 
 main/dll/dll_0029_effect16.c:
 	.text       start:0x800C8008 end:0x800C9140
@@ -561,23 +560,19 @@ main/dll/dll_0062_dll62func0.c:
 
 main/dll/dll_0063_dll63func0.c:
 	.text       start:0x800EE25C end:0x800EE8FC
-	.sdata2     start:0x803E08C8 end:0x803E0900
-	.sdata2     start:0x803E0900 end:0x803E0908
+	.sdata2     start:0x803E08C8 end:0x803E0908
 
 main/dll/dll_0064_dll64func0.c:
 	.text       start:0x800EE8FC end:0x800EEC34
-	.sdata2     start:0x803E0908 end:0x803E0928
-	.sdata2     start:0x803E0928 end:0x803E0930
+	.sdata2     start:0x803E0908 end:0x803E0930
 
 main/dll/dll_0065_dll65func0.c:
 	.text       start:0x800EEC34 end:0x800EEFEC
-	.sdata2     start:0x803E0930 end:0x803E0960
-	.sdata2     start:0x803E0960 end:0x803E0968
+	.sdata2     start:0x803E0930 end:0x803E0968
 
 main/dll/dll_00A3_dlla3func0.c:
 	.text       start:0x800EEFEC end:0x800EF3A0
-	.sdata2     start:0x803E0968 end:0x803E0988
-	.sdata2     start:0x803E0988 end:0x803E0990
+	.sdata2     start:0x803E0968 end:0x803E0990
 
 main/dll/dll_0066_dll66func0.c:
 	.text       start:0x800EF3A0 end:0x800EF7B4
@@ -638,8 +633,7 @@ main/dll/dll_0072_dll72func0.c:
 
 main/dll/dll_0073_dll73func0.c:
 	.text       start:0x800F1D64 end:0x800F220C
-	.sdata2     start:0x803E0B80 end:0x803E0BB0
-	.sdata2     start:0x803E0BB0 end:0x803E0BB8
+	.sdata2     start:0x803E0B80 end:0x803E0BB8
 
 main/dll/dll_0074_dll74func0.c:
 	.text       start:0x800F220C end:0x800F2694
@@ -660,26 +654,22 @@ main/dll/dll_0077_dll77func0.c:
 
 main/dll/dll_0078_dll78func0.c:
 	.text       start:0x800F2F4C end:0x800F3400
-	.sdata2     start:0x803E0C70 end:0x803E0CA4
-	.sdata2     start:0x803E0CA8 end:0x803E0CB0
+	.sdata2     start:0x803E0C70 end:0x803E0CB0
 
 main/dll/dll_0079_dll79func0.c:
 	.text       start:0x800F3400 end:0x800F3CD0
 	.data       start:0x80314AF0 end:0x80314CB0
 	.sdata      start:0x803DB8D8 end:0x803DB8E0
-	.sdata2     start:0x803E0CB0 end:0x803E0D00
-	.sdata2     start:0x803E0D00 end:0x803E0D08
+	.sdata2     start:0x803E0CB0 end:0x803E0D08
 
 main/dll/dll_007A_dll7afunc0.c:
 	.text       start:0x800F3CD0 end:0x800F4174
-	.sdata2     start:0x803E0D08 end:0x803E0D30
-	.sdata2     start:0x803E0D30 end:0x803E0D38
+	.sdata2     start:0x803E0D08 end:0x803E0D38
 
 main/dll/dll_007B_dll7bfunc0.c:
 	.text       start:0x800F4174 end:0x800F472C
 	.data       start:0x80314CB0 end:0x80314E08
-	.sdata2     start:0x803E0D38 end:0x803E0D7C
-	.sdata2     start:0x803E0D80 end:0x803E0D88
+	.sdata2     start:0x803E0D38 end:0x803E0D88
 
 main/dll/dll_007C_dll7cfunc0.c:
 	.text       start:0x800F472C end:0x800F4C70
@@ -727,8 +717,7 @@ main/dll/dll_0085_dll85func0.c:
 	.text       start:0x800F6DDC end:0x800F7434
 	.data       start:0x80315FA8 end:0x80316B60
 	.sdata      start:0x803DB8F0 end:0x803DB900
-	.sdata2     start:0x803E0F70 end:0x803E0FA8
-	.sdata2     start:0x803E0FA8 end:0x803E0FB0
+	.sdata2     start:0x803E0F70 end:0x803E0FB0
 
 main/dll/dll_0086_dll86func0.c:
 	.text       start:0x800F7434 end:0x800F77BC
@@ -1598,8 +1587,7 @@ main/dll/dll_025A_staticcamera.c:
 main/dll/dll_00DD_gcbaddieshield.c:
 	.text       start:0x8016B99C end:0x8016BB10
 	.data       start:0x80320690 end:0x803206C8
-	.sdata2     start:0x803E31F8 end:0x803E3218
-	.sdata2     start:0x803E3218 end:0x803E3220
+	.sdata2     start:0x803E31F8 end:0x803E3220
 
 main/dll/dll_00DE_baddieinterestp.c:
 	.text       start:0x8016BB10 end:0x8016BE70
@@ -1609,14 +1597,12 @@ main/dll/dll_00DE_baddieinterestp.c:
 main/dll/dll_00C6_animatedobj.c:
 	.text       start:0x8016BE70 end:0x8016C4AC
 	.data       start:0x80320730 end:0x80320768
-	.sdata2     start:0x803E3228 end:0x803E3238
-	.sdata2     start:0x803E3238 end:0x803E3240
+	.sdata2     start:0x803E3228 end:0x803E3240
 
 main/dll/DIM/dll_00C7_dim2roofrub.c:
 	.text       start:0x8016C4AC end:0x8016CD48
 	.data       start:0x80320768 end:0x80320868
-	.sdata2     start:0x803E3240 end:0x803E3280
-	.sdata2     start:0x803E3280 end:0x803E3288
+	.sdata2     start:0x803E3240 end:0x803E3288
 
 main/dll/dll_00C8_depthoffieldpoint.c:
 	.text       start:0x8016CD48 end:0x8016CEE8
@@ -1641,8 +1627,7 @@ main/dll/dll_00E4_flamethrowerspe.c:
 	.text       start:0x80170004 end:0x801702D4
 	.data       start:0x803209C0 end:0x80320A28
 	.sdata      start:0x803DBD60 end:0x803DBD70
-	.sdata2     start:0x803E3388 end:0x803E3398
-	.sdata2     start:0x803E3398 end:0x803E33A0
+	.sdata2     start:0x803E3388 end:0x803E33A0
 
 main/dll/dll_00E5_shield.c:
 	.text       start:0x801702D4 end:0x80171300
@@ -1726,8 +1711,7 @@ main/dll/dll_00F3_flameblast.c:
 main/dll/dll_00F4_doorf4.c:
 	.text       start:0x80178338 end:0x801793A4
 	.data       start:0x80320ED8 end:0x80320F30
-	.sdata2     start:0x803E3648 end:0x803E3678
-	.sdata2     start:0x803E3678 end:0x803E3680
+	.sdata2     start:0x803E3648 end:0x803E3680
 
 main/dll/dll_00F5_sidekickball.c:
 	.text       start:0x801793A4 end:0x8017A00C
@@ -1741,8 +1725,7 @@ main/dll/dll_00F6_area.c:
 main/dll/dll_00F8_levelname.c:
 	.text       start:0x8017A048 end:0x8017A350
 	.data       start:0x80320FD0 end:0x80321008
-	.sdata2     start:0x803E36E0 end:0x803E36F0
-	.sdata2     start:0x803E36F0 end:0x803E3700
+	.sdata2     start:0x803E36E0 end:0x803E3700
 
 main/dll/dll_00F9_projectileswitch.c:
 	.text       start:0x8017A350 end:0x8017A8EC
@@ -2000,8 +1983,7 @@ main/dll/dll_012D_lfxemitter.c:
 
 main/dll/warppad.c:
 	.text       start:0x8019042C end:0x80190BD4
-	.sdata2     start:0x803E3E98 end:0x803E3ED4
-	.sdata2     start:0x803E3ED8 end:0x803E3EE8
+	.sdata2     start:0x803E3E98 end:0x803E3EE8
 
 main/dll/dll_012C_transporter.c:
 	.text       start:0x80190BD4 end:0x80191A70
@@ -2210,8 +2192,7 @@ main/dll/dll_015F_attractor.c:
 main/dll/CF/dll_0162_cfmagicwall.c:
 	.text       start:0x801A4380 end:0x801A4524
 	.data       start:0x80322FD0 end:0x80323008
-	.sdata2     start:0x803E43D8 end:0x803E43E0
-	.sdata2     start:0x803E43E0 end:0x803E43E8
+	.sdata2     start:0x803E43D8 end:0x803E43E8
 
 main/dll/CF/dll_0164_cflevelcontrol.c:
 	.text       start:0x801A4524 end:0x801A4DB8
@@ -2245,8 +2226,7 @@ main/dll/MMP/dll_017E_mmplevelcontrol.c:
 main/dll/dll_017F_moonseedbush.c:
 	.text       start:0x801A6C28 end:0x801A6F4C
 	.data       start:0x80323198 end:0x803231D0
-	.sdata2     start:0x803E44D0 end:0x803E44E0
-	.sdata2     start:0x803E44E0 end:0x803E44E8
+	.sdata2     start:0x803E44D0 end:0x803E44E8
 
 main/dll/MMP/dll_0180_mmpasteroidre.c:
 	.text       start:0x801A6F4C end:0x801A78C8
@@ -2289,8 +2269,7 @@ main/dll/CC/dll_0185_ccgasvent.c:
 main/dll/CC/dll_0186_ccgasventcontrol.c:
 	.text       start:0x801A9FA8 end:0x801AA558
 	.data       start:0x80323378 end:0x803233CC
-	.sdata2     start:0x803E4618 end:0x803E4648
-	.sdata2     start:0x803E4648 end:0x803E4650
+	.sdata2     start:0x803E4618 end:0x803E4650
 
 main/dll/CC/dll_0187_ccqueen.c:
 	.text       start:0x801AA558 end:0x801AA734
@@ -2301,8 +2280,7 @@ main/dll/CC/dll_0188_cclightfoot.c:
 	.text       start:0x801AA734 end:0x801AB468
 	.data       start:0x80323408 end:0x803234D8
 	.sbss       start:0x803DDB38 end:0x803DDB40
-	.sdata2     start:0x803E4670 end:0x803E469C
-	.sdata2     start:0x803E46A0 end:0x803E46A8
+	.sdata2     start:0x803E4670 end:0x803E46A8
 
 main/dll/CC/dll_0189_ccsharpclawpad.c:
 	.text       start:0x801AB468 end:0x801AB6F8
@@ -2356,8 +2334,7 @@ main/dll/IM/dll_016E_imanimspacecraft.c:
 main/dll/IM/dll_016F_imspacethruster.c:
 	.text       start:0x801AE508 end:0x801AE984
 	.data       start:0x80323818 end:0x80323868
-	.sdata2     start:0x803E4788 end:0x803E479C
-	.sdata2     start:0x803E47A0 end:0x803E47B8
+	.sdata2     start:0x803E4788 end:0x803E47B8
 
 main/dll/IM/dll_0170_imspacering.c:
 	.text       start:0x801AE984 end:0x801AEAE4
@@ -2739,15 +2716,13 @@ main/dll/dll_019C_dll19c.c:
 
 main/dll/dll_019D_dll19d.c:
 	.text       start:0x801CC998 end:0x801CCFA4
-	.sdata2     start:0x803E51B8 end:0x803E51C0
-	.sdata2     start:0x803E51C0 end:0x803E51C8
+	.sdata2     start:0x803E51B8 end:0x803E51C8
 
 main/dll/DIM/dll_019E_dim_tricky.c:
 	.text       start:0x801CCFA4 end:0x801CD7DC
 	.rodata     start:0x802C23D8 end:0x802C23E8
 	.sbss       start:0x803DDBE8 end:0x803DDBF0
-	.sdata2     start:0x803E51C8 end:0x803E51EC
-	.sdata2     start:0x803E51F0 end:0x803E51F8
+	.sdata2     start:0x803E51C8 end:0x803E51F8
 
 main/dll/NW/dll_019F_nwtreebrid.c:
 	.text       start:0x801CD7DC end:0x801CDC78
@@ -2961,8 +2936,7 @@ main/dll/SB/dll_01ED_sbfireball.c:
 main/dll/SB/dll_01EF_sbcloudball.c:
 	.text       start:0x801E45AC end:0x801E4AC0
 	.data       start:0x80327DD8 end:0x80327E10
-	.sdata2     start:0x803E58E8 end:0x803E5908
-	.sdata2     start:0x803E5908 end:0x803E5918
+	.sdata2     start:0x803E58E8 end:0x803E5918
 
 main/dll/SB/dll_01F0_sbkytecage.c:
 	.text       start:0x801E4AC0 end:0x801E4F14
@@ -3135,8 +3109,7 @@ main/dll/dll_0206_lightsource.c:
 main/dll/WM/dll_0207_wmworm.c:
 	.text       start:0x801F3C2C end:0x801F3F18
 	.data       start:0x80328B40 end:0x80328B78
-	.sdata2     start:0x803E5E58 end:0x803E5E64
-	.sdata2     start:0x803E5E68 end:0x803E5E70
+	.sdata2     start:0x803E5E58 end:0x803E5E70
 
 main/dll/WM/dll_0209_wmlevelcontrol.c:
 	.text       start:0x801F3F18 end:0x801F48C0
@@ -3165,8 +3138,7 @@ main/dll/WM/dll_020C_wmspiritplace.c:
 main/dll/WM/dll_020D_wmseqpoint.c:
 	.text       start:0x801F654C end:0x801F6E8C
 	.data       start:0x80328CC8 end:0x80328D28
-	.sdata2     start:0x803E5F10 end:0x803E5F18
-	.sdata2     start:0x803E5F18 end:0x803E5F20
+	.sdata2     start:0x803E5F10 end:0x803E5F20
 
 main/dll/WM/dll_020E_wmsun.c:
 	.text       start:0x801F6E8C end:0x801F7C50
@@ -3190,8 +3162,7 @@ main/dll/WM/dll_0211_wmwallcrawler.c:
 	.data       start:0x80328DD0 end:0x80328E58
 	.sdata      start:0x803DC130 end:0x803DC138
 	.sbss       start:0x803DDCB8 end:0x803DDCC0
-	.sdata2     start:0x803E5FB0 end:0x803E601C
-	.sdata2     start:0x803E6020 end:0x803E6038
+	.sdata2     start:0x803E5FB0 end:0x803E6038
 
 main/dll/WM/dll_0215_wmnewcrystal.c:
 	.text       start:0x801F943C end:0x801F9804
@@ -3220,8 +3191,7 @@ main/dll/dll_0219.c:
 
 main/dll/VF/dll_021A_vfpstatueball.c:
 	.text       start:0x801FA870 end:0x801FAC6C
-	.sdata2     start:0x803E60B8 end:0x803E60C0
-	.sdata2     start:0x803E60C0 end:0x803E60D0
+	.sdata2     start:0x803E60B8 end:0x803E60D0
 
 main/dll/dll_021B.c:
 	.text       start:0x801FAC6C end:0x801FAFEC
@@ -3303,8 +3273,7 @@ main/dll/DF/dll_0230_dfpwallbar.c:
 main/dll/DF/dll_022F_dfpfloorbar.c:
 	.text       start:0x80206474 end:0x80206968
 	.data       start:0x80329A20 end:0x80329AD8
-	.sdata2     start:0x803E6408 end:0x803E6418
-	.sdata2     start:0x803E6418 end:0x803E6438
+	.sdata2     start:0x803E6408 end:0x803E6438
 
 main/dll/teslagroup.c:
 	.text       start:0x80206968 end:0x8020768C
@@ -3740,14 +3709,12 @@ main/dll/ARW/dll_02A6_arwsquadron.c:
 main/dll/ARW/dll_02A7_arwproximit.c:
 	.text       start:0x802331B0 end:0x802338F0
 	.data       start:0x8032B920 end:0x8032B958
-	.sdata2     start:0x803E71D8 end:0x803E7204
-	.sdata2     start:0x803E7208 end:0x803E7218
+	.sdata2     start:0x803E71D8 end:0x803E7218
 
 main/dll/ARW/dll_02A8_arwblocker.c:
 	.text       start:0x802338F0 end:0x80233B0C
 	.data       start:0x8032B958 end:0x8032B990
-	.sdata2     start:0x803E7218 end:0x803E7224
-	.sdata2     start:0x803E7228 end:0x803E7230
+	.sdata2     start:0x803E7218 end:0x803E7230
 
 main/dll/LGT/dll_02A9_lgtpointlight.c:
 	.text       start:0x80233B0C end:0x8023404C
@@ -3776,8 +3743,7 @@ main/dll/dll_02AD_softbody.c:
 	.text       start:0x80234DC8 end:0x8023503C
 	.data       start:0x8032BB70 end:0x8032BBA8
 	.sbss       start:0x803DDD98 end:0x803DDDA8
-	.sdata2     start:0x803E7288 end:0x803E729C
-	.sdata2     start:0x803E72A0 end:0x803E72B0
+	.sdata2     start:0x803E7288 end:0x803E72B0
 
 main/dll/dll_02AE_waterflowwe.c:
 	.text       start:0x8023503C end:0x802356CC
@@ -3842,8 +3808,7 @@ main/dll/dll_02B9_mcstaffeffe.c:
 main/dll/dll_02BA_mclightning.c:
 	.text       start:0x8023938C end:0x80239858
 	.data       start:0x8032BFE8 end:0x8032C020
-	.sdata2     start:0x803E7440 end:0x803E7448
-	.sdata2     start:0x803E7448 end:0x803E7460
+	.sdata2     start:0x803E7440 end:0x803E7460
 
 main/dll/dll_02BB_gflevelcon.c:
 	.text       start:0x80239858 end:0x80239DD8
