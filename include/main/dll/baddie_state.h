@@ -69,12 +69,12 @@ typedef struct BaddieState {
     f32 moveInputX;
     f32 animSpeedC; /* third of the animSpeed family - stored in lockstep with animSpeedB (z = K; animSpeedC = z; animSpeedB = z), scaled with animSpeedA and obj+0x28 */
     f32 inputMagnitude;
-    void *trackedObj; /* current target/player object (5-family census: lwz 668) */
+    void *trackedObj; /* current target/player object (cross-family census: lwz 668) */
     /* 0x2A0-0x2A7 is a PER-FAMILY UNION (lead-arbitrated): scarab and
-     * mediumbasket targets store f32 here (stfs f0,672(rN) at 4+ sites
-     * each -- the published types below), but the smallbasket family's
-     * target reads u16 (lhz r0,672(r30) in smallbasket_handleReactionEvent
-     * /fn_8015A924, lhz r0,676(r29) in fn_80157B58: a *0xc move-table
+     * mediumbasket targets store f32 here (stfs f0,672(rN) -- the
+     * published types below), but the smallbasket family's
+     * target reads u16 (lhz r0,672(r30) in snowworm_update,
+     * lhz r0,676(r29) in fn_80157B58: a *0xc move-table
      * index and a u16->f32 duration). smallbasket keeps RAW spellings at
      * these offsets -- do NOT launder through these names there (a u16
      * index read through "moveSpeed" would be semantically false). */

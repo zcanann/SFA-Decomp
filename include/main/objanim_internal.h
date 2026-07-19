@@ -438,8 +438,8 @@ typedef struct ObjAnimComponent {
 
 /*
  * anim.resetHitboxFlags bits - the engine<->DLL interact-prompt handshake.
- * ACTIVATED and IN_RANGE are engine-written (DLL code only reads them:
- * 44/31 sites); DISABLED and PROMPT_SUPPRESSED are DLL-written. The
+ * ACTIVATED and IN_RANGE are engine-written (DLL code only reads
+ * them); DISABLED and PROMPT_SUPPRESSED are DLL-written. The
  * objhits system separately stores small mode VALUES in this same byte
  * via the s8 view (OBJHITS_RESET_HITBOX_MODE).
  */
@@ -575,7 +575,7 @@ STATIC_ASSERT(offsetof(ObjDef, renderFlags) == 0x5F);
  *    site OR's the two together: object.c selects the deferred render callback
  *    objCallback_80074d04 when set; lightmap.c queues the object into the
  *    deferred object list and picks the extended (0x1f) shadow render mode.
- *    Consensus across object.c (2 sites) and lightmap.c (2 sites), each paired
+ *    Consensus across object.c and lightmap.c, each read paired
  *    with the named renderFlags 0x10 bit to the same behavior.
  */
 #define OBJDEF_FLAG_DEFERRED_RENDER 0x800

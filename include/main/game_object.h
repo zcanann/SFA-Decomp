@@ -97,7 +97,7 @@ STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
  * *_OBJFLAG_* defines that name the identical bit across dozens of
  * consumers (SET-condition + READ-behavior agree on the meaning):
  *  - 0x2000 HITDETECT_DISABLED: cleared for collision; class init OR's it
- *    in to suppress hit detection (object.c hitdetect gate, 100+ sites).
+ *    in to suppress hit detection (object.c hitdetect gate).
  *  - 0x4000 HIDDEN: suppresses render; paired with HITDETECT_DISABLED on
  *    hide (main.c/light.c/many class inits).
  *  - 0x8000 UPDATE_DISABLED: object.c update loop skips the tick when set.
