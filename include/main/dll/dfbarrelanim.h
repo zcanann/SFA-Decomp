@@ -11,6 +11,6 @@ int dfropenode_isVisible(int obj);
 void dfropenode_setVisible(int obj, int value);
 void dfropenode_clearLinkedObj(int obj);
 int dfropenode_getAngle(int obj);
-f32 fn_801C1698(f32* x, f32* y, f32* z, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ);
+f32 DFRope_projectPointOntoSegment(f32* x, f32* y, f32* z, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ);
 
 #endif /* MAIN_DLL_DFBARRELANIM_H_ */

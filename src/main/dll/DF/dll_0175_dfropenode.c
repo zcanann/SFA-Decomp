@@ -129,7 +129,7 @@ int dfropenode_findNearestRopePoint(GameObject* obj, f32 worldX, f32 worldY, f32
             y = localY;
             z = localZ;
             node = (DFRopeNode*)((int)extra->rope->nodes + offset);
-            phase = fn_801C1698(&x, &y, &z, node->pos[0], node->pos[1], node->pos[2], node[1].pos[0], node[1].pos[1],
+            phase = DFRope_projectPointOntoSegment(&x, &y, &z, node->pos[0], node->pos[1], node->pos[2], node[1].pos[0], node[1].pos[1],
                                 node[1].pos[2]);
             if (phase >= best && phase < lbl_803E4E18)
             {
