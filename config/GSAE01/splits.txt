@@ -1392,11 +1392,15 @@ main/dll/dll_00E0_swarmbaddie.c:
 	.sdata2     start:0x803E2678 end:0x803E26D0
 
 main/dll/dll_00E1_wispbaddie.c:
-	.text       start:0x8014F620 end:0x8014FFB4
+	.text       start:0x8014F620 end:0x8014FEF8
 	.data       start:0x8031DCF8 end:0x8031F290
 	.sdata      start:0x803DBC80 end:0x803DBC88
 	.sbss       start:0x803DDA68 end:0x803DDA70
-	.sdata2     start:0x803E26D0 end:0x803E2740
+	.sdata2     start:0x803E26D0 end:0x803E2724
+
+main/dll/battledroid.c:
+	.text       start:0x8014FEF8 end:0x8014FFB4
+	.sdata2     start:0x803E2728 end:0x803E2740
 
 main/dll/newseqobjgroup.c:
 	.text       start:0x8014FFB4 end:0x80151DB8
