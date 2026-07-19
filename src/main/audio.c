@@ -216,7 +216,7 @@ void Sfx_StopAllObjectSounds(void);
 void audioFn_8000b694(u32 value);
 void Sfx_SetObjectSoundsPaused(s32 paused);
 void Sfx_StopObjectChannel(int obj, int channel);
-void Sfx_StopFromObject(u32 obj, u32 sfxId);
+void Sfx_StopFromObject(u32 obj, u16 sfxId);
 void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
@@ -3371,11 +3371,11 @@ int concatThreeStrings(char* dst, void* unused, const char* first, const char* s
     return 1;
 }
 
-void Sfx_StopFromObject(u32 obj, u32 sfxId)
+void Sfx_StopFromObject(u32 obj, u16 sfxId)
 {
     SfxObjectChannel* objectChannel;
 
-    if ((u16)sfxId != 0)
+    if (sfxId != 0)
     {
         objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
     }

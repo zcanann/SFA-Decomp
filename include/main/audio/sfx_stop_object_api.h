@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-void Sfx_StopFromObject(u32 obj, u32 sfxId);
+void Sfx_StopFromObject(u32 obj, u16 sfxId);
 
 #define Sfx_StopFromObjectIntLegacy(obj, sfxId)                                                          \
     ((void (*)(int, int))Sfx_StopFromObject)((obj), (sfxId))

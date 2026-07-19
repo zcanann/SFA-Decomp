@@ -235,7 +235,7 @@ void fn_801DFA28(GameObject* obj)
     }
     else
     {
-        Sfx_StopFromObjectIntLegacy((int)obj, SFXTRIG_tr_gal_lightning);
+        Sfx_StopFromObject((int)obj, SFXTRIG_tr_gal_lightning);
     }
     tricky = state->targetObj;
     if (tricky == NULL)
@@ -586,7 +586,7 @@ void fn_801DFA28(GameObject* obj)
             ((SBGalleonState*)state)->phaseCounter = 5;
             ((SBGalleonState*)state)->headingLatch = 200;
             sfxObj = sbGetPropeller();
-            Sfx_StopFromObjectIntLegacy(sfxObj, SFXTRIG_swtst1_c);
+            Sfx_StopFromObject(sfxObj, SFXTRIG_swtst1_c);
             Sfx_PlayFromObject(sfxObj, SFXTRIG_mv_curtainloop16);
             mainSetBits(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 0);
         }
