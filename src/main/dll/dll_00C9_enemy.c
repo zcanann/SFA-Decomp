@@ -13,6 +13,7 @@
 #include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
+#include "main/dll/baddie_setmove.h"
 #include "main/obj_group.h"
 #include "main/obj_link.h"
 #include "main/objprint_character_api.h"
@@ -1439,13 +1440,13 @@ void baddieTurnTowardPoint(GameObject* node, int state, f32 targetX, f32 targetZ
     node->anim.rotX = newVal;
 }
 
-void fn_8014D08C(GameObject* obj, int state, f32 rateScale, int moveId, int moveControlFlags, u8 stateByte)
+void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 rateScale, int moveControlFlags, u8 stateByte)
 {
     ObjHitsPriorityState* hitState;
 
     ((BaddieState*)state)->unk308 = lbl_803E256C / (lbl_803E2570 * rateScale);
     *(u8*)(state + 0x323) = stateByte;
-    ObjAnim_SetCurrentMove((int)obj, (u8)moveId, lbl_803E2574, moveControlFlags);
+    ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E2574, moveControlFlags);
     hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     if (hitState != NULL)
     {

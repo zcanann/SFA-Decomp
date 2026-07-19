@@ -3,6 +3,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/audio/sfx.h"
+#include "main/dll/baddie_setmove.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/game_object.h"
@@ -36,10 +37,6 @@ extern f32 lbl_803E2924;
 extern f32 lbl_803E2928;
 extern f32 lbl_803E292C;
 extern f32 lbl_803E2930;
-void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
-#define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
-    fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
-
 void kooshy_spawnProjectile(GameObject* obj, int state)
 {
     ObjPlacement* fx;
