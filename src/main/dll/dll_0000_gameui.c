@@ -1395,20 +1395,7 @@ void gameUiResetMenuState(void)
     lbl_803DD730 = 0;
     lbl_803DD770 = 0;
     lbl_803DD760 = lbl_803E1E3C;
-    for (objectIndex = 0; objectIndex < 4; objectIndex++)
-    {
-        if (lbl_803A9410[objectIndex] != NULL)
-        {
-            lbl_803A9410[objectIndex]->anim.modelState->shadowTexture = NULL;
-            lbl_803A9410[objectIndex]->anim.modelState->shadowWorkBuffer = NULL;
-            if ((u32)lbl_803A9410[objectIndex]->anim.placementData > 0x90000000)
-            {
-                lbl_803A9410[objectIndex]->anim.placementData = NULL;
-            }
-            Obj_FreeObject(lbl_803A9410[objectIndex]);
-            lbl_803A9410[objectIndex] = NULL;
-        }
-    }
+    gameUiFreeHudAnims(lbl_803A9410);
     gTrickyHudShowNearestInfo = 0;
     lbl_803DD75B = 0;
     lbl_803DD772 = 0;
