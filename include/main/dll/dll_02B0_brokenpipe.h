@@ -26,7 +26,6 @@ STATIC_ASSERT(offsetof(BrokenPipeSetup, scale) == 0x1b);
 STATIC_ASSERT(sizeof(BrokenPipeSetup) == 0x20);
 STATIC_ASSERT(sizeof(BrokenPipeState) == 4);
 
-extern f32 lbl_803E7338;
 extern f32 lbl_803E733C;
 extern ObjectDescriptor gBrokenPipeObjDescriptor;
 
