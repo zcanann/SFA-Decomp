@@ -179,7 +179,7 @@ void DR_BarrelGr_update(GameObject* obj)
                 if (voxmaps_traceWorldLine((void*)&obj->anim.localPosX, traceTarget) != 0 &&
                     gunpowderbarrel_canBeGrabbed((GameObject*)nearest) != 0)
                 {
-                    ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_jbike_snowspray);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_jbike_snowspray);
                     newMode = DRBARRELGR_MODE_GRAB;
                     state->heldBarrel = (GameObject*)nearest;
                 }
@@ -217,7 +217,7 @@ void DR_BarrelGr_update(GameObject* obj)
         if (PSVECDistance((const Vec*)&state->grabX, (const Vec*)&state->heldBarrel->anim.localPosX) < lbl_803E6CA0 ||
             state->heldBarrel->anim.localPosY > state->grabY)
         {
-            ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_jbike_boost);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_jbike_boost);
             gunpowderbarrel_setHeldState(state->heldBarrel);
             newMode = state->prevMode;
             flags->bit80 = 1;

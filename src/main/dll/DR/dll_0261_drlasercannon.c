@@ -26,7 +26,7 @@ f32 lbl_803DDD68;
 #include "main/objfx.h"
 #include "main/dll/objfx_api.h"
 #include "main/object_update_list.h"
-#include "main/audio/sfx_play_int_u16_legacy_api.h"
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -343,11 +343,11 @@ void DR_LaserCannon_hitDetect(GameObject* obj)
         state->health -= hitVolume;
         Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&hitPosX, lbl_803E68F0);
         fn_8009A8C8(obj, lbl_803E68F4);
-        Sfx_PlayFromObject((int)obj, SFXTRIG_ar_awghitobj16);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_ar_awghitobj16);
         if (state->health <= 0)
         {
             tricky = (int*)getTrickyObject();
-            Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11_4b6);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_en_barrelblow11_4b6);
             spawnExplosionLegacy((int)obj, lbl_803E68F8, 0, 1, 1, 1, 0, 1, 0);
             state->flags.b0 = 1;
             mainSetBits(setup->destroyedGameBit, 1);
@@ -449,7 +449,7 @@ void DR_LaserCannon_update(GameObject* obj)
             hit = drlasercannon_aimAtTarget(obj, (GameObject*)target, &state->aim, 0x168, &state->muzzleX);
             if (hit != 0)
             {
-                ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_id_1ad);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_id_1ad);
             }
         }
         else
@@ -509,8 +509,8 @@ void DR_LaserCannon_update(GameObject* obj)
                             state->beamObject = spawned;
                             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E690C, 0);
                             state->animStepScale = lbl_803E6910;
-                            ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_wp_cahit2_c);
-                            ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_wp_blasershot11);
+                            Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_cahit2_c);
+                            Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_blasershot11);
                         }
                     }
                     s16toFloat(&state->reloadTimer, (s16)(setup->reloadFrames << 2));
