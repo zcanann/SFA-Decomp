@@ -1304,6 +1304,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_0041_warpstoneui.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_02C0_front.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_80136a40.c", cflags=cflags_dll_noopt_nostrength),
+            Object(NonMatching, "main/dll/dll_80138b60.c", cflags=cflags_dll_noopt_nostrength),
             Object(NonMatching, "main/dll/skeetla.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/dll/trickyfollow.c", cflags=cflags_dll_noopt_nocse_noloopinv),
             Object(MatchingFor("GSAE01"), "main/dll/mmp_cratercritter.c", cflags=cflags_dll_nosched),
