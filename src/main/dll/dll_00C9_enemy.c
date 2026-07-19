@@ -63,7 +63,7 @@
 #include "main/dll/magicplant.h"
 #include "main/dll/seqObj11D.h"
 #include "main/dll/dll_00C4_tricky_api.h"
-#include "main/dll/dll_00C4_tricky_ext.h"
+#include "main/dll/dll_00C4_tricky.h"
 #include "main/dll/magicplant_ext.h"
 #include "main/dll/fall_ladders_ext.h"
 #include "string.h"

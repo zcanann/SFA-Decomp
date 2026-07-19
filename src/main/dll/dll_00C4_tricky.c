@@ -65,7 +65,6 @@
 #include "main/dll/xyzanimator_api.h"
 #include "main/dll/dll_80136a40_ext.h"
 #include "main/dll/skeetla_ext.h"
-#include "main/dll/tricky_substates_ext.h"
 #include "main/dll/baddie/trickyfollow.h"
 #include "main/dll/mmp_critterspit_ext.h"
 #include "main/dll/dll_0014_unk.h"

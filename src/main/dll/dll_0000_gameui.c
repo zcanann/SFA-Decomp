@@ -595,7 +595,7 @@ extern const f32 lbl_803E2060;
 extern const f32 lbl_803E2064;
 extern const f32 lbl_803E2068;
 #include "main/fsin16_approx_api.h"
-#include "main/dll/dll_8011d918_ext.h"
+#include "main/dll/dll_8011d918.h"
 #include "main/trig.h"
 #include "main/dll/dll_0017_savegame_api.h"
 #include "main/dll/dll_0011_screens_api.h"
