@@ -5998,7 +5998,7 @@ int playerStateOnBike(GameObject* obj, int state)
     int d;
     f32 ret;
     int blend;
-    (*(void (*)(int))(*(int*)((char*)*gCameraInterface + 0x68)))(2);
+    (*gCameraInterface)->func1C(2);
     ((PlayerState*)state)->baddie.physicsActive = 0;
     *(int*)((char*)state + 0x4) |= 0x100000;
     *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_HITDETECT;
@@ -17770,7 +17770,7 @@ void playerUpdate(GameObject* obj)
                     setBButtonIcon(0xc);
                 }
             }
-            (*(void (*)(int))(*(int*)((char*)*gCameraInterface + 0x68)))(((PlayerState*)inner)->cameraFlags);
+            (*gCameraInterface)->func1C(((PlayerState*)inner)->cameraFlags);
             ((PlayerState*)inner)->isHoldingObject = 0;
             ((PlayerState*)inner)->queuedBitCount = 0;
             *(s16*)obj = ((PlayerState*)inner)->targetYaw;

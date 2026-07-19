@@ -4,6 +4,6 @@
 #include "ghidra_import.h"
 
 int cameraGetTargetType(void);
-s16 Camera_getMinimapInfoText(void);
+int Camera_getMinimapInfoText(void);
 
 #endif /* MAIN_DLL_DLL_8B_H_ */

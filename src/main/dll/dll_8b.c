@@ -14,7 +14,7 @@ int cameraGetTargetType(void)
     return CAMCONTROL_CAMERA->targetKind;
 }
 
-s16 Camera_getMinimapInfoText(void)
+int Camera_getMinimapInfoText(void)
 {
     return gCamcontrolTargetHelpTextId;
 }

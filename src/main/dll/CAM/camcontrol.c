@@ -388,7 +388,7 @@ void camcontrol_getRelativePosition(void* targetObj, f32* outX, f32* outY, f32* 
     return;
 }
 
-void camcontrol_initialise(f32* dst, f32 numerator, f32 denominator, f32 minValue, f32 y, f32 z)
+void camcontrol_initialise(f32 numerator, f32* dst, f32 denominator, f32 minValue, f32 y, f32 z)
 {
     f32 ratio;
 
@@ -418,7 +418,7 @@ void Camera_overridePos(f32 x, f32 y, f32 z)
     CAMCONTROL_CAMERA->overrideWorldZ = z;
 }
 
-void Camera_setFocus(void* target)
+void Camera_setFocus(void* target, int flags)
 {
     if (target == CAMCONTROL_CAMERA->focusObj)
     {
@@ -680,18 +680,18 @@ void* Camera_GetFollowPos(void)
     return gCamcontrolCurrentHandler;
 }
 
-u32 Camera_getMode(void)
+int Camera_getMode(void)
 {
     return gCamcontrolActiveActionId;
 }
 
-u32 Camera_get(void)
+void* Camera_get(void)
 {
-    return (u32)pCamera;
+    return pCamera;
 }
 
 #define camera CAMCONTROL_CAMERA
-void Camera_update(void)
+void Camera_update(u8 framesThisStep)
 {
     ObjAnimComponent* focus;
     u8 textActive;

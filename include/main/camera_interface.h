@@ -23,7 +23,8 @@ typedef void (*CameraSetTargetFn)(int target);
 typedef void (*CameraUpdateTargetFeedbackFn)(void);
 typedef void (*CameraSetLetterboxFn)(int mode, int enabled);
 typedef void (*CameraReleaseActionFn)(void *camAction, int recordSize);
-typedef void (*CameraFunc1DFn)(u8 value);
+typedef void (*CameraFunc1CFn)(int flags);
+typedef void (*CameraFunc1DFn)(int targetFlagMode);
 
 typedef struct CameraInterface {
     u8 pad00[0x04];
@@ -31,7 +32,7 @@ typedef struct CameraInterface {
     CameraUpdateFn update;
     CameraGetFn getCamera;
     CameraGetModeFn getMode;
-    void *(*getCurrentHandler)(void);
+    void *(*getFollowPos)(void);
     void *(*getDefaultHandlerEntry)(void);
     CameraSetModeFn setMode;
     void *(*getCamActionsBinEntry)(int actionNo);
@@ -43,7 +44,7 @@ typedef struct CameraInterface {
     CameraGetRelativePositionFn getRelativePosition;
     CameraGetTargetFn getOverrideTarget;
     CameraGetTargetFn getTarget;
-    void (*func13)(void);
+    void (*func13)(int enable);
     CameraSetTargetFn setTarget;
     CameraSetTargetReticleOverrideFn setTargetReticleOverride;
     int (*isZooming)(void);
@@ -52,7 +53,7 @@ typedef struct CameraInterface {
     CameraSetLetterboxFn setLetterbox;
     CameraReleaseActionFn releaseAction;
     int (*getMinimapInfoText)(void);
-    void (*func1C)(void);
+    CameraFunc1CFn func1C;
     CameraFunc1DFn func1D;
 } CameraInterface;
 
