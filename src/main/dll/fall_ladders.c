@@ -34,6 +34,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/fall_ladders.h"
+#include "main/dll/baddie_frozen.h"
 
 int lbl_803DBCD0[2] = {2, 3};
 
@@ -70,7 +71,8 @@ void baddieSpawnWaterRipple(GameObject* obj, BaddieState* state)
     }
 }
 
-void pinPon_updateWhileFrozen(GameObject* obj, u8* state, int unused, int cmd, int wpad0, int wpad1, void* wpad2, int wpad3)
+void pinPon_updateWhileFrozen(GameObject* obj, u8* state, int unused, int cmd, int wpad0, int wpad1, Vec* wpad2,
+                              int wpad3)
 {
     int objCopy = (int)obj;
     if (cmd == 17 || cmd == 16)

@@ -29,6 +29,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/voxmaps.h"
+#include "main/dll/baddie_frozen.h"
 
 int lbl_803DBCB8[2] = {2, 3};
 u8 gMagicPlantSeqEntryTable[8] = {1, 1, 3, 2, 0, 0, 0, 0};
@@ -52,7 +53,7 @@ static const f32 gVambatHeartbeatPeriod[1] = {6e+01f};
 #define MAGICPLANT_PARTFX          0x802
 #define MAGICPLANT_HIT_VOLUME_SLOT 0xe
 
-void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag, int wpad0, int wpad1, void* wpad2, int wpad3)
+void vambat_updateWhileFrozen(int obj, u8* state, int unused, int msgFlag, int wpad0, int wpad1, Vec* wpad2, int wpad3)
 {
     if (((BaddieState*)state)->userData2 != 0)
     {

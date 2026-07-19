@@ -24,6 +24,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/weevil.h"
+#include "main/dll/baddie_frozen.h"
 
 #define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 
@@ -58,7 +59,8 @@ STATIC_ASSERT(offsetof(WeevilState, retreatTimer) == 0x328);
 STATIC_ASSERT(offsetof(WeevilState, recoverTimer) == 0x32C);
 STATIC_ASSERT(offsetof(WeevilState, gruntTimer) == 0x330);
 
-void weevil_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag, int wpad0, int wpad1, void* wpad2, int wpad3)
+void weevil_updateWhileFrozen(GameObject* obj, u8* state, int attacker, int msgFlag, int wpad0, int wpad1, Vec* wpad2,
+                              int wpad3)
 {
     u8 cond = 0;
     if ((obj)->anim.currentMove == 5 || (obj)->anim.currentMove == 4 ||
