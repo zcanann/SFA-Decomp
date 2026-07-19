@@ -219,8 +219,12 @@ prodg_as = prodg_binutils / ("powerpc-eabi-as.exe" if is_windows() else "powerpc
 prodg_dir = prodg_compilers / "ProDG" / "3.5"
 if is_windows():
     prodg_wrapper = ""
+    # Native Windows ninja runs commands without an implicit shell, so the
+    # "&&" chain must be wrapped in cmd /c (mirrors the mwcc_*extab rules).
+    prodg_shell = "cmd /c "
 else:
     prodg_wrapper = f"{args.wrapper} " if args.wrapper else "build/tools/wibo "
+    prodg_shell = ""
 prodg_implicit = [
     str(prodg_compilers) if args.compilers is None else str(prodg_dir / "cc1.exe"),
     str(prodg_binutils) if args.binutils is None else str(prodg_as),
@@ -229,7 +233,7 @@ prodg_implicit = [
 config.custom_build_rules = [
     {
         "name": "prodg",
-        "command": f"{prodg_wrapper}{prodg_dir / 'cpp.exe'} -P $in $basefile.i"
+        "command": f"{prodg_shell}{prodg_wrapper}{prodg_dir / 'cpp.exe'} -P $in $basefile.i"
         f" && {prodg_wrapper}{prodg_dir / 'cc1.exe'} $basefile.i"
         " -quiet -O1 -fno-common -o $basefile.s"
         f" && {prodg_as} -mgekko $basefile.s -o $out",
