@@ -58,7 +58,7 @@ STATIC_ASSERT(offsetof(FireFlyLanternState, gameBit) == 0x20);
 
 #include "main/dll/CF/lanternfirefly_state.h"
 
-extern ObjectDescriptor gLanternFireFlyObjDescriptor;
+extern ObjectDescriptor13WithPadding gLanternFireFlyObjDescriptor;
 extern ObjectDescriptor gFireFlyLanternObjDescriptor;
 extern ObjectDescriptor gFlammableVineObjDescriptor;
 

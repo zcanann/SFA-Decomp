@@ -546,20 +546,22 @@ void sh_staff_update(GameObject* obj)
 }
 
 /* descriptor/ptr table auto 0x8032784c-0x803279a8 */
-u32 gSH_staffHazeObjDescriptor[14] __attribute__((aligned(8))) = {0x00000000,
-                                                                  0x00000000,
-                                                                  0x00000000,
-                                                                  0x00090000,
-                                                                  0x00000000,
-                                                                  0x00000000,
-                                                                  0x00000000,
-                                                                  0x00000000,
-                                                                  (u32)SH_StaffHaze_update,
-                                                                  0x00000000,
-                                                                  (u32)SH_StaffHaze_render,
-                                                                  0x00000000,
-                                                                  0x00000000,
-                                                                  0x00000000};
+ObjectDescriptor gSH_staffHazeObjDescriptor __attribute__((aligned(8))) = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)SH_StaffHaze_update,
+    0,
+    (ObjectDescriptorCallback)SH_StaffHaze_render,
+    0,
+    0,
+    0,
+};
 ObjectDescriptor gSH_BeaconObjDescriptor = {
     0,
     0,

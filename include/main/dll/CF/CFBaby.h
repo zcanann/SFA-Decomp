@@ -6,7 +6,7 @@
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
 
-extern ObjectDescriptor gLanternFireFlyObjDescriptor;
+extern ObjectDescriptor13WithPadding gLanternFireFlyObjDescriptor;
 extern ObjectDescriptor gFireFlyLanternObjDescriptor;
 extern ObjectDescriptor gFlammableVineObjDescriptor;
 

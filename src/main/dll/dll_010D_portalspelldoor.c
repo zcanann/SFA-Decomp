@@ -174,24 +174,28 @@ ObjectDescriptor gPortalSpellDoorObjDescriptor = {
 };
 
 /* descriptor/ptr table auto 0x80321830-0x80321a28 */
-u32 gLanternFireFlyObjDescriptor[18] = {0x00000000,
-                                        0x00000000,
-                                        0x00000000,
-                                        0x000c0000,
-                                        (u32)LanternFireFly_initialise,
-                                        (u32)LanternFireFly_release,
-                                        0x00000000,
-                                        (u32)LanternFireFly_init,
-                                        (u32)LanternFireFly_update,
-                                        (u32)LanternFireFly_hitDetect,
-                                        (u32)LanternFireFly_render,
-                                        (u32)LanternFireFly_free,
-                                        (u32)LanternFireFly_getObjectTypeId,
-                                        (u32)LanternFireFly_getExtraSize,
-                                        (u32)LanternFireFly_setScale,
-                                        (u32)LanternFireFly_func0B,
-                                        (u32)LanternFireFly_modelMtxFn,
-                                        0x00000000};
+ObjectDescriptor13WithPadding gLanternFireFlyObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
+        (ObjectDescriptorCallback)LanternFireFly_initialise,
+        (ObjectDescriptorCallback)LanternFireFly_release,
+        0,
+        (ObjectDescriptorCallback)LanternFireFly_init,
+        (ObjectDescriptorCallback)LanternFireFly_update,
+        (ObjectDescriptorCallback)LanternFireFly_hitDetect,
+        (ObjectDescriptorCallback)LanternFireFly_render,
+        (ObjectDescriptorCallback)LanternFireFly_free,
+        (ObjectDescriptorCallback)LanternFireFly_getObjectTypeId,
+        LanternFireFly_getExtraSize,
+        (ObjectDescriptorCallback)LanternFireFly_setScale,
+        (ObjectDescriptorCallback)LanternFireFly_func0B,
+        (ObjectDescriptorCallback)LanternFireFly_modelMtxFn,
+    },
+    0,
+};
 ObjectDescriptor gFireFlyLanternObjDescriptor = {
     0,
     0,

@@ -112,6 +112,11 @@ typedef struct ObjectDescriptor12 {
   ObjectDescriptorCallback slot0B;
 } ObjectDescriptor12;
 
+typedef struct ObjectDescriptor12WithPadding {
+  ObjectDescriptor12 descriptor;
+  u32 padding;
+} ObjectDescriptor12WithPadding;
+
 typedef struct ObjectDescriptor13 {
   u32 reserved0;
   u32 reserved1;
@@ -131,6 +136,11 @@ typedef struct ObjectDescriptor13 {
   ObjectDescriptorCallback slot0B;
   ObjectDescriptorCallback slot0C;
 } ObjectDescriptor13;
+
+typedef struct ObjectDescriptor13WithPadding {
+  ObjectDescriptor13 descriptor;
+  u32 padding;
+} ObjectDescriptor13WithPadding;
 
 typedef struct ObjectDescriptor14 {
   u32 reserved0;
@@ -319,6 +329,11 @@ typedef struct ObjectDescriptor24 {
   ObjectDescriptorCallback slot16;
   ObjectDescriptorCallback slot17;
 } ObjectDescriptor24;
+
+typedef struct ObjectDescriptor24WithPadding {
+  ObjectDescriptor24 descriptor;
+  u32 padding;
+} ObjectDescriptor24WithPadding;
 
 #define OBJECT_DESCRIPTOR_FLAGS_4_SLOTS  0x00030000
 #define OBJECT_DESCRIPTOR_FLAGS_6_SLOTS  0x00050000

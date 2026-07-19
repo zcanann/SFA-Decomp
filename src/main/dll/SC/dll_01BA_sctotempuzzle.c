@@ -15,6 +15,7 @@
  * poles of the tracking test).
  */
 #include "main/obj_list.h"
+#include "main/object_descriptor.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -381,18 +382,22 @@ void sc_totempuzzle_initialise(void)
 }
 
 /* descriptor/ptr table auto 0x80327a24-0x80327a60 */
-u32 gSC_totempuzzleObjDescriptor[15] = {0x00000000,
-                                        0x00000000,
-                                        0x00000000,
-                                        0x00090000,
-                                        (u32)sc_totempuzzle_initialise,
-                                        (u32)sc_totempuzzle_release,
-                                        0x00000000,
-                                        (u32)sc_totempuzzle_init,
-                                        (u32)sc_totempuzzle_update,
-                                        (u32)sc_totempuzzle_hitDetect,
-                                        (u32)sc_totempuzzle_render,
-                                        (u32)sc_totempuzzle_free,
-                                        (u32)sc_totempuzzle_getObjectTypeId,
-                                        (u32)sc_totempuzzle_getExtraSize,
-                                        0x00000000};
+ObjectDescriptor10WithPadding gSC_totempuzzleObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        (ObjectDescriptorCallback)sc_totempuzzle_initialise,
+        (ObjectDescriptorCallback)sc_totempuzzle_release,
+        0,
+        (ObjectDescriptorCallback)sc_totempuzzle_init,
+        (ObjectDescriptorCallback)sc_totempuzzle_update,
+        (ObjectDescriptorCallback)sc_totempuzzle_hitDetect,
+        (ObjectDescriptorCallback)sc_totempuzzle_render,
+        (ObjectDescriptorCallback)sc_totempuzzle_free,
+        (ObjectDescriptorCallback)sc_totempuzzle_getObjectTypeId,
+        sc_totempuzzle_getExtraSize,
+    },
+    0,
+};

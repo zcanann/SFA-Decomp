@@ -1800,23 +1800,27 @@ KTRexLaneTuning gKTRexLaneTuning = {
 };
 
 /* descriptor/ptr table auto 0x8032a58c-0x8032a7c0 */
-u32 gKtRexObjDescriptor[17] = {0x00000000,
-                               0x00000000,
-                               0x00000000,
-                               0x000b0000,
-                               (u32)ktrex_initialise,
-                               (u32)ktrex_release,
-                               0x00000000,
-                               (u32)ktrex_init,
-                               (u32)ktrex_update,
-                               (u32)ktrex_hitDetect,
-                               (u32)ktrex_render,
-                               (u32)ktrex_free,
-                               (u32)ktrex_getObjectTypeId,
-                               (u32)ktrex_getExtraSize,
-                               (u32)ktrex_setScale,
-                               (u32)ktrex_func0B,
-                               0x00000000};
+ObjectDescriptor12WithPadding gKtRexObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+        (ObjectDescriptorCallback)ktrex_initialise,
+        (ObjectDescriptorCallback)ktrex_release,
+        0,
+        (ObjectDescriptorCallback)ktrex_init,
+        (ObjectDescriptorCallback)ktrex_update,
+        (ObjectDescriptorCallback)ktrex_hitDetect,
+        (ObjectDescriptorCallback)ktrex_render,
+        (ObjectDescriptorCallback)ktrex_free,
+        (ObjectDescriptorCallback)ktrex_getObjectTypeId,
+        ktrex_getExtraSize,
+        (ObjectDescriptorCallback)ktrex_setScale,
+        (ObjectDescriptorCallback)ktrex_func0B,
+    },
+    0,
+};
 ObjectDescriptor gKtRexFloorSwitchObjDescriptor = {
     0,
     0,
