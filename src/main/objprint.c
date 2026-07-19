@@ -441,6 +441,158 @@ static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int 
     return found;
 }
 
+void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused)
+{
+    ObjTextureRuntimeSlot* foundA;
+    ObjTextureRuntimeSlot* foundB;
+    s16 t;
+    int flag;
+    s8 timer;
+
+    foundA = characterFindEyeJoint(obj, 1);
+    foundB = characterFindEyeJoint(obj, 0);
+    if (foundA == NULL || foundB == NULL)
+    {
+        return;
+    }
+
+    flag = 0;
+    t = state->movementStep;
+    if (t == 0)
+    {
+        flag = 1;
+    }
+    if (t > 0)
+    {
+        if (foundA->offsetS >= state->movementTarget)
+        {
+            flag = 1;
+        }
+    }
+    if (t < 0)
+    {
+        if (foundA->offsetS <= state->movementTarget)
+        {
+            flag = 1;
+        }
+    }
+    if (flag != 0)
+    {
+        state->movementTarget = randomGetRange(-0x3e8, 0x3e8);
+        state->movementStep = (state->movementTarget < foundA->offsetS) ? -0x96 : 0x96;
+        state->movementTimer = randomGetRange(0x1e, 0x64);
+    }
+    timer = state->movementTimer;
+    if (timer > 0)
+    {
+        state->movementTimer = timer - framesThisStep;
+    }
+    else
+    {
+        foundA->offsetS = (s16)(foundA->offsetS + state->movementStep * framesThisStep);
+        foundA->offsetT = 0;
+        foundB->offsetS = foundA->offsetS;
+        foundB->offsetT = 0;
+    }
+}
+
+int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
+{
+    f32 buf[4];
+    f32 ratio;
+    s16 lo;
+    s16 hi;
+
+    buf[0] = a;
+    buf[1] = a;
+    buf[2] = b;
+    buf[3] = -b;
+
+    lo = curve[10];
+    hi = curve[11];
+    if (lo != hi)
+    {
+        ratio = ((f32)(s32)*state - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
+    }
+    else
+    {
+        return 1;
+    }
+
+    if (ratio > lbl_803DE99C)
+    {
+        ratio = lbl_803DE99C;
+    }
+    else if (ratio < lbl_803DE9A4)
+    {
+        ratio = lbl_803DE9A4;
+    }
+
+    {
+        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
+        if (curve[10] < curve[11])
+        {
+            rate = -rate;
+        }
+        *state = rate * timeDelta + (f32)(s32)*state;
+    }
+
+    if (lbl_803DE99C == ratio || *state >= 8191 || *state <= -8191)
+    {
+        *state = curve[10];
+        return 1;
+    }
+    return 0;
+}
+int fn_800399C0(s16* curve, s16* state)
+{
+    f32 buf[4];
+    f32 ratio;
+    s16 lo;
+    s16 hi;
+
+    buf[0] = lbl_803DE9D8;
+    buf[1] = lbl_803DE9D8;
+    buf[2] = lbl_803DE9DC;
+    buf[3] = lbl_803DE9E0;
+
+    lo = curve[10];
+    hi = curve[11];
+    if (lo != hi)
+    {
+        ratio = ((f32)(s32)state[1] - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
+    }
+    else
+    {
+        return 1;
+    }
+
+    if (ratio > lbl_803DE99C)
+    {
+        ratio = lbl_803DE99C;
+    }
+    else if (ratio < lbl_803DE9A4)
+    {
+        ratio = lbl_803DE9A4;
+    }
+
+    {
+        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
+        if (curve[10] < curve[11])
+        {
+            rate = -rate;
+        }
+        state[1] = rate * timeDelta + (f32)(s32)state[1];
+    }
+
+    if (lbl_803DE99C == ratio || state[1] >= 8191 || state[1] <= -8191)
+    {
+        state[1] = curve[10];
+        return 1;
+    }
+    return 0;
+}
+
 int fn_80039834(s16* curve, s16* state, f32 a, f32 b);
 int fn_800399C0(s16* curve, s16* state);
 
@@ -918,103 +1070,6 @@ int fn_8003A8B4(GameObject* objArg, int* keyList, int countArg, u8* p4Arg)
     return (count * 2 - total) == 0;
 }
 
-int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
-{
-    f32 buf[4];
-    f32 ratio;
-    s16 lo;
-    s16 hi;
-
-    buf[0] = a;
-    buf[1] = a;
-    buf[2] = b;
-    buf[3] = -b;
-
-    lo = curve[10];
-    hi = curve[11];
-    if (lo != hi)
-    {
-        ratio = ((f32)(s32)*state - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
-    }
-    else
-    {
-        return 1;
-    }
-
-    if (ratio > lbl_803DE99C)
-    {
-        ratio = lbl_803DE99C;
-    }
-    else if (ratio < lbl_803DE9A4)
-    {
-        ratio = lbl_803DE9A4;
-    }
-
-    {
-        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
-        if (curve[10] < curve[11])
-        {
-            rate = -rate;
-        }
-        *state = rate * timeDelta + (f32)(s32)*state;
-    }
-
-    if (lbl_803DE99C == ratio || *state >= 8191 || *state <= -8191)
-    {
-        *state = curve[10];
-        return 1;
-    }
-    return 0;
-}
-int fn_800399C0(s16* curve, s16* state)
-{
-    f32 buf[4];
-    f32 ratio;
-    s16 lo;
-    s16 hi;
-
-    buf[0] = lbl_803DE9D8;
-    buf[1] = lbl_803DE9D8;
-    buf[2] = lbl_803DE9DC;
-    buf[3] = lbl_803DE9E0;
-
-    lo = curve[10];
-    hi = curve[11];
-    if (lo != hi)
-    {
-        ratio = ((f32)(s32)state[1] - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
-    }
-    else
-    {
-        return 1;
-    }
-
-    if (ratio > lbl_803DE99C)
-    {
-        ratio = lbl_803DE99C;
-    }
-    else if (ratio < lbl_803DE9A4)
-    {
-        ratio = lbl_803DE9A4;
-    }
-
-    {
-        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
-        if (curve[10] < curve[11])
-        {
-            rate = -rate;
-        }
-        state[1] = rate * timeDelta + (f32)(s32)state[1];
-    }
-
-    if (lbl_803DE99C == ratio || state[1] >= 8191 || state[1] <= -8191)
-    {
-        state[1] = curve[10];
-        return 1;
-    }
-    return 0;
-}
-
 void fn_8003A9C0(u8* p, int count, s16 a, s16 b)
 {
     while (count > 0)
@@ -1342,61 +1397,6 @@ void characterDoEyeAnims(GameObject* obj, CharacterEyeAnimState* state)
             break;
         }
         characterDoEyeMovements(obj, state, lbl_803DE9A4);
-    }
-}
-
-void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused)
-{
-    ObjTextureRuntimeSlot* foundA;
-    ObjTextureRuntimeSlot* foundB;
-    s16 t;
-    int flag;
-    s8 timer;
-
-    foundA = characterFindEyeJoint(obj, 1);
-    foundB = characterFindEyeJoint(obj, 0);
-    if (foundA == NULL || foundB == NULL)
-    {
-        return;
-    }
-
-    flag = 0;
-    t = state->movementStep;
-    if (t == 0)
-    {
-        flag = 1;
-    }
-    if (t > 0)
-    {
-        if (foundA->offsetS >= state->movementTarget)
-        {
-            flag = 1;
-        }
-    }
-    if (t < 0)
-    {
-        if (foundA->offsetS <= state->movementTarget)
-        {
-            flag = 1;
-        }
-    }
-    if (flag != 0)
-    {
-        state->movementTarget = randomGetRange(-0x3e8, 0x3e8);
-        state->movementStep = (state->movementTarget < foundA->offsetS) ? -0x96 : 0x96;
-        state->movementTimer = randomGetRange(0x1e, 0x64);
-    }
-    timer = state->movementTimer;
-    if (timer > 0)
-    {
-        state->movementTimer = timer - framesThisStep;
-    }
-    else
-    {
-        foundA->offsetS = (s16)(foundA->offsetS + state->movementStep * framesThisStep);
-        foundA->offsetT = 0;
-        foundB->offsetS = foundA->offsetS;
-        foundB->offsetT = 0;
     }
 }
 
@@ -1756,46 +1756,6 @@ void modelMtxFn_8003be38(u8* def, int* model, f32* mtxA, f32* mtxB)
     lbl_803DCC48 = 2;
 }
 
-void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model);
-
-void modelInitMtxs(ModelFileHeader* def, ObjModel* model)
-{
-    int cache;
-    int mtx;
-    int count;
-    u8 rem;
-
-    cache = (int)getCache();
-    if (def->extraJointCount != 0)
-    {
-        modelCalcVtxGroupMtxs(def, model);
-    }
-    count = (s32)(u32)def->jointCount + (s32)(u32)def->extraJointCount;
-    if (count >= 2 && count <= 0x64)
-    {
-        mtx = (int)ObjModel_GetJointMatrix((u8*)model, 0);
-        DCFlushRange((void*)mtx, count << 6);
-        rem = (u8)(count << 1);
-        cache += 0x2700;
-        while (rem >= 0x80)
-        {
-            copyToCache((void*)cache, (void*)mtx, 0);
-            rem -= 0x80;
-            mtx += 0x1000;
-            cache += 0x1000;
-        }
-        if (rem != 0)
-        {
-            copyToCache((void*)cache, (void*)mtx, rem);
-        }
-        lbl_803DCC48 = 1;
-    }
-    else
-    {
-        lbl_803DCC48 = 3;
-    }
-}
-
 void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model)
 {
     Mtx ma;
@@ -1842,6 +1802,46 @@ void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model)
         out[2][2] = ma[2][2] * w + mb[2][2] * wi;
         out[2][3] = ma[2][3] * w + mb[2][3] * wi;
         off += 4;
+    }
+}
+
+void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model);
+
+void modelInitMtxs(ModelFileHeader* def, ObjModel* model)
+{
+    int cache;
+    int mtx;
+    int count;
+    u8 rem;
+
+    cache = (int)getCache();
+    if (def->extraJointCount != 0)
+    {
+        modelCalcVtxGroupMtxs(def, model);
+    }
+    count = (s32)(u32)def->jointCount + (s32)(u32)def->extraJointCount;
+    if (count >= 2 && count <= 0x64)
+    {
+        mtx = (int)ObjModel_GetJointMatrix((u8*)model, 0);
+        DCFlushRange((void*)mtx, count << 6);
+        rem = (u8)(count << 1);
+        cache += 0x2700;
+        while (rem >= 0x80)
+        {
+            copyToCache((void*)cache, (void*)mtx, 0);
+            rem -= 0x80;
+            mtx += 0x1000;
+            cache += 0x1000;
+        }
+        if (rem != 0)
+        {
+            copyToCache((void*)cache, (void*)mtx, rem);
+        }
+        lbl_803DCC48 = 1;
+    }
+    else
+    {
+        lbl_803DCC48 = 3;
     }
 }
 
