@@ -6,7 +6,7 @@
 void CameraModeClimb_copyToCurrent(void);
 void CameraModeClimb_free(void);
 void CameraModeClimb_update(CameraObject* camObj);
-void CameraModeClimb_init(int arg1, int mode, s8* args);
+void CameraModeClimb_init(CameraObject* camera, int mode, s8* args);
 void CameraModeClimb_release(void);
 void CameraModeClimb_initialise(void);
 

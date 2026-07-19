@@ -433,8 +433,7 @@ void CameraModeViewfinder_update(s16* obj)
         {
             brightness = 1;
         }
-        ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
-            (int)obj, &outA, &hitY, &outB, &hitDist, 0.0f, 0);
+        (*gCameraInterface)->getRelativePosition(obj, &outA, &hitY, &outB, &hitDist, 0.0f, 0);
         if (hitDist < lbl_803E182C)
         {
             obj[1] = 0;

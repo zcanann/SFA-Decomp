@@ -245,8 +245,8 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
     f32 outY;
     f32 outZ;
 
-    ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
-        (int)camera, &velX, &step, &velZ, &speed, gCamcontrolModeSettings->targetHeight, 0);
+    (*gCameraInterface)
+        ->getRelativePosition(camera, &velX, &step, &velZ, &speed, gCamcontrolModeSettings->targetHeight, 0);
     speed = velZ * velZ + (velX * velX + step * step);
     if (speed > *(f32*)&lbl_803E16AC)
     {
@@ -466,8 +466,7 @@ void CameraModeNormal_follow(CameraObject* camera, ObjAnimComponent* target)
     f32 ratio;
     f32 speed;
 
-    ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
-        (int)camera, &dx, &dz, &dy, &dist, gCamcontrolModeSettings->targetHeight, 1);
+    (*gCameraInterface)->getRelativePosition(camera, &dx, &dz, &dy, &dist, gCamcontrolModeSettings->targetHeight, 1);
     dist = dy * dy + (dx * dx + dz * dz);
     if (dist > lbl_803E16AC)
     {
@@ -486,8 +485,8 @@ void CameraModeNormal_follow(CameraObject* camera, ObjAnimComponent* target)
         camera->probePosX = camera->anim.worldPosX;
         camera->probePosY = camera->anim.worldPosY;
         camera->probePosZ = camera->anim.worldPosZ;
-        ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
-            (int)camera, &dx, &dz, &dy, &dist, gCamcontrolModeSettings->targetHeight, 1);
+        (*gCameraInterface)
+            ->getRelativePosition(camera, &dx, &dz, &dy, &dist, gCamcontrolModeSettings->targetHeight, 1);
         dist = dy * dy + (dx * dx + dz * dz);
         if (dist > lbl_803E16AC)
         {
@@ -818,8 +817,8 @@ void CameraModeNormal_update(u8* obj)
             gCamcontrolModeSettings->collisionProbeTimer = 0;
         }
     }
-    ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
-        (int)camera, &dx2, (f32*)relPosScratch, &dz, &dy, gCamcontrolModeSettings->targetHeight, 0);
+    (*gCameraInterface)
+        ->getRelativePosition(camera, &dx2, (f32*)relPosScratch, &dz, &dy, gCamcontrolModeSettings->targetHeight, 0);
     yaw = 0x8000 - (u16)getAngle(dx2, dz);
     gCamcontrolModeSettings->pitchOffset = 0;
     camera->anim.rotX = yaw - gCamcontrolModeSettings->pitchOffset;
@@ -930,8 +929,8 @@ void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
         Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                        &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
                                        *(int*)&cam->anim.parent);
-        ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
-            (int)cam, &vOutA, &vOutB, &vOutC, &vOutD, gCamcontrolModeSettings->targetHeight, 0);
+        (*gCameraInterface)
+            ->getRelativePosition(cam, &vOutA, &vOutB, &vOutC, &vOutD, gCamcontrolModeSettings->targetHeight, 0);
         vOutB = cam->anim.localPosY - (target->anim.localPosY + gCamcontrolModeSettings->targetHeight);
         cam->anim.rotY = getAngle(vOutB, vOutD);
         cam->anim.rotZ = 0;

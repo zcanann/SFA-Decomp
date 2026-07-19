@@ -131,8 +131,7 @@ void camclimb_update(CameraObject* cam)
             cam->probePosZ = cam->anim.worldPosZ;
             needsReset = 1;
         }
-        ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
-            (int)cam, &relX, &relY, &relZ, &relDistXZ, 0.0f, 0);
+        (*gCameraInterface)->getRelativePosition(cam, &relX, &relY, &relZ, &relDistXZ, 0.0f, 0);
         angle = getAngle((double)relX, (double)relZ);
         yawDelta = 0x8000 - (angle & 0xffff);
         yawDelta = yawDelta - (u32)(u16)cam->anim.rotX;

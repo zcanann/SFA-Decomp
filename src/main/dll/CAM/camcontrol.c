@@ -353,14 +353,14 @@ int Camera_getOverrideTarget(void)
     return CAMCONTROL_CAMERA->overrideTarget;
 }
 
-void camcontrol_getRelativePosition(f32 heightOffset, int targetObj, f32* outX, f32* outY, f32* outZ,
-                                    f32* outDistanceXZ, int useLocalPosition)
+void camcontrol_getRelativePosition(void* targetObj, f32* outX, f32* outY, f32* outZ, f32* outDistanceXZ,
+                                    f32 heightOffset, int useLocalPosition)
 {
     ObjAnimComponent* focusObj;
     ObjAnimComponent* target;
 
     focusObj = CAMCONTROL_CAMERA->focusObj;
-    target = (ObjAnimComponent*)targetObj;
+    target = targetObj;
     if (useLocalPosition != 0)
     {
         *outX = target->localPosX - focusObj->localPosX;
