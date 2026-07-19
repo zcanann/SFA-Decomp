@@ -1074,7 +1074,7 @@ void fn_8003A9C0(u8* p, int count, s16 a, s16 b)
 {
     while (count > 0)
     {
-        *(s16*)(p + 0x14) = a;
+        ((ObjSoundState*)p)->pitch = a;
         *(s16*)(p + 0x44) = b;
         p += 0x60;
         count--;
@@ -1245,7 +1245,7 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
             {
                 int v;
                 int w;
-                *ap -= *(s16*)(p + 0x14);
+                *ap -= ((ObjSoundState*)p)->pitch;
                 v = *ap;
                 if (v < minB)
                 {
@@ -1260,14 +1260,14 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
                     w = (s16)v;
                 }
                 *ap = (s16)w;
-                *(s16*)(p + 0x14) += *ap;
-                if (*(s16*)(p + 0x14) > a)
+                ((ObjSoundState*)p)->pitch += *ap;
+                if (((ObjSoundState*)p)->pitch > a)
                 {
-                    *(s16*)(p + 0x14) = a;
+                    ((ObjSoundState*)p)->pitch = a;
                 }
-                if (*(s16*)(p + 0x14) < negA)
+                if (((ObjSoundState*)p)->pitch < negA)
                 {
-                    *(s16*)(p + 0x14) = negA;
+                    ((ObjSoundState*)p)->pitch = negA;
                 }
                 p += 0x30;
                 ap++;
@@ -1480,7 +1480,7 @@ void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, in
                 char* t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
                 char* row = t + off;
                 int idx2 = *(s8*)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
-                MtxPtr mtx2 = (MtxPtr)(*(char**)(model + ((*(u16*)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40);
+                MtxPtr mtx2 = (MtxPtr)(*(char**)(model + ((((ObjModel*)model)->bufferFlags & 1) * 4) + 0xc) + idx2 * 0x40);
                 vb.x = *(f32*)row;
                 vb.y = *(f32*)(t + off + 4);
                 vb.z = *(f32*)(t + off + 8);

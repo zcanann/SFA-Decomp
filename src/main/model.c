@@ -449,7 +449,7 @@ void modelAnimEvalChannels(u8* dst, u8* model, u8* channel, f32 blend, int flags
         *(u32*)(stk + 0x28) = *(u32*)&((ObjAnimState*)channel)->blendMoveCache[1];
         for (j = 0; j < 2; j++)
         {
-            if (*(u16*)(channel + 0x58))
+            if (((ObjAnimState*)channel)->eventCountdown)
             {
                 srcSlot = j;
             }
@@ -488,15 +488,15 @@ void modelAnimEvalChannels(u8* dst, u8* model, u8* channel, f32 blend, int flags
         {
             if (i != 0)
             {
-                slotEvent = *(u16*)(channel + 0x5c);
+                slotEvent = ((ObjAnimState*)channel)->prevEventState;
             }
             else
             {
-                slotEvent = *(u16*)(channel + 0x5a);
+                slotEvent = ((ObjAnimState*)channel)->eventState;
             }
             if (slotEvent != 0)
             {
-                if (*(u16*)(channel + 0x58))
+                if (((ObjAnimState*)channel)->eventCountdown)
                 {
                     blendMask = 4 << i;
                 }
@@ -540,7 +540,7 @@ void modelAnimEvalChannels(u8* dst, u8* model, u8* channel, f32 blend, int flags
         if ((((ObjAnimState*)channel)->eventState == 0 && ((ObjAnimState*)channel)->prevEventState == 0) || outFlags != 0)
         {
             slotCount = 1;
-            if (*(u16*)(channel + 0x58) != 0)
+            if (((ObjAnimState*)channel)->eventCountdown != 0)
             {
                 slotCount = 2;
             }
@@ -2522,13 +2522,13 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
 
     if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
     {
-        rowA = *(u8**)((u8*)(channel + 0x1c) + *(u16*)(channel + 0x44) * 4);
-        rowB = *(u8**)((u8*)(channel + 0x1c) + *(u16*)(channel + 0x46) * 4);
+        rowA = *(u8**)((u8*)(channel + 0x1c) + ((ObjAnimState*)channel)->moveCacheSlot * 4);
+        rowB = *(u8**)((u8*)(channel + 0x1c) + ((ObjAnimState*)channel)->prevMoveCacheSlot * 4);
     }
     else
     {
-        rowA = ((ModelFileHeader*)hdr)->animationDataSection + *(u16*)(channel + 0x44) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
-        rowB = ((ModelFileHeader*)hdr)->animationDataSection + *(u16*)(channel + 0x46) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
+        rowA = ((ModelFileHeader*)hdr)->animationDataSection + ((ObjAnimState*)channel)->moveCacheSlot * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
+        rowB = ((ModelFileHeader*)hdr)->animationDataSection + ((ObjAnimState*)channel)->prevMoveCacheSlot * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
     }
     objAnim = (ObjAnimComponent*)obj;
     modelDef = objAnim->modelInstance;
@@ -2824,7 +2824,7 @@ void ObjModel_Release(u8* model)
     }
     if (--((ModelFileHeader*)header)->refCount == 0)
     {
-        model_adjustModelList(gModelList, *(u16*)(header + 0x4)); /* modelId */
+        model_adjustModelList(gModelList, ((ModelFileHeader*)header)->modelId); /* modelId */
         z[0] = 0;
         for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->textureCount; z[1] += 4, z[0]++)
         {
