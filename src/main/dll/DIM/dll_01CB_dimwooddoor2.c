@@ -30,12 +30,6 @@ STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 #define DIMWOODDOOR2_OBJFLAG_HIDDEN             0x4000
 #define DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 lbl_803E49D0;
-extern f32 lbl_803E49D4;
-extern f32 lbl_803E49D8;
-extern f32 lbl_803E49DC;
-extern f32 lbl_803E49E0;
-extern f32 lbl_803E49E4;
 
 int dimwooddoor2_getExtraSize(void)
 {
@@ -54,7 +48,7 @@ void dimwooddoor2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E49D0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dimwooddoor2_hitDetect(void)
@@ -70,15 +64,15 @@ void dimwooddoor2_update(int* obj)
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + sub->riseSpeed;
     {
         f32 rs = sub->riseSpeed;
-        f32 ceil = lbl_803E49D4;
+        f32 ceil = 0.0f;
         if (rs != ceil)
         {
-            sub->riseSpeed = rs * lbl_803E49D8;
+            sub->riseSpeed *= 0.95f;
             sub->riseSpeed = (sub->riseSpeed < ceil) ? sub->riseSpeed : ceil;
         }
     }
     if ((s8)sub->burnState <= 0 && *(s16*)placement == DIMWOODDOOR2_MAP_CUE_OPEN &&
-        ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E49DC)
+        ((GameObject*)obj)->anim.currentMoveProgress > 0.9f)
     {
         int v = ((GameObject*)obj)->anim.alpha - framesThisStep * 16;
         if (v < 0)
@@ -105,8 +99,8 @@ void dimwooddoor2_update(int* obj)
         }
         if (found)
         {
-            sub->animSpeed = lbl_803E49E0;
-            sub->riseSpeed = lbl_803E49E4;
+            sub->animSpeed = 0.025f;
+            sub->riseSpeed = -4.0f;
             sub->burnState = 0;
             mainSetBits(((Dimwooddoor2Placement*)placement)->openedGameBit, 1);
             Sfx_PlayFromObject((int)obj, SFXTRIG_wp_dsmk2_c);
@@ -124,7 +118,7 @@ void dimwooddoor2_init(u8* obj, u8* params)
                                             (DIMWOODDOOR2_OBJFLAG_HIDDEN | DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED));
     sub = ((GameObject*)obj)->extra;
     sub->burnState = 3;
-    fz = lbl_803E49D4;
+    fz = 0.0f;
     sub->animSpeed = fz;
     sub->riseSpeed = fz;
     if (mainGetBit(((Dimwooddoor2Placement*)params)->openedGameBit) != 0)
