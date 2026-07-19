@@ -282,7 +282,7 @@ void SnowBike_onSeqFree(int* obj)
         sv = *(s16*)obj;
         state->yaw = sv;
         state->yawCurrent = sv;
-        state->unk430 = lbl_803E5B74;
+        state->engineFxLevel = lbl_803E5B74;
     }
     ObjHits_EnableObject((GameObject*)obj);
     (*gPathControlInterface)->attachObject((void*)obj, (char*)state + 0x178);
@@ -362,7 +362,7 @@ int SnowBike_SeqFn(short* obj, int unused, ObjSeqState* seq)
         }
 
         drcloudcage_updateEngineFx((GameObject*)obj, (void*)state, ((SnowBikeState*)state)->distanceScale,
-                                   (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->unk430), (u8*)(state + 0x461), 4);
+                                   (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->engineFxLevel), (u8*)(state + 0x461), 4);
     }
 
     ((HightopFlags3*)&((SnowBikeState*)state)->flags428)->active = 0;

@@ -83,7 +83,7 @@ typedef struct SnowBikeState {
     u8 pad414[0x8];
     s16 savedRotY;             /* 0x41c: saved anim.rotY (restored after temp halo modify) */
     s16 savedRotZ;             /* 0x41e: saved anim.rotZ (restored after temp halo modify) */
-    u8 unk420;              /* 0x420 */
+    u8 playerInRange;       /* 0x420: 1 while the mount hitbox reports INTERACT_FLAG_IN_RANGE, else 0; forced 0 once GAMEBIT_DIM_CrossedBlizzard is set; returned by the SnowBike_func0B vtable getter */
     s8 riderMode;              /* 0x421: rider mode */
     s8 routeRank;           /* 0x422: current checkpoint-route rank */
     u8 pad423;
@@ -94,7 +94,7 @@ typedef struct SnowBikeState {
     };
     u8 pad429[0x3];
     int linkedObj;             /* 0x42c: linked object */
-    f32 unk430;             /* 0x430 */
+    f32 engineFxLevel;      /* 0x430: scaled down on each collision impact; negated and scaled to form the drcloudcage_updateEngineFx intensity argument */
     u8 bikeType;              /* 0x434: bike kind */
     u8 bikeVariant;              /* 0x435: variant */
     u8 pad436[0x2];
@@ -140,8 +140,8 @@ typedef struct SnowBikeState {
     f32 homePosZ;             /* 0x524: home Z */
     u8 pad528[0x4];
     f32 unk52C;             /* 0x52c */
-    f32 unk530;             /* 0x530 */
-    f32 unk534;             /* 0x534 */
+    f32 unk530;             /* 0x530: exponentially smoothed toward unk56C (same idiom as localVelXDamp/localVelXDampTarget); never read outside its own update */
+    f32 unk534;             /* 0x534: exponentially smoothed toward unk574; never read outside its own update */
     f32 unk538;             /* 0x538 */
     f32 unk53C;             /* 0x53c */
     f32 turnVelScale;       /* 0x540: smoothed scale on the strafe/turn velocity delta */
@@ -150,12 +150,12 @@ typedef struct SnowBikeState {
     f32 distanceScaleDamp;  /* 0x54c: smoothed base of powfBitEstimate(.,dt) damping distanceScale */
     f32 unk550;             /* 0x550 */
     f32 unk554;             /* 0x554 */
-    f32 unk558;             /* 0x558 */
+    f32 unk558;             /* 0x558: exponentially smoothed toward a clamped unk578; never read outside its own update */
     u8 pad55C[0x10];
-    f32 unk56C;             /* 0x56c */
+    f32 unk56C;             /* 0x56c: held target for unk530 (riding-paused state) */
     f32 unk570;             /* 0x570 */
-    f32 unk574;             /* 0x574 */
-    f32 unk578;             /* 0x578 */
+    f32 unk574;             /* 0x574: held target for unk534 (riding-paused state) */
+    f32 unk578;             /* 0x578: held target for unk558 (riding-paused state) */
     f32 localVelXDampTarget;     /* 0x57c: held target for localVelXDamp (riding-paused state) */
     f32 distanceScaleDampTarget; /* 0x580: held target for distanceScaleDamp (riding-paused state) */
     f32 unk584;             /* 0x584 */

@@ -179,7 +179,7 @@ void fn_801EC870(int obj, register int state)
     ((SnowBikeState*)state)->unk56C = lbl_803E5C00;
     flags = (DRcradleSnowBikeFlags*)(state + 0x428);
     flags->resetLatch = 0;
-    ((SnowBikeState*)state)->unk430 = fz;
+    ((SnowBikeState*)state)->engineFxLevel = fz;
     fa = ((SnowBikeState*)state)->baseVelLimitX;
     ((SnowBikeState*)state)->velLimitX = fa;
     ((SnowBikeState*)state)->localVelXLimit = fa;
@@ -493,7 +493,7 @@ void SnowBike_modelMtxFn(GameObject* obj, f32* x, f32* y, f32* z)
 
 u8 SnowBike_func0B(int* obj)
 {
-    return ((SnowBikeState*)((GameObject*)obj)->extra)->unk420;
+    return ((SnowBikeState*)((GameObject*)obj)->extra)->playerInRange;
 }
 
 u32 SnowBike_setScale(GameObject* obj)
@@ -605,7 +605,7 @@ void SnowBike_hitDetect(GameObject* obj)
         {
             doRumble(lbl_803E5BC4 * mag);
         }
-        state->unk430 = state->unk430 * lbl_803E5BBC;
+        state->engineFxLevel = state->engineFxLevel * lbl_803E5BBC;
         if (obj->anim.seqId == SNOWBIKE_IM_BIKE_OBJ || obj->anim.seqId == SNOWBIKE_CR_BIKE_OBJ)
         {
             vol = (int)(lbl_803E5C4C * mag);
@@ -753,7 +753,7 @@ void SnowBike_update(GameObject* obj)
     {
         if (mainGetBit(GAMEBIT_DIM_CrossedBlizzard) != 0)
         {
-            ((SnowBikeState*)state)->unk420 = 0;
+            ((SnowBikeState*)state)->playerInRange = 0;
         }
         if (mainGetBit(GAMEBIT_SnowBikeRelated01FB) != 0)
         {
@@ -777,11 +777,11 @@ void SnowBike_update(GameObject* obj)
             *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
             {
-                ((SnowBikeState*)state)->unk420 = 1;
+                ((SnowBikeState*)state)->playerInRange = 1;
             }
             else
             {
-                ((SnowBikeState*)state)->unk420 = 0;
+                ((SnowBikeState*)state)->playerInRange = 0;
             }
             Sfx_StopObjectChannel((int)obj, 0x57);
         }
@@ -928,7 +928,7 @@ void SnowBike_update(GameObject* obj)
         }
         fn_801EB0D4((int)obj, (int)state);
         drcloudcage_updateEngineFx(obj, state, ((SnowBikeState*)state)->distanceScale,
-                                   (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->unk430), state + 0x461, 7);
+                                   (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->engineFxLevel), state + 0x461, 7);
         fn_801EB634(obj, (int)state);
         obj->anim.rotX = ((SnowBikeState*)state)->yaw;
     }
