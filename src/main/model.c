@@ -55,7 +55,6 @@ extern f32 lbl_803DE87C;
 #define MODEL_BONEXFORM_HAS_X 0x2000
 #define MODEL_BONEXFORM_HAS_Y 0x4000
 #define MODEL_BONEXFORM_HAS_Z 0x8000
-extern void lbl_80006C6C(int* out, u8* a, void* buf, int c, int d, u8* e, int f, int g);
 #define WALKANIM_COPY_SLOT(J, K)                                                          \
     *(u16*)(stk + (J)*2 + (0x44 + (K)*2)) = *(u16*)(channel + (J)*2 + (0x44 + (K)*2));    \
     *(u8*)(stk + (J) + 0x60 + (K)) = *((u8*)(channel + (J) + 0x60) + (K));                \
@@ -422,7 +421,8 @@ void modelAnimFn_800246a0(u8* dst, u8* model, u8* channel, f32 t, int flags, int
             }
         }
     }
-    lbl_80006C6C(&mtxBuf, dst, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, (u8)mode);
+    lbl_80006C6C(&mtxBuf, dst, stk, ((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount,
+                 gModelJointScratchBuffer, flags, (u8)mode);
 }
 void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int flags)
 {
@@ -480,7 +480,8 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
         {
             outFlags |= 0x20;
         }
-        lbl_80006C6C(&mtxBuf, dst, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, outFlags | 0x40);
+        lbl_80006C6C(&mtxBuf, dst, stk, ((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount,
+                     gModelJointScratchBuffer, flags, outFlags | 0x40);
     }
     else
     {
@@ -534,7 +535,8 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
                 }
                 *(u16*)(stk + 0x58) = slotEvent;
                 modelAnimUpdateChannels(hdr, stk, 2);
-                lbl_80006C6C(&mtxBuf, dst, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, blendMask);
+                lbl_80006C6C(&mtxBuf, dst, stk, ((ModelFileHeader*)hdr)->jointData,
+                             ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, blendMask);
                 if (blendMask != 0)
                 {
                     outFlags |= 1 << i;
@@ -586,7 +588,8 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
             {
                 outFlags |= 0x20;
             }
-            lbl_80006C6C(&mtxBuf, dst, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, outFlags);
+            lbl_80006C6C(&mtxBuf, dst, stk, ((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount,
+                         gModelJointScratchBuffer, flags, outFlags);
         }
     }
 }
