@@ -3173,7 +3173,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, s8 flags, void
         {
             break;
         }
-        animState = *(u8**)(action + 0x2c);
+        animState = (u8*)((ObjAnimBank*)action)->currentState;
         if (((GameObject*)activeObj)->anim.currentMove == ((ObjSeqState*)seq)->moveId)
         {
             if ((s8)animState[0x60] != 0)
