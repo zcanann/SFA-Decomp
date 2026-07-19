@@ -159,6 +159,32 @@ typedef struct MapCellEnt
 
 int mapProcessRomList(int slot);
 
+static inline int objVisibleForAct(int obj, int t)
+{
+    if (t == -1)
+    {
+        return 0;
+    }
+    if (t != 0)
+    {
+        if (t < 9)
+        {
+            if ((*(u8*)(obj + 3) >> (t - 1)) & 1)
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            if ((*(u8*)(obj + 5) >> (16 - t)) & 1)
+            {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
 int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)
 {
     char* strs;
@@ -191,26 +217,9 @@ int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)
         verbose = 0;
     }
     t = (*gMapEventInterface)->getMapAct(mapEventGroup);
-    if (t == -1)
+    if (objVisibleForAct(obj, t) == 0)
     {
         return 0;
-    }
-    if (t != 0)
-    {
-        if (t < 9)
-        {
-            if ((*(u8*)(obj + 3) >> (t - 1)) & 1)
-            {
-                return 0;
-            }
-        }
-        else
-        {
-            if ((*(u8*)(obj + 5) >> (16 - t)) & 1)
-            {
-                return 0;
-            }
-        }
     }
     if (*(u8*)(obj + 4) & 1)
     {
