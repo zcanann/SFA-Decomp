@@ -29,6 +29,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
 
+#define ARW_ARWING_BOMB_OBJ 0x605 /* retail OBJECTS.bin "ARWArwingBo", DLL 0x29C */
+
 #define ARWBOMBCOLL_HIT_VOLUME_SLOT 0x13
 
 ObjectDescriptor gARWBombCollObjDescriptor = {
@@ -163,7 +165,7 @@ void ARWBombColl_update(int obj)
             {
                 int hit;
                 if (ObjHits_GetPriorityHit((GameObject*)(obj), &hit, 0, 0) != 0 && (u32)hit != 0 &&
-                    (((GameObject*)hit)->anim.seqId == 0x604 || ((GameObject*)hit)->anim.seqId == 0x605))
+                    (((GameObject*)hit)->anim.seqId == 0x604 || ((GameObject*)hit)->anim.seqId == ARW_ARWING_BOMB_OBJ))
                 {
                     arwarwing_addScore(arw, 0xf);
                     flags->b40 = 1;

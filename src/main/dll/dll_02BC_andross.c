@@ -61,6 +61,8 @@ f32 gAndrossDistortPhase;
 #include "main/object_render_legacy.h"
 #include "main/maketex_sequence_api.h"
 
+#define ARW_ARWING_BOMB_OBJ 0x605 /* retail OBJECTS.bin "ARWArwingBo", DLL 0x29C */
+
 #define GAMEBIT_ANDROSS_HIT_CUE_BASE 0x108 /* six consecutive random-hit cue bits */
 
 /* retail "ANDSilverRi" (silver ring); cached into state->spawnedObj w/ spawnedObjLifetime */
@@ -272,7 +274,7 @@ void fn_8023A3E4(GameObject* obj, AndrossState* stateData)
         }
         case 3:
         {
-            if (((GameObject*)hitObj)->anim.seqId == 0x605)
+            if (((GameObject*)hitObj)->anim.seqId == ARW_ARWING_BOMB_OBJ)
             {
                 if (stateData->partHitTimer[ht] == 0 && stateData->partHealth[ht] != 0 && stateData->actionState == 0xc)
                 {

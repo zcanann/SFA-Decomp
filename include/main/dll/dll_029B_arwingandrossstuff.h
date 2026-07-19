@@ -7,13 +7,16 @@
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 
+/* defNos handled by this DLL; names read from retail OBJECTS.bin at def+0x91,
+   all gating to DLL 0x29B. LASER_BASIC and INVINCIBLE share the one truncated
+   name "ARWArwingLa" and are told apart only by their roles in the code below. */
 typedef enum ArwSeqId
 {
-    ARW_SEQID_LASER_BASIC = 0x604,
-    ARW_SEQID_LASER_GREEN = 0x655,
-    ARW_SEQID_INVINCIBLE = 0x6AE,
-    ARW_SEQID_CHARGE = 0x7E4,
-    ARW_SEQID_BOMB = 0x80D
+    ARW_SEQID_LASER_BASIC = 0x604,      /* "ARWArwingLa" */
+    ARW_SEQID_RAPIDFIRE_LASER = 0x655,  /* "rapidFireLa" */
+    ARW_SEQID_INVINCIBLE = 0x6AE,       /* "ARWArwingLa" */
+    ARW_SEQID_ANDROSS_RING = 0x7E4,     /* "AndrossRing" */
+    ARW_SEQID_ANDROSS_ASTEROID = 0x80D  /* "ANDAsteroid"; seeded with random per-axis tumble */
 } ArwSeqId;
 
 typedef union ArwProjectileParam0

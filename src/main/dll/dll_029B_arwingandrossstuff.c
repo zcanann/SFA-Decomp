@@ -1,10 +1,11 @@
 /*
- * arwingandrossstuff (DLL 0x29B) - the Arwing's projectiles (lasers,
- * bombs, charge shots) and Andross-fight shots.
+ * arwingandrossstuff (DLL 0x29B) - the Arwing's lasers and the Andross-fight
+ * projectiles (rings, asteroids). The deployed bomb is the separate DLL 0x29C.
  *
  * Each instance is one in-flight projectile whose behaviour is keyed off
- * its anim.seqId: bomb (0x80d, given random tumble), the invincible/
- * charge variants (0x6ae/0x7e4), and the basic laser kinds (0x655/0x604).
+ * its anim.seqId: the Andross asteroid (0x80d, given random tumble), the
+ * invincible shot and Andross ring (0x6ae/0x7e4), and the basic and
+ * rapid-fire lasers (0x604/0x655).
  * init() sets the hit-target mask, particle kind and hit-
  * volume mode per seqId; update() flies the projectile (objMove by
  * velocity*timeDelta), counts down its lifetime/despawn timers, plays the
@@ -90,7 +91,7 @@ void arwprojectile_createLinkedEffect(GameObject* obj, u8 enable)
     {
         modelLightStruct_setDiffuseColor(state->light, 0x3c, 0x5a, 0xff, 0);
     }
-    if ((obj)->anim.seqId == ARW_SEQID_LASER_GREEN)
+    if ((obj)->anim.seqId == ARW_SEQID_RAPIDFIRE_LASER)
     {
         modelLightStruct_setDistanceAttenuation(state->light, lbl_803E700C, lbl_803E7010);
     }
@@ -166,7 +167,7 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
     GameObject* arwing = getArwing();
     ObjAnimComponent* arwingAnim = &arwing->anim;
 
-    if (objAnim->seqId == ARW_SEQID_BOMB)
+    if (objAnim->seqId == ARW_SEQID_ANDROSS_ASTEROID)
     {
         int hit;
         u32 vol;
@@ -185,7 +186,7 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
         {
             Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_ar_laser116, 4);
         }
-        if (objAnim->seqId == ARW_SEQID_CHARGE)
+        if (objAnim->seqId == ARW_SEQID_ANDROSS_RING)
         {
             s16 angle =
                 (s16)-getAngle(objAnim->localPosX - arwingAnim->localPosX, objAnim->localPosY - arwingAnim->localPosY);
@@ -285,12 +286,12 @@ void arwingandrossstuff_update(GameObject* obj)
         }
         objMove(object, object->anim.velocityX * timeDelta, object->anim.velocityY * timeDelta,
                 object->anim.velocityZ * timeDelta);
-        if (object->anim.seqId == ARW_SEQID_BOMB)
+        if (object->anim.seqId == ARW_SEQID_ANDROSS_ASTEROID)
         {
             object->anim.rotZ += state->rotZSpeed;
             object->anim.rotY += state->rotYSpeed;
         }
-        if (object->anim.seqId == ARW_SEQID_CHARGE)
+        if (object->anim.seqId == ARW_SEQID_ANDROSS_RING)
         {
             object->anim.rootMotionScale += lbl_803DC3D0;
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)object,
@@ -310,16 +311,16 @@ void arwingandrossstuff_init(GameObject* obj, ArwProjectileSetup* setup)
     (obj)->anim.alpha = 1;
     switch ((obj)->anim.seqId)
     {
-    case ARW_SEQID_BOMB:
+    case ARW_SEQID_ANDROSS_ASTEROID:
         state->rotZSpeed = randomGetRange(-0x1f4, 0x1f4);
         state->rotYSpeed = randomGetRange(-0x1f4, 0x1f4);
     case ARW_SEQID_INVINCIBLE:
-    case ARW_SEQID_CHARGE:
+    case ARW_SEQID_ANDROSS_RING:
         ObjHits_SetTargetMask(obj, 4);
         state->param0.particleKind = 4;
         state->hitVolumeMode = 2;
         break;
-    case ARW_SEQID_LASER_GREEN:
+    case ARW_SEQID_RAPIDFIRE_LASER:
         ObjHits_SetTargetMask(obj, 1);
         state->param0.particleKind = 0;
         state->hitVolumeMode = 1;
