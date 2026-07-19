@@ -61,7 +61,6 @@ static const f32 lbl_803E50FC = 1.6f;
 static const f32 lbl_803E5100 = 7500.0f;
 static const f32 lbl_803E5104 = 1.0f;
 static const f32 lbl_803E5108 = 4.0f;
-static const f64 lbl_803E5110 = 4503601774854144.0;
 static const f32 lbl_803E5118 = 50.0f;
 
 int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)

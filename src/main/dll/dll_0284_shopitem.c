@@ -115,7 +115,6 @@ static const f32 lbl_803E5A44 = 0.003f;
 static const f32 lbl_803E5A48 = 4.0f;
 static const f32 lbl_803E5A4C = 0.2f;
 static const f32 lbl_803E5A50 = 0.0f;
-static const f64 lbl_803E5A58 = 4503601774854144.0;
 static const f32 lbl_803E5A60 = 0.005f;
 static const f32 lbl_803E5A64 = 10000.0f;
 static const f32 lbl_803E5A68 = 20.0f;

@@ -33,7 +33,6 @@ static const f32 gDeathSeqPi = 3.1415927f;
 static const f32 gDeathSeqAngleHalfCircle = 32768.0f;
 static const f32 gDeathSeqCameraFovY = 60.0f;
 static const f32 lbl_803E3D48 = 0.01f;
-static const f64 lbl_803E3D50 = 4503601774854144.0;
 static const f32 lbl_803E3D58 = 210.0f;
 
 int DeathSeq_getExtraSize(void)

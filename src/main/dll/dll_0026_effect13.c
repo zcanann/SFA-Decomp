@@ -25,7 +25,6 @@ static const f32 lbl_803E01A0 = 4.0f;
 static const f32 lbl_803E01A4 = 0.0001f;
 static const f32 lbl_803E01A8 = 110.0f;
 static const f32 lbl_803E01AC = 0.0003f;
-static const f64 lbl_803E01B0 = 4503601774854144.0;
 
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),

@@ -89,7 +89,6 @@ static const f32 lbl_803E645C = 30.0f;
 static const f32 lbl_803E6460 = 0.0f;
 static const f32 lbl_803E6464 = 60.0f;
 static const f32 lbl_803E6468 = 93.0f;
-static const f64 lbl_803E6470 = 4503599627370496.0;
 static const f32 lbl_803E6478 = 0.5f;
 
 #define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handleExpr, obj, rot, angleStep)                                            \

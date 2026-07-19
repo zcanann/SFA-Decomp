@@ -67,7 +67,6 @@ static const f32 gSbShipHeadFireballSpeed = 30.0f;
 static const f32 lbl_803E5854 = 100.0f;
 static const f32 lbl_803E5858 = 45.0f;
 static const f32 gSbShipHeadAnimAdvanceRate = 0.005f;
-static const f64 lbl_803E5860 = 4503601774854144.0;
 
 int SB_ShipHead_getExtraSize(void)
 {

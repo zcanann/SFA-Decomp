@@ -52,7 +52,6 @@ static const f32 lbl_803E3A68 = -2.2f;
 static const f32 lbl_803E3A6C = -0.75f;
 static const f32 lbl_803E3A70 = -10.0f;
 static const f32 gWindLift107LaunchGravity = -0.12f;
-static const f64 lbl_803E3A78 = 4503601774854144.0;
 static const f32 gWindLift107RadiusScale = 10.0f;
 static const f32 gWindLift107DefaultRadius = 50.0f;
 
