@@ -21,11 +21,11 @@ STATIC_ASSERT(offsetof(EcshCreatorState, gameBit) == 4);
 STATIC_ASSERT(offsetof(EcshCreatorState, groupSlot) == 8);
 STATIC_ASSERT(sizeof(EcshCreatorState) == 0xa);
 
-/* 0x38-byte spawn descriptor handed to Obj_SetupObject for the shrine
- * child (object type 0x11). Head is the common ObjPlacement layout
- * (type id at 0, color block, position, mapId); the tail is the
- * EarthWalker-shrine class fields. */
-typedef struct EcshShrineSpawnSetup
+/* 0x38-byte spawn descriptor handed to Obj_SetupObject for the spawned
+ * SharpClaw child (defNo 0x11 "sharpclawGr", DLL 0xC9). Head is the
+ * common ObjPlacement layout (type id at 0, color block, position,
+ * mapId); the tail is ground-baddie placement fields. */
+typedef struct EcshSharpClawSpawnSetup
 {
     s16 objType;  /* 0x00 */
     s16 pad02;    /* 0x02 */
@@ -55,14 +55,14 @@ typedef struct EcshShrineSpawnSetup
     u8 pad33;     /* 0x33 */
     u16 unk34;    /* 0x34 */
     u8 pad36[2];  /* 0x36 */
-} EcshShrineSpawnSetup;
+} EcshSharpClawSpawnSetup;
 
-STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, posX) == 0x8);
-STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, mapId) == 0x14);
-STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, gameBit) == 0x18);
-STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, rotByte) == 0x2a);
-STATIC_ASSERT(offsetof(EcshShrineSpawnSetup, unk34) == 0x34);
-STATIC_ASSERT(sizeof(EcshShrineSpawnSetup) == 0x38);
+STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, posX) == 0x8);
+STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, mapId) == 0x14);
+STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, gameBit) == 0x18);
+STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, rotByte) == 0x2a);
+STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, unk34) == 0x34);
+STATIC_ASSERT(sizeof(EcshSharpClawSpawnSetup) == 0x38);
 
 int ecsh_creator_getExtraSize(void);
 int ecsh_creator_getObjectTypeId(void);

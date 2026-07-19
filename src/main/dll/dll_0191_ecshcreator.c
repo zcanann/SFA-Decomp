@@ -1,5 +1,6 @@
 /*
- * DLL 0x0191 - ecshcreator (EarthWalker shrine spawner). TU 0x801C6E0C-0x801C70F0.
+ * DLL 0x0191 - ecshcreator ("ECSH_Creato", the ecshrine-map SharpClaw
+ * wave spawner). TU 0x801C6E0C-0x801C70F0.
  *
  * A placement-spawned manager object: on init it stores a per-instance
  * EcshCreatorState (in obj->extra) with the countdown (=100) and the
@@ -8,8 +9,9 @@
  * vtable slots, plays a sfx and starts
  * the countdown (decremented by framesThisStep each tick). Once object
  * loading is unlocked and the countdown reaches <= 0 it allocates a 0x38
- * byte spawn descriptor and creates the actual shrine child object
- * (object type 0x11) via Obj_SetupObject, then re-arms the countdown.
+ * byte spawn descriptor and creates a SharpClaw child (defNo 0x11
+ * "sharpclawGr") via Obj_SetupObject, sets configFlags 0x20 on its
+ * GroundBaddieState, then re-arms the countdown.
  */
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
@@ -25,8 +27,8 @@
 #include "main/dll/dll_0191_ecshcreator.h"
 #include "main/object_descriptor.h"
 
-#define ECSH_SHRINE_RESOURCE 0x82 /* shrine setup resource (Resource_Acquire id) */
-#define ECSH_SHRINE_OBJ_TYPE 0x11 /* object type id of the spawned shrine */
+#define ECSH_SHRINE_RESOURCE 0x82 /* setup resource (Resource_Acquire id) */
+#define ECSH_SHARPCLAW_OBJ 0x11 /* defNo of the spawned child: "sharpclawGr" (DLL 0xC9) */
 #define ECSH_COUNTDOWN_START 100
 
 extern f32 lbl_803E4FF8;
@@ -79,7 +81,7 @@ void ecsh_creator_update(GameObject* obj)
     u8* def;
     EcshCreatorState* state;
     void* res;
-    EcshShrineSpawnSetup* p;
+    EcshSharpClawSpawnSetup* p;
     int ret;
 
     def = (u8*)obj->anim.placementData;
@@ -104,7 +106,7 @@ void ecsh_creator_update(GameObject* obj)
         p->posX = ((ObjPlacement*)def)->posX;
         p->posY = ((ObjPlacement*)def)->posY;
         p->posZ = ((ObjPlacement*)def)->posZ;
-        p->objType = ECSH_SHRINE_OBJ_TYPE;
+        p->objType = ECSH_SHARPCLAW_OBJ;
         p->mapId = -1;
         p->color[0] = ((ObjPlacement*)def)->color[0];
         p->color[1] = ((ObjPlacement*)def)->color[1];
