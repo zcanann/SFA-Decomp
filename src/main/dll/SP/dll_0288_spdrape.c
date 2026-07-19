@@ -25,6 +25,8 @@
 u8 gSpDrapeSwingLeftMoveTable[4] = {1, 2, 3, 0};
 u8 gSpDrapeSwingRightMoveTable[4] = {4, 5, 6, 0};
 
+const f32 gSpDrapeZero[1] = {0.0f};
+
 #define SPDRAPE_OBJFLAG_HIDDEN             0x4000
 #define SPDRAPE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -100,7 +102,7 @@ void spdrape_update(GameObject* obj)
             {
                 if (state[3] + (state[1] * ((GameObject*)player)->anim.localPosX +
                                 state[2] * ((GameObject*)player)->anim.localPosZ) <
-                    0.0f)
+                    gSpDrapeZero[0])
                 {
                     ((SpdrapeState*)state)->moveTable = (int)gSpDrapeSwingLeftMoveTable;
                 }
@@ -109,7 +111,7 @@ void spdrape_update(GameObject* obj)
                     ((SpdrapeState*)state)->moveTable = (int)gSpDrapeSwingRightMoveTable;
                 }
             }
-            ObjAnim_SetCurrentMove((int)obj, **(u8**)&((SpdrapeState*)state)->moveTable, 0.0f, 0);
+            ObjAnim_SetCurrentMove((int)obj, **(u8**)&((SpdrapeState*)state)->moveTable, gSpDrapeZero[0], 0);
             *state = 0.0175f;
             Sfx_PlayFromObject((int)obj, SFXTRIG_cagesqk11);
             Camera_GetCurrentViewSlot();
@@ -122,14 +124,14 @@ void spdrape_update(GameObject* obj)
             if (getXZDistance(&(obj)->anim.worldPosX, (f32*)(player + 0x18)) > SP_DRAPE_LEAVE_RADIUS)
             {
                 ObjAnim_SetCurrentMove((int)obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_CLOSE],
-                                       0.0f, 0);
+                                       gSpDrapeZero[0], 0);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_cagesqk11);
                 *state = 0.0165f;
             }
             else
             {
                 ObjAnim_SetCurrentMove((int)obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_HOLD],
-                                       0.0f, 0);
+                                       gSpDrapeZero[0], 0);
                 *state = 0.0144f;
             }
         }
@@ -140,7 +142,7 @@ void spdrape_update(GameObject* obj)
         if (getXZDistance(&(obj)->anim.worldPosX, (f32*)(player + 0x18)) > SP_DRAPE_LEAVE_RADIUS)
         {
             ObjAnim_SetCurrentMove((int)obj, (*(u8**)&((SpdrapeState*)state)->moveTable)[SPDRAPE_MOVE_CLOSE],
-                                   0.0f, 0);
+                                   gSpDrapeZero[0], 0);
             Sfx_StopObjectChannel((int)obj, 0x40);
             Sfx_PlayFromObject((int)obj, SFXTRIG_cagesqk11);
             *state = 0.0165f;
@@ -155,7 +157,7 @@ void spdrape_update(GameObject* obj)
             {
                 if (state[3] + (state[1] * ((GameObject*)player)->anim.localPosX +
                                 state[2] * ((GameObject*)player)->anim.localPosZ) <
-                    0.0f)
+                    gSpDrapeZero[0])
                 {
                     ((SpdrapeState*)state)->moveTable = (int)gSpDrapeSwingLeftMoveTable;
                 }
@@ -164,13 +166,13 @@ void spdrape_update(GameObject* obj)
                     ((SpdrapeState*)state)->moveTable = (int)gSpDrapeSwingRightMoveTable;
                 }
             }
-            ObjAnim_SetCurrentMove((int)obj, **(u8**)&((SpdrapeState*)state)->moveTable, 0.0f, 0);
+            ObjAnim_SetCurrentMove((int)obj, **(u8**)&((SpdrapeState*)state)->moveTable, gSpDrapeZero[0], 0);
             Sfx_PlayFromObject((int)obj, SFXTRIG_cagesqk11);
             *state = 0.0175f;
         }
         else if (((SpdrapeState*)state)->moveActive != 0)
         {
-            ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0, gSpDrapeZero[0], 0);
             *state = 0.0072f;
             Camera_GetCurrentViewSlot();
         }
@@ -204,7 +206,7 @@ void spdrape_init(int* obj, u8* def)
     {
         if (state[1] * ((GameObject*)player)->anim.localPosX + state[2] * ((GameObject*)player)->anim.localPosZ +
                 state[3] <
-            0.0f)
+            gSpDrapeZero[0])
         {
             ((SpdrapeState*)state)->moveTable = (int)gSpDrapeSwingLeftMoveTable;
         }
