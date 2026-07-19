@@ -114,9 +114,6 @@ typedef struct DFSHLaserBeamObject
 #define DFSH_LASER_FLAGS(runtime)            (*(s32*)((u8*)(runtime) + 0x18))
 #define DFSH_MSG_PLAYER_HIT                  0x60003 /* message the player on a laser hit */
 
-#define MODGFX_DETACH(obj) (*gModgfxInterface)->detachSource(obj)
-#define PARTFX_SPAWN(obj, id, a, b, c, d)                                                                              \
-    (*gPartfxInterface)->spawnObject((obj), (id), (void*)(a), (b), (c), (void*)(d))
 #define RESOURCE_SPAWN(obj, id, a, flags, owner, unk)                                                                  \
     ((void (*)(void*, int, int, int, int, int))(*(int*)((u8*)*(int*)gLaserBeamEffectResource + 0x4)))(                 \
         obj, id, a, flags, owner, unk)
@@ -317,7 +314,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                 DFSH_LASER_HIT_STRENGTH(runtime) = (s16)(int)((2.0f) * lateralAbs);
                 if (DFSH_LASER_MODGFX_ATTACHED(runtime) == 1)
                 {
-                    MODGFX_DETACH(obj);
+                    (*gModgfxInterface)->detachSource(obj);
                     DFSH_LASER_MODGFX_ATTACHED(runtime) = 0;
                 }
                 if ((damageDistance < heightThreshold) && (damageDistance > -heightThreshold))
@@ -333,7 +330,8 @@ void DFSH_LaserBeam_update(u32 objAddr)
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_espk2_c);
                         for (i = 0; i < 4; i++)
                         {
-                            PARTFX_SPAWN(Obj_GetPlayerObject(), 0x28B, 0, 4, -1, 0);
+                            (*gPartfxInterface)->spawnObject(Obj_GetPlayerObject(), 0x28B, (void*)0, 4, -1,
+                                                             (void*)0);
                         }
                         DFSH_LASER_HIT_X(runtime) = yawSin * pushDistance + ((GameObject*)playerObj)->anim.localPosX;
                         DFSH_LASER_HIT_Z(runtime) = yawCos * pushDistance + ((GameObject*)playerObj)->anim.localPosZ;
@@ -354,7 +352,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
 
     if ((DFSH_LASER_ACTIVE(runtime) == 0) && (DFSH_LASER_MODGFX_ATTACHED(runtime) == 1))
     {
-        MODGFX_DETACH(obj);
+        (*gModgfxInterface)->detachSource(obj);
         DFSH_LASER_MODGFX_ATTACHED(runtime) = 0;
     }
 
