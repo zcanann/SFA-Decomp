@@ -404,7 +404,7 @@ ObjectDescriptor gBossDrakorObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)bossdrakor_getExtraSize,
 };
 
-void bossdrakor_handleActionEvent(int obj, int state, int action)
+void bossdrakor_handleActionEvent(GameObject* obj, int state, int action)
 {
     int* tbl = gBossDrakorMoveStateTable;
     f32 t;
@@ -514,7 +514,7 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
             ((BossDrakorState*)state)->curveFollowState = 1;
         }
     case 24:
-        found = ObjGroup_FindNearestObject(DRAKORHOVERPAD_OBJGROUP, obj, 0);
+        found = ObjGroup_FindNearestObject(DRAKORHOVERPAD_OBJGROUP, (int)obj, 0);
         if ((void*)found != NULL)
         {
             drakorhoverpad_resetPendingMotion((GameObject*)(found));
@@ -642,7 +642,7 @@ void bossdrakor_hitDetect(GameObject* obj)
     ((BossDrakorState*)inner)->hitSfxCooldown -= timeDelta;
     ((BossDrakorState*)inner)->hurtSfxCooldown -= timeDelta;
 }
-void bossdrakor_update(int obj)
+void bossdrakor_update(GameObject* obj)
 {
     int state;
     s8* p;
@@ -674,9 +674,9 @@ void bossdrakor_update(int obj)
     curveArg = 0x29;
     if (((DrakorFlags*)((char*)state + 0x198))->b10)
     {
-        getEnvfxActImmediatelyInt(obj, obj, BOSSDRAKOR_ENVFX_A, 0);
-        getEnvfxActImmediatelyInt(obj, obj, BOSSDRAKOR_ENVFX_B, 0);
-        getEnvfxActImmediatelyInt(obj, obj, BOSSDRAKOR_ENVFX_C, 0);
+        getEnvfxActImmediately(obj, obj, BOSSDRAKOR_ENVFX_A, 0);
+        getEnvfxActImmediately(obj, obj, BOSSDRAKOR_ENVFX_B, 0);
+        getEnvfxActImmediately(obj, obj, BOSSDRAKOR_ENVFX_C, 0);
         skyFn_80088e54(1, lbl_803E6510);
         timeOfDayFn_80055038();
         if ((*gRomCurveInterface)->initCurve((void*)((char*)state + 0x28), (void*)obj, lbl_803E6560, &curveArg, 0xd) !=
@@ -762,7 +762,7 @@ void bossdrakor_update(int obj)
         bossdrakor_handleActionEvent(obj, state, moveResult);
     }
     adv = ObjAnim_AdvanceCurrentMove(
-        obj,
+        (int)obj,
         (spd = PSVECMag(&((GameObject*)obj)->anim.velocityX) / ((BossDrakorState*)state)->moveSpeed, spd + lbl_803E6570),
         timeDelta, (ObjAnimEventList*)buf);
     if (adv != 0)
@@ -782,11 +782,11 @@ void bossdrakor_update(int obj)
             {
                 moveId = bossdrakor_chooseNextMove((GameObject*)(obj), &((BossDrakorState*)state)->moveSpeed);
             }
-            ObjAnim_SetCurrentMove(obj, moveId, lbl_803E6510, 0);
+            ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E6510, 0);
         }
         else
         {
-            ObjAnim_SetCurrentMove(obj, ((BossDrakorState*)state)->moveState, lbl_803E6510, 0);
+            ObjAnim_SetCurrentMove((int)obj, ((BossDrakorState*)state)->moveState, lbl_803E6510, 0);
         }
         if (arrayIndexOf(gBossDrakorTurnMoveStates, 5, ((BossDrakorState*)state)->moveState) != -1)
         {
@@ -829,10 +829,10 @@ void bossdrakor_update(int obj)
         switch (p[0x13])
         {
         case 0:
-            Sfx_PlayFromObject(obj, SFXTRIG_mv_sliftloop11);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_mv_sliftloop11);
             break;
         case 7:
-            Sfx_PlayFromObject(obj, SFXTRIG_mv_sliftloop11);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_mv_sliftloop11);
             break;
         }
         p++;
@@ -891,7 +891,7 @@ void bossdrakor_update(int obj)
     }
     if (randFn_80080100(200) != 0 && ((DrakorFlags*)((char*)state + 0x198))->b40)
     {
-    objAudioFn_80039270(obj, (void*)(state + 0x130), 0x2ff);
+    objAudioFn_80039270((u32)obj, (void*)(state + 0x130), 0x2ff);
     }
     objAnimFn_80038f38((GameObject*)(obj), (char*)(state + 0x130));
     if (((DrakorFlags*)((char*)state + 0x198))->b04)

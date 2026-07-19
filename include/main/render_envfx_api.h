@@ -15,7 +15,5 @@ int getEnvfxAct(void* source, void* target, u16 index, int flags);
     (((EnvfxActVoidFn)getEnvfxActImmediately)((void*)(source), (void*)(target), (index), (flags)))
 #define getEnvfxActInt(source, target, index, flags)                                                                   \
     (((EnvfxActIntFn)getEnvfxAct)((int)(source), (int)(target), (index), (flags)))
-#define getEnvfxActImmediatelyInt(source, target, index, flags)                                                        \
-    (((EnvfxActIntFn)getEnvfxActImmediately)((int)(source), (int)(target), (index), (flags)))
 
 #endif /* MAIN_RENDER_ENVFX_API_H_ */
