@@ -158,7 +158,7 @@ const u8 lbl_802C2C78[16] = {0x0B, 0x04, 0x06, 0x0A, 0x0A, 0x03, 0x03, 0x02,
                                     0x0E, 0x10, 0x12, 0x13, 0x05, 0x00, 0x00, 0x00};
 const u16 lbl_802C2C88[16] = {1, 2, 4, 8, 8, 16, 16, 64, 128, 256, 1, 32, 0xFFFF, 0, 0, 0};
 
-void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle);
+void playerUpdateTail(int unused1, int* unused2, f32* vec, int unused3, int mode, f32 angle);
 void playerDoTailAnims(int obj, void* statep);
 void playerUpdatePathEffectCountdown(GameObject* obj, int inner);
 int playerStopRidingObject(GameObject* obj);
@@ -298,7 +298,7 @@ int fn_802AD2F4(GameObject* obj, int inner, int state);
 int fn_802AC7DC(int obj, int state, int inner, f32 fv);
 
 
-void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle)
+void playerUpdateTail(int unused1, int* unused2, f32* vec, int unused3, int mode, f32 angle)
 {
     f32 mtx1[12];
     f32 mtx2[12];
@@ -362,7 +362,7 @@ void playerDoTailAnims(int obj, void* statep)
     if ((void*)gPlayerModelChain != NULL)
     {
         ObjModelChain_SetOrigin((ObjModelChain*)gPlayerModelChain, gPlayerModelChainOriginX, gPlayerModelChainOriginY, gPlayerModelChainOriginZ);
-        playerTailFn_80026b3c(state, v, gPlayerModelChain, playerUpdateTail);
+        playerTailFn_80026b3c(state, v, (ObjModelChain*)gPlayerModelChain, playerUpdateTail);
     }
 }
 static inline ObjModel* Player_GetActiveModel(int obj)

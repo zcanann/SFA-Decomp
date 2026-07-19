@@ -7,6 +7,7 @@
 #include "main/gamebits.h"
 #include "main/objHitReact.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/objprint_character_api.h"
 #include "main/objprint_api.h"
 #include "main/objanim_update.h"
@@ -262,7 +263,7 @@ void dim2prisonmammoth_initialise(void)
 
 void fn_802BC788(GameObject* obj, int b)
 {
-    playerTailFn_80026b3c((int*)b, *(int*)b, *(int*)(*(int*)&obj->extra + 0x14f8), 0);
+    playerTailFn_80026b3c((int*)b, *(int*)b, (ObjModelChain*)*(int*)(*(int*)&obj->extra + 0x14f8), NULL);
 }
 
 ObjHitReactEntry gPrisonMammothHitReactEntry[] = {

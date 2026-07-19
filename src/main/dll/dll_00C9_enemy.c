@@ -1460,11 +1460,11 @@ void baddieAfterUpdateBonesCb(GameObject* obj, int* bones)
     switch (obj->anim.seqId)
     {
     case ENEMY_HAGABONMK2_OBJ:
-        playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain,
+        playerTailFn_80026b3c(bones, v, (ObjModelChain*)((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain,
                               crawler_rotateVectorYaw);
         break;
     default:
-        playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain, NULL);
+        playerTailFn_80026b3c(bones, v, (ObjModelChain*)((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain, NULL);
         break;
     }
 }

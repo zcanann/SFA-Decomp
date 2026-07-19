@@ -1179,7 +1179,7 @@ void modelChainUpdateNodesPassive(int* a, int b, u8* blend, u8* chain)
     }
 }
 
-void modelChainUpdateNodes(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
+void modelChainUpdateNodes(int* a, int b, u8* blend, u8* chain, ObjModelChainUpdateCallback callback, int callbackArg)
 {
     u8* model = (u8*)a;
     f32 tmp[12];
@@ -1221,9 +1221,9 @@ void modelChainUpdateNodes(int* a, int b, u8* blend, u8* chain, int cb, int cbAr
         work[0] = *(f32*)(*(u8**)chain + i * 0x54 - 0x3c);
         work[1] = *(f32*)(*(u8**)chain + i * 0x54 - 0x38);
         work[2] = *(f32*)(*(u8**)chain + i * 0x54 - 0x34);
-        if ((u32)cb != 0)
+        if ((u32)callback != 0)
         {
-            ((void (*)(int, int*, f32*, int, int, f32))cb)(b, a, work, cbArg, i, *(f32*)(blend + 0x14));
+            callback(b, a, work, callbackArg, i, *(f32*)(blend + 0x14));
         }
         PSVECAdd(work, (f32*)(*(u8**)chain + i * 0x54 + 0x18), work);
         PSMTXMultVec(tmp, work, work);
@@ -1384,34 +1384,36 @@ void modelChainInitNodesFromJoints(int* obj, int b, int* desc)
         PSMTXMultVec((f32*)(obj[(*(u16*)((u8*)obj + 0x18) & 1) + 3] + lastJointIdx * 0x40), (f32*)(lastEntry + 0x18), (f32*)lastEntry);
     }
 }
-void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
+void playerTailFn_80026b3c(int* model, int animState, ObjModelChain* chain,
+                           ObjModelChainUpdateCallback callback)
 {
     int off;
     int i;
 
-    if (((ObjModelChain*)p)->enabled != 0)
+    if (chain->enabled != 0)
     {
         i = 0;
         off = 0;
-        for (; i < ((ObjModelChain*)p)->count; i++)
+        for (; i < chain->count; i++)
         {
-            if (((ObjModelChain*)p)->firstUpdateDone == 0)
+            if (chain->firstUpdateDone == 0)
             {
-                modelChainInitNodesFromJoints(a, b, (int*)((u8*)((ObjModelChain*)p)->entries + off));
+                modelChainInitNodesFromJoints(model, animState, (int*)((u8*)chain->entries + off));
             }
             if (getHudHiddenFrameCount() == 0)
             {
-                modelChainApplyDampingAndJitter((ObjModel*)a, b, (ObjModelChain*)p, (ObjModelChainEntry*)((u8*)((ObjModelChain*)p)->entries + off));
-                modelChainUpdateNodes(a, b, p, (u8*)((ObjModelChain*)p)->entries + off, d, i);
+                modelChainApplyDampingAndJitter((ObjModel*)model, animState, chain,
+                                                (ObjModelChainEntry*)((u8*)chain->entries + off));
+                modelChainUpdateNodes(model, animState, (u8*)chain, (u8*)chain->entries + off, callback, i);
             }
             else
             {
-                modelChainUpdateNodesPassive(a, b, p, (u8*)((ObjModelChain*)p)->entries + off);
+                modelChainUpdateNodesPassive(model, animState, (u8*)chain, (u8*)chain->entries + off);
             }
             off += 0xc;
         }
-        ((ObjModelChain*)p)->updatedThisFrame = 1;
-        ((ObjModelChain*)p)->firstUpdateDone = 1;
+        chain->updatedThisFrame = 1;
+        chain->firstUpdateDone = 1;
     }
 }
 

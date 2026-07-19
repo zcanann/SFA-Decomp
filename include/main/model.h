@@ -325,6 +325,9 @@ typedef struct ObjModelChain {
     u8 enabled;
 } ObjModelChain;
 
+typedef void (*ObjModelChainUpdateCallback)(int animState, int* model, f32* vector, int callbackArg, int nodeIndex,
+                                            f32 phase);
+
 STATIC_ASSERT(sizeof(ObjModelChainNode) == 0x54);
 STATIC_ASSERT(sizeof(ObjModelChainEntry) == 0x0C);
 STATIC_ASSERT(offsetof(ObjModelChainEntry, nodes) == 0x00);
@@ -375,7 +378,7 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 
 int loadModelAndAnimTabs(void);
 void postRenderSetAlphaBlendState(void);
-void playerTailFn_80026b3c();
+void playerTailFn_80026b3c(int* model, int animState, ObjModelChain* chain, ObjModelChainUpdateCallback callback);
 void __set_debug_bba(u8* p);
 
 #endif

@@ -203,11 +203,11 @@ typedef struct
 } CrawlerSfxParams;
 
 
-void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5, u32 int_deg)
+void crawler_rotateVectorYaw(int unused1, int* unused2, f32* vec, int unused3, int nodeIndex, f32 phase)
 {
     f32 mtx[12];
     f32 a;
-    a = lbl_803E2C20 * f1 - lbl_803E2C24 * (f32)(s32)int_deg;
+    a = lbl_803E2C20 * phase - lbl_803E2C24 * (f32)nodeIndex;
     a = mathCosfHighPrecision(a);
     a = lbl_803E2C1C * a;
     PSMTXRotRad(mtx, 0x79, a);
