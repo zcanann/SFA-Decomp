@@ -1537,7 +1537,7 @@ void objRenderShadowIfVisible(GameObject* obj, int wpad0, int wpad1, int wpad2, 
 
 int fn_8003BB84(f32* m, f32* out);
 
-void objRenderModelAndHitVolumes(GameObject* obj, f32 scale)
+void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     int** table = OBJPRINT_BANK_TABLE((int*)obj);
     (void)scale;

@@ -224,7 +224,7 @@ void Hagabon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (obj->userData1)
         {
         case 0:
-            objRenderModelAndHitVolumes(obj, 1.0f);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
             if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
             {
                 objParticleFn_80099d84((GameObject*)obj, 1.0f, 3,
@@ -438,4 +438,3 @@ ObjectDescriptor gHagabonObjDescriptor = {
     (ObjectDescriptorCallback)Hagabon_getObjectTypeId,
     Hagabon_getExtraSize,
 };
-

@@ -171,7 +171,7 @@ void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderSt
             fn_8003B5E0(200, 30, 30, state->glowPulse);
         }
     }
-    objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E3A5C);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3A5C);
 }
 
 void dll_107_hitDetect_nop(void)

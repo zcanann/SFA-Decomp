@@ -8,6 +8,7 @@
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/objhits.h"
+#include "main/object_render.h"
 #include "main/vecmath.h"
 #include "main/dll/firepipe_effect_api.h"
 
@@ -104,10 +105,10 @@ void flamethrowerspe_free(void)
 {
 }
 
-void flamethrowerspe_render(void)
+void flamethrowerspe_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     f32 scale = 1.0f;
-    objRenderModelAndHitVolumes(scale);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, scale);
 }
 
 void flamethrowerspe_hitDetect(void)

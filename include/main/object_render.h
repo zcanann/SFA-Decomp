@@ -3,7 +3,7 @@
 
 #include "main/game_object.h"
 
-void objRenderModelAndHitVolumes(GameObject* obj, f32 scale);
+void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 
 /* Preserve the full object-render callback ABI at legacy call sites. */
 #define objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, scale)                                        \

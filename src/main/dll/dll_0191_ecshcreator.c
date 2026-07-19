@@ -69,7 +69,7 @@ void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E4FF8);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E4FF8);
 }
 
 void ecsh_creator_hitDetect(void)

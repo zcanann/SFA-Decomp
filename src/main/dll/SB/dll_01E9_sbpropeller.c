@@ -66,7 +66,7 @@ void SB_Propeller_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)obj, lbl_803E5810);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E5810);
 }
 
 void SB_Propeller_hitDetect(GameObject* obj)
