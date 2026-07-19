@@ -47,7 +47,8 @@ typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p
 
 typedef struct ExplosionPlacement
 {
-    u8 pad00[0x1a];
+    u8 pad00[0x19];
+    s8 sfxKind;
     s16 scaleParam;
     s16 configFlags;
 } ExplosionPlacement;
@@ -144,7 +145,7 @@ void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
     }
     if (flames[idx].generation < 1)
     {
-        s8 c = *(s8*)((char*)placement + 0x19);
+        s8 c = ((ExplosionPlacement*)placement)->sfxKind;
         if (c != 0)
         {
             if (c == 2)
@@ -253,7 +254,7 @@ int explosion_getObjectTypeId(GameObject* obj)
 
 void explosion_free(GameObject* obj)
 {
-    ModelLightStruct* light = *(ModelLightStruct**)(*(int*)&obj->extra + 0xa40);
+    ModelLightStruct* light = ((ExplosionState*)obj->extra)->light;
     if (light != NULL)
     {
         ModelLightStruct_free(light);
