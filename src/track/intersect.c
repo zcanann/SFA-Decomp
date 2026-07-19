@@ -4523,8 +4523,8 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
 
     c_K0.a = alpha0;
     c_K1.a = alpha1;
-    ratio1 = ((f32)(u32)fn_8000FA90() - lbl_803DEF54) / lbl_803DEF58;
-    ratio2 = ((f32)(u32)fn_8000FA70() - lbl_803DEF54) / lbl_803DEF58;
+    ratio1 = ((f32)(u32)Camera_GetCurrentViewYaw() - lbl_803DEF54) / lbl_803DEF58;
+    ratio2 = ((f32)(u32)Camera_GetCurrentViewPitch() - lbl_803DEF54) / lbl_803DEF58;
     if (getHudHiddenFrameCount() != 0)
     {
         angle = lbl_803DD00C;
@@ -4697,7 +4697,7 @@ void doHeatEffect(u8 alpha)
     u8 a1;
 
     *(IndMtxInit*)indMtx = lbl_802C1EA8.ind;
-    v = fn_8000FA70Signed();
+    v = Camera_GetCurrentViewPitchSigned();
     if (v < 0)
     {
         k = (((u16)(int)v >> 8) - 0xc0) << 2;

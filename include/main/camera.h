@@ -150,14 +150,14 @@ f32* fn_8000E814(void);
 s32 Angle_AddWrappedS16(s32 angle, s16* delta);
 s32 Angle_SubWrappedS16(s32 angle, s16* delta);
 void screenFn_8000e944(void* viewportArg);
-void viewportEffectFn_8000e380(void);
+void Camera_UpdateShakeAndFarPlane(void);
 void fn_8000F83C(void);
 void fn_8000F8F8(void);
 void fn_8000F9B4(void);
-u16 fn_8000FA70(void);
-u16 fn_8000FA90(void);
+u16 Camera_GetCurrentViewPitch(void);
+u16 Camera_GetCurrentViewYaw(void);
 
-#define fn_8000FA70Signed() ((s16 (*)(void))fn_8000FA70)()
+#define Camera_GetCurrentViewPitchSigned() ((s16 (*)(void))Camera_GetCurrentViewPitch)()
 
 
 #endif /* MAIN_CAMERA_H_ */

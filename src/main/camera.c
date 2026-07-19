@@ -290,7 +290,7 @@ s32 Obj_BuildTransformMatrixSlot(GameObject* obj)
     return gObjTransformMatrixSlot - 1;
 }
 
-void viewportEffectFn_8000e380(void)
+void Camera_UpdateShakeAndFarPlane(void)
 {
     CameraViewSlot* slot;
     f32 expTerm;
@@ -981,12 +981,12 @@ void fn_8000F9B4(void)
     }
 }
 
-u16 fn_8000FA70(void)
+u16 Camera_GetCurrentViewPitch(void)
 {
     return gCameraShakeSlots[gCameraCurrentViewIndex].pitch;
 }
 
-u16 fn_8000FA90(void)
+u16 Camera_GetCurrentViewYaw(void)
 {
     return gCameraShakeSlots[gCameraCurrentViewIndex].yaw;
 }

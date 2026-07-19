@@ -1260,7 +1260,7 @@ void gameLoop(void)
         padUpdate();
         voxmaps_updateTimers();
         gameUpdate();
-        viewportEffectFn_8000e380();
+        Camera_UpdateShakeAndFarPlane();
         doNothing_startOfFrame();
         loadDataFiles();
         audioUpdate();

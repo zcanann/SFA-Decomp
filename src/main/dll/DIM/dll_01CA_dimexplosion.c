@@ -289,9 +289,9 @@ void explosion_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
                 u8 cv;
                 Obj_BuildWorldTransformMatrix(obj, mE, 0);
                 PSMTXRotRad(m1, 0x7a, (f32)((6.2832 * (f64)(int)((ExplosionDebris*)cursor)->spinAngle) / 65536.0));
-                PSMTXRotRad(m3, 0x78, (f32)((6.2832 * ((f64)(u32)(fn_8000FA70() & 0xffff) - 0.0)) / 65536.0));
+                PSMTXRotRad(m3, 0x78, (f32)((6.2832 * ((f64)(u32)(Camera_GetCurrentViewPitch() & 0xffff) - 0.0)) / 65536.0));
                 PSMTXConcat(m3, m1, m3);
-                PSMTXRotRad(m2, 0x79, (f32)((6.2832 * (f64)(int)(0x10000 - (fn_8000FA90() & 0xffff))) / 65536.0));
+                PSMTXRotRad(m2, 0x79, (f32)((6.2832 * (f64)(int)(0x10000 - (Camera_GetCurrentViewYaw() & 0xffff))) / 65536.0));
                 PSMTXConcat(m2, m3, m2);
                 PSMTXScale(m4, ((ExplosionDebris*)cursor)->scale, ((ExplosionDebris*)cursor)->scale,
                            ((ExplosionDebris*)cursor)->scale);
