@@ -86,7 +86,7 @@ void drgenerator_hitDetect(GameObject* obj)
     {
         return;
     }
-    state[0x19a] = *(u8*)(state + 0x19a) - hitVolume;
+    state[0x19a] = ((DrgeneratorState*)state)->hitsRemaining - hitVolume;
     Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&hitPosX, lbl_803E6B5C);
     fn_8009A8C8(obj, lbl_803E6B60);
     if (state[0x19a] > 0)

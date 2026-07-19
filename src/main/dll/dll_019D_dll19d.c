@@ -116,7 +116,7 @@ void dll_19D_update(GameObject* obj)
     }
 
     linkObj = *(int*)&((GameObject*)self)->anim.hitReactState;
-    if (*(s8*)(linkObj + 0xad) != 0)
+    if (((ObjHitsPriorityState*)linkObj)->contactFlags != 0)
     {
         Sfx_PlayFromObject(self, SFXTRIG_npu_216);
         (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);

@@ -83,7 +83,7 @@ int TREX_Lazerwall_popQueuedState(int obj, int animState)
                 ((TREXLazerwallUpdateTimedChallengeState*)state)->nodeTargetY =
                     lbl_803E59E0 + ((LazerwallCurveNode*)node)->y;
                 ((TREXLazerwallUpdateTimedChallengeState*)state)->unk9CA = 0;
-                ((TREXLazerwallUpdateTimedChallengeState*)state)->curveNodeTag = *(u8*)(node + 0x19);
+                ((TREXLazerwallUpdateTimedChallengeState*)state)->curveNodeTag = ((LazerwallCurveNode*)node)->type;
             }
 
             if ((s8) * (u8*)(node + 0x19) == LAZERWALL_NODE_TAG_A)

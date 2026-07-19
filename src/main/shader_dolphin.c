@@ -792,7 +792,7 @@ void fn_8004D6D8(void)
     if (tex != NULL)
     {
         void* obj = (char*)tex + 0x20;
-        if (*(u8*)((char*)tex + 0x48) != 0)
+        if (((Texture*)tex)->preloaded != 0)
         {
             GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)tex + 0x40), id);
         }

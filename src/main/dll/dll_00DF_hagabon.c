@@ -89,14 +89,14 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
     curve = state->curve;
     flags = &state->flags;
 
-    if (((Curve_AdvanceAlongPath((Curve*)curve, state->curveStep) != 0) || (*(int*)(curve + 0x10) != *(int*)&lbl_803DDA58)) &&
+    if (((Curve_AdvanceAlongPath((Curve*)curve, state->curveStep) != 0) || (((RomCurveWalker*)curve)->atSegmentEnd != *(int*)&lbl_803DDA58)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
         ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, (400.0f), lbl_803DBC70, -1) != 0))
     {
         *flags &= ~HAGABON_FLAG_PATH_NEEDS_LINK;
     }
 
-    *(int*)&lbl_803DDA58 = *(int*)(curve + 0x10);
+    *(int*)&lbl_803DDA58 = ((RomCurveWalker*)curve)->atSegmentEnd;
 
     *(u16*)&state->wavePhaseA += (u16)((128.0f) * timeDelta);
     *(u16*)&state->wavePhaseB += (u16)((256.0f) * timeDelta);
