@@ -1518,8 +1518,8 @@ void initFn_8006d020(void)
     int attempts;
     int j;
     u8 collide;
-    int tex;
     int row;
+    int tex;
 
     saved = testAndSet_onlyUseHeap3(1);
     attempts = 0;
