@@ -59,7 +59,7 @@ extern u8 lbl_8036F880[];
 #define ZADV(n) (pos += (n), src += pos >> 3, pos &= 7, sh = 32 - pos)
 #define ZROTL(b, m) (((u32)(b) << (m)) | ((u32)(b) >> (32 - (m))))
 
-int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
+int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
     u8 *src;
     u8 *dst;
     int pos;
@@ -88,10 +88,10 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
     u8 *curLens;
     u8 *curCnt;
 
-    dst = (u8 *)dstv - 1;
+    dst = dstv - 1;
     pos = 0;
     sh = 32;
-    src = (u8 *)srcv + 2;
+    src = srcv + 2;
     do {
         final = ZROT1(src[0]);
         ZADV(1);

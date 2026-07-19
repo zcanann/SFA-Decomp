@@ -233,7 +233,7 @@ prodg_implicit = [
 config.custom_build_rules = [
     {
         "name": "prodg",
-        "command": f"{prodg_shell}{prodg_wrapper}{prodg_dir / 'cpp.exe'} -P $in $basefile.i"
+        "command": f"{prodg_shell}{prodg_wrapper}{prodg_dir / 'cpp.exe'} -Iinclude -P $in $basefile.i"
         f" && {prodg_wrapper}{prodg_dir / 'cc1.exe'} $basefile.i"
         " -quiet -O1 -fno-common -o $basefile.s"
         f" && {prodg_as} -mgekko $basefile.s -o $out",

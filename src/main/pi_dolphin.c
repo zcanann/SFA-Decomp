@@ -55,6 +55,7 @@
 #include "main/sky_api.h"
 #include "main/textrender_api.h"
 #include "main/vecmath_distance_api.h"
+#include "main/zlb.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "track/intersect_api.h"
 #include "track/intersect_depth_read_api.h"
@@ -2261,10 +2262,6 @@ u32 mapLoadDataFile(int mapId, int fileId)
 
 char sAssetHaltFormat[] = "HALT\t%s\n";
 char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
-
-
-
-int zlbDecompress(u8* src, int size, u8* dst, void* outp);
 
 int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
                               u32 flagBits)
