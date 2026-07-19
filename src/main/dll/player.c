@@ -16783,7 +16783,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     }
     if (((GameObject*)gPlayerPathObject)->anim.classId == 0x2d)
     {
-        ((void (*)(void))objSetAnimField48to0)();
+        objSetAnimField48to0((GameObject*)gPlayerPathObject);
     }
     ((void (*)(int, void*, f32))staffAnimate)(obj, inner, timeDelta);
     if (gPlayerPathObject != NULL && ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
