@@ -1030,7 +1030,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     int a;
     int b;
     u8 color[4];
-    f32 fogc;
+    u8 fogc[4];
 
     shad = 0;
     {
@@ -1199,8 +1199,8 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     if (isHeavyFogEnabled() && !(((ModelFileHeader*)p2)->flags & 0x100))
     {
-        getColor803dd01cFloatLegacy(&fogc);
-        renderHeavyFog(&fogc);
+        getColor803dd01c(fogc);
+        renderHeavyFog(fogc);
     }
     if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_PROJECTED_TEX_PASS)
     {
@@ -1517,9 +1517,9 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
                           0, (GXColor*)color, 0, 0);
             if (isHeavyFogEnabled() != 0)
             {
-                f32 c;
-                getColor803dd01cFloatLegacy(&c);
-                renderHeavyFog(&c);
+                u8 c[4];
+                getColor803dd01c(c);
+                renderHeavyFog(c);
             }
             textureFn_800528bc();
             GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
