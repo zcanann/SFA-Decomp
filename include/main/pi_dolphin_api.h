@@ -39,7 +39,7 @@ int textureFn_80050ad8(void* texture, int stageCount, u8 mode, u32 indirectTextu
 void textureFn_80051348(void* textureRef, u8 objectFlags);
 void fn_800510F0(void* textureRef, u8 hasBaseTexture, u8 mode);
 void fn_80050FF4(u8 mode);
-void fn_8005011C(int objectInstance);
+void fn_8005011C(u8* objectInstance);
 void fn_80050558(u8* texture, void* texMtx, int stageMode, int componentMode, int variant);
 void fn_80050A28(int scale);
 void textureFn_8004c330(void* texture, void* texMtx);
@@ -56,8 +56,6 @@ void gxTextureFn_8004d5b4(void* renderOp);
     (((void (*)(u32, int, int))fn_800510F0)((textureRef), (hasBaseTexture), (mode)))
 #define fn_80050FF4IntLegacy(mode) \
     (((void (*)(int))fn_80050FF4)((mode)))
-#define fn_8005011CMatrixLegacy(matrix) \
-    (((void (*)(f32*))fn_8005011C)((matrix)))
 #define fn_80050558IntLegacy(texture, texMtx, stageMode, componentMode, variant) \
     (((void (*)(u32, int, int, int, int))fn_80050558)( \
         (texture), (texMtx), (stageMode), (componentMode), (variant)))

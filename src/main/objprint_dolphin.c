@@ -1112,7 +1112,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         b4 = b5f & 4;
         if (b4 && (mx = (f32*)((GameObject*)obj)->anim.modelState->shadowCastSlot) != NULL)
         {
-            fn_8005011CMatrixLegacy(mx);
+            fn_8005011C((u8*)mx);
             nlay = 0;
         }
         else if (b5f & 0x10)

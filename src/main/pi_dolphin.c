@@ -7500,7 +7500,7 @@ void textureFn_8004ff20(void* p1, f32* wpad0, void* wpad1, int wpad2)
     }
 }
 
-void fn_8005011C(int objInst)
+void fn_8005011C(u8* objInst)
 {
     u8* src;
     f32 mtx[3][4];
