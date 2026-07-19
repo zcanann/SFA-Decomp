@@ -32,7 +32,6 @@
 #include "main/object_api.h"
 #include "main/obj_list.h"
 
-typedef int (*ObjListFindObjectByIdLegacyFn)(int objectId);
 #include "main/frame_timing.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/DB/sbgalleon_state.h"
@@ -882,15 +881,15 @@ void fn_801DFA28(GameObject* obj)
 void DBprotection_updateEnvfxGameBits(u8* state)
 {
     int player;
-    int effectObj;
+    GameObject* effectObj;
 
     player = (int)Obj_GetPlayerObject();
     if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING) != 0)
     {
-        effectObj = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(DBPROTECTION_ENVFX_B);
-        getEnvfxActInt(effectObj, player, state[state[0xa4] + 0xa9], 0);
-        effectObj = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(DBPROTECTION_ENVFX_A);
-        getEnvfxActInt(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
+        effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_B);
+        getEnvfxActInt((int)effectObj, player, state[state[0xa4] + 0xa9], 0);
+        effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_A);
+        getEnvfxActInt((int)effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
         getEnvfxActInt(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
         mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING, 0);
         ((SBGalleonState*)state)->envfxCycle = DBPROTECTION_GAMEBIT_CYCLE_A_DONE;
@@ -898,10 +897,10 @@ void DBprotection_updateEnvfxGameBits(u8* state)
 
     if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING) != 0)
     {
-        effectObj = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(DBPROTECTION_ENVFX_A);
-        getEnvfxActInt(effectObj, player, state[state[0xa4] + 0xa9], 0);
-        effectObj = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(DBPROTECTION_ENVFX_B);
-        getEnvfxActInt(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
+        effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_A);
+        getEnvfxActInt((int)effectObj, player, state[state[0xa4] + 0xa9], 0);
+        effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_B);
+        getEnvfxActInt((int)effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
         getEnvfxActInt(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
         mainSetBits(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING, 0);
         ((SBGalleonState*)state)->envfxCycle = DBPROTECTION_GAMEBIT_CYCLE_B_DONE;
