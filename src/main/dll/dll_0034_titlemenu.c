@@ -62,8 +62,6 @@ static char sNRarewareReportTag[] = "n_rareware\n";
 extern TitleMenuControl* gTitleMenuLinkInterface;
 extern s32 gAttractMovieIdleFrameCount;
 
-typedef u8 (*TitleMenuShouldShowCreditsRenderFn)(u8* obj);
-
 /* TitleMenuTextEntry.flags: row is hidden / non-selectable (cleared on the
    highlighted entry, set on the rest). */
 #define TITLE_MENU_TEXT_ENTRY_HIDDEN 0x4000
@@ -79,7 +77,7 @@ void TitleMenu_render(u8* obj)
 {
     int menuAction;
 
-    if (((TitleMenuShouldShowCreditsRenderFn)shouldShowCredits)(obj) != 0)
+    if (shouldShowCredits() != 0)
     {
         creditsStart_();
         return;

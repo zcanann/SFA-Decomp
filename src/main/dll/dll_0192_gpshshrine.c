@@ -42,8 +42,6 @@
 #define GPSHSHRINE_MAP_SHRINE 0xb
 #define GPSHSHRINE_SPAWNED_OBJGROUP 0x10 /* puzzle-spawned objects, freed on completion */
 
-typedef void (*GpshShrineUpdateMotionFn)(int obj);
-
 
 
 
@@ -316,7 +314,7 @@ void gpsh_shrine_update(GameObject *obj)
                 getEnvfxActInt((int)obj, (int)player, GPSH_SHRINE_ENVFX_C, 0);
             }
         }
-        ((GpshShrineUpdateMotionFn)fn_801C70F0)((int)obj);
+        fn_801C70F0((s16*)obj);
         unlockLevel(mapGetDirIdx(0x22), 1, 0);
         SCGameBitLatch_Update((SCGameBitLatchState*)(data + 0x13), 2, -1, -1, 0xdd2, 0xb);
         SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(data + 0x13), 1, -1, -1, 0xcbb, 8);
@@ -512,5 +510,4 @@ void gpsh_shrine_release(void)
 void gpsh_shrine_initialise(void)
 {
 }
-
 
