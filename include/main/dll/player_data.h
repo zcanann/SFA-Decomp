@@ -43,7 +43,75 @@ extern u8 gPlayerSurfacePfxModeTable[];
 extern u64 gPlayerLastSfxFrame;
 extern u64 gPlayerFrameCounter;
 
-extern s16 gPlayerMoveSlotData[2464];
+typedef struct PlayerMoveSlot
+{
+    u8 slotId;
+    u8 unk01;
+    s16 moveTableIndex;
+    s16 unk04;
+    s16 unk06;
+    int hitWindowFlags[3];
+    u8 hitVolumeId;
+    s8 nextMoveSlots[5];
+    u8 unk1A[2];
+    f32 moveSpeed;
+    f32 comboWindowOpen;
+    f32 comboWindowClose;
+    f32 attackLandProgress;
+    f32 transitionProgress;
+    f32 hitWindowStart[3];
+    f32 hitWindowEnd[3];
+    f32 unk48;
+    f32 unk4C;
+    f32 sfxProgressA;
+    f32 sfxProgressB;
+    f32 unk58;
+    u8 unk5C;
+    s8 hitWindowType[3];
+    ObjWeaponDaTable weaponDa;
+    f32 animSpeed;
+    u8 chainBreakFlag;
+    u8 unk6D[3];
+    f32 hitWindowUnk70[3];
+    f32 hitWindowUnk7C[3];
+    u8 flags88;
+    u8 unk89[3];
+    f32 unk8C;
+    s8 unk90;
+    u8 unk91[3];
+    f32 hitWindowUnk94[3];
+    f32 unkA0;
+    f32 unkA4;
+    u8 unkA8[8];
+} PlayerMoveSlot;
+
+STATIC_ASSERT(sizeof(PlayerMoveSlot) == 0xb0);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, moveTableIndex) == 0x02);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, hitWindowFlags) == 0x08);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, hitVolumeId) == 0x14);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, nextMoveSlots) == 0x15);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, moveSpeed) == 0x1c);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, comboWindowOpen) == 0x20);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, comboWindowClose) == 0x24);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, attackLandProgress) == 0x28);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, transitionProgress) == 0x2c);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, hitWindowStart) == 0x30);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, hitWindowEnd) == 0x3c);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, unk48) == 0x48);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, sfxProgressA) == 0x50);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, sfxProgressB) == 0x54);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, hitWindowType) == 0x5d);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, weaponDa) == 0x60);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, animSpeed) == 0x68);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, chainBreakFlag) == 0x6c);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, hitWindowUnk70) == 0x70);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, hitWindowUnk7C) == 0x7c);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, flags88) == 0x88);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, hitWindowUnk94) == 0x94);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, unkA0) == 0xa0);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, unkA4) == 0xa4);
+
+extern PlayerMoveSlot gPlayerMoveSlotData[28];
 typedef struct PlayerAnimSpeedTuning
 {
     f32 gaitSpeedThresholds[6];
