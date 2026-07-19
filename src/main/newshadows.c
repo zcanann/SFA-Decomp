@@ -1017,7 +1017,7 @@ void sortShadowEntriesDescending(ShadowSortEntry* arr, int count);
 void renderShadows(int unused0, int unused1, int unused2)
 {
     NewShadowCaster* casterPtr;
-    f32 *vAp1, *vAp2, *mc54p;
+    f32 *mc54p, *vAp2, *vAp1;
     f32 dirY, dirZ, vAy, dirX, sCamX, sCamY;
     int savedRotY;
     s16 savedRotX, savedRotZ;
