@@ -211,7 +211,7 @@ u8 cmbsrc_cycleColor(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
             modelLightStruct_setSpecularColor(sourceState->light, gCmbsrcColorRgbTable[idx * 3],
                                               gCmbsrcColorRgbTable[idx * 3 + 1], gCmbsrcColorRgbTable[idx * 3 + 2],
                                               0xff);
-            ((void (*)(ModelLight*, int, int, int, int))modelLightStruct_setDiffuseTargetColor)(
+            modelLightStruct_setDiffuseTargetColor(
                 sourceState->light, (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3]),
                 (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 1]),
                 (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 2]), 0xff);
@@ -579,7 +579,7 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
                 }
             }
             modelLightStruct_startColorFade(state->light, 1, 3);
-            ((void (*)(ModelLight*, int, int, int, int))modelLightStruct_setDiffuseTargetColor)(
+            modelLightStruct_setDiffuseTargetColor(
                 state->light, (int)(0.8f * (f32)(u32)c0[mapData->colorIndex * 3]),
                 (int)(0.8f * (f32)(u32)c1[mapData->colorIndex * 3]),
                 (int)(0.8f * (f32)(u32)c2[mapData->colorIndex * 3]), 0xff);

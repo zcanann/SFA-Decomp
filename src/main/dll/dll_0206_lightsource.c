@@ -313,10 +313,9 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
             modelLightStruct_startColorFade(state->light, 1, 3);
 
             colorBase = state->fxType * 3;
-            ((void (*)(ModelLightStruct*, int, int, int, int))modelLightStruct_setDiffuseTargetColor)(
-                state->light, (int)(0.8f * (f32)(u32)colors.c[colorBase]),
-                (int)(0.8f * (f32)(u32)colors.c[colorBase + 1]),
-                (int)(0.8f * (f32)(u32)colors.c[colorBase + 2]), 0xff);
+            modelLightStruct_setDiffuseTargetColor(state->light, (int)(0.8f * (f32)(u32)colors.c[colorBase]),
+                                                   (int)(0.8f * (f32)(u32)colors.c[colorBase + 1]),
+                                                   (int)(0.8f * (f32)(u32)colors.c[colorBase + 2]), 0xff);
             lightSetField4D(state->light, 1);
 
             if (setup->flags & LIGHTSOURCE_FLAG_CREATE_GLOW)

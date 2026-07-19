@@ -535,7 +535,7 @@ void modelLightStruct_setSpotAttenuation(ModelLightStruct* obj, f32 cutoff, int 
     }
 }
 
-void modelLightStruct_setDiffuseTargetColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
+void modelLightStruct_setDiffuseTargetColor(ModelLightStruct* p, int r, int g, int b, int a)
 {
     p->diffuseFadeTargetColor[0] = r;
     p->diffuseFadeTargetColor[1] = g;
