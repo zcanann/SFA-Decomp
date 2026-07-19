@@ -2173,7 +2173,7 @@ main/dll/dll_0158_gunpowderbarrel.c:
 	.text       start:0x801A0B14 end:0x801A27B8
 	.data       start:0x80322D28 end:0x80322D68
 	.sdata      start:0x803DBE80 end:0x803DBE8C
-	.sdata2     start:0x803E42C0 end:0x803E4348
+	.sdata2     start:0x803E42C0 end:0x803E4344
 
 main/dll/dll_0159_blasted.c:
 	.text       start:0x801A27B8 end:0x801A2BDC
@@ -2335,7 +2335,7 @@ main/dll/dll_016C_dll16c.c:
 main/dll/IM/dll_016D_imicepillar.c:
 	.text       start:0x801AE0EC end:0x801AE144
 	.data       start:0x80323778 end:0x803237B0
-	.sdata2     start:0x803E4768 end:0x803E4770
+	.sdata2     start:0x803E4768 end:0x803E476C
 
 main/dll/IM/dll_016E_imanimspacecraft.c:
 	.text       start:0x801AE144 end:0x801AE508
@@ -2400,7 +2400,7 @@ main/dll/DIM/dll_01C2_dimsnowball1c2.c:
 main/dll/DIM/dll_01C3_dimgate.c:
 	.text       start:0x801B15D8 end:0x801B17F4
 	.data       start:0x80325398 end:0x803253D0
-	.sdata2     start:0x803E4878 end:0x803E4880
+	.sdata2     start:0x803E4878 end:0x803E487C
 
 main/dll/DIM/dll_01C4_dimicewall.c:
 	.text       start:0x801B17F4 end:0x801B1B40
@@ -3548,7 +3548,7 @@ main/dll/DR/dll_027C_drlightbea.c:
 main/dll/DR/dll_027E_drmusiccont.c:
 	.text       start:0x80220AD0 end:0x80221178
 	.data       start:0x8032AD98 end:0x8032ADD0
-	.sdata2     start:0x803E6BC8 end:0x803E6BF0
+	.sdata2     start:0x803E6BC8 end:0x803E6BEC
 
 main/dll/DR/dll_0280_drcloudper.c:
 	.text       start:0x80221178 end:0x80221430
@@ -3838,7 +3838,7 @@ main/dll/dll_02BD_androsshand.c:
 	.text       start:0x8023F05C end:0x8023FC8C
 	.data       start:0x8032C270 end:0x8032C2F0
 	.sdata      start:0x803DC4F0 end:0x803DC500
-	.sdata2     start:0x803E75A0 end:0x803E7600
+	.sdata2     start:0x803E75A0 end:0x803E75FC
 
 main/dll/dll_02BE_androssbrain.c:
 	.text       start:0x8023FC8C end:0x80240010
