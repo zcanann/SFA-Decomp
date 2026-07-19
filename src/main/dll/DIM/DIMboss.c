@@ -48,12 +48,7 @@
 extern f32 gDIMbossRenderMtx[12];
 extern MoveLibState gDIMbossAnimController;
 
-#define Obj_GetActiveModelLegacy ((int (*)())Obj_GetActiveModel)
-
-
-
-
-
+typedef int (*DIMbossGetActiveModelFn)(int obj);
 
 /* Env-fx ids co-activated on the steam/warp transition (getEnvfxAct 3rd arg) */
 #define DIMBOSS_ENVFX_A 0xdb
@@ -213,7 +208,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
                 obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
             DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
                 obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
-            model = Obj_GetActiveModelLegacy((int)obj);
+            model = ((DIMbossGetActiveModelFn)Obj_GetActiveModel)((int)obj);
             ObjModel_ClearRenderAttachment((ObjModel*)model);
             Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE, 1);
             break;

@@ -22,9 +22,8 @@
 #include "main/object_descriptor.h"
 #include "main/shader_api.h"
 
-#define ObjMsg_PopLegacy(obj, msg, param, flags) ((int (*)())ObjMsg_Pop)((obj), (msg), (param), (flags))
-#define ObjGroup_FindNearestObjectLegacy(group, from, distance)                                                        \
-    ((GameObject * (*)()) ObjGroup_FindNearestObject)((group), (from), (distance))
+typedef int (*Dll199ObjMsgPopFn)(GameObject* obj, int* message, int* param, int* flags);
+typedef GameObject* (*Dll199FindNearestObjectFn)(int group, GameObject* from, f32* distance);
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -229,7 +228,7 @@ void dll_199_update(GameObject* obj)
     obj->anim.worldPosZ = obj->anim.localPosZ;
     queue = *(int*)&obj->extra;
     flags = 0;
-    while (ObjMsg_PopLegacy(obj, &msg, &param, &flags) != 0)
+    while (((Dll199ObjMsgPopFn)ObjMsg_Pop)(obj, &msg, &param, &flags) != 0)
     {
         switch (msg)
         {
@@ -290,7 +289,7 @@ void dll_199_update(GameObject* obj)
     }
     else
     {
-        found = ObjGroup_FindNearestObjectLegacy(DLL199_TARGET_OBJGROUP_1, player, &dist);
+        found = ((Dll199FindNearestObjectFn)ObjGroup_FindNearestObject)(DLL199_TARGET_OBJGROUP_1, player, &dist);
         if ((found != 0) && (dist < 300.0f) && (dist > 100.0f))
         {
             dz = found->anim.localPosZ - player->anim.localPosZ;
@@ -385,7 +384,7 @@ void dll_199_update(GameObject* obj)
             state[5] = 1;
             (*gObjectTriggerInterface)->runSequence(2, obj, 0xffffffff);
             dist = 10000.0f;
-            found = ObjGroup_FindNearestObjectLegacy(DLL199_TARGET_OBJGROUP_2, obj, &dist);
+            found = ((Dll199FindNearestObjectFn)ObjGroup_FindNearestObject)(DLL199_TARGET_OBJGROUP_2, obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);
@@ -409,7 +408,7 @@ void dll_199_update(GameObject* obj)
             break;
         case 3:
             dist = 10000.0f;
-            found = ObjGroup_FindNearestObjectLegacy(DLL199_TARGET_OBJGROUP_2, obj, &dist);
+            found = ((Dll199FindNearestObjectFn)ObjGroup_FindNearestObject)(DLL199_TARGET_OBJGROUP_2, obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);

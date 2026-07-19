@@ -26,10 +26,6 @@
 #include "main/gamebit_ids.h"
 #include "main/shader_api.h"
 
-#define ObjMsg_PopLegacy(obj, msg, param, flags) ((int (*)())ObjMsg_Pop)((obj), (msg), (param), (flags))
-#define ObjGroup_FindNearestObjectLegacy(group, from, distance)                                                        \
-    ((int (*)())ObjGroup_FindNearestObject)((group), (from), (distance))
-
 #define DLL19B_TARGET_OBJGROUP 0xe
 
 /* env effects driven by anim events; ENVFX_B is the default when no override id set */
@@ -211,7 +207,7 @@ void dll_19B_update(int obj)
     dist = lbl_803E518C;
     st2 = ((GameObject*)obj)->extra;
     unk16 = 0;
-    while (ObjMsg_PopLegacy(obj, &msg, &unk8, &unk16) != 0)
+    while (ObjMsg_Pop((void*)obj, (u32*)&msg, (u32*)&unk8, (u32*)&unk16) != 0)
     {
         switch (msg)
         {
@@ -270,7 +266,7 @@ void dll_19B_update(int obj)
     }
     else
     {
-        near = ObjGroup_FindNearestObjectLegacy(DLL19B_TARGET_OBJGROUP, player, &dist);
+        near = ObjGroup_FindNearestObject(DLL19B_TARGET_OBJGROUP, player, &dist);
         if ((u32)near != 0 && dist < lbl_803E5190 && dist > lbl_803E5194)
         {
             dy = ((GameObject*)near)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
