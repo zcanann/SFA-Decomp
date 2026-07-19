@@ -1,15 +1,5 @@
 #include "main/object_descriptor.h"
-#include "main/game_object.h"
-
-int VFP_Block1_getExtraSize(void);
-int VFP_Block1_getObjectTypeId(void);
-void VFP_Block1_free(int obj);
-void VFP_Block1_render(void);
-void VFP_Block1_hitDetect(void);
-void VFP_Block1_update(GameObject* obj);
-void VFP_Block1_init(int obj, int data);
-void VFP_Block1_release(void);
-void VFP_Block1_initialise(void);
+#include "main/dll/VF/dll_021E_vfpblock1.h"
 
 ObjectDescriptor gVFP_Block1ObjDescriptor = {
     0,
