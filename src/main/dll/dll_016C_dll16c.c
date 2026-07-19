@@ -65,6 +65,40 @@ void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, in
  * extra block, optionally re-issuing a move on the sub-object first. */
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
+void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, int p2, int p3, int p4, int visible,
+                                    int opacity, int reissueMove)
+{
+    if (reissueMove != 0 && (s8)visible != 0 && opacity > 0)
+    {
+        u8 saved = *(u8*)((char*)src + 0x37);
+        *(u8*)((char*)src + 0x37) = opacity;
+        (*(void (**)(GameObject*, int, int, int, int, int))(**(int**)&src->anim.dll + 0x10))(src, p1, p2, p3, p4, -1);
+        *(u8*)((char*)src + 0x37) = saved;
+    }
+    dst->anim.previousWorldPosX = dst->anim.worldPosX;
+    dst->anim.previousWorldPosY = dst->anim.worldPosY;
+    dst->anim.previousWorldPosZ = dst->anim.worldPosZ;
+    dst->anim.previousLocalPosX = dst->anim.localPosX;
+    dst->anim.previousLocalPosY = dst->anim.localPosY;
+    dst->anim.previousLocalPosZ = dst->anim.localPosZ;
+    {
+        f32 x, y, z;
+        (*(void (**)(GameObject*, f32*, f32*, f32*))(**(int**)&src->anim.dll + 0x28))(src, &x, &y, &z);
+        dst->anim.localPosX = x;
+        dst->anim.localPosY = y;
+        dst->anim.localPosZ = z;
+    }
+    dst->anim.rotX = src->anim.rotX;
+    dst->anim.rotY = src->anim.rotY;
+    dst->anim.rotZ = src->anim.rotZ;
+    dst->anim.worldPosX = dst->anim.localPosX;
+    dst->anim.worldPosY = dst->anim.localPosY;
+    dst->anim.worldPosZ = dst->anim.localPosZ;
+    dst->anim.velocityX = src->anim.velocityX;
+    dst->anim.velocityY = src->anim.velocityY;
+    dst->anim.velocityZ = src->anim.velocityZ;
+}
+
 int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GameObject* linkedObj;
@@ -206,40 +240,6 @@ void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
         ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4,
                                                                                     (1.0f));
     }
-}
-
-void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, int p2, int p3, int p4, int visible,
-                                    int opacity, int reissueMove)
-{
-    if (reissueMove != 0 && (s8)visible != 0 && opacity > 0)
-    {
-        u8 saved = *(u8*)((char*)src + 0x37);
-        *(u8*)((char*)src + 0x37) = opacity;
-        (*(void (**)(GameObject*, int, int, int, int, int))(**(int**)&src->anim.dll + 0x10))(src, p1, p2, p3, p4, -1);
-        *(u8*)((char*)src + 0x37) = saved;
-    }
-    dst->anim.previousWorldPosX = dst->anim.worldPosX;
-    dst->anim.previousWorldPosY = dst->anim.worldPosY;
-    dst->anim.previousWorldPosZ = dst->anim.worldPosZ;
-    dst->anim.previousLocalPosX = dst->anim.localPosX;
-    dst->anim.previousLocalPosY = dst->anim.localPosY;
-    dst->anim.previousLocalPosZ = dst->anim.localPosZ;
-    {
-        f32 x, y, z;
-        (*(void (**)(GameObject*, f32*, f32*, f32*))(**(int**)&src->anim.dll + 0x28))(src, &x, &y, &z);
-        dst->anim.localPosX = x;
-        dst->anim.localPosY = y;
-        dst->anim.localPosZ = z;
-    }
-    dst->anim.rotX = src->anim.rotX;
-    dst->anim.rotY = src->anim.rotY;
-    dst->anim.rotZ = src->anim.rotZ;
-    dst->anim.worldPosX = dst->anim.localPosX;
-    dst->anim.worldPosY = dst->anim.localPosY;
-    dst->anim.worldPosZ = dst->anim.localPosZ;
-    dst->anim.velocityX = src->anim.velocityX;
-    dst->anim.velocityY = src->anim.velocityY;
-    dst->anim.velocityZ = src->anim.velocityZ;
 }
 
 void dll_16C_hitDetect(GameObject* obj)
