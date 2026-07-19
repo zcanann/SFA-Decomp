@@ -31,11 +31,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 
-#define ObjGroup_RemoveObjectLegacy(obj, group) \
-    ((u64 (*)())ObjGroup_RemoveObject)((obj), (group))
-#define ObjLink_DetachChildLegacy(parent, child) \
-    ((u64 (*)())ObjLink_DetachChild)((parent), (child))
-
 typedef struct LightfootState
 {
     u8 pad0[0x40C - 0x0];
@@ -99,14 +94,14 @@ void lightfoot_free(GameObject* obj, int flag)
     int inner = *(int*)&(obj)->extra;
     int count;
     int i;
-    ObjGroup_RemoveObjectLegacy(obj, LIGHTFOOT_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, LIGHTFOOT_OBJGROUP);
     count = (obj)->childCount;
     for (i = 0; i < count; i++)
     {
         child = (obj)->childObjs[0];
         if (child != NULL)
         {
-            ObjLink_DetachChildLegacy(obj, child);
+            ObjLink_DetachChild(obj, child);
             if (flag == 0)
             {
                 Obj_FreeObject(child);
@@ -463,4 +458,3 @@ void lightfoot_initialise(void)
     lbl_803DB0D0[1] = (int)Lightfoot_UpdateCompletionInteraction;
     lbl_803DB0D0[2] = (int)Lightfoot_UpdateProximityInteractionState;
 }
-
