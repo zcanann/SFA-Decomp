@@ -39,6 +39,12 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 extern u8 lbl_803DB411;
 f32 lbl_803DDC50[2];
 
+static void ShipBattle_resetTrackedState(void)
+{
+    lbl_803DDC50[0] = 0.0f;
+    *(u8*)&lbl_803DDC50[1] = 0;
+}
+
 int ShipBattle_getExtraSize(void)
 {
     return 0x140;
@@ -176,8 +182,7 @@ void ShipBattle_init(GameObject* obj, int def)
         obj->userData2 = light;
     }
 
-    lbl_803DDC50[0] = 0.0f;
-    *(u8*)&lbl_803DDC50[1] = 0;
+    ShipBattle_resetTrackedState();
 }
 
 void ShipBattle_release(void)
