@@ -141,6 +141,22 @@ parser.add_argument(
     action="store_false",
     help="disable progress calculation",
 )
+parser.add_argument(
+    "--zlb-toolchain",
+    dest="zlb_toolchain",
+    type=str,
+    choices=["prodg", "mwcc"],
+    default="prodg",
+    help="compiler for src/main/zlb.c; mwcc is a diagnostic comparison path "
+    "only (retail is GCC-family), see docs/mwcc_re/RESIDUAL_HANDOFFS.md",
+)
+parser.add_argument(
+    "--prodg-version",
+    dest="prodg_version",
+    type=str,
+    default="3.5",
+    help="ProDG release under build/compilers/ProDG when --zlb-toolchain=prodg",
+)
 parser.set_defaults(non_matching=True)
 args = parser.parse_args()
 
@@ -208,15 +224,25 @@ config.split_deps = [
 # Can be overridden in libraries or objects
 config.scratch_preset_id = None
 
-# Foreign-toolchain rules for units not compiled with MWCC.
-# zlbDecompress is an SN ProDG (GCC 2.95) middleware object; see
-# docs/mwcc_re/RESIDUAL_HANDOFFS.md for the evidence trail. ProDG ships in
-# the standard compilers bundle, and the whole pipeline (cpp, cc1, as) runs
-# under the same wibo wrapper and binutils the MWCC units already use.
+# Foreign-toolchain rules. zlbDecompress is GCC-family, not MWCC: retail
+# carries "mcrxr cr0; addme." doloops, an idiom absent from the whole GC/2.0
+# refcorpus. The vintage is OLDER than anything vendored here - all five SN
+# ProDG releases (3.5, 3.5b140, 3.7, 3.8.1, 3.9.3) emit byte-identical
+# prologues that open stwu-before-mflr on 8-byte-aligned frames, while retail
+# opens mflr-before-stwu on an 84-byte (4-aligned) frame. --prodg-version
+# selects the release, so an acquired older cc1 can be tested by dropping it
+# in build/compilers/ProDG/<ver>. See docs/mwcc_re/RESIDUAL_HANDOFFS.md.
+# NOTE: prologue shape alone does NOT discriminate MWCC from GCC - the matched
+# MWCC twin modelApplyBoneTransform opens mflr/stwu/stw/stmw too. Only the
+# mcrxr/addme idiom is decisive.
+# NOTE: rule prodg hardcodes its flags and never consumes $cflags, so
+# per-object cflags on this unit are silently discarded. The cc1 binary itself
+# does honour flags (-O2/-Os/-fno-schedule-insns all change output); an earlier
+# "cc1 ignores flags" note conflated the two.
 prodg_compilers = Path(args.compilers) if args.compilers else Path("build/compilers")
 prodg_binutils = Path(args.binutils) if args.binutils else Path("build/binutils")
 prodg_as = prodg_binutils / ("powerpc-eabi-as.exe" if is_windows() else "powerpc-eabi-as")
-prodg_dir = prodg_compilers / "ProDG" / "3.5"
+prodg_dir = prodg_compilers / "ProDG" / args.prodg_version
 if is_windows():
     prodg_wrapper = ""
     # Native Windows ninja runs commands without an implicit shell, so the
@@ -240,6 +266,14 @@ config.custom_build_rules = [
         "description": "PRODG $out",
     },
 ]
+
+if args.zlb_toolchain == "prodg":
+    zlb_object_kwargs = {
+        "custom_rule": "prodg",
+        "custom_rule_implicit": prodg_implicit,
+    }
+else:
+    zlb_object_kwargs = {}
 
 # Base flags, common to most GC/Wii games.
 # Generally leave untouched, with overrides added below.
@@ -974,7 +1008,7 @@ config.libs = [
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objprint_dolphin.c", cflags=cflags_dll_noopt_noloopinv),
             Object(NonMatching, "main/pi_dolphin.c", cflags=cflags_dll_noopt_noloopinv),
-            Object(NonMatching, "main/zlb.c", custom_rule="prodg", custom_rule_implicit=prodg_implicit),
+            Object(NonMatching, "main/zlb.c", **zlb_object_kwargs),
             Object(NonMatching, "main/shader_dolphin.c", cflags=cflags_dll_noopt_noloopinv),
             Object(NonMatching, "main/boot_logo.c"),
             Object(NonMatching, "main/rcp_dolphin.c", cflags=cflags_dll_noopt),
