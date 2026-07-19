@@ -1,7 +1,5 @@
 #include <dolphin/types.h>
 
-extern u8 macHandleActive[];
-
 u32 lbl_8032EDD0[] ATTRIBUTE_ALIGN(8) = {
     0x100010F3, 0x11F51307, 0x1428155B, 0x16A017F9, 0x19661AE8, 0x1C821E34, 0x20000000, 0x00000000, 0x0000000A,
     0x00000014, 0x0000001E, 0x00000028, 0x00000032, 0x0000003C, 0x00000046, 0x00000050, 0x0000005A, 0x00000064,
@@ -21,36 +19,4 @@ u32 lbl_8032EDD0[] ATTRIBUTE_ALIGN(8) = {
     0x00000000, 0x00000001, 0x00000000, 0x00000002, 0x00000000, 0x00000004, 0x00000000, 0x00000008, 0x00000000,
     0x80000001, 0x80000002, 0x80000004, 0x80000008, 0x00000010, 0x00000000, 0x00000020, 0x00000000, 0x00000040,
     0x00000000, 0x00000080, 0x00000000, 0x80000010, 0x80000020, 0x80000040, 0x80000080,
-};
-
-u8* jumptable_8032F050[] = {
-    macHandleActive + 0x348,  macHandleActive + 0x360,  macHandleActive + 0x378,  macHandleActive + 0x3B0,
-    macHandleActive + 0x3EC,  macHandleActive + 0x400,  macHandleActive + 0x410,  macHandleActive + 0x458,
-    macHandleActive + 0x474,  macHandleActive + 0x484,  macHandleActive + 0x508,  macHandleActive + 0x558,
-    macHandleActive + 0x5A4,  macHandleActive + 0x5B4,  macHandleActive + 0x664,  macHandleActive + 0x678,
-    macHandleActive + 0x68C,  macHandleActive + 0x69C,  macHandleActive + 0x6AC,  macHandleActive + 0x6C4,
-    macHandleActive + 0x704,  macHandleActive + 0x718,  macHandleActive + 0x72C,  macHandleActive + 0x7F8,
-    macHandleActive + 0x808,  macHandleActive + 0x8B0,  macHandleActive + 0x908,  macHandleActive + 0x988,
-    macHandleActive + 0x998,  macHandleActive + 0x9A8,  macHandleActive + 0xA14,  macHandleActive + 0xA80,
-    macHandleActive + 0xAB8,  macHandleActive + 0xAC8,  macHandleActive + 0xB20,  macHandleActive + 0xBA0,
-    macHandleActive + 0xBB8,  macHandleActive + 0xC0C,  macHandleActive + 0x14E4, macHandleActive + 0x14E4,
-    macHandleActive + 0xCAC,  macHandleActive + 0xD24,  macHandleActive + 0xD68,  macHandleActive + 0xD78,
-    macHandleActive + 0xDC8,  macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4,
-    macHandleActive + 0xE04,  macHandleActive + 0xE64,  macHandleActive + 0xE8C,  macHandleActive + 0xEA0,
-    macHandleActive + 0xEB8,  macHandleActive + 0xED0,  macHandleActive + 0xEE0,  macHandleActive + 0xEF0,
-    macHandleActive + 0xF34,  macHandleActive + 0xF60,  macHandleActive + 0x14E4, macHandleActive + 0x14E4,
-    macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4,
-    macHandleActive + 0xFB8,  macHandleActive + 0xFD8,  macHandleActive + 0xFF8,  macHandleActive + 0x1018,
-    macHandleActive + 0x1038, macHandleActive + 0x1058, macHandleActive + 0x1078, macHandleActive + 0x1098,
-    macHandleActive + 0x10B8, macHandleActive + 0x10D8, macHandleActive + 0x10F8, macHandleActive + 0x1118,
-    macHandleActive + 0x1138, macHandleActive + 0x1158, macHandleActive + 0x11A4, macHandleActive + 0x14E4,
-    macHandleActive + 0x11F0, macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4,
-    macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4,
-    macHandleActive + 0x1244, macHandleActive + 0x127C, macHandleActive + 0x128C, macHandleActive + 0x14E4,
-    macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4,
-    macHandleActive + 0x12C0, macHandleActive + 0x12D4, macHandleActive + 0x12E8, macHandleActive + 0x12FC,
-    macHandleActive + 0x1310, macHandleActive + 0x1324, macHandleActive + 0x14E4, macHandleActive + 0x14E4,
-    macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4,
-    macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4, macHandleActive + 0x14E4,
-    macHandleActive + 0x1340, macHandleActive + 0x1410,
 };

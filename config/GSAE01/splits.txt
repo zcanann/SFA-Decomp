@@ -4273,13 +4273,7 @@ main/audio/synth_seq_dispatch.c:
 	.data       start:0x8032ED80 end:0x8032EDD0
 
 main/audio/mcmd_data.c:
-	.data       start:0x8032EDD0 end:0x8032F218
-
-dolphin/gx/GXTextureTables.c:
-	.data       start:0x8032F218 end:0x8032F618
-
-main/audio/adsr_data.c:
-	.data       start:0x8032F618 end:0x8032FDA0
+	.data       start:0x8032EDD0 end:0x8032F050
 
 main/audio/synth_seq_queue.c:
 	.text       start:0x8026EC44 end:0x8026EC44
@@ -4347,7 +4341,14 @@ main/audio/mcmd_exec.c:
 	extab       start:0x800058D0 end:0x80005958
 	extabindex  start:0x800060C8 end:0x80006194
 	.text       start:0x8027656C end:0x80278F0C
+	.data       start:0x8032F050 end:0x8032F218
 	.sdata2     start:0x803E7810 end:0x803E7818
+
+dolphin/gx/GXTextureTables.c:
+	.data       start:0x8032F218 end:0x8032F618
+
+main/audio/adsr_data.c:
+	.data       start:0x8032F618 end:0x8032FDA0
 
 main/audio/vid_init.c:
 	.text       start:0x80278F0C end:0x80279004
