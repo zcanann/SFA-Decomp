@@ -33,8 +33,6 @@ f32 lbl_803DBD4C = 512.0f;
 
 #define s16toFloatLegacy(timer, duration) \
     ((void (*)(void*, int))s16toFloat)((timer), (duration))
-#define timerCountDownLegacy(timer) \
-    ((int (*)(int))timerCountDown)((int)(timer))
 
 typedef struct
 {
@@ -186,13 +184,13 @@ void pollenfragment_update(int obj)
     }
     if (fn_80080150(&((PollenFragmentExtra*)extra)->deathTimer) != 0)
     {
-        if (timerCountDownLegacy(extra + 0x20) != 0)
+        if (timerCountDown((f32*)(extra + 0x20)) != 0)
         {
             Obj_FreeObject(obj);
         }
         return;
     }
-    if (timerCountDownLegacy((int)extra + 0x24) != 0)
+    if (timerCountDown(&((PollenFragmentExtra*)extra)->lifetimeTimer) != 0)
     {
         s16toFloatLegacy(extra + 0x20, 0x78);
     }
