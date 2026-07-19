@@ -18,6 +18,7 @@
 #include "main/voxmaps.h"
 #include "main/dll/kooshy.h"
 #include "main/dll/magicPlant.h"
+#include "main/dll/baddie_frozen.h"
 
 
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
@@ -71,7 +72,8 @@ void kooshy_spawnProjectile(GameObject* obj, int state)
     }
 }
 
-void kooshy_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag, int hitId, int damage, void* wpad0, int wpad1)
+void kooshy_updateWhileFrozen(GameObject* obj, u8* state, int attacker, int msgFlag, int hitId, int damage, Vec* wpad0,
+                              int wpad1)
 {
     if ((obj)->anim.currentMove == 1)
     {

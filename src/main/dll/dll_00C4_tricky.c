@@ -2491,7 +2491,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                 case 0x6a3:
                 case 0x6a4:
                 case 0x6a5:
-                    crawler_onHit(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    crawler_onHit(obj, state, (GameObject*)attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x7c8:
                     hagabonMK2_updateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);

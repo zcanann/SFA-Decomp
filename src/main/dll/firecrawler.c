@@ -59,6 +59,7 @@
 #include "main/camera_shake_api.h"
 #include "main/pad_api.h"
 #include "main/dll/dll_0273_firepipe.h"
+#include "main/dll/baddie_frozen.h"
 
 f32 lbl_803DBCE0 = 0.7f;
 f32 lbl_803DBCE4 = 2.0f;
@@ -484,7 +485,7 @@ void fn_80157CDC(int obj, int state)
     }
 }
 
-void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, int damage, void* wpad0, int wpad1)
+void crawler_onHit(GameObject* obj, u8* state, GameObject* attacker, int cmd, int p5, int damage, Vec* wpad0, int wpad1)
 {
     typedef struct
     {
@@ -505,7 +506,7 @@ void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, in
         damage = damage << 2;
     }
     if (idx == 1 &&
-        (((GameObject*)attacker)->anim.seqId == FIRECRAWLER_ATTACKER_SEQID_FLAMETHROWER || ((GameObject*)attacker)->anim.classId == 0x1c || cmd == 0x1f))
+        (attacker->anim.seqId == FIRECRAWLER_ATTACKER_SEQID_FLAMETHROWER || attacker->anim.classId == 0x1c || cmd == 0x1f))
     {
         return;
     }
@@ -519,7 +520,7 @@ void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, in
         {
             if (gCrawlerHitSfxTimer <= 0.0f && attacker != NULL)
             {
-                switch (((GameObject*)attacker)->anim.seqId)
+                switch (attacker->anim.seqId)
                 {
                 case 0x416:
                     Sfx_PlayFromObject((int)obj, SFXTRIG_snort);
@@ -572,7 +573,7 @@ void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, in
         {
             if (gCrawlerHitSfxTimer <= 0.0f && attacker != NULL)
             {
-                switch (((GameObject*)attacker)->anim.seqId)
+                switch (attacker->anim.seqId)
                 {
                 case 0x416:
                     Sfx_PlayFromObject((int)obj, SFXTRIG_snort);
