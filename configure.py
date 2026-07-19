@@ -1834,7 +1834,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/audio/hw_dspctrl.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(NonMatching, "main/audio/sal_volume.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on", "-fp_contract", "off"]),
             Object(Matching, "main/audio/snd3dgroup.c", mw_version="GC/1.2.5n", extra_cflags=["-fp_contract", "off", "-Cpp_exceptions", "on", "-inline", "noauto"]),
-            Object(NonMatching, "main/audio/snd_core.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on", "-fp_contract", "off"]),
+            Object(MatchingFor("GSAE01"), "main/audio/snd_core.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on", "-fp_contract", "off"]),
             Object(MatchingFor("GSAE01"), "main/audio/hw_break.c"),
             Object(MatchingFor("GSAE01"), "main/audio/hw_sample.c"),
             Object(MatchingFor("GSAE01"), "main/audio/hw_keyoff.c"),
