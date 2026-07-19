@@ -1695,36 +1695,36 @@ static inline void* modelGetBoneMtx(ObjModel* model, int idx)
     return base + joint * 0x40;
 }
 
-void modelInitBoneMtxs(ObjModel* model, f32* out)
+void modelInitBoneMtxs(ObjModel* model, f32* outReordered)
 {
-    ModelFileHeader* hdr;
+    ModelFileHeader* file;
     u32 i;
-    f32 tmp[12];
+    f32 transMtx[12];
 
-    hdr = model->file;
-    for (i = 0; i < hdr->jointCount; i++)
+    file = model->file;
+    for (i = 0; i < file->jointCount; i++)
     {
         f32* mtx = modelGetBoneMtx(model, i);
-        PSMTXTrans(tmp,
-            -((ModelBone*)hdr->jointData)[i].tail[0],
-            -((ModelBone*)hdr->jointData)[i].tail[1],
-            -((ModelBone*)hdr->jointData)[i].tail[2]);
-        PSMTXConcat(mtx, tmp, tmp);
-        PSMTXReorder(tmp, out + i * 12);
+        PSMTXTrans(transMtx,
+            -((ModelBone*)file->jointData)[i].tail[0],
+            -((ModelBone*)file->jointData)[i].tail[1],
+            -((ModelBone*)file->jointData)[i].tail[2]);
+        PSMTXConcat(mtx, transMtx, transMtx);
+        PSMTXReorder(transMtx, outReordered + i * 12);
     }
 }
-void modelInitBoneMtxs2(ObjModel* model, f32* transform, f32* out)
+void modelInitBoneMtxs2(ObjModel* model, f32* worldMtx, f32* outReordered)
 {
-    f32* dst;
-    int boneOff;
-    ModelFileHeader* hdr;
+    f32* reorderCursor;
+    int boneByteOff;
+    ModelFileHeader* file;
     u32 i;
-    u8* mtx;
+    u8* jointMtx;
     ModelBone* bone;
-    f32 tmp[12];
+    f32 transMtx[12];
 
-    hdr = model->file;
-    if (hdr->jointCount == 0)
+    file = model->file;
+    if (file->jointCount == 0)
     {
         u32 cnt;
         int lim;
@@ -1744,24 +1744,24 @@ void modelInitBoneMtxs2(ObjModel* model, f32* transform, f32* out)
         {
             idx = 0;
         }
-        mtx = model->jointMatrices[model->bufferFlags & 1] + idx * 0x40;
-        PSMTXConcat(transform, (f32*)mtx, (f32*)mtx);
+        jointMtx = model->jointMatrices[model->bufferFlags & 1] + idx * 0x40;
+        PSMTXConcat(worldMtx, (f32*)jointMtx, (f32*)jointMtx);
     }
     else
     {
         i = 0;
-        boneOff = 0;
-        dst = out;
-        for (; i < hdr->jointCount; i++)
+        boneByteOff = 0;
+        reorderCursor = outReordered;
+        for (; i < file->jointCount; i++)
         {
-            mtx = modelGetBoneMtx(model, i);
-            bone = (ModelBone*)(hdr->jointData + boneOff);
-            PSMTXTrans(tmp, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
-            PSMTXConcat((f32*)mtx, tmp, tmp);
-            PSMTXReorder(tmp, dst);
-            PSMTXConcat(transform, (f32*)mtx, (f32*)mtx);
-            boneOff += 0x1c;
-            dst += 12;
+            jointMtx = modelGetBoneMtx(model, i);
+            bone = (ModelBone*)(file->jointData + boneByteOff);
+            PSMTXTrans(transMtx, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
+            PSMTXConcat((f32*)jointMtx, transMtx, transMtx);
+            PSMTXReorder(transMtx, reorderCursor);
+            PSMTXConcat(worldMtx, (f32*)jointMtx, (f32*)jointMtx);
+            boneByteOff += 0x1c;
+            reorderCursor += 12;
         }
     }
 }
