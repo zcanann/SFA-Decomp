@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DLL_0280_DRCLOUDPER_H_
 
 #include "global.h"
+#include "main/obj_placement.h"
 
 typedef struct DrCloudPerState
 {
@@ -30,7 +31,7 @@ typedef struct DrCloudPerObject
 
 typedef struct DrCloudPerSetup
 {
-    u8 pad00[0x18];
+    ObjPlacement head;
     s8 yawByte;
     s8 cloudIndex;
     u8 pad1A[0x1e - 0x1a];

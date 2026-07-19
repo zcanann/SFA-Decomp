@@ -5,6 +5,7 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_internal.h"
+#include "main/obj_placement.h"
 
 extern ObjectDescriptor14 gWaveAnimatorObjDescriptor;
 extern ObjectDescriptor gAlphaAnimatorObjDescriptor;
@@ -32,7 +33,7 @@ extern ObjectDescriptor gHitAnimatorObjDescriptor;
 
 typedef struct HitAnimatorPlacement
 {
-    u8 pad00[0x18];
+    ObjPlacement head;
     s16 gameBit;
     u8 toggleMode;
     u8 blockEffectId;
