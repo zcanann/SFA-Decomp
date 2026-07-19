@@ -324,7 +324,7 @@ void sharpClawInit(int obj, u8* state)
             *(s16*)(state + 0x2b6) = 51;
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
-        *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 40;
+        ((GroundBaddieState*)state)->baddie.hitCounter = 40;
         state[0x33b] = 0;
         break;
     case 17:
@@ -333,7 +333,7 @@ void sharpClawInit(int obj, u8* state)
             *(s16*)(state + 0x2b6) = 51;
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
-        *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 40;
+        ((GroundBaddieState*)state)->baddie.hitCounter = 40;
         state[0x33b] = 1;
         break;
     case 1505:
@@ -342,7 +342,7 @@ void sharpClawInit(int obj, u8* state)
             *(s16*)(state + 0x2b6) = 1529;
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
-        *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 50;
+        ((GroundBaddieState*)state)->baddie.hitCounter = 50;
         state[0x33b] = 2;
         break;
     case 1463:
@@ -351,7 +351,7 @@ void sharpClawInit(int obj, u8* state)
             *(s16*)(state + 0x2b6) = 1530;
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 120.0f;
-        *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 50;
+        ((GroundBaddieState*)state)->baddie.hitCounter = 50;
         state[0x33b] = 3;
         break;
     case 1464:
@@ -360,7 +360,7 @@ void sharpClawInit(int obj, u8* state)
             *(s16*)(state + 0x2b6) = 1534;
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
-        *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 60;
+        ((GroundBaddieState*)state)->baddie.hitCounter = 60;
         state[0x33b] = 4;
         break;
     case 1465:
@@ -369,7 +369,7 @@ void sharpClawInit(int obj, u8* state)
             *(s16*)(state + 0x2b6) = 51;
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
-        *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 1;
+        ((GroundBaddieState*)state)->baddie.hitCounter = 1;
         state[0x33b] = 1;
         break;
     case 1958:
@@ -378,7 +378,7 @@ void sharpClawInit(int obj, u8* state)
             *(s16*)(state + 0x2b6) = 1957;
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
-        *(s16*)&((GroundBaddieState*)state)->baddie.hitCounter = 160;
+        ((GroundBaddieState*)state)->baddie.hitCounter = 160;
         state[0x33b] = 5;
         z = 0;
         state[0x320] = z;

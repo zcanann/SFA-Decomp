@@ -436,7 +436,7 @@ void snowworm_init(int* obj, int* st)
      * kept raw - single site, member spelling off u8* st is byte-risky. */
     *((u8*)st + 0x33b) = ((BaddieState*)st)->unk2A8;
     ((BaddieState*)st)->unk2A8 = 160.0f;
-    *(u32*)&((BaddieState*)st)->unk2E4 = 0x42003;
+    ((BaddieState*)st)->unk2E4 = 0x42003;
     ((BaddieState*)st)->unk308 = 0.01f;
     ((BaddieState*)st)->animDeltaScale = 0.006f;
     ((BaddieState*)st)->unk304 = 0.95f;

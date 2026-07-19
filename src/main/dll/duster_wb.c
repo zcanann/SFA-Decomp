@@ -299,7 +299,7 @@ void wbInit(u32 unused, int state)
     u32 ua;
 
     ((BaddieState*)state)->speedScale = lbl_803E2AE8;
-    *(u32*)&((BaddieState*)state)->unk2E4 = 0x2002b029;
+    ((BaddieState*)state)->unk2E4 = 0x2002b029;
     ((BaddieState*)state)->unk308 = lbl_803E2ACC;
     ((BaddieState*)state)->animDeltaScale = lbl_803E2AEC;
     ((BaddieState*)state)->unk304 = lbl_803E2AF0;
@@ -458,7 +458,7 @@ void mutatedEbaInit(u32 unused, int state)
     float fa;
 
     ((BaddieState*)state)->speedScale = lbl_803E2B08;
-    *(u32*)&((BaddieState*)state)->unk2E4 = 0x46001;
+    ((BaddieState*)state)->unk2E4 = 0x46001;
     ((BaddieState*)state)->unk308 = lbl_803E2B0C;
     ((BaddieState*)state)->animDeltaScale = lbl_803E2B10;
     ((BaddieState*)state)->unk304 = lbl_803E2B14;

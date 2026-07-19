@@ -122,7 +122,7 @@ void mmsh_waterspike_init(GameObject* obj, s16* def)
     packedEventIds = (u32)(u16)((MmshWaterspikeObjectDef*)def)->xyzAnimIdHigh << 16;
     lowEventId = (u32)(u16)((MmshWaterspikeObjectDef*)def)->xyzAnimIdLow;
     packedEventIds |= lowEventId;
-    *(u32*)&(obj)->userData2 = packedEventIds;
+    (obj)->userData2 = packedEventIds;
 }
 
 void mmsh_waterspike_release(void)

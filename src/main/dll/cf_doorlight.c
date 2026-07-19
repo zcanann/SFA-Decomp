@@ -197,7 +197,7 @@ int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
     KaldaChomControl* control;
 
     state = *(int*)&(obj)->extra;
-    *(u8*)&((GroundBaddieState*)baddieState)->baddie.stateTag = 3;
+    ((GroundBaddieState*)baddieState)->baddie.stateTag = 3;
     ((GroundBaddieState*)baddieState)->baddie.moveSpeed = lbl_803E3084;
     {
         f32 fz = lbl_803E3060.f;
@@ -206,7 +206,7 @@ int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
         if (*(char*)&((GroundBaddieState*)baddieState)->baddie.moveJustStartedA != '\0')
         {
             ObjAnim_SetCurrentMove((int)obj, 5, fz, 0);
-            *(s8*)&((GroundBaddieState*)baddieState)->baddie.moveDone = 0;
+            ((GroundBaddieState*)baddieState)->baddie.moveDone = 0;
         }
     }
     {
