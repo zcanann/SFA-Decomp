@@ -23,7 +23,7 @@
 #include "main/camera.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "dolphin/mtx/mtx_legacy.h"
-#include "main/rcp_dolphin_ext.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/lightmap.h"
 
 s16 gBoneParticleEffectTimer;

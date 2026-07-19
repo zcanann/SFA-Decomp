@@ -32,7 +32,7 @@
 #include "main/frame_timing.h"
 #include "main/pad_api.h"
 #include "main/audio/sfx_play_api.h"
-#include "main/rcp_dolphin_ext.h"
+#include "main/rcp_dolphin_render_api.h"
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 

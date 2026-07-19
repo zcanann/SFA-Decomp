@@ -20,7 +20,6 @@
 #include "main/table_file.h"
 #include "main/frame_timing.h"
 #include "dolphin/gx/GXLegacyDecls.h"
-#include "main/rcp_dolphin_ext.h"
 #include "main/shader_init_api.h"
 #include "main/acosf_api.h"
 #include "main/render_internal.h"
