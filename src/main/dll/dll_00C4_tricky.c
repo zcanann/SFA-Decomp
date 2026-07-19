@@ -1685,12 +1685,7 @@ void Tricky_update(int obj)
                         if (trickyState->targetPosPtr != target)
                         {
                             trickyState->targetPosPtr = target;
-                            {
-                                u32 mask;
-                                u32 stateFlags = trickyState->stateFlags;
-                                mask = ~0x400;
-                                trickyState->stateFlags = stateFlags & mask;
-                            }
+                            trickyState->stateFlags &= ~(u64)0x400;
                             trickyState->linkedWalkGroup = 0;
                         }
                         trickyState->substate = 0;
@@ -1708,12 +1703,7 @@ void Tricky_update(int obj)
                             if (trickyState->targetPosPtr != (u8*)&step->anim.worldPosX)
                             {
                                 trickyState->targetPosPtr = (u8*)&step->anim.worldPosX;
-                                {
-                                    u32 mask;
-                                    u32 stateFlags = trickyState->stateFlags;
-                                    mask = ~0x400;
-                                    trickyState->stateFlags = stateFlags & mask;
-                                }
+                                trickyState->stateFlags &= ~(u64)0x400;
                                 trickyState->linkedWalkGroup = 0;
                             }
                             trickyState->stateIndex = 0xd;
@@ -1751,22 +1741,12 @@ void Tricky_update(int obj)
             *(int*)&trickyState->followObj = obj;
             trickyState->stateIndex = 0xf;
             trickyState->idleSfxTimer = (f32)(int)randomGetRange(0x1f4, 0x2ee);
-            {
-                u32 mask;
-                u32 stateFlags = trickyState->stateFlags;
-                mask = ~0x40000;
-                trickyState->stateFlags = stateFlags & mask;
-            }
+            trickyState->stateFlags &= ~(u64)0x40000;
             trickyState->commandPhase = 3;
             if (trickyState->targetPosPtr != (u8*)&trickyState->wanderTargetX)
             {
                 trickyState->targetPosPtr = (u8*)&trickyState->wanderTargetX;
-                {
-                    u32 mask;
-                    u32 stateFlags = trickyState->stateFlags;
-                    mask = ~0x400;
-                    trickyState->stateFlags = stateFlags & mask;
-                }
+                trickyState->stateFlags &= ~(u64)0x400;
                 trickyState->linkedWalkGroup = 0;
             }
         }
