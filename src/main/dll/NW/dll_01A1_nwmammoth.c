@@ -54,8 +54,6 @@ u8 lbl_803DBFB4[4] = {1, 0, 0, 0};
 u8 lbl_803DBFB8[4] = {1, 1, 0, 0};
 u8 lbl_803DBFBC[4] = {1, 2, 0, 0};
 
-typedef u32 (*NwMammothFindNearestObjectFn)(int group, int* obj, f32* distance);
-
 #define NWMAMMOTH_PARTFX               0x7f0
 #define NWMAMMOTH_OBJFLAG_PARENT_SLACK 0x1000
 #define NWMAMMOTH_OBJFLAG_RENDERED     0x800
@@ -249,7 +247,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     NwMammothState* state = (NwMammothState*)st;
     GameObject* tw2;
     GameObject* tw;
-    int nearestObj = ((NwMammothFindNearestObjectFn)ObjGroup_FindNearestObject)(NWMAMMOTH_TARGET_OBJGROUP, obj, 0);
+    int nearestObj = ObjGroup_FindNearestObject(NWMAMMOTH_TARGET_OBJGROUP, (GameObject*)obj, 0);
     switch (state->stateIndex)
     {
     case 9:

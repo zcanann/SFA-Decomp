@@ -21,8 +21,6 @@
 #include "main/shader_api.h"
 #include "main/dll/dll_0004_dummy04.h"
 
-typedef GameObject* (*Dll199FindNearestObjectFn)(int group, GameObject* from, f32* distance);
-
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
 
@@ -285,7 +283,7 @@ void dll_199_update(GameObject* obj)
     }
     else
     {
-        found = ((Dll199FindNearestObjectFn)ObjGroup_FindNearestObject)(DLL199_TARGET_OBJGROUP_1, player, &dist);
+        found = (GameObject*)ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_1, player, &dist);
         if ((found != 0) && (dist < 300.0f) && (dist > 100.0f))
         {
             dz = found->anim.localPosZ - player->anim.localPosZ;
@@ -379,7 +377,7 @@ void dll_199_update(GameObject* obj)
             state[5] = 1;
             (*gObjectTriggerInterface)->runSequence(2, obj, 0xffffffff);
             dist = 10000.0f;
-            found = ((Dll199FindNearestObjectFn)ObjGroup_FindNearestObject)(DLL199_TARGET_OBJGROUP_2, obj, &dist);
+            found = (GameObject*)ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_2, obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);
@@ -403,7 +401,7 @@ void dll_199_update(GameObject* obj)
             break;
         case 3:
             dist = 10000.0f;
-            found = ((Dll199FindNearestObjectFn)ObjGroup_FindNearestObject)(DLL199_TARGET_OBJGROUP_2, obj, &dist);
+            found = (GameObject*)ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_2, obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);
