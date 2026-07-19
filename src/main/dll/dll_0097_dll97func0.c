@@ -175,28 +175,6 @@ const f32 lbl_803E1330 = 1.0f;
 const f32 lbl_803E1334 = -1.0f;
 const f32 lbl_803E1338 = -2.0f;
 const f32 lbl_803E133C = 2.0f;
-const f32 lbl_803E1340 = 1.0f;
-const f32 lbl_803E1344 = 0.0f;
-const f32 lbl_803E1348 = 155.0f;
-const f32 lbl_803E134C = 55.0f;
-const f32 lbl_803E1350 = 0.15f;
-const f32 lbl_803E1354 = 0.1f;
-const f32 lbl_803E1358 = -0.5f;
-const f32 lbl_803E135C = 4.0f;
-const f32 lbl_803E1360 = 25.0f;
-const f32 lbl_803E1364 = 8.0f;
-const f32 lbl_803E1368 = 2.0f;
-const f32 lbl_803E136C = 0.0f;
-const f32 lbl_803E1370 = 0.0f;
-const f32 lbl_803E1374 = 1.0f;
-const f32 lbl_803E1378 = 0.2f;
-const f32 lbl_803E137C = 0.01f;
-const f32 lbl_803E1380 = 0.8f;
-const f32 lbl_803E1384 = 255.0f;
-const f32 lbl_803E1388 = 1.8f;
-const f32 lbl_803E138C = 3.0f;
-const f32 lbl_803E1390 = 4.0f;
-const f32 lbl_803E1394 = 200.0f;
 
 void dll_97_func01_nop(void)
 {

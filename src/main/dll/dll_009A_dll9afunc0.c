@@ -31,16 +31,6 @@ typedef struct
 const u8 gScreenFx9AAnimTemplate[16] = {
     0x00, 0x00, 0x00, 0x0A, 0x00, 0x28, 0x00, 0x3C, 0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 extern u8 lbl_80317B98[];
-extern f32 lbl_803E1370;
-extern f32 lbl_803E1374;
-extern f32 lbl_803E1378;
-extern f32 lbl_803E137C;
-extern f32 lbl_803E1380;
-extern f32 lbl_803E1384;
-extern f32 lbl_803E1388;
-extern f32 lbl_803E138C;
-extern f32 lbl_803E1390;
-extern f32 lbl_803E1394;
 
 void dll_9A_func03(int target, int variant, int parent, u32 flags)
 {
@@ -87,44 +77,44 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     cur[0].id = 0;
     cur[0].tex = NULL;
     cur[0].flags = 0x80;
-    cur[0].x = lbl_803E1370;
+    cur[0].x = 0.0f;
     cur[0].y = ry;
     cur[0].z = rz;
     cur[1].state = 0;
     cur[1].id = 3;
     cur[1].tex = gScreenFx9APartTexA;
     cur[1].flags = 4;
-    cur[1].x = lbl_803E1370;
-    cur[1].y = lbl_803E1370;
-    cur[1].z = lbl_803E1370;
+    cur[1].x = 0.0f;
+    cur[1].y = 0.0f;
+    cur[1].z = 0.0f;
     cur[2].state = 0;
     cur[2].id = 3;
     cur[2].tex = gScreenFx9APartTexA;
     cur[2].flags = 2;
-    cur[2].x = lbl_803E1374;
-    cur[2].y = lbl_803E137C * (f32)(s32)randomGetRange(0, 0x32) + lbl_803E1378;
-    cur[2].z = lbl_803E137C * (f32)(s32)randomGetRange(4, 6) + lbl_803E1380;
+    cur[2].x = 1.0f;
+    cur[2].y = 0.01f * (f32)(s32)randomGetRange(0, 0x32) + 0.2f;
+    cur[2].z = 0.01f * (f32)(s32)randomGetRange(4, 6) + 0.8f;
     cur[3].state = 1;
     cur[3].id = 1;
     cur[3].tex = gScreenFx9APartTexB;
     cur[3].flags = 4;
-    cur[3].x = lbl_803E1384;
-    cur[3].y = lbl_803E1370;
-    cur[3].z = lbl_803E1370;
+    cur[3].x = 255.0f;
+    cur[3].y = 0.0f;
+    cur[3].z = 0.0f;
     cur[4].state = 1;
     cur[4].id = 0;
     cur[4].tex = gScreenFx9APartTexB;
     cur[4].flags = 0x4000;
-    cur[4].x = lbl_803E1388;
-    cur[4].y = lbl_803E1370;
-    cur[4].z = lbl_803E1370;
+    cur[4].x = 1.8f;
+    cur[4].y = 0.0f;
+    cur[4].z = 0.0f;
     cur[5].state = 1;
     cur[5].id = 3;
     cur[5].tex = gScreenFx9APartTexA;
     cur[5].flags = 2;
-    cur[5].x = lbl_803E138C;
-    cur[5].y = lbl_803E1390;
-    cur[5].z = lbl_803E1390;
+    cur[5].x = 3.0f;
+    cur[5].y = 4.0f;
+    cur[5].z = 4.0f;
     cur[6].state = 1;
     cur[6].id = 0;
     cur[6].tex = NULL;
@@ -143,9 +133,9 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     cur[8].id = 0;
     cur[8].tex = gScreenFx9APartTexB;
     cur[8].flags = 0x4000;
-    cur[8].x = lbl_803E1388;
-    cur[8].y = lbl_803E1370;
-    cur[8].z = lbl_803E1370;
+    cur[8].x = 1.8f;
+    cur[8].y = 0.0f;
+    cur[8].z = 0.0f;
     cur[9].state = 3;
     cur[9].id = 0;
     cur[9].tex = NULL;
@@ -157,9 +147,9 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     cur[10].id = 0;
     cur[10].tex = gScreenFx9APartTexB;
     cur[10].flags = 0x4000;
-    cur[10].x = lbl_803E1388;
-    cur[10].y = lbl_803E1370;
-    cur[10].z = lbl_803E1370;
+    cur[10].x = 1.8f;
+    cur[10].y = 0.0f;
+    cur[10].z = 0.0f;
     cur[11].state = 4;
     cur[11].id = 0;
     cur[11].tex = NULL;
@@ -171,34 +161,34 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     cur[12].id = 0;
     cur[12].tex = gScreenFx9APartTexB;
     cur[12].flags = 0x4000;
-    cur[12].x = lbl_803E1388;
-    cur[12].y = lbl_803E1370;
-    cur[12].z = lbl_803E1370;
+    cur[12].x = 1.8f;
+    cur[12].y = 0.0f;
+    cur[12].z = 0.0f;
     cur[13].state = 4;
     cur[13].id = 1;
     cur[13].tex = gScreenFx9APartTexB;
     cur[13].flags = 4;
-    cur[13].x = lbl_803E1370;
-    cur[13].y = lbl_803E1370;
-    cur[13].z = lbl_803E1370;
+    cur[13].x = 0.0f;
+    cur[13].y = 0.0f;
+    cur[13].z = 0.0f;
 
     hdr.v0 = 0;
     hdr.target = target;
     hdr.b = variant;
-    hdr.bx = lbl_803E1370;
+    hdr.bx = 0.0f;
     if (variant == 0)
     {
-        hdr.by = lbl_803E1370;
+        hdr.by = 0.0f;
     }
     else if (variant == 1)
     {
-        hdr.by = lbl_803E1394;
+        hdr.by = 200.0f;
     }
     hdr.bz = 0.0f;
     hdr.ax = 0.0f;
     hdr.ay = 0.0f;
     hdr.az = 0.0f;
-    hdr.r = lbl_803E1390;
+    hdr.r = 4.0f;
     hdr.c2 = 1;
     hdr.c7 = 0;
     hdr.v1 = 3;
