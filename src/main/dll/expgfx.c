@@ -2735,9 +2735,8 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         }
 
         {
-            int poolIdx = poolIndex;
             sourceModeValue = (config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0 ? 1 : 0;
-            poolSourceModesByte = (u8*)runtime + poolIdx;
+            poolSourceModesByte = (u8*)runtime + poolIndex;
             poolSourceModesByte += EXPGFX_POOL_SOURCE_MODES_OFFSET;
             *poolSourceModesByte = sourceModeValue;
             if (*poolSourceModesByte != 0 &&
@@ -2745,7 +2744,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             {
                 (*poolSourceModesByte)++;
             }
-            runtime->poolBoundsTemplateIds[poolIdx] = (u8)boundsTemplateId;
+            runtime->poolBoundsTemplateIds[poolIndex] = (u8)boundsTemplateId;
         }
 
         DCFlushRange(slot, EXPGFX_SLOT_SIZE);
