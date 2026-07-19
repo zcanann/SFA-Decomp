@@ -1284,13 +1284,13 @@ void skyFn_8008a04c(void)
             }
             else
             {
-                blendAlpha = (int)Curve_EvalLinearValuesFirst(blendAlphaCurve, frac, 0);
-                ambientIntensity = Curve_EvalLinearValuesFirst(ambientIntensityCurve, frac, 0);
-                lightIntensity = Curve_EvalLinearValuesFirst(lightIntensityCurve, frac, 0);
+                blendAlpha = (int)Curve_EvalLinear(blendAlphaCurve, frac, 0);
+                ambientIntensity = Curve_EvalLinear(ambientIntensityCurve, frac, 0);
+                lightIntensity = Curve_EvalLinear(lightIntensityCurve, frac, 0);
             }
-            rawR = Curve_EvalCatmullRomValuesFirst(gSkyState + i * 0xa4 + part4 + 0x20, frac, 0);
-            rawG = Curve_EvalCatmullRomValuesFirst(gSkyState + i * 0xa4 + greenCurveOffset + 0x20, frac, 0);
-            blue = Curve_EvalCatmullRomValuesFirst(gSkyState + i * 0xa4 + blueCurveOffset + 0x20, frac, 0);
+            rawR = Curve_EvalCatmullRom(gSkyState + i * 0xa4 + part4 + 0x20, frac, 0);
+            rawG = Curve_EvalCatmullRom(gSkyState + i * 0xa4 + greenCurveOffset + 0x20, frac, 0);
+            blue = Curve_EvalCatmullRom(gSkyState + i * 0xa4 + blueCurveOffset + 0x20, frac, 0);
             slot = (SkyColorBlendView*)(gSkyState + i * 0xa4);
             blend = slot->factor;
             if (blend != zero)
@@ -2988,11 +2988,11 @@ void sky2_run(void)
                     u = (t - lbl_803DF174) / step;
                     k = 7;
                 }
-                r = Curve_EvalCatmullRomValuesFirst(*pp + (off1 = k * 4) + 0x70, u, 0);
-                g = Curve_EvalCatmullRomValuesFirst(*pp + (off2 = (k + 0xb) * 4) + 0x70, u, 0);
-                b = Curve_EvalCatmullRomValuesFirst(*pp + (k + 0x16) * 4 + 0x70, u, 0);
-                sa = Curve_EvalCatmullRomValuesFirst(*pp + off1 + 0x1fc, u, 0);
-                sb = Curve_EvalCatmullRomValuesFirst(*pp + off2 + 0x1fc, u, 0);
+                r = Curve_EvalCatmullRom(*pp + (off1 = k * 4) + 0x70, u, 0);
+                g = Curve_EvalCatmullRom(*pp + (off2 = (k + 0xb) * 4) + 0x70, u, 0);
+                b = Curve_EvalCatmullRom(*pp + (k + 0x16) * 4 + 0x70, u, 0);
+                sa = Curve_EvalCatmullRom(*pp + off1 + 0x1fc, u, 0);
+                sb = Curve_EvalCatmullRom(*pp + off2 + 0x1fc, u, 0);
             }
             else
             {

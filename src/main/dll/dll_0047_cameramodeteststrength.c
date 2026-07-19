@@ -76,10 +76,10 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     {
         t = lbl_803E188C;
     }
-    camera->anim.localPosX = Curve_EvalLinearValuesFirst(&lbl_803DD560->posXStart, t, NULL);
-    camera->anim.localPosY = Curve_EvalLinearValuesFirst(&lbl_803DD560->posYStart, t, NULL);
-    camera->anim.localPosZ = Curve_EvalLinearValuesFirst(&lbl_803DD560->posZStart, t, NULL);
-    camera->fov = Curve_EvalLinearValuesFirst(&lbl_803DD560->fovStart, t, NULL);
+    camera->anim.localPosX = Curve_EvalLinear(&lbl_803DD560->posXStart, t, NULL);
+    camera->anim.localPosY = Curve_EvalLinear(&lbl_803DD560->posYStart, t, NULL);
+    camera->anim.localPosZ = Curve_EvalLinear(&lbl_803DD560->posZStart, t, NULL);
+    camera->fov = Curve_EvalLinear(&lbl_803DD560->fovStart, t, NULL);
 
     if (((lbl_803DD560->rotXStart - lbl_803DD560->rotXEnd) > lbl_803E1890) ||
         ((lbl_803DD560->rotXStart - lbl_803DD560->rotXEnd) < lbl_803E1894))
@@ -121,15 +121,15 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     flags = flagsIn;
     if ((flags & 1) == 0)
     {
-        camera->anim.rotX = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotXStart, t, NULL);
+        camera->anim.rotX = Curve_EvalLinear(&lbl_803DD560->rotXStart, t, NULL);
     }
     if ((flags & 2) == 0)
     {
-        camera->anim.rotY = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotYStart, t, NULL);
+        camera->anim.rotY = Curve_EvalLinear(&lbl_803DD560->rotYStart, t, NULL);
     }
     if ((flags & 4) == 0)
     {
-        camera->anim.rotZ = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotZStart, t, NULL);
+        camera->anim.rotZ = Curve_EvalLinear(&lbl_803DD560->rotZStart, t, NULL);
     }
     return t >= lbl_803E188C;
 }
@@ -280,17 +280,17 @@ void CameraModeTestStrength_update(short* cam)
         lockPitch = flags & 1;
         if (lockPitch == 0)
         {
-            *cam = (int)Curve_EvalCatmullRomValuesFirst(pitchS, t, 0) + 0x8000;
+            *cam = (int)Curve_EvalCatmullRom(pitchS, t, 0) + 0x8000;
         }
         lockYaw = flags & 2;
         if (lockYaw == 0)
         {
-            cam[1] = Curve_EvalCatmullRomValuesFirst(yawS, t, 0);
+            cam[1] = Curve_EvalCatmullRom(yawS, t, 0);
         }
         lockRoll = flags & 4;
         if (lockRoll == 0)
         {
-            cam[2] = Curve_EvalCatmullRomValuesFirst(rollS, t, 0);
+            cam[2] = Curve_EvalCatmullRom(rollS, t, 0);
         }
         ((CameraObject*)cam)->fov = Curve_EvalBSplineValuesFirst(fov, t, 0);
         if (lbl_803DD560->transitionComplete == 0 && (s32)fn_8010AEA8((CameraObject*)cam, (u32)flags) != 0)
@@ -308,7 +308,7 @@ void CameraModeTestStrength_update(short* cam)
         {
             int delta;
             yaw = getAngle(dy, sqrtf(dx * dx + dz * dz)) & 0xffff;
-            delta = (int)(((f32)yaw - Curve_EvalCatmullRomValuesFirst(yawS, t, 0)) - (f32)(cam[1] & 0xffff));
+            delta = (int)(((f32)yaw - Curve_EvalCatmullRom(yawS, t, 0)) - (f32)(cam[1] & 0xffff));
             if (delta > 0x8000)
             {
                 delta -= 0xffff;
@@ -427,7 +427,7 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     }
     else
     {
-        pitch = (s16)((int)Curve_EvalCatmullRomValuesFirst(pitchS, t, 0) + 0x8000);
+        pitch = (s16)((int)Curve_EvalCatmullRom(pitchS, t, 0) + 0x8000);
     }
     if ((*(u8*)(romNode + 0x3b) & 4) != 0)
     {
@@ -435,16 +435,16 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     }
     else
     {
-        roll = Curve_EvalCatmullRomValuesFirst(rollS, t, 0);
+        roll = Curve_EvalCatmullRom(rollS, t, 0);
     }
     if ((*(u8*)(romNode + 0x3b) & 2) != 0)
     {
         yaw = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
-        yaw = (f32)yaw - Curve_EvalCatmullRomValuesFirst(yawS, t, 0);
+        yaw = (f32)yaw - Curve_EvalCatmullRom(yawS, t, 0);
     }
     else
     {
-        yaw = Curve_EvalCatmullRomValuesFirst(yawS, t, 0);
+        yaw = Curve_EvalCatmullRom(yawS, t, 0);
     }
     fov = Curve_EvalBSplineValuesFirst(fovS, t, 0);
     pos[0] = px;

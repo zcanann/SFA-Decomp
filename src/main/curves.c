@@ -411,13 +411,14 @@ void curvesMove(Curve* curve)
     }
 }
 
-f32 Curve_EvalLinear(f32 t, f32* values)
+f32 Curve_EvalLinear(f32* values, f32 t, f32* unused)
 {
     return t * (values[1] - values[0]) + values[0];
 }
 
-f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent)
+f32 Curve_EvalCatmullRom(void* valuesArg, f32 t, f32* outTangent)
 {
+    f32* values = valuesArg;
     f32 cubic;
     f32 p0;
     f32 p1;
