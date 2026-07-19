@@ -641,12 +641,12 @@ void trickyUpdateCirclingTargetPosition(void* objPtr, void* state)
 
     if (((TrickyState*)state)->substate == ANIMOBJD2_SUBSTATE_ACQUIRE)
     {
-        *(s32*)&((TrickyState*)state)->unk700 = randomGetRange(0, 1);
-        if (*(s32*)&((TrickyState*)state)->unk700 == 0)
+        ((TrickyState*)state)->scratch700.i = randomGetRange(0, 1);
+        if (((TrickyState*)state)->scratch700.i == 0)
         {
-            *(s32*)&((TrickyState*)state)->unk700 = -1;
+            ((TrickyState*)state)->scratch700.i = -1;
         }
-        *(s32*)&((TrickyState*)state)->unk704 = angle;
+        ((TrickyState*)state)->scratch704.i = angle;
         ((TrickyState*)state)->substate = ANIMOBJD2_SUBSTATE_APPROACH;
     }
 
@@ -666,15 +666,15 @@ void trickyUpdateCirclingTargetPosition(void* objPtr, void* state)
     }
     if (absDelta < 0x2000)
     {
-        *(s32*)&((TrickyState*)state)->unk704 =
-            *(s32*)((int)state + 0x704) + (*(s32*)&((TrickyState*)state)->unk700 << 11);
+        ((TrickyState*)state)->scratch704.i =
+            *(s32*)((int)state + 0x704) + (((TrickyState*)state)->scratch700.i << 11);
     }
 
-    *(f32*)&((TrickyState*)state)->unk708 = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosX -
-                                            lbl_803E24D4 * fsin16Precise((u16) * &((TrickyState*)state)->unk704);
+    ((TrickyState*)state)->scratch708.f = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosX -
+                                            lbl_803E24D4 * fsin16Precise((u16)((TrickyState*)state)->scratch704.i);
     *(f32*)&((TrickyState*)state)->unk70C = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosY;
     ((TrickyState*)state)->unk710 = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosZ -
-                                    lbl_803E24D4 * fcos16Precise((u16) * &((TrickyState*)state)->unk704);
+                                    lbl_803E24D4 * fcos16Precise((u16)((TrickyState*)state)->scratch704.i);
 
     if (trickyFn_8013b368(objPtr, lbl_803E2488, state) == 0)
     {

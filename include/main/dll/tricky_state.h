@@ -17,6 +17,15 @@
 #define TRICKY_STATE_FLAG_CHILDREN_CLEANUP 0x1000  /* child objects torn down this cycle */
 #define TRICKY_STATE_FLAG_MOVE_ADVANCING 0x8000000 /* ObjAnim_AdvanceCurrentMove reported the current move still advancing */
 
+typedef union TrickyScratch
+{
+    GameObject* obj;
+    void* ptr;
+    s32 i;
+    u32 u;
+    f32 f;
+} TrickyScratch;
+
 typedef struct TrickyPackedSlots
 {
     u8 promptASlot : 2;
@@ -214,9 +223,9 @@ typedef struct TrickyState {
     f32 previousPathX;
     f32 previousPathY;
     f32 previousPathZ;
-    u8 *unk700;
-    u8 *unk704;
-    u8 *unk708;
+    TrickyScratch scratch700;
+    TrickyScratch scratch704;
+    TrickyScratch scratch708;
     u8 *unk70C;
     f32 unk710;
     u8 pad714[0x71C - 0x714];

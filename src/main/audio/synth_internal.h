@@ -328,7 +328,6 @@ typedef struct SynthVoiceRuntime
 #define SYNTH_VOICE_PENDING_START_OUT_HANDLE(voice) (*(u32**)((u8*)(voice) + 0xEDC))
 #define SYNTH_VOICE_PENDING_START_ACTIVE(voice) (*(u8*)((u8*)(voice) + 0xEE0))
 
-extern SynthDelayStorage gSynthDelayStorage;
 extern SynthCallbackLink gSynthCallbacks[SYNTH_CALLBACK_COUNT];
 extern u8 gSynthInitialized;
 extern u8 gSynthDelayBucketCursor;
@@ -344,7 +343,6 @@ extern u8 gSynthCurrentFadeOutState;
 extern McmdVoiceState* lbl_803DEEE8;
 extern u32 gSynthDelayedActionWord0;
 extern u32 gSynthDelayedActionWord1;
-extern SynthFade gSynthFades[0x20];
 extern u32 gSynthFadeMask;
 
 extern u16 gSynthVoiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
@@ -358,17 +356,11 @@ extern u32 gSynthNextHandle;
 #define SYNTH_VOICE_RUNTIME() ((SynthVoiceRuntime*)(void*)gSynthCallbacks)
 #define SYNTH_VOICE_SLOT_FLAGS64(slot) (*(u64*)&(slot)->inputFlags)
 
-/* Recovered semantics for external audio helpers. */
-void synthReleaseVoiceSlot(McmdVoiceState * slot);
-u32 synthLookupCallbackLinkId(u32 callbackId);
-void synthCopyControllerValue(u32 controller, McmdVoiceState* dst, McmdVoiceState* src);
-void synthScaleFadeTime(s32* value);
 extern const f32 lbl_803E8430;
 extern const f32 sSynthFadeUnit;
 extern const f32 sSynthFadeTimeScale;
 
 #define sSynthFadeScale lbl_803E8430
-void synthInitVoices(void);
 void synthSetStudioChannelScale(int value, u8 studioIndex, u8 channelIndex);
 int synthGetVoiceSlotChannelScale(McmdVoiceState *slot);
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel);
@@ -377,32 +369,23 @@ SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 group
 void synthInitChannelEventQueues(void);
 void synthRefreshChannelEventQueue(u8 groupIndex);
 u32 synthProcessChannelEventQueue(u8 groupIndex, u32 delta);
-void synthUpdateVoices(s32 delta);
 void synthRecycleVoiceCallbacks(SynthVoice* voice);
 SynthCallbackLink* synthAllocCallback(s32 triggerValue, u8 controllerIndex);
 s32 synthUpdateCallbacks(void);
 void synthFlushCallbacks(void);
 void synthFreeCallback(SynthCallbackLink* callback);
-s32 synthTriggerCallback(u32 callbackId);
 u32 synthAssignHandle(s32 voiceIndex);
 u32 synthResolveHandle(u32 handle);
-void synthDispatchDelayedAction(SynthFade* fade);
-void synthSetFade(u8 value, u16 time, u8 selector, u8 action, u32 handle);
-u32 synthIsFadeActive(u32 fadeIndex);
-void synthSetFadeAction(u32 fadeIndex, u8 action);
 void synthQueueVoice(SynthVoice* voice);
 void synthQueueHandle(u32 handle);
 void synthFreeHandle(u32 handle);
 void synthSetHandleValue16(u32 handle, u16 value);
 void synthRestoreQueuedHandle(u32 handle);
 void synthSetHandleMixData(u32 handle, u32 value0, u32 value1);
-void synthSetControllerValue(u8 controller, u8 studioIndex, u8 channelIndex, u8 value);
-void synthSetControllerValue14Bit(u8 controller, u8 studioIndex, u8 channelIndex, u32 value);
 u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value);
 u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 void synthFXCloneMidiSetup(McmdVoiceState *dstVoice, McmdVoiceState *srcVoice);
 u32 synthSendKeyOff(u32 handle);
 void synthUpdateHandle(u8 volume, u16 time, u32 handle, u8 mode);
-u32 synthCancelCallbackVoices(u32 callbackId);
 
 #endif

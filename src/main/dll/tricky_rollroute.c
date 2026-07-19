@@ -32,8 +32,8 @@
 
 /* The "ball" is the Tricky cannonball's TrickyState extra block: substate is
  * the init-done byte, speed the roll speed, stateFlags the flag word, route the
- * embedded RomCurveWalker, followObj/playerObj the owner links, unk700 the
- * curve link and unk708 (read as f32) the rolling-sfx countdown. */
+ * embedded RomCurveWalker, followObj/playerObj the owner links, scratch700 the
+ * curve link and scratch708 the rolling-sfx countdown. */
 #define CANNONBALL_HIDE_FLAG        0x10
 #define CANNONBALL_SPEED_DECAY_FLAG 0x10000000
 
@@ -166,10 +166,10 @@ void tricky_updateBallRoll(int obj, int ball)
             ts->stateFlags |= CANNONBALL_HIDE_FLAG;
         }
 
-        *(float*)&ts->unk708 -= timeDelta;
-        if (*(float*)&ts->unk708 < lbl_803E23DC)
+        ts->scratch708.f -= timeDelta;
+        if (ts->scratch708.f < lbl_803E23DC)
         {
-            *(float*)&ts->unk708 = (f32)(int)randomGetRange(200, 600);
+            ts->scratch708.f = (f32)(int)randomGetRange(200, 600);
 
             sfxState = *(int*)&((GameObject*)obj)->extra;
             if (((u32)(*(u8*)(sfxState + 0x58) >> 6 & 1) == 0) &&
@@ -184,9 +184,9 @@ void tricky_updateBallRoll(int obj, int ball)
     {
         trickyFn_8013b368((GameObject*)obj, lbl_803E2488, (TrickyState*)ball);
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, NULL) ==
-            (walkGroup = Objfsa_GetWalkGroupIndexAtPoint((float*)((int)ts->unk700 + 8), NULL)))
+            (walkGroup = Objfsa_GetWalkGroupIndexAtPoint((float*)((int)ts->scratch700.ptr + 8), NULL)))
         {
-            curve = (int)ts->unk700;
+            curve = (int)ts->scratch700.ptr;
 
             nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(curve, 0);
             fromNode = (int)(*gRomCurveInterface)->getById(nextNode);
@@ -222,7 +222,7 @@ void tricky_updateBallRoll(int obj, int ball)
                 RomCurve_stepClamped(&ts->route, lbl_803E23E0);
             }
 
-            *(float*)&ts->unk708 = lbl_803E23DC;
+            ts->scratch708.f = lbl_803E23DC;
             ts->substate = 1;
         }
     }

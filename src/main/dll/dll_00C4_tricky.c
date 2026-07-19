@@ -1114,11 +1114,11 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
             {
                 if (((TrickyState*)state)->substate != 3)
                 {
-                    ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosX = ((TrickyState*)state)->renderPosX;
-                    ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosY = ((TrickyState*)state)->renderPosY;
-                    ((GameObject*)((TrickyState*)state)->unk700)->anim.localPosZ = ((TrickyState*)state)->renderPosZ;
+                    ((TrickyState*)state)->scratch700.obj->anim.localPosX = ((TrickyState*)state)->renderPosX;
+                    ((TrickyState*)state)->scratch700.obj->anim.localPosY = ((TrickyState*)state)->renderPosY;
+                    ((TrickyState*)state)->scratch700.obj->anim.localPosZ = ((TrickyState*)state)->renderPosZ;
                 }
-                objRenderModelAndHitVolumes(*(int*)&((TrickyState*)state)->unk700, p2, p3, p4, p5, lbl_803E23E8);
+                objRenderModelAndHitVolumes(((TrickyState*)state)->scratch700.i, p2, p3, p4, p5, lbl_803E23E8);
             }
         }
         Tricky_emitQueuedPathParticles((u8*)obj, (u8*)state);
