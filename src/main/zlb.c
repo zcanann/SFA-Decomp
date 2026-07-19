@@ -229,38 +229,38 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                 }
                 code = 0;
                 for (j = 1; j <= lenMax; j++) {
-                    if (*(u16 *)((u8 *)lbl_80377894 + j + j) != 0) {
-                        *(u16 *)((u8 *)lbl_80377954 + j + j) = code;
-                        code += *(u16 *)((u8 *)lbl_80377894 + j + j) << (lenMax - j);
+                    if (lbl_80377894[j] != 0) {
+                        lbl_80377954[j] = code;
+                        code += lbl_80377894[j] << (lenMax - j);
                     }
                 }
                 for (i = 0; i < hlit; i++) {
                     u32 len = lenBitsP[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (lenMax - len); k++) {
-                            u16 c = *(u16 *)((u8 *)lbl_80377954 + len + len) + 1;
-                            *(u16 *)((u8 *)lbl_80377954 + len + len) = c;
+                            u16 c = lbl_80377954[len] + 1;
+                            lbl_80377954[len] = c;
                             *(u16 *)(lenTblP + (c - 1) + (c - 1)) = i;
                         }
                     }
                 }
                 distMax = 0xf;
-                while (*(u16 *)((u8 *)lbl_803778B4 + distMax + distMax) == 0) {
+                while (lbl_803778B4[distMax] == 0) {
                     distMax--;
                 }
                 code = 0;
                 for (j = 1; j <= distMax; j++) {
-                    if (*(u16 *)((u8 *)lbl_803778B4 + j + j) != 0) {
-                        *(u16 *)((u8 *)lbl_80377974 + j + j) = code;
-                        code += *(u16 *)((u8 *)lbl_803778B4 + j + j) << (distMax - j);
+                    if (lbl_803778B4[j] != 0) {
+                        lbl_80377974[j] = code;
+                        code += lbl_803778B4[j] << (distMax - j);
                     }
                 }
                 for (i = 0; i < hdist; i++) {
                     u32 len = distBitsP[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (distMax - len); k++) {
-                            u16 c = *(u16 *)((u8 *)lbl_80377974 + len + len) + 1;
-                            *(u16 *)((u8 *)lbl_80377974 + len + len) = c;
+                            u16 c = lbl_80377974[len] + 1;
+                            lbl_80377974[len] = c;
                             distTblP[c - 1] = i;
                         }
                     }
@@ -285,9 +285,8 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                     u32 dcode;
                     u32 dsym;
                     u32 dist;
-                    int io = (sym - 0x101) * 4;
-                    len2 = *(u16 *)((u8 *)gInflateLengthCodes + io);
-                    eb = *(u16 *)((u8 *)gInflateLengthCodes + 2 + io);
+                    len2 = gInflateLengthCodes[sym - 0x101].base;
+                    eb = gInflateLengthCodes[sym - 0x101].extra;
                     if (eb != 0) {
                         len2 += ZGB8() & ((1 << eb) - 1);
                         ZADV(eb);
@@ -299,8 +298,8 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                     dcode |= ZROTL(lbl_8030CDE0[dt >> 8], m) & 0xff;
                     dsym = distTblP[dcode];
                     ZADV(distBitsP[dsym]);
-                    dist = *(u16 *)((u8 *)gInflateDistCodes + dsym * 4);
-                    eb = *(u16 *)((u8 *)gInflateDistCodes + 2 + dsym * 4);
+                    dist = gInflateDistCodes[dsym].base;
+                    eb = gInflateDistCodes[dsym].extra;
                     if (eb != 0) {
                         dist += ZGB16() & ((1 << eb) - 1);
                         ZADV(eb);
