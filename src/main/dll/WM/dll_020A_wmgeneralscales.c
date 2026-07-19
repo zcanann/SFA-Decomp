@@ -13,7 +13,7 @@
 #include "main/dll/LGT/LGTprojectedlight.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_play_legacy_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/obj_link.h"
@@ -170,7 +170,7 @@ void WM_GeneralScales_render(int* obj, int p2, int p3, int p4, int p5, s8 visibl
         return;
     if (visible == 0)
         return;
-    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void WM_GeneralScales_hitDetect(void)

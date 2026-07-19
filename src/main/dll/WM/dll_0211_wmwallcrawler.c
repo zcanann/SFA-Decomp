@@ -170,7 +170,7 @@ void wmwallcrawler_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
     }
     if (vis != 0 && state->despawnTimer == 0)
     {
-        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E5FB4.f); /* lbl_803E5FB4.f */
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5FB4.f); /* lbl_803E5FB4.f */
     }
 }
 

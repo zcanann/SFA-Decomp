@@ -24,7 +24,7 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/dll/wmgalleonstate_struct.h"
 #include "main/dll/dll1fbstate_struct.h"
 #include "main/dll/WM/dll_01FA_wmseqobject.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
@@ -88,7 +88,7 @@ void WM_seqobject_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     if (v != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

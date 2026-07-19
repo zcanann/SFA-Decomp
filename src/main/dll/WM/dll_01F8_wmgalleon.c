@@ -5,7 +5,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/objseq.h"
@@ -212,7 +212,7 @@ void WM_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
         return;
     }
 
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 
     if (lbl_803DDC70 != 0)
     {

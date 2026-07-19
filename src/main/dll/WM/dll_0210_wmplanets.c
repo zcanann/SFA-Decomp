@@ -42,7 +42,7 @@ void WM_Planets_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
     if (vis != 0)
     {
-        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

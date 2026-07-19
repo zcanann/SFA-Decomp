@@ -13,7 +13,7 @@
  * close holding nothing.
  */
 #include "main/carryable_interface.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
 #include "main/object_api.h"
@@ -84,7 +84,7 @@ void WM_Column_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

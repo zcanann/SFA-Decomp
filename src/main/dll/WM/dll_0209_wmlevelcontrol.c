@@ -17,7 +17,7 @@
 #include "main/textrender_api.h"
 #include "main/lightmap_render_control_api.h"
 #include "main/audio/music_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/pi_dolphin_api.h"
 #include "main/map_load.h"
 #include "main/objseq_api.h"
@@ -240,7 +240,7 @@ void WM_LevelControl_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void WM_LevelControl_hitDetect(void)

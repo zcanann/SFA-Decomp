@@ -9,7 +9,7 @@
  * 0.125/tick back to placement height.
  */
 #include "main/audio/sfx_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/obj_placement.h"
@@ -52,7 +52,7 @@ void WM_colrise_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5DC8);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E5DC8);
 }
 
 void WM_colrise_hitDetect(void)
