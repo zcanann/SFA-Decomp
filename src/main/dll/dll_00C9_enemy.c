@@ -163,7 +163,7 @@ extern void* lbl_803DDA50;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
 
-void fn_8014B878(int* obj, int* sub);
+void baddie_updateEngagementState(int* obj, int* sub);
 void baddieTurnTowardTarget(int* node, int* sub);
 typedef struct
 {
@@ -175,7 +175,7 @@ extern u8 lbl_8031DBD8[];
 extern u8 lbl_8031DBE4[];
 extern f32 enemySightRange;
 
-void objAnimFn_8014a9f0(short* obj, int state)
+void enemyObjAnimUpdate(short* obj, int state)
 {
     f32 vy;
     f32 dz;
@@ -624,7 +624,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
     }
 }
 
-void fn_8014B878(int* obj, int* sub)
+void baddie_updateEngagementState(int* obj, int* sub)
 {
     int* player;
     int* tricky;
@@ -906,7 +906,7 @@ int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate)
     if ((((TrickyState*)sub)->flags2DC & 0x1800) == 0)
     {
         baddieTurnTowardTarget((int*)node, (int*)sub);
-        fn_8014B878((int*)node, (int*)sub);
+        baddie_updateEngagementState((int*)node, (int*)sub);
     }
     if (n29[0x2e] != -1)
     {
@@ -1164,96 +1164,96 @@ void enemy_setTrackedObj(GameObject* obj, GameObject* target)
 {
     ((EnemyState*)obj->extra)->trackedObj = target;
 }
-void fn_8014C678(GameObject* obj1, void* obj2, f32* vec3, f32 fa, f32 fb, f32 fc, u8 flag)
+void fn_8014C678(GameObject* obj, void* state, f32* desiredVec, f32 maxSpeed, f32 speedBand, f32 maxTurnRad, u8 clampToGround)
 {
-    f32 mag1, mag2, magcross, finalScale;
-    f32 stk_20[3];
-    f32 stk_14[3];
-    f32 stk_8[3];
-    f32 stk_2c[12];
+    f32 curMag, targetMag, axisMag, speed;
+    f32 curDir[3];
+    f32 targetDir[3];
+    f32 turnAxis[3];
+    f32 rotMtx[12];
 
-    mag1 = PSVECMag((f32*)((int)obj2 + 0x2b8));
-    if (mag1 > lbl_803E2574)
+    curMag = PSVECMag((f32*)((int)state + 0x2b8));
+    if (curMag > lbl_803E2574)
     {
-        f32 inv = lbl_803E256C / mag1;
-        stk_20[0] = ((f32*)obj2)[174] * inv;
-        stk_20[1] = ((f32*)obj2)[175] * inv;
-        stk_20[2] = ((f32*)obj2)[176] * inv;
-        PSVECNormalize(stk_20, stk_20);
+        f32 inv = lbl_803E256C / curMag;
+        curDir[0] = ((f32*)state)[174] * inv;
+        curDir[1] = ((f32*)state)[175] * inv;
+        curDir[2] = ((f32*)state)[176] * inv;
+        PSVECNormalize(curDir, curDir);
     }
     else
     {
-        stk_20[0] = lbl_803E2574;
-        stk_20[1] = lbl_803E2574;
-        stk_20[2] = lbl_803E2574;
+        curDir[0] = lbl_803E2574;
+        curDir[1] = lbl_803E2574;
+        curDir[2] = lbl_803E2574;
     }
 
-    mag2 = PSVECMag(vec3);
-    if (mag2 > lbl_803E2574)
+    targetMag = PSVECMag(desiredVec);
+    if (targetMag > lbl_803E2574)
     {
-        f32 inv = lbl_803E256C / mag2;
-        stk_14[0] = vec3[0] * inv;
-        stk_14[1] = vec3[1] * inv;
-        stk_14[2] = vec3[2] * inv;
+        f32 inv = lbl_803E256C / targetMag;
+        targetDir[0] = desiredVec[0] * inv;
+        targetDir[1] = desiredVec[1] * inv;
+        targetDir[2] = desiredVec[2] * inv;
     }
     else
     {
-        stk_14[0] = lbl_803E2574;
-        stk_14[1] = lbl_803E2574;
-        stk_14[2] = lbl_803E2574;
+        targetDir[0] = lbl_803E2574;
+        targetDir[1] = lbl_803E2574;
+        targetDir[2] = lbl_803E2574;
     }
 
-    PSVECCrossProduct(stk_20, stk_14, stk_8);
-    magcross = PSVECMag(stk_8);
-    if (magcross > lbl_803E2574)
+    PSVECCrossProduct(curDir, targetDir, turnAxis);
+    axisMag = PSVECMag(turnAxis);
+    if (axisMag > lbl_803E2574)
     {
         f32 angle;
         int gt;
         f64 gtf;
-        angle = fn_80291FF4(PSVECDotProduct(stk_20, stk_14));
-        gt = (angle > fc);
+        angle = fn_80291FF4(PSVECDotProduct(curDir, targetDir));
+        gt = (angle > maxTurnRad);
         gtf = __fabs((f32)gt);
         if (gtf != lbl_803E2574)
         {
-            f32 rot = fc * ((angle > lbl_803E2574) ? lbl_803E256C : lbl_803E25C4);
-            PSMTXRotAxisRad(stk_2c, stk_8, rot);
-            PSMTXMultVecSR(stk_2c, stk_20, stk_14);
+            f32 rot = maxTurnRad * ((angle > lbl_803E2574) ? lbl_803E256C : lbl_803E25C4);
+            PSMTXRotAxisRad(rotMtx, turnAxis, rot);
+            PSMTXMultVecSR(rotMtx, curDir, targetDir);
         }
     }
 
-    finalScale = mag2 * lbl_803E25E8;
+    speed = targetMag * lbl_803E25E8;
     {
-        f32 cap_high = mag1 + fb;
-        if (finalScale > cap_high)
+        f32 cap_high = curMag + speedBand;
+        if (speed > cap_high)
         {
-            finalScale = cap_high;
+            speed = cap_high;
         }
         else
         {
-            f32 cap_low = mag1 - fb;
-            if (finalScale < cap_low)
-                finalScale = cap_low;
+            f32 cap_low = curMag - speedBand;
+            if (speed < cap_low)
+                speed = cap_low;
         }
-        if (finalScale > fa)
-            finalScale = fa;
+        if (speed > maxSpeed)
+            speed = maxSpeed;
     }
 
-    ((GameObject*)obj1)->anim.velocityX = stk_14[0] * finalScale;
-    ((GameObject*)obj1)->anim.velocityY = stk_14[1] * finalScale;
-    ((GameObject*)obj1)->anim.velocityZ = stk_14[2] * finalScale;
+    ((GameObject*)obj)->anim.velocityX = targetDir[0] * speed;
+    ((GameObject*)obj)->anim.velocityY = targetDir[1] * speed;
+    ((GameObject*)obj)->anim.velocityZ = targetDir[2] * speed;
 
-    if (flag != 0)
+    if (clampToGround != 0)
     {
-        f32 y = ((GameObject*)obj1)->anim.velocityY;
+        f32 y = ((GameObject*)obj)->anim.velocityY;
         if (y < lbl_803E2574)
         {
-            f32 floor_height = ((GameObject*)obj1)->anim.localPosY;
-            GameObject* target = *(GameObject**)((char*)obj2 + 0x29c);
+            f32 floor_height = ((GameObject*)obj)->anim.localPosY;
+            GameObject* target = *(GameObject**)((char*)state + 0x29c);
             f32 ground = lbl_803E25D0 + target->anim.localPosY;
             if (floor_height < ground)
             {
                 f32 t = (ground - floor_height) / lbl_803E25D0;
-                ((GameObject*)obj1)->anim.velocityY = y * (lbl_803E256C - t);
+                ((GameObject*)obj)->anim.velocityY = y * (lbl_803E256C - t);
             }
         }
     }
@@ -1858,9 +1858,9 @@ void enemy_update(int obj)
     if ((((EnemyState*)state)->controlFlags & 0x1800) == 0)
     {
         baddieTurnTowardTarget((int*)obj, (int*)state);
-        fn_8014B878((int*)obj, (int*)state);
+        baddie_updateEngagementState((int*)obj, (int*)state);
     }
-    objAnimFn_8014a9f0((short*)obj, (int)state);
+    enemyObjAnimUpdate((short*)obj, (int)state);
 }
 
 void enemy_init(GameObject* obj, u8* setup, int flag)

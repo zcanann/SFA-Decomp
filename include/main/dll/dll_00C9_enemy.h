@@ -66,7 +66,7 @@ typedef struct EnemyTargetSearchResult {
 
 STATIC_ASSERT(sizeof(EnemyTargetSearchResult) == 8);
 
-void objAnimFn_8014a9f0(short* obj, int state);
+void enemyObjAnimUpdate(short* obj, int state);
 void FUN_8014ab58(u64 param_1, double param_2, double param_3, double param_4, double param_5, double param_6,
                   double param_7, u64 param_8, u16* param_9, int* param_10, u32 param_11, u32 param_12, u32 param_13,
                   u32 param_14, u32 param_15, u32 param_16);
