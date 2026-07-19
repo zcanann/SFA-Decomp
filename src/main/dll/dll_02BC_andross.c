@@ -384,8 +384,8 @@ int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
     state->velZ = zVel;
     return result;
 }
-const f32 gAndrossAlpha255 = 255.0f;
-const f32 gAndrossDistortPhaseWrap = 6.28318f;
+#define ANDROSS_ALPHA_255 255.0f
+#define ANDROSS_DISTORT_PHASE_WRAP 6.28318f
 
 void fn_8023A87C(GameObject* obj, AndrossState* andross)
 {
@@ -421,7 +421,7 @@ void fn_8023A87C(GameObject* obj, AndrossState* andross)
     }
 }
 
-const f32 gAndrossPathPosOffset = 30.0f;
+#define ANDROSS_PATH_POS_OFFSET 30.0f
 int andross_SeqFn(GameObject* obj)
 {
     AndrossState* state = obj->extra;
@@ -435,7 +435,7 @@ int andross_SeqFn(GameObject* obj)
     fade = state->fadeAlpha;
     model = *(int*)Obj_GetActiveModel(obj);
     i = 0;
-    alpha = gAndrossAlpha255 * fade;
+    alpha = ANDROSS_ALPHA_255 * fade;
     for (; i < ((ModelFileHeader*)model)->renderOpCount; i++)
     {
         op = ObjModel_GetRenderOp((ModelFileHeader*)model, i);
@@ -616,8 +616,8 @@ void andross_update(int obj)
                                   &state->cachedPosZ, 0);
     if (pathIndex == 1)
     {
-        state->cachedPosY += gAndrossPathPosOffset;
-        state->cachedPosZ += gAndrossPathPosOffset;
+        state->cachedPosY += ANDROSS_PATH_POS_OFFSET;
+        state->cachedPosZ += ANDROSS_PATH_POS_OFFSET;
     }
     switch (state->fightPhase)
     {
@@ -1318,9 +1318,9 @@ void andross_update(int obj)
             fc = 200.0f;
         }
         gAndrossDistortPhase += gAndrossDistortPhaseStep;
-        if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+        if (gAndrossDistortPhase > ANDROSS_DISTORT_PHASE_WRAP)
         {
-            gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+            gAndrossDistortPhase -= ANDROSS_DISTORT_PHASE_WRAP;
         }
         turnOnDistortionFilter(&state->cachedPosX, fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         break;
@@ -1339,9 +1339,9 @@ void andross_update(int obj)
             fc = 200.0f;
         }
         gAndrossDistortPhase += gAndrossDistortPhaseStep;
-        if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+        if (gAndrossDistortPhase > ANDROSS_DISTORT_PHASE_WRAP)
         {
-            gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+            gAndrossDistortPhase -= ANDROSS_DISTORT_PHASE_WRAP;
         }
         turnOnDistortionFilter(&state->cachedPosX, fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         if (actionChanged)
@@ -1388,9 +1388,9 @@ void andross_update(int obj)
             state->actionState = 0x1a;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
             gAndrossDistortPhase += gAndrossDistortPhaseStep;
-            if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+            if (gAndrossDistortPhase > ANDROSS_DISTORT_PHASE_WRAP)
             {
-                gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+                gAndrossDistortPhase -= ANDROSS_DISTORT_PHASE_WRAP;
             }
             turnOnDistortionFilter(&state->cachedPosX, 1000.0f, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
@@ -1412,9 +1412,9 @@ void andross_update(int obj)
             fc = 200.0f;
         }
         gAndrossDistortPhase += gAndrossDistortPhaseStep;
-        if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+        if (gAndrossDistortPhase > ANDROSS_DISTORT_PHASE_WRAP)
         {
-            gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+            gAndrossDistortPhase -= ANDROSS_DISTORT_PHASE_WRAP;
         }
         turnOnDistortionFilter(&state->cachedPosX, fc, &gAndrossDistortFilterParam, gAndrossDistortPhase);
         if (actionChanged)
@@ -1469,9 +1469,9 @@ void andross_update(int obj)
             state->actionState = 0xf;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
             gAndrossDistortPhase += gAndrossDistortPhaseStep;
-            if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+            if (gAndrossDistortPhase > ANDROSS_DISTORT_PHASE_WRAP)
             {
-                gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+                gAndrossDistortPhase -= ANDROSS_DISTORT_PHASE_WRAP;
             }
             turnOnDistortionFilter(&state->cachedPosX, 1000.0f, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
@@ -1496,9 +1496,9 @@ void andross_update(int obj)
             }
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
             gAndrossDistortPhase += gAndrossDistortPhaseStep;
-            if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+            if (gAndrossDistortPhase > ANDROSS_DISTORT_PHASE_WRAP)
             {
-                gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+                gAndrossDistortPhase -= ANDROSS_DISTORT_PHASE_WRAP;
             }
             turnOnDistortionFilter(&state->cachedPosX, 1000.0f, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
@@ -1514,9 +1514,9 @@ void andross_update(int obj)
                 state->velZ = gAndrossZero;
                 gAndrossDistortPhase = gAndrossDistortPhaseReset;
                 gAndrossDistortPhase += gAndrossDistortPhaseStep;
-                if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+                if (gAndrossDistortPhase > ANDROSS_DISTORT_PHASE_WRAP)
                 {
-                    gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+                    gAndrossDistortPhase -= ANDROSS_DISTORT_PHASE_WRAP;
                 }
                 turnOnDistortionFilter(&state->cachedPosX, 1000.0f, &gAndrossDistortFilterParam,
                                        gAndrossDistortPhase);
@@ -1530,9 +1530,9 @@ void andross_update(int obj)
             state->actionState = 0xf;
             gAndrossDistortPhase = gAndrossDistortPhaseReset;
             gAndrossDistortPhase += gAndrossDistortPhaseStep;
-            if (gAndrossDistortPhase > gAndrossDistortPhaseWrap)
+            if (gAndrossDistortPhase > ANDROSS_DISTORT_PHASE_WRAP)
             {
-                gAndrossDistortPhase -= gAndrossDistortPhaseWrap;
+                gAndrossDistortPhase -= ANDROSS_DISTORT_PHASE_WRAP;
             }
             turnOnDistortionFilter(&state->cachedPosX, 1000.0f, &gAndrossDistortFilterParam,
                                    gAndrossDistortPhase);
@@ -1662,7 +1662,7 @@ void andross_update(int obj)
 
             model = *(ModelFileHeader**)Obj_GetActiveModel((GameObject*)obj);
             index = 0;
-            alpha = gAndrossAlpha255 * fade;
+            alpha = ANDROSS_ALPHA_255 * fade;
             for (; index < model->renderOpCount; index++)
             {
                 renderOp = ObjModel_GetRenderOp(model, index);
@@ -1971,7 +1971,7 @@ void andross_update(int obj)
 
             model = *(ModelFileHeader**)Obj_GetActiveModel((GameObject*)obj);
             index = 0;
-            alpha = gAndrossAlpha255 * fade;
+            alpha = ANDROSS_ALPHA_255 * fade;
             for (; index < model->renderOpCount; index++)
             {
                 renderOp = ObjModel_GetRenderOp(model, index);

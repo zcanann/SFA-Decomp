@@ -226,8 +226,8 @@ ObjectDescriptor gMMSH_ShrineObjDescriptor = {
     MMSH_Shrine_getExtraSize,
 };
 
-const f32 gLaserBeamOrbitPi = 3.1415927f;
-const f32 gLaserBeamOrbitAngleScale = 32768.0f;
+#define LASER_BEAM_ORBIT_PI 3.1415927f
+#define LASER_BEAM_ORBIT_ANGLE_SCALE 32768.0f
 
 /*
  * Advances the ambient laser-beam bob, aim, and player proximity alpha.
@@ -262,15 +262,15 @@ void fn_801C4664(void* objArg)
 
     obj->localPosY =
         20.0f + (config->baseHeight +
-                        mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale));
+                        mathSinf((LASER_BEAM_ORBIT_PI * DFSH_LASER_ORBIT_A(runtime)) / LASER_BEAM_ORBIT_ANGLE_SCALE));
 
-    trigA = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_B(runtime)) / gLaserBeamOrbitAngleScale);
-    trigB = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale);
+    trigA = mathSinf((LASER_BEAM_ORBIT_PI * DFSH_LASER_ORBIT_B(runtime)) / LASER_BEAM_ORBIT_ANGLE_SCALE);
+    trigB = mathSinf((LASER_BEAM_ORBIT_PI * DFSH_LASER_ORBIT_A(runtime)) / LASER_BEAM_ORBIT_ANGLE_SCALE);
     trigB = trigB + trigA;
     obj->roll = (s16)(600.0f * trigB);
 
-    trigA = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_C(runtime)) / gLaserBeamOrbitAngleScale);
-    trigB = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale);
+    trigA = mathSinf((LASER_BEAM_ORBIT_PI * DFSH_LASER_ORBIT_C(runtime)) / LASER_BEAM_ORBIT_ANGLE_SCALE);
+    trigB = mathSinf((LASER_BEAM_ORBIT_PI * DFSH_LASER_ORBIT_A(runtime)) / LASER_BEAM_ORBIT_ANGLE_SCALE);
     trigB = trigB + trigA;
     obj->pitch = (s16)(600.0f * trigB);
 
