@@ -28,11 +28,7 @@ int setSubtitlesEnabled(int enabled);
 void* gameTextGetPhrase(int textId, int phraseIndex);
 void* gameTextGetStr(int textId);
 void gameTextResetCursor(int flags);
-#ifdef TEXTRENDER_DIRECT_INT_CURSOR_CALL
-void gameTextSetCursor(int x, int y, int flags);
-#else
 void gameTextSetCursor(u16 x, u16 y, int flags);
-#endif
 void gameTextSetDrawFunc(void* drawFunc);
 void gameTextSetWindow(u8* textBox);
 f32 gameTextFn_80019c00(void);
