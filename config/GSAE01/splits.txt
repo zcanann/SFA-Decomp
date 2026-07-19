@@ -3796,8 +3796,7 @@ main/dll/dll_02AF_tree.c:
 main/dll/dll_02B0_brokenpipe.c:
 	.text       start:0x80236154 end:0x80236298
 	.data       start:0x8032BCC8 end:0x8032BD00
-	.sdata2     start:0x803E7338 end:0x803E7344
-	.sdata2     start:0x803E7348 end:0x803E7358
+	.sdata2     start:0x803E7338 end:0x803E7358
 
 main/dll/dll_02B1_cmbsrc.c:
 	.text       start:0x80236298 end:0x80237574
