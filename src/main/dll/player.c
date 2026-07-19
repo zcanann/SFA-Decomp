@@ -896,7 +896,7 @@ int playerGetTimeScale(GameObject* obj, f32* out)
 {
     PlayerState* inner = obj->extra;
     *out = inner->timeScale;
-    return inner->unk8C4;
+    return inner->timeScaleMode;
 }
 
 int playerSetHeldObject(GameObject* obj, GameObject* heldObj)
@@ -11279,7 +11279,7 @@ void fn_802A93F4(GameObject* obj, int p2, int p3)
         fn_802AB5A4(obj, (int)inner, 7);
     }
     ObjModelChain_SetEnabled((ObjModelChain*)gPlayerModelChain, 1);
-    inner->unk8C4 = 2;
+    inner->timeScaleMode = 2;
     if (gPlayerChildObject != NULL)
     {
         found = (void*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, (int)obj, &dist);

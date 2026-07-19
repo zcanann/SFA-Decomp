@@ -393,7 +393,7 @@ typedef struct PlayerState {
     u8 attackVariantMode; /* 0x8c1: attack/swing variant (0/1/2) chosen from moveSlotIndex (0x11->0, 0xf/0x1b/else->1/2); read as `mode`, selects camera-flag bits 0x100/0x200/0x400 */
     s8 climbProbeResult; /* debounced playerCheckIfClimbingOntoWall() result; -1 = none, else the wall/climb type switched on to pick the climb move */
     u8 climbProbeStableCount; /* consecutive frames climbProbeResult has held the same value (capped at 200); reset to 0 on change */
-    u8 unk8C4;
+    u8 timeScaleMode; /* companion return value of playerGetTimeScale (which outputs timeScale); set to 2 on player respawn/reset */
     u8 emissionState; /* emission-controller lifecycle state code (0-4) set by the staff/move handler keyed on current move; returned by EmissionController_IsLingering */
     u8 pad8C6[0x8C7 - 0x8C6];
     u8 staffUnlockedFlags;
