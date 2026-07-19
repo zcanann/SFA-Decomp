@@ -205,7 +205,7 @@ int TitleMenu_run(void)
         (gTitleMenuReadyForInput != 0))
     {
         buttons = getButtonsJustPressed(0);
-        padGetAnalogInputS8(0, &dpad, &face);
+        padGetAnalogInput(0, &dpad, &face);
         buttonDisable(0, buttons);
         padClearAnalogInputX(0);
         padClearAnalogInputY(0);
@@ -250,7 +250,7 @@ int TitleMenu_run(void)
     else if ((gTitleMenuReadyForInput != 0) && (gAttractMoviePlaybackEnabled == 0))
     {
         buttons = getButtonsJustPressed(0);
-        padGetAnalogInputS8(0, &dpad, &face);
+        padGetAnalogInput(0, &dpad, &face);
         if ((buttons != 0) || ((dpad != 0 || (face != 0))))
         {
             gAttractMovieReplayCountdown = 2;

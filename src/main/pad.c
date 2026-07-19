@@ -92,7 +92,7 @@ void padClearAnalogInputX(int port)
     (&gPadAnalogX)[port] = 0;
 }
 
-void padGetAnalogInput(int port, u8* x, u8* y)
+void padGetAnalogInput(int port, s8* x, s8* y)
 {
     if (joypadDisabled != 0 || port > 0 || gDvdErrorPauseActive != 0)
     {
@@ -338,8 +338,8 @@ void padUpdate(void)
     prevStickX = (s8*)&gPadPrevStickX;
     repeatY = (s8*)&gPadRepeatY;
     repeatX = (s8*)&gPadRepeatX;
-    analogY = (s8*)&gPadAnalogY;
-    analogX = (s8*)&gPadAnalogX;
+    analogY = &gPadAnalogY;
+    analogX = &gPadAnalogX;
     heldRaw = padStateBlock;
     curBtn = padStateBlock + 4;
     released = padStateBlock + 8;
@@ -526,8 +526,8 @@ int initControllers(void)
     u8* prevStickX;
     u8* repeatY;
     u8* repeatX;
-    u8* analogY;
-    u8* analogX;
+    s8* analogY;
+    s8* analogX;
     u32* heldButtons;
     u32* buttonsPressed;
     u32* buttonsReleased;

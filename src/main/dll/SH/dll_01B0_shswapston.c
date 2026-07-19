@@ -90,7 +90,7 @@ int warpstone_testEvent(u32 obj, u32 unused, int option)
     s8 vertical;
 
     Obj_GetPlayerObject();
-    padGetAnalogInput(0, (u8*)&horizontal, (u8*)&vertical);
+    padGetAnalogInput(0, &horizontal, &vertical);
 
     switch (option)
     {

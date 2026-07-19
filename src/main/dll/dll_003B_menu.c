@@ -65,7 +65,7 @@ int Menu_func08(int* sel)
     {
         lbl_803DD8EC = timer - lbl_803E21D8;
     }
-    padGetAnalogInputS8(0, &yInput, &xInput);
+    padGetAnalogInput(0, &yInput, &xInput);
     if (xInput < 0)
     {
         *sel = *sel + 1;

@@ -265,8 +265,8 @@ int DRlaserturret_startLinkedTarget(DRLaserTurretObject* obj)
 int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int dispatch)
 {
     DRLaserTurretState* state;
-    char stickHi;
-    char stickLo;
+    s8 stickHi;
+    s8 stickLo;
     int btn;
     int cv;
     char nudge;
@@ -275,13 +275,13 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     state = obj->state;
     if (dispatch == DR_LASERTURRET_PROMPT_COUNT)
     {
-    padGetAnalogInputChar(0, &stickHi, &stickLo);
-        if ((s8)stickLo < 0)
+        padGetAnalogInput(0, &stickHi, &stickLo);
+        if (stickLo < 0)
         {
             state->countValue--;
             Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);
         }
-        else if ((s8)stickLo > 0)
+        else if (stickLo > 0)
         {
             state->countValue++;
             Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);
@@ -311,13 +311,13 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject* obj, void* param2, int
     }
     else if (dispatch == DR_LASERTURRET_PROMPT_DIGIT_COUNT)
     {
-        padGetAnalogInputChar(0, &stickHi, &stickLo);
-        if ((s8)stickLo < 0)
+        padGetAnalogInput(0, &stickHi, &stickLo);
+        if (stickLo < 0)
         {
             state->digitCount--;
             Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);
         }
-        else if ((s8)stickLo > 0)
+        else if (stickLo > 0)
         {
             state->digitCount++;
             Sfx_PlayFromObject(0, DR_LASERTURRET_SFX_PROMPT_TICK);

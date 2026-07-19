@@ -4,10 +4,6 @@
 #include "ghidra_import.h"
 #include "main/pad_api.h"
 
-typedef void (*PadGetAnalogInputS8Fn)(int port, s8* x, s8* y);
-typedef int (*PadGetAnalogInputIntFn)(int port, s8* x, s8* y);
-typedef int (*PadGetAnalogInputCharFn)(int port, char* x, char* y);
-
 extern f32 gRumbleTimer;
 extern f32 lbl_803DE6E8;
 extern u8 joypadDisabled;
@@ -15,8 +11,8 @@ extern u8 rumbleEnabled;
 extern u32 gPadResetMask;
 extern u8 gPadStickRepeatDelay;
 extern u32 gPadButtonMask[];
-extern u8 gPadAnalogY;
-extern u8 gPadAnalogX;
+extern s8 gPadAnalogY;
+extern s8 gPadAnalogX;
 extern u8 gPadRepeatY;
 extern u8 gPadRepeatX;
 extern u8 gPadPrevStickY;
@@ -46,7 +42,7 @@ void setRumbleEnabled(u8 enabled);
 void padClearAnalogInputX(int port);
 void padClearAnalogInputY(int port);
 void padFn_80014b18(int value);
-void padGetAnalogInput(int port, u8* x, u8* y);
+void padGetAnalogInput(int port, s8* x, s8* y);
 s8 padGetCY(int port);
 s8 padGetCX(int port);
 s8 padGetStickY(int port);
@@ -57,9 +53,5 @@ u16 getPadFn_80014d9c(int port);
 u16 getButtons_80014dd8(int port);
 int initControllers(void);
 void doNothing_endOfFrame(void);
-
-#define padGetAnalogInputS8(port, x, y) (((PadGetAnalogInputS8Fn)padGetAnalogInput)((port), (x), (y)))
-#define padGetAnalogInputInt(port, x, y) (((PadGetAnalogInputIntFn)padGetAnalogInput)((port), (x), (y)))
-#define padGetAnalogInputChar(port, x, y) (((PadGetAnalogInputCharFn)padGetAnalogInput)((port), (x), (y)))
 
 #endif /* MAIN_PAD_H_ */
