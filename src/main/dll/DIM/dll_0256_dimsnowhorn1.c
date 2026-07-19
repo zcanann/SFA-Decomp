@@ -1464,7 +1464,7 @@ void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
         ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         hitState->trackContactMask = 9;
     }
-    (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))((int)obj, (int)inner, 0xc, 1);
+    (*gPlayerInterface)->init(obj, inner, 0xc, 1);
     inner->baddie.gravity = 0.17f;
     pathState = (u8*)&inner->baddie + 4;
     pathState[0x25b] = 0;

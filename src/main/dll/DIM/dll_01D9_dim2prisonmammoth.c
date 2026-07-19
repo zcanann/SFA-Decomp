@@ -242,7 +242,7 @@ void dim2prisonmammoth_init(int obj, int params)
         ((GameObject*)obj)->anim.modelState->flags |= 0xa10;
         ((GameObject*)obj)->anim.modelState->flags |= 0x8020LL;
     }
-    (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
+    (*gPlayerInterface)->init((void*)obj, (void*)inner, 4, 1);
     ((Dim2prisonmammothState*)inner)->unk25F = 0;
     ((GameObject*)obj)->objectFlags |= DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED;
 }

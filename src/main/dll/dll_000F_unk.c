@@ -1039,7 +1039,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
 
 
-void player_init(int unused, void* obj, int a, int b)
+void player_init(void* unused, void* obj, int a, int b)
 {
     memset(obj, 0, 0x35c);
     *(s16*)((char*)obj + 0x26c) = a;

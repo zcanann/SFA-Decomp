@@ -1172,7 +1172,7 @@ void HighTop_init(GameObject* obj, HighTopPlacement* placement)
     }
     ObjGroup_AddObject((int)obj, ARWARWING_OBJGROUP);
     ObjGroup_AddObject((int)obj, HIGHTOP_OBJGROUP);
-    (*(void (**)(void*, char*, int, int))((char*)*gPlayerInterface + 4))(obj, (char*)runtime, 11, 1);
+    (*gPlayerInterface)->init(obj, runtime, 11, 1);
     runtime->baddie.gravity = 0.17f;
     pathState = (u8*)&runtime->baddie + 4;
     pathState[0x25b] = 1;

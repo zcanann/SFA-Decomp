@@ -1314,7 +1314,7 @@ void DR_CloudRunner_init(GameObject* obj, int def)
         (obj)->anim.localPosZ = target.z;
         (obj)->anim.rotX = target.angle;
     }
-    (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))((int)obj, inner, 8, 1);
+    (*gPlayerInterface)->init(obj, (void*)inner, 8, 1);
     ((CloudRunnerState*)inner)->baddie.gravity = lbl_803E8424;
     fn_802BF0C8(obj, (CloudRunnerState*)inner, ((ByteFlags*)((char*)inner + 0xbc0))->b20);
     dll_2E_func05(obj, (MoveLibState*)((char*)inner + 0x4c4), -0x11c7, 0x1555, 1);

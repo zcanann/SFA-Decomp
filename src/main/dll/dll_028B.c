@@ -114,7 +114,7 @@ void dll_28B_init(GameObject* obj)
     dll_2E_func09(&state->moveLib, &blockB, &blockA, 8);
     state->moveLib.modeBits |= 0x22;
     (*gRomCurveInterface)->initCurve(&state->route, obj, gDll28BCurveInitParam, &curveParam, -1);
-    (*(void (**)(int, int, int, int))((char*)*gPlayerInterface + 0x4))((int)obj, (int)state, 4, 4);
+    (*gPlayerInterface)->init(obj, state, 4, 4);
     ObjGroup_AddObject((int)obj, DLL28B_OBJ_GROUP);
 }
 

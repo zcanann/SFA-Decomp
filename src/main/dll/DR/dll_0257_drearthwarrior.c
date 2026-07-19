@@ -1410,7 +1410,7 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     ((DREarthWarriorState*)inner)->unk14E8 = ((DREarthWarriorPlacement*)def)->unk19;
     ((DREarthWarriorState*)inner)->unk14DE = 5;
     ((DREarthWarriorState*)inner)->unk14F4 = -1;
-    (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))((int)obj, inner, 4, 1);
+    (*gPlayerInterface)->init(obj, (void*)inner, 4, 1);
     *(int*)inner |= 0x4000;
     ((EarthWarriorState*)inner)->baddie.gravity = lbl_803E8384;
     pathState = (u8*)&((EarthWarriorState*)inner)->baddie + 4;

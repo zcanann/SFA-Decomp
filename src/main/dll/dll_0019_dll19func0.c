@@ -255,7 +255,7 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
         ObjGroup_AddObject((int)obj, DLL19_OBJGROUP);
         ObjMsg_AllocQueue(obj, 4);
     }
-    (*(void (**)(int, u8*, int, int))(*(int*)gPlayerInterface + 4))((int)obj, state, moveArg0, moveArg1);
+    (*gPlayerInterface)->init(obj, state, moveArg0, moveArg1);
     *(int*)(state + 0) = 0;
     ((BaddieState*)state)->hasTarget = 0;
     ((BaddieState*)state)->animSpeedA = 0.0f;

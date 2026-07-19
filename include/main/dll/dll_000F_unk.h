@@ -42,7 +42,7 @@ void player_setState(void* ctx, void* p, int new_state);
 void player_setOverride(u32 x);
 void player_updateVel(char* p, char* obj, int unused);
 void player_update(char* pos, char* state, float dt, float pathDt, int stateFns, int auxStateFns);
-void player_init(int unused, void* obj, int a, int b);
+void player_init(void* unused, void* obj, int a, int b);
 void player_release(void);
 void player_initialise(void);
 
