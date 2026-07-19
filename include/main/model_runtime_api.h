@@ -23,10 +23,6 @@ void* modelFileGetDisplayList(u8* modelFile, int displayListIndex);
     (((void (*)(int*))ObjModel_ToggleMatrixBuffer)((model)))
 #define ObjModel_ApplyBlendChannelsIntLegacy(model) \
     (((void (*)(int*))ObjModel_ApplyBlendChannels)((model)))
-#define model_multMtxsIntLegacy(model, out) \
-    (((void (*)(int*, f32*))model_multMtxs)((model), (out)))
-#define modelInitBoneMtxsIntLegacy(model, out) \
-    (((void (*)(int*, f32*))modelInitBoneMtxs)((model), (out)))
 #define modelInitBoneMtxs2IntLegacy(model, out2, out) \
     (((void (*)(int*, f32*, f32*))modelInitBoneMtxs2)((model), (out2), (out)))
 #define ObjModel_UpdateAnimMatricesIntLegacy(model, blend, obj, dst) \

@@ -1494,7 +1494,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
             if (gObjCachedModel != (u32)m)
             {
                 ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, gObjJointMtxTemp);
-                modelInitMtxsPtrLegacy(m, am);
+                modelInitMtxs((ModelFileHeader*)m, (ObjModel*)am);
             }
             else
             {
@@ -1848,7 +1848,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         }
         *(u16*)((char*)am + 0x18) |= 8;
     }
-    modelInitMtxsPtrLegacy(m, am);
+    modelInitMtxs((ModelFileHeader*)m, (ObjModel*)am);
     modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, ((ModelFileHeader*)m)->instrsBitLenWords << 3,
                                          ((ModelFileHeader*)m)->instrsBitLenWords << 3);
     if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries != 0)
@@ -2106,7 +2106,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 }
                 else
                 {
-                    modelInitBoneMtxsIntLegacy(am, gObjBoneMtxBuffer);
+                    modelInitBoneMtxs((ObjModel*)am, gObjBoneMtxBuffer);
                 }
                 did = 1;
             }
@@ -2197,10 +2197,10 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         }
         if (did != 0)
         {
-            model_multMtxsIntLegacy(am, wm);
+            model_multMtxs((u8*)am, wm);
         }
     }
-    modelInitMtxsPtrLegacy(m, am);
+    modelInitMtxs((ModelFileHeader*)m, (ObjModel*)am);
     modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, ((ModelFileHeader*)m)->instrsBitLenWords << 3,
                                          ((ModelFileHeader*)m)->instrsBitLenWords << 3);
     {

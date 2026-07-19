@@ -5,6 +5,7 @@
 
 typedef struct GameObject GameObject;
 typedef struct ModelLightStruct ModelLightStruct;
+typedef struct ModelFileHeader ModelFileHeader;
 typedef struct ObjModel ObjModel;
 
 extern ModelLightStruct* lbl_803DCC64;
@@ -22,12 +23,10 @@ void objRenderFn_80041018(GameObject* obj);
 void objSetOverrideColor(u8 red, u8 green, u8 blue);
 void objRenderModel(GameObject* obj);
 void objSetMtxFn_800412d4(u32 mtx);
-void modelInitMtxs(int modelFile, int model);
+void modelInitMtxs(ModelFileHeader* modelFile, ObjModel* model);
 void modelMtxFn_8003be38(u8* modelFile, int* model, f32* matrix, f32* matrix2);
 int objRotateFn_8003bce8(f32* matrix, s16* outX, s16* outY, s16* outZ);
 int modelRenderCb_8003c268(int obj, int* model, int renderOpIndex);
 int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int renderOpIndex);
 
-#define modelInitMtxsPtrLegacy(modelFile, model) \
-    (((void (*)(u8*, int*))modelInitMtxs)((modelFile), (model)))
 #endif /* MAIN_OBJPRINT_RENDER_API_H_ */

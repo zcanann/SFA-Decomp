@@ -1754,9 +1754,9 @@ void modelMtxFn_8003be38(u8* def, int* model, f32* mtxA, f32* mtxB)
     lbl_803DCC48 = 2;
 }
 
-void modelCalcVtxGroupMtxs(int def, int model);
+void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model);
 
-void modelInitMtxs(int def, int model)
+void modelInitMtxs(ModelFileHeader* def, ObjModel* model)
 {
     int cache;
     int mtx;
@@ -1764,11 +1764,11 @@ void modelInitMtxs(int def, int model)
     u8 rem;
 
     cache = (int)getCache();
-    if (*(u8*)(def + 0xf4) != 0)
+    if (def->extraJointCount != 0)
     {
         modelCalcVtxGroupMtxs(def, model);
     }
-    count = (s32)(u32) * (u8*)(def + 0xf3) + (s32)(u32) * (u8*)(def + 0xf4);
+    count = (s32)(u32)def->jointCount + (s32)(u32)def->extraJointCount;
     if (count >= 2 && count <= 0x64)
     {
         mtx = (int)ObjModel_GetJointMatrix((u8*)model, 0);
@@ -1794,7 +1794,7 @@ void modelInitMtxs(int def, int model)
     }
 }
 
-void modelCalcVtxGroupMtxs(int def, int model)
+void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model)
 {
     Mtx ma;
     Mtx mb;
@@ -1802,7 +1802,7 @@ void modelCalcVtxGroupMtxs(int def, int model)
     int off;
     int i;
 
-    for (i = 0, off = 0; i < *(u8*)(def + 0xf4); i++)
+    for (i = 0, off = 0; i < def->extraJointCount; i++)
     {
         MtxPtr out;
         MtxPtr m1;
@@ -1812,18 +1812,18 @@ void modelCalcVtxGroupMtxs(int def, int model)
         f32 w;
         f32 wi;
 
-        grp = (u8*)(*(int*)(def + 0x54) + off);
-        out = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, i + *(u8*)(def + 0xf3));
+        grp = def->unk54 + off;
+        out = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, i + def->jointCount);
         m1 = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, grp[0]);
         m2 = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, grp[1]);
 
         w = (f32)grp[2] / 4.0f;
         wi = 1.0f - w;
 
-        jd = (char*)(*(int*)(def + 0x3c) + grp[0] * 0x1c);
+        jd = (char*)def->jointData + grp[0] * 0x1c;
         PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
         PSMTXConcat(m1, trans, ma);
-        jd = (char*)(*(int*)(def + 0x3c) + grp[1] * 0x1c);
+        jd = (char*)def->jointData + grp[1] * 0x1c;
         PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
         PSMTXConcat(m2, trans, mb);
 
