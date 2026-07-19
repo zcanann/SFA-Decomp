@@ -21,7 +21,7 @@
 #include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/audio/sfx_play_int_u16_legacy_api.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
@@ -1203,7 +1203,6 @@ void fn_802BB998(int obj, int pointState, int inputState)
     u8 pointIndex;
     u8 count;
     s32 inputFlags;
-    u16 sfxId;
     struct
     {
         u32 unk0;
@@ -1243,8 +1242,8 @@ void fn_802BB998(int obj, int pointState, int inputState)
                 count--;
             }
 
-            sfxId = audioPickSoundEffectU16Legacy((u8)(s8) * (s8*)&((BaddieState*)inputState)->paletteSlot, 9);
-            Sfx_PlayFromObject(obj, sfxId);
+            Sfx_PlayFromObject(
+                obj, audioPickSoundEffect_8006ed24((u8)(s8) * (s8*)&((BaddieState*)inputState)->paletteSlot, 9));
             doRumble(3.0f);
         }
         flags >>= 1;

@@ -1914,7 +1914,7 @@ void initFn_8006d020(void)
 }
 
 
-u16 audioPickSoundEffect_8006ed24(s8 a, u8 b)
+int audioPickSoundEffect_8006ed24(u8 a, u8 b)
 {
     u8* base = lbl_8030E8B0;
     int idx = (u8)a;
