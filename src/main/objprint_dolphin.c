@@ -3897,7 +3897,6 @@ void* getCurrentDataFile(int id)
 
 int mapUnload(int mapId, int flags)
 {
-    char* hi;
     struct MldfTables* tbl;
     int* e;
     int f20;
@@ -3974,7 +3973,6 @@ int mapUnload(int mapId, int flags)
         f10 = flags & 0x10000000;
         f80 = flags & 0x80000000;
         lockp = &gObjLevelLockSlots;
-        hi = (char*)tbl + 0x20000;
         for (; i < 0x38; i += 2)
         {
             if ((f20 && mapId == MAPID_RT(e[0])) || (f10 && mapId != MAPID_RT(e[0])) ||
@@ -3984,10 +3982,10 @@ int mapUnload(int mapId, int flags)
             }
             {
                 int idx = e[0];
-                if (((int**)(hi + -0x6A28))[idx] != NULL)
+                if (((int**)((char*)tbl + 0x20000 + -0x6A28))[idx] != NULL)
                 {
                     s16 v;
-                    if (f80 || ((flags & e[1]) && mapId == ((s16*)(hi + -0x68C8))[idx]) ||
+                    if (f80 || ((flags & e[1]) && mapId == ((s16*)((char*)tbl + 0x20000 + -0x68C8))[idx]) ||
                         (f10 && mapId != MAPOWNER_RT(idx)) || (f20 && mapId == MAPOWNER_RT(idx)))
                     {
                         if (gObjLevelLockSlots != (v = MAPOWNER_RT(idx)) && lockp[1] != v)
@@ -4023,7 +4021,7 @@ int mapUnload(int mapId, int flags)
                                 mmSetFreeDelay(0);
                                 for (j = 0; j < 75; j++)
                                 {
-                                    if (sMapFileNameIndexRemapTable[j] == MAPOWNER_RT(e[0]))
+                                    if (sMapFileNameIndexRemapTable[j] == *(s16*)((u32)tbl + 0x20000 + (e[0] << 1) - 0x68C8))
                                     {
                                         break;
                                     }
@@ -4038,9 +4036,9 @@ int mapUnload(int mapId, int flags)
                             }
                             mm_free((void*)MAPPTR_RT(e[0]));
                             mmSetFreeDelay(2);
-                            *(u32*)((u32)tbl + 0x20000 + (e[0] << 2) - 0x6A28) = 0;
-                            *(s16*)((u32)tbl + 0x20000 + (e[0] << 1) - 0x68C8) = -1;
-                            *(int*)((u32)tbl + 0x20000 + (e[0] << 2) - 0x6D68) = 0;
+                            *(u32*)((e[0] << 2) + ((u32)tbl + 0x20000) - 0x6A28) = 0;
+                            *(s16*)((e[0] << 1) + ((u32)tbl + 0x20000) - 0x68C8) = -1;
+                            *(int*)((e[0] << 2) + ((u32)tbl + 0x20000) - 0x6D68) = 0;
                             switch (e[0])
                             {
                             case 0x2a:
