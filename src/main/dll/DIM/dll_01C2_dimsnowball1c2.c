@@ -22,8 +22,7 @@
 
 typedef struct Dimsnowball1c2State
 {
-    s8 countdown;
-    u8 pad1[0x2 - 0x1];
+    s16 countdown;
     s16 spawnPeriod;
     u8 pad4[0x8 - 0x4];
 } Dimsnowball1c2State;
@@ -37,7 +36,7 @@ typedef struct Dimsnowball1c2Placement
     u8 colorA; /* 0x7 -> spawn setup head.unk04[3] */
     u8 pad8[0x14 - 0x8];
     s32 mapId;
-    s16 initialCountdown; /* init: copied to extra (DimicewallState.unk2 + word 0) */
+    s16 initialCountdown; /* init: copied to extra (spawnPeriod + countdown) */
     u8 childRot; /* copied to spawned child placement 0x1A (rotation) */
     u8 childZOffset; /* base for spawned child placement 0x1C (+random) */
     s8 rotByte; /* 0x1C rotation byte; also -> child placement 0x18 */
@@ -121,7 +120,7 @@ void dimsnowball1c2_init(GameObject *obj, u8* p)
     char* inner;
     (obj)->anim.rotX = (s16)((u32)p[0x1c] << 8);
     inner = (obj)->extra;
-    ((DimicewallState*)inner)->unk2 = def->initialCountdown;
+    ((Dimsnowball1c2State*)inner)->spawnPeriod = def->initialCountdown;
     *(s16*)inner = def->initialCountdown;
     (obj)->objectFlags |= (DIMSNOWBALL1C2_OBJFLAG_HIDDEN | DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED);
 }
