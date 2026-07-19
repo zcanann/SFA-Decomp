@@ -121,7 +121,6 @@ int dimlavasmash_getObjectTypeId(void)
 #define DIMLAVASMASH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 
-extern f32 lbl_803E48F8;
 
 void dimlavasmash_free(void)
 {
@@ -132,7 +131,7 @@ void dimlavasmash_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     u8* state = ((GameObject*)obj)->extra;
     if (state[2] == 2 && visible != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E48F8);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

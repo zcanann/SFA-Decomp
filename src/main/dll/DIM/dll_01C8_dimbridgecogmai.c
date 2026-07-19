@@ -44,7 +44,6 @@ typedef struct DimbridgecogmaiPlacement
     s16 unk1E;
 } DimbridgecogmaiPlacement;
 
-extern f32 lbl_803E4900;
 int dimbridgecogmai_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     char* param = *(char**)&(obj)->anim.placementData;
@@ -65,7 +64,7 @@ void dimbridgecogmai_free(int obj) { ObjGroup_RemoveObject(obj, DIMBRIDGECOG_GRO
 void dimbridgecogmai_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4900);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dimbridgecogmai_hitDetect(void)

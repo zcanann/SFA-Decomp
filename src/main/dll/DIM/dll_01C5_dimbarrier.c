@@ -34,7 +34,6 @@ typedef struct DimbarrierState
     s8 countdown;
 } DimbarrierState;
 
-extern f32 lbl_803E4898;
 
 int dimbarrier_getExtraSize(void) { return 0x4; }
 int dimbarrier_getObjectTypeId(void) { return 0x0; }
@@ -46,7 +45,7 @@ void dimbarrier_free(void)
 void dimbarrier_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4898);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dimbarrier_hitDetect(void)
