@@ -215,7 +215,6 @@ extern f32 gMapSavedPlayerOffsetZ;
 
 void Obj_RegisterObject(GameObject* obj, int b);
 int loadModLines(int n, s16* out);
-void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2);
 
 char sObjUnknownTypeUsingDummyObjectWarning[] =
     "Warning: Unknown object type '%d/%d romdefno %d', using DummyObject (128)\n";
