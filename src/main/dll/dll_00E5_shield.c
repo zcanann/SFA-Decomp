@@ -105,7 +105,6 @@ STATIC_ASSERT(offsetof(ShieldState, flags0) == 0x5C);
 
 extern f32 lbl_803E33A8;
 extern f32 lbl_803E33AC;
-extern f32 lbl_803E33C4;
 extern f32 lbl_803E33E8;
 extern f32 lbl_803E33EC;
 extern f32 lbl_803E33D8;
@@ -274,7 +273,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
                 u8* w;
                 f32* t1;
                 int i;
-                amp = lbl_803E33C4;
+                amp = 1.0f;
                 ((ShieldState*)state)->fadeRate = amp;
                 i = 0;
                 hw = state;
@@ -356,7 +355,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
             f32* t1;
             f32 k;
             f32 amp;
-            amp = lbl_803E33C4;
+            amp = 1.0f;
             ((ShieldState*)state)->fadeRate = amp;
             i = 0;
             hw = state;
@@ -394,7 +393,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
         f32 fade = lbl_803E33CC;
         f32 amp;
         ((ShieldState*)state)->fadeTarget = fade;
-        amp = lbl_803E33C4;
+        amp = 1.0f;
         ((ShieldState*)state)->fadeRate = amp;
         *(f32*)&((ShieldState*)state)->fadeMax = fade;
         {
@@ -445,7 +444,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
         t0 = (f32*)((char*)tbl[0] + 0x20);
         w = state;
         t1 = (f32*)((char*)tbl[0] + 0x30);
-        amp = lbl_803E33C4;
+        amp = 1.0f;
         k = lbl_803E33A8;
         for (; i < 4; i++)
         {
@@ -547,7 +546,7 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                         *(u8*)((char*)obj + 0x37) = ((ShieldState*)state)->segScale[k] * savedB36;
                     }
                     *(u16*)((char*)model + 0x18) &= ~0x8;
-                    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E33C4);
+                    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
                 }
             }
         }
@@ -566,7 +565,7 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                         *(u8*)((char*)obj + 0x37) = ((ShieldState*)state)->segScale[k] * savedB36;
                     }
                     *(u16*)((char*)model + 0x18) &= ~0x8;
-                    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E33C4);
+                    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
                     if (hud == 0)
                     {
                         f32 cD;
@@ -577,7 +576,7 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                         cA = lbl_803E33D8;
                         cB = lbl_803E33DC;
                         cC = lbl_803E33AC;
-                        cD = lbl_803E33C4;
+                        cD = 1.0f;
                         for (; j < 2; j++)
                         {
                             f32 f8v = ((GameObject*)obj)->anim.rootMotionScale;
@@ -678,14 +677,14 @@ void Shield_update(int* obj)
             if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_OMNI_SHIELD)
             {
                 f32 c = fcos16(ps[26]);
-                c = c * lbl_803E33EC + lbl_803E33C4;
+                c = c * lbl_803E33EC + 1.0f;
                 pf[9] = *t8 * c;
                 pf[5] = *t12;
             }
             else
             {
                 f32 c = fcos16(ps[26]);
-                f32 sum = lbl_803E33C4 + c;
+                f32 sum = 1.0f + c;
                 c = sum * lbl_803E33A8;
                 pf[9] = *tbl[0] * c;
                 pf[5] = *t4;
