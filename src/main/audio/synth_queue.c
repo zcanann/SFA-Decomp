@@ -403,9 +403,10 @@ resolved:
 
     if ((found & 0x80000000) == 0)
     {
-        voice = &gSynthVoices[found];
-        if (voice->state != SYNTH_VOICE_STATE_QUEUED)
+        SynthVoice* target = &gSynthVoices[found];
+        if (target->state != SYNTH_VOICE_STATE_QUEUED)
             return;
+        voice = target;
 
         if (voice->prev != 0)
         {
