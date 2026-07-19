@@ -116,7 +116,7 @@ LinkInterface* gTitleMenuLinkInterface;
 RomCurveInterface** gRomCurveInterface;
 WaterfxInterface** gWaterfxInterface;
 void* lbl_803DCA94;
-void* gScreensInterface;
+ScreensInterface* gScreensInterface;
 PlayerControlInterface** gPlayerInterface;
 EffectInterface** gPartfxInterface;
 PlayerShadowInterface** gPlayerShadowInterface;
@@ -228,7 +228,6 @@ extern int gGameLoopPlayerTrailIndex;
 extern u8 gGameLoopMusicActive;
 extern u8 gGameLoopProgressiveMode;
 extern void* lbl_803DCA94;
-extern void* gScreensInterface;
 extern void* gMinimapInterface;
 extern void* gCarryableInterface;
 extern u8 lbl_803DCA3F;
@@ -1179,7 +1178,7 @@ void gameUpdate(void)
     if (screenBlankFrameCount == 0)
     {
         sceneRender(0, 0, 0, 0, 0, 0);
-        (*(void (**)(int))(*(int*)gScreensInterface + 0xc))(0);
+        gScreensInterface->vtable->run(0);
         if (gGameLoopButtonObjectCount == 0)
         {
             curUiDllDraw(0, 0, 0, 0);

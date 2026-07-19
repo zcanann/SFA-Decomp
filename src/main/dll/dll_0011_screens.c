@@ -194,7 +194,7 @@ void loadTaskTexts(void)
     }
 }
 
-void screens_run(void)
+void screens_run(int unused)
 {
     if (lbl_803DD4A0 != 0)
     {

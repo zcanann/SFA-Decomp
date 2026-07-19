@@ -11,6 +11,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_0011_screens.h"
 #include "main/track_dolphin_api.h"
 #include "main/dll/dll1fbsetup_struct.h"
 #include "main/dll/wmgalleonsetup_struct.h"
@@ -86,7 +87,6 @@ STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 
 void* lbl_803DDC74;
-extern int* gScreensInterface;
 extern u32* lbl_803DCA94;
 s8 lbl_803DDC70;
 void WM_Galleon_initialise(void);
@@ -216,7 +216,7 @@ void WM_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
 
     if (lbl_803DDC70 != 0)
     {
-        (*(void (**)(int))(*(int*)gScreensInterface + 0x4))(1);
+        gScreensInterface->vtable->show(1);
     }
 }
 

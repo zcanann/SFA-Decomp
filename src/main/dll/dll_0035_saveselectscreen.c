@@ -36,6 +36,7 @@
 #include "main/model_engine.h"
 #include "main/map_load.h"
 #include "main/fileio.h"
+#include "main/mapEventTypes.h"
 #include "main/textrender_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
@@ -121,7 +122,6 @@ extern f32 lbl_803E1D68;
 extern f32 lbl_803E1D6C;
 extern f32 gSaveSelectPositionScale;
 extern f32 lbl_803E1D74;
-extern TitleMenuControl* gMapEventInterface;
 extern void* lbl_803DD498;
 char sSaveGameBinPathFormat[] = "/savegame/save%d.bin";
 
@@ -593,8 +593,8 @@ int SaveSelectScreen_run(void)
                 if (lbl_803DD6C4 != 0)
                 {
                     gplayNewGame(sFrontendFoxName, *(u8*)&saveFileSelect_currentSlotIndex);
-                    ((void (**)(int))gMapEventInterface->vtable)[30](1);
-                    flagPtr = (s8*)((int (**)(void))gMapEventInterface->vtable)[36]();
+                    (*gMapEventInterface)->setCharacter(1);
+                    flagPtr = (s8*)(*gMapEventInterface)->getCurCharPos();
                     flagPtr[0xe] = -1;
                 }
                 if (lbl_803DD6C4 > 1)
@@ -610,7 +610,7 @@ int SaveSelectScreen_run(void)
                 {
                     saveSetOverrideHealth(0);
                 }
-                ((void (**)(void))gMapEventInterface->vtable)[8]();
+                (*gMapEventInterface)->gotoSavegame();
             }
             else
             {
