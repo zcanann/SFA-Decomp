@@ -1784,7 +1784,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     if (!(((ObjModel*)am)->bufferFlags & 8))
     {
         did = 0;
-        *(u8*)((char*)am + 0x60) = 0;
+        ((ObjModel*)am)->vtxBufDirty = 0;
         ObjModel_ToggleVertexBuffer((ObjModel*)am);
         if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
             ((ModelFileHeader*)m)->jointCount != 0)
@@ -1820,7 +1820,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         if (did != 0)
         {
             int vtx;
-            vtx = *(u8*)((char*)am + 0x60) != 0
+            vtx = ((ObjModel*)am)->vtxBufDirty != 0
                 ? ((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1]
                 : *(int*)&((ModelFileHeader*)m)->vertices;
             ObjModel_BlendVertexStream(
@@ -1829,7 +1829,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
                 (u8*)((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1]);
             ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, m + 0xac,
                                        (u8*)*(int*)&((ModelFileHeader*)m)->normals,
-                                       (u8**)*(int*)((char*)am + 0x44),
+                                       (u8**)((ObjModel*)am)->blendAnimData,
                                        ((ModelFileHeader*)m)->flags24 & 8);
         }
         if (((ModelFileHeader*)m)->hitSphereCount != 0)
@@ -2094,7 +2094,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     did = 0;
     if (!(((ObjModel*)am)->bufferFlags & 8))
     {
-        *(u8*)((char*)am + 0x60) = 0;
+        ((ObjModel*)am)->vtxBufDirty = 0;
         ObjModel_ToggleVertexBuffer((ObjModel*)am);
         if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
             ((ModelFileHeader*)m)->jointCount != 0)
@@ -2139,7 +2139,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             if (did != 0)
             {
                 int vtx;
-                vtx = *(u8*)((char*)am + 0x60) != 0
+                vtx = ((ObjModel*)am)->vtxBufDirty != 0
                     ? ((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1]
                     : *(int*)&((ModelFileHeader*)m)->vertices;
                 ObjModel_BlendVertexStream(
@@ -2148,7 +2148,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                     (u8*)((int*)((char*)am + 0x1c))[(((ObjModel*)am)->bufferFlags >> 1) & 1]);
                 ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, m + 0xac,
                                            (u8*)*(int*)&((ModelFileHeader*)m)->normals,
-                                           (u8**)*(int*)((char*)am + 0x44),
+                                           (u8**)((ObjModel*)am)->blendAnimData,
                                            ((ModelFileHeader*)m)->flags24 & 8);
             }
         }
