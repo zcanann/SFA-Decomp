@@ -16,7 +16,6 @@
 #include "main/object_descriptor.h"
 #include "main/object.h"
 #include "main/obj_group.h"
-#define OBJFX_HIT_DETECT_SCALE_SECOND_CHARPTR_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
 #include "main/gamebits_api.h"
@@ -111,7 +110,7 @@ void magicmaker_update(GameObject* obj)
                         i = 3;
                         do
                         {
-                            hitDetectFn_80097070(spawnedObj, lbl_803E4D88, 2, 2, 0x64, 0);
+                            hitDetectFn_80097070(spawnedObj, lbl_803E4D88, 2, 2, 0x64, NULL);
                             i--;
                         } while (i != 0);
                     }

@@ -1,4 +1,3 @@
-#define OBJFX_HIT_DETECT_SCALE_SECOND_INT_LEGACY
 #include "main/frame_timing.h"
 #include "main/mm.h"
 #include "main/newclouds.h"
@@ -94,12 +93,12 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
             state->boltFrameTimer = lbl_803E7450;
             if (state->flags.spawnFlags & 1)
             {
-                hitDetectFn_80097070((int)obj, state->hitEffectScale, 1, 7, 0x1e, 0);
+                hitDetectFn_80097070(obj, state->hitEffectScale, 1, 7, 0x1e, NULL);
             }
             foundState = (McLightningState*)*(int*)(objs[i] + 0xb8);
             if (foundState->flags.spawnFlags & 1)
             {
-                hitDetectFn_80097070(objs[i], foundState->hitEffectScale, 1, 7, 0x1e, 0);
+                hitDetectFn_80097070((void*)objs[i], foundState->hitEffectScale, 1, 7, 0x1e, NULL);
             }
             if (state->flags.spawnFlags & 2)
             {

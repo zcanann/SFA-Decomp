@@ -4,7 +4,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#define OBJFX_HIT_DETECT_SCALE_SECOND_INTPTR_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
 #include "main/object.h"
@@ -94,7 +93,7 @@ void gpsh_objcreator_update(int* obj)
     if ((u8)Obj_IsLoadingLocked() == 0) return;
     if (!*(f32*)sub) return;
     *(f32*)sub = *(f32*)sub - timeDelta;
-    hitDetectFn_80097070(obj, 0.6f, 2, 1, 1, 0);
+    hitDetectFn_80097070(obj, 0.6f, 2, 1, 1, NULL);
     if (*(f32*)sub <= 0.0f)
     {
         Sfx_PlayFromObjectLimited(0, SFXTRIG_wp_hitpos_6_167, 1);

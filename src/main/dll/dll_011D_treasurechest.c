@@ -6,7 +6,6 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
-#define OBJFX_HIT_DETECT_SCALE_FIRST_LEGACY
 #include "main/objfx.h"
 #include "main/objhits.h"
 #include "main/resource.h"
@@ -131,7 +130,7 @@ void TreasureChest_hitDetect(GameObject* obj)
     state = ((GameObject*)obj)->extra;
     if (((u32)state[0] >> 5 & 1) != 0)
     {
-        hitDetectFn_80097070(0.6f, (int)obj, 2, (u8)(setup->hitboxKind + 6), 4, 0);
+        hitDetectFn_80097070(obj, 0.6f, 2, (u8)(setup->hitboxKind + 6), 4, NULL);
     }
 }
 

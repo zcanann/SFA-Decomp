@@ -7,7 +7,6 @@
 #include "main/vecmath.h"
 #include "main/obj_group.h"
 #include "main/newclouds.h"
-#define OBJFX_HIT_DETECT_DOUBLE_SCALE_LEGACY
 #include "main/objfx.h"
 
 
@@ -164,13 +163,12 @@ void lightning_update(u8* obj)
             state->ageTimer = 0.0f;
             if ((state->modeBits.mode & 1) != 0)
             {
-                hitDetectFn_80097070(obj, state->hitRadius, 1, 7, 0x1e, 0);
+                hitDetectFn_80097070(obj, state->hitRadius, 1, 7, 0x1e, NULL);
             }
             data = *(u8**)(*slot + 0xb8);
             if ((((LightningMode*)(data + 0x24))->mode & 1) != 0)
             {
-                hitDetectFn_80097070((u8*)*slot, ((LightningState*)data)->hitRadius, 1, 7,
-                                     0x1e, 0);
+                hitDetectFn_80097070((void*)*slot, ((LightningState*)data)->hitRadius, 1, 7, 0x1e, NULL);
             }
             if ((state->modeBits.mode & 2) != 0)
             {

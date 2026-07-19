@@ -19,7 +19,6 @@
  * id or required param skips that branch. The gameBit field gates all
  * spawning when non-(-1) and clear.
  */
-#define OBJFX_HIT_DETECT_SCALE_FOURTH_LEGACY
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
 #include "main/gamebits.h"
@@ -76,8 +75,8 @@ void dustmotesou_update(DustMoteSouObject* source)
         {
             return;
         }
-        hitDetectFn_80097070((int)source, mapData->effectId, mapData->effectParamA, mapData->scale,
-                            mapData->effectParamB, 0);
+        hitDetectFn_80097070(source, mapData->scale, mapData->effectId, mapData->effectParamA,
+                            mapData->effectParamB, NULL);
         return;
     }
     if (mapData->effectId == 0 || mapData->effectParamA == 0 || mapData->effectParamB == 0)

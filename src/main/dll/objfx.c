@@ -286,7 +286,7 @@ void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d)
     (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)partfxIface + 4)))(0, 1, &emitter, 0x401, -1, emitterArgs);
 }
 
-void hitDetectFn_80097070(GameObject* obj, u8 idSel, u8 paramSel, u8 count, GameObject* origin, f32 scale)
+void hitDetectFn_80097070(void* obj, f32 scale, int idSel, int paramSel, int count, GameObject* origin)
 {
     ObjFxParticleParams params;
     ObjFxU16Table11 table = gObjFxHitEffectParamTbl2;
@@ -294,12 +294,12 @@ void hitDetectFn_80097070(GameObject* obj, u8 idSel, u8 paramSel, u8 count, Game
     int i;
     *(int*)effectIds = lbl_803DF340;
     effectIds[2] = lbl_803DF344;
-    if (idSel == 0 || paramSel == 0)
+    if ((u8)idSel == 0 || (u8)paramSel == 0)
     {
         return;
     }
     params.scale = scale;
-    params.effectParam = table.values[paramSel];
+    params.effectParam = table.values[(u8)paramSel];
     if (origin != NULL)
     {
         params.position[0] = origin->anim.localPosX;
@@ -312,9 +312,9 @@ void hitDetectFn_80097070(GameObject* obj, u8 idSel, u8 paramSel, u8 count, Game
         params.position[1] = lbl_803DF35C;
         params.position[2] = lbl_803DF35C;
     }
-    for (i = 0; i < count; i++)
+    for (i = 0; i < (u8)count; i++)
     {
-        (*gPartfxInterface)->spawnObject(obj, effectIds[idSel], &params, 2, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, effectIds[(u8)idSel], &params, 2, -1, NULL);
     }
 }
 
