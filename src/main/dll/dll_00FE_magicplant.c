@@ -275,7 +275,7 @@ void MagicPlant_spawnChild(GameObject* obj, int objectId)
 
 int MagicPlant_SeqFn(u8* obj)
 {
-    (*(void (***)(u8*))gCameraInterface)[0x13](obj);
+    (*gCameraInterface)->setTargetReticleOverride((int)obj);
     return 0;
 }
 

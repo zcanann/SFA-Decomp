@@ -128,8 +128,7 @@ void CameraModeCrawl_update(u8* obj)
     else
     {
         other = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-        (*(void (**)(u8*, f32*, f32*, f32*, f32*, f32, int))(*(int*)gCameraInterface + 56))(obj, &dx, &outY, &dz, &outW,
-                                                                                            35.0f, 0);
+        (*gCameraInterface)->getRelativePosition(obj, &dx, &outY, &dz, &outW, 35.0f, 0);
         {
             int t = 0x8000 - (u16)getAngle(dx, dz);
             delta = t - (u16)camera->anim.rotX;

@@ -139,8 +139,7 @@ void CameraModeArwing_update(u8* obj)
         CameraArwingWork* work;
         ((CameraArwingWork*)gCamArwingWork)->rollRate = lbl_803E1BA8;
         work = (CameraArwingWork*)gCamArwingWork;
-        (*(void (**)(u8*, f32*, f32*, f32*, f32*, f32, int))(*(int*)gCameraInterface + 56))(
-            obj, &va, &vb, &vc, &vd, lbl_803E1BA4, 0);
+        (*gCameraInterface)->getRelativePosition(obj, &va, &vb, &vc, &vd, lbl_803E1BA4, 0);
         ((GameObject*)obj)->anim.rotZ = work->rollRate * timeDelta +
             (f32)((GameObject*)obj)->anim.rotZ;
         angleDelta = 0x8000 - (u16)getAngle(va, vc);

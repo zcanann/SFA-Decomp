@@ -101,7 +101,7 @@ void TitleMenu_frameEnd(void)
 }
 
 #define TitleMenu_GetMenuId()              (*gCameraInterface)->getMode()
-#define TitleMenu_SetMenuState(state, arg) (*(void (**)(int, int))((int)*gCameraInterface + 0x60))(state, arg)
+#define TitleMenu_SetMenuState(state, arg) (*gCameraInterface)->releaseAction((void*)(state), arg)
 #define TitleMenu_GetFadeState()           gTitleMenuLinkInterface->vtable->update()
 #define TitleMenu_GetSelection()           gTitleMenuLinkInterface->vtable->getSelected()
 #define TitleMenu_BindEntries()            gTitleMenuLinkInterface->vtable->copyItems(lbl_8031A214)
