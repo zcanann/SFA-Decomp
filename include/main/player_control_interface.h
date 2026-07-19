@@ -14,7 +14,7 @@ typedef struct PlayerControlInterface {
     void (*followCurve)(void *obj, void *state, f32 x, f32 z, f32 timeDelta, int flag);
     void (*moveTowardPoint)(void *obj, void *state, f32 x, f32 z, f32 minDistance, f32 maxDistance,
                             f32 speed);
-    void (*updateAnimRootMotion)(f32 timeDelta, void *moveState, void *state, u32 flags);
+    void (*updateAnimRootMotion)(void *obj, void *state, f32 timeDelta, u32 flags);
     void (*updateTurnFromRootMotion)(void *obj, void *state, f32 timeDelta, f32 scale, f32 limit);
     void (*applyModelForwardVelocity)(void *obj, void *state, f32 timeDelta, f32 scale);
     void (*applyYawForwardVelocity)(void *obj, void *state, f32 timeDelta, f32 scale);

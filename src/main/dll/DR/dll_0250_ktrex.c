@@ -915,7 +915,7 @@ int ktrex_stateHandlerB02(GameObject* obj, KTRexRuntime* runtime)
         *(u32*)&gKTRexState->phaseFlags |= 0x10000LL;
     }
     runtime->unk34C |= 1;
-    (*(void (**)(GameObject*, KTRexRuntime*, f32, int))((char*)*gPlayerInterface + 0x20))(obj, runtime, timeDelta, 3);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, runtime, timeDelta, 3);
     pos.rotX = gKTRexState->homeYaw;
     pos.rotY = 0;
     pos.rotZ = 0;

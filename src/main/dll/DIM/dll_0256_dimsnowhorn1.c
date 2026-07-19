@@ -305,7 +305,7 @@ int DIMSnowHorn1_stateHandler09(GameObject* obj, int state, f32 fv)
         }
     }
     ((DIMSnowHorn1State*)state)->baddie.moveSpeed = 0.012f;
-    (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x20)))((int)obj, state, fv, 8);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, (void*)state, fv, 8);
 
     if (*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & PAD_BUTTON_A)
     {

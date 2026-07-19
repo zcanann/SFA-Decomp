@@ -284,7 +284,7 @@ int grimble_stateHandlerA06(GameObject* obj, GroundBaddieState* p, f32 spd)
         p->baddie.moveDone = 0;
     }
     p->baddie.moveSpeed = 0.03f;
-    ((void (*)(short*, u8*, f32, int))((void**)*gPlayerInterface)[8])((short*)obj, (u8*)p, spd, 1);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, p, spd, 1);
     /* advance pathProgress along the path (pathObj vtable +0x28) by
      * animSpeedA, sign-flipped when the path is walked reversed */
     (*(void (**)(void*, void*, f32))(**(int**)(ctrl->pathObj + 0x68) + 0x28))(

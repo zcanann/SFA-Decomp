@@ -71,7 +71,7 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 arg)
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     ((GroundBaddieState*)state)->baddie.moveSpeed = 0.03f;
-    (*(void (**)(void*, char*, f32, int))(*(int*)gPlayerInterface + 0x20))(obj, state, arg, 9);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, state, arg, 9);
     (*(void (**)(int, char*, f32))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x28))(
         ((GrimbleControl*)sub)->pathObj, sub + 0x48,
         ((GroundBaddieState*)state)->baddie.animSpeedA * (f32)(1 - (((GrimbleControl*)sub)->reversed << 1)));
@@ -142,7 +142,7 @@ int grimble_stateHandlerA01(GameObject* obj, char* state, f32 arg)
         ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    (*(void (**)(int, char*, f32, int))(*(int*)gPlayerInterface + 0x20))((int)obj, state, arg, 0);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, state, arg, 0);
     if ((*(int*)&((GroundBaddieState*)state)->baddie.eventFlags & 1) != 0)
     {
         *(int*)&((GroundBaddieState*)state)->baddie.eventFlags =
@@ -204,7 +204,7 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 arg)
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
     ((GroundBaddieState*)state)->baddie.moveSpeed = 0.03f;
-    (*(void (**)(void*, char*, f32, int))(*(int*)gPlayerInterface + 0x20))(obj, state, arg, 1);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, state, arg, 1);
     (*(void (**)(int, char*, f32))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x28))(
         ((GrimbleControl*)sub)->pathObj, sub + 0x48,
         ((GroundBaddieState*)state)->baddie.animSpeedA * (f32)(1 - (((GrimbleControl*)sub)->reversed << 1)));

@@ -505,7 +505,7 @@ int DIMbossHitDetect_trackTargetMove(GameObject* obj, int runtime, f32 hitAmount
         ((BaddieState*)runtime)->moveSpeed = gDim2LiftMoveSpeedByDir[dirSector];
         ((BaddieState*)runtime)->moveDone = 0;
     }
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x20))((int)obj, runtime, hitAmount, 8);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, (void*)runtime, hitAmount, 8);
     return 0;
 }
 
@@ -517,7 +517,7 @@ int DIMbossHitDetect_applyForwardMove(int* obj, u8* state, f32 weight)
         ((BaddieState*)state)->moveDone = 0;
     }
     ((BaddieState*)state)->moveSpeed = lbl_803E4C24;
-    ((void (*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[8])(obj, state, weight, 1);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, state, weight, 1);
     ((void (*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, state, weight, 4);
     return 0;
 }
