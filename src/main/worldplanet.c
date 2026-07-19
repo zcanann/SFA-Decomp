@@ -354,7 +354,7 @@ void worldplanet_update(GameObject* obj)
                     {
                         arwing->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                     }
-                    *(s16*)&arwing->anim.rotX = (frac * dyaw + yaw);
+                    arwing->anim.rotX = (frac * dyaw + yaw);
                     arwing->anim.localPosX = frac * (x1 - x0) + x0;
                     arwing->anim.localPosY = frac * (y1 - y0) + y0;
                     arwing->anim.localPosZ = frac * (z1 - z0) + z0;
