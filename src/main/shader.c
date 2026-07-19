@@ -1830,11 +1830,11 @@ void doPendingMapLoads(void)
                 i = 0;
                 if (gShaderRomListSlotCount > 0)
                 {
-                    s8* q = (s8*)(base + 0x418C);
-                    for (i = 0; i < gShaderRomListSlotCount; i++)
+                    ShaderRomListSlot* slots = (ShaderRomListSlot*)(base + 0x418C);
+                    int cn = gShaderRomListSlotCount;
+                    for (i = 0; i < cn; i++)
                     {
-                        q[6] = 0;
-                        q += 8;
+                        slots[i].flag = 0;
                     }
                 }
                 gShaderCurMapEventId = mapCoordsToId(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, 0);
