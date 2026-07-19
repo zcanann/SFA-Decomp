@@ -41,26 +41,12 @@ CameraModeWorldMapState* gCamWorldMapState;
 #define PAD_BUTTON_UP   0x008
 
 extern f32 gCamWorldMapDistanceMax;
-extern f32 lbl_803E1A28;
-extern f32 lbl_803E1A80;
 
 
 extern f32 lbl_80319DF8[];
-extern f32 lbl_803E1A2C;
-extern f32 lbl_803E1A30;
-extern f32 lbl_803E1A34;
-extern f32 lbl_803E1A38;
 extern f32 gCamWorldMapDistanceMin;
-extern f32 lbl_803E1A44;
 extern f32 gCamWorldMapPi;
 extern f32 gCamWorldMapAngleScale;
-extern f32 lbl_803E1A50;
-extern f32 lbl_803E1A54;
-extern f32 lbl_803E1A58;
-extern f32 lbl_803E1A5C;
-extern f32 lbl_803E1A60;
-extern f32 lbl_803E1A64;
-extern f32 lbl_803E1A68;
 extern f32 gCamWorldMapAlphaScale;
 
 
@@ -101,7 +87,7 @@ void CameraModeWorldMap_update(u8* obj)
     GameObject* focus;
     GameObject *objA, *objB;
     u16 buttons;
-    f32 spd = lbl_803E1A28;
+    f32 spd = 0.0f;
     f32 mdx, mdz;
     f32 a;
     f32 b;
@@ -146,16 +132,16 @@ void CameraModeWorldMap_update(u8* obj)
                 }
                 if (buttons & PAD_BUTTON_UP)
                 {
-                    spd = lbl_803E1A2C * gCamWorldMapState->distance;
+                    spd = -0.02f * gCamWorldMapState->distance;
                 }
                 if (buttons & PAD_BUTTON_DOWN)
                 {
-                    spd = lbl_803E1A30 * gCamWorldMapState->distance;
+                    spd = 0.02f * gCamWorldMapState->distance;
                 }
                 {
                     f32 a, b, rate, vel;
                     CameraModeWorldMapState* st;
-                    if (spd < lbl_803E1A28)
+                    if (spd < 0.0f)
                     {
                         a = -spd;
                     }
@@ -165,7 +151,7 @@ void CameraModeWorldMap_update(u8* obj)
                     }
                     st = gCamWorldMapState;
                     vel = st->distanceVelocity;
-                    if (vel < lbl_803E1A28)
+                    if (vel < 0.0f)
                     {
                         b = -vel;
                     }
@@ -175,11 +161,11 @@ void CameraModeWorldMap_update(u8* obj)
                     }
                     if (b > a)
                     {
-                        rate = lbl_803E1A34;
+                        rate = 0.3f;
                     }
                     else
                     {
-                        rate = lbl_803E1A38;
+                        rate = 0.08f;
                     }
                     st->distanceVelocity = rate * (spd - vel) + st->distanceVelocity;
                 }
@@ -226,7 +212,7 @@ void CameraModeWorldMap_update(u8* obj)
                         angleDelta += 0xffff;
                     }
                     camera->anim.rotY = camera->anim.rotY + angleDelta / st->focusBlendTimer;
-                    tgt = lbl_803E1A44;
+                    tgt = 360.0f;
                     st = gCamWorldMapState;
                     cur = st->distance;
                     st->distance = cur + (f32)((s16)(s32)(tgt - cur) / st->focusBlendTimer);
@@ -256,7 +242,7 @@ void CameraModeWorldMap_update(u8* obj)
                     px = h * csYaw;
                     pz = h * snYaw;
                     dxx = camera->anim.worldPosX - (focus->anim.worldPosX + px);
-                    dyy = camera->anim.worldPosY - ((lbl_803E1A50 + focus->anim.worldPosY) + vy);
+                    dyy = camera->anim.worldPosY - ((-30.0f + focus->anim.worldPosY) + vy);
                     dzz = camera->anim.worldPosZ - (focus->anim.worldPosZ + pz);
                     camera->anim.worldPosX = camera->anim.worldPosX - dxx / gCamWorldMapState->settleFrames;
                     camera->anim.worldPosY = camera->anim.worldPosY - dyy / gCamWorldMapState->settleFrames;
@@ -324,14 +310,14 @@ void CameraModeWorldMap_update(u8* obj)
                     a = gCamWorldMapPi * (f32)(u16)(ang - 0x39dc) / gCamWorldMapAngleScale;
                     sn = -mathCosf(a);
                     cs = mathSinf(a);
-                    sn54 = mathCosf(lbl_803E1A54);
-                    cs54 = mathSinf(lbl_803E1A54);
-                    t6 = lbl_803E1A58 * cs54;
-                    t5 = lbl_803E1A58 * sn54;
+                    sn54 = mathCosf(0.1917476f);
+                    cs54 = mathSinf(0.1917476f);
+                    t6 = 70.0f * cs54;
+                    t5 = 70.0f * sn54;
                     px = t5 * cs;
                     pz = t5 * sn;
                     dxx = camera->anim.worldPosX - (focus->anim.worldPosX + px);
-                    dyy = camera->anim.worldPosY - (lbl_803E1A5C + (focus->anim.worldPosY + t6));
+                    dyy = camera->anim.worldPosY - (25.0f + (focus->anim.worldPosY + t6));
                     dzz = camera->anim.worldPosZ - (focus->anim.worldPosZ + pz);
                     camera->anim.worldPosX = camera->anim.worldPosX - dxx / gCamWorldMapState->settleFrames;
                     camera->anim.worldPosY = camera->anim.worldPosY - dyy / gCamWorldMapState->settleFrames;
@@ -349,7 +335,7 @@ void CameraModeWorldMap_update(u8* obj)
                     b = gCamWorldMapPi * my / gCamWorldMapAngleScale;
                     sb = mathCosf(b);
                     cb = -mathSinf(b);
-                    radius = lbl_803E1A60;
+                    radius = 30.0f;
                     g->anim.localPosX = radius * cb + camera->anim.worldPosX;
                     g->anim.localPosY = camera->anim.worldPosY + lbl_80319DF8[(s8) * &g->anim.bankIndex];
                     g->anim.localPosZ = radius * sb + camera->anim.worldPosZ;
@@ -369,7 +355,7 @@ void CameraModeWorldMap_update(u8* obj)
         marker->anim.rotX = (s16)(getAngle(mdx, mdz) + 0x8000);
         marker->anim.rotY =
             (s16)(0x8000 - getAngle(sqrtf(mdx * mdx + mdz * mdz), marker->anim.worldPosY - camera->anim.worldPosY));
-        marker->anim.rootMotionScale = lbl_803E1A64 + lbl_803E1A68 / gCamWorldMapState->distance;
+        marker->anim.rootMotionScale = 10.7f + 200.0f / gCamWorldMapState->distance;
         objB->anim.rotX = marker->anim.rotX;
         objB->anim.rotY = marker->anim.rotY;
         objB->anim.rootMotionScale = marker->anim.rootMotionScale;
@@ -379,11 +365,11 @@ void CameraModeWorldMap_update(u8* obj)
     if (pitchDelta > -0x2000 && pitchDelta < 0x2000)
     {
         f32 lim;
-        lim = (lbl_803E1A28 >
+        lim = (0.0f >
                gCamWorldMapAlphaScale *
                    (mathCosf(gCamWorldMapPi * (f32)((objB->anim.rotX - 0x2198) * 2) / gCamWorldMapAngleScale) *
                     mathCosf(gCamWorldMapPi * (f32)((objB->anim.rotY - 0x4000) * 2) / gCamWorldMapAngleScale)))
-                  ? lbl_803E1A28
+                  ? 0.0f
                   : gCamWorldMapAlphaScale *
                         (mathCosf(gCamWorldMapPi * (f32)((objB->anim.rotX - 0x2198) * 2) / gCamWorldMapAngleScale) *
                          mathCosf(gCamWorldMapPi * (f32)((objB->anim.rotY - 0x4000) * 2) / gCamWorldMapAngleScale));
@@ -407,7 +393,7 @@ void CameraModeWorldMap_init(int* obj)
         gCamWorldMapState = (CameraModeWorldMapState*)mmAlloc(sizeof(CameraModeWorldMapState), 15, 0);
     }
     gCamWorldMapState->distance = gCamWorldMapDistanceMax;
-    gCamWorldMapState->distanceVelocity = lbl_803E1A28;
+    gCamWorldMapState->distanceVelocity = 0.0f;
     bitval = 0;
     gCamWorldMapState->mode = bitval;
     gCamWorldMapState->previousMode = bitval;
@@ -415,7 +401,7 @@ void CameraModeWorldMap_init(int* obj)
     gCamWorldMapState->settleFrames = 1;
     gCamWorldMapState->focusBlendTimer = 0;
     gCamWorldMapState->focusObjectId = 0;
-    *(f32*)&((GameObject*)obj)->seqIndex = lbl_803E1A80;
+    *(f32*)&((GameObject*)obj)->seqIndex = 60.0f;
     ((GameObject*)obj)->anim.rotX = -32768;
 }
 void CameraModeWorldMap_release(void)

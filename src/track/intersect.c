@@ -148,9 +148,8 @@ extern void* gWaterFxTextures[4];
 extern f32 lbl_803DEE38, lbl_803DEE3C, lbl_803DEE44, lbl_803DEE48, lbl_803DEE58;
 extern f32 lbl_803DEE5C, lbl_803DEE64;
 extern f32 lbl_803DEE60;
-extern f32 lbl_803DEED8, lbl_803DEEE8, lbl_803DEEEC, lbl_803DEEF0, lbl_803DEEF4;
+extern f32 lbl_803DEED8, lbl_803DEEE8, lbl_803DEEEC, lbl_803DEEF4;
 extern f32 lbl_803DEF24, lbl_803DEF28, lbl_803DEF30, lbl_803DEF34, lbl_803DEF38;
-extern f32 lbl_803DEF3C, lbl_803DEF40, lbl_803DEF44, lbl_803DEF48;
 extern f32 lbl_803DEF4C, lbl_803DEF50, lbl_803DEF54, lbl_803DEF58, lbl_803DEF5C;
 extern f32 lbl_803DEF60, lbl_803DEF64, lbl_803DEF68, lbl_803DEF6C, lbl_803DEF70, lbl_803DEF74;
 extern f32 lbl_803DEF78, lbl_803DEF7C, lbl_803DEF80, lbl_803DEF84, lbl_803DEF88;
@@ -1305,7 +1304,7 @@ void screenImageDraw(u8 alpha)
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
 
     PSMTXScale(mtx_60, lbl_803DEEEC, *(f32*)&lbl_803DEEEC, lbl_803DEEE4);
-    PSMTXRotRad(mtx_30, 'z', lbl_803DEEF0);
+    PSMTXRotRad(mtx_30, 'z', 0.7853982f);
     PSMTXConcat(mtx_30, mtx_60, mtx_60);
     mtx_60[0][3] = fB;
     mtx_60[1][3] = fB;
@@ -2682,7 +2681,7 @@ u32 objCallback_80074d04(int handle, void* model)
         {
             dist = distortSqrtf(dist);
         }
-        f31_val = lbl_803DEF3C / dist;
+        f31_val = 200.0f / dist;
         if (f31_val > lbl_803DEEE4)
             f31_val = lbl_803DEEE4;
     }
@@ -2719,8 +2718,8 @@ u32 objCallback_80074d04(int handle, void* model)
     GXSetIndTexMtx(1, (f32(*)[3])indMtx_44, -4);
     GXSetTevIndirect(0, 0, 0, 7, 1, 6, 6, 0, 0, 0);
 
-    PSMTXScale(mtx_bc, lbl_803DEF40, lbl_803DEF40, lbl_803DEF40);
-    PSMTXRotRad(mtx_5c, 'z', lbl_803DEEF0);
+    PSMTXScale(mtx_bc, 0.83f, 0.83f, 0.83f);
+    PSMTXRotRad(mtx_5c, 'z', 0.7853982f);
     PSMTXConcat(mtx_5c, mtx_bc, mtx_bc);
     mtx_bc[0][3] = f2;
     mtx_bc[1][3] = f2;
@@ -2728,8 +2727,8 @@ u32 objCallback_80074d04(int handle, void* model)
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
 
     {
-        f32 v44 = lbl_803DEF44 * f31_val;
-        f32 v48 = lbl_803DEF48 * f31_val;
+        f32 v44 = 0.3536f * f31_val;
+        f32 v48 = -0.3536f * f31_val;
         indMtx_2c[0] = v44;
         indMtx_2c[1] = v44;
         indMtx_2c[2] = lbl_803DEEDC;
@@ -5578,8 +5577,8 @@ void gxTextureSetupFn_8007cf7c(void)
     GXSetIndTexMtx(1, (f32(*)[3])indMtx_54, -2);
     GXSetTevIndirect(0, 0, 0, 7, 1, 6, 6, 0, 0, 0);
 
-    PSMTXScale(mtx_9c, lbl_803DEF40, lbl_803DEF40, lbl_803DEF40);
-    PSMTXRotRad(mtx_6c, 'z', lbl_803DEEF0);
+    PSMTXScale(mtx_9c, 0.83f, 0.83f, 0.83f);
+    PSMTXRotRad(mtx_6c, 'z', 0.7853982f);
     PSMTXConcat(mtx_6c, mtx_9c, mtx_9c);
     mtx_9c[0][3] = fB;
     mtx_9c[1][3] = fB;
