@@ -1066,7 +1066,7 @@ void fn_80060BB0(void)
         {
             for (j = 0; j < (int)((MapBlockData*)blk)->edgeCount; j++)
             {
-                arr = *(char**)((char*)blk + 0x68);
+                arr = (char*)((MapBlockData*)blk)->displayLists;
                 arr[j * 0x1c + 0x12] = 0;
             }
         }
