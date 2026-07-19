@@ -44,7 +44,26 @@ extern u64 gPlayerLastSfxFrame;
 extern u64 gPlayerFrameCounter;
 
 extern s16 gPlayerMoveSlotData[2464];
-extern f32 gPlayerAnimSpeedThresholds[36];
+typedef struct PlayerAnimSpeedTuning
+{
+    f32 gaitSpeedThresholds[6];
+    f32 bodyCollisionPoints[2][3];
+    f32 groundCollisionPoint[3];
+    int mountableObjectIds[9];
+    int rideableObjectIds[4];
+    f32 foxStopMoveSpeeds[4];
+    f32 krystalStopMoveSpeeds[4];
+} PlayerAnimSpeedTuning;
+
+STATIC_ASSERT(sizeof(PlayerAnimSpeedTuning) == 0x90);
+STATIC_ASSERT(offsetof(PlayerAnimSpeedTuning, bodyCollisionPoints) == 0x18);
+STATIC_ASSERT(offsetof(PlayerAnimSpeedTuning, groundCollisionPoint) == 0x30);
+STATIC_ASSERT(offsetof(PlayerAnimSpeedTuning, mountableObjectIds) == 0x3c);
+STATIC_ASSERT(offsetof(PlayerAnimSpeedTuning, rideableObjectIds) == 0x60);
+STATIC_ASSERT(offsetof(PlayerAnimSpeedTuning, foxStopMoveSpeeds) == 0x70);
+STATIC_ASSERT(offsetof(PlayerAnimSpeedTuning, krystalStopMoveSpeeds) == 0x80);
+
+extern PlayerAnimSpeedTuning gPlayerAnimSpeedThresholds;
 extern int gPlayerMoveTableA[48];
 extern s16 gPlayerSpellGameBits[52];
 extern s16 gPlayerMoveTableB[14];
@@ -58,7 +77,7 @@ extern s16 lbl_80332F48[];
 extern s16 lbl_80332F78[];
 extern s16 lbl_80332F88[];
 extern s16 lbl_80333110[];
-extern int lbl_80333250[];
+extern f32 lbl_80333250[24];
 extern s16 lbl_803332B0[];
 extern s16 lbl_8033366C[];
 extern f32 lbl_8033369C[];

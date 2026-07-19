@@ -4718,7 +4718,7 @@ int playerState25(int obj, int state)
     {
         u8 phase = *(u8*)&((PlayerState*)inner)->gaitLevel;
         int idx = (u8)((s8)phase >> 1);
-        if (((PlayerState*)state)->baddie.animSpeedC < gPlayerAnimSpeedThresholds[idx])
+        if (((PlayerState*)state)->baddie.animSpeedC < gPlayerAnimSpeedThresholds.gaitSpeedThresholds[idx])
         {
             if ((s8)phase == 4)
             {
@@ -4735,7 +4735,7 @@ int playerState25(int obj, int state)
         }
         else
         {
-            if (((PlayerState*)state)->baddie.animSpeedC >= gPlayerAnimSpeedThresholds[idx + 1] && (s8)phase < 8)
+            if (((PlayerState*)state)->baddie.animSpeedC >= gPlayerAnimSpeedThresholds.gaitSpeedThresholds[idx + 1] && (s8)phase < 8)
             {
                 if ((s8)phase == 0)
                 {
@@ -4853,7 +4853,7 @@ int playerState24(GameObject* obj, int state, f32 fv)
 
     if (*(f32*)&((PlayerState*)state)->baddie.trackedObj >= lbl_803E7FC8 &&
         ((PlayerState*)state)->baddie.inputMagnitude >= lbl_803E7FC8 &&
-        ((PlayerState*)state)->baddie.animSpeedC >= gPlayerAnimSpeedThresholds[1])
+        ((PlayerState*)state)->baddie.animSpeedC >= gPlayerAnimSpeedThresholds.gaitSpeedThresholds[1])
     {
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029C8C8;
         return 0x26;
@@ -18891,11 +18891,14 @@ s16 gPlayerMoveSlotData[2464] = {
     16025,  -26214, 15820,  -13107, 0,      0,      -16512, 0,      0,      0,      0,      0,      0,      0,
 };
 
-f32 gPlayerAnimSpeedThresholds[36] = {
-    0.005f,     0.1f,      0.08f,     0.55f,     0.53f,      2.3993998f, 0.0f,      0.0f,       0.0f,
-    0.0f,       17.0f,     0.0f,      0.0f,      5.0f,       0.0f,       1.6e-43f,  1.272e-42f, 5.59e-43f,
-    1.466e-42f, 1.47e-42f, 1.96e-43f, 1.62e-42f, 1.469e-42f, 2.539e-42f, 1.62e-42f, 1.47e-42f,  1.469e-42f,
-    2.539e-42f, 0.002f,    0.003f,    0.0015f,   0.008f,     0.0022f,    0.002f,    0.0015f,    0.008f,
+PlayerAnimSpeedTuning gPlayerAnimSpeedThresholds = {
+    {0.005f, 0.1f, 0.08f, 0.55f, 0.53f, 2.3993998f},
+    {{0.0f, 0.0f, 0.0f}, {0.0f, 17.0f, 0.0f}},
+    {0.0f, 5.0f, 0.0f},
+    {114, 908, 399, 1046, 1049, 140, 1156, 1048, 1812},
+    {1156, 1049, 1048, 1812},
+    {0.002f, 0.003f, 0.0015f, 0.008f},
+    {0.0022f, 0.002f, 0.0015f, 0.008f},
 };
 
 int gPlayerMoveTableA[48] = {
@@ -18924,9 +18927,12 @@ s16 lbl_80333110[128] = {8,    8,    8,    8,    7,    7,    7,    7,    7,    7
 s16 gPlayerMoveTableB[14] = {140, 140, 140, 140, 147, 148, 149, 150, 147, 148, 149, 150, 140, 0};
 u8 gPlayerSurfacePfxModeTable[36] = {0, 1, 2, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0, 7, 5, 0, 0, 0,
                                      0, 0, 0, 3, 5, 0, 4, 6, 0, 7, 0, 0, 0, 0, 8, 0, 9, 0};
-int lbl_80333250[24] = {1000593162, 1040744395, 1037723154, 1060652576, 1060205294, 1067475701, 1067252061, 1072843067,
-                        1072619427, 1075417028, 1075333142, 1075417028, 1000593162, 1011129254, 1008981770, 1048911544,
-                        1047233823, 1051931443, 1050253722, 1057300152, 1056964608, 1060320051, 1059984507, 1060320051};
+f32 lbl_80333250[24] = {
+    0.005f, 0.13329999f, 0.106639996f, 0.71982f, 0.69315994f, 1.2530199f,
+    1.22636f, 1.8928598f, 1.8661999f, 2.3993998f, 2.3793998f, 2.3993998f,
+    0.005f, 0.012f, 0.01f, 0.26f, 0.23f, 0.35f,
+    0.3f, 0.52f, 0.5f, 0.7f, 0.68f, 0.7f,
+};
 s16 lbl_803332B0[478] = {
     23,    201,    24,    25,     26,    193,    195,   194,    205,   206,    -1,    -1,     123,   123,
     123,   123,    123,   123,    123,   123,    123,   123,    -1,    -1,     248,   248,    248,   248,
