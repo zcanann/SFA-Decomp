@@ -102,7 +102,7 @@ f32 groundanimator_setScale(int* obj, int* target)
             switch (((GameObject*)e)->anim.seqId)
             {
             case 0x519:
-                fn_801A80F0((GameObject*)(e), 0);
+                mmp_moonrock_setFrozen((GameObject*)(e), 0);
                 break;
             default:
                 (*(void (**)(void*, int))(*(int*)(*(int*)((char*)e + 0x68)) + 0x24))(e, 0);
@@ -344,9 +344,9 @@ void groundanimator_update(int* obj)
                 case 0x519:
                     if ((g->flags & 2) == 0)
                     {
-                        fn_801A80F0((GameObject*)(near), 1);
+                        mmp_moonrock_setFrozen((GameObject*)(near), 1);
                     }
-                    fn_801A80C4((GameObject*)(near), ((GameObject*)obj)->anim.localPosX,
+                    mmp_moonrock_setPosition((GameObject*)(near), ((GameObject*)obj)->anim.localPosX,
                                 ((GameObject*)obj)->anim.localPosY - g->yOffset, ((GameObject*)obj)->anim.localPosZ);
                     break;
                 default:
@@ -403,7 +403,7 @@ void groundanimator_update(int* obj)
                     switch (((GameObject*)g->linkedObj)->anim.seqId)
                     {
                     case 0x519:
-                        fn_801A80F0((GameObject*)g->linkedObj, 0);
+                        mmp_moonrock_setFrozen((GameObject*)g->linkedObj, 0);
                         break;
                     default:
                         (*(void (**)(void*, int))(*(int*)(*(int*)((char*)g->linkedObj + 0x68)) + 0x24))(
