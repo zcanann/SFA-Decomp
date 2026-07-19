@@ -1013,6 +1013,7 @@ void Tricky_free(int obj, int shouldKeepFlameChildren)
     int i;
     int childSlot;
     int state;
+    u32 objId = obj;
 
     state = *(int*)&((GameObject*)obj)->extra;
     freeAndNull((void**)&((TrickyState*)state)->pathSearches[0].nodes);
@@ -1025,7 +1026,7 @@ void Tricky_free(int obj, int shouldKeepFlameChildren)
     freeAndNull((void**)&((TrickyState*)state)->pathSearches[7].nodes);
     freeAndNull((void**)&((TrickyState*)state)->pathSearches[8].nodes);
     ObjGroup_RemoveObject(obj, TRICKY_OBJGROUP);
-    (*gExpgfxInterface)->freeSource(obj);
+    (*gExpgfxInterface)->freeSource(objId);
     if ((shouldKeepFlameChildren == 0) &&
         ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0))
     {
@@ -1041,7 +1042,7 @@ void Tricky_free(int obj, int shouldKeepFlameChildren)
             childSlot = childSlot + 4;
             i = i + 1;
         } while (i < 7);
-        Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
+        Sfx_RemoveLoopedObjectSound(objId, SFXTRIG_trpopn_c);
         childSlot = *(int*)&((GameObject*)obj)->extra;
         if (((*(u8*)(childSlot + 0x58) >> 6 & 1) == 0u) &&
             (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
