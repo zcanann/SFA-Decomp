@@ -156,7 +156,7 @@ void lightning_update(u8* obj)
             delay = (u16)(state->delayBase + randomGetRange(-5, 5));
             start = (float*)(obj + 0x0c);
             slot = &objects[objectIndex];
-            handle = lightningCreatePromoted((const Vec3f*)start, (const Vec3f*)(*slot + 0x0c), state->radiusX,
+            handle = lightningCreate((const Vec3f*)start, (const Vec3f*)(*slot + 0x0c), state->radiusX,
                                              state->radiusY, delay, state->param1D,
                                              (u8)(state->flags.style ? 1 : 0));
             state->handle = handle;

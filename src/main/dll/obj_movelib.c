@@ -95,7 +95,7 @@ int Obj_UpdateLightningCluster(GameObject* obj, LightningEffect** entries, int c
             pos[1] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[2] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             entries[i] =
-                lightningCreateU16Promoted((const Vec3f*)&obj->anim.localPosX, (const Vec3f*)pos, lbl_803DC3A0,
+                lightningCreate((const Vec3f*)&obj->anim.localPosX, (const Vec3f*)pos, lbl_803DC3A0,
                                            lbl_803DC3A4, lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
             spawned = 1;
         }

@@ -184,7 +184,7 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
     point2[2] = point2[2] + playerMapOffsetZ;
 
     ((void**)((char*)gKTRexState + 0x17c))[slot] =
-        lightningCreateU16Promoted((const Vec3f*)point1, (const Vec3f*)point2, kKTRexSmallDelta[0], 0.3f, angle, 96,
+        lightningCreate((const Vec3f*)point1, (const Vec3f*)point2, kKTRexSmallDelta[0], 0.3f, angle, 96,
                                    0);
 }
 

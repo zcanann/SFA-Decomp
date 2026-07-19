@@ -111,7 +111,7 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
                 targetPos[1] = 15.0f + player->anim.localPosY;
                 targetPos[2] = player->anim.localPosZ;
             }
-            state->handle = lightningCreateU16Promoted((const Vec3f*)sourcePos, (const Vec3f*)targetPos,
+            state->handle = lightningCreate((const Vec3f*)sourcePos, (const Vec3f*)targetPos,
                                                        0.05f, 0.1f, randomGetRange(5, 0xf), 0x60, 0);
         }
     }

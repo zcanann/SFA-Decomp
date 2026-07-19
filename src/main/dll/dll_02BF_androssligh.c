@@ -61,7 +61,7 @@ void androssligh_updateBeam(GameObject* obj, AndrossLighState* state)
     PSVECAdd(&end, &offset, &end);
     if (state->bolt == NULL)
     {
-        state->bolt = lightningCreateU16Promoted((const Vec3f*)&start, (const Vec3f*)&end, lbl_803DC518, lbl_803DC51C,
+        state->bolt = lightningCreate((const Vec3f*)&start, (const Vec3f*)&end, lbl_803DC518, lbl_803DC51C,
                                                  lbl_803DC520, lbl_803DC524, 0);
         state->boltAge = 0.0f;
     }

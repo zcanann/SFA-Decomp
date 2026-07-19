@@ -534,7 +534,7 @@ void lightningRenderActive(void)
     }
 }
 
-LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, s16 lifetime,
+LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, u16 lifetime,
                                  u8 width, u8 flags)
 {
     LightningEffect* p = mmAlloc(40, 23, 0);
@@ -551,7 +551,7 @@ LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiu
     p->end[2] = end->z;
     p->radiusX = radiusX;
     p->radiusY = radiusY;
-    *(s16*)&p->lifetime = lifetime;
+    p->lifetime = lifetime;
     p->width = width;
     p->timer = 0;
     p->seed = 0xFFFF;

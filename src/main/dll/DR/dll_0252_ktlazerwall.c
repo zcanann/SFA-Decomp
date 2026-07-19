@@ -61,7 +61,7 @@ void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
     dir[1] += (obj)->anim.localPosY;
     dir[2] += (obj)->anim.localPosZ;
     runtime->unk8 = (f32)(int)randomGetRange(10, angle);
-    runtime->boltObj = lightningCreateU16Promoted((const Vec3f*)pos, (const Vec3f*)dir, lbl_803E68A0.f, lbl_803E68A4.f,
+    runtime->boltObj = lightningCreate((const Vec3f*)pos, (const Vec3f*)dir, lbl_803E68A0.f, lbl_803E68A4.f,
                                                   angle, 96, 0);
 }
 

@@ -226,8 +226,8 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
                     pos[1] = scale * (f32)((int)randomGetRange(0, 2000) - 1000) + pos[1];
                     pos[2] = scale * (f32)((int)randomGetRange(0, 2000) - 1000) + pos[2];
                 }
-                *(LightningEffect**)(slot + 8) = lightningCreatePromoted(
-                    (const Vec3f*)((GameObjPos*)obj)->pos, (const Vec3f*)pos, angle, 0.2f, 0x14, mode, 0);
+                *(LightningEffect**)(slot + 8) = lightningCreate(
+                    (const Vec3f*)((GameObjPos*)obj)->pos, (const Vec3f*)pos, angle, 0.2f, 0x14, (u8)mode, 0);
                 *(f32*)(slot + 0x34) = 0.0f;
                 spawned = 1;
             }

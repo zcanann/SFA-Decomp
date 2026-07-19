@@ -86,7 +86,7 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
         else
         {
             McLightningState* foundState;
-            state->boltHandle = lightningCreateU16Promoted(
+            state->boltHandle = lightningCreate(
                 (const Vec3f*)&obj->anim.localPosX, (const Vec3f*)(objs[i] + 0xc), state->boltParamA,
                 state->boltParamB, state->boltParamC, state->boltParamD, 0);
             state->flags.phase = MCLIGHTNING_PHASE_ACTIVE;

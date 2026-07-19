@@ -43,17 +43,9 @@ extern NewCloudsInterface **gNewCloudsInterface;
 
 /* extern-cleanup: defining-file public prototypes */
 void mm_free_(void* ptr);
-LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, s16 lifetime,
+LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, u16 lifetime,
                                  u8 width, u8 flags);
 void lightningRender(LightningEffect* effect);
-
-/* Compiler-sensitive call views retained for TUs that originally called without the narrow parameter prototype. */
-#define lightningCreatePromoted(start, end, radiusX, radiusY, lifetime, width, flags) \
-    (((LightningEffect* (*)(const Vec3f*, const Vec3f*, f32, f32, int, int, int))lightningCreate)( \
-        (start), (end), (radiusX), (radiusY), (lifetime), (width), (flags)))
-#define lightningCreateU16Promoted(start, end, radiusX, radiusY, lifetime, width, flags) \
-    (((LightningEffect* (*)(const Vec3f*, const Vec3f*, f32, f32, u16, int, int))lightningCreate)( \
-        (start), (end), (radiusX), (radiusY), (lifetime), (width), (flags)))
 void titleScreenDrawFn_80093db4(void);
 void drawSkyStars(void);
 void cloudClearOverridePosition(void);

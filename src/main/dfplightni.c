@@ -156,7 +156,7 @@ void DFP_Lightni_update(DfpLightniObject* obj)
                         clampX = (radiusX < *(f32*)&gDfpLightningRadiusMin)   ? *(f32*)&gDfpLightningRadiusMin
                                  : (radiusX > *(f32*)&gDfpLightningRadiusMax) ? *(f32*)&gDfpLightningRadiusMax
                                                                               : radiusX;
-                        state->effectHandle = lightningCreatePromoted(
+                        state->effectHandle = lightningCreate(
                             (const Vec3f*)effectStart, (const Vec3f*)effectEnd, clampX, clampY,
                             DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP & DFPLIGHTNI_EFFECT_ANGLE_MASK, 0);
@@ -171,7 +171,7 @@ void DFP_Lightni_update(DfpLightniObject* obj)
                         clampX = (radiusX < *(f32*)&gDfpLightningRadiusMin)   ? *(f32*)&gDfpLightningRadiusMin
                                  : (radiusX > *(f32*)&gDfpLightningRadiusMax) ? *(f32*)&gDfpLightningRadiusMax
                                                                               : radiusX;
-                        state->effectHandle = lightningCreatePromoted(
+                        state->effectHandle = lightningCreate(
                             (const Vec3f*)effectStart, (const Vec3f*)effectEnd, clampX, clampY,
                             (u16)state->delayFrames,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP & DFPLIGHTNI_EFFECT_ANGLE_MASK, 0);

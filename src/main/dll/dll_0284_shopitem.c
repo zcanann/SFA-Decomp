@@ -196,7 +196,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
                     v.z = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.z;
                 }
                 state->lightningHandles[i] =
-                    lightningCreatePromoted((const Vec3f*)(obj + 0xC), (const Vec3f*)&v, lbl_803E5A48, lbl_803E5A4C,
+                    lightningCreate((const Vec3f*)(obj + 0xC), (const Vec3f*)&v, lbl_803E5A48, lbl_803E5A4C,
                                             0x14, 0x40, 0);
                 state->lightningTimers[i] = lbl_803E5A50;
                 spawned = 1;
