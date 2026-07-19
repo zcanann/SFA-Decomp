@@ -1811,11 +1811,27 @@ void Sfx_UpdateObjectSounds(void)
     }
 }
 
+static inline void Sfx_SetGlobalCtrlLevel(u8 level)
+{
+    s32 i;
+    SfxObjectChannel* objectChannel;
+
+    objectChannel = gSfxObjectChannels;
+    gSfxGlobalCtrlLevel = level;
+    i = SFX_OBJECT_CHANNEL_COUNT;
+    while (i-- != 0)
+    {
+        if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0))
+        {
+            sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
+        }
+        objectChannel++;
+    }
+}
+
 void Sfx_InitObjectChannels(void)
 {
-    SfxObjectChannel* objectChannel;
     s32 n;
-    s32 i;
 
     n = SFX_OBJECT_CHANNEL_COUNT;
     while (n-- != 0)
@@ -1824,17 +1840,7 @@ void Sfx_InitObjectChannels(void)
     }
 
     gSfxObjectChannelAge = 0;
-    objectChannel = gSfxObjectChannels;
-    gSfxGlobalCtrlLevel = 0;
-    i = SFX_OBJECT_CHANNEL_COUNT - 1;
-    do
-    {
-        if ((objectChannel->handle != (u32)-1) && (objectChannel->globalCtrlDisabled == 0))
-        {
-            sndFXCtrl(objectChannel->handle, 0x5B, gSfxGlobalCtrlLevel);
-        }
-        objectChannel++;
-    } while (i-- != 0);
+    Sfx_SetGlobalCtrlLevel(0);
 }
 
 void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId)
