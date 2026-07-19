@@ -123,7 +123,7 @@ int kaldachom_stateHandlerB02(GameObject* obj, GroundBaddieState* state)
         ObjHits_DisableObject(obj);
         *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         ((CfDoorlightState*)sub)->flags400 = (u16)(((CfDoorlightState*)sub)->flags400 | 0x20);
-        ((CfDoorlightState*)sub)->unk3E8 = lbl_803E3078;
+        ((CfDoorlightState*)sub)->glowAlpha = lbl_803E3078;
         ((CfDoorlightState*)sub)->unk3EC = lbl_803E307C;
     }
     else if ((s32)(s8)state->baddie.moveDone != 0)

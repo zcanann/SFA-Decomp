@@ -12,7 +12,7 @@
  */
 typedef struct CfDoorlightState {
     u8 unk0[0x3E8 - 0x0];
-    f32 unk3E8;
+    f32 glowAlpha; /* 0x3E8: alpha of the red glow tint, read by the engine-side baddie render (GroundBaddieState.glowAlpha) */
     f32 unk3EC;
     s16 spawnsLinkedObj; /* 0x3F0: nonzero -> fetch a linked object (baddie interface[0x13], type 6) to reposition on the pull-up burst */
     s16 gameBitA;
