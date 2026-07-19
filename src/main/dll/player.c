@@ -35,7 +35,6 @@
 
 typedef void (*PSVECScaleLegacyFn)(f32 scale, f32* src, f32* dst);
 
-#define PSVECScaleLegacy  ((PSVECScaleLegacyFn)PSVECScale)
 #include "main/object_api.h"
 #include "main/curve_eval.h"
 #include "main/objhits.h"
@@ -10605,7 +10604,7 @@ void fn_802A81B8(GameObject* obj, int state, f32* out)
         mag = PSVECMag(out);
         if (mag > lbl_803E7EA4)
         {
-            PSVECScaleLegacy(lbl_803E7EE0 / mag, out, out);
+            ((PSVECScaleLegacyFn)PSVECScale)(lbl_803E7EE0 / mag, out, out);
         }
         else
         {
