@@ -2397,24 +2397,24 @@ u16 modelFileHeaderGetCullDistance(ModelFileHeader* modelFile)
 u8* gModelCacheBuffersA[4];
 u8* gModelCacheBuffersB[6];
 
-void ObjModel_ClearRenderAttachment(u8* model)
+void ObjModel_ClearRenderAttachment(ObjModel* model)
 {
-    if (((ObjModel*)model)->renderAttachment != NULL)
+    if (model->renderAttachment != NULL)
     {
-        mm_free(((ObjModel*)model)->renderAttachment);
-        ((ObjModel*)model)->renderAttachment = NULL;
+        mm_free(model->renderAttachment);
+        model->renderAttachment = NULL;
     }
     else
     {
-        ((ObjModel*)model)->renderCallback = NULL;
+        model->renderCallback = NULL;
     }
 }
 
-void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale)
+void ObjModel_EnableDefaultRenderCallback(void* object, ObjModel* model, f32* mtx, int enabled, f32 scale)
 {
-    if (((ObjModel*)model)->renderAttachment == NULL)
+    if (model->renderAttachment == NULL)
     {
-        ((ObjModel*)model)->renderCallback = gxTextureFn_80072dfc;
+        model->renderCallback = gxTextureFn_80072dfc;
     }
 }
 

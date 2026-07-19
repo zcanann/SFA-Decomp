@@ -45,18 +45,12 @@
 
 #define DIMBOSS_OBJGROUP 3
 
-extern u32 gDIMbossRenderMtx[12];
+extern f32 gDIMbossRenderMtx[12];
 extern MoveLibState gDIMbossAnimController;
 
-
-
-
-
-
-extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, u32 model, void* mtx,
-                                                 int enabled, double scale);
-
 #define Obj_GetActiveModelLegacy ((int (*)())Obj_GetActiveModel)
+
+
 
 
 
@@ -220,7 +214,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
             DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
                 obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF, NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES, NULL);
             model = Obj_GetActiveModelLegacy((int)obj);
-            ObjModel_ClearRenderAttachment((u8*)model);
+            ObjModel_ClearRenderAttachment((ObjModel*)model);
             Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE, 1);
             break;
         case DIMBOSS_EVENT_LAUNCH_LIFT:
@@ -555,11 +549,11 @@ void DIMboss_update(DIMbossObject* obj)
                     topState->stompDustDelay--;
                     if (topState->stompDustDelay == 0)
                     {
-                        Obj_BuildWorldTransformMatrix((GameObject*)obj, (f32*)gDIMbossRenderMtx, 0);
-                        targetModel = Obj_GetActiveModelLegacy(obj);
-                        ObjModel_EnableDefaultRenderCallback
-                            (obj, targetModel, gDIMbossRenderMtx, 1,
-                             (double)(obj->anim.hitboxScale * obj->anim.rootMotionScale));
+                        Obj_BuildWorldTransformMatrix((GameObject*)obj, gDIMbossRenderMtx, 0);
+                        targetModel = (u32)Obj_GetActiveModel((GameObject*)obj);
+                        ObjModel_EnableDefaultRenderCallback(
+                            obj, (ObjModel*)targetModel, gDIMbossRenderMtx, 1,
+                            obj->anim.hitboxScale * obj->anim.rootMotionScale);
                     }
                 }
                 if (topState->steamFlags.bits.sfxPending != 0)
@@ -721,7 +715,7 @@ void DIMboss_initialiseAnimTables(void)
 DIMbossHitDetectAnimHandlerTable gDIMbossHitDetectAnimTable;
 DIMbossAnimHandlerTable gDIMbossAnimTable;
 MoveLibState gDIMbossAnimController;
-u32 gDIMbossRenderMtx[12];
+f32 gDIMbossRenderMtx[12];
 u8 gDim2IcicleHitFxBuffer[0x18];
 PartFxSpawnParams gDim2IcicleDustFxSource;
 f32 gDIMbossAnimScratchBase[3];

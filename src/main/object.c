@@ -215,7 +215,6 @@ extern f32 gMapSavedPlayerOffsetZ;
 
 void Obj_RegisterObject(GameObject* obj, int b);
 int loadModLines(int n, s16* out);
-void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
 void ObjModel_LoadRenderOpTextures(u8* model, int arg);
 void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);
 void* ObjModel_LoadAnimData(u8* p, int b, int c);
@@ -464,7 +463,7 @@ void Obj_Shatter(GameObject* obj)
     obj->colorFadeFrames = 0;
     obj->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_FROZEN;
     obj->fadeCounter = 0;
-    ObjModel_ClearRenderAttachment((u8*)Obj_GetActiveModel(obj));
+    ObjModel_ClearRenderAttachment(Obj_GetActiveModel(obj));
     (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7fb, NULL, 0x50, NULL);
     (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7fc, NULL, 0x32, NULL);
 }
@@ -505,9 +504,8 @@ void Obj_StartModelFadeIn(GameObject* obj, int frames)
             obj->colorFadeFrames = frames;
             obj->colorFadeFlags = (u8)(obj->colorFadeFlags | OBJ_COLOR_FADE_FLAG_FROZEN);
             Obj_BuildWorldTransformMatrix(obj, mtx, 0);
-            ((void (*)(u8*, u8*, f32*, int, f32))ObjModel_EnableDefaultRenderCallback)(
-                (u8*)obj, (u8*)objAnim->banks[objAnim->bankIndex], mtx, 1,
-                obj->anim.hitboxScale * obj->anim.rootMotionScale);
+            ObjModel_EnableDefaultRenderCallback(obj, (ObjModel*)objAnim->banks[objAnim->bankIndex], mtx, 1,
+                                                 obj->anim.hitboxScale * obj->anim.rootMotionScale);
             (*gBoneParticleEffectInterface)->spawnEffect(obj, 0x7fc, NULL, 0x64, NULL);
         }
     }
@@ -1075,7 +1073,7 @@ void objFreeObjDef(u8* obj, int flag)
         *(u16*)&((GameObject*)obj)->colorFadeFrames = 0;
         ((GameObject*)obj)->colorFadeFlags = ((GameObject*)obj)->colorFadeFlags & ~OBJ_COLOR_FADE_FLAG_FROZEN;
         ((GameObject*)obj)->fadeCounter = 0;
-        ObjModel_ClearRenderAttachment((u8*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex]);
+        ObjModel_ClearRenderAttachment((ObjModel*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex]);
         cb2 = (*gBoneParticleEffectInterface)->spawnEffect;
         cb2(obj, 0x7fb, NULL, 0x50, NULL);
         cb2 = (*gBoneParticleEffectInterface)->spawnEffect;
@@ -1340,7 +1338,7 @@ void Obj_UpdateObject(GameObject* obj)
             obj->colorFadeFrames = 0;
             obj->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_FROZEN;
             obj->fadeCounter = 0;
-            ObjModel_ClearRenderAttachment((u8*)object->banks[object->bankIndex]);
+            ObjModel_ClearRenderAttachment((ObjModel*)object->banks[object->bankIndex]);
             cb = (*gBoneParticleEffectInterface)->spawnEffect;
             cb(obj, 0x7fb, NULL, 0x50, NULL);
             cb = (*gBoneParticleEffectInterface)->spawnEffect;
