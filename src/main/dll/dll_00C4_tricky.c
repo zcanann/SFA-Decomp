@@ -477,7 +477,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 objSetAnimSpeedTo1((GameObject*)*(int*)(slot + 0x700));
             }
-            Sfx_RemoveLoopedObjectSoundIntLegacy(obj, SFXTRIG_trpopn_c);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
             slot = *(int*)&((GameObject*)obj)->extra;
             if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
                 (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
@@ -486,7 +486,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 objAudioFn_800393f8((GameObject*)obj, &((TrickyState*)slot)->soundState, 0x29d, 0, 0xffffffff, 0);
             }
         }
-        Sfx_RemoveLoopedObjectSoundIntLegacy(obj, SFXTRIG_trwhin1);
+        Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x200;
         if ((animUpdate->hitVolumePair & 3) == 0)
         {
@@ -511,7 +511,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     objSetAnimSpeedTo1((GameObject*)*(int*)(slot + 0x700));
                 }
-                Sfx_RemoveLoopedObjectSoundIntLegacy(obj, SFXTRIG_trpopn_c);
+                Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
                 slot = *(int*)&((GameObject*)obj)->extra;
                 if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
                     (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
@@ -534,7 +534,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                                                               ((GameObject*)obj)->anim.parent);
                 }
                 Sfx_PlayFromObjectIntReturnLegacy(obj, SFXTRIG_en_cvdrip1c_3db);
-                Sfx_AddLoopedObjectSoundIntReturnLegacy(obj, SFXTRIG_trpopn_c);
+                Sfx_AddLoopedObjectSound(obj, SFXTRIG_trpopn_c);
             }
             break;
         case 2:
@@ -1041,7 +1041,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
             childSlot = childSlot + 4;
             i = i + 1;
         } while (i < 7);
-        Sfx_RemoveLoopedObjectSoundIntLegacy((int)obj, SFXTRIG_trpopn_c);
+        Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_trpopn_c);
         childSlot = *(int*)&obj->extra;
         if (((*(u8*)(childSlot + 0x58) >> 6 & 1) == 0u) &&
             (((obj->anim.currentMove >= 0x30 || (obj->anim.currentMove < 0x29)) &&
@@ -1429,10 +1429,10 @@ void Tricky_update(int obj)
                 {
                     objSetAnimSpeedTo1((GameObject*)*(int*)(childCursor + 0x700));
                 }
-                Sfx_RemoveLoopedObjectSoundIntLegacy(obj, SFXTRIG_trpopn_c);
+                Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
                 TRICKY_VOICE(obj, 0x29d, 0);
             }
-            Sfx_RemoveLoopedObjectSoundIntLegacy(obj, SFXTRIG_trwhin1);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
         }
         TRICKY_RESET_COMMAND(state);
         *(int*)&trickyState->followObj = 0;
