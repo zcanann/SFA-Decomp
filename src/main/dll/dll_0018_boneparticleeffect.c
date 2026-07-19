@@ -1,5 +1,4 @@
 #include "main/dll/partfx_interface.h"
-#include "main/dll/bonespawndata_struct.h"
 #include "main/shader_api.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/modgfx_types.h"
@@ -382,7 +381,7 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
 {
     void* model;
     int i;
-    BoneSpawnData data;
+    PartFxSpawnParams data;
 
     model = Obj_GetActiveModel(obj);
     for (i = 0; i < *(u8*)(*(int*)model + 0xf3); i++)
@@ -390,20 +389,20 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
         if ((int)randomGetRange(1, 0x64) <= prob)
         {
             void* mtx;
-            data.x = (0.0f);
-            data.y = (0.0f);
-            data.z = (0.0f);
+            data.posX = (0.0f);
+            data.posY = (0.0f);
+            data.posZ = (0.0f);
             data.scale = (1.0f);
             data.unk4 = 0;
             data.unk2 = 0;
             data.unk0 = 0;
             mtx = ObjModel_GetJointMatrix(model, i);
-            PSMTXMultVec(mtx, &data.x, &data.x);
-            data.x = data.x - (obj)->anim.worldPosX;
-            data.y = data.y - (obj)->anim.worldPosY;
-            data.z = data.z - (obj)->anim.worldPosZ;
-            data.x = data.x + playerMapOffsetX;
-            data.z = data.z + playerMapOffsetZ;
+            PSMTXMultVec(mtx, &data.posX, &data.posX);
+            data.posX = data.posX - (obj)->anim.worldPosX;
+            data.posY = data.posY - (obj)->anim.worldPosY;
+            data.posZ = data.posZ - (obj)->anim.worldPosZ;
+            data.posX = data.posX + playerMapOffsetX;
+            data.posZ = data.posZ + playerMapOffsetZ;
             if (src != NULL)
             {
                 data.scale = *(f32*)((char*)src + 0x8);

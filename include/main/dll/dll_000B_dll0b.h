@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_DLL_000B_DLL0B_H_
 #define MAIN_DLL_DLL_000B_DLL0B_H_
 
-#include "main/dll/bonespawndata_struct.h"
+#include "main/dll/partfx_interface.h"
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"

@@ -11,7 +11,6 @@
  * on the struck triangles relative to the camera.
  */
 #include "main/dll/partfx_interface.h"
-#include "main/dll/bonespawndata_struct.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/camera.h"
@@ -45,7 +44,7 @@ extern const f32 lbl_803DF478;
 
 void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj)
 {
-    BoneSpawnData data;
+    PartFxSpawnParams data;
     CameraViewSlot* cam;
     u8 found;
     u8 surfType;
@@ -103,9 +102,9 @@ void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f3
             dx = dx * sc;
             dy = dy * sc;
             dz = dz * sc;
-            data.x = *(f32*)&lbl_803DF46C;
-            data.y = *(f32*)&lbl_803DF46C;
-            data.z = *(f32*)&lbl_803DF46C;
+            data.posX = *(f32*)&lbl_803DF46C;
+            data.posY = *(f32*)&lbl_803DF46C;
+            data.posZ = *(f32*)&lbl_803DF46C;
             data.scale = lbl_803DF470;
             data.unk4 = 0;
             data.unk2 = 0;
@@ -143,10 +142,10 @@ void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f3
                     w1 = omr * sqrtR2;
                 }
                 w2 = r1 * sqrtR2;
-                data.x = w0 * p0x + w1 * p1x + w2 * p2x;
-                data.y = w0 * p0y + w1 * p1y + w2 * p2y;
-                data.z = w0 * p0z + w1 * p1z + w2 * p2z;
-                data.y = data.y + lbl_803DF478;
+                data.posX = w0 * p0x + w1 * p1x + w2 * p2x;
+                data.posY = w0 * p0y + w1 * p1y + w2 * p2y;
+                data.posZ = w0 * p0z + w1 * p1z + w2 * p2z;
+                data.posY = data.posY + lbl_803DF478;
                 rt = (s8)hit->surfaceType;
                 if (rt == 0x12 || rt == 0x10)
                 {

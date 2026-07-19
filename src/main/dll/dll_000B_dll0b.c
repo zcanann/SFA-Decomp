@@ -16,7 +16,6 @@
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
-#include "main/dll/bonespawndata_struct.h"
 #include "main/dll/mtxbuildarg_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
@@ -1177,7 +1176,7 @@ void dll_0B_func05(void)
     int cntA;
     int k;
     void* res;
-    BoneSpawnData tmpl;
+    PartFxSpawnParams tmpl;
     MtxBuildArg rot;
     int objCount;
     int objIdx;
@@ -1274,9 +1273,9 @@ void dll_0B_func05(void)
                 }
                 if (flags & 0x10000000)
                 {
-                    tmpl.x = ((ModgfxEffectSlot*)eff)->posCurX;
-                    tmpl.y = ((ModgfxEffectSlot*)eff)->posCurY;
-                    tmpl.z = ((ModgfxEffectSlot*)eff)->posCurZ;
+                    tmpl.posX = ((ModgfxEffectSlot*)eff)->posCurX;
+                    tmpl.posY = ((ModgfxEffectSlot*)eff)->posCurY;
+                    tmpl.posZ = ((ModgfxEffectSlot*)eff)->posCurZ;
                     rot.a = lbl_803DF430;
                     rot.b = lbl_803DF430;
                     rot.c = lbl_803DF430;
@@ -1291,7 +1290,7 @@ void dll_0B_func05(void)
                     }
                     rot.ry = 0;
                     rot.rz = 0;
-                    vecRotateZXY(&rot.rotation.x, &tmpl.x);
+                    vecRotateZXY(&rot.rotation.x, &tmpl.posX);
                     if (*(void**)eff == NULL)
                     {
                         if (Obj_IsLoadingLocked())
@@ -1299,20 +1298,20 @@ void dll_0B_func05(void)
                             int* o;
                             if ((((ModgfxEffectSlot*)eff)->sourceFlags & 1) == 0)
                             {
-                                tmpl.x = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX + tmpl.x;
-                                tmpl.y = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY + tmpl.y;
-                                tmpl.z = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ + tmpl.z;
+                                tmpl.posX = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX + tmpl.posX;
+                                tmpl.posY = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY + tmpl.posY;
+                                tmpl.posZ = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ + tmpl.posZ;
                             }
                             else
                             {
-                                tmpl.x = ((ModgfxEffectSlot*)eff)->posOffsetX + tmpl.x;
-                                tmpl.y = ((ModgfxEffectSlot*)eff)->posOffsetY + tmpl.y;
-                                tmpl.z = ((ModgfxEffectSlot*)eff)->posOffsetZ + tmpl.z;
+                                tmpl.posX = ((ModgfxEffectSlot*)eff)->posOffsetX + tmpl.posX;
+                                tmpl.posY = ((ModgfxEffectSlot*)eff)->posOffsetY + tmpl.posY;
+                                tmpl.posZ = ((ModgfxEffectSlot*)eff)->posOffsetZ + tmpl.posZ;
                             }
                             o = (int*)Obj_AllocObjectSetup(0x20, DLL0B_CHILD_OBJ);
-                            ((GameObject*)o)->anim.rootMotionScale = tmpl.x;
-                            ((GameObject*)o)->anim.localPosX = tmpl.y;
-                            *(f32*)&((ObjDef*)o)->jointData = tmpl.z;
+                            ((GameObject*)o)->anim.rootMotionScale = tmpl.posX;
+                            ((GameObject*)o)->anim.localPosX = tmpl.posY;
+                            *(f32*)&((ObjDef*)o)->jointData = tmpl.posZ;
                             *(int*)eff = (int)Obj_SetupObject((ObjPlacement*)o, 5, -1, -1, NULL);
                             *(int*)(*(int*)eff + 0xf8) = 1;
                         }
@@ -1321,19 +1320,19 @@ void dll_0B_func05(void)
                     {
                         if ((((ModgfxEffectSlot*)eff)->sourceFlags & 1) == 0)
                         {
-                            tmpl.x = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX + tmpl.x;
-                            tmpl.y = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY + tmpl.y;
-                            tmpl.z = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ + tmpl.z;
+                            tmpl.posX = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX + tmpl.posX;
+                            tmpl.posY = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY + tmpl.posY;
+                            tmpl.posZ = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ + tmpl.posZ;
                         }
                         else
                         {
-                            tmpl.x = ((ModgfxEffectSlot*)eff)->posOffsetX + tmpl.x;
-                            tmpl.y = ((ModgfxEffectSlot*)eff)->posOffsetY + tmpl.y;
-                            tmpl.z = ((ModgfxEffectSlot*)eff)->posOffsetZ + tmpl.z;
+                            tmpl.posX = ((ModgfxEffectSlot*)eff)->posOffsetX + tmpl.posX;
+                            tmpl.posY = ((ModgfxEffectSlot*)eff)->posOffsetY + tmpl.posY;
+                            tmpl.posZ = ((ModgfxEffectSlot*)eff)->posOffsetZ + tmpl.posZ;
                         }
-                        *(f32*)(*(int*)eff + 0x18) = tmpl.x;
-                        *(f32*)(*(int*)eff + 0x1c) = tmpl.y;
-                        *(f32*)(*(int*)eff + 0x20) = tmpl.z;
+                        *(f32*)(*(int*)eff + 0x18) = tmpl.posX;
+                        *(f32*)(*(int*)eff + 0x1c) = tmpl.posY;
+                        *(f32*)(*(int*)eff + 0x20) = tmpl.posZ;
                     }
                     if (*(void**)eff != NULL)
                     {
@@ -1506,11 +1505,11 @@ void dll_0B_func05(void)
                     {
                         if ((((ModgfxEffectSlot*)eff)->sourceFlags & 1) == 0)
                         {
-                            tmpl.x = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX +
+                            tmpl.posX = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosX +
                                      ((ModgfxEffectSlot*)eff)->posCurX;
-                            tmpl.y = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY +
+                            tmpl.posY = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosY +
                                      ((ModgfxEffectSlot*)eff)->posCurY;
-                            tmpl.z = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ +
+                            tmpl.posZ = ((GameObject*)((ModgfxEffectSlot*)eff)->sourceObj)->anim.worldPosZ +
                                      ((ModgfxEffectSlot*)eff)->posCurZ;
                             if (*(int**)&((ModgfxEffectSlot*)eff)->sourceObj != NULL)
                             {
@@ -1522,9 +1521,9 @@ void dll_0B_func05(void)
                         }
                         else
                         {
-                            tmpl.x = ((ModgfxEffectSlot*)eff)->posCurX;
-                            tmpl.y = ((ModgfxEffectSlot*)eff)->posCurY;
-                            tmpl.z = ((ModgfxEffectSlot*)eff)->posCurZ;
+                            tmpl.posX = ((ModgfxEffectSlot*)eff)->posCurX;
+                            tmpl.posY = ((ModgfxEffectSlot*)eff)->posCurY;
+                            tmpl.posZ = ((ModgfxEffectSlot*)eff)->posCurZ;
                             if (*(int**)&((ModgfxEffectSlot*)eff)->sourceObj != NULL)
                             {
                                 (*gPartfxInterface)
