@@ -198,7 +198,7 @@ int playerState28(GameObject* obj, int state, f32 fv);
 void fn_8029BC08(GameObject* obj);
 int playerState27(GameObject* obj, int state, f32 fv);
 void fn_8029C8C8(GameObject* obj, int p2);
-int playerState25(int obj, int state);
+int playerState25(int obj, int state, f32 fv);
 int playerState24(GameObject* obj, int state, f32 fv);
 int playerState23(GameObject* obj, int state, f32 fv);
 int playerState22(GameObject* obj, int state);
@@ -4648,7 +4648,7 @@ void fn_8029C8C8(GameObject* obj, int p2)
     }
 }
 
-int playerState25(int obj, int state)
+int playerState25(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     f32 ratio, c, s, vx, t0, curveOut;
@@ -4659,7 +4659,7 @@ int playerState25(int obj, int state)
     {
         gPlayerSubState = 5;
     }
-    r = ((int (*)(int, int))playerState28)(obj, state);
+    r = playerState28((GameObject*)obj, state, fv);
     if (r != 0)
     {
         return r;
@@ -12892,7 +12892,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
         }
         if (ok != 0)
         {
-            r = ((int (*)(int, int, f32))playerState08)(obj, state, fv);
+            r = playerState08((GameObject*)obj, state, fv);
             if (r != 0)
             {
                 return r;
