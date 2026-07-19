@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 typedef struct DrEnergyDiscState
 {
@@ -13,7 +14,7 @@ extern int lbl_803DC380;
 
 typedef struct DrenergydiscPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 rotXByte;       /* 0x18: rotX in 1/256 turns */
     u8 pad19[0x1E - 0x19];
     s16 moveGameBit;   /* 0x1E */

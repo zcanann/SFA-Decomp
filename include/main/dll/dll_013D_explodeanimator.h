@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_013D_EXPLODEANIMATOR_H_
 
 #include "types.h"
+#include "main/obj_placement.h"
 
 typedef struct ExplodeanimatorState
 {
@@ -12,7 +13,7 @@ typedef struct ExplodeanimatorState
 
 typedef struct ExplodeanimatorPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s16 posXMin;  /* 0x18 */
     s16 posYMin;  /* 0x1A */
     s16 posZMin;  /* 0x1C */
