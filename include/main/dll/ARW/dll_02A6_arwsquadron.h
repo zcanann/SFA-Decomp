@@ -73,9 +73,9 @@ typedef struct ArwSquadronProjectileSetup
     f32 posY;
     f32 posZ;
     u8 pad14[4];
-    u8 rotX;
-    u8 rotY;
     u8 rotZ;
+    u8 rotY;
+    u8 rotX;
 } ArwSquadronProjectileSetup;
 
 STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, field04) == 0x04);
@@ -83,9 +83,9 @@ STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, field05) == 0x05);
 STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, posX) == 0x08);
 STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, posY) == 0x0c);
 STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, posZ) == 0x10);
-STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotX) == 0x18);
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotZ) == 0x18);
 STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotY) == 0x19);
-STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotZ) == 0x1a);
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotX) == 0x1a);
 
 typedef struct ArwSquadronPathCommand
 {
