@@ -59,6 +59,4 @@ extern void** lbl_803DCC8C;
 
 #include "main/mldf_fileid.h"
 
-double SeekTwiceBeforeRead();
-
 #endif /* MAIN_PI_DOLPHIN_H_ */
