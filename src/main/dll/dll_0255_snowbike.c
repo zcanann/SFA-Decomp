@@ -49,6 +49,18 @@ char sSnowBikeVelDebugFmt[] = "vel %f\n";
 #define SNOWBIKE_OBJGROUP           0xa
 #define SNOWBIKE_AIRMETER_BGTEXTURE 0x5cd
 
+/* SnowBike defNos (anim.seqId), names from retail OBJECTS.bin at def+0x91; all gate
+   to this file's own DLL 0x255. The three CRSnowClawB / two IMSnowClawB entries share
+   one truncated bin name apiece and are told apart by the bikeVariant ordinal that
+   SnowBike_init assigns them below. IM = Ice Mountain, CR = CloudRunner Fortress. */
+#define SNOWBIKE_IM_BIKE_OBJ           0x72
+#define SNOWBIKE_IM_CLAWBIKE_V0_OBJ    0x16c
+#define SNOWBIKE_IM_CLAWBIKE_V1_OBJ    0x16f
+#define SNOWBIKE_CR_BIKE_OBJ           0x38c
+#define SNOWBIKE_CR_CLAWBIKE_V0_OBJ    0x38d
+#define SNOWBIKE_CR_CLAWBIKE_V1_OBJ    0x38e
+#define SNOWBIKE_CR_CLAWBIKE_V2_OBJ    0x4d4
+
 typedef struct SnowBikeMountState
 {
     s16 savedRotX;
@@ -344,7 +356,7 @@ void SnowBike_setRiderMode(GameObject* obj, int type)
                 (*gGameUIInterface)->airMeterSetRatio(lbl_803E5B98);
             }
         }
-        if (obj->anim.seqId == 0x72)
+        if (obj->anim.seqId == SNOWBIKE_IM_BIKE_OBJ)
         {
             ((ObjHitsPriorityState*)obj->anim.hitReactState)->lateralResponseWeight = 0x14;
             ((ObjHitsPriorityState*)obj->anim.hitReactState)->axialResponseWeight = 0x14;
@@ -536,7 +548,7 @@ void SnowBike_hitDetect(GameObject* obj)
             doRumble(lbl_803E5BC4 * mag);
         }
         state->unk430 = state->unk430 * lbl_803E5BBC;
-        if (obj->anim.seqId == 114 || obj->anim.seqId == 908)
+        if (obj->anim.seqId == SNOWBIKE_IM_BIKE_OBJ || obj->anim.seqId == SNOWBIKE_CR_BIKE_OBJ)
         {
             vol = (int)(lbl_803E5C4C * mag);
             if (vol > 80)
@@ -563,8 +575,8 @@ void SnowBike_hitDetect(GameObject* obj)
     {
         velScale = lbl_803E5C00;
         OSReport(sSnowBikeVelDebugFmt, mag);
-        if (((GameObject*)state->linkedObj)->anim.seqId == 909 || ((GameObject*)state->linkedObj)->anim.seqId == 910 ||
-            ((GameObject*)state->linkedObj)->anim.seqId == 1236)
+        if (((GameObject*)state->linkedObj)->anim.seqId == SNOWBIKE_CR_CLAWBIKE_V0_OBJ || ((GameObject*)state->linkedObj)->anim.seqId == SNOWBIKE_CR_CLAWBIKE_V1_OBJ ||
+            ((GameObject*)state->linkedObj)->anim.seqId == SNOWBIKE_CR_CLAWBIKE_V2_OBJ)
         {
             velScale = lbl_803E5B88;
         }
@@ -989,13 +1001,13 @@ void SnowBike_init(int obj, SnowBikePlacement* params, int flag)
     ((SnowBikeState*)state)->modelId = 0x436;
     switch (((GameObject*)obj)->anim.seqId)
     {
-    case 0x72:
+    case SNOWBIKE_IM_BIKE_OBJ:
     default:
         ((SnowBikeState*)state)->bikeType = 1;
         ((SnowBikeState*)state)->velLimitZ = lbl_803E5C50;
         ((SnowBikeState*)state)->modelId = 282;
         break;
-    case 0x16c:
+    case SNOWBIKE_IM_CLAWBIKE_V0_OBJ:
         ((SnowBikeState*)state)->bikeType = 1;
         ((SnowBikeState*)state)->bikeVariant = 0;
         ((SnowBikeState*)state)->unk01C = lbl_803E5B14;
@@ -1003,33 +1015,33 @@ void SnowBike_init(int obj, SnowBikePlacement* params, int flag)
         ((SnowBikeState*)state)->collisionHitType = 1;
         ((SnowBikeState*)state)->velLimitZ = lbl_803E5AF0;
         break;
-    case 0x16f:
+    case SNOWBIKE_IM_CLAWBIKE_V1_OBJ:
         ((SnowBikeState*)state)->bikeType = 1;
         ((SnowBikeState*)state)->unk058 = 1;
         ((SnowBikeState*)state)->bikeVariant = 1;
         ((SnowBikeState*)state)->collisionHitType = 2;
         ((SnowBikeState*)state)->velLimitZ = lbl_803E5AF0;
         break;
-    case 0x38c:
+    case SNOWBIKE_CR_BIKE_OBJ:
         ((SnowBikeState*)state)->bikeType = 0;
         ((SnowBikeState*)state)->velLimitZ = lbl_803DC0C4;
         ((SnowBikeState*)state)->modelId = 282;
         break;
-    case 0x38d:
+    case SNOWBIKE_CR_CLAWBIKE_V0_OBJ:
         ((SnowBikeState*)state)->bikeType = 0;
         ((SnowBikeState*)state)->bikeVariant = 0;
         ((SnowBikeState*)state)->unk01C = lbl_803E5B14;
         ((SnowBikeState*)state)->unk018 = lbl_803E5C54;
         ((SnowBikeState*)state)->velLimitZ = lbl_803E5C58 * lbl_803DC0C0;
         break;
-    case 0x38e:
+    case SNOWBIKE_CR_CLAWBIKE_V1_OBJ:
         ((SnowBikeState*)state)->bikeType = 0;
         ((SnowBikeState*)state)->bikeVariant = 1;
         ((SnowBikeState*)state)->unk01C = lbl_803E5B48;
         ((SnowBikeState*)state)->unk018 = lbl_803E5C5C;
         ((SnowBikeState*)state)->velLimitZ = lbl_803E5C60 * lbl_803DC0C0;
         break;
-    case 0x4d4:
+    case SNOWBIKE_CR_CLAWBIKE_V2_OBJ:
         ((SnowBikeState*)state)->bikeType = 0;
         ((SnowBikeState*)state)->bikeVariant = 2;
         ((SnowBikeState*)state)->unk01C = lbl_803E5B48;
@@ -1120,6 +1132,8 @@ void SnowBike_initialise(void)
     }
 }
 
+/* hittable object defNos: IMSnowClaw/2 riders, IMSnowClawB bikes, CRSnowClaw/2/3
+   riders, CRSnowClawB bikes, then the DFP_/DFSH_ scenery ids. */
 s16 gSnowBikeHitObjectIdTable[26] = {
     0, 365, 0, 368, 0, 364, 0, 367, 0, 905, 0, 906, 0, 1235, 0, 909, 0, 910, 0, 1236, 1175, 1176, 1180, 930, 931, 1180,
 };

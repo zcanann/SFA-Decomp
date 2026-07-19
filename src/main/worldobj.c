@@ -34,10 +34,36 @@ typedef struct
     u8 pad12[2];
 } GreatFoxFxEntry;
 
-/* case 0x5e2 (retail "WORLDsun") spawns 11 scattered copies of this child
- * (retail "WORLDsunray", handled in case 0x5da below); each ray initializes
- * with random rotation on all axes and random per-axis spin. */
-#define WORLDOBJ_CHILD_OBJ_SUNRAY 0x5da
+/* World-map object defNos (WorldObjSetup.objectId), names read from retail
+ * OBJECTS.bin at def+0x91; the WORLD* set all belongs to DLL 0x1D3. The
+ * WORLDOBJ_SUN_OBJ case spawns 11 scattered WORLDOBJ_SUNRAY_OBJ children, each
+ * with random rotation on all axes and random per-axis spin.
+ * 0x5dc (retail "WORLDcloudl") is left raw: the 11-char name is truncated and
+ * its case body is empty, so nothing disambiguates the expansion. */
+#define WORLDOBJ_CLOUDRUNNER_OBJ   0x5d5
+#define WORLDOBJ_DRAGONROCK_OBJ    0x5d6
+#define WORLDOBJ_WALLEDCITY_OBJ    0x5d7
+#define WORLDOBJ_DARKICE_OBJ       0x5d8
+#define WORLDOBJ_SUNRAY_OBJ        0x5da
+#define WORLDOBJ_SUNFLARE_OBJ      0x5db
+#define WORLDOBJ_PATH1_OBJ         0x5dd
+#define WORLDOBJ_ARWING_OBJ        0x5de
+#define WORLDOBJ_GREATFOX_OBJ      0x5df
+#define WORLDOBJ_SUN_OBJ           0x5e2
+#define WORLDOBJ_PEPPER_OBJ        0x5e3
+#define WORLDOBJ_PATH2_OBJ         0x5ed
+#define WORLDOBJ_PATH3_OBJ         0x5ee
+#define WORLDOBJ_PATH4_OBJ         0x5ef
+#define WORLDOBJ_PATH5_OBJ         0x5f0
+#define WORLDOBJ_PATH6_OBJ         0x5f1
+#define WORLDOBJ_PATH7_OBJ         0x5f2
+#define WORLDOBJ_PATH8_OBJ         0x5f3
+#define WORLDOBJ_ASTEROID_OBJ      0x5f4
+#define WORLDOBJ_SKYSCAPE_OBJ      0x5f5
+#define WORLDOBJ_COMM_OBJ          0x602
+#define WORLDOBJ_ASTEROIDGEN_OBJ   0x61e
+#define WORLDOBJ_ARROW_OBJ         0x740
+#define WORLDOBJ_COMET_OBJ         0x80f
 #define GREAT_FOX_EFFECT_COUNT    10
 
 extern f32 lbl_803E6678;
@@ -98,7 +124,7 @@ int worldobj_getExtraSize(void)
 
 int worldobj_getObjectTypeId(int* obj)
 {
-    if (((WorldObjSetup*)((GameObject*)obj)->anim.placementData)->objectId != 0x5e3)
+    if (((WorldObjSetup*)((GameObject*)obj)->anim.placementData)->objectId != WORLDOBJ_PEPPER_OBJ)
     {
         return 0x0;
     }
@@ -121,7 +147,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     WorldObjState* state = ((GameObject*)p1)->extra;
     int modelId = ((WorldObjSetup*)((GameObject*)p1)->anim.placementData)->objectId;
 
-    if (modelId == 0x5f5)
+    if (modelId == WORLDOBJ_SKYSCAPE_OBJ)
     {
         ((void (*)(f32))objRenderModelAndHitVolumes)(lbl_803E6678);
         return;
@@ -132,15 +158,15 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     }
     switch (modelId)
     {
-    case 0x61e:
+    case WORLDOBJ_ASTEROIDGEN_OBJ:
         return;
-    case 0x5de:
+    case WORLDOBJ_ARWING_OBJ:
         if (state->effectState == 0)
         {
             ((void (*)(f32))objRenderModelAndHitVolumes)(lbl_803E6678);
         }
         break;
-    case 0x5e3:
+    case WORLDOBJ_PEPPER_OBJ:
         if (randomGetRange(0, 0x19) != 0 && state->effectState != 0)
         {
             GXSetScissor(0x1e0, 0x32, 0x82, 0x96);
@@ -148,7 +174,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
             Camera_ApplyCurrentViewport((void*)p2);
         }
         break;
-    case 0x740:
+    case WORLDOBJ_ARROW_OBJ:
         if (state->effectState != 0 && (u8)getWorldMapVoiceoverTimer() == 0 &&
             (*gScreenTransitionInterface)->isFinished() != 0)
         {
@@ -166,15 +192,15 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
             gWorldObjEffectRenderDelay = 2;
         }
         break;
-    case 0x80f:
+    case WORLDOBJ_COMET_OBJ:
         if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
         {
             queueGlowRender(state->light);
         }
         ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E6678);
         break;
-    case 0x5da:
-    case 0x5db:
+    case WORLDOBJ_SUNRAY_OBJ:
+    case WORLDOBJ_SUNFLARE_OBJ:
     default:
         ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E6678);
         break;
@@ -210,7 +236,7 @@ void worldobj_update(GameObject* obj)
 
     switch (setup->objectId)
     {
-    case 0x80f:
+    case WORLDOBJ_COMET_OBJ:
         if (state->orbitAngle > 0x8000 || state->orbitAngle < 0)
         {
             if (state->light != NULL)
@@ -265,7 +291,7 @@ void worldobj_update(GameObject* obj)
             }
         }
         break;
-    case 0x740:
+    case WORLDOBJ_ARROW_OBJ:
         ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E6694, timeDelta, NULL);
         obj->anim.rotX = lbl_803E668C * timeDelta + (f32)obj->anim.rotX;
         break;
@@ -292,14 +318,14 @@ void worldobj_update(GameObject* obj)
             tex->offsetS = (s16)-tmp;
         }
         break;
-    case 0x5dd:
-    case 0x5ed:
-    case 0x5ee:
-    case 0x5ef:
-    case 0x5f0:
-    case 0x5f1:
-    case 0x5f2:
-    case 0x5f3:
+    case WORLDOBJ_PATH1_OBJ:
+    case WORLDOBJ_PATH2_OBJ:
+    case WORLDOBJ_PATH3_OBJ:
+    case WORLDOBJ_PATH4_OBJ:
+    case WORLDOBJ_PATH5_OBJ:
+    case WORLDOBJ_PATH6_OBJ:
+    case WORLDOBJ_PATH7_OBJ:
+    case WORLDOBJ_PATH8_OBJ:
         if (state->effectState == 2)
         {
             for (i = 0; i < 0x16; i++)
@@ -310,7 +336,7 @@ void worldobj_update(GameObject* obj)
             }
         }
         break;
-    case 0x5e2:
+    case WORLDOBJ_SUN_OBJ:
         switch (setup->variant)
         {
         case 0:
@@ -324,7 +350,7 @@ void worldobj_update(GameObject* obj)
             break;
         }
         break;
-    case 0x5da:
+    case WORLDOBJ_SUNRAY_OBJ:
         obj->anim.rotX += state->spinXStep;
         obj->anim.rotY += state->spinYStep;
         obj->anim.rotZ += state->spinZStep;
@@ -332,18 +358,18 @@ void worldobj_update(GameObject* obj)
         sv = mathCosf(gWorldObjPi * (f32)(s16)(state->controlByte << 8) / gWorldObjAngleHalfCircle);
         obj->anim.rootMotionScale = lbl_803E669C * (lbl_803E6678 + sv) + lbl_803E6698;
         break;
-    case 0x5db:
+    case WORLDOBJ_SUNFLARE_OBJ:
         obj->anim.rotX = 0x21a8;
         obj->anim.rootMotionScale = lbl_803E66A0;
         break;
-    case 0x5f5:
+    case WORLDOBJ_SKYSCAPE_OBJ:
         obj->anim.rotX += 1;
         break;
-    case 0x602:
+    case WORLDOBJ_COMM_OBJ:
         ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E66A4, timeDelta,
                                                                      (ObjAnimEventList*)&vec[3]);
         break;
-    case 0x5e3:
+    case WORLDOBJ_PEPPER_OBJ:
         if (state->controlByte != ((ObjAnimComponent*)obj)->bankIndex)
         {
             Obj_SetActiveModelIndex(obj, state->controlByte);
@@ -368,12 +394,12 @@ void worldobj_update(GameObject* obj)
             state->light = NULL;
         }
         break;
-    case 0x5df:
+    case WORLDOBJ_GREATFOX_OBJ:
         worldobj_spawnGreatFoxEffects(obj);
-    case 0x5d5:
-    case 0x5d6:
-    case 0x5d7:
-    case 0x5d8:
+    case WORLDOBJ_CLOUDRUNNER_OBJ:
+    case WORLDOBJ_DRAGONROCK_OBJ:
+    case WORLDOBJ_WALLEDCITY_OBJ:
+    case WORLDOBJ_DARKICE_OBJ:
         if (obj->userData2 == 0)
         {
             child = ObjList_FindObjectById(state->attachChildObjectId);
@@ -450,7 +476,7 @@ void worldobj_update(GameObject* obj)
             state->light = NULL;
         }
         break;
-    case 0x61e:
+    case WORLDOBJ_ASTEROIDGEN_OBJ:
         obj->anim.rotY = 0x3448;
         obj->anim.rotX = 0x4000;
         switch (setup->variant)
@@ -571,17 +597,17 @@ void worldobj_init(GameObject* obj, int arg)
 
     switch (setup->objectId)
     {
-    case 0x5dd:
-    case 0x5ed:
-    case 0x5ee:
-    case 0x5ef:
-    case 0x5f0:
-    case 0x5f1:
-    case 0x5f2:
-    case 0x5f3:
+    case WORLDOBJ_PATH1_OBJ:
+    case WORLDOBJ_PATH2_OBJ:
+    case WORLDOBJ_PATH3_OBJ:
+    case WORLDOBJ_PATH4_OBJ:
+    case WORLDOBJ_PATH5_OBJ:
+    case WORLDOBJ_PATH6_OBJ:
+    case WORLDOBJ_PATH7_OBJ:
+    case WORLDOBJ_PATH8_OBJ:
         state->effectState = 0;
         break;
-    case 0x80f:
+    case WORLDOBJ_COMET_OBJ:
         objA = ObjList_FindObjectById(0x42fe7);
         objB = ObjList_FindObjectById(0x4305a);
         base = objB->anim.localPosY - objA->anim.localPosY;
@@ -611,18 +637,18 @@ void worldobj_init(GameObject* obj, int arg)
             modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E66A0);
         }
         break;
-    case 0x5f5:
+    case WORLDOBJ_SKYSCAPE_OBJ:
         (obj)->anim.rootMotionScale = lbl_803E66D8;
         break;
-    case 0x5e3:
+    case WORLDOBJ_PEPPER_OBJ:
         state->controlByte = 0;
         state->spinZStep = 0;
         break;
     case 0x5dc:
         break;
-    case 0x5f4:
+    case WORLDOBJ_ASTEROID_OBJ:
         break;
-    case 0x5e2:
+    case WORLDOBJ_SUN_OBJ:
         idx = setup->variant;
         Obj_SetActiveModelIndex(obj, idx);
         (obj)->anim.alpha = gWorldObjVariantAlphaTable[idx];
@@ -631,7 +657,7 @@ void worldobj_init(GameObject* obj, int arg)
             sub = *(int*)&(obj)->anim.placementData;
             if (Obj_IsLoadingLocked() != 0)
             {
-                int o2 = (int)Obj_AllocObjectSetup(0x20, WORLDOBJ_CHILD_OBJ_SUNRAY);
+                int o2 = (int)Obj_AllocObjectSetup(0x20, WORLDOBJ_SUNRAY_OBJ);
                 *(u8*)(o2 + 4) = *(u8*)(sub + 4);
                 *(u8*)(o2 + 6) = *(u8*)(sub + 6);
                 *(u8*)(o2 + 5) = *(u8*)(sub + 5);
@@ -643,7 +669,7 @@ void worldobj_init(GameObject* obj, int arg)
             }
         }
         break;
-    case 0x5da:
+    case WORLDOBJ_SUNRAY_OBJ:
         (obj)->anim.rotZ = randomGetRange(0, 0xffff);
         (obj)->anim.rotY = randomGetRange(0, 0xffff);
         (obj)->anim.rotX = randomGetRange(0, 0xffff);
@@ -652,26 +678,26 @@ void worldobj_init(GameObject* obj, int arg)
         state->spinYStep = randomGetRange(-0xa, 0xa);
         state->spinXStep = randomGetRange(-0xa, 0xa);
         break;
-    case 0x61e:
+    case WORLDOBJ_ASTEROIDGEN_OBJ:
         state->controlByte = 0;
         break;
-    case 0x740:
+    case WORLDOBJ_ARROW_OBJ:
         state->effectState = 0;
         gWorldObjEffectTargetObj = (int)obj;
         break;
-    case 0x5d5:
+    case WORLDOBJ_CLOUDRUNNER_OBJ:
         state->lookAtTargetRef = 0x4aaf7;
         state->attachChildObjectId = 0x4ab08;
         break;
-    case 0x5d6:
+    case WORLDOBJ_DRAGONROCK_OBJ:
         state->lookAtTargetRef = 0x4ab03;
         state->attachChildObjectId = 0x4ab09;
         break;
-    case 0x5d8:
+    case WORLDOBJ_DARKICE_OBJ:
         state->lookAtTargetRef = 0x4ab04;
         state->attachChildObjectId = 0x4ab0a;
         break;
-    case 0x5d7:
+    case WORLDOBJ_WALLEDCITY_OBJ:
         state->lookAtTargetRef = 0x4ab05;
         state->attachChildObjectId = 0x4ab0b;
         break;

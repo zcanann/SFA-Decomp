@@ -108,6 +108,38 @@ typedef struct
 /* camera mode DLL 0x49 = dll_0049_cameramodecombat */
 #define ENEMY_CAMMODE_COMBAT 0x49
 
+/* enemy defNos (anim.seqId) - names read from retail OBJECTS.bin at def+0x91;
+   every id below gates to this file's own DLL 0xC9 */
+#define ENEMY_SHARPCLAW_GR_OBJ     0x11
+#define ENEMY_GUARDCLAW_OBJ        0xd8
+#define ENEMY_SHARPCLAW_SN_OBJ     0x13a
+#define ENEMY_PINPON_OBJ           0x251
+#define ENEMY_RACHNOP_OBJ          0x25d
+#define ENEMY_WEEVIL_OBJ           0x369
+#define ENEMY_VAMBAT_OBJ           0x3fe
+#define ENEMY_BATTLEDROID_OBJ      0x427
+#define ENEMY_SPITTINGEBA_OBJ      0x457
+#define ENEMY_MUTATEDEBA_OBJ       0x458
+#define ENEMY_HOODEDZYCK_OBJ       0x4ac
+#define ENEMY_WB_OBJ               0x4d7
+#define ENEMY_KOOSHY_OBJ           0x58b
+#define ENEMY_SHARPCLAW_CO_OBJ     0x5b7
+#define ENEMY_SHARPCLAW_AS_OBJ     0x5b8
+#define ENEMY_SHARPCLAW_SH_OBJ     0x5b9
+#define ENEMY_SHARPCLAW_SO_OBJ     0x5e1
+#define ENEMY_GCROBOTPATROL_OBJ    0x613
+#define ENEMY_MIKALADON_OBJ        0x642
+#define ENEMY_FIRECRAWLER_OBJ      0x6a2
+#define ENEMY_REDEYE_OBJ           0x6a3
+#define ENEMY_SHADOWHUNTER_OBJ     0x6a4
+#define ENEMY_SWAMPSTRIDER_OBJ     0x6a5
+#define ENEMY_BOSSGENERAL_OBJ      0x7a6
+#define ENEMY_FIREBAT_OBJ          0x7c6
+#define ENEMY_HAGABONMK2_OBJ       0x7c8
+#define ENEMY_SNOWWORM_OBJ         0x842
+#define ENEMY_SNOWWORM_BABY_OBJ    0x84b
+#define ENEMY_WHIRLPOOL_OBJ        0x851
+
 extern f32 lbl_803E256C;
 extern f32 lbl_803E2570;
 extern f32 lbl_803E2574;
@@ -187,70 +219,70 @@ void objAnimFn_8014a9f0(short* obj, int state)
             ((TrickyState*)state)->actionId = 3;
             switch (((GameObject*)obj)->anim.seqId)
             {
-            case 0x11:
-            case 0x13a:
-            case 0x5b7:
-            case 0x5b8:
-            case 0x5b9:
-            case 0x5e1:
-            case 0x7a6:
+            case ENEMY_SHARPCLAW_GR_OBJ:
+            case ENEMY_SHARPCLAW_SN_OBJ:
+            case ENEMY_SHARPCLAW_CO_OBJ:
+            case ENEMY_SHARPCLAW_AS_OBJ:
+            case ENEMY_SHARPCLAW_SH_OBJ:
+            case ENEMY_SHARPCLAW_SO_OBJ:
+            case ENEMY_BOSSGENERAL_OBJ:
                 sharpClawUpdateAttack((GameObject*)(obj), (u8*)state);
                 break;
-            case 0xd8:
+            case ENEMY_GUARDCLAW_OBJ:
             case 0x281:
                 guardClaw_update((int*)obj, (u8*)state);
                 break;
-            case 0x613:
+            case ENEMY_GCROBOTPATROL_OBJ:
                 gcRobotPatrol_update((int*)obj, (u8*)state);
                 break;
-            case 0x642:
+            case ENEMY_MIKALADON_OBJ:
                 mikaladon_update((int*)obj, (u8*)state);
                 break;
-            case 0x3fe:
-            case 0x7c6:
+            case ENEMY_VAMBAT_OBJ:
+            case ENEMY_FIREBAT_OBJ:
                 vambat_updateEngaged((GameObject*)(obj), state);
                 break;
-            case 0x58b:
+            case ENEMY_KOOSHY_OBJ:
                 kooshy_updateEngaged((GameObject*)(obj), state);
                 break;
-            case 0x369:
+            case ENEMY_WEEVIL_OBJ:
                 weevil_updateEngaged((int)obj, state);
                 break;
-            case 0x251:
+            case ENEMY_PINPON_OBJ:
                 pinPon_updateEngaged((GameObject*)(obj), (int*)state);
                 break;
-            case 0x25d:
+            case ENEMY_RACHNOP_OBJ:
                 rachnopUpdateAttack((int*)obj, state);
                 break;
-            case 0x457:
+            case ENEMY_SPITTINGEBA_OBJ:
                 spittingEbaUpdateEngaged((u32)obj, state);
                 break;
-            case 0x4d7:
+            case ENEMY_WB_OBJ:
                 wbUpdateEngaged((u32)obj, state);
                 break;
-            case 0x458:
+            case ENEMY_MUTATEDEBA_OBJ:
                 mutatedEbaUpdateEngaged((u32)obj, state);
                 break;
-            case 0x851:
+            case ENEMY_WHIRLPOOL_OBJ:
                 iceBaddie_enterWhirlpoolGroup((GameObject*)obj, (GroundBaddieState*)state);
                 break;
-            case 0x842:
-            case 0x84b:
+            case ENEMY_SNOWWORM_OBJ:
+            case ENEMY_SNOWWORM_BABY_OBJ:
                 snowworm_update((int*)obj, (u8*)state);
                 break;
-            case 0x4ac:
+            case ENEMY_HOODEDZYCK_OBJ:
                 hoodedZyck_update(obj, (u8*)state);
                 break;
-            case 0x427:
+            case ENEMY_BATTLEDROID_OBJ:
                 battleDroidUpdateAttack((int)obj, state);
                 break;
-            case 0x6a2:
-            case 0x6a3:
-            case 0x6a4:
-            case 0x6a5:
+            case ENEMY_FIRECRAWLER_OBJ:
+            case ENEMY_REDEYE_OBJ:
+            case ENEMY_SHADOWHUNTER_OBJ:
+            case ENEMY_SWAMPSTRIDER_OBJ:
                 crawler_update((int*)obj, (u8*)state);
                 break;
-            case 0x7c8:
+            case ENEMY_HAGABONMK2_OBJ:
                 hagabonMK2_updateB(obj, (u8*)state);
                 break;
             case 0x7c7:
@@ -264,70 +296,70 @@ void objAnimFn_8014a9f0(short* obj, int state)
             ((TrickyState*)state)->actionId = 4;
             switch (((GameObject*)obj)->anim.seqId)
             {
-            case 0x11:
-            case 0x13a:
-            case 0x5b7:
-            case 0x5b8:
-            case 0x5b9:
-            case 0x5e1:
-            case 0x7a6:
+            case ENEMY_SHARPCLAW_GR_OBJ:
+            case ENEMY_SHARPCLAW_SN_OBJ:
+            case ENEMY_SHARPCLAW_CO_OBJ:
+            case ENEMY_SHARPCLAW_AS_OBJ:
+            case ENEMY_SHARPCLAW_SH_OBJ:
+            case ENEMY_SHARPCLAW_SO_OBJ:
+            case ENEMY_BOSSGENERAL_OBJ:
                 sharpClawUpdateApproach((GameObject*)(obj), (void*)state);
                 break;
-            case 0xd8:
+            case ENEMY_GUARDCLAW_OBJ:
             case 0x281:
                 guardClaw_update((int*)obj, (u8*)state);
                 break;
-            case 0x613:
+            case ENEMY_GCROBOTPATROL_OBJ:
                 gcRobotPatrol_update((int*)obj, (u8*)state);
                 break;
-            case 0x642:
+            case ENEMY_MIKALADON_OBJ:
                 mikaladon_update((int*)obj, (u8*)state);
                 break;
-            case 0x3fe:
-            case 0x7c6:
+            case ENEMY_VAMBAT_OBJ:
+            case ENEMY_FIREBAT_OBJ:
                 vambat_updateEngaged((GameObject*)(obj), state);
                 break;
-            case 0x58b:
+            case ENEMY_KOOSHY_OBJ:
                 kooshy_updateEngaged((GameObject*)(obj), state);
                 break;
-            case 0x369:
+            case ENEMY_WEEVIL_OBJ:
                 weevil_updateEngaged((int)obj, state);
                 break;
-            case 0x251:
+            case ENEMY_PINPON_OBJ:
                 pinPon_updateEngaged((GameObject*)(obj), (int*)state);
                 break;
-            case 0x25d:
+            case ENEMY_RACHNOP_OBJ:
                 rachnopUpdateApproach((int*)obj, state);
                 break;
-            case 0x457:
+            case ENEMY_SPITTINGEBA_OBJ:
                 spittingEbaUpdateEngaged((u32)obj, state);
                 break;
-            case 0x4d7:
+            case ENEMY_WB_OBJ:
                 wbUpdateEngaged((u32)obj, state);
                 break;
-            case 0x458:
+            case ENEMY_MUTATEDEBA_OBJ:
                 mutatedEbaUpdateEngaged((u32)obj, state);
                 break;
-            case 0x851:
+            case ENEMY_WHIRLPOOL_OBJ:
                 iceBaddie_enterWhirlpoolGroup((GameObject*)obj, (GroundBaddieState*)state);
                 break;
-            case 0x842:
-            case 0x84b:
+            case ENEMY_SNOWWORM_OBJ:
+            case ENEMY_SNOWWORM_BABY_OBJ:
                 snowworm_update((int*)obj, (u8*)state);
                 break;
-            case 0x4ac:
+            case ENEMY_HOODEDZYCK_OBJ:
                 hoodedZyck_updateB(obj, (u8*)state);
                 break;
-            case 0x427:
+            case ENEMY_BATTLEDROID_OBJ:
                 battleDroidUpdate((int)obj, state);
                 break;
-            case 0x6a2:
-            case 0x6a3:
-            case 0x6a4:
-            case 0x6a5:
+            case ENEMY_FIRECRAWLER_OBJ:
+            case ENEMY_REDEYE_OBJ:
+            case ENEMY_SHADOWHUNTER_OBJ:
+            case ENEMY_SWAMPSTRIDER_OBJ:
                 crawler_updateB(obj, (u8*)state);
                 break;
-            case 0x7c8:
+            case ENEMY_HAGABONMK2_OBJ:
                 hagabonMK2_update(obj, (u8*)state);
                 break;
             case 0x7c7:
@@ -375,70 +407,70 @@ void objAnimFn_8014a9f0(short* obj, int state)
         ((TrickyState*)state)->actionId = 5;
         switch (((GameObject*)obj)->anim.seqId)
         {
-        case 0x11:
-        case 0x13a:
-        case 0x5b7:
-        case 0x5b8:
-        case 0x5b9:
-        case 0x5e1:
-        case 0x7a6:
+        case ENEMY_SHARPCLAW_GR_OBJ:
+        case ENEMY_SHARPCLAW_SN_OBJ:
+        case ENEMY_SHARPCLAW_CO_OBJ:
+        case ENEMY_SHARPCLAW_AS_OBJ:
+        case ENEMY_SHARPCLAW_SH_OBJ:
+        case ENEMY_SHARPCLAW_SO_OBJ:
+        case ENEMY_BOSSGENERAL_OBJ:
             sharpClawUpdateIdle((int*)obj, (u8*)state);
             break;
-        case 0xd8:
+        case ENEMY_GUARDCLAW_OBJ:
         case 0x281:
             guardClaw_update((int*)obj, (u8*)state);
             break;
-        case 0x613:
+        case ENEMY_GCROBOTPATROL_OBJ:
             gcRobotPatrol_update((int*)obj, (u8*)state);
             break;
-        case 0x642:
+        case ENEMY_MIKALADON_OBJ:
             mikaladon_update((int*)obj, (u8*)state);
             break;
-        case 0x3fe:
-        case 0x7c6:
+        case ENEMY_VAMBAT_OBJ:
+        case ENEMY_FIREBAT_OBJ:
             vambat_updateIdle((GameObject*)(obj), state);
             break;
-        case 0x58b:
+        case ENEMY_KOOSHY_OBJ:
             kooshy_updateIdle((GameObject*)(obj), state);
             break;
-        case 0x369:
+        case ENEMY_WEEVIL_OBJ:
             weevil_updateIdle((GameObject*)(obj), state);
             break;
-        case 0x251:
+        case ENEMY_PINPON_OBJ:
             pinPon_updateIdle((GameObject*)(obj), state);
             break;
-        case 0x25d:
+        case ENEMY_RACHNOP_OBJ:
             rachnopUpdateIdle((int*)obj, state);
             break;
-        case 0x457:
+        case ENEMY_SPITTINGEBA_OBJ:
             spittingEbaUpdateIdle((GameObject*)(obj), state);
             break;
-        case 0x4d7:
+        case ENEMY_WB_OBJ:
             wbUpdateIdle((u32)obj, state);
             break;
-        case 0x458:
+        case ENEMY_MUTATEDEBA_OBJ:
             mutatedEbaUpdateIdle((u32)obj, state);
             break;
-        case 0x851:
+        case ENEMY_WHIRLPOOL_OBJ:
             iceBaddie_leaveWhirlpoolGroup((GameObject*)obj, (GroundBaddieState*)state);
             break;
-        case 0x842:
-        case 0x84b:
+        case ENEMY_SNOWWORM_OBJ:
+        case ENEMY_SNOWWORM_BABY_OBJ:
             snowworm_applyReactionState((int*)obj, (int*)state);
             break;
-        case 0x4ac:
+        case ENEMY_HOODEDZYCK_OBJ:
             hoodedZyck_updateIdle((GameObject*)(obj), state);
             break;
-        case 0x427:
+        case ENEMY_BATTLEDROID_OBJ:
             battleDroidUpdate((int)obj, state);
             break;
-        case 0x6a2:
-        case 0x6a3:
-        case 0x6a4:
-        case 0x6a5:
+        case ENEMY_FIRECRAWLER_OBJ:
+        case ENEMY_REDEYE_OBJ:
+        case ENEMY_SHADOWHUNTER_OBJ:
+        case ENEMY_SWAMPSTRIDER_OBJ:
             crawler_updateC(obj, (u8*)state);
             break;
-        case 0x7c8:
+        case ENEMY_HAGABONMK2_OBJ:
             hagabonMK2_updateB(obj, (u8*)state);
             break;
         case 0x7c7:
@@ -845,7 +877,7 @@ int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case 2:
-            if (((GameObject*)node)->anim.seqId == 0x7a6)
+            if (((GameObject*)node)->anim.seqId == ENEMY_BOSSGENERAL_OBJ)
                 *(u16*)(sub + 0x2b6) = 0x7a5;
             else
                 *(u16*)(sub + 0x2b6) = 0x33;
@@ -1427,7 +1459,7 @@ void baddieAfterUpdateBonesCb(GameObject* obj, int* bones)
     int v = *bones;
     switch (obj->anim.seqId)
     {
-    case 0x7C8:
+    case ENEMY_HAGABONMK2_OBJ:
         playerTailFn_80026b3c(bones, v, ((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain,
                               crawler_rotateVectorYaw);
         break;
@@ -1495,10 +1527,10 @@ void enemy_free(GameObject* obj, int flag)
     }
     switch ((obj)->anim.seqId)
     {
-    case 0x7c8:
+    case ENEMY_HAGABONMK2_OBJ:
         hagabonMK2_stopLoopSfx((int)obj, state);
         break;
-    case 0x851:
+    case ENEMY_WHIRLPOOL_OBJ:
         if ((int)ObjGroup_ContainsObject((u32)obj, ENEMY_OBJGROUP_SECONDARY) != 0)
         {
             ObjGroup_RemoveObject((int)obj, ENEMY_OBJGROUP_SECONDARY);
@@ -1926,70 +1958,70 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
         (obj)->animEventCallback = enemy_SeqFn;
         switch ((obj)->anim.seqId)
         {
-        case 17:
-        case 314:
-        case 1463:
-        case 1464:
-        case 1465:
-        case 1505:
-        case 1958:
+        case ENEMY_SHARPCLAW_GR_OBJ:
+        case ENEMY_SHARPCLAW_SN_OBJ:
+        case ENEMY_SHARPCLAW_CO_OBJ:
+        case ENEMY_SHARPCLAW_AS_OBJ:
+        case ENEMY_SHARPCLAW_SH_OBJ:
+        case ENEMY_SHARPCLAW_SO_OBJ:
+        case ENEMY_BOSSGENERAL_OBJ:
             sharpClawInit((int)obj, state);
             break;
-        case 216:
+        case ENEMY_GUARDCLAW_OBJ:
         case 641:
             guardClaw_init((int*)obj, state);
             break;
-        case 1555:
+        case ENEMY_GCROBOTPATROL_OBJ:
             gcRobotPatrol_init(obj, (int)state);
             break;
-        case 1602:
+        case ENEMY_MIKALADON_OBJ:
             mikaladon_init(obj, (int)state);
             break;
-        case 1022:
-        case 1990:
+        case ENEMY_VAMBAT_OBJ:
+        case ENEMY_FIREBAT_OBJ:
             vambat_init(obj, (int)state);
             break;
-        case 1419:
+        case ENEMY_KOOSHY_OBJ:
             kooshy_init((int)obj, (int)state);
             break;
-        case 873:
+        case ENEMY_WEEVIL_OBJ:
             weevil_init((int)obj, state);
             break;
-        case 593:
+        case ENEMY_PINPON_OBJ:
             pinPon_init(obj, state);
             break;
-        case 605:
+        case ENEMY_RACHNOP_OBJ:
             rachnopInit((int)obj, (int)state);
             break;
-        case 1111:
+        case ENEMY_SPITTINGEBA_OBJ:
             spittingEbaInit((int)obj, (int)state);
             break;
-        case 1239:
+        case ENEMY_WB_OBJ:
             wbInit((int)obj, (int)state);
             break;
-        case 1112:
+        case ENEMY_MUTATEDEBA_OBJ:
             mutatedEbaInit((u32)obj, (int)state);
             break;
-        case 2129:
+        case ENEMY_WHIRLPOOL_OBJ:
             baddie_initWhirlpoolState((int*)obj, (GroundBaddieState*)state);
             break;
-        case 2114:
-        case 2123:
+        case ENEMY_SNOWWORM_OBJ:
+        case ENEMY_SNOWWORM_BABY_OBJ:
             snowworm_init((int*)obj, (int*)state);
             break;
-        case 1196:
+        case ENEMY_HOODEDZYCK_OBJ:
             hoodedZyck_init((int*)obj, (int*)state);
             break;
-        case 1063:
+        case ENEMY_BATTLEDROID_OBJ:
             battleDroidInit((int)obj, (char*)state);
             break;
-        case 1698:
-        case 1699:
-        case 1700:
-        case 1701:
+        case ENEMY_FIRECRAWLER_OBJ:
+        case ENEMY_REDEYE_OBJ:
+        case ENEMY_SHADOWHUNTER_OBJ:
+        case ENEMY_SWAMPSTRIDER_OBJ:
             crawler_initModelVariant((s16*)obj, state);
             break;
-        case 1992:
+        case ENEMY_HAGABONMK2_OBJ:
             hagabonMK2_init((int*)obj, (int*)state);
             break;
         default:
@@ -2032,7 +2064,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             state[0x25f] = 1;
         }
         if ((((EnemyState*)state)->flags2E4 & 0x8000022) != 0 || ((EnemyPlacement*)setup)->unk34 != 0 ||
-            (obj)->anim.seqId == 1022 || (obj)->anim.seqId == 1990)
+            (obj)->anim.seqId == ENEMY_VAMBAT_OBJ || (obj)->anim.seqId == ENEMY_FIREBAT_OBJ)
         {
             ((EnemyState*)state)->flags |= 0x40000;
         }

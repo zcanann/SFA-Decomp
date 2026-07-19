@@ -35,9 +35,18 @@
 #define ARW_SQUADRON_STATE_DEAD     3
 #define ARW_SQUADRON_STATE_DISABLED 4
 
+/* Object defNos (ObjPlacement.objectId) handled by this DLL; names read from
+ * retail OBJECTS.bin at def+0x91, all gating to this file's own DLL 0x2A6. */
+#define ARW_SQUADRON_OBJ                0x7f0
+#define ARW_SQUADRON_BIGASTEROID_OBJ    0x616
+#define ARW_SQUADRON_SMALLASTEROID_OBJ  0x617
+
+/* variant 1 is the gun-armed fighter (it reads a muzzle/projectile seq table
+ * below); 2 is ARW_SQUADRON_OBJ itself; 3 is the two asteroid defNos, which are
+ * the only variant seeded with random per-axis tumble in arwsquadron_init. */
 #define ARW_SQUADRON_VARIANT_FIGHTER  1
-#define ARW_SQUADRON_VARIANT_ASTEROID 2
-#define ARW_SQUADRON_VARIANT_SHIP     3
+#define ARW_SQUADRON_VARIANT_SQUADRON 2
+#define ARW_SQUADRON_VARIANT_ASTEROID 3
 
 /* fighter-variant seqIds (retail OBJECTS.bin names, all DLL 0x2A6) */
 #define ARW_SQUADRON_SEQID_SHIP_FLY   0x6d5 /* "ARWShipFly" */
@@ -426,7 +435,7 @@ void ARWSquadron_update(int obj)
             state->phase = ARW_SQUADRON_STATE_DISABLED;
             return;
         }
-        if (state->variant != ARW_SQUADRON_VARIANT_ASTEROID)
+        if (state->variant != ARW_SQUADRON_VARIANT_SQUADRON)
         {
             if (setup->pathMode != 2)
             {
@@ -489,7 +498,7 @@ void arwsquadron_followPath(GameObject* obj, ArwSquadronState* state)
             arwsquadron_applyCommandParams(obj, state);
         if (setup->pathMode == 2)
         {
-            if (state->variant == ARW_SQUADRON_VARIANT_ASTEROID)
+            if (state->variant == ARW_SQUADRON_VARIANT_SQUADRON)
                 Obj_SmoothTurnAnglesTowardVelocity(obj, (const Vec3f*)&objAnim->velocityX, 0xf, 50.0f,
                                                    1.0f);
             else
@@ -571,14 +580,14 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
     state->rotZSpeed = setupData->rotZSpeed << 4;
     ObjHits_SetTargetMask(obj, 4);
 
-    if (setupData->objectId == 0x616 || setupData->objectId == 0x617)
+    if (setupData->objectId == ARW_SQUADRON_BIGASTEROID_OBJ || setupData->objectId == ARW_SQUADRON_SMALLASTEROID_OBJ)
     {
-        state->variant = ARW_SQUADRON_VARIANT_SHIP;
-        if (setupData->objectId == 0x616)
+        state->variant = ARW_SQUADRON_VARIANT_ASTEROID;
+        if (setupData->objectId == ARW_SQUADRON_BIGASTEROID_OBJ)
         {
             flags->b10 = 0;
         }
-        if (setupData->objectId == 0x616)
+        if (setupData->objectId == ARW_SQUADRON_BIGASTEROID_OBJ)
         {
             state->activationDistance = 10000.0f;
         }
@@ -588,7 +597,7 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
         }
         state->deathScore = 5;
         state->hitScore = 0;
-        if (setupData->objectId == 0x616)
+        if (setupData->objectId == ARW_SQUADRON_BIGASTEROID_OBJ)
         {
             state->hitVolumeMode = 2;
         }
@@ -601,9 +610,9 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
         state->rotZSpeed = randomGetRange(-0x12c, 0x12c);
         flags->b80 = 1;
     }
-    else if (setupData->objectId == 0x7f0)
+    else if (setupData->objectId == ARW_SQUADRON_OBJ)
     {
-        state->variant = ARW_SQUADRON_VARIANT_ASTEROID;
+        state->variant = ARW_SQUADRON_VARIANT_SQUADRON;
         flags->b10 = 0;
         state->activationDistance = 10000.0f;
     }
@@ -656,7 +665,7 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
 
     if (setupData->pathMode != 0)
     {
-        if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER || state->variant == ARW_SQUADRON_VARIANT_ASTEROID)
+        if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER || state->variant == ARW_SQUADRON_VARIANT_SQUADRON)
         {
             curveMode = 0x28;
         }

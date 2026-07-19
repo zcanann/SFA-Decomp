@@ -235,6 +235,9 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame);
 #define OBJSEQ_OVERRIDE_OBJ 0x6
 /* retail OBJECTS.bin name "VariableObj" (DLL 0xC6) */
 #define OBJSEQ_VARIABLE_OBJ 0x443
+/* seq actor that carries the cutscene camera; retail OBJECTS.bin name
+   "AnimCamera" (DLL 0xC6) */
+#define OBJSEQ_ANIMCAMERA_OBJ 0x1e
 
 /* playable-character placement ids; a seq actor carrying either one drives the
    live player object instead of spawning its own. retail OBJECTS.bin names
@@ -733,7 +736,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
             setup->unk1A = -1;
             if (idx != 0)
             {
-                if (lbl_803DD0D9 != 0 && setup->base.objectId == 0x1e)
+                if (lbl_803DD0D9 != 0 && setup->base.objectId == OBJSEQ_ANIMCAMERA_OBJ)
                 {
                     setup->base.posX = x + *(f32*)(base + 0x2bd4);
                     setup->base.posY = y + *(f32*)(base + 0x2bd8);
@@ -762,11 +765,11 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
             {
                 setup->base.color[1] = setup->base.color[1] | (srcSeq[5] & 0x18);
             }
-            if (setup->base.objectId == 0x1e)
+            if (setup->base.objectId == OBJSEQ_ANIMCAMERA_OBJ)
             {
                 setup->base.color[0] = 1;
             }
-            if (setup->base.objectId == 0x443 && objSeqObjs != -1)
+            if (setup->base.objectId == OBJSEQ_VARIABLE_OBJ && objSeqObjs != -1)
             {
                 setup->base.objectId = objSeqObjs;
             }
