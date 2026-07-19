@@ -20,6 +20,7 @@
 #include "main/shader_init_api.h"
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/rcp_dolphin_render_api.h"
 #include "main/camera.h"
 #include "main/loaded_file_flags.h"
@@ -2044,12 +2045,12 @@ extern f32 blurFilterArea;
 extern u8 bBlurFilterUseArea;
 extern u8 bBiggerBlurFilter;
 
-void turnOnBlurFilter(u8 useArea, u8 bigger, f32 a, f32 b, f32 area)
+void turnOnBlurFilter(f32 x, f32 y, f32 z, u8 useArea, u8 bigger)
 {
     bEnableBlurFilter = 1;
-    lbl_803DCE50 = a;
-    lbl_803DCE4C = b;
-    blurFilterArea = area;
+    lbl_803DCE50 = x;
+    lbl_803DCE4C = y;
+    blurFilterArea = z;
     bBlurFilterUseArea = useArea;
     bBiggerBlurFilter = bigger;
 }

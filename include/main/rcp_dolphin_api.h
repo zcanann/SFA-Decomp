@@ -17,6 +17,7 @@ void textureFn_800528bc(void);
 void gxColorFn_800523d0(void);
 void texRestructRefs(int mode);
 void Rcp_DisableBlurFilter(void);
+void turnOnBlurFilter(f32 x, f32 y, f32 z, u8 useArea, u8 bigger);
 void Rcp_DisableDistortionFilter(void);
 void turnOnDistortionFilter(f32* position, f32 angle2, u32* color, f32 angle1);
 void Rcp_SetSpiritVisionEnabled(u8 enabled);
