@@ -108,11 +108,11 @@ void sfxplayerObj_free(u8* obj)
     {
         u16 sfx1 = data->sfx1;
         if (sfx1 != 0)
-            Sfx_StopFromObjectPtrU16Legacy(obj, sfx1);
+            Sfx_StopFromObject((u32)obj, sfx1);
         {
             u16 sfx2 = data->sfx2;
             if (sfx2 != 0)
-                Sfx_StopFromObjectPtrU16Legacy(obj, sfx2);
+                Sfx_StopFromObject((u32)obj, sfx2);
         }
     }
 }
@@ -171,12 +171,12 @@ static inline void sfxplayerStartSound(u8* obj, SfxplayerPlacement* data, Sfxpla
             soundId = data->sfx1;                                                                            \
             if (soundId != 0)                                                                                          \
             {                                                                                                          \
-                Sfx_StopFromObjectPtrU16Legacy(obj, soundId);                                                          \
+                Sfx_StopFromObject((u32)obj, soundId);                                                                \
             }                                                                                                          \
             soundId = data->sfx2;                                                                            \
             if (soundId != 0)                                                                                          \
             {                                                                                                          \
-                Sfx_StopFromObjectPtrU16Legacy(obj, soundId);                                                          \
+                Sfx_StopFromObject((u32)obj, soundId);                                                                \
             }                                                                                                          \
         }                                                                                                              \
     } while (0)

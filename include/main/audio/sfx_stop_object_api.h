@@ -11,9 +11,6 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId);
 #define Sfx_StopFromObjectIntReturnLegacy(obj, sfxId)                                                    \
     ((int (*)(int, int))Sfx_StopFromObject)((obj), (sfxId))
 
-#define Sfx_StopFromObjectPtrU16Legacy(obj, sfxId)                                                       \
-    ((void (*)(void*, u16))Sfx_StopFromObject)((void*)(obj), (sfxId))
-
 #define Sfx_StopFromObjectPtrU32Legacy(obj, sfxId)                                                       \
     ((void (*)(void*, u32))Sfx_StopFromObject)((void*)(obj), (sfxId))
 
