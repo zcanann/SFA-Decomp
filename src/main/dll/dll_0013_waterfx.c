@@ -658,7 +658,7 @@ void waterfx_func05(int obj, int renderParam)
     }
 }
 
-void waterfx_run(void)
+void waterfx_run(int frames)
 {
     int i;
     for (i = 0; i < WATERFX_POOL_SIZE; i++)

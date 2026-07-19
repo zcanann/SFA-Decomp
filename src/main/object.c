@@ -74,9 +74,6 @@ int lbl_803DCB70;
 int gObjDefCaptureMode = 2;
 s16 gObjPlayerSpawnIdTable[2] = {0x1F, 0};
 
-#define Waterfx_RunFrameLegacy(interface, frames) \
-    ((void (*)())(interface)->runFrame)((frames))
-
 typedef struct ObjListObjectDef
 {
     u8 pad00[0x14];
@@ -2476,7 +2473,7 @@ void Obj_UpdateAllObjects(u8 flags)
                 } while (0);
             }
         }
-        Waterfx_RunFrameLegacy((*gWaterfxInterface), framesThisStep);
+        (*gWaterfxInterface)->runFrame(framesThisStep);
     }
     if ((updateFlags & 2) == 0)
     {

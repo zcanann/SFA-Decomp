@@ -3,7 +3,7 @@
 
 #include "global.h"
 
-typedef void (*WaterfxRunFrameFn)(void);
+typedef void (*WaterfxRunFrameFn)(int frames);
 typedef void (*WaterfxImpactSurfaceFn)(u8* objHeader, u16 limbMask, f32* impactPositions,
                                        u8* surface, f32 speed);
 typedef void (*WaterfxRenderFn)(int renderPass, int flags);
