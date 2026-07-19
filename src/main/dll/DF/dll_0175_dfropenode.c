@@ -444,8 +444,7 @@ void dfropenode_render(int obj, int p2, int p3)
     {
         originalScale = ((GameObject*)obj)->anim.rootMotionScale;
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E4DF8;
-        ((void (*)(int, int, int, f32, f32, int))Camera_LoadModelViewMatrix)(
-            0, p3, obj, lbl_803E4E18, lbl_803E4DFC, 0);
+        Camera_LoadModelViewMatrix(0, p3, (MatrixTransform*)obj, lbl_803E4E18, lbl_803E4DFC, NULL);
         ((GameObject*)obj)->anim.rootMotionScale = originalScale;
         textureSetupFn_800799c0();
         textRenderSetupFn_800795e8();

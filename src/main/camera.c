@@ -463,7 +463,8 @@ f32* fn_8000E814(void)
     return lbl_80338090;
 }
 
-void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* transform, f32 scale, f32* matrix)
+void Camera_LoadModelViewMatrix(int unused0, int unused1, MatrixTransform* transform, f32 scale, f32 unused4,
+                                f32* matrix)
 {
     f32* modelMatrix;
 
@@ -478,7 +479,7 @@ void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* tr
 
     transform->x -= playerMapOffsetX;
     transform->z -= playerMapOffsetZ;
-    setMatrixFromObjectPos(modelMatrix, (MatrixTransform*)transform);
+    setMatrixFromObjectPos(modelMatrix, transform);
     if (lbl_803DE5F0 != scale)
     {
         mtx44ScaleRow1(modelMatrix, scale);

@@ -111,7 +111,8 @@ f32* Camera_GetViewMatrix(void);
 f32* Camera_GetInverseViewMatrix(void);
 CameraViewSlot* Camera_GetCurrentViewSlot(void);
 u8 CameraShake_IsActive(void);
-void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* transform, f32 scale, f32* matrix);
+void Camera_LoadModelViewMatrix(int unused0, int unused1, MatrixTransform* transform, f32 scale, f32 unused4,
+                                f32* matrix);
 void Obj_UpdateWorldTransform(CameraViewSlot* view);
 void Obj_BuildTransformMatricesForYaw(GameObject* obj, s32 yawIndex);
 void Obj_BuildTransformMatrices(GameObject* obj);

@@ -264,8 +264,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     {
         textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
     }
-    ((void (*)(void*, int, void*, f32, f32, int))Camera_LoadModelViewMatrix)(
-        ctx, renderParam, &vtx, (1.0f), (0.0f), 0);
+    Camera_LoadModelViewMatrix((int)ctx, renderParam, (MatrixTransform*)&vtx, 1.0f, 0.0f, NULL);
     GXSetCullMode(GX_CULL_NONE);
     _textSetColor(ctx, 0xff, 0xff, 0xff, 0xff);
     textureSetupFn_800799c0();
