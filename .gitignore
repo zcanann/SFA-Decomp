@@ -45,3 +45,6 @@ compile_commands.json
 *.exe
 
 .claude/worktrees/
+
+# Per-lane scratch dirs (never part of the source tree)
+/scratchpad*/
