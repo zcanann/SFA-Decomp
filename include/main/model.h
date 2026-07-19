@@ -19,8 +19,7 @@ typedef struct ModelRenderOp
     u8 pad38[4];
     u32 flags;
     u8 pad40;
-    u8 texLayerCount; /* 0x41: count of the 8-byte texture-layer records at +0x24
-                         (distinct from layerCount @0x29) */
+    u8 mode;
     u8 pad42;
     u8 alphaOverride;
 } ModelRenderOp;
@@ -30,7 +29,7 @@ STATIC_ASSERT(offsetof(ModelRenderOp, textureId) == 0x24);
 STATIC_ASSERT(offsetof(ModelRenderOp, layerCount) == 0x29);
 STATIC_ASSERT(offsetof(ModelRenderOp, layer0TextureId) == 0x34);
 STATIC_ASSERT(offsetof(ModelRenderOp, flags) == 0x3C);
-STATIC_ASSERT(offsetof(ModelRenderOp, texLayerCount) == 0x41);
+STATIC_ASSERT(offsetof(ModelRenderOp, mode) == 0x41);
 STATIC_ASSERT(offsetof(ModelRenderOp, alphaOverride) == 0x43);
 
 typedef struct ModelRenderOpTextureRefs
