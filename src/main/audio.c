@@ -1317,10 +1317,10 @@ u8 musicInitMidiWad(void)
         gMusicChannelCounterA = 1;
         gMusicChannelCounterB = 1;
         gAudioPendingLoadFlags |= AUDIO_LOAD_MIDI_WAD;
-        saved = testAndSetOnlyUseHeap3_u8(0);
+        saved = testAndSet_onlyUseHeap3(0) & 0xff;
         gMidiWadFileData =
             loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0, MIDIWADLoadedCallback);
-        testAndSetOnlyUseHeap3_u8(saved);
+        testAndSet_onlyUseHeap3(saved);
     }
     if (gAudioCompletedLoadFlags & AUDIO_LOAD_MIDI_WAD)
     {

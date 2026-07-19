@@ -7,7 +7,6 @@
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/mm.h"
-#include "main/mm_ext.h"
 #include "main/dll/dll_3e_api.h"
 
 extern s32 gAttractMovieIdleFrameCount;

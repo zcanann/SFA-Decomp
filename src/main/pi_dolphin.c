@@ -163,7 +163,6 @@ extern volatile int lbl_803DCC80;
 #include "main/objprint_load_api.h"
 #include "dolphin/os/OSAlloc.h"
 #include "main/objmodel.h"
-#include "main/mm_ext.h"
 #include "main/newshadows_texture_api.h"
 #include "main/rcp_dolphin_render_api.h"
 #include "dolphin/gx/GXBump.h"
