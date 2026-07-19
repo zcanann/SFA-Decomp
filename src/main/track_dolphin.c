@@ -845,7 +845,7 @@ int fn_80060688(GameObject* obj, int type)
     int count;
     total = 0;
     offset = 0;
-    count = *(u16*)((char*)obj + 0x9a);
+    count = ((MapBlockData*)obj)->polyGroupCount;
     for (i = 0; i < count; i++)
     {
         entry = *(int*)&obj->anim.modelInstance + offset;
@@ -939,7 +939,7 @@ void MapBlock_init(GameObject* obj)
     *(int*)&obj->anim.dll = (int)obj + *(int*)&obj->anim.dll;
     if (*(u32*)&obj->anim.modelState != 0)
         *(int*)&obj->anim.modelState = (int)obj + *(int*)&obj->anim.modelState;
-    for (i = 0, off = 0; i < *(u8*)((char*)obj + 0xa1); i++)
+    for (i = 0, off = 0; i < ((MapBlockData*)obj)->edgeCount; i++)
     {
         *(int*)(*(int*)&obj->anim.dll + off) = (int)obj + *(int*)(*(int*)&obj->anim.dll + off);
         off += 0x1c;
@@ -959,8 +959,8 @@ void MapBlock_initHits(GameObject* obj, int index)
         *(void**)((char*)obj + 0x70) = mmAlloc(size, 5, 0);
         fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, *(void**)((char*)obj + 0x70), fileOff, size);
     }
-    *(u16*)((char*)obj + 0x9c) = (u32)size / 20;
-    for (i = 0; i < *(u16*)((char*)obj + 0x9c); i++)
+    ((MapBlockData*)obj)->hitCount = (u32)size / 20;
+    for (i = 0; i < ((MapBlockData*)obj)->hitCount; i++)
     {
         entry = *(int*)&obj->anim.textureSlots + i * 20;
         if (*(s16*)(entry + 0) < 0 || (v = *(s16*)(entry + 2)) < 0 || *(s16*)(entry + 0) > 0x280 ||
@@ -1064,7 +1064,7 @@ void fn_80060BB0(void)
         blk = *(int**)((char*)gMapBlocks + i * 4);
         if (blk != NULL)
         {
-            for (j = 0; j < (int)*(u8*)((char*)blk + 0xa1); j++)
+            for (j = 0; j < (int)((MapBlockData*)blk)->edgeCount; j++)
             {
                 arr = *(char**)((char*)blk + 0x68);
                 arr[j * 0x1c + 0x12] = 0;
