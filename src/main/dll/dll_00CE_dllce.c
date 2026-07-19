@@ -100,7 +100,7 @@ ObjectDescriptor12 dll_CE = {
     (ObjectDescriptorCallback)dll_CE_func0B,
 };
 
-void fn_8015DAE8(void)
+void iceBaddie_installStateHandlers(void)
 {
 
     gIceBaddieStateHandlersA[0] = iceBaddie_updateOpenHitState;

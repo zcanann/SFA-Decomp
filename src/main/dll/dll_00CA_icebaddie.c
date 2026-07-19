@@ -1419,7 +1419,7 @@ void iceBaddie_release_nop(void)
 
 void iceBaddie_initialise(void)
 {
-    fn_8015DAE8();
+    iceBaddie_installStateHandlers();
 }
 
 s16 gIceBaddieAttackMoves[8] = {5, 6, 8, 6, 5, 8, 6, 0};
