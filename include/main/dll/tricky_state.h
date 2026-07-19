@@ -5,6 +5,7 @@
 #include "global.h"
 #include "main/dll/curve_walker.h"
 #include "main/game_object.h"
+#include "main/objprint_sound_api.h"
 #include "main/pi_dolphin_path_api.h"
 
 /* Shared TrickyState.stateFlags bits used across the Tricky sidekick / spawned
@@ -170,7 +171,8 @@ typedef struct TrickyState {
     f32 followPosX; /* captured world position of followObj (copied from followObj->anim.worldPos when followPosValid is set); read as the look/eye-aim target through the 0x378 record pointer (tricky) */
     f32 followPosY;
     f32 followPosZ;
-    u8 pad388[0x3D8 - 0x388];
+    u8 pad388[0x3A8 - 0x388];
+    ObjSoundState soundState; /* 0x3A8: object-channel sound playback state */
     f32 sparkPos0X; /* spark particle emit point 0 (skeetla_spawnLinkedSparks args.xyz) */
     f32 sparkPos0Y;
     f32 sparkPos0Z;
@@ -264,6 +266,7 @@ STATIC_ASSERT(offsetof(TrickyState, route.reverse) == 0x4A0);
 STATIC_ASSERT(offsetof(TrickyState, pathSearches) == 0x538);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
+STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
 
 typedef struct

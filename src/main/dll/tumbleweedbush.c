@@ -82,7 +82,7 @@ void trickyGrowl(void* obj, void* trickyState)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8Legacy(obj, (char*)state + 0x3a8, 0x299, 0x100, -1, 0);
+                        objAudioFn_800393f8(obj, &((TrickyState*)state)->soundState, 0x299, 0x100, -1, 0);
                     }
                 }
             }
@@ -113,7 +113,7 @@ void trickyGrowl(void* obj, void* trickyState)
                     {
                         if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                         {
-                            objAudioFn_800393f8Legacy(obj, (char*)state + 0x3a8, 0x299, 0x100, -1, 0);
+                            objAudioFn_800393f8(obj, &((TrickyState*)state)->soundState, 0x299, 0x100, -1, 0);
                         }
                     }
                 }
@@ -168,7 +168,7 @@ void trickyGrowl(void* obj, void* trickyState)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((u32)(int)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8Legacy(obj, (char*)digState + 0x3a8, 0x29d, 0, -1, 0);
+                        objAudioFn_800393f8(obj, &((TrickyState*)digState)->soundState, 0x29d, 0, -1, 0);
                     }
                 }
             }

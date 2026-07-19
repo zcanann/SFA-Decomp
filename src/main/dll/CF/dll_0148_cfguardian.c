@@ -889,9 +889,9 @@ int cfguardian_updateMain(GameObject* obj)
     ((CfPlayEventSfxFn)cfguardianPlayEventSfx)((int*)obj, (u8*)&stk + 12, lbl_803DBE20);
     if (randFn_80080100(0x3c) != 0)
     {
-        objAudioFn_800393f8Legacy(obj, sub->audioBlock, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);
+        objAudioFn_800393f8(obj, &sub->soundState, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);
     }
-    objAnimFn_80038f38(obj, (char*)sub->audioBlock);
+    objAnimFn_80038f38(obj, (char*)&sub->soundState);
     characterDoEyeAnimsState(obj, sub->eyeBlock);
     if (sub->questState != mainGetBit(GAMEBIT_GUARDIAN_QUEST_STATE))
     {

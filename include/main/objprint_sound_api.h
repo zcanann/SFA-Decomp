@@ -35,8 +35,4 @@ void objSoundFn_800392f0(GameObject* obj, ObjSoundState* state, ObjSoundDef* sou
 void fn_80039264(s32* state);
 void objModelAndSoundFn_80039118(int obj, int state);
 
-#define objAudioFn_800393f8Legacy(obj, state, sfx, pitch, volume, force)                                         \
-    ((void (*)(GameObject*, ObjSoundState*, int, int, int, int))objAudioFn_800393f8)(                             \
-        (GameObject*)(obj), (ObjSoundState*)(state), (sfx), (pitch), (volume), (force))
-
 #endif /* MAIN_OBJPRINT_SOUND_API_H_ */

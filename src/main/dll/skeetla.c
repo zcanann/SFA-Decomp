@@ -433,7 +433,7 @@ static void skeetla_playFootstepSfx(u8* obj, u16 sfxId)
         ((((GameObject*)obj)->anim.currentMove >= 0x30) || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
         (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0))
     {
-        objAudioFn_800393f8Legacy(obj, state + 0x3a8, sfxId, 0x500, -1, 0);
+        objAudioFn_800393f8((GameObject*)obj, &((TrickyState*)state)->soundState, sfxId, 0x500, -1, 0);
     }
 }
 

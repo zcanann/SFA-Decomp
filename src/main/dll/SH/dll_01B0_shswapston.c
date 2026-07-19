@@ -402,7 +402,7 @@ void warpstone_hitDetect(GameObject* obj)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_swapstone_move_short_2bc);
         }
-        objAudioFn_800393f8Legacy(obj, state + 5, 171, -1280, -1, 0);
+        objAudioFn_800393f8(obj, (ObjSoundState*)((u8*)state + 0x14), 171, -1280, -1, 0);
     }
 }
 
@@ -468,11 +468,11 @@ void warpstone_update(int obj)
     {
         if (randFn_80080100(100) != 0)
         {
-            objAudioFn_800393f8Legacy(obj, (void*)(state + 0x14), 0xab, -0x100, -1, 0);
+            objAudioFn_800393f8((GameObject*)obj, (ObjSoundState*)(state + 0x14), 0xab, -0x100, -1, 0);
         }
         if (randFn_80080100(500) != 0)
         {
-            objAudioFn_800393f8Legacy(obj, (void*)(state + 0x14), 0x417, -0x500, -1, 0);
+            objAudioFn_800393f8((GameObject*)obj, (ObjSoundState*)(state + 0x14), 0x417, -0x500, -1, 0);
         }
     }
 

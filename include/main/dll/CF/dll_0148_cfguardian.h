@@ -10,6 +10,7 @@
 #include "main/game_ui_interface.h"
 #include "main/dll/player_status.h"
 #include "main/objseq.h"
+#include "main/objprint_sound_api.h"
 #include "main/dll/dll_002E_moveLib.h"
 
 typedef struct CfGuardianState {
@@ -36,7 +37,7 @@ typedef struct CfGuardianState {
             u8 pad612[0x12];
         };
     };
-    u8 audioBlock[0x30];  /* 0x624: objAudioFn block */
+    ObjSoundState soundState; /* 0x624 */
     u8 eyeBlock[0x38];    /* 0x654: characterDoEyeAnims block */
     int linkedObjs[6];    /* 0x68c: freed with the guardian */
     u8 pad6A4[0x18];
@@ -57,7 +58,7 @@ typedef struct CfGuardianState {
     u8 flagsA9B;          /* 1 move-latched, 2 path-flying, 4 homing */
 } CfGuardianState;
 
-STATIC_ASSERT(offsetof(CfGuardianState, audioBlock) == 0x624);
+STATIC_ASSERT(offsetof(CfGuardianState, soundState) == 0x624);
 STATIC_ASSERT(offsetof(CfGuardianState, eyeBlock) == 0x654);
 STATIC_ASSERT(offsetof(CfGuardianState, linkedObjs) == 0x68c);
 STATIC_ASSERT(offsetof(CfGuardianState, path) == 0x6bc);

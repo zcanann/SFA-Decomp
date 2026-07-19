@@ -135,7 +135,7 @@ int babycloudrunner_tryCapture(void* p)
         ((GameObject*)obj)->userData1 = 0;
         return 1;
     }
-    objAudioFn_800393f8Legacy(obj, sub->audioBlock, 0x296, 0x1000, -1, 1);
+    objAudioFn_800393f8((GameObject*)obj, &sub->soundState, 0x296, 0x1000, -1, 1);
     Sfx_PlayFromObject((int)obj, SFXTRIG_wp_ice_freeze);
     return 0;
 }
@@ -396,9 +396,9 @@ void babycloudrunner_update(int* obj)
             if (randFn_80080100(500) != 0)
             {
                 u16 sfxId = ((s16*)sub->mutterSfxTable)[randomGetRange(0, 3)];
-                objAudioFn_80039270((int)obj, sub->audioBlock, sfxId);
+                objAudioFn_80039270((int)obj, &sub->soundState, sfxId);
             }
-            objAnimFn_80038f38((GameObject*)obj, (char*)sub->audioBlock);
+            objAnimFn_80038f38((GameObject*)obj, (char*)&sub->soundState);
             if (sub->runnerState == 1 || sub->runnerState == 2)
             {
                 f32 speed = sub->curveSpeed;

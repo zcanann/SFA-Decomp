@@ -300,7 +300,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8Legacy(obj, (char*)temp + 0x3a8, 0x29d, 0, -1, 0);
+                        objAudioFn_800393f8((GameObject*)obj, &((TrickyState*)temp)->soundState, 0x29d, 0, -1, 0);
                     }
                 }
             }
@@ -338,7 +338,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8Legacy(obj, (char*)temp + 0x3a8, 0x299, 0x100, -1, 0);
+                        objAudioFn_800393f8((GameObject*)obj, &((TrickyState*)temp)->soundState, 0x299, 0x100, -1, 0);
                     }
                 }
             }
@@ -363,7 +363,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8Legacy(obj, (char*)temp + 0x3a8, 0x299, 0x100, -1, 0);
+                        objAudioFn_800393f8((GameObject*)obj, &((TrickyState*)temp)->soundState, 0x299, 0x100, -1, 0);
                     }
                 }
             }
@@ -601,7 +601,7 @@ void trickyFlame(GameObject* obj, int trickyState)
                         {
                             if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                             {
-                                objAudioFn_800393f8Legacy(obj, (char*)i + 0x3a8, 0x29d, 0, -1, 0);
+                                objAudioFn_800393f8(obj, &((TrickyState*)i)->soundState, 0x29d, 0, -1, 0);
                             }
                         }
                     }
@@ -695,7 +695,7 @@ void trickyFlame(GameObject* obj, int trickyState)
                         {
                             if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                             {
-                                objAudioFn_800393f8Legacy(obj, (char*)i + 0x3a8, 0x29d, 0, -1, 0);
+                                objAudioFn_800393f8(obj, &((TrickyState*)i)->soundState, 0x29d, 0, -1, 0);
                             }
                         }
                     }

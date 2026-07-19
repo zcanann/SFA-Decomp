@@ -150,7 +150,7 @@ void fn_8013F100(GameObject* obj, register int state)
                     {
                         if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) == 0)
                         {
-                            objAudioFn_800393f8Legacy(obj, (void*)(extra + 936), 861, 1280, -1, 0);
+                            objAudioFn_800393f8(obj, &((TrickyState*)extra)->soundState, 861, 1280, -1, 0);
                         }
                     }
                 }
@@ -257,7 +257,7 @@ void fn_8013F100(GameObject* obj, register int state)
                     }
                     if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) == 0)
                     {
-                        objAudioFn_800393f8Legacy(obj, (void*)(extra + 936), 865, 1280, -1, 0);
+                        objAudioFn_800393f8(obj, &((TrickyState*)extra)->soundState, 865, 1280, -1, 0);
                     }
                 }
             }
@@ -466,7 +466,7 @@ void fn_8013F9E4(GameObject* obj, int state)
                     {
                         if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) == 0)
                         {
-                            objAudioFn_800393f8Legacy(obj, (void*)(extra + 936), 864, 1280, -1, 0);
+                            objAudioFn_800393f8(obj, &((TrickyState*)extra)->soundState, 864, 1280, -1, 0);
                         }
                     }
                 }

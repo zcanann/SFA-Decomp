@@ -158,7 +158,7 @@ typedef struct
             {                                                                                                          \
                 if (Sfx_IsPlayingFromObjectChannel((int)(obj), 0x10) == 0)                                             \
                 {                                                                                                      \
-                    objAudioFn_800393f8Legacy(obj, cfg + 0x3a8, snd, p4, -1, 0);                                       \
+                    objAudioFn_800393f8((GameObject*)(obj), &((TrickyState*)cfg)->soundState, snd, p4, -1, 0);          \
                 }                                                                                                      \
             }                                                                                                          \
         }                                                                                                              \

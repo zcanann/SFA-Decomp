@@ -1108,7 +1108,7 @@ void fn_80138908(GameObject* obj, int v)
 {
     ((struct Bits58*)((GameObject*)obj)->extra)->b6 = v;
 }
-int fn_80138920(GameObject* obj, int sfxId, int vol)
+int fn_80138920(GameObject* obj, u16 sfxId, int vol)
 {
     u8* b = ((GameObject*)obj)->extra;
     s16 v;
@@ -1128,7 +1128,7 @@ int fn_80138920(GameObject* obj, int sfxId, int vol)
     }
     if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) != 0)
         return 0;
-    objAudioFn_800393f8Legacy(obj, b + 936, sfxId, vol, -1, 0);
+    objAudioFn_800393f8(obj, &((TrickyState*)b)->soundState, sfxId, vol, -1, 0);
     return 1;
 }
 

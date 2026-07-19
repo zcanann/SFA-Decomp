@@ -364,7 +364,7 @@ void trickyFn_80144f50(GameObject* obj, int state)
                 if ((sfxDisabled == 0) && (((obj)->anim.currentMove >= 0x30) || ((obj)->anim.currentMove < 0x29)) &&
                     (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0))
                 {
-                    objAudioFn_800393f8Legacy(obj, (void*)(sfxState + 0x3a8), 0x360, 0x500, -1, 0);
+                    objAudioFn_800393f8(obj, &((TrickyState*)sfxState)->soundState, 0x360, 0x500, -1, 0);
                 }
             }
 
@@ -485,7 +485,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
                   (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))))
             {
-                objAudioFn_800393f8Legacy(obj, (void*)(slot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
+                objAudioFn_800393f8((GameObject*)obj, &((TrickyState*)slot)->soundState, 0x29d, 0, 0xffffffff, 0);
             }
         }
         Sfx_RemoveLoopedObjectSoundIntLegacy(obj, SFXTRIG_trwhin1);
@@ -519,7 +519,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
                       (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))))
                 {
-                    objAudioFn_800393f8Legacy(obj, (void*)(slot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
+                    objAudioFn_800393f8((GameObject*)obj, &((TrickyState*)slot)->soundState, 0x29d, 0, 0xffffffff, 0);
                 }
             }
             else if (Obj_IsLoadingLocked())
@@ -852,7 +852,8 @@ int Tricky_updateSideCommandPrompts(int obj)
                                                                 (((GameObject*)objVal)->anim.currentMove < 0x29)) &&
                                                                !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))))
                 {
-                    objAudioFn_800393f8Legacy(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
+                    objAudioFn_800393f8((GameObject*)objVal, &((TrickyState*)ref)->soundState, promptId, 0x500,
+                                       0xffffffff, 0);
                 }
                 setup = (u16*)Obj_AllocObjectSetup(0x20, 0x17c);
                 flagsB[0] = -1;
@@ -919,7 +920,8 @@ int Tricky_updateSideCommandPrompts(int obj)
                                (((GameObject*)objVal)->anim.currentMove < 0x29)) &&
                               !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))))
                         {
-                            objAudioFn_800393f8Legacy(objVal, (void*)(refB + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
+                            objAudioFn_800393f8((GameObject*)objVal, &((TrickyState*)refB)->soundState, 0x359,
+                                               0x500, 0xffffffff, 0);
                         }
                     }
                     else if ((((promptC) &&
@@ -928,7 +930,8 @@ int Tricky_updateSideCommandPrompts(int obj)
                                 (((GameObject*)objVal)->anim.currentMove < 0x29)))) &&
                              !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))
                     {
-                        objAudioFn_800393f8Legacy(objVal, (void*)(refC + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
+                        objAudioFn_800393f8((GameObject*)objVal, &((TrickyState*)refC)->soundState, 0x358, 0x500,
+                                           0xffffffff, 0);
                     }
                 }
                 setup = (u16*)Obj_AllocObjectSetup(0x20, 0x175);
@@ -1046,7 +1049,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
             (((obj->anim.currentMove >= 0x30 || (obj->anim.currentMove < 0x29)) &&
               (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0))))
         {
-            objAudioFn_800393f8Legacy(obj, (void*)(childSlot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
+            objAudioFn_800393f8(obj, &((TrickyState*)childSlot)->soundState, 0x29d, 0, 0xffffffff, 0);
         }
     }
     doNothing_onTrickyFree();
@@ -1229,7 +1232,7 @@ void Tricky_hitDetect(GameObject* obj)
             {                                                                                                          \
                 if (Sfx_IsPlayingFromObjectChannel((obj), 0x10) == 0)                                                  \
                 {                                                                                                      \
-                    objAudioFn_800393f8Legacy((obj), (u8*)st + 0x3a8, (sfx), (vol), 0xffffffff, 0);                    \
+                    objAudioFn_800393f8((GameObject*)(obj), &st->soundState, (sfx), (vol), 0xffffffff, 0);             \
                 }                                                                                                      \
             }                                                                                                          \
         }                                                                                                              \
@@ -1944,7 +1947,7 @@ void Tricky_update(int obj)
                 }
                 else
                 {
-                    objAudioFn_800393f8Legacy(obj, (u8*)st + 0x3a8, 0x298, 0x500, 0xffffffff, 0);
+                    objAudioFn_800393f8((GameObject*)obj, &st->soundState, 0x298, 0x500, 0xffffffff, 0);
                     played = 1;
                 }
                 break;

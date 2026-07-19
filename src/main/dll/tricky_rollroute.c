@@ -176,7 +176,7 @@ void trickyFn_80141290(int obj, int ball)
                 ((((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
                  !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
             {
-                objAudioFn_800393f8Legacy(obj, (void*)(sfxState + 0x3a8), 0x29b, 0x1000, -1, 0);
+                objAudioFn_800393f8((GameObject*)obj, &((TrickyState*)sfxState)->soundState, 0x29b, 0x1000, -1, 0);
             }
         }
     }

@@ -16,7 +16,7 @@ int fn_80138F90(GameObject* tricky);
 int trickyFn_80138f14(GameObject* tricky);
 void trickyImpress(GameObject* obj);
 void fn_80138908(GameObject* obj, int value);
-int fn_80138920(GameObject* obj, int sfxId, int volume);
+int fn_80138920(GameObject* obj, u16 sfxId, int volume);
 void debugPrintInit(void);
 void debugPrintReset(void);
 void debugPrintfxy(int x, int y, char* fmt, ...);

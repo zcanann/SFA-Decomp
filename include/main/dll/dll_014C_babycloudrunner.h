@@ -3,13 +3,15 @@
 
 #include "main/game_object.h"
 #include "main/objanim_update.h"
+#include "main/objprint_sound_api.h"
 
 typedef struct BabyCloudRunnerState
 {
     f32 unk00;
     u8 pad04[0x38]; /* 0x18: position used for the sandworm handoff */
     u8 lookBlock[0x30]; /* 0x3c: fn_8003ADC4 head-track block */
-    u8 audioBlock[0x3c]; /* 0x6c: objAudioFn block */
+    ObjSoundState soundState; /* 0x6c */
+    u8 soundPad[0xc];
     f32 animSpeed;
     f32 scale; /* 0xac: copied to the linked object's scale */
     int unkB0;
@@ -35,6 +37,8 @@ typedef struct BabyCloudRunnerState
     u8 spitFlags; /* 0x244: BabyCloudrunnerFlags / WormSpitByte overlay */
     u8 pad245[3];
 } BabyCloudRunnerState;
+
+STATIC_ASSERT(offsetof(BabyCloudRunnerState, soundState) == 0x6C);
 
 int babycloudrunner_getExtraSize(void);
 int babycloudrunner_getObjectTypeId(void);
