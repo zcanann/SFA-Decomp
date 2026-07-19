@@ -1574,7 +1574,7 @@ int Sfx_IsPlayingFromObjectChannel(int obj, int channel)
     return 0;
 }
 
-s32 Sfx_IsPlayingFromObject(u32 obj, u16 sfxId)
+s32 Sfx_IsPlayingFromObject(int obj, u16 sfxId)
 {
     SfxObjectChannel* objectChannel;
 
@@ -1678,7 +1678,7 @@ void Sfx_StopObjectChannel(int obj, int channel)
     }
 }
 
-void Sfx_StopFromObject(u32 obj, u16 sfxId)
+void Sfx_StopFromObject(int obj, u16 sfxId)
 {
     SfxObjectChannel* objectChannel;
 

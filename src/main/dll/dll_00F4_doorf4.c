@@ -424,9 +424,9 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 break;
             case 4:
-                if (sub->sfxOpen != 0 && Sfx_IsPlayingFromObjectIntLegacy(obj, sub->sfxOpen) != 0)
+                if (sub->sfxOpen != 0 && Sfx_IsPlayingFromObject(obj, sub->sfxOpen) != 0)
                 {
-                    Sfx_StopFromObjectIntLegacy(obj, sub->sfxOpen);
+                    Sfx_StopFromObject(obj, sub->sfxOpen);
                 }
                 break;
             case 5:
@@ -507,9 +507,9 @@ void DoorF4_free(int obj)
     DoorF4State* state = ((GameObject*)obj)->extra;
     if (state->sfxOpen != 0)
     {
-        if (Sfx_IsPlayingFromObjectIntLegacy(obj, state->sfxOpen) != 0)
+        if (Sfx_IsPlayingFromObject(obj, state->sfxOpen) != 0)
         {
-            Sfx_StopFromObjectIntLegacy(obj, state->sfxOpen);
+            Sfx_StopFromObject(obj, state->sfxOpen);
         }
     }
     ObjGroup_RemoveObject(obj, DOORF4_OBJ_GROUP);
