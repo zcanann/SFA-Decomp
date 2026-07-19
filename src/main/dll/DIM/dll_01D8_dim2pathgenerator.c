@@ -81,7 +81,7 @@ typedef struct Dim2SpawnSetup
     f32 posY;
     f32 posZ;
     s32 mapId;
-    s8 unk18;
+    s8 initRotationByte; /* 0x18: spawn heading, read by the child as anim.rotX (<<8) */
     u8 pad19;
     s16 childRot; /* 0x1A rotation region of spawned child placement */
     s16 unk1C;
@@ -243,7 +243,7 @@ void DIM2PathGenerator_update(int* obj)
         np->colorA = ((Dim2pathgeneratorPlacement*)def)->colorA;
         np->colorA = 255;
         np->unk3 = ((Dim2pathgeneratorPlacement*)def)->unk3;
-        np->unk18 = (s8) * (u8*)((char*)def + 0x1c);
+        np->initRotationByte = (s8) * (u8*)((char*)def + 0x1c);
         np->childRot = *(u8*)((char*)def + 0x1a);
         np->unk1C = *(u8*)((char*)def + 0x1b);
         np->mapId = ((Dim2pathgeneratorPlacement*)def)->mapId;
