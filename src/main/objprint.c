@@ -35,7 +35,6 @@
 #include "track/intersect_api.h"
 #include "track/intersect_fog_api.h"
 #include "main/newshadows_shadow_api.h"
-#include "main/object_ext.h"
 #include "main/dll/player_api.h"
 
 s16 lbl_803DCC18;

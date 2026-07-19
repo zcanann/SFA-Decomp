@@ -34,7 +34,6 @@
 #include "main/texture.h"
 #include "main/camera.h"
 #include "main/object.h"
-#include "main/object_ext.h"
 #include "main/object_update_list.h"
 #include "main/object_api.h"
 #include "main/newshadows_shadow_api.h"
@@ -245,7 +244,7 @@ void doNothing_beforeRenderObject(int a)
 }
 
 
-void fn_8002A5DC(u8* obj)
+void fn_8002A5DC(GameObject* obj)
 {
     f32 m2[12];
     f32 rot[12];
@@ -258,13 +257,13 @@ void fn_8002A5DC(u8* obj)
     f32 denom;
     f32 sum;
 
-    len = lbl_803DE888 * ((GameObject*)obj)->anim.hitboxScale;
-    denom = len * ((GameObject*)obj)->anim.rootMotionScale;
-    dx = ((((GameObject*)obj)->anim.previousLocalPosZ - gMapSavedPlayerOffsetZ) -
-          (((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ)) /
+    len = lbl_803DE888 * obj->anim.hitboxScale;
+    denom = len * obj->anim.rootMotionScale;
+    dx = ((obj->anim.previousLocalPosZ - gMapSavedPlayerOffsetZ) -
+          (obj->anim.localPosZ - playerMapOffsetZ)) /
          denom;
-    dz = ((((GameObject*)obj)->anim.localPosX - gMapSavedPlayerOffsetX) -
-          (((GameObject*)obj)->anim.previousLocalPosX - playerMapOffsetX)) /
+    dz = ((obj->anim.localPosX - gMapSavedPlayerOffsetX) -
+          (obj->anim.previousLocalPosX - playerMapOffsetX)) /
          denom;
     sum = dz * dz + dx * dx;
     if (sum > lbl_803DE88C)
@@ -289,7 +288,7 @@ void fn_8002A5DC(u8* obj)
         vecB[0] = rot[4];
         vecB[1] = rot[5];
         vecB[2] = rot[6];
-        fn_800213D0(vecA, vecB, &((GameObject*)obj)->anim.rotZ, &((GameObject*)obj)->anim.rotY, (s16*)obj);
+        fn_800213D0(vecA, vecB, &obj->anim.rotZ, &obj->anim.rotY, (s16*)obj);
     }
 }
 void Obj_SetModelRenderOpAlpha(void* obj, u8 alpha)
@@ -314,14 +313,14 @@ void Obj_SetModelRenderOpAlpha(void* obj, u8 alpha)
     }
 }
 
-void Obj_SetModelSlotIndex(u8* obj, int slotIndex)
+void Obj_SetModelSlotIndex(GameObject* obj, int slotIndex)
 {
-    ((ObjAnimComponent*)obj)->mapEventSlot = slotIndex;
+    obj->anim.mapEventSlot = slotIndex;
 }
 
-void Obj_ClearModelSlotIndex(u8* obj)
+void Obj_ClearModelSlotIndex(GameObject* obj)
 {
-    ((ObjAnimComponent*)obj)->mapEventSlot = -1;
+    obj->anim.mapEventSlot = -1;
 }
 
 ObjModel* Obj_GetActiveModel(GameObject* obj)
@@ -782,14 +781,11 @@ void objSetSlot(GameObject* obj, s8 slot)
     obj->anim.activeHitboxMode = slot;
 }
 
-int objApplyVelocity(u8* obj)
+int objApplyVelocity(GameObject* obj)
 {
-    ((GameObject*)obj)->anim.localPosX +=
-        timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelX + ((GameObject*)obj)->anim.velocityX));
-    ((GameObject*)obj)->anim.localPosY +=
-        timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelY + ((GameObject*)obj)->anim.velocityY));
-    ((GameObject*)obj)->anim.localPosZ +=
-        timeDelta * (lbl_803DE8B8 * (((GameObject*)obj)->externalVelZ + ((GameObject*)obj)->anim.velocityZ));
+    obj->anim.localPosX += timeDelta * (lbl_803DE8B8 * (obj->externalVelX + obj->anim.velocityX));
+    obj->anim.localPosY += timeDelta * (lbl_803DE8B8 * (obj->externalVelY + obj->anim.velocityY));
+    obj->anim.localPosZ += timeDelta * (lbl_803DE8B8 * (obj->externalVelZ + obj->anim.velocityZ));
     return 1;
 }
 

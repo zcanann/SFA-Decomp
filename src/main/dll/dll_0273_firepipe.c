@@ -44,7 +44,6 @@
 #include "main/gamebits.h"
 #include "main/mm.h"
 #include "main/model_light.h"
-#include "main/object_ext.h"
 
 f32 lbl_803DC340 = -0.01f;
 f32 lbl_803DC344 = 0.3f;
