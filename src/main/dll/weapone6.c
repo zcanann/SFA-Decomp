@@ -489,7 +489,7 @@ void fn_8013F9E4(GameObject* obj, int state)
             }
             if (inWater != 0)
             {
-                ((void (*)(void*, int, f32, int))objAnimFn_8013a3f0)(obj, 8, lbl_803E243C, 0);
+                objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
                 ((TrickyState*)state)->cooldownC = lbl_803E2440;
                 ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(sInWaterMessage);
@@ -501,13 +501,13 @@ void fn_8013F9E4(GameObject* obj, int state)
                 case 13:
                     if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
                     {
-                        ((void (*)(void*, int, f32, int))objAnimFn_8013a3f0)(obj, 49, lbl_803E243C, 0);
+                        objAnimFn_8013a3f0((int)obj, 49, lbl_803E243C, 0);
                     }
                     break;
                 case 49:
                     break;
                 default:
-                    ((void (*)(void*, int, f32, int))objAnimFn_8013a3f0)(obj, 13, lbl_803E2444, 0);
+                    objAnimFn_8013a3f0((int)obj, 13, lbl_803E2444, 0);
                     break;
                 }
                 trickyDebugPrint(lbl_8031D478);
@@ -592,14 +592,14 @@ void fn_8013FBE4(GameObject* obj, register int state)
                 }
                 if (inWater != 0)
                 {
-                    ((void (*)(void*, int, f32, int))objAnimFn_8013a3f0)(obj, 8, lbl_803E243C, 0);
+                    objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
                     ((TrickyState*)state)->cooldownC = lbl_803E2440;
                     ((TrickyState*)state)->particleTimer = lbl_803E23DC;
                     trickyDebugPrint(sInWaterMessage);
                 }
                 else
                 {
-                    ((void (*)(void*, int, f32, int))objAnimFn_8013a3f0)(obj, 0, lbl_803E2444, 0);
+                    objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
                     trickyDebugPrint(lbl_8031D478);
                 }
             }
