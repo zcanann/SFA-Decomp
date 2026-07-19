@@ -255,3 +255,15 @@ etc). mathSinf is AUTHENTICALLY FLOAT. Reverted. The fn_801FD6B4 frsp divergence
 (not the return type) — the earlier codegen inference was wrong. Do NOT change mathSinf/mathCosf to
 double. (mathCosf-def was already known to match 100 as float in s_sin.c, corroborating.) Prior handoff
 entry retracted.
+
+## mcmdPortamento 82.685->100 available ONLY via a banned goto (owner policy call)
+mcmdPortamento (src/main/audio/mcmd_exec.c) reaches byte-perfect 100 with a single structural change:
+switch case 2's portamento-enable path shares case 1's 15-instr enable block (`if(!(cflags&0x400))
+fn_8026F5B8(state); outputFlags|=0x400;`) via a BACKWARD `goto setPortamentoActive;` into case 1's body,
+instead of duplicating the block (our current clean-C form, +15 instrs = 82.685). Cross-jumping ruled out
+(inverting case-2 conds to early-breaks was byte-inert). This is plausibly the original MusyX/Factor5
+tail-share idiom, BUT it's a backward goto into another switch case's interior — squarely what CLAUDE.md's
+"goto -> write structured control flow" ban targets, and distinct from the forward error-exit/break gotos
+we treat as authentic. NOT shipped (kept clean-C at 82.685 per "clean-C beats hacked-100"). If you judge
+this specific MusyX tail-share goto authentic 2002 source, the one-line change lands the whole fn at 100 —
+your policy call. Reverted; flagging.
