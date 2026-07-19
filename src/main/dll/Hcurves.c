@@ -1874,11 +1874,11 @@ int RomCurve_func29(RomCurveWalker* state, int pickIdx)
 
     if (state->reverse != 0)
     {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatNegOne);
+        Curve_AdvanceAlongPath(&state->curve, gFloatNegOne);
     }
     else
     {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatOne);
+        Curve_AdvanceAlongPath(&state->curve, gFloatOne);
     }
 
     return 0;
@@ -2095,11 +2095,11 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     }
     if (state->reverse != 0)
     {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatNegOne);
+        Curve_AdvanceAlongPath(&state->curve, gFloatNegOne);
     }
     else
     {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatOne);
+        Curve_AdvanceAlongPath(&state->curve, gFloatOne);
     }
     return 0;
 clearAndReturn:
@@ -2128,7 +2128,7 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
     }
 
     stateBytes = (char*)state;
-    curveId = ((int (*)(int, int*, int, int, char))curves_findNearObj)((int)obj, curveTypes, 1, curveType, 0xc);
+    curveId = curves_findNearObj((int)obj, curveTypes, 1, curveType, 0xc);
     if (curveId == -1)
     {
         goto fail;
