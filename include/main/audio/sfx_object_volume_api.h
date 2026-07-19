@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
+void Sfx_SetObjectSfxVolume(u32 obj, u16 sfxId, u8 volume, f32 volumeScale);
 
 #define Sfx_SetObjectSfxVolumeIntLegacy(obj, sfxId, volume, scale)                                        \
     ((void (*)(int, int, int, f32))Sfx_SetObjectSfxVolume)((obj), (sfxId), (volume), (scale))
