@@ -241,35 +241,50 @@ STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);
 STATIC_ASSERT(offsetof(ObjModel, vtxBufDirty) == 0x60);
 
+/* Verlet-style bone-chain node (player tail etc.), simulated by the
+ * fn_80025F38 / fn_80026308 / fn_80026928 / modelAnimFn_80026790 cluster. */
+typedef struct ObjModelChainNode {
+    f32 pos[3];         /* 0x00: current world position */
+    f32 posDelta[3];    /* 0x0C: per-frame momentum (damped + jittered) */
+    f32 localOffset[3]; /* 0x18: rest offset from the parent node */
+    f32 mtx[3][4];      /* 0x24: node world matrix */
+} ObjModelChainNode; /* 0x54 */
+
+typedef struct ObjModelChainDesc {
+    s32 *jointIndices; /* per-node model joint index */
+    s32 nodeCount;
+} ObjModelChainDesc;
+
 typedef struct ObjModelChainEntry {
-    void *frameBuffer;
-    void *model;
-    s32 frameCount;
+    ObjModelChainNode *nodes; /* nodeCount+1 records */
+    ObjModelChainDesc *desc;
+    s32 nodeCount;
 } ObjModelChainEntry;
 
 typedef struct ObjModelChain {
     ObjModelChainEntry *entries;
     s32 count;
-    f32 originX;
-    f32 originY;
-    f32 originZ;
+    f32 stiffness; /* 0x08: dot-product lerp stiffness toward the target orientation */
+    f32 damping;   /* 0x0C: per-frame momentum damping multiplier */
+    f32 gravityY;  /* 0x10: additive Y gravity applied to momentum */
     f32 phase;
-    u8 updateFlag;
+    u8 updatedThisFrame; /* 0x18: set during update, cleared by AdvancePhase */
     u8 firstUpdateDone;
     u8 enabled;
 } ObjModelChain;
 
+STATIC_ASSERT(sizeof(ObjModelChainNode) == 0x54);
 STATIC_ASSERT(sizeof(ObjModelChainEntry) == 0x0C);
-STATIC_ASSERT(offsetof(ObjModelChainEntry, frameBuffer) == 0x00);
-STATIC_ASSERT(offsetof(ObjModelChainEntry, model) == 0x04);
-STATIC_ASSERT(offsetof(ObjModelChainEntry, frameCount) == 0x08);
+STATIC_ASSERT(offsetof(ObjModelChainEntry, nodes) == 0x00);
+STATIC_ASSERT(offsetof(ObjModelChainEntry, desc) == 0x04);
+STATIC_ASSERT(offsetof(ObjModelChainEntry, nodeCount) == 0x08);
 STATIC_ASSERT(offsetof(ObjModelChain, entries) == 0x00);
 STATIC_ASSERT(offsetof(ObjModelChain, count) == 0x04);
-STATIC_ASSERT(offsetof(ObjModelChain, originX) == 0x08);
-STATIC_ASSERT(offsetof(ObjModelChain, originY) == 0x0C);
-STATIC_ASSERT(offsetof(ObjModelChain, originZ) == 0x10);
+STATIC_ASSERT(offsetof(ObjModelChain, stiffness) == 0x08);
+STATIC_ASSERT(offsetof(ObjModelChain, damping) == 0x0C);
+STATIC_ASSERT(offsetof(ObjModelChain, gravityY) == 0x10);
 STATIC_ASSERT(offsetof(ObjModelChain, phase) == 0x14);
-STATIC_ASSERT(offsetof(ObjModelChain, updateFlag) == 0x18);
+STATIC_ASSERT(offsetof(ObjModelChain, updatedThisFrame) == 0x18);
 STATIC_ASSERT(offsetof(ObjModelChain, firstUpdateDone) == 0x19);
 STATIC_ASSERT(offsetof(ObjModelChain, enabled) == 0x1A);
 

@@ -1410,7 +1410,7 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
             }
             off += 0xc;
         }
-        ((ObjModelChain*)p)->updateFlag = 1;
+        ((ObjModelChain*)p)->updatedThisFrame = 1;
         ((ObjModelChain*)p)->firstUpdateDone = 1;
     }
 }
@@ -1461,12 +1461,12 @@ void modelAnimFn_80026790(ObjModel* model, int unused, ObjModelChain* chain, Obj
     amp = lbl_803DE848 * randomGetRange((int)(lbl_803DE84C * scaled), (int)(lbl_803DE850 * scaled));
     i = 0;
     off = 0;
-    while (i < entry->frameCount + 1)
+    while (i < entry->nodeCount + 1)
     {
-        u8* p = (u8*)entry->frameBuffer + off;
-        *(f32*)&((ModelFileHeader*)p)->dataSize = *(f32*)&((ModelFileHeader*)p)->dataSize * chain->originY + gModelJitterAxis[0] * amp;
-        *(f32*)(p + 0x10) = gModelJitterAxis[1] * amp + (*(f32*)(p + 0x10) * chain->originY + chain->originZ);
-        *(f32*)(p + 0x14) = *(f32*)(p + 0x14) * chain->originY + gModelJitterAxis[2] * amp;
+        u8* p = (u8*)entry->nodes + off;
+        *(f32*)&((ModelFileHeader*)p)->dataSize = *(f32*)&((ModelFileHeader*)p)->dataSize * chain->damping + gModelJitterAxis[0] * amp;
+        *(f32*)(p + 0x10) = gModelJitterAxis[1] * amp + (*(f32*)(p + 0x10) * chain->damping + chain->gravityY);
+        *(f32*)(p + 0x14) = *(f32*)(p + 0x14) * chain->damping + gModelJitterAxis[2] * amp;
         off += 0x54;
         i++;
     }
@@ -1479,9 +1479,9 @@ void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled)
 
 void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z)
 {
-    chain->originX = x;
-    chain->originY = y;
-    chain->originZ = z;
+    chain->stiffness = x;
+    chain->damping = y;
+    chain->gravityY = z;
 }
 void __set_debug_bba(u8* p)
 {
@@ -1489,7 +1489,7 @@ void __set_debug_bba(u8* p)
 }
 void ObjModelChain_AdvancePhase(ObjModelChain* chain)
 {
-    chain->updateFlag = 0;
+    chain->updatedThisFrame = 0;
     chain->phase += timeDelta;
     if (chain->phase > gModelPhaseWrapPeriod)
     {
@@ -1502,7 +1502,7 @@ void ObjModelChain_Free(ObjModelChain* chain)
     int i;
     for (i = 0; i < chain->count; i++)
     {
-        mm_free(chain->entries[i].frameBuffer);
+        mm_free(chain->entries[i].nodes);
     }
     mm_free(chain->entries);
     mm_free(chain);
@@ -1523,7 +1523,7 @@ ObjModelChain* ObjModelChain_Alloc(void* models, int count)
     state = mmAlloc(0x1c, 0x1a, 0);
     state->count = count;
     state->firstUpdateDone = 0;
-    state->updateFlag = 0;
+    state->updatedThisFrame = 0;
     state->entries = mmAlloc(count * 0xc, 0x1a, 0);
     i = 0;
     p = models;
@@ -1536,9 +1536,9 @@ ObjModelChain* ObjModelChain_Alloc(void* models, int count)
         p++;
         off += 0xc;
     }
-    state->originX = gModelDefaultOriginX;
-    state->originY = gModelDefaultOriginY;
-    state->originZ = gModelDefaultOriginZ;
+    state->stiffness = gModelDefaultOriginX;
+    state->damping = gModelDefaultOriginY;
+    state->gravityY = gModelDefaultOriginZ;
     state->phase = lbl_803DE828;
     state->enabled = 1;
     return state;
