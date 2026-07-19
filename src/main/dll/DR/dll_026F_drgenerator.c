@@ -95,8 +95,7 @@ void drgenerator_hitDetect(GameObject* obj)
     }
     {
         ObjTextureRuntimeSlot* tex = objFindTexture(obj, 0, 0);
-        ((void (*)(void*, f32, int, int, int, int, int, int, int))spawnExplosion)(obj, lbl_803E6B64, 1, 1, 1, 1, 0, 1,
-                                                                                  0);
+        spawnExplosion(obj, lbl_803E6B64, 1, 1, 1, 1, 0, 1, 0);
         if (tex != 0)
         {
             tex->textureId = 0x100;
