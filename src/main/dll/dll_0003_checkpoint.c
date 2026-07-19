@@ -516,7 +516,7 @@ void Checkpoint_func0D(u32 v)
 #include "main/game_object.h"
 extern f32 lbl_803E050C; /* used by Checkpoint_func07 */
 extern f32 lbl_803E0514; /* used by Checkpoint_func07 */
-extern f32 lbl_803E0518; /* used by Checkpoint_func07/06 */
+extern f32 lbl_803E0518; /* used by Checkpoint_func06 */
 
 /* Project the object onto the current checkpoint segment, stepping the route
  * cursor forward or back and returning the segment heading. */
@@ -619,9 +619,9 @@ int Checkpoint_func07(GameObject* obj, CheckpointRouteState* state)
         {
             state->routeProgress = 0.0f;
         }
-        if (state->routeProgress >= lbl_803E0518)
+        if (state->routeProgress >= 0.999f)
         {
-            state->routeProgress = lbl_803E0518;
+            state->routeProgress = 0.999f;
         }
     }
     return ang;
