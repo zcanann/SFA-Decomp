@@ -81,7 +81,7 @@ void fn_8010A104(int* nodeId, int* leadNodeId, f32 x, f32 y, f32 z, int tag)
         settled = 1;
         node = (int)(*gRomCurveInterface)->getById(*nodeId);
         pathcam_findTaggedNodeWindow((u8*)node, window, tag);
-        dist = fn_8010AC48(x, y, z, window);
+        dist = pathcam_segmentParam(x, y, z, window);
         if (dist < nearThresh)
         {
             if (window[0] > -1)

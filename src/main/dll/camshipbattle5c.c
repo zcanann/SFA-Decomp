@@ -14,7 +14,7 @@
  * cur, next, next-next) around a node along the tagged path.
  * pathcam_buildWindowSamples gathers the per-node samples for that
  * window, extrapolating the missing end nodes and unwrapping angle
- * deltas that cross the +/- bound. fn_8010AC48 returns the normalised
+ * deltas that cross the +/- bound. pathcam_segmentParam returns the normalised
  * position of (px,pz) along the segment between the two midpoint planes
  * of the window.
  */
@@ -269,7 +269,7 @@ void pathcam_findTaggedNodeWindow(u8* node, int* out, int tag)
     }
 }
 
-f32 fn_8010AC48(f32 px, f32 unused, f32 pz, int* obj)
+f32 pathcam_segmentParam(f32 px, f32 unused, f32 pz, int* obj)
 {
     RomCurveNode* pts[4];
     int* sp;

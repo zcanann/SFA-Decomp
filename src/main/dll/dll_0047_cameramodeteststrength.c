@@ -214,7 +214,7 @@ void CameraModeTestStrength_update(short* cam)
         pathcam_findTaggedNodeWindow((u8*)node2, prevWindow, lbl_803DD560->pathTag);
         pathcam_findTaggedNodeWindow((u8*)node, nextWindow, lbl_803DD560->pathTag);
         pathcam_buildWindowSamples(prevWindow, x, y, z, pitchS, yawS, rollS, fov);
-        param = fn_8010AC48(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
+        param = pathcam_segmentParam(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                             ((GameObject*)obj)->anim.worldPosZ, nextWindow);
         if (param < lbl_803E1888)
         {
@@ -229,7 +229,7 @@ void CameraModeTestStrength_update(short* cam)
                     node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->prevNodeId);
                     pathcam_findTaggedNodeWindow((u8*)node2, prevWindow, lbl_803DD560->pathTag);
                     pathcam_buildWindowSamples(prevWindow, x, y, z, pitchS, yawS, rollS, fov);
-                    param = fn_8010AC48(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
+                    param = pathcam_segmentParam(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                         ((GameObject*)obj)->anim.worldPosZ, nextWindow);
                     lbl_803DD560->pathProgress += lbl_803E188C;
                 }
@@ -256,7 +256,7 @@ void CameraModeTestStrength_update(short* cam)
                     node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->prevNodeId);
                     pathcam_findTaggedNodeWindow((u8*)node2, prevWindow, lbl_803DD560->pathTag);
                     pathcam_buildWindowSamples(prevWindow, x, y, z, pitchS, yawS, rollS, fov);
-                    param = fn_8010AC48(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
+                    param = pathcam_segmentParam(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                         ((GameObject*)obj)->anim.worldPosZ, nextWindow);
                     lbl_803DD560->pathProgress -= lbl_803E188C;
                 }
@@ -405,7 +405,7 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     pathcam_findTaggedNodeWindow((u8*)romNode, prevW, lbl_803DD560->pathTag);
     pathcam_findTaggedNodeWindow((u8*)curveNode2, nextW, lbl_803DD560->pathTag);
     pathcam_buildWindowSamples(prevW, xS, yS, zS, pitchS, yawS, rollS, fovS);
-    t = fn_8010AC48(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
+    t = pathcam_segmentParam(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                     ((GameObject*)obj)->anim.worldPosZ, nextW);
     if (t < lbl_803E1888)
     {
