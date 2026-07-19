@@ -828,7 +828,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
             }
             else
             {
-                *(s8*)&((ObjSeqState*)seq)->movementState = -1;
+                ((ObjSeqState*)seq)->movementState = -1;
             }
             if ((objId == OBJSEQ_KRYSTAL_OBJ || objId == OBJSEQ_SABRE_OBJ) && (((ObjSeqState*)seq)->flags & 1))
             {
@@ -1001,7 +1001,7 @@ int ObjSeq_resolveTargetObject(u8* obj)
         break;
     case 3:
         ((ObjSeqState*)seqObj)->targetObj = NULL;
-        *(s8*)&((ObjSeqState*)seqObj)->unk7B = (s8)(model->targetType - 2);
+        ((ObjSeqState*)seqObj)->unk7B = (s8)(model->targetType - 2);
         if (lbl_803DD064 != 0)
         {
             lbl_803DD064 = 0;
@@ -2342,7 +2342,7 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
                 }
                 ((ObjSeqState*)seq)->curFrame = xrot;
                 ((ObjSeqState*)seq)->prevFrame = xrot;
-                *(s8*)&((ObjSeqState*)seq)->pendingConditionId = (s8)(arg10 + 1);
+                ((ObjSeqState*)seq)->pendingConditionId = (s8)(arg10 + 1);
                 gObjSeqJumpLatch[(s8)((ObjSeqState*)seq)->slot] = 1;
                 return 1;
             case 5:
@@ -3222,8 +3222,8 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, s8 flags, void
             act2 = ObjSeq_GetActiveModel(activeObj);
             animState = *(u8**)(act2 + 0x2c);
             ((ObjAnimState*)animState)->lastBlendMoveIndex = -1;
-            *(s16*)&((ObjAnimState*)animState)->eventState = 0;
-            *(s16*)&((ObjAnimState*)animState)->prevEventState = 0;
+            ((ObjAnimState*)animState)->eventState = 0;
+            ((ObjAnimState*)animState)->prevEventState = 0;
             st2 = *(u8**)(act2 + 0x30);
             if (st2 != NULL)
             {
@@ -3247,7 +3247,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, s8 flags, void
             ((ObjSeqState*)seq)->useRootMotionSpeed = 0;
             break;
         }
-        *(s8*)&((ObjSeqState*)seq)->useRootMotionSpeed = 1 - ((ObjSeqState*)seq)->useRootMotionSpeed;
+        ((ObjSeqState*)seq)->useRootMotionSpeed = 1 - ((ObjSeqState*)seq)->useRootMotionSpeed;
         break;
     case SEQACT_GROUND_MODE:
         *(s8*)&((ObjSeqState*)seq)->groundSnapEnabled = 1 - ((ObjSeqState*)seq)->groundSnapEnabled;
