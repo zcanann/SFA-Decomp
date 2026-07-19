@@ -767,9 +767,10 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         }
         if (((TexLayer*)layer)->mtxIndex != 0xff)
         {
-            ((void (*)(f32, f32*, f32, f32))PSMTXTrans)(
-                *(float*)(lbl_803DCE68 + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f, (f32*)texMatrix,
-                *(float*)((lbl_803DCE68 + 4) + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f, lbl_803DEBCC);
+            PSMTXTrans(texMatrix,
+                       *(float*)(lbl_803DCE68 + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f,
+                       *(float*)((lbl_803DCE68 + 4) + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f,
+                       lbl_803DEBCC);
             texMtx = texMatrix;
         }
         else
@@ -809,9 +810,10 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         }
         if (((TexLayer*)layer)->mtxIndex != 0xff)
         {
-            ((void (*)(f32, f32*, f32, f32))PSMTXTrans)(
-                *(float*)(lbl_803DCE68 + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f, (f32*)texMatrix,
-                *(float*)((lbl_803DCE68 + 4) + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f, lbl_803DEBCC);
+            PSMTXTrans(texMatrix,
+                       *(float*)(lbl_803DCE68 + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f,
+                       *(float*)((lbl_803DCE68 + 4) + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f,
+                       lbl_803DEBCC);
             texMtx = texMatrix;
         }
         else
@@ -859,8 +861,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                         float* mvec;
                         int mtxOff = (u32)((TexLayer*)layer)->mtxIndex * 0x10;
                         mvec = (float*)(lbl_803DCE68 + mtxOff);
-                        ((void (*)(f32, f32*, f32, f32))PSMTXTrans)(mvec[0] / 1048576.0f, (f32*)texMatrix,
-                                                                    mvec[1] / 1048576.0f, lbl_803DEBCC);
+                        PSMTXTrans(texMatrix, mvec[0] / 1048576.0f, mvec[1] / 1048576.0f, lbl_803DEBCC);
                         texMtx = texMatrix;
                     }
                     else
