@@ -47,7 +47,7 @@
 #include "main/dll/cloudaction.h"
 #include "main/track_dolphin_ext.h"
 #include "main/trig.h"
-#include "main/tex_dolphin_ext.h"
+#include "main/tex_dolphin.h"
 #include "main/acosf_api.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXTransform.h"

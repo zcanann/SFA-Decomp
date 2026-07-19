@@ -13,7 +13,6 @@
 #include "main/objseq_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/lightmap_render_queue_api.h"
-#include "main/tex_dolphin_ext.h"
 
 u8 lbl_803DB638[4] = {0x20, 0x20, 0x20, 0};
 int gTexShaderAmbColor = -1;
