@@ -55,7 +55,6 @@ u8 lbl_803DBFB8[4] = {1, 1, 0, 0};
 u8 lbl_803DBFBC[4] = {1, 2, 0, 0};
 
 typedef u32 (*NwMammothFindNearestObjectFn)(int group, int* obj, f32* distance);
-typedef int (*NwMammothObjTriggerIsSetFn)(int* obj);
 
 #define NWMAMMOTH_PARTFX               0x7f0
 #define NWMAMMOTH_OBJFLAG_PARENT_SLACK 0x1000
@@ -254,7 +253,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             Sfx_PlayFromObject((u32)obj, SFXTRIG_skeep_mumb);
             state->sfxTimer -= gNwMammothSfxInterval;
         }
-        if (((NwMammothObjTriggerIsSetFn)ObjTrigger_IsSet)(obj) != 0)
+        if (ObjTrigger_IsSet((int)obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(3, (void*)nearestObj, -1);
             state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
