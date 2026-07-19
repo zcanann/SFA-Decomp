@@ -605,6 +605,131 @@ int fn_8015E8BC(GameObject* obj, GroundBaddieState* state)
 
 void fn_8015EA48(GameObject* obj, GroundBaddieState* state);
 
+void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
+{
+                f32 dur;
+    f32 t;
+    int setup;
+    u8* o;
+
+    if (Obj_IsLoadingLocked() == 0)
+    {
+        setup = (int)Obj_AllocObjectSetup(36, DLLCE_CHILD_OBJ);
+        ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
+        ((ObjPlacement*)setup)->posY = 15.0f + (obj)->anim.localPosY;
+        ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
+        ((ObjPlacement*)setup)->color[0] = 1;
+        ((ObjPlacement*)setup)->color[1] = 1;
+        ((ObjPlacement*)setup)->color[2] = 0xff;
+        ((ObjPlacement*)setup)->color[3] = 0xff;
+        o = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
+        if (o != NULL)
+        {
+            t = state->baddie.targetDistance / (f32)(u32)state->aggroRange;
+            dur = 50.0f * t;
+            ((GameObject*)o)->anim.velocityX =
+                (((GameObject*)state->baddie.targetObj)->anim.localPosX - (obj)->anim.localPosX) / dur;
+            ((GameObject*)o)->anim.velocityY =
+                ((90.0f * t + ((GameObject*)state->baddie.targetObj)->anim.localPosY) - (obj)->anim.localPosY) /
+                dur;
+            ((GameObject*)o)->anim.velocityZ =
+                (((GameObject*)state->baddie.targetObj)->anim.localPosZ - (obj)->anim.localPosZ) / dur;
+            *(int*)&((GameObject*)o)->ownerObj = (int)obj;
+        }
+    }
+}
+
+void fn_8015EB6C(GameObject* obj, int state, int target)
+{
+            int sub = *(int*)&((GroundBaddieState*)state)->control;
+    char* r;
+
+    r = (char*)(**(int (**)(void*, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
+        obj, target, (f32)(u32)((GroundBaddieState*)state)->aggroRange, 0x8000);
+
+    if (r != NULL && (((GroundBaddieState*)state)->configFlags & 0x4) == 0)
+    {
+        int v = -1;
+        (**(void (**)(void*, int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x28))(
+            obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8, v);
+        *(int*)&((GroundBaddieState*)target)->baddie.targetObj = (int)r;
+        ((GroundBaddieState*)target)->baddie.hasTarget = 0;
+        ((GroundBaddieState*)state)->targetState = 1;
+    }
+    else
+    {
+        void* player = Obj_GetPlayerObject();
+        f32 dist;
+        struct
+        {
+            f32 x, y, z;
+        } d;
+        f32* dp = &d.x;
+        if (player != NULL)
+        {
+            d.x = ((GameObject*)player)->anim.worldPosX - obj->anim.worldPosX;
+            d.y = ((GameObject*)player)->anim.worldPosY - obj->anim.worldPosY;
+            d.z = ((GameObject*)player)->anim.worldPosZ - obj->anim.worldPosZ;
+            dist = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
+        }
+        else
+        {
+            dist = 10000.0f;
+        }
+        if (*(f32*)(sub + 0) > *(f32*)(sub + 4))
+        {
+            if (dist < 400.0f)
+            {
+                Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_265);
+                *(f32*)(sub + 4) += (f32)(s32)randomGetRange(50, 250);
+            }
+        }
+        *(f32*)(sub + 0) += timeDelta;
+    }
+}
+
+void fn_8015ED1C(int obj, int state, int target)
+{
+    void* player;
+    char* targetObj;
+    int result;
+    struct
+    {
+        f32 x, y, z;
+    } d;
+    f32* dp = &d.x;
+
+    player = Obj_GetPlayerObject();
+    targetObj = *(char**)&((GroundBaddieState*)target)->baddie.targetObj;
+    if (targetObj != NULL)
+    {
+        d.x = ((GameObject*)targetObj)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
+        d.y = ((GameObject*)targetObj)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
+        d.z = ((GameObject*)targetObj)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+        ((GroundBaddieState*)target)->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
+    }
+
+    if ((((GroundBaddieState*)state)->configFlags & 0x20) == 0)
+    {
+        (**(void (**)(int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x3c))(
+            obj, target, state + 0x400, 2, 3, (s32)((GroundBaddieState*)state)->soundIdA,
+            (s32)((GroundBaddieState*)state)->soundIdB);
+    }
+
+    (**(void (**)(int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x54))(
+        obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8);
+
+    result = (int)(**(int (**)(int, int, int, int, u8*, u8*, int, u8*))((char*)(*gBaddieControlInterface) + 0x50))(
+        obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, lbl_8031FEA8, lbl_8031FF20, 1,
+        lbl_803AC580);
+
+    if (result != 0)
+    {
+        void* pc8 = ((GameObject*)player)->childObjs[0];
+        (*(void (**)(void*))(**(int**)&((GameObject*)pc8)->anim.dll + 0x50))(pc8);
+    }
+}
+
 void dll_CE_func0B(GameObject* obj, int v)
 {
     GroundBaddieState* sub = obj->extra;
@@ -759,131 +884,6 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
             }
             obj->anim.localPosY = ((ObjPlacement*)setup)->posY - 2.0f;
         }
-    }
-}
-
-void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
-{
-                f32 dur;
-    f32 t;
-    int setup;
-    u8* o;
-
-    if (Obj_IsLoadingLocked() == 0)
-    {
-        setup = (int)Obj_AllocObjectSetup(36, DLLCE_CHILD_OBJ);
-        ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = 15.0f + (obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
-        ((ObjPlacement*)setup)->color[0] = 1;
-        ((ObjPlacement*)setup)->color[1] = 1;
-        ((ObjPlacement*)setup)->color[2] = 0xff;
-        ((ObjPlacement*)setup)->color[3] = 0xff;
-        o = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
-        if (o != NULL)
-        {
-            t = state->baddie.targetDistance / (f32)(u32)state->aggroRange;
-            dur = 50.0f * t;
-            ((GameObject*)o)->anim.velocityX =
-                (((GameObject*)state->baddie.targetObj)->anim.localPosX - (obj)->anim.localPosX) / dur;
-            ((GameObject*)o)->anim.velocityY =
-                ((90.0f * t + ((GameObject*)state->baddie.targetObj)->anim.localPosY) - (obj)->anim.localPosY) /
-                dur;
-            ((GameObject*)o)->anim.velocityZ =
-                (((GameObject*)state->baddie.targetObj)->anim.localPosZ - (obj)->anim.localPosZ) / dur;
-            *(int*)&((GameObject*)o)->ownerObj = (int)obj;
-        }
-    }
-}
-
-void fn_8015EB6C(GameObject* obj, int state, int target)
-{
-            int sub = *(int*)&((GroundBaddieState*)state)->control;
-    char* r;
-
-    r = (char*)(**(int (**)(void*, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
-        obj, target, (f32)(u32)((GroundBaddieState*)state)->aggroRange, 0x8000);
-
-    if (r != NULL && (((GroundBaddieState*)state)->configFlags & 0x4) == 0)
-    {
-        int v = -1;
-        (**(void (**)(void*, int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x28))(
-            obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8, v);
-        *(int*)&((GroundBaddieState*)target)->baddie.targetObj = (int)r;
-        ((GroundBaddieState*)target)->baddie.hasTarget = 0;
-        ((GroundBaddieState*)state)->targetState = 1;
-    }
-    else
-    {
-        void* player = Obj_GetPlayerObject();
-        f32 dist;
-        struct
-        {
-            f32 x, y, z;
-        } d;
-        f32* dp = &d.x;
-        if (player != NULL)
-        {
-            d.x = ((GameObject*)player)->anim.worldPosX - obj->anim.worldPosX;
-            d.y = ((GameObject*)player)->anim.worldPosY - obj->anim.worldPosY;
-            d.z = ((GameObject*)player)->anim.worldPosZ - obj->anim.worldPosZ;
-            dist = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
-        }
-        else
-        {
-            dist = 10000.0f;
-        }
-        if (*(f32*)(sub + 0) > *(f32*)(sub + 4))
-        {
-            if (dist < 400.0f)
-            {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_265);
-                *(f32*)(sub + 4) += (f32)(s32)randomGetRange(50, 250);
-            }
-        }
-        *(f32*)(sub + 0) += timeDelta;
-    }
-}
-
-void fn_8015ED1C(int obj, int state, int target)
-{
-    void* player;
-    char* targetObj;
-    int result;
-    struct
-    {
-        f32 x, y, z;
-    } d;
-    f32* dp = &d.x;
-
-    player = Obj_GetPlayerObject();
-    targetObj = *(char**)&((GroundBaddieState*)target)->baddie.targetObj;
-    if (targetObj != NULL)
-    {
-        d.x = ((GameObject*)targetObj)->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-        d.y = ((GameObject*)targetObj)->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-        d.z = ((GameObject*)targetObj)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
-        ((GroundBaddieState*)target)->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
-    }
-
-    if ((((GroundBaddieState*)state)->configFlags & 0x20) == 0)
-    {
-        (**(void (**)(int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x3c))(
-            obj, target, state + 0x400, 2, 3, (s32)((GroundBaddieState*)state)->soundIdA,
-            (s32)((GroundBaddieState*)state)->soundIdB);
-    }
-
-    (**(void (**)(int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x54))(
-        obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8);
-
-    result = (int)(**(int (**)(int, int, int, int, u8*, u8*, int, u8*))((char*)(*gBaddieControlInterface) + 0x50))(
-        obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, lbl_8031FEA8, lbl_8031FF20, 1,
-        lbl_803AC580);
-
-    if (result != 0)
-    {
-        void* pc8 = ((GameObject*)player)->childObjs[0];
-        (*(void (**)(void*))(**(int**)&((GameObject*)pc8)->anim.dll + 0x50))(pc8);
     }
 }
 
