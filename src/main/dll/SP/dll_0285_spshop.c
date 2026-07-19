@@ -1,7 +1,7 @@
 /* DLL 0x0285 - SP shop objects [801E4288-801E42F8) */
 #include "main/dll/shipbattlestate_struct.h"
 #include "main/audio/music_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/sky_api.h"
 #include "main/render_envfx_api.h"
 #include "main/dll/sbkytecagestate_struct.h"
@@ -403,7 +403,7 @@ void shop_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E59C8);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E59C8);
 }
 
 void shop_hitDetect(void)

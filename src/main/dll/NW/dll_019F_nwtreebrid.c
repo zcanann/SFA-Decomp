@@ -17,7 +17,7 @@
 #include "main/gamebits.h"
 #include "main/obj_group.h"
 #include "main/obj_path.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 typedef struct TreeBirdState
 {
@@ -136,7 +136,7 @@ void treebird_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     float fx, fy, fz;
 
     state = ((GameObject*)obj)->extra;
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     if (state->targetObj != NULL)
     {
         ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &fx, &fy, &fz, 0);

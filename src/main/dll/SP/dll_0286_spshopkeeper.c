@@ -40,7 +40,7 @@
 #include "main/dll/SP/dll_0286_spshopkeeper.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -401,7 +401,7 @@ void ShopKeeper_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
     fxParams[0] = lbl_803E59D8;
     if (((ShopkeeperState*)state)->controlMode != 7 && visible != 0)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E59D8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E59D8);
         dll_2E_func06(obj, (MoveLibState*)(state + 0x35c), 0);
     }
     if ((((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_TICK) != 0)

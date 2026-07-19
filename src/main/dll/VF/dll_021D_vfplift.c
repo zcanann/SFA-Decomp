@@ -19,7 +19,7 @@
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/expgfx_interface.h"
 #include "main/pad_api.h"
 #include "main/game_object.h"
@@ -263,7 +263,7 @@ void VFPLift_free(int obj)
 
 void VFPLift_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void VFPLift_hitDetect(GameObject* obj)

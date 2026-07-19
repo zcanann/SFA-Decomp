@@ -16,7 +16,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/expgfx_interface.h"
 #include "main/game_object.h"
 #include "main/rcp_dolphin_api.h"
@@ -59,7 +59,7 @@ void VFP_MiniFire_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
         return;
     }
     fn_80053ED0(8);
-    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     fn_80053EBC(8);
 }
 

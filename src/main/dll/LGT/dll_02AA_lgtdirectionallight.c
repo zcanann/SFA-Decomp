@@ -23,7 +23,7 @@
 #include "main/game_object.h"
 #include "dolphin/pad.h"
 #include "main/dll/LGT/dll_02AA_lgtdirectionallight.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 const f32 lbl_802C2608[4] = {0.0f, 0.0f, 1.0f, 0.0f};
 
@@ -203,7 +203,7 @@ void directionallight_free(GameObject* obj)
 
 void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void directionallight_hitDetect(void)
