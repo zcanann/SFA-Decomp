@@ -50,7 +50,6 @@ typedef struct SCTotemPuzzleParticleBox
 #define SC_TOTEMPUZZLE_OBJFLAG_HIDDEN             0x4000
 #define SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-f32 lbl_803E55F4 = 0.0f;
 extern f32 lbl_803E5618;
 extern const f32 lbl_803E561C;
 extern const f32 lbl_803E5620;
@@ -124,9 +123,9 @@ u8 sc_totempuzzle_checkSolvedSequence(ScTotemPuzzleObject* obj, ScTotemPuzzleSta
     if (solvedThisObject != 0)
     {
         ObjTextureRuntimeSlot* solvedTexture;
-        particleBox.x = lbl_803E55F4;
+        particleBox.x = 0.0f;
         particleBox.y = 16.5f;
-        particleBox.z = lbl_803E55F4;
+        particleBox.z = 0.0f;
         particleBox.alpha = 1.0f;
 
         for (objectIndex = 20; objectIndex != 0; objectIndex--)
@@ -231,7 +230,8 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         state->flags ^= SC_TOTEMPUZZLE_READY_FLAG;
         if ((state->flags & SC_TOTEMPUZZLE_READY_FLAG) != 0)
         {
-            if (state->pulseTimer != lbl_803E55F4)
+            f32 zero = 0.0f;
+            if (state->pulseTimer != zero)
             {
                 mainSetBits(GAMEBIT_SC_totempuzzle_running, sc_totempuzzle_checkSolvedSequence(obj, state));
             }
@@ -276,7 +276,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     if ((state->flags & SC_TOTEMPUZZLE_PULSE_FLAG) != 0)
     {
         state->pulseTimer -= timeDelta;
-        if (state->pulseTimer < lbl_803E55F4)
+        if (state->pulseTimer < 0.0f)
         {
             state->flags &= ~SC_TOTEMPUZZLE_PULSE_FLAG;
             Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_mv_cagerat01, 2);
