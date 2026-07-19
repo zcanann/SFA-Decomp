@@ -43,7 +43,7 @@ int grimble_stateHandlerB04(int* obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
-        ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 8);
+        (*gPlayerInterface)->setState(obj, state, 8);
         state->baddie.targetObj = NULL;
         state->baddie.physicsActive = 0;
         state->baddie.hasTarget = 0;
@@ -80,7 +80,7 @@ int scarab_updateProximityGate(int* obj, GroundBaddieState* state)
     target = *(int**)&state->baddie.targetObj;
     if (target == NULL)
     {
-        ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 0);
+        (*gPlayerInterface)->setState(obj, state, 0);
         return 1;
     }
     if (state->baddie.controlMode != 6)
@@ -100,7 +100,7 @@ int scarab_updateProximityGate(int* obj, GroundBaddieState* state)
         if (magAbs < 1.0f &&
             (state->baddie.controlMode == 1 || (state->baddie.controlMode == 5 && (s8)state->baddie.moveDone != 0)))
         {
-            ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 6);
+            (*gPlayerInterface)->setState(obj, state, 6);
         }
         else if (state->baddie.controlMode != 1)
         {
@@ -108,12 +108,12 @@ int scarab_updateProximityGate(int* obj, GroundBaddieState* state)
             {
                 if (state->baddie.controlMode != 4 && (state->baddie.controlMode != 5 || (s8)state->baddie.moveDone != 0))
                 {
-                    ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 1);
+                    (*gPlayerInterface)->setState(obj, state, 1);
                 }
             }
             if (dx < -2.5f)
             {
-                ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 1);
+                (*gPlayerInterface)->setState(obj, state, 1);
             }
         }
         if (state->baddie.controlMode == 1)
@@ -128,7 +128,7 @@ int grimble_stateHandlerB01(int* obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
-        ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 9);
+        (*gPlayerInterface)->setState(obj, state, 9);
     }
     if ((s8)state->baddie.moveDone != 0)
     {
@@ -153,7 +153,7 @@ int grimble_stateHandlerB00(int obj, GroundBaddieState* p)
             {
                 return 3;
             }
-            ((void (*)(int, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)p, 2);
+            (*gPlayerInterface)->setState((void*)obj, p, 2);
             p->baddie.moveSpeed = 0.028f;
             p->baddie.moveDone = 0;
         }

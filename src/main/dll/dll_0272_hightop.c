@@ -551,7 +551,7 @@ int hightop_handleMotionEvent(int obj, u8 event)
     case 0:
         break;
     case 5:
-        (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 8);
+        (*gPlayerInterface)->setState((void*)obj, runtime, 8);
         break;
     case 6:
         mainSetBits(0x634, 1);
@@ -563,13 +563,13 @@ int hightop_handleMotionEvent(int obj, u8 event)
         ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask |= 1;
         runtime->flagsC40 &= ~0x140;
         runtime->flags &= ~2;
-        (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 7);
+        (*gPlayerInterface)->setState((void*)obj, runtime, 7);
         break;
     case 8:
         (*gObjectTriggerInterface)->runSequence(7, (void*)obj, -1);
         break;
     case 9:
-        (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))(obj, (char*)runtime, 7);
+        (*gPlayerInterface)->setState((void*)obj, runtime, 7);
         break;
     }
     return 0;
@@ -1062,7 +1062,7 @@ void HighTop_hitDetect(GameObject* obj)
     }
     else
     {
-        (*(void (**)(int, char*, int))((char*)*gPlayerInterface + 0x14))((int)obj, (char*)runtime, 3);
+        (*gPlayerInterface)->setState(obj, runtime, 3);
     }
 }
 
@@ -1223,4 +1223,3 @@ void HighTop_initialise(void)
     t[10] = hightop_stateHandler10;
     gHighTopDefaultStateHandler = hightop_defaultStateHandler;
 }
-

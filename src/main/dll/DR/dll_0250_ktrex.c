@@ -250,7 +250,7 @@ int ktrex_stateHandlerA10(GameObject* obj, KTRexRuntime* runtime)
     laneBit = flags & 1;
     if ((s8)runtime->moveJustStartedB != 0)
     {
-        (*(void (**)(GameObject*, KTRexRuntime*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 1);
+        (*gPlayerInterface)->setState(obj, runtime, 1);
         gKTRexState->laneIndex = 2;
         {
             u8* row = (u8*)p + 0x38;
@@ -366,7 +366,7 @@ int ktrex_stateHandlerA09(GameObject* obj, KTRexRuntime* runtime)
 {
     if ((s8)runtime->moveJustStartedB != 0)
     {
-        (*(void (**)(GameObject*, KTRexRuntime*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 8);
+        (*gPlayerInterface)->setState(obj, runtime, 8);
         if ((*gCameraInterface)->getMode() == CAMMODE_DEFAULT)
         {
             (*gCameraInterface)->loadTriggeredCamAction(2, 0, 0);
@@ -390,7 +390,7 @@ int ktrex_stateHandlerA08(GameObject* obj, KTRexRuntime* runtime)
     p = ((GameObject*)obj)->anim.placementData;
     if ((s8)runtime->moveJustStartedB != 0)
     {
-        (*(void (**)(GameObject*, KTRexRuntime*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 7);
+        (*gPlayerInterface)->setState(obj, runtime, 7);
         {
             u8* row = (u8*)p + 0x4a;
             gKTRexState->stateTimer =
@@ -430,7 +430,7 @@ int ktrex_stateHandlerA07(GameObject* obj, KTRexRuntime* runtime)
 {
     if ((s8)runtime->moveJustStartedB != 0)
     {
-        (*(void (**)(GameObject*, KTRexRuntime*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 6);
+        (*gPlayerInterface)->setState(obj, runtime, 6);
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         gKTRexState->phaseCounter += 1;
         ktrexlevel_clearPathGameBits();
@@ -453,7 +453,7 @@ int ktrex_stateHandlerA06(GameObject* obj, KTRexRuntime* runtime)
     int slot;
     if (*(s8*)&runtime->moveJustStartedB != 0)
     {
-        (*(void (**)(GameObject*, KTRexRuntime*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 5);
+        (*gPlayerInterface)->setState(obj, runtime, 5);
     }
     else if (*(s8*)&runtime->moveDone != 0)
     {
@@ -475,7 +475,7 @@ int ktrex_stateHandlerA05(GameObject* obj, KTRexRuntime* runtime)
     p = (obj)->anim.placementData;
     if ((s8)runtime->moveJustStartedB != 0)
     {
-        (*(void (**)(GameObject*, KTRexRuntime*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 1);
+        (*gPlayerInterface)->setState(obj, runtime, 1);
         gKTRexState->laneIndex = 1;
         p = (char*)p + gKTRexState->laneIndex * 4;
         runtime->laneSpeed = ((KtrexPlacement*)p)->laneSpeed / 1000.0f;
@@ -520,7 +520,7 @@ int ktrex_stateHandlerA04(GameObject* obj, KTRexRuntime* runtime)
     p = ((GameObject*)obj)->anim.placementData;
     if ((s8)runtime->moveJustStartedB != 0)
     {
-        (*(void (**)(GameObject*, KTRexRuntime*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 4);
+        (*gPlayerInterface)->setState(obj, runtime, 4);
         gKTRexState->stateTimer =
             (f32)(u32)((u16*)((char*)p + 0x44))[gKTRexState->moveVariant];
     }
@@ -556,7 +556,7 @@ int ktrex_stateHandlerA03(GameObject* obj, KTRexRuntime* runtime)
     int popped;
     if ((s8)runtime->moveJustStartedB != 0)
     {
-        (*(void (**)(GameObject*, KTRexRuntime*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 2);
+        (*gPlayerInterface)->setState(obj, runtime, 2);
     }
     else if ((s8)runtime->moveDone != 0)
     {
@@ -597,7 +597,7 @@ int ktrex_stateHandlerA02(GameObject* obj, KTRexRuntime* runtime)
     p = ((GameObject*)obj)->anim.placementData;
     if ((s8)runtime->moveJustStartedB != 0)
     {
-        (*(void (**)(GameObject*, KTRexRuntime*, int))((char*)*gPlayerInterface + 0x14))(obj, runtime, 1);
+        (*gPlayerInterface)->setState(obj, runtime, 1);
         gKTRexState->laneIndex = 0;
         gKTRexState->timerFA &= ~0x20;
         {
@@ -1673,7 +1673,7 @@ void ktrex_init(GameObject* obj, char* arg, int flag)
         (int)obj, arg, gKTRexRuntime, 9, 0xc, 0x100, spawnFlags, 20.0f);
     (obj)->animEventCallback = ktrex_animEventCallback;
     rt = (KTRexRuntime*)gKTRexRuntime;
-    (*(void (**)(int, void*, int))((char*)*gPlayerInterface + 0x14))((int)obj, rt, 0);
+    (*gPlayerInterface)->setState(obj, rt, 0);
     rt->unk270 = 2;
     *(int*)&rt->playerObj = 0;
     rt->unk25F = 0;

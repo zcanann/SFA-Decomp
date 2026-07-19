@@ -188,7 +188,7 @@ int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
         }
         if (*(void**)&((BaddieState*)baddie)->targetObj != NULL)
         {
-            (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))((int)obj, baddie, *(int*)&sub->msgCode);
+            (*gPlayerInterface)->setState(obj, (void*)baddie, *(int*)&sub->msgCode);
         }
         return 0;
     }
@@ -279,8 +279,7 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
         }
         if (*(void**)&((BaddieState*)baddie)->targetObj != NULL)
         {
-            (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))((int)obj, baddie,
-                                                                              *(int*)sub->routeCursor);
+            (*gPlayerInterface)->setState(obj, (void*)baddie, *(int*)sub->routeCursor);
         }
         return 0;
     }
@@ -307,11 +306,11 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
             {
                 if (range < 50.0f)
                 {
-                    (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))((int)obj, baddie, 2);
+                    (*gPlayerInterface)->setState(obj, (void*)baddie, 2);
                 }
                 else
                 {
-                    (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))((int)obj, baddie, 4);
+                    (*gPlayerInterface)->setState(obj, (void*)baddie, 4);
                 }
             }
         }
@@ -365,7 +364,7 @@ int dbstealerworm_stateHandlerB04(int obj, int baddie)
     b8 = *(int*)&((GameObject*)obj)->extra;
     if (*(char*)&((BaddieState*)baddie)->moveJustStartedB != '\0')
     {
-        (**(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, baddie, 1);
+        (*gPlayerInterface)->setState((void*)obj, (void*)baddie, 1);
         b8 = *(int*)&((GroundBaddieState*)b8)->control;
         fz = 0.0f;
         ((DbStealerwormControl*)b8)->countdown = 0.0f;
@@ -399,7 +398,7 @@ int dbstealerworm_stateHandlerB02(int obj, int baddie)
         ((DbStealerwormControl*)b8)->countdown = 0.0f;
         ((DbStealerwormControl*)b8)->nextSfxTime = fz;
         ((DbStealerwormControl*)b8)->unk04 = fz;
-        (**(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, baddie, 6);
+        (*gPlayerInterface)->setState((void*)obj, (void*)baddie, 6);
     }
     else
     {
@@ -2462,7 +2461,7 @@ void dbstealerworm_init(int* obj, u8* def, int flag)
     ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, 0);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
         (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-    ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, sub, 3);
+    (*gPlayerInterface)->setState(obj, sub, 3);
     ((GroundBaddieState*)sub)->baddie.substate = 0;
     ((GroundBaddieState*)sub)->baddie.physicsActive = 1;
     ObjHits_EnableObject((GameObject*)obj);
