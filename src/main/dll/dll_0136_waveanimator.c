@@ -46,16 +46,6 @@ void* lbl_803DDAF0; /* per-grid phase table */
 void* lbl_803DDAEC; /* per-cell RGB color field */
 u8 lbl_803DDAE8;    /* live-instance refcount */
 
-extern const f32 lbl_803E3F40;
-extern const f32 lbl_803E3F44;
-extern const f32 lbl_803E3F48;
-extern const f32 lbl_803E3F4C;
-extern const f32 lbl_803E3F50;
-extern const f32 lbl_803E3F54;
-extern const f32 lbl_803E3F58;
-extern const f32 lbl_803E3F5C;
-extern const f32 lbl_803E3F60;
-extern const f32 lbl_803E3F64;
 
 void waveanimator_buildSharedTables(int* cfgArg);
 
@@ -95,8 +85,6 @@ void waveanimator_buildSharedTables(int* cfgArg)
     int phaseIdx;
     int stepY;
     f32 waveY;
-    f32 waveDivisor;
-    f32 waveScale;
     f32 initHeight;
     WaveAnimatorState* cfg = (WaveAnimatorState*)cfgArg;
 
@@ -104,30 +92,28 @@ void waveanimator_buildSharedTables(int* cfgArg)
     lbl_803DDAEC = mmAlloc(3 * cfg->period * cfg->period, 0xFFFFFF, 0);
 
     x = cfg->originX;
-    stepX = (s32)((lbl_803E3F40 * cfg->spanX) / cfg->period);
+    stepX = (s32)((65536.0f * cfg->spanX) / cfg->period);
     y = cfg->originY;
-    stepY = (s32)((lbl_803E3F40 * cfg->spanY) / cfg->period);
+    stepY = (s32)((65536.0f * cfg->spanY) / cfg->period);
 
-    initHeight = lbl_803E3F44;
+    initHeight = 0.0f;
     cfg->maxHeight = initHeight;
     cfg->minHeight = initHeight;
 
     i = 0;
     heightIdx = 0;
-    waveScale = lbl_803E3F48;
-    waveDivisor = lbl_803E3F4C;
     for (; i < cfg->period; i++)
     {
         f32 xv;
         j = 0;
         row = heightIdx;
-        xv = waveScale * x;
+        xv = 3.1415927f * x;
         for (; j < cfg->period; j++)
         {
-            f32 s1 = mathSinf((waveScale * y) / waveDivisor);
+            f32 s1 = mathSinf((3.1415927f * y) / 32768.0f);
             f32 s2;
             waveY = cfg->ampY * s1;
-            s2 = mathSinf(xv / waveDivisor);
+            s2 = mathSinf(xv / 32768.0f);
             *(f32*)((u8*)lbl_803DDAF4 + row) = cfg->ampX * s2 + waveY;
             if (*(f32*)((u8*)lbl_803DDAF4 + row) < cfg->minHeight)
             {
@@ -151,7 +137,7 @@ void waveanimator_buildSharedTables(int* cfgArg)
         heightIdx = 0;
         x = heightIdx;
         i = heightIdx;
-        colorSplitZero = lbl_803E3F44;
+        colorSplitZero = 0.0f;
         for (; heightIdx < cfg->period; heightIdx++)
         {
             int src[1];
@@ -162,9 +148,9 @@ void waveanimator_buildSharedTables(int* cfgArg)
                 if (v < colorSplitZero)
                 {
                     t = (v - cfg->minHeight) / negMin;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0]) = lbl_803E3F54 * t + lbl_803E3F50;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 1) = lbl_803E3F5C * t + lbl_803E3F58;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 2) = lbl_803E3F64 * t + lbl_803E3F60;
+                    *(u8*)((u8*)lbl_803DDAEC + byte[0]) = 65.0f * t + 190.0f;
+                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 1) = 165.0f * t + 90.0f;
+                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 2) = 235.0f * t + 20.0f;
                 }
                 else
                 {
