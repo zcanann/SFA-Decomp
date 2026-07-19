@@ -578,8 +578,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, Ma
             flags = SHADER_FLAGS(shader);
             if ((flags & 0x80000000) != 0)
             {
-                ((void (*)(int, int, int))fn_8005D3B4)(
-                    rec[0], (int)block, ((MapBlockBoundsRec*)rec[0])->selector);
+                fn_8005D3B4((u8*)rec[0], (u8*)block, ((MapBlockBoundsRec*)rec[0])->selector);
                 {
                     int shadowType = 5;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
@@ -588,8 +587,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, Ma
             }
             else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0))
             {
-                ((void (*)(int, int, int))fn_8005D3B4)(
-                    rec[0], (int)block, ((MapBlockBoundsRec*)rec[0])->selector);
+                fn_8005D3B4((u8*)rec[0], (u8*)block, ((MapBlockBoundsRec*)rec[0])->selector);
                 {
                     int shadowType = 4;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
@@ -713,7 +711,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, Ma
             if ((((flags & 0x4000) != 0) || ((flags & 0x8000) != 0) || ((flags & 0x10000) != 0)) &&
                 (mapBlockBounds_HasCornerPastDepthThreshold(rec[0], mtx) != 0))
             {
-                ((void (*)(int, int, int))fn_8005D3B4)(rec[0], (int)block, 0x17);
+                fn_8005D3B4((u8*)rec[0], (u8*)block, 0x17);
                 {
                     int shadowType = 6;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
