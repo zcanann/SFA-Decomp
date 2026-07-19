@@ -10890,7 +10890,7 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         thresh = 0.5f;
         do
         {
-            f32 dot = ((f32 (*)(f32*, f32*))PSVECDotProduct)(pl, vec);
+            f32 dot = PSVECDotProduct(pl, vec);
             *dp = pl[3] + dot;
             if (*dp < thresh + b6b8[1])
             {
@@ -11108,7 +11108,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     threshold = lbl_803E7E98;
     do
     {
-        f32 dot = ((f32 (*)(void*, void*))PSVECDotProduct)(pl, (void*)e);
+        f32 dot = PSVECDotProduct((f32*)pl, (f32*)e);
         if (pl->d + dot < threshold + b6b8[1])
         {
             void* face;
