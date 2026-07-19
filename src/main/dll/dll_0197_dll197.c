@@ -14,6 +14,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/dll/dll197state_struct.h"
+#include "main/obj_placement.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_play_api.h"
@@ -67,7 +68,7 @@ s8 lbl_803DDBD0; /* shared 0..3 progression latch */
 
 typedef struct Dll197Placement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     u8 rotXParam;  /* 0x18: low 6 bits -> anim.rotX seed */
     u8 kind;       /* 0x19: object sub-type selector */
     s16 scale;     /* 0x1a: rootMotionScale numerator */
