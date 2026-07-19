@@ -46,7 +46,6 @@ typedef struct FxEmitWorldSpawnArgs
 } FxEmitWorldSpawnArgs;
 
 extern char sCFTreasSharpyDebugFormat[];
-const f32 lbl_803E3E40 = 600.0f;
 
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg)                                                         \
     (*gPartfxInterface)->spawnObject((void*)(obj), id, data, flags, model, (void*)(arg))

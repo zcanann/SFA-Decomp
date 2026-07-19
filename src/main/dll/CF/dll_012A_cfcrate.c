@@ -26,7 +26,6 @@
 #include "main/dll/CF/dll_012A_cfcrate.h"
 #include "main/object_render.h"
 
-extern f32 lbl_803E3E40;
 
 u16 gCfCrateDefaultSfxTable[4] = {0x151, 0, 0, 0};
 
@@ -488,7 +487,7 @@ void CFCrate_init(GameObject* obj, int aux)
         (obj)->anim.rootMotionScale = zeroF;
         (obj)->userData1 = 0;
         (obj)->userData2 = 0;
-        state->oscVelB = lbl_803E3E40;
+        state->oscVelB = 600.0f;
         state->oscVelA = 0.5f;
         state->unk32 = 0;
         state->unk34 = randomGetRange(0x3e8, 0x1388);
