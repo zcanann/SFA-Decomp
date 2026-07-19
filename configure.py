@@ -385,6 +385,11 @@ cflags_dll_noopt_noloopinv = [
     "-opt", "nopeephole,noschedule,noloopinvariants",
 ]
 
+cflags_dll_noopt_noloopinv_zerodata = [
+    *cflags_dll_noopt_noloopinv,
+    '-pragma "explicit_zero_data on"',
+]
+
 cflags_dll_nopeep = [
     *cflags_base,
     "-opt", "nopeephole",
@@ -1007,7 +1012,7 @@ config.libs = [
             Object(NonMatching, "main/objlib.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objprint_dolphin.c", cflags=cflags_dll_noopt_noloopinv),
-            Object(NonMatching, "main/pi_dolphin.c", cflags=cflags_dll_noopt_noloopinv),
+            Object(NonMatching, "main/pi_dolphin.c", cflags=cflags_dll_noopt_noloopinv_zerodata),
             Object(NonMatching, "main/zlb.c", **zlb_object_kwargs),
             Object(NonMatching, "main/shader_dolphin.c", cflags=cflags_dll_noopt_noloopinv),
             Object(NonMatching, "main/boot_logo.c"),
@@ -1716,7 +1721,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/DR/dll_026C_drcagewith.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DR/dll_026E_drshackle.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0271_drakorhoverpad.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_0272_hightop.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_0272_hightop.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/dll/DR/dll_026F_drgenerator.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0273_firepipe.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DR/dll_0279_drenergydisc.c", cflags=cflags_dll_noopt),
