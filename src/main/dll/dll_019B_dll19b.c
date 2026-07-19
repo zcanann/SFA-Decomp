@@ -23,6 +23,7 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/shader_api.h"
+#include "main/dll/dll_0004_dummy04.h"
 
 #define DLL19B_TARGET_OBJGROUP 0xe
 
@@ -31,7 +32,6 @@
 #define DLL19B_ENVFX_B 0x14
 
 extern int lbl_803DB610;
-extern int* gTitleMenuControlInterface;
 u32 lbl_803DDBE0;
 extern f32 lbl_803E5188;
 extern f32 lbl_803E518C;
@@ -91,7 +91,7 @@ int dll_19B_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             ((Dll19BState*)state)->brightnessB = 0x46;
             ((Dll19BState*)state)->brightnessBVel = 0;
         }
-        ((void (**)(int, u8))*gTitleMenuControlInterface)[0x38 / 4](3, (u8)((Dll19BState*)state)->brightnessB);
+        gTitleMenuControlInterface->vtable->func11(3, (u8)((Dll19BState*)state)->brightnessB);
     }
 
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -150,7 +150,7 @@ int dll_19B_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
                 break;
             case 0xb:
                 ((Dll19BState*)state)->brightnessB = 100;
-                ((void (**)(int, int, int, u8, int))*gTitleMenuControlInterface)[0x18 / 4](
+                gTitleMenuControlInterface->vtable->onSelectSave(
                     3, 0x2d, 0x50, (u8)((Dll19BState*)state)->brightnessB, 0);
                 break;
             }
@@ -231,7 +231,7 @@ void dll_19B_update(int obj)
             st->brightnessA = 70;
             st->brightnessAVel = 0;
         }
-        (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(2, st->brightnessA & 0xff);
+        gTitleMenuControlInterface->vtable->func11(2, st->brightnessA & 0xff);
     }
     if ((v = st->brightnessBVel) != 0)
     {
@@ -246,7 +246,7 @@ void dll_19B_update(int obj)
             st->brightnessB = 70;
             st->brightnessBVel = 0;
         }
-        (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(3, st->brightnessB & 0xff);
+        gTitleMenuControlInterface->vtable->func11(3, st->brightnessB & 0xff);
     }
     if (st->timer > 0)
     {
@@ -256,8 +256,7 @@ void dll_19B_update(int obj)
             st->timer = 0;
             if (st->displayedFlag == 0)
             {
-                (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50,
-                                                                                                  st->brightnessB, 0);
+                gTitleMenuControlInterface->vtable->onSelectSave(3, 0x2c, 0x50, st->brightnessB, 0);
                 st->displayedFlag = 1;
             }
         }
@@ -283,13 +282,13 @@ void dll_19B_update(int obj)
                 {
                     v = 1;
                 }
-                (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(3, v & 0xff);
+                gTitleMenuControlInterface->vtable->func11(3, v & 0xff);
                 v = (int)((f32)st->brightnessA * ((lbl_803E51A0 - (dy - lbl_803E5194)) / *(f32*)&lbl_803E51A0));
                 if ((s16)v < 1)
                 {
                     v = 1;
                 }
-                (*(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(2, v & 0xff);
+                gTitleMenuControlInterface->vtable->func11(2, v & 0xff);
             }
         }
         switch (st->phase)
@@ -339,8 +338,7 @@ void dll_19B_update(int obj)
                 (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
                 st->timer = 10;
                 st->phase = DLL19B_PHASE_RESET;
-                (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                    3, 0x35, 0x50, st->brightnessB & 0xff, 0);
+                gTitleMenuControlInterface->vtable->onSelectSave(3, 0x35, 0x50, st->brightnessB & 0xff, 0);
                 st->brightnessBVel = 1;
                 mainSetBits(GAMEBIT_WM_KrazTest1TorchesActive, 0);
             }
@@ -355,8 +353,7 @@ void dll_19B_update(int obj)
             if ((u32)mainGetBit(0x1d1) != 0)
             {
                 st->brightnessB = 1;
-                (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                    3, 0x2c, 0x50, st->brightnessB & 0xff, 0);
+                gTitleMenuControlInterface->vtable->onSelectSave(3, 0x2c, 0x50, st->brightnessB & 0xff, 0);
                 st->brightnessBVel = 1;
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 st->phase = DLL19B_PHASE_DONE;
@@ -365,8 +362,7 @@ void dll_19B_update(int obj)
             {
                 playerCancelSpell((GameObject*)player, -1);
                 mainSetBits(0x126, 0);
-                (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                    3, 0x2a, 0x50, st->brightnessB & 0xff, 0);
+                gTitleMenuControlInterface->vtable->onSelectSave(3, 0x2a, 0x50, st->brightnessB & 0xff, 0);
                 st->brightnessBVel = 1;
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                 st->phase = DLL19B_PHASE_COMPLETE;
@@ -380,8 +376,7 @@ void dll_19B_update(int obj)
             mainSetBits(0x1d2, 0);
             mainSetBits(0x127, 0);
             st->phase = DLL19B_PHASE_DONE;
-            (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
-                3, 0x2c, 0x50, st->brightnessB & 0xff, 0);
+            gTitleMenuControlInterface->vtable->onSelectSave(3, 0x2c, 0x50, st->brightnessB & 0xff, 0);
             break;
         case DLL19B_PHASE_RESET:
             st->phase = DLL19B_PHASE_IDLE;
@@ -433,7 +428,7 @@ void dll_19B_init(GameObject* obj, u8* params)
     sub->brightnessA = 0xc;
     sub->brightnessB = 0x1e;
     sub->timer = 0xc8;
-    ((void (*)(int, int, int, int, int))((void**)*(void**)gTitleMenuControlInterface)[6])(2, 0x2b, 0x50, 1, 0);
+    gTitleMenuControlInterface->vtable->onSelectSave(2, 0x2b, 0x50, 1, 0);
     sub->brightnessAVel = 0;
     sub->brightnessBVel = 0;
     sub->displayedFlag = 0;

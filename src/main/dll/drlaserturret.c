@@ -34,12 +34,10 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
+#include "main/dll/dll_0004_dummy04.h"
 
 s16 gDrLaserTurretIdleAnimMoves[2] = {0x13, 0x11};
 f32 gDrLaserTurretIdleAnimStepScales[2] = {0.01f, 0.0125f};
-extern void* gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-
 extern const f32 lbl_803E59DC;
 extern const f32 lbl_803E59E0;
 extern f32 gDrLaserTurretDefaultAnimStepScale;
@@ -403,7 +401,7 @@ void DRlaserturret_startTimedChallenge(DRLaserTurretObject* obj)
         mainSetBits(DR_LASERTURRET_GAMEBIT_TIMER_STARTED, 1);
         target = state->linkedTarget;
         (**(VtableFn***)((char*)target + 0x68))[0x4c / 4](target, state->digitCount);
-        (*(VtableFn**)gTitleMenuControlInterface)[0x4 / 4](0, 0xf5, 0, 0, 0);
+        gTitleMenuControlInterfaceCopy->vtable->func04(NULL, 0xf5, 0, 0, 0);
     }
     else
     {

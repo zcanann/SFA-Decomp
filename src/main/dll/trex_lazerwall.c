@@ -26,6 +26,7 @@
 #include "main/dll/tricky_api.h"
 #include "main/model_engine.h"
 #include "main/dll/trex_lazerwall.h"
+#include "main/dll/dll_0004_dummy04.h"
 
 #define GAMEBIT_LAZERWALL_START   0x617
 #define GAMEBIT_LAZERWALL_WIN     0x624
@@ -41,11 +42,6 @@
 #define LAZERWALL_NODE_KIND_B 2
 
 #define LAZERWALL_FLAG_ADVANCED 0x20 /* flags bit set after a curve advance */
-
-/* this TU sees the title-menu interface under a differently-named extern; alias
- * to the canonical name */
-extern u32* gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
 extern f32 lbl_803E59DC;
 extern const f32 lbl_803E59E0; /* curve-node Y bias */
@@ -175,7 +171,7 @@ int TREX_Lazerwall_updateTimedChallenge(int obj)
 
         (*gMapEventInterface)->setObjGroupStatus((s32)((GameObject*)obj)->anim.mapEventSlot, 6, 0);
 
-        (*(void (**)(int, int, int, int, int))((char*)*gTitleMenuControlInterface + 0x4))(0, 0xf3, 0, 0, 0);
+        gTitleMenuControlInterfaceCopy->vtable->func04(NULL, 0xf3, 0, 0, 0);
     }
 
     return 0;

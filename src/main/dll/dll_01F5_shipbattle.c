@@ -25,6 +25,7 @@
 #include "main/model_light.h"
 #include "main/dll/dll_01F5_shipbattle.h"
 #include "main/object_descriptor.h"
+#include "main/dll/dll_0004_dummy04.h"
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
@@ -34,9 +35,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 #define SHIPBATTLE_FIRE_SEQ_ID    0x171
 #define SEQINDEX_PENDING          -2
 #define CLASSID_SEQUENCE_OBJECT   0x10
-
-extern void** gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
 extern u8 lbl_803DB411;
 f32 lbl_803DDC50[2];
@@ -55,7 +53,7 @@ void ShipBattle_free(int* obj)
     int* state = ((GameObject*)obj)->extra;
     int light;
     (*gObjectTriggerInterface)->freeState((u8*)state);
-    ((void (*)(int*, int, int, int, int))((void**)*gTitleMenuControlInterface)[2])(obj, 0xffff, 0, 0, 0);
+    gTitleMenuControlInterfaceCopy->vtable->func05(obj, 0xffff, 0, 0, 0);
     light = ((GameObject*)obj)->userData2;
     if (light != 0)
     {

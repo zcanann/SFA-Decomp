@@ -22,13 +22,11 @@
 #include "main/objseq.h"
 #include "main/dll/dll_018D_mmshscales.h"
 #include "main/object_render.h"
+#include "main/dll/dll_0004_dummy04.h"
 
 /* Child object spawned at init and cached in childObjs[0] (scaled x2);
    retail OBJECTS.bin name "scalessword" (DLL 0x12A). */
 #define MMSHSCALES_CHILD_OBJ_SWORD 0x1b8
-
-extern int* gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
 extern u8 lbl_803DB411;
 
@@ -46,7 +44,7 @@ void MMSH_Scales_free(int obj, int keepChild)
 {
     GameObject* child;
     (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
-    (*(void (**)(int, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, 0xffff, 0, 0, 0);
+    gTitleMenuControlInterfaceCopy->vtable->func05((void*)obj, 0xffff, 0, 0, 0);
     child = ((GameObject*)obj)->childObjs[0];
     if ((child != NULL) && (keepChild == 0))
     {

@@ -22,12 +22,11 @@
 #include "main/objseq.h"
 #include "main/dll/dll_0184_animsharpclaw.h"
 #include "main/object_descriptor.h"
+#include "main/dll/dll_0004_dummy04.h"
 
 /* child setup-object id spawned on anim sequence event 1 */
 #define ANIMSHARPCLAW_CHILD_SETUP_ID 0x30B
 
-extern int* gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -86,7 +85,7 @@ void animsharpclaw_free(GameObject* obj)
         Obj_FreeObject((GameObject*)child);
     }
     (*gObjectTriggerInterface)->freeState(inner);
-    (*(void (*)(int, int, int, int, int))(*(int*)(*gTitleMenuControlInterface + 0x8)))((int)obj, 0xffff, 0, 0, 0);
+    gTitleMenuControlInterfaceCopy->vtable->func05((void*)obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
 }
 

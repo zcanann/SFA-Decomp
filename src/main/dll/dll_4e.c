@@ -31,6 +31,7 @@
 #include "main/rcp_dolphin_render_api.h"
 #include "main/dll/dll_003C_tumbleweedbush_api.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
+#include "main/dll/dll_0004_dummy04.h"
 
 #define OPTIONS_MENU_ACTION_CLOSE      0
 #define OPTIONS_MENU_ACTION_SELECT     1
@@ -59,7 +60,6 @@
 #define OPTIONS_SUBMENU_AUDIO    2
 #define OPTIONS_SUBMENU_LANGUAGE 3
 
-extern int* gTitleMenuControlInterface;
 extern int lbl_803DD6FC;
 extern s8 lbl_803DD704;  /* transition fade counter */
 extern s8 lbl_803DD705;  /* transition pending flag */
@@ -86,7 +86,7 @@ void optionsMenu_applyAudioSetting(int action, int option)
             value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]);
             audioSetVolumes((u8)value, OPTIONS_MENU_VOLUME_STEP, 1, 0, 0);
             value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]);
-            (*(void (**)(int))(*gTitleMenuControlInterface + 0x28))(value); /* set music control value */
+            gTitleMenuControlInterface->vtable->func0D(value); /* set music control value */
             break;
         case AUDIO_OPTION_VOICE_VOLUME:
             value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]);

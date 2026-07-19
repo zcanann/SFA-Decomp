@@ -19,6 +19,7 @@
 #include "main/pad.h"
 #include "main/object_descriptor.h"
 #include "main/shader_api.h"
+#include "main/dll/dll_0004_dummy04.h"
 
 typedef GameObject* (*Dll199FindNearestObjectFn)(int group, GameObject* from, f32* distance);
 
@@ -37,7 +38,6 @@ typedef GameObject* (*Dll199FindNearestObjectFn)(int group, GameObject* from, f3
 #define DLL199_ENVFX_B 0x14
 
 extern int lbl_803DB610;
-extern int* gTitleMenuControlInterface;
 u32 lbl_803DDBD8;
 typedef struct Dll199ObjectDef
 {
@@ -91,7 +91,7 @@ int dll_199_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             ((Dll197State*)st)->scrollPos = 0x46;
             ((Dll197State*)st)->scrollVel = 0;
         }
-        (**(void (**)(int, int))(*(int*)gTitleMenuControlInterface + 0x38))(3, ((Dll197State*)st)->scrollPos & 0xff);
+        gTitleMenuControlInterface->vtable->func11(3, ((Dll197State*)st)->scrollPos & 0xff);
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -150,7 +150,7 @@ int dll_199_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
                 break;
             case 10:
                 ((Dll197State*)st)->scrollPos = 100;
-                (**(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
+                gTitleMenuControlInterface->vtable->onSelectSave(
                     3, 0x2d, 0x50, ((Dll197State*)st)->scrollPos & 0xff, 0);
                 break;
             }
@@ -189,8 +189,8 @@ int dll_199_getObjectTypeId(void)
 void dll_199_free(int* obj)
 {
     (*gModgfxInterface)->detachSource(obj);
-    ((void (*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
-    ((void (*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
+    gTitleMenuControlInterface->vtable->func11(3, 0);
+    gTitleMenuControlInterface->vtable->func11(2, 0);
 }
 
 void dll_199_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -252,7 +252,7 @@ void dll_199_update(GameObject* obj)
             state[2] = 0x46;
             state[3] = 0;
         }
-        (**(void (**)(int, int))(*gTitleMenuControlInterface + 0x38))(2, state[2] & 0xff);
+        gTitleMenuControlInterface->vtable->func11(2, state[2] & 0xff);
     }
     delta = state[5];
     if (delta != 0)
@@ -268,7 +268,7 @@ void dll_199_update(GameObject* obj)
             state[4] = 0x46;
             state[5] = 0;
         }
-        (**(void (**)(int, int))(*gTitleMenuControlInterface + 0x38))(3, state[4] & 0xff);
+        gTitleMenuControlInterface->vtable->func11(3, state[4] & 0xff);
     }
     if (state[1] > 0)
     {
@@ -278,8 +278,7 @@ void dll_199_update(GameObject* obj)
             state[1] = 0;
             if (((Dll199State*)state)->triggered == 0)
             {
-                (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50, state[4],
-                                                                                             0);
+                gTitleMenuControlInterface->vtable->onSelectSave(3, 0x2c, 0x50, state[4], 0);
                 ((Dll199State*)state)->triggered = 1;
             }
         }
@@ -305,13 +304,13 @@ void dll_199_update(GameObject* obj)
                 {
                     brightness = 1;
                 }
-                (**(void (**)(int, int))(*gTitleMenuControlInterface + 0x38))(3, brightness & 0xff);
+                gTitleMenuControlInterface->vtable->func11(3, brightness & 0xff);
                 brightness = (int)((f32)state[2] * ((200.0f - (dz - 100.0f)) / 200.0f));
                 if ((s16)brightness < 1)
                 {
                     brightness = 1;
                 }
-                (**(void (**)(int, int))(*gTitleMenuControlInterface + 0x38))(2, brightness & 0xff);
+                gTitleMenuControlInterface->vtable->func11(2, brightness & 0xff);
             }
         }
         switch (((Dll199State*)state)->phase)
@@ -376,8 +375,7 @@ void dll_199_update(GameObject* obj)
             state[5] = -3;
             break;
         case 6:
-            (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x35, 0x50, state[4] & 0xff,
-                                                                                         0);
+            gTitleMenuControlInterface->vtable->onSelectSave(3, 0x35, 0x50, state[4] & 0xff, 0);
             state[5] = 1;
             (*gObjectTriggerInterface)->runSequence(2, obj, 0xffffffff);
             dist = 10000.0f;
@@ -413,8 +411,7 @@ void dll_199_update(GameObject* obj)
             if (mainGetBit(0x1ce) != 0)
             {
                 state[4] = 1;
-                (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50,
-                                                                                             state[4] & 0xff, 0);
+                gTitleMenuControlInterface->vtable->onSelectSave(3, 0x2c, 0x50, state[4] & 0xff, 0);
                 state[5] = 1;
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 ((Dll199State*)state)->phase = 5;
@@ -422,8 +419,7 @@ void dll_199_update(GameObject* obj)
             else
             {
                 mainSetBits(0x126, 0);
-                (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2a, 0x50,
-                                                                                             state[4] & 0xff, 0);
+                gTitleMenuControlInterface->vtable->onSelectSave(3, 0x2a, 0x50, state[4] & 0xff, 0);
                 state[5] = 1;
                 (*gObjectTriggerInterface)->runSequence(1, obj, 0xffffffff);
             }
@@ -436,8 +432,7 @@ void dll_199_update(GameObject* obj)
             mainSetBits(0x1cf, 0);
             mainSetBits(0x127, 0);
             ((Dll199State*)state)->phase = 5;
-            (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50, state[4] & 0xff,
-                                                                                         0);
+            gTitleMenuControlInterface->vtable->onSelectSave(3, 0x2c, 0x50, state[4] & 0xff, 0);
             mainSetBits(0x1ce, 1);
             (*gMapEventInterface)->setMapAct(DLL199_MAP_SHRINE, 6);
             break;
@@ -473,7 +468,7 @@ void dll_199_init(GameObject* obj, int def)
     state[2] = 0xc;
     state[4] = 0x1e;
     state[1] = 200;
-    (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(2, 0x2b, 0x50, 1, 0);
+    gTitleMenuControlInterface->vtable->onSelectSave(2, 0x2b, 0x50, 1, 0);
     state[3] = 0;
     state[5] = 0;
     ((Dll199State*)state)->triggered = 0;

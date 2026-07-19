@@ -33,6 +33,7 @@
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/baddie_control_interface.h"
+#include "main/dll/dll_0004_dummy04.h"
 #include "string.h"
 
 #define DIM2ICICLE_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
@@ -437,7 +438,6 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject* obj, DIMbossRunt
     gDIMbossSequenceFlags &= DIMBOSS_SEQUENCE_FLAGS_PERSIST_AFTER_EFFECT_UPDATE;
 }
 
-extern int* gTitleMenuControlInterfaceCopy;
 extern int* gDIMbossHitEffectResource;
 extern int gDim2IcicleHitCooldown;
 extern f32 lbl_803E4C10;
@@ -561,26 +561,22 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
             {
                 if (*(s8*)&((BaddieState*)playerObj)->hitPoints == 3)
                 {
-                    ((void (*)(int, int, int, int, int)) *
-                     (VtableFn**)(*(int*)gTitleMenuControlInterfaceCopy + 4))(obj, 0x68, 0, 0, 0);
+                    gTitleMenuControlInterfaceCopy->vtable->func04((void*)obj, 0x68, 0, 0, 0);
                 }
                 else if (*(s8*)&((BaddieState*)playerObj)->hitPoints == 2)
                 {
-                    ((void (*)(int, int, int, int, int)) *
-                     (VtableFn**)(*(int*)gTitleMenuControlInterfaceCopy + 4))(obj, 0x6c, 0, 0, 0);
+                    gTitleMenuControlInterfaceCopy->vtable->func04((void*)obj, 0x6c, 0, 0, 0);
                 }
             }
             else if (((GroundBaddieState*)state)->targetState == 2)
             {
                 if (*(s8*)&((BaddieState*)playerObj)->hitPoints == 3)
                 {
-                    ((void (*)(int, int, int, int, int)) *
-                     (VtableFn**)(*(int*)gTitleMenuControlInterfaceCopy + 4))(obj, 0x77, 0, 0, 0);
+                    gTitleMenuControlInterfaceCopy->vtable->func04((void*)obj, 0x77, 0, 0, 0);
                 }
                 else if (*(s8*)&((BaddieState*)playerObj)->hitPoints == 2)
                 {
-                    ((void (*)(int, int, int, int, int)) *
-                     (VtableFn**)(*(int*)gTitleMenuControlInterfaceCopy + 4))(obj, 0x78, 0, 0, 0);
+                    gTitleMenuControlInterfaceCopy->vtable->func04((void*)obj, 0x78, 0, 0, 0);
                 }
             }
             ((BaddieState*)playerObj)->moveDone = 0;

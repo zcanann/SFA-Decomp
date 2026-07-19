@@ -21,8 +21,8 @@
 #include "main/dll/dll_0035_saveselectscreen.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gameloop_api.h"
+#include "main/dll/dll_0004_dummy04.h"
 
-extern TitleMenuControl* gTitleMenuControlInterface;
 extern u8 lbl_803DD6C4;
 extern u8 lbl_803DD6CC;
 extern u8 lbl_803DD6CD;
@@ -50,10 +50,10 @@ void saveSelectSetSlot(int slot, int value)
         lbl_803DD6CD = 1;
         Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up); /* confirm sfx (unnamed in sfx_ids.h) */
         (*gScreenTransitionInterface)->start(0x14, 1);
-        ((void (**)(int))gTitleMenuControlInterface->vtable)[7](0);
-        ((void (**)(int))gTitleMenuControlInterface->vtable)[7](1);
-        ((void (**)(int))gTitleMenuControlInterface->vtable)[7](2);
-        ((void (**)(int))gTitleMenuControlInterface->vtable)[7](3);
+        gTitleMenuControlInterface->vtable->func0A(0);
+        gTitleMenuControlInterface->vtable->func0A(1);
+        gTitleMenuControlInterface->vtable->func0A(2);
+        gTitleMenuControlInterface->vtable->func0A(3);
         lbl_803DD6CF = 0x23;
         lbl_803DD6C4 = value;
     }

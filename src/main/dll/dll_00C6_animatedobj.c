@@ -20,6 +20,7 @@
 #include "main/maketex_sequence_api.h"
 #include "main/objseq.h"
 #include "main/objhits.h"
+#include "main/dll/dll_0004_dummy04.h"
 
 /* object group this object joins while active */
 #define ANIMATEDOBJ_OBJGROUP 7
@@ -84,7 +85,6 @@ typedef struct AnimatedobjState
     u8 pad118[0x140 - 0x118];
 } AnimatedobjState;
 
-extern void** gTitleMenuControlInterfaceCopy;
 
 
 
@@ -112,7 +112,7 @@ void animatedobj_free(int* obj, int seqFlag)
 {
     (*gObjectTriggerInterface)
         ->freeState(((GameObject*)obj)->extra);
-    ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
+    gTitleMenuControlInterfaceCopy->vtable->func05(obj, 0xffff, 0, 0, 0);
     Sfx_RemoveLoopedObjectSoundForObject((u32)obj);
     Sfx_StopObjectChannel((int)obj, 0x7f);
     if (((GameObject*)obj)->anim.seqId == ANIMATEDOBJ_KRYSTAL_OBJ && ((GameObject*)obj)->childCount != 0)

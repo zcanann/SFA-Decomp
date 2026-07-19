@@ -41,6 +41,7 @@
 #include "main/object_transform.h"
 #include "main/player_control_interface.h"
 #include "main/dll/dll_0019_dll19func0.h"
+#include "main/dll/dll_0004_dummy04.h"
 
 GameObject* gDll19NearestObj;
 u32 lbl_803DD5E0;
@@ -69,9 +70,6 @@ typedef struct Dll19Placement
 #define DLL19_FLAG_YAW_ALIGNED 0x10 /* yaw delta within facing cone */
 #define DLL19_FLAG_OSC_RISING  0x20 /* oscillation phase 1 (initial rise) */
 #define DLL19_FLAG_OSC_ACTIVE  0x40 /* oscillation phase 2 (active/return) */
-
-extern void** gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
 typedef struct Dll19ChildObjectIdTable
 {
@@ -220,12 +218,12 @@ void dll_19_func12(int* obj, int* state, u8 flag)
         soundId = ((GroundBaddieState*)state)->soundIdB;
         if (soundId != 0)
         {
-            (*(void (**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, soundId, 0, 0, 0);
+            gTitleMenuControlInterfaceCopy->vtable->func05(obj, soundId, 0, 0, 0);
         }
         soundId = ((GroundBaddieState*)state)->soundIdA;
         if (soundId != 0)
         {
-            (*(void (**)(int*, u16, int, int, int))((char*)*gTitleMenuControlInterface + 8))(obj, soundId, 0, 0, 0);
+            gTitleMenuControlInterfaceCopy->vtable->func05(obj, soundId, 0, 0, 0);
         }
     }
     voxmaps_freeRouteWork(&((GroundBaddieState*)state)->routeState);

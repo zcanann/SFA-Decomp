@@ -41,6 +41,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/savegame.h"
 #include "main/dll/player_status.h"
+#include "main/dll/dll_0004_dummy04.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
 #include "string.h"
 
@@ -88,8 +89,6 @@ typedef struct SaveSelectPanel
 
 /* texture asset loaded into gSaveSelectTexture */
 #define SAVESELECTSCREEN_TEXTURE_ID 0x2dd
-
-extern TitleMenuControl* gTitleMenuControlInterface;
 
 s8 lbl_803DD6CF;
 s8 gSaveSelectRefreshCounter;
@@ -294,10 +293,10 @@ void saveSelectGoToChapterSelect(void)
         lbl_803DD6CD = 1;
         Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
         (*gScreenTransitionInterface)->start(20, 1);
-        ((void (**)(int))gTitleMenuControlInterface->vtable)[7](0);
-        ((void (**)(int))gTitleMenuControlInterface->vtable)[7](1);
-        ((void (**)(int))gTitleMenuControlInterface->vtable)[7](2);
-        ((void (**)(int))gTitleMenuControlInterface->vtable)[7](3);
+        gTitleMenuControlInterface->vtable->func0A(0);
+        gTitleMenuControlInterface->vtable->func0A(1);
+        gTitleMenuControlInterface->vtable->func0A(2);
+        gTitleMenuControlInterface->vtable->func0A(3);
         lbl_803DD6CF = 0x23;
         lbl_803DD6C4 = 0;
     }
@@ -686,10 +685,10 @@ int SaveSelectScreen_run(void)
                 {
                     lbl_803DD6CD = 1;
                     (*gScreenTransitionInterface)->start(0x14, 5);
-                    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](0);
-                    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](1);
-                    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](2);
-                    ((void (**)(int))gTitleMenuControlInterface->vtable)[7](3);
+                    gTitleMenuControlInterface->vtable->func0A(0);
+                    gTitleMenuControlInterface->vtable->func0A(1);
+                    gTitleMenuControlInterface->vtable->func0A(2);
+                    gTitleMenuControlInterface->vtable->func0A(3);
                     lbl_803DD6CF = 0x23;
                 }
                 break;

@@ -10,8 +10,8 @@
 #include "main/objseq.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
+#include "main/dll/dll_0004_dummy04.h"
 
-extern int* gTitleMenuControlInterfaceCopy;
 extern u8 lbl_803DB411;    /* trigger-interface update parameter */
 
 /* Child object spawned in sc_cloudrunnera_update case 0, cached in childObjs[0]
@@ -58,7 +58,7 @@ void sc_cloudrunnera_free(int* obj)
 {
     void* inner = ((GameObject*)obj)->extra;
     (*gObjectTriggerInterface)->freeState(inner);
-    ((void (*)(int*, int, int, int, int))(*(int*)(*gTitleMenuControlInterfaceCopy + 0x8)))(obj, 0xffff, 0, 0, 0);
+    gTitleMenuControlInterfaceCopy->vtable->func05(obj, 0xffff, 0, 0, 0);
 }
 
 void sc_cloudrunnera_render(int p1, int p2, int p3, int p4, int p5, s8 visible)

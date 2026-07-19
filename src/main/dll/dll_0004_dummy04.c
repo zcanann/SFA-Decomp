@@ -73,7 +73,7 @@ void Dummy04_func16_nop(void)
 void Dummy04_onSetupPlayer(void)
 {
 }
-void Dummy04_func15_nop(void)
+void Dummy04_func15_nop(void* obj)
 {
 }
 void Dummy04_func13_nop(void)
@@ -82,7 +82,7 @@ void Dummy04_func13_nop(void)
 void Dummy04_func12_nop(void)
 {
 }
-int Dummy04_func11_ret_0(void)
+int Dummy04_func11_ret_0(int arg0, int arg1)
 {
     return 0;
 }
@@ -96,7 +96,7 @@ int Dummy04_func0F_ret_0(void)
 void Dummy04_func0E_nop(void)
 {
 }
-int Dummy04_func0D_ret_0(void)
+int Dummy04_func0D_ret_0(int arg0)
 {
     return 0;
 }
@@ -107,24 +107,24 @@ int Dummy04_func0B_ret_0(void)
 {
     return 0;
 }
-int Dummy04_func0A_ret_0(void)
+int Dummy04_func0A_ret_0(int arg0)
 {
     return 0;
 }
-void Dummy04_onSelectSave(void)
+void Dummy04_onSelectSave(int arg0, int arg1, int arg2, int arg3, int arg4)
 {
 }
 void Dummy04_func08_nop(void)
 {
 }
-void Dummy04_func07_nop(void)
+void Dummy04_func07_nop(void* obj)
 {
 }
-int Dummy04_func05_ret_0(void)
+int Dummy04_func05_ret_0(void* obj, u16 arg1, int arg2, int arg3, int arg4)
 {
     return 0;
 }
-void Dummy04_func04_nop(void)
+void Dummy04_func04_nop(void* obj, int arg1, int arg2, int arg3, int arg4)
 {
 }
 int Dummy04_func03_ret_m1(void)

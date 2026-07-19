@@ -72,6 +72,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/object_render.h"
 #include "main/dll/dll_0011_screens.h"
 #include "main/dll/dll_000D_playershadow.h"
+#include "main/dll/dll_0004_dummy04.h"
 #include "main/dll/dll_003C_tumbleweedbush_api.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
 #include "main/voxmaps.h"
@@ -121,8 +122,8 @@ PlayerShadowInterface** gPlayerShadowInterface;
 ProjgfxInterface** gProjgfxInterface;
 ModgfxInterface** gModgfxInterface;
 ExpgfxInterface** gExpgfxInterface;
-void* gTitleMenuControlInterfaceCopy;
-void* gTitleMenuControlInterface;
+Dummy04Interface* gTitleMenuControlInterfaceCopy;
+Dummy04Interface* gTitleMenuControlInterface;
 CheckpointInterface** gCheckpointInterface;
 GameUIInterface** gGameUIInterface;
 CloudActionInterface** gCloudActionInterface;
@@ -226,8 +227,6 @@ extern int gGameLoopPlayerTrailIndex;
 extern u8 gGameLoopMusicActive;
 extern u8 gGameLoopProgressiveMode;
 extern void* lbl_803DCA94;
-extern void* gTitleMenuControlInterface;
-extern void* gTitleMenuControlInterfaceCopy;
 extern void* gScreensInterface;
 extern void* gPathControlInterface;
 extern void* gMinimapInterface;

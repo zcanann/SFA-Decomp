@@ -48,6 +48,7 @@
 #include "string.h"
 #include "main/track_dolphin_ext.h"
 #include "main/dll/player_ext.h"
+#include "main/dll/dll_0004_dummy04.h"
 
 s16 gObjPartitionPivot;
 void* lbl_803DCBC0;
@@ -201,7 +202,6 @@ extern int gObjSeqToObjIdMax;
 extern s16* gObjSeqToObjIdTable;
 extern f32 lbl_803DE8CC;
 extern f32 lbl_803DE8D0;
-extern void* gTitleMenuControlInterface;
 extern u8* gObjFileRefCount;
 extern u8* gObjFileBufferTable;
 extern u32 gObjUpdateFlags;
@@ -906,7 +906,7 @@ void mapSetupPlayer(void)
         vp->x = *(f32*)(view + 0x18);
         vp->y = *(f32*)(view + 0x1c);
         vp->z = *(f32*)(view + 0x20);
-        (*(void (**)(u8*))(*(int*)gTitleMenuControlInterface + 0x10))(obj);
+        gTitleMenuControlInterface->vtable->func07(obj);
         lbl_803DCB70 = 0;
         playerUpdateFn_8005649c();
     }
@@ -966,7 +966,7 @@ void objFreeObjDef(u8* obj, int flag)
         }
         break;
     }
-    (*(void (**)(u8*))(*(int*)gTitleMenuControlInterface + 0x48))(obj);
+    gTitleMenuControlInterface->vtable->func15(obj);
     (*gExpgfxInterface)->freeOwner3((u32)obj);
     if (((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE)
     {

@@ -20,6 +20,7 @@
 #include "main/camera_interface.h"
 #include "main/objseq.h"
 #include "main/obj_list.h"
+#include "main/dll/dll_0004_dummy04.h"
 
 #define DIM2ROOFRUB_OBJFLAG_RENDERED 0x800
 
@@ -74,8 +75,6 @@ typedef struct Dim2roofrubState
     s16 unk116;
     u8 pad118[0x140 - 0x118];
 } Dim2roofrubState;
-
-extern void** gTitleMenuControlInterfaceCopy;
 
 typedef struct Dim2FxRow
 {
@@ -210,7 +209,7 @@ ObjectDescriptor gDIM2RoofRubObjDescriptor = {
 void dim2roofrub_free(int* obj)
 {
     (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
-    ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
+    gTitleMenuControlInterfaceCopy->vtable->func05(obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel((int)obj, 0x7f);
 }
 
