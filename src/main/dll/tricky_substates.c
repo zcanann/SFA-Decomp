@@ -1755,7 +1755,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, int* state)
                         trickyDebugPrint(lbl_8031D478);
                     }
                     (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
-                    ((TrickyByteFlags*)&((TrickyState*)b)->unk82E)->bit5 = 1;
+                    ((TrickyByteFlags*)&((TrickyState*)b)->flags82E)->bit5 = 1;
                 }
                 else
                 {
@@ -1810,7 +1810,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, int* state)
                         trickyDebugPrint(lbl_8031D478);
                     }
                     (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-                    ((TrickyByteFlags*)&((TrickyState*)b)->unk82E)->bit5 = 1;
+                    ((TrickyByteFlags*)&((TrickyState*)b)->flags82E)->bit5 = 1;
                     ((TrickyState*)state)->stateFlags |= 0x40000000LL;
                 }
                 buttonDisable(0, PAD_BUTTON_A);
@@ -1867,7 +1867,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, int* state)
                     trickyDebugPrint(lbl_8031D478);
                 }
                 (*gObjectTriggerInterface)->runSequence(g, (void*)obj, -1);
-                ((TrickyByteFlags*)&((TrickyState*)b)->unk82E)->bit5 = 1;
+                ((TrickyByteFlags*)&((TrickyState*)b)->flags82E)->bit5 = 1;
                 buttonDisable(0, PAD_BUTTON_A);
                 return 1;
             }

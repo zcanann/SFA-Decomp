@@ -492,10 +492,10 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags | 0x4000;
         }
-        if (((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit5 == 0)
+        if (((TrickyByteFlags*)&((TrickyState*)state)->flags82E)->bit5 == 0)
         {
             ObjModel_ClearBlendChannels(Obj_GetActiveModel((GameObject*)obj));
-            ((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit6 = 0;
+            ((TrickyByteFlags*)&((TrickyState*)state)->flags82E)->bit6 = 0;
         }
     }
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -1353,7 +1353,7 @@ void Tricky_update(int obj)
         trickyState->stateFlags &= ~0x40000000LL;
     }
     {
-        int flagsByte = trickyState->unk358;
+        int flagsByte = trickyState->flags358;
         trickyDebugPrint(base + 0x894, flagsByte & 1, flagsByte & 2, flagsByte & 4, flagsByte & 8,
                          flagsByte & 0x10, flagsByte & 0x20, flagsByte & 0x40, flagsByte & 0x80);
     }
@@ -1386,13 +1386,13 @@ void Tricky_update(int obj)
             }
         }
         *(s32*)&trickyState->stateFlags &= ~0x4201;
-        if (((TrickyByteFlags*)&trickyState->unk82E)->bit5 != 0)
+        if (((TrickyByteFlags*)&trickyState->flags82E)->bit5 != 0)
         {
-            ((TrickyByteFlags*)&trickyState->unk82E)->bit5 = 0;
+            ((TrickyByteFlags*)&trickyState->flags82E)->bit5 = 0;
         }
         else
         {
-            ((TrickyByteFlags*)&trickyState->unk82E)->bit7 = 1;
+            ((TrickyByteFlags*)&trickyState->flags82E)->bit7 = 1;
         }
     }
     if (*(void**)&trickyState->followObj != NULL &&
@@ -2126,7 +2126,7 @@ void Tricky_init(GameObject* obj)
     doNothing_onTrickyInit();
     walkgroupFindExitPointFn_800dc398();
     ((TrickyState*)state)->groundSnapCounter = 2;
-    ((TrickyInitFlags*)&((TrickyState*)state)->unk82E)->initBit7 = 1;
+    ((TrickyInitFlags*)&((TrickyState*)state)->flags82E)->initBit7 = 1;
     ((TrickyState*)state)->commandPhase = -1;
 }
 

@@ -176,7 +176,7 @@ typedef struct TrickyState {
     u8 pad324[0x353 - 0x324];
     u8 heightUpdateActive; /* set 1 at update-cycle start; cleared to 0 when the object leaves its map block or a ground-snap fires; while (s8)set the water-level / tracked-height float update runs, else velocityY is zeroed (tricky sets, trickyfollow/skeetla clear+read) */
     u8 pad354[0x358 - 0x354];
-    s8 unk358;
+    s8 flags358; /* bit-flag byte: all 8 bits are decomposed individually (&1..&0x80) for the state debug print (tricky) */
     u8 pad359[0x360 - 0x359];
     void *lastContactObj;
     f32 contactTimer;
@@ -270,7 +270,7 @@ typedef struct TrickyState {
     u8 pad81C[0x82C - 0x81C];
     u8 modelVariant; /* progress/10; indexes model bank color */
     u8 progressValue; /* map-event progress byte written out via **progressPtr; computed as base+(count<<2), clamped to a max byte (tricky writes to progressPtr, substates computes/clamps) */
-    u8 unk82E; /* bit flags 5/6/7 (collectable.c overlays) */
+    u8 flags82E; /* bit flags 5/6/7, accessed only through the TrickyByteFlags / TrickyInitFlags overlays (tricky/tricky_substates) */
     u8 pad82F[0x838 - 0x82F];
     f32 particleTimer; /* f32 countdown decremented by timeDelta; while > threshold the queued particle effect keeps emitting; reset to a float sentinel on state entry (tricky/skeetla/weapone6/tricky_substates/mmp_cratercritter/animobjd2) */
     u8 pad83C[0x840 - 0x83C];
