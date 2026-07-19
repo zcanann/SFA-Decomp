@@ -723,7 +723,7 @@ int tricky_substateApproachThorntail(int obj, int state)
     if (getXZDistance(pos, (float*)(state + 0x72c)) > lbl_803E2424)
     {
         ((TrickyState*)state)->wanderTargetX = pos[0];
-        *(float*)&((TrickyState*)state)->wanderTargetY = pos[1];
+        ((TrickyState*)state)->wanderTargetY = pos[1];
         ((TrickyState*)state)->wanderTargetZ = pos[2];
     }
     if ((((u32)((TrickyState*)state)->stateFlags728 >> 5) & 1) != 0)
@@ -1605,7 +1605,7 @@ void tricky_pickAmbientActivity(u8* obj, u8* state)
         ang = lbl_803E2454 * (f32)sv / lbl_803E2458;
         ((TrickyState*)state)->wanderTargetX =
             (f32)(lbl_803E2528 * -mathSinf(ang) + ((GameObject*)obj)->anim.localPosX);
-        *(f32*)&((TrickyState*)state)->wanderTargetY = ((GameObject*)obj)->anim.localPosY;
+        ((TrickyState*)state)->wanderTargetY = ((GameObject*)obj)->anim.localPosY;
         ((TrickyState*)state)->wanderTargetZ =
             (f32)(lbl_803E2484 * -mathCosf(ang) + ((GameObject*)obj)->anim.localPosZ);
         if (((TrickyState*)state)->targetPosPtr != state + 0x72c)

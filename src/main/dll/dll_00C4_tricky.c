@@ -347,7 +347,7 @@ void tricky_stateIdleWander(GameObject* obj, int state)
     {
         ((TrickyState*)state)->wanderTargetX =
             (obj)->anim.worldPosX - mathSinf((lbl_803E2454 * (f32) * (s16*)obj) / lbl_803E2458);
-        *(f32*)&((TrickyState*)state)->wanderTargetY = (obj)->anim.worldPosY;
+        ((TrickyState*)state)->wanderTargetY = (obj)->anim.worldPosY;
         ((TrickyState*)state)->wanderTargetZ =
             (obj)->anim.worldPosZ - mathCosf((lbl_803E2454 * (f32) * (s16*)obj) / lbl_803E2458);
 
