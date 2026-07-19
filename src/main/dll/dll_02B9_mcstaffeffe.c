@@ -16,7 +16,7 @@
 
 void mcstaffeffe_render(McStaffEffectObject* staffEffect)
 {
-    fn_80098B18Legacy((int)staffEffect, staffEffect->anim.rootMotionScale, (u8)staffEffect->particleType, 0, 0, NULL);
+    fn_80098B18(staffEffect, staffEffect->anim.rootMotionScale, (u8)staffEffect->particleType, 0, 0, NULL);
 }
 
 void mcstaffeffe_update(void)

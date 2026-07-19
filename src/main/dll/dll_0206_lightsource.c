@@ -19,7 +19,6 @@
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/object_descriptor.h"
-#define OBJFX_FN_80098B18_BYTE_ARGS_LEGACY
 #include "main/objfx.h"
 #include "main/dll/LGT/dll_0206_lightsource.h"
 #include "main/objhits.h"
@@ -95,7 +94,7 @@ void lightsource_update(GameObject* obj)
     LightSourceState* b;
     ModelLightStruct* t;
     s16 sum;
-    u8 sfxFlag;
+    int sfxFlag;
     f32 vec[3];
     struct
     {
@@ -160,7 +159,7 @@ void lightsource_update(GameObject* obj)
                 vec[1] = 3.5f;
             }
             vec[2] = 0.0f;
-            fn_80098B18((int)obj, 10.0f * (obj)->anim.rootMotionScale, b->fxType, sfxFlag, 0, vec);
+            fn_80098B18(obj, 10.0f * (obj)->anim.rootMotionScale, b->fxType, sfxFlag, 0, vec);
         }
         if (b->sparks != 0)
         {

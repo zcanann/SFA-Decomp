@@ -108,7 +108,7 @@ void flameblast_render(GameObject* obj)
     color[0] = 0.0f;
     color[1] = 1.0f;
     color[2] = 0.0f;
-    fn_80098B18Legacy((int)obj, scale, 2, 0, 0, (int)color);
+    fn_80098B18(obj, scale, 2, 0, 0, color);
 }
 
 void flameblast_update(GameObject* obj)

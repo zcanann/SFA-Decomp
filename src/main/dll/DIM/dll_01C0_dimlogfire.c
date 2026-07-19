@@ -196,7 +196,7 @@ void DIMLogFire_update(GameObject* obj)
         vec.x = 0.0f;
         vec.y = 10.0f;
         vec.z = 0.0f;
-        fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 2, flickerFlagA, flickerFlagB, (int)&vec);
+        fn_80098B18(obj, (obj)->anim.rootMotionScale, 2, flickerFlagA, flickerFlagB, &vec.x);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMLOGFIRE_HIT_VOLUME_SLOT, 1, 0);
         break;
     case DIMLOGFIRE_MODE_UNLIT:

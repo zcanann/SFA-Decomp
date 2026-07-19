@@ -139,7 +139,7 @@ void CampFire_update(int obj)
     params[0] = 0.0f;
     params[1] = 10.0f;
     params[2] = 0.0f;
-    fn_80098B18Legacy(obj, 1.4f * ((GameObject*)obj)->anim.rootMotionScale, type, mode, flag, params);
+    fn_80098B18((void*)obj, 1.4f * ((GameObject*)obj)->anim.rootMotionScale, type, mode, flag, params);
     {
         ModelLightStruct* light = state->light;
         if (light != NULL && light->glowType != 0 && light->enabled != 0)

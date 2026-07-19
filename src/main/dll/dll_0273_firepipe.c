@@ -289,7 +289,7 @@ void firepipe_updateState(FirePipeObject* obj)
     {
         if (((((GameObject*)obj)->objectFlags & FIREPIPE_OBJFLAG_RENDERED) != 0) || (obj->callback != NULL))
         {
-            fn_80098B18Legacy(obj, lbl_803E6B70 * mapData->scale, (u8)extra->effectType, 0, 0, 0);
+            fn_80098B18(obj, lbl_803E6B70 * mapData->scale, (u8)extra->effectType, 0, 0, NULL);
         }
     }
 

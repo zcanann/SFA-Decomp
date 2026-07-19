@@ -195,8 +195,7 @@ void FlammableVine_update(GameObject* obj)
         {
             pulseStyle = 0;
         }
-        fn_80098B18Legacy((int)obj, 0.65f * (state->burnIntensity * (obj)->anim.rootMotionScale), 3, 0, pulseStyle,
-                          0);
+        fn_80098B18(obj, 0.65f * (state->burnIntensity * (obj)->anim.rootMotionScale), 3, 0, pulseStyle, NULL);
         Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_forcecryslp11);
     }
 }

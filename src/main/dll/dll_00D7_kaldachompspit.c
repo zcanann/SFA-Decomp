@@ -191,7 +191,7 @@ void KaldaChompSpit_update(int obj)
         {
             if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
             {
-                fn_80098B18Legacy(obj, 1.0f, 1, 0, 0, 0);
+                fn_80098B18((void*)obj, 1.0f, 1, 0, 0, NULL);
             }
             else
             {

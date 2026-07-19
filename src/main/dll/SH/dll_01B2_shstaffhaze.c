@@ -19,7 +19,7 @@ void SH_StaffHaze_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5)
     vec[0] = 0.0f;
     vec[1] = 0.5f;
     vec[2] = 0.0f;
-    fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 4, 0, 0, (int)&vec[0]);
+    fn_80098B18(obj, (obj)->anim.rootMotionScale, 4, 0, 0, vec);
 }
 
 void SH_StaffHaze_update(GameObject* obj)

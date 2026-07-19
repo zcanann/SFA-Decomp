@@ -72,7 +72,7 @@ void spiritdoorspirit_update(GameObject* obj)
     }
     else
     {
-        fn_80098B18Legacy((int)obj, lbl_803DBE78, 5, 0, 0, 0);
+        fn_80098B18((void*)(int)obj, lbl_803DBE78, 5, 0, 0, NULL);
         state->active = active = (u8)(mainGetBit(def->gateGameBit) == 0);
         if (active == 0)
         {
