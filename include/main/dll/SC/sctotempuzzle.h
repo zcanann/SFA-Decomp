@@ -1,12 +1,9 @@
 #ifndef MAIN_DLL_SC_SCTOTEMPUZZLE_H_
 #define MAIN_DLL_SC_SCTOTEMPUZZLE_H_
 
-#include "ghidra_import.h"
+#include "main/dll/SC/sctotembond.h"
 
-typedef struct SCTotemPuzzleObject SCTotemPuzzleObject;
-typedef struct SCTotemPuzzleState SCTotemPuzzleState;
-
-int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state);
+u8 sc_totempuzzle_checkSolvedSequence(ScTotemPuzzleObject *obj, ScTotemPuzzleState *state);
 int sc_totempuzzle_getExtraSize(void);
 int sc_totempuzzle_getObjectTypeId(void);
 void sc_totempuzzle_free(void);

@@ -23,23 +23,7 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
-
-typedef struct SCTotemPuzzleState
-{
-    u8 pad00[0xc];
-    f32 angleTarget;
-    s16 step;
-    s16 flags;
-} SCTotemPuzzleState;
-
-typedef struct SCTotemPuzzleObject
-{
-    s16 angle;
-    u8 pad02[0x44];
-    s16 objectType;
-    u8 pad48[0x70];
-    SCTotemPuzzleState* state;
-} SCTotemPuzzleObject;
+#include "main/dll/SC/sctotempuzzle.h"
 
 typedef struct SCTotemPuzzleParticleBox
 {
@@ -76,7 +60,7 @@ extern f32 lbl_803E5628;
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
 
-int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleState* state)
+u8 sc_totempuzzle_checkSolvedSequence(ScTotemPuzzleObject* obj, ScTotemPuzzleState* state)
 {
     SCTotemPuzzleParticleBox particleBox;
     int objectIndex;
@@ -91,11 +75,11 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
 
     while (objectIndex < objectCount)
     {
-        SCTotemPuzzleObject* peer;
-        SCTotemPuzzleState* peerState;
+        ScTotemPuzzleObject* peer;
+        ScTotemPuzzleState* peerState;
         s16 flags;
 
-        peer = (SCTotemPuzzleObject*)objects[objectIndex];
+        peer = (ScTotemPuzzleObject*)objects[objectIndex];
         if (peer->objectType == SC_TOTEMPUZZLE_OBJECT_TYPE)
         {
             peerState = peer->state;
@@ -104,13 +88,13 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
             {
                 if ((flags & SC_TOTEMPUZZLE_REVERSED_FLAG) != 0)
                 {
-                    if (peerState->step + 1 == SC_TOTEMPUZZLE_FORWARD_STEP)
+                    if (peerState->stepIndex + 1 == SC_TOTEMPUZZLE_FORWARD_STEP)
                     {
                         solvedCount++;
                         if (peer == obj)
                         {
-                            state->angleTarget = gTotemPuzzleAngleStep * (f32)(state->step + 1);
-                            obj->angle = (s16)(s32)state->angleTarget;
+                            state->angle = gTotemPuzzleAngleStep * (f32)(state->stepIndex + 1);
+                            obj->yaw = (s16)(s32)state->angle;
                             solvedThisObject = 1;
                         }
                     }
@@ -119,13 +103,13 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
                         Sfx_PlayFromObject(0, SC_TOTEMPUZZLE_WRONG_SFX);
                     }
                 }
-                else if (peerState->step == SC_TOTEMPUZZLE_FORWARD_STEP)
+                else if (peerState->stepIndex == SC_TOTEMPUZZLE_FORWARD_STEP)
                 {
                     solvedCount++;
                     if (peer == obj)
                     {
-                        state->angleTarget = gTotemPuzzleAngleStep * state->step;
-                        obj->angle = (s16)(s32)state->angleTarget;
+                        state->angle = gTotemPuzzleAngleStep * state->stepIndex;
+                        obj->yaw = (s16)(s32)state->angle;
                         solvedThisObject = 1;
                     }
                 }
@@ -206,7 +190,6 @@ void sc_totempuzzle_hitDetect(void)
 /* Tail of the TU (0x801DD46C..0x801DDA28) - formerly the head of
  * dll_01BB_sctotembond.c (the drift boundary at 0x801DD46C cut dll
  * 0x1BA between hitDetect and update; real edge = initialise end). */
-#include "main/dll/SC/sctotembond.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
@@ -252,9 +235,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
         {
             if (state->pulseTimer != lbl_803E55F4)
             {
-                mainSetBits(GAMEBIT_SC_totempuzzle_running,
-                            ((u8 (*)(ScTotemPuzzleObject*, ScTotemPuzzleState*))sc_totempuzzle_checkSolvedSequence)(
-                                obj, state));
+                mainSetBits(GAMEBIT_SC_totempuzzle_running, sc_totempuzzle_checkSolvedSequence(obj, state));
             }
             objects = ObjList_GetObjects(&startA, &countA);
             while (startA < countA)
