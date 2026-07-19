@@ -475,7 +475,7 @@ typedef struct IcicleHitFx
     f32 z;
 } IcicleHitFx;
 
-void DIM2icicle_updateHitResponse(int obj, int playerObj)
+void DIM2icicle_updateHitResponse(GameObject* obj, BaddieState* playerState)
 {
     int* state;
     u8 hit;
@@ -488,7 +488,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
     int hitId;
     IcicleHitDesc desc;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     Obj_GetPlayerObject();
     hit = 0;
     desc = gDim2IcicleHitDescTemplate;
@@ -496,7 +496,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
     {
         gDim2IcicleHitCooldown = gDim2IcicleHitCooldown - 1;
     }
-    hitResult = ObjHits_GetPriorityHit((GameObject*)(obj), &hitId, &hitType, &hitVolume);
+    hitResult = ObjHits_GetPriorityHit(obj, &hitId, &hitType, &hitVolume);
     if (hitResult != 0)
     {
         gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0040;
@@ -509,8 +509,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
         }
         else if (((GroundBaddieState*)state)->targetState == 2)
         {
-            if (hitType != 4 || ((GameObject*)obj)->anim.currentMoveProgress < lbl_803E4C10 ||
-                ((GameObject*)obj)->anim.currentMove != 0x12)
+            if (hitType != 4 || obj->anim.currentMoveProgress < lbl_803E4C10 || obj->anim.currentMove != 0x12)
             {
                 hit = 1;
             }
@@ -519,19 +518,19 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
         {
             if (gDim2IcicleHitCooldown == 0)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_sc_npu_216_4b2);
-                base = (IcicleHitEntry*)DIM2Icicle_GetActiveModel((void*)obj)[0x14];
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_sc_npu_216_4b2);
+                base = (IcicleHitEntry*)DIM2Icicle_GetActiveModel(obj)[0x14];
                 ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->x = playerMapOffsetX + base[hitType].px;
                 ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->y = base[hitType].py;
                 ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->z = playerMapOffsetZ + base[hitType].pz;
                 (*gPartfxInterface)
-                    ->spawnObject((void*)obj, DIM2ICICLE_PARTFX_HIT, gDim2IcicleHitFxBuffer, 0x200001, -1, NULL);
+                    ->spawnObject(obj, DIM2ICICLE_PARTFX_HIT, gDim2IcicleHitFxBuffer, 0x200001, -1, NULL);
                 ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->x =
-                    ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->x - ((GameObject*)obj)->anim.worldPosX;
+                    ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->x - obj->anim.worldPosX;
                 ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->y =
-                    ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->y - ((GameObject*)obj)->anim.worldPosY;
+                    ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->y - obj->anim.worldPosY;
                 ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->z =
-                    ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->z - ((GameObject*)obj)->anim.worldPosZ;
+                    ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->z - obj->anim.worldPosZ;
                 ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->scale = lbl_803E4C44;
                 ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->a = 0;
                 ((IcicleHitFx*)gDim2IcicleHitFxBuffer)->b = 0;
@@ -539,59 +538,61 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
                 desc.f1 += randomGetRange(0, 0x9b);
                 desc.f2 += randomGetRange(0, 0x9b);
                 ((void (*)(int, int, u8*, int, int, IcicleHitDesc*)) *
-                 (VtableFn**)(*(int*)gDIMbossHitEffectResource + 4))(obj, 0, gDim2IcicleHitFxBuffer, 1, -1, &desc);
+                 (VtableFn**)(*(int*)gDIMbossHitEffectResource + 4))((int)obj, 0, gDim2IcicleHitFxBuffer, 1, -1,
+                                                                     &desc);
                 gDim2IcicleHitCooldown = 0x1e;
             }
         }
         else
         {
-            if (((BaddieState*)playerObj)->targetObj == NULL)
+            if (playerState->targetObj == NULL)
             {
                 player = Obj_GetPlayerObject();
                 if (fn_80295A04(player, 1) != 0)
                 {
                     ((void (*)(int, int, int, int, int, int, int, int, int)) *
-                     (VtableFn**)(*gBaddieControlInterface + 0x28))(obj, playerObj, (int)state + 0x35c,
-                                                                    (int)*(s16*)((int)state + 0x3f4), 0, 2, 10, -1, -1);
-                    *(int*)&((BaddieState*)playerObj)->targetObj = (int)player;
-                    ((BaddieState*)playerObj)->hasTarget = 0;
+                     (VtableFn**)(*gBaddieControlInterface + 0x28))(
+                        (int)obj, (int)playerState, (int)state + 0x35c, (int)*(s16*)((int)state + 0x3f4), 0, 2, 10,
+                        -1, -1);
+                    playerState->targetObj = player;
+                    playerState->hasTarget = 0;
                 }
             }
             if (((GroundBaddieState*)state)->targetState == 1)
             {
-                if (*(s8*)&((BaddieState*)playerObj)->hitPoints == 3)
+                if (*(s8*)&playerState->hitPoints == 3)
                 {
-                    gTitleMenuControlInterfaceCopy->vtable->func04((void*)obj, 0x68, 0, 0, 0);
+                    gTitleMenuControlInterfaceCopy->vtable->func04(obj, 0x68, 0, 0, 0);
                 }
-                else if (*(s8*)&((BaddieState*)playerObj)->hitPoints == 2)
+                else if (*(s8*)&playerState->hitPoints == 2)
                 {
-                    gTitleMenuControlInterfaceCopy->vtable->func04((void*)obj, 0x6c, 0, 0, 0);
+                    gTitleMenuControlInterfaceCopy->vtable->func04(obj, 0x6c, 0, 0, 0);
                 }
             }
             else if (((GroundBaddieState*)state)->targetState == 2)
             {
-                if (*(s8*)&((BaddieState*)playerObj)->hitPoints == 3)
+                if (*(s8*)&playerState->hitPoints == 3)
                 {
-                    gTitleMenuControlInterfaceCopy->vtable->func04((void*)obj, 0x77, 0, 0, 0);
+                    gTitleMenuControlInterfaceCopy->vtable->func04(obj, 0x77, 0, 0, 0);
                 }
-                else if (*(s8*)&((BaddieState*)playerObj)->hitPoints == 2)
+                else if (*(s8*)&playerState->hitPoints == 2)
                 {
-                    gTitleMenuControlInterfaceCopy->vtable->func04((void*)obj, 0x78, 0, 0, 0);
+                    gTitleMenuControlInterfaceCopy->vtable->func04(obj, 0x78, 0, 0, 0);
                 }
             }
-            ((BaddieState*)playerObj)->moveDone = 0;
-            *(s8*)(playerObj + 0x34f) = hitResult;
-            ((BaddieState*)playerObj)->hitPoints -= 1;
-            Sfx_PlayFromObject(obj, SFXTRIG_wp_mpwru1);
-            if (*(s8*)&((BaddieState*)playerObj)->hitPoints <= 0)
+            playerState->moveDone = 0;
+            *(s8*)((u8*)playerState + 0x34f) = hitResult;
+            playerState->hitPoints -= 1;
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_mpwru1);
+            if (*(s8*)&playerState->hitPoints <= 0)
             {
-                ((BaddieState*)playerObj)->hitPoints = 0;
-                ((BaddieState*)playerObj)->hasTarget = 0;
-                (*gPlayerInterface)->setState((void*)obj, (void*)playerObj, 0);
-                hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+                playerState->hitPoints = 0;
+                playerState->hasTarget = 0;
+                (*gPlayerInterface)->setState(obj, playerState, 0);
+                hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
                 hitState->flags &= ~1;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~0x80;
+                *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+                *(u8*)&obj->anim.resetHitboxMode &= ~0x80;
                 mainSetBits(GAMEBIT_DIM2_ICICLE_DEFEATED, 1);
                 if (((GroundBaddieState*)state)->targetState == 1)
                 {
@@ -604,13 +605,13 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
             }
             else if (((GroundBaddieState*)state)->targetState == 1)
             {
-                (*gPlayerInterface)->setState((void*)obj, (void*)playerObj, 10);
+                (*gPlayerInterface)->setState(obj, playerState, 10);
             }
             else
             {
-                (*gPlayerInterface)->setState((void*)obj, (void*)playerObj, 0xb);
+                (*gPlayerInterface)->setState(obj, playerState, 0xb);
             }
-            ObjMsg_SendToObject((void*)hitId, DIM2ICICLE_ADVANCE_MSG, (void*)obj, 0);
+            ObjMsg_SendToObject((void*)hitId, DIM2ICICLE_ADVANCE_MSG, obj, 0);
         }
     }
 }

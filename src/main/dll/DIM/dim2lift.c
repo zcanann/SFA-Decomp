@@ -142,7 +142,7 @@ int DIMbossAnim_updatePlayerHitReaction(GameObject* obj, int runtime)
     {
         gDIMbossAnimController[0x611] &= ~1;
     }
-    DIM2icicle_updateHitResponse((int)obj, runtime);
+    DIM2icicle_updateHitResponse(obj, (BaddieState*)runtime);
     return 0;
 }
 

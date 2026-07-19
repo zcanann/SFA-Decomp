@@ -104,6 +104,6 @@ int fn_801B9ECC(int a, int obj)
     {
         gDIMbossAnimController[0x611] &= ~1;
     }
-    DIM2icicle_updateHitResponse(a, (int)state);
+    DIM2icicle_updateHitResponse((GameObject*)a, state);
     return 0;
 }
