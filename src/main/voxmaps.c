@@ -366,7 +366,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     }
 }
 
-void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
+void fn_800118EC(RouteState* a1, VoxBoxArg* a2, int a3)
 {
     s16 box[3];
     u16 count = a2->cost + 1;
@@ -374,20 +374,20 @@ void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
     box[1] = a2->z;
     box[2] = a2->y;
     box[0] += 2;
-    voxmapsFn_80010ff4((struct RouteState*)a1, a2, a3, count, box);
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
     box[0] -= 4;
     box[1] = a2->z;
-    voxmapsFn_80010ff4((struct RouteState*)a1, a2, a3, count, box);
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
     box[0] += 2;
     box[2] += 2;
     box[1] = a2->z;
-    voxmapsFn_80010ff4((struct RouteState*)a1, a2, a3, count, box);
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
     box[2] -= 4;
     box[1] = a2->z;
-    voxmapsFn_80010ff4((struct RouteState*)a1, a2, a3, count, box);
+    voxmapsFn_80010ff4(a1, a2, a3, count, box);
 }
 
-void fn_800118EC(int a1, VoxBoxArg* a2, int a3);
+void fn_800118EC(RouteState* a1, VoxBoxArg* a2, int a3);
 
 int fn_800119FC(s16* dest, s16* start, s16* out)
 {
@@ -849,9 +849,9 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
 int voxmaps_processRouteQueue(RouteState* state, int count)
 {
     CurveHeapNode* queue;
+    int nodeIdx;
     int done = 0;
     int ret = 0;
-    int nodeIdx;
     RouteNode* node;
 
     while (!done && count != 0)
@@ -880,7 +880,7 @@ int voxmaps_processRouteQueue(RouteState* state, int count)
             else
             {
                 node->flag = 1;
-                fn_800118EC((int)state, (VoxBoxArg*)node, nodeIdx);
+                fn_800118EC(state, (VoxBoxArg*)node, nodeIdx);
             }
         }
         else
