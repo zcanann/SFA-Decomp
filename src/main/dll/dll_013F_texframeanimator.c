@@ -1,5 +1,6 @@
 /* DLL 0x13F - TexFrameAnimator [801948C0-80195008) */
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/debug.h"
 #include "main/lightmap_api.h"
 #include "main/map_block.h"
@@ -13,7 +14,7 @@
 
 typedef struct TexframeanimatorPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 wrapFrame;   /* 0x18 */
     s8 textureSlot; /* 0x19 */
     s16 endFrame;   /* 0x1A */

@@ -18,6 +18,7 @@
  * releases the mode-3 buffer.
  */
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/frame_timing.h"
 #include "main/object_render.h"
 #include "main/audio/sfx.h"
@@ -33,7 +34,7 @@
 
 typedef struct AlphaanimatorPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s16 gateBit;
     s16 completeBit;
     u8 startAlpha;
