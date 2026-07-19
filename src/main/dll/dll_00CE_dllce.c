@@ -176,26 +176,26 @@ int fn_8015DC04(int obj, GroundBaddieState* state)
             {
                 hit[9] |= 1;
             }
-            (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)state, 4);
+            (*gPlayerInterface)->setState((void*)obj, state, 4);
         }
         else if (rnd > 32)
         {
             if (four > 1)
             {
-                (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)state, 2);
+                (*gPlayerInterface)->setState((void*)obj, state, 2);
             }
             else
             {
-                (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)state, 4);
+                (*gPlayerInterface)->setState((void*)obj, state, 4);
             }
         }
         else if (rnd > 16)
         {
-            (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)state, 2);
+            (*gPlayerInterface)->setState((void*)obj, state, 2);
         }
         else
         {
-            (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)state, 3);
+            (*gPlayerInterface)->setState((void*)obj, state, 3);
         }
     }
     return 0;
@@ -207,7 +207,7 @@ int fn_8015DE50(int* obj, GroundBaddieState* state)
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
         f32 fz;
-        ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 1);
+        (*gPlayerInterface)->setState(obj, state, 1);
         {
             f32* p = *(f32**)&sub->control;
             fz = 0.0f;
@@ -249,7 +249,7 @@ int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
         z = 0.0f;
         v[0] = z;
         v[1] = z;
-        (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))((int)obj, (u8*)state, 6);
+        (*gPlayerInterface)->setState(obj, state, 6);
         *(int*)&state->baddie.targetObj = 0;
         *(s8*)&state->baddie.physicsActive = 0;
         *(s8*)&state->baddie.hasTarget = 0;
@@ -287,7 +287,7 @@ int fn_8015E044(int* obj, GroundBaddieState* state)
             f32 fz = 0.0f;
             state->baddie.animSpeedB = fz;
             state->baddie.animSpeedA = fz;
-            ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 0);
+            (*gPlayerInterface)->setState(obj, state, 0);
         }
         if ((s8)state->baddie.moveDone != 0)
         {
@@ -910,7 +910,7 @@ void dll_CE_init(GameObject* obj, u8* def, int flags)
     *v = (f32)(int)randomGetRange(10, 300);
     ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, 0);
     *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))((int)obj, (int)sub, 0);
+    (*gPlayerInterface)->setState(obj, sub, 0);
     sub->baddie.substate = 0;
     *(s8*)&sub->baddie.physicsActive = 0;
     ObjHits_DisableObject(obj);
