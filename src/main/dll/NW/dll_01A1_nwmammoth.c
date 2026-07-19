@@ -705,8 +705,8 @@ void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vis
                                       (f32*)((char*)node + i * 0xc + 0x460),
                                       (f32*)((char*)node + i * 0xc + 0x464), 0);
     }
-    ObjPath_GetPointWorldPosition(obj, 4, (f32*)((char*)node + 0xc), (f32*)((char*)node + 0x10),
-                                  (f32*)((char*)node + 0x14), 0);
+    ObjPath_GetPointWorldPosition(obj, 4, &((NwMammothState*)node)->spawnPosX, &((NwMammothState*)node)->spawnPosY,
+                                  &((NwMammothState*)node)->spawnPosZ, 0);
 }
 
 enum NwMammothStateFlag
