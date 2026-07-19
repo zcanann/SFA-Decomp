@@ -2365,7 +2365,7 @@ void ObjHits_Update(int objectCount)
                 }
                 objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
                 objState->contactFlags = 0;
-                *(s8*)&objState->contactHitVolume = -1;
+                objState->contactHitVolume = -1;
                 *(int*)objState = 0;
                 attachedObj = *(u32*)&((GameObject*)obj)->childObjs[0];
                 if ((attachedObj != 0) && (((GameObject*)attachedObj)->anim.classId == 0x2d))
@@ -2373,7 +2373,7 @@ void ObjHits_Update(int objectCount)
                     objState = ObjAnim_GetPriorityHitState((ObjAnimComponent*)attachedObj);
                     objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
                     objState->contactFlags = 0;
-                    *(s8*)&objState->contactHitVolume = -1;
+                    objState->contactHitVolume = -1;
                     *(int*)objState = 0;
                 }
             }
