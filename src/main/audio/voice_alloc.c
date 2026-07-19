@@ -37,7 +37,6 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
     s32 voice;
     u16 prioNode;
     u32 type_alloc;
-    u32 doSteal;
     u32 pn3;
     SynthVoiceListNode* sfv;
     SynthVoiceListNode* fl;
@@ -50,17 +49,18 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             type_alloc = (voiceFxRunning >= SYNTH_CONFIGURATION->fxVoiceCount &&
                           SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->fxVoiceCount);
 
-            doSteal = (SYNTH_CONFIGURATION->fxVoiceCount <= maxVoices);
+            if (SYNTH_CONFIGURATION->fxVoiceCount <= maxVoices)
+                goto steal;
         }
         else
         {
             type_alloc = (voiceMusicRunning >= SYNTH_CONFIGURATION->musicVoiceCount &&
                           SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->musicVoiceCount);
 
-            doSteal = (SYNTH_CONFIGURATION->musicVoiceCount <= maxVoices);
+            if (SYNTH_CONFIGURATION->musicVoiceCount <= maxVoices)
+                goto steal;
         }
 
-        if (!doSteal)
         {
             num = 0;
             voice = -1;
@@ -94,6 +94,9 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                 prioNode = VB_PRIO_SORT_NEXT(vb, pn1);
             }
 
+            if (num >= maxVoices)
+                goto have_voice;
+
             while (prioNode != 0xffff && num < maxVoices)
             {
                 u32 pn = prioNode;
@@ -111,17 +114,11 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                 prioNode = VB_PRIO_SORT_NEXT(vb, pn);
             }
 
-            if (num < maxVoices)
-            {
-                doSteal = 1;
-            }
-            else
-            {
-                doSteal = 0;
-            }
+            if (num >= maxVoices)
+                goto have_voice;
         }
 
-        if (doSteal)
+    steal:
         {
             voice = -1;
             if (voiceListRoot != 0xff && type_alloc == 0)
@@ -139,7 +136,8 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 
                 while (prioNode != 0xFFFF && priority >= prioNode && voice == -1)
                 {
-                    for (pn3 = prioNode, i = VB_PRIO_HEAD(vb, pn3); i != 0xff; i = VB_PRIO_LINK_NEXT(vb, i))
+                    pn3 = prioNode;
+                    for (i = VB_PRIO_HEAD(vb, pn3); i != 0xff; i = VB_PRIO_LINK_NEXT(vb, i))
                     {
                         if ((synthVoice[i].block == 0) && (!type_alloc || fxFlag == synthVoice[i].streamKind))
                         {
@@ -168,13 +166,14 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 
             if (AV_PRIO(voice) > priority)
             {
-                return -1;
+                goto ret_neg1;
             }
         }
 
+    have_voice:
         if (voice == -1)
         {
-            return -1;
+            goto ret_neg1;
         }
 
         fl = (SynthVoiceListNode*)((u8*)vb + voice * 4);
@@ -224,6 +223,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
         return voice;
     }
 
+ret_neg1:
     return -1;
 }
 
