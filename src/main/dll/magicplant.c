@@ -188,17 +188,17 @@ void vambat_updateEngaged(GameObject* obj, int state)
         worldPos[0] = (obj)->anim.localPosX;
         worldPos[1] = (obj)->anim.localPosY;
         worldPos[2] = (obj)->anim.localPosZ;
-        voxmaps_worldToIntGrid(worldPos, gridA);
+        voxmaps_worldToGrid(worldPos, (s16*)gridA);
         worldPos[0] = curve->posX;
         worldPos[1] = curve->posY;
         worldPos[2] = curve->posZ;
-        voxmaps_worldToIntGrid(worldPos, gridB);
+        voxmaps_worldToGrid(worldPos, (s16*)gridB);
         /* BUG: precedence - `!` binds before `&`, so this is (controlFlags == 0) & 0x01000000,
          * which is always false; the line-of-sight abort below can never fire. The author
          * almost certainly meant !(controlFlags & 0x01000000). */
         if (!((BaddieState*)state)->controlFlags & 0x01000000)
         {
-            if (voxmaps_traceIntGrid(gridB, gridA, NULL, &hitOut, 0) == 0)
+            if (voxmaps_traceLine((VoxPos*)gridB, (VoxPos*)gridA, NULL, &hitOut, 0) == 0)
             {
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
                 *(f32*)(state + 0x324) = gVambatTimerReset[0];

@@ -810,12 +810,12 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                     gridIn[0] = ((GameObject*)self)->anim.localPosX;
                     gridIn[1] = 10.0f + ((GameObject*)self)->anim.localPosY;
                     gridIn[2] = ((GameObject*)self)->anim.localPosZ;
-                    voxmaps_worldToIntGrid(gridIn, gridA);
+                    voxmaps_worldToGrid(gridIn, (s16*)gridA);
                     gridIn[0] = ((GameObject*)obj)->anim.localPosX;
                     gridIn[1] = 10.0f + ((GameObject*)obj)->anim.localPosY;
                     gridIn[2] = ((GameObject*)obj)->anim.localPosZ;
-                    voxmaps_worldToIntGrid(gridIn, gridB);
-                    traced = voxmaps_traceIntGrid(gridB, gridA, NULL, &losOut, 0);
+                    voxmaps_worldToGrid(gridIn, (s16*)gridB);
+                    traced = voxmaps_traceLine((VoxPos*)gridB, (VoxPos*)gridA, NULL, &losOut, 0);
                     if (losOut == 1 || traced != 0)
                     {
                         if (objBboxFn_800640cc((f32*)(self + 12), gridIn, 1.0f, 0, (TrackBBoxHit*)bboxOut,
@@ -1258,7 +1258,7 @@ u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
     world[0] = obj->anim.localPosX;
     world[1] = 10.0f + obj->anim.localPosY;
     world[2] = obj->anim.localPosZ;
-    voxmaps_worldToIntGrid(world, grid0);
+    voxmaps_worldToGrid(world, (s16*)grid0);
     ovr = *(s16**)&obj->anim.parent;
     if (ovr != NULL)
     {
@@ -1274,14 +1274,14 @@ u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
         world[0] = obj->anim.localPosX - dist * mathSinf(a);
         world[1] = 10.0f + obj->anim.localPosY;
         world[2] = obj->anim.localPosZ - dist * mathCosf(a);
-        voxmaps_worldToIntGrid(world, grid1);
+        voxmaps_worldToGrid(world, (s16*)grid1);
         if (obj->anim.parent != NULL)
         {
             ok = 1;
         }
         else
         {
-            ok = (u8)voxmaps_traceIntGridU8(grid1, grid0, NULL, &hitFlag, 0);
+            ok = (u8)voxmaps_traceLine((VoxPos*)grid1, (VoxPos*)grid0, NULL, &hitFlag, 0);
             if (hitFlag == 1)
             {
                 ok = 1;

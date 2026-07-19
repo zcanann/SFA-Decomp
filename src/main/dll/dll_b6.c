@@ -173,9 +173,10 @@ CamcontrolTargetObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraS
             worldTo[0] = best->anim.hitVolumeTransforms[best->hitVolumeIndex].jointX;
             worldTo[1] = best->anim.hitVolumeTransforms[best->hitVolumeIndex].jointY;
             worldTo[2] = best->anim.hitVolumeTransforms[best->hitVolumeIndex].jointZ;
-            voxmaps_worldToIntGrid(worldFrom, gridFrom);
-            voxmaps_worldToIntGrid(worldTo, gridTo);
-            if (voxmaps_traceIntGridU8(gridFrom, gridTo, traceOut, occOut, 0) == 0 && occOut[0] != 1)
+            voxmaps_worldToGrid(worldFrom, (s16*)gridFrom);
+            voxmaps_worldToGrid(worldTo, (s16*)gridTo);
+            if ((u8)voxmaps_traceLine((VoxPos*)gridFrom, (VoxPos*)gridTo, (VoxPos*)traceOut, occOut, 0) == 0 &&
+                occOut[0] != 1)
             {
                 return NULL;
             }

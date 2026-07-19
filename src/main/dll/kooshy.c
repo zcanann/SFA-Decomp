@@ -126,15 +126,15 @@ void kooshy_updateIdle(GameObject* obj, int state)
         worldPos[0] = (obj)->anim.localPosX;
         worldPos[1] = lbl_803E2904 + (obj)->anim.localPosY;
         worldPos[2] = (obj)->anim.localPosZ;
-        voxmaps_worldToIntGrid(worldPos, gridA);
+        voxmaps_worldToGrid(worldPos, (s16*)gridA);
         {
             int trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
             worldPos[0] = ((GameObject*)trackedObj)->anim.localPosX;
             worldPos[1] = lbl_803E2908 + ((GameObject*)trackedObj)->anim.localPosY;
             worldPos[2] = ((GameObject*)trackedObj)->anim.localPosZ;
         }
-        voxmaps_worldToIntGrid(worldPos, gridB);
-        hit = voxmaps_traceIntGrid(gridB, gridA, NULL, &hitOut, 0) & 0xff;
+        voxmaps_worldToGrid(worldPos, (s16*)gridB);
+        hit = voxmaps_traceLine((VoxPos*)gridB, (VoxPos*)gridA, NULL, &hitOut, 0) & 0xff;
         if (hit != 0)
         {
             int trackedObj = *(int*)&((BaddieState*)state)->trackedObj;
