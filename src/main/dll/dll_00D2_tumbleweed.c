@@ -294,7 +294,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                 }
             }
             dist = sqrtf(dist2);
-            *(s16*)&((BackpackState*)aux)->distToTarget = dist;
+            ((BackpackState*)aux)->distToTarget = dist;
             {
                 f32 dpx = obj->anim.localPosX - ((BackpackState*)aux)->anchorPosX;
                 f32 dpz = obj->anim.localPosZ - ((BackpackState*)aux)->anchorPosZ;
@@ -507,7 +507,7 @@ void tumbleweed_updateTargetedStateMachine(GameObject *obj)
             dx = (obj)->anim.localPosX - player->anim.localPosX;
             dz = (obj)->anim.localPosZ - player->anim.localPosZ;
             d = sqrtf(dx * dx + dz * dz);
-            *(s16*)&((BackpackState*)aux)->distToTarget = d;
+            ((BackpackState*)aux)->distToTarget = d;
             if (((BackpackState*)aux)->distToTarget < *(u16*)&((BackpackState*)aux)->triggerRange)
             {
                 ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_ROLLING;
@@ -526,7 +526,7 @@ void tumbleweed_updateTargetedStateMachine(GameObject *obj)
         dx = (obj)->anim.localPosX - player->anim.localPosX;
         dz = (obj)->anim.localPosZ - player->anim.localPosZ;
         d = sqrtf(dx * dx + dz * dz);
-        *(s16*)&((BackpackState*)aux)->distToTarget = d;
+        ((BackpackState*)aux)->distToTarget = d;
         dist = ((BackpackState*)aux)->distToTarget;
         if ((f32)dist > 20.0f)
         {
@@ -673,7 +673,7 @@ void tumbleweed_init(GameObject *obj, int defData)
     ((BackpackState*)aux)->targetScale = (obj)->anim.rootMotionScale;
     ((BackpackState*)aux)->growRate = ((BackpackState*)aux)->targetScale / (f32)(s32)
     randomGetRange(0xc8, 0x1f4);
-    *(u32*)&((BackpackState*)aux)->targetObj = 0;
+    ((BackpackState*)aux)->targetObj = 0;
     (obj)->anim.rootMotionScale = 0.001f;
     (*gPathControlInterface)->init((void*)aux, 0, 0x40000, 1);
     (*gPathControlInterface)->setLocalPointCollision((void*)aux, 1, gTumbleweedCollisionPoint, gTumbleweedCollisionPointData, 8);
