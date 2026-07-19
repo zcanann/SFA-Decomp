@@ -4293,8 +4293,6 @@ void videoFn_800499e8(void)
 {
     char peek[12];
     int tok[3];
-    DepthReadRequest* src;
-    DepthReadRequest* dst;
     int i;
 
     if (gAttractMovieState == 2 || gAttractMovieState == 3)
@@ -4302,15 +4300,12 @@ void videoFn_800499e8(void)
         THPPlayerPostDrawDone();
     }
     Queue_Peek(&lbl_8035F730, &peek);
-    i = 0;
-    for (; i < (int)(u32)gDepthReadPendingCount; i++)
+    for (i = 0; i < (int)(u32)gDepthReadPendingCount; i++)
     {
-        src = &gDepthReadPendingQueue[i];
-        dst = &gDepthReadResults[i];
-        dst->x = src->x;
-        dst->y = src->y;
-        dst->key = src->key;
-        GXPeekZ(dst->x, dst->y, &dst->value);
+        gDepthReadResults[i].x = gDepthReadPendingQueue[i].x;
+        gDepthReadResults[i].y = gDepthReadPendingQueue[i].y;
+        gDepthReadResults[i].key = gDepthReadPendingQueue[i].key;
+        GXPeekZ(gDepthReadResults[i].x, gDepthReadResults[i].y, &gDepthReadResults[i].value);
     }
     gDepthReadResultCount = gDepthReadPendingCount;
     gDepthReadPendingCount = 0;
