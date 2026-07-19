@@ -148,8 +148,6 @@ static inline void sfxplayerStartSound(u8* obj, SfxplayerPlacement* data, Sfxpla
     }
 }
 
-#define SFXPLAYER_START_SOUND(sfxExpr) sfxplayerStartSound(obj, data, state, (sfxExpr))
-
 #define SFXPLAYER_STOP_PAIR()                                                                                          \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -228,8 +226,8 @@ void sfxplayerObj_update(u8* obj)
                     state->gameBitState = 0;
                     if ((data->flags & SFXPLAYER_FLAG_TRIGGER_ON_CLEAR) != 0)
                     {
-                        SFXPLAYER_START_SOUND(data->sfx1);
-                        SFXPLAYER_START_SOUND(data->sfx2);
+                        sfxplayerStartSound(obj, data, state, data->sfx1);
+                        sfxplayerStartSound(obj, data, state, data->sfx2);
                     }
                 }
             }
@@ -238,8 +236,8 @@ void sfxplayerObj_update(u8* obj)
                 state->gameBitState = 1;
                 if ((data->flags & SFXPLAYER_FLAG_TRIGGER_ON_SET) != 0)
                 {
-                    SFXPLAYER_START_SOUND(data->sfx1);
-                    SFXPLAYER_START_SOUND(data->sfx2);
+                    sfxplayerStartSound(obj, data, state, data->sfx1);
+                    sfxplayerStartSound(obj, data, state, data->sfx2);
                 }
             }
         }
@@ -250,8 +248,8 @@ void sfxplayerObj_update(u8* obj)
         {
             if ((state->flags & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0)
             {
-                SFXPLAYER_START_SOUND(data->sfx1);
-                SFXPLAYER_START_SOUND(data->sfx2);
+                sfxplayerStartSound(obj, data, state, data->sfx1);
+                sfxplayerStartSound(obj, data, state, data->sfx2);
             }
         }
         else if ((state->flags & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0)
@@ -268,8 +266,8 @@ void sfxplayerObj_update(u8* obj)
             if (state->delayTimer <= 0.0f)
             {
                 state->delayTimer = (f32)(s32)randomGetRange(data->randDelayMin, data->randDelayMax) * 60.0f;
-                SFXPLAYER_START_SOUND(data->sfx1);
-                SFXPLAYER_START_SOUND(data->sfx2);
+                sfxplayerStartSound(obj, data, state, data->sfx1);
+                sfxplayerStartSound(obj, data, state, data->sfx2);
             }
         }
         else if ((state->flags & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0)
