@@ -309,44 +309,44 @@ void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle)
     switch (gPlayerSubState)
     {
     case 0:
-        lbl_803DC670 = lbl_803E7E80;
-        lbl_803DC674 = lbl_803E7E84;
-        lbl_803DC678 = lbl_803E7E88;
+        gPlayerModelChainOriginX = lbl_803E7E80;
+        gPlayerModelChainOriginY = lbl_803E7E84;
+        gPlayerModelChainOriginZ = lbl_803E7E88;
         break;
     case 1:
-        lbl_803DC670 = lbl_803E7E80;
-        lbl_803DC674 = lbl_803E7E84;
-        lbl_803DC678 = lbl_803E7E88;
+        gPlayerModelChainOriginX = lbl_803E7E80;
+        gPlayerModelChainOriginY = lbl_803E7E84;
+        gPlayerModelChainOriginZ = lbl_803E7E88;
         PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * mathCosfHighPrecision(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
         PSMTXMultVecSR(mtx1, vec, vec);
         break;
     case 4:
-        lbl_803DC670 = lbl_803E7E98;
-        lbl_803DC674 = lbl_803E7E84;
-        lbl_803DC678 = lbl_803E7E88;
+        gPlayerModelChainOriginX = lbl_803E7E98;
+        gPlayerModelChainOriginY = lbl_803E7E84;
+        gPlayerModelChainOriginZ = lbl_803E7E88;
         PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * mathCosfHighPrecision(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
         PSMTXMultVecSR(mtx1, vec, vec);
         break;
     case 5:
-        lbl_803DC670 = lbl_803E7E9C;
-        lbl_803DC674 = lbl_803E7E84;
-        lbl_803DC678 = lbl_803E7E88;
+        gPlayerModelChainOriginX = lbl_803E7E9C;
+        gPlayerModelChainOriginY = lbl_803E7E84;
+        gPlayerModelChainOriginZ = lbl_803E7E88;
         PSMTXRotRad(mtx1, 0x79, lbl_803E7E8C * mathCosfHighPrecision(lbl_803E7E90 * angle - lbl_803E7E94 * (f32)mode));
         PSMTXMultVecSR(mtx1, vec, vec);
         break;
     case 2:
-        lbl_803DC670 = lbl_803E7EA0;
-        lbl_803DC674 = lbl_803E7EA4;
-        lbl_803DC678 = lbl_803E7EA8;
+        gPlayerModelChainOriginX = lbl_803E7EA0;
+        gPlayerModelChainOriginY = lbl_803E7EA4;
+        gPlayerModelChainOriginZ = lbl_803E7EA8;
         PSMTXRotRad(mtx1, 0x79, lbl_803E7EAC * mathCosfHighPrecision(lbl_803E7E98 * angle));
         PSMTXRotRad(mtx2, 0x78, lbl_803E7EB0);
         PSMTXConcat(mtx2, mtx1, mtx1);
         PSMTXMultVecSR(mtx1, vec, vec);
         break;
     case 3:
-        lbl_803DC670 = lbl_803E7E80;
-        lbl_803DC674 = lbl_803E7E84;
-        lbl_803DC678 = lbl_803E7E88;
+        gPlayerModelChainOriginX = lbl_803E7E80;
+        gPlayerModelChainOriginY = lbl_803E7E84;
+        gPlayerModelChainOriginZ = lbl_803E7E88;
         PSMTXRotRad(mtx1, 0x79, lbl_803E7EB4 * mathCosfHighPrecision(lbl_803E7EB4 * angle - lbl_803E7EB8 * (f32)mode));
         if (mode == 1)
         {
@@ -364,7 +364,7 @@ void playerDoTailAnims(int obj, void* statep)
     int v = *state;
     if ((void*)gPlayerModelChain != NULL)
     {
-        ObjModelChain_SetOrigin((ObjModelChain*)gPlayerModelChain, lbl_803DC670, lbl_803DC674, lbl_803DC678);
+        ObjModelChain_SetOrigin((ObjModelChain*)gPlayerModelChain, gPlayerModelChainOriginX, gPlayerModelChainOriginY, gPlayerModelChainOriginZ);
         playerTailFn_80026b3c(state, v, gPlayerModelChain, playerUpdateTail);
     }
 }
@@ -2693,7 +2693,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
         if ((flags & 0x100) != 0)
         {
             buttonDisable(0, PAD_BUTTON_A);
-            lbl_803DE488 = lbl_803E7ED8;
+            gPlayerLiftRockPullAccum = lbl_803E7ED8;
             ObjAnim_SetCurrentMove(obj, 0xac, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EA4;
         }
@@ -2719,7 +2719,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
         int count;
         f32 prog;
         setAButtonIcon(2);
-        lbl_803DE488 = lbl_803DE488 - lbl_803E7EE0;
+        gPlayerLiftRockPullAccum = gPlayerLiftRockPullAccum - lbl_803E7EE0;
         if ((inner->buttonsJustPressedIfNotBusy & PAD_BUTTON_A) != 0 || getCurSeqNo() != 0)
         {
             buttonDisable(0, PAD_BUTTON_A);
@@ -2732,31 +2732,31 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
             switch (cfPrisonGuard_getPullRateMode(gPlayerInteractTarget))
             {
             case 2:
-                lbl_803DE488 = lbl_803DE488 + lbl_803E7F50;
+                gPlayerLiftRockPullAccum = gPlayerLiftRockPullAccum + lbl_803E7F50;
                 break;
             default:
-                lbl_803DE488 = lbl_803DE488 + lbl_803E7F54;
+                gPlayerLiftRockPullAccum = gPlayerLiftRockPullAccum + lbl_803E7F54;
                 break;
             case 0:
-                lbl_803DE488 = lbl_803DE488 + lbl_803E7F58;
+                gPlayerLiftRockPullAccum = gPlayerLiftRockPullAccum + lbl_803E7F58;
                 break;
             }
         }
-        if (lbl_803DE488 > lbl_803E7F5C)
+        if (gPlayerLiftRockPullAccum > lbl_803E7F5C)
         {
-            lbl_803DE488 = lbl_803E7F5C;
+            gPlayerLiftRockPullAccum = lbl_803E7F5C;
         }
-        else if (lbl_803DE488 < lbl_803E7F60)
+        else if (gPlayerLiftRockPullAccum < lbl_803E7F60)
         {
-            lbl_803DE488 = lbl_803E7F60;
+            gPlayerLiftRockPullAccum = lbl_803E7F60;
         }
         {
             f32 lh = (f32)(int)cfPrisonGuard_getLiftHeight(gPlayerInteractTarget);
-            count = (int)(lh + lbl_803DE488);
+            count = (int)(lh + gPlayerLiftRockPullAccum);
         }
         if (count <= 0)
         {
-            lbl_803DE488 = lbl_803E7EA4;
+            gPlayerLiftRockPullAccum = lbl_803E7EA4;
             count = 0;
             ObjAnim_SetCurrentMove(obj, 0xb1, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
@@ -2821,7 +2821,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
             inner->staffActionRequest = 4;
             ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
         }
-        lbl_803DE488 = lbl_803E7EA4;
+        gPlayerLiftRockPullAccum = lbl_803E7EA4;
         lbl_803DE48C = 0;
         lbl_803DE460 = lbl_803E7EA4;
         if (inner->curAnimId != 0x48 && inner->curAnimId != 0x47)
@@ -2974,7 +2974,7 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
         {
             obj->anim.velocityY = *(f32*)&lbl_803E7F10;
         }
-        if (obj->anim.localPosY > lbl_803DE490)
+        if (obj->anim.localPosY > gPlayerStaffBoostTargetY)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x80, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F84;
@@ -3011,7 +3011,7 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
         obj->anim.velocityZ = zero;
         ObjAnim_SetCurrentMove((int)obj, 0x4, zero, 0);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F84;
-        lbl_803DE494 = obj->anim.localPosY;
+        gPlayerStaffBoostStartY = obj->anim.localPosY;
         inner->targetYaw = gPlayerInteractTarget->anim.rotX;
         inner->yaw = inner->targetYaw;
         staffactivated_calcInteractionTargetXZ(gPlayerInteractTarget, &((GameObject*)obj)->anim.localPosX,
@@ -3026,11 +3026,11 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
         toVec[2] = fromVec[2] - lbl_803E7F5C * mathCosf(gPlayerPi * (f32)(int)inner->targetYaw / lbl_803E7F98);
         if (objBboxFn_800640cc(fromVec, toVec, lbl_803E7EA4, 3, (TrackBBoxHit*)hitBuf, obj, 1, 1, 0xff, 0) != 0)
         {
-            lbl_803DE490 = *(f32*)(hitBuf + 0x3c) - lbl_803E7F30;
+            gPlayerStaffBoostTargetY = *(f32*)(hitBuf + 0x3c) - lbl_803E7F30;
         }
         else
         {
-            lbl_803DE490 = lbl_803E7F5C + obj->anim.localPosY;
+            gPlayerStaffBoostTargetY = lbl_803E7F5C + obj->anim.localPosY;
         }
         lbl_803DE48D = 0;
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
@@ -3387,14 +3387,14 @@ int playerStateFireLaser(int obj, int state, f32 unused)
             }
         }
         *(s16*)((char*)p + 4) = (s16)val;
-        lbl_803DE45C = lbl_803E7F30;
+        gPlayerFireLaserCountdown = lbl_803E7F30;
     }
-    if (lbl_803E7F30 == lbl_803DE45C || lbl_803E7FA0 == lbl_803DE45C || lbl_803E7FA4 == lbl_803DE45C)
+    if (lbl_803E7F30 == gPlayerFireLaserCountdown || lbl_803E7FA0 == gPlayerFireLaserCountdown || lbl_803E7FA4 == gPlayerFireLaserCountdown)
     {
         fn_802AA2B0(obj, state, inner->aimInputZ, (f32)randomGetRange(-0xc8, 0xc8) / lbl_803E7F5C);
     }
-    lbl_803DE45C = lbl_803DE45C - lbl_803E7EE0;
-    if (lbl_803DE45C < lbl_803E7EA4)
+    gPlayerFireLaserCountdown = gPlayerFireLaserCountdown - lbl_803E7EE0;
+    if (gPlayerFireLaserCountdown < lbl_803E7EA4)
     {
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029A4A8;
         return 0x2d;
@@ -8803,7 +8803,7 @@ int playerState08(GameObject* obj, int state, f32 fv)
 void fn_802A49A8(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
-    inner->moveParams = (int)lbl_80333250;
+    inner->moveParams = (int)gPlayerDefaultMoveParams;
     inner->moveAnimTable = (int)gPlayerMoveTableA;
 }
 
@@ -11924,17 +11924,17 @@ void objDoTeleportAnim(GameObject* obj)
 
     dy = base - inner->teleportAnimProgress;
     buf.y = dy;
-    if (lbl_803DE478 < lbl_803E80D8)
+    if (gPlayerTeleportAnimRearm < lbl_803E80D8)
     {
         inner->teleportAnimActive = 0;
         return;
     }
     if (dy <= lbl_803E7EA4)
     {
-        lbl_803DE478 = lbl_803DE478 - lbl_803E7F14 * timeDelta;
+        gPlayerTeleportAnimRearm = gPlayerTeleportAnimRearm - lbl_803E7F14 * timeDelta;
         return;
     }
-    lbl_803DE478 = base;
+    gPlayerTeleportAnimRearm = base;
     buf.y = dy + obj->anim.localPosY;
     {
         for (i = 0; i < 10; i++)
@@ -18921,7 +18921,7 @@ s16 lbl_80333110[128] = {8,    8,    8,    8,    7,    7,    7,    7,    7,    7
 s16 gPlayerMoveTableB[14] = {140, 140, 140, 140, 147, 148, 149, 150, 147, 148, 149, 150, 140, 0};
 u8 gPlayerSurfacePfxModeTable[36] = {0, 1, 2, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0, 7, 5, 0, 0, 0,
                                      0, 0, 0, 3, 5, 0, 4, 6, 0, 7, 0, 0, 0, 0, 8, 0, 9, 0};
-int lbl_80333250[24] = {1000593162, 1040744395, 1037723154, 1060652576, 1060205294, 1067475701, 1067252061, 1072843067,
+int gPlayerDefaultMoveParams[24] = {1000593162, 1040744395, 1037723154, 1060652576, 1060205294, 1067475701, 1067252061, 1072843067,
                         1072619427, 1075417028, 1075333142, 1075417028, 1000593162, 1011129254, 1008981770, 1048911544,
                         1047233823, 1051931443, 1050253722, 1057300152, 1056964608, 1060320051, 1059984507, 1060320051};
 s16 lbl_803332B0[478] = {
