@@ -49,7 +49,7 @@ void sfxplayer_hitDetect(void);
 void sfxplayer_update(GameObject* obj);
 void sfxplayer_updateEffectHandlePositions(short *obj);
 void sfxplayer_init(int obj,int config);
-void sfxplayer_free(int obj, int arg1);
+void sfxplayer_free(u32 obj, int arg1);
 void sfxplayer_release(void);
 void sfxplayer_initialise(void);
 

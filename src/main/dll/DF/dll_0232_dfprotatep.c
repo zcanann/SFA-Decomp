@@ -1,6 +1,6 @@
 #include "main/obj_placement.h"
 #include "main/audio/sfx_keep_alive_api.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -268,7 +268,7 @@ int sfxplayer_getObjectTypeId(void)
     return 0x0;
 }
 
-void sfxplayer_free(int obj, int flag)
+void sfxplayer_free(u32 obj, int flag)
 {
     u32* handles;
     s16 i;
