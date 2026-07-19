@@ -25,10 +25,6 @@
 #include "main/sky_api.h"
 #include "main/object_descriptor.h"
 
-#define skyFn_800895e0Legacy(flags, red, green, blue, m1, m2)                                                     \
-    ((void (*)(int, int, int, int, int, int))skyFn_800895e0)((flags), (red), (green), (blue), (m1), (m2))
-#define skyFn_80089710Legacy(flags, enabled, startComplete)                                                       \
-    ((void (*)(int, int, int))skyFn_80089710)((flags), (enabled), (startComplete))
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/mapEventTypes.h"
 #include "main/obj_group.h"
@@ -154,7 +150,7 @@ void fn_801F3F18(GameObject* obj)
     {
         skySetOverrideLightColorEnabled(0);
         skySetOverrideLightDirectionEnabled(0);
-        skyFn_80089710Legacy(7, 0, 1);
+        skyFn_80089710(7, 0, 1);
         return;
     }
 
@@ -162,12 +158,12 @@ void fn_801F3F18(GameObject* obj)
     skySetOverrideLightColor(0x88, 0xb7, 0xba);
     if ((obj->userData1 & 4) == 0)
     {
-        skyFn_80089710Legacy(1, 1, 0);
+        skyFn_80089710(1, 1, 0);
         obj->userData1 |= 4;
     }
     else
     {
-        skyFn_80089710Legacy(1, 1, 1);
+        skyFn_80089710(1, 1, 1);
     }
 
     /* hold the blend at full while spirit-restore progress is running,
@@ -193,8 +189,7 @@ void fn_801F3F18(GameObject* obj)
         gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
     gWmLevelControlBlendedLightColor[2] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
-    skyFn_800895e0Legacy(1, gWmLevelControlBlendedLightColor[0],
-                   gWmLevelControlBlendedLightColor[1],
+    skyFn_800895e0(1, gWmLevelControlBlendedLightColor[0], gWmLevelControlBlendedLightColor[1],
                    gWmLevelControlBlendedLightColor[2], 0x40, 0x40);
 
     fromColor = gWmLevelControlSkyColorFrom;
