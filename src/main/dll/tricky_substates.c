@@ -195,9 +195,9 @@ void trickyDigTunnel(u8* obj, u8* state)
             ((TrickyState*)state)->targetPosPtr = ptr;
             {
                 u32 m;
-                u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                u32 f2 = ((TrickyState*)state)->stateFlags;
                 m = ~0x400;
-                *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+                ((TrickyState*)state)->stateFlags = f2 & m;
             }
             ((TrickyState*)state)->linkedWalkGroup = 0;
         }
@@ -395,9 +395,9 @@ void trickyFn_80141fec(u8* obj, u8* state)
                     ((TrickyState*)state)->targetPosPtr = ptr;
                     {
                         u32 m;
-                        u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                        u32 f2 = ((TrickyState*)state)->stateFlags;
                         m = ~0x400;
-                        *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+                        ((TrickyState*)state)->stateFlags = f2 & m;
                     }
                     ((TrickyState*)state)->linkedWalkGroup = 0;
                 }
@@ -545,9 +545,9 @@ void trickyFn_80142524(u8* obj, u8* state)
                             ((TrickyState*)other)->targetPosPtr = target + 0x18;
                             {
                                 u32 m;
-                                u32 f2 = *(u32*)&((TrickyState*)other)->stateFlags;
+                                u32 f2 = ((TrickyState*)other)->stateFlags;
                                 m = ~0x400;
-                                *(u32*)&((TrickyState*)other)->stateFlags = f2 & m;
+                                ((TrickyState*)other)->stateFlags = f2 & m;
                             }
                             ((TrickyState*)other)->linkedWalkGroup = 0;
                         }
@@ -822,9 +822,9 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
         ((TrickyState*)state)->cooldownB = lbl_803E23DC;
         {
             u32 m;
-            u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+            u32 f2 = ((TrickyState*)state)->stateFlags;
             m = ~0x10;
-            *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+            ((TrickyState*)state)->stateFlags = f2 & m;
         }
         ((TrickyState*)state)->substate = 0;
         return 1;
@@ -849,9 +849,9 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
     {
         {
             u32 m;
-            u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+            u32 f2 = ((TrickyState*)state)->stateFlags;
             m = ~0x10;
-            *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+            ((TrickyState*)state)->stateFlags = f2 & m;
         }
         ((TrickyState*)state)->substate = 0;
     }
@@ -885,15 +885,15 @@ int trickyFn_80142eb0(GameObject* obj, int state)
     {
     case 44:
     case 45:
-        if ((*(u32*)&((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
+        if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             objAnimFn_8013a3f0((int)obj, 46, lbl_803E249C, 0);
         }
         break;
     case 46:
     {
-        if (((*(u32*)&((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) &&
-            (((*(u32*)&((TrickyState*)state)->stateFlags & 0x10000) != 0 || randomGetRange(0, 2) == 0) ||
+        if (((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) &&
+            (((((TrickyState*)state)->stateFlags & 0x10000) != 0 || randomGetRange(0, 2) == 0) ||
              ((TrickyState*)state)->cooldownB > lbl_803E23DC))
         {
             objAnimFn_8013a3f0((int)obj, 47, lbl_803E23EC, 0);
@@ -906,7 +906,7 @@ int trickyFn_80142eb0(GameObject* obj, int state)
         break;
     }
     case 47:
-        if ((*(u32*)&((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
+        if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0)
         {
             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
             {
@@ -938,9 +938,9 @@ int trickyFn_80142eb0(GameObject* obj, int state)
             }
             {
                 u32 m;
-                u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                u32 f2 = ((TrickyState*)state)->stateFlags;
                 m = ~0x10;
-                *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+                ((TrickyState*)state)->stateFlags = f2 & m;
             }
             ((TrickyState*)state)->substate = 0;
         }
@@ -1358,9 +1358,9 @@ int trickyFn_80143c04(GameObject* obj, int state)
         *(int*)&((TrickyState*)state)->targetPosPtr = followBase;
         {
             u32 m;
-            u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+            u32 f2 = ((TrickyState*)state)->stateFlags;
             m = ~0x400;
-            *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+            ((TrickyState*)state)->stateFlags = f2 & m;
         }
         ((TrickyState*)state)->linkedWalkGroup = 0;
     }
@@ -1375,10 +1375,10 @@ int trickyFn_80143c04(GameObject* obj, int state)
     }
     else
     {
-        if ((*(u32*)&((TrickyState*)state)->stateFlags & 0x20000) != 0)
+        if ((((TrickyState*)state)->stateFlags & 0x20000) != 0)
         {
             ((TrickyState*)state)->commandPhase = 0;
-            *(u32*)&((TrickyState*)state)->stateFlags = *(u32*)&((TrickyState*)state)->stateFlags & ~0x20000LL;
+            ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x20000LL;
         }
         threshold = lbl_803E2408;
     }
@@ -1387,7 +1387,7 @@ int trickyFn_80143c04(GameObject* obj, int state)
     {
         if (result == 2)
         {
-            if ((*(u32*)&((TrickyState*)state)->stateFlags & 2) != 0)
+            if ((((TrickyState*)state)->stateFlags & 2) != 0)
             {
                 tex = *(int*)&(obj)->extra;
                 if (((((TrickyState*)tex)->statusFlags >> 6) & 1) == 0u)
@@ -1580,9 +1580,9 @@ void objAnimFn_801441c0(u8* obj, u8* state)
             ((TrickyState*)state)->targetPosPtr = state + 0x72c;
             {
                 u32 m;
-                u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                u32 f2 = ((TrickyState*)state)->stateFlags;
                 m = ~0x400;
-                *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+                ((TrickyState*)state)->stateFlags = f2 & m;
             }
             ((TrickyState*)state)->linkedWalkGroup = 0;
         }
@@ -1603,9 +1603,9 @@ void objAnimFn_801441c0(u8* obj, u8* state)
             ((TrickyState*)state)->targetPosPtr = state + 0x72c;
             {
                 u32 m;
-                u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                u32 f2 = ((TrickyState*)state)->stateFlags;
                 m = ~0x400;
-                *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+                ((TrickyState*)state)->stateFlags = f2 & m;
             }
             ((TrickyState*)state)->linkedWalkGroup = 0;
         }

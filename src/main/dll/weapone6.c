@@ -320,9 +320,9 @@ void fn_8013F100(GameObject* obj, register int state)
             }
             {
                 u32 m;
-                u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                u32 f2 = ((TrickyState*)state)->stateFlags;
                 m = ~TRICKY_STATE_RESET_FLAG_10;
-                *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+                ((TrickyState*)state)->stateFlags = f2 & m;
             }
             ((TrickyState*)state)->substate = 7;
             targetPos = ((TrickyState*)state)->followObj + 24;
@@ -331,9 +331,9 @@ void fn_8013F100(GameObject* obj, register int state)
                 ((TrickyState*)state)->targetPosPtr = targetPos;
                 {
                     u32 m;
-                    u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                    u32 f2 = ((TrickyState*)state)->stateFlags;
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
-                    *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+                    ((TrickyState*)state)->stateFlags = f2 & m;
                 }
                 ((TrickyState*)state)->linkedWalkGroup = 0;
             }
@@ -394,9 +394,9 @@ void fn_8013F100(GameObject* obj, register int state)
                 ((TrickyState*)state)->targetPosPtr = targetPos;
                 {
                     u32 m;
-                    u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                    u32 f2 = ((TrickyState*)state)->stateFlags;
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
-                    *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+                    ((TrickyState*)state)->stateFlags = f2 & m;
                 }
                 ((TrickyState*)state)->linkedWalkGroup = 0;
             }
@@ -554,9 +554,9 @@ void fn_8013FBE4(GameObject* obj, register int state)
                 ((TrickyState*)state)->targetPosPtr = (u8*)(state + 0x704);
                 {
                     u32 m;
-                    u32 f2 = *(u32*)&((TrickyState*)state)->stateFlags;
+                    u32 f2 = ((TrickyState*)state)->stateFlags;
                     m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
-                    *(u32*)&((TrickyState*)state)->stateFlags = f2 & m;
+                    ((TrickyState*)state)->stateFlags = f2 & m;
                 }
                 ((TrickyState*)state)->linkedWalkGroup = 0;
             }
