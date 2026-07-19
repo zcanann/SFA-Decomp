@@ -652,8 +652,7 @@ void Shield_update(int* obj)
     {
         ((GameObject*)obj)->anim.alpha = state[1] / state[4] * (f32)(s32)randomGetRange(192, 255);
     }
-    Sfx_SetObjectSfxVolumePtrLegacy((s16*)obj, SFXTRIG_lockon3_on,
-                                    (s32)(lbl_803E33E8 * (state[1] / state[4])), lbl_803E33A8);
+    Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_lockon3_on, lbl_803E33E8 * (state[1] / state[4]), lbl_803E33A8);
     if (((GameObject*)obj)->anim.alpha != 0)
     {
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;

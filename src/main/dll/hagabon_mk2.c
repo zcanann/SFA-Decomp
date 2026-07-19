@@ -406,9 +406,9 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_death);
         {
             f32 t = ((FCVars*)state)->engineTimer;
-            Sfx_SetObjectSfxVolumeU32IntLegacy((u32)obj, SFXTRIG_baddie_rach_death,
-                                               (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
-                                               t / *(f32*)&lbl_803E2C70);
+            Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_baddie_rach_death,
+                                   (gCrawlerSfxVolMax127 * t) / lbl_803E2C70,
+                                   t / *(f32*)&lbl_803E2C70);
         }
     }
     else
@@ -527,9 +527,9 @@ void hagabonMK2_update(s16* obj, u8* state)
         Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_death);
         {
             f32 t = ((FCVars*)state)->engineTimer;
-            Sfx_SetObjectSfxVolumeU32IntLegacy((u32)obj, SFXTRIG_baddie_rach_death,
-                                               (int)((gCrawlerSfxVolMax127 * t) / lbl_803E2C70),
-                                               t / *(f32*)&lbl_803E2C70);
+            Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_baddie_rach_death,
+                                   (gCrawlerSfxVolMax127 * t) / lbl_803E2C70,
+                                   t / *(f32*)&lbl_803E2C70);
         }
     }
     else
