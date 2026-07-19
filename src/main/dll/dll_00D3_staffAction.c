@@ -930,9 +930,9 @@ void dll_D3_update(int* obj)
                 (void**)*(int*)gBaddieControlInterface)[0x28 / 4])(
                 obj, state, (int)((char*)state + 0x35c), (int)((TreasureChestState*)state)->gameBitB, 0, 0, 1, 0, -1);
             ((TreasureChestState*)state)->targetObj = rc;
-            ((TreasureChestState*)state)->unk349 = 0;
+            ((TreasureChestState*)state)->hasTarget = 0;
             ((TreasureChestState*)state)->targetState = 1;
-            ((TreasureChestState*)state)->unk405 = 2;
+            ((TreasureChestState*)state)->subMode = 2;
         }
 
         if ((u32)((TreasureChestState*)state)->targetObj != 0 && ((TreasureChestState*)state)->targetState == 2)
@@ -1044,10 +1044,10 @@ void dll_D3_init(GameObject* obj, int def, int flag)
         ftag = 1;
     }
     ((TreasureChestState*)state)->controlMode = ftag;
-    ((TreasureChestState*)state)->unk270 = 0;
+    ((TreasureChestState*)state)->substate = 0;
     ((TreasureChestState*)state)->targetState = 0;
-    ((TreasureChestState*)state)->unk405 = 0;
-    ((TreasureChestState*)state)->unk25F = 0;
+    ((TreasureChestState*)state)->subMode = 0;
+    ((TreasureChestState*)state)->physicsActive = 0;
     ObjHits_DisableObject(obj);
 
     fz = lbl_803E2FF4;
