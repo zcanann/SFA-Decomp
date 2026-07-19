@@ -3,11 +3,12 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objanim_update.h"
 
 typedef struct AnimsharpclawPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00: pos/color/mapId */
     s16 linkIndex;
     s16 unk1A;
     u8 pad1C[0x20 - 0x1C];
