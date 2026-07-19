@@ -7344,7 +7344,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         panelY = *(s16*)(gTextBoxes + 0x196);
         height = revealedHeight;
         width = (s16) * (u16*)(gTextBoxes + 0x182);
-        drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5), (f32)(panelY - 5), panelAlpha,
+        drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5), (f32)(panelY - 5), (u8)panelAlpha,
                     0x100);
         drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY - 5), (u8)panelAlpha, 0x100,
                           width, 5, 0);
