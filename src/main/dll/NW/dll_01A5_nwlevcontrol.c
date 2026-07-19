@@ -84,9 +84,10 @@ void* gNW_levcontrolObjDescriptor[14] = {
     (void*)0x00000000, (void*)0x00000000,  nw_levcontrol_init, nw_levcontrol_update,      (void*)0x00000000,
     (void*)0x00000000, nw_levcontrol_free, (void*)0x00000000,  nw_levcontrol_getExtraSize};
 
+extern s32 lbl_803269F8[];
+
 int fn_801CFD68(u8* stateBytes)
 {
-    extern s32 lbl_803269F8[];
     NwLevControlState* state = (NwLevControlState*)stateBytes;
     s32* table;
     int obj;
@@ -322,8 +323,7 @@ void nw_levcontrol_update(int objArg)
 
 void nw_levcontrol_init(int* obj)
 {
-    extern char lbl_803269F8[];
-    char* base = lbl_803269F8;
+    char* base = (char*)lbl_803269F8;
     NwLevControlState* state = ((GameObject*)obj)->extra;
 
     Obj_GetPlayerObject();
