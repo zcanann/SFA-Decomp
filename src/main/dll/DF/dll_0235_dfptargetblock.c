@@ -22,8 +22,6 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 
-const f32 lbl_803E64B0 = 10.0f;
-const f32 lbl_803E64C0 = 20.0f;
 typedef struct DfpTargetBlockPartfxArgs
 {
     s16 rotX;
@@ -48,6 +46,52 @@ f32 gTargetBlockHomeX;
 extern s32 gTargetBlockHomePos[];
 void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints);
 
+
+void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints)
+{
+    u8* point;
+    f32 probe[3];
+    TrackBBoxHit hit;
+    f32 originalX;
+    f32 originalZ;
+    f32 deltaX;
+    f32 deltaZ;
+    int i;
+
+    i = 0;
+    point = collisionPoints->pointData;
+    while (i < collisionPoints->count)
+    {
+        probe[0] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_X) + obj->x;
+        originalX = probe[0];
+        probe[1] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
+        probe[2] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
+        originalZ = probe[2];
+        if (objBboxFn_800640cc(&obj->x, probe, (0.5f), 1, &hit, (GameObject*)obj, 8, -1, 0, 0) != 0)
+        {
+            deltaX = probe[0] - originalX;
+            deltaZ = probe[2] - originalZ;
+            if (0.0f != obj->velX)
+            {
+                obj->x = obj->x + deltaX;
+            }
+            if (0.0f != obj->velZ)
+            {
+                obj->z = obj->z + deltaZ;
+            }
+            {
+                f32 zero = 0.0f;
+                obj->velX = zero;
+                obj->velY = zero;
+                obj->velZ = zero;
+            }
+            Sfx_PlayFromObject(obj, SFXTRIG_mv_bflconc1_1d0);
+            return;
+        }
+        point += DFPTARGETBLOCK_POINT_STRIDE;
+        i++;
+    }
+}
 
 int dfptargetblock_getExtraSize(void)
 {
@@ -90,7 +134,7 @@ static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTarg
     Sfx_PlayFromObject(obj, DFPTARGETBLOCK_RESET_SFX);
 }
 static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTargetBlockAudioState* state,
-                                               const f32* threshold)
+                                               f32 threshold)
 {
     f32 dx;
     f32 dz;
@@ -99,7 +143,7 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTar
     dz = obj->z - gTargetBlockHomeZ;
     if (!((0.0f == dx) && (0.0f == dz)))
     {
-        if (sqrtf(dx * dx + dz * dz) < *threshold)
+        if (sqrtf(dx * dx + dz * dz) < threshold)
         {
             state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
         }
@@ -226,7 +270,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
         {
             dfptargetblock_resetToHome(obj, home, state);
         }
-        dfptargetblock_checkSettled(obj, state, &lbl_803E64B0);
+        dfptargetblock_checkSettled(obj, state, 10.0f);
     }
     else if (mode == 2)
     {
@@ -249,56 +293,10 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
                                   -1, NULL);
             }
         }
-        dfptargetblock_checkSettled(obj, state, &lbl_803E64C0);
+        dfptargetblock_checkSettled(obj, state, 20.0f);
     }
 }
 
-
-void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetBlockCollisionPoints* collisionPoints)
-{
-    u8* point;
-    f32 probe[3];
-    TrackBBoxHit hit;
-    f32 originalX;
-    f32 originalZ;
-    f32 deltaX;
-    f32 deltaZ;
-    int i;
-
-    i = 0;
-    point = collisionPoints->pointData;
-    while (i < collisionPoints->count)
-    {
-        probe[0] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_X) + obj->x;
-        originalX = probe[0];
-        probe[1] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
-        probe[2] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
-        originalZ = probe[2];
-        if (objBboxFn_800640cc(&obj->x, probe, (0.5f), 1, &hit, (GameObject*)obj, 8, -1, 0, 0) != 0)
-        {
-            deltaX = probe[0] - originalX;
-            deltaZ = probe[2] - originalZ;
-            if (0.0f != obj->velX)
-            {
-                obj->x = obj->x + deltaX;
-            }
-            if (0.0f != obj->velZ)
-            {
-                obj->z = obj->z + deltaZ;
-            }
-            {
-                f32 zero = 0.0f;
-                obj->velX = zero;
-                obj->velY = zero;
-                obj->velZ = zero;
-            }
-            Sfx_PlayFromObject(obj, SFXTRIG_mv_bflconc1_1d0);
-            return;
-        }
-        point += DFPTARGETBLOCK_POINT_STRIDE;
-        i++;
-    }
-}
 
 
 void dfptargetblock_update(DfpTargetBlockObject* obj)
@@ -317,7 +315,7 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
         buf[4] = (12.0f);
         buf[5] = 0.0f;
         objfx_spawnArcedBurstLegacy((int)obj, 5, (0.75f), 1, 2, 0x32, (12.0f), (12.0f),
-                                   lbl_803E64B0, buf, 0);
+                                   10.0f, buf, 0);
     }
     else
     {
