@@ -2415,24 +2415,21 @@ int objShouldUnload(GameObject* obj)
         return 0;
     }
     m = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
-    keep = 1;
     if (m == -1)
     {
         keep = 0;
     }
-    else if (m != 0)
+    else if (m != 0 && m < 9 && ((def[3] >> (m - 1)) & 1))
     {
-        if (m < 9)
-        {
-            if ((def[3] >> (m - 1)) & 1)
-            {
-                keep = 0;
-            }
-        }
-        else if ((def[5] >> (0x10 - m)) & 1)
-        {
-            keep = 0;
-        }
+        keep = 0;
+    }
+    else if (m >= 9 && ((def[5] >> (0x10 - m)) & 1))
+    {
+        keep = 0;
+    }
+    else
+    {
+        keep = 1;
     }
     if (keep == 0)
     {
