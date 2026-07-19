@@ -216,11 +216,11 @@ int babycloudrunner_tryCapture(void* p)
     }
     if (flag != 0)
     {
-        s16toFloat(&sub->unk00, 0x3c);
+        s16toFloat(&sub->triggeredLatch, 0x3c);
         ((GameObject*)obj)->userData1 = 1;
         ((GameObject*)obj)->anim.rotX = sub->roostYaw;
         (*gObjectTriggerInterface)->runSequence(4, obj, -1);
-        sub->unk00 = lbl_803E4244;
+        sub->triggeredLatch = lbl_803E4244;
         gameBitIncrement(0x901);
         sub->behaviourState = 0xc;
         mainSetBits(q->enableBit, 1);
@@ -449,7 +449,7 @@ void babycloudrunner_update(int* obj)
         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
         (*gGameUIInterface)->airMeterSetShutdown();
     }
-    else if (fn_80080150(&sub->unk00) != 0)
+    else if (fn_80080150(&sub->triggeredLatch) != 0)
     {
         sub->flags22C |= 1;
         sub->behaviourState = 0;
@@ -669,7 +669,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
     sub->turnLatch = 0;
     sub->behaviourState = def->behaviourState;
     sub->unkCC = 0;
-    storeZeroToFloatParam(&sub->unk00);
+    storeZeroToFloatParam(&sub->triggeredLatch);
     sub->linkedObj = 0;
     sub->roostYaw = ((GameObject*)obj)->anim.rotX;
     sub->flags22C = 0;

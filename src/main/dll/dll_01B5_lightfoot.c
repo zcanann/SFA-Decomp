@@ -55,6 +55,8 @@ typedef struct LightfootSub
 } LightfootSub;
 
 #define LIGHTFOOT_SEQID_SC_BABY 0x27c /* retail "SC_babyligh..." (DLL 0x1B5) */
+#define LIGHTFOOT_WEAPON_T1 0x6f1
+#define LIGHTFOOT_WEAPON_T2 0x6f2
 #define LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define LIGHTFOOT_OBJFLAG_RENDERED           0x800
 #define LIGHTFOOT_OBJGROUP                   3
@@ -331,7 +333,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
         ((GroundBaddieState*)inner)->baddie.substate = 1;
         ObjHits_DisableObject(obj);
         ((LightfootSub*)sub)->unk24 = randomGetRange(0, 3);
-        ((LightfootSub*)sub)->unk28 = 0x6f1;
+        ((LightfootSub*)sub)->unk28 = LIGHTFOOT_WEAPON_T1;
         ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6F0;
         ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC6F4;
         *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
@@ -351,14 +353,14 @@ void lightfoot_init(GameObject* obj, int def, int flag)
         case 0x33e3c:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6F0;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC6F4;
-            ((LightfootSub*)sub)->unk28 = 0x6f1;
+            ((LightfootSub*)sub)->unk28 = LIGHTFOOT_WEAPON_T1;
             *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x33e34:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6FC;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC700;
-            ((LightfootSub*)sub)->unk28 = 0x6f1;
+            ((LightfootSub*)sub)->unk28 = LIGHTFOOT_WEAPON_T1;
             *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
@@ -366,7 +368,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC708;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC70C;
             ObjHits_DisableObject(obj);
-            ((LightfootSub*)sub)->unk28 = 0x6f2;
+            ((LightfootSub*)sub)->unk28 = LIGHTFOOT_WEAPON_T2;
             *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
