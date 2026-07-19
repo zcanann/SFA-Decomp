@@ -632,7 +632,7 @@ void wcpushblock_initialise(void)
 
 #undef WCPUSHBLOCK_IFACE
 
-WcTileGrid lbl_8032B008 = {{
+WcTileGrid gWcTileGridAInitial = {{
     {0, 0, 0, 0, 0, 0, 8, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 4, 0, 0, 0},
@@ -642,7 +642,7 @@ WcTileGrid lbl_8032B008 = {{
     {0, 0, 0, 0, 6, 0, 0, 0},
     {0, 5, 0, 0, 1, 0, 0, 0},
 }};
-WcTileGrid lbl_8032B048 = {{
+WcTileGrid gWcTileGridASolved = {{
     {0, 0, 0, 0, 0, 0, 4, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
@@ -652,7 +652,7 @@ WcTileGrid lbl_8032B048 = {{
     {0, 0, 0, 0, 2, 0, 0, 0},
     {0, 1, 0, 0, 0, 0, 0, 0},
 }};
-WcTileGrid lbl_8032B088 = {{
+WcTileGrid gWcTileGridBInitial = {{
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 1, 5, 0, 0, 2, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 3},
@@ -662,7 +662,7 @@ WcTileGrid lbl_8032B088 = {{
     {0, 8, 0, 0, 4, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
 }};
-WcTileGrid lbl_8032B0C8 = {{
+WcTileGrid gWcTileGridBSolved = {{
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 1, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},

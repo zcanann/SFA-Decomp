@@ -113,12 +113,12 @@ typedef union WcTileGrid
     u64 align8;
 } WcTileGrid;
 
-extern WcTileGrid lbl_8032B0C8;
-extern WcTileGrid lbl_8032B088;
-extern WcTileGrid lbl_8032B048;
-extern WcTileGrid lbl_8032B008;
-extern u8 lbl_803AD298[][8];
-extern u8 lbl_803AD2D8[][8];
+extern WcTileGrid gWcTileGridBSolved;
+extern WcTileGrid gWcTileGridBInitial;
+extern WcTileGrid gWcTileGridASolved;
+extern WcTileGrid gWcTileGridAInitial;
+extern u8 gWcTileGridB[][8];
+extern u8 gWcTileGridA[][8];
 extern f32 gWcPushBlockTileResetTime;
 extern f32 lbl_803E6DD0;
 extern f32 lbl_803E6DD4;
