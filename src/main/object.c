@@ -1067,7 +1067,7 @@ void objFreeObjDef(u8* obj, int flag)
     }
     if (((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_FROZEN)
     {
-        *(u16*)&((GameObject*)obj)->colorFadeFrames = 0;
+        ((GameObject*)obj)->colorFadeFrames = 0;
         ((GameObject*)obj)->colorFadeFlags = ((GameObject*)obj)->colorFadeFlags & ~OBJ_COLOR_FADE_FLAG_FROZEN;
         ((GameObject*)obj)->fadeCounter = 0;
         ObjModel_ClearRenderAttachment((ObjModel*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex]);
