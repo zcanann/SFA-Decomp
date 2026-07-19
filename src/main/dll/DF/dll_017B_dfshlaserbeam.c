@@ -26,6 +26,7 @@
 #include "main/gamebit_ids.h"
 #include "main/object_descriptor.h"
 #include "main/dll/dll_017B_dfshlaserbeam.h"
+#include "main/dll/foodbag.h"
 
 typedef struct DFSHLaserBeamConfig
 {
@@ -114,11 +115,7 @@ typedef struct DFSHLaserBeamObject
 #define DFSH_LASER_FLAGS(runtime)            (*(s32*)((u8*)(runtime) + 0x18))
 #define DFSH_MSG_PLAYER_HIT                  0x60003 /* message the player on a laser hit */
 
-#define RESOURCE_SPAWN(obj, id, a, flags, owner, unk)                                                                  \
-    ((void (*)(void*, int, int, int, int, int))(*(int*)((u8*)*(int*)gLaserBeamEffectResource + 0x4)))(                 \
-        obj, id, a, flags, owner, unk)
-
-void* gLaserBeamEffectResource;
+Dll81Interface** gLaserBeamEffectResource;
 
 int DFSH_LaserBeam_getExtraSize(void)
 {
@@ -203,7 +200,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                 DFSH_LASER_BLAST_PHASE(runtime) = 1;
                 if (gLaserBeamEffectResource != NULL)
                 {
-                    RESOURCE_SPAWN(obj, 10, 0, 0x10004, -1, 0);
+                    (*gLaserBeamEffectResource)->spawn((int)obj, 10, NULL, 0x10004, -1, 0);
                 }
             }
             if (DFSH_LASER_CYCLE_TIMER(runtime) < 0x28)
@@ -221,7 +218,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                     DFSH_LASER_BLAST_PHASE(runtime) = 2;
                     if (gLaserBeamEffectResource != NULL)
                     {
-                        RESOURCE_SPAWN(obj, 0xB, 0, 0x10004, -1, 0);
+                        (*gLaserBeamEffectResource)->spawn((int)obj, 0xB, NULL, 0x10004, -1, 0);
                     }
                 }
             }

@@ -3,6 +3,14 @@
 
 #include "ghidra_import.h"
 
+typedef s16 (*Dll81SpawnFn)(int sourceObj, int variant, void* posSource, u32 flags, int owner, int unused);
+
+typedef struct Dll81Interface
+{
+    u8 pad00[0x04];
+    Dll81SpawnFn spawn;
+} Dll81Interface;
+
 void dll_7C_func03(int param_1,int param_2,int param_3,u32 param_4);
 int dll_7D_func03(int param_1,int param_2,int param_3,u32 param_4,u32 param_5,
                  f32 *param_6);
@@ -12,7 +20,7 @@ void dll_7F_func03(int param_1,int param_2,int param_3,u32 param_4);
 void dll_80_func03(int param_1,int param_2,int param_3,u32 param_4);
 void dll_81_func00_nop(void);
 void dll_81_func01_nop(void);
-void dll_81_func03(int param_1,int param_2,int param_3,u32 param_4);
+int dll_81_func03(int sourceObj, int variant, void* posSource, u32 flags, int owner, int unused);
 void dll_82_func00_nop(void);
 void dll_82_func01_nop(void);
 void dll_82_func03(int param_1,int param_2,int param_3,u32 param_4);
