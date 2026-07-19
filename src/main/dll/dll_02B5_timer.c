@@ -119,13 +119,13 @@ void timer_update(GameObject* obj)
     int textureId[1];
     int expiredThisFrame;
     TimerFlags* flags;
-    TimerSetup* setup;
     TimerState* state;
+    TimerSetup* setup;
     state = (obj)->extra;
     setup = (TimerSetup*)(obj)->anim.placementData;
     flags = &state->flags;
 
-    if (((int (*)(int))fn_80080150)((int)state) != 0)
+    if (fn_80080150(&state->countdownTimer) != 0)
     {
         expiredThisFrame = 0;
         if (flags->manual == 0 && (void*)mainGetBit(setup->startGameBit) == NULL)
@@ -196,7 +196,7 @@ void timer_update(GameObject* obj)
             }
         }
     }
-    if (state->mode == TIMER_MODE_EFFECT && ((int (*)(int))fn_80080150)((int)state) != 0)
+    if (state->mode == TIMER_MODE_EFFECT && fn_80080150(&state->countdownTimer) != 0)
     {
         ModelLight* light = state->lightSlot;
         f32 progress = (f32)(setup->durationMinutes * 60) / state->countdownTimer;
