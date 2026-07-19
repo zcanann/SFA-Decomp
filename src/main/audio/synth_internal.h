@@ -167,6 +167,12 @@ typedef struct SynthTimeWord
     u32 high;
 } SynthTimeWord;
 
+typedef struct SynthMasterTrackEvent
+{
+    u32 time;
+    u32 bpm;
+} SynthMasterTrackEvent;
+
 typedef struct SynthSequenceQueue
 {
     u8* masterTrackBase;
@@ -343,6 +349,7 @@ extern u32 gSynthFadeMask;
 
 extern u16 gSynthVoiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
 extern SynthVoice gSynthVoices[SYNTH_MAX_VOICES];
+extern u8 synthTrackVolume[64];
 extern SynthVoice* gSynthFreeVoices;
 extern SynthVoice* gSynthQueuedVoices;
 extern SynthVoice* gSynthAllocatedVoices;

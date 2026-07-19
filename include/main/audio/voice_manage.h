@@ -22,12 +22,6 @@
 #define SYNTH_VOICE_MIDI_SLOT_OFFSET 0x121
 #define SYNTH_VOICE_MIDI_CHANNEL_OFFSET 0x122
 
-typedef struct VoiceIdSlot {
-    u8 prev;
-    u8 next;
-    u16 active;
-} VoiceIdSlot;
-
 typedef struct McmdVoiceState McmdVoiceState;
 
 void voiceInitPriorityTables(void);

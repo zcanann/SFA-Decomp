@@ -54,30 +54,30 @@ extern u8 voiceAdsrDecayTable[];
 void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
 {
     u8 tmp;
-    s32 i1;
-    s32 i2;
+    s32 rangeLo;
+    s32 rangeHi;
     u8 detune;
-    u8 k1;
-    u8 k2;
+    u8 keyLo;
+    u8 keyHi;
 
     if (((args->value >> 8) & 0xff) == 0)
     {
-        k2 = args->flags >> 0x18;
-        k1 = args->flags >> 8;
+        keyHi = args->flags >> 0x18;
+        keyLo = args->flags >> 8;
         detune = args->flags >> 0x18;
         if (((args->flags >> 8) & 0xff) > detune)
         {
-            tmp = k1;
-            k1 = k2;
-            k2 = tmp;
+            tmp = keyLo;
+            keyLo = keyHi;
+            keyHi = tmp;
         }
     }
     else
     {
-        i1 = state->key - (s32)((args->flags >> 8) & 0xff);
-        i2 = state->key + (args->flags >> 0x18);
-        k1 = i1 < 0 ? 0 : i1 > 0x7f ? 0x7f : i1;
-        k2 = i2 < 0 ? 0 : i2 > 0x7f ? 0x7f : i2;
+        rangeLo = state->key - (s32)((args->flags >> 8) & 0xff);
+        rangeHi = state->key + (args->flags >> 0x18);
+        keyLo = rangeLo < 0 ? 0 : rangeLo > 0x7f ? 0x7f : rangeLo;
+        keyHi = rangeHi < 0 ? 0 : rangeHi > 0x7f ? 0x7f : rangeHi;
     }
 
     if ((u8)args->value != 0)
@@ -89,7 +89,7 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
         detune = (args->flags >> 0x10) & 0xff;
     }
 
-    args->flags = (detune << 0x10) | 0x19 | ((k1 + (sndRand() % (((u8)k2 - k1) + 1))) << 8);
+    args->flags = (detune << 0x10) | 0x19 | ((keyLo + (sndRand() % (((u8)keyHi - keyLo) + 1))) << 8);
     args->value = 0;
     state->key = (args->flags >> 8) & 0x7f;
     state->fineTune = (s8)(args->flags >> 0x10);
@@ -106,17 +106,17 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
  */
 void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* cstep, u64 tstflag, u32 dirtyFlag)
 {
-    u8 comb;
+    u8 combineMode;
     s32 scale;
 
     if (!(MAC_CFLAGS(svoice) & tstflag))
     {
-        comb = 0;
+        combineMode = 0;
         MAC_CFLAGS(svoice) |= tstflag;
     }
     else
     {
-        comb = (u8)cstep->value;
+        combineMode = (u8)cstep->value;
     }
 
     scale = ((s16)(cstep->flags >> 16) << 16) / 100;
@@ -129,7 +129,7 @@ void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* 
         scale += ((s8)(cstep->value >> 0x10) << 8) / 100;
     }
 
-    inpAddCtrl(dest, (u8)(cstep->flags >> 8), scale, comb, (u8)(cstep->value >> 8) != 0);
+    inpAddCtrl(dest, (u8)(cstep->flags >> 8), scale, combineMode, (u8)(cstep->value >> 8) != 0);
 
     if ((dirtyFlag & 0x80000000) != 0)
     {
@@ -321,9 +321,9 @@ static inline int SendSingleKeyOff(u32 voiceid)
     if (voiceid != 0xffffffff)
     {
         i = voiceid & 0xff;
-        if (voiceid == ((McmdVoiceState*)synthVoice)[i].voiceHandle)
+        if (voiceid == synthVoice[i].voiceHandle)
         {
-            macSetExternalKeyoff(&((McmdVoiceState*)synthVoice)[i]);
+            macSetExternalKeyoff(&synthVoice[i]);
             return 0;
         }
     }
@@ -367,10 +367,10 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
         {
             for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; i++)
             {
-                if (((McmdVoiceState*)synthVoice)[i].macroBase != 0 &&
-                    targetInstrument == ((McmdVoiceState*)synthVoice)[i].instrumentKey)
+                if (synthVoice[i].macroBase != 0 &&
+                    targetInstrument == synthVoice[i].instrumentKey)
                 {
-                    macPostMessage(((McmdVoiceState*)synthVoice)[i].vidListNode->id, value);
+                    macPostMessage(synthVoice[i].vidListNode->id, value);
                 }
             }
         }
@@ -547,7 +547,7 @@ static inline void mcmdSendKeyOff(McmdVoiceState* svoice, McmdCommandArgs* cstep
     voiceid |= ((u16)(cstep->flags >> 0x10)) << 0x10;
     for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; i++)
     {
-        if (((McmdVoiceState*)synthVoice)[i].voiceHandle == (voiceid | i))
+        if (synthVoice[i].voiceHandle == (voiceid | i))
         {
             SendSingleKeyOff(voiceid | i);
         }
@@ -579,13 +579,13 @@ void macHandleActive(McmdVoiceState* sv)
 {
     u32 ex;
     u32 cmd;
-    u32* para1;
+    u32* cmdValuePtr;
     u8 lastNote;
     u8* channelDefaults;
     f32 one;
     f32 dlsScaleMax;
     u32 unused[2];
-    u8* tab = lbl_8032EDD0;
+    u8* dataTables = lbl_8032EDD0;
 
     if (MAC_CFLAGS(sv) & 3)
     {
@@ -669,7 +669,7 @@ void macHandleActive(McmdVoiceState* sv)
     lbl_803DE2D0 = 0;
     dlsScaleMax = lbl_803E7810;
     one = lbl_803E7814;
-    para1 = &lbl_803DE2E8.value;
+    cmdValuePtr = &lbl_803DE2E8.value;
 
     do
     {
@@ -680,7 +680,7 @@ void macHandleActive(McmdVoiceState* sv)
 
         ex = 0;
         lbl_803DE2E8.flags = ((McmdCommandArgs*)sv->macroCursor)->flags;
-        *para1 = ((McmdCommandArgs*)sv->macroCursor)->value;
+        *cmdValuePtr = ((McmdCommandArgs*)sv->macroCursor)->value;
         sv->macroCursor += 8;
         cmd = lbl_803DE2E8.flags;
 
@@ -703,7 +703,7 @@ void macHandleActive(McmdVoiceState* sv)
                 if (macro != 0)
                 {
                     sv->macroBase = macro;
-                    sv->macroCursor = macro + ((*para1 & 0xffff) << 3);
+                    sv->macroCursor = macro + ((*cmdValuePtr & 0xffff) << 3);
                 }
             }
             break;
@@ -714,7 +714,7 @@ void macHandleActive(McmdVoiceState* sv)
                 if (macro != 0)
                 {
                     sv->macroBase = macro;
-                    sv->macroCursor = macro + ((*para1 & 0xffff) << 3);
+                    sv->macroCursor = macro + ((*cmdValuePtr & 0xffff) << 3);
                 }
             }
             break;
@@ -732,7 +732,7 @@ void macHandleActive(McmdVoiceState* sv)
             {
                 sv->macroBase = macro;
                 stop = 0;
-                sv->macroCursor = macro + ((*para1 & 0xffff) << 3);
+                sv->macroCursor = macro + ((*cmdValuePtr & 0xffff) << 3);
             }
             else
             {
@@ -744,7 +744,7 @@ void macHandleActive(McmdVoiceState* sv)
             break;
         }
         case 0x7: /* wait ms */
-            ((u8*)para1)[2] = 1;
+            ((u8*)cmdValuePtr)[2] = 1;
             ex = mcmdWait(sv, &lbl_803DE2E8);
             break;
         case 0x8: /* play macro */
@@ -776,7 +776,7 @@ void macHandleActive(McmdVoiceState* sv)
         {
             u16 scale = (u8)(cmd >> 8);
             u16 curve;
-            if (((*para1 >> 8) & 0xff) == 0)
+            if (((*cmdValuePtr >> 8) & 0xff) == 0)
             {
                 sv->volume = (sv->volume * scale) / 0x7f;
             }
@@ -790,7 +790,7 @@ void macHandleActive(McmdVoiceState* sv)
                 sv->volume = 0x7f0000;
             }
             curve = (u8)(lbl_803DE2E8.flags >> 0x18);
-            curve |= ((u16)((u8)*para1) << 8);
+            curve |= ((u16)((u8)*cmdValuePtr) << 8);
             sv->volume = TranslateVolume(sv->volume, curve);
             MAC_CFLAGS(sv) |= MAC_FLAG64(0x1000, 0);
             break;
@@ -818,7 +818,7 @@ void macHandleActive(McmdVoiceState* sv)
                 if (macro != 0)
                 {
                     sv->macroBase = macro;
-                    sv->macroCursor = macro + ((*para1 & 0xffff) << 3);
+                    sv->macroCursor = macro + ((*cmdValuePtr & 0xffff) << 3);
                 }
             }
             break;
@@ -834,15 +834,15 @@ void macHandleActive(McmdVoiceState* sv)
             McmdDlsAdsrInfo adsr;
             s32* row;
             sScale = voiceAdsrSustainTable[(u16)inpGetMidiCtrl(cmd >> 0x18, sv->midiSlot, sv->midiEvent) >> 7];
-            row = (s32*)(tab +
+            row = (s32*)(dataTables +
                          ((u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 8) & 0xff, sv->midiSlot, sv->midiEvent) >> 7) * 4);
             adsr.atime = row[7];
-            row = (s32*)(tab + ((u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 0x10) & 0xff, sv->midiSlot, sv->midiEvent) >>
-                                7) *
-                                   4);
+            row = (s32*)(dataTables +
+                         ((u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 0x10) & 0xff, sv->midiSlot, sv->midiEvent) >> 7) *
+                             4);
             adsr.dtime = row[7];
             adsr.slevel = 0xc1 - voiceAdsrDecayTable[(u32)(dlsScaleMax * sScale)];
-            row = (s32*)(tab + ((u16)inpGetMidiCtrl((u8)*para1, sv->midiSlot, sv->midiEvent) >> 7) * 4);
+            row = (s32*)(dataTables + ((u16)inpGetMidiCtrl((u8)*cmdValuePtr, sv->midiSlot, sv->midiEvent) >> 7) * 4);
             adsr.rtime = row[7];
             adsr.ascale = 0x80000000;
             adsr.dscale = 0x80000000;
@@ -941,7 +941,7 @@ void macHandleActive(McmdVoiceState* sv)
         }
         case 0x1f: /* set pitch */
             sv->targetPitch = cmd >> 8;
-            sv->targetPitch |= (u8)*para1;
+            sv->targetPitch |= (u8)*cmdValuePtr;
             if (sv->prevSampleId != 0xffffffff)
             {
                 DoSetPitch(sv);
@@ -981,7 +981,7 @@ void macHandleActive(McmdVoiceState* sv)
             break;
         case 0x23: /* setup tremolo */
             sv->tremoloScale = (cmd >> 8) & 0xffff;
-            sv->tremoloModAddScale = *para1;
+            sv->tremoloModAddScale = *cmdValuePtr;
             sv->tremoloCurScale = one;
             break;
         case 0x24: /* return */
@@ -1008,7 +1008,7 @@ void macHandleActive(McmdVoiceState* sv)
                 }
                 sv->macroBase = macro;
                 stop = 0;
-                sv->macroCursor = macro + ((*para1 & 0xffff) << 3);
+                sv->macroCursor = macro + ((*cmdValuePtr & 0xffff) << 3);
             }
             else
             {
@@ -1099,9 +1099,9 @@ void macHandleActive(McmdVoiceState* sv)
             mcmdAddPriority(sv, &lbl_803DE2E8);
             break;
         case 0x38: /* set age counter speed */
-            if (*para1 != 0)
+            if (*cmdValuePtr != 0)
             {
-                sv->priorityScale = (sv->priorityValue >> 8) / *para1;
+                sv->priorityScale = (sv->priorityValue >> 8) / *cmdValuePtr;
             }
             else
             {
@@ -1152,18 +1152,18 @@ void macHandleActive(McmdVoiceState* sv)
             break;
         case 0x4d: /* aux A FX select */
         {
-            u8 i = *para1 >> 0x18;
-            u64* mask = (u64*)(tab + i * 8);
-            u32* dirty = (u32*)(tab + i * 4);
+            u8 i = *cmdValuePtr >> 0x18;
+            u64* mask = (u64*)(dataTables + i * 8);
+            u32* dirty = (u32*)(dataTables + i * 4);
             SelectSource(sv, (McmdInputSlot*)(inpAuxA + sv->studio * 0x90 + i * 0x24), &lbl_803DE2E8, mask[68],
                          dirty[144]);
             break;
         }
         case 0x4e: /* aux B FX select */
         {
-            u8 i = *para1 >> 0x18;
-            u64* mask = (u64*)(tab + i * 8);
-            u32* dirty = (u32*)(tab + i * 4);
+            u8 i = *cmdValuePtr >> 0x18;
+            u64* mask = (u64*)(dataTables + i * 8);
+            u32* dirty = (u32*)(dataTables + i * 4);
             SelectSource(sv, (McmdInputSlot*)(inpAuxB + sv->studio * 0x90 + i * 0x24), &lbl_803DE2E8, mask[74],
                          dirty[156]);
             break;
@@ -1200,7 +1200,7 @@ void macHandleActive(McmdVoiceState* sv)
         {
             u8 ctrl = (cmd >> 8) & 0xff;
             u8 index = (cmd >> 0x10) & 0xff;
-            varSet32(sv, ctrl, index, (s16)*para1);
+            varSet32(sv, ctrl, index, (s16)*cmdValuePtr);
             break;
         }
         case 0x70: /* if var equal */
@@ -1239,14 +1239,14 @@ void macHandle(u32 deltaTime)
 {
     McmdVoiceState* sv;
     McmdVoiceState* nextSv;
-    u64 w;
+    u64 wakeTime;
 
     for (sv = (McmdVoiceState*)macTimeQueueRoot; sv != 0 && *(u64*)&sv->wakeTimeHi <= macRealTime;)
     {
         nextSv = sv->timeNext;
-        w = *(u64*)&sv->wakeTimeHi;
+        wakeTime = *(u64*)&sv->wakeTimeHi;
         macMakeActive(sv);
-        *(u64*)&sv->activeTimeHi = w;
+        *(u64*)&sv->activeTimeHi = wakeTime;
         sv = nextSv;
     }
 
@@ -1641,9 +1641,9 @@ void macInit(void)
     macRealTime = 0;
     for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; i++)
     {
-        ((McmdVoiceState*)synthVoice)[i].macroBase = 0;
-        ((McmdVoiceState*)synthVoice)[i].queueMode = 2;
-        ((McmdVoiceState*)synthVoice)[i].loopCounter = 0;
+        synthVoice[i].macroBase = 0;
+        synthVoice[i].queueMode = 2;
+        synthVoice[i].loopCounter = 0;
     }
 }
 
