@@ -5,7 +5,5 @@
 
 void fn_801BEEA0(s16 *out, u8 *state);
 
-extern f32 gDimBossGut2Pi;
-extern f32 gDimBossGut2AngleUnitToRadians;
 
 #endif /* MAIN_DLL_DLL_18E_H_ */

@@ -57,9 +57,6 @@
 extern const f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
 extern f32 lbl_803E3004;
-f32 gStaffActionVelocityDamping = 0.97f;
-f32 gStaffActionBoundsSearchRadius = 1e+06f;
-
 typedef struct StaffBits
 {
     u8 hi : 4;
@@ -138,7 +135,7 @@ void fn_80165B3C(GameObject* obj, int state)
 
     radius = 100.0f;
     (obj)->anim.velocityY = (obj)->anim.velocityY - lbl_803E2FF4;
-    (obj)->anim.velocityX = (obj)->anim.velocityX * (damping = gStaffActionVelocityDamping);
+    (obj)->anim.velocityX = (obj)->anim.velocityX * (damping = 0.97f);
     (obj)->anim.velocityY = (obj)->anim.velocityY * damping;
     (obj)->anim.velocityZ = (obj)->anim.velocityZ * damping;
     start[0] = (obj)->anim.localPosX;
@@ -879,7 +876,7 @@ void dll_D3_update(int* obj)
     state = ((GameObject*)obj)->extra;
     extra = (LandedArwingState*)((GroundBaddieState*)state)->control;
     player = Obj_GetPlayerObject();
-    searchRadius = gStaffActionBoundsSearchRadius;
+    searchRadius = 1e+06f;
 
     if (extra->boundsObj == NULL)
     {
@@ -1005,7 +1002,6 @@ void dll_D3_update(int* obj)
 #undef dx
 #undef dy
 #undef dz
-
 
 void dll_D3_init(GameObject* obj, int def, int flag)
 {

@@ -75,7 +75,6 @@ STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, xDelta) == 0x0C);
 
 u8
     gTrickyCurveBurstCounter; /* inter-frame burst-fire counter; reset to 0 after TRICKY_CURVE_BURST_LIMIT ticks */
-extern f32 lbl_803E6448;      /* burst partfx scale constant */
 
 #define PARTFX_SPAWN(obj, effectId, args, mode, arg5, arg6)                                                            \
     (*gPartfxInterface)->spawnObject((void*)(obj), (effectId), (args), (mode), (arg5), (arg6))
@@ -255,7 +254,7 @@ void fn_80206C18(TrickyCurveObject* obj)
         partfxArgs.xDelta = xDelta;
         partfxArgs.yDelta = yDelta;
         partfxArgs.zDelta = zDelta;
-        partfxArgs.scale = lbl_803E6448;
+        partfxArgs.scale = 1.0f;
         partfxArgs.zRot = 0;
         partfxArgs.yRot = 0;
         partfxArgs.xRot = 0;

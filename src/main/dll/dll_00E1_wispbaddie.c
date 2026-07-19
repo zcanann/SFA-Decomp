@@ -43,7 +43,6 @@ int lbl_803DBC80[2] = {2, 3};
 #define WISPBADDIE_FLAG_CHASE_PLAYER    0x02
 #define WISPBADDIE_FLAG_CHASE_LOCKOUT   0x04 /* strayed too far; block re-chase until back near path */
 #define WISPBADDIE_FLAG_CHASE_MASK      0x06
-f32 gWispBaddiePi = 3.1415927f;
 union WispBaddieConstF32
 {
     f32 f;
@@ -74,7 +73,6 @@ typedef struct WispEventRow
 STATIC_ASSERT(sizeof(WispEventRow) == 0xc);
 STATIC_ASSERT(offsetof(WispEventRow, moveId) == 0x8);
 
-
 /*
  * HagabonAnimState - file-local overlay naming the PER-FAMILY anim-control
  * scratch that baddie_state.h leaves raw for the hagabon/swarmbaddie fighter
@@ -98,7 +96,7 @@ void fn_8014F620(GameObject* obj, WispBaddieState* state)
     state->pathWavePhase += (s16)(512.0f * timeDelta);
     state->hoverWavePhase += (s16)(2048.0f * timeDelta);
 
-    wave = 1.0f + mathSinf((gWispBaddiePi * (f32)state->pathWavePhase) / 32768.0f);
+    wave = 1.0f + mathSinf((3.1415927f * (f32)state->pathWavePhase) / 32768.0f);
     done = Curve_AdvanceAlongPath(&curve->curve, state->hitRadius * wave);
     if (((done != 0) || (curve->atSegmentEnd != gWispBaddieLastSegmentEnd)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
@@ -113,7 +111,7 @@ void fn_8014F620(GameObject* obj, WispBaddieState* state)
         (obj)->anim.velocityX =
             lbl_803E26E8.f * (state->playerObj->anim.localPosX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
 
-        wave = mathSinf((gWispBaddiePi * (f32)state->hoverWavePhase) / 32768.0f);
+        wave = mathSinf((3.1415927f * (f32)state->hoverWavePhase) / 32768.0f);
         wave = (40.0f * wave + (30.0f + state->playerObj->anim.localPosY)) - (obj)->anim.localPosY;
         (obj)->anim.velocityY = lbl_803E26E8.f * wave + (obj)->anim.velocityY;
         (obj)->anim.velocityZ =
@@ -124,7 +122,7 @@ void fn_8014F620(GameObject* obj, WispBaddieState* state)
         (obj)->anim.velocityX =
             lbl_803E26E8.f * (((RomCurveWalker*)curve)->posX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
 
-        wave = mathSinf((gWispBaddiePi * (f32)state->hoverWavePhase) / 32768.0f);
+        wave = mathSinf((3.1415927f * (f32)state->hoverWavePhase) / 32768.0f);
         wave = (40.0f * wave + ((RomCurveWalker*)curve)->posY) - (obj)->anim.localPosY;
         (obj)->anim.velocityY = lbl_803E26E8.f * wave + (obj)->anim.velocityY;
         (obj)->anim.velocityZ =

@@ -48,10 +48,7 @@ extern s16 lbl_803DCEB8;
 #define WARP_PAD_PULSE_STAGE3_TIME 420.0f
 #define WARP_PAD_PULSE_END_TIME 480.0f
 f32 lbl_803E3E98 = 0.0f;
-f32 gWarpPadProximityBurstDistSq = 409600.0f;
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
-
-extern f32 gWarpPadTriggerDist;
 
 void warpPadFn_8019042c(GameObject* obj)
 {
@@ -97,7 +94,7 @@ void warpPadFn_8019042c(GameObject* obj)
     else if ((flags & WARPPAD_FLAG_WARP_B) != 0)
     {
         if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            gWarpPadProximityBurstDistSq)
+            409600.0f)
         {
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
@@ -119,7 +116,7 @@ void warpPadFn_8019042c(GameObject* obj)
     else if ((flags & WARPPAD_FLAG_WARP_C) != 0)
     {
         if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            gWarpPadProximityBurstDistSq)
+            409600.0f)
         {
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
@@ -141,7 +138,7 @@ void warpPadFn_8019042c(GameObject* obj)
     else
     {
         if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            gWarpPadProximityBurstDistSq)
+            409600.0f)
         {
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
@@ -201,7 +198,7 @@ void warpPadFn_8019042c(GameObject* obj)
         }
         else if (!(state->pulseTimer < WARP_PAD_PULSE_END_TIME))
         {
-            state->pulseTimer = lbl_803E3E98;
+            state->pulseTimer = 0.0f;
             state->flags = state->flags & ~WARPPAD_FLAG_PULSE_FX;
         }
         state->pulseTimer = state->pulseTimer + timeDelta;
@@ -252,7 +249,7 @@ void warpPadPlayerStandingOn(GameObject* obj)
     {
         if ((lbl_803DCEB8 > -1) &&
             (Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) <
-             gWarpPadTriggerDist))
+             40.0f))
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
             (obj)->userData1 = state->activateDelay;
@@ -288,11 +285,9 @@ void warpPadPlayerStandingOn(GameObject* obj)
         }
     }
     state->cooldownTimer = state->cooldownTimer - timeDelta;
-    if (state->cooldownTimer <= lbl_803E3E98)
+    if (state->cooldownTimer <= 0.0f)
     {
-        state->cooldownTimer = lbl_803E3E98;
+        state->cooldownTimer = 0.0f;
         state->unk0A = -1;
     }
 }
-
-f32 gWarpPadTriggerDist = 40.0f;

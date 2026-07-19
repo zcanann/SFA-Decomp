@@ -52,7 +52,6 @@ typedef struct TrickyCurveBurstFxParams
 #define DFPFORCEAW_PARTFX_BURST          0x5ed /* spawned once */
 #define DFPFORCEAW_PARTFX_BURST_PARTICLE 0x5fd /* spawned 10x */
 
-extern f32 lbl_803E6448;
 
 void TrickyCurve_updateBurstTrigger(GameObject* obj)
 {
@@ -143,7 +142,7 @@ void TrickyCurve_updateBurstTrigger(GameObject* obj)
         fxParams.xOffset = dx;
         fxParams.yOffset = dy;
         fxParams.zOffset = dz;
-        fxParams.scale = lbl_803E6448;
+        fxParams.scale = 1.0f;
         fxParams.rotZ = 0;
         fxParams.rotY = 0;
         fxParams.rotX = 0;

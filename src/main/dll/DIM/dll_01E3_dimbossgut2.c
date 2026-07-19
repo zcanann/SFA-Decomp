@@ -216,9 +216,9 @@ void DIM_BossGut2_update(GameObject* obj)
             {
                 xyScale = 20.0f * posData->f10;
                 stk.f50 = (obj)->anim.localPosX -
-                          xyScale * mathSinf(gDimBossGut2Pi * (f32)(obj)->anim.rotX / gDimBossGut2AngleUnitToRadians);
+                          xyScale * mathSinf(3.1415927f * (f32)(obj)->anim.rotX / 32768.0f);
                 stk.f48 = (obj)->anim.localPosZ -
-                          xyScale * mathCosf(gDimBossGut2Pi * (f32)(obj)->anim.rotX / gDimBossGut2AngleUnitToRadians);
+                          xyScale * mathCosf(3.1415927f * (f32)(obj)->anim.rotX / 32768.0f);
                 stk.f54 = 0.65f * (1.0f - heightDiff / 14.0f);
                 (*gPartfxInterface)->spawnObject((void*)obj, DIMBOSSGUT2_PARTFX, &stk, 1, -1, NULL);
                 posData->timer16 = 0;

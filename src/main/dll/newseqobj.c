@@ -249,10 +249,6 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
 }
 
 f32 gSidekickToyDistToSpeedScale = 0.015625f;
-f32 gSidekickToyAngleWrapNegFull = -65535.0f;
-f32 gSidekickToyAngleWrapHalf = 32768.0f;
-f32 gSidekickToyAngleWrapFull = 65535.0f;
-f32 gSidekickToyAngleWrapNegHalf = -32768.0f;
 
 /* sidekick-toy main update: timer-driven 16-stride anim chain, curve chase
  * with speed/turn shaping, idle anims. */
@@ -351,17 +347,17 @@ void sharpClawUpdateIdle(int* obj, u8* state)
             }
         }
         delta = (f32)(int)((u16)getAngle(path->tangentX, path->tangentZ) + 0x8000 - (u16)((GameObject*)obj)->anim.rotX);
-        if (delta > gSidekickToyAngleWrapHalf)
+        if (delta > 32768.0f)
         {
-            delta = gSidekickToyAngleWrapNegFull + delta;
+            delta = -65535.0f + delta;
         }
-        if (delta < gSidekickToyAngleWrapNegHalf)
+        if (delta < -32768.0f)
         {
-            delta = gSidekickToyAngleWrapFull + delta;
+            delta = 65535.0f + delta;
         }
         ((BaddieState*)state)->unk308 =
             (((BaddieState*)state)->pathStep - *(f32*)(state + 0x310)) / 60.0f *
-            (1.0f - ((delta >= lbl_803E2740) ? delta : -delta) / gSidekickToyAngleWrapFull);
+            (1.0f - ((delta >= lbl_803E2740) ? delta : -delta) / 65535.0f);
         if (*(f32*)(state + 0x308) < 0.005f)
         {
             *(f32*)(state + 0x308) = 0.005f;

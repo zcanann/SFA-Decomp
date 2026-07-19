@@ -17,8 +17,6 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 
-f32 gDimBossGut2Pi = 3.1415927f;
-f32 gDimBossGut2AngleUnitToRadians = 32768.0f;
 
 typedef struct WaterSpikeMotion
 {

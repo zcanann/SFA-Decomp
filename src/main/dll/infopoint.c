@@ -18,7 +18,6 @@ typedef struct TrickyCurveState
     s16 halfHeightY;
 } TrickyCurveState;
 
-extern f32 lbl_803E644C;
 
 void TrickyCurve_updateCooldownTrigger(int obj)
 {
@@ -94,8 +93,8 @@ void TrickyCurve_updateCooldownTrigger(int obj)
 
     if ((u8)axisCount == 3)
     {
-        randomX = lbl_803E644C * randomGetRange(-0x17, 0x17);
-        randomZ = lbl_803E644C * randomGetRange(-0x17, 0x17);
+        randomX = 0.01f * randomGetRange(-0x17, 0x17);
+        randomZ = 0.01f * randomGetRange(-0x17, 0x17);
         fn_802960E4((int)player, randomX, randomZ);
     }
     return;
