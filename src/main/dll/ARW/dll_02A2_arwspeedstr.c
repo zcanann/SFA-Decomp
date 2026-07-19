@@ -19,6 +19,11 @@
 #include "main/object_descriptor.h"
 #include "main/object_render.h"
 
+static f32 ARWSpeedStr_randomSpread(f32 spread)
+{
+    return (f32)randomGetRange((int)-spread, (int)spread);
+}
+
 int ARWSpeedStr_getExtraSize(void)
 {
     return 0x1c;
@@ -48,8 +53,8 @@ void ARWSpeedStr_update(GameObject* obj)
     if (state->flags == 0)
     {
         f32 camOffset[3];
-        camOffset[0] = (f32)(int)randomGetRange((int)-state->spreadX, state->spreadX);
-        camOffset[1] = (f32)(int)randomGetRange((int)-state->spreadY, state->spreadY);
+        camOffset[0] = ARWSpeedStr_randomSpread(state->spreadX);
+        camOffset[1] = ARWSpeedStr_randomSpread(state->spreadY);
         camOffset[2] = state->viewZ;
         PSMTXMultVec((MtxP)Camera_GetInverseViewMatrix(), (const Vec*)&camOffset[0], (Vec*)((char*)obj + 12));
         (obj)->anim.localPosX += playerMapOffsetX;
