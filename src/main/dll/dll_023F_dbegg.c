@@ -71,42 +71,7 @@
 #define DBEGG_PARTFX_RESPAWN_WAIT 0x3be
 /* speed-scaled trail spawned while homing to the target in DBEGG_MODE_HOMING */
 #define DBEGG_PARTFX_HOMING_TRAIL 0x345
-extern const f32 lbl_803E61C8;
-extern const f32 gDbEggSpeedByteScale;
 int fn_801FE560(GameObject* obj, f32* out, f32 a, f32 b, int p3);
-extern const f32 lbl_803E61CC;
-extern const f32 lbl_803E6218;
-extern const f32 lbl_803E621C;
-extern const f32 lbl_803E61E4;
-extern const f32 lbl_803E61E8;
-extern const f32 lbl_803E61EC;
-extern const f32 lbl_803E61F0;
-extern const f32 lbl_803E61F4;
-extern const f32 gDbEggPi;
-extern const f32 gDbEggAngleHalfPeriod;
-extern const f32 lbl_803E6200;
-extern const f32 lbl_803E6204;
-extern const f32 lbl_803E6208;
-extern int lbl_803E61C0;
-extern const f32 lbl_803E6220;
-extern const f32 lbl_803E6224;
-extern const f32 lbl_803E6228;
-extern const f32 lbl_803E622C;
-extern const f32 lbl_803E6230;
-extern const f32 lbl_803E6234;
-extern const f32 lbl_803E6238;
-extern const f32 lbl_803E623C;
-extern const f32 lbl_803E6240;
-extern const f32 lbl_803E6244;
-extern const f32 lbl_803E6248;
-extern const f32 lbl_803E624C;
-extern const f32 lbl_803E6250;
-extern const f32 lbl_803E6254;
-extern const f32 lbl_803E6258;
-extern const f32 lbl_803E625C;
-extern const f32 lbl_803E6260;
-extern const f32 lbl_803E6264;
-extern const f32 lbl_803E6268;
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
@@ -159,6 +124,14 @@ typedef struct DbeggPlacement
     s8 unk2E;
     u8 pad2F[0x30 - 0x2F];
 } DbeggPlacement;
+
+typedef struct DbEggIntPair
+{
+    s32 a;
+    s32 b;
+} DbEggIntPair;
+
+static const DbEggIntPair sDbEggCurveIds = { 1, 0 };
 
 int dbegg_setLaunchVelocity(GameObject* obj, f32* v)
 {
@@ -218,11 +191,11 @@ void dbegg_processMessages(GameObject* obj)
                 (obj)->anim.velocityX = ((DbEggState*)eggState)->launchVelX;
                 (obj)->anim.velocityY = ((DbEggState*)eggState)->launchVelY;
                 (obj)->anim.velocityZ = -((DbEggState*)eggState)->launchVelZ;
-                v = lbl_803E61C8;
+                v = 0.0f;
                 buf.vector[0] = v;
                 buf.vector[1] = v;
                 buf.vector[2] = v;
-                buf.scale = lbl_803E61CC;
+                buf.scale = 1.0f;
                 buf.rotation[2] = 0;
                 buf.rotation[1] = 0;
                 buf.rotation[0] = *(s16*)msgArg;
@@ -260,12 +233,12 @@ void dbegg_setupFromDef(GameObject* obj, u8* state)
     (obj)->anim.rotX = (s16)(config->facingAngleByte << 8);
     (obj)->anim.rotY = 0;
     (obj)->anim.rotZ = 0;
-    (obj)->anim.rootMotionScale = (f32)(u32)config->speedScaleByte * gDbEggSpeedByteScale;
+    (obj)->anim.rootMotionScale = (f32)(u32)config->speedScaleByte / 64.0f;
     (obj)->anim.rootMotionScale = (obj)->anim.rootMotionScale * (obj)->anim.modelInstance->rootMotionScaleBase;
     state[0x118] = (u8)(mainGetBit(config->primaryConditionId) != 0 ? 3 : 1);
     if (state[0x118] == 1)
     {
-        if (fn_801FE560(obj, &surfaceProbeOut, lbl_803E61C8, *(f32*)&lbl_803E61C8, 1) == 0)
+        if (fn_801FE560(obj, &surfaceProbeOut, 0.0f, 0.0f, 1) == 0)
         {
             state[0x118] = 2;
         }
@@ -302,7 +275,7 @@ void dbegg_setupFromDef(GameObject* obj, u8* state)
         ObjGroup_AddObject((int)obj, DBEGG_OBJGROUP);
     }
     {
-        f32 fz = lbl_803E61C8;
+        f32 fz = 0.0f;
         (obj)->anim.velocityX = fz;
         (obj)->anim.velocityY = fz;
         (obj)->anim.velocityZ = fz;
@@ -449,25 +422,25 @@ void fn_801FE774(int obj, f32* vel)
     int i;
 
     int* objList;
-    sumZ = sumX = lbl_803E61C8;
+    sumZ = sumX = 0.0f;
     objList = (int*)ObjGroup_GetObjects(DBEGG_SIBLING_OBJGROUP, &count);
-    for (i = 0, objCursor = objList, limit = lbl_803E61E8; i < count; i++)
+    for (i = 0, objCursor = objList, limit = 7.0f; i < count; i++)
     {
         f32 dy;
         sibling = (u8*)*objCursor;
         dy = ((GameObject*)sibling)->anim.localPosY - *(f32*)(obj + 0x10);
-        if (dy <= limit && dy >= lbl_803E61EC)
+        if (dy <= limit && dy >= -7.0f)
         {
             f32 dx = ((GameObject*)sibling)->anim.localPosX - *(f32*)(obj + 0xc);
             f32 dz = ((GameObject*)sibling)->anim.localPosZ - *(f32*)(obj + 0x14);
             f32 dist = sqrtf(dx * dx + dz * dz);
-            f32 radius = lbl_803E61F0 * (f32)(u32) * (u8*)(*(int*)(sibling + 0x4c) + 0x19);
+            f32 radius = 1.5f * (f32)(u32) * (u8*)(*(int*)(sibling + 0x4c) + 0x19);
             if (dist < radius)
             {
                 force = (radius - dist) / radius;
-                force = force * (lbl_803E61F4 * *(f32*)(sibling + 8));
-                sumX += force * mathSinf((gDbEggPi * (f32)(int)*(s16*)sibling) / gDbEggAngleHalfPeriod);
-                sumZ += force * mathCosf((gDbEggPi * (f32)(int)*(s16*)sibling) / gDbEggAngleHalfPeriod);
+                force = force * (10.0f * *(f32*)(sibling + 8));
+                sumX += force * mathSinf((3.1415927f * (f32)(int)*(s16*)sibling) / 32768.0f);
+                sumZ += force * mathCosf((3.1415927f * (f32)(int)*(s16*)sibling) / 32768.0f);
             }
         }
         objCursor++;
@@ -478,16 +451,16 @@ void fn_801FE774(int obj, f32* vel)
         f32 scale;
         sumX = sumX / count;
         sumZ = sumZ / count;
-        weight = lbl_803E6200;
+        weight = 0.05f;
         vel[0] = -(weight * sumX - vel[0]);
         vel[2] = -(weight * sumZ - vel[2]);
-        vel[0] = vel[0] * (scale = lbl_803E6204);
+        vel[0] = vel[0] * (scale = 0.99f);
         vel[2] = vel[2] * scale;
         {
             f32 mag = sqrtf(vel[0] * vel[0] + vel[2] * vel[2]);
-            if (mag > lbl_803E6208)
+            if (mag > 1.85f)
             {
-                f32 sc = lbl_803E6208 / mag;
+                f32 sc = 1.85f / mag;
                 vel[0] = vel[0] * sc;
                 vel[2] = vel[2] * sc;
             }
@@ -517,7 +490,7 @@ void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         u32 t = ((DbEggState*)inner)->mode;
         if (t != 0xc && t != 4 && t != 0xb)
         {
-            objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, lbl_803E61CC);
+            objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, 1.0f);
         }
     }
 }
@@ -539,26 +512,17 @@ void dbegg_hitDetect(GameObject* obj)
     {
         void* hitFrom = &(obj)->anim.previousLocalPosX;
         void* hitTo = &(obj)->anim.localPosX;
-        f32 hitRadius = lbl_803E6218;
+        f32 hitRadius = 9.0f;
         if (objBboxFn_800640cc(hitFrom, hitTo, hitRadius, 1, NULL, obj, 8, -1, 0xff, 0) != 0)
         {
-            f32 damping = lbl_803E621C;
-            f32 velocityX = (obj)->anim.velocityX;
-            (obj)->anim.velocityX = velocityX - damping * velocityX;
-            velocityX = (obj)->anim.velocityZ;
-            (obj)->anim.velocityZ = velocityX - damping * velocityX;
+            (obj)->anim.velocityX -= 0.95f * (obj)->anim.velocityX;
+            (obj)->anim.velocityZ -= 0.95f * (obj)->anim.velocityZ;
         }
     }
     (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
     (obj)->anim.previousLocalPosY = (obj)->anim.localPosY;
     (obj)->anim.previousLocalPosZ = (obj)->anim.localPosZ;
 }
-
-typedef struct DbEggIntPair
-{
-    s32 a;
-    s32 b;
-} DbEggIntPair;
 
 ObjectDescriptor12 gDB_eggObjDescriptor = {
     0,
@@ -602,7 +566,7 @@ void dbegg_update(GameObject* obj)
 
     player = Obj_GetPlayerObject();
     egg = (obj)->extra;
-    *(DbEggIntPair*)curvePair = *(DbEggIntPair*)&lbl_803E61C0;
+    *(DbEggIntPair*)curvePair = sDbEggCurveIds;
     if (objPosToMapBlockIdx((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ) != -1)
     {
         dbegg_processMessages(obj);
@@ -614,14 +578,14 @@ void dbegg_update(GameObject* obj)
             {
                 hitState->flags |= 1;
             }
-            if (fn_801FE560(obj, &surfaceHeight, lbl_803E61C8, *(f32*)&lbl_803E61C8, 1) == 0)
+            if (fn_801FE560(obj, &surfaceHeight, 0.0f, 0.0f, 1) == 0)
             {
                 egg->mode = DBEGG_MODE_DRIFTING;
                 break;
             }
             v = surfaceHeight;
-            v = v >= lbl_803E61C8 ? v : -v;
-            if (v < lbl_803E6220)
+            v = v >= 0.0f ? v : -v;
+            if (v < 0.09f)
             {
                 if (egg->flags119 & 0x10)
                 {
@@ -631,23 +595,23 @@ void dbegg_update(GameObject* obj)
                 {
                     egg->mode = DBEGG_MODE_SETTLED;
                 }
-                fz = lbl_803E61C8;
-                (obj)->anim.velocityX = lbl_803E61C8;
+                fz = 0.0f;
+                (obj)->anim.velocityX = 0.0f;
                 (obj)->anim.velocityZ = fz;
                 (obj)->anim.velocityY = fz;
                 (obj)->anim.localPosY = (obj)->anim.localPosY + surfaceHeight;
             }
             else
             {
-                (obj)->anim.velocityY += lbl_803E6224;
-                if (surfaceHeight > lbl_803E61C8)
+                (obj)->anim.velocityY += -0.3f;
+                if (surfaceHeight > 0.0f)
                 {
-                    (obj)->anim.velocityY = lbl_803E6228 * -(obj)->anim.velocityY;
-                    (obj)->anim.velocityX = (obj)->anim.velocityX * lbl_803E622C;
-                    (obj)->anim.velocityZ = (obj)->anim.velocityZ * lbl_803E622C;
+                    (obj)->anim.velocityY = 0.65f * -(obj)->anim.velocityY;
+                    (obj)->anim.velocityX *= 0.9f;
+                    (obj)->anim.velocityZ *= 0.9f;
                     v = (obj)->anim.velocityY;
-                    v = v >= lbl_803E61C8 ? v : -v;
-                    if (v > lbl_803E6230)
+                    v = v >= 0.0f ? v : -v;
+                    if (v > 0.2f)
                     {
                         Sfx_PlayFromObject((int)obj, SFXTRIG_id_2df);
                     }
@@ -670,7 +634,7 @@ void dbegg_update(GameObject* obj)
                 *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 (obj)->anim.velocityX =
                     (obj)->anim.velocityX +
-                    (((DbeggPlacement*)data)->targetPosX - (obj)->anim.localPosX) / (fz = lbl_803E61E4);
+                    (((DbeggPlacement*)data)->targetPosX - (obj)->anim.localPosX) / (fz = 1000.0f);
                 (obj)->anim.velocityY =
                     (obj)->anim.velocityY + (((DbeggPlacement*)data)->targetPosY - (obj)->anim.localPosY) / fz;
                 (obj)->anim.velocityZ =
@@ -681,8 +645,8 @@ void dbegg_update(GameObject* obj)
                 }
             }
             hitState->flags |= OBJHITS_PRIORITY_STATE_IMMOVABLE;
-            fz = lbl_803E61C8;
-            flockVel[0] = lbl_803E61C8;
+            fz = 0.0f;
+            flockVel[0] = 0.0f;
             flockVel[1] = fz;
             flockVel[2] = fz;
             fn_801FE774((int)obj, flockVel);
@@ -692,19 +656,19 @@ void dbegg_update(GameObject* obj)
             if (fn_801FE560(obj, &surfaceHeight, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityZ * timeDelta,
                             1) != 0)
             {
-                (obj)->anim.velocityX = lbl_803E6234 * (obj)->anim.velocityX;
-                (obj)->anim.velocityZ = lbl_803E6234 * (obj)->anim.velocityZ;
+                (obj)->anim.velocityX = -0.95f * (obj)->anim.velocityX;
+                (obj)->anim.velocityZ = -0.95f * (obj)->anim.velocityZ;
                 fn_801FE560(obj, &surfaceHeight, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityZ * timeDelta,
                             1);
             }
             surfaceHeight = surfaceHeight + egg->waterOffset;
-            if (oneOverTimeDelta != lbl_803E61C8)
+            if (oneOverTimeDelta)
             {
-                (obj)->anim.velocityY = surfaceHeight * (lbl_803E6238 * oneOverTimeDelta);
+                (obj)->anim.velocityY = surfaceHeight * (0.3f * oneOverTimeDelta);
             }
             else
             {
-                (obj)->anim.velocityY = lbl_803E61C8;
+                (obj)->anim.velocityY = 0.0f;
             }
             randomGetRange(0x64, 0x1388);
             randomGetRange(0x64, 0x1388);
@@ -713,8 +677,8 @@ void dbegg_update(GameObject* obj)
             if (randomGetRange(0, 10) == 0)
             {
                 int nb;
-                nb = ((surfaceHeight < lbl_803E6200) >= 0) ? (surfaceHeight < lbl_803E6200)
-                                                           : -(surfaceHeight < lbl_803E6200);
+                nb = ((surfaceHeight < 0.05f) >= 0) ? (surfaceHeight < 0.05f)
+                                                           : -(surfaceHeight < 0.05f);
                 if (nb != 0)
                 {
                     (*gWaterfxInterface)->spawnRipple(
@@ -725,13 +689,13 @@ void dbegg_update(GameObject* obj)
             if (mainGetBit(0x426) != 0)
             {
                 *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                egg->waterOffset = egg->waterOffset - lbl_803E623C * timeDelta;
-                if (egg->waterOffset < lbl_803E61EC)
+                egg->waterOffset = egg->waterOffset - 0.1f * timeDelta;
+                if (egg->waterOffset < -7.0f)
                 {
                     mainSetBits(0x428, mainGetBit(0x428) + 1);
                     egg->mode = DBEGG_MODE_SINKING;
-                    fz = lbl_803E61C8;
-                    (obj)->anim.velocityY = lbl_803E61C8;
+                    fz = 0.0f;
+                    (obj)->anim.velocityY = 0.0f;
                     (obj)->anim.velocityX = fz;
                     (obj)->anim.velocityZ = fz;
                     *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
@@ -746,7 +710,7 @@ void dbegg_update(GameObject* obj)
             *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             break;
         case DBEGG_MODE_PICKUP_PROMPT:
-            if (Vec_xzDistance((f32*)((int)obj + 0x18), (f32*)(data + 8)) > lbl_803E6240 &&
+            if (Vec_xzDistance((f32*)((int)obj + 0x18), (f32*)(data + 8)) > 150.0f &&
                 (egg->flags119 & 2) == 0)
             {
                 playerObj = Obj_GetPlayerObject();
@@ -760,7 +724,7 @@ void dbegg_update(GameObject* obj)
                 mainSetBits(((DbeggPlacement*)placement)->triggerGameBit, 1);
                 ((DbEggState*)pickupState)->msg11C = -1;
                 ((DbEggState*)pickupState)->msg11E = 0;
-                ((DbEggState*)pickupState)->msg120 = lbl_803E61CC;
+                ((DbEggState*)pickupState)->msg120 = 1.0f;
                 ObjMsg_SendToObject(playerObj, DBEGG_MSG_IN_RANGE, obj, pickupState + 0x11c);
                 (obj)->userData2 = 0;
             }
@@ -780,22 +744,22 @@ void dbegg_update(GameObject* obj)
             *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             return;
         case DBEGG_MODE_SINKING:
-            fn_801FE560(obj, &surfaceHeight, lbl_803E61C8, *(f32*)&lbl_803E61C8, 0);
+            fn_801FE560(obj, &surfaceHeight, 0.0f, 0.0f, 0);
             v = surfaceHeight;
-            v = v >= lbl_803E61C8 ? v : -v;
-            if (v < lbl_803E6220)
+            v = v >= 0.0f ? v : -v;
+            if (v < 0.09f)
             {
                 egg->mode = DBEGG_MODE_RESPAWN_WAIT;
-                fz = lbl_803E61C8;
-                (obj)->anim.velocityX = lbl_803E61C8;
+                fz = 0.0f;
+                (obj)->anim.velocityX = 0.0f;
                 (obj)->anim.velocityZ = fz;
             }
             else
             {
-                (obj)->anim.velocityY += lbl_803E6244;
-                if (surfaceHeight > lbl_803E61C8)
+                (obj)->anim.velocityY += -0.006f;
+                if (surfaceHeight > 0.0f)
                 {
-                    (obj)->anim.velocityY = lbl_803E6248 * -(obj)->anim.velocityY;
+                    (obj)->anim.velocityY = 0.4f * -(obj)->anim.velocityY;
                 }
                 objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
                         (obj)->anim.velocityZ * timeDelta);
@@ -812,7 +776,7 @@ void dbegg_update(GameObject* obj)
             }
             break;
         case DBEGG_MODE_CURVE_INIT:
-            if ((*gRomCurveInterface)->initCurve(&egg->curve, (void*)obj, lbl_803E624C, curvePair, 2) != 0)
+            if ((*gRomCurveInterface)->initCurve(&egg->curve, (void*)obj, 300.0f, curvePair, 2) != 0)
             {
                 egg->mode = DBEGG_MODE_FALLING;
             }
@@ -828,7 +792,7 @@ void dbegg_update(GameObject* obj)
             }
             break;
         case DBEGG_MODE_CURVE_FOLLOW:
-            if (Curve_AdvanceAlongPath(&egg->curve.curve, lbl_803E6250) != 0 || egg->curve.atSegmentEnd != 0)
+            if (Curve_AdvanceAlongPath(&egg->curve.curve, 0.6f) != 0 || egg->curve.atSegmentEnd != 0)
             {
                 if ((*gRomCurveInterface)->goNextPoint(&egg->curve) != 0)
                 {
@@ -843,12 +807,12 @@ void dbegg_update(GameObject* obj)
                 fx = sqrtf(
                     (obj)->anim.velocityZ * (obj)->anim.velocityZ +
                     ((obj)->anim.velocityX * (obj)->anim.velocityX + (obj)->anim.velocityY * (obj)->anim.velocityY));
-                if (fx > lbl_803E6254 * timeDelta)
+                if (fx > 4.6f * timeDelta)
                 {
                     Vec3_Normalize((f32*)((int)obj + 0x24));
-                    (obj)->anim.velocityX = (obj)->anim.velocityX * (lbl_803E6254 * timeDelta);
-                    (obj)->anim.velocityY = (obj)->anim.velocityY * (lbl_803E6254 * timeDelta);
-                    (obj)->anim.velocityZ = (obj)->anim.velocityZ * (lbl_803E6254 * timeDelta);
+                    (obj)->anim.velocityX = (obj)->anim.velocityX * (4.6f * timeDelta);
+                    (obj)->anim.velocityY = (obj)->anim.velocityY * (4.6f * timeDelta);
+                    (obj)->anim.velocityZ = (obj)->anim.velocityZ * (4.6f * timeDelta);
                     logPrintf(sAnimGreaterMessage);
                 }
                 (obj)->anim.localPosX = (obj)->anim.localPosX + (obj)->anim.velocityX;
@@ -866,7 +830,7 @@ void dbegg_update(GameObject* obj)
         case DBEGG_MODE_HOMING:
             ObjHits_DisableObject(obj);
             (obj)->anim.velocityX = (obj)->anim.velocityX +
-                                    (((DbeggPlacement*)data)->targetPosX - (obj)->anim.localPosX) / (fz = lbl_803E6258);
+                                    (((DbeggPlacement*)data)->targetPosX - (obj)->anim.localPosX) / (fz = 2500.0f);
             (obj)->anim.velocityY =
                 (obj)->anim.velocityY + (((DbeggPlacement*)data)->targetPosY - (obj)->anim.localPosY) / fz;
             (obj)->anim.velocityZ =
@@ -876,10 +840,10 @@ void dbegg_update(GameObject* obj)
             d[2] = (obj)->anim.localPosZ - ((DbeggPlacement*)data)->targetPosZ;
             Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_baddie_eba_smallswipe1);
             fz = *(f32*)((int)d + 8);
-            fz = fz >= lbl_803E61C8 ? fz : -fz;
+            fz = fz >= 0.0f ? fz : -fz;
             fx = *(f32*)((int)d + 0);
-            fx = fx >= *(f32*)&lbl_803E61C8 ? fx : -fx;
-            if (fx + fz < lbl_803E625C)
+            fx = fx >= 0.0f ? fx : -fx;
+            if (fx + fz < 6.0f)
             {
                 ObjHits_EnableObject(obj);
                 egg->mode = DBEGG_MODE_SETTLED;
@@ -889,7 +853,7 @@ void dbegg_update(GameObject* obj)
             }
             else
             {
-                int n = (int)(PSVECMag((f32*)((int)obj + 0x24)) / lbl_803E6260);
+                int n = (int)(PSVECMag((f32*)((int)obj + 0x24)) / 0.5f);
                 for (i = 0; i < n; i++)
                 {
                     (*gPartfxInterface)->spawnObject((void*)obj, DBEGG_PARTFX_HOMING_TRAIL, NULL, 1, -1, NULL);
@@ -914,7 +878,7 @@ void dbegg_update(GameObject* obj)
         {
             if (mainGetBit(0x3c4) == 0)
             {
-                if (Vec_xzDistance((f32*)((int)obj + 0x18), (f32*)((int)player + 0x18)) < lbl_803E6264)
+                if (Vec_xzDistance((f32*)((int)obj + 0x18), (f32*)((int)player + 0x18)) < 25.0f)
                 {
                     if ((egg->flags119 & 1) == 0)
                     {
@@ -931,14 +895,14 @@ void dbegg_update(GameObject* obj)
                         mainSetBits(((DbeggPlacement*)placement)->triggerGameBit, 1);
                         ((DbEggState*)pickupState)->msg11C = -1;
                         ((DbEggState*)pickupState)->msg11E = 0;
-                        ((DbEggState*)pickupState)->msg120 = lbl_803E61CC;
+                        ((DbEggState*)pickupState)->msg120 = 1.0f;
                         ObjMsg_SendToObject(playerObj, DBEGG_MSG_IN_RANGE, obj, pickupState + 0x11c);
                     }
                     else
                     {
                         v = (obj)->anim.localPosY - player->anim.localPosY;
-                        v = v >= lbl_803E61C8 ? v : -v;
-                        if (v < lbl_803E6268)
+                        v = v >= 0.0f ? v : -v;
+                        if (v < 12.0f)
                         {
                             *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                             egg->mode = DBEGG_MODE_PICKUP_PROMPT;
