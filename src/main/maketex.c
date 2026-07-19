@@ -31,7 +31,7 @@
 
 extern char sMemoryCardFileNameString[];
 
-u32 lbl_803DB700 = 0xD;
+volatile u32 lbl_803DB700 = 0xD;
 char* sMemoryCardFileName = sMemoryCardFileNameString;
 int lbl_803DB708 = 0x404040FF;
 

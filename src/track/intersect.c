@@ -213,7 +213,7 @@ extern u32 lbl_803DEEA0, lbl_803DEEA4, lbl_803DEEA8;
 extern StageCountTable lbl_803DEEAC;
 extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
 extern u32 lbl_803DEEC8, lbl_803DEECC, lbl_803DEED0, lbl_803DEED4, lbl_803E8450;
-extern s32 lbl_803DB700;
+extern volatile s32 lbl_803DB700;
 extern u8 lbl_803DD059;
 extern u32 lbl_803DD048;
 extern u32 gSaveCardSerialLo;
