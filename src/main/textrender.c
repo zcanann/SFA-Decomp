@@ -3159,7 +3159,7 @@ void fn_8001BE2C(int mode)
     }
 }
 
-void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
+void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, struct TextSlot* box)
 {
     int c6y1;
     int c6y0;
@@ -3236,11 +3236,11 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         cur = gameTextGetCurBox();
         if (strPtr != NULL)
         {
-            gameTextFn_8001628c(*strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
+            gameTextFn_8001628c(*(u16*)strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
         }
         else if ((u32)boxId != 0)
         {
-            gameTextBoxFn_800164b0((char*)boxId, (int)(box - (u8*)gTextBoxes) / 0x20, &c6x0, &c6x1, &c6y0,
+            gameTextBoxFn_800164b0((char*)boxId, (int)((u8*)box - (u8*)gTextBoxes) / 0x20, &c6x0, &c6x1, &c6y0,
                                    &c6y1);
         }
         gameTextSetWindow(cur);
@@ -3266,11 +3266,11 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         cur = gameTextGetCurBox();
         if (strPtr != NULL)
         {
-            gameTextFn_8001628c(*strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
+            gameTextFn_8001628c(*(u16*)strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
         }
         else if ((u32)boxId != 0)
         {
-            gameTextBoxFn_800164b0((char*)boxId, (int)(box - (u8*)gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0,
+            gameTextBoxFn_800164b0((char*)boxId, (int)((u8*)box - (u8*)gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0,
                                    &c3y1);
         }
         gameTextSetWindow(cur);
@@ -3311,7 +3311,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         }
         break;
     case 4:
-        boxDrawFn_8001c5ac(strPtr, boxId, box);
+        boxDrawFn_8001c5ac((u16*)strPtr, boxId, (u8*)box);
         break;
     }
     ((GameTextBox*)box)->cursorX = savedX;

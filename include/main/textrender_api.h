@@ -3,6 +3,9 @@
 
 #include "types.h"
 
+struct GameTextDef;
+struct TextSlot;
+
 typedef struct GameTextSlot {
     int opcode;
     int arg0;
@@ -48,6 +51,7 @@ void gameTextInitFn_8001c794(void);
 void gameTextLoadGraphicsFn_8001a918(void);
 void fn_8001BDD4(int mode);
 void fn_8001BE2C(int mode);
+void gameTextDrawBox(struct GameTextDef* def, int box, struct TextSlot* slot);
 
 void gameTextSetWindowStrPos(int idx, int x, int y);
 
