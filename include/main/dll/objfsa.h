@@ -63,7 +63,7 @@ FUN_800de998(double param_1,u64 param_2,double param_3,u64 param_4,u64 param_5,
 int curves_findNearObj(int obj,int *curveTypes,int typeCount,int action,char bboxMode);
 f32 curves_getPathLength(u32 a, u32 b, f32 *posA, f32 *posB, f32 t1, f32 t2);
 void curves_getPos(int curve,float *outX,float *outY,float *outZ,f32 phase);
-int RomCurve_findProjectedCurveFromStart(int curve,f32 x,f32 y,f32 z,float *outPhase);
+int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, f32* outPhase);
 void* Objfsa_FindNearestCurveType24(f32* position, int walkGroupFilter, int curveSubtypeFilter);
 void* Objfsa_FindNearestEnabledCurveType24(f32* position, int walkGroupFilter, int curveSubtypeFilter);
 

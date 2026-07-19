@@ -227,8 +227,8 @@ STATIC_ASSERT(offsetof(CurvesCollisionState, updateMode) == 0x262);
 STATIC_ASSERT(offsetof(CurvesCollisionState, secondaryHitType) == 0x263);
 STATIC_ASSERT(offsetof(CurvesCollisionState, activeTimer) == 0x264);
 
-u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, float* outLateralOffset,
-                                          float* outVerticalOffset, float* outPhase);
+int RomCurve_projectPointToAdjacentWindow(int* curveIds, f32 x, f32 y, f32 z, f32* outLateralOffset,
+                                          f32* outVerticalOffset, f32* outPhase);
 int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance);
 int curves_findNearestOfType16(f32 x, f32 y, f32 z, int param_4);
 int RomCurve_func13(u32 curveId, int typeFilter, int param_3, int* param_4);
