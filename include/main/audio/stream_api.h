@@ -18,8 +18,6 @@ void AudioStream_StopAll(void);
 u32 AudioStream_GetMusicFadeFlagA(void);
 u32 AudioStream_GetMusicFadeFlagB(void);
 s32 AudioStream_GetCurrentId(void);
-void AudioStream_SetVolume(u8 volume);
-void AudioStream_SetDefaultVolume(u8 volume);
 void AudioStream_Init(void);
 void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo);
 void AudioStream_PlayAddrCallback(u32 result);

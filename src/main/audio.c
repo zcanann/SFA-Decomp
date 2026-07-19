@@ -212,6 +212,9 @@ void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 void audioSetSoundMode(int mode, u8 forceFlag);
 void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag);
+void sndMasterVolume(int volume, int time, u8 musicFlag, u8 fxFlag);
+void AudioStream_SetVolume();
+void AudioStream_SetDefaultVolume();
 void audioStopByMask(int mask);
 void audioReset(void);
 int audioIsResetting(void);
@@ -624,7 +627,7 @@ void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo)
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        *(int*)&gAudioPendingLoadFlags &= ~(s64)AUDIO_LOAD_STREAMS;
+        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_STREAMS;
         gAudioCompletedLoadFlags |= AUDIO_LOAD_STREAMS;
         s = gStreamsData;
         for (i = gStreamsCount; i != 0; i--)
@@ -2613,7 +2616,8 @@ u8 AudioStream_IsPreparing(void)
     return gAudioStreamDvdState;
 }
 
-void AudioStream_SetVolume(u8 volume)
+void AudioStream_SetVolume(volume)
+u8 volume;
 {
     gAudioStreamVolumeLeft = volume;
     gAudioStreamVolumeRight = volume;
@@ -2867,7 +2871,8 @@ void AudioStream_UpdateFadeTimer(void)
     }
 }
 
-void AudioStream_SetDefaultVolume(u8 volume)
+void AudioStream_SetDefaultVolume(volume)
+u8 volume;
 {
     gAudioStreamDefaultVolume = volume;
 }
