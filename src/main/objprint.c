@@ -1434,7 +1434,7 @@ void fn_8003B608(s16 a, s16 b, s16 c)
     lbl_803DCC08 = 1;
 }
 
-void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, int b, int c)
+void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, int c)
 {
     Vec va;
     Vec vb;
@@ -1443,13 +1443,7 @@ void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, 
     Vec* vp;
     int i;
     char* base;
-    int model;
-    int obj;
-    int staff;
 
-    staff = staffArg;
-    obj = (int)objArg;
-    model = modelArg;
     if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && ((GameObject*)staff)->anim.classId == 0x2d)
     {
         int off;
@@ -1509,7 +1503,7 @@ void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, 
             va.x = *(f32*)(r + 0x6c);
             va.y = *(f32*)(r + 0x74);
             va.z = *(f32*)(r + 0x7c);
-            (*(void (**)(int, int, Vec*))(*(int*)((GameObject*)staff)->anim.dll + 0x28))(staff, obj, &vb);
+            (*(void (**)(int, int, Vec*))(*(int*)((GameObject*)staff)->anim.dll + 0x28))(staff, (int)obj, &vb);
             va.x = va.x - vb.x;
             va.y = va.y - vb.y;
             va.z = va.z - vb.z;
