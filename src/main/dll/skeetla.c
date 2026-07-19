@@ -719,7 +719,7 @@ static void* skeetla_validateRouteEntry(void* entry)
 }
 
 
-void* trickySelectRouteEntry(u8* state, u8* routeDef, u8 routeFlagValue)
+void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
 {
     void* entry;
 

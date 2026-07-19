@@ -28,8 +28,6 @@
 #include "main/dll/Hcurves_api.h"
 #include "main/dll/objfsa_romcurve.h"
 
-void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue);
-
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23E8;

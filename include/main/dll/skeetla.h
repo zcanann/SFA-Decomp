@@ -23,6 +23,7 @@ int trickyTurnTowardYaw(u8* obj, s16 targetYaw);
 int trickyMove(GameObject* obj, f32* targetPos);
 void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelector, int routeFlagValue);
 void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId);
+void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue);
 int trickyFindReachableRouteIndex(u8* state, void** routes, u8* routeFlags, int pathId);
 void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 linkSelector, void** outRoutes);
 void skeetla_spawnLinkedSparks(u8* obj);
