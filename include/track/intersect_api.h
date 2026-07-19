@@ -25,7 +25,7 @@ void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 
 void textRenderSetupFn_800795e8(void);
 void fn_8007BD8C(int handle1, int handle2);
 void fn_8007C664(int textureHandle);
-void fn_8007CAF4(void);
+void fn_8007CAF4(void* texture);
 void fn_8007D670(void);
 void gxBlendFn_800788dc(void);
 void gxTevAddColor1Stage(void);

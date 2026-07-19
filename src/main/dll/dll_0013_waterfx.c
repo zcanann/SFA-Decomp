@@ -566,7 +566,7 @@ void waterfx_func05(int obj, int renderParam)
         GXSetCullMode(GX_CULL_NONE);
         if (gWaterfxRippleCount != 0)
         {
-            ((void (*)(int))fn_8007CAF4)((int)gWaterfxRippleTexture);
+            fn_8007CAF4(gWaterfxRippleTexture);
         }
         for (i = 0, poolOffset = 0, descriptorOffset = 0; i < WATERFX_POOL_SIZE;
              poolOffset += 0x1c, descriptorOffset += 0x20, i++)

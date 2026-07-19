@@ -5461,7 +5461,7 @@ void fn_8007C664(int texHandle)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void fn_8007CAF4(void)
+void fn_8007CAF4(void* texture)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
 
