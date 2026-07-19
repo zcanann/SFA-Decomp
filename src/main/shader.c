@@ -641,11 +641,11 @@ void playerUpdateFn_8005649c(void)
     }
 }
 
-extern int lbl_803DCE6C;
+extern TexOverrideEntry* lbl_803DCE6C;
 
 void* mapTextureOverrideGetEntry(int idx)
 {
-    return (void*)(lbl_803DCE6C + (idx << 4));
+    return &lbl_803DCE6C[idx];
 }
 
 int return0_80056694(void* wpad0, int wpad1)
@@ -669,7 +669,7 @@ int mapTextureOverrideAcquire(int key, int value, int type)
 
     found = -1;
     idx = 0;
-    base = (TexOverrideEntry*)lbl_803DCE6C;
+    base = lbl_803DCE6C;
     for (; idx < 80; idx++)
     {
         if (base[idx].refs != 0)
@@ -689,7 +689,7 @@ int mapTextureOverrideAcquire(int key, int value, int type)
     }
     found = -1;
     idx2 = 0;
-    base = (TexOverrideEntry*)lbl_803DCE6C;
+    base = lbl_803DCE6C;
     for (; idx2 < 80; idx2++)
     {
         if (base[idx2].refs == 0)
@@ -701,10 +701,10 @@ int mapTextureOverrideAcquire(int key, int value, int type)
     if (found != -1)
     {
         base[found].refs = 1;
-        ((TexOverrideEntry*)lbl_803DCE6C)[found].data0 = 0;
-        ((TexOverrideEntry*)lbl_803DCE6C)[found].data1 = value;
-        ((TexOverrideEntry*)lbl_803DCE6C)[found].key = key;
-        ((TexOverrideEntry*)lbl_803DCE6C)[found].type = type;
+        lbl_803DCE6C[found].data0 = 0;
+        lbl_803DCE6C[found].data1 = value;
+        lbl_803DCE6C[found].key = key;
+        lbl_803DCE6C[found].type = type;
         return found;
     }
     OSReport(sTrackGlobalTexanimOverflowError);
@@ -732,11 +732,11 @@ void mapTextureOverrideSetValue(int type, u32 key, int value)
     for (i = 0; i < 80; i++)
     {
         off = i * 0x10;
-        if (((TexOverrideEntry*)lbl_803DCE6C)[i].refs > 0 &&
-            (void*)((TexOverrideEntry*)lbl_803DCE6C)[i].key == (void*)key &&
-            type == ((TexOverrideEntry*)lbl_803DCE6C)[i].type)
+        if (lbl_803DCE6C[i].refs > 0 &&
+            (void*)lbl_803DCE6C[i].key == (void*)key &&
+            type == lbl_803DCE6C[i].type)
         {
-            ((TexOverrideEntry*)lbl_803DCE6C)[i].data0 = value;
+            lbl_803DCE6C[i].data0 = value;
         }
     }
 }
@@ -2062,17 +2062,17 @@ void mapTextureOverrideRelease(int key, int type)
     for (i = 0; i < 80; i++)
     {
         off = i * 0x10;
-        entryKey = ((TexOverrideEntry*)lbl_803DCE6C)[i].key;
-        if (entryKey == key && ((TexOverrideEntry*)lbl_803DCE6C)[i].type == type &&
-            ((TexOverrideEntry*)lbl_803DCE6C)[i].refs > 0)
+        entryKey = lbl_803DCE6C[i].key;
+        if (entryKey == key && lbl_803DCE6C[i].type == type &&
+            lbl_803DCE6C[i].refs > 0)
         {
-            ((TexOverrideEntry*)lbl_803DCE6C)[i].refs -= 1;
-            if (((TexOverrideEntry*)lbl_803DCE6C)[i].refs == 0)
+            lbl_803DCE6C[i].refs -= 1;
+            if (lbl_803DCE6C[i].refs == 0)
             {
-                ((TexOverrideEntry*)lbl_803DCE6C)[i].data0 = 0;
-                ((TexOverrideEntry*)lbl_803DCE6C)[i].type = 0;
-                ((TexOverrideEntry*)lbl_803DCE6C)[i].key = 0;
-                ((TexOverrideEntry*)lbl_803DCE6C)[i].data1 = 0;
+                lbl_803DCE6C[i].data0 = 0;
+                lbl_803DCE6C[i].type = 0;
+                lbl_803DCE6C[i].key = 0;
+                lbl_803DCE6C[i].data1 = 0;
             }
         }
     }
