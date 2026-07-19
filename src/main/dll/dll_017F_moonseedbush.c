@@ -25,10 +25,6 @@
 
 STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 
-extern const f32 lbl_803E44D0;
-extern const f32 lbl_803E44D4;
-extern const f32 lbl_803E44D8;
-
 #define MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* sequence event opcodes consumed by MoonSeedBush_SeqFn */
@@ -100,6 +96,9 @@ void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
+static const f32 sMoonSeedBushScaleByteToScale[1] = {0.015625f};
+static const f32 sMoonSeedBushNoScale[1] = {0.0f};
+
 void MoonSeedBush_hitDetect(void)
 {
 }
@@ -139,10 +138,10 @@ void MoonSeedBush_init(GameObject* obj, int data)
     obj->anim.rotX = (s16)(placement->rotXByte << 8);
     obj->animEventCallback = MoonSeedBush_SeqFn;
     obj->objectFlags |= MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED;
-    obj->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * lbl_803E44D4;
-    if (obj->anim.rootMotionScale == lbl_803E44D8)
+    obj->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * sMoonSeedBushScaleByteToScale[0];
+    if (obj->anim.rootMotionScale == sMoonSeedBushNoScale[0])
     {
-        obj->anim.rootMotionScale = lbl_803E44D0;
+        obj->anim.rootMotionScale = 1.0f;
     }
     obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
     if (placement->grownGameBit != -1)
