@@ -6,7 +6,4 @@
 u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
 
-#define Sfx_PlayFromObjectLimitedIntReturnLegacy(obj, sfxId, limit)                                      \
-    ((int (*)(int, int, int))Sfx_PlayFromObjectLimited)((obj), (sfxId), (limit))
-
 #endif /* MAIN_AUDIO_SFX_LIMITED_OBJECT_API_H_ */

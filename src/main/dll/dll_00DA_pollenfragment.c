@@ -144,8 +144,8 @@ void pollenfragment_hitDetect(GameObject* obj)
             if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
             {
                 spawnExplosionLegacy((int)obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
-                Sfx_PlayFromObjectLimitedIntReturnLegacy(
-                    (int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
+                Sfx_PlayFromObjectLimited(
+                    (u32)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
             ObjHits_DisableObject(obj);
             s16toFloatLegacy(extra + 0x20, 0x78);
@@ -157,8 +157,8 @@ void pollenfragment_hitDetect(GameObject* obj)
             if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
             {
                 spawnExplosionLegacy((int)obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
-                Sfx_PlayFromObjectLimitedIntReturnLegacy(
-                    (int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
+                Sfx_PlayFromObjectLimited(
+                    (u32)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
             s16toFloatLegacy(extra + 0x20, 0x78);
         }
@@ -312,7 +312,7 @@ void pollenfragment_update(int obj)
         if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
         {
             spawnExplosionLegacy(obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
-            Sfx_PlayFromObjectLimitedIntReturnLegacy(
+            Sfx_PlayFromObjectLimited(
                 obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
         }
         s16toFloatLegacy(extra + 0x20, 0x78);
@@ -342,7 +342,7 @@ void pollenfragment_init(GameObject* obj, int config)
     state[7] = (u32)lbl_8032059C[*(char*)(config + 0x19)];
     if ((int)*(short*)state[7] != 0)
     {
-        Sfx_PlayFromObjectLimitedIntReturnLegacy((int)obj, (int)*(short*)state[7] & 0xffff, 3);
+        Sfx_PlayFromObjectLimited((u32)obj, (int)*(short*)state[7] & 0xffff, 3);
     }
     spawnCount = 4;
     do
