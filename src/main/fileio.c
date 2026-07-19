@@ -237,13 +237,11 @@ void* loadFileByPath(char* path, int* outSize, int unused)
 
 int DVDRead(DVDFileInfo* fileInfo, void* buf, int size, int offset)
 {
-    typedef int (*DVDReadAsyncPrioCompatFn)(void*, void*, int, int, void (*)(void*), int);
     u8 resetSeen = 0;
     gDvdReadCallbackResult = 0;
     while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 || gDvdReadCallbackResult == -3)
     {
-        ((DVDReadAsyncPrioCompatFn)DVDReadAsyncPrio)(fileInfo, buf, size, offset,
-                                                     (void (*)(void*))fileReadCb_80015954, 2);
+        DVDReadAsyncPrio(fileInfo, buf, size, offset, fileReadCb_80015954, 2);
         while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1)
         {
             padUpdate();

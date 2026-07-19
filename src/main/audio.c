@@ -2577,10 +2577,6 @@ void AudioStream_StartPrepared(void)
 }
 int AudioStream_Play(int id, void (*preparedCallback)(void))
 {
-    typedef int (*DVDOpenCompatFn)(char*, void*);
-    typedef s32 (*DVDCancelStreamAsyncCompatFn)(void*, void*);
-    typedef int (*DVDPrepareStreamAsyncCompatFn)(void*, int, int, void (*)(void));
-    typedef int (*DVDStopStreamAtEndAsyncCompatFn)(void*, int);
     char path[64];
     u8 vol;
     u8* dvd[1];
@@ -2635,7 +2631,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     {
         return 0;
     }
-    if (((DVDOpenCompatFn)DVDOpen)(path, dvd[0] + offsetof(AudioDvdStreamStorage, prepared.fileInfo)) == 0)
+    if (DVDOpen(path, (DVDFileInfo*)(dvd[0] + offsetof(AudioDvdStreamStorage, prepared.fileInfo))) == 0)
     {
         return 0;
     }
@@ -2644,8 +2640,8 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (((DVDCancelStreamAsyncCompatFn)DVDCancelStreamAsync)(
-                dvd[0] + offsetof(AudioDvdStreamStorage, currentCommand), (void*)AudioStream_CancelCallback) == 0)
+        if (DVDCancelStreamAsync((DVDCommandBlock*)(dvd[0] + offsetof(AudioDvdStreamStorage, currentCommand)),
+                                 AudioStream_CancelCallback) == 0)
         {
             OSReport((char*)fadeTbl + 0xC);
             gAudioStreamPlaying = 0;
@@ -2708,10 +2704,10 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     gAudioStreamPreparedCallback = preparedCallback;
     gAudioStreamPreparingId = slot;
     gAudioStreamDvdState = 1;
-    ((DVDPrepareStreamAsyncCompatFn)DVDPrepareStreamAsync)(
-        dvd[0] + offsetof(AudioDvdStreamStorage, prepared.fileInfo), 0, 0, (void (*)(void))AudioStream_PrepareCallback);
-    ((DVDStopStreamAtEndAsyncCompatFn)DVDStopStreamAtEndAsync)(
-        dvd[0] + offsetof(AudioDvdStreamStorage, prepared.stopAtEndCommand), 0);
+    DVDPrepareStreamAsync((DVDFileInfo*)(dvd[0] + offsetof(AudioDvdStreamStorage, prepared.fileInfo)), 0, 0,
+                          AudioStream_PrepareCallback);
+    DVDStopStreamAtEndAsync((DVDCommandBlock*)(dvd[0] + offsetof(AudioDvdStreamStorage, prepared.stopAtEndCommand)),
+                            NULL);
     return 1;
 }
 
