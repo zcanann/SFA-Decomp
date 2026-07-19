@@ -2592,7 +2592,7 @@ u32 gDBHoleControl1ObjDescriptor[14] = {0x00000000,
                                         (u32)dbholecontrol1_free,
                                         (u32)dbholecontrol1_getObjectTypeId,
                                         (u32)dbholecontrol1_getExtraSize};
-u32 lbl_80329848[5] = {0x00010002, 0x00030000, 0x00000000, 0x00000000, 0x00000000};
+s16 lbl_80329848[10] = {1, 2, 3, 0, 0, 0, 0, 0, 0, 0};
 u32 gDFP_LevelControlObjDescriptor[15] = {0x00000000,
                                           0x00000000,
                                           0x00000000,

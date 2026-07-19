@@ -933,7 +933,7 @@ char sTumbleweedBushNavLinkRangeErr[] = {
 };
 
 /* descriptor/ptr table auto 0x8031c2a8-0x8031c508 */
-u32 lbl_8031C2A8[3] = {0x06160615, 0x0309030a, 0x030b030c};
+s16 lbl_8031C2A8[6] = {1558, 1557, 777, 778, 779, 780};
 u32 lbl_8031C2B4[19] = {0x00000000,
                         0x00000000,
                         0x00000000,
