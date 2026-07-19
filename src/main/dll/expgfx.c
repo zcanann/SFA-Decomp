@@ -36,9 +36,9 @@
 #include "main/lightmap.h"
 #include "main/dll/dll_80136a40.h"
 
-int lbl_803DD278;
+int gExpgfxSlotType1Average;
 int lbl_803DD274;
-int lbl_803DD270;
+int gExpgfxSlotType1Count;
 int gExpgfxLastAddedSlot;
 u16 gExpgfxPhaseAngleB;
 u16 gExpgfxPhaseAngleA;
@@ -51,7 +51,7 @@ u8 lbl_803DD253;
 u8 gExpgfxFrameParityBit;
 s16 gExpgfxSequenceCounter;
 
-f32 lbl_803DB790 = -50.0f;
+f32 gExpgfxNearFadeDepth = -50.0f;
 
 typedef union ExpgfxWGPipe
 {
@@ -156,9 +156,9 @@ extern const f32 lbl_803DF41C;
 extern const f32 lbl_803DF420;
 extern const f32 lbl_803DF424;
 extern const f32 lbl_803DF428;
-extern int lbl_803DD270;
+extern int gExpgfxSlotType1Count;
 extern int lbl_803DD274;
-extern int lbl_803DD278;
+extern int gExpgfxSlotType1Average;
 
 static inline ExpgfxTableEntry* Expgfx_GetTableEntry(int tableIndex)
 {
@@ -347,7 +347,7 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
     u32 activeBit;
     ExpgfxRuntimeDataLayout* runtime;
     short foundPoolIndex;
-    short foundPool;
+    short found;
     s8* poolActiveCounts;
     int slotIndex;
     int batchGroup;
@@ -355,7 +355,7 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
     int searchIndex;
     runtime = EXPGFX_RUNTIME_DATA;
     foundPoolIndex = EXPGFX_INVALID_POOL_INDEX;
-    foundPool = 0;
+    found = 0;
     searchIndex = 0;
     sourceIdWalk = runtime->poolSourceIds;
     poolSlotTypeIds = &gExpgfxStaticPoolSlotTypeIds[0];
@@ -371,14 +371,14 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
                 (activeCountWalk[batchSlot] < EXPGFX_SLOTS_PER_POOL))
             {
                 foundPoolIndex = searchIndex;
-                foundPool = 1;
+                found = 1;
                 goto poolSearchDone;
             }
         }
     }
 poolSearchDone:
 
-    if (foundPool)
+    if (found)
     {
         slotIndex = 0;
         chosenPool = foundPoolIndex;
@@ -398,7 +398,7 @@ poolSearchDone:
         }
     }
 
-    foundPool = 0;
+    found = 0;
     if (preferredPoolIndex == EXPGFX_INVALID_POOL_INDEX)
     {
         poolActiveCounts = runtime->poolActiveCounts;
@@ -407,7 +407,7 @@ poolSearchDone:
             if (*poolActiveCounts <= 0)
             {
                 foundPoolIndex = searchIndex;
-                foundPool = 1;
+                found = 1;
                 runtime->poolActiveCounts[searchIndex] = 0;
                 break;
             }
@@ -419,11 +419,11 @@ poolSearchDone:
         if (runtime->poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL)
         {
             foundPoolIndex = preferredPoolIndex;
-            foundPool = 1;
+            found = 1;
         }
     }
 
-    if (foundPool)
+    if (found)
     {
         slotIndex = 0;
         chosenPool = foundPoolIndex;
@@ -454,7 +454,7 @@ void expgfx_initSlotQuad(void* slotPtr)
     ExpgfxSlot* slot;
     ExpgfxTableEntry* entry;
     ExpgfxQuadVertex* quad;
-    ExpgfxQuadTemplateVertex* template;
+    ExpgfxQuadTemplateVertex* quadTemplate;
     u32 resource;
     u32 behaviorFlags;
     s16 texT1;
@@ -474,11 +474,11 @@ void expgfx_initSlotQuad(void* slotPtr)
     behaviorFlags = slot->behaviorFlags;
     if ((behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0)
     {
-        template = staticData->quadTemplateA;
+        quadTemplate = staticData->quadTemplateA;
     }
     else
     {
-        template = staticData->quadTemplateB;
+        quadTemplate = staticData->quadTemplateB;
     }
 
     if ((behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 && slot->velocityY < gExpgfxYVelocityPositiveLimit)
@@ -542,24 +542,24 @@ void expgfx_initSlotQuad(void* slotPtr)
     }
 
     quad = (ExpgfxQuadVertex*)slot;
-    quad[0].x = template[0].x;
-    quad[0].y = template[0].y;
-    quad[0].z = template[0].z;
+    quad[0].x = quadTemplate[0].x;
+    quad[0].y = quadTemplate[0].y;
+    quad[0].z = quadTemplate[0].z;
     quad[0].texS = texS0;
     quad[0].texT = texT0;
-    quad[1].x = template[1].x;
-    quad[1].y = template[1].y;
-    quad[1].z = template[1].z;
+    quad[1].x = quadTemplate[1].x;
+    quad[1].y = quadTemplate[1].y;
+    quad[1].z = quadTemplate[1].z;
     quad[1].texS = texS1;
     quad[1].texT = texT0;
-    quad[2].x = template[2].x;
-    quad[2].y = template[2].y;
-    quad[2].z = template[2].z;
+    quad[2].x = quadTemplate[2].x;
+    quad[2].y = quadTemplate[2].y;
+    quad[2].z = quadTemplate[2].z;
     quad[2].texS = texS1;
     quad[2].texT = texT1;
-    quad[3].x = template[3].x;
-    quad[3].y = template[3].y;
-    quad[3].z = template[3].z;
+    quad[3].x = quadTemplate[3].x;
+    quad[3].y = quadTemplate[3].y;
+    quad[3].z = quadTemplate[3].z;
     quad[3].texS = texS0;
     quad[3].texT = texT1;
 }
@@ -568,7 +568,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
 {
     ExpgfxBounds* bounds;
     ExpgfxRuntimeDataLayout* runtime;
-    int next;
+    int nextActivePool;
     f32* maxXPtr;
     f32* minYPtr;
     f32* maxYPtr;
@@ -579,48 +579,48 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     ExpgfxStaticDataLayout* staticData;
     s16 slotIdx;
     ExpgfxSlot* slot;
-    ExpgfxQuadTemplateVertex* template;
+    ExpgfxQuadTemplateVertex* quadTemplate;
     s16 texT1;
     s16 texT0;
     s16 texS1;
     s16 texS0;
     GameObject* player;
     GameObject* tricky;
-    u8* nextBuf;
-    u8 parity;
+    u8* nextCacheBuf;
+    u8 cacheParity;
     u32 resource;
-    s8* scan;
+    s8* activeCountScan;
     int curPool;
-    int scaled;
+    int poolByteOffset;
     u32* maskPtr;
     void* cache;
-    u8* curCache;
+    u8* curCacheBuf;
     u8* curPoolBuf;
     ExpgfxSourceObject* srcObj;
-    u8 prefetched;
+    u8 cacheQueued;
     int ambRPlus1;
     int ambGPlus1;
     int ambBPlus1;
-    u8 ambScaled[3];
-    ExpgfxRotateParams rot;
-    f32 vecBuf[3];
-    f32 camDir[3];
-    f32 rotPos[3];
-    f32 srcVel[3];
+    u8 ambientScaled[3]; /* BGR order: [2]=R, [1]=G, [0]=B */
+    ExpgfxRotateParams rotParams;
+    f32 workVec[3];
+    f32 skyLightDir[3];
+    f32 rotatedPos[3];
+    f32 srcWorldPos[3];
     u8 ambB8;
     u8 ambG8;
     u8 ambR8;
     f32 boundsMax;
     f32 boundsMin;
-    f32 prevX;
-    f32 prevY;
-    f32 prevZ;
-    f32 workB;
-    f32 workA;
-    f32 camScale;
+    f32 trailPrevX;
+    f32 trailPrevY;
+    f32 trailPrevZ;
+    f32 workB; /* player dist-sq; reused as cross-product lane in the trail block */
+    f32 workA; /* tricky dist-sq; reused as cross-product lane in the trail block */
+    f32 ambientScale;
     f32 playerRange;
     f32 trickyRange;
-    f32 attractRatio;
+    f32 attractRatio; /* attract speed ratio; reused as cross-product Z lane and trail inv-scale */
     staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
     attractRatio = lbl_803DF354;
@@ -632,36 +632,36 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     gExpgfxPhaseAngleA += (u16)(lbl_803DF3C8 * timeDelta);
     gExpgfxPhaseAngleB += (u16)(lbl_803DF3CC * timeDelta);
     sky = getSkyStructField24C();
-    fn_800897D4(sky, &camDir[0], &camDir[1], &camDir[2]);
-    PSMTXMultVec((void*)Camera_GetViewRotationMatrix(), (void*)camDir, (void*)camDir);
-    camScale = -camDir[2];
-    if (camScale < lbl_803DF3D0)
+    fn_800897D4(sky, &skyLightDir[0], &skyLightDir[1], &skyLightDir[2]);
+    PSMTXMultVec((void*)Camera_GetViewRotationMatrix(), (void*)skyLightDir, (void*)skyLightDir);
+    ambientScale = -skyLightDir[2];
+    if (ambientScale < lbl_803DF3D0)
     {
-        camScale = lbl_803DF3D0;
+        ambientScale = lbl_803DF3D0;
     }
     getAmbientColor(sky, &ambR8, &ambG8, &ambB8);
-    ambScaled[2] = (f32)ambR8 * camScale;
-    ambScaled[1] = (f32)ambG8 * camScale;
-    ambScaled[0] = (f32)ambB8 * camScale;
+    ambientScaled[2] = (f32)ambR8 * ambientScale;
+    ambientScaled[1] = (f32)ambG8 * ambientScale;
+    ambientScaled[0] = (f32)ambB8 * ambientScale;
 
-    scan = runtime->poolActiveCounts;
-    for (next = 0; next < EXPGFX_POOL_COUNT; next++)
+    activeCountScan = runtime->poolActiveCounts;
+    for (nextActivePool = 0; nextActivePool < EXPGFX_POOL_COUNT; nextActivePool++)
     {
-        if (scan[next] != 0)
+        if (activeCountScan[nextActivePool] != 0)
         {
             break;
         }
     }
-    if (next == EXPGFX_POOL_COUNT)
+    if (nextActivePool == EXPGFX_POOL_COUNT)
     {
-        next = -1;
+        nextActivePool = -1;
     }
-    pool = next;
+    pool = nextActivePool;
     if (pool != -1)
     {
         copyToCache(cache, (void*)runtime->slotPoolBases[pool], EXPGFX_POOL_CACHE_LINE_COUNT);
-        parity = 1;
-        curCache = cache;
+        cacheParity = 1;
+        curCacheBuf = cache;
         Camera_GetCurrentViewSlot();
         if (tricky != NULL)
         {
@@ -671,10 +671,10 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
         {
             playerRange = fn_8029610C(player);
         }
-        prefetched = 0;
-        ambRPlus1 = ambScaled[2] + 1;
-        ambGPlus1 = ambScaled[1] + 1;
-        ambBPlus1 = ambScaled[0] + 1;
+        cacheQueued = 0;
+        ambRPlus1 = ambientScaled[2] + 1;
+        ambGPlus1 = ambientScaled[1] + 1;
+        ambBPlus1 = ambientScaled[0] + 1;
         boundsMin = gExpgfxBoundsInitMin;
         boundsMax = gExpgfxBoundsInitMax;
         while (pool > -1)
@@ -693,38 +693,38 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
             maxZPtr = &bounds->maxZ;
             *maxZPtr = boundsMax;
             curPool = pool;
-            next = pool + 1;
-            curPoolBuf = (u8*)runtime + next;
-            scan = (s8*)(curPoolBuf + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-            for (; next < EXPGFX_POOL_COUNT; next++)
+            nextActivePool = pool + 1;
+            curPoolBuf = (u8*)runtime + nextActivePool;
+            activeCountScan = (s8*)(curPoolBuf + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+            for (; nextActivePool < EXPGFX_POOL_COUNT; nextActivePool++)
             {
-                if (*scan != 0)
+                if (*activeCountScan != 0)
                 {
                     break;
                 }
-                scan++;
+                activeCountScan++;
             }
-            if (next == EXPGFX_POOL_COUNT)
+            if (nextActivePool == EXPGFX_POOL_COUNT)
             {
-                next = -1;
+                nextActivePool = -1;
             }
-            slot = (ExpgfxSlot*)curCache;
-            if (next > -1)
+            slot = (ExpgfxSlot*)curCacheBuf;
+            if (nextActivePool > -1)
             {
-                nextBuf = (u8*)cache + parity * 0x1000;
-                copyToCache(nextBuf, (void*)*(u32*)((u8*)runtime->slotPoolBases + next * 4),
+                nextCacheBuf = (u8*)cache + cacheParity * 0x1000;
+                copyToCache(nextCacheBuf, (void*)*(u32*)((u8*)runtime->slotPoolBases + nextActivePool * 4),
                             EXPGFX_POOL_CACHE_LINE_COUNT);
-                curCache = nextBuf;
-                prefetched = 1;
+                curCacheBuf = nextCacheBuf;
+                cacheQueued = 1;
             }
-            parity ^= 1;
-            cacheQueueWait(prefetched);
+            cacheParity ^= 1;
+            cacheQueueWait(cacheQueued);
             slot--;
             slotIdx = 0;
-            scaled = pool * 4;
-            maskPtr = (u32*)((u8*)runtime + scaled);
+            poolByteOffset = pool * 4;
+            maskPtr = (u32*)((u8*)runtime + poolByteOffset);
             maskPtr = (u32*)((u8*)maskPtr + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
-            curPoolBuf = (u8*)cache + parity * 0x1000;
+            curPoolBuf = (u8*)cache + cacheParity * 0x1000;
             for (; slotIdx < EXPGFX_SLOTS_PER_POOL; slotIdx++)
             {
                 ExpgfxQuadVertex* quad;
@@ -768,23 +768,23 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                 }
                 if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0)
                 {
-                    template = staticData->quadTemplateA;
+                    quadTemplate = staticData->quadTemplateA;
                 }
                 else
                 {
-                    template = staticData->quadTemplateB;
+                    quadTemplate = staticData->quadTemplateB;
                 }
                 if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
                     (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0)
                 {
-                    rot.x = 0.0f;
-                    rot.y = 0.0f;
-                    rot.z = 0.0f;
-                    rot.scale = 1.0f;
-                    rot.angleZ = (f32)slot->sourceVecZ * timeDelta;
-                    rot.angleY = (f32)slot->sourceVecY * timeDelta;
-                    rot.angleX = (f32)slot->sourceVecX * timeDelta;
-                    vecRotateZXY(&rot.angleX, &slot->posX.value);
+                    rotParams.x = 0.0f;
+                    rotParams.y = 0.0f;
+                    rotParams.z = 0.0f;
+                    rotParams.scale = 1.0f;
+                    rotParams.angleZ = (f32)slot->sourceVecZ * timeDelta;
+                    rotParams.angleY = (f32)slot->sourceVecY * timeDelta;
+                    rotParams.angleX = (f32)slot->sourceVecX * timeDelta;
+                    vecRotateZXY(&rotParams.angleX, &slot->posX.value);
                 }
                 if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) != 0)
                 {
@@ -793,17 +793,17 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0 && player != NULL &&
                         srcObj != NULL && playerRange > lbl_803DF3E0)
                     {
-                        vecBuf[0] = player->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
-                        vecBuf[2] = player->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
-                        workB = vecBuf[0] * vecBuf[0] + vecBuf[2] * vecBuf[2];
+                        workVec[0] = player->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
+                        workVec[2] = player->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
+                        workB = workVec[0] * workVec[0] + workVec[2] * workVec[2];
                         attractRatio = playerRange / workB;
                     }
                     if (workB > lbl_803DF3B0 && (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0 &&
                         tricky != NULL && srcObj != NULL && trickyRange > lbl_803DF3E0)
                     {
-                        vecBuf[0] = tricky->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
-                        vecBuf[2] = tricky->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
-                        workA = vecBuf[0] * vecBuf[0] + vecBuf[2] * vecBuf[2];
+                        workVec[0] = tricky->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
+                        workVec[2] = tricky->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
+                        workA = workVec[0] * workVec[0] + workVec[2] * workVec[2];
                         attractRatio = trickyRange / workB;
                     }
                     if (workA < workB)
@@ -828,8 +828,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         slot->lifetimeFrameLimit = randomGetRange(0, 0x28) + 0xdc;
                         slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
                         slot->renderFlags |= EXPGFX_RENDER_IMPACT_POSITION_LOCKED | 0LL;
-                        slot->velocityX = -vecBuf[0] * attractRatio;
-                        slot->velocityZ = -vecBuf[2] * attractRatio;
+                        slot->velocityX = -workVec[0] * attractRatio;
+                        slot->velocityZ = -workVec[2] * attractRatio;
                     }
                 }
                 else
@@ -928,21 +928,21 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         {
                             slot->velocityY = lbl_803DF390;
                         }
-                        rot.scale = 1.0f;
-                        rot.angleZ = 0;
-                        rot.angleY = 0;
-                        rot.angleX = 0;
+                        rotParams.scale = 1.0f;
+                        rotParams.angleZ = 0;
+                        rotParams.angleY = 0;
+                        rotParams.angleX = 0;
                         if (srcObj != NULL)
                         {
-                            rot.x = slot->posX.value + srcObj->localPosX;
-                            rot.y = slot->posY.value + srcObj->localPosY;
-                            rot.z = slot->posZ.value + srcObj->localPosZ;
+                            rotParams.x = slot->posX.value + srcObj->localPosX;
+                            rotParams.y = slot->posY.value + srcObj->localPosY;
+                            rotParams.z = slot->posZ.value + srcObj->localPosZ;
                         }
                         else
                         {
-                            rot.x = slot->posX.value + slot->sourcePosY.value;
-                            rot.y = slot->posY.value + slot->sourcePosZ.value;
-                            rot.z = slot->posZ.value + slot->sourcePosW.value;
+                            rotParams.x = slot->posX.value + slot->sourcePosY.value;
+                            rotParams.y = slot->posY.value + slot->sourcePosZ.value;
+                            rotParams.z = slot->posZ.value + slot->sourcePosW.value;
                         }
                         gExpgfxFrameParityBit = 1;
                         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT) != 0 &&
@@ -953,7 +953,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT | 0LL;
                             if (slot->soundHandle != -1)
                             {
-                                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001, -1, 0);
+                                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rotParams, 0x200001, -1, 0);
                                 slot->soundHandle = -1;
                             }
                         }
@@ -981,7 +981,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
                             if (slot->soundHandle != -1)
                             {
-                                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001, -1, 0);
+                                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rotParams, 0x200001, -1, 0);
                             }
                             slot->soundHandle = -1;
                         }
@@ -1001,7 +1001,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
                             if (slot->soundHandle != -1)
                             {
-                                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001, -1, 0);
+                                (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rotParams, 0x200001, -1, 0);
                             }
                         }
                         gExpgfxFrameParityBit = 0;
@@ -1011,32 +1011,32 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     {
                         if (slot->soundHandle != -1)
                         {
-                            rot.scale = 1.0f;
-                            rot.angleZ = 0;
-                            rot.angleY = 0;
-                            rot.angleX = 0;
+                            rotParams.scale = 1.0f;
+                            rotParams.angleZ = 0;
+                            rotParams.angleY = 0;
+                            rotParams.angleX = 0;
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0)
                             {
-                                rot.x = slot->posX.value;
-                                rot.y = 0.0f;
-                                rot.z = slot->posZ.value;
+                                rotParams.x = slot->posX.value;
+                                rotParams.y = 0.0f;
+                                rotParams.z = slot->posZ.value;
                             }
                             else if (srcObj != NULL)
                             {
-                                rot.x = slot->posX.value + srcObj->worldPosX;
-                                rot.y = srcObj->worldPosY;
-                                rot.z = slot->posZ.value + srcObj->worldPosZ;
+                                rotParams.x = slot->posX.value + srcObj->worldPosX;
+                                rotParams.y = srcObj->worldPosY;
+                                rotParams.z = slot->posZ.value + srcObj->worldPosZ;
                             }
                             else
                             {
-                                rot.x = slot->posX.value;
-                                rot.y = 0.0f;
-                                rot.z = slot->posZ.value;
+                                rotParams.x = slot->posX.value;
+                                rotParams.y = 0.0f;
+                                rotParams.z = slot->posZ.value;
                             }
                             gExpgfxFrameParityBit = 1;
                             (*gWaterfxInterface)->spawnRipple(
-                                rot.x, rot.y, rot.z, 0, 0.0f, 4);
-                            (*gWaterfxInterface)->spawnSplashBurst(NULL, rot.x, rot.y, rot.z, gExpgfxSlotMotionStep);
+                                rotParams.x, rotParams.y, rotParams.z, 0, 0.0f, 4);
+                            (*gWaterfxInterface)->spawnSplashBurst(NULL, rotParams.x, rotParams.y, rotParams.z, gExpgfxSlotMotionStep);
                             if (srcObj != NULL && coordsToMapCell(srcObj->localPosX, srcObj->localPosZ) == 0x10)
                             {
                                 Sfx_PlayFromObject((u32)srcObj, SFXTRIG_blkscrp6);
@@ -1051,30 +1051,30 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                              (slot->behaviorFlags & EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT) == 0 &&
                              slot->soundHandle != -1)
                     {
-                        rot.scale = 1.0f;
-                        rot.angleZ = 0;
-                        rot.angleY = 0;
-                        rot.angleX = 0;
+                        rotParams.scale = 1.0f;
+                        rotParams.angleZ = 0;
+                        rotParams.angleY = 0;
+                        rotParams.angleX = 0;
                         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0)
                         {
-                            rot.x = slot->posX.value;
-                            rot.y = slot->posY.value;
-                            rot.z = slot->posZ.value;
+                            rotParams.x = slot->posX.value;
+                            rotParams.y = slot->posY.value;
+                            rotParams.z = slot->posZ.value;
                         }
                         else if (srcObj != NULL)
                         {
-                            rot.x = slot->posX.value + srcObj->worldPosX;
-                            rot.y = slot->posY.value + srcObj->worldPosY;
-                            rot.z = slot->posZ.value + srcObj->worldPosZ;
+                            rotParams.x = slot->posX.value + srcObj->worldPosX;
+                            rotParams.y = slot->posY.value + srcObj->worldPosY;
+                            rotParams.z = slot->posZ.value + srcObj->worldPosZ;
                         }
                         else
                         {
-                            rot.x = slot->posX.value;
-                            rot.y = slot->posY.value;
-                            rot.z = slot->posZ.value;
+                            rotParams.x = slot->posX.value;
+                            rotParams.y = slot->posY.value;
+                            rotParams.z = slot->posZ.value;
                         }
                         gExpgfxFrameParityBit = 1;
-                        (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rot, 0x200001, -1, NULL);
+                        (*gPartfxInterface)->spawnObject(srcObj, slot->soundHandle, &rotParams, 0x200001, -1, NULL);
                         gExpgfxFrameParityBit = 0;
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && randomGetRange(0, 4) == 1)
@@ -1103,9 +1103,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     }
                     if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0)
                     {
-                        prevX = slot->posX.value;
-                        prevY = slot->posY.value;
-                        prevZ = slot->posZ.value;
+                        trailPrevX = slot->posX.value;
+                        trailPrevY = slot->posY.value;
+                        trailPrevZ = slot->posZ.value;
                     }
                     slot->posX.value += slot->velocityX * timeDelta;
                     slot->posY.value += slot->velocityY * timeDelta;
@@ -1185,9 +1185,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_SCALED) != 0)
                     {
-                        quad[0].colorR = ambScaled[2];
-                        quad[0].colorG = ambScaled[1];
-                        quad[0].colorB = ambScaled[0];
+                        quad[0].colorR = ambientScaled[2];
+                        quad[0].colorG = ambientScaled[1];
+                        quad[0].colorB = ambientScaled[0];
                     }
                     if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0)
                     {
@@ -1227,9 +1227,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         dirX = sx - slot->posX.value;
                         dirY = sy - slot->posY.value;
                         dirZ = sz - slot->posZ.value;
-                        prevDX = prevX - slot->posX.value;
-                        prevDY = prevY - slot->posY.value;
-                        prevDZ = prevZ - slot->posZ.value;
+                        prevDX = trailPrevX - slot->posX.value;
+                        prevDY = trailPrevY - slot->posY.value;
+                        prevDZ = trailPrevZ - slot->posZ.value;
                         workA = prevDY * dirZ - prevDZ * dirY;
                         workB = -(prevDX * dirZ - prevDZ * dirX);
                         attractRatio = prevDX * dirY - prevDY * dirX;
@@ -1251,14 +1251,14 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         quad[0].z = (s16)axisZ;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].x = attractRatio * (slot->posX.value - prevX) + axisX;
-                        quad[1].y = attractRatio * (slot->posY.value - prevY) + axisY;
-                        quad[1].z = attractRatio * (slot->posZ.value - prevZ) + axisZ;
+                        quad[1].x = attractRatio * (slot->posX.value - trailPrevX) + axisX;
+                        quad[1].y = attractRatio * (slot->posY.value - trailPrevY) + axisY;
+                        quad[1].z = attractRatio * (slot->posZ.value - trailPrevZ) + axisZ;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].x = attractRatio * (slot->posX.value - prevX) - axisX;
-                        quad[2].y = attractRatio * (slot->posY.value - prevY) - axisY;
-                        quad[2].z = attractRatio * (slot->posZ.value - prevZ) - axisZ;
+                        quad[2].x = attractRatio * (slot->posX.value - trailPrevX) - axisX;
+                        quad[2].y = attractRatio * (slot->posY.value - trailPrevY) - axisY;
+                        quad[2].z = attractRatio * (slot->posZ.value - trailPrevZ) - axisZ;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
                         quad[3].x = -(s16)axisX;
@@ -1270,202 +1270,202 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) != 0 &&
                              (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0)
                     {
-                        rot.x = 0.0f;
-                        rot.y = 0.0f;
-                        rot.z = 0.0f;
+                        rotParams.x = 0.0f;
+                        rotParams.y = 0.0f;
+                        rotParams.z = 0.0f;
                         slot->sourceVecX = slot->sourceVecX + (int)slot->sourcePosY.value * framesThisStep;
                         slot->sourceVecY = slot->sourceVecY + (int)slot->sourcePosZ.value * framesThisStep;
                         slot->sourceVecZ = slot->sourceVecZ + (int)slot->sourcePosW.value * framesThisStep;
-                        rot.scale = 1.0f;
-                        vecBuf[0] = (f32) template[0].x;
-                        vecBuf[1] = (f32) template[0].y;
-                        vecBuf[2] = (f32) template[0].z;
-                        rot.angleZ = 0;
-                        rot.angleY = 0;
-                        rot.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rot.angleX, vecBuf);
-                        rot.angleZ = slot->sourceVecY;
-                        rot.angleY = slot->sourceVecZ;
-                        rot.angleX = 0;
-                        vecRotateZXY(&rot.angleX, vecBuf);
-                        quad[0].x = vecBuf[0];
-                        quad[0].y = vecBuf[1];
-                        quad[0].z = vecBuf[2];
+                        rotParams.scale = 1.0f;
+                        workVec[0] = (f32) quadTemplate[0].x;
+                        workVec[1] = (f32) quadTemplate[0].y;
+                        workVec[2] = (f32) quadTemplate[0].z;
+                        rotParams.angleZ = 0;
+                        rotParams.angleY = 0;
+                        rotParams.angleX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.angleX, workVec);
+                        rotParams.angleZ = slot->sourceVecY;
+                        rotParams.angleY = slot->sourceVecZ;
+                        rotParams.angleX = 0;
+                        vecRotateZXY(&rotParams.angleX, workVec);
+                        quad[0].x = workVec[0];
+                        quad[0].y = workVec[1];
+                        quad[0].z = workVec[2];
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        vecBuf[0] = (f32) template[1].x;
-                        vecBuf[1] = (f32) template[1].y;
-                        vecBuf[2] = (f32) template[1].z;
-                        rot.angleZ = 0;
-                        rot.angleY = 0;
-                        rot.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rot.angleX, vecBuf);
-                        rot.angleZ = slot->sourceVecY;
-                        rot.angleY = slot->sourceVecZ;
-                        rot.angleX = 0;
-                        vecRotateZXY(&rot.angleX, vecBuf);
-                        quad[1].x = vecBuf[0];
-                        quad[1].y = vecBuf[1];
-                        quad[1].z = vecBuf[2];
+                        workVec[0] = (f32) quadTemplate[1].x;
+                        workVec[1] = (f32) quadTemplate[1].y;
+                        workVec[2] = (f32) quadTemplate[1].z;
+                        rotParams.angleZ = 0;
+                        rotParams.angleY = 0;
+                        rotParams.angleX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.angleX, workVec);
+                        rotParams.angleZ = slot->sourceVecY;
+                        rotParams.angleY = slot->sourceVecZ;
+                        rotParams.angleX = 0;
+                        vecRotateZXY(&rotParams.angleX, workVec);
+                        quad[1].x = workVec[0];
+                        quad[1].y = workVec[1];
+                        quad[1].z = workVec[2];
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        vecBuf[0] = (f32) template[2].x;
-                        vecBuf[1] = (f32) template[2].y;
-                        vecBuf[2] = (f32) template[2].z;
-                        rot.angleZ = 0;
-                        rot.angleY = 0;
-                        rot.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rot.angleX, vecBuf);
-                        rot.angleZ = slot->sourceVecY;
-                        rot.angleY = slot->sourceVecZ;
-                        rot.angleX = 0;
-                        vecRotateZXY(&rot.angleX, vecBuf);
-                        quad[2].x = vecBuf[0];
-                        quad[2].y = vecBuf[1];
-                        quad[2].z = vecBuf[2];
+                        workVec[0] = (f32) quadTemplate[2].x;
+                        workVec[1] = (f32) quadTemplate[2].y;
+                        workVec[2] = (f32) quadTemplate[2].z;
+                        rotParams.angleZ = 0;
+                        rotParams.angleY = 0;
+                        rotParams.angleX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.angleX, workVec);
+                        rotParams.angleZ = slot->sourceVecY;
+                        rotParams.angleY = slot->sourceVecZ;
+                        rotParams.angleX = 0;
+                        vecRotateZXY(&rotParams.angleX, workVec);
+                        quad[2].x = workVec[0];
+                        quad[2].y = workVec[1];
+                        quad[2].z = workVec[2];
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        vecBuf[0] = (f32) template[3].x;
-                        vecBuf[1] = (f32) template[3].y;
-                        vecBuf[2] = (f32) template[3].z;
-                        rot.angleZ = 0;
-                        rot.angleY = 0;
-                        rot.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rot.angleX, vecBuf);
-                        rot.angleZ = slot->sourceVecY;
-                        rot.angleY = slot->sourceVecZ;
-                        rot.angleX = 0;
-                        vecRotateZXY(&rot.angleX, vecBuf);
-                        quad[3].x = vecBuf[0];
-                        quad[3].y = vecBuf[1];
-                        quad[3].z = vecBuf[2];
+                        workVec[0] = (f32) quadTemplate[3].x;
+                        workVec[1] = (f32) quadTemplate[3].y;
+                        workVec[2] = (f32) quadTemplate[3].z;
+                        rotParams.angleZ = 0;
+                        rotParams.angleY = 0;
+                        rotParams.angleX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.angleX, workVec);
+                        rotParams.angleZ = slot->sourceVecY;
+                        rotParams.angleY = slot->sourceVecZ;
+                        rotParams.angleX = 0;
+                        vecRotateZXY(&rotParams.angleX, workVec);
+                        quad[3].x = workVec[0];
+                        quad[3].y = workVec[1];
+                        quad[3].z = workVec[2];
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0)
                     {
-                        quad[0].x = template[0].x;
-                        quad[0].y = template[0].y;
-                        quad[0].z = template[0].z;
+                        quad[0].x = quadTemplate[0].x;
+                        quad[0].y = quadTemplate[0].y;
+                        quad[0].z = quadTemplate[0].z;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].x = template[1].x;
-                        quad[1].y = template[1].y;
-                        quad[1].z = template[1].z;
+                        quad[1].x = quadTemplate[1].x;
+                        quad[1].y = quadTemplate[1].y;
+                        quad[1].z = quadTemplate[1].z;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].x = template[2].x;
-                        quad[2].y = template[2].y;
-                        quad[2].z = template[2].z;
+                        quad[2].x = quadTemplate[2].x;
+                        quad[2].y = quadTemplate[2].y;
+                        quad[2].z = quadTemplate[2].z;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        quad[3].x = template[3].x;
-                        quad[3].y = template[3].y;
-                        quad[3].z = template[3].z;
+                        quad[3].x = quadTemplate[3].x;
+                        quad[3].y = quadTemplate[3].y;
+                        quad[3].z = quadTemplate[3].z;
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SCALE_Y8) != 0)
                     {
-                        quad[0].x = template[0].x;
-                        quad[0].y = template[0].y;
+                        quad[0].x = quadTemplate[0].x;
+                        quad[0].y = quadTemplate[0].y;
                         quad[0].y <<= 3;
-                        quad[0].z = template[0].z;
+                        quad[0].z = quadTemplate[0].z;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].x = template[1].x;
-                        quad[1].y = template[1].y;
+                        quad[1].x = quadTemplate[1].x;
+                        quad[1].y = quadTemplate[1].y;
                         quad[1].y <<= 3;
-                        quad[1].z = template[1].z;
+                        quad[1].z = quadTemplate[1].z;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].x = template[2].x;
-                        quad[2].y = template[2].y;
+                        quad[2].x = quadTemplate[2].x;
+                        quad[2].y = quadTemplate[2].y;
                         quad[2].y <<= 3;
-                        quad[2].z = template[2].z;
+                        quad[2].z = quadTemplate[2].z;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        quad[3].x = template[3].x;
-                        quad[3].y = template[3].y;
+                        quad[3].x = quadTemplate[3].x;
+                        quad[3].y = quadTemplate[3].y;
                         quad[3].y <<= 3;
-                        quad[3].z = template[3].z;
+                        quad[3].z = quadTemplate[3].z;
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SWAP_XZ_SCALE_Z32) != 0)
                     {
-                        quad[0].z = template[0].x;
+                        quad[0].z = quadTemplate[0].x;
                         quad[0].z <<= 5;
-                        quad[0].y = template[0].y;
-                        quad[0].x = template[0].z;
+                        quad[0].y = quadTemplate[0].y;
+                        quad[0].x = quadTemplate[0].z;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].z = template[1].x;
+                        quad[1].z = quadTemplate[1].x;
                         quad[1].z <<= 5;
-                        quad[1].y = template[1].y;
-                        quad[1].x = template[1].z;
+                        quad[1].y = quadTemplate[1].y;
+                        quad[1].x = quadTemplate[1].z;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].z = template[2].x;
+                        quad[2].z = quadTemplate[2].x;
                         quad[2].z <<= 5;
-                        quad[2].y = template[2].y;
-                        quad[2].x = template[2].z;
+                        quad[2].y = quadTemplate[2].y;
+                        quad[2].x = quadTemplate[2].z;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        quad[3].z = template[3].x;
+                        quad[3].z = quadTemplate[3].x;
                         quad[3].z <<= 5;
-                        quad[3].y = template[3].y;
-                        quad[3].x = template[3].z;
+                        quad[3].y = quadTemplate[3].y;
+                        quad[3].x = quadTemplate[3].z;
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_QUAD_SCALE_X32) != 0)
                     {
-                        quad[0].x = template[0].x;
+                        quad[0].x = quadTemplate[0].x;
                         quad[0].x <<= 5;
-                        quad[0].y = template[0].y;
-                        quad[0].z = template[0].z;
+                        quad[0].y = quadTemplate[0].y;
+                        quad[0].z = quadTemplate[0].z;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].x = template[1].x;
+                        quad[1].x = quadTemplate[1].x;
                         quad[1].x <<= 5;
-                        quad[1].y = template[1].y;
-                        quad[1].z = template[1].z;
+                        quad[1].y = quadTemplate[1].y;
+                        quad[1].z = quadTemplate[1].z;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].x = template[2].x;
+                        quad[2].x = quadTemplate[2].x;
                         quad[2].x <<= 5;
-                        quad[2].y = template[2].y;
-                        quad[2].z = template[2].z;
+                        quad[2].y = quadTemplate[2].y;
+                        quad[2].z = quadTemplate[2].z;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        quad[3].x = template[3].x;
+                        quad[3].x = quadTemplate[3].x;
                         quad[3].x <<= 5;
-                        quad[3].y = template[3].y;
-                        quad[3].z = template[3].z;
+                        quad[3].y = quadTemplate[3].y;
+                        quad[3].z = quadTemplate[3].z;
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
                     else
                     {
-                        quad[0].x = template[0].x;
-                        quad[0].y = template[0].y;
-                        quad[0].z = template[0].z;
+                        quad[0].x = quadTemplate[0].x;
+                        quad[0].y = quadTemplate[0].y;
+                        quad[0].z = quadTemplate[0].z;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].x = template[1].x;
-                        quad[1].y = template[1].y;
-                        quad[1].z = template[1].z;
+                        quad[1].x = quadTemplate[1].x;
+                        quad[1].y = quadTemplate[1].y;
+                        quad[1].z = quadTemplate[1].z;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].x = template[2].x;
-                        quad[2].y = template[2].y;
-                        quad[2].z = template[2].z;
+                        quad[2].x = quadTemplate[2].x;
+                        quad[2].y = quadTemplate[2].y;
+                        quad[2].z = quadTemplate[2].z;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        quad[3].x = template[3].x;
-                        quad[3].y = template[3].y;
-                        quad[3].z = template[3].z;
+                        quad[3].x = quadTemplate[3].x;
+                        quad[3].y = quadTemplate[3].y;
+                        quad[3].z = quadTemplate[3].z;
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
@@ -1474,115 +1474,115 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                                                                   EXPGFX_SLOT_TABLE_INDEX_MASK) *
                                                                      16))
                                    ->attachedTableKey;
-                    rot.x = 0.0f;
-                    rot.y = 0.0f;
-                    rot.z = 0.0f;
-                    rot.scale = 1.0f;
+                    rotParams.x = 0.0f;
+                    rotParams.y = 0.0f;
+                    rotParams.z = 0.0f;
+                    rotParams.scale = 1.0f;
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
                         (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0)
                     {
-                        rot.x = slot->posX.value;
-                        rot.y = slot->posY.value;
-                        rot.z = slot->posZ.value;
+                        rotParams.x = slot->posX.value;
+                        rotParams.y = slot->posY.value;
+                        rotParams.z = slot->posZ.value;
                     }
-                    rot.angleZ = 0;
-                    rot.angleY = 0;
-                    rot.angleX = 0;
+                    rotParams.angleZ = 0;
+                    rotParams.angleY = 0;
+                    rotParams.angleX = 0;
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0 &&
                         (slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0)
                     {
                         if (srcObj != NULL)
                         {
-                            rot.angleX = srcObj->rotX;
-                            rot.angleY = srcObj->rotY;
-                            rot.angleZ = srcObj->rotZ;
+                            rotParams.angleX = srcObj->rotX;
+                            rotParams.angleY = srcObj->rotY;
+                            rotParams.angleZ = srcObj->rotZ;
                         }
                         else
                         {
-                            rot.angleX = slot->sourceVecX;
-                            rot.angleY = slot->sourceVecY;
-                            rot.angleZ = slot->sourceVecZ;
+                            rotParams.angleX = slot->sourceVecX;
+                            rotParams.angleY = slot->sourceVecY;
+                            rotParams.angleZ = slot->sourceVecZ;
                         }
                     }
-                    rotPos[0] = slot->posX.value;
-                    rotPos[1] = slot->posY.value;
-                    rotPos[2] = slot->posZ.value;
-                    if ((rot.angleX | rot.angleY | rot.angleZ) != 0)
+                    rotatedPos[0] = slot->posX.value;
+                    rotatedPos[1] = slot->posY.value;
+                    rotatedPos[2] = slot->posZ.value;
+                    if ((rotParams.angleX | rotParams.angleY | rotParams.angleZ) != 0)
                     {
-                        vecRotateZXY(&rot.angleX, rotPos);
+                        vecRotateZXY(&rotParams.angleX, rotatedPos);
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) == 0)
                     {
                         if (srcObj != NULL)
                         {
-                            srcVel[0] = srcObj->worldPosX;
-                            srcVel[1] = srcObj->worldPosY;
-                            srcVel[2] = srcObj->worldPosZ;
+                            srcWorldPos[0] = srcObj->worldPosX;
+                            srcWorldPos[1] = srcObj->worldPosY;
+                            srcWorldPos[2] = srcObj->worldPosZ;
                         }
                         else
                         {
-                            srcVel[0] = slot->sourcePosY.value;
-                            srcVel[1] = slot->sourcePosZ.value;
-                            srcVel[2] = slot->sourcePosW.value;
+                            srcWorldPos[0] = slot->sourcePosY.value;
+                            srcWorldPos[1] = slot->sourcePosZ.value;
+                            srcWorldPos[2] = slot->sourcePosW.value;
                             if (attached != NULL)
                             {
-                                Obj_RotateLocalOffsetByYaw(&slot->sourcePosY.value, srcVel,
+                                Obj_RotateLocalOffsetByYaw(&slot->sourcePosY.value, srcWorldPos,
                                                            attached->anim.transformMatrixIndex);
                             }
                         }
                     }
                     else
                     {
-                        srcVel[0] = 0.0f;
-                        srcVel[1] = 0.0f;
-                        srcVel[2] = 0.0f;
+                        srcWorldPos[0] = 0.0f;
+                        srcWorldPos[1] = 0.0f;
+                        srcWorldPos[2] = 0.0f;
                     }
-                    rot.angleZ = 0;
-                    rot.angleY = 0;
-                    rot.angleX = 0;
-                    rot.x = srcVel[0] + rotPos[0];
-                    rot.y = srcVel[1] + rotPos[1];
-                    rot.z = srcVel[2] + rotPos[2];
+                    rotParams.angleZ = 0;
+                    rotParams.angleY = 0;
+                    rotParams.angleX = 0;
+                    rotParams.x = srcWorldPos[0] + rotatedPos[0];
+                    rotParams.y = srcWorldPos[1] + rotatedPos[1];
+                    rotParams.z = srcWorldPos[2] + rotatedPos[2];
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
                         (slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0 &&
                         (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0)
                     {
-                        rot.x = rot.x + slot->sourcePosY.value;
-                        rot.y = rot.y + slot->sourcePosZ.value;
-                        rot.z = rot.z + slot->sourcePosW.value;
+                        rotParams.x = rotParams.x + slot->sourcePosY.value;
+                        rotParams.y = rotParams.y + slot->sourcePosZ.value;
+                        rotParams.z = rotParams.z + slot->sourcePosW.value;
                     }
-                    slot->renderX = rot.x;
-                    slot->renderY = rot.y;
-                    slot->renderZ = rot.z;
-                    if (rot.x < bounds->minX)
+                    slot->renderX = rotParams.x;
+                    slot->renderY = rotParams.y;
+                    slot->renderZ = rotParams.z;
+                    if (rotParams.x < bounds->minX)
                     {
-                        bounds->minX = rot.x;
+                        bounds->minX = rotParams.x;
                     }
-                    if (rot.x > *maxXPtr)
+                    if (rotParams.x > *maxXPtr)
                     {
-                        *maxXPtr = rot.x;
+                        *maxXPtr = rotParams.x;
                     }
-                    if (rot.y < *minYPtr)
+                    if (rotParams.y < *minYPtr)
                     {
-                        *minYPtr = rot.y;
+                        *minYPtr = rotParams.y;
                     }
-                    if (rot.y > *maxYPtr)
+                    if (rotParams.y > *maxYPtr)
                     {
-                        *maxYPtr = rot.y;
+                        *maxYPtr = rotParams.y;
                     }
-                    if (rot.z < *minZPtr)
+                    if (rotParams.z < *minZPtr)
                     {
-                        *minZPtr = rot.z;
+                        *minZPtr = rotParams.z;
                     }
-                    if (rot.z > *maxZPtr)
+                    if (rotParams.z > *maxZPtr)
                     {
-                        *maxZPtr = rot.z;
+                        *maxZPtr = rotParams.z;
                     }
                 }
             }
-            memcpyToCache((void*)*(u32*)((u8*)runtime->slotPoolBases + scaled), curPoolBuf, EXPGFX_POOL_CACHE_LINE_COUNT);
-            prefetched = 1;
-            pool = next;
+            memcpyToCache((void*)*(u32*)((u8*)runtime->slotPoolBases + poolByteOffset), curPoolBuf, EXPGFX_POOL_CACHE_LINE_COUNT);
+            cacheQueued = 1;
+            pool = nextActivePool;
         }
         cacheQueueWait(0);
     }
@@ -1709,8 +1709,8 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
-    s16 angleB;
-    s16 angleA;
+    s16 pitchAngle;
+    s16 yawAngle;
     ExpgfxSlot* slot;
     ExpgfxTableEntry* tabBase;
     ExpgfxTableEntry* tabEntry;
@@ -1719,11 +1719,11 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     int alpha;
     ExpgfxSourceObject* sourceObject;
     u32 renderFlags;
-    u32 state;
+    u32 stateBitsValue;
     ExpgfxCameraViewSlot* cameraSlot;
-    f32 lifeFraction;
+    f32 halfLifeFrames;
     f32 scaleSize;
-    f32 sx, sy, sz;
+    f32 centerX, centerY, centerZ;
     f32 scaleFactor;
     u32 texture;
     MtxPtr viewMatrix;
@@ -1737,7 +1737,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     ExpgfxQuadVertex* quad;
     ExpgfxQuadVertex* vertexStream;
     int vertexIndex;
-    f32 viewProjW;
+    f32 viewDepth;
     int hudHiddenFrameCount;
     u32* activeMasks;
     s8 alphaMode;
@@ -1745,10 +1745,10 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     s8 zMode;
     s8 zCompLoc;
     u32 currentTexture;
-    u8 trackedFlags;
+    u8 lastOverrideColorFlag;
     ExpgfxSlot* cachedSlots;
     cachedSlots = getCache();
-    trackedFlags = 0;
+    lastOverrideColorFlag = 0;
     hudHiddenFrameCount = getHudHiddenFrameCount();
     Camera_GetProjectionMatrix();
     copyToCache(cachedSlots, (void*)slotPoolBase, EXPGFX_POOL_CACHE_LINE_COUNT);
@@ -1792,11 +1792,11 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         texture = tabEntry->resource;
         if ((1U << slotIndex & *activeMasks) != 0)
         {
-            state = slot->stateBits.value;
-            if (((state >> 2) & 3) == 0 && ((state >> 1) & 1) != 0 &&
-                slot->sequenceId != EXPGFX_INVALID_SEQUENCE_ID && (state & 1) == 0)
+            stateBitsValue = slot->stateBits.value;
+            if (((stateBitsValue >> 2) & 3) == 0 && ((stateBitsValue >> 1) & 1) != 0 &&
+                slot->sequenceId != EXPGFX_INVALID_SEQUENCE_ID && (stateBitsValue & 1) == 0)
             {
-                lifeFraction = lbl_803DF358 * (f32)slot->lifetimeFrameLimit;
+                halfLifeFrames = lbl_803DF358 * (f32)slot->lifetimeFrameLimit;
                 behaviorFlags = slot->behaviorFlags;
                 if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_TO_OPAQUE) != 0)
                 {
@@ -1828,9 +1828,9 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
                 }
                 else if ((slot->renderFlags & EXPGFX_RENDER_ALPHA_FADE_IN) != 0 &&
-                         (f32)slot->lifetimeFrame <= lifeFraction)
+                         (f32)slot->lifetimeFrame <= halfLifeFrames)
                 {
-                    f32 ratio = (f32)slot->lifetimeFrame / lifeFraction;
+                    f32 ratio = (f32)slot->lifetimeFrame / halfLifeFrames;
                     if (ratio < lbl_803DF35C)
                     {
                         ratio = lbl_803DF35C;
@@ -1844,9 +1844,9 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 else
                 {
                     u32 pulse = behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE;
-                    if (pulse != 0 && (f32)slot->lifetimeFrame <= lifeFraction)
+                    if (pulse != 0 && (f32)slot->lifetimeFrame <= halfLifeFrames)
                     {
-                        f32 ratio = (f32)slot->lifetimeFrame / lifeFraction;
+                        f32 ratio = (f32)slot->lifetimeFrame / halfLifeFrames;
                         if (ratio < lbl_803DF35C)
                         {
                             ratio = lbl_803DF35C;
@@ -1859,7 +1859,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     }
                     else if (pulse != 0)
                     {
-                        f32 ratio = (lifeFraction - ((f32)slot->lifetimeFrame - lifeFraction)) / lifeFraction;
+                        f32 ratio = (halfLifeFrames - ((f32)slot->lifetimeFrame - halfLifeFrames)) / halfLifeFrames;
                         if (ratio < lbl_803DF35C)
                         {
                             ratio = lbl_803DF35C;
@@ -1876,11 +1876,11 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     }
                 }
 
-                angleB = 0;
-                angleA = angleB;
-                sx = slot->renderX;
-                sy = slot->renderY;
-                sz = slot->renderZ;
+                pitchAngle = 0;
+                yawAngle = pitchAngle;
+                centerX = slot->renderX;
+                centerY = slot->renderY;
+                centerZ = slot->renderZ;
                 scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)slot->scaleCurrent;
                 if ((behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && hudHiddenFrameCount == 0)
                 {
@@ -1897,10 +1897,10 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     u32 behavior = slot->behaviorFlags;
                     if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0)
                     {
-                        angleB = 0;
+                        pitchAngle = 0;
                         if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_A) != 0)
                         {
-                            angleA = angleB;
+                            yawAngle = pitchAngle;
                         }
                         else if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH) != 0)
                         {
@@ -1916,31 +1916,31 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                                     if (absX > absZ)
                                     {
                                         getAngle(absX, aimDelta[1]);
-                                        angleB = (s16)(getAngle(absX, aimDelta[1]) - 0x3800);
+                                        pitchAngle = (s16)(getAngle(absX, aimDelta[1]) - 0x3800);
                                     }
                                     else
                                     {
                                         getAngle(absZ, aimDelta[1]);
-                                        angleB = (s16)(getAngle(absZ, aimDelta[1]) - 0x3800);
+                                        pitchAngle = (s16)(getAngle(absZ, aimDelta[1]) - 0x3800);
                                     }
-                                    angleA = (s16)getAngle(aimDelta[0], aimDelta[2]);
+                                    yawAngle = (s16)getAngle(aimDelta[0], aimDelta[2]);
                                 }
                             }
                             else
                             {
-                                angleA = (s16)(0x10000 - cameraSlot->yaw);
-                                angleB = cameraSlot->pitch;
+                                yawAngle = (s16)(0x10000 - cameraSlot->yaw);
+                                pitchAngle = cameraSlot->pitch;
                             }
                         }
                         else
                         {
-                            angleA = (s16)(0x10000 - cameraSlot->yaw);
+                            yawAngle = (s16)(0x10000 - cameraSlot->yaw);
                         }
                     }
                 }
 
-                angleToVec2((u16)angleA, &cosA, &sinA);
-                angleToVec2((u16)angleB, &cosB, &sinB);
+                angleToVec2((u16)yawAngle, &cosA, &sinA);
+                angleToVec2((u16)pitchAngle, &cosB, &sinB);
                 if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_A) != 0)
                 {
                     angleToVec2((u16)(gExpgfxPhaseAngleA + (((u32)slot << 8) & 0xFF00)), &sinC, &cosC);
@@ -1974,13 +1974,13 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     }
                     else if ((flags & EXPGFX_RENDER_ALT_ALPHA_SETUP) != 0)
                     {
-                        if (!(alphaMode == 4 && ((trackedFlags != flags) & EXPGFX_RENDER_OVERRIDE_COLORS) == 0))
+                        if (!(alphaMode == 4 && ((lastOverrideColorFlag != flags) & EXPGFX_RENDER_OVERRIDE_COLORS) == 0))
                         {
                             int masked;
                             setupReflectionIndirectTev(flags & EXPGFX_RENDER_OVERRIDE_COLORS);
                             alphaMode = 4;
                             masked = slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS;
-                            trackedFlags = masked;
+                            lastOverrideColorFlag = masked;
                         }
                     }
                     else if (alphaMode != 1)
@@ -2043,8 +2043,8 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     }
                 }
 
-                sx -= playerMapOffsetX;
-                sz -= playerMapOffsetZ;
+                centerX -= playerMapOffsetX;
+                centerZ -= playerMapOffsetZ;
                 quad = (ExpgfxQuadVertex*)slot;
                 vertexStream = quad;
                 GXBegin(GX_QUADS, GX_VTXFMT4, 4);
@@ -2065,9 +2065,9 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                         sA = sinA;
                         cB = cosB;
                         ay_cosB = ny * cB;
-                        worldX = sx + (nx * sA + cA * ay_cosB + cA * pz_sinB);
-                        worldY = sy + (ny * sB + (-pz) * cB);
-                        worldZ = sz + ((-nx) * cA + sA * ay_cosB + sA * pz_sinB);
+                        worldX = centerX + (nx * sA + cA * ay_cosB + cA * pz_sinB);
+                        worldY = centerY + (ny * sB + (-pz) * cB);
+                        worldZ = centerZ + ((-nx) * cA + sA * ay_cosB + sA * pz_sinB);
                     }
                     else
                     {
@@ -2077,15 +2077,15 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                         sA = sinA;
                         cB = cosB;
                         ay_cosB = py * cB;
-                        worldX = sx + (px * sA + cA * ay_cosB + cA * pz_sinB);
-                        worldY = sy + (py * sB + (-pz) * cB);
-                        worldZ = sz + ((-px) * cA + sA * ay_cosB + sA * pz_sinB);
+                        worldX = centerX + (px * sA + cA * ay_cosB + cA * pz_sinB);
+                        worldY = centerY + (py * sB + (-pz) * cB);
+                        worldZ = centerZ + ((-px) * cA + sA * ay_cosB + sA * pz_sinB);
                     }
-                    viewProjW = viewMatrix[2][0] * worldX + viewMatrix[2][1] * worldY + viewMatrix[2][2] * worldZ +
+                    viewDepth = viewMatrix[2][0] * worldX + viewMatrix[2][1] * worldY + viewMatrix[2][2] * worldZ +
                                 viewMatrix[2][3];
-                    if (viewProjW > lbl_803DB790)
+                    if (viewDepth > gExpgfxNearFadeDepth)
                     {
-                        alpha = (int)((f32)alpha * ((-viewProjW) - lbl_803DF414) / ((-lbl_803DB790) - lbl_803DF414));
+                        alpha = (int)((f32)alpha * ((-viewDepth) - lbl_803DF414) / ((-gExpgfxNearFadeDepth) - lbl_803DF414));
                     }
                     GXWGFifo.f32 = worldX;
                     GXWGFifo.f32 = worldY;
@@ -2442,7 +2442,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
     s16 texS0 = 0;
     f32 scaleVal;
     u8* poolSourceModesByte;
-    u8 modeFlag;
+    u8 sourceModeValue;
 
     ExpgfxQuadVertex* quadVertices;
 
@@ -2463,40 +2463,40 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         return EXPGFX_INVALID_POOL_INDEX;
     }
     {
-        int pi = poolIndex;
+        int poolIdx = poolIndex;
 
-        if (pi < EXPGFX_POOL_COUNT)
+        if (poolIdx < EXPGFX_POOL_COUNT)
         {
-            runtime->poolSourceIds[pi] = (int)config->attachedSource;
+            runtime->poolSourceIds[poolIdx] = (int)config->attachedSource;
         }
-        if (pi < EXPGFX_POOL_COUNT && (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)
+        if (poolIdx < EXPGFX_POOL_COUNT && (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)
         {
             /* Set this pool's bit in the 64-bit tracked-source-frame mask.
-             * mb selects trackedSourceFrameMasks[pi & 1] (offset 4112 = highWord,
-             * 4116 = lowWord); the bit index within the 64-bit mask is pi >> 1,
+             * maskBase selects trackedSourceFrameMasks[poolIdx & 1] (offset 4112 = highWord,
+             * 4116 = lowWord); the bit index within the 64-bit mask is poolIdx >> 1,
              * with the arithmetic shift routing bits >= 32 into the high word. */
-            u8* mb = (u8*)runtime + (pi & 1) * 8;
-            maskHighWord = *(u32*)(mb + 4112);
-            maskLowWord = *(u32*)(mb + 4116);
-            bit = 1 << (pi >> 1);
+            u8* maskBase = (u8*)runtime + (poolIdx & 1) * 8;
+            maskHighWord = *(u32*)(maskBase + 4112);
+            maskLowWord = *(u32*)(maskBase + 4116);
+            bit = 1 << (poolIdx >> 1);
             maskHighWord = (u32)((int)bit >> 0x1f) | maskHighWord;
             maskLowWord = bit | maskLowWord;
-            *(u32*)(mb + 4116) = maskLowWord;
-            *(u32*)(mb + 4112) = maskHighWord;
+            *(u32*)(maskBase + 4116) = maskLowWord;
+            *(u32*)(maskBase + 4112) = maskHighWord;
         }
         else
         {
             /* Clear this pool's bit in the 64-bit tracked-source-frame mask. */
-            u8* mb = (u8*)runtime + (pi & 1) * 8;
-            maskHighWord = *(u32*)(mb + 4112);
-            maskLowWord = *(u32*)(mb + 4116);
-            inverseBit = ~(u32)(1 << (pi >> 1));
+            u8* maskBase = (u8*)runtime + (poolIdx & 1) * 8;
+            maskHighWord = *(u32*)(maskBase + 4112);
+            maskLowWord = *(u32*)(maskBase + 4116);
+            inverseBit = ~(u32)(1 << (poolIdx >> 1));
             maskHighWord = (u32)((int)inverseBit >> 0x1f) & maskHighWord;
             maskLowWord = inverseBit & maskLowWord;
-            *(u32*)(mb + 4116) = maskLowWord;
-            *(u32*)(mb + 4112) = maskHighWord;
+            *(u32*)(maskBase + 4116) = maskLowWord;
+            *(u32*)(maskBase + 4112) = maskHighWord;
         }
-        slot = (ExpgfxSlot*)(runtime->slotPoolBases[pi] + slotIndex * EXPGFX_SLOT_SIZE);
+        slot = (ExpgfxSlot*)(runtime->slotPoolBases[poolIdx] + slotIndex * EXPGFX_SLOT_SIZE);
         quadVertices = (ExpgfxQuadVertex*)slot;
         gExpgfxSequenceCounter++;
         if (gExpgfxSequenceCounter > EXPGFX_SEQUENCE_COUNTER_MAX)
@@ -2700,8 +2700,8 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
 
         if (slotType == 1)
         {
-            lbl_803DD270 = lbl_803DD270 + 1;
-            lbl_803DD278 = lbl_803DD274 / lbl_803DD270;
+            gExpgfxSlotType1Count = gExpgfxSlotType1Count + 1;
+            gExpgfxSlotType1Average = lbl_803DD274 / gExpgfxSlotType1Count;
         }
 
         slot->colorByte0 = (u8)((int)*(u16*)&config->colorByte0 >> 8);
@@ -2734,17 +2734,17 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         }
 
         {
-            int pi2 = poolIndex;
-            modeFlag = (config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0 ? 1 : 0;
-            poolSourceModesByte = (u8*)runtime + pi2;
+            int poolIdx = poolIndex;
+            sourceModeValue = (config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0 ? 1 : 0;
+            poolSourceModesByte = (u8*)runtime + poolIdx;
             poolSourceModesByte += EXPGFX_POOL_SOURCE_MODES_OFFSET;
-            *poolSourceModesByte = modeFlag;
+            *poolSourceModesByte = sourceModeValue;
             if (*poolSourceModesByte != 0 &&
                 (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) == 0)
             {
                 (*poolSourceModesByte)++;
             }
-            runtime->poolBoundsTemplateIds[pi2] = (u8)boundsTemplateId;
+            runtime->poolBoundsTemplateIds[poolIdx] = (u8)boundsTemplateId;
         }
 
         DCFlushRange(slot, EXPGFX_SLOT_SIZE);

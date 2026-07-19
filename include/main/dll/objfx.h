@@ -8,10 +8,10 @@
 
 typedef struct ObjFxParticleEmitter
 {
-    u16 h18;
-    u16 h1a;
-    u16 h1c;
-    u16 pad06;
+    u16 rotX;
+    u16 rotY;
+    u16 rotZ;
+    u16 effectParam;
     f32 scale;
     f32 x;
     f32 y;
@@ -103,11 +103,11 @@ STATIC_ASSERT(sizeof(ObjFxRandomBurstTable) == 0x34);
 STATIC_ASSERT(sizeof(ObjFxColorTable) == 0x1E);
 STATIC_ASSERT(sizeof(ObjFxSparkleEffectTable) == 0xE0);
 
-extern const ObjFxS32Table5 lbl_802C1FF8;
+extern const ObjFxS32Table5 gObjFxPulseVariantTbl;
 extern const ObjFxSparkleEffectTable lbl_802C200C;
-extern const ObjFxU16Table11 lbl_802C20EC;
-extern const ObjFxU16Table7 lbl_802C2104;
-extern const ObjFxU16Table11 lbl_802C2114;
+extern const ObjFxU16Table11 gObjFxHitEffectParamTbl;
+extern const ObjFxU16Table7 gObjFxMaskedHitSpawnIdTbl;
+extern const ObjFxU16Table11 gObjFxHitEffectParamTbl2;
 extern const ObjFxRandomBurstTable gObjFxRandomBurstTbl;
 extern const ObjFxColorTable gObjFxCrystalSparkleTbl;
 extern ObjFxCrystalBurstTable gObjFxCrystalAmpTbl;
