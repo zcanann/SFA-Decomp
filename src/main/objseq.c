@@ -5148,8 +5148,6 @@ void ObjSeq_onMapSetup(void)
     u8* counts;
     int* handles;
     u8* marks;
-    int* handles2;
-    u8* marks2;
     int i = 0;
 
     flagsB = base + 0x3b9c;
@@ -5280,20 +5278,20 @@ void ObjSeq_onMapSetup(void)
     }
 
     {
-        for (flagsB = base + i, modes = (s16*)(base + 0x3a98) + i,
-             handles2 = (int*)(base + 0x33e4) + i, marks2 = flagsB + 0x338c;
-             i < 0x55;
-             i++, modes++, handles2++, marks2++)
+        modes = (s16*)(base + 0x3a98) + 0x50;
+        handles = (int*)(base + 0x33e4) + 0x50;
+        marks = base + 0x338c + 0x50;
+        for (i = 0; i < 5; i++)
         {
-            frames = (f32*)(handles2 + 300);
-            dists = (f32*)(handles2 + 215);
-            flagsA = marks2 + 0x810;
-            flagsB = marks2 + 0x7b8;
-            actions = marks2 + 0x8c0;
-            results = marks2 + 0x868;
-            states = marks2 + 0x6b4;
-            pending = marks2 + 0x65c;
-            counts = marks2 + 0x204;
+            frames = (f32*)(handles + 300);
+            dists = (f32*)(handles + 215);
+            flagsA = marks + 0x810;
+            flagsB = marks + 0x7b8;
+            actions = marks + 0x8c0;
+            results = marks + 0x868;
+            states = marks + 0x6b4;
+            pending = marks + 0x65c;
+            counts = marks + 0x204;
             flagsA[0] = 0;
             flagsB[0] = 0;
             modes[0] = 0;
@@ -5304,8 +5302,11 @@ void ObjSeq_onMapSetup(void)
             frames[0] = lbl_803DEFB0;
             dists[0] = -1.0f;
             counts[0] = 0;
-            handles2[0] = 0;
-            marks2[0] = 0;
+            handles[0] = 0;
+            marks[0] = 0;
+            modes++;
+            handles++;
+            marks++;
         }
     }
 
