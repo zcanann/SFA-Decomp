@@ -488,35 +488,24 @@ void timeFn_8006f400(f32 step)
     int i;
     u8* a;
     u8* b;
-    u8 value;
 
     for (i = 0; i < 256; i++)
     {
         a = &gWaterSplashQuads[i * 0x38];
         b = &gWaterRipples[i * 0x10];
-        value = a[0x33];
-        if (value != 0)
+        if (a[0x33] != 0)
         {
-            if ((f32)(u32)value - step <= lbl_803DEE20)
-            {
+            if (a[0x33] - step <= lbl_803DEE20)
                 a[0x33] = 0;
-            }
             else
-            {
-                a[0x33] = (f32)(u32)value - step;
-            }
+                a[0x33] -= step;
         }
-        value = b[0x0E];
-        if (value != 0)
+        if (b[0x0E] != 0)
         {
-            if ((f32)(u32)value - step <= lbl_803DEE20)
-            {
+            if (b[0x0E] - step <= lbl_803DEE20)
                 b[0x0E] = 0;
-            }
             else
-            {
-                b[0x0E] = (f32)(u32)value - step;
-            }
+                b[0x0E] -= step;
         }
     }
 }
