@@ -2261,8 +2261,8 @@ u32 mapLoadDataFile(int mapId, int fileId)
 char sAssetHaltFormat[] = "HALT\t%s\n";
 char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
 
-int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
-                              u32 flagBits)
+void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 length, int* sizeOut, int entryIndex,
+                                u32 flagBits)
 {
     struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
     u32 tab0 = 0; /* TAB ptr of the primary slot of the pair, 0 = not ready */
@@ -3357,7 +3357,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             fileBuf = qptr + entryIndex;
             if (strncmp(sDirBlockTag, (char*)fileBuf, 3) == 0)
             {
-                return MLDF_QPTR + (entryIndex + 0x20);
+                return (void*)(MLDF_QPTR + (entryIndex + 0x20));
             }
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {
@@ -3373,7 +3373,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             fileBuf = qptr + entryIndex;
             if (strncmp(sDirBlockTag, (char*)fileBuf, 3) == 0)
             {
-                return MLDF_QPTR + (entryIndex + 0x20);
+                return (void*)(MLDF_QPTR + (entryIndex + 0x20));
             }
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {

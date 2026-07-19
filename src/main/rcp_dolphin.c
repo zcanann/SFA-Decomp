@@ -1767,8 +1767,8 @@ void* textureLoad(int texId, u8 flagIn)
         }
         if (frameOut == -1)
         {
-            buf = (u8*)loadAndDecompressDataFile(file, 0, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel],
-                                                 frameSize, 0, id16, 0);
+            buf = loadAndDecompressDataFile(file, 0, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel], frameSize,
+                                            0, id16, 0);
             buf[0x49] = 1;
             if (flag != 0)
             {
@@ -1778,8 +1778,8 @@ void* textureLoad(int texId, u8 flagIn)
         }
         else
         {
-            loadAndDecompressDataFile(file, (int)buf, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel], frameSize,
-                                      0, id16, 0);
+            loadAndDecompressDataFile(file, buf, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel], frameSize, 0,
+                                      id16, 0);
         }
         if (frameOut != -1)
         {
