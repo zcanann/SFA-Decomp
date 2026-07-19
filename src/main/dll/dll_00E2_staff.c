@@ -628,10 +628,10 @@ void staffDrawSwipe(int* obj, int* swipe)
 }
 void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 {
-    u8* model2;
+    ObjWeaponDaTable* weaponDaTable;
     u8* slot;
     u8* obj;
-    ObjWeaponDaTable* weaponDaTable;
+    u8* model2;
     s16* tbl;
     int count;
     int count2;
