@@ -2,7 +2,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/vecmath_distance_api.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/objfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
