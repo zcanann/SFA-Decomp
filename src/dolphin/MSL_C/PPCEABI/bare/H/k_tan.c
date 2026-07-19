@@ -1,8 +1,8 @@
 #include "main/fsin16_approx_api.h"
 #include "main/trig_ext.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
-extern double __frsqrte(double x);
 typedef signed short s16;
 
 extern float lbl_803E7C70;

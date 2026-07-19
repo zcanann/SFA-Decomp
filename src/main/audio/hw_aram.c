@@ -1,9 +1,9 @@
+#include "PowerPC_EABI_Support/Runtime/runtime.h"
 #include "main/audio/hw_aram.h"
 #include "main/audio/synth_config.h"
 
 
 extern f32 lbl_803E78E8;
-extern asm u32 __cvt_fp2unsigned(register f64 d);
 
 u32 hwExitStream(u32 value)
 {

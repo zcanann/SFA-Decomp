@@ -1,3 +1,4 @@
+#include "PowerPC_EABI_Support/Runtime/runtime.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/adsr.h"
 #include "main/audio/adsr_setup.h"
@@ -6,7 +7,6 @@
 
 extern u8 voiceAdsrDecayTable[];
 extern u16 lbl_8032F618[];
-extern asm u32 __cvt_fp2unsigned(register f64 d);
 
 u32 voiceConvertDbToLinear(u32 timeCents)
 {

@@ -1,8 +1,8 @@
+#include "PowerPC_EABI_Support/Runtime/runtime.h"
 #include "main/audio/synth_config.h"
 
 extern f32 voicePitchUpTable[];
 extern f32 voicePitchDownTable[];
-extern asm u32 __cvt_fp2unsigned(register f64 d);
 
 int voiceScaleSampleRate(u16 value)
 {

@@ -1,6 +1,7 @@
+#include "PowerPC_EABI_Support/Runtime/runtime.h"
+
 extern double lbl_803E7C00;
 extern double lbl_803E7C08;
-extern unsigned int __cvt_fp2unsigned(double x);
 
 
 double tan(int* out_n, float x)
