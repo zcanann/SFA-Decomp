@@ -180,73 +180,6 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cb
     gAudioArqRequestDone = 0;
     ARQPostRequest(&entry->request, 0x64, 1, 1, (u32)source, (u32)buf, size, fn_80008EDC);
 }
-void fn_80008EDC(u32 request);
-void fn_80009008(u32 request);
-void sampleBufferSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void sampleDirectorySLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void projectDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void poolDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void sampleBufferMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void sampleDirectoryMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void projectDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void audioSetSoundMode(int mode, u8 forceFlag);
-void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag);
-void sndMasterVolume(int volume, int time, u8 musicFlag, u8 fxFlag);
-void AudioStream_SetVolume();
-void AudioStream_SetDefaultVolume();
-void audioStopByMask(int mask);
-void audioReset(void);
-int audioIsResetting(void);
-void audioStopAll(void);
-void audioUpdate(void);
-int audioInit(void);
-void audioLoadTriggerData(void);
-void audioFree(void* ptr);
-void* _audioAlloc(u32 size);
-void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void Music_PlayTrackByIndex(int index);
-int return0x64_8000A378(void);
-void streamFn_8000a380(int mask, int mode, int time);
-void Music_Trigger(int id, int arg);
-void Music_Update(void);
-s32 Music_GetActivePriority(void);
-void Music_LoadChannelForTrigger(MusicTrigger* trigger);
-void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger);
-u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit);
-int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-void audioFn_8000b694(u32 value);
-void Sfx_SetObjectSoundsPaused(s32 paused);
-void Sfx_StopObjectChannel(int obj, int channel);
-void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
-void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
-void Sfx_UpdateObjectSounds(void);
-void Sfx_InitObjectChannels(void);
-void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId);
-int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
-int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f32* outF6, f32* outF7, f32* outF8, int* outI9, int* outI10, int* outI11);
-SfxTrigger* Sfx_FindTrigger(u16 id);
-SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan,
-                                         int globalCtrlDisabled);
-void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
-void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v);
-f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta);
-void doNothing_8000CF54(int unused);
-void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block);
-void fn_8000D0B4(s32 result, DVDCommandBlock* block);
-void AudioStream_UpdateFadeTimer(void);
-void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo);
-void AudioStream_PlayAddrCallback(u32 result);
-void Sfx_ClearLoopedObjectSounds(void);
-void Sfx_UpdateLoopedObjectSounds(void);
-void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
-void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
-void Sfx_RemoveLoopedObjectSound(u32 obj, u16 sfxId);
-void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
-
 static inline void Music_FreeChannel(MusicChannel* ch)
 {
     sndSeqStop(ch->seqHandle);
@@ -565,9 +498,6 @@ static inline SfxObjectChannel* Sfx_FindFreeObjectChannel(void)
     return NULL;
 }
 
-SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan,
-                                         int globalCtrlDisabled);
-
 void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
@@ -735,7 +665,7 @@ void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int stream
 {
     if (musicFlag != 0 || fxFlag != 0)
     {
-        sndMasterVolume(volume, time, musicFlag, fxFlag);
+        ((void (*)(int, int, u8, u8))sndMasterVolume)(volume, time, musicFlag, fxFlag);
     }
     if (streamFlag != 0)
     {

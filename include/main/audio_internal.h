@@ -286,6 +286,7 @@ void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block);
 void fn_8000D0B4(s32 result, DVDCommandBlock* block);
 void fn_80008EDC(u32 request);
 void Music_LoadChannelForTrigger(MusicTrigger* trigger);
+void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger);
 u32 audioFlagFn_8000a188(u32 mask);
 void audioFree(void* ptr);
 void* _audioAlloc(u32 size);
@@ -307,6 +308,11 @@ void sampleDirectorySLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f32* outF6, f32* outF7,
+                          f32* outF8, int* outI9, int* outI10, int* outI11);
+SfxTrigger* Sfx_FindTrigger(u16 id);
+SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan,
+                                         int globalCtrlDisabled);
 void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 callback, u32 callbackArg1, u32 callbackArg2,
                           u32 callbackArg3);
 void audioLoadTriggerData(void);
