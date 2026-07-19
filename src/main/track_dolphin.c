@@ -296,7 +296,7 @@ extern const f32 lbl_803DECC0;
 extern const f32 lbl_803DECC8;
 extern f32 lbl_803DED08;
 extern const f32 lbl_803DECE8;
-extern const f32 lbl_803DECE0;
+extern const f32 gTrackGridCellSize;
 extern const f32 lbl_803DECEC;
 extern volatile GolfWGPipe GXWGFifo : (0xCC008000);
 extern const f32 lbl_803DEC78;
@@ -3977,10 +3977,10 @@ u8 doEdges;
         z1 ^= z0;
         z0 ^= z1;
     }
-    gx0 = fastFloorf((f32)x0 / lbl_803DECE0);
-    gz0 = fastFloorf((f32)z0 / lbl_803DECE0);
-    gx1 = fastFloorf((f32)x1 / lbl_803DECE0);
-    gz1 = fastFloorf((f32)z1 / lbl_803DECE0);
+    gx0 = fastFloorf((f32)x0 / gTrackGridCellSize);
+    gz0 = fastFloorf((f32)z0 / gTrackGridCellSize);
+    gx1 = fastFloorf((f32)x1 / gTrackGridCellSize);
+    gz1 = fastFloorf((f32)z1 / gTrackGridCellSize);
 
     count = 0;
     layer = 0;
@@ -4405,7 +4405,7 @@ void trackIntersect(void)
             f32 blockZ;
             gridX = 0;
             blockIndex = rowOffset;
-            blockZ = lbl_803DECE0 * gridZ;
+            blockZ = gTrackGridCellSize * gridZ;
             for (; gridX < 0x10; blockIndex++, gridX++)
             {
                 if ((s8)idx[blockIndex] >= 0)
@@ -4414,7 +4414,7 @@ void trackIntersect(void)
                     f32 blockX;
                     sourceIndex = 0;
                     sourceOffset = 0;
-                    blockX = lbl_803DECE0 * gridX;
+                    blockX = gTrackGridCellSize * gridX;
                     for (; sourceIndex < blk->hitCount; sourceOffset += 0x14, sourceIndex++)
                     {
                         if (gIntersectLineCount < 0x5dc)
