@@ -581,7 +581,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
     return 0;
 }
 
-int fn_800D9F38(RomCurveWalker* walker, void* curve)
+int RomCurve_setSegmentEndNode(RomCurveWalker* walker, void* curve)
 {
     char* A = (char*)walker;
     char* B = curve;
@@ -735,7 +735,7 @@ void RomCurve_stepClamped(RomCurveWalker* state, f32 dt)
     Curve_AdvanceAlongPath(&state->curve, dt);
 }
 
-int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
+int RomCurve_setupHermiteSegment(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
 {
     if (state->reverse != 0)
     {
@@ -909,7 +909,7 @@ void walkPath_writeU16LE(u32 v, u8* dst)
         }                                                                                                              \
     }
 
-int fn_800DB240(f32* point, f32* outVec, u16 id)
+int Objfsa_GetNearestPatchExit(f32* point, f32* outVec, u16 id)
 {
     u8 i;
     f32 d1;

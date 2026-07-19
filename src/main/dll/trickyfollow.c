@@ -290,7 +290,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                             }
                             if (i == 4)
                             {
-                                fn_800DB240(target, &state->patchExitPos.x, trickyPatch);
+                                Objfsa_GetNearestPatchExit(target, &state->patchExitPos.x, trickyPatch);
                                 state->followPhase = 4;
                             }
                         }
@@ -331,7 +331,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                             }
                             else
                             {
-                                fn_800DB240(target, &state->patchExitPos.x, (u16)tp);
+                                Objfsa_GetNearestPatchExit(target, &state->patchExitPos.x, (u16)tp);
                                 state->followPhase = 4;
                             }
                         }
@@ -418,7 +418,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                                 }
                                 if (i == 4)
                                 {
-                                    fn_800DB240(target, &state->patchExitPos.x, (u16)p);
+                                    Objfsa_GetNearestPatchExit(target, &state->patchExitPos.x, (u16)p);
                                     state->followPhase = 4;
                                 }
                             }
@@ -428,7 +428,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                             }
                             else
                             {
-                                fn_800DB240(target, &state->patchExitPos.x, (u16)p);
+                                Objfsa_GetNearestPatchExit(target, &state->patchExitPos.x, (u16)p);
                                 state->followPhase = 4;
                             }
                         }
@@ -506,7 +506,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                 }
                 else
                 {
-                        fn_800DA980(&state->route, prevNode, node, nextNode);
+                        RomCurve_setupHermiteSegment(&state->route, prevNode, node, nextNode);
                     RomCurve_stepClamped(&state->route, lbl_803E2484);
                     yawA = getAngle(state->prevLocalPosX - obj->anim.localPosX,
                                     state->prevLocalPosZ - obj->anim.localPosZ);
@@ -791,7 +791,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
             }
             if (node != state->route.nodeA4)
             {
-                fn_800D9F38(&state->route, node);
+                RomCurve_setSegmentEndNode(&state->route, node);
             }
         }
         if ((state->savedWalkGroup == 0) || (wg != state->savedWalkGroup))

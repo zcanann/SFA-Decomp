@@ -212,7 +212,7 @@ void trickyFn_80141290(int obj, int ball)
                 ts->route.reverse = 1;
             }
 
-            fn_800DA980(&ts->route, curveArg, (void*)fromNode, (void*)targetNode);
+            RomCurve_setupHermiteSegment(&ts->route, curveArg, (void*)fromNode, (void*)targetNode);
             if (ts->route.reverse != 0)
             {
                 RomCurve_stepClamped(&ts->route, lbl_803E250C);

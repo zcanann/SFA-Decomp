@@ -149,7 +149,7 @@ void CurveFish_update(int obj)
         thirdNode =
             (int)(*gRomCurveInterface)->getById(((int (*)(int, int))(*gRomCurveInterface)->slot54)(secondNode, 0));
 
-        if (fn_800DA980((RomCurveWalker*)state, (void*)firstNode, (void*)secondNode, (void*)thirdNode) != 0)
+        if (RomCurve_setupHermiteSegment((RomCurveWalker*)state, (void*)firstNode, (void*)secondNode, (void*)thirdNode) != 0)
         {
             return;
         }
