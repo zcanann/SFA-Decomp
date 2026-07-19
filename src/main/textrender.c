@@ -724,7 +724,7 @@ static inline TextGlyph* findGlyph(u32 ch, int glyphLang)
     return NULL;
 }
 
-void textRenderStr(u8* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mode)
+void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mode)
 {
     int realign;
     f32 fx0, fy0, fx1, fy1;
@@ -768,10 +768,10 @@ void textRenderStr(u8* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mode)
     if (curLanguage != 4 && mode == 1 && saveFileStruct_isCheatActive(CHEAT_DINO_LANGUAGE) &&
         win == &gTextBoxes[10])
     {
-        translateToDinoLanguage(str);
+        translateToDinoLanguage((u8*)str);
     }
 
-    gameTextMeasureString(str, lbl_803DC9A0, &measW, &measN, 0, 0, -1);
+    gameTextMeasureString((u8*)str, lbl_803DC9A0, &measW, &measN, 0, 0, -1);
     if (lbl_803DC9BC == 0)
     {
         setTextColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
@@ -786,7 +786,7 @@ void textRenderStr(u8* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mode)
     y = y + win->y;
     winBase = gTextBoxes;
 
-    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0)
+    while (p = (u8*)str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0)
     {
         byteOff += charLen;
         skipGlyph = 0;
@@ -795,8 +795,8 @@ void textRenderStr(u8* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mode)
             n2 = getControlCharLen(ch);
             for (i = 0; i < n2; i++)
             {
-                int hi = str[byteOff++];
-                int lo = str[byteOff++];
+                int hi = ((u8*)str)[byteOff++];
+                int lo = ((u8*)str)[byteOff++];
                 params[i] = (hi << 8) | lo;
             }
             switch (ch)
@@ -3159,7 +3159,7 @@ void fn_8001BE2C(int mode)
     }
 }
 
-void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, struct TextSlot* box)
+void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, GameTextBox* box)
 {
     int c6y1;
     int c6y0;

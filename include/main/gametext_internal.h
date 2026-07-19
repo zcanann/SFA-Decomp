@@ -33,7 +33,7 @@ typedef struct GameTextDef {
     char** strings;
 } GameTextDef;
 
-typedef struct TextSlot {
+typedef struct GameTextBox {
     u8 pad0[8];
     u16 f08;
     u16 f0a;
@@ -126,6 +126,5 @@ extern char sLanguageNameItalian[];
 extern char sLanguageNameSpanish[];
 
 int getControlCharLen(u32 c);
-void textRenderStr(char* str, TextSlot* slot, f32 x, f32 y, f32 lineH, int flag);
 
 #endif /* MAIN_GAMETEXT_INTERNAL_H_ */
