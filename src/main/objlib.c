@@ -31,7 +31,7 @@
 #include "string.h"
 #include "main/frame_timing.h"
 #include "main/pad_api.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/rcp_dolphin_ext.h"
 
 typedef struct ObjLibRegionList ObjLibRegionList;
@@ -1438,7 +1438,7 @@ int ObjHits_PollPriorityHitWithCooldown(GameObject* obj, float* cooldown, int* o
 }
 
 int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u32 colorR, u32 colorG, u32 colorB,
-                                              u32 sfxId, float* cooldown)
+                                              u16 sfxId, float* cooldown)
 {
     int collisionType;
     ObjHitReactEffectHandle* effectHandle;
@@ -1470,9 +1470,9 @@ int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u3
             effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &effectPos,
                                         OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE,
                                         &effectArgs);
-            if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (((GameObject*)hitObject)->anim.seqId == OBJLIB_HITOBJ_SEQID_STAFF))
+            if (((sfxId != 0) && (hitObject != 0)) && (((GameObject*)hitObject)->anim.seqId == OBJLIB_HITOBJ_SEQID_STAFF))
             {
-                Sfx_PlayFromObject((int)obj, sfxId);
+                Sfx_PlayFromObject((u32)obj, sfxId);
             }
         }
     }

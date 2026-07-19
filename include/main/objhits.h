@@ -321,6 +321,6 @@ int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* 
 int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 int ObjHits_PollPriorityHitWithCooldown(GameObject* obj, float* cooldown, int* outHitObject, float* outHitPos);
 int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u32 colorR, u32 colorG, u32 colorB,
-                                              u32 sfxId, float* cooldown);
+                                              u16 sfxId, float* cooldown);
 
 #endif /* MAIN_OBJHITS_H_ */
