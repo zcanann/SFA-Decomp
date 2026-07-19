@@ -2900,7 +2900,7 @@ void hudDrawRect(int x1, int y1, int x2, int y2, GXColor color)
     Camera_RebuildProjectionMatrix();
 }
 
-void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
+void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, GXColor* color)
 {
     extern f32 lbl_803DEEDC;
     f32 scale = hudScale;
@@ -2929,8 +2929,8 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    color[3] = (u8)(((s32)color[3] * gHudTintAlpha) >> 8);
-    GXSetTevKColor(GX_KCOLOR0, *(GXColor*)color);
+    color->a = (u8)(((s32)color->a * gHudTintAlpha) >> 8);
+    GXSetTevKColor(GX_KCOLOR0, *color);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
@@ -2979,7 +2979,7 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
     Camera_RebuildProjectionMatrix();
 }
 
-void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
+void hudDrawTriangle(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, u32* color)
 {
     extern f32 lbl_803DEEDC;
     f32 scale = hudScale;
@@ -3006,7 +3006,7 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    color[3] = (u8)(((s32)color[3] * gHudTintAlpha) >> 8);
+    ((u8*)color)[3] = (u8)(((s32)((u8*)color)[3] * gHudTintAlpha) >> 8);
     GXSetTevKColor(GX_KCOLOR0, *(GXColor*)color);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);

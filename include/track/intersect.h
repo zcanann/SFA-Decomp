@@ -32,8 +32,6 @@ void doSpiritVisionFilter(void);
 void doColorFilter(u8* mod);
 void doDistortionFilter(f32* position, f32 radius, u8* modulation, f32 angle);
 int moonFxCb_80074110(u8* obj, int* objB, int slot);
-void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
-void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3);
 void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z);
 void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2);
 void drawRect(f32 sx, f32 sy, int x, int y);

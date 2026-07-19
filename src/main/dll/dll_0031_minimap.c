@@ -139,7 +139,6 @@ void Minimap_drawCompassBlip(void);
 void Minimap_setupCompassBlip(void);
 void fn_8013351C(void);
 
-extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32* color);
 extern u8 lbl_803DD7BA;
 extern s16 lbl_803DD7A2;
 extern s16 lbl_803DBA6E;
