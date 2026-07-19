@@ -4,6 +4,7 @@
 #include "main/hud_visibility_api.h"
 #include "main/audio/sfx.h"
 #include "main/gametext_api.h"
+#include "main/gameloop_api.h"
 #include "main/gametext_charset_api.h"
 #include "main/gametext_show_str_api.h"
 #include "main/gametext_shared_internal.h"
@@ -339,8 +340,6 @@ extern int gSubtitleElapsedFrames;
 extern int gSubtitleLineCount;
 extern Texture* gGameTextBoxEdgeTexture;
 extern u32 lbl_80339C40[];
-
-int getGameState(void);
 
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
 void translateToDinoLanguage(u8* str);
