@@ -52,7 +52,8 @@
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 #include "main/dll/SB/dll_01E8_sbgalleon.h"
 #include "main/frame_timing.h"
-#include "main/audio/sfx.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_stop_object_api.h"
 
 u8 lbl_803DC078[4] = {0x0A, 0x10, 0x1F, 0};
 u8 gSbGalleonSkyColorBEnd[4] = {9, 0x0F, 0x1E, 0};
@@ -144,7 +145,7 @@ typedef struct
     f32 x, y, z;
 } SkyVec3;
 
-void fn_801E1588(int obj, int state)
+void fn_801E1588(GameObject* obj, SBGalleonState* state)
 {
     ObjModel* model;
     int i;
@@ -220,7 +221,7 @@ void fn_801E1588(int obj, int state)
     skySetOverrideLightDirectionEnabled(1);
     skySetOverrideLightDirection(lbl_803DDC28 * (d.x - c.x) + c.x, lbl_803DDC28 * (d.y - c.y) + c.y,
                                  lbl_803DDC28 * (d.z - c.z) + c.z, lbl_803E5724);
-    if (((SBGalleonState*)state)->skyFlag == 0)
+    if (state->skyFlag == 0)
     {
         skyFn_800894a8(SBGALLEON_SKY_LIGHT_SLOT, a.x, a.y, a.z);
     }
@@ -228,7 +229,7 @@ void fn_801E1588(int obj, int state)
     {
         skyFn_800894a8(SBGALLEON_SKY_LIGHT_SLOT, b.x, b.y, b.z);
     }
-    model = Obj_GetActiveModel((GameObject*)obj);
+    model = Obj_GetActiveModel(obj);
     i = 0;
     {
         f32 scale = lbl_803E57F4;
@@ -243,12 +244,13 @@ void fn_801E1588(int obj, int state)
     }
 }
 
-int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int SB_Galleon_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
+    SBGalleonState* state = obj->extra;
     int i;
-    ((GameObject*)obj)->anim.mapEventSlot = -1;
-    fn_801E1588(obj, (int)state);
+
+    obj->anim.mapEventSlot = -1;
+    fn_801E1588(obj, state);
     {
         f32 z = lbl_803E56CC;
         state->moveScale = lbl_803E56CC;
@@ -301,10 +303,10 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case SBGALLEON_SEQEV_SFX_ON:
-            Sfx_PlayFromObject((u32)obj, SBGALLEON_SFX_SPLASH);
+            Sfx_PlayFromObject(obj, SBGALLEON_SFX_SPLASH);
             break;
         case SBGALLEON_SEQEV_SFX_OFF:
-            Sfx_StopFromObject((u32)obj, SBGALLEON_SFX_SPLASH);
+            Sfx_StopFromObjectPtrU32Legacy(obj, SBGALLEON_SFX_SPLASH);
             break;
         case SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_8:
             if (state->damagePhase == 8)
@@ -323,7 +325,7 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             state->skyFlag = 0;
             break;
         case SBGALLEON_SEQEV_SPLASH_SFX:
-            Sfx_PlayFromObject(sbGetPropeller(), SBGALLEON_SFX_SPRAY);
+            Sfx_PlayFromObject((void*)sbGetPropeller(), SBGALLEON_SFX_SPRAY);
             break;
         case SBGALLEON_SEQEV_MUSIC:
             state->musicIdB = SBGALLEON_MUSIC_INTRO;
@@ -363,9 +365,9 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         gameTextSetColor(0xff, 0xff, 0xff, state->textAlpha);
         gameTextShow(SBGALLEON_GAMETEXT);
     }
-    state->posX = ((GameObject*)obj)->anim.localPosX;
-    state->posY = ((GameObject*)obj)->anim.localPosY;
-    state->posZ = ((GameObject*)obj)->anim.localPosZ;
+    state->posX = obj->anim.localPosX;
+    state->posY = obj->anim.localPosY;
+    state->posZ = obj->anim.localPosZ;
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
     animUpdate->sequenceEventActive = 0;
     return 0;
@@ -433,7 +435,7 @@ int SB_Galleon_onPartDestroyed(GameObject* obj)
     {
         if (phase >= 2)
         {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_sc_npu_216_3f);
+            Sfx_PlayFromObject(obj, SFXTRIG_sc_npu_216_3f);
         }
         state->stage += 1;
         return 1;
@@ -543,7 +545,7 @@ void SB_Galleon_update(GameObject* obj)
 {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     obj->anim.mapEventSlot = state->mapLayer;
-    fn_801E1588((int)obj, (int)state);
+    fn_801E1588(obj, state);
     if (mainGetBit(SBGALLEON_GAMEBIT_INTRO) == 0)
     {
         (*gMapEventInterface)->setMapAct(SBGALLEON_MAP_PALACE, 1);
