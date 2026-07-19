@@ -185,6 +185,29 @@ void guardClaw_init(int* obj, u8* state)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
 }
 
+GameObject* gcRobotLight_init(GameObject* obj, int childId)
+{
+    int sub;
+    u8* setup;
+
+    sub = *(int*)&obj->anim.placementData;
+    Obj_GetPlayerObject();
+    if (Obj_IsLoadingLocked() == 0)
+        return NULL;
+    setup = (u8*)Obj_AllocObjectSetup(36, childId);
+    *(s16*)(setup + 0) = childId;
+    ((ObjPlacement*)setup)->color[0] = ((ObjPlacement*)sub)->color[0];
+    ((ObjPlacement*)setup)->color[2] = ((ObjPlacement*)sub)->color[2];
+    ((ObjPlacement*)setup)->color[1] = 1;
+    ((ObjPlacement*)setup)->color[3] = ((ObjPlacement*)sub)->color[3];
+    ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
+    ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
+    ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
+    ((Seq11EChildSetup*)setup)->unk19 = 0;
+    ((Seq11EChildSetup*)setup)->unk20 = 149;
+    return Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
+}
+
 void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int msg, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     int sub;
@@ -412,29 +435,6 @@ void gcRobotPatrol_update(int* obj, u8* state)
             ObjLink_AttachChild((GameObject*)obj, newObj, attached);
         }
     }
-}
-
-GameObject* gcRobotLight_init(GameObject* obj, int childId)
-{
-    int sub;
-    u8* setup;
-
-    sub = *(int*)&obj->anim.placementData;
-    Obj_GetPlayerObject();
-    if (Obj_IsLoadingLocked() == 0)
-        return NULL;
-    setup = (u8*)Obj_AllocObjectSetup(36, childId);
-    *(s16*)(setup + 0) = childId;
-    ((ObjPlacement*)setup)->color[0] = ((ObjPlacement*)sub)->color[0];
-    ((ObjPlacement*)setup)->color[2] = ((ObjPlacement*)sub)->color[2];
-    ((ObjPlacement*)setup)->color[1] = 1;
-    ((ObjPlacement*)setup)->color[3] = ((ObjPlacement*)sub)->color[3];
-    ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
-    ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
-    ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
-    ((Seq11EChildSetup*)setup)->unk19 = 0;
-    ((Seq11EChildSetup*)setup)->unk20 = 149;
-    return Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
 }
 
 void gcRobotPatrol_init(GameObject* obj, int state)
