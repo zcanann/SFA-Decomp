@@ -3066,8 +3066,8 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
 int playerState31(GameObject* obj, int p2)
 {
     PlayerState* inner = obj->extra;
-    u8 state30 = 0x1a;
     u8 state29 = 0x1a;
+    u8 state30 = 0x1a;
     void* near;
     f32 dist;
     f32 dir[3];
