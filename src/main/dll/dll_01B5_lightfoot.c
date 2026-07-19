@@ -299,8 +299,7 @@ void lightfoot_update(GameObject* obj)
             snd[1] = lbl_803E81C4;
             snd[2] = lbl_803E8180;
             Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_foot_metal_scuff_455);
-            ((void (*)(int, f32, int, int, int, void*))fn_80098B18)(
-                (int)obj, lbl_803E81C8 * (obj)->anim.rootMotionScale, 3, p30, 0, snd);
+            fn_80098B18(obj, lbl_803E81C8 * obj->anim.rootMotionScale, 3, p30, 0, snd);
         }
         ((LightfootSub*)anim)->wanderTimer -= timeDelta;
     }

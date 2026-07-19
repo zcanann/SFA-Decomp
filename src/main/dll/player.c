@@ -18593,8 +18593,7 @@ int Lightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             scale = lbl_803E8210;
             for (; j != 0; j--)
             {
-                ((void (*)(GameObject*, f32, int, int, int, void*))fn_80098B18)(
-                    obj, scale * obj->anim.rootMotionScale, 3, 0, 0, arr);
+                fn_80098B18(obj, scale * obj->anim.rootMotionScale, 3, 0, 0, arr);
             }
             break;
         }
@@ -18619,8 +18618,7 @@ int Lightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             snd[1] = lbl_803E81C4;
             snd[2] = lbl_803E8180;
             Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_foot_metal_scuff_455);
-            ((void (*)(int, f32, int, int, int, void*))fn_80098B18)(
-                (int)obj, lbl_803E81C8 * obj->anim.rootMotionScale, 3, mode, 0, snd);
+            fn_80098B18(obj, lbl_803E81C8 * obj->anim.rootMotionScale, 3, mode, 0, snd);
         }
     }
     *(u16*)((char*)inner + 0x400) = *(u16*)((char*)inner + 0x400) | 2;
