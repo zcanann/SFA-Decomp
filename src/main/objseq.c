@@ -687,7 +687,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
             }
             else if (objId == 0xfffe)
             {
-                setup->base.objectId = 0x1e;
+                setup->base.objectId = OBJSEQ_ANIMCAMERA_OBJ;
                 setup->targetType = 3;
                 curSeqNo = slot;
             }

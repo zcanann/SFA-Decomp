@@ -1247,6 +1247,11 @@ void gameUpdate(void)
 
 
 
+/* death-sequence player stand-ins; the fuzz pass only runs for these two
+   (retail OBJECTS.bin names, both DLL 0x10E) */
+#define GAMELOOP_SEQID_DIE_FOX     0x882 /* "DieFox" */
+#define GAMELOOP_SEQID_DIE_KRYSTAL 0x887 /* "DieKrystal" */
+
 void gameLoop(void)
 {
     waitNextFrame();
@@ -1278,7 +1283,8 @@ void gameLoop(void)
                 for (; i < gGameLoopButtonObjectCount; i++)
                 {
                     objRenderModelAndHitVolumes(*p, 0, 0, 0, 0, lbl_803DE7A8);
-                    if (((GameObject*)*p)->anim.seqId == 0x882 || ((GameObject*)*p)->anim.seqId == 0x887)
+                    if (((GameObject*)*p)->anim.seqId == GAMELOOP_SEQID_DIE_FOX ||
+                        ((GameObject*)*p)->anim.seqId == GAMELOOP_SEQID_DIE_KRYSTAL)
                     {
                         objRenderFuzz((int*)*p);
                     }

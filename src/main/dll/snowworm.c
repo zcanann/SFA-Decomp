@@ -94,6 +94,7 @@ extern u8 lbl_803DBD30[4];
 #define FIRECRAWLER_SEQID_FIRECRAWLER  0x6a2 /* FireCrawler */
 #define FIRECRAWLER_SEQID_REDEYE       0x6a3 /* RedEye */
 #define FIRECRAWLER_SEQID_SHADOWHUNTER 0x6a4 /* ShadowHunter */
+#define SNOWWORM_SEQID_BABY            0x84b /* "snowworm_ba" - the baby variant of 0x842 "snowworm" */
 
 /* movement dust spawned on the move-loop event: turning (turnDelta != 0) */
 #define FIRECRAWLER_PARTFX_MOVE_TURN 0x802
@@ -449,7 +450,7 @@ void snowworm_init(int* obj, int* st)
         ((BaddieState*)st)->unk31C = d;
     }
     ((BaddieState*)st)->userData1 = 1;
-    ((FCVars*)st)->turnDelta = (u16)(((GameObject*)obj)->anim.seqId == 0x84b);
+    ((FCVars*)st)->turnDelta = (u16)(((GameObject*)obj)->anim.seqId == SNOWWORM_SEQID_BABY);
 }
 
 void whirlpool_updateWhileFrozen(int wpad0, void* wpad1, int wpad2, int wpad3, int wpad4, int wpad5, void* wpad6, int wpad7)

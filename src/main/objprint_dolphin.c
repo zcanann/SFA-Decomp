@@ -2506,6 +2506,12 @@ void objRenderFn_800413d4(int* obj)
     }
 }
 
+/* seqIds that always get the strong, high-segment-count fuzz (retail
+   OBJECTS.bin names) */
+#define OBJPRINT_SEQID_FRONT_FOX   0x77d /* "FrontFox" (DLL 0x2C0) */
+#define OBJPRINT_SEQID_DIE_FOX     0x882 /* "DieFox" (DLL 0x10E) */
+#define OBJPRINT_SEQID_DIE_KRYSTAL 0x887 /* "DieKrystal" (DLL 0x10E) */
+
 void objRenderFuzz(int* obj)
 {
     int n;
@@ -2517,12 +2523,15 @@ void objRenderFuzz(int* obj)
     f32 dx, dy, dz, dist;
     CameraViewSlot* cam = Camera_GetCurrentViewSlot();
     if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) ||
-        ((GameObject*)obj)->anim.mapEventSlot == 0x3f || ((GameObject*)obj)->anim.seqId == 0x882 ||
-        ((GameObject*)obj)->anim.seqId == 0x887)
+        ((GameObject*)obj)->anim.mapEventSlot == 0x3f ||
+        ((GameObject*)obj)->anim.seqId == OBJPRINT_SEQID_DIE_FOX ||
+        ((GameObject*)obj)->anim.seqId == OBJPRINT_SEQID_DIE_KRYSTAL)
     {
         strong = 1;
-        if (((GameObject*)obj)->anim.classId == 1 || ((GameObject*)obj)->anim.seqId == 0x77d ||
-            ((GameObject*)obj)->anim.seqId == 0x882 || ((GameObject*)obj)->anim.seqId == 0x887)
+        if (((GameObject*)obj)->anim.classId == 1 ||
+            ((GameObject*)obj)->anim.seqId == OBJPRINT_SEQID_FRONT_FOX ||
+            ((GameObject*)obj)->anim.seqId == OBJPRINT_SEQID_DIE_FOX ||
+            ((GameObject*)obj)->anim.seqId == OBJPRINT_SEQID_DIE_KRYSTAL)
         {
             maxN = 0xf;
         }

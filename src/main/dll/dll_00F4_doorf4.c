@@ -77,6 +77,10 @@ STATIC_ASSERT(offsetof(DoorF4Placement, gameBitC) == 0x20);
 #define DOORF4_POWERDOOR_OBJ 200
 #define DOORF4_WARPDOOR_OBJ  0x151
 
+/* seqId of the nearby explodable this door watches for; owned by DLL 0x15A
+   (dll_015A_explodable), retail OBJECTS.bin name "CFExplodeFl" */
+#define DOORF4_EXPLODABLE_SEQID 0x7c
+
 /* messages received by a door's inbox */
 #define DOORMSG_OPEN  0x30002
 #define DOORMSG_CLOSE 0x30003
@@ -263,7 +267,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             for (i = objIdx, walk = (GameObject**)((char*)list + i * 4); i < objCount && active == 0; walk++, i++)
             {
                 other = *walk;
-                if (((GameObject*)other)->anim.seqId == 0x7c)
+                if (((GameObject*)other)->anim.seqId == DOORF4_EXPLODABLE_SEQID)
                 {
                     dx = ((GameObject*)other)->anim.localPosX - def->head.posX;
                     dy = ((GameObject*)other)->anim.localPosZ - def->head.posZ;
