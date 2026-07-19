@@ -60,7 +60,7 @@
 extern int* gTitleMenuLinkInterface;
 extern f32 gWeirdMenuSaveTimerLimit;       /* save-phase timer limit */
 
-u32 gWeirdMenuTextHandle[2];
+void* gWeirdMenuTextHandle[2];
 Texture* gWeirdMenuTextureA;
 Texture* gWeirdMenuTextureB;
 Texture* gWeirdMenuTextureC;
@@ -172,7 +172,7 @@ void WeirdUnusedMenu_initialise(void)
     gWeirdMenuTextureA = textureLoadAsset(WEIRDMENU_TEXTURE_A_ID);
     gWeirdMenuTextureB = textureLoadAsset(WEIRDMENU_TEXTURE_B_ID);
     gWeirdMenuTextureC = textureLoadAsset(WEIRDMENU_TEXTURE_C_ID);
-    gWeirdMenuTextHandle[0] = gameTextGetLegacy(0);
+    gWeirdMenuTextHandle[0] = gameTextGet(0);
     (*(void (*)(u32*, int, int, u32*, int, int, int, int, int, int, int, int))(
         *(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_SETUP_WIDGETS)))(
         (u32*)&gWeirdMenuWidgetWork, 2, 0, gWeirdMenuWidgetLayout, 0, 0, 0x5b, 0x45, 0x30, 0xff, 0xd7, 0x3d);
