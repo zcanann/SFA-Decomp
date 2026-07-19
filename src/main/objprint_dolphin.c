@@ -2465,7 +2465,7 @@ void fuzzRenderFn_800412dc(int* obj)
     model = (int*)Obj_GetActiveModel((GameObject*)obj);
     savedMtx = curObjMtx;
     lbl_803DCC3D = gObjFuzzPhase;
-    ObjModel_SetRenderCallback((u8*)model, modelRenderCb_8003c268Legacy);
+    ObjModel_SetRenderCallback((u8*)model, modelRenderCb_8003c268);
     for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += gObjFuzzStep)
     {
         modelDoRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)*model, 8);
@@ -2568,7 +2568,7 @@ void objRenderFuzz(int* obj)
         }
         model = (int*)Obj_GetActiveModel((GameObject*)obj);
         savedMtx = curObjMtx;
-        ObjModel_SetRenderCallback((u8*)model, shaderFuzzFn_8003cc1cLegacy);
+        ObjModel_SetRenderCallback((u8*)model, shaderFuzzFn_8003cc1c);
         for (lbl_803DCC44 = 0; lbl_803DCC44 < n; lbl_803DCC44++)
         {
             modelDoRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)*model, 4);
@@ -2671,7 +2671,7 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
             ((GameObject*)child)->anim.localPosY = ((GameObject*)child)->anim.worldPosY;
             ((GameObject*)child)->anim.localPosZ = ((GameObject*)child)->anim.worldPosZ;
         }
-        objRotateFn_8003bce8VoidLegacy(m2, (s16*)child, (s16*)child + 1, (s16*)child + 2);
+        objRotateFn_8003bce8(m2, (s16*)child, (s16*)child + 1, (s16*)child + 2);
     }
     ((GameObject*)child)->anim.renderAlpha =
         ((((GameObject*)child)->anim.alpha + 1) * ((GameObject*)parent)->anim.renderAlpha) >> 8;
@@ -2682,7 +2682,7 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
         if (isShadow == 0)
         {
             ((GameObject*)child)->objectFlags |= OBJECT_OBJFLAG_RENDERED;
-            objRenderModelPtrLegacy(child);
+            objRenderModel((GameObject*)child);
         }
         else
         {

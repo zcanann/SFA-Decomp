@@ -160,7 +160,7 @@ void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
         {
             PSMTXConcat((f32*)ObjPath_GetPointModelMtx((GameObject*)player, 0), state->carryMtx, mtxB);
             objSetMtxFn_800412d4((u32)mtxB);
-            objRenderModelIntLegacy((int)obj);
+            objRenderModel((GameObject*)obj);
         }
         else
         {

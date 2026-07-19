@@ -1541,7 +1541,7 @@ void objRenderModelAndHitVolumes(GameObject* obj, f32 scale)
     (void)scale;
     if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL)
     {
-        objRenderModelWithBankTableLegacy((int*)obj, table);
+        objRenderModel(obj);
         if (obj->anim.hitVolumeTransforms != NULL)
         {
             objRenderFn_80041018((GameObject*)obj);
@@ -1586,7 +1586,7 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
         }
         else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL)
         {
-            (*(void (*)(int))objRenderModel)((int)obj);
+            objRenderModel(obj);
             if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
             {
                 objRenderFn_80041018((GameObject*)obj);
@@ -1604,7 +1604,7 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag)
         default:
             if (OBJPRINT_ACTIVE_BANK(obj) != NULL)
             {
-                (*(void (*)(int))objRenderModel)((int)obj);
+                objRenderModel(obj);
                 if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
                 {
                     objRenderFn_80041018((GameObject*)obj);

@@ -30,18 +30,4 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int renderOpIndex);
 
 #define modelInitMtxsPtrLegacy(modelFile, model) \
     (((void (*)(u8*, int*))modelInitMtxs)((modelFile), (model)))
-#define objRotateFn_8003bce8VoidLegacy(matrix, outX, outY, outZ) \
-    (((void (*)(f32*, s16*, s16*, s16*))objRotateFn_8003bce8)( \
-        (matrix), (outX), (outY), (outZ)))
-#define modelRenderCb_8003c268Legacy \
-    ((void (*)(void))modelRenderCb_8003c268)
-#define shaderFuzzFn_8003cc1cLegacy \
-    ((void (*)(void))shaderFuzzFn_8003cc1c)
-#define objRenderModelPtrLegacy(obj) \
-    (((void (*)(int*))objRenderModel)((obj)))
-#define objRenderModelIntLegacy(obj) \
-    (((void (*)(int))objRenderModel)((obj)))
-#define objRenderModelWithBankTableLegacy(obj, bankTable) \
-    (((void (*)(int*, int**))objRenderModel)((obj), (bankTable)))
-
 #endif /* MAIN_OBJPRINT_RENDER_API_H_ */

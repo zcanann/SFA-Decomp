@@ -168,7 +168,7 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         PSMTXConcat(mTransPos, mC, mD);
         PSMTXConcat(mD, mWorldCombined, mFinal);
         objSetMtxFn_800412d4((u32)mFinal);
-        objRenderModelPtrLegacy(obj);
+        objRenderModel((GameObject*)obj);
     }
     else
     {
