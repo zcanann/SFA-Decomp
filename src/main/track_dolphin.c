@@ -325,14 +325,9 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
 int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
 int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1,
                 f32 y1, f32 z1, u8 flags);
-int hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots,
+int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
                       int flagsArg);
 int doLotsOfMath(void* a, void* b, f32 f, int c, void* d, int* e, int g, int h, int i, int self);
-
-typedef int (*HitDetectIntFn)(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
-                              int flagsArg);
-
-#define hitDetectInt ((HitDetectIntFn)hitDetect_800667ec)
 
 f32 lbl_8038D7DC[0x19];
 f32 gPrevSunDir[3];
@@ -2828,9 +2823,9 @@ int hitDetectFn_80067958(GameObject* contactSrc, f32* startPos, f32* endPos, int
         }
     }
 
-    hitCount = hitDetectInt(0, (void*)(gTrackTriangleBuffer + tbl->firstTriangle * 0x4c),
-                            (void*)(gTrackTriangleBuffer + tbl[1].firstTriangle * 0x4c), startPos, endPos, count,
-                            results, 0);
+    hitCount = hitDetect_800667ec(0, (void*)(gTrackTriangleBuffer + tbl->firstTriangle * 0x4c),
+                                 (void*)(gTrackTriangleBuffer + tbl[1].firstTriangle * 0x4c), startPos, endPos, count,
+                                 results, 0);
 
     fp = results;
     pp = results;
@@ -5144,7 +5139,8 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
  * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
 char sTrackHitOverflowError[] = "HIT OVERFLOW\n";
 
-int hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots, int flagsArg)
+int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
+                      int flagsArg)
 {
     TrackBlockDescriptor* descBase;
     f32 *ep1, *ep2;
@@ -5219,10 +5215,10 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPo
     retLo = 0;
     retHi = 0;
     curBit = 1;
-    ep1 = (f32*)endPos;
-    ep2 = (f32*)endPos;
-    sp1 = (f32*)startPos;
-    sp2 = (f32*)startPos;
+    ep1 = endPos;
+    ep2 = endPos;
+    sp1 = startPos;
+    sp2 = startPos;
     slotp = slots;
     outp = slots;
     wyp = &we[1];
