@@ -62,7 +62,7 @@
 #define DBSH_SHRINE_ENVFX_C  0x222
 #define DBSH_SHRINE_IDLE_SFX 0x343
 
-void fn_801C8B68(int obj)
+void dbsh_shrine_updateSpirit(int obj)
 {
     register int self = obj;
     register int state2 = *(int*)&((GameObject*)self)->anim.placementData;
@@ -260,7 +260,7 @@ void dbsh_shrine_update(DbshShrineObject* obj)
         }
     }
 
-    fn_801C8B68((int)obj);
+    dbsh_shrine_updateSpirit((int)obj);
     SCGameBitLatch_Update(&runtime->latch, 2, -1, -1, DBSH_SHRINE_GB_APPROACH, 0xe);
     SCGameBitLatch_UpdateInverted(&runtime->latch, 1, -1, -1, DBSH_SHRINE_GB_SCENE_BLOCK, 8);
     SCGameBitLatch_Update(&runtime->latch, 4, -1, -1, DBSH_SHRINE_GB_SCENE_BLOCK, 0xc4);

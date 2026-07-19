@@ -72,7 +72,7 @@ typedef struct GpshShrineState
     u8 pad16[0x18 - 0x16];
 } GpshShrineState;
 
-void fn_801C70F0(s16* obj)
+void gpsh_shrine_updateSpirit(s16* obj)
 {
     u8 buf[32];
     u8* def;
@@ -314,7 +314,7 @@ void gpsh_shrine_update(GameObject *obj)
                 getEnvfxAct(obj, player, GPSH_SHRINE_ENVFX_C, 0);
             }
         }
-        fn_801C70F0((s16*)obj);
+        gpsh_shrine_updateSpirit((s16*)obj);
         unlockLevel(mapGetDirIdx(0x22), 1, 0);
         SCGameBitLatch_Update((SCGameBitLatchState*)(data + 0x13), 2, -1, -1, 0xdd2, 0xb);
         SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(data + 0x13), 1, -1, -1, 0xcbb, 8);
