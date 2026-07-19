@@ -146,7 +146,24 @@ extern s16 lbl_80332F78[];
 extern s16 lbl_80332F88[];
 extern s16 lbl_80333110[];
 extern f32 lbl_80333250[24];
-extern s16 lbl_803332B0[];
+typedef struct PlayerMotionTuning
+{
+    s16 moveSequences[4][12];
+    f32 velSmoothRateCurve[41];
+    f32 targetYawSmoothRateCurve[41];
+    f32 targetYawRateLimitCurve[46];
+    f32 yawSmoothRateCurve[41];
+    f32 yawRateLimitCurve[46];
+} PlayerMotionTuning;
+
+STATIC_ASSERT(sizeof(PlayerMotionTuning) == 0x3bc);
+STATIC_ASSERT(offsetof(PlayerMotionTuning, velSmoothRateCurve) == 0x60);
+STATIC_ASSERT(offsetof(PlayerMotionTuning, targetYawSmoothRateCurve) == 0x104);
+STATIC_ASSERT(offsetof(PlayerMotionTuning, targetYawRateLimitCurve) == 0x1a8);
+STATIC_ASSERT(offsetof(PlayerMotionTuning, yawSmoothRateCurve) == 0x260);
+STATIC_ASSERT(offsetof(PlayerMotionTuning, yawRateLimitCurve) == 0x304);
+
+extern PlayerMotionTuning lbl_803332B0;
 extern s16 lbl_8033366C[];
 extern f32 lbl_8033369C[];
 extern f32 lbl_803DAF88[];
