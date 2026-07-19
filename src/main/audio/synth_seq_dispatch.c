@@ -91,9 +91,9 @@ static inline u16 seqHandleStream(SynthSequenceStream* stream)
     return stream->value;
 }
 
-static inline void seqDoPrgChange(SynthVoice* voice, u8 program, u32 midi)
+static inline void seqDoPrgChange(SynthVoiceRuntime* rt, SynthVoice* voice, u8 program, u32 midi)
 {
-    gSynthVoiceNotes[gSynthCurrentVoiceSlotIndex][midi] = 0xFFFF;
+    rt->voiceNotes[gSynthCurrentVoiceSlotIndex][midi] = 0xFFFF;
     if (midi != 9)
     {
         program = voice->normTrans[program];
@@ -131,7 +131,9 @@ SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 voice
     SynthCallbackLink* note;
     SeqTrackEntry* tEntry;
     SynthSequenceState* pattern;
+    SynthVoiceRuntime* rt;
 
+    rt = SYNTH_VOICE_RUNTIME();
     switch (event->type)
     {
     case 4:
@@ -159,7 +161,7 @@ SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 voice
         prog = tEntry->prgChange;
         if (prog != 0xff)
         {
-            seqDoPrgChange(gSynthCurrentVoice, prog, pattern->midi);
+            seqDoPrgChange(rt, gSynthCurrentVoice, prog, pattern->midi);
         }
         if (tEntry->velocity != 0xff)
         {
@@ -179,7 +181,7 @@ SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 voice
             switch (velocity)
             {
             case 0:
-                seqDoPrgChange(gSynthCurrentVoice, key & 0x7f, midi);
+                seqDoPrgChange(rt, gSynthCurrentVoice, key & 0x7f, midi);
                 break;
             case 1:
                 inpSetMidiCtrl(SEQ_META_KEY_OFF, midi, gSynthCurrentVoiceSlotIndex & 0xff, key & 0x7f);
@@ -198,10 +200,10 @@ SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 voice
                         }
                         break;
                     case SEQ_META_LOOP_MARK:
-                        gSynthVoiceNotes[gSynthCurrentVoiceSlotIndex][midi] = key & 0x7f;
+                        rt->voiceNotes[gSynthCurrentVoiceSlotIndex][midi] = key & 0x7f;
                         break;
                     case SEQ_META_LOOP_MARK_HI:
-                        gSynthVoiceNotes[gSynthCurrentVoiceSlotIndex][midi] = (key & 0x7f) + 0x80;
+                        rt->voiceNotes[gSynthCurrentVoiceSlotIndex][midi] = (key & 0x7f) + 0x80;
                         break;
                     case SEQ_META_RESET_CTRL:
                         inpResetMidiCtrl(midi, gSynthCurrentVoiceSlotIndex & 0xff, 0);
