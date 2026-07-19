@@ -836,14 +836,14 @@ void SmallBasket_update(GameObject* obj)
                 }
                 if ((obj)->userData2 == 1)
                 {
-                    *(u8*)&state->carryState = 2;
+                    state->carryState = 2;
                 }
                 if (((state->carryState == 2) && ((obj)->userData2 == 0)) ||
                     ((state->disguiseGated != 0) && (playerIsDisguised(player) == 0)))
                 {
                     if (fn_8029669C(player) != 0)
                     {
-                        *(u8*)&state->carryState = 0;
+                        state->carryState = 0;
                         state->throwState = 1;
                         (obj)->anim.velocityY = (0.75f) * playerState->baddie.inputMagnitude + (2.2f);
                         (obj)->anim.velocityZ = (-0.75f) * playerState->baddie.inputMagnitude + (-2.2f);
@@ -863,7 +863,7 @@ void SmallBasket_update(GameObject* obj)
                     }
                     else if (fn_802966B4(player) != 0)
                     {
-                        *(u8*)&state->carryState = 0;
+                        state->carryState = 0;
                         state->throwState = 2;
                         zf = (0.0f);
                         (obj)->anim.velocityX = zf;
@@ -875,7 +875,7 @@ void SmallBasket_update(GameObject* obj)
                     }
                     else
                     {
-                        *(u8*)&state->carryState = 0;
+                        state->carryState = 0;
                         state->throwState = 1;
                         (obj)->anim.velocityY = (0.35f) * playerState->baddie.inputMagnitude + (1.2f);
                         (obj)->anim.velocityZ = (-0.35f) * playerState->baddie.inputMagnitude + (-1.2f);
