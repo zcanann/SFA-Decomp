@@ -43,19 +43,6 @@ int lbl_803DBC80[2] = {2, 3};
 #define WISPBADDIE_FLAG_CHASE_PLAYER    0x02
 #define WISPBADDIE_FLAG_CHASE_LOCKOUT   0x04 /* strayed too far; block re-chase until back near path */
 #define WISPBADDIE_FLAG_CHASE_MASK      0x06
-union WispBaddieConstF32
-{
-    f32 f;
-};
-
-typedef struct WispTriggerDistanceParams
-{
-    f32 scale;
-    f32 minimum;
-} WispTriggerDistanceParams;
-
-extern const WispTriggerDistanceParams lbl_803E2720;
-
 int gWispBaddieLastSegmentEnd;
 
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
@@ -111,7 +98,7 @@ void fn_8014F620(GameObject* obj, WispBaddieState* state)
             0.006f * (state->playerObj->anim.localPosX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
 
         wave = mathSinf((3.1415927f * (f32)state->hoverWavePhase) / 32768.0f);
-        wave = (40.0f * wave + (30.0f + state->playerObj->anim.localPosY)) - (obj)->anim.localPosY;
+        wave = ((30.0f + state->playerObj->anim.localPosY) + 40.0f * wave) - (obj)->anim.localPosY;
         (obj)->anim.velocityY = 0.006f * wave + (obj)->anim.velocityY;
         (obj)->anim.velocityZ =
             0.006f * (state->playerObj->anim.localPosZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
@@ -307,7 +294,7 @@ void wispbaddie_init(GameObject* obj, int setup, int initialised)
     value = (f32) * (s16*)(setup + 0x1a) / 25.0f;
     state->maxHitRadius = value;
     state->hitRadius = value;
-    state->triggerDistance = lbl_803E2720.scale * (f32) * (s8*)(setup + 0x19);
+    state->triggerDistance = 4.0f * (f32) * (s8*)(setup + 0x19);
     state->particleId = 0x337;
 
     if (initialised == 0)
@@ -618,5 +605,3 @@ void* lbl_8031F16C[69] = {
     (void*)0x0F3C0A32, (void*)0x07140514, (void*)0x030F030F, (void*)0x3F000000, (void*)0x3F000000, (void*)0x3F333333,
     (void*)0x3F19999A, (void*)0x3FC00000, (void*)0x3FC00000};
 u8 lbl_8031F280[16] = {0, 0, 0, 6, 0, 0, 0, 7, 0, 0, 0, 8, 0, 0, 0, 9};
-
-const WispTriggerDistanceParams lbl_803E2720 = {4.0f, 0.0f};
