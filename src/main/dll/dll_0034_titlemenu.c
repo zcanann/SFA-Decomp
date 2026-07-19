@@ -100,15 +100,6 @@ void TitleMenu_frameEnd(void)
 {
 }
 
-#define TitleMenu_GetMenuId()              (*gCameraInterface)->getMode()
-#define TitleMenu_SetMenuState(state, arg) (*gCameraInterface)->releaseAction((void*)(state), arg)
-#define TitleMenu_GetFadeState()           gTitleMenuLinkInterface->vtable->update()
-#define TitleMenu_GetSelection()           gTitleMenuLinkInterface->vtable->getSelected()
-#define TitleMenu_BindEntries()            gTitleMenuLinkInterface->vtable->copyItems(lbl_8031A214)
-#define TitleMenu_ClearPanel()             gTitleMenuLinkInterface->vtable->free()
-#define TitleMenu_OpenPanel()                                                                                          \
-    gTitleMenuLinkInterface->vtable->setup(lbl_8031A214, 9, 5, NULL, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff)
-#define TitleMenu_SetPanelSelection(selection) gTitleMenuLinkInterface->vtable->setSelected(selection)
 #define TitleMenu_SetEntryHighlight(entry)                                                                             \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -124,7 +115,7 @@ void TitleMenu_frameEnd(void)
                 lbl_8031A214[i].flags |= TITLE_MENU_TEXT_ENTRY_HIDDEN;                                                 \
             }                                                                                                          \
         }                                                                                                              \
-        TitleMenu_BindEntries();                                                                                       \
+        gTitleMenuLinkInterface->vtable->copyItems(lbl_8031A214);                                                      \
     } while (0)
 #define TitleMenu_ReloadSaveSettings()                                                                                 \
     do                                                                                                                 \
@@ -230,9 +221,9 @@ int TitleMenu_run(void)
                 gAttractMovieReplayCountdown = 1;
                 gTitleMenuInputCooldown = TITLE_MENU_ATTRACT_INPUT_COOLDOWN_FRAMES;
             }
-            TitleMenu_SetPanelSelection(0);
+            gTitleMenuLinkInterface->vtable->setSelected(0);
             gAttractMoviePlaybackEnabled = 0;
-            TitleMenu_SetMenuState(0, 1);
+            (*gCameraInterface)->releaseAction((void*)0, 1);
             if (lbl_803DB424 == 0xff)
             {
                 TitleMenu_ReloadSaveSettings();
@@ -261,7 +252,7 @@ int TitleMenu_run(void)
                 if (gAttractMovieReplayCountdown == 0)
                 {
                     gAttractMovieReplayCountdown = 1;
-                    TitleMenu_SetMenuState(TITLE_MENU_ATTRACT_MOVIE_STATE, 1);
+                    (*gCameraInterface)->releaseAction((void*)TITLE_MENU_ATTRACT_MOVIE_STATE, 1);
                     gAttractMoviePlaybackEnabled = 1;
                     gTitleMenuSelectionFadeStep = -TITLE_MENU_SELECTION_FADE_STEP;
                 }
@@ -277,7 +268,7 @@ int TitleMenu_run(void)
     {
         gTitleMenuLoadDelay -= frames;
     }
-    menuId = TitleMenu_GetMenuId();
+    menuId = (*gCameraInterface)->getMode();
     if (menuId != TITLE_MENU_CAMERA_ACTION_ACTIVE)
     {
         gTitleMenuReadyForInput = 0;
@@ -289,7 +280,7 @@ int TitleMenu_run(void)
     {
         if (((previousFadeTimer <= 12) || (gTitleMenuLoadDelay > 12)) && (gTitleMenuLoadDelay <= 0))
         {
-            TitleMenu_ClearPanel();
+            gTitleMenuLinkInterface->vtable->free();
             titleScreenFn_8005cdd4(0);
             setLinkNotRotated();
             loadUiDll(gTitleMenuNextDllId);
@@ -297,8 +288,8 @@ int TitleMenu_run(void)
         return gTitleMenuLoadDelay <= 12;
     }
 
-    menuId = TitleMenu_GetFadeState();
-    gTitleMenuSelection = TitleMenu_GetSelection();
+    menuId = gTitleMenuLinkInterface->vtable->update();
+    gTitleMenuSelection = gTitleMenuLinkInterface->vtable->getSelected();
     if (((1.0f == titleScreenGetCamProgress()) && (gTitleMenuSelectionFade < TITLE_MENU_SELECTION_FADE_MAX)) &&
         (gAttractMoviePlaybackEnabled == 0))
     {
@@ -314,7 +305,7 @@ int TitleMenu_run(void)
     }
     else if (gTitleMenuPreviousSelection != gTitleMenuSelection)
     {
-        TitleMenu_SetMenuState(gTitleMenuSelection, 1);
+        (*gCameraInterface)->releaseAction((void*)gTitleMenuSelection, 1);
         Sfx_PlayFromObject(0, SFXTRIG_menu_fox_select);
         gTitleMenuSelectionFadeStep = -TITLE_MENU_SELECTION_FADE_STEP;
         gTitleMenuPreviousSelection = gTitleMenuSelection;
@@ -345,8 +336,9 @@ int TitleMenu_run(void)
     {
         if (menuId == 1)
         {
-            TitleMenu_ClearPanel();
-            TitleMenu_OpenPanel();
+            gTitleMenuLinkInterface->vtable->free();
+            gTitleMenuLinkInterface->vtable->setup(lbl_8031A214, 9, 5, NULL, 0, 0, 0x14, 200, 0xff, 0xff, 0xff,
+                                                   0xff);
             gTitleMenuPanelOpen = 1;
         }
     }
