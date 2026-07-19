@@ -361,9 +361,9 @@ void firepipe_updateState(FirePipeObject* obj)
     {
         if (flags->wasEmitting == 0)
         {
-            Sfx_PlayFromObjectLimitedPtrVoidLegacy(obj, SFXTRIG_en_cvdrip1c_32c, 3);
+            Sfx_PlayFromObjectLimited((u32)obj, SFXTRIG_en_cvdrip1c_32c, 3);
         }
-        Sfx_KeepAliveLoopedObjectSoundLimitedPtrIntLegacy(obj, SFXTRIG_en_trpopn_c_32d, 2);
+        Sfx_KeepAliveLoopedObjectSoundLimited((u32)obj, SFXTRIG_en_trpopn_c_32d, 2);
     }
     flags->wasEmitting = flags->emitting;
 
@@ -625,4 +625,3 @@ ObjectDescriptor gFirePipeObjDescriptor = {
     (ObjectDescriptorCallback)firepipe_getObjectTypeId,
     firepipe_getExtraSize,
 };
-
