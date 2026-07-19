@@ -40,7 +40,7 @@
 #include "main/objprint_character_api.h"
 #include "main/obj_placement.h"
 #include "main/vecmath_distance_api.h"
-#include "main/audio/sfx_play_int_u16_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/dll/DR/dll_0265_drcreator.h"
 
 s16 gKytesMumRoamEventSfxTable[4] = {0x1B4, 0x1B5, 0x1B6, 0};
@@ -323,7 +323,7 @@ void kytesmum_update(GameObject* obj)
         ObjAnim_SetCurrentMove((int)obj, runtime->moveSet->moves[moveIdx], 0.0f, 0);
         runtime->animSpeed = (moveIdx == 0) ? 0.01f : 0.005f;
     }
-    kytesmum_playAnimationEventSfx((int)obj, runtime->animEvents, runtime->eventSfxTable);
+    kytesmum_playAnimationEventSfx((u32)obj, runtime->animEvents, runtime->eventSfxTable);
     characterDoEyeAnimsState(obj, runtime->eyeAnimState);
     objAnimFn_80038f38(obj, (char*)&runtime->modelSoundState);
     nearest = ObjGroup_FindNearestObject(KYTESMUM_TARGET_OBJGROUP, (u32)obj, &nearDist);
@@ -334,7 +334,7 @@ void kytesmum_update(GameObject* obj)
     }
 }
 
-void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData)
+void kytesmum_playAnimationEventSfx(u32 obj, u8* arg, s16* sfxData)
 {
     int i;
     u8 flags = 0;

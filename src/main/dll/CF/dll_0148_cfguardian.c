@@ -45,10 +45,10 @@
 #include "main/objprint_character_api.h"
 #include "main/objprint_sound_api.h"
 #include "main/vecmath_distance_api.h"
-#include "main/audio/sfx_play_int_u16_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "track/intersect_api.h"
 
-u8 lbl_803DBE20[8] = {0, 0xDD, 0, 0xDE, 0, 0xE0, 0, 0};
+s16 lbl_803DBE20[4] = {0xDD, 0xDE, 0xE0, 0};
 
 #define CFGUARDIAN_OBJGROUP        0x16
 #define CFGUARDIAN_TARGET_OBJGROUP 0x3
@@ -79,9 +79,6 @@ STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 STATIC_ASSERT(offsetof(CfGuardianMapData, variant) == 0x19);
 STATIC_ASSERT(sizeof(GuardianVec) == 0xa);
 STATIC_ASSERT(sizeof(GuardianMsg) == 0x10);
-
-/* cfguardianPlayEventSfx is defined below taking obj as an int. */
-typedef void (*CfPlayEventSfxFn)(int* obj, void* evbuf, void* sfxIds);
 
 /* sub->flagsA9B bits */
 #define GUARDIAN_FLAG_MOVE_LATCHED 0x1 /* a one-shot move is running */
@@ -215,15 +212,15 @@ ObjectDescriptor11 gCFGuardianObjDescriptor = {
     (ObjectDescriptorCallback)cfguardian_setScale,
 };
 
-int cfguardianPlayEventSfx(int obj, int evList, s16* sfxIds)
+int cfguardianPlayEventSfx(u32 obj, ObjAnimEventList* evList, s16* sfxIds)
 {
     int i;
     u8 marker;
 
     marker = 0;
-    for (i = 0; i < ((ObjAnimEventList*)evList)->triggerCount; i++)
+    for (i = 0; i < evList->triggerCount; i++)
     {
-        switch (*(s8*)(evList + i + offsetof(ObjAnimEventList, triggeredIds)))
+        switch (evList->triggeredIds[i])
         {
         case 0:
             if (sfxIds != NULL)
@@ -886,7 +883,7 @@ int cfguardian_updateMain(GameObject* obj)
     {
         sub->flagsA9B &= ~GUARDIAN_FLAG_MOVE_LATCHED;
     }
-    ((CfPlayEventSfxFn)cfguardianPlayEventSfx)((int*)obj, (u8*)&stk + 12, lbl_803DBE20);
+    cfguardianPlayEventSfx((u32)obj, (ObjAnimEventList*)((u8*)&stk + 12), lbl_803DBE20);
     if (randFn_80080100(0x3c) != 0)
     {
         objAudioFn_800393f8(obj, &sub->soundState, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);

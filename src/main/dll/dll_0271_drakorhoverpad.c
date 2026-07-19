@@ -34,7 +34,7 @@
 #include "main/object_render.h"
 #include "main/objprint_api.h"
 #include "main/vecmath.h"
-#include "main/audio/sfx_play_int_u16_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"

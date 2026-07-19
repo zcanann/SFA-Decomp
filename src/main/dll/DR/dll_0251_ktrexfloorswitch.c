@@ -25,7 +25,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/DR/dll_024F_ktrexlevel.h"
 
-#include "main/audio/sfx_play_int_u16_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
