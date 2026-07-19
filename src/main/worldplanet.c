@@ -9,7 +9,7 @@
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
 
-#define ObjList_FindObjectByIdLegacy(id) ((int (*)(int))ObjList_FindObjectById)(id)
+typedef int (*ObjListFindObjectByIdLegacyFn)(int objectId);
 #include "main/object.h"
 #include "main/mapEvent.h"
 #include "main/screen_transition.h"
@@ -190,7 +190,8 @@ void worldplanet_update(GameObject* obj)
             (*gCameraInterface)->releaseAction(&objId, 2);
             state->flags |= WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED;
             {
-                int briefingPortrait = ObjList_FindObjectByIdLegacy(WORLDPLANET_BRIEFING_PORTRAIT_OBJECT_ID);
+                int briefingPortrait =
+                    ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(WORLDPLANET_BRIEFING_PORTRAIT_OBJECT_ID);
                 ((WorldObjState*)((GameObject*)briefingPortrait)->extra)->controlByte =
                     gWorldPlanetBriefingSpeakerModel[state->selectedPlanet];
             }
@@ -214,12 +215,12 @@ void worldplanet_update(GameObject* obj)
         (obj)->anim.rotY = 0x3448;
         (obj)->anim.rotX = 0x4000;
         {
-            int fox = ObjList_FindObjectByIdLegacy(WORLDPLANET_FOX_OBJECT_ID);
+            int fox = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(WORLDPLANET_FOX_OBJECT_ID);
             ((GameObject*)fox)->anim.rotZ = (obj)->anim.rotZ;
             ((GameObject*)fox)->anim.rotY = (obj)->anim.rotY;
             ((GameObject*)fox)->anim.rotX = (obj)->anim.rotX;
         }
-        arwing = ObjList_FindObjectByIdLegacy(WORLDPLANET_ARWING_OBJECT_ID);
+        arwing = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(WORLDPLANET_ARWING_OBJECT_ID);
         ((WorldObjState*)((GameObject*)arwing)->extra)->effectState = state->selectionLocked;
         prevPlanet = state->selectedPlanet;
         {
@@ -283,9 +284,11 @@ void worldplanet_update(GameObject* obj)
                 }
                 gWorldPlanetPathProgress = lbl_803E65F8;
                 {
-                    int planetObj = ObjList_FindObjectByIdLegacy(tbl[0][gWorldPlanetSelectionToIndex[prevPlanet]]);
+                    int planetObj = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(
+                        tbl[0][gWorldPlanetSelectionToIndex[prevPlanet]]);
                     ((WorldObjState*)((GameObject*)planetObj)->extra)->effectState = 0;
-                    planetObj = ObjList_FindObjectByIdLegacy(tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+                    planetObj = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(
+                        tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
                     ((WorldObjState*)((GameObject*)planetObj)->extra)->effectState = 1;
                 }
                 (obj)->userData1 = 1;
@@ -298,7 +301,7 @@ void worldplanet_update(GameObject* obj)
         }
         for (i = 0; i < WORLDPLANET_PLANET_COUNT; i++)
         {
-            int planet = ObjList_FindObjectByIdLegacy(tbl[2][i]);
+            int planet = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(tbl[2][i]);
             WorldObjState* pstate = ((GameObject*)planet)->extra;
             ((GameObject*)planet)->anim.rotY = (obj)->anim.rotY;
             ((GameObject*)planet)->anim.rotX = (obj)->anim.rotX;
@@ -365,7 +368,8 @@ void worldplanet_update(GameObject* obj)
                 }
             }
         }
-        objId = ObjList_FindObjectByIdLegacy(tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+        objId = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(
+            tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
         if (getLoadedFileFlags(0) == 0 && gWorldPlanetInputLockTimer == 0)
         {
             switch ((u8)state->selectionLocked)
@@ -397,7 +401,8 @@ void worldplanet_update(GameObject* obj)
                         state->selectionLocked = 1;
                         (*gCameraInterface)->releaseAction(&state->selectionLocked, 0);
                         {
-                            int briefingPortrait = ObjList_FindObjectByIdLegacy(WORLDPLANET_BRIEFING_PORTRAIT_OBJECT_ID);
+                            int briefingPortrait = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(
+                                WORLDPLANET_BRIEFING_PORTRAIT_OBJECT_ID);
                             ((WorldObjState*)((GameObject*)briefingPortrait)->extra)->controlByte =
                                 gWorldPlanetBriefingSpeakerModel[state->selectedPlanet];
                         }
@@ -459,7 +464,7 @@ void worldplanet_update(GameObject* obj)
                 ang = -(obj)->anim.rotZ & 0xffff;
                 for (; spin < WORLDPLANET_PLANET_COUNT; spin++)
                 {
-                    int planetObj = ObjList_FindObjectByIdLegacy(tbl[2][spin]);
+                    int planetObj = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(tbl[2][spin]);
                     ((GameObject*)planetObj)->anim.rotZ = -ang;
                 }
             }

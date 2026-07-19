@@ -8,7 +8,7 @@
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
 
-#define ObjList_FindObjectByIdLegacy(id) ((int (*)(int))ObjList_FindObjectById)(id)
+typedef int (*ObjListFindObjectByIdLegacyFn)(int objectId);
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/worldobj.h"
@@ -235,8 +235,8 @@ void worldobj_update(GameObject* obj)
         }
         else
         {
-            objA = ObjList_FindObjectByIdLegacy(0x42fe7);
-            objB = ObjList_FindObjectByIdLegacy(0x4305a);
+            objA = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(0x42fe7);
+            objB = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(0x4305a);
             if ((void*)objA != NULL && (void*)objB != NULL)
             {
                 state->orbitAngle = (int)((f32)state->spinXStep * timeDelta + state->orbitAngle);
@@ -277,12 +277,12 @@ void worldobj_update(GameObject* obj)
     case 0x5dc:
         if (obj->userData1 == 0)
         {
-            obj->userData1 = ObjList_FindObjectByIdLegacy(0x431dc);
+            obj->userData1 = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(0x431dc);
             ((void (*)(void*, int, u16))ObjLink_AttachChild)(obj, obj->userData1, 0);
         }
         if (obj->userData2 == 0)
         {
-            obj->userData2 = ObjList_FindObjectByIdLegacy(0x4325b);
+            obj->userData2 = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(0x4325b);
             ((void (*)(void*, int, u16))ObjLink_AttachChild)(obj, obj->userData2, 0);
         }
         tex = objFindTexture(obj, 0, 0);
@@ -381,7 +381,7 @@ void worldobj_update(GameObject* obj)
     case 0x5d8:
         if (obj->userData2 == 0)
         {
-            child = ObjList_FindObjectByIdLegacy(state->attachChildObjectId);
+            child = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(state->attachChildObjectId);
             if ((void*)child != NULL)
             {
                 ((GameObject*)child)->anim.rootMotionScale *= lbl_803E6668;
@@ -439,7 +439,7 @@ void worldobj_update(GameObject* obj)
             ((GameObject*)gWorldObjEffectTargetObj)->anim.localPosX = obj->anim.localPosX;
             ((GameObject*)gWorldObjEffectTargetObj)->anim.localPosY = lbl_803E66B8 + obj->anim.localPosY;
             ((GameObject*)gWorldObjEffectTargetObj)->anim.localPosZ = obj->anim.localPosZ;
-            objA = ObjList_FindObjectByIdLegacy(0x4300c);
+            objA = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(0x4300c);
             if ((void*)objA != NULL && (((GameObject*)objA)->anim.flags & OBJANIM_FLAG_HIDDEN))
             {
         Obj_SetActiveModelIndex((GameObject*)gWorldObjEffectTargetObj, 1);
@@ -586,8 +586,8 @@ void worldobj_init(GameObject* obj, int arg)
         state->effectState = 0;
         break;
     case 0x80f:
-        objA = ObjList_FindObjectByIdLegacy(0x42fe7);
-        objB = ObjList_FindObjectByIdLegacy(0x4305a);
+        objA = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(0x42fe7);
+        objB = ((ObjListFindObjectByIdLegacyFn)ObjList_FindObjectById)(0x4305a);
         base = ((GameObject*)objB)->anim.localPosY - ((GameObject*)objA)->anim.localPosY;
         state->orbitStartY = (((GameObject*)objA)->anim.localPosY - base) + (f32)(int)randomGetRange(-0x3e8, 0x3e8);
         state->orbitEndY = ((GameObject*)objB)->anim.localPosY + (f32)(int)randomGetRange(-5, 5);
