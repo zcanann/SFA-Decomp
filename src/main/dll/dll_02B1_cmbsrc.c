@@ -30,6 +30,8 @@
 #include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/object_render_legacy.h"
 
+extern const f32 lbl_803E737C;
+
 u8 gCmbsrcColorCycleIndexTable[8] = {5, 6, 4, 0, 0, 0, 0, 0};
 
 #define CMBSRC_OBJFLAG_RENDERED 0x800
@@ -52,9 +54,12 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     }
     else
     {
-        f32 t = sourceState->hitCharge / 15.0f;
-        f32 radiusScaled = setup->radius / 4.0f;
-        f32 fullRadius = 2.0f * setup->radius;
+        f32 t = sourceState->hitCharge;
+        f32 radiusScaled;
+        f32 fullRadius;
+        t /= 15.0f;
+        radiusScaled = setup->radius * lbl_803E737C;
+        fullRadius = 2.0f * setup->radius;
         sourceState->radius += interpolate(t * (fullRadius - radiusScaled) + radiusScaled - sourceState->radius,
                                            0.1f, timeDelta);
     }
