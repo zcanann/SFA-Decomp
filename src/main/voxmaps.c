@@ -1252,10 +1252,11 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
             bestVal = -1;
             for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
             {
-                if (gVoxMapsSlotInUse[i] == 0 && vm->timer[i] > bestVal)
+                u32 s = i;
+                if (gVoxMapsSlotInUse[s] == 0 && vm->timer[s] > bestVal)
                 {
-                    bestSlot = i;
-                    bestVal = vm->timer[i];
+                    bestSlot = s;
+                    bestVal = vm->timer[s];
                 }
             }
             b8 = block->f8;
