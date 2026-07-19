@@ -49,7 +49,7 @@
 #include "track/intersect_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/objmodel.h"
-#include "main/newshadows_ext.h"
+#include "main/newshadows.h"
 #include "main/sky.h"
 #include "main/pi_dolphin_fileload_api.h"
 #include "main/newshadows_texture_api.h"

@@ -39,7 +39,7 @@
 #include "main/object_descriptor.h"
 #include "main/dll/player_api.h"
 #include "main/dll/tricky_api.h"
-#include "main/dll/dll_0000_gameui_ext.h"
+#include "main/dll/dll_0000_gameui.h"
 
 /* env-effect ids fired when the shrine load-trigger timer expires (index-style; roles opaque) */
 /* camera mode DLL 0x4c = dll_004C_camDebug */
@@ -351,7 +351,7 @@ int fn_801C49B8(void* objArg)
 
     runtime->swayPhase += timeDelta * (runtime->swayVelocity + runtime->swayAccel);
     swayValue = (int)(96.0f * runtime->swayPhase);
-    fearTestMeterSetRange(0x60, 0x39, swayValue);
+    fearTestMeterSetRange(0x60, 0x39, (s16)swayValue);
     if ((swayValue > 0x39) || (swayValue < -0x39))
     {
         return 1;

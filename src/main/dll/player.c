@@ -91,6 +91,7 @@ typedef void (*PSVECScaleLegacyFn)(f32 scale, f32* src, f32* dst);
 #include "string.h"
 #include "main/dll/dll_002F_carryable.h"
 #include "main/dll/dll_0104_smallbasket.h"
+#include "main/dll/dll_0000_gameui.h"
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/obj_group.h"
 #include "main/obj_link.h"

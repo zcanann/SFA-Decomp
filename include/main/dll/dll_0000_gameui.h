@@ -163,6 +163,7 @@ void GameUI_unselectAllItems(void);
 void GameUI_update(void);
 s32 CMenu_GetState(void);
 void CMenu_SetShouldClose(int value);
+void fearTestMeterSetRange(u8 start, u8 end, int position);
 
 
 #endif /* MAIN_DLL_DLL_0000_GAMEUI_H_ */

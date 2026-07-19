@@ -44,7 +44,7 @@
 #include "main/sky.h"
 #include "track/intersect_api.h"
 #include "track/intersect_render_setup_api.h"
-#include "main/dll/cloudaction_ext.h"
+#include "main/dll/cloudaction.h"
 #include "main/track_dolphin_ext.h"
 #include "main/trig.h"
 #include "main/tex_dolphin_ext.h"

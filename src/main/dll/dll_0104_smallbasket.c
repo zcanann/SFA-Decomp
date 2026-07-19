@@ -136,7 +136,7 @@ extern const f32 lbl_803E3950;
 extern const f32 lbl_803E3954;
 extern const f32 lbl_803E3958;
 
-int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
+int smallbasket_spawnContents(GameObject* obj, GameObject* player, void* dataIn)
 {
     GameObject* playerObj;
     s16 mode;
@@ -169,7 +169,7 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
     } spread;
 
     data = dataIn;
-    playerObj = (GameObject*)player;
+    playerObj = player;
     slowMo = 0;
     bit = *(s16*)(data + 0x1c);
     if (bit != -1)
@@ -230,12 +230,11 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
     {
     case 1:
         setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_SCARAB_GREEN);
-        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
+        ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
+        ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
         ((SmallBasketThrowSetup*)setup)->field1A = 0x190;
-        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                       ((GameObject*)obj)->anim.parent);
+        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
         if (slowMo)
         {
             sc = lbl_803E3948;
@@ -245,8 +244,8 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
         }
         else
         {
-            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
-            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
+            ((GameObject*)spawned)->anim.velocityX = obj->anim.localPosX - playerObj->anim.localPosX;
+            ((GameObject*)spawned)->anim.velocityZ = obj->anim.localPosZ - playerObj->anim.localPosZ;
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
@@ -284,12 +283,11 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
     case 2:
         setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_SCARAB_RED);
         ((SmallBasketThrowSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
-        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
+        ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
+        ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
         ((SmallBasketThrowSetup*)setup)->field1A = 0x190;
-        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                       ((GameObject*)obj)->anim.parent);
+        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
         if (slowMo)
         {
             sc = lbl_803E3948;
@@ -299,8 +297,8 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
         }
         else
         {
-            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
-            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
+            ((GameObject*)spawned)->anim.velocityX = obj->anim.localPosX - playerObj->anim.localPosX;
+            ((GameObject*)spawned)->anim.velocityZ = obj->anim.localPosZ - playerObj->anim.localPosZ;
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
@@ -338,12 +336,11 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
     case 3:
         setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_SCARAB_GOLD);
         ((SmallBasketThrowSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
-        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
+        ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
+        ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
         ((SmallBasketThrowSetup*)setup)->field1A = 0x7d0;
-        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                       ((GameObject*)obj)->anim.parent);
+        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
         if (slowMo)
         {
             sc = lbl_803E3948;
@@ -353,8 +350,8 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
         }
         else
         {
-            ((GameObject*)spawned)->anim.velocityX = ((GameObject*)obj)->anim.localPosX - playerObj->anim.localPosX;
-            ((GameObject*)spawned)->anim.velocityZ = ((GameObject*)obj)->anim.localPosZ - playerObj->anim.localPosZ;
+            ((GameObject*)spawned)->anim.velocityX = obj->anim.localPosX - playerObj->anim.localPosX;
+            ((GameObject*)spawned)->anim.velocityZ = obj->anim.localPosZ - playerObj->anim.localPosZ;
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
         mag += ((GameObject*)spawned)->anim.velocityZ * ((GameObject*)spawned)->anim.velocityZ;
@@ -404,19 +401,18 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
         ((SmallBasketThrowSetup*)setup)->field1C = -1;
         if ((s8)data[9] != 0)
         {
-            ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-0xf, 0xf);
-            ((ObjPlacement*)setup)->posY = (15.0f) + ((GameObject*)obj)->anim.localPosY;
-            ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0xf, 0xf);
+            ((ObjPlacement*)setup)->posX = obj->anim.localPosX + (f32)(int)randomGetRange(-0xf, 0xf);
+            ((ObjPlacement*)setup)->posY = (15.0f) + obj->anim.localPosY;
+            ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ + (f32)(int)randomGetRange(-0xf, 0xf);
         }
         else
         {
-            ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-            ((ObjPlacement*)setup)->posY = (5.0f) + ((GameObject*)obj)->anim.localPosY;
-            ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+            ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
+            ((ObjPlacement*)setup)->posY = (5.0f) + obj->anim.localPosY;
+            ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
         }
         ((SmallBasketThrowSetup*)setup)->field24 = -1;
-        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                       ((GameObject*)obj)->anim.parent);
+        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
         if (slowMo)
         {
             sc = lbl_803E3948;
@@ -701,7 +697,7 @@ void SmallBasket_update(GameObject* obj)
         state->disableTimer = 1;
         state->throwState = 0;
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        smallbasket_spawnContents((u8*)obj, (u8*)player, (u8*)state);
+        smallbasket_spawnContents(obj, player, state);
         zf = (0.0f);
         (obj)->anim.velocityX = zf;
         (obj)->anim.velocityZ = zf;
@@ -930,7 +926,7 @@ void SmallBasket_update(GameObject* obj)
                 state->disableTimer = 0x32;
                 state->throwState = 0;
                 *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                smallbasket_spawnContents((u8*)obj, (u8*)player, (u8*)state);
+                smallbasket_spawnContents(obj, player, state);
                 zf = (0.0f);
                 (obj)->anim.velocityX = zf;
                 (obj)->anim.velocityZ = zf;
@@ -1049,4 +1045,3 @@ void SmallBasket_init(GameObject* obj, int def)
         state->sfxId = 0x4a;
     }
 }
-

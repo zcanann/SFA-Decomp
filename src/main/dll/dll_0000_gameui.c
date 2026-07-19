@@ -1523,7 +1523,7 @@ void fearTestMeterSetFadeIn(u32 x)
 {
     gFearTestMeterFadeIn = (s16)(u8)x;
 }
-void fearTestMeterSetRange(u8 a, u8 b, s16 c)
+void fearTestMeterSetRange(u8 a, u8 b, int c)
 {
     fearTestMeterOuterHalfWidth = a;
     fearTestMeterInnerHalfWidth = b;

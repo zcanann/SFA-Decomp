@@ -22,7 +22,7 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/dll_0104_smallbasket_ext.h"
+#include "main/dll/dll_0104_smallbasket.h"
 
 int lbl_803DBDA0 = 1;
 f32 lbl_803DBDA4 = 15.0f;
@@ -123,7 +123,7 @@ void fn_801814D0(int obj, int arg, u8* state)
             }
             ((DusterState*)state)->hitReactTimer = 0x32;
             state[9] = 0;
-            smallbasket_spawnContents((u8*)obj, (u8*)arg, state);
+            smallbasket_spawnContents((GameObject*)obj, (GameObject*)arg, state);
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             launchVel = lbl_803E3938;
             ((GameObject*)obj)->anim.velocityX = lbl_803E3938;

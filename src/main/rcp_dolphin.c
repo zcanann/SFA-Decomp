@@ -47,7 +47,7 @@
 #include "dolphin/gx/GXTransform.h"
 #include "main/dll/modgfx.h"
 #include "main/pi_dolphin_ext.h"
-#include "main/newshadows_ext.h"
+#include "main/newshadows.h"
 #include "main/pi_dolphin_load_api.h"
 #include "main/pi_dolphin_texture_api.h"
 #include "main/gx_scissor_api.h"
