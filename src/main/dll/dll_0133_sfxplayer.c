@@ -193,7 +193,7 @@ void sfxplayerObj_update(u8* obj)
     data = *(SfxplayerPlacement**)&((GameObject*)obj)->anim.placementData;
     if ((data->flags & SFXPLAYER_FLAG_ROM_CURVE) != 0)
     {
-        if (getCurSeqNoInt() != 0)
+        if (getCurSeqNo() != 0)
         {
             focusObj = (*gCameraInterface)->getCamera();
             ((void (*)(int, int, f32, f32, f32, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(

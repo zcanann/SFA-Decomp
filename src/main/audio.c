@@ -2448,7 +2448,7 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
     f32* listener;
     GameObject* player = Obj_GetPlayerObject();
     void* slot = Camera_GetCurrentViewSlot();
-    int seqNo = getCurSeqNoInt();
+    int seqNo = getCurSeqNo();
 
     if (player != NULL && seqNo == 0)
     {

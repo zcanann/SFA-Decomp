@@ -6148,7 +6148,7 @@ void pauseMenuFn_80129ee0(void)
             camMode = (*gCameraInterface)->getMode();
             canOpen = 1;
             audioFree = (player == 0 || !(player->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK)) &&
-                getCurSeqNoInt() == 0 && AudioStream_IsPreparing() == 0;
+                getCurSeqNo() == 0 && AudioStream_IsPreparing() == 0;
             if (audioFree == 0 && camMode != 0x51)
             {
                 canOpen = 0;

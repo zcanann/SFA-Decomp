@@ -273,7 +273,7 @@ void WM_LevelControl_update(GameObject* obj)
         mode6 = (*gMapEventInterface)->getMapAct((int)(obj)->anim.mapEventSlot);
         mode6 = __cntlzw(6 - (mode6 & 0xff));
         mode6 = mode6 >> 5;
-        if ((((int)mode6 == 0) || (loadingDone = getCurSeqNoInt(), loadingDone == 0)) ||
+        if ((((int)mode6 == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
             (mode6 = mainGetBit(GAMEBIT_WMRelated0A7F), mode6 == 0))
         {
             SCGameBitLatch_UpdateInverted(&state->latch, 0x10, -1, -1, 0xa7f, 0xa6);

@@ -895,7 +895,7 @@ void clearCurSeqNo(void)
     curSeqNo = 0x0;
 }
 
-u8 getCurSeqNo(void)
+int getCurSeqNo(void)
 {
     return curSeqNo;
 }

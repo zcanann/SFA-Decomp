@@ -177,7 +177,7 @@ void pollenfragment_update(int obj)
     Vec pos;
 
     extra = *(u8**)&((GameObject*)obj)->extra;
-    if (getCurSeqNoInt() != 0)
+    if (getCurSeqNo() != 0)
     {
         Obj_FreeObject(obj);
         return;
