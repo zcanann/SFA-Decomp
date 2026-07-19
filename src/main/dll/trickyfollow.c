@@ -24,7 +24,6 @@
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/skeetla.h"
 #include "main/dll/objfsa.h"
-#include "main/dll/skeetla_ext.h"
 #include "main/dll/Hcurves_api.h"
 #include "main/dll/objfsa_romcurve.h"
 

@@ -17,7 +17,7 @@
 #include "main/frame_timing.h"
 #include "main/voxmaps.h"
 #include "main/dll/kooshy.h"
-#include "main/dll/magicplant_ext.h"
+#include "main/dll/magicPlant.h"
 
 
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000

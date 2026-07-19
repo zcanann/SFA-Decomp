@@ -34,7 +34,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/fall_ladders.h"
-#include "main/dll/fall_ladders_ext.h"
 
 int lbl_803DBCD0[2] = {2, 3};
 

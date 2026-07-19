@@ -12,6 +12,7 @@
  * attack window; userData2 holds per-instance counters/flags.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/dll/magicPlant.h"
 #include "main/audio/sfx_ids.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 #include "dolphin/mtx/mtx_legacy.h"

@@ -2,6 +2,13 @@
 #define MAIN_DLL_MAGICPLANT_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
+
+extern u8 gMagicPlantSeqEntryTable[8];
+
+void vambat_updateIdle(GameObject* obj, int state);
+void vambat_updateEngaged(GameObject* obj, int state);
+void fn_8015355C(GameObject* obj, int state);
 
 void FUN_80153738(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,

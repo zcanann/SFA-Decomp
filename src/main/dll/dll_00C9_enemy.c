@@ -60,12 +60,11 @@
 #include "main/dll/seqobj11e_baddie.h"
 #include "main/dll/wispbaddie_baddie.h"
 #include "main/dll/seqobj11d_baddie.h"
-#include "main/dll/magicplant.h"
+#include "main/dll/magicPlant.h"
 #include "main/dll/seqObj11D.h"
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/dll_00C4_tricky.h"
-#include "main/dll/magicplant_ext.h"
-#include "main/dll/fall_ladders_ext.h"
+#include "main/dll/fall_ladders.h"
 #include "string.h"
 
 int lbl_803DBC58[2] = {2, 3};
