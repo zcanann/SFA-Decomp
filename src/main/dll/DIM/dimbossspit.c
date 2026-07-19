@@ -35,8 +35,6 @@ extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
 extern f32 lbl_803DDBA4;
-extern u8 lbl_803DDBA8[8];
-extern u8 lbl_803DDBB0[8];
 extern f32 lbl_803E4C90;
 extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CB4;
@@ -129,7 +127,7 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
     state->savedObjFieldC0 = *(u32*)&((GameObject*)obj)->pendingParentObj;
     *(u32*)&((GameObject*)obj)->pendingParentObj = 0;
 
-    (*gPlayerInterface)->update(obj, updateState, timeDelta, timeDelta, lbl_803DDBB0, lbl_803DDBA8);
+    (*gPlayerInterface)->update(obj, updateState, timeDelta, timeDelta, &lbl_803DDBB0, &lbl_803DDBA8);
 
     *(u32*)&((GameObject*)obj)->pendingParentObj = state->savedObjFieldC0;
 }
