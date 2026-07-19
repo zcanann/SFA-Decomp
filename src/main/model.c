@@ -334,7 +334,7 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
     }
 }
 
-void modelAnimFn_800246a0(u8* dst, u8* model, u8* channel, f32 t, int flags, int slotA, int slotB, int blendSel, int mode, s16 eventVal)
+void modelAnimEvalSlotPair(u8* dst, u8* model, u8* channel, f32 t, int flags, int slotA, int slotB, int blendSel, int mode, s16 eventVal)
 {
     u8 stk[0x64];
     int mtxBuf;
@@ -418,7 +418,7 @@ void modelAnimFn_800246a0(u8* dst, u8* model, u8* channel, f32 t, int flags, int
     lbl_80006C6C(&mtxBuf, dst, stk, ((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount,
                  gModelJointScratchBuffer, flags, (u8)mode);
 }
-void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int flags)
+void modelAnimEvalChannels(u8* dst, u8* model, u8* channel, f32 blend, int flags)
 {
     /* channel points at an ObjAnimState; stk is an on-stack working copy of one */
     u8 stk[0x64];
@@ -1082,7 +1082,7 @@ static inline int boneBlendSlotLimit(u8* model)
     return 1;
 }
 
-void fn_80025F38(int* a, int b, u8* blend, u8* chain)
+void modelChainUpdateNodesPassive(int* a, int b, u8* blend, u8* chain)
 {
     u8* model = (u8*)a;
     f32 tmp[12];
@@ -1179,7 +1179,7 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
     }
 }
 
-void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
+void modelChainUpdateNodes(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
 {
     u8* model = (u8*)a;
     f32 tmp[12];
@@ -1281,8 +1281,8 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
         *(f32*)(*(u8**)chain + i * 0x54 + 8) = work[2];
     }
 }
-void modelAnimFn_80026790(ObjModel* model, int unused, ObjModelChain* chain, ObjModelChainEntry* entry);
-void fn_80026928(int* obj, int b, int* desc)
+void modelChainApplyDampingAndJitter(ObjModel* model, int unused, ObjModelChain* chain, ObjModelChainEntry* entry);
+void modelChainInitNodesFromJoints(int* obj, int b, int* desc)
 {
     int i;
 
@@ -1397,16 +1397,16 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
         {
             if (((ObjModelChain*)p)->firstUpdateDone == 0)
             {
-                fn_80026928(a, b, (int*)((u8*)((ObjModelChain*)p)->entries + off));
+                modelChainInitNodesFromJoints(a, b, (int*)((u8*)((ObjModelChain*)p)->entries + off));
             }
             if (getHudHiddenFrameCount() == 0)
             {
-                modelAnimFn_80026790((ObjModel*)a, b, (ObjModelChain*)p, (ObjModelChainEntry*)((u8*)((ObjModelChain*)p)->entries + off));
-                fn_80026308(a, b, p, (u8*)((ObjModelChain*)p)->entries + off, d, i);
+                modelChainApplyDampingAndJitter((ObjModel*)a, b, (ObjModelChain*)p, (ObjModelChainEntry*)((u8*)((ObjModelChain*)p)->entries + off));
+                modelChainUpdateNodes(a, b, p, (u8*)((ObjModelChain*)p)->entries + off, d, i);
             }
             else
             {
-                fn_80025F38(a, b, p, (u8*)((ObjModelChain*)p)->entries + off);
+                modelChainUpdateNodesPassive(a, b, p, (u8*)((ObjModelChain*)p)->entries + off);
             }
             off += 0xc;
         }
@@ -1415,7 +1415,7 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
     }
 }
 
-void modelAnimFn_80026790(ObjModel* model, int unused, ObjModelChain* chain, ObjModelChainEntry* entry)
+void modelChainApplyDampingAndJitter(ObjModel* model, int unused, ObjModelChain* chain, ObjModelChainEntry* entry)
 {
     extern f32 lbl_803DCB48;
     extern f32 lbl_803DE844;
@@ -2585,30 +2585,30 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
     }
     if (*(u16*)(*(u8**)model + 2) & 8)
     {
-        modelWalkAnimFn_800248b8((u8*)dst, (u8*)model, *(u8**)((u8*)model + 0x2c),
+        modelAnimEvalChannels((u8*)dst, (u8*)model, *(u8**)((u8*)model + 0x2c),
                                  ((GameObject*)obj)->anim.currentMoveProgress, 0x7f);
     }
     else if (((ObjAnimState*)((ObjModel*)model)->animStateA)->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP)
     {
         ch2 = ((ObjModel*)model)->animStateB;
-        modelAnimFn_800246a0((u8*)dst, (u8*)model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 0, 2, 0x14,
+        modelAnimEvalSlotPair((u8*)dst, (u8*)model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 0, 2, 0x14,
                              (s16)ch->eventState);
-        modelAnimFn_800246a0((u8*)dst, (u8*)model, (u8*)ch2, ((GameObject*)obj)->anim.activeMoveProgress, 0x7f, 0, 0, 2, 0x18,
+        modelAnimEvalSlotPair((u8*)dst, (u8*)model, (u8*)ch2, ((GameObject*)obj)->anim.activeMoveProgress, 0x7f, 0, 0, 2, 0x18,
                              (s16)ch2->eventState);
-        modelAnimFn_800246a0((u8*)dst, (u8*)model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 0, 0, 7,
+        modelAnimEvalSlotPair((u8*)dst, (u8*)model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 0, 0, 7,
                              (s16)ch2->eventCountdown);
-        modelAnimFn_800246a0((u8*)dst, (u8*)model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 1, 1, 1,
+        modelAnimEvalSlotPair((u8*)dst, (u8*)model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 1, 1, 1,
                              (s16)ch->eventCountdown);
     }
     else
     {
-        modelWalkAnimFn_800248b8((u8*)dst, (u8*)model, *(u8**)((u8*)model + 0x2c),
+        modelAnimEvalChannels((u8*)dst, (u8*)model, *(u8**)((u8*)model + 0x2c),
                                  ((GameObject*)obj)->anim.currentMoveProgress, 0x7f);
         ch2 = ((ObjModel*)model)->animStateB;
         if (ch2 != NULL && ((GameObject*)obj)->anim.activeMove > -1)
         {
             ObjModel_BuildAnimBlendTable((u8*)obj, *(u8**)((u8*)model + 0x30), (u8*)blend);
-            modelWalkAnimFn_800248b8((u8*)dst, (u8*)model, *(u8**)((u8*)model + 0x30),
+            modelAnimEvalChannels((u8*)dst, (u8*)model, *(u8**)((u8*)model + 0x30),
                                      ((GameObject*)obj)->anim.activeMoveProgress, -1);
         }
     }
