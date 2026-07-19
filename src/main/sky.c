@@ -2903,23 +2903,23 @@ void sky2_run(void)
                 if ((*(u16*)&((GameObject*)p)->anim.rotZ & 1) == 0)
                 {
                     spd = lbl_803DF118;
-                    *(f32*)(p + 0x310) = spd * *(f32*)(p + 0x30c);
-                    if (*(f32*)(*pp + 0x310) > spd)
+                    ((SkySlotAnim*)p)->blend = spd * ((SkySlotAnim*)p)->prevT;
+                    if (((SkySlotAnim*)*pp)->blend > spd)
                     {
-                        *(f32*)(*pp + 0x310) = spd;
+                        ((SkySlotAnim*)*pp)->blend = spd;
                     }
                 }
             }
             else if (*(int*)(p + 0x44) != 0)
             {
-                *(f32*)(p + 0x30c) = *(f32*)(p + 0x310) / lbl_803DF118;
+                ((SkySlotAnim*)p)->prevT = ((SkySlotAnim*)p)->blend / lbl_803DF118;
                 p = *pp;
                 if ((*(u16*)&((GameObject*)p)->anim.rotZ & 1) == 0)
                 {
-                    *(f32*)(p + 0x310) = -(timeDelta * *(f32*)(p + 0x58) - *(f32*)(p + 0x310));
-                    if (*(f32*)(*pp + 0x310) < (frzero = lbl_803DF108))
+                    ((SkySlotAnim*)p)->blend = -(timeDelta * *(f32*)(p + 0x58) - ((SkySlotAnim*)p)->blend);
+                    if (((SkySlotAnim*)*pp)->blend < (frzero = lbl_803DF108))
                     {
-                        *(f32*)(*pp + 0x310) = frzero;
+                        ((SkySlotAnim*)*pp)->blend = frzero;
                     }
                 }
             }
