@@ -189,6 +189,9 @@ void babycloudrunner_initialise(void);
 
 int fn_8019E3F4(int* obj);
 void sandworm_turnTowardTargetAnim(GameObject* obj, GameObject* target, BabyCloudRunnerState* state, int playMove);
+/* When the player gets within the trigger radius and the runner is in state 3,
+ * fire its burst (notify, bump the counter, set the gamebit); otherwise just
+ * play the idle audio cue. */
 int babycloudrunner_tryCapture(void* p)
 {
     int* obj;
@@ -232,9 +235,6 @@ int babycloudrunner_tryCapture(void* p)
     return 0;
 }
 
-/* When the player gets within the trigger radius and the runner is in state 3,
- * fire its burst (notify, bump the counter, set the gamebit); otherwise just
- * play the idle audio cue. */
 int babycloudrunner_setScale(int* obj)
 {
     BabyCloudRunnerState* state = ((GameObject*)obj)->extra;
