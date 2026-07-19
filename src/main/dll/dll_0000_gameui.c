@@ -1838,26 +1838,19 @@ void drawViewFinderHud(void)
                     ? lbl_803E1E3C
                     : ((fadeLevel > lbl_803E1E68) ? lbl_803E1E68 : fadeLevel);
     gViewFinderFadeLevel = fadeLevel;
-    if (fadeLevel == lbl_803E1E3C)
+    if (fadeLevel == 0.0f)
         return;
     gViewFinderBaseY = (f32)(lbl_803E1EB0 - lbl_803E1EB8 * fadeLevel);
     gViewFinderCamAngle = -view->yaw;
 
-    drawViewFinderHorizontal(lbl_803E1EC4, lbl_803E1E3C, lbl_803E1ECC, lbl_803E1ED0, lbl_803E1ED4, fadeLevel);
-    drawViewFinderHorizontal(lbl_803E1ED8, lbl_803E1E3C, lbl_803E1ECC, lbl_803E1EDC, lbl_803E1EE0,
-                             gViewFinderFadeLevel);
-    drawViewFinderHorizontal(lbl_803E1EC4, lbl_803E1E3C, lbl_803E1EE4, lbl_803E1ED0, lbl_803E1ED4,
-                             gViewFinderFadeLevel);
-    drawViewFinderHorizontal(lbl_803E1ED8, lbl_803E1E3C, lbl_803E1EE4, lbl_803E1EDC, lbl_803E1EE0,
-                             gViewFinderFadeLevel);
-    drawViewFinderVertical(lbl_803E1E3C, lbl_803E1EC4, lbl_803E1ED0, lbl_803E1ECC, lbl_803E1EE8,
-                           gViewFinderFadeLevel);
-    drawViewFinderVertical(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1ED0, lbl_803E1EE4, lbl_803E1ED4,
-                           gViewFinderFadeLevel);
-    drawViewFinderVertical(lbl_803E1E3C, lbl_803E1EC4, lbl_803E1EDC, lbl_803E1ECC, lbl_803E1EE8,
-                           gViewFinderFadeLevel);
-    drawViewFinderVertical(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE4, lbl_803E1ED4,
-                           gViewFinderFadeLevel);
+    drawViewFinderHorizontal(10.0f, 0.0f, 200.0f, 260.0f, 270.0f, fadeLevel);
+    drawViewFinderHorizontal(-10.0f, 0.0f, 200.0f, 380.0f, 370.0f, gViewFinderFadeLevel);
+    drawViewFinderHorizontal(10.0f, 0.0f, 280.0f, 260.0f, 270.0f, gViewFinderFadeLevel);
+    drawViewFinderHorizontal(-10.0f, 0.0f, 280.0f, 380.0f, 370.0f, gViewFinderFadeLevel);
+    drawViewFinderVertical(0.0f, 10.0f, 260.0f, 200.0f, 210.0f, gViewFinderFadeLevel);
+    drawViewFinderVertical(0.0f, -10.0f, 260.0f, 280.0f, 270.0f, gViewFinderFadeLevel);
+    drawViewFinderVertical(0.0f, 10.0f, 380.0f, 200.0f, 210.0f, gViewFinderFadeLevel);
+    drawViewFinderVertical(0.0f, -10.0f, 380.0f, 280.0f, 270.0f, gViewFinderFadeLevel);
 
     {
         char buf[56];
@@ -1865,14 +1858,14 @@ void drawViewFinderHud(void)
         f32 gridX, gridStep, wavePhase, nextWavePhase, nextGridX;
         f32 angleDivisor, gridSpacing, waveCenterX, angleScale, gridAlpha;
         f32 reticleY = (f32)(lbl_803E1EF0 * ((fovY - lbl_803E1EF8) / lbl_803E1F00) + lbl_803E1EB0);
-        f32 reticleTopY = -(lbl_803E1F0C * gViewFinderFadeLevel) + lbl_803E1F08;
+        f32 reticleTopY = -(lbl_803E1F0C * gViewFinderFadeLevel) + 410.0f;
         f32 reticleEndY;
         f32 viewScale;
-        drawViewFinderSegment(lbl_803E1F10, reticleTopY, lbl_803E1F10, lbl_803E1F08,
-                              lbl_803E1E3C, lbl_803E1F08 - reticleTopY, lbl_803E1E68,
+        drawViewFinderSegment(lbl_803E1F10, reticleTopY, lbl_803E1F10, 410.0f,
+                              lbl_803E1E3C, 410.0f - reticleTopY, lbl_803E1E68,
                               hudElementOpacity * gViewFinderFadeLevel);
         drawViewFinderSegment(lbl_803E1F10, reticleY, lbl_803E1F10,
-                              (reticleEndY = lbl_803E1F14 + reticleY), lbl_803E1E3C,
+                              (reticleEndY = 8.0f + reticleY), lbl_803E1E3C,
                               reticleEndY - reticleY, lbl_803E1F18,
                               hudElementOpacity * gViewFinderFadeLevel);
         viewScale = lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
@@ -1946,7 +1939,7 @@ void drawViewFinderHud(void)
             headingOffset = gViewFinderCamAngle - headingIndex * gViewFinderBamToDeg;
             tickSpacing = viewScale * (gViewFinderBamToDeg / lbl_803DBAE8);
             headingOffset = headingOffset / lbl_803DBAE8;
-            tickX = (f32)(lbl_803E1F78 + headingOffset * viewScale);
+            tickX = (f32)(320.0 + headingOffset * viewScale);
             heading = -headingIndex;
             while (tickX > lbl_803E1E3C)
             {
@@ -2020,7 +2013,7 @@ void drawViewFinderHud(void)
                     scale = lbl_803E1EC8;
                     phase = lbl_803E1F34 - tickX;
                     sn = lbl_803DBAE4 * mathCosf(scale * (phase * lbl_803DBAE0) / lbl_803E1E94);
-                    gameTextShowStr(buf, 0x93, (int)(lbl_803E1F88 * (tickX - lbl_803E1F78) + lbl_803E1F78),
+                    gameTextShowStr(buf, 0x93, (int)(0.98 * (tickX - 320.0) + 320.0),
                                     (int)(gViewFinderBaseY + (lbl_803E1F90 + sn)));
                 }
                 {
@@ -2031,7 +2024,7 @@ void drawViewFinderHud(void)
                     nextY = gViewFinderBaseY + ((f32)((u8)tickHeight + 0x1e0) + cosine);
                     cosine = lbl_803DBAE4 * mathCosf(lbl_803E1EC8 * (phase * lbl_803DBAE0) / lbl_803E1E94);
                     currentY = gViewFinderBaseY + (lbl_803E1F48 + cosine);
-                    fx = lbl_803E1F88 * (tickX - lbl_803E1F78) + lbl_803E1F78;
+                    fx = 0.98 * (tickX - 320.0) + 320.0;
                     drawViewFinderSegment(tickX, currentY, (f32)fx, nextY, (f32)fx - tickX,
                                           nextY - currentY, lbl_803E1E68, alpha);
                 }
