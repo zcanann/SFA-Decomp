@@ -1,7 +1,8 @@
 /*
  * snowworm - the snowworm baddie plus the shared crawler-family reaction and
  * variant helpers that live in the same original translation unit:
- *   fn_8015A52C                 per-frame body-segment placement helper.
+ *   snowworm_spawnProjectile    spawns the type-0x51b spit projectile on move 9,
+ *                               launched outward along the worm's facing angle.
  *   snowworm_updateWhileFrozen  freeze-event handler.
  *   crawler_playReactionEffects hit-reaction particle/sfx playback.
  *   snowworm_update             per-frame update: advances the curve walk and
@@ -180,7 +181,7 @@ STATIC_ASSERT(offsetof(FCVars, reactStep) == 0x33f);
 STATIC_ASSERT(offsetof(FCVars, linkedObj) == 0x340);
 
 
-void fn_8015A52C(s16* obj)
+void snowworm_spawnProjectile(s16* obj)
 {
     u8 locked = Obj_IsLoadingLocked();
     if (locked != 0)
@@ -379,7 +380,7 @@ void snowworm_update(int* obj, u8* state)
         }
         if (((GameObject*)obj)->anim.currentMove == 9)
         {
-            fn_8015A52C((s16*)obj);
+            snowworm_spawnProjectile((s16*)obj);
         }
         else if (((GameObject*)obj)->anim.currentMove == 1)
         {

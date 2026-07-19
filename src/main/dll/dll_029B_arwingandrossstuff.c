@@ -13,9 +13,11 @@
  * velocity) and rescales its speed by deflectSpeedScale.
  * createLinkedEffect() attaches a coloured point light to the shot.
  *
- * arwprojectile_placeForward and fn_8022ECE0 position a new projectile in
- * front of the Arwing; arwprojectile_setLifetime and fn_8022ED74 configure
- * its lifetime and speed; all four are called from wcfloortile.
+ * arwprojectile_setLifetime + arwprojectile_placeForward configure a new
+ * projectile's lifetime and launch velocity (callers: arwarwing, arwsquadron,
+ * andross, androsshand, player); arwprojectile_launchForward +
+ * arwprojectile_setParamScalar are the bomb-drop variants (called from
+ * arwarwing's bomb release).
  */
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
@@ -356,7 +358,7 @@ void arwingandrossstuff_initialise(void)
 {
 }
 
-void fn_8022ECE0(GameObject* obj, f32 lifetime)
+void arwprojectile_launchForward(GameObject* obj, f32 lifetime)
 {
     ArwProjectileState* state = obj->extra;
     f32 mtx[16];
@@ -375,7 +377,7 @@ void fn_8022ECE0(GameObject* obj, f32 lifetime)
                           &obj->anim.velocityY, &obj->anim.velocityZ);
 }
 
-void fn_8022ED74(GameObject* obj, int scalar)
+void arwprojectile_setParamScalar(GameObject* obj, int scalar)
 {
     ArwProjectileState* state = obj->extra;
     state->param0.scalar = scalar;

@@ -90,7 +90,7 @@ void arwingandrossstuff_update(GameObject* obj);
 void arwingandrossstuff_init(GameObject* obj, ArwProjectileSetup* setup);
 void arwingandrossstuff_release(void);
 void arwingandrossstuff_initialise(void);
-void fn_8022ECE0(GameObject* obj, f32 lifetime);
-void fn_8022ED74(GameObject* obj, int scalar);
+void arwprojectile_launchForward(GameObject* obj, f32 lifetime);
+void arwprojectile_setParamScalar(GameObject* obj, int scalar);
 
 #endif /* MAIN_DLL_DLL_029B_ARWINGANDROSSSTUFF_H */
