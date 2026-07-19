@@ -34,6 +34,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/object_descriptor.h"
 #include "main/dll/im_world_map_api.h"
+#include "main/dll/dll_0011_screens.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -68,7 +69,8 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 extern f32 lbl_803E46E0;
 extern f32 lbl_803E46D8;
 extern f32 lbl_803E46DC;
-extern void gameBitFn_800ea2e0(int idx);
+
+typedef void (*IMIceMountainGameBitSyncFn)(int id);
 
 void IMIceMountain_init(int* obj);
 int IMIceMountain_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
@@ -316,7 +318,7 @@ void IMIceMountain_init(int* obj)
     ((GameObject*)obj)->animEventCallback = IMIceMountain_SeqFn;
     for (i = 1; (u8)i <= 0xd; i++)
     {
-        gameBitFn_800ea2e0(i);
+        ((IMIceMountainGameBitSyncFn)gameBitFn_800ea2e0)(i);
     }
     sub->warningTextTimer = lbl_803E46E0;
     MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 1, 0);

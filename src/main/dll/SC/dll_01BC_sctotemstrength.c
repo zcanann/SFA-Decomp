@@ -19,6 +19,7 @@
 #include "main/screen_transition.h"
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/SC/sc_shared.h"
+#include "main/dll/SC/sctotembond.h"
 #include "main/obj_list.h"
 #include "main/pad.h"
 #include "main/gamebits.h"
@@ -35,7 +36,8 @@ u16 lbl_803DC070[4] = {0x2B6, 0x2D7, 0x2D8, 0};
 
 
 
-extern void fn_801DE320(void* dst, int val);
+typedef void (*SCTotemStrengthGameBitUpdateFn)(u16* ids, int value);
+
 int gTotemStrengthDeactivateTimer;
 
 /* Camera mode id passed to setMode()/getMode() (== the target camera-mode DLL number). */
@@ -231,7 +233,7 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
                         break;
                     }
                 }
-                fn_801DE320(lbl_803DC070, (int)(fn_8001461C() / 10.0f));
+                ((SCTotemStrengthGameBitUpdateFn)fn_801DE320)(lbl_803DC070, (int)(fn_8001461C() / 10.0f));
                 hudFn_8011f38c(0);
                 if (st->loopSfxHandle > 0)
                 {
