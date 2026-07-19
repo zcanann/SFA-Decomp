@@ -15,7 +15,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/obj_group.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 
 STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
@@ -92,7 +92,7 @@ void IMMultiSeq_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void IMMultiSeq_hitDetect(void)

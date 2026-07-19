@@ -17,7 +17,7 @@
 #include "main/mm.h"
 #include "main/pi_dolphin.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/IM/dll_016F_imspacethruster.h"
 #include "main/object_descriptor.h"
 
@@ -59,7 +59,7 @@ void imspacethruster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, IM_SPACE_THRUSTER_WEIGHT_MAX);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, IM_SPACE_THRUSTER_WEIGHT_MAX);
 }
 
 void imspacethruster_hitDetect(void)
@@ -222,4 +222,3 @@ ObjectDescriptor gIMSpaceThrusterObjDescriptor = {
     (ObjectDescriptorCallback)imspacethruster_getObjectTypeId,
     imspacethruster_getExtraSize,
 };
-

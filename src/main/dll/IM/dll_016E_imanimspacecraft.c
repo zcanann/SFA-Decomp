@@ -15,7 +15,7 @@
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/gamebits.h"
 #include "main/dll/IM/dll_016E_imanimspacecraft.h"
 #include "main/object_descriptor.h"
@@ -169,7 +169,7 @@ void imanimspacecraft_render(int obj, int p2, int p3, int p4, int p5, s8 visible
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void imanimspacecraft_hitDetect(void)

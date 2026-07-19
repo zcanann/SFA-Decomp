@@ -17,7 +17,7 @@
 #include "main/dll/cloudaction_interface.h"
 #include "main/frame_timing.h"
 #include "main/audio/music_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/render_envfx_api.h"
 #include "main/render_lactions_api.h"
 #include "main/game_object.h"
@@ -232,7 +232,7 @@ void IMIceMountain_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E46D8);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E46D8);
 }
 
 void IMIceMountain_hitDetect(void)

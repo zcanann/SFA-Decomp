@@ -19,7 +19,7 @@
 #include "main/obj_list.h"
 #include "main/frame_timing.h"
 #include "main/dll/IM/dll_0171_imspaceringgen.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 /* anim.seqId of the two reference ring objects the generator tracks */
@@ -49,7 +49,7 @@ void IMSpaceRingGen_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     u8* state = ((GameObject*)obj)->extra;
     if (visible != 0 && (state[8] != 0 || ((GameObject*)obj)->anim.alpha != 0))
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, 1.0f);
     }
 }
 
