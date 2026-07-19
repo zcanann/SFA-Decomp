@@ -80,8 +80,6 @@ typedef enum Dim2lavacontrolPhase
 
 extern f32 lbl_803E4B90;
 
-typedef void (*Dim2LavaControlGameBitSyncFn)(int id);
-
 void dim2lavacontrol_setScale(GameObject *obj)
 {
     void* sub = (obj)->extra;
@@ -194,7 +192,7 @@ void dim2lavacontrol_update(int obj)
 void dim2lavacontrol_init(GameObject *obj, int param2)
 {
     int state;
-    int i;
+    u8 i;
     int gameBitState;
     if (getSaveGameLoadStatus() != 0)
     {
@@ -204,9 +202,9 @@ void dim2lavacontrol_init(GameObject *obj, int param2)
     {
         (obj)->userData1 = 1;
     }
-    for (i = 1; (u8)i <= 0x2d; i++)
+    for (i = 1; i <= 0x2d; i++)
     {
-        ((Dim2LavaControlGameBitSyncFn)gameBitFn_800ea2e0)(i);
+        gameBitFn_800ea2e0(i);
     }
     state = *(int*)&(obj)->extra;
     ((Dim2lavacontrolState*)state)->countdown = (s8) * (s16*)(param2 + 0x1a);

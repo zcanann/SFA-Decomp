@@ -70,8 +70,6 @@ extern f32 lbl_803E46E0;
 extern f32 lbl_803E46D8;
 extern f32 lbl_803E46DC;
 
-typedef void (*IMIceMountainGameBitSyncFn)(int id);
-
 void IMIceMountain_init(int* obj);
 int IMIceMountain_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int IMIceMountain_getExtraSize(void);
@@ -314,11 +312,11 @@ void IMIceMountain_update(int* obj)
 void IMIceMountain_init(int* obj)
 {
     IMIceMountainState* sub = ((GameObject*)obj)->extra;
-    int i;
+    u8 i;
     ((GameObject*)obj)->animEventCallback = IMIceMountain_SeqFn;
-    for (i = 1; (u8)i <= 0xd; i++)
+    for (i = 1; i <= 0xd; i++)
     {
-        ((IMIceMountainGameBitSyncFn)gameBitFn_800ea2e0)(i);
+        gameBitFn_800ea2e0(i);
     }
     sub->warningTextTimer = lbl_803E46E0;
     MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 1, 0);
