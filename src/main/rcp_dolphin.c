@@ -1222,11 +1222,7 @@ void fn_80053C40(Texture* tex, GXTexObj* obj)
 
 void fn_80053EBC(u32 bits)
 {
-    u32 nb;
-    u32 v;
-    v = gRcpRenderFlags;
-    nb = ~bits;
-    gRcpRenderFlags = v & nb;
+    gRcpRenderFlags &= ~(u64)bits;
 }
 
 
