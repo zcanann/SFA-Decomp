@@ -57,7 +57,6 @@ STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 #define DBEGG_OBJGROUP           0x24
 #define DBHOLECONTROL1_CHILD_OBJ 1337
 
-extern const union DbHoleControl1ConstF32 lbl_803E6390;
 int lbl_803DDCE0;
 
 

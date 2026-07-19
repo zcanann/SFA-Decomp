@@ -42,14 +42,6 @@ const f32 lbl_803DF46C = 0.0f;
 extern const f32 lbl_803DF470;
 extern const f32 lbl_803DF474;
 extern const f32 lbl_803DF478;
-extern const union PlayerShadowConstF32 lbl_803DF488;
-extern const union PlayerShadowConstF32 lbl_803DF48C;
-extern const union PlayerShadowConstF32 lbl_803DF490;
-extern const union PlayerShadowConstF32 lbl_803DF494;
-extern const union PlayerShadowConstF32 lbl_803DF498;
-extern const union PlayerShadowConstF32 lbl_803DF49C;
-extern const union PlayerShadowConstF32 lbl_803DF4A0;
-extern const union PlayerShadowConstF32 lbl_803DF4A4;
 
 void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj)
 {

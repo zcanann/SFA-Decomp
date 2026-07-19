@@ -125,7 +125,6 @@ typedef struct
 } BasketMathArgs;
 
 extern const f32 lbl_803E3930;
-extern const f32 lbl_803E3934;
 extern const f32 lbl_803E3938;
 extern const f32 lbl_803E393C;
 extern const f32 lbl_803E3940;

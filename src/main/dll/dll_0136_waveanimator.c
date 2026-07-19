@@ -56,7 +56,6 @@ extern const f32 lbl_803E3F58;
 extern const f32 lbl_803E3F5C;
 extern const f32 lbl_803E3F60;
 extern const f32 lbl_803E3F64;
-extern const union WaveAnimatorConstF32 lbl_803E3F70;
 
 void waveanimator_buildSharedTables(int* cfgArg);
 
