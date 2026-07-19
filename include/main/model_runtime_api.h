@@ -41,7 +41,4 @@ void* modelFileGetDisplayList(u8* modelFile, int displayListIndex);
 #define objUpdateHitSpheresIntLegacy(hitState, headerOwner, previousObj, boneMtx, obj) \
     (((void (*)(int*, u8*, int*, int, int*))objUpdateHitSpheres)( \
         (hitState), (headerOwner), (previousObj), (boneMtx), (obj)))
-#define modelFileGetDisplayListU8Legacy(modelFile, displayListIndex) \
-    (((u8* (*)(u8*, int))modelFileGetDisplayList)((modelFile), (displayListIndex)))
-
 #endif /* MAIN_MODEL_RUNTIME_API_H_ */

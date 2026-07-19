@@ -1571,7 +1571,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
             bs.pos = pos + 8;
             idx = (w >> (pos & 7)) & 0xff;
         }
-        dl = modelFileGetDisplayListU8Legacy(m, idx);
+        dl = modelFileGetDisplayList(m, idx);
         GXCallDisplayList(*(void**)dl, *(u16*)(dl + 4));
     }
 }
@@ -1943,7 +1943,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             w |= p[1] << 8;
             w |= p[2] << 16;
             bs.pos = pos + 8;
-            dl = modelFileGetDisplayListU8Legacy(
+            dl = modelFileGetDisplayList(
                 m, ((ModelFileHeader*)m)->displayListCount + ((w >> (pos & 7)) & 0xff));
             GXCallDisplayList(*(void**)dl, *(u16*)(dl + 4));
         }
@@ -2348,7 +2348,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 w |= p[1] << 8;
                 w |= p[2] << 16;
                 bs.pos = pos + 8;
-                dl = modelFileGetDisplayListU8Legacy(m, (w >> (pos & 7)) & 0xff);
+                dl = modelFileGetDisplayList(m, (w >> (pos & 7)) & 0xff);
                 GXCallDisplayList(*(void**)dl, *(u16*)(dl + 4));
             }
             else
