@@ -813,10 +813,11 @@ main/dll/dll_0096_dll96func0.c:
 main/dll/dll_0097_dll97func0.c:
 	.text       start:0x800FBA40 end:0x800FBDF0
 	.sdata      start:0x803DB948 end:0x803DB950
-	.sdata2     start:0x803E12E8 end:0x803E1340
+	.sdata2     start:0x803E12E8 end:0x803E1314
 
 main/dll/dll_0098_dll98func0.c:
 	.text       start:0x800FBDF0 end:0x800FC208
+	.sdata2     start:0x803E1318 end:0x803E1340
 
 main/dll/dll_0099_dll99func0.c:
 	.text       start:0x800FC208 end:0x800FC5B8
