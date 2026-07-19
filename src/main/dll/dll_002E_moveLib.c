@@ -23,6 +23,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
+#include "main/objlib_api.h"
 #include "main/objprint_api.h"
 #include "main/curve.h"
 #include "main/curve_eval.h"
@@ -57,12 +58,6 @@
 #define MOVELIB_CURVE_WALK_DONE 0x10
 
 extern u8 gMoveLibDefaultMoveData[];
-
-int fn_8003A8B4(PostObjAnimComponent* objAnim, PostMotionTarget* leadAnims, u8 contactAnim, void* secondary);
-s16 objMathFn_8003a380(PostObjAnimComponent* objAnim, PostObject* obj, void* primary, void* secondary, s16* events,
-                       f32 distance, int eventCount, int eventState);
-
-void fn_80038F1C(int a, int b);
 
 typedef struct ProjNearSearch
 {
@@ -629,8 +624,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
         {
             if (s->setupFlag != 0 && (s->modeBits & 8) == 0)
             {
-                s->setupFlag = !fn_8003A8B4((PostObjAnimComponent*)obj, (PostMotionTarget*)seqHandle, s->pointCount,
-                                            s->animChannels);
+                s->setupFlag = !fn_8003A8B4(obj, (int*)seqHandle, s->pointCount, s->animChannels);
             }
             else
             {
@@ -679,8 +673,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                     }
                     if (s->setupFlag != 0)
                     {
-                        s->setupFlag = !fn_8003A8B4((PostObjAnimComponent*)obj, (PostMotionTarget*)seqHandle,
-                                                    s->pointCount, s->animChannels);
+                        s->setupFlag = !fn_8003A8B4(obj, (int*)seqHandle, s->pointCount, s->animChannels);
                     }
                     if (s->reattackTimer < -s->reattackDelayMin)
                     {
@@ -751,7 +744,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                     {
                         s->setupFlag = 0;
                     }
-                    objMathFn_8003a380((PostObjAnimComponent*)obj, (PostObject*)target, &s->targetX,
+                    objMathFn_8003a380(obj, (GameObject*)target, &s->targetX,
                                        (s->setupFlag != 0) ? s->animChannels : NULL, s->turnTable, targetYaw, 8,
                                        s->yawLimitA);
                     s->phase = MOVELIB_PHASE_TURN;
@@ -763,8 +756,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                 }
                 if (((s->modeBits & 8) == 0) && (s->setupFlag != 0))
                 {
-                    s->setupFlag = !fn_8003A8B4((PostObjAnimComponent*)obj, (PostMotionTarget*)seqHandle, s->pointCount,
-                                                s->animChannels);
+                    s->setupFlag = !fn_8003A8B4(obj, (int*)seqHandle, s->pointCount, s->animChannels);
                 }
             }
         }
@@ -812,11 +804,13 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
     }
 
     hitResult =
-        objMathFn_8003a380(objAnim, obj, control->primary, ((control->flags & 8) != 0) ? NULL : control->secondary,
-                           control->events, distance, 8, control->eventState);
+        objMathFn_8003a380((GameObject*)objAnim, (GameObject*)obj, control->primary,
+                           ((control->flags & 8) != 0) ? NULL : control->secondary, control->events, distance, 8,
+                           control->eventState);
     if ((control->flags & 8) == 0)
     {
-        control->blocked = (u32)__cntlzw(fn_8003A8B4(objAnim, motion, control->contactAnim, control->secondary)) >> 5;
+        control->blocked =
+            (u32)__cntlzw(fn_8003A8B4((GameObject*)objAnim, (int*)motion, control->contactAnim, control->secondary)) >> 5;
     }
     control->blocked = 0;
 

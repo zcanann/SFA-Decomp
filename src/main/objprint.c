@@ -735,11 +735,12 @@ void fn_8003A230(GameObject* obj, CharacterEyeAnimState* state, f32 val)
         *(s16*)((char*)state + 0x1a) = (s16)(*(s16*)((char*)state + 0x1a) | (flag << 8));
     }
 }
-int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk6, int p7, f32 yOff)
+s16 objMathFn_8003a380(GameObject* obj, GameObject* target, f32* pos, u8* p4, s16* spd, f32 yOff, int unused,
+                      int basePitch)
 {
     s16 src[2];
     s16 dst[2];
-    GameObject* go = (GameObject*)obj;
+    GameObject* go = obj;
     s16* found[1];
     s16* sp2;
     f32 dx, dy, dz, dist;
@@ -747,9 +748,9 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
     s16 ret;
 
     sp2 = spd + 0xf;
-    dx = pos[0] - ((GameObject*)tgt)->anim.localPosX;
-    dz = pos[2] - ((GameObject*)tgt)->anim.localPosZ;
-    dy = (pos[1] + yOff) - ((GameObject*)tgt)->anim.localPosY;
+    dx = pos[0] - target->anim.localPosX;
+    dz = pos[2] - target->anim.localPosZ;
+    dy = (pos[1] + yOff) - target->anim.localPosY;
     dist = sqrtf(dx * dx + dz * dz);
 
     src[0] = (s16)getAngle(dx, dz) - (u16)go->anim.rotX;
@@ -761,7 +762,7 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
     {
         src[0] = (s16)(src[0] + 0xffff);
     }
-    src[1] = p7 - (u16)-getAngle(dist, dy);
+    src[1] = basePitch - (u16)-getAngle(dist, dy);
     if (src[1] > 0x8000)
     {
         src[1] = (s16)(src[1] - 0xffff);
@@ -890,14 +891,14 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
     return src[0];
 }
 
-int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
+int fn_8003A8B4(GameObject* objArg, int* keyList, int countArg, u8* p4Arg)
 {
     int* keys;
     int i;
     int total;
-    char* p4;
+    u8* p4;
     int count;
-    int obj;
+    GameObject* obj;
     s16* found;
 
     obj = objArg;
@@ -908,7 +909,7 @@ int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
     keys = keyList;
     while (i < count)
     {
-        found = objFindJointVecByKey((GameObject*)(obj), *keys);
+        found = objFindJointVecByKey(obj, *keys);
         total += fn_800399C0((s16*)p4, found);
         total += fn_80039834((s16*)(p4 + 0x30), found, lbl_803DE9D8, lbl_803DE9DC);
         keys++;

@@ -25,7 +25,7 @@ typedef struct PostObjAnimComponent {
 
 typedef struct PostControl {
   u8 pad0[0x10];
-  u8 primary[0xc];
+  f32 primary[3];
   u8 secondary[0x5a0];
   s16 events[0x1e];
   int blocked;
