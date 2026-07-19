@@ -97,7 +97,7 @@ void dll_28B_update(GameObject* obj)
     setMatrixFromObjectPos(mtx, &xform);
     Matrix_TransformPoint(mtx, gWcEarthWalkerIdleTimerThreshold, gWcEarthWalkerIdleTimerThreshold,
                           gWcEarthWalkerIdleTimerThreshold, &ox, &oy, &oz);
-    doNothing_80062A50((int)obj, ox, oy, oz);
+    doNothing_80062A50(obj, ox, oy, oz);
 }
 
 void dll_28B_init(GameObject* obj)

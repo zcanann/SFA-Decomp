@@ -1949,7 +1949,7 @@ void playerShadowFn_80062a30(GameObject* obj)
     p->flags &= ~0x2020;
 }
 
-void doNothing_80062A50(void)
+void doNothing_80062A50(GameObject* obj, f32 x, f32 y, f32 z)
 {
 }
 

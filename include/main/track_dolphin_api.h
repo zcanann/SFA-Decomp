@@ -44,7 +44,7 @@ void hitDetect_calcSweptSphereBounds(TrackQueryBounds* boundsOut, f32* startPoin
                                      int pointCount);
 void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* bounds, u32 mask, int flags);
 void fn_80065574(int matchValue, GameObject* obj, int flag);
-void doNothing_80062A50();
+void doNothing_80062A50(GameObject* obj, f32 x, f32 y, f32 z);
 void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode);
 void playerShadowFn_80062a30(GameObject* obj);
 void setShadowFlag_803db658(s32 value);
