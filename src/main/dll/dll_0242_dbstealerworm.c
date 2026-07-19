@@ -1027,7 +1027,6 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
     int tmpB;
     int tmpA;
     int target;
-    RingBufferQueue* msgStack;
     f32 z;
     f32 dist;
     struct
@@ -1047,31 +1046,31 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
     {
         tmpA = sub->objGroup;
         tmpB = sub->msgMode;
-        msgStack = sub->msgStack;
+        obj = (GameObject*)sub->msgStack;
         msgA[0] = sub->msgCode;
         msgA[1] = tmpB;
         msgA[2] = tmpA;
-        if (Stack_IsFull(msgStack) == 0)
+        if (Stack_IsFull((RingBufferQueue*)obj) == 0)
         {
-            Stack_Push(msgStack, msgA);
+            Stack_Push((RingBufferQueue*)obj, msgA);
         }
-        msgStack = sub->msgStack;
+        obj = (GameObject*)sub->msgStack;
         msgB[0] = 8;
         msgB[1] = c2c;
         msgB[2] = c30;
-        if (Stack_IsFull(msgStack) == 0)
+        if (Stack_IsFull((RingBufferQueue*)obj) == 0)
         {
-            Stack_Push(msgStack, msgB);
+            Stack_Push((RingBufferQueue*)obj, msgB);
         }
         sub->msgAdvance = 1;
         tmpA = sub->msgSlotIndex;
-        msgStack = sub->msgStack;
+        obj = (GameObject*)sub->msgStack;
         msgC[0] = 9;
         msgC[1] = 0;
         msgC[2] = tmpA;
-        if (Stack_IsFull(msgStack) == 0)
+        if (Stack_IsFull((RingBufferQueue*)obj) == 0)
         {
-            Stack_Push(msgStack, msgC);
+            Stack_Push((RingBufferQueue*)obj, msgC);
         }
         sub->msgAdvance = 1;
         return 0;

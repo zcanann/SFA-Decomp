@@ -17,6 +17,7 @@
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/dll/bonespawndata_struct.h"
+#include "main/dll/mtxbuildarg_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
 #include "main/lightmap_api.h"
@@ -1177,9 +1178,8 @@ void dll_0B_func05(void)
     int cntA;
     int k;
     void* res;
-    s16 ang[3];
-    f32 q[4];
     BoneSpawnData tmpl;
+    MtxBuildArg rot;
     int objCount;
     int objIdx;
 
@@ -1278,21 +1278,21 @@ void dll_0B_func05(void)
                     tmpl.x = ((ModgfxEffectSlot*)eff)->posCurX;
                     tmpl.y = ((ModgfxEffectSlot*)eff)->posCurY;
                     tmpl.z = ((ModgfxEffectSlot*)eff)->posCurZ;
-                    q[1] = lbl_803DF430;
-                    q[2] = lbl_803DF430;
-                    q[3] = lbl_803DF430;
-                    q[0] = lbl_803DF434;
+                    rot.a = lbl_803DF430;
+                    rot.b = lbl_803DF430;
+                    rot.c = lbl_803DF430;
+                    rot.w = lbl_803DF434;
                     if (((ModgfxEffectSlot*)eff)->sourceFlags & 1)
                     {
-                        ang[0] = ((ModgfxEffectSlot*)eff)->unkC;
+                        rot.rx = ((ModgfxEffectSlot*)eff)->unkC;
                     }
                     else
                     {
-                        ang[0] = *(s16*)(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj);
+                        rot.rx = *(s16*)(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj);
                     }
-                    ang[1] = 0;
-                    ang[2] = 0;
-                    vecRotateZXY(&ang[0], &tmpl.x);
+                    rot.ry = 0;
+                    rot.rz = 0;
+                    vecRotateZXY(&rot.rotation.x, &tmpl.x);
                     if (*(void**)eff == NULL)
                     {
                         if (Obj_IsLoadingLocked())
