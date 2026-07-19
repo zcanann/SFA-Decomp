@@ -1754,14 +1754,13 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
 
-    PSMTXTrans(mtx_a0, gSynthDelayedActionWord0 * (-proj5) - gSynthDelayedActionWord0,
-               gSynthDelayedActionWord0 * proj4 - gSynthDelayedActionWord0, lbl_803DEEDC);
+    PSMTXTrans(mtx_a0, 0.5f * (-proj5) - 0.5f, 0.5f * proj4 - 0.5f, lbl_803DEEDC);
     {
         f32 s = *(f32*)&lbl_803DB6C4;
         PSMTXScale(mtx_70, s / proj2, s / proj1, lbl_803DEEDC);
     }
     PSMTXConcat(mtx_70, mtx_a0, mtx_d0);
-    PSMTXTrans(mtx_a0, gSynthDelayedActionWord0, gSynthDelayedActionWord0, lbl_803DEEDC);
+    PSMTXTrans(mtx_a0, 0.5f, 0.5f, lbl_803DEEDC);
     PSMTXConcat(mtx_a0, mtx_d0, mtx_d0);
     GXLoadTexMtxImm(mtx_d0, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
@@ -1794,8 +1793,8 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
 
     {
         f32 ind_s = lbl_803DB6CC / radius;
-        if (ind_s > gSynthDelayedActionWord0)
-            ind_s = gSynthDelayedActionWord0;
+        if (ind_s > 0.5f)
+            ind_s = 0.5f;
         indMtx[0] = ind_s;
         indMtx[1] = lbl_803DEEDC;
         indMtx[2] = lbl_803DEEDC;
@@ -1804,13 +1803,12 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
         indMtx[5] = lbl_803DEEDC;
     }
 
-    PSMTXTrans(mtx_a0, *(f32*)&gSynthDelayedActionWord0 * (-proj5) - *(f32*)&gSynthDelayedActionWord0,
-               *(f32*)&gSynthDelayedActionWord0 * proj4 - *(f32*)&gSynthDelayedActionWord0, lbl_803DEEDC);
+    PSMTXTrans(mtx_a0, 0.5f * (-proj5) - 0.5f, 0.5f * proj4 - 0.5f, lbl_803DEEDC);
     PSMTXScale(mtx_70, lbl_803DEF24, *(f32*)&lbl_803DEF24, lbl_803DEEDC);
     PSMTXRotRad(mtx_d0, 'z', angle);
     PSMTXConcat(mtx_70, mtx_a0, mtx_70);
     PSMTXConcat(mtx_d0, mtx_70, mtx_d0);
-    PSMTXTrans(mtx_a0, gSynthDelayedActionWord0, gSynthDelayedActionWord0, lbl_803DEEDC);
+    PSMTXTrans(mtx_a0, 0.5f, 0.5f, lbl_803DEEDC);
     PSMTXConcat(mtx_a0, mtx_d0, mtx_d0);
     GXLoadTexMtxImm(mtx_d0, GX_TEXMTX1, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
