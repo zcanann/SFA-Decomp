@@ -23,9 +23,9 @@ typedef struct WaterEntry
     f32 y;
     f32 z;
     f32 w;
-    f32 f10;
+    f32 scale;
     s16 active;
-    s16 f16;
+    s16 rot;
     u8 f18;
     u8 pad19[3];
 } WaterEntry;
@@ -35,11 +35,11 @@ typedef struct WaterParticle
     f32 x;
     f32 y;
     f32 z;
-    f32 f0c;
-    f32 f10;
-    f32 f14;
+    f32 size;
+    f32 life;
+    f32 lifeSpeed;
     u8 vtxColors[0x20];
-    u8 active;
+    u8 dropCount;
     u8 pad39[3];
 } WaterParticle;
 
@@ -49,10 +49,10 @@ typedef struct WaterEntry7
     f32 y;
     f32 z;
     f32 w;
-    f32 f10;
-    s16 f14;
+    f32 scale;
+    s16 rot;
     s16 active;
-    s16 f18;
+    s16 fadeRate;
     u8 pad1a[2];
 } WaterEntry7;
 
@@ -61,24 +61,12 @@ typedef struct WaterDrop
     f32 x;
     f32 y;
     f32 z;
-    f32 f0c;
-    f32 f10;
-    f32 f14;
-    s8 idx;
+    f32 vx;
+    f32 vy;
+    f32 vz;
+    s8 parentIdx;
     u8 pad19[3];
 } WaterDrop;
-
-typedef struct WaterDrawObj
-{
-    s16 f8;
-    s16 fa;
-    s16 fc;
-    u8 pade[2];
-    f32 f10;
-    f32 x;
-    f32 y;
-    f32 z;
-} WaterDrawObj;
 
 typedef struct WaterVtxDesc
 {
