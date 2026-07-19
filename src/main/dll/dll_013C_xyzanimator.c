@@ -3,7 +3,7 @@
  * block's vertices/edges along the X/Y/Z axes.
  *
  * On first update the object copies the source map block's vertex and
- * edge positions into a freshly mmAlloc'd buffer (fn_80194964), then on
+ * edge positions into a freshly mmAlloc'd buffer (XyzAnimator_captureGeometry), then on
  * each tick walks an offset vec toward the placement's per-axis targets
  * and writes the displaced positions back into the live block
  * (fn_80194C40). The placement animation mode selects the drive style:
@@ -83,7 +83,7 @@ f32 objFn_801948c0(GameObject* obj, u8 coord)
     return 0.0f;
 }
 
-void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block)
+void XyzAnimator_captureGeometry(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block)
 {
     int edgeOffset[1];
     int coordOffset[1];
@@ -365,7 +365,7 @@ void XyzAnimator_update(GameObject* obj)
         ((XyzAnimatorState*)state)->edgeV0zBuffer = alloc;
         alloc = alloc + stride;
         ((XyzAnimatorState*)state)->edgeV1zBuffer = alloc;
-        fn_80194964((XyzAnimatorPlacement*)setup, (XyzAnimatorState*)state, block);
+        XyzAnimator_captureGeometry((XyzAnimatorPlacement*)setup, (XyzAnimatorState*)state, block);
         if (((XyzAnimatorPlacement*)setup)->mode != 4)
         {
             fn_80194C40((XyzAnimatorPlacement*)setup, (XyzAnimatorState*)state, block);

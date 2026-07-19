@@ -13,7 +13,7 @@
 
 struct WallanimatorPlacement;
 f32 wallanimator_setScale(GameObject* obj, int desc);
-void fn_80194964(int obj, int state, int block);
+void XyzAnimator_captureGeometry(int obj, int state, int block);
 void fn_80194C40(u32 def, int state, int block);
 u8 wallanimator_modelMtxFn(int* obj);
 u8 wallanimator_func0B(int* obj);

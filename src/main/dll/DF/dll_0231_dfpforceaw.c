@@ -217,11 +217,11 @@ void TrickyCurve_update(int* obj)
     }
     else if (state == 2)
     {
-        fn_80206C18((TrickyCurveObject*)obj);
+        TrickyCurve_updateBurstHit((TrickyCurveObject*)obj);
     }
     else if (state == 3)
     {
-        fn_80206968((TrickyCurveObject*)obj);
+        TrickyCurve_updateCooldownHit((TrickyCurveObject*)obj);
     }
 }
 

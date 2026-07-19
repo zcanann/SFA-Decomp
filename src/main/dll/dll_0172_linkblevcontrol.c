@@ -2,7 +2,7 @@
  * dll_0172 linkb_levcontrol - level controller for Link's boss arena (the
  * Tricky/SharpClaw encounter). It drives a 5-stage progression machine
  * (state->stage) gated on game bits, runs the per-stage trigger sequence,
- * pokes the Tricky object (fn_80138908) at each transition, edge-latches the
+ * pokes the Tricky object (trickySetSoundSuppressed) at each transition, edge-latches the
  * arena music (track 0x1A) on the sun-position sky flag, maintains gamebit
  * latches via SCGameBitLatch_Update, and re-arms gamebit 0x4e3 from the
  * tricky-energy meter on a timer.
@@ -147,13 +147,13 @@ void linkb_levcontrol_update(int* obj)
     }
     if (tricky != NULL)
     {
-        fn_80138908((GameObject*)tricky, 0);
+        trickySetSoundSuppressed((GameObject*)tricky, 0);
         switch (state->stage)
         {
         case LINKBLEVCONTROL_STAGE_START:
             if (mainGetBit(GAMEBIT_LINKB_STAGE_1) != 0)
             {
-                fn_80138908((GameObject*)tricky, 1);
+                trickySetSoundSuppressed((GameObject*)tricky, 1);
                 (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                 state->stage++;
                 state->unk_02_low = 0;
@@ -166,7 +166,7 @@ void linkb_levcontrol_update(int* obj)
                 if (!(((GameObject*)player)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
                 {
                     mainSetBits(GAMEBIT_LINKB_STAGE_2, 1);
-                    fn_80138908((GameObject*)tricky, 1);
+                    trickySetSoundSuppressed((GameObject*)tricky, 1);
                     (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                     state->stage++;
                     state->unk_02_low = 0;
@@ -177,7 +177,7 @@ void linkb_levcontrol_update(int* obj)
         case LINKBLEVCONTROL_STAGE_2:
             if (cur[0] != 0)
             {
-                fn_80138908((GameObject*)tricky, 1);
+                trickySetSoundSuppressed((GameObject*)tricky, 1);
                 if (state->trickyHitCount-- == -1 &&
                     !(((GameObject*)tricky)->objectFlags & LINKBLEVCONTROL_OBJFLAG_PARENT_SLACK))
                 {
@@ -204,7 +204,7 @@ void linkb_levcontrol_update(int* obj)
             if (state->altPath != 0)
             {
                 mainSetBits(GAMEBIT_LINKB_STAGE_4, 1);
-                fn_80138908((GameObject*)tricky, 1);
+                trickySetSoundSuppressed((GameObject*)tricky, 1);
                 (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                 state->stage++;
                 state->unk_02_low = 0;
@@ -214,7 +214,7 @@ void linkb_levcontrol_update(int* obj)
         case LINKBLEVCONTROL_STAGE_4:
             if (mainGetBit(GAMEBIT_LINKB_STAGE_5) != 0)
             {
-                fn_80138908((GameObject*)tricky, 1);
+                trickySetSoundSuppressed((GameObject*)tricky, 1);
                 (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);
                 state->stage++;
                 state->unk_02_low = 0;

@@ -4,13 +4,13 @@
  * A box-shaped trigger volume centred on the object that watches the
  * player's offset from the object on each axis. When the player is inside
  * the half-extents on all three axes (insideAxes == 3) the object reacts:
- *  - fn_80206968 is the cooldown variant: throttled by state->cooldown
+ *  - TrickyCurve_updateCooldownHit is the cooldown variant: throttled by state->cooldown
  *    (decremented by timeDelta, reset to TRICKY_CURVE_COOLDOWN_TICKS after
  *    a hit). A sliding player (player anim state ==
  *    TRICKY_CURVE_PLAYER_ANIM_SLIDE) sets the hit game bit and spawns the
  *    cooldown partfx; otherwise the player takes a recorded hit. Either
  *    way a sfx plays.
- *  - fn_80206C18 is the burst variant: spawns a directional burst partfx
+ *  - TrickyCurve_updateBurstHit is the burst variant: spawns a directional burst partfx
  *    (TrickyCurveBurstPartfxArgs carries the player-relative deltas and an
  *    x-rotation flip when the player crosses the x midline) and, off the
  *    slide path, messages the player and plays the burst sfx. The
@@ -76,7 +76,7 @@ STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, xDelta) == 0x0C);
 u8
     gTrickyCurveBurstCounter; /* inter-frame burst-fire counter; reset to 0 after TRICKY_CURVE_BURST_LIMIT ticks */
 
-void fn_80206968(TrickyCurveObject* obj)
+void TrickyCurve_updateCooldownHit(TrickyCurveObject* obj)
 {
     u8 insideAxes;
     TrickyCurveTriggerState* state;
@@ -172,7 +172,7 @@ void fn_80206968(TrickyCurveObject* obj)
     state->zSide = zSide;
 }
 
-void fn_80206C18(TrickyCurveObject* obj)
+void TrickyCurve_updateBurstHit(TrickyCurveObject* obj)
 {
     u8 insideAxes;
     TrickyCurveTriggerState* state;

@@ -1105,11 +1105,11 @@ void errDisplayHandler(s16 a, OSContext* b, u32 c, u32 d)
  * coordinates from saved values. */
 
 /* Bit setter at bit 6 (0x40) of obj->_b8->_58. */
-void fn_80138908(GameObject* obj, int v)
+void trickySetSoundSuppressed(GameObject* obj, int v)
 {
     ((struct Bits58*)((GameObject*)obj)->extra)->b6 = v;
 }
-int fn_80138920(GameObject* obj, u16 sfxId, int vol)
+int trickyTryPlaySound(GameObject* obj, u16 sfxId, int vol)
 {
     u8* b = ((GameObject*)obj)->extra;
     s16 v;
