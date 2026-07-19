@@ -464,8 +464,8 @@ u32 frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 
     return 1;
 }
 
-u8 mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* planes, int planeCount, f32* minX,
-                                       f32* minY, f32* minZ, f32* maxX, f32* maxY, f32* maxZ)
+u8 mapBlockBounds_ComputeAndTestPlanes(int bounds, struct MapBlockData* block, FrustumPlane* planes, int planeCount,
+                                       f32* minX, f32* minY, f32* minZ, f32* maxX, f32* maxY, f32* maxZ)
 {
     u8 cornerIndex;
     float nearX;
@@ -477,12 +477,12 @@ u8 mapBlockBounds_ComputeAndTestPlanes(int bounds, int block, FrustumPlane* plan
     int i;
     MapBlockBoundsRec* b = (MapBlockBoundsRec*)bounds;
 
-    *maxX = (f32)(b->maxX >> 3) + *(float*)(block + 0x18);
-    *minX = (f32)(b->minX >> 3) + *(float*)(block + 0x18);
-    *maxY = (f32)(b->maxY >> 3) + *(float*)(block + 0x28);
-    *minY = (f32)(b->minY >> 3) + *(float*)(block + 0x28);
-    *maxZ = (f32)(b->maxZ >> 3) + *(float*)(block + 0x38);
-    *minZ = (f32)(b->minZ >> 3) + *(float*)(block + 0x38);
+    *maxX = (f32)(b->maxX >> 3) + *(float*)((u8*)block + 0x18);
+    *minX = (f32)(b->minX >> 3) + *(float*)((u8*)block + 0x18);
+    *maxY = (f32)(b->maxY >> 3) + *(float*)((u8*)block + 0x28);
+    *minY = (f32)(b->minY >> 3) + *(float*)((u8*)block + 0x28);
+    *maxZ = (f32)(b->maxZ >> 3) + *(float*)((u8*)block + 0x38);
+    *minZ = (f32)(b->minZ >> 3) + *(float*)((u8*)block + 0x38);
     for (i = 0; i < planeCount; i = i + 1)
     {
         cornerIndex = planes->aabbCornerIndex;
@@ -568,7 +568,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, Ma
         {
             return;
         }
-        if (mapBlockBounds_ComputeAndTestPlanes(rec[0], (int)block, (FrustumPlane*)(texGlobals + 0x987c),
+        if (mapBlockBounds_ComputeAndTestPlanes(rec[0], block, (FrustumPlane*)(texGlobals + 0x987c),
                                                 FRUSTUM_PLANE_COUNT, &minX, &minY, &minZ, &maxX, &maxY, &maxZ) == 0)
         {
             return;
@@ -679,8 +679,8 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, Ma
                         else
                         {
                             u8 mirrorVisible = mapBlockBounds_ComputeAndTestPlanes(
-                                rec[0], (int)block, (FrustumPlane*)(texGlobals + 0x9818), FRUSTUM_PLANE_COUNT, &minX,
-                                &minY, &minZ, &maxX, &maxY, &maxZ);
+                                rec[0], block, (FrustumPlane*)(texGlobals + 0x9818), FRUSTUM_PLANE_COUNT, &minX, &minY,
+                                &minZ, &maxX, &maxY, &maxZ);
                             if ((mirrorVisible != 0 && (u8)visArg != 0) || (mirrorVisible == 0 && (u8)visArg == 0))
                             {
                                 visible = 1;
@@ -722,7 +722,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, Ma
     }
 }
 
-void mapBlockRender_setupShaderTextures(int shader, int mode)
+void mapBlockRender_setupShaderTextures(MapShader* shader, int mode)
 {
     int layerIdx;
     int* layer;
@@ -768,7 +768,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         if (((TexLayer*)layer)->mtxIndex != 0xff)
         {
             PSMTXTrans(texMatrix,
-                       *(float*)(lbl_803DCE68 + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f,
+                       *(float*)(((u32)((TexLayer*)layer)->mtxIndex << 4) + lbl_803DCE68) / 1048576.0f,
                        *(float*)((lbl_803DCE68 + 4) + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f,
                        lbl_803DEBCC);
             texMtx = texMatrix;
@@ -811,7 +811,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         if (((TexLayer*)layer)->mtxIndex != 0xff)
         {
             PSMTXTrans(texMatrix,
-                       *(float*)(lbl_803DCE68 + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f,
+                       *(float*)(((u32)((TexLayer*)layer)->mtxIndex << 4) + lbl_803DCE68) / 1048576.0f,
                        *(float*)((lbl_803DCE68 + 4) + ((u32)((TexLayer*)layer)->mtxIndex << 4)) / 1048576.0f,
                        lbl_803DEBCC);
             texMtx = texMatrix;
@@ -952,7 +952,7 @@ MapShader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, int* bi
     }
     else
     {
-        mapBlockRender_setupShaderTextures((int)shader, 0x80);
+        mapBlockRender_setupShaderTextures(shader, 0x80);
     }
     flags = SHADER_FLAGS(shader);
     if ((flags & 0x20) != 0 && (lightList = lbl_803DCE34) != 0)
