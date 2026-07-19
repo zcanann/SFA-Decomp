@@ -844,15 +844,15 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* anim
                 state->flags |= SNOWHORN1_FLAG_SEQ_TRIGGERED;
             }
         }
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 1);
+        (*gPlayerInterface)->setState((void*)obj, state, 1);
         break;
     case 5:
         animUpdate->sequenceEventActive = 0;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 2);
+        (*gPlayerInterface)->setState((void*)obj, state, 2);
         break;
     case 4:
         animUpdate->sequenceEventActive = 0;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 7);
+        (*gPlayerInterface)->setState((void*)obj, state, 7);
         break;
     case 1:
         animUpdate->sequenceEventActive = 0;
@@ -876,12 +876,12 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* anim
         {
             animState = 7;
         }
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, animState);
+        (*gPlayerInterface)->setState((void*)obj, state, animState);
         break;
     case 3:
         animUpdate->sequenceEventActive = 0;
         state->baddie.moveJustStartedA = 1;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 7);
+        (*gPlayerInterface)->setState((void*)obj, state, 7);
         break;
     default:
         break;

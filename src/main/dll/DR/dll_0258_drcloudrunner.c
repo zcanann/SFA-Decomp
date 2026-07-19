@@ -1146,7 +1146,7 @@ void DR_CloudRunner_hitDetect(GameObject* obj)
             (*gGameUIInterface)->airMeterSetShutdown();
             (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
             inner->airTimeRemaining = 1;
-            (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, (int)inner, 7);
+            (*gPlayerInterface)->setState(obj, inner, 7);
         }
         Sfx_PlayFromObject((int)obj, SFXTRIG_gscsc);
     }
@@ -1270,7 +1270,7 @@ void DR_CloudRunner_update(GameObject* obj)
                 inner->unkB04 = 0;
                 inner->flagsBB6 |= 4;
                 inner->moveFlags |= 1;
-                (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, (int)inner, 4);
+                (*gPlayerInterface)->setState(obj, inner, 4);
             }
             else
             {

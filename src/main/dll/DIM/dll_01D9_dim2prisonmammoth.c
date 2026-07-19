@@ -142,7 +142,7 @@ int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState* animUpdate)
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
     inner = *(int*)&((GameObject*)obj)->extra;
-    (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, inner, 2);
+    (*gPlayerInterface)->setState((void*)obj, (void*)inner, 2);
 
     v.x = ((GameObject*)obj)->anim.localPosX;
     v.y = ((GameObject*)obj)->anim.localPosY;

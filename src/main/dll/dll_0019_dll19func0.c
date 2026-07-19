@@ -707,7 +707,7 @@ void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flag
     }
     if (moveMode != -1)
     {
-        (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))((int)obj, state, moveMode);
+        (*gPlayerInterface)->setState(obj, state, moveMode);
     }
     if (flagOut != NULL)
     {

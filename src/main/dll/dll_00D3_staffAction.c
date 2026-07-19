@@ -1060,7 +1060,7 @@ void dll_D3_init(GameObject* obj, int def, int flag)
 void fn_80167550(GameObject* obj, GameObject* otherObj)
 {
     int* state = obj->extra;
-    ((void (*)(int*, int*, int))((void**)*gPlayerInterface)[5])((int*)obj, state, 2);
+    (*gPlayerInterface)->setState(obj, state, 2);
 }
 
 void dll_D3_release_nop(void)

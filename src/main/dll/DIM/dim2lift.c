@@ -98,11 +98,11 @@ int DIMbossAnim_updatePlayerHitReaction(GameObject* obj, int runtime)
         {
             if (distance > 30 && ((u16)(dirSector - 3) <= 1 || dirSector == 11 || dirSector == 12))
             {
-                (*(int (**)(void*, int, int))(*(int*)gPlayerInterface + 0x14))(obj, runtime, 2);
+                (*gPlayerInterface)->setState(obj, (void*)runtime, 2);
             }
             else
             {
-                (*(int (**)(void*, int, int))(*(int*)gPlayerInterface + 0x14))(obj, runtime, 9);
+                (*gPlayerInterface)->setState(obj, (void*)runtime, 9);
             }
         }
         else
@@ -114,22 +114,22 @@ int DIMbossAnim_updatePlayerHitReaction(GameObject* obj, int runtime)
                                            obj, runtime, lbl_803E4BBC)) &
                                        1))
                 {
-                    (*(int (**)(void*, int, int))(*(int*)gPlayerInterface + 0x14))(
-                        obj, runtime, gDim2LiftFarMoveChoices[randomGetRange(0, 5)]);
+                    (*gPlayerInterface)->setState(obj, (void*)runtime,
+                                                  gDim2LiftFarMoveChoices[randomGetRange(0, 5)]);
                 }
                 else if (((GroundBaddieState*)state)->flags400 & 4)
                 {
-                    (*(int (**)(void*, int, int))(*(int*)gPlayerInterface + 0x14))(
-                        obj, runtime, gDim2LiftFarFlankMoveChoices[randomGetRange(0, 1)]);
+                    (*gPlayerInterface)->setState(obj, (void*)runtime,
+                                                  gDim2LiftFarFlankMoveChoices[randomGetRange(0, 1)]);
                 }
                 else
                 {
-                    (*(int (**)(void*, int, int))(*(int*)gPlayerInterface + 0x14))(obj, runtime, 3);
+                    (*gPlayerInterface)->setState(obj, (void*)runtime, 3);
                 }
             }
             else
             {
-                (*(int (**)(void*, int, int))(*(int*)gPlayerInterface + 0x14))(obj, runtime, 2);
+                (*gPlayerInterface)->setState(obj, (void*)runtime, 2);
             }
         }
     }
@@ -182,7 +182,7 @@ int DIMbossAnim_returnToIdleWhenDone(int obj, int runtime)
 {
     if (*(s8*)&((BaddieState*)runtime)->moveDone != 0)
     {
-        (*(int (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, runtime, 0);
+        (*gPlayerInterface)->setState((void*)obj, (void*)runtime, 0);
     }
     return 0;
 }

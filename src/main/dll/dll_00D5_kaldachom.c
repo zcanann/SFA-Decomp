@@ -273,7 +273,7 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
             if ((result != 0x10) && (result != 0x11))
             {
                 objLightFn_8009a1dc((void*)obj, lbl_803E30BC, gKaldachomHitLightWork, 3, 0);
-                (*(void (**)(void*, int, int))(*(int*)gPlayerInterface + 0x14))(obj, state, 4);
+                (*gPlayerInterface)->setState(obj, (void*)state, 4);
                 ((GroundBaddieState*)state)->baddie.hitPoints -= 1;
                 Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_stftest);
@@ -303,7 +303,7 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
                     (*(void (**)(int, int, void*, int, int, void*))(*(int*)gKaldachomEffectResource + 4))(
                         0, 1, gKaldachomHitLightWork, 0x401, -1, (KaldaCombatParams*)((u8*)&st + 0xc));
                     fn_802961FC(playerObj, 2);
-                    (*(void (**)(void*, int, int))(*(int*)gPlayerInterface + 0x14))(obj, state, 5);
+                    (*gPlayerInterface)->setState(obj, (void*)state, 5);
                     objLightFn_8009a1dc((void*)obj, lbl_803E30BC, gKaldachomHitLightWork, 4, 0);
                     Sfx_PlayFromObject((int)obj, SFXTRIG_swdout1);
                 }
@@ -312,7 +312,7 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
             {
                 if (((GroundBaddieState*)state)->baddie.substate != 1)
                 {
-                    (*(void (**)(void*, int, int))(*(int*)gPlayerInterface + 0x14))(obj, state, 6);
+                    (*gPlayerInterface)->setState(obj, (void*)state, 6);
                     ((GroundBaddieState*)state)->baddie.moveJustStartedB = 1;
                     ((GroundBaddieState*)state)->baddie.moveJustStartedA = 1;
                     ((GroundBaddieState*)state)->baddie.substate = 1;
@@ -521,7 +521,7 @@ void kaldachom_init(GameObject* obj, int data, int skip_alloc)
     ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E3060.f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
     (obj)->anim.currentMoveProgress = lbl_803E307C;
     *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-    (*(VtableFn*)((char*)*gPlayerInterface + 0x14))(obj, state, 0);
+    (*gPlayerInterface)->setState(obj, (void*)state, 0);
     *(u16*)&((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.moveSpeed = lbl_803E307C;
     ((GroundBaddieState*)state)->baddie.animSpeedA = lbl_803E3060.f;

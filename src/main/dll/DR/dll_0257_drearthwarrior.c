@@ -1181,7 +1181,7 @@ void DR_EarthWarrior_hitDetect(GameObject* obj)
                         }
                     }
                     inner->sub.savedControlMode = inner->baddie.controlMode;
-                    (*(void (*)(void*, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, (int)inner, 3);
+                    (*gPlayerInterface)->setState(obj, inner, 3);
                 }
             }
         }

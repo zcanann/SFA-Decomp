@@ -498,7 +498,7 @@ int dll_28B_substateHandler3(int obj, int ai)
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         state->flagsAC0 &= ~1;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, ai, 3);
+        (*gPlayerInterface)->setState((void*)obj, (void*)ai, 3);
     }
     else if (*(s8*)&((BaddieState*)ai)->moveDone != 0)
     {
@@ -515,7 +515,7 @@ int dll_28B_substateHandler2(int obj, int ai)
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         state->flagsAC0 |= 1;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, ai, 1);
+        (*gPlayerInterface)->setState((void*)obj, (void*)ai, 1);
     }
     state->randomTimer -= timeDelta;
     dist = state->playerDistance;
@@ -542,7 +542,7 @@ int dll_28B_substateHandler1(int obj, int ai)
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         state->flagsAC0 &= ~1;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, ai, 2);
+        (*gPlayerInterface)->setState((void*)obj, (void*)ai, 2);
     }
     if (Curve_AdvanceAlongPath(&route->curve, gWcEarthWalkerCurveAdvanceStep) != 0 || route->atSegmentEnd != 0)
     {
