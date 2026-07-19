@@ -292,7 +292,7 @@ int Checkpoint_func09_ret_1(void)
 
 /* Advance along the route by arc-length `dist`, sampling the Hermite curve and
  * clamping t to [0,1]; crossing a segment end hands off to the next checkpoint. */
-s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s32 p3, u8 flag)
+s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s32 p3, u8 flag, int unused)
 {
     f32 v1[4];
     f32 v2[4];

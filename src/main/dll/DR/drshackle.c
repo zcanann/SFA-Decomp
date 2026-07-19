@@ -44,12 +44,6 @@ STATIC_ASSERT(offsetof(ShackleSwingState, lastPitch) == 0x49C);
 
 #define DRSHACKLE_MODEL_OFFSET 0x54
 
-/* advanceRoute takes a trailing (always-zero) arg not reflected in the shared
- * interface header; cast the slot locally to emit the extra r7=0. */
-#define DRSHACKLE_ADVANCE_ROUTE(iface, out, route, dist, mode, flag)                                                   \
-    ((s32 (*)(u8*, CheckpointRouteState*, f32, s32, u8, int))(iface)->advanceRoute)((out), (route), (dist), (mode),    \
-                                                                                    (flag), 0)
-
 #define DRSHACKLE_ANGLE_STEP         0xb6
 #define DRSHACKLE_SWING_BLEND_LIMIT  0x41
 #define DRSHACKLE_SWING_RETURN_LEFT  0x100
@@ -91,7 +85,7 @@ int drshackle_updateSwingBlend(GameObject* obj, int state)
         fade = *(f32*)&lbl_803E5AE8;
     }
 
-    hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider, fade, s->colliderMode, 1);
+    hitResult = (*gCheckpointInterface)->advanceRoute((u8*)state, &s->collider, fade, s->colliderMode, 1, 0);
 
     (*gCheckpointInterface)->getRouteHeading((GameObject*)obj, &s->collider);
 
@@ -172,8 +166,8 @@ int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state)
                 s->unk498 = zero;
             }
             s->lastPitch = -fn_801EA678(obj, (int)state);
-            hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider,
-                                                -s->lastPitch * timeDelta, s->colliderMode, 1);
+            hitResult = (*gCheckpointInterface)
+                            ->advanceRoute((u8*)state, &s->collider, -s->lastPitch * timeDelta, s->colliderMode, 1, 0);
             (*gCheckpointInterface)->getRouteHeading(obj, &s->collider);
             (*gCheckpointInterface)->queueRouteRankItem((CheckpointRankItem*)&s->collider);
             if (hitResult != 0)
@@ -211,8 +205,9 @@ int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state)
         return drshackle_updateSwingBlend(obj, (int)state) != 0;
     }
 
-    hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider,
-                                        timeDelta * fn_801EA678(obj, (int)state), s->colliderMode, 1);
+    hitResult = (*gCheckpointInterface)
+                    ->advanceRoute((u8*)state, &s->collider, timeDelta * fn_801EA678(obj, (int)state), s->colliderMode,
+                                   1, 0);
     (*gCheckpointInterface)->getRouteHeading(obj, &s->collider);
     (*gCheckpointInterface)->queueRouteRankItem((CheckpointRankItem*)&s->collider);
     if (hitResult != 0)
