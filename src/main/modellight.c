@@ -1060,17 +1060,16 @@ void modelLightChannel_configure(int i, int mode, int matSrc)
 }
 void modelLightChannels_applyGXControls(void)
 {
-    ModelLightChannelState* entry = NULL;
+    ModelLightChannelState* entry;
     int channel;
     u8 activeMask;
     int lightMask;
     int attnFn;
 
     activeMask = 0;
-    channel = 0;
-    entry = gModelLightChannelStates;
-    do
+    for (channel = 0; channel <= 5; channel++)
     {
+        entry = &gModelLightChannelStates[channel];
         if (entry->active != 0)
         {
             if (entry->mode == 0)
@@ -1094,9 +1093,7 @@ void modelLightChannels_applyGXControls(void)
             }
             activeMask |= 1 << channel;
         }
-        entry++;
-        channel++;
-    } while (channel <= 5);
+    }
 
     activeMask &= 0xff;
 
