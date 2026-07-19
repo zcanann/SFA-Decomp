@@ -629,19 +629,14 @@ void objFn_80065604(void)
 
 void fn_80063368(GameObject* target)
 {
-    int zero, idx;
     s16 i;
-    i = 0;
-    idx = 0;
-    zero = idx;
-    for (; i < MAP_DYNAMIC_SLOT_COUNT; i++)
+    for (i = 0; i < MAP_DYNAMIC_SLOT_COUNT; i++)
     {
-        u32* p = (u32*)(gMapDynamicSlots + idx);
-        if ((GameObject*)*p == target)
+        MapDynamicSlot* p = (MapDynamicSlot*)(gMapDynamicSlots + i * 24);
+        if ((GameObject*)p->object == target)
         {
-            ((MapDynamicSlot*)p)->cooldown = zero;
+            p->cooldown = 0;
         }
-        idx += sizeof(MapDynamicSlot);
     }
 }
 
@@ -688,33 +683,21 @@ check:
 void fn_80060BB0(void)
 {
     char* arr;
-    int zero;
-    int innerOff;
-    int byteOff;
     int i;
     int j;
     int* blk;
 
-    i = 0;
-    byteOff = 0;
-    zero = byteOff;
-    for (; i < lbl_803DCE98; i++)
+    for (i = 0; i < lbl_803DCE98; i++)
     {
-        blk = *(int**)((char*)gMapBlocks + byteOff);
+        blk = *(int**)((char*)gMapBlocks + i * 4);
         if (blk != NULL)
         {
-            j = 0;
-            innerOff = 0;
-            for (; j < (int)*(u8*)((char*)blk + 0xa1); j++)
+            for (j = 0; j < (int)*(u8*)((char*)blk + 0xa1); j++)
             {
-                int o;
                 arr = *(char**)((char*)blk + 0x68);
-                o = innerOff + 0x12;
-                arr[o] = zero;
-                innerOff += 0x1c;
+                arr[j * 0x1c + 0x12] = 0;
             }
         }
-        byteOff += 4;
     }
 }
 
@@ -1420,20 +1403,23 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
     }
     gShadowOffsetZ = c * param;
     dot = vec[0] * gPrevSunDir[0] + vec[1] * gPrevSunDir[1] + vec[2] * gPrevSunDir[2];
-    lenv = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
+    lenv = vec[0] * vec[0] + vec[1] * vec[1];
+    lenv += vec[2] * vec[2];
     lenp = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] + gPrevSunDir[2] * gPrevSunDir[2];
     mag = lenv * lenp;
     if (mag != lbl_803DEC58)
     {
         lenp = sqrtf(mag);
     }
-    lenv = lbl_803DEC58;
-    if (lenp != lenv)
     {
-        lenv = dot / lenp;
+        f32 r = lbl_803DEC58;
+        if (lenp != r)
+        {
+            r = dot / lenp;
+        }
+        gSunDotCos = r;
     }
-    gSunDotCos = lenv;
-    if ((f32)gSunDotCos < lbl_803DEC58)
+    if ((f32)gSunDotCos < *(f32*)&lbl_803DEC58)
     {
         gSunDotCos = (f32)gSunDotCos * lbl_803DEC98;
     }
