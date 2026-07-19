@@ -66,8 +66,6 @@
 #include "main/gameloop_ext.h"
 #include "track/intersect_api.h"
 
-#define Sfx_StopFromObjectLegacy(obj, sfxId) \
-    ((void (*)(void*, int))Sfx_StopFromObject)((obj), (sfxId))
 #define TIMER_OBJGROUP                  0x4c /* DLL 0x2B5 timer */
 #define TARGET_OBJGROUP                 0xf  /* player-target group; nearest object gets the trigger's sequence */
 #define TRICKY_TARGET_OBJGROUP          0x32 /* nearest object searched from the tricky object */
@@ -719,7 +717,7 @@ void Trigger_free(GameObject* obj)
     {
         if ((entry[0] & (TRIGGER_CMD_ON_ENTER | TRIGGER_CMD_ON_EXIT)) != 0 && entry[1] != 3 && entry[1] == 4)
         {
-            Sfx_StopFromObjectLegacy(obj, (u16)((entry[2] << 8) | entry[3]));
+            Sfx_StopFromObject((u32)obj, (u16)((entry[2] << 8) | entry[3]));
         }
         i++;
         entry += 4;
