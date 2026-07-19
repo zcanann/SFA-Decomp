@@ -35,11 +35,13 @@ typedef struct DfpseqpointPlacement
     f32 posY;  /* 0x0C */
     f32 posZ;  /* 0x10 */
     s32 mapId; /* 0x14 */
-    u8 pad18[0x19 - 0x18];
-    u8 triggerMode;
-    u8 pad1A[0x1E - 0x1A];
-    s8 unk1E;
-    u8 pad1F[0x24 - 0x1F];
+    s8 rotXByte;       /* 0x18 */
+    u8 triggerMode;    /* 0x19 */
+    s16 triggerRadius; /* 0x1A */
+    s16 triggerId;     /* 0x1C */
+    s16 gameBitGate;   /* 0x1E */
+    s16 gameBitDone;   /* 0x20 */
+    u8 pad22[0x24 - 0x22];
     s16 unk24;
     u8 pad26[0x2B - 0x26];
     u8 unk2B;
