@@ -1230,19 +1230,6 @@ void setPendingMapLoad(int v)
 {
     renderFlags = (v != 0) ? (renderFlags | RENDERFLAG_PENDING_MAP_LOAD) : (renderFlags & ~RENDERFLAG_PENDING_MAP_LOAD);
 }
-typedef struct LightmapVertex
-{
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 pad;
-    s16 s;
-    s16 t;
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} LightmapVertex;
 
 void drawFn_8005cf8c(const void* vertexBase, u8* triList, int triCount)
 {

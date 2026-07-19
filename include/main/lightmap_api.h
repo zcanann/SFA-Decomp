@@ -2,8 +2,27 @@
 #define MAIN_LIGHTMAP_API_H_
 
 #include "types.h"
+#include "global.h"
 #include "main/map_block.h"
 #include "main/lightmap_text_color_api.h"
+
+typedef struct LightmapVertex
+{
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 pad;
+    s16 s;
+    s16 t;
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} LightmapVertex;
+
+STATIC_ASSERT(sizeof(LightmapVertex) == 0x10);
+STATIC_ASSERT(offsetof(LightmapVertex, s) == 0x08);
+STATIC_ASSERT(offsetof(LightmapVertex, r) == 0x0c);
 
 void* mapGetBlockAtPos(int x, int y, int layer);
 void* RomList_GetLoadedPages(void);

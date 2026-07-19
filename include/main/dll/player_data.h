@@ -2,6 +2,7 @@
 #define MAIN_DLL_PLAYER_DATA_H_
 
 #include "main/game_object.h"
+#include "main/lightmap_api.h"
 
 typedef struct PlayerModelChainEntry
 {
@@ -37,7 +38,7 @@ extern void* gPlayerChildObject;
 extern PlayerModelChainEntry* gPlayerModelChainConfig;
 extern int gPlayerHeldObject;
 extern f32 gPlayerPartFxParams[];
-extern u8 gPlayerHudVtxBuf[];
+extern LightmapVertex gPlayerHudVtxBuf[8];
 extern s16 gPlayerStopMoves[4];
 extern u8 gPlayerSurfacePfxModeTable[];
 extern u64 gPlayerLastSfxFrame;

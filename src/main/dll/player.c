@@ -12043,8 +12043,8 @@ void fn_802AABE4(int obj)
 void playerDrawTeleportAnim(GameObject* obj)
 {
     int state = *(int*)&obj->extra;
-    u8* vp = gPlayerHudVtxBuf;
-    u8* p = vp;
+    LightmapVertex* vp = gPlayerHudVtxBuf;
+    LightmapVertex* p = vp;
     int i;
     f32 height;
     f32 v;
@@ -12070,27 +12070,27 @@ void playerDrawTeleportAnim(GameObject* obj)
         v = lbl_803E7FA4 * (lbl_803E80C4 - height);
         if (i < 4)
         {
-            *(s16*)(p + 2) = 0x320;
+            p->y = 0x320;
         }
         else
         {
-            *(s16*)(p + 2) = v;
+            p->y = v;
         }
         if (i < 4)
         {
-            *(s16*)(p + 0) = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 0]);
-            *(s16*)(p + 4) = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 2]);
+            p->x = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 0]);
+            p->z = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 2]);
         }
         else
         {
-            *(s16*)(p + 0) = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 0]);
-            *(s16*)(p + 4) = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 2]);
+            p->x = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 0]);
+            p->z = (lbl_803E7FA4 * lbl_802C2BF0[i * 3 + 2]);
         }
-        p[0xc] = 0xff;
-        p[0xd] = 0;
-        p[0xe] = 0;
-        p[0xf] = 0x40;
-        p += 0x10;
+        p->r = 0xff;
+        p->g = 0;
+        p->b = 0;
+        p->a = 0x40;
+        p++;
     }
 
     xf.px = obj->anim.localPosX - playerMapOffsetX;
@@ -19323,7 +19323,7 @@ s16 gPlayerMoveSlotTable[44] = {1113, 1114, 0,    0,    0,    0,   0,    1120, 0
 
 int gPlayerStateHandlers[66];
 f32 lbl_803DAF88[16];
-u8 gPlayerHudVtxBuf[0x80];
+LightmapVertex gPlayerHudVtxBuf[8];
 f32 gPlayerPartFxParams[6];
 
 void* jumptable_80334ABC[12] = {
