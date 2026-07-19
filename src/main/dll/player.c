@@ -283,7 +283,7 @@ void fn_802B18BC(GameObject* obj, int state, f32 fv);
 void playerDoControls(GameObject* obj, int state, f32 fv);
 void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt);
 void fn_802B4A9C(GameObject* obj, int inner, int inner2);
-void playerAnimate(int obj, int state, f32 fv);
+void playerAnimate(GameObject* obj, int state, f32 fv);
 void fn_802B4DE0(GameObject* obj, int p2);
 void fn_802B4ED8(GameObject* obj, int p2, int mode);
 void playerUpdateWhileTimeStopped(int obj);
@@ -16863,7 +16863,7 @@ void fn_802B4A9C(GameObject* obj, int inner, int inner2)
     }
 }
 
-void playerAnimate(int obj, int state, f32 fv)
+void playerAnimate(GameObject* obj, int state, f32 fv)
 {
     u8 buf[0x40];
 
@@ -16872,18 +16872,18 @@ void playerAnimate(int obj, int state, f32 fv)
     ((PlayerState*)state)->baddie.moveInputZ = ((PlayerState*)state)->stickYf;
     *(int*)&((PlayerState*)state)->baddie.unk31C = ((PlayerState*)state)->buttonsJustPressed;
     *(int*)&((PlayerState*)state)->baddie.unk318 = ((PlayerState*)state)->buttonsHeld;
-    Player_GetObjHitsState((GameObject*)(obj))->hitVolumePriority = 0;
-    Player_GetObjHitsState((GameObject*)(obj))->hitVolumeId = 0;
-    Player_GetObjHitsState((GameObject*)(obj))->objectPairPriority = 0;
-    Player_GetObjHitsState((GameObject*)(obj))->objectPairHitVolume = 0;
+    Player_GetObjHitsState(obj)->hitVolumePriority = 0;
+    Player_GetObjHitsState(obj)->hitVolumeId = 0;
+    Player_GetObjHitsState(obj)->objectPairPriority = 0;
+    Player_GetObjHitsState(obj)->objectPairHitVolume = 0;
     ((PlayerState*)state)->baddie.physicsActive = 1;
     *(u32*)((char*)state + 0x4) &= ~0x8100000;
-    playerShadowFn_80062a30((GameObject*)obj);
+    playerShadowFn_80062a30(obj);
     ((PlayerState*)state)->emissionState = 0;
     *(u32*)&((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_NO_POS_VELOCITY;
     *(int*)state |= 0x1000000;
-    fn_802B0EA4((GameObject*)(obj), state, state);
-    if (playerCheckIfClimbingOntoWall(obj, state, state, buf, fv, 0x60) == 8)
+    fn_802B0EA4(obj, state, state);
+    if (playerCheckIfClimbingOntoWall((int)obj, state, state, buf, fv, 0x60) == 8)
     {
         *(int*)&((PlayerState*)state)->baddie.targetObj = 0;
         ((PlayerState*)state)->baddie.hasTarget = 0;
@@ -16893,11 +16893,11 @@ void playerAnimate(int obj, int state, f32 fv)
             ((PlayerState*)state)->staffActionRequest = 1;
             ((ByteFlags*)((char*)state + 0x3f4))->b08 = 1;
         }
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 0xa);
+        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, state, 0xa);
         *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
     }
     (*(void (*)(int, int, f32, f32, int*, int*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
-        obj, state, fv, fv, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
+        (int)obj, state, fv, fv, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
     *(int*)state &= ~0x1000000;
 }
 
@@ -17620,7 +17620,7 @@ void playerUpdate(GameObject* obj)
             *(u32*)&((PlayerState*)inner)->flags360 &= 0xfffff4ff;
             dt = *(f32*)&timeDelta;
             playerDoControls(obj, inner, dt);
-            ((void (*)(GameObject*, int, f32))playerAnimate)(obj, inner, dt);
+            playerAnimate(obj, inner, dt);
             ((void (*)(GameObject*, int, f32))staffAnimate)(obj, inner, dt);
             fn_802B1E5C(obj, inner, inner, dt);
             fn_802B1BF8(obj, inner, inner, dt);
