@@ -662,12 +662,12 @@ void resetLotsOfRenderVars(void)
 void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) */
 {
     f32 step;
-    f32 half;
-    f32 span;
-    f32 x0;
     f32 y;
     f32 ySq;
+    f32 x0;
+    f32 half;
     f32 x1;
+    f32 span;
     f32 distSq;
     f32 bulge;
     f32 col0;
@@ -688,12 +688,12 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
         {
             GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT4, 0x22);
             j = 0;
-            col0 = step * (f32)i;
-            col1 = step * (f32)(i + 1);
-            x0 = col0 / span - half;
-            x1 = col1 / span - half;
             for (; j <= 0x10; j++)
             {
+                col0 = step * (f32)i;
+                col1 = step * (f32)(i + 1);
+                x0 = col0 / span - half;
+                x1 = col1 / span - half;
                 y = (step * (f32)j) / span - half;
                 ySq = y * y;
                 distSq = x0 * x0 + ySq;
