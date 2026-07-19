@@ -747,7 +747,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                 *(u32*)&s->lastTarget = target;
                 if (s->setupFlag == 0)
                 {
-                    *(u32*)&s->lockTarget = 0;
+                    s->lockTarget = NULL;
                 }
                 if (((s->modeBits & 8) == 0) && (s->setupFlag != 0))
                 {
