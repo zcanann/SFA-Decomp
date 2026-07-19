@@ -289,7 +289,7 @@ void CameraModeViewfinder_free(int camObj)
     GameObject* viewObj;
     GameObject* outBuf[3];
 
-    *(s16*)(*(int*)(camObj + 0xa4) + 6) &= ~0x4000;
+    *(s16*)((int)((GameObject*)camObj)->anim.targetObj + 6) &= ~0x4000;
     Rcp_SetViewFinderHudEnabled(0);
     viewObj = (GameObject*)((CameraObject*)camObj)->anim.targetObj;
     if (viewObj != NULL)
