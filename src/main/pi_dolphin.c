@@ -7247,7 +7247,7 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
     }
 }
 
-void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
+void fn_8004F6D8(f32 scale, int* colorIn, f32* pos, u8* chanColor)
 {
     f32 matA[3][4];
     f32 matB[3][4];
