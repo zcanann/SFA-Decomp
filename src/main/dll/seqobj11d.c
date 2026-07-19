@@ -173,7 +173,7 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state)
     if (((GroundBaddieState*)state)->baddie.trackedObj != NULL &&
         ((GameObject*)*(int*)&((GroundBaddieState*)state)->baddie.trackedObj)->anim.classId == 1)
     {
-        fn_8001FEA8();
+        requestKrazoaShrineMusic();
     }
     ((void (*)(GameObject*, u8*))fn_8015039C)(obj, state);
     tv = *(f32*)(state + 0x328);

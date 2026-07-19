@@ -464,7 +464,7 @@ void sharpClawUpdateApproach(GameObject* obj, void* state)
     if (((BaddieState*)state)->trackedObj != NULL &&
         ((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1)
     {
-        fn_8001FEA8();
+        requestKrazoaShrineMusic();
     }
 
     ((void (*)(GameObject*, void*))fn_8015039C)(obj, state);

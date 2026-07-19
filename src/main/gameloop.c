@@ -594,13 +594,13 @@ void addButtonObject(void* obj)
 }
 
 
-void fn_8001FE90(void)
+void requestGalleonBattleMusic(void)
 {
     gGameLoopMusicRequestCount++;
     gGameLoopPendingMusicId = 0xd0;
 }
 
-void fn_8001FEA8(void)
+void requestKrazoaShrineMusic(void)
 {
     gGameLoopMusicRequestCount++;
     gGameLoopPendingMusicId = 0xc9;

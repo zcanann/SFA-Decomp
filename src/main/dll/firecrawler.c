@@ -943,7 +943,7 @@ void crawler_updateB(s16* obj, u8* state)
     if (((BaddieState*)state)->trackedObj != NULL &&
         ((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1)
     {
-        fn_8001FE90();
+        requestGalleonBattleMusic();
     }
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
@@ -1167,7 +1167,7 @@ void crawler_update(int* obj, u8* state)
     if (((BaddieState*)state)->trackedObj != NULL &&
         ((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1)
     {
-        fn_8001FE90();
+        requestGalleonBattleMusic();
     }
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
