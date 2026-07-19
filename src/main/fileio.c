@@ -125,7 +125,7 @@ void dvdCheckError(void)
         int prevCharset = gameTextGetCharset();
         Sfx_SetObjectSoundsPaused(1);
         gameTextSetCharset(2, 2);
-        gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
+    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShow(msgId);
         if (prevCharset != 2)
         {

@@ -670,11 +670,11 @@ void gameTimerRun(void)
 
         if (colorFlag && hundredths < 0x32)
         {
-            gameTextSetColorInt(0xFF, 0x40, 0x40, 0xFF);
+        gameTextSetColor(0xFF, 0x40, 0x40, 0xFF);
         }
         else
         {
-            gameTextSetColorInt(0xFF, 0xFF, 0xFF, 0xFF);
+        gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
         }
 
         sprintf(gModelEngineTextBuf, lbl_803DB294, hours / 10);

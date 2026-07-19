@@ -516,7 +516,7 @@ void Link_render(void)
 
                 if ((drawItem->flags & LINK_FLAG_DRAW_BLACK_SHADOW) != 0)
                 {
-                    gameTextSetColorInt(0, 0, 0, (u8)(((linkCount_803dd90e + 1) * linkItemOpacity) >> 8));
+                    gameTextSetColor(0, 0, 0, (u8)(((linkCount_803dd90e + 1) * linkItemOpacity) >> 8));
                     gameTextFn_80016810(drawItem->textId, 2, 2);
                 }
 
@@ -538,18 +538,18 @@ void Link_render(void)
                         {
                             alpha = linkItemOpacity * 256 >> 8;
                         }
-                        gameTextSetColorInt((u8)red, (u8)green, (u8)blue, (u8)alpha);
+                        gameTextSetColor((u8)red, (u8)green, (u8)blue, (u8)alpha);
                     }
                     else
                     {
-                        gameTextSetColorInt((u8)gTumbleweedBushBaseColorR, (u8)gTumbleweedBushBaseColorG,
+                        gameTextSetColor((u8)gTumbleweedBushBaseColorR, (u8)gTumbleweedBushBaseColorG,
                                          (u8)gTumbleweedBushBaseColorB,
                                          (u8)((((int)((u32)opacity >> 31)) + opacity) >> 1));
                     }
                 }
                 else
                 {
-                    gameTextSetColorInt(0xff, 0xff, 0xff, (u8)opacity);
+                    gameTextSetColor(0xff, 0xff, 0xff, (u8)opacity);
                 }
 
                 textId = drawItem->textId;

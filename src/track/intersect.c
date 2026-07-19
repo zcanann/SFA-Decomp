@@ -6181,7 +6181,7 @@ void showMemCardError(u8 err)
         {
             cardGetMessage((u32*)opts, (u32*)msgs, (u32*)&count);
         }
-        gameTextSetColorInt(0xff, 0xc0, 0x40, 0xff);
+        gameTextSetColor(0xff, 0xc0, 0x40, 0xff);
         for (i = 0, m = msgs, y = 0x64; i < count + 1; m++, y += 0x14, i++)
         {
             t = (char*)gameTextGet(*m);
@@ -6198,7 +6198,7 @@ void showMemCardError(u8 err)
             }
             else
             {
-                gameTextSetColorInt(0xa0, 0xa0, 0xa0, 0xff);
+            gameTextSetColor(0xa0, 0xa0, 0xa0, 0xff);
             }
         }
         gameTextRun();
@@ -6364,7 +6364,7 @@ void cardShowLoadingMsg(u8 kind)
             saved = lbl_803DB708;
             hudDrawColored(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
         }
-        gameTextSetColorInt(0xFF, 0xFF, 0xFF, 0xFF);
+    gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
         if (mode == 1)
         {
             gameTextFn_80016810(0x323, 0, 0xC8);

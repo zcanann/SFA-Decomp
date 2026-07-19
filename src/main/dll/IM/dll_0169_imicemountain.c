@@ -270,7 +270,7 @@ void IMIceMountain_update(int* obj)
     extra->latchFlags &= ~1;
     if (extra->warningTextTimer > lbl_803E46DC)
     {
-        gameTextSetColorInt(255, 255, 255, 255);
+    gameTextSetColor(255, 255, 255, 255);
         gameTextShow(0x351);
         extra->warningTextTimer = extra->warningTextTimer - timeDelta;
         if (extra->warningTextTimer < *(f32*)&lbl_803E46DC)

@@ -121,7 +121,7 @@ int PaymentKiosk_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
             break;
         }
     }
-    gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
+    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     if (st->promptState == 1)
     {
         gameTextShow(lbl_80327AF0[st->textVariant].approachText);
