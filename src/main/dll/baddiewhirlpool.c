@@ -13,7 +13,6 @@
 #include "main/objprint_api.h"
 #include "main/object.h"
 #include "main/object_render_legacy.h"
-#include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/objanim.h"

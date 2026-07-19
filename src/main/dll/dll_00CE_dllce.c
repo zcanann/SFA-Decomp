@@ -20,7 +20,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/objanim.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -317,19 +317,19 @@ int fn_8015E0C8(GameObject* obj, GroundBaddieState* state)
     {
         if (((GameObject*)Obj_GetPlayerObject())->anim.seqId != 0)
         {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_stftest122_1f2);
         }
         else
         {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_swd);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_swd);
         }
-        Sfx_PlayFromObject((int)obj, SFXTRIG_en_rfall5_c);
-        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_seal4_c_263);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_en_rfall5_c);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_seal4_c_263);
         state->baddie.moveEventFlags |= 1;
     }
     if ((state->baddie.moveEventFlags & 2) == 0 && (obj)->anim.currentMoveProgress > 0.3f)
     {
-        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_iceywindlp16_233);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_iceywindlp16_233);
         state->baddie.moveEventFlags |= 2;
         (*(void (**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))((int)obj, sub->triggerId, -1, 0);
     }
@@ -369,25 +369,25 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
         {
             if (((GameObject*)player)->anim.seqId != 0)
             {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_stftest122_1f2);
             }
             else
             {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_95);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_95);
             }
         }
         else
         {
             if (((GameObject*)player)->anim.seqId != 0)
             {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_stftest122_1f2);
             }
             else
             {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_swd);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_swd);
             }
         }
-        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_267);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_267);
     }
     *(s8*)&state->baddie.stateTag = 3;
     state->baddie.moveSpeed = 0.015f;
@@ -440,7 +440,7 @@ int fn_8015E3A0(GameObject* obj, int state)
         ((GroundBaddieState*)state)->baddie.eventFlags =
             ((GroundBaddieState*)state)->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
         *(u8*)(child + 0x8) = (u8)(*(u8*)(child + 0x8) | 0x1);
-        Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_bite_266);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_rach_bite_266);
     }
     return 0;
 }
@@ -680,7 +680,7 @@ void fn_8015EB6C(GameObject* obj, int state, int target)
         {
             if (dist < 400.0f)
             {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_265);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_265);
                 *(f32*)(sub + 4) += (f32)(s32)randomGetRange(50, 250);
             }
         }
@@ -739,7 +739,7 @@ void dll_CE_func0B(GameObject* obj, int v)
     {
     case 0x80:
         *(u8*)(*(int*)&sub->control + 9) |= 2;
-        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_264);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_264);
         (*gPlayerInterface)->setState((void*)obj, (void*)sub2, 1);
         sub2->baddie.substate = 4;
         *(s8*)&sub2->baddie.moveJustStartedB = 1;
@@ -820,7 +820,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
             (*(void (**)(void*, int, int, int, int, int, int, f32))(*(int*)gBaddieControlInterface + 0x58))(
                 obj, setup, (int)sub, 7, 6, 0x102, 0x26, 20.0f);
             sub->targetState = 0;
-            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_seal4_c_263);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_seal4_c_263);
             ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
             *(s8*)&sub->baddie.moveDone = 0;
             obj->anim.alpha = 0xff;
