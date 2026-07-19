@@ -121,7 +121,7 @@ int arwlevelcon_getObjectTypeId(void)
 void arwlevelcon_free(void)
 {
     arwingHudSetVisible(2);
-    fn_80125D04();
+    headDisplayFreeModels();
     setIsOvercast(1);
 }
 

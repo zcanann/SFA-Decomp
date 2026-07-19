@@ -532,7 +532,7 @@ void landed_arwing_update(GameObject* obj)
         ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->sequenceHitCooldown);
         break;
     case 2:
-        if (fn_8012DDA4() != 0)
+        if (pauseMenuGetTokenConfirmFlag() != 0)
         {
             landed_arwing_runTargetSequence(obj);
         }

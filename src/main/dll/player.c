@@ -17876,7 +17876,7 @@ void playerStaffInit(GameObject* obj, int state)
         ((PlayerState*)state)->boulderChargeLevel = lbl_803E7EA4;
     }
 
-    fn_8011F34C((u8)(int)((PlayerState*)state)->chargeLevel);
+    hudSetMagicCostPreview((u8)(int)((PlayerState*)state)->chargeLevel);
 
     if ((u32)obj != 0)
     {
@@ -18360,12 +18360,12 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
                 Sfx_PlayFromObject(0, SFXTRIG_lowoxy_beep);
                 obj->userData2 = 3;
             }
-            fn_8011F6D4(0);
+            fearTestMeterSetFadeIn(0);
         }
     }
     else
     {
-        fn_8011F6D4(0);
+        fearTestMeterSetFadeIn(0);
     }
     if (*(s8*)&playerState->moveDone != 0 || *(s8*)&playerState->moveJustStartedA != 0)
     {
@@ -18387,7 +18387,7 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
             fearTestMeterSetRange(
                 0x60, (u8)(int)(lbl_803E81BC * controls->scales[challenge->difficulty]),
                 (int)(lbl_803E81B0 * mathSinf(gPlayerPi2 * (f32)challenge->phase / lbl_803E81B8)));
-            fn_8011F6D4(1);
+            fearTestMeterSetFadeIn(1);
             setAButtonIcon(6);
         }
         placement = (LightfootChallengePlacement*)obj->anim.placementData;

@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-void fn_8012DDB8(u32 val);
+void setWorldMapVoiceoverActive(u32 val);
 
 #endif /* MAIN_DLL_DLL_0000_GAMEUI_HUD_API_H_ */

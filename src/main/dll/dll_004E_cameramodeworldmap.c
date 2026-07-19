@@ -131,7 +131,7 @@ void CameraModeWorldMap_update(u8* obj)
             if (gCamWorldMapState->flags.transitionActive != 0 && (*gScreenTransitionInterface)->isFinished() != 0)
             {
                 GameObject* mk;
-                fn_8012DDB8(0);
+                setWorldMapVoiceoverActive(0);
                 (*gScreenTransitionInterface)->step(0xc, 1);
                 gCamWorldMapState->flags.transitionActive = 0;
                 mk = ObjList_FindObjectById(0x43077);
@@ -279,7 +279,7 @@ void CameraModeWorldMap_update(u8* obj)
             if (gCamWorldMapState->flags.transitionActive != 0 && (*gScreenTransitionInterface)->isFinished() != 0)
             {
                 GameObject* mk;
-                fn_8012DDB8(1);
+                setWorldMapVoiceoverActive(1);
                 (*gScreenTransitionInterface)->step(0xc, 1);
                 gCamWorldMapState->flags.transitionActive = 0;
                 mk = ObjList_FindObjectById(0x43077);

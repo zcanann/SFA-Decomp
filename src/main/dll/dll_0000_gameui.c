@@ -302,7 +302,7 @@ extern GameObject* lbl_803DD868[2];
 extern const f32 lbl_803E1E3C;
 extern const f32 lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
 extern const f32 lbl_803E1E50, lbl_803E1E54, lbl_803E1E58, lbl_803E1E5C;
-extern u8 lbl_803DD7B3;
+extern u8 gHudMagicCostPreview;
 extern u8 lbl_803DD792;
 extern u8 gTrickyHudShowNearestInfo;
 extern u8 lbl_803DBA88;
@@ -406,7 +406,7 @@ extern u16 gViewFinderCamAngle;
 extern GXColor gViewFinderLineColor;
 extern char sTrickyDebugXCoordFormat[];
 
-int fn_8011E0D8(int* this, int* p2, int p3);
+int pauseMenuHoloRenderFn(int* this, int* p2, int p3);
 void hudDrawCounter(int id, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget);
 char sHudCounterFmt02d[] = "%02d";
 char sHudCounterFmt03d[] = "%03d";
@@ -663,8 +663,8 @@ extern const f32 lbl_803E20C0;
 extern const f32 lbl_803E20C4;
 extern const f32 lbl_803E20CC;
 void boxDrawFn_8012975c(int a, int b, int c);
-void fn_80128120(void* obj, u8 v);
-void fn_80128470(int v);
+void pauseMenuDrawTaskHintPanel(void* obj, u8 v);
+void pauseMenuDrawGrid(int v);
 extern u8 gPauseMenuTokenConfirmFlag;
 extern u16 lbl_803DD774;
 extern u16 gWorldMapVoiceoverTimer;
@@ -903,11 +903,11 @@ void gameUiLoadResources(void)
 
         p = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, GAMEUI_CHILD_OBJ_COMM_CUBE), 4, -1, -1, NULL);
         lbl_803DD860[0] = (GameObject*)p;
-        ObjModel_SetRenderCallback(*(void**)*(int*)(p + 0x7c), fn_8011E0D8);
+        ObjModel_SetRenderCallback(*(void**)*(int*)(p + 0x7c), pauseMenuHoloRenderFn);
 
         {
             lbl_803DD860[1] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, GAMEUI_CHILD_OBJ_COMM_CUBE_FRONT), 4, -1, -1, NULL);
-            ObjModel_SetRenderCallback(*(void**)*(int*)((u8*)lbl_803DD860[1] + 0x7c), fn_8011E0D8);
+            ObjModel_SetRenderCallback(*(void**)*(int*)((u8*)lbl_803DD860[1] + 0x7c), pauseMenuHoloRenderFn);
         }
 
         j = 4;
@@ -1034,7 +1034,7 @@ void pauseMenuMapFn_8011de20(void* this, u8 a, s16 b, int c)
 
 extern f32 lbl_803A8950[0x18];
 
-int fn_8011E0D8(int* this, int* p2, int p3)
+int pauseMenuHoloRenderFn(int* this, int* p2, int p3)
 {
     f32 m1[12];
     f32 m2[12];
@@ -1310,7 +1310,7 @@ void pauseMenuDrawElement(void* element, f32 fx, f32 fy, int depthZ, u8 paletteI
     GXWGFifo.f32 = c0;
     GXWGFifo.f32 = c1;
 }
-void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
+void pauseMenuSetHoloTransform(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
 {
     int i;
     f32 mA[12];
@@ -1407,9 +1407,9 @@ u8 pauseMenuGetState(void)
 {
     return pauseMenuState;
 }
-void fn_8011F34C(u8 x)
+void hudSetMagicCostPreview(u8 x)
 {
-    lbl_803DD7B3 = x;
+    gHudMagicCostPreview = x;
 }
 
 void arwingHudSetVisible(u32 x)
@@ -1518,7 +1518,7 @@ void fearTestMeterDraw(void)
                 (hgt + 0x32) - lbl_803DBAEE, col);
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
-void fn_8011F6D4(u32 x)
+void fearTestMeterSetFadeIn(u32 x)
 {
     gFearTestMeterFadeIn = (s16)(u8)x;
 }
@@ -2454,7 +2454,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
                                seg4, 0);
         }
     }
-    previousCurrent = current - lbl_803DD7B3;
+    previousCurrent = current - gHudMagicCostPreview;
     if (previousCurrent < 0)
     {
         previousCurrent = 0;
@@ -4238,12 +4238,12 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2)
  * headdisplay - HUD / overlay drawing for the in-cockpit pause-menu head
  * display (the NPC "comms" portrait box) and the Arwing flight HUD.
  *
- *  - drawFn_80125424: animates the active head-display panel (the NPC
+ *  - headDisplayDraw: animates the active head-display panel (the NPC
  *    "comms" box). Scrolls the panel open/closed (gHeadDisplayPanelWidth width
  *    clamp 0x122..0x152), renders the selected character model into a
  *    side viewport, then composites the static-wave border texture and
  *    corner/edge frame tiles (hudTextures[10..13,84]).
- *  - fn_80125D04: frees the six cached head-display model objects.
+ *  - headDisplayFreeModels: frees the six cached head-display model objects.
  *  - gameTextFn_80125ba4: opens the head display for entry idx (clamped
  *    0..0x14), kicking off the matching audio stream (gHeadDisplayEntryTable
  *    table, 0xC-byte records: int streamId, u16 textId@+4, u16 box@+8,
@@ -4280,7 +4280,7 @@ typedef struct HeadDisplayEntry
     u16 unkA;
 } HeadDisplayEntry;
 
-void drawFn_80125424(void)
+void headDisplayDraw(void)
 {
     u32 width;
     u32 height;
@@ -4489,7 +4489,7 @@ void gameTextFn_80125ba4(int idx)
     }
 }
 
-void fn_80125D04(void)
+void headDisplayFreeModels(void)
 {
     int i;
     for (i = 0; i < 6; i++)
@@ -4629,7 +4629,7 @@ void drawArwingHud(int unused1, int unused2, int unused3)
         }
         gameTextSetColorU8(0xff, 0xff, 0xff, arwingHudAlpha);
         gameTextShowStr(score, 0x93, 0x23a, 0x41);
-        drawFn_80125424();
+        headDisplayDraw();
     }
 }
 
@@ -4692,7 +4692,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
         lbl_803DD754 = (u16)(lbl_803DBA50 * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
+        pauseMenuSetHoloTransform(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
                     lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
@@ -4734,7 +4734,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
             }
             fn_80127F24(x);
             lbl_803DD824 = lbl_803DD7C4 ? statusTable->gridBD0 : statusTable->grid9F8;
-            fn_80128470(panelAlpha);
+            pauseMenuDrawGrid(panelAlpha);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
             model->bufferFlags &= ~0x8;
@@ -4759,7 +4759,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
         lbl_803DD754 = (u16)(lbl_803DBA50 * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
+        pauseMenuSetHoloTransform(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
                     lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
@@ -4839,7 +4839,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
         lbl_803DD754 = (u16)(lbl_803DBA50 * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
+        pauseMenuSetHoloTransform(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
                     lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
@@ -4863,7 +4863,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
         else
         {
             lbl_803DD824 = statusTable->gridF10;
-            fn_80128470(alpha);
+            pauseMenuDrawGrid(alpha);
             gameTextSetDrawFunc(pauseMenuTextDrawFn);
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
             lbl_803DBA8A = 0x100;
@@ -4949,7 +4949,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
         lbl_803DD754 = (u16)(lbl_803DBA50 * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
+        pauseMenuSetHoloTransform(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
                     lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
@@ -5057,7 +5057,7 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
     lbl_803DD754 = (u16)(lbl_803DBA50 * mathCosfHighPrecision(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
     lbl_803DBA3C = lbl_803E2070 * lbl_803DD760;
     lbl_803DBA34 = lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760);
-    fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
+    pauseMenuSetHoloTransform(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
                 lbl_803DD754);
     model = Obj_GetActiveModel(lbl_803DD860[0]);
     objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
@@ -5098,7 +5098,7 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
             drawFn_8011eb3c(((HudTextures*)hudTextures)->tex170, lbl_803E1ECC, lbl_803E20AC, px, ty, 0x100, 0xf0, 4, 0);
         }
         lbl_803DD824 = (GridEntry*)lbl_8031BD90;
-        fn_80128470(ty1);
+        pauseMenuDrawGrid(ty1);
     }
     else
     {
@@ -5120,7 +5120,7 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
             f64 tmp = (double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C);
             ty = (s32)(tmp * lbl_803E2088);
         }
-        fn_80128120(arg1, ty);
+        pauseMenuDrawTaskHintPanel(arg1, ty);
         spellStoneCount = mainGetBit(GAMEBIT_ITEM_SpellStone3_Got);
         usedSpellStoneCount = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
         spellStoneCount += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
@@ -5208,7 +5208,7 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
                              0x100 - lbl_803DD75C, ty, 0x100, 0);
         hudDrawMagicBar((u8)ty, 0x100 - lbl_803DD75C, 1);
         lbl_803DD824 = lbl_8031BB90;
-        fn_80128470(ty1);
+        pauseMenuDrawGrid(ty1);
     }
 
     model = Obj_GetActiveModel(lbl_803DD860[1]);
@@ -5256,9 +5256,9 @@ void fn_80127F24(s32 alpha)
 
 
 /* Forward declarations. */
-void fn_80128120(void* unused, u8 alpha);
-void fn_80128470(int alpha);
-void fn_80128A7C(u8 i, int alpha, int flag);
+void pauseMenuDrawTaskHintPanel(void* unused, u8 alpha);
+void pauseMenuDrawGrid(int alpha);
+void pauseMenuDrawGridCell(u8 i, int alpha, int flag);
 void timeListDraw(int unused1, int unused2, int unused3);
 void highScoreScreenDraw(int p1, int p2, int p3);
 int registerNewScore(s8 tableId, int score, u8 kind, int mode);
@@ -5277,9 +5277,9 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag);
 void mapScreenDrawHud(int p1, int p2, int p3);
 void drawWorldMapHud(void);
 void setShowWorldMapHud(u8 param);
-u8 fn_8012DDA4(void);
+u8 pauseMenuGetTokenConfirmFlag(void);
 u8 getWorldMapVoiceoverTimer(void);
-void fn_8012DDB8(u32 val);
+void setWorldMapVoiceoverActive(u32 val);
 void timeListFn_8012df14(void);
 void cMenuRun(void);
 void npcTalkFn_8012e880(void);
@@ -5296,7 +5296,7 @@ s32 CMenu_GetState(void);
  * pauseMenuDrawElement/drawFn_8011eb3c) plus a six-segment progress bar whose
  * lit-segment count scales with the current task-hint text level. `alpha` is
  * the fade level threaded through every draw call. */
-void fn_80128120(void* unused, u8 alpha)
+void pauseMenuDrawTaskHintPanel(void* unused, u8 alpha)
 {
     s16 yPos = 0xc8 - lbl_803DD75C;
     int hintText;
@@ -5353,12 +5353,12 @@ void fn_80128120(void* unused, u8 alpha)
     }
 }
 
-void fn_80128A7C(u8 i, int alpha, int flag);
+void pauseMenuDrawGridCell(u8 i, int alpha, int flag);
 
 /* Pause-menu grid renderer: draws all cells
  * (selection last), the breathing selected cell, header/footer text, and the
  * flashing corner cursor. */
-void fn_80128470(int alpha)
+void pauseMenuDrawGrid(int alpha)
 {
     gameTextSetDrawFunc(pauseMenuTextDrawFn);
     lbl_803DBA8C = lbl_803E20A0;
@@ -5372,7 +5372,7 @@ void fn_80128470(int alpha)
         {
             if (i != lbl_803DD7D8)
             {
-                fn_80128A7C((u8)i, alpha, 0);
+                pauseMenuDrawGridCell((u8)i, alpha, 0);
             }
             off += 0x20;
             i++;
@@ -5392,14 +5392,14 @@ void fn_80128470(int alpha)
         {
             if (j != lbl_803DD7D8)
             {
-                fn_80128A7C((u8)j, alpha, 0);
+                pauseMenuDrawGridCell((u8)j, alpha, 0);
             }
         }
     }
-    fn_80128A7C((u8)lbl_803DD7D8, alpha, 0);
+    pauseMenuDrawGridCell((u8)lbl_803DD7D8, alpha, 0);
     {
         f32 base = lbl_803DBAC0;
-        fn_80128A7C((u8)lbl_803DD7D8,
+        pauseMenuDrawGridCell((u8)lbl_803DD7D8,
                     (s16)alpha * (base + base * mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94)),
                     4);
     }
@@ -5474,7 +5474,7 @@ void fn_80128470(int alpha)
  * texture offset along the entry's trail vector, fading via the scaled
  * alpha. The selected cell on the main grid breathes (sin pulse) and slides
  * toward the panel edge while lbl_803DD75C runs. */
-void fn_80128A7C(u8 i, int alpha, int flag)
+void pauseMenuDrawGridCell(u8 i, int alpha, int flag)
 {
     s8 cnt;
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
@@ -7813,7 +7813,7 @@ void setShowWorldMapHud(u8 param)
 }
 
 /* Getter for the u8 at gPauseMenuTokenConfirmFlag. */
-u8 fn_8012DDA4(void)
+u8 pauseMenuGetTokenConfirmFlag(void)
 {
     return gPauseMenuTokenConfirmFlag;
 }
@@ -7829,7 +7829,7 @@ u8 getWorldMapVoiceoverTimer(void)
 
 /* Set gWorldMapVoiceoverTimer to 1 if param is
  * nonzero else 0. */
-void fn_8012DDB8(u32 val)
+void setWorldMapVoiceoverActive(u32 val)
 {
     if ((u8)val != 0)
         gWorldMapVoiceoverTimer = 1;
@@ -9324,7 +9324,7 @@ u8 gGameUiHelpTextPending;
 u8 gCMenuScrollLock;
 s16 gCMenuScrollVel;
 s8 shouldCloseCMenu;
-u8 lbl_803DD7B3;
+u8 gHudMagicCostPreview;
 u8 gHudBButtonFlashTimer;
 u8 gHudAButtonFlashTimer;
 u8 gHudPrevBButtonIcon;

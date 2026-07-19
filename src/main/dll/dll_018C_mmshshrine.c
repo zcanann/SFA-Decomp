@@ -357,7 +357,7 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
                 runtime->latch.activeMask &= ~MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE;
                 if ((runtime->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_RESET) != 0)
                 {
-                    fn_8011F6D4(0);
+                    fearTestMeterSetFadeIn(0);
                     runtime->latch.activeMask &= ~MMSH_SHRINE_LATCH_FLAG_SWAY_RESET;
                 }
                 break;
@@ -384,7 +384,7 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
 
     if (((runtime->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE) != 0) && ((u8)fn_801C49B8((void*)objArg) != 0))
     {
-        fn_8011F6D4(0);
+        fearTestMeterSetFadeIn(0);
         runtime->latch.activeMask &= ~(MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE | MMSH_SHRINE_LATCH_FLAG_SWAY_RESET);
         runtime->phase = MMSH_SHRINE_PHASE_RESULT;
         mainSetBits(MMSH_SHRINE_SEQ_GB_RESET0, 0);
@@ -410,7 +410,7 @@ int fn_801C49B8(void* objArg)
     runtime = obj->runtime;
     if ((DFSH_LASER_FLAGS(runtime) & 0x20) == 0)
     {
-        fn_8011F6D4(1);
+        fearTestMeterSetFadeIn(1);
         DFSH_LASER_FLAGS(runtime) |= 0x20;
         zero = 0.0f;
         runtime->swayPhase = zero;
@@ -460,7 +460,7 @@ void MMSH_Shrine_free(GameObject* obj)
     int state = *(int*)&obj->extra;
     if ((((MMSHShrineRuntime*)state)->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_RESET) != 0)
     {
-        fn_8011F6D4(0);
+        fearTestMeterSetFadeIn(0);
         ((MMSHShrineRuntime*)state)->latch.activeMask =
             ((MMSHShrineRuntime*)state)->latch.activeMask & ~MMSH_SHRINE_LATCH_FLAG_SWAY_RESET;
     }
