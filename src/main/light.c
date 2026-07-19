@@ -1131,7 +1131,7 @@ void dll_224_update(GameObject* obj)
         gSpellStoneEventId = 0x123;
         break;
     }
-    spellStoneUseFn_801fd270(obj);
+    ((void (*)(GameObject*))spellStoneUseFn_801fd270)(obj);
 }
 
 void dll_224_init(void* obj, void* other)
