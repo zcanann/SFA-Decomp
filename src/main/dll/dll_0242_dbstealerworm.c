@@ -1041,8 +1041,8 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
 int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
 {
     DbStealerwormControl* sub = (DbStealerwormControl*)(*(GroundBaddieState**)&(obj)->extra)->control;
-    int c30 = sub->objGroup;
     int c2c = sub->msgMode;
+    int c30 = sub->objGroup;
     int tmpB;
     int tmpA;
     int target;
@@ -2128,9 +2128,9 @@ void fn_80203144(GameObject* obj, int groundState, int baddie)
 {
 
     GroundBaddieState* st = (GroundBaddieState*)groundState;
-    DbStealerwormControl* sub = (DbStealerwormControl*)st->control;
     u32 near;
     int data;
+    DbStealerwormControl* sub = (DbStealerwormControl*)st->control;
     char* player;
     f32 dist;
     struct
@@ -2138,7 +2138,6 @@ void fn_80203144(GameObject* obj, int groundState, int baddie)
         f32 range;
         f32 d[3];
     } stk;
-
     stk.range = 100.0f;
     data = *(int*)&obj->anim.placementData;
     near = (**(u32(**)(int, int, f32, int))((char*)*gBaddieControlInterface + 0x48))((int)obj, baddie, st->aggroRange,
@@ -2314,7 +2313,6 @@ void dbstealerworm_update(u8* objp)
     int data;
     int sub;
     int obj;
-    int off;
     char* entry;
     int sub3;
     int n;
@@ -2341,13 +2339,9 @@ void dbstealerworm_update(u8* objp)
         entry = entry + 0x15c;
         ((DbStealerwormControl*)sub)->msgStack = allocModelStruct_800139e8(0x14, 0xc);
         n = *(s16*)(entry + 4);
-        off = n * 0xc;
-        while (n != 0)
+        for (; n != 0;)
         {
-            RingBufferQueue* stk = ((DbStealerwormControl*)sub)->msgStack;
-            int base = *(int*)entry;
-            n--;
-            Stack_Push(stk, (int*)(base + (off -= 12)));
+            Stack_Push(((DbStealerwormControl*)sub)->msgStack, (int*)(*(int*)entry + --n * 12));
         }
         ((DbStealerwormControl*)sub)->msgAdvance = 1;
         ((DbStealerwormFlags44*)&((DbStealerwormControl*)sub)->flags44)->flag10 = 0;
