@@ -278,7 +278,6 @@ f32 lbl_803E23EC = 0.01f;
 f32 lbl_803E23F0 = 0.7f;
 f32 lbl_803E23F4 = -0.01f;
 f32 lbl_803E23F8 = 2.0f;
-const f64 gTrickyU32ToDoubleBias = 4503599627370496.0;
 f32 lbl_803E2408 = 20.0f;
 f32 lbl_803E240C = 196.0f;
 f32 lbl_803E2410 = -100000.0f;
