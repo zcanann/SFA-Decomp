@@ -413,6 +413,12 @@ cflags_dll_noopt_noinline = [
     "-inline", "off",
 ]
 
+cflags_dll_noopt_noloopinv_noautoinline = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,noloopinvariants",
+    "-inline", "noauto",
+]
+
 cflags_dll_noopt_noloopinv_noinline = [
     *cflags_base,
     "-opt", "nopeephole,noschedule,noloopinvariants",
@@ -1787,7 +1793,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_02B8_mcupgradema.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02B9_mcstaffeffe.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02BA_mclightning.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_02BB_gflevelcon.c", cflags=cflags_dll_noopt_noloopinv),
+            Object(NonMatching, "main/dll/dll_02BB_gflevelcon.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
             Object(NonMatching, "main/dll/dll_02BC_andross.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/dll/dll_02BD_androsshand.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02BE_androssbrain.c", cflags=cflags_dll_noopt_nocse),
