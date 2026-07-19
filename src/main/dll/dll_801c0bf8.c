@@ -19,7 +19,7 @@ extern f32 lbl_803E4DE0; /* 100.0f  - world-units -> fixed-point vertex scale   
 extern f32 lbl_803E4DE4; /* PI                                                  */
 extern f32 lbl_803E4DE8; /* 32768.0f - half-turn in binary-angle (BAMS) units   */
 
-void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, short* out)
+void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, LightmapVertex* out)
 {
     int startX;
     int startY;
@@ -27,7 +27,7 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
     int endX;
     int endY;
     int endZ;
-    short* vertex;
+    LightmapVertex* vertex;
     int i;
     float angleRadians;
     f32 vertexX;
@@ -48,31 +48,31 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
     for (; i < 6; i++)
     {
         /* Rotate each vertex about Y: x' = x*cos, z' = -x*sin. */
-        vertexX = (float)(int)vertex[0];
-        vertex[0] = (int)(vertexX * mathCosf(angleRadians));
-        vertex[2] = (int)(-vertexX * mathSinf(angleRadians));
-        vertex += 8;
+        vertexX = (float)(int)vertex->x;
+        vertex->x = (int)(vertexX * mathCosf(angleRadians));
+        vertex->z = (int)(-vertexX * mathSinf(angleRadians));
+        vertex++;
     }
 
     /* Translate the near end-cap (vertices 0,1,2) onto the start node ... */
-    out[0] += startX;
-    out[1] += startY;
-    out[2] += startZ;
+    out[0].x += startX;
+    out[0].y += startY;
+    out[0].z += startZ;
     /* ... and the far end-cap (vertices 3,4,5) onto the end node. */
-    out[0x18] += endX;
-    out[0x19] += endY;
-    out[0x1a] += endZ;
-    out[8] += startX;
-    out[9] += startY;
-    out[10] += startZ;
-    out[0x20] += endX;
-    out[0x21] += endY;
-    out[0x22] += endZ;
-    out[0x10] += startX;
-    out[0x11] += startY;
-    out[0x12] += startZ;
-    out[0x28] += endX;
-    out[0x29] += endY;
-    out[0x2a] += endZ;
+    out[3].x += endX;
+    out[3].y += endY;
+    out[3].z += endZ;
+    out[1].x += startX;
+    out[1].y += startY;
+    out[1].z += startZ;
+    out[4].x += endX;
+    out[4].y += endY;
+    out[4].z += endZ;
+    out[2].x += startX;
+    out[2].y += startY;
+    out[2].z += startZ;
+    out[5].x += endX;
+    out[5].y += endY;
+    out[5].z += endZ;
     return;
 }

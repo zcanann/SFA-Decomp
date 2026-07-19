@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/game_object.h"
+#include "main/dll/dll_801c0bf8.h"
 
 typedef struct CCriverflowState
 {
@@ -49,6 +50,5 @@ void ccriverflow_free(CCriverflowObject* obj);
 void ccriverflow_render(void);
 void ccriverflow_update(CCriverflowObject* obj);
 void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params);
-void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, short* out);
 
 #endif /* MAIN_DLL_DF_DFCRADLE_H_ */

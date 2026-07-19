@@ -398,7 +398,7 @@ void dfropenode_render(int obj, int p2, int p3)
     DFRopeNode* node;
     s16 segment;
     DfropenodeRenderState renderState;
-    s16 matrix[0x30];
+    LightmapVertex segmentVerts[6];
     f32 originalScale;
 
     objAnim = &((GameObject*)obj)->anim;
@@ -478,8 +478,8 @@ void dfropenode_render(int obj, int p2, int p3)
         for (segment = 0; segment < (int)(extra->rope->count - 1); segment++)
         {
             node++;
-            fn_801C0BF8((u8*)gRopeNodeSegmentDataA, extra->angle, (node - 1)->pos, node->pos, matrix);
-            drawFn_8005cf8c(matrix, (u8*)gRopeNodeDisplayList, 6);
+            fn_801C0BF8((u8*)gRopeNodeSegmentDataA, extra->angle, (node - 1)->pos, node->pos, segmentVerts);
+            drawFn_8005cf8c(segmentVerts, (u8*)gRopeNodeDisplayList, 6);
         }
         if (((DfropenodePlacement*)objDef)->textureIndex == 1)
         {
@@ -495,8 +495,8 @@ void dfropenode_render(int obj, int p2, int p3)
             for (segment = 0; segment < (int)(extra->rope->count - 1); segment++)
             {
                 node++;
-                fn_801C0BF8((u8*)gRopeNodeSegmentDataB, extra->angle, (node - 1)->pos, node->pos, matrix);
-                drawFn_8005cf8c(matrix, (u8*)gRopeNodeDisplayList, 6);
+                fn_801C0BF8((u8*)gRopeNodeSegmentDataB, extra->angle, (node - 1)->pos, node->pos, segmentVerts);
+                drawFn_8005cf8c(segmentVerts, (u8*)gRopeNodeDisplayList, 6);
             }
         }
     }
