@@ -91,6 +91,35 @@ typedef struct AndrossChildSetup
     s16 flags;
 } AndrossChildSetup;
 
+void fn_80239DD8(GameObject* obj, AndrossState* state)
+{
+    f32 maxDist;
+    GameObject* nearObj;
+    ObjPlacement* newObj;
+
+    maxDist = 10000.0f;
+    if (Obj_IsLoadingLocked())
+    {
+        nearObj = ObjList_FindNearestObjectByDefNo(obj, 0x7e5, &maxDist);
+        if (nearObj != NULL)
+        {
+            newObj = Obj_AllocObjectSetup(0x24, ANDROSS_CHILD_OBJ_ARW_BOMB);
+            newObj->posX = nearObj->anim.localPosX;
+            newObj->posY = nearObj->anim.localPosY;
+            newObj->posZ = nearObj->anim.localPosZ;
+            newObj->color[0] = 1;
+            newObj->color[1] = 1;
+            state->effectHandle = loadObjectAtObject(obj, newObj);
+            if (state->effectHandle != NULL)
+            {
+                state->effectHandle->anim.alpha = 0xff;
+                *(u8*)((int)state->effectHandle + 0x37) = 0xff;
+                state->effectLifetime = 0x12c;
+            }
+        }
+    }
+}
+
 void fn_80239EAC(GameObject* obj, AndrossState* state)
 {
     f32 dx, dy, dz;
@@ -394,34 +423,6 @@ void fn_8023A87C(GameObject* obj, AndrossState* andross)
     }
 }
 
-void fn_80239DD8(GameObject* obj, AndrossState* state)
-{
-    f32 maxDist;
-    GameObject* nearObj;
-    ObjPlacement* newObj;
-
-    maxDist = 10000.0f;
-    if (Obj_IsLoadingLocked())
-    {
-        nearObj = ObjList_FindNearestObjectByDefNo(obj, 0x7e5, &maxDist);
-        if (nearObj != NULL)
-        {
-            newObj = Obj_AllocObjectSetup(0x24, ANDROSS_CHILD_OBJ_ARW_BOMB);
-            newObj->posX = nearObj->anim.localPosX;
-            newObj->posY = nearObj->anim.localPosY;
-            newObj->posZ = nearObj->anim.localPosZ;
-            newObj->color[0] = 1;
-            newObj->color[1] = 1;
-            state->effectHandle = loadObjectAtObject(obj, newObj);
-            if (state->effectHandle != NULL)
-            {
-                state->effectHandle->anim.alpha = 0xff;
-                *(u8*)((int)state->effectHandle + 0x37) = 0xff;
-                state->effectLifetime = 0x12c;
-            }
-        }
-    }
-}
 const f32 gAndrossPathPosOffset = 30.0f;
 f32 gAndrossSwayAmplitudeY = 20.0f;
 
