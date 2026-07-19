@@ -382,8 +382,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
                 ((SnowclawState*)inner)->prevPosY = ((SnowclawState*)inner)->posY;
                 ((SnowclawState*)inner)->prevPosZ = ((SnowclawState*)inner)->posZ;
                 (*(void (**)(int*, int))((char*)*((GameObject*)sub)->anim.dll + 0x3c))(sub, 2);
-                ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(
-                    obj, *(u16*)&((SnowclawState*)inner)->moveIdBase, 0.0f, 1);
+                ObjAnim_SetCurrentMove((int)obj, *(u16*)&((SnowclawState*)inner)->moveIdBase, 0.0f, 1);
                 {
                     ObjModelState* gx = obj->anim.modelState;
                     if (gx != 0)
@@ -615,8 +614,7 @@ void snowclaw_hitDetect(GameObject* obj)
             }
             else
             {
-                ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(
-                    obj, *(u16*)&((SnowclawState*)inner)->moveIdBase + 9, 0.0f, 0);
+                ObjAnim_SetCurrentMove((int)obj, *(u16*)&((SnowclawState*)inner)->moveIdBase + 9, 0.0f, 0);
                 ((SnowclawState*)inner)->unk30 = 0.004f;
             }
         }
@@ -736,14 +734,12 @@ void snowclaw_update(GameObject* obj)
         turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, Obj_GetPlayerObject(), 0) >> 31;
         if (turnSign == 0 || obj->anim.seqId == SNOWCLAW_SEQID_CR_SNOWCLAW)
         {
-            ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(
-                obj, *(u16*)&((SnowclawState*)inner)->moveIdBase + 6, 0.0f, 0);
+            ObjAnim_SetCurrentMove((int)obj, *(u16*)&((SnowclawState*)inner)->moveIdBase + 6, 0.0f, 0);
             snowclaw_spawnDropBomb((GameObject*)(*(int*)inner), obj, (u8)choice, 2);
         }
         else
         {
-            ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(
-                obj, *(u16*)&((SnowclawState*)inner)->moveIdBase + 5, 0.0f, 0);
+            ObjAnim_SetCurrentMove((int)obj, *(u16*)&((SnowclawState*)inner)->moveIdBase + 5, 0.0f, 0);
             snowclaw_spawnDropBomb((GameObject*)(*(int*)inner), obj, (u8)choice, 0);
         }
         s16toFloat((f32*)(inner + offsetof(SnowclawState, attackTimer)),

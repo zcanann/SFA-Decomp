@@ -352,11 +352,11 @@ void worldobj_update(GameObject* obj)
         {
             if (gAudioStreamCurrentId != 0)
             {
-                ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, 1, lbl_803E665C, 0);
+                ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E665C, 0);
             }
             else
             {
-                ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, 0, lbl_803E665C, 0);
+                ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E665C, 0);
             }
         }
         state->spinZStep = gAudioStreamCurrentId != 0;
