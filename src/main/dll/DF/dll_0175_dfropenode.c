@@ -19,7 +19,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/lightmap_text_color_api.h"
-#include "main/lightmap_api.h"
 #include "main/camera.h"
 #include "track/intersect_api.h"
 
@@ -29,6 +28,8 @@ f32 lbl_803DBF50[2] = {0.1f, 0.13f};
 u8 gRopeNodeVariantVisibleFlags[8] = {0, 1, 0, 0, 0, 0, 0, 0};
 
 #define DFROPENODE_OBJGROUP 0x17
+
+void drawFn_8005cf8c(s16* vertexBase, u8* triList, int triCount);
 
 extern f64 gRopeNodeS32ToDoubleBias;
 extern f32 lbl_803E4DFC;
@@ -216,18 +217,14 @@ void dfropenode_getWorldPosAtPhase(f32 phase, GameObject* obj, float* xOut, floa
     f32 dy;
     f32 dz;
     f32 fraction;
-    DFRopeNode* node;
-    int nodes;
 
     extra = (obj)->extra;
     idx = (s8)phase;
     fraction = phase - (f32)idx;
-    nodes = (int)extra->rope->nodes;
-    node = (DFRopeNode*)(nodes + idx * 0x34);
-    dy = node[1].pos[1] - node->pos[1];
-    dz = node[1].pos[2] - node->pos[2];
+    dy = extra->rope->nodes[idx + 1].pos[1] - extra->rope->nodes[idx].pos[1];
+    dz = extra->rope->nodes[idx + 1].pos[2] - extra->rope->nodes[idx].pos[2];
     x0 = extra->rope->nodes[idx].pos[0];
-    dx = node[1].pos[0] - x0;
+    dx = extra->rope->nodes[idx + 1].pos[0] - x0;
     *xOut = dx * fraction + ((obj)->anim.localPosX + x0);
     *yOut = dy * fraction + ((obj)->anim.localPosY + extra->rope->nodes[idx].pos[1]);
     *zOut = dz * fraction + ((obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
@@ -483,7 +480,7 @@ void dfropenode_render(int obj, int p2, int p3)
         {
             node++;
             fn_801C0BF8((u8*)gRopeNodeSegmentDataA, extra->angle, (node - 1)->pos, node->pos, matrix);
-            drawFn_8005cf8c((int)matrix, (u8*)gRopeNodeDisplayList, 6);
+            drawFn_8005cf8c(matrix, (u8*)gRopeNodeDisplayList, 6);
         }
         if (((DfropenodePlacement*)objDef)->textureIndex == 1)
         {
@@ -500,7 +497,7 @@ void dfropenode_render(int obj, int p2, int p3)
             {
                 node++;
                 fn_801C0BF8((u8*)gRopeNodeSegmentDataB, extra->angle, (node - 1)->pos, node->pos, matrix);
-                drawFn_8005cf8c((int)matrix, (u8*)gRopeNodeDisplayList, 6);
+                drawFn_8005cf8c(matrix, (u8*)gRopeNodeDisplayList, 6);
             }
         }
     }
