@@ -4656,10 +4656,10 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
     f32 timer;
     s32 textHeight;
     s32 lineHeight;
-    s32 boundsLeft, boundsRight, boundsTop, boundsBottom;
-    s32 measureLeft, measureRight, measureTop, measureBottom;
+    int boundsLeft, boundsRight, boundsTop, boundsBottom;
+    int measureLeft, measureRight, measureTop, measureBottom;
     SmallText characterCount;
-    s32 tokenLeft, tokenRight, tokenTop, tokenBottom;
+    int tokenLeft, tokenRight, tokenTop, tokenBottom;
     char tokenCountText[12];
 
     statusTable = (PauseTbl*)lbl_8031AE20;
@@ -4799,8 +4799,8 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
                     while (stringIndex < lbl_803DD7A4->count)
                     {
                         gameTextShowStr(*(void**)((u8*)lbl_803DD7A4->strings + stringOffset), 0x79, 0xf0, textY);
-                        gameTextMeasureS32(*(void**)((u8*)lbl_803DD7A4->strings + stringOffset), 0x79, 0, 0,
-                                           &measureLeft, &measureRight, &measureTop, &measureBottom);
+                        gameTextMeasureFn_800163c4(*(void**)((u8*)lbl_803DD7A4->strings + stringOffset), 0x79, 0, 0,
+                                                   &measureLeft, &measureRight, &measureTop, &measureBottom);
                         lineHeight = lbl_802C8680[sLanguageNameTable[getCurLanguage()].sizeIdx].lineHeight;
                         textHeight = measureBottom - measureTop;
                         textY += (textHeight > lineHeight)
@@ -4898,14 +4898,14 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
                 TextSlot* textBox;
                 lbl_803DBA8C = lbl_803E1E64;
                 textBox = gameTextGetBox(0x7f);
-                gameTextBoundsS32(0x3cd, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
+                gameTextFn_8001628c(0x3cd, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
                 textHeight = boundsRight - boundsLeft;
                 lbl_803DD824[0].trailX = textHeight;
                 lbl_803DD824[0].x =
                     lbl_803DBA8C * (f32)(s32)(textBox->f14 + textBox->f08 - (textHeight >> 1) - 0x140) + lbl_803E1F34;
 
                 textBox = gameTextGetBox(0x80);
-                gameTextBoundsS32(0x3cc, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
+                gameTextFn_8001628c(0x3cc, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
                 textHeight = boundsRight - boundsLeft;
                 lbl_803DD824[1].trailX = textHeight;
                 x = textBox->f14 + (textHeight >> 1) - 0x140;
@@ -4968,33 +4968,33 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
             s32 textX;
             s16* taskTextIds;
             gameTextFn_80016810(0x440, 0, 0x78);
-            gameTextBoundsS32(0x440, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextFn_8001628c(0x440, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             textX = (tokenBottom - tokenTop) + 5;
             {
                 u8* thresholds = &statusTable->tokens[0].thresh;
                 sprintf(tokenCountText, lbl_803DBB58, thresholds[lbl_803DD756 * 8]);
             }
             gameTextShowStr(tokenCountText, 0x79, 0, textX + 0x78);
-            gameTextMeasureS32(tokenCountText, 0x79, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextMeasureFn_800163c4(tokenCountText, 0x79, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             {
                 s32 textWidth = tokenBottom - tokenTop;
                 textX = textWidth + textX;
             }
             textX += 5;
             gameTextFn_80016810(0x441, 0, textX + 0x78);
-            gameTextBoundsS32(0x441, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextFn_8001628c(0x441, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             textX += tokenBottom - tokenTop;
             taskTextIds = &statusTable->tokens[0].alt;
             gameTextFn_80016810(taskTextIds[lbl_803DD756 * 4], 0, textX + 0x78);
-            gameTextBoundsS32(taskTextIds[lbl_803DD756 * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
-                              &tokenBottom);
+            gameTextFn_8001628c(taskTextIds[lbl_803DD756 * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
+                                &tokenBottom);
             {
                 s32 textWidth = tokenBottom - tokenTop;
                 textX = textWidth + textX;
             }
             textX += 0xa;
             gameTextFn_80016810(0x442, 0, textX + 0x78);
-            gameTextBoundsS32(0x442, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextFn_8001628c(0x442, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             textX += tokenBottom - tokenTop;
             gameTextFn_80016810(0x43a, 0, textX + 0x82);
             break;
@@ -5004,12 +5004,12 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
             s16* taskTextIds;
             s32 textX;
             gameTextFn_80016810(0x443, 0, 0xa0);
-            gameTextBoundsS32(0x443, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextFn_8001628c(0x443, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             textX = (tokenBottom - tokenTop) + 5;
             taskTextIds = &statusTable->tokens[0].alt;
             gameTextFn_80016810(taskTextIds[lbl_803DD756 * 4], 0, textX + 0xa0);
-            gameTextBoundsS32(taskTextIds[lbl_803DD756 * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
-                              &tokenBottom);
+            gameTextFn_8001628c(taskTextIds[lbl_803DD756 * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
+                                &tokenBottom);
             textX += tokenBottom - tokenTop;
             gameTextFn_80016810(0x444, 0, textX + 0xaa);
             break;
@@ -7573,7 +7573,7 @@ void pauseMenuDrawText(int unused1, int unused2, int unused3)
     int saved;
     s16 cur;
     s16 mirrored;
-    s32 v[4];
+    int v[4];
 
     if (lbl_803DD774 == 0)
         return;
@@ -7613,7 +7613,7 @@ void pauseMenuDrawText(int unused1, int unused2, int unused3)
         cur = 0x10e;
 
     gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
-    gameTextMeasureS32(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
+    gameTextMeasureFn_800163c4(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
     gameTextResetCursor(1);
 
     {
