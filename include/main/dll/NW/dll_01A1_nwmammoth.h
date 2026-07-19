@@ -224,5 +224,6 @@ void FUN_801cf1a0(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  short *param_9);
 int NW_tricky_getExtraSize(void);
+void fn_801CDF94(GameObject* obj, int state, int flag);
 
 #endif /* MAIN_DLL_NW_DLL_01A1_NWMAMMOTH_H_ */

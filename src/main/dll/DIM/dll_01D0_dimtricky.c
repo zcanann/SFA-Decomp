@@ -61,11 +61,6 @@ static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-void dll_1CF_free(void);
-void dim2conveyor_hitDetect(void);
-int dimtruthhornice_getExtraSize(void);
-void dim2conveyor_free(int x);
-
 int dim_tricky_getExtraSize(void) { return 0x1; }
 int dim_tricky_getObjectTypeId(void) { return 0x0; }
 

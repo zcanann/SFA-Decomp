@@ -103,8 +103,6 @@ extern f32 lbl_803E2C1C;
 extern f32 lbl_803E2C20;
 extern f32 lbl_803E2C24;
 
-void firecrawler_spawnProjectile(int* obj, u8* state);
-
 extern f32 lbl_803E2C74;
 extern f32 lbl_803E2C30;
 extern f32 lbl_803E2C34;

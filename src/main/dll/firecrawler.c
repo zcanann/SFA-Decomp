@@ -126,7 +126,6 @@ extern void* gCrawlerDescriptorTable[];
 
 extern f32 gCrawlerS8Norm127;
 EnemyTargetSearchResult gCrawlerNearbyObjectBuffer[16];
-void firecrawler_spawnProjectile(int* obj, u8* state);
 
 f32 gCrawlerHitSfxTimer;
 

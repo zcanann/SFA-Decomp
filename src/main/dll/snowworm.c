@@ -122,7 +122,6 @@ extern f32 lbl_803E2C9C;
 extern f32 gCrawlerPi;
 extern f32 gCrawlerHalfCircleBams;
 extern f32 lbl_803E2CA8;
-void firecrawler_spawnProjectile(int* obj, u8* state);
 
 /*
  * FCVars - file-local overlay naming the crawler/HagabonMK2-family scratch

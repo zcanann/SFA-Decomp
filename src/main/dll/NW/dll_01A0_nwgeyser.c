@@ -43,9 +43,6 @@ typedef struct NwGeyserTextureScrollParams
 
 const NwGeyserTextureScrollParams gNwGeyserTextureScrollParams = {512.0f, 0.0f};
 
-
-void fn_801CDF94(GameObject* obj, int state, int flag);
-
 int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     ObjTextureRuntimeSlot* tex0;
