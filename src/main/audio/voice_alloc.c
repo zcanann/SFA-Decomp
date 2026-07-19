@@ -16,7 +16,7 @@
 #define AV_PRIO(i)               (synthVoice[i].priorityGroup)
 #define AV_FXFLAG(i)             (synthVoice[i].streamKind)
 
-VoiceIdSlot voiceFreeListSlots[64];
+SynthVoiceListNode voiceFreeListSlots[64];
 extern u8 synthIdleWaitActive;
 extern u16 voicePrioSortedRoot;
 extern u8 voiceMusicRunning;
@@ -240,10 +240,10 @@ void voiceFree(McmdVoiceState* voice)
     {
         u32 voiceId = voice->voiceHandle;
         u32 v = voiceId & 0xff;
-        VoiceIdSlot* slot = &voiceFreeListSlots[v];
-        if (slot->active == 0)
+        SynthVoiceListNode* slot = &voiceFreeListSlots[v];
+        if (slot->user == 0)
         {
-            slot->active = 1;
+            slot->user = 1;
             if (voiceFreeListRoot != 0xff)
             {
                 slot->next = 0xff;
