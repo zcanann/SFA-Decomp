@@ -158,13 +158,19 @@ void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
             else
             {
                 s8 m = (obj)->anim.mapEventSlot;
-                if ((m >= 0x3a && m < 0x3f) || m == 0x2c)
+                switch (m)
                 {
+                case 0x2c:
+                case 0x3a:
+                case 0x3b:
+                case 0x3c:
+                case 0x3d:
+                case 0x3e:
                     Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_wp_sexpl2_c_4b8, 2);
-                }
-                else
-                {
+                    break;
+                default:
                     Sfx_PlayFromObject((int)obj, SFXTRIG_sexpl2_c);
+                    break;
                 }
             }
         }
