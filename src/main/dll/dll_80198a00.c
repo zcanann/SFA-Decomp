@@ -41,7 +41,7 @@ extern f32 lbl_803E40CC;
 extern f32 lbl_803E40D8;
 extern const char sMoonrockTriggerIdentFormat[];
 
-void fn_80198A00(u8* obj, int seqArg)
+void fn_80198A00(u8* obj, GameObject* seqObj)
 {
     MmpTriggerPlaneState* state;
     f32 hitDistance;
@@ -64,20 +64,20 @@ void fn_80198A00(u8* obj, int seqArg)
     {
         if (rearBlocked == 0)
         {
-            objInterpretSeq((GameObject*)obj, seqArg, 1, (int)hitDistance);
+            objInterpretSeq((GameObject*)obj, seqObj, 1, (int)hitDistance);
         }
         else
         {
-            objInterpretSeq((GameObject*)obj, seqArg, 2, (int)hitDistance);
+            objInterpretSeq((GameObject*)obj, seqObj, 2, (int)hitDistance);
         }
     }
     else if (rearBlocked != 0)
     {
-        objInterpretSeq((GameObject*)obj, seqArg, -1, (int)hitDistance);
+        objInterpretSeq((GameObject*)obj, seqObj, -1, (int)hitDistance);
     }
     else
     {
-        objInterpretSeq((GameObject*)obj, seqArg, -2, (int)hitDistance);
+        objInterpretSeq((GameObject*)obj, seqObj, -2, (int)hitDistance);
     }
 }
 
@@ -138,7 +138,7 @@ int fn_80198B68(u8* obj, f32* point)
     return 0;
 }
 
-void fn_80198DE8(u8* obj, int seqArg)
+void fn_80198DE8(u8* obj, GameObject* seqObj)
 {
     f32 ny;
     MmpTriggerPlaneState* state;
@@ -208,7 +208,7 @@ void fn_80198DE8(u8* obj, int seqArg)
             (localPos[1] >= -state->clipHalfExtent) && (localPos[1] <= state->clipHalfExtent))
         {
             OSReport(sMoonrockTriggerIdentFormat, triggerState, *(u32*)(data + 0x14));
-            objInterpretSeq((GameObject*)obj, seqArg, triggerState, (int)farDist);
+            objInterpretSeq((GameObject*)obj, seqObj, triggerState, (int)farDist);
         }
     }
 }

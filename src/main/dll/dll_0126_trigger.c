@@ -87,7 +87,7 @@ extern f32 lbl_803E40D8;
 
 #define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
 
-void objInterpretSeq(GameObject* obj, int seqArg, s8 legCode, int distSq)
+void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int distSq)
 {
     char* desc = (char*)&gTriggerObjDescriptor;
     u8* state = ((GameObject*)obj)->extra;
@@ -304,11 +304,11 @@ void objInterpretSeq(GameObject* obj, int seqArg, s8 legCode, int distSq)
                     }
                     break;
                 case 10:
-                    getEnvfxActInt((int)obj, seqArg, (u16)((p[2] << 8) | p[3]), distSq);
+                    getEnvfxAct(obj, seqObj, (u16)((p[2] << 8) | p[3]), distSq);
                     OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (p[2] << 8) | p[3], distSq);
                     break;
                 case 0xd:
-                    getLActions(obj, (void*)seqArg, (u16)((p[2] << 8) | p[3]), legCode, distSq, 0);
+                    getLActions(obj, seqObj, (u16)((p[2] << 8) | p[3]), legCode, distSq, 0);
                     break;
                 case 0xb:
                     switch (p[2])
@@ -352,7 +352,7 @@ void objInterpretSeq(GameObject* obj, int seqArg, s8 legCode, int distSq)
                         case 0x230:
                             if (((TriggerPlacement*)tbl)->triggerId == id)
                             {
-                                objInterpretSeq((GameObject*)t2, seqArg, legCode, distSq);
+                                objInterpretSeq((GameObject*)t2, seqObj, legCode, distSq);
                             }
                             break;
                         }
@@ -616,7 +616,7 @@ void objInterpretSeq(GameObject* obj, int seqArg, s8 legCode, int distSq)
                     }
                     break;
                 case 0x2c:
-                    **(f32**)(seqArg + 0xb8) = 0.1f * (f32)(s32)((p[2] << 8) | p[3]);
+                    *(f32*)seqObj->extra = 0.1f * (f32)(s32)((p[2] << 8) | p[3]);
                     break;
                 case 0x2d:
                     t = (int)Obj_GetPlayerObject();
@@ -690,9 +690,9 @@ void Trigger_hitDetect(GameObject* obj)
 {
     u8* state = (obj)->extra;
     u8* def = *(u8**)&(obj)->anim.placementData;
-    int triggerObj;
-    int trickyObj;
-    int target;
+    GameObject* triggerObj;
+    GameObject* trickyObj;
+    GameObject* target;
     int ok;
     int ok2;
     int inside;
@@ -705,21 +705,21 @@ void Trigger_hitDetect(GameObject* obj)
     dist[0] = 200.0f;
     if (((TriggerPlacement*)def)->triggerId <= 0 || ((TriggerPlacement*)def)->typeId == 0xf4)
     {
-        triggerObj = (int)Obj_GetPlayerObject();
-        if ((void*)triggerObj != NULL)
+        triggerObj = Obj_GetPlayerObject();
+        if (triggerObj != NULL)
         {
-            inside = (int)playerGetFocusObject((GameObject*)triggerObj);
+            inside = (int)playerGetFocusObject(triggerObj);
             if ((void*)inside != NULL)
             {
-                triggerObj = inside;
+                triggerObj = (GameObject*)inside;
             }
         }
         else
         {
-            triggerObj = (int)getArwing();
+            triggerObj = getArwing();
         }
-        trickyObj = (int)getTrickyObject();
-        if ((void*)triggerObj != NULL || (void*)trickyObj != NULL)
+        trickyObj = getTrickyObject();
+        if (triggerObj != NULL || trickyObj != NULL)
         {
             if ((*state & TRIGGER_SFLAG_DISABLED) != 0)
             {
@@ -733,8 +733,8 @@ void Trigger_hitDetect(GameObject* obj)
                 targetKind = ((TriggerPlacement*)def)->target;
                 if (targetKind > 2)
                 {
-                    target = ObjGroup_FindNearestObject(targetKind - 1, (int)obj, dist);
-                    if ((void*)target == NULL)
+                    target = (GameObject*)ObjGroup_FindNearestObject(targetKind - 1, (int)obj, dist);
+                    if (target == NULL)
                     {
                         ok = 0;
                     }
@@ -745,20 +745,20 @@ void Trigger_hitDetect(GameObject* obj)
                     {
                     case 0:
                         target = triggerObj;
-                        if ((void*)triggerObj == NULL)
+                        if (triggerObj == NULL)
                         {
                             ok = 0;
                         }
                         break;
                     case 1:
                         target = trickyObj;
-                        if ((void*)trickyObj == NULL)
+                        if (trickyObj == NULL)
                         {
                             ok = 0;
                         }
                         break;
                     case 2:
-                        target = (int)(*gCameraInterface)->getCamera();
+                        target = (GameObject*)(*gCameraInterface)->getCamera();
                         break;
                     }
                 }
@@ -769,20 +769,20 @@ void Trigger_hitDetect(GameObject* obj)
                         switch (((TriggerPlacement*)def)->target)
                         {
                         case 2:
-                            ((TriggerState*)state)->targetPosX = ((GameObject*)target)->anim.worldPosX;
-                            ((TriggerState*)state)->targetPosY = ((GameObject*)target)->anim.worldPosY;
-                            ((TriggerState*)state)->targetPosZ = ((GameObject*)target)->anim.worldPosZ;
+                            ((TriggerState*)state)->targetPosX = target->anim.worldPosX;
+                            ((TriggerState*)state)->targetPosY = target->anim.worldPosY;
+                            ((TriggerState*)state)->targetPosZ = target->anim.worldPosZ;
                             break;
                         case 0:
                         case 1:
-                            ((TriggerState*)state)->targetPosX = ((GameObject*)target)->anim.previousWorldPosX;
-                            ((TriggerState*)state)->targetPosY = ((GameObject*)target)->anim.previousWorldPosY;
-                            ((TriggerState*)state)->targetPosZ = ((GameObject*)target)->anim.previousWorldPosZ;
+                            ((TriggerState*)state)->targetPosX = target->anim.previousWorldPosX;
+                            ((TriggerState*)state)->targetPosY = target->anim.previousWorldPosY;
+                            ((TriggerState*)state)->targetPosZ = target->anim.previousWorldPosZ;
                             break;
                         default:
-                            ((TriggerState*)state)->targetPosX = ((GameObject*)target)->anim.previousLocalPosX;
-                            ((TriggerState*)state)->targetPosY = ((GameObject*)target)->anim.previousLocalPosY;
-                            ((TriggerState*)state)->targetPosZ = ((GameObject*)target)->anim.previousLocalPosZ;
+                            ((TriggerState*)state)->targetPosX = target->anim.previousLocalPosX;
+                            ((TriggerState*)state)->targetPosY = target->anim.previousLocalPosY;
+                            ((TriggerState*)state)->targetPosZ = target->anim.previousLocalPosZ;
                             break;
                         }
                         *state &= ~TRIGGER_SFLAG_SEED_TARGET;
@@ -798,14 +798,14 @@ void Trigger_hitDetect(GameObject* obj)
                     case 0:
                     case 1:
                     case 2:
-                        ((TriggerState*)state)->prevTargetPosX = ((GameObject*)target)->anim.worldPosX;
-                        ((TriggerState*)state)->prevTargetPosY = ((GameObject*)target)->anim.worldPosY;
-                        ((TriggerState*)state)->prevTargetPosZ = ((GameObject*)target)->anim.worldPosZ;
+                        ((TriggerState*)state)->prevTargetPosX = target->anim.worldPosX;
+                        ((TriggerState*)state)->prevTargetPosY = target->anim.worldPosY;
+                        ((TriggerState*)state)->prevTargetPosZ = target->anim.worldPosZ;
                         break;
                     default:
-                        ((TriggerState*)state)->prevTargetPosX = ((GameObject*)target)->anim.localPosX;
-                        ((TriggerState*)state)->prevTargetPosY = ((GameObject*)target)->anim.localPosY;
-                        ((TriggerState*)state)->prevTargetPosZ = ((GameObject*)target)->anim.localPosZ;
+                        ((TriggerState*)state)->prevTargetPosX = target->anim.localPosX;
+                        ((TriggerState*)state)->prevTargetPosY = target->anim.localPosY;
+                        ((TriggerState*)state)->prevTargetPosZ = target->anim.localPosZ;
                         break;
                     }
                 }

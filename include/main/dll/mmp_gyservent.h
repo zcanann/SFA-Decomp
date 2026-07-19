@@ -32,7 +32,7 @@ STATIC_ASSERT(offsetof(MmpGyserventState, reachBX) == 0x28);
 STATIC_ASSERT(offsetof(MmpGyserventState, reach) == 0x34);
 
 void objFn_80198fa4(GameObject* obj, MmpGyserventPlacement* placement);
-void objSeqMoveFn_80199188(GameObject* obj, int arg2);
-void objSeqFn_801992ec(GameObject* obj, int arg2);
+void objSeqMoveFn_80199188(GameObject* obj, GameObject* seqObj);
+void objSeqFn_801992ec(GameObject* obj, GameObject* seqObj);
 
 #endif /* MAIN_DLL_MMP_GYSERVENT_H_ */

@@ -5,6 +5,6 @@
 
 struct GameObject;
 
-void objInterpretSeq(struct GameObject* obj, int seqArg, s8 legCode, int distSq);
+void objInterpretSeq(struct GameObject* obj, struct GameObject* seqObj, s8 legCode, int distSq);
 
 #endif /* MAIN_DLL_DLL_0126_TRIGGER_API_H_ */
