@@ -1441,14 +1441,14 @@ int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* out
 {
     int n = 0;
     int outCount = 0;
+    int i = 0;
     ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
     s16 zero = 0;
 
     gShadowVisibleCount = zero;
-    for (; n < count; n++, input += 5)
+    for (; n < count; n++, i += 3, input += 5)
     {
         int vis = 1;
-        int i = n * 3;
         f32 dot = modelState->shadowOffsetX * input[0] + modelState->shadowOffsetY * input[1] +
                   modelState->shadowOffsetZ * input[2];
         if (dot < lbl_803DEC58)
