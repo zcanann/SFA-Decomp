@@ -28,5 +28,9 @@ void reportAllocFail(int region0SizeKb, int region0FreeKb, int region1SizeKb, in
 void debugPrintDraw(int ctx);
 void objAnimFreeChildren(int a, int b, GameObject** c);
 GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes);
+void Tricky_updateBlendChannelWeight(int obj, u8* state);
+void Tricky_emitQueuedPathParticles(u8* obj, u8* state);
+int trickySelectQueuedCommandTarget(u8* state, int commandType);
+void fn_80138D7C(int obj, int state);
 
 #endif
