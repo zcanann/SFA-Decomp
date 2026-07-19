@@ -18,7 +18,7 @@ void maybeHudFn_8006c91c(void);
 void fn_8006CB24(void);
 void fn_8006CB50(void);
 
-int getReflectionTexture1(void);
+u32 getReflectionTexture1(void);
 void getReflectionTexture2(u32* out);
 void getTextureFn_8006c5e4(u32* out);
 void fn_8006C5CC(u32* out);

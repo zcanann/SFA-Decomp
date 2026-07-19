@@ -9,6 +9,7 @@
 #include "main/model.h"
 #include "main/objprint_render_api.h"
 #include "main/newshadows_audio_api.h"
+#include "main/newshadows.h"
 #include "main/texture.h"
 #include "main/newshadows_shadow_api.h"
 #include "main/rcp_dolphin_api.h"
