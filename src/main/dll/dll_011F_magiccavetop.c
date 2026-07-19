@@ -325,17 +325,15 @@ void MagicCaveTop_update(int* obj)
         fx.z = originXZ;
         if ((sub->flags & 8) != 0)
         {
-            objfx_spawnArcedBurstLegacy(obj, 1, 0.5f, 5, 2, 0x32, 18.0f, 8.0f, 80.0f, fx.pad,
-                                  0);
+            objfx_spawnArcedBurst(obj, 1, 0.5f, 5, 2, 0x32, 18.0f, 8.0f, 80.0f, fx.pad, 0);
             fx.y = 5.0f;
-            objfx_spawnArcedBurstLegacy(obj, 5, 0.5f, 5, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
+            objfx_spawnArcedBurst(obj, 5, 0.5f, 5, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
         }
         else
         {
-            objfx_spawnArcedBurstLegacy(obj, 1, 0.5f, 2, 2, 0x32, 18.0f, 8.0f, 80.0f, fx.pad,
-                                  0);
+            objfx_spawnArcedBurst(obj, 1, 0.5f, 2, 2, 0x32, 18.0f, 8.0f, 80.0f, fx.pad, 0);
             fx.y = 5.0f;
-            objfx_spawnArcedBurstLegacy(obj, 5, 0.5f, 2, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
+            objfx_spawnArcedBurst(obj, 5, 0.5f, 2, 2, 0x14, 10.0f, 10.0f, 10.0f, fx.pad, 0);
         }
     }
 }

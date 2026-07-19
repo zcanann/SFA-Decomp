@@ -432,7 +432,7 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode,
 
 #define OBJ_FX_PI 3.1415927f
 
-void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 angBase, f32 lo, f32 hi,
+void objfx_spawnArcedBurst(void* obj, int idx, f32 scale, int kind, int mode, int chance, f32 angBase, f32 lo, f32 hi,
                            void* origin, int flags)
 {
     ObjFxParticleParams params;
@@ -447,13 +447,13 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 ch
     f32 angularT;
 
     params.scale = scale;
-    params.effectParam = effectParams.values[kind];
+    params.effectParam = effectParams.values[(u8)kind];
     params.pad00[1] = 0x3c;
     for (i = 0; i < 4; i++)
     {
         u16 val;
         f32 a;
-        if (randomGetRange(0, 0x63) >= chance)
+        if (randomGetRange(0, 0x63) >= (u8)chance)
         {
             continue;
         }
@@ -464,7 +464,7 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 ch
         angularT = randomGetRange(0, 1000) / 1000.0f;
         params.position[1] = lbl_803DF35C;
         params.position[2] = lbl_803DF35C;
-        switch (mode)
+        switch ((u8)mode)
         {
         case 1:
             params.position[0] = lbl_803DF354 - radialT * radialT;
@@ -509,9 +509,9 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 ch
             params.position[1] += ((GameObject*)origin)->anim.localPosY;
             params.position[2] += ((GameObject*)origin)->anim.localPosZ;
         }
-        params.pad00[2] = paramC.values[idx];
-        params.pad00[0] = paramD.values[idx];
-        (*gPartfxInterface)->spawnObject(obj, spawnIds.values[idx], &params, flags | 2, -1, NULL);
+        params.pad00[2] = paramC.values[(u8)idx];
+        params.pad00[0] = paramD.values[(u8)idx];
+        (*gPartfxInterface)->spawnObject(obj, spawnIds.values[(u8)idx], &params, flags | 2, -1, NULL);
     }
 }
 

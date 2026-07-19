@@ -314,8 +314,7 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
         buf[3] = 0.0f;
         buf[4] = (12.0f);
         buf[5] = 0.0f;
-        objfx_spawnArcedBurstLegacy((int)obj, 5, (0.75f), 1, 2, 0x32, (12.0f), (12.0f),
-                                   10.0f, buf, 0);
+        objfx_spawnArcedBurst(obj, 5, (0.75f), 1, 2, 0x32, (12.0f), (12.0f), 10.0f, buf, 0);
     }
     else
     {

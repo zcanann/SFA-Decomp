@@ -92,9 +92,9 @@ void dustmotesou_update(DustMoteSouObject* source)
     }
     else if (mapData->burstMode == DUSTMOTESOU_BURST_ARCED)
     {
-        objfx_spawnArcedBurstLegacy((int)source, mapData->effectId, mapData->scale, mapData->effectParamA,
-                              mapData->effectParamB,
-                              mapData->effectFlags, (f32)(u32)mapData->spreadX, (f32)(u32)mapData->spreadY,
+        objfx_spawnArcedBurst(source, mapData->effectId, mapData->scale, mapData->effectParamA,
+                             mapData->effectParamB, mapData->effectFlags, (f32)(u32)mapData->spreadX,
+                             (f32)(u32)mapData->spreadY,
                               (f32)(u32)mapData->spreadZ, 0, 0);
     }
     else

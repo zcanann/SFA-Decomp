@@ -42,9 +42,9 @@ void CCSharpclawPad_update(GameObject* obj)
         particleArgs.offset[0] = -5.0f;
         particleArgs.offset[1] = 5.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurstLegacy((int)obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
         particleArgs.offset[0] = 5.0f;
-        objfx_spawnArcedBurstLegacy((int)obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 2, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
     }
     else
     {
@@ -85,9 +85,9 @@ void CCSharpclawPad_update(GameObject* obj)
         particleArgs.offset[0] = -5.0f;
         particleArgs.offset[1] = 5.0f;
         particleArgs.offset[2] = 0.0f;
-        objfx_spawnArcedBurstLegacy((int)obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
         particleArgs.offset[0] = 5.0f;
-        objfx_spawnArcedBurstLegacy((int)obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
+        objfx_spawnArcedBurst(obj, 5, 0.75f, 5, 2, 0x19, 2.0f, 2.0f, 10.0f, &particleArgs, 0);
     }
 }
 

@@ -99,15 +99,11 @@ void warpPadFn_8019042c(GameObject* obj)
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.75f, 2, 7, 100, 30.0f,
-                                            30.0f,
-                                      110.0f, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, 0.75f, 2, 7, 100, 30.0f, 30.0f, 110.0f, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.5f, 1, 6, 100, 30.0f,
-                                            30.0f,
-                                      110.0f, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, 0.5f, 1, 6, 100, 30.0f, 30.0f, 110.0f, &fx, 0);
             }
         }
         fx.effectId = 0xc0e;
@@ -121,15 +117,11 @@ void warpPadFn_8019042c(GameObject* obj)
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.75f, 2, 7, 100, 30.0f,
-                                            30.0f,
-                                      110.0f, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, 0.75f, 2, 7, 100, 30.0f, 30.0f, 110.0f, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.5f, 5, 6, 100, 30.0f,
-                                            30.0f,
-                                      110.0f, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, 0.5f, 5, 6, 100, 30.0f, 30.0f, 110.0f, &fx, 0);
             }
         }
         fx.effectId = 0xc7e;
@@ -143,15 +135,11 @@ void warpPadFn_8019042c(GameObject* obj)
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
                 (state->countdownActive == 0))
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.75f, 2, 7, 100, 30.0f,
-                                            30.0f,
-                                      110.0f, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, 0.75f, 2, 7, 100, 30.0f, 30.0f, 110.0f, &fx, 0);
             }
             else
             {
-                objfx_spawnArcedBurstLegacy((int)obj, 1, 0.5f, 3, 6, 100, 30.0f,
-                                            30.0f,
-                                      110.0f, &fx, 0);
+                objfx_spawnArcedBurst(obj, 1, 0.5f, 3, 6, 100, 30.0f, 30.0f, 110.0f, &fx, 0);
             }
         }
         fx.effectId = 0xc13;

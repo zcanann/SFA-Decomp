@@ -30,7 +30,6 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/dll/player_api.h"
-#define OBJFX_ARCED_BURST_REORDERED_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
 #include "main/mm.h"
@@ -278,15 +277,15 @@ void quakeSpellFn_8016cee8(int* obj, GameObject* player)
             }
             if (((StaffState*)state)->glowAttackType == 7)
             {
-                objfx_spawnArcedBurst(obj, 0.5f, ((StaffState*)state)->glowAttackType,
-                                      ((StaffState*)state)->glowEnable, 1, (int)(30.0f * burstScale),
-                                      0.5f, 0.5f, 45.0f * power, 0, 0);
+                objfx_spawnArcedBurst(obj, ((StaffState*)state)->glowAttackType, 0.5f,
+                                      ((StaffState*)state)->glowEnable, 1, (int)(30.0f * burstScale), 0.5f, 0.5f,
+                                      45.0f * power, NULL, 0);
             }
             else
             {
-                objfx_spawnArcedBurst(obj, 1.0f, ((StaffState*)state)->glowAttackType,
-                                      ((StaffState*)state)->glowEnable, 1, (int)(30.0f * burstScale),
-                                      1.0f, 1.0f, 45.0f * power, 0, 0);
+                objfx_spawnArcedBurst(obj, ((StaffState*)state)->glowAttackType, 1.0f,
+                                      ((StaffState*)state)->glowEnable, 1, (int)(30.0f * burstScale), 1.0f, 1.0f,
+                                      45.0f * power, NULL, 0);
             }
         }
         fn_802961A4(player, &type, &power);

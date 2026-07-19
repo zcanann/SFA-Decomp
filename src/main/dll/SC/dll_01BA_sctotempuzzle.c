@@ -131,8 +131,7 @@ u8 sc_totempuzzle_checkSolvedSequence(ScTotemPuzzleObject* obj, ScTotemPuzzleSta
 
         for (objectIndex = 20; objectIndex != 0; objectIndex--)
         {
-            objfx_spawnArcedBurstLegacy(obj, 7, 2.0f, 5, 7, 100, 25.0f, 25.0f,
-                                       30.0f, &particleBox, 0);
+            objfx_spawnArcedBurst(obj, 7, 2.0f, 5, 7, 100, 25.0f, 25.0f, 30.0f, &particleBox, 0);
         }
 
         solvedTexture = objFindTexture((GameObject*)(obj), 0, 0);
