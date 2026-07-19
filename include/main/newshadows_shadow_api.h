@@ -10,8 +10,4 @@ void shadowCreate(int* obj);
 void shadowRenderFn_8006b558(int* obj);
 void renderShadows(int unused0, int unused1, int unused2);
 
-/* Preserve the raw object-address view used by partially typed render code. */
-#define objShadowFn_8006c5f0Legacy(obj, outTexture, outScale, outX, outY)                                                \
-    ((void (*)(void*, int*, f32*, int*, int*))objShadowFn_8006c5f0)((obj), (outTexture), (outScale), (outX), (outY))
-
 #endif /* MAIN_NEWSHADOWS_SHADOW_API_H_ */

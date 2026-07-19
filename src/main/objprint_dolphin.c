@@ -330,7 +330,7 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     cm[11] = lbl_803DEA04;
     PSMTXConcat(cm, sm, cm);
     GXLoadTexMtxImm((const f32 (*)[4])cm, 0x1e, 0);
-    gxTextureFn_80072dfcIntModelLegacy(obj, mdl, 0);
+    gxTextureFn_80072dfc(obj, (void**)mdl, 0);
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_NRM, GX_DIRECT);
@@ -2743,7 +2743,7 @@ void objRenderShadow(void* obj)
 
 void objRenderModel(GameObject* obj)
 {
-    int d1;
+    u32 d1;
     f32 d2;
     int d3;
     int d4;
@@ -2838,7 +2838,7 @@ void objRenderModel(GameObject* obj)
         }
     }
     gObjShadowColor[3] = obj->anim.modelState->shadowAlpha;
-    objShadowFn_8006c5f0Legacy(obj, &d1, &d2, &d3, &d4);
+    objShadowFn_8006c5f0(obj, &d1, &d2, &d3, &d4);
     col = *(u32*)gObjShadowColor;
     hudDrawColored(d1, d3, d4, &col, (s32)(lbl_803DEA6C * d2), 1);
 }
