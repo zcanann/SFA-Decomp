@@ -154,7 +154,7 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     case TITLE_MENU_KIND_WINDOW:
         phrase = gameTextGetPhrase(item->extra.window.phraseId,
                                    (item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0 ? 0 : item->value);
-        gameTextSetColorInt(0, 0, 0, (u8)(((u8)alpha * 0x96) >> 8));
+        gameTextSetColor(0, 0, 0, (u8)(((u8)alpha * 0x96) >> 8));
         gameTextSetWindowStrPos(item->extra.window.windowId, 2, 2);
         gameTextAppendStr(phrase, item->extra.window.windowId);
         gameTextSetColorInt(0xff, 0xff, 0xff, alpha);

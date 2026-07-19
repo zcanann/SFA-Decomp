@@ -3309,7 +3309,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
                 sprintf((char*)&label, lbl_803DBB58, gCMenuItemIcons[iconIndex]);
                 gameTextSetColorInt(0, 0, 0, a16 & 0xFF);
                 gameTextShowStr((char*)&label, 0x93, 0x247, 0x2B + rowOffset + gCMenuScrollTimer);
-                gameTextSetColorInt(0xFF, 0xFF, 0xFF, (u8)a16);
+                gameTextSetColor(0xFF, 0xFF, 0xFF, (u8)a16);
                 gameTextShowStr((char*)&label, 0x93, 0x246, 0x2A + rowOffset + gCMenuScrollTimer);
             }
         }
@@ -5630,7 +5630,7 @@ void timeListDraw(int unused1, int unused2, int unused3)
         gameTextShow(0x2f8);
         gameTextSetColorInt(b, b, b, 0xff);
         gameTextShow(0x2fb);
-        gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     }
     {
         u16* p;
@@ -5691,7 +5691,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
     drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)top, 0xff, 0x100, 5, 5, 1);
     drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)left, (f32)(y + h), 0xff, 0x100, 5, 5, 2);
 
-    gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
+    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     gameTextFn_80016810(0x345, 0, 0xa);
     gameTextFn_80016810(gHighScoreTitleIdTable[gHighScoreActiveTableId].titleId, 0, 0x28);
 
@@ -5712,7 +5712,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
             }
             else if (k == gHighScoreHighlightRow + 1)
             {
-                gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
+                gameTextSetColor(0xff, 0xff, 0xff, 0xff);
             }
             gameTextShowStr(name, 0x86, 0, rowY = (starY = k * 0x1e) + 0x5a);
             gameTextShowStr(buf, 0x87, 0, rowY);
@@ -5874,7 +5874,7 @@ void pauseMenuDoSave(void)
     {
         if (lbl_803DB424 != 0)
         {
-            gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
+            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
             gameTextShow(0x46e);
         }
     }
@@ -7522,7 +7522,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     else
     {
         char* gt;
-        gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21A0, lbl_803E21A4, 0xff, 0x100);
         drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F9C, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
         drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E21A0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
@@ -7626,7 +7626,7 @@ void pauseMenuDrawText(int unused1, int unused2, int unused3)
     }
 
     gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
-    gameTextSetColorInt(0xff, 0xff, 0xff, (u8)alpha);
+    gameTextSetColor(0xff, 0xff, 0xff, (u8)alpha);
     *(u8*)((u8*)sprite + 0x1e) = alpha;
     gameTextAppendStr(handle, 0x49);
     gameTextResetCursor(2);
@@ -8517,7 +8517,7 @@ void GameUI_hudDraw(int a, int b, int c)
         box = gameTextGetBox(0x7c);
         if (curGameText != 0xffff && lbl_803DD8D0 != 0)
         {
-            gameTextSetColorInt(0xff, 0xff, 0xff, (u8)lbl_803DD8D0);
+            gameTextSetColor(0xff, 0xff, 0xff, (u8)lbl_803DD8D0);
             box[0x1e] = lbl_803DD8D0;
             if (lbl_803DD8CA != -1)
             {
@@ -8563,7 +8563,7 @@ void GameUI_hudDraw(int a, int b, int c)
             box = gameTextGetBox(0x7c);
             if (curGameText != 0xffff && lbl_803DD8D0 != 0)
             {
-                gameTextSetColorInt(0xff, 0xff, 0xff, (u8)lbl_803DD8D0);
+                gameTextSetColor(0xff, 0xff, 0xff, (u8)lbl_803DD8D0);
                 box[0x1e] = lbl_803DD8D0;
                 if (lbl_803DD8CA != -1)
                 {

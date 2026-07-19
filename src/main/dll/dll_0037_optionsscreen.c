@@ -157,7 +157,7 @@ void OptionsScreen_render(int arg)
     gameTextBoxFn_80134d40(fade, 0, 0);
     if (panel[5] != 0xffff)
     {
-        gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         *(u8*)((char*)gameTextGetBox(*(u8*)((char*)gameTextGet(panel[5]) + 4)) + 0x1e) = fade;
         gameTextShow(panel[5]);
     }
@@ -356,4 +356,3 @@ void OptionsScreen_initialise(void)
     lbl_803DD705 = 0;
     lbl_803DD6F9 = 0;
 }
-
