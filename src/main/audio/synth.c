@@ -418,6 +418,7 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
     s32 pan;
     s32 note;
     u8 scaledVol;
+    u8 keyHi;
     u8 mKey;
 
     vid = 0xFFFFFFFF;
@@ -425,6 +426,7 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
     {
 
         mKey = key & 0x7f;
+        keyHi = key & 0x80;
         for (; count != 0; --count, l++)
         {
             if (l->id == 0xffff || l->keyLow > mKey || l->keyHigh < mKey)
@@ -475,15 +477,15 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
                 switch (l->id & 0xC000)
                 {
                 case 0:
-                    new_id = macStart(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
+                    new_id = macStart(l->id, prio, maxVoices, allocId, note | keyHi, scaledVol, pan, midi, midiSet,
                                       section, step, trackid, 0, vGroup, studio, itd);
                     break;
                 case 0x4000:
-                    new_id = StartKeymap(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
+                    new_id = StartKeymap(l->id, prio, maxVoices, allocId, note | keyHi, scaledVol, pan, midi, midiSet,
                                          section, step, trackid, 0, vGroup, studio, itd);
                     break;
                 case 0x8000:
-                    new_id = audioLayerFn_8026f8b8(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi,
+                    new_id = audioLayerFn_8026f8b8(l->id, prio, maxVoices, allocId, note | keyHi, scaledVol, pan, midi,
                                                    midiSet, section, step, trackid, 0, vGroup, studio, itd);
                     break;
                 }
