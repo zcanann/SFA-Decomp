@@ -1250,9 +1250,9 @@ typedef struct LightmapVertex
     u8 a;
 } LightmapVertex;
 
-void drawFn_8005cf8c(int vertexBase, u8* triList, int triCount)
+void drawFn_8005cf8c(const void* vertexBase, u8* triList, int triCount)
 {
-    const LightmapVertex* vertices = (const LightmapVertex*)vertexBase;
+    const LightmapVertex* vertices = vertexBase;
     const LightmapVertex* vertex;
     int tri, vtx;
 

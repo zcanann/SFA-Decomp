@@ -18,6 +18,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/lightmap_api.h"
 #include "main/lightmap_text_color_api.h"
 #include "main/camera.h"
 #include "track/intersect_api.h"
@@ -28,8 +29,6 @@ f32 lbl_803DBF50[2] = {0.1f, 0.13f};
 u8 gRopeNodeVariantVisibleFlags[8] = {0, 1, 0, 0, 0, 0, 0, 0};
 
 #define DFROPENODE_OBJGROUP 0x17
-
-void drawFn_8005cf8c(s16* vertexBase, u8* triList, int triCount);
 
 extern f64 gRopeNodeS32ToDoubleBias;
 extern f32 lbl_803E4DFC;

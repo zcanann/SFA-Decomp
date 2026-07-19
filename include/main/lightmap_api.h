@@ -19,7 +19,7 @@ int getDrawDistanceFlag_8005cd48(void);
 int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
 void setPendingMapLoad(int pending);
-void drawFn_8005cf8c(int vertexBase, u8* triList, int triCount);
+void drawFn_8005cf8c(const void* vertexBase, u8* triList, int triCount);
 void doNothing_8005D148(int arg0, int arg1);
 void doNothing_8005D14C(int arg0, int arg1);
 void titleScreenFn_8005cdd4(int enabled);
