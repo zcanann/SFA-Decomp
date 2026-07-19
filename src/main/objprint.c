@@ -874,7 +874,7 @@ void fn_8003A230(GameObject* obj, CharacterEyeAnimState* state, f32 val)
         {
             fn_80039B54((int)obj, (s16*)state, found, val);
         }
-        *(s16*)((char*)state + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)state + 0x1a);
+        state->headTrackMode = (s16)(u16)(u8)state->headTrackMode;
         if (val > lbl_803DE9E4)
         {
             flag = 1;
@@ -883,7 +883,7 @@ void fn_8003A230(GameObject* obj, CharacterEyeAnimState* state, f32 val)
         {
             flag = 0;
         }
-        *(s16*)((char*)state + 0x1a) = (s16)(*(s16*)((char*)state + 0x1a) | (flag << 8));
+        state->headTrackMode = (s16)(state->headTrackMode | (flag << 8));
     }
 }
 s16 objMathFn_8003a380(GameObject* obj, GameObject* target, f32* pos, u8* p4, s16* spd, f32 yOff, int unused,
