@@ -86,10 +86,9 @@ void dustmotesou_update(DustMoteSouObject* source)
     }
     if (mapData->burstMode == DUSTMOTESOU_BURST_BOX)
     {
-        ((void (*)(int, int, f32, int, int, int, f32, f32, f32, int, int))objfx_spawnBoxBurst)(
-            (int)source, mapData->effectId, mapData->scale, mapData->effectParamA, mapData->effectParamB,
-            mapData->effectFlags,
-            (f32)(u32)mapData->spreadX, (f32)(u32)mapData->spreadY, (f32)(u32)mapData->spreadZ, 0, 0);
+        objfx_spawnBoxBurst(source, mapData->effectId, mapData->scale, mapData->effectParamA,
+                            mapData->effectParamB, mapData->effectFlags, (f32)(u32)mapData->spreadX,
+                            (f32)(u32)mapData->spreadY, (f32)(u32)mapData->spreadZ, NULL, 0);
     }
     else if (mapData->burstMode == DUSTMOTESOU_BURST_ARCED)
     {
@@ -100,10 +99,9 @@ void dustmotesou_update(DustMoteSouObject* source)
     }
     else
     {
-        ((void (*)(int, int, int, int, f32, int, f32, int, int))objfx_spawnDirectionalBurst)(
-            (int)source, mapData->effectId, mapData->effectParamA, mapData->effectParamB, mapData->scale,
-            mapData->effectFlags,
-            (f32)(u32)mapData->spreadX, 0, 0);
+        objfx_spawnDirectionalBurst(source, mapData->effectId, mapData->scale, mapData->effectParamA,
+                                    mapData->effectParamB, mapData->effectFlags,
+                                    (f32)(u32)mapData->spreadX, NULL, 0);
     }
 }
 

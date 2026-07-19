@@ -233,15 +233,13 @@ void wcpushblock_update(GameObject* obj)
         {
             if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
             {
-                ((void (*)(int, int, f32, int, int, int, f32, f32, f32, int, int))objfx_spawnBoxBurst)(
-                    (int)obj, 1, lbl_803E6D5C, WCPUSHBLOCK_BOX_BURST_VARIANT_A, 1, 50, lbl_803E6D60, lbl_803E6D5C,
-                    lbl_803E6D60, 0, 0);
+                objfx_spawnBoxBurst(obj, 1, lbl_803E6D5C, WCPUSHBLOCK_BOX_BURST_VARIANT_A, 1, 50,
+                                    lbl_803E6D60, lbl_803E6D5C, lbl_803E6D60, NULL, 0);
             }
             else
             {
-                ((void (*)(int, int, f32, int, int, int, f32, f32, f32, int, int))objfx_spawnBoxBurst)(
-                    (int)obj, 1, lbl_803E6D5C, WCPUSHBLOCK_BOX_BURST_VARIANT_B, 1, 50, lbl_803E6D60, lbl_803E6D5C,
-                    lbl_803E6D60, 0, 0);
+                objfx_spawnBoxBurst(obj, 1, lbl_803E6D5C, WCPUSHBLOCK_BOX_BURST_VARIANT_B, 1, 50,
+                                    lbl_803E6D60, lbl_803E6D5C, lbl_803E6D60, NULL, 0);
             }
         }
     }
