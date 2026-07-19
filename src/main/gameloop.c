@@ -480,11 +480,11 @@ void askProgressiveScanMode(void)
         dvdCheckError();
         doNothing_endOfFrame();
         GXFlush_(0, 0);
-        if ((s8)padGetStickX(0) < 0 || (s8)padGetCX(0) < 0)
+        if (padGetStickX(0) < 0 || padGetCX(0) < 0)
         {
             sel = 1;
         }
-        else if ((s8)padGetStickX(0) > 0 || (s8)padGetCX(0) > 0)
+        else if (padGetStickX(0) > 0 || padGetCX(0) > 0)
         {
             sel = 0;
         }

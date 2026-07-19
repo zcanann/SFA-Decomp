@@ -234,8 +234,8 @@ void arwarwing_readControls(GameObject* obj, ArwingState* state)
     int btn;
 
     debugPrintSetColor(0xff, 0xff, 0xff, 0xff);
-    aw->stickX = (f32)(s8)padGetStickX(0) / 72.0f;
-    aw->stickY = (f32)(s8)padGetStickY(0) / 72.0f;
+    aw->stickX = (f32)padGetStickX(0) / 72.0f;
+    aw->stickY = (f32)padGetStickY(0) / 72.0f;
     if (aw->damageFlashTimer > 0.0f)
     {
         f32 zero = 0.0f;
@@ -1929,4 +1929,3 @@ void arwarwing_release(void)
 void arwarwing_initialise(void)
 {
 }
-

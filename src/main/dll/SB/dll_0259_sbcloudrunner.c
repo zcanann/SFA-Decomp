@@ -541,8 +541,8 @@ void SB_CloudRunner_update(GameObject* obj)
         return;
     }
     setAButtonIcon(6);
-    state->stickX = (int)(s8)padGetStickX(0);
-    state->stickY = (int)(s8)padGetStickY(0);
+    state->stickX = padGetStickX(0);
+    state->stickY = padGetStickY(0);
     if (state->targetObj == NULL)
     {
         int count;

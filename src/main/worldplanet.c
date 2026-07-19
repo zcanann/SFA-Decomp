@@ -498,8 +498,8 @@ void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
     s8 resX;
     s8 resY;
 
-    stickX = padGetStickXS8(0);
-    stickY = padGetStickYS8(0);
+    stickX = padGetStickX(0);
+    stickY = padGetStickY(0);
     resX = 0;
     resY = 0;
     if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0)

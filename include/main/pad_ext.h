@@ -4,7 +4,7 @@
 #include "types.h"
 
 u32 getButtonsHeld(int port);
-u8 padGetCX(int port);
-u8 padGetCY(int port);
+s8 padGetCX(int port);
+s8 padGetCY(int port);
 
 #endif /* MAIN_PAD_EXT_H_ */

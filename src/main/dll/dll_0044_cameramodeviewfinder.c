@@ -111,8 +111,8 @@ void firstPersonDoControls(s16* obj)
     f32 zoom2;
 
     camObj = (short*)((GameObject*)obj)->anim.targetObj;
-    stickX = padGetStickXS8(0);
-    stickY = padGetStickYS8(0);
+    stickX = padGetStickX(0);
+    stickY = padGetStickY(0);
     t = (lbl_803E17E0 - ((CameraObject*)obj)->fov) / lbl_803E17E4;
     zoom = (t < lbl_803E17C4) ? lbl_803E17C4 : ((t > lbl_803E17E8) ? lbl_803E17E8 : t);
     spin = stickX * -(lbl_803E17F0 * zoom - lbl_803E17EC);

@@ -6764,7 +6764,7 @@ void pauseMenuFn_80129ee0(void)
 int pauseMenuGridFn_8012b4c4(void)
 {
     int ret = 0;
-    s8 cx = padGetCXS8(0);
+    s8 cx = padGetCX(0);
     s8 dir;
     int mag = cx;
 
@@ -8070,7 +8070,7 @@ void cMenuRun(void)
             }
             else
             {
-                cy = padGetCYS8(0);
+                cy = padGetCY(0);
             }
             if (((cy <= -0xa && gCMenuPrevStickY > -0xa) || cy < -0x3c) &&
                 (gCMenuScrollTimer < 0 ? -gCMenuScrollTimer : gCMenuScrollTimer) < 8 &&
@@ -8620,7 +8620,7 @@ void GameUI_update(void)
     }
     else
     {
-        cx = padGetCXS8(0);
+        cx = padGetCX(0);
         buttonDisable(0, 0xf0000);
         gCMenuButtons &= 0xfff0fff7;
         lbl_803DD898 &= 0xfff0fff7;
@@ -8698,16 +8698,16 @@ void GameUI_update(void)
         if (allowCStickTarget != 0)
         {
             int cxa, cya;
-            if ((s8)padGetCXS8(0) < 0)
-                cxa = -padGetCXS8(0);
+            if (padGetCX(0) < 0)
+                cxa = -padGetCX(0);
             else
-                cxa = padGetCXS8(0);
+                cxa = padGetCX(0);
             if (cxa <= 5)
             {
-                if ((s8)padGetCYS8(0) < 0)
-                    cya = -padGetCYS8(0);
+                if (padGetCY(0) < 0)
+                    cya = -padGetCY(0);
                 else
-                    cya = padGetCYS8(0);
+                    cya = padGetCY(0);
                 if (cya <= 5)
                     goto noCStickTarget;
             }

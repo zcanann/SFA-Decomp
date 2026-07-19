@@ -6203,7 +6203,7 @@ void showMemCardError(u8 err)
         }
         gameTextRun();
         GXFlush_(1, 0);
-        if (padGetStickYS8(0) < 0 || padGetCYS8(0) < 0)
+        if (padGetStickY(0) < 0 || padGetCY(0) < 0)
         {
             if (held == 0)
             {
@@ -6211,7 +6211,7 @@ void showMemCardError(u8 err)
                 held = 1;
             }
         }
-        else if (padGetStickYS8(0) > 0 || padGetCYS8(0) > 0)
+        else if (padGetStickY(0) > 0 || padGetCY(0) > 0)
         {
             if (held == 0)
             {

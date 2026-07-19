@@ -794,8 +794,8 @@ void SnowBike_update(GameObject* obj)
         {
             setAButtonIcon(0x10);
             setBButtonIcon(0x11);
-            ((SnowBikeState*)state)->stickX = padGetStickXS8(0);
-            ((SnowBikeState*)state)->stickY = (f32)padGetStickYS8(0);
+            ((SnowBikeState*)state)->stickX = padGetStickX(0);
+            ((SnowBikeState*)state)->stickY = (f32)padGetStickY(0);
             ((SnowBikeState*)state)->buttonsHeld = getButtonsHeld(0);
             ((SnowBikeState*)state)->buttonsJustPressed = getButtonsJustPressed(0);
             ((SnowBikeState*)state)->buttonsJustPressedIfNotBusy = getButtonsJustPressedIfNotBusy(0);

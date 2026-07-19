@@ -192,8 +192,8 @@ void CameraModeWorldMap_update(u8* obj)
                 {
                     gCamWorldMapState->distance = gCamWorldMapDistanceMax;
                 }
-                dYaw = (s16)((s8)padGetCX(0) * 3);
-                dPitch = (s16)((s8)padGetCY(0) * 3);
+                dYaw = (s16)(padGetCX(0) * 3);
+                dPitch = (s16)(padGetCY(0) * 3);
                 if (gCamWorldMapState->focusBlendTimer != 0)
                 {
                     GameObject* f = ObjList_FindObjectById(gCamWorldMapState->focusObjectId);

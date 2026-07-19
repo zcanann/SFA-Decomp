@@ -88,8 +88,8 @@ void CameraModeDebug_update(CameraObject* cam)
         gCamDebugState->orbitRadius = gCamDebugOrbitRadiusMax;
     }
     {
-        u16 dx = (u16)((s8)padGetCX(0) * 3);
-        u16 dy = (u16)((s8)padGetCY(0) * 3);
+        u16 dx = (u16)(padGetCX(0) * 3);
+        u16 dy = (u16)(padGetCY(0) * 3);
         cam->anim.rotX = (s16)(cam->anim.rotX - dx);
         cam->anim.rotY = (s16)(cam->anim.rotY + dy);
     }

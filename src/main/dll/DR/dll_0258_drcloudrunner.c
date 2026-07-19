@@ -1143,8 +1143,8 @@ void fn_802C11BC(GameObject* obj, f32 f, int triggerFrame)
     *(int*)&inner->baddie |= 0x200000;
     if (inner->flightState == CLOUDRUNNER_FLIGHT_MOUNTED)
     {
-        inner->baddie.moveInputX = (f32)(s8)padGetStickX(0);
-        inner->baddie.moveInputZ = (f32)(s8)padGetStickY(0);
+        inner->baddie.moveInputX = (f32)padGetStickX(0);
+        inner->baddie.moveInputZ = (f32)padGetStickY(0);
         *(int*)&inner->baddie.unk31C = getButtonsJustPressed(0);
         *(int*)&inner->baddie.unk318 = getButtonsHeld(0);
         inner->baddie.cameraYaw = *(s16*)slot;

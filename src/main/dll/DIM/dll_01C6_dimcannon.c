@@ -136,7 +136,7 @@ int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 (*gGameUIInterface)->showNpcDialogue(0x4b9, 0x14, 0x8c, 1);
                 mainSetBits(0xdb, 1);
             }
-            delta = (int)(-gDimCannonAimStickScale * padGetStickXS8(0));
+            delta = (int)(-gDimCannonAimStickScale * padGetStickX(0));
             if (delta != 0)
             {
                 s16 mag = *(s16*)((char*)vec + 0x2) < 0 ? -*(s16*)((char*)vec + 0x2) : *(s16*)((char*)vec + 0x2);

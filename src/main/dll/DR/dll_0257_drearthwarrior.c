@@ -1254,8 +1254,8 @@ void fn_802BE6E8(GameObject* obj, int t, int p3)
     *(int*)((char*)inner + 0) &= ~0x8000;
     if (((DREarthWarriorState*)inner)->controlMode == 2)
     {
-        ((EarthWarriorState*)inner)->baddie.moveInputX = (f32)(s8)padGetStickX(0);
-        ((EarthWarriorState*)inner)->baddie.moveInputZ = (f32)(s8)padGetStickY(0);
+        ((EarthWarriorState*)inner)->baddie.moveInputX = (f32)padGetStickX(0);
+        ((EarthWarriorState*)inner)->baddie.moveInputZ = (f32)padGetStickY(0);
         *(int*)&((EarthWarriorState*)inner)->baddie.unk31C = getButtonsJustPressed(0);
         *(int*)&((EarthWarriorState*)inner)->baddie.unk318 = getButtonsHeld(0);
         ((EarthWarriorState*)inner)->baddie.cameraYaw = *(s16*)slot;

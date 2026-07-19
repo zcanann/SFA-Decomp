@@ -104,7 +104,7 @@ void padGetAnalogInput(int port, u8* x, u8* y)
     *y = (&gPadAnalogY)[port];
 }
 
-u8 padGetCY(int port)
+s8 padGetCY(int port)
 {
     PADStatus* statuses;
 
@@ -120,7 +120,7 @@ u8 padGetCY(int port)
     return statuses[gPadStatusToggle * 4 + port].substickY;
 }
 
-u8 padGetCX(int port)
+s8 padGetCX(int port)
 {
     PADStatus* statuses;
 
@@ -136,7 +136,7 @@ u8 padGetCX(int port)
     return statuses[gPadStatusToggle * 4 + port].substickX;
 }
 
-u8 padGetStickY(int port)
+s8 padGetStickY(int port)
 {
     PADStatus* statuses;
 
@@ -152,7 +152,7 @@ u8 padGetStickY(int port)
     return statuses[gPadStatusToggle * 4 + port].stickY;
 }
 
-u8 padGetStickX(int port)
+s8 padGetStickX(int port)
 {
     PADStatus* statuses;
 

@@ -102,7 +102,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
     int buttons;
     u8 moved;
 
-    stickX = padGetStickXS8(0);
+    stickX = padGetStickX(0);
     padClearAnalogInputX(0);
     if (stickX != 0)
     {
