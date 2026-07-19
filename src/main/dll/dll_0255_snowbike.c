@@ -239,12 +239,12 @@ typedef struct
     f32 quad[4];
 } SBRotQuad;
 
-s32 fn_801EC9BC(GameObject* obj)
+s32 SnowBike_getRouteRank(GameObject* obj)
 {
     return (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&obj->extra + 0x28));
 }
 
-s32 fn_801EC9F4(GameObject* obj)
+s32 SnowBike_isAtRankGate(GameObject* obj)
 {
     int result = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(*(int*)&obj->extra + 0x28));
     if (result == 3)

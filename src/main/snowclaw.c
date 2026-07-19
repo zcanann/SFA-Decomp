@@ -727,7 +727,7 @@ void snowclaw_update(GameObject* obj)
     sub = *(int**)inner;
     if (sub != 0 && *(s8*)&((SnowclawState*)inner)->health != 0 &&
         obj->anim.currentMove == *(u16*)&((SnowclawState*)inner)->moveIdBase &&
-        fn_801EC9F4((GameObject*)sub) != 0 && timerCountDown(&((SnowclawState*)inner)->attackTimer) != 0)
+        SnowBike_isAtRankGate((GameObject*)sub) != 0 && timerCountDown(&((SnowclawState*)inner)->attackTimer) != 0)
     {
         choice = randomGetRange(0, 1);
         ((SnowclawState*)inner)->pendingMoveId = *(u16*)&((SnowclawState*)inner)->moveIdBase + 5;
@@ -743,7 +743,7 @@ void snowclaw_update(GameObject* obj)
             snowclaw_spawnDropBomb((GameObject*)(*(int*)inner), obj, (u8)choice, 0);
         }
         s16toFloat((f32*)(inner + offsetof(SnowclawState, attackTimer)),
-                   (s16)lbl_8032A340[fn_801EC9BC((GameObject*)(*(int*)inner)) - 1]);
+                   (s16)lbl_8032A340[SnowBike_getRouteRank((GameObject*)(*(int*)inner)) - 1]);
     }
 
     sub = *(int**)inner;
