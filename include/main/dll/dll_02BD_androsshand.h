@@ -82,7 +82,7 @@ extern int lbl_803DC510;
 int AndrossHand_getExtraSize(void);
 int AndrossHand_getObjectTypeId(void);
 void AndrossHand_free(void);
-void AndrossHand_render(int obj, int p2, int p3, int p4, int p5);
+void AndrossHand_render(GameObject* obj, int p2, int p3, int p4, int p5);
 void AndrossHand_update(int obj);
 void AndrossHand_hitDetect(void);
 void androsshand_setState(GameObject* obj, AndrossHandStateId newState, u8 force);

@@ -30,7 +30,7 @@
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 #define TREE_CHILD_OBJ_APPLE_ON_TREE     0x210 /* retail "AppleOnTree" (DLL 0x117) */
 
@@ -140,7 +140,7 @@ void tree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     if (visible != 0)
     {
         fn_8003B608(setup->colorR, setup->colorG, setup->colorB);
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
         {
             for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)

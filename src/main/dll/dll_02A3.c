@@ -22,7 +22,7 @@ int lbl_803DDD94;
 int lbl_803DDD90;
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 void dll_2A3_setSpeed(GameObject* obj, int speed)
 {
@@ -53,7 +53,7 @@ void dll_2A3_free(void)
     lbl_803DDD90 = lbl_803DDD90 - 1;
 }
 
-void dll_2A3_render(int obj, int p2, int p3, int p4, int p5)
+void dll_2A3_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }

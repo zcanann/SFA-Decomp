@@ -25,7 +25,7 @@
 #include "main/dll/WC/dll_028A_wcearthwalker.h"
 #include "main/dll/dll_028B.h"
 #include "main/player_control_interface.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define DLL28B_OBJ_GROUP    3
@@ -54,7 +54,7 @@ void dll_28B_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     Dll28BState* state = obj->extra;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6D18);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6D18);
         dll_2E_func06(obj, &state->moveLib, 0);
     }
 }

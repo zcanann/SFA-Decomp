@@ -33,7 +33,7 @@
 #include "main/dll/dll_02BB_gflevelcon.h"
 #include "main/gametext_show_api.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 const f32 lbl_803E7450 = 0.0f;
@@ -261,7 +261,7 @@ void gf_levelcon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -287,4 +287,3 @@ void gf_levelcon_release(void)
 void gf_levelcon_initialise(void)
 {
 }
-

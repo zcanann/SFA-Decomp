@@ -31,7 +31,7 @@
 #include "main/audio/sfx_play_api.h"
 #include "track/intersect_hud_api.h"
 #include "main/audio/sfx_stop_object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/audio/stream_api.h"
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
@@ -647,14 +647,14 @@ void TitleScreen_free(u8* obj)
 /* When visible and ready, render via objRenderFn; once the credits flag
  * fires, set the one-shot trigger 0x57 and release the attract-mode movie
  * buffers. */
-void TitleScreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void TitleScreen_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v == 0)
         return;
     if (lbl_803DD9AB == 0)
         return;
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2318);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E2318);
     if (showCredits == 0)
         return;
     if (gTitleScreenCreditsStarted != 0)

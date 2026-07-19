@@ -35,7 +35,7 @@ STATIC_ASSERT(offsetof(StaticCameraPlacement, rotZ) == 0x20);
 int StaticCamera_getExtraSize(void);
 int StaticCamera_getObjectTypeId(void);
 void StaticCamera_free(int obj);
-void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void StaticCamera_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void StaticCamera_hitDetect(void);
 void StaticCamera_update(void);
 void StaticCamera_init(GameObject* obj, StaticCameraPlacement* params, int deferAdd);

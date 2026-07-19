@@ -47,7 +47,7 @@ extern f32 lbl_803E6E18;
 int suntemple_getExtraSize(void);
 int suntemple_getObjectTypeId(void);
 void suntemple_free(void);
-void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void suntemple_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void suntemple_hitDetect(GameObject* obj);
 int suntemple_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void suntemple_init(GameObject* obj, SunTempleSetup* setup);

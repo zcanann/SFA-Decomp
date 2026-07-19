@@ -23,7 +23,7 @@
 #include "main/dll/dll_02B5_timer.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 f32 lbl_803DC418 = 7.0f;
@@ -110,7 +110,7 @@ void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
     }
     if ((obj)->ownerObj == NULL)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

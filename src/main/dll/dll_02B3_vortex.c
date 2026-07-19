@@ -8,7 +8,7 @@
 #include "main/model.h"
 #include "main/dll/dll_02B3_vortex.h"
 #include "main/gameloop_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 s16 gVortexAngleSpeed83D[4] = {8, 0x10, 0x20, 0};
@@ -139,7 +139,7 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                                         (state->alpha * (state->radiusScale[i] * objScale));
             *((u8*)obj + 0x37) = state->alpha * (state->alphaScale[i] * (f32)(u32)objAlpha);
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
-            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E73E0);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
         }
         obj->anim.rootMotionScale = objScale;
         obj->anim.alpha = objAlpha;
@@ -175,7 +175,7 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                 obj->anim.localPosY = objZ - radius * state->alpha;
             }
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
-            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E73E0);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
         }
         obj->anim.rootMotionScale = objScale;
         obj->anim.alpha = objAlpha;
@@ -217,7 +217,7 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                 obj->anim.localPosY = radius * state->alpha + objZ;
             }
             *(u16*)(model + 0x18) = (u16)(*(u16*)(model + 0x18) & ~8);
-            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E73E0);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E73E0);
         }
         obj->anim.rootMotionScale = objScale;
         obj->anim.alpha = objAlpha;

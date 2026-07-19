@@ -18,7 +18,7 @@
 #include "main/dll/ARW/dll_02A3.h"
 #include "main/dll/ARW/dll_02A4.h"
 #include "main/object_descriptor.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 /* random start-rotation range and per-axis spin-rate range */
 #define ROT_RANGE_MAX 0xffff
@@ -51,7 +51,7 @@ void dll_2A4_free_nop(void)
 {
 }
 
-void dll_2A4_render(int obj, int p2, int p3, int p4, int p5)
+void dll_2A4_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7138);
 }

@@ -87,7 +87,7 @@ void arwprojectile_setLifetime(GameObject* obj, int lifetime);
 int arwingandrossstuff_getExtraSize(void);
 int arwingandrossstuff_getObjectTypeId(void);
 void arwingandrossstuff_free(GameObject* obj);
-void arwingandrossstuff_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void arwingandrossstuff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void arwingandrossstuff_hitDetect(GameObject* obj);
 void arwingandrossstuff_update(GameObject* obj);
 void arwingandrossstuff_init(GameObject* obj, ArwProjectileSetup* setup);

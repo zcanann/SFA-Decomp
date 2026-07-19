@@ -40,7 +40,7 @@
 #include "main/newclouds.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 int lbl_803DC398 = 0x14;
@@ -87,7 +87,7 @@ void barrelgener_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6C20);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6C20);
     }
 }
 

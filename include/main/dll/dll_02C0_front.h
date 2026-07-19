@@ -14,7 +14,7 @@
 int TitleScreen_getObjectTypeId(u8* obj);
 int TitleScreen_getExtraSize(void);
 void TitleScreen_hitDetect(void);
-void TitleScreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void TitleScreen_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void TitleScreen_release(void);
 void TitleScreen_initialise(void);
 void TitleScreen_free(u8* obj);

@@ -58,7 +58,7 @@ f32 gAndrossDistortPhase;
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/maketex_sequence_api.h"
 
 #define ARW_ARWING_BOMB_OBJ 0x605 /* retail OBJECTS.bin "ARWArwingBo", DLL 0x29C */
@@ -456,7 +456,7 @@ void andross_free(int obj)
     fn_8006CB24();
     Rcp_DisableDistortionFilter();
 }
-void andross_render(int obj, int p2, int p3, int p4, int p5)
+void andross_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }

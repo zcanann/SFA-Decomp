@@ -31,7 +31,7 @@
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/dll_02A0_ring.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 #define RING_SEQID_ARW_ARWING 0x601 /* "ARWArwing" (DLL 0x29A) */
 #define RING_OBJ_ARW_GOLD   0x060b
@@ -263,7 +263,7 @@ void ring_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
     {
         queueGlowRender(state->light);
     }
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 
@@ -558,4 +558,3 @@ void ring_release(void)
 void ring_initialise(void)
 {
 }
-

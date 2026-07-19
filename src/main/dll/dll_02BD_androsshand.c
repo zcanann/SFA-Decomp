@@ -31,7 +31,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_02BD_androsshand.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 /* Andross body object id, located once and cached in androssObj. */
@@ -188,7 +188,7 @@ void AndrossHand_free(void)
 
 const f32 lbl_803E75AC[1] = {0.0f};
 
-void AndrossHand_render(int obj, int p2, int p3, int p4, int p5)
+void AndrossHand_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }

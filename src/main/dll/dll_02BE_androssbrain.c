@@ -17,7 +17,7 @@
 #include "main/objhits.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 static const f32 gAndrossBrainRenderScale[2] = {1.0f, 0.0f};
@@ -77,7 +77,7 @@ void AndrossBrain_free(void)
 
 void AndrossBrain_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, gAndrossBrainRenderScale[0]);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, gAndrossBrainRenderScale[0]);
 }
 
 void AndrossBrain_hitDetect(void)

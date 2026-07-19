@@ -28,7 +28,7 @@ GameObject* gWaterFlowPhaseDriver;
 #include "main/objanim.h"
 #include "main/obj_group.h"
 #include "main/vecmath.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define WATERFLOWWE_FOLIAGE_GROUP               0x14
@@ -166,7 +166,7 @@ void waterflowwe_free(GameObject* obj)
     }
 }
 
-void waterflowwe_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void waterflowwe_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {

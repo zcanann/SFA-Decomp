@@ -28,7 +28,7 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 
 u8 gCmbsrcColorCycleIndexTable[8] = {5, 6, 4, 0, 0, 0, 0, 0};
@@ -371,7 +371,7 @@ void cmbsrc_render(CmbSrcObject* cmbsrc, int p2, int p3, int p4, int p5, s8 visi
         }
         if ((setup->flags & CMBSRC_MAP_RENDER_MODEL) != 0)
         {
-            objRenderModelAndHitVolumes((int)cmbsrc, p2, p3, p4, p5, 1.0f);
+            objRenderModelAndHitVolumes((GameObject*)cmbsrc, p2, p3, p4, p5, 1.0f);
         }
     }
 }

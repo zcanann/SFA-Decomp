@@ -13,7 +13,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/obj_group.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/dll_025A_staticcamera.h"
 
 #define STATICCAMERA_OBJGROUP 7
@@ -32,12 +32,12 @@ void StaticCamera_free(int obj)
     ObjGroup_RemoveObject(obj, STATICCAMERA_OBJGROUP);
 }
 
-void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void StaticCamera_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
     {
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

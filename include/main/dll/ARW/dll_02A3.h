@@ -31,7 +31,7 @@ extern int lbl_803DDD94;
 int dll_2A3_getExtraSize_ret_12(void);
 int dll_2A3_getObjectTypeId(void);
 void dll_2A3_free(void);
-void dll_2A3_render(int obj, int p2, int p3, int p4, int p5);
+void dll_2A3_render(GameObject* obj, int p2, int p3, int p4, int p5);
 void dll_2A3_hitDetect(void);
 void dll_2A3_update(GameObject* obj);
 void dll_2A3_init(GameObject* obj);

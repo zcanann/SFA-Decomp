@@ -38,7 +38,7 @@
 #include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 f32 lbl_803DC3D0 = 0.1f;
 f32 lbl_803DC3D4 = 500.0f;
@@ -151,7 +151,7 @@ void arwingandrossstuff_free(GameObject* obj)
     }
 }
 
-void arwingandrossstuff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void arwingandrossstuff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {

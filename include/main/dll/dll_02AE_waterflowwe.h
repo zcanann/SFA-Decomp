@@ -72,7 +72,7 @@ int waterflowwe_getExtraSize(void);
 int waterflowwe_getObjectTypeId(void);
 void waterflowwe_init(GameObject* obj, WaterFlowWeSetup* setup);
 void waterflowwe_free(GameObject* obj);
-void waterflowwe_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void waterflowwe_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void waterflowwe_hitDetect(void);
 void waterflowwe_update(GameObject* obj);
 void waterflowwe_release(void);

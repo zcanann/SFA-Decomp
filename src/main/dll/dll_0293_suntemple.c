@@ -38,7 +38,7 @@
 #include "main/objtexture.h"
 #include "main/pad.h"
 #include "main/shader_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 const Vec3f lbl_802C25D8 = {-6318.10009765625f, -1232.0f, -5884.0f};
@@ -113,7 +113,7 @@ void suntemple_free(void)
 {
 }
 
-void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void suntemple_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {

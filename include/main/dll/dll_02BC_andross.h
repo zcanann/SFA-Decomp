@@ -212,7 +212,7 @@ int andross_getExtraSize(void);
 int andross_getObjectTypeId(void);
 void andross_free(int obj);
 void andross_hitDetect(void);
-void andross_render(int obj, int p2, int p3, int p4, int p5);
+void andross_render(GameObject* obj, int p2, int p3, int p4, int p5);
 void andross_setPartSignal(GameObject* obj, u8 signal);
 void andross_update(int obj);
 void andross_init(int obj, ObjPlacement* setup);

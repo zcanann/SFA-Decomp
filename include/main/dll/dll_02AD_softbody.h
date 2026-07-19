@@ -28,7 +28,7 @@ extern f32 lbl_803DDDA0;
 int SoftBody_getExtraSize(void);
 int SoftBody_getObjectTypeId(void);
 void SoftBody_free(GameObject* obj);
-void SoftBody_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void SoftBody_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void SoftBody_hitDetect(void);
 void SoftBody_init(GameObject* obj, SoftBodySetup* setup);
 void SoftBody_update(GameObject* obj);

@@ -22,7 +22,7 @@ GameObject* lbl_803DDD98;
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define SOFTBODY_OBJECT_FLAGS_INIT 0x2000
@@ -49,7 +49,7 @@ void SoftBody_free(GameObject* obj)
     }
 }
 
-void SoftBody_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void SoftBody_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
