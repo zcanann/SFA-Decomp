@@ -965,7 +965,7 @@ void dll_D3_update(int* obj)
     if (hits > 0)
     {
         ((void (*)(int*, int*, int, int, int*, int*, int, int*))((void**)*(int*)gBaddieControlInterface)[0x50 / 4])(
-            obj, state, (int)((char*)state + 0x35c), (int)((TreasureChestState*)state)->gameBitB, lbl_803202E8,
+            obj, state, (int)state + 0x35c, (int)((TreasureChestState*)state)->gameBitB, lbl_803202E8,
             lbl_80320360, 0, gStaffActionHitLightParams);
         if ((int)((TreasureChestState*)state)->hitPoints < hits)
         {
