@@ -1165,11 +1165,11 @@ typedef void (*ExpResFn6)(void*, int, void*, int, int, void*);
 void dll_0B_func05(void)
 {
     int emOff;
-    int** pp;
+    int emIdx;
     int* eff;
     int reprocess;
     int active;
-    int emIdx;
+    int** pp;
     int slot;
     int feFlag;
     int cntC;
@@ -1620,7 +1620,7 @@ s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16*
     }
 
     ((PartfxEffectState**)gPartfxActiveEffects)[slot] =
-        (PartfxEffectState*)mmAlloc(base0 + spawnCount * 0x18 + total * 2 + 0x240, 0x15, 0);
+        (PartfxEffectState*)mmAlloc(base0 + 0x240 + spawnCount * 0x18 + total * 2, 0x15, 0);
     if (((PartfxEffectState**)gPartfxActiveEffects)[slot] == NULL)
     {
         fn_800A1040(0, 0);
