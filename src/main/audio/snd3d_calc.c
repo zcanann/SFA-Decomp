@@ -81,7 +81,7 @@ extern inline f32 sqrtf(f32 x)
     return x;
 }
 
-static u8 clip127(u8 value)
+static inline u8 clip127(u8 value)
 {
     if (value > 0x7f)
     {

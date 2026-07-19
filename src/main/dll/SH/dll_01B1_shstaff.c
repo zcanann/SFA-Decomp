@@ -421,6 +421,35 @@ int sh_staff_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
+void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int clearChildren)
+{
+    int player;
+    void* child;
+    int i;
+
+    player = (int)Obj_GetPlayerObject();
+    ObjHits_DisableObject(obj);
+    (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+    (obj)->anim.resetHitboxFlags = (u8)((obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+
+    if (clearChildren != 0)
+    {
+        staffToggle((GameObject*)(player), 1);
+        playerPutAwayStaff((GameObject*)(player), 1);
+        for (i = 0; i < 10; i++)
+        {
+            child = *(void**)((char*)state + i * 4 + 56);
+            if (child != NULL)
+            {
+                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
+                *(int*)((char*)state + i * 4 + 56) = 0;
+            }
+        }
+    }
+
+    state->phase = SHSTAFF_PHASE_DONE;
+}
+
 void sh_staff_update(GameObject* obj)
 {
     ShStaffState* state = (obj)->extra;
@@ -513,35 +542,6 @@ void sh_staff_update(GameObject* obj)
             Sfx_PlayFromObject((int)obj, SFXTRIG_pk_staff_fizz);
         }
     }
-}
-
-void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int clearChildren)
-{
-    int player;
-    void* child;
-    int i;
-
-    player = (int)Obj_GetPlayerObject();
-    ObjHits_DisableObject(obj);
-    (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-    (obj)->anim.resetHitboxFlags = (u8)((obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
-
-    if (clearChildren != 0)
-    {
-        staffToggle((GameObject*)(player), 1);
-        playerPutAwayStaff((GameObject*)(player), 1);
-        for (i = 0; i < 10; i++)
-        {
-            child = *(void**)((char*)state + i * 4 + 56);
-            if (child != NULL)
-            {
-                ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                *(int*)((char*)state + i * 4 + 56) = 0;
-            }
-        }
-    }
-
-    state->phase = SHSTAFF_PHASE_DONE;
 }
 
 /* descriptor/ptr table auto 0x8032784c-0x803279a8 */

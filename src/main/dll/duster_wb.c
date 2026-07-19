@@ -317,6 +317,56 @@ void wbInit(u32 unused, int state)
 
 void mutatedEbaPlayMoveSfx(u32 obj, int state);
 
+void mutatedEbaPlayMoveSfx(u32 obj, int state)
+{
+    switch (((GameObject*)obj)->anim.currentMove)
+    {
+    case 5:
+        if (((DusterState*)state)->moveEventFired != 0)
+        {
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite);
+        }
+        break;
+    case 6:
+        if (((DusterState*)state)->moveEventFired != 0)
+        {
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite);
+        }
+        break;
+    case 7:
+        if (((DusterState*)state)->moveEventFired != 0)
+        {
+            if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2AF8)
+            {
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite);
+            }
+            else
+            {
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
+            }
+        }
+        break;
+    case 8:
+        if (((DusterState*)state)->moveEventFired != 0)
+        {
+            if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2AFC)
+            {
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
+            }
+            else if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2B00)
+            {
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_call1);
+            }
+            else
+            {
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
+            }
+        }
+        break;
+    }
+    return;
+}
+
 void mutatedEbaUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     int move;
@@ -400,56 +450,6 @@ void mutatedEbaUpdateIdle(u32 obj, int state)
         Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 8], *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
     }
     mutatedEbaPlayMoveSfx(obj, state);
-    return;
-}
-
-void mutatedEbaPlayMoveSfx(u32 obj, int state)
-{
-    switch (((GameObject*)obj)->anim.currentMove)
-    {
-    case 5:
-        if (((DusterState*)state)->moveEventFired != 0)
-        {
-            Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite);
-        }
-        break;
-    case 6:
-        if (((DusterState*)state)->moveEventFired != 0)
-        {
-            Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite);
-        }
-        break;
-    case 7:
-        if (((DusterState*)state)->moveEventFired != 0)
-        {
-            if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2AF8)
-            {
-                Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite);
-            }
-            else
-            {
-                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
-            }
-        }
-        break;
-    case 8:
-        if (((DusterState*)state)->moveEventFired != 0)
-        {
-            if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2AFC)
-            {
-                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
-            }
-            else if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2B00)
-            {
-                Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_call1);
-            }
-            else
-            {
-                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
-            }
-        }
-        break;
-    }
     return;
 }
 

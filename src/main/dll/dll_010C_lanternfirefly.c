@@ -148,6 +148,81 @@ void LanternFireFly_setScale(u8* obj, f32* vec)
     sub->animFrame = 4;
 }
 
+void fn_801868D0(GameObject* obj)
+{
+    typedef struct
+    {
+        s16 ang;
+        s16 b;
+        s16 c;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } LFRot;
+    LFRot rot;
+    LanternFireFlyState* state;
+    s16 angleDelta;
+    f32 fz;
+
+    state = obj->extra;
+    state->offX = lbl_803E3AB8;
+    state->offY = (f32)(int)randomGetRange(-state->wanderRange, state->wanderRange);
+    if (state->driftRangeZ < lbl_803E3ABC)
+    {
+        state->offZ = lbl_803E3AB8;
+    }
+    else
+    {
+        state->offZ = state->driftRangeZ - (f32)(int)randomGetRange(0x14, (s16)(int)state->driftRangeZ);
+    }
+    angleDelta = randomGetRange(3000, 5000);
+    state->randAngle += angleDelta;
+    fz = lbl_803E3AB8;
+    rot.x = fz;
+    rot.y = fz;
+    rot.z = fz;
+    rot.scale = lbl_803E3AA0;
+    rot.c = 0;
+    rot.b = 0;
+    rot.ang = state->randAngle;
+    vecRotateZXY(&rot.ang, &state->offX);
+}
+
+void fn_801869DC(GameObject* obj)
+{
+    typedef struct
+    {
+        u8 mode : 2;
+    } LFF2;
+    LanternFireFlyState* state;
+
+    state = obj->extra;
+    state->controlX[0] = state->controlX[1];
+    state->controlY[0] = state->controlY[1];
+    state->controlZ[0] = state->controlZ[1];
+    state->controlX[1] = state->controlX[2];
+    state->controlY[1] = state->controlY[2];
+    state->controlZ[1] = state->controlZ[2];
+    state->controlX[2] = state->controlX[3];
+    state->controlY[2] = state->controlY[3];
+    state->controlZ[2] = state->controlZ[3];
+    if (((LFF2*)&state->modeFlags)->mode == 1)
+    {
+        int player = (int)Obj_GetPlayerObject();
+        state->speed =
+            lbl_803E3AC4 * Vec_distance((void*)&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) +
+            lbl_803E3AC0;
+    }
+    else
+    {
+        state->speed = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
+    }
+    state->controlX[3] = state->offX;
+    state->controlY[3] = state->offY;
+    state->controlZ[3] = state->offZ;
+}
+
 int LanternFireFly_getExtraSize(void)
 {
     return 0x74;
@@ -338,81 +413,6 @@ void LanternFireFly_update(GameObject* obj)
 #undef LANTERN_SPAWN_FX
 #undef LANTERN_FIREFLY_IS_ACTIVE
 #undef LANTERN_FIREFLY_MODE
-
-void fn_801868D0(GameObject* obj)
-{
-    typedef struct
-    {
-        s16 ang;
-        s16 b;
-        s16 c;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } LFRot;
-    LFRot rot;
-    LanternFireFlyState* state;
-    s16 angleDelta;
-    f32 fz;
-
-    state = obj->extra;
-    state->offX = lbl_803E3AB8;
-    state->offY = (f32)(int)randomGetRange(-state->wanderRange, state->wanderRange);
-    if (state->driftRangeZ < lbl_803E3ABC)
-    {
-        state->offZ = lbl_803E3AB8;
-    }
-    else
-    {
-        state->offZ = state->driftRangeZ - (f32)(int)randomGetRange(0x14, (s16)(int)state->driftRangeZ);
-    }
-    angleDelta = randomGetRange(3000, 5000);
-    state->randAngle += angleDelta;
-    fz = lbl_803E3AB8;
-    rot.x = fz;
-    rot.y = fz;
-    rot.z = fz;
-    rot.scale = lbl_803E3AA0;
-    rot.c = 0;
-    rot.b = 0;
-    rot.ang = state->randAngle;
-    vecRotateZXY(&rot.ang, &state->offX);
-}
-
-void fn_801869DC(GameObject* obj)
-{
-    typedef struct
-    {
-        u8 mode : 2;
-    } LFF2;
-    LanternFireFlyState* state;
-
-    state = obj->extra;
-    state->controlX[0] = state->controlX[1];
-    state->controlY[0] = state->controlY[1];
-    state->controlZ[0] = state->controlZ[1];
-    state->controlX[1] = state->controlX[2];
-    state->controlY[1] = state->controlY[2];
-    state->controlZ[1] = state->controlZ[2];
-    state->controlX[2] = state->controlX[3];
-    state->controlY[2] = state->controlY[3];
-    state->controlZ[2] = state->controlZ[3];
-    if (((LFF2*)&state->modeFlags)->mode == 1)
-    {
-        int player = (int)Obj_GetPlayerObject();
-        state->speed =
-            lbl_803E3AC4 * Vec_distance((void*)&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) +
-            lbl_803E3AC0;
-    }
-    else
-    {
-        state->speed = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
-    }
-    state->controlX[3] = state->offX;
-    state->controlY[3] = state->offY;
-    state->controlZ[3] = state->offZ;
-}
 
 void LanternFireFly_init(GameObject* obj, int def)
 {
