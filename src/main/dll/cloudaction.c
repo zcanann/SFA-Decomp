@@ -57,7 +57,7 @@ f32 lbl_803DD1E8;
 f32 lbl_803DD1E4;
 f32 lbl_803DD1E0;
 
-f32 gCloudActionGlareQuadSize = 8000.0f;
+f32 gCloudActionGlareQuadSize[2] = {8000.0f, 0.0f};
 
 #define GXWGFifo (*(volatile PPCWGPipe*)0xCC008000)
 
@@ -306,18 +306,18 @@ void renderClouds(int a, int b, int c, int d)
         }
         if (getHudHiddenFrameCount() == 0)
         {
-            gCloudActionGlareQuadSize = randomGetRange(0x1f40, 0x2ee0);
+            gCloudActionGlareQuadSize[0] = randomGetRange(0x1f40, 0x2ee0);
         }
         GXBegin(GX_QUADS, GX_VTXFMT2, 4);
         c0 = 0.0f;
         c1 = 1.0f;
-        GXPos3f32(-gCloudActionGlareQuadSize, -gCloudActionGlareQuadSize, c0);
+        GXPos3f32(-gCloudActionGlareQuadSize[0], -gCloudActionGlareQuadSize[0], c0);
         GXTex2f32(c0, c0);
-        GXPos3f32(gCloudActionGlareQuadSize, -gCloudActionGlareQuadSize, c0);
+        GXPos3f32(gCloudActionGlareQuadSize[0], -gCloudActionGlareQuadSize[0], c0);
         GXTex2f32(c1, c0);
-        GXPos3f32(gCloudActionGlareQuadSize, gCloudActionGlareQuadSize, c0);
+        GXPos3f32(gCloudActionGlareQuadSize[0], gCloudActionGlareQuadSize[0], c0);
         GXTex2f32(c1, c1);
-        GXPos3f32(-gCloudActionGlareQuadSize, gCloudActionGlareQuadSize, c0);
+        GXPos3f32(-gCloudActionGlareQuadSize[0], gCloudActionGlareQuadSize[0], c0);
         GXTex2f32(c0, c1);
     }
 
