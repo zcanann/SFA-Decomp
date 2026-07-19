@@ -452,13 +452,13 @@ void firepipe_free(FirePipeObject* obj)
 void firepipe_render(FirePipeObject* obj, int p1, int p2, int p3, int p4, char visible)
 {
     FirePipeExtra* extra;
-    int glowLight;
+    ModelLightStruct* glowLight;
 
     extra = obj->extra;
-    glowLight = (int)extra->glowLight;
-    if ((u32)glowLight != 0 && *(u8*)(glowLight + 0x2f8) != 0 && *(u8*)(glowLight + 0x4c) != 0)
+    glowLight = extra->glowLight;
+    if (glowLight != NULL && glowLight->glowType != 0 && glowLight->enabled != 0)
     {
-        ((void (*)(void))queueGlowRender)();
+        queueGlowRender(glowLight);
     }
     if (visible != 0 && (u32)((extra->flags >> 1) & 1) != 0)
     {
