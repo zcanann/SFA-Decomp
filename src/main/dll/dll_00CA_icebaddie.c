@@ -285,13 +285,13 @@ int iceBaddie_stateHandlerB06(int obj, int state)
     voxmaps_updateRoutePath(&sub->routeNav, &sub->routeState);
     if (*(u8*)(route + 0x25) == 0)
     {
-        ((void (*)(int, int, f32, f32, f32, f32, f32))((void**)*gPlayerInterface)[7])(
-            obj, state, *(f32*)(route + 0x18), *(f32*)(route + 0x20), 0.0f, 0.0f, 60.0f);
+        (*gPlayerInterface)->moveTowardPoint((void*)obj, (void*)state, *(f32*)(route + 0x18),
+                                             *(f32*)(route + 0x20), 0.0f, 0.0f, 60.0f);
     }
     else
     {
-        ((void (*)(int, int, f32, f32, f32, f32, f32))((void**)*gPlayerInterface)[7])(
-            obj, state, *(f32*)(route + 0x18), *(f32*)(route + 0x20), 15.0f, 30.0f, 60.0f);
+        (*gPlayerInterface)->moveTowardPoint((void*)obj, (void*)state, *(f32*)(route + 0x18),
+                                             *(f32*)(route + 0x20), 15.0f, 30.0f, 60.0f);
     }
     if (((GroundBaddieState*)state)->baddie.stateTimer > 0x78 &&
         ((int (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[17])(obj, state, sub->aggroRange, 1) != 0)
@@ -1202,8 +1202,8 @@ void iceBaddie_updateTargetMotion(GameObject* obj, int sub, int state)
     }
     ((GroundBaddieState*)sub)->savedObjC0 = *(int*)&(obj)->pendingParentObj;
     *(int*)&(obj)->pendingParentObj = 0;
-    ((void (*)(int, int, f32, f32, u8*, u8*))((void**)*gPlayerInterface)[2])(
-        (int)obj, state, timeDelta, timeDelta, gIceBaddieStateHandlersA, gIceBaddieStateHandlersB);
+    (*gPlayerInterface)->update(obj, (void*)state, timeDelta, timeDelta, gIceBaddieStateHandlersA,
+                                gIceBaddieStateHandlersB);
     *(int*)&(obj)->pendingParentObj = ((GroundBaddieState*)sub)->savedObjC0;
 }
 
@@ -1324,8 +1324,8 @@ void iceBaddie_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, in
 
 void iceBaddie_hitDetect(int obj)
 {
-    ((void (*)(int, int, u8*))((void**)*gPlayerInterface)[3])(obj, *(int*)&((GameObject*)obj)->extra,
-                                                              gIceBaddieStateHandlersA);
+    (*gPlayerInterface)->updateVelocityState((void*)obj, ((GameObject*)obj)->extra,
+                                              gIceBaddieStateHandlersA);
 }
 
 void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
