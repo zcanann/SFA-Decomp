@@ -1400,7 +1400,7 @@ int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char ch
                     pb2 = &spheresB[hit * 4];
                     cx = pb2[1] + cr[2];
                     ObjHits_RecordPositionHit((GameObject*)objB, (GameObject*)objA,
-                                              (u8)stateSrc->hitVolumePriority, (u8)stateSrc->hitVolumeId, hit, cx,
+                                              stateSrc->hitVolumePriority, (u8)stateSrc->hitVolumeId, hit, cx,
                                               (modeB != 0) ? spheresA[idxA * 4 + 2] : pb2[2] + cr[3],
                                               pb2[3] + cr[4]);
                     result = 1;

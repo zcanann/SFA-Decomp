@@ -12840,7 +12840,7 @@ int fn_802AD2F4(GameObject* obj, int inner, int state)
             {
                 hv = 2;
             }
-            ObjHits_RecordPositionHit(obj, NULL, hv, 1, 0, v[3], v[4], v[5]);
+            ObjHits_RecordPositionHit(obj, NULL, (int)hv, 1, 0, v[3], v[4], v[5]);
             ((ByteFlags*)(((char*)inner) + 0x3f2))->b04 = 1;
         }
         if ((*((s8*)(&((PlayerState*)state)->baddie.moveDone))) != 0)
@@ -12940,7 +12940,7 @@ int fn_802AD2F4(GameObject* obj, int inner, int state)
             {
                 hv = 2;
             }
-            ObjHits_RecordPositionHit(obj, NULL, hv, 2, 0, v[3], v[4], v[5]);
+            ObjHits_RecordPositionHit(obj, NULL, (int)hv, 2, 0, v[3], v[4], v[5]);
             ((ByteFlags*)(((char*)inner) + 0x3f2))->b08 = 0;
             if (ps->waterDepth > lbl_803E7FC4)
             {

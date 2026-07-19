@@ -694,7 +694,7 @@ int ObjHits_RecordObjectHit(GameObject* obj, GameObject* hitObj, s8 priority, in
     return 1;
 }
 
-int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, int priority, int hitVolume, s8 sphereIndex,
+int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, s8 priority, int hitVolume, s8 sphereIndex,
                               f32 hitPosX, f32 hitPosY, f32 hitPosZ)
 {
     ObjAnimComponent* sourceObj;
@@ -703,7 +703,7 @@ int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, int priority,
     int hitSlot;
     u8 hitVolumeId;
 
-    if ((s8)priority == '\0')
+    if ((int)priority == '\0')
     {
         return 0;
     }

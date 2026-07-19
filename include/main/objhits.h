@@ -313,7 +313,7 @@ int ObjHits_IsObjectEnabled(ObjAnimComponent* obj);
 void ObjHits_SyncObjectPosition(GameObject* obj);
 void ObjHits_RefreshObjectState(GameObject* obj);
 void ObjHits_AddContactObject(GameObject* obj, GameObject* contactObj);
-int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, int priority, int hitVolume, s8 sphereIndex,
+int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, s8 priority, int hitVolume, s8 sphereIndex,
                               f32 hitPosX, f32 hitPosY, f32 hitPosZ);
 int ObjHits_RecordObjectHit(GameObject* obj, GameObject* hitObj, s8 priority, int hitVolume, s8 sphereIndex);
 int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume,
