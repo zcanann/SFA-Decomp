@@ -252,7 +252,7 @@ void DIMbosstonsil_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char 
 
             if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->glowType != 0 && gDIMbosstonsilLight->enabled != 0)
             {
-                ((void (*)(f32, f32, f32))modelLightStruct_setPosition)(pathPoint.x, pathPoint.y, pathPoint.z);
+                modelLightStruct_setPosition(gDIMbosstonsilLight, pathPoint.x, pathPoint.y, pathPoint.z);
                 queueGlowRender(gDIMbosstonsilLight);
             }
             break;

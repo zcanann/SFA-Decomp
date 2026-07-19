@@ -170,7 +170,8 @@ void DR_BarrelGr_update(GameObject* obj)
         {
             nearest = ((int (*)(int, void*, f32*))ObjGroup_FindNearestObject)(GUNPOWDERBARREL_UPDATE_OBJGROUP, obj, 0);
             if ((u32)nearest != 0 &&
-                ((f32 (*)(void*, int))Vec_xzDistance)((char*)obj + 24, nearest + 24) < gDrBarrelGenGrabRange &&
+                Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)nearest)->anim.worldPosX) <
+                    gDrBarrelGenGrabRange &&
                 ((GameObject*)nearest)->anim.localPosY < obj->anim.localPosY)
             {
                 traceTarget[0] = ((GameObject*)nearest)->anim.localPosX;
