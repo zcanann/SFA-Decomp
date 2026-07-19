@@ -2630,7 +2630,7 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
             u8* e = op + k * 8;
             if (*(int*)&((GameObject*)e)->anim.velocityX != -1)
             {
-                *(int*)&((GameObject*)e)->anim.velocityX = ((int*)*(u8**)(m + 0x20))[*(int*)&((GameObject*)e)->anim.velocityX];
+                *(int*)&((GameObject*)e)->anim.velocityX = ((int*)(u8*)((ModelFileHeader*)m)->textureIds)[*(int*)&((GameObject*)e)->anim.velocityX];
             }
             else
             {
@@ -2639,7 +2639,7 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
         }
         if (*(int*)(op + 0x34) != -1)
         {
-            *(int*)(op + 0x34) = ((int*)*(u8**)(m + 0x20))[*(int*)(op + 0x34)];
+            *(int*)(op + 0x34) = ((int*)(u8*)((ModelFileHeader*)m)->textureIds)[*(int*)(op + 0x34)];
         }
         else
         {
@@ -2647,7 +2647,7 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
         }
         if (*(int*)(op + 0x38) != -1)
         {
-            *(int*)(op + 0x38) = ((int*)*(u8**)(m + 0x20))[*(int*)(op + 0x38)];
+            *(int*)(op + 0x38) = ((int*)(u8*)((ModelFileHeader*)m)->textureIds)[*(int*)(op + 0x38)];
         }
         else
         {
@@ -2670,7 +2670,7 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
         }
         if (*(int*)(op + 0x18) != -1)
         {
-            *(int*)(op + 0x18) = ((int*)*(u8**)(m + 0x20))[*(int*)(op + 0x18)];
+            *(int*)(op + 0x18) = ((int*)(u8*)((ModelFileHeader*)m)->textureIds)[*(int*)(op + 0x18)];
         }
         else
         {
