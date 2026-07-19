@@ -59,6 +59,44 @@ static const f32 gWindLift107DefaultRadius = 50.0f;
 void* lbl_803DDAD4;
 void* lbl_803DDAD0;
 
+void fn_80185868(GameObject* obj, f32 arg)
+{
+
+    struct
+    {
+        u8 pad[8];
+        f32 val;
+        u8 pad2[12];
+    } stk;
+    WindLift107State* sub;
+    f32 fz;
+
+    sub = (obj)->extra;
+    stk.val = sub->radius;
+    (*(VtableFn*)(*(int*)lbl_803DDAD0 + 4))(obj, 0xf, 0, 2, -1, 0);
+    (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stk.pad, 2, -1, 0);
+    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_crthit6);
+    fz = lbl_803E3A58;
+    (obj)->anim.velocityX = fz;
+    (obj)->anim.velocityZ = fz;
+    sub->ventState = 0x32;
+    sub->liftTimer = 800;
+    sub->launchPhase = 0;
+    sub->rideState = 0;
+    (obj)->userData2 = 0;
+    (obj)->userData1 = 2;
+    ObjHits_EnableObject(obj);
+    ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
+    sub->spitTimer = 0;
+    if (arg < sub->radius)
+    {
+        ObjMsg_SendToObject(Obj_GetPlayerObject(), UNUSED107_MSG_PLAYER_BURST, obj, 0);
+    }
+    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, sub->radius, -5, 10);
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNUSED_HIT_VOLUME_SLOT, 1, 0);
+    ObjHits_EnableObject(obj);
+}
+
 int dll_107_getExtraSize_ret_44(void)
 {
     return 0x2c;
@@ -398,44 +436,6 @@ void dll_107_update(GameObject* obj)
             ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
         }
     }
-}
-
-void fn_80185868(GameObject* obj, f32 arg)
-{
-
-    struct
-    {
-        u8 pad[8];
-        f32 val;
-        u8 pad2[12];
-    } stk;
-    WindLift107State* sub;
-    f32 fz;
-
-    sub = (obj)->extra;
-    stk.val = sub->radius;
-    (*(VtableFn*)(*(int*)lbl_803DDAD0 + 4))(obj, 0xf, 0, 2, -1, 0);
-    (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stk.pad, 2, -1, 0);
-    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_crthit6);
-    fz = lbl_803E3A58;
-    (obj)->anim.velocityX = fz;
-    (obj)->anim.velocityZ = fz;
-    sub->ventState = 0x32;
-    sub->liftTimer = 800;
-    sub->launchPhase = 0;
-    sub->rideState = 0;
-    (obj)->userData2 = 0;
-    (obj)->userData1 = 2;
-    ObjHits_EnableObject(obj);
-    ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
-    sub->spitTimer = 0;
-    if (arg < sub->radius)
-    {
-        ObjMsg_SendToObject(Obj_GetPlayerObject(), UNUSED107_MSG_PLAYER_BURST, obj, 0);
-    }
-    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, sub->radius, -5, 10);
-    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNUSED_HIT_VOLUME_SLOT, 1, 0);
-    ObjHits_EnableObject(obj);
 }
 
 typedef struct WindLift107Placement
