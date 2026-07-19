@@ -383,12 +383,12 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                         if (((GameObject*)obj)->anim.seqId == EDIBLEMUSHROOM_OBJ_WHITE)
                         {
                             ((EdibleMushroomState*)state)->pickupMsgBitId = 0x18a;
-                            itemPickupDoParticleFxLegacy(obj, 1.0f, 0xff, 0x28);
+                            itemPickupDoParticleFx(obj, 1.0f, 0xff, 0x28);
                         }
                         else
                         {
                             ((EdibleMushroomState*)state)->pickupMsgBitId = 0x119;
-                            itemPickupDoParticleFxLegacy(obj, 1.0f, 6, 0x28);
+                            itemPickupDoParticleFx(obj, 1.0f, 6, 0x28);
                         }
                         ((EdibleMushroomState*)state)->pickupMsgValue = 0;
                         ((EdibleMushroomState*)state)->pickupMsgDelay = 0.4f;
@@ -613,11 +613,11 @@ void EdibleMushroom_update(u8* self)
             mainSetBits(GAMEBIT_ITEM_TrickyFood_GrabInProgress, 0);
             if (((GameObject*)self)->anim.seqId == EDIBLEMUSHROOM_OBJ_WHITE)
             {
-                itemPickupDoParticleFxLegacy(self, 1.0f, 0xFF, 0x28);
+                itemPickupDoParticleFx(self, 1.0f, 0xFF, 0x28);
             }
             else
             {
-                itemPickupDoParticleFxLegacy(self, 1.0f, 6, 0x28);
+                itemPickupDoParticleFx(self, 1.0f, 6, 0x28);
             }
             Sfx_PlayFromObject((u32)self, SFXTRIG_cam90_c);
         }

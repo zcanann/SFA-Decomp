@@ -741,7 +741,7 @@ void Scarab_update(GameObject* obj)
                         ObjHits_DisableObject(obj);
                     }
                     Sfx_PlayFromObject((int)obj, (u16)state->pickupSfx);
-                    itemPickupDoParticleFxLegacy(obj, lbl_803E3A00, state->particleId, 0x28);
+                    itemPickupDoParticleFx(obj, lbl_803E3A00, state->particleId, 0x28);
                 }
             }
             if (state->fleeTimer == 0 && obj->anim.seqId == SCARAB_OBJ_RAIN)

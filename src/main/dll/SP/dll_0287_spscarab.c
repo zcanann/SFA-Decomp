@@ -132,7 +132,7 @@ void SPScarab_update(int obj)
         100.0f)
     {
         Sfx_PlayFromObject(obj, (u16)((SpscarabState*)state)->sfxId);
-        itemPickupDoParticleFxLegacy(obj, 1.0f, ((SpscarabState*)state)->mode, 0x28);
+        itemPickupDoParticleFx((void*)obj, 1.0f, ((SpscarabState*)state)->mode, 0x28);
         ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | SPSCARAB_OBJFLAG_UPDATE_DISABLED;
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
 

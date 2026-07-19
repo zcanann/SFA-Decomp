@@ -105,7 +105,7 @@ static inline void magicgem_collect(GameObject* obj, MagicGemState* state, int p
 {
     MagicgemObjectDef* ref = (MagicgemObjectDef*)obj->anim.modelInstance->extraSetupData;
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    itemPickupDoParticleFxLegacy((int)obj, MAGICGEM_RENDER_SCALE, state->mode, 0x28);
+    itemPickupDoParticleFx(obj, MAGICGEM_RENDER_SCALE, state->mode, 0x28);
     ObjHits_DisableObject(obj);
     Sfx_PlayFromObject((int)obj, (u16)state->sfxId);
     Sfx_StopFromObject((int)obj, SFXTRIG_rfall5_c);

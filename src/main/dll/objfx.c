@@ -1285,12 +1285,12 @@ void projectileParticleFxFn_80099660(void* obj, f32 scaleArg, int mode)
     (*gPartfxInterface)->spawnObject(obj, 0x79f, NULL, 1, -1, &tailScale);
 }
 
-void itemPickupDoParticleFx(void* obj, int mode, u8 count, f32 fval)
+void itemPickupDoParticleFx(void* obj, f32 scale, int mode, u8 count)
 {
     ObjFxParticleParams params;
     int i;
 
-    params.scale = fval;
+    params.scale = scale;
     if (mode == 0)
     {
         return;

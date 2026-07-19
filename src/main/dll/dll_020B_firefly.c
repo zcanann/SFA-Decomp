@@ -291,7 +291,7 @@ void firefly_update(GameObject* obj)
             state->despawnTimer -= timeDelta;
             if (state->despawnTimer > lbl_803DC128) /* 170 */
             {
-                itemPickupDoParticleFxLegacy(obj, 2.0f, 4, 5);
+                itemPickupDoParticleFx(obj, 2.0f, 4, 5);
             }
             if (state->despawnTimer <= 0.0f)
             {

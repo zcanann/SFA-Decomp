@@ -275,7 +275,7 @@ void appleontree_handleCollectableHit(GameObject* obj)
     else
     {
         playerAddHealth(player, ((AppleOnTreeState*)state)->healthRestore);
-        itemPickupDoParticleFxLegacy((int)obj, lbl_803E37C8, 0xff, 0x28);
+        itemPickupDoParticleFx(obj, lbl_803E37C8, 0xff, 0x28);
         Sfx_PlayFromObject((int)obj, SFXTRIG_cam90_c);
         appleontree_markFallen(obj);
     }
@@ -560,7 +560,7 @@ void AppleOnTree_update(int objArg)
             case APPLEONTREE_MSG_PICKUP:
             {
                 playerAddHealth(Obj_GetPlayerObject(), (int)((AppleOnTreeState*)state)->healthRestore);
-                itemPickupDoParticleFxLegacy((int)obj, lbl_803E37C8, 0xff, 0x28);
+                itemPickupDoParticleFx((void*)obj, lbl_803E37C8, 0xff, 0x28);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_cam90_c);
                 val = *(int*)&((GameObject*)obj)->extra;
                 if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)

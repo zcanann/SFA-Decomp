@@ -24,7 +24,7 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 ch
 void objfx_spawnBoxBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chance, f32 scaleX, f32 scaleY,
                          f32 scaleZ, void* origin, int flags);
 void projectileParticleFxFn_80099660(void* obj, f32 scale, int mode);
-void itemPickupDoParticleFx(void* obj, int mode, u8 count, f32 scale);
+void itemPickupDoParticleFx(void* obj, f32 scale, int mode, u8 count);
 #if defined(OBJFX_FN_80098B18_BYTE_ARGS_LEGACY)
 void fn_80098B18(int obj, f32 scale, u8 type, u8 count, int mode, f32* offset);
 #else
@@ -54,9 +54,6 @@ void spawnExplosion(GameObject* source, f32 scale, u8 kind, u8 flag4, u8 flag8, 
     ((void (*)(void*, int, f32, int, int, int, f32, f32, f32, void*, int))objfx_spawnArcedBurst)(                \
         (void*)(obj), (idx), (scale), (kind), (mode), (chance), (angleBase), (angleLow), (angleHigh),             \
         (void*)(origin), (flags))
-
-#define itemPickupDoParticleFxLegacy(obj, scale, mode, count)                                                     \
-    ((void (*)(void*, f32, int, int))itemPickupDoParticleFx)((void*)(obj), (scale), (mode), (count))
 
 #define fn_80098B18Legacy(obj, scale, type, count, mode, offset)                                                   \
     ((void (*)(void*, f32, int, int, int, void*))fn_80098B18)(                                                    \
