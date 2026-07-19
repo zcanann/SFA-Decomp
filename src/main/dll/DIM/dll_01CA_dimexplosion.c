@@ -414,35 +414,38 @@ void explosion_update(GameObject* obj)
                 if (((ExplosionDebris*)cursor)->generation < 5)
                 {
                     if ((f32)((ExplosionDebris*)cursor)->age / (f32)((ExplosionDebris*)cursor)->lifetime <
-                            lbl_803E4998 &&
-                        (((ExplosionDebris*)cursor)->spawnTimer -= framesThisStep,
-                         ((ExplosionDebris*)cursor)->spawnTimer <= 0))
+                        lbl_803E4998)
                     {
-                        int st2;
-                        u8 gen;
-                        f32 sp2;
-                        f32 sv;
-                        gen = ((ExplosionDebris*)cursor)->generation;
-                        sp2 = ((ExplosionDebris*)cursor)->speed;
-                        st2 = *(int*)&(obj)->extra;
-                        vpos[0] = ((ExplosionDebris*)cursor)->scale *
-                                  (lbl_803E495C * (f32)(int)randomGetRange(-5, 3) + lbl_803E492C);
-                        vpos[1] = lbl_803E4960;
-                        vpos[2] = lbl_803E4960;
-                        PSMTXRotRad(m, 0x7a,
-                                    (f32)(lbl_803E4968 * (f64)((f32)(int)randomGetRange(0, 0xffff) / lbl_803E4970)));
-                        PSMTXConcat(Camera_GetInverseViewRotationMatrix(), m, m);
-                        PSMTXMultVecSR(m, vpos, vpos);
-                        vpos[0] += ((ExplosionDebris*)cursor)->posX;
-                        vpos[1] += ((ExplosionDebris*)cursor)->posY;
-                        vpos[2] += ((ExplosionDebris*)cursor)->posZ;
-                        sv = sp2 * (f32)(int)randomGetRange(0xc0, 0x100);
-                        sv = sv * lbl_803E4974;
-                        if (((ExplosionState*)st2)->flameCount < 0x32)
+                        ((ExplosionDebris*)cursor)->spawnTimer -= framesThisStep;
+                        if (((ExplosionDebris*)cursor)->spawnTimer <= 0)
                         {
-                            explosion_spawnFlame(obj, (u8)(gen + 1), sv, vpos[0], vpos[1], vpos[2]);
+                            int st2;
+                            u8 gen;
+                            f32 sp2;
+                            f32 sv;
+                            gen = ((ExplosionDebris*)cursor)->generation;
+                            sp2 = ((ExplosionDebris*)cursor)->speed;
+                            st2 = *(int*)&(obj)->extra;
+                            vpos[0] = ((ExplosionDebris*)cursor)->scale *
+                                      (lbl_803E495C * (f32)(int)randomGetRange(-5, 3) + lbl_803E492C);
+                            vpos[1] = lbl_803E4960;
+                            vpos[2] = lbl_803E4960;
+                            PSMTXRotRad(
+                                m, 0x7a,
+                                (f32)(lbl_803E4968 * (f64)((f32)(int)randomGetRange(0, 0xffff) / lbl_803E4970)));
+                            PSMTXConcat(Camera_GetInverseViewRotationMatrix(), m, m);
+                            PSMTXMultVecSR(m, vpos, vpos);
+                            vpos[0] += ((ExplosionDebris*)cursor)->posX;
+                            vpos[1] += ((ExplosionDebris*)cursor)->posY;
+                            vpos[2] += ((ExplosionDebris*)cursor)->posZ;
+                            sv = sp2 * (f32)(int)randomGetRange(0xc0, 0x100);
+                            sv = sv * lbl_803E4974;
+                            if (((ExplosionState*)st2)->flameCount < 0x32)
+                            {
+                                explosion_spawnFlame(obj, (u8)(gen + 1), sv, vpos[0], vpos[1], vpos[2]);
+                            }
+                            ((ExplosionDebris*)cursor)->spawnTimer = ((ExplosionDebris*)cursor)->spawnInterval;
                         }
-                        ((ExplosionDebris*)cursor)->spawnTimer = ((ExplosionDebris*)cursor)->spawnInterval;
                     }
                 }
             }
@@ -675,8 +678,9 @@ void explosion_init(GameObject* obj, int def)
             else
             {
                 f32 mag = (f32)(int)randomGetRange(0x14, 0x28) * lbl_803E49C0;
-                u8 idx = i % 4;
+                u8 idx;
                 mag = lbl_803E49BC * mag + lbl_803E49BC;
+                idx = i % 4;
                 vsp[0] = mag * gExplosionSpreadDirs[idx * 3];
                 vsp[1] = mag * gExplosionSpreadDirs[idx * 3 + 1];
                 vsp[2] = mag * gExplosionSpreadDirs[idx * 3 + 2];
