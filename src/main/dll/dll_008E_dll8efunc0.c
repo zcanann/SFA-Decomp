@@ -23,7 +23,7 @@
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL8E_EFFECT_ID 0x26a
 
-extern u8 gDll8EEffectHwParams[];
+extern s16 gDll8EEffectHwParams[];
 extern u8 gDll8EEffectVtxColorTable[];
 #include "main/dll/dll_008F_dll8ffunc0.h"
 
@@ -35,7 +35,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     FbBuf buf;
     FbCmd* p;
     FbCmd* e = buf.entries;
-    u8* base;
+    s16* base;
     f32 rz;
     f32 ry;
 
@@ -158,13 +158,13 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v5b = 0;
     buf.count = (FbCmd*)((u8*)p + 0xd8) - e;
     base = gDll8EEffectHwParams;
-    buf.hw[0] = *(s16*)(base + 0);
-    buf.hw[1] = *(s16*)(base + 2);
-    buf.hw[2] = *(s16*)(base + 4);
-    buf.hw[3] = *(s16*)(base + 6);
-    buf.hw[4] = *(s16*)(base + 8);
-    buf.hw[5] = *(s16*)(base + 0xa);
-    buf.hw[6] = *(s16*)(base + 0xc);
+    buf.hw[0] = base[0];
+    buf.hw[1] = base[1];
+    buf.hw[2] = base[2];
+    buf.hw[3] = base[3];
+    buf.hw[4] = base[4];
+    buf.hw[5] = base[5];
+    buf.hw[6] = base[6];
     buf.cmds = (FbCmd*)((u8*)&buf + 0x60);
     buf.flags = 0x4000410;
     buf.flags |= flags;
@@ -203,7 +203,7 @@ void dll_8E_func00_nop(void)
 
 u8 gDll8EEffectVtxColorTable[32] = {0, 0,  0, 230, 5, 20, 0, 0, 0, 31, 0, 0,  255, 26, 5, 20,
                                     0, 31, 0, 31,  0, 0,  0, 0, 0, 0,  0, 15, 0,   16, 0, 0};
-u8 gDll8EEffectHwParams[16] = {0, 0, 0, 140, 0, 140, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+s16 gDll8EEffectHwParams[8] = {0, 140, 140, 0, 0, 0, 0, 0};
 
 /* descriptor/ptr table auto 0x80316c70-0x80316e30 */
 u32 lbl_80316C70[8] = {

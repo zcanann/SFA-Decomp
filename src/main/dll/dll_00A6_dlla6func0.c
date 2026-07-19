@@ -29,7 +29,7 @@ u8 gDllA6EffectTex[8] = {0, 0, 0, 1, 0, 2, 0, 0};
 #define DLLA6_EFFECT_ID 0x26a
 
 extern u8 lbl_80318DF0[];
-extern u8 gDllA6EffectHwWords[];
+extern s16 gDllA6EffectHwWords[];
 
 void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -151,13 +151,13 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
     buf.v5a = 0;
     buf.v5b = 0;
     buf.count = &p[9] - e;
-    buf.hw[0] = *(s16*)&gDllA6EffectHwWords[0];
-    buf.hw[1] = *(s16*)&gDllA6EffectHwWords[2];
-    buf.hw[2] = *(s16*)&gDllA6EffectHwWords[4];
-    buf.hw[3] = *(s16*)&gDllA6EffectHwWords[6];
-    buf.hw[4] = *(s16*)&gDllA6EffectHwWords[8];
-    buf.hw[5] = *(s16*)&gDllA6EffectHwWords[10];
-    buf.hw[6] = *(s16*)&gDllA6EffectHwWords[12];
+    buf.hw[0] = gDllA6EffectHwWords[0];
+    buf.hw[1] = gDllA6EffectHwWords[1];
+    buf.hw[2] = gDllA6EffectHwWords[2];
+    buf.hw[3] = gDllA6EffectHwWords[3];
+    buf.hw[4] = gDllA6EffectHwWords[4];
+    buf.hw[5] = gDllA6EffectHwWords[5];
+    buf.hw[6] = gDllA6EffectHwWords[6];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     fl = 0x4000400;
     buf.flags = fl;
@@ -198,8 +198,7 @@ void dll_A6_func00_nop(void)
 {
 }
 
-u8 gDllA6EffectHwWords[] = {0x00, 0x00, 0x00, 0x46, 0x00, 0x46, 0x00, 0x00,
-                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+s16 gDllA6EffectHwWords[8] = {0, 0x46, 0x46, 0, 0, 0, 0, 0};
 
 void* lbl_80318E20[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_A6_func00_nop, dll_A6_func01_nop, (void*)0x00000000, dll_A6_func03};
