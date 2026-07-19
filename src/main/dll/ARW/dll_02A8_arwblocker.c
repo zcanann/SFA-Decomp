@@ -15,7 +15,7 @@
 #include "main/vecmath.h"
 #include "main/dll/ARW/dll_02A8_arwblocker.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 /* placement sequenceMode: which object sequence the blocker fires on approach */
@@ -55,7 +55,7 @@ void ARWBlocker_free(void)
 
 void ARWBlocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void ARWBlocker_hitDetect(void)

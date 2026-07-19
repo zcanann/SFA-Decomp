@@ -22,7 +22,7 @@
 #include "main/object_api.h"
 #include "main/object_descriptor.h"
 #include "main/vecmath.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 #define ARW_PROXIMITY_TAUNT_DISTANCE 2700.0f
 #define ARW_PROXIMITY_ACTIVATE_DISTANCE 5120.0f
@@ -67,7 +67,7 @@ void arwproximit_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
     {
         queueGlowRender(state->light);
     }
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void arwproximit_hitDetect(void)

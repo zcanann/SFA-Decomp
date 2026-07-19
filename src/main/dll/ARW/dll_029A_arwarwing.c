@@ -69,7 +69,7 @@ GameObject* gArwing;
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 u8 gArwingCourseMapIds[8] = {7, 0x13, 0x0D, 0x0C, 2, 0, 0, 0};
 
@@ -1689,7 +1689,7 @@ void arwarwing_render(GameObject* obj, int p2, int p3, int p4, int p5)
         (obj)->anim.rotY = (s16)((obj)->anim.rotY + dx);
         (obj)->anim.rotZ = (s16)((obj)->anim.rotZ + dy);
     }
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     if (state->hitShake != 0)
     {
         (obj)->anim.rotY = (s16)((obj)->anim.rotY - dx);

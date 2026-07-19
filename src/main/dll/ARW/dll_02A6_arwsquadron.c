@@ -22,7 +22,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define ARW_SQUADRON_PARTFX_SMOKE 0x7d0 /* damage smoke effect (pfx.f8 = damageSmokeScale) */
@@ -416,7 +416,7 @@ ObjectDescriptor gARWSquadronObjDescriptor = {
 };
 void ARWSquadron_render(int obj, int p2, int p3, int p4, int p5)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void ARWSquadron_hitDetect(void)

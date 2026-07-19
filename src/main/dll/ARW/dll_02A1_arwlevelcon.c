@@ -27,7 +27,7 @@
 #include "main/game_object.h"
 #include "main/gamebit_ids.h"
 #include "main/audio/music_trigger_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 
 /* env effects co-activated once with the sky preset; opaque distinct roles */
@@ -127,7 +127,7 @@ void arwlevelcon_free(void)
 
 void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void arwlevelcon_hitDetect(void)

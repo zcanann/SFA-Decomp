@@ -27,7 +27,7 @@
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 #define ARW_ARWING_BOMB_OBJ 0x605 /* retail OBJECTS.bin "ARWArwingBo", DLL 0x29C */
 
@@ -83,7 +83,7 @@ void ARWBombColl_free(void)
 
 void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, sRenderScale);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, sRenderScale);
 }
 
 

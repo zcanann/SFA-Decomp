@@ -21,7 +21,7 @@
 #include "main/dll/ARW/dll_02A5_arwgenerato.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 /* Spawn-setup buffer for a squadron ship: ObjPlacement head (pos/color) plus
  * the class-specific rotation bytes the parent seeds (all 0) at +0x18. */
@@ -119,7 +119,7 @@ void arwgenerato_free(void)
 
 void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void arwgenerato_hitDetect(void)
