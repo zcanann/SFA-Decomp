@@ -1681,18 +1681,19 @@ void allocLotsOfTextures(void)
             j = 0;
             fi = i - lbl_803DEDF8;
             fi2 = (f32)(i + 1) - lbl_803DEDF8;
-            rc = fi * lbl_803DEDFC;
-            rc2 = fi2 * lbl_803DEDFC;
             for (; j < 0x40; j++)
             {
                 f32 cc = (f32)j - lbl_803DEDF8;
                 f32 d1, d2, cc2, d3, n1, a, b;
                 f64 n2, n3;
+                rc = fi * lbl_803DEDFC;
+                rc2 = fi2 * lbl_803DEDFC;
                 cc = cc * lbl_803DEDFC;
                 d1 = sqrtf(cc * cc + rc * rc);
                 d2 = sqrtf(cc * cc + rc2 * rc2);
                 cc2 = (f32)(j + 1) - lbl_803DEDF8;
                 cc2 = cc2 * lbl_803DEDFC;
+                rc = fi * lbl_803DEDFC;
                 d3 = sqrtf(rc * rc + cc2 * cc2);
                 n1 = -mathCosfHighPrecision(lbl_803DEE00 * d1);
                 n2 = __fabs(mathCosfHighPrecision(lbl_803DEE00 * d2));
@@ -1716,14 +1717,14 @@ void allocLotsOfTextures(void)
                 lowoff = (j & 3) * 2;
                 fj = j - lbl_803DEDF8;
                 fj2 = (f32)(j + 1) - lbl_803DEDF8;
-                rc = fj * lbl_803DEDFC;
-                rc2 = fj2 * lbl_803DEDFC;
                 for (; i < 0x40; i++)
                 {
                     int dst = gNewShadowBumpTexture + lowoff;
                     f32 cc, d1, d2, cc2, d3, n1, n2, n3, a, b;
                     f32 c;
                     int bi, ci, ai;
+                    rc = fj * lbl_803DEDFC;
+                    rc2 = fj2 * lbl_803DEDFC;
                     dst += rowoff;
                     dst += (i & 3) * 8;
                     dst += (i >> 2) * 0x200;
@@ -1733,6 +1734,7 @@ void allocLotsOfTextures(void)
                     d2 = sqrtf(cc * cc + rc2 * rc2);
                     cc2 = (f32)(i + 1) - lbl_803DEDF8;
                     cc2 = cc2 * lbl_803DEDFC;
+                    rc = fj * lbl_803DEDFC;
                     d3 = sqrtf(rc * rc + cc2 * cc2);
                     n1 = -mathCosfHighPrecision(lbl_803DEE00 * d1);
                     n2 = -mathCosfHighPrecision(lbl_803DEE00 * d2);
