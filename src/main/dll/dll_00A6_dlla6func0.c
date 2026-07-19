@@ -30,20 +30,6 @@ u8 gDllA6EffectTex[8] = {0, 0, 0, 1, 0, 2, 0, 0};
 
 extern u8 lbl_80318DF0[];
 extern u8 gDllA6EffectHwWords[];
-extern f32 lbl_803E1530;
-extern f32 lbl_803E1534;
-extern f32 lbl_803E1538;
-extern f32 lbl_803E153C;
-extern f32 lbl_803E1540;
-extern f32 lbl_803E1544;
-extern f32 lbl_803E1548;
-extern f32 lbl_803E154C;
-extern f32 lbl_803E1550;
-extern f32 lbl_803E1554;
-extern f32 lbl_803E1558;
-extern f32 lbl_803E155C;
-extern f32 lbl_803E1560;
-extern f32 lbl_803E1564;
 
 void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -82,83 +68,83 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
     p[0].flags = 0;
     p[0].tex = NULL;
     p[0].mode = 0x80;
-    p[0].x = lbl_803E1530;
+    p[0].x = 0.0f;
     p[0].y = yr;
     p[0].z = zr;
     p[1].layer = 0;
     p[1].flags = 3;
     p[1].tex = gDllA6EffectTex;
     p[1].mode = 4;
-    p[1].x = lbl_803E1530;
-    p[1].y = lbl_803E1530;
-    p[1].z = lbl_803E1530;
+    p[1].x = 0.0f;
+    p[1].y = 0.0f;
+    p[1].z = 0.0f;
     p[2].layer = 0;
     p[2].flags = 3;
     p[2].tex = gDllA6EffectTex;
     p[2].mode = 2;
-    p[2].x = lbl_803E1534;
-    p[2].y = lbl_803E153C * (f32)(int)randomGetRange(0, 0x19) + lbl_803E1538;
-    p[2].z = lbl_803E153C * (f32)(int)randomGetRange(0, 10) + lbl_803E1540;
+    p[2].x = 1.0f;
+    p[2].y = 0.01f * (f32)(int)randomGetRange(0, 0x19) + 0.25f;
+    p[2].z = 0.01f * (f32)(int)randomGetRange(0, 10) + 0.4f;
     p[3].layer = 1;
     p[3].flags = 3;
     p[3].tex = gDllA6EffectTex;
     p[3].mode = 4;
     if (randomGetRange(0, 10) == 0)
     {
-        p[3].x = lbl_803E1544 + (f32)(int)randomGetRange(0, 0x1e);
+        p[3].x = 145.0f + (f32)(int)randomGetRange(0, 0x1e);
     }
     else
     {
-        p[3].x = lbl_803E1548 + (f32)(int)randomGetRange(0, 10);
+        p[3].x = 25.0f + (f32)(int)randomGetRange(0, 10);
     }
-    p[3].y = lbl_803E1530;
-    p[3].z = lbl_803E1530;
+    p[3].y = 0.0f;
+    p[3].z = 0.0f;
     p[4].layer = 1;
     p[4].flags = 0;
     p[4].tex = NULL;
     p[4].mode = 0x80;
-    p[4].x = lbl_803E1530;
-    p[4].y = lbl_803E1530;
+    p[4].x = 0.0f;
+    p[4].y = 0.0f;
     p[4].z = (f32)(int)randomGetRange(0, 0xfffe);
     p[5].layer = 1;
     p[5].flags = 3;
     p[5].tex = gDllA6EffectTex;
     p[5].mode = 2;
-    p[5].x = lbl_803E154C;
-    p[5].y = lbl_803E1550;
-    p[5].z = lbl_803E1554;
+    p[5].x = 9.0f;
+    p[5].y = 12.0f;
+    p[5].z = 21.0f;
     p[6].layer = 2;
     p[6].flags = 0;
     p[6].tex = NULL;
     p[6].mode = 0x80;
-    p[6].x = lbl_803E1530;
-    p[6].y = lbl_803E1530;
+    p[6].x = 0.0f;
+    p[6].y = 0.0f;
     p[6].z = (f32)(int)randomGetRange(0, 0xfffe);
     p[7].layer = 2;
     p[7].flags = 3;
     p[7].tex = gDllA6EffectTex;
     p[7].mode = 4;
-    p[7].x = lbl_803E1530;
-    p[7].y = lbl_803E1530;
-    p[7].z = lbl_803E1530;
+    p[7].x = 0.0f;
+    p[7].y = 0.0f;
+    p[7].z = 0.0f;
     p[8].layer = 2;
     p[8].flags = 3;
     p[8].tex = gDllA6EffectTex;
     p[8].mode = 2;
-    p[8].x = lbl_803E1558;
-    p[8].y = lbl_803E155C;
-    p[8].z = lbl_803E1560;
+    p[8].x = 0.1f;
+    p[8].y = 14.0f;
+    p[8].z = 0.05f;
 
     buf.v58 = 0;
     buf.ctx = (int)sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E1530;
-    buf.pos[1] = lbl_803E1530;
-    buf.pos[2] = lbl_803E1530;
-    buf.col[0] = lbl_803E1530;
-    buf.col[1] = lbl_803E1530;
-    buf.col[2] = lbl_803E1530;
-    buf.scale = lbl_803E1564;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = 0.0f;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 4.0f;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 3;
@@ -181,12 +167,12 @@ void dll_A6_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
     {
         if (sourceObj != 0 && posSource != 0)
         {
-            buf.pos[0] =
-                lbl_803E1530 + (((GameObject*)sourceObj)->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX);
-            buf.pos[1] =
-                lbl_803E1530 + (((GameObject*)sourceObj)->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY);
-            buf.pos[2] =
-                lbl_803E1530 + (((GameObject*)sourceObj)->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ);
+            buf.pos[0] +=
+                ((GameObject*)sourceObj)->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] +=
+                ((GameObject*)sourceObj)->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] +=
+                ((GameObject*)sourceObj)->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ;
         }
         else if (sourceObj != 0)
         {
