@@ -1283,6 +1283,7 @@ main/dll/dll_003C_tumbleweedbush.c:
 	.data       start:0x8031C1A8 end:0x8031C508
 	.bss        start:0x803A9458 end:0x803A9DB8
 	.sbss       start:0x803DD8F8 end:0x803DD918
+	.sdata2     start:0x803E21E0 end:0x803E21E8
 
 main/dll/dll_003D_titlemenuitem.c:
 	.text       start:0x80131540 end:0x80132008
