@@ -129,8 +129,6 @@ void TrickyWarp_free(GameObject* obj);
 void TrickyWarp_update(GameObject* obj);
 int fn_8017FFD0(GameObject* obj, TrickyWarpState* state);
 void TrickyWarp_init(s16* obj, u8* param_2);
-void TrickyGuard_update();
-void TrickyGuard_init(s16* obj, u8* param_2);
 void StayPoint_update(int obj);
 void StayPoint_init(u16* obj);
 int duster_getExtraSize(void);

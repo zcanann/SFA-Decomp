@@ -16,20 +16,11 @@
  *
  * The descriptor follows the implementation below.
  */
-#include "main/game_object.h"
+#include "main/dll/dll_0101_trickyguard.h"
+#include "main/object_descriptor.h"
 #include "main/objprint_render_api.h"
 #include "main/object.h"
-#include "main/dll/dll_00FE_magicplant.h"
 #include "main/gamebits.h"
-
-typedef struct TrickyguardPlacement
-{
-    u8 pad00[0x18];
-    u8 yawByte; /* 0x18 */
-    u8 pad19;
-    s16 armingGameBit; /* 0x1A: -1 = always armed */
-    u8 pad1C[0x20 - 0x1C];
-} TrickyguardPlacement;
 
 /* Tricky vtable slots reached through (tricky + 0x68). */
 #define TRICKY_VTBL_IS_BUSY 0x11
@@ -37,37 +28,37 @@ typedef struct TrickyguardPlacement
 
 #define TRICKYGUARD_OBJECT_FLAG 0x4000
 
-void TrickyGuard_update(int* obj)
+void TrickyGuard_update(GameObject* obj)
 {
-    int* tricky;
-    TrickyguardPlacement* placement = (TrickyguardPlacement*)((GameObject*)obj)->anim.placementData;
-    ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+    GameObject* tricky;
+    TrickyGuardPlacement* placement = (TrickyGuardPlacement*)obj->anim.placementData;
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     if (placement->armingGameBit != -1)
     {
         if ((u32)mainGetBit(placement->armingGameBit) == 0)
             return;
     }
-    tricky = (int*)getTrickyObject();
+    tricky = getTrickyObject();
     if (tricky == NULL)
         return;
-    if ((u8)((int (*)(int*))(**(int***)((char*)tricky + 0x68))[TRICKY_VTBL_IS_BUSY])(tricky) != 0)
+    if ((u8)((int (*)(GameObject*))(**(int***)((char*)tricky + 0x68))[TRICKY_VTBL_IS_BUSY])(tricky) != 0)
         return;
-    if ((((GameObject*)obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
+    if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
     {
-        ((void (*)(int*, int*, int, int))(**(int***)((char*)tricky + 0x68))[TRICKY_VTBL_GUARD])(tricky, obj, 1, 3);
+        ((void (*)(GameObject*, GameObject*, int, int))(**(int***)((char*)tricky + 0x68))[TRICKY_VTBL_GUARD])(
+            tricky, obj, 1, 3);
     }
-    ((GameObject*)obj)->anim.resetHitboxFlags =
-        (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
-    objRenderFn_80041018((GameObject*)obj);
+    obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
+    objRenderFn_80041018(obj);
 }
 
-void TrickyGuard_init(s16* obj, u8* placement)
+void TrickyGuard_init(GameObject* obj, TrickyGuardPlacement* placement)
 {
     u32 flags;
-    *obj = (s16)((u32)((TrickyguardPlacement*)placement)->yawByte << 8);
-    flags = ((GameObject*)obj)->objectFlags;
+    obj->anim.rotX = (s16)((u32)placement->yawByte << 8);
+    flags = obj->objectFlags;
     flags |= TRICKYGUARD_OBJECT_FLAG;
-    ((GameObject*)obj)->objectFlags = flags;
+    obj->objectFlags = flags;
 }
 
 ObjectDescriptor gTrickyGuardObjDescriptor = {
