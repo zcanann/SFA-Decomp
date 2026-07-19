@@ -427,7 +427,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             snowworm_applyReactionState((int*)obj, (int*)state);
             break;
         case 0x4ac:
-            fn_80156DA0((GameObject*)(obj), state);
+            hoodedZyck_updateIdle((GameObject*)(obj), state);
             break;
         case 0x427:
             fn_8014FF20((int)obj, state);

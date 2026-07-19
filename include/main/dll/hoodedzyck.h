@@ -3,7 +3,7 @@
 
 #include "main/game_object.h"
 
-void fn_80156DA0(GameObject* obj, int state);
+void hoodedZyck_updateIdle(GameObject* obj, int state);
 void hoodedZyck_updateB(s16* obj, u8* state);
 void hoodedZyck_update(s16* obj, u8* state);
 void hoodedZyck_init(int* obj, int* st);

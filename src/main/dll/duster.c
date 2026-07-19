@@ -19,7 +19,7 @@
  *   - mutated EBA (mutatedEbaInit / mutatedEbaUpdateEngaged / mutatedEbaUpdateIdle / mutatedEbaPlayMoveSfx
  *     / mutatedEbaUpdateWhileFrozen): move-table sequenced attacker
  *     (gDusterEbaMoveTable entries, 0xC bytes each).
- *   - hooded Zyck flyer (fn_80156DA0 / hoodedZyckUpdateWhileFrozen):
+ *   - hooded Zyck flyer (hoodedZyck_updateIdle / hoodedZyckUpdateWhileFrozen):
  *     line-probes the ground each frame and toggles its move/visibility.
  *
  * Shared idioms: controlFlags bit 0x40000000 = "move just landed / can

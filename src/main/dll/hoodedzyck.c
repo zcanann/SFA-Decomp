@@ -6,7 +6,7 @@
  *   hoodedZyckUpdateWhileFrozen  freeze-event handler.
  *   hoodedZyck_tickPhaseTimer    counts the phase timer down, rearming it when it expires.
  *   hoodedZyck_getAngleDelta     signed yaw delta from the zyck to a target, wrapped to +/-32768.
- *   fn_80156DA0                  per-frame ground probe + move/visibility toggle.
+ *   hoodedZyck_updateIdle        unengaged-slot update: per-frame ground probe + move/visibility toggle.
  *   hoodedZyck_updateB           chase/attack update.
  *   hoodedZyck_update            approach update.
  *   hoodedZyck_init              seeds BaddieState speed/move fields.
@@ -98,7 +98,7 @@ static int hoodedZyck_getAngleDelta(GameObject* obj, GameObject* target)
     return d;
 }
 
-void fn_80156DA0(GameObject* obj, int state)
+void hoodedZyck_updateIdle(GameObject* obj, int state)
 {
     bool resetting;
     int groundHit;
