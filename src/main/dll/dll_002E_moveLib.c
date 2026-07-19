@@ -422,16 +422,11 @@ int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16
     s16 pair[2];
     int mode;
     GameObject* player;
-    u8* phasePtr;
 
     player = Obj_GetPlayerObject();
     pair[0] = a;
     pair[1] = b;
-    {
-        char* p = *(char**)&(obj)->anim.hitReactState;
-        *(s16*)(p + 0x60) = *(s16*)(p + 0x60) | 1;
-    }
-    phasePtr = &s->phase;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |= OBJHITS_PRIORITY_STATE_ENABLED;
     mode = (s8)seq->movementState;
     if (mode == 4)
     {
@@ -449,7 +444,7 @@ int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16
     }
     else if (mode == 5)
     {
-        if (s->phase >= MOVELIB_PHASE_RUN && *phasePtr <= MOVELIB_PHASE_FINISH)
+        if (s->phase >= MOVELIB_PHASE_RUN && s->phase <= MOVELIB_PHASE_FINISH)
         {
             void* types = seqFn_800394a0();
             switch (s->phase)
