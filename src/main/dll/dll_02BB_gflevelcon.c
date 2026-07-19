@@ -106,6 +106,39 @@ ObjectDescriptor gGF_LevelConObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)gf_levelcon_getExtraSize,
 };
 
+void gf_levelcon_findLinkedObjects(GameObject* obj)
+{
+    GfLevelconFindLinkedObjectsState* state = obj->extra;
+    int* objects;
+    int objectIndex;
+    int objectCount;
+    int linkedObj;
+
+    state->light = 0;
+    state->scrollA = 0;
+    state->scrollB = 0;
+    objects = ObjList_GetObjects(&objectIndex, &objectCount);
+    for (; objectIndex < objectCount; objectIndex++)
+    {
+        linkedObj = objects[objectIndex];
+        if ((GameObject*)linkedObj != obj && *(void**)(linkedObj + 0x4c) != NULL)
+        {
+            switch (*(int*)(*(int*)(linkedObj + 0x4c) + 0x14))
+            {
+            case GFLEVELCON_LINK_LIGHT:
+                state->light = linkedObj;
+                break;
+            case GFLEVELCON_LINK_SCROLL_A:
+                state->scrollA = linkedObj;
+                break;
+            case GFLEVELCON_LINK_SCROLL_B:
+                state->scrollB = linkedObj;
+                break;
+            }
+        }
+    }
+}
+
 int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpdate)
 {
     GfLevelconHandleScriptEventsState* state = obj->extra;
@@ -207,39 +240,6 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
         }
     }
     return 0;
-}
-
-void gf_levelcon_findLinkedObjects(GameObject* obj)
-{
-    GfLevelconFindLinkedObjectsState* state = obj->extra;
-    int* objects;
-    int objectIndex;
-    int objectCount;
-    int linkedObj;
-
-    state->light = 0;
-    state->scrollA = 0;
-    state->scrollB = 0;
-    objects = ObjList_GetObjects(&objectIndex, &objectCount);
-    for (; objectIndex < objectCount; objectIndex++)
-    {
-        linkedObj = objects[objectIndex];
-        if ((GameObject*)linkedObj != obj && *(void**)(linkedObj + 0x4c) != NULL)
-        {
-            switch (*(int*)(*(int*)(linkedObj + 0x4c) + 0x14))
-            {
-            case GFLEVELCON_LINK_LIGHT:
-                state->light = linkedObj;
-                break;
-            case GFLEVELCON_LINK_SCROLL_A:
-                state->scrollA = linkedObj;
-                break;
-            case GFLEVELCON_LINK_SCROLL_B:
-                state->scrollB = linkedObj;
-                break;
-            }
-        }
-    }
 }
 
 int gf_levelcon_getExtraSize(void)

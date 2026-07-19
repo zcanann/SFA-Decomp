@@ -91,6 +91,92 @@ extern f32 lbl_803E30C8;
 extern f32 lbl_803E30CC;
 u8 gKaldachomHitLightWork[0x18];
 
+void kaldaChomFn_8016821c(GameObject* obj, KaldaChomControl* control)
+{
+    u8 loadLocked;
+    int placement;
+    int work;
+
+    placement = *(int*)&(obj)->anim.placementData;
+    gKaldachomDustSpawnScratch = lbl_803E30A0 + (float)(int)*(char*)(placement + 0x28) / lbl_803E30A4;
+    control->hitFlashTimer = lbl_803E308C;
+    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_beamgenlp16_276);
+    work = 0x28;
+    do
+    {
+        (*gPartfxInterface)
+            ->spawnObject((void*)obj, KALDACHOM_PARTFX_DUST, 0, 4, 0xffffffff, &gKaldachomDustSpawnScratch);
+        work--;
+    } while (work != 0);
+    if ((control->spawnedDustObj == NULL) && (loadLocked = Obj_IsLoadingLocked(), loadLocked != '\0'))
+    {
+        work = (int)Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_DUST);
+        ((ObjPlacement*)work)->posX = (obj)->anim.localPosX;
+        ((ObjPlacement*)work)->posY = lbl_803E30A8 + (obj)->anim.localPosY;
+        ((ObjPlacement*)work)->posZ = (obj)->anim.localPosZ;
+        ((ObjPlacement*)work)->color[0] = ((ObjPlacement*)placement)->color[0];
+        ((ObjPlacement*)work)->color[1] = ((ObjPlacement*)placement)->color[1];
+        ((ObjPlacement*)work)->color[2] = ((ObjPlacement*)placement)->color[2];
+        ((ObjPlacement*)work)->color[3] = ((ObjPlacement*)placement)->color[3];
+        work = (int)Obj_SetupObject((ObjPlacement*)work, 5, 0xffffffff, 0xffffffff, 0);
+        control->spawnedDustObj = (void*)work;
+        ((GameObject*)control->spawnedDustObj)->anim.rootMotionScale = gKaldachomDustSpawnScratch;
+    }
+}
+
+void kaldaChomFn_80168374(GameObject* obj, int state, u8 useUpperMouthPoint)
+{
+    KaldaChomControl* control;
+    int ref;
+    u8* setup;
+    f32 yJitter;
+    f32 spd;
+    f32 heightOffset;
+    f32 mouthY;
+
+    control = ((CampfireState*)state)->control;
+    ref = *(int*)&obj->anim.placementData;
+    if (Obj_IsLoadingLocked() != 0)
+    {
+        heightOffset = lbl_803E30A0 + (f32)(s32) * (s8*)(ref + 0x28) / lbl_803E30A4;
+        ref = (int)Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE);
+        if (useUpperMouthPoint != 0)
+        {
+            ((ObjPlacement*)ref)->posX = control->upperMouthPosX;
+            ((ObjPlacement*)ref)->posY = control->upperMouthPosY;
+            ((ObjPlacement*)ref)->posZ = control->upperMouthPosZ;
+        }
+        else
+        {
+            ((ObjPlacement*)ref)->posX = control->lowerMouthPosX;
+            ((ObjPlacement*)ref)->posY = control->lowerMouthPosY;
+            ((ObjPlacement*)ref)->posZ = control->lowerMouthPosZ;
+        }
+        ((ObjPlacement*)ref)->color[0] = 1;
+        ((ObjPlacement*)ref)->color[1] = 4;
+        ((ObjPlacement*)ref)->color[2] = 0xff;
+        ((ObjPlacement*)ref)->color[3] = 0xff;
+        setup = (u8*)Obj_SetupObject((ObjPlacement*)ref, 5, 0xffffffff, 0xffffffff, 0);
+        if (setup != NULL)
+        {
+            spd = lbl_803E30AC * (((GroundBaddieState*)state)->baddie.targetDistance /
+                                  (f32)(u32)((GroundBaddieState*)state)->aggroRange);
+            ((GameObject*)setup)->anim.velocityX =
+                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosX -
+                 ((ObjPlacement*)ref)->posX) /
+                spd;
+            yJitter = (f32)(s32)randomGetRange(-0xa, 0xa);
+            mouthY = lbl_803E30A8 * heightOffset +
+                     ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY;
+            ((GameObject*)setup)->anim.velocityY = (mouthY + yJitter - ((ObjPlacement*)ref)->posY) / spd;
+            ((GameObject*)setup)->anim.velocityZ =
+                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosZ -
+                 ((ObjPlacement*)ref)->posZ) /
+                spd;
+        }
+    }
+}
+
 void kaldachom_handleAnimEvents(GameObject* obj, int state, int eventStateArg)
 {
     KaldaChomControl* control = ((CampfireState*)state)->control;
@@ -258,92 +344,6 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
             ((GameObject*)control->spawnedDustObj)->anim.rotY = obj->anim.rotY;
             ((GameObject*)control->spawnedDustObj)->anim.rotX = obj->anim.rotX;
             control->hitFlashTimer = control->hitFlashTimer - lbl_803E30C4 * timeDelta;
-        }
-    }
-}
-
-void kaldaChomFn_8016821c(GameObject* obj, KaldaChomControl* control)
-{
-    u8 loadLocked;
-    int placement;
-    int work;
-
-    placement = *(int*)&(obj)->anim.placementData;
-    gKaldachomDustSpawnScratch = lbl_803E30A0 + (float)(int)*(char*)(placement + 0x28) / lbl_803E30A4;
-    control->hitFlashTimer = lbl_803E308C;
-    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_beamgenlp16_276);
-    work = 0x28;
-    do
-    {
-        (*gPartfxInterface)
-            ->spawnObject((void*)obj, KALDACHOM_PARTFX_DUST, 0, 4, 0xffffffff, &gKaldachomDustSpawnScratch);
-        work--;
-    } while (work != 0);
-    if ((control->spawnedDustObj == NULL) && (loadLocked = Obj_IsLoadingLocked(), loadLocked != '\0'))
-    {
-        work = (int)Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_DUST);
-        ((ObjPlacement*)work)->posX = (obj)->anim.localPosX;
-        ((ObjPlacement*)work)->posY = lbl_803E30A8 + (obj)->anim.localPosY;
-        ((ObjPlacement*)work)->posZ = (obj)->anim.localPosZ;
-        ((ObjPlacement*)work)->color[0] = ((ObjPlacement*)placement)->color[0];
-        ((ObjPlacement*)work)->color[1] = ((ObjPlacement*)placement)->color[1];
-        ((ObjPlacement*)work)->color[2] = ((ObjPlacement*)placement)->color[2];
-        ((ObjPlacement*)work)->color[3] = ((ObjPlacement*)placement)->color[3];
-        work = (int)Obj_SetupObject((ObjPlacement*)work, 5, 0xffffffff, 0xffffffff, 0);
-        control->spawnedDustObj = (void*)work;
-        ((GameObject*)control->spawnedDustObj)->anim.rootMotionScale = gKaldachomDustSpawnScratch;
-    }
-}
-
-void kaldaChomFn_80168374(GameObject* obj, int state, u8 useUpperMouthPoint)
-{
-    KaldaChomControl* control;
-    int ref;
-    u8* setup;
-    f32 yJitter;
-    f32 spd;
-    f32 heightOffset;
-    f32 mouthY;
-
-    control = ((CampfireState*)state)->control;
-    ref = *(int*)&obj->anim.placementData;
-    if (Obj_IsLoadingLocked() != 0)
-    {
-        heightOffset = lbl_803E30A0 + (f32)(s32) * (s8*)(ref + 0x28) / lbl_803E30A4;
-        ref = (int)Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE);
-        if (useUpperMouthPoint != 0)
-        {
-            ((ObjPlacement*)ref)->posX = control->upperMouthPosX;
-            ((ObjPlacement*)ref)->posY = control->upperMouthPosY;
-            ((ObjPlacement*)ref)->posZ = control->upperMouthPosZ;
-        }
-        else
-        {
-            ((ObjPlacement*)ref)->posX = control->lowerMouthPosX;
-            ((ObjPlacement*)ref)->posY = control->lowerMouthPosY;
-            ((ObjPlacement*)ref)->posZ = control->lowerMouthPosZ;
-        }
-        ((ObjPlacement*)ref)->color[0] = 1;
-        ((ObjPlacement*)ref)->color[1] = 4;
-        ((ObjPlacement*)ref)->color[2] = 0xff;
-        ((ObjPlacement*)ref)->color[3] = 0xff;
-        setup = (u8*)Obj_SetupObject((ObjPlacement*)ref, 5, 0xffffffff, 0xffffffff, 0);
-        if (setup != NULL)
-        {
-            spd = lbl_803E30AC * (((GroundBaddieState*)state)->baddie.targetDistance /
-                                  (f32)(u32)((GroundBaddieState*)state)->aggroRange);
-            ((GameObject*)setup)->anim.velocityX =
-                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosX -
-                 ((ObjPlacement*)ref)->posX) /
-                spd;
-            yJitter = (f32)(s32)randomGetRange(-0xa, 0xa);
-            mouthY = lbl_803E30A8 * heightOffset +
-                     ((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosY;
-            ((GameObject*)setup)->anim.velocityY = (mouthY + yJitter - ((ObjPlacement*)ref)->posY) / spd;
-            ((GameObject*)setup)->anim.velocityZ =
-                (((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosZ -
-                 ((ObjPlacement*)ref)->posZ) /
-                spd;
         }
     }
 }

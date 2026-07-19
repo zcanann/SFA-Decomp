@@ -134,6 +134,37 @@ void dvdCheckError(void)
     }
 }
 
+int DVDRead(DVDFileInfo* fileInfo, void* buf, s32 size, s32 offset)
+{
+    u8 resetSeen = 0;
+    gDvdReadCallbackResult = 0;
+    while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 || gDvdReadCallbackResult == -3)
+    {
+        DVDReadAsyncPrio(fileInfo, buf, size, offset, fileReadCb_80015954, 2);
+        while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1)
+        {
+            padUpdate();
+            checkReset();
+            if (resetSeen)
+            {
+                waitNextFrame();
+            }
+            dvdCheckError();
+            if (resetSeen)
+            {
+                mmFreeTick(0);
+                gameTextRun();
+                GXFlush_(1, 0);
+            }
+            if (gDvdErrorPauseActive != 0)
+            {
+                resetSeen = 1;
+            }
+        }
+    }
+    return gDvdReadCallbackResult;
+}
+
 void fileReadCb_80015954(s32 result, DVDFileInfo* fileInfo)
 {
     (void)fileInfo;
@@ -233,35 +264,4 @@ void* loadFileByPath(char* path, int* outSize, int unused)
         *outSize = size;
     }
     return buf;
-}
-
-int DVDRead(DVDFileInfo* fileInfo, void* buf, s32 size, s32 offset)
-{
-    u8 resetSeen = 0;
-    gDvdReadCallbackResult = 0;
-    while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 || gDvdReadCallbackResult == -3)
-    {
-        DVDReadAsyncPrio(fileInfo, buf, size, offset, fileReadCb_80015954, 2);
-        while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1)
-        {
-            padUpdate();
-            checkReset();
-            if (resetSeen)
-            {
-                waitNextFrame();
-            }
-            dvdCheckError();
-            if (resetSeen)
-            {
-                mmFreeTick(0);
-                gameTextRun();
-                GXFlush_(1, 0);
-            }
-            if (gDvdErrorPauseActive != 0)
-            {
-                resetSeen = 1;
-            }
-        }
-    }
-    return gDvdReadCallbackResult;
 }

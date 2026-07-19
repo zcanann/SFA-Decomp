@@ -502,6 +502,51 @@ ModelList* allocModelStruct(int capacity, int dataSize)
     return list;
 }
 
+BOOL Resource_Release(void* handleSlot)
+{
+    s32 i;
+    ResourceDescriptor* descriptor;
+
+    i = 0;
+    descriptor = (ResourceDescriptor*)handleSlot;
+    while (i < RESOURCE_DESCRIPTOR_COUNT)
+    {
+        if ((void*)&gResourceLoadedHandles[i] == handleSlot)
+        {
+            descriptor = gResourceDescriptors[i];
+            break;
+        }
+        i++;
+    }
+
+    gResourceRefCounts[i]--;
+    if (gResourceRefCounts[i] == 0)
+    {
+        if (descriptor->release != NULL)
+        {
+            descriptor->release();
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void* Resource_Acquire(u16 id, int unused)
+{
+    u32 index;
+    ResourceDescriptor* descriptor;
+
+    index = id;
+    descriptor = gResourceDescriptors[index];
+    if (gResourceRefCounts[index] == 0 && descriptor->acquire != NULL)
+    {
+        descriptor->acquire(descriptor);
+    }
+    gResourceRefCounts[index]++;
+    gResourceLoadedHandles[index] = descriptor->data;
+    return &gResourceLoadedHandles[index];
+}
+
 void Resource_ResetRefCounts(void)
 {
     u32 i;
@@ -1576,48 +1621,3 @@ ResourceDescriptor* gResourceDescriptors[] = {
 s32 gModelEngineUiDllResourceIds[] = {
     -1, 16, 50, 51, 52, 53, 54, 55, 56, 57, -1, -1, 58, -1, 63, 64, 65, -1,
 };
-
-BOOL Resource_Release(void* handleSlot)
-{
-    s32 i;
-    ResourceDescriptor* descriptor;
-
-    i = 0;
-    descriptor = (ResourceDescriptor*)handleSlot;
-    while (i < RESOURCE_DESCRIPTOR_COUNT)
-    {
-        if ((void*)&gResourceLoadedHandles[i] == handleSlot)
-        {
-            descriptor = gResourceDescriptors[i];
-            break;
-        }
-        i++;
-    }
-
-    gResourceRefCounts[i]--;
-    if (gResourceRefCounts[i] == 0)
-    {
-        if (descriptor->release != NULL)
-        {
-            descriptor->release();
-        }
-        return TRUE;
-    }
-    return FALSE;
-}
-
-void* Resource_Acquire(u16 id, int unused)
-{
-    u32 index;
-    ResourceDescriptor* descriptor;
-
-    index = id;
-    descriptor = gResourceDescriptors[index];
-    if (gResourceRefCounts[index] == 0 && descriptor->acquire != NULL)
-    {
-        descriptor->acquire(descriptor);
-    }
-    gResourceRefCounts[index]++;
-    gResourceLoadedHandles[index] = descriptor->data;
-    return &gResourceLoadedHandles[index];
-}
