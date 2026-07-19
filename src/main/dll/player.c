@@ -10965,8 +10965,8 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         wallHit = 0;
         if (parent != NULL)
         {
-            tris = *(int*)((char*)*(int*)((char*)parent + 0x50) + 0x34);
-            verts = *(int*)((char*)*(int*)((char*)parent + 0x50) + 0x3c);
+            tris = *(int*)((char*)(int)((ObjAnimComponent*)parent)->modelInstance + 0x34);
+            verts = *(int*)((char*)(int)((ObjAnimComponent*)parent)->modelInstance + 0x3c);
         }
         else
         {
@@ -11186,8 +11186,8 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     hit = *(void**)((char*)c + 0x0);
     if (hit != NULL)
     {
-        tbl1 = *(int*)((char*)*(int*)((char*)hit + 0x50) + 0x34);
-        tbl2 = *(int*)((char*)*(int*)((char*)hit + 0x50) + 0x3c);
+        tbl1 = *(int*)((char*)(int)((ObjAnimComponent*)hit)->modelInstance + 0x34);
+        tbl2 = *(int*)((char*)(int)((ObjAnimComponent*)hit)->modelInstance + 0x3c);
     }
     else
     {
@@ -15768,7 +15768,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
             {
                 *(u32*)((char*)t + 0x30) &= ~0x4LL;
             }
-            bit = **(s16**)((char*)inner + 0x8dc);
+            bit = *(s16*)((PlayerState*)inner)->triggerGameBitPtr;
             if (bit > 0)
             {
                 if (mainGetBit(bit) != 0)
@@ -15788,7 +15788,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                         *(f32*)(p + 8) = *(f32*)(p + 8) * k;
                         r = *(f32*)(p + 8) / *(f32*)(*(int*)(p + 0x50) + 4);
                     }
-                    mainSetBits(**(s16**)((char*)inner + 0x8dc), 1);
+                    mainSetBits(*(s16*)((PlayerState*)inner)->triggerGameBitPtr, 1);
                     (*gObjectTriggerInterface)->setObjects(*(s16*)(p + 0x46), 0, 0);
                     (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 }
