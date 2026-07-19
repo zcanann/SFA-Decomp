@@ -2990,11 +2990,7 @@ int modelGetAmapSize(int animId, int amapFlag, int animCount)
     }
     else
     {
-        {
-            int words;
-            words = animCount * 4;
-            size = words;
-        }
+        size = animCount * 4;
         while (size & 7)
         {
             size++;
