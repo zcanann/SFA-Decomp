@@ -2330,11 +2330,10 @@ void gameTextLoadGraphicsFn_8001a918(void)
             tyEnd = ty + 3;
             for (; row < tyEnd; row++)
             {
-                int off = tx << 5;
                 int j2 = tx;
                 for (; j2 < txEnd; j2++)
                 {
-                    u8* dst = *(u8**)(base31 + 0x60) + off;
+                    u8* dst = *(u8**)(base31 + 0x60) + (j2 << 5);
                     int k;
                     dst += row * lbl_803DB3C4;
                     for (k = 0; k < 8; k++)
@@ -2342,7 +2341,6 @@ void gameTextLoadGraphicsFn_8001a918(void)
                         *(u32*)(dst + 0x60 + k * 4) = src[k];
                     }
                     src += 8;
-                    off += 0x20;
                 }
             }
         }
