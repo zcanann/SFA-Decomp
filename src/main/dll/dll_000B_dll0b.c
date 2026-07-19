@@ -1662,16 +1662,13 @@ s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16*
     if ((st->flags & 0x800) == 0)
     {
         int k;
-        int off;
-        for (off = k = 0; k < 3; off += 4, k++)
+        for (k = 0; k < 3; k++)
         {
-            u8* q = (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot];
-            int idx = off + 0x84;
-            u8* dstc = *(u8**)(q + idx);
+            u8* dstc = (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorBuffers[k];
+            int j = 0;
             int bias = 0;
-            int j;
             s16* sd = d;
-            for (j = 0; j < e; j++)
+            for (; j < e; j++)
             {
                 if ((st->flags & 0x8000000) && j == divThresh)
                 {
@@ -1702,12 +1699,9 @@ s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16*
     if ((st->flags & 0x800) == 0)
     {
         int k;
-        int off;
-        for (off = k = 0; k < 3; off += 4, k++)
+        for (k = 0; k < 3; k++)
         {
-            u8* q = (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot];
-            int idx = off + 0x78;
-            u8* dstv = *(u8**)(q + idx);
+            u8* dstv = (u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexBuffers[k];
             int j;
             s16* sb = b;
             for (j = 0; j < c; j++)
