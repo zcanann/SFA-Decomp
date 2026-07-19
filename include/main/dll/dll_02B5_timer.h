@@ -41,6 +41,7 @@ STATIC_ASSERT(offsetof(TimerSetup, durationMinutes) == 0x1A);
 STATIC_ASSERT(offsetof(TimerSetup, expiredGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(TimerSetup, startGameBit) == 0x20);
 STATIC_ASSERT(sizeof(TimerSetup) == 0x24);
+STATIC_ASSERT(offsetof(TimerState, countdownTimer) == 0x00);
 STATIC_ASSERT(offsetof(TimerState, lightSlot) == 0x04);
 STATIC_ASSERT(offsetof(TimerState, lightScale) == 0x08);
 STATIC_ASSERT(offsetof(TimerState, mode) == 0x0C);

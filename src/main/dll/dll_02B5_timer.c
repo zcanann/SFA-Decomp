@@ -47,7 +47,7 @@ f32 lbl_803DC41C = 5.0f;
 void timer_addDuration(GameObject* obj, int duration)
 {
     TimerState* state = obj->extra;
-    if (((int (*)(int))fn_80080150)((int)state) != 0)
+    if (fn_80080150(&state->countdownTimer) != 0)
     {
         state->countdownTimer = state->countdownTimer + duration;
         if (state->mode == TIMER_MODE_GLOBAL)
