@@ -3,21 +3,21 @@
 #include "main/sky.h"
 #include "main/sky_api.h"
 
-extern u8 lbl_803DC1F4[4];
-extern u8 lbl_803DC1F8[4];
-extern u8 lbl_803DC1FC[4];
-extern u8 lbl_803DC200[4];
-extern u8 lbl_803DC204[4];
-extern u8 lbl_803DC208[8];
+extern u8 gWorldPlanetLightFrom[4];
+extern u8 gWorldPlanetLightTo[4];
+extern u8 gWorldPlanetSkyColorFrom[4];
+extern u8 gWorldPlanetSkyColorTo[4];
+extern u8 gWorldPlanetAmbientFrom[4];
+extern u8 gWorldPlanetAmbientTo[8];
 
 #define WORLDPLANET_LERP_BYTE(from, to, idx, t)                                                                        \
     ((u8)(s32)((t) * (f32)((s32)(to)[idx] - (s32)(from)[idx]) + (f32)(s32)(from)[idx]))
 
 extern f32 gWorldPlanetLightingLerpT;
-extern u8 lbl_803DDD18;
-extern u8 lbl_803DDD1C[3];
-extern u8 lbl_803DDD20[3];
-extern u8 lbl_803DDD24[3];
+extern u8 gWorldPlanetCurIntensity;
+extern u8 gWorldPlanetCurAmbient[3];
+extern u8 gWorldPlanetCurLight[3];
+extern u8 gWorldPlanetCurSky[3];
 extern f32 lbl_803E65F8;
 extern f32 lbl_803E65FC;
 extern f32 lbl_803E6600;
@@ -29,24 +29,24 @@ void worldplanet_updateMapLighting(int a)
 
     gWorldPlanetLightingLerpT = lbl_803E65F8;
 
-    lbl_803DDD24[0] = WORLDPLANET_LERP_BYTE(lbl_803DC1FC, lbl_803DC200, 0, lbl_803E65F8);
-    lbl_803DDD24[1] = WORLDPLANET_LERP_BYTE(lbl_803DC1FC, lbl_803DC200, 1, lbl_803E65F8);
-    lbl_803DDD24[2] = WORLDPLANET_LERP_BYTE(lbl_803DC1FC, lbl_803DC200, 2, lbl_803E65F8);
-    skyFn_800895e0(7, ((volatile u8*)lbl_803DDD24)[0], ((volatile u8*)lbl_803DDD24)[1],
-                   ((volatile u8*)lbl_803DDD24)[2], 0x40, 0x40);
+    gWorldPlanetCurSky[0] = WORLDPLANET_LERP_BYTE(gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 0, lbl_803E65F8);
+    gWorldPlanetCurSky[1] = WORLDPLANET_LERP_BYTE(gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 1, lbl_803E65F8);
+    gWorldPlanetCurSky[2] = WORLDPLANET_LERP_BYTE(gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 2, lbl_803E65F8);
+    skyFn_800895e0(7, ((volatile u8*)gWorldPlanetCurSky)[0], ((volatile u8*)gWorldPlanetCurSky)[1],
+                   ((volatile u8*)gWorldPlanetCurSky)[2], 0x40, 0x40);
 
-    lbl_803DDD20[0] = WORLDPLANET_LERP_BYTE(lbl_803DC1F4, lbl_803DC1F8, 0, gWorldPlanetLightingLerpT);
-    lbl_803DDD20[1] = WORLDPLANET_LERP_BYTE(lbl_803DC1F4, lbl_803DC1F8, 1, gWorldPlanetLightingLerpT);
-    lbl_803DDD20[2] = WORLDPLANET_LERP_BYTE(lbl_803DC1F4, lbl_803DC1F8, 2, gWorldPlanetLightingLerpT);
-    fn_80089510(7, ((volatile u8*)lbl_803DDD20)[0], ((volatile u8*)lbl_803DDD20)[1],
-                ((volatile u8*)lbl_803DDD20)[2]);
+    gWorldPlanetCurLight[0] = WORLDPLANET_LERP_BYTE(gWorldPlanetLightFrom, gWorldPlanetLightTo, 0, gWorldPlanetLightingLerpT);
+    gWorldPlanetCurLight[1] = WORLDPLANET_LERP_BYTE(gWorldPlanetLightFrom, gWorldPlanetLightTo, 1, gWorldPlanetLightingLerpT);
+    gWorldPlanetCurLight[2] = WORLDPLANET_LERP_BYTE(gWorldPlanetLightFrom, gWorldPlanetLightTo, 2, gWorldPlanetLightingLerpT);
+    fn_80089510(7, ((volatile u8*)gWorldPlanetCurLight)[0], ((volatile u8*)gWorldPlanetCurLight)[1],
+                ((volatile u8*)gWorldPlanetCurLight)[2]);
 
-    lbl_803DDD1C[0] = WORLDPLANET_LERP_BYTE(lbl_803DC204, lbl_803DC208, 0, gWorldPlanetLightingLerpT);
-    lbl_803DDD1C[1] = WORLDPLANET_LERP_BYTE(lbl_803DC204, lbl_803DC208, 1, gWorldPlanetLightingLerpT);
-    lbl_803DDD1C[2] = WORLDPLANET_LERP_BYTE(lbl_803DC204, lbl_803DC208, 2, gWorldPlanetLightingLerpT);
-    fn_80089578(7, ((volatile u8*)lbl_803DDD1C)[0], ((volatile u8*)lbl_803DDD1C)[1],
-                ((volatile u8*)lbl_803DDD1C)[2]);
+    gWorldPlanetCurAmbient[0] = WORLDPLANET_LERP_BYTE(gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 0, gWorldPlanetLightingLerpT);
+    gWorldPlanetCurAmbient[1] = WORLDPLANET_LERP_BYTE(gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 1, gWorldPlanetLightingLerpT);
+    gWorldPlanetCurAmbient[2] = WORLDPLANET_LERP_BYTE(gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 2, gWorldPlanetLightingLerpT);
+    fn_80089578(7, ((volatile u8*)gWorldPlanetCurAmbient)[0], ((volatile u8*)gWorldPlanetCurAmbient)[1],
+                ((volatile u8*)gWorldPlanetCurAmbient)[2]);
 
-    lbl_803DDD18 = (u8)(s32)(gWorldPlanetLightingLerpT * lbl_803E6600 + lbl_803E65FC);
+    gWorldPlanetCurIntensity = (u8)(s32)(gWorldPlanetLightingLerpT * lbl_803E6600 + lbl_803E65FC);
     skyFn_800894a8(7, gWorldPlanetLightingSkyDirX, lbl_803E65F8, gWorldPlanetLightingSkyDirZ);
 }
