@@ -1011,7 +1011,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/DF/dll_0230_dfpwallbar.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objlib.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/objprint_dolphin.c", cflags=cflags_dll_noopt_noloopinv),
+            Object(NonMatching, "main/objprint_dolphin.c", cflags=cflags_dll_noopt_noloopinv_zerodata),
             Object(NonMatching, "main/pi_dolphin.c", cflags=cflags_dll_noopt_noloopinv_zerodata),
             Object(NonMatching, "main/zlb.c", **zlb_object_kwargs),
             Object(NonMatching, "main/shader_dolphin.c", cflags=cflags_dll_noopt_noloopinv),
