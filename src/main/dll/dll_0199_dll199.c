@@ -22,7 +22,6 @@
 #include "main/object_descriptor.h"
 #include "main/shader_api.h"
 
-typedef int (*Dll199ObjMsgPopFn)(GameObject* obj, int* message, int* param, int* flags);
 typedef GameObject* (*Dll199FindNearestObjectFn)(int group, GameObject* from, f32* distance);
 
 #define PAD_BUTTON_A 0x100
@@ -213,9 +212,9 @@ void dll_199_update(GameObject* obj)
     int queue;
     GameObject* found;
     f32 dist;
-    int flags;
-    int msg;
-    int param;
+    u32 flags;
+    u32 msg;
+    u32 param;
     f32 dz;
     u32 brightness;
     int delta;
@@ -228,7 +227,7 @@ void dll_199_update(GameObject* obj)
     obj->anim.worldPosZ = obj->anim.localPosZ;
     queue = *(int*)&obj->extra;
     flags = 0;
-    while (((Dll199ObjMsgPopFn)ObjMsg_Pop)(obj, &msg, &param, &flags) != 0)
+    while (ObjMsg_Pop(obj, &msg, &param, &flags) != 0)
     {
         switch (msg)
         {
