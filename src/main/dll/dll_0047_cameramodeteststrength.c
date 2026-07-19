@@ -121,15 +121,15 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     flags = flagsIn;
     if ((flags & 1) == 0)
     {
-        *(s16*)&camera->anim.rotX = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotXStart, t, NULL);
+        camera->anim.rotX = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotXStart, t, NULL);
     }
     if ((flags & 2) == 0)
     {
-        *(s16*)&camera->anim.rotY = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotYStart, t, NULL);
+        camera->anim.rotY = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotYStart, t, NULL);
     }
     if ((flags & 4) == 0)
     {
-        *(s16*)&camera->anim.rotZ = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotZStart, t, NULL);
+        camera->anim.rotZ = Curve_EvalLinearValuesFirst(&lbl_803DD560->rotZStart, t, NULL);
     }
     return t >= lbl_803E188C;
 }
