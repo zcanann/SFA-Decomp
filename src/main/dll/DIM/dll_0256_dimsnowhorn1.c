@@ -21,7 +21,7 @@
 #include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
@@ -1048,9 +1048,7 @@ int DIMSnowHorn1_setScale(GameObject* obj)
     return 0;
 }
 
-void fn_802BB998(int obj, int pointState, int inputState);
-
-void fn_802BB998(int obj, int pointState, int inputState)
+void fn_802BB998(u32 obj, DIMSnowHorn1State* pointState, DIMSnowHorn1State* inputState)
 {
     u8 flags;
     u8 pointIndex;
@@ -1067,7 +1065,7 @@ void fn_802BB998(int obj, int pointState, int inputState)
     } args;
 
     flags = 0;
-    inputFlags = *(s32*)&((BaddieState*)inputState)->eventFlags;
+    inputFlags = *(s32*)&inputState->baddie.eventFlags;
     if ((inputFlags & 2) != 0)
     {
         flags |= 1;
@@ -1082,9 +1080,9 @@ void fn_802BB998(int obj, int pointState, int inputState)
     {
         if ((flags & 1) != 0)
         {
-            args.x = *(f32*)(pointState + 0x9b0 + pointIndex * 0xc);
-            args.y = *(f32*)(pointState + 0x9b4 + pointIndex * 0xc);
-            args.z = *(f32*)(pointState + 0x9b8 + pointIndex * 0xc);
+            args.x = pointState->pathPointArray[pointIndex * 3];
+            args.y = pointState->pathPointArray[pointIndex * 3 + 1];
+            args.z = pointState->pathPointArray[pointIndex * 3 + 2];
             args.scale = 0.004f;
 
             count = (u8)randomGetRange(2, 6);
@@ -1096,7 +1094,7 @@ void fn_802BB998(int obj, int pointState, int inputState)
             }
 
             Sfx_PlayFromObject(
-                obj, audioPickSoundEffect_8006ed24((u8)(s8) * (s8*)&((BaddieState*)inputState)->paletteSlot, 9));
+                obj, audioPickSoundEffect_8006ed24((u8)(s8) * (s8*)&inputState->baddie.paletteSlot, 9));
             doRumble(3.0f);
         }
         flags >>= 1;
@@ -1217,7 +1215,7 @@ void fn_802BB4B4(GameObject* obj, int frameStep, int slot)
 
     (*(void (**)(int, int, f32, f32, int*, f32*))(*(int*)gPlayerInterface + 0x8))(
         (int)obj, (int)state, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers, &gDIMSnowHorn1DefaultStateHandler);
-    fn_802BB998((int)obj, (int)state, (int)state);
+    fn_802BB998((u32)obj, state, state);
 }
 
 static inline s16 DIMSnowHorn1_angleTo(GameObject* obj, char* found)
