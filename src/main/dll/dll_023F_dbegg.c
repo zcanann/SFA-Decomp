@@ -455,11 +455,11 @@ void fn_801FE774(int obj, f32* vel)
     {
         f32 dy;
         sibling = (u8*)*objCursor;
-        dy = ((GameObject*)sibling)->anim.localPosY - *(f32*)(obj + 0x10);
+        dy = ((GameObject*)sibling)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
         if (dy <= limit && dy >= lbl_803E61EC)
         {
-            f32 dx = ((GameObject*)sibling)->anim.localPosX - *(f32*)(obj + 0xc);
-            f32 dz = ((GameObject*)sibling)->anim.localPosZ - *(f32*)(obj + 0x14);
+            f32 dx = ((GameObject*)sibling)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+            f32 dz = ((GameObject*)sibling)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
             f32 dist = sqrtf(dx * dx + dz * dz);
             f32 radius = lbl_803E61F0 * (f32)(u32) * (u8*)(*(int*)(sibling + 0x4c) + 0x19);
             if (dist < radius)
