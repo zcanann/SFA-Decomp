@@ -43,6 +43,13 @@ f32 lbl_803DC224 = 0.006f;
 #define SNOWCLAW_SEQID_IM_SNOWCLAW2 0x170 /* "IMSnowClaw2" (DLL 0x25C) */
 #define SNOWCLAW_SEQID_CR_SNOWCLAW  0x389 /* "CRSnowClaw" (DLL 0x25C) */
 
+/* gSnowClawDropObjectTable entries, indexed by SnowclawState.dropIndex
+   (retail OBJECTS.bin names); index 4 (0x1D) has no retail object entry */
+#define SNOWCLAW_DROP_OBJ_SWORD       0x23 /* "sword" (DLL 0xE2) */
+#define SNOWCLAW_DROP_OBJ_STAFF       0x69 /* "staff" (DLL 0xE2) */
+#define SNOWCLAW_DROP_OBJ_SCWEAPON_T1 0x33 /* "SCweaponT1" */
+#define SNOWCLAW_DROP_OBJ_ICEBALL     0x64 /* "IceBall" (DLL 0xCD) */
+
 typedef struct SnowclawState
 {
     u8 pad0[0x4 - 0x0];
@@ -117,7 +124,9 @@ s32 lbl_8032A340[4] = {150, 200, 300, 400};
 u32 gSnowClawHurtSfxTable[8] = {0x2EF, 0x2EE, 0x2ED, 0x2EC, 0x2EB, 0x0497049C, 0x03A2049C, 0x07D007D1};
 
 const u32 gSnowClawPulseTable[8] = {0, 1, 2, 3, 1, 1, 2, 2};
-const SnowClawDropObjectTable gSnowClawDropObjectTable = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
+const SnowClawDropObjectTable gSnowClawDropObjectTable = {
+    {SNOWCLAW_DROP_OBJ_SWORD, SNOWCLAW_DROP_OBJ_STAFF, SNOWCLAW_DROP_OBJ_SCWEAPON_T1, SNOWCLAW_DROP_OBJ_ICEBALL,
+     0x1D}};
 
 int snowclaw_getExtraSize(void);
 int snowclaw_getObjectTypeId(void);

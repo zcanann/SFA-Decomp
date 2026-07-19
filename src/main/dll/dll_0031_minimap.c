@@ -76,6 +76,10 @@ f32 gMinimapWorldToTexScale = 0.08f;
 /* compass texture asset (loaded into lbl_803DD940; see file header). */
 #define MINIMAP_TEXTURE_COMPASS 0xBE5
 
+/* base of the 2-object run spawned into lbl_803DBBC8; both 0x7DA and 0x7DB are
+   "CommandMenu" in the retail OBJECTS.bin, so only the run base is named here. */
+#define MINIMAP_COMMAND_MENU_OBJ_BASE 2010
+
 /* gMinimapViewMode selector (see file header): the three HUD view modes. */
 #define MINIMAP_VIEW_MODE_MAP       0
 #define MINIMAP_VIEW_MODE_RADAR     1
@@ -986,7 +990,7 @@ void Minimap_setupCompassBlip(void)
     scale = gMinimapF0_05;
     for (; i < 2; i++)
     {
-        lbl_803DBBC8[i] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(32, 2010 + i), 4, -1, -1, 0);
+        lbl_803DBBC8[i] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(32, MINIMAP_COMMAND_MENU_OBJ_BASE + i), 4, -1, -1, 0);
         ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = posX;
         ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = posY;
         ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = center;
