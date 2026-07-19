@@ -398,7 +398,7 @@ void LaserBeam_update(int obj2)
                         {
                             ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_BURST, (char*)b + 0x34, 0);
                         }
-                        *(u8*)&b->fireCooldown = 2;
+                        b->fireCooldown = 2;
                     }
                 }
             }
