@@ -14,8 +14,6 @@
 #include "main/audio/synth_volume.h"
 #include "src/main/audio/synth_internal.h"
 
-#define fabs __fabs
-
 extern f32 lbl_803E7780;
 extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
@@ -27,7 +25,7 @@ static inline f32 sal_fmod(f32 x, f32 y, f64 absy)
 {
     s64 n;
 
-    if (absy > fabs(x))
+    if (absy > __fabs(x))
     {
         return x;
     }
@@ -113,7 +111,7 @@ void seqHandle(u32 deltaTime)
     {
         tickRange = lbl_803E7788;
         song = gSynthQueuedVoices;
-        absoluteTickRange = fabs(tickRange);
+        absoluteTickRange = __fabs(tickRange);
         tickRateScale = lbl_803E7780;
         speedScale = lbl_803E7784;
         for (; song != NULL; song = nextSong)
