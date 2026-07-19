@@ -290,7 +290,6 @@ extern int lbl_803DCE80;
 extern int gMapBlockIndexCount;
 extern int gMapBlockIndexList;
 extern f32 lbl_803DECC4;
-extern const f32 lbl_803DECB8;
 extern const f32 lbl_803DECBC;
 extern const f32 lbl_803DECC0;
 extern const f32 lbl_803DECC8;
@@ -313,7 +312,6 @@ extern f32 lbl_803DEC3C, lbl_803DEC40;
 extern const f32 lbl_803DECA0;
 extern const f32 lbl_803DECA4;
 extern const f32 lbl_803DECA8;
-extern const f32 lbl_803DECAC;
 extern const f32 lbl_803DECF0;
 extern const f32 lbl_803DECF4;
 extern const f32 lbl_803DECF8;
@@ -2058,10 +2056,10 @@ void initTextures(void)
     a[15] = lbl_803DECA0;
     a[16] = lbl_803DECA8;
     a[17] = lbl_803DECA4;
-    a[18] = lbl_803DECAC;
+    a[18] = 6.0f;
     a[19] = lbl_803DECA8;
     a[20] = lbl_803DECA4;
-    a[21] = lbl_803DECAC;
+    a[21] = 6.0f;
     a[22] = lbl_803DEC58;
     a[23] = lbl_803DECA4;
     allocLotsOfTextures();
@@ -2222,7 +2220,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
     len2 = dx2 * dx2 + dy2 * dy2;
     if (len2 > lbl_803DECB4)
     {
-        B = lbl_803DECB8 * (dx2 * dx + dy2 * dy);
+        B = 2.0f * (dx2 * dx + dy2 * dy);
         lc = lbl_803DECBC * len2;
         disc = B * B - lc * cc;
         if (disc >= lbl_803DECB4)
@@ -2230,7 +2228,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
             root = sqrtf(disc);
             nB = -B;
             t1 = nB + root;
-            denom = lbl_803DECB8 * len2;
+            denom = 2.0f * len2;
             t1 = t1 / denom;
             t2 = (nB - root) / denom;
             if (t1 < lbl_803DECB4)
@@ -2511,8 +2509,8 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
             lb[2] = -dz;
             la[2] = dx;
             {
-                f32 q0 = lb[2] * (lbl_803DECB8 * lb[2] + ax2);
-                f32 q1 = la[2] * (lbl_803DECB8 * la[2] + az2);
+                f32 q0 = lb[2] * (2.0f * lb[2] + ax2);
+                f32 q1 = la[2] * (2.0f * la[2] + az2);
                 ld[2] = -(q0 + q1);
             }
             lb[3] = dz;

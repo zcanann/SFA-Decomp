@@ -203,7 +203,6 @@ extern const f32 lbl_803DEDC0;
 extern const f32 lbl_803DEDD0;
 extern const f32 lbl_803DEDD4;
 extern const f32 lbl_803DEE00;
-extern const f32 lbl_803DED08;
 extern const f32 lbl_803DEDE0;
 extern const f32 lbl_803DEDE4, lbl_803DEDE8;
 extern const f32 lbl_803DEDD8, lbl_803DEDDC;
@@ -559,7 +558,7 @@ static inline void fillDiskTexture(void)
             dx = dx * lbl_803DEDF0;
             dz = dz * lbl_803DEDF0;
             d2 = dx * dx + dz * dz;
-            base[off] = lbl_803DED08 * ((d2 > lbl_803DED2C) ? lbl_803DED28 : (lbl_803DED2C - d2));
+            base[off] = 255.0f * ((d2 > lbl_803DED2C) ? lbl_803DED28 : (lbl_803DED2C - d2));
         }
     }
 }
@@ -600,7 +599,7 @@ static inline void fillSmallDiskTexture(void)
             {
                 d2 = sqrtf(lbl_803DED2C - d2);
             }
-            base[off] = lbl_803DED08 * d2;
+            base[off] = 255.0f * d2;
         }
     }
 }
@@ -1591,8 +1590,8 @@ void initFn_8006d020(void)
                 dst += (col & 3) * 8;
                 dst += (col >> 2) * 0x200;
                 fn_8006CD20(row * lbl_803DEDE0, col * lbl_803DEDE0, tex, gNewShadowPlacements, count, &o1, &o2);
-                hi = (int)(lbl_803DED08 * o2);
-                lo = (int)(lbl_803DED08 * o1);
+                hi = (int)(255.0f * o2);
+                lo = (int)(255.0f * o1);
                 *(u16*)(dst + 0x60) = ((hi & 0xffff) << 8) | lo;
             }
         }
