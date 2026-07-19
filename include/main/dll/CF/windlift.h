@@ -23,7 +23,6 @@ extern ObjectDescriptor gDummy108ObjDescriptor;
 extern ObjectDescriptor gPortalSpellDoorObjDescriptor;
 
 int Dummy108_getExtraSize(void);
-int Dummy108_func08_ret_0(void);
 void Dummy108_free(void);
 void Dummy108_render(void);
 void Dummy108_hitDetect(void);

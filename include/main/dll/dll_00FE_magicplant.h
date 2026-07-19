@@ -111,10 +111,8 @@ void MagicPlant_update(int obj);
 void MagicPlant_init(GameObject* obj, MagicPlantSetup* setup);
 void FUN_8017fa14(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9, u16 param_10);
-u32 FUN_8017fba8(void);
 void FUN_8017fbe0(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9, int param_10);
-void FUN_8017fccc(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_8017fd40(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u16* param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
                   u32 param_15, u32 param_16);
@@ -131,10 +129,6 @@ void TrickyWarp_free(GameObject* obj);
 void TrickyWarp_update(GameObject* obj);
 int fn_8017FFD0(GameObject* obj, TrickyWarpState* state);
 void TrickyWarp_init(s16* obj, u8* param_2);
-void FUN_801804a0(short* param_1, int param_2);
-void FUN_801804a4(int param_1);
-void FUN_801804d8(int param_1, u32 param_2, u8* param_3, int param_4, int param_5);
-void FUN_801804dc(u32 param_1, u32 param_2, u8* param_3, int param_4, int param_5);
 void TrickyGuard_update();
 void TrickyGuard_init(s16* obj, u8* param_2);
 void StayPoint_update(int obj);
@@ -144,15 +138,8 @@ void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void duster_hitDetect(GameObject* obj);
 void duster_update(GameObject* obj);
 void duster_init(GameObject* obj, u8* params);
-void FUN_80180700(int param_1);
-void FUN_801807cc(int param_1);
-void FUN_80180940(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void FUN_80180984(int* param_1);
 void FUN_80180a0c(u64 param_1, u64 param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8);
-void FUN_801811c8(int param_1, int param_2);
-void FUN_801811cc(void);
-void FUN_80181a90(int param_1, int param_2);
 void FUN_80181b50(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, u32 param_10, int param_11);
 int CurveFish_getExtraSize(void);

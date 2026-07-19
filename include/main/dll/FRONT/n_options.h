@@ -7,9 +7,6 @@
 void THPPlayerDrawCurrentFrame(void *yTexture,void *uTexture,void *vTexture,u32 width,u32 height);
 void AttractMovieAudio_Mix(s16 *dst,s16 *src,u32 sampleCount);
 void AttractMovieAudio_DmaCallback(void);
-void FUN_80118108(void);
-void FUN_8011810c(void);
-bool FUN_80118164(u32 param_1);
 void THPPlayerPostDrawDone(void);
 BOOL THPPlayerGetVideoInfo(void *dst);
 void fn_80118240(void);

@@ -41,13 +41,6 @@ STATIC_ASSERT(offsetof(WispBaddieState, hoverWavePhase) == 0x28);
 STATIC_ASSERT(sizeof(WispBaddieState) == 0x2C);
 
 void wispbaddie_update(GameObject* obj);
-void FUN_8014fd38(int param_1);
-void FUN_8014fd80(u32 param_1);
-void FUN_8014fd84(u32 param_1, int param_2, int param_3);
-void FUN_8014fef8(u32 param_1, int param_2, u32 param_3, int param_4);
-void FUN_8014ff20(void);
-void FUN_8014ff24(short* param_1, u32 param_2);
-void FUN_8014ff4c(u32 param_1, int param_2);
 void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
                   u32 param_15, u32 param_16);

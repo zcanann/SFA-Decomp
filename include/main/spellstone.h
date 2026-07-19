@@ -49,7 +49,6 @@ extern ObjectDescriptor12 gSpellStoneObjDescriptor;
 int spellstone_getState(SpellStoneObject *obj);
 int spellstone_setState(SpellStoneObject *obj,int state);
 int spellstone_getExtraSize(void);
-int spellstone_func08(void);
 void spellstone_free(SpellStoneObject *obj);
 void spellstone_render(SpellStoneObject *obj,u32 param_2,u32 param_3,
                        u32 param_4,u32 param_5,char visible);

@@ -3,8 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_80118470(void);
-u32 FUN_80118524(void);
 bool FUN_80118574(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u32 param_9,u8 param_10,u32 param_11,u32 param_12,

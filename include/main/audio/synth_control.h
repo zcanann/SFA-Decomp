@@ -3,9 +3,6 @@
 
 #include "ghidra_import.h"
 
-void synthSetFade(u8 value, u16 time, u8 selector, u8 action, u32 handle);
-u32 synthIsFadeActive(u32 fadeIndex);
-void synthSetFadeAction(u32 fadeIndex, u8 action);
 void synthExit(void);
 void sndSeqStop(u32 handle);
 void sndSeqSpeed(u32 handle, u16 speed);

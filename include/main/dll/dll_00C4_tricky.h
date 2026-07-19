@@ -22,7 +22,6 @@ extern const TrickyItemIdList gTrickyFoodItemIds;
 extern ObjectDescriptor20WithPadding gTrickyObjDescriptor;
 
 u8* Tricky_findNearestGroup4BObject(u8* obj, TrickyState* state);
-int FUN_80145120(int param_1, int param_2);
 void FUN_80145230(u64 param_1, u64 param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9, int* param_10, int param_11, u32 param_12, u8 param_13, u32 param_14,
                   u32 param_15, u32 param_16);
@@ -33,31 +32,22 @@ void FUN_801457a4(u64 param_1, double param_2, double param_3, u64 param_4, u64 
                   u32 param_15, u32 param_16);
 void tricky_attachToWalkGroup(GameObject* obj, int state);
 void tricky_stateIdleWander(GameObject* obj, int state);
-void FUN_80145ea4(int param_1);
-void FUN_80145ee8(int param_1, int param_2, int param_3);
 int Tricky_requestMoveToObject(int* obj, int targetObj);
 void Tricky_commandPlayBall(int* obj, int commandEnabled, int targetObj);
 void sideCommandEnable(GameObject* obj, int targetObj, int commandKind, int commandType);
 int Tricky_updateSideCommandPrompts(int obj);
-u32 FUN_80146874(void);
 void Tricky_free(int obj, int shouldKeepFlameChildren);
 void Tricky_init(GameObject* obj);
 int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void Tricky_update(int obj);
-void fn_80148C18(int obj, int state);
 void tricky_handleDefeat(GameObject* obj, int state);
 int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAltMode, u32 mode);
 u8 baddie_canSeeTarget(GameObject* obj, int state, void* from, void* to);
 void baddie_updateSightQuadrants(int obj, int state, float radius);
-void fn_8014A5FC(int obj, int state);
-void fn_8014A86C(int obj, int state, float* nearestFloorY, float* nearestSpecialY);
 void Tricky_render(GameObject* obj, int param_2, int param_3, int param_4, int param_5, char doRender);
 void Tricky_hitDetect(GameObject* obj);
 void FUN_80146f94(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8);
-void FUN_80146f98(int param_1);
-void FUN_80146f9c(void);
-void FUN_80146fa0(void);
 void baddieInstantiateWeapon(GameObject* obj, int state);
 void FUN_80146fa4(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, int param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
@@ -67,7 +57,6 @@ void FUN_80147218(u64 param_1, u64 param_2, double param_3, u64 param_4, u64 par
                   u32 param_15, u32 param_16);
 void FUN_8014721c(u64 param_1, u64 param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, u32 param_10, u32 param_11);
-void FUN_80147220(double param_1, int param_2, u32 param_3, u16 param_4);
 void FUN_80147314(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
                   u32 param_15, u32 param_16);
@@ -77,7 +66,6 @@ void FUN_80147884(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_
                   u64 param_8, u32 param_9, u32 param_10, float* param_11, float* param_12);
 void FUN_80147a70(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8);
-void FUN_80147d2c(int param_1, int param_2);
 int Tricky_getExtraSize(void);
 u8 Tricky_getEnergyMax(int* obj);
 u8 Tricky_getEnergy(int* obj);

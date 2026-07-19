@@ -13,15 +13,6 @@
 
 struct WallanimatorPlacement;
 f32 wallanimator_setScale(GameObject* obj, int desc);
-void FUN_80194544(int param_1);
-void FUN_801945fc(int param_1, int param_2);
-void FUN_801946b8(void);
-void FUN_80194874(int param_1);
-void FUN_801948b0(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void FUN_801948d8(u32 param_1);
-void FUN_801949ec(u16* param_1, int param_2);
-double FUN_80194a70(int param_1, u8 param_2);
-void FUN_80194b10(u32 param_1, u32 param_2, int param_3);
 void fn_80194964(int obj, int state, int block);
 void fn_80194C40(u32 def, int state, int block);
 u8 wallanimator_modelMtxFn(int* obj);

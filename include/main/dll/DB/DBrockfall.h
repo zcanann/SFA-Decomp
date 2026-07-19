@@ -22,11 +22,8 @@ int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void dll_144_init(GameObject* obj);
 void PaymentKiosk_release(void);
 void PaymentKiosk_initialise(void);
-void FUN_801df45c(u16* param_1);
-u32 FUN_801df69c(int param_1, u32 param_2, int param_3);
 void FUN_801df784(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, u32 param_10, int param_11);
-void FUN_801df788(int param_1);
 int FEseqobject_getExtraSize(void);
 int FEseqobject_getObjectTypeId(void);
 void FEseqobject_free(void);

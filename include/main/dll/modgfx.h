@@ -16,16 +16,6 @@ extern char sProjgfxSetzscaleDoNoLongerSupported[];
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
 
 
-void modgfx_releaseExpgfxPools(void);
-void modgfx_allocExpgfxPools(void);
-void modgfx_scrollVertexTexcoords(int param_1,int param_2);
-void modgfx_resetBaseVertexState(int param_1);
-void modgfx_updateVertexRgb(int param_1,int param_2,int param_3);
-void modgfx_updateEffectPosition(int state,int command,int mode);
-void modgfx_updateEffectRotation(int state,int command,int mode);
-void modgfx_updateVertexAlpha(int param_1,int param_2,int param_3,u32 param_4);
-void modgfx_updateVertexScale(int param_1,int param_2,int param_3,u32 param_4);
-void modgfx_restoreActiveVertexState(int param_1);
 void modgfx_releaseActiveEffectsByType(u64 param_1,u64 param_2,u64 param_3,
                                        u64 param_4,u64 param_5,u64 param_6,
                                        u64 param_7,u64 param_8,short param_9,

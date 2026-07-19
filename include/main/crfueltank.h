@@ -52,7 +52,6 @@ typedef struct CrFuelTankObject {
 extern ObjectDescriptor gCrFuelTankObjDescriptor;
 
 int crfueltank_getExtraSize(void);
-int crfueltank_func08(void);
 void crfueltank_free(void);
 void crfueltank_render(void);
 void crfueltank_hitDetect(CrFuelTankObject *obj);

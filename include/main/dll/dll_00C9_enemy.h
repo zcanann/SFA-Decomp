@@ -72,12 +72,10 @@ void FUN_8014ab58(u64 param_1, double param_2, double param_3, double param_4, d
                   u32 param_14, u32 param_15, u32 param_16);
 void FUN_8014c0b4(double param_1, double param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9, int param_10);
-void FUN_8014c528(u16* param_1, int param_2);
 void FUN_8014c690(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, u32 param_10, int param_11);
 void FUN_8014c694(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9);
-void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4);
 int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate);
 int fn_8014C11C(GameObject* obj, f32 radius, u8 flags, int maxCount, EnemyTargetSearchResult* results);
 void enemy_setTrackedObj(GameObject* obj, GameObject* target);
@@ -104,12 +102,6 @@ void enemy_hitDetect(GameObject* obj);
 void enemy_free(GameObject* obj, int flag);
 void enemy_update(int obj);
 void enemy_init(GameObject* obj, u8* setup, int flag);
-u32 FUN_8014ca90(int param_1);
-void FUN_8014caf4(int param_1, u32* param_2, float* param_3, float* param_4);
-void FUN_8014cbbc(int param_1);
-double FUN_8014cbcc(int param_1);
-void FUN_8014cc7c(int param_1);
-void FUN_8014ccac(int param_1, u32 param_2);
 void FUN_8014ccb8(double param_1, double param_2, double param_3, int param_4, int param_5, float* param_6,
                   char param_7);
 double FUN_8014cfac(double param_1, double param_2, double param_3, double param_4, double param_5, double param_6,

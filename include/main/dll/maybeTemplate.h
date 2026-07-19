@@ -11,7 +11,6 @@
 
 void pauseMenuDrawStatus(void);
 void cMenuUpdateAnims(void);
-void minimapFn_8012310c(void);
 void hudDrawMagicBar(int alpha, int elementAlpha, u8 flags);
 
 #endif

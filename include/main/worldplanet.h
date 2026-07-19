@@ -144,7 +144,6 @@ STATIC_ASSERT(offsetof(WorldPlanetState, orbitSoundFrameCount) == 0x14);
 extern ObjectDescriptor gWorldPlanetObjDescriptor;
 
 int worldplanet_getExtraSize(void);
-int worldplanet_func08(void);
 void worldplanet_free(void);
 void worldplanet_render(u32 param_1, u32 param_2, u32 param_3, u32 param_4, u32 param_5, char visible);
 void worldplanet_hitDetect(void);

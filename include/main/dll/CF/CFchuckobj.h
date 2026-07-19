@@ -225,23 +225,11 @@ STATIC_ASSERT(offsetof(LfxEmitterObject, objAnim) == 0x00);
 STATIC_ASSERT(offsetof(LfxEmitterObject, state) == 0xB8);
 
 void FxEmit_init(FxEmitObject* obj, FxEmitPlacement* setup);
-void FUN_8018f158(u32 param_1);
-void FUN_8018f1b4(short* param_1);
-void FUN_8018f4fc(u16* param_1, int param_2);
-void FUN_8018f500(void);
-void FUN_8018f650(void);
-int FUN_8018fca4(int obj, int unused, ObjAnimUpdateState* animUpdate);
-void FUN_8018fd14(int obj);
-void FUN_8018fd48(int param_1);
-void FUN_8018fec4(u16* param_1, int param_2);
-void FUN_8018fec8(u16* param_1, u16* param_2);
-void FUN_8018ffbc(int param_1);
 void areafxemit_emitBurst(AreaFxEmitObject* obj, int count);
 void areafxemit_emitEffect(AreaFxEmitObject* obj);
 void fn_8018FF48(u16* src, u16* dst);
 void FUN_80190004(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, short* param_9);
-void FUN_80190008(int param_1, int param_2);
 
 int AreaFxEmit_getExtraSize(void);
 int AreaFxEmit_getObjectTypeId(void);

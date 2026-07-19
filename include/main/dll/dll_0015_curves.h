@@ -229,7 +229,6 @@ STATIC_ASSERT(offsetof(CurvesCollisionState, activeTimer) == 0x264);
 
 u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, float* outLateralOffset,
                                           float* outVerticalOffset, float* outPhase);
-u32 FUN_800e1b2c(double param_1, u64 param_2, double param_3, int param_4, int param_5);
 int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance);
 int curves_findNearestOfType16(f32 x, f32 y, f32 z, int param_4);
 int RomCurve_func13(u32 curveId, int typeFilter, int param_3, int* param_4);
@@ -256,23 +255,18 @@ void RomCurve_add(RomCurveDef* curve);
 void curves_initialise(void);
 void RomCurve_release(void);
 void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* state);
-void FUN_800e49c0(int param_1, u32* param_2);
 void fn_800E56A4(GameObject* obj, CurvesCollisionState* state);
 void fn_800E58FC(GameObject* obj, CurvesCollisionState* state);
 void fn_800E5CBC(short* param_1, int param_2);
 void fn_800E5E38(GameObject* obj, CurvesCollisionState* state);
 void fn_800E5F1C(GameObject* obj, CurvesCollisionState* state);
-void FUN_800e4db4(int param_1, int param_2);
-void FUN_800e4db8(int param_1, int param_2);
 void curves_updateLocalPointCollision(int obj, CurvesCollisionState* state);
 void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* state);
 void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* state);
 void dll_15_func0A(GameObject* obj, CurvesCollisionState* state);
 f32 dll_15_func0B(GameObject* obj, f32 x, f32 baseY, f32 z, f32 height);
-double FUN_800e56bc(u64 param_1, double param_2, double param_3, double param_4, int param_5);
 RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll);
 void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, u32 updateValue, f32 step);
-void FUN_800e6140(u32 param_1, CurvesCollisionState* state);
 void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoints, f32* radii, s8* types);
 void dll_15_func06(GameObject* obj, CurvesCollisionState* state);
 void FUN_800e65c8(CurvesCollisionState* state, u8 pointCount, f32* localPointPositions, f32* localPointRadii,
