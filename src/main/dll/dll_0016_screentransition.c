@@ -84,6 +84,8 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     u32 sh;
     GXColor col;
     u32 wipe;
+    u32 wipeSpan;
+    u32 alphaSpan;
     u32 dist;
     u32 width;
     u32 band;
@@ -115,8 +117,8 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         wipe = 0;
     }
     half = (u16)(width >> 1);
-    wipe = wipe & 0xffff;
-    conv = (f32)(int)(wipe * half);
+    wipeSpan = wipe & 0xffff;
+    conv = (f32)(int)(wipeSpan * half);
     band = (u32)(int)(conv * gScreenTransitionEdgeScale) & 0xffff;
     if (band == half)
     {
@@ -139,12 +141,13 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
             strip = 1;
         }
         fadeAlpha = maxAlpha;
+        alphaSpan = fadeAlpha;
         for (walked = 0; dist = walked & 0xffff, (int)dist < (int)(fadeSpan - strip);)
         {
             col.r = 0xff;
             col.g = 0xff;
             col.b = 0xff;
-            col.a = ((int)(fadeAlpha * (half - dist)) / (int)half) & 0xff;
+            col.a = ((int)(alphaSpan * (half - dist)) / (int)half) & 0xff;
             hudDrawRect(vx + (outer & 0xffff), vy, strip + (vx + (outer & 0xffff)), vb, col);
             hudDrawRect((vx + (band & 0xffff) - strip) + 1, vy, vx + (band & 0xffff) + 1, vb, col);
             walked += strip;
@@ -154,11 +157,11 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = ((int)(fadeAlpha * (half - dist)) / (int)half) & 0xff;
+        col.a = ((int)(alphaSpan * (half - dist)) / (int)half) & 0xff;
         hudDrawRect(vx + (outer & 0xffff), vy, vr, vb, col);
         hudDrawRect(vx, vy, vx + (band & 0xffff) + 1, vb, col);
         band = (u16)(height >> 1);
-        conv = (f32)(int)(wipe * band);
+        conv = (f32)(int)(wipeSpan * band);
         wipe = (u32)(int)(conv * gScreenTransitionEdgeScale) & 0xffff;
         half = (band - wipe) & 0xffff;
         fadeSpan = (band + wipe) & 0xffff;
@@ -178,7 +181,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
             col.r = 0xff;
             col.g = 0xff;
             col.b = 0xff;
-            col.a = ((int)(fadeAlpha * (band - outer)) / (int)band) & 0xff;
+            col.a = ((int)(alphaSpan * (band - outer)) / (int)band) & 0xff;
             hudDrawRect(vx, vy + (fadeSpan & 0xffff), vr, strip + (vy + (fadeSpan & 0xffff)), col);
             hudDrawRect(vx, (vy + (wipe & 0xffff) - strip) + 1, vr, vy + (wipe & 0xffff) + 1, col);
             walked += strip;
@@ -188,7 +191,7 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = ((int)(fadeAlpha * (band - outer)) / (int)band) & 0xff;
+        col.a = ((int)(alphaSpan * (band - outer)) / (int)band) & 0xff;
         hudDrawRect(vx, vy + (fadeSpan & 0xffff), vr, vb, col);
         hudDrawRect(vx, vy, vr, vy + (wipe & 0xffff) + 1, col);
         GXSetScissor(sx, sy, sw, sh);
