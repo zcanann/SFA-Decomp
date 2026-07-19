@@ -58,9 +58,9 @@ GXColor gGameTextClearColor = {0, 0, 0, 0xC0};
 int lbl_803DB3CC = 3;
 f32 lbl_803DB3D0 = 0.4f;
 char lbl_803DB3D4[] = "    ";
-int lbl_803DB3DC = 0;
+char lbl_803DB3DC[4] = {0};
 int gGameTextSavedDir = -1;
-int lbl_803DB3E4 = 0;
+char lbl_803DB3E4[4] = {0};
 s16 gGameTextBoxTexAssets = 0x1C4;
 int gGameTextBoxCornerInset = 2;
 int gGameTextBoxInset = 0xE;
@@ -68,7 +68,7 @@ int gGameTextBoxColorR = 0xFF;
 int gGameTextBoxColorG = 0xFF;
 int gGameTextBoxColorB = 0xFF;
 int gGameTextBoxColorA = 0xFF;
-int lbl_803DB404 = 0;
+char lbl_803DB404[4] = {0};
 
 typedef struct
 {

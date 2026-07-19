@@ -192,6 +192,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     BabyCloudRunnerPlacement* def = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
     s8 inRange;
     int yaw;
+    int halfInner;
     u8* animUpdateBytes = (u8*)animUpdate;
     f32 dx;
     f32 dz;
@@ -207,7 +208,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     dx = ((GameObject*)player)->anim.localPosX - def->base.posX;
     dz = ((GameObject*)player)->anim.localPosZ - def->base.posZ;
     distSq = dx * dx + dz * dz;
-    if (distSq < (f32)((def->innerRadius / 2) * (def->innerRadius / 2)))
+    if (distSq < (f32)((halfInner = def->innerRadius / 2) * halfInner))
     {
         inRange = 1;
     }
