@@ -380,11 +380,13 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action)
 int gBossDrakorMoveStateTable[5] = {1, 2, 3, 4, 5};
 int gBossDrakorMoveSpeedTable[5] = {400, 400, 400, 600, 600};
 
-int gBossDrakorTurnMoveStates[32] = {
-    18,         18,         19,         20,         21,         1000593162, 1000593162, 1000593162,
-    1000593162, 1000593162, 1000593162, 1000593162, 1000593162, 1000593162, 1,          7,
-    6,          7,          7,          1,          1,          3,          11,         1045220557,
-    1045220557, 1045220557, 1034147594, 1031127695, 1031127695, 50,         100,        200,
+BossDrakorTuning gBossDrakorTurnMoveStates = {
+    {18, 18, 19, 20, 21},
+    {0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f, 0.005f},
+    {1, 7, 6, 7, 7, 1, 1, 3, 11},
+    {0.2f, 0.2f, 0.2f},
+    {0.08f, 0.06f, 0.06f},
+    {50, 100, 200},
 };
 
 ObjectDescriptor gBossDrakorObjDescriptor = {
@@ -788,7 +790,7 @@ void bossdrakor_update(GameObject* obj)
         {
             ObjAnim_SetCurrentMove((int)obj, ((BossDrakorState*)state)->moveState, lbl_803E6510, 0);
         }
-        if (arrayIndexOf(gBossDrakorTurnMoveStates, 5, ((BossDrakorState*)state)->moveState) != -1)
+        if (arrayIndexOf(gBossDrakorTurnMoveStates.turnMoveStates, 5, ((BossDrakorState*)state)->moveState) != -1)
         {
             switch (((BossDrakorState*)state)->moveState)
             {

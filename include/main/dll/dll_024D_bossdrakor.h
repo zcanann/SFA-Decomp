@@ -101,7 +101,24 @@ extern s16 lbl_803DC19A;
 
 extern int gBossDrakorMoveStateTable[];
 extern int gBossDrakorMoveSpeedTable[];
-extern int gBossDrakorTurnMoveStates[];
+typedef struct BossDrakorTuning
+{
+    int turnMoveStates[5];
+    f32 unk14[9];
+    int unk38[9];
+    f32 missileBaseSpeeds[3];
+    f32 missileLeadFactors[3];
+    int unk74[3];
+} BossDrakorTuning;
+
+STATIC_ASSERT(sizeof(BossDrakorTuning) == 0x80);
+STATIC_ASSERT(offsetof(BossDrakorTuning, unk14) == 0x14);
+STATIC_ASSERT(offsetof(BossDrakorTuning, unk38) == 0x38);
+STATIC_ASSERT(offsetof(BossDrakorTuning, missileBaseSpeeds) == 0x5c);
+STATIC_ASSERT(offsetof(BossDrakorTuning, missileLeadFactors) == 0x68);
+STATIC_ASSERT(offsetof(BossDrakorTuning, unk74) == 0x74);
+
+extern BossDrakorTuning gBossDrakorTurnMoveStates;
 
 void bossdrakor_release(void);
 void bossdrakor_initialise(void);
