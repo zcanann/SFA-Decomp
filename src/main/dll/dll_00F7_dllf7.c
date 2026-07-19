@@ -128,8 +128,7 @@ void dll_F7_free(int obj)
     ObjGroup_RemoveObject(obj, DLLF7_OBJGROUP);
 }
 
-extern const f32 lbl_803E3400;
-extern const f32 lbl_803E3404;
+static const f32 gDllF7BounceRest[1] = {0.0f};
 
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -137,11 +136,11 @@ void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     if (state->byte9 == 0 && visible != 0)
     {
         f32 v = state->bounceOffset;
-        if (v != lbl_803E3400)
+        if (v != gDllF7BounceRest[0])
         {
             fn_8003B5E0(0xc8, 0, 0, v);
         }
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3404);
+        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -180,11 +179,11 @@ void dll_F7_update(int* obj)
         {
             Sfx_PlayAtPositionFromObject((int)obj, blk.x, blk.y, blk.z, SFXTRIG_crtsmsh6);
             Obj_SetActiveModelIndex((GameObject*)obj, 2 - state->hitsRemaining);
-            state->bounceOffset = (1.0f);
+            state->bounceOffset = 1.0f;
             state->bounceVelocity = 12.0f;
             blk.x += playerMapOffsetX;
             blk.z += playerMapOffsetZ;
-            blk.scale = (1.0f);
+            blk.scale = 1.0f;
             blk.rotZ = 0;
             blk.rotY = 0;
             blk.rotX = 0;
@@ -238,12 +237,12 @@ void dll_F7_update(int* obj)
         }
         ((void (*)(int*, int, int, int, int, int))((int*)*(int**)gDllF7Resource5B)[1])(obj, 1, 0, 2, -1, 0);
     }
-    if (state->bounceOffset > (0.0f))
+    if (state->bounceOffset > gDllF7BounceRest[0])
     {
         state->bounceOffset = timeDelta * state->bounceVelocity + state->bounceOffset;
-        if (state->bounceOffset < (0.0f))
+        if (state->bounceOffset < gDllF7BounceRest[0])
         {
-            state->bounceOffset = (0.0f);
+            state->bounceOffset = gDllF7BounceRest[0];
         }
         else if (state->bounceOffset > 120.0f)
         {
