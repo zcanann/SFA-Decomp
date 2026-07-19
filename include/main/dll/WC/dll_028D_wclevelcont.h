@@ -143,9 +143,9 @@ void wclevelcont_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 void wclevelcont_hitDetect(void);
 void wclevelcont_syncProgressBits(WcLevelControlState* state);
 void wclevelcont_update(GameObject* obj);
-void fn_802251B4(GameObject* obj, WcLevelControlState* state);
+void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state);
 int wclevelcont_traceMoveA(GameObject* obj, s16 x, s16 y, f32* outX, f32* outZ, int dx, int dy);
-void wcpushblock_updateLevelControlState(GameObject* obj, WcLevelControlState* state);
+void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state);
 int wclevelcont_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int wclevelcont_traceMoveB(GameObject* obj, s16 x, s16 y, f32* outX, f32* outZ, int dx, int dy);
 void wclevelcont_init(GameObject* obj);

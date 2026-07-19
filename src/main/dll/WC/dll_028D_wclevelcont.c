@@ -36,7 +36,7 @@
 #define WCPUSHBLOCK_GAMEBIT_B_FADE   0x809
 #define WCPUSHBLOCK_GAMEBIT_B_COUNT  0x811
 
-void fn_802251B4(GameObject* obj, WcLevelControlState* state)
+void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
 {
     f32 sunTime;
 
@@ -195,7 +195,7 @@ void fn_802251B4(GameObject* obj, WcLevelControlState* state)
     }
 }
 
-void wcpushblock_updateLevelControlState(GameObject* obj, WcLevelControlState* state)
+void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state)
 {
     if (state->completionFlags & WCLEVELCTL_FLAG_EVENT_ACTIVE)
         return;
@@ -827,10 +827,10 @@ void wclevelcont_update(GameObject* obj)
     {
     case 1:
     default:
-        wcpushblock_updateLevelControlState(obj, state);
+        wclevelcont_updateAct1State(obj, state);
         break;
     case 2:
-        fn_802251B4(obj, state);
+        wclevelcont_updateAct2State(obj, state);
         break;
     }
     wclevelcont_syncProgressBits(state);

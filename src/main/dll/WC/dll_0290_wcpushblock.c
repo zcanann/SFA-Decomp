@@ -15,9 +15,10 @@
  * variant solved/fade/count game bits drive the puzzle; reaching
  * WCPUSHBLOCK_REQUIRED_LOCK_COUNT latches the solved bit.
  *
- * wcpushblock_updateLevelControlState / fn_802251B4 are the WC level
- * controller's own mode machine (timers, save points, map gating, music),
- * co-located in this TU. Offsets/bit values inferred from code.
+ * The WC level controller's own act-1/act-2 mode machines (timers, save
+ * points, map gating, music) live in dll_028D_wclevelcont.c
+ * (wclevelcont_updateAct1State / wclevelcont_updateAct2State), not here.
+ * Offsets/bit values inferred from code.
  */
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
