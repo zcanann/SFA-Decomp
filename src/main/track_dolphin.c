@@ -1320,7 +1320,7 @@ void fn_8006135C(s16* out, GameObject* obj)
     }
 }
 
-void objDrawFn_80061654(int obj, int placementObj)
+void objDrawFn_80061654(GameObject* obj, ObjModel* model)
 {
     s16* shadowVerts;
     u8 alpha;
@@ -1329,19 +1329,19 @@ void objDrawFn_80061654(int obj, int placementObj)
     f32 mtx[16];
     f32 outMtx[16];
 
-    shadowVerts = *(s16**)(placementObj + 0x54);
+    shadowVerts = (s16*)model->unk54;
     if (*(u8*)((u8*)shadowVerts + 0x18) == 0)
     {
-        fn_8006135C(shadowVerts, (GameObject*)obj);
+        fn_8006135C(shadowVerts, obj);
     }
     if (*(u8*)((u8*)shadowVerts + 0x18) != 0xff)
     {
-        alpha = (u8)objShadowFn_80062378((GameObject*)obj, 0x96);
+        alpha = (u8)objShadowFn_80062378(obj, 0x96);
         kColor.a = alpha;
         if (alpha != 0)
         {
             viewMtx = Camera_GetViewMatrix();
-            Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
+            Obj_BuildWorldTransformMatrix(obj, mtx, 0);
             mtx[0] = lbl_803DEC68;
             mtx[1] = lbl_803DEC58;
             mtx[2] = lbl_803DEC58;
@@ -2067,7 +2067,8 @@ void initTextures(void)
     allocLotsOfTextures();
 }
 
-int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY, int* outSurfaceId)
+int findSurfaceInYRange(GameObject* obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
+                        GameObject** outSurfaceObj)
 {
     TrackGroundHit** arr;
     int n;
@@ -2079,9 +2080,9 @@ int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
         hi = lo;
         lo = t;
     }
-    n = hitDetectFn_80065e50((GameObject*)obj, x, lo, z, &arr, 0, 1);
+    n = hitDetectFn_80065e50(obj, x, lo, z, &arr, 0, 1);
     *outSurfaceY = lo;
-    *outSurfaceId = 0;
+    *outSurfaceObj = NULL;
     for (i = 0; i < n; i++)
     {
         TrackGroundHit* elem = arr[i];
@@ -2091,7 +2092,7 @@ int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
         }
         if (lo < elem->height && hi > elem->height)
         {
-            *outSurfaceId = (int)arr[i]->object;
+            *outSurfaceObj = arr[i]->object;
             *outSurfaceY = arr[i]->height;
             return (arr[i]->normalY < lbl_803DECB0) + 1;
         }

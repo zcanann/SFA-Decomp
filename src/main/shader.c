@@ -77,7 +77,6 @@ extern const f32 gMapBlockWorldSize;
 #include "track/intersect_api.h"
 #include "main/model.h"
 #include "main/pi_dolphin.h"
-#include "main/track_dolphin_ext.h"
 #include "main/track_dolphin_shadow_api.h"
 #include "main/dll/dll_0017_savegame_api.h"
 #include "main/objprint_dolphin_api.h"

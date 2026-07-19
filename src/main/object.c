@@ -45,7 +45,6 @@
 #include "main/frame_timing.h"
 #include "main/dll/player.h"
 #include "string.h"
-#include "main/track_dolphin_ext.h"
 #include "main/dll/dll_0004_dummy04.h"
 
 s16 gObjPartitionPivot;

@@ -45,7 +45,6 @@
 #include "track/intersect_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/dll/cloudaction.h"
-#include "main/track_dolphin_ext.h"
 #include "main/trig.h"
 #include "main/tex_dolphin.h"
 #include "main/acosf_api.h"
@@ -1614,7 +1613,7 @@ void objDrawFn_8005da48(GameObject* obj)
         }
         else if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH)
         {
-            objDrawFn_80061654((int)obj, (int)model);
+            objDrawFn_80061654(obj, (ObjModel*)model);
         }
         Camera_ApplyFullViewport();
     }
@@ -1666,7 +1665,7 @@ void sceneDrawTransparentPolys(void)
             break;
         case 3:
             fn_8000F9B4();
-            objDrawFn_80061654((int)e[i][0], (int)Obj_GetActiveModel((GameObject*)e[i][0]));
+            objDrawFn_80061654((GameObject*)e[i][0], Obj_GetActiveModel((GameObject*)e[i][0]));
             Camera_ApplyFullViewport();
             break;
         case 4:

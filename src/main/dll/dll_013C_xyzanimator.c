@@ -25,7 +25,6 @@
 #include "dolphin/os/OSCache.h"
 #include "main/object_descriptor.h"
 #include "main/track_dolphin_api.h"
-#include "main/track_dolphin_ext.h"
 #include "main/track_dolphin_sky_api.h"
 #include "main/dll/xyzanimator_api.h"
 

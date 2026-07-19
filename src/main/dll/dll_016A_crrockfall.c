@@ -30,7 +30,6 @@
 #include "main/frame_timing.h"
 #include "main/objhits.h"
 #include "main/object_descriptor.h"
-#include "main/track_dolphin_ext.h"
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
