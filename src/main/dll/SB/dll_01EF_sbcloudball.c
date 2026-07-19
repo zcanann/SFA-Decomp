@@ -35,8 +35,6 @@
 #define SBCLOUDBALL_OBJFLAG_PARENT_SLACK 0x1000
 #define SBCLOUDBALL_PARTFX               0xa8
 
-typedef void (*SBCloudBallTrailBurstFn)(int* obj, f32 scale, int mode, int effectId, int origin, void* velocity);
-
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
  * (SB_CloudBall_getExtraSize == 0x24).
@@ -200,12 +198,9 @@ void SB_CloudBall_update(GameObject* obj)
         particleVelocity[0] = SB_CLOUD_BALL_TRAIL_VEL_SCALE * -state->velX;
         particleVelocity[1] = SB_CLOUD_BALL_TRAIL_VEL_SCALE * -state->velY;
         particleVelocity[2] = SB_CLOUD_BALL_TRAIL_VEL_SCALE * -state->velZ;
-        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE, 2, 0x156,
-                                                                0xf, particleVelocity);
-        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE, 2, 0x156,
-                                                                0xf, particleVelocity);
-        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE, 2, 0x156,
-                                                                0xf, particleVelocity);
+        objfx_spawnFlaggedTrailBurst(obj, SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE, 2, 0x156, 0xf, particleVelocity);
+        objfx_spawnFlaggedTrailBurst(obj, SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE, 2, 0x156, 0xf, particleVelocity);
+        objfx_spawnFlaggedTrailBurst(obj, SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE, 2, 0x156, 0xf, particleVelocity);
         (*gPartfxInterface)->spawnObject((void*)obj, SBCLOUDBALL_PARTFX, NULL, 2, -1, NULL);
     }
 }
