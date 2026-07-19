@@ -8,7 +8,7 @@
  * landing on a contact object, and a floor clamp), then persists the
  * object's position. Re-split from a former multi-object TU. */
 #include "main/audio/sfx_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
@@ -55,11 +55,11 @@ void dll_1DA_free(void)
 {
 }
 
-void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_1DA_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1DA_hitDetect(GameObject* obj)

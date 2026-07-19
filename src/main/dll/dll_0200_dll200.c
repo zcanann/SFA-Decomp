@@ -20,7 +20,7 @@
 #include "main/gamebits.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_api.h"
 #include "main/pad.h"
 #include "main/vecmath.h"
@@ -450,10 +450,10 @@ void dll_200_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
     {
         if ((u32)mainGetBit(0x2bd) == 0u)
             return;
-        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, 1.0f);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
         return;
     }
-    objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, 1.0f);
+    objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
 }
 
 void dll_200_hitDetect_nop(void)
@@ -535,4 +535,4 @@ void dll_200_release_nop(void)
 void dll_200_initialise_nop(void)
 {
 }
-
+

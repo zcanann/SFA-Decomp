@@ -18,7 +18,7 @@
 #include "main/objtexture.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_descriptor.h"
 
@@ -58,9 +58,9 @@ void dll_1DF_free(void)
 {
 }
 
-void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_1DF_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (visible != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1DF_hitDetect(void)

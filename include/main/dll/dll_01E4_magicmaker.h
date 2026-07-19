@@ -43,7 +43,7 @@ STATIC_ASSERT(sizeof(MagicmakerSetup) == 0x30);
 int magicmaker_getExtraSize(void);
 int magicmaker_getObjectTypeId(void);
 void magicmaker_free(void);
-void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void magicmaker_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void magicmaker_hitDetect(void);
 void magicmaker_update(GameObject* obj);
 void magicmaker_init(void);

@@ -24,7 +24,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/mm.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objseq.h"
 
 #define LINKA_LEVCONTROL_LOOP_SFX_ID 0x48B
@@ -173,9 +173,9 @@ void LinkALevControl_free(void)
 {
 }
 
-void LinkALevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void LinkALevControl_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void LinkALevControl_hitDetect(void)

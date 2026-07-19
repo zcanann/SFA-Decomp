@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0243_DBHOLECONTROL1_H_
 
 #include "types.h"
+#include "main/game_object.h"
 #include "main/objanim_update.h"
 
 extern u32 gDBHoleControl1ObjDescriptor[14];
@@ -33,7 +34,7 @@ void DBstealerwo_setFuncPtrs_80203c78(void);
 int dbholecontrol1_getExtraSize(void);
 int dbholecontrol1_getObjectTypeId(void);
 void dbholecontrol1_free(int obj);
-void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dbholecontrol1_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void dbholecontrol1_hitDetect(void);
 void dbholecontrol1_update(int* obj);
 void dbholecontrol1_init(int* obj, u8* params);

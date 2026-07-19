@@ -15,7 +15,7 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/obj_placement.h"
@@ -113,15 +113,15 @@ void lightfoot_free(GameObject* obj, int flag)
     (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))((int)obj, inner, 0x20);
 }
 
-void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void lightfoot_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
     {
-        switch (((GameObject*)p1)->userData1)
+        switch (obj->userData1)
         {
         case 0:
-            objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E8188);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E8188);
             break;
         default:
             break;

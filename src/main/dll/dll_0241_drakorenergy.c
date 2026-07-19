@@ -22,7 +22,7 @@
 #include "main/dll/objfx.h"
 #include "main/dll/player_api.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
@@ -87,7 +87,7 @@ void drakorenergy_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 vis
     u32 mode = state->mode;
     if (mode != DRAKORENERGY_MODE_IDLE && mode != DRAKORENERGY_MODE_COLLECTED)
     {
-        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, lbl_803E6278);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E6278);
     }
 }
 
@@ -236,4 +236,3 @@ ObjectDescriptor12 gDrakorEnergyObjDescriptor = {
     (ObjectDescriptorCallback)drakorenergy_setScale,
     (ObjectDescriptorCallback)DrakorEnergy_func0B_nop,
 };
-

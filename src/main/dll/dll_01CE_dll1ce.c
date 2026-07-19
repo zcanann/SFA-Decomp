@@ -26,7 +26,7 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 /* Spawn-setup buffer seeded by dll_1CE_update for its child (obj id 0x246):
  * position/color head plus class-specific fields (see the target stb/sth). */
@@ -121,11 +121,11 @@ void dll_1CE_free(void)
     lbl_803DDB78 = NULL;
 }
 
-void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_1CE_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1CE_hitDetect(void)

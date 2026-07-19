@@ -24,7 +24,7 @@
 #include "main/gamebits.h"
 #include "main/mm.h"
 #include "main/vecmath.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 s16 gDll1D6SlotTabIndex[4] = {0x10A, 0x14F, 0x151, 0x153};
@@ -117,11 +117,11 @@ void dll_1D6_free(int* obj)
     (gDll1D6SlotInUse)[state->slot] = 0;
 }
 
-void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_1D6_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1D6_hitDetect(void)
@@ -352,4 +352,3 @@ ObjectDescriptor dll_1D6 = {
     (ObjectDescriptorCallback)dll_1D6_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)dll_1D6_getExtraSize,
 };
-

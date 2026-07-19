@@ -44,7 +44,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/dll/dll_022C_dll22c.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -102,10 +102,10 @@ void dll_22C_free(int obj)
     getLActions((void*)obj, (void*)obj, 0, 0, 0, 0);
 }
 
-void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_22C_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_22C_hitDetect_nop(void)

@@ -18,7 +18,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/object_descriptor.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 typedef struct Dll1CFObjectDef
 {
@@ -72,11 +72,11 @@ void dll_1CF_free(void)
 {
 }
 
-void dll_1CF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_1CF_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 visibleInt = visible;
     if (visibleInt != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A30);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4A30);
 }
 
 void dll_1CF_hitDetect(void)

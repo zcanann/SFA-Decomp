@@ -2,6 +2,7 @@
 #define MAIN_DLL_FIRE_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
@@ -39,7 +40,7 @@ int LinkALevControl_seqFn(FireObject *obj,int unused,ObjAnimUpdateState *animUpd
 int LinkALevControl_getExtraSize(void);
 int LinkALevControl_getObjectTypeId(void);
 void LinkALevControl_free(void);
-void LinkALevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void LinkALevControl_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void LinkALevControl_hitDetect(void);
 void LinkALevControl_update(FireObject *obj);
 void LinkALevControl_init(FireObject *obj);

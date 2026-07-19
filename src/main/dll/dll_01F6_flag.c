@@ -16,7 +16,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/dll_01F6_flag.h"
 #include "main/object_descriptor.h"
 
@@ -59,10 +59,10 @@ static void flag_updateTiedSwing(GameObject* obj, GameObject* parent)
     }
 }
 
-void Flag_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void Flag_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void Flag_hitDetect(void)

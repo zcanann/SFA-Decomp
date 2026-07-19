@@ -2,7 +2,7 @@
 #include "main/game_object.h"
 #include "main/object_update_list.h"
 #include "main/obj_group.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/dll22cstate_struct.h"
@@ -147,7 +147,7 @@ void dbholecontrol1_free(int obj)
     ObjGroup_RemoveObject(obj, DBHOLECONTROL1_OBJGROUP);
 }
 
-void dbholecontrol1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dbholecontrol1_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 enabled = visible;
     if (enabled != 0)

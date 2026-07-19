@@ -33,7 +33,7 @@ extern f32 lbl_803E8228;
 int lightfoot_getExtraSize(void);
 int lightfoot_getObjectTypeId(void);
 void lightfoot_free(GameObject* obj, int flag);
-void lightfoot_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void lightfoot_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void lightfoot_hitDetect(void);
 void lightfoot_update(GameObject* obj);
 void lightfoot_init(GameObject* obj, int def, int flag);
