@@ -2404,7 +2404,7 @@ int playerStateSuperQuake(GameObject* obj, int state, f32 fv)
     case 0x85:
         inner->chargeLevel = inner->chargeLevel + lbl_803E7ED4 * fv / lbl_803E7EF0;
         inner->chargeLevel = lbl_803E7E98 * fv + inner->chargeLevel;
-        if (inner->chargeLevel >= (f32)(u32) * (u8*)((char*)inner + 0x41c))
+        if (inner->chargeLevel >= (f32)(u32) ((PlayerState*)inner)->chargeCapacity)
         {
             int amt;
             int r35c;
@@ -4968,7 +4968,7 @@ int playerState21(int obj, int state, f32 fv)
             lbl_803E7EE0)
         {
             d = getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ) & 0xffff;
-            d -= (u16) * (s16*)((char*)inner + 0x478);
+            d -= (u16) ((PlayerState*)inner)->targetYaw;
             if (d > 0x8000)
             {
                 d -= 0xffff;
@@ -5001,7 +5001,7 @@ int playerState21(int obj, int state, f32 fv)
             lbl_803E7EE0)
         {
             d = getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ) & 0xffff;
-            d -= (u16) * (s16*)((char*)inner + 0x478);
+            d -= (u16) ((PlayerState*)inner)->targetYaw;
             if (d > 0x8000)
             {
                 d -= 0xffff;
@@ -9422,7 +9422,7 @@ int playerStateMoving(int obj, int state, f32 fv)
                     d = -d;
                 }
                 ((PlayerState*)inner)->targetYaw =
-                    (s16)(gPlayerDegToBinAngle * d + (f32) * (s16*)((char*)inner + 0x478));
+                    (s16)(gPlayerDegToBinAngle * d + (f32) ((PlayerState*)inner)->targetYaw);
             }
             if (((PlayerState*)inner)->yawRateSigned < 0x96)
             {
@@ -9477,9 +9477,9 @@ int playerStateMoving(int obj, int state, f32 fv)
                                ? ((PlayerState*)inner)->maxSpeed
                                : ((PlayerState*)state)->baddie.animSpeedC);
             }
-            t = mathSinf((gPlayerPi * (f32) * (s16*)((char*)inner + 0x478)) / lbl_803E7F98);
+            t = mathSinf((gPlayerPi * (f32) ((PlayerState*)inner)->targetYaw) / lbl_803E7F98);
             {
-                f32 sn = mathCosf((gPlayerPi * (f32) * (s16*)((char*)inner + 0x478)) / lbl_803E7F98);
+                f32 sn = mathCosf((gPlayerPi * (f32) ((PlayerState*)inner)->targetYaw) / lbl_803E7F98);
                 f32 nx = -((PlayerState*)inner)->smoothVelZ * sn - ((PlayerState*)inner)->smoothVelX * t;
                 ya = ((PlayerState*)inner)->smoothVelX * sn - ((PlayerState*)inner)->smoothVelZ * t;
                 ((PlayerState*)state)->baddie.animSpeedA =
@@ -10045,7 +10045,7 @@ int playerStateIdle(int obj, int state, f32 fv)
         {
             step = -step;
         }
-        *(u16*)&((PlayerState*)inner)->targetYaw = gPlayerDegToBinAngle * step + (f32) * (s16*)((char*)inner + 0x478);
+        *(u16*)&((PlayerState*)inner)->targetYaw = gPlayerDegToBinAngle * step + (f32) ((PlayerState*)inner)->targetYaw;
         step = interpolate((f32) * (int*)((char*)inner + 0x488), lbl_803E7EE0 / ((PlayerState*)inner)->yawSmoothRate,
                            timeDelta);
         lim = ((PlayerState*)inner)->yawRateLimit * timeDelta;
@@ -13465,8 +13465,8 @@ void fn_802ADE80(GameObject* obj, int inner, int state)
     }
     ((void (*)(f32*, f32*, f32, int))playerCalcWaterCurrent)(&waterX, &waterZ, lbl_803E7EE0, (int)obj);
     {
-        cosv = mathSinf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
-        sinv = mathCosf(gPlayerPi * (f32) * (s16*)((char*)inner + 0x478) / lbl_803E7F98);
+        cosv = mathSinf(gPlayerPi * (f32) ((PlayerState*)inner)->targetYaw / lbl_803E7F98);
+        sinv = mathCosf(gPlayerPi * (f32) ((PlayerState*)inner)->targetYaw / lbl_803E7F98);
         a = -waterZ * sinv - waterX * cosv;
         ((PlayerState*)inner)->waterCurrentVelB +=
             timeDelta * (0.1f * ((waterX * sinv - waterZ * cosv) - ((PlayerState*)inner)->waterCurrentVelB));
@@ -13856,7 +13856,7 @@ void fn_802AED2C(GameObject* obj, int state, int p3)
     ((PlayerState*)state)->targetYawRate = 0;
     gPlayerSubState = 4;
     ((PlayerState*)state)->isHoldingObject = 0;
-    if (*(void**)((char*)state + 0x7f8) != NULL)
+    if (((PlayerState*)state)->heldObj != NULL)
     {
         short id = ((GameObject*)((PlayerState*)state)->heldObj)->anim.seqId;
         if (id == 0x3cf || id == 0x662)
@@ -15831,7 +15831,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                 mdl = (int*)Obj_GetActiveModel(((PlayerState*)inner)->heldObj);
                 if (mdl != NULL && (void*)*mdl != NULL && (*(u16*)(*mdl + 2) & 0x8000) == 0)
                 {
-                    *(u8*)((char*)((PlayerState*)inner)->heldObj + 0xf2) = *(u8*)((char*)obj + 0xf2);
+                    *(u8*)((char*)((PlayerState*)inner)->heldObj + 0xf2) = ((GameObject*)obj)->lightColorSlot;
                 }
                 ((PlayerState*)inner)->unk7FC = (f32)(param >> 0x10) / lbl_803E7ED8;
                 (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 5);
@@ -15852,7 +15852,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                 mdl = (int*)Obj_GetActiveModel(((PlayerState*)inner)->heldObj);
                 if (mdl != NULL && (void*)*mdl != NULL && (*(u16*)(*mdl + 2) & 0x8000) == 0)
                 {
-                    *(u8*)((char*)((PlayerState*)inner)->heldObj + 0xf2) = *(u8*)((char*)obj + 0xf2);
+                    *(u8*)((char*)((PlayerState*)inner)->heldObj + 0xf2) = ((GameObject*)obj)->lightColorSlot;
                 }
                 ((PlayerState*)inner)->unk7FC = (f32)(param >> 0x10);
                 (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 5);
@@ -16046,7 +16046,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             {
                 s16 ang = (s16)getAngle(dx, dz);
                 lbl_803DE4B0 = ang;
-                d = ang - (u16) * (s16*)((char*)inner + 0x478);
+                d = ang - (u16) ((PlayerState*)inner)->targetYaw;
             }
             if (d > 0x8000)
             {
