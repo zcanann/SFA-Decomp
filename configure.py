@@ -1777,7 +1777,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_02AE_waterflowwe.c", cflags=cflags_dll_noopt, extra_cflags=["-opt", "nodeadstore"]),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02AF_tree.c", cflags=cflags_dll_noopt_nocse_noinline),
             Object(NonMatching, "main/dll/dll_02B0_brokenpipe.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_02B1_cmbsrc.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_02B1_cmbsrc.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02B2_dustmotesou.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_02B3_vortex.c", cflags=cflags_dll_noopt_noprop),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02B4_cntcounter.c", cflags=cflags_dll_noopt),
