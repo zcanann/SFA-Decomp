@@ -142,7 +142,6 @@ ModgfxPendingSpawn gModgfxPendingSpawnQueue[0x300 / sizeof(ModgfxPendingSpawn)];
 extern void fn_800A1040(s16 a, int b);
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
-extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 
 s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16* d, int textureAssetId,
                   void* textureResource);

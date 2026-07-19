@@ -19,6 +19,7 @@
 #include "main/lightmap_lifecycle_api.h"
 #include "main/lightmap_render_control_api.h"
 #include "main/lightmap_render_queue_api.h"
+#include "main/lightmap_text_color_api.h"
 #include "main/model_render_instrs_api.h"
 #include "main/modellight_api.h"
 #include "main/newclouds.h"
@@ -1285,9 +1286,9 @@ void fn_8005D0BC(int unused, u8 a, u8 b, u8 c, int wpad0)
 }
 
 
-void _textSetColor(int unused, int a, int b, int c, int d)
+void _textSetColor(void* context, int red, int green, int blue, int alpha)
 {
-    _gxSetTevColor1(a, b, c, d);
+    _gxSetTevColor1(red, green, blue, alpha);
 }
 
 void setTextColor(int unused, int a, int b, int c, int d)

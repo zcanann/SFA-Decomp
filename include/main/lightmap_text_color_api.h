@@ -2,6 +2,7 @@
 #define MAIN_LIGHTMAP_TEXT_COLOR_API_H_
 
 void setTextColor(int unused, int red, int green, int blue, int alpha);
+void _textSetColor(void* context, int red, int green, int blue, int alpha);
 
 #define setTextColorContextLegacy(context, red, green, blue, alpha)                                                     \
     ((void (*)(void*, int, int, int, int))setTextColor)((context), (red), (green), (blue), (alpha))
