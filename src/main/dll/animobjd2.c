@@ -27,7 +27,7 @@
 #include "main/dll/tricky_state.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_looped_object_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/vecmath.h"
 #include "main/dll/player_target.h"
@@ -438,7 +438,7 @@ void fn_8013E0D0(int* obj, TrickyState* t)
                         p += 4;
                     }
                 }
-                Sfx_PlayFromObject((int*)gobj, SFXTRIG_en_cvdrip1c_3db);
+            Sfx_PlayFromObject((u32)gobj, SFXTRIG_en_cvdrip1c_3db);
                 Sfx_AddLoopedObjectSound((u32)gobj, SFXTRIG_trpopn_c);
             }
             **(u8**)&t->progressPtr -= 2;

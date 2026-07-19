@@ -15,7 +15,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/track_dolphin_api.h"
 #include "main/audio/sfx_channel_query_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/dll/objfsa_romcurve.h"
 #include "main/vecmath.h"
 #include "main/lightmap_api.h"
@@ -240,7 +240,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         objLightFn_8009a1dc(obj, lbl_803E2434, lightArgs, 4, 0);
         if (((GameObject*)lastContactObj)->anim.seqId == SKEETLA_ATTACKER_SEQID_STAFF)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_stftest_var);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_stftest_var);
         }
         break;
     case 0x1f:

@@ -21,7 +21,7 @@
 #include "track/intersect_texture_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_position_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
@@ -863,7 +863,7 @@ void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)
     {
         if (((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate < 0.0f)
         {
-            Sfx_PlayFromObject((int*)obj, SFXTRIG_wp_stpos4_b);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_stpos4_b);
         }
         if (flag2 == 0)
         {
@@ -878,7 +878,7 @@ void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)
     {
         if (((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate > 0.0f)
         {
-            Sfx_PlayFromObject((int*)obj, SFXTRIG_wp_stapo1_b);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_stapo1_b);
         }
         if (flag2 == 0)
         {

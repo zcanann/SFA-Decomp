@@ -18,7 +18,7 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
@@ -101,7 +101,7 @@ void SB_CageKyte_update(GameObject* obj)
         randomGetRange(0, 10);
         if ((u32)mainGetBit(SB_CAGEKYTE_SILENCE_GAMEBIT) == 0u)
         {
-            Sfx_PlayFromObject((int*)obj, SFXTRIG_wp_ice_freeze_316);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_ice_freeze_316);
         }
         *timer = randomGetRange(SB_CAGEKYTE_CHIRP_MIN, SB_CAGEKYTE_CHIRP_MAX);
     }

@@ -18,7 +18,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
@@ -154,8 +154,8 @@ void SB_MiniFire_init(GameObject* obj)
         gSbMiniFireResourceVariant = 1;
     }
     Resource_Release(resource);
-    Sfx_PlayFromObject((int*)obj, SFXTRIG_en_trpopn_c_35);
-    Sfx_PlayFromObject((int*)obj, SFXTRIG_dn_boar1_c_2ca);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_en_trpopn_c_35);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_2ca);
 }
 
 void SB_MiniFire_release(void)

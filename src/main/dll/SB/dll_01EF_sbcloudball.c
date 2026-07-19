@@ -22,7 +22,7 @@
 #include "main/object.h"
 #include "main/model_light.h"
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
@@ -121,7 +121,7 @@ void SB_CloudBall_hitDetect(GameObject* obj)
         return;
     if (((GameObject*)target)->anim.seqId == CLOUDBALL_TARGET_TYPE_ID)
     {
-        Sfx_PlayFromObject((int*)obj, SFXTRIG_wp_gcfir1_c);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_gcfir1_c);
     }
     {
         ObjHitsPriorityState* hits = ObjAnim_GetPriorityHitState(&obj->anim);
