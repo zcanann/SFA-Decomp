@@ -62,7 +62,7 @@ STATIC_ASSERT(sizeof(CrawlerModelChainList) == 8);
 #define LANTERNFIREFLY_OBJGROUP          0x30 /* DLL 0x10C lanternfirefly */
 #define FIRECRAWLER_OBJFLAG_RENDERED     0x800
 #define FIRECRAWLER_OBJFLAG_PARENT_SLACK 0x1000
-#define FIREPIPE_OBJ_ID                  0x710 /* child object spawned by firecrawler */
+#define FIREHOLE_OBJ_ID                  0x710 /* FireHole child spawned by firecrawler (firepipe DLL 0x273) */
 /* crawler-family enemy anim.seqIds (docblock table: seqId -> enemy name) */
 #define FIRECRAWLER_SEQID_FIRECRAWLER  0x6a2 /* FireCrawler */
 #define FIRECRAWLER_SEQID_REDEYE       0x6a3 /* RedEye */
@@ -74,9 +74,9 @@ STATIC_ASSERT(sizeof(CrawlerModelChainList) == 8);
 #define FIRECRAWLER_PARTFX_MOVE_STRAIGHT 0x809
 #define FIRECRAWLER_HIT_VOLUME_SLOT      9
 
-/* Spawn-setup buffer for the firepipe child (obj id 0x710): ObjPlacement head
+/* Spawn-setup buffer for the FireHole child (obj id 0x710): ObjPlacement head
  * (pos/color) plus the class-specific fields the parent seeds at +0x18. */
-typedef struct FirepipeSetup
+typedef struct FireHoleSetup
 {
     ObjPlacement head; /* 0x00 */
     u8 unk18;          /* 0x18 */
@@ -87,7 +87,7 @@ typedef struct FirepipeSetup
     s16 unk20;         /* 0x20 */
     u8 unk22;          /* 0x22 */
     u8 unk23;          /* 0x23 */
-} FirepipeSetup;
+} FireHoleSetup;
 extern f32 lbl_803E2C3C;
 extern f32 lbl_803E2C58;
 extern f32 lbl_803E2C7C;
@@ -103,7 +103,7 @@ extern f32 lbl_803E2C1C;
 extern f32 lbl_803E2C20;
 extern f32 lbl_803E2C24;
 
-void fn_80157B58(int* obj, u8* state);
+void firecrawler_spawnProjectile(int* obj, u8* state);
 
 extern f32 lbl_803E2C74;
 extern f32 lbl_803E2C30;
@@ -141,7 +141,7 @@ typedef struct FCVars
     u8 pad000[0x2a0];
     u16 moveTableIndex; /* 0x2a0: reaction/move sub-table index (*0xc stride) */
     u8 pad2a2[0x2a4 - 0x2a2];
-    u16 projectileTimer; /* 0x2a4: firepipe launch timing counter (>=0x50 gate) */
+    u16 projectileTimer; /* 0x2a4: FireHole launch timing counter (>=0x50 gate) */
     u8 pad2a6[0x2ec - 0x2a6];
     u16 hitCountScalar; /* 0x2ec: hit-count scalar folded into emergeTimer */
     u8 pad2ee[0x2f1 - 0x2ee];

@@ -1,7 +1,7 @@
 /*
  * snowworm - the snowworm baddie plus the shared crawler-family reaction and
  * variant helpers that live in the same original translation unit:
- *   snowworm_spawnProjectile    spawns the type-0x51b spit projectile on move 9,
+ *   snowworm_spawnProjectile    spawns the KaldachomSp spit projectile (0x51b) on move 9,
  *                               launched outward along the worm's facing angle.
  *   snowworm_updateWhileFrozen  freeze-event handler.
  *   crawler_playReactionEffects hit-reaction particle/sfx playback.
@@ -19,7 +19,7 @@
  * referenced with the dispatch in dll_00C9_enemy.c:
  *
  *   anim.seqId  enemy          handler(s)               shipped?
- *   0x6a2       FireCrawler    crawler_update/B/C        yes (dragrock, moonpass) - has firepipe
+ *   0x6a2       FireCrawler    crawler_update/B/C        yes (dragrock, moonpass) - has FireHole
  *   0x6a3       RedEye         crawler_update/B/C        yes (wallcity)
  *   0x6a4       ShadowHunter   crawler_update/B/C        dynamic-only (e.g. Krazoa test)
  *   0x6a5       SwampStrider   crawler_update/B/C        dynamic-only
@@ -30,8 +30,8 @@
  * The 0x6a2-0x6a5 crawler family shares one AI (crawler_initModelVariant sets
  * per-variant speed/health/model). Behaviour: follows ROM curve paths
  * (RomCurveWalker / gRomCurveInterface), tracks the player, reacts to hits
- * (crawler_onHit), FireCrawler spawns a linked "firepipe" projectile
- * (firecrawler_spawnFirepipe), and HagabonMK2 flies with a dynamic light +
+ * (crawler_onHit), FireCrawler spawns a linked FireHole child
+ * (firecrawler_spawnFireHole), and HagabonMK2 flies with a dynamic light +
  * looping engine SFX (0x3e8). Move/sequence sub-tables live at gCrawlerDescriptorTable
  * (CrawlerSeq12 / CrawlerSeq16 / CrawlerDescriptor). controlFlags bits
  * 0x80000000 (just-triggered) and 0x40000000 (active) gate the move dispatch.
@@ -88,7 +88,8 @@ extern u8 lbl_803DBD30[4];
 #define LANTERNFIREFLY_OBJGROUP          0x30 /* DLL 0x10C lanternfirefly */
 #define FIRECRAWLER_OBJFLAG_RENDERED     0x800
 #define FIRECRAWLER_OBJFLAG_PARENT_SLACK 0x1000
-#define FIREPIPE_OBJ_ID                  0x710 /* child object spawned by firecrawler */
+#define FIREHOLE_OBJ_ID                  0x710 /* FireHole child spawned by firecrawler (firepipe DLL 0x273) */
+#define KALDACHOM_SPIT_OBJ               0x51b /* retail "KaldachomSp" (DLL 0xD7 kaldachompspit), shared with kooshy */
 /* crawler-family enemy anim.seqIds (docblock table: seqId -> enemy name) */
 #define FIRECRAWLER_SEQID_FIRECRAWLER  0x6a2 /* FireCrawler */
 #define FIRECRAWLER_SEQID_REDEYE       0x6a3 /* RedEye */
@@ -100,9 +101,9 @@ extern u8 lbl_803DBD30[4];
 #define FIRECRAWLER_PARTFX_MOVE_STRAIGHT 0x809
 #define FIRECRAWLER_HIT_VOLUME_SLOT      9
 
-/* Spawn-setup buffer for the firepipe child (obj id 0x710): ObjPlacement head
+/* Spawn-setup buffer for the FireHole child (obj id 0x710): ObjPlacement head
  * (pos/color) plus the class-specific fields the parent seeds at +0x18. */
-typedef struct FirepipeSetup
+typedef struct FireHoleSetup
 {
     ObjPlacement head; /* 0x00 */
     u8 unk18;          /* 0x18 */
@@ -113,7 +114,7 @@ typedef struct FirepipeSetup
     s16 unk20;         /* 0x20 */
     u8 unk22;          /* 0x22 */
     u8 unk23;          /* 0x23 */
-} FirepipeSetup;
+} FireHoleSetup;
 extern u8* gCrawlerReactionTables[];
 
 extern f32 lbl_803E2C98;
@@ -121,7 +122,7 @@ extern f32 lbl_803E2C9C;
 extern f32 gCrawlerPi;
 extern f32 gCrawlerHalfCircleBams;
 extern f32 lbl_803E2CA8;
-void fn_80157B58(int* obj, u8* state);
+void firecrawler_spawnProjectile(int* obj, u8* state);
 
 /*
  * FCVars - file-local overlay naming the crawler/HagabonMK2-family scratch
@@ -137,7 +138,7 @@ typedef struct FCVars
     u8 pad000[0x2a0];
     u16 moveTableIndex; /* 0x2a0: reaction/move sub-table index (*0xc stride) */
     u8 pad2a2[0x2a4 - 0x2a2];
-    u16 projectileTimer; /* 0x2a4: firepipe launch timing counter (>=0x50 gate) */
+    u16 projectileTimer; /* 0x2a4: FireHole launch timing counter (>=0x50 gate) */
     u8 pad2a6[0x2ec - 0x2a6];
     u16 hitCountScalar; /* 0x2ec: hit-count scalar folded into emergeTimer */
     u8 pad2ee[0x2f1 - 0x2ee];
@@ -186,7 +187,7 @@ void snowworm_spawnProjectile(s16* obj)
     u8 locked = Obj_IsLoadingLocked();
     if (locked != 0)
     {
-        int* setup = (int*)Obj_AllocObjectSetup(0x24, 0x51b);
+        int* setup = (int*)Obj_AllocObjectSetup(0x24, KALDACHOM_SPIT_OBJ);
         ((GameObject*)setup)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
         ((GameObject*)setup)->anim.localPosX = lbl_803E2C98 + ((GameObject*)obj)->anim.localPosY;
         ((GameObject*)setup)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;

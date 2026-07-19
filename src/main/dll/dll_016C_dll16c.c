@@ -42,6 +42,13 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 /* seqId variant whose render is gated by GameBit 0x3A2 (docblock: "Render is gated by GameBit 0x3A2 / seqId 883") */
 #define DLL16C_RENDER_GATE_SEQID 883
 
+/* snowclaw pair seqIds (retail OBJECTS.bin names): each rider selects its
+   linked base object from group 10 */
+#define DLL16C_SEQID_IM_SNOWCLAW   365 /* 0x16d "IMSnowClaw" (DLL 0x25C) */
+#define DLL16C_SEQID_IM_SNOWCLAW_B 364 /* 0x16c "IMSnowClawB..." (DLL 0x255) */
+#define DLL16C_SEQID_IM_SNOWCLAW2  368 /* 0x170 "IMSnowClaw2" (DLL 0x25C) */
+#define DLL16C_SEQID_IM_SNOWCLAW2_B 367 /* 0x16f "IMSnowClawB..." (DLL 0x255) */
+
 typedef struct Dll16CChildObjectIdTable
 {
     s16 ids[5];
@@ -290,13 +297,13 @@ void dll_16C_update(GameObject* obj)
         objs = (GameObject**)ObjGroup_GetObjects(10, &count);
         switch (obj->anim.seqId)
         {
-        case 365:
-        case 883:
+        case DLL16C_SEQID_IM_SNOWCLAW:
+        case DLL16C_RENDER_GATE_SEQID:
         default:
-            sel = 364;
+            sel = DLL16C_SEQID_IM_SNOWCLAW_B;
             break;
-        case 368:
-            sel = 367;
+        case DLL16C_SEQID_IM_SNOWCLAW2:
+            sel = DLL16C_SEQID_IM_SNOWCLAW2_B;
             break;
         }
         for (i = 0; i < count; i++)

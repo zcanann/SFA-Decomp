@@ -29,6 +29,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_00E7_flammablevine.h"
 
+#define FLAMMABLEVINE_SEQID_CC_EYE_VINES 0x102 /* retail "CCeyeVines" (DLL 0xE7) */
 #define FLAMMABLEVINE_HIT_VOLUME_SLOT 9
 
 /* object group this object joins while active */
@@ -115,7 +116,7 @@ void FlammableVine_update(GameObject* obj)
         }
         ObjHits_EnableObject(obj);
 
-        if ((obj)->anim.seqId == 0x102)
+        if ((obj)->anim.seqId == FLAMMABLEVINE_SEQID_CC_EYE_VINES)
         {
             if (cMenuGetSelectedItemInt() == -1)
             {

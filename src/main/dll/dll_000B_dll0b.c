@@ -53,9 +53,9 @@ s16 gPartfxSequenceIdCounter;
 
 #define DLL0B_OBJFLAG_RENDERED 0x800
 
-/* DLL-id of the object spawned to back a modgfx effect slot (generic effect
-   object; no cache field / spawn-fn / kind name -> suffixless per role-gate). */
-#define DLL0B_CHILD_OBJ 0x66
+/* Object spawned to back a modgfx effect slot; retail OBJECTS.bin name
+   "InvHit" (DLL 0xF1). */
+#define DLL0B_CHILD_OBJ_INVHIT 0x66
 
 typedef struct ModgfxEffectSlot
 {
@@ -1308,7 +1308,7 @@ void dll_0B_func05(void)
                                 tmpl.posY = ((ModgfxEffectSlot*)eff)->posOffsetY + tmpl.posY;
                                 tmpl.posZ = ((ModgfxEffectSlot*)eff)->posOffsetZ + tmpl.posZ;
                             }
-                            o = (int*)Obj_AllocObjectSetup(0x20, DLL0B_CHILD_OBJ);
+                            o = (int*)Obj_AllocObjectSetup(0x20, DLL0B_CHILD_OBJ_INVHIT);
                             ((GameObject*)o)->anim.rootMotionScale = tmpl.posX;
                             ((GameObject*)o)->anim.localPosX = tmpl.posY;
                             *(f32*)&((ObjDef*)o)->jointData = tmpl.posZ;

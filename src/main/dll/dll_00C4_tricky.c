@@ -180,6 +180,19 @@ STATIC_ASSERT(sizeof(struct VisBits16) == 0x10);
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
 
+/* child/reward objects spawned by this DLL (retail OBJECTS.bin names) */
+#define TRICKY_CHILD_OBJ_FLAMEBLAST    0x4f0 /* "flameblast" (DLL 0xF3) */
+#define TRICKY_CHILD_OBJ_BADGE_A       0x244 /* "TrickyBadge" */
+#define TRICKY_CHILD_OBJ_BADGE_B       0x254 /* "TrickyBadge" */
+#define TRICKY_CHILD_OBJ_QUEST         0x17c /* "TrickyQuest..." */
+#define TRICKY_CHILD_OBJ_EXCLAMATION   0x175 /* "TrickyExcla..." */
+#define TRICKY_CHILD_OBJ_FOOD          0x17b /* "TrickyFood" */
+#define TRICKY_CHILD_OBJ_SIDEKICK_BALL 0x112 /* "SidekickBal..." (DLL 0xF5 sidekickball) */
+#define TRICKY_CHILD_OBJ_MAGIC_DUST    0x2cd /* "MagicDustMi..." (DLL 0xFF magicgem) */
+#define TRICKY_CHILD_OBJ_ENERGY_EGG    0xb   /* "EnergyEgg" (DLL 0xED) */
+#define TRICKY_OBJ_APPLE               0x3cd /* "Apple" (DLL 0xED) */
+#define TRICKY_OBJ_BLUE_MUSHROOM       0x6a  /* "BlueMushroo..." (DLL 0x1A7) */
+
 #define TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT   0x00000008
 #define TRICKY_CONTROL_FLAG_USE_SPECIAL_FLOOR_Y 0x08000000
 #define TRICKY_CONTROL_FLAG_OFFSET_FLOOR_Y      0x20000000
@@ -528,7 +541,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     ((TrickyState*)state)->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE;
                 for (k = 0, p = (u8*)state; k < 7; p += 4, k = k + 1)
                 {
-                    setup = (int)Obj_AllocObjectSetup(0x24, 0x4f0);
+                    setup = (int)Obj_AllocObjectSetup(0x24, TRICKY_CHILD_OBJ_FLAMEBLAST);
                     *(u8*)(setup + 4) = 2;
                     *(u8*)(setup + 5) = 1;
                     *(s16*)(setup + 0x1a) = k;
@@ -547,11 +560,11 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 mapBlockFn_80059c2c(blockFlags);
                 if (blockFlags[0xd] != 0)
                 {
-                    setup = (int)Obj_AllocObjectSetup(0x20, 0x244);
+                    setup = (int)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_BADGE_A);
                 }
                 else
                 {
-                    setup = (int)Obj_AllocObjectSetup(0x20, 0x254);
+                    setup = (int)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_BADGE_B);
                 }
                 *(int*)&((TrickyState*)state)->spawnedChild =
                     (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, -1, ((GameObject*)obj)->anim.parent);
@@ -802,7 +815,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 cmdByte = *(char*)(ref + 0x74c);
                 if (cmdByte == '\0')
                 {
-                    if (((GameObject*)*(int*)(ref + 0x748))->anim.seqId == 0x6a)
+                    if (((GameObject*)*(int*)(ref + 0x748))->anim.seqId == TRICKY_OBJ_BLUE_MUSHROOM)
                     {
                         promptB = true;
                     }
@@ -855,7 +868,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                     objAudioFn_800393f8((GameObject*)objVal, &((TrickyState*)ref)->soundState, promptId, 0x500,
                                        0xffffffff, 0);
                 }
-                setup = (u16*)Obj_AllocObjectSetup(0x20, 0x17c);
+                setup = (u16*)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_QUEST);
                 flagsB[0] = -1;
                 flagsB[1] = -1;
                 flagsB[2] = -1;
@@ -934,7 +947,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                                            0xffffffff, 0);
                     }
                 }
-                setup = (u16*)Obj_AllocObjectSetup(0x20, 0x175);
+                setup = (u16*)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_EXCLAMATION);
                 flagsA[0] = -1;
                 flagsA[1] = -1;
                 flagsA[2] = -1;
@@ -1238,13 +1251,13 @@ void Tricky_hitDetect(GameObject* obj)
         }                                                                                                              \
     }
 
-#define TRICKY_SPAWN_BUBBLE(obj, state)                                                                                \
+#define TRICKY_SPAWN_FOOD_BUBBLE(obj, state)                                                                                \
     if (*(void**)((state) + 0x7b8) == NULL)                                                                            \
     {                                                                                                                  \
         int setup_;                                                                                                    \
         s8 used_[4];                                                                                                   \
         int slot_;                                                                                                     \
-        setup_ = (int)Obj_AllocObjectSetup(0x20, 0x17b);                                                               \
+        setup_ = (int)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);                                                               \
         used_[0] = -1;                                                                                                 \
         used_[1] = -1;                                                                                                 \
         used_[2] = -1;                                                                                                 \
@@ -1329,11 +1342,11 @@ void Tricky_update(int obj)
         mapBlockFn_80059c2c(blockFlags);
         if (blockFlags[0xd] != 0)
         {
-            setup = (int)Obj_AllocObjectSetup(0x20, 0x244);
+            setup = (int)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_BADGE_A);
         }
         else
         {
-            setup = (int)Obj_AllocObjectSetup(0x20, 0x254);
+            setup = (int)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_BADGE_B);
         }
         *(int*)&trickyState->spawnedChild =
             (int)Obj_SetupObject((ObjPlacement*)setup, 4, -1, -1, ((GameObject*)obj)->anim.parent);
@@ -1501,7 +1514,7 @@ void Tricky_update(int obj)
                             {
                                 trickyState->stateFlags |= 4;
                                 TRICKY_RESET_COMMAND(state);
-                                TRICKY_SPAWN_BUBBLE(obj, state);
+                                TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
                             }
                         }
                         else
@@ -1516,7 +1529,7 @@ void Tricky_update(int obj)
                             {
                                 trickyState->stateFlags |= 4;
                                 TRICKY_RESET_COMMAND(state);
-                                TRICKY_SPAWN_BUBBLE(obj, state);
+                                TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
                             }
                         }
                         else
@@ -1537,7 +1550,7 @@ void Tricky_update(int obj)
                             {
                                 trickyState->stateFlags |= 4;
                                 TRICKY_RESET_COMMAND(state);
-                                TRICKY_SPAWN_BUBBLE(obj, state);
+                                TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
                             }
                         }
                         else
@@ -1552,7 +1565,7 @@ void Tricky_update(int obj)
                             {
                                 trickyState->stateFlags |= 4;
                                 TRICKY_RESET_COMMAND(state);
-                                TRICKY_SPAWN_BUBBLE(obj, state);
+                                TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
                             }
                         }
                         else
@@ -1627,7 +1640,7 @@ void Tricky_update(int obj)
                         {
                             trickyState->stateFlags |= 4;
                             TRICKY_RESET_COMMAND(state);
-                            TRICKY_SPAWN_BUBBLE(obj, state);
+                            TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
                         }
                     }
                     else
@@ -1676,7 +1689,7 @@ void Tricky_update(int obj)
                     if (Obj_IsLoadingLocked())
                     {
                         trickyState->commandPhase = 5;
-                        setup = (int)Obj_AllocObjectSetup(0x18, 0x112);
+                        setup = (int)Obj_AllocObjectSetup(0x18, TRICKY_CHILD_OBJ_SIDEKICK_BALL);
                         *(u8*)(setup + 7) = 0xff;
                         *(u8*)(setup + 4) = 2;
                         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.worldPosX;
@@ -2700,13 +2713,13 @@ int collectibleFn_80149cec(GameObject* obj, int state, int spawnBits, u32 useAlt
         switch (spawnBits)
         {
         case 1:
-            setup = (int)Obj_AllocObjectSetup(0x30, 0x2cd);
+            setup = (int)Obj_AllocObjectSetup(0x30, TRICKY_CHILD_OBJ_MAGIC_DUST);
             break;
         case 3:
-            setup = (int)Obj_AllocObjectSetup(0x30, 0xb);
+            setup = (int)Obj_AllocObjectSetup(0x30, TRICKY_CHILD_OBJ_ENERGY_EGG);
             break;
         case 4:
-            setup = (int)Obj_AllocObjectSetup(0x30, 0x2cd);
+            setup = (int)Obj_AllocObjectSetup(0x30, TRICKY_CHILD_OBJ_MAGIC_DUST);
             break;
         case 5:
             savedX = (obj)->anim.worldPosX;
@@ -2775,7 +2788,7 @@ int collectibleFn_80149cec(GameObject* obj, int state, int spawnBits, u32 useAlt
     ((ObjPlacement*)setup)->color[3] = ((ObjPlacement*)parentSetup)->color[3];
     nearest = (int)Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
     gTrickyNearestObject = nearest;
-    if ((((GameObject*)nearest)->anim.seqId == 0x3cd) || (((GameObject*)nearest)->anim.seqId == 0xb))
+    if ((((GameObject*)nearest)->anim.seqId == TRICKY_OBJ_APPLE) || (((GameObject*)nearest)->anim.seqId == TRICKY_CHILD_OBJ_ENERGY_EGG))
     {
         (*(void (**)(int, f32, f32, f32))(*(int*)(*(int*)&((GameObject*)nearest)->anim.dll) + 0x2c))(
             nearest, lbl_803E2574, lbl_803E256C, lbl_803E2574);

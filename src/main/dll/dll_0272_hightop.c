@@ -61,7 +61,8 @@ const HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF,
 
 #define PAD_BUTTON_A 0x100
 
-/* Death follow-up spawn (docblock: "Obj_AllocObjectSetup(0x2C, 0xD4)"): object id and effect id. */
+/* Death follow-up spawn (docblock: "Obj_AllocObjectSetup(0x2C, 0xD4)"): object id
+   (retail OBJECTS.bin name "FXEmit", DLL 0x12B) and effect id. */
 #define HIGHTOP_DEATH_SPAWN_OBJ_ID 0xd4
 #define HIGHTOP_DEATH_EFFECT_ID    0x675
 #define HIGHTOP_AIRMETER_BGTEXTURE 0x5ce

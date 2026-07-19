@@ -63,12 +63,15 @@ f32 gAndrossDistortPhase;
 
 #define GAMEBIT_ANDROSS_HIT_CUE_BASE 0x108 /* six consecutive random-hit cue bits */
 
-#define ANDROSS_CHILD_OBJ_SPAWNED 0x819 /* cached into state->spawnedObj w/ spawnedObjLifetime */
+/* retail "ANDSilverRi" (silver ring); cached into state->spawnedObj w/ spawnedObjLifetime */
+#define ANDROSS_CHILD_OBJ_SILVER_RING 0x819
 
-#define ANDROSS_CHILD_OBJ_PROJECTILE_SPREAD 0x80d
-#define ANDROSS_CHILD_OBJ_PROJECTILE_AIMED  0x7e4
-#define ANDROSS_CHILD_OBJ_PROJECTILE_RING   0x859
-#define ANDROSS_CHILD_OBJ_MARKER_ATTACH     0x608
+/* projectiles; retail OBJECTS.bin names ANDAsteroid / AndrossRing / ANDSuckAste */
+#define ANDROSS_CHILD_OBJ_ASTEROID      0x80d
+#define ANDROSS_CHILD_OBJ_RING          0x7e4
+#define ANDROSS_CHILD_OBJ_SUCK_ASTEROID 0x859
+/* retail "ARWBombColl" (DLL 0x29F arwbombcoll), attached at the nearest 0x7e5 arwing */
+#define ANDROSS_CHILD_OBJ_ARW_BOMB      0x608
 
 #define ANDROSS_MAP_SHRINE 0xb /* Krazoa shrine map warped to on fight completion */
 
@@ -101,7 +104,7 @@ void fn_80239EAC(GameObject* obj, AndrossState* state)
         {
             cur = *objs;
             defNo = *(s16*)(*(int*)&((GameObject*)cur)->anim.placementData);
-            if (defNo == ANDROSS_CHILD_OBJ_PROJECTILE_SPREAD || defNo == ANDROSS_CHILD_OBJ_PROJECTILE_RING)
+            if (defNo == ANDROSS_CHILD_OBJ_ASTEROID || defNo == ANDROSS_CHILD_OBJ_SUCK_ASTEROID)
             {
                 dy = state->cachedPosY - ((GameObject*)cur)->anim.localPosY;
                 dz = state->cachedPosZ - ((GameObject*)cur)->anim.localPosZ;
@@ -130,7 +133,7 @@ void fn_80239FCC(GameObject* obj, AndrossState* state)
         gGfLevelConRingProjectilePitch = gGfLevelConRingProjectilePitchSource;
         rndYaw = randomGetRange(-0x8000, 0x7fff);
         rndDur = randomGetRange(0x64, 0x12c);
-        newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_RING);
+        newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_SUCK_ASTEROID);
         ang = 3.1415927f * (f32)(int)rndYaw / 32768.0f;
         newObj->head.posX = (f32)(int)rndDur * mathSinf(ang) + state->arwingObj->anim.localPosX;
         newObj->head.posY = (f32)(int)rndDur * mathCosf(ang) + state->arwingObj->anim.localPosY;
@@ -161,7 +164,7 @@ void fn_8023A168(GameObject* obj, AndrossState* state)
     {
         yawRnd = (s16)(randomGetRange(-0x1f40, 0x1f40) - 0x8000);
         pitchRnd = randomGetRange(-0x1f40, 0x1f40) >> 8;
-        newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_SPREAD);
+        newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_ASTEROID);
         newObj->head.posX = state->cachedPosX;
         newObj->head.posY = state->cachedPosY;
         newObj->head.posZ = state->cachedPosZ;
@@ -193,7 +196,7 @@ void fn_8023A268(GameObject* obj, AndrossState* state, int p3)
         dist = sqrtf(dx * dx + dz * dz);
         yaw = (u16)getAngle(dx, dz);
         gGfLevelConProjectilePitch = (u16)getAngle(state->cachedPosY - state->arwingObj->anim.localPosY, dist) >> 8;
-        newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_PROJECTILE_AIMED);
+        newObj = (GfProjectileSetup*)Obj_AllocObjectSetup(0x20, ANDROSS_CHILD_OBJ_RING);
         newObj->head.posX = state->cachedPosX;
         newObj->head.posY = state->cachedPosY;
         newObj->head.posZ = state->cachedPosZ;
@@ -401,7 +404,7 @@ void fn_80239DD8(GameObject* obj, AndrossState* state)
         nearObj = ObjList_FindNearestObjectByDefNo(obj, 0x7e5, &maxDist);
         if (nearObj != NULL)
         {
-            newObj = Obj_AllocObjectSetup(0x24, ANDROSS_CHILD_OBJ_MARKER_ATTACH);
+            newObj = Obj_AllocObjectSetup(0x24, ANDROSS_CHILD_OBJ_ARW_BOMB);
             newObj->posX = nearObj->anim.localPosX;
             newObj->posY = nearObj->anim.localPosY;
             newObj->posZ = nearObj->anim.localPosZ;
@@ -1775,7 +1778,7 @@ void andross_update(int obj)
                 (Obj_IsLoadingLocked() != 0))
             {
                 childSetup =
-                    (AndrossChildSetup*)Obj_AllocObjectSetup(sizeof(AndrossChildSetup), ANDROSS_CHILD_OBJ_SPAWNED);
+                    (AndrossChildSetup*)Obj_AllocObjectSetup(sizeof(AndrossChildSetup), ANDROSS_CHILD_OBJ_SILVER_RING);
                 childSetup->base.posX = state->cachedPosX;
                 childSetup->base.posY = state->cachedPosY;
                 childSetup->base.posZ = state->cachedPosZ;

@@ -283,8 +283,15 @@ STATIC_ASSERT(offsetof(TrickyHud, statusValue) == 0xB74);
 
 #define TRICKY_OBJFLAG_PARENT_SLACK 0x1000
 
-#define TRICKY_CHILD_OBJ_RING_MODEL 0x65e
-#define TRICKY_CHILD_OBJ_RING_ICON  0x65f
+/* command-menu ring pair (both retail-named "CommandMenu...") and the
+   communicator cluster spawned by the HUD loader (retail OBJECTS.bin names) */
+#define CMENU_CHILD_OBJ_RING_MODEL       0x65e /* "CommandMenu" */
+#define CMENU_CHILD_OBJ_RING_ICON        0x65f /* "CommandMenu" */
+#define GAMEUI_CHILD_OBJ_COMMUNICATOR    0x6e9 /* "communicato..." */
+#define GAMEUI_CHILD_OBJ_WORLD_COMM      0x602 /* "WORLDcomm" */
+#define GAMEUI_CHILD_OBJ_COMM_CUBE       0x755 /* "commCube" */
+#define GAMEUI_CHILD_OBJ_COMM_CUBE_FRONT 0x756 /* "commCubeFro..." */
+#define GAMEUI_CHILD_OBJ_PROJBALL        0x14b /* "projball" (DLL 0xE3) */
 
 extern f32 gViewFinderFadeLevel;
 extern u8 gameUiResourcesLoaded;
@@ -858,14 +865,14 @@ void gameUiLoadResources(void)
         fc = lbl_803E1E44;
         for (; i < 3; i++)
         {
-            *arrA = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_RING_MODEL), 4, -1, -1, NULL);
+            *arrA = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, CMENU_CHILD_OBJ_RING_MODEL), 4, -1, -1, NULL);
             ((GameObject*)(*arrA))->anim.localPosX = fa;
             ((GameObject*)(*arrA))->anim.localPosY = fb;
             ((GameObject*)(*arrA))->anim.localPosZ = fc;
             ((GameObject*)(*arrA))->anim.rotX = val;
             *(s8*)(*arrA + 0xad) = i;
             ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel((GameObject*)*arrA), cMenuRingModelRenderFn);
-            *arrB = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_RING_ICON), 4, -1, -1, NULL);
+            *arrB = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, CMENU_CHILD_OBJ_RING_ICON), 4, -1, -1, NULL);
             ((GameObject*)(*arrB))->anim.localPosX = fa;
             ((GameObject*)(*arrB))->anim.localPosY = fb;
             ((GameObject*)(*arrB))->anim.localPosZ = fc;
@@ -877,7 +884,7 @@ void gameUiLoadResources(void)
         }
 
         {
-            lbl_803DD868[0] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, NULL);
+            lbl_803DD868[0] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, GAMEUI_CHILD_OBJ_COMMUNICATOR), 4, -1, -1, NULL);
             lbl_803DD868[0]->anim.localPosX = lbl_803E1E3C;
             lbl_803DD868[0]->anim.localPosY = lbl_803E1E48;
             lbl_803DD868[0]->anim.localPosZ = lbl_803E1E4C;
@@ -886,7 +893,7 @@ void gameUiLoadResources(void)
         }
 
         {
-            lbl_803DD868[1] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, NULL);
+            lbl_803DD868[1] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, GAMEUI_CHILD_OBJ_WORLD_COMM), 4, -1, -1, NULL);
             lbl_803DD868[1]->anim.localPosX = lbl_803E1E3C;
             lbl_803DD868[1]->anim.localPosY = lbl_803E1E54;
             lbl_803DD868[1]->anim.localPosZ = lbl_803E1E4C;
@@ -894,12 +901,12 @@ void gameUiLoadResources(void)
             lbl_803DD868[1]->anim.rootMotionScale = lbl_803E1E58;
         }
 
-        p = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x755), 4, -1, -1, NULL);
+        p = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, GAMEUI_CHILD_OBJ_COMM_CUBE), 4, -1, -1, NULL);
         lbl_803DD860[0] = (GameObject*)p;
         ObjModel_SetRenderCallback(*(void**)*(int*)(p + 0x7c), fn_8011E0D8);
 
         {
-            lbl_803DD860[1] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x756), 4, -1, -1, NULL);
+            lbl_803DD860[1] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, GAMEUI_CHILD_OBJ_COMM_CUBE_FRONT), 4, -1, -1, NULL);
             ObjModel_SetRenderCallback(*(void**)*(int*)((u8*)lbl_803DD860[1] + 0x7c), fn_8011E0D8);
         }
 
@@ -926,7 +933,7 @@ void gameUiLoadResources(void)
             arrC++;
         }
 
-        p = (char*)Obj_AllocObjectSetup(0x24, 0x14b);
+        p = (char*)Obj_AllocObjectSetup(0x24, GAMEUI_CHILD_OBJ_PROJBALL);
         *(s16*)(p + 0x1c) = 1;
         lbl_803DD85C = (char*)Obj_SetupObject((ObjPlacement*)p, 4, -1, -1, NULL);
         gameUiResourcesLoaded = 1;

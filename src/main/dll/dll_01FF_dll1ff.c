@@ -45,6 +45,7 @@ typedef struct Dll1FFSlots
     u8 count;
 } Dll1FFSlots;
 
+#define DLL1FF_SEQID_WM_COLUMN_TOP 0x146 /* retail "WM_Column_T..." (DLL 0x116) */
 #define DLL1FF_BUTTON_ACTION 0x100    /* action-button mask (button-just-pressed / disable) */
 #define DLL1FF_MSG_GRAB      0x100008 /* ObjMsg kind sent on release */
 
@@ -56,7 +57,7 @@ int dll_1FF_getExtraSize_ret_8(void)
 
 int dll_1FF_getObjectTypeId(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x146)
+    if (((GameObject*)obj)->anim.seqId == DLL1FF_SEQID_WM_COLUMN_TOP)
         return 0x2;
     return 0x0;
 }

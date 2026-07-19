@@ -93,6 +93,13 @@ typedef struct
 /* object group this object joins while active */
 #define PUSHABLE_OBJGROUP 5
 
+/* pushable-block variant seqIds (retail OBJECTS.bin names, all DLL 0xEF) */
+#define PUSHABLE_SEQID_WC_PUSH_BLOCK    0x7df /* "WCPushBlock" */
+#define PUSHABLE_SEQID_DIM_PUSH_BLOCK   0x1cb /* "DIMPushBloc..." */
+#define PUSHABLE_SEQID_DIM2_ICE_BLOCK   0x108 /* "DIM2IceBloc..." */
+#define PUSHABLE_SEQID_METAL_PUSH_BLOCK 0x85a /* "MetalPushBl..." */
+#define PUSHABLE_SEQID_VFP_BLOCK2       0x54a /* "VFP_Block2" */
+
 
 #define PUSHABLE_ZERO 0.0f
 #define PUSHABLE_CURTAIN_X_OFFSET 188.0
@@ -502,7 +509,7 @@ void fn_80174BFC(GameObject* obj, PushableState* ext)
                             case 0x411:
                             case 0x21e:
                                 break;
-                            case 0x7df:
+                            case PUSHABLE_SEQID_WC_PUSH_BLOCK:
                                 ext->flags &= ~1;
                                 if (hit.kind == ext->requiredHitId)
                                 {
@@ -516,7 +523,7 @@ void fn_80174BFC(GameObject* obj, PushableState* ext)
                                     ext->flags |= PUSHABLE_FLAG_PUSH_LOCKED;
                                 }
                                 break;
-                            case 0x1cb:
+                            case PUSHABLE_SEQID_DIM_PUSH_BLOCK:
                                 if (hit.kind == 1)
                                 {
                                     mainSetBits(gamebit, 1);
@@ -949,7 +956,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
                         break;
                     case 0x411:
                         break;
-                    case 0x7df:
+                    case PUSHABLE_SEQID_WC_PUSH_BLOCK:
                         break;
                     default:
                         if (((PushablePlacement*)def2)->requiredHitId > -1)
@@ -1079,7 +1086,7 @@ void pushable_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
                 break;
             }
             return;
-        case 0x54a:
+        case PUSHABLE_SEQID_VFP_BLOCK2:
         {
             f32 v = state->timer_0x14;
             f32 zero = PUSHABLE_ZERO;
@@ -1177,7 +1184,7 @@ void pushable_hitDetect(GameObject* obj)
     state->moveFlags.b6 = 1;
     switch (obj->anim.seqId)
     {
-    case 0x108:
+    case PUSHABLE_SEQID_DIM2_ICE_BLOCK:
         if (mainGetBit(GAMEBIT_PushableRelated0272) != 0)
         {
             return;
@@ -1195,10 +1202,10 @@ void pushable_hitDetect(GameObject* obj)
             return;
         }
         break;
-    case 0x85a:
+    case PUSHABLE_SEQID_METAL_PUSH_BLOCK:
         state->moveFlags.b6 = 0;
         break;
-    case 0x54a:
+    case PUSHABLE_SEQID_VFP_BLOCK2:
         break;
     }
     if ((state->flags & 4) != 0)
@@ -1357,7 +1364,7 @@ void pushable_update(int* obj)
         if (fn_80174668((GameObject*)(obj), state) == 0)
             break;
         return;
-    case 0x54a:
+    case PUSHABLE_SEQID_VFP_BLOCK2:
         if (mainGetBit(state->gameBit) != 0)
         {
             ((GameObject*)obj)->anim.localPosX = (f32)((f64)((ObjPlacement*)def)->posX - PUSHABLE_CURTAIN_X_OFFSET);
@@ -1366,7 +1373,7 @@ void pushable_update(int* obj)
         }
         fn_80174438((int)obj, state);
         break;
-    case 0x108:
+    case PUSHABLE_SEQID_DIM2_ICE_BLOCK:
         if (PUSHABLE_ZERO == state->prevWaterDepth && state->waterDepth > PUSHABLE_ZERO)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_curtainopen16);
@@ -1551,10 +1558,10 @@ void pushable_init(s16* obj, char* def)
     case 0x411:
         fn_80174A80((GameObject*)(obj), state);
         break;
-    case 0x7df:
+    case PUSHABLE_SEQID_WC_PUSH_BLOCK:
         fn_80174588((GameObject*)(obj), state);
         break;
-    case 0x1cb:
+    case PUSHABLE_SEQID_DIM_PUSH_BLOCK:
         if (((PushableObjectDef*)def)->gameBit > -1 && mainGetBit(((PushableObjectDef*)def)->gameBit) != 0)
         {
             state->flags = state->flags | 0x81;

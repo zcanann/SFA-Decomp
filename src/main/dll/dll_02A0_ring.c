@@ -33,6 +33,7 @@
 #include "main/dll/dll_02A0_ring.h"
 #include "main/object_render_legacy.h"
 
+#define RING_SEQID_ARW_ARWING 0x601 /* "ARWArwing" (DLL 0x29A) */
 #define RING_OBJ_ARW_GOLD   0x060b
 #define RING_OBJ_ARW_SILVER 0x060c
 #define RING_OBJ_WC_SUN     0x07fb
@@ -148,7 +149,7 @@ void Ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing)
     if (mode == 0)
     {
         Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_lsrhitobj16);
-        if (arwingObj->anim.seqId == 0x601)
+        if (arwingObj->anim.seqId == RING_SEQID_ARW_ARWING)
         {
             arwarwing_addHealth(arwingObj, 1);
             arwarwing_addScore(arwingObj, 0xa);
@@ -157,7 +158,7 @@ void Ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing)
     else if (mode == 1)
     {
         Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_lsrhitobj16);
-        if (arwingObj->anim.seqId == 0x601)
+        if (arwingObj->anim.seqId == RING_SEQID_ARW_ARWING)
         {
             arwarwing_addMaxHealth(arwingObj, 1);
             arwarwing_addHealth(arwingObj, arwarwing_getMaxHealth(arwingObj));
@@ -171,7 +172,7 @@ void Ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing)
     else
     {
         Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_laser216);
-        if (arwingObj->anim.seqId == 0x601)
+        if (arwingObj->anim.seqId == RING_SEQID_ARW_ARWING)
         {
             int seg;
             int collected;

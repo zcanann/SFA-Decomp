@@ -6,7 +6,7 @@
  * referenced with the dispatch in dll_00C9_enemy.c:
  *
  *   anim.seqId  enemy          handler(s)               shipped?
- *   0x6a2       FireCrawler    crawler_update/B/C        yes (dragrock, moonpass) - has firepipe
+ *   0x6a2       FireCrawler    crawler_update/B/C        yes (dragrock, moonpass) - has FireHole
  *   0x6a3       RedEye         crawler_update/B/C        yes (wallcity)
  *   0x6a4       ShadowHunter   crawler_update/B/C        dynamic-only (e.g. Krazoa test)
  *   0x6a5       SwampStrider   crawler_update/B/C        dynamic-only
@@ -17,8 +17,8 @@
  * The 0x6a2-0x6a5 crawler family shares one AI (crawler_initModelVariant sets
  * per-variant speed/health/model). Behaviour: follows ROM curve paths
  * (RomCurveWalker / gRomCurveInterface), tracks the player, reacts to hits
- * (crawler_onHit), FireCrawler spawns a linked "firepipe" projectile
- * (firecrawler_spawnFirepipe), and HagabonMK2 flies with a dynamic light +
+ * (crawler_onHit), FireCrawler spawns a linked FireHole child
+ * (firecrawler_spawnFireHole), and HagabonMK2 flies with a dynamic light +
  * looping engine SFX (0x3e8). Move/sequence sub-tables live at gCrawlerDescriptorTable
  * (CrawlerSeq12 / CrawlerSeq16 / CrawlerDescriptor). controlFlags bits
  * 0x80000000 (just-triggered) and 0x40000000 (active) gate the move dispatch.
@@ -95,7 +95,8 @@ u8 lbl_803DBD38[8] = {3, 5, 3, 5, 0, 0, 0, 0};
 #define LANTERNFIREFLY_OBJGROUP          0x30 /* DLL 0x10C lanternfirefly */
 #define FIRECRAWLER_OBJFLAG_RENDERED     0x800
 #define FIRECRAWLER_OBJFLAG_PARENT_SLACK 0x1000
-#define FIREPIPE_OBJ_ID                  0x710 /* child object spawned by firecrawler */
+#define FIREHOLE_OBJ_ID                  0x710 /* FireHole child spawned by firecrawler (firepipe DLL 0x273) */
+#define FIRECRAWLER_PROJECTILE_OBJ       0x869 /* retail "FireCrawler..." (DLL 0xD7 kaldachompspit) */
 /* crawler-family enemy anim.seqIds (docblock table: seqId -> enemy name) */
 #define FIRECRAWLER_SEQID_FIRECRAWLER  0x6a2 /* FireCrawler */
 #define FIRECRAWLER_SEQID_REDEYE       0x6a3 /* RedEye */
@@ -107,9 +108,9 @@ u8 lbl_803DBD38[8] = {3, 5, 3, 5, 0, 0, 0, 0};
 #define FIRECRAWLER_PARTFX_MOVE_STRAIGHT 0x809
 #define FIRECRAWLER_HIT_VOLUME_SLOT      9
 
-/* Spawn-setup buffer for the firepipe child (obj id 0x710): ObjPlacement head
+/* Spawn-setup buffer for the FireHole child (obj id 0x710): ObjPlacement head
  * (pos/color) plus the class-specific fields the parent seeds at +0x18. */
-typedef struct FirepipeSetup
+typedef struct FireHoleSetup
 {
     ObjPlacement head; /* 0x00 */
     u8 unk18;          /* 0x18 */
@@ -120,12 +121,12 @@ typedef struct FirepipeSetup
     s16 unk20;         /* 0x20 */
     u8 unk22;          /* 0x22 */
     u8 unk23;          /* 0x23 */
-} FirepipeSetup;
+} FireHoleSetup;
 extern void* gCrawlerDescriptorTable[];
 
 extern f32 gCrawlerS8Norm127;
 EnemyTargetSearchResult gCrawlerNearbyObjectBuffer[16];
-void fn_80157B58(int* obj, u8* state);
+void firecrawler_spawnProjectile(int* obj, u8* state);
 
 f32 gCrawlerHitSfxTimer;
 
@@ -144,7 +145,7 @@ typedef struct FCVars
     u8 pad000[0x2a0];
     u16 moveTableIndex; /* 0x2a0: reaction/move sub-table index (*0xc stride) */
     u8 pad2a2[0x2a4 - 0x2a2];
-    u16 projectileTimer; /* 0x2a4: firepipe launch timing counter (>=0x50 gate) */
+    u16 projectileTimer; /* 0x2a4: FireHole launch timing counter (>=0x50 gate) */
     u8 pad2a6[0x2ec - 0x2a6];
     u16 hitCountScalar; /* 0x2ec: hit-count scalar folded into emergeTimer */
     u8 pad2ee[0x2f1 - 0x2ee];
@@ -337,14 +338,14 @@ void crawler_checkNearbyActive(GameObject* obj, u8* state)
     }
 }
 
-void firecrawler_spawnFirepipe(int* obj, u8* state)
+void firecrawler_spawnFireHole(int* obj, u8* state)
 {
-    FirepipeSetup* setup;
+    FireHoleSetup* setup;
     GameObject* child;
     (void)state;
     if (Obj_IsLoadingLocked() != 0)
     {
-        setup = (FirepipeSetup*)Obj_AllocObjectSetup(0x24, FIREPIPE_OBJ_ID);
+        setup = (FireHoleSetup*)Obj_AllocObjectSetup(0x24, FIREHOLE_OBJ_ID);
         ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &setup->head.posX, &setup->head.posY, &setup->head.posZ, 0);
         setup->head.color[0] = 1;
         setup->head.color[1] = 4;
@@ -368,13 +369,13 @@ void firecrawler_spawnFirepipe(int* obj, u8* state)
     }
 }
 
-void fn_80157B58(int* obj, u8* state)
+void firecrawler_spawnProjectile(int* obj, u8* state)
 {
     u8 locked = Obj_IsLoadingLocked();
     if (locked != 0)
     {
         int child;
-        int setup = (int)Obj_AllocObjectSetup(0x24, 0x869);
+        int setup = (int)Obj_AllocObjectSetup(0x24, FIRECRAWLER_PROJECTILE_OBJ);
         ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)(setup + 8), (f32*)(setup + 0xc), (f32*)(setup + 0x10),
                                       0);
         ((ObjPlacement*)setup)->color[0] = 1;
@@ -461,7 +462,7 @@ void fn_80157CDC(int obj, int state)
                     {
                         if (((GameObject*)obj)->childObjs[0] == NULL)
                         {
-                            firecrawler_spawnFirepipe((int*)obj, (u8*)state);
+                            firecrawler_spawnFireHole((int*)obj, (u8*)state);
                         }
                         else
                         {
@@ -475,7 +476,7 @@ void fn_80157CDC(int obj, int state)
                 }
                 if ((sub->flags & 2) != 0)
                 {
-                    fn_80157B58((int*)obj, (u8*)state);
+                    firecrawler_spawnProjectile((int*)obj, (u8*)state);
                 }
             }
         }

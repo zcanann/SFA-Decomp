@@ -46,9 +46,10 @@ s16 lbl_803DBD88[4] = {50, 50, 512, 512};
 
 #define MODEL_LIGHT_KIND_POINT 2
 
-/* anim.seqId of the staff-mode-5 shield variant (docblock: "seqId 0x836 uses
- * staff-mode 5, otherwise mode 7"). */
-#define SHIELD_SEQID_STAFF_MODE5 0x836
+/* anim.seqId of the omni_shield variant (retail OBJECTS.bin name; DLL 0xE5
+ * also hosts 0x773 "fox_shield"); this variant uses staff-mode 5, otherwise
+ * mode 7. */
+#define SHIELD_SEQID_OMNI_SHIELD 0x836
 /* shield-ring particle spawned around the object in the deflect loop */
 #define SHIELD_PARTFX 2028
 
@@ -137,13 +138,13 @@ f32 lbl_80320A28[] = {
     0.3f,
 };
 
-GameObject* fn_801702D4(GameObject* obj, f32 fv)
+GameObject* shield_spawnOmniShield(GameObject* obj, f32 fv)
 {
     void* alloc;
     GameObject* new_obj;
     if ((u8)Obj_IsLoadingLocked() == 0)
         return NULL;
-    alloc = (void*)Obj_AllocObjectSetup(36, 2102);
+    alloc = (void*)Obj_AllocObjectSetup(36, SHIELD_SEQID_OMNI_SHIELD);
     ((ObjPlacement*)alloc)->posX = obj->anim.worldPosX;
     ((ObjPlacement*)alloc)->posY = obj->anim.worldPosY;
     ((ObjPlacement*)alloc)->posZ = obj->anim.worldPosZ;
@@ -527,7 +528,7 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             dt = timeDelta;
         }
-        if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
+        if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_OMNI_SHIELD)
         {
             for (i = 0; i < 4; i++)
             {
@@ -644,7 +645,7 @@ void Shield_update(int* obj)
             }
         }
     }
-    if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
+    if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_OMNI_SHIELD)
     {
         ((GameObject*)obj)->anim.alpha = state[1] / state[4] * (f32)(s32)randomGetRange(96, 127);
     }
@@ -678,7 +679,7 @@ void Shield_update(int* obj)
         for (; i < 4; i++)
         {
             ps[26] = (f32)ps[30] * timeDelta + ps[26];
-            if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
+            if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_OMNI_SHIELD)
             {
                 f32 c = ((ShieldCosFn)fcos16)(ps[26]);
                 c = c * lbl_803E33EC + lbl_803E33C4;
@@ -707,7 +708,7 @@ void Shield_init(int* obj, void* initData)
 {
     int* model = (int*)Obj_GetActiveModel((GameObject*)obj);
     ObjModel_SetPostRenderCallback((ObjModel*)model, postRenderSetAlphaBlendState);
-    if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
+    if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_OMNI_SHIELD)
     {
         staffFn_80170380((GameObject*)obj, 5);
     }

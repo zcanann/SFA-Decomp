@@ -42,6 +42,7 @@ typedef struct TrickyGrowlState
 } TrickyGrowlState;
 
 #define CHILD_OBJECT_COUNT 7
+#define TRICKY_CHILD_OBJ_FLAMEBLAST 0x4f0 /* "flameblast" (DLL 0xF3) */
 
 enum
 {
@@ -130,7 +131,7 @@ void trickyGrowl(void* obj, void* trickyState)
                     ((TrickyState*)trickyState)->stateFlags | TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 for (i = 0, slot = trickyState; i < CHILD_OBJECT_COUNT; slot++, i++)
                 {
-                    setup = (void*)Obj_AllocObjectSetup(0x24, 0x4f0);
+                    setup = (void*)Obj_AllocObjectSetup(0x24, TRICKY_CHILD_OBJ_FLAMEBLAST);
                     *(u8*)((char*)setup + 0x4) = 2;
                     *(u8*)((char*)setup + 0x5) = 1;
                     *(s16*)((char*)setup + 0x1a) = i;

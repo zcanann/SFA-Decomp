@@ -611,7 +611,7 @@ void DR_LaserCannon_init(GameObject* obj, DrLaserCannonSetup* setup)
     (obj)->anim.velocityZ = fz;
     if (mainGetBit(setup->destroyedGameBit) == 0)
     {
-        state->warningObject = fn_801702D4(obj, lbl_803E6938);
+        state->warningObject = shield_spawnOmniShield(obj, lbl_803E6938);
         if (state->warningObject != NULL)
         {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_ACTIVE_MODE);

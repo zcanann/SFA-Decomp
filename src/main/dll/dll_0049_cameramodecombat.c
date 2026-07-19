@@ -18,6 +18,7 @@
 s32 gCamCombatPrevYawDiff;
 CameraModeCombatState* gCamCombatState;
 
+#define CAMCOMBAT_SEQID_DIM_BOSS 0x200 /* retail "DIM_Boss" (DLL 0x1E0) */
 #define CAMERAMODECOMBAT_OBJFLAG_FREED 0x40
 #define CAMERAMODECOMBAT_CAMACTION_DEFAULT 0x42
 #define PAD_BUTTON_B 0x200
@@ -254,7 +255,7 @@ void CameraModeCombat_update(short* cam)
                         classId = tgt->anim.classId;
                         if (classId == 0x1c || classId == 0x6d || classId == 0x2a)
                         {
-                            if (tgt->anim.seqId == 0x200)
+                            if (tgt->anim.seqId == CAMCOMBAT_SEQID_DIM_BOSS)
                             {
                                 ty = ty + lbl_803E18D0;
                             }

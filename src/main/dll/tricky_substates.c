@@ -52,6 +52,10 @@
 
 #define THORNTAIL_OBJGROUP 0x4d /* DLL 0x1AD shthorntail */
 
+/* child objects spawned by this TU (retail OBJECTS.bin names) */
+#define TRICKY_CHILD_OBJ_FLAMEBLAST 0x4f0 /* "flameblast" (DLL 0xF3) */
+#define TRICKY_CHILD_OBJ_FOOD       0x17b /* "TrickyFood" */
+
 /*
  * A ROM/FSA walk-curve node as Tricky's tunnel/follow states see it (via the
  * rom_curve_interface getById() / Objfsa_*Curve* lookups). Byte-compatible with
@@ -770,7 +774,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
                 ((TrickyState*)state)->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 for (i = 0, p = state; i < 7; p += 4, i++)
                 {
-                    e = (u8*)Obj_AllocObjectSetup(0x24, 0x4f0);
+                    e = (u8*)Obj_AllocObjectSetup(0x24, TRICKY_CHILD_OBJ_FLAMEBLAST);
                     e[4] = 2;
                     e[5] = 1;
                     *(s16*)(e + 0x1a) = i;
@@ -1243,7 +1247,7 @@ int trickyFoodFn_801437d4(GameObject* obj, int* state)
     }
     if (((TrickyState*)state)->child == NULL && Obj_IsLoadingLocked() != 0)
     {
-        e = (u8*)Obj_AllocObjectSetup(0x20, 0x17b);
+        e = (u8*)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);
         slots[0] = -1;
         slots[1] = -1;
         slots[2] = -1;

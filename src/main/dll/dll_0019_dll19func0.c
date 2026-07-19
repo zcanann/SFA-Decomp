@@ -18,6 +18,12 @@
 /* object group this object joins */
 #define DLL19_OBJGROUP        3
 #define DLL19_TARGET_OBJGROUP 4
+
+/* reward objects spawned on hit (retail OBJECTS.bin names) */
+#define DLL19_CHILD_OBJ_MAGIC_DUST  717  /* 0x2cd "MagicDustMi..." (DLL 0xFF magicgem) */
+#define DLL19_CHILD_OBJ_ENERGY_GEM1 9    /* "EnergyGem1" (DLL 0x12A) */
+#define DLL19_CHILD_OBJ_ENERGY_EGG  11   /* 0xb "EnergyEgg" (DLL 0xED) */
+#define DLL19_CHILD_OBJ_MOON_SEED   1702 /* 0x6a6 "MoonSeedCol..." (DLL 0xED) */
 #define DLL19_ADVANCE_MSG     0xe0001 /* notify the struck object to advance its hit reaction */
 
 #include "main/camera_interface.h"
@@ -604,19 +610,19 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
         switch (spawnType)
         {
         case 1:
-            setup = Obj_AllocObjectSetup(48, 717);
+            setup = Obj_AllocObjectSetup(48, DLL19_CHILD_OBJ_MAGIC_DUST);
             scale = *(f32*)&lbl_803E1C54;
             break;
         case 2:
-            setup = Obj_AllocObjectSetup(48, 9);
+            setup = Obj_AllocObjectSetup(48, DLL19_CHILD_OBJ_ENERGY_GEM1);
             scale = *(f32*)&lbl_803E1C54;
             break;
         case 3:
-            setup = Obj_AllocObjectSetup(48, 11);
+            setup = Obj_AllocObjectSetup(48, DLL19_CHILD_OBJ_ENERGY_EGG);
             scale = *(f32*)&lbl_803E1C54;
             break;
         case 4:
-            setup = Obj_AllocObjectSetup(48, 717);
+            setup = Obj_AllocObjectSetup(48, DLL19_CHILD_OBJ_MAGIC_DUST);
             scale = *(f32*)&lbl_803E1C54;
             break;
         case 5:
@@ -652,7 +658,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
             }
             return (int)gDll19NearestObj;
         case 6:
-            setup = Obj_AllocObjectSetup(48, 1702);
+            setup = Obj_AllocObjectSetup(48, DLL19_CHILD_OBJ_MOON_SEED);
             *(u8*)((u8*)setup + 27) = 0;
             *(u8*)((u8*)setup + 34) = 0;
             *(u8*)((u8*)setup + 35) = 64;

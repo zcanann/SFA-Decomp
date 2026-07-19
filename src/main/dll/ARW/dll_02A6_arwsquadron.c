@@ -39,6 +39,11 @@
 #define ARW_SQUADRON_VARIANT_ASTEROID 2
 #define ARW_SQUADRON_VARIANT_SHIP     3
 
+/* fighter-variant seqIds (retail OBJECTS.bin names, all DLL 0x2A6) */
+#define ARW_SQUADRON_SEQID_SHIP_FLY   0x6d5 /* "ARWShipFly" */
+#define ARW_SQUADRON_SEQID_SHIP_TWIN  0x6d6 /* "ARWShipTwin" */
+#define ARW_SQUADRON_SEQID_SHIP_ANGE  0x6d7 /* "ARWShipAnge..." */
+
 #define ARWSQUADRON_CHILD_OBJ_PROJECTILE 0x6ae
 
 
@@ -615,17 +620,17 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
         flags->b80 = 1;
         switch (obj->anim.seqId)
         {
-        case 0x6d6:
+        case ARW_SQUADRON_SEQID_SHIP_TWIN:
             state->muzzleCount = 1;
             state->projectilePathCount = 2;
             state->muzzleLightRadius = 3.8f;
             state->muzzleLightIntensity = 0.3f;
             break;
-        case 0x6d5:
+        case ARW_SQUADRON_SEQID_SHIP_FLY:
             state->muzzleCount = 0;
             state->projectilePathCount = 1;
             break;
-        case 0x6d7:
+        case ARW_SQUADRON_SEQID_SHIP_ANGE:
             state->muzzleCount = 1;
             state->projectilePathCount = 1;
             state->muzzleLightRadius = fxScale;

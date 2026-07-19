@@ -17,8 +17,9 @@
  *
  * smallbasket_spawnContents spawns the basket "contents" on break/throw: it dispatches on
  * the contents mode (data+0x1e, or a health-weighted random roll when 7),
- * allocating one of several object types (0x3d3/0x3d4/0x3d5 fruit, 0xb/0x3cd
- * effect) and launching it with a randomized outward velocity.
+ * allocating one of several object types (0x3d3/0x3d4/0x3d5 green/red/gold
+ * scarab, 0xb energy egg, 0x3cd apple) and launching it with a randomized
+ * outward velocity.
  *
  * objThrowFn_80182504 is the external entry the player code calls to launch
  * a held basket.
@@ -62,13 +63,13 @@
 #define SMALLBASKET_MSG_PLAYER_GRAB            0x100010 /* tells player to grab/hold the basket */
 #define PAD_BUTTON_A                           0x100
 
-/* Contents object DLL-ids spawned by smallbasket_spawnContents on break/throw (roles from
-   the file docblock: 0x3d3/0x3d4/0x3d5 fruit variants, 0xb/0x3cd effect). */
-#define SMALLBASKET_CHILD_OBJ_FRUIT_A    0x3d3
-#define SMALLBASKET_CHILD_OBJ_FRUIT_B    0x3d4
-#define SMALLBASKET_CHILD_OBJ_FRUIT_C    0x3d5
-#define SMALLBASKET_CHILD_OBJ_EFFECT     0xb
-#define SMALLBASKET_CHILD_OBJ_EFFECT_ALT 0x3cd
+/* Contents objects spawned by smallbasket_spawnContents on break/throw (retail
+   OBJECTS.bin names: GreenScarab/RedScarab/GoldScarab, EnergyEgg, Apple). */
+#define SMALLBASKET_CHILD_OBJ_SCARAB_GREEN 0x3d3
+#define SMALLBASKET_CHILD_OBJ_SCARAB_RED   0x3d4
+#define SMALLBASKET_CHILD_OBJ_SCARAB_GOLD  0x3d5
+#define SMALLBASKET_CHILD_OBJ_ENERGY_EGG   0xb
+#define SMALLBASKET_CHILD_OBJ_APPLE        0x3cd
 #define SMALLBASKET_RESOURCE_ID          0x5b /* basket object resource -> gSmallBasketResource */
 
 typedef void (*ObjThrowInitFn)(void* obj, f32 vx, f32 vy, f32 vz);
@@ -228,7 +229,7 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
     switch (sw)
     {
     case 1:
-        setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_A);
+        setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_SCARAB_GREEN);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
@@ -281,7 +282,7 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
         ((GameObject*)spawned)->anim.rotX = diff;
         break;
     case 2:
-        setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_B);
+        setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_SCARAB_RED);
         ((SmallBasketThrowSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
@@ -335,7 +336,7 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
         ((GameObject*)spawned)->anim.rotX = diff;
         break;
     case 3:
-        setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_C);
+        setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_SCARAB_GOLD);
         ((SmallBasketThrowSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
@@ -392,11 +393,11 @@ int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
     case 6:
         if (data[0x1e] == 5)
         {
-            setup = (u8*)Obj_AllocObjectSetup(0x30, SMALLBASKET_CHILD_OBJ_EFFECT);
+            setup = (u8*)Obj_AllocObjectSetup(0x30, SMALLBASKET_CHILD_OBJ_ENERGY_EGG);
         }
         else
         {
-            setup = (u8*)Obj_AllocObjectSetup(0x30, SMALLBASKET_CHILD_OBJ_EFFECT_ALT);
+            setup = (u8*)Obj_AllocObjectSetup(0x30, SMALLBASKET_CHILD_OBJ_APPLE);
         }
         setup[0x1a] = 0x14;
         ((SmallBasketThrowSetup*)setup)->field2C = -1;

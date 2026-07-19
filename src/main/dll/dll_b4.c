@@ -14,8 +14,9 @@
 #include "main/model_light.h"
 #include "main/object.h"
 
-/* Lock-on / A-button reticle object, cached into gCamcontrolTargetReticle. */
-#define DLLB4_CHILD_OBJ_RETICLE 0x1FE
+/* Lock-on / A-button reticle object (retail OBJECTS.bin name "LockIcon"),
+   cached into gCamcontrolTargetReticle. */
+#define DLLB4_CHILD_OBJ_LOCK_ICON 0x1FE
 
 extern ModelLightStruct* lbl_803DD4C4;
 extern f32 lbl_803E1640;
@@ -25,7 +26,7 @@ void lockIconInit(void)
     if (gCamcontrolTargetReticle == NULL)
     {
         gCamcontrolTargetReticle = (CamcontrolReticleObject*)Obj_SetupObject(
-            Obj_AllocObjectSetup(0x18, DLLB4_CHILD_OBJ_RETICLE), 4, -1, -1, NULL);
+            Obj_AllocObjectSetup(0x18, DLLB4_CHILD_OBJ_LOCK_ICON), 4, -1, -1, NULL);
         ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel((GameObject*)gCamcontrolTargetReticle), lockIconTexCb);
         gCamcontrolTargetReticle->anim.bankIndex = CAMCONTROL_RETICLE_ICON_LOCKON;
         ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel((GameObject*)gCamcontrolTargetReticle), aButtonIconTexCb);

@@ -230,6 +230,12 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
 f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame);
 
 /* Camera mode ids passed to gCameraInterface->setMode; each == cameramode DLL number. */
+/* placement stand-in spawned for missing seq actors; retail OBJECTS.bin name
+   "Override" (DLL 0xC6) */
+#define OBJSEQ_OVERRIDE_OBJ 0x6
+/* retail OBJECTS.bin name "VariableObj" (DLL 0xC6) */
+#define OBJSEQ_VARIABLE_OBJ 0x443
+
 #define OBJSEQ_CAMMODE_DEFAULT      0x42 /* default gameplay cameramode DLL */
 #define OBJSEQ_CAMMODE_VIEWFINDER   0x44 /* dll_0044 viewfinder */
 #define OBJSEQ_CAMMODE_CAMTALK      0x45 /* dll_0045_camTalk */
@@ -653,7 +659,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
     {
         if (flags & (1 << idx))
         {
-            setup = (ObjSeqAnimPlacement*)Obj_AllocObjectSetup(0x28, 6);
+            setup = (ObjSeqAnimPlacement*)Obj_AllocObjectSetup(0x28, OBJSEQ_OVERRIDE_OBJ);
             objId = *(u16*)(walk2 + 6);
             if (objId == 0x1f || objId == 0)
             {
@@ -662,9 +668,9 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
             }
             if (objId == 0xffff)
             {
-                setup->base.objectId = 6;
+                setup->base.objectId = OBJSEQ_OVERRIDE_OBJ;
                 setup->targetType = ((GameObject*)obj)->anim.seqId + 4;
-                if (((GameObject*)obj)->anim.seqId == 0x443 && objSeqObjs != -1)
+                if (((GameObject*)obj)->anim.seqId == OBJSEQ_VARIABLE_OBJ && objSeqObjs != -1)
                 {
                     setup->targetType = objSeqObjs + 4;
                 }
@@ -680,7 +686,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
             {
                 if (*(u16*)(walk2 + 4) & 0x4000)
                 {
-                    setup->base.objectId = 6;
+                    setup->base.objectId = OBJSEQ_OVERRIDE_OBJ;
                     if (objId == 0x443)
                     {
                         if (objSeqObjs != -1)

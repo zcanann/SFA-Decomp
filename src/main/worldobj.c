@@ -34,10 +34,10 @@ typedef struct
     u8 pad12[2];
 } GreatFoxFxEntry;
 
-/* case 0x5e2 spawns 11 scattered copies of this child; the child (handled in
- * case 0x5da below) initializes with random rotation on all axes and random
- * per-axis spin = tumbling debris fragments. */
-#define WORLDOBJ_CHILD_OBJ_DEBRIS 0x5da
+/* case 0x5e2 (retail "WORLDsun") spawns 11 scattered copies of this child
+ * (retail "WORLDsunray", handled in case 0x5da below); each ray initializes
+ * with random rotation on all axes and random per-axis spin. */
+#define WORLDOBJ_CHILD_OBJ_SUNRAY 0x5da
 #define GREAT_FOX_EFFECT_COUNT    10
 
 extern f32 lbl_803E6678;
@@ -631,7 +631,7 @@ void worldobj_init(GameObject* obj, int arg)
             sub = *(int*)&(obj)->anim.placementData;
             if (Obj_IsLoadingLocked() != 0)
             {
-                int o2 = (int)Obj_AllocObjectSetup(0x20, WORLDOBJ_CHILD_OBJ_DEBRIS);
+                int o2 = (int)Obj_AllocObjectSetup(0x20, WORLDOBJ_CHILD_OBJ_SUNRAY);
                 *(u8*)(o2 + 4) = *(u8*)(sub + 4);
                 *(u8*)(o2 + 6) = *(u8*)(sub + 6);
                 *(u8*)(o2 + 5) = *(u8*)(sub + 5);

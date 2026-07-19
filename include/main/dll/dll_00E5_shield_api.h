@@ -6,7 +6,7 @@
 
 extern ObjectDescriptor gShieldObjDescriptor;
 
-GameObject* fn_801702D4(GameObject* obj, f32 rootMotionScale);
+GameObject* shield_spawnOmniShield(GameObject* obj, f32 rootMotionScale);
 void Shield_free(GameObject* obj);
 int Shield_getExtraSize(void);
 int Shield_getObjectTypeId(void);

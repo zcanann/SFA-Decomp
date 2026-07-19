@@ -74,7 +74,7 @@ typedef struct BaddieState {
      * mediumbasket targets store f32 here (stfs f0,672(rN) -- the
      * published types below), but the smallbasket family's
      * target reads u16 (lhz r0,672(r30) in snowworm_update,
-     * lhz r0,676(r29) in fn_80157B58: a *0xc move-table
+     * lhz r0,676(r29) in firecrawler_spawnProjectile: a *0xc move-table
      * index and a u16->f32 duration). smallbasket keeps RAW spellings at
      * these offsets -- do NOT launder through these names there (a u16
      * index read through "moveSpeed" would be semantically false). */

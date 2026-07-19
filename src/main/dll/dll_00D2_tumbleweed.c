@@ -24,6 +24,7 @@
 u8 gTumbleweedCollisionPointData[8] = {0x41, 0xC8, 0, 0, 0, 0, 0, 0};
 
 #define TUMBLEWEED_OBJFLAG_RENDERED 0x800
+#define TRICKY_SEQID 0x24 /* retail "Tricky" (DLL 0xC4) */
 #define TUMBLEWEED_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 #define TUMBLEWEED_MSG_PICKUP   0x7000b /* player collected: award and burst */
 #define TUMBLEWEED_OBJGROUP 3
@@ -275,7 +276,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
             dz = obj->anim.localPosZ - player->anim.localPosZ;
             dist2 = dx * dx + dz * dz;
             tricky = (GameObject*)getTrickyObject();
-            if (tricky != 0 && tricky->anim.seqId == 0x24)
+            if (tricky != 0 && tricky->anim.seqId == TRICKY_SEQID)
             {
                 f32 ndx, ndz, ndist2;
                 if (dist2 < 30625.0f)

@@ -152,6 +152,14 @@ typedef struct CharSpawn
 #define OBJECT_CAMMODE_TITLE   0x57 /* cameramode DLL dll_0057_cameramodetitle */
 #define OBJECT_CAMMODE_DEFAULT 0x42 /* default gameplay cameramode DLL */
 
+/* special-cased seqIds (retail OBJECTS.bin names) */
+#define OBJECT_SEQID_SABRE       0x0   /* "Sabre" - the player object */
+#define OBJECT_SEQID_KRYSTAL     0x1f  /* "Krystal" - the player object */
+#define OBJECT_SEQID_STAFF       0x69  /* "staff" (DLL 0xE2) */
+#define OBJECT_SEQID_DIE_DUSTER  0x4f3 /* "DieDuster" (DLL 0x10E) */
+#define OBJECT_SEQID_DIE_FOX     0x882 /* "DieFox" (DLL 0x10E) */
+#define OBJECT_SEQID_DIE_KRYSTAL 0x887 /* "DieKrystal" (DLL 0x10E) */
+
 /* GameObject::objectFlags lifecycle bits */
 #define OBJECT_FLAG_IN_UPDATE_LIST 0x10 /* registered in gObjList / gObjUpdateList */
 #define OBJECT_FLAG_FREED          0x40 /* Obj_FreeObject ran (double-free guard) */
@@ -1268,16 +1276,16 @@ void Obj_UpdateObject(GameObject* obj)
     {
         switch (object->seqId)
         {
-        case 0:
-        case 0x1f:
+        case OBJECT_SEQID_SABRE:
+        case OBJECT_SEQID_KRYSTAL:
             playerUpdateWhileTimeStopped((int)obj);
             break;
-        case 0x69:
+        case OBJECT_SEQID_STAFF:
             playerRenderQuakeSpell(obj);
             break;
-        case 0x4f3:
-        case 0x882:
-        case 0x887:
+        case OBJECT_SEQID_DIE_DUSTER:
+        case OBJECT_SEQID_DIE_FOX:
+        case OBJECT_SEQID_DIE_KRYSTAL:
             cb2 = (void (*)(GameObject*)) * (int*)((u8*)*object->dll + 8);
             cb2(obj);
             break;
@@ -1343,8 +1351,8 @@ void Obj_UpdateObject(GameObject* obj)
         {
             switch (object->seqId)
             {
-            case 0:
-            case 0x1f:
+            case OBJECT_SEQID_SABRE:
+            case OBJECT_SEQID_KRYSTAL:
                 playerUpdate(obj);
                 break;
             default:
@@ -1778,8 +1786,8 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     }
     switch (tmpl.seqId)
     {
-    case 0:
-    case 0x1f:
+    case OBJECT_SEQID_SABRE:
+    case OBJECT_SEQID_KRYSTAL:
         fnFlags = 0x1cb;
         break;
     default:
@@ -1912,8 +1920,8 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     cursor = roundUpTo4((int)obj->models + modelDef->modelCount * 4);
     switch (obj->seqId)
     {
-    case 0:
-    case 0x1f:
+    case OBJECT_SEQID_SABRE:
+    case OBJECT_SEQID_KRYSTAL:
         dllStateSize = 0x8e0;
         break;
     default:

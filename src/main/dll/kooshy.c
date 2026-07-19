@@ -21,9 +21,9 @@
 
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
 
-/* DLL-id of the object spawned by fn_80153640 (generic spawn; no cache field /
-   named spawn-fn / kind name -> suffixless per role-gate). */
-#define MAGICPLANT_CHILD_OBJ 0x51b
+/* Spit projectile spawned by kooshy_spawnProjectile; retail OBJECTS.bin name
+   "KaldachomSp" (DLL 0xD7 kaldachompspit), shared with the snowworm spitter. */
+#define KALDACHOM_SPIT_OBJ 0x51b
 
 extern f32 lbl_803E2900;
 extern f32 lbl_803E2904;
@@ -40,14 +40,14 @@ void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int f
 #define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
     fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
 
-void fn_80153640(GameObject* obj, int state)
+void kooshy_spawnProjectile(GameObject* obj, int state)
 {
     ObjPlacement* fx;
     int newObj;
 
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
-        fx = (ObjPlacement*)Obj_AllocObjectSetup(0x24, MAGICPLANT_CHILD_OBJ);
+        fx = (ObjPlacement*)Obj_AllocObjectSetup(0x24, KALDACHOM_SPIT_OBJ);
         fx->posX = (obj)->anim.localPosX;
         fx->posY = 14.0f + (obj)->anim.localPosY;
         fx->posZ = (obj)->anim.localPosZ;
@@ -206,7 +206,7 @@ void kooshy_updateIdle(GameObject* obj, int state)
     if ((obj)->anim.currentMove == 5 && (double)(obj)->anim.currentMoveProgress >= lbl_803E2918 &&
         (double)(obj)->anim.currentMoveProgress < lbl_803E2918 + ((BaddieState*)state)->unk308 * timeDelta)
     {
-        fn_80153640(obj, state);
+        kooshy_spawnProjectile(obj, state);
     }
     else
     {

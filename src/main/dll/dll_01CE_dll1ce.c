@@ -88,11 +88,12 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 #define DLL1CE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* Key objects that unlock the hatch (docblock: "a key object (seqId 0x18F or 0x1D6)"). */
-#define DLL1CE_KEY_SEQID_A 0x18f
-#define DLL1CE_KEY_SEQID_B 0x1d6
+#define DLL1CE_SEQID_DIM_HUT_DOOR 0x334 /* retail "DIMHutDoor" (DLL 0x128) */
+#define DLL1CE_KEY_SEQID_A 0x18f /* retail "DIMSnowHorn..." (DLL 0x256) */
+#define DLL1CE_KEY_SEQID_B 0x1d6 /* retail "DIMCannonBa..." (DLL 0x1C6) */
 
 /* Subtype of the contents object spawned on unlock (docblock: "contents object (subtype 0x246)"). */
-#define DLL1CE_CONTENTS_SUBTYPE 0x246
+#define DLL1CE_CONTENTS_SUBTYPE 0x246 /* retail "DIMBridgeCo..." (DLL 0xED) */
 
 extern f32 lbl_803E49E8;
 void* lbl_803DDB78;
@@ -167,7 +168,7 @@ void dll_1CE_update(int* obj)
             }
         }
     }
-    if (((GameObject*)obj)->anim.seqId == 0x334)
+    if (((GameObject*)obj)->anim.seqId == DLL1CE_SEQID_DIM_HUT_DOOR)
         return;
     {
         int off;

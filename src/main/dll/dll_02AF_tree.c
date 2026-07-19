@@ -32,7 +32,19 @@
 #include "main/objhits.h"
 #include "main/object_render_legacy.h"
 
-#define TREE_AMBIENT_EFFECT_OBJECT_ID    0x210
+#define TREE_CHILD_OBJ_APPLE_ON_TREE     0x210 /* retail "AppleOnTree" (DLL 0x117) */
+
+/* tree variant seqIds (retail OBJECTS.bin names, all DLL 0x2AF) */
+#define TREE_SEQID_SMALL_FERN      0x798 /* "smallfern" */
+#define TREE_SEQID_TALL_PALM_TREE  0x799 /* "tallpalmtre..." */
+#define TREE_SEQID_SNOW_TREE_4     0x70d /* "SnowTree4" */
+#define TREE_SEQID_SNOW_TREE_3     0x70c /* "SnowTree3" */
+#define TREE_SEQID_SNOW_FRUIT_TREE 0x625 /* "SnowFruitTr..." */
+#define TREE_SEQID_JUNGLE_TREE     0x77a /* "JungleTree" */
+#define TREE_SEQID_SNOW_TREE_2     0x624 /* "SnowTree2" */
+#define TREE_SEQID_SNOW_TREE_1     0x39  /* "SnowTree1" */
+#define TREE_SEQID_SH_FERN_TREE    0x10b /* "SH_FernTree" */
+#define TREE_SEQID_FERN_TREE       0x5d1 /* "FernTree" */
 #define TREE_OBJECT_FLAGS_INIT           0x2000
 #define TREE_RESET_HITBOX_FLAG           INTERACT_FLAG_DISABLED /* 0x08 */
 #define TREE_FLAG_BURST_MODE_MASK        0x0f
@@ -53,7 +65,7 @@ void tree_spawnAmbientEffect(GameObject* obj, TreeState* state, s8 index)
     if (Obj_IsLoadingLocked())
     {
         effectSetup = (TreeAmbientEffectSetup*)Obj_AllocObjectSetup(TREE_AMBIENT_EFFECT_SETUP_SIZE,
-                                                                    TREE_AMBIENT_EFFECT_OBJECT_ID);
+                                                                    TREE_CHILD_OBJ_APPLE_ON_TREE);
         effectSetup->base.color[0] = setup->base.color[0];
         effectSetup->base.color[2] = setup->base.color[2];
         effectSetup->base.color[1] = setup->base.color[1];
@@ -316,36 +328,36 @@ void tree_init(GameObject* obj, TreeSetup* setup)
     }
     switch (obj->anim.seqId)
     {
-    case 0x798:
+    case TREE_SEQID_SMALL_FERN:
         state->effectProfileIndex = 0xa;
         break;
-    case 0x799:
+    case TREE_SEQID_TALL_PALM_TREE:
         state->effectProfileIndex = 0x9;
         break;
-    case 0x70d:
+    case TREE_SEQID_SNOW_TREE_4:
         state->effectProfileIndex = 0x8;
         break;
-    case 0x70c:
+    case TREE_SEQID_SNOW_TREE_3:
         state->effectProfileIndex = 0x7;
         ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (int)(6.0f * obj->anim.rootMotionScale), -0x5,
                                    0x64);
         break;
-    case 0x625:
+    case TREE_SEQID_SNOW_FRUIT_TREE:
         state->effectProfileIndex = 0x6;
         break;
-    case 0x77a:
+    case TREE_SEQID_JUNGLE_TREE:
         state->effectProfileIndex = 0x5;
         break;
-    case 0x624:
+    case TREE_SEQID_SNOW_TREE_2:
         state->effectProfileIndex = 0x4;
         break;
-    case 0x39:
+    case TREE_SEQID_SNOW_TREE_1:
         state->effectProfileIndex = 0x3;
         break;
-    case 0x10b:
+    case TREE_SEQID_SH_FERN_TREE:
         state->effectProfileIndex = 0x2;
         break;
-    case 0x5d1:
+    case TREE_SEQID_FERN_TREE:
         state->effectProfileIndex = 0x1;
         break;
     default:

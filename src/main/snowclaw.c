@@ -38,6 +38,11 @@ f32 lbl_803DC224 = 0.006f;
 /* drop-bomb child spawned by snowclaw_spawnDropBomb (obj id 0x5ff) */
 #define SNOWCLAW_CHILD_OBJ_DROP_BOMB 0x5ff
 
+/* rider-variant seqIds (retail OBJECTS.bin names) */
+#define SNOWCLAW_SEQID_IM_SNOWCLAW  0x16d /* "IMSnowClaw" (DLL 0x25C) */
+#define SNOWCLAW_SEQID_IM_SNOWCLAW2 0x170 /* "IMSnowClaw2" (DLL 0x25C) */
+#define SNOWCLAW_SEQID_CR_SNOWCLAW  0x389 /* "CRSnowClaw" (DLL 0x25C) */
+
 typedef struct SnowclawState
 {
     u8 pad0[0x4 - 0x0];
@@ -327,7 +332,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
     {
         ObjHits_DisableObject((GameObject*)*(int*)inner);
     }
-    if (obj->seqIndex != -1 && (obj->anim.seqId == 0x16d || obj->anim.seqId == 0x170) &&
+    if (obj->seqIndex != -1 && (obj->anim.seqId == SNOWCLAW_SEQID_IM_SNOWCLAW || obj->anim.seqId == SNOWCLAW_SEQID_IM_SNOWCLAW2) &&
         mainGetBit(GAMEBIT_IM_BikeRelated03A3) != 0)
     {
         (*gObjectTriggerInterface)->endSequence(obj->seqIndex);
@@ -507,7 +512,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
         {
             obj->anim.renderAlpha = ((SnowclawState*)inner)->mountAlpha;
         }
-        if ((obj)->childCount == 0 && (obj)->anim.seqId == 0x389 &&
+        if ((obj)->childCount == 0 && (obj)->anim.seqId == SNOWCLAW_SEQID_CR_SNOWCLAW &&
             ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->b0 != 0)
         {
             near = ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, (int)obj, &dist);
@@ -575,7 +580,7 @@ void snowclaw_hitDetect(GameObject* obj)
                 {
                     (*(void (**)(int*, int))((char*)*((GameObject*)sub2)->anim.dll + 0x3c))(sub2, 0);
                 }
-                if (obj->anim.seqId == 0x389)
+                if (obj->anim.seqId == SNOWCLAW_SEQID_CR_SNOWCLAW)
                 {
                     near = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, (int)obj, &dist);
                     if (near != 0)
@@ -584,7 +589,7 @@ void snowclaw_hitDetect(GameObject* obj)
                         (*(void (**)(int*, int))((char*)*((GameObject*)near)->anim.dll + 0x20))(near, 2);
                     }
                 }
-                if (obj->anim.seqId == 0x16d || obj->anim.seqId == 0x170)
+                if (obj->anim.seqId == SNOWCLAW_SEQID_IM_SNOWCLAW || obj->anim.seqId == SNOWCLAW_SEQID_IM_SNOWCLAW2)
                 {
                     (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 1);
                 }
@@ -730,7 +735,7 @@ void snowclaw_update(GameObject* obj)
         choice = randomGetRange(0, 1);
         ((SnowclawState*)inner)->pendingMoveId = *(u16*)&((SnowclawState*)inner)->moveIdBase + 5;
         turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, Obj_GetPlayerObject(), 0) >> 31;
-        if (turnSign == 0 || obj->anim.seqId == 0x389)
+        if (turnSign == 0 || obj->anim.seqId == SNOWCLAW_SEQID_CR_SNOWCLAW)
         {
             ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(
                 obj, *(u16*)&((SnowclawState*)inner)->moveIdBase + 6, 0.0f, 0);

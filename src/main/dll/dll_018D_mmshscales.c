@@ -23,8 +23,9 @@
 #include "main/dll/dll_018D_mmshscales.h"
 #include "main/object_render_legacy.h"
 
-/* Child object spawned at init and cached in childObjs[0] (scaled x2). */
-#define MMSHSCALES_CHILD_OBJ 0x1b8
+/* Child object spawned at init and cached in childObjs[0] (scaled x2);
+   retail OBJECTS.bin name "scalessword" (DLL 0x12A). */
+#define MMSHSCALES_CHILD_OBJ_SWORD 0x1b8
 
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
@@ -136,7 +137,7 @@ void MMSH_Scales_init(int* obj, s16* def)
     }
     if (Obj_IsLoadingLocked() == 0)
         return;
-    setup = (MmshScalesSpawnSetup*)Obj_AllocObjectSetup(0x24, MMSHSCALES_CHILD_OBJ);
+    setup = (MmshScalesSpawnSetup*)Obj_AllocObjectSetup(0x24, MMSHSCALES_CHILD_OBJ_SWORD);
     setup->posX = ((GameObject*)obj)->anim.localPosX;
     setup->posY = ((GameObject*)obj)->anim.localPosY;
     setup->posZ = ((GameObject*)obj)->anim.localPosZ;

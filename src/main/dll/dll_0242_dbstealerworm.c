@@ -323,7 +323,8 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
 #define DBEGG_OBJGROUP         0x24
 
 /* projectile spat at the baddie target: velocity aimed at targetObj, ownerObj = worm */
-#define DBSTEALERWORM_CHILD_OBJ_PROJECTILE 0x30a
+#define DBSTEALERWORM_SEQID 0x539 /* retail "DBstealerwo..." (DLL 0x242) */
+#define DBSTEALERWORM_CHILD_OBJ_ICE_BALL_SMALL 0x30a
 
 /* small dust burst (spawned 3x when DBWORM_FLAG14_FX_DUST is set) */
 #define DBSTEALERWORM_PARTFX_DUST 0x345
@@ -742,7 +743,7 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
     {
         if ((u32)best != (u32)obj)
         {
-            if (((GameObject*)best)->anim.seqId == 0x539)
+            if (((GameObject*)best)->anim.seqId == DBSTEALERWORM_SEQID)
             {
                 *(int*)&((BaddieState*)baddie)->targetObj = best;
                 if (randomGetRange(0, n) == 0)
@@ -835,7 +836,7 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     ptr = (int*)ObjGroup_GetObjects(DBSTEALERWORM_OBJGROUP, &cnt2);
     for (i = 0, objs = ptr; i < cnt2; i++)
     {
-        if (((GameObject*)*objs)->anim.seqId == 0x539)
+        if (((GameObject*)*objs)->anim.seqId == DBSTEALERWORM_SEQID)
         {
             tmpB = (**(int (**)(int, int, int))(*(int*)(*(int*)(*objs + 0x68)) + 0x24))(*objs, 0x83, 0);
             if ((u32)tmpB == q)
@@ -2057,7 +2058,7 @@ void fn_80202EF0(GameObject* obj, int baddie)
 
     if (Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(0x24, DBSTEALERWORM_CHILD_OBJ_PROJECTILE);
+        setup = Obj_AllocObjectSetup(0x24, DBSTEALERWORM_CHILD_OBJ_ICE_BALL_SMALL);
         setup->posX = (obj)->anim.localPosX;
         setup->posY = 15.0f + (obj)->anim.localPosY;
         setup->posZ = (obj)->anim.localPosZ;

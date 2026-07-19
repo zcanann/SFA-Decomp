@@ -50,9 +50,10 @@
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP    0x4b /* DLL 0x100 trickywarp */
 #define ANIMOBJD2_OBJFLAG_FREED 0x40
-/* Helper objects spawned by the fn_8013E0D0 state machine. */
-#define ANIMOBJD2_HELPER_OBJ_ID 0x17b
-#define ANIMOBJD2_DRIP_OBJ_ID   0x4f0
+/* Objects spawned by the fn_8013E0D0 state machine (retail OBJECTS.bin names
+   "TrickyFood" and "flameblast"). */
+#define ANIMOBJD2_TRICKY_FOOD_OBJ_ID 0x17b
+#define ANIMOBJD2_FLAMEBLAST_OBJ_ID  0x4f0
 /* seqId of the special actor Tricky circles when it is the current follow target (docblock: "the special seqId 0x6a3 actor") */
 #define ANIMOBJD2_CIRCLE_TARGET_SEQID 0x6a3
 
@@ -310,7 +311,7 @@ void fn_8013E0D0(int* obj, TrickyState* t)
                         TRICKY_RESET((u8*)t);
                         if (t->child == NULL)
                         {
-                            int o = (int)Obj_AllocObjectSetup(0x20, ANIMOBJD2_HELPER_OBJ_ID);
+                            int o = (int)Obj_AllocObjectSetup(0x20, ANIMOBJD2_TRICKY_FOOD_OBJ_ID);
                             s8 slots[4];
                             int free_;
                             slots[0] = -1;
@@ -428,7 +429,7 @@ void fn_8013E0D0(int* obj, TrickyState* t)
                     u8* p = (u8*)t;
                     for (; i < 7; i++)
                     {
-                        int o = (int)Obj_AllocObjectSetup(0x24, ANIMOBJD2_DRIP_OBJ_ID);
+                        int o = (int)Obj_AllocObjectSetup(0x24, ANIMOBJD2_FLAMEBLAST_OBJ_ID);
                         ((AnimObjD2DripSetup*)o)->head.color[0] = 2;
                         ((AnimObjD2DripSetup*)o)->head.color[1] = 1;
                         ((AnimObjD2DripSetup*)o)->index = i;

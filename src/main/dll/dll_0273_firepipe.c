@@ -71,23 +71,26 @@ extern f32 gFirePipeFarAttenMax;
 extern f32 lbl_803E6B98;
 extern f32 lbl_803E6BA8;
 
-/* objectId variants handled by this DLL (select the emitted effect). */
-#define FIREPIPE_OBJ_BLUE    0x6f9
-#define FIREPIPE_OBJ_C       0x730
-#define FIREPIPE_OBJ_D       0x731
-#define FIREPIPE_OBJ_E       0x732
-#define FIREPIPE_OBJ_FLAME_A 0x4a4
-#define FIREPIPE_OBJ_FLAME_B 0x70a
-#define FIREPIPE_OBJ_EFFECT  0x1b5
+/* objectId variants handled by this DLL (select the emitted effect); retail
+ * OBJECTS.bin names: IceHole, SteamHoleNo/SteamHoleFi/SteamHoleDe (11-char
+ * truncated), FirePipe, BossDrakorF. */
+#define FIREPIPE_OBJ_ICE_HOLE        0x6f9
+#define FIREPIPE_OBJ_STEAM_HOLE_NO   0x730
+#define FIREPIPE_OBJ_STEAM_HOLE_FI   0x731
+#define FIREPIPE_OBJ_STEAM_HOLE_DE   0x732
+#define FIREPIPE_OBJ_FIRE_PIPE       0x4a4
+#define FIREPIPE_OBJ_BOSSDRAKOR_FIRE 0x70a
+/* FlameThrower child (DLL 0xE4 flamethrowerspe) spawned as the emitted effect. */
+#define FIREPIPE_CHILD_OBJ_FLAMETHROWER 0x1b5
 
 /* emitted effect-type (flavour) per objectId variant (docblock: "0x6f9 -> type
  * 10 (blue glow), 0x730 -> 0xC, 0x731 -> 0xD, 0x732 -> 0xE, flame/default ->
  * type 9 (orange flame)"). */
-#define FIREPIPE_EFFECT_TYPE_BLUE  10
-#define FIREPIPE_EFFECT_TYPE_C     0xc
-#define FIREPIPE_EFFECT_TYPE_D     0xd
-#define FIREPIPE_EFFECT_TYPE_E     0xe
-#define FIREPIPE_EFFECT_TYPE_FLAME 9
+#define FIREPIPE_EFFECT_TYPE_ICE_HOLE      10
+#define FIREPIPE_EFFECT_TYPE_STEAM_HOLE_NO 0xc
+#define FIREPIPE_EFFECT_TYPE_STEAM_HOLE_FI 0xd
+#define FIREPIPE_EFFECT_TYPE_STEAM_HOLE_DE 0xe
+#define FIREPIPE_EFFECT_TYPE_FLAME         9
 
 typedef struct
 {
@@ -173,7 +176,7 @@ void firepipe_updateState(FirePipeObject* obj)
         priorityHit = ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0);
         switch (obj->objectId)
         {
-        case FIREPIPE_OBJ_FLAME_B:
+        case FIREPIPE_OBJ_BOSSDRAKOR_FIRE:
             if ((priorityHit == 0xf) || (priorityHit == 0xe))
             {
                 flags->emitting = 0;
@@ -181,12 +184,12 @@ void firepipe_updateState(FirePipeObject* obj)
                 s16toFloat(&extra->cycleTimer, 0x12c);
             }
             break;
-        case FIREPIPE_OBJ_BLUE:
+        case FIREPIPE_OBJ_ICE_HOLE:
             break;
-        case FIREPIPE_OBJ_FLAME_A:
-        case FIREPIPE_OBJ_C:
-        case FIREPIPE_OBJ_D:
-        case FIREPIPE_OBJ_E:
+        case FIREPIPE_OBJ_FIRE_PIPE:
+        case FIREPIPE_OBJ_STEAM_HOLE_NO:
+        case FIREPIPE_OBJ_STEAM_HOLE_FI:
+        case FIREPIPE_OBJ_STEAM_HOLE_DE:
         default:
             if (priorityHit == 0x10)
             {
@@ -276,7 +279,7 @@ void firepipe_updateState(FirePipeObject* obj)
                     {
                         modelLightStruct_setEnabled(extra->glowLight, 0, lbl_803E6B74);
                         modelLightStruct_setEnabled(extra->glowLight, 1, lbl_803E6B78);
-                        if (obj->objectId == FIREPIPE_OBJ_BLUE)
+                        if (obj->objectId == FIREPIPE_OBJ_ICE_HOLE)
                         {
                             modelLightStruct_setupGlow(extra->glowLight, 0, 0, 0xb4, 0xff, 0x64, lbl_803DC34C * obj->scale);
                         }
@@ -327,7 +330,7 @@ void firepipe_updateState(FirePipeObject* obj)
         FirePipeMapData* md3;
         md3 = (FirePipeMapData*)obj->objectDef;
         ex3 = obj->extra;
-        spawnDef = (u8*)Obj_AllocObjectSetup(0x24, FIREPIPE_OBJ_EFFECT);
+        spawnDef = (u8*)Obj_AllocObjectSetup(0x24, FIREPIPE_CHILD_OBJ_FLAMETHROWER);
         ((FirePipeEffectSetup*)spawnDef)->head.color[0] = 2;
         ((FirePipeEffectSetup*)spawnDef)->effectMode = ex3->effectMode;
         ((FirePipeEffectSetup*)spawnDef)->scale = md3->scale;
@@ -531,28 +534,28 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         extra->clearVolumeB = 0;
         switch (obj->objectId)
         {
-        case FIREPIPE_OBJ_BLUE:
-            extra->effectType = FIREPIPE_EFFECT_TYPE_BLUE;
+        case FIREPIPE_OBJ_ICE_HOLE:
+            extra->effectType = FIREPIPE_EFFECT_TYPE_ICE_HOLE;
             extra->effectMode = 1;
             extra->effectScale = lbl_803DC340;
             break;
-        case FIREPIPE_OBJ_D:
-            extra->effectType = FIREPIPE_EFFECT_TYPE_D;
+        case FIREPIPE_OBJ_STEAM_HOLE_FI:
+            extra->effectType = FIREPIPE_EFFECT_TYPE_STEAM_HOLE_FI;
             extra->effectMode = 2;
             extra->effectScale = lbl_803E6B74;
             break;
-        case FIREPIPE_OBJ_C:
-            extra->effectType = FIREPIPE_EFFECT_TYPE_C;
+        case FIREPIPE_OBJ_STEAM_HOLE_NO:
+            extra->effectType = FIREPIPE_EFFECT_TYPE_STEAM_HOLE_NO;
             extra->effectMode = 2;
             extra->effectScale = lbl_803E6B74;
             break;
-        case FIREPIPE_OBJ_E:
-            extra->effectType = FIREPIPE_EFFECT_TYPE_E;
+        case FIREPIPE_OBJ_STEAM_HOLE_DE:
+            extra->effectType = FIREPIPE_EFFECT_TYPE_STEAM_HOLE_DE;
             extra->effectMode = 2;
             extra->effectScale = lbl_803E6B74;
             break;
-        case FIREPIPE_OBJ_FLAME_A:
-        case FIREPIPE_OBJ_FLAME_B:
+        case FIREPIPE_OBJ_FIRE_PIPE:
+        case FIREPIPE_OBJ_BOSSDRAKOR_FIRE:
         default:
             extra->effectType = FIREPIPE_EFFECT_TYPE_FLAME;
             extra->effectMode = 0;

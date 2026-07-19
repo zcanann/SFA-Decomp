@@ -65,7 +65,7 @@
 #define PRESSURESWITCHFB_OBJ_SH_PRESSURE 0x026c
 #define PRESSURESWITCHFB_OBJ_LINK_UNDERW 0x0274
 #define PRESSURESWITCHFB_OBJ_CC_PRESSURE 0x0545
-#define PRESSURESWITCHFB_OBJ_WM_PRESSURE 0x077b
+#define PRESSURESWITCHFB_OBJ_GROUNDQUAKE 0x077b
 
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;
@@ -443,7 +443,7 @@ void PressureSwitchFB_init(GameObject* obj, PressureswitchfbPlacement* params)
     }
     defaultOffset = lbl_803E3778;
     state->velocityY = defaultOffset;
-    if (obj->anim.seqId == PRESSURESWITCHFB_OBJ_WM_PRESSURE)
+    if (obj->anim.seqId == PRESSURESWITCHFB_OBJ_GROUNDQUAKE)
     {
         flags->usePressedTexture = 1;
         flags->startPressed = 1;

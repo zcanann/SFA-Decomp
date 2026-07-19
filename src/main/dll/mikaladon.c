@@ -31,9 +31,9 @@
 
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
 
-/* DLL-id of the object spawned by fn_80153640 (generic spawn; no cache field /
-   named spawn-fn / kind name -> suffixless per role-gate). */
-#define MAGICPLANT_CHILD_OBJ 0x51b
+/* Spit projectile spawned by kooshy_spawnProjectile; retail OBJECTS.bin name
+   "KaldachomSp" (DLL 0xD7 kaldachompspit), shared with the snowworm spitter. */
+#define KALDACHOM_SPIT_OBJ 0x51b
 
 /* The magic-plant's one particle-fx effect (spawned per hit-count in the
    attack handler). */

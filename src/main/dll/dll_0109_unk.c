@@ -44,9 +44,9 @@ typedef enum Dll109Phase
     DLL109_PHASE_RESPAWNING = 2, /* respawn timer + off-screen wait, then reset */
 } Dll109Phase;
 
-/* DLL-id of the replacement object dropped at break (generic replacement setup
-   per file docblock; no cache field / spawn-fn / kind name -> suffixless). */
-#define DLL109_CHILD_OBJ 0x253
+/* Replacement object dropped at break; retail OBJECTS.bin name
+   "DIMExplosio..." (DLL 0x1CA). */
+#define DLL109_CHILD_OBJ_DIM_EXPLOSION 0x253
 
 typedef struct Dll109MapData
 {
@@ -108,7 +108,7 @@ void carryable_break_respawn_update(GameObject* obj)
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNK0109_HIT_VOLUME_SLOT, 4, 0);
             if (Obj_IsLoadingLocked() != 0)
             {
-                setup = Obj_AllocObjectSetup(0x24, DLL109_CHILD_OBJ);
+                setup = Obj_AllocObjectSetup(0x24, DLL109_CHILD_OBJ_DIM_EXPLOSION);
                 setup->posX = (obj)->anim.localPosX;
                 setup->posY = (obj)->anim.localPosY;
                 setup->posZ = (obj)->anim.localPosZ;

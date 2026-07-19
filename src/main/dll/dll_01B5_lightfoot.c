@@ -53,6 +53,7 @@ typedef struct LightfootSub
     u8 pad2C[0x30 - 0x2C];
 } LightfootSub;
 
+#define LIGHTFOOT_SEQID_SC_BABY 0x27c /* retail "SC_babyligh..." (DLL 0x1B5) */
 #define LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define LIGHTFOOT_OBJFLAG_RENDERED           0x800
 #define LIGHTFOOT_OBJGROUP                   3
@@ -152,7 +153,7 @@ void lightfoot_update(GameObject* obj)
         }
     }
 
-    if ((obj)->anim.seqId == 0x27c && ((GroundBaddieState*)inner)->gameBitA != -1)
+    if ((obj)->anim.seqId == LIGHTFOOT_SEQID_SC_BABY && ((GroundBaddieState*)inner)->gameBitA != -1)
     {
         switch (((ObjPlacement*)p30)->mapId)
         {

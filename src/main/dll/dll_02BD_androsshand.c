@@ -38,8 +38,9 @@
 #define ANDROSS_OBJ_ID              0x47b77
 #define ANDROSSHAND_HIT_VOLUME_SLOT 5
 
-/* Projectile spawned by the hand; role pinned by arwprojectile_setLifetime/placeForward + AndrossHandShotSetup cast. */
-#define ANDROSSHAND_CHILD_OBJ_SHOT 0x7e4
+/* Projectile spawned by the hand; retail "AndrossRing" (same 0x7e4 the andross body fires);
+   role pinned by arwprojectile_setLifetime/placeForward + AndrossHandShotSetup cast. */
+#define ANDROSSHAND_CHILD_OBJ_RING 0x7e4
 
 enum AndrossHandHealth
 {
@@ -388,7 +389,7 @@ void androsshand_spawnShot(GameObject* obj, AndrossHandState* state, int p3)
         dist = sqrtf(dx * dx + dz * dz);
         yaw = (u16)getAngle(dx, dz) + 0x8000;
         gAndrossHandShotPitch = (u16)getAngle(pt[1] - state->arwingObj->anim.localPosY, dist) >> 8;
-        setup = (AndrossHandShotSetup*)Obj_AllocObjectSetup(0x20, ANDROSSHAND_CHILD_OBJ_SHOT);
+        setup = (AndrossHandShotSetup*)Obj_AllocObjectSetup(0x20, ANDROSSHAND_CHILD_OBJ_RING);
         setup->head.posX = pt[0];
         setup->head.posY = pt[1];
         setup->head.posZ = pt[2];
