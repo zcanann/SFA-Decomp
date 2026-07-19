@@ -15,7 +15,7 @@
  * ground/wall collision, leash to the placement origin (leashRange), and
  * the periodic ambient sfx (0x6c/0x6d) keyed on the object subtype.
  *
- * fn_801816F8 spawns the basket "contents" on break/throw: it dispatches on
+ * smallbasket_spawnContents spawns the basket "contents" on break/throw: it dispatches on
  * the contents mode (data+0x1e, or a health-weighted random roll when 7),
  * allocating one of several object types (0x3d3/0x3d4/0x3d5 fruit, 0xb/0x3cd
  * effect) and launching it with a randomized outward velocity.
@@ -62,7 +62,7 @@
 #define SMALLBASKET_MSG_PLAYER_GRAB            0x100010 /* tells player to grab/hold the basket */
 #define PAD_BUTTON_A                           0x100
 
-/* Contents object DLL-ids spawned by fn_801816F8 on break/throw (roles from
+/* Contents object DLL-ids spawned by smallbasket_spawnContents on break/throw (roles from
    the file docblock: 0x3d3/0x3d4/0x3d5 fruit variants, 0xb/0x3cd effect). */
 #define SMALLBASKET_CHILD_OBJ_FRUIT_A    0x3d3
 #define SMALLBASKET_CHILD_OBJ_FRUIT_B    0x3d4
@@ -136,7 +136,7 @@ extern const f32 lbl_803E3950;
 extern const f32 lbl_803E3954;
 extern const f32 lbl_803E3958;
 
-int fn_801816F8(u8* obj, u8* player, u8* dataIn)
+int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn)
 {
     GameObject* playerObj;
     s16 mode;
@@ -701,7 +701,7 @@ void SmallBasket_update(GameObject* obj)
         state->disableTimer = 1;
         state->throwState = 0;
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        fn_801816F8((u8*)obj, (u8*)player, (u8*)state);
+        smallbasket_spawnContents((u8*)obj, (u8*)player, (u8*)state);
         zf = (0.0f);
         (obj)->anim.velocityX = zf;
         (obj)->anim.velocityZ = zf;
@@ -930,7 +930,7 @@ void SmallBasket_update(GameObject* obj)
                 state->disableTimer = 0x32;
                 state->throwState = 0;
                 *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                fn_801816F8((u8*)obj, (u8*)player, (u8*)state);
+                smallbasket_spawnContents((u8*)obj, (u8*)player, (u8*)state);
                 zf = (0.0f);
                 (obj)->anim.velocityX = zf;
                 (obj)->anim.velocityZ = zf;

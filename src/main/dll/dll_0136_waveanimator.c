@@ -3,7 +3,7 @@
  * surface for a map object. On init it folds the object's placement def
  * (origin/span/amplitude/period/grid) into a shared WaveAnimatorState and,
  * for the first instance only, builds three globally shared tables via
- * fn_801923F8: a per-cell height field (lbl_803DDAF4), a per-cell RGB
+ * waveanimator_buildSharedTables: a per-cell height field (lbl_803DDAF4), a per-cell RGB
  * color field shaded by height (lbl_803DDAEC), and a per-grid phase table
  * (lbl_803DDAF0). hitDetect advances every phase by framesThisStep/2 each
  * step (wrapping at the wave period); the tables are freed when the last
@@ -58,7 +58,7 @@ extern const f32 lbl_803E3F60;
 extern const f32 lbl_803E3F64;
 extern const union WaveAnimatorConstF32 lbl_803E3F70;
 
-void fn_801923F8(int* cfgArg);
+void waveanimator_buildSharedTables(int* cfgArg);
 
 void waveanimator_modelMtxFn(GameObject* obj, int a, int b, int c)
 {
@@ -84,7 +84,7 @@ void waveanimator_setScale(int* obj, f32 fval)
     state->scaleB = fval;
 }
 
-void fn_801923F8(int* cfgArg)
+void waveanimator_buildSharedTables(int* cfgArg)
 {
     int row;
     int heightIdx;
@@ -275,7 +275,7 @@ void waveanimator_init(int* obj, int* desc)
     state->scaleB = scale;
     if (lbl_803DDAE8 == 0)
     {
-        fn_801923F8((int*)state);
+        waveanimator_buildSharedTables((int*)state);
     }
     ObjGroup_AddObject((int)obj, WAVEANIMATOR_OBJGROUP);
     lbl_803DDAE8++;

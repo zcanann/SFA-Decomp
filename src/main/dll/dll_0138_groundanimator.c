@@ -39,7 +39,7 @@ typedef struct GroundanimatorPlacement
 } GroundanimatorPlacement;
 
 /* waveanimator_getExtraSize == 0x3c (also the shared wave-grid config fed
- * to fn_801923F8; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
+ * to waveanimator_buildSharedTables; the grid/color/phase tables live in the lbl_803DDAEC/F0/F4
  * globals). */
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);

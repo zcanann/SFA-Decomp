@@ -5,7 +5,7 @@
  * which only accepts 0 or values >= 0xa) and playerShadow_renderObject, which
  * builds an 8-corner swept-sphere box (radius/height chosen per shadow mode,
  * modes 0xb..0x11) around the object, runs it through the terrain hit-detect
- * pipeline, then hands the resulting tri hits to fn_800A3AF0. fn_800A3AF0
+ * pipeline, then hands the resulting tri hits to playerShadow_scatterFootfallEffects. playerShadow_scatterFootfallEffects
  * walks those hits and, for surface types 0x10-0x17, scatters bone/foot
  * particle effects (partfx ids 0x72/0x73/0x190) at random barycentric points
  * on the struck triangles relative to the camera.
@@ -51,7 +51,7 @@ extern const union PlayerShadowConstF32 lbl_803DF49C;
 extern const union PlayerShadowConstF32 lbl_803DF4A0;
 extern const union PlayerShadowConstF32 lbl_803DF4A4;
 
-void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj)
+void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj)
 {
     BoneSpawnData data;
     CameraViewSlot* cam;
@@ -303,7 +303,7 @@ void playerShadow_renderObject(GameObject* obj)
     fn_80069968(&hitCount, &hitTable);
     hitTableValue = hitTable;
     trackGetGridOrigin(&tileInfo);
-    fn_800A3AF0((PlayerShadowTriHit*)hitTableValue, hitCount, (obj)->anim.localPosX - tileInfo[0],
+    playerShadow_scatterFootfallEffects((PlayerShadowTriHit*)hitTableValue, hitCount, (obj)->anim.localPosX - tileInfo[0],
                 (obj)->anim.localPosZ - tileInfo[2], obj);
 }
 

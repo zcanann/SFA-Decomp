@@ -123,7 +123,7 @@ void fn_801814D0(int obj, int arg, u8* state)
             }
             ((DusterState*)state)->hitReactTimer = 0x32;
             state[9] = 0;
-            fn_801816F8((u8*)obj, (u8*)arg, state);
+            smallbasket_spawnContents((u8*)obj, (u8*)arg, state);
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             launchVel = lbl_803E3938;
             ((GameObject*)obj)->anim.velocityX = lbl_803E3938;

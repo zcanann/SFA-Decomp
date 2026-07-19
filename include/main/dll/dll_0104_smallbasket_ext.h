@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-int fn_801816F8(u8* obj, u8* player, u8* dataIn);
+int smallbasket_spawnContents(u8* obj, u8* player, u8* dataIn);
 
 #endif /* MAIN_DLL_DLL_0104_SMALLBASKET_EXT_H_ */

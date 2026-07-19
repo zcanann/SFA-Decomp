@@ -4,8 +4,8 @@
  * Three functions installed into the shopkeeper object's state-machine
  * dispatch tables by dll_0286_spshopkeeper (lbl_803AD068[6]/[7] and
  * lbl_803DDC58):
- *   - fn_801E66DC / fn_801E66E4: trivial "return 0" state slots.
- *   - fn_801E66EC: the active handler. When the linked actor flags a
+ *   - return0_801E66DC / return0_801E66E4: trivial "return 0" state slots.
+ *   - ShopKeeper_popQueuedState: the active handler. When the linked actor flags a
  *     trigger (animState+0x27a) and the object's flag word (objHandle+0xb0) has
  *     bit 0x800 set, it spawns bone particle effect 2031. It then clears
  *     the actor's queued-state guard byte (state+0x9d6) and, if a queued
@@ -23,16 +23,16 @@
 extern f32 lbl_803E59D8;
 extern f32 lbl_803E59DC;
 
-int fn_801E66DC(void)
+int return0_801E66DC(void)
 {
     return 0;
 }
-int fn_801E66E4(void)
+int return0_801E66E4(void)
 {
     return 0;
 }
 
-int fn_801E66EC(int objHandle, int animState)
+int ShopKeeper_popQueuedState(int objHandle, int animState)
 {
     GameObject* obj = (GameObject*)objHandle;
     int state;

@@ -3,7 +3,7 @@
  *
  * He latches onto the nearest shop stall (object group 9, vendorObj), turns
  * to face the player and runs the purchase flow via his animEventCallback
- * (fn_801E76A0): reading the shop's current item price through the stall's
+ * (ShopKeeper_SeqFn): reading the shop's current item price through the stall's
  * interface vtable, pushing the three price digits into his number-texture
  * slots, and handling buy/cancel through the screen-transition + UI dll.
  * ShopKeeper_spawnScarabs scatters the paid scarab coins (object type 1151). Per-frame
@@ -120,7 +120,7 @@ ObjectDescriptor gShopKeeperObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)ShopKeeper_getExtraSize,
 };
 
-int fn_801E76A0(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
+int ShopKeeper_SeqFn(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
 {
     int state;
     int digit;
@@ -456,7 +456,7 @@ void ShopKeeper_init(GameObject* obj)
 {
     int state = *(int*)&(obj)->extra;
     (obj)->objectFlags |= SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED;
-    (obj)->animEventCallback = fn_801E76A0;
+    (obj)->animEventCallback = ShopKeeper_SeqFn;
     (obj)->anim.modelState->flags |= 0x810;
     ((ShopkeeperState*)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
     ((ShopkeeperState*)state)->msgStack = allocModelStruct_800139e8(4, 4);
@@ -478,8 +478,8 @@ void ShopKeeper_initialise(void)
     lbl_803AD068[3] = TREX_Lazerwall_updateTimedChallenge;
     lbl_803AD068[4] = TREX_Lazerwall_waitForStartBit;
     lbl_803AD068[5] = TREX_Lazerwall_popQueuedState;
-    lbl_803AD068[6] = fn_801E66EC;
-    lbl_803AD068[7] = fn_801E66E4;
-    lbl_803DDC58 = fn_801E66DC;
+    lbl_803AD068[6] = ShopKeeper_popQueuedState;
+    lbl_803AD068[7] = return0_801E66E4;
+    lbl_803DDC58 = return0_801E66DC;
 }
 
