@@ -1048,8 +1048,8 @@ void staff_hitDetectGeometry(int* obj)
         }
         if (idx == 14)
         {
-            Sfx_PlayAtPositionFromObjectPtrFirstLegacy(obj, hitState->contactPosX, hitState->contactPosY,
-                                                       hitState->contactPosZ, SFXTRIG_foot_water_walk_1);
+            Sfx_PlayAtPositionFromObject((int)obj, hitState->contactPosX, hitState->contactPosY,
+                                         hitState->contactPosZ, SFXTRIG_foot_water_walk_1);
             (*gWaterfxInterface)
                 ->spawnSplashBurst(obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ,
                                    0.0f);
@@ -1069,8 +1069,8 @@ void staff_hitDetectGeometry(int* obj)
             ((void (*)(int, int, void*, int, int, u8*))(*(int**)gStaffSwipeResource)[1])(
                 OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &v, OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,
                 OBJHITREACT_HIT_EFFECT_NO_SOURCE, (u8*)&tbl + (((u8*)lbl_803208E8)[idx] << 4));
-            Sfx_PlayAtPositionFromObjectPtrFirstLegacy(obj, hitState->contactPosX, hitState->contactPosY,
-                                                       hitState->contactPosZ, (u16)((s16*)lbl_803208A0)[idx]);
+            Sfx_PlayAtPositionFromObject((int)obj, hitState->contactPosX, hitState->contactPosY,
+                                         hitState->contactPosZ, (u16)((s16*)lbl_803208A0)[idx]);
         }
     }
 }

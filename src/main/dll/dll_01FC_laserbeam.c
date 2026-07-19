@@ -373,7 +373,7 @@ void LaserBeam_update(int obj2)
                         {
                             spread = lbl_803E5D44;
                         }
-                        Sfx_PlayAtPositionFromObjectIntFirstLegacy(
+                        Sfx_PlayAtPositionFromObject(
                             obj2, ((GameObject*)player)->anim.localPosX, ((GameObject*)obj2)->anim.localPosY,
                             ((GameObject*)player)->anim.localPosZ, SFXTRIG_wp_fball2_c_1c9);
                         if (*(s16*)(*(char**)&((GameObject*)player)->extra + 0x81a) == 0)

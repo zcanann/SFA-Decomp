@@ -152,8 +152,7 @@ void baddieSpawnWaterRipple(int obj, int state)
         if (sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
                   ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) > 0.5f)
         {
-            ((void (*)(u32, f32, f32, f32, u16))Sfx_PlayAtPositionFromObject)(obj, stk.x, stk.y, stk.z,
-                                                                              SFXstaff_proj_putaway);
+            Sfx_PlayAtPositionFromObject((int)obj, stk.x, stk.y, stk.z, SFXstaff_proj_putaway);
         }
     }
 }

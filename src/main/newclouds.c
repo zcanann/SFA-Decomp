@@ -1094,8 +1094,7 @@ void snowReposSnowCloud(int cloudId)
         gActiveLightning = lightningCreate((const Vec3f*)from, (const Vec3f*)to, gNewCloudLightningRadius,
                                        lbl_803DF1BC, 0xf, 0xc0, 0);
         {
-            Sfx_PlayAtPositionFromObjectIntFirstLegacy(0, from[0], from[1], from[2],
-                                                       SFXTRIG_barrelgrabber_suck);
+            Sfx_PlayAtPositionFromObject(0, from[0], from[1], from[2], SFXTRIG_barrelgrabber_suck);
         }
         fl = ((NewCloud*)gNewClouds[cloudId])->lightningFlags;
         if (fl & NEWCLOUD_LTG_SLOW)

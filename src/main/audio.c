@@ -221,7 +221,6 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId);
 void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
-void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId);
 void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 void Sfx_UpdateObjectSounds(void);
 void Sfx_InitObjectChannels(void);
@@ -1694,7 +1693,7 @@ void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId)
     Sfx_PlayFromObjectEx(obj, NULL, channel, sfxId);
 }
 
-void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId)
+void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, u16 sfxId)
 {
     f32 pos[3];
 

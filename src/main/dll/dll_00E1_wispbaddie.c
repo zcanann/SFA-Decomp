@@ -222,7 +222,7 @@ void wispbaddie_update(GameObject* obj)
             state->flags = (u8)(flags & ~WISPBADDIE_FLAG_CHASE_PLAYER);
             state->flags = (u8)(state->flags | WISPBADDIE_FLAG_CHASE_LOCKOUT);
         }
-        Sfx_PlayAtPositionFromObjectIntFirstLegacy((int)obj, hitZ, dy, dz, SFXTRIG_robolaser16);
+        Sfx_PlayAtPositionFromObject((int)obj, hitZ, dy, dz, SFXTRIG_robolaser16);
     }
 
     particleParam = 4;

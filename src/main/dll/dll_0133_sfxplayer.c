@@ -141,9 +141,9 @@ static inline void sfxplayerStartSound(u8* obj, SfxplayerPlacement* data, Sfxpla
         }
         else
         {
-            Sfx_PlayAtPositionFromObjectPtrCanonicalLegacy(
-                ((GameObject*)soundObj)->anim.localPosX, ((GameObject*)soundObj)->anim.localPosY,
-                ((GameObject*)soundObj)->anim.localPosZ, soundObj, soundId);
+            Sfx_PlayAtPositionFromObject((int)soundObj, ((GameObject*)soundObj)->anim.localPosX,
+                                         ((GameObject*)soundObj)->anim.localPosY,
+                                         ((GameObject*)soundObj)->anim.localPosZ, soundId);
         }
     }
 }

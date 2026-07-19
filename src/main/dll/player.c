@@ -13212,9 +13212,8 @@ void fn_802ADE80(GameObject* obj, int inner, int state)
     {
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
         {
-            ((void (*)(int, f32, f32, f32, int))Sfx_PlayAtPositionFromObject)((int)obj, obj->anim.localPosX,
-                                                                              ((PlayerState*)inner)->waterSurfaceY,
-                                                                              obj->anim.localPosZ, 0xe);
+            Sfx_PlayAtPositionFromObject((int)obj, obj->anim.localPosX,
+                                         ((PlayerState*)inner)->waterSurfaceY, obj->anim.localPosZ, 0xe);
         }
         if (((PlayerState*)inner)->waterDepth < lbl_803E7FA0 &&
             (*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)
@@ -13228,9 +13227,8 @@ void fn_802ADE80(GameObject* obj, int inner, int state)
     {
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) != 0)
         {
-            ((void (*)(int, f32, f32, f32, int))Sfx_PlayAtPositionFromObject)((int)obj, obj->anim.localPosX,
-                                                                              ((PlayerState*)inner)->waterSurfaceY,
-                                                                              obj->anim.localPosZ, 0xf);
+            Sfx_PlayAtPositionFromObject((int)obj, obj->anim.localPosX,
+                                         ((PlayerState*)inner)->waterSurfaceY, obj->anim.localPosZ, 0xf);
         }
         if (((PlayerState*)inner)->waterDepth < lbl_803E7FA0 &&
             (*(int*)&((PlayerState*)state)->baddie.eventFlags & 0x200) != 0)

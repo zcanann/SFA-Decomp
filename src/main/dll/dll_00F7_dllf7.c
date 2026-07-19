@@ -178,7 +178,7 @@ void dll_F7_update(int* obj)
     {
         if ((state->hitsRemaining -= hitVolume) > 0)
         {
-            Sfx_PlayAtPositionFromObjectPtrFirstLegacy(obj, blk.x, blk.y, blk.z, SFXTRIG_crtsmsh6);
+            Sfx_PlayAtPositionFromObject((int)obj, blk.x, blk.y, blk.z, SFXTRIG_crtsmsh6);
             Obj_SetActiveModelIndex((GameObject*)obj, 2 - state->hitsRemaining);
             state->bounceOffset = (1.0f);
             state->bounceVelocity = 12.0f;

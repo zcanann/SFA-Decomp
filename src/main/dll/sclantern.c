@@ -85,9 +85,8 @@ u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
         if (!((lantern->anim.currentMove == SCLANTERN_SPARK_SUPPRESS_MOVE) &&
               (lantern->anim.currentMoveProgress < 0.8f)))
         {
-            Sfx_PlayAtPositionFromObjectIntFirstLegacy(obj, posX, posY, posZ, SCLANTERN_SPARK_SFX_ID);
+            Sfx_PlayAtPositionFromObject(obj, posX, posY, posZ, SCLANTERN_SPARK_SFX_ID);
         }
     }
     return advanceResult;
 }
-
