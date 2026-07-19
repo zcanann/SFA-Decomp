@@ -4,6 +4,8 @@
 #include "global.h"
 #include "main/texture.h"
 
+typedef struct GameObject GameObject;
+
 typedef struct ModelRenderOp
 {
     u8 pad00[0x0C];
@@ -33,12 +35,13 @@ STATIC_ASSERT(offsetof(ModelRenderOp, alphaOverride) == 0x43);
 typedef struct ModelRenderOpTextureRefs
 {
     void* texture0;
-    u8 pad04[4];
+    void* texture1;
     u8 unk08;
     u8 pad09[3];
 } ModelRenderOpTextureRefs;
 
 STATIC_ASSERT(sizeof(ModelRenderOpTextureRefs) == 0x0C);
+STATIC_ASSERT(offsetof(ModelRenderOpTextureRefs, texture1) == 0x04);
 STATIC_ASSERT(offsetof(ModelRenderOpTextureRefs, unk08) == 0x08);
 
 /*
@@ -292,7 +295,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c);
 void modelAnimResetState(void* m, void* data);
 int modelLoadAnimations(void* model, int id, void* animBase);
 void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);
-void ObjModel_LoadRenderOpTextures(u8* model, int object);
+void ObjModel_LoadRenderOpTextures(u8* model, GameObject* object);
 void ObjModel_Release(u8* model);
 void* ObjModel_LoadAnimData(u8* modelData, int loadFlags, int destination);
 void* ObjModel_Load(int modelId, int loadFlags, int* outSize);

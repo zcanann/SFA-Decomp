@@ -1862,7 +1862,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             {
                 ((ObjModelInstance*)obj->def)->flags &= ~0x800000LL;
             }
-            ObjModel_LoadRenderOpTextures(obj->models[idx], (int)obj);
+            ObjModel_LoadRenderOpTextures(obj->models[idx], (GameObject*)obj);
             modelInitBones(obj->scale, obj->models[idx]);
             if (((ObjModelInstance*)obj->def)->flags & OBJDEF_FLAG_DEFERRED_RENDER)
             {
@@ -1893,7 +1893,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             {
                 ((ObjModelInstance*)obj->def)->flags &= ~0x800000LL;
             }
-            ObjModel_LoadRenderOpTextures(obj->models[i], (int)obj);
+            ObjModel_LoadRenderOpTextures(obj->models[i], (GameObject*)obj);
             modelInitBones(obj->scale, obj->models[i]);
             if (((ObjModelInstance*)obj->def)->flags & OBJDEF_FLAG_DEFERRED_RENDER)
             {

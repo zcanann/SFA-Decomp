@@ -21,6 +21,7 @@
 #include "main/frame_timing.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "main/rcp_dolphin_ext.h"
+#include "main/shader_init_api.h"
 #include "main/pi_dolphin_ext.h"
 #include "main/acosf_api.h"
 #include "main/render_internal.h"
@@ -2500,7 +2501,7 @@ ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int r
 }
 
 u8 gModelJointScratchBuffer[0x140];
-void ObjModel_LoadRenderOpTextures(u8* model, int arg)
+void ObjModel_LoadRenderOpTextures(u8* model, GameObject* object)
 {
     int i;
     u8* hdr = *(u8**)model;
@@ -2511,7 +2512,7 @@ void ObjModel_LoadRenderOpTextures(u8* model, int arg)
     ((ObjModel*)model)->bufferFlags |= OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
     for (i = 0; i < (*(u8**)model)[0xf8]; i++)
     {
-        shaderInit((u8*)&((ModelFileHeader*)hdr)->renderOps[i], (u8*)&((ObjModel*)model)->textureRefs[i], arg,
+        shaderInit((u8*)&((ModelFileHeader*)hdr)->renderOps[i], &((ObjModel*)model)->textureRefs[i], object,
                    ((ModelFileHeader*)hdr)->shaderFlags);
     }
 }

@@ -15,6 +15,8 @@
 #include "main/object.h"
 #include "main/mapEvent.h"
 #include "main/model_light.h"
+#include "main/model.h"
+#include "main/shader_init_api.h"
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
 #include "main/rcp_dolphin_render_api.h"
@@ -930,7 +932,7 @@ void ShaderDef_free(int* def)
     }
 }
 
-void shaderInit(u8* def, void** out, u8* obj, int wpad0)
+void shaderInit(u8* def, ModelRenderOpTextureRefs* textures, GameObject* obj, int wpad0)
 {
     void** slot;
     void* s;
@@ -938,12 +940,12 @@ void shaderInit(u8* def, void** out, u8* obj, int wpad0)
     if (*(void**)(def + 0x8) != NULL)
     {
         if (obj != NULL)
-            slot = (void**)(gRcpDistortSlots + (6 - (obj[0xf2] + 1)) * 0x1C);
+            slot = (void**)(gRcpDistortSlots + (6 - (obj->lightColorSlot + 1)) * 0x1C);
         else
             slot = (void**)(gRcpDistortSlots + 0x8C);
         s = *slot;
         (((Texture*)s)->refCount)++;
-        out[0] = *slot;
+        textures->texture0 = *slot;
     }
     if (*(void**)(def + 0x14) == NULL)
         return;
@@ -953,7 +955,7 @@ void shaderInit(u8* def, void** out, u8* obj, int wpad0)
         slot = (void**)(gRcpDistortSlots + (def[0x20] >> 1) * 0x1C);
     s = *slot;
     (((Texture*)s)->refCount)++;
-    out[1] = *slot;
+    textures->texture1 = *slot;
 }
 
 extern s32 lbl_803DCE00;
