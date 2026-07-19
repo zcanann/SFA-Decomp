@@ -24,7 +24,7 @@
 #include "main/frame_timing.h"
 #include "main/object_descriptor.h"
 #include "main/dll/CF/dll_012A_cfcrate.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 extern f32 lbl_803E3E40;
 
@@ -95,7 +95,7 @@ void CFCrate_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             return;
         }
     }
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 int CFCrate_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)

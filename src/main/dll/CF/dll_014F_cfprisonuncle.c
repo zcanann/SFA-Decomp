@@ -9,7 +9,7 @@
  * object still renders. Carved from the sandwormBoss 10-DLL container.
  */
 #include "main/game_object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objseq.h"
 #include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
@@ -71,18 +71,15 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
     {
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
-            ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
-                                                                                        1.0f);
+            objRenderModelAndHitVolumes(sub->target, p2, p3, p4, p5, 1.0f);
         }
     }
     else if (mainGetBit(GAMEBIT_CFPerchRelated004D) != 0 && visible != 0)
     {
-        ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
-                                                                                    1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
-            ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
-                                                                                        1.0f);
+            objRenderModelAndHitVolumes(sub->target, p2, p3, p4, p5, 1.0f);
         }
     }
     else if (sub != NULL && *(void**)&sub->target != NULL)
@@ -93,26 +90,22 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
             {
                 if (objUpdateOpacity(sub->target) != 0)
                 {
-                    ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3,
-                                                                                                p4, p5, 1.0f);
+                    objRenderModelAndHitVolumes(sub->target, p2, p3, p4, p5, 1.0f);
                     ObjPath_GetPointWorldPosition(sub->target, 0, &obj->anim.localPosX, &obj->anim.localPosY,
                                                   &obj->anim.localPosZ, 0);
                 }
-                ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
-                                                                                              1.0f);
+                objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
             }
         }
         else
         {
             if (objUpdateOpacity(sub->target) != 0)
             {
-                ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4,
-                                                                                            p5, 1.0f);
+                objRenderModelAndHitVolumes(sub->target, p2, p3, p4, p5, 1.0f);
             }
             if (visible != 0)
             {
-                ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
-                                                                                              1.0f);
+                objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
             }
         }
     }

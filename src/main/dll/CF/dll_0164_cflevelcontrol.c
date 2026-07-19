@@ -19,7 +19,7 @@
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/dll/player_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/shader_api.h"
 #include "main/sky_api.h"
 #include "main/gamebits.h"
@@ -122,7 +122,7 @@ void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E43E8);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E43E8);
 }
 
 void cflevelcontrol_hitDetect(void)

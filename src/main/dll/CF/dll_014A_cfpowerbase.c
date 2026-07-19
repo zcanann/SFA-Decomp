@@ -17,7 +17,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/CF/dll_014A_cfpowerbase.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
@@ -118,7 +118,7 @@ void CFPowerBase_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }
 
 void CFPowerBase_hitDetect(void)

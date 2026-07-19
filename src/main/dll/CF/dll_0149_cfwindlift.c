@@ -20,7 +20,7 @@
 #include "main/gamebits.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/vecmath.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/frame_timing.h"
 #include "main/maketex_sequence_api.h"
 #include "main/dll/CF/dll_0149_cfwindlift.h"
@@ -320,7 +320,7 @@ void WindLift_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 vis = visible;
     if (vis != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4190);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E4190);
 }
 
 void WindLift_hitDetect(void)

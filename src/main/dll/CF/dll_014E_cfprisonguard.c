@@ -20,7 +20,7 @@
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
@@ -243,7 +243,7 @@ void CFPrisonGuard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
     if (visible != 0)
     {

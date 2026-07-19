@@ -22,7 +22,7 @@
 #include "main/curve.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_0015_curves.h"
@@ -969,7 +969,7 @@ void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     int* sub = ((GameObject*)obj)->extra;
     if ((s32)visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
         dll_2E_func06((GameObject*)obj, (MoveLibState*)sub, 0);
     }
 }

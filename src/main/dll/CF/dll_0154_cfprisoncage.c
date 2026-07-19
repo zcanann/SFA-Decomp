@@ -14,7 +14,7 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/obj_message.h"
 #include "main/obj_placement.h"
 #include "main/dll/CF/dll_0154_cfprisoncage.h"
@@ -135,7 +135,7 @@ void CFPrisonCage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
     if (isVisible != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }
 
 void CFPrisonCage_hitDetect(int* obj)

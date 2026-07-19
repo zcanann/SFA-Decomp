@@ -11,7 +11,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/obj_message.h"
 #include "main/camera.h"
 #include "main/audio/sfx_ids.h"
@@ -336,7 +336,7 @@ void CFMainCrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4210);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E4210);
 }
 
 void CFMainCrystal_hitDetect(void)

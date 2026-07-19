@@ -4,7 +4,7 @@
  * scale from the placement; render just draws the model.
  */
 #include "main/game_object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED    0x8000
@@ -26,7 +26,7 @@ void CFLightWall_free(void)
 
 void CFLightWall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }
 
 void CFLightWall_hitDetect(void)

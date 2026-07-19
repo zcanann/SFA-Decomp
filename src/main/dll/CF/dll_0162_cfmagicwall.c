@@ -6,7 +6,7 @@
  * using the nearer of player distance and camera distance.
  */
 #include "main/game_object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/obj_placement.h"
 #include "main/obj_query.h"
 #include "main/gamebits.h"
@@ -50,7 +50,7 @@ void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }
 
 void cfmagicwall_hitDetect(void)
