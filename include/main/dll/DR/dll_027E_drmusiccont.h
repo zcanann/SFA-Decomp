@@ -5,15 +5,6 @@
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "global.h"
 
-extern const f32 lbl_803E6BC8;
-extern const f32 gDrMusicControlCloudOverridePosX;
-extern const f32 gDrMusicControlCloudOverridePosY;
-extern const f32 gDrMusicControlCloudOverridePosZ;
-extern const f32 lbl_803E6BD8;
-extern const f32 gDrMusicControlStingerTimerDuration;
-extern const f32 gDrMusicControlRestartPointX;
-extern const f32 gDrMusicControlRestartPointY;
-extern const f32 gDrMusicControlRestartPointZ;
 
 typedef struct DrMusicContFlags
 {
