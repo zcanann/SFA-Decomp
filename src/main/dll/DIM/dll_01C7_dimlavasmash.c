@@ -172,8 +172,8 @@ void dimlavasmash_init(s16* obj, s8* def)
     ((GameObject*)obj)->animEventCallback = dimlavasmash_SeqFn;
     inner = ((GameObject*)obj)->extra;
     inner->surfaceLayerId = (u8)((DimlavasmashObjectDef*)def)->surfaceLayerId;
-    inner->unk0 = (s8)((DimlavasmashObjectDef*)def)->unk1C;
-    inner->state = mainGetBit(((DimlavasmashObjectDef*)def)->gameBit);
+    inner->seqSlot = (s8)((DimlavasmashObjectDef*)def)->unk1C;
+    inner->state = mainGetBit(((DimlavasmashObjectDef*)def)->triggerGameBit);
     if (inner->state == 1)
     {
         block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
