@@ -684,7 +684,7 @@ main/dll/dll_007B_dll7bfunc0.c:
 main/dll/dll_007C_dll7cfunc0.c:
 	.text       start:0x800F472C end:0x800F4C70
 	.data       start:0x80314E08 end:0x80315998
-	.sdata2     start:0x803E0D88 end:0x803E0DD8
+	.sdata2     start:0x803E0D88 end:0x803E0DD4
 
 main/dll/dll_007D_dll7dfunc0.c:
 	.text       start:0x800F4C70 end:0x800F4FA4
@@ -1833,7 +1833,7 @@ main/dll/dll_0118_duster.c:
 main/dll/dll_0103_curvefish.c:
 	.text       start:0x80180DC8 end:0x801814D0
 	.data       start:0x80321680 end:0x803216B8
-	.sdata2     start:0x803E38E8 end:0x803E3930
+	.sdata2     start:0x803E38E8 end:0x803E392C
 
 main/dll/dll_801814d0.c:
 	.text       start:0x801814D0 end:0x801816F8
