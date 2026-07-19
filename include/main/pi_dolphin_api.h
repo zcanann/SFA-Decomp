@@ -33,6 +33,7 @@ void fn_8004F380(f32 scale, int* color, f32* position);
 void fn_8004F6D8(f32 scale, int* color, f32* position, u8* chanColor);
 void fn_8004FA30(f32 scale, int* color, f32* position);
 void fn_8004FDA0(u8* texture, void* texMtx, u8* color);
+void textureFn_8004ff20(void* texture, f32* texMtx, void* color, int unused);
 void fn_80051528(void* texture, void* texMtx);
 void gxTextureFn_80050e28(u8 mode);
 int textureFn_80050ad8(void* texture, int stageCount, u8 mode, u32 indirectTextureId);

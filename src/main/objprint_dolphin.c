@@ -11,7 +11,7 @@
 #include "main/pi_frame_api.h"
 #include "main/pi_data_file_api.h"
 #include "main/pi_dolphin_api.h"
-#include "main/pi_dolphin_ext.h"
+#include "main/pi_dolphin.h"
 #include "main/pi_flush_api.h"
 #include "main/shader_api.h"
 #include "main/sky_api.h"

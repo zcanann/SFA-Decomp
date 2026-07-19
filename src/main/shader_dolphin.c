@@ -11,7 +11,6 @@
 #include "main/object_api.h"
 #include "dolphin/gx/GXMisc.h"
 #include "main/pi_dolphin.h"
-#include "main/pi_dolphin_ext.h"
 #include "main/newshadows.h"
 #include "main/mm.h"
 #include "main/model.h"

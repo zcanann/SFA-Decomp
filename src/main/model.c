@@ -22,7 +22,6 @@
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "main/rcp_dolphin_ext.h"
 #include "main/shader_init_api.h"
-#include "main/pi_dolphin_ext.h"
 #include "main/acosf_api.h"
 #include "main/render_internal.h"
 #include "string.h"

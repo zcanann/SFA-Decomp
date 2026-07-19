@@ -84,7 +84,6 @@ int lbl_803DB42C = 0x16A;
 #include "track/intersect_api.h"
 #include "dolphin/ai.h"
 #include "main/lightmap.h"
-#include "main/pi_dolphin_ext.h"
 #include "main/pi_dolphin_load_api.h"
 #include "main/pi_dolphin_fileload_api.h"
 #include "string.h"
