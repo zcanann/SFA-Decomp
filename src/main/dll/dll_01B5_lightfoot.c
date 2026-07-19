@@ -11,7 +11,8 @@
  * 0xc42/0xc46 below is a separate per-NPC reveal, not the chief.
  */
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx_legacy.h"
+#include "main/audio/sfx_keep_alive_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
