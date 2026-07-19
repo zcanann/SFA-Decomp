@@ -118,7 +118,7 @@ s32 Angle_SubWrappedS16(s32 angle, s16* delta)
     return angle + 0xFFFF;
 }
 
-void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj)
+void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj)
 {
     f32 vec[3];
     s32 matrixIndex;
@@ -166,11 +166,11 @@ void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f
     }
 }
 
-void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj)
+void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj)
 {
     s32 matrixIndex;
 
-    if (obj != 0)
+    if ((u32)obj != 0)
     {
         matrixIndex = ((GameObject*)obj)->anim.transformMatrixIndex << 4;
         Matrix_TransformPoint((f32*)((u8*)gObjYawTransformMatrices + (matrixIndex << 2)), x, y, z, outX, outY, outZ);

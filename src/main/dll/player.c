@@ -1646,24 +1646,20 @@ void fn_80296EB4(GameObject* obj, int newParent)
     }
     if ((void*)oldParent != NULL)
     {
-        ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
-            obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
-            &s.wp[0], &s.wp[1], &s.wp[2], oldParent);
-        ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
-            obj->anim.previousLocalPosX, obj->anim.previousLocalPosY,
-            obj->anim.previousLocalPosZ, &s.wp2[0], &s.wp2[1], &s.wp2[2], oldParent);
-        ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalVectorToWorld)(
-            obj->anim.velocityX, lbl_803E7EA4, obj->anim.velocityZ, &s.wv[0], &s.wv[1],
-            &s.wv[2], oldParent);
+        Obj_TransformLocalPointToWorld(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
+                                       &s.wp[0], &s.wp[1], &s.wp[2], oldParent);
+        Obj_TransformLocalPointToWorld(obj->anim.previousLocalPosX, obj->anim.previousLocalPosY,
+                                       obj->anim.previousLocalPosZ, &s.wp2[0], &s.wp2[1], &s.wp2[2], oldParent);
+        Obj_TransformLocalVectorToWorld(obj->anim.velocityX, lbl_803E7EA4, obj->anim.velocityZ,
+                                        &s.wv[0], &s.wv[1], &s.wv[2], oldParent);
         a0 = Angle_AddWrappedS16(obj->anim.rotX, (s16*)oldParent);
         a1 = Angle_AddWrappedS16(inner->targetYaw, (s16*)oldParent);
         a2 = Angle_AddWrappedS16(inner->yaw, (s16*)oldParent);
         a3 = Angle_AddWrappedS16(inner->prevTargetYaw, (s16*)oldParent);
         a4 = Angle_AddWrappedS16(inner->prevYaw, (s16*)oldParent);
         a5 = Angle_AddWrappedS16(inner->lastInputHeading, (s16*)oldParent);
-        ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
-            *(f32*)((char*)inner + 0x118), *(f32*)((char*)inner + 0x11c), *(f32*)((char*)inner + 0x120), &s.wp0[0],
-            &s.wp0[1], &s.wp0[2], oldParent);
+        Obj_TransformLocalPointToWorld(*(f32*)((char*)inner + 0x118), *(f32*)((char*)inner + 0x11c),
+                                       *(f32*)((char*)inner + 0x120), &s.wp0[0], &s.wp0[1], &s.wp0[2], oldParent);
     }
     else
     {
