@@ -5181,7 +5181,7 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     u8 vertexBit;
     u8 nextBit;
     u8 bounces;
-    s16 hit;
+    int hit;
     TrackTriangle* tri;
     u32 objmtx;
     TrackBlockDescriptor* desc;
