@@ -827,14 +827,15 @@ main/dll/dll_009A_dll9afunc0.c:
 	.text       start:0x800FC5B8 end:0x800FCF3C
 	.rodata     start:0x802C2180 end:0x802C2190
 	.sdata      start:0x803DB958 end:0x803DB970
-	.sdata2     start:0x803E1370 end:0x803E13F0
+	.sdata2     start:0x803E1370 end:0x803E13A0
 
 main/dll/dll_009B_dll9bfunc0.c:
 	.text       start:0x800FCF3C end:0x800FD2B4
+	.sdata2     start:0x803E13A0 end:0x803E13C8
 
 main/dll/dll_009C_dll9cfunc0.c:
 	.text       start:0x800FD2B4 end:0x800FD744
-	.sdata2     start:0x803E13F0 end:0x803E13F8
+	.sdata2     start:0x803E13C8 end:0x803E13F8
 
 main/dll/dll_009D_dll9dfunc0.c:
 	.text       start:0x800FD744 end:0x800FDA98

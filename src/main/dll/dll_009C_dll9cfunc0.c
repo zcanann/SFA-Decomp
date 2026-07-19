@@ -22,15 +22,6 @@
 
 extern u8 lbl_80317E00[];
 
-extern f32 lbl_803E13C8;
-extern f32 lbl_803E13CC;
-extern f32 lbl_803E13D0;
-extern f32 lbl_803E13D4;
-extern f32 lbl_803E13D8;
-extern f32 lbl_803E13DC;
-extern f32 lbl_803E13E0;
-extern f32 lbl_803E13E4;
-extern f32 lbl_803E13E8;
 
 void dll_9C_func03(int target, int variant, int parent, u32 flags)
 {
@@ -47,16 +38,16 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
     cur[0].id = 0x15;
     cur[0].tex = base + 0x1b0;
     cur[0].flags = 4;
-    cur[0].x = lbl_803E13C8;
-    cur[0].y = lbl_803E13C8;
-    cur[0].z = lbl_803E13C8;
+    cur[0].x = 0.0f;
+    cur[0].y = 0.0f;
+    cur[0].z = 0.0f;
     cur[1].state = 0;
     cur[1].id = 0x15;
     cur[1].tex = base + 0x1b0;
     cur[1].flags = 2;
-    cur[1].x = lbl_803E13CC;
-    cur[1].y = lbl_803E13D0;
-    cur[1].z = *(f32*)&lbl_803E13CC;
+    cur[1].x = 0.01f;
+    cur[1].y = 2.0f;
+    cur[1].z = 0.01f;
     cur += 2;
     if (variant != 1)
     {
@@ -64,9 +55,9 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
         cur->id = 0;
         cur->tex = 0;
         cur->flags = 0x400000;
-        cur->x = lbl_803E13C8;
-        cur->y = lbl_803E13C8;
-        cur->z = lbl_803E13C8;
+        cur->x = 0.0f;
+        cur->y = 0.0f;
+        cur->z = 0.0f;
         cur++;
     }
     if (variant == 1)
@@ -86,9 +77,9 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
         cur->id = 0x15;
         cur->tex = base + 0x1b0;
         cur->flags = 2;
-        cur->x = lbl_803E13D4;
-        cur->y = ((PartFxSpawnParams*)parent)->posY / lbl_803E13D4;
-        cur->z = lbl_803E13D4;
+        cur->x = 30.0f;
+        cur->y = ((PartFxSpawnParams*)parent)->posY / 30.0f;
+        cur->z = 30.0f;
     }
     else
     {
@@ -96,24 +87,24 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
         cur->id = 0x15;
         cur->tex = base + 0x1b0;
         cur->flags = 2;
-        cur->x = lbl_803E13D4;
-        cur->y = lbl_803E13D8;
-        cur->z = lbl_803E13D4;
+        cur->x = 30.0f;
+        cur->y = 1.2f;
+        cur->z = 30.0f;
     }
     cur[1].state = 1;
     cur[1].id = 0xe;
     cur[1].tex = base + 0x1dc;
     cur[1].flags = 4;
-    cur[1].x = lbl_803E13DC;
-    cur[1].y = lbl_803E13C8;
-    cur[1].z = lbl_803E13C8;
+    cur[1].x = 155.0f;
+    cur[1].y = 0.0f;
+    cur[1].z = 0.0f;
     cur[2].state = 1;
     cur[2].id = 0x15;
     cur[2].tex = base + 0x1b0;
     cur[2].flags = 0x4000;
-    cur[2].x = lbl_803E13D0;
-    cur[2].y = lbl_803E13E0;
-    cur[2].z = lbl_803E13C8;
+    cur[2].x = 2.0f;
+    cur[2].y = -4.0f;
+    cur[2].z = 0.0f;
     cur += 3;
     if (variant != 1)
     {
@@ -121,44 +112,44 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
         cur->id = 0;
         cur->tex = 0;
         cur->flags = 0x100;
-        cur->x = lbl_803E13C8;
-        cur->y = lbl_803E13C8;
-        cur->z = lbl_803E13E4;
+        cur->x = 0.0f;
+        cur->y = 0.0f;
+        cur->z = -150.0f;
         cur++;
     }
     cur[0].state = 2;
     cur[0].id = 0x15;
     cur[0].tex = base + 0x1b0;
     cur[0].flags = 0x4000;
-    cur[0].x = lbl_803E13D0;
-    cur[0].y = lbl_803E13E0;
-    cur[0].z = lbl_803E13C8;
+    cur[0].x = 2.0f;
+    cur[0].y = -4.0f;
+    cur[0].z = 0.0f;
     cur[1].state = 3;
     cur[1].id = 0x15;
     cur[1].tex = base + 0x1b0;
     cur[1].flags = 0x4000;
-    cur[1].x = lbl_803E13D0;
-    cur[1].y = lbl_803E13E0;
-    cur[1].z = lbl_803E13C8;
+    cur[1].x = 2.0f;
+    cur[1].y = -4.0f;
+    cur[1].z = 0.0f;
     cur[2].state = 3;
     cur[2].id = 0xe;
     cur[2].tex = base + 0x1dc;
     cur[2].flags = 4;
-    cur[2].x = lbl_803E13C8;
-    cur[2].y = lbl_803E13C8;
-    cur[2].z = lbl_803E13C8;
+    cur[2].x = 0.0f;
+    cur[2].y = 0.0f;
+    cur[2].z = 0.0f;
     cur[3].state = 1;
 
     hdr.v0 = 0;
     hdr.target = target;
     hdr.b = variant;
-    hdr.bx = lbl_803E13C8;
-    hdr.by = lbl_803E13C8;
-    hdr.bz = lbl_803E13C8;
-    hdr.ax = lbl_803E13C8;
-    hdr.ay = lbl_803E13C8;
-    hdr.az = lbl_803E13C8;
-    hdr.r = lbl_803E13E8;
+    hdr.bx = 0.0f;
+    hdr.by = 0.0f;
+    hdr.bz = 0.0f;
+    hdr.ax = 0.0f;
+    hdr.ay = 0.0f;
+    hdr.az = 0.0f;
+    hdr.r = 4.0f;
     hdr.c2 = 2;
     hdr.c7 = 7;
     hdr.v1 = 0xe;
@@ -187,15 +178,15 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
     {
         if ((void*)target != NULL)
         {
-            hdr.bx = lbl_803E13C8 + ((GameObject*)target)->anim.worldPosX;
-            hdr.by = lbl_803E13C8 + ((GameObject*)target)->anim.worldPosY;
-            hdr.bz = lbl_803E13C8 + ((GameObject*)target)->anim.worldPosZ;
+            hdr.bx = hdr.bx + ((GameObject*)target)->anim.worldPosX;
+            hdr.by = hdr.by + ((GameObject*)target)->anim.worldPosY;
+            hdr.bz = hdr.bz + ((GameObject*)target)->anim.worldPosZ;
         }
         else
         {
-            hdr.bx = lbl_803E13C8 + ((PartFxSpawnParams*)parent)->posX;
-            hdr.by = lbl_803E13C8 + ((PartFxSpawnParams*)parent)->posY;
-            hdr.bz = lbl_803E13C8 + ((PartFxSpawnParams*)parent)->posZ;
+            hdr.bx = hdr.bx + ((PartFxSpawnParams*)parent)->posX;
+            hdr.by = hdr.by + ((PartFxSpawnParams*)parent)->posY;
+            hdr.bz = hdr.bz + ((PartFxSpawnParams*)parent)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, (u8*)(int)lbl_80317E00, 0x18, base + 0xd4, DLL9C_EFFECT_ID, 0);

@@ -8,7 +8,7 @@
  * gScreenFx9AAnimTemplate blob and jittered with randomGetRange; the part table
  * is built in two variants selected by `variant` (0 or 1), and the
  * header is anchored to the target/parent object positions when its
- * low flag bit is set. lbl_803E13xx are shared f32 effect constants.
+ * low flag bit is set.
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/screenfx_types.h"
@@ -236,24 +236,3 @@ void dll_9A_func01_nop(void)
 void dll_9A_func00_nop(void)
 {
 }
-
-/* .sdata2 float-pool constants referenced via extern by sibling dll_009B */
-const f32 lbl_803E13A0 = 0.0f;
-const f32 lbl_803E13A4 = 0.01f;
-const f32 lbl_803E13A8 = 2.0f;
-const f32 lbl_803E13AC = 100.0f;
-const f32 lbl_803E13B0 = 10.0f;
-const f32 lbl_803E13B4 = 1.3f;
-const f32 lbl_803E13B8 = 255.0f;
-const f32 lbl_803E13BC = 6.0f;
-const f32 lbl_803E13C0 = -100.0f;
-const f32 lbl_803E13C4 = 1.0f;
-const f32 lbl_803E13C8 = 0.0f;
-const f32 lbl_803E13CC = 0.01f;
-const f32 lbl_803E13D0 = 2.0f;
-const f32 lbl_803E13D4 = 30.0f;
-const f32 lbl_803E13D8 = 1.2f;
-const f32 lbl_803E13DC = 155.0f;
-const f32 lbl_803E13E0 = -4.0f;
-const f32 lbl_803E13E4 = -150.0f;
-const f32 lbl_803E13E8 = 4.0f;

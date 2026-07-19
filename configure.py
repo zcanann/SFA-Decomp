@@ -1157,7 +1157,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_0099_dll99func0.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_009A_dll9afunc0.c", cflags=cflags_dll_noopt_noprop),
             Object(MatchingFor("GSAE01"), "main/dll/dll_009B_dll9bfunc0.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "main/dll/dll_009C_dll9cfunc0.c", cflags=cflags_dll_noopt, extra_cflags=["-opt", "level=2"]),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_009C_dll9cfunc0.c", cflags=cflags_dll_noopt, extra_cflags=["-opt", "level=3,nopropagation"]),
             Object(MatchingFor("GSAE01"), "main/dll/dll_009D_dll9dfunc0.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_009E_dll9efunc0.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_009F_dll9ffunc0.c", cflags=cflags_dll_noopt),
