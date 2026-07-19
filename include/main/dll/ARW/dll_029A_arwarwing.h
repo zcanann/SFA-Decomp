@@ -95,8 +95,8 @@ extern f32 gArwingFireTimerReset;
 extern f32 gArwingExplodeModeTime;
 extern u8 gArwingCourseMapIds[8];
 extern const ArwInitCfg gArwingInitConfig;
-extern int gArwingPathSetupData[];
-extern int sArwingPathName[];
+extern f32 gArwingPathSetupData[10][3];
+extern f32 sArwingPathName[10];
 
 GameObject* getArwing(void);
 int arwarwing_getExtraSize(void);
