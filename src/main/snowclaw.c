@@ -251,8 +251,7 @@ void snowclaw_updateMountAttack(GameObject* obj, int mount)
 
         if (randFn_80080100(2) == 0)
         {
-            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(
-                (int)obj, *(u16*)&((SnowclawState*)inner)->moveIdBase, 0.0f, 0);
+            ObjAnim_SetCurrentMove((int)obj, *(u16*)&((SnowclawState*)inner)->moveIdBase, 0.0f, 0);
         }
         else
         {
@@ -275,7 +274,7 @@ void snowclaw_updateMountAttack(GameObject* obj, int mount)
             {
                 moveId = *(u16*)&((SnowclawState*)inner)->moveIdBase + 8;
             }
-            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)((int)obj, moveId, 0.0f, 0);
+            ObjAnim_SetCurrentMove((int)obj, moveId, 0.0f, 0);
             ((SnowclawState*)inner)->attackDelay += 0x64;
         }
     }

@@ -540,23 +540,23 @@ void warpstone_update(int obj)
                 }
                 if (((GameObject*)obj)->anim.currentMove != moveId)
                 {
-                    ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, moveId, 0.0f, 0);
+                    ObjAnim_SetCurrentMove(obj, moveId, 0.0f, 0);
                 }
             }
             else if (((GameObject*)obj)->anim.currentMove != 0)
             {
-                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
                 Sfx_StopFromObject(obj, SFXTRIG_swapstone_move_long);
             }
             else if (randFn_80080100(lbl_803DC048) != 0)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_swapstone_mumble);
-                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0x1b, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 0x1b, 0.0f, 0);
             }
             else if (randFn_80080100(lbl_803DC04C) != 0)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_long);
-                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)(obj, 0x1a, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 0x1a, 0.0f, 0);
             }
         }
     }
