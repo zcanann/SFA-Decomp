@@ -188,11 +188,11 @@ int playerState31(GameObject* obj, int p2);
 int playerState30(GameObject* obj, int state, f32 fv);
 void fn_8029A420(GameObject* obj);
 void fn_8029A4A8(GameObject* obj, int p2);
-int playerStateFireLaser(int obj, int state, f32 unused);
+int playerStateFireLaser(int obj, int state, f32 fv);
 int playerStateShootFireball(GameObject* obj, int state, f32 fv);
 int playerStateTryCastSpell(GameObject* obj, int state, f32 fv);
-int playerStateStopAimStaff(int obj, int state);
-int playerStateStartAimStaff(GameObject* obj, int state);
+int playerStateStopAimStaff(int obj, int state, f32 fv);
+int playerStateStartAimStaff(GameObject* obj, int state, f32 fv);
 int playerState29(GameObject* obj, int state);
 int playerState28(GameObject* obj, int state, f32 fv);
 void fn_8029BC08(GameObject* obj);
@@ -3360,10 +3360,10 @@ void fn_8029A4A8(GameObject* obj, int p2)
     }
 }
 
-int playerStateFireLaser(int obj, int state, f32 unused)
+int playerStateFireLaser(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    int r = ((int (*)(int, int, int))fn_802AC7DC)(obj, state, (int)inner);
+    int r = fn_802AC7DC(obj, state, (int)inner, fv);
     if (r != 0)
     {
         return r;
@@ -3445,7 +3445,7 @@ int playerStateShootFireball(GameObject* obj, int state, f32 fv)
         obj->anim.velocityY = z;
         obj->anim.velocityZ = z;
     }
-    r = ((int (*)(int, int, int))fn_802AC7DC)((int)obj, state, (int)inner);
+    r = fn_802AC7DC((int)obj, state, (int)inner, fv);
     if (r != 0)
     {
         return r;
@@ -3745,7 +3745,7 @@ int playerStateTryCastSpell(GameObject* obj, int state, f32 fv)
     return 0;
 }
 
-int playerStateAimStaff(int obj, int state)
+int playerStateAimStaff(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     int r;
@@ -3760,7 +3760,7 @@ int playerStateAimStaff(int obj, int state)
         f32 z;
     } pfx;
 
-    r = ((int (*)(int, int, int))fn_802AC7DC)(obj, state, (int)inner);
+    r = fn_802AC7DC(obj, state, (int)inner, fv);
     if (r != 0)
     {
         return r;
@@ -4002,10 +4002,10 @@ int playerStateAimStaff(int obj, int state)
     return 0;
 }
 
-int playerStateStopAimStaff(int obj, int state)
+int playerStateStopAimStaff(int obj, int state, f32 fv)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
-    int r = ((int (*)(int, int, int))fn_802AC7DC)(obj, state, (int)inner);
+    int r = fn_802AC7DC(obj, state, (int)inner, fv);
     if (r != 0)
     {
         return r;
@@ -4030,10 +4030,10 @@ int playerStateStopAimStaff(int obj, int state)
     return 0;
 }
 
-int playerStateStartAimStaff(GameObject* obj, int state)
+int playerStateStartAimStaff(GameObject* obj, int state, f32 fv)
 {
     PlayerState* inner = obj->extra;
-    int r = ((int (*)(int, int, int))fn_802AC7DC)((int)obj, state, (int)inner);
+    int r = fn_802AC7DC((int)obj, state, (int)inner, fv);
     u32 b;
     if (r != 0)
     {
@@ -4149,7 +4149,7 @@ int playerState28(GameObject* obj, int state, f32 fv)
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return 2;
     }
-    v = ((int (*)(int, int, int, f32))fn_802AC7DC)((int)obj, state, (int)inner, fv);
+    v = fn_802AC7DC((int)obj, state, (int)inner, fv);
     if (v != 0)
     {
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
@@ -9142,7 +9142,7 @@ void fn_802A514C(GameObject* obj, int state)
     gPlayerSubState = 1;
 }
 
-int playerStateMoving(int obj, int state)
+int playerStateMoving(int obj, int state, f32 fv)
 {
     int inner;
     int dir;
@@ -9166,7 +9166,7 @@ int playerStateMoving(int obj, int state)
         ((ByteFlags*)((char*)inner + 0x3f2))->b10 = 1;
     }
     {
-        int r = ((int (*)(int, int, int))fn_802AC7DC)(obj, state, inner);
+        int r = fn_802AC7DC(obj, state, inner, fv);
         if (r != 0)
         {
             return r;
@@ -9796,7 +9796,7 @@ int playerStateIdle(int obj, int state, f32 fv)
         ((GameObject*)obj)->anim.velocityZ = z;
     }
     {
-        int r = ((int (*)(int, int, int, f32))fn_802AC7DC)(obj, state, inner, fv);
+        int r = fn_802AC7DC(obj, state, inner, fv);
         if (r != 0)
         {
             return r;
