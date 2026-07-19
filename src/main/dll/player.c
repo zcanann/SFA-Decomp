@@ -282,7 +282,7 @@ int fn_80295A04(GameObject* obj, int sel);
 void fn_802B18BC(GameObject* obj, int state, f32 fv);
 void playerDoControls(GameObject* obj, int state, f32 fv);
 void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt);
-void fn_802B4A9C(int obj, int inner, int inner2);
+void fn_802B4A9C(GameObject* obj, int inner, int inner2);
 void playerAnimate(int obj, int state, f32 fv);
 void fn_802B4DE0(GameObject* obj, int p2);
 void fn_802B4ED8(GameObject* obj, int p2, int mode);
@@ -16797,7 +16797,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     return result;
 }
 
-void fn_802B4A9C(int obj, int inner, int inner2)
+void fn_802B4A9C(GameObject* obj, int inner, int inner2)
 {
     int* target = (int*)(*gCameraInterface)->getOverrideTarget();
     u32 v = (((PlayerState*)inner)->flags3F4 >> 6) & 1;
@@ -17564,7 +17564,7 @@ void playerUpdate(GameObject* obj)
                 *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A514C;
             }
             ((void (*)(GameObject*, int, int))playerItemGetAnimFn)(obj, inner, inner);
-            ((void (*)(GameObject*, int, int))fn_802B4A9C)(obj, inner, inner);
+            fn_802B4A9C(obj, inner, inner);
             playerStaffInit(obj, inner);
             if ((u32)gPlayerEggObject == 0 && Obj_IsLoadingLocked() != 0)
             {
