@@ -307,7 +307,6 @@ void CurveFish_init(GameObject* obj, u8* setup)
     ((CurveFishState*)state)->maxSpeed = (f32)(u32)((CurveFishSetup*)setup)->speedChange / 100.0f;
 }
 
-const float lbl_803E392C = 0.0f;
 
 ObjectDescriptor gCurveFishObjDescriptor = {
     0,

@@ -38,7 +38,6 @@ const f32 gDrMusicControlStingerTimerDuration = 60.0f;
 const f32 gDrMusicControlRestartPointX = -15697.0f;
 const f32 gDrMusicControlRestartPointY = -1501.0f;
 const f32 gDrMusicControlRestartPointZ = 12928.0f;
-const f32 lbl_803E6BEC = 0.0f;
 
 #define DRMUSICCONT_ENVFX_A 0x210
 #define DRMUSICCONT_ENVFX_B 0x20f

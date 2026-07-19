@@ -392,4 +392,3 @@ u8 lbl_80315770[520] = {
 void* lbl_80315978[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_82_func00_nop, dll_82_func01_nop, (void*)0x00000000, dll_82_func03};
 
-const f32 lbl_803E0DD4 = 0.0f;

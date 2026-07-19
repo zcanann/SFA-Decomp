@@ -484,7 +484,6 @@ void AndrossHand_init(int obj, AndrossHandSetup* setup)
     ObjHits_SetTargetMask((GameObject*)obj, 4);
 }
 
-const f32 lbl_803E75FC = 0.0f;
 
 f32 lbl_803DC4F0 = 400.0f;
 f32 lbl_803DC4F4 = -100.0f;

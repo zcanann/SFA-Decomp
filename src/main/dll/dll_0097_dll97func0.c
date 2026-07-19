@@ -164,17 +164,6 @@ void dll_97_func03(int sourceObj, int variant, int posSource, u32 flags, u32 unu
     (*gModgfxInterface)->spawnEffect(&buf, 0, 6, base, 4, base + 0x3c, DLL97_EFFECT_ID, 0);
 }
 
-const f32 lbl_803E1314 = 0.0f;
-const f32 lbl_803E1318 = 0.0f;
-const f32 lbl_803E131C = 0.22f;
-const f32 lbl_803E1320 = 0.3f;
-const f32 lbl_803E1324 = 255.0f;
-const f32 lbl_803E1328 = -7.0f;
-const f32 lbl_803E132C = 7.0f;
-const f32 lbl_803E1330 = 1.0f;
-const f32 lbl_803E1334 = -1.0f;
-const f32 lbl_803E1338 = -2.0f;
-const f32 lbl_803E133C = 2.0f;
 
 void dll_97_func01_nop(void)
 {

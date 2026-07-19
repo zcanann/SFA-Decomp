@@ -117,7 +117,6 @@ void dimgate_init(GameObject *obj, s8* p_unused_passthrough)
     (obj)->objectFlags |= (DIMGATE_OBJFLAG_HIDDEN | DIMGATE_OBJFLAG_HITDETECT_DISABLED);
 }
 
-const f32 lbl_803E487C = 0.0f;
 
 void dimgate_release(void)
 {

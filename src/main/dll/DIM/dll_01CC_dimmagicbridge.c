@@ -267,9 +267,7 @@ void dimmagicbridge_initialise(void)
 {
 }
 
-const f32 lbl_803E4A1C = 0.0f;
 const f32 lbl_803E4A20 = 1.0f;
 const f32 lbl_803E4A24 = 0.0f;
 const f32 lbl_803E4A28 = 3e+02f;
-const f32 lbl_803E4A2C = 0.0f;
 const f32 lbl_803E4A30[2] = {1.0f, 0.0f};

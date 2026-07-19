@@ -1195,4 +1195,3 @@ ObjectDescriptor11WithPadding gGunPowderBarrelObjDescriptor = {
     0,
 };
 
-const f32 lbl_803E4344 = 0.0f;

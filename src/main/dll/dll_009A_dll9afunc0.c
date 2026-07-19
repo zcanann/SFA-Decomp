@@ -257,4 +257,3 @@ const f32 lbl_803E13DC = 155.0f;
 const f32 lbl_803E13E0 = -4.0f;
 const f32 lbl_803E13E4 = -150.0f;
 const f32 lbl_803E13E8 = 4.0f;
-const f32 lbl_803E13EC = 0.0f;

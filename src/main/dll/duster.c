@@ -371,7 +371,6 @@ void rachnopInit(u32 unused, int state)
     return;
 }
 
-const f32 lbl_803E2A44 = 0.0f;
 const f32 gSpittingEbaSelfSpawnHeight[1] = { 15.0f };
 const f32 gSpittingEbaTargetAimHeight[1] = { 30.0f };
 

@@ -9,9 +9,6 @@
 #include "main/dll/IM/dll_016D_imicepillar.h"
 #include "main/object_descriptor.h"
 
-const f32 lbl_803E4768 = 1.0f;
-const f32 lbl_803E476C = 0.0f;
-
 int imicepillar_getExtraSize(void)
 {
     return 0x4;
