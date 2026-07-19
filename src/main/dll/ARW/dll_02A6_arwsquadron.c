@@ -103,14 +103,12 @@ void arwsquadron_emitEffects(GameObject* obj, ArwSquadronState* state)
         pfx.s4 = 0;
         pfx.f8 = 0.0f;
         ObjPath_GetPointLocalPosition(obj, 2, &pfx.fx, &pfx.fy, &pfx.fz);
-        objfx_spawnLightPulseLegacy(obj, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity,
-                              (int)&pfx);
+        objfx_spawnLightPulse(obj, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity, &pfx);
     }
     if (state->muzzleCount > 1 && (s8)state->health > 1)
     {
         ObjPath_GetPointLocalPosition(obj, 3, &pfx.fx, &pfx.fy, &pfx.fz);
-        objfx_spawnLightPulseLegacy(obj, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity,
-                              (int)&pfx);
+        objfx_spawnLightPulse(obj, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity, &pfx);
     }
 }
 

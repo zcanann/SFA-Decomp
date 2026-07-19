@@ -171,7 +171,7 @@ void landed_arwing_renderPathEffects(GameObject* obj)
         scratch.x -= (obj)->anim.localPosX;
         scratch.y -= (obj)->anim.localPosY;
         scratch.z -= (obj)->anim.localPosZ;
-        objfx_spawnLightPulseLegacy(obj, 0.7f, 4, 0, 0, state->path6Fx, scratch.effectPos);
+        objfx_spawnLightPulse(obj, 0.7f, 4, 0, 0, state->path6Fx, scratch.effectPos);
     }
 
     if (state->path8Fx != zero)
@@ -180,7 +180,7 @@ void landed_arwing_renderPathEffects(GameObject* obj)
         scratch.x -= (obj)->anim.localPosX;
         scratch.y -= (obj)->anim.localPosY;
         scratch.z -= (obj)->anim.localPosZ;
-        objfx_spawnLightPulseLegacy(obj, 0.7f, 4, 0, 0, state->path8Fx, scratch.effectPos);
+        objfx_spawnLightPulse(obj, 0.7f, 4, 0, 0, state->path8Fx, scratch.effectPos);
     }
 
     if (state->path7Fx != zero)
@@ -189,7 +189,7 @@ void landed_arwing_renderPathEffects(GameObject* obj)
         scratch.x -= (obj)->anim.localPosX;
         scratch.y -= (obj)->anim.localPosY;
         scratch.z -= (obj)->anim.localPosZ;
-        objfx_spawnLightPulseLegacy(obj, 0.7f, 4, 0, 0, state->path7Fx, scratch.effectPos);
+        objfx_spawnLightPulse(obj, 0.7f, 4, 0, 0, state->path7Fx, scratch.effectPos);
     }
 }
 

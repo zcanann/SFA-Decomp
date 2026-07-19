@@ -238,8 +238,8 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
                     subMode = setup->pulseSubMode;
                 }
             }
-            objfx_spawnLightPulseLegacy((GameObject*)cmbsrc, sourceState->radius, colorIdx, effectMode, subMode,
-                                  (f32)(u32)setup->pulseDistance / 255.0f, 0);
+            objfx_spawnLightPulse((GameObject*)cmbsrc, sourceState->radius, colorIdx, effectMode, subMode,
+                                  (f32)(u32)setup->pulseDistance / 255.0f, NULL);
             break;
         case CMBSRC_SEQ_DEFAULT:
         default:

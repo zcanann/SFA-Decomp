@@ -365,7 +365,7 @@ void gcRobotPatrol_update(int* obj, u8* state)
         fx.c = z;
         fx.d = z;
         fx.a = 1.0f;
-        objfx_spawnLightPulseLegacy((GameObject*)(obj), 0.5f, 2, 0, 6, 0.25f, &fx);
+        objfx_spawnLightPulse((GameObject*)obj, 0.5f, 2, 0, 6, 0.25f, &fx);
         fx.c = 12.0f;
         objfx_spawnMaskedHitEffect(obj, 0.4f, 1, 6, 0x20, &fx);
         fx.b = 0.0f;

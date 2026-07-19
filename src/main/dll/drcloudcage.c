@@ -542,10 +542,10 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
         pulse.unk10 = lbl_803E5B50;
         pulse.unk14 = lbl_803E5B54;
         pulse.unk8 = lbl_803E5AE8;
-        objfx_spawnLightPulseLegacy(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
+        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
                               &pulse);
         pulse.unkC = lbl_803E5B5C;
-        objfx_spawnLightPulseLegacy(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
+        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, ((DRCloudCageState*)state)->channel4Vol / lbl_803E5B58,
                               &pulse);
     }
     fn_801E9C00(obj, (int)state);

@@ -98,7 +98,7 @@ void DR_BarrelGr_render(GameObject* obj, int p2, int p3, int p4, int p5)
         ObjPath_GetPointWorldPosition(obj, i + 1, vp, vp1, vp2, 0);
         PSVECSubtract((Vec*)vp, (const Vec*)&obj->anim.localPosX, (Vec*)vp);
         params.d = dval;
-        objfx_spawnLightPulseLegacy(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, &params);
+        objfx_spawnLightPulse(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, &params);
     }
     objRef = state->heldBarrel;
     if ((u32)objRef != 0)

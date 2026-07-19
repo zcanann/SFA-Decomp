@@ -685,7 +685,7 @@ void objfx_spawnFrameTimedHitPulse(GameObject* obj, f32 scale, u8 type, u8 varia
     }
 }
 
-void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* light, f32 scale, f32 sizeParam)
+void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mode, f32 sizeParam, void* light)
 {
     ObjFxParticleParams params;
     f32 lightOffset[6];
@@ -709,9 +709,9 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
         sizeParam = 0.001f;
     }
     params.position[0] = sizeParam;
-    if (type != 0)
+    if ((u8)type != 0)
     {
-        switch (type)
+        switch ((u8)type)
         {
         case 1:
             params.effectParam = 0x159;
@@ -754,7 +754,7 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
         }
     }
 
-    if (mode != 0)
+    if ((u8)mode != 0)
     {
         if (light != NULL)
         {
@@ -776,7 +776,7 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
         depth = depthReadRequestPoll(screenPos[2], screenPos[1], obj);
         if (screenPos[0] > depth)
         {
-            switch (mode)
+            switch ((u8)mode)
             {
             case 1:
                 mode = 4;
@@ -789,10 +789,10 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
                 break;
             }
         }
-        switch (mode)
+        switch ((u8)mode)
         {
         case 1:
-            if (type == 1)
+            if ((u8)type == 1)
             {
                 params.effectParam = 0xc75;
             }
@@ -813,7 +813,7 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
             }
             break;
         case 3:
-            if (type == 1)
+            if ((u8)type == 1)
             {
                 params.effectParam = 0xc75;
             }
@@ -827,7 +827,7 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
             }
             break;
         case 4:
-            if (type == 1)
+            if ((u8)type == 1)
             {
                 params.effectParam = 0xc75;
             }
@@ -848,7 +848,7 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
             }
             break;
         case 6:
-            if (type == 1)
+            if ((u8)type == 1)
             {
                 params.effectParam = 0xc75;
             }

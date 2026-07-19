@@ -149,18 +149,18 @@ void dim2roofrub_spawnEffects(int* obj)
         v.x = (0.64f) * ((-0.8230000138282776f) * ((GameObject*)obj)->anim.rootMotionScale);
         v.y = (0.64f) * ((-0.08399999886751175f) * ((GameObject*)obj)->anim.rootMotionScale);
         v.z = (0.64f) * ((-2.5999999046325684f) * ((GameObject*)obj)->anim.rootMotionScale);
-        objfx_spawnLightPulseLegacy((GameObject*)(obj), (0.02500000037252903f) * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, count,
-                              (0.699999988079071f), &v);
+        objfx_spawnLightPulse((GameObject*)obj, (0.02500000037252903f) * ((GameObject*)obj)->anim.rootMotionScale,
+                              1, 0, count, (0.699999988079071f), &v);
         v.x = (0.0f);
         v.y = (0.64f) * ((0.20900000631809235f) * ((GameObject*)obj)->anim.rootMotionScale);
         v.z = (0.64f) * ((-3.5999999046325684f) * ((GameObject*)obj)->anim.rootMotionScale);
-        objfx_spawnLightPulseLegacy((GameObject*)(obj), (0.02500000037252903f) * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, count,
-                              (0.5f), &v);
+        objfx_spawnLightPulse((GameObject*)obj, (0.02500000037252903f) * ((GameObject*)obj)->anim.rootMotionScale,
+                              1, 0, count, (0.5f), &v);
         v.x = (0.64f) * ((0.8230000138282776f) * ((GameObject*)obj)->anim.rootMotionScale);
         v.y = (0.64f) * ((-0.08399999886751175f) * ((GameObject*)obj)->anim.rootMotionScale);
         v.z = (0.64f) * ((-2.5999999046325684f) * ((GameObject*)obj)->anim.rootMotionScale);
-        objfx_spawnLightPulseLegacy((GameObject*)(obj), (0.02500000037252903f) * ((GameObject*)obj)->anim.rootMotionScale, 1, 0, count,
-                              (0.699999988079071f), &v);
+        objfx_spawnLightPulse((GameObject*)obj, (0.02500000037252903f) * ((GameObject*)obj)->anim.rootMotionScale,
+                              1, 0, count, (0.699999988079071f), &v);
     }
     if (((GameObject*)obj)->anim.seqId == DIM2ROOFRUB_SEQID_SLIDE)
     {
