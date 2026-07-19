@@ -502,7 +502,7 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
             state->pathSpeed += gNwMammothPathAccel[0] * timeDelta;
             if (state->pathSpeed > gNwMammothPathSpeedMax[0])
             {
-                state->pathSpeed = *(f32*)&gNwMammothPathSpeedMax[0];
+                state->pathSpeed = gNwMammothPathSpeedMax[0];
             }
         }
         break;
@@ -700,7 +700,7 @@ void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vis
     void* node;
 
     node = (obj)->extra;
-    objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)1.0f);
+    objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, 1.0f);
     for (i = 0; i < 4; i++)
     {
         ObjPath_GetPointWorldPosition(obj, i, (f32*)((char*)node + i * 0xc + 0x45c),
@@ -729,9 +729,9 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
     ObjHitReactEntry* hitReactEntries;
     u8 stateFlags;
     u8 stateIndex;
-    NwMammothMapData* mapData;
-    NwMammothState* state;
     NwMammothTables* table = (NwMammothTables*)gNwMammothTables;
+    NwMammothState* state;
+    NwMammothMapData* mapData;
 
     (void)unused;
     state = obj->state;
