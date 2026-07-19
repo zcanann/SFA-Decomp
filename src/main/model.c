@@ -1069,7 +1069,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     }
     *(int*)&((ObjModel*)out2)->renderAttachment = 0;
     ((ObjModel*)out2)->file = (ModelFileHeader*)p;
-    ((ObjModel*)out2)->unk60 = 0;
+    ((ObjModel*)out2)->vtxBufDirty = 0;
     return out2;
 }
 static inline int boneBlendSlotLimit(u8* model)
@@ -1917,7 +1917,7 @@ void ObjModel_ApplyBlendChannels(ObjModel* model)
             dstVtx = model->vtxBuf[(model->bufferFlags >> 1) & 1];
             modelApplyBoneTransforms(srcVtx, dstVtx, hdr->vertexCount, targetA, targetB,
                                      (int)(lbl_803DE870 * eased));
-            model->unk60 = 1;
+            model->vtxBufDirty = 1;
         }
         if (ch->targetWeight != ch->weight)
         {
@@ -2962,7 +2962,7 @@ void* ObjModel_LoadModelData(int id)
     model = (void*)roundUpTo16((int)mmAlloc(dataLen + amapSize + 0x1f4, 9, 0));
     loadAndDecompressDataFile(MLDF_FILEID_MODELS_BIN_A, model, fileOffset, dataLen, 0, id, 0);
     ((ModelFileHeader*)model)->headerSize = headerSize;
-    *(u16*)((u8*)model + 0x4) = id; /* modelId (in unk04) */
+    *(u16*)((u8*)model + 0x4) = id; /* modelId */
     ((ModelFileHeader*)model)->animationCount = animCount;
     ((ModelFileHeader*)model)->flags &= ~MODEL_FLAG_VERTEX_ANIM_AREA;
     ((ModelFileHeader*)model)->refCount = 1;

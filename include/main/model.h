@@ -54,8 +54,10 @@ STATIC_ASSERT(offsetof(ModelRenderOpTextureRefs, unk08) == 0x08);
 typedef struct ModelFileHeader {
     u8 refCount;
     u8 unk01;
-    u16 flags; /* 0x10 = dynamic vertex buffers, 0x40 = vertex anim area */
-    u8 unk04[8];
+    u16 flags; /* 0x8 = single-pass anim-eval path, 0x10 = dynamic vertex buffers, 0x40 = vertex anim area */
+    u16 modelId; /* 0x04: MODELS.TAB index; ids 1/3 (player models) bypass the
+                    loaded-file-flag 0x100000 anim-cache suppression */
+    u8 unk06[6];
     s32 dataSize; /* anim data appended at header + dataSize */
     u8 unk10[8];
     u8 *unk18;
@@ -72,7 +74,7 @@ typedef struct ModelFileHeader {
     u8 *jointBlendData; /* 0x40: per-joint blend/pivot table (stride joff); [+0..8]=pivot XYZ (PSMTXTrans to/from origin for scale-fuzz), [+0xc]=scale divisor; passed to ObjModel_BlendVertexStream; offset->ptr relocated on load */
     u8 unk44[0x10];
     u8 *unk54;
-    u8 *hitVolumes;
+    u8 *hitVolumes; /* 0x58: 0x18-byte ModelHitSphereDef records, hitSphereCount entries */
     u8 *collisionTriangles; /* 0x5c: 8-byte triangle vertex-index records (hit-detect mesh) */
     u8 *collisionBlocks;    /* 0x60: 0x14-byte spatial blocks (AABB + triangle range), count at +0xf0 */
     u8 *animationModelPtrs;
@@ -134,9 +136,11 @@ typedef struct ModelFileHeader {
 /* ModelFileHeader.shaderFlags bit: set = use object color override (gObjOverrideColor) */
 #define MODEL_SHADERFLAGS_USE_OBJ_COLOR 0x2
 
-/* ObjModel.bufferFlags bit */
+/* ObjModel.bufferFlags bits */
+#define OBJMODEL_BUFFER_FLAG_HITSPHERE_SELECT 0x4 /* selects hitSphereBuf0/1 for objUpdateHitSpheres */
 #define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED 0x40
 
+STATIC_ASSERT(offsetof(ModelFileHeader, modelId) == 0x04);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
 STATIC_ASSERT(offsetof(ModelFileHeader, blendAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);
@@ -216,7 +220,7 @@ typedef struct ObjModel {
     u8 *unk54;
     void *renderAttachment;
     u8 *curMtxBuf;
-    u8 unk60;
+    u8 vtxBufDirty; /* 0x60: set when the active vertex buffer needs re-layout; cleared at layout */
     u8 unk61[3];
 } ObjModel;
 
@@ -235,7 +239,7 @@ ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int r
 
 STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);
-STATIC_ASSERT(offsetof(ObjModel, unk60) == 0x60);
+STATIC_ASSERT(offsetof(ObjModel, vtxBufDirty) == 0x60);
 
 typedef struct ObjModelChainEntry {
     void *frameBuffer;
