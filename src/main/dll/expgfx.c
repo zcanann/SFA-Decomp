@@ -121,7 +121,7 @@ typedef union Dll0BDescriptorTable
 #define GX_DF_NONE        0
 #define GX_AF_NONE        2
 
-ExpgfxWGPipe GXWGFifo : (0xCC008000);
+#define GXWGFifo (*(volatile ExpgfxWGPipe*)0xCC008000)
 
 extern ExpgfxBounds gExpgfxPoolBounds[];
 extern u8 lbl_803DD253;
