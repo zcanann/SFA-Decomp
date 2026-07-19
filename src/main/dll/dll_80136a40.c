@@ -188,7 +188,6 @@ extern u32 gDebugMarginBottom;
 #define Obj_SetModelColorOverrideRecursivePromoted(obj, red, green, blue, alpha, enabled)                         \
     ((void (*)(GameObject*, int, int, int, int, int))Obj_SetModelColorOverrideRecursive)(                        \
         (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
-int TitleScreen_getObjectTypeId(u8* obj);
 
 u8 debugLogBuffer[0x1100];
 

@@ -5,9 +5,9 @@
  * layered effect that varies between two presets selected by `variant`),
  * derives its world position from the source/position objects when the
  * positioning flag is set, then hands the whole buffer to the modgfx
- * interface's spawnEffect. The four *_nop entry points and the dll_95
- * forward decl exist to align this object's function set with the v1.0
- * asm. Sibling of dll_0093 (same GfxCmd/ModgfxSpawnPacket layout and func03 shape).
+ * interface's spawnEffect. The four *_nop entry points align this object's
+ * function set with the v1.0 asm. Sibling of dll_0093 (same GfxCmd/ModgfxSpawnPacket
+ * layout and func03 shape).
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/modgfx_types.h"
@@ -24,8 +24,6 @@ u8 lbl_803DB938[8] = {0, 1, 0, 0, 0, 0, 0, 0};
 
 extern u8 lbl_803DB938[8]; /* texture/resource handle */
 extern u8 lbl_80317488[];
-
-void dll_95_func01_nop(void);
 
 void dll_94_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, f32* extraArgs)
 {
