@@ -1015,7 +1015,7 @@ void fn_800D8414(int* obj, int* ctx)
     {
         *(s16*)((char*)ctx + 0x334) = ((BaddieState*)ctx)->turnRate;
     }
-    diff += 0x10000;
+    diff = diff + 0x10000u;
     if (((BaddieState*)ctx)->inputMagnitude < lbl_803E0594)
     {
         *(u8*)((char*)ctx + 0x34b) = 0;
