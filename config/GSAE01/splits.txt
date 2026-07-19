@@ -1413,10 +1413,14 @@ main/dll/groundbaddiepush.c:
 	.sdata2     start:0x803E27D8 end:0x803E27F8
 
 main/dll/seqobj11e.c:
-	.text       start:0x80152040 end:0x80152B90
+	.text       start:0x80152040 end:0x80152440
 	.data       start:0x8031F290 end:0x8031F2D8
 	.sdata      start:0x803DBCA8 end:0x803DBCB8
-	.sdata2     start:0x803E27F8 end:0x803E2870
+	.sdata2     start:0x803E27F8 end:0x803E2810
+
+main/dll/gcrobotpatrol.c:
+	.text       start:0x80152440 end:0x80152B90
+	.sdata2     start:0x803E2810 end:0x803E2870
 
 main/dll/mikaladon.c:
 	.text       start:0x80152B90 end:0x80152FA8
