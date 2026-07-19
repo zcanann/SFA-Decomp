@@ -75,6 +75,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/dll/dll_0004_dummy04.h"
 #include "main/dll/dll_003C_tumbleweedbush_api.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
+#include "main/dll/path_control_interface.h"
 #include "main/voxmaps.h"
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
 #include "main/dll/dll_BC.h"
@@ -109,7 +110,7 @@ int* gBaddieControlInterface;
 BoneParticleEffectInterface** gBoneParticleEffectInterface;
 void* lbl_803DCAB0;
 MapEventInterface** gMapEventInterface;
-void* gPathControlInterface;
+PathControlInterface** gPathControlInterface;
 TitleMenuItemInterface* gTitleMenuItemInterface;
 LinkInterface* gTitleMenuLinkInterface;
 RomCurveInterface** gRomCurveInterface;
@@ -228,7 +229,6 @@ extern u8 gGameLoopMusicActive;
 extern u8 gGameLoopProgressiveMode;
 extern void* lbl_803DCA94;
 extern void* gScreensInterface;
-extern void* gPathControlInterface;
 extern void* gMinimapInterface;
 extern void* gCarryableInterface;
 extern u8 lbl_803DCA3F;

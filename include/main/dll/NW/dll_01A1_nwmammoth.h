@@ -137,24 +137,7 @@ typedef struct NwMammothTables {
   u8 stateFlags[1];
 } NwMammothTables;
 
-typedef void (*NwMammothPathInitFn)(void *pathState,int param1,int param2,int param3);
-typedef void (*NwMammothPathSetupFn)(void *pathState,int pointCount,u8 *pathDataA,u8 *pathDataB,
-                                     u32 *pathParam);
-typedef void (*NwMammothPathUpdateFn)(NwMammothObject *obj,void *pathState,f32 delta);
-typedef void (*NwMammothPathApplyFn)(NwMammothObject *obj,void *pathState);
 typedef void (*NwMammothUiMessageFn)(int messageId,int textId);
-typedef struct NwMammothPathControlInterface {
-  u8 pad00[0x04];
-  NwMammothPathInitFn init;
-  u8 pad08[0x0C - 0x08];
-  NwMammothPathSetupFn setup;
-  NwMammothPathUpdateFn update;
-  NwMammothPathApplyFn apply;
-  NwMammothPathUpdateFn advance;
-  u8 pad1C[0x20 - 0x1C];
-  NwMammothPathApplyFn attachObject;
-} NwMammothPathControlInterface;
-
 typedef struct NwMammothGameUiInterface {
   u8 pad00[0x58];
   NwMammothUiMessageFn showMessage;
@@ -208,12 +191,6 @@ STATIC_ASSERT(offsetof(NwMammothObject, seqCallback) == 0xBC);
 STATIC_ASSERT(offsetof(NwMammothTables, stateMoveIds) == 0x68);
 STATIC_ASSERT(offsetof(NwMammothTables, stateMoveStepScales) == 0x98);
 STATIC_ASSERT(offsetof(NwMammothTables, stateFlags) == 0xF4);
-STATIC_ASSERT(offsetof(NwMammothPathControlInterface, init) == 0x04);
-STATIC_ASSERT(offsetof(NwMammothPathControlInterface, setup) == 0x0C);
-STATIC_ASSERT(offsetof(NwMammothPathControlInterface, update) == 0x10);
-STATIC_ASSERT(offsetof(NwMammothPathControlInterface, apply) == 0x14);
-STATIC_ASSERT(offsetof(NwMammothPathControlInterface, advance) == 0x18);
-STATIC_ASSERT(offsetof(NwMammothPathControlInterface, attachObject) == 0x20);
 STATIC_ASSERT(offsetof(NwMammothGameUiInterface, showMessage) == 0x58);
 void NW_mammoth_update(NwMammothObject *obj,int param_2);
 void NW_mammoth_init(NwMammothObject *obj,NwMammothMapData *mapData,int isReload);

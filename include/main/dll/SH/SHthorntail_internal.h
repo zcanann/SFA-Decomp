@@ -152,18 +152,6 @@ typedef struct SHthorntailEventInterface {
   void (*setAnimEvent)(int,int,int);
 } SHthorntailEventInterface;
 
-typedef struct SHthorntailPathControlInterface {
-  u8 pad00[0x04];
-  void (*initControl)(int control,int mode,int flags,int loopMode);
-  u8 pad08[0x0C - 0x08];
-  void (*attachPathData)(int control,int channel,u8 *headers,u8 *pathData,u32 *events);
-  void (*advanceControl)(SHthorntailObject *obj,u8 *control,f32 deltaTime);
-  void (*applyControl)(SHthorntailObject *obj,u8 *control);
-  void (*finishControl)(SHthorntailObject *obj,u8 *control,f32 deltaTime);
-  u8 pad1C[0x20 - 0x1C];
-  void (*bindObject)(SHthorntailObject *obj,int control);
-} SHthorntailPathControlInterface;
-
 #define SHTHORNTAIL_FLAG_MOVE_COMPLETE 0x01
 #define SHTHORNTAIL_FLAG_IMPACT_PENDING 0x02
 #define SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING 0x04

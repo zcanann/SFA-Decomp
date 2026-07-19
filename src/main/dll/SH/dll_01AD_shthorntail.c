@@ -23,6 +23,7 @@
 #include "main/dll/SC/SCanimobj.h"
 #include "main/dll/SH/dll_01B0_shswapston.h"
 #include "main/newshadows_audio_api.h"
+#include "main/dll/path_control_interface.h"
 
 typedef struct SHthorntailTailSwingEffectScratch
 {
@@ -43,8 +44,6 @@ typedef struct SHthorntailTailSwingEffectScratch
 #define SHTHORNTAIL_LEVEL_MODE0_LOCOMOTION2_GAMEBIT          0x09E
 #define SHTHORNTAIL_LEVELCONTROL_AUDIO_CHANNEL               0x7F
 #define SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG              0x40
-
-#define gSHthorntailPathControlInterface gPathControlInterface
 
 #define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES_OFFSET 0x0A0
 #define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES_OFFSET  0x294
@@ -67,9 +66,6 @@ typedef struct SHthorntailTailSwingEffectScratch
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 extern u32 lbl_803E5410;
-extern SHthorntailPathControlInterface** gPathControlInterface;
-
-
 void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {
     int playerObj;
@@ -519,9 +515,9 @@ void SHthorntail_update(int obj)
         {
             gSHthorntailActiveConfigToken = ((SHthorntailObject*)obj)->config->configToken;
             ((SHthorntailObject*)obj)->velocityY = -(SHTHORNTAIL_TAIL_SWING_GRAVITY[0] * timeDelta - ((SHthorntailObject*)obj)->velocityY);
-            (*gSHthorntailPathControlInterface)->advanceControl((SHthorntailObject*)obj, runtime->moveScratch, timeDelta);
-            (*gSHthorntailPathControlInterface)->applyControl((SHthorntailObject*)obj, runtime->moveScratch);
-            (*gSHthorntailPathControlInterface)->finishControl((SHthorntailObject*)obj, runtime->moveScratch, timeDelta);
+            (*gPathControlInterface)->update((void*)obj, runtime->moveScratch, timeDelta);
+            (*gPathControlInterface)->apply((void*)obj, runtime->moveScratch);
+            (*gPathControlInterface)->advance((void*)obj, runtime->moveScratch, timeDelta);
             ((SHthorntailObject*)obj)->pitch = runtime->moveControlPitch;
             ((SHthorntailObject*)obj)->roll = runtime->moveControlRoll;
         }
@@ -534,15 +530,15 @@ void SHthorntail_update(int obj)
             if (('\x02' <= runtime->behaviorState) && (runtime->behaviorState <= '\x06'))
             {
                 ((SHthorntailObject*)obj)->velocityY = -(SHTHORNTAIL_TAIL_SWING_GRAVITY[0] * timeDelta - ((SHthorntailObject*)obj)->velocityY);
-                (*gSHthorntailPathControlInterface)->advanceControl((SHthorntailObject*)obj, runtime->moveScratch, timeDelta);
-                (*gSHthorntailPathControlInterface)->applyControl((SHthorntailObject*)obj, runtime->moveScratch);
-                (*gSHthorntailPathControlInterface)->finishControl((SHthorntailObject*)obj, runtime->moveScratch, timeDelta);
+                (*gPathControlInterface)->update((void*)obj, runtime->moveScratch, timeDelta);
+                (*gPathControlInterface)->apply((void*)obj, runtime->moveScratch);
+                (*gPathControlInterface)->advance((void*)obj, runtime->moveScratch, timeDelta);
                 ((SHthorntailObject*)obj)->pitch = runtime->moveControlPitch;
                 ((SHthorntailObject*)obj)->roll = runtime->moveControlRoll;
             }
             else
             {
-                (*gSHthorntailPathControlInterface)->bindObject((SHthorntailObject*)obj, (int)runtime->moveScratch);
+                (*gPathControlInterface)->attachObject((void*)obj, runtime->moveScratch);
             }
         }
     }
@@ -554,7 +550,7 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
     SHthorntailRuntime* runtime;
     ObjModel* model;
     u32 randomTime;
-    int moveScratch;
+    u8* moveScratch;
     u32 outA[2];
     u32 outB;
     u32 stackPad;
@@ -587,12 +583,11 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
     obj->modelScale = *(float*)((int)obj->anim.modelInstance + 4) * ((float)config->initScale / 1000.0f);
     model = Obj_GetActiveModel((GameObject*)obj);
     modelInitBones(obj->modelScale, model);
-    moveScratch = (int)runtime->moveScratch;
-    (*gSHthorntailPathControlInterface)
-        ->initControl(moveScratch, SHTHORNTAIL_PATH_CONTROL_MODE, SHTHORNTAIL_PATH_CONTROL_FLAGS, 0);
-    (*gSHthorntailPathControlInterface)
-        ->attachPathData(moveScratch, SHTHORNTAIL_PATH_CHANNEL, gSHthorntailPathHeaders, gSHthorntailPathData, outA);
-    (*gSHthorntailPathControlInterface)->bindObject(obj, moveScratch);
+    moveScratch = runtime->moveScratch;
+    (*gPathControlInterface)->init(moveScratch, SHTHORNTAIL_PATH_CONTROL_MODE, SHTHORNTAIL_PATH_CONTROL_FLAGS, 0);
+    (*gPathControlInterface)
+        ->setup(moveScratch, SHTHORNTAIL_PATH_CHANNEL, gSHthorntailPathHeaders, gSHthorntailPathData, outA);
+    (*gPathControlInterface)->attachObject(obj, moveScratch);
     obj->animEventCallback = SHthorntail_updateLevelControlState;
     dll_2E_func05((GameObject*)obj, (MoveLibState*)runtime, 0xffffdc72, 0x2aaa, 3);
     dll_2E_func08((MoveLibState*)runtime, 400, 0x78);

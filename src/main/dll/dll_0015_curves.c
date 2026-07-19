@@ -1029,7 +1029,7 @@ RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, in
     return sCurvesHitPoints;
 }
 
-void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, u32 updateValue, f32 step)
+void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, f32 step)
 {
     int flags;
     CurvesCollisionState* collision;
@@ -1441,7 +1441,7 @@ void dll_15_func07(void* obj, CurvesCollisionState* state)
 }
 
 
-void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
+void dll_15_func06(GameObject* obj, CurvesCollisionState* state, f32 step)
 {
     f32 maxX;
     f32 minX;
