@@ -32,6 +32,7 @@
 #include "main/objhits.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/fall_ladders_ext.h"
 #include "main/dll/fireflyLantern.h"
 
 #define FIREFLYLANTERN_HIT_VOLUME_SLOT 0xe
@@ -161,7 +162,7 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
     ((BaddieState*)state)->userData1 += 1;
     (obj)->anim.rotY = (1024.0f * fn_80293DA4(0.19634955f * (f32)(u32)((BaddieState*)state)->userData1) +
                         (f32)(obj)->anim.rotY);
-    ((void (*)(int, int*))baddieSpawnWaterRipple)((int)obj, state);
+    ((void (*)(GameObject*, BaddieState*))baddieSpawnWaterRipple)(obj, (BaddieState*)state);
 }
 
 void pinPon_init(GameObject* obj, void* state)
