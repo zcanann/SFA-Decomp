@@ -38,6 +38,8 @@ extern f32 lbl_803E04E4;
 
 extern f32 lbl_803E0504; /* used by Checkpoint_func08/07/06 */
 extern f32 lbl_803E0508; /* used by Checkpoint_func08 */
+extern void* lbl_803DD418;
+extern void* lbl_803DD41C;
 typedef struct CheckpointCursor
 {
     s16 headingAngle; /* 0x00 */
@@ -393,7 +395,6 @@ s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s3
 
 s32 Checkpoint_func0F(PartFxItem* p)
 {
-    extern void* lbl_803DD418;
     PartFxItem* q;
     s32 rank = 1;
     PartFxItem** arr = (PartFxItem**)lbl_803DD418;
@@ -421,7 +422,6 @@ s32 Checkpoint_func0F(PartFxItem* p)
 
 PartFxItem* Checkpoint_func10(s32 target_rank)
 {
-    extern void* lbl_803DD418;
     s32 i;
     for (i = 0; i < lbl_803DD414; i++)
     {
@@ -461,8 +461,6 @@ PartFxItem* Checkpoint_func10(s32 target_rank)
 
 void Checkpoint_onGameLoop(void)
 {
-    extern void* lbl_803DD418;
-    extern void* lbl_803DD41C;
     void* tmp = lbl_803DD418;
     lbl_803DD418 = lbl_803DD41C;
     lbl_803DD41C = tmp;
@@ -472,9 +470,8 @@ void Checkpoint_onGameLoop(void)
 
 u32 Checkpoint_func0E(s32* p)
 {
-    extern u32 lbl_803DD418;
     *p = lbl_803DD414;
-    return lbl_803DD418;
+    return (u32)lbl_803DD418;
 }
 
 /* Object cursor written back by Checkpoint_func08: the sampled heading/pitch
@@ -511,7 +508,6 @@ void Checkpoint_func0C(CheckpointRouteState* o)
 
 void Checkpoint_func0D(u32 v)
 {
-    extern u32 lbl_803DD41C;
     if (lbl_803DD416 >= 10)
         return;
     ((u32*)lbl_803DD41C)[lbl_803DD416++] = v;
@@ -868,8 +864,6 @@ void Checkpoint_release(void)
 }
 void Checkpoint_initialise(void)
 {
-    extern void* lbl_803DD418;
-    extern void* lbl_803DD41C;
     gCheckpointRouteCount = 0;
     lbl_803DD41C = gCheckpointPartFxListBuffer;
     lbl_803DD418 = (void*)((u8*)gCheckpointPartFxListBuffer + 0x28);
