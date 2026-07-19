@@ -424,8 +424,7 @@ void Obj_SetModelColorFadeRecursive(GameObject* obj, int frames, u8 red, u8 gree
     i = 0;
     while (i < obj->childCount)
     {
-        ((void (*)(GameObject*, int, u8, u8, u8, u8))Obj_SetModelColorFadeRecursive)(
-            (GameObject*)obj->childObjs[i], frames, red, green, blue, startAtHalf);
+        Obj_SetModelColorFadeRecursive((GameObject*)obj->childObjs[i], frames, red, green, blue, startAtHalf);
         i++;
     }
 }
@@ -491,8 +490,7 @@ void Obj_StartModelFadeIn(GameObject* obj, int frames)
         if (obj->fadeCounter < fadeLimit)
         {
             obj->fadeCounter++;
-            ((void (*)(GameObject*, int, u8, u8, u8, u8))Obj_SetModelColorFadeRecursive)(obj, 0x1e, 0xa0, 0xff, 0xff,
-                                                                                        0);
+            Obj_SetModelColorFadeRecursive(obj, 0x1e, 0xa0, 0xff, 0xff, 0);
         }
         if (obj->fadeCounter == fadeLimit)
         {
