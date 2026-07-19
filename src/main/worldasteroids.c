@@ -1,4 +1,6 @@
 #include "main/worldasteroids.h"
+#include "main/fcos16_approx_api.h"
+#include "main/fsin16_approx_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
@@ -9,8 +11,8 @@ extern f32 lbl_803E65E4;
 extern f32 lbl_803E65E8;
 extern f32 lbl_803E65EC;
 extern f32 lbl_803E65F0;
-extern f32 fsin16Approx(u16 angle);
-extern f32 fcos16Approx(u16 angle);
+
+typedef f32 (*WorldAsteroidsTrigFn)(u16 angle);
 
 static inline f32 worldasteroids_s32AsFloat(s32 value)
 {
@@ -62,17 +64,17 @@ void worldasteroids_update(WorldAsteroidsObject* obj)
     obj->rotY += state->rotStepY;
     obj->rotZ += state->rotStepZ;
     state->orbitAngle += WORLD_ASTEROIDS_ORBIT_STEP_SCALE / state->orbitRadius;
-    orbitCos = fcos16Approx(WORLD_ASTEROIDS_ORBIT_TILT_ANGLE);
-    orbitSin = fsin16Approx((u16)state->orbitAngle);
+    orbitCos = ((WorldAsteroidsTrigFn)fcos16Approx)(WORLD_ASTEROIDS_ORBIT_TILT_ANGLE);
+    orbitSin = ((WorldAsteroidsTrigFn)fsin16Approx)((u16)state->orbitAngle);
     radius = worldasteroids_s32AsFloat(state->orbitRadius);
     orbitScale = radius * orbitSin;
     obj->posX = orbitScale * orbitCos + anchor->posX;
-    orbitSin = fsin16Approx(WORLD_ASTEROIDS_ORBIT_TILT_ANGLE);
-    orbitScale = fsin16Approx((u16)state->orbitAngle);
+    orbitSin = ((WorldAsteroidsTrigFn)fsin16Approx)(WORLD_ASTEROIDS_ORBIT_TILT_ANGLE);
+    orbitScale = ((WorldAsteroidsTrigFn)fsin16Approx)((u16)state->orbitAngle);
     radius = worldasteroids_s32AsFloat(state->orbitRadius);
     orbitProduct = radius * orbitScale;
     obj->posY = orbitProduct * orbitSin + (anchor->posY + worldasteroids_s32AsFloat(state->heightOffset));
-    orbitCos = fcos16Approx((u16)state->orbitAngle);
+    orbitCos = ((WorldAsteroidsTrigFn)fcos16Approx)((u16)state->orbitAngle);
     radius = worldasteroids_s32AsFloat(state->orbitRadius);
     obj->posZ = radius * orbitCos + anchor->posZ;
     return;
@@ -88,24 +90,24 @@ void worldasteroids_init(WorldAsteroidsObject* obj)
 
     state = obj->state;
     baseAngle = randomGetRange(-0x7fff, 0x7fff);
-    orbitShape = fsin16Approx(baseAngle);
+    orbitShape = ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
     if (orbitShape < lbl_803E65E0)
     {
-        orbitShape = -fsin16Approx(baseAngle);
+        orbitShape = -((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
     }
     else
     {
-        orbitShape = fsin16Approx(baseAngle);
+        orbitShape = ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
     }
     randomGetRange(0, (int)(lbl_803E65E8 * orbitShape + lbl_803E65E4));
-    orbitShape = fsin16Approx(baseAngle);
+    orbitShape = ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
     if (orbitShape < lbl_803E65E0)
     {
-        orbitShape = -fsin16Approx(baseAngle);
+        orbitShape = -((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
     }
     else
     {
-        orbitShape = fsin16Approx(baseAngle);
+        orbitShape = ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
     }
     radiusSeed = (int)(lbl_803E65EC * orbitShape);
     randomValue = randomGetRange(WORLD_ASTEROIDS_ROTATION_SPEED_MIN, WORLD_ASTEROIDS_ROTATION_SPEED_MAX);
@@ -116,8 +118,8 @@ void worldasteroids_init(WorldAsteroidsObject* obj)
     state->rotStepX = randomValue;
     randomValue = randomGetRange(-0x7fff, 0x7fff);
     state->orbitAngle = randomValue;
-    state->orbitRadius = worldasteroids_s32AsFloat(radiusSeed) * fsin16Approx(baseAngle) + lbl_803E65F0;
-    state->heightOffset = worldasteroids_s32AsFloat(radiusSeed) * fcos16Approx(baseAngle);
+    state->orbitRadius = worldasteroids_s32AsFloat(radiusSeed) * ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle) + lbl_803E65F0;
+    state->heightOffset = worldasteroids_s32AsFloat(radiusSeed) * ((WorldAsteroidsTrigFn)fcos16Approx)(baseAngle);
     return;
 }
 

@@ -37,6 +37,7 @@
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/trig_ext.h"
 
 s16 lbl_803DBD70[4] = {-1024, -512, 512, 1024};
 s16 lbl_803DBD78[4] = {-500, 50, 50, 200};
@@ -101,7 +102,7 @@ STATIC_ASSERT(offsetof(ShieldState, segRotY) == 0x4C);
 STATIC_ASSERT(offsetof(ShieldState, segRotZ) == 0x54);
 STATIC_ASSERT(offsetof(ShieldState, flags0) == 0x5C);
 
-extern f32 fcos16(u16 angle);
+typedef f32 (*ShieldCosFn)(u16 angle);
 extern f32 lbl_803E33A8;
 extern f32 lbl_803E33AC;
 extern f32 lbl_803E33C4;
@@ -285,7 +286,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
                     f32 wave;
                     f32 sum;
                     *(s16*)(hw + 0x34) = -0x4000;
-                    wave = fcos16((u16) * (s16*)(hw + 0x34));
+                    wave = ((ShieldCosFn)fcos16)((u16) * (s16*)(hw + 0x34));
                     sum = amp + wave;
                     wave = sum * k;
                     *(f32*)(w + 0x24) = *tbl[0] * wave;
@@ -367,7 +368,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
                 f32 wave;
                 f32 sum;
                 *(s16*)(hw + 0x34) = 0;
-                wave = fcos16((u16) * (s16*)(hw + 0x34));
+                wave = ((ShieldCosFn)fcos16)((u16) * (s16*)(hw + 0x34));
                 sum = amp + wave;
                 wave = sum * k;
                 *(f32*)(w + 0x24) = *tbl[0] * wave;
@@ -414,7 +415,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
                 f32 wave;
                 f32 sum;
                 *(s16*)(hw + 0x34) = -0x4000;
-                wave = fcos16((u16) * (s16*)(hw + 0x34));
+                wave = ((ShieldCosFn)fcos16)((u16) * (s16*)(hw + 0x34));
                 sum = amp + wave;
                 wave = sum * k;
                 *(f32*)(w + 0x24) = *t0 * wave;
@@ -451,7 +452,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
             f32 wave;
             f32 sum;
             *(s16*)(hw + 0x34) = 0x4000;
-            wave = fcos16((u16) * (s16*)(hw + 0x34));
+            wave = ((ShieldCosFn)fcos16)((u16) * (s16*)(hw + 0x34));
             sum = amp + wave;
             wave = sum * k;
             *(f32*)(w + 0x24) = *t0 * wave;
@@ -679,14 +680,14 @@ void Shield_update(int* obj)
             ps[26] = (f32)ps[30] * timeDelta + ps[26];
             if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
             {
-                f32 c = fcos16(ps[26]);
+                f32 c = ((ShieldCosFn)fcos16)(ps[26]);
                 c = c * lbl_803E33EC + lbl_803E33C4;
                 pf[9] = *t8 * c;
                 pf[5] = *t12;
             }
             else
             {
-                f32 c = fcos16(ps[26]);
+                f32 c = ((ShieldCosFn)fcos16)(ps[26]);
                 f32 sum = lbl_803E33C4 + c;
                 c = sum * lbl_803E33A8;
                 pf[9] = *tbl[0] * c;
