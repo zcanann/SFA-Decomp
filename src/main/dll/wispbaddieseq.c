@@ -98,8 +98,6 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     f32 blendScale;
     f32 blendTimer;
     int eventTableIndex;
-    int controlMask;
-    int controlFlags;
     WispEventRow* row;
     u32 sf2;
 
@@ -211,9 +209,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
         if (((HagabonAnimState*)state)->moveHoldTimer <= lbl_803E2740)
         {
             ((HagabonAnimState*)state)->moveHoldTimer = lbl_803E2740;
-            controlFlags = ((BaddieState*)state)->controlFlags;
-            controlMask = ~0x40;
-            ((BaddieState*)state)->controlFlags = controlFlags & controlMask;
+            *(int*)&((BaddieState*)state)->controlFlags &= ~0x40LL;
             ((BaddieState*)state)->controlFlags =
                 ((BaddieState*)state)->controlFlags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
             ((HagabonAnimState*)state)->animFlags = ((HagabonAnimState*)state)->animFlags & ~0x80;
