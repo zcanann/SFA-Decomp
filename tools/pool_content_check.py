@@ -16,9 +16,19 @@ are structurally blind to a pool whose SIZE is right and whose VALUES are wrong:
   * main.dol's sha1 is blind while the unit is INCOMPLETE, because the link
     consumes the retail object. The defect appears the instant it is promoted.
 
-cameramodeforcebehind was the worked example: our pool slot 0x803E1B0C held
-0.25 where retail holds 0.0, and the .text referenced it at a different SDA2
-displacement (b60c vs retail b618).
+A wrong VALUE is rarer than it looks, so the verdicts are graded. Only
+VALUE-DIFF -- a word present in ours that retail does not hold anywhere in the
+unit's pool -- can be a miscoded literal. PERM (same multiset, other order) and
+PAD (differs only in zero/0x80000000 alignment words) are emission-order
+artifacts; SUBSET means the unit is merely incomplete. cameramodeforcebehind,
+long cited as a wrong-value case, is in fact a PERM.
+
+Two things this must get right, because both once produced a census of ~76
+phantom defects. A unit may claim `.sdata2` MORE THAN ONCE -- keeping only the
+last claim compares a whole pool against a fragment of itself. And a SHIFT
+(pool matching verbatim at another address, meaning the claim is misplaced) is
+only evidence when the untruncated pool is long enough to be unique: an 8-byte
+prefix recurs hundreds of times in a float pool.
 
 Ground truth is orig/GSAE01/sys/main.dol. For each unit that claims a data
 range in config/GSAE01/splits.txt, this reads the same-named section out of our
@@ -35,6 +45,7 @@ usage: python3 tools/pool_content_check.py [unit-substring ...]
 exit status 1 if any scanned unit has a content mismatch.
 """
 import json
+from collections import Counter
 import os
 import re
 import struct
@@ -73,7 +84,14 @@ class Dol(object):
 
 
 def parse_splits(path):
-    """unit source path (e.g. main/foo.c) -> {section: (start, end)}"""
+    """unit source path (e.g. main/foo.c) -> {section: [(start, end), ...]}
+
+    A unit may claim the SAME section more than once (MWCC emits one input
+    section per alignment run, and the split mirrors that). Keeping only the
+    last claim compares the unit's whole pool against a fragment of it, which
+    manufactures a spurious mismatch for every such unit -- so collect them
+    all, in file order, and treat them as one concatenated range.
+    """
     units = {}
     cur = None
     for line in open(path):
@@ -93,7 +111,8 @@ def parse_splits(path):
         m = re.match(r'\s*(\S+)\s+start:0x([0-9A-Fa-f]+)\s+end:0x([0-9A-Fa-f]+)',
                      line)
         if m:
-            cur[m.group(1)] = (int(m.group(2), 16), int(m.group(3), 16))
+            cur.setdefault(m.group(1), []).append(
+                (int(m.group(2), 16), int(m.group(3), 16)))
     return units
 
 
@@ -142,6 +161,14 @@ def disp(addr):
     return '-'
 
 
+def fmt_vals(counter):
+    parts = []
+    for w, c in sorted(counter.items()):
+        v = '%.9g' % f32(w) if len(w) == 4 else w.hex()
+        parts.append(v + ('' if c == 1 else ' x%d' % c))
+    return ', '.join(parts)
+
+
 def f32(word):
     return struct.unpack('>f', word)[0]
 
@@ -163,10 +190,10 @@ def shift_hint(ours, dol, base, span):
     return None
 
 
-def compare(name, section, ours, claim, dol, quiet):
+def compare(name, section, ours, claims, dol, quiet):
     """Return list of report lines (empty == clean)."""
-    base, end = claim
-    span = end - base
+    base = claims[0][0]
+    span = sum(e - b for b, e in claims)
     lines = []
     n = len(ours)
     if n > span:
@@ -174,9 +201,14 @@ def compare(name, section, ours, claim, dol, quiet):
                      'claimed 0x%x only (section_size_check owns the rest)'
                      % (section, n, span, span))
         ours = ours[:span]
-    retail = dol.read(base, len(ours))
-    if retail is None:
-        return ['  [skip] %s not mapped in the DOL at 0x%08X' % (section, base)]
+    retail = b''
+    for b, e in claims:
+        chunk = dol.read(b, e - b)
+        if chunk is None:
+            return ['  [skip] %s not mapped in the DOL at 0x%08X'
+                    % (section, b)]
+        retail += chunk
+    retail = retail[:len(ours)]
     bad = []
     for off in range(0, len(ours) & ~3, 4):
         a, b = ours[off:off + 4], retail[off:off + 4]
@@ -190,33 +222,47 @@ def compare(name, section, ours, claim, dol, quiet):
     words = max(1, len(ours) // 4)
     kind = 'BAD'
     note = ''
-    delta = shift_hint(ours, dol, base, span)
-    if delta is not None:
-        kind = 'SHIFT'
-        note = '  -- our pool matches retail VERBATIM at %+d (0x%08X): the ' \
-               'CLAIM is misplaced, not the values' % (delta, base + delta)
+    full = retail if n > span else (b''.join(
+        dol.read(b, e - b) or b'' for b, e in claims) or retail)
+    ow = Counter(ours[i:i + 4] for i in range(0, len(ours) & ~3, 4))
+    rw = Counter(full[i:i + 4] for i in range(0, len(full) & ~3, 4))
+    pad = b'\x00\x00\x00\x00'
+    only_ours, only_retail = ow - rw, rw - ow
+    if not only_ours and not only_retail:
+        kind = 'PERM'
+        note = '  -- same VALUES in a different ORDER: an emission-order ' \
+               '(first-use) artifact, NOT a wrong literal'
+    elif not only_ours and set(only_retail) == {pad}:
+        kind = 'PERM'
+        note = '  -- same VALUES in a different ORDER, plus retail zero ' \
+               'word(s): the alignment PAD the reordering pushes ahead of ' \
+               'the 8-aligned int-to-float magic pair. Still an emission-' \
+               'order artifact, NOT a wrong literal'
+    elif not only_ours:
+        kind = 'SUBSET'
+        note = '  -- every word we emit also occurs in retail; retail has ' \
+               '%d MORE (%s). The unit is INCOMPLETE, not miscoded' \
+               % (sum(only_retail.values()), fmt_vals(only_retail))
+    elif not only_retail:
+        kind = 'SUPERSET'
+        note = '  -- every retail word occurs in ours; we emit %d EXTRA ' \
+               '(%s). Over-claim or surplus literals, not a wrong value' \
+               % (sum(only_ours.values()), fmt_vals(only_ours))
     else:
-        full = dol.read(base, span) or retail
-        ow = sorted(ours[i:i + 4] for i in range(0, len(ours) & ~3, 4))
-        rw = sorted(full[i:i + 4] for i in range(0, len(full) & ~3, 4))
-        pad = b'\x00\x00\x00\x00'
-        rw_nopad = list(rw)
-        if pad in rw_nopad:
-            rw_nopad.remove(pad)
-        if ow == rw:
-            kind = 'PERM'
-            note = '  -- same VALUES in a different ORDER: an emission-order ' \
-                   '(first-use) artifact, NOT a wrong literal'
-        elif ow == rw_nopad:
-            kind = 'PERM'
-            note = '  -- same VALUES in a different ORDER, plus one retail ' \
-                   'zero word: the 4-byte ALIGNMENT PAD the reordering pushes ' \
-                   'ahead of the 8-aligned int-to-float magic pair. Still an ' \
-                   'emission-order artifact, NOT a wrong literal'
+        delta = (shift_hint(ours, dol, base, span)
+                 if n <= span and len(ours) >= 0x10 else None)
+        if delta is not None:
+            kind = 'SHIFT'
+            note = '  -- our pool matches retail VERBATIM at %+d (0x%08X): ' \
+                   'the CLAIM is misplaced, not the values' \
+                   % (delta, base + delta)
+        else:
+            note = '  -- ours-only %s | retail-only %s' \
+                   % (fmt_vals(only_ours), fmt_vals(only_retail))
     lines.append('  [%s] %-8s %d/%d words differ  (0x%08X..0x%08X)%s'
                  % (kind, section, len(bad), words, base, base + len(ours),
                     note))
-    if quiet or kind == 'SHIFT':
+    if quiet or kind in ('SHIFT', 'SUBSET', 'SUPERSET'):
         return lines
     for off, a, b in bad:
         addr = base + off
@@ -283,7 +329,8 @@ def main():
                 report.append('  [skip] %s carries relocations' % section)
                 continue
             report += compare(name, section, data, claims[section], dol, quiet)
-        if any(k in ln for ln in report for k in ('[BAD]', '[SHIFT]', '[PERM]')):
+        if any(k in ln for ln in report for k in
+                   ('[BAD]', '[SHIFT]', '[PERM]', '[SUBSET]', '[SUPERSET]')):
             bad_units += 1
             bad_names.append(name)
         if report:
