@@ -21,10 +21,6 @@
 
 #define SCMUSICTREE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-#define objfx_spawnRandomBurstLegacy(obj, type, count, origin, mult, flags)                                      \
-    ((void (*)(void*, int, int, void*, f32, int))objfx_spawnRandomBurst)(                                       \
-        (void*)(obj), (type), (count), (origin), (mult), (flags))
-
 /* placement mapIds: striking the three totem trees sets the combo bits
    sclevelcontrol watches; the three "gate" trees gate their bits on
    GAMEBIT_MUSICTREE_GATE. */
@@ -258,8 +254,8 @@ void sc_musictree_update(GameObject* obj)
         vec[0] = zero;
         vec[1] = 200.0f * ((CloudRunnerState*)inner)->baddie.velX;
         vec[2] = zero;
-        objfx_spawnRandomBurstLegacy(obj, ((ScMusictreeState*)inner)->flags & 0xf, 0x14, vec2,
-                                     80.0f * ((CloudRunnerState*)inner)->baddie.velX, 0);
+        objfx_spawnRandomBurst(obj, ((ScMusictreeState*)inner)->flags & 0xf, 0x14, vec2,
+                               80.0f * ((CloudRunnerState*)inner)->baddie.velX, 0);
     }
     ((ScMusictreeState*)inner)->moveStepScale = 0.0225f;
     ((CloudRunnerState*)inner)->baddie.velZ = 20.0f;
@@ -300,8 +296,8 @@ void sc_musictree_update(GameObject* obj)
                 vec[0] = 0.0f;
                 vec[1] = 0.75f * (200.0f * ((CloudRunnerState*)inner)->baddie.velX);
                 vec[2] = 0.0f;
-                objfx_spawnRandomBurstLegacy(obj, ((ScMusictreeState*)inner)->flags & 0xf, 0xa, vec2,
-                                             80.0f * ((CloudRunnerState*)inner)->baddie.velX, 1);
+                objfx_spawnRandomBurst(obj, ((ScMusictreeState*)inner)->flags & 0xf, 0xa, vec2,
+                                       80.0f * ((CloudRunnerState*)inner)->baddie.velX, 1);
                 ((CloudRunnerState*)inner)->baddie.velY = 340.0f;
             }
             ((ScMusictreeState*)inner)->proximityBurstTimer = ((ScMusictreeState*)inner)->proximityBurstTimer - timeDelta;
@@ -312,8 +308,8 @@ void sc_musictree_update(GameObject* obj)
                 vec[1] = 200.0f * ((CloudRunnerState*)inner)->baddie.velX;
                 vec[2] = 0.0f;
                 vecRotateZXY(&obj->anim.rotX, rv);
-                objfx_spawnRandomBurstLegacy(obj, ((ScMusictreeState*)inner)->flags & 0xf, 1, vec2,
-                                             80.0f * ((CloudRunnerState*)inner)->baddie.velX, 0);
+                objfx_spawnRandomBurst(obj, ((ScMusictreeState*)inner)->flags & 0xf, 1, vec2,
+                                       80.0f * ((CloudRunnerState*)inner)->baddie.velX, 0);
                 ((ScMusictreeState*)inner)->proximityBurstTimer += 30.0f;
             }
         }

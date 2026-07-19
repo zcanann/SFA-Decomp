@@ -213,7 +213,7 @@ void WM_newcrystalFn_800969b0(GameObject* obj, s16* state, f32 period, f32 xMul,
     }
 }
 
-void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagByte, f32 mult)
+void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, f32 mult, u8 flagByte)
 {
     ObjFxParticleParams params;
     ObjFxRandomBurstTable partbl = gObjFxRandomBurstTbl;
