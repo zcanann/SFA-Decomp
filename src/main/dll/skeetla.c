@@ -716,7 +716,7 @@ static void* skeetla_validateRouteEntry(void* entry)
 }
 
 
-void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
+void* trickySelectRouteEntry(u8* state, u8* routeDef, u8 routeFlagValue)
 {
     void* entry;
 
@@ -724,7 +724,7 @@ void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
 
     if ((*(u8**)&((TrickyState*)state)->cachedRouteDef == routeDef) &&
         (((TrickyState*)state)->cachedWalkGroup == ((TrickyState*)state)->walkGroup) &&
-        (((TrickyState*)state)->cachedRouteFlags == (routeFlagValue & 0xff)))
+        (((TrickyState*)state)->cachedRouteFlags == (routeFlagValue & 0xffu)))
     {
         entry = skeetla_validateRouteEntry(((TrickyState*)state)->validatedRouteEntry);
     }
