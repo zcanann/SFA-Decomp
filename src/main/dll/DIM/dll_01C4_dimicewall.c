@@ -133,16 +133,3 @@ ObjectDescriptor gDIMIceWallObjDescriptor = {
     dimicewall_getExtraSize,
 };
 
-/* .sdata2 constant pool */
-const f32 lbl_803E4898 = 1.0f;
-const f32 lbl_803E48A0 = 5e+01f;
-const f32 lbl_803E48A4 = 0.01f;
-const f32 lbl_803E48A8 = 0.5f;
-const f32 gDimWoodDoorPi = 3.1415927f;
-const f32 gDimWoodDoorAngleHalfCircle = 32768.0f;
-const f32 lbl_803E48B8 = 0.0f;
-const f32 lbl_803E48E8 = 1.0f;
-const f32 lbl_803E48EC = 1e+02f;
-const f32 gDimCannonAnimAdvanceSpeed = 0.025f;
-const f32 lbl_803E48F8 = 1.0f;
-const f32 lbl_803E4900 = 1.0f;

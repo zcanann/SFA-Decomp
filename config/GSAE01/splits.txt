@@ -2410,7 +2410,7 @@ main/dll/DIM/dll_01C3_dimgate.c:
 main/dll/DIM/dll_01C4_dimicewall.c:
 	.text       start:0x801B17F4 end:0x801B1B40
 	.data       start:0x803253D0 end:0x80325408
-	.sdata2     start:0x803E4880 end:0x803E4908
+	.sdata2     start:0x803E4880 end:0x803E4898
 
 main/dll/DIM/dll_01C5_dimbarrier.c:
 	.text       start:0x801B1B40 end:0x801B1D84
@@ -2421,6 +2421,7 @@ main/dll/dll_801b1d84.c:
 
 main/dll/DIM/dimwooddoor.c:
 	.text       start:0x801B1FF4 end:0x801B2550
+	.sdata2     start:0x803E4898 end:0x803E4908
 
 main/dll/DIM/dll_01C6_dimcannon.c:
 	.text       start:0x801B2550 end:0x801B3344
@@ -2529,7 +2530,7 @@ main/dll/DIM/dll_01DE_dim2lavacontrol.c:
 main/dll/dll_01DF_dll1df.c:
 	.text       start:0x801B9CB4 end:0x801B9ECC
 	.data       start:0x80325928 end:0x80325960
-	.sdata2     start:0x803E4B98 end:0x803E4CD0
+	.sdata2     start:0x803E4B98 end:0x803E4BB8
 
 main/dll/dll_801b9ecc.c:
 	.text       start:0x801B9ECC end:0x801BA224
@@ -2539,6 +2540,7 @@ main/dll/DIM/dim2lift.c:
 	.text       start:0x801BA224 end:0x801BB598
 	.data       start:0x803259A0 end:0x803259E0
 	.sdata      start:0x803DBF30 end:0x803DBF40
+	.sdata2     start:0x803E4BB8 end:0x803E4CD0
 
 main/dll/DIM/dim2icicle.c:
 	.text       start:0x801BB598 end:0x801BCB34
