@@ -6,7 +6,7 @@
  * source object's world position (flags bit 0), then hands the buffer to
  * (*gModgfxInterface)->spawnEffect. The texture pointers index a shared
  * resource blob (gDll91Func0ResourceBlob); the position/scale constants live in a
- * shared float pool (lbl_803E11D8..lbl_803E1208).
+ * shared float pool (0.0f..2.0f).
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/modgfx_types.h"
@@ -18,19 +18,6 @@
 #define DLL91_EFFECT_ID 0x45
 
 extern u8 gDll91Func0ResourceBlob[];
-extern f32 lbl_803E11D8;
-extern f32 lbl_803E11DC;
-extern f32 lbl_803E11E0;
-extern f32 lbl_803E11E4;
-extern f32 lbl_803E11E8;
-extern f32 lbl_803E11EC;
-extern f32 lbl_803E11F0;
-extern f32 lbl_803E11F4;
-extern f32 lbl_803E11F8;
-extern f32 lbl_803E11FC;
-extern f32 lbl_803E1200;
-extern f32 lbl_803E1204;
-extern f32 lbl_803E1208;
 #include "main/dll/dll_0092_dll92func0.h"
 #include "main/dll/dll_0093_dll93func0.h"
 #include "main/dll/dll_0094_dll94func0.h"
@@ -59,145 +46,145 @@ void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
     entry[0].flags = 0x12;
     entry[0].tex = base + 0x150;
     entry[0].mode = 4;
-    entry[0].x = lbl_803E11D8;
-    entry[0].y = lbl_803E11D8;
-    entry[0].z = lbl_803E11D8;
+    entry[0].x = 0.0f;
+    entry[0].y = 0.0f;
+    entry[0].z = 0.0f;
     entry[1].layer = 0;
     entry[1].flags = 9;
     entry[1].tex = base + 0x114;
     entry[1].mode = 8;
-    entry[1].x = lbl_803E11D8;
-    entry[1].y = lbl_803E11D8;
-    entry[1].z = lbl_803E11DC;
+    entry[1].x = 0.0f;
+    entry[1].y = 0.0f;
+    entry[1].z = 255.0f;
     entry[2].layer = 0;
     entry[2].flags = 9;
     entry[2].tex = base + 0x128;
     entry[2].mode = 2;
-    entry[2].x = lbl_803E11E0;
-    entry[2].y = lbl_803E11E4;
-    entry[2].z = lbl_803E11E0;
+    entry[2].x = 3.0f;
+    entry[2].y = 0.03f;
+    entry[2].z = 3.0f;
     entry[3].layer = 0;
     entry[3].flags = 0x12;
     entry[3].tex = base + 0x150;
     entry[3].mode = 2;
-    entry[3].x = lbl_803E11E8;
-    entry[3].y = lbl_803E11EC;
-    entry[3].z = lbl_803E11E8;
+    entry[3].x = 1.75f;
+    entry[3].y = 0.5f;
+    entry[3].z = 1.75f;
     entry[4].layer = 0;
     entry[4].flags = 9;
     entry[4].tex = base + 0x128;
     entry[4].mode = 8;
-    entry[4].x = lbl_803E11DC;
-    entry[4].y = lbl_803E11D8;
-    entry[4].z = lbl_803E11DC;
+    entry[4].x = 255.0f;
+    entry[4].y = 0.0f;
+    entry[4].z = 255.0f;
     entry[5].layer = 1;
     entry[5].flags = 0x12;
     entry[5].tex = base + 0x150;
     entry[5].mode = 4;
-    entry[5].x = lbl_803E11DC;
-    entry[5].y = lbl_803E11D8;
-    entry[5].z = lbl_803E11D8;
+    entry[5].x = 255.0f;
+    entry[5].y = 0.0f;
+    entry[5].z = 0.0f;
     entry[6].layer = 1;
     entry[6].flags = 9;
     entry[6].tex = base + 0x128;
     entry[6].mode = 2;
-    entry[6].x = lbl_803E11F0;
-    entry[6].y = lbl_803E11F4;
-    entry[6].z = lbl_803E11F0;
+    entry[6].x = 1.0f;
+    entry[6].y = 150.0f;
+    entry[6].z = 1.0f;
     entry[7].layer = 2;
     entry[7].flags = 0;
     entry[7].tex = NULL;
     entry[7].mode = 0x20;
-    entry[7].x = lbl_803E11D8;
-    entry[7].y = lbl_803E11D8;
-    entry[7].z = lbl_803E11D8;
+    entry[7].x = 0.0f;
+    entry[7].y = 0.0f;
+    entry[7].z = 0.0f;
     entry[8].layer = 3;
     entry[8].flags = 9;
     entry[8].tex = base + 0x114;
     entry[8].mode = 8;
-    entry[8].x = lbl_803E11DC;
-    entry[8].y = lbl_803E11F8;
-    entry[8].z = lbl_803E11D8;
+    entry[8].x = 255.0f;
+    entry[8].y = 155.0f;
+    entry[8].z = 0.0f;
     entry[9].layer = 3;
     entry[9].flags = 0x12;
     entry[9].tex = base + 0x150;
     entry[9].mode = 0x100;
-    entry[9].x = lbl_803E11D8;
-    entry[9].y = lbl_803E11D8;
-    entry[9].z = lbl_803E11FC;
+    entry[9].x = 0.0f;
+    entry[9].y = 0.0f;
+    entry[9].z = -10.0f;
     entry[10].layer = 3;
     entry[10].flags = 5;
     entry[10].tex = base + 0x188;
     entry[10].mode = 2;
-    entry[10].x = lbl_803E1200;
-    entry[10].y = lbl_803E11F0;
-    entry[10].z = lbl_803E1200;
+    entry[10].x = 0.98f;
+    entry[10].y = 1.0f;
+    entry[10].z = 0.98f;
     entry[11].layer = 3;
     entry[11].flags = 4;
     entry[11].tex = gDll91Func0Tex;
     entry[11].mode = 2;
-    entry[11].x = lbl_803E1204;
-    entry[11].y = lbl_803E11F0;
-    entry[11].z = lbl_803E1204;
+    entry[11].x = 1.02f;
+    entry[11].y = 1.0f;
+    entry[11].z = 1.02f;
     entry[12].layer = 4;
     entry[12].flags = 9;
     entry[12].tex = base + 0x114;
     entry[12].mode = 8;
-    entry[12].x = lbl_803E11DC;
-    entry[12].y = lbl_803E11D8;
-    entry[12].z = lbl_803E11DC;
+    entry[12].x = 255.0f;
+    entry[12].y = 0.0f;
+    entry[12].z = 255.0f;
     entry[13].layer = 4;
     entry[13].flags = 0x12;
     entry[13].tex = base + 0x150;
     entry[13].mode = 0x100;
-    entry[13].x = lbl_803E11D8;
-    entry[13].y = lbl_803E11D8;
-    entry[13].z = lbl_803E11FC;
+    entry[13].x = 0.0f;
+    entry[13].y = 0.0f;
+    entry[13].z = -10.0f;
     entry[14].layer = 4;
     entry[14].flags = 5;
     entry[14].tex = base + 0x188;
     entry[14].mode = 2;
-    entry[14].x = lbl_803E1204;
-    entry[14].y = lbl_803E11F0;
-    entry[14].z = lbl_803E1204;
+    entry[14].x = 1.02f;
+    entry[14].y = 1.0f;
+    entry[14].z = 1.02f;
     entry[15].layer = 4;
     entry[15].flags = 4;
     entry[15].tex = gDll91Func0Tex;
     entry[15].mode = 2;
-    entry[15].x = lbl_803E1200;
-    entry[15].y = lbl_803E11F0;
-    entry[15].z = lbl_803E1200;
+    entry[15].x = 0.98f;
+    entry[15].y = 1.0f;
+    entry[15].z = 0.98f;
     entry[16].layer = 5;
     entry[16].flags = 2;
     entry[16].tex = NULL;
     entry[16].mode = 0x1000;
-    entry[16].x = lbl_803E11F0;
-    entry[16].y = lbl_803E11D8;
-    entry[16].z = lbl_803E11D8;
+    entry[16].x = 1.0f;
+    entry[16].y = 0.0f;
+    entry[16].z = 0.0f;
     entry[17].layer = 6;
     entry[17].flags = 0x12;
     entry[17].tex = base + 0x150;
     entry[17].mode = 4;
-    entry[17].x = lbl_803E11D8;
-    entry[17].y = lbl_803E11D8;
-    entry[17].z = lbl_803E11D8;
+    entry[17].x = 0.0f;
+    entry[17].y = 0.0f;
+    entry[17].z = 0.0f;
     entry[18].layer = 6;
     entry[18].flags = 0x12;
     entry[18].tex = base + 0x150;
     entry[18].mode = 2;
-    entry[18].x = lbl_803E1208;
-    entry[18].y = lbl_803E11F0;
-    entry[18].z = lbl_803E1208;
+    entry[18].x = 2.0f;
+    entry[18].y = 1.0f;
+    entry[18].z = 2.0f;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E11D8;
-    buf.pos[1] = lbl_803E11D8;
-    buf.pos[2] = lbl_803E11D8;
-    buf.col[0] = lbl_803E11D8;
-    buf.col[1] = lbl_803E11D8;
-    buf.col[2] = lbl_803E11D8;
-    buf.scale = lbl_803E11F0;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = 0.0f;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 1.0f;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 0x12;
@@ -218,15 +205,15 @@ void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E11D8 + ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] = lbl_803E11D8 + ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] = lbl_803E11D8 + ((GameObject*)(sourceObj))->anim.worldPosZ;
+            buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
+            buf.pos[1] += ((GameObject*)(sourceObj))->anim.worldPosY;
+            buf.pos[2] += ((GameObject*)(sourceObj))->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E11D8 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E11D8 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E11D8 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)
