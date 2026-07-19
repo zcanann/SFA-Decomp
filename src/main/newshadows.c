@@ -789,10 +789,7 @@ void allocLotsOfTextures(void)
                 d2 = sqrtf(cc * cc + rc2 * rc2);
                 cc2 = (f32)(j + 1) - lbl_803DEDF8;
                 cc2 = cc2 * lbl_803DEDFC;
-                {
-                    f32 rcb = rc;
-                    d3 = sqrtf(rcb * rcb + cc2 * cc2);
-                }
+                d3 = sqrtf(rc * rc + cc2 * cc2);
                 n1 = -mathCosfHighPrecision(lbl_803DEE00 * d1);
                 n2 = __fabs(mathCosfHighPrecision(lbl_803DEE00 * d2));
                 n3 = __fabs(mathCosfHighPrecision(lbl_803DEE00 * d3));
@@ -832,10 +829,7 @@ void allocLotsOfTextures(void)
                     d2 = sqrtf(cc * cc + rc2 * rc2);
                     cc2 = (f32)(i + 1) - lbl_803DEDF8;
                     cc2 = cc2 * lbl_803DEDFC;
-                    {
-                        f32 rcb = rc;
-                        d3 = sqrtf(rcb * rcb + cc2 * cc2);
-                    }
+                    d3 = sqrtf(rc * rc + cc2 * cc2);
                     n1 = -mathCosfHighPrecision(lbl_803DEE00 * d1);
                     n2 = -mathCosfHighPrecision(lbl_803DEE00 * d2);
                     n3 = -mathCosfHighPrecision(lbl_803DEE00 * d3);
