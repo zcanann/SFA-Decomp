@@ -109,11 +109,9 @@ STATIC_ASSERT(offsetof(ObjfsaWalkCurveDef, linkEdges) == 0x34);
 
 extern f32 lbl_803E0640;
 extern f32 gFloatOne;
-extern f32 lbl_803E05F0;
 extern char sObjfsaFoundNewWalkGroupPatch[];
 extern char sObjfsaIsPointWithinPatchGroupError[];
 extern f32 lbl_803E05C8;
-extern f32 lbl_803E05D0;
 extern f32 lbl_803E0610;
 extern f32 gRomCurveAnglePi2;
 extern f32 lbl_803E0618;
@@ -138,7 +136,7 @@ u8 gObjfsaWalkGroupActive[0xB8];
 #define OBJFSA_CORNER(BASE, OFF, POSOFF) (f32)((f32) * (s8*)(OFF) * scale + *(f32*)((BASE) + (POSOFF)))
 #define OBJFSA_SET_PLANE(P, K, XA, ZA)                                                                                 \
     len = sqrtf(dxn * dxn + dzn * dzn);                                                                                \
-    if (len != lbl_803E05F0)                                                                                           \
+    if (len != 0.0f)                                                                                           \
     {                                                                                                                  \
         dxn = dxn / len;                                                                                               \
         dzn = dzn / len;                                                                                               \
@@ -165,7 +163,7 @@ u8 gObjfsaWalkGroupActive[0xB8];
     dxn = (DXE);                                                                                                       \
     dzn = (DZE);                                                                                                       \
     len = sqrtf(dxn * dxn + dzn * dzn);                                                                                \
-    if (len != lbl_803E05F0)                                                                                           \
+    if (len != 0.0f)                                                                                           \
     {                                                                                                                  \
         dxn = dxn / len;                                                                                               \
         dzn = dzn / len;                                                                                               \
@@ -211,7 +209,7 @@ static inline int Objfsa_IsPointInsidePatch(const float* point, const ObjfsaPatc
     {
         if (patch->planeOffsets[edgeIndex] + point[0] * patch->planes[edgeIndex].normalX +
                 point[2] * patch->planes[edgeIndex].normalZ >
-            lbl_803E05F0)
+            0.0f)
         {
             return 0;
         }
@@ -232,7 +230,7 @@ static inline int Objfsa_IsPointInsideWalkGroup(const float* point, const Objfsa
     {
         if (walkGroup->planeOffsets[edgeIndex] + point[0] * walkGroup->planes[edgeIndex].normalX +
                 point[2] * walkGroup->planes[edgeIndex].normalZ >
-            lbl_803E05F0)
+            0.0f)
         {
             return 0;
         }
@@ -447,15 +445,15 @@ int RomCurve_setSegmentEndNode(RomCurveWalker* walker, void* curve)
         *(f32*)(A + 0xa8) = *(f32*)(B + 0x8);
         t = (float)(u32) * (u8*)(B + 0x2e) *
             mathSinf(3.1415927f * (float)((s32)((s8) * (B + 0x2c)) << 8) / 32768.0f);
-        *(f32*)(A + 0xb0) = lbl_803E05D0 * t;
+        *(f32*)(A + 0xb0) = 2.0f * t;
         *(f32*)(A + 0xc8) = *(f32*)(B + 0xc);
         t = (float)(u32) * (u8*)(B + 0x2e) *
             mathSinf(3.1415927f * (float)((s32)((s8) * (B + 0x2d)) << 8) / 32768.0f);
-        *(f32*)(A + 0xd0) = lbl_803E05D0 * t;
+        *(f32*)(A + 0xd0) = 2.0f * t;
         *(f32*)(A + 0xe8) = *(f32*)(B + 0x10);
         t = (float)(u32) * (u8*)(B + 0x2e) *
             mathCosf(3.1415927f * (float)((s32)((s8) * (B + 0x2c)) << 8) / 32768.0f);
-        *(f32*)(A + 0xf0) = lbl_803E05D0 * t;
+        *(f32*)(A + 0xf0) = 2.0f * t;
     }
     else
     {
@@ -463,15 +461,15 @@ int RomCurve_setSegmentEndNode(RomCurveWalker* walker, void* curve)
         *(f32*)(A + 0xbc) = *(f32*)(B + 0x8);
         t = (float)(u32) * (u8*)(B + 0x2e) *
             mathSinf(3.1415927f * (float)((s32)((s8) * (B + 0x2c)) << 8) / 32768.0f);
-        *(f32*)(A + 0xc4) = lbl_803E05D0 * t;
+        *(f32*)(A + 0xc4) = 2.0f * t;
         *(f32*)(A + 0xdc) = *(f32*)(B + 0xc);
         t = (float)(u32) * (u8*)(B + 0x2e) *
             mathSinf(3.1415927f * (float)((s32)((s8) * (B + 0x2d)) << 8) / 32768.0f);
-        *(f32*)(A + 0xe4) = lbl_803E05D0 * t;
+        *(f32*)(A + 0xe4) = 2.0f * t;
         *(f32*)(A + 0xfc) = *(f32*)(B + 0x10);
         t = (float)(u32) * (u8*)(B + 0x2e) *
             mathCosf(3.1415927f * (float)((s32)((s8) * (B + 0x2c)) << 8) / 32768.0f);
-        *(f32*)(A + 0x104) = lbl_803E05D0 * t;
+        *(f32*)(A + 0x104) = 2.0f * t;
     }
     return 0;
 }
@@ -491,7 +489,7 @@ static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset
         trig = mathSinf(angle);
     }
     trig = (f32)(u32) * (u8*)((char*)*nodePtr + 0x2e) * trig;
-    return lbl_803E05D0 * trig;
+    return 2.0f * trig;
 }
 
 int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
@@ -532,7 +530,7 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
         if (state->moveNetwork != 0)
         {
             curvesSetupMoveNetworkCurve(&state->curve);
-            if (state->phase <= lbl_803E05F0)
+            if (state->phase <= 0.0f)
             {
                 state->phase = 0.01f;
             }
@@ -577,7 +575,7 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
 }
 void RomCurve_stepClamped(RomCurveWalker* state, f32 dt)
 {
-    if (state->phase <= lbl_803E05F0)
+    if (state->phase <= 0.0f)
     {
         state->phase = 0.01f;
     }
@@ -1545,7 +1543,7 @@ void walkgroupFindExitPointFn_800dc398(void)
                 dzn = x3 - objfsaCorner(curve->firstEdge[0], scale, &curve->x);
                 po = &wg->planeOffsets[3];
                 len = sqrtf(dxn * dxn + dzn * dzn);
-                if (len != lbl_803E05F0)
+                if (len != 0.0f)
                 {
                     dxn = dxn / len;
                     dzn = dzn / len;
@@ -1554,8 +1552,8 @@ void walkgroupFindExitPointFn_800dc398(void)
                 wg->planes[3].normalZ = (s16)(32767.0f * dzn);
                 *po = -(wg->planes[3].normalX * x3 + wg->planes[3].normalZ * z3);
 
-                wg->maxY = (s16)(lbl_803E05D0 * curve->maxYExtent + curve->y);
-                wg->minY = (s16)-(lbl_803E05D0 * curve->minYExtent - curve->y);
+                wg->maxY = (s16)(2.0f * curve->maxYExtent + curve->y);
+                wg->minY = (s16)-(2.0f * curve->minYExtent - curve->y);
 
                 for (slot = 0, slotPtr = (char*)curve; slot < 4; slot++)
                 {
@@ -1642,8 +1640,8 @@ void walkgroupFindExitPointFn_800dc398(void)
                             OBJFSA_SET_NEWPATCH_PLANE(3, objfsaCorner(edgeCoords[1], scale, &curve->z) - z3,
                                                       x3 - objfsaCorner(edgeCoords[0], scale, &curve->x), x3, z3);
 
-                            fy0 = lbl_803E05D0 * curve->maxYExtent + curve->y;
-                            fy1 = lbl_803E05D0 * linked->maxYExtent + linked->y;
+                            fy0 = 2.0f * curve->maxYExtent + curve->y;
+                            fy1 = 2.0f * linked->maxYExtent + linked->y;
                             if (fy0 > fy1)
                             {
                                 fyv = fy0;
@@ -1654,8 +1652,8 @@ void walkgroupFindExitPointFn_800dc398(void)
                                 fyv = fy1;
                                 OBJFSA_NEWPATCH.maxY = fyv;
                             }
-                            fy0 = -(lbl_803E05D0 * curve->minYExtent - curve->y);
-                            fy1 = -(lbl_803E05D0 * linked->minYExtent - linked->y);
+                            fy0 = -(2.0f * curve->minYExtent - curve->y);
+                            fy1 = -(2.0f * linked->minYExtent - linked->y);
                             if (fy0 < fy1)
                             {
                                 fyv = fy0;
@@ -1677,7 +1675,7 @@ void walkgroupFindExitPointFn_800dc398(void)
 
         pi = 1;
         pp = &pairs[2];
-        zero = lbl_803E05F0;
+        zero = 0.0f;
         div = 20.0f;
         p = &patchBase[0][1];
         for (; pi < gObjfsaPatchCount; pp += 2, p++, pi++)

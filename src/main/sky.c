@@ -109,9 +109,7 @@ extern f32 gSkyOverrideLightIntensity;
 extern u8 gSkyOverrideLightDirectionEnabled;
 extern f32 gSkyOverrideLightDirection[];
 extern const f32 lbl_803DF058;
-extern const f32 lbl_803DF05C;
 extern f32 lbl_803DF060;
-extern const f32 lbl_803DF06C;
 extern f32 gSkyDayStartTime;
 extern f32 lbl_803DF064;
 extern f32 lbl_803DF068;
@@ -144,7 +142,6 @@ extern const f32 lbl_803DF108;
 extern const f32 lbl_803DF10C;
 extern const f32 lbl_803DF110;
 extern f32 lbl_803DF114;
-extern f32 lbl_803DF118;
 extern f32 lbl_803DF11C;
 extern f32 lbl_803DF120;
 extern f32 lbl_803DF138;
@@ -162,10 +159,8 @@ extern f32 lbl_803DF14C;
 extern f32 lbl_803DF148;
 extern const f32 lbl_803DF150;
 extern const f32 lbl_803DF154;
-extern const f32 lbl_803DF158;
 extern const f32 lbl_803DF15C;
 extern const f32 lbl_803DF160;
-extern const f32 lbl_803DF164;
 extern const f32 lbl_803DF168;
 extern const f32 lbl_803DF16C;
 extern const f32 lbl_803DF170;
@@ -539,12 +534,12 @@ void skyFn_80088e54(int mode, f32 brightness)
         unset = lbl_803DF058;
         if (brightness != unset)
         {
-            ((SkyState*)gSkyState)->lightBlendRate = lbl_803DF05C / (lbl_803DF060 * brightness);
+            ((SkyState*)gSkyState)->lightBlendRate = 1.0f / (lbl_803DF060 * brightness);
             ((SkyState*)gSkyState)->lightBlendFactor = unset;
         }
         else
         {
-            fullBlend = lbl_803DF05C;
+            fullBlend = 1.0f;
             ((SkyState*)gSkyState)->lightBlendRate = fullBlend;
             ((SkyState*)gSkyState)->lightBlendFactor = fullBlend;
         }
@@ -665,7 +660,7 @@ void skyBuildSunModelMatrix(f32 mtx[3][4])
     f32 scale;
     f32 scaleMtx[3][4];
 
-    scale = lbl_803DF05C / *(f32*)(gSkySunObject + 8);
+    scale = 1.0f / *(f32*)(gSkySunObject + 8);
     PSMTXScale((f32*)scaleMtx, scale, scale, scale);
     Obj_BuildWorldTransformMatrix((GameObject*)gSkySunObject, (f32*)mtx, 0);
     PSMTXConcat((f32*)mtx, (f32*)scaleMtx, (f32*)mtx);
@@ -788,7 +783,7 @@ void fn_8008923C(GameObject* obj, f32* x, f32* y, f32* z)
                 mag = PSVECMag(dir);
                 if (mag > lbl_803DF058)
                 {
-                    mag = lbl_803DF05C / mag;
+                    mag = 1.0f / mag;
                     PSVECScale(dir, dir, mag);
                     *x = dir[0];
                     *y = dir[1];
@@ -799,7 +794,7 @@ void fn_8008923C(GameObject* obj, f32* x, f32* y, f32* z)
             {
                 cur = NULL;
                 dir[0] = lbl_803DF068;
-                dir[1] = lbl_803DF06C;
+                dir[1] = (-1.0f);
                 dir[2] = lbl_803DF068;
                 PSVECNormalize(dir, dir);
                 *x = dir[0];
@@ -812,7 +807,7 @@ void fn_8008923C(GameObject* obj, f32* x, f32* y, f32* z)
             if (gSkyState == NULL)
             {
                 *x = lbl_803DF058;
-                *y = lbl_803DF06C;
+                *y = (-1.0f);
                 *z = lbl_803DF058;
             }
             else
@@ -949,7 +944,7 @@ void skyFn_80089710(int flags, u8 enabled, int startComplete)
             {
                 if (startComplete != 0)
                 {
-                    ((SkyState*)sky)->lights[flagBit].unk9C = lbl_803DF05C;
+                    ((SkyState*)sky)->lights[flagBit].unk9C = 1.0f;
                 }
                 else
                 {
@@ -972,7 +967,7 @@ void fn_800897D4(int slot, f32* x, f32* y, f32* z)
     {
         fallback = lbl_803DF058;
         *x = fallback;
-        *y = lbl_803DF06C;
+        *y = (-1.0f);
         *z = fallback;
         return;
     }
@@ -1147,9 +1142,9 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int red, int green, int blue, in
     {
         if (((SkyBlendStateFlags*)(gSkyState + slot * 0xa4 + 0xc1))->unused80 != 0)
         {
-            dir[0] = lbl_803DF06C;
-            dir[1] = lbl_803DF06C;
-            dir[2] = lbl_803DF06C;
+            dir[0] = (-1.0f);
+            dir[1] = (-1.0f);
+            dir[2] = (-1.0f);
             PSVECNormalize(dir, dir);
             PSMTXMultVecSR(Camera_GetInverseViewMatrix(), dir, dir);
         }
@@ -1370,7 +1365,7 @@ void skyFn_8008a500(void)
         }
         else
         {
-            len = lbl_803DF05C;
+            len = 1.0f;
         }
         *gSkySunDirection = *gSkySunDirection / len;
         gSkySunDirection[1] = gSkySunDirection[1] / len;
@@ -1383,7 +1378,7 @@ void skyFn_8008a500(void)
         }
         else
         {
-            len = lbl_803DF05C;
+            len = 1.0f;
         }
         *gSkyMoonDirection = *gSkyMoonDirection / len;
         gSkyMoonDirection[1] = gSkyMoonDirection[1] / len;
@@ -1446,14 +1441,14 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
     q1.x = lbl_803DF058;
     q1.y = lbl_803DF058;
     q1.z = lbl_803DF058;
-    q1.w = lbl_803DF05C;
+    q1.w = 1.0f;
     q1.rz = 0;
     q1.ry = 0;
     q1.rx = 0;
     q2.x = lbl_803DF058;
     q2.y = lbl_803DF058;
     q2.z = lbl_803DF058;
-    q2.w = lbl_803DF05C;
+    q2.w = 1.0f;
     q2.rz = 0;
     q2.ry = 0;
     q2.rx = 0;
@@ -1469,9 +1464,9 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         {
             sunT = lbl_803DF058;
         }
-        else if (sunT > lbl_803DF05C)
+        else if (sunT > 1.0f)
         {
-            sunT = lbl_803DF05C;
+            sunT = 1.0f;
         }
         if (sunT < gSkySunFadeInThreshold)
         {
@@ -1488,7 +1483,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         {
             if (sunT > gSkySunFadeOutThreshold)
             {
-                if (sunT > lbl_803DF05C)
+                if (sunT > 1.0f)
                 {
                     gSkySunAlpha = 0;
                 }
@@ -1509,18 +1504,18 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         {
             riseT = lbl_803DF058;
         }
-        else if (riseT > lbl_803DF05C)
+        else if (riseT > 1.0f)
         {
-            riseT = lbl_803DF05C - (riseT - lbl_803DF05C);
+            riseT = 1.0f - (riseT - 1.0f);
         }
-        scale = -(lbl_803DF0B4 * riseT - lbl_803DF05C);
+        scale = -(lbl_803DF0B4 * riseT - 1.0f);
         vec[0] = lbl_803DF0B8 * sunDir.x;
         vec[1] = lbl_803DF0B8 * sunDir.y;
         vec[2] = lbl_803DF0B8 * sunDir.z;
         yaw = sky->sunYaw;
         q1.rx = sunT;
         vecRotateZXY(&q1.rx, vec);
-        q1.w = lbl_803DF05C;
+        q1.w = 1.0f;
         q1.rz = yaw;
         q1.ry = 0;
         q1.rx = 0;
@@ -1550,9 +1545,9 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         {
             moonTC = lbl_803DF058;
         }
-        else if (moonTC > lbl_803DF05C)
+        else if (moonTC > 1.0f)
         {
-            moonTC = lbl_803DF05C;
+            moonTC = 1.0f;
         }
         if (moonTC < gSkySunFadeInThreshold)
         {
@@ -1569,7 +1564,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         {
             if (moonTC > gSkySunFadeOutThreshold)
             {
-                if (moonTC > lbl_803DF05C)
+                if (moonTC > 1.0f)
                 {
                     gSkyMoonAlpha = 0;
                 }
@@ -1590,17 +1585,17 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         {
             riseT = lbl_803DF058;
         }
-        else if (riseT > lbl_803DF05C)
+        else if (riseT > 1.0f)
         {
-            riseT = lbl_803DF05C - (riseT - lbl_803DF05C);
+            riseT = 1.0f - (riseT - 1.0f);
         }
-        scale = -(lbl_803DF0B4 * riseT - lbl_803DF05C);
+        scale = -(lbl_803DF0B4 * riseT - 1.0f);
         vec[0] = lbl_803DF0B8 * moonDir.x;
         vec[1] = lbl_803DF0B8 * moonDir.y;
         vec[2] = lbl_803DF0B8 * moonDir.z;
         q2.rx = moonTC;
         vecRotateZXY(&q2.rx, vec);
-        q2.w = lbl_803DF05C;
+        q2.w = 1.0f;
         q2.rz = yaw;
         q2.ry = 0;
         q2.rx = 0;
@@ -2021,21 +2016,21 @@ void timeOfDayFn_8008b964(void)
                 *(f32*)&((GameObject*)p)->extra -= *(f32*)(p + 0xb4) * timeDelta;
                 val = *(f32*)(gSkyState + (idx = i + 0xb8));
                 *(f32*)(gSkyState + idx) =
-                    (val < 0.0f) ? 0.0f : ((val > lbl_803DF05C) ? lbl_803DF05C : val);
+                    (val < 0.0f) ? 0.0f : ((val > 1.0f) ? 1.0f : val);
                 *(f32*)(gSkyState + (idx = i + 0xbc)) -= lbl_803DF0F0 * timeDelta;
                 val = *(f32*)(gSkyState + idx);
                 *(f32*)(gSkyState + idx) =
-                    (val < 0.0f) ? 0.0f : ((val > lbl_803DF05C) ? lbl_803DF05C : val);
+                    (val < 0.0f) ? 0.0f : ((val > 1.0f) ? 1.0f : val);
                 i += 0xa4;
             }
             ((SkyState*)gSkyState)->fadeFactor -= ((SkyState*)gSkyState)->fadeRate * timeDelta;
             val = ((SkyState*)gSkyState)->fadeFactor;
             ((SkyState*)gSkyState)->fadeFactor =
-                (val < lbl_803DF058) ? lbl_803DF058 : ((val > lbl_803DF05C) ? lbl_803DF05C : val);
+                (val < lbl_803DF058) ? lbl_803DF058 : ((val > 1.0f) ? 1.0f : val);
             ((SkyState*)gSkyState)->lightBlendFactor += ((SkyState*)gSkyState)->lightBlendRate * timeDelta;
             val = ((SkyState*)gSkyState)->lightBlendFactor;
             ((SkyState*)gSkyState)->lightBlendFactor =
-                (val < lbl_803DF058) ? lbl_803DF058 : ((val > lbl_803DF05C) ? lbl_803DF05C : val);
+                (val < lbl_803DF058) ? lbl_803DF058 : ((val > 1.0f) ? 1.0f : val);
         }
     }
 }
@@ -2095,10 +2090,10 @@ void loadLightFn_8008bbc4(void)
     skyFn_8008a500();
     skyFn_8008a04c();
     gSkySunDirection[0] = lbl_803DF058;
-    gSkySunDirection[1] = lbl_803DF06C;
+    gSkySunDirection[1] = (-1.0f);
     gSkySunDirection[2] = lbl_803DF058;
     gSkyMoonDirection[0] = lbl_803DF058;
-    gSkyMoonDirection[1] = lbl_803DF06C;
+    gSkyMoonDirection[1] = (-1.0f);
     gSkyMoonDirection[2] = lbl_803DF058;
     gSkySkyTexture = textureLoadAsset(SKY_TEXTURE_SKY);
 }
@@ -2183,14 +2178,14 @@ void fn_8008BDA8(void)
         gSkyState[iofs + 0x89] = 0xff;
         gSkyState[iofs + 0x8a] = 0xff;
         *(f32*)(gSkyState + iofs + 0x90) = lbl_803DF058;
-        *(f32*)(gSkyState + iofs + 0x94) = lbl_803DF06C;
+        *(f32*)(gSkyState + iofs + 0x94) = (-1.0f);
         *(f32*)(gSkyState + iofs + 0x98) = lbl_803DF058;
         *(f32*)(gSkyState + iofs + 0x9c) = lbl_803DF058;
-        *(f32*)(gSkyState + iofs + 0xa0) = lbl_803DF06C;
+        *(f32*)(gSkyState + iofs + 0xa0) = (-1.0f);
         *(f32*)(gSkyState + iofs + 0xa4) = lbl_803DF058;
         ((SkyBlendStateFlags*)(gSkyState + iofs + 0xc1))->active = 0;
         *(f32*)(gSkyState + iofs + 0xa8) = lbl_803DF100;
-        *(f32*)(gSkyState + iofs + 0xac) = lbl_803DF05C;
+        *(f32*)(gSkyState + iofs + 0xac) = 1.0f;
         *(f32*)(gSkyState + iofs + 0xb0) = lbl_803DF100;
         gSkyState[iofs + 0x7c] = 0xff;
         gSkyState[iofs + 0x7d] = 0xff;
@@ -2273,15 +2268,15 @@ void Sky_func03(int a, int b, u8* cfg)
                 *(f32*)(gSkyState + iofs + 0x68) = (f32)(u32)((Sky2Config*)cfg)->color3A;
                 *(f32*)(gSkyState + iofs + 0x6c) = (f32)(u32)((Sky2Config*)cfg)->color3R;
                 *(f32*)(gSkyState + iofs + 0x70) = (f32)(u32)((Sky2Config*)cfg)->color3R;
-                *(f32*)(gSkyState + iofs + 0xb8) = lbl_803DF05C;
+                *(f32*)(gSkyState + iofs + 0xb8) = 1.0f;
                 if (((Sky2Config*)cfg)->fadeDurationA != 0)
                 {
                     *(f32*)(gSkyState + iofs + 0xb4) =
-                        lbl_803DF05C / (lbl_803DF104 * (f32)(u32)((Sky2Config*)cfg)->fadeDurationA);
+                        1.0f / (lbl_803DF104 * (f32)(u32)((Sky2Config*)cfg)->fadeDurationA);
                 }
                 else
                 {
-                    *(f32*)(gSkyState + iofs + 0xb4) = lbl_803DF05C;
+                    *(f32*)(gSkyState + iofs + 0xb4) = 1.0f;
                 }
                 p4 = gSkyState + iofs;
                 if (gSkyState == NULL)
@@ -2340,15 +2335,15 @@ void Sky_func03(int a, int b, u8* cfg)
             ((SkyState*)gSkyState)->unk250 = -1;
             if ((((u32)(u8)((SkyState*)gSkyState)->flags255 >> 7) & 1) != 0)
             {
-                ((SkyState*)gSkyState)->fadeFactor = lbl_803DF05C;
+                ((SkyState*)gSkyState)->fadeFactor = 1.0f;
                 if (((Sky2Config*)cfg)->fadeDurationA != 0)
                 {
                     ((SkyState*)gSkyState)->fadeRate =
-                        lbl_803DF05C / (lbl_803DF104 * (f32)(u32)((Sky2Config*)cfg)->fadeDurationA);
+                        1.0f / (lbl_803DF104 * (f32)(u32)((Sky2Config*)cfg)->fadeDurationA);
                 }
                 else
                 {
-                    ((SkyState*)gSkyState)->fadeRate = lbl_803DF05C;
+                    ((SkyState*)gSkyState)->fadeRate = 1.0f;
                 }
             }
             else
@@ -2484,7 +2479,7 @@ void fn_8008C9F4(u8* cfg, u8 flags)
     {
         *(int*)((&gSky2State)[idx] + 0x40) = ((Sky2Config*)cfg)->fadeDurationB;
         *(f32*)((&gSky2State)[idx] + 0x58) =
-            lbl_803DF118 / (lbl_803DF11C * ((f32)(u32)((Sky2Config*)cfg)->fadeDurationB / lbl_803DF120));
+            255.0f / (lbl_803DF11C * ((f32)(u32)((Sky2Config*)cfg)->fadeDurationB / lbl_803DF120));
         *(int*)((&gSky2State)[idx] + 0xc) = 0x5dc;
         *(f32*)((&gSky2State)[idx] + 0x60) = lbl_803DF114 / (f32)(u32)((Sky2Config*)cfg)->fadeDurationB;
     }
@@ -2570,14 +2565,14 @@ void fn_8008D088(int slot)
         flag1 = flags & 1;
         if (flag1 != 0 && (bv = p->blend) > (zero = lbl_803DF108))
         {
-            p->blend = -(lbl_803DF118 * p->t - bv);
+            p->blend = -(255.0f * p->t - bv);
             if ((*(SkySlotAnim**)(&gSky2State + slot))->blend < zero)
             {
                 (*(SkySlotAnim**)(&gSky2State + slot))->blend = zero;
                 lbl_803DB750 = 1;
             }
         }
-        else if ((flags & 4) != 0 && p->blend < (spd = lbl_803DF118))
+        else if ((flags & 4) != 0 && p->blend < (spd = 255.0f))
         {
             p->blend = spd * p->t;
             if ((*(SkySlotAnim**)(&gSky2State + slot))->blend > spd)
@@ -2585,7 +2580,7 @@ void fn_8008D088(int slot)
                 (*(SkySlotAnim**)(&gSky2State + slot))->blend = spd;
             }
         }
-        else if (flag1 == 0 && p->blend < (spd = lbl_803DF118))
+        else if (flag1 == 0 && p->blend < (spd = 255.0f))
         {
             p->blend = spd * p->t;
             if ((*(SkySlotAnim**)(&gSky2State + slot))->blend > spd)
@@ -2616,7 +2611,7 @@ int dll_06_func0F(void)
     {
         return 0xff;
     }
-    return (int)(lbl_803DF118 * ((y - lbl_803DF138) / lbl_803DF140));
+    return (int)(255.0f * ((y - lbl_803DF138) / lbl_803DF140));
 }
 
 void dll_06_func0C_nop(void)
@@ -2712,7 +2707,7 @@ void fn_8008DAE8(int obj)
         }
         else
         {
-            alpha = (int)(lbl_803DF118 - lbl_803DF118 * (v / lbl_803DF148));
+            alpha = (int)(255.0f - 255.0f * (v / lbl_803DF148));
         }
         Obj_SetModelColorOverrideRecursive((GameObject*)obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28),
                                            (u8) * (int*)(s + 0x2c), (u8)alpha, 1);
@@ -2744,7 +2739,7 @@ void dll_06_func08(int obj)
             }
             else
             {
-                alpha = (int)(lbl_803DF118 - lbl_803DF118 * (v / lbl_803DF148));
+                alpha = (int)(255.0f - 255.0f * (v / lbl_803DF148));
             }
             setTextColor((void*)obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28),
                          (u8) * (int*)(s + 0x2c), (u8)alpha);
@@ -2856,7 +2851,7 @@ void sky2_run(void)
         dst[4] = z;
         c154 = lbl_803DF154;
         dst[5] = c154;
-        c158 = lbl_803DF158;
+        c158 = (-1.0f);
         dst[6] = c158;
         dst[7] = z;
         dst[8] = z;
@@ -2881,7 +2876,7 @@ void sky2_run(void)
     zv = lbl_803DF108;
     vec[0] = zv;
     vec[1] = zv;
-    vec[2] = lbl_803DF158;
+    vec[2] = (-1.0f);
     q.x = zv;
     q.y = zv;
     q.z = zv;
@@ -2902,7 +2897,7 @@ void sky2_run(void)
             {
                 if ((*(u16*)&((GameObject*)p)->anim.rotZ & 1) == 0)
                 {
-                    spd = lbl_803DF118;
+                    spd = 255.0f;
                     *(f32*)(p + 0x310) = spd * *(f32*)(p + 0x30c);
                     if (*(f32*)(*pp + 0x310) > spd)
                     {
@@ -2912,7 +2907,7 @@ void sky2_run(void)
             }
             else if (*(int*)(p + 0x44) != 0)
             {
-                *(f32*)(p + 0x30c) = *(f32*)(p + 0x310) / lbl_803DF118;
+                *(f32*)(p + 0x30c) = *(f32*)(p + 0x310) / 255.0f;
                 p = *pp;
                 if ((*(u16*)&((GameObject*)p)->anim.rotZ & 1) == 0)
                 {
@@ -2958,14 +2953,14 @@ void sky2_run(void)
                     u = (t - step) / step;
                     k = 1;
                 }
-                else if (t <= lbl_803DF164)
+                else if (t <= 0.375f)
                 {
                     u = (t - lbl_803DF144) / step;
                     k = 2;
                 }
                 else if (t <= lbl_803DF168)
                 {
-                    u = (t - lbl_803DF164) / step;
+                    u = (t - 0.375f) / step;
                     k = 3;
                 }
                 else if (t <= lbl_803DF16C)
@@ -3049,15 +3044,15 @@ void sky2_run(void)
                     sb = *(f32*)(p + 0x228) * best.y + sb;
                 }
             }
-            if (r > lbl_803DF118)
+            if (r > 255.0f)
             {
-                r = lbl_803DF118;
+                r = 255.0f;
             }
             else if (r < lbl_803DF108)
             {
                 r = lbl_803DF108;
             }
-            cmax = lbl_803DF118;
+            cmax = 255.0f;
             if (g > 255.0f)
             {
                 g = cmax;
@@ -3066,7 +3061,7 @@ void sky2_run(void)
             {
                 g = lbl_803DF108;
             }
-            if (b > lbl_803DF118)
+            if (b > 255.0f)
             {
                 b = cmax;
             }

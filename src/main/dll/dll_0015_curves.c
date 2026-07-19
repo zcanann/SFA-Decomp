@@ -70,7 +70,6 @@ typedef struct CurvesSaveGameObjectPosition
 
 extern SaveData saveData;
 extern f32 lbl_803E0668;
-extern const f32 lbl_803E066C;
 extern const f32 lbl_803E068C;
 extern const f32 gCurvesSurfaceNormalZThreshold;
 extern const f32 lbl_803E067C;
@@ -206,7 +205,7 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision)
                     {
                         point = *list;
                         pointY = point->height;
-                        if ((pointY < lbl_803E066C + object->anim.worldPosY) &&
+                        if ((pointY < 50.0f + object->anim.worldPosY) &&
                             ((s8)point->surfaceType != ROMCURVE_POINT_TYPE_WATER))
                         {
                             heights[i] = point->height;

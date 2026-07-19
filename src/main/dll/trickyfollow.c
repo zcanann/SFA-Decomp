@@ -28,7 +28,6 @@
 #include "main/dll/Hcurves_api.h"
 #include "main/dll/objfsa_romcurve.h"
 
-extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23E8;
 extern f32 lbl_803E23EC;
@@ -452,8 +451,8 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
     case 0:
         trickyDebugPrint(strs + 0x41c);
         v = lbl_803E241C * timeDelta + velBefore;
-        state->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;
-        if (lbl_803E23DC == state->speed)
+        state->speed = (v < 0.0f) ? 0.0f : v;
+        if (0.0f == state->speed)
         {
             moved = 0;
         }
@@ -469,7 +468,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
     case 2:
         trickyDebugPrint(strs + 0x434);
         state->speed = velBefore;
-        trickyUpdateApproachSpeed(obj, lbl_803E23DC, state, patchTarget = &state->patchTargets[slot].x, 1);
+        trickyUpdateApproachSpeed(obj, 0.0f, state, patchTarget = &state->patchTargets[slot].x, 1);
         moved = trickyMove(obj, patchTarget);
         break;
     case 4:
@@ -546,7 +545,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                         sqx = state->dirX * state->dirX;
                         sqz = state->dirZ * state->dirZ;
                         len = sqrtf(sqx + sqz);
-                        if (lbl_803E23DC != len)
+                        if (0.0f != len)
                         {
                             state->dirX = state->dirX / len;
                             state->dirZ = state->dirZ / len;
@@ -563,7 +562,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                         sqx = state->dirX * state->dirX;
                         sqz = state->dirZ * state->dirZ;
                         len = sqrtf(sqx + sqz);
-                        if (lbl_803E23DC != len)
+                        if (0.0f != len)
                         {
                             state->dirX = state->dirX / len;
                             state->dirZ = state->dirZ / len;
@@ -603,7 +602,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                         sqx = state->dirX * state->dirX;
                         sqz = state->dirZ * state->dirZ;
                         len = sqrtf(sqx + sqz);
-                        if (lbl_803E23DC != len)
+                        if (0.0f != len)
                         {
                             state->dirX = state->dirX / len;
                             state->dirZ = state->dirZ / len;
@@ -684,7 +683,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         if ((state->savedWalkGroup != 0) && (wg == state->savedWalkGroup))
         {
             v = lbl_803E241C * timeDelta + velBefore;
-            state->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;
+            state->speed = (v < 0.0f) ? 0.0f : v;
         }
         node = state->route.nodeA0;
         if ((((ObjfsaRomCurveDef*)state->route.node9C)->unk1A != 9) && (node->unk1A != 9))
@@ -697,7 +696,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
             rot._pad0 = 0;
             rot._pad1 = 0;
             vecRotateZXY(&rot.angle, delta);
-            if ((delta[2] > lbl_803E23DC) && (lbl_803E23DC != state->speed))
+            if ((delta[2] > 0.0f) && (0.0f != state->speed))
             {
                 for (step = 0; step < 4; step++)
                 {
@@ -847,7 +846,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         if ((state->savedWalkGroup != 0) && (wg == state->savedWalkGroup))
         {
             v = lbl_803E241C * timeDelta + velBefore;
-            state->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;
+            state->speed = (v < 0.0f) ? 0.0f : v;
         }
         yawA = getAngle(state->prevLocalPosX - obj->anim.localPosX,
                         state->prevLocalPosZ - obj->anim.localPosZ);
@@ -895,7 +894,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                 sqx = state->dirX * state->dirX;
                 sqz = state->dirZ * state->dirZ;
                 len = sqrtf(sqx + sqz);
-                if (lbl_803E23DC != len)
+                if (0.0f != len)
                 {
                     state->dirX = state->dirX / len;
                     state->dirZ = state->dirZ / len;
@@ -912,9 +911,9 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         if ((u8)(state->stateFlags & 0x10000000))
         {
             v = lbl_803E23F4 * timeDelta + velBefore;
-            if (v < lbl_803E23DC)
+            if (v < 0.0f)
             {
-                v = lbl_803E23DC;
+                v = 0.0f;
             }
         }
         else if (velBefore > (v = lbl_803E24A4))
@@ -975,7 +974,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
             dx = dx * dx;
             len = sqrtf(sqx + dx);
             arc->duration = len / lbl_803E24A4;
-            arc->time = (v = lbl_803E23DC);
+            arc->time = (v = 0.0f);
             arc->baseX = obj->anim.worldPosX;
             arc->baseY = obj->anim.worldPosY;
             arc->baseZ = obj->anim.worldPosZ;
@@ -1066,7 +1065,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         if ((state->savedWalkGroup != 0) && (wg == state->savedWalkGroup))
         {
             v = lbl_803E241C * timeDelta + velBefore;
-            state->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;
+            state->speed = (v < 0.0f) ? 0.0f : v;
         }
         yawA = getAngle(state->prevLocalPosX - obj->anim.localPosX,
                         state->prevLocalPosZ - obj->anim.localPosZ);
@@ -1114,7 +1113,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                 sqx = state->dirX * state->dirX;
                 sqz = state->dirZ * state->dirZ;
                 len = sqrtf(sqx + sqz);
-                if (lbl_803E23DC != len)
+                if (0.0f != len)
                 {
                     state->dirX = state->dirX / len;
                     state->dirZ = state->dirZ / len;
@@ -1182,7 +1181,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         if ((state->savedWalkGroup != 0) && (wg == state->savedWalkGroup))
         {
             v = lbl_803E241C * timeDelta + velBefore;
-            state->speed = (v < lbl_803E23DC) ? lbl_803E23DC : v;
+            state->speed = (v < 0.0f) ? 0.0f : v;
         }
         yawA = getAngle(state->prevLocalPosX - obj->anim.localPosX,
                         state->prevLocalPosZ - obj->anim.localPosZ);
@@ -1230,7 +1229,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
                 sqx = state->dirX * state->dirX;
                 sqz = state->dirZ * state->dirZ;
                 len = sqrtf(sqx + sqz);
-                if (lbl_803E23DC != len)
+                if (0.0f != len)
                 {
                     state->dirX = state->dirX / len;
                     state->dirZ = state->dirZ / len;
@@ -1283,7 +1282,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
     }
     step = state->followPhase;
     if (((((step == 0) || (step == 2)) || (step == 4)) || (step == 3)) &&
-        (lbl_803E23DC == state->speed))
+        (0.0f == state->speed))
     {
         return 2;
     }
@@ -1322,7 +1321,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 baseRadius, TrickyState* sta
     v = state->speed;
     td = timeDelta;
     dec = lbl_803E241C * td;
-    minSpeed = lbl_803E23DC;
+    minSpeed = 0.0f;
     while (v > minSpeed)
     {
         sum = v * td + sum;
@@ -1336,7 +1335,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 baseRadius, TrickyState* sta
     {
         candidate = state->speed;
         candidate = lbl_803E241C * timeDelta + candidate;
-        state->speed = (candidate < lbl_803E23DC) ? lbl_803E23DC : candidate;
+        state->speed = (candidate < 0.0f) ? 0.0f : candidate;
         return;
     }
     if (flag != 0)
@@ -1348,20 +1347,20 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 baseRadius, TrickyState* sta
         params._pad0 = 0;
         params._pad1 = 0;
         vecRotateZXY(&params.angle, delta);
-        if (delta[2] > lbl_803E23DC)
+        if (delta[2] > 0.0f)
         {
             candidate = state->speed;
             candidate = lbl_803E241C * timeDelta + candidate;
-            state->speed = (candidate < lbl_803E23DC) ? lbl_803E23DC : candidate;
+            state->speed = (candidate < 0.0f) ? 0.0f : candidate;
             return;
         }
     }
     if ((state->stateFlags & 0x10000000) != 0)
     {
         state->speed = lbl_803E23F4 * timeDelta + state->speed;
-        if (state->speed < lbl_803E23DC)
+        if (state->speed < 0.0f)
         {
-            state->speed = lbl_803E23DC;
+            state->speed = 0.0f;
         }
         return;
     }
@@ -1384,11 +1383,11 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 baseRadius, TrickyState* sta
         }
         else
         {
-            candidate = lbl_803E23DC;
+            candidate = 0.0f;
         }
         if (dist < deltaSpeedSq)
         {
-            if (candidate > lbl_803E23DC)
+            if (candidate > 0.0f)
             {
                 f32 curSpeed = state->speed;
                 if (candidate < curSpeed)

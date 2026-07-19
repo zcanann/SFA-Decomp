@@ -17,7 +17,6 @@
 #define fabs __fabs
 
 extern f32 lbl_803E7780;
-extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
 
 /*
@@ -115,7 +114,7 @@ void seqHandle(u32 deltaTime)
         song = gSynthQueuedVoices;
         absoluteTickRange = fabs(tickRange);
         tickRateScale = lbl_803E7780;
-        speedScale = lbl_803E7784;
+        speedScale = 0.00390625f;
         for (; song != NULL; song = nextSong)
         {
             nextSong = song->next;
