@@ -166,3 +166,110 @@ if '--claims' in sys.argv:
 
 json.dump({k: v for k, v in out.items()},
           open(os.path.join(ROOT, 'build/sdata2_census.json'), 'w'), indent=1)
+
+
+# ---------------------------------------------------------------------------
+# --graph: pool DEFINER / IMPORTER dependency graph, from OBJECT SYMBOL TABLES
+#
+# A unit that reads 100% on .text but carries an incomplete pool is usually
+# BORROWING retail's pool: its source declares `extern const f32 lbl_803Exxxx`
+# with no definer of its own, and the link resolves it out of the unit's own
+# RETAIL object.  Literalizing those declarations mints ANONYMOUS `@N` words,
+# which DESTROYS the named symbol -- so it only works when no OTHER unit
+# imports that word.  Promoting a definer out from under an importer LINKFAILS.
+#
+#   PROVIDES(U)  lbl_ syms defined by U's retail object
+#   CONSUMERS(s) units != U whose CURRENTLY-LINKED object has s undefined
+#   LEAF         a unit with no consumed provides -- promotable today
+#
+# Work the leaves first, then inward: a definer becomes promotable once every
+# consumer has been literalized off it (src-linked) or promoted (retail-linked).
+#
+# Usage:  python3 tools/sdata2_ownership_census.py --graph [--all]
+# ---------------------------------------------------------------------------
+if '--graph' in sys.argv:
+    import subprocess
+
+    NM = os.path.join(ROOT, 'build/binutils/powerpc-eabi-nm')
+    status = {}
+    for line in open(os.path.join(ROOT, 'configure.py')):
+        m = re.search(r'Object\((MatchingFor\([^)]*\)|Matching|NonMatching|Equivalent)'
+                      r'\s*,\s*"([^"]+)"', line)
+        if m:
+            status[m.group(2)] = m.group(1)
+
+    def scan(root):
+        """unit -> (defined lbl_ syms, undefined lbl_ syms) for every .o under root."""
+        base = os.path.join(ROOT, root)
+        files = [os.path.join(dp, f) for dp, _, fs in os.walk(base)
+                 for f in fs if f.endswith('.o')]
+        d, u = collections.defaultdict(set), collections.defaultdict(set)
+        for i in range(0, len(files), 400):
+            chunk = files[i:i + 400]
+            out_ = subprocess.run([NM, '-A', '-g'] + chunk, capture_output=True,
+                                  text=True).stdout
+            for line in out_.splitlines():
+                if ':' not in line:
+                    continue
+                f, rest = line.split(':', 1)
+                p = rest.split()
+                if len(p) < 2:
+                    continue
+                unit = os.path.relpath(f, base)[:-2] + '.c'
+                if p[0] == 'U':
+                    if p[1].startswith('lbl_'):
+                        u[unit].add(p[1])
+                elif p[-1].startswith('lbl_'):
+                    d[unit].add(p[-1])
+        return d, u
+
+    rdef, rund = scan('build/GSAE01/obj')
+    sdef, sund = scan('build/GSAE01/src')
+
+    # ORPHAN FILTER -- stale rename artifacts inflate an unfiltered sweep ~3x.
+    allsrc = set(sdef) | set(sund)
+    orphans = allsrc - set(units)
+    kept = allsrc & set(units)
+    assert kept, 'orphan filter removed every src unit'
+    print('src objects with pool syms %d: %d in splits.txt, %d ORPHANED (filtered)'
+          % (len(allsrc), len(kept), len(orphans)))
+
+    def src_linked(u):
+        return status.get(u, '').startswith(('Matching', 'Equivalent'))
+
+    # CONSUMERS: only the object the linker ACTUALLY uses for each unit counts.
+    consumers = collections.defaultdict(set)
+    for u in units:
+        for s in (sund if src_linked(u) else rund).get(u, ()):
+            consumers[s].add(u)
+
+    rows = []
+    for u in units:
+        provides = rdef.get(u, set())
+        blocked = {s: sorted(consumers[s] - {u}) for s in provides
+                   if consumers[s] - {u}}
+        borrows = sorted(sund.get(u, set()) & provides)
+        if provides or borrows:
+            rows.append((u, sorted(provides), borrows, blocked))
+
+    leaves = [r for r in rows if not r[3]]
+    print('units defining pool syms: %d   LEAVES (no external consumer): %d'
+          % (len(rows), len(leaves)))
+    print('\n=== BLOCKED: promoting the definer would LINKFAIL its importers ===')
+    for u, prov, bor, bl in sorted(rows, key=lambda r: -len(r[3])):
+        if not bl:
+            continue
+        print('%-52s provides %3d  borrows %3d' % (u, len(prov), len(bor)))
+        for s, cs in sorted(bl.items()):
+            print('      %-16s -> %s' % (s, ', '.join(cs)))
+    if '--all' in sys.argv:
+        print('\n=== LEAVES: literalize + promote (topological front) ===')
+        for u, prov, bor, bl in sorted(leaves, key=lambda r: -len(r[2])):
+            if bor:
+                print('%-52s borrows %3d of %3d provided' % (u, len(bor), len(prov)))
+
+    json.dump({'provides': {u: p for u, p, b, x in rows},
+               'borrows': {u: b for u, p, b, x in rows if b},
+               'blocked': {u: x for u, p, b, x in rows if x},
+               'orphans': sorted(orphans)},
+              open(os.path.join(ROOT, 'build/sdata2_graph.json'), 'w'), indent=1)
