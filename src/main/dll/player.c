@@ -242,7 +242,7 @@ void fn_802A81B8(GameObject* obj, int state, f32* out);
 int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag);
 int fn_802A8EE4(int a, int b, int c, int d, int e);
 void fn_802A93F4(GameObject* obj, int p2, int p3);
-void playerCastIceSpell(void);
+void playerCastIceSpell(GameObject* unused);
 int fn_802A97D0(GameObject* obj, int p2);
 int playerCanCastPortalOpenSpell(GameObject* obj, int p2);
 int playerCanCastQuakeSpell(GameObject* obj, int p2);
@@ -3719,7 +3719,7 @@ int playerStateTryCastSpell(GameObject* obj, int state, f32 fv)
                 {
                     int sub2;
                     int v;
-                    ((void (*)(int))playerCastIceSpell)((int)obj);
+                    playerCastIceSpell(obj);
                     gPlayerHeldButtonMask = b28;
                     lbl_803DE42C = 1;
                     lbl_803DE430 = lbl_803E7EA4;
@@ -3954,7 +3954,7 @@ int playerStateAimStaff(int obj, int state)
                     {
                         int sub2;
                         int v;
-                        ((void (*)(int))playerCastIceSpell)(obj);
+                        playerCastIceSpell((GameObject*)obj);
                         gPlayerHeldButtonMask = b28;
                         lbl_803DE42C = 1;
                         lbl_803DE430 = lbl_803E7EA4;
@@ -11433,7 +11433,7 @@ void fn_802A93F4(GameObject* obj, int p2, int p3)
     tex->offsetT = 0;
 }
 
-void playerCastIceSpell(void)
+void playerCastIceSpell(GameObject* unused)
 {
     ObjPlacement* setup;
     s8 i;
