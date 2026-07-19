@@ -93,8 +93,8 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     u8 eventIndex;
     int ei;
     int flag20;
-    u8 eventFlags;
     u32 stateFlags;
+    u8 eventFlags;
     u8 sequenceIndex;
     f32 blendScale;
     f32 blendTimer;
