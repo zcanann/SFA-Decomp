@@ -164,7 +164,16 @@ int hightop_stateHandler07(GameObject* obj, HighTopRuntime* runtime);
 int hightop_stateHandler09(GameObject* obj, HighTopRuntime* runtime);
 int hightop_stateHandler10(GameObject* obj, HighTopRuntime* runtime);
 
-extern int lbl_8032AB48[];
+typedef struct HighTopTuning
+{
+    int dispatchArgs[4];
+    f32 unk10[22];
+} HighTopTuning;
+
+STATIC_ASSERT(sizeof(HighTopTuning) == 0x68);
+STATIC_ASSERT(offsetof(HighTopTuning, unk10) == 0x10);
+
+extern HighTopTuning lbl_8032AB48;
 extern int lbl_803DC318;
 extern s16 gHighTopLookYawOffset;
 extern u8 lbl_803DC308;

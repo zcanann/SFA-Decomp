@@ -508,9 +508,11 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
 }
 int gHighTopIdleSequenceIds[3] = {0x4, 0x5, 0x6};
 int gHighTopIdleSequenceWeights[3] = {0x32, 0x19, 0x19};
-int lbl_8032AB48[26] = {0x8,         0x9,        0x7, 0xA,        -1043857408, 0x0, -1032847360, 0x41C80000, 0x0,
-                        -1032847360, 0x41C80000, 0x0, 0x42700000, -1043857408, 0x0, 0x42700000,  0x0,        0x0,
-                        0x0,         0x0,        0x0, 0x0,        0x420C0000,  0x0, 0x0,         -1039400960};
+HighTopTuning lbl_8032AB48 = {
+    {8, 9, 7, 10},
+    {-25.0f, 0.0f, -60.0f, 25.0f, 0.0f, -60.0f, 25.0f, 0.0f, 60.0f, -25.0f, 0.0f,
+     60.0f,  0.0f, 0.0f,   0.0f,  0.0f, 0.0f,   0.0f,  35.0f, 0.0f, 0.0f,  -35.0f},
+};
 f32 gHighTopBandSpeedThresholds[4] = {0.0f, 0.03f, 0.05f, 8.0f};
 ObjectDescriptor24 gHighTopObjDescriptor = {
     0,
@@ -986,7 +988,7 @@ void HighTop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
                 int idx = (*(int (**)(int*))((char*)**(int***)((char*)*list + 0x68) + 0x24))(*list);
                 void (*dispatch)(int*, void*, int, int, int, int, int) =
                     *(void (**)(int*, void*, int, int, int, int, int))((char*)**(int***)((char*)*list + 0x68) + 0x20);
-                dispatch(*list, obj, lbl_8032AB48[idx], p2, p3, p4, p5);
+                dispatch(*list, obj, lbl_8032AB48.dispatchArgs[idx], p2, p3, p4, p5);
                 list++;
             }
         }
