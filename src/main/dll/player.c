@@ -26,7 +26,7 @@
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/dll/viewfinder.h"
 #include "main/sky_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/dll_0015_curves.h"
 #include "track/intersect_api.h"
 #include "main/track_dolphin_api.h"
@@ -17068,7 +17068,7 @@ void playerRender(int obj, int a, int b, int c, int d, int flag)
             ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.modelState->overrideWorldPosZ;
         }
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + ((PlayerState*)inner)->sinkOffsetY;
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, a, b, c, d, lbl_803E7EE0);
+        objRenderModelAndHitVolumes((GameObject*)obj, a, b, c, d, lbl_803E7EE0);
         ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - ((PlayerState*)inner)->sinkOffsetY;
         if ((*(u32*)&((PlayerState*)inner)->flags360 & 0x8000000) != 0)
         {
