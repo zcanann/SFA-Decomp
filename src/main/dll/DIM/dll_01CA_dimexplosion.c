@@ -186,11 +186,11 @@ void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
         f32 sp = flames[idx].speed;
         f32 ev = expf((lbl_803E4934 * ((f32)flames[idx].lifetime - (f32)flames[idx].age)) / (f32)flames[idx].lifetime);
         f32 d = sp - flames[idx].baseScale;
-        f32 t = d * ev;
-        flames[idx].scale = sp - gExplosionDebrisSpeedScale * t;
+        ev = d * ev;
+        flames[idx].scale = sp - gExplosionDebrisSpeedScale * ev;
         ev = expf((lbl_803E493C * (f32)flames[idx].age) / (f32)flames[idx].lifetime);
-        t = lbl_803E4938 * ev;
-        flames[idx].alpha = lbl_803E4938 - gExplosionDebrisAlphaScale * t;
+        ev = lbl_803E4938 * ev;
+        flames[idx].alpha = lbl_803E4938 - gExplosionDebrisAlphaScale * ev;
         flames[idx].spawnTimer = lbl_803E4940;
         flames[idx].spawnInterval = flames[idx].spawnTimer;
         flames[idx].active = 1;
@@ -398,12 +398,12 @@ void explosion_update(GameObject* obj)
                 (lbl_803E4934 * ((f32)((ExplosionDebris*)cursor)->lifetime - (f32)((ExplosionDebris*)cursor)->age)) /
                 (f32)(int)((ExplosionDebris*)cursor)->lifetime);
             f32 d = sp - ((ExplosionDebris*)cursor)->baseScale;
-            f32 t = d * ev;
-            ((ExplosionDebris*)cursor)->scale = sp - gExplosionDebrisSpeedScale * t;
+            ev = d * ev;
+            ((ExplosionDebris*)cursor)->scale = sp - gExplosionDebrisSpeedScale * ev;
             ev =
                 expf((lbl_803E493C * (f32)((ExplosionDebris*)cursor)->age) / (f32)((ExplosionDebris*)cursor)->lifetime);
-            t = lbl_803E4938 * ev;
-            *(s8*)&((ExplosionDebris*)cursor)->alpha = lbl_803E4938 - gExplosionDebrisAlphaScale * t;
+            ev = lbl_803E4938 * ev;
+            *(s8*)&((ExplosionDebris*)cursor)->alpha = lbl_803E4938 - gExplosionDebrisAlphaScale * ev;
             if (((ExplosionDebris*)cursor)->age >= ((ExplosionDebris*)cursor)->lifetime)
             {
                 ((ExplosionDebris*)cursor)->active = 0;
@@ -777,15 +777,14 @@ void explosion_init(GameObject* obj, int def)
 
 void explosion_release(u32 obj)
 {
-    void** p;
     int i;
 
-    for (i = 0, p = gExplosionTextures; i < GEXPLOSION_TEXTURE_COUNT; p++, i++)
+    for (i = 0; i < GEXPLOSION_TEXTURE_COUNT; i++)
     {
-        if (*p != NULL)
+        if (gExplosionTextures[i] != NULL)
         {
-            textureFree((Texture*)*p);
-            *p = NULL;
+            textureFree((Texture*)gExplosionTextures[i]);
+            gExplosionTextures[i] = NULL;
         }
     }
 }
@@ -793,8 +792,6 @@ void explosion_release(u32 obj)
 void explosion_initialise(void)
 {
     FbTexTbl t;
-    int* src;
-    void** dst;
     int i;
     t = gExplosionTexTable;
     gExplosionDebrisSpeedScale = lbl_803E492C / expf(lbl_803E4934);
@@ -803,9 +800,9 @@ void explosion_initialise(void)
     gExplosionFalloffScaleRed = lbl_803E492C / expf(lbl_803E4950);
     gExplosionFalloffScaleGreen = lbl_803E492C / expf(lbl_803E4954);
     gExplosionFalloffScaleBlue = lbl_803E492C / expf(lbl_803E492C);
-    for (i = 0, src = t.v, dst = gExplosionTextures; i < GEXPLOSION_TEXTURE_COUNT; src++, dst++, i++)
+    for (i = 0; i < GEXPLOSION_TEXTURE_COUNT; i++)
     {
-        *dst = textureLoadAsset(*src);
+        gExplosionTextures[i] = textureLoadAsset(t.v[i]);
     }
 }
 
