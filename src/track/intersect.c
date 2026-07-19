@@ -4374,7 +4374,7 @@ void textureSetupFn_800799c0(void)
     gTevTexMapCursor = 0;
 }
 
-void _gxSetTevColor2(int r, int g, int b, int a)
+void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a)
 {
     GXColor c;
     c.r = r;
@@ -4384,7 +4384,7 @@ void _gxSetTevColor2(int r, int g, int b, int a)
     GXSetTevColor(GX_TEVREG1, c);
 }
 
-void _gxSetTevColor1(int r, int g, int b, int a)
+void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
 {
     GXColor c;
     c.r = r;
