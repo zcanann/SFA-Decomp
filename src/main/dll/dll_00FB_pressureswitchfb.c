@@ -247,7 +247,7 @@ void PressureSwitchFB_update(GameObject* obj)
                 if (isTarget && (other != nearest))
                 {
                     if (((GameObject*)other)->anim.localPosY - obj->anim.localPosY >
-                        (f32)(u32)def->unk1D)
+                        (f32)(u32)def->triggerHeight)
                     {
                         tmp = *(int*)&obj->extra;
                         j = 0;

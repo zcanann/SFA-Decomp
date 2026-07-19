@@ -11,7 +11,7 @@ typedef struct PressureswitchfbPlacement
     u8 modelBankIndex;
     s16 pressedGameBit;
     u8 pressDepth;
-    u8 unk1D;
+    u8 triggerHeight;
     u8 drivesTricky;
     u8 pad1F;
     s16 enableGameBit;
