@@ -30,7 +30,7 @@
    are owned by dll_0037_optionsscreen.c */
 extern MenuPanelGroup lbl_8031ACB8;
 extern s8 lbl_803DBA28;
-extern u8 lbl_803DD706;
+extern s8 lbl_803DD706;
 extern u8* lbl_803DD708;    /* save-file struct; [2] = subtitles enabled */
 
 void languageMenuInit(void)

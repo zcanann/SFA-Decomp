@@ -1971,7 +1971,7 @@ void loadTextureFiles(void)
 }
 
 
-extern u32 bEnableColorFilter;
+extern s32 bEnableColorFilter;
 extern u8 bEnableViewFinderHud;
 extern u8 bEnableSpiritVision;
 extern u8 bEnableMonochromeFilter;

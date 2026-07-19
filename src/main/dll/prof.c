@@ -22,7 +22,7 @@
 #include "main/rcp_dolphin_state_api.h"
 #include "main/dll/dll_003C_tumbleweedbush_api.h"
 extern s8 lbl_803DBA28;
-extern u8 lbl_803DD706;
+extern s8 lbl_803DD706;
 extern u8* lbl_803DD708;
 
 typedef struct OptionsMenuPanels

@@ -8,7 +8,7 @@ typedef struct VoiceNode
 } VoiceNode;
 
 extern VoiceNode vidListNodes[128];
-extern int vidCurrentId;
+extern u32 vidCurrentId;
 extern int vidRoot;
 extern VoiceNode* vidFree;
 
