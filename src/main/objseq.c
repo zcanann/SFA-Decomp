@@ -4681,20 +4681,20 @@ int ObjSeq_update(u8* obj, f32 t)
             switch (conditionOpcode)
             {
             case 0x12:
-                if ((getButtonsJustPressed(0) & PAD_BUTTON_A) == 0)
+                if (getButtonsJustPressed(0) & PAD_BUTTON_A)
                 {
-                    pressed = 0;
+                    pressed = 1;
                     break;
                 }
-                pressed = 1;
+                pressed = 0;
                 break;
             case 0x13:
-                if ((getButtonsJustPressed(0) & PAD_BUTTON_B) == 0)
+                if (getButtonsJustPressed(0) & PAD_BUTTON_B)
                 {
-                    pressed = 0;
+                    pressed = 1;
                     break;
                 }
-                pressed = 1;
+                pressed = 0;
                 break;
             case 0x14:
             case 0x15:
