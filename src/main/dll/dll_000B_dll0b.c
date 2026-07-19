@@ -374,15 +374,15 @@ void fn_800A0524(void* state, void* p, int mode)
         f32 tb = ((ModgfxVertexGroupCmd*)p)->valueZ;
         if (((ModgfxState*)state)->blendFrameCount != 0)
         {
-            ((ModgfxState*)state)->blendColorR = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xc];
-            ((ModgfxState*)state)->blendColorG = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xd];
-            ((ModgfxState*)state)->blendColorB = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xe];
+            ((ModgfxState*)state)->blendColorR = (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xc];
+            ((ModgfxState*)state)->blendColorG = (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xd];
+            ((ModgfxState*)state)->blendColorB = (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xe];
             ((ModgfxState*)state)->blendColorStepR =
-                (tr - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xc]) / (f32) * (s16*)((char*)state + 0xfe);
+                (tr - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xc]) / (f32) ((ModgfxState*)state)->blendFrameCount;
             ((ModgfxState*)state)->blendColorStepG =
-                (tg - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xd]) / (f32) * (s16*)((char*)state + 0xfe);
+                (tg - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xd]) / (f32) ((ModgfxState*)state)->blendFrameCount;
             ((ModgfxState*)state)->blendColorStepB =
-                (tb - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xe]) / (f32) * (s16*)((char*)state + 0xfe);
+                (tb - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xe]) / (f32) ((ModgfxState*)state)->blendFrameCount;
         }
         else
         {
@@ -426,9 +426,9 @@ void fn_800A0524(void* state, void* p, int mode)
     }
     for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
     {
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xc] = (int)((ModgfxState*)state)->blendColorR;
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xd] = (int)((ModgfxState*)state)->blendColorG;
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xe] = (int)((ModgfxState*)state)->blendColorB;
+        buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xc] = (int)((ModgfxState*)state)->blendColorR;
+        buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xd] = (int)((ModgfxState*)state)->blendColorG;
+        buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xe] = (int)((ModgfxState*)state)->blendColorB;
     }
 }
 
@@ -522,7 +522,7 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
     int k = idx * 2;
     char* slots = (char*)state + 0x78;
     u8* bufB = *(u8**)(slots + ((ModgfxState*)state)->activeVertexBufferIndex * 4);
-    u8* bufA = *(u8**)((char*)state + 0x80);
+    u8* bufA = (u8*)((ModgfxState*)state)->baseVertexData;
     int j;
 
     if (mode == 1)
@@ -532,15 +532,15 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
         if (frames != 0)
         {
             ((f32*)((char*)state + 0xac))[k] =
-                (target - (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf]) / frames;
-            ((f32*)((char*)state + 0xb0))[k] = (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf];
+                (target - (f32)(u32)bufA[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xf]) / frames;
+            ((f32*)((char*)state + 0xb0))[k] = (f32)(u32)bufA[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xf];
         }
         else
         {
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
             {
-                bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = target;
-                bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
+                bufA[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf] = target;
+                bufB[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf] = bufA[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf];
             }
             return;
         }
@@ -563,8 +563,8 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
     {
         for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
-            bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = *(f32*)((char*)state + off);
-            bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
+            bufB[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf] = *(f32*)((char*)state + off);
+            bufA[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf] = bufB[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf];
         }
     }
 }
