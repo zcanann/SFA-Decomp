@@ -627,7 +627,7 @@ void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags)
     }
     else
     {
-        ((void (*)(GameObject*, f32*, int))Obj_BuildWorldTransformMatrix)(parent, parentMtx, 1);
+        Obj_BuildWorldTransformMatrix(parent, parentMtx, 1);
         PSMTXConcat((f32*)parentMtx, mtx, mtx);
     }
 }
