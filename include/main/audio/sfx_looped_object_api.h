@@ -4,7 +4,7 @@
 #include "types.h"
 
 void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
-void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
+void Sfx_RemoveLoopedObjectSound(u32 obj, u16 sfxId);
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
 
 #define Sfx_RemoveLoopedObjectSoundPtrU16Legacy(obj, sfxId)                                             \

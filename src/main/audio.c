@@ -243,7 +243,7 @@ void Sfx_ClearLoopedObjectSounds(void);
 void Sfx_UpdateLoopedObjectSounds(void);
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
-void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
+void Sfx_RemoveLoopedObjectSound(u32 obj, u16 sfxId);
 void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
 
 static inline void Music_FreeChannel(MusicChannel* ch)
@@ -3007,10 +3007,9 @@ void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
     }
 }
 
-void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
+void Sfx_RemoveLoopedObjectSound(u32 obj, u16 sfxId)
 {
     SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
-    u16 sfx16;
     u32* op;
     u16* ip;
     s16 i;
@@ -3021,10 +3020,9 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
     i = (s16)(gSfxLoopedObjectSoundCount - 1);
     op = (u32*)table->objects + i;
     ip = (u16*)table->ids + i;
-    sfx16 = sfxId;
     for (; i >= 0; i--)
     {
-        if (*op == obj && sfx16 == *ip)
+        if (*op == obj && sfxId == *ip)
         {
             gSfxLoopedObjectSoundCount--;
             sz = (u16)((gSfxLoopedObjectSoundCount - (index = (u16)i)) << 2);
