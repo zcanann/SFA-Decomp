@@ -41,6 +41,7 @@
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "main/dll/dll_0031_minimap.h"
 #include "main/minimap_api.h"
 #define TEXTRENDER_DIRECT_INT_CURSOR_CALL
 #include "main/textrender_api.h"

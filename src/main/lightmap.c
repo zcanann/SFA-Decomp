@@ -38,6 +38,7 @@
 #include "main/newshadows_shadow_api.h"
 #include "main/rcp_dolphin.h"
 #include "main/dll/dll_0000_gameui.h"
+#include "main/dll/dll_0031_minimap.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/savegame_env_api.h"
 #include "main/sky.h"
@@ -123,7 +124,6 @@ extern s16 lbl_803DCEBA;
 extern s16 lbl_803DCEB8;
 extern void* lbl_803DCE6C;
 extern void* lbl_803DCE68;
-extern void* gMinimapInterface;
 extern void* lbl_803DCAB0;
 extern s32 lbl_803DCE00;
 
@@ -1022,7 +1022,7 @@ void updateEnvironment(int mode)
         {
             (*(void (***)(void))lbl_803DCAB0)[2]();
         }
-        (*(void (***)(void))gMinimapInterface)[1]();
+        gMinimapInterface->vtable->frameStart();
 
         if (lbl_803DCE00 != 0)
         {

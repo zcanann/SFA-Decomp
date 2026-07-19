@@ -31,6 +31,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/camera.h"
+#include "main/carryable_interface.h"
 #include "main/checkpoint_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
@@ -71,6 +72,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/textrender_api.h"
 #include "main/object_render.h"
 #include "main/dll/dll_0011_screens.h"
+#include "main/dll/dll_0031_minimap.h"
 #include "main/dll/dll_000D_playershadow.h"
 #include "main/dll/dll_0004_dummy04.h"
 #include "main/dll/dll_003C_tumbleweedbush_api.h"
@@ -104,8 +106,8 @@ int lbl_803DCACC;
 f32 gGameLoopResetHoldTimer;
 u8 gGameLoopHardReset;
 u8 lbl_803DCAC4;
-void* gCarryableInterface;
-void* gMinimapInterface;
+CarryableInterface** gCarryableInterface;
+MinimapInterface* gMinimapInterface;
 int* gBaddieControlInterface;
 BoneParticleEffectInterface** gBoneParticleEffectInterface;
 void* lbl_803DCAB0;
@@ -228,8 +230,6 @@ extern int gGameLoopPlayerTrailIndex;
 extern u8 gGameLoopMusicActive;
 extern u8 gGameLoopProgressiveMode;
 extern void* lbl_803DCA94;
-extern void* gMinimapInterface;
-extern void* gCarryableInterface;
 extern u8 lbl_803DCA3F;
 extern int gGameLoopPlayerTrailTime;
 extern f32 lbl_803DE7B0;
@@ -1183,7 +1183,7 @@ void gameUpdate(void)
         {
             curUiDllDraw(0, 0, 0, 0);
         }
-        (*(void (**)(void))(*(int*)gMinimapInterface + 8))();
+        gMinimapInterface->vtable->update();
         if (gGameLoopButtonObjectCount == 0)
         {
             dvdCheckError();
