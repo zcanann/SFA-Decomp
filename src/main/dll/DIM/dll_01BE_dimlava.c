@@ -64,6 +64,16 @@ static inline int* DIMcannon_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
+static void lavaball1be_applyDebrisGravity(GameObject* obj)
+{
+    obj->anim.velocityY = -(0.05f * timeDelta - obj->anim.velocityY);
+}
+
+static void lavaball1be_scaleDebrisRootMotion(GameObject* obj)
+{
+    obj->anim.rootMotionScale *= 0.25f;
+}
+
 void lavaball1be_relaunch(s16* obj, int vertSpeed, int horizSpeed)
 {
     Lavaball1beState* state;
@@ -165,7 +175,7 @@ void lavaball1be_update(s16* obj)
         (*gPartfxInterface)->spawnObject(obj, LAVA1BE_PARTFX, NULL, 1, -1, NULL);
         ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + framesThisStep * 0x374;
         ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 0x12c;
-        ((GameObject*)obj)->anim.velocityY = -(0.05f * timeDelta - ((GameObject*)obj)->anim.velocityY);
+        lavaball1be_applyDebrisGravity((GameObject*)obj);
         ((GameObject*)obj)->userData1 = ((GameObject*)obj)->userData1 - framesThisStep;
         if (((GameObject*)obj)->userData1 < 0)
         {
@@ -269,7 +279,7 @@ void lavaball1be_init(s16* obj, u8* p)
         ((GameObject*)obj)->anim.velocityX = s.vec.x;
         ((GameObject*)obj)->anim.velocityY = s.vec.y;
         ((GameObject*)obj)->anim.velocityZ = s.vec.z;
-        ((GameObject*)obj)->anim.rootMotionScale *= 0.25f;
+        lavaball1be_scaleDebrisRootMotion((GameObject*)obj);
     }
     else
     {
