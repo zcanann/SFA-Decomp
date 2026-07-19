@@ -1592,12 +1592,12 @@ void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x40) != 0)
             {
-                Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy((int*)obj, SFXTRIG_forcecryslp11);
+                Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_forcecryslp11);
                 objParticleFn_80099d84((GameObject*)obj, lbl_803E256C, 5, ((EnemyState*)state)->particleScale, 0);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x80) != 0)
             {
-                Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy((int*)obj, SFXTRIG_forcecryslp11);
+                Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_forcecryslp11);
                 objParticleFn_80099d84((GameObject*)obj, lbl_803E25F8, 6, ((EnemyState*)state)->particleScale, 0);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x100) != 0)

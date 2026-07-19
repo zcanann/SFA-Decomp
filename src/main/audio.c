@@ -243,7 +243,6 @@ void AudioStream_PlayAddrCallback(u32 result);
 void Sfx_ClearLoopedObjectSounds(void);
 void Sfx_UpdateLoopedObjectSounds(void);
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
-void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
 void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
 void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
@@ -2979,7 +2978,7 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
     }
 }
 
-void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
+void Sfx_KeepAliveLoopedObjectSound(int obj, u16 sfxId)
 {
     Sfx_KeepAliveLoopedObjectSoundLimited(obj, sfxId, 0);
 }

@@ -107,8 +107,8 @@ void WaterFallSpray_update(int* objParam)
         {
             if ((data[0]->flags & 0x10) == 0)
             {
-                Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, state->sfxIdA & 0xffff);
-                Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, state->sfxIdB & 0xffff);
+                Sfx_KeepAliveLoopedObjectSound((int)obj, state->sfxIdA & 0xffff);
+                Sfx_KeepAliveLoopedObjectSound((int)obj, state->sfxIdB & 0xffff);
             }
 
             cooldown = ((GameObject*)obj)->userData1;
@@ -181,4 +181,3 @@ void WaterFallSpray_init(u8* obj, u8* dataRaw)
         ((WaterFallSprayState*)sub)->sfxIdB = WATERFALLSPRAY_DEFAULT_SFX_B;
     }
 }
-

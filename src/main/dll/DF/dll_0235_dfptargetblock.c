@@ -182,7 +182,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 
     if (0.0f != obj->velX)
     {
-        Sfx_KeepAliveLoopedObjectSoundPtrU16Legacy(obj, DFPTARGETBLOCK_LOOP_SFX);
+        Sfx_KeepAliveLoopedObjectSound((int)obj, DFPTARGETBLOCK_LOOP_SFX);
         velX = obj->velX;
         if (velX < 0.0f)
         {
@@ -199,7 +199,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 
     if (0.0f != obj->velZ)
     {
-        Sfx_KeepAliveLoopedObjectSoundPtrU16Legacy(obj, DFPTARGETBLOCK_LOOP_SFX);
+        Sfx_KeepAliveLoopedObjectSound((int)obj, DFPTARGETBLOCK_LOOP_SFX);
         velZ = obj->velZ;
         if (velZ < 0.0f)
         {
@@ -478,4 +478,3 @@ ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor = {
 void dfptargetblock_initialise(void)
 {
 }
-

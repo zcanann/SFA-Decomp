@@ -286,7 +286,7 @@ void dim2snowball_update(int* obj)
             *(int*)&((ObjHitsPriorityState*)m)->skeletonHitMask = 16;
         }
     }
-    Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_firlp6);
+    Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_firlp6);
 }
 
 void dim2snowball_init(int* obj, int* def)
