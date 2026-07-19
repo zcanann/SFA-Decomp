@@ -866,11 +866,11 @@ main/dll/dll_00A6_dlla6func0.c:
 	.text       start:0x800FF004 end:0x800FF6A0
 	.data       start:0x80318E10 end:0x80319398
 	.sdata      start:0x803DB980 end:0x803DB990
-	.sdata2     start:0x803E1530 end:0x803E1590
+	.sdata2     start:0x803E1530 end:0x803E1570
 
 main/dll/dll_00A7_dlla7func0.c:
 	.text       start:0x800FF6A0 end:0x800FFB44
-	.sdata2     start:0x803E1590 end:0x803E1598
+	.sdata2     start:0x803E1570 end:0x803E1598
 
 main/dll/dll_00A8_dlla8func0.c:
 	.text       start:0x800FFB44 end:0x800FFF04

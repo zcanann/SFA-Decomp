@@ -270,11 +270,3 @@ void* lbl_80319378[8] = {(void*)0x00000000,    (void*)0x00000000, (void*)0x00000
                          projdummy_initialise, projdummy_release, (void*)0x00000000, projdummy_doUnsupported};
 
 /* auto 0x803e1570-0x803e1590 */
-const f32 lbl_803E1570 = 0.0f;
-const f32 lbl_803E1574 = 7.0f;
-const f32 lbl_803E1578 = 6.0f;
-const f32 lbl_803E157C = 255.0f;
-const f32 lbl_803E1580 = 1.0f;
-const f32 lbl_803E1584 = 10.0f;
-const f32 lbl_803E1588 = 50.0f;
-const f32 lbl_803E158C = 0.0f;
