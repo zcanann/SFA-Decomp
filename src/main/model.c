@@ -1725,28 +1725,28 @@ void modelInitBoneMtxs(ObjModel* model, f32* out)
         PSMTXReorder(tmp, out + i * 12);
     }
 }
-void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
+void modelInitBoneMtxs2(ObjModel* model, f32* transform, f32* out)
 {
-    u8* dst;
+    f32* dst;
     int boneOff;
-    u8* hdr;
+    ModelFileHeader* hdr;
     u32 i;
     u8* mtx;
     ModelBone* bone;
     f32 tmp[12];
 
-    hdr = *(u8**)m;
-    if (((ModelFileHeader*)hdr)->jointCount == 0)
+    hdr = model->file;
+    if (hdr->jointCount == 0)
     {
         u32 cnt;
         int lim;
         int idx;
 
         idx = 0;
-        cnt = *(u8*)(*(u8**)m + 0xf3);
+        cnt = model->file->jointCount;
         if (cnt != 0)
         {
-            lim = cnt + *(u8*)(*(u8**)m + 0xf4);
+            lim = cnt + model->file->extraJointCount;
         }
         else
         {
@@ -1756,24 +1756,24 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
         {
             idx = 0;
         }
-        mtx = ((ObjModel*)m)->jointMatrices[((ObjModel*)m)->bufferFlags & 1] + idx * 0x40;
-        PSMTXConcat((f32*)out2, (f32*)mtx, (f32*)mtx);
+        mtx = model->jointMatrices[model->bufferFlags & 1] + idx * 0x40;
+        PSMTXConcat(transform, (f32*)mtx, (f32*)mtx);
     }
     else
     {
         i = 0;
         boneOff = 0;
         dst = out;
-        for (; i < ((ModelFileHeader*)hdr)->jointCount; i++)
+        for (; i < hdr->jointCount; i++)
         {
-            mtx = modelGetBoneMtx((ObjModel*)m, i);
-            bone = (ModelBone*)(((ModelFileHeader*)hdr)->jointData + boneOff);
+            mtx = modelGetBoneMtx(model, i);
+            bone = (ModelBone*)(hdr->jointData + boneOff);
             PSMTXTrans(tmp, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
             PSMTXConcat((f32*)mtx, tmp, tmp);
-            PSMTXReorder(tmp, (f32*)dst);
-            PSMTXConcat((f32*)out2, (f32*)mtx, (f32*)mtx);
+            PSMTXReorder(tmp, dst);
+            PSMTXConcat(transform, (f32*)mtx, (f32*)mtx);
             boneOff += 0x1c;
-            dst += 0x30;
+            dst += 12;
         }
     }
 }
@@ -2452,14 +2452,14 @@ void ObjModel_SetRenderCallback(u8* model, void* callback)
     ((ObjModel*)model)->renderCallback = callback;
 }
 
-void ObjModel_ToggleVertexBuffer(u8* model)
+void ObjModel_ToggleVertexBuffer(ObjModel* model)
 {
-    ((ObjModel*)model)->bufferFlags ^= 2;
+    model->bufferFlags ^= 2;
 }
 
-void ObjModel_ToggleMatrixBuffer(u8* model)
+void ObjModel_ToggleMatrixBuffer(ObjModel* model)
 {
-    ((ObjModel*)model)->bufferFlags ^= 1;
+    model->bufferFlags ^= 1;
 }
 
 /* Per-bone delta-transform opcode bits: a set bit means the X/Y/Z
@@ -2577,14 +2577,14 @@ extern s16 gModelRootRotX;
 extern s16 gModelRootRotY;
 extern s16 gModelRootRotZ;
 
-void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
+void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameObject* obj, f32* dst)
 {
     ObjAnimState* ch;
     ObjAnimState* ch2;
     f32 pos[3];
     s16 rot[3];
 
-    ObjModel_BuildAnimBlendTable(obj, *(u8**)(model + 0x2c), blend);
+    ObjModel_BuildAnimBlendTable((u8*)obj, *(u8**)((u8*)model + 0x2c), (u8*)blend);
     ((ObjModel*)model)->bufferFlags ^= 1;
     ch = ((ObjModel*)model)->animStateA;
     if (ch->moveControlFlags & 4)
@@ -2597,30 +2597,30 @@ void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
     }
     if (*(u16*)(*(u8**)model + 2) & 8)
     {
-        modelWalkAnimFn_800248b8(dst, model, *(u8**)(model + 0x2c),
+        modelWalkAnimFn_800248b8((u8*)dst, (u8*)model, *(u8**)((u8*)model + 0x2c),
                                  ((GameObject*)obj)->anim.currentMoveProgress, 0x7f);
     }
     else if (((ObjAnimState*)((ObjModel*)model)->animStateA)->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP)
     {
         ch2 = ((ObjModel*)model)->animStateB;
-        modelAnimFn_800246a0(dst, model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 0, 2, 0x14,
+        modelAnimFn_800246a0((u8*)dst, (u8*)model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 0, 2, 0x14,
                              (s16)ch->eventState);
-        modelAnimFn_800246a0(dst, model, (u8*)ch2, ((GameObject*)obj)->anim.activeMoveProgress, 0x7f, 0, 0, 2, 0x18,
+        modelAnimFn_800246a0((u8*)dst, (u8*)model, (u8*)ch2, ((GameObject*)obj)->anim.activeMoveProgress, 0x7f, 0, 0, 2, 0x18,
                              (s16)ch2->eventState);
-        modelAnimFn_800246a0(dst, model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 0, 0, 7,
+        modelAnimFn_800246a0((u8*)dst, (u8*)model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 0, 0, 7,
                              (s16)ch2->eventCountdown);
-        modelAnimFn_800246a0(dst, model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 1, 1, 1,
+        modelAnimFn_800246a0((u8*)dst, (u8*)model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 1, 1, 1,
                              (s16)ch->eventCountdown);
     }
     else
     {
-        modelWalkAnimFn_800248b8(dst, model, *(u8**)(model + 0x2c),
+        modelWalkAnimFn_800248b8((u8*)dst, (u8*)model, *(u8**)((u8*)model + 0x2c),
                                  ((GameObject*)obj)->anim.currentMoveProgress, 0x7f);
         ch2 = ((ObjModel*)model)->animStateB;
         if (ch2 != NULL && ((GameObject*)obj)->anim.activeMove > -1)
         {
-            ObjModel_BuildAnimBlendTable(obj, *(u8**)(model + 0x30), blend);
-            modelWalkAnimFn_800248b8(dst, model, *(u8**)(model + 0x30),
+            ObjModel_BuildAnimBlendTable((u8*)obj, *(u8**)((u8*)model + 0x30), (u8*)blend);
+            modelWalkAnimFn_800248b8((u8*)dst, (u8*)model, *(u8**)((u8*)model + 0x30),
                                      ((GameObject*)obj)->anim.activeMoveProgress, -1);
         }
     }

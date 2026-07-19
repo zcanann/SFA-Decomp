@@ -1493,7 +1493,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         {
             if (gObjCachedModel != (u32)m)
             {
-                ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, gObjJointMtxTemp);
+                ObjModel_UpdateAnimMatrices((ObjModel*)am, (ModelFileHeader*)m, (GameObject*)obj, gObjJointMtxTemp);
                 modelInitMtxs((ModelFileHeader*)m, (ObjModel*)am);
             }
             else
@@ -1503,7 +1503,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         }
         else
         {
-            ObjModel_ToggleMatrixBufferIntLegacy(am);
+            ObjModel_ToggleMatrixBuffer((ObjModel*)am);
             PSMTXCopy(gObjJointMtxTemp, (f32*)ObjModel_GetJointMatrix((u8*)am, 0));
             lbl_803DCC48 = 3;
         }
@@ -1784,20 +1784,20 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     {
         did = 0;
         *(u8*)((char*)am + 0x60) = 0;
-        ObjModel_ToggleVertexBufferIntLegacy(am);
+        ObjModel_ToggleVertexBuffer((ObjModel*)am);
         if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
             ((ModelFileHeader*)m)->jointCount != 0)
         {
             if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries != 0)
             {
                 PSMTXIdentity(im);
-                ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, im);
-                modelInitBoneMtxs2IntLegacy(am, wm, gObjBoneMtxBuffer);
+                ObjModel_UpdateAnimMatrices((ObjModel*)am, (ModelFileHeader*)m, (GameObject*)obj, im);
+                modelInitBoneMtxs2((ObjModel*)am, wm, gObjBoneMtxBuffer);
                 did = 1;
             }
             else
             {
-                ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, wm);
+                ObjModel_UpdateAnimMatrices((ObjModel*)am, (ModelFileHeader*)m, (GameObject*)obj, wm);
             }
             {
                 ObjShadowCb cb = *(ObjShadowCb*)((char*)obj + 0x108);
@@ -1809,12 +1809,12 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         }
         else
         {
-            ObjModel_ToggleMatrixBufferIntLegacy(am);
+            ObjModel_ToggleMatrixBuffer((ObjModel*)am);
             PSMTXCopy(wm, (f32*)ObjModel_GetJointMatrix((u8*)am, 0));
         }
         if (((ModelFileHeader*)m)->morphTargetCount != 0)
         {
-            ObjModel_ApplyBlendChannelsIntLegacy(am);
+            ObjModel_ApplyBlendChannels((ObjModel*)am);
         }
         if (did != 0)
         {
@@ -1822,17 +1822,18 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             vtx = *(u8*)((char*)am + 0x60) != 0
                 ? ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]
                 : *(int*)&((ModelFileHeader*)m)->vertices;
-            ObjModel_BlendVertexStreamIntLegacy(
-                gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->jointBlendData,
-                ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
-            ObjModel_BlendNormalStreamIntLegacy(gObjBoneMtxBuffer, m + 0xac,
-                                                *(int*)&((ModelFileHeader*)m)->normals,
-                                                *(int*)((char*)am + 0x44),
-                                                ((ModelFileHeader*)m)->flags24 & 8);
+            ObjModel_BlendVertexStream(
+                (u8*)gObjBoneMtxBuffer, m + 0x88, (u8*)vtx,
+                (int*)*(int*)&((ModelFileHeader*)am)->jointBlendData,
+                (u8*)((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
+            ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, m + 0xac,
+                                       (u8*)*(int*)&((ModelFileHeader*)m)->normals,
+                                       (u8**)*(int*)((char*)am + 0x44),
+                                       ((ModelFileHeader*)m)->flags24 & 8);
         }
         if (((ModelFileHeader*)m)->hitSphereCount != 0)
         {
-            objUpdateHitSpheresIntLegacy(am, m, obj, 0, obj2);
+            objUpdateHitSpheres((u8*)am, m, (u8*)obj, NULL, (u8*)obj2);
         }
         else
         {
@@ -2092,17 +2093,17 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     if (!(*(u16*)((char*)am + 0x18) & 8))
     {
         *(u8*)((char*)am + 0x60) = 0;
-        ObjModel_ToggleVertexBufferIntLegacy(am);
+        ObjModel_ToggleVertexBuffer((ObjModel*)am);
         if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
             ((ModelFileHeader*)m)->jointCount != 0)
         {
             if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries != 0)
             {
                 PSMTXIdentity(im);
-                ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, im);
+                ObjModel_UpdateAnimMatrices((ObjModel*)am, (ModelFileHeader*)m, (GameObject*)obj, im);
                 if (m4 == 0)
                 {
-                    modelInitBoneMtxs2IntLegacy(am, wm, gObjBoneMtxBuffer);
+                    modelInitBoneMtxs2((ObjModel*)am, wm, gObjBoneMtxBuffer);
                 }
                 else
                 {
@@ -2112,7 +2113,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             }
             else
             {
-                ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, wm);
+                ObjModel_UpdateAnimMatrices((ObjModel*)am, (ModelFileHeader*)m, (GameObject*)obj, wm);
             }
             {
                 ObjShadowCb cb = *(ObjShadowCb*)((char*)obj + 0x108);
@@ -2124,14 +2125,14 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         }
         else
         {
-            ObjModel_ToggleMatrixBufferIntLegacy(am);
+            ObjModel_ToggleMatrixBuffer((ObjModel*)am);
             PSMTXCopy(wm, (f32*)ObjModel_GetJointMatrix((u8*)am, 0));
         }
         if ((m4 == 0 && (mode8 & 8) == 0) || lbl_803DCC44 == 0)
         {
             if (((ModelFileHeader*)m)->morphTargetCount != 0)
             {
-                ObjModel_ApplyBlendChannelsIntLegacy(am);
+                ObjModel_ApplyBlendChannels((ObjModel*)am);
             }
             if (did != 0)
             {
@@ -2139,18 +2140,19 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 vtx = *(u8*)((char*)am + 0x60) != 0
                     ? ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]
                     : *(int*)&((ModelFileHeader*)m)->vertices;
-                ObjModel_BlendVertexStreamIntLegacy(
-                    gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->jointBlendData,
-                    ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
-                ObjModel_BlendNormalStreamIntLegacy(gObjBoneMtxBuffer, m + 0xac,
-                                                    *(int*)&((ModelFileHeader*)m)->normals,
-                                                    *(int*)((char*)am + 0x44),
-                                                    ((ModelFileHeader*)m)->flags24 & 8);
+                ObjModel_BlendVertexStream(
+                    (u8*)gObjBoneMtxBuffer, m + 0x88, (u8*)vtx,
+                    (int*)*(int*)&((ModelFileHeader*)am)->jointBlendData,
+                    (u8*)((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
+                ObjModel_BlendNormalStream((u8*)gObjBoneMtxBuffer, m + 0xac,
+                                           (u8*)*(int*)&((ModelFileHeader*)m)->normals,
+                                           (u8**)*(int*)((char*)am + 0x44),
+                                           ((ModelFileHeader*)m)->flags24 & 8);
             }
         }
         if (((ModelFileHeader*)m)->hitSphereCount != 0)
         {
-            objUpdateHitSpheresIntLegacy(am, m, obj, 0, obj2);
+            objUpdateHitSpheres((u8*)am, m, (u8*)obj, NULL, (u8*)obj2);
         }
         else
         {
