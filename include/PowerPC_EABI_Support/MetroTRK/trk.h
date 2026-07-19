@@ -2,6 +2,7 @@
 #define __METROTRK_TRK_H__
 
 #include "dolphin/types.h"
+#include "dolphin/TRK_MINNOW_DOLPHIN/MWTrace.h"
 #include "PowerPC_EABI_Support/MetroTRK/dstypes.h"
 #include "PowerPC_EABI_Support/MetroTRK/trkenum.h"
 #include "PowerPC_EABI_Support/MetroTRK/trktypes.h"
@@ -109,8 +110,6 @@ DSError TRKInitializeTarget(void);
 
 void UnreserveEXI2Port(void);
 void ReserveEXI2Port(void);
-
-void MWTRACE(u8, char*, ...);
 
 DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 p1, u32 p2, int p3);
 

@@ -18,6 +18,7 @@
  * LINK_FLAG_DISABLE_NAV_TO / LINK_FLAG_NO_ACCEPT. GameBit 0x44f gates accept.
  */
 #include "dolphin/os/OSReport.h"
+#include "dolphin/TRK_MINNOW_DOLPHIN/MWTrace.h"
 #include "track/intersect_hud_api.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_command_api.h"
@@ -57,7 +58,6 @@ extern char sTumbleweedBushSlotOverflowErr[]; /* "too many slots" overflow error
 extern char sTumbleweedBushNavLinkRangeErr[]; /* base of the nav-link out-of-range error format strings */
 
 extern u8 lbl_802C8680[];
-extern void MWTRACE(int boxId);
 #define PAD_BUTTON_A     0x100
 #define PAD_BUTTON_B     0x200
 #define PAD_BUTTON_START 0x1000

@@ -1,4 +1,5 @@
 #include "dolphin.h"
+#include "dolphin/TRK_MINNOW_DOLPHIN/MWTrace.h"
 
 extern char gTextBoxes[];
 extern volatile u32 lbl_8033A540[][5];

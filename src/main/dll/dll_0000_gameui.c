@@ -1,6 +1,7 @@
 /* In-game HUD, C-menu, head display, and pause-menu implementation. */
 #include "main/dll/ppcwgpipe_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
+#include "dolphin/TRK_MINNOW_DOLPHIN/MWTrace.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_depth_read_api.h"
 #include "main/frame_timing.h"
@@ -707,7 +708,6 @@ extern const f32 lbl_803E20F8;
 extern const f32 lbl_803E20FC;
 extern const f32 lbl_803E2100;
 extern u8 gGameUiTaskHintCandidates[8];
-extern void MWTRACE(int boxId);
 extern char sBabySnowwormTimerFormat[];
 extern s16 gTimeListPulseAngle;
 extern s16 gTimeListPulseAngleStep;
