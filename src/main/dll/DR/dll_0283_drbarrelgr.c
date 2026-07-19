@@ -222,7 +222,7 @@ void DR_BarrelGr_update(GameObject* obj)
             gunpowderbarrel_setHeldState(state->heldBarrel);
             newMode = state->prevMode;
             flags->bit80 = 1;
-            ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, 0, lbl_803E6CA4, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E6CA4, 0);
         }
         break;
     case DRBARRELGR_MODE_CARRY:
@@ -272,7 +272,7 @@ void DR_BarrelGr_update(GameObject* obj)
         {
             gunpowderbarrel_clearHeldState(state->heldBarrel);
             flags->bit80 = 0;
-            ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, 0, lbl_803E6CA4, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E6CA4, 0);
         }
         state->heldBarrel = NULL;
         newMode = state->prevMode;

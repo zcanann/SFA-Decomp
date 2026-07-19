@@ -4641,7 +4641,7 @@ int playerState25(int obj, int state)
                     ObjAnim_SetCurrentMove(obj, gPlayerMoveTableB[inner->gaitLevel], t0, 0);
                     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA == 0)
                     {
-                        ((void (*)(int, int))ObjAnim_SetCurrentEventStepFrames)(obj, 0xc);
+                        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
                     }
                 }
             }
@@ -4659,7 +4659,7 @@ int playerState25(int obj, int state)
                     ObjAnim_SetCurrentMove(obj, (gPlayerMoveTableB + 2)[inner->gaitLevel], t0, 0);
                     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA == 0)
                     {
-                        ((void (*)(int, int))ObjAnim_SetCurrentEventStepFrames)(obj, 0xc);
+                        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
                     }
                 }
             }
@@ -5822,8 +5822,8 @@ int playerState19(GameObject* obj, int state)
             inner->yaw = inner->targetYaw;
         }
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E7EA4, 1);
-        ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)((int)obj, OBJANIM_STATE_INDEX_CURRENT,
-                                                               OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
+        ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT,
+                               OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
         (*(void (*)(int, int))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x3c)))(sub, 0);
         fn_802AB5A4(obj, (int)inner, 7);
         ObjHits_EnableObject(obj);
@@ -7729,12 +7729,12 @@ int playerStateClimbOntoLadder(GameObject* obj, int state, f32 fv)
             obj->anim.localPosY = c * (lbl_803DE43C - lbl_803DE438) + inner->climbStartY;
         }
     }
-    ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)((int)obj, OBJANIM_STATE_INDEX_CURRENT,
-                                                           OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
-    ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)((int)obj, OBJANIM_STATE_INDEX_ACTIVE,
-                                                           OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
-    ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)((int)obj, OBJANIM_STATE_INDEX_ACTIVE,
-                                                           OBJANIM_STATE_WORD_EVENT_COUNTDOWN, inner->eventCountdown);
+    ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT,
+                           OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
+    ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_ACTIVE,
+                           OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
+    ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_ACTIVE,
+                           OBJANIM_STATE_WORD_EVENT_COUNTDOWN, inner->eventCountdown);
     Object_ObjAnimAdvanceMove((int)obj, ((PlayerState*)state)->baddie.moveSpeed, fv, NULL);
     (*gCameraInterface)
         ->overridePos(obj->anim.localPosX,
@@ -9906,7 +9906,7 @@ int playerStateIdle(int obj, int state, f32 fv)
             ((PlayerState*)state)->baddie.moveSpeed = fv;
             if (move == 0x5d)
             {
-                ((void (*)(int, int))ObjAnim_SetCurrentEventStepFrames)(obj, 0x1e);
+                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x1e);
             }
         }
     }

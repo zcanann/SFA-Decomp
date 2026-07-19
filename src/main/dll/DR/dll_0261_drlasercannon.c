@@ -507,7 +507,7 @@ void DR_LaserCannon_update(GameObject* obj)
                                                                 0x24))(spawned, outv, inv,
                                                                        setup->beamSpeed / lbl_803E6908);
                             state->beamObject = spawned;
-                            ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, 1, lbl_803E690C, 0);
+                            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E690C, 0);
                             state->animStepScale = lbl_803E6910;
                             ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_wp_cahit2_c);
                             ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_wp_blasershot11);
@@ -569,7 +569,7 @@ void DR_LaserCannon_update(GameObject* obj)
     hit = ObjAnim_AdvanceCurrentMove((int)obj, state->animStepScale, timeDelta, 0);
     if ((obj)->anim.currentMove == 1 && hit != 0)
     {
-        ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, 0, lbl_803E690C, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E690C, 0);
         state->animStepScale = lbl_803E6920;
     }
     *(u16*)&state->bobPhase = (lbl_803E6924 * timeDelta + (f32)(u32)state->bobPhase);
