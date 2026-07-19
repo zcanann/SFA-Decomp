@@ -7,19 +7,19 @@
 
 typedef struct SquadFlags
 {
-    u8 b80 : 1;
-    u8 b40 : 1;
-    u8 b20 : 1;
-    u8 b10 : 1;
+    u8 attackWindowOpen : 1;
+    u8 followingCurve : 1;
+    u8 volleyInProgress : 1;
+    u8 acceptsDamage : 1;
 } SquadFlags;
 
 typedef struct SquadCmdFlags
 {
-    u8 f80 : 1;
-    u8 f40 : 1;
-    u8 f20 : 1;
-    u8 f10 : 1;
-    u8 f08 : 1;
+    u8 attackWindowOpen : 1;
+    u8 followingCurve : 1;
+    u8 volleyInProgress : 1;
+    u8 acceptsDamage : 1;
+    u8 rollCmdActive : 1;
     u8 : 3;
 } SquadCmdFlags;
 

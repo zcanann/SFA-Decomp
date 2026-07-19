@@ -142,31 +142,31 @@ void arwsquadron_applyCommandParams(GameObject* obj, ArwSquadronState* state)
                 state->targetPathSpeed = val * speedScale;
                 break;
             case 1:
-                if (!flags->f80)
+                if (!flags->attackWindowOpen)
                 {
                     ArwSquadronSetup* setup;
-                    flags->f80 = 1;
+                    flags->attackWindowOpen = 1;
                     setup = (ArwSquadronSetup*)obj->anim.placementData;
                     if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
                     {
-                        flags->f20 = 0;
+                        flags->volleyInProgress = 0;
                         storeZeroToFloatParam(&state->volleyCooldownTimer);
                         s16toFloat(&state->volleyCooldownTimer, setup->volleyCooldown);
                     }
                 }
                 break;
             case 2:
-                flags->f80 = 0;
+                flags->attackWindowOpen = 0;
                 break;
             case 4:
-                if (!flags->f08)
+                if (!flags->rollCmdActive)
                 {
-                    flags->f08 = 1;
+                    flags->rollCmdActive = 1;
                     state->rotZSpeed = 4.0f * val;
                 }
                 break;
             case 5:
-                flags->f08 = 0;
+                flags->rollCmdActive = 0;
                 break;
             }
         }
@@ -205,15 +205,15 @@ void arwsquadron_followLeader(GameObject* obj, ArwSquadronState* state)
     objAnim->velocityZ = leaderAnim->velocityZ;
     objAnim->rotX = leaderAnim->rotX;
     objAnim->rotY = leaderAnim->rotY;
-    if (!state->flags.cmd.f08)
+    if (!state->flags.cmd.rollCmdActive)
     {
         objAnim->rotZ = state->rollAmplitude *
                             mathSinf(3.14159265f * state->swayPhaseX / 32768.0f) +
                         leaderAnim->rotZ;
     }
-    state->flags.cmd.f80 = leaderState->flags.cmd.f80;
+    state->flags.cmd.attackWindowOpen = leaderState->flags.cmd.attackWindowOpen;
     if (state->rotZSpeed > 0)
-        state->flags.cmd.f08 = leaderState->flags.cmd.f08;
+        state->flags.cmd.rollCmdActive = leaderState->flags.cmd.rollCmdActive;
     if (leaderState->phase == ARW_SQUADRON_STATE_DISABLED)
     {
         objAnim->flags |= OBJANIM_FLAG_HIDDEN;
@@ -248,7 +248,7 @@ void arwsquadron_followPath(GameObject* obj, ArwSquadronState* state)
                                                    1.0f);
             else
                 Obj_SmoothTurnAnglesTowardVelocity(obj, (const Vec3f*)&objAnim->velocityX, 0xf,
-                                                   state->flags.cmd.f08 ? 0.0f : 50.0f, 1.0f);
+                                                   state->flags.cmd.rollCmdActive ? 0.0f : 50.0f, 1.0f);
         }
         state->pathSpeed += interpolate(state->targetPathSpeed - state->pathSpeed, 0.1f, timeDelta);
         objMove((GameObject*)obj, objAnim->velocityX * timeDelta, objAnim->velocityY * timeDelta,
@@ -297,7 +297,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
         squad->hitFlashTimer -= timeDelta;
         if (squad->hitFlashTimer <= 0.0f)
             squad->hitFlashActive = 0;
-        if (flags->f10)
+        if (flags->acceptsDamage)
         {
             squad->hitFadeRed = 12816.0f * timeDelta + (f32) * (u16*)&squad->hitFadeRed;
             squad->hitFadeGreen = 10304.0f * timeDelta + (f32) * (u16*)&squad->hitFadeGreen;
@@ -306,7 +306,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, &hitVol) != 0 ||
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->lastHitObject != 0)
     {
-        if (flags->f10)
+        if (flags->acceptsDamage)
         {
             if (squad->hitFlashActive == 0)
                 Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_wmap_nameoff_29e, 4);
@@ -362,11 +362,11 @@ void arwsquadron_updateVolley(GameObject* obj, ArwSquadronState* state, ArwSquad
 {
     SquadCmdFlags* flags = &state->flags.cmd;
 
-    if (!flags->f20)
+    if (!flags->volleyInProgress)
     {
         if (timerCountDown(&state->volleyCooldownTimer) != 0)
         {
-            flags->f20 = 1;
+            flags->volleyInProgress = 1;
             storeZeroToFloatParam(&state->shotIntervalTimer);
             s16toFloat(&state->shotIntervalTimer, setup->shotInterval);
             *(s8*)&state->volleyShotsRemaining = setup->shotsPerVolley;
@@ -385,7 +385,7 @@ void arwsquadron_updateVolley(GameObject* obj, ArwSquadronState* state, ArwSquad
         state->volleyAngle += setup->volleyAngleSpread * 2 / setup->shotsPerVolley;
         if ((s8)state->volleyShotsRemaining <= 0)
         {
-            flags->f20 = 0;
+            flags->volleyInProgress = 0;
             storeZeroToFloatParam(&state->volleyCooldownTimer);
             s16toFloat(&state->volleyCooldownTimer, setup->volleyCooldown);
         }
@@ -475,7 +475,7 @@ void ARWSquadron_update(int obj)
                 ArwSquadronSetup* volleyPlacement = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
                 if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
                 {
-                    flags->f20 = 0;
+                    flags->volleyInProgress = 0;
                     storeZeroToFloatParam(&state->volleyCooldownTimer);
                     s16toFloat(&state->volleyCooldownTimer, volleyPlacement->volleyCooldown);
                 }
@@ -514,7 +514,7 @@ void ARWSquadron_update(int obj)
                 ((GameObject*)obj)->anim.rotX = state->rotXSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotX;
                 ((GameObject*)obj)->anim.rotY = state->rotYSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotY;
             }
-            if (flags->f08 || setup->pathMode != 2)
+            if (flags->rollCmdActive || setup->pathMode != 2)
             {
                 ((GameObject*)obj)->anim.rotZ = state->rotZSpeed * timeDelta + (f32)((GameObject*)obj)->anim.rotZ;
             }
@@ -523,11 +523,11 @@ void ARWSquadron_update(int obj)
         {
             arwsquadron_followLeader((GameObject*)obj, state);
         }
-        else if (flags->f40)
+        else if (flags->followingCurve)
         {
             arwsquadron_followPath((GameObject*)obj, state);
         }
-        if (flags->f80)
+        if (flags->attackWindowOpen)
         {
             ArwSquadronSetup* volleyPlacement = *(ArwSquadronSetup**)&((GameObject*)obj)->anim.placementData;
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWSQUADRON_HIT_VOLUME_SLOT, state->hitVolumeMode, 0);
@@ -567,7 +567,7 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
     obj->anim.rotX = setupData->rotX << 8;
     obj->anim.rotY = setupData->rotY << 8;
     obj->anim.rotZ = setupData->rotZ << 8;
-    flags->b10 = 1;
+    flags->acceptsDamage = 1;
     state->health = 1;
     state->pathSpeed = (f32)(u32)setupData->pathSpeed * pathSpeedScale;
     state->targetPathSpeed = state->pathSpeed;
@@ -581,7 +581,7 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
         state->variant = ARW_SQUADRON_VARIANT_ASTEROID;
         if (setupData->objectId == ARW_SQUADRON_BIGASTEROID_OBJ)
         {
-            flags->b10 = 0;
+            flags->acceptsDamage = 0;
         }
         if (setupData->objectId == ARW_SQUADRON_BIGASTEROID_OBJ)
         {
@@ -604,12 +604,12 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
         state->rotXSpeed = randomGetRange(-0x12c, 0x12c);
         state->rotYSpeed = randomGetRange(-0x12c, 0x12c);
         state->rotZSpeed = randomGetRange(-0x12c, 0x12c);
-        flags->b80 = 1;
+        flags->attackWindowOpen = 1;
     }
     else if (setupData->objectId == ARW_SQUADRON_OBJ)
     {
         state->variant = ARW_SQUADRON_VARIANT_SQUADRON;
-        flags->b10 = 0;
+        flags->acceptsDamage = 0;
         state->activationDistance = 10000.0f;
     }
     else
@@ -622,7 +622,7 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
         state->damageSmokeScale = 4.2f;
         fxScale = 4.0f;
         state->fireFxScale = fxScale;
-        flags->b80 = 1;
+        flags->attackWindowOpen = 1;
         switch (obj->anim.seqId)
         {
         case ARW_SQUADRON_SEQID_SHIP_TWIN:
@@ -671,7 +671,7 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
         }
         if ((*gRomCurveInterface)->initCurve(&state->curve, obj, 200.0f, &curveMode, -1) == 0)
         {
-            flags->b40 = 1;
+            flags->followingCurve = 1;
             obj->anim.localPosX = state->curve.posX;
             obj->anim.localPosY = state->curve.posY;
             obj->anim.localPosZ = state->curve.posZ;
