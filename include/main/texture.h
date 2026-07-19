@@ -23,7 +23,8 @@
  * do not take sizeof or index arrays of it.
  */
 typedef struct Texture {
-    u8 unk00[0xA];
+    struct Texture* nextAnimationFrame;
+    u8 unk04[0x06];
     u16 width;
     u16 height;
     u16 refCount;
@@ -51,6 +52,7 @@ typedef struct Texture {
     u8 unk54[0xC];
 } Texture;
 
+STATIC_ASSERT(offsetof(Texture, nextAnimationFrame) == 0x00);
 STATIC_ASSERT(offsetof(Texture, width) == 0xA);
 STATIC_ASSERT(offsetof(Texture, animationFrameCount) == 0x10);
 STATIC_ASSERT(offsetof(Texture, animationFrameStep) == 0x14);

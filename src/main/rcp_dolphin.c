@@ -1345,33 +1345,34 @@ void fn_800541A4(Texture* texture, u16 frameStep)
     texture->animationFrameStep = frameStep;
 }
 
-void textureFn_800541ac(int p1 /* unused */, int* tex, void* forceTex, int flags, int packed, int wpad0, int wpad1)
+void textureFn_800541ac(void* context, Texture* texture, Texture* forcedTexture, int flags, int packed, int unused0,
+                        int unused1)
 {
     int i;
     int idx, count;
-    int* node;
-    int* cur;
-    int* result;
-    int* walk;
+    Texture* node;
+    Texture* current;
+    Texture* result;
+    Texture* walk;
     u16 f10;
 
-    if (tex == NULL)
+    if (texture == NULL)
         return;
     idx = packed >> 16;
-    f10 = ((Texture*)tex)->animationFrameCount;
+    f10 = texture->animationFrameCount;
     if (f10 != 0)
         count = f10 >> 8;
     else
         count = 0;
-    cur = tex;
-    result = tex;
+    current = texture;
+    result = texture;
     if (count > 1 && idx < count)
     {
-        node = tex;
+        node = texture;
         for (i = 0; i < idx && node != NULL; i++)
-            node = *(int**)node;
+            node = node->nextAnimationFrame;
         if (node != NULL)
-            cur = node;
+            current = node;
         if (flags & 0x40)
         {
             if (flags & 0x80000)
@@ -1396,21 +1397,21 @@ void textureFn_800541ac(int p1 /* unused */, int* tex, void* forceTex, int flags
                         idx = count - 1;
                 }
             }
-            walk = tex;
+            walk = texture;
             for (i = 0; i < idx && walk != NULL; i++)
-                walk = *(int**)walk;
+                walk = walk->nextAnimationFrame;
             if (walk != NULL)
                 result = walk;
         }
         else
         {
-            result = cur;
+            result = current;
         }
     }
-    if (forceTex != NULL)
-        result = forceTex;
-    selectTexture((Texture*)((int)cur), 0);
-    selectTexture((Texture*)((int)result), 1);
+    if (forcedTexture != NULL)
+        result = forcedTexture;
+    selectTexture(current, 0);
+    selectTexture(result, 1);
 }
 
 void fn_800542F4(void)
