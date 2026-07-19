@@ -54,7 +54,7 @@
 #include "main/dll/mikaladon.h"
 #include "main/dll/baddiewhirlpool.h"
 #include "main/dll/newseqobj_baddie.h"
-#include "main/dll/dll_010B_fireflylantern.h"
+#include "main/dll/fireflyLantern.h"
 #include "main/dll/firecrawler_baddie.h"
 #include "main/dll/seqobj11e_baddie.h"
 #include "main/dll/wispbaddie_baddie.h"
@@ -126,7 +126,6 @@ extern f32 lbl_803E25F4;
 extern f32 lbl_803E25D8;
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25E8;
-extern u32 fn_80154C24();
 extern void* lbl_803DDA50;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;

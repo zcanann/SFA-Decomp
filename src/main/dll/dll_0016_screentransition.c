@@ -17,7 +17,6 @@ f32 screenTransitionAlpha;
 
 
 extern f32 gScreenTransitionHoldDuration;
-extern void setHudOpacity(int op);
 
 static inline void screenTransitionFadeBlack(void)
 {
