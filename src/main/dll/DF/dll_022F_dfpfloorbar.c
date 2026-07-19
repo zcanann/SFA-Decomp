@@ -16,7 +16,7 @@
 #include "main/obj_list.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/gamebit_ids.h"
@@ -70,7 +70,7 @@ void DFP_Floorbar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 t = visible;
     if (t != 0)
     {
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
     }
 }
 

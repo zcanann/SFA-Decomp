@@ -10,7 +10,7 @@
 #include "main/objtexture.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 typedef struct DFSHDoor2SpeciPlacement
 {
@@ -111,7 +111,7 @@ void DFSH_Door2Speci_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     visibleFlag = visible;
     if (visibleFlag != 0)
     {
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4E38);
+        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E4E38);
     }
 }
 

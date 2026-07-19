@@ -20,7 +20,7 @@
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "main/voxmaps.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
@@ -93,7 +93,7 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
     }
     else
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         if (state->lit != 0)
         {
             state->visibleLatch = 1;

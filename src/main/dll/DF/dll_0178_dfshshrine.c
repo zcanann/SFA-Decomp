@@ -11,7 +11,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/audio_control_api.h"
 #include "main/audio/music_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/pi_dolphin_api.h"
 #include "main/map_load.h"
 #include "main/model_light.h"
@@ -316,7 +316,7 @@ void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             modelLightStruct_setEnabled(light, 1, 1.0f);
         }
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
         objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f,
                                (ModelLightStruct*)state->light);
     }
@@ -562,4 +562,3 @@ void DFSH_Shrine_release(void)
 void DFSH_Shrine_initialise(void)
 {
 }
-
