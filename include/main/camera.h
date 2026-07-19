@@ -130,7 +130,7 @@ void Camera_SetCurrentViewRotation(int yaw, int pitch, int roll);
 void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
 void Camera_UpdateViewMatrices(void);
 void Camera_ApplyFullViewport(void);
-u8 Camera_IsViewYOffsetEnabled(void);
+int Camera_IsViewYOffsetEnabled(void);
 void Camera_DisableViewYOffset(void);
 void Camera_EnableViewYOffset(void);
 s16 Camera_GetViewportYOffset(void);

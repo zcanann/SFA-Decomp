@@ -3974,7 +3974,7 @@ void hudDrawCMenu(int p1, int p2, int p3)
     lbl_803DBAA4 = Camera_GetFovY();
     Camera_SetFovY(lbl_803E2020);
     Camera_SetCurrentViewIndex(1);
-    lbl_803DD7E0 = ((int (*)(void))Camera_IsViewYOffsetEnabled)();
+    lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
     Camera_DisableViewYOffset();
     {
         f32 small = lbl_803E1E3C;
@@ -4352,7 +4352,7 @@ void drawFn_80125424(void)
         lbl_803DBAA4 = Camera_GetFovY();
         Camera_SetFovY(lbl_803E2044);
         Camera_SetCurrentViewIndex(1);
-        lbl_803DD7E0 = ((int (*)(void))Camera_IsViewYOffsetEnabled)();
+        lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
         Camera_DisableViewYOffset();
         cameraOrigin = lbl_803E1E3C;
         Camera_SetCurrentViewPosition(cameraOrigin, cameraOrigin, cameraOrigin);
@@ -5810,7 +5810,7 @@ void pauseMenuDoSave(void)
     lbl_803DBAA4 = Camera_GetFovY();
     Camera_SetFovY(lbl_803E2044);
     Camera_SetCurrentViewIndex(1);
-    lbl_803DD7E0 = ((int (*)(void))Camera_IsViewYOffsetEnabled)();
+    lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
     Camera_DisableViewYOffset();
     Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
@@ -5899,7 +5899,7 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
     lbl_803DBAA4 = Camera_GetFovY();
     Camera_SetFovY(fov);
     Camera_SetCurrentViewIndex(1);
-    lbl_803DD7E0 = ((int (*)(void))Camera_IsViewYOffsetEnabled)();
+    lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
     Camera_DisableViewYOffset();
     Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
     Camera_SetCurrentViewRotation(0x8000, 0, 0);

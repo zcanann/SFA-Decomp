@@ -995,7 +995,7 @@ CameraViewSlot* Camera_GetCurrentViewSlot(void)
     return &gCameraShakeSlots[gCameraCurrentViewIndex];
 }
 
-u8 Camera_IsViewYOffsetEnabled(void)
+int Camera_IsViewYOffsetEnabled(void)
 {
     return cameraViewYOffsetEnabled;
 }
