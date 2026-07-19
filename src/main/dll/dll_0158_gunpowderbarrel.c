@@ -120,7 +120,7 @@ int gunpowderbarrel_canBeGrabbed(GameObject* obj)
     int result = 0;
     if (state->heldByCarryInterface == 0 &&
         !state->respawnTimer &&
-        (*(int (**)(GunpowderBarrelState*))(*(int*)gCarryableInterface + 0x14))(state) == 0)
+        (*gCarryableInterface)->getCarryState(state) == 0)
     {
         result = 1;
     }
@@ -456,7 +456,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
         spawnExplosion((GameObject*)(int*)obj, 0.0f, 1, 1, 0, 0, 0, 1, 0);
         if (((GunpowderBarrelState*)sub)->heldByCarryInterface != 0)
         {
-            (*(void (**)(int, u8*))(*(int*)gCarryableInterface + 0x30))((int)obj, sub);
+            (*gCarryableInterface)->stopCarrying(obj, sub);
             ((GunpowderBarrelState*)sub)->heldByCarryInterface = 0;
         }
         /* Light the fuse: update() grows the blast radius each frame and, once
@@ -652,7 +652,7 @@ void gunpowderbarrel_free(GameObject *obj, int mode)
     int extra;
     void* child;
     extra = *(int*)&(obj)->extra;
-    (*(VtableFn*)(*(int*)gCarryableInterface + 0x10))(obj);
+    (*gCarryableInterface)->free(obj);
     child = ((GunpowderBarrelState*)extra)->linkedTimerObject;
     if (child != NULL && mode == 0)
     {
@@ -687,7 +687,7 @@ void gunpowderbarrel_render(GameObject* obj, int p2, int p3, int p4, int p5,
         obj->anim.rotZ = 0;
         obj->anim.rotY = 0;
     }
-    result = (*(int (**)(int*, int))(*(int*)gCarryableInterface + 0xc))((int*)obj, visFlag);
+    result = (*gCarryableInterface)->updateRenderState(obj, visFlag);
     if (result != 0 || visFlag == -1)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
@@ -1025,7 +1025,7 @@ void gunpowderbarrel_update(GameObject *obj)
         }
     }
     if ((state->motionFlags & 2) != 0 || ((GpbHeldFlags*)&state->heldFlags)->held != 0 ||
-        (*(int (**)(int, GunpowderBarrelState*))((char*)*gCarryableInterface + 0x8))((int)obj, state) == 0 ||
+        (*gCarryableInterface)->updateHeld(obj, state) == 0 ||
         (((GpbHeldFlags*)&state->heldFlags)->cannonRangeVariant != 0 &&
          playerIsDisguised(player) == 0))
     {
@@ -1125,7 +1125,7 @@ void gunpowderbarrel_init(int obj, u8* def)
     GunpowderBarrelState* state = ((GameObject*)obj)->extra;
 
     ((GunpowderBarrelState*)((GameObject*)obj)->extra)->unk07 |= 2;
-    (*(void (**)(int, GunpowderBarrelState*, int))((char*)*gCarryableInterface + 0x4))(obj, state, 5);
+    (*gCarryableInterface)->init((GameObject*)obj, state, 5);
     ObjGroup_AddObject(obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
     ObjGroup_AddObject(obj, CFGUARDIAN_OBJGROUP);
     ObjMsg_AllocQueue((void*)obj, 8);
@@ -1156,7 +1156,7 @@ void gunpowderbarrel_init(int obj, u8* def)
     ((GpbHeldFlags*)&state->heldFlags)->held = 0;
     state->fallAccum = 0.0f;
     state->linkedTimerObject = NULL;
-    (*(void (**)(GunpowderBarrelState*, int))((char*)*gCarryableInterface + 0x2c))(state, 1);
+    (*gCarryableInterface)->setSuppressPositionSave(state, 1);
     if ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState != NULL)
     {
         ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->trackContactMask = 1;

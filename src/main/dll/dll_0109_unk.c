@@ -68,7 +68,7 @@ int dll_109_getObjectTypeId(void)
 
 void dll_109_free(int obj)
 {
-    (*gCarryableInterface)->free(obj);
+    (*gCarryableInterface)->free((GameObject*)obj);
 }
 
 void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
@@ -76,7 +76,7 @@ void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     Dll109State* state = ((GameObject*)obj)->extra;
     if (state->phase == DLL109_PHASE_INTACT)
     {
-        if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
+        if ((*gCarryableInterface)->updateRenderState((GameObject*)obj, visible) != 0)
         {
             objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, 1.0f);
         }
@@ -99,10 +99,10 @@ void carryable_break_respawn_update(GameObject* obj)
     switch (state->phase)
     {
     case DLL109_PHASE_INTACT:
-        (*gCarryableInterface)->getAnimState((int)obj, (int)state);
+        (*gCarryableInterface)->updateHeld(obj, state);
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0)
         {
-            (*(void (*)(int, Dll109State*)) * (int*)((u8*)*gCarryableInterface + 0x30))((int)obj, state);
+            (*gCarryableInterface)->stopCarrying(obj, state);
             Sfx_PlayFromObject((int)obj, SFXTRIG_crtsmsh6);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x28);
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNK0109_HIT_VOLUME_SLOT, 4, 0);
@@ -149,8 +149,8 @@ void dll_109_init(GameObject* obj, Dll109MapData* p)
 {
     obj->anim.rotX = (s16)((s32)p->rotX << 8);
     obj->objectFlags |= UNK_OBJFLAG_HITDETECT_DISABLED;
-    (*gCarryableInterface)->initAnim((void*)obj, *(int*)&obj->extra, 0x21);
-    (*(void (**)(int*, int))((u8*)*gCarryableInterface + 0x2c))(obj->extra, 1);
+    (*gCarryableInterface)->init(obj, obj->extra, 0x21);
+    (*gCarryableInterface)->setSuppressPositionSave(obj->extra, 1);
 }
 
 void dll_109_release_nop(void)

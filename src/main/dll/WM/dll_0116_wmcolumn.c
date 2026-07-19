@@ -77,12 +77,12 @@ int WM_Column_getObjectTypeId(void)
 void WM_Column_free(int obj)
 {
     ObjGroup_RemoveObject(obj, WMCOLUMN_OBJGROUP);
-    (*gCarryableInterface)->free(obj);
+    (*gCarryableInterface)->free((GameObject*)obj);
 }
 
 void WM_Column_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
+    if ((*gCarryableInterface)->updateRenderState((GameObject*)obj, visible) != 0)
     {
         objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
@@ -104,7 +104,7 @@ void WM_Column_update(int obj)
 
     state = *(int*)&((GameObject*)obj)->extra;
     nearest = 10000.0f;
-    if ((*gCarryableInterface)->getAnimState(obj, *(int*)&((GameObject*)obj)->extra) != 0)
+    if ((*gCarryableInterface)->updateHeld((GameObject*)obj, ((GameObject*)obj)->extra) != 0)
     {
         if ((((GameObject*)obj)->userData1 & 2) != 0)
         {
@@ -128,13 +128,13 @@ void WM_Column_update(int obj)
         playerFlags = playerGetStateFlag310((GameObject*)playerFlags);
         if (((playerFlags & 0x4000) != 0) && (nearest > 60.0f))
         {
-            (*gCarryableInterface)->setVisible(state, 0);
+            (*gCarryableInterface)->setDropDisabled((void*)state, 0);
             setAButtonIcon(5);
             *(u32*)&((GameObject*)obj)->userData1 |= 1;
         }
         else
         {
-            (*gCarryableInterface)->setVisible(state, 1);
+            (*gCarryableInterface)->setDropDisabled((void*)state, 1);
         }
         *(u32*)&((GameObject*)obj)->userData1 &= ~2;
     }
@@ -172,12 +172,12 @@ void WM_Column_update(int obj)
         playerFlags = playerGetStateFlag310(Obj_GetPlayerObject());
         if ((playerFlags & 0x4000) != 0)
         {
-            (*gCarryableInterface)->setVisible(state, 0);
+            (*gCarryableInterface)->setDropDisabled((void*)state, 0);
             *(u32*)&((GameObject*)obj)->userData1 |= 2;
         }
         else
         {
-            (*gCarryableInterface)->setVisible(state, 1);
+            (*gCarryableInterface)->setDropDisabled((void*)state, 1);
             *(u32*)&((GameObject*)obj)->userData1 &= ~2;
         }
         *(u32*)&((GameObject*)obj)->userData1 &= ~1;
@@ -195,7 +195,7 @@ void WM_Column_init(GameObject* obj, WmColumnPlacement* mapData)
     {
         obj->anim.bankIndex = 0;
     }
-    (*gCarryableInterface)->initAnim(obj, state, 0x32);
+    (*gCarryableInterface)->init(obj, (void*)state, 0x32);
     ObjGroup_AddObject((int)obj, WMCOLUMN_OBJGROUP);
 }
 

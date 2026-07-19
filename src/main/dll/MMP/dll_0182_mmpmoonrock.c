@@ -277,7 +277,7 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
             inventoryCount = mainGetBit(0x894);
             if (place == 0)
             {
-                (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 1);
+                (*gCarryableInterface)->setGravityEnabled(state, 1);
                 if (odef->placedGameBit != -1)
                 {
                     mainSetBits(odef->placedGameBit, 0);
@@ -308,7 +308,7 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
             }
             else
             {
-                (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 0);
+                (*gCarryableInterface)->setGravityEnabled(state, 0);
                 if (odef->placedGameBit != -1)
                 {
                     mainSetBits(odef->placedGameBit, 1);
@@ -414,12 +414,12 @@ int mmp_moonrock_getObjectTypeId(void)
 void mmp_moonrock_free(int obj)
 {
     ObjGroup_RemoveObject((u32)obj, MMPMOONROCK_OBJGROUP);
-    (*gCarryableInterface)->free(obj);
+    (*gCarryableInterface)->free((GameObject*)obj);
 }
 
 void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
+    if ((*gCarryableInterface)->updateRenderState((GameObject*)obj, visible) != 0)
     {
         objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
@@ -492,7 +492,7 @@ void mmp_moonrock_update(GameObject* obj)
         {
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         }
-        else if ((*gCarryableInterface)->getAnimState((int)obj, (int)obj->extra) != 0)
+        else if ((*gCarryableInterface)->updateHeld(obj, obj->extra) != 0)
         {
             grabbed = 1;
         }
@@ -518,7 +518,7 @@ void mmp_moonrock_update(GameObject* obj)
             state->flags &= ~MOONROCK_FLAG_ICON_PLACE;
         }
         stateCopy = (int)obj->extra;
-        (*gCarryableInterface)->setVisible(stateCopy, 0);
+        (*gCarryableInterface)->setDropDisabled((void*)stateCopy, 0);
         {
             f32 k;
             def = (MmpMoonrockPlacement*)ObjGroup_GetObjects(CARRYABLE_OBJGROUP, &count);
@@ -532,7 +532,7 @@ void mmp_moonrock_update(GameObject* obj)
                 if (other != obj && other->anim.seqId == MMPMOONROCK_OBJ &&
                     Vec_xzDistance(&obj->anim.worldPosX, &other->anim.worldPosX) < k)
                 {
-                    (*gCarryableInterface)->setVisible(stateCopy, 1);
+                    (*gCarryableInterface)->setDropDisabled((void*)stateCopy, 1);
                     found = 0;
                     break;
                 }
@@ -631,19 +631,19 @@ void mmp_moonrock_init(GameObject* obj, int param2)
         {
             state->flags = state->flags | MOONROCK_FLAG_PLACED;
         }
-        (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 0);
+        (*gCarryableInterface)->setGravityEnabled(state, 0);
     }
     else
     {
-        (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 1);
+        (*gCarryableInterface)->setGravityEnabled(state, 1);
     }
     {
         f32 z = (obj)->anim.localPosY;
         state->baseY = z;
         state->baseY2 = z;
     }
-    (*gCarryableInterface)->initAnim((void*)obj, *(int*)&(obj)->extra, 0x32);
-    (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x2c))((int)state, 1);
+    (*gCarryableInterface)->init(obj, obj->extra, 0x32);
+    (*gCarryableInterface)->setSuppressPositionSave(state, 1);
     ObjGroup_AddObject((int)obj, MMPMOONROCK_OBJGROUP);
     state->homeX = (obj)->anim.localPosX;
     state->homeY = (obj)->anim.localPosY;
