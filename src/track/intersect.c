@@ -6345,7 +6345,7 @@ void cardShowLoadingMsg(u8 kind)
             drawRect(rectAlpha, rectAlpha, 0x280, 0x1E0);
             for (j = 0; j < count; j++)
             {
-                objRenderModelAndHitVolumesFwdLegacy(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
+                objRenderModelAndHitVolumes((GameObject*)buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
             }
             curUiDllDraw(0, 0, 0, 0);
         }
