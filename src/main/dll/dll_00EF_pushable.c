@@ -272,7 +272,7 @@ int fn_80174668(GameObject* obj, PushableState* state)
 
     flag = 0;
     dist[0] = MAGIC_GEM_INITIAL_DISTANCE;
-    pushable_handleMsgs((int)obj, 0);
+    pushable_handleMsgs((u32)obj, 0);
     if (mainGetBit(state->gameBit) != 0)
     {
         cur = obj->anim.rootMotionScale;
@@ -291,7 +291,7 @@ int fn_80174668(GameObject* obj, PushableState* state)
     }
     if (state->nearestObj == NULL)
     {
-        state->nearestObj = (void*)ObjGroup_FindNearestObject(MAGICGEM_TARGET_OBJGROUP, (int)obj, dist);
+        state->nearestObj = (void*)ObjGroup_FindNearestObject(MAGICGEM_TARGET_OBJGROUP, (u32)obj, dist);
     }
     if (state->nearestObj == NULL)
     {
