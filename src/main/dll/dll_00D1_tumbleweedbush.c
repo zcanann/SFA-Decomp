@@ -31,6 +31,7 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
+#include "main/dll/dll_00D2_tumbleweed.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
 #include "main/sky_interface.h"
@@ -399,43 +400,39 @@ void fn_80163980(GameObject* obj)
     *((u8*)(int*)obj->extra + 0x278) = v;
 }
 
-void fn_80163990(int* piece, u8* state)
+void fn_80163990(GameObject* piece, BackpackState* state)
 {
     f32 gh;
 
-    ((GameObject*)piece)->anim.velocityX = ((GameObject*)piece)->anim.velocityX / 10.0f;
-    if (fn_80065684((GameObject*)piece, ((GameObject*)piece)->anim.localPosX, ((GameObject*)piece)->anim.localPosY,
-                    ((GameObject*)piece)->anim.localPosZ, &gh, 0) != 0)
+    piece->anim.velocityX = piece->anim.velocityX / 10.0f;
+    if (fn_80065684(piece, piece->anim.localPosX, piece->anim.localPosY, piece->anim.localPosZ, &gh, 0) != 0)
     {
         if (gh > 7.0f)
         {
-            ((GameObject*)piece)->anim.velocityY = ((GameObject*)piece)->anim.velocityY + -0.17f * timeDelta;
+            piece->anim.velocityY = piece->anim.velocityY + -0.17f * timeDelta;
         }
         else
         {
-            ((GameObject*)piece)->anim.localPosY = ((GameObject*)piece)->anim.localPosY - (gh - 7.0f);
-            ((GameObject*)piece)->anim.velocityY = 0.0f;
+            piece->anim.localPosY = piece->anim.localPosY - (gh - 7.0f);
+            piece->anim.velocityY = 0.0f;
         }
     }
-    ((GameObject*)piece)->anim.velocityZ = ((GameObject*)piece)->anim.velocityZ / 10.0f;
+    piece->anim.velocityZ = piece->anim.velocityZ / 10.0f;
 
-    *(s16*)(state + 0x27c) = (s16)(*(s16*)(state + 0x27c) / 100);
-    *(s16*)(state + 0x27e) = (s16)(*(s16*)(state + 0x27e) / 100);
-    *(s16*)(state + 0x280) = (s16)(*(s16*)(state + 0x280) / 100);
+    state->recoilVelX = (s16)(state->recoilVelX / 100);
+    state->recoilVelZ = (s16)(state->recoilVelZ / 100);
+    *(s16*)((u8*)state + 0x280) = (s16)(*(s16*)((u8*)state + 0x280) / 100);
 
-    ((GameObject*)piece)->anim.localPosX =
-        ((GameObject*)piece)->anim.localPosX + ((GameObject*)piece)->anim.velocityX * timeDelta;
-    ((GameObject*)piece)->anim.localPosY =
-        ((GameObject*)piece)->anim.localPosY + ((GameObject*)piece)->anim.velocityY * timeDelta;
-    ((GameObject*)piece)->anim.localPosZ =
-        ((GameObject*)piece)->anim.localPosZ + ((GameObject*)piece)->anim.velocityZ * timeDelta;
+    piece->anim.localPosX = piece->anim.localPosX + piece->anim.velocityX * timeDelta;
+    piece->anim.localPosY = piece->anim.localPosY + piece->anim.velocityY * timeDelta;
+    piece->anim.localPosZ = piece->anim.localPosZ + piece->anim.velocityZ * timeDelta;
 
-    ((GameObject*)piece)->anim.rotZ =
-        (f32)(int)*(s16*)(state + 0x27c) * timeDelta + (f32)(int)((GameObject*)piece)->anim.rotZ;
-    ((GameObject*)piece)->anim.rotY =
-        (f32)(int)*(s16*)(state + 0x27e) * timeDelta + (f32)(int)((GameObject*)piece)->anim.rotY;
-    ((GameObject*)piece)->anim.rotX =
-        (f32)(int)*(s16*)(state + 0x280) * timeDelta + (f32)(int)((GameObject*)piece)->anim.rotX;
+    piece->anim.rotZ =
+        (f32)(int)state->recoilVelX * timeDelta + (f32)(int)piece->anim.rotZ;
+    piece->anim.rotY =
+        (f32)(int)state->recoilVelZ * timeDelta + (f32)(int)piece->anim.rotY;
+    piece->anim.rotX =
+        (f32)(int)*(s16*)((u8*)state + 0x280) * timeDelta + (f32)(int)piece->anim.rotX;
 }
 
 u8 gTumbleweedBushPieceOffsetTable[] = {

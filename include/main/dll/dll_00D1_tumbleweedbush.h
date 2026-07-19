@@ -5,6 +5,7 @@
 #include "main/object_descriptor.h"
 
 struct GameObject;
+struct BackpackState;
 
 /* Bush variant anim.seqIds and the sibling tumbleweed seqId each one spawns.
  * The sibling ids match dll_00D2_tumbleweed.h's TUMBLEWEED_TYPE_1/3/4
@@ -28,5 +29,6 @@ extern ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor;
 s8 fn_801631C8(int* obj);
 struct GameObject* tumbleweedbush_findNearestActive(f32* position);
 void fn_80163980(struct GameObject* obj);
+void fn_80163990(struct GameObject* piece, struct BackpackState* state);
 
 #endif /* MAIN_DLL_DLL_00D1_TUMBLEWEEDBUSH_H_ */

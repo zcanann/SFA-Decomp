@@ -1,5 +1,6 @@
 /* DLL 0x00D2 (tumbleweed) - Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
 #include "main/dll/partfx_interface.h"
+#include "main/dll/dll_00D1_tumbleweedbush.h"
 #include "main/dll/dll_00D2_tumbleweed.h"
 #include "main/audio/sfx_ids.h"
 #include "main/vecmath.h"
@@ -387,7 +388,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                     }
                 }
             }
-            ((void (*)(int, int))fn_80163990)((int)obj, aux);
+            ((void (*)(GameObject*, BackpackState*))fn_80163990)(obj, (BackpackState*)aux);
             (*gPathControlInterface)->advance((void*)obj, (void*)aux, timeDelta);
         }
         else if (state == 4)
