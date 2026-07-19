@@ -412,7 +412,7 @@ void tricky_stateFindSecretDig(u8* obj, u8* state)
                 ((TrickyState*)state)->stateFlags |= 0x10;
                 state[0xa] = 3;
                 ((TrickyState*)state)->scratch700.f = lbl_803E23DC;
-                ((TrickyState*)state)->unk710 = (f32)(int)randomGetRange(0x28, 0x50);
+                ((TrickyState*)state)->scratch710.f = (f32)(int)randomGetRange(0x28, 0x50);
                 Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_trwhin1);
                 objAnimFn_8013a3f0((int)obj, 0xe, lbl_803E2510, 0x4000000);
             }
@@ -447,7 +447,7 @@ void tricky_stateFindSecretDig(u8* obj, u8* state)
         break;
     case 3:
         ((TrickyState*)state)->scratch700.f += timeDelta;
-        ((TrickyState*)state)->unk710 -= timeDelta;
+        ((TrickyState*)state)->scratch710.f -= timeDelta;
         if (((TrickyState*)state)->scratch700.f >= lbl_803E24F8)
         {
             state[0xa] = 4;
@@ -470,11 +470,11 @@ void tricky_stateFindSecretDig(u8* obj, u8* state)
         }
         break;
     case 4:
-        ((TrickyState*)state)->unk710 -= timeDelta;
-        if (((TrickyState*)state)->unk710 <= lbl_803E23DC)
+        ((TrickyState*)state)->scratch710.f -= timeDelta;
+        if (((TrickyState*)state)->scratch710.f <= lbl_803E23DC)
         {
-            ((TrickyState*)state)->unk710 = (f32)(int)randomGetRange(0x28, 0x50);
-            ((TrickyState*)state)->unk710 *= lbl_803E2424;
+            ((TrickyState*)state)->scratch710.f = (f32)(int)randomGetRange(0x28, 0x50);
+            ((TrickyState*)state)->scratch710.f *= lbl_803E2424;
             trickyPlayWhineSfx(0x360, obj);
         }
         spd = ((f32(**)(u8*, u8*))(**(u8***)(pc + 0x68)))[8](pc, obj);
@@ -1128,8 +1128,8 @@ int tricky_substateHowlCall(GameObject* obj, int* trickyState)
         }
         break;
     case 0x2a:
-        ((TrickyState*)trickyState)->unk73C = ((TrickyState*)trickyState)->unk73C - timeDelta;
-        if (((TrickyState*)trickyState)->unk73C <= lbl_803E23DC)
+        ((TrickyState*)trickyState)->moveHoldTimer = ((TrickyState*)trickyState)->moveHoldTimer - timeDelta;
+        if (((TrickyState*)trickyState)->moveHoldTimer <= lbl_803E23DC)
         {
             if (((((TrickyState*)trickyState)->stateFlags & 0x10000) != 0) || (((TrickyState*)trickyState)->cooldownB > lbl_803E23DC))
             {
@@ -1306,7 +1306,7 @@ int tricky_substateSleep(GameObject* obj, int* state)
         }
         ((TrickyState*)state)->stateFlags |= 0x10;
         ((u8*)state)[0xa] = 4;
-        ((TrickyState*)state)->unk73C = (f32)(int)randomGetRange(0x78, 0xf0);
+        ((TrickyState*)state)->moveHoldTimer = (f32)(int)randomGetRange(0x78, 0xf0);
     }
     return 1;
 }
@@ -1637,7 +1637,7 @@ void tricky_pickAmbientActivity(u8* obj, u8* state)
         }
         ((TrickyState*)state)->stateFlags |= 0x10;
         state[0xa] = 4;
-        ((TrickyState*)state)->unk73C = (f32)(int)randomGetRange(0x78, 0xf0);
+        ((TrickyState*)state)->moveHoldTimer = (f32)(int)randomGetRange(0x78, 0xf0);
         break;
     }
 }

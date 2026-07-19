@@ -670,7 +670,7 @@ void Tricky_commandPlayBall(int* obj, int commandEnabled, int targetObj)
                 return;
             }
             state[0x700 / 4] = (int)Objfsa_FindNearestEnabledCurveType24((void*)(targetObj + 0x18), -1, 3);
-            ((TrickyState*)state)->unk710 = (f32)(int)randomGetRange(0x168, 0x28);
+            ((TrickyState*)state)->scratch710.f = (f32)(int)randomGetRange(0x168, 0x28);
             *((u8*)state + 8) = 5;
             state[0x24 / 4] = targetObj;
             nextTarget = (void*)(state[0x700 / 4] + 8);

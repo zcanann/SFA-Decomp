@@ -227,7 +227,7 @@ typedef struct TrickyState {
     TrickyScratch scratch704;
     TrickyScratch scratch708;
     TrickyScratch scratch70C;
-    f32 unk710;
+    TrickyScratch scratch710;
     u8 pad714[0x71C - 0x714];
     f32 cooldownA; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC; == floor gates a state/anim transition (tricky/substates/weapone6/tumbleweedbush/mmp) */
     f32 cooldownB; /* f32 countdown paired with cooldownA: -= timeDelta, clamped to floor; == floor gates a move, > floor gates fidget/contact-sfx (tricky/substates/weapone6/tumbleweedbush) */
@@ -238,7 +238,7 @@ typedef struct TrickyState {
     u32 wanderTargetY; /* wander target position Y (written as f32 from anim world/local posY) */
     f32 wanderTargetZ; /* wander target position Z: anim world/local posZ plus a cos offset; a rare u8-overlay at this offset toggles a state bit (tricky/tricky_substates) */
     f32 sfxRepeatTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an SFX and re-primes to lbl_803E2440 (tricky_substates) */
-    f32 unk73C;
+    f32 moveHoldTimer; /* f32 countdown primed to randomGetRange(120,240) on entering idle move 0x29; counted down in move 0x2a and on reaching the floor advances to move 0x2b or 0x2c (tricky_substates) */
     f32 idleSfxTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an idle vocalization SFX and re-primes to randomGetRange(500,750) (tricky/substates/weapone6) */
     f32 sparkleFxTimer;
     TrickyCommand commands[10];

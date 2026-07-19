@@ -673,7 +673,7 @@ void trickyUpdateCirclingTargetPosition(void* objPtr, void* state)
     ((TrickyState*)state)->scratch708.f = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosX -
                                             lbl_803E24D4 * fsin16Precise((u16)((TrickyState*)state)->scratch704.i);
     ((TrickyState*)state)->scratch70C.f = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosY;
-    ((TrickyState*)state)->unk710 = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosZ -
+    ((TrickyState*)state)->scratch710.f = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosZ -
                                     lbl_803E24D4 * fcos16Precise((u16)((TrickyState*)state)->scratch704.i);
 
     if (trickyFn_8013b368(objPtr, lbl_803E2488, state) == 0)

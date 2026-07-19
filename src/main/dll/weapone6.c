@@ -534,7 +534,7 @@ void fn_8013FBE4(GameObject* obj, register int state)
     case 0:
         newBit = mainGetBit(GAMEBIT_NW_MammothTumbleweedCount);
         ((TrickyNibblePair*)&((TrickyState*)state)->scratch700)->hi = newBit;
-        *(int*)&((TrickyState*)state)->unk710 = 0;
+        ((TrickyState*)state)->scratch710.i = 0;
         ((TrickyState*)state)->substate = 1;
     case 1:
         currentBit = mainGetBit(GAMEBIT_NW_MammothTumbleweedCount);
@@ -548,7 +548,7 @@ void fn_8013FBE4(GameObject* obj, register int state)
         trackedObj = tumbleweedbush_findNearestActive(targetPos);
         if (trackedObj != 0 && **(u8**)state != 0)
         {
-            if (trackedObj != *(GameObject**)&((TrickyState*)state)->unk710 &&
+            if (trackedObj != ((TrickyState*)state)->scratch710.obj &&
                 ((TrickyState*)state)->targetPosPtr != (u8*)(state + 0x704))
             {
                 ((TrickyState*)state)->targetPosPtr = (u8*)(state + 0x704);
