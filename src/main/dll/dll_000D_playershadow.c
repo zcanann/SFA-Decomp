@@ -37,7 +37,6 @@ f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
  * on each struck triangle. offsX/offsZ = obj position minus the tile origin,
  * so (vert - offs) + objPos recovers the world-space triangle corners. */
 extern const f32 lbl_803DF468;
-const f32 lbl_803DF46C = 0.0f;
 extern const f32 lbl_803DF470;
 extern const f32 lbl_803DF474;
 extern const f32 lbl_803DF478;
@@ -93,7 +92,7 @@ void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f3
                 len = sqrtf(dydy + dx * dx + dz * dz);
             }
             sc = lbl_803DF468 * len;
-            if (lbl_803DF46C != len)
+            if (0.0f != len)
             {
                 dx = dx / len;
                 dy = dy / len;
@@ -102,9 +101,9 @@ void playerShadow_scatterFootfallEffects(PlayerShadowTriHit* hits, int count, f3
             dx = dx * sc;
             dy = dy * sc;
             dz = dz * sc;
-            data.posX = *(f32*)&lbl_803DF46C;
-            data.posY = *(f32*)&lbl_803DF46C;
-            data.posZ = *(f32*)&lbl_803DF46C;
+            data.posX = 0.0f;
+            data.posY = 0.0f;
+            data.posZ = 0.0f;
             data.scale = lbl_803DF470;
             data.unk4 = 0;
             data.unk2 = 0;
@@ -259,7 +258,7 @@ void playerShadow_renderObject(GameObject* obj)
         height = radius;
         break;
     default:
-        radius = lbl_803DF46C;
+        radius = 0.0f;
         height = radius;
         break;
     }

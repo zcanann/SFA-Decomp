@@ -24,7 +24,6 @@ f32 gEffect4TickCyclePhaseSlow = 0.3f;
 
 extern const f32 lbl_803DFA88;
 extern const f32 lbl_803DFA8C;
-const f32 lbl_803DFA90 = 1.0f;
 extern const f32 gEffect4SpawnCyclePhaseSlowStep;
 extern const f32 lbl_803DFA98;
 extern const f32 lbl_803DFAB0;
@@ -126,10 +125,10 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     PartFxSpawn cfg;
 
     gEffect4SpawnCyclePhaseFast = gEffect4SpawnCyclePhaseFast + lbl_803DFA88;
-    if (gEffect4SpawnCyclePhaseFast > *(f32*)&lbl_803DFA90)
+    if (gEffect4SpawnCyclePhaseFast > 1.0f)
         gEffect4SpawnCyclePhaseFast = lbl_803DFA8C;
     gEffect4SpawnCyclePhaseSlow = gEffect4SpawnCyclePhaseSlow + gEffect4SpawnCyclePhaseSlowStep;
-    if (gEffect4SpawnCyclePhaseSlow > *(f32*)&lbl_803DFA90)
+    if (gEffect4SpawnCyclePhaseSlow > 1.0f)
         gEffect4SpawnCyclePhaseSlow = lbl_803DFA98;
     if (sourceObj == 0)
         return -1;
@@ -187,7 +186,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.a = (0.0f);
         es.b = (0.0f);
         es.c = (0.0f);
-        es.w = lbl_803DFA90;
+        es.w = 1.0f;
         es.rz = 0;
         es.ry = 0;
         es.rx = randomGetRange(0, 0xffff);
@@ -240,7 +239,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.a = (0.0f);
         es.b = (0.0f);
         es.c = (0.0f);
-        es.w = lbl_803DFA90;
+        es.w = 1.0f;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
@@ -256,7 +255,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.a = (0.0f);
         es.b = (0.0f);
         es.c = (0.0f);
-        es.w = lbl_803DFA90;
+        es.w = 1.0f;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
@@ -273,7 +272,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.a = (0.0f);
         es.b = (0.0f);
         es.c = (0.0f);
-        es.w = lbl_803DFA90;
+        es.w = 1.0f;
         es.rz = 0;
         es.ry = 0;
         es.rx = randomGetRange(0, 0xffff);
@@ -689,7 +688,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.a = (0.0f);
         es.b = (0.0f);
         es.c = (0.0f);
-        es.w = lbl_803DFA90;
+        es.w = 1.0f;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
@@ -830,7 +829,7 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         es.a = (0.0f);
         es.b = (0.0f);
         es.c = (0.0f);
-        es.w = lbl_803DFA90;
+        es.w = 1.0f;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
         es.rx = randomGetRange(0, 0xffff);
@@ -1022,13 +1021,13 @@ void Effect4_func05(void)
     f32 step;
     sum = gEffect4TickCyclePhaseFast + (step = (0.001f) * timeDelta);
     gEffect4TickCyclePhaseFast = sum;
-    if (sum > *(f32*)&lbl_803DFA90)
+    if (sum > 1.0f)
     {
         gEffect4TickCyclePhaseFast = (0.1f);
     }
     sum = gEffect4TickCyclePhaseSlow + step;
     gEffect4TickCyclePhaseSlow = sum;
-    if (sum > *(f32*)&lbl_803DFA90)
+    if (sum > 1.0f)
     {
         gEffect4TickCyclePhaseSlow = (0.3f);
     }

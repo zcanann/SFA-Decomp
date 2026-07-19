@@ -1,4 +1,4 @@
-/* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
+/* DLL 0x0019 - dll19 / camDebug group. TU: 0x8010DB7C-0x8010DD58. */
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
 #include "main/track_bbox_api.h"
