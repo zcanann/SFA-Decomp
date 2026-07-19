@@ -143,7 +143,7 @@ typedef struct DrakorHoverpadHandlePathPointEventState
 
 typedef struct DrakorHoverpadState
 {
-    f32 unk00;
+    f32 commandSpeed;
     RomCurveWalker curve; /* 0x004 */
     u8 pad10C[4];
     f32 speed;       /* 0x110 */
@@ -203,7 +203,7 @@ void drakorhoverpad_resetPendingMotion(GameObject* obj)
     if (g->p6 != 0)
     {
         g->p6 = 0;
-        *(f32*)p = (*(f32*)&gDrakorHoverpadSpeedStep);
+        ((DrakorHoverpadState*)p)->commandSpeed = (*(f32*)&gDrakorHoverpadSpeedStep);
     }
 }
 
@@ -569,22 +569,22 @@ int drakorhoverpad_init(GameObject* obj)
     if (f->b01 != mainGetBit(1654))
     {
         f->b01 ^= 1;
-        *(f32*)p = -*(f32*)p;
+        ((DrakorHoverpadState*)p)->commandSpeed = -((DrakorHoverpadState*)p)->commandSpeed;
         if (f->state == 3)
         {
             f->state = 0;
-            *(f32*)p = (*(f32*)&gDrakorHoverpadSpeedStep);
+            ((DrakorHoverpadState*)p)->commandSpeed = (*(f32*)&gDrakorHoverpadSpeedStep);
         }
         if (f->state == 4)
         {
             f->state = 0;
-            *(f32*)p = -2.0f;
+            ((DrakorHoverpadState*)p)->commandSpeed = -2.0f;
         }
         if (f->b40 != 0)
         {
-            if (0.0f == *(f32*)p)
+            if (0.0f == ((DrakorHoverpadState*)p)->commandSpeed)
             {
-                *(f32*)p = (f->b01 != 0) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
+                ((DrakorHoverpadState*)p)->commandSpeed = (f->b01 != 0) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
             }
         }
         Sfx_PlayFromObject((int)obj, SFXTRIG_id_309);
@@ -612,7 +612,7 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         player = (int)Obj_GetPlayerObject();
         ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel =
             0.8f * -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
-        *(f32*)p = 0.0f;
+        ((DrakorHoverpadState*)p)->commandSpeed = 0.0f;
         if (((GameObject*)player)->anim.parent == (void*)obj)
         {
             Camera_EnableViewYOffset();
@@ -643,7 +643,7 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         player = (int)Obj_GetPlayerObject();
         ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel =
             0.8f * -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
-        *(f32*)p = 0.0f;
+        ((DrakorHoverpadState*)p)->commandSpeed = 0.0f;
         if (((GameObject*)player)->anim.parent == (void*)obj)
         {
             Camera_EnableViewYOffset();
@@ -671,12 +671,12 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         {
             mainSetBits(0x788, 1);
             f->state = 1;
-            *(f32*)p = 0.0f;
+            ((DrakorHoverpadState*)p)->commandSpeed = 0.0f;
         }
         else
         {
             ((DrakorHoverpadHandlePathPointEventState*)p)->targetSpeed +=
-                (*(f32*)p < 0.0f) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
+                (((DrakorHoverpadState*)p)->commandSpeed < 0.0f) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
         }
         break;
     case 9:
@@ -687,12 +687,12 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         if (mainGetBit(0x661) == 0)
         {
             f->state = 1;
-            *(f32*)p = 0.0f;
+            ((DrakorHoverpadState*)p)->commandSpeed = 0.0f;
         }
         else
         {
             ((DrakorHoverpadHandlePathPointEventState*)p)->targetSpeed +=
-                (*(f32*)p < 0.0f) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
+                (((DrakorHoverpadState*)p)->commandSpeed < 0.0f) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
         }
         break;
     case 5:
@@ -708,21 +708,21 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
             break;
         }
         ((DrakorHoverpadHandlePathPointEventState*)p)->targetSpeed +=
-            (*(f32*)p < 0.0f) ? -3.0f : 3.0f;
+            (((DrakorHoverpadState*)p)->commandSpeed < 0.0f) ? -3.0f : 3.0f;
         break;
     case 7:
-        if (*(f32*)p <= 0.0f)
+        if (((DrakorHoverpadState*)p)->commandSpeed <= 0.0f)
         {
             f->state = 3;
-            *(f32*)p = 0.0f;
+            ((DrakorHoverpadState*)p)->commandSpeed = 0.0f;
             Sfx_PlayFromObject((int)obj, SFXTRIG_id_30b);
         }
         break;
     case 17:
-        if (*(f32*)p >= 0.0f)
+        if (((DrakorHoverpadState*)p)->commandSpeed >= 0.0f)
         {
             f->state = 4;
-            *(f32*)p = 0.0f;
+            ((DrakorHoverpadState*)p)->commandSpeed = 0.0f;
             Sfx_PlayFromObject((int)obj, SFXTRIG_id_30b);
         }
         break;
@@ -764,12 +764,12 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         {
             break;
         }
-        if (*(f32*)p >= 0.0f)
+        if (((DrakorHoverpadState*)p)->commandSpeed >= 0.0f)
         {
             player = (int)Obj_GetPlayerObject();
             ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel =
                 0.8f * -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
-            *(f32*)p = 0.0f;
+            ((DrakorHoverpadState*)p)->commandSpeed = 0.0f;
             if (((GameObject*)player)->anim.parent == (void*)obj)
             {
                 Camera_EnableViewYOffset();
@@ -790,12 +790,12 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         {
             break;
         }
-        if (*(f32*)p <= 0.0f)
+        if (((DrakorHoverpadState*)p)->commandSpeed <= 0.0f)
         {
             player = (int)Obj_GetPlayerObject();
             ((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel =
                 0.8f * -((DrakorHoverpadHandlePathPointEventState*)p)->verticalVel;
-            *(f32*)p = 0.0f;
+            ((DrakorHoverpadState*)p)->commandSpeed = 0.0f;
             if (((GameObject*)player)->anim.parent == (void*)obj)
             {
                 Camera_EnableViewYOffset();
@@ -819,7 +819,7 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         mainSetBits(0x788, 1);
         break;
     case 16:
-        cur = *(f32*)p;
+        cur = ((DrakorHoverpadState*)p)->commandSpeed;
         if (cur >= 0.0f)
         {
             absP = cur;
@@ -830,11 +830,11 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         }
         if ((*(f32*)&gDrakorHoverpadSpeedStep) == absP)
         {
-            *(f32*)p = cur * half;
+            ((DrakorHoverpadState*)p)->commandSpeed = cur * half;
         }
         else
         {
-            *(f32*)p = (*(f32*)&gDrakorHoverpadSpeedStep) * cur;
+            ((DrakorHoverpadState*)p)->commandSpeed = (*(f32*)&gDrakorHoverpadSpeedStep) * cur;
         }
         Sfx_PlayFromObject((int)obj, SFXTRIG_id_309);
         break;
@@ -843,7 +843,7 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         break;
     case 21:
         g->p6 = 1;
-        *(f32*)p = 0.0f;
+        ((DrakorHoverpadState*)p)->commandSpeed = 0.0f;
         break;
     }
     switch (subCode)
@@ -951,7 +951,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
             (obj)->anim.localPosX = ((DrakorHoverpadState*)p)->curve.posX;
             (obj)->anim.localPosY = ((DrakorHoverpadState*)p)->curve.posY;
             (obj)->anim.localPosZ = ((DrakorHoverpadState*)p)->curve.posZ;
-            *(f32*)p = (*(f32*)&gDrakorHoverpadSpeedStep);
+            ((DrakorHoverpadState*)p)->commandSpeed = (*(f32*)&gDrakorHoverpadSpeedStep);
             Sfx_PlayFromObject((int)obj, SFXTRIG_id_308);
             Sfx_PlayFromObject((int)obj, SFXTRIG_id_30a);
         }
@@ -967,7 +967,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
         limit = 0.1f * (0.7f * mathSinf(phase));
         if (f->b40 != 0)
         {
-            absH = (*(f32*)p >= 0.0f) ? *(f32*)p : -*(f32*)p;
+            absH = (((DrakorHoverpadState*)p)->commandSpeed >= 0.0f) ? ((DrakorHoverpadState*)p)->commandSpeed : -((DrakorHoverpadState*)p)->commandSpeed;
             absV = (((DrakorHoverpadUpdateMainState*)p)->verticalVel >= 0.0f)
                        ? ((DrakorHoverpadUpdateMainState*)p)->verticalVel
                        : -((DrakorHoverpadUpdateMainState*)p)->verticalVel;
@@ -986,19 +986,19 @@ void drakorhoverpad_updateMain(GameObject* obj)
         absH = (absV >= 0.0f) ? absV : -absV;
         if (absH < limit)
         {
-            ((DrakorHoverpadUpdateMainState*)p)->verticalVel = *(f32*)p;
+            ((DrakorHoverpadUpdateMainState*)p)->verticalVel = ((DrakorHoverpadState*)p)->commandSpeed;
         }
         else
         {
-            ((DrakorHoverpadUpdateMainState*)p)->verticalVel += (absV > *(f32*)p) ? -limit : limit;
+            ((DrakorHoverpadUpdateMainState*)p)->verticalVel += (absV > ((DrakorHoverpadState*)p)->commandSpeed) ? -limit : limit;
         }
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DRAKORHOVERPAD_HIT_VOLUME_SLOT, 1, 0);
     }
     else
     {
         ObjHits_DisableObject(obj);
-        ((DrakorHoverpadUpdateMainState*)p)->verticalVel = *(f32*)p;
-        lbl_803DC2F8 = (*(f32*)&gDrakorHoverpadSpeedStep) * *(f32*)p;
+        ((DrakorHoverpadUpdateMainState*)p)->verticalVel = ((DrakorHoverpadState*)p)->commandSpeed;
+        lbl_803DC2F8 = (*(f32*)&gDrakorHoverpadSpeedStep) * ((DrakorHoverpadState*)p)->commandSpeed;
     }
     if (((DrakorHoverpadUpdateMainState*)p)->verticalVel < 0.0f)
     {
