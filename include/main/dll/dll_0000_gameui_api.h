@@ -3,9 +3,7 @@
 
 #include "types.h"
 
-typedef int (*CMenuGetSelectedItemIntFn)(void);
-
-s16 cMenuGetSelectedItem(void);
+int cMenuGetSelectedItem(void);
 void drawHudBox(s16 x, s16 y, s16 width, s16 height, u8 alpha, u8 flags);
 u8 pauseMenuGetTokenConfirmFlag(void);
 int registerNewScore(s8 tableId, int score, u8 kind, int mode);
@@ -19,8 +17,6 @@ void Pause_SetDisabled(u8 disabled);
 void Pause_ResetMenuFrameCounter(void);
 s32 isTalkingToNpc(void);
 void setShowWorldMapHud(u8 visible);
-
-#define cMenuGetSelectedItemInt() (((CMenuGetSelectedItemIntFn)cMenuGetSelectedItem)())
 
 void forceAButtonIcon(int icon);
 void viewFn_80129cbc(f32 fov, f32 x, f32 y);

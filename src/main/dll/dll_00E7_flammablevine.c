@@ -118,7 +118,7 @@ void FlammableVine_update(GameObject* obj)
 
         if ((obj)->anim.seqId == FLAMMABLEVINE_SEQID_CC_EYE_VINES)
         {
-            if (cMenuGetSelectedItemInt() == -1)
+            if (cMenuGetSelectedItem() == -1)
             {
                 (obj)->anim.modelInstance->hitVolumes[0].priority = 0;
             }

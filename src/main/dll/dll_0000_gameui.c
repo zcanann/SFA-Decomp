@@ -815,7 +815,7 @@ extern s8 gCMenuCloseSfx;
 
 
 s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count);
-s16 cMenuGetSelectedItem(void);
+int cMenuGetSelectedItem(void);
 int GameUI_isItemBeingUsed(s32 id);
 int GameUI_isAnyItemBeingUsed(void);
 void GameUI_hudDraw(int a, int b, int c);
@@ -8472,8 +8472,7 @@ s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
     return -1;
 }
 
-/* s16 getter for cMenuSelectedItem. */
-s16 cMenuGetSelectedItem(void)
+int cMenuGetSelectedItem(void)
 {
     return cMenuSelectedItem;
 }

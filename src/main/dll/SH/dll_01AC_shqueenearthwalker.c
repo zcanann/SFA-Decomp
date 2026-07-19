@@ -140,7 +140,7 @@ void queenFeedFn_801d44a4(GameObject* obj, void* state)
         break;
     case 1:
         (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
-        if (cMenuGetSelectedItemInt() == -1)
+        if (cMenuGetSelectedItem() == -1)
         {
             if (getYButtonItem(&triggerId) == 0 || triggerId != 0x66d)
             {

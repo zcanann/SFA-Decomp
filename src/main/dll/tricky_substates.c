@@ -1229,7 +1229,7 @@ int tricky_substateSleep(GameObject* obj, int* state)
         ((u8*)state)[0xa] = 0;
         return 1;
     }
-    if (cMenuGetSelectedItemInt() == 0xc1)
+    if (cMenuGetSelectedItem() == 0xc1)
     {
         ((u8*)state)[0xa] = 0;
         return 1;
@@ -1708,7 +1708,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, int* state)
         {
             flag = 1;
         }
-        if (cMenuGetSelectedItemInt() == 0xc1)
+        if (cMenuGetSelectedItem() == 0xc1)
         {
             flag = 1;
         }
@@ -1826,7 +1826,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, int* state)
     else
     {
         gu = mainGetBit(GAMEBIT_TrickyTalk);
-        if (gu != 0xff && cMenuGetSelectedItemInt() == -1)
+        if (gu != 0xff && cMenuGetSelectedItem() == -1)
         {
             if (*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
             {

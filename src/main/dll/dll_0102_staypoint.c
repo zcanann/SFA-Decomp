@@ -70,7 +70,7 @@ void StayPoint_update(int obj)
                 }
                 return;
             }
-            if (cMenuGetSelectedItemInt() == -1)
+            if (cMenuGetSelectedItem() == -1)
             {
                 ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = 0;
             }
