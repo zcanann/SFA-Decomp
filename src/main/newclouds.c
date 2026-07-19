@@ -656,6 +656,15 @@ void dll_07_func0A_nop(void)
 
 WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
 
+typedef struct
+{
+    f32 v[3];
+} SnowVec3;
+
+const SnowVec3 lbl_802C1FA8 = {{0.0f, 0.0f, 0.0f}};
+const SnowVec3 lbl_802C1FB4 = {{0.0f, 0.0f, 0.0f}};
+const SnowVec3 lbl_802C1FC0 = {{0.0f, 0.0f, 0.0f}};
+
 static const SnowFlakeUVs kSnowFlakeUVs = {{-48, 0, 176, 0, 64, 256}};
 
 int snowPrintSnowCloud(int arg, int cloudId)
@@ -878,15 +887,6 @@ int snowPrintSnowCloud(int arg, int cloudId)
 
 f32 lbl_8039A8F0[4];
 extern int gNewCloudSnowFogColor;
-
-typedef struct
-{
-    f32 v[3];
-} SnowVec3;
-
-const SnowVec3 lbl_802C1FA8 = {{0.0f, 0.0f, 0.0f}};
-const SnowVec3 lbl_802C1FB4 = {{0.0f, 0.0f, 0.0f}};
-const SnowVec3 lbl_802C1FC0 = {{0.0f, 0.0f, 0.0f}};
 
 extern char lbl_8030F670[];
 extern const f32 lbl_803DF228;
@@ -1623,7 +1623,7 @@ void dll_07_func06(void)
     while (i < 8)
     {
         pp = (u8**)((u8*)clouds + off);
-        pp += 4;
+        pp = (u8**)((u8*)pp + 16);
         p = *pp;
         if (p != NULL &&
             (*(u8**)p == NULL || (*(u16*)(*(u8**)p + 0xb0) & OBJECT_OBJFLAG_FREED)))
