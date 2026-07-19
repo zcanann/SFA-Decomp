@@ -51,7 +51,7 @@
 /* object group this object belongs to */
 #define DLLCE_OBJGROUP 3
 
-/* child object id spawned in fn_8015EA48 (role un-pinnable per gate: generic locals, no cache field/spawn-fn/docstring) */
+/* child object id spawned in chukChuk_spawnIceBall (role un-pinnable per gate: generic locals, no cache field/spawn-fn/docstring) */
 #define DLLCE_CHILD_OBJ 778
 
 /* dust burst spawned once when the baddie-control fx flag bit 2 is set */
@@ -126,7 +126,7 @@ void fn_8015DAE8(void)
     gIceBaddieStateHandlersB[6] = iceBaddie_stateHandlerB06;
     gIceBaddieStateHandlersB[7] = iceBaddie_stateHandlerB07;
 }
-int fn_8015DC04(int obj, GroundBaddieState* state)
+int chukChuk_checkChooseAttackState(int obj, GroundBaddieState* state)
 {
 
     int count;
@@ -201,7 +201,7 @@ int fn_8015DC04(int obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015DE50(int* obj, GroundBaddieState* state)
+int chukChuk_checkSubmergeState(int* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     if ((s8)state->baddie.moveJustStartedB != 0)
@@ -218,7 +218,7 @@ int fn_8015DE50(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015DEB4(int* obj, GroundBaddieState* state)
+int chukChuk_checkYieldState(int* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub;
     if ((s8)state->baddie.moveJustStartedB != 0)
@@ -237,7 +237,7 @@ int fn_8015DEB4(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
+int chukChuk_checkDeathState(GameObject* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub = obj->extra;
     f32 z;
@@ -269,7 +269,7 @@ int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E00C(int obj, u8* state)
+int chukChuk_checkHealthState(int obj, u8* state)
 {
     if ((s8)((GroundBaddieState*)state)->baddie.hitPoints < 1)
         return 3;
@@ -278,7 +278,7 @@ int fn_8015E00C(int obj, u8* state)
     return 0;
 }
 
-int fn_8015E044(int* obj, GroundBaddieState* state)
+int chukChuk_checkTargetState(int* obj, GroundBaddieState* state)
 {
     if (*(int**)&state->baddie.targetObj != NULL)
     {
@@ -297,7 +297,7 @@ int fn_8015E044(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E0C8(GameObject* obj, GroundBaddieState* state)
+int chukChuk_updateWindupState(GameObject* obj, GroundBaddieState* state)
 {
             GroundBaddieState* sub;
     f32 spd;
@@ -336,7 +336,7 @@ int fn_8015E0C8(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E210(int* obj, GroundBaddieState* state)
+int chukChuk_updateAlertState(int* obj, GroundBaddieState* state)
 {
 
         int* objs;
@@ -395,7 +395,7 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E3A0(GameObject* obj, int state)
+int chukChuk_updateSpitState(GameObject* obj, int state)
 {
 
         GroundBaddieState* sub = (obj)->extra;
@@ -445,7 +445,7 @@ int fn_8015E3A0(GameObject* obj, int state)
     return 0;
 }
 
-int fn_8015E520(int* obj, GroundBaddieState* state)
+int chukChuk_updateState3(int* obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.moveJustStartedA != 0)
     {
@@ -465,7 +465,7 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E5DC(short* obj, GroundBaddieState* state)
+int chukChuk_updateAttackState(short* obj, GroundBaddieState* state)
 {
 
             int count;
@@ -516,7 +516,7 @@ int fn_8015E5DC(short* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E798(GameObject* obj, GroundBaddieState* state)
+int chukChuk_updateSubmergeState(GameObject* obj, GroundBaddieState* state)
 {
 
             GroundBaddieState* sub;
@@ -555,7 +555,7 @@ int fn_8015E798(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E8BC(GameObject* obj, GroundBaddieState* state)
+int chukChuk_updateEmergeState(GameObject* obj, GroundBaddieState* state)
 {
 
                 GroundBaddieState* sub;
@@ -603,9 +603,9 @@ int fn_8015E8BC(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-void fn_8015EA48(GameObject* obj, GroundBaddieState* state);
+void chukChuk_spawnIceBall(GameObject* obj, GroundBaddieState* state);
 
-void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
+void chukChuk_spawnIceBall(GameObject* obj, GroundBaddieState* state)
 {
                 f32 dur;
     f32 t;
@@ -639,7 +639,7 @@ void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
     }
 }
 
-void fn_8015EB6C(GameObject* obj, int state, int target)
+void chukChuk_acquireTarget(GameObject* obj, int state, int target)
 {
             int sub = *(int*)&((GroundBaddieState*)state)->control;
     char* r;
@@ -688,7 +688,7 @@ void fn_8015EB6C(GameObject* obj, int state, int target)
     }
 }
 
-void fn_8015ED1C(int obj, int state, int target)
+void chukChuk_updateTargeting(int obj, int state, int target)
 {
     void* player;
     char* targetObj;
@@ -847,17 +847,17 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
         }
         else
         {
-            fn_8015ED1C((int)obj, (int)sub, (int)sub);
+            chukChuk_updateTargeting((int)obj, (int)sub, (int)sub);
             if (sub->targetState == 0)
             {
-                fn_8015EB6C(obj, (int)sub, (int)sub);
+                chukChuk_acquireTarget(obj, (int)sub, (int)sub);
             }
             else
             {
                 hit = *(u8**)&sub->control;
                 if ((hit[8] & 1) != 0)
                 {
-                    fn_8015EA48(obj, sub);
+                    chukChuk_spawnIceBall(obj, sub);
                 }
                 if ((hit[8] & 2) != 0)
                 {
@@ -922,17 +922,17 @@ void dll_CE_release_nop(void)
 
 void dll_CE_initialise(void)
 {
-    gChukChukMoveHandlers[0] = fn_8015E8BC;
-    gChukChukMoveHandlers[1] = fn_8015E798;
-    gChukChukMoveHandlers[2] = fn_8015E5DC;
-    gChukChukMoveHandlers[3] = fn_8015E520;
-    gChukChukMoveHandlers[4] = fn_8015E3A0;
-    gChukChukMoveHandlers[5] = fn_8015E210;
-    gChukChukMoveHandlers[6] = fn_8015E0C8;
-    gChukChukCheckHandlers[0] = fn_8015E044;
-    gChukChukCheckHandlers[1] = fn_8015E00C;
-    gChukChukCheckHandlers[2] = fn_8015DF20;
-    gChukChukCheckHandlers[3] = fn_8015DEB4;
-    gChukChukCheckHandlers[4] = fn_8015DE50;
-    gChukChukCheckHandlers[5] = fn_8015DC04;
+    gChukChukMoveHandlers[0] = chukChuk_updateEmergeState;
+    gChukChukMoveHandlers[1] = chukChuk_updateSubmergeState;
+    gChukChukMoveHandlers[2] = chukChuk_updateAttackState;
+    gChukChukMoveHandlers[3] = chukChuk_updateState3;
+    gChukChukMoveHandlers[4] = chukChuk_updateSpitState;
+    gChukChukMoveHandlers[5] = chukChuk_updateAlertState;
+    gChukChukMoveHandlers[6] = chukChuk_updateWindupState;
+    gChukChukCheckHandlers[0] = chukChuk_checkTargetState;
+    gChukChukCheckHandlers[1] = chukChuk_checkHealthState;
+    gChukChukCheckHandlers[2] = chukChuk_checkDeathState;
+    gChukChukCheckHandlers[3] = chukChuk_checkYieldState;
+    gChukChukCheckHandlers[4] = chukChuk_checkSubmergeState;
+    gChukChukCheckHandlers[5] = chukChuk_checkChooseAttackState;
 }

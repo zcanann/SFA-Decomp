@@ -3,8 +3,8 @@
 
 #include "main/game_object.h"
 
-void fn_8015ED1C(int obj, int state, int target);
-void fn_8015EB6C(GameObject* obj, int state, int target);
+void chukChuk_updateTargeting(int obj, int state, int target);
+void chukChuk_acquireTarget(GameObject* obj, int state, int target);
 void dll_CE_func0B(GameObject* obj, int v);
 s16 dll_CE_setScale(int* obj);
 int dll_CE_getExtraSize_ret_1052(void);
