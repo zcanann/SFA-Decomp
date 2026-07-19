@@ -1816,9 +1816,9 @@ void dll_07_func06(void)
             snowReposSnowCloud(((NewCloud*)D7_CLOUD)->cloudId);
             if (((NewCloud*)D7_CLOUD)->activeFlakes > lbl_803DF1A0)
             {
-                d[0] = ((NewCloud*)D7_CLOUD)->worldPosX - *(f32*)((u8*)cam + 0xc);
-                d[1] = ((NewCloud*)D7_CLOUD)->worldPosY - *(f32*)((u8*)cam + 0x10);
-                d[2] = ((NewCloud*)D7_CLOUD)->worldPosZ - *(f32*)((u8*)cam + 0x14);
+                d[0] = ((NewCloud*)D7_CLOUD)->worldPosX - cam->x;
+                d[1] = ((NewCloud*)D7_CLOUD)->worldPosY - cam->y;
+                d[2] = ((NewCloud*)D7_CLOUD)->worldPosZ - cam->z;
                 mag = PSVECMag(d);
                 if (mag < nearest)
                 {
