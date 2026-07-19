@@ -8,7 +8,7 @@
  *   1  face target   - turns toward the followed object (extra+0x28), with a
  *                      random chance to bark again, until anim flag + timer hit
  *   2  dig start     - if loading isn't locked, spawns seven child objects
- *                      (Obj_AllocObjectSetup/Obj_SetupObject into unk700..),
+ *                      (Obj_AllocObjectSetup/Obj_SetupObject into scratch700..),
  *                      plays/loops the dig sfx (0x3db/0x3dc) and runs anim 0x34
  *   3  dig end       - on move progress >= threshold, resets child anim speed,
  *                      stops the dig loop, barks (sfx 0x29d) and clears the
