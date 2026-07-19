@@ -58,11 +58,6 @@ STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
 
 #define CFCRATE_HIT_VOLUME_SLOT 0x13
 
-#define PARTFX_SPAWN(obj, fxId, a, b, c, d)                                                                            \
-    (*gPartfxInterface)->spawnObject((void*)(obj), (fxId), (void*)(a), (b), (c), (void*)(d))
-
-
-
 int CFCrate_getExtraSize(void)
 {
     return 0x4c;
@@ -128,7 +123,7 @@ int CFCrate_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (animUpdate->eventIds[i] == 1)
             {
-                PARTFX_SPAWN(obj, 0x44, 0, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x44, NULL, 2, -1, NULL);
             }
             animUpdate->eventIds[i] = 0;
         }

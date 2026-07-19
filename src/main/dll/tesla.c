@@ -76,9 +76,6 @@ STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, xDelta) == 0x0C);
 u8
     gTrickyCurveBurstCounter; /* inter-frame burst-fire counter; reset to 0 after TRICKY_CURVE_BURST_LIMIT ticks */
 
-#define PARTFX_SPAWN(obj, effectId, args, mode, arg5, arg6)                                                            \
-    (*gPartfxInterface)->spawnObject((void*)(obj), (effectId), (args), (mode), (arg5), (arg6))
-
 void fn_80206968(TrickyCurveObject* obj)
 {
     u8 insideAxes;
@@ -160,7 +157,7 @@ void fn_80206968(TrickyCurveObject* obj)
         if (objGetAnimState80A((GameObject*)player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE)
         {
             mainSetBits(TRICKY_CURVE_GAMEBIT_HIT, 1);
-            PARTFX_SPAWN(player, TRICKY_CURVE_PARTFX_COOLDOWN, 0, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(player, TRICKY_CURVE_PARTFX_COOLDOWN, NULL, 2, -1, NULL);
         }
         else
         {
@@ -271,13 +268,13 @@ void fn_80206C18(TrickyCurveObject* obj)
                 mainSetBits(TRICKY_CURVE_GAMEBIT_HIT, 1);
                 Sfx_PlayFromObject((u32)obj, TRICKY_CURVE_SFX_BURST);
             }
-            PARTFX_SPAWN(player, TRICKY_CURVE_PARTFX_COOLDOWN, 0, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(player, TRICKY_CURVE_PARTFX_COOLDOWN, NULL, 2, -1, NULL);
         }
         else
         {
             mainSetBits(TRICKY_CURVE_GAMEBIT_HIT, 1);
             ObjMsg_SendToObject(player, TRICKY_CURVE_MESSAGE_BURST, obj, 2);
-            PARTFX_SPAWN((int)obj, TRICKY_CURVE_PARTFX_BURST, &partfxArgs, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, TRICKY_CURVE_PARTFX_BURST, &partfxArgs, 2, -1, NULL);
             Sfx_PlayFromObject((u32)obj, TRICKY_CURVE_SFX_BURST);
         }
     }

@@ -48,9 +48,6 @@ typedef struct FxEmitWorldSpawnArgs
 extern char sCFTreasSharpyDebugFormat[];
 f32 lbl_803E3E40 = 600.0f;
 
-#define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg)                                                         \
-    (*gPartfxInterface)->spawnObject((void*)(obj), id, data, flags, model, (void*)(arg))
-
 void fxemit_emitEffect(FxEmitObject* obj)
 {
     FxEmitState* state;
@@ -142,12 +139,12 @@ void fxemit_emitEffect(FxEmitObject* obj)
         {
             for (i = 0; i < state->emitCount; i++)
             {
-                CFTREAS_PARTFX_SPAWN(obj, state->effectId, &args, spawnFlags, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, spawnFlags, -1, NULL);
             }
         }
         else
         {
-            CFTREAS_PARTFX_SPAWN(obj, state->altEffectId, &args, spawnFlags, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, state->altEffectId, &args, spawnFlags, -1, NULL);
         }
     }
     else
@@ -161,12 +158,12 @@ void fxemit_emitEffect(FxEmitObject* obj)
             {
                 for (i = 0; i < state->emitCount; i++)
                 {
-                    CFTREAS_PARTFX_SPAWN(obj, state->effectId, NULL, spawnFlags, -1, 0);
+                    (*gPartfxInterface)->spawnObject(obj, state->effectId, NULL, spawnFlags, -1, NULL);
                 }
             }
             else
             {
-                CFTREAS_PARTFX_SPAWN(obj, state->effectId, NULL, spawnFlags, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, state->effectId, NULL, spawnFlags, -1, NULL);
             }
         }
         else if (mode == 1)
@@ -207,8 +204,6 @@ void fxemit_emitEffect(FxEmitObject* obj)
         }
     }
 }
-
-#undef CFTREAS_PARTFX_SPAWN
 
 int FxEmit_SeqFn(FxEmitObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
