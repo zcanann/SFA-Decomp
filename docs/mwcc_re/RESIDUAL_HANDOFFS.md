@@ -267,3 +267,16 @@ tail-share idiom, BUT it's a backward goto into another switch case's interior �
 we treat as authentic. NOT shipped (kept clean-C at 82.685 per "clean-C beats hacked-100"). If you judge
 this specific MusyX tail-share goto authentic 2002 source, the one-line change lands the whole fn at 100 —
 your policy call. Reverted; flagging.
+
+## sndFXCtrl14 3rd param u16-vs-int: ambiguous (def wants u16, callers want int) — owner call
+Tested changing sndFXCtrl14's 3rd param `u16 value`->`int value` (def snd_synth_api.c + proto
+snd_synth_api.h). Result: 2 ups / 1 down — Sfx_SetObjectChannelVolume + Sfx_SetObjectSfxVolume both
+98.478->100 (they currently emit a redundant clrlwi to narrow an int to the u16 param; int drops it), BUT
+the definition sndFXCtrl14 itself 100->97.125 (its body matches better with u16 — likely stores to a u16
+field). Net ~neutral in raw % (+3.0 callers, -2.875 def) = +1 fully-matched fn but BREAKS a clean 100.
+The authentic signature is genuinely ambiguous: def-match says u16, caller-match says int, they can't both
+be original (same class as the mathSinf def-vs-caller split, which was net-negative). Likely the param is
+`int` at the boundary and the def truncates internally — fixing the def body to `(u16)value`/u16-field
+store MIGHT recover the def's 100 AND keep the callers at 100 (net +2). Not shipped (won't break a 100
+unilaterally on an ambiguous signature). Only 3 caller files — cheap for you to resolve with the def-body
+truncation angle. Flagging.
