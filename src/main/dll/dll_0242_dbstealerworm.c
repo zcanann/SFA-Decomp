@@ -816,14 +816,15 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
         ObjGroup_GetObjects(c30, &cnt1);
         if (cnt1 == 0)
         {
+            RingBufferQueue* q0;
             player = Obj_GetPlayerObject();
-            q = (int)sub->msgStack;
+            q0 = sub->msgStack;
             msg0[0] = 0xf;
             msg0[1] = 1;
             msg0[2] = (int)player;
-            if (Stack_IsFull((RingBufferQueue*)q) == 0)
+            if (Stack_IsFull(q0) == 0)
             {
-                Stack_Push((RingBufferQueue*)q, msg0);
+                Stack_Push(q0, msg0);
             }
             sub->msgAdvance = 1;
             return 0;
@@ -831,8 +832,8 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     }
     q = *(int*)&((BaddieState*)baddie)->targetObj;
     found = 0;
-    objs = (int*)ObjGroup_GetObjects(DBSTEALERWORM_OBJGROUP, &cnt2);
-    for (i = 0; i < cnt2; i++)
+    ptr = (int*)ObjGroup_GetObjects(DBSTEALERWORM_OBJGROUP, &cnt2);
+    for (i = 0, objs = ptr; i < cnt2; i++)
     {
         if (((GameObject*)*objs)->anim.seqId == 0x539)
         {
@@ -1404,7 +1405,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
 
     sub->flags14 |= DBWORM_FLAG14_FX_DUST;
     sub->flags15 &= ~4;
-    Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_baddie_vambat_death);
+    ((void (*)(GameObject*, int))Sfx_KeepAliveLoopedObjectSound)(obj, SFXTRIG_baddie_vambat_death);
     if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
     {
         ObjHits_EnableObject(obj);
