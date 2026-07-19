@@ -16,7 +16,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/vecmath_distance_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/crrockfallplacement_struct.h"
 #include "main/dll/crrockfall_types.h"
@@ -225,9 +225,9 @@ void crrockfall_update(int* obj)
                 ((GameObject*)obj)->anim.velocityY = 0.0f;
                 if (((GameObject*)obj)->anim.seqId == CRROCKFALL_SEQ_QUARRY)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_155);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_155);
                 }
-                Sfx_PlayFromObject(obj, SFXTRIG_wp_swdwood16);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_swdwood16);
                 hitState->flags |= 1;
             }
             *(int*)&hitState->objectHitMask = 16;
@@ -244,7 +244,7 @@ void crrockfall_update(int* obj)
                 state->mode = zcEn3_ROCKFALL_MODE_RESTING;
                 if (state->cfg->landSfx != 0)
                 {
-                    Sfx_PlayFromObject(obj, (u16)state->cfg->landSfx);
+                    Sfx_PlayFromObject((u32)obj, (u16)state->cfg->landSfx);
                 }
             }
             break;
@@ -265,11 +265,11 @@ void crrockfall_update(int* obj)
             Sfx_StopObjectChannel((int)obj, 8);
             if (((GameObject*)obj)->anim.seqId == CRROCKFALL_SEQ_QUARRY)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_mv_dinostomp1);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_mv_dinostomp1);
             }
             else
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_jbike_bombbeep);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_jbike_bombbeep);
                 spawnExplosionLegacy(obj, (f32)(u32)((CrrockfallPlacement*)placement)->scaleByte, 1, 1, 0, 1,
                                      1, 1, 1);
             }

@@ -14,7 +14,7 @@
  * but is not part of the retail dll0b unit; it was dead here and removed.
  */
 #include "main/dll/partfx_interface.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/dll/mtxbuildarg_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
@@ -1403,7 +1403,7 @@ void dll_0B_func05(void)
                     }
                     else
                     {
-                        Sfx_PlayFromObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
+                        Sfx_PlayFromObject((u32)((ModgfxEffectSlot*)eff)->sourceObj,
                                            (u16) * (s16*)(PENDING_SPAWNS + emOff + 0x14));
                     }
                 }

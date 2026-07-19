@@ -24,7 +24,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_channel_volume_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
@@ -492,8 +492,8 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
     }
     if (channelFlags & 4)
     {
-        Sfx_PlayFromObject(obj, ((DRCloudCageState*)state)->windSfxId);
-        Sfx_PlayFromObject(obj, SFXTRIG_tr_gal_rumblelp11);
+        Sfx_PlayFromObject((u32)obj, ((DRCloudCageState*)state)->windSfxId);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_tr_gal_rumblelp11);
         if (intensity > 5)
         {
             ((DRCloudCageState*)state)->channel2Vol = ((DRCloudCageState*)state)->channel2Vol + timeDelta;
