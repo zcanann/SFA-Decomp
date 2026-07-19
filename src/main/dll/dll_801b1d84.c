@@ -1,7 +1,6 @@
 /* DIM wood door falling debris updater [801B13E8-801B13F0) */
 
 #include "main/game_object.h"
-#define OBJFX_SPAWN_EXPLOSION_POINTER_LEGACY
 #include "main/objfx.h"
 #include "main/object.h"
 #include "main/gamebits.h"
@@ -75,7 +74,7 @@ void DIMwooddoor_updateFallingDebris(int* obj)
             {
                 ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                           ((DIMwooddoorUpdateFallingDebrisState*)extra)->hitboxRadius);
-                spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
+                spawnExplosion((GameObject*)obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
                 ((GameObject*)obj)->userData1 = 1180;
                 *(s8*)&((DIMwooddoorUpdateFallingDebrisState*)extra)->state = DIMWOODDOOR_DEBRIS_STATE_EXPLODED;
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -90,7 +89,7 @@ void DIMwooddoor_updateFallingDebris(int* obj)
         {
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                       ((DIMwooddoorUpdateFallingDebrisState*)extra)->hitboxRadius);
-            spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
+            spawnExplosion((GameObject*)obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
             ((GameObject*)obj)->userData1 = 1180;
             *(s8*)&((DIMwooddoorUpdateFallingDebrisState*)extra)->state = DIMWOODDOOR_DEBRIS_STATE_EXPLODED;
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;

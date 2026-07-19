@@ -21,16 +21,8 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chan
 void projectileParticleFxFn_80099660(void* obj, f32 scale, int mode);
 void itemPickupDoParticleFx(void* obj, f32 scale, int mode, u8 count);
 void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* offset);
-#if defined(OBJFX_SPAWN_EXPLOSION_POINTER_LEGACY)
-void spawnExplosion(int* source, f32 scale, int kind, int flag4, int flag8, int flag10, int doShake, int flag20,
-                    int initialFlags);
-#elif defined(OBJFX_SPAWN_EXPLOSION_REORDERED_LEGACY)
-void spawnExplosion(int source, int kind, int flag4, int flag8, int flag10, int doShake, int flag20,
-                    int initialFlags, f32 scale);
-#else
 void spawnExplosion(GameObject* source, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 flag10, u8 doShake, u8 flag20,
                     u8 initialFlags);
-#endif
 
 #define spawnExplosionLegacy(source, scale, kind, flag4, flag8, flag10, doShake, flag20, initialFlags)            \
     ((void (*)(GameObject*, f32, int, int, int, int, int, int, int))spawnExplosion)(                              \
