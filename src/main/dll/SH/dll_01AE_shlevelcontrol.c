@@ -96,7 +96,7 @@ extern f32 gShLevelControlHudTextDuration;
 
 union ShLevelControlConstF32 { f32 f; };
 
-f32 gShLevelControlBloopTimeLimit = 1e+05f;
+const f32 gShLevelControlBloopTimeLimit[1] = {1e+05f};
 const union ShLevelControlConstF32 lbl_803E54B4 = { 0.0f };
 
 void SH_LevelControl_setMusic(short* state);
@@ -310,7 +310,7 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
         if (mainGetBit(0x124) != 0)
         {
             (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
-            ((ShLevelcontrolState*)state)->timer8 = gShLevelControlBloopTimeLimit;
+            ((ShLevelcontrolState*)state)->timer8 = gShLevelControlBloopTimeLimit[0];
             (*gGameUIInterface)->initAirMeter(100000, SHLEVELCONTROL_AIRMETER_BGTEXTURE);
             ((ShLevelcontrolState*)state)->eventState = 2;
         }
