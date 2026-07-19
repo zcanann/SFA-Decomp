@@ -53,8 +53,6 @@ typedef s16 (*SwapstoneYawDeltaFn)(int obj, int target, f32* distance);
 
 #define PAD_BUTTON_B 0x200
 
-typedef u32 (*WarpstoneAdvanceAnimEventsFn)(int obj, f32 moveStepScale);
-
 typedef struct WarpstoneUpdateMenuAnimObjState
 {
     u8 pad0[0x8 - 0x0];
@@ -459,7 +457,7 @@ void warpstone_update(int obj)
         *(int*)state = 0;
     }
 
-    advanceResult = ((WarpstoneAdvanceAnimEventsFn)SClantern_advanceAnimEvents)(obj, 0.0055555557f);
+    advanceResult = SClantern_advanceAnimEvents(obj, 0.0055555557f);
     if (((GameObject*)obj)->anim.currentMove == 0)
     {
         if (randFn_80080100(100) != 0)

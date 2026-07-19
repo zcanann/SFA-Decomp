@@ -44,8 +44,6 @@
 #include "main/newshadows.h"
 #include "main/newshadows_audio_api.h"
 
-typedef int (*DREarthWarriorEventCountdownFn)(ObjAnimComponent* objAnim);
-
 typedef struct DREarthWarriorPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -766,7 +764,7 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, int state)
         if ((skip != 0 || (void*)((EarthWarriorSub*)q)->prevMoveTable != (void*)((EarthWarriorSub*)q)->moveTable ||
              (obj)->anim.currentMove !=
                  *(s16*)(((EarthWarriorSub*)q)->moveTable + ((EarthWarriorSub*)q)->attackPhase * 2)) &&
-            (((DREarthWarriorEventCountdownFn)ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0 ||
+            (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 ||
              ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F2)->b10 != 0))
         {
             if ((obj)->anim.currentMove == 0x14)
@@ -857,7 +855,7 @@ int DR_EarthWarrior_stateHandler01(GameObject* obj, int baddie)
         (obj)->anim.currentMove == *(s16*)(q->moveTable + 0x32))
     {
         if (*(s8*)&((BaddieState*)baddie)->moveDone != 0 &&
-            ((DREarthWarriorEventCountdownFn)ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0 &&
+            ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 &&
             !((ByteFlags*)&inner->sub.flags994)->b01)
         {
             ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E8304, 0);

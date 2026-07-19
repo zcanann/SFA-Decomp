@@ -30,7 +30,7 @@
 
 extern ObjAnimEventList gSClanternObjAnimEvents;
 
-u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
+u32 SClantern_advanceAnimEvents(int obj, f32 moveStepScale)
 {
     u32 advanceResult;
     GameObject* lantern;
