@@ -41,55 +41,6 @@ typedef struct SquadronShipSetup
 #define SPAWN_EXTRA_SIZE 0x20
 
 
-int arwgenerato_getExtraSize(void)
-{
-    return 4;
-}
-
-int arwgenerato_getObjectTypeId(void)
-{
-    return 0;
-}
-
-void arwgenerato_free(void)
-{
-}
-
-void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
-{
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
-}
-
-void arwgenerato_hitDetect(void)
-{
-}
-
-void arwgenerato_update(GameObject* obj)
-{
-    ARWGeneratorState* state = (obj)->extra;
-    ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)(obj)->anim.placementData;
-    f32 timer = state->spawnTimer;
-    f32 thr = 0.0f;
-
-    if (timer > thr)
-    {
-        state->spawnTimer = timer - timeDelta;
-        if (state->spawnTimer <= thr)
-        {
-            switch (mapData->spawnMode)
-            {
-            case 0:
-                arwgenerato_spawnSquadronShipB(obj, state, mapData);
-                break;
-            case 1:
-                arwgenerato_spawnSquadronShipA(obj, state, mapData);
-                break;
-            }
-            state->spawnTimer = (f32)(u32)mapData->spawnInterval;
-        }
-    }
-}
-
 void arwgenerato_spawnSquadronShipA(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
 {
     SquadronShipSetup* newObj;
@@ -149,6 +100,55 @@ void arwgenerato_spawnSquadronShipB(GameObject* obj, ARWGeneratorState* state, A
         dir.z = setup->velocityZ / *(f32*)&lbl_803E7140;
         dll_2A3_setVelocity((GameObject*)(newObj), &dir);
         dll_2A3_setSpeed((GameObject*)(newObj), setup->projectileSpeed);
+    }
+}
+
+int arwgenerato_getExtraSize(void)
+{
+    return 4;
+}
+
+int arwgenerato_getObjectTypeId(void)
+{
+    return 0;
+}
+
+void arwgenerato_free(void)
+{
+}
+
+void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+{
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+}
+
+void arwgenerato_hitDetect(void)
+{
+}
+
+void arwgenerato_update(GameObject* obj)
+{
+    ARWGeneratorState* state = (obj)->extra;
+    ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)(obj)->anim.placementData;
+    f32 timer = state->spawnTimer;
+    f32 thr = 0.0f;
+
+    if (timer > thr)
+    {
+        state->spawnTimer = timer - timeDelta;
+        if (state->spawnTimer <= thr)
+        {
+            switch (mapData->spawnMode)
+            {
+            case 0:
+                arwgenerato_spawnSquadronShipB(obj, state, mapData);
+                break;
+            case 1:
+                arwgenerato_spawnSquadronShipA(obj, state, mapData);
+                break;
+            }
+            state->spawnTimer = (f32)(u32)mapData->spawnInterval;
+        }
     }
 }
 

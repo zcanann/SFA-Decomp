@@ -92,12 +92,14 @@ int bombplant_SeqFn(int* obj)
     return 0;
 }
 
-static void bombplant_tryBeginGrow(void* obj, void* state)
+static const f32 gBombPlantTriggerDistSq[1] = {6.4e+03f};
+
+static inline void bombplant_tryBeginGrow(void* obj, void* state)
 {
     void* plr = Obj_GetPlayerObject();
     f32 dist = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)plr + 0x18));
 
-    if (dist > 6400.0f)
+    if (dist > gBombPlantTriggerDistSq[0])
     {
         ((BombPlantState*)state)->stateIndex = 2;
         ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
@@ -123,6 +125,41 @@ typedef struct
 
 /* Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
+
+void bombplant_throwSpore(int* obj, int* p2)
+{
+    BombplantSporeSpawn* spore;
+    BombplantPlacement* base = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
+
+    if (Obj_IsLoadingLocked())
+    {
+        MatrixTransform bd;
+        f32 mtx[16];
+        f32 tz, ty, tx;
+
+        spore = (BombplantSporeSpawn*)Obj_AllocObjectSetup(0x24, BOMBPLANT_CHILD_OBJ_SPORE);
+        bd.rotX = ((GameObject*)obj)->anim.rotX;
+        bd.rotY = ((GameObject*)obj)->anim.rotY;
+        bd.rotZ = ((GameObject*)obj)->anim.rotZ;
+        bd.x = 0.0f;
+        bd.y = 0.0f;
+        bd.z = 0.0f;
+        bd.scale = 1.0f;
+        setMatrixFromObjectPos(mtx, &bd);
+        Matrix_TransformPoint(mtx, 0.0f, 1.0f, 0.0f, &tx, &ty, &tz);
+        bd.x = 26.0f * tx;
+        bd.y = 26.0f * ty;
+        bd.z = 26.0f * tz;
+        spore->posX = ((GameObject*)obj)->anim.localPosX + bd.x;
+        spore->posY = ((GameObject*)obj)->anim.localPosY + bd.y;
+        spore->posZ = ((GameObject*)obj)->anim.localPosZ + bd.z;
+        spore->color[1] = 1;
+        spore->color[0] = 2;
+        spore->spawnYaw = (s16)((s32)base->spawnYawByte << 8);
+        spore->rotXSeed = ((GameObject*)obj)->anim.rotX;
+        Obj_SetupObject((ObjPlacement*)spore, 5, -1, -1, NULL);
+    }
+}
 
 int bombplant_getExtraSize(void)
 {
@@ -446,38 +483,3 @@ u8 lbl_80326D98[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 void* gBombPlantSporeObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_init, BombPlantSpore_update, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_free, (void*)0x00000000, BombPlantSpore_getExtraSize, (void*)0x00000000 };
 void* gBombPlantingSpotObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, BombPlantingSpot_init, BombPlantingSpot_update, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
 
-
-void bombplant_throwSpore(int* obj, int* p2)
-{
-    BombplantSporeSpawn* spore;
-    BombplantPlacement* base = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
-
-    if (Obj_IsLoadingLocked())
-    {
-        MatrixTransform bd;
-        f32 mtx[16];
-        f32 tz, ty, tx;
-
-        spore = (BombplantSporeSpawn*)Obj_AllocObjectSetup(0x24, BOMBPLANT_CHILD_OBJ_SPORE);
-        bd.rotX = ((GameObject*)obj)->anim.rotX;
-        bd.rotY = ((GameObject*)obj)->anim.rotY;
-        bd.rotZ = ((GameObject*)obj)->anim.rotZ;
-        bd.x = 0.0f;
-        bd.y = 0.0f;
-        bd.z = 0.0f;
-        bd.scale = 1.0f;
-        setMatrixFromObjectPos(mtx, &bd);
-        Matrix_TransformPoint(mtx, 0.0f, 1.0f, 0.0f, &tx, &ty, &tz);
-        bd.x = 26.0f * tx;
-        bd.y = 26.0f * ty;
-        bd.z = 26.0f * tz;
-        spore->posX = ((GameObject*)obj)->anim.localPosX + bd.x;
-        spore->posY = ((GameObject*)obj)->anim.localPosY + bd.y;
-        spore->posZ = ((GameObject*)obj)->anim.localPosZ + bd.z;
-        spore->color[1] = 1;
-        spore->color[0] = 2;
-        spore->spawnYaw = (s16)((s32)base->spawnYawByte << 8);
-        spore->rotXSeed = ((GameObject*)obj)->anim.rotX;
-        Obj_SetupObject((ObjPlacement*)spore, 5, -1, -1, NULL);
-    }
-}

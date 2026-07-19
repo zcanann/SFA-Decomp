@@ -36,6 +36,35 @@ const union KtlazerwallConstF32 lbl_803E68B4 = {0.25f};
 const union KtlazerwallConstF32 lbl_803E68B8 = {230.0f};
 const union KtlazerwallConstF32 lbl_803E68BC = {0.01f};
 
+void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
+{
+    KtrexfloorswitchSpawnEnergyArcState* runtime = (obj)->extra;
+    f32 pos[3];
+    f32 dir[3];
+    if (runtime->boltObj != 0)
+    {
+        mm_free(runtime->boltObj);
+        runtime->boltObj = 0;
+    }
+    pos[0] = (obj)->anim.localPosX;
+    pos[1] = (obj)->anim.localPosY;
+    pos[2] = (obj)->anim.localPosZ;
+    dir[0] = lbl_803E6898.f;
+    {
+        f32 fr = angle;
+        fr = fr * runtime->angleScale;
+        dir[1] = -(fr * lbl_803E689C.f);
+    }
+    dir[2] = scale;
+    vecRotateZXY(&obj->anim.rotX, dir);
+    dir[0] += (obj)->anim.localPosX;
+    dir[1] += (obj)->anim.localPosY;
+    dir[2] += (obj)->anim.localPosZ;
+    runtime->unk8 = (f32)(int)randomGetRange(10, angle);
+    runtime->boltObj = lightningCreateU16Promoted((const Vec3f*)pos, (const Vec3f*)dir, lbl_803E68A0.f, lbl_803E68A4.f,
+                                                  angle, 96, 0);
+}
+
 int KT_Lazerwall_getExtraSize(void)
 {
     return 0x14;
@@ -185,33 +214,4 @@ void KT_Lazerwall_release(void)
 
 void KT_Lazerwall_initialise(void)
 {
-}
-
-void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
-{
-    KtrexfloorswitchSpawnEnergyArcState* runtime = (obj)->extra;
-    f32 pos[3];
-    f32 dir[3];
-    if (runtime->boltObj != 0)
-    {
-        mm_free(runtime->boltObj);
-        runtime->boltObj = 0;
-    }
-    pos[0] = (obj)->anim.localPosX;
-    pos[1] = (obj)->anim.localPosY;
-    pos[2] = (obj)->anim.localPosZ;
-    dir[0] = lbl_803E6898.f;
-    {
-        f32 fr = angle;
-        fr = fr * runtime->angleScale;
-        dir[1] = -(fr * lbl_803E689C.f);
-    }
-    dir[2] = scale;
-    vecRotateZXY(&obj->anim.rotX, dir);
-    dir[0] += (obj)->anim.localPosX;
-    dir[1] += (obj)->anim.localPosY;
-    dir[2] += (obj)->anim.localPosZ;
-    runtime->unk8 = (f32)(int)randomGetRange(10, angle);
-    runtime->boltObj = lightningCreateU16Promoted((const Vec3f*)pos, (const Vec3f*)dir, lbl_803E68A0.f, lbl_803E68A4.f,
-                                                  angle, 96, 0);
 }
