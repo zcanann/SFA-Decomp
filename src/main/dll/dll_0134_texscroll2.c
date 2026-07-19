@@ -73,8 +73,8 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
         {
             if (*(void**)((char*)material + 0x24) == tex)
             {
-                texWidthFixed = (s32)(u32) * (u16*)((char*)tex + 0xa) << 6;
-                texHeightFixed = (s32)(u32) * (u16*)((char*)tex + 0xc) << 6;
+                texWidthFixed = (s32)(u32) ((Texture*)tex)->width << 6;
+                texHeightFixed = (s32)(u32) ((Texture*)tex)->height << 6;
                 if (*(u8*)((char*)material + 0x2a) != TEXSCROLL_SLOT_UNALLOCATED)
                 {
                     int mapId = ((TexScrollPlacement*)obj->objAnim.placementData)->mapId;
