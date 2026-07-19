@@ -66,7 +66,7 @@ typedef struct SAL_PANINFO
 } SAL_PANINFO;
 
 /* The +1 pan lookups read the global directly so &pan[1] stays one shared address constant. */
-static void CalcBus(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
+static inline void CalcBus(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
 {
     u32 i;
     f32 level;
@@ -85,7 +85,7 @@ static void CalcBus(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTa
         level * ((1.0f - pi->pan_fm) * tabs->pan[pi->pan_im] + pi->pan_fm * gSnd3dRoomVolTable.pan[pi->pan_im + 1]);
 }
 
-static void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
+static inline void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalVolTab* tabs)
 {
     u32 i;
     f32 frac;
