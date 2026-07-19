@@ -249,6 +249,38 @@ void fn_8017D854(GameObject* obj, int msg)
     }
 }
 
+/* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
+ * range, either send a trigger event (first contact) or apply healing +
+ * particle FX + sfx + free-or-disable. */
+void appleontree_handleCollectableHit(GameObject* obj)
+{
+    int state = *(int*)&obj->extra;
+    GameObject* player = Obj_GetPlayerObject();
+
+    if (!(Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX) < gAppleOnTreePickupXZRange))
+        return;
+    if (!(Vec_distance(&player->anim.worldPosX, &obj->anim.worldPosX) < gAppleOnTreePickupRange))
+        return;
+
+    if (mainGetBit(GAMEBIT_SawApple) == 0)
+    {
+        (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
+        ((AppleOnTreeState*)state)->triggerGameBit = -1;
+        ((AppleOnTreeState*)state)->pickupMsgValue = 0;
+        ((AppleOnTreeState*)state)->unk60 = lbl_803E37C8;
+        ObjMsg_SendToObject(player, APPLEONTREE_MSG_IN_RANGE, obj, state + 0x5c);
+        mainSetBits(GAMEBIT_SawApple, 1);
+        ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 4);
+    }
+    else
+    {
+        playerAddHealth(player, ((AppleOnTreeState*)state)->healthRestore);
+        itemPickupDoParticleFxLegacy((int)obj, lbl_803E37C8, 0xff, 0x28);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_cam90_c);
+        appleontree_markFallen(obj);
+    }
+}
+
 u8 AppleOnTree_modelMtxFn(int* obj)
 {
     return ((AppleOnTreeState*)(int*)((GameObject*)obj)->extra)->animState;
@@ -783,38 +815,6 @@ void AppleOnTree_update(int objArg)
                 appleontree_handleCollectableHit((GameObject*)obj);
             }
         }
-    }
-}
-
-/* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
- * range, either send a trigger event (first contact) or apply healing +
- * particle FX + sfx + free-or-disable. */
-void appleontree_handleCollectableHit(GameObject* obj)
-{
-    int state = *(int*)&obj->extra;
-    GameObject* player = Obj_GetPlayerObject();
-
-    if (!(Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX) < gAppleOnTreePickupXZRange))
-        return;
-    if (!(Vec_distance(&player->anim.worldPosX, &obj->anim.worldPosX) < gAppleOnTreePickupRange))
-        return;
-
-    if (mainGetBit(GAMEBIT_SawApple) == 0)
-    {
-        (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
-        ((AppleOnTreeState*)state)->triggerGameBit = -1;
-        ((AppleOnTreeState*)state)->pickupMsgValue = 0;
-        ((AppleOnTreeState*)state)->unk60 = lbl_803E37C8;
-        ObjMsg_SendToObject(player, APPLEONTREE_MSG_IN_RANGE, obj, state + 0x5c);
-        mainSetBits(GAMEBIT_SawApple, 1);
-        ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 4);
-    }
-    else
-    {
-        playerAddHealth(player, ((AppleOnTreeState*)state)->healthRestore);
-        itemPickupDoParticleFxLegacy((int)obj, lbl_803E37C8, 0xff, 0x28);
-        Sfx_PlayFromObject((int)obj, SFXTRIG_cam90_c);
-        appleontree_markFallen(obj);
     }
 }
 

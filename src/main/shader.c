@@ -38,6 +38,8 @@
 #include "main/sky_interface.h"
 #include "main/sky_api.h"
 
+extern int* gMapBlocks;
+extern char sTrackLoadBlockOverrunError[];
 #include "main/camera.h"
 #include "main/object_transform.h"
 #include "main/mm.h"
@@ -656,6 +658,31 @@ int return0_8005669C(int unused)
 {
     return 0x0;
 }
+
+void mapTextureOverrideRelease(int key, int type)
+{
+    int i;
+    int off;
+    u32 entryKey;
+
+    for (i = 0; i < 80; i++)
+    {
+        off = i * 0x10;
+        entryKey = lbl_803DCE6C[i].key;
+        if (entryKey == key && lbl_803DCE6C[i].type == type &&
+            lbl_803DCE6C[i].refs > 0)
+        {
+            lbl_803DCE6C[i].refs -= 1;
+            if (lbl_803DCE6C[i].refs == 0)
+            {
+                lbl_803DCE6C[i].data0 = 0;
+                lbl_803DCE6C[i].type = 0;
+                lbl_803DCE6C[i].key = 0;
+                lbl_803DCE6C[i].data1 = 0;
+            }
+        }
+    }
+}
 void mapTextureOverrideRelease(int key, int type);
 
 extern char sTrackGlobalTexanimOverflowError[];
@@ -888,9 +915,39 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
     return slot;
 }
 
-extern int* gMapBlocks;
+void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
+{
+    int i;
+    s16* arr;
+    int count;
+    s8* statusArr;
 
-extern char sTrackLoadBlockOverrunError[];
+    i = 0;
+    arr = gMapBlockIds;
+    count = lbl_803DCE98;
+    for (; i < count; i++)
+    {
+        if (*arr == -1)
+            break;
+        arr++;
+    }
+    if (i == count)
+    {
+        lbl_803DCE98++;
+        if (lbl_803DCE98 == 0x40)
+        {
+            OSReport(sTrackLoadBlockOverrunError);
+        }
+    }
+    statusArr = (s8*)gMapBlockLayerTables[layer];
+    statusArr[slotIdx] = i;
+    gMapBlocks[i] = (int)blk;
+    gMapBlockIds[i] = blockId;
+    gMapBlockRefCounts[i] = 1;
+    setMapBlockFlag();
+}
+
+
 
 
 char lbl_803822C8[0x41A0];
@@ -967,38 +1024,6 @@ int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
         DCStoreRange(blk[0], *(int*)((char*)blk[0] + 0x8));
     }
     return 1;
-}
-
-void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
-{
-    int i;
-    s16* arr;
-    int count;
-    s8* statusArr;
-
-    i = 0;
-    arr = gMapBlockIds;
-    count = lbl_803DCE98;
-    for (; i < count; i++)
-    {
-        if (*arr == -1)
-            break;
-        arr++;
-    }
-    if (i == count)
-    {
-        lbl_803DCE98++;
-        if (lbl_803DCE98 == 0x40)
-        {
-            OSReport(sTrackLoadBlockOverrunError);
-        }
-    }
-    statusArr = (s8*)gMapBlockLayerTables[layer];
-    statusArr[slotIdx] = i;
-    gMapBlocks[i] = (int)blk;
-    gMapBlockIds[i] = blockId;
-    gMapBlockRefCounts[i] = 1;
-    setMapBlockFlag();
 }
 
 void unloadMap(void)
@@ -2053,31 +2078,6 @@ void doPendingMapLoads(void)
     }
 }
 
-void mapTextureOverrideRelease(int key, int type)
-{
-    int i;
-    int off;
-    u32 entryKey;
-
-    for (i = 0; i < 80; i++)
-    {
-        off = i * 0x10;
-        entryKey = lbl_803DCE6C[i].key;
-        if (entryKey == key && lbl_803DCE6C[i].type == type &&
-            lbl_803DCE6C[i].refs > 0)
-        {
-            lbl_803DCE6C[i].refs -= 1;
-            if (lbl_803DCE6C[i].refs == 0)
-            {
-                lbl_803DCE6C[i].data0 = 0;
-                lbl_803DCE6C[i].type = 0;
-                lbl_803DCE6C[i].key = 0;
-                lbl_803DCE6C[i].data1 = 0;
-            }
-        }
-    }
-}
-
 void loadMapForCameraPos(float x, float y, float z)
 {
     if ((renderFlags & 2) != 0 && (renderFlags & 0x800) == 0)
@@ -2089,6 +2089,33 @@ void loadMapForCameraPos(float x, float y, float z)
     if ((renderFlags & 0x800) != 0)
     {
         doPendingMapLoads();
+    }
+}
+
+void mapInitSetRects(s16* rect, u8* bitmap, int originX, int originY, int idx)
+{
+    u8* self = lbl_803DCE78;
+    int tabOff = idx * 7 << 2;
+    int offset0 = *(int*)(lbl_803DCE7C + tabOff);
+
+    getTabEntry(self, MLDF_FILEID_MAPS_BIN, offset0, *(int*)((lbl_803DCE7C + 8) + tabOff) - offset0);
+    *(int*)(self + 0xc) = (int)self + *(int*)((lbl_803DCE7C + 4) + tabOff) - *(int*)(lbl_803DCE7C + tabOff);
+    rect[0] = originX - *(s16*)(self + 4);
+    rect[2] = originY - *(s16*)(self + 6);
+    rect[1] = rect[0] + *(s16*)(self + 0) - 1;
+    rect[3] = rect[2] + *(s16*)(self + 2) - 1;
+    *(s8*)((char*)rect + 8) = *(s16*)(self + 4);
+    *(s8*)((char*)rect + 9) = *(s16*)(self + 6);
+    for (originY = 0; (s16)originY < *(s16*)(self + 2); originY++)
+    {
+        for (originX = 0; (s16)originX < *(s16*)(self + 0); originX++)
+        {
+            int pixelIdx = (s16)originX + (s16)originY * *(s16*)(self + 0);
+            if ((int)(*(u32*)(*(int*)(self + 0xc) + pixelIdx * 4) >> 23 & 0xff) != 0xff)
+            {
+                bitmap[pixelIdx >> 3] |= 1 << (pixelIdx & 7);
+            }
+        }
     }
 }
 
@@ -2147,33 +2174,6 @@ void initMaps(void)
     lbl_803DCEB6 = 0;
     lbl_803DCEB4 = 0;
     mm_free(data);
-}
-
-void mapInitSetRects(s16* rect, u8* bitmap, int originX, int originY, int idx)
-{
-    u8* self = lbl_803DCE78;
-    int tabOff = idx * 7 << 2;
-    int offset0 = *(int*)(lbl_803DCE7C + tabOff);
-
-    getTabEntry(self, MLDF_FILEID_MAPS_BIN, offset0, *(int*)((lbl_803DCE7C + 8) + tabOff) - offset0);
-    *(int*)(self + 0xc) = (int)self + *(int*)((lbl_803DCE7C + 4) + tabOff) - *(int*)(lbl_803DCE7C + tabOff);
-    rect[0] = originX - *(s16*)(self + 4);
-    rect[2] = originY - *(s16*)(self + 6);
-    rect[1] = rect[0] + *(s16*)(self + 0) - 1;
-    rect[3] = rect[2] + *(s16*)(self + 2) - 1;
-    *(s8*)((char*)rect + 8) = *(s16*)(self + 4);
-    *(s8*)((char*)rect + 9) = *(s16*)(self + 6);
-    for (originY = 0; (s16)originY < *(s16*)(self + 2); originY++)
-    {
-        for (originX = 0; (s16)originX < *(s16*)(self + 0); originX++)
-        {
-            int pixelIdx = (s16)originX + (s16)originY * *(s16*)(self + 0);
-            if ((int)(*(u32*)(*(int*)(self + 0xc) + pixelIdx * 4) >> 23 & 0xff) != 0xff)
-            {
-                bitmap[pixelIdx >> 3] |= 1 << (pixelIdx & 7);
-            }
-        }
-    }
 }
 
 extern int lbl_803DB648;

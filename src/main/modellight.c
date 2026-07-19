@@ -265,6 +265,44 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
 
     return 0;
 }
+
+f32 modelLightStruct_getObjectIntensity(u8* light, u8* obj)
+{
+    f32 delta[3];
+    f32 dist;
+    f32 amount;
+
+    if (((GameObject*)obj)->ownerObj != NULL)
+    {
+        obj = ((GameObject*)obj)->ownerObj;
+    }
+
+    PSVECSubtract(&((GameObject*)obj)->anim.worldPosX, (f32*)(light + 0x10), delta);
+    dist = PSVECMag(delta) - ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
+    if (dist > lbl_803DE768 || dist > ((ModelLightStruct*)light)->attenuationFar)
+    {
+        return lbl_803DE75C;
+    }
+
+    if (dist < ((ModelLightStruct*)light)->attenuationNear)
+    {
+        amount = lbl_803DE760;
+    }
+    else
+    {
+        amount = lbl_803DE760 -
+                 (dist - ((ModelLightStruct*)light)->attenuationNear) /
+                     (((ModelLightStruct*)light)->attenuationFar - ((ModelLightStruct*)light)->attenuationNear);
+    }
+
+    if (((ModelLightStruct*)light)->spotFunction != 0)
+    {
+        PSVECScale(delta, delta, lbl_803DE760 / dist);
+        PSVECDotProduct((f32*)(light + 0x34), delta);
+    }
+
+    return amount;
+}
 f32 modelLightStruct_getObjectIntensity(u8* light, u8* obj);
 
 void modelLightStruct_updateColorFade(ModelLightStruct* light)
@@ -335,6 +373,34 @@ void modelLightStruct_updateColorFade(ModelLightStruct* light)
     light->specularColor[1] = ((f32)light->specularColor[1] * light->activeIntensity);
     light->specularColor[2] = ((f32)light->specularColor[2] * light->activeIntensity);
     light->specularColor[3] = ((f32)light->specularColor[3] * light->activeIntensity);
+}
+
+void modelLightStruct_startColorFade(ModelLightStruct* light, int mode, s16 frames)
+{
+    f32 denom;
+
+    light->colorFadeMode = mode;
+    if (mode != 0)
+    {
+        if (frames != 0)
+        {
+            denom = frames;
+        }
+        else
+        {
+            denom = lbl_803DE760;
+        }
+        light->colorFadeStep = lbl_803DE760 / denom;
+        light->diffuseFadeStartColor[0] = light->diffuseColor[0];
+        light->diffuseFadeStartColor[1] = light->diffuseColor[1];
+        light->diffuseFadeStartColor[2] = light->diffuseColor[2];
+        light->specularFadeStartColor[0] = light->specularColor[0];
+        light->specularFadeStartColor[1] = light->specularColor[1];
+        light->specularFadeStartColor[2] = light->specularColor[2];
+        denom = lbl_803DE75C;
+        light->colorFadeProgress = denom;
+        light->colorFadeTimer = denom;
+    }
 }
 
 void modelLightStruct_startColorFade(ModelLightStruct* light, int mode, s16 frames);
@@ -609,6 +675,48 @@ int modelLightStruct_getActiveState(ModelLightStruct* p)
     return p->activeState;
 }
 
+void modelLightStruct_setEnabled(ModelLightStruct* light, u8 enabled, f32 duration)
+{
+    f32 zero;
+
+    zero = lbl_803DE75C;
+    if (zero == duration)
+    {
+        if (enabled != 0)
+        {
+            light->activeState = 2;
+            light->activeIntensity = lbl_803DE760;
+        }
+        else
+        {
+            light->activeState = 0;
+            light->activeIntensity = zero;
+        }
+        light->enabled = enabled;
+        return;
+    }
+
+    if (enabled != 0)
+    {
+        if (light->activeState == 0 || light->activeState == 3)
+        {
+            light->activeState = 1;
+            light->activeIntensityStep = lbl_803DE760 / (lbl_803DE794 * duration);
+            light->activeIntensity = lbl_803DE75C;
+        }
+        light->enabled = 1;
+        return;
+    }
+
+    if (light->activeState != 2 && light->activeState != 1)
+    {
+        return;
+    }
+    light->activeState = 3;
+    light->activeIntensityStep = lbl_803DE798 / (lbl_803DE794 * duration);
+    light->activeIntensity = lbl_803DE760;
+}
+
 void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 near, f32 far)
 {
     light->attenuationNear = near;
@@ -843,76 +951,6 @@ ModelLightStruct* objAllocLight(void* owner)
     ((ModelLightStruct*)light)->attenuationK1 = zero;
     ((ModelLightStruct*)light)->attenuationK2 = zero;
     return (ModelLightStruct*)light;
-}
-
-void modelLightStruct_startColorFade(ModelLightStruct* light, int mode, s16 frames)
-{
-    f32 denom;
-
-    light->colorFadeMode = mode;
-    if (mode != 0)
-    {
-        if (frames != 0)
-        {
-            denom = frames;
-        }
-        else
-        {
-            denom = lbl_803DE760;
-        }
-        light->colorFadeStep = lbl_803DE760 / denom;
-        light->diffuseFadeStartColor[0] = light->diffuseColor[0];
-        light->diffuseFadeStartColor[1] = light->diffuseColor[1];
-        light->diffuseFadeStartColor[2] = light->diffuseColor[2];
-        light->specularFadeStartColor[0] = light->specularColor[0];
-        light->specularFadeStartColor[1] = light->specularColor[1];
-        light->specularFadeStartColor[2] = light->specularColor[2];
-        denom = lbl_803DE75C;
-        light->colorFadeProgress = denom;
-        light->colorFadeTimer = denom;
-    }
-}
-
-void modelLightStruct_setEnabled(ModelLightStruct* light, u8 enabled, f32 duration)
-{
-    f32 zero;
-
-    zero = lbl_803DE75C;
-    if (zero == duration)
-    {
-        if (enabled != 0)
-        {
-            light->activeState = 2;
-            light->activeIntensity = lbl_803DE760;
-        }
-        else
-        {
-            light->activeState = 0;
-            light->activeIntensity = zero;
-        }
-        light->enabled = enabled;
-        return;
-    }
-
-    if (enabled != 0)
-    {
-        if (light->activeState == 0 || light->activeState == 3)
-        {
-            light->activeState = 1;
-            light->activeIntensityStep = lbl_803DE760 / (lbl_803DE794 * duration);
-            light->activeIntensity = lbl_803DE75C;
-        }
-        light->enabled = 1;
-        return;
-    }
-
-    if (light->activeState != 2 && light->activeState != 1)
-    {
-        return;
-    }
-    light->activeState = 3;
-    light->activeIntensityStep = lbl_803DE798 / (lbl_803DE794 * duration);
-    light->activeIntensity = lbl_803DE760;
 }
 
 void modelLightStruct_loadDiffuseGXLight(ModelLightStruct* light, GameObject* obj, GXLightID lightId)
@@ -1338,44 +1376,6 @@ void modelLightStruct_selectObjectLights(GameObject* obj, ModelLightStruct** out
         outLights[(*outCount)++] = light;
         light->selectionScore = -light->selectionScore;
     }
-}
-
-f32 modelLightStruct_getObjectIntensity(u8* light, u8* obj)
-{
-    f32 delta[3];
-    f32 dist;
-    f32 amount;
-
-    if (((GameObject*)obj)->ownerObj != NULL)
-    {
-        obj = ((GameObject*)obj)->ownerObj;
-    }
-
-    PSVECSubtract(&((GameObject*)obj)->anim.worldPosX, (f32*)(light + 0x10), delta);
-    dist = PSVECMag(delta) - ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
-    if (dist > lbl_803DE768 || dist > ((ModelLightStruct*)light)->attenuationFar)
-    {
-        return lbl_803DE75C;
-    }
-
-    if (dist < ((ModelLightStruct*)light)->attenuationNear)
-    {
-        amount = lbl_803DE760;
-    }
-    else
-    {
-        amount = lbl_803DE760 -
-                 (dist - ((ModelLightStruct*)light)->attenuationNear) /
-                     (((ModelLightStruct*)light)->attenuationFar - ((ModelLightStruct*)light)->attenuationNear);
-    }
-
-    if (((ModelLightStruct*)light)->spotFunction != 0)
-    {
-        PSVECScale(delta, delta, lbl_803DE760 / dist);
-        PSVECDotProduct((f32*)(light + 0x34), delta);
-    }
-
-    return amount;
 }
 
 void lightGetColor(int i, u8* r, u8* g, u8* b)

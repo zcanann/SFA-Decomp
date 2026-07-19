@@ -533,6 +533,68 @@ void lightningRenderActive(void)
         lightningRender(gActiveLightning);
     }
 }
+
+LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, s16 lifetime,
+                                 u8 width, u8 flags)
+{
+    LightningEffect* p = mmAlloc(40, 23, 0);
+
+    if (p == NULL)
+    {
+        return NULL;
+    }
+    p->start[0] = start->x;
+    p->start[1] = start->y;
+    p->start[2] = start->z;
+    p->end[0] = end->x;
+    p->end[1] = end->y;
+    p->end[2] = end->z;
+    p->radiusX = radiusX;
+    p->radiusY = radiusY;
+    *(s16*)&p->lifetime = lifetime;
+    p->width = width;
+    p->timer = 0;
+    p->seed = 0xFFFF;
+    p->flags = flags;
+    return p;
+}
+
+void snowCloudBuildBoxVerts(f32* out, f32 height, f32 scale)
+{
+    f32 side;
+    f32 zero;
+    f32 scaledHeight;
+    f32 edge;
+
+    side = lbl_803DF1D8 * scale;
+    out[0] = side;
+    zero = 0.0f;
+    out[1] = zero;
+    out[2] = side;
+    out[3] = side;
+    scaledHeight = height * scale;
+    out[4] = scaledHeight;
+    out[5] = side;
+    edge = lbl_803DF1DC * scale;
+    out[6] = edge;
+    out[7] = scaledHeight;
+    out[8] = side;
+    out[9] = edge;
+    out[10] = zero;
+    out[11] = side;
+    out[12] = side;
+    out[13] = zero;
+    out[14] = edge;
+    out[15] = side;
+    out[16] = scaledHeight;
+    out[17] = edge;
+    out[18] = edge;
+    out[19] = scaledHeight;
+    out[20] = edge;
+    out[21] = edge;
+    out[22] = zero;
+    out[23] = edge;
+}
 void snowCloudBuildBoxVerts(f32* out, f32 height, f32 scale);
 void mm_free_(void* ptr)
 {
@@ -646,6 +708,48 @@ void snowCloudInitFlakes(f32* buf, f32 a, f32 b, int cloudId)
         widx++;
     }
     ((NewCloud*)gNewClouds[i])->waveWriteIdx = ((NewCloud*)gNewClouds[i])->waveWriteIdx + 0xfa0;
+}
+
+void snowFreeSnowCloud(int cloudId)
+{
+    u8* env;
+    u8* p;
+    int i;
+
+    env = saveGameGetEnvState();
+    if (cloudId >= 0 && cloudId <= 2 && getSaveGameLoadStatus() == 0)
+    {
+        ((s16*)(env + 0xe))[cloudId] = -1;
+        ((s8*)(env + 0x41))[cloudId] = -1;
+    }
+    for (i = 0; i < 8; i++)
+    {
+        p = gNewClouds[i];
+        if (p != NULL && cloudId == ((NewCloud*)p)->cloudId)
+        {
+            break;
+        }
+    }
+    p = gNewClouds[i];
+    if (p == NULL || i == 8)
+    {
+        return;
+    }
+    if (cloudId != ((NewCloud*)p)->cloudId)
+    {
+        debugPrintf(sSnowFreeSnowCloudInvalidCloudId, cloudId);
+        return;
+    }
+    if (*(u8**)(p + 4) != NULL)
+    {
+        mm_free(*(u8**)(p + 4));
+        *(u8**)((u8*)gNewClouds[i] + 4) = NULL;
+    }
+    if (gNewClouds[i] != NULL)
+    {
+        mm_free(gNewClouds[i]);
+        gNewClouds[i] = NULL;
+    }
 }
 void* gNewClouds[8];
 void snowFreeSnowCloud(int index);
@@ -1466,67 +1570,6 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
     }
 }
 
-LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, s16 lifetime,
-                                 u8 width, u8 flags)
-{
-    LightningEffect* p = mmAlloc(40, 23, 0);
-
-    if (p == NULL)
-    {
-        return NULL;
-    }
-    p->start[0] = start->x;
-    p->start[1] = start->y;
-    p->start[2] = start->z;
-    p->end[0] = end->x;
-    p->end[1] = end->y;
-    p->end[2] = end->z;
-    p->radiusX = radiusX;
-    p->radiusY = radiusY;
-    *(s16*)&p->lifetime = lifetime;
-    p->width = width;
-    p->timer = 0;
-    p->seed = 0xFFFF;
-    p->flags = flags;
-    return p;
-}
-void snowCloudBuildBoxVerts(f32* out, f32 height, f32 scale)
-{
-    f32 side;
-    f32 zero;
-    f32 scaledHeight;
-    f32 edge;
-
-    side = lbl_803DF1D8 * scale;
-    out[0] = side;
-    zero = 0.0f;
-    out[1] = zero;
-    out[2] = side;
-    out[3] = side;
-    scaledHeight = height * scale;
-    out[4] = scaledHeight;
-    out[5] = side;
-    edge = lbl_803DF1DC * scale;
-    out[6] = edge;
-    out[7] = scaledHeight;
-    out[8] = side;
-    out[9] = edge;
-    out[10] = zero;
-    out[11] = side;
-    out[12] = side;
-    out[13] = zero;
-    out[14] = edge;
-    out[15] = side;
-    out[16] = scaledHeight;
-    out[17] = edge;
-    out[18] = edge;
-    out[19] = scaledHeight;
-    out[20] = edge;
-    out[21] = edge;
-    out[22] = zero;
-    out[23] = edge;
-}
-
 void dll_07_func09(void)
 {
     Camera_GetCurrentViewSlot();
@@ -1964,47 +2007,6 @@ void newclouds_onMapSetup(void)
     Music_Trigger(MUSICTRIG_crun_dungeon, 0);
 }
 
-void snowFreeSnowCloud(int cloudId)
-{
-    u8* env;
-    u8* p;
-    int i;
-
-    env = saveGameGetEnvState();
-    if (cloudId >= 0 && cloudId <= 2 && getSaveGameLoadStatus() == 0)
-    {
-        ((s16*)(env + 0xe))[cloudId] = -1;
-        ((s8*)(env + 0x41))[cloudId] = -1;
-    }
-    for (i = 0; i < 8; i++)
-    {
-        p = gNewClouds[i];
-        if (p != NULL && cloudId == ((NewCloud*)p)->cloudId)
-        {
-            break;
-        }
-    }
-    p = gNewClouds[i];
-    if (p == NULL || i == 8)
-    {
-        return;
-    }
-    if (cloudId != ((NewCloud*)p)->cloudId)
-    {
-        debugPrintf(sSnowFreeSnowCloudInvalidCloudId, cloudId);
-        return;
-    }
-    if (*(u8**)(p + 4) != NULL)
-    {
-        mm_free(*(u8**)(p + 4));
-        *(u8**)((u8*)gNewClouds[i] + 4) = NULL;
-    }
-    if (gNewClouds[i] != NULL)
-    {
-        mm_free(gNewClouds[i]);
-        gNewClouds[i] = NULL;
-    }
-}
 extern const f32 lbl_803DF27C;
 
 /*

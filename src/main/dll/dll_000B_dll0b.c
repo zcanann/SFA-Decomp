@@ -665,6 +665,38 @@ void fn_800A0FD0(ModgfxState* state)
         src++;
     }
 }
+
+void fn_800A1040(s16 sequenceId, int forceAll)
+{
+    PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
+    int i;
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
+    {
+        if (arr[i] == NULL)
+            continue;
+        if (sequenceId != arr[i]->sequenceId && forceAll == 0)
+            continue;
+        if (arr[i]->auxAllocation != NULL)
+        {
+            mm_free(arr[i]->auxAllocation);
+        }
+        if (arr[i]->instanceObject != NULL)
+        {
+            Obj_FreeObject(arr[i]->instanceObject);
+        }
+        arr[i]->inlineData = NULL;
+        if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL)
+        {
+            textureFree((Texture*)(arr[i]->textureResource));
+        }
+        if (arr[i]->textureIsBorrowed == 0)
+        {
+            arr[i]->textureResource = NULL;
+        }
+        mm_free(arr[i]);
+        arr[i] = NULL;
+    }
+}
 /* Flag every active effect whose owner object has the 0x800 state bit
  * by setting its frameUpdated flag. */
 void dll_0B_func0E(void)
@@ -1920,37 +1952,6 @@ void dll_0B_release(void)
     fn_800A1040(0, 1);
 }
 
-void fn_800A1040(s16 sequenceId, int forceAll)
-{
-    PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
-    int i;
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
-    {
-        if (arr[i] == NULL)
-            continue;
-        if (sequenceId != arr[i]->sequenceId && forceAll == 0)
-            continue;
-        if (arr[i]->auxAllocation != NULL)
-        {
-            mm_free(arr[i]->auxAllocation);
-        }
-        if (arr[i]->instanceObject != NULL)
-        {
-            Obj_FreeObject(arr[i]->instanceObject);
-        }
-        arr[i]->inlineData = NULL;
-        if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL)
-        {
-            textureFree((Texture*)(arr[i]->textureResource));
-        }
-        if (arr[i]->textureIsBorrowed == 0)
-        {
-            arr[i]->textureResource = NULL;
-        }
-        mm_free(arr[i]);
-        arr[i] = NULL;
-    }
-}
 void dll_0B_initialise(void)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;

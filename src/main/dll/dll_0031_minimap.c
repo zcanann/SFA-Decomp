@@ -731,6 +731,35 @@ void Minimap_drawCompassBlip(void)
     viewFn_80129c74();
 }
 
+void Minimap_setupCompassBlip(void)
+{
+    f32 scale;
+    f32 posZ;
+    f32 center;
+    f32 posY;
+    f32 posX;
+    u8 i;
+
+    i = 0;
+    posX = gMinimapFNeg15;
+    posY = gMinimapFNeg9_8;
+    center = gMinimapZero;
+    posZ = gMinimapFNeg40;
+    scale = gMinimapF0_05;
+    for (; i < 2; i++)
+    {
+        lbl_803DBBC8[i] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(32, MINIMAP_COMMAND_MENU_OBJ_BASE + i), 4, -1, -1, 0);
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = posX;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = posY;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = center;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = center;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosZ = posZ;
+        ((GameObject*)lbl_803DBBC8[i])->anim.rotX = 2000;
+        ((GameObject*)lbl_803DBBC8[i])->anim.rotY = 0;
+        ((GameObject*)lbl_803DBBC8[i])->anim.rootMotionScale = scale;
+    }
+}
+
 static inline void Minimap_freeObjectSlots(GameObject** slots, int count)
 {
     u8 z[1];
@@ -970,35 +999,6 @@ void Minimap_frameStart(void)
                 Sfx_PlayFromObject(0, sfx);
             }
         }
-    }
-}
-
-void Minimap_setupCompassBlip(void)
-{
-    f32 scale;
-    f32 posZ;
-    f32 center;
-    f32 posY;
-    f32 posX;
-    u8 i;
-
-    i = 0;
-    posX = gMinimapFNeg15;
-    posY = gMinimapFNeg9_8;
-    center = gMinimapZero;
-    posZ = gMinimapFNeg40;
-    scale = gMinimapF0_05;
-    for (; i < 2; i++)
-    {
-        lbl_803DBBC8[i] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(32, MINIMAP_COMMAND_MENU_OBJ_BASE + i), 4, -1, -1, 0);
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = posX;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = posY;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = center;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = center;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosZ = posZ;
-        ((GameObject*)lbl_803DBBC8[i])->anim.rotX = 2000;
-        ((GameObject*)lbl_803DBBC8[i])->anim.rotY = 0;
-        ((GameObject*)lbl_803DBBC8[i])->anim.rootMotionScale = scale;
     }
 }
 

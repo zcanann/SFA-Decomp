@@ -408,6 +408,30 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
     return NULL;
 }
 
+void sortVisibleObjectKeysDescending(u32* arr, int n)
+{
+    int i, j;
+    int gap = 1;
+    u32 tmp;
+    while (gap <= n / 9)
+        gap = gap * 3 + 1;
+    while (gap > 0)
+    {
+        for (i = gap + 1; i <= n; i++)
+        {
+            tmp = arr[i - 1];
+            j = i;
+            while (j > gap && arr[j - gap - 1] < tmp)
+            {
+                arr[j - 1] = arr[j - gap - 1];
+                j -= gap;
+            }
+            arr[j - 1] = tmp;
+        }
+        gap /= 3;
+    }
+}
+
 void sortVisibleObjectKeysDescending(u32* arr, int n);
 void getVisibleObjects(s8* opacity)
 {
@@ -564,30 +588,6 @@ void getVisibleObjects(s8* opacity)
         sortVisibleObjectKeysDescending(gVisibleObjectSortKeys, gVisibleObjectSortKeyCount);
     }
     renderShadows(0, 0, 0);
-}
-
-void sortVisibleObjectKeysDescending(u32* arr, int n)
-{
-    int i, j;
-    int gap = 1;
-    u32 tmp;
-    while (gap <= n / 9)
-        gap = gap * 3 + 1;
-    while (gap > 0)
-    {
-        for (i = gap + 1; i <= n; i++)
-        {
-            tmp = arr[i - 1];
-            j = i;
-            while (j > gap && arr[j - gap - 1] < tmp)
-            {
-                arr[j - 1] = arr[j - gap - 1];
-                j -= gap;
-            }
-            arr[j - 1] = tmp;
-        }
-        gap /= 3;
-    }
 }
 
 void renderObjects(s8* opacity)
@@ -1339,6 +1339,30 @@ void renderShadowType3(u8* obj, u32 b, s32 offset)
     lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = v | ((b & 0xff) << 27);
 }
 
+void lightmap_sortTransparentDrawQueue(void)
+{
+    int i, j;
+    int gap = 1;
+    LightSortEntry tmp;
+    while (gap <= (lbl_803DCE30 - 1) / 9)
+        gap = gap * 3 + 1;
+    while (gap > 0)
+    {
+        for (i = gap + 1; i <= lbl_803DCE30; i++)
+        {
+            tmp = ((LightSortEntry*)lbl_8037E0C0)[i - 1];
+            j = i;
+            while (j > gap && ((LightSortEntry*)lbl_8037E0C0)[j - gap - 1].key < tmp.key)
+            {
+                ((LightSortEntry*)lbl_8037E0C0)[j - 1] = ((LightSortEntry*)lbl_8037E0C0)[j - gap - 1];
+                j -= gap;
+            }
+            ((LightSortEntry*)lbl_8037E0C0)[j - 1] = tmp;
+        }
+        gap /= 3;
+    }
+}
+
 
 typedef union
 {
@@ -1445,101 +1469,6 @@ _store:
 
 
 void sortVisibleObjectKeysDescending(u32* arr, int n);
-
-
-void sceneDrawTransparentPolys(void)
-{
-    int (*e)[4];
-    int i;
-    int* block;
-    GameObject* player;
-    GXColor c4;
-    GXColor c5;
-    GXColor c6;
-    f32 m[16];
-
-    lightmap_sortTransparentDrawQueue();
-    i = 0;
-    e = (int(*)[4])&lbl_8037E0C0;
-    for (; i < lbl_803DCE30; i++)
-    {
-        switch (e[i][3])
-        {
-        case 0:
-            expgfx_renderSourcePools(e[i][0], 0);
-            objDrawFn_8005da48((GameObject*)e[i][0]);
-            expgfx_renderSourcePools(e[i][0], 1);
-            break;
-        case 1:
-            block = (int*)e[i][0];
-            Obj_GetActiveModel((GameObject*)block);
-            player = Obj_GetPlayerObject();
-            if ((GameObject*)block == player)
-            {
-                if (playerIsDisguised((GameObject*)block) == 0)
-                {
-                    fn_802B4ED8((GameObject*)block, 1, 1);
-                }
-            }
-            else
-            {
-                objRenderFuzz(block);
-            }
-            break;
-        case 2:
-            fn_8000F9B4();
-            objShadowFn_80062498((GameObject*)e[i][0], 0, 0, framesThisStep);
-            Camera_ApplyFullViewport();
-            break;
-        case 3:
-            fn_8000F9B4();
-            objDrawFn_80061654((int)e[i][0], (int)Obj_GetActiveModel((GameObject*)e[i][0]));
-            Camera_ApplyFullViewport();
-            break;
-        case 4:
-            block = (int*)e[i][1];
-            GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-            GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-            objGetColor(0, (u8*)&c4, (u8*)&c4 + 1, (u8*)&c4 + 2);
-            GXSetChanAmbColor(GX_COLOR0, c4);
-            GXSetNumChans(1);
-            PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
-            setupToRenderMapBlock(block, m);
-            modelRenderFn_8005d894((int*)e[i][0], (int*)e[i][1], m);
-            break;
-        case 5:
-            block = (int*)e[i][1];
-            GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-            GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-            objGetColor(0, (u8*)&c5, (u8*)&c5 + 1, (u8*)&c5 + 2);
-            GXSetChanAmbColor(GX_COLOR0, c5);
-            GXSetNumChans(1);
-            PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
-            setupToRenderMapBlock(block, m);
-            modelRenderFn_8005d69c((int*)e[i][0], (int*)e[i][1], m);
-            break;
-        case 6:
-            block = (int*)e[i][1];
-            GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-            GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-            objGetColor(0, (u8*)&c6, (u8*)&c6 + 1, (u8*)&c6 + 2);
-            GXSetChanAmbColor(GX_COLOR0, c6);
-            GXSetNumChans(1);
-            PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
-            setupToRenderMapBlock(block, m);
-            modelRenderFn_8005d4ec((int*)e[i][0], (int*)e[i][1], m);
-            break;
-        case 7:
-            drawGlow((u32)e[i][0], e[i][1]);
-            break;
-        case 8:
-            drawFn_8006f500();
-            break;
-        case 9:
-            (*gWaterfxInterface)->render(0, 0);
-        }
-    }
-}
 
 
 void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
@@ -1691,30 +1620,100 @@ void objDrawFn_8005da48(GameObject* obj)
     }
 }
 
-
-void lightmap_sortTransparentDrawQueue(void)
+void sceneDrawTransparentPolys(void)
 {
-    int i, j;
-    int gap = 1;
-    LightSortEntry tmp;
-    while (gap <= (lbl_803DCE30 - 1) / 9)
-        gap = gap * 3 + 1;
-    while (gap > 0)
+    int (*e)[4];
+    int i;
+    int* block;
+    GameObject* player;
+    GXColor c4;
+    GXColor c5;
+    GXColor c6;
+    f32 m[16];
+
+    lightmap_sortTransparentDrawQueue();
+    i = 0;
+    e = (int(*)[4])&lbl_8037E0C0;
+    for (; i < lbl_803DCE30; i++)
     {
-        for (i = gap + 1; i <= lbl_803DCE30; i++)
+        switch (e[i][3])
         {
-            tmp = ((LightSortEntry*)lbl_8037E0C0)[i - 1];
-            j = i;
-            while (j > gap && ((LightSortEntry*)lbl_8037E0C0)[j - gap - 1].key < tmp.key)
+        case 0:
+            expgfx_renderSourcePools(e[i][0], 0);
+            objDrawFn_8005da48((GameObject*)e[i][0]);
+            expgfx_renderSourcePools(e[i][0], 1);
+            break;
+        case 1:
+            block = (int*)e[i][0];
+            Obj_GetActiveModel((GameObject*)block);
+            player = Obj_GetPlayerObject();
+            if ((GameObject*)block == player)
             {
-                ((LightSortEntry*)lbl_8037E0C0)[j - 1] = ((LightSortEntry*)lbl_8037E0C0)[j - gap - 1];
-                j -= gap;
+                if (playerIsDisguised((GameObject*)block) == 0)
+                {
+                    fn_802B4ED8((GameObject*)block, 1, 1);
+                }
             }
-            ((LightSortEntry*)lbl_8037E0C0)[j - 1] = tmp;
+            else
+            {
+                objRenderFuzz(block);
+            }
+            break;
+        case 2:
+            fn_8000F9B4();
+            objShadowFn_80062498((GameObject*)e[i][0], 0, 0, framesThisStep);
+            Camera_ApplyFullViewport();
+            break;
+        case 3:
+            fn_8000F9B4();
+            objDrawFn_80061654((int)e[i][0], (int)Obj_GetActiveModel((GameObject*)e[i][0]));
+            Camera_ApplyFullViewport();
+            break;
+        case 4:
+            block = (int*)e[i][1];
+            GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+            objGetColor(0, (u8*)&c4, (u8*)&c4 + 1, (u8*)&c4 + 2);
+            GXSetChanAmbColor(GX_COLOR0, c4);
+            GXSetNumChans(1);
+            PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
+            setupToRenderMapBlock(block, m);
+            modelRenderFn_8005d894((int*)e[i][0], (int*)e[i][1], m);
+            break;
+        case 5:
+            block = (int*)e[i][1];
+            GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+            objGetColor(0, (u8*)&c5, (u8*)&c5 + 1, (u8*)&c5 + 2);
+            GXSetChanAmbColor(GX_COLOR0, c5);
+            GXSetNumChans(1);
+            PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
+            setupToRenderMapBlock(block, m);
+            modelRenderFn_8005d69c((int*)e[i][0], (int*)e[i][1], m);
+            break;
+        case 6:
+            block = (int*)e[i][1];
+            GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+            objGetColor(0, (u8*)&c6, (u8*)&c6 + 1, (u8*)&c6 + 2);
+            GXSetChanAmbColor(GX_COLOR0, c6);
+            GXSetNumChans(1);
+            PSMTXConcat((f32*)Camera_GetViewMatrix(), (f32*)(block + 3), m);
+            setupToRenderMapBlock(block, m);
+            modelRenderFn_8005d4ec((int*)e[i][0], (int*)e[i][1], m);
+            break;
+        case 7:
+            drawGlow((u32)e[i][0], e[i][1]);
+            break;
+        case 8:
+            drawFn_8006f500();
+            break;
+        case 9:
+            (*gWaterfxInterface)->render(0, 0);
         }
-        gap /= 3;
     }
 }
+
 
 void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32* p)
 {

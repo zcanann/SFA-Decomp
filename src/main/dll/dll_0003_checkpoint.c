@@ -36,6 +36,37 @@ extern f32 gCheckpointAngleToRadians;
 extern f32 gCheckpointWidthScale;
 extern f32 lbl_803E04E4;
 
+
+CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
+{
+    s32 high;
+    s32 low;
+    s32 mid;
+    *idx_out = -1;
+    if (key < 0)
+        return NULL;
+    high = gCheckpointRouteCount - 1;
+    low = 0;
+    while (high >= low)
+    {
+        mid = (high + low) >> 1;
+        if ((u32)key > gCheckpointRouteTable[mid].key)
+        {
+            low = mid + 1;
+        }
+        else if ((u32)key < gCheckpointRouteTable[mid].key)
+        {
+            high = mid - 1;
+        }
+        else
+        {
+            *idx_out = mid;
+            return gCheckpointRouteTable[mid].entry;
+        }
+    }
+    *idx_out = -1;
+    return NULL;
+}
 extern f32 lbl_803E0504; /* used by Checkpoint_func08/07/06 */
 extern f32 lbl_803E0508; /* used by Checkpoint_func08 */
 extern void* lbl_803DD418;
@@ -877,34 +908,3 @@ u32 lbl_803112E8[22] = {
     (u32)Checkpoint_func0C, (u32)Checkpoint_func0D, (u32)Checkpoint_func0E, (u32)Checkpoint_func0F,
     (u32)Checkpoint_func10, (u32)Checkpoint_onGameLoop,
 };
-
-CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
-{
-    s32 high;
-    s32 low;
-    s32 mid;
-    *idx_out = -1;
-    if (key < 0)
-        return NULL;
-    high = gCheckpointRouteCount - 1;
-    low = 0;
-    while (high >= low)
-    {
-        mid = (high + low) >> 1;
-        if ((u32)key > gCheckpointRouteTable[mid].key)
-        {
-            low = mid + 1;
-        }
-        else if ((u32)key < gCheckpointRouteTable[mid].key)
-        {
-            high = mid - 1;
-        }
-        else
-        {
-            *idx_out = mid;
-            return gCheckpointRouteTable[mid].entry;
-        }
-    }
-    *idx_out = -1;
-    return NULL;
-}

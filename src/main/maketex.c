@@ -755,6 +755,41 @@ int arrayIndexOf(int* arr, int count, int target)
     }
     return -1;
 }
+
+void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
+{
+    int key;
+    int val;
+    int i;
+    int j;
+    int gap;
+
+    gap = 1;
+    while (gap <= (n - 1) / 9)
+    {
+        gap = gap * 3 + 1;
+    }
+    for (; gap > 0; gap /= 3)
+    {
+        for (i = gap + 1; i < n; i++)
+        {
+            key = arr[i].key;
+            val = arr[i].val;
+            j = i;
+            while (j > gap && arr[j - gap].key > key)
+            {
+                arr[j].key = arr[j - gap].key;
+                arr[j].val = arr[j - gap].val;
+                j -= gap;
+            }
+            arr[j].key = key;
+            arr[j].val = val;
+        }
+    }
+    for (i = 1; i < n; i++)
+    {
+    }
+}
 void objSeqInitFn_8007feac(SeqSortPair* arr, int n);
 
 int seqStreamLookupFn_8007fff8(void* entries, int count, int key)
@@ -808,41 +843,6 @@ void objSeqInitFn_80080078(void* entries, int n)
     if (n > 0x10)
     {
         objSeqInitFn_8007feac(arr, n);
-    }
-}
-
-void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
-{
-    int key;
-    int val;
-    int i;
-    int j;
-    int gap;
-
-    gap = 1;
-    while (gap <= (n - 1) / 9)
-    {
-        gap = gap * 3 + 1;
-    }
-    for (; gap > 0; gap /= 3)
-    {
-        for (i = gap + 1; i < n; i++)
-        {
-            key = arr[i].key;
-            val = arr[i].val;
-            j = i;
-            while (j > gap && arr[j - gap].key > key)
-            {
-                arr[j].key = arr[j - gap].key;
-                arr[j].val = arr[j - gap].val;
-                j -= gap;
-            }
-            arr[j].key = key;
-            arr[j].val = val;
-        }
-    }
-    for (i = 1; i < n; i++)
-    {
     }
 }
 
@@ -917,6 +917,134 @@ GameObject* getFocusedNpc(void)
 }
 
 void objModelResetVecFn_80080548(GameObject* obj);
+
+/* Starts the prepared audio stream for a sequence slot and records its
+ * subtitle timing. */
+int seqStreamFn_8008023c(int x)
+{
+    int seqId = gObjSeqSlotSeqIdTable[x] - 1;
+    f32 streamTime;
+
+    if (gObjSeqStreamSuppressed != 0 || AudioStream_IsPreparing() != 0)
+    {
+        return 0;
+    }
+    streamTime = gObjSeqSlotStreamTimeTable[x] - (f32)lbl_803DB728;
+    lbl_803DD074 = streamTime;
+    if (lbl_803DEFB0 != lbl_803DD074)
+    {
+        lbl_803DB724 = x;
+    }
+    lbl_803DB728 = -1;
+    if (seqId == 0x54b || seqId == 0x550 || seqId == 0x551 || seqId == 0x574 || seqId == 0x579 || seqId == 0x57a)
+    {
+        lbl_803DD074 = 0.0f;
+        lbl_803DB724 = -1;
+    }
+    lbl_803DB720 = -1;
+    AudioStream_StartPrepared();
+    return 1;
+}
+
+int animatedObjGetSeqId(ObjAnimUpdateState* state)
+{
+    return gObjSeqSlotSeqIdTable[state->sequenceSlot] - 1;
+}
+
+int fn_80080360(int p, int val)
+{
+    lbl_8030ECF8[(s8) * (u8*)(p + 0x57)] = (s16)val;
+    return 1;
+}
+
+void streamCb_80080384(void)
+{
+    AudioStream_IsPreparing();
+    doNothing_8000CF54(0);
+    if ((s32)lbl_803DB71C != -1)
+    {
+        gameTextLoadTaskText(lbl_803DB71C);
+        lbl_803DB71C = -1;
+        lbl_803DB714 = -1;
+    }
+    else if ((s32)lbl_803DB718 != -1)
+    {
+        subtitleFn_8001b700();
+        subtitleStart(lbl_803DB718);
+        lbl_803DB718 = -1;
+    }
+}
+
+int ObjSeq_func23(int unused, int x)
+{
+    switch (x)
+    {
+    case 0:
+        lbl_803DD0B4.useWorldSpace = 1;
+        break;
+    case 1:
+        lbl_803DD0B4.useWorldSpace = 0;
+        break;
+    }
+    return 0;
+}
+
+int ObjSeq_setOverridePos(f32 x, f32 y, f32 z)
+{
+    lbl_803DD0D9 = 1;
+    objSeqOverridePos[0] = x;
+    objSeqOverridePos[1] = y;
+    objSeqOverridePos[2] = z;
+    return 1;
+}
+
+int ObjSeq_SetObjs(int objs, int arg, int flags)
+{
+    u8 flagsByte = (u8)flags;
+    objSeqObjs = objs;
+    lbl_803DD07C = arg;
+    lbl_803DD078 = flagsByte;
+    return 1;
+}
+
+void cameraFocusNpc(int param1, GameObject* obj)
+{
+    struct
+    {
+        f32 vec[3];
+        u8 tag;
+    } buf;
+    ObjHitVolumeRuntimeTransform* hitTransform;
+
+    if ((*gCameraInterface)->getMode() == MAKETEX_CAMMODE_NPCSPEAK)
+        return;
+    focusedNpc = obj;
+    hitTransform = obj->anim.hitVolumeTransforms;
+    if (hitTransform == NULL || param1 == 7 || param1 == 6)
+    {
+        buf.vec[0] = obj->anim.worldPosX;
+        buf.vec[1] = obj->anim.worldPosY;
+        buf.vec[2] = obj->anim.worldPosZ;
+    }
+    else
+    {
+        buf.vec[0] = hitTransform->jointX;
+        buf.vec[1] = hitTransform->jointY;
+        buf.vec[2] = hitTransform->jointZ;
+    }
+    buf.tag = (u8)param1;
+    (*gCameraInterface)->setMode(MAKETEX_CAMMODE_NPCSPEAK, 1, 0, 0x10, buf.vec, 0, 0xff);
+}
+
+void objModelResetVecFn_80080548(GameObject* obj)
+{
+    s16* v = (s16*)objModelGetVecFn_800395d8(obj, 0);
+    if (v != NULL)
+    {
+        v[1] = 0;
+        v[0] = 0;
+    }
+}
 
 /* Object-sequence turn-to-face-player step: starts (mode 4) or advances
  * (mode 5) a smooth turn of the object toward the player, blending the model
@@ -1077,134 +1205,6 @@ int ObjSeq_func20(GameObject* obj, int state, s16 turnDegrees, s16 yawThreshold,
         return 1;
     }
     return 0;
-}
-
-/* Starts the prepared audio stream for a sequence slot and records its
- * subtitle timing. */
-int seqStreamFn_8008023c(int x)
-{
-    int seqId = gObjSeqSlotSeqIdTable[x] - 1;
-    f32 streamTime;
-
-    if (gObjSeqStreamSuppressed != 0 || AudioStream_IsPreparing() != 0)
-    {
-        return 0;
-    }
-    streamTime = gObjSeqSlotStreamTimeTable[x] - (f32)lbl_803DB728;
-    lbl_803DD074 = streamTime;
-    if (lbl_803DEFB0 != lbl_803DD074)
-    {
-        lbl_803DB724 = x;
-    }
-    lbl_803DB728 = -1;
-    if (seqId == 0x54b || seqId == 0x550 || seqId == 0x551 || seqId == 0x574 || seqId == 0x579 || seqId == 0x57a)
-    {
-        lbl_803DD074 = 0.0f;
-        lbl_803DB724 = -1;
-    }
-    lbl_803DB720 = -1;
-    AudioStream_StartPrepared();
-    return 1;
-}
-
-int animatedObjGetSeqId(ObjAnimUpdateState* state)
-{
-    return gObjSeqSlotSeqIdTable[state->sequenceSlot] - 1;
-}
-
-int fn_80080360(int p, int val)
-{
-    lbl_8030ECF8[(s8) * (u8*)(p + 0x57)] = (s16)val;
-    return 1;
-}
-
-void streamCb_80080384(void)
-{
-    AudioStream_IsPreparing();
-    doNothing_8000CF54(0);
-    if ((s32)lbl_803DB71C != -1)
-    {
-        gameTextLoadTaskText(lbl_803DB71C);
-        lbl_803DB71C = -1;
-        lbl_803DB714 = -1;
-    }
-    else if ((s32)lbl_803DB718 != -1)
-    {
-        subtitleFn_8001b700();
-        subtitleStart(lbl_803DB718);
-        lbl_803DB718 = -1;
-    }
-}
-
-int ObjSeq_func23(int unused, int x)
-{
-    switch (x)
-    {
-    case 0:
-        lbl_803DD0B4.useWorldSpace = 1;
-        break;
-    case 1:
-        lbl_803DD0B4.useWorldSpace = 0;
-        break;
-    }
-    return 0;
-}
-
-int ObjSeq_setOverridePos(f32 x, f32 y, f32 z)
-{
-    lbl_803DD0D9 = 1;
-    objSeqOverridePos[0] = x;
-    objSeqOverridePos[1] = y;
-    objSeqOverridePos[2] = z;
-    return 1;
-}
-
-int ObjSeq_SetObjs(int objs, int arg, int flags)
-{
-    u8 flagsByte = (u8)flags;
-    objSeqObjs = objs;
-    lbl_803DD07C = arg;
-    lbl_803DD078 = flagsByte;
-    return 1;
-}
-
-void cameraFocusNpc(int param1, GameObject* obj)
-{
-    struct
-    {
-        f32 vec[3];
-        u8 tag;
-    } buf;
-    ObjHitVolumeRuntimeTransform* hitTransform;
-
-    if ((*gCameraInterface)->getMode() == MAKETEX_CAMMODE_NPCSPEAK)
-        return;
-    focusedNpc = obj;
-    hitTransform = obj->anim.hitVolumeTransforms;
-    if (hitTransform == NULL || param1 == 7 || param1 == 6)
-    {
-        buf.vec[0] = obj->anim.worldPosX;
-        buf.vec[1] = obj->anim.worldPosY;
-        buf.vec[2] = obj->anim.worldPosZ;
-    }
-    else
-    {
-        buf.vec[0] = hitTransform->jointX;
-        buf.vec[1] = hitTransform->jointY;
-        buf.vec[2] = hitTransform->jointZ;
-    }
-    buf.tag = (u8)param1;
-    (*gCameraInterface)->setMode(MAKETEX_CAMMODE_NPCSPEAK, 1, 0, 0x10, buf.vec, 0, 0xff);
-}
-
-void objModelResetVecFn_80080548(GameObject* obj)
-{
-    s16* v = (s16*)objModelGetVecFn_800395d8(obj, 0);
-    if (v != NULL)
-    {
-        v[1] = 0;
-        v[0] = 0;
-    }
 }
 
 

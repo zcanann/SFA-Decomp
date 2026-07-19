@@ -679,6 +679,21 @@ void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* ou
         *outZ *= invW;
     }
 }
+
+void Camera_ApplyCurrentViewport(void* viewportArg)
+{
+    u16 height;
+    int viewportY;
+    u32 clipped;
+
+    clipped = getScreenResolution();
+    viewportY = clipped >> 16;
+    height = clipped;
+    clipped = viewportY;
+    viewportY = gCameraViewportYOffset + 6;
+    clipped = clipped - viewportY;
+    gxSetScissorRect(0, 0, 0, viewportY, height, clipped);
+}
 typedef struct CameraViewportEntry {
     u8 pad00[0x20];
     s32 scissorX;
@@ -770,21 +785,6 @@ void Camera_UpdateProjection(void* viewportArg, int unused)
         Camera_ApplyCurrentViewport(viewportArg);
         gCameraCurrentViewIndex = viewIndex;
     }
-}
-
-void Camera_ApplyCurrentViewport(void* viewportArg)
-{
-    u16 height;
-    int viewportY;
-    u32 clipped;
-
-    clipped = getScreenResolution();
-    viewportY = clipped >> 16;
-    height = clipped;
-    clipped = viewportY;
-    viewportY = gCameraViewportYOffset + 6;
-    clipped = clipped - viewportY;
-    gxSetScissorRect(0, 0, 0, viewportY, height, clipped);
 }
 
 void Camera_GetCurrentViewport(s32* outX, s32* outY, u32* outHeight, s32* outWidth)

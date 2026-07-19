@@ -146,17 +146,7 @@ s8 hudHiddenFrameCount;
 u8 gGameLoopReloadRequested;
 u8 lbl_803DCA38;
 
-extern u8 gameState;
-extern u8 timeStop;
-extern u8 shouldResetNextFrame;
-extern s8 hudHiddenFrameCount;
-extern s8 frameCountdown;
-extern s16 screenBlankFrameCount;
-extern u8 gGameLoopInitComplete;
-extern u8 gGameLoopButtonObjectCount;
-extern u16 gGameLoopMusicRequestCount;
-extern u8 gGameLoopPendingMusicId;
-extern u8 gGameLoopReloadRequested;
+
 typedef struct
 {
     u8 pending;
@@ -173,7 +163,50 @@ typedef struct
     int arg24;
     int arg28;
 } AssetReq;
-void loadAsset(AssetReq* req);
+void loadAsset(AssetReq* req)
+{
+    u8 tmp[0x10];
+
+    switch (req->type)
+    {
+    case 0:
+        *(void**)req->dest = fileLoad(req->resourceId, 0);
+        break;
+    case 1:
+        fileLoadToBuffer(req->resourceId, (void*)req->dest);
+        break;
+    case 2:
+        fileLoadToBufferOffset(req->resourceId, (void*)req->dest, req->offset, req->argC);
+        break;
+    case 4:
+        *(void**)req->dest =
+            loadCharacter((s16*)req->arg18, req->arg1c, req->arg24, req->arg20, (void*)req->arg14, req->arg28);
+        break;
+    case 3:
+        *(void**)req->dest = (void*)textureLoad(req->resourceId, 0);
+        break;
+    case 5:
+        *(void**)req->dest = Resource_Acquire(req->resourceId & 0xffff, req->argC & 0xffff);
+        break;
+    case 6:
+        *(void**)req->dest = return0_8002969C(req->resourceId, req->argC, tmp);
+        break;
+    case 7:
+        *(void**)req->dest = loadAnimation(req->arg24, req->resourceId, (s16)req->argC, (u8*)req->arg20);
+        break;
+    }
+}
+extern u8 gameState;
+extern u8 timeStop;
+extern u8 shouldResetNextFrame;
+extern s8 hudHiddenFrameCount;
+extern s8 frameCountdown;
+extern s16 screenBlankFrameCount;
+extern u8 gGameLoopInitComplete;
+extern u8 gGameLoopButtonObjectCount;
+extern u16 gGameLoopMusicRequestCount;
+extern u8 gGameLoopPendingMusicId;
+extern u8 gGameLoopReloadRequested;
 extern void* lbl_803DCAFC;
 extern u8* gGameBitTable;
 extern s16 gGameBitCount;
@@ -268,40 +301,6 @@ void loadAssetFileById(void* out, int fileId)
     gGameLoopAssetReq.resourceId = fileId;
     gGameLoopAssetReq.dest = (int)out;
     loadAsset(&gGameLoopAssetReq);
-}
-
-void loadAsset(AssetReq* req)
-{
-    u8 tmp[0x10];
-
-    switch (req->type)
-    {
-    case 0:
-        *(void**)req->dest = fileLoad(req->resourceId, 0);
-        break;
-    case 1:
-        fileLoadToBuffer(req->resourceId, (void*)req->dest);
-        break;
-    case 2:
-        fileLoadToBufferOffset(req->resourceId, (void*)req->dest, req->offset, req->argC);
-        break;
-    case 4:
-        *(void**)req->dest =
-            loadCharacter((s16*)req->arg18, req->arg1c, req->arg24, req->arg20, (void*)req->arg14, req->arg28);
-        break;
-    case 3:
-        *(void**)req->dest = (void*)textureLoad(req->resourceId, 0);
-        break;
-    case 5:
-        *(void**)req->dest = Resource_Acquire(req->resourceId & 0xffff, req->argC & 0xffff);
-        break;
-    case 6:
-        *(void**)req->dest = return0_8002969C(req->resourceId, req->argC, tmp);
-        break;
-    case 7:
-        *(void**)req->dest = loadAnimation(req->arg24, req->resourceId, (s16)req->argC, (u8*)req->arg20);
-        break;
-    }
 }
 
 void crash(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad5, int wpad6, int wpad7)
@@ -990,20 +989,6 @@ void setTimeStop(int stop)
     timeStop = (u8)stop;
 }
 
-typedef struct PlayerTrailRecord
-{
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    int time;
-} PlayerTrailRecord;
-
-PlayerTrailRecord gGameLoopPlayerTrailBuffer[0x3C0 / sizeof(PlayerTrailRecord)];
-void cutsceneFadeInOut(int enter)
-{
-    cutsceneEnterExit(enter, 1);
-}
-
 void cutsceneEnterExit(int entering, int affectSounds)
 {
     if (entering != 0)
@@ -1030,6 +1015,20 @@ void cutsceneEnterExit(int entering, int affectSounds)
             }
         }
     }
+}
+
+typedef struct PlayerTrailRecord
+{
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    int time;
+} PlayerTrailRecord;
+
+PlayerTrailRecord gGameLoopPlayerTrailBuffer[0x3C0 / sizeof(PlayerTrailRecord)];
+void cutsceneFadeInOut(int enter)
+{
+    cutsceneEnterExit(enter, 1);
 }
 
 u8 lbl_8033C3B8[0x3E8];

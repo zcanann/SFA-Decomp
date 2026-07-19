@@ -42,6 +42,53 @@
 
 s16 gMagicPlantGemDefIds[4] = {0x2C4, 0x2CD, 0x2CE, 0x2CF};
 
+
+extern f32 lbl_803E385C;
+extern f32 lbl_803E3880;
+extern f32 lbl_803E3858;
+extern f32 lbl_803E387C;
+extern f32 lbl_803E3878;
+extern f32 lbl_803E3874;
+extern f32 lbl_803E3870;
+void magicPlantDropGem(int obj, void* setup, void* stateArg)
+{
+    MagicPlantState* state;
+    int player;
+    u8* childObj;
+    f32 launchSpeed;
+    int angle;
+
+    state = (MagicPlantState*)stateArg;
+    player = (int)Obj_GetPlayerObject();
+    Sfx_StopObjectChannel(obj, 0x40);
+
+    childObj = *(u8**)&state->childObject;
+    if ((childObj != NULL) && (*(void**)(childObj + 0xc4) != NULL) &&
+        (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3870))
+    {
+        state->childObject = 0;
+        ObjLink_DetachChild((GameObject*)obj, (GameObject*)childObj);
+
+        launchSpeed = (f32)(int)
+        randomGetRange(0x27, 0x2c) / lbl_803E3874;
+        angle = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
+                         ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
+        randomGetRange(((u16)angle) - 0x1000, ((u16)angle) + 0x1000);
+
+        ((GameObject*)childObj)->anim.velocityX =
+            launchSpeed * mathSinf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
+        ((GameObject*)childObj)->anim.velocityZ =
+            launchSpeed * mathCosf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
+        Sfx_PlayFromObject(obj, SFXTRIG_id_5e);
+    }
+
+    if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3858)
+    {
+        state->mode = MAGICPLANT_MODE_FADE_OUT;
+        state->animStepScale = lbl_803E3880;
+        ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_BURST, lbl_803E385C, 0);
+    }
+}
 typedef struct MagicPlantChildSetup
 {
     u8 pad00[4];
@@ -88,8 +135,6 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 #define MAGICPLANT_IDLE_TIMER_MIN  300   /* frames between idle-sway retriggers (lo..hi) */
 #define MAGICPLANT_IDLE_TIMER_MAX  600
 
-extern f32 lbl_803E3858;
-extern f32 lbl_803E385C;
 extern f32 gMagicPlantHitReactAnimStep;
 extern f32 gMagicPlantHitLightScale;
 extern f32 gMagicPlantIdleAnimStep;
@@ -97,11 +142,6 @@ extern f32 lbl_803E3890;
 extern f32 gMagicPlantBuzzStartDist;
 extern f32 gMagicPlantBuzzStopDist;
 
-extern f32 lbl_803E3870;
-extern f32 lbl_803E3874;
-extern f32 lbl_803E3878;
-extern f32 lbl_803E387C;
-extern f32 lbl_803E3880;
 
 void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, MagicPlantState* stateParam)
 {
@@ -192,6 +232,43 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, Magic
     else if (distance > gMagicPlantBuzzStopDist)
     {
         Sfx_StopObjectChannel((int)obj, 0x40);
+    }
+}
+
+void MagicPlant_spawnChild(GameObject* obj, int objectId)
+{
+    MagicPlantChildSetup* setup;
+    GameObject* childObj;
+    u8* mapData;
+    MagicPlantState* state;
+
+    mapData = *(u8**)&(obj)->anim.placementData;
+    state = (obj)->extra;
+    if ((u8)Obj_IsLoadingLocked() != 0)
+    {
+        setup = (MagicPlantChildSetup*)Obj_AllocObjectSetup(sizeof(MagicPlantChildSetup), objectId);
+        setup->field1A = 0x14;
+        setup->field2C = -1;
+        setup->field1C = -1;
+        setup->x = (obj)->anim.localPosX;
+        setup->y = (obj)->anim.localPosY;
+        setup->z = (obj)->anim.localPosZ;
+        setup->field24 = -1;
+        setup->mapByte4 = mapData[0x04];
+        setup->mapByte6 = mapData[0x06];
+        setup->mapByte5 = mapData[0x05];
+        setup->yawByte = (u8)(mapData[0x07] - 0xf);
+        childObj = Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
+        if (childObj != 0)
+        {
+            ObjLink_AttachChild(obj, childObj, 0);
+            state->childObject = childObj;
+        }
+        else
+        {
+            mm_free(setup);
+            state->childObject = 0;
+        }
     }
 }
 
@@ -379,83 +456,6 @@ void MagicPlant_update(int obj)
     }
 
     ObjAnim_AdvanceCurrentMove((int)obj, state->animStepScale, timeDelta, NULL);
-}
-
-void magicPlantDropGem(int obj, void* setup, void* stateArg)
-{
-    MagicPlantState* state;
-    int player;
-    u8* childObj;
-    f32 launchSpeed;
-    int angle;
-
-    state = (MagicPlantState*)stateArg;
-    player = (int)Obj_GetPlayerObject();
-    Sfx_StopObjectChannel(obj, 0x40);
-
-    childObj = *(u8**)&state->childObject;
-    if ((childObj != NULL) && (*(void**)(childObj + 0xc4) != NULL) &&
-        (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3870))
-    {
-        state->childObject = 0;
-        ObjLink_DetachChild((GameObject*)obj, (GameObject*)childObj);
-
-        launchSpeed = (f32)(int)
-        randomGetRange(0x27, 0x2c) / lbl_803E3874;
-        angle = getAngle(((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
-                         ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
-        randomGetRange(((u16)angle) - 0x1000, ((u16)angle) + 0x1000);
-
-        ((GameObject*)childObj)->anim.velocityX =
-            launchSpeed * mathSinf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
-        ((GameObject*)childObj)->anim.velocityZ =
-            launchSpeed * mathCosf((lbl_803E3878 * (f32) * (s16*)obj) / lbl_803E387C);
-        Sfx_PlayFromObject(obj, SFXTRIG_id_5e);
-    }
-
-    if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3858)
-    {
-        state->mode = MAGICPLANT_MODE_FADE_OUT;
-        state->animStepScale = lbl_803E3880;
-        ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_BURST, lbl_803E385C, 0);
-    }
-}
-
-void MagicPlant_spawnChild(GameObject* obj, int objectId)
-{
-    MagicPlantChildSetup* setup;
-    GameObject* childObj;
-    u8* mapData;
-    MagicPlantState* state;
-
-    mapData = *(u8**)&(obj)->anim.placementData;
-    state = (obj)->extra;
-    if ((u8)Obj_IsLoadingLocked() != 0)
-    {
-        setup = (MagicPlantChildSetup*)Obj_AllocObjectSetup(sizeof(MagicPlantChildSetup), objectId);
-        setup->field1A = 0x14;
-        setup->field2C = -1;
-        setup->field1C = -1;
-        setup->x = (obj)->anim.localPosX;
-        setup->y = (obj)->anim.localPosY;
-        setup->z = (obj)->anim.localPosZ;
-        setup->field24 = -1;
-        setup->mapByte4 = mapData[0x04];
-        setup->mapByte6 = mapData[0x06];
-        setup->mapByte5 = mapData[0x05];
-        setup->yawByte = (u8)(mapData[0x07] - 0xf);
-        childObj = Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
-        if (childObj != 0)
-        {
-            ObjLink_AttachChild(obj, childObj, 0);
-            state->childObject = childObj;
-        }
-        else
-        {
-            mm_free(setup);
-            state->childObject = 0;
-        }
-    }
 }
 
 void MagicPlant_init(GameObject* obj, MagicPlantSetup* setup)

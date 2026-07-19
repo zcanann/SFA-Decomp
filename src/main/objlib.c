@@ -791,6 +791,109 @@ void ObjHits_AddContactObject(GameObject* obj, GameObject* contactObj)
     return;
 }
 
+int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume,
+                                       float* outHitPosX, float* outHitPosY, float* outHitPosZ)
+{
+    u8 hitPriority;
+    int hitCount;
+    ObjHitsPriorityState* hitState;
+    int hitSlot;
+    u8 bestPriority;
+    s8 bestHitSlot;
+
+    hitState = *(ObjHitsPriorityState**)&(obj)->anim.hitReactState;
+    if (hitState == 0)
+    {
+        return 0;
+    }
+    hitCount = hitState->priorityHitCount;
+    if (hitCount != 0)
+    {
+        bestPriority = OBJHITS_PRIORITY_INVALID;
+        bestHitSlot = -1;
+        for (hitSlot = 0; hitSlot < hitCount; hitSlot++)
+        {
+            hitPriority = hitState->priorities[hitSlot];
+            if ((s8)hitPriority < (s8)bestPriority)
+            {
+                bestPriority = hitPriority;
+                bestHitSlot = hitSlot;
+            }
+        }
+        if (bestHitSlot != -1)
+        {
+            if (outHitObject != 0x0)
+            {
+                *outHitObject = hitState->hitObjects[bestHitSlot];
+            }
+            if (outSphereIndex != 0x0)
+            {
+                *outSphereIndex = hitState->sphereIndices[bestHitSlot];
+            }
+            if (outHitVolume != 0x0)
+            {
+                *outHitVolume = hitState->hitVolumes[bestHitSlot];
+            }
+            if (outHitPosX != (float*)0x0)
+            {
+                *outHitPosX = hitState->hitPosX[bestHitSlot];
+                *outHitPosY = hitState->hitPosY[bestHitSlot];
+                *outHitPosZ = hitState->hitPosZ[bestHitSlot];
+            }
+            return (int)(s8)bestPriority;
+        }
+    }
+    return 0;
+}
+
+int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume)
+{
+    u8 hitPriority;
+    int hitCount;
+    ObjHitsPriorityState* hitState;
+    int hitSlot;
+    u8 bestPriority;
+    s8 bestHitSlot;
+
+    hitState = *(ObjHitsPriorityState**)&(obj)->anim.hitReactState;
+    if (hitState == 0)
+    {
+        return 0;
+    }
+    hitCount = hitState->priorityHitCount;
+    if (hitCount != 0)
+    {
+        bestPriority = OBJHITS_PRIORITY_INVALID;
+        bestHitSlot = -1;
+        for (hitSlot = 0; hitSlot < hitCount; hitSlot++)
+        {
+            hitPriority = hitState->priorities[hitSlot];
+            if ((s8)hitPriority < (s8)bestPriority)
+            {
+                bestPriority = hitPriority;
+                bestHitSlot = hitSlot;
+            }
+        }
+        if (bestHitSlot != -1)
+        {
+            if (outHitObject != 0x0)
+            {
+                *outHitObject = hitState->hitObjects[bestHitSlot];
+            }
+            if (outSphereIndex != 0x0)
+            {
+                *outSphereIndex = hitState->sphereIndices[bestHitSlot];
+            }
+            if (outHitVolume != 0x0)
+            {
+                *outHitVolume = hitState->hitVolumes[bestHitSlot];
+            }
+            return (int)(s8)bestPriority;
+        }
+    }
+    return 0;
+}
+
 void ObjHitReact_UpdateResetObjects(void)
 {
     ObjAnimComponent* obj;
@@ -1477,109 +1580,6 @@ int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u3
         }
     }
     return collisionType;
-}
-
-int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume,
-                                       float* outHitPosX, float* outHitPosY, float* outHitPosZ)
-{
-    u8 hitPriority;
-    int hitCount;
-    ObjHitsPriorityState* hitState;
-    int hitSlot;
-    u8 bestPriority;
-    s8 bestHitSlot;
-
-    hitState = *(ObjHitsPriorityState**)&(obj)->anim.hitReactState;
-    if (hitState == 0)
-    {
-        return 0;
-    }
-    hitCount = hitState->priorityHitCount;
-    if (hitCount != 0)
-    {
-        bestPriority = OBJHITS_PRIORITY_INVALID;
-        bestHitSlot = -1;
-        for (hitSlot = 0; hitSlot < hitCount; hitSlot++)
-        {
-            hitPriority = hitState->priorities[hitSlot];
-            if ((s8)hitPriority < (s8)bestPriority)
-            {
-                bestPriority = hitPriority;
-                bestHitSlot = hitSlot;
-            }
-        }
-        if (bestHitSlot != -1)
-        {
-            if (outHitObject != 0x0)
-            {
-                *outHitObject = hitState->hitObjects[bestHitSlot];
-            }
-            if (outSphereIndex != 0x0)
-            {
-                *outSphereIndex = hitState->sphereIndices[bestHitSlot];
-            }
-            if (outHitVolume != 0x0)
-            {
-                *outHitVolume = hitState->hitVolumes[bestHitSlot];
-            }
-            if (outHitPosX != (float*)0x0)
-            {
-                *outHitPosX = hitState->hitPosX[bestHitSlot];
-                *outHitPosY = hitState->hitPosY[bestHitSlot];
-                *outHitPosZ = hitState->hitPosZ[bestHitSlot];
-            }
-            return (int)(s8)bestPriority;
-        }
-    }
-    return 0;
-}
-
-int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume)
-{
-    u8 hitPriority;
-    int hitCount;
-    ObjHitsPriorityState* hitState;
-    int hitSlot;
-    u8 bestPriority;
-    s8 bestHitSlot;
-
-    hitState = *(ObjHitsPriorityState**)&(obj)->anim.hitReactState;
-    if (hitState == 0)
-    {
-        return 0;
-    }
-    hitCount = hitState->priorityHitCount;
-    if (hitCount != 0)
-    {
-        bestPriority = OBJHITS_PRIORITY_INVALID;
-        bestHitSlot = -1;
-        for (hitSlot = 0; hitSlot < hitCount; hitSlot++)
-        {
-            hitPriority = hitState->priorities[hitSlot];
-            if ((s8)hitPriority < (s8)bestPriority)
-            {
-                bestPriority = hitPriority;
-                bestHitSlot = hitSlot;
-            }
-        }
-        if (bestHitSlot != -1)
-        {
-            if (outHitObject != 0x0)
-            {
-                *outHitObject = hitState->hitObjects[bestHitSlot];
-            }
-            if (outSphereIndex != 0x0)
-            {
-                *outSphereIndex = hitState->sphereIndices[bestHitSlot];
-            }
-            if (outHitVolume != 0x0)
-            {
-                *outHitVolume = hitState->hitVolumes[bestHitSlot];
-            }
-            return (int)(s8)bestPriority;
-        }
-    }
-    return 0;
 }
 
 void ObjLink_DetachChild(GameObject* obj, GameObject* child)

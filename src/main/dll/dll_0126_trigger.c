@@ -87,60 +87,6 @@ extern f32 lbl_803E40D8;
 
 #define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
 
-void Trigger_init(u8* obj, u8* params)
-{
-    u8* state;
-    f32 range;
-
-    objSetSlot((GameObject*)obj, 0x28);
-    state = ((GameObject*)obj)->extra;
-    switch (((TriggerPlacement*)params)->typeId)
-    {
-    case 0x4b:
-        range = (f32)(s32)(((TriggerPlacement*)params)->size[0] * 2);
-        ((TriggerState*)state)->rangeSq = range * range;
-        ((GameObject*)obj)->anim.rotZ = 0;
-        ((GameObject*)obj)->anim.rotY = 0;
-        ((GameObject*)obj)->anim.rotX = (s16)(((TriggerPlacement*)params)->rot[0] << 8);
-        ((GameObject*)obj)->anim.rootMotionScale = range / 55.4256f;
-        break;
-    case 0x4c:
-        ((TriggerState*)state)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
-        objFn_80198fa4((GameObject*)obj, (MmpGyserventPlacement*)params);
-        break;
-    case 0x230:
-        ((TriggerState*)state)->rangeSq = (f32)(s32)(((TriggerPlacement*)params)->size[0] * 2);
-        ((TriggerState*)state)->rangeSq = ((TriggerState*)state)->rangeSq * ((TriggerState*)state)->rangeSq;
-        break;
-    case 0x4d:
-        ((GameObject*)obj)->anim.rotX = (s16)(((TriggerPlacement*)params)->rot[0] << 8);
-        ((GameObject*)obj)->anim.rotY = (s16)(((TriggerPlacement*)params)->rot[1] << 8);
-        ((GameObject*)obj)->anim.rotZ = 0;
-        break;
-    case 0x54:
-        ((TriggerState*)state)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
-        ((TriggerState*)state)->gateBits[1] = ((TriggerPlacement*)params)->gateBitSrc[1];
-        ((TriggerState*)state)->gateBits[2] = ((TriggerPlacement*)params)->gateBitSrc[2];
-        ((TriggerState*)state)->gateBits[3] = ((TriggerPlacement*)params)->gateBitSrc[3];
-        ((TriggerFlags8A*)(state + 0x8a))->bit7 = 0;
-        break;
-    case 0x4e:
-    case 0x4f:
-    case 0x50:
-        break;
-    case 0xf4:
-        break;
-    default:
-        break;
-    }
-    ((TriggerState*)state)->gameBit = ((TriggerPlacement*)params)->gameBitSrc;
-    if ((int)mainGetBit(((TriggerState*)state)->gameBit) == 1)
-    {
-        state[0] = (u8)(state[0] | TRIGGER_SFLAG_DISABLED);
-    }
-    state[0] = (u8)(state[0] | TRIGGER_SFLAG_SEED_TARGET);
-}
-
 void objInterpretSeq(GameObject* obj, int seqArg, s8 legCode, int distSq)
 {
     char* desc = (char*)&gTriggerObjDescriptor;
@@ -966,6 +912,60 @@ void Trigger_hitDetect(GameObject* obj)
 
 void Trigger_update(void)
 {
+}
+
+void Trigger_init(u8* obj, u8* params)
+{
+    u8* state;
+    f32 range;
+
+    objSetSlot((GameObject*)obj, 0x28);
+    state = ((GameObject*)obj)->extra;
+    switch (((TriggerPlacement*)params)->typeId)
+    {
+    case 0x4b:
+        range = (f32)(s32)(((TriggerPlacement*)params)->size[0] * 2);
+        ((TriggerState*)state)->rangeSq = range * range;
+        ((GameObject*)obj)->anim.rotZ = 0;
+        ((GameObject*)obj)->anim.rotY = 0;
+        ((GameObject*)obj)->anim.rotX = (s16)(((TriggerPlacement*)params)->rot[0] << 8);
+        ((GameObject*)obj)->anim.rootMotionScale = range / 55.4256f;
+        break;
+    case 0x4c:
+        ((TriggerState*)state)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
+        objFn_80198fa4((GameObject*)obj, (MmpGyserventPlacement*)params);
+        break;
+    case 0x230:
+        ((TriggerState*)state)->rangeSq = (f32)(s32)(((TriggerPlacement*)params)->size[0] * 2);
+        ((TriggerState*)state)->rangeSq = ((TriggerState*)state)->rangeSq * ((TriggerState*)state)->rangeSq;
+        break;
+    case 0x4d:
+        ((GameObject*)obj)->anim.rotX = (s16)(((TriggerPlacement*)params)->rot[0] << 8);
+        ((GameObject*)obj)->anim.rotY = (s16)(((TriggerPlacement*)params)->rot[1] << 8);
+        ((GameObject*)obj)->anim.rotZ = 0;
+        break;
+    case 0x54:
+        ((TriggerState*)state)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
+        ((TriggerState*)state)->gateBits[1] = ((TriggerPlacement*)params)->gateBitSrc[1];
+        ((TriggerState*)state)->gateBits[2] = ((TriggerPlacement*)params)->gateBitSrc[2];
+        ((TriggerState*)state)->gateBits[3] = ((TriggerPlacement*)params)->gateBitSrc[3];
+        ((TriggerFlags8A*)(state + 0x8a))->bit7 = 0;
+        break;
+    case 0x4e:
+    case 0x4f:
+    case 0x50:
+        break;
+    case 0xf4:
+        break;
+    default:
+        break;
+    }
+    ((TriggerState*)state)->gameBit = ((TriggerPlacement*)params)->gameBitSrc;
+    if ((int)mainGetBit(((TriggerState*)state)->gameBit) == 1)
+    {
+        state[0] = (u8)(state[0] | TRIGGER_SFLAG_DISABLED);
+    }
+    state[0] = (u8)(state[0] | TRIGGER_SFLAG_SEED_TARGET);
 }
 
 void Trigger_release(void)

@@ -5970,6 +5970,46 @@ int loadSaveGame(int a, int b)
     } while (gSaveCardRetry != 0);
     return ret;
 }
+
+int memCardFn_8007dd04(u8 retry)
+{
+    int ret;
+
+    if (retry != 0)
+    {
+        gSaveCardRetry = 0;
+        cardShowLoadingMsg(2);
+    }
+    do
+    {
+        ret = saveGame(0);
+        if (ret != 0)
+        {
+            if (lbl_803DD05A != 0)
+            {
+                lbl_803DD05A = 0;
+                CARDClose(&lbl_80396900.fileInfo);
+            }
+            CARDUnmount(0);
+            mm_free(lbl_803DD040);
+            lbl_803DD040 = 0;
+            lbl_803DB700 = 13;
+            if (ret == 2)
+            {
+                ret = saveGame_prepareAndWrite(0, 0, 0, 0, 0, NULL);
+            }
+        }
+        if (retry != 0)
+        {
+            showMemCardError(0);
+        }
+        if (gSaveCardRetry != 0)
+        {
+            cardShowLoadingMsg(2);
+        }
+    } while (gSaveCardRetry != 0 && retry != 0);
+    return ret;
+}
 int cardProbe(u8 retry)
 {
 
@@ -6279,46 +6319,6 @@ void showMemCardError(u8 err)
             }
         }
     } while (lbl_803DB700 != 0xd);
-}
-
-int memCardFn_8007dd04(u8 retry)
-{
-    int ret;
-
-    if (retry != 0)
-    {
-        gSaveCardRetry = 0;
-        cardShowLoadingMsg(2);
-    }
-    do
-    {
-        ret = saveGame(0);
-        if (ret != 0)
-        {
-            if (lbl_803DD05A != 0)
-            {
-                lbl_803DD05A = 0;
-                CARDClose(&lbl_80396900.fileInfo);
-            }
-            CARDUnmount(0);
-            mm_free(lbl_803DD040);
-            lbl_803DD040 = 0;
-            lbl_803DB700 = 13;
-            if (ret == 2)
-            {
-                ret = saveGame_prepareAndWrite(0, 0, 0, 0, 0, NULL);
-            }
-        }
-        if (retry != 0)
-        {
-            showMemCardError(0);
-        }
-        if (gSaveCardRetry != 0)
-        {
-            cardShowLoadingMsg(2);
-        }
-    } while (gSaveCardRetry != 0 && retry != 0);
-    return ret;
 }
 
 /*

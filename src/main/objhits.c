@@ -871,6 +871,37 @@ int ObjHits_TestTaperedCapsule3D(float* point, float pointRadius, float baseRadi
     return *dist2 <= radiusSum * radiusSum;
 }
 
+void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount)
+{
+    int maxGap;
+    ObjHitsSweepEntry* prevEntry;
+    int index;
+    int insertIndex;
+    int gap;
+    ObjHitsSweepEntry* entry;
+
+    gap = 1;
+    maxGap = (entryCount - 1) / 9;
+    for (; gap <= maxGap; gap = gap * 3 + 1)
+    {
+    }
+    for (; gap > 0; gap = gap / 3)
+    {
+        for (index = gap + 1; index < entryCount; index++)
+        {
+            entry = sweepPtrs[index];
+            insertIndex = index;
+            while ((insertIndex > gap) && (prevEntry = sweepPtrs[insertIndex - gap], prevEntry->minX > entry->minX))
+            {
+                sweepPtrs[insertIndex] = prevEntry;
+                insertIndex -= gap;
+            }
+            sweepPtrs[insertIndex] = entry;
+        }
+    }
+    return;
+}
+
 void ObjHits_TickPriorityHitCooldowns(void)
 {
     int slotOffset;
@@ -1462,6 +1493,10 @@ int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char ch
         }
     }
     return 0;
+}
+
+void doNothing_800333C8(int objA, int objB, int att, void* state, void* attState, f32 dt)
+{
 }
 
 void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 dt)
@@ -2508,38 +2543,3 @@ void ObjHits_Update(int objectCount)
 }
 
 char sObjHitsTooManyHitSpheresWarning[] = "HIT VOLUMES: an object has too many hit spheres\n";
-
-void doNothing_800333C8(int objA, int objB, int att, void* state, void* attState, f32 dt)
-{
-}
-
-void ObjHits_SortSweepEntries(ObjHitsSweepEntry** sweepPtrs, int entryCount)
-{
-    int maxGap;
-    ObjHitsSweepEntry* prevEntry;
-    int index;
-    int insertIndex;
-    int gap;
-    ObjHitsSweepEntry* entry;
-
-    gap = 1;
-    maxGap = (entryCount - 1) / 9;
-    for (; gap <= maxGap; gap = gap * 3 + 1)
-    {
-    }
-    for (; gap > 0; gap = gap / 3)
-    {
-        for (index = gap + 1; index < entryCount; index++)
-        {
-            entry = sweepPtrs[index];
-            insertIndex = index;
-            while ((insertIndex > gap) && (prevEntry = sweepPtrs[insertIndex - gap], prevEntry->minX > entry->minX))
-            {
-                sweepPtrs[insertIndex] = prevEntry;
-                insertIndex -= gap;
-            }
-            sweepPtrs[insertIndex] = entry;
-        }
-    }
-    return;
-}

@@ -719,59 +719,6 @@ static inline void* skeetla_validateRouteEntry(void* entry)
 }
 
 
-void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
-{
-    void* entry;
-
-    entry = NULL;
-
-    if ((*(u8**)&((TrickyState*)state)->cachedRouteDef == routeDef) &&
-        (((TrickyState*)state)->cachedWalkGroup == ((TrickyState*)state)->walkGroup) &&
-        (((TrickyState*)state)->cachedRouteFlags == (routeFlagValue & 0xffu)))
-    {
-        entry = skeetla_validateRouteEntry(((TrickyState*)state)->validatedRouteEntry);
-    }
-
-    if (entry == NULL)
-    {
-        entry =
-            trickyFindNearestLinkedRouteEntry(state, routeDef, ((TrickyState*)state)->walkGroup, routeFlagValue & 0xff);
-        if (entry == NULL)
-        {
-            entry = trickyFindPathRouteEntry(state, (u32)routeDef, ((TrickyState*)state)->walkGroup);
-        }
-
-        if (entry == NULL)
-        {
-            if (((TrickyState*)state)->savedWalkGroup != 0)
-            {
-                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, ((TrickyState*)state)->savedWalkGroup,
-                                                          routeFlagValue & 0xff);
-                if (entry == NULL)
-                {
-                    entry = trickyFindPathRouteEntry(state, (u32)routeDef, ((TrickyState*)state)->savedWalkGroup);
-                }
-                if (entry != NULL)
-                {
-                    ((TrickyState*)state)->walkGroup = ((TrickyState*)state)->savedWalkGroup;
-                }
-            }
-
-            if (entry == NULL)
-            {
-                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, 0, routeFlagValue & 0xff);
-                ((TrickyState*)state)->walkGroup = 0;
-            }
-        }
-    }
-
-    *(u8**)&((TrickyState*)state)->cachedRouteDef = routeDef;
-    ((TrickyState*)state)->validatedRouteEntry = entry;
-    ((TrickyState*)state)->cachedWalkGroup = ((TrickyState*)state)->walkGroup;
-    ((TrickyState*)state)->cachedRouteFlags = routeFlagValue;
-    return entry;
-}
-
 void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelector, int routeFlagValue)
 {
     void* candidates[4];
@@ -937,6 +884,59 @@ int trickyFindReachableRouteIndex(u8* state, void** routes, u8* routeFlags, int 
     }
 
     return -1;
+}
+
+void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
+{
+    void* entry;
+
+    entry = NULL;
+
+    if ((*(u8**)&((TrickyState*)state)->cachedRouteDef == routeDef) &&
+        (((TrickyState*)state)->cachedWalkGroup == ((TrickyState*)state)->walkGroup) &&
+        (((TrickyState*)state)->cachedRouteFlags == (routeFlagValue & 0xffu)))
+    {
+        entry = skeetla_validateRouteEntry(((TrickyState*)state)->validatedRouteEntry);
+    }
+
+    if (entry == NULL)
+    {
+        entry =
+            trickyFindNearestLinkedRouteEntry(state, routeDef, ((TrickyState*)state)->walkGroup, routeFlagValue & 0xff);
+        if (entry == NULL)
+        {
+            entry = trickyFindPathRouteEntry(state, (u32)routeDef, ((TrickyState*)state)->walkGroup);
+        }
+
+        if (entry == NULL)
+        {
+            if (((TrickyState*)state)->savedWalkGroup != 0)
+            {
+                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, ((TrickyState*)state)->savedWalkGroup,
+                                                          routeFlagValue & 0xff);
+                if (entry == NULL)
+                {
+                    entry = trickyFindPathRouteEntry(state, (u32)routeDef, ((TrickyState*)state)->savedWalkGroup);
+                }
+                if (entry != NULL)
+                {
+                    ((TrickyState*)state)->walkGroup = ((TrickyState*)state)->savedWalkGroup;
+                }
+            }
+
+            if (entry == NULL)
+            {
+                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, 0, routeFlagValue & 0xff);
+                ((TrickyState*)state)->walkGroup = 0;
+            }
+        }
+    }
+
+    *(u8**)&((TrickyState*)state)->cachedRouteDef = routeDef;
+    ((TrickyState*)state)->validatedRouteEntry = entry;
+    ((TrickyState*)state)->cachedWalkGroup = ((TrickyState*)state)->walkGroup;
+    ((TrickyState*)state)->cachedRouteFlags = routeFlagValue;
+    return entry;
 }
 
 void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 linkSelector, void** outRoutes)

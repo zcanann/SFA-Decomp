@@ -57,6 +57,17 @@ int isSpace(u32 c);
 static inline int gameTextIdExists(int id);
 static inline int textCountChars(char* lineStr);
 
+
+int isSpace(u32 c)
+{
+    int result = 0;
+
+    if (c == 0x20 || c == 0x3000 || c == 0x303F)
+    {
+        result = 1;
+    }
+    return result;
+}
 static inline int gameTextIdExists(int id)
 {
     GlyphEntry* e;
@@ -141,6 +152,37 @@ char* gameStrcpy(char* dst, char* src)
         }
     } while (ch != 0);
     return dst - 1;
+}
+
+int utf8GetNextChar(u8* str, int* outLen)
+{
+    u8 first = *str;
+    int cls = gUtf8CharClassTable[first];
+    u32 acc = 0;
+    switch (cls)
+    {
+    case 5:
+        str++;
+        acc = first << 6;
+    case 4:
+        acc += *str++;
+        acc <<= 6;
+    case 3:
+        acc += *str++;
+        acc <<= 6;
+    case 2:
+        acc += *str++;
+        acc <<= 6;
+    case 1:
+        acc += *str++;
+        acc <<= 6;
+    case 0:
+        acc += *str;
+    default:
+        break;
+    }
+    *outLen = cls + 1;
+    return acc - gUtf8ClassOffsetTable[cls];
 }
 int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId)
 {
@@ -986,48 +1028,6 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     }
     *dst = 0;
     return buffer;
-}
-
-int isSpace(u32 c)
-{
-    int result = 0;
-
-    if (c == 0x20 || c == 0x3000 || c == 0x303F)
-    {
-        result = 1;
-    }
-    return result;
-}
-
-int utf8GetNextChar(u8* str, int* outLen)
-{
-    u8 first = *str;
-    int cls = gUtf8CharClassTable[first];
-    u32 acc = 0;
-    switch (cls)
-    {
-    case 5:
-        str++;
-        acc = first << 6;
-    case 4:
-        acc += *str++;
-        acc <<= 6;
-    case 3:
-        acc += *str++;
-        acc <<= 6;
-    case 2:
-        acc += *str++;
-        acc <<= 6;
-    case 1:
-        acc += *str++;
-        acc <<= 6;
-    case 0:
-        acc += *str;
-    default:
-        break;
-    }
-    *outLen = cls + 1;
-    return acc - gUtf8ClassOffsetTable[cls];
 }
 
 void* gameTextGetBox(int box)
