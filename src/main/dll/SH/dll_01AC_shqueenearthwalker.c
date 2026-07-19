@@ -101,7 +101,7 @@ void queenFeedFn_801d44a4(GameObject* obj, void* state)
         (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         if (cMenuGetSelectedItemInt() == -1)
         {
-            if (getYButtonItemLegacy(&triggerId) == 0 || triggerId != 0x66d)
+            if (getYButtonItem(&triggerId) == 0 || triggerId != 0x66d)
             {
                 tricky = getTrickyObject();
                 if (tricky != NULL && getXZDistance((f32*)((u8*)tricky + 0x18), &(obj)->anim.worldPosX) <

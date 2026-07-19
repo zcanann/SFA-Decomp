@@ -1422,7 +1422,7 @@ void resetYbutton(void)
     yButtonItemTextureId = -1;
 }
 
-u16 getYButtonItem(s16* out)
+int getYButtonItem(s16* out)
 {
     s32 t;
     if (yButtonState != 0)

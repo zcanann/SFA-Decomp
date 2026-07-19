@@ -12,10 +12,8 @@ void fn_8011F6D4(u32 value);
 void hudFn_8011f38c(u8 value);
 void showDeathMenu(void);
 void resetYbutton(void);
-u16 getYButtonItem(s16* out);
+int getYButtonItem(s16* out);
 void gameUiResetMenuState(void);
 void hudFn_8011f6f0(u8 value);
-
-#define getYButtonItemLegacy(out) ((int (*)(s16*))getYButtonItem)(out)
 
 #endif /* MAIN_DLL_TRICKY_API_H_ */
