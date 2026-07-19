@@ -1,56 +1,45 @@
-/*
- * zlbDecompress -- reconstructed GCC reference implementation.
- *
- * STATUS: integrated. The live unit is src/main/zlb.c (own TU, compiled with
- * ProDG 3.5 cc1 at -O1 via the "prodg" custom rule in configure.py); this
- * file is the annotated reference copy carrying the probe rationale that the
- * comment-free unit source cannot. Keep the two in sync.
- * The retail object is a foreign GCC compile (SN ProDG family), NOT MWCC --
- * see docs/mwcc_re/RESIDUAL_HANDOFFS.md for the detection signature and full
- * evidence trail. Our bundled ProDG 3.5-3.9.3 (GCC 2.95.2/3 SN builds)
- * reproduce this source's structure against the retail fn (all loop/table/
- * macro shapes aligned; report.json fuzzy 41.87 on .text, all data sections
- * 100); the residual divergence classes are pure compiler vintage (andi.
- * isel for contiguous masks, mcrxr/addme. decrement loops, no lbzux/lhzu
- * fusion, no loop-invariant lis hoisting) and point at a GCC 2.7/2.8-era SN
- * or Cygnus toolchain. Sourcing such a compiler is the remaining lever.
- *
- * Probe-verified GCC spellings (do not "clean up"):
- * - The rotate must be spelled (b << m) | (b >> (32 - m)) with m a NAMED
- *   variable/temp -- pre-folded counts (e.g. b >> (8-n) | b << (24+n)) do
- *   NOT pattern-match to rlwnm.
- * - sh is maintained as 32 - pos by ZADV precisely so the rotate idiom has
- *   its count in a variable; the stored-block path resets pos only (sh goes
- *   stale -- faithful to the retail asm, latent bug never hit in practice).
- * - The retail asm reads multi-byte groups src[2],src[1],src[0] (GCC eval
- *   order) and keeps the (rot|s1)|s2 or-tree; per-site loop spellings
- *   (walking pointer vs re-indexed) follow the retail asm per site.
- */
-
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
+
+typedef struct {
+    u16 base;
+    u16 extra;
+} InflateBaseExtra;
+
+const u8 gInflateCodeLengthOrder[20] = {
+    16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15, 0};
+const InflateBaseExtra gInflateLengthCodes[29] = {
+    {3, 0},   {4, 0},   {5, 0},   {6, 0},   {7, 0},   {8, 0},   {9, 0},   {10, 0},
+    {11, 1},  {13, 1},  {15, 1},  {17, 1},  {19, 2},  {23, 2},  {27, 2},  {31, 2},
+    {35, 3},  {43, 3},  {51, 3},  {59, 3},  {67, 4},  {83, 4},  {99, 4},  {115, 4},
+    {131, 5}, {163, 5}, {195, 5}, {227, 5}, {258, 0}};
+const InflateBaseExtra gInflateDistCodes[30] = {
+    {1, 0},     {2, 0},     {3, 0},     {4, 0},     {5, 1},     {7, 1},
+    {9, 2},     {13, 2},    {17, 3},    {25, 3},    {33, 4},    {49, 4},
+    {65, 5},    {97, 5},    {129, 6},   {193, 6},   {257, 7},   {385, 7},
+    {513, 8},   {769, 8},   {1025, 9},  {1537, 9},  {2049, 10}, {3073, 10},
+    {4097, 11}, {6145, 11}, {8193, 12}, {12289, 12}, {16385, 13}, {24577, 13}};
 
 extern u8 lbl_8030C880[];
 extern u16 lbl_8030C9A0[];
 extern u8 lbl_8030CDA0[];
 extern u8 lbl_8030CDC0[];
 extern u8 lbl_8030CDE0[];
-extern u8 lbl_802C1C50[];
-extern u16 lbl_802C1C64[];
-extern u16 lbl_802C1CD8[];
-extern u8 lbl_803DCD20[];
-extern u8 lbl_803DCD18[];
-extern u8 lbl_80377880[];
-extern u16 lbl_80377894[];
-extern u16 lbl_80377954[];
-extern u16 lbl_803778B4[];
-extern u16 lbl_80377974[];
-extern u8 lbl_803778D4[];
-extern u8 lbl_8035F740[];
-extern u16 lbl_8035F860[];
-extern u8 lbl_8036F860[];
-extern u8 lbl_8036F880[];
+
+u8 lbl_8035F740[0x120];
+u16 lbl_8035F860[0x8000];
+u8 lbl_8036F860[0x20];
+u8 lbl_8036F880[0x8000];
+u8 lbl_80377880[0x14];
+u16 lbl_80377894[0x10];
+u16 lbl_803778B4[0x10];
+u8 lbl_803778D4[0x80];
+u16 lbl_80377954[0x10];
+u16 lbl_80377974[0x16];
+
+u8 lbl_803DCD18[8];
+u8 lbl_803DCD20[8];
 
 #define ZROT1(b) ((((u32)(b) << sh) | ((u32)(b) >> (32 - sh))) & 1)
 #define ZROT8(b) ((((u32)(b) << sh) | ((u32)(b) >> (32 - sh))) & 0xff)
@@ -164,7 +153,7 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
                 ZADV(4);
                 for (i = 0; i != hclen; i++) {
                     u32 v = ZGB8() & 7;
-                    lbl_80377880[lbl_802C1C50[i]] = v;
+                    lbl_80377880[gInflateCodeLengthOrder[i]] = v;
                     lbl_803DCD20[v] += 1;
                     ZADV(3);
                 }
@@ -295,8 +284,8 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
                     u32 dsym;
                     u32 dist;
                     int io = (sym - 0x101) * 4;
-                    len2 = *(u16 *)((u8 *)lbl_802C1C64 + io);
-                    eb = *(u16 *)((u8 *)lbl_802C1C64 + 2 + io);
+                    len2 = *(u16 *)((u8 *)gInflateLengthCodes + io);
+                    eb = *(u16 *)((u8 *)gInflateLengthCodes + 2 + io);
                     if (eb != 0) {
                         len2 += ZGB8() & ((1 << eb) - 1);
                         ZADV(eb);
@@ -308,8 +297,8 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
                     dcode |= ZROTL(lbl_8030CDE0[dt >> 8], m) & 0xff;
                     dsym = distTblP[dcode];
                     ZADV(distBitsP[dsym]);
-                    dist = *(u16 *)((u8 *)lbl_802C1CD8 + dsym * 4);
-                    eb = *(u16 *)((u8 *)lbl_802C1CD8 + 2 + dsym * 4);
+                    dist = *(u16 *)((u8 *)gInflateDistCodes + dsym * 4);
+                    eb = *(u16 *)((u8 *)gInflateDistCodes + 2 + dsym * 4);
                     if (eb != 0) {
                         dist += ZGB16() & ((1 << eb) - 1);
                         ZADV(eb);

@@ -64,6 +64,8 @@ class Object:
             "asflags": None,
             "asm_dir": None,
             "cflags": None,
+            "custom_rule": None,
+            "custom_rule_implicit": [],
             "extab_padding": None,
             "extra_asflags": [],
             "extra_cflags": [],
@@ -1129,6 +1131,11 @@ def generate_build_ninja(
                 build_rule = "mwcc_realign"
             if section_alignments:
                 build_implcit = [*build_implcit, objcopy_implicit, section_realign]
+            if obj.options["custom_rule"]:
+                build_rule = obj.options["custom_rule"]
+                build_implcit = [
+                    Path(p) for p in obj.options["custom_rule_implicit"]
+                ]
             n.comment(f"{obj.name}: {lib_name} (linked {obj.completed})")
             n.build(
                 outputs=obj.src_obj_path,

@@ -292,3 +292,18 @@ removed IN-SOURCE hacks (match-volatiles, load-bearing gotos) that cflags cannot
 demoted for authenticity — cflags path is a confirmed dead end, no orchestrator action needed there.
 (gameloop inherits the section default, not noopt — but it's a mixed unit where most fns match on default,
 so switching it risks regressing the matched fns; low-value, left alone.)
+
+## DONE: ProDG toolchain split executed (2026-07-19)
+The zlb owner-action split shipped. main/pi_dolphin.c re-split into three units at retail link-order
+boundaries derived from the extracted object's relocations (zero local-symbol cross-references, all six
+sections tile exactly): main/pi_dolphin.c (.text 0x800443CC-0x8004B658, all .data, fuzzy 69.42->99.15),
+main/zlb.c (.text 0x8004B658-0x8004BF88, gInflate* .rodata, 99KB inflate .bss, the 0x803DCD18/20 sbss
+pair; ProDG 3.5 cc1 -O1 -fno-common via the "prodg" custom_build_rules entry in configure.py + per-object
+custom_rule support in tools/project.py; fuzzy 41.87 on .text, ALL data sections 100), and
+main/shader_dolphin.c (.text 0x8004BF88-0x80051868, IndTexMtx .rodata, fuzzy 99.74). DOL sha1 verified
+byte-identical post-split. The MWCC halves were near-matched all along - the foreign object was the
+entire wall. Remaining zlb lever: source the older GCC vintage (2.7/2.8-era SN "GameCube BUILD" or
+Cygnus GNUPro) whose rs6000.md still emits mcrxr;addme. doloops; the C source (src/main/zlb.c, annotated
+copy docs/foreign/zlb_decompress_gcc.c) is semantically exact and structurally aligned. The render.o
+gap_03_80006C6C_text ProDG island (11x mcrxr) is still unsplit - same recipe applies once its C is
+reconstructed.

@@ -154,15 +154,27 @@ main/objprint_dolphin.c:
 	.sbss       start:0x803DCC20 end:0x803DCC70
 
 main/pi_dolphin.c:
-	.text       start:0x800443CC end:0x80051868
-	.rodata     start:0x802C1C50 end:0x802C1E58
+	.text       start:0x800443CC end:0x8004B658
 	.data       start:0x802CAF48 end:0x802CC6A0
-	.bss        start:0x8035EF48 end:0x803779C0
-	.sdata      start:0x803DB4A0 end:0x803DB600
-	.sbss       start:0x803DCC98 end:0x803DCD48
+	.bss        start:0x8035EF48 end:0x8035F740
+	.sdata      start:0x803DB4A0 end:0x803DB5E8
+	.sbss       start:0x803DCC98 end:0x803DCD18
 
 main/boot_logo.c:
 	.data       start:0x802CC6A0 end:0x8030C6A0
+
+main/zlb.c:
+	.text       start:0x8004B658 end:0x8004BF88
+	.rodata     start:0x802C1C50 end:0x802C1D50
+	.bss        start:0x8035F740 end:0x803779A0
+	.sbss       start:0x803DCD18 end:0x803DCD28
+
+main/shader_dolphin.c:
+	.text       start:0x8004BF88 end:0x80051868
+	.rodata     start:0x802C1D50 end:0x802C1E58
+	.bss        start:0x803779A0 end:0x803779C0
+	.sdata      start:0x803DB5E8 end:0x803DB600
+	.sbss       start:0x803DCD28 end:0x803DCD48
 
 main/rcp_dolphin.c:
 	.text       start:0x80051868 end:0x80055980

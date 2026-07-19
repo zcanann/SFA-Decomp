@@ -208,6 +208,24 @@ config.split_deps = [
 # Can be overridden in libraries or objects
 config.scratch_preset_id = None
 
+# Foreign-toolchain rules for units not compiled with MWCC.
+# zlbDecompress is an SN ProDG (GCC 2.95) middleware object; see
+# docs/mwcc_re/RESIDUAL_HANDOFFS.md for the evidence trail.
+prodg_implicit = [
+    "build/tools/wibo",
+    "build/compilers/ProDG/3.5/cc1.exe",
+]
+config.custom_build_rules = [
+    {
+        "name": "prodg",
+        "command": "cc -E -P -x c $in -o $basefile.i"
+        " && build/tools/wibo build/compilers/ProDG/3.5/cc1.exe $basefile.i"
+        " -quiet -O1 -fno-common -o $basefile.s"
+        " && build/binutils/powerpc-eabi-as -mgekko $basefile.s -o $out",
+        "description": "PRODG $out",
+    },
+]
+
 # Base flags, common to most GC/Wii games.
 # Generally leave untouched, with overrides added below.
 cflags_base = [
@@ -941,6 +959,8 @@ config.libs = [
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objprint_dolphin.c", cflags=cflags_dll_noopt_noloopinv),
             Object(NonMatching, "main/pi_dolphin.c", cflags=cflags_dll_noopt_noloopinv),
+            Object(NonMatching, "main/zlb.c", custom_rule="prodg", custom_rule_implicit=prodg_implicit),
+            Object(NonMatching, "main/shader_dolphin.c", cflags=cflags_dll_noopt_noloopinv),
             Object(NonMatching, "main/boot_logo.c"),
             Object(NonMatching, "main/rcp_dolphin.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/shader.c", cflags=cflags_dll_noopt),
