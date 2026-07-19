@@ -217,8 +217,8 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     GXSetNumTexGens(2);
     GXSetCullMode(2);
     GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
-    gxSetZModeByteLegacy(1, 3, 0);
-    gxSetPeControl_ZCompLocByteLegacy(1);
+    gxSetZMode_(1, 3, 0);
+    gxSetPeControl_ZCompLoc_(1);
     GXSetBlendMode(1, 4, 5, 5);
     return;
 }
@@ -1285,18 +1285,18 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 f2 = ((ModelFileHeader*)p2)->flags;
                 if (f2 & 0x400)
                 {
-                    gxSetZModeByteLegacy(0, 3, 0);
+                    gxSetZMode_(0, 3, 0);
                     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                 }
                 else if (f2 & 0x2000)
                 {
                     zon = 0;
-                    gxSetZModeByteLegacy(1, 3, 1);
+                    gxSetZMode_(1, 3, 1);
                     GXSetAlphaCompare(GX_GREATER, gObjAlphaCompareThreshold, GX_AOP_AND, GX_GREATER, gObjAlphaCompareThreshold);
                 }
                 else
                 {
-                    gxSetZModeByteLegacy(1, 3, 0);
+                    gxSetZMode_(1, 3, 0);
                     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                 }
             }
@@ -1305,11 +1305,11 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
                 if (((ModelFileHeader*)p2)->flags & 0x400)
                 {
-                    gxSetZModeByteLegacy(0, 3, 0);
+                    gxSetZMode_(0, 3, 0);
                 }
                 else
                 {
-                    gxSetZModeByteLegacy(1, 3, 1);
+                    gxSetZMode_(1, 3, 1);
                 }
                 GXSetAlphaCompare(GX_GREATER, 0x40, GX_AOP_AND, GX_GREATER, 0x40);
             }
@@ -1318,11 +1318,11 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
                 if (((ModelFileHeader*)p2)->flags & 0x400)
                 {
-                    gxSetZModeByteLegacy(0, 3, 0);
+                    gxSetZMode_(0, 3, 0);
                 }
                 else
                 {
-                    gxSetZModeByteLegacy(1, 3, 1);
+                    gxSetZMode_(1, 3, 1);
                 }
                 GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
@@ -1330,7 +1330,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             {
                 zon = 0;
             }
-            gxSetPeControl_ZCompLocByteLegacy(zon);
+            gxSetPeControl_ZCompLoc_(zon);
         }
     }
     if (((ObjModelRenderOp*)op)->flags & 8)
@@ -1431,13 +1431,13 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
     }
     if (gObjGxZWriteCache != zwrite || gObjGxZCompareCache != zcmp)
     {
-        gxSetZModeByteLegacy(zwrite, 3, zcmp);
+        gxSetZMode_(zwrite, 3, zcmp);
         gObjGxZWriteCache = zwrite;
         gObjGxZCompareCache = zcmp;
     }
     if (gObjGxZCompLocCache != zcomploc)
     {
-        gxSetPeControl_ZCompLocByteLegacy(zcomploc);
+        gxSetPeControl_ZCompLoc_(zcomploc);
         gObjGxZCompLocCache = zcomploc;
     }
     if (gObjGxAlphaCompareCache != alpha)
@@ -1903,18 +1903,18 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
-    gxSetPeControl_ZCompLocByteLegacy(1);
+    gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetNumChans(1);
     if (OBJPRINT_MODEL_DEF(obj)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
     {
-        gxSetZModeByteLegacy(1, 3, 1);
+        gxSetZMode_(1, 3, 1);
         GXSetCullMode(GX_CULL_FRONT);
     }
     else
     {
-        gxSetZModeByteLegacy(0, 3, 0);
+        gxSetZMode_(0, 3, 0);
         GXSetCullMode(GX_CULL_NONE);
     }
     GXSetArray(GX_VA_POS,
@@ -2289,18 +2289,18 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
-        gxSetPeControl_ZCompLocByteLegacy(1);
+        gxSetPeControl_ZCompLoc_(1);
         GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
         GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
         GXSetNumChans(1);
         if (OBJPRINT_MODEL_DEF(obj)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
         {
-            gxSetZModeByteLegacy(1, 3, 1);
+            gxSetZMode_(1, 3, 1);
             GXSetCullMode(GX_CULL_FRONT);
         }
         else
         {
-            gxSetZModeByteLegacy(0, 3, 0);
+            gxSetZMode_(0, 3, 0);
             GXSetCullMode(GX_CULL_NONE);
         }
     }
