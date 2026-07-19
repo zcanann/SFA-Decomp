@@ -71,18 +71,6 @@ void* gDllCBStateHandlers[6];
 extern u8 lbl_80320008[];
 extern u8 lbl_80320080[];
 
-void ChukChuk_free(void);
-void ChukChuk_hitDetect(void);
-void ChukChuk_release(void);
-void ChukChuk_initialise(void);
-void ChukChuk_init(u8* obj, u8* params);
-int ChukChuk_getExtraSize(void);
-int ChukChuk_getObjectTypeId(void);
-void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void ChukChuk_update(short* obj);
-void ChukChuk_setScale(int obj, int v);
-
-
 int fn_801601C4(GameObject* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub;

@@ -85,10 +85,6 @@ extern f32 lbl_803E3810;
 extern f32 lbl_803E3814;
 extern f32 lbl_803E3818;
 
-void dll_FC_free_nop(void);
-int dll_FC_getExtraSize_ret_8(void);
-int dll_FC_getObjectTypeId(void);
-void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void appleontree_handleCollectableHit(GameObject* obj);
 
 ObjectDescriptor13 gAppleOnTreeObjDescriptor = {
