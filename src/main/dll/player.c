@@ -2039,7 +2039,7 @@ int playerState39(GameObject* obj, int state, f32 fv)
     {
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
         if (obj->anim.currentMove != 0x458 &&
-            ((int (*)(ObjAnimComponent*))ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0)
+            ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x458, obj->anim.currentMoveProgress, 0);
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 8);
@@ -4636,7 +4636,7 @@ int playerState25(int obj, int state)
             }
             if (((GameObject*)obj)->anim.currentMove != gPlayerMoveTableB[inner->gaitLevel])
             {
-                if (((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0)
+                if (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0)
                 {
                     ObjAnim_SetCurrentMove(obj, gPlayerMoveTableB[inner->gaitLevel], t0, 0);
                     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA == 0)
@@ -4654,7 +4654,7 @@ int playerState25(int obj, int state)
             }
             if (((GameObject*)obj)->anim.currentMove != (gPlayerMoveTableB + 2)[inner->gaitLevel])
             {
-                if (((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0)
+                if (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0)
                 {
                     ObjAnim_SetCurrentMove(obj, (gPlayerMoveTableB + 2)[inner->gaitLevel], t0, 0);
                     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA == 0)
@@ -5253,7 +5253,7 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
         }
     }
     if (nextMove != -1 && self->anim.currentMove != nextMove &&
-        ((int (*)(ObjAnimComponent*))ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0)
+        ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0)
     {
         ObjAnim_SetCurrentMove(obj, nextMove, lbl_803E7EA4, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xa);
@@ -7470,7 +7470,7 @@ int playerStateOnLadder(int obj, int state)
                 }
                 else
                 {
-                    if (((int (*)(ObjAnimComponent*))ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0)
+                    if (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0)
                     {
                         spd = lbl_803E7EA4;
                         ph = lbl_803E7EF8;
@@ -9558,7 +9558,7 @@ int playerStateMoving(int obj, int state)
                 ((GameObject*)obj)->anim.currentMove !=
                     *(s16*)(((PlayerState*)inner)->moveAnimTable + (((PlayerState*)inner)->gaitLevel + dir) * 2))
             {
-                if (((int (*)(ObjAnimComponent*))ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0 ||
+                if (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 ||
                     ((u32) * (u8*)((char*)inner + 0x3f2) >> 4 & 1) != 0)
                 {
                     ObjAnim_SetCurrentMove(
@@ -9872,7 +9872,7 @@ int playerStateIdle(int obj, int state, f32 fv)
         ((GameObject*)obj)->anim.currentMove == *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x32))
     {
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0 &&
-            ((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0)
+            ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0)
         {
             ObjAnim_SetCurrentMove(obj, move, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = fv;
@@ -9882,13 +9882,14 @@ int playerStateIdle(int obj, int state, f32 fv)
              ((PlayerState*)inner)->targetYawRateSigned > 5)
     {
         if (((GameObject*)obj)->anim.currentMove != *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x3e) &&
-            ((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0)
+            ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0)
         {
             ObjAnim_SetCurrentMove(obj, *(s16*)(((PlayerState*)inner)->moveAnimTable + 0x3e), lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7E90;
         }
     }
-    else if (((GameObject*)obj)->anim.currentMove != move && ((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0)
+    else if (((GameObject*)obj)->anim.currentMove != move &&
+             ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0)
     {
         s16 cur = ((GameObject*)obj)->anim.currentMove;
         if (cur == gPlayerStopMoves[0] || cur == gPlayerStopMoves[1] || cur == gPlayerStopMoves[2] ||
