@@ -17106,35 +17106,35 @@ void playerRender(int obj, int a, int b, int c, int d, int flag)
         }
         {
             in2 = *(int*)&((GameObject*)obj)->extra;
-            if (*(void**)((char*)in2 + 0x7f8) != NULL && *(int*)((char*)*(int*)((char*)in2 + 0x7f8) + 0xf8) == 1)
+            if (((PlayerState*)in2)->heldObj != NULL && *(int*)((char*)(int)((PlayerState*)in2)->heldObj + 0xf8) == 1)
             {
                 ObjPath_GetPointWorldPosition((GameObject*)obj, 8, &px, &py, &pz, 0);
                 ObjPath_GetPointWorldPosition((GameObject*)obj, 9, &qx, &qy, &qz, 0);
                 px = lbl_803E7E98 * (px + qx);
                 py = lbl_803E7E98 * (py + qy);
                 pz = lbl_803E7E98 * (pz + qz);
-                if (*(s16*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x46) == 0x112)
+                if (*(s16*)((char*)(int)((PlayerState*)in2)->heldObj + 0x46) == 0x112)
                 {
                     py = py + lbl_803E7ED4;
                 }
-                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0xc) = *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x18) =
+                *(f32*)((char*)(int)((PlayerState*)in2)->heldObj + 0xc) = *(f32*)((char*)(int)((PlayerState*)in2)->heldObj + 0x18) =
                     px;
-                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x10) =
-                    *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x1c) = py;
-                *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x14) =
-                    *(f32*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x20) = pz;
+                *(f32*)((char*)(int)((PlayerState*)in2)->heldObj + 0x10) =
+                    *(f32*)((char*)(int)((PlayerState*)in2)->heldObj + 0x1c) = py;
+                *(f32*)((char*)(int)((PlayerState*)in2)->heldObj + 0x14) =
+                    *(f32*)((char*)(int)((PlayerState*)in2)->heldObj + 0x20) = pz;
                 if (*(s16**)&((GameObject*)obj)->anim.parent != NULL)
                 {
-                    *(s16*)*(int*)((char*)in2 + 0x7f8) =
+                    *(s16*)(int)((PlayerState*)in2)->heldObj =
                         **(s16**)&((GameObject*)obj)->anim.parent + ((GameObject*)obj)->anim.rotX;
                 }
                 else
                 {
-                    *(s16*)*(int*)((char*)in2 + 0x7f8) = ((PlayerState*)in2)->targetYaw;
+                    *(s16*)(int)((PlayerState*)in2)->heldObj = ((PlayerState*)in2)->targetYaw;
                 }
                 (*(void (*)(int, int, int, int, int, int)) *
-                 (int*)(*(int*)(*(int*)((char*)*(int*)((char*)in2 + 0x7f8) + 0x68)) + 0x10))(
-                    *(int*)((char*)in2 + 0x7f8), 0, 0, 0, 0, -1);
+                 (int*)(*(int*)(*(int*)((char*)(int)((PlayerState*)in2)->heldObj + 0x68)) + 0x10))(
+                    (int)((PlayerState*)in2)->heldObj, 0, 0, 0, 0, -1);
             }
         }
         if (((PlayerState*)inner)->knockbackTimer > lbl_803E7EA4 || (((PlayerState*)inner)->pendingFxFlags & 2) != 0)
