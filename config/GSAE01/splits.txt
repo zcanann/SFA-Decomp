@@ -2479,7 +2479,7 @@ main/dll/dll_01D6_dll1d6.c:
 	.text       start:0x801B75B8 end:0x801B7D48
 	.data       start:0x80325758 end:0x80325790
 	.sdata      start:0x803DBF18 end:0x803DBF28
-	.sdata2     start:0x803E4A78 end:0x803E4B08
+	.sdata2     start:0x803E4A78 end:0x803E4AD8
 
 main/dll/DIM/dll_01D7_dim2snowball.c:
 	.text       start:0x801B7D48 end:0x801B837C
@@ -2492,6 +2492,7 @@ main/dll/DIM/dll_01D8_dim2pathgenerator.c:
 main/dll/dll_01DA_dll1da.c:
 	.text       start:0x801B8798 end:0x801B8B70
 	.data       start:0x80325808 end:0x80325840
+	.sdata2     start:0x803E4AD8 end:0x803E4B08
 
 main/dll/dll_01DB_dll1db.c:
 	.text       start:0x801B8B70 end:0x801B8F7C

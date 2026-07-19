@@ -41,18 +41,6 @@ typedef struct
     int pad[8];
 } RockHitInfo;
 
-extern f32 lbl_803E4AD8;
-extern f32 lbl_803E4ADC;
-extern f32 lbl_803E4AE0;
-extern f32 lbl_803E4AE4;
-extern f32 lbl_803E4AE8;
-extern f32 lbl_803E4AEC;
-extern f32 lbl_803E4AF0;
-extern f32 lbl_803E4AF4;
-extern f32 lbl_803E4AF8;
-extern f32 lbl_803E4AFC;
-extern f32 lbl_803E4B00;
-extern const f32 lbl_803E4B04;
 
 int dll_1DA_getExtraSize(void)
 {
@@ -71,7 +59,7 @@ void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4AD8);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1DA_hitDetect(GameObject* obj)
@@ -85,7 +73,7 @@ void dll_1DA_hitDetect(GameObject* obj)
     {
         player = Obj_GetPlayerObject();
         (void)Vec_distance((float*)&(obj)->anim.worldPosX, (float*)((int)player + 0x18));
-        (obj)->anim.velocityX = ((GameObject*)hi)->anim.velocityX * (k = lbl_803E4ADC);
+        (obj)->anim.velocityX = ((GameObject*)hi)->anim.velocityX * (k = 0.5f);
         (obj)->anim.velocityZ = ((GameObject*)hi)->anim.velocityZ * k;
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_birdymornin11_1f9);
     }
@@ -111,24 +99,24 @@ void dll_1DA_update(int obj)
     state = *(int*)&((GameObject*)obj)->extra;
     if (((Dll1DAState*)state)->grounded != 0)
     {
-        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = lbl_803E4AE0);
+        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = 0.85f);
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
     }
     else
     {
-        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = lbl_803E4AE4);
+        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = 0.9f);
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
     }
-    if (((GameObject*)obj)->anim.velocityX < lbl_803E4AE8 && ((GameObject*)obj)->anim.velocityX > lbl_803E4AEC &&
-        ((GameObject*)obj)->anim.velocityZ < *(f32*)&lbl_803E4AE8 &&
-        ((GameObject*)obj)->anim.velocityZ > *(f32*)&lbl_803E4AEC)
+    if (((GameObject*)obj)->anim.velocityX < 0.1f && ((GameObject*)obj)->anim.velocityX > -0.1f &&
+        ((GameObject*)obj)->anim.velocityZ < 0.1f &&
+        ((GameObject*)obj)->anim.velocityZ > -0.1f)
     {
-        ((GameObject*)obj)->anim.velocityX = (k = lbl_803E4AF0);
+        ((GameObject*)obj)->anim.velocityX = (k = 0.0f);
         ((GameObject*)obj)->anim.velocityZ = k;
     }
-    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, lbl_803E4AF0,
+    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, 0.0f,
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
-    hitCount = objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), lbl_803E4AF4, 1,
+    hitCount = objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), 6.5f, 1,
                                   (TrackBBoxHit*)out.hit, (GameObject*)obj, 8, -1, 0xff, 0);
     if (hitCount != 0)
     {
@@ -136,32 +124,32 @@ void dll_1DA_update(int obj)
         vy = -((GameObject*)obj)->anim.velocityY;
         vz = -((GameObject*)obj)->anim.velocityZ;
         len = sqrtf(vz * vz + (vx * vx + vy * vy));
-        if (lbl_803E4AF0 != len)
+        if (0.0f != len)
         {
-            f32 s = lbl_803E4AD8 / len;
+            f32 s = 1.0f / len;
             vx = vx * s;
             vy = vy * s;
             vz = vz * s;
         }
-        reflect = lbl_803E4AF8 * (vz * out.nz + (vx * out.nx + vy * out.ny));
+        reflect = 2.0f * (vz * out.nz + (vx * out.nx + vy * out.ny));
         ((GameObject*)obj)->anim.velocityX = out.nx * reflect;
         ((GameObject*)obj)->anim.velocityY = out.ny * reflect;
         ((GameObject*)obj)->anim.velocityZ = out.nz * reflect;
         ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX - vx;
         ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - vy;
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ - vz;
-        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (damping = lbl_803E4AFC * len);
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * (lbl_803E4ADC * len);
+        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (damping = 0.8f * len);
+        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * (0.5f * len);
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * damping;
     }
-    ((GameObject*)obj)->anim.localPosY = -(lbl_803E4B00 * timeDelta - ((GameObject*)obj)->anim.localPosY);
+    ((GameObject*)obj)->anim.localPosY = -(0.2f * timeDelta - ((GameObject*)obj)->anim.localPosY);
     hitCount = hitDetectFn_80065e50((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                     ((GameObject*)obj)->anim.localPosZ, &floorList, 0, 0x11);
     ((Dll1DAState*)state)->grounded = 0;
     i = 0;
     for (; hitCount > 0; hitCount--)
     {
-        if (((GameObject*)obj)->anim.localPosY < *(f32*)&lbl_803E4B04 + floorList[i]->height)
+        if (((GameObject*)obj)->anim.localPosY < 5.0f + floorList[i]->height)
         {
             ((GameObject*)obj)->anim.localPosY = floorList[i]->height;
             ObjHits_AddContactObject(floorList[i]->object, (GameObject*)obj);
@@ -180,7 +168,7 @@ void dll_1DA_update(int obj)
 void dll_1DA_init(GameObject* obj)
 {
     *(*(f32**)&obj->extra) = obj->anim.localPosY;
-    obj->anim.localPosY = obj->anim.localPosY + lbl_803E4AD8;
+    obj->anim.localPosY += 1.0f;
 }
 
 void dll_1DA_release(void)
