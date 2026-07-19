@@ -84,8 +84,7 @@ void DR_BarrelGr_render(GameObject* obj, int p2, int p3, int p4, int p5)
     DrBarrelGrRenderParams params;
 
     ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E6CA0);
-    ((void (*)(void*, int, f32*, f32*, f32*, int))ObjPath_GetPointWorldPosition)(
-        obj, 0, &state->grabX, &state->grabY, &state->grabZ, 0);
+    ObjPath_GetPointWorldPosition(obj, 0, &state->grabX, &state->grabY, &state->grabZ, 0);
     params.a = 0;
     params.c = 0;
     params.b = 0x4000;
@@ -96,7 +95,7 @@ void DR_BarrelGr_render(GameObject* obj, int p2, int p3, int p4, int p5)
     dval = lbl_803E6CA4;
     for (; i < 4; i++)
     {
-        ((void (*)(void*, int, f32*, f32*, f32*, int))ObjPath_GetPointWorldPosition)(obj, i + 1, vp, vp1, vp2, 0);
+        ObjPath_GetPointWorldPosition(obj, i + 1, vp, vp1, vp2, 0);
         PSVECSubtract((Vec*)vp, (const Vec*)&obj->anim.localPosX, (Vec*)vp);
         params.d = dval;
         objfx_spawnLightPulseLegacy(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, &params);

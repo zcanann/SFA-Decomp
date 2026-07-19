@@ -132,8 +132,8 @@ int drshackle_setScale(GameObject* obj, int a, int b, int c, int d, int e, int f
         char* entry = *(char**)a;
         if (entry != NULL)
         {
-            ((void (*)(void*, int, f32*, f32*, f32*, int))ObjPath_GetPointWorldPosition)(
-                obj, p[i + 0x1b], (f32*)(entry + 0xc), (f32*)(entry + 0x10), (f32*)(entry + 0x14), 0);
+            ObjPath_GetPointWorldPosition((GameObject*)obj, p[i + 0x1b], (f32*)(entry + 0xc),
+                                          (f32*)(entry + 0x10), (f32*)(entry + 0x14), 0);
         }
         a += 4;
     }
@@ -168,9 +168,9 @@ void drshackle_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visi
             int* entry = ((int**)state)[i];
             if (entry != 0)
             {
-                ((void (*)(void*, int, f32*, f32*, f32*, int))ObjPath_GetPointWorldPosition)(
-                    obj, state[i + 0x1b], (f32*)((char*)entry + 0xc), (f32*)((char*)entry + 0x10),
-                    (f32*)((char*)entry + 0x14), 0);
+                ObjPath_GetPointWorldPosition(obj, state[i + 0x1b], (f32*)((char*)entry + 0xc),
+                                              (f32*)((char*)entry + 0x10),
+                                              (f32*)((char*)entry + 0x14), 0);
             }
         }
     }

@@ -16945,7 +16945,7 @@ void playerRender(int obj, int a, int b, int c, int d, int flag)
         {
             fn_802AAF80((GameObject*)obj, inner, a, b, c);
         }
-        ((void (*)(int, int, int, int))ObjPath_GetPointWorldPositionArray)(obj, 6, 2, inner + 0x3c4);
+        ObjPath_GetPointWorldPositionArray((GameObject*)obj, 6, 2, (f32*)(inner + 0x3c4));
         ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, (f32*)((char*)inner + 0x768), (f32*)((char*)inner + 0x76c),
                                       (f32*)((char*)inner + 0x770), 0);
         if (((int (*)(int, int))playerHasKrazoaSpirit)(1, 0) != 0)

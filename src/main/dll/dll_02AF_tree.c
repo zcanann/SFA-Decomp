@@ -145,9 +145,9 @@ void tree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
             {
-                ((void (*)(GameObject*, int, f32*, f32*, f32*, int))ObjPath_GetPointWorldPosition)(
-                    obj, i, &state->ambientEffectPos[i][0], &state->ambientEffectPos[i][1],
-                    &state->ambientEffectPos[i][2], 0);
+                ObjPath_GetPointWorldPosition(obj, i, &state->ambientEffectPos[i][0],
+                                              &state->ambientEffectPos[i][1],
+                                              &state->ambientEffectPos[i][2], 0);
             }
         }
         obj->userData2 = 1;
