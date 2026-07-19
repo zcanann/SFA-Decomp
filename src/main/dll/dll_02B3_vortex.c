@@ -60,7 +60,7 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     s16 objRotY;
     u8 objAlpha;
     u8 i;
-    f32 particleArgs[6];
+    PartFxSpawnParams particleArgs;
     u8 hudHidden;
 
     if (visible == 0)
@@ -119,10 +119,10 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         if (state->particleTimer <= lbl_803E73D0 && hudHidden == 0)
         {
             state->particleTimer = lbl_803E73D8;
-            particleArgs[2] = ((f32)setup->radiusParam / gVortexRadiusParamScale) *
+            particleArgs.scale = ((f32)setup->radiusParam / gVortexRadiusParamScale) *
                               (obj->anim.rootMotionScale * state->alpha);
-            particleArgs[4] = lbl_803E73D0;
-            (*gPartfxInterface)->spawnObject((void*)obj, VORTEX_PARTFX_A, particleArgs, 2, -1, NULL);
+            particleArgs.posY = lbl_803E73D0;
+            (*gPartfxInterface)->spawnObject((void*)obj, VORTEX_PARTFX_A, &particleArgs, 2, -1, NULL);
         }
 
         model = (int)Obj_GetActiveModel(obj);
@@ -195,10 +195,10 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             texture->offsetS -= 10000;
         }
 
-        particleArgs[2] = obj->anim.rootMotionScale * state->alpha;
+        particleArgs.scale = obj->anim.rootMotionScale * state->alpha;
         if (hudHidden == 0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, VORTEX_PARTFX_B, particleArgs, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, VORTEX_PARTFX_B, &particleArgs, 2, -1, NULL);
         }
 
         model = (int)Obj_GetActiveModel(obj);
