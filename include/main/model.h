@@ -233,9 +233,6 @@ Texture* ObjModel_GetTexture(ModelFileHeader* modelFile, int textureIndex);
 ModelRenderOp* ObjModel_GetRenderOp(ModelFileHeader* modelFile, int renderOpIndex);
 ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int renderOpIndex);
 
-#define ObjModel_GetRenderOpLegacy(model, renderOpIndex) \
-    (((ModelRenderOp* (*)(int, int))ObjModel_GetRenderOp)((model), (renderOpIndex)))
-
 STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);
 STATIC_ASSERT(offsetof(ObjModel, unk60) == 0x60);

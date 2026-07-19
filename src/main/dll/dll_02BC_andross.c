@@ -1663,7 +1663,7 @@ void andross_update(int obj)
             alpha = gAndrossAlpha255 * fade;
             for (; index < model->renderOpCount; index++)
             {
-                renderOp = ObjModel_GetRenderOpLegacy((int)model, index);
+                renderOp = ObjModel_GetRenderOp(model, index);
                 renderOp->alphaOverride = alpha;
             }
         }
@@ -1972,7 +1972,7 @@ void andross_update(int obj)
             alpha = gAndrossAlpha255 * fade;
             for (; index < model->renderOpCount; index++)
             {
-                renderOp = ObjModel_GetRenderOpLegacy((int)model, index);
+                renderOp = ObjModel_GetRenderOp(model, index);
                 renderOp->alphaOverride = alpha;
             }
         }
