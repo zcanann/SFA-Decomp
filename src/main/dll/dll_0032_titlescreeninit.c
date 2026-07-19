@@ -28,8 +28,10 @@
 #include "main/gametext_show_str_api.h"
 #include "main/textrender_api.h"
 #include "main/fileio.h"
-#include "track/intersect_hud_api.h"
 #include "main/sky.h"
+
+void drawTexture(void* texture, f32 x, f32 y, int alpha, int scale);
+void hudDrawColored(int texture, int x, int y, u32* color, int scale, int flags);
 
 f32 lbl_803DD5F4;
 s8 gTitleScreenInitFrameStartPending;

@@ -3297,7 +3297,7 @@ void drawRect(f32 sx, f32 sy, int x, int y)
     GXSetColorUpdate(GX_TRUE);
 }
 
-void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int width, int height, int flags)
+void drawScaledTexture(void* obj, f32 sx, f32 sy, u8 alpha_mod, int scale, int width, int height, int flags)
 {
     extern f32 lbl_803DEEDC;
     GXColor c;
@@ -3309,8 +3309,7 @@ void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int 
     c.r = 0xFF;
     c.g = 0xFF;
     c.b = 0xFF;
-    alpha = (u8)alpha_mod;
-    alpha *= gHudTintAlpha;
+    alpha = alpha_mod * gHudTintAlpha;
     c.a = (u8)(alpha >> 8);
 
     GXClearVtxDesc();
@@ -3549,7 +3548,7 @@ void hudDrawColored(int obj, int x, int y, u32* color, int scale, int flag)
  * tex stage that further K-multiplies by the texture. Final width and
  * height are 4 * asset_dim * scale >> 8 in screen pixels at z=-8.
  */
-void drawTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale)
+void drawTexture(void* obj, f32 sx, f32 sy, u8 alpha_mod, int scale)
 {
     extern const f32 lbl_803DEEDC;
     extern const f32 lbl_803DEEE4;
@@ -3559,7 +3558,7 @@ void drawTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale)
     c.r = 0xFF;
     c.g = 0xFF;
     c.b = 0xFF;
-    c.a = (u8)(((s32)(u8)alpha_mod * gHudTintAlpha) >> 8);
+    c.a = (u8)(((s32)alpha_mod * gHudTintAlpha) >> 8);
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);

@@ -13,7 +13,6 @@
  * (HH:MM:SS derived from playTimeSeconds), life count and magic count.
  */
 #include "main/audio/sfx_ids.h"
-#include "track/intersect_hud_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/FRONT/frontend_control.h"
@@ -23,6 +22,8 @@
 #include "main/pad.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/pad.h"
+
+void drawTexture(void* texture, f32 x, f32 y, int alpha, int scale);
 
 #define CHEAT_SEQUENCE_LEN  5
 #define CHEAT_INPUT_TIMEOUT 0xF

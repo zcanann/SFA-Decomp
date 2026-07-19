@@ -7344,23 +7344,23 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         panelY = *(s16*)(gTextBoxes + 0x196);
         height = revealedHeight;
         width = (s16) * (u16*)(gTextBoxes + 0x182);
-        drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5), (f32)(panelY - 5), (u8)panelAlpha,
+        drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5), (f32)(panelY - 5), panelAlpha,
                     0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY - 5), (u8)panelAlpha, 0x100,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY - 5), panelAlpha, 0x100,
                           width, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX - 5), panelY, (u8)panelAlpha, 0x100, 5,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX - 5), panelY, panelAlpha, 0x100, 5,
                           height, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, panelX, panelY, (u8)panelAlpha, 0x100, width, height, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY + height), (u8)panelAlpha, 0x100,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex30, panelX, panelY, panelAlpha, 0x100, width, height, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY + height), panelAlpha, 0x100,
                           width, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX + width), panelY, (u8)panelAlpha, 0x100,
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(panelX + width), panelY, panelAlpha, 0x100,
                           5, height, 1);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX + width), (f32)(panelY + height),
-                          (u8)panelAlpha, 0x100, 5, 5, 3);
+                          panelAlpha, 0x100, 5, 5, 3);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX + width), (f32)(panelY - 5),
-                          (u8)panelAlpha, 0x100, 5, 5, 1);
+                          panelAlpha, 0x100, 5, 5, 1);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5), (f32)(panelY + height),
-                          (u8)panelAlpha, 0x100, 5, 5, 2);
+                          panelAlpha, 0x100, 5, 5, 2);
         *(u16*)(gTextBoxes + 0x18a) = revealedHeight;
         {
             s8 firstAvailableHint;
