@@ -232,7 +232,6 @@ SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 p
 void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v);
 f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta);
-SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
 void doNothing_8000CF54(int unused);
 void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block);
 void fn_8000D0B4(s32 result, DVDCommandBlock* block);
@@ -2341,7 +2340,7 @@ f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta)
     return PSVECMag(outDelta);
 }
 
-SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode)
+SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u16 sfxId, s32 mode)
 {
     SfxObjectChannel* objectChannel = gSfxObjectChannels;
     SfxObjectChannel* bestChannel = NULL;
@@ -2357,7 +2356,7 @@ SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mod
     {
         if ((objectChannel->handle != (u32)-1) && ((obj == 0) || (objectChannel->object == obj)) &&
             (((u8)channel == 0) || ((objectChannel->channelMask & channelMask) != 0)) &&
-            (((u16)sfxId == 0) || (objectChannel->sfxId == (u16)sfxId)))
+            ((sfxId == 0) || (objectChannel->sfxId == sfxId)))
         {
             gSfxObjectChannelMatchCount++;
 
