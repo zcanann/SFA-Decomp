@@ -484,7 +484,7 @@ void dfropenode_render(int obj, int p2, int p3)
         {
             node++;
             fn_801C0BF8((u8*)gRopeNodeSegmentDataA, extra->angle, (node - 1)->pos, node->pos, matrix);
-            drawFn_8005cf8c((int)matrix, gRopeNodeDisplayList, 6);
+            drawFn_8005cf8c((int)matrix, (u8*)gRopeNodeDisplayList, 6);
         }
         if (((DfropenodePlacement*)objDef)->textureIndex == 1)
         {
@@ -501,7 +501,7 @@ void dfropenode_render(int obj, int p2, int p3)
             {
                 node++;
                 fn_801C0BF8((u8*)gRopeNodeSegmentDataB, extra->angle, (node - 1)->pos, node->pos, matrix);
-                drawFn_8005cf8c((int)matrix, gRopeNodeDisplayList, 6);
+                drawFn_8005cf8c((int)matrix, (u8*)gRopeNodeDisplayList, 6);
             }
         }
     }

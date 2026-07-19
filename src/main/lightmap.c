@@ -1250,7 +1250,7 @@ typedef struct LightmapVertex
     u8 a;
 } LightmapVertex;
 
-void drawFn_8005cf8c(int vertexBase, const u8* triList, int triCount)
+void drawFn_8005cf8c(int vertexBase, u8* triList, int triCount)
 {
     const LightmapVertex* vertices = (const LightmapVertex*)vertexBase;
     const LightmapVertex* vertex;
@@ -1266,7 +1266,7 @@ void drawFn_8005cf8c(int vertexBase, const u8* triList, int triCount)
     GXBegin(GX_TRIANGLES, GX_VTXFMT0, triCount * 3 & 0xffff);
     for (tri = 0; tri < triCount; tri++)
     {
-        const u8* list = triList;
+        u8* list = triList;
         for (vtx = 0; vtx < 3; vtx++)
         {
             GXPosition1x8(0);
