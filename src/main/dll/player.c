@@ -1905,7 +1905,7 @@ int playerState3B(GameObject* obj, int state, f32 fv)
     return 0;
 }
 
-static void playerFreeSpawnedObjects(void** p, int i, int hi)
+static inline void playerFreeSpawnedObjects(void** p, int i, int hi)
 {
     do
     {
