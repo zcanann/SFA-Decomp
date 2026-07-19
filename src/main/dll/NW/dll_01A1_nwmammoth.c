@@ -142,7 +142,7 @@ void fn_801CDF94(GameObject* obj, int state, int flag)
     }
     else
     {
-        fn_8003A230(obj, (CharacterEyeAnimState*)(state + 0x40c), kNwMammothZero[0]);
+        fn_8003A230(obj, (CharacterEyeAnimState*)(state + 0x40c), 0.0f);
         characterDoEyeAnimsState(obj, state + 0x40c);
     }
 }
@@ -168,7 +168,7 @@ int fn_801CE078(int* obj, u8* st)
     {
         if (night != 0)
         {
-            if (state->pathSpeed > kNwMammothZero[0])
+            if (state->pathSpeed > 0.0f)
             {
                 return -1;
             }
@@ -199,14 +199,14 @@ int fn_801CE078(int* obj, u8* st)
             Sfx_PlayFromObject((u32)obj, SFXTRIG_sa_off);
         }
         state->stateTimer -= timeDelta;
-        if (night == 0 && state->stateTimer <= kNwMammothZero[0])
+        if (night == 0 && state->stateTimer <= 0.0f)
         {
             state->stateIndex = 0x16;
         }
         {
             f32 t = state->partfxTimer - timeDelta;
             state->partfxTimer = t;
-            if (t <= kNwMammothZero[0])
+            if (t <= 0.0f)
             {
                 if (((GameObject*)obj)->objectFlags & NWMAMMOTH_OBJFLAG_RENDERED)
                 {
@@ -485,7 +485,7 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
         state->pathSpeed -= gNwMammothPathAccel[0] * timeDelta;
         if (state->pathSpeed < gNwMammothPathSpeedMin[0])
         {
-            state->pathSpeed = kNwMammothZero[0];
+            state->pathSpeed = 0.0f;
         }
         break;
     case 0:
@@ -494,7 +494,7 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
             state->pathSpeed -= gNwMammothPathDecel[0] * timeDelta;
             if (state->pathSpeed < gNwMammothPathSpeedMin[0])
             {
-                state->pathSpeed = kNwMammothZero[0];
+                state->pathSpeed = 0.0f;
             }
         }
         else
@@ -528,7 +528,7 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
         ((GameObject*)obj)->anim.rotX = (s16)(getAngle(cv->tangent[0], cv->tangent[2]) + 0x8000);
         ((GameObject*)obj)->anim.localPosX = cv->sample[0];
         ((GameObject*)obj)->anim.localPosZ = cv->sample[2];
-        if (state->pathSpeed <= kNwMammothZero[0])
+        if (state->pathSpeed <= 0.0f)
         {
             state->stateIndex = 7;
         }
@@ -700,7 +700,7 @@ void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vis
     void* node;
 
     node = (obj)->extra;
-    objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)gNwMammothAnimSpeedNormal[0]);
+    objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)1.0f);
     for (i = 0; i < 4; i++)
     {
         ObjPath_GetPointWorldPosition(obj, i, (f32*)((char*)node + i * 0xc + 0x45c),
@@ -816,13 +816,13 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
     if (obj->currentMove != (currentMove = table->stateMoveIds[stateIndex]))
     {
         stepScale = table->stateMoveStepScales[stateIndex];
-        if (stepScale > kNwMammothZero[0])
+        if (stepScale > 0.0f)
         {
-            ObjAnim_SetCurrentMove((int)obj, currentMove, kNwMammothZero[0], 0);
+            ObjAnim_SetCurrentMove((int)obj, currentMove, 0.0f, 0);
         }
         else
         {
-            ObjAnim_SetCurrentMove((int)obj, currentMove, gNwMammothAnimSpeedNormal[0], 0);
+            ObjAnim_SetCurrentMove((int)obj, currentMove, 1.0f, 0);
         }
         state->animStepScale = table->stateMoveStepScales[state->stateIndex];
     }
@@ -835,8 +835,8 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
     {
         state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_ANIM_ENDED);
     }
-    objAudioFn_8006ef38((GameObject*)obj, &state->animEvents, 8, state->pathPoints, state->pathState, gNwMammothAnimSpeedNormal[0],
-                        gNwMammothAnimSpeedNormal[0]);
+    objAudioFn_8006ef38((GameObject*)obj, &state->animEvents, 8, state->pathPoints, state->pathState, 1.0f,
+                        1.0f);
     fn_801CDF94((GameObject*)obj, (int)state, table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
     state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
     if (((state->runtimeFlags & NW_MAMMOTH_RUNTIME_MENU_LOCK) == 0) && (ObjTrigger_IsSet((int)obj) != 0))
