@@ -1,4 +1,4 @@
-/* DLL 0x0120 (trickyguardspot) — Tricky guard spot object. */
+/* DLL 0x0120 (trickyguardspot) - Tricky guard spot object. */
 
 #include "main/dll/dll_0120_trickyguardspot.h"
 #include "main/frame_timing.h"

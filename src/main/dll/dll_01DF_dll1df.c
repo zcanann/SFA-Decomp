@@ -1,5 +1,5 @@
 /*
- * DLL 0x01DF — a small placed scenery/effect object (TU 0x801B9CB4..0x801B9ECC).
+ * DLL 0x01DF - a small placed scenery/effect object (TU 0x801B9CB4..0x801B9ECC).
  *
  * init seeds rotation from three placement bytes, optionally scales the model's
  * root motion by a placement flag, primes 0.01f into state->unk10 (0x10),

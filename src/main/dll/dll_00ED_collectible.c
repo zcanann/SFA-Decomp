@@ -1,5 +1,5 @@
 /*
- * DLL 0x00ED — collectible / genprops object group. TU: 0x80171D14–0x801723DC.
+ * DLL 0x00ED - collectible / genprops object group. TU: 0x80171D14-0x801723DC.
  *
  * Hosts the pick-up "collectible" object (the magicgem/scarab family).
  *

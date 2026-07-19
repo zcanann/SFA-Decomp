@@ -1,5 +1,5 @@
 /*
- * dimsnowball1c2 (DLL 0x1C2) — timed snowball spawner for Dinosaur Island
+ * dimsnowball1c2 (DLL 0x1C2) - timed snowball spawner for Dinosaur Island
  * Mission.  On each timer expiry, if loading is not locked and the player
  * is clear, allocates a rolling-snowball object (kind 36, id 406) seeded
  * from the placement params and resets the spawn countdown.

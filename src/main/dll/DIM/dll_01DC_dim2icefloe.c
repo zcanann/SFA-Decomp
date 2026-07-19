@@ -1,4 +1,4 @@
-/* DLL 0x1DC — DIM2 Ice Floe: floating ice platform that follows a hermite
+/* DLL 0x1DC - DIM2 Ice Floe: floating ice platform that follows a hermite
  * curve path toward a target object, bobs, then sinks on arrival. */
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"

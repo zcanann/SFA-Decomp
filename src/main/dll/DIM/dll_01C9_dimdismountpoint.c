@@ -1,5 +1,5 @@
 /*
- * dimdismountpoint (DLL 0x1C9) — dismount-point object for Dinosaur Island
+ * dimdismountpoint (DLL 0x1C9) - dismount-point object for Dinosaur Island
  * Mission 2.  Tracks the nearest conveyor object and exposes a signed-distance
  * plane test so the conveyor can determine which side of the dismount point
  * the player is on.

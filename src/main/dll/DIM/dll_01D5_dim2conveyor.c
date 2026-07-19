@@ -1,4 +1,4 @@
-/* DLL 0x1D5 — DIM 2 conveyor belt object. Scrolls two texture channels on a conveyor mesh using
+/* DLL 0x1D5 - DIM 2 conveyor belt object. Scrolls two texture channels on a conveyor mesh using
  * sin/cos of a placement-defined rotation angle. For map id 0x49B23 (the dual-direction belt),
  * manages forward/reverse direction via game bits 3163/3164 with a timed swap (swapTimer). Adds
  * itself to object group 22; music track 0xDF is kept alive while the belt is moving. */

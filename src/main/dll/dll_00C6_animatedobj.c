@@ -1,4 +1,4 @@
-/* DLL 0xC6 — animated object [8016984C-801713AC) */
+/* DLL 0xC6 - animated object [8016984C-801713AC) */
 #include "main/object_render_legacy.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/shader_api.h"

@@ -1,4 +1,4 @@
-/* DLL 0x01A9 — bombplant / enemymushroom group. TU: 0x801D286C–0x801D2C54. */
+/* DLL 0x01A9 - bombplant / enemymushroom group. TU: 0x801D286C-0x801D2C54. */
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_keep_alive_api.h"

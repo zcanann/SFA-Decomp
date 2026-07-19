@@ -1,4 +1,4 @@
-/* DLL 0x1D1 — DIM Truth Horn Ice: a breakable ice target in Snowhorn Wastes 2.
+/* DLL 0x1D1 - DIM Truth Horn Ice: a breakable ice target in Snowhorn Wastes 2.
  * Hit-count tracked in extra->hitsLeft; when depleted sets gameBit and starts a
  * particle-burst death animation (spawn loop in phase 1, freeze-hide in phase 2).
  * Tricky can deliver fire hits via vtable dispatch (slot 0x28 of Tricky's type at

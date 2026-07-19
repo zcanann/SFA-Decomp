@@ -1,5 +1,5 @@
 /*
- * dimicewall (DLL 0x1C4) — ice wall object for Dinosaur Island Mission.
+ * dimicewall (DLL 0x1C4) - ice wall object for Dinosaur Island Mission.
  * On shatter (hp reaches zero), emits particle bursts and latches a gamebit;
  * while intact, allows Tricky to push through it.
  */
