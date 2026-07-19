@@ -295,30 +295,30 @@ void gameTextShowTimeStr(char* str)
 void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
 {
     GlyphEntry* e;
+    GameTextFont* fonts;
     int count;
     int i;
     int found;
 
-    if (gameTextFonts->mode != 2)
+    fonts = gameTextFonts;
+    if (fonts->mode != 2)
     {
         found = 0;
     }
     else
     {
-        count = gameTextFonts->count;
-        e = gameTextFonts->entries;
-        for (i = 0; i != count; i++)
+        e = fonts->entries;
+        count = fonts->count;
+        for (i = 0; i != count || (found = 0, 0); i++)
         {
             if (e->id == id)
             {
                 found = 1;
-                goto have_found;
+                break;
             }
             e++;
         }
-        found = 0;
     }
-have_found:
     if (!found)
     {
         *outMaxX = 0;
@@ -568,9 +568,12 @@ void gameTextShow(int a)
 void textDisplayFn_800168dc(int textId, TextDisplayState* state)
 {
     GameTextDef* def;
-    int charCount;
+    s32 charCount;
+    int byteOffset;
     char* lineStr;
     int special;
+    u32 ch;
+    int charLen;
 
     if (gameTextFonts->mode == 1)
     {
@@ -588,38 +591,37 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
         return;
     }
     lineStr = def->strings[state->charIndex];
+    charCount = 0;
+    byteOffset = charCount;
+    if (lineStr == NULL)
     {
-        int byteOffset;
-        u32 ch;
-        int charLen;
-
         charCount = 0;
-        byteOffset = 0;
-        if (lineStr != NULL)
+    }
+    else
+    {
+        while ((ch = utf8GetNextChar((u8*)(lineStr + byteOffset), &charLen)) != 0)
         {
-            while ((ch = utf8GetNextChar((u8*)(lineStr + byteOffset), &charLen)) != 0)
+            byteOffset += charLen;
+            if (ch >= 0xe000 && ch <= 0xf8ff)
             {
-                byteOffset += charLen;
-                if (ch >= 0xe000 && ch <= 0xf8ff)
+                int n;
+                int val;
+                SpecialGlyph* g;
+                g = lbl_802C86F0;
+                for (n = 46; n-- != 0 || (val = 0, 0);)
                 {
-                    SpecialGlyph* g = lbl_802C86F0;
-                    int n;
-                    int val = 0;
-                    for (n = 46; n-- != 0;)
+                    if (g->key == ch)
                     {
-                        if (g->key == ch)
-                        {
-                            val = g->val;
-                            break;
-                        }
-                        g++;
+                        val = g->val;
+                        break;
                     }
-                    byteOffset += val * 2;
+                    g++;
                 }
-                else
-                {
-                    charCount++;
-                }
+                byteOffset += val * 2;
+            }
+            else
+            {
+                charCount++;
             }
         }
     }
