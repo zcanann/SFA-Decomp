@@ -103,8 +103,6 @@ f32* fn_801CDE70(GameObject* obj)
 }
 
 const u32 kNwMammothPathParamDefault[1] = { 0x01010101 };
-const f32 kNwMammothZero[1] = { 0.0f };
-const f32 gNwMammothAnimSpeedNormal[1] = { 1.0f };
 
 int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -117,13 +115,13 @@ int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     if ((((NwMammothState*)state)->runtimeFlags & 0x20) == 0)
     {
         Sfx_StopObjectChannel((int)obj, 0x7f);
-        ((NwMammothState*)state)->pathSpeed = kNwMammothZero[0];
+        ((NwMammothState*)state)->pathSpeed = 0.0f;
         ((NwMammothState*)state)->runtimeFlags = (u8)(((NwMammothState*)state)->runtimeFlags & ~0x10);
         ((NwMammothState*)state)->runtimeFlags = (u8)(((NwMammothState*)state)->runtimeFlags | 0x20);
     }
     if ((((NwMammothState*)state)->runtimeFlags & 4) != 0)
     {
-        ((NwMammothState*)state)->playerDistanceSq = kNwMammothZero[0];
+        ((NwMammothState*)state)->playerDistanceSq = 0.0f;
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~8);
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~0x40);
         fn_801CDF94(obj, (int)state, 1);
@@ -131,7 +129,7 @@ int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     audioEvents = state + 0x440;
     audioPoints = state + 0x45c;
     audioScratch = state + 0x16c;
-    objAudioFn_8006ef38(obj, (ObjAnimEventList*)audioEvents, 8, audioPoints, audioScratch, gNwMammothAnimSpeedNormal[0], gNwMammothAnimSpeedNormal[0]);
+    objAudioFn_8006ef38(obj, (ObjAnimEventList*)audioEvents, 8, audioPoints, audioScratch, 1.0f, 1.0f);
     if (animUpdate->eventCount != 0)
     {
         (obj)->objectFlags = (u16)((obj)->objectFlags & ~0x400);
