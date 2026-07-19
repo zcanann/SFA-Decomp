@@ -73,10 +73,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 #define SB_CLOUD_BALL_TRAIL_VEL_SCALE 0.1f
 #define SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE 0.22f
 
-static const union {
-    f32 f;
-} kZeroFade = {0.0f};
-
 int SB_CloudBall_getExtraSize(void)
 {
     return 0x24;
@@ -174,7 +170,7 @@ void SB_CloudBall_update(GameObject* obj)
         if (obj->userData1 < 0 ||
             (player != NULL && (((GameObject*)player)->objectFlags & SBCLOUDBALL_OBJFLAG_PARENT_SLACK) != 0))
         {
-            if (state->fadeTimer == kZeroFade.f)
+            if (state->fadeTimer == zero)
             {
                 obj->anim.alpha = 0;
                 state->fadeTimer = SB_CLOUD_BALL_FADE_TIME;
@@ -187,7 +183,7 @@ void SB_CloudBall_update(GameObject* obj)
         ObjAnim_GetPriorityHitState(&obj->anim)->objectHitMask = 0x10;
         ObjAnim_GetPriorityHitState(&obj->anim)->skeletonHitMask = 0x10;
         ObjAnim_GetPriorityHitState(&obj->anim)->flags |= 1;
-        if (ObjAnim_GetPriorityHitState(&obj->anim)->contactFlags != 0 && state->fadeTimer == kZeroFade.f)
+        if (ObjAnim_GetPriorityHitState(&obj->anim)->contactFlags != 0 && state->fadeTimer == zero)
         {
             projectileParticleFxFn_80099660(obj, 1.0f, 2);
             state->fadeTimer = SB_CLOUD_BALL_FADE_TIME;
