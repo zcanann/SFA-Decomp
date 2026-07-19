@@ -5539,10 +5539,7 @@ void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                            0xfc)
                           << 3;
                     outputPixel = blue | (red | green);
-                    pc = (u8*)dst + pixelColumnOffset;
-                    pc += tileColumnOffset;
-                    pc += h;
-                    pc += rowDataOffset;
+                    pc = (u8*)dst + pixelColumnOffset + tileColumnOffset + h + rowDataOffset;
                     *(u16*)(pc + 0x60) = outputPixel;
                 }
             }
