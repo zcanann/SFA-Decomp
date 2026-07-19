@@ -1395,7 +1395,7 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
         off = 0;
         for (; i < ((ObjModelChain*)p)->count; i++)
         {
-            if (((ObjModelChain*)p)->unk19 == 0)
+            if (((ObjModelChain*)p)->firstUpdateDone == 0)
             {
                 fn_80026928(a, b, (int*)((u8*)((ObjModelChain*)p)->entries + off));
             }
@@ -1411,7 +1411,7 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
             off += 0xc;
         }
         ((ObjModelChain*)p)->updateFlag = 1;
-        ((ObjModelChain*)p)->unk19 = 1;
+        ((ObjModelChain*)p)->firstUpdateDone = 1;
     }
 }
 
@@ -1522,7 +1522,7 @@ ObjModelChain* ObjModelChain_Alloc(void* models, int count)
 
     state = mmAlloc(0x1c, 0x1a, 0);
     state->count = count;
-    state->unk19 = 0;
+    state->firstUpdateDone = 0;
     state->updateFlag = 0;
     state->entries = mmAlloc(count * 0xc, 0x1a, 0);
     i = 0;

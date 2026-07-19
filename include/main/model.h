@@ -251,7 +251,7 @@ typedef struct ObjModelChain {
     f32 originZ;
     f32 phase;
     u8 updateFlag;
-    u8 unk19;
+    u8 firstUpdateDone;
     u8 enabled;
 } ObjModelChain;
 
@@ -266,7 +266,7 @@ STATIC_ASSERT(offsetof(ObjModelChain, originY) == 0x0C);
 STATIC_ASSERT(offsetof(ObjModelChain, originZ) == 0x10);
 STATIC_ASSERT(offsetof(ObjModelChain, phase) == 0x14);
 STATIC_ASSERT(offsetof(ObjModelChain, updateFlag) == 0x18);
-STATIC_ASSERT(offsetof(ObjModelChain, unk19) == 0x19);
+STATIC_ASSERT(offsetof(ObjModelChain, firstUpdateDone) == 0x19);
 STATIC_ASSERT(offsetof(ObjModelChain, enabled) == 0x1A);
 
 ObjModelJointMatrix *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex);
