@@ -163,7 +163,7 @@ void OptionsScreen_render(int arg)
     }
     if (panel[6] != 0xffff)
     {
-        gameTextSetColorInt(0xff, 0xff, 0xff, fade);
+        gameTextSetColor(0xff, 0xff, 0xff, fade);
         gameTextShow(panel[6]);
     }
 

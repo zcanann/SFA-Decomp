@@ -68,7 +68,7 @@ void EnterSaveNameScreen_render(void)
 
     gEnterSaveNameColorAnimTime = gEnterSaveNameColorAnimTime + timeDelta;
 
-    gameTextSetColorInt((int)(mathSinf(lbl_803E1D94 * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
+    gameTextSetColor((int)(mathSinf(lbl_803E1D94 * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
                         (int)(mathSinf(lbl_803E1D98 * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
                         (int)(mathSinf(lbl_803E1D9C * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
                         0xff);

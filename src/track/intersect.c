@@ -6194,7 +6194,7 @@ void showMemCardError(u8 err)
             if (i == sel)
             {
                 v = (int)(lbl_803DEF94 * fn_80293AC4(timer) + lbl_803DEF90);
-                gameTextSetColorInt(v, v, v, 0xff);
+                gameTextSetColor(v, v, v, 0xff);
             }
             else
             {

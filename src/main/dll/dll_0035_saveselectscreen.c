@@ -29,9 +29,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/dll/dll_02C0_front.h"
 #include "main/dll/dll_02C0_front_api.h"
-#define FRONT_GAME_TEXT_BOX_DIRECT_U8_CALL
 #include "main/dll/front_game_text_box_api.h"
-#undef FRONT_GAME_TEXT_BOX_DIRECT_U8_CALL
 #include "main/gametext_api.h"
 #include "main/gametext_show_api.h"
 #include "main/mm.h"
@@ -442,7 +440,7 @@ void SaveSelectScreen_render(int param)
 {
     SaveSelectPanel* panel;
     int progress;
-    u8 alpha;
+    int alpha;
     int i;
     int slotCount;
     int off;
@@ -463,14 +461,15 @@ void SaveSelectScreen_render(int param)
     else
     {
         titleScreenPositionElements(lbl_803E1D68, lbl_803E1D74);
-        alpha = (u8)(((u8)progress & 0x7f) << 1);
+        alpha = ((u8)progress & 0x7f) << 1;
+        alpha &= 0xff;
     }
     gameTextBoxFn_80134d40(alpha, (u8)(gSaveSelectPanelIndex == SAVE_SELECT_PANEL_CONFIRM_ERASE), 0);
     switch (gSaveSelectPanelIndex)
     {
     case SAVE_SELECT_PANEL_OPEN_FILE:
         saveSelect_drawText(param, alpha);
-        gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
+        gameTextSetColor(0xff, 0xff, 0xff, alpha);
         slotCount = 0;
         p = (char*)saveFileSelect_saveSlots + saveFileSelect_currentSlotIndex * 0x24;
         while (slotCount < 3 && *(void**)(p + 0xc) != NULL)
@@ -491,15 +490,15 @@ void SaveSelectScreen_render(int param)
         }
         if (gSaveSelectMenuItem != NULL)
         {
-            ((void (**)(void*, int, u8))gTitleMenuItemInterface->vtable)[6](gSaveSelectMenuItem, 0, alpha);
+            ((void (**)(void*, int, int))gTitleMenuItemInterface->vtable)[6](gSaveSelectMenuItem, 0, alpha);
         }
         break;
     case SAVE_SELECT_PANEL_CONFIRM_ERASE:
-        gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
+        gameTextSetColor(0xff, 0xff, 0xff, alpha);
         gameTextShow(0x324);
         break;
     case SAVE_SELECT_PANEL_CHOOSE_SLOT:
-        gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
+        gameTextSetColor(0xff, 0xff, 0xff, alpha);
         ((void (**)(void))gTitleMenuLinkInterface->vtable)[5]();
         if (lbl_803DB424 != 0)
         {
@@ -509,29 +508,29 @@ void SaveSelectScreen_render(int param)
             for (i = 0; i < 3; i++)
             {
                 sprintf(arr[i], sFrontendPercentFormat, saveFileSelect_saveSlots[i].completionPercent);
-                gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
+                gameTextSetColor(0xff, 0xff, 0xff, alpha);
                 gameTextAppendStr(arr[i], ptrs[i]);
             }
         }
         break;
     }
-    gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
+    gameTextSetColor(0xff, 0xff, 0xff, alpha);
     if (panel->textIdA != 0xffff)
     {
-        if (alpha < 0x7f)
+        if ((u8)alpha < 0x7f)
         {
-            gameTextSetColorU8(0xff, 0xff, 0xff, (u8)(0xff - (alpha << 1)));
+            gameTextSetColor(0xff, 0xff, 0xff, (u8)(0xff - (alpha << 1)));
             gameTextShow(0x331);
         }
         else
         {
-            gameTextSetColorU8(0xff, 0xff, 0xff, (u8)((alpha - 0x7f) << 1));
+            gameTextSetColor(0xff, 0xff, 0xff, (u8)((alpha - 0x7f) << 1));
             gameTextShow(panel->textIdA);
         }
     }
     if (panel->textIdB != 0xffff)
     {
-        gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
+        gameTextSetColor(0xff, 0xff, 0xff, alpha);
         gameTextShow(panel->textIdB);
     }
     ((void (**)(int))gTitleMenuLinkInterface->vtable)[12](progress);

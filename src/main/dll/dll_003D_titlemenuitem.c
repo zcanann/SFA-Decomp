@@ -157,7 +157,7 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
         gameTextSetColor(0, 0, 0, (u8)(((u8)alpha * 0x96) >> 8));
         gameTextSetWindowStrPos(item->extra.window.windowId, 2, 2);
         gameTextAppendStr(phrase, item->extra.window.windowId);
-        gameTextSetColorInt(0xff, 0xff, 0xff, alpha);
+        gameTextSetColor(0xff, 0xff, 0xff, alpha);
         gameTextSetWindowStrPos(item->extra.window.windowId, 0, 0);
         gameTextAppendStr(phrase, item->extra.window.windowId);
         break;

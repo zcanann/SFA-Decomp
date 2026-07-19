@@ -114,7 +114,7 @@ void saveSelect_drawText(int unused, int alpha)
 
     drawTexture(lbl_803A8680[1], lbl_803E1D58, lbl_803E1D5C, alpha, 0x100);
     drawTexture(lbl_803A8680[2], lbl_803E1D60, lbl_803E1D5C, alpha, 0x100);
-    gameTextSetColorInt(0xff, 0xff, 0xff, alpha);
+    gameTextSetColor(0xff, 0xff, 0xff, alpha);
 
     saveFileSelect_saveSlots =
         saveFileSelect_saveSlotsBase; /* retail draw path resets the working slot pointer to the base */

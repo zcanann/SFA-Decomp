@@ -1878,7 +1878,7 @@ void drawViewFinderHud(void)
                               hudElementOpacity * gViewFinderFadeLevel);
         viewScale = lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
         sprintf(buf, sTrickyDebugXCoordFormat, viewScale);
-        gameTextSetColorInt(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
+        gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);
 
         {
@@ -2017,7 +2017,7 @@ void drawViewFinderHud(void)
                     f32 sn;
                     f32 phase;
                     f32 scale;
-                    gameTextSetColorInt(0, 0xff, 0, (int)((f32)(u8)textAlpha * gViewFinderFadeLevel));
+                    gameTextSetColor(0, 0xff, 0, (int)((f32)(u8)textAlpha * gViewFinderFadeLevel));
                     scale = lbl_803E1EC8;
                     phase = lbl_803E1F34 - tickX;
                     sn = lbl_803DBAE4 * mathCosf(scale * (phase * lbl_803DBAE0) / lbl_803E1E94);
@@ -2047,7 +2047,7 @@ void drawViewFinderHud(void)
             if (dist > lbl_803E1E3C && dist < gTrickyHudNearestObjMaxDist)
             {
                 sprintf(buf, lbl_803DBB40, dist / lbl_803E1EC4);
-                gameTextSetColorInt(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
+                gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
                 gameTextShowStr(buf, 0x93, 0x32, 0x46);
             }
         }
@@ -2562,22 +2562,22 @@ void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* y
             gameTextMeasureString((u8*)buf1.text, lbl_803E1E68, &width, NULL, NULL, NULL, -1);
             if ((showTarget == 0) && (value >= target))
             {
-                gameTextSetColorInt(0, 0xFF, 0, alpha);
+                gameTextSetColor(0, 0xFF, 0, alpha);
             }
             else
             {
-                gameTextSetColorInt(0xFF, 0xFF, 0xFF, alpha);
+                gameTextSetColor(0xFF, 0xFF, 0xFF, alpha);
             }
             gameTextShowStr(buf1.text, 0x93, (int)-(lbl_803E1E70 * width - (f32)(591 - *yPos)), 0x1A9);
             if (showTarget != 0)
             {
                 if (value >= 0)
                 {
-                    gameTextSetColorInt(0, 0xFF, 0, alpha);
+                    gameTextSetColor(0, 0xFF, 0, alpha);
                 }
                 else
                 {
-                    gameTextSetColorInt(0xFF, 0, 0, alpha);
+                    gameTextSetColor(0xFF, 0, 0, alpha);
                 }
                 gameTextShowStr(buf2.text, 0x93, (int)-(lbl_803E1E70 * width - (f32)(591 - *yPos)), 0x1A9);
             }
@@ -3307,7 +3307,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
                 a16 = alpha * lbl_803DD8D4 / 0xFF;
                 GXSetScissor(0, 0, 0x280, 0x1E0);
                 sprintf((char*)&label, lbl_803DBB58, gCMenuItemIcons[iconIndex]);
-                gameTextSetColorInt(0, 0, 0, a16 & 0xFF);
+                gameTextSetColor(0, 0, 0, a16 & 0xFF);
                 gameTextShowStr((char*)&label, 0x93, 0x247, 0x2B + rowOffset + gCMenuScrollTimer);
                 gameTextSetColor(0xFF, 0xFF, 0xFF, (u8)a16);
                 gameTextShowStr((char*)&label, 0x93, 0x246, 0x2A + rowOffset + gCMenuScrollTimer);
@@ -3372,11 +3372,11 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
             }
             if (gHudAButtonFlashTimer & 8)
             {
-                gameTextSetColorInt(0x32, 0x32, 0xFF, lbl_803DD83C);
+                gameTextSetColor(0x32, 0x32, 0xFF, lbl_803DD83C);
             }
             else
             {
-                gameTextSetColorInt(200, 0xE6, 0xFF, lbl_803DD83C);
+                gameTextSetColor(200, 0xE6, 0xFF, lbl_803DD83C);
             }
             prevCharset = gameTextGetCharset();
             gameTextSetCharset(3, 3);
@@ -3440,11 +3440,11 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
             }
             if (gHudBButtonFlashTimer & 8)
             {
-                gameTextSetColorInt(0x32, 0x32, 0xFF, lbl_803DD83C);
+                gameTextSetColor(0x32, 0x32, 0xFF, lbl_803DD83C);
             }
             else
             {
-                gameTextSetColorInt(200, 0xE6, 0xFF, lbl_803DD83C);
+                gameTextSetColor(200, 0xE6, 0xFF, lbl_803DD83C);
             }
             icon = 0;
             for (bi = icon; bi < 0x1D; bi++)
@@ -3534,7 +3534,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
         }
         else
         {
-            gameTextSetColorInt(0xFF, 0xFF, 0xFF, lbl_803DD83C);
+            gameTextSetColor(0xFF, 0xFF, 0xFF, lbl_803DD83C);
             prevCharset = gameTextGetCharset();
             gameTextSetCharset(3, 3);
             gameTextShowStr(sHudEmptyYSlotMark, 0x93, 0x216, 0x22);
@@ -4627,7 +4627,7 @@ void drawArwingHud(int unused1, int unused2, int unused3)
             drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), lbl_803E1FAC, (u8)arwingHudAlpha, 0x100);
             sprintf(score, sHeadDisplayScoreFmt, arwarwing_getScore(arwing));
         }
-        gameTextSetColorU8(0xff, 0xff, 0xff, arwingHudAlpha);
+        gameTextSetColor(0xff, 0xff, 0xff, (u8)arwingHudAlpha);
         gameTextShowStr(score, 0x93, 0x23a, 0x41);
         headDisplayDraw();
     }
@@ -5134,7 +5134,7 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
         lbl_803DD734 = magicVal;
         lbl_8031BB90[11].id = magicVal != 0 ? (u8)0x4e : (u8)0x25;
         gameTextSetDrawFunc(pauseMenuTextDrawFn);
-        gameTextSetColor(0xff, 0xff, 0xff, ty);
+        gameTextSetColor(0xff, 0xff, 0xff, ty & 0xff);
         lbl_803DBA8A = (s16)(0xff - lbl_803DD75C);
         lbl_803DBA8C = lbl_803E20A0;
         sprintf(buf, lbl_803DBB70, *(u8*)((u8*)info + 9), *(u8*)((u8*)info + 0xa));
@@ -5405,7 +5405,7 @@ void pauseMenuDrawGrid(int alpha)
     }
     {
         int n = (s16)alpha * (0x200 - lbl_803DD75C);
-        gameTextSetColorInt(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
+        gameTextSetColor(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
     }
     lbl_803DBA8A = (s16)(0x100 - lbl_803DD75C);
     switch ((int)pauseMenuState)
@@ -5423,7 +5423,7 @@ void pauseMenuDrawGrid(int alpha)
     {
         s16 tx;
         int n = (s16)alpha * lbl_803DD75C;
-        gameTextSetColorInt(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
+        gameTextSetColor(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
         lbl_803DBA8A = (s16)(lbl_803DD75C - 0xff);
         if (lbl_803DD824 == lbl_8031B818.entries)
         {
@@ -5626,9 +5626,9 @@ void timeListDraw(int unused1, int unused2, int unused3)
             b = pulse;
         }
         gameTextFn_80016810(0x2f7, 0, 5);
-        gameTextSetColorInt(a, a, a, 0xff);
+        gameTextSetColor(a, a, a, 0xff);
         gameTextShow(0x2f8);
-        gameTextSetColorInt(b, b, b, 0xff);
+        gameTextSetColor(b, b, b, 0xff);
         gameTextShow(0x2fb);
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     }
@@ -5708,7 +5708,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
             sprintf(buf, sHighScoreRowFormat, *(u32*)e >> 1);
             if (k == gHighScoreHighlightRow)
             {
-                gameTextSetColorInt(pulse, pulse, pulse, 0xff);
+                gameTextSetColor(pulse, pulse, pulse, 0xff);
             }
             else if (k == gHighScoreHighlightRow + 1)
             {

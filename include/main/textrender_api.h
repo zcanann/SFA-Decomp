@@ -11,7 +11,6 @@ typedef struct GameTextSlot {
     int arg3;
 } GameTextSlot;
 
-typedef void (*GameTextSetColorIntFn)(int r, int g, int b, int a);
 extern int lbl_803DC9C8;
 extern u8 lbl_803DC968;
 extern GameTextSlot lbl_8033A540[];
@@ -39,7 +38,7 @@ void gameTextSetWindow(u8* textBox);
 f32 gameTextFn_80019c00(void);
 void gameTextRun(void);
 void* gameTextGet(int textId);
-void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
+void gameTextSetColor(int r, int g, int b, int a);
 void mainLoopDoGameText(void);
 void gameTextLoadDir(int dirId);
 int gameTextFn_8001b44c(int x);
@@ -55,8 +54,6 @@ void gameTextLoadGraphicsFn_8001a918(void);
 void fn_8001BDD4(int mode);
 void fn_8001BE2C(int mode);
 
-#define gameTextSetColorInt ((GameTextSetColorIntFn)gameTextSetColor)
-#define gameTextSetColorU8 gameTextSetColor
 void gameTextSetWindowStrPos(int idx, int x, int y);
 
 #endif /* MAIN_TEXTRENDER_API_H_ */
