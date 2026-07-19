@@ -688,12 +688,12 @@ void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int stream
 {
     if (musicFlag != 0 || fxFlag != 0)
     {
-        ((void (*)(int, int, u8, u8))sndMasterVolume)(volume, time, musicFlag, fxFlag);
+        sndMasterVolume(volume, time, musicFlag, fxFlag);
     }
     if (streamFlag != 0)
     {
-        ((void (*)(int))AudioStream_SetVolume)(volume);
-        ((void (*)(int))AudioStream_SetDefaultVolume)(volume);
+        AudioStream_SetVolume(volume);
+        AudioStream_SetDefaultVolume(volume);
     }
 }
 
