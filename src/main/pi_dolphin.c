@@ -7012,7 +7012,7 @@ void renderHeavyFog(void* fogColor)
     lbl_803DCD70 = lbl_803DCD70 + 1;
     lbl_803DCD6C = lbl_803DCD6C + 1;
 }
-void fn_8004EECC(void)
+void fn_8004EECC(u8* color)
 {
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);

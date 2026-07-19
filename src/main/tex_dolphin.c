@@ -631,7 +631,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, Ma
                             }
                             else
                             {
-                                fn_8004EECCColorLegacy(chanColor);
+                                fn_8004EECC(chanColor);
                             }
                         }
                         else

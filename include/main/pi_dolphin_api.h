@@ -24,7 +24,7 @@ void* Shader_getLayer(void* shader, int layerIdx);
 void fn_8004CE0C(void* viewMtx);
 void fn_8004DA54(char* shader);
 void fn_8004E0FC(void);
-void fn_8004EECC(void);
+void fn_8004EECC(u8* color);
 void renderHeavyFog(void* fogColor);
 void fn_8004EF9C(int* color);
 void fn_8004F080(void);
@@ -45,8 +45,6 @@ void fn_80050A28(int scale);
 void textureFn_8004c330(void* texture, void* texMtx);
 void gxTextureFn_8004d5b4(void* renderOp);
 
-#define fn_8004EECCColorLegacy(color) \
-    (((void (*)(u8*))fn_8004EECC)((color)))
 #define fn_8004F380Legacy(color, position) \
     (((void (*)(u8*, int*))fn_8004F380)((color), (position)))
 #define fn_8004F6D8Legacy(color, position, chanColor) \
