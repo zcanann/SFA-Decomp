@@ -377,8 +377,7 @@ void grimble_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void grimble_hitDetect(int obj)
 {
-    (*(void (**)(int, int*, void*))(*(int*)gPlayerInterface + 0xC))(obj, ((GameObject*)obj)->extra,
-                                                                    gGrimbleStateHandlersA);
+    (*gPlayerInterface)->updateVelocityState((void*)obj, ((GameObject*)obj)->extra, gGrimbleStateHandlersA);
 }
 
 void grimble_update(GameObject* obj)

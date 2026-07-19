@@ -2299,7 +2299,7 @@ void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
 void dbstealerworm_hitDetect(GameObject* obj)
 {
     int* inner = obj->extra;
-    (*(void (*)(int, int*, int*))(*(int*)((char*)*gPlayerInterface + 0xc)))((int)obj, inner, gDBStealerWormStateHandlersA);
+    (*gPlayerInterface)->updateVelocityState(obj, inner, gDBStealerWormStateHandlersA);
 }
 
 void dbstealerworm_update(u8* objp)
