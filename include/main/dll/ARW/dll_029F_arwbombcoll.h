@@ -21,8 +21,8 @@ typedef struct ARWBombCollSetup
 
 typedef struct ArwBombFlags
 {
-    u8 b80 : 1;
-    u8 b40 : 1;
+    u8 collected : 1;
+    u8 shotOpen : 1;
 } ArwBombFlags;
 
 typedef struct ARWBombCollState

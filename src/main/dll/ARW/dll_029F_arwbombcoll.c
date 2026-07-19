@@ -121,13 +121,13 @@ void ARWBombColl_update(int obj)
 
     if (arw != NULL && arwarwing_isExplodingOrWarping(arw) != 0)
     {
-        flags->b80 = 0;
+        flags->collected = 0;
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject((GameObject*)obj);
         return;
     }
 
-    if (flags->b80 != 0 ||
+    if (flags->collected != 0 ||
         (((arwingCheck = getArwing()) != NULL
               ? (((GameObject*)obj)->anim.localPosZ - arwingCheck->anim.localPosZ <
                  sActivateDistanceZ)
@@ -150,13 +150,13 @@ void ARWBombColl_update(int obj)
             ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ((GameObject*)obj)->anim.rotX = sSpinRate * timeDelta + (f32) * &((GameObject*)obj)->anim.rotX;
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ARWBOMBCOLL_HIT_VOLUME_SLOT, 0, 0);
-            if (flags->b40 != 0)
+            if (flags->shotOpen != 0)
             {
                 if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
                     (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
                 {
                     arwarwing_addScore(arw, 0x19);
-                    flags->b80 = 1;
+                    flags->collected = 1;
                     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     ObjHits_DisableObject((GameObject*)obj);
                 }
@@ -168,7 +168,7 @@ void ARWBombColl_update(int obj)
                     (((GameObject*)hit)->anim.seqId == 0x604 || ((GameObject*)hit)->anim.seqId == ARW_ARWING_BOMB_OBJ))
                 {
                     arwarwing_addScore(arw, 0xf);
-                    flags->b40 = 1;
+                    flags->shotOpen = 1;
                     Obj_SetActiveModelIndex((GameObject*)obj, 1);
                     spawnExplosion((GameObject*)obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
                 }
@@ -180,7 +180,7 @@ void ARWBombColl_update(int obj)
                     spawnExplosion((GameObject*)obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
                 }
             }
-            if (arw != NULL && flags->b80 != 0)
+            if (arw != NULL && flags->collected != 0)
             {
                 switch (((GameObject*)obj)->anim.seqId)
                 {
