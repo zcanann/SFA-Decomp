@@ -4691,6 +4691,26 @@ extern GXTexObj lbl_803779A0;
 
 int pathSearchNodeMatchesTarget(int* ctx, int* ref);
 void pathSearchHeapSiftDown(u8* arr, int size, int idx);
+static inline int pathSearchFindPointNode(PathSearch* search, PathPoint* point, int count, int* visitedOut)
+{
+    int index = 0;
+    int offset = 0;
+    int n;
+
+    for (n = count; n > 0; n--)
+    {
+        PathSearchNode* scanNode = (PathSearchNode*)((u8*)search->nodes + offset);
+        if (scanNode->point == point)
+        {
+            *visitedOut = scanNode->visited;
+            return index;
+        }
+        offset += 0x10;
+        index++;
+    }
+    return -1;
+}
+
 void pathSearchEnqueuePoint(int* q, int* elem, int idx, u32 d, char* obj)
 {
     PathSearch* search = (PathSearch*)q;
@@ -4701,9 +4721,7 @@ void pathSearchEnqueuePoint(int* q, int* elem, int idx, u32 d, char* obj)
     int cnt2;
     PathSearchNode* node;
     u32* heap;
-    PathSearchNode* scanNode;
     int z[2];
-    int n;
     PathSearchNode* node4;
     int visited;
     int cnt;
@@ -4739,24 +4757,8 @@ void pathSearchEnqueuePoint(int* q, int* elem, int idx, u32 d, char* obj)
             hh[i * 4 + 2] = idx16;
         }
     }
-    z[0] = 0;
-    z[1] = z[0];
     cnt2 = search->nodeCount;
-    for (n = cnt2; n > 0; n--)
-    {
-        scanNode = (PathSearchNode*)((u8*)search->nodes + z[1]);
-        if (scanNode->point == point)
-        {
-            visited = scanNode->visited;
-            break;
-        }
-        z[1] += 0x10;
-        z[0]++;
-    }
-    if (n <= 0)
-    {
-        z[0] = -1;
-    }
+    z[0] = pathSearchFindPointNode(search, point, cnt2, &visited);
     if (z[0] >= 0 && visited == 0)
     {
         PathSearchNode* node3 = &search->nodes[z[0]];
