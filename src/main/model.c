@@ -572,7 +572,7 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
                         WALKANIM_COPY_SLOT(j, 7);
                     }
                 }
-                for (; j < slotCount; j++)
+                for (slotEvent = slotCount - j; slotEvent > 0; slotEvent--, j++)
                 {
                     WALKANIM_COPY_SLOT(j, 0);
                 }
