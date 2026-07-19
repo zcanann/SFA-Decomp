@@ -86,7 +86,7 @@ int TREX_Lazerwall_popQueuedState(int obj, int animState)
                 ((TREXLazerwallUpdateTimedChallengeState*)state)->curveNodeTag = ((LazerwallCurveNode*)node)->type;
             }
 
-            if ((s8) * (u8*)(node + 0x19) == LAZERWALL_NODE_TAG_A)
+            if ((s8)((LazerwallCurveNode*)node)->type == LAZERWALL_NODE_TAG_A)
             {
                 pushKindA = LAZERWALL_NODE_KIND_A;
                 stackHandle = ((TREXLazerwallUpdateTimedChallengeState*)state)->stack;
