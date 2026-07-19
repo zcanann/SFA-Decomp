@@ -1,6 +1,6 @@
 /* DLL 0xEF - pushable object [80174A80-801755CC) */
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx_play_int_return_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/object_api.h"
 #include "main/camera.h"
 #include "main/camera_interface.h"
@@ -203,7 +203,7 @@ int fn_80174438(int obj, PushableState* state)
         Sfx_StopObjectChannel(obj, 8);
         return 0;
     }
-    Sfx_PlayFromObjectIntReturnLegacy(obj, SFXTRIG_treedrum16);
+    Sfx_PlayFromObject(obj, SFXTRIG_treedrum16);
     state->flags |= 2;
     if ((state->flags & 4) == 0)
     {
@@ -216,7 +216,7 @@ int fn_80174438(int obj, PushableState* state)
         ((GameObject*)obj)->anim.localPosX = (f32)(((ObjPlacement*)def)->posX - CURTAIN_POSITION_X_OFFSET);
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
         ((GameObject*)obj)->anim.localPosZ = (f32)(CURTAIN_POSITION_Z_OFFSET + ((ObjPlacement*)def)->posZ);
-        Sfx_PlayFromObjectIntReturnLegacy(obj, SFXTRIG_curtainopen16);
+        Sfx_PlayFromObject(obj, SFXTRIG_curtainopen16);
     }
     if (mainGetBit(GAMEBIT_PushableRelated0A1A) != 0)
     {
@@ -352,7 +352,7 @@ int fn_80174668(GameObject* obj, PushableState* state)
             ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
             ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
             Resource_Release(tex);
-            Sfx_PlayFromObjectIntReturnLegacy((int)obj, SFXTRIG_espar5_c);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_espar5_c);
         }
         else
         {
@@ -527,7 +527,7 @@ void fn_80174BFC(GameObject* obj, PushableState* ext)
                                 if (hit.kind == 1)
                                 {
                                     mainSetBits(gamebit, 1);
-                                    Sfx_PlayFromObjectIntReturnLegacy(0, SFXTRIG_menuups16k);
+                                    Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
                                     ext->flags |= PUSHABLE_FLAG_PUSH_LOCKED;
                                     *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                                     saveGame_saveObjectPos(obj);
@@ -539,7 +539,7 @@ void fn_80174BFC(GameObject* obj, PushableState* ext)
                                 if (t > -1 && t == hit.kind)
                                 {
                                     mainSetBits(gamebit, 1);
-                                    Sfx_PlayFromObjectIntReturnLegacy(0, SFXTRIG_menuups16k);
+                                    Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
                                 }
                                 break;
                             }
@@ -973,7 +973,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
             f32 f6 = ((GameObject*)obj)->anim.localPosZ - state->posHistZ[4];
             if (f5 * f5 + f6 * f6 > PUSHABLE_UNIT_SCALE && (state->flags & PUSHABLE_FLAG_PUSH_SFX_DUE) != 0)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_birdymornin11);
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_birdymornin11);
                 state->flags = state->flags & ~PUSHABLE_FLAG_PUSH_SFX_DUE;
             }
         }
@@ -1376,7 +1376,7 @@ void pushable_update(int* obj)
     case PUSHABLE_SEQID_DIM2_ICE_BLOCK:
         if (PUSHABLE_ZERO == state->prevWaterDepth && state->waterDepth > PUSHABLE_ZERO)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_curtainopen16);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_curtainopen16);
             mainSetBits(GAMEBIT_PushableRelated0272, 1);
         }
         if (mainGetBit(GAMEBIT_PushableRelated0272) != 0)
