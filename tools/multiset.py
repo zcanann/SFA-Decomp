@@ -26,6 +26,15 @@ CLASSIFY LABELS (operates on the mnemonic delta only):
 
 Only EXT-HANDLE-T and SIGNEDNESS-HANDLE with an ISOLATED delta (no mr/branch/
 other keys, |delta| small) are candidates for the isolated-ext-insert vein.
+
+BRANCH HINTS ARE NORMALIZED AWAY. objdump -M gekko renders the static-prediction
+suffix (beq-/beq+), but that suffix is a function of the DISPLACEMENT SIGN, not
+of the instruction word alone: a branch carrying a R_PPC_REL14 relocation has a
+zeroed displacement and so renders with the opposite suffix from the same BO
+bits resolved locally. Counting the suffix therefore manufactures a phantom
+delta wherever one side relocates a branch and the other resolves it (seen in
+OSGetTime and vidMakeNew, both byte-identical after link), and it also breaks
+BRANCH-SENSE detection by hiding beq/bne behind beq-/bne-.
 """
 import sys
 import re
@@ -42,6 +51,7 @@ from function_objdump import (
 )
 
 INSTR = re.compile(r"^[0-9a-f]+:\s+(?:[0-9a-f]{2} ){4}\s*(.*)$")
+BRANCH_HINT = re.compile(r"^(b[a-z]+)[-+]$")
 
 EXT_MNEMS = {"extsh", "extsb"}
 SIGNED_NARROW = {"srawi", "extsb", "extsh"}
@@ -63,7 +73,11 @@ def mnem_counts(lines):
         m = INSTR.match(ln.strip())
         if not m:
             continue
-        c[m.group(1).split(None, 1)[0]] += 1
+        mnem = m.group(1).split(None, 1)[0]
+        hint = BRANCH_HINT.match(mnem)
+        if hint:
+            mnem = hint.group(1)
+        c[mnem] += 1
     return c
 
 
@@ -111,7 +125,17 @@ def analyze(unit_query, sym):
     src_obj = Path(unit["object"].replace("/obj/", "/src/"))
     tgt = strip_preamble(objdump_symbol(objdump, obj, sym))
     cur = strip_preamble(objdump_symbol(objdump, src_obj, sym))
-    return deltas(mnem_counts(tgt), mnem_counts(cur))
+    tc, cc = mnem_counts(tgt), mnem_counts(cur)
+    if not tc:
+        raise SystemExit(
+            f"No instructions for '{sym}' in {obj}. objdump --disassemble= on an "
+            f"unknown symbol emits nothing, which would otherwise score as an "
+            f"empty delta and be reported as a PURE-REG-PERM cap. Check the "
+            f"spelling against: powerpc-eabi-objdump -t {obj}"
+        )
+    if not cc:
+        raise SystemExit(f"No instructions for '{sym}' in {src_obj} (target has them).")
+    return deltas(tc, cc)
 
 
 def main():
