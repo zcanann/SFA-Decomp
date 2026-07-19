@@ -194,10 +194,10 @@ void dll_9A_func03(int target, int variant, int parent, u32 flags)
     {
         hdr.by = lbl_803E1394;
     }
-    hdr.bz = *(f32*)&lbl_803E1370;
-    hdr.ax = *(f32*)&lbl_803E1370;
-    hdr.ay = *(f32*)&lbl_803E1370;
-    hdr.az = *(f32*)&lbl_803E1370;
+    hdr.bz = 0.0f;
+    hdr.ax = 0.0f;
+    hdr.ay = 0.0f;
+    hdr.az = 0.0f;
     hdr.r = lbl_803E1390;
     hdr.c2 = 1;
     hdr.c7 = 0;
