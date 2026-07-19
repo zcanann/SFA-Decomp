@@ -9,21 +9,21 @@ typedef struct WmTorchPlacement
 {
     ObjPlacement base;
     u8 pad18;
-    u8 torchType; /* 0x19: 0 / 0x7F = resource-0x69 flames, else 0x63 */
-    s16 unk1A;    /* 0x1A: state value, default 90.0 when 0 */
-    s16 unk1C;    /* 0x1C: state value, default 0x8C when 0 */
+    u8 torchType;  /* 0x19: 0 / 0x7F = resource-0x69 flames, else 0x63 */
+    s16 motionRate; /* 0x1A: root-motion scale numerator, default 90.0 when 0 */
+    s16 colorIdx;   /* 0x1C: flame color index, default 0x8C when 0 */
 } WmTorchPlacement;
 
 STATIC_ASSERT(offsetof(WmTorchPlacement, torchType) == 0x19);
-STATIC_ASSERT(offsetof(WmTorchPlacement, unk1C) == 0x1C);
+STATIC_ASSERT(offsetof(WmTorchPlacement, colorIdx) == 0x1C);
 
 typedef struct WmTorchState
 {
     GameObject* linkedObj;
-    f32 unk04; /* from placement unk1A */
+    f32 motionRate; /* 0x04: from placement motionRate */
     u8 pad08[2];
-    s16 unk0A;    /* from placement unk1C */
-    u8 torchType; /* placement torchType: 0 / 0x7F / other */
+    s16 colorIdx;   /* 0x0A: from placement colorIdx */
+    u8 torchType;   /* placement torchType: 0 / 0x7F / other */
     u8 pad0D[3];
 } WmTorchState;
 

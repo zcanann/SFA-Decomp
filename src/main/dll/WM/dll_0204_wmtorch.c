@@ -26,7 +26,7 @@ typedef void (*WmTorchAttachFlameFn)(u8* obj, int variant, f32* params, int flag
 
 #define WMTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 lbl_803E5DEC; /* 90.0: unk04 default */
+extern f32 lbl_803E5DEC; /* 90.0: motionRate default */
 extern f32 lbl_803E5DF0; /* flame param */
 extern f32 lbl_803E5DF4; /* model scale factor */
 extern f32 lbl_803E5DF8; /* model scale factor */
@@ -86,21 +86,21 @@ void wmtorch_init(u8* obj, u8* params)
     f32 flameParams[5]; /* flame params; only [4] is set, the rest raw on purpose */
 
     state = ((GameObject*)obj)->extra;
-    if (((WmTorchPlacement*)params)->unk1A != 0)
+    if (((WmTorchPlacement*)params)->motionRate != 0)
     {
-        state->unk04 = (f32)(s32)((WmTorchPlacement*)params)->unk1A;
+        state->motionRate = (f32)(s32)((WmTorchPlacement*)params)->motionRate;
     }
     else
     {
-        state->unk04 = lbl_803E5DEC;
+        state->motionRate = lbl_803E5DEC;
     }
-    if (((WmTorchPlacement*)params)->unk1C != 0)
+    if (((WmTorchPlacement*)params)->colorIdx != 0)
     {
-        state->unk0A = ((WmTorchPlacement*)params)->unk1C;
+        state->colorIdx = ((WmTorchPlacement*)params)->colorIdx;
     }
     else
     {
-        state->unk0A = 0x8c;
+        state->colorIdx = 0x8c;
     }
     state->torchType = ((WmTorchPlacement*)params)->torchType;
     flameParams[4] = lbl_803E5DF0;
