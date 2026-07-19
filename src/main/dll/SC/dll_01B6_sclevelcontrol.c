@@ -202,30 +202,30 @@ void sc_levelcontrol_update(GameObject *obj)
         envFxActFn_800887f8(0);
         if ((obj)->userData1 == 2)
         {
-            getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
-            getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
-            getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
+            getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
+            getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
+            getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
             if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(SCLEVELCONTROL_MAP_SWAPCIRCLE, 5) != 0)
             {
-                getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
             }
             else
             {
-                getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
+                getEnvfxActImmediately(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
             }
         }
         else
         {
-            getEnvfxActInt(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
-            getEnvfxActInt(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
-            getEnvfxActInt(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
+            getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
+            getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
+            getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_C, 0);
             if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(SCLEVELCONTROL_MAP_SWAPCIRCLE, 5) != 0)
             {
-                getEnvfxActInt(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_D, 0);
             }
             else
             {
-                getEnvfxActInt(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
+                getEnvfxAct(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
             }
         }
         (obj)->userData1 = 0;

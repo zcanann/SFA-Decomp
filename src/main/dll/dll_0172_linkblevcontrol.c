@@ -292,7 +292,7 @@ void linkb_levcontrol_init(int* obj)
         {
             envFxActFn_800887f8(0x1f);
         }
-        getEnvfxActInt(0, 0, LINKBLEVCONTROL_ENVFX_A, 0);
+        getEnvfxAct(0, 0, LINKBLEVCONTROL_ENVFX_A, 0);
     }
     state->music = 0;
 }

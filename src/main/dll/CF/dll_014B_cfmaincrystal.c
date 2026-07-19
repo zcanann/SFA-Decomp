@@ -251,7 +251,7 @@ void cfmaincrystal_updateBeams(int* obj)
             if (sub->charge == 0)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
-                getEnvfxActInt(0, 0, CFMAINCRYSTAL_ENVFX, 0);
+                getEnvfxAct(0, 0, CFMAINCRYSTAL_ENVFX, 0);
             }
             sub->charge += framesThisStep;
         }

@@ -151,8 +151,8 @@ void arwlevelcon_update(GameObject* obj)
             skyFn_800895e0(7, 0x96, 0x64, 0xf0, 0, 0);
         }
         skyFn_800894a8(7, -1.0f, -1.0f, 1.0f);
-        getEnvfxActVoid(0, 0, ARWLEVELCON_ENVFX_A, 0);
-        getEnvfxActVoid(0, 0, ARWLEVELCON_ENVFX_B, 0);
+        getEnvfxAct(0, 0, ARWLEVELCON_ENVFX_A, 0);
+        getEnvfxAct(0, 0, ARWLEVELCON_ENVFX_B, 0);
         setIsOvercast(0);
         state->skyConfigured = 1;
         setDrawLights(0);

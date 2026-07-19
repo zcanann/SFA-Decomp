@@ -183,12 +183,12 @@ void cclevcontrol_init(int* obj)
     if (getSaveGameLoadStatus() != 0)
     {
         envFxActFn_800887f8(0x3f);
-        getEnvfxActImmediatelyVoid((void*)0, 0, CCLEVCONTROL_ENVFX_A, 0);
+        getEnvfxActImmediately(0, 0, CCLEVCONTROL_ENVFX_A, 0);
     }
     else
     {
         envFxActFn_800887f8(0x1f);
-        getEnvfxActInt(0, 0, CCLEVCONTROL_ENVFX_A, 0);
+        getEnvfxAct(0, 0, CCLEVCONTROL_ENVFX_A, 0);
     }
     *(f32*)state = 300.0f;
     state[2] = -1;

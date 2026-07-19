@@ -198,7 +198,7 @@ void worldplanet_update(GameObject* obj)
         if ((state->flags & WORLDPLANET_STATE_FLAG_ENVFX_STARTED) == 0)
         {
             state->flags |= WORLDPLANET_STATE_FLAG_ENVFX_STARTED;
-            getEnvfxActInt(0, 0, WORLDPLANET_ENVFX_OPEN_ID, 0);
+            getEnvfxAct(0, 0, WORLDPLANET_ENVFX_OPEN_ID, 0);
             setIsOvercast(0);
             setDrawLights(0);
         }

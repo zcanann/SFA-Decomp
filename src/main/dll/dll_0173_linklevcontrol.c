@@ -154,9 +154,9 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
     case AREA_CELL_45:
         skyFn_80088c94(7, 0);
         envFxActFn_800887f8(0);
-        getEnvfxActInt(0, 0, LINKLEVCONTROL_ENVFX_A, 0);
-        getEnvfxActInt(0, 0, LINKLEVCONTROL_ENVFX_B, 0);
-        getEnvfxActInt(0, 0, LINKLEVCONTROL_ENVFX_C, 0);
+        getEnvfxAct(0, 0, LINKLEVCONTROL_ENVFX_A, 0);
+        getEnvfxAct(0, 0, LINKLEVCONTROL_ENVFX_B, 0);
+        getEnvfxAct(0, 0, LINKLEVCONTROL_ENVFX_C, 0);
         Music_Trigger(MUSICTRIG_underwater, 1);
         break;
     case AREA_CELL_49:

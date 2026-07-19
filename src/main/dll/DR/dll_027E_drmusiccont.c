@@ -92,10 +92,10 @@ void drmusiccont_update(GameObject* obj)
     {
         if ((u32)mainGetBit(GAMEBIT_DRArwingRelated0E7B) == 0)
         {
-            getEnvfxActImmediatelyVoid((int)obj, (int)obj, DRMUSICCONT_ENVFX_A, 0);
-            getEnvfxActImmediatelyVoid((int)obj, (int)obj, DRMUSICCONT_ENVFX_B, 0);
-            getEnvfxActImmediatelyVoid((int)obj, (int)obj, DRMUSICCONT_ENVFX_C, 0);
-            getEnvfxActImmediatelyVoid((int)obj, (int)obj, DRMUSICCONT_ENVFX_D, 0);
+            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_A, 0);
+            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_B, 0);
+            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_C, 0);
+            getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_D, 0);
             skyFn_80088e54(0, 0.0f);
             mainSetBits(GAMEBIT_DRArwingRelated0E7B, 1);
         }

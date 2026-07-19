@@ -120,17 +120,17 @@ void dim2lavacontrol_update(int obj)
     {
         if (((GameObject*)obj)->userData1 == 2)
         {
-            getEnvfxActImmediatelyInt(0, 0, DIM2LAVACONTROL_ENVFX_A, 0);
-            getEnvfxActImmediatelyInt(0, 0, DIM2LAVACONTROL_ENVFX_B, 0);
-            getEnvfxActImmediatelyInt(0, 0, DIM2LAVACONTROL_ENVFX_C, 0);
-            getEnvfxActImmediatelyInt(0, 0, DIM2LAVACONTROL_ENVFX_D, 0);
+            getEnvfxActImmediately(0, 0, DIM2LAVACONTROL_ENVFX_A, 0);
+            getEnvfxActImmediately(0, 0, DIM2LAVACONTROL_ENVFX_B, 0);
+            getEnvfxActImmediately(0, 0, DIM2LAVACONTROL_ENVFX_C, 0);
+            getEnvfxActImmediately(0, 0, DIM2LAVACONTROL_ENVFX_D, 0);
         }
         else
         {
-            getEnvfxActInt(0, 0, DIM2LAVACONTROL_ENVFX_A, 0);
-            getEnvfxActInt(0, 0, DIM2LAVACONTROL_ENVFX_B, 0);
-            getEnvfxActInt(0, 0, DIM2LAVACONTROL_ENVFX_C, 0);
-            getEnvfxActInt(0, 0, DIM2LAVACONTROL_ENVFX_D, 0);
+            getEnvfxAct(0, 0, DIM2LAVACONTROL_ENVFX_A, 0);
+            getEnvfxAct(0, 0, DIM2LAVACONTROL_ENVFX_B, 0);
+            getEnvfxAct(0, 0, DIM2LAVACONTROL_ENVFX_C, 0);
+            getEnvfxAct(0, 0, DIM2LAVACONTROL_ENVFX_D, 0);
         }
         ((GameObject*)obj)->userData1 = 0;
     }

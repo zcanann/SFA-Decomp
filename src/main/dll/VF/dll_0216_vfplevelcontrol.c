@@ -142,9 +142,9 @@ void VFP_LevelControl_update(GameObject* obj)
     {
         if (mainGetBit(GAMEBIT_VFP_SKY_PENDING) != 0u)
         {
-            getEnvfxActImmediatelyVoid((int)obj, (int)obj, VFP_ENVFX_INTRO_0, 0);
-            getEnvfxActImmediatelyVoid((int)obj, (int)obj, VFP_ENVFX_INTRO_1, 0);
-            getEnvfxActImmediatelyVoid((int)obj, (int)obj, VFP_ENVFX_INTRO_2, 0);
+            getEnvfxActImmediately(obj, obj, VFP_ENVFX_INTRO_0, 0);
+            getEnvfxActImmediately(obj, obj, VFP_ENVFX_INTRO_1, 0);
+            getEnvfxActImmediately(obj, obj, VFP_ENVFX_INTRO_2, 0);
             skyFn_80088e54(1, 0.0f);
             mainSetBits(GAMEBIT_VFP_SKY_PENDING, 0);
         }
@@ -248,4 +248,3 @@ void VFP_LevelControl_initialise(void)
 {
     lbl_803DC148 = VFP_TIMER_INIT;
 }
-

@@ -465,10 +465,10 @@ void WM_spiritplace_update(GameObject* obj)
                         state->envFxPending = 0;
                         mainSetBits(state->promptGameBit, 0);
                         mainSetBits(GAMEBIT_WMRelated0D1F, 1);
-                        getEnvfxActImmediatelyVoid(0, 0, 0x217, 0);
-                        getEnvfxActImmediatelyVoid((int)obj, (int)obj, 0x216, 0);
-                        getEnvfxActImmediatelyVoid((int)obj, (int)obj, 0x229, 0);
-                        getEnvfxActImmediatelyVoid((int)obj, (int)obj, 0x22a, 0);
+                        getEnvfxActImmediately(0, 0, 0x217, 0);
+                        getEnvfxActImmediately(obj, obj, 0x216, 0);
+                        getEnvfxActImmediately(obj, obj, 0x229, 0);
+                        getEnvfxActImmediately(obj, obj, 0x22a, 0);
                         (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 4, 1);
                         (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 10, 0);
                         (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 0xb, 1);

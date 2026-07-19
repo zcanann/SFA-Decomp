@@ -107,7 +107,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
             skyFn_80089710(7, 1, 0);
             skyFn_800894a8(7, lbl_803E4CC4, *(f32*)&lbl_803E4CC4, lbl_803E4CB8);
             skyFn_800895e0(7, 0xff, 0xb4, 0xb4, 0x7f, 0x28);
-            getEnvfxActVoid(obj, obj, DIMBOSSTONSIL_STEAM_ENVFX, 0);
+            getEnvfxAct(obj, obj, DIMBOSSTONSIL_STEAM_ENVFX, 0);
             Music_Trigger(DIMBOSSTONSIL_STEAM_MUSIC, 1);
             break;
         case DIMBOSSTONSIL_ANIM_EVENT_ENABLE_AREA:

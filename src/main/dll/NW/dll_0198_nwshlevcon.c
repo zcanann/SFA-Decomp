@@ -95,9 +95,9 @@ void nwsh_levcon_update(int* obj)
         if (((GameObject*)obj)->userData1 == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxActInt(0, 0, NWSH_LEVCON_ENVFX_A, 0);
-            getEnvfxActInt(0, 0, NWSH_LEVCON_ENVFX_B, 0);
-            getEnvfxActInt(0, 0, NWSH_LEVCON_ENVFX_C, 0);
+            getEnvfxAct(0, 0, NWSH_LEVCON_ENVFX_A, 0);
+            getEnvfxAct(0, 0, NWSH_LEVCON_ENVFX_B, 0);
+            getEnvfxAct(0, 0, NWSH_LEVCON_ENVFX_C, 0);
         }
     }
 }

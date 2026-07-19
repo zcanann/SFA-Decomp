@@ -875,17 +875,17 @@ void SH_LevelControl_update(GameObject* obj)
             envFxActFn_800887f8(0);
             if ((obj)->userData1 == 2)
             {
-                getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
-                getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
-                getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
             }
             else
             {
-                getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
-                getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
-                getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
             }
         }
     }
@@ -900,18 +900,18 @@ void SH_LevelControl_update(GameObject* obj)
                 if ((obj)->userData1 == 2)
                 {
                     envFxActFn_800887f8(0);
-                    getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
-                    getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_E, 0);
-                    getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_F, 0);
-                    getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_E, 0);
+                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_F, 0);
+                    getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
                 }
                 else
                 {
                     envFxActFn_800887f8(0);
-                    getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
-                    getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_E, 0);
-                    getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_F, 0);
-                    getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
+                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_E, 0);
+                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_F, 0);
+                    getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
                 }
             }
         }
@@ -922,14 +922,14 @@ void SH_LevelControl_update(GameObject* obj)
             {
                 fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
                 envFxActFn_800887f8(0x3f);
-                getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
                 skyFn_80088e54(0, lbl_803E54B4.f);
             }
             else
             {
                 fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
                 envFxActFn_800887f8(0x1f);
-                getEnvfxActInt(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
             }
         }
     }

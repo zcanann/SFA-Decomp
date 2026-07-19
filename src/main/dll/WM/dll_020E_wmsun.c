@@ -458,8 +458,8 @@ void wmsun_update(GameObject* obj)
                     if (gWmSunEnvfxTimer <= 0)
                     {
                         gWmSunEnvfxTimer = 0;
-                        getEnvfxActVoid((int)obj, (int)obj, WMSUN_ENVFX_A, 0);
-                        getEnvfxActVoid((int)obj, (int)obj, WMSUN_ENVFX_B, 0);
+                        getEnvfxAct(obj, obj, WMSUN_ENVFX_A, 0);
+                        getEnvfxAct(obj, obj, WMSUN_ENVFX_B, 0);
                     }
                 }
                 if ((int)randomGetRange(0, 8) == 0)

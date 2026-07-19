@@ -91,9 +91,9 @@ void KT_RexLevel_update(GameObject* obj)
     if ((obj)->userData1 == 0)
     {
         skyFn_80088c94(7, 1);
-        getEnvfxActVoid((int)obj, (int)obj, KTREXLEVEL_ENVFX_A, 0);
-        getEnvfxActVoid((int)obj, (int)obj, KTREXLEVEL_ENVFX_B, 0);
-        getEnvfxActVoid((int)obj, (int)obj, KTREXLEVEL_ENVFX_C, 0);
+        getEnvfxAct(obj, obj, KTREXLEVEL_ENVFX_A, 0);
+        getEnvfxAct(obj, obj, KTREXLEVEL_ENVFX_B, 0);
+        getEnvfxAct(obj, obj, KTREXLEVEL_ENVFX_C, 0);
         skyFn_80088e54(1, lbl_803E67A4);
         mainSetBits(0x55e, 1);
         (obj)->userData1 = 1;

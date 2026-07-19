@@ -199,11 +199,11 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 if (mainGetBit(GAMEBIT_CF_PowerOn) != 0)
                 {
-                    getEnvfxActInt(0, 0, DOORF4_ENVFX_A, 0);
+                    getEnvfxAct(0, 0, DOORF4_ENVFX_A, 0);
                 }
                 else
                 {
-                    getEnvfxActInt(0, 0, DOORF4_ENVFX_B, 0);
+                    getEnvfxAct(0, 0, DOORF4_ENVFX_B, 0);
                 }
             }
             sub->toggled = 1;
@@ -212,7 +212,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (((GameObject*)obj)->anim.seqId == DOORF4_POWERDOOR_OBJ && sd <= 0.0f)
             {
-                getEnvfxActInt(0, 0, DOORF4_ENVFX_OFF, 0);
+                getEnvfxAct(0, 0, DOORF4_ENVFX_OFF, 0);
             }
             sub->toggled = 0;
         }
