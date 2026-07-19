@@ -153,8 +153,6 @@ void XyzAnimator_captureGeometry(XyzAnimatorPlacement* setup, XyzAnimatorState* 
     }
 }
 
-void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block);
-
 int XyzAnimator_getExtraSize(void)
 {
     return 0x50;
