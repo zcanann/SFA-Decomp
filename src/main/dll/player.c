@@ -188,7 +188,7 @@ int playerState31(GameObject* obj, int p2);
 int playerState30(GameObject* obj, int state, f32 fv);
 void fn_8029A420(GameObject* obj);
 void fn_8029A4A8(GameObject* obj, int p2);
-int playerStateFireLaser(int obj, int state);
+int playerStateFireLaser(int obj, int state, f32 unused);
 int playerStateShootFireball(GameObject* obj, int state, f32 fv);
 int playerStateTryCastSpell(GameObject* obj, int state, f32 fv);
 int playerStateStopAimStaff(int obj, int state);
@@ -3360,7 +3360,7 @@ void fn_8029A4A8(GameObject* obj, int p2)
     }
 }
 
-int playerStateFireLaser(int obj, int state)
+int playerStateFireLaser(int obj, int state, f32 unused)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     int r = ((int (*)(int, int, int))fn_802AC7DC)(obj, state, (int)inner);
@@ -3700,7 +3700,7 @@ int playerStateTryCastSpell(GameObject* obj, int state, f32 fv)
                 int sub = *(int*)((char*)*(int*)&obj->extra + 0x35c);
                 if (*(s16*)((char*)sub + 0x4) >= 0)
                 {
-                    int r = ((int (*)(int, int, f32))playerStateFireLaser)((int)obj, state, fv);
+                    int r = playerStateFireLaser((int)obj, state, fv);
                     if (r != 0)
                     {
                         return r;
