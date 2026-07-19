@@ -12,6 +12,7 @@
 #include "main/obj_message.h"
 #include "main/dll/trickycurve_state.h"
 #include "main/dll/TrickyCurve.h"
+#include "main/dll/tesla.h"
 #include "main/mapEvent.h"
 #include "main/dll/sfxplayer.h"
 #include "main/dll/infopoint.h"
@@ -217,11 +218,11 @@ void TrickyCurve_update(int* obj)
     }
     else if (state == 2)
     {
-        ((void (*)(int*))fn_80206C18)(obj);
+        fn_80206C18((TrickyCurveObject*)obj);
     }
     else if (state == 3)
     {
-        ((void (*)(int*))fn_80206968)(obj);
+        fn_80206968((TrickyCurveObject*)obj);
     }
 }
 

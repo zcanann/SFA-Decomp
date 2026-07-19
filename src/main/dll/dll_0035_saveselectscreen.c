@@ -469,7 +469,7 @@ void SaveSelectScreen_render(int param)
     switch (gSaveSelectPanelIndex)
     {
     case SAVE_SELECT_PANEL_OPEN_FILE:
-        ((void (*)(int, u8))saveSelect_drawText)(param, alpha);
+        saveSelect_drawText(param, alpha);
         gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
         slotCount = 0;
         p = (char*)saveFileSelect_saveSlots + saveFileSelect_currentSlotIndex * 0x24;
