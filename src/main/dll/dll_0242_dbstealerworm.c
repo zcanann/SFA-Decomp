@@ -1935,7 +1935,7 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
     i = 0;
     objCursor = objs;
     weightCursor = weights;
-    rangeInit = 26kDbStealerWormZero[0];
+    rangeInit = 260.0f;
     zero = kDbStealerWormZero[0];
     for (; i < n; i++)
     {
@@ -1948,7 +1948,7 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
                 return 0;
             }
             scale = 1.0f;
-            k = scale - stk.range / 26kDbStealerWormZero[0];
+            k = scale - stk.range / 260.0f;
             k = k * k;
             k = k * k;
             stk.d[0] = nearest->anim.localPosX - (obj)->anim.localPosX;
@@ -2011,7 +2011,7 @@ int fn_80202C78(GameObject* obj, GameObject* otherObj, f32 yawOffset, f32 speed,
     {
         a = -ratio;
     }
-    if (a < 1kDbStealerWormZero[0])
+    if (a < 10.0f)
     {
         return 1;
     }
