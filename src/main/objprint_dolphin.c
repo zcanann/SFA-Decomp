@@ -1758,6 +1758,7 @@ void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
 
 void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
 {
+    int done;
     f32 cm[16];
     f32 wm[16];
     f32 im[16];
@@ -1767,7 +1768,6 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     f32* vm;
     u8 did;
     int* op;
-    int done;
     u32 sh;
 
     am = (int*)Obj_GetActiveModel((GameObject*)obj);
