@@ -3,7 +3,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/fcos16_approx_api.h"
 #include "main/trig.h"
-#include "main/trig_ext.h"
 
 extern float lbl_803E7C80;
 extern float lbl_803E7C84;

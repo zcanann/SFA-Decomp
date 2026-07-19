@@ -6,7 +6,7 @@
 #include "main/vecmath.h"
 #include "stdlib.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
-#include "main/trig_ext.h"
+#include "main/trig.h"
 
 typedef f32 Mtx[3][4];
 

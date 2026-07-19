@@ -27,7 +27,7 @@
 #include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/expgfx_resource_api.h"
 #include "main/frame_timing.h"
-#include "main/trig_ext.h"
+#include "main/trig.h"
 #include "main/object.h"
 #include "main/model_light.h"
 #include "main/object_api.h"

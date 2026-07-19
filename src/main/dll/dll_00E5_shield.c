@@ -37,7 +37,7 @@
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
-#include "main/trig_ext.h"
+#include "main/trig.h"
 
 s16 lbl_803DBD70[4] = {-1024, -512, 512, 1024};
 s16 lbl_803DBD78[4] = {-500, 50, 50, 200};

@@ -40,7 +40,7 @@
 #include "main/vecmath.h"
 #include "main/track_dolphin_api.h"
 #include "main/object_render.h"
-#include "main/trig_api.h"
+#include "main/trig.h"
 #define STAFFACTION_HIT_VOLUME_SLOT 9
 
 /* object group this object belongs to */
@@ -80,9 +80,9 @@ u32 fn_801659B8(s16* obj, u32* params)
     {
         state->speed = lbl_803E3004;
         ObjHits_EnableObject((GameObject*)obj);
-        ((GameObject*)obj)->anim.velocityX = -(state->speed) * fsin16Precise(((GameObject*)obj)->anim.rotX);
+        ((GameObject*)obj)->anim.velocityX = -(state->speed) * fsin16Precise(((GameObject*)obj)->anim.rotX & 0xffff);
         ((GameObject*)obj)->anim.velocityY = lbl_803E2FDC;
-        ((GameObject*)obj)->anim.velocityZ = -(state->speed) * fcos16Precise(((GameObject*)obj)->anim.rotX);
+        ((GameObject*)obj)->anim.velocityZ = -(state->speed) * fcos16Precise(((GameObject*)obj)->anim.rotX & 0xffff);
         *params |= 0x2004000;
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FDC;

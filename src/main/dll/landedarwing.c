@@ -15,7 +15,7 @@
 #include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
-#include "main/trig_api.h"
+#include "main/trig.h"
 
 /* raw offsets - kept as-is to match staffAction.c handlers */
 #define BADDIESTATE_HANDLER_TICK_FLAG 0x34d
@@ -70,10 +70,10 @@ u32 LandedArwing_UpdateFlightChase(int obj, int state)
         sub->speed = lbl_803E3004;
         ObjHits_EnableObject((GameObject*)obj);
         ((GameObject*)obj)->anim.velocityX =
-            -sub->speed * fsin16Precise(((GameObject*)obj)->anim.rotX);
+            -sub->speed * fsin16Precise(((GameObject*)obj)->anim.rotX & 0xffff);
         ((GameObject*)obj)->anim.velocityY = lbl_803E2FDC;
         ((GameObject*)obj)->anim.velocityZ =
-            -sub->speed * fcos16Precise(((GameObject*)obj)->anim.rotX);
+            -sub->speed * fcos16Precise(((GameObject*)obj)->anim.rotX & 0xffff);
         *(u32*)state |= LANDED_ARWING_FLAG_LAUNCHING;
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E2FDC, 0);
         sub->animSpeed = lbl_803E3008;

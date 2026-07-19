@@ -596,7 +596,7 @@ extern const f32 lbl_803E2064;
 extern const f32 lbl_803E2068;
 #include "main/fsin16_approx_api.h"
 #include "main/dll/dll_8011d918_ext.h"
-#include "main/trig_api.h"
+#include "main/trig.h"
 #include "main/dll/dll_0017_savegame_api.h"
 #include "main/dll/dll_0011_screens_api.h"
 #include "string.h"
@@ -5615,7 +5615,7 @@ void timeListDraw(int unused1, int unused2, int unused3)
         int a, b;
         gTimeListPulseAngle += gTimeListPulseAngleStep;
         ang = gTimeListPulseAngle;
-        pulse = (int)(gTimeListPulseAmplitude * fsin16Precise(ang) + gTimeListPulseBias);
+        pulse = (int)(gTimeListPulseAmplitude * fsin16Precise((u16)ang) + gTimeListPulseBias);
         if (lbl_803DD75B == 1)
         {
             a = pulse;
@@ -5676,7 +5676,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
     char buf[0x20];
 
     gHighScorePulseAngle += gHighScorePulseAngleStep;
-    pulse = (int)(gHighScorePulseAmplitude * fsin16Precise(gHighScorePulseAngle) + gHighScorePulseBias);
+    pulse = (int)(gHighScorePulseAmplitude * fsin16Precise((u16)gHighScorePulseAngle) + gHighScorePulseBias);
     h = (s16)box->f0a;
     w = (s16)box->f08;
     y = box->f16;

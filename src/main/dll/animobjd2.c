@@ -45,7 +45,7 @@
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/flameblast_api.h"
 #include "main/dll/baddie/trickyfollow.h"
-#include "main/trig_ext.h"
+#include "main/trig.h"
 
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP    0x4b /* DLL 0x100 trickywarp */

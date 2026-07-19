@@ -46,7 +46,7 @@
 #include "track/intersect_render_setup_api.h"
 #include "main/dll/cloudaction_ext.h"
 #include "main/track_dolphin_ext.h"
-#include "main/trig_ext.h"
+#include "main/trig.h"
 #include "main/tex_dolphin_ext.h"
 #include "main/acosf_api.h"
 #include "dolphin/gx/GXGeometry.h"
