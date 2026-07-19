@@ -37,7 +37,7 @@
 #include "main/obj_group.h"
 #include "main/lightmap_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0000_gameui_api.h"
@@ -762,7 +762,7 @@ void fn_80133934(void)
 void Minimap_frameStart(void)
 {
     int player;
-    int sfx;
+    u16 sfx;
     int held;
     int pressed;
     CameraViewSlot* slot;
@@ -965,7 +965,7 @@ void Minimap_frameStart(void)
                 gMinimapPrevAreaNameId = areaNameId;
                 break;
             }
-            if ((u16)sfx != 0)
+            if (sfx != 0)
             {
                 Sfx_PlayFromObject(0, sfx);
             }
