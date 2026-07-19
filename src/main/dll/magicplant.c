@@ -44,6 +44,10 @@ static const f32 gVambatHeartbeatPeriod[1] = {6e+01f};
 
 /* The magic-plant's one particle-fx effect (spawned per hit-count in the
    attack handler). */
+/* The Firebat variant of the shared Vambat/Firebat family (retail
+   OBJECTS.bin name "Firebat", DLL 0xC9); it alone runs with userData2 set. */
+#define MAGICPLANT_FIREBAT_SEQID 0x7c6
+
 #define MAGICPLANT_PARTFX          0x802
 #define MAGICPLANT_HIT_VOLUME_SLOT 0xe
 
@@ -234,7 +238,7 @@ void vambat_init(GameObject* obj, int state)
     ((BaddieState*)state)->pathStep = pathStepInit;
     switch (obj->anim.seqId)
     {
-    case 0x7c6:
+    case MAGICPLANT_FIREBAT_SEQID:
         ((BaddieState*)state)->userData2 = 1;
         break;
     default:
