@@ -111,7 +111,7 @@ void dim2snowball_update(int* obj)
     TrackGroundHit** results;
     int count;
     int start;
-    f32 evt[6];
+    PartFxSpawnParams evt;
     f32 k;
 
     if ((((Dim2SnowballState*)extra)->flagsAC & 4) != 0)
@@ -179,10 +179,10 @@ void dim2snowball_update(int* obj)
                 }
                 Sfx_PlayFromObject((int)obj, SFXTRIG_en_nlite1_c);
             }
-            evt[3] = ((GameObject*)obj)->anim.localPosX;
-            evt[4] = ((GameObject*)obj)->anim.localPosY;
-            evt[5] = ((GameObject*)obj)->anim.localPosZ;
-            (*gPartfxInterface)->spawnObject(obj, PARTFX_SNOWBALL_IMPACT, evt, 4, -1, NULL);
+            evt.posX = ((GameObject*)obj)->anim.localPosX;
+            evt.posY = ((GameObject*)obj)->anim.localPosY;
+            evt.posZ = ((GameObject*)obj)->anim.localPosZ;
+            (*gPartfxInterface)->spawnObject(obj, PARTFX_SNOWBALL_IMPACT, &evt, 4, -1, NULL);
             if (((GameObject*)obj)->anim.alpha == 0)
             {
                 Obj_FreeObject((GameObject*)obj);

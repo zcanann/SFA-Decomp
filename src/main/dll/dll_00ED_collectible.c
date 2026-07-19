@@ -386,7 +386,7 @@ void collectible_updateIdleMotion(GameObject *obj)
 int collectible_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int* state = (obj)->extra;
-    f32 buf[6];
+    PartFxSpawnParams buf;
     int j;
     int i;
     f32 s_val;
@@ -430,10 +430,10 @@ int collectible_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState* animUpdat
             z = 0.0f;
             for (; j < 10; j++)
             {
-                buf[3] = z;
-                buf[4] = z;
-                buf[5] = z;
-                (*gPartfxInterface)->spawnObject((void*)obj, COLLECTIBLE_PARTFX_SCATTER, buf, 1,
+                buf.posX = z;
+                buf.posY = z;
+                buf.posZ = z;
+                (*gPartfxInterface)->spawnObject((void*)obj, COLLECTIBLE_PARTFX_SCATTER, &buf, 1,
                                                  -1, NULL);
             }
         }

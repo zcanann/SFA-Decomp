@@ -50,33 +50,33 @@ void dimicewall_update(int* obj)
     {
         if (((DimicewallState*)extra)->hp <= 0)
         {
-            f32 desc[6];
+            PartFxSpawnParams desc;
             int i;
-            desc[2] =(f32)(s8)((DimicewallPlacement*)def)->shatterScale / 50.0f;
-            desc[5] = 0.0f;
+            desc.scale =(f32)(s8)((DimicewallPlacement*)def)->shatterScale / 50.0f;
+            desc.posZ = 0.0f;
             for (i = 45; i != 0; i--)
             {
-                desc[3] = desc[2] * (0.1f * (f32)(int)
+                desc.posX = desc.scale * (0.1f * (f32)(int)
                 randomGetRange(-250, 250)
                 )
                 ;
-                desc[4] = desc[2] * (0.1f * (f32)(int)
+                desc.posY = desc.scale * (0.1f * (f32)(int)
                 randomGetRange(0, 450)
                 )
                 ;
-                (*gPartfxInterface)->spawnObject(obj, 2041, desc, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, 2041, &desc, 2, -1, NULL);
             }
             for (i = 25; i != 0; i--)
             {
-                desc[3] = desc[2] * (0.1f * (f32)(int)
+                desc.posX = desc.scale * (0.1f * (f32)(int)
                 randomGetRange(-250, 250)
                 )
                 ;
-                desc[4] = desc[2] * (0.1f * (f32)(int)
+                desc.posY = desc.scale * (0.1f * (f32)(int)
                 randomGetRange(0, 450)
                 )
                 ;
-                (*gPartfxInterface)->spawnObject(obj, 2042, desc, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject(obj, 2042, &desc, 2, -1, NULL);
             }
             if ((u32)((DimicewallPlacement*)def)->mapId != DIMICEWALL_MAPID_NO_SFX)
             {
