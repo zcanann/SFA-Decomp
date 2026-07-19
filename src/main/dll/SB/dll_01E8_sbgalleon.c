@@ -33,11 +33,6 @@
 #include "main/pi_dolphin_api.h"
 #include "main/map_load.h"
 #include "main/sky_api.h"
-
-#define skyFn_800895e0Legacy(flags, red, green, blue, m1, m2)                                                     \
-    ((void (*)(int, int, int, int, int, int))skyFn_800895e0)((flags), (red), (green), (blue), (m1), (m2))
-#define skyFn_80089710Legacy(flags, enabled, startComplete)                                                       \
-    ((void (*)(int, int, int))skyFn_80089710)((flags), (enabled), (startComplete))
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/render_lactions_api.h"
@@ -65,11 +60,6 @@ u8 gSbGalleonSkyColorAStart[4] = {0x3E, 0x52, 0x64, 0};
 u8 gSbGalleonSkyColorAEnd[4] = {0xC8, 0xE7, 0xFF, 0};
 u8 gSbGalleonSkyColorCStart[4] = {0x3E, 0x52, 0x66, 0};
 u8 gSbGalleonSkyColorCEnd[4] = {0x13, 0x23, 0x36, 0};
-
-#define Sfx_PlayFromObjectLegacy(obj, sfxId) \
-    ((void (*)(int, int))Sfx_PlayFromObject)((obj), (sfxId))
-#define Sfx_StopFromObjectLegacy(obj, sfxId) \
-    ((void (*)(int, int))Sfx_StopFromObject)((obj), (sfxId))
 
 #define SBGALLEON_OBJGROUP 3
 
@@ -170,7 +160,7 @@ void fn_801E1588(int obj, int state)
     setDrawLights(0);
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x29, 0x4b, 0xa9);
-    skyFn_80089710Legacy(SBGALLEON_SKY_LIGHT_SLOT, 1, 0);
+    skyFn_80089710(SBGALLEON_SKY_LIGHT_SLOT, 1, 0);
     if (lightningGetRemainingFraction() > *(f32*)&lbl_803E56CC)
     {
         lbl_803DDC24 = lbl_803E57A4;
@@ -196,8 +186,8 @@ void fn_801E1588(int obj, int state)
         int v2 = gSbGalleonSkyColorAStart[2];
         gSbGalleonSkyColorA[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorAEnd[2] - v2);
     }
-    skyFn_800895e0Legacy(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorA[0],
-                   gSbGalleonSkyColorA[1], gSbGalleonSkyColorA[2], 0x40, 0x40);
+    skyFn_800895e0(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorA[0], gSbGalleonSkyColorA[1],
+                   gSbGalleonSkyColorA[2], 0x40, 0x40);
     {
         int v0 = lbl_803DC078[0];
         gSbGalleonSkyColorB[0] = v0 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[0] - v0);
@@ -311,10 +301,10 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             break;
         case SBGALLEON_SEQEV_SFX_ON:
-            Sfx_PlayFromObjectLegacy(obj, SBGALLEON_SFX_SPLASH);
+            Sfx_PlayFromObject((u32)obj, SBGALLEON_SFX_SPLASH);
             break;
         case SBGALLEON_SEQEV_SFX_OFF:
-            Sfx_StopFromObjectLegacy(obj, SBGALLEON_SFX_SPLASH);
+            Sfx_StopFromObject((u32)obj, SBGALLEON_SFX_SPLASH);
             break;
         case SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_8:
             if (state->damagePhase == 8)
@@ -333,7 +323,7 @@ int SB_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             state->skyFlag = 0;
             break;
         case SBGALLEON_SEQEV_SPLASH_SFX:
-            Sfx_PlayFromObjectLegacy(sbGetPropeller(), SBGALLEON_SFX_SPRAY);
+            Sfx_PlayFromObject(sbGetPropeller(), SBGALLEON_SFX_SPRAY);
             break;
         case SBGALLEON_SEQEV_MUSIC:
             state->musicIdB = SBGALLEON_MUSIC_INTRO;
