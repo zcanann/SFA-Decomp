@@ -74,6 +74,16 @@ typedef struct WarpstoneUpdateMenuAnimObjState
 extern int lbl_803DC050;
 int lbl_803DDBF4;
 
+u32 playerFn_801d6d58(void)
+{
+    u32 playerObj;
+
+    (*gMapEventInterface)->getCurChar();
+    playerObj = (u32)Obj_GetPlayerObject();
+    objGetAnimStateFlags((GameObject*)playerObj, 0xff);
+    return 2;
+}
+
 int warpstone_testEvent(u32 obj, u32 unused, int option)
 {
     s8 horizontal;
@@ -326,16 +336,6 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
 
     SHthorntail_updateDustEffects((SHthorntailObject*)obj);
     return 0;
-}
-
-u32 playerFn_801d6d58(void)
-{
-    u32 playerObj;
-
-    (*gMapEventInterface)->getCurChar();
-    playerObj = (u32)Obj_GetPlayerObject();
-    objGetAnimStateFlags((GameObject*)playerObj, 0xff);
-    return 2;
 }
 
 int warpstone_getExtraSize(void)

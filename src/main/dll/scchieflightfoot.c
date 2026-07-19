@@ -35,8 +35,6 @@ typedef struct SHthorntailDustEffectParams
 #define DUST_SPAWN_CHANCE_RANGE 0x1e0
 #define DUST_BURST_PUFF_COUNT   0xf
 
-f32 gChiefLightfootDustCloudScale = 0.0009f;
-f32 gChiefLightfootDustBurstScale = 0.00036f;
 
 void SHthorntail_updateDustEffects(SHthorntailObject* obj)
 {
@@ -70,7 +68,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject* obj)
             effectParams.radius = 0x28;
             effectParams.flags = 0;
             effectParams.scale =
-                gChiefLightfootDustCloudScale * ((runtime->dustEffectTimer - 120.0f) / 240.0f);
+                0.0009f * ((runtime->dustEffectTimer - 120.0f) / 240.0f);
             (*gPartfxInterface)->spawnObject(playerObj, DUST_CLOUD_EFFECT_ID, &effectParams, 2, -1, NULL);
             runtime->dustEffectFlags = runtime->dustEffectFlags | SHTHORNTAIL_DUST_FLAG_BURST_READY;
         }
@@ -84,7 +82,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject* obj)
             {
                 runtime->dustEffectFlags = runtime->dustEffectFlags & ~SHTHORNTAIL_DUST_FLAG_BURST_READY;
                 effectParams.radius = 0x46;
-                effectParams.scale = gChiefLightfootDustBurstScale;
+                effectParams.scale = 0.00036f;
                 for (burstCount = DUST_BURST_PUFF_COUNT; (u8)burstCount != 0; burstCount--)
                 {
                     (*gPartfxInterface)->spawnObject(playerObj, DUST_CLOUD_EFFECT_ID, &effectParams, 2, -1, NULL);
