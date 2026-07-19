@@ -3170,7 +3170,7 @@ void hudUpdateMinimapReveal(void)
 
 void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
 {
-    char* textPtr;
+    s16 fade;
     u32 label;
     int ax0;
     int ax1;
@@ -3197,7 +3197,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
     int k;
     int slotCount;
     int sel;
-    s16 fade;
+    char* textPtr;
     u8* phraseIndex;
     s16 alpha;
     s16 rowFade;
@@ -3697,8 +3697,8 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
     s16* textIds;
     CMenuItemDef* item;
     int count;
-    s16* textureIds;
     s16* previousTextureIdsBase;
+    s16* textureIds;
     int* ownedBits;
     CMenuHud* hud;
     u8* itemFlags;
@@ -5755,10 +5755,10 @@ int registerNewScore(s8 tableId, int score, u8 kind, int mode)
  * then a row of edge/corner segments tweened in from both directions. */
 void boxDrawFn_8012975c(int unused1, int unused2, int unused3)
 {
-    int fade;
+    f64 offset;
     s8 phase;
     s8 segment;
-    f64 offset;
+    int fade;
     int y;
     int drawAlpha;
     int scale;
