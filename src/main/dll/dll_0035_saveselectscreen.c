@@ -48,8 +48,8 @@
 u16 gSaveSelectSlotTextIds[4] = {0x23, 0x24, 0x25, 0};
 u8 gSaveSelectInfoTextIds[3] = {0x21, 0x20, 0x1F};
 s8 gSaveSelectPanelIndex = -1;
-int gSaveSelectInfoStartSlot = 0;
-int lbl_803DBA00 = 0;
+int gSaveSelectInfoStartSlot[1] = {0};
+int lbl_803DBA00[1] = {0};
 s16 gSaveSelectTextureIds[4] = {0x31D, 0x31F, 0x31E, 0};
 char sFrontendCompletionPercentFormat[] = "%1d%";
 char sFrontendSingleDigitFormat[] = "%1d";
@@ -313,13 +313,13 @@ void saveSelectFn_8011a70c(void)
     int i;
     FrontendSaveSlot* slots = saveFileSelect_saveSlotsBase;
     saveFileSelect_saveSlots = slots;
-    gSaveSelectInfoStartSlot = 0;
+    gSaveSelectInfoStartSlot[0] = 0;
     if (lbl_803DB424 != 0)
     {
         saveSelect_getInfo(slots);
         if (lbl_803DB424 != 0)
         {
-            gSaveSelectInfoStartSlot = 3;
+            gSaveSelectInfoStartSlot[0] = 3;
         }
     }
     {
@@ -332,7 +332,7 @@ void saveSelectFn_8011a70c(void)
             u8 f21;
             u8 pad22[2];
         };
-        for (i = gSaveSelectInfoStartSlot; i < 3; i++)
+        for (i = gSaveSelectInfoStartSlot[0]; i < 3; i++)
         {
             sprintf(((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].name, sFrontendStringFormat, lbl_803DBA20);
             ((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].f5 = 0;
@@ -365,7 +365,7 @@ void saveSelectGoToChooseSlot(int arg)
 
     for (i = 0; i < 1; i++)
     {
-        if ((&gSaveSelectInfoStartSlot)[i] != 3)
+        if (gSaveSelectInfoStartSlot[i] != 3)
         {
             p->entries[0].pad18[2] = 3;
         }

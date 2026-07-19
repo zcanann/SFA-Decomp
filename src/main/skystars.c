@@ -28,7 +28,7 @@ char* gNewCloudStarTextureB;
 char* gNewCloudStarTextureA;
 
 u8 gNewCloudStarAlphaRanges[8] = {0xA0, 0xAA, 0x82, 0x8C, 0x64, 0x6E, 0x50, 0x5A};
-int gNewCloudStarFogColor = 0;
+FogColor gNewCloudStarFogColor = {0};
 
 static inline void starFifoPosition3s16(s16 x, s16 y, s16 z)
 {
@@ -102,7 +102,7 @@ void drawSkyStars(void)
     gxTevAddColor1Stage();
     textRenderSetupFn_80079804();
     gxBlendFn_800789ac();
-    color = *(FogColor*)&gNewCloudStarFogColor;
+    color = gNewCloudStarFogColor;
     GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, color);
     Camera_UpdateViewMatrices();
     GXLoadPosMtxImm(Camera_GetViewRotationMatrix(), GX_PNMTX0);
