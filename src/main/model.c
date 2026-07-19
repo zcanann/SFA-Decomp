@@ -55,12 +55,6 @@ extern f32 lbl_803DE87C;
 #define MODEL_BONEXFORM_HAS_X 0x2000
 #define MODEL_BONEXFORM_HAS_Y 0x4000
 #define MODEL_BONEXFORM_HAS_Z 0x8000
-#define WALKANIM_COPY_SLOT(J, K)                                                          \
-    *(u16*)(stk + (J)*2 + (0x44 + (K)*2)) = *(u16*)(channel + (J)*2 + (0x44 + (K)*2));    \
-    *(u8*)(stk + (J) + 0x60 + (K)) = *((u8*)(channel + (J) + 0x60) + (K));                \
-    *(f32*)(stk + (J)*4 + (0x14 + (K)*4)) = *(f32*)(channel + (J)*4 + (0x14 + (K)*4));    \
-    *(f32*)(stk + (J)*4 + (4 + (K)*4)) = *(f32*)(channel + (J)*4 + (4 + (K)*4));          \
-    *(u32*)(stk + (J)*4 + (0x34 + (K)*4)) = *(u32*)(channel + (J)*4 + (0x34 + (K)*4));
 void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
 #define LOADCOLOR_BLOCK(SLOT)                                                         \
     {                                                                                 \
@@ -554,27 +548,24 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
             *(u32*)(stk + 0x20) = *(u32*)&((ObjAnimState*)channel)->moveCache[1];
             *(u32*)(stk + 0x24) = *(u32*)&((ObjAnimState*)channel)->blendMoveCache[0];
             *(u32*)(stk + 0x28) = *(u32*)&((ObjAnimState*)channel)->blendMoveCache[1];
-            j = 0;
-            if (slotCount > 0)
             {
-                slotEvent = slotCount - 8;
-                if (slotCount > 8)
+                u8* srcAnimId = channel;
+                u8* dstAnimId = stk;
+                u8* dstFrameType = stk;
+                u8* srcSlotVals = channel;
+                u8* dstSlotVals = stk;
+                for (j = 0; j < slotCount; j++)
                 {
-                    for (; j < slotEvent; j += 8)
-                    {
-                        WALKANIM_COPY_SLOT(j, 0);
-                        WALKANIM_COPY_SLOT(j, 1);
-                        WALKANIM_COPY_SLOT(j, 2);
-                        WALKANIM_COPY_SLOT(j, 3);
-                        WALKANIM_COPY_SLOT(j, 4);
-                        WALKANIM_COPY_SLOT(j, 5);
-                        WALKANIM_COPY_SLOT(j, 6);
-                        WALKANIM_COPY_SLOT(j, 7);
-                    }
-                }
-                for (slotEvent = slotCount - j; slotEvent > 0; slotEvent--, j++)
-                {
-                    WALKANIM_COPY_SLOT(j, 0);
+                    *(u16*)(dstAnimId + 0x44) = *(u16*)(srcAnimId + 0x44);
+                    *(u8*)(dstFrameType + 0x60) = *(u8*)(channel + j + 0x60);
+                    *(f32*)(dstSlotVals + 0x14) = *(f32*)(srcSlotVals + 0x14);
+                    *(f32*)(dstSlotVals + 4) = *(f32*)(srcSlotVals + 4);
+                    *(u32*)(dstSlotVals + 0x34) = *(u32*)(srcSlotVals + 0x34);
+                    srcAnimId += 2;
+                    dstAnimId += 2;
+                    dstFrameType += 1;
+                    srcSlotVals += 4;
+                    dstSlotVals += 4;
                 }
             }
             *(u16*)(stk + 0x58) = ((ObjAnimState*)channel)->eventCountdown;
