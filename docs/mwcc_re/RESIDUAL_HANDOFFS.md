@@ -280,3 +280,15 @@ be original (same class as the mathSinf def-vs-caller split, which was net-negat
 store MIGHT recover the def's 100 AND keep the callers at 100 (net +2). Not shipped (won't break a 100
 unilaterally on an ambiguous signature). Only 3 caller files — cheap for you to resolve with the def-body
 truncation angle. Flagging.
+
+## RESOLVED: hack-dependent peephole-off units ALREADY have noopt cflags (my prior speculation was wrong)
+Earlier handoffs speculated the low-band demoted units (textrender/objseq/debug/objanim) might re-match if
+their TUs were compiled with -opt nopeephole,noschedule via cflags. CHECKED configure.py directly: they
+ALREADY have it — textrender/objseq/objanim = cflags_dll_noopt (nopeephole,noschedule), dll_80136a40 =
+cflags_dll_noopt_nostrength. The mechanism is extensively used (15+ noopt variants: noopt_nocse/_noprop/
+_noloopinv/_noinline/etc), clearly owner-tuned per-unit. So the cflags are NOT the blocker; these fns
+(subtitleBuildLineTable 70, ObjSeq_onMapSetup 80, debugPrintDraw 88, etc.) are demoted because the purge
+removed IN-SOURCE hacks (match-volatiles, load-bearing gotos) that cflags cannot substitute. They stay
+demoted for authenticity — cflags path is a confirmed dead end, no orchestrator action needed there.
+(gameloop inherits the section default, not noopt — but it's a mixed unit where most fns match on default,
+so switching it risks regressing the matched fns; low-value, left alone.)
