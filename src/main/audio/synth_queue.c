@@ -450,16 +450,14 @@ void synthFreeHandle(u32 handle)
     SynthSeqRuntime* runtime;
     SynthVoice* voice;
     u32 found;
-    u32 key;
     u32 i;
     SynthVoiceRuntimeView* runtimeView;
 
     runtime = (SynthSeqRuntime*)(void*)gSynthCallbacks;
-    key = handle & 0x7fffffffu;
 
     for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
     {
-        if (voice->handle == key)
+        if (voice->handle == (handle & 0x7fffffffu))
         {
             found = voice->slotIndex | (handle & 0x80000000);
             goto resolved;
@@ -468,7 +466,7 @@ void synthFreeHandle(u32 handle)
 
     for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
     {
-        if (voice->handle == key)
+        if (voice->handle == (handle & 0x7fffffffu))
         {
             found = voice->slotIndex | (handle & 0x80000000);
             goto resolved;
