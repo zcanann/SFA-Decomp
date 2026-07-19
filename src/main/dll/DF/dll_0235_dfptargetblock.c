@@ -5,7 +5,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_keep_alive_api.h"
-#include "main/audio/sfx_play_pointer_u16_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/object_render_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -85,7 +85,7 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetB
                 obj->velY = zero;
                 obj->velZ = zero;
             }
-            Sfx_PlayFromObject(obj, SFXTRIG_mv_bflconc1_1d0);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_mv_bflconc1_1d0);
             return;
         }
         point += DFPTARGETBLOCK_POINT_STRIDE;
@@ -131,7 +131,7 @@ static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTarg
     obj->velZ = zero;
     state->mode = DFPTARGETBLOCK_AUDIO_MODE_RESETTING;
     obj->y = home->y - (80.0f);
-    Sfx_PlayFromObject(obj, DFPTARGETBLOCK_RESET_SFX);
+    Sfx_PlayFromObject((u32)obj, DFPTARGETBLOCK_RESET_SFX);
 }
 static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTargetBlockAudioState* state,
                                                f32 threshold)
@@ -195,7 +195,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     if ((hitType != 0) && (hitObj != NULL) && (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH) &&
         (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH))
     {
-        Sfx_PlayFromObject(obj, DFPTARGETBLOCK_IMPACT_SFX);
+        Sfx_PlayFromObject((u32)obj, DFPTARGETBLOCK_IMPACT_SFX);
         velX = hitObj->velX;
         velZ = hitObj->velZ;
         if (velX < 0.0f)

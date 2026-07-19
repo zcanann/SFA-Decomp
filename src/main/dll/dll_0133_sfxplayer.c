@@ -25,7 +25,7 @@
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_looped_object_api.h"
-#include "main/audio/sfx_play_pointer_u16_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_position_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 
@@ -136,7 +136,7 @@ static inline void sfxplayerStartSound(u8* obj, SfxplayerPlacement* data, Sfxpla
             }
             else
             {
-                Sfx_PlayFromObject(soundObj, soundId);
+                Sfx_PlayFromObject((u32)soundObj, soundId);
             }
         }
         else
