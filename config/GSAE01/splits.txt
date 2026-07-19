@@ -843,7 +843,7 @@ main/dll/dll_009F_dll9ffunc0.c:
 	.text       start:0x800FDE18 end:0x800FE240
 	.data       start:0x80318488 end:0x80318E10
 	.sdata2     start:0x803E1448 end:0x803E1480
-	.sdata2     start:0x803E1480 end:0x803E1508
+	.sdata2     start:0x803E1480 end:0x803E14E0
 
 main/dll/dll_00A0_dlla0func0.c:
 	.text       start:0x800FE240 end:0x800FE5A8
@@ -853,6 +853,7 @@ main/dll/dll_00A1_dlla1func0.c:
 
 main/dll/dll_00A2_dlla2func0.c:
 	.text       start:0x800FE928 end:0x800FEC74
+	.sdata2     start:0x803E14E0 end:0x803E1504
 
 main/dll/dll_00A4_dummya4.c:
 	.text       start:0x800FEC74 end:0x800FEC84
