@@ -14,8 +14,29 @@
 void iceBaddie_enterWhirlpoolGroup(GameObject* obj, GroundBaddieState* state);
 void iceBaddie_leaveWhirlpoolGroup(GameObject* obj, GroundBaddieState* state);
 
-/* extern-cleanup: defining-file public prototypes */
 void iceBaddie_updateEffectAnchors(GameObject* obj, int state);
 void iceBaddie_update(GameObject* obj, int unusedA, int unusedB);
+int iceBaddie_updateOpenHitState(GameObject* obj, int state);
+int iceBaddie_updateOpenState(GameObject* obj, int state);
+int iceBaddie_updateHideResetState(GameObject* obj, int state);
+int iceBaddie_updateImpactHitState(GameObject* obj, int state);
+int iceBaddie_updateSpinState(GameObject* obj, int state);
+int iceBaddie_stateHandlerA05(GameObject* obj, int state);
+int iceBaddie_stateHandlerA06(GameObject* obj, int state);
+int iceBaddie_updateHeightBlendState(GameObject* obj, int state);
+int iceBaddie_updateControlMove5State(int* obj, GroundBaddieState* state);
+int iceBaddie_updateCommDownState(GameObject* obj, int state);
+int iceBaddie_updateDropState(GameObject* obj, int state);
+int iceBaddie_stateHandlerA0B(GameObject* obj, int state);
+int iceBaddie_updateContactHitState(GameObject* obj, int state);
+int iceBaddie_updateLandingState(GameObject* obj, int state);
+int iceBaddie_checkTargetState(int obj, int state);
+int iceBaddie_stateHandlerB01(int* obj, GroundBaddieState* state);
+int iceBaddie_stateHandlerB02(GameObject* obj, int state);
+int iceBaddie_stateHandlerB03(GameObject* obj, int state);
+int iceBaddie_stateHandlerB04(int obj, int state);
+int iceBaddie_stateHandlerB05(int* obj, GroundBaddieState* state);
+int iceBaddie_stateHandlerB06(int obj, int state);
+int iceBaddie_stateHandlerB07(int obj, int state);
 
 #endif /* MAIN_DLL_ICEBADDIE_H_ */

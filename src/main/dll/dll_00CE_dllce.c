@@ -34,6 +34,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/dll_00CA_icebaddie.h"
 #include "main/dll/dll_00CE_dllce.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
@@ -59,30 +60,6 @@
 #define DLLCE_PARTFX_SPRAY    0x343
 #define DLLCE_HIT_VOLUME_SLOT 10
 u8 lbl_803AC580[0x18];
-
-/* State handlers implemented by dll_00CA_icebaddie.c. */
-int iceBaddie_updateOpenHitState(GameObject* obj, int state);
-int iceBaddie_updateOpenState(GameObject* obj, int state);
-int iceBaddie_updateHideResetState(GameObject* obj, int state);
-int iceBaddie_updateImpactHitState(GameObject* obj, int state);
-int iceBaddie_updateSpinState(GameObject* obj, int state);
-int iceBaddie_stateHandlerA05(GameObject* obj, int state);
-int iceBaddie_stateHandlerA06(GameObject* obj, int state);
-int iceBaddie_updateHeightBlendState(GameObject* obj, int state);
-int iceBaddie_updateControlMove5State(int* obj, GroundBaddieState* state);
-int iceBaddie_updateCommDownState(GameObject* obj, int state);
-int iceBaddie_updateDropState(GameObject* obj, int state);
-int iceBaddie_stateHandlerA0B(GameObject* obj, int state);
-int iceBaddie_updateContactHitState(GameObject* obj, int state);
-int iceBaddie_updateLandingState(GameObject* obj, int state);
-int iceBaddie_checkTargetState(int obj, int state);
-int iceBaddie_stateHandlerB01(int* obj, GroundBaddieState* state);
-int iceBaddie_stateHandlerB02(GameObject* obj, int state);
-int iceBaddie_stateHandlerB03(GameObject* obj, int state);
-int iceBaddie_stateHandlerB04(int obj, int state);
-int iceBaddie_stateHandlerB05(int* obj, GroundBaddieState* state);
-int iceBaddie_stateHandlerB06(int obj, int state);
-int iceBaddie_stateHandlerB07(int obj, int state);
 
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
