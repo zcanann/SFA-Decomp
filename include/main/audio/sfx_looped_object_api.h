@@ -7,9 +7,6 @@ void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
 void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
 
-#define Sfx_AddLoopedObjectSoundPtrU16Legacy(obj, sfxId)                                                \
-    ((void (*)(void*, u16))Sfx_AddLoopedObjectSound)((void*)(obj), (sfxId))
-
 #define Sfx_RemoveLoopedObjectSoundPtrU16Legacy(obj, sfxId)                                             \
     ((void (*)(void*, u16))Sfx_RemoveLoopedObjectSound)((void*)(obj), (sfxId))
 

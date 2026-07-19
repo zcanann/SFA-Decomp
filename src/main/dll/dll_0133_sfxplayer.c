@@ -97,11 +97,11 @@ void sfxplayerObj_free(u8* obj)
     {
         u16 sfx1 = data->sfx1;
         if (sfx1 != 0)
-            Sfx_RemoveLoopedObjectSoundPtrU16Legacy(obj, sfx1);
+            Sfx_RemoveLoopedObjectSound((u32)obj, sfx1);
         {
             u16 sfx2 = data->sfx2;
             if (sfx2 != 0)
-                Sfx_RemoveLoopedObjectSoundPtrU16Legacy(obj, sfx2);
+                Sfx_RemoveLoopedObjectSound((u32)obj, sfx2);
         }
     }
     else
@@ -132,7 +132,7 @@ static inline void sfxplayerStartSound(u8* obj, SfxplayerPlacement* data, Sfxpla
         {
             if (data->mode == SFXPLAYER_MODE_LOOPED)
             {
-                Sfx_AddLoopedObjectSoundPtrU16Legacy(soundObj, soundId);
+                Sfx_AddLoopedObjectSound((u32)soundObj, soundId);
             }
             else
             {
@@ -158,12 +158,12 @@ static inline void sfxplayerStartSound(u8* obj, SfxplayerPlacement* data, Sfxpla
             soundId = data->sfx1;                                                                            \
             if (soundId != 0)                                                                                          \
             {                                                                                                          \
-                Sfx_RemoveLoopedObjectSoundPtrU16Legacy(obj, soundId);                                                 \
+                Sfx_RemoveLoopedObjectSound((u32)obj, soundId);                                                       \
             }                                                                                                          \
             soundId = data->sfx2;                                                                            \
             if (soundId != 0)                                                                                          \
             {                                                                                                          \
-                Sfx_RemoveLoopedObjectSoundPtrU16Legacy(obj, soundId);                                                 \
+                Sfx_RemoveLoopedObjectSound((u32)obj, soundId);                                                       \
             }                                                                                                          \
         }                                                                                                              \
         else                                                                                                           \
