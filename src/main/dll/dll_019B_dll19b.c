@@ -9,9 +9,7 @@
 #include "main/vecmath_distance_api.h"
 #include "main/object_render.h"
 #include "main/debug.h"
-#define RENDER_ENVFX_DIRECT_INT_CALL
 #include "main/render_envfx_api.h"
-#undef RENDER_ENVFX_DIRECT_INT_CALL
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/dll/player_api.h"
@@ -71,7 +69,7 @@ ObjectDescriptor dll_19B = {
     (ObjectDescriptorExtraSizeCallback)dll_19B_getExtraSize,
 };
 
-int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int dll_19B_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int state;
     int i;

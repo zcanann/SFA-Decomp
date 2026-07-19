@@ -363,11 +363,11 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
 {
     MMSHShrineRuntime* runtime;
     u8 command;
-    int playerObj;
+    GameObject* playerObj;
     int i;
 
     runtime = ((MMSHShrineObject*)objArg)->runtime;
-    playerObj = (int)Obj_GetPlayerObject();
+    playerObj = Obj_GetPlayerObject();
     seq->targetObject = -1;
     seq->activeCommand = 0;
 
@@ -379,7 +379,7 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
             switch (command)
             {
             case 7:
-                objSetAnimStateFlags((GameObject*)playerObj, 4, 1);
+                objSetAnimStateFlags(playerObj, 4, 1);
                 mainSetBits(MMSH_SHRINE_SEQ_GB_KRYSTAL, 1);
                 mainSetBits(MMSH_SHRINE_SEQ_GB_UNKNOWN_FF, 1);
                 (*gMapEventInterface)->setMapAct(MMSH_SHRINE_SEQ_MAP_DIR, MMSH_SHRINE_SEQ_MAP_EVENT);
@@ -513,11 +513,11 @@ void MMSH_Shrine_update(int objArg)
 {
     MMSHShrineRuntime* runtime;
     MMSHShrineObject* obj;
-    int playerObj;
+    GameObject* playerObj;
 
     obj = (MMSHShrineObject*)objArg;
     runtime = obj->runtime;
-    playerObj = (int)Obj_GetPlayerObject();
+    playerObj = Obj_GetPlayerObject();
 
     if (obj->loadTriggerTimer != 0)
     {
@@ -525,9 +525,9 @@ void MMSH_Shrine_update(int objArg)
         if (obj->loadTriggerTimer == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxActInt((int)obj, playerObj, MMSH_SHRINE_ENVFX_A, 0);
-            getEnvfxActInt((int)obj, playerObj, MMSH_SHRINE_ENVFX_B, 0);
-            getEnvfxActInt((int)obj, playerObj, MMSH_SHRINE_ENVFX_C, 0);
+            getEnvfxAct(obj, playerObj, MMSH_SHRINE_ENVFX_A, 0);
+            getEnvfxAct(obj, playerObj, MMSH_SHRINE_ENVFX_B, 0);
+            getEnvfxAct(obj, playerObj, MMSH_SHRINE_ENVFX_C, 0);
             obj->prevPosX = obj->posX;
             obj->prevPosY = obj->posY;
             obj->prevPosZ = obj->posZ;
@@ -585,7 +585,7 @@ void MMSH_Shrine_update(int objArg)
         mainSetBits(MMSH_SHRINE_GB_COMPLETE, 1);
         break;
     case MMSH_SHRINE_PHASE_LIT:
-        if (objGetAnimStateFlags((GameObject*)playerObj, 4) == 0)
+        if (objGetAnimStateFlags(playerObj, 4) == 0)
         {
             audioStopByMask(3);
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);

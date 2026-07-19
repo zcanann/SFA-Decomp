@@ -55,8 +55,8 @@ void MagicCaveBottom_update(int* obj)
     case MAGICCAVEBOTTOM_STATE_SETUP:
         mainSetBits(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 1);
         envFxActFn_800887f8(0);
-        getEnvfxActVoid(obj, obj, MAGICCAVEBOTTOM_ENVFX_A, 0);
-        getEnvfxActVoid(obj, obj, MAGICCAVEBOTTOM_ENVFX_B, 0);
+        getEnvfxAct(obj, obj, MAGICCAVEBOTTOM_ENVFX_A, 0);
+        getEnvfxAct(obj, obj, MAGICCAVEBOTTOM_ENVFX_B, 0);
         *sub = MAGICCAVEBOTTOM_STATE_START_MUSIC;
         if (def[0x1b] != 0)
         {

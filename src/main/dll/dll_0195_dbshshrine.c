@@ -132,12 +132,12 @@ void fn_801C8B68(int obj)
 int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
     DbshShrineRuntime* runtime;
-    int player;
+    GameObject* player;
     int i;
     u32 event;
 
     runtime = ((GameObject*)obj)->extra;
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
 
@@ -152,7 +152,7 @@ int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
                 runtime->flags.latchStarted = 1;
                 break;
             case 7:
-                objSetAnimStateFlags((GameObject*)player, 2, 1);
+                objSetAnimStateFlags(player, 2, 1);
                 mainSetBits(DBSH_SHRINE_GB_FIRST_RISE, 1);
                 mainSetBits(GAMEBIT_ITEM_SpiritTestStrength_Got, 1);
                 (*gMapEventInterface)->setMapAct(DBSHSHRINE_MAP_SHRINE, 3);
@@ -241,13 +241,13 @@ void dbsh_shrine_hitDetect(void)
 
 void dbsh_shrine_update(DbshShrineObject* obj)
 {
-    int player;
+    GameObject* player;
     u8 active;
     DbshShrineRuntime* runtime;
 
     runtime = obj->runtime;
-    player = (int)Obj_GetPlayerObject();
-    if ((void*)player == NULL)
+    player = Obj_GetPlayerObject();
+    if (player == NULL)
     {
         return;
     }
@@ -258,9 +258,9 @@ void dbsh_shrine_update(DbshShrineObject* obj)
         if (obj->introDelay == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxActVoid(obj, player, DBSH_SHRINE_ENVFX_A, 0);
-            getEnvfxActVoid(obj, player, DBSH_SHRINE_ENVFX_B, 0);
-            getEnvfxActVoid(obj, player, DBSH_SHRINE_ENVFX_C, 0);
+            getEnvfxAct(obj, player, DBSH_SHRINE_ENVFX_A, 0);
+            getEnvfxAct(obj, player, DBSH_SHRINE_ENVFX_B, 0);
+            getEnvfxAct(obj, player, DBSH_SHRINE_ENVFX_C, 0);
         }
     }
 

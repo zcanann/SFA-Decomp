@@ -5,9 +5,7 @@
 #include "main/vecmath_distance_api.h"
 #include "main/object_render.h"
 #include "main/object_api.h"
-#define RENDER_ENVFX_DIRECT_INT_CALL
 #include "main/render_envfx_api.h"
-#undef RENDER_ENVFX_DIRECT_INT_CALL
 #include "main/dll/dll199state_struct.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
@@ -71,7 +69,7 @@ ObjectDescriptor dll_199 = {
 
 
 
-int dll_199_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int dll_199_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     u8* st;
     int i;

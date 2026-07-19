@@ -580,22 +580,22 @@ void objInterpretSeq(GameObject* obj, int seqArg, s8 legCode, int distSq)
                         {
                         case 0:
                             mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
-                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
-                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
-                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
                             break;
                         case 1:
                             mainSetBits(GAMEBIT_ENV_isOutdoor, 0);
-                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
-                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
-                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
                             envFxFn_800887cc();
                             break;
                         case 2:
                             mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
-                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B0, 0);
-                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B1, 0);
-                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B2, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B0, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B1, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_B2, 0);
                             break;
                         }
                         break;

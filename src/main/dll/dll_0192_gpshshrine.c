@@ -309,9 +309,9 @@ void gpsh_shrine_update(GameObject *obj)
             if ((obj)->userData1 == 0)
             {
                 skyFn_80088c94(7, 1);
-                getEnvfxActInt((int)obj, (int)player, GPSH_SHRINE_ENVFX_A, 0);
-                getEnvfxActInt((int)obj, (int)player, GPSH_SHRINE_ENVFX_B, 0);
-                getEnvfxActInt((int)obj, (int)player, GPSH_SHRINE_ENVFX_C, 0);
+                getEnvfxAct(obj, player, GPSH_SHRINE_ENVFX_A, 0);
+                getEnvfxAct(obj, player, GPSH_SHRINE_ENVFX_B, 0);
+                getEnvfxAct(obj, player, GPSH_SHRINE_ENVFX_C, 0);
             }
         }
         fn_801C70F0((s16*)obj);

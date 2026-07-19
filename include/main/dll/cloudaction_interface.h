@@ -5,8 +5,7 @@
 
 struct GameObject;
 
-typedef void (*CloudActionUpdateFn)(struct GameObject* source, struct GameObject* target,
-                                    void* entry, int flags, u16 idx);
+typedef void (*CloudActionUpdateFn)(void* source, void* target, void* entry, int flags, u16 idx);
 typedef void (*CloudActionOnMapSetupFn)(void);
 typedef void (*CloudActionScrollTextureFn)(void);
 typedef void (*CloudActionRenderFn)(int a, int b, int c, int d);

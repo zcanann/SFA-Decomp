@@ -35,7 +35,7 @@ typedef struct Dll19BState
     u8 pad17[0x18 - 0x17];
 } Dll19BState;
 
-int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int dll_19B_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int dll_19B_getExtraSize(void);
 int dll_19B_getObjectTypeId(void);
 void dll_19B_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);

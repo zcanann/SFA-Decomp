@@ -7,7 +7,7 @@
 
 void dll_199_update(GameObject* obj);
 void dll_199_init(GameObject* obj, int def);
-int dll_199_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int dll_199_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void dll_199_release(void);
 void dll_199_initialise(void);
 int dll_19A_getExtraSize(void);

@@ -105,9 +105,7 @@ void wmspiritplace_onSeqFree(void)
 {
 }
 
-/* obj is a word here, not a pointer: the original signature was untyped
-   (contrast update/init, which take typed pointers). */
-int WM_spiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
+int WM_spiritplace_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
 {
     int i;
     WmSpiritPlaceState* state;
@@ -172,10 +170,10 @@ int WM_spiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
         case WMSPIRITPLACE_SEQEV_SKY_RESTORE:
             skyFn_80088c94(7, 0);
             setDrawCloudsAndLights(1);
-            getEnvfxActVoid(obj, obj, WMSPIRITPLACE_ENVFX_A, 0);
-            getEnvfxActVoid(obj, obj, WMSPIRITPLACE_ENVFX_B, 0);
-            getEnvfxActImmediatelyVoid(0, 0, 0x217, 0);
-            getEnvfxActImmediatelyVoid(0, 0, 0x216, 0);
+            getEnvfxAct(obj, obj, WMSPIRITPLACE_ENVFX_A, 0);
+            getEnvfxAct(obj, obj, WMSPIRITPLACE_ENVFX_B, 0);
+            getEnvfxActImmediately(0, 0, 0x217, 0);
+            getEnvfxActImmediately(0, 0, 0x216, 0);
             break;
         case WMSPIRITPLACE_SEQEV_SPIRIT_VISION_ON:
             Rcp_SetSpiritVisionEnabled(1);

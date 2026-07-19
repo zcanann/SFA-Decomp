@@ -116,7 +116,7 @@ void RollingBarrel_update(GameObject* obj);
 void RollingBarrel_init(GameObject* obj, RollingBarrelMapData* params);
 void RollingBarrel_release(void);
 void RollingBarrel_initialise(void);
-int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int MMP_LevelControl_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int MMP_levelcontrol_getExtraSize(void);
 int MMP_levelcontrol_getObjectTypeId(void);
 void MMP_levelcontrol_free(int obj);

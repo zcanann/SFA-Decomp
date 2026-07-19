@@ -571,7 +571,7 @@ int return0xFFFF_80008B6C(void)
     return -0x1;
 }
 
-int getEnvfxActImmediately(struct GameObject* a, struct GameObject* b, u16 idx, int d)
+int getEnvfxActImmediately(void* a, void* b, u16 idx, int d)
 {
     u8 raw[0x80];
     EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);
@@ -601,7 +601,7 @@ int getEnvfxActImmediately(struct GameObject* a, struct GameObject* b, u16 idx, 
     return 0;
 }
 
-int getEnvfxAct(struct GameObject* a, struct GameObject* b, u16 idx, int d)
+int getEnvfxAct(void* a, void* b, u16 idx, int d)
 {
     u8 raw[0x80];
     EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);

@@ -5,7 +5,7 @@
 
 struct GameObject;
 
-typedef void (*SkyUpdateEnvfxActFn)(struct GameObject* sourceObj, struct GameObject* targetObj, void* entry, int flags);
+typedef void (*SkyUpdateEnvfxActFn)(void* sourceObj, void* targetObj, void* entry, int flags);
 typedef void (*SkyLoadLightsFn)(void);
 typedef void (*SkyUpdateTimeOfDayFn)(void);
 typedef void (*SkyRenderFn)(int a, int b, int c, int d, int e);
@@ -70,8 +70,7 @@ STATIC_ASSERT(offsetof(SkyInterface, return0b) == 0x54);
 
 extern SkyInterface **gSkyInterface;
 
-typedef void (*Sky2UpdateEnvfxActFn)(struct GameObject* source, struct GameObject* target,
-                                     void* entry, int flags, u16 idx);
+typedef void (*Sky2UpdateEnvfxActFn)(void* source, void* target, void* entry, int flags, u16 idx);
 typedef void (*Sky2OnMapSetupFn)(void);
 typedef void (*Sky2RunFn)(void);
 typedef void (*Sky2ApplyFogColorFn)(int slot);

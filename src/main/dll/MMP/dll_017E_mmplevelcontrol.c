@@ -16,9 +16,7 @@
 #include "main/audio/music_api.h"
 #include "main/object_render.h"
 #include "main/object_api.h"
-#define RENDER_ENVFX_DIRECT_INT_CALL
 #include "main/render_envfx_api.h"
-#undef RENDER_ENVFX_DIRECT_INT_CALL
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
 #include "main/lightmap_api.h"
@@ -51,12 +49,12 @@ int lbl_803DDB2C;
 f32 lbl_803DDB28;
 
 
-int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int MMP_LevelControl_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int player;
+    GameObject* player;
     int i;
 
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -71,7 +69,7 @@ int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         }
     }
-    MMP_levelcontrol_update((GameObject*)(obj));
+    MMP_levelcontrol_update(obj);
     return 0;
 }
 
@@ -104,11 +102,11 @@ void MMP_levelcontrol_hitDetect(void)
 
 void MMP_levelcontrol_update(GameObject* obj)
 {
-    int playerForMap;
-    int playerForFx;
+    GameObject* playerForMap;
+    GameObject* playerForFx;
 
-    playerForMap = (int)Obj_GetPlayerObject();
-    playerForFx = (int)Obj_GetPlayerObject();
+    playerForMap = Obj_GetPlayerObject();
+    playerForFx = Obj_GetPlayerObject();
 
     if (lbl_803DDB28 > 0.0f)
     {
@@ -131,15 +129,15 @@ void MMP_levelcontrol_update(GameObject* obj)
             skyFn_80088c94(7, 1);
             if ((obj)->userData1 == 2)
             {
-                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_D, 0);
-                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_E, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_E, 0);
             }
             else
             {
-                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_D, 0);
-                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_E, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_D, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_E, 0);
             }
             (obj)->userData2 = 0;
         }
@@ -148,33 +146,32 @@ void MMP_levelcontrol_update(GameObject* obj)
             skyFn_80088c94(7, 1);
             if ((obj)->userData1 == 2)
             {
-                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
-                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
             }
             else
             {
-                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
-                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
             }
             (obj)->userData2 = 1;
         }
-        else if (coordsToMapCell(((GameObject*)playerForMap)->anim.localPosX,
-                                 ((GameObject*)playerForMap)->anim.localPosZ) == 0x12)
+        else if (coordsToMapCell(playerForMap->anim.localPosX, playerForMap->anim.localPosZ) == 0x12)
         {
             skyFn_80088c94(7, 0);
             if ((obj)->userData1 == 2)
             {
-                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
-                getEnvfxActImmediately((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxActImmediately(obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
             }
             else
             {
-                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
-                getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
+                getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
             }
             (obj)->userData2 = 0;
         }
@@ -185,17 +182,17 @@ void MMP_levelcontrol_update(GameObject* obj)
     if ((obj)->userData2 != 0 && mainGetBit(0xf33) == 0)
     {
         skyFn_80088c94(7, 0);
-        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
-        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_B, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_H, 0);
         (obj)->userData2 = 0;
     }
     else if ((obj)->userData2 == 0 && mainGetBit(0xf33) != 0)
     {
         skyFn_80088c94(7, 1);
-        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
-        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
-        getEnvfxAct((int)obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_C, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_F, 0);
+        getEnvfxAct(obj, playerForFx, MMPLEVELCONTROL_ENVFX_G, 0);
         (obj)->userData2 = 1;
     }
 

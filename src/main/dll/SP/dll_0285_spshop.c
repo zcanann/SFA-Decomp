@@ -434,8 +434,8 @@ void shop_update(GameObject* obj)
     if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) != 0u && (obj)->userData2 == 0)
     {
         envFxActFn_800887f8(0);
-        getEnvfxActInt((int)obj, (int)obj, SPSHOP_ENVFX_A, 0);
-        getEnvfxActInt((int)obj, (int)obj, SPSHOP_ENVFX_B, 0);
+        getEnvfxAct(obj, obj, SPSHOP_ENVFX_A, 0);
+        getEnvfxAct(obj, obj, SPSHOP_ENVFX_B, 0);
         (obj)->userData2 = 1;
         return;
     }

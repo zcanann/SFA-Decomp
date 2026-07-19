@@ -4,7 +4,7 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 
-int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int MMP_LevelControl_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int MMP_levelcontrol_getExtraSize(void);
 int MMP_levelcontrol_getObjectTypeId(void);
 void MMP_levelcontrol_free(int obj);

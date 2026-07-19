@@ -7,8 +7,7 @@
 
 struct GameObject;
 
-typedef void (*NewCloudsUpdateEnvfxActFn)(struct GameObject* sourceObj, struct GameObject* targetObj, void* entry,
-                                          int flags);
+typedef void (*NewCloudsUpdateEnvfxActFn)(void* sourceObj, void* targetObj, void* entry, int flags);
 typedef void (*NewCloudsOnMapSetupFn)(void);
 typedef void (*NewCloudsKillSnowCloudFn)(int cloudId, int flag);
 typedef void (*NewCloudsRunFn)(void);

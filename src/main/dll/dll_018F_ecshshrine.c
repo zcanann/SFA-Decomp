@@ -448,9 +448,9 @@ void ecsh_shrine_update(s16* obj)
         if (((GameObject*)obj)->userData1 == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxActVoid(obj, player, ECSH_SHRINE_ENVFX_A, 0);
-            getEnvfxActVoid(obj, player, ECSH_SHRINE_ENVFX_B, 0);
-            getEnvfxActVoid(obj, player, ECSH_SHRINE_ENVFX_C, 0);
+            getEnvfxAct(obj, player, ECSH_SHRINE_ENVFX_A, 0);
+            getEnvfxAct(obj, player, ECSH_SHRINE_ENVFX_B, 0);
+            getEnvfxAct(obj, player, ECSH_SHRINE_ENVFX_C, 0);
         }
     }
     ecsh_shrine_updateMotion((MmShrineAnimObj*)obj);

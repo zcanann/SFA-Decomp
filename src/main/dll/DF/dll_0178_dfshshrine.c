@@ -348,7 +348,7 @@ void DFSH_Shrine_update(int objArg)
 
     u16* base[1];
     DfshShrineState* state;
-    int player;
+    GameObject* player;
     s16 i;
     u8 anyMissing;
     u16* required;
@@ -356,16 +356,16 @@ void DFSH_Shrine_update(int objArg)
 
     base[0] = gDfShShrineRewardTable;
     state = obj->extra;
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     if (obj->userData1 != 0)
     {
         obj->userData1 = obj->userData1 - 1;
         if (obj->userData1 == 0)
         {
             skyFn_80088c94(7, 1);
-            getEnvfxActInt((int)obj, player, DFSH_SHRINE_ENVFX_A, 0);
-            getEnvfxActInt((int)obj, player, DFSH_SHRINE_ENVFX_B, 0);
-            getEnvfxActInt((int)obj, player, DFSH_SHRINE_ENVFX_C, 0);
+            getEnvfxAct(obj, player, DFSH_SHRINE_ENVFX_A, 0);
+            getEnvfxAct(obj, player, DFSH_SHRINE_ENVFX_B, 0);
+            getEnvfxAct(obj, player, DFSH_SHRINE_ENVFX_C, 0);
         }
     }
     dfshshrine_updateHoverMotion((int)obj);
@@ -374,7 +374,7 @@ void DFSH_Shrine_update(int objArg)
         obj->anim.worldPosX = obj->anim.localPosX;
         obj->anim.worldPosY = obj->anim.localPosY;
         obj->anim.worldPosZ = obj->anim.localPosZ;
-        playerAddRemoveMagic((GameObject*)player, 0x14);
+        playerAddRemoveMagic(player, 0x14);
         mainSetBits(GAMEBIT_ITEM_DeletedSpell1D7, 1);
         gDfShShrinePendingReward = 0;
     }
@@ -483,7 +483,7 @@ void DFSH_Shrine_update(int objArg)
         state->mode = DFSHRINE_MODE_POST_FINISH;
         break;
     case DFSHRINE_MODE_POST_FINISH:
-        if (objGetAnimStateFlags((GameObject*)player, 1) != 0 || mainGetBit(GAMEBIT_ITEM_TestCombatSpirit_Got) != 0u)
+        if (objGetAnimStateFlags(player, 1) != 0 || mainGetBit(GAMEBIT_ITEM_TestCombatSpirit_Got) != 0u)
         {
             state->mode = DFSHRINE_MODE_RESET;
         }
