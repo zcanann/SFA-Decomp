@@ -211,7 +211,7 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger);
 void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger);
 u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
+s32 Sfx_IsPlayingFromObject(u32 obj, u16 sfxId);
 void Sfx_StopAllObjectSounds(void);
 void audioFn_8000b694(u32 value);
 void Sfx_SetObjectSoundsPaused(s32 paused);
@@ -2864,11 +2864,11 @@ void Sfx_UpdateLoopedObjectSounds(void)
     }
 }
 
-s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
+s32 Sfx_IsPlayingFromObject(u32 obj, u16 sfxId)
 {
     SfxObjectChannel* objectChannel;
 
-    if ((u16)sfxId != 0)
+    if (sfxId != 0)
     {
         objectChannel = Sfx_FindObjectChannel(obj, 0, sfxId, 0);
     }

@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
+s32 Sfx_IsPlayingFromObject(u32 obj, u16 sfxId);
 
 #define Sfx_IsPlayingFromObjectIntLegacy(obj, sfxId)                                                     \
     ((int (*)(int, int))Sfx_IsPlayingFromObject)((obj), (sfxId))

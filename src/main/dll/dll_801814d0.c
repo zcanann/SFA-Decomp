@@ -89,7 +89,7 @@ void fn_801814D0(int obj, int arg, u8* state)
                 if (hitType != 5)
                 {
                     objLightFn_8009a1dc((void*)obj, lbl_803E3934, &effectPos, 4, 0);
-                    if (Sfx_IsPlayingFromObjectIntU16Legacy(0, SFXTRIG_staff_rocket_powerup) == 0)
+                    if (Sfx_IsPlayingFromObject(0, SFXTRIG_staff_rocket_powerup) == 0)
                     {
                         Sfx_PlayFromObject(obj, SFXTRIG_staff_rocket_powerup);
                     }
@@ -117,7 +117,7 @@ void fn_801814D0(int obj, int arg, u8* state)
             }
             objLightFn_8009a1dc((void*)obj, lbl_803E3934, &effectPos, 1, 0);
             Obj_SetModelColorFadeRecursive((GameObject*)obj, 0xf, 0xc8, 0, 0, 1);
-            if (Sfx_IsPlayingFromObjectIntU16Legacy(0, (u16)((DusterState*)state)->heldObjectId) == 0)
+            if (Sfx_IsPlayingFromObject(0, (u16)((DusterState*)state)->heldObjectId) == 0)
             {
                 Sfx_PlayFromObject(obj, (u16)((DusterState*)state)->heldObjectId);
             }
