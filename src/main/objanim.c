@@ -121,7 +121,7 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent* objAnim, u32 moveId, 
     return;
 }
 
-int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandle, ObjAnimEventList* events)
+int Object_ObjAnimAdvanceMove(int objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events)
 {
     ObjAnimComponent* objAnim;
     ObjAnimBank* bank;
@@ -304,7 +304,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale, f32 deltaTime, int objAnimHandl
     return wrapped;
 }
 
-int Object_ObjAnimSetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
+int Object_ObjAnimSetMoveProgress(ObjAnimComponent* objAnim, f32 moveProgress)
 {
     if (moveProgress > gObjAnimSetMoveProgressMax)
     {
@@ -319,7 +319,7 @@ int Object_ObjAnimSetMoveProgress(f32 moveProgress, ObjAnimComponent* objAnim)
 }
 
 int
-Object_ObjAnimSetMove(f32 moveProgress, int objAnimHandle, int moveId, int moveControlFlags)
+Object_ObjAnimSetMove(int objAnimHandle, int moveId, f32 moveProgress, int moveControlFlags)
 {
     ObjAnimComponent* objAnim;
     ObjAnimBank* bank;

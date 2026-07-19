@@ -31,10 +31,10 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
 void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,int eventState);
 void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,int eventState);
 /* ABI-facing callbacks pass object pointers through int; implementations cast to ObjAnimComponent. */
-int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
+int Object_ObjAnimAdvanceMove(int objAnimHandle,f32 moveStepScale,f32 deltaTime,
                               ObjAnimEventList *events);
-int Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
-int Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveControlFlags);
+int Object_ObjAnimSetMoveProgress(ObjAnimComponent *objAnim,f32 moveProgress);
+int Object_ObjAnimSetMove(int objAnimHandle,int moveId,f32 moveProgress,int moveControlFlags);
 u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim);
 void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordIndex,int value);
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,u32 frameCount);

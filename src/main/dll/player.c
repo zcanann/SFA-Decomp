@@ -6509,7 +6509,7 @@ int playerStateClimbWall(GameObject* obj, int state)
                         return 0x16;
                     }
                 }
-                ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)((int)obj, lbl_80332F48[gPlayerCurrentMoveId], 0.0f, 1);
+                Object_ObjAnimSetMove((int)obj, lbl_80332F48[gPlayerCurrentMoveId], 0.0f, 1);
                 ObjModel_SampleJointTransform(jt, 1, 0, 1.0f, obj->anim.rootMotionScale, out1, tmp);
                 obj->anim.activeMove = -1;
                 ((PlayerState*)inner)->moveOffsetX = ((PlayerState*)inner)->slopeTangentX * -out1[0];
@@ -7714,8 +7714,7 @@ int playerStateClimbOntoLadder(GameObject* obj, int state, f32 fv)
     {
         if (obj->anim.currentMoveProgress > lbl_803E7FF4)
         {
-            ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)((int)obj, ((PlayerState*)state)->baddie.moveSpeed, fv,
-                                                                     0);
+            Object_ObjAnimAdvanceMove((int)obj, ((PlayerState*)state)->baddie.moveSpeed, fv, NULL);
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029FFD0;
             return 0x10;
         }
@@ -7736,7 +7735,7 @@ int playerStateClimbOntoLadder(GameObject* obj, int state, f32 fv)
                                                            OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
     ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)((int)obj, OBJANIM_STATE_INDEX_ACTIVE,
                                                            OBJANIM_STATE_WORD_EVENT_COUNTDOWN, inner->eventCountdown);
-    ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)((int)obj, ((PlayerState*)state)->baddie.moveSpeed, fv, 0);
+    Object_ObjAnimAdvanceMove((int)obj, ((PlayerState*)state)->baddie.moveSpeed, fv, NULL);
     (*gCameraInterface)
         ->overridePos(obj->anim.localPosX,
                       obj->anim.currentMoveProgress *
@@ -10018,7 +10017,7 @@ s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
     else
     {
         ((int (*)(int, int, u8, f32))Object_ObjAnimSetMove)(obj, a, mf, lbl_803E7EA4);
-        ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(obj, f, lbl_803E7EA4, 0);
+        Object_ObjAnimAdvanceMove(obj, f, lbl_803E7EA4, NULL);
         ObjModel_SampleJointTransform(model, 1, 0, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
     }
     off = (u8)n << 2;
@@ -13699,16 +13698,16 @@ void staffAnimate(int obj, int state)
         case 2:
             if (prevChanged != 0)
             {
-                ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, ((GameObject*)obj)->anim.currentMove,
-                                                                     ((GameObject*)obj)->anim.currentMoveProgress, 0);
+                Object_ObjAnimSetMove(obj, ((GameObject*)obj)->anim.currentMove,
+                                      ((GameObject*)obj)->anim.currentMoveProgress, 0);
                 p = *(void**)((char*)state + 0x4b8);
                 if (p != NULL && (*(s16*)((char*)p + 0x44) == 0x1c || *(s16*)((char*)p + 0x44) == 0x2a))
                 {
-                    ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, 0x82, lbl_803E7EA4, 0);
+                    Object_ObjAnimSetMove(obj, 0x82, lbl_803E7EA4, 0);
                 }
                 else
                 {
-                    ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, 0x8d, lbl_803E7EA4, 0);
+                    Object_ObjAnimSetMove(obj, 0x8d, lbl_803E7EA4, 0);
                 }
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
             }
@@ -13724,22 +13723,22 @@ void staffAnimate(int obj, int state)
             }
             else
             {
-                ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(obj, lbl_803E7F20, lbl_803E7EE0, 0);
+                Object_ObjAnimAdvanceMove(obj, lbl_803E7F20, lbl_803E7EE0, NULL);
             }
             break;
         case 1:
             if (prevChanged != 0)
             {
-                ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, ((GameObject*)obj)->anim.currentMove,
-                                                                     ((GameObject*)obj)->anim.currentMoveProgress, 0);
+                Object_ObjAnimSetMove(obj, ((GameObject*)obj)->anim.currentMove,
+                                      ((GameObject*)obj)->anim.currentMoveProgress, 0);
                 p = *(void**)((char*)state + 0x4b8);
                 if (p != NULL && (*(s16*)((char*)p + 0x44) == 0x1c || *(s16*)((char*)p + 0x44) == 0x2a))
                 {
-                    ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, 0x82, lbl_803E7F68, 0);
+                    Object_ObjAnimSetMove(obj, 0x82, lbl_803E7F68, 0);
                 }
                 else
                 {
-                    ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, 0x8d, lbl_803E7F68, 0);
+                    Object_ObjAnimSetMove(obj, 0x8d, lbl_803E7F68, 0);
                 }
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
             }
@@ -13754,16 +13753,15 @@ void staffAnimate(int obj, int state)
             }
             else
             {
-                ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(obj, f31, lbl_803E7EE0, 0);
+                Object_ObjAnimAdvanceMove(obj, f31, lbl_803E7EE0, NULL);
             }
             break;
         case 0xf:
             if (prevChanged != 0)
             {
-                ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, ((GameObject*)obj)->anim.currentMove,
-                                                                     ((GameObject*)obj)->anim.currentMoveProgress, 0);
-                ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(
-                    obj, lbl_8033366C[((PlayerState*)state)->moveVariantIndex], lbl_803E7EA4, 0);
+                Object_ObjAnimSetMove(obj, ((GameObject*)obj)->anim.currentMove,
+                                      ((GameObject*)obj)->anim.currentMoveProgress, 0);
+                Object_ObjAnimSetMove(obj, lbl_8033366C[((PlayerState*)state)->moveVariantIndex], lbl_803E7EA4, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
             }
             {
@@ -13794,16 +13792,16 @@ void staffAnimate(int obj, int state)
                 }
                 else
                 {
-                    ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(
-                        obj, lbl_8033369C[((PlayerState*)state)->moveVariantIndex], timeDelta, 0);
+                    Object_ObjAnimAdvanceMove(obj, lbl_8033369C[((PlayerState*)state)->moveVariantIndex], timeDelta,
+                                              NULL);
                 }
             }
             break;
         case 3:
             if (((GameObject*)obj)->anim.activeMove != ((GameObject*)obj)->anim.currentMove)
             {
-                ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(obj, ((GameObject*)obj)->anim.currentMove,
-                                                                     ((GameObject*)obj)->anim.currentMoveProgress, 0);
+                Object_ObjAnimSetMove(obj, ((GameObject*)obj)->anim.currentMove,
+                                      ((GameObject*)obj)->anim.currentMoveProgress, 0);
             }
             if (*(u16*)((char*)model + 0x58) == 0)
             {
@@ -13812,9 +13810,9 @@ void staffAnimate(int obj, int state)
             }
             else
             {
-                ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(obj, lbl_803E7EA4, timeDelta, 0);
-                ((int (*)(ObjAnimComponent*, f32))Object_ObjAnimSetMoveProgress)(
-                    (ObjAnimComponent*)obj, ((GameObject*)obj)->anim.currentMoveProgress);
+                Object_ObjAnimAdvanceMove(obj, lbl_803E7EA4, timeDelta, NULL);
+                Object_ObjAnimSetMoveProgress((ObjAnimComponent*)obj,
+                                              ((GameObject*)obj)->anim.currentMoveProgress);
             }
             break;
         default:
