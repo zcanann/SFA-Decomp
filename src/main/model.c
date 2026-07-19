@@ -2120,8 +2120,8 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
     }
 
     st = (ObjHitBufs*)hitState;
-    *(u16*)(hitState + 0x18) ^= 4;
-    bufSel = (*(u16*)(hitState + 0x18) >> 2) & 1;
+    ((ObjModel*)hitState)->bufferFlags ^= 4;
+    bufSel = (((ObjModel*)hitState)->bufferFlags >> 2) & 1;
     st->cur = st->bufs[bufSel];
     mtx = boneMtx;
     i = 0;
@@ -2146,7 +2146,7 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
             {
                 idx = 0;
             }
-            mtx = (u8*)((int*)hitState)[(*(u16*)(hitState + 0x18) & 1) + 3] + idx * 0x40;
+            mtx = (u8*)((int*)hitState)[(((ObjModel*)hitState)->bufferFlags & 1) + 3] + idx * 0x40;
         }
         if (i == 0 && obj != prevObj)
         {
