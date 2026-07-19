@@ -1638,10 +1638,10 @@ void Tricky_update(int obj)
                             *(void**)&trickyState->unk724 = dimicewall_countdownCallback;
                             break;
                         case 0x718:
-                            *(void**)&trickyState->unk724 = fn_801B6D40;
+                            *(void**)&trickyState->unk724 = dimtruthhornice_countdownCallback;
                             break;
                         case 0x551:
-                            *(void**)&trickyState->unk724 = fn_801FD4A8;
+                            *(void**)&trickyState->unk724 = vfpflamepoint_countdownCallback;
                             break;
                         case 0x191:
                             *(void**)&trickyState->unk724 = dimlogfire_countdownCallback;
@@ -1657,7 +1657,7 @@ void Tricky_update(int obj)
                             *(void**)&trickyState->unk724 = 0;
                             break;
                         case 0x3c:
-                            *(void**)&trickyState->unk724 = fn_801DA9CC;
+                            *(void**)&trickyState->unk724 = shbeacon_resetFadeTimerCallback;
                             break;
                         case 0x50f:
                             *(void**)&trickyState->unk724 = wcbeacon_aButtonCallback;

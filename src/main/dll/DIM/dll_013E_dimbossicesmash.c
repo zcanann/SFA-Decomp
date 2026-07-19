@@ -57,7 +57,7 @@ u8 lbl_80322368[0xC] = {0};
 /* seed the icesmash launch state from the setup record: spawn position/rotation,
  * launch velocity (optionally homing on the target point), rotation velocities
  * and the gravity/clamp direction flags. */
-void fn_80196520(u8* obj, u8* state, u8* setup)
+void dimbossicesmash_initLaunchState(u8* obj, u8* state, u8* setup)
 {
     f32 vx, vy, vz;
     f32 spd, len;
@@ -376,7 +376,7 @@ void DIMBossIceSmash_init(GameObject* obj, u8* params)
     ((DimBossIceSmashState*)state)->spawnScaleX = 0.0f;
     ((DimBossIceSmashState*)state)->spawnScaleY = fz;
     ((DimBossIceSmashState*)state)->spawnScaleZ = fz;
-    fn_80196520((u8*)obj, state, params);
+    dimbossicesmash_initLaunchState((u8*)obj, state, params);
     initState = (mainGetBit(((DimbossicesmashPlacement*)params)->activateGameBit) != 0) ? 2 : 0;
     state[0x29e] = initState;
     lbl_803DDB00 = 0;

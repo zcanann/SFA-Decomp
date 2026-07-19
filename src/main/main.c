@@ -117,7 +117,7 @@ extern f32 lbl_803E6190;
 extern f32 lbl_803E6194;
 extern f32 lbl_803E6198;
 
-int fn_801FD4A8(GameObject* obj, int x)
+int vfpflamepoint_countdownCallback(GameObject* obj, int x)
 {
     VfpFlamePointData* extra = obj->extra;
     if (extra != NULL)

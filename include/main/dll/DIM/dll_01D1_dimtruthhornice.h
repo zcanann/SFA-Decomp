@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-int fn_801B6D40(int* obj, int damage);
+int dimtruthhornice_countdownCallback(int* obj, int damage);
 
 #endif /* MAIN_DLL_DIM_DLL_01D1_DIMTRUTHHORNICE_H_ */

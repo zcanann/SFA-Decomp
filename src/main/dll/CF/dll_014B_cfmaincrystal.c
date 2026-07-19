@@ -72,11 +72,11 @@ extern f32 lbl_803E4210;
 
 int* gCfMainCrystalObj;
 
-/* fn_8019D9F0: main crystal beam update -
+/* cfmaincrystal_updateBeams: main crystal beam update -
  * collect the three pylon positions from messages, re-request missing ones,
  * emit the beam particles toward the crystal (and down from each pylon),
  * ramp the convergence charge, hum volume and per-beam chime timers. */
-void fn_8019D9F0(int* obj)
+void cfmaincrystal_updateBeams(int* obj)
 {
     int i;
     CfMainCrystalState* sub = ((GameObject*)obj)->extra;
@@ -353,7 +353,7 @@ void CFMainCrystal_update(int* obj)
     switch (mode)
     {
     case 0:
-        fn_8019D9F0(obj);
+        cfmaincrystal_updateBeams(obj);
         break;
     case 1:
         payload = 0;

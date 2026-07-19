@@ -2,7 +2,7 @@
  * Hit-count tracked in extra->hitsLeft; when depleted sets gameBit and starts a
  * particle-burst death animation (spawn loop in phase 1, freeze-hide in phase 2).
  * Tricky can deliver fire hits via vtable dispatch (slot 0x28 of Tricky's type at
- * offset 0x68). Also contains fn_801B6D40 (generic byte-damage helper shared by
+ * offset 0x68). Also contains dimtruthhornice_countdownCallback (generic byte-damage helper shared by
  * this DLL group). */
 #include "main/dll/partfx_interface.h"
 #include "main/dll/DIM/dll_01D1_dimtruthhornice.h"
@@ -86,7 +86,7 @@ static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
 
 
 
-int fn_801B6D40(int* obj, int damage)
+int dimtruthhornice_countdownCallback(int* obj, int damage)
 {
     u8* state = ((GameObject*)obj)->extra;
     *(s8*)(state + 2) = (s8)(state[2] - damage);

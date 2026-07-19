@@ -3,7 +3,7 @@
 
 #include "main/game_object.h"
 
-int fn_801DA9CC(GameObject* obj);
+int shbeacon_resetFadeTimerCallback(GameObject* obj);
 int sh_beacon_getExtraSize(void);
 void sh_beacon_free(GameObject* obj, int keepChild);
 void sh_beacon_update(GameObject* obj);

@@ -30,7 +30,7 @@ typedef struct CfMainCrystalState
     u8 chime[4]; /* 0x15c: per-beam chime timers */
 } CfMainCrystalState;
 
-void fn_8019D9F0(int* obj);
+void cfmaincrystal_updateBeams(int* obj);
 int CFMainCrystal_getExtraSize(void);
 int CFMainCrystal_getObjectTypeId(void);
 void CFMainCrystal_free(int* obj);
