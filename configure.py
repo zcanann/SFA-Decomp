@@ -1602,7 +1602,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/NW/dll_01A3_nwanimice.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/NW/dll_01A4_nwice.c", cflags=cflags_dll_noopt),
             Object(
-                NonMatching,
+                MatchingFor("GSAE01"),
                 "main/dll/NW/dll_01A5_nwlevcontrol.c",
                 cflags=cflags_dll_noopt_noinline,
                 section_alignments={".data": 4},
