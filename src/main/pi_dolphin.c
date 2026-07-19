@@ -7419,7 +7419,7 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
     }
 }
 
-void fn_8004FDA0(u8* texSrc, void* texMtx)
+void fn_8004FDA0(u8* texSrc, void* texMtx, u8* color)
 {
     GXSetTevDirect(lbl_803DCD90);
     GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);

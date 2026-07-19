@@ -958,7 +958,7 @@ MapShader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, int* bi
     flags = SHADER_FLAGS(shader);
     if ((flags & 0x20) != 0 && (lightList = lbl_803DCE34) != 0)
     {
-        fn_8004FDA0ColorLegacy(lightList, &lbl_80382008, lbl_803DB638);
+        fn_8004FDA0((u8*)lightList, &lbl_80382008, lbl_803DB638);
     }
     else if ((flags & 0x40) != 0)
     {
