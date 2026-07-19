@@ -549,20 +549,16 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
             *(u32*)(stk + 0x24) = *(u32*)&((ObjAnimState*)channel)->blendMoveCache[0];
             *(u32*)(stk + 0x28) = *(u32*)&((ObjAnimState*)channel)->blendMoveCache[1];
             {
-                u8* srcAnimId = channel;
-                u8* dstAnimId = stk;
                 u8* dstFrameType = stk;
                 u8* srcSlotVals = channel;
                 u8* dstSlotVals = stk;
                 for (j = 0; j < slotCount; j++)
                 {
-                    *(u16*)(dstAnimId + 0x44) = *(u16*)(srcAnimId + 0x44);
+                    *(u16*)(stk + j * 2 + 0x44) = *(u16*)(channel + j * 2 + 0x44);
                     *(u8*)(dstFrameType + 0x60) = *(u8*)(channel + j + 0x60);
                     *(f32*)(dstSlotVals + 0x14) = *(f32*)(srcSlotVals + 0x14);
                     *(f32*)(dstSlotVals + 4) = *(f32*)(srcSlotVals + 4);
                     *(u32*)(dstSlotVals + 0x34) = *(u32*)(srcSlotVals + 0x34);
-                    srcAnimId += 2;
-                    dstAnimId += 2;
                     dstFrameType += 1;
                     srcSlotVals += 4;
                     dstSlotVals += 4;
