@@ -1918,27 +1918,29 @@ void loadTextureFiles(void)
     gLoadedTextureCount = n = 0;
     p = getCurrentDataFile(MLDF_FILEID_TEX0_TAB_A);
     gRcpTexBankTable[0] = p;
-    if (gRcpTexBankTable != NULL)
+    if (gRcpTexBankTable == NULL)
     {
-        while (p[0] != -1)
-        {
-            p++;
-            n++;
-        }
-        gRcpTexBankCount[0] = n - 1;
+        return;
     }
+    while (p[0] != -1)
+    {
+        p++;
+        n++;
+    }
+    gRcpTexBankCount[0] = n - 1;
     n = 0;
     p = getCurrentDataFile(MLDF_FILEID_TEX1_TAB_A);
     gRcpTexBankTable[1] = p;
-    if (gRcpTexBankTable != NULL)
+    if (gRcpTexBankTable == NULL)
     {
-        while (p[0] != -1)
-        {
-            p++;
-            n++;
-        }
-        gRcpTexBankCount[1] = n - 1;
+        return;
     }
+    while (p[0] != -1)
+    {
+        p++;
+        n++;
+    }
+    gRcpTexBankCount[1] = n - 1;
     n = 0;
     p = getCurrentDataFile(MLDF_FILEID_TEXPRE_TAB);
     gRcpTexBankTable[2] = p;
