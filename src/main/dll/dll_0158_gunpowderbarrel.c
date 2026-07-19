@@ -127,19 +127,6 @@ int gunpowderbarrel_canBeGrabbed(GameObject* obj)
     return result;
 }
 
-extern const f32 lbl_803E42C4;
-extern const f32 lbl_803E42C8;
-extern const f32 lbl_803E42CC;
-extern const f32 lbl_803E42D0;
-extern const f32 lbl_803E42D4;
-extern const f32 lbl_803E42D8;
-extern const f32 lbl_803E42DC;
-extern const f32 lbl_803E42E0;
-extern const f32 lbl_803E42E4;
-extern const f32 lbl_803E42E8;
-extern const f32 lbl_803E42EC;
-extern const f32 gGunpowderBarrelAngleUnit;
-extern const f32 lbl_803E42F4;
 
 /* Zero the barrel's velocity/throw vectors, mark it sleeping, clear
  * obj-active and the held flag. */
@@ -192,19 +179,19 @@ void gunpowderbarrel_launchAtTarget(GameObject *obj, u8 flag)
     state->throwVelX = 0.0f;
     if (flag != 0)
     {
-        state->throwVelY = lbl_803E42C8 * playerState->baddie.inputMagnitude + lbl_803E42C4;
-        state->throwVelZ = lbl_803E42D0 * playerState->baddie.inputMagnitude + lbl_803E42CC;
+        state->throwVelY = 0.75f * playerState->baddie.inputMagnitude + 2.2f;
+        state->throwVelZ = -0.75f * playerState->baddie.inputMagnitude + -2.2f;
     }
     else
     {
-        state->throwVelY = lbl_803E42D4;
-        state->throwVelZ = lbl_803E42D8;
+        state->throwVelY = 1.5f;
+        state->throwVelZ = -1.5f;
     }
     fz = 0.0f;
     *(f32*)((u8*)stk + 0xc) = fz;
     *(f32*)((u8*)stk + 0x10) = fz;
     *(f32*)((u8*)stk + 0x14) = fz;
-    *(f32*)((u8*)stk + 0x8) = lbl_803E42DC;
+    *(f32*)((u8*)stk + 0x8) = 1.0f;
     stk[2] = 0;
     stk[1] = 0;
     stk[0] = state->launchYaw;
@@ -309,7 +296,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     int rotZMode;
     char* player;
     char* near;
-    f32 radius = lbl_803E42E0;
+    f32 radius = 300.0f;
     player = (char*)Obj_GetPlayerObject();
     near = (char*)ObjGroup_FindNearestObject(DBHOLECONTROL1_OBJGROUP, (u32)obj, &radius);
     if (near == NULL)
@@ -318,7 +305,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     }
     dy = ((GameObject*)near)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
     dy = (dy >= 0.0f) ? dy : -dy;
-    if (dy < lbl_803E42E4)
+    if (dy < 30.0f)
     {
         return;
     }
@@ -338,14 +325,14 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     {
         rate = scale;
     }
-    if (rate >= lbl_803E42DC)
+    if (rate >= 1.0f)
     {
         Sfx_PlayFromObject((u32)obj, SFXTRIG_barrel_putdown);
-        rate = lbl_803E42DC;
+        rate = 1.0f;
         ((GameObject*)obj)->anim.velocityY = dy2;
-        ((GameObject*)near)->anim.localPosX += lbl_803E42E8;
-        ((GameObject*)near)->anim.velocityZ += lbl_803E42E8;
-        if (((GameObject*)near)->anim.velocityZ > lbl_803E42EC)
+        ((GameObject*)near)->anim.localPosX += 20.0f;
+        ((GameObject*)near)->anim.velocityZ += 20.0f;
+        if (((GameObject*)near)->anim.velocityZ > 180.0f)
         {
             ((GameObject*)near)->anim.localPosX -= ((GameObject*)near)->anim.velocityZ;
             ((GameObject*)near)->anim.velocityZ = 0.0f;
@@ -364,7 +351,7 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
         f32 factor;
         if (rotYMode == 1)
         {
-            factor = gGunpowderBarrelAngleUnit - (f32)(u16)((GameObject*)obj)->anim.rotY;
+            factor = 65536.0f - (f32)(u16)((GameObject*)obj)->anim.rotY;
             t = factor * rate;
         }
         else
@@ -392,19 +379,6 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     }
 }
 
-extern const f32 lbl_803E4308;
-extern const f32 lbl_803E430C;
-extern const f32 lbl_803E4310;
-extern const f32 lbl_803E4314;
-extern const f32 lbl_803E4318;
-extern const f32 lbl_803E431C;
-extern const f32 lbl_803E4320;
-extern const f32 lbl_803E4324;
-extern const f32 lbl_803E4328;
-extern const f32 lbl_803E432C;
-extern const f32 lbl_803E4330;
-extern const f32 lbl_803E4334;
-extern const f32 lbl_803E4338;
 
 void gunpowderbarrel_triggerExplosion(GameObject *obj)
 {
@@ -478,7 +452,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
         ObjHits_EnableObject(obj);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11_d1);
-        (obj)->anim.localPosY += lbl_803E4308;
+        (obj)->anim.localPosY += 10.0f;
         spawnExplosionLegacy((int*)obj, 0.0f, 1, 1, 0, 0, 0, 1, 0);
         if (((GunpowderBarrelState*)sub)->heldByCarryInterface != 0)
         {
@@ -495,11 +469,11 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
         ObjGroup_RemoveObject((u32)(void*)obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
         if ((obj)->anim.parent != 0)
         {
-            ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = lbl_803E42C4;
+            ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = 2.2f;
         }
         else
         {
-            ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = lbl_803E42C4;
+            ((GunpowderBarrelState*)sub)->radiusGrowthPerFrame = 2.2f;
         }
         tricky = (u8*)getTrickyObject();
         if (tricky != 0)
@@ -539,32 +513,32 @@ void gunpowderbarrel_updatePhysics(int* obj)
         }
         return;
     }
-    if (((GunpowderBarrelState*)sub)->detonateTrigger == 0 && ((((GunpowderBarrelState*)sub)->motionFlags & 2) || ((GunpowderBarrelState*)sub)->throwVelY > lbl_803E430C))
+    if (((GunpowderBarrelState*)sub)->detonateTrigger == 0 && ((((GunpowderBarrelState*)sub)->motionFlags & 2) || ((GunpowderBarrelState*)sub)->throwVelY > 0.01f))
     {
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BODY, 1, 0);
         ObjHits_EnableObject((GameObject*)obj);
     }
     if (!((GpbHeldFlags*)&((GunpowderBarrelState*)sub)->heldFlags)->playerHeld)
     {
-        ((GunpowderBarrelState*)sub)->throwVelY -= lbl_803E4310 * timeDelta;
+        ((GunpowderBarrelState*)sub)->throwVelY -= 0.12f * timeDelta;
     }
     {
         f32 v = ((GunpowderBarrelState*)sub)->throwVelX;
-        ((GunpowderBarrelState*)sub)->throwVelX = (v < lbl_803E4314)
-                                                                   ? lbl_803E4314
-                                                                   : ((v > lbl_803E4318) ? lbl_803E4318 : v);
+        ((GunpowderBarrelState*)sub)->throwVelX = (v < -5.0f)
+                                                                   ? -5.0f
+                                                                   : ((v > 5.0f) ? 5.0f : v);
     }
     {
         f32 v = ((GunpowderBarrelState*)sub)->throwVelY;
-        ((GunpowderBarrelState*)sub)->throwVelY = (v < lbl_803E4314)
-                                                                   ? lbl_803E4314
-                                                                   : ((v > lbl_803E4318) ? lbl_803E4318 : v);
+        ((GunpowderBarrelState*)sub)->throwVelY = (v < -5.0f)
+                                                                   ? -5.0f
+                                                                   : ((v > 5.0f) ? 5.0f : v);
     }
     {
         f32 v = ((GunpowderBarrelState*)sub)->throwVelZ;
-        ((GunpowderBarrelState*)sub)->throwVelZ = (v < lbl_803E4314)
-                                                                   ? lbl_803E4314
-                                                                   : ((v > lbl_803E4318) ? lbl_803E4318 : v);
+        ((GunpowderBarrelState*)sub)->throwVelZ = (v < -5.0f)
+                                                                   ? -5.0f
+                                                                   : ((v > 5.0f) ? 5.0f : v);
     }
     ((GameObject*)obj)->anim.velocityX = ((GunpowderBarrelState*)sub)->throwVelX;
     ((GameObject*)obj)->anim.velocityY = ((GunpowderBarrelState*)sub)->throwVelY;
@@ -585,11 +559,11 @@ void gunpowderbarrel_updatePhysics(int* obj)
         below = top < bottom;
         if (below)
         {
-            bottom += lbl_803E4318;
+            bottom += 5.0f;
         }
         if (!below)
         {
-            top += lbl_803E4318;
+            top += 5.0f;
         }
         result = findSurfaceInYRange((int)obj, ((GameObject*)obj)->anim.localPosX, top, ((GameObject*)obj)->anim.localPosZ,
                              bottom, &outY, (int*)&contact);
@@ -635,7 +609,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
             {
                 ((GunpowderBarrelState*)sub)->queuedHitObject = contact;
             }
-            else if (((GunpowderBarrelState*)sub)->fallAccum < lbl_803E431C)
+            else if (((GunpowderBarrelState*)sub)->fallAccum < -100.0f)
             {
                 ((GunpowderBarrelState*)sub)->detonateTrigger = 4;
             }
@@ -648,7 +622,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
     }
     else
     {
-        if (((GunpowderBarrelState*)sub)->throwVelY < lbl_803E4320)
+        if (((GunpowderBarrelState*)sub)->throwVelY < -0.2f)
         {
             gunpowderbarrel_homeOnTarget(obj, ((GunpowderBarrelState*)sub)->homingHeadingA,
                         ((GunpowderBarrelState*)sub)->homingHeadingB);
@@ -716,7 +690,7 @@ void gunpowderbarrel_render(int* obj, int p2, int p3, int p4, int p5,
     result = (*(int (**)(int*, int))(*(int*)gCarryableInterface + 0xc))(obj, visFlag);
     if (result != 0 || visFlag == -1)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E42DC);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
     }
     child = (int*)((GunpowderBarrelState*)sub)->linkedTimerObject;
     if (child != 0)
@@ -778,7 +752,7 @@ void gunpowderbarrel_hitDetect(int obj)
         sp1c[1] = barrel->anim.localPosY - barrel->anim.previousLocalPosY;
         sp1c[2] = barrel->anim.localPosZ - barrel->anim.previousLocalPosZ;
         {
-            f32 inv = lbl_803E4324 * oneOverTimeDelta;
+            f32 inv = 0.99f * oneOverTimeDelta;
             sp1c[0] = sp1c[0] * inv;
             sp1c[1] = sp1c[1] * inv;
             sp1c[2] = sp1c[2] * inv;
@@ -789,16 +763,16 @@ void gunpowderbarrel_hitDetect(int obj)
         {
             f32 zero = 0.0f;
             sp1c[1] = zero;
-            state->throwVelX = lbl_803E4328 * state->throwVelX;
-            state->throwVelY = lbl_803E4328 * state->throwVelY;
-            state->throwVelZ = lbl_803E4328 * state->throwVelZ;
+            state->throwVelX = 0.5f * state->throwVelX;
+            state->throwVelY = 0.5f * state->throwVelY;
+            state->throwVelZ = 0.5f * state->throwVelZ;
             state->throwVelY = zero;
         }
         state->motionFlags = (u8)(state->motionFlags | 1);
     }
 
     if (state->heldByCarryInterface == 0 &&
-        objBboxFn_800640cc(&barrel->anim.previousLocalPosX, &barrel->anim.localPosX, lbl_803E432C, 1,
+        objBboxFn_800640cc(&barrel->anim.previousLocalPosX, &barrel->anim.localPosX, 8.0f, 1,
                            (TrackBBoxHit*)&collision_buf[0], (GameObject*)obj, 8, -1, 0xff, 0) != 0)
     {
         if ((s8) * ((u8*)&collision_buf[0] + 0x51) == 0x14)
@@ -821,7 +795,7 @@ void gunpowderbarrel_hitDetect(int obj)
             Vec3_ReflectAgainstNormal(sp10, &state->throwVelX, &state->throwVelX);
 
             {
-                f32 damp = lbl_803E4330;
+                f32 damp = 0.2f;
                 barrel->anim.velocityX = damp * barrel->anim.velocityX;
                 barrel->anim.velocityY = damp * barrel->anim.velocityY;
                 barrel->anim.velocityZ = damp * barrel->anim.velocityZ;
@@ -830,7 +804,7 @@ void gunpowderbarrel_hitDetect(int obj)
                 state->throwVelZ = damp * state->throwVelZ;
             }
 
-            if (state->impactSoundCooldown > lbl_803E4334)
+            if (state->impactSoundCooldown > 60.0f)
             {
                 if (PSVECMag(&state->throwVelX) > lbl_803DBE84)
                 {
@@ -846,9 +820,6 @@ void gunpowderbarrel_hitDetect(int obj)
     barrel->anim.previousLocalPosZ = barrel->anim.localPosZ;
 }
 
-extern const f32 gGunpowderBarrelPi;
-extern const f32 gGunpowderBarrelHalfAngleUnit;
-extern const f32 lbl_803E4344;
 
 void gunpowderbarrel_update(GameObject *obj)
 {
@@ -858,7 +829,7 @@ void gunpowderbarrel_update(GameObject *obj)
     player = Obj_GetPlayerObject();
     def = *(GunpowderbarrelPlacement**)&(obj)->anim.placementData;
 
-    if (state->impactSoundCooldown <= lbl_803E4334)
+    if (state->impactSoundCooldown <= 60.0f)
     {
         state->impactSoundCooldown += timeDelta;
     }
@@ -908,7 +879,7 @@ void gunpowderbarrel_update(GameObject *obj)
      * group-0x4c effect-timer object and attach it; drop it if it dies. --- */
     if ((obj)->childObjs[0] == NULL)
     {
-        f32 range = lbl_803E4338;
+        f32 range = 50.0f;
         if ((u32)(state->linkedTimerObject =
                       (GameObject*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, (int)obj, &range)) != 0 &&
             timer_isEffectMode(state->linkedTimerObject) != 0 && state->linkedTimerObject->ownerObj == NULL)
@@ -960,11 +931,11 @@ void gunpowderbarrel_update(GameObject *obj)
     {
         state->fuseFrames += framesThisStep;
         state->hitRadius = state->radiusGrowthPerFrame * (f32)(u32)
-        state->fuseFrames + lbl_803E42DC;
+        state->fuseFrames + 1.0f;
         {
             f32 r = state->hitRadius;
-            ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, r, (s32)(-r * lbl_803E4328),
-                                       (s32)(r * lbl_803E4328));
+            ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, r, (s32)(-r * 0.5f),
+                                       (s32)(r * 0.5f));
         }
         if (state->linkedTimerObject != NULL)
         {
@@ -1083,16 +1054,16 @@ void gunpowderbarrel_update(GameObject *obj)
             else if (state->fuseFrames == 0)
             {
                 (obj)->anim.velocityX = state->throwVelX =
-                    mathSinf(gGunpowderBarrelPi * (f32) player->anim.rotX / gGunpowderBarrelHalfAngleUnit);
+                    mathSinf(3.1415927f * (f32) player->anim.rotX / 32768.0f);
                 (obj)->anim.velocityY = state->throwVelY = 0.0f;
                 (obj)->anim.velocityZ = state->throwVelZ =
-                    mathCosf(gGunpowderBarrelPi * (f32) player->anim.rotX / gGunpowderBarrelHalfAngleUnit);
+                    mathCosf(3.1415927f * (f32) player->anim.rotX / 32768.0f);
                 (obj)->anim.localPosX =
-                    lbl_803DBE80 * -mathSinf(gGunpowderBarrelPi * (f32) player->anim.rotX /
-                        gGunpowderBarrelHalfAngleUnit) +
+                    lbl_803DBE80 * -mathSinf(3.1415927f * (f32) player->anim.rotX /
+                        32768.0f) +
                     (obj)->anim.localPosX;
                 (obj)->anim.localPosZ =
-                    lbl_803DBE80 * -mathCosf(gGunpowderBarrelPi * (f32) player->anim.rotX / gGunpowderBarrelHalfAngleUnit) +
+                    lbl_803DBE80 * -mathCosf(3.1415927f * (f32) player->anim.rotX / 32768.0f) +
                     (obj)->anim.localPosZ;
                 ObjGroup_AddObject((int)obj, CFGUARDIAN_OBJGROUP);
             }
@@ -1202,35 +1173,6 @@ void gunpowderbarrel_init(int obj, u8* def)
  * and handles the pickup/steal/toss transitions against the player's carry
  * state. */
 
-const f32 lbl_803E42C4 = 2.2f;
-const f32 lbl_803E42C8 = 0.75f;
-const f32 lbl_803E42CC = -2.2f;
-const f32 lbl_803E42D0 = -0.75f;
-const f32 lbl_803E42D4 = 1.5f;
-const f32 lbl_803E42D8 = -1.5f;
-const f32 lbl_803E42DC = 1.0f;
-const f32 lbl_803E42E0 = 300.0f;
-const f32 lbl_803E42E4 = 30.0f;
-const f32 lbl_803E42E8 = 20.0f;
-const f32 lbl_803E42EC = 180.0f;
-const f32 gGunpowderBarrelAngleUnit = 65536.0f;
-const f32 lbl_803E42F4 = 0.0f;
-const f32 lbl_803E4308 = 10.0f;
-const f32 lbl_803E430C = 0.01f;
-const f32 lbl_803E4310 = 0.12f;
-const f32 lbl_803E4314 = -5.0f;
-const f32 lbl_803E4318 = 5.0f;
-const f32 lbl_803E431C = -100.0f;
-const f32 lbl_803E4320 = -0.2f;
-const f32 lbl_803E4324 = 0.99f;
-const f32 lbl_803E4328 = 0.5f;
-const f32 lbl_803E432C = 8.0f;
-const f32 lbl_803E4330 = 0.2f;
-const f32 lbl_803E4334 = 60.0f;
-const f32 lbl_803E4338 = 50.0f;
-const f32 gGunpowderBarrelPi = 3.1415927f;
-const f32 gGunpowderBarrelHalfAngleUnit = 32768.0f;
-const f32 lbl_803E4344 = 0.0f;
 
 ObjectDescriptor11WithPadding gGunPowderBarrelObjDescriptor = {
     {
@@ -1252,3 +1194,5 @@ ObjectDescriptor11WithPadding gGunPowderBarrelObjDescriptor = {
     },
     0,
 };
+
+const f32 lbl_803E4344 = 0.0f;
