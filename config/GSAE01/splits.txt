@@ -2528,7 +2528,7 @@ main/dll/DIM/dim2lift.c:
 	.text       start:0x801BA224 end:0x801BB598
 	.data       start:0x803259A0 end:0x803259E0
 	.sdata      start:0x803DBF30 end:0x803DBF40
-	.sdata2     start:0x803E4BB8 end:0x803E4CD0
+	.sdata2     start:0x803E4BBC end:0x803E4C34
 
 main/dll/DIM/dim2icicle.c:
 	.text       start:0x801BB598 end:0x801BCB34
