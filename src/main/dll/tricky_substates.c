@@ -830,8 +830,13 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
         return 1;
     }
     result = (*gGameUIInterface)->isOneOfItemsBeingUsed(buf.ids, TRICKY_ITEM_ID_COUNT);
-    if (result != 2 && result >= 0 && result < 6)
+    switch (result)
     {
+    case 0:
+    case 1:
+    case 3:
+    case 4:
+    case 5:
         tex = *(int*)&(obj)->extra;
         if (((((TrickyState*)tex)->statusFlags >> 6) & 1) == 0u)
         {
@@ -844,6 +849,7 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
                 }
             }
         }
+        break;
     }
     if (lbl_803E23DC == ((TrickyState*)state)->cooldownB)
     {
@@ -1056,8 +1062,7 @@ u32 trickyFn_80143388(GameObject* obj, int* trickyState)
     int ref;
     int val;
 
-    val = trickyFoodFn_8014460c(obj, trickyState);
-    if (val != 0)
+    if (trickyFoodFn_8014460c(obj, trickyState) != 0)
     {
         return 1;
     }
@@ -1070,14 +1075,13 @@ u32 trickyFn_80143388(GameObject* obj, int* trickyState)
             continue;
         if ((int)(obj)->anim.currentMove >= 0x30 || (int)(obj)->anim.currentMove < 0x29)
         {
-            if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+            if (((int (*)(GameObject*, int))Sfx_IsPlayingFromObjectChannel)(obj, 0x10) == 0)
             {
                 objAudioFn_800393f8Legacy(obj, (void*)(ref + 0x3a8), 0x357, 0, 0xffffffff, 0);
             }
         }
     }
-    val = trickyFoodFn_8014460c(obj, trickyState);
-    if (val != 0)
+    if (trickyFoodFn_8014460c(obj, trickyState) != 0)
     {
         return 1;
     }
