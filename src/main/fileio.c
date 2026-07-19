@@ -5,6 +5,7 @@
 #include "main/gametext_charset_api.h"
 #include "main/gametext_show_api.h"
 #include "main/textrender_api.h"
+#include "main/gametext_color_api.h"
 #include "main/loaded_file_flags.h"
 #include "main/mm.h"
 #include "main/pad.h"

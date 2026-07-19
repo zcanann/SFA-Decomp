@@ -22,6 +22,7 @@
 #include "main/dll/player_state.h"
 #include "main/sky_interface.h"
 #include "main/textrender_api.h"
+#include "main/gametext_color_api.h"
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_str_api.h"
 #include "main/gameloop_api.h"

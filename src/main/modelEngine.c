@@ -57,6 +57,7 @@
 #include "main/gametext_box_api.h"
 #include "main/gametext_show_str_api.h"
 #include "main/textrender_api.h"
+#include "main/gametext_color_api.h"
 #include "main/gameloop_api.h"
 #include "main/minimap_api.h"
 #include "main/model_engine.h"
