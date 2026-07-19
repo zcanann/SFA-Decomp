@@ -697,10 +697,10 @@ int mapTextureOverrideAcquire(int key, int value, int type)
     if (found != -1)
     {
         base[found].refs = 1;
-        base[found].data0 = 0;
-        base[found].data1 = value;
-        base[found].key = key;
-        base[found].type = type;
+        ((TexOverrideEntry*)lbl_803DCE6C)[found].data0 = 0;
+        ((TexOverrideEntry*)lbl_803DCE6C)[found].data1 = value;
+        ((TexOverrideEntry*)lbl_803DCE6C)[found].key = key;
+        ((TexOverrideEntry*)lbl_803DCE6C)[found].type = type;
         return found;
     }
     OSReport(sTrackGlobalTexanimOverflowError);
