@@ -3,6 +3,6 @@
 
 #include "main/game_object.h"
 
-int fn_801B17F4(GameObject* obj, int delta);
+int dimicewall_countdownCallback(GameObject* obj, int delta);
 
 #endif /* MAIN_DLL_DIM_DLL_01C4_DIMICEWALL_H_ */

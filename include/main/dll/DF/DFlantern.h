@@ -12,7 +12,7 @@ void DFSH_Door2Speci_update(void);
 void DFSH_Door2Speci_init(GameObject* obj, int def);
 void DFSH_Door2Speci_release(void);
 void DFSH_Door2Speci_initialise(void);
-void fn_801C2914(int obj);
+void dfshshrine_updateHoverMotion(int obj);
 int DFSH_Shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 int DFSH_Shrine_getExtraSize(void);
 int DFSH_Shrine_getObjectTypeId(void);

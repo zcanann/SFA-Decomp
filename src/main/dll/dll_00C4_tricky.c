@@ -1635,7 +1635,7 @@ void Tricky_update(int obj)
                         switch (((GameObject*)trickyState->followObj)->anim.seqId)
                         {
                         case 0x1c9:
-                            *(void**)&trickyState->unk724 = fn_801B17F4;
+                            *(void**)&trickyState->unk724 = dimicewall_countdownCallback;
                             break;
                         case 0x718:
                             *(void**)&trickyState->unk724 = fn_801B6D40;
@@ -1644,7 +1644,7 @@ void Tricky_update(int obj)
                             *(void**)&trickyState->unk724 = fn_801FD4A8;
                             break;
                         case 0x191:
-                            *(void**)&trickyState->unk724 = fn_801B0784;
+                            *(void**)&trickyState->unk724 = dimlogfire_countdownCallback;
                             break;
                         case 0x470:
                             *(void**)&trickyState->unk724 = drchimmey_countdownCallback;

@@ -85,7 +85,7 @@ int DIMLogFire_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     return 0;
 }
 
-int fn_801B0784(GameObject* obj, int delta)
+int dimlogfire_countdownCallback(GameObject* obj, int delta)
 {
     DimLogFireState* inner = obj->extra;
     inner->strengthInit = (s8)(inner->strengthInit - delta);

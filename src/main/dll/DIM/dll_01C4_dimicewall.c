@@ -32,7 +32,7 @@ typedef struct DimicewallPlacement
 
 
 
-int fn_801B17F4(GameObject *obj, int delta)
+int dimicewall_countdownCallback(GameObject *obj, int delta)
 {
     DimicewallState* inner = (obj)->extra;
     inner->hp = (s8)(inner->hp - delta);

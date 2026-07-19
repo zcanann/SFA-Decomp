@@ -146,7 +146,7 @@ void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init);
 void DFSH_Shrine_release(void);
 void DFSH_Shrine_initialise(void);
 
-void fn_801C2914(int obj)
+void dfshshrine_updateHoverMotion(int obj)
 {
     int def;
     DFlanternShrineState* state;
@@ -368,7 +368,7 @@ void DFSH_Shrine_update(int objArg)
             getEnvfxActInt((int)obj, player, DFSH_SHRINE_ENVFX_C, 0);
         }
     }
-    fn_801C2914((int)obj);
+    dfshshrine_updateHoverMotion((int)obj);
     if (gDfShShrinePendingReward != 0)
     {
         obj->anim.worldPosX = obj->anim.localPosX;

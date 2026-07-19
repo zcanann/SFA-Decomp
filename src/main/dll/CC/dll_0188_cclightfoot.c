@@ -160,7 +160,7 @@ ObjectDescriptor gCClightfootObjDescriptor = {
     cclightfoot_getExtraSize,
 };
 
-void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
+void cclightfoot_selectCombatState(CcLightfootState* state, int* targetObj, f32 dist)
 {
     s16 move;
     if (CC_LIGHTFOOT_DIST_SENTINEL == dist)
@@ -424,7 +424,7 @@ void cclightfoot_update(int obj)
         }
         if (state->flags & 1)
         {
-            fn_801AA878(state, (int*)targetObj, dist);
+            cclightfoot_selectCombatState(state, (int*)targetObj, dist);
         }
         break;
     case CCLIGHTFOOT_STATE_APPROACH:
@@ -449,7 +449,7 @@ void cclightfoot_update(int obj)
     case CCLIGHTFOOT_STATE_ENGAGE:
         if (state->flags & 1)
         {
-            fn_801AA878(state, (int*)targetObj, dist);
+            cclightfoot_selectCombatState(state, (int*)targetObj, dist);
         }
         break;
     case CCLIGHTFOOT_STATE_GUARD:
@@ -480,7 +480,7 @@ void cclightfoot_update(int obj)
         }
         else if (state->flags & 1)
         {
-            fn_801AA878(state, (int*)targetObj, dist);
+            cclightfoot_selectCombatState(state, (int*)targetObj, dist);
         }
         break;
     case CCLIGHTFOOT_STATE_PARRY:
@@ -513,11 +513,11 @@ void cclightfoot_update(int obj)
         }
         else if (state->flags & 1)
         {
-            fn_801AA878(state, (int*)targetObj, dist);
+            cclightfoot_selectCombatState(state, (int*)targetObj, dist);
         }
         break;
     case CCLIGHTFOOT_STATE_REACT:
-        fn_801AA878(state, (int*)targetObj, dist);
+        cclightfoot_selectCombatState(state, (int*)targetObj, dist);
         break;
     case CCLIGHTFOOT_STATE_DORMANT:
         if (mainGetBit(GAMEBIT_LIGHTFOOT_TRIGGERED) != 0)
