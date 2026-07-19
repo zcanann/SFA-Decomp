@@ -16,6 +16,7 @@
 #include "main/mapEvent.h"
 #include "main/model_light.h"
 #include "main/model.h"
+#include "main/map_romlist_page.h"
 #include "main/shader_init_api.h"
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
@@ -1982,12 +1983,12 @@ void Rcp_SetColorFilterEnabled(u32 x)
     bEnableColorFilter = x;
 }
 
-void fn_80054F74(int* p, f32* vec)
+void fn_80054F74(GameObject* object, f32* position)
 {
-    if (*(void**)((char*)p + 0x30) != NULL)
+    if (object->anim.parent != NULL)
         return;
-    vec[0] = vec[0] + playerMapOffsetX;
-    vec[2] = vec[2] + playerMapOffsetZ;
+    position[0] = position[0] + playerMapOffsetX;
+    position[2] = position[2] + playerMapOffsetZ;
 }
 
 extern u8 bEnableDistortionFilter;
@@ -2276,7 +2277,7 @@ void warpToMap(int idx, s8 transType)
     Pause_SetDisabled(1);
 }
 #undef mtx
-void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
+void mapInstantiateObjects(MapRomListPage* page, int mapId, int index, GameObject* parent)
 {
     int* seg = (int*)(lbl_803822C8 + mapId * 0x8c);
     int i;
@@ -2295,7 +2296,7 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
     if (seg[index] == -1)
         return;
     objIndex = 0;
-    romBase = *(char**)((char*)p1 + 0x20);
+    romBase = (char*)page->objects;
     p = romBase;
     objStart = romBase + seg[index];
     while (p < objStart)
@@ -2378,7 +2379,7 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
                     vis = *(s8**)((char*)bm2 + 0x10);
                     vis[byteIdx] |= bit;
                 }
-                Obj_SetupObject((ObjPlacement*)obj, 1, mapId, objIndex, (void*)p4);
+                Obj_SetupObject((ObjPlacement*)obj, 1, mapId, objIndex, parent);
             }
         }
         objIndex++;

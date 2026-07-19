@@ -13,6 +13,7 @@
 #include "main/shader_api.h"
 #include "main/shader_map_api.h"
 #include "main/shader_map_text_api.h"
+#include "main/map_romlist_page.h"
 #include "main/textrender_api.h"
 #include "main/texture.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
@@ -155,14 +156,6 @@ typedef struct MapCellEnt
     s8 romListIndex;
     s16 unkA;
 } MapCellEnt;
-
-typedef struct MapRomListPage
-{
-    u8 unk00[0x10];
-    u8* loadedObjectBits;
-    u8 unk14[0xC];
-    ObjPlacement* objects;
-} MapRomListPage;
 
 int mapProcessRomList(int slot);
 
@@ -457,7 +450,7 @@ void mapLoadUnloadObjects(int flag)
                     {
                         if ((bits & 1) && (s8)SaveGame_findTransientMapBit(i, grpBit) == -1)
                         {
-                            mapInstantiateObjects((int*)((char**)(base + 0x83A8))[i], i, grpBit, 0);
+                            mapInstantiateObjects((MapRomListPage*)((char**)(base + 0x83A8))[i], i, grpBit, NULL);
                             mapClearBit(i, grpBit);
                         }
                         bits >>= 1;
@@ -526,12 +519,12 @@ void mapLoadUnloadObjects(int flag)
             {
                 GameObject* obj2 = (GameObject*)objs2[i];
                 u32 mid2 = obj2->anim.pad34;
-                char* page2 = ((char**)(base + 0x83A8))[mid2];
+                MapRomListPage* page2 = ((MapRomListPage**)(base + 0x83A8))[mid2];
                 if (page2 != 0)
                 {
                     int lp = obj2->anim.transformMatrixIndex + 1;
                     bit = 0;
-                    cur = (u32)((MapRomListPage*)page2)->objects;
+                    cur = (u32)page2->objects;
                     end = cur + *(int*)(base + (0x4290 + mid2 * 0x8C));
                     bits = (*gMapEventInterface)->getObjGroups(mid2);
                     if (bits != 0)
@@ -541,7 +534,7 @@ void mapLoadUnloadObjects(int flag)
                         {
                             if ((bits & 1) && (s8)SaveGame_findTransientMapBit(mid2, grpBit) == -1)
                             {
-                                mapInstantiateObjects((int*)page2, mid2, grpBit, (int)obj2);
+                                mapInstantiateObjects(page2, mid2, grpBit, obj2);
                             }
                             bits >>= 1;
                             mapClearBit(mid2, grpBit);
