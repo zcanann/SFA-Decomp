@@ -13,7 +13,6 @@
 #include "main/curve_eval.h"
 #include "main/audio/sfx.h"
 #include "main/objprint_anim_api.h"
-#include "main/objprint_api.h"
 #include "main/objprint_character_api.h"
 #include "main/objprint_sound_api.h"
 #include "main/newshadows.h"
@@ -1416,7 +1415,7 @@ void fn_8003B500(GameObject* obj, s16* state, f32 value)
     }
 }
 
-void fn_8003B5E0(int a, int b, int c, int d)
+void fn_8003B5E0(int a, int b, int c, u8 d)
 {
     lbl_803DCC0D = a;
     lbl_803DCC0C = b;
