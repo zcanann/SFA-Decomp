@@ -1507,7 +1507,6 @@ u32 mapLoadDataFile(int mapId, int fileId)
     {
         int idx;
         int* grp;
-        int n;
         result = MLDF_PTR(0x26);
         if ((result != 0) && (MLDF_OWNER(0x26) == mapId))
         {
@@ -1537,26 +1536,11 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            idx = 0;
             grp = MLDF_REMAP;
-            for (n = 0xf; n != 0; n--)
+            for (idx = 0; idx < 0x4b; idx++)
             {
-                if (mapId == grp[0])
+                if (mapId == grp[idx])
                     break;
-                idx = idx + 1;
-                if (mapId == grp[1])
-                    break;
-                idx = idx + 1;
-                if (mapId == grp[2])
-                    break;
-                idx = idx + 1;
-                if (mapId == grp[3])
-                    break;
-                idx = idx + 1;
-                if (mapId == grp[4])
-                    break;
-                grp = grp + 5;
-                idx = idx + 1;
             }
             piRomLoadSection(0, idx, 0);
             if (mapId > 4)
