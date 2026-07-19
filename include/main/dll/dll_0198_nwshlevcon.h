@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_1CA_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/objanim_update.h"
 
 void dll_197_init(int obj, int data);
@@ -16,7 +17,7 @@ void dll_197_release(void);
 void dll_197_initialise(void);
 int dll_199_getExtraSize(void);
 int dll_199_getObjectTypeId(void);
-void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dll_199_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void dll_199_hitDetect(void);
 int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int nwsh_levcon_getExtraSize(void);

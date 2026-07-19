@@ -2,11 +2,12 @@
 #define MAIN_DLL_DLL_0190_ECSHCUP_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 
 int ecsh_cup_getExtraSize(void);
 int ecsh_cup_getObjectTypeId(void);
 void ecsh_cup_free(int* obj);
-void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void ecsh_cup_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void ecsh_cup_hitDetect(void);
 void ecsh_cup_update(short *param_1);
 void ecsh_cup_init(int obj, int def);

@@ -17,7 +17,7 @@
 #include "main/game_timer_control_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/vecmath.h"
 #include "main/dll/dbshsymbol_types.h"
 #include "main/game_object.h"
@@ -232,9 +232,9 @@ void DBSH_Symbol_free(void)
     gameTimerStop();
 }
 
-void DBSH_Symbol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void DBSH_Symbol_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5104);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5104);
 }
 
 void DBSH_Symbol_update(GameObject* obj)

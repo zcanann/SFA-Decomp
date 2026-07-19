@@ -6,7 +6,7 @@
 #include "main/resource.h"
 #include "main/object.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -74,11 +74,11 @@ void dll_19A_free(void)
 {
 }
 
-void dll_19A_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_19A_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5180);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5180);
 }
 
 void dll_19A_hitDetect(void)

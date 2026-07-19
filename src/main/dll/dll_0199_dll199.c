@@ -3,7 +3,7 @@
 #include "main/dll/dll197state_struct.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_api.h"
 #define RENDER_ENVFX_DIRECT_INT_CALL
 #include "main/render_envfx_api.h"
@@ -51,7 +51,7 @@ void dll_199_hitDetect(void);
 int dll_199_getExtraSize(void);
 int dll_199_getObjectTypeId(void);
 void dll_199_free(int* obj);
-void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dll_199_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 ObjectDescriptor dll_199 = {
     0,
     0,
@@ -195,11 +195,11 @@ void dll_199_free(int* obj)
     ((void (*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
 }
 
-void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_199_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 void dll_199_hitDetect(void)
 {

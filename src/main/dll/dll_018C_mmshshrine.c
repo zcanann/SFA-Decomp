@@ -23,7 +23,7 @@
 #include "main/render_envfx_api.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
@@ -499,7 +499,7 @@ void MMSH_Shrine_render(GameObject* obj, u32 a2, u32 a3, u32 a4, u32 a5, char vi
         {
             modelLightStruct_setEnabled(runtime->light, 1, 1.0f);
         }
-        objRenderModelAndHitVolumes((int)obj, a2, a3, a4, a5, 1.0f);
+        objRenderModelAndHitVolumes(obj, a2, a3, a4, a5, 1.0f);
         objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f,
                                (ModelLightStruct*)runtime->light);
     }

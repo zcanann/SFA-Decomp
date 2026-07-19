@@ -8,7 +8,7 @@
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/dll/creator1C4.h"
@@ -58,10 +58,10 @@ void gpsh_objcreator_free(void)
 {
 }
 
-void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void gpsh_objcreator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void gpsh_objcreator_hitDetect(void)

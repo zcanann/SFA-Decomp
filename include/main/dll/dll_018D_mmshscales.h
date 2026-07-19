@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_018D_MMSHSCALES_H_
 
 #include "global.h"
+#include "main/game_object.h"
 
 typedef struct MmshScalesState
 {
@@ -37,7 +38,7 @@ STATIC_ASSERT(sizeof(MmshScalesSpawnSetup) == 0x24);
 int MMSH_Scales_getExtraSize(void);
 int MMSH_Scales_getObjectTypeId(void);
 void MMSH_Scales_free(int obj, int keepChild);
-void MMSH_Scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void MMSH_Scales_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void MMSH_Scales_hitDetect(void);
 void MMSH_Scales_update(int objArg);
 void MMSH_Scales_init(int* obj, s16* def);

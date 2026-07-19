@@ -7,7 +7,7 @@
 #include "main/dll/dll_01A0_nwgeyser.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/debug.h"
 #define RENDER_ENVFX_DIRECT_INT_CALL
 #include "main/render_envfx_api.h"
@@ -176,11 +176,11 @@ void dll_19B_free(int* obj)
     (*gModgfxInterface)->detachSource(obj);
 }
 
-void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_19B_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5188);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5188);
 }
 
 void dll_19B_hitDetect(void)

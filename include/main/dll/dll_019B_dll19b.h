@@ -38,7 +38,7 @@ typedef struct Dll19BState
 int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 int dll_19B_getExtraSize(void);
 int dll_19B_getObjectTypeId(void);
-void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dll_19B_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void dll_19B_hitDetect(void);
 void dll_19B_free(int* obj);
 void dll_19B_update(int obj);

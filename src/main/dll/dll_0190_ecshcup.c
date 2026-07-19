@@ -2,7 +2,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath_distance_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/dll_0190_ecshcup.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
@@ -71,11 +71,11 @@ void ecsh_cup_free(int* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void ecsh_cup_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void ecsh_cup_hitDetect(void)

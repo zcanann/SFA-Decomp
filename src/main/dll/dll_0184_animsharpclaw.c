@@ -14,7 +14,7 @@
  */
 #include "main/objanim_update.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -90,11 +90,11 @@ void animsharpclaw_free(GameObject* obj)
     Sfx_StopObjectChannel(obj, 0x7f);
 }
 
-void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void animsharpclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
     if (isVisible != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void animsharpclaw_hitDetect(void)

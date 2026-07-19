@@ -27,7 +27,7 @@
 #include "main/mapEventTypes.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/gamebits.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
@@ -229,7 +229,7 @@ void dbsh_shrine_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visi
         {
             modelLightStruct_setEnabled(runtime->light, 1, 1.0f);
         }
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f,
                                (ModelLightStruct*)runtime->light);
     }

@@ -25,7 +25,7 @@ typedef struct Dll19CState
 int dll_19C_getExtraSize(void);
 int dll_19C_getObjectTypeId(void);
 void dll_19C_free(void);
-void dll_19C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void dll_19C_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void dll_19C_hitDetect(void);
 void dll_19C_update(int* obj);
 void dll_19C_init(GameObject* obj, u8* initData);
