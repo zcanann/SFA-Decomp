@@ -74,38 +74,44 @@ const ModelLightCornerBlock gModelLightCornerBlock = {{
 
 extern void* gModelLightList[0x32];
 
-void modelLightStruct_freeSlot(ModelLightStruct** lightSlot)
+static void modelLightRemoveAndFree(ModelLightStruct* light)
 {
     int i;
     int count;
+
+    for (i = 0; i < (count = gModelLightCount); i++)
+    {
+        if (gModelLightList[i] == light)
+        {
+            break;
+        }
+    }
+
+    if (i < count)
+    {
+        while (i < count - 1)
+        {
+            gModelLightList[i] = gModelLightList[i + 1];
+            i++;
+        }
+        gModelLightCount--;
+    }
+
+    if (light->glowType == 2 && light->glowTexture != NULL)
+    {
+        textureFree((Texture*)(light->glowTexture));
+    }
+    mm_free(light);
+}
+
+void modelLightStruct_freeSlot(ModelLightStruct** lightSlot)
+{
     ModelLightStruct* light;
 
     light = *lightSlot;
     if (light != NULL)
     {
-        for (i = 0; i < (count = gModelLightCount); i++)
-        {
-            if (gModelLightList[i] == light)
-            {
-                break;
-            }
-        }
-
-        if (i < count)
-        {
-            while (i < count - 1)
-            {
-                gModelLightList[i] = gModelLightList[i + 1];
-                i++;
-            }
-            gModelLightCount--;
-        }
-
-        if (light->glowType == 2 && light->glowTexture != NULL)
-        {
-            textureFree((Texture*)(light->glowTexture));
-        }
-        mm_free(light);
+        modelLightRemoveAndFree(light);
         *lightSlot = NULL;
     }
 }
