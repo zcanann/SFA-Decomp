@@ -24,6 +24,7 @@
 #include "main/frame_timing.h"
 #include "main/camera_shake_api.h"
 #include "main/dll/seqobj11d_ext.h"
+#include "main/dll/baddie_frozen.h"
 
 int lbl_803DBC80[2] = {2, 3};
 #define WISPBADDIE_HIT_VOLUME_SLOT 10
@@ -353,7 +354,7 @@ ObjectDescriptor gWispBaddieObjDescriptor = {
     wispbaddie_getExtraSize,
 };
 
-void battleDroidUpdateWhileFrozen(int obj, int* state, int arg, int code, int wpad0, int wpad1, void* wpad2, int wpad3)
+void battleDroidUpdateWhileFrozen(int obj, u8* state, int arg, int code, int wpad0, int wpad1, Vec* wpad2, int wpad3)
 {
     if (code == 0x10)
     {

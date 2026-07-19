@@ -47,6 +47,7 @@
 #include "main/pad_api.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/dll/hagabon_mk2.h"
+#include "main/dll/baddie_frozen.h"
 
 extern int lbl_803DBCF8[2];
 
@@ -219,7 +220,7 @@ void hagabonMK2_stopLoopSfx(int obj, u8* state)
     Sfx_StopFromObject(obj, SFXTRIG_baddie_rach_death);
 }
 
-void hagabonMK2_updateWhileFrozen(int obj, int* st, int unused, int cmd, int wpad0, int wpad1, void* wpad2, int wpad3)
+void hagabonMK2_updateWhileFrozen(int obj, u8* st, int unused, int cmd, int wpad0, int wpad1, Vec* wpad2, int wpad3)
 {
     int objI = (int)obj;
     if (cmd == 0x11)

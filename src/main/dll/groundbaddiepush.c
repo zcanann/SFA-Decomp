@@ -14,6 +14,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/object_transform.h"
 #include "main/object_api.h"
+#include "main/dll/baddie_frozen.h"
 
 #define GROUND_BADDIE_PI 3.14159274f
 #define GROUND_BADDIE_ANGLE_UNIT_SCALE 32768.0f
@@ -74,7 +75,8 @@ void groundBaddiePushPlayerOut(int obj, u8* state)
     }
 }
 
-void guardClawUpdateWhileFrozen(int obj, int* state, int wpad0, int wpad1, int wpad2, int wpad3, void* wpad4, int wpad5)
+void guardClawUpdateWhileFrozen(int obj, u8* state, int wpad0, int wpad1, int wpad2, int wpad3, Vec* wpad4,
+                                int wpad5)
 {
     Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_pole1_c_23);
     ((GroundBaddieState*)state)->baddie.reactionFlags |= 0x10;
