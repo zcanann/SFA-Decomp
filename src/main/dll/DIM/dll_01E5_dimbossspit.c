@@ -62,13 +62,6 @@ typedef struct DIMbossspitState
 extern f32 gDimBossSpitGravity;
 extern f32 gDimBossSpitVelocityDamping;
 extern f32 lbl_803E4D68;
-extern const f32 lbl_803E4D38;
-extern const f32 lbl_803E4D3C;
-extern const f32 lbl_803E4D40;
-extern const f32 lbl_803E4D44;
-extern const f32 lbl_803E4D48;
-extern const f32 gDimBossSpitBurstAlphaScale;
-extern const f32 lbl_803E4D50;
 extern const f32 lbl_803E4D6C;
 extern f32 lbl_803E4D70;
 extern f32 lbl_803E4D74;
@@ -86,7 +79,7 @@ void DIMbossspit_updateBurst(GameObject* obj)
     int i;
 
     state = *(int*)&(obj)->extra;
-    (obj)->anim.rootMotionScale = (obj)->anim.rootMotionScale + lbl_803E4D38;
+    (obj)->anim.rootMotionScale += 0.2f;
     (obj)->anim.rotX += 0xaaa;
     (obj)->anim.rotZ += 0x38e;
     (obj)->anim.rotY += 0x38e;
@@ -101,11 +94,11 @@ void DIMbossspit_updateBurst(GameObject* obj)
         (*gPartfxInterface)->spawnObject((void*)obj, 0x4bb, NULL, 1, -1, NULL);
         Sfx_PlayFromObject((int)obj, SFXTRIG_wp_gcexp1_c);
         Sfx_PlayFromObject((int)obj, SFXTRIG_mn_lummy311);
-        CameraShake_SetAllMagnitudes(lbl_803E4D3C);
-        doRumble(lbl_803E4D40);
+        CameraShake_SetAllMagnitudes(3.0f);
+        doRumble(12.0f);
         if (((DIMbossspitUpdateBurstState*)state)->light != NULL)
         {
-            modelLightStruct_setEnabled(((DIMbossspitUpdateBurstState*)state)->light, 0, lbl_803E4D44);
+            modelLightStruct_setEnabled(((DIMbossspitUpdateBurstState*)state)->light, 0, 1.0f);
         }
     }
     *(s16*)state += framesThisStep;
@@ -118,7 +111,7 @@ void DIMbossspit_updateBurst(GameObject* obj)
         }
         return;
     }
-    alphaFade = (int)(lbl_803E4D48 * ((f32)(s32)burstTimer * gDimBossSpitBurstAlphaScale));
+    alphaFade = (int)(255.0f * ((f32)(s32)burstTimer / 64.0f));
     alpha = 0xff - alphaFade;
     radius = 0x94 - (burstTimer >> 2);
     if (alpha >= 0)
@@ -135,7 +128,7 @@ void DIMbossspit_updateBurst(GameObject* obj)
             ((DIMbossspitUpdateBurstState*)state)->light = NULL;
         }
         (obj)->anim.alpha = 0;
-        if ((f32)(s32)((radius - 0x40) >> 1) > lbl_803E4D50)
+        if ((f32)(s32)((radius - 0x40) >> 1) > 10.0f)
         {
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMBOSSSPIT_HIT_VOLUME_SLOT_9, 1, 0);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (s16)((radius - 0x40) >> 1));
