@@ -127,19 +127,19 @@ int gunpowderbarrel_canBeGrabbed(GameObject* obj)
     return result;
 }
 
-const f32 lbl_803E42C4 = 2.2f;
-const f32 lbl_803E42C8 = 0.75f;
-const f32 lbl_803E42CC = -2.2f;
-const f32 lbl_803E42D0 = -0.75f;
-const f32 lbl_803E42D4 = 1.5f;
-const f32 lbl_803E42D8 = -1.5f;
-const f32 lbl_803E42DC = 1.0f;
-const f32 lbl_803E42E0 = 300.0f;
-const f32 lbl_803E42E4 = 30.0f;
-const f32 lbl_803E42E8 = 20.0f;
-const f32 lbl_803E42EC = 180.0f;
-const f32 gGunpowderBarrelAngleUnit = 65536.0f;
-const f32 lbl_803E42F4 = 0.0f;
+extern const f32 lbl_803E42C4;
+extern const f32 lbl_803E42C8;
+extern const f32 lbl_803E42CC;
+extern const f32 lbl_803E42D0;
+extern const f32 lbl_803E42D4;
+extern const f32 lbl_803E42D8;
+extern const f32 lbl_803E42DC;
+extern const f32 lbl_803E42E0;
+extern const f32 lbl_803E42E4;
+extern const f32 lbl_803E42E8;
+extern const f32 lbl_803E42EC;
+extern const f32 gGunpowderBarrelAngleUnit;
+extern const f32 lbl_803E42F4;
 
 /* Zero the barrel's velocity/throw vectors, mark it sleeping, clear
  * obj-active and the held flag. */
@@ -392,19 +392,19 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
     }
 }
 
-const f32 lbl_803E4308 = 10.0f;
-const f32 lbl_803E430C = 0.01f;
-const f32 lbl_803E4310 = 0.12f;
-const f32 lbl_803E4314 = -5.0f;
-const f32 lbl_803E4318 = 5.0f;
-const f32 lbl_803E431C = -100.0f;
-const f32 lbl_803E4320 = -0.2f;
-const f32 lbl_803E4324 = 0.99f;
-const f32 lbl_803E4328 = 0.5f;
-const f32 lbl_803E432C = 8.0f;
-const f32 lbl_803E4330 = 0.2f;
-const f32 lbl_803E4334 = 60.0f;
-const f32 lbl_803E4338 = 50.0f;
+extern const f32 lbl_803E4308;
+extern const f32 lbl_803E430C;
+extern const f32 lbl_803E4310;
+extern const f32 lbl_803E4314;
+extern const f32 lbl_803E4318;
+extern const f32 lbl_803E431C;
+extern const f32 lbl_803E4320;
+extern const f32 lbl_803E4324;
+extern const f32 lbl_803E4328;
+extern const f32 lbl_803E432C;
+extern const f32 lbl_803E4330;
+extern const f32 lbl_803E4334;
+extern const f32 lbl_803E4338;
 
 void gunpowderbarrel_triggerExplosion(GameObject *obj)
 {
@@ -846,9 +846,9 @@ void gunpowderbarrel_hitDetect(int obj)
     barrel->anim.previousLocalPosZ = barrel->anim.localPosZ;
 }
 
-const f32 gGunpowderBarrelPi = 3.1415927f;
-const f32 gGunpowderBarrelHalfAngleUnit = 32768.0f;
-const f32 lbl_803E4344 = 0.0f;
+extern const f32 gGunpowderBarrelPi;
+extern const f32 gGunpowderBarrelHalfAngleUnit;
+extern const f32 lbl_803E4344;
 
 void gunpowderbarrel_update(GameObject *obj)
 {
@@ -1201,6 +1201,36 @@ void gunpowderbarrel_init(int obj, u8* def)
  * hitbox while the fuse burns and hands the barrel back to its generator,
  * and handles the pickup/steal/toss transitions against the player's carry
  * state. */
+
+const f32 lbl_803E42C4 = 2.2f;
+const f32 lbl_803E42C8 = 0.75f;
+const f32 lbl_803E42CC = -2.2f;
+const f32 lbl_803E42D0 = -0.75f;
+const f32 lbl_803E42D4 = 1.5f;
+const f32 lbl_803E42D8 = -1.5f;
+const f32 lbl_803E42DC = 1.0f;
+const f32 lbl_803E42E0 = 300.0f;
+const f32 lbl_803E42E4 = 30.0f;
+const f32 lbl_803E42E8 = 20.0f;
+const f32 lbl_803E42EC = 180.0f;
+const f32 gGunpowderBarrelAngleUnit = 65536.0f;
+const f32 lbl_803E42F4 = 0.0f;
+const f32 lbl_803E4308 = 10.0f;
+const f32 lbl_803E430C = 0.01f;
+const f32 lbl_803E4310 = 0.12f;
+const f32 lbl_803E4314 = -5.0f;
+const f32 lbl_803E4318 = 5.0f;
+const f32 lbl_803E431C = -100.0f;
+const f32 lbl_803E4320 = -0.2f;
+const f32 lbl_803E4324 = 0.99f;
+const f32 lbl_803E4328 = 0.5f;
+const f32 lbl_803E432C = 8.0f;
+const f32 lbl_803E4330 = 0.2f;
+const f32 lbl_803E4334 = 60.0f;
+const f32 lbl_803E4338 = 50.0f;
+const f32 gGunpowderBarrelPi = 3.1415927f;
+const f32 gGunpowderBarrelHalfAngleUnit = 32768.0f;
+const f32 lbl_803E4344 = 0.0f;
 
 ObjectDescriptor11WithPadding gGunPowderBarrelObjDescriptor = {
     {
