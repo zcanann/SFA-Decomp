@@ -433,144 +433,6 @@ static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
     }
     return count;
 }
-int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGroupIndex)
-{
-    ObjfsaPatch* lp;
-    u8* lwg;
-    ObjfsaWalkGroup* wg;
-    u32 lpidx;
-    u32 clz;
-    u16 groupIdx;
-    u16 pgid;
-    u8 i;
-    u8 j;
-    u8 m;
-    u32 pidx;
-    u8 k2;
-    ObjfsaPatch* patch;
-    int lidx;
-    u8 k;
-    f32 y;
-    for (k = 0, wg = &gObjfsaWalkGroups[currentWalkGroupIndex]; k < 4; k++)
-    {
-        pidx = wg->patchIndices[k];
-        if (pidx == 0)
-        {
-            continue;
-        }
-        patch = &gObjfsaPatches[pidx];
-        y = prevPoint[1];
-        if (y < patch->maxY && y > patch->minY)
-        {
-            i = 0;
-            j = 0;
-            for (; i < 4; i++, j += 2)
-            {
-                if (patch->planeOffsets[i] +
-                        (prevPoint[0] * (f32)((s16*)patch)[j] + prevPoint[2] * (f32)((s16*)patch)[j + 1]) >
-                    0.0f)
-                {
-                    break;
-                }
-            }
-            if (i == 4)
-            {
-                y = nextPoint[1];
-                if (y < patch->maxY && y > patch->minY)
-                {
-                    i = 0;
-                    j = 0;
-                    for (; i < 4; i++, j += 2)
-                    {
-                        if (patch->planeOffsets[i] +
-                                (nextPoint[0] * (f32)((s16*)patch)[j] + nextPoint[2] * (f32)((s16*)patch)[j + 1]) >
-                            0.0f)
-                        {
-                            break;
-                        }
-                    }
-                    if (i == 4)
-                    {
-                        return currentWalkGroupIndex;
-                    }
-                }
-            }
-        }
-    }
-
-    for (m = 0; m < 4; m++)
-    {
-        pidx = wg->patchIndices[m];
-        if (pidx == 0)
-        {
-            continue;
-        }
-        clz = (u32)__cntlzw(0xff - currentWalkGroupIndex) >> 5;
-        pgid = gObjfsaPatches[pidx].groupId;
-        if (((int)clz & pgid) != 0)
-        {
-            pidx = (int)(pgid & 0xff00) >> 8;
-            lidx = pidx & 0xffff;
-        }
-        else
-        {
-            lidx = (u8)pgid;
-        }
-        for (k2 = 0, lwg = (u8*)gObjfsaWalkGroups + (lidx & 0xffff) * OBJFSA_PATCHGROUP_STRIDE; k2 < 4; k2++)
-        {
-            lpidx = lwg[k2 + 0x24];
-            if (lpidx == 0)
-            {
-                continue;
-            }
-            lp = &gObjfsaPatches[lpidx];
-            if (lp->groupId != patch->groupId)
-            {
-                y = prevPoint[1];
-                if (y < lp->maxY && y > lp->minY)
-                {
-                    i = 0;
-                    j = 0;
-                    for (; i < 4; i++, j += 2)
-                    {
-                        if (lp->planeOffsets[i] +
-                                (prevPoint[0] * (f32)((s16*)lp)[j] + prevPoint[2] * (f32)((s16*)lp)[j + 1]) >
-                            0.0f)
-                        {
-                            break;
-                        }
-                    }
-                    if (i == 4)
-                    {
-                        y = nextPoint[1];
-                        if (y < lp->maxY && y > lp->minY)
-                        {
-                            i = 0;
-                            j = 0;
-                            for (; i < 4; i++, j += 2)
-                            {
-                                if (lp->planeOffsets[i] +
-                                        (nextPoint[0] * (f32)((s16*)lp)[j] + nextPoint[2] * (f32)((s16*)lp)[j + 1]) >
-                                    0.0f)
-                                {
-                                    break;
-                                }
-                            }
-                            if (i == 4)
-                            {
-                                groupIdx = lidx;
-                                OSReport(sObjfsaFoundNewWalkGroupPatch, groupIdx);
-                                return groupIdx;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    return 0;
-}
 
 int RomCurve_setSegmentEndNode(RomCurveWalker* walker, void* curve)
 {
@@ -927,6 +789,145 @@ int Objfsa_GetNearestPatchExit(f32* point, f32* outVec, u16 id)
     outVec[0] = (f32)(s32)gObjfsaPatches[i].exit0X;
     outVec[2] = (f32)(s32)gObjfsaPatches[i].exit0Z;
     return 1;
+}
+
+int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGroupIndex)
+{
+    ObjfsaPatch* lp;
+    u8* lwg;
+    ObjfsaWalkGroup* wg;
+    u32 lpidx;
+    u32 clz;
+    u16 groupIdx;
+    u16 pgid;
+    u8 i;
+    u8 j;
+    u8 m;
+    u32 pidx;
+    u8 k2;
+    ObjfsaPatch* patch;
+    int lidx;
+    u8 k;
+    f32 y;
+    for (k = 0, wg = &gObjfsaWalkGroups[currentWalkGroupIndex]; k < 4; k++)
+    {
+        pidx = wg->patchIndices[k];
+        if (pidx == 0)
+        {
+            continue;
+        }
+        patch = &gObjfsaPatches[pidx];
+        y = prevPoint[1];
+        if (y < patch->maxY && y > patch->minY)
+        {
+            i = 0;
+            j = 0;
+            for (; i < 4; i++, j += 2)
+            {
+                if (patch->planeOffsets[i] +
+                        (prevPoint[0] * (f32)((s16*)patch)[j] + prevPoint[2] * (f32)((s16*)patch)[j + 1]) >
+                    0.0f)
+                {
+                    break;
+                }
+            }
+            if (i == 4)
+            {
+                y = nextPoint[1];
+                if (y < patch->maxY && y > patch->minY)
+                {
+                    i = 0;
+                    j = 0;
+                    for (; i < 4; i++, j += 2)
+                    {
+                        if (patch->planeOffsets[i] +
+                                (nextPoint[0] * (f32)((s16*)patch)[j] + nextPoint[2] * (f32)((s16*)patch)[j + 1]) >
+                            0.0f)
+                        {
+                            break;
+                        }
+                    }
+                    if (i == 4)
+                    {
+                        return currentWalkGroupIndex;
+                    }
+                }
+            }
+        }
+    }
+
+    for (m = 0; m < 4; m++)
+    {
+        pidx = wg->patchIndices[m];
+        if (pidx == 0)
+        {
+            continue;
+        }
+        clz = (u32)__cntlzw(0xff - currentWalkGroupIndex) >> 5;
+        pgid = gObjfsaPatches[pidx].groupId;
+        if (((int)clz & pgid) != 0)
+        {
+            pidx = (int)(pgid & 0xff00) >> 8;
+            lidx = pidx & 0xffff;
+        }
+        else
+        {
+            lidx = (u8)pgid;
+        }
+        for (k2 = 0, lwg = (u8*)gObjfsaWalkGroups + (lidx & 0xffff) * OBJFSA_PATCHGROUP_STRIDE; k2 < 4; k2++)
+        {
+            lpidx = lwg[k2 + 0x24];
+            if (lpidx == 0)
+            {
+                continue;
+            }
+            lp = &gObjfsaPatches[lpidx];
+            if (lp->groupId != patch->groupId)
+            {
+                y = prevPoint[1];
+                if (y < lp->maxY && y > lp->minY)
+                {
+                    i = 0;
+                    j = 0;
+                    for (; i < 4; i++, j += 2)
+                    {
+                        if (lp->planeOffsets[i] +
+                                (prevPoint[0] * (f32)((s16*)lp)[j] + prevPoint[2] * (f32)((s16*)lp)[j + 1]) >
+                            0.0f)
+                        {
+                            break;
+                        }
+                    }
+                    if (i == 4)
+                    {
+                        y = nextPoint[1];
+                        if (y < lp->maxY && y > lp->minY)
+                        {
+                            i = 0;
+                            j = 0;
+                            for (; i < 4; i++, j += 2)
+                            {
+                                if (lp->planeOffsets[i] +
+                                        (nextPoint[0] * (f32)((s16*)lp)[j] + nextPoint[2] * (f32)((s16*)lp)[j + 1]) >
+                                    0.0f)
+                                {
+                                    break;
+                                }
+                            }
+                            if (i == 4)
+                            {
+                                groupIdx = lidx;
+                                OSReport(sObjfsaFoundNewWalkGroupPatch, groupIdx);
+                                return groupIdx;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
 }
 
 
@@ -1813,6 +1814,64 @@ fail:
     return 1;
 }
 
+int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
+{
+    int candidates[4];
+    int neighbor;
+    int count = 0;
+    u32 mask = 1;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) != 0 && neighbor != exclude)
+        {
+            candidates[count++] = neighbor;
+        }
+        mask <<= 1;
+    }
+    if (count != 0)
+    {
+        if (pickIdx > count - 1)
+            pickIdx = count - 1;
+        if (pickIdx == -1)
+        {
+            pickIdx = randomGetRange(0, count - 1);
+        }
+        return candidates[pickIdx];
+    }
+    return -1;
+}
+
+int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx)
+{
+    int candidates[4];
+    int neighbor;
+    int count = 0;
+    u32 mask = 1;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && neighbor != exclude)
+        {
+            candidates[count++] = neighbor;
+        }
+        mask <<= 1;
+    }
+    if (count != 0)
+    {
+        if (pickIdx > count - 1)
+            pickIdx = count - 1;
+        if (pickIdx == -1)
+        {
+            pickIdx = randomGetRange(0, count - 1);
+        }
+        return candidates[pickIdx];
+    }
+    return -1;
+}
+
 int RomCurve_func29(RomCurveWalker* state, int pickIdx)
 {
     char* stateBytes;
@@ -1887,64 +1946,6 @@ failClear:
     state->nodeA4 = NULL;
 fail:
     return 1;
-}
-
-int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx)
-{
-    int candidates[4];
-    int neighbor;
-    int count = 0;
-    u32 mask = 1;
-    int i;
-    for (i = 0; i < 4; i++)
-    {
-        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
-        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && neighbor != exclude)
-        {
-            candidates[count++] = neighbor;
-        }
-        mask <<= 1;
-    }
-    if (count != 0)
-    {
-        if (pickIdx > count - 1)
-            pickIdx = count - 1;
-        if (pickIdx == -1)
-        {
-            pickIdx = randomGetRange(0, count - 1);
-        }
-        return candidates[pickIdx];
-    }
-    return -1;
-}
-
-int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
-{
-    int candidates[4];
-    int neighbor;
-    int count = 0;
-    u32 mask = 1;
-    int i;
-    for (i = 0; i < 4; i++)
-    {
-        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
-        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) != 0 && neighbor != exclude)
-        {
-            candidates[count++] = neighbor;
-        }
-        mask <<= 1;
-    }
-    if (count != 0)
-    {
-        if (pickIdx > count - 1)
-            pickIdx = count - 1;
-        if (pickIdx == -1)
-        {
-            pickIdx = randomGetRange(0, count - 1);
-        }
-        return candidates[pickIdx];
-    }
-    return -1;
 }
 
 
@@ -2964,6 +2965,32 @@ int RomCurve_projectPointToAdjacentWindow(int* curveIds, f32 x, f32 y, f32 z, f3
     return 0;
 }
 
+int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a, RomCurveDef* b, f32 unusedW)
+{
+    f32 ax;
+    f32 bx;
+    f32 az;
+    f32 bz;
+    f32 cross1;
+    f32 sum1;
+    ax = a->x;
+    az = a->z;
+    bx = b->x;
+    bz = b->z;
+    cross1 = bx * az - ax * bz;
+    sum1 = cross1 + (x * (bz - az) + z * (ax - bx));
+    if ((sum1 <= 0.0f && cross1 >= 0.0f) || (sum1 >= 0.0f && cross1 < 0.0f))
+    {
+        f32 cross_a = -z * ax + x * az;
+        f32 cross_b = -z * bx + x * bz;
+        if ((cross_a <= 0.0f && cross_b >= 0.0f) || (cross_a >= 0.0f && cross_b < 0.0f))
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
 {
     RomCurveDef* curve;
@@ -3019,32 +3046,6 @@ int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
     } while ((previousCurveId != (int)curveId) && (nextCurveId != (int)ROMCURVE_LINK_ID_NONE));
 
     return hitCount & 1;
-}
-
-int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a, RomCurveDef* b, f32 unusedW)
-{
-    f32 ax;
-    f32 bx;
-    f32 az;
-    f32 bz;
-    f32 cross1;
-    f32 sum1;
-    ax = a->x;
-    az = a->z;
-    bx = b->x;
-    bz = b->z;
-    cross1 = bx * az - ax * bz;
-    sum1 = cross1 + (x * (bz - az) + z * (ax - bx));
-    if ((sum1 <= 0.0f && cross1 >= 0.0f) || (sum1 >= 0.0f && cross1 < 0.0f))
-    {
-        f32 cross_a = -z * ax + x * az;
-        f32 cross_b = -z * bx + x * bz;
-        if ((cross_a <= 0.0f && cross_b >= 0.0f) || (cross_a >= 0.0f && cross_b < 0.0f))
-        {
-            return 1;
-        }
-    }
-    return 0;
 }
 
 int curves_findNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
