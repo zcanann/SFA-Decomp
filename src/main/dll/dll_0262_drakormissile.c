@@ -28,7 +28,7 @@
 #include "main/vecmath_distance_api.h"
 #include "main/voxmaps.h"
 
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"

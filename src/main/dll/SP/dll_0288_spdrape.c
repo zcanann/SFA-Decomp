@@ -11,7 +11,7 @@
  * swings (0x140) and flutters (0x141) and re-opens if the player lingers.
  */
 #include "main/dll/SP/dll_0287_spscarab.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"

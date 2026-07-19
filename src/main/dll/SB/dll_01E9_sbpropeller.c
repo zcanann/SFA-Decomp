@@ -13,7 +13,7 @@
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/frame_timing.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/vecmath.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/objhits.h"

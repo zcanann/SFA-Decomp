@@ -14,7 +14,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/camera.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"

@@ -55,7 +55,7 @@
 #include "main/pad.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_keep_alive_api.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/track_dolphin_api.h"
 #include "main/object_descriptor.h"
