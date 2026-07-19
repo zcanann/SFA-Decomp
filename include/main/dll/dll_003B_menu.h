@@ -3,15 +3,15 @@
 
 #include "types.h"
 
-s32 Menu_func0B(void);
-void Menu_func0A(int v);
+s32 Menu_getItemCount(void);
+void Menu_setArmed(int v);
 void Menu_func09_nop(void);
-int Menu_func08(int* sel);
-void Menu_func07(int v);
-void Menu_func06(int resultId, int unused2, int unused3, int itemWidth, int defaultIndex);
-void Menu_func05(int resultId, int unused2, int itemWidth, int defaultIndex);
-void Menu_func04(int unused, int v);
-void Menu_func03(int v);
+int Menu_poll(int* sel);
+void Menu_setCancelId(int v);
+void Menu_addItemEx(int resultId, int unused2, int unused3, int itemWidth, int defaultIndex);
+void Menu_addItem(int resultId, int unused2, int itemWidth, int defaultIndex);
+void Menu_open(int unused, int v);
+void Menu_reset(int v);
 void Menu_release(void);
 void Menu_initialise(void);
 

@@ -10,7 +10,7 @@
  *   0x467  item that rides a B-spline path (Curve_EvalBSpline) with a
  *          trailing particle stream
  *   0x468  sparkle/lightning item with a custom post-render pass
- *          (fn_801E83B0) and ObjGroup membership 0x4F
+ *          (shopitem_renderSparkle) and ObjGroup membership 0x4F
  * Help text and the A-button buy prompt are raised from the per-frame
  * resetHitboxMode interaction bits.
  */
@@ -119,7 +119,7 @@ static const f32 lbl_803E5A60 = 0.005f;
 static const f32 lbl_803E5A64 = 10000.0f;
 static const f32 lbl_803E5A68 = 20.0f;
 
-void fn_801E832C(int obj)
+void shopitem_sparkleBlendSetup(int obj)
 {
     if (*(u8*)(obj + 0x37) == 0xFF)
     {
@@ -134,7 +134,7 @@ void fn_801E832C(int obj)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
+void shopitem_renderSparkle(int obj, int p2, int p3, int p4, int p5)
 {
     ShopItemState* state = *(ShopItemState**)&((GameObject*)obj)->extra;
     u8 i;
@@ -303,7 +303,7 @@ void shopitem_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
     {
         if ((obj)->anim.seqId == SHOPITEM_SEQ_SPARKLE)
         {
-            fn_801E83B0((int)obj, 0, 0, 0, 0);
+            shopitem_renderSparkle((int)obj, 0, 0, 0, 0);
         }
         else
         {
@@ -463,7 +463,7 @@ void shopitem_init(GameObject* obj, int data)
         (*gPartfxInterface)->spawnObject((void*)obj, SHOPITEM_PARTFX_AMBIENT, NULL, 4, -1, NULL);
         break;
     case SHOPITEM_SEQ_SPARKLE:
-        ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_801E832C);
+        ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), shopitem_sparkleBlendSetup);
         ObjGroup_AddObject((int)obj, SHOPITEM_OBJGROUP);
         break;
     }
