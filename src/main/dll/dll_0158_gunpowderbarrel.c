@@ -171,7 +171,7 @@ void gunpowderbarrel_launchAtTarget(GameObject *obj, u8 flag)
     int count;
     GunpowderBarrelState* state = (obj)->extra;
     PlayerState* playerState;
-    s16 stk[8];
+    MatrixTransform xf;
     f32 fz;
     f32 sx, sy, sz;
 
@@ -188,14 +188,14 @@ void gunpowderbarrel_launchAtTarget(GameObject *obj, u8 flag)
         state->throwVelZ = -1.5f;
     }
     fz = 0.0f;
-    *(f32*)((u8*)stk + 0xc) = fz;
-    *(f32*)((u8*)stk + 0x10) = fz;
-    *(f32*)((u8*)stk + 0x14) = fz;
-    *(f32*)((u8*)stk + 0x8) = 1.0f;
-    stk[2] = 0;
-    stk[1] = 0;
-    stk[0] = state->launchYaw;
-    vecRotateZXY(stk, &state->throwVelX);
+    xf.x = fz;
+    xf.y = fz;
+    xf.z = fz;
+    xf.scale = 1.0f;
+    xf.rotZ = 0;
+    xf.rotY = 0;
+    xf.rotX = state->launchYaw;
+    vecRotateZXY(&xf.rotX, &state->throwVelX);
     state->motionFlags = (u8)(state->motionFlags | 1);
     Sfx_PlayFromObject((u32)obj, SFXTRIG_barrel_throw_d3);
     state->motionFlags = (u8)(state->motionFlags | 2);
