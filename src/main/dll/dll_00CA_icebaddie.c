@@ -140,20 +140,20 @@ int iceBaddie_stateHandlerB07(int obj, int state)
         {
             if ((sub->configFlags & 2) == 0)
             {
-                ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 7);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 7);
             }
             else
             {
                 IceBaddieControl* control = (IceBaddieControl*)*(int*)&sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
-                    ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, gIceBaddieAttackMovesAlt[control->attackPatternIndex++]);
+                    (*gPlayerInterface)->setState(
+                        (void*)obj, (void*)state, gIceBaddieAttackMovesAlt[control->attackPatternIndex++]);
                 }
                 else
                 {
-                    ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, gIceBaddieAttackMoves[control->attackPatternIndex++]);
+                    (*gPlayerInterface)->setState(
+                        (void*)obj, (void*)state, gIceBaddieAttackMoves[control->attackPatternIndex++]);
                 }
                 if (control->attackPatternIndex >= 7)
                 {
@@ -165,11 +165,11 @@ int iceBaddie_stateHandlerB07(int obj, int state)
         {
             if (((GroundBaddieState*)state)->baddie.controlMode == 6)
             {
-                ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 5);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 5);
             }
             else
             {
-                ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 6);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 6);
             }
         }
     }
@@ -187,20 +187,22 @@ int iceBaddie_stateHandlerB07(int obj, int state)
         {
             if ((sub->configFlags & 2) == 0)
             {
-                ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 7);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 7);
             }
             else
             {
                 int control = *(int*)&sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
-                    ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, gIceBaddieAttackMovesAlt[((IceBaddieControl*)control)->attackPatternIndex++]);
+                    (*gPlayerInterface)->setState(
+                        (void*)obj, (void*)state,
+                        gIceBaddieAttackMovesAlt[((IceBaddieControl*)control)->attackPatternIndex++]);
                 }
                 else
                 {
-                    ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(
-                        obj, state, gIceBaddieAttackMoves[((IceBaddieControl*)control)->attackPatternIndex++]);
+                    (*gPlayerInterface)->setState(
+                        (void*)obj, (void*)state,
+                        gIceBaddieAttackMoves[((IceBaddieControl*)control)->attackPatternIndex++]);
                 }
                 if (((IceBaddieControl*)control)->attackPatternIndex >= 7)
                 {
@@ -212,11 +214,11 @@ int iceBaddie_stateHandlerB07(int obj, int state)
         {
             if (((GroundBaddieState*)state)->baddie.controlMode == 6)
             {
-                ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 5);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 5);
             }
             else
             {
-                ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 6);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 6);
             }
         }
     }
@@ -225,11 +227,11 @@ int iceBaddie_stateHandlerB07(int obj, int state)
     {
         if (((GroundBaddieState*)state)->baddie.controlMode == 6)
         {
-            ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 5);
+            (*gPlayerInterface)->setState((void*)obj, (void*)state, 5);
         }
         else
         {
-            ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 6);
+            (*gPlayerInterface)->setState((void*)obj, (void*)state, 6);
         }
     }
     return 0;
@@ -248,11 +250,11 @@ int iceBaddie_stateHandlerB06(int obj, int state)
     }
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
     {
-        ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 0xb);
+        (*gPlayerInterface)->setState((void*)obj, (void*)state, 0xb);
     }
     else if (sub->targetState == 3)
     {
-        ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 4);
+        (*gPlayerInterface)->setState((void*)obj, (void*)state, 4);
     }
     else if (sub->targetState == 4)
     {
@@ -261,11 +263,11 @@ int iceBaddie_stateHandlerB06(int obj, int state)
         {
             if (sub->aggression > 50)
             {
-                ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
             }
             else
             {
-                ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 1);
             }
         }
     }
@@ -303,13 +305,13 @@ int iceBaddie_stateHandlerB05(int* obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
-        ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 3);
+        (*gPlayerInterface)->setState(obj, state, 3);
     }
     if ((s8)state->baddie.moveDone != 0)
     {
         if (state->baddie.controlMode == 3)
         {
-            ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 0);
+            (*gPlayerInterface)->setState(obj, state, 0);
         }
         else
         {
@@ -323,7 +325,7 @@ int iceBaddie_stateHandlerB04(int obj, int state)
 {
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
     {
-        ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 2);
+        (*gPlayerInterface)->setState((void*)obj, (void*)state, 2);
     }
     return 0;
 }
@@ -346,7 +348,7 @@ int iceBaddie_stateHandlerB02(GameObject* obj, int state)
 {
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedB != 0)
     {
-        ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])((int)obj, state, 0xd);
+        (*gPlayerInterface)->setState(obj, (void*)state, 0xd);
         *(int*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
         ((GroundBaddieState*)state)->baddie.physicsActive = 0;
         ((GroundBaddieState*)state)->baddie.hasTarget = 0;
@@ -377,11 +379,11 @@ int iceBaddie_stateHandlerB01(int* obj, GroundBaddieState* state)
         {
             if (sub->aggression > 50)
             {
-                ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 0);
+                (*gPlayerInterface)->setState(obj, state, 0);
             }
             else
             {
-                ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 1);
+                (*gPlayerInterface)->setState(obj, state, 1);
             }
         }
         else
@@ -409,16 +411,16 @@ int iceBaddie_checkTargetState(int obj, int state)
                 if (((GroundBaddieState*)state)->baddie.targetDistance < 0.5f * (f32)(u32)sub->aggroRange ||
                     (sub->configFlags & 0x2) != 0)
                 {
-                    (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, state, 0);
+                    (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
                 }
                 else
                 {
-                    (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, state, 1);
+                    (*gPlayerInterface)->setState((void*)obj, (void*)state, 1);
                 }
             }
             else
             {
-                (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, state, 1);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 1);
             }
         }
 
@@ -1249,7 +1251,7 @@ void iceBaddie_updateTargetCollision(int obj, int sub, int state)
         if ((s8)((GroundBaddieState*)state)->baddie.hitPoints > 0 &&
             ((IceBaddieControl*)control)->consecutiveHitCount >= 2)
         {
-            ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, state, 3);
+            (*gPlayerInterface)->setState((void*)obj, (void*)state, 3);
             ((IceBaddieControl*)control)->consecutiveHitCount = 0;
             ((GroundBaddieState*)state)->baddie.substate = 5;
         }
@@ -1263,7 +1265,7 @@ void iceBaddie_func0B(int obj, int message)
     switch ((u8)message)
     {
     case 0x80:
-        ((void (*)(int, int, int))((void**)*gPlayerInterface)[5])(obj, (int)state, 2);
+        (*gPlayerInterface)->setState((void*)obj, state, 2);
         state->baddie.substate = 4;
         state->baddie.moveJustStartedB = 1;
         break;
@@ -1406,7 +1408,7 @@ void iceBaddie_init(int obj, u8* params, int flags)
     }
     ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, 0);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))(obj, (int)sub, 0);
+    (*gPlayerInterface)->setState((void*)obj, sub, 0);
     sub->baddie.substate = 0;
     *(s8*)&sub->baddie.physicsActive = 0;
 }
