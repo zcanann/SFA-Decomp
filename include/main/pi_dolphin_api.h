@@ -45,8 +45,6 @@ void fn_80050A28(int scale);
 void textureFn_8004c330(void* texture, void* texMtx);
 void gxTextureFn_8004d5b4(void* renderOp);
 
-#define gxTextureFn_80050e28IntLegacy(mode) \
-    (((void (*)(int))gxTextureFn_80050e28)((mode)))
 void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5);
 
 extern s16 gObjMapBlockInfo[];

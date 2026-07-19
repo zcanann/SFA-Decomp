@@ -868,7 +868,16 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
             {
                 if ((((ObjModelRenderOp*)shader)->flags & SHADER_FLAG_DECAL_LAYER) && layerIdx == 1)
                 {
-                    gxTextureFn_80050e28IntLegacy(p3[0] != 0 ? 1 : 0);
+                    u8 hasBaseTexture;
+                    if (p3[0] != 0)
+                    {
+                        hasBaseTexture = 1;
+                    }
+                    else
+                    {
+                        hasBaseTexture = 0;
+                    }
+                    gxTextureFn_80050e28(hasBaseTexture);
                     return 1;
                 }
                 alpha = ((obj[0x37] + 1) * shader[0xc]) >> 8;
@@ -1185,7 +1194,16 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         if (modelRenderFn_8003e98c(obj, (u8*)op, refs, 0x80, hl = ((((ModelFileHeader*)p2)->shaderFlags & 2) && !(p2[0x24] & 2)),
                                    nlay) == 0)
         {
-            gxTextureFn_80050e28IntLegacy(refs[0] != 0 ? 1 : 0);
+            u8 hasBaseTexture;
+            if (refs[0] != 0)
+            {
+                hasBaseTexture = 1;
+            }
+            else
+            {
+                hasBaseTexture = 0;
+            }
+            gxTextureFn_80050e28(hasBaseTexture);
         }
         if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_DECAL_LAYER)
         {
