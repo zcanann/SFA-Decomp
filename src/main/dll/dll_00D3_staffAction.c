@@ -789,12 +789,12 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                 mtx[13] = (obj)->anim.localPosY;
                 mtx[14] = (obj)->anim.localPosZ - playerMapOffsetZ;
                 fn_8003B950((f32*)mtx);
-                objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E2FF4);
+                objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E2FF4);
                 fn_8003B950(0);
             }
             else
             {
-                objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E2FF4);
+                objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E2FF4);
             }
             break;
         }

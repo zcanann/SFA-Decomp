@@ -74,7 +74,7 @@ void lightsource_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visi
     }
     if (visible != 0)
     {
-        objRenderModelAndHitVolumesFwdLegacy(obj, p1, p2, p3, p4, 1.0f);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
     }
 }
 

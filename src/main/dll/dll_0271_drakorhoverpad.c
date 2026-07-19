@@ -892,7 +892,7 @@ void drakorhoverpad_render(GameObject* obj, int p2, int p3, int p4, int p5, char
     u8* p = (obj)->extra;
     if (visible)
     {
-        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         ((DrakorHoverpadRenderState*)p)->frameCounter += framesThisStep;
         if (((DrakorHoverpadRenderState*)p)->frameCounter == 0 || ((DrakorHoverpadRenderState*)p)->frameCounter > 10)
         {

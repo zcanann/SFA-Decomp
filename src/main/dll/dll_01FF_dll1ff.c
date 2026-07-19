@@ -94,7 +94,7 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
     }
-    objRenderModelAndHitVolumesFwdLegacy(obj, p1, p2, p3, p4, (1.0f));
+    objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, 1.0f);
 }
 
 void dll_1FF_hitDetect_nop(void)
