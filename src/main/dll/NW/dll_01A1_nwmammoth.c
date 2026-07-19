@@ -54,10 +54,9 @@ u8 lbl_803DBFB4[4] = {1, 0, 0, 0};
 u8 lbl_803DBFB8[4] = {1, 1, 0, 0};
 u8 lbl_803DBFBC[4] = {1, 2, 0, 0};
 
-#define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
-    ((u32 (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
-#define ObjTrigger_IsSetLegacy(obj) \
-    ((int (*)())ObjTrigger_IsSet)((obj))
+typedef u32 (*NwMammothFindNearestObjectFn)(int group, int* obj, f32* distance);
+typedef int (*NwMammothObjTriggerIsSetFn)(int* obj);
+
 #define NWMAMMOTH_PARTFX               0x7f0
 #define NWMAMMOTH_OBJFLAG_PARENT_SLACK 0x1000
 #define NWMAMMOTH_OBJFLAG_RENDERED     0x800
@@ -227,7 +226,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     NwMammothState* state = (NwMammothState*)st;
     GameObject* tw2;
     GameObject* tw;
-    int nearestObj = ObjGroup_FindNearestObjectLegacy(NWMAMMOTH_TARGET_OBJGROUP, obj, 0);
+    int nearestObj = ((NwMammothFindNearestObjectFn)ObjGroup_FindNearestObject)(NWMAMMOTH_TARGET_OBJGROUP, obj, 0);
     switch (state->stateIndex)
     {
     case 9:
@@ -255,7 +254,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             Sfx_PlayFromObject((u32)obj, SFXTRIG_skeep_mumb);
             state->sfxTimer -= gNwMammothSfxInterval;
         }
-        if (ObjTrigger_IsSetLegacy(obj) != 0)
+        if (((NwMammothObjTriggerIsSetFn)ObjTrigger_IsSet)(obj) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(3, (void*)nearestObj, -1);
             state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
