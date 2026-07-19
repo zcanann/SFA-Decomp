@@ -14,7 +14,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/dll/player_objects.h"
@@ -109,7 +109,7 @@ void dim2lavacontrol_free(void)
 void dim2lavacontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dim2lavacontrol_update(int obj)

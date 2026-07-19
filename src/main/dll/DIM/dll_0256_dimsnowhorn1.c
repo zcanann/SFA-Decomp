@@ -27,7 +27,7 @@
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/newshadows_audio_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/pad_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/shader_api.h"
@@ -1123,14 +1123,14 @@ void DIMSnowHorn1_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis
 
     if (visible == -1)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         ObjPath_GetPointWorldPosition(obj, 1, &state->pathPosX, &state->pathPosY, &state->pathPosZ, 0);
         ObjPath_GetPointWorldPositionArray(obj, 2, 4, state->pathPointArray);
     }
 
     if ((state->mountMode != 2) && (visible != 0))
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         ObjPath_GetPointWorldPosition(obj, 1, &state->pathPosX, &state->pathPosY, &state->pathPosZ, 0);
         ObjPath_GetPointWorldPositionArray(obj, 2, 4, state->pathPointArray);
     }

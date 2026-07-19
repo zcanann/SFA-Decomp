@@ -16,7 +16,7 @@
 #include "main/gamebits.h"
 #include "main/map_block.h"
 #include "main/track_dolphin_map_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/dll/DIM/dll_01C7_dimlavasmash.h"
@@ -132,7 +132,7 @@ void dimlavasmash_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     u8* state = ((GameObject*)obj)->extra;
     if (state[2] == 2 && visible != 0)
     {
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E48F8);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E48F8);
     }
 }
 

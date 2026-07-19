@@ -13,7 +13,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 u8 lbl_803DBDF8[8] = {0x40, 0x80, 0, 0, 0, 0, 0, 0};
@@ -138,7 +138,7 @@ void DIMBossIceSmash_free(int* obj)
 void DIMBossIceSmash_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0) objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }
 
 void DIMBossIceSmash_hitDetect(void)

@@ -10,7 +10,7 @@
 #include "main/obj_group.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 /* Cog-puzzle gamebits for DIM2 bridge puzzle */
 #define COGBIT_PANEL_A     0x17a
@@ -65,7 +65,7 @@ void dimbridgecogmai_free(int obj) { ObjGroup_RemoveObject(obj, DIMBRIDGECOG_GRO
 void dimbridgecogmai_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4900);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4900);
 }
 
 void dimbridgecogmai_hitDetect(void)

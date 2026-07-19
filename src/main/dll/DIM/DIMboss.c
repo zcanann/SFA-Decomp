@@ -461,7 +461,7 @@ void DIMboss_render(DIMbossObject* obj, u32 p2, u32 p3, u32 p4,
         return;
     }
 
-    objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E4C44);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E4C44);
     DIM2icicle_updateBossSequenceEffects(obj, runtime);
     dll_2E_func06((GameObject*)obj, &gDIMbossAnimController, 0);
 

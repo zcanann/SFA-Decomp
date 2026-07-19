@@ -13,7 +13,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 #define DIMDISMOUNT_GAMEBIT_DONE  0x3e3
 #define DIMDISMOUNT_GROUP         0x13
@@ -74,7 +74,7 @@ void DIMDismountPoint_render(GameObject *obj, int p1, int p2, int p3, int p4, s8
     }
     else
     {
-        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, 1.0f);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
     }
 }
 

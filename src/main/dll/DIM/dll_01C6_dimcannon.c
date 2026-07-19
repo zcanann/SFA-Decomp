@@ -13,7 +13,7 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objprint_api.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -299,14 +299,14 @@ void DIMCannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         sub = ((GameObject*)obj)->extra;
         saved = ((GameObject*)obj)->anim.rotX;
         ((GameObject*)obj)->anim.rotX = (s16)((s8)def[0x28] << 8);
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E48E8);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E48E8);
         ((GameObject*)obj)->anim.rotX = saved;
         ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &((DimCannonState*)sub)->posX, &((DimCannonState*)sub)->posY,
                                       &((DimCannonState*)sub)->posZ, 0);
     }
     else
     {
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E48E8);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E48E8);
     }
 }
 

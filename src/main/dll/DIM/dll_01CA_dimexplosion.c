@@ -30,7 +30,7 @@
 #include "main/model_light.h"
 #include "main/object_api.h"
 #include "main/object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/camera.h"
 #include "string.h"
 #include "main/audio/sfx.h"
@@ -360,7 +360,7 @@ void explosion_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
             {
                 obj->anim.rotY = (s16) * (u16*)&((ExplosionState*)cursor)->rayYawA;
                 obj->anim.rotX = (s16) * (u16*)&((ExplosionState*)cursor)->rayPitchA;
-                ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, visible);
+                objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, visible);
                 if (i < ((ExplosionState*)state)->rayMode - 1)
                 {
                     *(u16*)((char*)model + 0x18) &= ~8;

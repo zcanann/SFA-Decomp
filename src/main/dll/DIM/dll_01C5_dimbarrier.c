@@ -9,9 +9,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
-#define OBJECT_RENDER_LEGACY_DIRECT_CALL
-#include "main/object_render_legacy.h"
-#undef OBJECT_RENDER_LEGACY_DIRECT_CALL
+#include "main/object_render.h"
 #include "main/audio/sfx.h"
 
 #define DIMBARRIER_TRIGGER_OBJ_TYPE 470
@@ -48,7 +46,7 @@ void dimbarrier_free(void)
 void dimbarrier_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4898);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4898);
 }
 
 void dimbarrier_hitDetect(void)

@@ -12,7 +12,7 @@
 #include "main/dll/DIM/dll_00C7_dim2roofrub_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -270,7 +270,7 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5)
     }
     else
     {
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, (1.0f));
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

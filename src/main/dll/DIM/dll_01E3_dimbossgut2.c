@@ -11,7 +11,7 @@
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
 #include "main/model_light.h"
@@ -155,7 +155,7 @@ void DIM_BossGut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     light = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
         light = (u8*)((Dimbossgut2Curve*)((Dimbossgut2State*)light)->curveData)->light;
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))
         {

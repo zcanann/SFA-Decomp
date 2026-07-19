@@ -84,7 +84,7 @@ void dim_levelcontrol_free(GameObject *obj)
 void dim_levelcontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E4A20);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4A20);
 }
 
 FbWGPipe GXWGFifo : (0xCC008000);

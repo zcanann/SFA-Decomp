@@ -7,7 +7,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/game_object.h"
 #include "main/object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
@@ -62,7 +62,7 @@ void dim2icefloe_free(void)
 void dim2icefloe_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dim2icefloe_hitDetect(void)

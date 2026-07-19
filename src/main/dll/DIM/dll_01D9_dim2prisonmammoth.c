@@ -17,7 +17,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/DIM/dll_01D9_dim2prisonmammoth.h"
 #include "main/player_control_interface.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 #define DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define PAD_BUTTON_A                                 0x100
@@ -177,7 +177,7 @@ void dim2prisonmammoth_render(int obj, int p2, int p3, int p4, int p5, s8 visibl
 {
     if (visible != 0)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

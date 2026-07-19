@@ -17,7 +17,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/model_light.h"
 #include "main/objfx.h"
 #include "main/dll/DIM/dimlogfire.h"
@@ -129,11 +129,9 @@ void DIMLogFire_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
             int* q = (int*)((ObjAnimComponent*)subobj)->banks[((ObjAnimComponent*)subobj)->bankIndex];
             *(u16*)((char*)q + 0x18) = (u16)(*(u16*)((char*)q + 0x18) & ~0x8);
             *(u8*)((char*)(int*)state->subObj + 0x37) = *(u8*)((char*)obj + 0x37);
-            ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(
-                (GameObject*)state->subObj, p2, p3, p4, p5, 1.0f);
+            objRenderModelAndHitVolumes((GameObject*)state->subObj, p2, p3, p4, p5, 1.0f);
         }
-        ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
-                                                                                     1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         if (state->light != NULL)
         {
             if (state->light->glowType != 0)

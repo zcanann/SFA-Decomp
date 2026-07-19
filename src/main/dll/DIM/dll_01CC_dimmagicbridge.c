@@ -24,7 +24,7 @@
 #include "dolphin/os/OSCache.h"
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
@@ -156,7 +156,7 @@ void dimmagicbridge_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
     if (isVisible != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dimmagicbridge_hitDetect(void)
