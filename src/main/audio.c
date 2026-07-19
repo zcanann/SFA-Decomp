@@ -48,7 +48,7 @@ const MusicSeqStartParams gMusicSeqStartParamsDefault = {
     4, {0xFFFFFFFF, 0xFFFFFFFF}, 0x100, {0, 0x7F}, 0, NULL, 0, NULL};
 
 s8 gAudioSoundMode = -1;
-s32 lbl_803DB1EC = 0;
+s32 lbl_803DB1EC[1] = {0};
 char sMusicTrackNameBarren[] = "barren";
 char sMusicTrackNameBarrels[] = "barrels";
 char sMusicTrackNameBloop[] = "bloop";

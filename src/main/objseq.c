@@ -59,7 +59,7 @@ int objSeqObjs = -1;
 f32 gObjSeqShakeAmplitude = 0.2f;
 char sSeqAAnimDataTag[] = "SEQA";
 char sSeqBAnimDataTag[] = "SEQB";
-int lbl_803DB744 = 0;
+int lbl_803DB744[1] = {0};
 u8 lbl_803DB748[4] = {0x20, 0x20, 0x20, 0xFF};
 
 #define ObjMsg_SendToObjectsLegacy(target, flags, sender, message, param) \
