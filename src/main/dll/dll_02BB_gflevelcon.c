@@ -36,19 +36,6 @@
 #include "main/object_render.h"
 #include "main/object_descriptor.h"
 
-extern const f32 lbl_803E7460;
-extern const f32 lbl_803E7464;
-extern const f32 lbl_803E7468;
-extern const f32 lbl_803E746C;
-extern const f32 lbl_803E7470;
-extern const f32 lbl_803E7474;
-extern const f32 lbl_803E7478;
-extern const f32 lbl_803E747C;
-extern const f32 lbl_803E7480;
-extern const f32 lbl_803E7484;
-extern const f32 lbl_803E7488;
-extern const f32 lbl_803E748C;
-
 /* sequence event opcodes consumed by gf_levelcon_SeqFn */
 #define GFLEVELCON_SEQEV_NONE          0
 #define GFLEVELCON_SEQEV_SKY_PRESET_A  1
@@ -139,6 +126,9 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
 {
     GfLevelconHandleScriptEventsState* state = obj->extra;
     int i;
+    f32 skyRed;
+    f32 skyGreen;
+    f32 skyBlue;
 
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -150,16 +140,19 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
         case GFLEVELCON_SEQEV_SKY_PRESET_A:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, lbl_803E7460, lbl_803E7464, lbl_803E7468);
+            skyFn_800894a8(7, -0.1f, -0.5f, -0.2f);
             getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_START_PROMPT:
-            state->promptTimer = lbl_803E746C;
+            state->promptTimer = 476.0f;
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_B:
             skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
-            skyFn_800894a8(7, lbl_803E7464, lbl_803E747C, *(f32*)&lbl_803E7464);
+            skyRed = 112.5f;
+            skyGreen = 150.0f;
+            skyBlue = 180.0f;
+            skyFn_800895e0(7, skyRed, skyGreen, skyBlue, 0, 0);
+            skyFn_800894a8(7, -0.5f, -1.0f, -0.5f);
             getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_B, 0);
             break;
         case GFLEVELCON_SEQEV_LIGHT_ON:
@@ -179,7 +172,7 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
         case GFLEVELCON_SEQEV_SKY_PRESET_C:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, lbl_803E7480, lbl_803E747C, lbl_803E7464);
+            skyFn_800894a8(7, 1.0f, -1.0f, -0.5f);
             getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_C, 0);
             break;
         case GFLEVELCON_SEQEV_LOAD_MAP:
@@ -199,25 +192,28 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
         case GFLEVELCON_SEQEV_SKY_PRESET_D:
             skyFn_80089710(7, 1, 0);
             skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, lbl_803E7484, lbl_803E747C, lbl_803E7464);
+            skyFn_800894a8(7, 0.5f, -1.0f, -0.5f);
             getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_E:
             skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, lbl_803E7470, lbl_803E7474, lbl_803E7478, 0, 0);
-            skyFn_800894a8(7, lbl_803E7484, lbl_803E747C, lbl_803E7464);
+            skyRed = 112.5f;
+            skyGreen = 150.0f;
+            skyBlue = 180.0f;
+            skyFn_800895e0(7, skyRed, skyGreen, skyBlue, 0, 0);
+            skyFn_800894a8(7, 0.5f, -1.0f, -0.5f);
             getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_B, 0);
             break;
         }
     }
 
-    if (state->promptTimer > lbl_803E7488)
+    if (state->promptTimer > 0.0f)
     {
         gameTextShow(0x476);
         state->promptTimer -= timeDelta;
-        if (state->promptTimer < *(f32*)&lbl_803E7488)
+        if (state->promptTimer < 0.0f)
         {
-            state->promptTimer = lbl_803E7488;
+            state->promptTimer = 0.0f;
         }
     }
 
@@ -225,14 +221,14 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
         s16* scroll = state->scrollA;
         if (scroll != NULL)
         {
-            *scroll += (s16)(lbl_803E748C * timeDelta);
+            *scroll += (s16)(256.0f * timeDelta);
         }
     }
     {
         s16* scroll = state->scrollB;
         if (scroll != NULL)
         {
-            *scroll -= (s16)(lbl_803E748C * timeDelta);
+            *scroll -= (s16)(256.0f * timeDelta);
         }
     }
     return 0;
