@@ -11,7 +11,7 @@ typedef struct WindliftPlacement
     f32 posZ; /* 0x10 */
     u8 pad14[0x18 - 0x14];
     s16 unk18;
-    s16 pullStrength; /* 0x1A: wind pull strength passed to fn_8019C784 */
+    s16 pullStrength; /* 0x1A: wind pull strength passed to WindLift_updateRider */
     u8 pad1C[0x22 - 0x1C];
     s16 unk22;
     u8 pad24[0x28 - 0x24];

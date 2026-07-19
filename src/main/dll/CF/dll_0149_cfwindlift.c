@@ -2,7 +2,7 @@
  * cfwindlift (DLL 0x149, defs CFWindLift + CFTreasWind) - wind lifts
  * at CF and elsewhere. update ramps the lift alpha from its game bit,
  * runs the rise sequence with a squared ramp-in, and tracks up to 14
- * rider slots (riders get pulled by fn_8019C784's per-slot spring
+ * rider slots (riders get pulled by WindLift_updateRider's per-slot spring
  * model). The three fortress lifts (placement seqIds 0x58-0x5A in the
  * lookup tables) only run once GameBit 0x57 is set - the city's power
  * restored via the three power bases and the main crystal convergence
@@ -87,13 +87,13 @@ extern f32 lbl_803E41B4;
 extern f32 lbl_803E41B8;
 extern f32 lbl_803E41BC;
 
-/* fn_8019C784: per-rider wind lift physics - track the rider while
+/* WindLift_updateRider: per-rider wind lift physics - track the rider while
  * above the lift and in range, send the lift/drop messages on state
  * edges, and integrate the rise speed with ramp-up, oscillation damping
  * and player-mode handoff. The spring model pulls a rider toward the
  * lift column and lifts it with the wind; slot->phaseFlags carries the rider's
  * phase bits. */
-void fn_8019C784(GameObject* obj, GameObject* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, u32 dur, f32 height)
+void WindLift_updateRider(GameObject* obj, GameObject* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, u32 dur, f32 height)
 {
     GameObject* player;
     f32 lim;
@@ -390,7 +390,7 @@ void WindLift_update(int* obj)
             }
             if (player != NULL)
             {
-                fn_8019C784((GameObject*)obj, player, &sub->slots[0], pull, gb2, 1, sub->duration, sub->liftHeight);
+                WindLift_updateRider((GameObject*)obj, player, &sub->slots[0], pull, gb2, 1, sub->duration, sub->liftHeight);
             }
         }
         else
@@ -466,7 +466,7 @@ void WindLift_update(int* obj)
                 }
                 else if (rider != NULL)
                 {
-                    fn_8019C784((GameObject*)obj, (GameObject*)*objs++, &sub->slots[found], pull, gb2, 0,
+                    WindLift_updateRider((GameObject*)obj, (GameObject*)*objs++, &sub->slots[found], pull, gb2, 0,
                                 sub->duration, sub->liftHeight);
                 }
             }
