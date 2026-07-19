@@ -42,9 +42,6 @@
 #include "main/shader_api.h"
 #include "main/newshadows_audio_api.h"
 
-typedef void (*GXSetZCompLocLegacyFn)(u8 beforeTex);
-typedef void (*GXSetZModeLegacyFn)(u8 compareEnable, int compareFunc, u8 updateEnable);
-typedef void (*GXInitTexObjLegacyFn)();
 typedef void (*GXSetAlphaCompareIntFn)(int comp0, int ref0, int op, int comp1, int ref1);
 
 int lbl_803DD03C;
@@ -984,7 +981,6 @@ void fn_80070234(f32* mat)
 
 
 
-#define GXSetZCompLoc ((GXSetZCompLocLegacyFn)GXSetZCompLoc)
 void gxSetPeControl_ZCompLoc_(u8 zCompLoc)
 {
     if (gGxZCompLocCached != zCompLoc || gGxZCompLocValid == 0)
@@ -994,10 +990,8 @@ void gxSetPeControl_ZCompLoc_(u8 zCompLoc)
         gGxZCompLocValid = 1;
     }
 }
-#undef GXSetZCompLoc
 
 
-#define GXSetZMode ((GXSetZModeLegacyFn)GXSetZMode)
 void gxSetZMode_(u8 compareEnable, int compareFunc, u8 updateEnable)
 {
     if (gGxZModeCompareEnable != compareEnable || gGxZModeCompareFunc != compareFunc ||
@@ -1010,7 +1004,6 @@ void gxSetZMode_(u8 compareEnable, int compareFunc, u8 updateEnable)
         gGxZModeValid = 1;
     }
 }
-#undef GXSetZMode
 
 void resetSomeGxFlags(void)
 {
@@ -1085,10 +1078,8 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     selectReflectionTexture(1);
     tex2 = textureIdxToPtr(((ModelRenderOp*)renderOp)->layer0TextureId);
     wrapBit = (((Texture*)tex2)->maxLod - ((Texture*)tex2)->minLod > 0) ? 1 : 0;
-#define GXInitTexObj ((GXInitTexObjLegacyFn)GXInitTexObj)
     GXInitTexObj((void*)((u8*)tex2 + 0x20), (u8*)tex2 + 0x60, ((Texture*)tex2)->width, ((Texture*)tex2)->height,
                  ((Texture*)tex2)->format, GX_REPEAT, GX_REPEAT, wrapBit);
-#undef GXInitTexObj
     selectTexture((Texture*)tex2, 2);
     GXLoadTexMtxImm(lbl_80396850, GX_PTTEXMTX6, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, 0, GX_FALSE, GX_PTTEXMTX6);
