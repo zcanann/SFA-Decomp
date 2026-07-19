@@ -214,6 +214,7 @@ int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 void Sfx_StopAllObjectSounds(void);
 void audioFn_8000b694(u32 value);
+int sndFXCtrl14(u32 handle, u8 controller, s32 value);
 void Sfx_SetObjectSoundsPaused(s32 paused);
 void Sfx_StopObjectChannel(int obj, int channel);
 void Sfx_StopFromObject(u32 obj, u32 sfxId);

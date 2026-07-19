@@ -8,7 +8,6 @@
 void sndSeqVolume(u8 volume, u16 time, u32 seqId, u8 mode);
 u16 seqGetMIDIPriority(u8 slot, u8 event);
 int sndFXCtrl(u32 handle, u8 controller, u8 value);
-int sndFXCtrl14(u32 handle, u8 controller, u16 value);
 int sndFXKeyOff(u32 handle);
 u32 sndFXStartEx(u16 fxId, u8 volume, u8 pan, u8 studio);
 int sndFXCheck(u32 id);
