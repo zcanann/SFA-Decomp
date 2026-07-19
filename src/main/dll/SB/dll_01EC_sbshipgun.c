@@ -396,7 +396,7 @@ void SB_ShipGun_update(GameObject* obj)
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             if (*(char*)&((SBShipGunState*)state)->health == '\0')
             {
-                spawnExplosionLegacy((int)obj, 100.0f, 1, 1, 1, 0, 1, 1, 0);
+                spawnExplosion((GameObject*)(int)obj, 100.0f, 1, 1, 1, 0, 1, 1, 0);
                 ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_EXPLODED;
             }
             else

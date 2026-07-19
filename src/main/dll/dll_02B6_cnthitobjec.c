@@ -119,7 +119,7 @@ void cnthitobjec_hitDetect(GameObject* obj)
             if (model != CNTHIT_MODEL_NO_EXPLOSION_A && model != CNTHIT_MODEL_NO_EXPLOSION_B &&
                 model != CNTHIT_MODEL_NO_EXPLOSION_C && model != CNTHIT_MODEL_NO_EXPLOSION_D)
             {
-                spawnExplosionLegacy((int)obj, amount, 1, 1, 1, 1, 0, 1, 0);
+                spawnExplosion((GameObject*)(int)obj, amount, 1, 1, 1, 1, 0, 1, 0);
             }
             if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT)
             {

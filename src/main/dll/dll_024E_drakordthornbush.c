@@ -134,12 +134,12 @@ void drakord_thornbush_hitDetect(int obj)
             switch (((GameObject*)obj)->anim.seqId)
             {
             case THORNBUSH_SEQ_THORN:
-                spawnExplosionLegacy((int*)obj, (f32)(s32)((DrakordThornbushPlacement*)setup)->baseRadius, 1, 0, 0,
+                spawnExplosion((GameObject*)(int*)obj, (f32)(s32)((DrakordThornbushPlacement*)setup)->baseRadius, 1, 0, 0,
                                      0, 0, 1, 1);
                 break;
             case THORNBUSH_SEQ_LIGHTNING:
                 Sfx_PlayFromObject(obj, SFXTRIG_awghitobj16);
-                spawnExplosionLegacy((int*)obj, (f32)(s32)(((DrakordThornbushState*)inner)->radius << 1), 1, 1, 1,
+                spawnExplosion((GameObject*)(int*)obj, (f32)(s32)(((DrakordThornbushState*)inner)->radius << 1), 1, 1, 1,
                                      1, 0, 1, 0);
                 Obj_UpdateLightningCluster((GameObject*)obj, ((DrakordThornbushState*)inner)->lightningEntries, 3,
                                            0.0f, &((DrakordThornbushState*)inner)->light);

@@ -176,7 +176,7 @@ void SB_Propeller_update(GameObject* obj)
                 SB_GALLEON_VTBL(*(int*)&objAnim->parent)->onPartDestroyed(*(int*)&objAnim->parent);
                 ObjHits_DisableObject(obj);
                 objAnim->flags = objAnim->flags | OBJANIM_FLAG_HIDDEN;
-                spawnExplosionLegacy((int)obj, lbl_803E5824, 1, 1, 1, 0, 1, 1, 0);
+                spawnExplosion((GameObject*)(int)obj, lbl_803E5824, 1, 1, 1, 0, 1, 1, 0);
                 Sfx_PlayFromObject((int)obj, SB_PROPELLER_SFX_DESTROYED);
             }
         }

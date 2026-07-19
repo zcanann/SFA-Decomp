@@ -196,7 +196,7 @@ void bombplant_explode(int* obj, int unused, int* p3)
         int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
         ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
     }
-    spawnExplosionLegacy((int)obj, 100.0f, 0, 1, 1, 1, 0, 1, 0);
+    spawnExplosion((GameObject*)(int)obj, 100.0f, 0, 1, 1, 1, 0, 1, 0);
     ((BombPlantState*)p3)->stateIndex = 1;
     ((BombPlantState*)p3)->flags = (u8)(((BombPlantState*)p3)->flags | BOMBPLANT_FLAG_STATE_ENTERED);
     gbId = p4->gameBit;

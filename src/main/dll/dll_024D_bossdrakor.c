@@ -606,7 +606,7 @@ void bossdrakor_hitDetect(GameObject* obj)
             if (((BossDrakorState*)inner)->airMeterHandle < 0)
             {
                 mainSetBits(((BossdrakorPlacement*)setup)->defeatedGameBit, 1);
-                spawnExplosionLegacy((int*)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
+                spawnExplosion((GameObject*)(int*)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
                 Obj_RemoveFromUpdateList(obj);
                 (*gMapEventInterface)->setMapAct(BOSSDRAKOR_MAP_ARENA, 3);
                 mainSetBits(GAMEBIT_ITEM_WaterSpellStone2_Got, 1);

@@ -453,7 +453,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST, 4, 0);
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_barrelblow11_d1);
         (obj)->anim.localPosY += 10.0f;
-        spawnExplosionLegacy((int*)obj, 0.0f, 1, 1, 0, 0, 0, 1, 0);
+        spawnExplosion((GameObject*)(int*)obj, 0.0f, 1, 1, 0, 0, 0, 1, 0);
         if (((GunpowderBarrelState*)sub)->heldByCarryInterface != 0)
         {
             (*(void (**)(int, u8*))(*(int*)gCarryableInterface + 0x30))((int)obj, sub);
@@ -1194,4 +1194,3 @@ ObjectDescriptor11WithPadding gGunPowderBarrelObjDescriptor = {
     },
     0,
 };
-

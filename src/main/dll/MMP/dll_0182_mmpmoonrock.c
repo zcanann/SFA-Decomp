@@ -116,7 +116,7 @@ void fn_801A79E0(GameObject* obj)
                        (state->flags & MOONROCK_FLAG_SUNK) != 0))
     {
         (obj)->anim.localPosY += 10.0f;
-        spawnExplosionLegacy((int)obj, 0.0f, 1, 1, 0, 0, 0, 1, 0);
+        spawnExplosion((GameObject*)(int)obj, 0.0f, 1, 1, 0, 0, 0, 1, 0);
         state->flags |= MOONROCK_FLAG_RESPAWNING;
         state->respawnTimer = 120.0f;
         (obj)->anim.alpha = 0;
@@ -678,4 +678,3 @@ ObjectDescriptor gMMP_moonrockObjDescriptor = {
     (ObjectDescriptorCallback)mmp_moonrock_getObjectTypeId,
     mmp_moonrock_getExtraSize,
 };
-

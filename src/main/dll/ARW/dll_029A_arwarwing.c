@@ -805,7 +805,7 @@ void arwarwing_handlePathDamage(GameObject* obj, ArwingState* state)
             state->mode = ARWING_MODE_EXPLODE;
             state->modeTimer = gArwingExplodeModeTime;
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            spawnExplosionLegacy((int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
+            spawnExplosion((GameObject*)(int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
             return;
         }
         if ((dmg & 1) && (s8)pathBlock[0xb8] == 8)
@@ -861,7 +861,7 @@ void arwarwing_handleObjectDamage(GameObject* obj, ArwingState* state)
             state->mode = ARWING_MODE_EXPLODE;
             state->modeTimer = gArwingExplodeModeTime;
             obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            spawnExplosionLegacy((int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
+            spawnExplosion((GameObject*)(int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
         else
         {
@@ -1773,7 +1773,7 @@ void arwarwing_update(GameObject* obj)
             state->mode = ARWING_MODE_EXPLODE;
             state->modeTimer = gArwingExplodeModeTime;
             (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-            spawnExplosionLegacy((int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
+            spawnExplosion((GameObject*)(int)obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         }
         state->rotZCur = (int)(lbl_803E6F6C * timeDelta + (f32)state->rotZCur);
         (obj)->anim.rotZ = (s16)state->rotZCur;
