@@ -30,8 +30,6 @@
 #define WMNEWCRYSTAL_OBJECT_GREEN       0x784
 #define WMNEWCRYSTAL_PARTICLE_ID        0x7ed
 
-extern void WM_newcrystalFn_800969b0(GameObject* obj, void* params, f32 a, f32 b, f32 c, f32 d, f32 e, int enabled);
-
 ObjectDescriptor gWM_newcrystalObjDescriptor = {
     0,
     0,
@@ -96,7 +94,7 @@ int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
                stack block for this effect */
             (*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, &params, 2, -1, NULL);
         }
-        WM_newcrystalFn_800969b0((GameObject*)obj, state, 640.0f, 36.0f, -60.0f, 5.0f, 100.0f, 1);
+        WM_newcrystalFn_800969b0((GameObject*)obj, state->fxState, 640.0f, 36.0f, -60.0f, 5.0f, 100.0f, 1);
         WM_newcrystalFn_800969b0((GameObject*)obj, state->altFxState, 640.0f, 36.0f, 60.0f, 5.0f, 0.0f, 1);
     }
     else if (obj->anim.seqId == WMNEWCRYSTAL_OBJECT_GREEN && state->active != 0)

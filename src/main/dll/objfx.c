@@ -167,7 +167,8 @@ STATIC_ASSERT(offsetof(ExplosionSetup, unk19) == 0x19);
 STATIC_ASSERT(offsetof(ExplosionSetup, flags) == 0x1C);
 STATIC_ASSERT(sizeof(ExplosionSetup) == 0x24);
 
-void WM_newcrystalFn_800969b0(GameObject* obj, s16* state, u8 flags, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff)
+void WM_newcrystalFn_800969b0(GameObject* obj, s16* state, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff,
+                             u8 flags)
 {
     ObjFxParticleParams params;
     int i;

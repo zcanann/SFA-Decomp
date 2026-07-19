@@ -7,8 +7,8 @@
 
 typedef struct WmNewCrystalState
 {
-    u8 fxState[0x34];    /* 0x00: primary glow-effect block (WM_newcrystalFn_800969b0) */
-    u8 altFxState[0x34]; /* 0x34: secondary glow-effect block */
+    s16 fxState[0x1A];    /* 0x00: primary glow-effect block (WM_newcrystalFn_800969b0) */
+    s16 altFxState[0x1A]; /* 0x34: secondary glow-effect block */
     u8 active;           /* 0x68: green crystal still bursting */
     u8 pad69[3];
 } WmNewCrystalState;
