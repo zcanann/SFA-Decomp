@@ -55,8 +55,6 @@ extern s32 gPicMenuVideoDecodeThreadCreated;
 extern s32 gPicMenuVideoDecodePrepareReady;
 extern s32 gAttractMovieIdleFrameCount; /* sbss slot is 8 bytes; upper word unreferenced */
 
-void AttractMovieVideo_DecoderForOnMemory(void*);
-
 char gPicMenuReadThreadArea[0x1000];
 OSThread gPicMenuReadThread;
 OSMessageQueue gPicMenuReadedBuffer2Queue;
@@ -256,7 +254,7 @@ OSMessage PopReadedBuffer(void)
     return msg;
 }
 
-void THPRead_Reader(void)
+void* THPRead_Reader(void* unused)
 {
     AttractMovieReadBuffer* req;
     u32 readOff;
@@ -339,7 +337,7 @@ BOOL CreateReadThread(OSPriority priority)
     char* base = gPicMenuReadThreadArea;
     char* stack = base + 0x1000;
 
-    if (!OSCreateThread((OSThread*)stack, (void* (*)(void*))THPRead_Reader, NULL, stack, 0x1000, priority, 1))
+    if (!OSCreateThread((OSThread*)stack, THPRead_Reader, NULL, stack, 0x1000, priority, 1))
     {
         return 0;
     }
@@ -432,7 +430,7 @@ void AttractMovieVideo_Decode(void* param)
     }
 }
 
-void AttractMovieVideo_DecoderForOnMemory(void* param)
+void* AttractMovieVideo_DecoderForOnMemory(void* param)
 {
     AttractMoviePlayer* player = &lbl_803A5D60;
     u32 frameSize = player->frameStride;
@@ -506,7 +504,7 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
     }
 }
 
-void AttractMovieVideo_Decoder(void)
+void* AttractMovieVideo_Decoder(void* unused)
 {
     AttractMoviePlayer* player = &lbl_803A5D60;
     void* msg;
@@ -572,16 +570,16 @@ BOOL CreateVideoDecodeThread(OSPriority priority, u32 onMemoryArg)
 
     if (onMemoryArg != 0)
     {
-        if (!OSCreateThread((OSThread*)(db + 0x1058), (void* (*)(void*))AttractMovieVideo_DecoderForOnMemory,
-                            (void*)onMemoryArg, (void*)(db + 0x1058), 0x1000, priority, 1))
+        if (!OSCreateThread((OSThread*)(db + 0x1058), AttractMovieVideo_DecoderForOnMemory, (void*)onMemoryArg,
+                            (void*)(db + 0x1058), 0x1000, priority, 1))
         {
             return 0;
         }
     }
     else
     {
-        if (!OSCreateThread((OSThread*)(db + 0x1058), (void* (*)(void*))AttractMovieVideo_Decoder, NULL,
-                            (void*)(db + 0x1058), 0x1000, priority, 1))
+        if (!OSCreateThread((OSThread*)(db + 0x1058), AttractMovieVideo_Decoder, NULL, (void*)(db + 0x1058), 0x1000,
+                            priority, 1))
         {
             return 0;
         }
