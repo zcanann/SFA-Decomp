@@ -1194,10 +1194,10 @@ void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, 
     pauseMenuMapFn_8011de20(this, p5, p4, 0);
     f1 = lbl_803E1E80 * f1;
     f2 = lbl_803E1E80 * f2;
-    u0 = (f32)(u32)p8 / *(u16*)((char*)this + 0xa);
-    v0 = (f32)(u32)p9 / *(u16*)((char*)this + 0xc);
-    u1 = (f32)(u32)(p6 + p8) / *(u16*)((char*)this + 0xa);
-    v1 = (f32)(u32)(p7 + p9) / *(u16*)((char*)this + 0xc);
+    u0 = (f32)(u32)p8 / ((Texture*)this)->width;
+    v0 = (f32)(u32)p9 / ((Texture*)this)->height;
+    u1 = (f32)(u32)(p6 + p8) / ((Texture*)this)->width;
+    v1 = (f32)(u32)(p7 + p9) / ((Texture*)this)->height;
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
     GXWGFifo.s16 = f1;
     GXWGFifo.s16 = f2;
@@ -1232,8 +1232,8 @@ void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, 
     dy = ((u32)(p8 << 2) * (u16)p6) >> 8;
     f1 = lbl_803E1E80 * f1;
     f2 = lbl_803E1E80 * f2;
-    tu = (f32)(u32)p7 / (f32)(u32) * (u16*)((char*)this + 0xa);
-    tv = (f32)(u32)p8 / (f32)(u32) * (u16*)((char*)this + 0xc);
+    tu = (f32)(u32)p7 / (f32)(u32)((Texture*)this)->width;
+    tv = (f32)(u32)p8 / (f32)(u32)((Texture*)this)->height;
     if (flags & 1)
     {
         ua = tu;
