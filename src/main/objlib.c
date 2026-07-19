@@ -137,6 +137,9 @@ extern f32 gObjLibBlinkAnglePiDivisor;
 #define OBJ_MODEL_JOINT_COUNT_OFFSET 0xf3
 #define OBJLIB_BLINK_LEFT_JOINT_TAG  5
 #define OBJLIB_BLINK_RIGHT_JOINT_TAG 4
+
+/* hit-object seqId that triggers the staff-impact sfx (retail OBJECTS.bin). */
+#define OBJLIB_HITOBJ_SEQID_STAFF 0x69 /* "staff" (DLL 0xE2) */
 #define OBJPATH_POINTS_OFFSET        0x2c
 #define OBJPATH_POINT_COUNT_OFFSET   0x58
 #define OBJPATH_ROOT_JOINT_INDEX     -1
@@ -1467,7 +1470,7 @@ int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u3
             effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &effectPos,
                                         OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE,
                                         &effectArgs);
-            if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (((GameObject*)hitObject)->anim.seqId == 0x69))
+            if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (((GameObject*)hitObject)->anim.seqId == OBJLIB_HITOBJ_SEQID_STAFF))
             {
                 Sfx_PlayFromObject((int)obj, sfxId);
             }

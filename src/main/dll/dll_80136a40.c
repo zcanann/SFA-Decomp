@@ -125,6 +125,12 @@ typedef struct
 #define TRICKY_PATH_PARTFX 0x533
 
 #define TRICKY_BADDIE_TARGET_OBJGROUP 49 /* baddie object group scanned by trickyFindNearestUsableBaddie */
+/* creatures excluded from Tricky's baddie targeting (retail OBJECTS.bin names). */
+#define TRICKY_SEQID_WHIRLPOOL    2129 /* "Whirlpool" (DLL 0xC9) */
+#define TRICKY_SEQID_VAMBAT       1022 /* "Vambat" (DLL 0xC9) */
+#define TRICKY_SEQID_WB           1239 /* "WB" (DLL 0xC9) */
+#define TRICKY_SEQID_SC_BABYLIGHT 636  /* "SC_babyligh" (DLL 0x1B5) */
+#define TRICKY_SEQID_PINPON       593  /* "PinPon" (DLL 0xC9) */
 
 #define TUMBLEWEED_BLEND_FLAGS_OFFSET    0x82e
 #define TUMBLEWEED_BLEND_WEIGHT_OFFSET   0x830
@@ -1405,14 +1411,15 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
         if (ObjGroup_ContainsObject(*objs, TRICKY_BADDIE_TARGET_OBJGROUP) == 0 && obj_extra > lbl_803E23DC && v1 == 0 &&
             v2 != 0)
         {
-            if (((GameObject*)*objs)->anim.seqId != 2129)
+            if (((GameObject*)*objs)->anim.seqId != TRICKY_SEQID_WHIRLPOOL)
             {
                 if ((*gMapEventInterface)->shouldNotSaveTime(*(int*)((char*)data + 0x14)) != 0)
                 {
                     if (allowSpecialTypes == 0)
                     {
                         s16 m = ((GameObject*)*objs)->anim.seqId;
-                        if (m == 1022 || m == 1239 || m == 636 || m == 593)
+                        if (m == TRICKY_SEQID_VAMBAT || m == TRICKY_SEQID_WB || m == TRICKY_SEQID_SC_BABYLIGHT ||
+                            m == TRICKY_SEQID_PINPON)
                             continue;
                     }
                     {

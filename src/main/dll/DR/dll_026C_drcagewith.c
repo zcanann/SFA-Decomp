@@ -26,6 +26,8 @@
 #define DRCAGEWITH_CHILD_OBJ 1143
 #define DRCAGEWITH_CAGE_NOROPE_OBJ 2154
 #define DRCAGEWITH_CAGE_ROPE_OBJ 2155
+/* the caged CloudRunner itself; corroborated by the GAMEBIT_DR_RescuedCloudRunner guard. */
+#define DRCAGEWITH_CLOUDRUNNER_OBJ 1049 /* "DR_CloudRun" (DLL 0x258) */
 
 #define DRCAGEWITH_OBJGROUP 0x18
 
@@ -165,7 +167,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             bf31->b0 = 1;
             nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, (int)obj, &maxDist);
-            if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == 1049)
+            if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == DRCAGEWITH_CLOUDRUNNER_OBJ)
             {
                 ((GameObject*)nearest)->userData1 = 0;
                 state->linkedObject = NULL;
@@ -192,7 +194,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
         {
             state->spawnedObject->anim.rotZ = (s16)state->angularVel;
             nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, (int)obj, &maxDist);
-            if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == 1049)
+            if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == DRCAGEWITH_CLOUDRUNNER_OBJ)
             {
                 ((GameObject*)nearest)->userData1 = 1;
                 state->linkedObject = (GameObject*)nearest;

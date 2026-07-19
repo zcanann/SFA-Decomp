@@ -57,6 +57,9 @@ char sSkeetlaVelDebugFmt[] = "Vel %f\n";
 #define SKEETLA_LINKED_SOURCE_ID_OBJ_B 0x160
 #define SKEETLA_PARTICLE_SPARK_A       0xca
 #define SKEETLA_PARTICLE_SPARK_B       0xcb
+
+/* attacker seqId that triggers the staff-impact sfx (retail OBJECTS.bin). */
+#define SKEETLA_ATTACKER_SEQID_STAFF 0x69 /* "staff" (DLL 0xE2) */
 #define SKEETLA_PARTICLE_SPAWN_FLAGS   0x200001
 #define SKEETLA_PARTICLE_RANDOM_RATE   4
 
@@ -235,7 +238,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     case 0xc:
         objfx_spawnHitEmitterAtPos(hitPosPtr, 8, 0xff, 0x20, 0x20);
         objLightFn_8009a1dc(obj, lbl_803E2434, lightArgs, 4, 0);
-        if (((GameObject*)lastContactObj)->anim.seqId == 0x69)
+        if (((GameObject*)lastContactObj)->anim.seqId == SKEETLA_ATTACKER_SEQID_STAFF)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_stftest_var);
         }

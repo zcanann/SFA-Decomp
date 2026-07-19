@@ -30,6 +30,9 @@
 
 #define WMCOLUMN_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+/* nearby scene-marker object whose placement gameBit is cleared (retail OBJECTS.bin). */
+#define WMCOLUMN_SCENE_MARKER_OBJ 499 /* "GPSH_Scene" (DLL 0x194) */
+
 typedef struct WmColumnPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -109,7 +112,7 @@ void WM_Column_update(int obj)
             for (; i < count; i++)
             {
                 other = objects[i];
-                if (((u32)other != obj) && (((GameObject*)other)->anim.seqId == 499) &&
+                if (((u32)other != obj) && (((GameObject*)other)->anim.seqId == WMCOLUMN_SCENE_MARKER_OBJ) &&
                     (Vec_distance((float*)(obj + 0x18), (float*)(other + 0x18)) < 35.0f))
                 {
                     other = ((WmColumnPlacement*)((GameObject*)objects[i])->anim.placement)->gameBit;
@@ -145,7 +148,7 @@ void WM_Column_update(int obj)
             for (; i < count; i++)
             {
                 other = objects[i];
-                if (((u32)other != obj) && (((GameObject*)other)->anim.seqId == 499) &&
+                if (((u32)other != obj) && (((GameObject*)other)->anim.seqId == WMCOLUMN_SCENE_MARKER_OBJ) &&
                     (Vec_distance((float*)(obj + 0x18), (float*)(other + 0x18)) < 35.0f))
                 {
                     int mapData = *(int*)&((GameObject*)objects[i])->anim.placementData;

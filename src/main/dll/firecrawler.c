@@ -100,6 +100,8 @@ u8 lbl_803DBD38[8] = {3, 5, 3, 5, 0, 0, 0, 0};
 /* crawler-family enemy anim.seqIds (docblock table: seqId -> enemy name) */
 #define FIRECRAWLER_SEQID_FIRECRAWLER  0x6a2 /* FireCrawler */
 #define FIRECRAWLER_SEQID_REDEYE       0x6a3 /* RedEye */
+/* attacker seqId this creature is immune to (retail OBJECTS.bin). */
+#define FIRECRAWLER_ATTACKER_SEQID_FLAMETHROWER 0x1b5 /* "FlameThrowe" (DLL 0xE4) */
 #define FIRECRAWLER_SEQID_SHADOWHUNTER 0x6a4 /* ShadowHunter */
 
 /* movement dust spawned on the move-loop event: turning (turnDelta != 0) */
@@ -503,7 +505,7 @@ void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, in
         damage = damage << 2;
     }
     if (idx == 1 &&
-        (((GameObject*)attacker)->anim.seqId == 0x1b5 || ((GameObject*)attacker)->anim.classId == 0x1c || cmd == 0x1f))
+        (((GameObject*)attacker)->anim.seqId == FIRECRAWLER_ATTACKER_SEQID_FLAMETHROWER || ((GameObject*)attacker)->anim.classId == 0x1c || cmd == 0x1f))
     {
         return;
     }

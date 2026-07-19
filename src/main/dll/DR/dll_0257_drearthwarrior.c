@@ -264,6 +264,8 @@ typedef struct
 #define DREARTHWARRIOR_OBJFLAG_PARENT_SLACK 0x1000
 
 #define DREARTHWARRIOR_CHILD_OBJ_HELPER   0x6f5
+/* attacker seqId whose hits are ignored here (retail OBJECTS.bin). */
+#define DREARTHWARRIOR_ATTACKER_SEQID_SWORD 0x23 /* "sword" (DLL 0xE2) */
 #define DREARTHWARRIOR_EFFECT_RESOURCE_ID 0x5a /* shared effect resource -> gEarthWarriorResource */
 
 extern f32 lbl_803E8314;
@@ -1157,7 +1159,7 @@ void DR_EarthWarrior_hitDetect(GameObject* obj)
                     return;
                 }
                 Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&hx, lbl_803E8368);
-                if (hit == 0x1a || hitObj == Obj_GetPlayerObject() || ((GameObject*)hitObj)->anim.seqId == 0x23)
+                if (hit == 0x1a || hitObj == Obj_GetPlayerObject() || ((GameObject*)hitObj)->anim.seqId == DREARTHWARRIOR_ATTACKER_SEQID_SWORD)
                 {
                     return;
                 }
