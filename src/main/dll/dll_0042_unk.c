@@ -4,7 +4,7 @@
  * Implements the per-frame logic for the "normal"/follow camera and a
  * handful of related modes (slide, first-person, path/cutscene). Each
  * routine reads and mutates the shared CamcontrolModeSettings block held
- * in cameraMtxVar57:
+ * in gCamcontrolModeSettings:
  *   - camcontrol_updateVerticalBounds: collision-probes around the camera
  *     and derives upper/lower world-Y bounds from the hit results.
  *   - camslide_update: lateral slide + height tracking that follows the
@@ -18,7 +18,7 @@
  *     plus wall-avoidance and collision-probe timers.
  *   - CameraModeNormal_func0A / _free and the mode-settings alloc/free.
  *
- * cameraMtxVar57 is the live CamcontrolModeSettings; classId 1 marks the
+ * gCamcontrolModeSettings is the live CamcontrolModeSettings; classId 1 marks the
  * player target throughout.
  */
 #include "main/dll/CAM/camcontrol_mode_settings.h"
@@ -37,8 +37,6 @@
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0042_unk.h"
-
-#define gCamcontrolModeSettings cameraMtxVar57
 
 typedef struct CameraModeNormalInitData
 {
