@@ -191,10 +191,6 @@ extern u16 gDebugScreenHeight;
 extern u32 gDebugMarginRight;
 extern u32 gDebugMarginBottom;
 
-#define Obj_SetModelColorOverrideRecursivePromoted(obj, red, green, blue, alpha, enabled)                         \
-    ((void (*)(GameObject*, int, int, int, int, int))Obj_SetModelColorOverrideRecursive)(                        \
-        (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
-
 u8 debugLogBuffer[0x1100];
 
 OSThread gErrDisplayThread;
@@ -1301,12 +1297,12 @@ void fn_80138D7C(int obj, int state)
                     *(u8*)(*(int*)((char*)Obj_GetActiveModel((GameObject*)obj) + 0x34) + 8) = ratio;
                     alpha = *(f32*)(state + 0x828) / lbl_803E23E0;
                 }
-                Obj_SetModelColorOverrideRecursivePromoted(obj, 255, 255, 255, (s32)(lbl_803E240C * alpha), 1);
+                Obj_SetModelColorOverrideRecursive((GameObject*)obj, 255, 255, 255, lbl_803E240C * alpha, 1);
             }
             else
             {
                 *(u8*)(state + 0x82c) = ratio;
-                Obj_SetModelColorOverrideRecursivePromoted(obj, 0, 0, 0, 0, 0);
+                Obj_SetModelColorOverrideRecursive((GameObject*)obj, 0, 0, 0, 0, 0);
             }
         }
     }
