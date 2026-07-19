@@ -255,72 +255,72 @@ void firepipe_updateState(FirePipeObject* obj)
     {
         flags->emitting = 0;
         flags->restartPending = 1;
-        goto sound_update;
     }
-
-    if (flags->restartPending != 0)
+    else
     {
-        flags->emitting = 1;
-        flags->restartPending = 0;
-        mainSetBits(mapData->gameBit, flags->lastGameBitState);
-    }
-
-    if ((fn_80080150(&extra->cycleTimer) != 0) && (flags->emitting == 0))
-    {
-        if (extra->cycleTimer < lbl_803DC348)
+        if (flags->restartPending != 0)
         {
-            if ((extra->glowLight == 0) && (flags->glowEnabled != 0))
+            flags->emitting = 1;
+            flags->restartPending = 0;
+            mainSetBits(mapData->gameBit, flags->lastGameBitState);
+        }
+
+        if ((fn_80080150(&extra->cycleTimer) != 0) && (flags->emitting == 0))
+        {
+            if (extra->cycleTimer < lbl_803DC348)
             {
-                extra->glowLight = modelLightStruct_createPointLight(obj, 0xff, 0x80, 0, 0);
-                if (extra->glowLight != 0)
+                if ((extra->glowLight == 0) && (flags->glowEnabled != 0))
                 {
-                    modelLightStruct_setEnabled(extra->glowLight, 0, lbl_803E6B74);
-                    modelLightStruct_setEnabled(extra->glowLight, 1, lbl_803E6B78);
-                    if (obj->objectId == FIREPIPE_OBJ_BLUE)
+                    extra->glowLight = modelLightStruct_createPointLight(obj, 0xff, 0x80, 0, 0);
+                    if (extra->glowLight != 0)
                     {
-                        modelLightStruct_setupGlow(extra->glowLight, 0, 0, 0xb4, 0xff, 0x64, lbl_803DC34C * obj->scale);
-                    }
-                    else
-                    {
-                        modelLightStruct_setupGlow(extra->glowLight, 0, 0xff, 0x80, 0, 0x64, lbl_803DC34C * obj->scale);
-                    }
-                    modelLightStruct_setPosition(extra->glowLight, lbl_803E6B74, *(f32*)&lbl_803E6B74, lbl_803E6B7C);
-                    radius = lbl_803E6B80 * obj->scale;
-                    nearAtten = (radius < gFirePipeNearAttenMin)
-                                    ? gFirePipeNearAttenMin
-                                    : ((radius > gFirePipeNearAttenMax) ? gFirePipeNearAttenMax : radius);
-                    farAtten = lbl_803E6B8C + radius;
-                    { /* separate local to reproduce reg assignment */
-                        int light = (int)extra->glowLight;
-                        modelLightStruct_setDistanceAttenuation(
-                            (ModelLightStruct*)light, nearAtten,
-                            (farAtten < gFirePipeFarAttenMin)
-                                ? gFirePipeFarAttenMin
-                                : ((farAtten > gFirePipeFarAttenMax) ? gFirePipeFarAttenMax : farAtten));
+                        modelLightStruct_setEnabled(extra->glowLight, 0, lbl_803E6B74);
+                        modelLightStruct_setEnabled(extra->glowLight, 1, lbl_803E6B78);
+                        if (obj->objectId == FIREPIPE_OBJ_BLUE)
+                        {
+                            modelLightStruct_setupGlow(extra->glowLight, 0, 0, 0xb4, 0xff, 0x64, lbl_803DC34C * obj->scale);
+                        }
+                        else
+                        {
+                            modelLightStruct_setupGlow(extra->glowLight, 0, 0xff, 0x80, 0, 0x64, lbl_803DC34C * obj->scale);
+                        }
+                        modelLightStruct_setPosition(extra->glowLight, lbl_803E6B74, *(f32*)&lbl_803E6B74, lbl_803E6B7C);
+                        radius = lbl_803E6B80 * obj->scale;
+                        nearAtten = (radius < gFirePipeNearAttenMin)
+                                        ? gFirePipeNearAttenMin
+                                        : ((radius > gFirePipeNearAttenMax) ? gFirePipeNearAttenMax : radius);
+                        farAtten = lbl_803E6B8C + radius;
+                        { /* separate local to reproduce reg assignment */
+                            int light = (int)extra->glowLight;
+                            modelLightStruct_setDistanceAttenuation(
+                                (ModelLightStruct*)light, nearAtten,
+                                (farAtten < gFirePipeFarAttenMin)
+                                    ? gFirePipeFarAttenMin
+                                    : ((farAtten > gFirePipeFarAttenMax) ? gFirePipeFarAttenMax : farAtten));
+                        }
                     }
                 }
             }
-        }
-        else if (extra->glowLight != 0)
-        {
-            modelLightStruct_setEnabled(extra->glowLight, 0, lbl_803E6B98);
-            if (modelLightStruct_getActiveState((ModelLightStruct*)extra->glowLight) == 0)
+            else if (extra->glowLight != 0)
             {
-                modelLightStruct_freeSlot(&extra->glowLight);
+                modelLightStruct_setEnabled(extra->glowLight, 0, lbl_803E6B98);
+                if (modelLightStruct_getActiveState((ModelLightStruct*)extra->glowLight) == 0)
+                {
+                    modelLightStruct_freeSlot(&extra->glowLight);
+                }
             }
         }
-    }
 
-    if (timerCountDown(&extra->cycleTimer) != 0)
-    {
-        if (mapData->cycleTime != 0)
+        if (timerCountDown(&extra->cycleTimer) != 0)
         {
-            s16toFloat(&extra->cycleTimer, (s16)(mapData->cycleTime * 0x3c));
+            if (mapData->cycleTime != 0)
+            {
+                s16toFloat(&extra->cycleTimer, (s16)(mapData->cycleTime * 0x3c));
+            }
+            flags->emitting = (flags->emitting == 0);
         }
-        flags->emitting = (flags->emitting == 0);
     }
 
-sound_update:
     if ((flags->emitting != 0) && (timerCountDown(&extra->emitTimer) != 0))
     {
         FirePipeExtra* ex3;

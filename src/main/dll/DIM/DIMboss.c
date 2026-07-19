@@ -352,8 +352,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
         baddieResult = DIMboss_GetBaddieControlInterface()->updateState(obj, runtime, 1);
         if (baddieResult == 0)
         {
-            updateResult = 1;
-            goto LAB_801bd7dc;
+            return 1;
         }
         if (obj->childObject != NULL)
         {
@@ -403,7 +402,6 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
     {
         updateResult = runtime->hitReactMode != 0;
     }
-LAB_801bd7dc:
     return updateResult;
 }
 

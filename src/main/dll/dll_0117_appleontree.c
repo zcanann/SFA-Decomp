@@ -552,7 +552,7 @@ void AppleOnTree_update(int objArg)
             }
         }
         if ((((AppleOnTreeState*)state)->flags & 4) != 0)
-            goto switchD_8017e864_caseD_7;
+            return;
     }
     if ((((AppleOnTreeState*)state)->flags & 2) == 0)
     {
@@ -788,8 +788,6 @@ void AppleOnTree_update(int objArg)
             }
         }
     }
-switchD_8017e864_caseD_7:
-    return;
 }
 
 /* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in

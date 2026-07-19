@@ -232,28 +232,20 @@ void SpiritPrize_init(int* obj, u8* init)
     state->spawnScale = 1.0f / (1.0f + (f32)(u32)placement->scaleParam);
     state->triggerHandle = -1;
     triggerId = ((GameObject*)obj)->userData1;
-    if (triggerId == 0)
+    if (triggerId == 0 && placement->triggerOrder != 1)
     {
-        if (placement->triggerOrder != 1)
+        (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
+        ((GameObject*)obj)->userData1 = placement->triggerOrder + 1;
+    }
+    else if (triggerId != 0 && placement->triggerOrder != triggerId - 1)
+    {
+        (*gObjectTriggerInterface)->freeState((u8*)state);
+        if (placement->triggerOrder != -1)
         {
             (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
-            ((GameObject*)obj)->userData1 = placement->triggerOrder + 1;
-            goto afterTrigger;
         }
+        ((GameObject*)obj)->userData1 = placement->triggerOrder + 1;
     }
-    if (triggerId != 0)
-    {
-        if (placement->triggerOrder != triggerId - 1)
-        {
-            (*gObjectTriggerInterface)->freeState((u8*)state);
-            if (placement->triggerOrder != -1)
-            {
-                (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
-            }
-            ((GameObject*)obj)->userData1 = placement->triggerOrder + 1;
-        }
-    }
-afterTrigger:;
     if (((GameObject*)obj)->anim.seqId != SPIRITPRIZE_SEQID_OBJECTBOUND_LIGHT)
     {
         state->useDetachedLight = 1;

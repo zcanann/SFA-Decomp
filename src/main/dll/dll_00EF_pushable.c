@@ -1314,16 +1314,13 @@ void pushable_update(int* obj)
     {
         state->flags = state->flags | PUSHABLE_FLAG_MOVING_Y;
     }
-    if (state->moveFlags.b6 == 0)
+    if (state->moveFlags.b6 == 0 && playerIsDisguised(Obj_GetPlayerObject()) == 0)
     {
-        if (playerIsDisguised(Obj_GetPlayerObject()) != 0)
-            goto LAB_clear;
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
     else
     {
-    LAB_clear:
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
