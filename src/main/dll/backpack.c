@@ -25,14 +25,14 @@
 #include "main/dll/baddie_control_interface.h"
 
 /* obj+0xB8 overlay used only by TriggerLaunchTarget; the named fields line
-   up with GroundBaddieState (triggerId/gameBitA at 0x3F0/0x3F2, unk405). */
+   up with GroundBaddieState (triggerId/gameBitA/subMode at 0x3F0/0x3F2/0x405). */
 typedef struct LandedArwingTriggerLaunchTargetState
 {
     u8 pad0[0x3F0 - 0x0];
     s16 launchMoveId;   /* 0x3F0 */
     s16 triggerGameBit; /* 0x3F2 */
     u8 pad3F4[0x405 - 0x3F4];
-    u8 unk405;
+    u8 subMode;         /* 0x405 */
     u8 pad406[0x408 - 0x406];
 } LandedArwingTriggerLaunchTargetState;
 
@@ -71,7 +71,7 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target)
             obj, (int)((LandedArwingTriggerLaunchTargetState*)aux)->launchMoveId, -1, 0);
         (*gPlayerInterface)->spawnPartfx((void*)obj, (void*)target, 0x3c, 0xa, 0);
         mainSetBits((int)((LandedArwingTriggerLaunchTargetState*)aux)->triggerGameBit, 1);
-        ((LandedArwingTriggerLaunchTargetState*)aux)->unk405 = 0;
+        ((LandedArwingTriggerLaunchTargetState*)aux)->subMode = 0;
     }
     return 0;
 }
