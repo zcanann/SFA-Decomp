@@ -20,6 +20,7 @@
 #include "main/camera_shake_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/seqobj11d_ext.h"
+#include "main/dll/wispbaddieseq_ext.h"
 
 #define WISPBADDIE_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -183,7 +184,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
         }
         if ((sf2 & 0x40000000) != 0)
         {
-            ((void (*)(GameObject*, int))fn_801513AC)(obj, state);
+            fn_801513AC(obj, (u8*)state);
         }
         return 0;
     }
@@ -223,7 +224,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     return 0;
 }
 
-void fn_8015039C(GameObject* obj, int animState)
+void fn_8015039C(GameObject* obj, void* animState)
 {
     GameObject* player;
     f32 distance;

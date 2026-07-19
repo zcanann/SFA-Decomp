@@ -39,6 +39,7 @@
 #include "main/vecmath.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/baddie_setmove.h"
+#include "main/dll/wispbaddieseq_ext.h"
 
 typedef struct GroundBaddieModelChainDescriptor
 {
@@ -175,7 +176,7 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state)
     {
         requestKrazoaShrineMusic();
     }
-    ((void (*)(GameObject*, u8*))fn_8015039C)(obj, state);
+    fn_8015039C(obj, state);
     tv = *(f32*)(state + 0x328);
     fz = lbl_803E2740;
     if (tv != fz && *(u16*)(state + 0x338) != 0)

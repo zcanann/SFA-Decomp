@@ -34,6 +34,7 @@
 #include "main/dll/newseqobj_baddie.h"
 #include "main/dll/dll_00C9_enemy_ext.h"
 #include "main/dll/baddie_frozen.h"
+#include "main/dll/wispbaddieseq_ext.h"
 
 
 /* explosive-barrel attackers; a hit from one skips the sword/impact sfx.
@@ -272,7 +273,7 @@ void sharpClawUpdateIdle(int* obj, u8* state)
     {
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
-    ((void (*)(GameObject*, void*))fn_8015039C)((GameObject*)(obj), state);
+    fn_8015039C((GameObject*)obj, state);
     {
         f32 t = ((SeqObj11EState*)state)->seqTimer;
         f32 z = lbl_803E2740;
@@ -467,7 +468,7 @@ void sharpClawUpdateApproach(GameObject* obj, void* state)
         requestKrazoaShrineMusic();
     }
 
-    ((void (*)(GameObject*, void*))fn_8015039C)(obj, state);
+    fn_8015039C(obj, state);
 
     {
         if (((SeqObj11EState*)state)->seqTimer != lbl_803E2740 && ((SeqObj11EState*)state)->seqNode != 0)

@@ -33,8 +33,6 @@ f32 lbl_803DBD4C = 512.0f;
 
 #define s16toFloatLegacy(timer, duration) \
     ((void (*)(void*, int))s16toFloat)((timer), (duration))
-#define storeZeroToFloatParamLegacy(timer) \
-    ((void (*)(void*))storeZeroToFloatParam)((timer))
 #define timerCountDownLegacy(timer) \
     ((int (*)(int))timerCountDown)((int)(timer))
 
@@ -360,7 +358,7 @@ void pollenfragment_init(GameObject* obj, int config)
     *(f32*)&((XyzAnimatorState*)state)->vertexCount = *(f32*)(state[7] + 0xc);
     ((XyzAnimatorState*)state)->rowCount = 0;
     s16toFloatLegacy(state + 9, 0xe10);
-    storeZeroToFloatParamLegacy(state + 8);
+    storeZeroToFloatParam(&((PollenFragmentExtra*)state)->deathTimer);
 }
 
 void pollenfragment_release(void)
