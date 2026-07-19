@@ -19,7 +19,8 @@ typedef struct ModelRenderOp
     u8 pad38[4];
     u32 flags;
     u8 pad40;
-    u8 mode;
+    u8 texLayerCount; /* 0x41: count of the 8-byte texture-layer records at +0x24
+                         (distinct from layerCount @0x29) */
     u8 pad42;
     u8 alphaOverride;
 } ModelRenderOp;
@@ -29,7 +30,7 @@ STATIC_ASSERT(offsetof(ModelRenderOp, textureId) == 0x24);
 STATIC_ASSERT(offsetof(ModelRenderOp, layerCount) == 0x29);
 STATIC_ASSERT(offsetof(ModelRenderOp, layer0TextureId) == 0x34);
 STATIC_ASSERT(offsetof(ModelRenderOp, flags) == 0x3C);
-STATIC_ASSERT(offsetof(ModelRenderOp, mode) == 0x41);
+STATIC_ASSERT(offsetof(ModelRenderOp, texLayerCount) == 0x41);
 STATIC_ASSERT(offsetof(ModelRenderOp, alphaOverride) == 0x43);
 
 typedef struct ModelRenderOpTextureRefs
@@ -146,6 +147,58 @@ STATIC_ASSERT(offsetof(ModelFileHeader, blendAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);
 STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetCount) == 0xF9);
 STATIC_ASSERT(offsetof(ModelFileHeader, texMtxCount) == 0xFA);
+
+/* ModelFileHeader.hitVolumes entry: joint-space sphere transformed by the
+ * joint matrix each update (objUpdateHitSpheres). */
+typedef struct ModelHitSphereDef {
+    s16 jointIdx;
+    u8 pad02[2];
+    f32 radius;    /* scaled by anim.rootMotionScale at update */
+    f32 center[3]; /* joint-space center */
+    u8 pad14[4];
+} ModelHitSphereDef; /* 0x18 */
+
+STATIC_ASSERT(sizeof(ModelHitSphereDef) == 0x18);
+
+/* Runtime double-buffered hit-sphere record (ObjModel.hitSphereBuf0/1). */
+typedef struct ObjModelHitSphere {
+    f32 radius;
+    f32 pos[3];
+} ObjModelHitSphere; /* 0x10 */
+
+STATIC_ASSERT(sizeof(ObjModelHitSphere) == 0x10);
+
+/* Vertex-anim job header + chunk records consumed by ObjModel_Blend{Vertex,
+ * Normal}Stream (the raw .c spells chunkCount as ((ModelFileHeader*)hdr)->flags;
+ * the stride 0x74 matches ModelFileHeader.vertexAnimEntries). */
+typedef struct ModelVtxAnimJob {
+    u8 unk00[2];
+    u16 chunkCount; /* 0x02 */
+    u8 unk04[2];
+    u8 quantShift;  /* 0x06: GQR6/7 scale for the s16/s8 streams */
+    u8 unk07[5];
+    struct ModelVtxAnimChunk *chunks; /* 0x0C */
+} ModelVtxAnimJob;
+
+typedef struct ModelVtxAnimChunk {
+    u8 unk00[0x60];
+    s32 srcDataOffset; /* 0x60: into the anim data */
+    u8 *weightStream;  /* 0x64 */
+    u8 unk68[4];
+    u8 mtxIdxA;      /* 0x6C: * 0x30 into the reordered matrix array */
+    u8 mtxIdxB;      /* 0x6D */
+    u8 unk6E;
+    u8 weightWords;  /* 0x6F */
+    u16 vtxCount;    /* 0x70 */
+    u8 dstByteOffset; /* 0x72 */
+    u8 vtxWords;     /* 0x73 */
+} ModelVtxAnimChunk; /* 0x74 */
+
+STATIC_ASSERT(sizeof(ModelVtxAnimChunk) == 0x74);
+STATIC_ASSERT(offsetof(ModelVtxAnimJob, chunkCount) == 0x02);
+STATIC_ASSERT(offsetof(ModelVtxAnimJob, chunks) == 0x0C);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, srcDataOffset) == 0x60);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, vtxCount) == 0x70);
 
 /* ModelFileHeader.jointData entry (wiki: Bone). tail is the inverse bind-pose
  * translation, negated into PSMTXTrans every frame by modelInitBoneMtxs. */
