@@ -75,7 +75,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
     m.scale = 1.0f;
     m.seqId = 0;
     activeModel = *(u8**)model;
-    if (*(u8*)(activeModel + 0xf2) == 0)
+    if (((GameObject*)activeModel)->lightColorSlot == 0)
     {
         return -1;
     }
