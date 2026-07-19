@@ -15,6 +15,7 @@
 #include "main/objprint_render_api.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_spirit_api.h"
 #include "main/dll/player_state_api.h"
 #include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
@@ -17083,7 +17084,7 @@ void playerRender(int obj, int a, int b, int c, int d, int flag)
         ObjPath_GetPointWorldPositionArray((GameObject*)obj, 6, 2, (f32*)(inner + 0x3c4));
         ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, (f32*)((char*)inner + 0x768), (f32*)((char*)inner + 0x76c),
                                       (f32*)((char*)inner + 0x770), 0);
-        if (((int (*)(int, int))playerHasKrazoaSpirit)(1, 0) != 0)
+        if (playerHasKrazoaSpirit(1, 0) != 0)
         {
             if ((void*)gPlayerHeldObject == NULL)
             {

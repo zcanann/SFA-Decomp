@@ -355,7 +355,7 @@ void pollenfragment_init(GameObject* obj, int config)
     ((XyzAnimatorState*)state)->unk18 = 0;
     *(f32*)&((XyzAnimatorState*)state)->vertexCount = *(f32*)(state[7] + 0xc);
     ((XyzAnimatorState*)state)->rowCount = 0;
-    s16toFloatLegacy(state + 9, 0xe10);
+    s16toFloat((f32*)(state + 9), 0xe10);
     storeZeroToFloatParam(&((PollenFragmentExtra*)state)->deathTimer);
 }
 
