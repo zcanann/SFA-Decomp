@@ -136,8 +136,6 @@ void dimlavasmash_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-typedef void (*DimLavaSmashSetBlockSurfaceFlagsFn)(int* block, int disable, int surfaceType);
-
 
 void dimlavasmash_hitDetect(void)
 {
@@ -166,7 +164,7 @@ void dimlavasmash_update(int* obj)
 void dimlavasmash_init(s16* obj, s8* def)
 {
     ObjAnimComponent* objAnim;
-    int* block;
+    MapBlockData* block;
     DimlavasmashState* inner;
     ObjHitsPriorityState* hitState;
 
@@ -179,15 +177,13 @@ void dimlavasmash_init(s16* obj, s8* def)
     inner->state = mainGetBit(((DimlavasmashObjectDef*)def)->gameBit);
     if (inner->state == 1)
     {
-        block = (int*)mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
-                                                      ((GameObject*)obj)->anim.localPosY,
-                                                      ((GameObject*)obj)->anim.localPosZ));
+        block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,
+                                                ((GameObject*)obj)->anim.localPosY,
+                                                ((GameObject*)obj)->anim.localPosZ));
         if (block != NULL)
         {
-            ((DimLavaSmashSetBlockSurfaceFlagsFn)dimlavasmash_setBlockSurfaceFlags)(block, 1,
-                                                                                    inner->surfaceLayerId);
-            ((DimLavaSmashSetBlockSurfaceFlagsFn)dimlavasmash_setBlockSurfaceFlags)(block, 0,
-                                                                                    inner->surfaceLayerId + 1);
+            dimlavasmash_setBlockSurfaceFlags(block, 1, inner->surfaceLayerId);
+            dimlavasmash_setBlockSurfaceFlags(block, 0, inner->surfaceLayerId + 1);
         }
     }
     objAnim->bankIndex = def[0x19];
