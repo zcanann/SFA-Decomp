@@ -594,8 +594,8 @@ void DoorF4_init(int* obj, int* params)
         break;
     case 318:
     case 890:
-        *(s16*)&state->sfxOpen = 830;
-        *(s16*)&state->sfxClose = 831;
+        state->sfxOpen = 830;
+        state->sfxClose = 831;
         break;
     case 200:
         state->openRange = lbl_803E3684;
