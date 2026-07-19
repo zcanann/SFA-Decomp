@@ -2172,7 +2172,7 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
  * stage 1 modulates by the second texture. Uses ind tex stage 0 to warp
  * tex coord 0 by tex1.
  */
-void quakeSpellTextureFn_8007366c(int alpha)
+void quakeSpellTextureFn_8007366c(u8 alpha)
 {
     extern f32 lbl_803DEEDC;
     extern f32 lbl_803DEEE4;

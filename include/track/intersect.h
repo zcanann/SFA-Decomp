@@ -8,7 +8,6 @@
 #include "track/intersect_hud_api.h"
 #include "track/intersect_geom_api.h"
 #include "track/intersect_screen_api.h"
-#include "track/intersect_texture_api.h"
 #include "track/intersect_whirlpool_api.h"
 #include "ghidra_import.h"
 
