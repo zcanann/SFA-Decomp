@@ -298,7 +298,7 @@ void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible)
     f32 scale = 1.0f;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, scale);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, scale);
     }
 }
 

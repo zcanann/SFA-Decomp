@@ -75,7 +75,7 @@ void DR_CageControl_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visib
     if (visible != 0)
     {
         f32 scale = 1.0f;
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, scale);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, scale);
     }
 }
 

@@ -42,7 +42,7 @@ void DIM_BossGut_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, char shouldRend
     if (visible != 0)
     {
         ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4C80, timeDelta, NULL);
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E4C84);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, (double)lbl_803E4C84);
     }
 }
 

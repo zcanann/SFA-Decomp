@@ -970,7 +970,7 @@ void HighTop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
         int count;
         int** list;
         int i;
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, scale);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, scale);
         ObjPath_GetPointWorldPosition((GameObject*)obj, 2, &runtime->pathPoint2X, &runtime->pathPoint2Y, &runtime->pathPoint2Z,
                                       0);
         ObjPath_GetPointWorldPositionArray((GameObject*)obj, 3, 4, runtime->pathPointWorldPositions);

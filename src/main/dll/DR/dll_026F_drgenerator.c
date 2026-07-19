@@ -64,7 +64,7 @@ void drgenerator_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6B58);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6B58);
     }
 }
 

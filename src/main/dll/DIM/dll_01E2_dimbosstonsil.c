@@ -242,7 +242,7 @@ void DIMbosstonsil_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char 
         {
         case 0:
         {
-            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
             ObjPath_GetPointWorldPosition(obj, 1, (pp = &pathPoint.x), &pathPoint.y, &pathPoint.z, 0);
             (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_PARTFX, partfxArgs, 0x200001, -1, NULL);

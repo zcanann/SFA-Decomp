@@ -164,7 +164,7 @@ void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
         }
         else
         {
-            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E54D0);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E54D0);
         }
         ObjPath_GetPointWorldPosition(obj, 0, &x0, &y0, &z0, 0);
         ObjPath_GetPointWorldPosition(obj, 1, &x1, &y1, &z1, 0);
@@ -631,4 +631,3 @@ u32 gSC_totempoleObjDescriptor[14] = {0x00000000,
                                       (u32)sc_totempole_free,
                                       (u32)sc_totempole_getObjectTypeId,
                                       (u32)sc_totempole_getExtraSize};
-

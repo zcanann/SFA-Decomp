@@ -89,14 +89,15 @@ void DR_CageWith_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
     f32 renderScale = 1.0f;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)renderScale);
+        ((void (*)(GameObject*, u32, u32, u32, u32, double))objRenderModelAndHitVolumes)(
+            obj, p2, p3, p4, p5, (double)renderScale);
         if (state->spawnedObject != 0)
         {
             ObjPath_GetPointWorldPosition(obj, 0, &state->spawnedObject->anim.localPosX,
                                           &state->spawnedObject->anim.localPosY,
                                           &state->spawnedObject->anim.localPosZ, 0);
-            objRenderModelAndHitVolumesFwdDoubleLegacy(state->spawnedObject, p2, p3, p4, p5,
-                                                        (double)renderScale);
+            ((void (*)(GameObject*, u32, u32, u32, u32, double))objRenderModelAndHitVolumes)(
+                state->spawnedObject, p2, p3, p4, p5, (double)renderScale);
             linkedObj = state->linkedObject;
             if (linkedObj != 0)
             {
@@ -104,7 +105,8 @@ void DR_CageWith_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
                 linkedObj->anim.rotZ = state->spawnedObject->anim.rotZ;
                 ObjPath_GetPointWorldPosition(state->spawnedObject, 0, &linkedObj->anim.localPosX,
                                               &linkedObj->anim.localPosY, &linkedObj->anim.localPosZ, 0);
-                objRenderModelAndHitVolumesFwdDoubleLegacy(linkedObj, p2, p3, p4, p5, (double)renderScale);
+                ((void (*)(GameObject*, u32, u32, u32, u32, double))objRenderModelAndHitVolumes)(
+                    linkedObj, p2, p3, p4, p5, (double)renderScale);
             }
         }
     }

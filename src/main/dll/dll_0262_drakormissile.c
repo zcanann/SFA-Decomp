@@ -244,13 +244,15 @@ void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 vi
             (obj)->anim.rotZ = state->trailYaw[i];
             (obj)->anim.rotY = state->trailPitch[i];
             ((ObjModel*)model)->bufferFlags &= ~8;
-            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)one);
+            ((void (*)(GameObject*, u32, u32, u32, u32, double))objRenderModelAndHitVolumes)(
+                obj, p2, p3, p4, p5, (double)one);
         }
         (obj)->anim.rotZ = savedRotZ;
         (obj)->anim.rotY = savedRotY;
         (obj)->anim.rootMotionScale = savedScale;
         objAnim->bankIndex = 0;
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)one);
+        ((void (*)(GameObject*, u32, u32, u32, u32, double))objRenderModelAndHitVolumes)(
+            obj, p2, p3, p4, p5, (double)one);
         if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
         {
             queueGlowRender(state->light);
