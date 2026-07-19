@@ -41,9 +41,6 @@
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
 #include "main/dll/FRONT/dll_39.h"
 
-#define Obj_GetYawDeltaToObjectLegacy(obj, target, distance)                                                           \
-    ((int (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
-
 /* Persistent movement-state block that sits at the start of the per-object
  * extra for the baddie/object DLLs that use moveLib. The anim-channel table
  * region (0x1c..0x5bb) and the two packed turn/event tables (0x5bc/0x5da) are
@@ -727,7 +724,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                 }
                 if (target != 0)
                 {
-                    yawDelta = Obj_GetYawDeltaToObjectLegacy(obj, target, NULL);
+                    yawDelta = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)target, NULL);
                 }
                 if ((s->modeBits & 0x10) != 0)
                 {
