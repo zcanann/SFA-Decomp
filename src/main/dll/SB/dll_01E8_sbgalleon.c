@@ -52,7 +52,7 @@
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 #include "main/dll/SB/dll_01E8_sbgalleon.h"
 #include "main/frame_timing.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 
 u8 lbl_803DC078[4] = {0x0A, 0x10, 0x1F, 0};
@@ -303,10 +303,10 @@ int SB_Galleon_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
             }
             break;
         case SBGALLEON_SEQEV_SFX_ON:
-            Sfx_PlayFromObject(obj, SBGALLEON_SFX_SPLASH);
+            Sfx_PlayFromObject((u32)obj, SBGALLEON_SFX_SPLASH);
             break;
         case SBGALLEON_SEQEV_SFX_OFF:
-            Sfx_StopFromObjectPtrU32Legacy(obj, SBGALLEON_SFX_SPLASH);
+            Sfx_StopFromObject((u32)obj, SBGALLEON_SFX_SPLASH);
             break;
         case SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_8:
             if (state->damagePhase == 8)
@@ -325,7 +325,7 @@ int SB_Galleon_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
             state->skyFlag = 0;
             break;
         case SBGALLEON_SEQEV_SPLASH_SFX:
-            Sfx_PlayFromObject((void*)sbGetPropeller(), SBGALLEON_SFX_SPRAY);
+            Sfx_PlayFromObject((u32)sbGetPropeller(), SBGALLEON_SFX_SPRAY);
             break;
         case SBGALLEON_SEQEV_MUSIC:
             state->musicIdB = SBGALLEON_MUSIC_INTRO;
@@ -435,7 +435,7 @@ int SB_Galleon_onPartDestroyed(GameObject* obj)
     {
         if (phase >= 2)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_sc_npu_216_3f);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_sc_npu_216_3f);
         }
         state->stage += 1;
         return 1;
