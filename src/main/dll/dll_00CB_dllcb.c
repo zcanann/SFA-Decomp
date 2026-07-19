@@ -108,7 +108,7 @@ int fn_801601C4(GameObject* obj, GroundBaddieState* state)
     else
     {
         (*gPlayerInterface)->setState((void*)obj, state, 0);
-        *(s8*)&state->baddie.moveDone = 0;
+        state->baddie.moveDone = 0;
     }
     return 0;
 }
@@ -159,8 +159,8 @@ int fn_8016043C(GameObject* obj, GroundBaddieState* state)
     {
         (*gPlayerInterface)->setState((void*)obj, state, 3);
         *(int*)&state->baddie.targetObj = 0;
-        *(s8*)&state->baddie.physicsActive = 0;
-        *(s8*)&state->baddie.hasTarget = 0;
+        state->baddie.physicsActive = 0;
+        state->baddie.hasTarget = 0;
         hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         hitState->flags &= ~1;
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
@@ -227,9 +227,9 @@ int fn_801605D4(int* obj, GroundBaddieState* def)
     if ((s8)def->baddie.moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
-        *(s8*)&def->baddie.moveDone = 0;
+        def->baddie.moveDone = 0;
     }
-    *(s8*)&def->baddie.physicsActive = 1;
+    def->baddie.physicsActive = 1;
     ((GameObject*)obj)->anim.rotZ = def->baddie.spawnRotZ;
     ((GameObject*)obj)->anim.rotY = def->baddie.spawnRotY;
     ((void (*)(int*, u8*, int*, f32, f32))((void**)*gBaddieControlInterface)[4])(obj, (u8*)def, (int*)state,
@@ -260,19 +260,19 @@ void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)
     int setup;
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
-    *(s8*)&state->baddie.moveDone = 1;
+    state->baddie.moveDone = 1;
     if ((*(int (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x44))(
             obj, (u8*)state, (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 1) != 0)
     {
         *(int*)&state->baddie.targetObj = ((GroundBaddieState*)sub)->savedObjC0;
-        *(s8*)&state->baddie.hasTarget = 0;
+        state->baddie.hasTarget = 0;
         if (((DllCBPlacement*)setup)->trackYieldEnable != -1)
         {
             if (seq != NULL)
             {
                 (*gObjectTriggerInterface)->yield((ObjSeqState*)seq, ((DllCBPlacement*)setup)->trackYieldId);
             }
-            *(s8*)&((GroundBaddieState*)sub)->subMode = 1;
+            ((GroundBaddieState*)sub)->subMode = 1;
         }
         else
         {
@@ -320,7 +320,7 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
         obj, (u8*)state, (u8*)&sub->routeNav, sub->gameBitB, lbl_80320008, lbl_80320080, 1, 0);
     if (stateResult >= 4)
     {
-        *(s8*)&sub->subMode = 2;
+        sub->subMode = 2;
         *(int*)&state->baddie.targetObj = (int)Obj_GetPlayerObject();
     }
 }
