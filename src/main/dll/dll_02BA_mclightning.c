@@ -90,7 +90,7 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
                 (const Vec3f*)&obj->anim.localPosX, (const Vec3f*)(objs[i] + 0xc), state->boltParamA,
                 state->boltParamB, state->boltParamC, state->boltParamD, 0);
             state->flags.phase = MCLIGHTNING_PHASE_ACTIVE;
-            state->boltFrameTimer = lbl_803E7450;
+            state->boltFrameTimer = 0.0f;
             if (state->flags.spawnFlags & 1)
             {
                 hitDetectFn_80097070(obj, state->hitEffectScale, 1, 7, 0x1e, NULL);
@@ -102,12 +102,12 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
             }
             if (state->flags.spawnFlags & 2)
             {
-                objfx_spawnDirectionalBurst(obj, 5, state->burstEffectChance, 1, 1, 0x64, lbl_803E7454, NULL, 0);
+                objfx_spawnDirectionalBurst(obj, 5, state->burstEffectChance, 1, 1, 0x64, 5.0f, NULL, 0);
             }
             if (foundState->flags.spawnFlags & 2)
             {
                 objfx_spawnDirectionalBurst((void*)objs[i], 5, foundState->burstEffectChance, 1, 1, 0x64,
-                                            lbl_803E7454, NULL, 0);
+                                            5.0f, NULL, 0);
             }
         }
     }
@@ -118,7 +118,7 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
             u32 frame;
             lightningRender(state->boltHandle);
             state->boltFrameTimer += timeDelta;
-            frame = (u16)(lbl_803E7458 + state->boltFrameTimer);
+            frame = (u16)(0.5f + state->boltFrameTimer);
             *(u16*)((int)state->boltHandle + 0x20) = frame;
             if (*(u16*)((int)state->boltHandle + 0x20) >= *(u16*)((int)state->boltHandle + 0x22))
             {
@@ -153,7 +153,7 @@ void mclightning_init(GameObject* obj, McLightningSetup* setup)
     (obj)->animEventCallback = mclightning_SeqFn;
     ObjGroup_AddObject((int)obj, MCLIGHTNING_OBJGROUP);
     state->flags.spawnFlags = setup->spawnFlags;
-    effectScale = lbl_803E745C;
+    effectScale = 1.0f;
     state->hitEffectScale = effectScale;
     state->burstEffectChance = effectScale;
 }

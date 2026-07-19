@@ -7,10 +7,6 @@
 #include "main/objanim_update.h"
 
 extern ObjectDescriptor gMCLightningObjDescriptor;
-extern const f32 lbl_803E7450;
-extern const f32 lbl_803E7454;
-extern const f32 lbl_803E7458;
-extern const f32 lbl_803E745C;
 
 int mclightning_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int mclightning_getExtraSize(void);

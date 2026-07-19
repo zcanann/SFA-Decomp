@@ -3832,12 +3832,12 @@ main/dll/dll_02BA_mclightning.c:
 	.text       start:0x8023938C end:0x80239858
 	.data       start:0x8032BFE8 end:0x8032C020
 	.sdata2     start:0x803E7440 end:0x803E7448
-	.sdata2     start:0x803E7448 end:0x803E7450
+	.sdata2     start:0x803E7448 end:0x803E7460
 
 main/dll/dll_02BB_gflevelcon.c:
 	.text       start:0x80239858 end:0x80239DD8
 	.data       start:0x8032C020 end:0x8032C088
-	.sdata2     start:0x803E7450 end:0x803E7490
+	.sdata2     start:0x803E7460 end:0x803E7490
 
 main/dll/dll_02BC_andross.c:
 	.text       start:0x80239DD8 end:0x8023F05C

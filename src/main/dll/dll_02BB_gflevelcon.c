@@ -36,10 +36,6 @@
 #include "main/object_render.h"
 #include "main/object_descriptor.h"
 
-const f32 lbl_803E7450 = 0.0f;
-const f32 lbl_803E7454 = 5.0f;
-const f32 lbl_803E7458 = 0.5f;
-const f32 lbl_803E745C = 1.0f;
 extern const f32 lbl_803E7460;
 extern const f32 lbl_803E7464;
 extern const f32 lbl_803E7468;
