@@ -3,6 +3,7 @@
  * lit state is one GameBit: FRONT 0x81 / LEFT 0x82 / RIGHT 0x83 / REAR 0x84
  * (reset by sclevelcontrol on entry). Lighting all four plays the success
  * fanfare; the test is timed (beat MuscleFoot's record). */
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/dll/SC/sc_shared.h"
@@ -188,4 +189,19 @@ void sc_totempole_initialise(void)
 }
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gSC_CloudrunnerAObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, sc_cloudrunnera_initialise, sc_cloudrunnera_release, (void*)0x00000000, sc_cloudrunnera_init, sc_cloudrunnera_update, sc_cloudrunnera_hitDetect, sc_cloudrunnera_render, sc_cloudrunnera_free, sc_cloudrunnera_getObjectTypeId, sc_cloudrunnera_getExtraSize };
+ObjectDescriptor gSC_CloudrunnerAObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)sc_cloudrunnera_initialise,
+    (ObjectDescriptorCallback)sc_cloudrunnera_release,
+    0,
+    (ObjectDescriptorCallback)sc_cloudrunnera_init,
+    (ObjectDescriptorCallback)sc_cloudrunnera_update,
+    (ObjectDescriptorCallback)sc_cloudrunnera_hitDetect,
+    (ObjectDescriptorCallback)sc_cloudrunnera_render,
+    (ObjectDescriptorCallback)sc_cloudrunnera_free,
+    (ObjectDescriptorCallback)sc_cloudrunnera_getObjectTypeId,
+    sc_cloudrunnera_getExtraSize,
+};

@@ -701,10 +701,22 @@ void largecrate_initialise(void)
 
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gScarabObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,  (void*)0x00000000, (void*)0x00090000,
-                                  (void*)0x00000000, (void*)0x00000000,  (void*)0x00000000, Scarab_init,
-                                  Scarab_update,     (void*)0x00000000,  Scarab_render,     Scarab_free,
-                                  (void*)0x00000000, Scarab_getExtraSize};
+ObjectDescriptor gScarabObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)Scarab_init,
+    (ObjectDescriptorCallback)Scarab_update,
+    0,
+    (ObjectDescriptorCallback)Scarab_render,
+    (ObjectDescriptorCallback)Scarab_free,
+    0,
+    Scarab_getExtraSize,
+};
 void* lbl_80321788[14] = {(void*)0x00000000,       (void*)0x00000000,          (void*)0x00000000, (void*)0x00090000,
                           dll_107_initialise_nop,  dll_107_release_nop,        (void*)0x00000000, dll_107_init,
                           dll_107_update,          dll_107_hitDetect_nop,      dll_107_render,    dll_107_free,

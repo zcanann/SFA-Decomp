@@ -97,11 +97,11 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 void* lbl_803DDB78;
 
-extern u8 dim_levelcontrol_free[];
-extern u8 dim_levelcontrol_getExtraSize[];
-extern u8 dim_levelcontrol_init[];
-extern u8 dim_levelcontrol_render[];
-extern u8 dim_levelcontrol_update[];
+extern void dim_levelcontrol_free(GameObject* obj);
+extern int dim_levelcontrol_getExtraSize(void);
+extern void dim_levelcontrol_init(GameObject* obj);
+extern void dim_levelcontrol_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+extern void dim_levelcontrol_update(GameObject* obj);
 
 int dll_1CE_getExtraSize(void)
 {
@@ -261,31 +261,35 @@ ObjectDescriptor dll_1CE = {
 };
 
 /* descriptor/ptr table auto 0x80325600-0x80325670 */
-u32 gDIMMagicBridgeObjDescriptor[14] = {0x00000000,
-                                        0x00000000,
-                                        0x00000000,
-                                        0x00090000,
-                                        (u32)dimmagicbridge_initialise,
-                                        (u32)dimmagicbridge_release,
-                                        0x00000000,
-                                        (u32)dimmagicbridge_init,
-                                        (u32)dimmagicbridge_update,
-                                        (u32)dimmagicbridge_hitDetect,
-                                        (u32)dimmagicbridge_render,
-                                        (u32)dimmagicbridge_free,
-                                        (u32)dimmagicbridge_getObjectTypeId,
-                                        (u32)dimmagicbridge_getExtraSize};
-u32 gDIM_LevelControlObjDescriptor[14] = {0x00000000,
-                                          0x00000000,
-                                          0x00000000,
-                                          0x00090000,
-                                          0x00000000,
-                                          0x00000000,
-                                          0x00000000,
-                                          (u32)dim_levelcontrol_init,
-                                          (u32)dim_levelcontrol_update,
-                                          0x00000000,
-                                          (u32)dim_levelcontrol_render,
-                                          (u32)dim_levelcontrol_free,
-                                          0x00000000,
-                                          (u32)dim_levelcontrol_getExtraSize};
+ObjectDescriptor gDIMMagicBridgeObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dimmagicbridge_initialise,
+    (ObjectDescriptorCallback)dimmagicbridge_release,
+    0,
+    (ObjectDescriptorCallback)dimmagicbridge_init,
+    (ObjectDescriptorCallback)dimmagicbridge_update,
+    (ObjectDescriptorCallback)dimmagicbridge_hitDetect,
+    (ObjectDescriptorCallback)dimmagicbridge_render,
+    (ObjectDescriptorCallback)dimmagicbridge_free,
+    (ObjectDescriptorCallback)dimmagicbridge_getObjectTypeId,
+    dimmagicbridge_getExtraSize,
+};
+ObjectDescriptor gDIM_LevelControlObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)dim_levelcontrol_init,
+    (ObjectDescriptorCallback)dim_levelcontrol_update,
+    0,
+    (ObjectDescriptorCallback)dim_levelcontrol_render,
+    (ObjectDescriptorCallback)dim_levelcontrol_free,
+    0,
+    dim_levelcontrol_getExtraSize,
+};

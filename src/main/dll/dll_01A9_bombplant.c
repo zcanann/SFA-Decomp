@@ -1,4 +1,5 @@
 /* DLL 0x01A9 - bombplant / enemymushroom group. TU: 0x801D286C-0x801D2C54. */
+#include "main/object_descriptor.h"
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_keep_alive_api.h"
@@ -478,7 +479,58 @@ u8 gBombPlantStateTable[] =
 };
 
 /*__DATA_EXTERNS__*/
-void* gBombPlantObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, bombplant_init, bombplant_update, bombplant_hitDetect, bombplant_render, bombplant_free, bombplant_getObjectTypeId, bombplant_getExtraSize, (void*)0x00000000 };
+ObjectDescriptor10WithPadding gBombPlantObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        0,
+        0,
+        0,
+        (ObjectDescriptorCallback)bombplant_init,
+        (ObjectDescriptorCallback)bombplant_update,
+        (ObjectDescriptorCallback)bombplant_hitDetect,
+        (ObjectDescriptorCallback)bombplant_render,
+        (ObjectDescriptorCallback)bombplant_free,
+        (ObjectDescriptorCallback)bombplant_getObjectTypeId,
+        bombplant_getExtraSize,
+    },
+    0,
+};
 u8 lbl_80326D98[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-void* gBombPlantSporeObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_init, BombPlantSpore_update, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_free, (void*)0x00000000, BombPlantSpore_getExtraSize, (void*)0x00000000 };
-void* gBombPlantingSpotObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, BombPlantingSpot_init, BombPlantingSpot_update, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
+ObjectDescriptor10WithPadding gBombPlantSporeObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        0,
+        0,
+        0,
+        (ObjectDescriptorCallback)BombPlantSpore_init,
+        (ObjectDescriptorCallback)BombPlantSpore_update,
+        0,
+        0,
+        (ObjectDescriptorCallback)BombPlantSpore_free,
+        0,
+        BombPlantSpore_getExtraSize,
+    },
+    0,
+};
+ObjectDescriptor gBombPlantingSpotObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)BombPlantingSpot_init,
+    (ObjectDescriptorCallback)BombPlantingSpot_update,
+    0,
+    0,
+    0,
+    0,
+    0,
+};

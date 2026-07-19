@@ -55,20 +55,20 @@ typedef union ObjDescriptorTable
 #define TEXFRAMEANIMATOR_OBJFLAG_HIDDEN             0x4000
 #define TEXFRAMEANIMATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern u8 WaterFallSpray_free[];
-extern u8 WaterFallSpray_getExtraSize[];
-extern u8 WaterFallSpray_init[];
-extern u8 WaterFallSpray_render[];
-extern u8 WaterFallSpray_update[];
-extern u8 lightning_free[];
-extern u8 lightning_getExtraSize[];
-extern u8 lightning_init[];
-extern u8 lightning_render[];
-extern u8 lightning_update[];
-extern u8 sfxplayerObj_free[];
-extern u8 sfxplayerObj_getExtraSize[];
-extern u8 sfxplayerObj_init[];
-extern u8 sfxplayerObj_update[];
+extern void WaterFallSpray_free(u8* obj);
+extern int WaterFallSpray_getExtraSize(void);
+extern void WaterFallSpray_init(u8* obj, u8* dataRaw);
+extern void WaterFallSpray_render(void);
+extern void WaterFallSpray_update(int* objParam);
+extern void lightning_free(u8* obj, int p2);
+extern int lightning_getExtraSize(void);
+extern void lightning_init(u8* obj, u8* data);
+extern void lightning_render(u8* obj);
+extern void lightning_update(u8* obj);
+extern void sfxplayerObj_free(u8* obj);
+extern int sfxplayerObj_getExtraSize(void);
+extern void sfxplayerObj_init(u8* obj, u8* dataBytes);
+extern void sfxplayerObj_update(u8* obj);
 
 
 int TexFrameAnimator_getExtraSize(void);

@@ -6,6 +6,7 @@
  * the player stands in the correct scoring zone (matched against
  * requiredScore); a wrong zone trips game bit 0x5e5 to reset.
  */
+#include "main/object_descriptor.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/dll_022F_dfpfloorbar.h"
@@ -288,13 +289,35 @@ ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor = {
 };
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gTrickyCurveObjDescriptor[14] = {(void*)0x00000000,           (void*)0x00000000,       (void*)0x00000000,
-                                       (void*)0x00090000,           TrickyCurve_initialise,  TrickyCurve_release,
-                                       (void*)0x00000000,           TrickyCurve_init,        TrickyCurve_update,
-                                       TrickyCurve_hitDetect,       TrickyCurve_render,      TrickyCurve_free,
-                                       TrickyCurve_getObjectTypeId, TrickyCurve_getExtraSize};
-void* gSfxplayerObjDescriptor[14] = {(void*)0x00000000,         (void*)0x00000000,     (void*)0x00000000,
-                                     (void*)0x00090000,         sfxplayer_initialise,  sfxplayer_release,
-                                     (void*)0x00000000,         sfxplayer_init,        sfxplayer_update,
-                                     sfxplayer_hitDetect,       sfxplayer_render,      sfxplayer_free,
-                                     sfxplayer_getObjectTypeId, sfxplayer_getExtraSize};
+ObjectDescriptor gTrickyCurveObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)TrickyCurve_initialise,
+    (ObjectDescriptorCallback)TrickyCurve_release,
+    0,
+    (ObjectDescriptorCallback)TrickyCurve_init,
+    (ObjectDescriptorCallback)TrickyCurve_update,
+    (ObjectDescriptorCallback)TrickyCurve_hitDetect,
+    (ObjectDescriptorCallback)TrickyCurve_render,
+    (ObjectDescriptorCallback)TrickyCurve_free,
+    (ObjectDescriptorCallback)TrickyCurve_getObjectTypeId,
+    TrickyCurve_getExtraSize,
+};
+ObjectDescriptor gSfxplayerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)sfxplayer_initialise,
+    (ObjectDescriptorCallback)sfxplayer_release,
+    0,
+    (ObjectDescriptorCallback)sfxplayer_init,
+    (ObjectDescriptorCallback)sfxplayer_update,
+    (ObjectDescriptorCallback)sfxplayer_hitDetect,
+    (ObjectDescriptorCallback)sfxplayer_render,
+    (ObjectDescriptorCallback)sfxplayer_free,
+    (ObjectDescriptorCallback)sfxplayer_getObjectTypeId,
+    sfxplayer_getExtraSize,
+};

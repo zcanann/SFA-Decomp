@@ -7,6 +7,7 @@
  * "player caught in the beam" hit flag to react - the sharp-claw disguise
  * fools the beam. ("GC" = GameCube; see the dll_0150 header.)
  */
+#include "main/object_descriptor.h"
 #include "main/camera_interface.h"
 #include "main/dll/objfx_api.h"
 #include "main/object_render.h"
@@ -828,20 +829,22 @@ u32 gEnemyTargetAngleFlagClearMask[] = {
     0x10000, 0x20000, 0x20000, 0x40000, 0x40000, 0x80000, 0x80000, 0x10000,
 };
 
-void* gBaddieObjDescriptor[14] = {(void*)0x00000000,
-                                  (void*)0x00000000,
-                                  (void*)0x00000000,
-                                  (void*)0x00090000,
-                                  enemy_initialise,
-                                  enemy_release,
-                                  (void*)0x00000000,
-                                  enemy_init,
-                                  enemy_update,
-                                  enemy_hitDetect,
-                                  enemy_render,
-                                  enemy_free,
-                                  enemy_getObjectTypeId,
-                                  enemy_getExtraSize};
+ObjectDescriptor gBaddieObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)enemy_initialise,
+    (ObjectDescriptorCallback)enemy_release,
+    0,
+    (ObjectDescriptorCallback)enemy_init,
+    (ObjectDescriptorCallback)enemy_update,
+    (ObjectDescriptorCallback)enemy_hitDetect,
+    (ObjectDescriptorCallback)enemy_render,
+    (ObjectDescriptorCallback)enemy_free,
+    (ObjectDescriptorCallback)enemy_getObjectTypeId,
+    enemy_getExtraSize,
+};
 
 int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate)
 {

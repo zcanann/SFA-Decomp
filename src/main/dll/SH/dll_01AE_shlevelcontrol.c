@@ -11,6 +11,7 @@
  * weather sets. SH_LevelControl_SeqFn handles the totem-log-puzzle map
  * teardown. init seeds the music latches and clears the bloop bits.
  */
+#include "main/object_descriptor.h"
 #include "main/game_ui_interface.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/gametext_show_api.h"
@@ -107,10 +108,22 @@ s16 lbl_80327618[130] = {
     95, 95, 95, 95, 435, 95, 95, 95, 436, 96, 96, 96, 436, 439, 442, 442, 436, 96, 96, 96, 96, 96, 439,
     442, 442, 442, 436, 96, 96, 96, 96, 96, 436, 96, 96, 96, -1, -1, -1, -1, -1, -1, 424, -1, -1, -1,
     -1, -1, -1, -1, -1, 424, -1, 424, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-void* gSH_LevelControlObjDescriptor[14] = {
-    (void*)0x00000000, (void*)0x00000000,    (void*)0x00000000,    (void*)0x00090000,      (void*)0x00000000,
-    (void*)0x00000000, (void*)0x00000000,    SH_LevelControl_init, SH_LevelControl_update, (void*)0x00000000,
-    (void*)0x00000000, SH_LevelControl_free, (void*)0x00000000,    SH_LevelControl_getExtraSize};
+ObjectDescriptor gSH_LevelControlObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)SH_LevelControl_init,
+    (ObjectDescriptorCallback)SH_LevelControl_update,
+    0,
+    0,
+    (ObjectDescriptorCallback)SH_LevelControl_free,
+    0,
+    SH_LevelControl_getExtraSize,
+};
 
 char sSPShopNumBloopsFormat[] = "numBloops %d\n";
 
@@ -988,24 +1001,35 @@ void SH_LevelControl_init(GameObject* obj)
 }
 
 /* descriptor/ptr table auto 0x803277a8-0x80327818 */
-u32 gWarpStoneLiftObjDescriptor[14] = {0x00000000,
-                                       0x00000000,
-                                       0x00000000,
-                                       0x00090000,
-                                       (u32)warpstonelift_initialise,
-                                       (u32)warpstonelift_release,
-                                       0x00000000,
-                                       (u32)warpstonelift_init,
-                                       (u32)warpstonelift_update,
-                                       (u32)warpstonelift_hitDetect,
-                                       (u32)warpstonelift_render,
-                                       (u32)warpstonelift_free,
-                                       (u32)warpstonelift_getObjectTypeId,
-                                       (u32)warpstonelift_getExtraSize};
-u32 gSH_staffObjDescriptor[14] = {0x00000000,           0x00000000,
-                                  0x00000000,           0x00090000,
-                                  0x00000000,           0x00000000,
-                                  0x00000000,           0x00000000,
-                                  (u32)sh_staff_update, 0x00000000,
-                                  (u32)sh_staff_render, (u32)sh_staff_free,
-                                  0x00000000,           (u32)sh_staff_getExtraSize};
+ObjectDescriptor gWarpStoneLiftObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)warpstonelift_initialise,
+    (ObjectDescriptorCallback)warpstonelift_release,
+    0,
+    (ObjectDescriptorCallback)warpstonelift_init,
+    (ObjectDescriptorCallback)warpstonelift_update,
+    (ObjectDescriptorCallback)warpstonelift_hitDetect,
+    (ObjectDescriptorCallback)warpstonelift_render,
+    (ObjectDescriptorCallback)warpstonelift_free,
+    (ObjectDescriptorCallback)warpstonelift_getObjectTypeId,
+    warpstonelift_getExtraSize,
+};
+ObjectDescriptor gSH_staffObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)sh_staff_update,
+    0,
+    (ObjectDescriptorCallback)sh_staff_render,
+    (ObjectDescriptorCallback)sh_staff_free,
+    0,
+    sh_staff_getExtraSize,
+};

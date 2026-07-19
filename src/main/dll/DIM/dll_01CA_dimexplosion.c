@@ -14,6 +14,7 @@
  *   explosion_init         - seed flames/debris/light from placement flags
  *   explosion_initialise   - precompute the expf falloff scales
  */
+#include "main/object_descriptor.h"
 #include "main/dll/partfx_interface.h"
 #include "main/track_dolphin_api.h"
 #include "main/texture.h"
@@ -814,22 +815,35 @@ f32 gExplosionSpreadDirs[] = {
 #include "main/dll/DIM/dll_01CB_dimwooddoor2.h"
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gExplosionObjDescriptor[14] = {(void*)0x00000000,         (void*)0x00000000,     (void*)0x00000000,
-                                     (void*)0x00090000,         explosion_initialise,  explosion_release,
-                                     (void*)0x00000000,         explosion_init,        explosion_update,
-                                     explosion_hitDetect,       explosion_render,      explosion_free,
-                                     explosion_getObjectTypeId, explosion_getExtraSize};
-void* gDIMWoodDoor2ObjDescriptor[14] = {(void*)0x00000000,
-                                        (void*)0x00000000,
-                                        (void*)0x00000000,
-                                        (void*)0x00090000,
-                                        dimwooddoor2_initialise,
-                                        dimwooddoor2_release,
-                                        (void*)0x00000000,
-                                        dimwooddoor2_init,
-                                        dimwooddoor2_update,
-                                        dimwooddoor2_hitDetect,
-                                        dimwooddoor2_render,
-                                        dimwooddoor2_free,
-                                        dimwooddoor2_getObjectTypeId,
-                                        dimwooddoor2_getExtraSize};
+ObjectDescriptor gExplosionObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)explosion_initialise,
+    (ObjectDescriptorCallback)explosion_release,
+    0,
+    (ObjectDescriptorCallback)explosion_init,
+    (ObjectDescriptorCallback)explosion_update,
+    (ObjectDescriptorCallback)explosion_hitDetect,
+    (ObjectDescriptorCallback)explosion_render,
+    (ObjectDescriptorCallback)explosion_free,
+    (ObjectDescriptorCallback)explosion_getObjectTypeId,
+    explosion_getExtraSize,
+};
+ObjectDescriptor gDIMWoodDoor2ObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dimwooddoor2_initialise,
+    (ObjectDescriptorCallback)dimwooddoor2_release,
+    0,
+    (ObjectDescriptorCallback)dimwooddoor2_init,
+    (ObjectDescriptorCallback)dimwooddoor2_update,
+    (ObjectDescriptorCallback)dimwooddoor2_hitDetect,
+    (ObjectDescriptorCallback)dimwooddoor2_render,
+    (ObjectDescriptorCallback)dimwooddoor2_free,
+    (ObjectDescriptorCallback)dimwooddoor2_getObjectTypeId,
+    dimwooddoor2_getExtraSize,
+};

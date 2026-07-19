@@ -8,6 +8,7 @@
  * plain model render. The rest of the callbacks are stubs.
  *
  */
+#include "main/object_descriptor.h"
 #include "main/dll/checkpoint4.h"
 #include "main/object_render.h"
 #include "main/game_object.h"
@@ -119,15 +120,51 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     0,
 };
 
-void* gSideloadObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000,
-                                    (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000,
-                                    sideload_update,   (void*)0x00000000, (void*)0x00000000, (void*)0x00000000,
-                                    (void*)0x00000000, (void*)0x00000000};
-void* gSiderepelObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, (void*)0x00090000,
-                                     (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, siderepel_init,
-                                     (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, siderepel_free,
-                                     (void*)0x00000000, siderepel_getExtraSize};
-void* gSetuppointObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000,
-                                      (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, setuppoint_init,
-                                      (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000,
-                                      (void*)0x00000000, (void*)0x00000000};
+ObjectDescriptor gSideloadObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)sideload_update,
+    0,
+    0,
+    0,
+    0,
+    0,
+};
+ObjectDescriptor gSiderepelObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)siderepel_init,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)siderepel_free,
+    0,
+    siderepel_getExtraSize,
+};
+ObjectDescriptor gSetuppointObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)setuppoint_init,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+};

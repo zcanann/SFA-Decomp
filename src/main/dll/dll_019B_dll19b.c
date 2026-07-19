@@ -462,11 +462,35 @@ void* dll_19E[14] = {(void*)0x00000000,       (void*)0x00000000,   (void*)0x0000
                      dll_19E_initialise,      dll_19E_release,     (void*)0x00000000, dll_19E_init,
                      dll_19E_update,          dll_19E_hitDetect,   dll_19E_render,    dll_19E_free,
                      dll_19E_getObjectTypeId, dll_19E_getExtraSize};
-void* gTreeBirdObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,    (void*)0x00000000, (void*)0x00090000,
-                                    (void*)0x00000000, (void*)0x00000000,    (void*)0x00000000, treebird_init,
-                                    treebird_update,   (void*)0x00000000,    treebird_render,   (void*)0x00000000,
-                                    (void*)0x00000000, treebird_getExtraSize};
-void* gNW_geyserObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000,
-                                     (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, nw_geyser_init,
-                                     nw_geyser_update,  (void*)0x00000000, (void*)0x00000000, nw_geyser_free,
-                                     (void*)0x00000000, (void*)0x00000000};
+ObjectDescriptor gTreeBirdObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)treebird_init,
+    (ObjectDescriptorCallback)treebird_update,
+    0,
+    (ObjectDescriptorCallback)treebird_render,
+    0,
+    0,
+    treebird_getExtraSize,
+};
+ObjectDescriptor gNW_geyserObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)nw_geyser_init,
+    (ObjectDescriptorCallback)nw_geyser_update,
+    0,
+    0,
+    (ObjectDescriptorCallback)nw_geyser_free,
+    0,
+    0,
+};

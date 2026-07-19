@@ -1,3 +1,4 @@
+#include "main/object_descriptor.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -727,8 +728,19 @@ GreatFoxFxEntry gGreatFoxEffects[] = {
 f32 gWorldObjAdvanceMoveTable[4] = {0.02f, 0.01f, 0.01f, 0.02f};
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gWorldObjObjDescriptor[14] = {(void*)0x00000000,        (void*)0x00000000,    (void*)0x00000000,
-                                    (void*)0x00090000,        worldobj_initialise,  worldobj_release,
-                                    (void*)0x00000000,        worldobj_init,        worldobj_update,
-                                    worldobj_hitDetect,       worldobj_render,      worldobj_free,
-                                    worldobj_getObjectTypeId, worldobj_getExtraSize};
+ObjectDescriptor gWorldObjObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)worldobj_initialise,
+    (ObjectDescriptorCallback)worldobj_release,
+    0,
+    (ObjectDescriptorCallback)worldobj_init,
+    (ObjectDescriptorCallback)worldobj_update,
+    (ObjectDescriptorCallback)worldobj_hitDetect,
+    (ObjectDescriptorCallback)worldobj_render,
+    (ObjectDescriptorCallback)worldobj_free,
+    (ObjectDescriptorCallback)worldobj_getObjectTypeId,
+    worldobj_getExtraSize,
+};

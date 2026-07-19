@@ -37,6 +37,7 @@
  * introTextLatch (live-verified; it is NOT a torch signal).
  */
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/dll/objfx_api.h"
 #include "main/sky_api.h"
@@ -138,26 +139,27 @@ s16 gEcShShrineCupSlotMap[] = {
     0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5,
 };
 
-/* descriptor/ptr table auto 0x80326250-0x8032629C */
-u32 gECSH_ShrineObjDescriptor[19] = {0x00000000,
-                                     0x00000000,
-                                     0x00000000,
-                                     0x000e0000,
-                                     (u32)ecsh_shrine_initialise,
-                                     (u32)ecsh_shrine_release,
-                                     0x00000000,
-                                     (u32)ecsh_shrine_init,
-                                     (u32)ecsh_shrine_update,
-                                     (u32)ecsh_shrine_hitDetect,
-                                     (u32)ecsh_shrine_render,
-                                     (u32)ecsh_shrine_free,
-                                     (u32)ecsh_shrine_getObjectTypeId,
-                                     (u32)ecsh_shrine_getExtraSize,
-                                     (u32)ecsh_shrine_setScale,
-                                     (u32)ecsh_shrine_getCupPos,
-                                     (u32)ecsh_shrine_getPhaseAndSpiritCup,
-                                     (u32)ecsh_shrine_setCupPos,
-                                     (u32)ecsh_shrine_checkCupPick};
+ObjectDescriptor15 gECSH_ShrineObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_15_SLOTS,
+    (ObjectDescriptorCallback)ecsh_shrine_initialise,
+    (ObjectDescriptorCallback)ecsh_shrine_release,
+    0,
+    (ObjectDescriptorCallback)ecsh_shrine_init,
+    (ObjectDescriptorCallback)ecsh_shrine_update,
+    (ObjectDescriptorCallback)ecsh_shrine_hitDetect,
+    (ObjectDescriptorCallback)ecsh_shrine_render,
+    (ObjectDescriptorCallback)ecsh_shrine_free,
+    (ObjectDescriptorCallback)ecsh_shrine_getObjectTypeId,
+    ecsh_shrine_getExtraSize,
+    (ObjectDescriptorCallback)ecsh_shrine_setScale,
+    (ObjectDescriptorCallback)ecsh_shrine_getCupPos,
+    (ObjectDescriptorCallback)ecsh_shrine_getPhaseAndSpiritCup,
+    (ObjectDescriptorCallback)ecsh_shrine_setCupPos,
+    (ObjectDescriptorCallback)ecsh_shrine_checkCupPick,
+};
 
 
 void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)

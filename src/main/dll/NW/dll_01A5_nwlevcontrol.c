@@ -9,6 +9,7 @@
  * bits 0x19d/0x19f), and a state machine that walks a table of target
  * objects (fn_801CFD68) firing their trigger sequences in turn.
  */
+#include "main/object_descriptor.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/music_api.h"
 #include "main/dll/savegame_load_api.h"
@@ -79,10 +80,22 @@ enum NwLevControlMode
 };
 
 
-void* gNW_levcontrolObjDescriptor[14] = {
-    (void*)0x00000000, (void*)0x00000000,  (void*)0x00000000,  (void*)0x00090000,         (void*)0x00000000,
-    (void*)0x00000000, (void*)0x00000000,  nw_levcontrol_init, nw_levcontrol_update,      (void*)0x00000000,
-    (void*)0x00000000, nw_levcontrol_free, (void*)0x00000000,  nw_levcontrol_getExtraSize};
+ObjectDescriptor gNW_levcontrolObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)nw_levcontrol_init,
+    (ObjectDescriptorCallback)nw_levcontrol_update,
+    0,
+    0,
+    (ObjectDescriptorCallback)nw_levcontrol_free,
+    0,
+    nw_levcontrol_getExtraSize,
+};
 
 extern s32 lbl_803269F8[];
 

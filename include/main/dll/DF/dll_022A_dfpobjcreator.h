@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DF_DLL_022A_DFPOBJCREATOR_H_
 #define MAIN_DLL_DF_DLL_022A_DFPOBJCREATOR_H_
 
+#include "main/object_descriptor.h"
 #include "main/game_object.h"
 typedef struct DfpobjcreatorObjectDef
 {
@@ -16,7 +17,7 @@ typedef struct DfpobjcreatorObjectDef
     u8 pad26[0x28 - 0x26];
 } DfpobjcreatorObjectDef;
 
-extern u32 gDFP_ObjCreatorObjDescriptor[14];
+extern ObjectDescriptor gDFP_ObjCreatorObjDescriptor;
 
 int DFP_ObjCreator_getExtraSize(void);
 int DFP_ObjCreator_getObjectTypeId(void);

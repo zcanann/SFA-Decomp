@@ -16,6 +16,7 @@
  * gWallCrawlerVariantFlags. All crawlers despawn for good once the six progress
  * game bits 0x2AA-0x2AF are set.
  */
+#include "main/object_descriptor.h"
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
@@ -785,20 +786,24 @@ u8 gWallCrawlerPointCollision[12] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0
 
 /*__DATA_EXTERNS__*/
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gWM_WallCrawlerObjDescriptor[15] = {(void*)0x00000000,
-                                          (void*)0x00000000,
-                                          (void*)0x00000000,
-                                          (void*)0x00090000,
-                                          wmwallcrawler_initialise,
-                                          wmwallcrawler_release,
-                                          (void*)0x00000000,
-                                          wmwallcrawler_init,
-                                          wmwallcrawler_update,
-                                          wmwallcrawler_hitDetect,
-                                          wmwallcrawler_render,
-                                          wmwallcrawler_free,
-                                          wmwallcrawler_getObjectTypeId,
-                                          wmwallcrawler_getExtraSize,
-                                          (void*)0x00000000};
+ObjectDescriptor10WithPadding gWM_WallCrawlerObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        (ObjectDescriptorCallback)wmwallcrawler_initialise,
+        (ObjectDescriptorCallback)wmwallcrawler_release,
+        0,
+        (ObjectDescriptorCallback)wmwallcrawler_init,
+        (ObjectDescriptorCallback)wmwallcrawler_update,
+        (ObjectDescriptorCallback)wmwallcrawler_hitDetect,
+        (ObjectDescriptorCallback)wmwallcrawler_render,
+        (ObjectDescriptorCallback)wmwallcrawler_free,
+        (ObjectDescriptorCallback)wmwallcrawler_getObjectTypeId,
+        (ObjectDescriptorExtraSizeCallback)wmwallcrawler_getExtraSize,
+    },
+    0,
+};
 u8 lbl_80328E28[48] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};

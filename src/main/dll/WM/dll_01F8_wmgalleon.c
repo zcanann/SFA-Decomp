@@ -343,48 +343,50 @@ void WM_Galleon_initialise(void)
 }
 
 /* descriptor/ptr table auto 0x80328748-0x80328898 */
-extern u8 LaserBeam_init[];
-extern u8 LaserBeam_getExtraSize[];
-extern u8 LaserBeam_getObjectTypeId[];
-extern u8 LaserBeam_hitDetect[];
-extern u8 LaserBeam_free[];
-extern u8 LaserBeam_initialise[];
-extern u8 LaserBeam_release[];
-extern u8 LaserBeam_render[];
-extern u8 LaserBeam_update[];
-extern u8 dll_1FB_free_nop[];
-extern u8 dll_1FB_getExtraSize_ret_12[];
-extern u8 dll_1FB_getObjectTypeId[];
-extern u8 dll_1FB_hitDetect_nop[];
-extern u8 dll_1FB_init[];
-extern u8 dll_1FB_initialise_nop[];
-extern u8 dll_1FB_release_nop[];
-extern u8 dll_1FB_render[];
-extern u8 dll_1FB_update[];
-extern u8 dll_1FF_free_nop[];
-extern u8 dll_1FF_getExtraSize_ret_8[];
-extern u8 dll_1FF_getObjectTypeId[];
-extern u8 dll_1FF_hitDetect_nop[];
-extern u8 dll_1FF_init[];
-extern u8 dll_1FF_initialise_nop[];
-extern u8 dll_1FF_release_nop[];
-extern u8 dll_1FF_render[];
-extern u8 dll_1FF_update[];
+extern void LaserBeam_init(s16* obj, char* arg);
+extern int LaserBeam_getExtraSize(void);
+extern int LaserBeam_getObjectTypeId(void);
+extern void LaserBeam_hitDetect(void);
+extern void LaserBeam_free(int* obj);
+extern void LaserBeam_initialise(void);
+extern void LaserBeam_release(void);
+extern void LaserBeam_render(void);
+extern void LaserBeam_update(int obj2);
+extern void dll_1FB_free_nop(void);
+extern int dll_1FB_getExtraSize_ret_12(void);
+extern int dll_1FB_getObjectTypeId(void);
+extern void dll_1FB_hitDetect_nop(void);
+extern void dll_1FB_init(int* obj, u8* def);
+extern void dll_1FB_initialise_nop(void);
+extern void dll_1FB_release_nop(void);
+extern void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+extern void dll_1FB_update(int* obj);
+extern void dll_1FF_free_nop(void);
+extern int dll_1FF_getExtraSize_ret_8(void);
+extern int dll_1FF_getObjectTypeId(int* obj);
+extern void dll_1FF_hitDetect_nop(void);
+extern void dll_1FF_init(s16* a, s8* b);
+extern void dll_1FF_initialise_nop(void);
+extern void dll_1FF_release_nop(void);
+extern void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
+extern void dll_1FF_update(int obj);
 
-u32 gWM_seqobjectObjDescriptor[14] = {0x00000000,
-                                      0x00000000,
-                                      0x00000000,
-                                      0x00090000,
-                                      (u32)WM_seqobject_initialise,
-                                      (u32)WM_seqobject_release,
-                                      0x00000000,
-                                      (u32)WM_seqobject_init,
-                                      (u32)WM_seqobject_update,
-                                      (u32)WM_seqobject_hitDetect,
-                                      (u32)WM_seqobject_render,
-                                      (u32)WM_seqobject_free,
-                                      (u32)WM_seqobject_getObjectTypeId,
-                                      (u32)WM_seqobject_getExtraSize};
+ObjectDescriptor gWM_seqobjectObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)WM_seqobject_initialise,
+    (ObjectDescriptorCallback)WM_seqobject_release,
+    0,
+    (ObjectDescriptorCallback)WM_seqobject_init,
+    (ObjectDescriptorCallback)WM_seqobject_update,
+    (ObjectDescriptorCallback)WM_seqobject_hitDetect,
+    (ObjectDescriptorCallback)WM_seqobject_render,
+    (ObjectDescriptorCallback)WM_seqobject_free,
+    (ObjectDescriptorCallback)WM_seqobject_getObjectTypeId,
+    WM_seqobject_getExtraSize,
+};
 u32 dll_1FB[14] = {0x00000000,
                    0x00000000,
                    0x00000000,
@@ -399,34 +401,38 @@ u32 dll_1FB[14] = {0x00000000,
                    (u32)dll_1FB_free_nop,
                    (u32)dll_1FB_getObjectTypeId,
                    (u32)dll_1FB_getExtraSize_ret_12};
-u32 gLaserBeamObjDescriptor[14] = {0x00000000,
-                                   0x00000000,
-                                   0x00000000,
-                                   0x00090000,
-                                   (u32)LaserBeam_initialise,
-                                   (u32)LaserBeam_release,
-                                   0x00000000,
-                                   (u32)LaserBeam_init,
-                                   (u32)LaserBeam_update,
-                                   (u32)LaserBeam_hitDetect,
-                                   (u32)LaserBeam_render,
-                                   (u32)LaserBeam_free,
-                                   (u32)LaserBeam_getObjectTypeId,
-                                   (u32)LaserBeam_getExtraSize};
-u32 gPressureSwitchObjDescriptor[14] = {0x00000000,
-                                        0x00000000,
-                                        0x00000000,
-                                        0x00090000,
-                                        (u32)PressureSwitch_initialise,
-                                        (u32)PressureSwitch_release,
-                                        0x00000000,
-                                        (u32)PressureSwitch_init,
-                                        (u32)PressureSwitch_update,
-                                        (u32)PressureSwitch_hitDetect,
-                                        (u32)PressureSwitch_render,
-                                        (u32)PressureSwitch_free,
-                                        (u32)PressureSwitch_getObjectTypeId,
-                                        (u32)PressureSwitch_getExtraSize};
+ObjectDescriptor gLaserBeamObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)LaserBeam_initialise,
+    (ObjectDescriptorCallback)LaserBeam_release,
+    0,
+    (ObjectDescriptorCallback)LaserBeam_init,
+    (ObjectDescriptorCallback)LaserBeam_update,
+    (ObjectDescriptorCallback)LaserBeam_hitDetect,
+    (ObjectDescriptorCallback)LaserBeam_render,
+    (ObjectDescriptorCallback)LaserBeam_free,
+    (ObjectDescriptorCallback)LaserBeam_getObjectTypeId,
+    LaserBeam_getExtraSize,
+};
+ObjectDescriptor gPressureSwitchObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)PressureSwitch_initialise,
+    (ObjectDescriptorCallback)PressureSwitch_release,
+    0,
+    (ObjectDescriptorCallback)PressureSwitch_init,
+    (ObjectDescriptorCallback)PressureSwitch_update,
+    (ObjectDescriptorCallback)PressureSwitch_hitDetect,
+    (ObjectDescriptorCallback)PressureSwitch_render,
+    (ObjectDescriptorCallback)PressureSwitch_free,
+    (ObjectDescriptorCallback)PressureSwitch_getObjectTypeId,
+    PressureSwitch_getExtraSize,
+};
 u32 dll_1FF[14] = {0x00000000,
                    0x00000000,
                    0x00000000,
@@ -441,17 +447,19 @@ u32 dll_1FF[14] = {0x00000000,
                    (u32)dll_1FF_free_nop,
                    (u32)dll_1FF_getObjectTypeId,
                    (u32)dll_1FF_getExtraSize_ret_8};
-u32 gWM_LaserTargetObjDescriptor[14] = {0x00000000,
-                                        0x00000000,
-                                        0x00000000,
-                                        0x00090000,
-                                        (u32)WM_LaserTarget_initialise,
-                                        (u32)WM_LaserTarget_release,
-                                        0x00000000,
-                                        (u32)WM_LaserTarget_init,
-                                        (u32)WM_LaserTarget_update,
-                                        (u32)WM_LaserTarget_hitDetect,
-                                        (u32)WM_LaserTarget_render,
-                                        (u32)WM_LaserTarget_free,
-                                        (u32)WM_LaserTarget_getObjectTypeId,
-                                        (u32)WM_LaserTarget_getExtraSize};
+ObjectDescriptor gWM_LaserTargetObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)WM_LaserTarget_initialise,
+    (ObjectDescriptorCallback)WM_LaserTarget_release,
+    0,
+    (ObjectDescriptorCallback)WM_LaserTarget_init,
+    (ObjectDescriptorCallback)WM_LaserTarget_update,
+    (ObjectDescriptorCallback)WM_LaserTarget_hitDetect,
+    (ObjectDescriptorCallback)WM_LaserTarget_render,
+    (ObjectDescriptorCallback)WM_LaserTarget_free,
+    (ObjectDescriptorCallback)WM_LaserTarget_getObjectTypeId,
+    WM_LaserTarget_getExtraSize,
+};

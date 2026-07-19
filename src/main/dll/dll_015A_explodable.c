@@ -17,6 +17,7 @@
  * explodable_computeFragmentLaunch computes a fragment's launch offset/velocity/spin from the
  * placement def and random spread; explodable_spawnFragmentObject spawns the fragment object.
  */
+#include "main/object_descriptor.h"
 #include "main/dll/dll_015A_explodable.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -411,17 +412,19 @@ GasVentTableEntry gExplodableBreakRecipeTable[16] = {
     {2071, 2072, 705, 50, 0, {0, 0}},
 };
 
-u32 gExplodableObjDescriptor[14] = {0x00000000,
-                                    0x00000000,
-                                    0x00000000,
-                                    0x00090000,
-                                    0x00000000,
-                                    0x00000000,
-                                    0x00000000,
-                                    (u32)explodable_init,
-                                    (u32)explodable_update,
-                                    0x00000000,
-                                    (u32)explodable_render,
-                                    (u32)explodable_free,
-                                    0x00000000,
-                                    (u32)explodable_getExtraSize};
+ObjectDescriptor gExplodableObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)explodable_init,
+    (ObjectDescriptorCallback)explodable_update,
+    0,
+    (ObjectDescriptorCallback)explodable_render,
+    (ObjectDescriptorCallback)explodable_free,
+    0,
+    explodable_getExtraSize,
+};

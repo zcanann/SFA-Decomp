@@ -1,11 +1,12 @@
 #ifndef MAIN_DLL_DLL_0243_DBHOLECONTROL1_H_
 #define MAIN_DLL_DLL_0243_DBHOLECONTROL1_H_
 
+#include "main/object_descriptor.h"
 #include "types.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 
-extern u32 gDBHoleControl1ObjDescriptor[14];
+extern ObjectDescriptor gDBHoleControl1ObjDescriptor;
 
 typedef struct Dbholecontrol1Placement
 {

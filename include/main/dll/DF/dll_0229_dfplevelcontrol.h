@@ -1,8 +1,9 @@
 #ifndef MAIN_DLL_DF_DLL_0229_DFPLEVELCONTROL_H_
 #define MAIN_DLL_DF_DLL_0229_DFPLEVELCONTROL_H_
 
+#include "main/object_descriptor.h"
 #include "main/game_object.h"
-extern u32 gDFP_LevelControlObjDescriptor[15];
+extern ObjectDescriptor11 gDFP_LevelControlObjDescriptor;
 
 int DFP_LevelControl_SeqFn(int obj);
 void DFP_LevelControl_setScale(int unused, u8* out);

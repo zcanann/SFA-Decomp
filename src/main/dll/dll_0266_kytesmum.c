@@ -18,6 +18,7 @@
  * group 1. Completing the active callback sets the placement's completion
  * game bit.
  */
+#include "main/object_descriptor.h"
 #include "main/dll/dll_0266_kytesmum.h"
 #include "main/pad.h"
 #include "main/object.h"
@@ -133,20 +134,22 @@ u8 gKytesMumMoveSets[] = {
 int gKytesMumQuestIdleSfxTable[] = {
     0x02921000, 0x00000292, 0x10000000, 0x02920500, 0x00000292, 0x05000000,
 };
-u32 gKytesMumObjDescriptor[14] = {0x00000000,
-                                  0x00000000,
-                                  0x00000000,
-                                  0x00090000,
-                                  (u32)kytesmum_initialise,
-                                  (u32)kytesmum_release,
-                                  0x00000000,
-                                  (u32)kytesmum_init,
-                                  (u32)kytesmum_update,
-                                  (u32)kytesmum_hitDetect,
-                                  (u32)kytesmum_render,
-                                  (u32)kytesmum_free,
-                                  (u32)kytesmum_getObjectTypeId,
-                                  (u32)kytesmum_getExtraSize};
+ObjectDescriptor gKytesMumObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)kytesmum_initialise,
+    (ObjectDescriptorCallback)kytesmum_release,
+    0,
+    (ObjectDescriptorCallback)kytesmum_init,
+    (ObjectDescriptorCallback)kytesmum_update,
+    (ObjectDescriptorCallback)kytesmum_hitDetect,
+    (ObjectDescriptorCallback)kytesmum_render,
+    (ObjectDescriptorCallback)kytesmum_free,
+    (ObjectDescriptorCallback)kytesmum_getObjectTypeId,
+    kytesmum_getExtraSize,
+};
 
 void kytesmum_playAnimationEventSfx(u32 obj, u8* arg, s16* sfxData)
 {
@@ -437,17 +440,19 @@ void kytesmum_initialise(void)
 char sKytesMumYawDiffMessage[] = " YAW DIFF ";
 
 /* descriptor/ptr table auto 0x8032a878-0x8032a8b0 */
-u32 gDrCreatorObjDescriptor[14] = {0x00000000,
-                                   0x00000000,
-                                   0x00000000,
-                                   0x00090000,
-                                   (u32)DR_Creator_initialise,
-                                   (u32)DR_Creator_release,
-                                   0x00000000,
-                                   (u32)DR_Creator_init,
-                                   (u32)DR_Creator_update,
-                                   (u32)DR_Creator_hitDetect,
-                                   (u32)DR_Creator_render,
-                                   (u32)DR_Creator_free,
-                                   (u32)DR_Creator_getObjectTypeId,
-                                   (u32)DR_Creator_getExtraSize};
+ObjectDescriptor gDrCreatorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DR_Creator_initialise,
+    (ObjectDescriptorCallback)DR_Creator_release,
+    0,
+    (ObjectDescriptorCallback)DR_Creator_init,
+    (ObjectDescriptorCallback)DR_Creator_update,
+    (ObjectDescriptorCallback)DR_Creator_hitDetect,
+    (ObjectDescriptorCallback)DR_Creator_render,
+    (ObjectDescriptorCallback)DR_Creator_free,
+    (ObjectDescriptorCallback)DR_Creator_getObjectTypeId,
+    DR_Creator_getExtraSize,
+};
