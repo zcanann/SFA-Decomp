@@ -2081,7 +2081,7 @@ void hudDrawTimedElement(int unused, void* element)
     memset(lbl_803A9428, 0, 0xc);
     lbl_803A9428[0] = e[0];
     lbl_803A9428[3] = 0;
-    drawTexture(lbl_803A9428, lbl_803E1FA4, (f32)(lbl_803DD740 + 0xaf), (int)*(f32*)((char*)e + 0x8), 0x100);
+    drawTexture(lbl_803A9428, lbl_803E1FA4, (f32)(lbl_803DD740 + 0xaf), (u8)*(f32*)((char*)e + 0x8), 0x100);
 }
 
 
