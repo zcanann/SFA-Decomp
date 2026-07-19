@@ -9,7 +9,7 @@
 #include "main/object_render.h"
 #include "main/dll/dll_0140_fogcontrol.h"
 #include "main/object_descriptor.h"
-#include "main/shader_ext.h"
+#include "main/shader_api.h"
 #include "main/shader_maptex_api.h"
 
 typedef struct TexframeanimatorPlacement
@@ -130,7 +130,7 @@ void TexFrameAnimator_update(int* obj)
     TexFrameAnimatorState* state;
     u8* params;
     MapBlockData* block;
-    int* textureHit;
+    s16* textureHit;
     int* textureEntry;
 
     state = ((GameObject*)obj)->extra;
@@ -151,10 +151,10 @@ void TexFrameAnimator_update(int* obj)
         {
             return;
         }
-        textureHit = return0_80056694((int*)block, state->textureSlot);
+        textureHit = return0_80056694(block, state->textureSlot);
         if (textureHit != NULL)
         {
-            textureEntry = mapTextureOverrideGetEntry(*(s16*)textureHit);
+            textureEntry = mapTextureOverrideGetEntry(*textureHit);
             state->frame += state->speed * framesThisStep;
             logPrintf(sTexFrameAnimDebugFormat, state->frame);
             if (state->frame < 0)

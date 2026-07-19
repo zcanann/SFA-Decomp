@@ -36,7 +36,7 @@
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/tricky_substates.h"
-#include "main/dll/trickyfollow_ext.h"
+#include "main/dll/baddie/trickyfollow.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
 
 typedef struct

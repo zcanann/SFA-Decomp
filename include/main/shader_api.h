@@ -4,6 +4,7 @@
 #include "global.h"
 
 struct GameObject;
+struct MapBlockData;
 
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -48,6 +49,7 @@ s32 getCurMapLayer(void);
 void fn_80059A50(int pageIndex);
 void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, int f2, int idx);
 int mapTextureOverrideAcquire(int key, int value, int type);
+s16* return0_80056694(struct MapBlockData* block, int textureSlot);
 int return0_8005669C(int unused);
 
 #endif /* MAIN_SHADER_API_H_ */

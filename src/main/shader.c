@@ -78,7 +78,6 @@ extern const f32 gMapBlockWorldSize;
 #include "main/model.h"
 #include "main/pi_dolphin.h"
 #include "main/track_dolphin_ext.h"
-#include "main/gameloop_ext.h"
 #include "main/rcp_dolphin_ext.h"
 #include "main/track_dolphin_shadow_api.h"
 #include "main/dll/dll_0017_savegame_api.h"
@@ -650,9 +649,9 @@ void* mapTextureOverrideGetEntry(int idx)
     return &lbl_803DCE6C[idx];
 }
 
-int return0_80056694(void* wpad0, int wpad1)
+s16* return0_80056694(MapBlockData* wpad0, int wpad1)
 {
-    return 0x0;
+    return NULL;
 }
 int return0_8005669C(int unused)
 {
