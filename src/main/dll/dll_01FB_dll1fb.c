@@ -28,9 +28,6 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/object_render.h"
 #define PAD_BUTTON_A 0x100
 
-#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
-    (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
-
 STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
 STATIC_ASSERT(offsetof(Dll1FBState, triggerMode) == 0x06);
@@ -94,7 +91,7 @@ void dll_1FB_update(int* obj)
     if (((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0) && (state->triggerMode == 2) &&
         (mainGetBit(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0))
     {
-        OBJECT_TRIGGER_REFRESH(4, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(4, obj, -1);
         buttonDisable(0, PAD_BUTTON_A);
         mainSetBits(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
     }
