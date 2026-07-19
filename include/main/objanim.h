@@ -13,8 +13,6 @@ typedef struct ObjWeaponDaTable ObjWeaponDaTable;
 typedef void (*ObjAnimSequenceFreeCallback)(void *ctx,u8 *obj);
 typedef int (*ObjAnimSequenceConditionCallback)(void *ctx,u8 *obj);
 typedef int (*ObjAnimSetProgressObjectFirstFn)(int objAnimHandle,f32 progress);
-typedef int (*ObjAnimSampleRootCurveObjectFirstFn)(int objAnimHandle,f32 distance,
-                                                   float *phaseOut);
 typedef int (*ObjAnimSetCurrentMoveObjectFirstFn)(int objAnimHandle,int moveId,f32 moveProgress,
                                                   int moveControlFlags);
 extern char gObjAnimMissingCachedMoveWarning[];
@@ -42,7 +40,7 @@ int Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int move
 u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim);
 void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordIndex,int value);
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,u32 frameCount);
-int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut);
+int ObjAnim_SampleRootCurvePhase(ObjAnimComponent *objAnim,f32 distance,float *phaseOut);
 int ObjAnim_AdvanceCurrentMove(int objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events);
 int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
 int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int moveControlFlags);

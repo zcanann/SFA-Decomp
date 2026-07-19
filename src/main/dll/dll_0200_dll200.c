@@ -177,7 +177,7 @@ void fn_801F2290(int obj)
                     spd = 0.25f;
                     ((GameObject*)obj)->anim.velocityX = spd * (dx / dist);
                     ((GameObject*)obj)->anim.velocityZ = spd * (dy / dist);
-                    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, spd, &state->animSpeed);
+                    ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, spd, &state->animSpeed);
                 }
                 else
                 {

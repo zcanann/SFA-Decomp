@@ -602,8 +602,8 @@ int dll_28B_stateHandler2(GameObject* obj, int ai)
     obj->anim.localPosZ = state->route.posZ;
     ewObj->facingAngle = getAngle(-state->route.tangentX, -state->route.tangentZ);
     ObjAnim_SampleRootCurvePhase(
-        sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ),
-        (ObjAnimComponent*)obj, &((BaddieState*)ai)->moveSpeed);
+        &obj->anim, sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ),
+        &((BaddieState*)ai)->moveSpeed);
     return 0;
 }
 

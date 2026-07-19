@@ -447,7 +447,7 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent* objAnim, u32 frameCount
     }
 }
 
-int ObjAnim_SampleRootCurvePhase(f32 distance, ObjAnimComponent* objAnim, float* phaseOut)
+int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float* phaseOut)
 {
     ObjAnimBank* bank;
     ObjAnimRootCurve* curve;

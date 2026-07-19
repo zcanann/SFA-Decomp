@@ -499,7 +499,8 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
         {
             f32 dx = cv->sample[0] - ((GameObject*)obj)->anim.localPosX;
             f32 dz = cv->sample[2] - ((GameObject*)obj)->anim.localPosZ;
-            ObjAnim_SampleRootCurvePhase(oneOverTimeDelta * sqrtf(dx * dx + dz * dz), (ObjAnimComponent*)obj,
+            ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj,
+                                         oneOverTimeDelta * sqrtf(dx * dx + dz * dz),
                                          &state->animStepScale);
         }
         ((GameObject*)obj)->anim.rotX = (s16)(getAngle(cv->tangent[0], cv->tangent[2]) + 0x8000);

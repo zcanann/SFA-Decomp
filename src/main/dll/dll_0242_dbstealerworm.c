@@ -520,8 +520,8 @@ int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t)
         sub->msgAdvance = 1;
         return 0;
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((BaddieState*)baddie)->animSpeedA,
-                                                                        (float*)(baddie + 0x2a0));
+    ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, ((BaddieState*)baddie)->animSpeedA,
+                                 (float*)(baddie + 0x2a0));
     return 0;
 }
 
@@ -1368,8 +1368,8 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
             p3++;
         }
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((BaddieState*)baddie)->animSpeedA,
-                                                                        (float*)(baddie + 0x2a0));
+    ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, ((BaddieState*)baddie)->animSpeedA,
+                                 (float*)(baddie + 0x2a0));
     return 0;
 }
 int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
@@ -1569,8 +1569,8 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
             p3++;
         }
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((BaddieState*)baddie)->animSpeedA,
-                                                                        (float*)(baddie + 0x2a0));
+    ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, ((BaddieState*)baddie)->animSpeedA,
+                                 (float*)(baddie + 0x2a0));
     return 0;
 }
 

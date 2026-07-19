@@ -701,8 +701,8 @@ int hightop_stateHandler02(GameObject* obj, HighTopRuntime* stateArg, f32 dt)
         ObjAnim_SetCurrentMove((int)obj, gHighTopBandMoveIds[band], moveSpeed, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xa);
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-        (int)obj, stateArg->baddie.animSpeedA, (f32*)((char*)stateArg + 0x2a0));
+    ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, stateArg->baddie.animSpeedA,
+                                 (f32*)((char*)stateArg + 0x2a0));
     return 0;
 }
 

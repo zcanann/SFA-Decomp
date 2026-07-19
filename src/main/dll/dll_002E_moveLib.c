@@ -314,7 +314,7 @@ int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, MoveLibHerm
             *flags |= MOVELIB_CURVE_WALK_DONE;
         }
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, phase, rootOut);
+    ObjAnim_SampleRootCurvePhase(&obj->anim, phase, rootOut);
     if (*flags & 1)
     {
         if (hitDetectFn_800658a4(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &ground,
@@ -408,7 +408,7 @@ int dll_2E_func0D(GameObject* obj, const MoveLibTarget* target, f32 speed, int m
             delta = delta + 0xffff;
         }
         speed = speed * -mathCosf(3.1415927f * delta / 32768.0f);
-        ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, speed, out);
+        ObjAnim_SampleRootCurvePhase(&obj->anim, speed, out);
     }
     return 0;
 }

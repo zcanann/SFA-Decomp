@@ -545,9 +545,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
     }
     else if (mode == 2)
     {
-        if (ObjAnim_SampleRootCurvePhase(sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+        if (ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj,
+                                         sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
                                                ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ),
-                                         (ObjAnimComponent*)obj, &phase) != 0)
+                                         &phase) != 0)
         {
             ((TrickyState*)state)->animPlaySpeed = phase;
         }

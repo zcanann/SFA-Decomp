@@ -978,8 +978,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         }
         if (obj->anim.currentMoveProgress < lbl_803E24A8)
         {
-            ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, state->speed,
-                                                                                &state->moveProgress);
+            ObjAnim_SampleRootCurvePhase(&obj->anim, state->speed, &state->moveProgress);
             obj->anim.localPosX =
                 timeDelta * (state->dirX * state->speed) +
                 obj->anim.localPosX;
@@ -989,8 +988,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
         }
         else
         {
-            ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-                (int)obj, state->speed * lbl_803E24AC, &state->moveProgress);
+            ObjAnim_SampleRootCurvePhase(&obj->anim, state->speed * lbl_803E24AC, &state->moveProgress);
             obj->anim.localPosX =
                 timeDelta * (state->dirX * (state->speed * (k = lbl_803E24AC))) +
                 obj->anim.localPosX;

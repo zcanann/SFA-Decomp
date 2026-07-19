@@ -1801,8 +1801,7 @@ void Tricky_update(int obj)
     {
         ((GameObject*)obj)->anim.localPosX += timeDelta * (trickyState->dirX * trickyState->speed);
         ((GameObject*)obj)->anim.localPosZ += timeDelta * (trickyState->dirZ * trickyState->speed);
-        ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-            obj, trickyState->speed, (float*)(state + 0x34));
+        ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, trickyState->speed, (float*)(state + 0x34));
     }
     if (trickyState->moveProgress == lbl_803E23DC)
     {

@@ -642,8 +642,9 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, int state)
     if (!((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b80 && !((ByteFlags*)&((EarthWarriorSub*)q)->flags3F0)->b40 &&
         !((ByteFlags*)((char*)inner + 0x14ec))->b01)
     {
-        if (((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-                (int)obj, ((EarthWarriorState*)state)->baddie.animSpeedC, (f32*)(state + 0x2a0)) == 0)
+        if (ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj,
+                                         ((EarthWarriorState*)state)->baddie.animSpeedC,
+                                         (f32*)(state + 0x2a0)) == 0)
         {
             ((EarthWarriorState*)state)->baddie.moveSpeed = lbl_803E8354;
         }

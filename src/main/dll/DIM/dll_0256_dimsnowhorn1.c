@@ -259,8 +259,8 @@ int DIMSnowHorn1_stateHandler0A(GameObject* obj, int state, f32 t)
         }
     }
 
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-        (int)obj, ((DIMSnowHorn1State*)state)->baddie.animSpeedA, &((DIMSnowHorn1State*)state)->baddie.moveSpeed);
+    ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, ((DIMSnowHorn1State*)state)->baddie.animSpeedA,
+                                 &((DIMSnowHorn1State*)state)->baddie.moveSpeed);
     if ((*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & PAD_BUTTON_A) != 0)
     {
         if ((void*)near == NULL || (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)

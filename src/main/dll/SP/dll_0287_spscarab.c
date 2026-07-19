@@ -118,7 +118,7 @@ void SPScarab_update(int obj)
     distance = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
                      ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
 
-    ObjAnim_SampleRootCurvePhase(distance, (ObjAnimComponent*)obj, &phase);
+    ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, distance, &phase);
     ObjAnim_AdvanceCurrentMove((int)obj, phase, timeDelta, 0);
 
     if (((GameObject*)obj)->anim.localPosY < ((SpscarabState*)state)->groundY)

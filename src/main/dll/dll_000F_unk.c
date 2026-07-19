@@ -170,7 +170,7 @@ void player_updateSecondaryBlend(int* obj, int* ctx, int moveA, int moveB)
         q1 = ((BaddieState*)ctx)->animSpeedA * ((BaddieState*)ctx)->animSpeedA;
         q2 = ((BaddieState*)ctx)->animSpeedB * ((BaddieState*)ctx)->animSpeedB;
         mag = sqrtf(q1 + q2);
-        if (ObjAnim_SampleRootCurvePhase(mag, (ObjAnimComponent*)obj, &tmp) != 0)
+        if (ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, mag, &tmp) != 0)
         {
             ((BaddieState*)ctx)->moveSpeed = tmp;
         }

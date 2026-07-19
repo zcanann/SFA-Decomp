@@ -947,7 +947,7 @@ int ktrex_stateHandlerB01(GameObject* obj, KTRexRuntime* runtime)
     }
     dx = oneOverTimeDelta * (gKTRexState->posX - (obj)->anim.localPosX);
     dz = oneOverTimeDelta * (gKTRexState->posZ - (obj)->anim.localPosZ);
-    ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent*)obj,
+    ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, sqrtf(dx * dx + dz * dz),
                                  &runtime->curvePhase);
     (obj)->anim.localPosX = gKTRexState->posX;
     (obj)->anim.localPosZ = gKTRexState->posZ;

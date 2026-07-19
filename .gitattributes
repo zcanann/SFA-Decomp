@@ -11,3 +11,6 @@
 
 # decomp-toolkit writes files with LF
 config/**/*.txt  text eol=lf
+
+# Preserve the line endings already stored by this source file.
+src/main/dll/dll_0200_dll200.c -text whitespace=cr-at-eol

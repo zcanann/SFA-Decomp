@@ -4635,8 +4635,8 @@ int playerState25(int obj, int state)
         {
             ax = -ax;
         }
-        if (((int (*)(int, f32, f32*))ObjAnim_SampleRootCurvePhase)(obj, ((PlayerState*)state)->baddie.animSpeedC,
-                                                                    &curveOut) != 0)
+        if (ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, ((PlayerState*)state)->baddie.animSpeedC,
+                                         &curveOut) != 0)
         {
             ((PlayerState*)state)->baddie.moveSpeed = curveOut;
         }
@@ -5450,8 +5450,8 @@ int playerState1B(GameObject* obj, int state, f32 fv)
                 {
                     ObjAnim_SetCurrentMove((int)obj, 0x40d, lbl_803E7EA4, 0);
                 }
-                ((int (*)(int, f32, f32*))ObjAnim_SampleRootCurvePhase)((int)obj, ((PlayerState*)state)->baddie.animSpeedC,
-                                                                        (f32*)((char*)state + 0x2a0));
+                ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, ((PlayerState*)state)->baddie.animSpeedC,
+                                             (f32*)((char*)state + 0x2a0));
             }
         }
         atDest = inner->traveledDistance > inner->travelTargetDistance || inner->traveledDistance < lbl_803E7EA4;
@@ -9387,8 +9387,9 @@ int playerStateMoving(int obj, int state)
             t = ((PlayerState*)state)->baddie.animSpeedA;
             t = (t < *(f32*)&lbl_803E7EA4) ? -t : t;
             {
-                int r = ((int (*)(int, f32, f32*))ObjAnim_SampleRootCurvePhase)(
-                    obj, ((PlayerState*)state)->baddie.animSpeedC, (f32*)(state + 0x2a0));
+                int r = ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj,
+                                                     ((PlayerState*)state)->baddie.animSpeedC,
+                                                     (f32*)(state + 0x2a0));
                 if (r == 0)
                 {
                     ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F78;
@@ -9622,8 +9623,9 @@ int playerStateMoving(int obj, int state)
                                                         (int)(lbl_803E7FAC * ad));
                 }
                 {
-                    int r = ((int (*)(int, f32, f32*))ObjAnim_SampleRootCurvePhase)(
-                        obj, ((PlayerState*)state)->baddie.animSpeedC, (f32*)(state + 0x2a0));
+                    int r = ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj,
+                                                         ((PlayerState*)state)->baddie.animSpeedC,
+                                                         (f32*)(state + 0x2a0));
                     if (r == 0)
                     {
                         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F78;

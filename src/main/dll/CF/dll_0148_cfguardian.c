@@ -329,7 +329,7 @@ int cfguardianFlyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 t, int p
             obj->anim.localPosY = obj->anim.localPosY - ground;
         }
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, t, outPhase);
+    ObjAnim_SampleRootCurvePhase(&obj->anim, t, outPhase);
     if (moved != 0)
     {
         yawDelta = (s16)(getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
@@ -861,7 +861,7 @@ int cfguardianSteerToward(GameObject* obj, MoveLibTarget* target, f32 speed, f32
     {
         ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, 0.0f, 0);
     }
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, speed, outPhase);
+    ObjAnim_SampleRootCurvePhase(&obj->anim, speed, outPhase);
     return 0;
 }
 

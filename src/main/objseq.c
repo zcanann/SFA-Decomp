@@ -3626,8 +3626,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                 action != NULL)
             {
                 f32 dx = posp[0] - prevX;
-                if (ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + (posp[2] - prevZ) * (posp[2] - prevZ)),
-                                                 (ObjAnimComponent*)activeObj, &speed) == 0)
+                if (ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)activeObj,
+                                                 sqrtf(dx * dx + (posp[2] - prevZ) * (posp[2] - prevZ)),
+                                                 &speed) == 0)
                 {
                     frame = ((ObjSeqState*)seq)->curFrame - 1;
                     val = ObjSeq_SampleTrackCurve(seq, 9, frame);
@@ -4558,7 +4559,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 {
                     f32 dx = px - prevX;
                     f32 dz = pz - prevZ;
-                    if (ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent*)activeObj,
+                    if (ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)activeObj, sqrtf(dx * dx + dz * dz),
                                                      &scratch[1]) == 0)
                     {
                         i = state->curFrame - 1;
