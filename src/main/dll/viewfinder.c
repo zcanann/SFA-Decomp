@@ -17,9 +17,9 @@ void viewFinderSetZoom(f32 zoom)
     gExpgfxNearFadeDepth = -3000.0f / zoom;
 }
 
-f32 lbl_803DF34C = 50.0f;
+const f32 lbl_803DF34C[1] = {50.0f};
 
 void viewFinderSetZoomTo50(void)
 {
-    gExpgfxNearFadeDepth = lbl_803DF34C;
+    gExpgfxNearFadeDepth = lbl_803DF34C[0];
 }

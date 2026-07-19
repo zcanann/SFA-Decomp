@@ -1446,7 +1446,7 @@ void objParticleFn_80099d84(GameObject* obj, f32 scale, int type, f32 extraScale
         bPtr = (u8*)&colorTbl + 2;
         modelLightStruct_setDiffuseColor(light, rPtr[(u8)type * 3], gPtr[(u8)type * 3], bPtr[(u8)type * 3], 0xff);
         modelLightStruct_setSpecularColor(light, rPtr[(u8)type * 3], gPtr[(u8)type * 3], bPtr[(u8)type * 3], 0xff);
-        modelLightStruct_setDistanceAttenuation(light, lbl_803DF34C, 75.0f);
+        modelLightStruct_setDistanceAttenuation(light, lbl_803DF34C[0], 75.0f);
         lightSetField4D(light, 0);
         modelLightStruct_setEnabled(light, 1, lbl_803DF35C);
         modelLightStruct_setEnabled(light, 0, lbl_803DF354);
