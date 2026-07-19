@@ -160,35 +160,3 @@ ObjectDescriptor12 gDIMDismountPointObjDescriptor = {
     (ObjectDescriptorCallback)DIMDismountPoint_func0B,
 };
 
-/* .sdata2 constant pool */
-const u32 lbl_803E4928 = 0xFFFFFFFF;
-const f32 lbl_803E492C = 1.0f;
-const f32 lbl_803E4930 = 15.0f;
-const f32 lbl_803E4934 = 1e+01f;
-const f32 lbl_803E4938 = 255.0f;
-const f32 lbl_803E493C = 25.0f;
-const f32 lbl_803E4940 = 8.0f;
-const f32 lbl_803E4950 = 7.5f;
-const f32 lbl_803E4954 = 2.5f;
-const f32 lbl_803E4958 = 3.0f;
-const f32 lbl_803E495C = 0.09f;
-const f32 lbl_803E4960 = 0.0f;
-const f32 lbl_803E4968 = 2.1427498f;
-const f32 lbl_803E4970 = 32768.0f;
-const f32 lbl_803E4974 = 0.00390625f;
-const f32 lbl_803E4988 = -1.0f;
-const f64 lbl_803E4990 = 4503599627370496.0;
-const f32 lbl_803E4998 = 0.2f;
-const f32 lbl_803E499C = 0.5f;
-const f32 lbl_803E49A0 = 0.95f;
-const f32 lbl_803E49A4 = 0.1f;
-const f32 lbl_803E49A8 = 1e+02f;
-const f32 lbl_803E49AC = 0.4f;
-const f32 lbl_803E49B0 = 5.0f;
-const f32 lbl_803E49B4 = 2e+01f;
-const f32 lbl_803E49B8 = 6.0f;
-const f32 lbl_803E49BC = 2.0f;
-const f32 lbl_803E49C0 = 0.01f;
-const f32 lbl_803E49C4 = 65535.0f;
-const f32 lbl_803E49C8 = 16384.0f;
-const f32 lbl_803E49CC = 1.5f;
