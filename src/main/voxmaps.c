@@ -1233,8 +1233,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
         found = -1;
         for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
         {
-            int* row = (int*)((u8*)vm + (i << 2));
-            if (blockId == row[12])
+            if (blockId == vm->blockId[i])
             {
                 found = i;
                 i = VOXMAP_SLOT_COUNT;
