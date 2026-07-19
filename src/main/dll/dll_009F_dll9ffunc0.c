@@ -248,28 +248,6 @@ u8 gDll9fEffectDataTable[520] = {
 };
 
 /* .sdata2 float-pool constants referenced via extern by sibling stubs */
-const f32 lbl_803E1488 = 0.0f;
-const f32 lbl_803E148C = 0.035f;
-const f32 lbl_803E1490 = -0.45f;
-const f32 lbl_803E1494 = 0.45f;
-const f32 lbl_803E1498 = 10.0f;
-const f32 lbl_803E149C = 255.0f;
-const f32 lbl_803E14A0 = -6.0f;
-const f32 lbl_803E14A4 = 1.0f;
-const f32 lbl_803E14A8 = 2.0f;
-const f32 lbl_803E14AC = 4.0f;
-const f32 lbl_803E14B0 = 6.0f;
-const f32 lbl_803E14B4 = 0.0f;
-const f32 lbl_803E14B8 = 0.0f;
-const f32 lbl_803E14BC = 0.01f;
-const f32 lbl_803E14C0 = 0.05f;
-const f32 lbl_803E14C4 = 255.0f;
-const f32 lbl_803E14C8 = 1.0f;
-const f32 lbl_803E14CC = -6.0f;
-const f32 lbl_803E14D0 = 5.0f;
-const f32 lbl_803E14D4 = 500.0f;
-const f32 lbl_803E14D8 = 3.5f;
-const f32 lbl_803E14DC = 2.0f;
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* lbl_80318690[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,

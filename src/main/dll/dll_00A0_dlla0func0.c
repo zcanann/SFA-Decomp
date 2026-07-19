@@ -29,17 +29,6 @@
 #define DLLA0_EFFECT_ID 0x1d9
 
 extern u8 lbl_803186B0[]; /* texture/asset table */
-extern f32 lbl_803E1488;  /* float constant table (0.0f, offsets, etc.) */
-extern f32 lbl_803E148C;
-extern f32 lbl_803E1490;
-extern f32 lbl_803E1494;
-extern f32 lbl_803E1498;
-extern f32 lbl_803E149C;
-extern f32 lbl_803E14A0;
-extern f32 lbl_803E14A4;
-extern f32 lbl_803E14A8;
-extern f32 lbl_803E14AC;
-extern f32 lbl_803E14B0;
 
 void dll_A0_func03(u8* sourceObj, int variant, int posSource, u32 flags)
 {
@@ -53,18 +42,18 @@ void dll_A0_func03(u8* sourceObj, int variant, int posSource, u32 flags)
     entry[0].flags = 0x15;
     entry[0].tex = &tab[0x1b0];
     entry[0].mode = 4;
-    entry[0].x = lbl_803E1488;
-    entry[0].y = lbl_803E1488;
-    entry[0].z = lbl_803E1488;
+    entry[0].x = 0.0f;
+    entry[0].y = 0.0f;
+    entry[0].z = 0.0f;
     if (variant == 0)
     {
         entry[1].layer = 0;
         entry[1].flags = 0x15;
         entry[1].tex = &tab[0x1b0];
         entry[1].mode = 2;
-        entry[1].x = lbl_803E148C;
-        entry[1].y = lbl_803E1490;
-        entry[1].z = lbl_803E148C;
+        entry[1].x = 0.035f;
+        entry[1].y = -0.45f;
+        entry[1].z = 0.035f;
         cmd = entry + 2;
     }
     else
@@ -73,78 +62,78 @@ void dll_A0_func03(u8* sourceObj, int variant, int posSource, u32 flags)
         entry[1].flags = 0x15;
         entry[1].tex = &tab[0x1b0];
         entry[1].mode = 2;
-        entry[1].x = lbl_803E148C;
-        entry[1].y = lbl_803E1494;
-        entry[1].z = lbl_803E148C;
+        entry[1].x = 0.035f;
+        entry[1].y = 0.45f;
+        entry[1].z = 0.035f;
         cmd = entry + 2;
     }
     cmd[0].layer = 1;
     cmd[0].flags = 0x15;
     cmd[0].tex = &tab[0x1b0];
     cmd[0].mode = 2;
-    cmd[0].x = lbl_803E1498;
-    cmd[0].y = lbl_803E1498;
-    cmd[0].z = lbl_803E1498;
+    cmd[0].x = 10.0f;
+    cmd[0].y = 10.0f;
+    cmd[0].z = 10.0f;
     cmd[1].layer = 1;
     cmd[1].flags = 7;
     cmd[1].tex = &tab[0x174];
     cmd[1].mode = 4;
-    cmd[1].x = lbl_803E149C;
-    cmd[1].y = lbl_803E1488;
-    cmd[1].z = lbl_803E1488;
+    cmd[1].x = 255.0f;
+    cmd[1].y = 0.0f;
+    cmd[1].z = 0.0f;
     cmd[2].layer = 1;
     cmd[2].flags = 0x15;
     cmd[2].tex = &tab[0x1b0];
     cmd[2].mode = 0x4000;
-    cmd[2].x = lbl_803E14A0;
-    cmd[2].y = lbl_803E14A4;
-    cmd[2].z = lbl_803E1488;
+    cmd[2].x = -6.0f;
+    cmd[2].y = 1.0f;
+    cmd[2].z = 0.0f;
     cmd[3].layer = 2;
     cmd[3].flags = 7;
     cmd[3].tex = &tab[0x174];
     cmd[3].mode = 2;
-    cmd[3].x = lbl_803E14A8;
-    cmd[3].y = lbl_803E14A4;
-    cmd[3].z = lbl_803E14A8;
+    cmd[3].x = 2.0f;
+    cmd[3].y = 1.0f;
+    cmd[3].z = 2.0f;
     cmd[4].layer = 2;
     cmd[4].flags = 7;
     cmd[4].tex = &tab[0x184];
     cmd[4].mode = 2;
-    cmd[4].x = lbl_803E14AC;
-    cmd[4].y = lbl_803E14A4;
-    cmd[4].z = lbl_803E14AC;
+    cmd[4].x = 4.0f;
+    cmd[4].y = 1.0f;
+    cmd[4].z = 4.0f;
     cmd[5].layer = 2;
     cmd[5].flags = 0x15;
     cmd[5].tex = &tab[0x1b0];
     cmd[5].mode = 0x4000;
-    cmd[5].x = lbl_803E14A0;
-    cmd[5].y = lbl_803E14A4;
-    cmd[5].z = lbl_803E1488;
+    cmd[5].x = -6.0f;
+    cmd[5].y = 1.0f;
+    cmd[5].z = 0.0f;
     cmd[6].layer = 3;
     cmd[6].flags = 7;
     cmd[6].tex = &tab[0x174];
     cmd[6].mode = 4;
-    cmd[6].x = lbl_803E1488;
-    cmd[6].y = lbl_803E1488;
-    cmd[6].z = lbl_803E1488;
+    cmd[6].x = 0.0f;
+    cmd[6].y = 0.0f;
+    cmd[6].z = 0.0f;
     cmd[7].layer = 3;
     cmd[7].flags = 0x15;
     cmd[7].tex = &tab[0x1b0];
     cmd[7].mode = 0x4000;
-    cmd[7].x = lbl_803E14B0;
-    cmd[7].y = lbl_803E14A4;
-    cmd[7].z = lbl_803E1488;
+    cmd[7].x = 6.0f;
+    cmd[7].y = 1.0f;
+    cmd[7].z = 0.0f;
 
     buf.v58 = 0;
     buf.ctx = (int)sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E1488;
-    buf.pos[1] = lbl_803E1488;
-    buf.pos[2] = lbl_803E1488;
-    buf.col[0] = lbl_803E1488;
-    buf.col[1] = lbl_803E1488;
-    buf.col[2] = lbl_803E1488;
-    buf.scale = lbl_803E14A4;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = 0.0f;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 1.0f;
     buf.v40 = 2;
     buf.v3c = 7;
     buf.v59 = 0xe;
@@ -167,15 +156,15 @@ void dll_A0_func03(u8* sourceObj, int variant, int posSource, u32 flags)
     {
         if (sourceObj != NULL)
         {
-            buf.pos[0] = lbl_803E1488 + ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] = lbl_803E1488 + ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] = lbl_803E1488 + ((GameObject*)(sourceObj))->anim.worldPosZ;
+            buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
+            buf.pos[1] += ((GameObject*)(sourceObj))->anim.worldPosY;
+            buf.pos[2] += ((GameObject*)(sourceObj))->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E1488 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E1488 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E1488 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, tab, 0x18, &tab[0xd4], DLLA0_EFFECT_ID, 0);
