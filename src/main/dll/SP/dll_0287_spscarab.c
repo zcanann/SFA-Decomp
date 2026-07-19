@@ -25,9 +25,14 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
+typedef struct
+{
+    u16 pairAB;
+    u8 byteC;
+} SpscarabPalette;
+
 u16 gSpScarabPaletteBytesA = 0x0213;
 u8 gSpScarabPaletteByteB = 0x16;
-const f32 gSpScarabBounceVelocityY = 0.0f;
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
@@ -114,7 +119,7 @@ void SPScarab_update(int obj)
     if (((GameObject*)obj)->anim.localPosY < ((SpscarabState*)state)->groundY)
     {
         ((GameObject*)obj)->anim.localPosY = ((SpscarabState*)state)->groundY;
-        ((GameObject*)obj)->anim.velocityY = *(f32*)&gSpScarabBounceVelocityY;
+        ((GameObject*)obj)->anim.velocityY = 0.0f;
     }
 
     if (objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), 3.0f, 0,
@@ -159,11 +164,7 @@ void SPScarab_init(GameObject* obj, int def)
     ObjAnimComponent* objAnim;
     int state;
     int model;
-    struct
-    {
-        u16 pairAB;
-        u8 byteC;
-    } paletteBytes;
+    SpscarabPalette paletteBytes;
 
     objAnim = (ObjAnimComponent*)obj;
     state = *(int*)&(obj)->extra;
