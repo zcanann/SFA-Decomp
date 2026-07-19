@@ -679,5 +679,3 @@ ObjectDescriptor gMMP_moonrockObjDescriptor = {
     mmp_moonrock_getExtraSize,
 };
 
-const f32 lbl_803E45B0 = 0.0f;
-const f32 lbl_803E45B4 = 1.0f;

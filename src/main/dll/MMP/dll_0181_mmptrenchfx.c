@@ -28,8 +28,6 @@ STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 #define MMPTRENCHFX_PARTFX_TICK 0x720
 
 char lbl_803AC930[0x18];
-extern f32 lbl_803E45B0;
-extern f32 lbl_803E45B4;
 
 int mmp_trenchfx_getExtraSize(void)
 {
@@ -61,9 +59,9 @@ void mmp_trenchfx_update(GameObject* obj)
     if (state->enableBit == -1 || mainGetBit(state->enableBit) != 0)
     {
         state->emitCooldown -= timeDelta;
-        if (state->emitCooldown < lbl_803E45B0)
+        if (state->emitCooldown < 0.0f)
         {
-            state->fxScale = lbl_803E45B4;
+            state->fxScale = 1.0f;
             state->fxX = (f32)(int)randomGetRange(-state->extentX, state->extentX);
             state->fxY = (f32)(int)randomGetRange(-state->extentY, state->extentY);
             state->fxZ = (f32)(int)randomGetRange(-state->extentZ, state->extentZ);
@@ -75,11 +73,11 @@ void mmp_trenchfx_update(GameObject* obj)
             state->emitTimer = (f32)(int)randomGetRange(0x32, 0x64);
         }
         state->emitTimer -= timeDelta;
-        if (state->emitTimer > lbl_803E45B0)
+        if (state->emitTimer > 0.0f)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_EMIT, &state->fxUnk10, 0x200001, -1, NULL);
         }
-        *(f32*)(lbl_803AC930 + 8) = lbl_803E45B4;
+        *(f32*)(lbl_803AC930 + 8) = 1.0f;
         *(f32*)(lbl_803AC930 + 0xC) = (f32)(int)randomGetRange(-state->extentX, state->extentX);
         *(f32*)(lbl_803AC930 + 0x10) = (f32)(int)randomGetRange(-state->extentY, state->extentY);
         *(f32*)(lbl_803AC930 + 0x14) = (f32)(int)randomGetRange(-state->extentZ, state->extentZ);

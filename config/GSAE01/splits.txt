@@ -2247,13 +2247,13 @@ main/dll/MMP/dll_0182_mmpmoonrock.c:
 	.text       start:0x801A78C8 end:0x801A8A40
 	.data       start:0x80323218 end:0x80323250
 	.bss        start:0x803AC918 end:0x803AC930
-	.sdata2     start:0x803E4548 end:0x803E45B8
+	.sdata2     start:0x803E4548 end:0x803E45B0
 
 main/dll/MMP/dll_0181_mmptrenchfx.c:
 	.text       start:0x801A8A40 end:0x801A8E24
 	.data       start:0x80323250 end:0x80323288
 	.bss        start:0x803AC930 end:0x803AC948
-	.sdata2     start:0x803E45B8 end:0x803E45C4
+	.sdata2     start:0x803E45B0 end:0x803E45C4
 
 main/dll/MMP/dll_0183_mmpgyservent.c:
 	.text       start:0x801A8E24 end:0x801A8F88
