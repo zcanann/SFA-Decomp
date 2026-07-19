@@ -483,7 +483,7 @@ void TitleMenu_initialise(void)
         titleScreenPositionElements(-380.0f, 254.0f);
         gAttractMoviePlaybackEnabled = 1;
         Movie_SetVolumeFade(0, 0);
-        audioSetVolumesU8(0, 10, 1, 0, 0);
+        audioSetVolumes(0, 10, 1, 0, 0);
         gTitleMenuSelectionFade = 0;
     }
     else

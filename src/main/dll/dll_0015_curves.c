@@ -1757,9 +1757,9 @@ void loadSaveSettings(void)
     audioSetSoundMode(saveData.soundMode, 0);
     (*gGameUIInterface)->setUnusedHudSetting(saveData.gameUiSetting);
     (*gCameraInterface)->func1D(saveData.cameraSetting);
-    audioSetVolumesU8(saveData.sfxVolume, 10, 0, 1, 0);
-    audioSetVolumesU8(saveData.musicVolume, 10, 1, 0, 0);
-    audioSetVolumesU8(saveData.speechVolume, 10, 0, 0, 1);
+    audioSetVolumes(saveData.sfxVolume, 10, 0, 1, 0);
+    audioSetVolumes(saveData.musicVolume, 10, 1, 0, 0);
+    audioSetVolumes(saveData.speechVolume, 10, 0, 0, 1);
 }
 
 void* getLastSavedGameTexts(void)

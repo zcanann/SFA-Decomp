@@ -1121,7 +1121,7 @@ int fn_80080360(int p, int val)
 void streamCb_80080384(void)
 {
     AudioStream_IsPreparing();
-    doNothing_8000CF54Int(0);
+    doNothing_8000CF54(0);
     if ((s32)lbl_803DB71C != -1)
     {
         gameTextLoadTaskText(lbl_803DB71C);

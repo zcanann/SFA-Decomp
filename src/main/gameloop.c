@@ -1311,7 +1311,7 @@ void gameLoop(void)
 
 void init(void)
 {
-    u8 audioDone;
+    int audioDone;
     u8 filesDone;
     u8 once;
     int delay;
@@ -1358,16 +1358,16 @@ void init(void)
         padUpdate();
         checkReset();
         waitNextFrame();
-        if (audioDone == 0)
+        if ((u8)audioDone == 0)
         {
-            audioDone = audioInitU8();
+            audioDone = audioInit();
         }
         if (once == 0)
         {
             testAndSet_onlyUseHeap3(1);
             allocSomething32bytes();
         }
-        if (audioDone != 0 && filesDone == 0)
+        if ((u8)audioDone != 0 && filesDone == 0)
         {
             testAndSet_onlyUseHeap3(1);
             filesDone = initLoadFiles();
@@ -1398,7 +1398,7 @@ void init(void)
             *(u8*)lbl_803DCAFC = dtv;
         }
         GXFlush_(1, 0);
-    } while ((filesDone == 0 || audioDone == 0) && gameState == GAMELOOP_STATE_BOOTING);
+    } while ((filesDone == 0 || (u8)audioDone == 0) && gameState == GAMELOOP_STATE_BOOTING);
     while (gameState != GAMELOOP_STATE_BOOTING)
     {
         mmFreeTick(0);

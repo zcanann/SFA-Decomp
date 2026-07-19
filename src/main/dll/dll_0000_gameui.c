@@ -4298,7 +4298,7 @@ void drawFn_80125424(void)
                 if (((HeadDisplayEntry*)gHeadDisplayEntryTable)[gHeadDisplayEntryIdx].streamId != -1)
                 {
                     AudioStream_StopCurrent();
-                    doNothing_8000CF54Int(0);
+                    doNothing_8000CF54(0);
                 }
             }
             gHeadDisplayPanelHeight = gHeadDisplayPanelHeight - framesThisStep * 10;
