@@ -324,7 +324,7 @@ static void drakorhoverpad_initPathCurve(GameObject* obj, u8* p)
     int curveArg = 0x2a;
 
     (*gRomCurveInterface)->initCurve(&((DrakorHoverpadState*)p)->curve, (void*)obj, 300.0f, &curveArg, -1);
-    Curve_AdvanceAlongPath(&((DrakorHoverpadState*)p)->curve.curve, 0.01f);
+    Curve_AdvanceAlongPath((Curve*)(p + 4), 0.01f);
 }
 
 static f32 drakorhoverpad_nodeWobbleSin(DrakorCurveNode** slot, int angle)
@@ -890,11 +890,11 @@ void drakorhoverpad_updateMain(GameObject* obj)
     }
     if (((DrakorHoverpadUpdateMainState*)p)->verticalVel < 0.0f)
     {
-        (*gRomCurveInterface)->setClosed(&((DrakorHoverpadState*)p)->curve, 1);
+        (*gRomCurveInterface)->setClosed((RomCurveWalker*)(p + 4), 1);
     }
     else
     {
-        (*gRomCurveInterface)->setClosed(&((DrakorHoverpadState*)p)->curve, 0);
+        (*gRomCurveInterface)->setClosed((RomCurveWalker*)(p + 4), 0);
     }
     ((DrakorHoverpadUpdateMainState*)p)->targetSpeed = 0.0f;
     if (0.0f != ((DrakorHoverpadUpdateMainState*)p)->verticalVel)
