@@ -373,7 +373,7 @@ void sc_totembond_initialise(void)
 {
 }
 
-int fn_801DE320(u16* gameBitIds, int newValue)
+int fn_801DE320(u16* gameBitIds, u16 newValue)
 {
     u16 values[4];
     u8 i, j;

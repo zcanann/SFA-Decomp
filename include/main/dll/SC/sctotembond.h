@@ -104,6 +104,5 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *stat
 u32 sc_totembond_SeqFn(ScTotemBondObject *obj,u32 param_2,ObjAnimUpdateState *animUpdate);
 void sc_totembond_update(ScTotemBondObject *obj);
 void sc_totembond_init(ScTotemBondObject *obj,int params);
-int fn_801DE320(u16 *gameBitIds,int newValue);
 
 #endif /* MAIN_DLL_SC_SCTOTEMBOND_H_ */
