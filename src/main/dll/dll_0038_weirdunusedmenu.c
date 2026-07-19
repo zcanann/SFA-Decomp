@@ -1,13 +1,13 @@
 /*
  * weirdunusedmenu (DLL 0x38) - an on-screen menu screen driven through
  * the title-menu link interface (gTitleMenuLinkInterface). Each tick,
- * WeirdUnusedMenu_run polls the interface for the current selection
- * (slot 0xC) and the pressed action (slot 0x14):
- *   - selection 1, action 0: leave the menu (load UI dll 1, exit the
+ * WeirdUnusedMenu_run polls the interface for the pressed action
+ * (slot 0xC) and the current selection (slot 0x14):
+ *   - action 1, selection 0: leave the menu (load UI dll 1, exit the
  *     cutscene, disable buttons) with a confirm sfx.
- *   - selection 0: leave the menu the same way, but with the cancel sfx
+ *   - action 0: leave the menu the same way, but with the cancel sfx
  *     (SFX_MENU_CANCEL).
- *   - selection 1, action != 0: open the save flow - it sets a 0x1000
+ *   - action 1, any other selection: open the save flow - it sets a 0x1000
  *     flag on two menu widgets, plays the save/confirm sfx
  *     (SFXqu_shortsob1) and starts the save countdown (phase
  *     gWeirdMenuPhase == 1, the saving phase).
@@ -32,14 +32,7 @@
 #include "main/textrender_api.h"
 #include "main/dll/dll_0038_weirdunusedmenu.h"
 #include "main/dll/savegame.h"
-
-/* title-menu link interface vtable slot offsets (gTitleMenuLinkInterface) */
-#define TITLEMENULINK_SETUP_WIDGETS 0x4
-#define TITLEMENULINK_RELEASE       0x8
-#define TITLEMENULINK_GET_SELECTION 0xc
-#define TITLEMENULINK_GET_ACTION    0x14
-#define TITLEMENULINK_SET_STATE     0x18
-#define TITLEMENULINK_TOGGLE        0x2c
+#include "main/dll/dll_003C_tumbleweedbush_api.h"
 
 /* set on both menu widgets while the save dialog is up */
 #define WIDGET_FLAG_SAVING 0x1000
@@ -57,7 +50,6 @@
 /* accept + cancel buttons, disabled once a menu decision is committed */
 #define PAD_CONFIRM_MASK (PAD_BUTTON_A | PAD_BUTTON_B)
 
-extern int* gTitleMenuLinkInterface;
 extern f32 gWeirdMenuSaveTimerLimit;       /* save-phase timer limit */
 
 void* gWeirdMenuTextHandle[2];
@@ -104,11 +96,11 @@ int WeirdUnusedMenu_run(void)
 
     if (gWeirdMenuPhase == 0)
     {
-        selection = (*(int (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_GET_SELECTION)))();
-        action = (*(int (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_GET_ACTION)))();
-        if (selection == 1)
+        action = gTitleMenuLinkInterface->vtable->update();
+        selection = gTitleMenuLinkInterface->vtable->getSelected();
+        if (action == 1)
         {
-            if (action == 0)
+            if (selection == 0)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_dn_boar1_c_103);
                 loadUiDll(1);
@@ -122,11 +114,10 @@ int WeirdUnusedMenu_run(void)
                 gWeirdMenuPhase = 1;
                 gWeirdMenuWidgetWork.widgetFlagsA = (u16)(gWeirdMenuWidgetWork.widgetFlagsA | WIDGET_FLAG_SAVING);
                 gWeirdMenuWidgetWork.widgetFlagsB = (u16)(gWeirdMenuWidgetWork.widgetFlagsB | WIDGET_FLAG_SAVING);
-                (*(void (*)(u32*))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_TOGGLE)))(
-                    (u32*)&gWeirdMenuWidgetWork);
+                gTitleMenuLinkInterface->vtable->copyItems(&gWeirdMenuWidgetWork);
             }
         }
-        else if (selection == 0)
+        else if (action == 0)
         {
             Sfx_PlayFromObject(0, SFX_MENU_CANCEL);
             loadUiDll(1);
@@ -145,8 +136,8 @@ int WeirdUnusedMenu_run(void)
             gWeirdMenuPhase = 0;
             gWeirdMenuWidgetWork.widgetFlagsA = (u16)(gWeirdMenuWidgetWork.widgetFlagsA & ~WIDGET_FLAG_SAVING);
             gWeirdMenuWidgetWork.widgetFlagsB = (u16)(gWeirdMenuWidgetWork.widgetFlagsB & ~WIDGET_FLAG_SAVING);
-            (*(void (*)(u32*))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_TOGGLE)))((u32*)&gWeirdMenuWidgetWork);
-            (*(void (*)(int))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_SET_STATE)))(0);
+            gTitleMenuLinkInterface->vtable->copyItems(&gWeirdMenuWidgetWork);
+            gTitleMenuLinkInterface->vtable->setSelected(0);
         }
     }
 
@@ -164,7 +155,7 @@ void WeirdUnusedMenu_release(void)
     textureFree((Texture*)((u8*)gWeirdMenuTextureB));
     textureFree((Texture*)((u8*)gWeirdMenuTextureC));
     warpToMap(0, 1);
-    (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_RELEASE)))();
+    gTitleMenuLinkInterface->vtable->free();
 }
 
 void WeirdUnusedMenu_initialise(void)
@@ -173,9 +164,8 @@ void WeirdUnusedMenu_initialise(void)
     gWeirdMenuTextureB = textureLoadAsset(WEIRDMENU_TEXTURE_B_ID);
     gWeirdMenuTextureC = textureLoadAsset(WEIRDMENU_TEXTURE_C_ID);
     gWeirdMenuTextHandle[0] = gameTextGet(0);
-    (*(void (*)(u32*, int, int, u32*, int, int, int, int, int, int, int, int))(
-        *(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_SETUP_WIDGETS)))(
-        (u32*)&gWeirdMenuWidgetWork, 2, 0, gWeirdMenuWidgetLayout, 0, 0, 0x5b, 0x45, 0x30, 0xff, 0xd7, 0x3d);
+    gTitleMenuLinkInterface->vtable->setup(&gWeirdMenuWidgetWork, 2, 0, gWeirdMenuWidgetLayout, 0, 0, 0x5b, 0x45,
+                                          0x30, 0xff, 0xd7, 0x3d);
     gWeirdMenuScrollOffset = 0;
     gWeirdMenuPhase = 0;
 }

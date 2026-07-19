@@ -29,6 +29,7 @@
 #include "main/pad.h"
 #include "main/screen_transition.h"
 #include "main/rcp_dolphin_render_api.h"
+#include "main/dll/dll_003C_tumbleweedbush_api.h"
 
 #define OPTIONS_MENU_ACTION_CLOSE      0
 #define OPTIONS_MENU_ACTION_SELECT     1
@@ -59,7 +60,6 @@
 
 extern int* gTitleMenuControlInterface;
 extern int* gTitleMenuItemInterface;
-extern int* gTitleMenuLinkInterface;
 extern int* lbl_803A87D0[8]; /* the 8 menu-row widgets */
 extern int lbl_803DD6FC;
 extern s8 lbl_803DD704;  /* transition fade counter */
@@ -160,7 +160,7 @@ void optionsMenu_applyGameplaySetting(int action, int option)
                 creditsStart();
                 if (lbl_803DBA28 != -1)
                 {
-                    (*(void (**)(void))(*gTitleMenuLinkInterface + 0x8))();
+                    gTitleMenuLinkInterface->vtable->free();
                     lbl_803DBA28 = -1;
                 }
                 z[0] = 0;

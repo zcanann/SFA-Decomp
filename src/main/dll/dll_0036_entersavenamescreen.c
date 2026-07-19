@@ -15,6 +15,7 @@
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_003C_tumbleweedbush_api.h"
 
 extern u16 gEnterSaveNameColorAnimTime;
 extern u32 lbl_803DD6DC;
@@ -40,7 +41,6 @@ extern u8 gEnterSaveNameAutoScrolling;
 extern u32 gEnterSaveNameTotalWidth;
 extern u8 lbl_803DD6EC;
 extern u8 lbl_803DD6ED;
-extern int* gTitleMenuLinkInterface;
 extern char gEnterSaveNameBuffer[4];
 extern s32 gEnterSaveNameSelectedIndex;
 
@@ -284,7 +284,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
 
 void EnterSaveNameScreen_release(void)
 {
-    ((void (*)(void))((void**)*gTitleMenuLinkInterface)[2])();
+    gTitleMenuLinkInterface->vtable->free();
 }
 
 void EnterSaveNameScreen_initialise(void)

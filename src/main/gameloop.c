@@ -72,6 +72,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/object_render.h"
 #include "main/dll/dll_0011_screens.h"
 #include "main/dll/dll_000D_playershadow.h"
+#include "main/dll/dll_003C_tumbleweedbush_api.h"
 #include "main/voxmaps.h"
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
 #include "main/dll/dll_BC.h"
@@ -108,7 +109,7 @@ void* lbl_803DCAB0;
 MapEventInterface** gMapEventInterface;
 void* gPathControlInterface;
 void* gTitleMenuItemInterface;
-void* gTitleMenuLinkInterface;
+LinkInterface* gTitleMenuLinkInterface;
 RomCurveInterface** gRomCurveInterface;
 WaterfxInterface** gWaterfxInterface;
 void* lbl_803DCA94;
@@ -227,7 +228,6 @@ extern void* lbl_803DCA94;
 extern void* gTitleMenuControlInterface;
 extern void* gTitleMenuControlInterfaceCopy;
 extern void* gScreensInterface;
-extern void* gTitleMenuLinkInterface;
 extern void* gPathControlInterface;
 extern void* gMinimapInterface;
 extern void* gCarryableInterface;

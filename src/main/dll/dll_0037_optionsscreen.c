@@ -55,7 +55,6 @@ typedef struct OptionsScreenPanelConfig {
 } OptionsScreenPanelConfig;
 
 extern TitleMenuControl* gTitleMenuItemInterface;
-extern TitleMenuControl* gTitleMenuLinkInterface;
 s8 lbl_803DBA28 = -1;      /* active panel id (-1 = none) */
 extern int lbl_803A87D0[8]; /* the 8 menu-item objects of the active panel */
 extern f32 lbl_803E1DD4;
@@ -175,8 +174,8 @@ void OptionsScreen_render(int arg)
             ((void (**)(int, int, int))gTitleMenuItemInterface->vtable)[6](item[i], arg, fade);
         }
     }
-    ((void (**)(int))gTitleMenuLinkInterface->vtable)[12](fade);
-    ((void (**)(int))gTitleMenuLinkInterface->vtable)[4](arg);
+    gTitleMenuLinkInterface->vtable->setOpacity(fade);
+    gTitleMenuLinkInterface->vtable->render(arg);
     gameTextSetDrawFunc(0);
     titleScreenShowCopyright(0);
     if ((s8)--lbl_803DD706 < 0)
@@ -225,7 +224,7 @@ int OptionsScreen_frameStart(void)
     }
     if ((*gScreenTransitionInterface)->isFinished() == 0)
     {
-        ((void (**)(void))gTitleMenuLinkInterface->vtable)[13]();
+        gTitleMenuLinkInterface->vtable->resetTimers();
         lbl_803DD706 = 2;
     }
 
@@ -235,7 +234,7 @@ int OptionsScreen_frameStart(void)
         {
             if ((s8)lbl_803DBA28 != OPTIONSSCREEN_PANEL_NONE)
             {
-                ((void (**)(void))gTitleMenuLinkInterface->vtable)[2]();
+                gTitleMenuLinkInterface->vtable->free();
                 lbl_803DBA28 = OPTIONSSCREEN_PANEL_NONE;
             }
             optionsScreenFreeMenuItems();
@@ -246,8 +245,8 @@ int OptionsScreen_frameStart(void)
         return lbl_803DD704 <= 12;
     }
 
-    selection = ((int (**)(void))gTitleMenuLinkInterface->vtable)[3]();
-    item = ((int (**)(void))gTitleMenuLinkInterface->vtable)[5]();
+    selection = gTitleMenuLinkInterface->vtable->update();
+    item = gTitleMenuLinkInterface->vtable->getSelected();
     if (item != lbl_803DD700)
     {
         Sfx_PlayFromObject(0, SFXTRIG_warningloop);

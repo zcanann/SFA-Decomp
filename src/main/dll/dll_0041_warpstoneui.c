@@ -24,6 +24,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0041_warpstoneui.h"
+#include "main/dll/dll_003C_tumbleweedbush_api.h"
 
 int lbl_803DBBF8 = 0x140;
 int lbl_803DBBFC = 0x136;
@@ -51,7 +52,6 @@ extern f32 lbl_803E22E0;
 extern f32 lbl_803E22D8;
 extern f32 lbl_803E22DC;
 extern u8 gWarpStoneUiMenuItemTemplates[];
-extern int* gTitleMenuLinkInterface;
 
 WarpstoneMenuItem gWarpStoneUiMenuItems[WARPSTONE_UI_ENTRY_COUNT];
 WarpstoneEntry gWarpStoneUiEntryTable[WARPSTONE_UI_ENTRY_COUNT] = {
@@ -147,25 +147,24 @@ void WarpstoneUI_showUI(int arg)
                                                  gWarpStoneUiMenuItems, gWarpStoneUiEntryTable,
                                                  WARPSTONE_UI_ENTRY_COUNT,
                                                  gWarpStoneUiSelectedIndices);
-            (**(void (**)(u8*, int, int, int, int, int, int, int, int, int, int, int))(
-                (char*)(*gTitleMenuLinkInterface) + 4))((u8*)gWarpStoneUiMenuItems, itemCount, 0, 0, 0, 0, 0x14,
-                                                        200, 0xff, 0xff, 0xff, 0xff);
+            gTitleMenuLinkInterface->vtable->setup(gWarpStoneUiMenuItems, itemCount, 0, NULL, 0, 0, 0x14, 200, 0xff,
+                                                   0xff, 0xff, 0xff);
             gWarpStoneUiMenuActive = 1;
         }
-        sel = (**(int (**)(void))((char*)(*gTitleMenuLinkInterface) + 0xc))();
-        idx = (**(int (**)(void))((char*)(*gTitleMenuLinkInterface) + 0x14))();
+        sel = gTitleMenuLinkInterface->vtable->update();
+        idx = gTitleMenuLinkInterface->vtable->getSelected();
         if (sel > 0)
         {
             (*gMapEventInterface)
                 ->setMapAct(WARPSTONEUI_MAPEVENT_KRAZOA,
                             gWarpStoneUiEntryTable[gWarpStoneUiSelectedIndices[idx]].mapAct);
         }
-        (**(void (**)(int))((char*)(*gTitleMenuLinkInterface) + 0x10))(arg);
+        gTitleMenuLinkInterface->vtable->render(arg);
         break;
     }
     if (gWarpStoneUiMenuActive != 0 && warpstoneUIState[0] != 4)
     {
-        (**(void (**)(void))((char*)(*gTitleMenuLinkInterface) + 8))();
+        gTitleMenuLinkInterface->vtable->free();
         gWarpStoneUiMenuActive = 0;
     }
 }

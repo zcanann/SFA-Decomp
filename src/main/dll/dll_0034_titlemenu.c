@@ -59,7 +59,6 @@ u8 gTitleMenuSelection;
 s32 gAttractMovieState;
 static char sNRarewareReportTag[] = "n_rareware\n";
 
-extern TitleMenuControl* gTitleMenuLinkInterface;
 extern s32 gAttractMovieIdleFrameCount;
 
 /* TitleMenuTextEntry.flags: row is hidden / non-selectable (cleared on the
@@ -73,7 +72,7 @@ extern u8 lbl_803DD6F8;
 
 extern u8* lbl_803DD498;
 
-void TitleMenu_render(u8* obj)
+void TitleMenu_render(int obj)
 {
     int menuAction;
 
@@ -90,8 +89,8 @@ void TitleMenu_render(u8* obj)
         titleScreenPositionElements(-380.0f + (f32)(gTitleMenuSelectionFade * 0x1a4) / 255.0f, 254.0f);
         gameTextBoxFn_80134d40(0, 0, 0);
         (*gScreenTransitionInterface)->getProgress();
-        (*(VtableFn*)((int)gTitleMenuLinkInterface->vtable + 0x30))(0xff);
-        (*(VtableFn*)((int)gTitleMenuLinkInterface->vtable + 0x10))(obj);
+        gTitleMenuLinkInterface->vtable->setOpacity(0xff);
+        gTitleMenuLinkInterface->vtable->render(obj);
         gameTextSetDrawFunc(0);
         titleScreenShowCopyright(gAttractMoviePlaybackEnabled);
     }
@@ -101,18 +100,15 @@ void TitleMenu_frameEnd(void)
 {
 }
 
-#define TitleMenu_GetMenuId()              (*(int (**)(void))((int)*gCameraInterface + 0x10))()
+#define TitleMenu_GetMenuId()              (*gCameraInterface)->getMode()
 #define TitleMenu_SetMenuState(state, arg) (*(void (**)(int, int))((int)*gCameraInterface + 0x60))(state, arg)
-#define TitleMenu_GetFadeState()           (*(int (**)(void))((int)gTitleMenuLinkInterface->vtable + 0xc))()
-#define TitleMenu_GetSelection()           (*(int (**)(void))((int)gTitleMenuLinkInterface->vtable + 0x14))()
-#define TitleMenu_BindEntries()                                                                                        \
-    (*(void (**)(TitleMenuTextEntry*))((int)gTitleMenuLinkInterface->vtable + 0x2c))(lbl_8031A214)
-#define TitleMenu_ClearPanel() (*(void (**)(void))((int)gTitleMenuLinkInterface->vtable + 8))()
+#define TitleMenu_GetFadeState()           gTitleMenuLinkInterface->vtable->update()
+#define TitleMenu_GetSelection()           gTitleMenuLinkInterface->vtable->getSelected()
+#define TitleMenu_BindEntries()            gTitleMenuLinkInterface->vtable->copyItems(lbl_8031A214)
+#define TitleMenu_ClearPanel()             gTitleMenuLinkInterface->vtable->free()
 #define TitleMenu_OpenPanel()                                                                                          \
-    (*(void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int, int))(                         \
-        (int)gTitleMenuLinkInterface->vtable + 4))(lbl_8031A214, 9, 5, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff)
-#define TitleMenu_SetPanelSelection(selection)                                                                         \
-    (*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18))(selection)
+    gTitleMenuLinkInterface->vtable->setup(lbl_8031A214, 9, 5, NULL, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff)
+#define TitleMenu_SetPanelSelection(selection) gTitleMenuLinkInterface->vtable->setSelected(selection)
 #define TitleMenu_SetEntryHighlight(entry)                                                                             \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -400,7 +396,7 @@ void TitleMenu_setSelection(int selection)
     u8 v = selection;
     gTitleMenuSelection = v;
     gTitleMenuPreviousSelection = TITLE_MENU_SELECTION_INVALID;
-    (*(*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18)))(v);
+    gTitleMenuLinkInterface->vtable->setSelected(v);
 }
 
 extern TitleMenuTextEntry sNAttractModeStringBlock[1];
@@ -428,19 +424,16 @@ void TitleMenu_initialise(void)
     mode = getUiDllFn_80014930();
     if (mode == 3)
     {
-        ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int,
-                    int))gTitleMenuLinkInterface->vtable)[1](sNAttractModeStringBlock, 1, 0, 0, 0, 0, 0x14, 200, 0xff,
-                                                             0xff, 0xff, 0xff);
+        gTitleMenuLinkInterface->vtable->setup(sNAttractModeStringBlock, 1, 0, NULL, 0, 0, 0x14, 200, 0xff, 0xff, 0xff,
+                                               0xff);
         gTitleMenuPanelOpen = 0;
     }
     else
     {
-        ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int,
-                    int))gTitleMenuLinkInterface->vtable)[1](lbl_8031A214, 4, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff,
-                                                             0xff);
+        gTitleMenuLinkInterface->vtable->setup(lbl_8031A214, 4, 0, NULL, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
         gTitleMenuPanelOpen = 1;
     }
-    ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](gTitleMenuSelection);
+    gTitleMenuLinkInterface->vtable->setSelected(gTitleMenuSelection);
     titleScreenFn_801368a4(0);
 
     mode = getUiDllFn_80014930();
@@ -467,7 +460,7 @@ void TitleMenu_initialise(void)
             lbl_8031A214[i].flags |= TITLE_MENU_TEXT_ENTRY_HIDDEN;
         }
     }
-    ((void (**)(TitleMenuTextEntry*))gTitleMenuLinkInterface->vtable)[11](lbl_8031A214);
+    gTitleMenuLinkInterface->vtable->copyItems(lbl_8031A214);
     gAttractMoviePreparePending = 0;
     gAttractMovieRetraceCountdown = 0;
     gAttractMovieReplayCountdown = 1;

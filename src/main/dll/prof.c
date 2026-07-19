@@ -20,7 +20,7 @@
 #include "main/dll/savedata_struct.h"
 #include "dolphin/os/OSRtc.h"
 #include "main/rcp_dolphin_state_api.h"
-extern int* gTitleMenuLinkInterface;
+#include "main/dll/dll_003C_tumbleweedbush_api.h"
 extern int* gTitleMenuItemInterface;
 extern s8 lbl_803DBA28;
 extern u8 lbl_803DD706;
@@ -51,7 +51,7 @@ void optionsMenu_openAudioPanel(void)
 
     if (lbl_803DBA28 != -1)
     {
-        (*(void (**)(void))(*gTitleMenuLinkInterface + 8))();
+        gTitleMenuLinkInterface->vtable->free();
     }
     lbl_803DBA28 = 1;
     panels = &lbl_8031ACB8;
@@ -68,8 +68,8 @@ void optionsMenu_openAudioPanel(void)
         *(u16*)(panels->audioEntries + 0x142) = (u16)(*(u16*)(panels->audioEntries + 0x142) | OPTION_ENTRY_DISABLED);
     }
 
-    (*(void (**)(s8*, u8, int, int, int, int, int, int, int, int, int, int))(*gTitleMenuLinkInterface + 4))(
-        panels->audioEntries, panels->audioCount, 0, 0, 0, 0, 0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
+    gTitleMenuLinkInterface->vtable->setup(panels->audioEntries, panels->audioCount, 0, NULL, 0, 0, 0x14, 0xc8, 0xff,
+                                           0xff, 0xff, 0xff);
 
     if (OSGetSoundMode() == 1)
     {
@@ -115,7 +115,7 @@ void optionsMenu_openGeneralPanel(void)
 
     if (lbl_803DBA28 != -1)
     {
-        (*(void (**)(void))(*gTitleMenuLinkInterface + 8))();
+        gTitleMenuLinkInterface->vtable->free();
     }
     lbl_803DBA28 = 2;
     panels = &lbl_8031ACB8;
@@ -155,8 +155,8 @@ void optionsMenu_openGeneralPanel(void)
         cheatId2++;
     } while (cheatId2 < 4);
 
-    (*(void (**)(s8*, u8, int, int, int, int, int, int, int, int, int, int))(*gTitleMenuLinkInterface + 4))(
-        panels->optionEntries, panels->optionCount, 0, 0, 0, 0, 0x14, 0xc8, 0xff, 0xff, 0xff, 0xff);
+    gTitleMenuLinkInterface->vtable->setup(panels->optionEntries, panels->optionCount, 0, NULL, 0, 0, 0x14, 0xc8, 0xff,
+                                           0xff, 0xff, 0xff);
 
     lbl_803A87D0[0] =
         (*(int (**)(int, int, int, int, u8))(*gTitleMenuItemInterface + 0xc))(0x366, 0x22, 0, 1, lbl_803DD708[6]);
