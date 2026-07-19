@@ -23,6 +23,7 @@
 #include "main/game_object.h"
 #include "main/frame_timing.h"
 #include "main/audio/audio_control_api.h"
+#include "main/dll/dll_0017_savegame_api.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/dll/player_api.h"
 #include "main/model_engine.h"
@@ -221,8 +222,9 @@ typedef struct SaveGameMapState
 
 #define gSaveGameMapState (*(SaveGameMapState*)gTransientMapBits)
 
-int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
+int saveGame_restoreObjectPosToRomList(void* objectData)
 {
+    SaveGameRomListPosition* object = objectData;
     u8* walker;
     u8* slot;
     int i;
