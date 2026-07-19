@@ -67,10 +67,6 @@ typedef struct WarpstoneUpdateMenuAnimObjState
     u8 flagsD4; /* 0xd4: bit2 set on event 0x17 */
 } WarpstoneUpdateMenuAnimObjState;
 
-#define WARPSTONE_MAP_EVENT_SET(mapId, value) (*gMapEventInterface)->setMapAct((mapId), (value))
-#define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value)                                                                \
-    (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
-
 extern int lbl_803DC050;
 int lbl_803DDBF4;
 
@@ -101,7 +97,7 @@ int warpstone_testEvent(u32 obj, u32 unused, int option)
             unlockLevel(0, 0, 1);
             lockLevel(mapGetDirIdx(0x42), 0);
             lockLevel(mapGetDirIdx(7), 1);
-            WARPSTONE_MAP_EVENT_SET(0x42, 1);
+            (*gMapEventInterface)->setMapAct(0x42, 1);
             Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
             return 1;
         }
@@ -123,19 +119,19 @@ int warpstone_testEvent(u32 obj, u32 unused, int option)
             lockLevel(mapGetDirIdx(7), 1);
             if (mainGetBit(GAMEBIT_ITEM_TestCombatSpirit_Got) != 0)
             {
-                WARPSTONE_MAP_EVENT_SET(0x42, 2);
+                (*gMapEventInterface)->setMapAct(0x42, 2);
             }
             else if (mainGetBit(GAMEBIT_ITEM_SpiritTestFear_Got) != 0)
             {
-                WARPSTONE_MAP_EVENT_SET(0x42, 2);
+                (*gMapEventInterface)->setMapAct(0x42, 2);
             }
             else if (mainGetBit(GAMEBIT_ITEM_SpiritTestStrength_Got) != 0)
             {
-                WARPSTONE_MAP_EVENT_SET(0x42, 2);
+                (*gMapEventInterface)->setMapAct(0x42, 2);
             }
             else if (mainGetBit(GAMEBIT_ITEM_Spirit5_Got) != 0)
             {
-                WARPSTONE_MAP_EVENT_SET(0x42, 2);
+                (*gMapEventInterface)->setMapAct(0x42, 2);
             }
             Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
             return 1;
@@ -287,8 +283,8 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
             break;
 
         case 9:
-            WARPSTONE_MAP_EVENT_SET(0x17, 1);
-            WARPSTONE_MAP_EVENT_SET(0xe, 2);
+            (*gMapEventInterface)->setMapAct(0x17, 1);
+            (*gMapEventInterface)->setMapAct(0xe, 2);
             CMenu_SetFadeCounter(0);
             loadUiDll(1);
             break;
@@ -315,7 +311,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
             break;
 
         case 0x12:
-            WARPSTONE_MAP_EVENT_ANIM(7, 0xa, 0);
+            (*gMapEventInterface)->setObjGroupStatus(7, 0xa, 0);
             break;
 
         case 0x14:

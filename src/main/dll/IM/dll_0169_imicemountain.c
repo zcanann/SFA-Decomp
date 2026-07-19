@@ -48,7 +48,7 @@ typedef struct IMIceMountainState
     s8 warpCountdown; /* state 6: frames until warpToMap(0x1A) */
     u8 pad09;
     s16 musicTrack;   /* -1 or 26; Music_Trigger edge latch */
-    u8 mapEventState; /* MEVT_QUERY result at init (1/2/5) */
+    u8 mapEventState; /* getMapAct result at init (1/2/5) */
     u8 pad0D[3];
     f32 warningTextTimer; /* shows text 0x351 while above the floor value */
 } IMIceMountainState;
@@ -61,10 +61,6 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 #define IMICEMOUNTAIN_ENVFX_B 0x9e
 #define IMICEMOUNTAIN_ENVFX_C 0x119
 #define IMICEMOUNTAIN_ENVFX_D 0x104
-
-#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setObjGroupStatus((a), (b), (c))
-#define MEVT_SET(a, b)        (*gMapEventInterface)->setMapAct((a), (b))
-#define MEVT_QUERY(a)         (*gMapEventInterface)->getMapAct((a))
 
 extern f32 lbl_803E46E0;
 extern f32 lbl_803E46D8;
@@ -109,7 +105,7 @@ void imicemountain_updateEventState(int* obj)
         if (mainGetBit(GAMEBIT_IM_TrickyRelated006E) != 0)
         {
             extra->eventState = 1;
-            MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 2, 0);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 2, 0);
         }
         break;
     case 1:
@@ -117,25 +113,25 @@ void imicemountain_updateEventState(int* obj)
         {
             mainSetBits(GAMEBIT_IM_SwitchVisible, 1);
             extra->eventState = 2;
-            MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
         }
         else if (mainGetBit(GAMEBIT_IM_RescuedTricky) != 0)
         {
             extra->eventState = 2;
-            MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
         }
         break;
     case 2:
         if (mainGetBit(GAMEBIT_IM_RescuedTricky) != 0)
         {
             extra->eventState = 3;
-            MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 6, 1);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6, 1);
         }
         break;
     case 3:
         if (mainGetBit(GAMEBIT_IM_RaceStarted) != 0)
         {
-            MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 0, 0);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0, 0);
         }
         if (mainGetBit(GAMEBIT_IM_BikeRelated03A2) != 0)
         {
@@ -175,12 +171,12 @@ void imicemountain_updateEventState(int* obj)
     case 5:
         if ((extra->latchFlags & 1) != 0)
         {
-            MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 3, 0);
-            MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 4, 0);
-            MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 6, 0);
-            MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 7, 0);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 3, 0);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 4, 0);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 6, 0);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 7, 0);
             extra->eventState = 0;
-            MEVT_SET(((GameObject*)obj)->anim.mapEventSlot, 2);
+            (*gMapEventInterface)->setMapAct(((GameObject*)obj)->anim.mapEventSlot, 2);
         }
         break;
     case 6:
@@ -319,14 +315,14 @@ void IMIceMountain_init(int* obj)
         gameBitFn_800ea2e0(i);
     }
     sub->warningTextTimer = lbl_803E46E0;
-    MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 1, 0);
-    MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 5, 1);
+    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 1, 0);
+    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 5, 1);
     unlockLevel(0, 0, 1);
     if (mainGetBit(GAMEBIT_IM_BikeRelated0379) != 0)
     {
-        MEVT_SET(((GameObject*)obj)->anim.mapEventSlot, 2);
+        (*gMapEventInterface)->setMapAct(((GameObject*)obj)->anim.mapEventSlot, 2);
     }
-    sub->mapEventState = MEVT_QUERY(((GameObject*)obj)->anim.mapEventSlot);
+    sub->mapEventState = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
     switch (sub->mapEventState)
     {
     case 1:
@@ -347,10 +343,10 @@ void IMIceMountain_init(int* obj)
         }
         else
         {
-            MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 0, 1);
+            (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0, 1);
             if (mainGetBit(GAMEBIT_IM_CannonGuy1Dead) != 0 && mainGetBit(GAMEBIT_IM_CannonGuy2Dead) != 0)
             {
-                MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
+                (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0xb, 1);
             }
             if (mainGetBit(GAMEBIT_IM_TrickyRelated006E) != 0)
             {
@@ -358,13 +354,13 @@ void IMIceMountain_init(int* obj)
             }
             else
             {
-                MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 2, 1);
+                (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 2, 1);
                 sub->eventState = 7;
             }
         }
-        MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 3, 1);
-        MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 4, 1);
-        MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 7, 1);
+        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 3, 1);
+        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 4, 1);
+        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 7, 1);
         break;
     case 2:
         mainSetBits(GAMEBIT_IM_BikeRelated03A3, 0);
@@ -374,13 +370,10 @@ void IMIceMountain_init(int* obj)
         mainSetBits(GAMEBIT_IM_OnBike, 0);
         mainSetBits(0x374, 0);
         mainSetBits(0x37c, 0);
-        MEVT_TRIGGER(((GameObject*)obj)->anim.mapEventSlot, 2, 0);
+        (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 2, 0);
         break;
     case 3:
     case 4:
         break;
     }
 }
-#undef MEVT_TRIGGER
-#undef MEVT_SET
-#undef MEVT_QUERY

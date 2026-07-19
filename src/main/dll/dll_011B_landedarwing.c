@@ -275,10 +275,6 @@ extern f32 lbl_803E3BBC;
 extern f32 lbl_803E3BC0;
 extern f32 lbl_803E3BC4;
 
-#define MAP_EVENT_STATUS(mapId)         (*gMapEventInterface)->getMapAct((mapId))
-#define MAP_EVENT_SET(mapId, value)     (*gMapEventInterface)->setMapAct((mapId), (value))
-#define MAP_EVENT_OP(mapId, arg, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (arg), (value))
-
 int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -304,7 +300,7 @@ int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
                 lockLevel(mapGetDirIdx(0x29), 0);
                 break;
             case 0x451b9:
-                if (MAP_EVENT_STATUS(0xd) == 2)
+                if ((*gMapEventInterface)->getMapAct(0xd) == 2)
                 {
                     loadMapAndParent(0xb);
                     unlockLevel(0, 0, 1);
@@ -346,16 +342,16 @@ int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
                 mapUnload(mapGetDirIdx(7), 0x3f3c);
                 break;
             case 0x49f5a:
-                MAP_EVENT_OP(0xb, 4, 0);
+                (*gMapEventInterface)->setObjGroupStatus(0xb, 4, 0);
                 break;
             case 0x451b9:
-                if (MAP_EVENT_STATUS(0xd) == 2)
+                if ((*gMapEventInterface)->getMapAct(0xd) == 2)
                 {
                     unlockLevel(0, 0, 1);
                     mapUnload(mapGetDirIdx(0xd), 0x3f3f);
-                    MAP_EVENT_OP(0xd, 0xa, 0);
-                    MAP_EVENT_OP(0xd, 0xb, 0);
-                    MAP_EVENT_OP(0xd, 0xe, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(0xd, 0xa, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(0xd, 0xb, 0);
+                    (*gMapEventInterface)->setObjGroupStatus(0xd, 0xe, 0);
                 }
                 break;
             case 0x4cd65:
@@ -373,7 +369,7 @@ int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
                 setLoadedFileFlags_blocks1();
                 break;
             case 0x451b9:
-                if (MAP_EVENT_STATUS(0xd) == 2)
+                if ((*gMapEventInterface)->getMapAct(0xd) == 2)
                 {
                     setLoadedFileFlags_blocks1();
                 }
@@ -389,7 +385,7 @@ int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
                 clearLoadedFileFlags_blocks1();
                 break;
             case 0x451b9:
-                if (MAP_EVENT_STATUS(0xd) == 2)
+                if ((*gMapEventInterface)->getMapAct(0xd) == 2)
                 {
                     clearLoadedFileFlags_blocks1();
                 }
@@ -402,9 +398,9 @@ int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
             switch (mapId)
             {
             case 0x451b9:
-                if (MAP_EVENT_STATUS(0xd) == 2)
+                if ((*gMapEventInterface)->getMapAct(0xd) == 2)
                 {
-                    MAP_EVENT_SET(0xb, 5);
+                    (*gMapEventInterface)->setMapAct(0xb, 5);
                     warpToMap(0x4e, 0);
                 }
                 break;
@@ -413,7 +409,7 @@ int Landed_Arwing_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
                 break;
             case 0x4cd65:
                 warpToMap(0x7f, 0);
-                MAP_EVENT_SET(0x41, 2);
+                (*gMapEventInterface)->setMapAct(0x41, 2);
                 break;
             }
             break;
