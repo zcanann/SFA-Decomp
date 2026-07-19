@@ -3536,7 +3536,7 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
     {
         ((GameObject*)obj)->anim.localPosY =
             ((GameObject*)obj)->anim.localPosY +
-            ((((GameObject*)obj)->anim.localPosY - groundY[0]) - *(f32*)(sourceObj + 0xc));
+            ((((GameObject*)obj)->anim.localPosY - groundY[0]) - ((GameObject*)sourceObj)->anim.localPosX);
     }
 
     *(s16*)obj += ((ObjSeqState*)seq)->heading;

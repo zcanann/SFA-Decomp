@@ -457,7 +457,7 @@ void dll_107_init(int obj, int pArg)
 
     sub = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = 0;
-    p54 = *(int*)(obj + 0x54);
+    p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
     *(int*)&((ObjHitsPriorityState*)p54)->skeletonHitMask = 16;
     p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
     *(int*)&((ObjHitsPriorityState*)p54)->objectHitMask = 16;
