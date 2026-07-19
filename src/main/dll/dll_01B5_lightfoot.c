@@ -96,7 +96,7 @@ void lightfoot_free(GameObject* obj, int flag)
     int inner = *(int*)&(obj)->extra;
     int count;
     int i;
-    ObjGroup_RemoveObject((int)obj, LIGHTFOOT_OBJGROUP);
+    ObjGroup_RemoveObject((u32)obj, LIGHTFOOT_OBJGROUP);
     count = (obj)->childCount;
     for (i = 0; i < count; i++)
     {
