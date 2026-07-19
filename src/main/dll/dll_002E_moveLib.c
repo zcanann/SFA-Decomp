@@ -58,10 +58,6 @@
 
 extern u8 gMoveLibDefaultMoveData[];
 
-/* Animation-channel helpers implemented by objprint.c. */
-void objFn_8003acfc(GameObject* obj, int* types, int count, char* out);
-void fn_8003AC14(GameObject* obj, int* types, int count);
-void fn_8003A9C0(char* channels, int count, s16 a, s16 b);
 int fn_8003A8B4(PostObjAnimComponent* objAnim, PostMotionTarget* leadAnims, u8 contactAnim, void* secondary);
 s16 objMathFn_8003a380(PostObjAnimComponent* objAnim, PostObject* obj, void* primary, void* secondary, s16* events,
                        f32 distance, int eventCount, int eventState);
@@ -421,9 +417,9 @@ void fn_80114B1C(GameObject* obj)
     (*gCameraInterface)->setTarget(0);
 
     state->phase = MOVELIB_PHASE_IDLE;
-    objFn_8003acfc(obj, types, state->pointCount, (char*)state->animChannels);
+    objFn_8003acfc(obj, types, state->pointCount, state->animChannels);
     state->setupFlag = 0x50;
-    fn_8003A9C0((char*)state->animChannels, state->pointCount, 0, 0);
+    fn_8003A9C0(state->animChannels, state->pointCount, 0, 0);
 }
 
 int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16 b)
@@ -464,7 +460,7 @@ int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16
             switch (s->phase)
             {
             case MOVELIB_PHASE_SETUP:
-                objFn_8003acfc(obj, types, s->pointCount, (char*)s->animChannels);
+                objFn_8003acfc(obj, types, s->pointCount, s->animChannels);
                 s->setupFlag = 0;
                 s->phase = MOVELIB_PHASE_RUN;
             case MOVELIB_PHASE_RUN:
@@ -566,8 +562,8 @@ void dll_2E_func05(GameObject* obj, MoveLibState* s, s16 a, s16 b, int count)
     s->startOffsetZ = z;
     s->reattackDelayBase = -1;
     fn_8003AC14(obj, seqFn_800394a0(), count);
-    objFn_8003acfc(obj, seqFn_800394a0(), count, (char*)s->animChannels);
-    fn_8003A9C0((char*)s->animChannels, s->pointCount, 0, 0);
+    objFn_8003acfc(obj, seqFn_800394a0(), count, s->animChannels);
+    fn_8003A9C0(s->animChannels, s->pointCount, 0, 0);
     dll_2E_func09(s, gMoveLibDefaultMoveData, gMoveLibDefaultMoveData, s->pointCount);
 }
 
@@ -611,9 +607,9 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
             s->phase = MOVELIB_PHASE_HELD;
             if ((s->modeBits & 8) == 0)
             {
-                objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, (char*)s->animChannels);
+                objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, s->animChannels);
                 s->setupFlag = 0x50;
-                fn_8003A9C0((char*)s->animChannels, (u32)s->pointCount, 0, 0);
+                fn_8003A9C0(s->animChannels, (u32)s->pointCount, 0, 0);
             }
             else
             {
@@ -625,7 +621,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
             s->phase = MOVELIB_PHASE_IDLE;
             if ((s->modeBits & 8) == 0)
             {
-                objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, (char*)s->animChannels);
+                objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, s->animChannels);
                 s->setupFlag = 0x50;
             }
         }
@@ -675,9 +671,9 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                     s->reattackTimer = ival;
                     if ((ival <= 0) && (0 < (int)(s->reattackTimer + framesThisStep)))
                     {
-                        objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, (char*)s->animChannels);
+                        objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, s->animChannels);
                         s->setupFlag = 0x50;
-                        fn_8003A9C0((char*)s->animChannels, (u32)s->pointCount, 0, 0);
+                        fn_8003A9C0(s->animChannels, (u32)s->pointCount, 0, 0);
                         s->phase = MOVELIB_PHASE_IDLE;
                         return;
                     }
@@ -738,9 +734,9 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                 {
                     if ((s->phase != MOVELIB_PHASE_IDLE) || ((target == 0 && (*(u32*)&s->lastTarget != 0))))
                     {
-                        objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, (char*)s->animChannels);
+                        objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, s->animChannels);
                         s->setupFlag = 10;
-                        fn_8003A9C0((char*)s->animChannels, (u32)s->pointCount, 0, 0);
+                        fn_8003A9C0(s->animChannels, (u32)s->pointCount, 0, 0);
                         s->phase = MOVELIB_PHASE_IDLE;
                     }
                 }
@@ -748,7 +744,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                 {
                     if ((target != *(u32*)&s->lastTarget) || (s->phase == MOVELIB_PHASE_IDLE))
                     {
-                        objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, (char*)s->animChannels);
+                        objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, s->animChannels);
                         s->setupFlag = 1;
                     }
                     if ((s->modeBits & 8) != 0)

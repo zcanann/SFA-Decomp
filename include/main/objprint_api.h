@@ -20,5 +20,8 @@ void objSetAlphaCompareThreshold(u8 alpha);
 void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model);
 void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, int c);
 void objModelClearVecFn_8003aa40(GameObject* obj);
+void fn_8003A9C0(u8* channels, int count, s16 a, s16 b);
+void fn_8003AC14(GameObject* obj, int* keys, int count);
+void objFn_8003acfc(GameObject* obj, int* keys, int count, u8* channels);
 
 #endif /* MAIN_OBJPRINT_API_H_ */

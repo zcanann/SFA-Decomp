@@ -1015,7 +1015,7 @@ int fn_800399C0(s16* curve, s16* state)
     return 0;
 }
 
-void fn_8003A9C0(char* p, int count, s16 a, s16 b)
+void fn_8003A9C0(u8* p, int count, s16 a, s16 b)
 {
     while (count > 0)
     {
@@ -1098,7 +1098,7 @@ void fn_8003AC14(GameObject* obj, int* keys, int count)
     }
 }
 
-void objFn_8003acfc(GameObject* obj, int* keys, int count, int out)
+void objFn_8003acfc(GameObject* obj, int* keys, int count, u8* out)
 {
     s16* found;
     int idx;
