@@ -878,14 +878,7 @@ int tricky_substateDigForFood(GameObject* obj, int state)
 {
     short move;
     int b;
-    struct
-    {
-        u8 head[8];
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } spawnBuf;
+    PartFxSpawnParams spawnBuf;
 
     if (tricky_handleFeedOrTalk(obj, (int*)state) != 0)
     {
@@ -910,9 +903,9 @@ int tricky_substateDigForFood(GameObject* obj, int state)
         {
             objAnimFn_8013a3f0((int)obj, 47, lbl_803E23EC, 0);
         }
-        spawnBuf.x = (obj)->anim.worldPosX;
-        spawnBuf.y = (obj)->anim.worldPosY;
-        spawnBuf.z = (obj)->anim.worldPosZ;
+        spawnBuf.posX = (obj)->anim.worldPosX;
+        spawnBuf.posY = (obj)->anim.worldPosY;
+        spawnBuf.posZ = (obj)->anim.worldPosZ;
         spawnBuf.scale = lbl_803E23F0;
         (*gPartfxInterface)->spawnObject((void*)obj, 2022, &spawnBuf, 0x200001, -1, NULL);
         break;
@@ -1108,7 +1101,7 @@ int tricky_substateHowlCall(GameObject* obj, int* trickyState)
     float fval;
     int b[1];
     int val;
-    u8 fxBuf[24];
+    PartFxSpawnParams fxBuf;
     int ia;
     float fa;
     int ib;
@@ -1164,10 +1157,10 @@ int tricky_substateHowlCall(GameObject* obj, int* trickyState)
         {
             if (((obj)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0)
             {
-                *(f32*)&fxBuf[12] = ((TrickyState*)trickyState)->renderPosX;
-                *(f32*)&fxBuf[16] = lbl_803E23F8 + ((TrickyState*)trickyState)->renderPosY;
-                *(f32*)&fxBuf[20] = ((TrickyState*)trickyState)->renderPosZ;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7f0, fxBuf, 0x200001, -1, NULL);
+                fxBuf.posX = ((TrickyState*)trickyState)->renderPosX;
+                fxBuf.posY = lbl_803E23F8 + ((TrickyState*)trickyState)->renderPosY;
+                fxBuf.posZ = ((TrickyState*)trickyState)->renderPosZ;
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x7f0, &fxBuf, 0x200001, -1, NULL);
             }
             *(float*)(trickyState + 0x1d1) = lbl_803E24C8;
         }

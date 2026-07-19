@@ -78,11 +78,7 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
 {
     AreaFxEmitState* state;
     s16 i;
-    struct
-    {
-        s16 hw[6];
-        f32 vec[3];
-    } args;
+    PartFxSpawnParams args;
 
     state = obj->state;
     if (count > 0)
@@ -91,24 +87,24 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
         {
             {
                 u16 sx = state->extentX;
-                args.vec[0] = (f32)(s32)randomGetRange(-sx, sx);
+                args.posX = (f32)(s32)randomGetRange(-sx, sx);
             }
             {
                 u16 sy = state->extentY;
-                args.vec[1] = (f32)(s32)randomGetRange(-sy, sy);
+                args.posY = (f32)(s32)randomGetRange(-sy, sy);
             }
             {
                 u16 sz = state->extentZ;
-                args.vec[2] = (f32)(s32)randomGetRange(-sz, sz);
+                args.posZ = (f32)(s32)randomGetRange(-sz, sz);
             }
-            vecRotateZXY(state->emitAngles, args.vec);
+            vecRotateZXY(state->emitAngles, &args.posX);
             {
                 u8 type = state->emitType;
                 if (type == 4 || type == 6)
                 {
-                    args.vec[0] += obj->objAnim.localPosX;
-                    args.vec[1] += obj->objAnim.localPosY;
-                    args.vec[2] += obj->objAnim.localPosZ;
+                    args.posX += obj->objAnim.localPosX;
+                    args.posY += obj->objAnim.localPosY;
+                    args.posZ += obj->objAnim.localPosZ;
                     (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 0x200001, -1, NULL);
                 }
                 else
