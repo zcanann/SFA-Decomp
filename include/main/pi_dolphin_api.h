@@ -47,19 +47,6 @@ void gxTextureFn_8004d5b4(void* renderOp);
 
 #define gxTextureFn_80050e28IntLegacy(mode) \
     (((void (*)(int))gxTextureFn_80050e28)((mode)))
-#define textureFn_80050ad8ByteLegacy(texture, stageCount, mode, indirectTextureId) \
-    (((u8 (*)(void*, int, int, u32))textureFn_80050ad8)( \
-        (texture), (stageCount), (mode), (indirectTextureId)))
-#define textureFn_80051348IntLegacy(textureRef, objectFlags) \
-    (((void (*)(u32, int))textureFn_80051348)((textureRef), (objectFlags)))
-#define fn_800510F0IntLegacy(textureRef, hasBaseTexture, mode) \
-    (((void (*)(u32, int, int))fn_800510F0)((textureRef), (hasBaseTexture), (mode)))
-#define fn_80050FF4IntLegacy(mode) \
-    (((void (*)(int))fn_80050FF4)((mode)))
-#define fn_80050558IntLegacy(texture, texMtx, stageMode, componentMode, variant) \
-    (((void (*)(u32, int, int, int, int))fn_80050558)( \
-        (texture), (texMtx), (stageMode), (componentMode), (variant)))
-
 void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5);
 
 extern s16 gObjMapBlockInfo[];

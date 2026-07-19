@@ -1066,12 +1066,12 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         {
             nl += 1;
         }
-        envtex = textureFn_80050ad8ByteLegacy(t, nl, ((u8*)op)[0x42],
-                                              ((ObjModelRenderOp*)op)->indirectTextureId);
+        envtex = textureFn_80050ad8(t, nl, ((u8*)op)[0x42], ((ObjModelRenderOp*)op)->indirectTextureId);
+        envtex &= 0xff;
     }
     if (refs[0] != 0)
     {
-        textureFn_80051348IntLegacy(refs[0], obj[0xf1]);
+        textureFn_80051348((void*)refs[0], obj[0xf1]);
     }
     if (refs[1] != 0)
     {
@@ -1087,10 +1087,30 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             color[3] = 0;
         }
         GXSetTevColor(GX_TEVREG2, *(GXColor*)color);
-        fn_800510F0IntLegacy(refs[1], refs[0] != 0 ? 1 : 0, ((u8*)op)[0x20]);
+        {
+            u8 hasBaseTexture;
+            if (refs[0] != 0)
+            {
+                hasBaseTexture = 1;
+            }
+            else
+            {
+                hasBaseTexture = 0;
+            }
+            fn_800510F0((void*)refs[1], hasBaseTexture, ((u8*)op)[0x20]);
+        }
         if (color[3] != 0)
         {
-            fn_80050FF4IntLegacy(refs[0] != 0 ? 1 : 0);
+            u8 hasBaseTexture;
+            if (refs[0] != 0)
+            {
+                hasBaseTexture = 1;
+            }
+            else
+            {
+                hasBaseTexture = 0;
+            }
+            fn_80050FF4(hasBaseTexture);
         }
     }
     else
@@ -1130,7 +1150,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             sp = &lbl_803DCC60;
             for (; i < lbl_803DCC5C; i++)
             {
-                u32 t = (u32)modelLightStruct_getProjectionTexture(*lp);
+                u8* t = (u8*)modelLightStruct_getProjectionTexture(*lp);
                 if (t != 0)
                 {
                     modelLightStruct_getProjectionTevModes(*lp, &a, &b);
@@ -1139,8 +1159,8 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                         shad = 1;
                     }
                     {
-                        int mtx = (int)modelLightStruct_getProjectionTexMtx(*lp);
-                        fn_80050558IntLegacy(t, mtx, a, b, *sp);
+                        f32* mtx = modelLightStruct_getProjectionTexMtx(*lp);
+                        fn_80050558(t, mtx, a, b, *sp);
                     }
                 }
                 lp++;
