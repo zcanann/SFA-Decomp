@@ -8,7 +8,7 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_object_query_api.h"
-#include "main/audio/sfx_play_int_return_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_descriptor.h"
@@ -101,7 +101,7 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (((GameObject*)obj)->anim.modelInstance->textureSlotCount != 0)
             {
-                Sfx_PlayFromObjectIntReturnLegacy(obj, SFXTRIG_littletink22);
+                Sfx_PlayFromObject(obj, SFXTRIG_littletink22);
             }
             state->closeFlags |= DOOR_CLOSE_FLAG_REQUESTED;
         }
@@ -109,7 +109,7 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (((GameObject*)obj)->anim.modelInstance->textureSlotCount != 0)
             {
-                Sfx_PlayFromObjectIntReturnLegacy(obj, SFXTRIG_littletink22);
+                Sfx_PlayFromObject(obj, SFXTRIG_littletink22);
             }
             state->closeFlags |= DOOR_CLOSE_FLAG_READY;
         }
@@ -118,7 +118,7 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
             state->phase = DOOR_PHASE_CLOSING;
             if (state->movementSfx != 0)
             {
-                Sfx_PlayFromObjectIntReturnLegacy(obj, state->movementSfx);
+                Sfx_PlayFromObject(obj, state->movementSfx);
             }
         }
     }
@@ -129,7 +129,7 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
             state->phase = DOOR_PHASE_OPENING;
             if (state->movementSfx != 0)
             {
-                Sfx_PlayFromObjectIntReturnLegacy(obj, state->movementSfx);
+                Sfx_PlayFromObject(obj, state->movementSfx);
             }
         }
     }
@@ -145,13 +145,13 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     mainSetBits(def->closedLatchGameBit, 1);
                 }
                 if ((state->movementSfx != 0) &&
-                    (Sfx_IsPlayingFromObjectIntLegacy(obj, state->movementSfx) != 0))
+                    (Sfx_IsPlayingFromObject(obj, state->movementSfx) != 0))
                 {
-                    Sfx_StopFromObjectIntReturnLegacy(obj, state->movementSfx);
+                    Sfx_StopFromObject(obj, state->movementSfx);
                 }
                 if (state->endpointSfx != 0)
                 {
-                    Sfx_PlayFromObjectIntReturnLegacy(obj, state->endpointSfx);
+                    Sfx_PlayFromObject(obj, state->endpointSfx);
                 }
             }
         }
@@ -169,13 +169,13 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     mainSetBits(def->closedLatchGameBit, 0);
                 }
                 if ((state->movementSfx != 0) &&
-                    (Sfx_IsPlayingFromObjectIntLegacy(obj, state->movementSfx) != 0))
+                    (Sfx_IsPlayingFromObject(obj, state->movementSfx) != 0))
                 {
-                    Sfx_StopFromObjectIntReturnLegacy(obj, state->movementSfx);
+                    Sfx_StopFromObject(obj, state->movementSfx);
                 }
                 if (state->endpointSfx != 0)
                 {
-                    Sfx_PlayFromObjectIntReturnLegacy(obj, state->endpointSfx);
+                    Sfx_PlayFromObject(obj, state->endpointSfx);
                 }
             }
         }
