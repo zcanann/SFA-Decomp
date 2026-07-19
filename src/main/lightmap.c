@@ -1058,18 +1058,12 @@ void initMapBlocks(void)
     *(u32*)(mb + 0x41e0) = (u32)mmAlloc(0x3c00, 5, 0);
     *(u32*)(mb + 0x41cc) = (u32)mmAlloc(0x500, 5, 0);
 
-    *(u32*)(mb + 0x41f8) = *(u32*)(mb + 0x41f4) + 0x100;
-    *(u32*)(mb + 0x41e4) = *(u32*)(mb + 0x41e0) + 0xc00;
-    *(u32*)(mb + 0x41d0) = *(u32*)(mb + 0x41cc) + 0x100;
-    *(u32*)(mb + 0x41fc) = *(u32*)(mb + 0x41f8) + 0x100;
-    *(u32*)(mb + 0x41e8) = *(u32*)(mb + 0x41e4) + 0xc00;
-    *(u32*)(mb + 0x41d4) = *(u32*)(mb + 0x41d0) + 0x100;
-    *(u32*)(mb + 0x4200) = *(u32*)(mb + 0x41fc) + 0x100;
-    *(u32*)(mb + 0x41ec) = *(u32*)(mb + 0x41e8) + 0xc00;
-    *(u32*)(mb + 0x41d8) = *(u32*)(mb + 0x41d4) + 0x100;
-    *(u32*)(mb + 0x4204) = *(u32*)(mb + 0x4200) + 0x100;
-    *(u32*)(mb + 0x41f0) = *(u32*)(mb + 0x41ec) + 0xc00;
-    *(u32*)(mb + 0x41dc) = *(u32*)(mb + 0x41d8) + 0x100;
+    for (i = 0; i < 16; i += 4)
+    {
+        *(u32*)(mb + 0x41f8 + i) = *(u32*)(mb + 0x41f4 + i) + 0x100;
+        *(u32*)(mb + 0x41e4 + i) = *(u32*)(mb + 0x41e0 + i) + 0xc00;
+        *(u32*)(mb + 0x41d0 + i) = *(u32*)(mb + 0x41cc + i) + 0x100;
+    }
 
     loadAssetFileById(&lbl_803DCE7C, MLDF_FILEID_MAPS_TAB);
     loadAssetFileById(&lbl_803DCE80, MLDF_FILEID_HITS_TAB);
