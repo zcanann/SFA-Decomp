@@ -16279,8 +16279,8 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     *(u32*)((char*)inner + 4) = *(u32*)((char*)inner + 4) & ~0x100000;
                     ((PlayerState*)inner)->emissionState = 0;
                     fn_802B0EA4((GameObject*)(obj), (int)inner, (int)inner);
-                    (**(void (**)(f32, int, int, f32, void*, void*))((char*)(*gPlayerInterface) + 8))(
-                        timeDelta, obj, (int)inner, timeDelta, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
+                    (*gPlayerInterface)->update((void*)obj, inner, timeDelta, timeDelta, gPlayerStateHandlers,
+                        &gPlayerDefaultStateHandler);
                 }
             }
             else
@@ -16303,8 +16303,8 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 *(u32*)((char*)inner + 4) = *(u32*)((char*)inner + 4) & ~0x100000;
                 ((PlayerState*)inner)->emissionState = 0;
                 fn_802B0EA4((GameObject*)(obj), (int)inner, (int)inner);
-                (**(void (**)(f32, int, int, f32, void*, void*))((char*)(*gPlayerInterface) + 8))(
-                    timeDelta, obj, (int)inner, timeDelta, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
+                (*gPlayerInterface)->update((void*)obj, inner, timeDelta, timeDelta, gPlayerStateHandlers,
+                    &gPlayerDefaultStateHandler);
             }
             lbl_803DE468 = dist;
         }
@@ -16784,7 +16784,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     {
         ((void (*)(void))objSetAnimField48to0)();
     }
-    ((void (*)(int, int, f32))staffAnimate)(obj, (int)inner, timeDelta);
+    ((void (*)(int, void*, f32))staffAnimate)(obj, inner, timeDelta);
     if (gPlayerPathObject != NULL && ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
     {
         ((GameObject*)gPlayerPathObject)->objectFlags &= ~7;

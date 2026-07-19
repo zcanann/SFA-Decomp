@@ -33,6 +33,8 @@ def resolve_unit(units: list[dict], query: str) -> dict:
 def objdump_symbol(objdump_path: Path, object_path: Path, symbol: str) -> list[str]:
     command = [
         str(objdump_path),
+        "-M",
+        "gekko",
         "-drz",
         f"--disassemble={symbol}",
         str(object_path),
