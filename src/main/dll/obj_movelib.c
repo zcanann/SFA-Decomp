@@ -33,7 +33,6 @@
 #include "main/newclouds.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 
 f32 lbl_803DC3A0 = 2.0f;
