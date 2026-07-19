@@ -2,10 +2,11 @@
 #define MAIN_DLL_WAVEANIMATOROBJECTDEF_STRUCT_H_
 
 #include "types.h"
+#include "main/obj_placement.h"
 
 typedef struct WaveanimatorObjectDef
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head;
     s16 originX;
     s16 originY;
     s8 spanX;

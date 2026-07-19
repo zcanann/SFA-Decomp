@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 /* opaque per-instance extra state; no field is read or written by this DLL */
 typedef struct ExplodePlanState
@@ -13,7 +14,7 @@ typedef struct ExplodePlanState
 /* explodeplan placement record (tail past the common ObjPlacement head) */
 typedef struct ExplodePlanPlacement
 {
-    u8 pad0[0x18];
+    ObjPlacement head;
     s8 rotXByte; /* 0x18: rotX in 1/256 turns */
     u8 pad19[0x1E - 0x19];
     s16 removeGameBit; /* 0x1E: game bit that removes this prop */
