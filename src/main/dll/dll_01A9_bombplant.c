@@ -2,7 +2,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_keep_alive_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/shader_api.h"
@@ -191,7 +191,7 @@ void bombplant_explode(int* obj, int unused, int* p3)
     {
         trickyImpress((GameObject*)trickyObj);
     }
-    Sfx_PlayFromObject(obj, SFXTRIG_bombplant_woompf);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_bombplant_woompf);
     {
         int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
         ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
@@ -272,7 +272,7 @@ void bombplant_update(void* obj)
     case 2:
         if ((((BombPlantState*)state)->flags & BOMBPLANT_FLAG_STATE_ENTERED) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_bombplant_grows);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_bombplant_grows);
             ((BombPlantState*)state)->flags &= ~BOMBPLANT_FLAG_STATE_ENTERED;
             p4c = ((GameObject*)obj)->anim.placementData;
             ((GameObject*)obj)->anim.alpha = 0xff;
@@ -342,7 +342,7 @@ void bombplant_update(void* obj)
             }
             else if ((u32)(hitType - 0xe) <= 1 || hitType == 0x11)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_mv_ladderslide16);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_mv_ladderslide16);
                 hitX = hitX + playerMapOffsetX;
                 hitZ = hitZ + playerMapOffsetZ;
                 objLightFn_8009a1dc(obj, 0.014f, lightVec, 1, 0);
@@ -482,4 +482,3 @@ void* gBombPlantObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (voi
 u8 lbl_80326D98[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 void* gBombPlantSporeObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_init, BombPlantSpore_update, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_free, (void*)0x00000000, BombPlantSpore_getExtraSize, (void*)0x00000000 };
 void* gBombPlantingSpotObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, BombPlantingSpot_init, BombPlantingSpot_update, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
-

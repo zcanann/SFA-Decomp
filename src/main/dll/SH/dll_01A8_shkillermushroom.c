@@ -45,7 +45,7 @@
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_01A8_shkillermushroom.h"
 
@@ -201,7 +201,7 @@ void enemymushroom_update(int* obj)
             hv.x += playerMapOffsetX;
             hv.z += playerMapOffsetZ;
             objLightFn_8009a1dc(obj, 0.014f, &hv, 1, 0);
-            Sfx_PlayFromObject(obj, SFXTRIG_barrel_bounce1);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_barrel_bounce1);
             Obj_Shatter((GameObject*)obj);
         }
         return;
@@ -419,7 +419,7 @@ void enemymushroom_update(int* obj)
                         (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_HIT_PLAYER);
                     ((EnemyMushroomState*)state)->stateId = 3;
                     ((EnemyMushroomState*)state)->timer = 0.0f;
-                    Sfx_PlayFromObject(obj, SFXTRIG_baddie_haga_talk3);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_haga_talk3);
                 }
             }
         }
@@ -442,7 +442,7 @@ void enemymushroom_update(int* obj)
             {
                 if (((EnemyMushroomState*)state)->stateId != 9)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_mv_ladderslide16);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_mv_ladderslide16);
                 }
                 ((EnemyMushroomState*)state)->stateFlags =
                     (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_HIT_PLAYER);

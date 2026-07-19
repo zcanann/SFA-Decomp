@@ -42,7 +42,7 @@
 #include "main/sky_api.h"
 #include "main/audio/audio_control_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/music_api.h"
 #include "main/obj_group.h"
@@ -491,7 +491,7 @@ void ecsh_shrine_update(s16* obj)
             ((EcshShrineState*)sub)->voiceTimer = fv;
             if (fv <= zero)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_spirit_voice);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_spirit_voice);
                 ((EcshShrineState*)sub)->voiceTimer = (f32)(int)randomGetRange(500, 1000);
             }
             if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
@@ -530,7 +530,7 @@ void ecsh_shrine_update(s16* obj)
                 sub[0x2f] = 2;
                 ((EcshShrineState*)sub)->cooldownTimer = 200.0f;
                 ((EcshShrineState*)sub)->animState = 6;
-                Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_iceywindlp16);
                 ((EcshShrineState*)sub)->animTimer = 0.0f;
                 mainSetBits(GAMEBIT_ECSH_TestObservRunning, 1);
                 (*gScreenTransitionInterface)->step(0x78, 1);
@@ -557,7 +557,7 @@ void ecsh_shrine_update(s16* obj)
                 {
                     if ((int)randomGetRange(0, 10) > 7)
                     {
-                        Sfx_PlayFromObject(obj, SFXTRIG_spirit_voice_var);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_spirit_voice_var);
                     }
                     sub[0x31] = 1;
                 }
@@ -609,7 +609,7 @@ void ecsh_shrine_update(s16* obj)
                     {
                         sub[0x31] = 0;
                         ((EcshShrineState*)sub)->shuffleSfxThreshold = (f32)(int)randomGetRange(0x28, 0x3c);
-                        Sfx_PlayFromObject(obj, SFXTRIG_spirit_basketspin);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_spirit_basketspin);
                         ((EcshShrineState*)sub)->animState = 0;
                         ((EcshShrineState*)sub)->animTimer = 2.0f;
                         if (sub[0x2f] == 3)
@@ -721,7 +721,7 @@ void ecsh_shrine_update(s16* obj)
                         (*gScreenTransitionInterface)->start(0x1e, 1);
                         ((EcshShrineState*)sub)->cooldownTimer = 31.0f;
                         ((EcshShrineState*)sub)->animState = 7;
-                        Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_iceywindlp16);
                         sub[0x2f] = 10;
                     }
                     else if (((EcshShrineState*)sub)->matchFlag == 1)
@@ -736,7 +736,7 @@ void ecsh_shrine_update(s16* obj)
                             ((EcshShrineState*)sub)->animTimer = 12.0f;
                             ((EcshShrineState*)sub)->shuffleCount = 7;
                             ((EcshShrineState*)sub)->matchFlag = -1;
-                            Sfx_PlayFromObject(obj, SFXTRIG_sc_menuups16k);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_sc_menuups16k);
                             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
                         }
                         else if (sub[0x2f] == 4)
@@ -749,7 +749,7 @@ void ecsh_shrine_update(s16* obj)
                             ((EcshShrineState*)sub)->animTimer = 12.0f;
                             ((EcshShrineState*)sub)->shuffleCount = 9;
                             ((EcshShrineState*)sub)->matchFlag = -1;
-                            Sfx_PlayFromObject(obj, SFXTRIG_sc_menuups16k);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_sc_menuups16k);
                             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
                         }
                         else
@@ -760,8 +760,8 @@ void ecsh_shrine_update(s16* obj)
                             ((EcshShrineState*)sub)->animState = 3;
                             ((EcshShrineState*)sub)->matchFlag = 0;
                             ((EcshShrineState*)sub)->animState = 7;
-                            Sfx_PlayFromObject(obj, SFXTRIG_mpick1_b);
-                            Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_mpick1_b);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_iceywindlp16);
                         }
                     }
                     else
@@ -773,7 +773,7 @@ void ecsh_shrine_update(s16* obj)
                             (*gScreenTransitionInterface)->start(0x1e, 1);
                             ((EcshShrineState*)sub)->cooldownTimer = 31.0f;
                             ((EcshShrineState*)sub)->animState = 7;
-                            Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_iceywindlp16);
                         }
                     }
                     break;

@@ -6,7 +6,7 @@
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_channel_volume_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
@@ -185,7 +185,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
             if (DFSH_LASER_BLOCKED(runtime) == 0)
             {
                 DFSH_LASER_CYCLE_TIMER(runtime) = 0x190;
-                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_78);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_78);
                 runtime->beamVolumeScale = (0.0f);
             }
             else
@@ -198,10 +198,10 @@ void DFSH_LaserBeam_update(u32 objAddr)
         {
             if (DFSH_LASER_BLAST_PHASE(runtime) == 0)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_79);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_79);
                 if (DFSH_LASER_BLOCKED(runtime) == 0)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_77);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_77);
                 }
                 DFSH_LASER_BLAST_PHASE(runtime) = 1;
                 if (gLaserBeamEffectResource != NULL)
@@ -330,7 +330,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                     if (objGetAnimState80A((GameObject*)(playerObj)) != 0x1D7)
                     {
                         int i;
-                        Sfx_PlayFromObject(obj, SFXTRIG_wp_espk2_c);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_espk2_c);
                         for (i = 0; i < 4; i++)
                         {
                             PARTFX_SPAWN(Obj_GetPlayerObject(), 0x28B, 0, 4, -1, 0);

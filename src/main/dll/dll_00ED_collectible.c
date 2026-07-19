@@ -25,7 +25,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/path_control_interface.h"
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
@@ -198,11 +198,11 @@ void collectible_applyPickup(int* obj)
         switch (((GameObject*)obj)->anim.seqId)
         {
         case 90:
-            Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_lockoff22);
             itemPickupDoParticleFxLegacy(obj, 1.0f, 2, 40);
             break;
         case 793:
-            Sfx_PlayFromObject(obj, SFXTRIG_bapt11_c);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_bapt11_c);
             mainSetBits(GAMEBIT_ITEM_NWFood_Got, 1);
             ((CollectibleState*)state)->hideFrames = 1200;
             itemPickupDoParticleFxLegacy(obj, 1.0f, 255, 40);
@@ -216,15 +216,15 @@ void collectible_applyPickup(int* obj)
                 }
                 mainSetBits(GAMEBIT_ITEM_MoonSeed_Count, c);
                 itemPickupDoParticleFxLegacy(obj, 1.0f, 6, 40);
-                Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_lockoff22);
                 break;
             }
         case 34:
-            Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_lockoff22);
             itemPickupDoParticleFxLegacy(obj, 1.0f, 255, 40);
             break;
         default:
-            Sfx_PlayFromObject(obj, SFXTRIG_cam90_c);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_cam90_c);
             itemPickupDoParticleFxLegacy(obj, 1.0f, 255, 40);
             break;
         }
@@ -233,23 +233,23 @@ void collectible_applyPickup(int* obj)
         switch (((GameObject*)obj)->anim.seqId)
         {
         case COLLECTIBLE_ITEM_ENERGY_EGG:
-            Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_lockoff22);
+                    Sfx_PlayFromObject((u32)Obj_GetPlayerObject(), SFXTRIG_lockoff22);
             playerAddHealth(Obj_GetPlayerObject(), 4);
             itemPickupDoParticleFxLegacy(obj, 1.0f, 3, 40);
             break;
         case COLLECTIBLE_ITEM_APPLE:
             playerAddHealth(Obj_GetPlayerObject(), 2);
-            Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_lockoff22);
+                    Sfx_PlayFromObject((u32)Obj_GetPlayerObject(), SFXTRIG_lockoff22);
             itemPickupDoParticleFxLegacy(obj, 1.0f, 1, 40);
             break;
         default:
-            Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_cam90_c);
+                    Sfx_PlayFromObject((u32)Obj_GetPlayerObject(), SFXTRIG_cam90_c);
             itemPickupDoParticleFxLegacy(obj, 1.0f, 255, 40);
             break;
         }
         break;
     default:
-        Sfx_PlayFromObject(obj, SFXTRIG_cam90_c);
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_cam90_c);
         itemPickupDoParticleFxLegacy(obj, 1.0f, 255, 40);
         break;
     }
@@ -345,7 +345,7 @@ void collectible_updateIdleMotion(GameObject *obj)
         {
             ((CollectibleState*)state)->spinSpeed = (f32)(s32)randomGetRange(600, 800);
             ((CollectibleState*)state)->spinTimer = randomGetRange(180, 240);
-            Sfx_PlayFromObject((int*)obj, SFXTRIG_dn_boar1_c_169);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_169);
         }
         (obj)->anim.rotY = ((CollectibleState*)state)->spinSpeed;
         ((CollectibleState*)state)->spinSpeed *= -0.8f;

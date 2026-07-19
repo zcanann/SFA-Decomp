@@ -20,7 +20,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/hud_visibility_api.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_object_volume_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/object_render_legacy.h"
@@ -298,8 +298,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
                     t1 += 1;
                 }
             }
-            Sfx_PlayFromObject((int*)obj, SFXTRIG_lrope_powerup);
-            Sfx_PlayFromObject((int*)obj, SFXTRIG_lockon3_on);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_lrope_powerup);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_lockon3_on);
         }
         break;
     case 2:
@@ -379,8 +379,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
                 t1 += 1;
             }
         }
-        Sfx_PlayFromObject((int*)obj, SFXTRIG_lockon3_on);
-        Sfx_PlayFromObject((int*)obj, SFXTRIG_lrope_powerup);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_lockon3_on);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_lrope_powerup);
         break;
     case 5:
         ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
@@ -427,8 +427,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
                 t1 += 1;
             }
         }
-        Sfx_PlayFromObject((int*)obj, SFXTRIG_lockon3_on);
-        Sfx_PlayFromObject((int*)obj, SFXTRIG_lrope_powerup);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_lockon3_on);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_lrope_powerup);
         break;
     }
     case 6:
