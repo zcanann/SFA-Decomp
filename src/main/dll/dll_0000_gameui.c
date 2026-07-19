@@ -8550,8 +8550,8 @@ void GameUI_hudDraw(int a, int b, int c)
                 textureAnimFn_80053f2c(gGameUiBlinkTexture, &lbl_803DD82C, &lbl_803DD828);
                 tex = gGameUiBlinkTexture;
                 scale = lbl_803E1E70;
-                x = sx - scale * (f32)(u32) * (u16*)((char*)tex + 0xa);
-                y = sy - scale * (f32)(u32) * (u16*)((char*)tex + 0xc);
+                x = sx - scale * (f32)(u32) ((Texture*)tex)->width;
+                y = sy - scale * (f32)(u32) ((Texture*)tex)->height;
                 drawTexture(tex, x, y, 0x96, 0x100);
             }
             hudDrawFn_80121440(a, b, c);
