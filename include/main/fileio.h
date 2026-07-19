@@ -15,11 +15,7 @@ void dvdCheckError(void);
 int DVDRead(DVDFileInfo* fileInfo, void* buf, int size, int offset);
 void fileReadCb_80015954(s32 result, DVDFileInfo* fileInfo);
 void setFileInfo(DVDFileInfo* fileInfo);
-void* loadFileByPath(char* path, int* outSize);
+void* loadFileByPath(char* path, int* outSize, int unused);
 void* loadFileByPathAsync(char* path, int* outSize, int unused, DVDCallback callback);
-
-/* Compatibility view for callers recovered with the unused third argument. */
-#define loadFileByPathLegacy3(path, outSize, unused) \
-    ((void* (*)(char*, int*, int))loadFileByPath)((path), (outSize), (unused))
 
 #endif /* MAIN_FILEIO_H_ */

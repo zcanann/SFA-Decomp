@@ -195,7 +195,7 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, DVDCallback cb)
     return NULL;
 }
 
-void* loadFileByPath(char* path, int* outSize)
+void* loadFileByPath(char* path, int* outSize, int unused)
 {
     DVDFileInfo fileInfo;
     int size;

@@ -608,7 +608,7 @@ int SaveSelectScreen_run(void)
                 if (lbl_803DD6C4 > 1)
                 {
                     sprintf(buf, sSaveGameBinPathFormat, lbl_803DD6C4);
-                    data = loadFileByPathLegacy3(buf, 0, 0);
+                    data = loadFileByPath(buf, 0, 0);
                     if (data != NULL)
                     {
                         memcpy(lbl_803DD498, data, 0x6ec);
