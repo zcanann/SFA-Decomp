@@ -1291,7 +1291,7 @@ void _textSetColor(void* context, int red, int green, int blue, int alpha)
     _gxSetTevColor1(red, green, blue, alpha);
 }
 
-void setTextColor(int unused, int a, int b, int c, int d)
+void setTextColor(void* context, int a, int b, int c, int d)
 {
     _gxSetTevColor2(a, b, c, d);
 }

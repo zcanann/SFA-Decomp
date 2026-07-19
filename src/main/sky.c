@@ -1026,11 +1026,12 @@ void dll_06_func08(int obj)
             {
                 alpha = (int)(lbl_803DF118 - lbl_803DF118 * (v / lbl_803DF148));
             }
-            setTextColor(obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28), (u8) * (int*)(s + 0x2c), (u8)alpha);
+            setTextColor((void*)obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28),
+                         (u8) * (int*)(s + 0x2c), (u8)alpha);
         }
         else
         {
-            setTextColor(obj, 255, 255, 255, 0);
+            setTextColor((void*)obj, 255, 255, 255, 0);
         }
     }
 }

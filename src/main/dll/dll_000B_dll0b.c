@@ -945,17 +945,17 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         }
         if ((int)((PartfxEffectState*)p[slot])->flags & 0x10000000)
         {
-            setTextColorContextLegacy(a0, ar, ag, ab, 0xff);
+            setTextColor(a0, ar, ag, ab, 0xff);
         }
         else if (((PartfxEffectState*)p[slot])->sourceObject != NULL &&
                  ((int)((PartfxEffectState*)p[slot])->flags & 0x4000))
         {
-            setTextColorContextLegacy(a0, 0xff, 0xff, 0xff,
-                                      *(u8*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x37));
+            setTextColor(a0, 0xff, 0xff, 0xff,
+                         *(u8*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x37));
         }
         else
         {
-            setTextColorContextLegacy(a0, 0xff, 0xff, 0xff, 0xff);
+            setTextColor(a0, 0xff, 0xff, 0xff, 0xff);
         }
         tex = ((PartfxEffectState*)p[slot])->textureResource;
         if (tex != NULL)

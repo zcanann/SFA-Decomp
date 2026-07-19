@@ -241,7 +241,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     vtx.vy = gobj->anim.localPosY;
     vtx.vz = gobj->anim.localPosZ;
     vtx.w = 0.0495f;
-    setTextColorContextLegacy(ctx, 0xff, 0xff, 0xff, 0xff);
+    setTextColor(ctx, 0xff, 0xff, 0xff, 0xff);
     if (gBoneParticleEffectTimer != 0)
     {
         (*gPartfxInterface)->spawnObject((u8*)gobj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);

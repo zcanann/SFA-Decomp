@@ -431,7 +431,7 @@ int debugPrintDrawRecord(int color, u8* p)
                 gDebugTextColorG = green;
                 gDebugTextColorB = blue;
                 gDebugTextColorA = alpha;
-                setTextColorContextOnlyLegacy(color);
+                setTextColor((void*)color, red, green, blue, alpha);
             }
             break;
         }

@@ -574,7 +574,7 @@ void waterfx_func05(int obj, int renderParam)
             e = (WaterEntry7*)((char*)gWaterfxRipplePool + poolOffset);
             if (e->active != 0)
             {
-                setTextColor(obj, 0xff, 0xff, 0xff, (u8)e->active);
+                setTextColor((void*)obj, 0xff, 0xff, 0xff, (u8)e->active);
                 dp.x = e->x;
                 dp.y = e->y;
                 dp.z = e->z;
@@ -639,7 +639,7 @@ void waterfx_func05(int obj, int renderParam)
             g = (WaterEntry*)((char*)gWaterfxWakePool + poolOffset);
             if (g->active != 0 && g->f18 == 0)
             {
-                setTextColor(obj, 0xff, 0xff, 0xff, (u8)g->active);
+                setTextColor((void*)obj, 0xff, 0xff, 0xff, (u8)g->active);
                 dp.x = g->x;
                 dp.y = g->y;
                 dp.z = g->z;

@@ -477,7 +477,7 @@ void dfropenode_render(int obj, int p2, int p3)
                 alpha = (objAnim->alpha + objAnim->alpha) >> 1;
             }
             selectTexture((Texture*)(gRopeNodeTextures[((DfropenodePlacement*)objDef)->textureIndex]), 0);
-            setTextColorByteLegacy((u32*)&p2, renderState.blue, renderState.green, renderState.red, (u8)alpha);
+            setTextColor(&p2, renderState.blue, renderState.green, renderState.red, (u8)alpha);
         }
         node = extra->rope->nodes;
         for (segment = 0; segment < (int)(extra->rope->count - 1); segment++)
@@ -494,7 +494,7 @@ void dfropenode_render(int obj, int p2, int p3)
                 int alpha;
 
                 alpha = (u8)(objAnim->alpha + randomGetRange(0, objAnim->alpha));
-                setTextColorByteLegacy((u32*)&p2, renderState.blue, renderState.green, renderState.red, alpha);
+                setTextColor(&p2, renderState.blue, renderState.green, renderState.red, alpha);
             }
             node = extra->rope->nodes;
             for (segment = 0; segment < (int)(extra->rope->count - 1); segment++)

@@ -780,12 +780,12 @@ int snowPrintSnowCloud(int arg, int cloudId)
     textRenderSetupFn_80079804();
     if (((NewCloud*)p)->cloudType == 4)
     {
-        setTextColor(arg, 0x7d, 0x7d, 0x9b, 0xff);
+        setTextColor((void*)arg, 0x7d, 0x7d, 0x9b, 0xff);
     }
     else if (((NewCloud*)p)->cloudType == 0)
     {
         getAmbientColor(0, &cr, &cg, &cb);
-        setTextColor(arg, cr, cg, cb, 0xff);
+        setTextColor((void*)arg, cr, cg, cb, 0xff);
     }
     gxBlendFn_80078b4c();
     GXClearVtxDesc();
