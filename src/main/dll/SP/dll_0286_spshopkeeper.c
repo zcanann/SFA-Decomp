@@ -90,9 +90,6 @@ extern f32 lbl_803E59F0;
 
 void ShopKeeper_spawnScarabs(GameObject* obj, int state, int count);
 
-f32 lbl_803E5A24 = 10.0f;
-f32 lbl_803E5A28 = 300.0f;
-
 int ShopKeeper_getExtraSize(void);
 int ShopKeeper_getObjectTypeId(void);
 void ShopKeeper_free(GameObject* obj);
@@ -416,7 +413,7 @@ f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
         dx /= dist;
         dz /= dist;
     }
-    if (dist > lbl_803E5A24)
+    if (dist > 10.0f)
     {
         diff = getAngle(dx, dz) & 0xffff;
         if (mode != 0)
@@ -461,7 +458,7 @@ void ShopKeeper_init(GameObject* obj)
     ((ShopkeeperState*)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
     ((ShopkeeperState*)state)->msgStack = allocModelStruct_800139e8(4, 4);
     ((ShopkeeperState*)state)->opacity = 0xFF;
-    ((ShopkeeperState*)state)->textTimer = lbl_803E5A28;
+    ((ShopkeeperState*)state)->textTimer = 300.0f;
     dll_2E_func05(obj, (MoveLibState*)(state + 0x35C), -0x1C71, 0x3555, 2);
     ((ShopkeeperState*)state)->unk96D |= 0x12;
 }
