@@ -1450,11 +1450,11 @@ u32 tricky_updateIdleBehavior(int obj, int* trickyState)
     {
         return 1;
     }
-    if (*(f32*)((int)trickyState + 0x79c) > lbl_803E23DC)
+    if (((TrickyState*)trickyState)->cooldownC > lbl_803E23DC)
     {
         objAnimFn_8013a3f0(obj, 0x1b, lbl_803E23EC, 0);
         ((TrickyState*)trickyState)->substate = 2;
-        *(f32*)((int)trickyState + 0x79c) = lbl_803E23DC;
+        ((TrickyState*)trickyState)->cooldownC = lbl_803E23DC;
         return 1;
     }
     if ((((TrickyState*)trickyState)->stateFlags728 >> 7 & 1) != 0U)
@@ -1468,7 +1468,7 @@ u32 tricky_updateIdleBehavior(int obj, int* trickyState)
         *(f32*)((int)trickyState + 0x724) = *(f32*)((int)trickyState + 0x724) - timeDelta;
         if (*(f32*)((int)trickyState + 0x724) <= lbl_803E23DC)
         {
-            *(f32*)((int)trickyState + 0x71c) = lbl_803E2438;
+            ((TrickyState*)trickyState)->cooldownA = lbl_803E2438;
             bitVal = randomGetRange(200, 500);
             *(f32*)((int)trickyState + 0x724) = (f32)(s32)(bitVal);
             ((FlagByte728*)((int)trickyState + 0x728))->bf6 = 0;
@@ -1517,7 +1517,7 @@ u32 tricky_updateIdleBehavior(int obj, int* trickyState)
             ((TrickyState*)trickyState)->sfxRepeatTimer = lbl_803E2440;
             return 1;
         }
-        if (*(f32*)((int)trickyState + 0x71c) > lbl_803E23DC)
+        if (((TrickyState*)trickyState)->cooldownA > lbl_803E23DC)
         {
             tricky_startRandomIdleMove((GameObject*)(obj), (int)trickyState);
         }

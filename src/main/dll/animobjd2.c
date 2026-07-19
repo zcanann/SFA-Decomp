@@ -650,7 +650,7 @@ void trickyUpdateCirclingTargetPosition(void* objPtr, void* state)
         ((TrickyState*)state)->substate = ANIMOBJD2_SUBSTATE_APPROACH;
     }
 
-    delta = angle - (s32)(u16) * (s32*)((u8*)state + 0x704);
+    delta = angle - (s32)(u16)((TrickyState*)state)->scratch704.i;
     if (delta > 0x8000)
         delta -= 0xFFFF;
     if (delta < -0x8000)
@@ -667,7 +667,7 @@ void trickyUpdateCirclingTargetPosition(void* objPtr, void* state)
     if (absDelta < 0x2000)
     {
         ((TrickyState*)state)->scratch704.i =
-            *(s32*)((int)state + 0x704) + (((TrickyState*)state)->scratch700.i << 11);
+            ((TrickyState*)state)->scratch704.i + (((TrickyState*)state)->scratch700.i << 11);
     }
 
     ((TrickyState*)state)->scratch708.f = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosX -
