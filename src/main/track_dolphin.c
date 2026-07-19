@@ -409,6 +409,27 @@ int* bs;
 
 void setupToRenderMapBlock(int* block, void* posMtx);
 
+void setupToRenderMapBlock(int* block, void* posMtx)
+{
+    f32 out[12];
+    f32 tmp[12];
+    f32 fc;
+
+    GXLoadPosMtxImm((const f32 (*)[4])posMtx, GX_PNMTX0);
+    PSMTXCopy((f32*)posMtx, tmp);
+    fc = lbl_803DEBCC;
+    tmp[3] = fc;
+    tmp[7] = fc;
+    tmp[11] = fc;
+    GXLoadNrmMtxImm((const f32 (*)[4])tmp, GX_PNMTX0);
+    PSMTXConcat((f32*)lbl_803967F0, (f32*)posMtx, out);
+    GXLoadTexMtxImm((const f32 (*)[4])out, GX_TEXMTX2, GX_MTX3x4);
+    GXSetArray(GX_VA_POS, *(void**)((char*)block + 0x58), 6);
+    GXSetArray(GX_VA_CLR0, *(void**)((char*)block + 0x5C), 2);
+    GXSetArray(GX_VA_TEX0, *(void**)((char*)block + 0x60), 4);
+    GXSetArray(GX_VA_TEX1, *(void**)((char*)block + 0x60), 4);
+}
+
 void renderMapBlock(int* o, u8 type)
 {
     int state[5];
@@ -494,72 +515,7 @@ void renderMapBlock(int* o, u8 type)
     }
 }
 
-void setupToRenderMapBlock(int* block, void* posMtx)
-{
-    f32 out[12];
-    f32 tmp[12];
-    f32 fc;
-
-    GXLoadPosMtxImm((const f32 (*)[4])posMtx, GX_PNMTX0);
-    PSMTXCopy((f32*)posMtx, tmp);
-    fc = lbl_803DEBCC;
-    tmp[3] = fc;
-    tmp[7] = fc;
-    tmp[11] = fc;
-    GXLoadNrmMtxImm((const f32 (*)[4])tmp, GX_PNMTX0);
-    PSMTXConcat((f32*)lbl_803967F0, (f32*)posMtx, out);
-    GXLoadTexMtxImm((const f32 (*)[4])out, GX_TEXMTX2, GX_MTX3x4);
-    GXSetArray(GX_VA_POS, *(void**)((char*)block + 0x58), 6);
-    GXSetArray(GX_VA_CLR0, *(void**)((char*)block + 0x5C), 2);
-    GXSetArray(GX_VA_TEX0, *(void**)((char*)block + 0x60), 4);
-    GXSetArray(GX_VA_TEX1, *(void**)((char*)block + 0x60), 4);
-}
-
-void doNothing_80062A50(void)
-{
-}
-
-int return0_80060B90(void* wpad0)
-{
-    return 0x0;
-}
-
-void fn_800628CC(void* wpad0)
-{
-    gShadowFlag = 0x1;
-}
-void setMapBlockFlag(void)
-{
-    mapBlockFlag = 0x1;
-}
-
-void* mapBlockFn_800606ec(void* obj, int idx)
-{
-    return (char*)((int**)obj)[0x50 / 4] + idx * 0x14;
-}
-void* fn_800606FC(int* obj, int idx)
-{
-    return (char*)((int**)obj)[0x68 / 4] + idx * 0x1c;
-}
-MapShader* fn_8006070C(MapBlockData* obj, int idx)
-{
-    return obj->shaders + idx;
-}
-
 void* fn_800606DC(int* obj, int idx);
-
-void fn_80060490(int* outX, int* outY, int* outWidth, int* outHeight)
-{
-    *outX = gSunFlareScissorX;
-    *outY = gSunFlareScissorY;
-    *outWidth = gSunFlareScissorWidth;
-    *outHeight = gSunFlareScissorHeight;
-}
-
-void setShadowFlag_803db658(s32 v)
-{
-    gShadowFlag = v;
-}
 
 u8 gTrackGridOrigin[0x104];
 
@@ -567,77 +523,239 @@ TrackBlockDescriptor gTrackBlockDescriptors[20];
 
 void* fn_80069944(u32* outVal);
 
-int mapBlockFn_80060678(void* obj)
-{
-    return (*(u32*)&((GameObject*)obj)->anim.localPosY & 0xff000000) >> 24;
-}
-
-void mapGetBlocks(void** outPtr, u32* outVal)
-{
-    *outPtr = gMapBlockLayerTables;
-    *outVal = gMapBlocks;
-}
-
-void playerShadowFn_80062a30(GameObject* obj)
-{
-    ObjModelState* p = obj->anim.modelState;
-    if (p == NULL)
-        return;
-    p->flags &= ~0x2020;
-}
-
 /* fn_80060668 -- extract bits 8-15 of obj[0x10] as a byte. */
 u32 fn_80060668(int* obj);
 
-void fn_80062894(void)
-{
-    lbl_803DCEF6 = 0;
-    lbl_803DCEFA = 0;
-    lbl_803DCEEA = (s8)(1 - lbl_803DCEEA);
-    lbl_803DCEEB = (s8)(1 - lbl_803DCEEB);
-    lbl_803DCEE9 = 0;
-    lbl_803DCEE8 = 0;
-}
-
 void fn_80069968(int* outCount, int* outTable);
 
-int fn_80065640(void)
+int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z);
+
+char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
+
+/* fn_80062808 -- begin a new shadow-volume frame: clear the per-frame
+ * counts, flip the three double-buffer selectors, and rotate the current
+ * write pointers to the buffer picked by this frame's flip index. */
+void vecGetRanges(f32* pts, f32* base, f32 scale, int* out);
+
+int objShadowFn_80062378(GameObject* obj, u8 param);
+
+int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag);
+
+void fn_80061094(f32* vec, f32* out, f32 scale);
+
+u8 gShadowDrawScratch[0x5DC0];
+
+u16 gIntersectSegmentTypeTable[0x212];
+
+static inline void GXPosition3s16(const int x, const int y, const int z)
 {
-    int r = 0;
-    if ((s8)mapBlockFlag != 0 || (s8)lbl_803DCF4F != 0 || lbl_803DCF4D != 0)
-        r = 1;
-    return r;
+    GXWGFifo.s16 = x;
+    GXWGFifo.s16 = y;
+    GXWGFifo.s16 = z;
 }
 
-void objFn_80065604(void)
+static inline void GXTexCoord2s16(const s16 x, const s16 y)
 {
-    u32 cur;
-    int idx;
-    s16 i;
-    i = 0;
-    idx = 0;
-    do
-    {
-        u8* p = (u8*)(gMapDynamicSlots + idx);
-        cur = p[20];
-        if (cur != 0)
-            p[20]--;
-        idx += sizeof(MapDynamicSlot);
-        i++;
-    } while (i < MAP_DYNAMIC_SLOT_COUNT);
+    GXWGFifo.s16 = x;
+    GXWGFifo.s16 = y;
 }
 
-void fn_80063368(GameObject* target)
+static inline void GXPosition3f32(const f32 x, const f32 y, const f32 z)
 {
-    s16 i;
-    for (i = 0; i < MAP_DYNAMIC_SLOT_COUNT; i++)
+    GXWGFifo.f32 = x;
+    GXWGFifo.f32 = y;
+    GXWGFifo.f32 = z;
+}
+
+void renderGlows(void)
+{
+    f32 px, py, pz;
+    s32 sx, sy, sz;
+    u8 amb[3];
+    GXColor fogCol;
+    f32 sunMtx[12];
+    f32 dir[3];
+    f32 cam[3];
+    void* viewMtx;
+    u8 alpha;
+    u8 sky;
+    f32 sunDot;
+    f32 cx, cy, cz;
+
+    fogCol = *(GXColor*)&sSynthFadeUnit;
+    GXSetCullMode(GX_CULL_NONE);
+    Camera_RebuildProjectionMatrix();
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    textureSetupFn_800799c0();
+    gxTextureFn_800794e0();
+    textRenderSetupFn_80079804();
+    GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, fogCol);
+    gxBlendFn_800789ac();
+    alpha = 0xff;
+    gSunFlareScissorWidth = 0;
+    gSunFlareScissorHeight = 0;
+    sky = skyFn_8008919c(2);
+    if (sky != 0 && (renderFlags & 0x40))
     {
-        MapDynamicSlot* p = (MapDynamicSlot*)(gMapDynamicSlots + i * 24);
-        if ((GameObject*)p->object == target)
+        viewMtx = Camera_GetViewMatrix();
+        fn_800897D4(0, &dir[0], &dir[1], &dir[2]);
+        cam[0] = *(f32*)((char*)viewMtx + 0x20);
+        cam[1] = *(f32*)((char*)viewMtx + 0x24);
+        cam[2] = *(f32*)((char*)viewMtx + 0x28);
+        sunDot = PSVECDotProduct(dir, cam);
+        if (sunDot > lbl_803DEBCC)
         {
-            p->cooldown = 0;
+            int i;
+            int occ;
+            f32 fade;
+            skyBuildSunModelMatrix((f32(*)[4])sunMtx);
+            Camera_ProjectWorldPointWithOffset(sunMtx[3], sunMtx[7], sunMtx[11], lbl_803DEBD4, &px, &py, &pz);
+            Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
+            gSunFlareScissorX = sx - 0x10;
+            gSunFlareScissorWidth = 0x20;
+            gSunFlareScissorY = sy - 0x10;
+            gSunFlareScissorHeight = 0x20;
+            if ((int)gSunFlareScissorX < 0)
+                gSunFlareScissorX = 0;
+            else if ((int)gSunFlareScissorX > 0x280)
+                gSunFlareScissorX = 0x280;
+            if ((int)gSunFlareScissorY < 0)
+                gSunFlareScissorY = 0;
+            else if ((int)gSunFlareScissorY > 0x1e0)
+                gSunFlareScissorY = 0x1e0;
+            if ((int)gSunFlareScissorX + 0x20 > 0x280)
+                gSunFlareScissorWidth = 0x280 - gSunFlareScissorX;
+            if ((int)gSunFlareScissorY + 0x20 > 0x1e0)
+                gSunFlareScissorHeight = 0x1e0 - gSunFlareScissorY;
+            occ = 0;
+            for (i = 0; i < 5; i++)
+            {
+                int d = depthReadRequestPoll(sx + gSunOcclusionSampleOffsets[i * 2],
+                                             sy + gSunOcclusionSampleOffsets[i * 2 + 1], (void*)i);
+                if (sz <= d && pauseMenuGetState() == 0)
+                    occ++;
+            }
+            fade = (f32)(u32)occ / lbl_803DEBE4 - gSunFlareFade;
+            if (fade > lbl_803DEC30)
+                fade = lbl_803DEC30;
+            else if (fade < lbl_803DEC34)
+                fade = lbl_803DEC34;
+            gSunFlareFade = gSunFlareFade + fade;
+            sunDot = sunDot * gSunFlareFade;
+            if (sunDot > lbl_803DEBCC)
+            {
+                PSMTXConcat(viewMtx, sunMtx, sunMtx);
+                GXLoadPosMtxImm((const f32 (*)[4])sunMtx, GX_PNMTX0);
+                GXSetCurrentMtx(GX_PNMTX0);
+                selectTexture((Texture*)((int)skyGetSkyTexture()), 0);
+                getAmbientColor(0, &amb[0], &amb[1], &amb[2]);
+                sunDot = (f32)(u32)sky * sunDot;
+                _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(lbl_803DEBFC * sunDot));
+                alpha = lbl_803DEBD8 - lbl_803DEC38 * sunDot;
+                fade = lbl_803DEC3C * sunDot;
+                sunDot = fade * lbl_803DEC40;
+                GXBegin(GX_QUADS, GX_VTXFMT2, 4);
+                GXWGFifo.f32 = -sunDot;
+                GXWGFifo.f32 = -sunDot;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = sunDot;
+                GXWGFifo.f32 = -sunDot;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = sunDot;
+                GXWGFifo.f32 = sunDot;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                GXWGFifo.f32 = -sunDot;
+                GXWGFifo.f32 = sunDot;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+            }
         }
     }
+    colorScale = alpha;
+    if (lbl_803DCE06 != 0)
+    {
+        int i;
+        for (i = 0; i < lbl_803DCE06; i++)
+        {
+            ModelLightStruct* e = (ModelLightStruct*)gGlowLightList[i];
+            int d;
+            Camera_ProjectWorldPointWithOffset(e->worldX - playerMapOffsetX, e->worldY, e->worldZ - playerMapOffsetZ,
+                                               e->glowProjectionRadius, &px, &py, &pz);
+            Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
+            d = depthReadRequestPoll(sx, sy, e);
+            if (sz <= d && pauseMenuGetState() == 0)
+                e->glowAlphaStep = 0x10;
+            else
+                e->glowAlphaStep = -0x10;
+        }
+        GXSetCurrentMtx(GX_IDENTITY);
+        gxTextureFn_800794e0();
+        gxBlendFn_800789ac();
+        for (i = 0; i < lbl_803DCE06; i++)
+        {
+            ModelLightStruct* e = (ModelLightStruct*)gGlowLightList[i];
+            if (e->glowAlpha != 0)
+            {
+                f32 f = e->activeIntensity;
+                selectTexture((Texture*)((int)e->glowTexture), 0);
+                _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * e->activeIntensity),
+                                (int)((f32)(u32)e->glowColor[1] * e->activeIntensity),
+                                (int)((f32)(u32)e->glowColor[2] * e->activeIntensity),
+                                (u8)((int)(e->glowColor[3] * e->glowAlpha) >> 8));
+                GXBegin(GX_QUADS, GX_VTXFMT2, 4);
+                cz = e->viewZ;
+                cy = e->viewY - e->glowScale;
+                cx = e->viewX - e->glowScale;
+                GXWGFifo.f32 = cx;
+                GXWGFifo.f32 = cy;
+                GXWGFifo.f32 = cz;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                cz = e->viewZ;
+                cy = e->viewY - e->glowScale;
+                cx = e->viewX + e->glowScale;
+                GXWGFifo.f32 = cx;
+                GXWGFifo.f32 = cy;
+                GXWGFifo.f32 = cz;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                cz = e->viewZ;
+                cy = e->viewY + e->glowScale;
+                cx = e->viewX + e->glowScale;
+                GXWGFifo.f32 = cx;
+                GXWGFifo.f32 = cy;
+                GXWGFifo.f32 = cz;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                cz = e->viewZ;
+                cy = e->viewY + e->glowScale;
+                cx = e->viewX - e->glowScale;
+                GXWGFifo.f32 = cx;
+                GXWGFifo.f32 = cy;
+                GXWGFifo.f32 = cz;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+            }
+        }
+        GXSetCurrentMtx(GX_PNMTX0);
+    }
+}
+
+void fn_80060490(int* outX, int* outY, int* outWidth, int* outHeight)
+{
+    *outX = gSunFlareScissorX;
+    *outY = gSunFlareScissorY;
+    *outWidth = gSunFlareScissorWidth;
+    *outHeight = gSunFlareScissorHeight;
 }
 
 void queueGlowRender(ModelLightStruct* light)
@@ -680,6 +798,260 @@ check:
     gGlowLightList[idx] = (int)light;
 }
 
+void fn_8006058C(short* out, float* vec)
+{
+    int yScaled;
+    int zScaled;
+
+    yScaled = (int)(lbl_803DEC50 * vec[1]);
+    zScaled = (int)(lbl_803DEC50 * vec[2]);
+    *out = (short)(int)(lbl_803DEC50 * *vec);
+    out[1] = yScaled;
+    out[2] = zScaled;
+}
+
+void fn_800605F0(s16* in, f32* out)
+{
+    out[0] = (f32)(s32)in[0] * lbl_803DEC20;
+    out[1] = (f32)(s32)in[1] * lbl_803DEC20;
+    out[2] = (f32)(s32)in[2] * lbl_803DEC20;
+}
+
+f32 lbl_8038D77C[0x18];
+
+char sTrackNoFreeLastLineError[] = "NO FREE LAST LINE\n";
+
+/* fn_80067B84 -- gather model triangles overlapping a swept bbox into the
+ * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
+ * cursor. */
+u32 fn_80060668(int* obj)
+{
+    u32 v = obj[4];
+    v &= 0x00FF0000;
+    return v >> 16;
+}
+
+int mapBlockFn_80060678(void* obj)
+{
+    return (*(u32*)&((GameObject*)obj)->anim.localPosY & 0xff000000) >> 24;
+}
+
+int fn_80060688(GameObject* obj, int type)
+{
+    int entry;
+    int offset;
+    int total;
+    int i;
+    int count;
+    total = 0;
+    offset = 0;
+    count = *(u16*)((char*)obj + 0x9a);
+    for (i = 0; i < count; i++)
+    {
+        entry = *(int*)&obj->anim.modelInstance + offset;
+        if (type == (int)((*(u32*)(entry + 0x10) & 0xff000000) >> 24))
+        {
+            total += *(u16*)(entry + 0x14) - *(u16*)entry;
+        }
+        offset += 0x14;
+    }
+    return total;
+}
+
+void* fn_800606DC(int* obj, int idx)
+{
+    return (char*)((int**)obj)[0x4c / 4] + idx * 8;
+}
+
+void* mapBlockFn_800606ec(void* obj, int idx)
+{
+    return (char*)((int**)obj)[0x50 / 4] + idx * 0x14;
+}
+
+void* fn_800606FC(int* obj, int idx)
+{
+    return (char*)((int**)obj)[0x68 / 4] + idx * 0x1c;
+}
+
+MapShader* fn_8006070C(MapBlockData* obj, int idx)
+{
+    return obj->shaders + idx;
+}
+
+void MapBlock_initShaders(MapBlockData* block)
+{
+    int i;
+    int j;
+    int ref;
+    MapShader* sh;
+    for (i = 0; i < block->layerCount; i++)
+    {
+        sh = &block->shaders[i];
+        for (j = 0; j < sh->layerCount; j++)
+        {
+            ref = sh->layers[j].texture;
+            if (ref != -1)
+            {
+                sh->layers[j].texture = ((s32*)block->textures)[ref];
+                ref = sh->layers[j].overrideType;
+                if ((u32)ref != 0u)
+                {
+                    mapTextureOverrideAcquire(sh->layers[j].texture, 0, ref);
+                }
+            }
+            else
+            {
+                sh->layers[j].texture = 0;
+            }
+            sh->layers[j].scrollMtx = 0xff;
+        }
+        ref = sh->auxTexture;
+        if (ref != -1)
+        {
+            sh->auxTexture = ((s32*)block->textures)[ref];
+        }
+        else
+        {
+            sh->auxTexture = 0;
+        }
+    }
+}
+
+void MapBlock_init(GameObject* obj)
+{
+    int off;
+    int i;
+    if (*(u32*)&obj->anim.hitReactState != 0)
+        *(int*)&obj->anim.hitReactState = (int)obj + *(int*)&obj->anim.hitReactState;
+    if (*(u32*)&obj->anim.placementData != 0)
+        *(int*)&obj->anim.placementData = (int)obj + *(int*)&obj->anim.placementData;
+    if (*(u32*)&obj->anim.modelInstance != 0)
+        *(int*)&obj->anim.modelInstance = (int)obj + *(int*)&obj->anim.modelInstance;
+    *(int*)((char*)obj + 0x58) = (int)obj + *(int*)((char*)obj + 0x58);
+    *(int*)&obj->anim.weaponDaTable = (int)obj + *(int*)&obj->anim.weaponDaTable;
+    *(int*)&obj->anim.eventTable = (int)obj + *(int*)&obj->anim.eventTable;
+    if (*(u32*)&obj->anim.hitVolumeBounds != 0)
+        *(int*)&obj->anim.hitVolumeBounds = (int)obj + *(int*)&obj->anim.hitVolumeBounds;
+    if (*(u32*)&obj->anim.banks != 0)
+        *(int*)&obj->anim.banks = (int)obj + *(int*)&obj->anim.banks;
+    if (*(u32*)&obj->anim.previousLocalPosX != 0)
+        *(int*)&obj->anim.previousLocalPosX = (int)obj + *(int*)&obj->anim.previousLocalPosX;
+    *(int*)&obj->anim.dll = (int)obj + *(int*)&obj->anim.dll;
+    if (*(u32*)&obj->anim.modelState != 0)
+        *(int*)&obj->anim.modelState = (int)obj + *(int*)&obj->anim.modelState;
+    for (i = 0, off = 0; i < *(u8*)((char*)obj + 0xa1); i++)
+    {
+        *(int*)(*(int*)&obj->anim.dll + off) = (int)obj + *(int*)(*(int*)&obj->anim.dll + off);
+        off += 0x1c;
+    }
+}
+
+void MapBlock_initHits(GameObject* obj, int index)
+{
+    int i;
+    int* table = (int*)lbl_803DCE80;
+    int fileOff = table[index];
+    int size = table[index + 1] - fileOff;
+    int entry;
+    s16 v;
+    if (size > 0)
+    {
+        *(void**)((char*)obj + 0x70) = mmAlloc(size, 5, 0);
+        fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, *(void**)((char*)obj + 0x70), fileOff, size);
+    }
+    *(u16*)((char*)obj + 0x9c) = (u32)size / 20;
+    for (i = 0; i < *(u16*)((char*)obj + 0x9c); i++)
+    {
+        entry = *(int*)&obj->anim.textureSlots + i * 20;
+        if (*(s16*)(entry + 0) < 0 || (v = *(s16*)(entry + 2)) < 0 || *(s16*)(entry + 0) > 0x280 ||
+            v > 0x280)
+        {
+            *(u8*)(entry + 0xf) = 0x40;
+        }
+        entry = *(int*)&obj->anim.textureSlots + i * 20;
+        if (*(s16*)(entry + 8) < 0 || (v = *(s16*)(entry + 0xa)) < 0 || *(s16*)(entry + 8) > 0x280 ||
+            v > 0x280)
+        {
+            *(u8*)(entry + 0xf) = 0x40;
+        }
+    }
+    *(int*)&obj->anim.hitVolumeTransforms = 0;
+    *(u16*)((char*)obj + 0x9e) = 0;
+    *(u16*)&obj->anim.rotZ = *(u16*)&obj->anim.rotZ & ~0x40;
+}
+
+void* MapBlock_loadFromFile(int blockId)
+{
+    int compressedLen;
+    int decompressedSize;
+    void* buf;
+    int blockOff = 0;
+    int* table;
+    int tableEntry;
+    if (blockId > gMapBlockIndexCount)
+    {
+        goto ret0a;
+    }
+    table = (int*)gMapBlockIndexList;
+    if (table != 0)
+    {
+        tableEntry = table[blockId];
+        if (tableEntry != -1)
+        {
+            if (tableEntry == 0 && table[blockId + 1] == 0)
+            {
+                goto ret0b;
+            }
+            blockOff = tableEntry;
+            checkLoadBlock(tableEntry, &compressedLen, &decompressedSize);
+        }
+    }
+    goto cont;
+ret0b:
+    return 0;
+ret0a:
+    return 0;
+cont:
+    if (compressedLen <= 0)
+    {
+        return 0;
+    }
+    if (decompressedSize > 0x32000)
+    {
+        return 0;
+    }
+    buf = mmAlloc(decompressedSize, 5, 0);
+    if (buf == 0)
+    {
+        return 0;
+    }
+    loadAndDecompressDataFile(MLDF_FILEID_BLOCKS_BIN_A, buf, blockOff, compressedLen, 0, 0, 0);
+    return buf;
+}
+
+void gxErrorFn_80060b40(void)
+{
+    int n;
+    int i;
+
+    i = 0;
+    n = lbl_803DCE98;
+    for (; i < n; i++)
+    {
+    }
+}
+
+int return0_80060B90(void* wpad0)
+{
+    return 0x0;
+}
+
+void mapGetBlocks(void** outPtr, u32* outVal)
+{
+    *outPtr = gMapBlockLayerTables;
+    *outVal = gMapBlocks;
+}
+
 void fn_80060BB0(void)
 {
     char* arr;
@@ -701,9 +1073,1940 @@ void fn_80060BB0(void)
     }
 }
 
-int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z);
+int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32 offX, f32 offZ, int p8, int kindMask)
+{
+    int j;
+    f32 lm[12];
+    int grp;
+    u8* descBytes = fn_80069944((u32*)&j);
+    u8* end = descBytes + j * 0x18;
+    int total;
+    int outOff;
 
-char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
+    grp = 0;
+    outOff = 0;
+    j = grp;
+    total = 0;
+    kindMask = kindMask ? 4 : 8;
+    for (; descBytes < end; descBytes += 0x18)
+    {
+        u32 id = *(u32*)descBytes;
+        if (id == 0 || id == *(u32*)&((GameObject*)obj)->anim.parent)
+        {
+            f32 fx = ((GameObject*)obj)->anim.localPosX;
+            f32 fz = ((GameObject*)obj)->anim.localPosZ;
+            f32* outA;
+
+            if (id == 0)
+            {
+                fx -= offX;
+                fz -= offZ;
+            }
+            j = (s16)((TrackBlockDescriptor*)descBytes)->firstTriangle;
+            outA = (f32*)((char*)planesOut + outOff);
+            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
+            {
+                if (kindMask & ((TrackTriangle*)triBuf + j)->flags)
+                {
+                    ((TrackP6Entry*)vertsOut)->relX0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[0]) - fx;
+                    ((TrackP6Entry*)vertsOut)->relY0 =
+                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]) - ((GameObject*)obj)->anim.localPosY;
+                    ((TrackP6Entry*)vertsOut)->relZ0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[0]) - fz;
+                    ((TrackP6Entry*)vertsOut)->relX1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[1]) - fx;
+                    ((TrackP6Entry*)vertsOut)->relY1 =
+                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[1]) - ((GameObject*)obj)->anim.localPosY;
+                    ((TrackP6Entry*)vertsOut)->relZ1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[1]) - fz;
+                    ((TrackP6Entry*)vertsOut)->relX2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[2]) - fx;
+                    ((TrackP6Entry*)vertsOut)->relY2 =
+                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[2]) - ((GameObject*)obj)->anim.localPosY;
+                    ((TrackP6Entry*)vertsOut)->relZ2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[2]) - fz;
+                    outA[0] = ((TrackTriangle*)triBuf + j)->planeN[0];
+                    outA[1] = ((TrackTriangle*)triBuf + j)->planeN[1];
+                    outA[2] = ((TrackTriangle*)triBuf + j)->planeN[2];
+                    *(u8*)((char*)outA + 0x10) = *(u8*)&((TrackTriangle*)triBuf + j)->flags;
+                    vertsOut += 0x24;
+                    total += 3;
+                    outA = (f32*)((char*)outA + 0x14);
+                    grp += 1;
+                    outOff += 0x14;
+                }
+                j++;
+            }
+        }
+        else
+        {
+            f32* m = *(f32**)((char*)descBytes + 0xc);
+            f32* p6start;
+            int totalStart;
+            f32* outA;
+
+            lm[0] = m[0];
+            lm[1] = m[4];
+            lm[2] = m[8];
+            lm[3] = m[12] - ((GameObject*)obj)->anim.localPosX;
+            lm[4] = m[1];
+            lm[5] = m[5];
+            lm[6] = m[9];
+            lm[7] = m[13] - ((GameObject*)obj)->anim.localPosY;
+            lm[8] = m[2];
+            lm[9] = m[6];
+            lm[10] = m[10];
+            lm[11] = m[14] - ((GameObject*)obj)->anim.localPosZ;
+            p6start = (f32*)vertsOut;
+            totalStart = total;
+            j = (s16)((TrackBlockDescriptor*)descBytes)->firstTriangle;
+            outA = (f32*)((char*)planesOut + outOff);
+            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
+            {
+                if (kindMask & ((TrackTriangle*)triBuf + j)->flags)
+                {
+                    ((TrackP6Entry*)vertsOut)->relX0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[0]);
+                    ((TrackP6Entry*)vertsOut)->relY0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]);
+                    ((TrackP6Entry*)vertsOut)->relZ0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[0]);
+                    ((TrackP6Entry*)vertsOut)->relX1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[1]);
+                    ((TrackP6Entry*)vertsOut)->relY1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[1]);
+                    ((TrackP6Entry*)vertsOut)->relZ1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[1]);
+                    ((TrackP6Entry*)vertsOut)->relX2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[2]);
+                    ((TrackP6Entry*)vertsOut)->relY2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[2]);
+                    ((TrackP6Entry*)vertsOut)->relZ2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[2]);
+                    outA[0] = ((TrackTriangle*)triBuf + j)->planeN[0];
+                    outA[1] = ((TrackTriangle*)triBuf + j)->planeN[1];
+                    outA[2] = ((TrackTriangle*)triBuf + j)->planeN[2];
+                    *(u8*)((char*)outA + 0x10) = *(u8*)&((TrackTriangle*)triBuf + j)->flags;
+                    vertsOut += 0x24;
+                    total += 3;
+                    outA = (f32*)((char*)outA + 0x14);
+                    grp += 1;
+                    outOff += 0x14;
+                }
+                j++;
+            }
+            if (totalStart < total)
+            {
+                PSMTXMultVecArray(lm, p6start, p6start, total - totalStart);
+            }
+        }
+    }
+    return grp;
+}
+
+void fn_80061094(f32* vec, f32* out, f32 scale)
+{
+    AngleXf xf;
+    f32 ax;
+    f32 az;
+    int i;
+    int rotY;
+
+    xf.tx = 0.0f;
+    xf.ty = 0.0f;
+    xf.tz = 0.0f;
+    xf.scale = 1.0f;
+    xf.rotZ = 0;
+    ax = __fabsf(vec[0]);
+    az = __fabsf(vec[2]);
+    if (ax > az)
+    {
+        rotY = (u16)getAngle(ax, vec[1]);
+    }
+    else
+    {
+        rotY = (u16)getAngle(az, vec[1]);
+    }
+    xf.rotY = rotY;
+    if (xf.rotY > 0x2000)
+    {
+        xf.rotY = 0x2000;
+    }
+    xf.rotX = (s16)getAngle(vec[0], vec[2]);
+    for (i = 0; i < 8; i++)
+    {
+        out[i * 3 + 0] = lbl_8038D7DC[i * 3 + 0];
+        if (lbl_8038D7DC[i * 3 + 1] > 0.0f)
+        {
+            out[i * 3 + 1] = lbl_8038D7DC[i * 3 + 1];
+        }
+        else
+        {
+            out[i * 3 + 1] = scale * lbl_8038D7DC[i * 3 + 1];
+        }
+        out[i * 3 + 2] = lbl_8038D7DC[i * 3 + 2];
+        vecRotateZXY(&xf.rotX, &out[i * 3]);
+    }
+}
+
+void vecGetRanges(f32* pts, f32* base, f32 scale, int* out)
+{
+    int i;
+
+    out[0] = 0x7fffffff;
+    out[3] = 0x80000000;
+    out[1] = 0x7fffffff;
+    out[4] = 0x80000000;
+    out[2] = 0x7fffffff;
+    out[5] = 0x80000000;
+    for (i = 0; i < 8; i++)
+    {
+        f32 x = scale * pts[0] + base[0];
+        f32 y = scale * pts[1] + base[1];
+        f32 z = scale * pts[2] + base[2];
+        if (x < out[0])
+            out[0] = x;
+        if (x > out[3])
+            out[3] = x;
+        if (y < out[1])
+            out[1] = y;
+        if (y > out[4])
+            out[4] = y;
+        if (z < out[2])
+            out[2] = z;
+        if (z > out[5])
+            out[5] = z;
+        pts += 3;
+    }
+}
+
+void fn_8006135C(s16* out, GameObject* obj)
+{
+    f32 dist;
+    f32 b[3];
+    f32 c[3];
+    f32 a[3];
+    f64 d;
+    f32 scale;
+    f32 z;
+    f32 s;
+    f32 nd;
+
+    if (fn_80065768((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &dist, a, 0) == 0)
+    {
+        PSVECNormalize(a, a);
+        b[0] = lbl_803DEC68;
+        b[1] = lbl_803DEC58;
+        b[2] = lbl_803DEC58;
+        d = __fabs(PSVECDotProduct(a, b));
+        if (d >= lbl_803DEC6C)
+        {
+            b[0] = lbl_803DEC58;
+            b[2] = lbl_803DEC68;
+        }
+        PSVECCrossProduct(a, b, c);
+        PSVECCrossProduct(c, a, b);
+        PSVECNormalize(b, b);
+        PSVECNormalize(c, c);
+        scale = lbl_803DEC70 * ((ObjAnimComponent*)obj)->modelState->shadowScale;
+        PSVECScale(b, b, scale);
+        PSVECScale(c, c, scale);
+        nd = -dist;
+        s = lbl_803DEC74;
+        z = lbl_803DEC58;
+        out[0] = (s * ((z - b[0]) - c[0]));
+        out[1] = (s * ((nd - b[1]) - c[1]));
+        out[2] = (s * ((z - b[2]) - c[2]));
+        out[3] = (s * ((z + b[0]) - c[0]));
+        out[4] = (s * ((nd + b[1]) - c[1]));
+        out[5] = (s * ((z + b[2]) - c[2]));
+        out[6] = (s * (c[0] + (z + b[0])));
+        out[7] = (s * (c[1] + (nd + b[1])));
+        out[8] = (s * (c[2] + (z + b[2])));
+        out[9] = (s * (c[0] + (z - b[0])));
+        out[10] = (s * (c[1] + (nd - b[1])));
+        out[11] = (s * (c[2] + (z - b[2])));
+        *(u8*)((char*)out + 0x18) = 1;
+    }
+    else
+    {
+        *(u8*)((char*)out + 0x18) = 0xff;
+    }
+}
+
+void objDrawFn_80061654(int obj, int placementObj)
+{
+    s16* shadowVerts;
+    u8 alpha;
+    void* viewMtx;
+    GXColor kColor;
+    f32 mtx[16];
+    f32 outMtx[16];
+
+    shadowVerts = *(s16**)(placementObj + 0x54);
+    if (*(u8*)((u8*)shadowVerts + 0x18) == 0)
+    {
+        fn_8006135C(shadowVerts, (GameObject*)obj);
+    }
+    if (*(u8*)((u8*)shadowVerts + 0x18) != 0xff)
+    {
+        alpha = (u8)objShadowFn_80062378((GameObject*)obj, 0x96);
+        kColor.a = alpha;
+        if (alpha != 0)
+        {
+            viewMtx = Camera_GetViewMatrix();
+            Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
+            mtx[0] = lbl_803DEC68;
+            mtx[1] = lbl_803DEC58;
+            mtx[2] = lbl_803DEC58;
+            mtx[4] = lbl_803DEC58;
+            mtx[5] = lbl_803DEC68;
+            mtx[6] = lbl_803DEC58;
+            mtx[8] = lbl_803DEC58;
+            mtx[9] = lbl_803DEC58;
+            mtx[10] = lbl_803DEC68;
+            PSMTXConcat(viewMtx, mtx, outMtx);
+            GXLoadPosMtxImm((const f32 (*)[4])outMtx, GX_PNMTX9);
+            GXClearVtxDesc();
+            GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+            GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+            GXSetNumTexGens(1);
+            GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+            GXSetTevKColor(GX_KCOLOR0, kColor);
+            GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
+            GXSetNumTevStages(1);
+            GXSetNumIndStages(0);
+            GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetChanCtrl(GX_COLOR1A1, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
+            GXSetNumChans(0);
+            GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
+            GXSetTevDirect(GX_TEVSTAGE0);
+            GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO);
+            GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_KONST, GX_CA_TEXA, GX_CA_ZERO);
+            GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_ENABLE, GX_TEVPREV);
+            GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_ENABLE, GX_TEVPREV);
+            gxSetZMode_(1, GX_LEQUAL, 0);
+            GXSetCullMode(GX_CULL_NONE);
+            GXSetCurrentMtx(GX_PNMTX9);
+            GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
+            selectTexture((Texture*)((int)((ObjAnimComponent*)obj)->modelState->shadowTexture), 0);
+            GXBegin(GX_QUADS, GX_VTXFMT6, 4);
+            GXPosition3s16(shadowVerts[0], shadowVerts[1], shadowVerts[2]);
+            GXTexCoord2s16(0, 0);
+            GXPosition3s16(shadowVerts[3], shadowVerts[4], shadowVerts[5]);
+            GXTexCoord2s16(0x400, 0);
+            GXPosition3s16(shadowVerts[6], shadowVerts[7], shadowVerts[8]);
+            GXTexCoord2s16(0x400, 0x400);
+            GXPosition3s16(shadowVerts[9], shadowVerts[10], shadowVerts[11]);
+            GXTexCoord2s16(0, 0x400);
+            GXSetCurrentMtx(GX_PNMTX0);
+        }
+    }
+}
+
+void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
+{
+    f32* verts = buf48;
+    f32* planes = bufA8;
+    f32 e2y, e1x, e1y, e1z, e2x, e2z;
+    f32 nrm[3];
+
+    e1x = verts[6] - verts[9];
+    e1y = verts[7] - verts[10];
+    e1z = verts[8] - verts[0xb];
+    e2x = verts[0x15] - verts[9];
+    e2y = verts[0x16] - verts[10];
+    e2z = verts[0x17] - verts[0xb];
+    nrm[0] = e2y * e1z - e2z * e1y;
+    nrm[1] = -(e2x * e1z - e2z * e1x);
+    nrm[2] = e2x * e1y - e2y * e1x;
+    PSVECNormalize(nrm, nrm);
+    planes[0] = -nrm[0];
+    planes[1] = -nrm[1];
+    planes[2] = -nrm[2];
+    planes[3] = -(planes[0] * verts[9] + planes[1] * verts[10] + planes[2] * verts[0xb]);
+
+    e1x = verts[0x12] - verts[0xf];
+    e1y = verts[0x13] - verts[0x10];
+    e1z = verts[0x14] - verts[0x11];
+    e2x = verts[3] - verts[0xf];
+    e2y = verts[4] - verts[0x10];
+    e2z = verts[5] - verts[0x11];
+    nrm[0] = e2y * e1z - e2z * e1y;
+    nrm[1] = -(e2x * e1z - e2z * e1x);
+    nrm[2] = e2x * e1y - e2y * e1x;
+    PSVECNormalize(nrm, nrm);
+    planes[5] = -nrm[0];
+    planes[6] = -nrm[1];
+    planes[7] = -nrm[2];
+    planes[8] = -(planes[5] * verts[0xf] + planes[6] * verts[0x10] + planes[7] * verts[0x11]);
+
+    e1x = verts[0xf] - verts[0xc];
+    e1y = verts[0x10] - verts[0xd];
+    e1z = verts[0x11] - verts[0xe];
+    e2x = verts[0] - verts[0xc];
+    e2y = verts[1] - verts[0xd];
+    e2z = verts[2] - verts[0xe];
+    nrm[0] = e2y * e1z - e2z * e1y;
+    nrm[1] = -(e2x * e1z - e2z * e1x);
+    nrm[2] = e2x * e1y - e2y * e1x;
+    PSVECNormalize(nrm, nrm);
+    planes[10] = -nrm[0];
+    planes[0xb] = -nrm[1];
+    planes[0xc] = -nrm[2];
+    planes[0xd] = -(planes[10] * verts[0xc] + planes[0xb] * verts[0xd] + planes[0xc] * verts[0xe]);
+
+    e1x = verts[9] - verts[0];
+    e1y = verts[10] - verts[1];
+    e1z = verts[0xb] - verts[2];
+    e2x = verts[0xc] - verts[0];
+    e2y = verts[0xd] - verts[1];
+    e2z = verts[0xe] - verts[2];
+    nrm[0] = e2y * e1z - e2z * e1y;
+    nrm[1] = -(e2x * e1z - e2z * e1x);
+    nrm[2] = e2x * e1y - e2y * e1x;
+    PSVECNormalize(nrm, nrm);
+    planes[0xf] = -nrm[0];
+    planes[0x10] = -nrm[1];
+    planes[0x11] = -nrm[2];
+    planes[0x12] = -(planes[0xf] * verts[0] + planes[0x10] * verts[1] + planes[0x11] * verts[2]);
+
+    e1x = verts[0x12] - verts[0x15];
+    e1y = verts[0x13] - verts[0x16];
+    e1z = verts[0x14] - verts[0x17];
+    e2x = verts[0xc] - verts[0x15];
+    e2y = verts[0xd] - verts[0x16];
+    e2z = verts[0xe] - verts[0x17];
+    nrm[0] = e2y * e1z - e2z * e1y;
+    nrm[1] = -(e2x * e1z - e2z * e1x);
+    nrm[2] = e2x * e1y - e2y * e1x;
+    PSVECNormalize(nrm, nrm);
+    planes[0x14] = -nrm[0];
+    planes[0x15] = -nrm[1];
+    planes[0x16] = -nrm[2];
+    planes[0x17] = -(planes[0x14] * verts[0x15] + planes[0x15] * verts[0x16] + planes[0x16] * verts[0x17]);
+
+    e1x = verts[3] - verts[0];
+    e1y = verts[4] - verts[1];
+    e1z = verts[5] - verts[2];
+    e2x = verts[9] - verts[0];
+    e2y = verts[10] - verts[1];
+    e2z = verts[0xb] - verts[2];
+    nrm[0] = e2y * e1z - e2z * e1y;
+    nrm[1] = -(e2x * e1z - e2z * e1x);
+    nrm[2] = e2x * e1y - e2y * e1x;
+    PSVECNormalize(nrm, nrm);
+    planes[0x19] = -nrm[0];
+    planes[0x1a] = -nrm[1];
+    planes[0x1b] = -nrm[2];
+    planes[0x1c] = -(planes[0x19] * verts[0] + planes[0x1a] * verts[1] + planes[0x1b] * verts[2]);
+}
+
+int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* outPtr, f32* input, int limit)
+{
+    int n = 0;
+    int outCount = 0;
+    int i = 0;
+    ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
+    s16 zero = 0;
+
+    gShadowVisibleCount = zero;
+    for (; n < count; n++, i += 3, input += 5)
+    {
+        int vis = 1;
+        f32 dot = modelState->shadowOffsetX * input[0] + modelState->shadowOffsetY * input[1] +
+                  modelState->shadowOffsetZ * input[2];
+        if (dot < lbl_803DEC58)
+        {
+            vis = -1;
+        }
+        if (vis == 1)
+        {
+            gShadowVisibleCount++;
+            outPtr[0] = *(f32*)((char*)outBase + i * 0xc + 0);
+            outPtr[1] = *(f32*)((char*)outBase + i * 0xc + 4);
+            outPtr[2] = *(f32*)((char*)outBase + i * 0xc + 8);
+            if (++outCount >= limit)
+            {
+                return 0;
+            }
+            outPtr[3] = *(f32*)((char*)outBase + (i + 1) * 0xc + 0);
+            outPtr[4] = *(f32*)((char*)outBase + (i + 1) * 0xc + 4);
+            outPtr[5] = *(f32*)((char*)outBase + (i + 1) * 0xc + 8);
+            if (++outCount >= limit)
+            {
+                return 0;
+            }
+            outPtr[6] = *(f32*)((char*)outBase + (i + 2) * 0xc + 0);
+            outPtr[7] = *(f32*)((char*)outBase + (i + 2) * 0xc + 4);
+            outPtr[8] = *(f32*)((char*)outBase + (i + 2) * 0xc + 8);
+            outPtr += 9;
+            if (++outCount >= limit)
+            {
+                return 0;
+            }
+        }
+    }
+    return gShadowVisibleCount > 0;
+}
+
+void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* p7, void* buf48, f32 f)
+{
+    u8 col[4];
+    u8 save_18[12];
+    u8 save_c[12];
+    f32 mtx[4][4];
+    f32 outMtx[4][4];
+    f32 f31, f30;
+    f32 kf;
+    s16 s31, s30, s29;
+    u32 handle;
+    u32 h2;
+    ProjectedShadowTexture* hdr;
+    void* viewMtx;
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    col[0] = 0;
+    col[1] = 0;
+    col[2] = 0;
+    col[3] = ((MapBlockData*)blockData)->shadowTexHeader->alpha;
+    f31 = ((GameObject*)obj)->anim.rootMotionScale;
+    s31 = ((GameObject*)obj)->anim.rotX;
+    s30 = ((GameObject*)obj)->anim.rotZ;
+    s29 = ((GameObject*)obj)->anim.rotY;
+    handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
+    if (handle == 0 || handle != 0xFFFFFFFF)
+        ((GameObject*)obj)->anim.rootMotionScale = lbl_803DEC78;
+    else
+        ((GameObject*)obj)->anim.rootMotionScale = lbl_803DEC68;
+    ((GameObject*)obj)->anim.rotX = 0;
+    ((GameObject*)obj)->anim.rotY = 0;
+    if ((*(u32*)&((MapBlockData*)blockData)->flags & 0x2000) == 0)
+        ((GameObject*)obj)->anim.rotZ = 0;
+    if (*(u32*)&((MapBlockData*)blockData)->flags & 0x20)
+    {
+        memcpy(save_c, (char*)obj + 0xc, 0xc);
+        memcpy(save_18, (char*)obj + 0x18, 0xc);
+        memcpy((char*)((int)obj + 0x18), (char*)blockData + 0x20, 0xc);
+        memcpy((char*)((int)obj + 0xc), (char*)((int)blockData + 0x20), 0xc);
+    }
+    Obj_BuildWorldTransformMatrix((GameObject*)obj, (f32*)mtx, 0);
+    viewMtx = Camera_GetViewMatrix();
+    PSMTXConcat(viewMtx, (f32*)mtx, (f32*)outMtx);
+    GXLoadPosMtxImm((const f32 (*)[4])outMtx, GX_PNMTX0);
+    if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
+    {
+        u32 c = *(u32*)col;
+        objectShadow_setupSwappedProjectedTexture(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx);
+    }
+    else
+    {
+        if ((GameObject*)obj == Obj_GetPlayerObject())
+            f30 = 10.0f;
+        else
+            f30 = ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
+        handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
+        if (handle != 0xFFFFFFFF ||
+            (h2 = textureFn_8006c5c4(), hdr = ((MapBlockData*)blockData)->shadowTexHeader,
+             (u32)hdr->texture == h2))
+        {
+            u32 c = *(u32*)col;
+            objectShadow_setupProjectedTexture(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx);
+        }
+        else if (hdr->mode == 0xff)
+        {
+            u32 c = *(u32*)col;
+            fn_80077AD8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
+        }
+        else
+        {
+            u32 c = *(u32*)col;
+            fn_80077EF8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
+        }
+    }
+    GXSetCullMode(GX_CULL_FRONT);
+    GXSetCurrentMtx(GX_PNMTX0);
+    ((GameObject*)obj)->anim.rootMotionScale = f31;
+    ((GameObject*)obj)->anim.rotX = s31;
+    ((GameObject*)obj)->anim.rotY = s29;
+    ((GameObject*)obj)->anim.rotZ = s30;
+    if (*(u32*)&((MapBlockData*)blockData)->allocHandle == 0)
+    {
+        f32* cv;
+        int off;
+        int i;
+        int* vbuf;
+        ((MapBlockData*)blockData)->allocHandle = (int)mmAlloc(slot * 0x12 + 8, 0x18, 0);
+        vbuf = *(int**)&((MapBlockData*)blockData)->allocHandle;
+        if (vbuf == NULL)
+            return;
+        vbuf[0] = (int)vbuf + 8;
+        *(int*)(((MapBlockData*)blockData)->allocHandle + 4) = slot * 3;
+        i = 0;
+        cv = cache;
+        off = 0;
+        kf = lbl_803DEC80;
+        for (; i < *(u32*)(((MapBlockData*)blockData)->allocHandle + 4); off += 6)
+        {
+            *(s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + off + 0) = kf * cv[0];
+            *(s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + off + 2) = kf * cv[1];
+            *(s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + off + 4) = kf * cv[2];
+            cv += 3;
+            i++;
+        }
+    }
+    handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
+    if (handle != 0xFFFFFFFF)
+    {
+        int z[2];
+        GXBegin(GX_TRIANGLES, GX_VTXFMT0, *(int*)(((MapBlockData*)blockData)->allocHandle + 4) & 0xffff);
+        z[0] = 0;
+        z[1] = z[0];
+        for (; z[0] < *(u32*)(((MapBlockData*)blockData)->allocHandle + 4); z[1] += 6)
+        {
+            s16* ep = (s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + z[1]);
+            s16 e2 = ep[2];
+            s16 e1 = ep[1];
+            s16 e0 = ep[0];
+            GXWGFifo.s16 = e0;
+            GXWGFifo.s16 = e1;
+            GXWGFifo.s16 = e2;
+            z[0]++;
+        }
+    }
+    else
+    {
+        int i;
+        int w0;
+        int w1;
+        GXBegin(GX_TRIANGLES, GX_VTXFMT2, (slot * 3) & 0xffff);
+        w0 = 0;
+        w1 = w0;
+        for (i = 0; i < slot; i++)
+        {
+            int k;
+            f32* v0 = (f32*)((char*)cache + w1);
+            GXPosition3f32(v0[0], v0[1], v0[2]);
+            for (k = 1; k < 3; k++)
+            {
+                f32* v1 = (f32*)((char*)cache + (w0 + k) * 0xc);
+                f32 b2 = v1[2];
+                f32 b1 = v1[1];
+                f32 b0 = v1[0];
+                GXWGFifo.f32 = b0;
+                GXWGFifo.f32 = b1;
+                GXWGFifo.f32 = b2;
+            }
+            w0 += 3;
+            w1 += 0x24;
+        }
+    }
+    if (*(u32*)&((MapBlockData*)blockData)->flags & 0x20)
+    {
+        memcpy((char*)((int)obj + 0xc), save_c, 0xc);
+        memcpy((char*)((int)obj + 0x18), save_18, 0xc);
+    }
+}
+
+int objShadowFn_80062378(GameObject* obj, u8 param)
+{
+    int lo;
+    int hi;
+    f32 inv;
+    void* p;
+
+    p = (obj)->anim.modelInstance;
+    if (((ObjDef*)p)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
+    {
+        lo = 1000;
+        hi = 2000;
+    }
+    else
+    {
+        lo = 400;
+        hi = 500;
+    }
+    inv = (Camera_DistanceToCurrentViewPosition((obj)->anim.worldPosX, (obj)->anim.worldPosY, (obj)->anim.worldPosZ) -
+           lo) /
+          (f32)(hi - lo);
+    if (inv < 0.0f)
+    {
+        inv = 0.0f;
+    }
+    else if (inv > 1.0f)
+    {
+        inv = 1.0f;
+    }
+    inv = 1.0f - inv;
+    {
+        int n = (int)((f32)param * inv);
+        return (n * (*(u8*)((char*)obj + 0x37) + 1)) >> 8;
+    }
+}
+
+int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameCount)
+{
+    ObjModelState* modelState;
+    u8* cache;
+    f32 yOff;
+    int idxOut = 0;
+    int drawScratch;
+    u32* vtx;
+    int alphaOut = 0;
+    int alpha;
+    u32 handle;
+    f32 vec[3];
+    f32 base[3];
+    TrackQueryBounds ranges;
+    u8 buf48[96];
+    u8 bufA8[304];
+
+    cache = getCache();
+    modelState = obj->anim.modelState;
+    if ((s32)shouldDrawShadows() == 0)
+    {
+        obj->anim.modelState->shadowCastSlot = NULL;
+        return 0;
+    }
+
+    handle = (u32)modelState->shadowRenderResource;
+    if (handle == 0 || handle == 0xFFFFFFFF)
+    {
+        vec[0] = modelState->shadowOffsetX;
+        vec[1] = modelState->shadowOffsetY;
+        vec[2] = modelState->shadowOffsetZ;
+        fn_80061094(vec, (f32*)buf48, modelState->shadowModelScale);
+
+        {
+            void* p54 = obj->anim.hitReactState;
+            if (p54 != NULL)
+            {
+                yOff = (f32)((int)((ObjHitsPriorityState*)p54)->primaryCapsuleOffsetB / 2);
+            }
+            else
+            {
+                yOff = lbl_803DEC58;
+            }
+        }
+
+        base[0] = obj->anim.worldPosX;
+        base[1] = obj->anim.worldPosY + yOff;
+        base[2] = obj->anim.worldPosZ;
+        vecGetRanges((f32*)buf48, base, modelState->shadowScale, (int*)&ranges);
+
+        hitDetectFn_800691c0(obj, &ranges, 0x81, 0);
+        trackGetGridOrigin((int**)&vtx);
+        fn_80069968(&idxOut, &alphaOut);
+
+        alpha = alphaOut;
+        idxOut = fn_80060C14((int*)obj, alpha, gShadowDrawScratch, gShadowVolumeBuffer, idxOut, (f32)(int)vtx[0],
+                             (f32)(int)vtx[2], renderMode, modelState->flags & 0x40000);
+        lbl_803DCEE0 = alpha;
+        lbl_803DCEF0 = idxOut;
+        lbl_803DCEE4 = (int)vtx;
+        trackDolphin_buildShadowVolumePlanes((int*)obj, buf48, bufA8);
+        fn_80061DD8((int*)obj, buf48, bufA8, idxOut, (f32*)gShadowVolumeBuffer, (f32*)cache,
+                    (f32*)gShadowDrawScratch, 0x555);
+    }
+    objDrawFn_80061f0c(cache, modelState, (int*)obj, gShadowVisibleCount, &drawScratch, buf48, yOff);
+    return 0;
+}
+
+u8 fn_800626C8(GameObject* obj, int delta)
+{
+    ObjModelState* modelState;
+    s16* alphaStep;
+    f32 f31;
+    int v;
+
+    modelState = obj->anim.modelState;
+    alphaStep = &modelState->shadowAlphaStep;
+    if (modelState->flags & OBJ_MODEL_STATE_SHADOW_FADE_OUT)
+    {
+        *alphaStep = *alphaStep - (delta << 9);
+        if (*alphaStep <= 0)
+        {
+            *alphaStep = 0;
+        }
+        if (*alphaStep == 0)
+        {
+            modelState->shadowCastSlot = NULL;
+            return 0;
+        }
+    }
+    else if (!(modelState->flags & OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD))
+    {
+        *alphaStep = *alphaStep + (delta << 9);
+        if (*alphaStep >= 0x4000)
+        {
+            *alphaStep = 0x4000;
+        }
+    }
+    f31 = lbl_803DEC90[0] * (f32)*alphaStep;
+    f31 = lbl_803DB654 * f31;
+    {
+        f32 tint = objShadowFn_80062378(obj, modelState->shadowTintA);
+        v = (s16)(int)(tint * f31);
+    }
+    if (v > 0xff)
+    {
+        v = 0xff;
+    }
+    else if (v < 0)
+    {
+        v = 0;
+    }
+    return v & 0xff;
+}
+
+void fn_80062808(void)
+{
+    void* bufPtr;
+    s16 zero;
+    if ((s8)gShadowFlag == 0)
+    {
+        return;
+    }
+    zero = 0;
+    lbl_803DCEF8 = zero;
+    lbl_803DCEFC = zero;
+    lbl_803DCEF4 = zero;
+    lbl_803DCEEC = 1 - lbl_803DCEEC;
+    lbl_803DCEED = 1 - lbl_803DCEED;
+    lbl_803DCEEE = 1 - lbl_803DCEEE;
+    bufPtr = lbl_803DCF24[lbl_803DCEEC];
+    lbl_803DCF08 = bufPtr;
+    lbl_803DCEF4 = zero;
+    lbl_803DCF10 = lbl_803DCF20;
+    lbl_803DCF18 = lbl_803DCF1C;
+    lbl_803DCF04 = bufPtr;
+    lbl_803DCF14 = lbl_803DCF1C;
+    lbl_803DCF0C = lbl_803DCF20;
+}
+
+void fn_80062894(void)
+{
+    lbl_803DCEF6 = 0;
+    lbl_803DCEFA = 0;
+    lbl_803DCEEA = (s8)(1 - lbl_803DCEEA);
+    lbl_803DCEEB = (s8)(1 - lbl_803DCEEB);
+    lbl_803DCEE9 = 0;
+    lbl_803DCEE8 = 0;
+}
+
+void fn_800628CC(void* wpad0)
+{
+    gShadowFlag = 0x1;
+}
+
+void setShadowFlag_803db658(s32 v)
+{
+    gShadowFlag = v;
+}
+
+void* shadowInit(int* obj, int size, int wpad0)
+{
+    int rounded;
+    ObjModelState* modelState;
+    s16 texId;
+
+    rounded = roundUpTo4(size);
+    *(int*)&((ObjAnimComponent*)obj)->modelState = rounded;
+    modelState = ((ObjAnimComponent*)obj)->modelState;
+    texId = ((ObjAnimComponent*)obj)->modelInstance->shadowTextureId;
+    if (texId != -1 && ((ObjAnimComponent*)obj)->modelInstance->shadowType != OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
+    {
+        modelState->shadowTexture = (void*)textureLoad(-texId, 0);
+    }
+    else if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
+    {
+        modelState->shadowTexture = (void*)textureAlloc512();
+    }
+    else if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 0x2)
+    {
+        modelState->shadowTexture = NULL;
+        modelState->shadowWorkBuffer = NULL;
+    }
+    else
+    {
+        modelState->shadowTexture = (void*)textureFn_8006c5c4();
+    }
+    if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX)
+    {
+        modelState->shadowRenderResource = NULL;
+    }
+    else
+    {
+        modelState->shadowRenderResource = (void*)-1;
+    }
+    modelState->shadowScale = *(f32*)((ObjAnimComponent*)obj)->modelInstance;
+    modelState->shadowModelScale = *(f32*)((char*)((ObjAnimComponent*)obj)->modelInstance + 0x88);
+    modelState->shadowOffsetX = gShadowOffsetX;
+    modelState->shadowOffsetY = gShadowOffsetY;
+    modelState->shadowOffsetZ = gShadowOffsetZ;
+    modelState->shadowAlphaStep = 0x4000;
+    modelState->flags = OBJ_MODEL_STATE_SHADOW_VISIBLE;
+    modelState->pad38[0] = 0x19;
+    modelState->pad38[1] = 0x4b;
+    modelState->shadowTintA = 0x96;
+    modelState->shadowTintB = 0x64;
+    gShadowFlag = 1;
+    return (char*)rounded + 0x44;
+}
+
+void playerShadowFn_80062a30(GameObject* obj)
+{
+    ObjModelState* p = obj->anim.modelState;
+    if (p == NULL)
+        return;
+    p->flags &= ~0x2020;
+}
+
+void doNothing_80062A50(void)
+{
+}
+
+void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
+{
+    f32 vec[3];
+    f32 dot;
+    f32 mag;
+    f32 lenv;
+    f32 lenp;
+
+    vec[0] = a;
+    vec[1] = b;
+    vec[2] = c;
+    PSVECNormalize(vec, vec);
+    gSunMagnitude = param;
+    gShadowOffsetX = a * param;
+    gShadowOffsetY = b * param;
+    lbl_803DB654 = lbl_803DEC68;
+    if (gShadowOffsetY < lbl_803DEC94)
+    {
+        gShadowOffsetY = lbl_803DEC94;
+    }
+    gShadowOffsetZ = c * param;
+    dot = vec[0] * gPrevSunDir[0] + vec[1] * gPrevSunDir[1] + vec[2] * gPrevSunDir[2];
+    lenv = vec[0] * vec[0] + vec[1] * vec[1];
+    lenv += vec[2] * vec[2];
+    lenp = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] + gPrevSunDir[2] * gPrevSunDir[2];
+    mag = lenv * lenp;
+    if (mag != lbl_803DEC58)
+    {
+        lenp = sqrtf(mag);
+    }
+    {
+        f32 r = lbl_803DEC58;
+        if (lenp != r)
+        {
+            r = dot / lenp;
+        }
+        gSunDotCos = r;
+    }
+    if ((f32)gSunDotCos < *(f32*)&lbl_803DEC58)
+    {
+        gSunDotCos = (f32)gSunDotCos * lbl_803DEC98;
+    }
+    if (gSunDotCos <= lbl_803DEC9C)
+    {
+        gSunDirChanged = 1;
+    }
+    if (gSunDirChanged != 0)
+    {
+        gPrevSunDir[0] = vec[0];
+        gPrevSunDir[1] = vec[1];
+        gPrevSunDir[2] = vec[2];
+        gSunDirChanged = 0;
+        gShadowFlag = 1;
+    }
+}
+
+void initTextures(void)
+{
+    f32* a = lbl_8038D77C;
+    f32* b = lbl_8038D7DC;
+
+    gShadowFlag = 10;
+    gShadowVolumeBuffer = (int)mmAlloc(0xa8c0, 0x18, 0);
+    a[0] = lbl_803DEC98;
+    b[0] = lbl_803DEC98;
+    a[1] = lbl_803DEC98;
+    b[1] = lbl_803DEC98;
+    a[2] = lbl_803DEC98;
+    b[2] = lbl_803DEC98;
+    a[3] = lbl_803DEC98;
+    b[3] = lbl_803DEC98;
+    a[4] = lbl_803DEC58;
+    b[4] = lbl_803DEC58;
+    a[5] = lbl_803DEC98;
+    b[5] = lbl_803DEC98;
+    a[6] = lbl_803DEC68;
+    b[6] = lbl_803DEC68;
+    a[7] = lbl_803DEC58;
+    b[7] = lbl_803DEC58;
+    a[8] = lbl_803DEC98;
+    b[8] = lbl_803DEC98;
+    a[9] = lbl_803DEC68;
+    b[9] = lbl_803DEC68;
+    a[10] = lbl_803DEC98;
+    b[10] = lbl_803DEC98;
+    a[11] = lbl_803DEC98;
+    b[11] = lbl_803DEC98;
+    b[12] = lbl_803DEC98;
+    b[13] = lbl_803DEC98;
+    b[14] = lbl_803DEC68;
+    b[15] = lbl_803DEC98;
+    b[16] = lbl_803DEC58;
+    b[17] = lbl_803DEC68;
+    b[18] = lbl_803DEC68;
+    b[19] = lbl_803DEC58;
+    b[20] = lbl_803DEC68;
+    b[21] = lbl_803DEC68;
+    b[22] = lbl_803DEC98;
+    b[23] = lbl_803DEC68;
+    a[12] = lbl_803DECA0;
+    a[13] = lbl_803DEC58;
+    a[14] = lbl_803DECA4;
+    a[15] = lbl_803DECA0;
+    a[16] = lbl_803DECA8;
+    a[17] = lbl_803DECA4;
+    a[18] = lbl_803DECAC;
+    a[19] = lbl_803DECA8;
+    a[20] = lbl_803DECA4;
+    a[21] = lbl_803DECAC;
+    a[22] = lbl_803DEC58;
+    a[23] = lbl_803DECA4;
+    allocLotsOfTextures();
+}
+
+int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY, int* outSurfaceId)
+{
+    TrackGroundHit** arr;
+    int n;
+    int i;
+
+    if (lo > hi)
+    {
+        f32 t = hi;
+        hi = lo;
+        lo = t;
+    }
+    n = hitDetectFn_80065e50((GameObject*)obj, x, lo, z, &arr, 0, 1);
+    *outSurfaceY = lo;
+    *outSurfaceId = 0;
+    for (i = 0; i < n; i++)
+    {
+        TrackGroundHit* elem = arr[i];
+        if ((s8)elem->surfaceType == 14)
+        {
+            continue;
+        }
+        if (lo < elem->height && hi > elem->height)
+        {
+            *outSurfaceId = (int)arr[i]->object;
+            *outSurfaceY = arr[i]->height;
+            return (arr[i]->normalY < lbl_803DECB0) + 1;
+        }
+    }
+    return 0;
+}
+
+void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode)
+{
+    GameObject* oldParent;
+    ObjHitsPriorityState* hitState;
+    int yawSum;
+    f32 dirX;
+    f32 dirZ;
+    u8 dirBuf[16];
+
+    oldParent = (GameObject*)obj->anim.parent;
+    if (oldParent == newParent)
+        return;
+
+    if (oldParent != NULL)
+        Obj_BuildTransformMatrices(oldParent);
+    if (newParent != NULL)
+        Obj_BuildTransformMatrices(newParent);
+
+    if (obj->anim.classId == 1)
+    {
+        fn_80296EB4(obj, (int)newParent);
+        return;
+    }
+
+    obj->anim.parent = newParent;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+    if (oldParent != NULL)
+    {
+        Obj_TransformLocalPointToWorld(obj->anim.localPosX, obj->anim.localPosY,
+                                       obj->anim.localPosZ, &obj->anim.worldPosX,
+                                       &obj->anim.worldPosY, &obj->anim.worldPosZ,
+                                       (u32)oldParent);
+        Obj_TransformLocalPointToWorld(obj->anim.previousLocalPosX, obj->anim.previousLocalPosY,
+                                       obj->anim.previousLocalPosZ, &obj->anim.previousWorldPosX,
+                                       &obj->anim.previousWorldPosY, &obj->anim.previousWorldPosZ, (u32)oldParent);
+        Obj_TransformLocalVectorToWorld(obj->anim.velocityX, lbl_803DECB4,
+                                        obj->anim.velocityZ, &dirX, (f32*)dirBuf, &dirZ, (u32)oldParent);
+        yawSum = oldParent->anim.rotX + obj->anim.rotX;
+    }
+    else
+    {
+        dirX = obj->anim.velocityX;
+        dirZ = obj->anim.velocityZ;
+        yawSum = obj->anim.rotX;
+    }
+
+    if (mode != 0)
+    {
+        if (obj->anim.parent != NULL)
+        {
+            Obj_TransformWorldPointToLocal(obj->anim.worldPosX, obj->anim.worldPosY,
+                                           obj->anim.worldPosZ, &obj->anim.localPosX,
+                                           &obj->anim.localPosY, &obj->anim.localPosZ,
+                                           (u32)obj->anim.parent);
+            Obj_TransformWorldPointToLocal(obj->anim.previousWorldPosX, obj->anim.previousWorldPosY,
+                                           obj->anim.previousWorldPosZ, &obj->anim.previousLocalPosX,
+                                           &obj->anim.previousLocalPosY, &obj->anim.previousLocalPosZ,
+                                           (u32)obj->anim.parent);
+            Obj_TransformWorldVectorToLocal(dirX, lbl_803DECB4, dirZ, &obj->anim.velocityX, (f32*)dirBuf,
+                                            &obj->anim.velocityZ, (u32)obj->anim.parent);
+            yawSum = yawSum - ((GameObject*)obj->anim.parent)->anim.rotX;
+            if (yawSum > 0x8000)
+                yawSum -= 0xffff;
+            if (yawSum < -0x8000)
+                yawSum += 0xffff;
+            obj->anim.rotX = yawSum;
+        }
+        else
+        {
+            obj->anim.localPosX = obj->anim.worldPosX;
+            obj->anim.localPosY = obj->anim.worldPosY;
+            obj->anim.localPosZ = obj->anim.worldPosZ;
+            obj->anim.previousLocalPosX = obj->anim.previousWorldPosX;
+            obj->anim.previousLocalPosY = obj->anim.previousWorldPosY;
+            obj->anim.previousLocalPosZ = obj->anim.previousWorldPosZ;
+            obj->anim.velocityX = dirX;
+            obj->anim.velocityZ = dirZ;
+            obj->anim.rotX = yawSum;
+        }
+    }
+
+    if (hitState != NULL)
+    {
+        hitState->localPosX = obj->anim.localPosX;
+        hitState->localPosY = obj->anim.localPosY;
+        hitState->localPosZ = obj->anim.localPosZ;
+        hitState->worldPosX = obj->anim.worldPosX;
+        hitState->worldPosY = obj->anim.worldPosY;
+        hitState->worldPosZ = obj->anim.worldPosZ;
+    }
+}
+
+int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
+{
+    f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, step_y, dot, nx, proj, vy4, vy5, disc, dy, ny, len2, lc;
+
+    if (lbl_803DECB4 == r)
+        return 0;
+
+    px = p4[0];
+    dx = px - cx;
+    sum = dx * dx;
+    dy = p5[0] - cy;
+    {
+        f32 dyy = dy * dy;
+        sum = sum + dyy;
+    }
+    cc = sum - r * r;
+    if (cc < lbl_803DECB4)
+    {
+        if (flag != 0)
+        {
+            p4[1] = px + lbl_803DCF54;
+            p5[1] = p5[0] + lbl_803DCF50;
+        }
+        return 0;
+    }
+
+    dx2 = p4[1] - px;
+    dy2 = p5[1] - p5[0];
+    len2 = dx2 * dx2 + dy2 * dy2;
+    if (len2 > lbl_803DECB4)
+    {
+        B = lbl_803DECB8 * (dx2 * dx + dy2 * dy);
+        lc = lbl_803DECBC * len2;
+        disc = B * B - lc * cc;
+        if (disc >= lbl_803DECB4)
+        {
+            root = sqrtf(disc);
+            nB = -B;
+            t1 = nB + root;
+            denom = lbl_803DECB8 * len2;
+            t1 = t1 / denom;
+            t2 = (nB - root) / denom;
+            if (t1 < lbl_803DECB4)
+                t1 = lbl_803DECC0;
+            if (t2 < lbl_803DECB4)
+                t2 = lbl_803DECC0;
+            if (t2 < t1)
+                t1 = t2;
+            t = t1;
+            if (t >= *(f32*)(int)&lbl_803DECB4 && t <= lbl_803DECC4)
+            {
+                lbl_803DCF58 = t;
+                if (flag != 0)
+                {
+                    hitX = t * dx2 + p4[0];
+                    hitY = t * dy2 + p5[0];
+                    nx = (hitX - cx) / r;
+                    ny = (hitY - cy) / r;
+                    dot = -(hitX * nx + hitY * ny);
+                    proj = dot + (nx * p4[1] + ny * p5[1]);
+                    p4[1] = p4[1] - proj * nx;
+                    p5[1] = p5[1] - proj * ny;
+                    step8 = lbl_803DECC8;
+                    step_x = step8 * nx;
+                    step_y = step8 * ny;
+                    while (dot + (p4[1] * nx + p5[1] * ny) < step8)
+                    {
+                        p4[1] += step_x;
+                        p5[1] += step_y;
+                    }
+                }
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+void fn_80063368(GameObject* target)
+{
+    s16 i;
+    for (i = 0; i < MAP_DYNAMIC_SLOT_COUNT; i++)
+    {
+        MapDynamicSlot* p = (MapDynamicSlot*)(gMapDynamicSlots + i * 24);
+        if ((GameObject*)p->object == target)
+        {
+            p->cooldown = 0;
+        }
+    }
+}
+
+/* trackIntersect -- rebuild the intersection line table from map blocks when
+ * a refresh has been requested. */
+/* doLotsOfMath -- sweep a 2D segment (with radius) against the intersection
+ * line table, sliding/clipping the end point; fills *out with the last hit. */
+int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* obj, int pmask, int seg, int ytol,
+                 int self)
+{
+    f32* A = ptA;
+    f32 fracs[5];
+    f32 dists[5];
+    f32 lb[4], la[4], ld[4];
+    s16 hits[6];
+    f32 posX[2];
+    f32 posZ[2];
+    s16 m[2];
+    int si16;
+    int si2;
+    s16* hitp;
+    int start;
+    f32* fracp;
+    u8 flag4;
+    s16* ep;
+    u8* rp;
+    f32* distp;
+    s8 mask;
+    int i;
+    int found;
+    int count;
+    int end;
+    u32 lineIdx;
+    int vt, vp;
+    s8 lineType;
+    s8 flag1;
+    s8 flag2;
+    f32 dist;
+    f32 len, ax2, ay2, az2, bx2, by2, bz2, dx, dz;
+    f32 minX, maxX, minZ, maxZ;
+
+    if (obj != NULL)
+    {
+        if ((s8)seg != -1)
+        {
+            u8* tbl = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x38);
+            start = tbl[(s8)seg * 2];
+            end = tbl[(s8)seg * 2 + 1];
+        }
+        else
+        {
+            start = 0;
+            end = *(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x5c);
+        }
+        lineIdx = 0;
+        vt = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x34);
+        vp = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x3c);
+        if (((GameObject*)obj)->objectFlags & 0x100)
+        {
+            end = 0;
+        }
+    }
+    else
+    {
+        if ((s8)seg != -1)
+        {
+            int idx = (s8)seg * 2;
+            start = gIntersectSegmentTypeTable[idx];
+            end = gIntersectSegmentTypeTable[idx + 1];
+        }
+        else
+        {
+            start = 0;
+            end = gIntersectLineCount;
+        }
+        lineIdx = gIntersectLineIndexTable;
+        vt = lbl_803DCF34;
+        vp = (int)lbl_803DCF38;
+    }
+
+    flag1 = !(flags & 1);
+    flag2 = flags & 2;
+    flag4 = flags & 4;
+
+    {
+        f32 x1, x0;
+        x0 = A[0];
+        posX[0] = x0;
+        posZ[0] = A[2];
+        x1 = ((f32*)ptB)[0];
+        posX[1] = x1;
+        posZ[1] = ((f32*)ptB)[2];
+        if (x0 < x1)
+        {
+            minX = x0;
+            maxX = x1;
+        }
+        else
+        {
+            minX = x1;
+            maxX = x0;
+        }
+    }
+    if (posZ[0] < posZ[1])
+    {
+        minZ = posZ[0];
+        maxZ = posZ[1];
+    }
+    else
+    {
+        minZ = posZ[1];
+        maxZ = posZ[0];
+    }
+    minX = minX - radius;
+    maxX = maxX + radius;
+    minZ = minZ - radius;
+    maxZ = maxZ + radius;
+    minX = minX - lbl_803DECCC;
+    maxX = maxX + lbl_803DECCC;
+    minZ = minZ - lbl_803DECCC;
+    maxZ = maxZ + lbl_803DECCC;
+
+    count = 0;
+    found = 1;
+    hitp = hits;
+    fracp = fracs;
+    distp = dists;
+    mask = pmask;
+    si2 = start << 1;
+    si16 = start << 4;
+
+    while (found)
+    {
+        found = 0;
+        for (i = start, ep = (s16*)(lineIdx + si2), rp = (u8*)(vt + si16); i < end; ep++, rp += 0x10, i++)
+        {
+            u8* rec;
+            int i0, i1;
+            f32 *va, *vb;
+            f32 ha, ylo, hb, yhi;
+
+            dist = lbl_803DECD0;
+            if (lineIdx != 0)
+            {
+                rec = (u8*)(vt + ep[0] * 0x10);
+            }
+            else
+            {
+                rec = rp;
+            }
+            if ((mask & ~(s8)rec[2]) == 0)
+                continue;
+            if ((s8)rec[3] & 0x40)
+                continue;
+            i0 = *(s16*)(rec + 4);
+            i1 = *(s16*)(rec + 6);
+            if ((s8)rec[3] & 0x80)
+            {
+                if (flag4 != 0)
+                    continue;
+                lineType = 0;
+            }
+            else
+            {
+                lineType = 1;
+            }
+            if (flag2 != 0)
+            {
+                lineType = 1;
+            }
+            va = (f32*)(vp + i0 * 0xc);
+            ax2 = va[0];
+            ay2 = va[1];
+            az2 = va[2];
+            vb = (f32*)(vp + i1 * 0xc);
+            bx2 = vb[0];
+            by2 = vb[1];
+            bz2 = vb[2];
+            if (ax2 < minX && bx2 < minX)
+                continue;
+            if (ax2 > maxX && bx2 > maxX)
+                continue;
+            if (az2 < minZ && bz2 < minZ)
+                continue;
+            if (az2 > maxZ && bz2 > maxZ)
+                continue;
+
+            ylo = ay2;
+            if (by2 < ay2)
+                ylo = by2;
+            ylo = ylo - (f32)(s8)ytol;
+            if ((s8)rec[2] & 0x80)
+            {
+                ha = (f32) * (s16*)rec;
+                hb = ha;
+            }
+            else
+            {
+                ha = (f32)(s8)rec[0];
+                hb = (f32)(s8)rec[1];
+            }
+            {
+                f32 ta = ay2 + ha;
+                yhi = ta;
+                if (by2 + hb > ta)
+                    yhi = by2 + hb;
+            }
+            yhi = yhi + (f32)(s8)ytol;
+            if (A[1] < ylo)
+                continue;
+            if (A[1] > yhi)
+                continue;
+
+            dx = bx2 - ax2;
+            dz = bz2 - az2;
+            {
+                f32 dd = dx * dx + dz * dz;
+                if (lbl_803DECB4 == dd)
+                    continue;
+                len = sqrtf(dd);
+            }
+            dx = dx / len;
+            dz = dz / len;
+            lb[0] = dx;
+            la[0] = dz;
+            ld[0] = -(dx * ax2 + dz * az2);
+            lb[1] = -dx;
+            la[1] = -dz;
+            ld[1] = -(lb[1] * bx2 + la[1] * bz2);
+            lb[2] = -dz;
+            la[2] = dx;
+            {
+                f32 q0 = lb[2] * (lbl_803DECB8 * lb[2] + ax2);
+                f32 q1 = la[2] * (lbl_803DECB8 * la[2] + az2);
+                ld[2] = -(q0 + q1);
+            }
+            lb[3] = dz;
+            la[3] = -dx;
+            {
+                f32 q0 = lb[3] * (radius * lb[3] + ax2);
+                f32 q1 = la[3] * (radius * la[3] + az2);
+                ld[3] = -(q0 + q1);
+            }
+            lbl_803DCF54 = lbl_803DECD4 * (lb[3] * radius);
+            lbl_803DCF50 = lbl_803DECD4 * (la[3] * radius);
+
+            {
+                f32 *ap, *bp, *dp;
+                s16* mp;
+                f32* zp;
+                f32* xp;
+                int mi;
+                int n;
+                mi = 0;
+                mp = m;
+                zp = posZ;
+                xp = posX;
+                dist = lbl_803DECB4;
+                do
+                {
+                    s16 mb = 1;
+                    f32 pz, px;
+                    *mp = 0;
+                    n = 0;
+                    pz = zp[0];
+                    px = xp[0];
+                    ap = la;
+                    bp = lb;
+                    dp = ld;
+                    for (; n < 4; n++)
+                    {
+                        if (dp[0] + (px * bp[0] + pz * ap[0]) < dist)
+                            *mp |= mb;
+                        mb = (s16)(mb << 1);
+                        ap++;
+                        bp++;
+                        dp++;
+                    }
+                    xp[0] = px;
+                    zp[0] = pz;
+                    mp++;
+                    zp++;
+                    xp++;
+                    mi++;
+                } while (mi < 2);
+            }
+            {
+                s16 mx = m[0] ^ m[1];
+                s16 ma = m[0] & m[1];
+                dist = lbl_803DECC4;
+                if ((m[0] & 0xc) == 0xc)
+                {
+                    if (m[0] & 1)
+                    {
+                        found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
+                        dist = lbl_803DECB4;
+                    }
+                    else if (m[0] & 2)
+                    {
+                        found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
+                        dist = lbl_803DECC4;
+                    }
+                    else if (lineType != 0)
+                    {
+                        posX[1] = posX[1] + lbl_803DCF54;
+                        posZ[1] = posZ[1] + lbl_803DCF50;
+                    }
+                }
+                else if (mx & 0xc)
+                {
+                    if (ma & 1)
+                    {
+                        found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
+                        dist = lbl_803DECB4;
+                    }
+                    else if (ma & 2)
+                    {
+                        found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
+                        dist = lbl_803DECC4;
+                    }
+                    else if (m[0] & 4)
+                    {
+                        f32 sx = posX[1] - posX[0];
+                        f32 sz = posZ[1] - posZ[0];
+                        f32 t0 = ld[3] + (posX[0] * lb[3] + posZ[0] * la[3]);
+                        f32 t1 = ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]);
+                        f32 fr, cx, cz;
+                        s16 ok;
+                        if (t0 != t1)
+                        {
+                            fr = t0 / (t0 - t1);
+                        }
+                        else
+                        {
+                            fr = lbl_803DECB4;
+                        }
+                        cx = sx * fr + posX[0];
+                        cz = sz * fr + posZ[0];
+                        lbl_803DCF58 = fr;
+                        ok = 1;
+                        if (ld[0] + (cx * lb[0] + cz * la[0]) < lbl_803DECB4)
+                        {
+                            found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
+                            ok = 0;
+                            dist = lbl_803DECB4;
+                        }
+                        if (ld[1] + (cx * lb[1] + cz * la[1]) < lbl_803DECB4)
+                        {
+                            found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
+                            ok = 0;
+                            dist = lbl_803DECC4;
+                        }
+                        if (ok != 0)
+                        {
+                            found = 1;
+                            if (lineType != 0)
+                            {
+                                int j;
+                                if (flag1 != 0)
+                                {
+                                    f32 stepLb, stepLa;
+                                    f32 t3 = ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]);
+                                    posX[1] = -(t3 * lb[3] - posX[1]);
+                                    posZ[1] = -(t3 * la[3] - posZ[1]);
+                                    j = 0;
+                                    stepLb = lbl_803DB660 * lb[3];
+                                    stepLa = lbl_803DB660 * la[3];
+                                    while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
+                                    {
+                                        posX[1] += stepLb;
+                                        posZ[1] += stepLa;
+                                        j++;
+                                        if (j > 0xa)
+                                        {
+                                            posX[1] = posX[0];
+                                            posZ[1] = posZ[0];
+                                            break;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    f32 stepLb, stepLa;
+                                    posX[1] = cx;
+                                    posZ[1] = cz;
+                                    j = 0;
+                                    stepLb = lbl_803DB660 * lb[3];
+                                    stepLa = lbl_803DB660 * la[3];
+                                    t1 = ld[3];
+                                    while (t1 + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
+                                    {
+                                        posX[1] += stepLb;
+                                        posZ[1] += stepLa;
+                                        j++;
+                                        if (j > 0xa)
+                                        {
+                                            posX[1] = posX[0];
+                                            posZ[1] = posZ[0];
+                                            break;
+                                        }
+                                    }
+                                }
+                                {
+                                    f32 ddx = posX[1] - ax2;
+                                    f32 ddz = posZ[1] - az2;
+                                    dist = sqrtf(ddx * ddx + ddz * ddz) / len;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (found)
+                break;
+        }
+        if (found)
+        {
+            *hitp = i;
+            *fracp = lbl_803DCF58;
+            *distp = dist;
+            hitp++;
+            fracp++;
+            distp++;
+            count++;
+            if (count > 4)
+            {
+                found = 0;
+                if (lineType != 0)
+                {
+                    posX[1] = posX[0];
+                    posZ[1] = posZ[0];
+                }
+            }
+        }
+    }
+
+    if (count != 0 && out != NULL)
+    {
+        f32* outf = out;
+        int pick = count - 1;
+        int hi;
+        s16* rec2;
+        f32 fa, fb;
+        f32 *va2, *vb2;
+        f32 dx, dz;
+        if (flag1 == 0)
+        {
+            pick = 0;
+        }
+        dx = ((f32*)ptB)[0] - posX[0];
+        dz = ((f32*)ptB)[2] - posZ[0];
+        outf[0x11] = fracs[0] * sqrtf(dx * dx + dz * dz);
+        outf[0x12] = dists[pick];
+        hi = hits[pick];
+        if (lineIdx != 0)
+        {
+            rec2 = (s16*)(vt + *(s16*)(lineIdx + hi * 2) * 0x10);
+        }
+        else
+        {
+            rec2 = (s16*)(vt + hi * 0x10);
+        }
+        {
+            int j0 = rec2[2];
+            int j1 = rec2[3];
+            if ((s8) * (u8*)((u8*)rec2 + 2) & 0x80)
+            {
+                fa = rec2[0];
+                fb = fa;
+            }
+            else
+            {
+                fa = (f32)(s8) * (u8*)rec2;
+                fb = (f32)(s8) * ((u8*)rec2 + 1);
+            }
+            outf[1] = ((f32*)vp)[j0 * 3];
+            va2 = (f32*)(vp + j0 * 0xc);
+            outf[3] = va2[1];
+            outf[0xf] = outf[3] + fa;
+            outf[5] = va2[2];
+            outf[2] = ((f32*)vp)[j1 * 3];
+            vb2 = (f32*)(vp + j1 * 0xc);
+            outf[4] = vb2[1];
+            outf[0x10] = outf[4] + fb;
+            outf[6] = vb2[2];
+            *(s8*)((u8*)out + 0x50) = (s8)(*((u8*)rec2 + 3) & 0x3f);
+            *((u8*)out + 0x52) = *((u8*)rec2 + 2);
+            *(s8*)((u8*)out + 0x51) = rec2[6];
+            *(int**)out = obj;
+            *(s16*)((u8*)out + 0x4c) = rec2[4];
+            *(s16*)((u8*)out + 0x4e) = rec2[5];
+        }
+    }
+    if (count != 0)
+    {
+        lbl_803DCF4C++;
+        count = 1;
+        ((f32*)ptB)[0] = posX[1];
+        ((f32*)ptB)[2] = posZ[1];
+    }
+    return count;
+}
+
+int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
+{
+    f32* p;
+    f32* base;
+    int i;
+    int n;
+
+    i = 0;
+    p = base = lbl_803DCF38;
+    n = gIntersectPointCount;
+    for (; i < n; i++)
+    {
+        if (x == p[0] && y == p[1] && z == p[2])
+        {
+            s16* q = arr + 1;
+            q[i << 1] = val;
+            return i;
+        }
+        p += 3;
+    }
+    base[n * 3] = x;
+    lbl_803DCF38[gIntersectPointCount * 3 + 1] = y;
+    lbl_803DCF38[gIntersectPointCount * 3 + 2] = z;
+    arr[gIntersectPointCount << 1] = val;
+    arr[(gIntersectPointCount << 1) + 1] = -1;
+    gIntersectPointCount++;
+    return gIntersectPointCount - 1;
+}
+
+int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameObject* self, int p8, int p9,
+                      u8 slot, u8 arg8)
+{
+    f32 w0[3];
+    f32 w1[3];
+    f32 t20[3];
+    f32 t14[3];
+    int* objs;
+    int count;
+    int i;
+    int mtx;
+
+    lbl_803DCF4C = 0;
+    if (out != NULL)
+    {
+        *(s8*)((char*)out + 0x50) = -1;
+        *(s8*)((char*)out + 0x51) = -1;
+    }
+    mtx = (self != NULL) ? *(int*)((char*)self + 0x30) : 0;
+    if ((u32)mtx != 0)
+    {
+        Obj_TransformLocalPointToWorld(p0[0], p0[1], p0[2], &w0[0], &w0[1], &w0[2], mtx);
+        Obj_TransformLocalPointToWorld(p1[0], p1[1], p1[2], &w1[0], &w1[1], &w1[2], mtx);
+    }
+    else
+    {
+        memcpy(w0, p0, 0xc);
+        memcpy(w1, p1, 0xc);
+    }
+    objs = (int*)ObjGroup_GetObjects(6, &count);
+    for (i = 0; i < count; i++, objs++)
+    {
+        int* o = (int*)*objs;
+        int* p54;
+        int hdr;
+        f32 rad;
+        f32 dx, dy, dz;
+        s8 hit;
+        int* e;
+        s16 k;
+
+        if ((GameObject*)o == self)
+            continue;
+        if ((s8) * (u8*)((char*)o + 0x35) <= -1)
+            continue;
+        if (*(u32*)(*(int*)&((GameObject*)o)->anim.modelInstance + 0x34) == 0)
+            continue;
+        p54 = *(int**)&((GameObject*)o)->anim.hitReactState;
+        if (p54 != NULL && (((ObjHitsPriorityState*)p54)->flags & 1) == 0)
+            continue;
+        dx = ((GameObject*)o)->anim.localPosX - w0[0];
+        dy = ((GameObject*)o)->anim.localPosY - w0[1];
+        dz = ((GameObject*)o)->anim.localPosZ - w0[2];
+        hdr = *(int*)(*(int*)(*(int*)&((GameObject*)o)->anim.banks + (s8)((ObjHitsPriorityState*)p54)->stateIndex * 4));
+        rad = (f32)((u16)modelFileHeaderGetCullDistance((ModelFileHeader*)hdr) + 0x32);
+        rad = rad * rad;
+        hit = 0;
+        {
+            f32 ddy = dy * dy;
+            if (ddy + dx * dx + dz * dz < rad)
+                hit = 1;
+        }
+        if (hit == 0)
+        {
+            dx = ((GameObject*)o)->anim.localPosX - w1[0];
+            dy = ((GameObject*)o)->anim.localPosY - w1[1];
+            dz = ((GameObject*)o)->anim.localPosZ - w1[2];
+            {
+                f32 ddy = dy * dy;
+                if (ddy + dx * dx + dz * dz < rad)
+                    hit = 1;
+            }
+        }
+        if (hit == 0)
+            continue;
+        if (slot != 0xff)
+        {
+            char* fl;
+            k = 0;
+            fl = (char*)gMapDynamicSlots;
+            do
+            {
+                if (*(u8*)(fl + 0x14) != 0 && *(u32*)fl == (u32)self && *(u32*)(fl + 4) == (u32)o &&
+                    *(u8*)(fl + 0x15) == slot)
+                {
+                    *(u8*)(fl + 0x14) = 0;
+                    e = (int*)fl;
+                    goto haveEntry;
+                }
+                fl += 0x18;
+                k++;
+            } while (k < 0x40);
+        }
+        e = NULL;
+    haveEntry:
+        if (e != NULL)
+        {
+            t20[0] = ((ModelLightStruct*)e)->localY;
+            t20[1] = ((ModelLightStruct*)e)->localZ;
+            t20[2] = ((ModelLightStruct*)e)->worldX;
+        }
+        else
+        {
+            Obj_TransformWorldPointToLocal(w0[0], w0[1], w0[2], &t20[0], &t20[1], &t20[2], (u32)o);
+        }
+        Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &t14[0], &t14[1], &t14[2], (u32)o);
+        if (doLotsOfMath(t20, t14, f, p5, out, o, p8, p9, arg8, (int)self) != 0)
+            Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], (u32)o);
+        if (slot != 0xff)
+        {
+            k = 0;
+            e = (int*)gMapDynamicSlots;
+            do
+            {
+                if (*(u8*)((char*)e + 0x14) == 0)
+                {
+                    *(int*)e = (int)self;
+                    *(int*)((char*)e + 4) = (int)o;
+                    *(u8*)((char*)e + 0x15) = slot;
+                    *(u8*)((char*)e + 0x14) = 2;
+                    goto stored;
+                }
+                e = (int*)((char*)e + 0x18);
+                k++;
+            } while (k < 0x40);
+            debugPrintf(sTrackNoFreeLastLineError);
+            e = NULL;
+        stored:
+            if (e != NULL)
+            {
+                ((ModelLightStruct*)e)->localY = t14[0];
+                ((ModelLightStruct*)e)->localZ = t14[1];
+                ((ModelLightStruct*)e)->worldX = t14[2];
+            }
+        }
+    }
+    doLotsOfMath(w0, w1, f, p5, out, NULL, p8, p9, arg8, (int)self);
+    if (lbl_803DCF4C != 0 && out != NULL)
+    {
+        f32 hx = *(f32*)((char*)out + 0x3c) - *(f32*)((char*)out + 0xc);
+        f32 hy = *(f32*)((char*)out + 0x40) - *(f32*)((char*)out + 0x10);
+        f32 len;
+        *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
+        *(f32*)((char*)out + 0x30) = lbl_803DECB4;
+        *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
+        {
+            f32 sqA = *(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x2c);
+            f32 sqB = *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x34);
+            len = lbl_803DECC4 / sqrtf(sqA + sqB);
+        }
+        *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x2c) * len;
+        *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x34) * len;
+        *(f32*)((char*)out + 0x38) = -(*(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x4) +
+                                       *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x14));
+        if (*(u32*)out != 0)
+        {
+            Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
+                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4), (f32*)((int)out + 0xc),
+                                           (f32*)((int)out + 0x14), (u32) * (int*)out);
+            Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
+                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8), (f32*)((int)out + 0x10),
+                                           (f32*)((int)out + 0x18), (u32) * (int*)out);
+        }
+        if ((u32)mtx != 0)
+        {
+            Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
+                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4), (f32*)((int)out + 0xc),
+                                           (f32*)((int)out + 0x14), mtx);
+            Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
+                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8), (f32*)((int)out + 0x10),
+                                           (f32*)((int)out + 0x18), mtx);
+        }
+        *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
+        *(f32*)((char*)out + 0x20) = lbl_803DECB4;
+        *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
+        {
+            f32 sqA = *(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x1c);
+            f32 sqB = *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x24);
+            len = lbl_803DECC4 / sqrtf(sqA + sqB);
+        }
+        *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x1c) * len;
+        *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x24) * len;
+        *(f32*)((char*)out + 0x3c) = *(f32*)((char*)out + 0xc) + hx;
+        *(f32*)((char*)out + 0x40) = *(f32*)((char*)out + 0x10) + hy;
+        *(f32*)((char*)out + 0x28) = -(*(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x4) +
+                                       *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x14));
+    }
+    if (lbl_803DCF4C != 0)
+    {
+        if ((u32)mtx != 0)
+            Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &p1[0], &p1[1], &p1[2], mtx);
+        else
+            memcpy(p1, w1, 0xc);
+    }
+    return lbl_803DCF4C;
+}
 
 void intersectModLineBuild(IntersectModLineObject* obj)
 {
@@ -850,61 +3153,256 @@ void intersectModLineBuild(IntersectModLineObject* obj)
     gIntersectPointCount = 0;
 }
 
-void fn_800605F0(s16* in, f32* out)
+void trackIntersect(void)
 {
-    out[0] = (f32)(s32)in[0] * lbl_803DEC20;
-    out[1] = (f32)(s32)in[1] * lbl_803DEC20;
-    out[2] = (f32)(s32)in[2] * lbl_803DEC20;
-}
-
-int fn_80060688(GameObject* obj, int type)
-{
-    int entry;
-    int offset;
-    int total;
+    s16 counts[0x47];
+    s16 edges[0x6a4 * 2];
+    s16* sourceCoord;
+    u8* linePoint;
+    int sourceOffset;
+    int blockIndex;
+    int rowOffset;
+    int orderOffset;
+    int orderIndex;
+    int sourceIndex;
+    int endpoint;
+    int gridX, gridZ;
+    int layer;
+    IntersectLine* line;
     int i;
-    int count;
-    total = 0;
-    offset = 0;
-    count = *(u16*)((char*)obj + 0x9a);
-    for (i = 0; i < count; i++)
-    {
-        entry = *(int*)&obj->anim.modelInstance + offset;
-        if (type == (int)((*(u32*)(entry + 0x10) & 0xff000000) >> 24))
-        {
-            total += *(u16*)(entry + 0x14) - *(u16*)entry;
-        }
-        offset += 0x14;
-    }
-    return total;
-}
+    int lineOffset;
+    u8* lineBytes;
+    s16* sortOrder;
+    s16 firstLine;
+    s16 secondLine;
+    int sortIndex;
+    int sortComplete;
+    s16 previousType, segmentType;
+    f32 pointX, pointY, pointZ;
 
-/* fn_80062808 -- begin a new shadow-volume frame: clear the per-frame
- * counts, flip the three double-buffer selectors, and rotate the current
- * write pointers to the buffer picked by this frame's flip index. */
-void fn_80062808(void)
-{
-    void* bufPtr;
-    s16 zero;
-    if ((s8)gShadowFlag == 0)
+    lbl_803DCF44 = 0;
+    if (lbl_803DCF4D != 0 && getHudHiddenFrameCount() == 0)
+    {
+        lbl_803DCF4D--;
+    }
+    if ((s8)mapBlockFlag == 1)
+    {
+        lbl_803DCF4F = 1;
+        mapBlockFlag = 0;
+        return;
+    }
+    if ((s8)lbl_803DCF4F == 0)
     {
         return;
     }
-    zero = 0;
-    lbl_803DCEF8 = zero;
-    lbl_803DCEFC = zero;
-    lbl_803DCEF4 = zero;
-    lbl_803DCEEC = 1 - lbl_803DCEEC;
-    lbl_803DCEED = 1 - lbl_803DCEED;
-    lbl_803DCEEE = 1 - lbl_803DCEEE;
-    bufPtr = lbl_803DCF24[lbl_803DCEEC];
-    lbl_803DCF08 = bufPtr;
-    lbl_803DCEF4 = zero;
-    lbl_803DCF10 = lbl_803DCF20;
-    lbl_803DCF18 = lbl_803DCF1C;
-    lbl_803DCF04 = bufPtr;
-    lbl_803DCF14 = lbl_803DCF1C;
-    lbl_803DCF0C = lbl_803DCF20;
+    lbl_803DCF4F = 0;
+    if (getHudHiddenFrameCount() != 0)
+    {
+        lbl_803DCF4D = 2;
+    }
+
+    for (i = 0; i < 0x47; i++)
+    {
+        counts[i] = 0;
+    }
+    gIntersectLineCount = 0;
+    gIntersectPointCount = 0;
+
+    for (layer = 0; layer < 5; layer++)
+    {
+        u8* idx = mapGetBlockIdx(layer);
+        for (gridZ = 0, rowOffset = 0; gridZ < 0x10; rowOffset += 0x10, gridZ++)
+        {
+            f32 blockZ;
+            gridX = 0;
+            blockIndex = rowOffset;
+            blockZ = gTrackGridCellSize * gridZ;
+            for (; gridX < 0x10; blockIndex++, gridX++)
+            {
+                if ((s8)idx[blockIndex] >= 0)
+                {
+                    MapBlockData* blk = mapGetBlock((s8)idx[blockIndex]);
+                    f32 blockX;
+                    sourceIndex = 0;
+                    sourceOffset = 0;
+                    blockX = gTrackGridCellSize * gridX;
+                    for (; sourceIndex < blk->hitCount; sourceOffset += 0x14, sourceIndex++)
+                    {
+                        if (gIntersectLineCount < 0x5dc)
+                        {
+                            IntersectModLineSource* sourceLine =
+                                (IntersectModLineSource*)((u8*)blk->hits + sourceOffset);
+                            s16* sourcePoints = sourceLine->x;
+                            IntersectLine* rec = (IntersectLine*)(lbl_803DCF34 + gIntersectLineCount * 0x10);
+                            f32 mapOriginX, mapOriginZ;
+                            rec->end0 = sourceLine->endpointData[0];
+                            rec->end1 = sourceLine->endpointData[1];
+                            rec->kind = sourceLine->kind;
+                            if ((rec->kind & 0x3f) == 0x11)
+                            {
+                                rec->kind &= ~0x3f;
+                                rec->kind |= 2;
+                            }
+                            rec->flags = sourceLine->flags;
+                            *(s8*)&rec->flags = rec->flags ^ 0x10;
+                            rec->param = sourceLine->param;
+                            mapOriginX = blockX + playerMapOffsetX;
+                            mapOriginZ = blockZ + playerMapOffsetZ;
+                            endpoint = 0;
+                            sourceCoord = sourcePoints;
+                            linePoint = (u8*)rec;
+                            for (; endpoint < 2; sourceCoord++, linePoint += 2, endpoint++)
+                            {
+                                pointX = mapOriginX + sourceCoord[0];
+                                pointY = sourceCoord[2];
+                                pointZ = sourceCoord[4] + mapOriginZ;
+                                if (gIntersectPointCount < 0x6a4)
+                                {
+                                    *(s16*)(linePoint + 4) =
+                                        insertPoint(gIntersectLineCount, edges, pointX, pointY, pointZ);
+                                }
+                            }
+                            counts[rec->kind & 0x3f]++;
+                            gIntersectLineCount++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    i = 0;
+    lineOffset = i;
+    for (; i < gIntersectLineCount; lineOffset += sizeof(IntersectLine), i++)
+    {
+        int pointIndex;
+        s16* pointEdges;
+        s16 adjacentLine;
+
+        line = (IntersectLine*)(lbl_803DCF34 + lineOffset);
+        pointIndex = line->pt[0] * 2;
+        pointEdges = &edges[pointIndex];
+        adjacentLine = pointEdges[0];
+        if (adjacentLine > -1 && adjacentLine != i)
+        {
+            line->adj[0] = adjacentLine;
+        }
+        else
+        {
+            adjacentLine = pointEdges[1];
+            if (adjacentLine > -1 && adjacentLine != i)
+            {
+                line->adj[0] = adjacentLine;
+            }
+            else
+            {
+                line->adj[0] = -1;
+            }
+        }
+        pointIndex = line->pt[1] * 2;
+        pointEdges = &edges[pointIndex];
+        adjacentLine = pointEdges[0];
+        if (adjacentLine > -1 && adjacentLine != i)
+        {
+            line->adj[1] = adjacentLine;
+        }
+        else
+        {
+            adjacentLine = pointEdges[1];
+            if (adjacentLine > -1 && adjacentLine != i)
+            {
+                line->adj[1] = adjacentLine;
+            }
+            else
+            {
+                line->adj[1] = -1;
+            }
+        }
+    }
+
+    if (lbl_803DCF40 != 0)
+    {
+        for (i = 0, lineOffset = i; i < gIntersectLineCount; i++, lineOffset += 2)
+        {
+            *(s16*)(lbl_803DCF40 + lineOffset) = i;
+        }
+        sortComplete = 0;
+        while (sortComplete == 0)
+        {
+            sortComplete = 1;
+            for (sortIndex = 0, lineOffset = sortIndex; sortIndex < gIntersectLineCount - 1;
+                 lineOffset += 2, sortIndex++)
+            {
+                int firstType;
+
+                lineBytes = (u8*)lbl_803DCF34;
+                sortOrder = (s16*)(lbl_803DCF40 + lineOffset);
+                firstLine = sortOrder[0];
+                firstType = (s8)lineBytes[firstLine * sizeof(IntersectLine) + 3] & 0x3f;
+                secondLine = sortOrder[1];
+                if (firstType < ((s8)lineBytes[secondLine * sizeof(IntersectLine) + 3] & 0x3f))
+                {
+                    sortOrder[0] = secondLine;
+                    *(s16*)(lbl_803DCF40 + lineOffset + 2) = firstLine;
+                    sortComplete = 0;
+                }
+            }
+        }
+    }
+
+    for (i = 0x46; i != 0; i--)
+    {
+        counts[i - 1] += counts[i];
+    }
+
+    for (i = 0, lineOffset = i; i < gIntersectLineCount; lineOffset += sizeof(IntersectLine), i++)
+    {
+        int typeIndex = ((s8) * (u8*)(lbl_803DCF34 + lineOffset + 3) & 0x3f) + 1;
+        s16 typeOffset = counts[typeIndex]++;
+        *(s16*)(gIntersectLineIndexTable + typeOffset * 2) = i;
+    }
+
+    for (i = 0; i < gIntersectLineCount - 1; i++)
+    {
+    }
+
+    for (i = 0; i < 40; i++)
+    {
+        gIntersectSegmentTypeTable[i] = 0xffff;
+    }
+
+    previousType = -1;
+    orderIndex = 0;
+    orderOffset = orderIndex;
+    for (; orderIndex < gIntersectLineCount; orderOffset += 2, orderIndex++)
+    {
+        segmentType =
+            (s16)((s8) * (u8*)(lbl_803DCF34 + *(s16*)(gIntersectLineIndexTable + orderOffset) * 0x10 + 3) &
+                  0x3f);
+        if (segmentType >= 0x14)
+        {
+            segmentType = 1;
+            debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
+        }
+        if (previousType != segmentType)
+        {
+            u16 v = orderIndex;
+            int ti = segmentType * 2;
+            gIntersectSegmentTypeTable[ti] = v;
+            if (previousType != -1)
+            {
+                int pi = previousType * 2;
+                gIntersectSegmentTypeTable[pi + 1] = v;
+            }
+            previousType = segmentType;
+        }
+    }
+    if (previousType != -1)
+    {
+        int pi = previousType * 2;
+        gIntersectSegmentTypeTable[pi + 1] = gIntersectLineCount;
+    }
+    lbl_803DCF44 = 1;
 }
 
 void fn_80065574(int matchVal, GameObject* obj, int flag)
@@ -948,200 +3446,36 @@ void fn_80065574(int matchVal, GameObject* obj, int flag)
     }
 }
 
-void MapBlock_init(GameObject* obj)
+void objFn_80065604(void)
 {
-    int off;
-    int i;
-    if (*(u32*)&obj->anim.hitReactState != 0)
-        *(int*)&obj->anim.hitReactState = (int)obj + *(int*)&obj->anim.hitReactState;
-    if (*(u32*)&obj->anim.placementData != 0)
-        *(int*)&obj->anim.placementData = (int)obj + *(int*)&obj->anim.placementData;
-    if (*(u32*)&obj->anim.modelInstance != 0)
-        *(int*)&obj->anim.modelInstance = (int)obj + *(int*)&obj->anim.modelInstance;
-    *(int*)((char*)obj + 0x58) = (int)obj + *(int*)((char*)obj + 0x58);
-    *(int*)&obj->anim.weaponDaTable = (int)obj + *(int*)&obj->anim.weaponDaTable;
-    *(int*)&obj->anim.eventTable = (int)obj + *(int*)&obj->anim.eventTable;
-    if (*(u32*)&obj->anim.hitVolumeBounds != 0)
-        *(int*)&obj->anim.hitVolumeBounds = (int)obj + *(int*)&obj->anim.hitVolumeBounds;
-    if (*(u32*)&obj->anim.banks != 0)
-        *(int*)&obj->anim.banks = (int)obj + *(int*)&obj->anim.banks;
-    if (*(u32*)&obj->anim.previousLocalPosX != 0)
-        *(int*)&obj->anim.previousLocalPosX = (int)obj + *(int*)&obj->anim.previousLocalPosX;
-    *(int*)&obj->anim.dll = (int)obj + *(int*)&obj->anim.dll;
-    if (*(u32*)&obj->anim.modelState != 0)
-        *(int*)&obj->anim.modelState = (int)obj + *(int*)&obj->anim.modelState;
-    for (i = 0, off = 0; i < *(u8*)((char*)obj + 0xa1); i++)
+    u32 cur;
+    int idx;
+    s16 i;
+    i = 0;
+    idx = 0;
+    do
     {
-        *(int*)(*(int*)&obj->anim.dll + off) = (int)obj + *(int*)(*(int*)&obj->anim.dll + off);
-        off += 0x1c;
-    }
+        u8* p = (u8*)(gMapDynamicSlots + idx);
+        cur = p[20];
+        if (cur != 0)
+            p[20]--;
+        idx += sizeof(MapDynamicSlot);
+        i++;
+    } while (i < MAP_DYNAMIC_SLOT_COUNT);
 }
 
-void MapBlock_initHits(GameObject* obj, int index)
+int fn_80065640(void)
 {
-    int i;
-    int* table = (int*)lbl_803DCE80;
-    int fileOff = table[index];
-    int size = table[index + 1] - fileOff;
-    int entry;
-    s16 v;
-    if (size > 0)
-    {
-        *(void**)((char*)obj + 0x70) = mmAlloc(size, 5, 0);
-        fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, *(void**)((char*)obj + 0x70), fileOff, size);
-    }
-    *(u16*)((char*)obj + 0x9c) = (u32)size / 20;
-    for (i = 0; i < *(u16*)((char*)obj + 0x9c); i++)
-    {
-        entry = *(int*)&obj->anim.textureSlots + i * 20;
-        if (*(s16*)(entry + 0) < 0 || (v = *(s16*)(entry + 2)) < 0 || *(s16*)(entry + 0) > 0x280 ||
-            v > 0x280)
-        {
-            *(u8*)(entry + 0xf) = 0x40;
-        }
-        entry = *(int*)&obj->anim.textureSlots + i * 20;
-        if (*(s16*)(entry + 8) < 0 || (v = *(s16*)(entry + 0xa)) < 0 || *(s16*)(entry + 8) > 0x280 ||
-            v > 0x280)
-        {
-            *(u8*)(entry + 0xf) = 0x40;
-        }
-    }
-    *(int*)&obj->anim.hitVolumeTransforms = 0;
-    *(u16*)((char*)obj + 0x9e) = 0;
-    *(u16*)&obj->anim.rotZ = *(u16*)&obj->anim.rotZ & ~0x40;
+    int r = 0;
+    if ((s8)mapBlockFlag != 0 || (s8)lbl_803DCF4F != 0 || lbl_803DCF4D != 0)
+        r = 1;
+    return r;
 }
 
-void* MapBlock_loadFromFile(int blockId)
+void setMapBlockFlag(void)
 {
-    int compressedLen;
-    int decompressedSize;
-    void* buf;
-    int blockOff = 0;
-    int* table;
-    int tableEntry;
-    if (blockId > gMapBlockIndexCount)
-    {
-        goto ret0a;
-    }
-    table = (int*)gMapBlockIndexList;
-    if (table != 0)
-    {
-        tableEntry = table[blockId];
-        if (tableEntry != -1)
-        {
-            if (tableEntry == 0 && table[blockId + 1] == 0)
-            {
-                goto ret0b;
-            }
-            blockOff = tableEntry;
-            checkLoadBlock(tableEntry, &compressedLen, &decompressedSize);
-        }
-    }
-    goto cont;
-ret0b:
-    return 0;
-ret0a:
-    return 0;
-cont:
-    if (compressedLen <= 0)
-    {
-        return 0;
-    }
-    if (decompressedSize > 0x32000)
-    {
-        return 0;
-    }
-    buf = mmAlloc(decompressedSize, 5, 0);
-    if (buf == 0)
-    {
-        return 0;
-    }
-    loadAndDecompressDataFile(MLDF_FILEID_BLOCKS_BIN_A, buf, blockOff, compressedLen, 0, 0, 0);
-    return buf;
+    mapBlockFlag = 0x1;
 }
-
-void MapBlock_initShaders(MapBlockData* block)
-{
-    int i;
-    int j;
-    int ref;
-    MapShader* sh;
-    for (i = 0; i < block->layerCount; i++)
-    {
-        sh = &block->shaders[i];
-        for (j = 0; j < sh->layerCount; j++)
-        {
-            ref = sh->layers[j].texture;
-            if (ref != -1)
-            {
-                sh->layers[j].texture = ((s32*)block->textures)[ref];
-                ref = sh->layers[j].overrideType;
-                if ((u32)ref != 0u)
-                {
-                    mapTextureOverrideAcquire(sh->layers[j].texture, 0, ref);
-                }
-            }
-            else
-            {
-                sh->layers[j].texture = 0;
-            }
-            sh->layers[j].scrollMtx = 0xff;
-        }
-        ref = sh->auxTexture;
-        if (ref != -1)
-        {
-            sh->auxTexture = ((s32*)block->textures)[ref];
-        }
-        else
-        {
-            sh->auxTexture = 0;
-        }
-    }
-}
-
-void mapInitFn_80069990(void)
-{
-    int i;
-    int off;
-    if (gTrackTriangleBuffer == 0)
-    {
-        gTrackTriangleBuffer = (u32)mmAlloc(0x16440, 0xffff00ff, 0);
-        lbl_803DCF34 = (int)mmAlloc(0x5dc0, 0xffff00ff, 0);
-        lbl_803DCF38 = mmAlloc(0x4fb0, 0xffff00ff, 0);
-        gIntersectLineIndexTable = (int)mmAlloc(0xbb8, 0xffff00ff, 0);
-        gMapDynamicSlots = (int)mmAlloc(0x600, 0xffff00ff, 0);
-    }
-    off = 0;
-    for (i = 0; i < 4; i++)
-    {
-        int j;
-        for (j = 0; j < 16; j++)
-        {
-            ((MapDynamicSlot*)(gMapDynamicSlots + off + j * sizeof(MapDynamicSlot)))->cooldown = 0;
-        }
-        off += sizeof(MapDynamicSlot) * 16;
-    }
-    gIntersectLineCount = 0;
-    gIntersectPointCount = 0;
-    mapBlockFlag = 0;
-    lbl_803DCF4F = 0;
-}
-
-void fn_8006058C(short* out, float* vec)
-{
-    int yScaled;
-    int zScaled;
-
-    yScaled = (int)(lbl_803DEC50 * vec[1]);
-    zScaled = (int)(lbl_803DEC50 * vec[2]);
-    *out = (short)(int)(lbl_803DEC50 * *vec);
-    out[1] = yScaled;
-    out[2] = zScaled;
-}
-
-void vecGetRanges(f32* pts, f32* base, f32 scale, int* out);
-
-int objShadowFn_80062378(GameObject* obj, u8 param);
 
 int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
 {
@@ -1181,364 +3515,6 @@ int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
     return 0;
 }
 
-int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag)
-{
-    TrackGroundHit** arr;
-    int n;
-    int i;
-    int bestIdx;
-    f32 best;
-    f32 cur;
-
-    n = hitDetectFn_80065e50(obj, x, y, z, &arr, 0, flag);
-    if (n != 0)
-    {
-        cur = y - arr[0]->height;
-        cur = cur >= lbl_803DECB4 ? cur : -cur;
-        best = cur;
-        bestIdx = 0;
-        for (i = 1; i < n; i++)
-        {
-            cur = y - arr[i]->height;
-            cur = cur >= lbl_803DECB4 ? cur : -cur;
-            if (cur < best)
-            {
-                best = cur;
-                bestIdx = i;
-            }
-        }
-        *outGroundY = y - arr[bestIdx]->height;
-        return 0;
-    }
-    *outGroundY = lbl_803DECB4;
-    return 1;
-}
-
-int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag);
-
-int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY, int* outSurfaceId)
-{
-    TrackGroundHit** arr;
-    int n;
-    int i;
-
-    if (lo > hi)
-    {
-        f32 t = hi;
-        hi = lo;
-        lo = t;
-    }
-    n = hitDetectFn_80065e50((GameObject*)obj, x, lo, z, &arr, 0, 1);
-    *outSurfaceY = lo;
-    *outSurfaceId = 0;
-    for (i = 0; i < n; i++)
-    {
-        TrackGroundHit* elem = arr[i];
-        if ((s8)elem->surfaceType == 14)
-        {
-            continue;
-        }
-        if (lo < elem->height && hi > elem->height)
-        {
-            *outSurfaceId = (int)arr[i]->object;
-            *outSurfaceY = arr[i]->height;
-            return (arr[i]->normalY < lbl_803DECB0) + 1;
-        }
-    }
-    return 0;
-}
-
-void* shadowInit(int* obj, int size, int wpad0)
-{
-    int rounded;
-    ObjModelState* modelState;
-    s16 texId;
-
-    rounded = roundUpTo4(size);
-    *(int*)&((ObjAnimComponent*)obj)->modelState = rounded;
-    modelState = ((ObjAnimComponent*)obj)->modelState;
-    texId = ((ObjAnimComponent*)obj)->modelInstance->shadowTextureId;
-    if (texId != -1 && ((ObjAnimComponent*)obj)->modelInstance->shadowType != OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
-    {
-        modelState->shadowTexture = (void*)textureLoad(-texId, 0);
-    }
-    else if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
-    {
-        modelState->shadowTexture = (void*)textureAlloc512();
-    }
-    else if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & 0x2)
-    {
-        modelState->shadowTexture = NULL;
-        modelState->shadowWorkBuffer = NULL;
-    }
-    else
-    {
-        modelState->shadowTexture = (void*)textureFn_8006c5c4();
-    }
-    if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX)
-    {
-        modelState->shadowRenderResource = NULL;
-    }
-    else
-    {
-        modelState->shadowRenderResource = (void*)-1;
-    }
-    modelState->shadowScale = *(f32*)((ObjAnimComponent*)obj)->modelInstance;
-    modelState->shadowModelScale = *(f32*)((char*)((ObjAnimComponent*)obj)->modelInstance + 0x88);
-    modelState->shadowOffsetX = gShadowOffsetX;
-    modelState->shadowOffsetY = gShadowOffsetY;
-    modelState->shadowOffsetZ = gShadowOffsetZ;
-    modelState->shadowAlphaStep = 0x4000;
-    modelState->flags = OBJ_MODEL_STATE_SHADOW_VISIBLE;
-    modelState->pad38[0] = 0x19;
-    modelState->pad38[1] = 0x4b;
-    modelState->shadowTintA = 0x96;
-    modelState->shadowTintB = 0x64;
-    gShadowFlag = 1;
-    return (char*)rounded + 0x44;
-}
-
-u8 fn_800626C8(GameObject* obj, int delta)
-{
-    ObjModelState* modelState;
-    s16* alphaStep;
-    f32 f31;
-    int v;
-
-    modelState = obj->anim.modelState;
-    alphaStep = &modelState->shadowAlphaStep;
-    if (modelState->flags & OBJ_MODEL_STATE_SHADOW_FADE_OUT)
-    {
-        *alphaStep = *alphaStep - (delta << 9);
-        if (*alphaStep <= 0)
-        {
-            *alphaStep = 0;
-        }
-        if (*alphaStep == 0)
-        {
-            modelState->shadowCastSlot = NULL;
-            return 0;
-        }
-    }
-    else if (!(modelState->flags & OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD))
-    {
-        *alphaStep = *alphaStep + (delta << 9);
-        if (*alphaStep >= 0x4000)
-        {
-            *alphaStep = 0x4000;
-        }
-    }
-    f31 = lbl_803DEC90[0] * (f32)*alphaStep;
-    f31 = lbl_803DB654 * f31;
-    {
-        f32 tint = objShadowFn_80062378(obj, modelState->shadowTintA);
-        v = (s16)(int)(tint * f31);
-    }
-    if (v > 0xff)
-    {
-        v = 0xff;
-    }
-    else if (v < 0)
-    {
-        v = 0;
-    }
-    return v & 0xff;
-}
-
-void fn_80069EB8(int param)
-{
-    u8* cache;
-    int hi, mid;
-    u32 scaled;
-    u32 j;
-    int blk;
-
-    cache = getCache();
-    for (blk = 0; (u32)blk < 0x40; blk++)
-    {
-        j = 0;
-        hi = ((u32)blk >> 2) << 8;
-        mid = (blk & 3) << 3;
-        scaled = (blk + param) * 0xff;
-        for (; j < 0x40; j++)
-        {
-            int idx;
-            u32 s;
-            s = (j & 7) + ((j >> 3) << 5);
-            s += mid;
-            idx = s + hi;
-            s = scaled;
-            if (s > 0x3fc0)
-            {
-                s = 0x3fc0;
-            }
-            cache[idx] = (s * j) >> 12;
-        }
-    }
-    memcpyToCache((void*)(lbl_803DCFB8 + 0x60), cache, 0);
-    lbl_803DCF80 = param;
-}
-
-void fn_80061094(f32* vec, f32* out, f32 scale);
-
-void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
-{
-    f32 vec[3];
-    f32 dot;
-    f32 mag;
-    f32 lenv;
-    f32 lenp;
-
-    vec[0] = a;
-    vec[1] = b;
-    vec[2] = c;
-    PSVECNormalize(vec, vec);
-    gSunMagnitude = param;
-    gShadowOffsetX = a * param;
-    gShadowOffsetY = b * param;
-    lbl_803DB654 = lbl_803DEC68;
-    if (gShadowOffsetY < lbl_803DEC94)
-    {
-        gShadowOffsetY = lbl_803DEC94;
-    }
-    gShadowOffsetZ = c * param;
-    dot = vec[0] * gPrevSunDir[0] + vec[1] * gPrevSunDir[1] + vec[2] * gPrevSunDir[2];
-    lenv = vec[0] * vec[0] + vec[1] * vec[1];
-    lenv += vec[2] * vec[2];
-    lenp = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] + gPrevSunDir[2] * gPrevSunDir[2];
-    mag = lenv * lenp;
-    if (mag != lbl_803DEC58)
-    {
-        lenp = sqrtf(mag);
-    }
-    {
-        f32 r = lbl_803DEC58;
-        if (lenp != r)
-        {
-            r = dot / lenp;
-        }
-        gSunDotCos = r;
-    }
-    if ((f32)gSunDotCos < *(f32*)&lbl_803DEC58)
-    {
-        gSunDotCos = (f32)gSunDotCos * lbl_803DEC98;
-    }
-    if (gSunDotCos <= lbl_803DEC9C)
-    {
-        gSunDirChanged = 1;
-    }
-    if (gSunDirChanged != 0)
-    {
-        gPrevSunDir[0] = vec[0];
-        gPrevSunDir[1] = vec[1];
-        gPrevSunDir[2] = vec[2];
-        gSunDirChanged = 0;
-        gShadowFlag = 1;
-    }
-}
-
-int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* outPtr, f32* input, int limit)
-{
-    int n = 0;
-    int outCount = 0;
-    int i = 0;
-    ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
-    s16 zero = 0;
-
-    gShadowVisibleCount = zero;
-    for (; n < count; n++, i += 3, input += 5)
-    {
-        int vis = 1;
-        f32 dot = modelState->shadowOffsetX * input[0] + modelState->shadowOffsetY * input[1] +
-                  modelState->shadowOffsetZ * input[2];
-        if (dot < lbl_803DEC58)
-        {
-            vis = -1;
-        }
-        if (vis == 1)
-        {
-            gShadowVisibleCount++;
-            outPtr[0] = *(f32*)((char*)outBase + i * 0xc + 0);
-            outPtr[1] = *(f32*)((char*)outBase + i * 0xc + 4);
-            outPtr[2] = *(f32*)((char*)outBase + i * 0xc + 8);
-            if (++outCount >= limit)
-            {
-                return 0;
-            }
-            outPtr[3] = *(f32*)((char*)outBase + (i + 1) * 0xc + 0);
-            outPtr[4] = *(f32*)((char*)outBase + (i + 1) * 0xc + 4);
-            outPtr[5] = *(f32*)((char*)outBase + (i + 1) * 0xc + 8);
-            if (++outCount >= limit)
-            {
-                return 0;
-            }
-            outPtr[6] = *(f32*)((char*)outBase + (i + 2) * 0xc + 0);
-            outPtr[7] = *(f32*)((char*)outBase + (i + 2) * 0xc + 4);
-            outPtr[8] = *(f32*)((char*)outBase + (i + 2) * 0xc + 8);
-            outPtr += 9;
-            if (++outCount >= limit)
-            {
-                return 0;
-            }
-        }
-    }
-    return gShadowVisibleCount > 0;
-}
-
-void fn_8006135C(s16* out, GameObject* obj)
-{
-    f32 dist;
-    f32 b[3];
-    f32 c[3];
-    f32 a[3];
-    f64 d;
-    f32 scale;
-    f32 z;
-    f32 s;
-    f32 nd;
-
-    if (fn_80065768((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &dist, a, 0) == 0)
-    {
-        PSVECNormalize(a, a);
-        b[0] = lbl_803DEC68;
-        b[1] = lbl_803DEC58;
-        b[2] = lbl_803DEC58;
-        d = __fabs(PSVECDotProduct(a, b));
-        if (d >= lbl_803DEC6C)
-        {
-            b[0] = lbl_803DEC58;
-            b[2] = lbl_803DEC68;
-        }
-        PSVECCrossProduct(a, b, c);
-        PSVECCrossProduct(c, a, b);
-        PSVECNormalize(b, b);
-        PSVECNormalize(c, c);
-        scale = lbl_803DEC70 * ((ObjAnimComponent*)obj)->modelState->shadowScale;
-        PSVECScale(b, b, scale);
-        PSVECScale(c, c, scale);
-        nd = -dist;
-        s = lbl_803DEC74;
-        z = lbl_803DEC58;
-        out[0] = (s * ((z - b[0]) - c[0]));
-        out[1] = (s * ((nd - b[1]) - c[1]));
-        out[2] = (s * ((z - b[2]) - c[2]));
-        out[3] = (s * ((z + b[0]) - c[0]));
-        out[4] = (s * ((nd + b[1]) - c[1]));
-        out[5] = (s * ((z + b[2]) - c[2]));
-        out[6] = (s * (c[0] + (z + b[0])));
-        out[7] = (s * (c[1] + (nd + b[1])));
-        out[8] = (s * (c[2] + (z + b[2])));
-        out[9] = (s * (c[0] + (z - b[0])));
-        out[10] = (s * (c[1] + (nd - b[1])));
-        out[11] = (s * (c[2] + (z - b[2])));
-        *(u8*)((char*)out + 0x18) = 1;
-    }
-    else
-    {
-        *(u8*)((char*)out + 0x18) = 0xff;
-    }
-}
-
 int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag)
 {
     TrackGroundHit** arr;
@@ -1575,830 +3551,37 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
     return 1;
 }
 
-void hitDetect_calcSweptSphereBounds(TrackQueryBounds* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
-                                     int pointCount)
+int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag)
 {
+    TrackGroundHit** arr;
+    int n;
     int i;
+    int bestIdx;
+    f32 best;
+    f32 cur;
 
-    boundsOut->minX = 1000000;
-    boundsOut->maxX = -1000000;
-    boundsOut->minY = 1000000;
-    boundsOut->maxY = -1000000;
-    boundsOut->minZ = 1000000;
-    boundsOut->maxZ = -1000000;
-    for (i = pointCount; i != 0; i--)
+    n = hitDetectFn_80065e50(obj, x, y, z, &arr, 0, flag);
+    if (n != 0)
     {
-        if (startPoints[0] - radii[0] < boundsOut->minX)
-            boundsOut->minX = (int)(startPoints[0] - radii[0]);
-        if (startPoints[0] + radii[0] > boundsOut->maxX)
-            boundsOut->maxX = (int)(startPoints[0] + radii[0]);
-        if (startPoints[1] - radii[0] < boundsOut->minY)
-            boundsOut->minY = (int)(startPoints[1] - radii[0]);
-        if (startPoints[1] + radii[0] > boundsOut->maxY)
-            boundsOut->maxY = (int)(startPoints[1] + radii[0]);
-        if (startPoints[2] - radii[0] < boundsOut->minZ)
-            boundsOut->minZ = (int)(startPoints[2] - radii[0]);
-        if (startPoints[2] + radii[0] > boundsOut->maxZ)
-            boundsOut->maxZ = (int)(startPoints[2] + radii[0]);
-        if (endPoints[0] - radii[0] < boundsOut->minX)
-            boundsOut->minX = (int)(endPoints[0] - radii[0]);
-        if (endPoints[0] + radii[0] > boundsOut->maxX)
-            boundsOut->maxX = (int)(endPoints[0] + radii[0]);
-        if (endPoints[1] - radii[0] < boundsOut->minY)
-            boundsOut->minY = (int)(endPoints[1] - radii[0]);
-        if (endPoints[1] + radii[0] > boundsOut->maxY)
-            boundsOut->maxY = (int)(endPoints[1] + radii[0]);
-        if (endPoints[2] - radii[0] < boundsOut->minZ)
-            boundsOut->minZ = (int)(endPoints[2] - radii[0]);
-        if (endPoints[2] + radii[0] > boundsOut->maxZ)
-            boundsOut->maxZ = (int)(endPoints[2] + radii[0]);
-        startPoints += 3;
-        endPoints += 3;
-        radii += 1;
-    }
-}
-
-u8 gShadowDrawScratch[0x5DC0];
-
-int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameCount)
-{
-    ObjModelState* modelState;
-    u8* cache;
-    f32 yOff;
-    int idxOut = 0;
-    int drawScratch;
-    u32* vtx;
-    int alphaOut = 0;
-    int alpha;
-    u32 handle;
-    f32 vec[3];
-    f32 base[3];
-    TrackQueryBounds ranges;
-    u8 buf48[96];
-    u8 bufA8[304];
-
-    cache = getCache();
-    modelState = obj->anim.modelState;
-    if ((s32)shouldDrawShadows() == 0)
-    {
-        obj->anim.modelState->shadowCastSlot = NULL;
+        cur = y - arr[0]->height;
+        cur = cur >= lbl_803DECB4 ? cur : -cur;
+        best = cur;
+        bestIdx = 0;
+        for (i = 1; i < n; i++)
+        {
+            cur = y - arr[i]->height;
+            cur = cur >= lbl_803DECB4 ? cur : -cur;
+            if (cur < best)
+            {
+                best = cur;
+                bestIdx = i;
+            }
+        }
+        *outGroundY = y - arr[bestIdx]->height;
         return 0;
     }
-
-    handle = (u32)modelState->shadowRenderResource;
-    if (handle == 0 || handle == 0xFFFFFFFF)
-    {
-        vec[0] = modelState->shadowOffsetX;
-        vec[1] = modelState->shadowOffsetY;
-        vec[2] = modelState->shadowOffsetZ;
-        fn_80061094(vec, (f32*)buf48, modelState->shadowModelScale);
-
-        {
-            void* p54 = obj->anim.hitReactState;
-            if (p54 != NULL)
-            {
-                yOff = (f32)((int)((ObjHitsPriorityState*)p54)->primaryCapsuleOffsetB / 2);
-            }
-            else
-            {
-                yOff = lbl_803DEC58;
-            }
-        }
-
-        base[0] = obj->anim.worldPosX;
-        base[1] = obj->anim.worldPosY + yOff;
-        base[2] = obj->anim.worldPosZ;
-        vecGetRanges((f32*)buf48, base, modelState->shadowScale, (int*)&ranges);
-
-        hitDetectFn_800691c0(obj, &ranges, 0x81, 0);
-        trackGetGridOrigin((int**)&vtx);
-        fn_80069968(&idxOut, &alphaOut);
-
-        alpha = alphaOut;
-        idxOut = fn_80060C14((int*)obj, alpha, gShadowDrawScratch, gShadowVolumeBuffer, idxOut, (f32)(int)vtx[0],
-                             (f32)(int)vtx[2], renderMode, modelState->flags & 0x40000);
-        lbl_803DCEE0 = alpha;
-        lbl_803DCEF0 = idxOut;
-        lbl_803DCEE4 = (int)vtx;
-        trackDolphin_buildShadowVolumePlanes((int*)obj, buf48, bufA8);
-        fn_80061DD8((int*)obj, buf48, bufA8, idxOut, (f32*)gShadowVolumeBuffer, (f32*)cache,
-                    (f32*)gShadowDrawScratch, 0x555);
-    }
-    objDrawFn_80061f0c(cache, modelState, (int*)obj, gShadowVisibleCount, &drawScratch, buf48, yOff);
-    return 0;
-}
-
-void trackGetGridOrigin(int** outOrigin)
-{
-    *outOrigin = (int*)gTrackGridOrigin;
-}
-
-void fn_80069968(int* outCount, int* outTable)
-{
-    TrackBlockDescriptor* descriptors = gTrackBlockDescriptors;
-    *outCount = descriptors[gActiveTrackBlockCount].firstTriangle;
-    *outTable = gTrackTriangleBuffer;
-}
-
-void vecGetRanges(f32* pts, f32* base, f32 scale, int* out)
-{
-    int i;
-
-    out[0] = 0x7fffffff;
-    out[3] = 0x80000000;
-    out[1] = 0x7fffffff;
-    out[4] = 0x80000000;
-    out[2] = 0x7fffffff;
-    out[5] = 0x80000000;
-    for (i = 0; i < 8; i++)
-    {
-        f32 x = scale * pts[0] + base[0];
-        f32 y = scale * pts[1] + base[1];
-        f32 z = scale * pts[2] + base[2];
-        if (x < out[0])
-            out[0] = x;
-        if (x > out[3])
-            out[3] = x;
-        if (y < out[1])
-            out[1] = y;
-        if (y > out[4])
-            out[4] = y;
-        if (z < out[2])
-            out[2] = z;
-        if (z > out[5])
-            out[5] = z;
-        pts += 3;
-    }
-}
-
-void fn_80061094(f32* vec, f32* out, f32 scale)
-{
-    AngleXf xf;
-    f32 ax;
-    f32 az;
-    int i;
-    int rotY;
-
-    xf.tx = 0.0f;
-    xf.ty = 0.0f;
-    xf.tz = 0.0f;
-    xf.scale = 1.0f;
-    xf.rotZ = 0;
-    ax = __fabsf(vec[0]);
-    az = __fabsf(vec[2]);
-    if (ax > az)
-    {
-        rotY = (u16)getAngle(ax, vec[1]);
-    }
-    else
-    {
-        rotY = (u16)getAngle(az, vec[1]);
-    }
-    xf.rotY = rotY;
-    if (xf.rotY > 0x2000)
-    {
-        xf.rotY = 0x2000;
-    }
-    xf.rotX = (s16)getAngle(vec[0], vec[2]);
-    for (i = 0; i < 8; i++)
-    {
-        out[i * 3 + 0] = lbl_8038D7DC[i * 3 + 0];
-        if (lbl_8038D7DC[i * 3 + 1] > 0.0f)
-        {
-            out[i * 3 + 1] = lbl_8038D7DC[i * 3 + 1];
-        }
-        else
-        {
-            out[i * 3 + 1] = scale * lbl_8038D7DC[i * 3 + 1];
-        }
-        out[i * 3 + 2] = lbl_8038D7DC[i * 3 + 2];
-        vecRotateZXY(&xf.rotX, &out[i * 3]);
-    }
-}
-
-void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* ranges, u32 a, int b)
-{
-    f32 f31 = (f32)(ranges->minX - 5);
-    f32 f30 = (f32)(ranges->maxX + 5);
-    f32 f29 = (f32)(ranges->minY - 5);
-    f32 f28 = (f32)(ranges->maxY + 5);
-    f32 f27 = (f32)(ranges->minZ - 5);
-    f32 f26 = (f32)(ranges->maxZ + 5);
-    ObjAnimComponent** resetObjects;
-    int flag80;
-    s16 i;
-    ObjAnimComponent* resetObj;
-    int* model;
-    int masked;
-    int count;
-
-    {
-        int cur;
-        TrackBlockDescriptor* desc;
-        TrackBlockDescriptor* descEnd;
-
-        desc = gTrackBlockDescriptors;
-        desc->object = NULL;
-        desc->firstTriangle = 0;
-        desc++;
-        descEnd = &gTrackBlockDescriptors[20];
-        gTrackTriangleBufferEnd = gTrackTriangleBuffer + 0x16440;
-        masked = a & 0xffff;
-        if ((masked & 0x10) != 0)
-        {
-            cur = gTrackTriangleBuffer;
-        }
-        else
-        {
-            cur = mapLoadBlocksFn_800685cc(gTrackTriangleBuffer, f31, f29, f27, f30, f28, f26, a, b);
-        }
-        if ((u32)cur < gTrackTriangleBufferEnd && (masked & 1) && obj != NULL)
-        {
-            ObjAnimComponent** t = ObjHitReact_GetResetObjects(&count);
-            i = 0;
-            resetObjects = t;
-            flag80 = masked & 0x80;
-            for (; i < count; resetObjects++, i++)
-            {
-                ObjHitsPriorityState* hitState;
-                ObjHitboxTransformState* transformState;
-                int n;
-                int hdr;
-                f32 r, c;
-
-                resetObj = *resetObjects;
-                if (flag80 && (resetObj->modelInstance->flags & 0x01000000))
-                    continue;
-                hitState = (ObjHitsPriorityState*)resetObj->hitReactState;
-                if (hitState == NULL)
-                    continue;
-                transformState = ((ObjHitbox*)resetObj)->transformState;
-                if (transformState == NULL)
-                    continue;
-                if (transformState->resetFrames != 0)
-                    continue;
-                if (transformState->pad10E != 0)
-                    continue;
-                model = (int*)resetObj->banks[(s8)hitState->stateIndex];
-                if (model == NULL)
-                    continue;
-                hdr = *(int*)model;
-                if (*(u16*)(hdr + 0xf0) == 0)
-                    continue;
-                r = (f32)(u32)(u16)modelFileHeaderGetCullDistance((ModelFileHeader*)hdr);
-                c = resetObj->worldPosX;
-                if (f30 < c - r)
-                    continue;
-                if (f31 > c + r)
-                    continue;
-                c = resetObj->worldPosY;
-                if (f28 < c - r)
-                    continue;
-                if (f29 > c + r)
-                    continue;
-                c = resetObj->worldPosZ;
-                if (f26 < c - r)
-                    continue;
-                if (f27 > c + r)
-                    continue;
-
-                desc->currentCollisionMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
-                                               ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex + 2) << 4);
-                desc->currentMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
-                                      (((ObjHitbox*)resetObj)->transformState->activeMatrixIndex << 4);
-                desc->alternateCollisionMatrix =
-                    (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
-                    (((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) + 2) << 4);
-                desc->alternateMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
-                                        ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) << 4);
-
-                desc->firstTriangle = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
-                desc->object = resetObj;
-                cur = fn_80067B84(cur, desc, (int)model, lbl_803DECC4, f31, f29, f27, f30, f28, f26, a);
-                desc++;
-                if ((u32)cur >= gTrackTriangleBufferEnd)
-                    break;
-                if (desc >= descEnd)
-                    break;
-            }
-        }
-        gTrackTriangleCount = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
-        gActiveTrackBlockCount = (u8)(desc - gTrackBlockDescriptors);
-        desc->firstTriangle = gTrackTriangleCount;
-    }
-}
-
-int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32 offX, f32 offZ, int p8, int kindMask)
-{
-    int j;
-    f32 lm[12];
-    int grp;
-    u8* descBytes = fn_80069944((u32*)&j);
-    u8* end = descBytes + j * 0x18;
-    int total;
-    int outOff;
-
-    grp = 0;
-    outOff = 0;
-    j = grp;
-    total = 0;
-    kindMask = kindMask ? 4 : 8;
-    for (; descBytes < end; descBytes += 0x18)
-    {
-        u32 id = *(u32*)descBytes;
-        if (id == 0 || id == *(u32*)&((GameObject*)obj)->anim.parent)
-        {
-            f32 fx = ((GameObject*)obj)->anim.localPosX;
-            f32 fz = ((GameObject*)obj)->anim.localPosZ;
-            f32* outA;
-
-            if (id == 0)
-            {
-                fx -= offX;
-                fz -= offZ;
-            }
-            j = (s16)((TrackBlockDescriptor*)descBytes)->firstTriangle;
-            outA = (f32*)((char*)planesOut + outOff);
-            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
-            {
-                if (kindMask & ((TrackTriangle*)triBuf + j)->flags)
-                {
-                    ((TrackP6Entry*)vertsOut)->relX0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[0]) - fx;
-                    ((TrackP6Entry*)vertsOut)->relY0 =
-                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]) - ((GameObject*)obj)->anim.localPosY;
-                    ((TrackP6Entry*)vertsOut)->relZ0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[0]) - fz;
-                    ((TrackP6Entry*)vertsOut)->relX1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[1]) - fx;
-                    ((TrackP6Entry*)vertsOut)->relY1 =
-                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[1]) - ((GameObject*)obj)->anim.localPosY;
-                    ((TrackP6Entry*)vertsOut)->relZ1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[1]) - fz;
-                    ((TrackP6Entry*)vertsOut)->relX2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[2]) - fx;
-                    ((TrackP6Entry*)vertsOut)->relY2 =
-                        __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[2]) - ((GameObject*)obj)->anim.localPosY;
-                    ((TrackP6Entry*)vertsOut)->relZ2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[2]) - fz;
-                    outA[0] = ((TrackTriangle*)triBuf + j)->planeN[0];
-                    outA[1] = ((TrackTriangle*)triBuf + j)->planeN[1];
-                    outA[2] = ((TrackTriangle*)triBuf + j)->planeN[2];
-                    *(u8*)((char*)outA + 0x10) = *(u8*)&((TrackTriangle*)triBuf + j)->flags;
-                    vertsOut += 0x24;
-                    total += 3;
-                    outA = (f32*)((char*)outA + 0x14);
-                    grp += 1;
-                    outOff += 0x14;
-                }
-                j++;
-            }
-        }
-        else
-        {
-            f32* m = *(f32**)((char*)descBytes + 0xc);
-            f32* p6start;
-            int totalStart;
-            f32* outA;
-
-            lm[0] = m[0];
-            lm[1] = m[4];
-            lm[2] = m[8];
-            lm[3] = m[12] - ((GameObject*)obj)->anim.localPosX;
-            lm[4] = m[1];
-            lm[5] = m[5];
-            lm[6] = m[9];
-            lm[7] = m[13] - ((GameObject*)obj)->anim.localPosY;
-            lm[8] = m[2];
-            lm[9] = m[6];
-            lm[10] = m[10];
-            lm[11] = m[14] - ((GameObject*)obj)->anim.localPosZ;
-            p6start = (f32*)vertsOut;
-            totalStart = total;
-            j = (s16)((TrackBlockDescriptor*)descBytes)->firstTriangle;
-            outA = (f32*)((char*)planesOut + outOff);
-            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
-            {
-                if (kindMask & ((TrackTriangle*)triBuf + j)->flags)
-                {
-                    ((TrackP6Entry*)vertsOut)->relX0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[0]);
-                    ((TrackP6Entry*)vertsOut)->relY0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]);
-                    ((TrackP6Entry*)vertsOut)->relZ0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[0]);
-                    ((TrackP6Entry*)vertsOut)->relX1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[1]);
-                    ((TrackP6Entry*)vertsOut)->relY1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[1]);
-                    ((TrackP6Entry*)vertsOut)->relZ1 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[1]);
-                    ((TrackP6Entry*)vertsOut)->relX2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[2]);
-                    ((TrackP6Entry*)vertsOut)->relY2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[2]);
-                    ((TrackP6Entry*)vertsOut)->relZ2 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[2]);
-                    outA[0] = ((TrackTriangle*)triBuf + j)->planeN[0];
-                    outA[1] = ((TrackTriangle*)triBuf + j)->planeN[1];
-                    outA[2] = ((TrackTriangle*)triBuf + j)->planeN[2];
-                    *(u8*)((char*)outA + 0x10) = *(u8*)&((TrackTriangle*)triBuf + j)->flags;
-                    vertsOut += 0x24;
-                    total += 3;
-                    outA = (f32*)((char*)outA + 0x14);
-                    grp += 1;
-                    outOff += 0x14;
-                }
-                j++;
-            }
-            if (totalStart < total)
-            {
-                PSMTXMultVecArray(lm, p6start, p6start, total - totalStart);
-            }
-        }
-    }
-    return grp;
-}
-
-void* fn_80069944(u32* outVal)
-{
-    *outVal = gActiveTrackBlockCount;
-    return gTrackBlockDescriptors;
-}
-
-int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
-{
-    f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, step_y, dot, nx, proj, vy4, vy5, disc, dy, ny, len2, lc;
-
-    if (lbl_803DECB4 == r)
-        return 0;
-
-    px = p4[0];
-    dx = px - cx;
-    sum = dx * dx;
-    dy = p5[0] - cy;
-    {
-        f32 dyy = dy * dy;
-        sum = sum + dyy;
-    }
-    cc = sum - r * r;
-    if (cc < lbl_803DECB4)
-    {
-        if (flag != 0)
-        {
-            p4[1] = px + lbl_803DCF54;
-            p5[1] = p5[0] + lbl_803DCF50;
-        }
-        return 0;
-    }
-
-    dx2 = p4[1] - px;
-    dy2 = p5[1] - p5[0];
-    len2 = dx2 * dx2 + dy2 * dy2;
-    if (len2 > lbl_803DECB4)
-    {
-        B = lbl_803DECB8 * (dx2 * dx + dy2 * dy);
-        lc = lbl_803DECBC * len2;
-        disc = B * B - lc * cc;
-        if (disc >= lbl_803DECB4)
-        {
-            root = sqrtf(disc);
-            nB = -B;
-            t1 = nB + root;
-            denom = lbl_803DECB8 * len2;
-            t1 = t1 / denom;
-            t2 = (nB - root) / denom;
-            if (t1 < lbl_803DECB4)
-                t1 = lbl_803DECC0;
-            if (t2 < lbl_803DECB4)
-                t2 = lbl_803DECC0;
-            if (t2 < t1)
-                t1 = t2;
-            t = t1;
-            if (t >= *(f32*)(int)&lbl_803DECB4 && t <= lbl_803DECC4)
-            {
-                lbl_803DCF58 = t;
-                if (flag != 0)
-                {
-                    hitX = t * dx2 + p4[0];
-                    hitY = t * dy2 + p5[0];
-                    nx = (hitX - cx) / r;
-                    ny = (hitY - cy) / r;
-                    dot = -(hitX * nx + hitY * ny);
-                    proj = dot + (nx * p4[1] + ny * p5[1]);
-                    p4[1] = p4[1] - proj * nx;
-                    p5[1] = p5[1] - proj * ny;
-                    step8 = lbl_803DECC8;
-                    step_x = step8 * nx;
-                    step_y = step8 * ny;
-                    while (dot + (p4[1] * nx + p5[1] * ny) < step8)
-                    {
-                        p4[1] += step_x;
-                        p5[1] += step_y;
-                    }
-                }
-                return 1;
-            }
-        }
-    }
-    return 0;
-}
-
-void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
-{
-    u32 fmt;
-    u32 w;
-    u32 h;
-    u32 wA;
-    int rowDataOffset;
-    int tileColumnOffset;
-    int pixelColumnOffset;
-    int pixelA;
-    int pixelB;
-    int j;
-    int i;
-    u32 wB;
-    int redB;
-    int redA;
-    int blue;
-    int red;
-    int green;
-    u16 outputPixel;
-
-    if (src1 == NULL)
-        return;
-    if (src2 == NULL)
-        return;
-    if (dst == NULL)
-        return;
-    fmt = src1->format;
-    if (fmt != 4 && fmt != 6)
-        return;
-    if (src2->format != fmt)
-        return;
-    if (dst->format != fmt)
-        return;
-    w = src1->width;
-    if (w != src2->width)
-        return;
-    h = src1->height;
-    if (h != src2->height)
-        return;
-    if (w != dst->width || h != dst->height)
-    {
-        return;
-    }
-    {
-        wA = (int)(lbl_803DED08 * blend) & 0xff;
-        wB = (0xff - wA) & 0xff;
-        if (fmt == 4)
-        {
-            for (i = 0; i < (int)src1->height; i++)
-            {
-                u8 *pa, *pb, *pc;
-                u32 wd;
-                j = 0;
-                w = i & 0xfffffffc;
-                h = (i & 3) * 8;
-                for (; j < (int)(wd = src1->width); j++)
-                {
-                    pixelColumnOffset = (j & 3) * 2;
-                    pa = (u8*)src1 + pixelColumnOffset;
-                    tileColumnOffset = (j >> 2) * 0x20;
-                    pa += tileColumnOffset;
-                    pa += h;
-                    rowDataOffset = (int)wd * w * 2;
-                    pa += rowDataOffset;
-                    pixelA = *(u16*)(pa + 0x60);
-                    redA = (u8)(((int)(pixelA & 0xf800) >> 8) | ((int)(pixelA & 0xe000) >> 13));
-                    pb = (u8*)src2 + pixelColumnOffset;
-                    pb += tileColumnOffset;
-                    pb += h;
-                    pb += rowDataOffset;
-                    pixelB = *(u16*)(pb + 0x60);
-                    redB = (u8)(((int)(pixelB & 0xf800) >> 8) | ((int)(pixelB & 0xe000) >> 13));
-                    blue = ((u8)(((int)(wA * (u8)(((pixelA & 0x1f) << 3) | ((int)(pixelA & 0x1c) >> 2))) >> 8) +
-                               ((int)(wB * (u8)(((pixelB & 0x1f) << 3) | ((int)(pixelB & 0x1c) >> 2))) >> 8)) &
-                           0xf8) >>
-                          3;
-                    red = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
-                    green = ((u8)(((int)(wA * (u8)(((int)(pixelA & 0x7e0) >> 3) | ((int)(pixelA & 0x600) >> 9))) >> 8) +
-                               ((int)(wB * (u8)(((int)(pixelB & 0x7e0) >> 3) | ((int)(pixelB & 0x600) >> 9))) >> 8)) &
-                           0xfc)
-                          << 3;
-                    outputPixel = blue | (red | green);
-                    pc = (u8*)dst + pixelColumnOffset;
-                    pc += tileColumnOffset;
-                    pc += h;
-                    pc += rowDataOffset;
-                    *(u16*)(pc + 0x60) = outputPixel;
-                }
-            }
-        }
-        else
-        {
-            for (i = 0; i < (int)src1->height; i++)
-            {
-                int tileRowGroupOffset, tileRowOffset;
-                u32 wd;
-                j = 0;
-                tileRowGroupOffset = (i >> 2) * 8;
-                tileRowOffset = (i & 3) * 8;
-                for (; j < (int)(wd = src1->width); j++)
-                {
-                    int pixelColumnOffset = (j & 3) * 2;
-                    int tileColumnOffset;
-                    int rowDataOffset;
-                    u8 *at, *ad, *bd, *bt, *ct, *cd;
-                    int aLo, bLo, aHi, bHi;
-                    bt = (u8*)src1 + pixelColumnOffset;
-                    tileColumnOffset = (j >> 2) * 0x40;
-                    at = bt + tileColumnOffset;
-                    bt = at + tileRowOffset;
-                    rowDataOffset = (int)wd * tileRowGroupOffset * 2;
-                    ad = bt + rowDataOffset;
-                    bt = (u8*)src2 + pixelColumnOffset;
-                    bt += tileColumnOffset;
-                    bt += tileRowOffset;
-                    bd = bt + rowDataOffset;
-                    aLo = (u8) * (u16*)(ad + 0x60);
-                    bLo = (u8) * (u16*)(bd + 0x60);
-                    pixelA = *(u16*)(ad + 0x80);
-                    aHi = (u8)((int)(pixelA & 0xff00) >> 8);
-                    pixelB = *(u16*)(bd + 0x80);
-                    bHi = (u8)((int)(pixelB & 0xff00) >> 8);
-                    ct = (u8*)dst + pixelColumnOffset;
-                    cd = ct + tileColumnOffset;
-                    cd += tileRowOffset;
-                    cd += 0x60;
-                    *(u16*)(cd + rowDataOffset) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
-                    *(u16*)(cd + (int)src1->width * tileRowGroupOffset * 2 + 0x20) =
-                        ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8) |
-                        (u8)(((int)(wA * (u8)pixelA) >> 8) + ((int)(wB * (u8)pixelB) >> 8));
-                }
-            }
-        }
-        DCStoreRange((u8*)dst + sizeof(Texture), dst->dataSize);
-    }
-}
-
-void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode)
-{
-    GameObject* oldParent;
-    ObjHitsPriorityState* hitState;
-    int yawSum;
-    f32 dirX;
-    f32 dirZ;
-    u8 dirBuf[16];
-
-    oldParent = (GameObject*)obj->anim.parent;
-    if (oldParent == newParent)
-        return;
-
-    if (oldParent != NULL)
-        Obj_BuildTransformMatrices(oldParent);
-    if (newParent != NULL)
-        Obj_BuildTransformMatrices(newParent);
-
-    if (obj->anim.classId == 1)
-    {
-        fn_80296EB4(obj, (int)newParent);
-        return;
-    }
-
-    obj->anim.parent = newParent;
-    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
-    if (oldParent != NULL)
-    {
-        Obj_TransformLocalPointToWorld(obj->anim.localPosX, obj->anim.localPosY,
-                                       obj->anim.localPosZ, &obj->anim.worldPosX,
-                                       &obj->anim.worldPosY, &obj->anim.worldPosZ,
-                                       (u32)oldParent);
-        Obj_TransformLocalPointToWorld(obj->anim.previousLocalPosX, obj->anim.previousLocalPosY,
-                                       obj->anim.previousLocalPosZ, &obj->anim.previousWorldPosX,
-                                       &obj->anim.previousWorldPosY, &obj->anim.previousWorldPosZ, (u32)oldParent);
-        Obj_TransformLocalVectorToWorld(obj->anim.velocityX, lbl_803DECB4,
-                                        obj->anim.velocityZ, &dirX, (f32*)dirBuf, &dirZ, (u32)oldParent);
-        yawSum = oldParent->anim.rotX + obj->anim.rotX;
-    }
-    else
-    {
-        dirX = obj->anim.velocityX;
-        dirZ = obj->anim.velocityZ;
-        yawSum = obj->anim.rotX;
-    }
-
-    if (mode != 0)
-    {
-        if (obj->anim.parent != NULL)
-        {
-            Obj_TransformWorldPointToLocal(obj->anim.worldPosX, obj->anim.worldPosY,
-                                           obj->anim.worldPosZ, &obj->anim.localPosX,
-                                           &obj->anim.localPosY, &obj->anim.localPosZ,
-                                           (u32)obj->anim.parent);
-            Obj_TransformWorldPointToLocal(obj->anim.previousWorldPosX, obj->anim.previousWorldPosY,
-                                           obj->anim.previousWorldPosZ, &obj->anim.previousLocalPosX,
-                                           &obj->anim.previousLocalPosY, &obj->anim.previousLocalPosZ,
-                                           (u32)obj->anim.parent);
-            Obj_TransformWorldVectorToLocal(dirX, lbl_803DECB4, dirZ, &obj->anim.velocityX, (f32*)dirBuf,
-                                            &obj->anim.velocityZ, (u32)obj->anim.parent);
-            yawSum = yawSum - ((GameObject*)obj->anim.parent)->anim.rotX;
-            if (yawSum > 0x8000)
-                yawSum -= 0xffff;
-            if (yawSum < -0x8000)
-                yawSum += 0xffff;
-            obj->anim.rotX = yawSum;
-        }
-        else
-        {
-            obj->anim.localPosX = obj->anim.worldPosX;
-            obj->anim.localPosY = obj->anim.worldPosY;
-            obj->anim.localPosZ = obj->anim.worldPosZ;
-            obj->anim.previousLocalPosX = obj->anim.previousWorldPosX;
-            obj->anim.previousLocalPosY = obj->anim.previousWorldPosY;
-            obj->anim.previousLocalPosZ = obj->anim.previousWorldPosZ;
-            obj->anim.velocityX = dirX;
-            obj->anim.velocityZ = dirZ;
-            obj->anim.rotX = yawSum;
-        }
-    }
-
-    if (hitState != NULL)
-    {
-        hitState->localPosX = obj->anim.localPosX;
-        hitState->localPosY = obj->anim.localPosY;
-        hitState->localPosZ = obj->anim.localPosZ;
-        hitState->worldPosX = obj->anim.worldPosX;
-        hitState->worldPosY = obj->anim.worldPosY;
-        hitState->worldPosZ = obj->anim.worldPosZ;
-    }
-}
-
-u16 gIntersectSegmentTypeTable[0x212];
-
-int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsOut, int mode, int submode)
-{
-    u8* base = (u8*)gIntersectSegmentTypeTable;
-    TrackBlockDescriptor* desc = (TrackBlockDescriptor*)(base + 0x424);
-    TrackBlockDescriptor* end;
-    u8* ptr;
-    f32* p5;
-    int i, j;
-    int sorted;
-    int conv[6];
-    f32 tx, ty, tz;
-
-    if (mode >= 0)
-    {
-        conv[0] = x;
-        conv[3] = x;
-        conv[1] = (int)(y - lbl_803DECE8);
-        conv[4] = (int)(lbl_803DECE8 + y);
-        conv[2] = z;
-        conv[5] = z;
-        hitDetectFn_800691c0(obj, (TrackQueryBounds*)conv, submode, 1);
-    }
-    else
-    {
-        if (mode == -1)
-            mode = 0;
-        else
-            mode = 1;
-    }
-
-    lbl_803DCF68 = (TrackGroundHit*)(base + 0xdc);
-    lbl_803DCF64 = (int)(base + 0x50);
-    lbl_803DCF60 = 0;
-    end = (TrackBlockDescriptor*)(base + 0x424) + gActiveTrackBlockCount;
-    for (; desc < end; desc++)
-    {
-        if (lbl_803DCF60 >= 0x23)
-            break;
-        if (desc->object != NULL)
-        {
-            Matrix_TransformPoint(desc->currentMatrix, x, lbl_803DECB4, z, &tx, &ty, &tz);
-            fn_800659A8((TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
-                        (TrackTriangle*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c), desc, tx, tz, mode);
-        }
-        else
-        {
-            fn_800659A8((TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
-                        (TrackTriangle*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c), desc, x, z, mode);
-        }
-    }
-
-    for (j = 0, ptr = base + 0xdc, i = 0; j < lbl_803DCF60; j++)
-    {
-        *(u8**)(lbl_803DCF64 + i) = ptr;
-        ptr += 0x18;
-        i += 4;
-    }
-
-    sorted = 0;
-    while (!sorted)
-    {
-        sorted = 1;
-        i = 0;
-        for (j = 0; j < lbl_803DCF60 - 1; j++)
-        {
-            p5 = ((f32**)(lbl_803DCF64 + i))[0];
-            if (*p5 < *((f32**)(lbl_803DCF64 + i))[1])
-            {
-                sorted = 0;
-                ((f32**)(lbl_803DCF64 + i))[0] = ((f32**)(lbl_803DCF64 + i))[1];
-                *(f32**)(lbl_803DCF64 + i + 4) = p5;
-            }
-            i += 4;
-        }
-    }
-
-    *hitsOut = (TrackGroundHit**)(base + 0x50);
-    return lbl_803DCF60;
+    *outGroundY = lbl_803DECB4;
+    return 1;
 }
 
 void fn_800659A8(TrackTriangle* triStart, TrackTriangle* triEnd, TrackBlockDescriptor* desc, f32 qx, f32 qz,
@@ -2505,6 +3688,86 @@ void fn_800659A8(TrackTriangle* triStart, TrackTriangle* triEnd, TrackBlockDescr
         lbl_803DCF68++;
         lbl_803DCF60++;
     }
+}
+
+int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsOut, int mode, int submode)
+{
+    u8* base = (u8*)gIntersectSegmentTypeTable;
+    TrackBlockDescriptor* desc = (TrackBlockDescriptor*)(base + 0x424);
+    TrackBlockDescriptor* end;
+    u8* ptr;
+    f32* p5;
+    int i, j;
+    int sorted;
+    int conv[6];
+    f32 tx, ty, tz;
+
+    if (mode >= 0)
+    {
+        conv[0] = x;
+        conv[3] = x;
+        conv[1] = (int)(y - lbl_803DECE8);
+        conv[4] = (int)(lbl_803DECE8 + y);
+        conv[2] = z;
+        conv[5] = z;
+        hitDetectFn_800691c0(obj, (TrackQueryBounds*)conv, submode, 1);
+    }
+    else
+    {
+        if (mode == -1)
+            mode = 0;
+        else
+            mode = 1;
+    }
+
+    lbl_803DCF68 = (TrackGroundHit*)(base + 0xdc);
+    lbl_803DCF64 = (int)(base + 0x50);
+    lbl_803DCF60 = 0;
+    end = (TrackBlockDescriptor*)(base + 0x424) + gActiveTrackBlockCount;
+    for (; desc < end; desc++)
+    {
+        if (lbl_803DCF60 >= 0x23)
+            break;
+        if (desc->object != NULL)
+        {
+            Matrix_TransformPoint(desc->currentMatrix, x, lbl_803DECB4, z, &tx, &ty, &tz);
+            fn_800659A8((TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
+                        (TrackTriangle*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c), desc, tx, tz, mode);
+        }
+        else
+        {
+            fn_800659A8((TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
+                        (TrackTriangle*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c), desc, x, z, mode);
+        }
+    }
+
+    for (j = 0, ptr = base + 0xdc, i = 0; j < lbl_803DCF60; j++)
+    {
+        *(u8**)(lbl_803DCF64 + i) = ptr;
+        ptr += 0x18;
+        i += 4;
+    }
+
+    sorted = 0;
+    while (!sorted)
+    {
+        sorted = 1;
+        i = 0;
+        for (j = 0; j < lbl_803DCF60 - 1; j++)
+        {
+            p5 = ((f32**)(lbl_803DCF64 + i))[0];
+            if (*p5 < *((f32**)(lbl_803DCF64 + i))[1])
+            {
+                sorted = 0;
+                ((f32**)(lbl_803DCF64 + i))[0] = ((f32**)(lbl_803DCF64 + i))[1];
+                *(f32**)(lbl_803DCF64 + i + 4) = p5;
+            }
+            i += 4;
+        }
+    }
+
+    *hitsOut = (TrackGroundHit**)(base + 0x50);
+    return lbl_803DCF60;
 }
 
 int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
@@ -2718,6 +3981,510 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
     return 0;
 }
 
+/* hitDetect_800667ec -- sweep each input sphere against the gathered triangle
+ * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
+char sTrackHitOverflowError[] = "HIT OVERFLOW\n";
+
+int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
+                      int flagsArg)
+{
+    TrackBlockDescriptor* descBase;
+    f32 *ep1, *ep2;
+    f32 *sp1, *sp2;
+    u8* slotp;
+    u8* typeSlotp;
+    f32* outp;
+    f32 *szp, *syp, *wzp, *wyp;
+    f32 *edge1p, *edge2p, *vbp, *evecp;
+    u8 found;
+    u8* slotBase;
+    s16 i;
+    u8 retLo;
+    u8 curBit;
+    u8 retHi;
+    u8 typeb;
+    u8 typeb2;
+    TrackBlockDescriptor* descSave;
+    u8 type;
+    f32 edge2[4];
+    f32 edge1[4];
+    f32 edge0[4];
+    f32 rdata[3];
+    f32* rdatap = rdata;
+    f32 evec[3];
+    f32 vb[3];
+    f32 va[3];
+    f32 ws[3];
+    f32 we[3];
+    f32 delta[3];
+    f32 hitpt[3];
+    f32 cur[3];
+    f32 plane[4];
+    f32 norm4[4];
+    f32 svFrom[3];
+    f32* svFromp = svFrom;
+    f32 svHit[3];
+    f32 svWorld[3];
+    f32 dir[3];
+    f32 tmp1[3];
+    f32 tmp2[3];
+    f32 frac;
+    f32 ndot;
+    f32 dS;
+    f32 dotv;
+    f32 sq;
+    f32 disc;
+    f32 root;
+    f32 tt;
+    f32 rr;
+    f32 dE;
+    u8 vertexBit;
+    u8 nextBit;
+    u8 bounces;
+    int hit;
+    TrackTriangle* tri;
+    u32 objmtx;
+    TrackBlockDescriptor* desc;
+    f32 eps;
+    f32 negStep, radius, maxStep;
+    f32 offX, offZ;
+    f32 mag;
+    TrackBlockDescriptor* descEnd;
+
+    slotBase = (u8*)slots;
+    descEnd = gTrackBlockDescriptors + gActiveTrackBlockCount;
+    descBase = gTrackBlockDescriptors;
+    offX = (f32) * (int*)gTrackGridOrigin;
+    offZ = (f32) * (int*)(gTrackGridOrigin + 8);
+    i = 0;
+    retLo = 0;
+    retHi = 0;
+    curBit = 1;
+    ep1 = endPos;
+    ep2 = endPos;
+    sp1 = startPos;
+    sp2 = startPos;
+    slotp = slots;
+    outp = slots;
+    wyp = &we[1];
+    wzp = &we[2];
+    szp = &ws[2];
+    syp = &ws[1];
+    edge1p = edge1;
+    edge2p = edge2;
+    vbp = vb;
+    evecp = evec;
+    eps = lbl_803DECB4;
+    do
+    {
+        cur[0] = ep1[0];
+        cur[1] = ep2[1];
+        cur[2] = ep2[2];
+        svFromp[0] = sp1[0];
+        svFromp[1] = sp2[1];
+        svFromp[2] = sp2[2];
+        radius = *(f32*)(slotp + 0x40);
+        typeSlotp = slotBase + i;
+        type = slotBase[i + 0x54];
+        maxStep = radius + lbl_803DB660;
+        rdatap[0] = radius;
+        rdatap[1] = radius * radius;
+        bounces = 0;
+        negStep = -maxStep;
+        do
+        {
+            we[0] = cur[0];
+            we[1] = cur[1];
+            we[2] = cur[2];
+            found = 0;
+            hit = 0;
+            for (desc = descBase; (u32)desc < (u32)descEnd; desc++)
+            {
+                if (desc->object != NULL)
+                {
+                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2], &ws[0], syp, szp);
+                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2], &we[0], wyp, wzp);
+                }
+                else
+                {
+                    ws[0] = svFromp[0] - offX;
+                    ws[1] = svFromp[1];
+                    ws[2] = svFromp[2] - offZ;
+                    we[0] = cur[0] - offX;
+                    wyp[0] = cur[1];
+                    wzp[0] = cur[2] - offZ;
+                }
+                PSVECSubtract(we, ws, delta);
+                mag = PSVECMag(delta);
+                if (mag > eps)
+                {
+                    PSVECNormalize(delta, dir);
+                }
+                for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
+                     (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
+                {
+                    s16* ts = (s16*)tri;
+                    u8 b;
+                    tri->edgeOutBits = 0;
+                    if (tri->flags & 0x10)
+                        continue;
+                    plane[0] = tri->planeN[0];
+                    plane[1] = tri->planeN[1];
+                    plane[2] = tri->planeN[2];
+                    plane[3] = tri->planeD;
+                    dE = (plane[3] + PSVECDotProduct(plane, we)) - radius;
+                    if (!(dE <= 0.0f))
+                        continue;
+                    dS = (plane[3] + PSVECDotProduct(plane, ws)) - radius;
+                    if ((dS <= 0.0f && dE >= 0.0f) ||
+                        (dS >= 0.0f && dE <= 0.0f))
+                    {
+                        if (dS != dE)
+                        {
+                            frac = dS / (dS - dE);
+                        }
+                        else
+                        {
+                            frac = 0.0f;
+                        }
+                        PSVECScale(delta, hitpt, frac);
+                        PSVECAdd(hitpt, ws, hitpt);
+                        if (hitpt[1] < ts[(tri->minMaxY & 0xf) + 0xb] - maxStep)
+                            continue;
+                        if (hitpt[1] > ts[(tri->minMaxY >> 4) + 0xb] + maxStep)
+                            continue;
+                        edge0[0] = tri->edgeN0[0];
+                        edge0[1] = tri->edgeN0[1];
+                        edge0[2] = tri->edgeN0[2];
+                        edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + ts[0xb] * edge0[1])) +
+                                   PSVECDotProduct(edge0, hitpt);
+                        edge1[0] = tri->edgeN1[0];
+                        edge1[1] = tri->edgeN1[1];
+                        edge1[2] = tri->edgeN1[2];
+                        edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1])) +
+                                   PSVECDotProduct(edge1p, hitpt);
+                        edge2[0] = tri->edgeN2[0];
+                        edge2[1] = tri->edgeN2[1];
+                        edge2[2] = tri->edgeN2[2];
+                        edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1])) +
+                                   PSVECDotProduct(edge2p, hitpt);
+                        b = 0;
+                        if (radius > 0.0f)
+                        {
+                            if (edge0[3] > 0.0f)
+                                b |= 1;
+                            if (edge1[3] > 0.0f)
+                                b |= 2;
+                            if (edge2[3] > 0.0f)
+                                b |= 4;
+                        }
+                        if (b == 0)
+                        {
+                            hit = 1;
+                            break;
+                        }
+                        tri->edgeOutBits = b;
+                    }
+                    else if (dE >= negStep && radius > 0.0f)
+                    {
+                        edge0[0] = tri->edgeN0[0];
+                        edge0[1] = tri->edgeN0[1];
+                        edge0[2] = tri->edgeN0[2];
+                        edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + ts[0xb] * edge0[1])) +
+                                   PSVECDotProduct(edge0, ws);
+                        edge1[0] = tri->edgeN1[0];
+                        edge1[1] = tri->edgeN1[1];
+                        edge1[2] = tri->edgeN1[2];
+                        edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1])) +
+                                   PSVECDotProduct(edge1p, ws);
+                        edge2[0] = tri->edgeN2[0];
+                        edge2[1] = tri->edgeN2[1];
+                        edge2[2] = tri->edgeN2[2];
+                        edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1])) +
+                                   PSVECDotProduct(edge2p, ws);
+                        b = 0;
+                        if (edge0[3] > 0.0f)
+                            b |= 1;
+                        if (edge1[3] > 0.0f)
+                            b |= 2;
+                        if (edge2[3] > 0.0f)
+                            b |= 4;
+                        tri->edgeOutBits = b;
+                    }
+                }
+                if (hit == 0)
+                {
+                    if (mag == 0.0f)
+                        continue;
+                    for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
+                         (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
+                    {
+                        u8 edgeBit;
+                        if (tri->edgeOutBits == 0)
+                            continue;
+                        for (edgeBit = 0; edgeBit < 3; edgeBit++)
+                        {
+                            s16* vs;
+                            u8 k;
+                            if ((tri->edgeOutBits & (1 << edgeBit)) == 0)
+                                continue;
+                            k = edgeBit + 1;
+                            if (k > 2)
+                                k = 0;
+                            vs = (s16*)((u8*)tri + edgeBit * 2);
+                            va[0] = vs[8];
+                            va[1] = vs[0xb];
+                            va[2] = vs[0xe];
+                            vs = (s16*)((u8*)tri + k * 2);
+                            vb[0] = vs[8];
+                            vb[1] = vs[0xb];
+                            vb[2] = vs[0xe];
+                            PSVECSubtract(vbp, va, evecp);
+                            rdatap[2] = Vec3_Normalize(evecp);
+                            if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, 0.0f, hitpt, plane,
+                                                     &frac))
+                            {
+                                hit = 1;
+                                break;
+                            }
+                        }
+                        if (hit != 0)
+                            break;
+                    }
+                    if (hit == 0)
+                    for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
+                         (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
+                    {
+                        if (tri->edgeOutBits == 0)
+                            continue;
+                        for (vertexBit = 0; vertexBit < 3; vertexBit++)
+                        {
+                            s16* vs;
+                            int ok;
+                            if ((tri->edgeOutBits & (1 << vertexBit)) == 0)
+                                continue;
+                            nextBit = vertexBit + 1;
+                            if (nextBit > 2)
+                                nextBit = 0;
+                            vs = (s16*)((u8*)tri + vertexBit * 2);
+                            va[0] = vs[8];
+                            va[1] = vs[0xb];
+                            va[2] = vs[0xe];
+                            rr = rdatap[1];
+                            PSVECSubtract(va, ws, tmp1);
+                            dotv = PSVECDotProduct(tmp1, dir);
+                            sq = PSVECSquareMag(tmp1);
+                            if (dotv < 0.0f && sq > rr)
+                            {
+                                ok = 0;
+                            }
+                            else
+                            {
+                                disc = -(dotv * dotv - sq);
+                                if (disc > rr)
+                                {
+                                    ok = 0;
+                                }
+                                else
+                                {
+                                    root = sqrtf(rr - disc);
+                                    if (sq > rr)
+                                    {
+                                        dotv = dotv - root;
+                                    }
+                                    else
+                                    {
+                                        dotv = dotv + root;
+                                    }
+                                    if (dotv >= 0.0f && dotv <= mag)
+                                    {
+                                        PSVECScale(dir, hitpt, dotv);
+                                        PSVECAdd(ws, hitpt, hitpt);
+                                        PSVECSubtract(hitpt, va, plane);
+                                        PSVECNormalize(plane, plane);
+                                        root = sqrtf(rr);
+                                        ndot = -PSVECDotProduct(hitpt, plane);
+                                        plane[3] = ndot + root;
+                                        frac = dotv;
+                                        ok = 1;
+                                    }
+                                    else
+                                    {
+                                        ok = 0;
+                                    }
+                                }
+                            }
+                            if (ok)
+                            {
+                                hit = 1;
+                                break;
+                            }
+                            vs = (s16*)((u8*)tri + nextBit * 2);
+                            vb[0] = vs[8];
+                            vb[1] = vs[0xb];
+                            vb[2] = vs[0xe];
+                            dE = rdatap[1];
+                            PSVECSubtract(vbp, ws, tmp2);
+                            sq = PSVECDotProduct(tmp2, dir);
+                            dotv = PSVECSquareMag(tmp2);
+                            if (sq < 0.0f && dotv > dE)
+                            {
+                                ok = 0;
+                            }
+                            else
+                            {
+                                disc = -(sq * sq - dotv);
+                                if (disc > dE)
+                                {
+                                    ok = 0;
+                                }
+                                else
+                                {
+                                    root = sqrtf(dE - disc);
+                                    if (dotv > dE)
+                                    {
+                                        tt = sq - root;
+                                    }
+                                    else
+                                    {
+                                        tt = sq + root;
+                                    }
+                                    if (tt >= 0.0f && tt <= mag)
+                                    {
+                                        PSVECScale(dir, hitpt, tt);
+                                        PSVECAdd(ws, hitpt, hitpt);
+                                        PSVECSubtract(hitpt, vbp, plane);
+                                        PSVECNormalize(plane, plane);
+                                        root = sqrtf(dE);
+                                        ndot = -PSVECDotProduct(hitpt, plane);
+                                        plane[3] = ndot + root;
+                                        frac = tt;
+                                        ok = 1;
+                                    }
+                                    else
+                                    {
+                                        ok = 0;
+                                    }
+                                }
+                            }
+                            if (ok)
+                            {
+                                hit = 1;
+                                break;
+                            }
+                        }
+                        if (hit != 0)
+                            break;
+                    }
+                }
+                if (hit != 0)
+                {
+                    u32 triFlags;
+                    we[0] = hitpt[0];
+                    we[1] = hitpt[1];
+                    we[2] = hitpt[2];
+                    norm4[0] = plane[0];
+                    norm4[1] = plane[1];
+                    norm4[2] = plane[2];
+                    norm4[3] = plane[3];
+                    typeb = tri->surfaceType;
+                    triFlags = *(u8*)&tri->flags;
+                    typeb2 = (u8)triFlags;
+                    objmtx = *(u32*)desc;
+                    svWorld[0] = ws[0];
+                    svWorld[1] = ws[1];
+                    svWorld[2] = ws[2];
+                    svHit[0] = hitpt[0];
+                    svHit[1] = hitpt[1];
+                    svHit[2] = hitpt[2];
+                    descSave = desc;
+                    found = 1;
+                    if ((u8)type == 7)
+                    {
+                        outp[0] = norm4[0];
+                        outp[1] = norm4[1];
+                        outp[2] = norm4[2];
+                        outp[3] = norm4[3];
+                        typeSlotp[0x50] = typeb;
+                        typeSlotp[0x58] = (u8)triFlags;
+                        *(int*)(slotp + 0x5c) = objmtx;
+                        bounces++;
+                        found = 0;
+                    }
+                    break;
+                }
+            }
+            if (found != 0)
+            {
+                bounces++;
+                if (bounces > 10)
+                {
+                    logPrintf(sTrackHitOverflowError);
+                    cur[0] = svFromp[0];
+                    cur[1] = svFromp[1];
+                    cur[2] = svFromp[2];
+                    found = 0;
+                }
+                else
+                {
+                    f32 pen;
+                    if (objmtx != 0)
+                    {
+                        Matrix_TransformPoint(descSave->currentMatrix, cur[0], cur[1], cur[2], &cur[0], &cur[1],
+                                              &cur[2]);
+                    }
+                    else
+                    {
+                        cur[0] = cur[0] - offX;
+                        cur[2] = cur[2] - offZ;
+                    }
+                    pen = norm4[3] + (cur[2] * norm4[2] + (cur[0] * norm4[0] + cur[1] * norm4[1]));
+                    pen = pen - radius;
+                    fn_800660C8(svWorld, cur, svHit, norm4, pen, maxStep, type);
+                    if (objmtx != 0)
+                    {
+                        Matrix_TransformPoint(descSave->currentCollisionMatrix, cur[0], cur[1], cur[2], &cur[0],
+                                              &cur[1], &cur[2]);
+                    }
+                    else
+                    {
+                        cur[0] = cur[0] + offX;
+                        cur[2] = cur[2] + offZ;
+                    }
+                    outp[0] = norm4[0];
+                    outp[1] = norm4[1];
+                    outp[2] = norm4[2];
+                    outp[3] = norm4[3];
+                    typeSlotp[0x50] = typeb;
+                    typeSlotp[0x58] = typeb2;
+                    *(int*)(slotp + 0x5c) = objmtx;
+                }
+            }
+        } while (found != 0);
+        if (bounces != 0)
+        {
+            if (norm4[1] >= lbl_803DECB0 || norm4[1] <= lbl_803DECEC)
+            {
+                retHi |= curBit;
+            }
+            ep1[0] = cur[0];
+            ep2[1] = cur[1];
+            ep2[2] = cur[2];
+            (*(s16*)((u8*)slots + 0x6c))++;
+            retLo |= curBit;
+        }
+        curBit = (u8)(curBit << 1);
+        slotp += 4;
+        outp += 4;
+        i++;
+        ep1 += 3;
+        ep2 += 3;
+        sp1 += 3;
+        sp2 += 3;
+    } while (i < count);
+    return (u8)retLo | ((u8)retHi << 4);
+}
+
 int hitDetectFn_80067958(GameObject* contactSrc, f32* startPos, f32* endPos, int count, void* results, int flags)
 {
     int lim;
@@ -2831,846 +4598,6 @@ int hitDetectFn_80067958(GameObject* contactSrc, f32* startPos, f32* endPos, int
     return hitCount;
 }
 
-static inline void GXPosition3s16(const int x, const int y, const int z)
-{
-    GXWGFifo.s16 = x;
-    GXWGFifo.s16 = y;
-    GXWGFifo.s16 = z;
-}
-
-static inline void GXTexCoord2s16(const s16 x, const s16 y)
-{
-    GXWGFifo.s16 = x;
-    GXWGFifo.s16 = y;
-}
-
-static inline void GXPosition3f32(const f32 x, const f32 y, const f32 z)
-{
-    GXWGFifo.f32 = x;
-    GXWGFifo.f32 = y;
-    GXWGFifo.f32 = z;
-}
-
-void objDrawFn_80061654(int obj, int placementObj)
-{
-    s16* shadowVerts;
-    u8 alpha;
-    void* viewMtx;
-    GXColor kColor;
-    f32 mtx[16];
-    f32 outMtx[16];
-
-    shadowVerts = *(s16**)(placementObj + 0x54);
-    if (*(u8*)((u8*)shadowVerts + 0x18) == 0)
-    {
-        fn_8006135C(shadowVerts, (GameObject*)obj);
-    }
-    if (*(u8*)((u8*)shadowVerts + 0x18) != 0xff)
-    {
-        alpha = (u8)objShadowFn_80062378((GameObject*)obj, 0x96);
-        kColor.a = alpha;
-        if (alpha != 0)
-        {
-            viewMtx = Camera_GetViewMatrix();
-            Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
-            mtx[0] = lbl_803DEC68;
-            mtx[1] = lbl_803DEC58;
-            mtx[2] = lbl_803DEC58;
-            mtx[4] = lbl_803DEC58;
-            mtx[5] = lbl_803DEC68;
-            mtx[6] = lbl_803DEC58;
-            mtx[8] = lbl_803DEC58;
-            mtx[9] = lbl_803DEC58;
-            mtx[10] = lbl_803DEC68;
-            PSMTXConcat(viewMtx, mtx, outMtx);
-            GXLoadPosMtxImm((const f32 (*)[4])outMtx, GX_PNMTX9);
-            GXClearVtxDesc();
-            GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-            GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-            GXSetNumTexGens(1);
-            GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-            GXSetTevKColor(GX_KCOLOR0, kColor);
-            GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
-            GXSetNumTevStages(1);
-            GXSetNumIndStages(0);
-            GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
-            GXSetChanCtrl(GX_COLOR1A1, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
-            GXSetNumChans(0);
-            GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
-            GXSetTevDirect(GX_TEVSTAGE0);
-            GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO);
-            GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_KONST, GX_CA_TEXA, GX_CA_ZERO);
-            GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_ENABLE, GX_TEVPREV);
-            GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_ENABLE, GX_TEVPREV);
-            gxSetZMode_(1, GX_LEQUAL, 0);
-            GXSetCullMode(GX_CULL_NONE);
-            GXSetCurrentMtx(GX_PNMTX9);
-            GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-            selectTexture((Texture*)((int)((ObjAnimComponent*)obj)->modelState->shadowTexture), 0);
-            GXBegin(GX_QUADS, GX_VTXFMT6, 4);
-            GXPosition3s16(shadowVerts[0], shadowVerts[1], shadowVerts[2]);
-            GXTexCoord2s16(0, 0);
-            GXPosition3s16(shadowVerts[3], shadowVerts[4], shadowVerts[5]);
-            GXTexCoord2s16(0x400, 0);
-            GXPosition3s16(shadowVerts[6], shadowVerts[7], shadowVerts[8]);
-            GXTexCoord2s16(0x400, 0x400);
-            GXPosition3s16(shadowVerts[9], shadowVerts[10], shadowVerts[11]);
-            GXTexCoord2s16(0, 0x400);
-            GXSetCurrentMtx(GX_PNMTX0);
-        }
-    }
-}
-
-int objShadowFn_80062378(GameObject* obj, u8 param)
-{
-    int lo;
-    int hi;
-    f32 inv;
-    void* p;
-
-    p = (obj)->anim.modelInstance;
-    if (((ObjDef*)p)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
-    {
-        lo = 1000;
-        hi = 2000;
-    }
-    else
-    {
-        lo = 400;
-        hi = 500;
-    }
-    inv = (Camera_DistanceToCurrentViewPosition((obj)->anim.worldPosX, (obj)->anim.worldPosY, (obj)->anim.worldPosZ) -
-           lo) /
-          (f32)(hi - lo);
-    if (inv < 0.0f)
-    {
-        inv = 0.0f;
-    }
-    else if (inv > 1.0f)
-    {
-        inv = 1.0f;
-    }
-    inv = 1.0f - inv;
-    {
-        int n = (int)((f32)param * inv);
-        return (n * (*(u8*)((char*)obj + 0x37) + 1)) >> 8;
-    }
-}
-
-void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
-{
-    f32* verts = buf48;
-    f32* planes = bufA8;
-    f32 e2y, e1x, e1y, e1z, e2x, e2z;
-    f32 nrm[3];
-
-    e1x = verts[6] - verts[9];
-    e1y = verts[7] - verts[10];
-    e1z = verts[8] - verts[0xb];
-    e2x = verts[0x15] - verts[9];
-    e2y = verts[0x16] - verts[10];
-    e2z = verts[0x17] - verts[0xb];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
-    PSVECNormalize(nrm, nrm);
-    planes[0] = -nrm[0];
-    planes[1] = -nrm[1];
-    planes[2] = -nrm[2];
-    planes[3] = -(planes[0] * verts[9] + planes[1] * verts[10] + planes[2] * verts[0xb]);
-
-    e1x = verts[0x12] - verts[0xf];
-    e1y = verts[0x13] - verts[0x10];
-    e1z = verts[0x14] - verts[0x11];
-    e2x = verts[3] - verts[0xf];
-    e2y = verts[4] - verts[0x10];
-    e2z = verts[5] - verts[0x11];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
-    PSVECNormalize(nrm, nrm);
-    planes[5] = -nrm[0];
-    planes[6] = -nrm[1];
-    planes[7] = -nrm[2];
-    planes[8] = -(planes[5] * verts[0xf] + planes[6] * verts[0x10] + planes[7] * verts[0x11]);
-
-    e1x = verts[0xf] - verts[0xc];
-    e1y = verts[0x10] - verts[0xd];
-    e1z = verts[0x11] - verts[0xe];
-    e2x = verts[0] - verts[0xc];
-    e2y = verts[1] - verts[0xd];
-    e2z = verts[2] - verts[0xe];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
-    PSVECNormalize(nrm, nrm);
-    planes[10] = -nrm[0];
-    planes[0xb] = -nrm[1];
-    planes[0xc] = -nrm[2];
-    planes[0xd] = -(planes[10] * verts[0xc] + planes[0xb] * verts[0xd] + planes[0xc] * verts[0xe]);
-
-    e1x = verts[9] - verts[0];
-    e1y = verts[10] - verts[1];
-    e1z = verts[0xb] - verts[2];
-    e2x = verts[0xc] - verts[0];
-    e2y = verts[0xd] - verts[1];
-    e2z = verts[0xe] - verts[2];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
-    PSVECNormalize(nrm, nrm);
-    planes[0xf] = -nrm[0];
-    planes[0x10] = -nrm[1];
-    planes[0x11] = -nrm[2];
-    planes[0x12] = -(planes[0xf] * verts[0] + planes[0x10] * verts[1] + planes[0x11] * verts[2]);
-
-    e1x = verts[0x12] - verts[0x15];
-    e1y = verts[0x13] - verts[0x16];
-    e1z = verts[0x14] - verts[0x17];
-    e2x = verts[0xc] - verts[0x15];
-    e2y = verts[0xd] - verts[0x16];
-    e2z = verts[0xe] - verts[0x17];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
-    PSVECNormalize(nrm, nrm);
-    planes[0x14] = -nrm[0];
-    planes[0x15] = -nrm[1];
-    planes[0x16] = -nrm[2];
-    planes[0x17] = -(planes[0x14] * verts[0x15] + planes[0x15] * verts[0x16] + planes[0x16] * verts[0x17]);
-
-    e1x = verts[3] - verts[0];
-    e1y = verts[4] - verts[1];
-    e1z = verts[5] - verts[2];
-    e2x = verts[9] - verts[0];
-    e2y = verts[10] - verts[1];
-    e2z = verts[0xb] - verts[2];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
-    PSVECNormalize(nrm, nrm);
-    planes[0x19] = -nrm[0];
-    planes[0x1a] = -nrm[1];
-    planes[0x1b] = -nrm[2];
-    planes[0x1c] = -(planes[0x19] * verts[0] + planes[0x1a] * verts[1] + planes[0x1b] * verts[2]);
-}
-
-void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* p7, void* buf48, f32 f)
-{
-    u8 col[4];
-    u8 save_18[12];
-    u8 save_c[12];
-    f32 mtx[4][4];
-    f32 outMtx[4][4];
-    f32 f31, f30;
-    f32 kf;
-    s16 s31, s30, s29;
-    u32 handle;
-    u32 h2;
-    ProjectedShadowTexture* hdr;
-    void* viewMtx;
-
-    GXClearVtxDesc();
-    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-    col[0] = 0;
-    col[1] = 0;
-    col[2] = 0;
-    col[3] = ((MapBlockData*)blockData)->shadowTexHeader->alpha;
-    f31 = ((GameObject*)obj)->anim.rootMotionScale;
-    s31 = ((GameObject*)obj)->anim.rotX;
-    s30 = ((GameObject*)obj)->anim.rotZ;
-    s29 = ((GameObject*)obj)->anim.rotY;
-    handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
-    if (handle == 0 || handle != 0xFFFFFFFF)
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803DEC78;
-    else
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803DEC68;
-    ((GameObject*)obj)->anim.rotX = 0;
-    ((GameObject*)obj)->anim.rotY = 0;
-    if ((*(u32*)&((MapBlockData*)blockData)->flags & 0x2000) == 0)
-        ((GameObject*)obj)->anim.rotZ = 0;
-    if (*(u32*)&((MapBlockData*)blockData)->flags & 0x20)
-    {
-        memcpy(save_c, (char*)obj + 0xc, 0xc);
-        memcpy(save_18, (char*)obj + 0x18, 0xc);
-        memcpy((char*)((int)obj + 0x18), (char*)blockData + 0x20, 0xc);
-        memcpy((char*)((int)obj + 0xc), (char*)((int)blockData + 0x20), 0xc);
-    }
-    Obj_BuildWorldTransformMatrix((GameObject*)obj, (f32*)mtx, 0);
-    viewMtx = Camera_GetViewMatrix();
-    PSMTXConcat(viewMtx, (f32*)mtx, (f32*)outMtx);
-    GXLoadPosMtxImm((const f32 (*)[4])outMtx, GX_PNMTX0);
-    if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
-    {
-        u32 c = *(u32*)col;
-        objectShadow_setupSwappedProjectedTexture(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx);
-    }
-    else
-    {
-        if ((GameObject*)obj == Obj_GetPlayerObject())
-            f30 = 10.0f;
-        else
-            f30 = ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
-        handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
-        if (handle != 0xFFFFFFFF ||
-            (h2 = textureFn_8006c5c4(), hdr = ((MapBlockData*)blockData)->shadowTexHeader,
-             (u32)hdr->texture == h2))
-        {
-            u32 c = *(u32*)col;
-            objectShadow_setupProjectedTexture(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx);
-        }
-        else if (hdr->mode == 0xff)
-        {
-            u32 c = *(u32*)col;
-            fn_80077AD8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
-        }
-        else
-        {
-            u32 c = *(u32*)col;
-            fn_80077EF8(((MapBlockData*)blockData)->shadowTexHeader, &c, mtx, f30);
-        }
-    }
-    GXSetCullMode(GX_CULL_FRONT);
-    GXSetCurrentMtx(GX_PNMTX0);
-    ((GameObject*)obj)->anim.rootMotionScale = f31;
-    ((GameObject*)obj)->anim.rotX = s31;
-    ((GameObject*)obj)->anim.rotY = s29;
-    ((GameObject*)obj)->anim.rotZ = s30;
-    if (*(u32*)&((MapBlockData*)blockData)->allocHandle == 0)
-    {
-        f32* cv;
-        int off;
-        int i;
-        int* vbuf;
-        ((MapBlockData*)blockData)->allocHandle = (int)mmAlloc(slot * 0x12 + 8, 0x18, 0);
-        vbuf = *(int**)&((MapBlockData*)blockData)->allocHandle;
-        if (vbuf == NULL)
-            return;
-        vbuf[0] = (int)vbuf + 8;
-        *(int*)(((MapBlockData*)blockData)->allocHandle + 4) = slot * 3;
-        i = 0;
-        cv = cache;
-        off = 0;
-        kf = lbl_803DEC80;
-        for (; i < *(u32*)(((MapBlockData*)blockData)->allocHandle + 4); off += 6)
-        {
-            *(s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + off + 0) = kf * cv[0];
-            *(s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + off + 2) = kf * cv[1];
-            *(s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + off + 4) = kf * cv[2];
-            cv += 3;
-            i++;
-        }
-    }
-    handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
-    if (handle != 0xFFFFFFFF)
-    {
-        int z[2];
-        GXBegin(GX_TRIANGLES, GX_VTXFMT0, *(int*)(((MapBlockData*)blockData)->allocHandle + 4) & 0xffff);
-        z[0] = 0;
-        z[1] = z[0];
-        for (; z[0] < *(u32*)(((MapBlockData*)blockData)->allocHandle + 4); z[1] += 6)
-        {
-            s16* ep = (s16*)(*(int*)(((MapBlockData*)blockData)->allocHandle) + z[1]);
-            s16 e2 = ep[2];
-            s16 e1 = ep[1];
-            s16 e0 = ep[0];
-            GXWGFifo.s16 = e0;
-            GXWGFifo.s16 = e1;
-            GXWGFifo.s16 = e2;
-            z[0]++;
-        }
-    }
-    else
-    {
-        int i;
-        int w0;
-        int w1;
-        GXBegin(GX_TRIANGLES, GX_VTXFMT2, (slot * 3) & 0xffff);
-        w0 = 0;
-        w1 = w0;
-        for (i = 0; i < slot; i++)
-        {
-            int k;
-            f32* v0 = (f32*)((char*)cache + w1);
-            GXPosition3f32(v0[0], v0[1], v0[2]);
-            for (k = 1; k < 3; k++)
-            {
-                f32* v1 = (f32*)((char*)cache + (w0 + k) * 0xc);
-                f32 b2 = v1[2];
-                f32 b1 = v1[1];
-                f32 b0 = v1[0];
-                GXWGFifo.f32 = b0;
-                GXWGFifo.f32 = b1;
-                GXWGFifo.f32 = b2;
-            }
-            w0 += 3;
-            w1 += 0x24;
-        }
-    }
-    if (*(u32*)&((MapBlockData*)blockData)->flags & 0x20)
-    {
-        memcpy((char*)((int)obj + 0xc), save_c, 0xc);
-        memcpy((char*)((int)obj + 0x18), save_18, 0xc);
-    }
-}
-
-void renderGlows(void)
-{
-    f32 px, py, pz;
-    s32 sx, sy, sz;
-    u8 amb[3];
-    GXColor fogCol;
-    f32 sunMtx[12];
-    f32 dir[3];
-    f32 cam[3];
-    void* viewMtx;
-    u8 alpha;
-    u8 sky;
-    f32 sunDot;
-    f32 cx, cy, cz;
-
-    fogCol = *(GXColor*)&sSynthFadeUnit;
-    GXSetCullMode(GX_CULL_NONE);
-    Camera_RebuildProjectionMatrix();
-    GXClearVtxDesc();
-    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-    textureSetupFn_800799c0();
-    gxTextureFn_800794e0();
-    textRenderSetupFn_80079804();
-    GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, fogCol);
-    gxBlendFn_800789ac();
-    alpha = 0xff;
-    gSunFlareScissorWidth = 0;
-    gSunFlareScissorHeight = 0;
-    sky = skyFn_8008919c(2);
-    if (sky != 0 && (renderFlags & 0x40))
-    {
-        viewMtx = Camera_GetViewMatrix();
-        fn_800897D4(0, &dir[0], &dir[1], &dir[2]);
-        cam[0] = *(f32*)((char*)viewMtx + 0x20);
-        cam[1] = *(f32*)((char*)viewMtx + 0x24);
-        cam[2] = *(f32*)((char*)viewMtx + 0x28);
-        sunDot = PSVECDotProduct(dir, cam);
-        if (sunDot > lbl_803DEBCC)
-        {
-            int i;
-            int occ;
-            f32 fade;
-            skyBuildSunModelMatrix((f32(*)[4])sunMtx);
-            Camera_ProjectWorldPointWithOffset(sunMtx[3], sunMtx[7], sunMtx[11], lbl_803DEBD4, &px, &py, &pz);
-            Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
-            gSunFlareScissorX = sx - 0x10;
-            gSunFlareScissorWidth = 0x20;
-            gSunFlareScissorY = sy - 0x10;
-            gSunFlareScissorHeight = 0x20;
-            if ((int)gSunFlareScissorX < 0)
-                gSunFlareScissorX = 0;
-            else if ((int)gSunFlareScissorX > 0x280)
-                gSunFlareScissorX = 0x280;
-            if ((int)gSunFlareScissorY < 0)
-                gSunFlareScissorY = 0;
-            else if ((int)gSunFlareScissorY > 0x1e0)
-                gSunFlareScissorY = 0x1e0;
-            if ((int)gSunFlareScissorX + 0x20 > 0x280)
-                gSunFlareScissorWidth = 0x280 - gSunFlareScissorX;
-            if ((int)gSunFlareScissorY + 0x20 > 0x1e0)
-                gSunFlareScissorHeight = 0x1e0 - gSunFlareScissorY;
-            occ = 0;
-            for (i = 0; i < 5; i++)
-            {
-                int d = depthReadRequestPoll(sx + gSunOcclusionSampleOffsets[i * 2],
-                                             sy + gSunOcclusionSampleOffsets[i * 2 + 1], (void*)i);
-                if (sz <= d && pauseMenuGetState() == 0)
-                    occ++;
-            }
-            fade = (f32)(u32)occ / lbl_803DEBE4 - gSunFlareFade;
-            if (fade > lbl_803DEC30)
-                fade = lbl_803DEC30;
-            else if (fade < lbl_803DEC34)
-                fade = lbl_803DEC34;
-            gSunFlareFade = gSunFlareFade + fade;
-            sunDot = sunDot * gSunFlareFade;
-            if (sunDot > lbl_803DEBCC)
-            {
-                PSMTXConcat(viewMtx, sunMtx, sunMtx);
-                GXLoadPosMtxImm((const f32 (*)[4])sunMtx, GX_PNMTX0);
-                GXSetCurrentMtx(GX_PNMTX0);
-                selectTexture((Texture*)((int)skyGetSkyTexture()), 0);
-                getAmbientColor(0, &amb[0], &amb[1], &amb[2]);
-                sunDot = (f32)(u32)sky * sunDot;
-                _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(lbl_803DEBFC * sunDot));
-                alpha = lbl_803DEBD8 - lbl_803DEC38 * sunDot;
-                fade = lbl_803DEC3C * sunDot;
-                sunDot = fade * lbl_803DEC40;
-                GXBegin(GX_QUADS, GX_VTXFMT2, 4);
-                GXWGFifo.f32 = -sunDot;
-                GXWGFifo.f32 = -sunDot;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = sunDot;
-                GXWGFifo.f32 = -sunDot;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = lbl_803DEBDC;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = sunDot;
-                GXWGFifo.f32 = sunDot;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = lbl_803DEBDC;
-                GXWGFifo.f32 = lbl_803DEBDC;
-                GXWGFifo.f32 = -sunDot;
-                GXWGFifo.f32 = sunDot;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = lbl_803DEBDC;
-            }
-        }
-    }
-    colorScale = alpha;
-    if (lbl_803DCE06 != 0)
-    {
-        int i;
-        for (i = 0; i < lbl_803DCE06; i++)
-        {
-            ModelLightStruct* e = (ModelLightStruct*)gGlowLightList[i];
-            int d;
-            Camera_ProjectWorldPointWithOffset(e->worldX - playerMapOffsetX, e->worldY, e->worldZ - playerMapOffsetZ,
-                                               e->glowProjectionRadius, &px, &py, &pz);
-            Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
-            d = depthReadRequestPoll(sx, sy, e);
-            if (sz <= d && pauseMenuGetState() == 0)
-                e->glowAlphaStep = 0x10;
-            else
-                e->glowAlphaStep = -0x10;
-        }
-        GXSetCurrentMtx(GX_IDENTITY);
-        gxTextureFn_800794e0();
-        gxBlendFn_800789ac();
-        for (i = 0; i < lbl_803DCE06; i++)
-        {
-            ModelLightStruct* e = (ModelLightStruct*)gGlowLightList[i];
-            if (e->glowAlpha != 0)
-            {
-                f32 f = e->activeIntensity;
-                selectTexture((Texture*)((int)e->glowTexture), 0);
-                _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * e->activeIntensity),
-                                (int)((f32)(u32)e->glowColor[1] * e->activeIntensity),
-                                (int)((f32)(u32)e->glowColor[2] * e->activeIntensity),
-                                (u8)((int)(e->glowColor[3] * e->glowAlpha) >> 8));
-                GXBegin(GX_QUADS, GX_VTXFMT2, 4);
-                cz = e->viewZ;
-                cy = e->viewY - e->glowScale;
-                cx = e->viewX - e->glowScale;
-                GXWGFifo.f32 = cx;
-                GXWGFifo.f32 = cy;
-                GXWGFifo.f32 = cz;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                cz = e->viewZ;
-                cy = e->viewY - e->glowScale;
-                cx = e->viewX + e->glowScale;
-                GXWGFifo.f32 = cx;
-                GXWGFifo.f32 = cy;
-                GXWGFifo.f32 = cz;
-                GXWGFifo.f32 = lbl_803DEBDC;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                cz = e->viewZ;
-                cy = e->viewY + e->glowScale;
-                cx = e->viewX + e->glowScale;
-                GXWGFifo.f32 = cx;
-                GXWGFifo.f32 = cy;
-                GXWGFifo.f32 = cz;
-                GXWGFifo.f32 = lbl_803DEBDC;
-                GXWGFifo.f32 = lbl_803DEBDC;
-                cz = e->viewZ;
-                cy = e->viewY + e->glowScale;
-                cx = e->viewX - e->glowScale;
-                GXWGFifo.f32 = cx;
-                GXWGFifo.f32 = cy;
-                GXWGFifo.f32 = cz;
-                GXWGFifo.f32 = lbl_803DEBCC;
-                GXWGFifo.f32 = lbl_803DEBDC;
-            }
-        }
-        GXSetCurrentMtx(GX_PNMTX0);
-    }
-}
-
-void gxErrorFn_80060b40(void)
-{
-    int n;
-    int i;
-
-    i = 0;
-    n = lbl_803DCE98;
-    for (; i < n; i++)
-    {
-    }
-}
-
-f32 lbl_8038D77C[0x18];
-
-void initTextures(void)
-{
-    f32* a = lbl_8038D77C;
-    f32* b = lbl_8038D7DC;
-
-    gShadowFlag = 10;
-    gShadowVolumeBuffer = (int)mmAlloc(0xa8c0, 0x18, 0);
-    a[0] = lbl_803DEC98;
-    b[0] = lbl_803DEC98;
-    a[1] = lbl_803DEC98;
-    b[1] = lbl_803DEC98;
-    a[2] = lbl_803DEC98;
-    b[2] = lbl_803DEC98;
-    a[3] = lbl_803DEC98;
-    b[3] = lbl_803DEC98;
-    a[4] = lbl_803DEC58;
-    b[4] = lbl_803DEC58;
-    a[5] = lbl_803DEC98;
-    b[5] = lbl_803DEC98;
-    a[6] = lbl_803DEC68;
-    b[6] = lbl_803DEC68;
-    a[7] = lbl_803DEC58;
-    b[7] = lbl_803DEC58;
-    a[8] = lbl_803DEC98;
-    b[8] = lbl_803DEC98;
-    a[9] = lbl_803DEC68;
-    b[9] = lbl_803DEC68;
-    a[10] = lbl_803DEC98;
-    b[10] = lbl_803DEC98;
-    a[11] = lbl_803DEC98;
-    b[11] = lbl_803DEC98;
-    b[12] = lbl_803DEC98;
-    b[13] = lbl_803DEC98;
-    b[14] = lbl_803DEC68;
-    b[15] = lbl_803DEC98;
-    b[16] = lbl_803DEC58;
-    b[17] = lbl_803DEC68;
-    b[18] = lbl_803DEC68;
-    b[19] = lbl_803DEC58;
-    b[20] = lbl_803DEC68;
-    b[21] = lbl_803DEC68;
-    b[22] = lbl_803DEC98;
-    b[23] = lbl_803DEC68;
-    a[12] = lbl_803DECA0;
-    a[13] = lbl_803DEC58;
-    a[14] = lbl_803DECA4;
-    a[15] = lbl_803DECA0;
-    a[16] = lbl_803DECA8;
-    a[17] = lbl_803DECA4;
-    a[18] = lbl_803DECAC;
-    a[19] = lbl_803DECA8;
-    a[20] = lbl_803DECA4;
-    a[21] = lbl_803DECAC;
-    a[22] = lbl_803DEC58;
-    a[23] = lbl_803DECA4;
-    allocLotsOfTextures();
-}
-
-char sTrackNoFreeLastLineError[] = "NO FREE LAST LINE\n";
-
-int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameObject* self, int p8, int p9,
-                      u8 slot, u8 arg8)
-{
-    f32 w0[3];
-    f32 w1[3];
-    f32 t20[3];
-    f32 t14[3];
-    int* objs;
-    int count;
-    int i;
-    int mtx;
-
-    lbl_803DCF4C = 0;
-    if (out != NULL)
-    {
-        *(s8*)((char*)out + 0x50) = -1;
-        *(s8*)((char*)out + 0x51) = -1;
-    }
-    mtx = (self != NULL) ? *(int*)((char*)self + 0x30) : 0;
-    if ((u32)mtx != 0)
-    {
-        Obj_TransformLocalPointToWorld(p0[0], p0[1], p0[2], &w0[0], &w0[1], &w0[2], mtx);
-        Obj_TransformLocalPointToWorld(p1[0], p1[1], p1[2], &w1[0], &w1[1], &w1[2], mtx);
-    }
-    else
-    {
-        memcpy(w0, p0, 0xc);
-        memcpy(w1, p1, 0xc);
-    }
-    objs = (int*)ObjGroup_GetObjects(6, &count);
-    for (i = 0; i < count; i++, objs++)
-    {
-        int* o = (int*)*objs;
-        int* p54;
-        int hdr;
-        f32 rad;
-        f32 dx, dy, dz;
-        s8 hit;
-        int* e;
-        s16 k;
-
-        if ((GameObject*)o == self)
-            continue;
-        if ((s8) * (u8*)((char*)o + 0x35) <= -1)
-            continue;
-        if (*(u32*)(*(int*)&((GameObject*)o)->anim.modelInstance + 0x34) == 0)
-            continue;
-        p54 = *(int**)&((GameObject*)o)->anim.hitReactState;
-        if (p54 != NULL && (((ObjHitsPriorityState*)p54)->flags & 1) == 0)
-            continue;
-        dx = ((GameObject*)o)->anim.localPosX - w0[0];
-        dy = ((GameObject*)o)->anim.localPosY - w0[1];
-        dz = ((GameObject*)o)->anim.localPosZ - w0[2];
-        hdr = *(int*)(*(int*)(*(int*)&((GameObject*)o)->anim.banks + (s8)((ObjHitsPriorityState*)p54)->stateIndex * 4));
-        rad = (f32)((u16)modelFileHeaderGetCullDistance((ModelFileHeader*)hdr) + 0x32);
-        rad = rad * rad;
-        hit = 0;
-        {
-            f32 ddy = dy * dy;
-            if (ddy + dx * dx + dz * dz < rad)
-                hit = 1;
-        }
-        if (hit == 0)
-        {
-            dx = ((GameObject*)o)->anim.localPosX - w1[0];
-            dy = ((GameObject*)o)->anim.localPosY - w1[1];
-            dz = ((GameObject*)o)->anim.localPosZ - w1[2];
-            {
-                f32 ddy = dy * dy;
-                if (ddy + dx * dx + dz * dz < rad)
-                    hit = 1;
-            }
-        }
-        if (hit == 0)
-            continue;
-        if (slot != 0xff)
-        {
-            char* fl;
-            k = 0;
-            fl = (char*)gMapDynamicSlots;
-            do
-            {
-                if (*(u8*)(fl + 0x14) != 0 && *(u32*)fl == (u32)self && *(u32*)(fl + 4) == (u32)o &&
-                    *(u8*)(fl + 0x15) == slot)
-                {
-                    *(u8*)(fl + 0x14) = 0;
-                    e = (int*)fl;
-                    goto haveEntry;
-                }
-                fl += 0x18;
-                k++;
-            } while (k < 0x40);
-        }
-        e = NULL;
-    haveEntry:
-        if (e != NULL)
-        {
-            t20[0] = ((ModelLightStruct*)e)->localY;
-            t20[1] = ((ModelLightStruct*)e)->localZ;
-            t20[2] = ((ModelLightStruct*)e)->worldX;
-        }
-        else
-        {
-            Obj_TransformWorldPointToLocal(w0[0], w0[1], w0[2], &t20[0], &t20[1], &t20[2], (u32)o);
-        }
-        Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &t14[0], &t14[1], &t14[2], (u32)o);
-        if (doLotsOfMath(t20, t14, f, p5, out, o, p8, p9, arg8, (int)self) != 0)
-            Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], (u32)o);
-        if (slot != 0xff)
-        {
-            k = 0;
-            e = (int*)gMapDynamicSlots;
-            do
-            {
-                if (*(u8*)((char*)e + 0x14) == 0)
-                {
-                    *(int*)e = (int)self;
-                    *(int*)((char*)e + 4) = (int)o;
-                    *(u8*)((char*)e + 0x15) = slot;
-                    *(u8*)((char*)e + 0x14) = 2;
-                    goto stored;
-                }
-                e = (int*)((char*)e + 0x18);
-                k++;
-            } while (k < 0x40);
-            debugPrintf(sTrackNoFreeLastLineError);
-            e = NULL;
-        stored:
-            if (e != NULL)
-            {
-                ((ModelLightStruct*)e)->localY = t14[0];
-                ((ModelLightStruct*)e)->localZ = t14[1];
-                ((ModelLightStruct*)e)->worldX = t14[2];
-            }
-        }
-    }
-    doLotsOfMath(w0, w1, f, p5, out, NULL, p8, p9, arg8, (int)self);
-    if (lbl_803DCF4C != 0 && out != NULL)
-    {
-        f32 hx = *(f32*)((char*)out + 0x3c) - *(f32*)((char*)out + 0xc);
-        f32 hy = *(f32*)((char*)out + 0x40) - *(f32*)((char*)out + 0x10);
-        f32 len;
-        *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
-        *(f32*)((char*)out + 0x30) = lbl_803DECB4;
-        *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
-        {
-            f32 sqA = *(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x2c);
-            f32 sqB = *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x34);
-            len = lbl_803DECC4 / sqrtf(sqA + sqB);
-        }
-        *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x2c) * len;
-        *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x34) * len;
-        *(f32*)((char*)out + 0x38) = -(*(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x4) +
-                                       *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x14));
-        if (*(u32*)out != 0)
-        {
-            Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
-                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4), (f32*)((int)out + 0xc),
-                                           (f32*)((int)out + 0x14), (u32) * (int*)out);
-            Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
-                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8), (f32*)((int)out + 0x10),
-                                           (f32*)((int)out + 0x18), (u32) * (int*)out);
-        }
-        if ((u32)mtx != 0)
-        {
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
-                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4), (f32*)((int)out + 0xc),
-                                           (f32*)((int)out + 0x14), mtx);
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
-                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8), (f32*)((int)out + 0x10),
-                                           (f32*)((int)out + 0x18), mtx);
-        }
-        *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
-        *(f32*)((char*)out + 0x20) = lbl_803DECB4;
-        *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
-        {
-            f32 sqA = *(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x1c);
-            f32 sqB = *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x24);
-            len = lbl_803DECC4 / sqrtf(sqA + sqB);
-        }
-        *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x1c) * len;
-        *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x24) * len;
-        *(f32*)((char*)out + 0x3c) = *(f32*)((char*)out + 0xc) + hx;
-        *(f32*)((char*)out + 0x40) = *(f32*)((char*)out + 0x10) + hy;
-        *(f32*)((char*)out + 0x28) = -(*(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x4) +
-                                       *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x14));
-    }
-    if (lbl_803DCF4C != 0)
-    {
-        if ((u32)mtx != 0)
-            Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &p1[0], &p1[1], &p1[2], mtx);
-        else
-            memcpy(p1, w1, 0xc);
-    }
-    return lbl_803DCF4C;
-}
-
-/* fn_80067B84 -- gather model triangles overlapping a swept bbox into the
- * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
- * cursor. */
 int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1, f32 y1,
                 f32 z1, u8 flags)
 {
@@ -4328,1299 +5255,375 @@ u8 doEdges;
     return cur;
 }
 
-void* fn_800606DC(int* obj, int idx)
+void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* ranges, u32 a, int b)
 {
-    return (char*)((int**)obj)[0x4c / 4] + idx * 8;
+    f32 f31 = (f32)(ranges->minX - 5);
+    f32 f30 = (f32)(ranges->maxX + 5);
+    f32 f29 = (f32)(ranges->minY - 5);
+    f32 f28 = (f32)(ranges->maxY + 5);
+    f32 f27 = (f32)(ranges->minZ - 5);
+    f32 f26 = (f32)(ranges->maxZ + 5);
+    ObjAnimComponent** resetObjects;
+    int flag80;
+    s16 i;
+    ObjAnimComponent* resetObj;
+    int* model;
+    int masked;
+    int count;
+
+    {
+        int cur;
+        TrackBlockDescriptor* desc;
+        TrackBlockDescriptor* descEnd;
+
+        desc = gTrackBlockDescriptors;
+        desc->object = NULL;
+        desc->firstTriangle = 0;
+        desc++;
+        descEnd = &gTrackBlockDescriptors[20];
+        gTrackTriangleBufferEnd = gTrackTriangleBuffer + 0x16440;
+        masked = a & 0xffff;
+        if ((masked & 0x10) != 0)
+        {
+            cur = gTrackTriangleBuffer;
+        }
+        else
+        {
+            cur = mapLoadBlocksFn_800685cc(gTrackTriangleBuffer, f31, f29, f27, f30, f28, f26, a, b);
+        }
+        if ((u32)cur < gTrackTriangleBufferEnd && (masked & 1) && obj != NULL)
+        {
+            ObjAnimComponent** t = ObjHitReact_GetResetObjects(&count);
+            i = 0;
+            resetObjects = t;
+            flag80 = masked & 0x80;
+            for (; i < count; resetObjects++, i++)
+            {
+                ObjHitsPriorityState* hitState;
+                ObjHitboxTransformState* transformState;
+                int n;
+                int hdr;
+                f32 r, c;
+
+                resetObj = *resetObjects;
+                if (flag80 && (resetObj->modelInstance->flags & 0x01000000))
+                    continue;
+                hitState = (ObjHitsPriorityState*)resetObj->hitReactState;
+                if (hitState == NULL)
+                    continue;
+                transformState = ((ObjHitbox*)resetObj)->transformState;
+                if (transformState == NULL)
+                    continue;
+                if (transformState->resetFrames != 0)
+                    continue;
+                if (transformState->pad10E != 0)
+                    continue;
+                model = (int*)resetObj->banks[(s8)hitState->stateIndex];
+                if (model == NULL)
+                    continue;
+                hdr = *(int*)model;
+                if (*(u16*)(hdr + 0xf0) == 0)
+                    continue;
+                r = (f32)(u32)(u16)modelFileHeaderGetCullDistance((ModelFileHeader*)hdr);
+                c = resetObj->worldPosX;
+                if (f30 < c - r)
+                    continue;
+                if (f31 > c + r)
+                    continue;
+                c = resetObj->worldPosY;
+                if (f28 < c - r)
+                    continue;
+                if (f29 > c + r)
+                    continue;
+                c = resetObj->worldPosZ;
+                if (f26 < c - r)
+                    continue;
+                if (f27 > c + r)
+                    continue;
+
+                desc->currentCollisionMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                                               ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex + 2) << 4);
+                desc->currentMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                                      (((ObjHitbox*)resetObj)->transformState->activeMatrixIndex << 4);
+                desc->alternateCollisionMatrix =
+                    (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                    (((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) + 2) << 4);
+                desc->alternateMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                                        ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) << 4);
+
+                desc->firstTriangle = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
+                desc->object = resetObj;
+                cur = fn_80067B84(cur, desc, (int)model, lbl_803DECC4, f31, f29, f27, f30, f28, f26, a);
+                desc++;
+                if ((u32)cur >= gTrackTriangleBufferEnd)
+                    break;
+                if (desc >= descEnd)
+                    break;
+            }
+        }
+        gTrackTriangleCount = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
+        gActiveTrackBlockCount = (u8)(desc - gTrackBlockDescriptors);
+        desc->firstTriangle = gTrackTriangleCount;
+    }
 }
 
-u32 fn_80060668(int* obj)
+void hitDetect_calcSweptSphereBounds(TrackQueryBounds* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
+                                     int pointCount)
 {
-    u32 v = obj[4];
-    v &= 0x00FF0000;
-    return v >> 16;
-}
-
-/* trackIntersect -- rebuild the intersection line table from map blocks when
- * a refresh has been requested. */
-void trackIntersect(void)
-{
-    s16 counts[0x47];
-    s16 edges[0x6a4 * 2];
-    s16* sourceCoord;
-    u8* linePoint;
-    int sourceOffset;
-    int blockIndex;
-    int rowOffset;
-    int orderOffset;
-    int orderIndex;
-    int sourceIndex;
-    int endpoint;
-    int gridX, gridZ;
-    int layer;
-    IntersectLine* line;
     int i;
-    int lineOffset;
-    u8* lineBytes;
-    s16* sortOrder;
-    s16 firstLine;
-    s16 secondLine;
-    int sortIndex;
-    int sortComplete;
-    s16 previousType, segmentType;
-    f32 pointX, pointY, pointZ;
 
-    lbl_803DCF44 = 0;
-    if (lbl_803DCF4D != 0 && getHudHiddenFrameCount() == 0)
+    boundsOut->minX = 1000000;
+    boundsOut->maxX = -1000000;
+    boundsOut->minY = 1000000;
+    boundsOut->maxY = -1000000;
+    boundsOut->minZ = 1000000;
+    boundsOut->maxZ = -1000000;
+    for (i = pointCount; i != 0; i--)
     {
-        lbl_803DCF4D--;
+        if (startPoints[0] - radii[0] < boundsOut->minX)
+            boundsOut->minX = (int)(startPoints[0] - radii[0]);
+        if (startPoints[0] + radii[0] > boundsOut->maxX)
+            boundsOut->maxX = (int)(startPoints[0] + radii[0]);
+        if (startPoints[1] - radii[0] < boundsOut->minY)
+            boundsOut->minY = (int)(startPoints[1] - radii[0]);
+        if (startPoints[1] + radii[0] > boundsOut->maxY)
+            boundsOut->maxY = (int)(startPoints[1] + radii[0]);
+        if (startPoints[2] - radii[0] < boundsOut->minZ)
+            boundsOut->minZ = (int)(startPoints[2] - radii[0]);
+        if (startPoints[2] + radii[0] > boundsOut->maxZ)
+            boundsOut->maxZ = (int)(startPoints[2] + radii[0]);
+        if (endPoints[0] - radii[0] < boundsOut->minX)
+            boundsOut->minX = (int)(endPoints[0] - radii[0]);
+        if (endPoints[0] + radii[0] > boundsOut->maxX)
+            boundsOut->maxX = (int)(endPoints[0] + radii[0]);
+        if (endPoints[1] - radii[0] < boundsOut->minY)
+            boundsOut->minY = (int)(endPoints[1] - radii[0]);
+        if (endPoints[1] + radii[0] > boundsOut->maxY)
+            boundsOut->maxY = (int)(endPoints[1] + radii[0]);
+        if (endPoints[2] - radii[0] < boundsOut->minZ)
+            boundsOut->minZ = (int)(endPoints[2] - radii[0]);
+        if (endPoints[2] + radii[0] > boundsOut->maxZ)
+            boundsOut->maxZ = (int)(endPoints[2] + radii[0]);
+        startPoints += 3;
+        endPoints += 3;
+        radii += 1;
     }
-    if ((s8)mapBlockFlag == 1)
-    {
-        lbl_803DCF4F = 1;
-        mapBlockFlag = 0;
-        return;
-    }
-    if ((s8)lbl_803DCF4F == 0)
-    {
-        return;
-    }
-    lbl_803DCF4F = 0;
-    if (getHudHiddenFrameCount() != 0)
-    {
-        lbl_803DCF4D = 2;
-    }
+}
 
-    for (i = 0; i < 0x47; i++)
+void* fn_80069944(u32* outVal)
+{
+    *outVal = gActiveTrackBlockCount;
+    return gTrackBlockDescriptors;
+}
+
+void trackGetGridOrigin(int** outOrigin)
+{
+    *outOrigin = (int*)gTrackGridOrigin;
+}
+
+void fn_80069968(int* outCount, int* outTable)
+{
+    TrackBlockDescriptor* descriptors = gTrackBlockDescriptors;
+    *outCount = descriptors[gActiveTrackBlockCount].firstTriangle;
+    *outTable = gTrackTriangleBuffer;
+}
+
+void mapInitFn_80069990(void)
+{
+    int i;
+    int off;
+    if (gTrackTriangleBuffer == 0)
     {
-        counts[i] = 0;
+        gTrackTriangleBuffer = (u32)mmAlloc(0x16440, 0xffff00ff, 0);
+        lbl_803DCF34 = (int)mmAlloc(0x5dc0, 0xffff00ff, 0);
+        lbl_803DCF38 = mmAlloc(0x4fb0, 0xffff00ff, 0);
+        gIntersectLineIndexTable = (int)mmAlloc(0xbb8, 0xffff00ff, 0);
+        gMapDynamicSlots = (int)mmAlloc(0x600, 0xffff00ff, 0);
+    }
+    off = 0;
+    for (i = 0; i < 4; i++)
+    {
+        int j;
+        for (j = 0; j < 16; j++)
+        {
+            ((MapDynamicSlot*)(gMapDynamicSlots + off + j * sizeof(MapDynamicSlot)))->cooldown = 0;
+        }
+        off += sizeof(MapDynamicSlot) * 16;
     }
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
-
-    for (layer = 0; layer < 5; layer++)
-    {
-        u8* idx = mapGetBlockIdx(layer);
-        for (gridZ = 0, rowOffset = 0; gridZ < 0x10; rowOffset += 0x10, gridZ++)
-        {
-            f32 blockZ;
-            gridX = 0;
-            blockIndex = rowOffset;
-            blockZ = gTrackGridCellSize * gridZ;
-            for (; gridX < 0x10; blockIndex++, gridX++)
-            {
-                if ((s8)idx[blockIndex] >= 0)
-                {
-                    MapBlockData* blk = mapGetBlock((s8)idx[blockIndex]);
-                    f32 blockX;
-                    sourceIndex = 0;
-                    sourceOffset = 0;
-                    blockX = gTrackGridCellSize * gridX;
-                    for (; sourceIndex < blk->hitCount; sourceOffset += 0x14, sourceIndex++)
-                    {
-                        if (gIntersectLineCount < 0x5dc)
-                        {
-                            IntersectModLineSource* sourceLine =
-                                (IntersectModLineSource*)((u8*)blk->hits + sourceOffset);
-                            s16* sourcePoints = sourceLine->x;
-                            IntersectLine* rec = (IntersectLine*)(lbl_803DCF34 + gIntersectLineCount * 0x10);
-                            f32 mapOriginX, mapOriginZ;
-                            rec->end0 = sourceLine->endpointData[0];
-                            rec->end1 = sourceLine->endpointData[1];
-                            rec->kind = sourceLine->kind;
-                            if ((rec->kind & 0x3f) == 0x11)
-                            {
-                                rec->kind &= ~0x3f;
-                                rec->kind |= 2;
-                            }
-                            rec->flags = sourceLine->flags;
-                            *(s8*)&rec->flags = rec->flags ^ 0x10;
-                            rec->param = sourceLine->param;
-                            mapOriginX = blockX + playerMapOffsetX;
-                            mapOriginZ = blockZ + playerMapOffsetZ;
-                            endpoint = 0;
-                            sourceCoord = sourcePoints;
-                            linePoint = (u8*)rec;
-                            for (; endpoint < 2; sourceCoord++, linePoint += 2, endpoint++)
-                            {
-                                pointX = mapOriginX + sourceCoord[0];
-                                pointY = sourceCoord[2];
-                                pointZ = sourceCoord[4] + mapOriginZ;
-                                if (gIntersectPointCount < 0x6a4)
-                                {
-                                    *(s16*)(linePoint + 4) =
-                                        insertPoint(gIntersectLineCount, edges, pointX, pointY, pointZ);
-                                }
-                            }
-                            counts[rec->kind & 0x3f]++;
-                            gIntersectLineCount++;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    i = 0;
-    lineOffset = i;
-    for (; i < gIntersectLineCount; lineOffset += sizeof(IntersectLine), i++)
-    {
-        int pointIndex;
-        s16* pointEdges;
-        s16 adjacentLine;
-
-        line = (IntersectLine*)(lbl_803DCF34 + lineOffset);
-        pointIndex = line->pt[0] * 2;
-        pointEdges = &edges[pointIndex];
-        adjacentLine = pointEdges[0];
-        if (adjacentLine > -1 && adjacentLine != i)
-        {
-            line->adj[0] = adjacentLine;
-        }
-        else
-        {
-            adjacentLine = pointEdges[1];
-            if (adjacentLine > -1 && adjacentLine != i)
-            {
-                line->adj[0] = adjacentLine;
-            }
-            else
-            {
-                line->adj[0] = -1;
-            }
-        }
-        pointIndex = line->pt[1] * 2;
-        pointEdges = &edges[pointIndex];
-        adjacentLine = pointEdges[0];
-        if (adjacentLine > -1 && adjacentLine != i)
-        {
-            line->adj[1] = adjacentLine;
-        }
-        else
-        {
-            adjacentLine = pointEdges[1];
-            if (adjacentLine > -1 && adjacentLine != i)
-            {
-                line->adj[1] = adjacentLine;
-            }
-            else
-            {
-                line->adj[1] = -1;
-            }
-        }
-    }
-
-    if (lbl_803DCF40 != 0)
-    {
-        for (i = 0, lineOffset = i; i < gIntersectLineCount; i++, lineOffset += 2)
-        {
-            *(s16*)(lbl_803DCF40 + lineOffset) = i;
-        }
-        sortComplete = 0;
-        while (sortComplete == 0)
-        {
-            sortComplete = 1;
-            for (sortIndex = 0, lineOffset = sortIndex; sortIndex < gIntersectLineCount - 1;
-                 lineOffset += 2, sortIndex++)
-            {
-                int firstType;
-
-                lineBytes = (u8*)lbl_803DCF34;
-                sortOrder = (s16*)(lbl_803DCF40 + lineOffset);
-                firstLine = sortOrder[0];
-                firstType = (s8)lineBytes[firstLine * sizeof(IntersectLine) + 3] & 0x3f;
-                secondLine = sortOrder[1];
-                if (firstType < ((s8)lineBytes[secondLine * sizeof(IntersectLine) + 3] & 0x3f))
-                {
-                    sortOrder[0] = secondLine;
-                    *(s16*)(lbl_803DCF40 + lineOffset + 2) = firstLine;
-                    sortComplete = 0;
-                }
-            }
-        }
-    }
-
-    for (i = 0x46; i != 0; i--)
-    {
-        counts[i - 1] += counts[i];
-    }
-
-    for (i = 0, lineOffset = i; i < gIntersectLineCount; lineOffset += sizeof(IntersectLine), i++)
-    {
-        int typeIndex = ((s8) * (u8*)(lbl_803DCF34 + lineOffset + 3) & 0x3f) + 1;
-        s16 typeOffset = counts[typeIndex]++;
-        *(s16*)(gIntersectLineIndexTable + typeOffset * 2) = i;
-    }
-
-    for (i = 0; i < gIntersectLineCount - 1; i++)
-    {
-    }
-
-    for (i = 0; i < 40; i++)
-    {
-        gIntersectSegmentTypeTable[i] = 0xffff;
-    }
-
-    previousType = -1;
-    orderIndex = 0;
-    orderOffset = orderIndex;
-    for (; orderIndex < gIntersectLineCount; orderOffset += 2, orderIndex++)
-    {
-        segmentType =
-            (s16)((s8) * (u8*)(lbl_803DCF34 + *(s16*)(gIntersectLineIndexTable + orderOffset) * 0x10 + 3) &
-                  0x3f);
-        if (segmentType >= 0x14)
-        {
-            segmentType = 1;
-            debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
-        }
-        if (previousType != segmentType)
-        {
-            u16 v = orderIndex;
-            int ti = segmentType * 2;
-            gIntersectSegmentTypeTable[ti] = v;
-            if (previousType != -1)
-            {
-                int pi = previousType * 2;
-                gIntersectSegmentTypeTable[pi + 1] = v;
-            }
-            previousType = segmentType;
-        }
-    }
-    if (previousType != -1)
-    {
-        int pi = previousType * 2;
-        gIntersectSegmentTypeTable[pi + 1] = gIntersectLineCount;
-    }
-    lbl_803DCF44 = 1;
+    mapBlockFlag = 0;
+    lbl_803DCF4F = 0;
 }
 
-int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
+void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
 {
-    f32* p;
-    f32* base;
+    u32 fmt;
+    u32 w;
+    u32 h;
+    u32 wA;
+    int rowDataOffset;
+    int tileColumnOffset;
+    int pixelColumnOffset;
+    int pixelA;
+    int pixelB;
+    int j;
     int i;
-    int n;
+    u32 wB;
+    int redB;
+    int redA;
+    int blue;
+    int red;
+    int green;
+    u16 outputPixel;
 
-    i = 0;
-    p = base = lbl_803DCF38;
-    n = gIntersectPointCount;
-    for (; i < n; i++)
+    if (src1 == NULL)
+        return;
+    if (src2 == NULL)
+        return;
+    if (dst == NULL)
+        return;
+    fmt = src1->format;
+    if (fmt != 4 && fmt != 6)
+        return;
+    if (src2->format != fmt)
+        return;
+    if (dst->format != fmt)
+        return;
+    w = src1->width;
+    if (w != src2->width)
+        return;
+    h = src1->height;
+    if (h != src2->height)
+        return;
+    if (w != dst->width || h != dst->height)
     {
-        if (x == p[0] && y == p[1] && z == p[2])
-        {
-            s16* q = arr + 1;
-            q[i << 1] = val;
-            return i;
-        }
-        p += 3;
+        return;
     }
-    base[n * 3] = x;
-    lbl_803DCF38[gIntersectPointCount * 3 + 1] = y;
-    lbl_803DCF38[gIntersectPointCount * 3 + 2] = z;
-    arr[gIntersectPointCount << 1] = val;
-    arr[(gIntersectPointCount << 1) + 1] = -1;
-    gIntersectPointCount++;
-    return gIntersectPointCount - 1;
+    {
+        wA = (int)(lbl_803DED08 * blend) & 0xff;
+        wB = (0xff - wA) & 0xff;
+        if (fmt == 4)
+        {
+            for (i = 0; i < (int)src1->height; i++)
+            {
+                u8 *pa, *pb, *pc;
+                u32 wd;
+                j = 0;
+                w = i & 0xfffffffc;
+                h = (i & 3) * 8;
+                for (; j < (int)(wd = src1->width); j++)
+                {
+                    pixelColumnOffset = (j & 3) * 2;
+                    pa = (u8*)src1 + pixelColumnOffset;
+                    tileColumnOffset = (j >> 2) * 0x20;
+                    pa += tileColumnOffset;
+                    pa += h;
+                    rowDataOffset = (int)wd * w * 2;
+                    pa += rowDataOffset;
+                    pixelA = *(u16*)(pa + 0x60);
+                    redA = (u8)(((int)(pixelA & 0xf800) >> 8) | ((int)(pixelA & 0xe000) >> 13));
+                    pb = (u8*)src2 + pixelColumnOffset;
+                    pb += tileColumnOffset;
+                    pb += h;
+                    pb += rowDataOffset;
+                    pixelB = *(u16*)(pb + 0x60);
+                    redB = (u8)(((int)(pixelB & 0xf800) >> 8) | ((int)(pixelB & 0xe000) >> 13));
+                    blue = ((u8)(((int)(wA * (u8)(((pixelA & 0x1f) << 3) | ((int)(pixelA & 0x1c) >> 2))) >> 8) +
+                               ((int)(wB * (u8)(((pixelB & 0x1f) << 3) | ((int)(pixelB & 0x1c) >> 2))) >> 8)) &
+                           0xf8) >>
+                          3;
+                    red = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
+                    green = ((u8)(((int)(wA * (u8)(((int)(pixelA & 0x7e0) >> 3) | ((int)(pixelA & 0x600) >> 9))) >> 8) +
+                               ((int)(wB * (u8)(((int)(pixelB & 0x7e0) >> 3) | ((int)(pixelB & 0x600) >> 9))) >> 8)) &
+                           0xfc)
+                          << 3;
+                    outputPixel = blue | (red | green);
+                    pc = (u8*)dst + pixelColumnOffset;
+                    pc += tileColumnOffset;
+                    pc += h;
+                    pc += rowDataOffset;
+                    *(u16*)(pc + 0x60) = outputPixel;
+                }
+            }
+        }
+        else
+        {
+            for (i = 0; i < (int)src1->height; i++)
+            {
+                int tileRowGroupOffset, tileRowOffset;
+                u32 wd;
+                j = 0;
+                tileRowGroupOffset = (i >> 2) * 8;
+                tileRowOffset = (i & 3) * 8;
+                for (; j < (int)(wd = src1->width); j++)
+                {
+                    int pixelColumnOffset = (j & 3) * 2;
+                    int tileColumnOffset;
+                    int rowDataOffset;
+                    u8 *at, *ad, *bd, *bt, *ct, *cd;
+                    int aLo, bLo, aHi, bHi;
+                    bt = (u8*)src1 + pixelColumnOffset;
+                    tileColumnOffset = (j >> 2) * 0x40;
+                    at = bt + tileColumnOffset;
+                    bt = at + tileRowOffset;
+                    rowDataOffset = (int)wd * tileRowGroupOffset * 2;
+                    ad = bt + rowDataOffset;
+                    bt = (u8*)src2 + pixelColumnOffset;
+                    bt += tileColumnOffset;
+                    bt += tileRowOffset;
+                    bd = bt + rowDataOffset;
+                    aLo = (u8) * (u16*)(ad + 0x60);
+                    bLo = (u8) * (u16*)(bd + 0x60);
+                    pixelA = *(u16*)(ad + 0x80);
+                    aHi = (u8)((int)(pixelA & 0xff00) >> 8);
+                    pixelB = *(u16*)(bd + 0x80);
+                    bHi = (u8)((int)(pixelB & 0xff00) >> 8);
+                    ct = (u8*)dst + pixelColumnOffset;
+                    cd = ct + tileColumnOffset;
+                    cd += tileRowOffset;
+                    cd += 0x60;
+                    *(u16*)(cd + rowDataOffset) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
+                    *(u16*)(cd + (int)src1->width * tileRowGroupOffset * 2 + 0x20) =
+                        ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8) |
+                        (u8)(((int)(wA * (u8)pixelA) >> 8) + ((int)(wB * (u8)pixelB) >> 8));
+                }
+            }
+        }
+        DCStoreRange((u8*)dst + sizeof(Texture), dst->dataSize);
+    }
 }
 
-/* doLotsOfMath -- sweep a 2D segment (with radius) against the intersection
- * line table, sliding/clipping the end point; fills *out with the last hit. */
-int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* obj, int pmask, int seg, int ytol,
-                 int self)
+void fn_80069EB8(int param)
 {
-    f32* A = ptA;
-    f32 fracs[5];
-    f32 dists[5];
-    f32 lb[4], la[4], ld[4];
-    s16 hits[6];
-    f32 posX[2];
-    f32 posZ[2];
-    s16 m[2];
-    int si16;
-    int si2;
-    s16* hitp;
-    int start;
-    f32* fracp;
-    u8 flag4;
-    s16* ep;
-    u8* rp;
-    f32* distp;
-    s8 mask;
-    int i;
-    int found;
-    int count;
-    int end;
-    u32 lineIdx;
-    int vt, vp;
-    s8 lineType;
-    s8 flag1;
-    s8 flag2;
-    f32 dist;
-    f32 len, ax2, ay2, az2, bx2, by2, bz2, dx, dz;
-    f32 minX, maxX, minZ, maxZ;
+    u8* cache;
+    int hi, mid;
+    u32 scaled;
+    u32 j;
+    int blk;
 
-    if (obj != NULL)
+    cache = getCache();
+    for (blk = 0; (u32)blk < 0x40; blk++)
     {
-        if ((s8)seg != -1)
+        j = 0;
+        hi = ((u32)blk >> 2) << 8;
+        mid = (blk & 3) << 3;
+        scaled = (blk + param) * 0xff;
+        for (; j < 0x40; j++)
         {
-            u8* tbl = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x38);
-            start = tbl[(s8)seg * 2];
-            end = tbl[(s8)seg * 2 + 1];
-        }
-        else
-        {
-            start = 0;
-            end = *(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x5c);
-        }
-        lineIdx = 0;
-        vt = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x34);
-        vp = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x3c);
-        if (((GameObject*)obj)->objectFlags & 0x100)
-        {
-            end = 0;
+            int idx;
+            u32 s;
+            s = (j & 7) + ((j >> 3) << 5);
+            s += mid;
+            idx = s + hi;
+            s = scaled;
+            if (s > 0x3fc0)
+            {
+                s = 0x3fc0;
+            }
+            cache[idx] = (s * j) >> 12;
         }
     }
-    else
-    {
-        if ((s8)seg != -1)
-        {
-            int idx = (s8)seg * 2;
-            start = gIntersectSegmentTypeTable[idx];
-            end = gIntersectSegmentTypeTable[idx + 1];
-        }
-        else
-        {
-            start = 0;
-            end = gIntersectLineCount;
-        }
-        lineIdx = gIntersectLineIndexTable;
-        vt = lbl_803DCF34;
-        vp = (int)lbl_803DCF38;
-    }
-
-    flag1 = !(flags & 1);
-    flag2 = flags & 2;
-    flag4 = flags & 4;
-
-    {
-        f32 x1, x0;
-        x0 = A[0];
-        posX[0] = x0;
-        posZ[0] = A[2];
-        x1 = ((f32*)ptB)[0];
-        posX[1] = x1;
-        posZ[1] = ((f32*)ptB)[2];
-        if (x0 < x1)
-        {
-            minX = x0;
-            maxX = x1;
-        }
-        else
-        {
-            minX = x1;
-            maxX = x0;
-        }
-    }
-    if (posZ[0] < posZ[1])
-    {
-        minZ = posZ[0];
-        maxZ = posZ[1];
-    }
-    else
-    {
-        minZ = posZ[1];
-        maxZ = posZ[0];
-    }
-    minX = minX - radius;
-    maxX = maxX + radius;
-    minZ = minZ - radius;
-    maxZ = maxZ + radius;
-    minX = minX - lbl_803DECCC;
-    maxX = maxX + lbl_803DECCC;
-    minZ = minZ - lbl_803DECCC;
-    maxZ = maxZ + lbl_803DECCC;
-
-    count = 0;
-    found = 1;
-    hitp = hits;
-    fracp = fracs;
-    distp = dists;
-    mask = pmask;
-    si2 = start << 1;
-    si16 = start << 4;
-
-    while (found)
-    {
-        found = 0;
-        for (i = start, ep = (s16*)(lineIdx + si2), rp = (u8*)(vt + si16); i < end; ep++, rp += 0x10, i++)
-        {
-            u8* rec;
-            int i0, i1;
-            f32 *va, *vb;
-            f32 ha, ylo, hb, yhi;
-
-            dist = lbl_803DECD0;
-            if (lineIdx != 0)
-            {
-                rec = (u8*)(vt + ep[0] * 0x10);
-            }
-            else
-            {
-                rec = rp;
-            }
-            if ((mask & ~(s8)rec[2]) == 0)
-                continue;
-            if ((s8)rec[3] & 0x40)
-                continue;
-            i0 = *(s16*)(rec + 4);
-            i1 = *(s16*)(rec + 6);
-            if ((s8)rec[3] & 0x80)
-            {
-                if (flag4 != 0)
-                    continue;
-                lineType = 0;
-            }
-            else
-            {
-                lineType = 1;
-            }
-            if (flag2 != 0)
-            {
-                lineType = 1;
-            }
-            va = (f32*)(vp + i0 * 0xc);
-            ax2 = va[0];
-            ay2 = va[1];
-            az2 = va[2];
-            vb = (f32*)(vp + i1 * 0xc);
-            bx2 = vb[0];
-            by2 = vb[1];
-            bz2 = vb[2];
-            if (ax2 < minX && bx2 < minX)
-                continue;
-            if (ax2 > maxX && bx2 > maxX)
-                continue;
-            if (az2 < minZ && bz2 < minZ)
-                continue;
-            if (az2 > maxZ && bz2 > maxZ)
-                continue;
-
-            ylo = ay2;
-            if (by2 < ay2)
-                ylo = by2;
-            ylo = ylo - (f32)(s8)ytol;
-            if ((s8)rec[2] & 0x80)
-            {
-                ha = (f32) * (s16*)rec;
-                hb = ha;
-            }
-            else
-            {
-                ha = (f32)(s8)rec[0];
-                hb = (f32)(s8)rec[1];
-            }
-            {
-                f32 ta = ay2 + ha;
-                yhi = ta;
-                if (by2 + hb > ta)
-                    yhi = by2 + hb;
-            }
-            yhi = yhi + (f32)(s8)ytol;
-            if (A[1] < ylo)
-                continue;
-            if (A[1] > yhi)
-                continue;
-
-            dx = bx2 - ax2;
-            dz = bz2 - az2;
-            {
-                f32 dd = dx * dx + dz * dz;
-                if (lbl_803DECB4 == dd)
-                    continue;
-                len = sqrtf(dd);
-            }
-            dx = dx / len;
-            dz = dz / len;
-            lb[0] = dx;
-            la[0] = dz;
-            ld[0] = -(dx * ax2 + dz * az2);
-            lb[1] = -dx;
-            la[1] = -dz;
-            ld[1] = -(lb[1] * bx2 + la[1] * bz2);
-            lb[2] = -dz;
-            la[2] = dx;
-            {
-                f32 q0 = lb[2] * (lbl_803DECB8 * lb[2] + ax2);
-                f32 q1 = la[2] * (lbl_803DECB8 * la[2] + az2);
-                ld[2] = -(q0 + q1);
-            }
-            lb[3] = dz;
-            la[3] = -dx;
-            {
-                f32 q0 = lb[3] * (radius * lb[3] + ax2);
-                f32 q1 = la[3] * (radius * la[3] + az2);
-                ld[3] = -(q0 + q1);
-            }
-            lbl_803DCF54 = lbl_803DECD4 * (lb[3] * radius);
-            lbl_803DCF50 = lbl_803DECD4 * (la[3] * radius);
-
-            {
-                f32 *ap, *bp, *dp;
-                s16* mp;
-                f32* zp;
-                f32* xp;
-                int mi;
-                int n;
-                mi = 0;
-                mp = m;
-                zp = posZ;
-                xp = posX;
-                dist = lbl_803DECB4;
-                do
-                {
-                    s16 mb = 1;
-                    f32 pz, px;
-                    *mp = 0;
-                    n = 0;
-                    pz = zp[0];
-                    px = xp[0];
-                    ap = la;
-                    bp = lb;
-                    dp = ld;
-                    for (; n < 4; n++)
-                    {
-                        if (dp[0] + (px * bp[0] + pz * ap[0]) < dist)
-                            *mp |= mb;
-                        mb = (s16)(mb << 1);
-                        ap++;
-                        bp++;
-                        dp++;
-                    }
-                    xp[0] = px;
-                    zp[0] = pz;
-                    mp++;
-                    zp++;
-                    xp++;
-                    mi++;
-                } while (mi < 2);
-            }
-            {
-                s16 mx = m[0] ^ m[1];
-                s16 ma = m[0] & m[1];
-                dist = lbl_803DECC4;
-                if ((m[0] & 0xc) == 0xc)
-                {
-                    if (m[0] & 1)
-                    {
-                        found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
-                        dist = lbl_803DECB4;
-                    }
-                    else if (m[0] & 2)
-                    {
-                        found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
-                        dist = lbl_803DECC4;
-                    }
-                    else if (lineType != 0)
-                    {
-                        posX[1] = posX[1] + lbl_803DCF54;
-                        posZ[1] = posZ[1] + lbl_803DCF50;
-                    }
-                }
-                else if (mx & 0xc)
-                {
-                    if (ma & 1)
-                    {
-                        found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
-                        dist = lbl_803DECB4;
-                    }
-                    else if (ma & 2)
-                    {
-                        found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
-                        dist = lbl_803DECC4;
-                    }
-                    else if (m[0] & 4)
-                    {
-                        f32 sx = posX[1] - posX[0];
-                        f32 sz = posZ[1] - posZ[0];
-                        f32 t0 = ld[3] + (posX[0] * lb[3] + posZ[0] * la[3]);
-                        f32 t1 = ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]);
-                        f32 fr, cx, cz;
-                        s16 ok;
-                        if (t0 != t1)
-                        {
-                            fr = t0 / (t0 - t1);
-                        }
-                        else
-                        {
-                            fr = lbl_803DECB4;
-                        }
-                        cx = sx * fr + posX[0];
-                        cz = sz * fr + posZ[0];
-                        lbl_803DCF58 = fr;
-                        ok = 1;
-                        if (ld[0] + (cx * lb[0] + cz * la[0]) < lbl_803DECB4)
-                        {
-                            found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
-                            ok = 0;
-                            dist = lbl_803DECB4;
-                        }
-                        if (ld[1] + (cx * lb[1] + cz * la[1]) < lbl_803DECB4)
-                        {
-                            found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
-                            ok = 0;
-                            dist = lbl_803DECC4;
-                        }
-                        if (ok != 0)
-                        {
-                            found = 1;
-                            if (lineType != 0)
-                            {
-                                int j;
-                                if (flag1 != 0)
-                                {
-                                    f32 stepLb, stepLa;
-                                    f32 t3 = ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]);
-                                    posX[1] = -(t3 * lb[3] - posX[1]);
-                                    posZ[1] = -(t3 * la[3] - posZ[1]);
-                                    j = 0;
-                                    stepLb = lbl_803DB660 * lb[3];
-                                    stepLa = lbl_803DB660 * la[3];
-                                    while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
-                                    {
-                                        posX[1] += stepLb;
-                                        posZ[1] += stepLa;
-                                        j++;
-                                        if (j > 0xa)
-                                        {
-                                            posX[1] = posX[0];
-                                            posZ[1] = posZ[0];
-                                            break;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    f32 stepLb, stepLa;
-                                    posX[1] = cx;
-                                    posZ[1] = cz;
-                                    j = 0;
-                                    stepLb = lbl_803DB660 * lb[3];
-                                    stepLa = lbl_803DB660 * la[3];
-                                    t1 = ld[3];
-                                    while (t1 + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
-                                    {
-                                        posX[1] += stepLb;
-                                        posZ[1] += stepLa;
-                                        j++;
-                                        if (j > 0xa)
-                                        {
-                                            posX[1] = posX[0];
-                                            posZ[1] = posZ[0];
-                                            break;
-                                        }
-                                    }
-                                }
-                                {
-                                    f32 ddx = posX[1] - ax2;
-                                    f32 ddz = posZ[1] - az2;
-                                    dist = sqrtf(ddx * ddx + ddz * ddz) / len;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (found)
-                break;
-        }
-        if (found)
-        {
-            *hitp = i;
-            *fracp = lbl_803DCF58;
-            *distp = dist;
-            hitp++;
-            fracp++;
-            distp++;
-            count++;
-            if (count > 4)
-            {
-                found = 0;
-                if (lineType != 0)
-                {
-                    posX[1] = posX[0];
-                    posZ[1] = posZ[0];
-                }
-            }
-        }
-    }
-
-    if (count != 0 && out != NULL)
-    {
-        f32* outf = out;
-        int pick = count - 1;
-        int hi;
-        s16* rec2;
-        f32 fa, fb;
-        f32 *va2, *vb2;
-        f32 dx, dz;
-        if (flag1 == 0)
-        {
-            pick = 0;
-        }
-        dx = ((f32*)ptB)[0] - posX[0];
-        dz = ((f32*)ptB)[2] - posZ[0];
-        outf[0x11] = fracs[0] * sqrtf(dx * dx + dz * dz);
-        outf[0x12] = dists[pick];
-        hi = hits[pick];
-        if (lineIdx != 0)
-        {
-            rec2 = (s16*)(vt + *(s16*)(lineIdx + hi * 2) * 0x10);
-        }
-        else
-        {
-            rec2 = (s16*)(vt + hi * 0x10);
-        }
-        {
-            int j0 = rec2[2];
-            int j1 = rec2[3];
-            if ((s8) * (u8*)((u8*)rec2 + 2) & 0x80)
-            {
-                fa = rec2[0];
-                fb = fa;
-            }
-            else
-            {
-                fa = (f32)(s8) * (u8*)rec2;
-                fb = (f32)(s8) * ((u8*)rec2 + 1);
-            }
-            outf[1] = ((f32*)vp)[j0 * 3];
-            va2 = (f32*)(vp + j0 * 0xc);
-            outf[3] = va2[1];
-            outf[0xf] = outf[3] + fa;
-            outf[5] = va2[2];
-            outf[2] = ((f32*)vp)[j1 * 3];
-            vb2 = (f32*)(vp + j1 * 0xc);
-            outf[4] = vb2[1];
-            outf[0x10] = outf[4] + fb;
-            outf[6] = vb2[2];
-            *(s8*)((u8*)out + 0x50) = (s8)(*((u8*)rec2 + 3) & 0x3f);
-            *((u8*)out + 0x52) = *((u8*)rec2 + 2);
-            *(s8*)((u8*)out + 0x51) = rec2[6];
-            *(int**)out = obj;
-            *(s16*)((u8*)out + 0x4c) = rec2[4];
-            *(s16*)((u8*)out + 0x4e) = rec2[5];
-        }
-    }
-    if (count != 0)
-    {
-        lbl_803DCF4C++;
-        count = 1;
-        ((f32*)ptB)[0] = posX[1];
-        ((f32*)ptB)[2] = posZ[1];
-    }
-    return count;
-}
-
-/* hitDetect_800667ec -- sweep each input sphere against the gathered triangle
- * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
-char sTrackHitOverflowError[] = "HIT OVERFLOW\n";
-
-int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
-                      int flagsArg)
-{
-    TrackBlockDescriptor* descBase;
-    f32 *ep1, *ep2;
-    f32 *sp1, *sp2;
-    u8* slotp;
-    u8* typeSlotp;
-    f32* outp;
-    f32 *szp, *syp, *wzp, *wyp;
-    f32 *edge1p, *edge2p, *vbp, *evecp;
-    u8 found;
-    u8* slotBase;
-    s16 i;
-    u8 retLo;
-    u8 curBit;
-    u8 retHi;
-    u8 typeb;
-    u8 typeb2;
-    TrackBlockDescriptor* descSave;
-    u8 type;
-    f32 edge2[4];
-    f32 edge1[4];
-    f32 edge0[4];
-    f32 rdata[3];
-    f32* rdatap = rdata;
-    f32 evec[3];
-    f32 vb[3];
-    f32 va[3];
-    f32 ws[3];
-    f32 we[3];
-    f32 delta[3];
-    f32 hitpt[3];
-    f32 cur[3];
-    f32 plane[4];
-    f32 norm4[4];
-    f32 svFrom[3];
-    f32* svFromp = svFrom;
-    f32 svHit[3];
-    f32 svWorld[3];
-    f32 dir[3];
-    f32 tmp1[3];
-    f32 tmp2[3];
-    f32 frac;
-    f32 ndot;
-    f32 dS;
-    f32 dotv;
-    f32 sq;
-    f32 disc;
-    f32 root;
-    f32 tt;
-    f32 rr;
-    f32 dE;
-    u8 vertexBit;
-    u8 nextBit;
-    u8 bounces;
-    int hit;
-    TrackTriangle* tri;
-    u32 objmtx;
-    TrackBlockDescriptor* desc;
-    f32 eps;
-    f32 negStep, radius, maxStep;
-    f32 offX, offZ;
-    f32 mag;
-    TrackBlockDescriptor* descEnd;
-
-    slotBase = (u8*)slots;
-    descEnd = gTrackBlockDescriptors + gActiveTrackBlockCount;
-    descBase = gTrackBlockDescriptors;
-    offX = (f32) * (int*)gTrackGridOrigin;
-    offZ = (f32) * (int*)(gTrackGridOrigin + 8);
-    i = 0;
-    retLo = 0;
-    retHi = 0;
-    curBit = 1;
-    ep1 = endPos;
-    ep2 = endPos;
-    sp1 = startPos;
-    sp2 = startPos;
-    slotp = slots;
-    outp = slots;
-    wyp = &we[1];
-    wzp = &we[2];
-    szp = &ws[2];
-    syp = &ws[1];
-    edge1p = edge1;
-    edge2p = edge2;
-    vbp = vb;
-    evecp = evec;
-    eps = lbl_803DECB4;
-    do
-    {
-        cur[0] = ep1[0];
-        cur[1] = ep2[1];
-        cur[2] = ep2[2];
-        svFromp[0] = sp1[0];
-        svFromp[1] = sp2[1];
-        svFromp[2] = sp2[2];
-        radius = *(f32*)(slotp + 0x40);
-        typeSlotp = slotBase + i;
-        type = slotBase[i + 0x54];
-        maxStep = radius + lbl_803DB660;
-        rdatap[0] = radius;
-        rdatap[1] = radius * radius;
-        bounces = 0;
-        negStep = -maxStep;
-        do
-        {
-            we[0] = cur[0];
-            we[1] = cur[1];
-            we[2] = cur[2];
-            found = 0;
-            hit = 0;
-            for (desc = descBase; (u32)desc < (u32)descEnd; desc++)
-            {
-                if (desc->object != NULL)
-                {
-                    Matrix_TransformPoint(desc->alternateMatrix, svFromp[0], svFromp[1], svFromp[2], &ws[0], syp, szp);
-                    Matrix_TransformPoint(desc->currentMatrix, cur[0], cur[1], cur[2], &we[0], wyp, wzp);
-                }
-                else
-                {
-                    ws[0] = svFromp[0] - offX;
-                    ws[1] = svFromp[1];
-                    ws[2] = svFromp[2] - offZ;
-                    we[0] = cur[0] - offX;
-                    wyp[0] = cur[1];
-                    wzp[0] = cur[2] - offZ;
-                }
-                PSVECSubtract(we, ws, delta);
-                mag = PSVECMag(delta);
-                if (mag > eps)
-                {
-                    PSVECNormalize(delta, dir);
-                }
-                for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
-                     (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
-                {
-                    s16* ts = (s16*)tri;
-                    u8 b;
-                    tri->edgeOutBits = 0;
-                    if (tri->flags & 0x10)
-                        continue;
-                    plane[0] = tri->planeN[0];
-                    plane[1] = tri->planeN[1];
-                    plane[2] = tri->planeN[2];
-                    plane[3] = tri->planeD;
-                    dE = (plane[3] + PSVECDotProduct(plane, we)) - radius;
-                    if (!(dE <= 0.0f))
-                        continue;
-                    dS = (plane[3] + PSVECDotProduct(plane, ws)) - radius;
-                    if ((dS <= 0.0f && dE >= 0.0f) ||
-                        (dS >= 0.0f && dE <= 0.0f))
-                    {
-                        if (dS != dE)
-                        {
-                            frac = dS / (dS - dE);
-                        }
-                        else
-                        {
-                            frac = 0.0f;
-                        }
-                        PSVECScale(delta, hitpt, frac);
-                        PSVECAdd(hitpt, ws, hitpt);
-                        if (hitpt[1] < ts[(tri->minMaxY & 0xf) + 0xb] - maxStep)
-                            continue;
-                        if (hitpt[1] > ts[(tri->minMaxY >> 4) + 0xb] + maxStep)
-                            continue;
-                        edge0[0] = tri->edgeN0[0];
-                        edge0[1] = tri->edgeN0[1];
-                        edge0[2] = tri->edgeN0[2];
-                        edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + ts[0xb] * edge0[1])) +
-                                   PSVECDotProduct(edge0, hitpt);
-                        edge1[0] = tri->edgeN1[0];
-                        edge1[1] = tri->edgeN1[1];
-                        edge1[2] = tri->edgeN1[2];
-                        edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1])) +
-                                   PSVECDotProduct(edge1p, hitpt);
-                        edge2[0] = tri->edgeN2[0];
-                        edge2[1] = tri->edgeN2[1];
-                        edge2[2] = tri->edgeN2[2];
-                        edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1])) +
-                                   PSVECDotProduct(edge2p, hitpt);
-                        b = 0;
-                        if (radius > 0.0f)
-                        {
-                            if (edge0[3] > 0.0f)
-                                b |= 1;
-                            if (edge1[3] > 0.0f)
-                                b |= 2;
-                            if (edge2[3] > 0.0f)
-                                b |= 4;
-                        }
-                        if (b == 0)
-                        {
-                            hit = 1;
-                            break;
-                        }
-                        tri->edgeOutBits = b;
-                    }
-                    else if (dE >= negStep && radius > 0.0f)
-                    {
-                        edge0[0] = tri->edgeN0[0];
-                        edge0[1] = tri->edgeN0[1];
-                        edge0[2] = tri->edgeN0[2];
-                        edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + ts[0xb] * edge0[1])) +
-                                   PSVECDotProduct(edge0, ws);
-                        edge1[0] = tri->edgeN1[0];
-                        edge1[1] = tri->edgeN1[1];
-                        edge1[2] = tri->edgeN1[2];
-                        edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + ts[0xc] * edge1[1])) +
-                                   PSVECDotProduct(edge1p, ws);
-                        edge2[0] = tri->edgeN2[0];
-                        edge2[1] = tri->edgeN2[1];
-                        edge2[2] = tri->edgeN2[2];
-                        edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + ts[0xd] * edge2[1])) +
-                                   PSVECDotProduct(edge2p, ws);
-                        b = 0;
-                        if (edge0[3] > 0.0f)
-                            b |= 1;
-                        if (edge1[3] > 0.0f)
-                            b |= 2;
-                        if (edge2[3] > 0.0f)
-                            b |= 4;
-                        tri->edgeOutBits = b;
-                    }
-                }
-                if (hit == 0)
-                {
-                    if (mag == 0.0f)
-                        continue;
-                    for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
-                         (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
-                    {
-                        u8 edgeBit;
-                        if (tri->edgeOutBits == 0)
-                            continue;
-                        for (edgeBit = 0; edgeBit < 3; edgeBit++)
-                        {
-                            s16* vs;
-                            u8 k;
-                            if ((tri->edgeOutBits & (1 << edgeBit)) == 0)
-                                continue;
-                            k = edgeBit + 1;
-                            if (k > 2)
-                                k = 0;
-                            vs = (s16*)((u8*)tri + edgeBit * 2);
-                            va[0] = vs[8];
-                            va[1] = vs[0xb];
-                            va[2] = vs[0xe];
-                            vs = (s16*)((u8*)tri + k * 2);
-                            vb[0] = vs[8];
-                            vb[1] = vs[0xb];
-                            vb[2] = vs[0xe];
-                            PSVECSubtract(vbp, va, evecp);
-                            rdatap[2] = Vec3_Normalize(evecp);
-                            if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, 0.0f, hitpt, plane,
-                                                     &frac))
-                            {
-                                hit = 1;
-                                break;
-                            }
-                        }
-                        if (hit != 0)
-                            break;
-                    }
-                    if (hit == 0)
-                    for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
-                         (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
-                    {
-                        if (tri->edgeOutBits == 0)
-                            continue;
-                        for (vertexBit = 0; vertexBit < 3; vertexBit++)
-                        {
-                            s16* vs;
-                            int ok;
-                            if ((tri->edgeOutBits & (1 << vertexBit)) == 0)
-                                continue;
-                            nextBit = vertexBit + 1;
-                            if (nextBit > 2)
-                                nextBit = 0;
-                            vs = (s16*)((u8*)tri + vertexBit * 2);
-                            va[0] = vs[8];
-                            va[1] = vs[0xb];
-                            va[2] = vs[0xe];
-                            rr = rdatap[1];
-                            PSVECSubtract(va, ws, tmp1);
-                            dotv = PSVECDotProduct(tmp1, dir);
-                            sq = PSVECSquareMag(tmp1);
-                            if (dotv < 0.0f && sq > rr)
-                            {
-                                ok = 0;
-                            }
-                            else
-                            {
-                                disc = -(dotv * dotv - sq);
-                                if (disc > rr)
-                                {
-                                    ok = 0;
-                                }
-                                else
-                                {
-                                    root = sqrtf(rr - disc);
-                                    if (sq > rr)
-                                    {
-                                        dotv = dotv - root;
-                                    }
-                                    else
-                                    {
-                                        dotv = dotv + root;
-                                    }
-                                    if (dotv >= 0.0f && dotv <= mag)
-                                    {
-                                        PSVECScale(dir, hitpt, dotv);
-                                        PSVECAdd(ws, hitpt, hitpt);
-                                        PSVECSubtract(hitpt, va, plane);
-                                        PSVECNormalize(plane, plane);
-                                        root = sqrtf(rr);
-                                        ndot = -PSVECDotProduct(hitpt, plane);
-                                        plane[3] = ndot + root;
-                                        frac = dotv;
-                                        ok = 1;
-                                    }
-                                    else
-                                    {
-                                        ok = 0;
-                                    }
-                                }
-                            }
-                            if (ok)
-                            {
-                                hit = 1;
-                                break;
-                            }
-                            vs = (s16*)((u8*)tri + nextBit * 2);
-                            vb[0] = vs[8];
-                            vb[1] = vs[0xb];
-                            vb[2] = vs[0xe];
-                            dE = rdatap[1];
-                            PSVECSubtract(vbp, ws, tmp2);
-                            sq = PSVECDotProduct(tmp2, dir);
-                            dotv = PSVECSquareMag(tmp2);
-                            if (sq < 0.0f && dotv > dE)
-                            {
-                                ok = 0;
-                            }
-                            else
-                            {
-                                disc = -(sq * sq - dotv);
-                                if (disc > dE)
-                                {
-                                    ok = 0;
-                                }
-                                else
-                                {
-                                    root = sqrtf(dE - disc);
-                                    if (dotv > dE)
-                                    {
-                                        tt = sq - root;
-                                    }
-                                    else
-                                    {
-                                        tt = sq + root;
-                                    }
-                                    if (tt >= 0.0f && tt <= mag)
-                                    {
-                                        PSVECScale(dir, hitpt, tt);
-                                        PSVECAdd(ws, hitpt, hitpt);
-                                        PSVECSubtract(hitpt, vbp, plane);
-                                        PSVECNormalize(plane, plane);
-                                        root = sqrtf(dE);
-                                        ndot = -PSVECDotProduct(hitpt, plane);
-                                        plane[3] = ndot + root;
-                                        frac = tt;
-                                        ok = 1;
-                                    }
-                                    else
-                                    {
-                                        ok = 0;
-                                    }
-                                }
-                            }
-                            if (ok)
-                            {
-                                hit = 1;
-                                break;
-                            }
-                        }
-                        if (hit != 0)
-                            break;
-                    }
-                }
-                if (hit != 0)
-                {
-                    u32 triFlags;
-                    we[0] = hitpt[0];
-                    we[1] = hitpt[1];
-                    we[2] = hitpt[2];
-                    norm4[0] = plane[0];
-                    norm4[1] = plane[1];
-                    norm4[2] = plane[2];
-                    norm4[3] = plane[3];
-                    typeb = tri->surfaceType;
-                    triFlags = *(u8*)&tri->flags;
-                    typeb2 = (u8)triFlags;
-                    objmtx = *(u32*)desc;
-                    svWorld[0] = ws[0];
-                    svWorld[1] = ws[1];
-                    svWorld[2] = ws[2];
-                    svHit[0] = hitpt[0];
-                    svHit[1] = hitpt[1];
-                    svHit[2] = hitpt[2];
-                    descSave = desc;
-                    found = 1;
-                    if ((u8)type == 7)
-                    {
-                        outp[0] = norm4[0];
-                        outp[1] = norm4[1];
-                        outp[2] = norm4[2];
-                        outp[3] = norm4[3];
-                        typeSlotp[0x50] = typeb;
-                        typeSlotp[0x58] = (u8)triFlags;
-                        *(int*)(slotp + 0x5c) = objmtx;
-                        bounces++;
-                        found = 0;
-                    }
-                    break;
-                }
-            }
-            if (found != 0)
-            {
-                bounces++;
-                if (bounces > 10)
-                {
-                    logPrintf(sTrackHitOverflowError);
-                    cur[0] = svFromp[0];
-                    cur[1] = svFromp[1];
-                    cur[2] = svFromp[2];
-                    found = 0;
-                }
-                else
-                {
-                    f32 pen;
-                    if (objmtx != 0)
-                    {
-                        Matrix_TransformPoint(descSave->currentMatrix, cur[0], cur[1], cur[2], &cur[0], &cur[1],
-                                              &cur[2]);
-                    }
-                    else
-                    {
-                        cur[0] = cur[0] - offX;
-                        cur[2] = cur[2] - offZ;
-                    }
-                    pen = norm4[3] + (cur[2] * norm4[2] + (cur[0] * norm4[0] + cur[1] * norm4[1]));
-                    pen = pen - radius;
-                    fn_800660C8(svWorld, cur, svHit, norm4, pen, maxStep, type);
-                    if (objmtx != 0)
-                    {
-                        Matrix_TransformPoint(descSave->currentCollisionMatrix, cur[0], cur[1], cur[2], &cur[0],
-                                              &cur[1], &cur[2]);
-                    }
-                    else
-                    {
-                        cur[0] = cur[0] + offX;
-                        cur[2] = cur[2] + offZ;
-                    }
-                    outp[0] = norm4[0];
-                    outp[1] = norm4[1];
-                    outp[2] = norm4[2];
-                    outp[3] = norm4[3];
-                    typeSlotp[0x50] = typeb;
-                    typeSlotp[0x58] = typeb2;
-                    *(int*)(slotp + 0x5c) = objmtx;
-                }
-            }
-        } while (found != 0);
-        if (bounces != 0)
-        {
-            if (norm4[1] >= lbl_803DECB0 || norm4[1] <= lbl_803DECEC)
-            {
-                retHi |= curBit;
-            }
-            ep1[0] = cur[0];
-            ep2[1] = cur[1];
-            ep2[2] = cur[2];
-            (*(s16*)((u8*)slots + 0x6c))++;
-            retLo |= curBit;
-        }
-        curBit = (u8)(curBit << 1);
-        slotp += 4;
-        outp += 4;
-        i++;
-        ep1 += 3;
-        ep2 += 3;
-        sp1 += 3;
-        sp2 += 3;
-    } while (i < count);
-    return (u8)retLo | ((u8)retHi << 4);
+    memcpyToCache((void*)(lbl_803DCFB8 + 0x60), cache, 0);
+    lbl_803DCF80 = param;
 }
