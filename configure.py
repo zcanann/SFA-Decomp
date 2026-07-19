@@ -1603,7 +1603,7 @@ config.libs = [
             Object(NonMatching, "main/dll/SH/dll_01AC_shqueenearthwalker.c", cflags=cflags_dll_noopt_noinline),
             Object(Matching, "main/dll/lily.c"),
             Object(Matching, "main/dll/dll_1e8.c"),
-            Object(NonMatching, "main/dll/SH/SHthorntail.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/SH/SHthorntail.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/dll/scshgroup.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/SH/dll_01AE_shlevelcontrol.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/SH/dll_01AF_shswaplift.c", cflags=cflags_dll_noopt),
