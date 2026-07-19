@@ -46,7 +46,7 @@ void ExplodeAnimator_update(int* obj)
     int i;
     u8* sub;
     u8* def;
-    f32 buf[6];
+    PartFxSpawnParams buf;
     f32 vel[2];
 
     sub = ((GameObject*)obj)->extra;
@@ -64,13 +64,13 @@ void ExplodeAnimator_update(int* obj)
                                                       ((ExplodeanimatorPlacement*)def)->velXMax);
             vel[1] = 0.01f * (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->velYMin,
                                                       ((ExplodeanimatorPlacement*)def)->velYMax);
-            buf[3] = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->posXMin,
-                                              ((ExplodeanimatorPlacement*)def)->posXMax);
-            buf[4] = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->posYMin,
-                                              ((ExplodeanimatorPlacement*)def)->posYMax);
-            buf[5] = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->posZMin,
-                                              ((ExplodeanimatorPlacement*)def)->posZMax);
-            (*gPartfxInterface)->spawnObject(obj, ((ExplodeanimatorPlacement*)def)->effectId, buf, 2, -1, vel);
+            buf.posX = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->posXMin,
+                                                ((ExplodeanimatorPlacement*)def)->posXMax);
+            buf.posY = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->posYMin,
+                                                ((ExplodeanimatorPlacement*)def)->posYMax);
+            buf.posZ = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->posZMin,
+                                                ((ExplodeanimatorPlacement*)def)->posZMax);
+            (*gPartfxInterface)->spawnObject(obj, ((ExplodeanimatorPlacement*)def)->effectId, &buf, 2, -1, vel);
         }
     }
 }
