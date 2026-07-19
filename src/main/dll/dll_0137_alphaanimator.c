@@ -19,7 +19,7 @@
  */
 #include "main/game_object.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/dll/waveanimatorstate_struct.h"
@@ -79,10 +79,10 @@ void AlphaAnimator_free(int* obj)
         mm_free(p);
 }
 
-void AlphaAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void AlphaAnimator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void AlphaAnimator_hitDetect(void)

@@ -19,7 +19,7 @@ u8 wallanimator_modelMtxFn(int* obj);
 u8 wallanimator_func0B(int* obj);
 int wallanimator_getExtraSize(void);
 void wallanimator_free(int obj);
-void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void wallanimator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void wallanimator_update(GameObject* obj);
 void wallanimator_init(int obj, struct WallanimatorPlacement* desc);
 int XyzAnimator_getExtraSize(void);

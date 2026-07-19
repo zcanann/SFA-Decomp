@@ -17,7 +17,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 /* anim-event opcodes consumed by FEseqobject_SeqFn */
@@ -186,11 +186,11 @@ void FEseqobject_free(void)
 {
 }
 
-void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void FEseqobject_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E56B4);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E56B4);
 }
 
 void FEseqobject_hitDetect(void)

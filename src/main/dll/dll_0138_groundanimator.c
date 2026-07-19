@@ -1,5 +1,5 @@
 /* DLL 0x0138 (groundanimator) - Ground animator object [0x80193100-0x80193DBC). */
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/lightmap_api.h"
@@ -257,11 +257,11 @@ void groundanimator_free(int* obj, int flag)
     ObjGroup_RemoveObject((int)obj, GROUNDANIMATOR_OBJGROUP);
 }
 
-void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void groundanimator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, (1.0f));
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (1.0f));
 }
 
 void groundanimator_update(int* obj)

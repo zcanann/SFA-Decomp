@@ -15,7 +15,7 @@
 #include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/mm.h"
 #include "main/object_descriptor.h"
 
@@ -213,11 +213,11 @@ void waveanimator_free(int* obj)
     ObjGroup_RemoveObject((int)obj, WAVEANIMATOR_OBJGROUP);
 }
 
-void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void waveanimator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, (1.0f));
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (1.0f));
 }
 
 void waveanimator_hitDetect(int* obj)

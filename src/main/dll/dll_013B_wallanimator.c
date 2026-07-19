@@ -16,7 +16,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/dll/groundanimator_state.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/dll/waveanimatorstate_struct.h"
@@ -149,11 +149,11 @@ void wallanimator_free(int obj)
     ObjGroup_RemoveObject(obj, WALLANIMATOR_GROUP_SECONDARY);
 }
 
-void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void wallanimator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void wallanimator_update(GameObject* obj)

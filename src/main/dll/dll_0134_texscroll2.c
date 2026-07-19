@@ -19,7 +19,7 @@
 #include "main/object.h"
 #include "main/rcp_dolphin.h"
 #include "main/dll/dll_0134_texscroll2.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 #include "main/map_texscroll.h"
 
@@ -119,11 +119,11 @@ void texscroll2_free(void)
 {
 }
 
-void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void texscroll2_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void texscroll2_hitDetect(void)

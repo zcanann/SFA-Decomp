@@ -7,7 +7,7 @@
  */
 #include "main/game_object.h"
 #include "main/objfx.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/dll_012F_barrelpad.h"
 #include "main/object_descriptor.h"
 
@@ -40,9 +40,9 @@ void BarrelPad_free(void)
 {
 }
 
-void BarrelPad_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void BarrelPad_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void BarrelPad_hitDetect(void)

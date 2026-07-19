@@ -8,7 +8,7 @@
  */
 #include "main/dll/DB/DBrockfall.h"
 #include "main/game_object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 extern f32 lbl_803E56B8;
 
@@ -25,10 +25,10 @@ void FElevControl_free(void)
 {
 }
 
-void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void FElevControl_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E56B8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E56B8);
 }
 
 void FElevControl_hitDetect(void)

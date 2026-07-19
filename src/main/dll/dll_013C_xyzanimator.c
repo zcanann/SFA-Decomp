@@ -20,7 +20,7 @@
 #include "main/obj_group.h"
 #include "main/mm.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/map_block.h"
 #include "dolphin/os/OSCache.h"
 #include "main/object_descriptor.h"
@@ -191,11 +191,11 @@ void XyzAnimator_free(GameObject* obj, int flag)
     ObjGroup_RemoveObject((int)obj, XYZANIMATOR_OBJGROUP);
 }
 
-void XyzAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void XyzAnimator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)

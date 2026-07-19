@@ -8,7 +8,7 @@
  * init guards on state == NULL before writing (absent in texscroll2).
  */
 #include "main/dll/dll_0135_texscroll.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 int texscroll_getExtraSize(void)
 {
@@ -23,11 +23,11 @@ void texscroll_free(void)
 {
 }
 
-void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void texscroll_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void texscroll_hitDetect(void)

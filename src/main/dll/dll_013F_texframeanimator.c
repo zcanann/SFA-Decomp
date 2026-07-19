@@ -5,7 +5,7 @@
 #include "main/map_block.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/dll_0140_fogcontrol.h"
 #include "main/object_descriptor.h"
 #include "main/shader_ext.h"
@@ -74,7 +74,7 @@ extern u8 sfxplayerObj_update[];
 int TexFrameAnimator_getExtraSize(void);
 int TexFrameAnimator_getObjectTypeId(void);
 void TexFrameAnimator_free(void);
-void TexFrameAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void TexFrameAnimator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void TexFrameAnimator_hitDetect(void);
 void TexFrameAnimator_update(int* obj);
 void TexFrameAnimator_init(int* obj, u8* params);
@@ -113,11 +113,11 @@ void TexFrameAnimator_free(void)
 {
 }
 
-void TexFrameAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void TexFrameAnimator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void TexFrameAnimator_hitDetect(void)
@@ -224,4 +224,3 @@ ObjDescriptorTable gSfxPlayerObjDescriptor = {{0x00000000, 0x00000000, 0x0000000
                                                0x00000000, (u32)sfxplayerObj_init, (u32)sfxplayerObj_update, 0x00000000,
                                                0x00000000, (u32)sfxplayerObj_free, 0x00000000,
                                                (u32)sfxplayerObj_getExtraSize}};
-
