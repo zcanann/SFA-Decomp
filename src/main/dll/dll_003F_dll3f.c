@@ -47,7 +47,7 @@ void dll_3F_updateTimerReadout(void* obj)
     total = 0;
     if (gameTimerIsRunning())
     {
-        gameTimerRunContext(obj);
+        gameTimerRun(obj);
     }
     player = Obj_GetPlayerObject();
     nearest = (void*)ObjGroup_FindNearestObject(9, (int)player, &maxDist);

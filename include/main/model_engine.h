@@ -37,11 +37,8 @@ typedef struct UiDllVTable {
     int (*frameStart)(void);
     void (*frameEnd)(void);
     void (*draw)(void);
+    void (*setState)(int state);
 } UiDllVTable;
-
-typedef int (*ModelEngineGetDll16IntFn)(void);
-typedef u8 (*GameTimerIsRunningContextFn)(void* context, int arg1, int arg2);
-typedef void (*GameTimerContextFn)(void* context);
 
 extern UiDllVTable** gModelEngineCurUiDllRes;
 extern u8 gModelEngineTimerState;
@@ -92,7 +89,7 @@ ModelList* allocModelStruct(int capacity, int dataSize);
 int getUiDllFn_80014930(void);
 void loadUiDll(int index);
 void fn_8001404C(s32 value);
-void hudNumberFn_80014060(void);
+void hudNumberFn_80014060(void* context);
 void set_hudNumber_803db278(s32 value);
 f32 fn_8001461C(void);
 f32 gameTimerGetValue(void);
@@ -100,15 +97,8 @@ void curUiDllDraw(int a, int b, int c, int d);
 void uiDll_runFrameEndAndLoadNext(void);
 int uiDll_runFrameStartAndLoadNext(void);
 void set_uiDllIdx_803dc8f0(int idx);
-void* getDLL16(void);
+UiDllVTable** getDLL16(void);
 void initGameTimer(void);
-void gameTimerRun(void);
-
-/* Preserve the integer handle view used by legacy callers. */
-#define getDLL16Int() (((ModelEngineGetDll16IntFn)getDLL16)())
-#define gameTimerIsRunningContext(context, arg1, arg2) \
-    (((GameTimerIsRunningContextFn)gameTimerIsRunning)((context), (arg1), (arg2)))
-#define gameTimerRunContext(context) (((GameTimerContextFn)gameTimerRun)((context)))
-#define hudNumberRunContext(context) (((GameTimerContextFn)hudNumberFn_80014060)((context)))
+void gameTimerRun(void* context);
 
 #endif /* MAIN_MODEL_ENGINE_H_ */

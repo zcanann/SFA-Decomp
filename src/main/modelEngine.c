@@ -567,7 +567,7 @@ u8 gameTimerIsRunning(void)
     return gModelEngineTimerState & MODELENGINE_TIMER_RUNNING;
 }
 
-void hudNumberFn_80014060(void)
+void hudNumberFn_80014060(void* context)
 {
     if (gModelEngineHudNumber != -1)
     {
@@ -581,7 +581,7 @@ void set_hudNumber_803db278(s32 value)
     gModelEngineHudNumber = value;
 }
 
-void gameTimerRun(void)
+void gameTimerRun(void* context)
 {
     f32 dt = timeDelta;
     u8 colorFlag = 0;
@@ -850,7 +850,7 @@ int getUiDllFn_80014930(void)
     return gModelEnginePrevUiDll;
 }
 
-void* getDLL16(void)
+UiDllVTable** getDLL16(void)
 {
     return gModelEngineCurUiDllRes;
 }

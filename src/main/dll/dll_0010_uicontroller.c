@@ -13,11 +13,11 @@
 
 void UIController_render(void* context, int arg1, int arg2)
 {
-    if (gameTimerIsRunningContext(context, arg1, arg2) != 0)
+    if (gameTimerIsRunning() != 0)
     {
-        gameTimerRunContext(context);
+        gameTimerRun(context);
     }
-    hudNumberRunContext(context);
+    hudNumberFn_80014060(context);
     (*gGameUIInterface)->render(context, arg1, arg2);
 }
 

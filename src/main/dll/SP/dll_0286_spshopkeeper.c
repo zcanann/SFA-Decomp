@@ -127,7 +127,7 @@ int ShopKeeper_SeqFn(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
     void* player;
     int hundreds;
     ObjTextureRuntimeSlot* tex;
-    int* uiDll;
+    UiDllVTable** uiDll;
     f32 range;
     f32 speed;
 
@@ -232,21 +232,21 @@ int ShopKeeper_SeqFn(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
             if (getCurUiDll() == 0x10)
             {
                 uiDll = getDLL16();
-                (*(void (**)(int))(*uiDll + 0x10))(0);
+                (*uiDll)->setState(0);
             }
             break;
         case 6:
             if (getCurUiDll() == 0x10)
             {
                 uiDll = getDLL16();
-                (*(void (**)(int))(*uiDll + 0x10))(2);
+                (*uiDll)->setState(2);
             }
             break;
         case 7:
             if (getCurUiDll() == 0x10)
             {
                 uiDll = getDLL16();
-                (*(void (**)(int))(*uiDll + 0x10))(4);
+                (*uiDll)->setState(4);
             }
             break;
         case 9:
@@ -479,4 +479,3 @@ void ShopKeeper_initialise(void)
     lbl_803AD068[7] = return0_801E66E4;
     lbl_803DDC58 = return0_801E66DC;
 }
-
