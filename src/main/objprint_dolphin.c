@@ -1520,8 +1520,9 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         }
         *(u16*)((char*)am + 0x18) |= 8;
     }
-    modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, ((ModelFileHeader*)m)->instrsBitLenWords << 3,
-                                         ((ModelFileHeader*)m)->instrsBitLenWords << 3);
+    modelRenderInstrsState_init((ModelRenderInstrsState*)&bs, ((ModelFileHeader*)m)->instrs,
+                                ((ModelFileHeader*)m)->instrsBitLenWords << 3,
+                                ((ModelFileHeader*)m)->instrsBitLenWords << 3);
     if (((ModelFileHeader*)m)->shaderFlags & MODEL_SHADERFLAGS_USE_OBJ_COLOR)
     {
         if (gObjOverrideColorPending != 0)
@@ -1850,8 +1851,9 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         *(u16*)((char*)am + 0x18) |= 8;
     }
     modelInitMtxs((ModelFileHeader*)m, (ObjModel*)am);
-    modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, ((ModelFileHeader*)m)->instrsBitLenWords << 3,
-                                         ((ModelFileHeader*)m)->instrsBitLenWords << 3);
+    modelRenderInstrsState_init((ModelRenderInstrsState*)&bs, ((ModelFileHeader*)m)->instrs,
+                                ((ModelFileHeader*)m)->instrsBitLenWords << 3,
+                                ((ModelFileHeader*)m)->instrsBitLenWords << 3);
     if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries != 0)
     {
         PSMTXConcat(vm, wm, cm);
@@ -2203,8 +2205,9 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         }
     }
     modelInitMtxs((ModelFileHeader*)m, (ObjModel*)am);
-    modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, ((ModelFileHeader*)m)->instrsBitLenWords << 3,
-                                         ((ModelFileHeader*)m)->instrsBitLenWords << 3);
+    modelRenderInstrsState_init((ModelRenderInstrsState*)&bs, ((ModelFileHeader*)m)->instrs,
+                                ((ModelFileHeader*)m)->instrsBitLenWords << 3,
+                                ((ModelFileHeader*)m)->instrsBitLenWords << 3);
     {
         f32 inv = lbl_803DEA1C / ((GameObject*)obj)->anim.rootMotionScale;
         PSMTXScale(sm, inv, inv, inv);

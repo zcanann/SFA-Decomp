@@ -2876,7 +2876,7 @@ void mapDebugRender(int* state)
             n = v >> 3;
             if (v & 7)
                 n = n + 1;
-            modelRenderInstrsState_initIntLegacy(state, lbl_803DCE74 + n * cell, v, v);
+            modelRenderInstrsState_init((ModelRenderInstrsState*)state, (void*)(lbl_803DCE74 + n * cell), v, v);
         }
     }
 }

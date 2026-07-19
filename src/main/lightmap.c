@@ -1559,8 +1559,9 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     u8* s0;
 
     countShifted = (int)*(u16*)((char*)obj + 0x84) << 3;
-    modelRenderInstrsState_initPtrLegacy(state, *(void**)((char*)obj + 0x78), countShifted, countShifted);
-    modelRenderInstrsState_setBitIntLegacy(state, (int)*(u16*)((char*)p1 + 0x14));
+    modelRenderInstrsState_init((ModelRenderInstrsState*)state, *(void**)((char*)obj + 0x78), countShifted,
+                                countShifted);
+    modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, (int)*(u16*)((char*)p1 + 0x14));
     state[4] += 4;
     mapBlockRender_drawDimmedAabbLights((u32)p1, (u32)obj, (int)p3);
     newR = mapBlockRender_setLightmapShader((struct MapBlockData*)obj, state);
@@ -1602,9 +1603,9 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     GXLoadTexMtxImm((const f32 (*)[4])m, GX_TEXMTX1, GX_MTX3x4);
     gxTextureSetupFn_8007cf7c();
     countShifted = (int)*(u16*)((char*)obj + 0x88) << 3;
-    modelRenderInstrsState_initPtrLegacy(state, *(void**)&((GameObject *)obj)->anim.previousLocalPosX, countShifted,
-                                         countShifted);
-    modelRenderInstrsState_setBitIntLegacy(state, (int)*(u16*)((char*)p1 + 0x14));
+    modelRenderInstrsState_init((ModelRenderInstrsState*)state,
+                                *(void**)&((GameObject *)obj)->anim.previousLocalPosX, countShifted, countShifted);
+    modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, (int)*(u16*)((char*)p1 + 0x14));
     state[4] += 4;
     newR = mapBlockRender_setShader(1, (struct MapBlockData*)obj, state);
     state[4] += 4;
@@ -1640,8 +1641,9 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 
     fn_8000F8F8();
     countShifted = (int)*(u16*)((char*)obj + 0x86) << 3;
-    modelRenderInstrsState_initPtrLegacy(state, *(void**)&((GameObject *)obj)->anim.banks, countShifted, countShifted);
-    modelRenderInstrsState_setBitIntLegacy(state, (int)*(u16*)((char*)p1 + 0x14));
+    modelRenderInstrsState_init((ModelRenderInstrsState*)state, *(void**)&((GameObject *)obj)->anim.banks,
+                                countShifted, countShifted);
+    modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, (int)*(u16*)((char*)p1 + 0x14));
     state[4] += 4;
     newR = mapBlockRender_setShader(1, (struct MapBlockData*)obj, state);
     state[4] += 4;

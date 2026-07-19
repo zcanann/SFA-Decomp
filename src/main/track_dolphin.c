@@ -443,7 +443,7 @@ void renderMapBlock(int* o, u8 type)
     PSMTXConcat(viewMtx, (f32*)((char*)o + 0xc), m);
     if ((u32)(u8)flag != 0)
         setupToRenderMapBlock(o, m);
-    modelRenderInstrsState_initIntLegacy(state, ptr, (u16)count << 3, (u16)count << 3);
+    modelRenderInstrsState_init((ModelRenderInstrsState*)state, (void*)ptr, (u16)count << 3, (u16)count << 3);
     ptr = 0;
     while (!ptr)
     {
