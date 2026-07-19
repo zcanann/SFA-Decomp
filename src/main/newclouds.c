@@ -602,7 +602,9 @@ void mm_free_(void* ptr)
 }
 
 extern const f32 gSnowFlakeWaveAmpScale;
-extern const f32 gSnowFlakeSize;
+
+#define SNOW_FLAKE_SIZE 8.0f
+
 extern const f32 gSnowFlakeSizeLarge;
 extern const f32 lbl_803DF1EC;
 extern const f32 gNewCloudPi;
@@ -636,7 +638,7 @@ void snowCloudInitFlakes(f32* buf, f32 a, f32 b, int cloudId)
         }
     }
     p = gNewClouds[i];
-    if (p == NULL || gSnowFlakeSize == gSnowFlakeWaveValue)
+    if (p == NULL || SNOW_FLAKE_SIZE == gSnowFlakeWaveValue)
     {
         return;
     }
@@ -647,7 +649,7 @@ void snowCloudInitFlakes(f32* buf, f32 a, f32 b, int cloudId)
     }
     if (((NewCloud*)p)->cloudType == 4)
     {
-        size = gSnowFlakeSize;
+        size = SNOW_FLAKE_SIZE;
     }
     else
     {
@@ -902,17 +904,17 @@ int snowPrintSnowCloud(int arg, int cloudId)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     hudHidden = getHudHiddenFrameCount();
-    driftX = gSnowFlakeSize * (((NewCloud*)p)->curPosX - ((NewCloud*)p)->lastPosX);
-    stepX = (driftX < lbl_803DF214 * ((NewCloud*)p)->flakeMinX)
-                ? lbl_803DF214 * ((NewCloud*)p)->flakeMinX
-                : ((driftX > lbl_803DF214 * ((NewCloud*)p)->driftSpeed)
-                       ? lbl_803DF214 * ((NewCloud*)p)->driftSpeed
+    driftX = SNOW_FLAKE_SIZE * (((NewCloud*)p)->curPosX - ((NewCloud*)p)->lastPosX);
+    stepX = (driftX < 0.5f * ((NewCloud*)p)->flakeMinX)
+                ? 0.5f * ((NewCloud*)p)->flakeMinX
+                : ((driftX > 0.5f * ((NewCloud*)p)->driftSpeed)
+                       ? 0.5f * ((NewCloud*)p)->driftSpeed
                        : driftX);
-    driftZ = gSnowFlakeSize * (((NewCloud*)p)->curPosZ - ((NewCloud*)p)->lastPosZ);
-    stepZ = (driftZ < lbl_803DF214 * ((NewCloud*)p)->flakeMinZ)
-                ? lbl_803DF214 * ((NewCloud*)p)->flakeMinZ
-                : ((driftZ > lbl_803DF214 * ((NewCloud*)p)->flakeMaxZ)
-                       ? lbl_803DF214 * ((NewCloud*)p)->flakeMaxZ
+    driftZ = SNOW_FLAKE_SIZE * (((NewCloud*)p)->curPosZ - ((NewCloud*)p)->lastPosZ);
+    stepZ = (driftZ < 0.5f * ((NewCloud*)p)->flakeMinZ)
+                ? 0.5f * ((NewCloud*)p)->flakeMinZ
+                : ((driftZ > 0.5f * ((NewCloud*)p)->flakeMaxZ)
+                       ? 0.5f * ((NewCloud*)p)->flakeMaxZ
                        : driftZ);
     if (((NewCloud*)p)->cloudType == 4)
     {
@@ -1059,7 +1061,7 @@ void snowCloudUpdateFlakes(u8* snow)
         f32 negSize2;
         angleToVec2((u16)(0xffff - cam->yaw), &c1, &s1);
         m = (f32*)(snow + 0x1008);
-        size2 = gSnowFlakeSize;
+        size2 = SNOW_FLAKE_SIZE;
         negSize2 = -size2;
         for (i = 0; i < 20; i++)
         {
@@ -1386,7 +1388,7 @@ void newClouds(CloudSpawnParams* params, void* owner, f32 x, f32 y, f32 z)
     else
     {
         ((NewCloud*)NC_CLOUD)->cloudHeight = params->heightBase;
-        ((NewCloud*)NC_CLOUD)->scale = gSnowFlakeSize * params->driftBase;
+        ((NewCloud*)NC_CLOUD)->scale = SNOW_FLAKE_SIZE * params->driftBase;
     }
     if (params->driftMax < lbl_803DF1A4)
     {
