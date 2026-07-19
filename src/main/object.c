@@ -215,11 +215,6 @@ extern f32 gMapSavedPlayerOffsetZ;
 
 void Obj_RegisterObject(GameObject* obj, int b);
 int loadModLines(int n, s16* out);
-void ObjModel_LoadRenderOpTextures(u8* model, int arg);
-void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);
-void* ObjModel_LoadAnimData(u8* p, int b, int c);
-void* ObjModel_Load(int id, int arg2, int* outSize);
-void ObjModel_Release(u8* model);
 void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2);
 
 char sObjUnknownTypeUsingDummyObjectWarning[] =

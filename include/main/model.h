@@ -291,6 +291,11 @@ void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA,
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c);
 void modelAnimResetState(void* m, void* data);
 int modelLoadAnimations(void* model, int id, void* animBase);
+void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);
+void ObjModel_LoadRenderOpTextures(u8* model, int object);
+void ObjModel_Release(u8* model);
+void* ObjModel_LoadAnimData(u8* modelData, int loadFlags, int destination);
+void* ObjModel_Load(int modelId, int loadFlags, int* outSize);
 void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out);
 void ObjModel_InitRenderBuffers(void);
 void ObjModel_InitResourceCaches(void);
