@@ -202,7 +202,7 @@ void dim2snowball_update(int* obj)
             objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                     ((GameObject*)obj)->anim.velocityY * timeDelta,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
-            bbox = objBboxFn_800640cc((f32*)((char*)obj + 0x80), (f32*)((char*)obj + 0xc), 36.0f, 0,
+            bbox = objBboxFn_800640cc(&((GameObject*)obj)->anim.previousLocalPosX, (f32*)((char*)obj + 0xc), 36.0f, 0,
                                                    NULL, (GameObject*)obj, 8, -1, 0, 0);
             if (bbox != 0)
             {

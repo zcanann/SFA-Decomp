@@ -572,7 +572,7 @@ void EdibleMushroom_hitDetect(u8* obj)
             }
         }
 
-        hitCount = objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), 6.0f, 2, &bboxHit,
+        hitCount = objBboxFn_800640cc(&((GameObject*)obj)->anim.previousLocalPosX, (f32*)(obj + 0xc), 6.0f, 2, &bboxHit,
                                       (GameObject*)obj, 8, -1, 0xff, 0x14);
         if ((mapObj[0x18] == 4) && (hitCount != 0) && (bboxHit.surfaceType == 13))
         {
