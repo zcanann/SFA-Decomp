@@ -33,6 +33,7 @@
 #include "main/dll/savedata_struct.h"
 #include "main/dll/debug/prof.h"
 #include "main/dll/dll_0037_optionsscreen.h"
+#include "main/dll/dll_003D_titlemenuitem.h"
 #include "main/dll/dll_0015_curves.h"
 
 /* Menu-item slots per options panel (lbl_803A87D0[8], size 0x20 / 4). */
@@ -54,9 +55,7 @@ typedef struct OptionsScreenPanelConfig {
     u16 padding;
 } OptionsScreenPanelConfig;
 
-extern TitleMenuControl* gTitleMenuItemInterface;
 s8 lbl_803DBA28 = -1;      /* active panel id (-1 = none) */
-extern int lbl_803A87D0[8]; /* the 8 menu-item objects of the active panel */
 extern f32 lbl_803E1DD4;
 extern f32 lbl_803E1DD8;
 extern f32 lbl_803E1DDC;
@@ -128,7 +127,7 @@ void OptionsScreen_render(int arg)
 {
     int alpha;
     int fade;
-    int* item;
+    TitleMenuItem** item;
     int i;
     u16* panel = (u16*)lbl_8031ACB8 + lbl_803DBA28 * 8;
 
@@ -169,9 +168,9 @@ void OptionsScreen_render(int arg)
     item = lbl_803A87D0;
     for (i = 0; i < OPTIONSSCREEN_MENU_ITEM_COUNT; i++)
     {
-        if (*(void**)&item[i] != NULL)
+        if (item[i] != NULL)
         {
-            ((void (**)(int, int, int))gTitleMenuItemInterface->vtable)[6](item[i], arg, fade);
+            gTitleMenuItemInterface->vtable->render(item[i], arg, fade);
         }
     }
     gTitleMenuLinkInterface->vtable->setOpacity(fade);
@@ -194,10 +193,10 @@ static inline void optionsScreenFreeMenuItems(void)
 
     for (i = 0; i < OPTIONSSCREEN_MENU_ITEM_COUNT; i++)
     {
-        if ((u32)lbl_803A87D0[i] != 0)
+        if (lbl_803A87D0[i] != NULL)
         {
-            ((void (**)(int))gTitleMenuItemInterface->vtable)[4](lbl_803A87D0[i]);
-            lbl_803A87D0[i] = 0;
+            gTitleMenuItemInterface->vtable->free(lbl_803A87D0[i]);
+            lbl_803A87D0[i] = NULL;
         }
     }
 }
@@ -266,8 +265,8 @@ int OptionsScreen_frameStart(void)
         optionsMenu_applyGameplaySetting(selection, item);
         if (selection == 0)
         {
-            lbl_803DD708[6] = ((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[0]);
-            lbl_803DD708[8] = !((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[1]);
+            lbl_803DD708[6] = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[0]);
+            lbl_803DD708[8] = !gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[1]);
             setWidescreen(lbl_803DD708[6]);
             setRumbleEnabled(lbl_803DD708[8]);
         }
@@ -276,10 +275,10 @@ int OptionsScreen_frameStart(void)
         optionsMenu_applyAudioSetting(selection, item);
         if (selection == 0)
         {
-            lbl_803DD708[9] = ((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[0]);
-            lbl_803DD708[10] = ((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[1]);
-            lbl_803DD708[11] = ((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[2]);
-            lbl_803DD708[12] = ((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[3]);
+            lbl_803DD708[9] = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[0]);
+            lbl_803DD708[10] = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[1]);
+            lbl_803DD708[11] = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[2]);
+            lbl_803DD708[12] = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[3]);
         }
         break;
     case OPTIONSSCREEN_PANEL_MISC:
@@ -290,18 +289,17 @@ int OptionsScreen_frameStart(void)
             lbl_803DD704 = 0x23;
             lbl_803DD705 = 1;
         }
-        if ((u32)lbl_803A87D0[item] != 0 &&
-            ((int (**)(int))gTitleMenuItemInterface->vtable)[11](lbl_803A87D0[item]) != 0)
+        if (lbl_803A87D0[item] != NULL && gTitleMenuItemInterface->vtable->isChanged(lbl_803A87D0[item]) != 0)
         {
             switch (item)
             {
             case 0:
-                lbl_803DD708[2] = !((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[0]);
+                lbl_803DD708[2] = !gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[0]);
                 setSubtitlesEnabled(lbl_803DD708[2]);
                 break;
             default:
                 saveFileStruct_setCheatActive(CHEAT_DINO_LANGUAGE,
-                                              !((int (**)(int))gTitleMenuItemInterface->vtable)[9](lbl_803A87D0[item]));
+                                              !gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[item]));
                 break;
             }
         }
@@ -312,17 +310,17 @@ int OptionsScreen_frameStart(void)
     {
         for (i = 0; i < OPTIONSSCREEN_MENU_ITEM_COUNT; i++)
         {
-            if ((u32)lbl_803A87D0[i] != 0)
+            if (lbl_803A87D0[i] != NULL)
             {
                 if (i == item)
                 {
-                    ((void (**)(int, int))gTitleMenuItemInterface->vtable)[8](lbl_803A87D0[i], 1);
+                    gTitleMenuItemInterface->vtable->setEnabled(lbl_803A87D0[i], 1);
                 }
                 else
                 {
-                    ((void (**)(int, int))gTitleMenuItemInterface->vtable)[8](lbl_803A87D0[i], 0);
+                    gTitleMenuItemInterface->vtable->setEnabled(lbl_803A87D0[i], 0);
                 }
-                ((void (**)(int))gTitleMenuItemInterface->vtable)[5](lbl_803A87D0[i]);
+                gTitleMenuItemInterface->vtable->update(lbl_803A87D0[i]);
             }
         }
     }

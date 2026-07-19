@@ -30,6 +30,7 @@
 #include "main/screen_transition.h"
 #include "main/rcp_dolphin_render_api.h"
 #include "main/dll/dll_003C_tumbleweedbush_api.h"
+#include "main/dll/dll_003D_titlemenuitem.h"
 
 #define OPTIONS_MENU_ACTION_CLOSE      0
 #define OPTIONS_MENU_ACTION_SELECT     1
@@ -59,8 +60,6 @@
 #define OPTIONS_SUBMENU_LANGUAGE 3
 
 extern int* gTitleMenuControlInterface;
-extern int* gTitleMenuItemInterface;
-extern int* lbl_803A87D0[8]; /* the 8 menu-row widgets */
 extern int lbl_803DD6FC;
 extern s8 lbl_803DD704;  /* transition fade counter */
 extern s8 lbl_803DD705;  /* transition pending flag */
@@ -72,29 +71,29 @@ void optionsMenu_applyAudioSetting(int action, int option)
 {
     int value;
 
-    if (lbl_803A87D0[option] != NULL && (*(int (**)(int*))(*gTitleMenuItemInterface + 0x2c))(lbl_803A87D0[option]) != 0)
+    if (lbl_803A87D0[option] != NULL && gTitleMenuItemInterface->vtable->isChanged(lbl_803A87D0[option]) != 0)
     {
         switch (option)
         {
         case AUDIO_OPTION_SOUND_MODE:
-            audioSetSoundMode((u8)(*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]), 1);
+            audioSetSoundMode((u8)gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]), 1);
             break;
         case AUDIO_OPTION_SFX_VOLUME:
-            value = (*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]);
+            value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]);
             audioSetVolumes((u8)value, OPTIONS_MENU_VOLUME_STEP, 0, 1, 0);
             break;
         case AUDIO_OPTION_MUSIC_VOLUME:
-            value = (*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]);
+            value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]);
             audioSetVolumes((u8)value, OPTIONS_MENU_VOLUME_STEP, 1, 0, 0);
-            value = (*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]);
+            value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]);
             (*(void (**)(int))(*gTitleMenuControlInterface + 0x28))(value); /* set music control value */
             break;
         case AUDIO_OPTION_VOICE_VOLUME:
-            value = (*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]);
+            value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]);
             audioSetVolumes((u8)value, OPTIONS_MENU_VOLUME_STEP, 0, 0, 1);
             break;
         case AUDIO_OPTION_EXTRA:
-            lbl_803DD6FC = (*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]);
+            lbl_803DD6FC = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]);
             break;
         }
     }
@@ -114,17 +113,14 @@ void optionsMenu_applyAudioSetting(int action, int option)
     else if ((action == OPTIONS_MENU_ACTION_SELECT) && (option == AUDIO_OPTION_RESET_DEFAULTS))
     {
         saveFileStruct_resetVolumes();
-        (*(void (**)(int*, u8))(*gTitleMenuItemInterface + 0x28))(lbl_803A87D0[AUDIO_OPTION_MUSIC_VOLUME],
-                                                                  lbl_803DD708[10]);
-        (*(void (**)(int*, u8))(*gTitleMenuItemInterface + 0x28))(lbl_803A87D0[AUDIO_OPTION_SFX_VOLUME],
-                                                                  lbl_803DD708[11]);
-        (*(void (**)(int*, u8))(*gTitleMenuItemInterface + 0x28))(lbl_803A87D0[AUDIO_OPTION_VOICE_VOLUME],
-                                                                  lbl_803DD708[12]);
-        value = (*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[AUDIO_OPTION_MUSIC_VOLUME]);
+        gTitleMenuItemInterface->vtable->setValue(lbl_803A87D0[AUDIO_OPTION_MUSIC_VOLUME], lbl_803DD708[10]);
+        gTitleMenuItemInterface->vtable->setValue(lbl_803A87D0[AUDIO_OPTION_SFX_VOLUME], lbl_803DD708[11]);
+        gTitleMenuItemInterface->vtable->setValue(lbl_803A87D0[AUDIO_OPTION_VOICE_VOLUME], lbl_803DD708[12]);
+        value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[AUDIO_OPTION_MUSIC_VOLUME]);
         audioSetVolumes((u8)value, OPTIONS_MENU_VOLUME_STEP, 0, 1, 0);
-        value = (*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[AUDIO_OPTION_SFX_VOLUME]);
+        value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[AUDIO_OPTION_SFX_VOLUME]);
         audioSetVolumes((u8)value, OPTIONS_MENU_VOLUME_STEP, 1, 0, 0);
-        value = (*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[AUDIO_OPTION_VOICE_VOLUME]);
+        value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[AUDIO_OPTION_VOICE_VOLUME]);
         audioSetVolumes((u8)value, OPTIONS_MENU_VOLUME_STEP, 0, 0, 1);
         Sfx_PlayFromObject(0, OPTIONS_SFX_CONFIRM);
     }
@@ -135,15 +131,15 @@ void optionsMenu_applyGameplaySetting(int action, int option)
     int z[2];
     u8 newState;
 
-    if (lbl_803A87D0[option] != NULL && (*(int (**)(int*))(*gTitleMenuItemInterface + 0x2c))(lbl_803A87D0[option]) != 0)
+    if (lbl_803A87D0[option] != NULL && gTitleMenuItemInterface->vtable->isChanged(lbl_803A87D0[option]) != 0)
     {
         switch (option)
         {
         case GAMEPLAY_OPTION_WIDESCREEN:
-            setWidescreen((u8)(*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]));
+            setWidescreen((u8)gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]));
             break;
         case GAMEPLAY_OPTION_RUMBLE:
-            newState = !(*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]);
+            newState = !gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]);
             if (newState == 0)
             {
                 stopRumble2();
@@ -155,7 +151,7 @@ void optionsMenu_applyGameplaySetting(int action, int option)
             }
             break;
         case GAMEPLAY_OPTION_CREDITS:
-            if ((*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]) == 0)
+            if (gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]) == 0)
             {
                 creditsStart();
                 if (lbl_803DBA28 != -1)
@@ -169,14 +165,14 @@ void optionsMenu_applyGameplaySetting(int action, int option)
                 {
                     if (lbl_803A87D0[z[0]] != NULL)
                     {
-                        (*(void (**)(int*))(*gTitleMenuItemInterface + 0x10))(lbl_803A87D0[z[0]]);
-                        lbl_803A87D0[z[0]] = (int*)z[1];
+                        gTitleMenuItemInterface->vtable->free(lbl_803A87D0[z[0]]);
+                        lbl_803A87D0[z[0]] = (TitleMenuItem*)z[1];
                     }
                 }
             }
             break;
         case GAMEPLAY_OPTION_COLOR_FILTER:
-            Rcp_SetColorFilterEnabled((*(int (**)(int*))(*gTitleMenuItemInterface + 0x24))(lbl_803A87D0[option]));
+            Rcp_SetColorFilterEnabled(gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[option]));
             break;
         }
     }

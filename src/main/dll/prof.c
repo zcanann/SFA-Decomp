@@ -16,16 +16,14 @@
 #include "main/dll/debug/prof.h"
 #include "main/audio/audio_control_api.h"
 #include "main/dll/dll_0015_save_settings.h"
-#include "main/dll/titlemenuitem_struct.h"
+#include "main/dll/dll_003D_titlemenuitem.h"
 #include "main/dll/savedata_struct.h"
 #include "dolphin/os/OSRtc.h"
 #include "main/rcp_dolphin_state_api.h"
 #include "main/dll/dll_003C_tumbleweedbush_api.h"
-extern int* gTitleMenuItemInterface;
 extern s8 lbl_803DBA28;
 extern u8 lbl_803DD706;
 extern u8* lbl_803DD708;
-extern int lbl_803A87D0[8];
 
 typedef struct OptionsMenuPanels
 {
@@ -47,7 +45,7 @@ extern OptionsMenuPanels lbl_8031ACB8;
 void optionsMenu_openAudioPanel(void)
 {
     OptionsMenuPanels* panels;
-    int item;
+    TitleMenuItem* item;
 
     if (lbl_803DBA28 != -1)
     {
@@ -73,32 +71,31 @@ void optionsMenu_openAudioPanel(void)
 
     if (OSGetSoundMode() == 1)
     {
-        item =
-            (*(int (**)(int, int, int, int, u8))(*gTitleMenuItemInterface + 0xc))(0x36c, 0x22, 0, 3, lbl_803DD708[9]);
+        item = gTitleMenuItemInterface->vtable->createWithWindow(0x36c, 0x22, 0, 3, lbl_803DD708[9]);
     }
     else
     {
-        item = (*(int (**)(int, int, int, int, int))(*gTitleMenuItemInterface + 0xc))(0x36c, 0x22, 0, 3, 2);
+        item = gTitleMenuItemInterface->vtable->createWithWindow(0x36c, 0x22, 0, 3, 2);
     }
     lbl_803A87D0[0] = item;
-    lbl_803A87D0[1] = (*(int (**)(int, int, int, int, u8, int))(*gTitleMenuItemInterface + 4))(0x124, 0xb2, 0, 0x7f,
-                                                                                               lbl_803DD708[10], 0x3e);
-    lbl_803A87D0[2] = (*(int (**)(int, int, int, int, u8, int))(*gTitleMenuItemInterface + 4))(0x124, 0xcc, 0, 0x7f,
-                                                                                               lbl_803DD708[11], 0x3e);
-    lbl_803A87D0[3] = (*(int (**)(int, int, int, int, u8, int))(*gTitleMenuItemInterface + 4))(0x124, 0xe6, 0, 0x7f,
-                                                                                               lbl_803DD708[12], 0x3e);
-    ((TitleMenuItem*)lbl_803A87D0[3])->flags = (u8)(((TitleMenuItem*)lbl_803A87D0[3])->flags | 0x40);
-    lbl_803A87D0[4] = 0;
-    lbl_803A87D0[5] = 0;
+    lbl_803A87D0[1] =
+        gTitleMenuItemInterface->vtable->createWithText(0x124, 0xb2, 0, 0x7f, lbl_803DD708[10], 0x3e);
+    lbl_803A87D0[2] =
+        gTitleMenuItemInterface->vtable->createWithText(0x124, 0xcc, 0, 0x7f, lbl_803DD708[11], 0x3e);
+    lbl_803A87D0[3] =
+        gTitleMenuItemInterface->vtable->createWithText(0x124, 0xe6, 0, 0x7f, lbl_803DD708[12], 0x3e);
+    lbl_803A87D0[3]->flags = (u8)(lbl_803A87D0[3]->flags | 0x40);
+    lbl_803A87D0[4] = NULL;
+    lbl_803A87D0[5] = NULL;
 
     if (isCheatUnlocked(2) != 0)
     {
-        lbl_803A87D0[5] = (*(int (**)(int, int, int, int, int))(*gTitleMenuItemInterface + 0xc))(
+        lbl_803A87D0[5] = gTitleMenuItemInterface->vtable->createWithWindow(
             0x3cb, 0x27, 0, (s16)(return0x64_8000A378() - 1), 0);
-        ((TitleMenuItem*)lbl_803A87D0[5])->flags = (u8)(((TitleMenuItem*)lbl_803A87D0[5])->flags | 0x80);
+        lbl_803A87D0[5]->flags = (u8)(lbl_803A87D0[5]->flags | 0x80);
     }
 
-    (*(void (**)(int, int))(*gTitleMenuItemInterface + 0x20))(lbl_803A87D0[0], 1);
+    gTitleMenuItemInterface->vtable->setEnabled(lbl_803A87D0[0], 1);
     lbl_803DD706 = 2;
 }
 
@@ -108,7 +105,7 @@ void optionsMenu_openGeneralPanel(void)
     int lastUnlocked;
     int entryOffset;
     int cheatId;
-    int* slot[1];
+    TitleMenuItem** slot[1];
     int cheatId2;
     int entryOffset2;
     int lastUnlocked2;
@@ -158,10 +155,9 @@ void optionsMenu_openGeneralPanel(void)
     gTitleMenuLinkInterface->vtable->setup(panels->optionEntries, panels->optionCount, 0, NULL, 0, 0, 0x14, 0xc8, 0xff,
                                            0xff, 0xff, 0xff);
 
-    lbl_803A87D0[0] =
-        (*(int (**)(int, int, int, int, u8))(*gTitleMenuItemInterface + 0xc))(0x366, 0x22, 0, 1, lbl_803DD708[6]);
-    lbl_803A87D0[1] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
-        0x36b, 0x23, 0, 1, (s16)(lbl_803DD708[8] == 0));
+    lbl_803A87D0[0] = gTitleMenuItemInterface->vtable->createWithWindow(0x366, 0x22, 0, 1, lbl_803DD708[6]);
+    lbl_803A87D0[1] =
+        gTitleMenuItemInterface->vtable->createWithWindow(0x36b, 0x23, 0, 1, (s16)(lbl_803DD708[8] == 0));
     slot[0] = lbl_803A87D0;
 
     cheatId = 0;
@@ -171,12 +167,12 @@ void optionsMenu_openGeneralPanel(void)
         {
             if (cheatId == CHEAT_SEPIA_MODE)
             {
-                slot[0][2] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
+                slot[0][2] = gTitleMenuItemInterface->vtable->createWithWindow(
                     0x507, cheatId + 0x24, 0, 1, Rcp_GetColorFilterEnabled());
             }
             else
             {
-                slot[0][2] = (*(int (**)(int, int, int, int, s16))(*gTitleMenuItemInterface + 0xc))(
+                slot[0][2] = gTitleMenuItemInterface->vtable->createWithWindow(
                     0x36b, cheatId + 0x24, 0, 1, (s16)(saveFileStruct_isCheatActive((u8)cheatId) == 0));
             }
         }
@@ -184,6 +180,6 @@ void optionsMenu_openGeneralPanel(void)
         cheatId++;
     } while (cheatId <= 1);
 
-    (*(void (**)(int, int))(*gTitleMenuItemInterface + 0x20))(lbl_803A87D0[0], 1);
+    gTitleMenuItemInterface->vtable->setEnabled(lbl_803A87D0[0], 1);
     lbl_803DD706 = 2;
 }

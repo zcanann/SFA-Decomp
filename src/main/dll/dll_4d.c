@@ -14,6 +14,7 @@
 #include "main/dll/dll_4D.h"
 #include "main/dll/savedata_struct.h"
 #include "main/dll/dll_0015_save_settings.h"
+#include "main/dll/dll_003D_titlemenuitem.h"
 #include "main/textrender_api.h"
 
 /* misc-panel id stored in lbl_803DBA28 (see dll_0037_optionsscreen.c) */
@@ -25,18 +26,12 @@
 /* TitleMenuTextEntry.flags: row is hidden / non-selectable */
 #define TITLE_MENU_TEXT_ENTRY_HIDDEN 0x4000
 
-/* title-menu item-interface vtable slots */
-#define TITLE_MENU_ITEM_CREATE_ROW 3 /* create a menu row, returns widget */
-#define TITLE_MENU_ITEM_FOCUS_ROW  8
-
 /* lbl_803DBA28 active-panel id and lbl_803DD706 render-stale countdown
    are owned by dll_0037_optionsscreen.c */
 extern MenuPanelGroup lbl_8031ACB8;
 extern s8 lbl_803DBA28;
-extern TitleMenuControl* gTitleMenuItemInterface;
 extern u8 lbl_803DD706;
 extern u8* lbl_803DD708;    /* save-file struct; [2] = subtitles enabled */
-extern int lbl_803A87D0[8]; /* created menu-row widgets of the active panel */
 
 void languageMenuInit(void)
 {
@@ -49,17 +44,16 @@ void languageMenuInit(void)
     lbl_803DBA28 = OPTIONS_PANEL_MISC;
 
     panel = &lbl_8031ACB8;
-    lbl_803A87D0[0] = ((int (**)(int, int, int, int, s16))gTitleMenuItemInterface->vtable)[TITLE_MENU_ITEM_CREATE_ROW](
-        0x36b, 0x22, 0, 1, (s16)(lbl_803DD708[2] == 0));
+    lbl_803A87D0[0] =
+        gTitleMenuItemInterface->vtable->createWithWindow(0x36b, 0x22, 0, 1, (s16)(lbl_803DD708[2] == 0));
 
     if (isCheatUnlocked(LANGUAGE_MENU_CHEAT_ID) != 0 && lbl_803DC968 == 0)
     {
         panel->entries[panel->count - 2].pad18[3] = panel->count - 1;
         panel->entries[panel->count - 1].flags &= ~TITLE_MENU_TEXT_ENTRY_HIDDEN;
 
-        lbl_803A87D0[1] =
-            ((int (**)(int, int, int, int, s16))gTitleMenuItemInterface->vtable)[TITLE_MENU_ITEM_CREATE_ROW](
-                0x36b, 0x23, 0, 1, (s16)(saveFileStruct_isCheatActive(LANGUAGE_MENU_CHEAT_ID) == 0));
+        lbl_803A87D0[1] = gTitleMenuItemInterface->vtable->createWithWindow(
+            0x36b, 0x23, 0, 1, (s16)(saveFileStruct_isCheatActive(LANGUAGE_MENU_CHEAT_ID) == 0));
     }
     else
     {
@@ -67,7 +61,7 @@ void languageMenuInit(void)
         panel->entries[panel->count - 1].flags |= TITLE_MENU_TEXT_ENTRY_HIDDEN;
     }
 
-    ((void (**)(int, int))gTitleMenuItemInterface->vtable)[TITLE_MENU_ITEM_FOCUS_ROW](lbl_803A87D0[0], 1);
+    gTitleMenuItemInterface->vtable->setEnabled(lbl_803A87D0[0], 1);
 
     gTitleMenuLinkInterface->vtable->setup(panel->entries, panel->count, 0, NULL, 0, 0, 0x14, 0xc8, 0xff, 0xff, 0xff,
                                            0xff);

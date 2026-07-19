@@ -74,7 +74,7 @@ void TitleMenuItem_setVal(TitleMenuItem* item, int val)
     item->frameDelay = 2;
 }
 
-s16 TitleMenuItem_getVal(TitleMenuItem* item)
+int TitleMenuItem_getVal(TitleMenuItem* item)
 {
     return item->value;
 }

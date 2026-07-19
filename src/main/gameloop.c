@@ -73,6 +73,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/dll/dll_0011_screens.h"
 #include "main/dll/dll_000D_playershadow.h"
 #include "main/dll/dll_003C_tumbleweedbush_api.h"
+#include "main/dll/dll_003D_titlemenuitem.h"
 #include "main/voxmaps.h"
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
 #include "main/dll/dll_BC.h"
@@ -108,7 +109,7 @@ BoneParticleEffectInterface** gBoneParticleEffectInterface;
 void* lbl_803DCAB0;
 MapEventInterface** gMapEventInterface;
 void* gPathControlInterface;
-void* gTitleMenuItemInterface;
+TitleMenuItemInterface* gTitleMenuItemInterface;
 LinkInterface* gTitleMenuLinkInterface;
 RomCurveInterface** gRomCurveInterface;
 WaterfxInterface** gWaterfxInterface;
@@ -231,7 +232,6 @@ extern void* gScreensInterface;
 extern void* gPathControlInterface;
 extern void* gMinimapInterface;
 extern void* gCarryableInterface;
-extern void* gTitleMenuItemInterface;
 extern u8 lbl_803DCA3F;
 extern int gGameLoopPlayerTrailTime;
 extern f32 lbl_803DE7B0;

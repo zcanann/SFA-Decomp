@@ -41,6 +41,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/savegame.h"
 #include "main/dll/player_status.h"
+#include "main/dll/dll_003D_titlemenuitem.h"
 #include "string.h"
 
 u16 gSaveSelectSlotTextIds[4] = {0x23, 0x24, 0x25, 0};
@@ -89,7 +90,6 @@ typedef struct SaveSelectPanel
 #define SAVESELECTSCREEN_TEXTURE_ID 0x2dd
 
 extern TitleMenuControl* gTitleMenuControlInterface;
-extern TitleMenuControl* gTitleMenuItemInterface;
 
 s8 lbl_803DD6CF;
 s8 gSaveSelectRefreshCounter;
@@ -102,7 +102,7 @@ int gSaveSelectLastSlot;
 u8 saveFileSelect_cheatInputTimer;
 u8 saveFileSelect_saveCheatProgress;
 u8 saveFileSelect_debugCheatProgress;
-void* gSaveSelectMenuItem;
+TitleMenuItem* gSaveSelectMenuItem;
 u8 lbl_803DD6B4;
 FrontendSaveSlot* saveFileSelect_saveSlots;
 void* lbl_803DD6AC;
@@ -137,7 +137,7 @@ void saveSelectOpenFile(int sel, int slot)
     {
         if (gSaveSelectMenuItem != NULL)
         {
-            ((void (**)(void*))gTitleMenuItemInterface->vtable)[4](gSaveSelectMenuItem);
+            gTitleMenuItemInterface->vtable->free(gSaveSelectMenuItem);
             gSaveSelectMenuItem = NULL;
         }
         Sfx_PlayFromObject(0, SFXTRIG_menu_pause_down);
@@ -159,19 +159,18 @@ void saveSelectOpenFile(int sel, int slot)
                 (*(TitleMenuTextEntry**)((char*)pp + off))[1].pad18[2] = -1;
                 (*(TitleMenuTextEntry**)((char*)pp + off))[1].textId = 984;
                 gSaveSelectMenuItemActive = 1;
-                gSaveSelectMenuItem =
-                    ((void* (**)(int, int, int, int, int))gTitleMenuItemInterface->vtable)[3](983, 41, 0, 1, 0);
-                ((void (**)(void*, int))gTitleMenuItemInterface->vtable)[8](gSaveSelectMenuItem, 1);
+                gSaveSelectMenuItem = gTitleMenuItemInterface->vtable->createWithWindow(983, 41, 0, 1, 0);
+                gTitleMenuItemInterface->vtable->setEnabled(gSaveSelectMenuItem, 1);
                 gTitleMenuLinkInterface->vtable->copyItems(*(TitleMenuTextEntry**)((char*)pp + off));
             }
         }
         else
         {
-            if (((u8(**)(void*))gTitleMenuItemInterface->vtable)[9](gSaveSelectMenuItem) == 1)
+            if ((u8)gTitleMenuItemInterface->vtable->getValue(gSaveSelectMenuItem) == 1)
             {
                 gplaySaveGame((u8)saveFileSelect_currentSlotIndex);
             }
-            ((void (**)(void*))gTitleMenuItemInterface->vtable)[4](gSaveSelectMenuItem);
+            gTitleMenuItemInterface->vtable->free(gSaveSelectMenuItem);
             gSaveSelectMenuItem = NULL;
             saveSelectGoToChooseSlot(0);
         }
@@ -426,7 +425,7 @@ void saveSelectScreenFree(int runExitCallback)
     }
     if (gSaveSelectMenuItem != NULL)
     {
-        ((void (**)(void*))gTitleMenuItemInterface->vtable)[4](gSaveSelectMenuItem);
+        gTitleMenuItemInterface->vtable->free(gSaveSelectMenuItem);
         gSaveSelectMenuItem = NULL;
     }
 }
@@ -485,7 +484,7 @@ void SaveSelectScreen_render(int param)
         }
         if (gSaveSelectMenuItem != NULL)
         {
-            ((void (**)(void*, int, int))gTitleMenuItemInterface->vtable)[6](gSaveSelectMenuItem, 0, alpha);
+            gTitleMenuItemInterface->vtable->render(gSaveSelectMenuItem, 0, alpha);
         }
         break;
     case SAVE_SELECT_PANEL_CONFIRM_ERASE:
@@ -648,7 +647,7 @@ int SaveSelectScreen_run(void)
         gSaveSelectLastSlot = slot;
         if (gSaveSelectMenuItem != NULL)
         {
-            ((void (**)(void*))gTitleMenuItemInterface->vtable)[5](gSaveSelectMenuItem);
+            gTitleMenuItemInterface->vtable->update(gSaveSelectMenuItem);
         }
         if (sel != -1 || gSaveSelectPanelIndex == SAVE_SELECT_PANEL_CHOOSE_SLOT)
         {
