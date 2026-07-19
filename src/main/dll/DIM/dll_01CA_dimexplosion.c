@@ -14,6 +14,7 @@
  *   explosion_init         - seed flames/debris/light from placement flags
  *   explosion_initialise   - precompute the expf falloff scales
  */
+#include "main/model.h"
 #include "main/dll/partfx_interface.h"
 #include "main/track_dolphin_api.h"
 #include "main/texture.h"
@@ -363,7 +364,7 @@ void explosion_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
                 objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, visible);
                 if (i < ((ExplosionState*)state)->rayMode - 1)
                 {
-                    *(u16*)((char*)model + 0x18) &= ~8;
+                    ((ObjModel*)model)->bufferFlags &= ~8;
                 }
             }
         }

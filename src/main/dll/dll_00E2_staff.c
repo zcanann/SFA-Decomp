@@ -12,6 +12,7 @@
  * grow/shrink lock-on animation is in staffDoGrowShrinkAnim.
  *
  */
+#include "main/model.h"
 #include "main/dll/partfx_interface.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
@@ -1193,7 +1194,7 @@ void staff_update(int* obj)
     SwipeRecord* swp;
     int n;
     int* model = (int*)Obj_GetActiveModel((GameObject*)obj);
-    *(u16*)((char*)model + 0x18) &= ~0x8;
+    ((ObjModel*)model)->bufferFlags &= ~0x8;
     ObjAnim_AdvanceCurrentMove((int)obj, ((StaffState*)state)->moveSpeed, timeDelta,
                                                                  NULL);
 
