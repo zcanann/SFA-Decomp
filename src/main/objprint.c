@@ -1415,7 +1415,7 @@ void fn_8003B500(GameObject* obj, s16* state, f32 value)
     }
 }
 
-void fn_8003B5E0(int a, int b, int c, u8 d)
+void fn_8003B5E0(int a, int b, int c, int d)
 {
     lbl_803DCC0D = a;
     lbl_803DCC0C = b;

@@ -13,15 +13,12 @@ void fn_8003AAE0(GameObject* obj, int* keys, int count, int lo, int hi);
 s16* objModelGetVecFn_800395d8(GameObject* obj, int target);
 void fn_8003A168(GameObject* obj, void* state);
 void fn_8003B608(s16 red, s16 green, s16 blue);
-void fn_8003B5E0(int red, int green, int blue, u8 alpha);
+void fn_8003B5E0(int red, int green, int blue, int alpha);
 void fn_8003B950(f32* matrix);
 int objGetAlphaCompareThreshold(void);
 void objSetAlphaCompareThreshold(u8 alpha);
 void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model);
 void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, int c);
 void objModelClearVecFn_8003aa40(GameObject* obj);
-
-#define fn_8003B5E0IntAlphaLegacy(red, green, blue, alpha) \
-    ((void (*)(int, int, int, int))fn_8003B5E0)((red), (green), (blue), (alpha))
 
 #endif /* MAIN_OBJPRINT_API_H_ */

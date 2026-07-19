@@ -387,7 +387,7 @@ void kaldachom_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
         case 0:
             if (((GroundBaddieState*)state)->glowAlpha != lbl_803E3060.f)
             {
-                fn_8003B5E0IntAlphaLegacy(200, 0, 0, (int)((GroundBaddieState*)state)->glowAlpha);
+                fn_8003B5E0(200, 0, 0, (int)((GroundBaddieState*)state)->glowAlpha);
             }
             ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3078);
             if ((((GroundBaddieState*)state)->flags400 & 0x60) != 0)
