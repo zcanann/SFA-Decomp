@@ -10,6 +10,7 @@
 #include "main/dll/scarabstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/track_dolphin_api.h"
 #include "main/model_light.h"
 #include "main/object.h"
@@ -28,7 +29,7 @@ f32 lbl_803DBDD8 = 60.0f;
 
 typedef struct LanternFireFlyPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 wanderRange;
     u8 stateId;
     s16 timer;

@@ -10,6 +10,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/obj_message.h"
 #include "main/object_api.h"
 #include "main/object.h"
@@ -29,7 +30,7 @@
 
 typedef struct AppleontreeObjectDef
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     u32 unk18;
     u16 duration;
     u16 elapsed;

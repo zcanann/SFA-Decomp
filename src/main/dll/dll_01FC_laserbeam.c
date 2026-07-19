@@ -101,7 +101,7 @@ void LaserBeam_hitDetect(void)
 
 typedef struct LaserBeamPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 spawnYaw;    /* 0x18: seeded into the object header (obj[0] = spawnYaw << 8) */
     u8 beamKind;    /* 0x19: laser variant (2/3/30) */
     s16 beamLength; /* 0x1A: beam reach - added to beamZ for the endpoint and squared for the hit radius */

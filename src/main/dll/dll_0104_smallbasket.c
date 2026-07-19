@@ -104,7 +104,7 @@ void* gSmallBasketResource;
 
 typedef struct SmallbasketObjectDef
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 rotX;
     u8 subtype;
     s16 unk1A;

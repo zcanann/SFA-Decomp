@@ -1,6 +1,7 @@
 /* DLL 0x0110 - door objects [0x8017B5C8-0x8017BB80). */
 
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/object_render.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
@@ -26,7 +27,7 @@
 
 typedef struct DoorPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s16 closeRequestGameBit; /* 0x18: nonzero requests that the door close */
     s16 closedLatchGameBit;  /* 0x1A: set after closing, cleared after opening */
     s16 triggerSequenceId;   /* 0x1C */

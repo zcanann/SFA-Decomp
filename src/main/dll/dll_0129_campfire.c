@@ -1,5 +1,6 @@
 /* DLL 0x0129 - campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/object_api.h"
 #include "main/model_light.h"
 #include "main/objfx.h"
@@ -167,7 +168,7 @@ void CampFire_update(int obj)
 
 typedef struct CampFirePlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s16 gameBit;  /* 0x18: gate game bit */
     u8 sizeParam; /* 0x1a: * 0.01 -> rootMotionScale */
     u8 unk1b;     /* 0x1b */

@@ -20,6 +20,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/object.h"
 #include "main/object_descriptor.h"
 #include "main/object_api.h"
@@ -42,7 +43,7 @@ typedef struct InvHitState
 
 typedef struct InvhitObjectDef
 {
-    u8 pad0[0x18];
+    ObjPlacement head; /* 0x00 */
     u8 radius;       /* 0x18: primaryRadius / userData2 seed */
     u8 shapeFlags;   /* 0x19 */
     u8 mode;         /* 0x1a: InvHitState.mode selector */

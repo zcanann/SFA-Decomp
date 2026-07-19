@@ -16,6 +16,7 @@
  * unlock sequence.
  */
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objprint_render_api.h"
 #include "main/obj_group.h"
 #include "main/obj_trigger.h"
@@ -30,7 +31,7 @@
 /* placement view used for the def+0xNN byte/halfword derefs in this TU */
 typedef struct DoorlockPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s16 unk18;
     u8 unk1A;            /* 0x1A */
     u8 modeBits;         /* 0x1B: mode flag bits (1,4,8,0x10,0x20,0x40,0x80) */
