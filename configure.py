@@ -210,18 +210,29 @@ config.scratch_preset_id = None
 
 # Foreign-toolchain rules for units not compiled with MWCC.
 # zlbDecompress is an SN ProDG (GCC 2.95) middleware object; see
-# docs/mwcc_re/RESIDUAL_HANDOFFS.md for the evidence trail.
+# docs/mwcc_re/RESIDUAL_HANDOFFS.md for the evidence trail. ProDG ships in
+# the standard compilers bundle, and the whole pipeline (cpp, cc1, as) runs
+# under the same wibo wrapper and binutils the MWCC units already use.
+prodg_compilers = Path(args.compilers) if args.compilers else Path("build/compilers")
+prodg_binutils = Path(args.binutils) if args.binutils else Path("build/binutils")
+prodg_as = prodg_binutils / ("powerpc-eabi-as.exe" if is_windows() else "powerpc-eabi-as")
+prodg_dir = prodg_compilers / "ProDG" / "3.5"
+if is_windows():
+    prodg_wrapper = ""
+else:
+    prodg_wrapper = f"{args.wrapper} " if args.wrapper else "build/tools/wibo "
 prodg_implicit = [
-    "build/tools/wibo",
-    "build/compilers/ProDG/3.5/cc1.exe",
+    str(prodg_compilers) if args.compilers is None else str(prodg_dir / "cc1.exe"),
+    str(prodg_binutils) if args.binutils is None else str(prodg_as),
+    *([prodg_wrapper.strip()] if prodg_wrapper else []),
 ]
 config.custom_build_rules = [
     {
         "name": "prodg",
-        "command": "cc -E -P -x c $in -o $basefile.i"
-        " && build/tools/wibo build/compilers/ProDG/3.5/cc1.exe $basefile.i"
+        "command": f"{prodg_wrapper}{prodg_dir / 'cpp.exe'} -P $in $basefile.i"
+        f" && {prodg_wrapper}{prodg_dir / 'cc1.exe'} $basefile.i"
         " -quiet -O1 -fno-common -o $basefile.s"
-        " && build/binutils/powerpc-eabi-as -mgekko $basefile.s -o $out",
+        f" && {prodg_as} -mgekko $basefile.s -o $out",
         "description": "PRODG $out",
     },
 ]

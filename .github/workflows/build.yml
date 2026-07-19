@@ -68,8 +68,12 @@ jobs:
         # src .o whose source .c no longer exists, forcing a clean recompile
         # at the current name.
         python tools/ci_drop_orphan_objects.py build/${{ matrix.version }}/src
+        # No --compilers override: the container's baked /compilers predates
+        # the ProDG addition to the compilers bundle, so let ninja download
+        # the pinned bundle into build/compilers (kept warm by the build
+        # cache above). Restore the override once the container is refreshed.
         python configure.py --map --version ${{ matrix.version }} \
-            --binutils /binutils --compilers /compilers
+            --binutils /binutils
         ninja all_source progress build/${{ matrix.version }}/report.json
 
     # Upload map files
