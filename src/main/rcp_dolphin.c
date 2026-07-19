@@ -2342,6 +2342,7 @@ void mapInstantiateObjects(MapRomListPage* page, int mapId, int index, GameObjec
         if (i == 0)
         {
             v = (*gMapEventInterface)->getMapAct(mapId);
+            flag = 1;
             if (v == -1)
             {
                 flag = 0;
@@ -2352,21 +2353,11 @@ void mapInstantiateObjects(MapRomListPage* page, int mapId, int index, GameObjec
                 {
                     if ((*(u8*)(obj + 3) >> (v - 1)) & 1)
                         flag = 0;
-                    else
-                        flag = 1;
                 }
                 else if ((*(u8*)(obj + 5) >> (0x10 - v)) & 1)
                 {
                     flag = 0;
                 }
-                else
-                {
-                    flag = 1;
-                }
-            }
-            else
-            {
-                flag = 1;
             }
             if (flag != 0)
             {
@@ -2425,6 +2416,7 @@ int objShouldUnload(GameObject* obj)
         return 0;
     }
     m = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
+    keep = 1;
     if (m == -1)
     {
         keep = 0;
@@ -2437,23 +2429,11 @@ int objShouldUnload(GameObject* obj)
             {
                 keep = 0;
             }
-            else
-            {
-                keep = 1;
-            }
         }
         else if ((def[5] >> (0x10 - m)) & 1)
         {
             keep = 0;
         }
-        else
-        {
-            keep = 1;
-        }
-    }
-    else
-    {
-        keep = 1;
     }
     if (keep == 0)
     {
