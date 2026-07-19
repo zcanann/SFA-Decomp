@@ -533,7 +533,7 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
         {
             ((f32*)((char*)state + 0xac))[k] =
                 (target - (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf]) / frames;
-            ((f32*)((char*)state + 0xac))[k + 1] = (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf];
+            ((f32*)((char*)state + 0xb0))[k] = (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf];
         }
         else
         {
@@ -547,8 +547,10 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
     }
 {
     char* kb;
+    int off;
     int k4 = k * 4;
     kb = (char*)state + k4;
+    off = k4 + 0xb0;
     *(f32*)(kb + 0xb0) = *(f32*)(kb + 0xb0) + *(f32*)(kb + 0xac) * gModgfxMotionStep;
     if (*(f32*)(kb + 0xb0) < lbl_803DF430)
     {
@@ -561,7 +563,7 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
     {
         for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
-            bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = *(f32*)((char*)state + (k4 + 0xb0));
+            bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = *(f32*)((char*)state + off);
             bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
         }
     }
