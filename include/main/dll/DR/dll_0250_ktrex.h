@@ -97,6 +97,12 @@ typedef struct KTRexArenaState
     void* lightning[KTREX_LIGHTNING_COUNT];
 } KTRexArenaState;
 
+typedef struct KTRexLaneTuning
+{
+    f32 speedMax[3];
+    int curveIds[4][4];
+} KTRexLaneTuning;
+
 typedef struct KTRexRuntime
 {
     u8 pad000[0x25f];
@@ -142,13 +148,15 @@ STATIC_ASSERT(sizeof(KTRexWork) == 0x18);
 STATIC_ASSERT(offsetof(KTRexArenaState, light) == 0x178);
 STATIC_ASSERT(offsetof(KTRexArenaState, lightning) == 0x17c);
 STATIC_ASSERT(offsetof(KTRexRuntime, arena) == 0x40c);
+STATIC_ASSERT(sizeof(KTRexLaneTuning) == 0x4c);
+STATIC_ASSERT(offsetof(KTRexLaneTuning, curveIds) == 0xc);
 
 extern KTRexArenaState* gKTRexState;
 extern KTRexRuntime* gKTRexRuntime;
 extern void* gKTRexStateHandlersA[];
 extern void* gKTRexStateHandlersB[];
 extern f32 gKTRexLaneSpeedMin[];
-extern f32 gKTRexLaneSpeedMax[];
+extern KTRexLaneTuning gKTRexLaneTuning;
 extern MapRomList* gKTRexMapBlock;
 extern void* gKTRexResource;
 extern const KtrexMsgBlob gKTRexMsgTemplate;

@@ -1345,7 +1345,7 @@ int ktrex_updateArenaPathProgress(KTRexRuntime* runtime)
         speed = runtime->laneSpeed;
     }
     gKTRexState->laneLerpT = speed * timeDelta + gKTRexState->laneLerpT;
-    if ((gKTRexState->laneLerpT > gKTRexLaneSpeedMax[gKTRexState->laneIndex] &&
+    if ((gKTRexState->laneLerpT > gKTRexLaneTuning.speedMax[gKTRexState->laneIndex] &&
          speed > 0.0f) ||
         (gKTRexState->laneLerpT < gKTRexLaneSpeedMin[gKTRexState->laneIndex] &&
          speed < 0.0f))
@@ -1368,9 +1368,9 @@ int ktrex_updateArenaPathProgress(KTRexRuntime* runtime)
         }
         gKTRexState->timerFA = gKTRexState->timerFA & ~6;
         gKTRexState->timerFA = gKTRexState->timerFA | (phase << 1);
-        if (gKTRexState->laneLerpT > gKTRexLaneSpeedMax[gKTRexState->laneIndex])
+        if (gKTRexState->laneLerpT > gKTRexLaneTuning.speedMax[gKTRexState->laneIndex])
         {
-            gKTRexState->laneLerpT = gKTRexLaneSpeedMax[gKTRexState->laneIndex];
+            gKTRexState->laneLerpT = gKTRexLaneTuning.speedMax[gKTRexState->laneIndex];
         }
         else if (gKTRexState->laneLerpT <
                  gKTRexLaneSpeedMin[gKTRexState->laneIndex])
@@ -1788,10 +1788,14 @@ f32 lbl_8032A528[3] = {0.0055f, 0.012f, 0.012f};
 
 f32 gKTRexLaneSpeedMin[3] = {0.0f, 0.025f, 0.025f};
 
-f32 gKTRexLaneSpeedMax[19] = {
-    1.0f,         0.975f,       0.975f,       2.8742e-40f,  2.8743e-40f,  2.87401e-40f, 2.8741e-40f,
-    2.87412e-40f, 2.87422e-40f, 2.87394e-40f, 2.87402e-40f, 2.88206e-40f, 2.88209e-40f, 2.8821e-40f,
-    2.88204e-40f, 2.87415e-40f, 2.87425e-40f, 2.87395e-40f, 2.87405e-40f,
+KTRexLaneTuning gKTRexLaneTuning = {
+    {1.0f, 0.975f, 0.975f},
+    {
+        {205110, 205117, 205096, 205103},
+        {205104, 205111, 205091, 205097},
+        {205671, 205673, 205674, 205669},
+        {205106, 205113, 205092, 205099},
+    },
 };
 
 /* descriptor/ptr table auto 0x8032a58c-0x8032a7c0 */
