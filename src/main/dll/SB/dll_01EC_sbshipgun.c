@@ -21,7 +21,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/camera_shake_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_api.h"
 #include "main/obj_path.h"
 #include "main/obj_list.h"
@@ -129,7 +129,7 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     vis = visible;
     if (vis == 0 || state[0xc] == 0 || ((SBShipGunState*)state)->active == 0)
         return;
-    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 /* The cannonball setup block (SBShipGunPlacement) doubles as the spawn-

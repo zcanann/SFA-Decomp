@@ -13,7 +13,7 @@
 #include "main/dll/objfx.h"
 #include "main/object.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/SB/dll_01ED_sbfireball.h"
 #include "main/object_descriptor.h"
 
@@ -67,7 +67,7 @@ void SB_FireBall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

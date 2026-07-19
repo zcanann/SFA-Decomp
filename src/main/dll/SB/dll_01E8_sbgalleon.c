@@ -29,7 +29,7 @@
 #include "main/textrender_api.h"
 #include "main/lightmap_render_control_api.h"
 #include "main/audio/music_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/pi_dolphin_api.h"
 #include "main/map_load.h"
 #include "main/sky_api.h"
@@ -510,7 +510,7 @@ void SB_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
             stk.a = lbl_803E5808;
             (*gPartfxInterface)->spawnObject((void*)obj, SBGALLEON_FX_WANDER, stk.pad, 2, -1, NULL);
         }
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E57A4);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E57A4);
     }
 }
 

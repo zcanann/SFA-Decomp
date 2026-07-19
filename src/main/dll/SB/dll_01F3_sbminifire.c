@@ -10,7 +10,7 @@
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/shipbattlestate_struct.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
@@ -84,7 +84,7 @@ void SB_MiniFire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0)
     {
         fn_80053ED0(8);
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
         fn_80053EBC(8);
     }
 }

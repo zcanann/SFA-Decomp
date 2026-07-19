@@ -17,7 +17,7 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/gamebits.h"
 #include "main/dll/SB/dll_01F1_sbseqdoor.h"
 #include "main/object_descriptor.h"
@@ -62,7 +62,7 @@ void SB_SeqDoor_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

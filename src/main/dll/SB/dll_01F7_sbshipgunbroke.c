@@ -9,7 +9,7 @@
  * placement record at offset 0x1E.
  */
 #include "main/dll/shipbattlestate_struct.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
@@ -46,8 +46,7 @@ void SB_ShipGunBroke_render(GameObject* obj, int p2, int p3, int p4, int p5)
     SBShipGunBrokePlacement* placement = (SBShipGunBrokePlacement*)obj->anim.placementData;
     if ((u32)mainGetBit(placement->destroyedGameBit) != 0u)
     {
-        ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
-                                                                                      lbl_803E59C0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E59C0);
     }
 }
 
