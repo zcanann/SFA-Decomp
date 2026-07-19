@@ -1159,8 +1159,8 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
             f32 dist = sqrtf(dx * dx + dy * dy);
             int minB;
             int negA;
-            char* p[1];
-            s16* ap[1];
+            char* p;
+            s16* ap;
             int i;
             f32 prodB;
 
@@ -1180,17 +1180,18 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
             ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
 
             a = (s16)(gObjPrintDegToAngle * a);
-            p[0] = (char*)p3;
-            ap[0] = ang;
+            p = (char*)p3;
+            ap = ang;
             prodB = gObjPrintDegToAngle * b;
             minB = -(s16)(s32)prodB;
             negA = -a;
-            for (i = 0; i < 2; i++)
+            i = 2;
+            do
             {
                 int v;
                 int w;
-                *ap[0] -= *(s16*)(p[0] + 0x14);
-                v = *ap[0];
+                *ap -= *(s16*)(p + 0x14);
+                v = *ap;
                 if (v < minB)
                 {
                     w = minB;
@@ -1203,19 +1204,19 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
                     }
                     w = (s16)v;
                 }
-                *ap[0] = (s16)w;
-                *(s16*)(p[0] + 0x14) += *ap[0];
-                if (*(s16*)(p[0] + 0x14) > a)
+                *ap = (s16)w;
+                *(s16*)(p + 0x14) += *ap;
+                if (*(s16*)(p + 0x14) > a)
                 {
-                    *(s16*)(p[0] + 0x14) = a;
+                    *(s16*)(p + 0x14) = a;
                 }
-                if (*(s16*)(p[0] + 0x14) < negA)
+                if (*(s16*)(p + 0x14) < negA)
                 {
-                    *(s16*)(p[0] + 0x14) = negA;
+                    *(s16*)(p + 0x14) = negA;
                 }
-                p[0] += 0x30;
-                ap[0]++;
-            }
+                p += 0x30;
+                ap++;
+            } while (--i != 0);
             found[0][1] = *(s16*)((u8*)p3 + 0x14);
             found[0][0] = *(s16*)((u8*)p3 + 0x44);
         }
