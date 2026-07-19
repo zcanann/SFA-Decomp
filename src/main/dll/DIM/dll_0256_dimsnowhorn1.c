@@ -1050,6 +1050,60 @@ int DIMSnowHorn1_setScale(GameObject* obj)
 
 void fn_802BB998(int obj, int pointState, int inputState);
 
+void fn_802BB998(int obj, int pointState, int inputState)
+{
+    u8 flags;
+    u8 pointIndex;
+    u8 count;
+    s32 inputFlags;
+    struct
+    {
+        u32 unk0;
+        u32 unk4;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } args;
+
+    flags = 0;
+    inputFlags = *(s32*)&((BaddieState*)inputState)->eventFlags;
+    if ((inputFlags & 2) != 0)
+    {
+        flags |= 1;
+    }
+    if ((inputFlags & 4) != 0)
+    {
+        flags |= 2;
+    }
+
+    pointIndex = 0;
+    while (flags != 0)
+    {
+        if ((flags & 1) != 0)
+        {
+            args.x = *(f32*)(pointState + 0x9b0 + pointIndex * 0xc);
+            args.y = *(f32*)(pointState + 0x9b4 + pointIndex * 0xc);
+            args.z = *(f32*)(pointState + 0x9b8 + pointIndex * 0xc);
+            args.scale = 0.004f;
+
+            count = (u8)randomGetRange(2, 6);
+            while (count != 0)
+            {
+                ((EffectInterface*)*gPartfxInterface)
+                    ->spawnObject((void*)obj, randomGetRange(0, 1) + 0x1f9, &args, 0x10001, -1, NULL);
+                count--;
+            }
+
+            Sfx_PlayFromObject(
+                obj, audioPickSoundEffect_8006ed24((u8)(s8) * (s8*)&((BaddieState*)inputState)->paletteSlot, 9));
+            doRumble(3.0f);
+        }
+        flags >>= 1;
+        pointIndex++;
+    }
+}
+
 int DIMSnowHorn1_getExtraSize(void)
 {
     return 0xd0c;
@@ -1180,7 +1234,10 @@ static inline s16 DIMSnowHorn1_angleTo(GameObject* obj, char* found)
     return angleDelta;
 }
 
-static void DIMSnowHorn1_updateOverridePos(GameObject* obj)
+static const f32 gDIMSnowHorn1OverrideOffsetY[1] = {-3e+01f};
+static const f32 gDIMSnowHorn1OverrideOffsetZ[1] = {-2e+01f};
+
+static inline void DIMSnowHorn1_updateOverridePos(GameObject* obj)
 {
     MatrixTransform v;
     f32 matrix[16];
@@ -1193,63 +1250,10 @@ static void DIMSnowHorn1_updateOverridePos(GameObject* obj)
     v.rotZ = (obj)->anim.rotZ;
     v.scale = 1.0f;
     setMatrixFromObjectPos(matrix, &v);
-    Matrix_TransformPoint(matrix, 0.0f, -30.0f, -20.0f, &(obj)->anim.modelState->overrideWorldPosX,
+    Matrix_TransformPoint(matrix, 0.0f, gDIMSnowHorn1OverrideOffsetY[0], gDIMSnowHorn1OverrideOffsetZ[0], &(obj)->anim.modelState->overrideWorldPosX,
                           &(obj)->anim.modelState->overrideWorldPosY, &(obj)->anim.modelState->overrideWorldPosZ);
 }
 
-void fn_802BB998(int obj, int pointState, int inputState)
-{
-    u8 flags;
-    u8 pointIndex;
-    u8 count;
-    s32 inputFlags;
-    struct
-    {
-        u32 unk0;
-        u32 unk4;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } args;
-
-    flags = 0;
-    inputFlags = *(s32*)&((BaddieState*)inputState)->eventFlags;
-    if ((inputFlags & 2) != 0)
-    {
-        flags |= 1;
-    }
-    if ((inputFlags & 4) != 0)
-    {
-        flags |= 2;
-    }
-
-    pointIndex = 0;
-    while (flags != 0)
-    {
-        if ((flags & 1) != 0)
-        {
-            args.x = *(f32*)(pointState + 0x9b0 + pointIndex * 0xc);
-            args.y = *(f32*)(pointState + 0x9b4 + pointIndex * 0xc);
-            args.z = *(f32*)(pointState + 0x9b8 + pointIndex * 0xc);
-            args.scale = 0.004f;
-
-            count = (u8)randomGetRange(2, 6);
-            while (count != 0)
-            {
-                ((EffectInterface*)*gPartfxInterface)
-                    ->spawnObject((void*)obj, randomGetRange(0, 1) + 0x1f9, &args, 0x10001, -1, NULL);
-                count--;
-            }
-
-            Sfx_PlayFromObject(
-                obj, audioPickSoundEffect_8006ed24((u8)(s8) * (s8*)&((BaddieState*)inputState)->paletteSlot, 9));
-            doRumble(3.0f);
-        }
-        flags >>= 1;
-        pointIndex++;
-    }
-}
 void DIMSnowHorn1_update(GameObject* obj)
 {
     f32 nearDist;
