@@ -1,6 +1,6 @@
 /* DLL 0x01B7 - SC music-tree objects [801DBFA0-801DC310) */
 #include "main/obj_placement.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -219,7 +219,7 @@ void sc_musictree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis
     if (visible == 0) return;
     fn_8003B608(((ScMusictreePlacement*)def)->colorR, ((ScMusictreePlacement*)def)->colorG,
                  ((ScMusictreePlacement*)def)->colorB);
-    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     if ((state->flags & SCMUSICTREE_FLAG_SATELLITES) != 0)
     {
         for (i = 0; i < 3; i++)

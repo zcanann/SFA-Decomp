@@ -8,7 +8,7 @@
  */
 #include "main/camera_interface.h"
 #include "main/game_timer_control_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/dll/VF/platform1.h"
@@ -356,7 +356,7 @@ void sc_totemstrength_free(void)
 
 void sc_totemstrength_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }
 
 void sc_totemstrength_hitDetect(void)

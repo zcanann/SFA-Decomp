@@ -10,7 +10,7 @@
 #include "main/game_timer_control_api.h"
 #include "main/gametext_show_api.h"
 #include "main/audio/music_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/map_load.h"
@@ -180,7 +180,7 @@ void sc_levelcontrol_free(GameObject *obj)
 void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5554);
+    if (v != 0) objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E5554);
 }
 
 void sc_levelcontrol_hitDetect(void)
