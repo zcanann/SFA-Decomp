@@ -37,7 +37,7 @@
 #include "main/curve.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objHitReact.h"
@@ -111,7 +111,7 @@ void earthwalker_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6CE0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6CE0);
         dll_2E_func06(obj, (MoveLibState*)state, 0);
     }
 }

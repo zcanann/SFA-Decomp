@@ -14,7 +14,7 @@
 #include "main/sky_api.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
 #include "main/objseq.h"
@@ -753,7 +753,7 @@ void wclevelcont_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6DD8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6DD8);
     }
 }
 

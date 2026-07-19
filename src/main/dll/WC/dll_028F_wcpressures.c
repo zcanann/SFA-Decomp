@@ -25,7 +25,7 @@
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 
 #define WCPRESSURES_EXTRA_SIZE        0x7c
 #define WCPRESSURES_OBJECT_GROUP      0x31
@@ -124,7 +124,7 @@ void wcpressures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6E00);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6E00);
     }
 }
 
@@ -301,4 +301,3 @@ ObjectDescriptor gWCPressureSObjDescriptor = {
 };
 
 char sWCPressuresActivateFormat[] = " Avitvate %i ";
-

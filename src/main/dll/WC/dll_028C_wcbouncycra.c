@@ -2,7 +2,7 @@
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define WCBLOCK_VARIANT_A          1
@@ -33,7 +33,7 @@ void WCBouncyCra_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6D38);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E6D38);
     }
 }
 

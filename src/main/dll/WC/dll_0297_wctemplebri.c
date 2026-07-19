@@ -22,7 +22,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/WC/dll_0297_wctemplebri.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define WCTEMPLEBRI_EXTRA_SIZE        0x68
@@ -160,7 +160,7 @@ void wctemplebri_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
         return;
     }
 
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void wctemplebri_hitDetect(void)

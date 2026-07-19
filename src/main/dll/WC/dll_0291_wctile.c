@@ -20,7 +20,7 @@
 #include "main/dll/WC/dll_0291_wctile.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define WCTILE_RENDER_TYPE_BASE    0x400
@@ -71,7 +71,7 @@ void wctile_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6DF0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6DF0);
     }
 }
 

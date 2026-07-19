@@ -17,7 +17,7 @@
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
 #include "main/vecmath.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define WCTREXSTATU_CALLBACK_TRIGGER 1
@@ -80,7 +80,7 @@ void wctrexstatu_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6E10);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E6E10);
     }
 }
 

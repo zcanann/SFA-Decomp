@@ -44,7 +44,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebit_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 #define WCPUSHBLOCK_EXTRA_SIZE          0x288
@@ -139,7 +139,7 @@ void wcpushblock_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6D54);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6D54);
     }
 }
 

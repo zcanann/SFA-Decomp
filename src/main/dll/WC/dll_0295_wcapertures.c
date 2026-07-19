@@ -24,7 +24,7 @@
 #include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/model.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_descriptor.h"
 
 
@@ -128,7 +128,7 @@ void wcapertures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
     }
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
