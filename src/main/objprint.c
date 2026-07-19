@@ -1467,7 +1467,8 @@ void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, 
                 MtxPtr jm;
                 char* t;
                 int joint;
-                joint = (*(s8**)(*(char**)(staff + 0x50) + 0x2c))[off + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a];
+                t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
+                joint = *(s8*)(t + off + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a);
                 jm = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, joint);
                 t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
                 vp->x = *(f32*)(t + off + 0x18);
