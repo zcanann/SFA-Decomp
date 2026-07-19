@@ -4697,7 +4697,7 @@ void doHeatEffect(u8 alpha)
     u8 a1;
 
     *(IndMtxInit*)indMtx = lbl_802C1EA8.ind;
-    v = Camera_GetCurrentViewPitchSigned();
+    v = (s16)Camera_GetCurrentViewPitch();
     if (v < 0)
     {
         k = (((u16)(int)v >> 8) - 0xc0) << 2;

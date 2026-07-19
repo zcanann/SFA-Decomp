@@ -157,7 +157,5 @@ void fn_8000F9B4(void);
 u16 Camera_GetCurrentViewPitch(void);
 u16 Camera_GetCurrentViewYaw(void);
 
-#define Camera_GetCurrentViewPitchSigned() ((s16 (*)(void))Camera_GetCurrentViewPitch)()
-
 
 #endif /* MAIN_CAMERA_H_ */
