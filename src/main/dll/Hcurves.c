@@ -126,12 +126,6 @@ typedef int (*RomCurveProjectAdjacentLegacyFn)(int* curveIds, double x, double y
                                                 float* outLateralOffset, float* outVerticalOffset, float* outPhase);
 typedef int (*CurvesPointInsideLoopLegacyFn)(u32 curveId, double x, double y, double z, int* outDistance);
 
-#define RomCurve_getAdjacentWindowInt \
-    ((RomCurveGetAdjacentWindowIntFn)RomCurve_getAdjacentWindow)
-#define RomCurve_projectPointToAdjacentWindowLegacy \
-    ((RomCurveProjectAdjacentLegacyFn)RomCurve_projectPointToAdjacentWindow)
-#define curves_isPointInsideLoopLegacy \
-    ((CurvesPointInsideLoopLegacyFn)curves_isPointInsideLoop)
 extern char sObjfsaMissingPatchExitPoint0[];
 extern char sObjfsaMissingPatchExitPoint1[];
 extern f32 gFloatHalf;
@@ -2595,7 +2589,7 @@ int RomCurve_func16(double x, double y, double z)
     top = &candidateIds[candidateCount];
     while (candidateCount != 0)
     {
-        if (curves_isPointInsideLoopLegacy(candidateIds[0], x, y, z, &out) != 0)
+        if (((CurvesPointInsideLoopLegacyFn)curves_isPointInsideLoop)(candidateIds[0], x, y, z, &out) != 0)
         {
             return candidateIds[0];
         }
@@ -2812,10 +2806,10 @@ int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* 
     goto loopTest;
     do
     {
-        RomCurve_getAdjacentWindowInt(curve, adjacentWindow);
+        ((RomCurveGetAdjacentWindowIntFn)RomCurve_getAdjacentWindow)(curve, adjacentWindow);
         projected =
-            RomCurve_projectPointToAdjacentWindowLegacy(adjacentWindow, x, y, z, &lateralOffset, &verticalOffset,
-                                                        &phase);
+            ((RomCurveProjectAdjacentLegacyFn)RomCurve_projectPointToAdjacentWindow)(
+                adjacentWindow, x, y, z, &lateralOffset, &verticalOffset, &phase);
         if (projected != 0 && lateralOffset > -300.0f && lateralOffset < 300.0f &&
             verticalOffset > -100.0f && verticalOffset < 100.0f)
         {
