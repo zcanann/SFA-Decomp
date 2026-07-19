@@ -198,14 +198,14 @@ extern s16 gAndrossSwayPhaseX;
 extern u8 gAndrossPartTextureIndices[4];
 extern u32 gAndrossDistortFilterParam;
 
-void fn_80239DD8(GameObject* obj, AndrossState* state);
-void fn_80239EAC(GameObject* obj, AndrossState* state);
-void fn_80239FCC(GameObject* obj, AndrossState* state);
-void fn_8023A168(GameObject* obj, AndrossState* state);
-void fn_8023A268(GameObject* obj, AndrossState* state, int p3);
-void fn_8023A3E4(GameObject* obj, AndrossState* state);
-int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel);
-void fn_8023A87C(GameObject* obj, AndrossState* state);
+void andross_spawnBombCollector(GameObject* obj, AndrossState* state);
+void andross_steerAsteroids(GameObject* obj, AndrossState* state);
+void andross_spawnSuckAsteroid(GameObject* obj, AndrossState* state);
+void andross_spawnAsteroid(GameObject* obj, AndrossState* state);
+void andross_spawnAimedRing(GameObject* obj, AndrossState* state, int p3);
+void andross_processPartHits(GameObject* obj, AndrossState* state);
+int andross_trackArwingVelocity(AndrossState* state, f32 clampRange, f32 scale, f32 zVel);
+void andross_updateBombCollector(GameObject* obj, AndrossState* state);
 
 int andross_SeqFn(GameObject* obj);
 int andross_getExtraSize(void);

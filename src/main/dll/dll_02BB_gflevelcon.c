@@ -11,7 +11,7 @@
  *
  * The fn_8023* helpers (referenced from dll_02BC_andross.c) spawn and
  * aim the Arwing projectile/effect objects used during the boss fight,
- * and fn_8023A3E4 is the hit-reaction handler (three breakable hit
+ * and andross_processPartHits is the hit-reaction handler (three breakable hit
  * zones + texture-state swaps).
  */
 #include "main/pi_dolphin_api.h"
@@ -75,7 +75,7 @@ extern const f32 lbl_803E748C;
 #define GFLEVELCON_CHILD_OBJ_PROJECTILE_SPREAD 0x80d
 #define GFLEVELCON_CHILD_OBJ_PROJECTILE_AIMED  0x7e4
 #define GFLEVELCON_CHILD_OBJ_PROJECTILE_RING   0x859
-/* Object loaded at the nearest def-0x7e5 marker in fn_80239DD8, cached in
+/* Object loaded at the nearest def-0x7e5 marker in andross_spawnBombCollector, cached in
  * obj->extra+0x10 and faded in. */
 #define GFLEVELCON_CHILD_OBJ_MARKER_ATTACH 0x608
 
