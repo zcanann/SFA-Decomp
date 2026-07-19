@@ -594,7 +594,6 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
     int largestFree1;
     int largest;
 
-    largest = 0;
     largestFree0 = 0;
     largestFree1 = 0;
 
@@ -613,6 +612,7 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
     bestSize = 0x7fffffff;
     base = (HeapItem*)gMmRegionTable[region].start;
     idx = 0;
+    largest = 0;
 
     if (region == 0 && size < 0x33450)
     {
