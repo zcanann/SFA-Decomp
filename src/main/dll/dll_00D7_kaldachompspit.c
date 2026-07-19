@@ -65,7 +65,7 @@ void kaldachompspit_burst(GameObject* obj)
     if ((obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
     {
         rnd = randomGetRange(0, 1);
-        spawnExplosionLegacy((int)obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
+        spawnExplosion((GameObject*)(int)obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
     }
     else
     {
