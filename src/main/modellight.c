@@ -201,69 +201,72 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
         {
             return 0;
         }
-        return 1;
     }
-
-    if (localPos[2] - ((GameObject*)obj)->anim.hitboxScale > ((ModelLightStruct*)light)->projectionFarZ ||
-        localPos[2] + scaledExtent < ((ModelLightStruct*)light)->projectionNearZ)
+    else
     {
+        if (localPos[2] - ((GameObject*)obj)->anim.hitboxScale > ((ModelLightStruct*)light)->projectionFarZ ||
+            localPos[2] + scaledExtent < ((ModelLightStruct*)light)->projectionNearZ)
+        {
+            return 0;
+        }
+
+        combinedClipMask = 0x3f;
+        i = 0;
+        cv = cornerBlock.v;
+        zero = lbl_803DE75C;
+        for (; i < 8; i++)
+        {
+            worldPos[0] = localPos[0] + scaledExtent * cv[0];
+            worldPos[1] = localPos[1] + scaledExtent * cv[1];
+            worldPos[2] = localPos[2] + scaledExtent * cv[2];
+            PSMTXMultVec((f32*)(light + 0x1f0), worldPos, projected);
+            if (zero != projected[2])
+            {
+                projected[0] /= projected[2];
+                projected[1] /= projected[2];
+            }
+
+            clipMask = 0;
+            if (worldPos[2] < ((ModelLightStruct*)light)->projectionNearZ)
+            {
+                clipMask |= LIGHTCLIP_NEAR;
+            }
+            if (worldPos[2] > ((ModelLightStruct*)light)->projectionFarZ)
+            {
+                clipMask |= LIGHTCLIP_FAR;
+            }
+            if (projected[0] < zero)
+            {
+                clipMask |= LIGHTCLIP_LEFT;
+            }
+            else if (projected[0] > lbl_803DE760)
+            {
+                clipMask |= LIGHTCLIP_RIGHT;
+            }
+            if (projected[1] < zero)
+            {
+                clipMask |= LIGHTCLIP_BOTTOM;
+            }
+            else if (projected[1] > lbl_803DE760)
+            {
+                clipMask |= LIGHTCLIP_TOP;
+            }
+            if (clipMask == 0)
+            {
+                return 1;
+            }
+            combinedClipMask &= clipMask;
+            if (combinedClipMask == 0)
+            {
+                return 1;
+            }
+            cv += 3;
+        }
+
         return 0;
     }
 
-    combinedClipMask = 0x3f;
-    i = 0;
-    cv = cornerBlock.v;
-    zero = lbl_803DE75C;
-    for (; i < 8; i++)
-    {
-        worldPos[0] = localPos[0] + scaledExtent * cv[0];
-        worldPos[1] = localPos[1] + scaledExtent * cv[1];
-        worldPos[2] = localPos[2] + scaledExtent * cv[2];
-        PSMTXMultVec((f32*)(light + 0x1f0), worldPos, projected);
-        if (zero != projected[2])
-        {
-            projected[0] /= projected[2];
-            projected[1] /= projected[2];
-        }
-
-        clipMask = 0;
-        if (worldPos[2] < ((ModelLightStruct*)light)->projectionNearZ)
-        {
-            clipMask |= LIGHTCLIP_NEAR;
-        }
-        if (worldPos[2] > ((ModelLightStruct*)light)->projectionFarZ)
-        {
-            clipMask |= LIGHTCLIP_FAR;
-        }
-        if (projected[0] < zero)
-        {
-            clipMask |= LIGHTCLIP_LEFT;
-        }
-        else if (projected[0] > lbl_803DE760)
-        {
-            clipMask |= LIGHTCLIP_RIGHT;
-        }
-        if (projected[1] < zero)
-        {
-            clipMask |= LIGHTCLIP_BOTTOM;
-        }
-        else if (projected[1] > lbl_803DE760)
-        {
-            clipMask |= LIGHTCLIP_TOP;
-        }
-        if (clipMask == 0)
-        {
-            return 1;
-        }
-        combinedClipMask &= clipMask;
-        if (combinedClipMask == 0)
-        {
-            return 1;
-        }
-        cv += 3;
-    }
-
-    return 0;
+    return 1;
 }
 
 f32 modelLightStruct_getObjectIntensity(u8* light, u8* obj)
