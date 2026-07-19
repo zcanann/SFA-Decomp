@@ -84,7 +84,6 @@ enum
 extern f32 lbl_803E59D8;
 extern void* lbl_803AD068[8];
 void* lbl_803DDC58;
-extern f32 lbl_803E5A20;
 
 extern f32 lbl_803E59F0;
 
@@ -421,7 +420,7 @@ void ShopKeeper_update(GameObject* obj)
     f32 dist;
     player = Obj_GetPlayerObject();
     state = *(int*)&(obj)->extra;
-    dist = lbl_803E5A20;
+    dist = 10000.0f;
     ((ShopkeeperState*)state)->flags9D4 &= ~SHOPKEEPER_FLAG_TICK;
     if (((ShopkeeperState*)state)->textTimer > lbl_803E59DC)
     {
