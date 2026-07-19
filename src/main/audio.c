@@ -154,23 +154,6 @@ typedef struct AudioMemHookPair
     s32 free;
 } AudioMemHookPair;
 
-extern char sSampleBufferSLoadedCallbackLoadError[];
-extern char sSampleDirectorySLoadedCallbackLoadError[];
-extern char sProjectDataSLoadedCallbackLoadError[];
-extern char sPoolDataSLoadedCallbackLoadError[];
-extern char sSampleBufferMLoadedCallbackLoadError[];
-extern char sSampleDirectoryMLoadedCallbackLoadError[];
-extern char sProjectDataMLoadedCallbackLoadError[];
-extern char sPoolDataMLoadedCallbackLoadError[];
-extern char sStreamsLoadedCallbackLoadError[];
-extern char sSfxTriggersLoadedCallbackLoadError[];
-extern char sMusicTriggersLoadedCallbackLoadError[];
-extern char sMidiWadLoadedCallbackLoadError[];
-extern char sMidiWadPath[];
-extern u8 gSfxLoopedObjectSoundFlags[0x80];
-extern u16 gSfxLoopedObjectSoundIds[0x80];
-extern u32 gSfxLoopedObjectSoundObjects[0x80];
-
 void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3)
 {
     int idx;
