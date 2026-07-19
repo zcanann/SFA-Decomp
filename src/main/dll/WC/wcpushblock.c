@@ -23,6 +23,7 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/cloudaction_interface.h"
+#include "main/dll/WC/WCpushblock.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 
@@ -50,7 +51,7 @@ typedef struct WCPushBlockRotationWork
     f32 zeroZ;
 } WCPushBlockRotationWork;
 
-typedef struct WCPushBlockObject
+struct WCPushBlockObject
 {
     union
     {
@@ -74,7 +75,7 @@ typedef struct WCPushBlockObject
     u8 padB0[0xF4 - sizeof(ObjAnimComponent)];
     int actionState;
     void* spawnPath;
-} WCPushBlockObject;
+};
 
 STATIC_ASSERT(offsetof(WCPushBlockObject, anim) == 0x00);
 STATIC_ASSERT(offsetof(WCPushBlockObject, velocityX) == offsetof(ObjAnimComponent, velocityX));
@@ -83,7 +84,7 @@ STATIC_ASSERT(offsetof(WCPushBlockObject, linkedObject) == offsetof(ObjAnimCompo
 STATIC_ASSERT(offsetof(WCPushBlockObject, actionState) == offsetof(GameObject, userData1));
 STATIC_ASSERT(offsetof(WCPushBlockObject, spawnPath) == offsetof(GameObject, userData2));
 
-typedef struct WCPushBlockState
+struct WCPushBlockState
 {
     u8 pad0[0x10];
     void* linkedPushBlock;
@@ -101,7 +102,7 @@ typedef struct WCPushBlockState
     int stickY;
     f32 bankAmount;
     f32 liftBase;
-} WCPushBlockState;
+};
 
 #define WCPUSHBLOCK_SPAWN_OBJECT_ID  0x119
 #define WCPUSHBLOCK_SPAWN_SETUP_SIZE 0x18

@@ -45,7 +45,7 @@
 #include "main/object_descriptor.h"
 #include "main/dll/ship_battle_api.h"
 
-typedef struct SBCloudRunnerState
+struct SBCloudRunnerState
 {
     u8 pad0[0x10 - 0x0];
     GameObject* targetObj;  /* 0x10: laser-locked target (object type 0x8E) */
@@ -74,7 +74,7 @@ typedef struct SBCloudRunnerState
     f32 steerZ;         /* 0x7C */
     u8 aButtonHeld : 1; /* 0x80 & 1: A held last frame */
     u8 pad80 : 7;
-} SBCloudRunnerState;
+};
 
 /* Overlay for the A-held bit at state+0x80. Load-bearing: accessing it
  * through this separate typed pointer (not SBCloudRunnerState.aButtonHeld)
@@ -313,7 +313,7 @@ int SB_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
  * if the hit type is HIT_TYPE_BURST emit 3 hit-flash partfx followed by a
  * 10-shot debris burst. */
 
-void SB_CloudRunner_HandlePriorityHit(GameObject* obj, u8* state)
+void SB_CloudRunner_HandlePriorityHit(GameObject* obj, SBCloudRunnerState* state)
 {
     int hitObj;
     f32 pos[3];
@@ -334,7 +334,7 @@ void SB_CloudRunner_HandlePriorityHit(GameObject* obj, u8* state)
                     Sfx_PlayFromObject((int)obj, SFX_CLOUDRUNNER_HIT);
                 }
                 (obj)->anim.rotY = COLORFADE_RUMBLE_PRESET;
-                ((SBCloudRunnerState*)state)->rideSubState = RIDE_SUBSTATE_TILT;
+                state->rideSubState = RIDE_SUBSTATE_TILT;
                 args.scale = lbl_803E5C74;
                 args.v[0] = 0;
                 args.v[1] = 0;
@@ -569,7 +569,7 @@ void SB_CloudRunner_update(GameObject* obj)
     {
     case RIDE_SUBSTATE_STEER:
         SB_CloudRunner_UpdateSteer((s16*)obj, (u8*)state);
-        ((void (*)(int, int))SB_CloudRunner_HandlePriorityHit)((int)obj, (int)state);
+        ((void (*)(GameObject*, SBCloudRunnerState*))SB_CloudRunner_HandlePriorityHit)(obj, state);
         break;
     case RIDE_SUBSTATE_TILT:
         WCPushBlock_UpdateRideTilt((WCPushBlockObject*)obj, (WCPushBlockState*)state);
@@ -591,7 +591,7 @@ void SB_CloudRunner_update(GameObject* obj)
     {
         state->rideFrames = 0;
     }
-    ((void (*)(int, int))WCPushBlock_UpdateCloudAction)((int)obj, (int)state);
+    ((void (*)(int, WCPushBlockState*))WCPushBlock_UpdateCloudAction)((int)obj, (WCPushBlockState*)state);
 }
 
 
