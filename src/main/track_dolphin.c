@@ -424,10 +424,10 @@ void setupToRenderMapBlock(int* block, void* posMtx)
     GXLoadNrmMtxImm((const f32 (*)[4])tmp, GX_PNMTX0);
     PSMTXConcat((f32*)lbl_803967F0, (f32*)posMtx, out);
     GXLoadTexMtxImm((const f32 (*)[4])out, GX_TEXMTX2, GX_MTX3x4);
-    GXSetArray(GX_VA_POS, *(void**)((char*)block + 0x58), 6);
+    GXSetArray(GX_VA_POS, ((MapBlockData*)block)->vertices, 6);
     GXSetArray(GX_VA_CLR0, *(void**)((char*)block + 0x5C), 2);
-    GXSetArray(GX_VA_TEX0, *(void**)((char*)block + 0x60), 4);
-    GXSetArray(GX_VA_TEX1, *(void**)((char*)block + 0x60), 4);
+    GXSetArray(GX_VA_TEX0, ((MapBlockData*)block)->vertexTexCoords, 4);
+    GXSetArray(GX_VA_TEX1, ((MapBlockData*)block)->vertexTexCoords, 4);
 }
 
 void renderMapBlock(int* o, u8 type)
@@ -445,17 +445,17 @@ void renderMapBlock(int* o, u8 type)
     if (type == 1)
     {
         ptr = *(int*)&((GameObject*)o)->anim.banks;
-        count = *(u16*)((char*)o + 0x86);
+        count = ((MapBlockData*)o)->nRenderInstrsTransp;
     }
     else if (type == 2)
     {
         ptr = *(int*)&((GameObject*)o)->anim.previousLocalPosX;
-        count = *(u16*)((char*)o + 0x88);
+        count = ((MapBlockData*)o)->nRenderInstrsWater;
     }
     else
     {
         ptr = *(int*)&((GameObject*)o)->anim.hitVolumeBounds;
-        count = *(u16*)((char*)o + 0x84);
+        count = ((MapBlockData*)o)->nRenderInstrsMain;
         flag = 1;
     }
     if ((u16)count == 0)
@@ -956,8 +956,8 @@ void MapBlock_initHits(GameObject* obj, int index)
     s16 v;
     if (size > 0)
     {
-        *(void**)((char*)obj + 0x70) = mmAlloc(size, 5, 0);
-        fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, *(void**)((char*)obj + 0x70), fileOff, size);
+        ((MapBlockData*)obj)->hits = mmAlloc(size, 5, 0);
+        fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, ((MapBlockData*)obj)->hits, fileOff, size);
     }
     ((MapBlockData*)obj)->hitCount = (u32)size / 20;
     for (i = 0; i < ((MapBlockData*)obj)->hitCount; i++)
