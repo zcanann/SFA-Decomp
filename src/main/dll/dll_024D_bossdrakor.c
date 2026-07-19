@@ -75,10 +75,8 @@ f32 lbl_803DC194 = 150.0f;
 s16 lbl_803DC198 = 0xE38;
 s16 lbl_803DC19A = 0x2D8;
 
-#define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
-    ((int (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
-#define ObjLink_AttachChildLegacy(parent, child, mode) \
-    ((u64 (*)())ObjLink_AttachChild)((parent), (child), (mode))
+typedef int (*BossDrakorFindNearestObjectFn)(int group, GameObject* obj, f32* distance);
+
 #define BOSSDRAKOR_MAP_ARENA          0x1d /* map-event id set to act 3 on boss defeat */
 #define BOSSDRAKOR_OBJGROUP           0x45
 #define BOSSDRAKOR_PARTFX             0x7ad
@@ -116,7 +114,7 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
         switch (eventId)
         {
         case 6:
-            target = ObjGroup_FindNearestObjectLegacy(DBHOLECONTROL1_OBJGROUP, obj, 0);
+            target = ((BossDrakorFindNearestObjectFn)ObjGroup_FindNearestObject)(DBHOLECONTROL1_OBJGROUP, obj, 0);
             if ((void*)target != NULL && (obj)->childCount != 0)
             {
                 (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)target)->anim.dll) + 0x20)))(target, 2);
@@ -124,11 +122,11 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
             }
             break;
         case 7:
-            target = ObjGroup_FindNearestObjectLegacy(DBHOLECONTROL1_OBJGROUP, obj, 0);
+            target = ((BossDrakorFindNearestObjectFn)ObjGroup_FindNearestObject)(DBHOLECONTROL1_OBJGROUP, obj, 0);
             if ((void*)target != NULL)
             {
                 (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)&((GameObject*)target)->anim.dll) + 0x20)))(target, 0);
-                ObjLink_AttachChildLegacy(obj, target, 1);
+                ObjLink_AttachChild(obj, (GameObject*)target, 1);
                 ((BossDrakorState*)inner)->textTimer = lbl_803E6514;
             }
             break;
