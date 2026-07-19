@@ -353,16 +353,3 @@ ObjectDescriptor dll_1D6 = {
     (ObjectDescriptorExtraSizeCallback)dll_1D6_getExtraSize,
 };
 
-const f32 lbl_803E4AA0 = 1.0f;
-const f32 lbl_803E4AA4 = 0.9f;
-const f32 lbl_803E4AA8 = -0.1f;
-const f32 lbl_803E4AAC = 0.05f;
-const f32 lbl_803E4AB0 = 0.98f;
-const f32 lbl_803E4AB4 = 0.1f;
-const f32 lbl_803E4AB8 = 36.0f;
-const f32 lbl_803E4ABC = 0.75f;
-const f32 lbl_803E4AC0[2] = {2.1f, 0.0f};
-const f32 lbl_803E4AC8 = 2.859375f;
-const f32 lbl_803E4ACC = 0.0f;
-const f32 lbl_803E4AD0 = 0.0f;
-const f32 lbl_803E4AD4 = 0.0f;
