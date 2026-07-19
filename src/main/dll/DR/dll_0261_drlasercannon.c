@@ -545,8 +545,8 @@ void DR_LaserCannon_update(GameObject* obj)
     {
         Obj_UpdateRomCurveFollowVelocity(obj, &state->curveFollow, lbl_803E6914 * lbl_803DC2A8, lbl_803E6918,
                                          lbl_803E6908, 1);
-        ((void (*)(void*, f32, f32, f32))objMove)(obj, (obj)->anim.velocityX * timeDelta,
-                                                  (obj)->anim.velocityY * timeDelta, (obj)->anim.velocityZ * timeDelta);
+        objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+                obj->anim.velocityZ * timeDelta);
     }
     else
     {

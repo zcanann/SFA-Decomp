@@ -229,7 +229,7 @@ void DR_BarrelGr_update(GameObject* obj)
         f32 spd = gDrBarrelGenCarrySpeedScale * (f32)state->carrySpeed;
         int r = Obj_UpdateRomCurveFollowVelocity(obj, &state->curve, spd * timeDelta,
                                                  lbl_803E6CBC, lbl_803E6CB4, 1);
-        ((void (*)(void*, f32, f32, f32))objMove)(obj, obj->anim.velocityX, obj->anim.velocityY, obj->anim.velocityZ);
+        objMove(obj, obj->anim.velocityX, obj->anim.velocityY, obj->anim.velocityZ);
         if (r != 0)
         {
             newMode = r - 1;

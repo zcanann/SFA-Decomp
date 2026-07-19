@@ -445,9 +445,8 @@ u8 trickyBallMove(GameObject* obj)
         obj->anim.velocityY -= 0.05f * timeDelta;
     }
 
-    ((void (*)(int, f32, f32, f32))objMove)(
-        (int)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
-        obj->anim.velocityZ * timeDelta);
+    objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+            obj->anim.velocityZ * timeDelta);
     (*gPathControlInterface)->update(obj, state, timeDelta);
     (*gPathControlInterface)->apply(obj, state);
     (*gPathControlInterface)->advance(obj, state, timeDelta);
