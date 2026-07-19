@@ -36,6 +36,11 @@
 #include "main/dll/baddie_frozen.h"
 
 
+/* explosive-barrel attackers; a hit from one skips the sword/impact sfx.
+   retail OBJECTS.bin names "GunPowderBa" and "MetalBarrel" (both DLL 0x158) */
+#define NEWSEQOBJ_ATTACKER_GUNPOWDERBARREL 0x6d
+#define NEWSEQOBJ_ATTACKER_METALBARREL     0x754
+
 /* per-family anim-table row: speed + flags + anim ids and chain links */
 typedef struct
 {
@@ -116,7 +121,7 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
         if (msgId != 0x11)
         {
             f32 z;
-            if (msgId != 0x1a && attacker->anim.seqId != 0x6d && attacker->anim.seqId != 0x754)
+            if (msgId != 0x1a && attacker->anim.seqId != NEWSEQOBJ_ATTACKER_GUNPOWDERBARREL && attacker->anim.seqId != NEWSEQOBJ_ATTACKER_METALBARREL)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_swdout1);
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_gethit02);
@@ -234,7 +239,7 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_attack);
         }
-        if (msgId != 0x1a && msgId != 0x1f && attacker->anim.seqId != 0x6d && attacker->anim.seqId != 0x754)
+        if (msgId != 0x1a && msgId != 0x1f && attacker->anim.seqId != NEWSEQOBJ_ATTACKER_GUNPOWDERBARREL && attacker->anim.seqId != NEWSEQOBJ_ATTACKER_METALBARREL)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_stftest);
         }

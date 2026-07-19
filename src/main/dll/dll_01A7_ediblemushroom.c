@@ -37,6 +37,13 @@
 #define EDIBLEMUSHROOM_FLAG_STRUCK        0x10    /* hit by the player this cycle */
 #define EDIBLEMUSHROOM_MSG_IN_RANGE       0x7000a /* sent to player when grab is offered */
 #define EDIBLEMUSHROOM_OBJGROUP           0x47
+
+/* the white-mushroom variant, the only one with a pickup particle burst;
+   retail OBJECTS.bin name "SH_whitemus" (DLL 0x1A7) */
+#define EDIBLEMUSHROOM_OBJ_WHITE 0x658
+/* attacker exempt from the struck-by-player reaction; retail OBJECTS.bin name
+   "DR_EarthWar" (DLL 0x257) */
+#define EDIBLEMUSHROOM_ATTACKER_EARTHWALKER 0x416
 #define EDIBLEMUSHROOM_OBJGROUP_SECONDARY 0x31
 
 /* effect emitted on the tailSwingFxTimer tick while idle/rendered */
@@ -373,7 +380,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                     if (Vec_xzDistance(&player->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) < 25.0f)
                     {
                         (*gExpgfxInterface)->freeSource((int)obj);
-                        if (((GameObject*)obj)->anim.seqId == 0x658)
+                        if (((GameObject*)obj)->anim.seqId == EDIBLEMUSHROOM_OBJ_WHITE)
                         {
                             ((EdibleMushroomState*)state)->pickupMsgBitId = 0x18a;
                             itemPickupDoParticleFxLegacy(obj, 1.0f, 0xff, 0x28);
@@ -604,7 +611,7 @@ void EdibleMushroom_update(u8* self)
             ObjHits_DisableObject((GameObject*)self);
             gameBitIncrement(((EdibleMushroomState*)state)->collectedGameBitId);
             mainSetBits(GAMEBIT_ITEM_TrickyFood_GrabInProgress, 0);
-            if (((GameObject*)self)->anim.seqId == 0x658)
+            if (((GameObject*)self)->anim.seqId == EDIBLEMUSHROOM_OBJ_WHITE)
             {
                 itemPickupDoParticleFxLegacy(self, 1.0f, 0xFF, 0x28);
             }
@@ -659,7 +666,7 @@ void EdibleMushroom_update(u8* self)
         else
         {
             Obj_SetModelColorFadeRecursive((GameObject*)self, 0xF, 0xC8, 0, 0, 1);
-            if (((GameObject*)hitObj)->anim.seqId != 0x416)
+            if (((GameObject*)hitObj)->anim.seqId != EDIBLEMUSHROOM_ATTACKER_EARTHWALKER)
             {
                 if ((((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_STRUCK) == 0)
                 {
@@ -754,7 +761,7 @@ void EdibleMushroom_init(GameObject* obj, int aux)
     ObjGroup_AddObject((int)obj, EDIBLEMUSHROOM_OBJGROUP_SECONDARY);
     ObjGroup_AddObject((int)obj, EDIBLEMUSHROOM_OBJGROUP);
 
-    if ((obj)->anim.seqId == 0x658)
+    if ((obj)->anim.seqId == EDIBLEMUSHROOM_OBJ_WHITE)
     {
         ((EdibleMushroomState*)state)->collectedGameBitId = 0x66d;
     }
