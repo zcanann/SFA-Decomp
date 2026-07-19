@@ -241,3 +241,7 @@ Reading key — the three proven "bad split" signatures:
 | 1 | ProDG island (zlbDecompress + render gap_03) | toolchain split (configure.py + new units) | breaks a hard cap + ~4.8 KB uncarved code |
 | 2 | Tricky family → 3 TUs (TU-C first) | splits/symbols redraw + merged-TU wrapper | +2 units / +416 B now; 13 carves structurally fixed |
 | 3 | Global-bias-redraw remainder (dbegg, arwingandrossstuff, dll_3b, voice_manage) | cracked force_active + boundary-redraw recipe | ~+1 unit each |
+
+## Added 2026-07-19 (agent-verified TU re-split leads)
+- **objseq::ObjSeq_onMapSetup (80.58%)** — byte-matches 189/190 under `-opt nopropagation` + unroll-off (the manual 8x unroll of loop 1 is a dev fingerprint of unroll-off authoring), but that whole-TU flag REGRESSES 12 siblings (ObjSeq_seqState_init 100→80, ObjSeq_ToggleCommand3Target 100→82, RebuildCurveStateToFrame 99.6→83, …). ⇒ needs onMapSetup isolated into its own propagation-off/unroll-off TU. Confirmed impossible via whole-TU cflag; re-split only.
+- **dll_0052_cameramodeforcebehind** — the reverse case (LANDED): whole-TU flip TO `noopt_noprop`→`noopt` worked (all 8 fns matched under prop-on) because the WHOLE unit wanted prop-on; dimexplosion same (noprop_noinline→noinline, unit→100). Pattern: whole-TU cflag flip works when the ENTIRE unit shares the retail flag; re-split needed only when fns within one unit disagree (objseq).
