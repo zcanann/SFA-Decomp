@@ -3,6 +3,8 @@
 
 #include "global.h"
 
+struct GameObject;
+
 typedef struct PushablePoint {
   f32 x;
   f32 y;
@@ -105,5 +107,7 @@ STATIC_ASSERT(offsetof(PushableState, posHistZ) == 0x12C);
 STATIC_ASSERT(offsetof(PushableState, yaw) == 0x140);
 STATIC_ASSERT(offsetof(PushableState, requiredHitId) == 0x144);
 STATIC_ASSERT(offsetof(PushableState, savePosEnabled) == 0x146);
+
+void pushable_resolveCollisions(struct GameObject* obj, PushableState* state);
 
 #endif /* MAIN_DLL_PUSHABLE_H_ */

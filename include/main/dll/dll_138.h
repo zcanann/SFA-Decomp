@@ -7,7 +7,6 @@
 
 struct PushableState;
 void pushable_initMagicGem(GameObject* param_1, struct PushableState* param_2);
-void pushable_resolveCollisions(GameObject* obj, int ext);
 u32 pushable_SeqFn(short* param_1, short* param_2, ObjAnimUpdateState* animUpdate);
 void pushable_handleMsgs(GameObject* obj);
 int pushable_render2(GameObject* obj);

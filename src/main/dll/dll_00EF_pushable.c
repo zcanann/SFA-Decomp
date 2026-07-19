@@ -157,7 +157,6 @@ void pushable_free(int* obj);
 void pushable_update(int* obj);
 void pushable_init(s16* obj, char* def);
 void pushable_handleMsgs();
-void pushable_resolveCollisions(GameObject* obj, PushableState* ext);
 
 ObjectDescriptor14 gPushableObjDescriptor = {
     0,
