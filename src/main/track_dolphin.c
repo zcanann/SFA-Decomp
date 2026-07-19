@@ -5352,168 +5352,170 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         tri->edgeOutBits = b;
                     }
                 }
-                if (hit == 0 && mag == 0.0f)
-                    continue;
                 if (hit == 0)
-                for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
-                     (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                 {
-                    u8 edgeBit;
-                    if (tri->edgeOutBits == 0)
+                    if (mag == 0.0f)
                         continue;
-                    for (edgeBit = 0; edgeBit < 3; edgeBit++)
+                    for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
+                         (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                     {
-                        s16* vs;
-                        u8 k;
-                        if ((tri->edgeOutBits & (1 << edgeBit)) == 0)
+                        u8 edgeBit;
+                        if (tri->edgeOutBits == 0)
                             continue;
-                        k = edgeBit + 1;
-                        if (k > 2)
-                            k = 0;
-                        vs = (s16*)((u8*)tri + edgeBit * 2);
-                        va[0] = vs[8];
-                        va[1] = vs[0xb];
-                        va[2] = vs[0xe];
-                        vs = (s16*)((u8*)tri + k * 2);
-                        vb[0] = vs[8];
-                        vb[1] = vs[0xb];
-                        vb[2] = vs[0xe];
-                        PSVECSubtract(vbp, va, evecp);
-                        rdatap[2] = Vec3_Normalize(evecp);
-                        if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, 0.0f, hitpt, plane,
-                                                 &frac))
+                        for (edgeBit = 0; edgeBit < 3; edgeBit++)
                         {
-                            hit = 1;
+                            s16* vs;
+                            u8 k;
+                            if ((tri->edgeOutBits & (1 << edgeBit)) == 0)
+                                continue;
+                            k = edgeBit + 1;
+                            if (k > 2)
+                                k = 0;
+                            vs = (s16*)((u8*)tri + edgeBit * 2);
+                            va[0] = vs[8];
+                            va[1] = vs[0xb];
+                            va[2] = vs[0xe];
+                            vs = (s16*)((u8*)tri + k * 2);
+                            vb[0] = vs[8];
+                            vb[1] = vs[0xb];
+                            vb[2] = vs[0xe];
+                            PSVECSubtract(vbp, va, evecp);
+                            rdatap[2] = Vec3_Normalize(evecp);
+                            if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, 0.0f, hitpt, plane,
+                                                     &frac))
+                            {
+                                hit = 1;
+                                break;
+                            }
+                        }
+                        if (hit != 0)
                             break;
-                        }
                     }
-                    if (hit != 0)
-                        break;
-                }
-                if (hit == 0)
-                for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
-                     (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
-                {
-                    if (tri->edgeOutBits == 0)
-                        continue;
-                    for (vertexBit = 0; vertexBit < 3; vertexBit++)
+                    if (hit == 0)
+                    for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
+                         (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                     {
-                        s16* vs;
-                        int ok;
-                        if ((tri->edgeOutBits & (1 << vertexBit)) == 0)
+                        if (tri->edgeOutBits == 0)
                             continue;
-                        nextBit = vertexBit + 1;
-                        if (nextBit > 2)
-                            nextBit = 0;
-                        vs = (s16*)((u8*)tri + vertexBit * 2);
-                        va[0] = vs[8];
-                        va[1] = vs[0xb];
-                        va[2] = vs[0xe];
-                        rr = rdatap[1];
-                        PSVECSubtract(va, ws, tmp1);
-                        dotv = PSVECDotProduct(tmp1, dir);
-                        sq = PSVECSquareMag(tmp1);
-                        if (dotv < 0.0f && sq > rr)
+                        for (vertexBit = 0; vertexBit < 3; vertexBit++)
                         {
-                            ok = 0;
-                        }
-                        else
-                        {
-                            disc = -(dotv * dotv - sq);
-                            if (disc > rr)
+                            s16* vs;
+                            int ok;
+                            if ((tri->edgeOutBits & (1 << vertexBit)) == 0)
+                                continue;
+                            nextBit = vertexBit + 1;
+                            if (nextBit > 2)
+                                nextBit = 0;
+                            vs = (s16*)((u8*)tri + vertexBit * 2);
+                            va[0] = vs[8];
+                            va[1] = vs[0xb];
+                            va[2] = vs[0xe];
+                            rr = rdatap[1];
+                            PSVECSubtract(va, ws, tmp1);
+                            dotv = PSVECDotProduct(tmp1, dir);
+                            sq = PSVECSquareMag(tmp1);
+                            if (dotv < 0.0f && sq > rr)
                             {
                                 ok = 0;
                             }
                             else
                             {
-                                root = sqrtf(rr - disc);
-                                if (sq > rr)
-                                {
-                                    dotv = dotv - root;
-                                }
-                                else
-                                {
-                                    dotv = dotv + root;
-                                }
-                                if (dotv >= 0.0f && dotv <= mag)
-                                {
-                                    PSVECScale(dir, hitpt, dotv);
-                                    PSVECAdd(ws, hitpt, hitpt);
-                                    PSVECSubtract(hitpt, va, plane);
-                                    PSVECNormalize(plane, plane);
-                                    root = sqrtf(rr);
-                                    ndot = -PSVECDotProduct(hitpt, plane);
-                                    plane[3] = ndot + root;
-                                    frac = dotv;
-                                    ok = 1;
-                                }
-                                else
+                                disc = -(dotv * dotv - sq);
+                                if (disc > rr)
                                 {
                                     ok = 0;
                                 }
+                                else
+                                {
+                                    root = sqrtf(rr - disc);
+                                    if (sq > rr)
+                                    {
+                                        dotv = dotv - root;
+                                    }
+                                    else
+                                    {
+                                        dotv = dotv + root;
+                                    }
+                                    if (dotv >= 0.0f && dotv <= mag)
+                                    {
+                                        PSVECScale(dir, hitpt, dotv);
+                                        PSVECAdd(ws, hitpt, hitpt);
+                                        PSVECSubtract(hitpt, va, plane);
+                                        PSVECNormalize(plane, plane);
+                                        root = sqrtf(rr);
+                                        ndot = -PSVECDotProduct(hitpt, plane);
+                                        plane[3] = ndot + root;
+                                        frac = dotv;
+                                        ok = 1;
+                                    }
+                                    else
+                                    {
+                                        ok = 0;
+                                    }
+                                }
                             }
-                        }
-                        if (ok)
-                        {
-                            hit = 1;
-                            break;
-                        }
-                        vs = (s16*)((u8*)tri + nextBit * 2);
-                        vb[0] = vs[8];
-                        vb[1] = vs[0xb];
-                        vb[2] = vs[0xe];
-                        dE = rdatap[1];
-                        PSVECSubtract(vbp, ws, tmp2);
-                        sq = PSVECDotProduct(tmp2, dir);
-                        dotv = PSVECSquareMag(tmp2);
-                        if (sq < 0.0f && dotv > dE)
-                        {
-                            ok = 0;
-                        }
-                        else
-                        {
-                            disc = -(sq * sq - dotv);
-                            if (disc > dE)
+                            if (ok)
+                            {
+                                hit = 1;
+                                break;
+                            }
+                            vs = (s16*)((u8*)tri + nextBit * 2);
+                            vb[0] = vs[8];
+                            vb[1] = vs[0xb];
+                            vb[2] = vs[0xe];
+                            dE = rdatap[1];
+                            PSVECSubtract(vbp, ws, tmp2);
+                            sq = PSVECDotProduct(tmp2, dir);
+                            dotv = PSVECSquareMag(tmp2);
+                            if (sq < 0.0f && dotv > dE)
                             {
                                 ok = 0;
                             }
                             else
                             {
-                                root = sqrtf(dE - disc);
-                                if (dotv > dE)
-                                {
-                                    tt = sq - root;
-                                }
-                                else
-                                {
-                                    tt = sq + root;
-                                }
-                                if (tt >= 0.0f && tt <= mag)
-                                {
-                                    PSVECScale(dir, hitpt, tt);
-                                    PSVECAdd(ws, hitpt, hitpt);
-                                    PSVECSubtract(hitpt, vbp, plane);
-                                    PSVECNormalize(plane, plane);
-                                    root = sqrtf(dE);
-                                    ndot = -PSVECDotProduct(hitpt, plane);
-                                    plane[3] = ndot + root;
-                                    frac = tt;
-                                    ok = 1;
-                                }
-                                else
+                                disc = -(sq * sq - dotv);
+                                if (disc > dE)
                                 {
                                     ok = 0;
                                 }
+                                else
+                                {
+                                    root = sqrtf(dE - disc);
+                                    if (dotv > dE)
+                                    {
+                                        tt = sq - root;
+                                    }
+                                    else
+                                    {
+                                        tt = sq + root;
+                                    }
+                                    if (tt >= 0.0f && tt <= mag)
+                                    {
+                                        PSVECScale(dir, hitpt, tt);
+                                        PSVECAdd(ws, hitpt, hitpt);
+                                        PSVECSubtract(hitpt, vbp, plane);
+                                        PSVECNormalize(plane, plane);
+                                        root = sqrtf(dE);
+                                        ndot = -PSVECDotProduct(hitpt, plane);
+                                        plane[3] = ndot + root;
+                                        frac = tt;
+                                        ok = 1;
+                                    }
+                                    else
+                                    {
+                                        ok = 0;
+                                    }
+                                }
+                            }
+                            if (ok)
+                            {
+                                hit = 1;
+                                break;
                             }
                         }
-                        if (ok)
-                        {
-                            hit = 1;
+                        if (hit != 0)
                             break;
-                        }
                     }
-                    if (hit != 0)
-                        break;
                 }
                 if (hit != 0)
                 {
