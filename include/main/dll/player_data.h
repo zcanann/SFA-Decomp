@@ -132,7 +132,7 @@ STATIC_ASSERT(offsetof(PlayerAnimSpeedTuning, foxStopMoveSpeeds) == 0x70);
 STATIC_ASSERT(offsetof(PlayerAnimSpeedTuning, krystalStopMoveSpeeds) == 0x80);
 
 extern PlayerAnimSpeedTuning gPlayerAnimSpeedThresholds;
-extern int gPlayerMoveTableA[48];
+extern s16 gPlayerMoveTableA[96];
 extern s16 gPlayerSpellGameBits[52];
 extern s16 gPlayerMoveTableB[14];
 extern s16 gPlayerMoveSlotTable[44];
