@@ -4,22 +4,21 @@
  * a GameObject plus its BaddieState scratch block; the pairs below are
  * (init, update) sets plus hit/reaction callbacks selected per type:
  *
- *   guardClaw_init / fn_80152514: a child-zapping curve-follower. Init seeds
- *     speed/scale/state flags from the placement row; update runs a child-
- *     zap timer, advances along a rom curve, steps heading from the curve
- *     tangent, plays landing/laser sfx, emits light-pulse + masked-hit fx
- *     while the active flag (objectFlags 0x800) is set, clamps vertical
- *     velocity, and spawns/parents a spark child object.
- *   gcRobotPatrol_init / mikaladon_update: a firefly hover. Init seeds state; update
- *     drives a circular drift, bobs between two heights, periodically
- *     spawns a dropped object, and runs ambient sfx timers.
- *   fn_80152040: a 12-byte-row state-table driver (gSeq11EStateTable) that
- *     advances on GameBit + sequence flags and kicks the matching anim.
+ *   gcRobotPatrol_init / gcRobotPatrol_update: a child-zapping curve-follower. Init seeds
+ *     speed/scale/state flags; update runs a child-zap timer, advances along
+ *     a rom curve, steps heading from the curve tangent, plays landing/laser
+ *     sfx, emits light-pulse + masked-hit fx while the active flag
+ *     (objectFlags 0x800) is set, clamps vertical velocity, and
+ *     spawns/parents a spark child object.
+ *   guardClaw_init / guardClaw_update: a 12-byte-row state-table driver (gSeq11EStateTable)
+ *     that advances on GameBit + sequence flags and kicks the matching anim.
  *   gcRobotLight_init: spawns and sets up a child object at the parent's pos.
- *   gcRobotPatrol_updateWhileFrozen / mikaladon_updateWhileFrozen: hit/reaction message callbacks.
+ *   gcRobotPatrol_updateWhileFrozen / mikaladon_updateWhileFrozen: hit/reaction message
+ *     callbacks (the rest of the mikaladon family lives in mikaladon.c).
  *
- * Object type ids handled (from the enemy dispatch table): 0xd8/0x281
- * (state-table), 0x613 (curve-follower update), 0x642 (firefly).
+ * defNos handled (from the enemy dispatch table, named per retail OBJECTS.bin):
+ * 0xd8 GuardClaw (state-table), 0x613 GCRobotPatrol (curve-follower),
+ * 0x642 Mikaladon.
  */
 #include "main/audio/sfx_ids.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -58,7 +57,7 @@ f32 lbl_803DBCB4 = 240.0f;
 typedef void (*SeqObj11ESetMovePointerStateFn)(GameObject* obj, void* state, int moveId, f32 speed, int p5,
                                                int flags);
 
-/* fn_80152040: state-table driver: walks the 12-byte gSeq11EStateTable state
+/* guardClaw_update: state-table driver: walks the 12-byte gSeq11EStateTable state
  * rows, advancing on GameBit + sequence flags and kicking the matching anim. */
 
 typedef struct
@@ -73,7 +72,7 @@ typedef struct
 
 extern Seq11ERow gSeq11EStateTable[];
 
-void fn_80152040(int* obj, u8* state)
+void guardClaw_update(int* obj, u8* state)
 {
     int* def = *(int**)&((GameObject*)obj)->anim.placementData;
     u32 flags;
@@ -208,7 +207,7 @@ void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int
     obj->anim.velocityX = fz;
 }
 
-/* fn_80152514: main update: child-zap timer, curve follow, heading steps,
+/* gcRobotPatrol_update: main update: child-zap timer, curve follow, heading steps,
  * landing sfx, light-pulse fx, child spark spawn. */
 
 
@@ -221,7 +220,7 @@ typedef struct
     f32 d;
 } SeqFxParams;
 
-void fn_80152514(int* obj, u8* state)
+void gcRobotPatrol_update(int* obj, u8* state)
 {
     int* def;
     RomCurveWalker* path;

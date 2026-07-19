@@ -194,36 +194,36 @@ void objAnimFn_8014a9f0(short* obj, int state)
             case 0x5b9:
             case 0x5e1:
             case 0x7a6:
-                fn_8015165C((GameObject*)(obj), (u8*)state);
+                sharpClawUpdateAttack((GameObject*)(obj), (u8*)state);
                 break;
             case 0xd8:
             case 0x281:
-                fn_80152040((int*)obj, (u8*)state);
+                guardClaw_update((int*)obj, (u8*)state);
                 break;
             case 0x613:
-                fn_80152514((int*)obj, (u8*)state);
+                gcRobotPatrol_update((int*)obj, (u8*)state);
                 break;
             case 0x642:
                 mikaladon_update((int*)obj, (u8*)state);
                 break;
             case 0x3fe:
             case 0x7c6:
-                fn_80153248((GameObject*)(obj), state);
+                vambat_updateEngaged((GameObject*)(obj), state);
                 break;
             case 0x58b:
-                fn_80153BFC((GameObject*)(obj), state);
+                kooshy_updateEngaged((GameObject*)(obj), state);
                 break;
             case 0x369:
-                fn_801540A0((int)obj, state);
+                weevil_updateEngaged((int)obj, state);
                 break;
             case 0x251:
-                fn_80154870((GameObject*)(obj), (int*)state);
+                pinPon_updateEngaged((GameObject*)(obj), (int*)state);
                 break;
             case 0x25d:
                 rachnopUpdateAttack((int*)obj, state);
                 break;
             case 0x457:
-                fn_80156010((u32)obj, state);
+                spittingEbaUpdateEngaged((u32)obj, state);
                 break;
             case 0x4d7:
                 wbUpdateEngaged((u32)obj, state);
@@ -242,7 +242,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 hoodedZyck_update(obj, (u8*)state);
                 break;
             case 0x427:
-                fn_8014FF24((int)obj, state);
+                battleDroidUpdateAttack((int)obj, state);
                 break;
             case 0x6a2:
             case 0x6a3:
@@ -255,7 +255,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 break;
             case 0x7c7:
             default:
-                fn_8014FF24((int)obj, state);
+                battleDroidUpdateAttack((int)obj, state);
                 break;
             }
         }
@@ -271,36 +271,36 @@ void objAnimFn_8014a9f0(short* obj, int state)
             case 0x5b9:
             case 0x5e1:
             case 0x7a6:
-                fn_80150EDC((GameObject*)(obj), (void*)state);
+                sharpClawUpdateApproach((GameObject*)(obj), (void*)state);
                 break;
             case 0xd8:
             case 0x281:
-                fn_80152040((int*)obj, (u8*)state);
+                guardClaw_update((int*)obj, (u8*)state);
                 break;
             case 0x613:
-                fn_80152514((int*)obj, (u8*)state);
+                gcRobotPatrol_update((int*)obj, (u8*)state);
                 break;
             case 0x642:
                 mikaladon_update((int*)obj, (u8*)state);
                 break;
             case 0x3fe:
             case 0x7c6:
-                fn_80153248((GameObject*)(obj), state);
+                vambat_updateEngaged((GameObject*)(obj), state);
                 break;
             case 0x58b:
-                fn_80153BFC((GameObject*)(obj), state);
+                kooshy_updateEngaged((GameObject*)(obj), state);
                 break;
             case 0x369:
-                fn_801540A0((int)obj, state);
+                weevil_updateEngaged((int)obj, state);
                 break;
             case 0x251:
-                fn_80154870((GameObject*)(obj), (int*)state);
+                pinPon_updateEngaged((GameObject*)(obj), (int*)state);
                 break;
             case 0x25d:
                 rachnopUpdateApproach((int*)obj, state);
                 break;
             case 0x457:
-                fn_80156010((u32)obj, state);
+                spittingEbaUpdateEngaged((u32)obj, state);
                 break;
             case 0x4d7:
                 wbUpdateEngaged((u32)obj, state);
@@ -319,7 +319,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 hoodedZyck_updateB(obj, (u8*)state);
                 break;
             case 0x427:
-                fn_8014FF20((int)obj, state);
+                battleDroidUpdate((int)obj, state);
                 break;
             case 0x6a2:
             case 0x6a3:
@@ -332,7 +332,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
                 break;
             case 0x7c7:
             default:
-                fn_8014FF20((int)obj, state);
+                battleDroidUpdate((int)obj, state);
                 break;
             }
         }
@@ -382,36 +382,36 @@ void objAnimFn_8014a9f0(short* obj, int state)
         case 0x5b9:
         case 0x5e1:
         case 0x7a6:
-            fn_80150910((int*)obj, (u8*)state);
+            sharpClawUpdateIdle((int*)obj, (u8*)state);
             break;
         case 0xd8:
         case 0x281:
-            fn_80152040((int*)obj, (u8*)state);
+            guardClaw_update((int*)obj, (u8*)state);
             break;
         case 0x613:
-            fn_80152514((int*)obj, (u8*)state);
+            gcRobotPatrol_update((int*)obj, (u8*)state);
             break;
         case 0x642:
             mikaladon_update((int*)obj, (u8*)state);
             break;
         case 0x3fe:
         case 0x7c6:
-            fn_80153040((GameObject*)(obj), state);
+            vambat_updateIdle((GameObject*)(obj), state);
             break;
         case 0x58b:
-            fn_8015383C((GameObject*)(obj), state);
+            kooshy_updateIdle((GameObject*)(obj), state);
             break;
         case 0x369:
-            fn_80153E0C((GameObject*)(obj), state);
+            weevil_updateIdle((GameObject*)(obj), state);
             break;
         case 0x251:
-            waterBaddieFollowCurveUpdate((GameObject*)(obj), state);
+            pinPon_updateIdle((GameObject*)(obj), state);
             break;
         case 0x25d:
             rachnopUpdateIdle((int*)obj, state);
             break;
         case 0x457:
-            fn_80155F20((GameObject*)(obj), state);
+            spittingEbaUpdateIdle((GameObject*)(obj), state);
             break;
         case 0x4d7:
             wbUpdateIdle((u32)obj, state);
@@ -430,7 +430,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             hoodedZyck_updateIdle((GameObject*)(obj), state);
             break;
         case 0x427:
-            fn_8014FF20((int)obj, state);
+            battleDroidUpdate((int)obj, state);
             break;
         case 0x6a2:
         case 0x6a3:
@@ -443,7 +443,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
             break;
         case 0x7c7:
         default:
-            fn_8014FF20((int)obj, state);
+            battleDroidUpdate((int)obj, state);
             break;
         }
     }
@@ -1953,16 +1953,16 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             kooshy_init((int)obj, (int)state);
             break;
         case 873:
-            fn_801542AC((int)obj, state);
+            weevil_init((int)obj, state);
             break;
         case 593:
-            fn_80154C24(obj, state);
+            pinPon_init(obj, state);
             break;
         case 605:
             rachnopInit((int)obj, (int)state);
             break;
         case 1111:
-            baddieInit_80156188((int)obj, (int)state);
+            spittingEbaInit((int)obj, (int)state);
             break;
         case 1239:
             wbInit((int)obj, (int)state);
@@ -1975,7 +1975,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             break;
         case 2114:
         case 2123:
-            crawler_initVariant((int*)obj, (int*)state);
+            snowworm_init((int*)obj, (int*)state);
             break;
         case 1196:
             hoodedZyck_init((int*)obj, (int*)state);
@@ -1990,7 +1990,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             crawler_initModelVariant((s16*)obj, state);
             break;
         case 1992:
-            crawler_initTailModel((int*)obj, (int*)state);
+            hagabonMK2_init((int*)obj, (int*)state);
             break;
         default:
             battleDroidInit((int)obj, (char*)state);

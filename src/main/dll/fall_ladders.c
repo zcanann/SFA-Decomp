@@ -3,13 +3,14 @@
  *
  * These three functions are not an object descriptor of their own; they are
  * called by other baddie DLLs (dll_00C9_enemy, dll_00C4_tricky) as per-state
- * update/setup callbacks for a curve-following water creature.
+ * update/setup callbacks for the PinPon water baddie (retail OBJECTS.bin
+ * name for dispatch defNo 0x251).
  *
  *   baddieSpawnWaterRipple  spawns a water ripple under the object and a splash sfx when
  *                it is moving fast enough; gated by a randomised cooldown.
- *   Baddie_HandleHitReaction  hit-reaction handler: sets reaction flags + door sfx above a
+ *   pinPon_updateWhileFrozen  hit-reaction handler: sets reaction flags + door sfx above a
  *                progress threshold.
- *   waterBaddieFollowCurveUpdate  curve-path follow update: advances the RomCurveWalker, steers
+ *   pinPon_updateIdle  curve-path follow update: advances the RomCurveWalker, steers
  *                toward the next point, bobs rotY via a sine table, then calls
  *                baddieSpawnWaterRipple.
  *
@@ -40,7 +41,7 @@ int lbl_803DBCD0[2] = {2, 3};
 
 void baddieSpawnWaterRipple(int obj, int state);
 
-void Baddie_HandleHitReaction(GameObject* obj, u8* state, int unused, int cmd, int wpad0, int wpad1, void* wpad2, int wpad3)
+void pinPon_updateWhileFrozen(GameObject* obj, u8* state, int unused, int cmd, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
     int objCopy = (int)obj;
     if (cmd == 17 || cmd == 16)
@@ -59,7 +60,7 @@ void Baddie_HandleHitReaction(GameObject* obj, u8* state, int unused, int cmd, i
     }
 }
 
-void waterBaddieFollowCurveUpdate(GameObject* obj, int state)
+void pinPon_updateIdle(GameObject* obj, int state)
 {
     ObjHitsPriorityState* hitState;
     RomCurveWalker* curve;

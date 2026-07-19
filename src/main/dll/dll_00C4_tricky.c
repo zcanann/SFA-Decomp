@@ -2436,7 +2436,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                 case 0x5b9:
                 case 0x5e1:
                 case 0x7a6:
-                    result = sidekickToy_handleHitMessage(obj, state, (GameObject*)attacker, hit, hitArg, hitCount,
+                    result = sharpClawHandleHitMessage(obj, state, (GameObject*)attacker, hit, hitArg, hitCount,
                                                           &hitPos, sector, hDist, vDist);
                     break;
                 case 0xd8:
@@ -2460,7 +2460,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                     weevil_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x251:
-                    Baddie_HandleHitReaction(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    pinPon_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x25d:
                     rachnopUpdateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
@@ -2469,7 +2469,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                     wbUpdateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x457:
-                    baddieUpdateWhileFrozen_80155e10((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    spittingEbaUpdateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x458:
                     mutatedEbaUpdateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);

@@ -3,8 +3,8 @@
 
 #include "main/camera.h"
 
-void fn_80153040(GameObject* obj, int state);
-void fn_80153248(GameObject* obj, int state);
+void vambat_updateIdle(GameObject* obj, int state);
+void vambat_updateEngaged(GameObject* obj, int state);
 void fn_8015355C(GameObject* obj, int state);
 
 extern u8 gMagicPlantSeqEntryTable[8];

@@ -8,7 +8,7 @@
  *   hagabonMK2_updateB           per-frame update: curve walk, engine sfx and
  *                                the dynamic light.
  *   hagabonMK2_update            per-frame update for the second variant.
- *   crawler_initTailModel        seeds the tail model chain and hit volumes.
+ *   hagabonMK2_init        seeds the tail model chain and hit volumes.
  */
 #include "main/dll/partfx_interface.h"
 #include "main/camera_interface.h"
@@ -545,7 +545,7 @@ void hagabonMK2_update(s16* obj, u8* state)
     }
 }
 
-void crawler_initTailModel(int* obj, int* st)
+void hagabonMK2_init(int* obj, int* st)
 {
     u8* tab;
     ((BaddieState*)st)->speedScale = lbl_803E2C7C;

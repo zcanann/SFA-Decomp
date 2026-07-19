@@ -4,8 +4,8 @@
 #include "main/game_object.h"
 #include "ghidra_import.h"
 
-void fn_80154870(GameObject* obj, int* state);
-void fn_80154C24(GameObject* obj, void* state);
+void pinPon_updateEngaged(GameObject* obj, int* state);
+void pinPon_init(GameObject* obj, void* state);
 void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance);
 u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 maxDistance);
 

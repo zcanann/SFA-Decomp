@@ -102,7 +102,7 @@ void kooshy_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgF
         }
     }
 }
-void fn_8015383C(GameObject* obj, int state)
+void kooshy_updateIdle(GameObject* obj, int state)
 {
     u32 hit;
     u8 losDetected;
@@ -221,7 +221,7 @@ void fn_8015383C(GameObject* obj, int state)
     fn_8015355C(obj, state);
 }
 
-void fn_80153BFC(GameObject* obj, int state)
+void kooshy_updateEngaged(GameObject* obj, int state)
 {
     ((BaddieState*)state)->userData2 = ((BaddieState*)state)->userData2 & 0xbf;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 && (obj)->anim.currentMove != 1)

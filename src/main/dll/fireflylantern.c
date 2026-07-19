@@ -1,13 +1,13 @@
 /*
  * fireflylantern - named for the firefly-lantern DLL object whose source
  * this TU was split from; it owns the generic rom-curve path-walk and
- * target-steering helpers that object first defined, which the fox-fighting
- * baddie family then reuses (the "fox fightbreath" SFX and BaddieState
- * path/curve fields identify the latter). These four routines live in this
- * object but are linked into sibling baddie DLLs:
- *   - fn_80154870  per-frame update: walks the rom curve path, faces the
+ * target-steering helpers that object first defined, which the PinPon
+ * baddie then reuses (retail OBJECTS.bin name "PinPon" for dispatch defNo
+ * 0x251; it uses the "fox fightbreath" SFX). These four routines live in
+ * this object but are linked into sibling baddie DLLs:
+ *   - pinPon_updateEngaged  per-frame update: walks the rom curve path, faces the
  *     player, drives the move/look helpers and plays attack-breath SFX.
- *   - fn_80154C24  state init: seeds BaddieState path/speed fields and a
+ *   - pinPon_init  state init: seeds BaddieState path/speed fields and a
  *     random path phase/step.
  *   - fn_80154D0C  computes the signed angle + planar distance from the
  *     object to its tracked target relative to the path plane.
@@ -66,7 +66,7 @@ typedef struct FireflyState
     f32 planeAnchorZ; /* 0x364 */
 } FireflyState;
 
-void fn_80154870(GameObject* obj, int* state)
+void pinPon_updateEngaged(GameObject* obj, int* state)
 {
     RomCurveWalker* curve;
     u8 flag;
@@ -164,7 +164,7 @@ void fn_80154870(GameObject* obj, int* state)
     ((void (*)(int, int*))baddieSpawnWaterRipple)((int)obj, state);
 }
 
-void fn_80154C24(GameObject* obj, void* state)
+void pinPon_init(GameObject* obj, void* state)
 {
     float fval;
     u32 randVal;

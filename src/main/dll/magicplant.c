@@ -74,7 +74,7 @@ void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag, int w
     }
 }
 
-void fn_80153040(GameObject* obj, int state)
+void vambat_updateIdle(GameObject* obj, int state)
 {
     ObjHitsPriorityState* hitState;
     RomCurveWalker* curve;
@@ -132,7 +132,7 @@ void fn_80153040(GameObject* obj, int state)
     *(f32*)(state + 0x32c) = 0.0f;
 }
 
-void fn_80153248(GameObject* obj, int state)
+void vambat_updateEngaged(GameObject* obj, int state)
 {
     RomCurveWalker* curve;
     f32 vec[3];

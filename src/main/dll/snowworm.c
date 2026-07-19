@@ -8,7 +8,7 @@
  *   snowworm_update             per-frame update: advances the curve walk and
  *                               drives the emerge/burrow timers.
  *   snowworm_applyReactionState applies the queued reaction to the actor.
- *   crawler_initVariant         seeds the per-variant scratch fields.
+ *   snowworm_init         seeds the per-variant scratch fields.
  *   whirlpool_updateWhileFrozen freeze-event stub.
  */
 /*
@@ -428,7 +428,7 @@ void snowworm_applyReactionState(int* obj, int* st)
     crawler_playReactionEffects(obj, st);
 }
 
-void crawler_initVariant(int* obj, int* st)
+void snowworm_init(int* obj, int* st)
 {
     ((BaddieState*)st)->speedScale = 60.0f;
     /* 0x33b: crawler variant selector (shares slot with BaddieState.userData2);

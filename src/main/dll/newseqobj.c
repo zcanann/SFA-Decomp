@@ -1,12 +1,13 @@
 /*
- * sidekick-toy baddie reaction + update handlers. The object is a
- * curve-following toy/pet baddie driven by per-family anim tables keyed off
- * BaddieState.userData2 (state[0x33b]):
- *   - sidekickToy_handleHitMessage: hit/message reaction handler. Maps incoming message ids
+ * sharpclaw-family baddie reaction + update handlers (retail OBJECTS.bin
+ * names for the dispatch defNos 0x11/0x13a/0x5b7-0x5b9/0x5e1/0x7a6:
+ * sharpclawGr/Sn/Co/As/Sh/So + BossGeneral). The variant is driven by
+ * per-family anim tables keyed off BaddieState.userData2 (state[0x33b]):
+ *   - sharpClawHandleHitMessage: hit/message reaction handler. Maps incoming message ids
  *     (0xe..0x1f) onto reaction flags (BaddieState.reactionFlags 8/0x10/0x28),
  *     starts a new anim move from the per-family row tables, decrements the
  *     hit counter and plays the impact sfx (0x13/0x14/0x22).
- *   - fn_80150910 / fn_80150EDC: per-frame update. Run the timer-driven 16B
+ *   - sharpClawUpdateIdle / sharpClawUpdateApproach: per-frame update. Run the timer-driven 16B
  *     anim chain (state[0x338] walks the SeqRow16 table), follow the rom
  *     curve (path-chase with distance/turn speed shaping when controlFlags
  *     0x2000 is set), and fall back to randomised idle anims otherwise.
@@ -76,7 +77,7 @@ STATIC_ASSERT(offsetof(SeqObj11EState, unk330) == 0x330);
 STATIC_ASSERT(offsetof(SeqObj11EState, unk334) == 0x334);
 STATIC_ASSERT(offsetof(SeqObj11EState, seqNode) == 0x338);
 
-u8 sidekickToy_handleHitMessage(GameObject* obj, u8* state, GameObject* attacker, int msgId, int arrIdx, int damage,
+u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, int msgId, int arrIdx, int damage,
                                 Vec* hitPos, int sector, f32 hDist, f32 vDist)
 {
     u8* animRows;
@@ -250,7 +251,7 @@ f32 gSidekickToyAngleWrapNegHalf = -32768.0f;
 /* sidekick-toy main update: timer-driven 16-stride anim chain, curve chase
  * with speed/turn shaping, idle anims. */
 
-void fn_80150910(int* obj, u8* state)
+void sharpClawUpdateIdle(int* obj, u8* state)
 {
     RomCurveWalker* path = *(RomCurveWalker**)state;
     u8* tbl4;
@@ -439,8 +440,8 @@ void fn_80150910(int* obj, u8* state)
 
 
 /* sidekick-toy anim-chain advance: timer-driven 16-stride SeqRow16 chain +
- * curve-follow speed shaping, called from the fn_80150910 update path. */
-void fn_80150EDC(GameObject* obj, void* state)
+ * curve-follow speed shaping, called from the sharpClawUpdateIdle update path. */
+void sharpClawUpdateApproach(GameObject* obj, void* state)
 {
     u8* table = lbl_8031DD30;
     u8 idx = ((BaddieState*)state)->userData2;

@@ -3,8 +3,8 @@
 
 #include "main/game_object.h"
 
-void fn_80152040(int* obj, u8* state);
-void fn_80152514(int* obj, u8* state);
+void guardClaw_update(int* obj, u8* state);
+void gcRobotPatrol_update(int* obj, u8* state);
 void guardClaw_init(int* obj, u8* state);
 void gcRobotPatrol_init(GameObject* obj, int state);
 

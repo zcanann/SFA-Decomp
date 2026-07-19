@@ -3,6 +3,6 @@
 
 #include "main/game_object.h"
 
-void fn_8015165C(GameObject* obj, u8* state);
+void sharpClawUpdateAttack(GameObject* obj, u8* state);
 
 #endif /* H_MAIN_DLL_SEQOBJ11D_BADDIE_H */

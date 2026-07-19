@@ -7,12 +7,13 @@
  *     rachnopUpdateWhileFrozen): wall-crawling spider; rachnopFindWallPlane probes
  *     the surrounding geometry (objBboxFn_800640cc) to find a wall face,
  *     then drives roll/charge moves toward the tracked player.
- *   - pollen spit (pollenFn_80155b10): spawns a projectile setup object
- *     (Obj_AllocObjectSetup/Obj_SetupObject, type 0x47b) aimed at the
- *     tracked target with randomised speed.
- *   - day/night gated mover (baddieInit_80156188 / fn_80155F20 /
- *     fn_80156010 / timeOfDayFn_80155cf8 / baddieUpdateWhileFrozen_80155e10):
- *     switches move sets by sky time-of-day.
+ *   - spitting Eba (spittingEbaInit / spittingEbaUpdateIdle /
+ *     spittingEbaUpdateEngaged / spittingEbaUpdateTimeOfDay / spittingEbaUpdateWhileFrozen;
+ *     retail OBJECTS.bin name "SpittingEba" for dispatch defNo 0x457):
+ *     switches move sets by sky time-of-day; spittingEbaSpawnPollen spawns
+ *     its "Pollen" projectile setup object (Obj_AllocObjectSetup/
+ *     Obj_SetupObject, type 0x47b) aimed at the tracked target with
+ *     randomised speed.
  *   - whirlpool/water creature (wbInit / wbUpdateEngaged / wbUpdateIdle /
  *     wbUpdateWhileFrozen): path-following (RomCurveWalker) flyer/swimmer
  *     with buoyancy clamping and periodic decoy sfx.
@@ -81,7 +82,7 @@ typedef struct DusterState
     f32 planeAnchorZ;   /* 0x364 hit[5] */
 } DusterState;
 
-/* object-type id of the pollen-spit projectile spawned by pollenFn_80155b10
+/* object-type id of the pollen-spit projectile spawned by spittingEbaSpawnPollen
  * (see file docblock). */
 #define DUSTER_CHILD_OBJ_POLLEN_SPIT 0x47b
 #define DUSTER_HIT_VOLUME_SLOT       10
@@ -373,7 +374,7 @@ void rachnopInit(u32 unused, int state)
     return;
 }
 
-void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int eventKind, u32 unused2, int damage, void* wpad0, int wpad1)
+void spittingEbaUpdateWhileFrozen(u32 obj, int state, u32 unused1, int eventKind, u32 unused2, int damage, void* wpad0, int wpad1)
 {
     if (eventKind == 0x10)
     {
@@ -410,7 +411,7 @@ void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int event
     return;
 }
 
-void fn_80155F20(GameObject* obj, int state)
+void spittingEbaUpdateIdle(GameObject* obj, int state)
 {
     ((DusterState*)state)->phaseTimer = lbl_803E2A60.f;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
@@ -434,11 +435,11 @@ void fn_80155F20(GameObject* obj, int state)
             Baddie_SetMove(obj, state, 2, (1.0f), 0, 0);
         }
     }
-    timeOfDayFn_80155cf8((int)obj, state);
+    spittingEbaUpdateTimeOfDay((int)obj, state);
     return;
 }
 
-void fn_80156010(u32 obj, int state)
+void spittingEbaUpdateEngaged(u32 obj, int state)
 {
     u8 timerExpired;
 
@@ -453,7 +454,7 @@ void fn_80156010(u32 obj, int state)
     {
         if (((GameObject*)obj)->anim.currentMove == 4)
         {
-            pollenFn_80155b10(obj, state);
+            spittingEbaSpawnPollen(obj, state);
             ((DusterState*)state)->phaseTimer = lbl_803E2A80;
             Baddie_SetMove(obj, state, 5, (1.0f), 0, 0);
         }
@@ -474,11 +475,11 @@ void fn_80156010(u32 obj, int state)
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
         }
     }
-    timeOfDayFn_80155cf8(obj, state);
+    spittingEbaUpdateTimeOfDay(obj, state);
     return;
 }
 
-void pollenFn_80155b10(u32 obj, int state)
+void spittingEbaSpawnPollen(u32 obj, int state)
 {
     u32 loadLocked;
     int ref;
@@ -544,7 +545,7 @@ void pollenFn_80155b10(u32 obj, int state)
     return;
 }
 
-void timeOfDayFn_80155cf8(int obj, int state)
+void spittingEbaUpdateTimeOfDay(int obj, int state)
 {
     u8 isDaytime;
     float timeInfo[4];
@@ -573,7 +574,7 @@ void timeOfDayFn_80155cf8(int obj, int state)
     return;
 }
 
-void baddieInit_80156188(u32 unused, int state)
+void spittingEbaInit(u32 unused, int state)
 {
     float fa;
     float fb;

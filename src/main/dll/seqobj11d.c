@@ -152,7 +152,7 @@ void fn_801513AC(GameObject* obj, u8* state)
     }
 }
 
-void fn_8015165C(GameObject* obj, u8* state)
+void sharpClawUpdateAttack(GameObject* obj, u8* state)
 {
     GameObject* player;
     u8* p20;

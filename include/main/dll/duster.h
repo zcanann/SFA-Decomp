@@ -7,8 +7,8 @@
 void rachnopUpdateApproach(int* obj, int state);
 void rachnopUpdateAttack(int* obj, int state);
 void rachnopUpdateIdle(int* obj, int state);
-void fn_80155F20(GameObject* obj, int state);
-void fn_80156010(u32 obj, int state);
+void spittingEbaUpdateIdle(GameObject* obj, int state);
+void spittingEbaUpdateEngaged(u32 obj, int state);
 
 u32 FUN_8015536c(double param_1,short *param_2,int param_3,u32 param_4);
 void FUN_801556d4(double param_1,double param_2,float *param_3,float *param_4);
@@ -24,9 +24,9 @@ void FUN_80155e00(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  int *param_9,int param_10);
 void rachnopInit(u32 param_1,int param_2);
-void pollenFn_80155b10(u32 param_9,int param_10);
-void timeOfDayFn_80155cf8(int param_9,int param_10);
-void baddieUpdateWhileFrozen_80155e10(u32 param_9,int param_10,u32 param_11,
+void spittingEbaSpawnPollen(u32 param_9,int param_10);
+void spittingEbaUpdateTimeOfDay(int param_9,int param_10);
+void spittingEbaUpdateWhileFrozen(u32 param_9,int param_10,u32 param_11,
                                       int param_12,u32 param_13,int param_14,void* param_15,int param_16);
 void FUN_8015666c(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
@@ -34,7 +34,7 @@ void FUN_8015666c(u64 param_1,double param_2,double param_3,u64 param_4,
 void FUN_80156978(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  u32 param_9,int param_10);
-void baddieInit_80156188(u32 param_1,int param_2);
+void spittingEbaInit(u32 param_1,int param_2);
 void wbUpdateWhileFrozen(u32 param_1,int param_2,u32 param_3,int param_4);
 void FUN_80156eb8(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,

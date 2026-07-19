@@ -1,16 +1,15 @@
 /*
- * weevil - the weevil baddie's freeze-event + per-frame handlers, plus the
- * curve-following move update/setup pair that the same object first defined
- * and the sibling baddie DLLs reuse:
+ * weevil - the weevil baddie's init, freeze-event and per-frame handlers
+ * (retail OBJECTS.bin name "Weevil" for dispatch defNo 0x369):
  *   - weevil_updateWhileFrozen  freeze-event handler: gates the reaction
  *     flags on the current move and re-arms the recover timer.
- *   - fn_80153E0C  per-frame update: walks the rom curve path, runs the
+ *   - weevil_updateIdle  per-frame update: walks the rom curve path, runs the
  *     approach/recover timers and plays the idle grunt sfx.
- *   - fn_801540A0  move update: picks the active move from the tracked
+ *   - weevil_updateEngaged  move update: picks the active move from the tracked
  *     target and runs the approach/retreat timer.
- *   - fn_801542AC  one-shot move setup: seeds speed/path-step and the
+ *   - weevil_init  one-shot move setup: seeds speed/path-step and the
  *     BaddieState scratch floats.
- * (callers: dll_00C9_enemy, dll_00C4_tricky, fireflylantern.)
+ * (callers: dll_00C9_enemy, dll_00C4_tricky.)
  */
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
@@ -104,7 +103,7 @@ void weevil_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgF
 }
 }
 
-void fn_80153E0C(GameObject* obj, int state)
+void weevil_updateIdle(GameObject* obj, int state)
 {
     RomCurveWalker* curve;
     u32 rnd;
@@ -181,7 +180,7 @@ void fn_80153E0C(GameObject* obj, int state)
 }
 
 
-void fn_801540A0(int obj, int state)
+void weevil_updateEngaged(int obj, int state)
 {
     u8 done;
 
@@ -239,7 +238,7 @@ void fn_801540A0(int obj, int state)
     }
 }
 
-void fn_801542AC(int unused, u8* state)
+void weevil_init(int unused, u8* state)
 {
     f32 fz;
     f32 fc;
