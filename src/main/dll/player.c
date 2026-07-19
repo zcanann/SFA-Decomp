@@ -15290,7 +15290,7 @@ void fn_802B1B28(GameObject* obj, f32 fv)
     objMove((GameObject*)obj, x, y, z);
 }
 
-void fn_802B1BF8(EmitObj* a, int b, int state)
+void fn_802B1BF8(GameObject* a, int b, int state, f32 unusedTimeDelta)
 {
     MatrixTransform v;
     f32 mtx[16];
@@ -15316,22 +15316,24 @@ void fn_802B1BF8(EmitObj* a, int b, int state)
         v.y = lbl_803E7EA4;
         v.z = lbl_803E7EA4;
         setMatrixFromObjectPos(mtx, &v);
-        Matrix_TransformPoint(mtx, f30v, lbl_803E7EA4, -f31v, &a->x, &oy, &a->z);
-        a->x = a->x + ((PlayerState*)b)->pushVelX;
-        a->z = a->z + ((PlayerState*)b)->pushVelZ;
+        Matrix_TransformPoint(mtx, f30v, lbl_803E7EA4, -f31v, &a->anim.velocityX, &oy, &a->anim.velocityZ);
+        a->anim.velocityX = a->anim.velocityX + ((PlayerState*)b)->pushVelX;
+        a->anim.velocityZ = a->anim.velocityZ + ((PlayerState*)b)->pushVelZ;
     }
     else
     {
         int cosI = (int)mathSinf(gPlayerPi * (f32) * (s16*)((char*)b + 0x484) / lbl_803E7F98);
         int sinI = (int)mathCosf(gPlayerPi * (f32) * (s16*)((char*)b + 0x484) / lbl_803E7F98);
-        ((PlayerState*)state)->baddie.animSpeedB = a->x * (f32)sinI - a->z * (f32)cosI;
-        ((PlayerState*)state)->baddie.animSpeedA = -a->z * (f32)sinI - a->x * (f32)cosI;
+        ((PlayerState*)state)->baddie.animSpeedB =
+            a->anim.velocityX * (f32)sinI - a->anim.velocityZ * (f32)cosI;
+        ((PlayerState*)state)->baddie.animSpeedA =
+            -a->anim.velocityZ * (f32)sinI - a->anim.velocityX * (f32)cosI;
     }
 
     if ((*(int*)((char*)state) & 0x200000) == 0)
     {
-        a->y = a->y * powfBitEstimate(lbl_803E8140, timeDelta);
-        a->y = a->y - ((PlayerState*)state)->baddie.gravity * timeDelta;
+        a->anim.velocityY = a->anim.velocityY * powfBitEstimate(lbl_803E8140, timeDelta);
+        a->anim.velocityY = a->anim.velocityY - ((PlayerState*)state)->baddie.gravity * timeDelta;
     }
 }
 
@@ -17490,7 +17492,7 @@ void playerUpdate(GameObject* obj)
             playerAnimate((int)obj, inner, dt);
             ((void (*)(int, int, f32))staffAnimate)((int)obj, inner, dt);
             fn_802B1E5C(obj, inner, inner, dt);
-            fn_802B1BF8TimeLegacy((int)obj, inner, inner, dt);
+            fn_802B1BF8(obj, inner, inner, dt);
             {
                 f32 t = obj->anim.velocityX;
                 obj->anim.velocityX =

@@ -1279,8 +1279,8 @@ void fn_802BE6E8(GameObject* obj, int t, int p3)
     {
         (*gGameUIInterface)->runAirMeter(((DREarthWarriorState*)inner)->airMeterCapacity);
     }
-    fn_802B1BF8TimeLegacy((int)obj, sub, inner, timeDelta);
-    fn_802B1B28IntObjectLegacy((int)obj, timeDelta);
+    fn_802B1BF8(obj, sub, inner, timeDelta);
+    fn_802B1B28(obj, timeDelta);
     (*gPathControlInterface)->update((void*)obj, (void*)(inner + 4), timeDelta);
     (*gPathControlInterface)->apply((void*)obj, (void*)(inner + 4));
     (*gPathControlInterface)->advance((void*)obj, (void*)(inner + 4), timeDelta);
