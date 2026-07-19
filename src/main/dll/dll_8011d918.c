@@ -40,6 +40,6 @@ void cMenuPlayTrickyCommandSfx(int obj)
     }
     if (sfx != 0)
     {
-        Sfx_PlayFromObjectLimitedU32U16Legacy(obj, sfx, 1);
+        Sfx_PlayFromObjectLimited(obj, (u16)sfx, 1);
     }
 }
