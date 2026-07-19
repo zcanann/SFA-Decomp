@@ -1333,6 +1333,7 @@ config.libs = [
             Object(NonMatching, "main/dll/fallladdersgroup.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/fireflylantern_steer.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/duster.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "main/dll/spittingeba.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "main/dll/duster_wb.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/dll/hoodedzyck.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/firecrawler.c", cflags=cflags_dll_noopt_noloopinv_noinline),

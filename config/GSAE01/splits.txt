@@ -1446,10 +1446,14 @@ main/dll/fireflylantern_steer.c:
 	.sdata2     start:0x803E2A10 end:0x803E2A20
 
 main/dll/duster.c:
-	.text       start:0x8015536C end:0x801561EC
+	.text       start:0x8015536C end:0x80155B10
 	.data       start:0x8031F2F8 end:0x8031FAE8
 	.sdata      start:0x803DBCD8 end:0x803DBCE0
-	.sdata2     start:0x803E2A20 end:0x803E2A70
+	.sdata2     start:0x803E2A20 end:0x803E2A44
+
+main/dll/spittingeba.c:
+	.text       start:0x80155B10 end:0x801561EC
+	.sdata2     start:0x803E2A48 end:0x803E2A70
 
 main/dll/duster_wb.c:
 	.text       start:0x801561EC end:0x80156D44
