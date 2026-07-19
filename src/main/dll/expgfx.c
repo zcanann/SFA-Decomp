@@ -2453,10 +2453,6 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
     s16 texT1 = 0;
     int expTabIndex;
     int attachedTableKey;
-    u32 bit;
-    u32 maskHighWord;
-    u32 maskLowWord;
-    u32 inverseBit;
     short poolIndex;
     short slotIndex;
     s16 texT0 = 0;
@@ -2494,32 +2490,14 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         }
         if (poolIdx < EXPGFX_POOL_COUNT && (config->behaviorFlags & EXPGFX_BEHAVIOR_TRACK_POOL_SOURCE) != 0)
         {
-            /* Set this pool's bit in the 64-bit tracked-source-frame mask.
-             * maskBase selects trackedSourceFrameMasks[poolIdx & 1] (offset 4112 = highWord,
-             * 4116 = lowWord); the bit index within the 64-bit mask is poolIdx >> 1,
-             * with the arithmetic shift routing bits >= 32 into the high word. */
-            u8* maskBase = (u8*)runtime + (poolIdx & 1) * 8;
-            maskHighWord = *(u32*)(maskBase + 4112);
-            maskLowWord = *(u32*)(maskBase + 4116);
-            bit = 1 << (poolIdx >> 1);
-            maskHighWord = (u32)((int)bit >> 0x1f) | maskHighWord;
-            maskLowWord = bit | maskLowWord;
-            *(u32*)(maskBase + 4116) = maskLowWord;
-            *(u32*)(maskBase + 4112) = maskHighWord;
+            runtime->trackedSourceFrameMasks[poolIdx & 1] |= (s64)(1 << (poolIdx >> 1));
         }
         else
         {
-            /* Clear this pool's bit in the 64-bit tracked-source-frame mask. */
-            u8* maskBase = (u8*)runtime + (poolIdx & 1) * 8;
-            maskHighWord = *(u32*)(maskBase + 4112);
-            maskLowWord = *(u32*)(maskBase + 4116);
-            inverseBit = ~(u32)(1 << (poolIdx >> 1));
-            maskHighWord = (u32)((int)inverseBit >> 0x1f) & maskHighWord;
-            maskLowWord = inverseBit & maskLowWord;
-            *(u32*)(maskBase + 4116) = maskLowWord;
-            *(u32*)(maskBase + 4112) = maskHighWord;
+            runtime->trackedSourceFrameMasks[poolIdx & 1] &= (s64)~(1 << (poolIdx >> 1));
         }
-        slot = (ExpgfxSlot*)(runtime->slotPoolBases[poolIdx] + slotIndex * EXPGFX_SLOT_SIZE);
+        slot = (ExpgfxSlot*)runtime->slotPoolBases[poolIdx];
+        slot += slotIndex;
         quadVertices = (ExpgfxQuadVertex*)slot;
         gExpgfxSequenceCounter++;
         if (gExpgfxSequenceCounter > EXPGFX_SEQUENCE_COUNTER_MAX)
@@ -2780,7 +2758,7 @@ void expgfx_onMapSetup(void)
 {
     ExpgfxRuntimeDataLayout* runtime[1];
     ExpgfxResourceEntry* resourceEntry;
-    ExpgfxTrackedSourceFrameMask* trackedFrameMasks;
+    s64* trackedFrameMasks;
     u32* poolActiveMasks[1];
     s8* poolActiveCounts[1];
     s16* poolSlotTypeIds[1];
@@ -2817,10 +2795,8 @@ void expgfx_onMapSetup(void)
     }
 
     trackedFrameMasks = runtime[0]->trackedSourceFrameMasks;
-    trackedFrameMasks[0].lowWord = 0;
-    trackedFrameMasks[0].highWord = 0;
-    trackedFrameMasks[1].lowWord = 0;
-    trackedFrameMasks[1].highWord = 0;
+    trackedFrameMasks[0] = 0;
+    trackedFrameMasks[1] = 0;
 
     gExpgfxTextureFreeInProgress = 1;
     poolIndex = 0;

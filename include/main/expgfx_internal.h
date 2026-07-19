@@ -193,11 +193,6 @@ typedef struct ExpgfxPoolSourcePosition {
   f32 z;
 } ExpgfxPoolSourcePosition;
 
-typedef struct ExpgfxTrackedSourceFrameMask {
-  u32 highWord;
-  u32 lowWord;
-} ExpgfxTrackedSourceFrameMask;
-
 typedef union ExpgfxFloatWord {
   int bits;
   f32 value;
@@ -391,7 +386,7 @@ typedef struct ExpgfxRuntimeDataLayout {
   ExpgfxTableEntry expTab[EXPGFX_EXPTAB_ENTRY_COUNT];
   u8 poolSourceModes[EXPGFX_POOL_COUNT];
   u32 poolSourceIds[EXPGFX_POOL_COUNT];
-  ExpgfxTrackedSourceFrameMask trackedSourceFrameMasks[2];
+  s64 trackedSourceFrameMasks[2];
   u8 poolBoundsTemplateIds[EXPGFX_POOL_COUNT];
   s8 poolActiveCounts[EXPGFX_POOL_COUNT];
   u32 poolActiveMasks[EXPGFX_POOL_COUNT];
