@@ -1225,8 +1225,8 @@ void fn_80053C40(Texture* tex, GXTexObj* obj)
 
 void textureFn_80053d58(void* vobj)
 {
-    u8* obj = (u8*)vobj;
     u8 mipmap = 0;
+    u8* obj = (u8*)vobj;
     GXTexObj* texObj;
     *(int*)(obj + 64) = mipmap;
     ((Texture*)obj)->preloaded = mipmap;
