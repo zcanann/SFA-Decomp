@@ -2777,7 +2777,7 @@ GlyphResource802CA100 lbl_802CA100 = {
 };
 void subtitleBuildLineTable(void)
 {
-    int savedCharset;
+    char* str;
     SubtitleLineTable* s[1];
     f32 delta;
     f32 curTime;
@@ -2785,7 +2785,7 @@ void subtitleBuildLineTable(void)
     u8* win;
     int m;
     int i;
-    char* str;
+    int savedCharset;
     int k;
     int total;
     int oldDelay;
