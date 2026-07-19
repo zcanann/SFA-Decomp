@@ -56,7 +56,6 @@ typedef struct WispTriggerDistanceParams
 
 extern const WispTriggerDistanceParams lbl_803E2720;
 
-const union WispBaddieConstF32 lbl_803E26E8 = {0.006f};
 int gWispBaddieLastSegmentEnd;
 
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
@@ -109,24 +108,24 @@ void fn_8014F620(GameObject* obj, WispBaddieState* state)
     if ((state->flags & WISPBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
         (obj)->anim.velocityX =
-            lbl_803E26E8.f * (state->playerObj->anim.localPosX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
+            0.006f * (state->playerObj->anim.localPosX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
 
         wave = mathSinf((3.1415927f * (f32)state->hoverWavePhase) / 32768.0f);
         wave = (40.0f * wave + (30.0f + state->playerObj->anim.localPosY)) - (obj)->anim.localPosY;
-        (obj)->anim.velocityY = lbl_803E26E8.f * wave + (obj)->anim.velocityY;
+        (obj)->anim.velocityY = 0.006f * wave + (obj)->anim.velocityY;
         (obj)->anim.velocityZ =
-            lbl_803E26E8.f * (state->playerObj->anim.localPosZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
+            0.006f * (state->playerObj->anim.localPosZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
     }
     else
     {
         (obj)->anim.velocityX =
-            lbl_803E26E8.f * (((RomCurveWalker*)curve)->posX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
+            0.006f * (((RomCurveWalker*)curve)->posX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
 
         wave = mathSinf((3.1415927f * (f32)state->hoverWavePhase) / 32768.0f);
         wave = (40.0f * wave + ((RomCurveWalker*)curve)->posY) - (obj)->anim.localPosY;
-        (obj)->anim.velocityY = lbl_803E26E8.f * wave + (obj)->anim.velocityY;
+        (obj)->anim.velocityY = 0.006f * wave + (obj)->anim.velocityY;
         (obj)->anim.velocityZ =
-            lbl_803E26E8.f * (((RomCurveWalker*)curve)->posZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
+            0.006f * (((RomCurveWalker*)curve)->posZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
     }
 
     (obj)->anim.velocityX = (obj)->anim.velocityX * (step = 0.9f);

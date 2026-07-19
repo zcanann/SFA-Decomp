@@ -82,23 +82,16 @@ STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 #define SFXPLAYER_HIT_TYPE_RING_TARGET    0x13
 #define SFXPLAYER_OBJECT_FLAGS            0x6000
 
-/* .sdata2 constant pool */
 static const RingIdPair lbl_803E6450 = {0x00040005, 0x0006000B};
-static const f32 lbl_803E6458 = 1.0f;
-static const f32 lbl_803E645C = 30.0f;
-static const f32 lbl_803E6460 = 0.0f;
-static const f32 lbl_803E6464 = 60.0f;
-static const f32 lbl_803E6468 = 93.0f;
-static const f32 lbl_803E6478 = 0.5f;
 
 #define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handleExpr, obj, rot, angleStep)                                            \
     do                                                                                                                 \
     {                                                                                                                  \
         if ((void*)(handleExpr) != NULL)                                                                               \
         {                                                                                                              \
-            *(f32*)((handleExpr) + 0xc) = lbl_803E6460;                                                                \
-            *(f32*)((handleExpr) + 0x10) = lbl_803E6464;                                                               \
-            *(f32*)((handleExpr) + 0x14) = lbl_803E6468;                                                               \
+            *(f32*)((handleExpr) + 0xc) = 0.0f;                                                                \
+            *(f32*)((handleExpr) + 0x10) = 60.0f;                                                               \
+            *(f32*)((handleExpr) + 0x14) = 93.0f;                                                               \
             (rot)[0] = (s16)(*(s16*)(obj) + (angleStep));                                                              \
             vecRotateZXY((rot), (f32*)((handleExpr) + 0xc));                                                           \
             *(f32*)((handleExpr) + 0xc) += *(f32*)((obj) + 0xc);                                                       \
@@ -123,11 +116,11 @@ void TrickyCurve_updateEffectHandleRing(GameObject* obj)
         Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXPLAYER_RING_START_SFX);
         if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == SFXPLAYER_MODE_SEQUENCE)
         {
-            *(s16*)obj += (int)((lbl_803E6458 + state->ringCount) * (lbl_803E645C * timeDelta));
+            *(s16*)obj += (int)((1.0f + state->ringCount) * (30.0f * timeDelta));
         }
         else
         {
-            *(s16*)obj += (int)(lbl_803E645C * timeDelta);
+            *(s16*)obj += (int)(30.0f * timeDelta);
         }
     }
 
@@ -140,10 +133,10 @@ void TrickyCurve_updateEffectHandleRing(GameObject* obj)
         }
     }
 
-    buf.baseVec[1] = lbl_803E6460;
-    buf.baseVec[2] = lbl_803E6460;
-    buf.baseVec[3] = lbl_803E6460;
-    buf.baseVec[0] = lbl_803E6458;
+    buf.baseVec[1] = 0.0f;
+    buf.baseVec[2] = 0.0f;
+    buf.baseVec[3] = 0.0f;
+    buf.baseVec[0] = 1.0f;
     buf.rotation[1] = buf.rotation[2] = 0;
     handles = gSfxplayerEffectHandles;
 
@@ -202,7 +195,7 @@ int sfxplayer_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
         setup->unk26 = 0x64;
         setup->unk27 = 0;
         setup->unk28 = 0;
-        setup->unk20 = lbl_803E6478;
+        setup->unk20 = 0.5f;
         setup->unk29 = 0xd2;
         setup->unk2A = 0;
         *(int*)((int)handles + handleOffset) =

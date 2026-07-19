@@ -105,20 +105,6 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 #define GX_ALWAYS      7
 #define GX_AOP_AND     0
 
-/* .sdata2 constant pool */
-static const f32 lbl_803E5A30 = 1.0f;
-static const f32 lbl_803E5A34 = 3.5f;
-static const f32 lbl_803E5A38 = 4.5f;
-static const f32 lbl_803E5A3C = 0.5f;
-static const f32 lbl_803E5A40 = 0.0017f;
-static const f32 lbl_803E5A44 = 0.003f;
-static const f32 lbl_803E5A48 = 4.0f;
-static const f32 lbl_803E5A4C = 0.2f;
-static const f32 lbl_803E5A50 = 0.0f;
-static const f32 lbl_803E5A60 = 0.005f;
-static const f32 lbl_803E5A64 = 10000.0f;
-static const f32 lbl_803E5A68 = 20.0f;
-
 void fn_801E832C(int obj)
 {
     if (*(u8*)(obj + 0x37) == 0xFF)
@@ -145,17 +131,17 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
 
     if (b->flag_40)
     {
-        objfx_spawnDirectionalBurst((void*)obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A34, NULL, 0);
+        objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 1, 1, 0x14, 3.5f, NULL, 0);
     }
     else
     {
-        objfx_spawnDirectionalBurst((void*)obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, NULL, 0);
+        objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 1, 1, 0x14, 4.5f, NULL, 0);
     }
     {
         ModelRenderOp* renderOp = ObjModel_GetRenderOp(Obj_GetActiveModel((GameObject*)obj)->file, 0);
         renderOp->alphaOverride = 0x7F;
     }
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E5A30);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     for (i = 0; i < 10; i++)
     {
         if (state->lightningHandles[i] != NULL)
@@ -164,7 +150,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
             if (getHudHiddenFrameCount() == 0)
             {
                 state->lightningTimers[i] += timeDelta;
-                state->lightningHandles[i]->timer = (u16)(int)(lbl_803E5A3C + state->lightningTimers[i]);
+                state->lightningHandles[i]->timer = (u16)(int)(0.5f + state->lightningTimers[i]);
                 if (state->lightningHandles[i]->timer > 0x14)
                 {
                     mm_free_(state->lightningHandles[i]);
@@ -184,20 +170,20 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
                 {
                     if (b->flag_40)
                     {
-                        scale = lbl_803E5A40;
+                        scale = 0.0017f;
                     }
                     else
                     {
-                        scale = lbl_803E5A44;
+                        scale = 0.003f;
                     }
                     v.x = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.x;
                     v.y = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.y;
                     v.z = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.z;
                 }
                 state->lightningHandles[i] =
-                    lightningCreate((const Vec3f*)(obj + 0xC), (const Vec3f*)&v, lbl_803E5A48, lbl_803E5A4C,
+                    lightningCreate((const Vec3f*)(obj + 0xC), (const Vec3f*)&v, 4.0f, 0.2f,
                                             0x14, 0x40, 0);
-                state->lightningTimers[i] = lbl_803E5A50;
+                state->lightningTimers[i] = 0.0f;
                 spawned = 1;
             }
         }
@@ -237,7 +223,7 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
 
     if ((int)objAnim->banks[objAnim->bankIndex] != 0)
     {
-        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5A60, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, NULL);
     }
 
     switch ((obj)->anim.seqId)
@@ -245,10 +231,10 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
     case SHOPITEM_SEQ_BSPLINE:
     {
         f32 t = ((ShopItemState*)sub)->splineT;
-        if (t > lbl_803E5A30)
+        if (t > 1.0f)
         {
             u32 segCounter;
-            ((ShopItemState*)sub)->splineT = t - lbl_803E5A30;
+            ((ShopItemState*)sub)->splineT = t - 1.0f;
             segCounter = ((ShopItemState*)sub)->segCounter;
             if (segCounter >= 4)
             {
@@ -307,7 +293,7 @@ void shopitem_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
         }
         else
         {
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5A30);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         }
     }
 }
@@ -321,7 +307,7 @@ void shopitem_update(GameObject* obj)
     int def = *(int*)&(obj)->anim.placementData;
     void* player = Obj_GetPlayerObject();
     int state = *(int*)&(obj)->extra;
-    f32 range = lbl_803E5A64;
+    f32 range = 10000.0f;
     PushcartState97* b = (PushcartState97*)(state + 0x97);
     int money;
     int price;
@@ -381,7 +367,7 @@ void shopitem_update(GameObject* obj)
                 {
                 case SHOPITEM_SEQ_BSPLINE:
                     (obj)->anim.localPosY =
-                        lbl_803E5A68 + ((ShopItemDef*)*(int*)&(obj)->anim.placementData)->splineYOffset;
+                        20.0f + ((ShopItemDef*)*(int*)&(obj)->anim.placementData)->splineYOffset;
                     break;
                 }
                 if (money >= price)
@@ -400,10 +386,10 @@ void shopitem_update(GameObject* obj)
             case SHOPITEM_SEQ_BSPLINE:
             {
                 f32 t = ((ShopItemState*)state)->splineT;
-                if (t > lbl_803E5A30)
+                if (t > 1.0f)
                 {
                     u32 segCounter;
-                    ((ShopItemState*)state)->splineT = t - lbl_803E5A30;
+                    ((ShopItemState*)state)->splineT = t - 1.0f;
                     segCounter = ((ShopItemState*)state)->segCounter;
                     if (segCounter >= 4)
                     {
@@ -430,7 +416,7 @@ void shopitem_update(GameObject* obj)
         }
         if ((obj)->anim.seqId != SHOPITEM_SEQ_STATIC && (obj)->anim.seqId != SHOPITEM_SEQ_BSPLINE)
         {
-            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5A60, timeDelta, NULL);
+            ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, NULL);
         }
         if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) == 0)
         {

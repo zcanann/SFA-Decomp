@@ -19,21 +19,11 @@
 #include "main/dll/tricky_api.h"
 #include "main/object_descriptor.h"
 
-/* .sdata2 constant pool */
-static const f32 lbl_803E3D18 = 50.0f;
-static const f32 lbl_803E3D1C = 0.0f;
-static const f32 lbl_803E3D20 = 0.005f;
-static const f32 lbl_803E3D24 = 0.5f;
-static const f32 lbl_803E3D28 = 1.0f;
-static const f32 lbl_803E3D2C = 40.0f;
 static const f32 gDeathSeqCameraYawAngle = -0.7853982f;
 static const f32 gDeathSeqCameraPitchAngle = 0.3926991f;
-static const f32 lbl_803E3D38 = 10.0f;
 static const f32 gDeathSeqPi = 3.1415927f;
 static const f32 gDeathSeqAngleHalfCircle = 32768.0f;
 static const f32 gDeathSeqCameraFovY = 60.0f;
-static const f32 lbl_803E3D48 = 0.01f;
-static const f32 lbl_803E3D58 = 210.0f;
 
 int DeathSeq_getExtraSize(void)
 {
@@ -71,22 +61,22 @@ void DeathSeq_update(int* obj)
     ready = 0;
     if (playerIsDead(player) != 0)
     {
-        state->distTarget = lbl_803E3D18;
+        state->distTarget = 50.0f;
         if (((GameObject*)obj)->anim.currentMove != 0x92)
         {
             AudioStream_StopCurrent();
             AudioStream_Play(0x51e1, AudioStream_StartPrepared);
-            ObjAnim_SetCurrentMove((int)obj, 0x92, lbl_803E3D1C, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x92, 0.0f, 0);
         }
-        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E3D20, timeDelta, NULL);
-        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E3D24)
+        ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, NULL);
+        if (((GameObject*)obj)->anim.currentMoveProgress > 0.5f)
         {
             tex = objFindTexture((GameObject*)(obj), 5, 0);
             tex->textureId = 0;
             tex = objFindTexture((GameObject*)(obj), 4, 0);
             tex->textureId = 0;
         }
-        if (((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E3D28)
+        if (((GameObject*)obj)->anim.currentMoveProgress >= 1.0f)
         {
             if (!state->transitionStarted)
             {
@@ -112,13 +102,13 @@ void DeathSeq_update(int* obj)
     }
     else
     {
-        state->distTarget = lbl_803E3D2C;
+        state->distTarget = 40.0f;
         if ((*gScreenTransitionInterface)->isFinished() != 0)
         {
-            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E3D20, timeDelta, NULL);
+            ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, NULL);
             ready = 1;
         }
-        if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E3D24)
+        if (((GameObject*)obj)->anim.currentMoveProgress > 0.5f)
         {
             tex = objFindTexture((GameObject*)(obj), 5, 0);
             tex->textureId = 0x200;
@@ -126,9 +116,9 @@ void DeathSeq_update(int* obj)
             tex->textureId = 0x200;
         }
         state->timer -= timeDelta;
-        if (state->timer <= lbl_803E3D1C)
+        if (state->timer <= 0.0f)
         {
-            state->timer = lbl_803E3D1C;
+            state->timer = 0.0f;
             if (!state->menuShown)
             {
                 showDeathMenu();
@@ -153,15 +143,15 @@ void DeathSeq_update(int* obj)
         sin34 = sin34 * cos30;
         cam->yaw = 0x2000;
         cam->pitch = 0x1000;
-        xTerm = lbl_803E3D38 * -mathSinf((gDeathSeqPi * (f32) * (s16*)obj) / gDeathSeqAngleHalfCircle);
-        zTerm = (fz = lbl_803E3D38) * -mathCosf((gDeathSeqPi * (f32) * (s16*)obj) / gDeathSeqAngleHalfCircle);
+        xTerm = 10.0f * -mathSinf((gDeathSeqPi * (f32) * (s16*)obj) / gDeathSeqAngleHalfCircle);
+        zTerm = (fz = 10.0f) * -mathCosf((gDeathSeqPi * (f32) * (s16*)obj) / gDeathSeqAngleHalfCircle);
         cam->x = sin30 + (((GameObject*)obj)->anim.worldPosX + xTerm);
         fy = fz + ((GameObject*)obj)->anim.worldPosY;
         cam->y = fy + dz;
         cam->z = sin34 + (((GameObject*)obj)->anim.worldPosZ + zTerm);
         Camera_SetFovY(gDeathSeqCameraFovY);
         state->camActive = 1;
-        state->dist += interpolate(state->distTarget - state->dist, lbl_803E3D48, timeDelta);
+        state->dist += interpolate(state->distTarget - state->dist, 0.01f, timeDelta);
         Rcp_SetViewFinderHudEnabled(0);
     }
     else
@@ -192,14 +182,14 @@ void DeathSeq_init(int* obj)
 
     setScreenTransitionPause(1);
     (*gScreenTransitionInterface)->start(1, 1);
-    ObjAnim_SetCurrentMove((int)obj, 0x8e, lbl_803E3D1C, 0);
-    state->timer = lbl_803E3D58;
+    ObjAnim_SetCurrentMove((int)obj, 0x8e, 0.0f, 0);
+    state->timer = 210.0f;
     state->camX = cam->x;
     state->camY = cam->y;
     state->camZ = cam->z;
     state->camRotY = cam->yaw;
     state->camRotX = cam->pitch;
-    dist = lbl_803E3D2C;
+    dist = 40.0f;
     state->dist = dist;
     state->distTarget = dist;
     addButtonObject(obj);

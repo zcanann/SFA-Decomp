@@ -43,14 +43,6 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-/* .sdata2 constant pool */
-static const f32 lbl_803E3A58 = 0.0f;
-static const f32 lbl_803E3A5C = 1.0f;
-static const f32 lbl_803E3A60 = 2.2f;
-static const f32 lbl_803E3A64 = 0.75f;
-static const f32 lbl_803E3A68 = -2.2f;
-static const f32 lbl_803E3A6C = -0.75f;
-static const f32 lbl_803E3A70 = -10.0f;
 static const f32 gWindLift107LaunchGravity = -0.12f;
 static const f32 gWindLift107RadiusScale = 10.0f;
 static const f32 gWindLift107DefaultRadius = 50.0f;
@@ -75,7 +67,7 @@ void fn_80185868(GameObject* obj, f32 arg)
     (*(VtableFn*)(*(int*)lbl_803DDAD0 + 4))(obj, 0xf, 0, 2, -1, 0);
     (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stk.pad, 2, -1, 0);
     Sfx_PlayFromObject((int)obj, SFXTRIG_wp_crthit6);
-    fz = lbl_803E3A58;
+    fz = 0.0f;
     (obj)->anim.velocityX = fz;
     (obj)->anim.velocityZ = fz;
     sub->ventState = 0x32;
@@ -170,7 +162,7 @@ void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderSt
             fn_8003B5E0(200, 30, 30, state->glowPulse);
         }
     }
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3A5C);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_107_hitDetect_nop(void)
@@ -215,7 +207,7 @@ void dll_107_update(GameObject* obj)
     u8 held;
 
     p4c = *(int*)&(obj)->anim.placementData;
-    spd = lbl_803E3A5C;
+    spd = 1.0f;
     (*gSkyInterface)->getClockTime(&spd);
     state = (obj)->extra;
     player = Obj_GetPlayerObject();
@@ -227,7 +219,7 @@ void dll_107_update(GameObject* obj)
         state->launchPhase = 0;
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         {
-            f32 fz = lbl_803E3A58;
+            f32 fz = 0.0f;
             (obj)->anim.velocityX = fz;
             (obj)->anim.velocityZ = fz;
         }
@@ -338,15 +330,15 @@ void dll_107_update(GameObject* obj)
                 state->rideState = 0;
                 state->launchPhase = 1;
                 {
-                    f32 fz = lbl_803E3A58;
+                    f32 fz = 0.0f;
                     (obj)->anim.velocityX = fz;
-                    (obj)->anim.velocityY = lbl_803E3A64 * playerState->baddie.inputMagnitude + lbl_803E3A60;
-                    (obj)->anim.velocityZ = lbl_803E3A6C * playerState->baddie.inputMagnitude + lbl_803E3A68;
+                    (obj)->anim.velocityY = 0.75f * playerState->baddie.inputMagnitude + 2.2f;
+                    (obj)->anim.velocityZ = -0.75f * playerState->baddie.inputMagnitude + -2.2f;
                     rot.x = fz;
                     rot.y = fz;
                     rot.z = fz;
                 }
-                rot.scale = lbl_803E3A5C;
+                rot.scale = 1.0f;
                 rot.c = 0;
                 rot.b = 0;
                 rot.ang = player->anim.rotX;
@@ -358,7 +350,7 @@ void dll_107_update(GameObject* obj)
                 f32 fz;
                 state->rideState = 0;
                 state->launchPhase = 2;
-                fz = lbl_803E3A58;
+                fz = 0.0f;
                 (obj)->anim.velocityX = fz;
                 (obj)->anim.velocityY = fz;
                 (obj)->anim.velocityZ = fz;
@@ -384,7 +376,7 @@ void dll_107_update(GameObject* obj)
         if (*(s8*)&state->launchPhase == 1)
         {
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNUSED_HIT_VOLUME_SLOT, 3, 0);
-            if ((obj)->anim.velocityY > lbl_803E3A70)
+            if ((obj)->anim.velocityY > -10.0f)
             {
                 (obj)->anim.velocityY = gWindLift107LaunchGravity * timeDelta + (obj)->anim.velocityY;
             }
@@ -394,7 +386,7 @@ void dll_107_update(GameObject* obj)
         held = hitState->contactFlags;
         if ((s8)held != 0 && *(s8*)&state->launchPhase == 1)
         {
-            (obj)->anim.velocityY = lbl_803E3A58;
+            (obj)->anim.velocityY = 0.0f;
             state->launchPhase = 0;
             windLiftState = obj->extra;
             stkB.val = windLiftState->radius;
@@ -409,7 +401,7 @@ void dll_107_update(GameObject* obj)
             stkC.val = windLiftState->radius;
             (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkC.pad, 2, -1, 0);
             windLiftState->spitTimer = 1;
-            (obj)->anim.velocityY = lbl_803E3A58;
+            (obj)->anim.velocityY = 0.0f;
             return;
         }
         (obj)->anim.localPosX = (obj)->anim.velocityX * timeDelta + (obj)->anim.localPosX;
@@ -424,7 +416,7 @@ void dll_107_update(GameObject* obj)
     {
         if (getXZDistance(&(obj)->anim.worldPosX, (f32*)(p4c + 8)) >= (f32)(state->maxDist * state->maxDist))
         {
-            f32 fz = lbl_803E3A58;
+            f32 fz = 0.0f;
             (obj)->anim.velocityX = fz;
             (obj)->anim.velocityZ = fz;
             state->ventState = 500;

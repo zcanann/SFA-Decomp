@@ -54,18 +54,8 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 int gSbShipHeadPrevGalleonPhase;
 
-/* .sdata2 constant pool */
-static const f32 lbl_803E5830 = 1.0f;
-static const f32 lbl_803E5834 = 0.0f;
-static const f32 lbl_803E5838 = 10.0f;
-static const f32 lbl_803E583C = 3.0f;
 static const f32 gSbShipHeadHissSfxDistance = 400.0f;
-static const f32 lbl_803E5844 = 0.5f;
-static const f32 lbl_803E5848 = 50.0f;
-static const f32 lbl_803E584C = 300.0f;
 static const f32 gSbShipHeadFireballSpeed = 30.0f;
-static const f32 lbl_803E5854 = 100.0f;
-static const f32 lbl_803E5858 = 45.0f;
 static const f32 gSbShipHeadAnimAdvanceRate = 0.005f;
 
 int SB_ShipHead_getExtraSize(void)
@@ -103,23 +93,23 @@ void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
     if (visible != 0)
     {
         state = object->extra;
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5830);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         parent = *(int*)&object->anim.parent;
         if ((((void*)parent != NULL && (((GameObject*)parent)->anim.seqId == SB_GALLEON_SEQID_FIRING)) &&
              (phase = SB_GALLEON_VTBL(parent)->getDamagePhase(parent), phase != 0)) &&
             (phase != 2))
         {
             state->swayA = state->swayA - timeDelta;
-            if (state->swayA <= lbl_803E5834)
+            if (state->swayA <= 0.0f)
             {
-                state->swayA += lbl_803E5838;
+                state->swayA += 10.0f;
             }
             state->swayB = state->swayB - timeDelta;
-            if (state->swayB <= lbl_803E5834)
+            if (state->swayB <= 0.0f)
             {
-                state->swayB += lbl_803E5830;
+                state->swayB += 1.0f;
             }
-            stk.scale = lbl_803E583C;
+            stk.scale = 3.0f;
             stk.mode = 0xc0a;
             ObjPath_GetPointWorldPosition(obj, 0xd, &stk.dx, &stk.dy, &stk.dz, 0);
             stk.dx = stk.dx - object->anim.worldPosX;
@@ -236,21 +226,21 @@ void SB_ShipHead_update(GameObject* obj)
     }
     if ((galleonPhase == 5) && (gSbShipHeadPrevGalleonPhase != 5))
     {
-        ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E5834, 0);
+        ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
         gSbShipHeadHasFiredFireball = 0;
     }
-    if ((((object->anim.currentMove == 1) && (object->anim.currentMoveProgress >= lbl_803E5844)) &&
+    if ((((object->anim.currentMove == 1) && (object->anim.currentMoveProgress >= 0.5f)) &&
          (gSbShipHeadHasFiredFireball == 0)) &&
         (Obj_IsLoadingLocked() != 0))
     {
         gSbShipHeadHasFiredFireball = 1;
         object->userData1 = object->userData1 + framesThisStep;
         Sfx_PlayFromObject((int)obj, SFXTRIG_gcexp1_c);
-        object->anim.localPosY += lbl_803E5848;
-        object->anim.localPosZ = object->anim.localPosZ - lbl_803E584C;
+        object->anim.localPosY += 50.0f;
+        object->anim.localPosZ = object->anim.localPosZ - 300.0f;
         Obj_GetWorldPosition((int)obj, &px, &py, &pz);
-        object->anim.localPosY = object->anim.localPosY - lbl_803E5848;
-        object->anim.localPosZ += lbl_803E584C;
+        object->anim.localPosY = object->anim.localPosY - 50.0f;
+        object->anim.localPosZ += 300.0f;
         setup = (u8*)Obj_AllocObjectSetup(0x18, SB_FIREBALL_OBJID);
         setup[6] = 0xff;
         setup[7] = 0xff;
@@ -275,11 +265,11 @@ void SB_ShipHead_update(GameObject* obj)
         Sfx_PlayFromObject((int)obj, SFXTRIG_gcexp1_c);
         player = (int)Obj_GetPlayerObject();
         setup = (u8*)Obj_AllocObjectSetup(0x18, SB_PROJECTILE_OBJID);
-        ((ObjPlacement*)setup)->posX = lbl_803E5854 + ((GameObject*)player)->anim.worldPosX;
+        ((ObjPlacement*)setup)->posX = 100.0f + ((GameObject*)player)->anim.worldPosX;
         ((ObjPlacement*)setup)->posY =
-            lbl_803E5848 + (((GameObject*)player)->anim.worldPosY + (f32)(int)randomGetRange(-6, 6));
+            50.0f + (((GameObject*)player)->anim.worldPosY + (f32)(int)randomGetRange(-6, 6));
         ((ObjPlacement*)setup)->posZ =
-            lbl_803E5858 + (((GameObject*)player)->anim.worldPosZ + (f32)(int)randomGetRange(-6, 6));
+            45.0f + (((GameObject*)player)->anim.worldPosZ + (f32)(int)randomGetRange(-6, 6));
         setup[4] = 2;
         setup[5] = 1;
         setup[6] = 0xff;
@@ -290,7 +280,7 @@ void SB_ShipHead_update(GameObject* obj)
                                                                        NULL);
     if ((object->anim.currentMove == 1) && (proj != 0))
     {
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E5834, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
     }
     gSbShipHeadPrevGalleonPhase = galleonPhase;
 }
@@ -301,8 +291,8 @@ void SB_ShipHead_init(GameObject* obj)
     ObjGroup_AddObject((u32)obj, SBSHIPHEAD_OBJGROUP);
     ObjMsg_AllocQueue((void*)obj, 10);
     state->health = 4;
-    state->swayB += lbl_803E5830;
-    state->swayA += lbl_803E5838;
+    state->swayB += 1.0f;
+    state->swayA += 10.0f;
 }
 
 ObjectDescriptor gSB_ShipHeadObjDescriptor = {
