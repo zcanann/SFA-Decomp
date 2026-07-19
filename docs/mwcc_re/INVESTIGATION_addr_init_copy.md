@@ -127,3 +127,20 @@ desc+0x24 (RegisterInfo.c 0x4d0150 area / the move-list builders feeding
   subtitleBuildLineTable, optionsMenu_openGeneralPanel, movieLoad): wrap the
   function body (or its head) in a `static inline` helper receiving the table
   address as a parameter.
+
+## Update (session 7): the inline-param ACTION does NOT close the dll_94 family
+- Prereq: the whole-body helper exceeds the -inline auto budget; no CLI size knob exists
+  (`-inline all` still refuses; `inline_max_size` is not a CLI option). A TU-level
+  `-pragma "inline_max_size(3000)"` cflag does inline it (sanctioned knob, configure.py).
+- With the body inlined, the param path splits into three shapes, none retail's:
+  (a) plain `helper(lbl_80317488, ...)`: const-prop folds the addrconst into the uses —
+      4 rematerialized lis/addi pairs (retail has 1);
+  (b) `helper((u8*)(int)lbl_80317488, ...)`: single materialization, direct addi rHOME
+      (mr gone!) but PLACED AT FIRST USE (after the s-diamond), not at entry, and the
+      base+84 recompute pair CSEs (C=252 vs T=253) — net no better than the mr form;
+  (c) caller-local `u8* base = lbl; helper(base, ...)`: temp+mr returns at the caller.
+- staff_initialise worked because its param web is MUTATED (p++ walker) — mutation blocks
+  the const-fold AND anchors the binding at entry. The dll_92/94/97/99 family's base is
+  never mutated, so the param web is const-foldable and its single def sinks to first use.
+- Sharpened open question: retail shows def-at-entry + first-use-after-diamond + single
+  unmutated web + NO copy. No probed construct produces that placement. Still banked.
