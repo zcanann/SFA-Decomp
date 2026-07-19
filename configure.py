@@ -361,6 +361,12 @@ cflags_dll_noopt_nocse = [
 ]
 
 # ...plus inlining off (dont_inline on).
+cflags_dll_noopt_nocse_noautoinline = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,nocse",
+    "-inline", "noauto",
+]
+
 cflags_dll_noopt_nocse_noinline = [
     *cflags_base,
     "-opt", "nopeephole,noschedule,nocse",
@@ -1606,7 +1612,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/SH/dll_01B3_shbeacon.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/SH/dll_01B4_shemptytumblew.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/SC/dll_01B6_sclevelcontrol.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/SC/dll_01B7_scmusictree.c", cflags=cflags_dll_noopt_nocse),
+            Object(NonMatching, "main/dll/SC/dll_01B7_scmusictree.c", cflags=cflags_dll_noopt_nocse_noautoinline),
             Object(MatchingFor("GSAE01"), "main/dll/SC/dll_01B8_sctotempole.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/SC/dll_01B9_sccloudrunnera.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_801dd170.c", cflags=cflags_dll_noopt),
@@ -1783,7 +1789,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_02BA_mclightning.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_02BB_gflevelcon.c", cflags=cflags_dll_noopt_noloopinv),
             Object(NonMatching, "main/dll/dll_02BC_andross.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/dll/dll_02BD_androsshand.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_02BD_androsshand.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02BE_androssbrain.c", cflags=cflags_dll_noopt_nocse),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02BF_androssligh.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/audio/synth_queue.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
