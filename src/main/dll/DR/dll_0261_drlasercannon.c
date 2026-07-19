@@ -387,8 +387,8 @@ void DR_LaserCannon_update(GameObject* obj)
     if (state->flags.b7 != 0)
     {
         nearDist = lbl_803E68F8;
-        if ((state->firepipeObject = ((FirePipeObject* (*)(int, GameObject*, f32*))ObjGroup_FindNearestObject)(
-                 DR_LASERCANNON_FIREPIPE_GROUP_ID, obj, &nearDist)) != 0u)
+        if ((state->firepipeObject = (FirePipeObject*)ObjGroup_FindNearestObject(
+                 DR_LASERCANNON_FIREPIPE_GROUP_ID, (int)obj, &nearDist)) != 0u)
         {
             state->hasFirepipe = 1;
             ObjLink_AttachChild(obj, (GameObject*)state->firepipeObject, 0);

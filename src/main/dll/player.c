@@ -2842,7 +2842,7 @@ int playerState31(GameObject* obj, int p2)
     f32 sinv;
     f32 fz;
     dist = lbl_803E7F5C;
-    near = (void*)((int (*)())ObjGroup_FindNearestObject)(MAGICPLANT_OBJGROUP_B, obj, &dist);
+    near = (void*)ObjGroup_FindNearestObject(MAGICPLANT_OBJGROUP_B, (int)obj, &dist);
     ((ByteFlags*)((char*)inner + 0x3f4))->b20 = 1;
     fz = lbl_803E7EA4;
     inner->buttonHoldTimer = fz;
@@ -8531,7 +8531,7 @@ int playerState08(GameObject* obj, int state, f32 fv)
             char* found;
             s16* def = NULL;
             buttonDisable(0, PAD_BUTTON_A);
-            found = ((char* (*)(int, int, f32*))ObjGroup_FindNearestObject)(0xf, (int)obj, &dist);
+            found = (char*)ObjGroup_FindNearestObject(0xf, (int)obj, &dist);
             if (found != NULL)
             {
                 def = *(s16**)((char*)found + 0x4c);
