@@ -73,7 +73,7 @@ void dll_FD_hitDetect(GameObject *obj)
     if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
         (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
     {
-        ((void (*)(void))objRenderFn_80041018)();
+        objRenderFn_80041018(obj);
     }
     return;
 }
