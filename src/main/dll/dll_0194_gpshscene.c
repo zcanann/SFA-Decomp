@@ -5,7 +5,6 @@
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
-f32 lbl_803E5058 = 1.0f;
 
 typedef struct GpshScenePlacement
 {
@@ -23,7 +22,7 @@ void gpsh_scene_free(void)
 void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5058);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void gpsh_scene_hitDetect(void)

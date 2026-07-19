@@ -51,7 +51,6 @@ STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 #define DRAKORENERGY_MODE_RESET     5 /* one-frame reset back to IDLE */
 
 extern f32 lbl_803E627C;
-extern f32 lbl_803E62A0;
 extern f32 lbl_803E6278;
 extern f32 gDrakorEnergyBounceRestitution;
 extern f32 lbl_803E6284;
@@ -203,7 +202,7 @@ void drakorenergy_init(int* obj, u8* init)
     fz = lbl_803E627C;
     ((GameObject*)obj)->anim.velocityZ = fz;
     ((GameObject*)obj)->anim.velocityX = fz;
-    ((GameObject*)obj)->anim.velocityY = lbl_803E62A0;
+    ((GameObject*)obj)->anim.velocityY = -4.0f;
     state->phase = randomGetRange(0, 0xffff);
     if (mainGetBit(placement->gameBitId) != 0)
     {
@@ -238,4 +237,3 @@ ObjectDescriptor12 gDrakorEnergyObjDescriptor = {
     (ObjectDescriptorCallback)DrakorEnergy_func0B_nop,
 };
 
-f32 lbl_803E62A0 = -4.0f;

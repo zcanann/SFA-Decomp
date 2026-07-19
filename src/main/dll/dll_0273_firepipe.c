@@ -69,7 +69,6 @@ extern f32 lbl_803E6B8C;
 extern f32 gFirePipeFarAttenMin;
 extern f32 gFirePipeFarAttenMax;
 extern f32 lbl_803E6B98;
-extern f32 lbl_803E6BA8;
 
 /* objectId variants handled by this DLL (select the emitted effect); retail
  * OBJECTS.bin names: IceHole, SteamHoleNo/SteamHoleFi/SteamHoleDe (11-char
@@ -488,7 +487,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
     extra = obj->extra;
     if ((int)mapData->scale != 0)
     {
-        f32 scale = lbl_803E6BA8 * (f32)(s32)mapData->scale;
+        f32 scale = 0.1f * (f32)(s32)mapData->scale;
         obj->scale = scale * obj->anim.modelInstance->rootMotionScaleBase;
     }
     if (mapData->gameBit != -1)
@@ -627,4 +626,3 @@ ObjectDescriptor gFirePipeObjDescriptor = {
     firepipe_getExtraSize,
 };
 
-f32 lbl_803E6BA8 = 0.1f;

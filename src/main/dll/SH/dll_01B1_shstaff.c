@@ -82,6 +82,11 @@ void sh_staff_free(int* obj, int flag)
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/SH/dll_01B3_shbeacon.h"
 
+#define SH_STAFF_FADE_OUT_TIMER_INIT 1500.0f
+#define SH_STAFF_FIZZ_SFX_TIMER_INIT 0.9f
+#define SH_STAFF_MAP_LOAD_DIST_SQ    250000.0f
+#define SH_STAFF_MAP_UNLOAD_DIST_SQ  490000.0f
+
 typedef struct ShStaffPlacement
 {
     u8 pad0[0x4 - 0x0];
@@ -106,11 +111,6 @@ extern f32 gShStaffConvergeLerpDiv;
 extern f32 gShStaffHazeSpacing;
 extern f32 gShStaffScatterJitterDiv;
 extern f32 gShStaffHazeScale;
-extern f32 gShStaffFadeOutTimerInit;
-extern f32 gShStaffFizzSfxTimerInit;
-extern f32 gShStaffMapUnloadDistSq;
-extern f32 gShStaffMapLoadDistSq;
-
 
 void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int a);
 
@@ -400,7 +400,7 @@ int sh_staff_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         case 0xc:
             state->flags = (u8)(state->flags | 0x10);
             state->flags = (u8)(state->flags | 0xa);
-            state->fadeTimer = gShStaffFadeOutTimerInit;
+            state->fadeTimer = SH_STAFF_FADE_OUT_TIMER_INIT;
             break;
         case 0:
         case 1:
@@ -458,7 +458,7 @@ void sh_staff_update(GameObject* obj)
                 loadResult = (int)loadObjectAtObject(obj, newSetup);
             }
             state->slots[0] = loadResult;
-            state->sfxTimer = gShStaffFizzSfxTimerInit;
+            state->sfxTimer = SH_STAFF_FIZZ_SFX_TIMER_INIT;
         }
         }
     }
@@ -472,7 +472,7 @@ void sh_staff_update(GameObject* obj)
             state->fadeTimer = gShStaffFadeTimerMax;
             mainSetBits(GAMEBIT_STAFF_ACQUIRED, 1);
         }
-        else if (dist > gShStaffMapUnloadDistSq)
+        else if (dist > SH_STAFF_MAP_UNLOAD_DIST_SQ)
         {
             if (state->mapLoaded != 0)
             {
@@ -480,7 +480,7 @@ void sh_staff_update(GameObject* obj)
                 mapUnload(0x13, 0x20000000);
             }
         }
-        else if (dist < gShStaffMapLoadDistSq)
+        else if (dist < SH_STAFF_MAP_LOAD_DIST_SQ)
         {
             if (state->mapLoaded == 0)
             {
@@ -632,7 +632,3 @@ u32 gSC_totempoleObjDescriptor[14] = {0x00000000,
                                       (u32)sc_totempole_getObjectTypeId,
                                       (u32)sc_totempole_getExtraSize};
 
-f32 gShStaffFadeOutTimerInit = 1.5e+03f;
-f32 gShStaffFizzSfxTimerInit = 0.9f;
-f32 gShStaffMapUnloadDistSq = 4.9e+05f;
-f32 gShStaffMapLoadDistSq = 2.5e+05f;

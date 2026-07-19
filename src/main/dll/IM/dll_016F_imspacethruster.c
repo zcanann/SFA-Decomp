@@ -21,15 +21,16 @@
 #include "main/dll/IM/dll_016F_imspacethruster.h"
 #include "main/object_descriptor.h"
 
+#define IM_SPACE_THRUSTER_ROOT_MOTION_SCALE_KIND01 0.49f
+#define IM_SPACE_THRUSTER_ROOT_MOTION_SCALE_KIND23 0.42f
+#define IM_SPACE_THRUSTER_ROOT_MOTION_SCALE_KIND4  0.72f
+#define IM_SPACE_THRUSTER_ROOT_MOTION_SCALE_KIND56 0.58f
+
 #define IM_SPACE_THRUSTER_WEIGHT_MAX 1.0f
 #define IM_SPACE_THRUSTER_ALPHA_TO_WEIGHT_SCALE 255.0f
 
 s16 gImSpaceThrusterKeyframeIndexA[6] = {0x160, 0x161, 0x162, 0x163, 0x165, 0};
 s16 gImSpaceThrusterKeyframeIndexB[6] = {3, 4, 5, 6, 7, 0};
-extern f32 gImSpaceThrusterRootMotionScaleKind01;
-extern f32 gImSpaceThrusterRootMotionScaleKind23;
-extern f32 gImSpaceThrusterRootMotionScaleKind56;
-extern f32 gImSpaceThrusterRootMotionScaleKind4;
 static inline ObjModel* getActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -167,18 +168,18 @@ void imspacethruster_init(GameObject* obj, u8* placement)
     {
     case 0:
     case 1:
-        obj->anim.rootMotionScale = gImSpaceThrusterRootMotionScaleKind01;
+        obj->anim.rootMotionScale = IM_SPACE_THRUSTER_ROOT_MOTION_SCALE_KIND01;
         break;
     case 2:
     case 3:
-        obj->anim.rootMotionScale = gImSpaceThrusterRootMotionScaleKind23;
+        obj->anim.rootMotionScale = IM_SPACE_THRUSTER_ROOT_MOTION_SCALE_KIND23;
         break;
     case 5:
     case 6:
-        obj->anim.rootMotionScale = gImSpaceThrusterRootMotionScaleKind56;
+        obj->anim.rootMotionScale = IM_SPACE_THRUSTER_ROOT_MOTION_SCALE_KIND56;
         break;
     case 4:
-        obj->anim.rootMotionScale = gImSpaceThrusterRootMotionScaleKind4;
+        obj->anim.rootMotionScale = IM_SPACE_THRUSTER_ROOT_MOTION_SCALE_KIND4;
         break;
     }
     model = getActiveModel(obj);
@@ -222,7 +223,3 @@ ObjectDescriptor gIMSpaceThrusterObjDescriptor = {
     imspacethruster_getExtraSize,
 };
 
-f32 gImSpaceThrusterRootMotionScaleKind01 = 0.49f;
-f32 gImSpaceThrusterRootMotionScaleKind23 = 0.42f;
-f32 gImSpaceThrusterRootMotionScaleKind56 = 0.58f;
-f32 gImSpaceThrusterRootMotionScaleKind4 = 0.72f;
