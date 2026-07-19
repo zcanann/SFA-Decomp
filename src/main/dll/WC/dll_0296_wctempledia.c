@@ -27,9 +27,6 @@ s16 gWcTempleDiaGameBitsB[4] = {0x203, 0x2EC, 0x2EF, 0};
 #define WCTEMPLE_DIA_RESET_SFX 0x487
 #define WCTEMPLE_DIA_STAGE_SFX 0x409
 
-#define Sfx_SetObjectSfxVolumeIntVolume(obj, sfxId, volume, volumeScale)                                      \
-    ((void (*)(u32, u32, int, f32))Sfx_SetObjectSfxVolume)((obj), (sfxId), (volume), (volumeScale))
-
 void wctempledia_syncPartVisibility(GameObject* obj, u8 mask)
 {
     int bit;
@@ -128,7 +125,7 @@ void wctempledia_update(GameObject* obj)
     Sfx_KeepAliveLoopedObjectSound(k, SFXTRIG_en_treedrum16);
     {
         f32 ratio = state->currentSpeed / state->targetTable[2];
-        Sfx_SetObjectSfxVolumeIntVolume((u32)go, SFXTRIG_en_treedrum16,
+        Sfx_SetObjectSfxVolumeIntLegacy((u32)go, SFXTRIG_en_treedrum16,
                                         (u8)(lbl_803E6E60 * ratio + lbl_803E6E5C),
                                         lbl_803E6E68 * ratio + lbl_803E6E64);
     }
