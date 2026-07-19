@@ -89,10 +89,8 @@ extern f32 gObjHitsScalarOne;
 extern char sObjHitsTooManyHitSpheresWarning[];
 
 void ObjHitbox_SetStateIndex(GameObject* obj, ObjHitReactState* hitState, int stateIndex);
-#ifndef OBJHITS_IMPLEMENTATION
 void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, int radius);
 void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalMin, int verticalMax);
-#endif
 int ObjHits_AllocObjectState(GameObject* obj, u32 arena);
 void ObjHits_ResetWorkBuffers(void);
 void ObjHits_InitWorkBuffers(void);
@@ -300,9 +298,7 @@ void ObjHits_ClearHitVolumes(ObjAnimComponent* obj);
 void ObjHits_SetHitVolumeMasks(ObjAnimComponent* obj, int hitVolume, int hitType, int sourceMask);
 void ObjHits_SetHitVolumeSlot(ObjAnimComponent* obj, int hitVolume, int hitType, int sourceSlot);
 void ObjHits_ClearSourceMask(ObjAnimComponent* obj, int sourceMask);
-#ifndef OBJHITS_IMPLEMENTATION
 void ObjHits_SetSourceMask(ObjAnimComponent* obj, u8 sourceMask);
-#endif
 void ObjHits_ClearFlags(ObjAnimComponent* obj, int flags);
 void ObjHits_SetFlags(ObjAnimComponent* obj, int flags);
 void ObjHits_MarkObjectPositionDirty(ObjAnimComponent* obj);

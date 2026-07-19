@@ -24,7 +24,6 @@
 #include "main/obj_query.h"
 #include "main/obj_trigger.h"
 #include "main/player_eye_anim.h"
-#define OBJHITS_IMPLEMENTATION
 #include "main/objhits.h"
 #include "main/resource.h"
 #include "main/vecmath.h"
@@ -223,7 +222,7 @@ void ObjHits_SetTargetMask(GameObject* obj, u8 targetMask)
     return;
 }
 
-void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, s16 radius)
+void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, int radius)
 {
     ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->hitReactState;
 
@@ -269,7 +268,7 @@ void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, s16 radius)
     return;
 }
 
-void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, s16 radius, s16 verticalMin, s16 verticalMax)
+void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalMin, int verticalMax)
 {
     ObjHitsPriorityState* hitState;
     float absMin;
