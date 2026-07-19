@@ -687,7 +687,7 @@ typedef struct CameraViewportEntry {
     s32 flags;
 } CameraViewportEntry;
 
-void Camera_UpdateProjection(void* viewportArg)
+void Camera_UpdateProjection(void* viewportArg, int unused)
 {
     u8 viewIndex = gCameraCurrentViewIndex;
     u8 activeViewIndex;

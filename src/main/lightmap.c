@@ -807,7 +807,7 @@ void sceneDraw(void)
     gxTextureFn_80052efc();
     perspectiveFn_80129db4();
     GXPixModeSync();
-    ((void (*)(int, int))Camera_UpdateProjection)(0, 0);
+    Camera_UpdateProjection(NULL, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
     t = 0;
@@ -952,7 +952,7 @@ void sceneRender(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad
     {
         renderFlags &= ~1LL;
     }
-    ((void (*)(int, int))Camera_UpdateProjection)(0, 0);
+    Camera_UpdateProjection(NULL, 0);
     updateVisibleGeometry();
     playerVecFn_8005a9b0();
     Camera_EnableViewYOffset();

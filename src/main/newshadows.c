@@ -1299,21 +1299,21 @@ void renderShadows(int unused0, int unused1, int unused2)
             Camera_SetAspectRatio(gNewShadowAspectWide);
         else
             Camera_SetAspectRatio(gNewShadowAspectNarrow);
-        ((void (*)(int, int))Camera_UpdateProjection)(0, 0);
+        Camera_UpdateProjection(NULL, 0);
     }
     else if (isWidescreen() != 0)
     {
         Camera_SetCurrentViewIndex(0);
         Camera_SetFovY(savedFovY);
         Camera_SetAspectRatio(lbl_803DED80);
-        ((void (*)(int, int))Camera_UpdateProjection)(0, 0);
+        Camera_UpdateProjection(NULL, 0);
     }
     else
     {
         Camera_SetCurrentViewIndex(0);
         Camera_SetFovY(savedFovY);
         Camera_SetAspectRatio(lbl_803DB670);
-        ((void (*)(int, int))Camera_UpdateProjection)(0, 0);
+        Camera_UpdateProjection(NULL, 0);
     }
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
