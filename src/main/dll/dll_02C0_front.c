@@ -673,8 +673,6 @@ void TitleScreen_hitDetect(void)
 
 /* Drive the copyright/title text fade and push text box 0x3d9. */
 
-typedef void (*TitleScreenUpdateSfxFn)(u8* obj, u8* arr);
-
 /* Drive the title screen actor anim state machine, the per-actor
  * footstep/voice sfx flag grid at gTitleScreenSfxFlagGrid, the random blink
  * blend, and the one-shot envfx/sky setup. */
@@ -809,7 +807,7 @@ void TitleScreen_update(u8* obj)
                     }
                 }
             }
-            ((TitleScreenUpdateSfxFn)fn_80134870)(obj, buf);
+            fn_80134870(objHandle, buf);
         }
         t = ((GameObject*)obj)->anim.seqId;
         if (t == FRONT_SEQID_PEPPY && ((phase = ((TitlescreenState*)state)->animPhase) == 0 || phase == 4))
@@ -1036,7 +1034,6 @@ void titleScreenFn_801368a4(s8 arg)
 }
 
 u8 gTitleScreenSfxFlagGrid[0x48];
-void fn_80134870(int obj, u8* arr);
 
 /* Two-byte state push (no equality check): copy lbl_803DD990 to
  * lbl_803DBC08 and write new value. */
