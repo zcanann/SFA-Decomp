@@ -3,7 +3,7 @@
 #include "main/dll/objfx_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/music_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/render_envfx_api.h"
@@ -237,7 +237,7 @@ void gpsh_shrine_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visi
         {
             modelLightStruct_setEnabled((ModelLightStruct*)light, 1, 1.0f);
         }
-        ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         objParticleFn_80099d84(obj, 1.0f, 7, 1.0f, state[0]);
     }
 }
@@ -510,4 +510,3 @@ void gpsh_shrine_release(void)
 void gpsh_shrine_initialise(void)
 {
 }
-

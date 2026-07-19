@@ -1,6 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/vecmath.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
@@ -104,7 +104,7 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
         return;
     }
 
-    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, 1.0f);
 }
 
 void RollingBarrel_hitDetect(void)

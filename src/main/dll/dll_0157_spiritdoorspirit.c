@@ -12,7 +12,7 @@
 #include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/objfx.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0157_spiritdoorspirit.h"
 #include "main/object_descriptor.h"
@@ -45,7 +45,7 @@ void spiritdoorspirit_render(GameObject* obj, int p2, int p3, int p4, int p5, s8
         return;
     }
 
-    ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void spiritdoorspirit_hitDetect(void)

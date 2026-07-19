@@ -13,7 +13,7 @@
  */
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
@@ -229,16 +229,14 @@ void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
             {
                 *(u8*)((char*)obj + 0x37) = extra->opacity;
             }
-            ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4,
-                                                                                        (1.0f));
+            objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
             ObjPath_GetPointWorldPosition(obj, 1, &extra->pathPointX, &extra->pathPointY, &extra->pathPointZ, 0);
             *(u8*)((char*)obj + 0x37) = saved;
         }
     }
     else
     {
-        ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4,
-                                                                                    (1.0f));
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
     }
 }
 
@@ -403,4 +401,3 @@ ObjectDescriptor lbl_80323740 = {
     (ObjectDescriptorCallback)dll_16C_getObjectTypeId,
     dll_16C_getExtraSize,
 };
-

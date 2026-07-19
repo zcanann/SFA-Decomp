@@ -17,7 +17,7 @@
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_play_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/crrockfallplacement_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/game_object.h"
@@ -98,7 +98,7 @@ void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     CrRockfallState* state = ((GameObject*)obj)->extra;
     if (state->mode != zcEn3_ROCKFALL_MODE_SHATTERED && visible != 0)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, 1.0f);
     }
 }
 

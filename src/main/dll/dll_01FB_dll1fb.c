@@ -25,7 +25,7 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/obj_message.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #define PAD_BUTTON_A 0x100
 
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
@@ -80,7 +80,7 @@ void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
-    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1FB_hitDetect_nop(void)

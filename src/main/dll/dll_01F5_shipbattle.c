@@ -20,7 +20,7 @@
 #include "main/dll/objfx.h"
 #include "main/objseq.h"
 #include "main/object.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/obj_list.h"
 #include "main/model_light.h"
 #include "main/dll/dll_01F5_shipbattle.h"
@@ -65,7 +65,7 @@ void ShipBattle_free(int* obj)
 
 void ShipBattle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     if (((GameObject*)obj)->anim.seqId == SHIPBATTLE_FIRE_SEQ_ID)
     {
         objfx_spawnFlaggedTrailBurst(obj, 0.11f, 4, 389, 5, NULL);
