@@ -73,6 +73,7 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, runnerGameBit) == 0x22);
 
 #define BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
 #define BABYCLOUDRUNNER_OBJGROUP             3
+#define BABYCLOUDRUNNER_AMBIENT_OBJ          0x788
 #define BABYCLOUDRUNNER_OBJGROUP_SECONDARY   0x20
 #define BABYCLOUDRUNNER_AIRMETER_BGTEXTURE   0x5d1 /* HUD air-meter background texture id */
 
@@ -686,7 +687,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
     else
     {
         sub->runnerIndex = def->runnerGameBit - 0x2fc;
-        if (((GameObject*)obj)->anim.seqId == 0x788)
+        if (((GameObject*)obj)->anim.seqId == BABYCLOUDRUNNER_AMBIENT_OBJ)
         {
             sub->runnerIndex = -1;
             sub->curveSpeed = lbl_803E4244;

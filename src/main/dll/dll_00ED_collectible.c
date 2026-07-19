@@ -42,6 +42,9 @@
 #include "main/object_render_legacy.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define COLLECTIBLE_OBJGROUP 4
+#define COLLECTIBLE_FIRECRYSTAL_OBJ 0xa8
+#define COLLECTIBLE_TRUTHHORN_OBJ   0x156
+#define COLLECTIBLE_MOONSEED_OBJ    1702
 
 static const u32 sCollectiblePathWord[1] = {0x40400000};
 static const u8 sCollectiblePathByte[4] = {5, 0, 0, 0};
@@ -267,7 +270,7 @@ static void collectible_updateSeqEffects(GameObject* obj)
 void collectible_updateLooseMotion(int* obj)
 {
     u8* state = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.seqId == 1702)
+    if (((GameObject*)obj)->anim.seqId == COLLECTIBLE_MOONSEED_OBJ)
     {
         objMove((GameObject*)obj, 0.0f,
                 ((GameObject*)obj)->anim.velocityY * framesThisStep, 0.0f);
@@ -506,14 +509,14 @@ void collectible_render(GameObject *obj, int a, int b, int c, int d, s8 visible)
     int state = *(int*)&(obj)->extra;
     f32 zero = 0.0f;
     if (visible != 0 && ((CollectibleState*)state)->despawnTimer == zero && (obj)->userData1 == 0
-        && ((obj)->anim.seqId == 0x156 || ((CollectibleState*)state)->visibilityBitClear == 0))
+        && ((obj)->anim.seqId == COLLECTIBLE_TRUTHHORN_OBJ || ((CollectibleState*)state)->visibilityBitClear == 0))
     {
         if ((((ObjAnimComponent*)obj)->modelInstance->flags & 0x10000) != 0 && ((CollectibleState*)state)->useColor != 0)
         {
             fn_8003B608(((CollectibleState*)state)->colorR, ((CollectibleState*)state)->colorG, ((CollectibleState*)state)->colorB);
         }
         objRenderModelAndHitVolumes((int)obj, a, b, c, d, 1.0f);
-        if ((obj)->anim.seqId == 0xa8)
+        if ((obj)->anim.seqId == COLLECTIBLE_FIRECRYSTAL_OBJ)
         {
             objfx_spawnDirectionalBurstLegacy((int)obj, 7, 1.0f, 5, 1, 10, 4.0f, 0, 0x20000000);
         }

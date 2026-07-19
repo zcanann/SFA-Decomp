@@ -28,6 +28,7 @@
 /* DLL-id spawned+child-attached on seq event 0xa (generic child; no cache
    field / named spawn-fn / kind name -> suffixless per role-gate). */
 #define ANIMATEDOBJ_CHILD_OBJ 0x69
+#define ANIMATEDOBJ_KRYSTAL_OBJ 0x774
 
 typedef struct AnimatedobjPlacement
 {
@@ -114,7 +115,7 @@ void animatedobj_free(int* obj, int seqFlag)
     ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
     Sfx_RemoveLoopedObjectSoundForObjectPtrLegacy(obj);
     Sfx_StopObjectChannel((int)obj, 0x7f);
-    if (((GameObject*)obj)->anim.seqId == 0x774 && ((GameObject*)obj)->childCount != 0)
+    if (((GameObject*)obj)->anim.seqId == ANIMATEDOBJ_KRYSTAL_OBJ && ((GameObject*)obj)->childCount != 0)
     {
         Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
         ObjLink_DetachChild((GameObject*)obj, (GameObject*)((GameObject*)obj)->childObjs[0]);

@@ -74,6 +74,8 @@ STATIC_ASSERT(offsetof(DoorF4Placement, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(DoorF4Placement, gameBitC) == 0x20);
 
 #define DOORF4_OBJ_GROUP 14
+#define DOORF4_POWERDOOR_OBJ 200
+#define DOORF4_WARPDOOR_OBJ  0x151
 
 /* messages received by a door's inbox */
 #define DOORMSG_OPEN  0x30002
@@ -189,7 +191,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         if (active != 0 && sub->toggled == 0)
         {
-            if (((GameObject*)obj)->anim.seqId == 200)
+            if (((GameObject*)obj)->anim.seqId == DOORF4_POWERDOOR_OBJ)
             {
                 if (mainGetBit(GAMEBIT_CF_PowerOn) != 0)
                 {
@@ -204,7 +206,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         else if (active == 0 && sub->toggled == 1)
         {
-            if (((GameObject*)obj)->anim.seqId == 200 && sd <= 0.0f)
+            if (((GameObject*)obj)->anim.seqId == DOORF4_POWERDOOR_OBJ && sd <= 0.0f)
             {
                 getEnvfxActInt(0, 0, DOORF4_ENVFX_OFF, 0);
             }
@@ -350,7 +352,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_CLEAR_LATCH_B;
     }
     ((GameObject*)obj)->userData2 = active;
-    if ((((GameObject*)obj)->anim.seqId == 0x13e || ((GameObject*)obj)->anim.seqId == 0x151) && sub->triggerLatch != 0)
+    if ((((GameObject*)obj)->anim.seqId == 0x13e || ((GameObject*)obj)->anim.seqId == DOORF4_WARPDOOR_OBJ) && sub->triggerLatch != 0)
     {
         animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_B;
     }

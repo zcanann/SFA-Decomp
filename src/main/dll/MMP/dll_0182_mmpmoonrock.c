@@ -42,6 +42,8 @@
 
 extern PartFxSpawnParams gMoonRockSpawnParams;
 #define MMPMOONROCK_OBJGROUP        4
+#define MMPMOONROCK_OBJ             0x519
+#define MMPGYSERVENT_OBJ            0x518
 #define MMPMOONROCK_HIT_VOLUME_SLOT 14
 #define CARRYABLE_OBJGROUP          0x10
 #define MMPMOONROCK_PARTFX          0x723
@@ -234,7 +236,7 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
     for (; i < count; i++)
     {
         u32 otherObj = list[i];
-        if (otherObj != (u32)obj && ((GameObject*)otherObj)->anim.seqId == 0x518 &&
+        if (otherObj != (u32)obj && ((GameObject*)otherObj)->anim.seqId == MMPGYSERVENT_OBJ &&
             Vec_distance(&obj->anim.worldPosX, (void*)(otherObj + 0x18)) < 40.0f)
         {
             odef = (MmpMoonrockPlacement*)((GameObject*)list[i])->anim.placementData;
@@ -495,7 +497,7 @@ void mmp_moonrock_update(GameObject* obj)
             for (; i < count; i++)
             {
                 GameObject* other = (GameObject*)*list;
-                if (other != obj && other->anim.seqId == 0x519 &&
+                if (other != obj && other->anim.seqId == MMPMOONROCK_OBJ &&
                     Vec_xzDistance(&obj->anim.worldPosX, &other->anim.worldPosX) < k)
                 {
                     (*gCarryableInterface)->setVisible(stateCopy, 1);

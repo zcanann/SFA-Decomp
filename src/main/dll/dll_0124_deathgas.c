@@ -13,6 +13,7 @@
 
 #define DEATHGAS_OBJFLAG_HIDDEN 0x4000
 #define DEATHGAS_AIRMETER_BGTEXTURE 0x603
+#define DEATHGAS_NOFOG_OBJ 2103
 int DeathGas_getExtraSize(void) { return 0x10; }
 
 typedef struct
@@ -144,7 +145,7 @@ void DeathGas_init(int* obj)
     register DeathGasState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DEATHGAS_OBJFLAG_HIDDEN);
     state->radius = 10000.0f;
-    if (((GameObject*)obj)->anim.seqId != 2103) return;
+    if (((GameObject*)obj)->anim.seqId != DEATHGAS_NOFOG_OBJ) return;
     state->noFog = 1;
     state->radius = *(f32*)((char*)obj + 64);
 }

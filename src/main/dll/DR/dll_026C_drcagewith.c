@@ -24,6 +24,8 @@
 #include "main/object_descriptor.h"
 
 #define DRCAGEWITH_CHILD_OBJ 1143
+#define DRCAGEWITH_CAGE_NOROPE_OBJ 2154
+#define DRCAGEWITH_CAGE_ROPE_OBJ 2155
 
 #define DRCAGEWITH_OBJGROUP 0x18
 
@@ -129,7 +131,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
         objParticleFn_80099d84(obj, 1.5f, 6, 1.0f, NULL);
     }
 
-    if ((obj)->anim.seqId == 2154 || (obj)->anim.seqId == 2155)
+    if ((obj)->anim.seqId == DRCAGEWITH_CAGE_NOROPE_OBJ || (obj)->anim.seqId == DRCAGEWITH_CAGE_ROPE_OBJ)
     {
         if (mainGetBit(GAMEBIT_DR_RescuedCloudRunner) != 0)
         {

@@ -47,6 +47,7 @@ f32 lbl_803DBF14 = -300.0f;
 #define PAD_BUTTON_A                         0x100
 #define PAD_BUTTON_B                         0x200
 #define DIMCANNON_OBJGROUP                   3
+#define DIMCANNON_BALL_OBJ                   0x1d6
 #define DIMCANNON_AIRMETER_BGTEXTURE         0x5d5 /* HUD air-meter background texture id */
 #define DIMCANNON_OBJFLAG_HIDDEN             0x4000
 #define DIMCANNON_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -263,21 +264,21 @@ int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 int DIMCannon_getExtraSize(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x1d6)
+    if (((GameObject*)obj)->anim.seqId == DIMCANNON_BALL_OBJ)
         return 0xc;
     return 0xb4;
 }
 
 int DIMCannon_getObjectTypeId(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == 0x1d6)
+    if (((GameObject*)obj)->anim.seqId == DIMCANNON_BALL_OBJ)
         return 0x0;
     return 0x0;
 }
 
 void DIMCannon_free(int* obj)
 {
-    if (((GameObject*)obj)->anim.seqId != 0x1d6)
+    if (((GameObject*)obj)->anim.seqId != DIMCANNON_BALL_OBJ)
     {
         ((void (*)(void))((int**)*gGameUIInterface)[0x18])();
         Resource_Release(lbl_803DDB50);
@@ -293,7 +294,7 @@ void DIMCannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     s16 saved;
 
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (((GameObject*)obj)->anim.seqId != 0x1d6)
+    if (((GameObject*)obj)->anim.seqId != DIMCANNON_BALL_OBJ)
     {
         sub = ((GameObject*)obj)->extra;
         saved = ((GameObject*)obj)->anim.rotX;
@@ -319,7 +320,7 @@ void DIMCannon_update(int* obj)
     void* player;
     int* src = *(int**)&((GameObject*)obj)->anim.placementData;
 
-    if (((GameObject*)obj)->anim.seqId == 0x1d6)
+    if (((GameObject*)obj)->anim.seqId == DIMCANNON_BALL_OBJ)
     {
         DIMwooddoor_updateFallingDebris(obj);
         return;
@@ -479,7 +480,7 @@ void DIMCannon_init(int* obj, int* arg)
 {
     ObjMsg_AllocQueue(obj, 4);
 
-    if (((GameObject*)obj)->anim.seqId == 0x1d6)
+    if (((GameObject*)obj)->anim.seqId == DIMCANNON_BALL_OBJ)
     {
         void* state;
         int* p;

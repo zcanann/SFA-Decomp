@@ -39,6 +39,8 @@
 /* Partfx spawned by VFPDragHead_update: BREATH is the hit-driven breath fx
  * (state 1, gameBitA toggled); IDLE is the ambient periodic fx (states 0/2). */
 #define VFPDRAGHEAD_PARTFX_BREATH 0x390
+#define VFP_PLATFORM_LAVABLOCK_OBJ 960
+#define VFP_DOORSWITCH_LIFTIND_OBJ 0x3e7
 #define VFPDRAGHEAD_PARTFX_IDLE   0x391
 
 /*
@@ -396,7 +398,7 @@ void VFP_Platform_update(GameObject* obj)
         tyi = ((ObjPlacement*)params)->posZ;
         if (s3 != 99)
         {
-            if ((obj)->anim.seqId == 960)
+            if ((obj)->anim.seqId == VFP_PLATFORM_LAVABLOCK_OBJ)
             {
                 fn_801FBAC8((int)obj);
             }
@@ -598,7 +600,7 @@ void VFP_DoorSwitch_hitDetect(void)
 void VFP_DoorSwitch_update(GameObject* obj)
 {
     VfpDoorSwitchState* state;
-    if ((obj)->anim.seqId != 0x3e7)
+    if ((obj)->anim.seqId != VFP_DOORSWITCH_LIFTIND_OBJ)
     {
         vfpdoorswitch_updateExplodingVariant(obj);
         return;
@@ -668,7 +670,7 @@ void VFP_DoorSwitch_init(int obj, int data)
         state->exploded = 1;
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
-    if (((GameObject*)obj)->anim.seqId == 0x3e7 && state->activated != 0)
+    if (((GameObject*)obj)->anim.seqId == VFP_DOORSWITCH_LIFTIND_OBJ && state->activated != 0)
     {
         *&((GameObject*)obj)->anim.bankIndex = 1;
     }
