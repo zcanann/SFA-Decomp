@@ -214,7 +214,6 @@ int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 void Sfx_StopAllObjectSounds(void);
 void audioFn_8000b694(u32 value);
-int sndFXCtrl14(u32 handle, u8 controller, s32 value);
 void Sfx_SetObjectSoundsPaused(s32 paused);
 void Sfx_StopObjectChannel(int obj, int channel);
 void Sfx_StopFromObject(u32 obj, u32 sfxId);
@@ -1627,7 +1626,7 @@ void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale
         {
             volumeScale = lbl_803DE574;
         }
-        sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
+        sndFXCtrl14(objectChannel->handle, 0x80, lbl_803DE578 * volumeScale);
     }
 }
 
@@ -1683,7 +1682,7 @@ void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
         {
             volumeScale = lbl_803DE574;
         }
-        sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
+        sndFXCtrl14(objectChannel->handle, 0x80, lbl_803DE578 * volumeScale);
     }
 }
 
