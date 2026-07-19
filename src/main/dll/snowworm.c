@@ -73,6 +73,7 @@
 #include "main/pad_api.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/dll/snowworm.h"
+#include "main/dll/baddie_frozen.h"
 
 typedef struct CrawlerModelChainList
 {
@@ -207,7 +208,7 @@ void snowworm_spawnProjectile(s16* obj)
 }
 
 
-void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int sub, void* wpad0, int wpad1)
+void snowworm_updateWhileFrozen(int obj, u8* st, int p3, int cmd, int p5, int sub, Vec* wpad0, int wpad1)
 {
     u8* base;
     u32 r;
@@ -232,11 +233,11 @@ void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int s
     }
     if (((FCVars*)st)->moveTableIndex > 3)
     {
-        Baddie_SetMove((int*)obj, st, 6, 0.5f, 0, 0);
+        Baddie_SetMove((int*)obj, (int*)st, 6, 0.5f, 0, 0);
     }
     else
     {
-        Baddie_SetMove((int*)obj, st, 5, 0.5f, 0, 0);
+        Baddie_SetMove((int*)obj, (int*)st, 5, 0.5f, 0, 0);
     }
     r = randomGetRange(0, 3);
     ((BaddieState*)st)->userData1 = base[r];
@@ -453,6 +454,7 @@ void snowworm_init(int* obj, int* st)
     ((FCVars*)st)->turnDelta = (u16)(((GameObject*)obj)->anim.seqId == SNOWWORM_SEQID_BABY);
 }
 
-void whirlpool_updateWhileFrozen(int wpad0, void* wpad1, int wpad2, int wpad3, int wpad4, int wpad5, void* wpad6, int wpad7)
+void whirlpool_updateWhileFrozen(int wpad0, u8* wpad1, int wpad2, int wpad3, int wpad4, int wpad5, Vec* wpad6,
+                                 int wpad7)
 {
 }
