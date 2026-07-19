@@ -83,6 +83,7 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     u32 sw;
     u32 sh;
     GXColor col;
+    u8 maxAlpha;
     u32 wipe;
     u32 wipeSpan;
     u32 alphaSpan;
@@ -95,7 +96,6 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     u32 walked;
     u8 strip;
     u8 fadeAlpha;
-    u8 maxAlpha;
     f32 conv;
     s32 w;
     s32 h;
