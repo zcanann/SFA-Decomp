@@ -1689,11 +1689,13 @@ void allocLotsOfTextures(void)
                 f32 d1, d2, cc2, d3, n1, a, b;
                 f64 n2, n3;
                 cc = cc * lbl_803DEDFC;
-                d1 = sqrtf(cc * cc + rc * rc);
-                d2 = sqrtf(cc * cc + rc2 * rc2);
+                cc = cc * cc;
+                d1 = sqrtf(rc * rc + cc);
+                d2 = sqrtf(rc2 * rc2 + cc);
                 cc2 = (f32)(j + 1) - lbl_803DEDF8;
                 cc2 = cc2 * lbl_803DEDFC;
-                d3 = sqrtf(rc * rc + cc2 * cc2);
+                cc2 = cc2 * cc2;
+                d3 = sqrtf(rc * rc + cc2);
                 n1 = -mathCosfHighPrecision(lbl_803DEE00 * d1);
                 n2 = __fabs(mathCosfHighPrecision(lbl_803DEE00 * d2));
                 n3 = __fabs(mathCosfHighPrecision(lbl_803DEE00 * d3));
@@ -1729,11 +1731,13 @@ void allocLotsOfTextures(void)
                     dst += (i >> 2) * 0x200;
                     cc = (f32)i - lbl_803DEDF8;
                     cc = cc * lbl_803DEDFC;
-                    d1 = sqrtf(cc * cc + rc * rc);
-                    d2 = sqrtf(cc * cc + rc2 * rc2);
+                    cc = cc * cc;
+                    d1 = sqrtf(rc * rc + cc);
+                    d2 = sqrtf(rc2 * rc2 + cc);
                     cc2 = (f32)(i + 1) - lbl_803DEDF8;
                     cc2 = cc2 * lbl_803DEDFC;
-                    d3 = sqrtf(rc * rc + cc2 * cc2);
+                    cc2 = cc2 * cc2;
+                    d3 = sqrtf(rc * rc + cc2);
                     n1 = -mathCosfHighPrecision(lbl_803DEE00 * d1);
                     n2 = -mathCosfHighPrecision(lbl_803DEE00 * d2);
                     n3 = -mathCosfHighPrecision(lbl_803DEE00 * d3);
@@ -1789,14 +1793,16 @@ void allocLotsOfTextures(void)
         lowoff += rowoff;
         cy = cy * lbl_803DEDE0;
         cy = __fabsf(cy);
-        cy = cy * cy;
         for (; j < 0x80; j++)
         {
             u8* base = (u8*)gNewShadowRadialTexture;
             int off = lowoff + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
             f32 cx = __fabsf(((f32)j - lbl_803DED1C) * lbl_803DEDE0);
-            f32 d2 = sqrtf(cx * cx + cy);
-            f32 v = lbl_803DED2C - d2;
+            f32 d2;
+            f32 v;
+            cx = cx * cx;
+            d2 = sqrtf(cy * cy + cx);
+            v = lbl_803DED2C - d2;
             if (v < lbl_803DED28)
                 v = lbl_803DED28;
             base[off] = 255.0f * v;
