@@ -66,7 +66,6 @@ extern f32 lbl_803E4BFC;
 extern f32 lbl_803E4C28;
 extern f32 lbl_803E4C2C;
 extern f32 lbl_803E4C30;
-extern s16 gDim2LiftFarMoveChoices[30];
 extern u8 gDIMbossAnimController[];
 
 typedef struct DIM2icicleBlueWhiteEffectPlacement
@@ -115,7 +114,7 @@ int DIMbossAnim_updatePlayerHitReaction(GameObject* obj, int runtime)
                                        1))
                 {
                     (*(int (**)(void*, int, int))(*(int*)gPlayerInterface + 0x14))(
-                        obj, runtime, gDim2LiftFarMoveChoices[randomGetRange(0, 5)]);
+                        obj, runtime, gDim2LiftFarMoveChoices.surprised[randomGetRange(0, 5)]);
                 }
                 else if (((GroundBaddieState*)state)->flags400 & 4)
                 {

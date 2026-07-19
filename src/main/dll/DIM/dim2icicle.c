@@ -741,6 +741,9 @@ int gDim2IcicleSequenceSfx[] = {
 
 /*__DATA_EXTERNS__*/
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-u8 gDim2LiftFarMoveChoices[60] = {0, 1, 0, 1, 0, 8, 0, 4, 0, 5, 0, 5, 0, 3, 0, 4, 0, 3, 0, 5,
-                                  0, 4, 0, 5, 0, 6, 0, 0, 0, 5, 0, 4, 0, 3, 0, 5, 0, 4, 0, 5,
-                                  0, 6, 0, 0, 0, 4, 0, 5, 0, 4, 0, 5, 0, 4, 0, 5, 0, 6, 0, 0};
+Dim2BossMoveChoices gDim2LiftFarMoveChoices = {
+    {1, 1, 8, 4, 5, 5},
+    {3, 4, 3, 5, 4, 5, 6, 0},
+    {5, 4, 3, 5, 4, 5, 6, 0},
+    {4, 5, 4, 5, 4, 5, 6, 0},
+};
