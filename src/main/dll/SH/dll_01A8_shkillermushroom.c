@@ -140,7 +140,7 @@ void enemymushroom_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char 
     if (visible != 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, scale);
-        ObjPath_GetPointWorldPosition(obj, 0, (f32*)((char*)state + 0x20), (f32*)((char*)state + 0x24),
+        ObjPath_GetPointWorldPosition(obj, 0, &((EnemyMushroomState*)state)->hitEffectX, (f32*)((char*)state + 0x24),
                                       (f32*)((char*)state + 0x28), 0);
     }
 }
