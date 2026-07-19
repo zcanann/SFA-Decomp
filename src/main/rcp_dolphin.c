@@ -2342,22 +2342,21 @@ void mapInstantiateObjects(MapRomListPage* page, int mapId, int index, GameObjec
         if (i == 0)
         {
             v = (*gMapEventInterface)->getMapAct(mapId);
-            flag = 1;
             if (v == -1)
             {
                 flag = 0;
             }
-            else if (v != 0)
+            else if (v != 0 && v < 9 && ((*(u8*)(obj + 3) >> (v - 1)) & 1))
             {
-                if (v < 9)
-                {
-                    if ((*(u8*)(obj + 3) >> (v - 1)) & 1)
-                        flag = 0;
-                }
-                else if ((*(u8*)(obj + 5) >> (0x10 - v)) & 1)
-                {
-                    flag = 0;
-                }
+                flag = 0;
+            }
+            else if (v >= 9 && ((*(u8*)(obj + 5) >> (0x10 - v)) & 1))
+            {
+                flag = 0;
+            }
+            else
+            {
+                flag = 1;
             }
             if (flag != 0)
             {
