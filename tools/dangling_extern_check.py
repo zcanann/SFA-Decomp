@@ -45,6 +45,7 @@ Usage:
 """
 import argparse
 import collections
+import functools
 import glob
 import os
 import re
@@ -108,19 +109,52 @@ def retail_defines():
     return nm_defines(objs)
 
 
+GROUP_INCLUDE = re.compile(r'#\s*include\s*"([^"]+\.(?:c|cpp|cp))"')
+
+
+@functools.lru_cache(maxsize=1)
+def group_members():
+    """Sources that are #included into a group TU, keyed by repo-relative path.
+
+    A group member is never compiled on its own, so a standalone .o bearing its
+    name is an orphan even though its .c still exists.
+    """
+    members = set()
+    for src in glob.glob(os.path.join(ROOT, 'src', '**', '*.c'), recursive=True):
+        try:
+            text = open(src, 'rb').read().decode('latin-1')
+        except OSError:
+            continue
+        for inc in GROUP_INCLUDE.findall(text):
+            # A group include is written relative to the build directory
+            # ("../src/main/..."), not to the including file, so resolve it
+            # against both and keep whichever names a real source.
+            cands = [os.path.normpath(os.path.join(os.path.dirname(src), inc))]
+            if 'src/' in inc:
+                cands.append(os.path.join(ROOT, 'src', inc.split('src/', 1)[1]))
+            for path in cands:
+                rel = os.path.relpath(path, ROOT)
+                if os.path.exists(path) and not rel.startswith('..'):
+                    members.add(rel)
+                    break
+    return members
+
+
 def source_for(obj):
     """The source an object was built from, or None if it is an orphan.
 
-    Renaming a unit leaves its old .o behind in the build tree; ninja no
-    longer regenerates it, so its symbols are frozen at whatever the tree
-    looked like before the rename. Those stale objects would otherwise
-    dominate the report with danglers no source actually contains.
+    Two ways an object goes stale. Renaming a unit leaves its old .o behind in
+    the build tree; ninja no longer regenerates it, so its symbols are frozen
+    at whatever the tree looked like before the rename. Merging a unit into a
+    group TU does the same while LEAVING THE .c IN PLACE -- so an
+    existence check alone still admits the stale object, and its frozen
+    symbols masquerade as live danglers.
     """
     stem = os.path.splitext(os.path.relpath(obj, OBJS))[0]
     for ext in ('.c', '.cpp', '.cp', '.s', '.S'):
-        path = os.path.join(ROOT, 'src', stem + ext)
-        if os.path.exists(path):
-            return path
+        rel = os.path.join('src', stem + ext)
+        if os.path.exists(os.path.join(ROOT, rel)):
+            return None if rel in group_members() else rel
     return None
 
 
@@ -130,7 +164,7 @@ def scan_objects():
     objs = [o for o in every if source_for(o)]
     orphans = len(every) - len(objs)
     if orphans:
-        print('[skipped %d orphaned objects with no source]' % orphans)
+        print('[skipped %d orphaned objects: source gone or merged into a group TU]' % orphans)
     for obj in objs:
         out = subprocess.run([NM, obj], capture_output=True, text=True).stdout
         for line in out.splitlines():
