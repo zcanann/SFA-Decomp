@@ -118,7 +118,7 @@ void dll_FC_update(GameObject* obj)
     {
         state->target = (GameObject*)ObjGroup_FindNearestObject(placement->targetGroup, (int)obj, &maxDist);
         if (state->target == NULL)
-            goto end;
+            return;
         if ((int)placement->rememberedGameBit == -1)
         {
             state->rememberedGameBitValue = 0;
@@ -195,8 +195,6 @@ void dll_FC_update(GameObject* obj)
         }
         break;
     }
-end:
-    return;
 }
 
 void dll_FC_init(GameObject* obj, int objDef)

@@ -83,21 +83,15 @@ void Lock_DoorLock_free(int obj)
 
 void Lock_DoorLock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0)
+    if (visible == 0 || ((GameObject*)obj)->userData2 != 0)
     {
         if (((GameObject*)obj)->userData2 == 0)
         {
-            goto render_basic;
+            return;
         }
-    }
-    if (((GameObject*)obj)->userData2 == 0)
-    {
+        objRenderFn_80041018((GameObject*)obj);
         return;
     }
-    objRenderFn_80041018((GameObject*)obj);
-    return;
-
-render_basic:
     objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
 }
 

@@ -203,23 +203,21 @@ void fn_8015383C(GameObject* obj, int state)
         }
         Baddie_SetMove(obj, state, mode, lbl_803E2910, 0, 0);
     }
-    if ((obj)->anim.currentMove == 5)
+    if ((obj)->anim.currentMove == 5 && (double)(obj)->anim.currentMoveProgress >= lbl_803E2918 &&
+        (double)(obj)->anim.currentMoveProgress < lbl_803E2918 + ((BaddieState*)state)->unk308 * timeDelta)
     {
-        f32 sct = (obj)->anim.currentMoveProgress;
-        if ((double)sct >= lbl_803E2918 && (double)sct < lbl_803E2918 + ((BaddieState*)state)->unk308 * timeDelta)
+        fn_80153640(obj, state);
+    }
+    else
+    {
+        *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
+        if (*(f32*)(state + 0x324) <= lbl_803E2920)
         {
-            fn_80153640(obj, state);
-            goto sharedTail;
+            rnd = randomGetRange(0x96, 0x12c);
+            *(f32*)(state + 0x324) = (f32)(s32)rnd;
+            Sfx_PlayFromObject((int)obj, SFXTRIG_sc_clubswipe);
         }
     }
-    *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
-    if (*(f32*)(state + 0x324) <= lbl_803E2920)
-    {
-        rnd = randomGetRange(0x96, 0x12c);
-        *(f32*)(state + 0x324) = (f32)(s32)rnd;
-        Sfx_PlayFromObject((int)obj, SFXTRIG_sc_clubswipe);
-    }
-sharedTail:
     fn_8015355C(obj, state);
 }
 

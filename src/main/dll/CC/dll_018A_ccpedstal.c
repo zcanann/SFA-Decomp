@@ -101,10 +101,11 @@ void ccpedstal_updateAltVariant(GameObject* obj, u8* state2)
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
             gameBitIncrement(GAMEBIT_ITEM_FireGem_Count);
             doMark = 1;
-            goto check;
         }
-        doMark = 0;
-    check:
+        else
+        {
+            doMark = 0;
+        }
         if (doMark != 0)
         {
             state->markFlags = (u8)(state->markFlags | 1);

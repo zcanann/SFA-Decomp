@@ -240,7 +240,7 @@ void fn_801DFA28(GameObject* obj)
     }
     tricky = state->targetObj;
     if (tricky == NULL)
-        goto end;
+        return;
     if ((tricky != NULL) && (tricky->userData1 == 0))
     {
         fn_801EED5C(tricky, &state->homeX, &state->homeY, &state->homeZ);
@@ -808,7 +808,7 @@ void fn_801DFA28(GameObject* obj)
                 Sfx_StopObjectChannel((int)obj, 1);
                 DBPROT_MAP_EVENT(obj->anim.pad34, 2, 1);
                 OBJECT_TRIGGER_REFRESH(0, obj, -1);
-                goto end;
+                return;
             }
         }
         break;
@@ -877,7 +877,6 @@ void fn_801DFA28(GameObject* obj)
         ((GameObject*)obj)->anim.rotX = ((SBGalleonState*)state)->rollLatch + 0x4000;
         ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotX - 0x4000;
     }
-end:;
 }
 
 void DBprotection_updateEnvfxGameBits(u8* state)
