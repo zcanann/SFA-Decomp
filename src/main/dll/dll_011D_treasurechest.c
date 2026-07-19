@@ -16,6 +16,8 @@
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
 
+const f32 lbl_803E3C1C = 0.0f;
+
 typedef struct ChestHitParams
 {
     u32 a;
