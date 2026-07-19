@@ -148,11 +148,11 @@ void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, 
     *outZ = vec[2];
 }
 
-void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj)
+void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj)
 {
     s32 matrixIndex;
 
-    if (obj != 0)
+    if ((u32)obj != 0)
     {
         matrixIndex = ((GameObject*)obj)->anim.transformMatrixIndex << 4;
         Matrix_TransformPoint((f32*)((u8*)gObjInverseYawTransformMatrices + (matrixIndex << 2)), x, y, z, outX, outY,
