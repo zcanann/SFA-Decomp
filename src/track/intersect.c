@@ -5937,7 +5937,7 @@ int _saveGame(int a, int b, int c)
     cardShowLoadingMsg(1);
     do
     {
-        ret = saveGamePrepareLegacy(0, a, 0, b, c, cardCb_8007e6d4);
+        ret = saveGame_prepareAndWrite(0, a, 0, b, c, (SaveGameCallback)cardCb_8007e6d4);
         showMemCardError(0);
         if (gSaveCardRetry != 0)
         {
@@ -5954,7 +5954,7 @@ int maybeTryLoadSave(int a)
     cardShowLoadingMsg(0);
     do
     {
-        ret = saveGamePrepareLegacy(1, 0, 0, a, 0, saveCb_8007e748);
+        ret = saveGame_prepareAndWrite(1, 0, 0, a, 0, (SaveGameCallback)saveCb_8007e748);
         showMemCardError(1);
         if (gSaveCardRetry != 0)
         {
@@ -5971,7 +5971,7 @@ int loadSaveGame(int a, int b)
     cardShowLoadingMsg(0);
     do
     {
-        ret = saveGamePrepareLegacy(1, a, 0, b, 0, saveCb_8007e77c);
+        ret = saveGame_prepareAndWrite(1, a, 0, b, 0, (SaveGameCallback)saveCb_8007e77c);
         showMemCardError(0);
         if (gSaveCardRetry != 0)
         {
@@ -6316,7 +6316,7 @@ int memCardFn_8007dd04(u8 retry)
             lbl_803DB700 = 13;
             if (ret == 2)
             {
-                ret = saveGamePrepareLegacy(0, 0, 0, 0, 0, 0);
+                ret = saveGame_prepareAndWrite(0, 0, 0, 0, 0, NULL);
             }
         }
         if (retry != 0)

@@ -20,9 +20,6 @@ int saveGame_doWrite(int slot);
 int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD, SaveGameCallback callback);
 int saveCb_8007e77c(u8 index, int unused, void* dst);
 
-#define saveGamePrepareLegacy(writeImages, cbA, cbB, cbC, cbD, callback) \
-    saveGame_prepareAndWrite((writeImages), (cbA), (cbB), (cbC), (cbD), (SaveGameCallback)(callback))
-
 int seqStreamFn_8008023c(int x);
 void ObjSeq_preempt(int key, int value);
 u8 ObjSeq_getGlobal3(void);
