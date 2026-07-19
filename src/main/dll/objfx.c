@@ -1192,7 +1192,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
         }
     }
 }
-void projectileParticleFxFn_80099660(void* obj, int mode)
+void projectileParticleFxFn_80099660(void* obj, f32 scaleArg, int mode)
 {
     ObjFxParticleParams params;
     f32 tailScale;

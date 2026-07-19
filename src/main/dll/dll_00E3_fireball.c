@@ -353,15 +353,15 @@ void Fireball_hitDetect(int* obj)
         colorIndex = ((FireballState*)state)->colorIndex;
         if (colorIndex == 0)
         {
-            projectileParticleFxFn_80099660Legacy(obj, 1.0f, 3);
+            projectileParticleFxFn_80099660(obj, 1.0f, 3);
         }
         else if (colorIndex == 1)
         {
-            projectileParticleFxFn_80099660Legacy(obj, 1.0f, 0);
+            projectileParticleFxFn_80099660(obj, 1.0f, 0);
         }
         else
         {
-            projectileParticleFxFn_80099660Legacy(obj, 1.0f, 6);
+            projectileParticleFxFn_80099660(obj, 1.0f, 6);
         }
         ((GameObject*)obj)->anim.alpha = 0;
         if (((FireballState*)state)->light != NULL)
@@ -436,15 +436,15 @@ void Fireball_update(int* obj)
                 u8 v = ((FireballState*)state)->colorIndex;
                 if (v == 0)
                 {
-                    projectileParticleFxFn_80099660Legacy(obj, 1.0f, 3);
+                    projectileParticleFxFn_80099660(obj, 1.0f, 3);
                 }
                 else if (v == 1)
                 {
-                    projectileParticleFxFn_80099660Legacy(obj, 1.0f, 0);
+                    projectileParticleFxFn_80099660(obj, 1.0f, 0);
                 }
                 else
                 {
-                    projectileParticleFxFn_80099660Legacy(obj, 1.0f, 6);
+                    projectileParticleFxFn_80099660(obj, 1.0f, 6);
                 }
             }
             ((FireballState*)state)->fadeoutTimer = 60.0f;
