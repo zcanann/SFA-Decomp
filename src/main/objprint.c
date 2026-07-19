@@ -133,7 +133,6 @@ static inline s16* objFindJointVecByKey(GameObject* obj, int key)
     return found;
 }
 
-extern u32 objRenderFuzzFn_8003d6f8();
 extern f32 lbl_803DE9A4;
 extern f32 lbl_803DE9C8;
 extern f32 lbl_803DE99C;
@@ -1524,8 +1523,6 @@ void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, 
 }
 
 
-extern void objRenderShadow(void* obj);
-
 void objRenderShadowIfVisible(GameObject* obj, int wpad0, int wpad1, int wpad2, int wpad3, int wpad4)
 {
     void** arr = *(void***)&(obj)->anim.banks;
@@ -1909,7 +1906,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
             return 0;
         }
         lbl_803DCC3E = 1;
-        objRenderFuzzFn_8003d6f8(obj);
+        objRenderFuzzFn_8003d6f8((void*)obj);
         return 1;
     }
     lbl_803DCC3E = 1;

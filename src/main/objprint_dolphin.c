@@ -2263,7 +2263,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     }
     else if (m2 != 0)
     {
-        objRenderFuzzFn_8003d6f8((void*)obj);
+        objRenderFuzzFn_8003d6f8(obj);
     }
     else
     {
@@ -2547,7 +2547,6 @@ typedef struct
     s16 rot[3];
     s8 joints[6];
 } ChildEnt;
-void objRenderShadow(int* obj);
 void objRenderChild(int* child, int* parent, u8 isShadow)
 {
     f32 res[3];
@@ -2655,7 +2654,7 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
 }
 
 
-void objRenderShadow(int* obj)
+void objRenderShadow(void* obj)
 {
     if (lbl_803DEA04 == ((GameObject*)obj)->anim.rootMotionScale)
     {
