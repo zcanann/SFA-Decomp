@@ -900,15 +900,15 @@ u8 getCurSeqNo(void)
     return curSeqNo;
 }
 
-void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
+void fn_8008020C(f32 x, f32 y, s16 rx, s16 ry, s16 rz, f32 z, f32 w)
 {
     lbl_803DD0F8 = 1;
     lbl_803DD0F4 = x;
     lbl_803DD0F0 = y;
     lbl_803DD0EC = z;
-    lbl_803DD0E8 = a;
-    lbl_803DD0E6 = b;
-    lbl_803DD0E4 = c;
+    lbl_803DD0E8 = rx;
+    lbl_803DD0E6 = ry;
+    lbl_803DD0E4 = rz;
     lbl_803DD0E0 = w;
 }
 GameObject* getFocusedNpc(void)

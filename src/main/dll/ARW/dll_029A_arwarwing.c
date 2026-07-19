@@ -36,6 +36,7 @@
 #include "main/gamebits.h"
 #include "main/loaded_file_flags.h"
 #include "main/mapEventTypes.h"
+#include "main/maketex_sequence_api.h"
 #include "main/model_light.h"
 #include "main/objhits.h"
 #include "main/pad.h"
@@ -679,8 +680,6 @@ void arwarwing_render(GameObject* obj, int p2, int p3, int p4, int p5)
         (obj)->anim.rotZ = (s16)((obj)->anim.rotZ - dy);
     }
 }
-
-void fn_8008020C(f32 x, f32 y, s16 rx, s16 ry, s16 rz, f32 z, f32 w);
 
 void arwarwing_hitDetect(GameObject* obj)
 {
