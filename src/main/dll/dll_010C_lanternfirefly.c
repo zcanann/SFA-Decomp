@@ -123,12 +123,12 @@ void LanternFireFly_func0B(GameObject* obj)
         st->offZ = vec[2];
         st->animFrame = 4;
     }
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
+    LanternFireFly_advanceControlRing(obj);
+    LanternFireFly_advanceControlRing(obj);
+    LanternFireFly_advanceControlRing(obj);
+    LanternFireFly_advanceControlRing(obj);
+    LanternFireFly_advanceControlRing(obj);
+    LanternFireFly_advanceControlRing(obj);
     ((LFFlags*)&state->modeFlags)->mode = 1;
     state->timer = ((LanternFireFlyPlacement*)setup)->timer;
     gameBitIncrement(0x698);
@@ -148,7 +148,7 @@ void LanternFireFly_setScale(u8* obj, f32* vec)
     sub->animFrame = 4;
 }
 
-void fn_801868D0(GameObject* obj)
+void LanternFireFly_pickDriftOffset(GameObject* obj)
 {
     typedef struct
     {
@@ -189,7 +189,7 @@ void fn_801868D0(GameObject* obj)
     vecRotateZXY(&rot.ang, &state->offX);
 }
 
-void fn_801869DC(GameObject* obj)
+void LanternFireFly_advanceControlRing(GameObject* obj)
 {
     typedef struct
     {
@@ -303,9 +303,9 @@ void LanternFireFly_update(GameObject* obj)
         }
         else
         {
-            fn_801868D0(obj);
+            LanternFireFly_pickDriftOffset(obj);
         }
-        fn_801869DC(obj);
+        LanternFireFly_advanceControlRing(obj);
     }
 
     (obj)->anim.localPosX = state->anchorX + Curve_EvalBSplineValuesFirst(state->controlX, state->splineT, 0);

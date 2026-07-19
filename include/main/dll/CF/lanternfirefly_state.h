@@ -25,7 +25,7 @@ typedef struct LanternFireFlyState {
   s32 timer;        /* 0x60 */
   s16 randAngle;    /* 0x64 */
   s16 randPeriod;   /* 0x66 */
-  s16 wanderRange;      /* 0x68: randAngle wander range (windlift fn_801868D0) */
+  s16 wanderRange;      /* 0x68: randAngle wander range (windlift LanternFireFly_pickDriftOffset) */
   u8 stateId;       /* 0x6a */
   u8 field6B;       /* 0x6b */
   u8 animFrame;     /* 0x6c */

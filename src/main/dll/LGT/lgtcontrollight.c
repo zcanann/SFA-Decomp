@@ -30,7 +30,7 @@
 
 int firefly_animEventCallback(GameObject* obj)
 {
-    FireFlyFn_801f4f88(obj);
+    firefly_activeTick(obj);
     return 0;
 }
 

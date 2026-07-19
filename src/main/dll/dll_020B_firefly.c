@@ -83,7 +83,7 @@ STATIC_ASSERT(sizeof(FireFlyState) == FIREFLY_EXTRA_SIZE);
    new segment and re-targeting while pathAge < 4), spawn the trail fx,
    ease the proximity glow, and detect the player touch. Runs as the
    anim-event callback via the sibling TU's firefly_animEventCallback wrapper. */
-void FireFlyFn_801f4f88(GameObject* obj)
+void firefly_activeTick(GameObject* obj)
 {
     FireFlyState* state = (obj)->extra;
     ObjAnimComponent* objAnim = &(obj)->anim;
@@ -300,7 +300,7 @@ void firefly_update(GameObject* obj)
         }
         else
         {
-            FireFlyFn_801f4f88(obj);
+            firefly_activeTick(obj);
         }
     }
 }

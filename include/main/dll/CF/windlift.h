@@ -44,7 +44,7 @@ void PortalSpellDoor_initialise(void);
 void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c);
 void LanternFireFly_func0B(GameObject* obj);
 void LanternFireFly_setScale(u8* obj, f32* vec);
-void fn_801868D0(GameObject* obj);
-void fn_801869DC(GameObject* obj);
+void LanternFireFly_pickDriftOffset(GameObject* obj);
+void LanternFireFly_advanceControlRing(GameObject* obj);
 
 #endif /* MAIN_DLL_CF_WINDLIFT_H_ */
