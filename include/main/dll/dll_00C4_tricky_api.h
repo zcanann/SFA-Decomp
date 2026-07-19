@@ -10,6 +10,6 @@ void trickyDebugPrint(const char* fmt, ...);
 void tricky_handleDefeat(GameObject* obj, int state);
 void baddieInstantiateWeapon(GameObject* obj, int state);
 
-extern const u16 gSkeetlaFootstepSfxId2;
+extern u16 gSkeetlaFootstepSfxId2;
 
 #endif /* MAIN_DLL_DLL_00C4_TRICKY_API_H_ */
