@@ -23,6 +23,7 @@
 #include "main/dll/cmenu.h"
 #include "main/dll/maybeTemplate.h"
 #include "main/dll/dll_0000_gameui.h"
+#include "main/gametext_color_api.h"
 #include "main/dll/cmenu_item_table.h"
 #include "main/pause_menu_api.h"
 #include "main/rcp_dolphin.h"

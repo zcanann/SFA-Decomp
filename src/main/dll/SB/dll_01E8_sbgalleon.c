@@ -54,6 +54,7 @@
 #include "main/frame_timing.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_object_api.h"
+#include "main/gametext_color_api.h"
 
 u8 lbl_803DC078[4] = {0x0A, 0x10, 0x1F, 0};
 u8 gSbGalleonSkyColorBEnd[4] = {9, 0x0F, 0x1E, 0};
