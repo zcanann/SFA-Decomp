@@ -7,7 +7,7 @@
 #include "main/model.h"
 #include "main/objprint_character_api.h"
 #include "main/object_api.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/obj_group.h"
 #include "main/obj_path.h"
 #include "main/obj_trigger.h"
@@ -321,7 +321,7 @@ void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, 
     int pointIndex;
 
     runtime = obj->runtime;
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     dll_2E_func06((GameObject*)obj, (MoveLibState*)runtime, 0);
     pointIndex = 0;
     do

@@ -10,7 +10,7 @@
  * issued through the map-event interface.
  */
 #include "main/audio/sfx_ids.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/map_load.h"
@@ -369,7 +369,7 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
         player = Obj_GetPlayerObject();
         if (player != NULL && fn_80296464(player) != 0)
         {

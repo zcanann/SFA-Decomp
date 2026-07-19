@@ -13,7 +13,7 @@
 #include "main/obj_trigger.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/SH/dll_01AF_shswaplift.h"
 #include "main/dll/tricky_api.h"
@@ -48,7 +48,7 @@ void warpstonelift_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E54C8);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E54C8);
 }
 
 void warpstonelift_hitDetect(void)
