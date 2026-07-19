@@ -12,7 +12,5 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
                                          SHthorntailConfig *config);
 u32 SHthorntail_updateLevelControlState(SHthorntailObject *obj,int unused,
                                                ObjAnimUpdateState *animUpdate);
-int SHthorntail_getExtraSize(void);
-void SHthorntail_free(SHthorntailObject *obj);
 
 #endif /* MAIN_DLL_SH_SHROOT_H_ */

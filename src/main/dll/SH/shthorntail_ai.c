@@ -15,6 +15,7 @@
 #include "dolphin/os/OSReport.h"
 #include "main/gamebits.h"
 #include "main/dll/SH/shthorntail_ai.h"
+#include "main/dll/SH/SHthorntail.h"
 #include "main/vecmath.h"
 #include "main/frustum.h"
 #include "main/frame_timing.h"
@@ -56,12 +57,6 @@ extern f32 SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ;
 extern f32 SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;
 extern f32 SHTHORNTAIL_TAIL_SWING_RECOVER_TIME;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
-
-void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config);
-void SHthorntail_update(SHthorntailObject* obj);
-void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void SHthorntail_free(SHthorntailObject* obj);
-int SHthorntail_getExtraSize(void);
 
 u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {
