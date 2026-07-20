@@ -95,7 +95,7 @@ int pinponspike_getObjectTypeId(void)
     return 0x0;
 }
 
-void pinponspike_free(int obj)
+void pinponspike_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
@@ -108,66 +108,66 @@ void pinponspike_hitDetect(void)
 {
 }
 
-void pinponspike_update(int obj)
+void pinponspike_update(GameObject* obj)
 {
     f32 vx;
     f32 vy;
     f32 vz;
 
-    if (((GameObject*)obj)->userData1 > 0)
+    if (obj->userData1 > 0)
     {
-        ((GameObject*)obj)->userData1 = (int)((f32)((GameObject*)obj)->userData1 - timeDelta);
-        if (((GameObject*)obj)->userData1 <= 0)
+        obj->userData1 = (int)((f32)obj->userData1 - timeDelta);
+        if (obj->userData1 <= 0)
         {
-            Obj_FreeObject((GameObject*)obj);
+            Obj_FreeObject(obj);
             return;
         }
     }
-    if (((GameObject*)obj)->anim.alpha != 0)
+    if (obj->anim.alpha != 0)
     {
-        vx = ((GameObject*)obj)->anim.velocityX * timeDelta;
-        vy = ((GameObject*)obj)->anim.velocityY * timeDelta;
-        vz = ((GameObject*)obj)->anim.velocityZ * timeDelta;
-        objMove((GameObject*)obj, vx, vy, vz);
-        ((GameObject*)obj)->anim.velocityY += lbl_803E3124 * timeDelta;
-        if (((GameObject*)obj)->anim.velocityY < *(f32*)&lbl_803E3128)
+        vx = obj->anim.velocityX * timeDelta;
+        vy = obj->anim.velocityY * timeDelta;
+        vz = obj->anim.velocityZ * timeDelta;
+        objMove(obj, vx, vy, vz);
+        obj->anim.velocityY += lbl_803E3124 * timeDelta;
+        if (obj->anim.velocityY < *(f32*)&lbl_803E3128)
         {
-            ((GameObject*)obj)->anim.velocityY = lbl_803E3128;
+            obj->anim.velocityY = lbl_803E3128;
         }
-        ((GameObject*)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
-        ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
+        obj->anim.rotX = getAngle(vx, vz) - 0x8000;
+        obj->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, PINPONSPIKE_HIT_VOLUME_SLOT, 1, 0);
-        ObjHits_EnableObject((GameObject*)obj);
-        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
-            (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+        ObjHits_EnableObject(obj);
+        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject != 0 &&
+            (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject ==
                  (int)Obj_GetPlayerObject() ||
-             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)getTrickyObject()))
+             ((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject == (int)getTrickyObject()))
         {
             int i;
-            ((GameObject*)obj)->anim.alpha = 0;
-            ((GameObject*)obj)->userData1 = 0x78;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
+            obj->anim.alpha = 0;
+            obj->userData1 = 0x78;
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             for (i = 0; i < 0x19; i++)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, PINPONSPIKE_PARTFX, NULL, 1, -1, &i);
             }
-            Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_lummy311);
         }
-        else if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
+        else if (((ObjHitsPriorityState*)obj->anim.hitReactState)->contactFlags != 0)
         {
             int i;
-            ((GameObject*)obj)->anim.alpha = 0;
-            ((GameObject*)obj)->userData1 = 0x78;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
+            obj->anim.alpha = 0;
+            obj->userData1 = 0x78;
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             for (i = 0; i < 0x19; i++)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, PINPONSPIKE_PARTFX, NULL, 1, -1, &i);
             }
-            Sfx_PlayFromObject(obj, SFXTRIG_lummy311);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_lummy311);
         }
-        else if (((GameObject*)obj)->anim.localPosY < lbl_803E312C)
+        else if (obj->anim.localPosY < lbl_803E312C)
         {
-            Obj_FreeObject((GameObject*)obj);
+            Obj_FreeObject(obj);
         }
     }
 }
