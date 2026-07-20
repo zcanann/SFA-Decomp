@@ -652,12 +652,12 @@ void Shield_update(int* obj)
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     {
+        int i;
+        f32* t12;
+        f32* t4;
         s16* ps;
         f32* t8;
         f32* pf;
-        f32* t12;
-        f32* t4;
-        int i;
         i = 0;
         ps = (s16*)state;
         t8 = tbl[0] + 8;
@@ -669,14 +669,14 @@ void Shield_update(int* obj)
             ps[26] = (f32)ps[30] * timeDelta + ps[26];
             if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_OMNI_SHIELD)
             {
-                f32 c = fcos16(ps[26]);
+                f32 c = fcos16((u16)ps[26]);
                 c = c * lbl_803E33EC + 1.0f;
                 pf[9] = *t8 * c;
                 pf[5] = *t12;
             }
             else
             {
-                f32 c = fcos16(ps[26]);
+                f32 c = fcos16((u16)ps[26]);
                 f32 sum = 1.0f + c;
                 c = sum * lbl_803E33A8;
                 pf[9] = *tbl[0] * c;
