@@ -36,7 +36,7 @@ u8 gDvdErrorPauseActive;
 #define GAMETEXT_MSG_DVD_NO_DISK     0x33d
 #define GAMETEXT_MSG_DVD_WRONG_DISK  0x33e
 
-DVDCommandBlock lbl_80339950;
+DVDCommandBlock gDvdStreamPlayAddrCommandBlock;
 
 void dvdCheckError(void)
 {
@@ -47,7 +47,7 @@ void dvdCheckError(void)
     {
         gAudioStreamPlayAddrCallbackDone = 0;
         gAudioStreamPlayAddrCallbackResult = 0;
-        DVDGetStreamPlayAddrAsync(&lbl_80339950, (DVDCBCallback)AudioStream_PlayAddrCallback);
+        DVDGetStreamPlayAddrAsync(&gDvdStreamPlayAddrCommandBlock, (DVDCBCallback)AudioStream_PlayAddrCallback);
     }
 
     status = DVDGetDriveStatus();
@@ -141,7 +141,7 @@ int DVDRead(DVDFileInfo* fileInfo, void* buf, s32 size, s32 offset)
     gDvdReadCallbackResult = 0;
     while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 || gDvdReadCallbackResult == -3)
     {
-        DVDReadAsyncPrio(fileInfo, buf, size, offset, fileReadCb_80015954, 2);
+        DVDReadAsyncPrio(fileInfo, buf, size, offset, DvdRead_Callback, 2);
         while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1)
         {
             padUpdate();
@@ -166,7 +166,7 @@ int DVDRead(DVDFileInfo* fileInfo, void* buf, s32 size, s32 offset)
     return gDvdReadCallbackResult;
 }
 
-void fileReadCb_80015954(s32 result, DVDFileInfo* fileInfo)
+void DvdRead_Callback(s32 result, DVDFileInfo* fileInfo)
 {
     (void)fileInfo;
     gDvdReadCallbackResult = result;
