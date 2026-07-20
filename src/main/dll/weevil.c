@@ -29,14 +29,6 @@
 #define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 
 extern int lbl_803DBCC8[2];
-extern f64 lbl_803E2938;
-extern f32 lbl_803E2940;
-extern f32 lbl_803E2944;
-extern f32 lbl_803E2948;
-extern f32 lbl_803E294C;
-extern f32 lbl_803E2950;
-extern f32 lbl_803E2954;
-extern f32 lbl_803E2958;
 
 /*
  * WeevilState - file-local overlay naming the per-family scratch that
@@ -64,7 +56,7 @@ void weevil_updateWhileFrozen(GameObject* obj, u8* state, int attacker, int msgF
 {
     u8 cond = 0;
     if ((obj)->anim.currentMove == 5 || (obj)->anim.currentMove == 4 ||
-        ((obj)->anim.currentMove == 6 && (double)(obj)->anim.currentMoveProgress < lbl_803E2938))
+        ((obj)->anim.currentMove == 6 && (double)(obj)->anim.currentMoveProgress < 0.5))
     {
         if (msgFlag != 0xe)
         {
@@ -92,9 +84,9 @@ void weevil_updateWhileFrozen(GameObject* obj, u8* state, int attacker, int msgF
     }
     else if (msgFlag == 0x11)
     {
-        ((WeevilState*)state)->recoverTimer = lbl_803E2940;
-        ((WeevilState*)state)->approachTimer = lbl_803E2944;
-        fn_8014D08C(obj, (int)state, 4, lbl_803E2948, 0, 3);
+        ((WeevilState*)state)->recoverTimer = 120.0f;
+        ((WeevilState*)state)->approachTimer = 180.0f;
+        fn_8014D08C(obj, (int)state, 4, 2.0f, 0, 3);
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         ((BaddieState*)state)->userData2 = 0x3c;
     }
@@ -113,7 +105,7 @@ void weevil_updateIdle(GameObject* obj, int state)
 
     curve = *(RomCurveWalker**)state;
     ((BaddieState*)state)->userData1 = 0;
-    ((WeevilState*)state)->retreatTimer = lbl_803E294C;
+    ((WeevilState*)state)->retreatTimer = 0.0f;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
         if (Curve_AdvanceAlongPath(&curve->curve, ((BaddieState*)state)->pathStep) != 0 ||
@@ -122,22 +114,22 @@ void weevil_updateIdle(GameObject* obj, int state)
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
                 if ((*gRomCurveInterface)
-                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2950, lbl_803DBCC8, -1) != 0)
+                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, 700.0f, lbl_803DBCC8, -1) != 0)
                 {
                     ((BaddieState*)state)->controlFlags =
                         ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
         }
-        if (lbl_803E294C == ((WeevilState*)state)->recoverTimer)
+        if (0.0f == ((WeevilState*)state)->recoverTimer)
         {
             if ((obj)->anim.currentMove == 0)
             {
                 baddieTurnTowardPoint(obj, state, curve->posX, curve->posZ, 0x3c, 0);
             }
-            if (((WeevilState*)state)->approachTimer > lbl_803E294C)
+            if (((WeevilState*)state)->approachTimer > 0.0f)
             {
-                f32 zero = lbl_803E294C;
+                f32 zero = 0.0f;
                 ((WeevilState*)state)->approachTimer = ((WeevilState*)state)->approachTimer - timeDelta;
                 if (((WeevilState*)state)->approachTimer <= zero)
                 {
@@ -147,28 +139,28 @@ void weevil_updateIdle(GameObject* obj, int state)
             }
         }
     }
-    if (((WeevilState*)state)->recoverTimer > lbl_803E294C)
+    if (((WeevilState*)state)->recoverTimer > 0.0f)
     {
-        f32 zero = lbl_803E294C;
+        f32 zero = 0.0f;
         ((WeevilState*)state)->recoverTimer = ((WeevilState*)state)->recoverTimer - timeDelta;
         if (((WeevilState*)state)->recoverTimer <= zero)
         {
-            fn_8014D08C(obj, state, 6, lbl_803E2948, 0, 3);
-            ((WeevilState*)state)->recoverTimer = lbl_803E294C;
+            fn_8014D08C(obj, state, 6, 2.0f, 0, 3);
+            ((WeevilState*)state)->recoverTimer = 0.0f;
         }
         else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
-            fn_8014D08C(obj, state, 5, lbl_803E2954, 0, 3);
+            fn_8014D08C(obj, state, 5, 1.0f, 0, 3);
         }
     }
     else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
-        fn_8014D08C(obj, state, 0, lbl_803E2958, 0, 3);
+        fn_8014D08C(obj, state, 0, 0.5f, 0, 3);
     }
     (obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
     (obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;
     ((WeevilState*)state)->gruntTimer = ((WeevilState*)state)->gruntTimer - timeDelta;
-    if (((WeevilState*)state)->gruntTimer <= lbl_803E294C)
+    if (((WeevilState*)state)->gruntTimer <= 0.0f)
     {
         rnd = randomGetRange(0x3c, 0x78);
         ((WeevilState*)state)->gruntTimer = (f32)(s32)rnd;
@@ -186,17 +178,17 @@ void weevil_updateEngaged(int obj, int state)
 {
     u8 done;
 
-    ((WeevilState*)state)->recoverTimer = lbl_803E294C;
+    ((WeevilState*)state)->recoverTimer = 0.0f;
     done = 0;
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FALL_LADDERS_HIT_VOLUME_SLOT, 1, -1);
     if (*(void**)(state + 0x340) != 0)
     {
         done = 1;
         ((WeevilState*)state)->approachTimer = 360.0f;
-        ((WeevilState*)state)->recoverTimer = lbl_803E294C;
+        ((WeevilState*)state)->recoverTimer = 0.0f;
         if (((GameObject*)obj)->anim.currentMove != 0)
         {
-            fn_8014D08C((GameObject*)obj, state, 2, lbl_803E2958, 0, 3);
+            fn_8014D08C((GameObject*)obj, state, 2, 0.5f, 0, 3);
         }
     }
     if (((GameObject*)obj)->anim.currentMove != 3)
@@ -207,12 +199,12 @@ void weevil_updateEngaged(int obj, int state)
     else
     {
         ((WeevilState*)state)->retreatTimer -= timeDelta;
-        if (((WeevilState*)state)->retreatTimer <= lbl_803E294C)
+        if (((WeevilState*)state)->retreatTimer <= 0.0f)
         {
             done = 1;
-            ((WeevilState*)state)->recoverTimer = lbl_803E2940;
-            ((WeevilState*)state)->approachTimer = lbl_803E2944;
-            fn_8014D08C((GameObject*)obj, state, 4, lbl_803E2948, 0, 3);
+            ((WeevilState*)state)->recoverTimer = 120.0f;
+            ((WeevilState*)state)->approachTimer = 180.0f;
+            fn_8014D08C((GameObject*)obj, state, 4, 2.0f, 0, 3);
         }
     }
     if (done != 0)
@@ -226,7 +218,7 @@ void weevil_updateEngaged(int obj, int state)
     }
     else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 &&
              (fn_8014D08C((GameObject*)obj, state, 3, 0.375f, 0, 3),
-              lbl_803E294C == ((WeevilState*)state)->retreatTimer))
+              0.0f == ((WeevilState*)state)->retreatTimer))
     {
         ((WeevilState*)state)->retreatTimer = 50.0f;
         baddieTurnTowardPoint((GameObject*)obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
@@ -248,7 +240,7 @@ void weevil_init(int unused, u8* state)
     ((BaddieState*)state)->speedScale = 40.0f;
     ((BaddieState*)state)->unk2E4 = 173;
     ((BaddieState*)state)->unk308 = 0.02f;
-    ((BaddieState*)state)->animDeltaScale = lbl_803E2954;
+    ((BaddieState*)state)->animDeltaScale = 1.0f;
     ((BaddieState*)state)->unk304 = 0.97f;
     ((BaddieState*)state)->unk320 = 0;
     fz = 1.5f;
@@ -257,12 +249,12 @@ void weevil_init(int unused, u8* state)
     ((BaddieState*)state)->unk318 = 4.0f;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fz;
-    fc = lbl_803E294C;
+    fc = 0.0f;
     ((WeevilState*)state)->approachTimer = fc;
     ((WeevilState*)state)->retreatTimer = fc;
     ((WeevilState*)state)->recoverTimer = fc;
     ((BaddieState*)state)->userData1 = 0;
     ((BaddieState*)state)->userData2 = 0;
     ((WeevilState*)state)->gruntTimer = 60.0f;
-    ((BaddieState*)state)->pathStep = lbl_803E2958;
+    ((BaddieState*)state)->pathStep = 0.5f;
 }
