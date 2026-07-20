@@ -9,10 +9,6 @@
 extern const float __sincos_on_quadrant[];
 extern const float __sincos_poly[];
 
-void __sinit_trigf_c(void);
-float sin__Ff(float x);
-float cos__Ff(float x);
-
 static const float tmp_float[] = { 0.25f, 0.0232393741608f, 1.70555722434e-7f, 1.86736494323e-11f };
 static float __four_over_pi_m1[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 

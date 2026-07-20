@@ -11,8 +11,6 @@
 
 __declspec(section ".init") static void __init_registers(void);
 __declspec(section ".init") void __init_data(void);
-__declspec(section ".init") void __init_hardware(void);
-__declspec(section ".init") void __flush_cache(void* address, unsigned int size);
 
 #define EXCEPTIONMASK_ADDR 0x80000044
 #define BOOTINFO2_ADDR 0x800000F4

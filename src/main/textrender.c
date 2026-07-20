@@ -3351,7 +3351,7 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
 {
     int x;
     int y;
-    u8 alpha;
+    int alpha;
     int halfW;
     int halfH;
     int midX;

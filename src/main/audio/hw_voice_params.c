@@ -11,8 +11,6 @@
 #define DSP_VOICE_ITD_CENTER            0x10
 
 extern u8 salTimeOffset;
-extern u16 lbl_803DC618[4];
-extern u16 lbl_803DC620[4];
 
 void hwSetPitch(u32 slot, u16 pitch)
 {
@@ -47,15 +45,17 @@ void hwSetPitch(u32 slot, u16 pitch)
 
 void hwSetSRCType(u32 slot, u8 value)
 {
+    static u16 dspSRCType[3] = {0, 1, 2};
     DSPvoice* entry = &dspVoice[slot];
-    entry->srcTypeSelect = lbl_803DC618[(u8)value];
+    entry->srcTypeSelect = dspSRCType[(u8)value];
     entry->changed[0] |= DSP_VOICE_SRC_TYPE_CHANGE_FLAG;
 }
 
 void hwSetPolyPhaseFilter(u32 slot, u8 value)
 {
+    static u16 dspCoefSel[3] = {0, 1, 2};
     DSPvoice* entry = &dspVoice[slot];
-    entry->srcCoefSelect = lbl_803DC620[(u8)value];
+    entry->srcCoefSelect = dspCoefSel[(u8)value];
     entry->changed[0] |= DSP_VOICE_POLYPHASE_CHANGE_FLAG;
 }
 

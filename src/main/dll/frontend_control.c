@@ -19,11 +19,10 @@
 #include "main/dll/dll_0035_saveselectscreen.h"
 #include "main/gametext_show_str_api.h"
 #include "main/textrender_api.h"
+#include "track/intersect_hud_api.h"
 #include "main/pad.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/pad.h"
-
-void drawTexture(void* texture, f32 x, f32 y, int alpha, int scale);
 
 #define CHEAT_SEQUENCE_LEN  5
 #define CHEAT_INPUT_TIMEOUT 0xF

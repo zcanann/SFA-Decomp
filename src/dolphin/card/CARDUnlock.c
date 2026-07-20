@@ -1,7 +1,7 @@
 
 #include "dolphin/card/__card.h"
 
-extern unsigned long int lbl_803DC600;
+static u32 next = 1;
 
 static u32 CARDUnlockProgram[88] = {
     0x00000000, 0x00000000, 0x00000000, 0x00000000,
@@ -39,12 +39,12 @@ static void InitCallback(void* task);
 static void DoneCallback(void* task);
 
 static inline int CARDRand(void) {
-    lbl_803DC600 = lbl_803DC600 * 1103515245 + 12345;
-    return (int)((unsigned int)(lbl_803DC600 / 65536) % 32768);
+    next = next * 1103515245 + 12345;
+    return (int)((unsigned int)(next / 65536) % 32768);
 }
 
 static inline void CARDSrand(unsigned int seed) {
-    lbl_803DC600 = seed;
+    next = seed;
 }
 
 static inline u32 GetInitVal(void) {

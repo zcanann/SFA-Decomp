@@ -7,6 +7,8 @@ extern "C" {
 
 void __init_user(void);
 void _ExitProcess(void);
+__declspec(section ".init") asm void __init_hardware(void);
+__declspec(section ".init") asm void __flush_cache(void* address, unsigned int size);
 
 #ifdef __cplusplus
 }

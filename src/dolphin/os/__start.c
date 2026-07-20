@@ -14,8 +14,6 @@ SECTION_INIT extern u8 __get_debug_bba(void);
 SECTION_INIT extern void __start(void);
 SECTION_INIT extern void __init_registers(void);
 SECTION_INIT extern void __init_data(void);
-SECTION_INIT extern void __init_hardware(void);
-SECTION_INIT extern void __flush_cache(void* addr, u32 size);
 
 extern u8 Debug_BBA_8032EFE0;
 

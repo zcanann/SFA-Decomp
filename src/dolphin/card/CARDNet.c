@@ -1,5 +1,6 @@
-#include <dolphin/card.h>
+#include "dolphin/card/__card.h"
 
+u16 __CARDVendorID = 0xFFFF;
 
 s32 CARDGetSerialNo(s32 chan, u64* serialNo) {
     CARDControl* card;
