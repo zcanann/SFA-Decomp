@@ -1778,10 +1778,8 @@ void gameTextRun(void)
         case 4:
         {
             int t1 = cmd->arg2;
-            *(s16*)((u8*)gTextBoxes + cmd->arg0 * sizeof(GameTextBox) +
-                    offsetof(GameTextBox, cursorX)) = (s16)cmd->arg1;
-            *(s16*)((u8*)gTextBoxes + cmd->arg0 * sizeof(GameTextBox) +
-                    offsetof(GameTextBox, cursorY)) = t1;
+            gTextBoxes[cmd->arg0].cursorX = (s16)cmd->arg1;
+            gTextBoxes[cmd->arg0].cursorY = t1;
             break;
         }
         case 1:
@@ -2172,7 +2170,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
 {
     int wbytes;
     u8* base30;
-    u8* base31;
+    TextFont* charset;
     u8* buf;
     int sizeA;
     int y;
@@ -2189,7 +2187,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
 
     fontData = (u8*)gGameTextFontData;
     base30 = lbl_802C8680;
-    base31 = (u8*)gGameTextCharsets;
+    charset = (TextFont*)&gGameTextCharsets[GAMETEXT_SLOT_ERROR];
     savedHeap = testAndSet_onlyUseHeap3(0);
     buf = mmAlloc(0x120, 0x1a, 0);
     switch (OSGetFontEncode())
@@ -2210,31 +2208,31 @@ void gameTextLoadGraphicsFn_8001a918(void)
     bufA = mmAlloc(sizeA, 0x1a, 0);
     bufB = mmAlloc(sizeB, 0x1a, 0);
     OSLoadFont(bufB, bufA);
-    if (*(int*)(base31 + 0x58) == 0)
+    if (charset->glyphCount == 0)
     {
         if (lbl_803DC968)
         {
-            *(u8**)(base31 + 0x50) = fontData;
-            *(int*)(base31 + 0x58) = 0x55;
-            *(u8**)(base31 + 0x54) = fontData + 0x8ec;
-            *(int*)(base31 + 0x5c) = 7;
+            charset->glyphs = (TextGlyph*)fontData;
+            charset->glyphCount = 0x55;
+            charset->entries = (u16*)(fontData + 0x8ec);
+            charset->entryCount = 7;
         }
         else
         {
-            *(u8**)(base31 + 0x50) = fontData + 0x940;
-            *(int*)(base31 + 0x58) = 0x2b;
-            *(u8**)(base31 + 0x54) = fontData + 0xe24;
-            *(int*)(base31 + 0x5c) = 7;
+            charset->glyphs = (TextGlyph*)(fontData + 0x940);
+            charset->glyphCount = 0x2b;
+            charset->entries = (u16*)(fontData + 0xe24);
+            charset->entryCount = 7;
         }
     }
-    *(u8**)(base31 + 0x60) = textureAlloc(0x200, 0x60, 0, 0, 0, 0, 0, 1, 1);
-    *(u16*)(base30 + 0x60) = *(int*)(base31 + 0x58);
+    charset->textures[0] = (Texture*)textureAlloc(0x200, 0x60, 0, 0, 0, 0, 0, 1, 1);
+    *(u16*)(base30 + 0x60) = charset->glyphCount;
     *(u8*)(base30 + 0x64) = 0x30;
     *(u8*)(base30 + 0x65) = 0x20;
     *(u16*)(base30 + 0x68) = 0;
     *(u16*)(base30 + 0x6a) = 0x18;
-    count = *(int*)(base31 + 0x58);
-    glyph = *(TextGlyph**)(base31 + 0x50);
+    count = charset->glyphCount;
+    glyph = charset->glyphs;
     x = 0;
     y = 0;
     while (count--)
@@ -2333,7 +2331,7 @@ void gameTextLoadGraphicsFn_8001a918(void)
                 int j2 = tx;
                 for (; j2 < txEnd; j2++)
                 {
-                    u8* dst = *(u8**)(base31 + 0x60) + (j2 << 5);
+                    u8* dst = (u8*)charset->textures[0] + (j2 << 5);
                     int k;
                     dst += row * lbl_803DB3C4;
                     for (k = 0; k < 8; k++)
@@ -2347,12 +2345,12 @@ void gameTextLoadGraphicsFn_8001a918(void)
         x += wbytes << 3;
         glyph++;
     }
-    DCFlushRange(*(u8**)(base31 + 0x60) + 0x60, 0x20000);
+    DCFlushRange((u8*)charset->textures[0] + 0x60, 0x20000);
     mm_free(bufA);
     mm_free(bufB);
     mm_free(buf);
     testAndSet_onlyUseHeap3(savedHeap);
-    *(int*)(base31 + 0x6c) = 2;
+    charset->mode = 2;
 }
 
 void setLanguageFn_8001ad64(void* reqp)

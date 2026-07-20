@@ -88,43 +88,43 @@ void fn_801511E8(GameObject* obj, u8* state);
 
 void fn_801511E8(GameObject* obj, u8* state)
 {
-    u8* entry;
+    SeqEntry* entry;
     u32 idx;
     u8 wrapIdx;
     char* base;
 
     base = (char*)lbl_8031F16C;
-    base += state[0x33b] * 40;
-    entry = *(u8**)(base + 12);
+    base += ((GroundBaddieState*)state)->baddie.userData2 * 40;
+    entry = *(SeqEntry**)(base + 12);
     if ((f32) * (u16*)(state + 0x2a4) > 0.6f * ((GroundBaddieState*)state)->baddie.speedScale)
     {
         if ((f32) * (u16*)(state + 0x2a4) > 0.8f * ((GroundBaddieState*)state)->baddie.speedScale)
         {
-            state[0x33a] = (u8)(entry[8] + 2);
+            state[0x33a] = (u8)(entry[0].anim + 2);
         }
         else
         {
-            state[0x33a] = (u8)(entry[8] + 3);
+            state[0x33a] = (u8)(entry[0].anim + 3);
         }
     }
     wrapIdx = 1;
-    while (*(u32*)(entry + (idx = state[0x33a]) * 16 + 4) != 0 &&
-           (((GroundBaddieState*)state)->baddie.controlFlags & *(u32*)(entry + idx * 16 + 4)) == 0)
+    while (entry[idx = state[0x33a]].mask != 0 &&
+           (((GroundBaddieState*)state)->baddie.controlFlags & entry[idx].mask) == 0)
     {
         (((GroundBaddieState*)state)->baddie.userData1)++;
-        if (state[0x33a] > entry[8])
+        if (state[0x33a] > entry[0].anim)
         {
             state[0x33a] = wrapIdx;
         }
     }
-    *(u8*)(state + 0x2f2) = (entry + state[0x33a] * 16)[10];
-    *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
-    *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
-    fn_8014D08C(obj, (int)state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
+    *(u8*)(state + 0x2f2) = entry[state[0x33a]].r;
+    *(u8*)(state + 0x2f3) = entry[state[0x33a]].g;
+    *(u8*)(state + 0x2f4) = entry[state[0x33a]].b;
+    fn_8014D08C(obj, (int)state, entry[state[0x33a]].anim, entry[state[0x33a]].speed, 0, 3);
     ObjAnim_SetMoveProgress((ObjAnimComponent*)obj,
-                            *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
+                            *(f32*)(lbl_8031DD30 + entry[state[0x33a]].anim * 4));
     (((GroundBaddieState*)state)->baddie.userData1)++;
-    if (state[0x33a] > entry[8])
+    if (state[0x33a] > entry[0].anim)
     {
         state[0x33a] = 1;
     }
@@ -132,14 +132,14 @@ void fn_801511E8(GameObject* obj, u8* state)
 
 void fn_801513AC(GameObject* obj, u8* state)
 {
-    u8* entry;
+    SeqEntry* entry;
     u32 idx;
     s16 d;
     char* base;
 
     base = (char*)lbl_8031F16C;
-    base += state[0x33b] * 40;
-    entry = *(u8**)(base + 12);
+    base += ((GroundBaddieState*)state)->baddie.userData2 * 40;
+    entry = *(SeqEntry**)(base + 12);
     if (fn_8014C11C(obj, 100.0f, 1, 16, gGroundBaddieTargetSearchResult) >= 1)
     {
         if (gGroundBaddieTargetSearchResult[0].dist <= 40 && *(u16*)(state + 0x2a0) != 3 &&
@@ -157,14 +157,14 @@ void fn_801513AC(GameObject* obj, u8* state)
                 d = (d + 0x10000) - 1;
             }
             d = (s16)((u32)(u16)d >> 13);
-            state[0x33a] = (u8)(entry[8] + gGroundBaddieAngleSectorOffsets[d]);
+            state[0x33a] = (u8)(entry[0].anim + gGroundBaddieAngleSectorOffsets[d]);
         }
         else if (gGroundBaddieTargetSearchResult[0].dist <= 70)
         {
-            while ((*(u8*)(entry + state[0x33a] * 16 + 10) & 1) != 0)
+            while ((entry[state[0x33a]].r & 1) != 0)
             {
                 (((GroundBaddieState*)state)->baddie.userData1)++;
-                if (state[0x33a] > entry[8])
+                if (state[0x33a] > entry[0].anim)
                 {
                     state[0x33a] = 1;
                 }
@@ -173,25 +173,25 @@ void fn_801513AC(GameObject* obj, u8* state)
     }
     if ((f32) * (u16*)(state + 0x2a4) < 0.8f * ((GroundBaddieState*)state)->baddie.speedScale)
     {
-        state[0x33a] = (u8)(entry[8] + 1);
+        state[0x33a] = (u8)(entry[0].anim + 1);
     }
-    while (*(u32*)(entry + (idx = state[0x33a]) * 16 + 4) != 0 &&
-           (((GroundBaddieState*)state)->baddie.controlFlags & *(u32*)(entry + idx * 16 + 4)) == 0)
+    while (entry[idx = state[0x33a]].mask != 0 &&
+           (((GroundBaddieState*)state)->baddie.controlFlags & entry[idx].mask) == 0)
     {
         (((GroundBaddieState*)state)->baddie.userData1)++;
-        if (state[0x33a] > entry[8])
+        if (state[0x33a] > entry[0].anim)
         {
             state[0x33a] = 1;
         }
     }
-    *(u8*)(state + 0x2f2) = (entry + state[0x33a] * 16)[10];
-    *(u8*)(state + 0x2f3) = (entry + state[0x33a] * 16)[11];
-    *(u8*)(state + 0x2f4) = (entry + state[0x33a] * 16)[12];
-    fn_8014D08C(obj, (int)state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
+    *(u8*)(state + 0x2f2) = entry[state[0x33a]].r;
+    *(u8*)(state + 0x2f3) = entry[state[0x33a]].g;
+    *(u8*)(state + 0x2f4) = entry[state[0x33a]].b;
+    fn_8014D08C(obj, (int)state, entry[state[0x33a]].anim, entry[state[0x33a]].speed, 0, 3);
     ObjAnim_SetMoveProgress((ObjAnimComponent*)obj,
-                            *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
+                            *(f32*)(lbl_8031DD30 + entry[state[0x33a]].anim * 4));
     (((GroundBaddieState*)state)->baddie.userData1)++;
-    if (state[0x33a] > entry[8])
+    if (state[0x33a] > entry[0].anim)
     {
         state[0x33a] = 1;
     }
@@ -208,7 +208,7 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state)
     GroundBaddieSequenceTable* table;
 
     table = (GroundBaddieSequenceTable*)lbl_8031F16C;
-    t = state[0x33b];
+    t = ((GroundBaddieState*)state)->baddie.userData2;
     p20 = table[t].hitEntries;
     p28 = table[t].sequenceEntries;
     if (t == 5 && (((GroundBaddieState*)state)->baddie.controlFlags & 0x800000) != 0)
@@ -216,7 +216,7 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state)
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
     if (((GroundBaddieState*)state)->baddie.trackedObj != NULL &&
-        ((GameObject*)*(int*)&((GroundBaddieState*)state)->baddie.trackedObj)->anim.classId == 1)
+        ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.classId == 1)
     {
         requestKrazoaShrineMusic();
     }
@@ -295,7 +295,7 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state)
 
 void sharpClawInit(int obj, u8* state)
 {
-    u8* setup = *(u8**)&((GameObject*)obj)->anim.placementData;
+    u8* setup = (u8*)((GameObject*)obj)->anim.placementData;
     f32 fz;
     f32 fz2;
     int z;
@@ -325,7 +325,7 @@ void sharpClawInit(int obj, u8* state)
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         ((GroundBaddieState*)state)->baddie.hitCounter = 40;
-        state[0x33b] = 0;
+        ((GroundBaddieState*)state)->baddie.userData2 = 0;
         break;
     case 17:
         if (*(s8*)(setup + 0x27) != 0)
@@ -334,7 +334,7 @@ void sharpClawInit(int obj, u8* state)
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         ((GroundBaddieState*)state)->baddie.hitCounter = 40;
-        state[0x33b] = 1;
+        ((GroundBaddieState*)state)->baddie.userData2 = 1;
         break;
     case 1505:
         if (*(s8*)(setup + 0x27) != 0)
@@ -343,7 +343,7 @@ void sharpClawInit(int obj, u8* state)
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         ((GroundBaddieState*)state)->baddie.hitCounter = 50;
-        state[0x33b] = 2;
+        ((GroundBaddieState*)state)->baddie.userData2 = 2;
         break;
     case 1463:
         if (*(s8*)(setup + 0x27) != 0)
@@ -352,7 +352,7 @@ void sharpClawInit(int obj, u8* state)
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 120.0f;
         ((GroundBaddieState*)state)->baddie.hitCounter = 50;
-        state[0x33b] = 3;
+        ((GroundBaddieState*)state)->baddie.userData2 = 3;
         break;
     case 1464:
         if (*(s8*)(setup + 0x27) != 0)
@@ -361,7 +361,7 @@ void sharpClawInit(int obj, u8* state)
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         ((GroundBaddieState*)state)->baddie.hitCounter = 60;
-        state[0x33b] = 4;
+        ((GroundBaddieState*)state)->baddie.userData2 = 4;
         break;
     case 1465:
         if (*(s8*)(setup + 0x27) != 0)
@@ -370,7 +370,7 @@ void sharpClawInit(int obj, u8* state)
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         ((GroundBaddieState*)state)->baddie.hitCounter = 1;
-        state[0x33b] = 1;
+        ((GroundBaddieState*)state)->baddie.userData2 = 1;
         break;
     case 1958:
         if (*(s8*)(setup + 0x27) != 0)
@@ -379,7 +379,7 @@ void sharpClawInit(int obj, u8* state)
         }
         ((GroundBaddieState*)state)->baddie.speedScale = 110.0f;
         ((GroundBaddieState*)state)->baddie.hitCounter = 160;
-        state[0x33b] = 5;
+        ((GroundBaddieState*)state)->baddie.userData2 = 5;
         z = 0;
         state[0x320] = z;
         fz2 = 1.0f;
@@ -406,7 +406,7 @@ void fn_80151C68(int obj, u8* state)
     u8* setup;
 
     player = Obj_GetPlayerObject();
-    setup = *(u8**)&((GameObject*)obj)->anim.placementData;
+    setup = (u8*)((GameObject*)obj)->anim.placementData;
     if ((*gGameUIInterface)->isEventReady(446) != 0)
     {
         if (player != NULL && playerGetMoney(player) >= 25)

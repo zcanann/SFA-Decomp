@@ -495,14 +495,14 @@ void getVisibleObjects(s8* opacity)
                     {
                         Camera_ProjectWorldPoint(((GameObject*)o)->anim.worldPosX, ((GameObject*)o)->anim.worldPosY,
                                                  ((GameObject*)o)->anim.worldPosZ, &a, &b, &depth,
-                                                 (f32*)(o + 0xa4));
+                                                 (f32*)&((GameObject*)o)->anim.targetObj);
                     }
                     else
                     {
                         Camera_ProjectWorldPoint(((GameObject*)o)->anim.localPosX - playerMapOffsetX,
                                                  ((GameObject*)o)->anim.localPosY,
                                                  ((GameObject*)o)->anim.localPosZ - playerMapOffsetZ, &a, &b,
-                                                 &depth, (f32*)(o + 0xa4));
+                                                 &depth, (f32*)&((GameObject*)o)->anim.targetObj);
                     }
                     depthInt = (int)(lbl_803DEC0C * (lbl_803DEBDC + depth));
                 }
@@ -524,7 +524,7 @@ void getVisibleObjects(s8* opacity)
                 {
                     key = 0;
                     model = (int*)Obj_GetActiveModel((GameObject*)o);
-                    if (*(u8*)(o + 0x37) == 0xff && (((GameObject*)o)->anim.flags & 0x80) == 0 &&
+                    if (((GameObject*)o)->anim.renderAlpha == 0xff && (((GameObject*)o)->anim.flags & 0x80) == 0 &&
                         ((tf = ((ObjAnimComponent*)o)->modelInstance->flags) & 0x40000) == 0 &&
                         *(void**)(model + 0x16) == NULL)
                     {
@@ -905,7 +905,7 @@ void sceneDraw(void)
         for (; i < ((GameObject*)player)->childCount; i++)
         {
             u8* m = *(u8**)(cursor + 200);
-            if (*(s16*)(m + 0x44) == 45)
+            if (((GameObject*)m)->anim.classId == 45)
             {
                 (*(void (***)(void))*(int*)(m + 0x68))[11]();
             }
