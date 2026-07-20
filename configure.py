@@ -392,6 +392,12 @@ cflags_dll_noopt_noprop = [
 ]
 
 # ...plus strength reduction off (keeps byte-array loop indices as a single indexed IV).
+cflags_dll_noopt_noprop_noinline = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,nopropagation",
+    "-inline", "noauto",
+]
+
 cflags_dll_noopt_noprop_nostrength = [
     *cflags_base,
     "-opt", "nopeephole,noschedule,nopropagation,nostrength",
@@ -1394,7 +1400,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/magicplant.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/kooshy.c", cflags=cflags_dll_noopt_noinline),
             Object(NonMatching, "main/dll/weevil.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/fallladdersgroup.c", cflags=cflags_dll_noopt_noprop),
+            Object(NonMatching, "main/dll/fallladdersgroup.c", cflags=cflags_dll_noopt_noprop_noinline),
             Object(MatchingFor("GSAE01"), "main/dll/fireflylantern_steer.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/duster.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/dll/duster_80155770.c", cflags=cflags_dll_noopt_nocse_noautoinline),
