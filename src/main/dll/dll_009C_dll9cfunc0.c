@@ -30,6 +30,8 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
     ScreenFxPart* cur;
     u8* base = (u8*)(int)lbl_80317E00;
     ScreenFxPart* pp = parts;
+    PartFxSpawnParams* params = (PartFxSpawnParams*)parent;
+    GameObject* obj = (GameObject*)target;
     int idx;
     u8* q;
 
@@ -66,9 +68,9 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
         cur->id = 0;
         cur->tex = 0;
         cur->flags = 0x80;
-        cur->x = (f32)((PartFxSpawnParams*)parent)->arg2;
-        cur->y = (f32)((PartFxSpawnParams*)parent)->arg1;
-        cur->z = (f32)((PartFxSpawnParams*)parent)->arg0;
+        cur->x = (f32)params->arg2;
+        cur->y = (f32)params->arg1;
+        cur->z = (f32)params->arg0;
         cur++;
     }
     if (variant == 1)
@@ -78,7 +80,7 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
         cur->tex = base + 0x1b0;
         cur->flags = 2;
         cur->x = 30.0f;
-        cur->y = ((PartFxSpawnParams*)parent)->posY / 30.0f;
+        cur->y = params->posY / 30.0f;
         cur->z = 30.0f;
     }
     else
@@ -178,15 +180,15 @@ void dll_9C_func03(int target, int variant, int parent, u32 flags)
     {
         if ((void*)target != NULL)
         {
-            hdr.bx = hdr.bx + ((GameObject*)target)->anim.worldPosX;
-            hdr.by = hdr.by + ((GameObject*)target)->anim.worldPosY;
-            hdr.bz = hdr.bz + ((GameObject*)target)->anim.worldPosZ;
+            hdr.bx = hdr.bx + obj->anim.worldPosX;
+            hdr.by = hdr.by + obj->anim.worldPosY;
+            hdr.bz = hdr.bz + obj->anim.worldPosZ;
         }
         else
         {
-            hdr.bx = hdr.bx + ((PartFxSpawnParams*)parent)->posX;
-            hdr.by = hdr.by + ((PartFxSpawnParams*)parent)->posY;
-            hdr.bz = hdr.bz + ((PartFxSpawnParams*)parent)->posZ;
+            hdr.bx = hdr.bx + params->posX;
+            hdr.by = hdr.by + params->posY;
+            hdr.bz = hdr.bz + params->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&hdr, 0, 0x15, (u8*)(int)lbl_80317E00, 0x18, base + 0xd4, DLL9C_EFFECT_ID, 0);

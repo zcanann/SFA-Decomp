@@ -149,7 +149,7 @@ void dll_9B_func03(int target, int variant, int parent, u32 flags)
     buf.hw[4] = *(s16*)(base + 0x200);
     buf.hw[5] = *(s16*)(base + 0x202);
     buf.hw[6] = *(s16*)(base + 0x204);
-    buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
+    buf.cmds = buf.entries;
     buf.flags = 0xc010480;
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)

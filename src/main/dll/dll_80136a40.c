@@ -1148,17 +1148,17 @@ void objAnimFreeChildren(int a, int b, GameObject** c)
     buf[0] = -1;
     buf[1] = -1;
     buf[2] = -1;
-    v0 = *(void**)(b + 0x7a8);
+    v0 = (void*)((TrickyImpressState*)b)->childObj0;
     if (v0 != NULL)
     {
         buf[((TrickyImpressState*)b)->childSlotMap >> 6 & 3] = 1;
     }
-    v1 = *(void**)(b + 0x7b0);
+    v1 = (void*)((TrickyImpressState*)b)->childObj1;
     if (v1 != NULL)
     {
         buf[((TrickyImpressState*)b)->childSlotMap >> 4 & 3] = 1;
     }
-    v2 = *(void**)(b + 0x7b8);
+    v2 = (void*)((TrickyImpressState*)b)->childObj2;
     if (v2 != NULL)
     {
         buf[((TrickyImpressState*)b)->childSlotMap >> 2 & 3] = 1;
