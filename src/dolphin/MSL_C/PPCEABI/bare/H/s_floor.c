@@ -16,44 +16,44 @@ extern const double lbl_803E7E00;
 extern const double lbl_803E7E08;
 extern const double lbl_803E7E10;
 
-float mathSinfHighPrecision(float x) {
-    int n;
-    double y;
-    double y2;
+float mathSinfHighPrecision(float angle) {
+    int quadrant;
+    double reducedAngle;
+    double reducedSquared;
 
-    y = tan(&n, x);
-    n += (*(u32*)&x & 0x80000000) >> 29;
-    y2 = y * y;
+    reducedAngle = tan(&quadrant, angle);
+    quadrant += (*(u32*)&angle & 0x80000000) >> 29;
+    reducedSquared = reducedAngle * reducedAngle;
 
-    switch (n & 6) {
+    switch (quadrant & 6) {
         case 0:
-            return (float)(y * (((((lbl_803E7DD8 * y2 + lbl_803E7DD0) * y2 + lbl_803E7DC8) * y2
+            return (float)(reducedAngle * (((((lbl_803E7DD8 * reducedSquared + lbl_803E7DD0) * reducedSquared + lbl_803E7DC8) * reducedSquared
                                   + lbl_803E7DC0)
-                                     * y2
+                                     * reducedSquared
                                  + lbl_803E7DB8)
-                                    * y2
+                                    * reducedSquared
                                 + lbl_803E7DB0));
         case 2:
-            return (float)((((((lbl_803E7E10 * y2 + lbl_803E7E08) * y2 + lbl_803E7E00) * y2 + lbl_803E7DF8) * y2
+            return (float)((((((lbl_803E7E10 * reducedSquared + lbl_803E7E08) * reducedSquared + lbl_803E7E00) * reducedSquared + lbl_803E7DF8) * reducedSquared
                               + lbl_803E7DF0)
-                                 * y2
+                                 * reducedSquared
                              + lbl_803E7DE8)
-                                * y2
+                                * reducedSquared
                             + lbl_803E7DE0);
         case 4:
-            return (float)(-(y * (((((lbl_803E7DD8 * y2 + lbl_803E7DD0) * y2 + lbl_803E7DC8) * y2
+            return (float)(-(reducedAngle * (((((lbl_803E7DD8 * reducedSquared + lbl_803E7DD0) * reducedSquared + lbl_803E7DC8) * reducedSquared
                                     + lbl_803E7DC0)
-                                       * y2
+                                       * reducedSquared
                                    + lbl_803E7DB8)
-                                      * y2
+                                      * reducedSquared
                                   + lbl_803E7DB0)));
         default:
-            return (float)(-(y2
-                                 * (((((lbl_803E7E10 * y2 + lbl_803E7E08) * y2 + lbl_803E7E00) * y2
+            return (float)(-(reducedSquared
+                                 * (((((lbl_803E7E10 * reducedSquared + lbl_803E7E08) * reducedSquared + lbl_803E7E00) * reducedSquared
                                       + lbl_803E7DF8)
-                                         * y2
+                                         * reducedSquared
                                      + lbl_803E7DF0)
-                                        * y2
+                                        * reducedSquared
                                     + lbl_803E7DE8)
                              + lbl_803E7DE0));
     }

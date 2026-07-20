@@ -7,42 +7,42 @@ extern float lbl_803E7C70;
 extern float lbl_803E7C74;
 extern float lbl_803E7C78;
 
-float sqrtf_8029312c(float x) {
-    float guess;
-    float half;
+float sqrtf_8029312c(float value) {
+    float reciprocalSqrt;
+    float halfValue;
 
-    if (lbl_803E7C70 != x) {
-        guess = (float)__frsqrte(x);
-        half = lbl_803E7C74 * x;
-        guess = guess * (lbl_803E7C78 - guess * (half * guess));
-        guess = guess * (lbl_803E7C78 - guess * (half * guess));
-        guess = guess * (lbl_803E7C78 - guess * (half * guess));
-        return guess * x;
+    if (lbl_803E7C70 != value) {
+        reciprocalSqrt = (float)__frsqrte(value);
+        halfValue = lbl_803E7C74 * value;
+        reciprocalSqrt = reciprocalSqrt * (lbl_803E7C78 - reciprocalSqrt * (halfValue * reciprocalSqrt));
+        reciprocalSqrt = reciprocalSqrt * (lbl_803E7C78 - reciprocalSqrt * (halfValue * reciprocalSqrt));
+        reciprocalSqrt = reciprocalSqrt * (lbl_803E7C78 - reciprocalSqrt * (halfValue * reciprocalSqrt));
+        return reciprocalSqrt * value;
     }
 
     return lbl_803E7C70;
 }
 
-float sqrtf(float x) {
-    float guess;
-    float half;
+float sqrtf(float value) {
+    float reciprocalSqrt;
+    float halfValue;
 
-    if (lbl_803E7C70 != x) {
-        guess = (float)__frsqrte(x);
-        half = lbl_803E7C74 * x;
-        guess = guess * (lbl_803E7C78 - guess * (half * guess));
-        return guess * x;
+    if (lbl_803E7C70 != value) {
+        reciprocalSqrt = (float)__frsqrte(value);
+        halfValue = lbl_803E7C74 * value;
+        reciprocalSqrt = reciprocalSqrt * (lbl_803E7C78 - reciprocalSqrt * (halfValue * reciprocalSqrt));
+        return reciprocalSqrt * value;
     }
 
     return lbl_803E7C70;
 }
 
-float invSqrt(float x) {
-    float guess;
-    float half;
+float invSqrt(float value) {
+    float reciprocalSqrt;
+    float halfValue;
 
-    guess = (float)__frsqrte(x);
-    half = lbl_803E7C74 * x;
-    guess = guess * (lbl_803E7C78 - guess * (half * guess));
-    return guess;
+    reciprocalSqrt = (float)__frsqrte(value);
+    halfValue = lbl_803E7C74 * value;
+    reciprocalSqrt = reciprocalSqrt * (lbl_803E7C78 - reciprocalSqrt * (halfValue * reciprocalSqrt));
+    return reciprocalSqrt;
 }

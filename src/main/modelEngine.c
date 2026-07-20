@@ -19,6 +19,7 @@
 #include "main/dll/dll_0111_doorlock.h"
 #include "main/dll/dll_0112_seqobject.h"
 #include "main/dll/dll_0113_seqobj2.h"
+#include "main/dll/dll_0108_endobject.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_0293_suntemple.h"
 #include "main/dll/dll_0294_wctemple.h"
@@ -151,7 +152,7 @@ extern ResourceDescriptor gDoorswitchObjDescriptor, gDrBarrelGrObjDescriptor, gD
 extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor, gDrLaserCannonObjDescriptor,
     gDrLightBeaObjDescriptor, gDrMusicContObjDescriptor, gDrShackleObjDescriptor, gDrakorDThornBushObjDescriptor,
     gDrakorEnergyObjDescriptor;
-extern ResourceDescriptor gDrakorHoverPadObjDescriptor, gDrakorMissileObjDescriptor, gDummy108ObjDescriptor,
+extern ResourceDescriptor gDrakorHoverPadObjDescriptor, gDrakorMissileObjDescriptor,
     gDusterObjDescriptor, gECSH_CreatorObjDescriptor, gECSH_CupObjDescriptor, gECSH_ShrineObjDescriptor;
 extern ResourceDescriptor gEarthWalkerObjDescriptor, gEdibleMushroomObjDescriptor, gEffectBoxObjDescriptor,
     gEnemyMushroomObjDescriptor, gExplodableObjDescriptor, gExplodeAnimatorObjDescriptor, gExplodePlanObjDescriptor,
@@ -1176,7 +1177,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gLargeCrateObjDescriptor,
     &gScarabObjDescriptor,
     &lbl_80321788,
-    &gDummy108ObjDescriptor,
+    (ResourceDescriptor*)&gEndObjectObjDescriptor,
     &lbl_803218E8,
     &gFall_LaddersObjDescriptor,
     &gFireFlyLanternObjDescriptor,

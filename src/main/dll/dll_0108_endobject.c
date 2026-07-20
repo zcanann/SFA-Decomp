@@ -1,60 +1,58 @@
 /*
- * EndObject (DLL 0x108) - dummy descriptor whose every callback is a stub.
- * TU = 0x8018646C..0x80186498 plus the gDummy108ObjDescriptor .data object
- * at 0x803217C0.
+ * EndObject (DLL 0x108) - terminal marker object whose callbacks are stubs.
  */
-#include "main/dll_000A_expgfx.h"
+#include "main/dll/dll_0108_endobject.h"
 
-int Dummy108_getExtraSize(void)
+int EndObject_getExtraSize(void)
 {
     return 0x0;
 }
-int Dummy108_getObjectTypeId(void)
+int EndObject_getObjectTypeId(void)
 {
     return 0x0;
 }
 
-void Dummy108_free(void)
+void EndObject_free(void)
 {
 }
 
-void Dummy108_render(void)
+void EndObject_render(void)
 {
 }
 
-void Dummy108_hitDetect(void)
+void EndObject_hitDetect(void)
 {
 }
 
-void Dummy108_update(void)
+void EndObject_update(void)
 {
 }
 
-void Dummy108_init(void)
+void EndObject_init(void)
 {
 }
 
-void Dummy108_release(void)
+void EndObject_release(void)
 {
 }
 
-void Dummy108_initialise(void)
+void EndObject_initialise(void)
 {
 }
 
-ObjectDescriptor gDummy108ObjDescriptor = {
+ObjectDescriptor gEndObjectObjDescriptor = {
     0,
     0,
     0,
     OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)Dummy108_initialise,
-    (ObjectDescriptorCallback)Dummy108_release,
+    (ObjectDescriptorCallback)EndObject_initialise,
+    (ObjectDescriptorCallback)EndObject_release,
     0,
-    (ObjectDescriptorCallback)Dummy108_init,
-    (ObjectDescriptorCallback)Dummy108_update,
-    (ObjectDescriptorCallback)Dummy108_hitDetect,
-    (ObjectDescriptorCallback)Dummy108_render,
-    (ObjectDescriptorCallback)Dummy108_free,
-    (ObjectDescriptorCallback)Dummy108_getObjectTypeId,
-    Dummy108_getExtraSize,
+    (ObjectDescriptorCallback)EndObject_init,
+    (ObjectDescriptorCallback)EndObject_update,
+    (ObjectDescriptorCallback)EndObject_hitDetect,
+    (ObjectDescriptorCallback)EndObject_render,
+    (ObjectDescriptorCallback)EndObject_free,
+    (ObjectDescriptorCallback)EndObject_getObjectTypeId,
+    EndObject_getExtraSize,
 };

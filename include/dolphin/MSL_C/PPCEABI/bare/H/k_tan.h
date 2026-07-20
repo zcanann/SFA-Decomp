@@ -3,7 +3,7 @@
 
 
 
-float sqrtf_8029312c(float x);
-float invSqrt(float x);
+float sqrtf_8029312c(float value);
+float invSqrt(float value);
 
 #endif

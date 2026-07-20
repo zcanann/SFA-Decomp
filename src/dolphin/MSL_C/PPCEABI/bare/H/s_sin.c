@@ -32,77 +32,77 @@ extern double lbl_803E7E00;
 extern double lbl_803E7E08;
 extern double lbl_803E7E10;
 
-float mathCosf(float x) {
-    u16 n;
-    float y = trigReduceQuadrant(&n, x);
-    float y2 = y * y;
+float mathCosf(float angle) {
+    u16 quadrant;
+    float reducedAngle = trigReduceQuadrant(&quadrant, angle);
+    float reducedSquared = reducedAngle * reducedAngle;
 
-    switch (n & 6) {
+    switch (quadrant & 6) {
         case 0:
-            return ((lbl_803E7D8C * y2 + lbl_803E7D88) * y2 + lbl_803E7D84) * y2 + lbl_803E7D80;
+            return ((lbl_803E7D8C * reducedSquared + lbl_803E7D88) * reducedSquared + lbl_803E7D84) * reducedSquared + lbl_803E7D80;
         case 2:
-            return -(y * ((lbl_803E7D7C * y2 + lbl_803E7D78) * y2 + lbl_803E7D74));
+            return -(reducedAngle * ((lbl_803E7D7C * reducedSquared + lbl_803E7D78) * reducedSquared + lbl_803E7D74));
         case 4:
-            return -(y2 * ((lbl_803E7D8C * y2 + lbl_803E7D88) * y2 + lbl_803E7D84) + lbl_803E7D80);
+            return -(reducedSquared * ((lbl_803E7D8C * reducedSquared + lbl_803E7D88) * reducedSquared + lbl_803E7D84) + lbl_803E7D80);
         default:
-            return y * ((lbl_803E7D7C * y2 + lbl_803E7D78) * y2 + lbl_803E7D74);
+            return reducedAngle * ((lbl_803E7D7C * reducedSquared + lbl_803E7D78) * reducedSquared + lbl_803E7D74);
     }
 }
 
-float fn_802942EC(float x) {
-    u16 n;
-    float y = trigReduceQuadrant(&n, x);
-    float y2 = y * y;
+float fn_802942EC(float angle) {
+    u16 quadrant;
+    float reducedAngle = trigReduceQuadrant(&quadrant, angle);
+    float reducedSquared = reducedAngle * reducedAngle;
 
-    switch (n & 6) {
+    switch (quadrant & 6) {
         case 0:
-            return (((lbl_803E7DAC * y2 + lbl_803E7DA8) * y2 + lbl_803E7DA4) * y2 + lbl_803E7DA0) * y2
+            return (((lbl_803E7DAC * reducedSquared + lbl_803E7DA8) * reducedSquared + lbl_803E7DA4) * reducedSquared + lbl_803E7DA0) * reducedSquared
                    + lbl_803E7D80;
         case 2:
-            return -(y * (((lbl_803E7D9C * y2 + lbl_803E7D98) * y2 + lbl_803E7D94) * y2 + lbl_803E7D90));
+            return -(reducedAngle * (((lbl_803E7D9C * reducedSquared + lbl_803E7D98) * reducedSquared + lbl_803E7D94) * reducedSquared + lbl_803E7D90));
         case 4:
-            return -(y2 * (((lbl_803E7DAC * y2 + lbl_803E7DA8) * y2 + lbl_803E7DA4) * y2 + lbl_803E7DA0)
+            return -(reducedSquared * (((lbl_803E7DAC * reducedSquared + lbl_803E7DA8) * reducedSquared + lbl_803E7DA4) * reducedSquared + lbl_803E7DA0)
                      + lbl_803E7D80);
         default:
-            return y * (((lbl_803E7D9C * y2 + lbl_803E7D98) * y2 + lbl_803E7D94) * y2 + lbl_803E7D90);
+            return reducedAngle * (((lbl_803E7D9C * reducedSquared + lbl_803E7D98) * reducedSquared + lbl_803E7D94) * reducedSquared + lbl_803E7D90);
     }
 }
 
-float mathCosfHighPrecision(float x) {
-    int n;
-    double y = tan(&n, x);
-    double y2 = y * y;
+float mathCosfHighPrecision(float angle) {
+    int quadrant;
+    double reducedAngle = tan(&quadrant, angle);
+    double reducedSquared = reducedAngle * reducedAngle;
 
-    switch (n & 6) {
+    switch (quadrant & 6) {
         case 0:
-            return (float)((((((lbl_803E7E10 * y2 + lbl_803E7E08) * y2 + lbl_803E7E00) * y2 + lbl_803E7DF8) * y2
+            return (float)((((((lbl_803E7E10 * reducedSquared + lbl_803E7E08) * reducedSquared + lbl_803E7E00) * reducedSquared + lbl_803E7DF8) * reducedSquared
                               + lbl_803E7DF0)
-                                 * y2
+                                 * reducedSquared
                              + lbl_803E7DE8)
-                                * y2
+                                * reducedSquared
                             + lbl_803E7DE0);
         case 2:
-            return (float)(-(y * (((((lbl_803E7DD8 * y2 + lbl_803E7DD0) * y2 + lbl_803E7DC8) * y2
+            return (float)(-(reducedAngle * (((((lbl_803E7DD8 * reducedSquared + lbl_803E7DD0) * reducedSquared + lbl_803E7DC8) * reducedSquared
                                     + lbl_803E7DC0)
-                                       * y2
+                                       * reducedSquared
                                    + lbl_803E7DB8)
-                                      * y2
+                                      * reducedSquared
                                   + lbl_803E7DB0)));
         case 4:
-            return (float)(-(y2
-                                 * (((((lbl_803E7E10 * y2 + lbl_803E7E08) * y2 + lbl_803E7E00) * y2
+            return (float)(-(reducedSquared
+                                 * (((((lbl_803E7E10 * reducedSquared + lbl_803E7E08) * reducedSquared + lbl_803E7E00) * reducedSquared
                                       + lbl_803E7DF8)
-                                         * y2
+                                         * reducedSquared
                                      + lbl_803E7DF0)
-                                        * y2
+                                        * reducedSquared
                                     + lbl_803E7DE8)
                              + lbl_803E7DE0));
         default:
-            return (float)(y * (((((lbl_803E7DD8 * y2 + lbl_803E7DD0) * y2 + lbl_803E7DC8) * y2
+            return (float)(reducedAngle * (((((lbl_803E7DD8 * reducedSquared + lbl_803E7DD0) * reducedSquared + lbl_803E7DC8) * reducedSquared
                                   + lbl_803E7DC0)
-                                     * y2
+                                     * reducedSquared
                                  + lbl_803E7DB8)
-                                    * y2
+                                    * reducedSquared
                                 + lbl_803E7DB0));
     }
 }

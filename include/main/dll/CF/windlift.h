@@ -18,17 +18,7 @@ void dll_107_init(int obj, int pArg);
 void dll_107_release_nop(void);
 void dll_107_initialise_nop(void);
 
-extern ObjectDescriptor gDummy108ObjDescriptor;
 extern ObjectDescriptor gPortalSpellDoorObjDescriptor;
-
-int Dummy108_getExtraSize(void);
-void Dummy108_free(void);
-void Dummy108_render(void);
-void Dummy108_hitDetect(void);
-void Dummy108_update(void);
-void Dummy108_init(void);
-void Dummy108_release(void);
-void Dummy108_initialise(void);
 
 int PortalSpellDoor_getExtraSize(void);
 int PortalSpellDoor_getObjectTypeId(void);

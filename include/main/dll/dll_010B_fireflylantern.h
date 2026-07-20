@@ -2,21 +2,12 @@
 #define MAIN_DLL_DLL_010B_FIREFLYLANTERN_H_
 
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objanim_update.h"
 
 typedef struct FireFlyLanternSpawnSetup
 {
-    s16 objectType;
-    u8 setupType;
-    u8 pad03;
-    u8 field04;
-    u8 field05;
-    u8 field06;
-    u8 field07;
-    f32 x;
-    f32 y;
-    f32 z;
-    u8 pad14[0x18 - 0x14];
+    ObjPlacement base;
     u8 field18;
     u8 spawnMode; /* 0x19: 1 = single hidden-lantern firefly; else firefly swarm */
     s16 field1A;
@@ -25,7 +16,6 @@ typedef struct FireFlyLanternSpawnSetup
 } FireFlyLanternSpawnSetup;
 
 STATIC_ASSERT(sizeof(FireFlyLanternSpawnSetup) == 0x24);
-STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, x) == 0x08);
 STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field18) == 0x18);
 STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, spawnMode) == 0x19);
 STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field1A) == 0x1A);
@@ -55,11 +45,11 @@ STATIC_ASSERT(offsetof(FireFlyLanternState, gameBit) == 0x20);
 
 int FireFlyLantern_getExtraSize(void);
 int FireFlyLantern_getObjectTypeId(void);
-void FireFlyLantern_free(int obj);
-void FireFlyLantern_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void FireFlyLantern_free(GameObject* obj);
+void FireFlyLantern_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void FireFlyLantern_update(GameObject* obj);
-void FireFlyLantern_init(GameObject* obj, int def);
-GameObject* FireFlyLantern_spawnFireFly(int* obj);
+void FireFlyLantern_init(GameObject* obj, FireFlyLanternSpawnSetup* placement);
+GameObject* FireFlyLantern_spawnFireFly(GameObject* obj);
 int FireFlyLantern_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 #endif /* MAIN_DLL_DLL_010B_FIREFLYLANTERN_H_ */

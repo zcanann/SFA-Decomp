@@ -1,10 +1,10 @@
 #ifndef DOLPHIN_MSL_C_PPCEABI_BARE_H_MATH_TRIG_API_H_
 #define DOLPHIN_MSL_C_PPCEABI_BARE_H_MATH_TRIG_API_H_
 
-float mathCosf(float x);
-float mathCosfHighPrecision(float x);
-float mathSinf(float x);
-float mathSinfHighPrecision(float x);
+float mathCosf(float angle);
+float mathCosfHighPrecision(float angle);
+float mathSinf(float angle);
+float mathSinfHighPrecision(float angle);
 float cosf(float x);
 float sinf(float x);
 float cos__Ff(float x);
