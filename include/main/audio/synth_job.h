@@ -5,7 +5,7 @@
 
 #define SYNTH_JOB_STRIDE 0x64
 
-typedef void (*SynthJobCallback)(u32, u32, u32, u32, u32);
+typedef u32 (*SynthJobCallback)(u8* buffer, u32 length, u8* wrapBuffer, u32 wrapLength, u32 user);
 
 typedef struct SynthJobAdpcm {
     u8 unk00[2];
@@ -41,6 +41,8 @@ typedef struct SynthJob {
     u8 streamHandle;
     u8 unk5E[6];
 } SynthJob;
+
+extern SynthJob streamInfo[64];
 
 /* SynthJob.state - stream playback job lifecycle */
 #define SYNTH_JOB_STATE_FREE 0    /* unused slot */
