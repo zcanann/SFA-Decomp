@@ -155,9 +155,6 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     f32 dist;
     f32 vec[3];
     f32 param[6];
-    f32 t;
-    f32 radiusScaled;
-    f32 fullRadius;
 
     viewSlot = Camera_GetCurrentViewSlot();
     if (sourceState->active == 0)
@@ -169,7 +166,7 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
         f32 t = sourceState->hitCharge;
         f32 radiusScaled;
         f32 fullRadius;
-        t = t / 15.0f;
+        t /= 15.0f;
         radiusScaled = setup->radius / 4.0f;
         fullRadius = 2.0f * setup->radius;
         sourceState->radius += interpolate(t * (fullRadius - radiusScaled) + radiusScaled - sourceState->radius,
