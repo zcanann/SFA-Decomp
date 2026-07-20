@@ -51,6 +51,7 @@
 #include "main/dll/duster.h"
 #include "main/dll/duster_api.h"
 #include "main/dll/dll_00D8_pinponspike_arc_api.h"
+#include "main/dll/baddie_frozen.h"
 
 int lbl_803DBCD8[2] = {2, 3};
 
@@ -235,7 +236,8 @@ void rachnopFindWallPlane(int* obj, int state)
     }
 }
 
-void rachnopUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
+void rachnopUpdateWhileFrozen(int obj, u8* state, int unused, int eventKind, int wpad0, int wpad1, Vec* wpad2,
+                              int wpad3)
 {
     if (eventKind == 0x10)
     {
@@ -469,7 +471,8 @@ void spittingEbaUpdateTimeOfDay(int obj, int state)
     return;
 }
 
-void spittingEbaUpdateWhileFrozen(u32 obj, int state, u32 unused1, int eventKind, u32 unused2, int damage, void* wpad0, int wpad1)
+void spittingEbaUpdateWhileFrozen(int obj, u8* state, int unused1, int eventKind, int unused2, int damage, Vec* wpad0,
+                                  int wpad1)
 {
     if (eventKind == 0x10)
     {

@@ -25,6 +25,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/player_api.h"
 #include "main/dll/duster_wb.h"
+#include "main/dll/baddie_frozen.h"
 
 typedef struct DusterState
 {
@@ -69,7 +70,7 @@ extern const f32 lbl_803E2B0C;
 extern const f32 lbl_803E2B10;
 extern const f32 lbl_803E2B14;
 
-void wbUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
+void wbUpdateWhileFrozen(int obj, u8* state, int unused, int eventKind, int wpad0, int wpad1, Vec* wpad2, int wpad3)
 {
     if (eventKind != 0x11)
     {
@@ -367,7 +368,8 @@ void mutatedEbaPlayMoveSfx(u32 obj, int state)
     return;
 }
 
-void mutatedEbaUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
+void mutatedEbaUpdateWhileFrozen(int obj, u8* state, int unused, int eventKind, int wpad0, int wpad1, Vec* wpad2,
+                                 int wpad3)
 {
     int move;
 
