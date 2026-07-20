@@ -13,9 +13,4 @@ void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_FC_release_nop(void);
 void dll_FC_initialise_nop(void);
 void dll_FC_hitDetect(int* obj);
-void dll_FD_hitDetect(GameObject* obj);
-void dll_FD_free(void);
-void dll_FD_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-int dll_FD_getExtraSize(void);
-
 #endif /* MAIN_DLL_DLL_00FC_BABYCLOUDRUNNER_H_ */

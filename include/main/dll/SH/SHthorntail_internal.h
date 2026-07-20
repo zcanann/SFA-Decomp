@@ -252,8 +252,4 @@ static inline s16 SHthorntail_GetLinkedGameBit(SHthorntailConfig *config) {
   return *(s16 *)&config->controlMode;
 }
 
-void SHthorntail_updateTailSwing(u32 objectId,SHthorntailRuntime *runtime);
-u32 SHthorntail_chooseNextState(SHthorntailObject *obj,SHthorntailRuntime *runtime,
-                                 SHthorntailConfig *config);
-
 #endif /* MAIN_DLL_SH_SHTHORNTAIL_INTERNAL_H_ */
