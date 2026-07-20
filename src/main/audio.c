@@ -2970,8 +2970,7 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 
     if (sameSfxCount <= limit)
     {
-        found = 0;
-        for (j = 0; j < count; j++)
+        for (j = 0; j < count || (found = 0, 0); j++)
         {
             if ((*objects == obj) && (sfxId == *ids))
             {
