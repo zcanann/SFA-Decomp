@@ -20,7 +20,7 @@
 #include "main/dll/modgfx.h"
 #include "main/dll/dll_0014_api.h"
 #include "main/frame_timing.h"
-#include "main/dll/dll_00C4_tricky_api.h"
+#include "main/dll/dll_00C4_tricky.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/skeetla.h"
 #include "main/dll/objfsa.h"

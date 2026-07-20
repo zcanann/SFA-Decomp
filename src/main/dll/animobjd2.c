@@ -40,7 +40,7 @@
 #include "main/obj_placement.h"
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
-#include "main/dll/dll_00C4_tricky_api.h"
+#include "main/dll/dll_00C4_tricky.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/flameblast_api.h"

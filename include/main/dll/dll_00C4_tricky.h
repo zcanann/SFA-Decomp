@@ -14,6 +14,7 @@ STATIC_ASSERT(sizeof(TrickyItemIdList) == 0x14);
 
 extern const TrickyItemIdList gTrickyCmdQueryInit;
 extern const TrickyItemIdList gTrickyFoodItemIds;
+extern u16 gSkeetlaFootstepSfxId2;
 #include "ghidra_import.h"
 #include "main/dll/tricky_state.h"
 #include "main/objanim_update.h"
@@ -21,6 +22,8 @@ extern const TrickyItemIdList gTrickyFoodItemIds;
 
 extern ObjectDescriptor20WithPadding gTrickyObjDescriptor;
 
+void trickyReportError(const char* fmt, ...);
+void trickyDebugPrint(const char* fmt, ...);
 u8* Tricky_findNearestGroup4BObject(u8* obj, TrickyState* state);
 void FUN_80145230(u64 param_1, u64 param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9, int* param_10, int param_11, u32 param_12, u8 param_13, u32 param_14,
@@ -41,6 +44,7 @@ void Tricky_init(GameObject* obj);
 int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void Tricky_update(int obj);
 void tricky_handleDefeat(GameObject* obj, int state);
+void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit);
 int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAltMode, u32 mode);
 u8 baddie_canSeeTarget(GameObject* obj, int state, void* from, void* to);
 void baddie_updateSightQuadrants(int obj, int state, float radius);

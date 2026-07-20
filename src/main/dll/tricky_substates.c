@@ -40,7 +40,6 @@
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
 #include "main/objprint_api.h"
-#include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/skeetla.h"
 #include "main/dll/objfsa.h"

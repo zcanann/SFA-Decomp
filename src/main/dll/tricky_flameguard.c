@@ -13,7 +13,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/objprint_sound_api.h"
-#include "main/dll/dll_00C4_tricky_api.h"
+#include "main/dll/dll_00C4_tricky.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/flameblast_api.h"
 #include "main/dll/tricky_state.h"

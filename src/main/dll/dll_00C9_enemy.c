@@ -62,7 +62,6 @@
 #include "main/dll/seqobj11d_baddie.h"
 #include "main/dll/magicPlant.h"
 #include "main/dll/seqObj11D.h"
-#include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/dll_00C4_tricky.h"
 #include "main/dll/fall_ladders.h"
 #include "string.h"

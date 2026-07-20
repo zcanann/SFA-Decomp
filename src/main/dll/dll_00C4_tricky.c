@@ -30,7 +30,6 @@
 #include "main/objhits.h"
 #include "dolphin/mtx.h"
 #include "main/dll/dll_00C4_tricky.h"
-#include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/cmenu_item_table.h"
 #include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/baddie_state.h"
