@@ -618,7 +618,7 @@ int playerStopRidingObject(GameObject* obj)
         (*(void (**)(int, int))((char*)*((GameObject*)sub)->anim.dll + 0x3c))(sub, 0);
         (*gCameraInterface)->setFocus((void*)obj, 0);
         obj->anim.flags &= ~8;
-        obj->anim.modelState->flags &= 0xFFFFEFFFLL;
+        obj->anim.modelState->flags &= ~0x1000;
         inner->focusObject = NULL;
         obj->anim.activeMove = -1;
         (*gPlayerInterface)->setState(obj, inner, 1);
