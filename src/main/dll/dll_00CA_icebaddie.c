@@ -1234,9 +1234,9 @@ void iceBaddie_updateTargetCollision(int obj, int sub, int state)
     }
     if ((((GroundBaddieState*)sub)->configFlags & 0x20) == 0)
     {
-        ((void (*)(int, int, int, int, int, int, int))((void**)*gBaddieControlInterface)[15])(
-            obj, state, sub + 0x400, 2, 3, (s32)((GroundBaddieState*)sub)->soundIdB,
-            (s32)((GroundBaddieState*)sub)->soundIdA);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->pollCameraTarget((GameObject*)obj, (void*)state, &((GroundBaddieState*)sub)->flags400, 2, 3,
+                               ((GroundBaddieState*)sub)->soundIdB, ((GroundBaddieState*)sub)->soundIdA);
     }
     ((BaddieControlInterface*)*gBaddieControlInterface)
         ->processMessages((GameObject*)obj, (void*)state, (void*)(sub + 0x35c),

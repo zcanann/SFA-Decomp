@@ -712,9 +712,9 @@ void chukChuk_updateTargeting(int obj, int state, int target)
 
     if ((((GroundBaddieState*)state)->configFlags & 0x20) == 0)
     {
-        (**(void (**)(int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x3c))(
-            obj, target, state + 0x400, 2, 3, (s32)((GroundBaddieState*)state)->soundIdA,
-            (s32)((GroundBaddieState*)state)->soundIdB);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->pollCameraTarget((GameObject*)obj, (void*)target, &((GroundBaddieState*)state)->flags400, 2, 3,
+                               ((GroundBaddieState*)state)->soundIdA, ((GroundBaddieState*)state)->soundIdB);
     }
 
     ((BaddieControlInterface*)*gBaddieControlInterface)

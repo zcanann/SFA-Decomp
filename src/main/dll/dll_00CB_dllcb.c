@@ -311,8 +311,8 @@ void dll_CB_advanceAI(int* obj, GroundBaddieState* sub, GroundBaddieState* state
     characterDoEyeAnims((GameObject*)obj, sub->eyeAnimState);
     if ((sub->configFlags & 1) == 0)
     {
-        (*(void (**)(int*, u8*, u8*, int, int, int, int))(*(int*)gBaddieControlInterface + 0x3c))(
-            obj, (u8*)state, (u8*)&sub->flags400, 2, 3, sub->soundIdB, sub->soundIdA);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->pollCameraTarget((GameObject*)obj, state, &sub->flags400, 2, 3, sub->soundIdB, sub->soundIdA);
     }
     ((BaddieControlInterface*)*gBaddieControlInterface)
         ->processMessages((GameObject*)obj, state, &sub->routeNav, sub->gameBitB, &sub->subMode, 0, 0, 0);
