@@ -231,7 +231,17 @@ def find_function_body(src: str, name: str):
             b = k2
             while b < n:
                 c = src[b]
-                if c == "{":
+                if src.startswith("//", b):
+                    while b < n and src[b] != "\n":
+                        b += 1
+                    continue
+                elif src.startswith("/*", b):
+                    b += 2
+                    while b < n and not src.startswith("*/", b):
+                        b += 1
+                    b += 2
+                    continue
+                elif c == "{":
                     depth += 1
                 elif c == "}":
                     depth -= 1
