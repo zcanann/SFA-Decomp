@@ -1581,6 +1581,7 @@ main/dll/dll_00D8_pinponspike.c:
 main/dll/dll_00D9_pollen.c:
 	.text       start:0x8016A3C8 end:0x8016A8E0
 	.data       start:0x80320500 end:0x80320538
+	.sdata2     start:0x803E3138 end:0x803E3158
 
 main/dll/dll_00DA_pollenfragment.c:
 	.text       start:0x8016A8E0 end:0x8016B230
