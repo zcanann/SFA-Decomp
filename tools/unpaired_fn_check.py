@@ -19,15 +19,29 @@ retail-inlined static helpers that the file still genuinely calls, so deleting
 breaks the build. Proven on snd3dgroup's clip127 (.text 0x1730 vs retail 0x171c,
 exactly its 20 bytes); after `static inline` the .text matched exactly.
 
-!! ONLY APPLY TO NonMatching UNITS -- ON A COMPLETE UNIT THE FIX BREAKS THE DOL.
-A complete unit links OUR object, and mwld DEAD-STRIPS the unreferenced
-out-of-line copy, so the duplicate never reaches the image and the DOL sha is
-already correct: on a Matching unit this defect is COSMETIC. Adding `inline`
-there instead perturbs the inlining heuristics in the CALLERS, drops the unit
-off 100 and moves the sha. Six units (mikaladon, dll_0105_largecrate,
-dll_011B_landedarwing, dll_01F6_flag, dll_0295_wcapertures, hoodedzyck) moved
-the sha this way and had to be reverted. Check the Object() flag first, and
-gate on the DOL sha regardless.
+!! THE ONLY SOUND GATE IS THE DOL SHA. `build/GSAE01/main.dol` must equal
+`orig/GSAE01/sys/main.dol` (e750e8e894707a52446118a4b84f1b58b677b269) -- the
+gate value IS retail's DOL and a clean tree reproduces it byte-for-byte.
+
+!! .text BYTE-IDENTITY AGAINST THE CARVED RETAIL .o IS *NOT* SUFFICIENT (w89).
+For DLL units the carve UNDER-CLAIMS: `splits.txt` does not cover the
+out-of-line copy, so the retail .o lacks it and our .text "matches" once the
+copy is removed -- yet retail's main.dol DOES contain those bytes, and removing
+them moves the DOL AWAY from retail. Eight units were taken to exact .text AND
+.data AND .sdata2 parity with the carve this way and every one regressed the
+DOL: hoodedzyck, dll_0105_largecrate, dll_011B_landedarwing, dll_01F6_flag,
+dll_02A2_arwspeedstr, dll_0295_wcapertures, dll_01BE_dimlava,
+dll_01F5_shipbattle (mikaladon is the same class). All reverted. For these the
+unpaired symbol is a CARVE ARTIFACT, not a source defect -- leave them alone.
+
+Where the fix IS correct: a unit linked into main.dol proper whose dead copy
+mwld actually dead-strips, so removing it is DOL-neutral. Proven on hw_dspctrl
+(complete=True, 4 helpers, .text 0x2fd0 -> exactly retail's 0x2e20, DOL
+unmoved) and textrender. Note this REFUTES the older "NonMatching units only"
+rule: hw_dspctrl is complete. Decide by measuring the DOL, not by the flag.
+
+Necessary (not sufficient) precondition: ZERO `bl` to the symbol in our object,
+i.e. every call site is already inlined, so caller codegen cannot move.
 
 The fix is invisible to fuzzy in BOTH directions -- nine NonMatching units were
 fixed here for a total fuzzy delta of 0.00000 -- so the DOL sha and the .text
@@ -100,23 +114,31 @@ def main():
         rsyms, rsize = text_syms(rp)
         if osyms is None or rsyms is None or osize is None or rsize is None:
             continue
-        if osize <= rsize:
-            continue
         extra = {k: v for k, v in osyms.items() if k not in rsyms}
-        if not extra:
+        missing = {k: v for k, v in rsyms.items() if k not in osyms}
+        if not extra and not missing:
             continue
         delta = osize - rsize
         total = sum(extra.values())
         orel, rrel = reloc_targets(op), reloc_targets(rp)
         verdict = 'EXACT' if total == delta else 'PARTIAL'
+        if rsize == 0:
+            verdict = 'ZERO-CLAIM'
         hits += 1
         print('\n=== %s' % name)
         print('  .text ours=0x%x retail=0x%x delta=0x%x  unpaired-sum=0x%x  [%s]'
               % (osize, rsize, delta, total, verdict))
+        if rsize == 0:
+            print('    !! splits.txt claims a ZERO-LENGTH .text range for this '
+                  'unit, so objdiff pairs nothing and the unit scores 100.0 '
+                  'vacuously. Not an inlining defect.')
         for k, v in sorted(extra.items(), key=lambda x: -x[1]):
-            print('    %-44s size=0x%-5x reloc ours=%s retail=%s'
+            print('    OURS-ONLY   %-44s size=0x%-5x reloc ours=%s retail=%s'
                   % (k, v, 'Y' if k in orel else 'n',
                      'Y' if k in rrel else 'n'))
+        for k, v in sorted(missing.items(), key=lambda x: -x[1]):
+            print('    RETAIL-ONLY %-44s size=0x%-5x  (we emit nothing for it)'
+                  % (k, v))
     print('\nunits with unpaired .text symbols: %d' % hits)
 
 
