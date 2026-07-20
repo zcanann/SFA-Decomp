@@ -228,8 +228,6 @@ extern u8 gGameLoopProgressiveMode;
 extern void* lbl_803DCA94;
 extern u8 lbl_803DCA3F;
 extern int gGameLoopPlayerTrailTime;
-extern f32 lbl_803DE7B0;
-extern f32 lbl_803DE7A8;
 extern u8 lbl_803DCAC4;
 extern int lbl_803DCACC;
 extern f32 gGameLoopResetHoldTimer;
@@ -816,7 +814,6 @@ void setFrameCountdown_800202c4(s8 count)
 
 #define AI_STREAM_STOP 0
 extern u8 lbl_803DCCA6;
-extern f32 lbl_803DE7AC;
 char sGameBitSetDuringSaveLoadWarning[204] =
     "WARNING in mainSetBits: Bit %d can't be set to %d while a savegame is "
     "loading\n\000\000GAME_STATE_RESETPRESSED\n\000\000\000\000GAME_STATE_RESETNOW\n\000\000\000\000audioQuit "
@@ -859,16 +856,16 @@ void checkReset(void)
         }
         if (pressed != 0 && gGameLoopResetComboDebounce == 0)
         {
-            t = gGameLoopResetHoldTimer + lbl_803DE7A8;
+            t = gGameLoopResetHoldTimer + 1.0f;
             gGameLoopResetHoldTimer = t;
-            if (t >= lbl_803DE7AC)
+            if (t >= 3e+01f)
             {
                 gameState = GAMELOOP_STATE_RESET_REQUESTED;
             }
         }
         else
         {
-            gGameLoopResetHoldTimer = lbl_803DE7B0;
+            gGameLoopResetHoldTimer = 0.0f;
         }
         break;
     case GAMELOOP_STATE_RESET_REQUESTED:
@@ -891,12 +888,12 @@ void checkReset(void)
         AISetStreamVolRight(0);
         audioStopAll();
         gameState = GAMELOOP_STATE_RESET_FADE_OUT;
-        gGameLoopResetFadeOutTimer = lbl_803DE7AC;
+        gGameLoopResetFadeOutTimer = 3e+01f;
         break;
     case GAMELOOP_STATE_RESET_FADE_OUT:
-        t = gGameLoopResetFadeOutTimer - lbl_803DE7A8;
+        t = gGameLoopResetFadeOutTimer - 1.0f;
         gGameLoopResetFadeOutTimer = t;
-        if (t <= lbl_803DE7B0)
+        if (t <= 0.0f)
         {
             gameState = GAMELOOP_STATE_RESET_TEARDOWN;
         }
@@ -1039,7 +1036,6 @@ void cutsceneExit(void)
     Sfx_SetObjectSoundsPaused(0);
 }
 
-extern f32 lbl_803DE7B8;
 
 
 int getHudHiddenFrameCount(void)
@@ -1051,7 +1047,6 @@ void mapReload(void)
     mapReloadWithFadeout();
     gGameLoopReloadRequested = 1;
 }
-extern f32 lbl_803DE7B4;
 
 void mapLoadByCoords(f32 x, f32 y, f32 z, int act)
 {
@@ -1065,7 +1060,7 @@ void mapLoadByCoords(f32 x, f32 y, f32 z, int act)
     gGameLoopMusicActive = 0;
     Music_Trigger(MUSICTRIG_Krazoa_Shrine, 0);
     Music_Trigger(MUSICTRIG_galleon_battle, 0);
-    gGameLoopMusicFadeTimer = lbl_803DE7B4;
+    gGameLoopMusicFadeTimer = -3e+01f;
 }
 
 void doQueuedLoads(void)
@@ -1199,15 +1194,15 @@ void gameUpdate(void)
         if (gGameLoopMusicActive == 0)
         {
             gGameLoopMusicFadeTimer = gGameLoopMusicFadeTimer + timeDelta;
-            if (gGameLoopMusicFadeTimer >= lbl_803DE7B0)
+            if (gGameLoopMusicFadeTimer >= 0.0f)
             {
                 Music_Trigger(gGameLoopPendingMusicId, 1);
                 gGameLoopMusicActive = 1;
             }
         }
-        if (gGameLoopMusicFadeTimer >= lbl_803DE7B0)
+        if (gGameLoopMusicFadeTimer >= 0.0f)
         {
-            gGameLoopMusicFadeTimer = lbl_803DE7B8;
+            gGameLoopMusicFadeTimer = 1.8e+02f;
         }
     }
     else
@@ -1215,16 +1210,16 @@ void gameUpdate(void)
         if (gGameLoopMusicActive != 0)
         {
             gGameLoopMusicFadeTimer = gGameLoopMusicFadeTimer - timeDelta;
-            if (gGameLoopMusicFadeTimer <= lbl_803DE7B0)
+            if (gGameLoopMusicFadeTimer <= 0.0f)
             {
                 Music_Trigger(MUSICTRIG_Krazoa_Shrine, 0);
                 Music_Trigger(MUSICTRIG_galleon_battle, 0);
                 gGameLoopMusicActive = 0;
             }
         }
-        if (gGameLoopMusicFadeTimer <= lbl_803DE7B0)
+        if (gGameLoopMusicFadeTimer <= 0.0f)
         {
-            gGameLoopMusicFadeTimer = lbl_803DE7B4;
+            gGameLoopMusicFadeTimer = -3e+01f;
         }
     }
     Camera_ApplyCurrentViewport(0);
@@ -1270,12 +1265,12 @@ void gameLoop(void)
                 int* p;
                 int i;
 
-                drawRect(lbl_803DE7B0, lbl_803DE7B0, 0x280, 0x1e0);
+                drawRect(0.0f, 0.0f, 0x280, 0x1e0);
                 i = 0;
                 p = (int*)&gGameLoopButtonObjects;
                 for (; i < gGameLoopButtonObjectCount; i++)
                 {
-                    objRenderModelAndHitVolumes((GameObject*)*p, 0, 0, 0, 0, lbl_803DE7A8);
+                    objRenderModelAndHitVolumes((GameObject*)*p, 0, 0, 0, 0, 1.0f);
                     if (((GameObject*)*p)->anim.seqId == GAMELOOP_SEQID_DIE_FOX ||
                         ((GameObject*)*p)->anim.seqId == GAMELOOP_SEQID_DIE_KRYSTAL)
                     {
