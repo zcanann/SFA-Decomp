@@ -13908,6 +13908,24 @@ void fn_802AED2C(GameObject* obj, int state, int p3)
     }
 }
 
+static inline int staffCanContinueSpin(int state)
+{
+    ByteFlags* bf = (ByteFlags*)((char*)state + 0x3f0);
+    s16 t;
+
+    if (bf->b10 || bf->b04 || bf->b08 || bf->b20 || ((PlayerState*)state)->baddie.controlMode == 0x36)
+    {
+        return 0;
+    }
+
+    t = ((PlayerState*)state)->baddie.controlMode;
+    if ((u16)(t - 1) <= 1 || (u16)(t - 0x24) <= 1 || ((PlayerState*)state)->baddie.targetObj != NULL)
+    {
+        return 1;
+    }
+    return 0;
+}
+
 void staffAnimate(int obj, int state)
 {
     int prevChanged;
@@ -14019,37 +14037,15 @@ void staffAnimate(int obj, int state)
                 Object_ObjAnimSetMove(obj, lbl_8033366C[((PlayerState*)state)->moveVariantIndex], lbl_803E7EA4, 0);
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
             }
+            if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7EE0 || !staffCanContinueSpin(state))
             {
-                int ok;
-                ByteFlags* bf = (ByteFlags*)((char*)state + 0x3f0);
-                if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7EE0 || bf->b10 || bf->b04 ||
-                    bf->b08 || bf->b20 || ((PlayerState*)state)->baddie.controlMode == 0x36)
-                {
-                    ok = 0;
-                }
-                else
-                {
-                    s16 t = ((PlayerState*)state)->baddie.controlMode;
-                    if ((u16)(t - 1) <= 1 || (u16)(t - 0x24) <= 1 || ((PlayerState*)state)->baddie.targetObj != NULL)
-                    {
-                        ok = 1;
-                    }
-                    else
-                    {
-                        ok = 0;
-                    }
-                }
-                if (!ok)
-                {
-                    *(s16*)&((PlayerState*)state)->staffAnimState = 3;
-                    ((PlayerState*)state)->moveVariantIndex = 0xff;
-                    changed = 1;
-                }
-                else
-                {
-                    Object_ObjAnimAdvanceMove(obj, lbl_8033369C[((PlayerState*)state)->moveVariantIndex], timeDelta,
-                                              NULL);
-                }
+                *(s16*)&((PlayerState*)state)->staffAnimState = 3;
+                ((PlayerState*)state)->moveVariantIndex = 0xff;
+                changed = 1;
+            }
+            else
+            {
+                Object_ObjAnimAdvanceMove(obj, lbl_8033369C[((PlayerState*)state)->moveVariantIndex], timeDelta, NULL);
             }
             break;
         case 3:
