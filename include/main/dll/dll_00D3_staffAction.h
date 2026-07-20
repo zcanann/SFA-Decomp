@@ -4,13 +4,6 @@
 #include "main/game_object.h"
 #include "ghidra_import.h"
 
-u32 fn_801659B8(s16* obj, u32* params);
-void fn_80165B3C(GameObject* obj, int state);
-struct LandedArwingState;
-void landedarwing_moveSurfaceCrawler(short* obj, struct LandedArwingState* state);
-void fn_80166444(int obj, int state);
-void fn_80166840(GameObject* obj, int state, float* hit, float* end);
-void updateConstrainedChaseVelocity(GameObject* obj, float targetX, float targetY, float targetZ, float blend);
 void dll_D3_initialise(void);
 void dll_D3_release_nop(void);
 void dll_D3_init(GameObject* obj, int def, int flag);

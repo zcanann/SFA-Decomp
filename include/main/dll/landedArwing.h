@@ -3,14 +3,16 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/game_object.h"
 
 /*
  * Per-object extra block for the landed-arwing baddie (dll_D3) -- the 0x94-byte
  * GroundBaddieState::control region, memset in dll_D3_init. Shared by
- * treasurechest.c (dll_D3_*), landedArwing.c, staffAction.c (fn_80165xxx
- * movement helpers) and backpack.c (LandedArwing_Update* action callbacks).
+ * treasurechest.c (dll_D3_*), landedArwing.c, staffAction.c (the
+ * landedarwing_* movement helpers) and backpack.c (LandedArwing_Update*
+ * action callbacks).
  * flags92 is bit-accessed through per-TU overlay structs (LandedArwingFlags,
- * StaffBits) -- keep those casts at the use sites.
+ * LandedArwingMovementFlags) -- keep those casts at the use sites.
  */
 typedef struct LandedArwingState {
   void *boundsObj;        /* nearest defNo-0x4AD object; fills bounds + bounceFlags */
@@ -60,5 +62,11 @@ STATIC_ASSERT(offsetof(LandedArwingState, surfaceMode) == 0x90);
 STATIC_ASSERT(offsetof(LandedArwingState, flags92) == 0x92);
 
 u32 LandedArwing_UpdateFlightChase(int obj, int state);
+u32 landedarwing_updateMovementState(s16* obj, u32* params);
+void landedarwing_updateAirborneMotion(GameObject* obj, int state);
+void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state);
+void landedarwing_moveAlongSurface(int obj, int state);
+void landedarwing_resolveSurfaceCollision(GameObject* obj, int state, f32* hit, f32* end);
+void landedarwing_updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ, f32 blend);
 
 #endif /* MAIN_DLL_LANDEDARWING_H_ */

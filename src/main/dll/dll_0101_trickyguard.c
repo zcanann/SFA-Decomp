@@ -17,16 +17,14 @@
  * The descriptor follows the implementation below.
  */
 #include "main/dll/dll_0101_trickyguard.h"
+#include "main/dll/dll_0120_trickyguardspot.h"
 #include "main/object_descriptor.h"
 #include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/gamebits.h"
 
-/* Tricky vtable slots reached through (tricky + 0x68). */
-#define TRICKY_VTBL_IS_BUSY 0x11
-#define TRICKY_VTBL_GUARD   0x0A
-
-#define TRICKYGUARD_OBJECT_FLAG 0x4000
+#define TRICKY_GUARD_VTABLE(tricky) \
+    (*(TrickyGuardSpotInterfaceVTable**)((tricky)->anim.dll))
 
 void TrickyGuard_update(GameObject* obj)
 {
@@ -41,12 +39,13 @@ void TrickyGuard_update(GameObject* obj)
     tricky = getTrickyObject();
     if (tricky == NULL)
         return;
-    if ((u8)((int (*)(GameObject*))(**(int***)((char*)tricky + 0x68))[TRICKY_VTBL_IS_BUSY])(tricky) != 0)
+    if ((u8)TRICKY_GUARD_VTABLE(tricky)->isGuardSpotActionReady(&tricky->anim) != 0)
         return;
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
     {
-        ((void (*)(GameObject*, GameObject*, int, int))(**(int***)((char*)tricky + 0x68))[TRICKY_VTBL_GUARD])(
-            tricky, obj, 1, 3);
+        TRICKY_GUARD_VTABLE(tricky)->setGuardSpotAction(
+            &tricky->anim, (TrickyGuardSpotObject*)obj,
+            TRICKY_GUARD_SPOT_ACTION, TRICKY_GUARD_SPOT_ACTION_PARAM);
     }
     obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
     objRenderFn_80041018(obj);
@@ -55,9 +54,9 @@ void TrickyGuard_update(GameObject* obj)
 void TrickyGuard_init(GameObject* obj, TrickyGuardPlacement* placement)
 {
     u32 flags;
-    obj->anim.rotX = (s16)((u32)placement->yawByte << 8);
+    obj->anim.rotX = (s16)((u32)placement->rotXByte << 8);
     flags = obj->objectFlags;
-    flags |= TRICKYGUARD_OBJECT_FLAG;
+    flags |= OBJECT_OBJFLAG_HIDDEN;
     obj->objectFlags = flags;
 }
 

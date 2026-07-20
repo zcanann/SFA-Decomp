@@ -7,15 +7,17 @@
  * Movement is a bounce-walker: landedarwing_moveSurfaceCrawler runs a
  * per-axis bounce machine over surfaceMode 0-5 (X/Y/Z wall planes), while
  * surfaceMode 6 is the swept-surface mode that does collision against a
- * bound mesh object (fn_80165B3C / fn_80166444 / fn_80166840). flags92
- * is a packed bit/nibble field (StaffBits) holding the per-frame movement
- * flags and a retry counter (hi nibble).
+ * bound mesh object (landedarwing_updateAirborneMotion /
+ * landedarwing_moveAlongSurface / landedarwing_resolveSurfaceCollision).
+ * flags92 is a packed bit/nibble field (LandedArwingMovementFlags) holding
+ * the per-frame movement flags and a bounds-object lookup retry counter
+ * (high nibble).
  *
  * dll_D3_update drives target acquisition, contact damage, and per-frame
  * advance through gBaddieControlInterface and gPlayerInterface vtable
  * slots; the object id is 0x49 and its extra block is 0x4a4 bytes. The
  * state handler table gLandedArwingStateHandlers is populated in
- * dll_D3_initialise (slot 0 = fn_801659B8).
+ * dll_D3_initialise (slot 0 = landedarwing_updateMovementState).
  *
  * The TU also defines a second object descriptor, gSkeetlaWallObjDescriptor
  * (skeetlawall), an 11-slot object whose callbacks live in a sibling unit.
@@ -57,20 +59,20 @@
 extern const f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
 extern f32 lbl_803E3004;
-typedef struct StaffBits
+typedef struct LandedArwingMovementFlags
 {
-    u8 hi : 4;
-    u8 b3 : 1;
-    u8 b2 : 1;
-    u8 b1 : 1;
-    u8 b0 : 1;
-} StaffBits;
+    u8 boundsLookupRetries : 4;
+    u8 surfaceOrientationReady : 1;
+    u8 airborne : 1;
+    u8 contactCallbackRegistered : 1;
+    u8 hitSurfaceType13 : 1;
+} LandedArwingMovementFlags;
 
-void fn_80166840(GameObject* obj, int state, f32* hit, f32* end);
-void updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ, f32 blend);
-void fn_80166E38(f32* out, f32* forward, f32* up);
+void landedarwing_resolveSurfaceCollision(GameObject* obj, int state, f32* hit, f32* end);
+void landedarwing_updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ, f32 blend);
+void landedarwing_buildSurfaceOrientationMatrix(f32* out, f32* forward, f32* up);
 
-u32 fn_801659B8(s16* obj, u32* params)
+u32 landedarwing_updateMovementState(s16* obj, u32* params)
 {
     LandedArwingState* state;
 
@@ -98,11 +100,11 @@ u32 fn_801659B8(s16* obj, u32* params)
         {
             if (((state->flags92 >> 2) & 1) != 0u)
             {
-                fn_80165B3C((GameObject*)obj, (int)state);
+                landedarwing_updateAirborneMotion((GameObject*)obj, (int)state);
             }
             else
             {
-                fn_80166444((int)obj, (int)state);
+                landedarwing_moveAlongSurface((int)obj, (int)state);
             }
         }
         else
@@ -113,7 +115,7 @@ u32 fn_801659B8(s16* obj, u32* params)
     return 0;
 }
 
-void fn_80165B3C(GameObject* obj, int state)
+void landedarwing_updateAirborneMotion(GameObject* obj, int state)
 {
     f32 radius;
     f32 dx;
@@ -153,9 +155,9 @@ void fn_80165B3C(GameObject* obj, int state)
     {
         {
             int zero = 0;
-            ((StaffBits*)&((LandedArwingState*)state)->flags92)->b2 = zero;
+            ((LandedArwingMovementFlags*)&((LandedArwingState*)state)->flags92)->airborne = zero;
         }
-        fn_80166840(obj, state, hitScratch.hit, end);
+        landedarwing_resolveSurfaceCollision(obj, state, hitScratch.hit, end);
     }
     else
     {
@@ -469,7 +471,7 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
     return;
 }
 
-void fn_80166444(int obj, int state)
+void landedarwing_moveAlongSurface(int obj, int state)
 {
     f32 one;
     f32 distanceRemaining;
@@ -529,7 +531,7 @@ void fn_80166444(int obj, int state)
             dz = end[2] - start[2];
             segmentLen = sqrtf(dz * dz + (dx * dx + dy * dy));
             traveled = (f32)(traveled + segmentLen);
-            fn_80166840((GameObject*)(obj), state, hitScratch.hit, end);
+            landedarwing_resolveSurfaceCollision((GameObject*)(obj), state, hitScratch.hit, end);
         }
         else
         {
@@ -555,7 +557,7 @@ void fn_80166444(int obj, int state)
              (hitScratch.hit[2] != ((LandedArwingState*)state)->surfaceNormalZ)) ||
             (hitScratch.hit[3] != ((LandedArwingState*)state)->surfacePlaneD))
         {
-            fn_80166840((GameObject*)(obj), state, hitScratch.hit, end);
+            landedarwing_resolveSurfaceCollision((GameObject*)(obj), state, hitScratch.hit, end);
         }
         else
         {
@@ -581,7 +583,7 @@ void fn_80166444(int obj, int state)
         hitFound = hitDetectFn_80067958((GameObject*)obj, start, end, 1, hitScratch.hit, 0x20);
         if (hitFound != 0)
         {
-            fn_80166840((GameObject*)(obj), state, hitScratch.hit, end);
+            landedarwing_resolveSurfaceCollision((GameObject*)(obj), state, hitScratch.hit, end);
         }
         else
         {
@@ -589,13 +591,13 @@ void fn_80166444(int obj, int state)
             ((GameObject*)obj)->anim.velocityX = speed * ((LandedArwingState*)state)->surfaceNormalX;
             ((GameObject*)obj)->anim.velocityY = speed * ((LandedArwingState*)state)->surfaceNormalY;
             ((GameObject*)obj)->anim.velocityZ = speed * ((LandedArwingState*)state)->surfaceNormalZ;
-            ((StaffBits*)&((LandedArwingState*)state)->flags92)->b2 = 1;
+            ((LandedArwingMovementFlags*)&((LandedArwingState*)state)->flags92)->airborne = 1;
         }
     }
-    ((StaffBits*)&((LandedArwingState*)state)->flags92)->b3 = 1;
+    ((LandedArwingMovementFlags*)&((LandedArwingState*)state)->flags92)->surfaceOrientationReady = 1;
 }
 
-void fn_80166840(GameObject* obj, int state, f32* hit, f32* end)
+void landedarwing_resolveSurfaceCollision(GameObject* obj, int state, f32* hit, f32* end)
 {
     f32 speed;
     f32 planeX;
@@ -654,7 +656,7 @@ void fn_80166840(GameObject* obj, int state, f32* hit, f32* end)
     obj->anim.localPosZ = end[2] + ((LandedArwingState*)state)->surfaceNormalZ;
 }
 
-void updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ, f32 blend)
+void landedarwing_updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ, f32 blend)
 {
     LandedArwingState* state;
     int mode;
@@ -780,7 +782,8 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 if ((((u32)((LandedArwingState*)state)->flags92 >> 2) & 1) == 0)
                 {
-                    fn_80166E38(slideMtx, &(obj)->anim.velocityX, &((LandedArwingState*)state)->surfaceNormalX);
+                    landedarwing_buildSurfaceOrientationMatrix(
+                        slideMtx, &(obj)->anim.velocityX, &((LandedArwingState*)state)->surfaceNormalX);
                 }
                 scale = (obj)->anim.rootMotionScale;
                 initRotationMtx(mtx, scale, scale, scale);
@@ -801,7 +804,7 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void fn_80166E38(f32* out, f32* forward, f32* up)
+void landedarwing_buildSurfaceOrientationMatrix(f32* out, f32* forward, f32* up)
 {
     f32 rt[3];
     f32 upRecomputed[3];
@@ -887,7 +890,7 @@ void dll_D3_update(int* obj)
                     *(int*)&extra->boundsObj, (int)&extra->boundsMinX, (int)&extra->bounceFlags);
                 extra->surfaceMode = 5;
             }
-            ((StaffBits*)&extra->flags92)->hi -= 1;
+            ((LandedArwingMovementFlags*)&extra->flags92)->boundsLookupRetries -= 1;
         }
     }
 
@@ -908,11 +911,11 @@ void dll_D3_update(int* obj)
     if (rc == 0)
         return;
 
-    if (((StaffBits*)&extra->flags92)->b1 == 0u)
+    if (((LandedArwingMovementFlags*)&extra->flags92)->contactCallbackRegistered == 0u)
     {
     if (ObjContact_AddCallback((GameObject*)obj, player, fn_80167550) != 0)
         {
-            ((StaffBits*)&extra->flags92)->b1 = 1;
+            ((LandedArwingMovementFlags*)&extra->flags92)->contactCallbackRegistered = 1;
         }
     }
 
@@ -987,14 +990,14 @@ void dll_D3_update(int* obj)
 
     *(int*)&((GameObject*)obj)->pendingParentObj = ((TreasureChestState*)state)->savedObjC0;
 
-    if (((StaffBits*)&extra->flags92)->b0 == 0u && extra->surfaceMode == 6)
+    if (((LandedArwingMovementFlags*)&extra->flags92)->hitSurfaceType13 == 0u && extra->surfaceMode == 6)
     {
         hitCount = objBboxFn_800640cc(&((GameObject*)obj)->anim.previousLocalPosX, &((GameObject*)obj)->anim.localPosX,
                                       6.0f, 0, (TrackBBoxHit*)hitResult, (GameObject*)obj, -0x7c, -1, 0xff,
                                       0);
         if (hitCount != 0 && *(s8*)((char*)hitResult + 0x50) == 13)
         {
-            ((StaffBits*)&extra->flags92)->b0 = 1;
+            ((LandedArwingMovementFlags*)&extra->flags92)->hitSurfaceType13 = 1;
             extra->scriptTimer = (u16)(randomGetRange(10, 0xf) * 0x3c);
         }
     }
@@ -1025,7 +1028,7 @@ void dll_D3_init(GameObject* obj, int def, int flag)
     extra = (LandedArwingState*)((GroundBaddieState*)state)->control;
     memset((void*)extra, 0, 0x94);
     extra->surfaceMode = 5;
-    ((StaffBits*)&extra->flags92)->hi = 3;
+    ((LandedArwingMovementFlags*)&extra->flags92)->boundsLookupRetries = 3;
     fz = lbl_803E2FDC;
     extra->surfaceNormalX = fz;
     extra->surfaceNormalY = lbl_803E2FF4;
@@ -1070,7 +1073,7 @@ void dll_D3_release_nop(void)
 
 void dll_D3_initialise(void)
 {
-    gLandedArwingStateHandlers[0] = fn_801659B8;
+    gLandedArwingStateHandlers[0] = landedarwing_updateMovementState;
     gLandedArwingStateHandlers[1] = LandedArwing_UpdateFlightChase;
     gLandedArwingStateHandlers[2] = LandedArwing_UpdateRetreatChase;
     gLandedArwingStateHandlers[3] = LandedArwing_UpdateBounceFade;

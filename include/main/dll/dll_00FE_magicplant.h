@@ -116,19 +116,6 @@ void FUN_8017fbe0(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_
 void FUN_8017fd40(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u16* param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
                   u32 param_15, u32 param_16);
-typedef struct TrickyWarpState
-{
-    u8 patchGroup;
-    u8 active;
-    u8 pad02[2];
-    int curveNodeIds[0x18];
-} TrickyWarpState;
-
-int TrickyWarp_getExtraSize(void);
-void TrickyWarp_free(GameObject* obj);
-void TrickyWarp_update(GameObject* obj);
-int fn_8017FFD0(GameObject* obj, TrickyWarpState* state);
-void TrickyWarp_init(GameObject* obj, u8* param_2);
 void StayPoint_update(int obj);
 void StayPoint_init(u16* obj);
 int duster_getExtraSize(void);
@@ -140,14 +127,9 @@ void FUN_80180a0c(u64 param_1, u64 param_2, double param_3, u64 param_4, u64 par
                   u64 param_8);
 void FUN_80181b50(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, u32 param_10, int param_11);
-int CurveFish_getExtraSize(void);
-void CurveFish_update(int obj);
-void CurveFish_init(GameObject* obj, u8* param_2);
 extern ObjectDescriptor gMagicPlantObjDescriptor;
-extern ObjectDescriptor gTrickyWarpObjDescriptor;
 extern ObjectDescriptor gTrickyGuardObjDescriptor;
 extern ObjectDescriptor gStayPointObjDescriptor;
 extern ObjectDescriptor gDusterObjDescriptor;
-extern ObjectDescriptor gCurveFishObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_00FE_MAGICPLANT_H_ */

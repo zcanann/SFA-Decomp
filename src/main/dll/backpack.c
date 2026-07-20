@@ -182,16 +182,16 @@ int LandedArwing_UpdateRetreatChase(GameObject* obj, int stateWord)
         z = (obj)->anim.localPosZ - lbl_803E3000 * (playerObj->anim.localPosZ - (obj)->anim.localPosZ);
         scale = lbl_803E2FF4;
     }
-    updateConstrainedChaseVelocity(obj, x, y, z, scale);
+    landedarwing_updateConstrainedChaseVelocity(obj, x, y, z, scale);
     if (state->surfaceMode == LANDED_ARWING_SCRIPT_MODE)
     {
         if ((u32)((state->flags92 >> 2) & 1) != 0U)
         {
-            fn_80165B3C(obj, (int)state);
+            landedarwing_updateAirborneMotion(obj, (int)state);
         }
         else
         {
-            fn_80166444((int)obj, (int)state);
+            landedarwing_moveAlongSurface((int)obj, (int)state);
         }
     }
     else

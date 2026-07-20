@@ -583,35 +583,35 @@ void mtx44_multSafe(f32* a, f32* b, f32* out)
     }
 }
 
-void Matrix_TransformVector(f32* m, f32* v, f32* out)
+void Matrix_TransformVector(const f32* matrix, const f32* vector, f32* out)
 {
     f32 vx, vy, vz;
     f32 m0, m1, m2;
     f32 t;
 
-    vx = v[0];
-    m0 = m[0];
-    vy = v[1];
-    m1 = m[4];
-    vz = v[2];
-    m2 = m[8];
+    vx = vector[0];
+    m0 = matrix[0];
+    vy = vector[1];
+    m1 = matrix[4];
+    vz = vector[2];
+    m2 = matrix[8];
     m0 = vx * m0;
     m1 = vy * m1;
     m2 = vz * m2;
     m1 = m0 + m1;
-    m0 = m[1];
+    m0 = matrix[1];
     t = m1 + m2;
-    m1 = m[5];
-    m2 = m[9];
+    m1 = matrix[5];
+    m2 = matrix[9];
     m0 = vx * m0;
     out[0] = t;
     m1 = vy * m1;
     m2 = vz * m2;
     m1 = m0 + m1;
-    m0 = m[2];
+    m0 = matrix[2];
     t = m1 + m2;
-    m1 = m[6];
-    m2 = m[10];
+    m1 = matrix[6];
+    m2 = matrix[10];
     m0 = vx * m0;
     out[1] = t;
     m1 = vy * m1;
@@ -620,69 +620,69 @@ void Matrix_TransformVector(f32* m, f32* v, f32* out)
     out[2] = m0 + m2;
 }
 
-void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz)
+void Matrix_TransformPoint(const f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ)
 {
-    *ox = m[12] + (m[0] * x + m[4] * y + m[8] * z);
-    *oy = m[13] + (m[1] * x + m[5] * y + m[9] * z);
-    *oz = m[14] + (m[2] * x + m[6] * y + m[10] * z);
+    *outX = matrix[12] + (matrix[0] * x + matrix[4] * y + matrix[8] * z);
+    *outY = matrix[13] + (matrix[1] * x + matrix[5] * y + matrix[9] * z);
+    *outZ = matrix[14] + (matrix[2] * x + matrix[6] * y + matrix[10] * z);
 }
 
-void Vec3_ReflectAgainstNormal(f32* a, f32* n, f32* out)
+void Vec3_ReflectAgainstNormal(f32* normal, f32* velocity, f32* out)
 {
-    f32 yy = a[1] * n[1];
-    f32 dot = yy + a[0] * n[0] + a[2] * n[2];
+    f32 yProduct = normal[1] * velocity[1];
+    f32 dot = yProduct + normal[0] * velocity[0] + normal[2] * velocity[2];
     if (dot > lbl_803DE808)
     {
-        out[0] = n[0];
-        out[1] = n[1];
-        out[2] = n[2];
+        out[0] = velocity[0];
+        out[1] = velocity[1];
+        out[2] = velocity[2];
     }
     else
     {
-        f32 s = dot * lbl_803DE80C;
-        out[0] = a[0];
-        out[1] = a[1];
-        out[2] = a[2];
-        out[0] *= s;
-        out[1] *= s;
-        out[2] *= s;
-        out[0] += n[0];
-        out[1] += n[1];
-        out[2] += n[2];
+        f32 reflectionScale = dot * lbl_803DE80C;
+        out[0] = normal[0];
+        out[1] = normal[1];
+        out[2] = normal[2];
+        out[0] *= reflectionScale;
+        out[1] *= reflectionScale;
+        out[2] *= reflectionScale;
+        out[0] += velocity[0];
+        out[1] += velocity[1];
+        out[2] += velocity[2];
     }
 }
 
-void Vec3_ScaleAdd(f32* a, f32* b, f32 s, f32* out)
+void Vec3_ScaleAdd(const f32* base, const f32* vector, f32 scale, f32* out)
 {
-    out[0] = s * b[0] + a[0];
-    out[1] = s * b[1] + a[1];
-    out[2] = s * b[2] + a[2];
+    out[0] = scale * vector[0] + base[0];
+    out[1] = scale * vector[1] + base[1];
+    out[2] = scale * vector[2] + base[2];
 }
 
-f32 Vec3_Normalize(f32* v)
+f32 Vec3_Normalize(f32* vector)
 {
-    f32 len;
-    f32 s;
+    f32 length;
+    f32 inverseLength;
 
-    len = sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-    if (lbl_803DE808 != len)
+    length = sqrtf(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
+    if (lbl_803DE808 != length)
     {
-        s = lbl_803DE810 / len;
-        v[0] *= s;
-        v[1] *= s;
-        v[2] *= s;
+        inverseLength = lbl_803DE810 / length;
+        vector[0] *= inverseLength;
+        vector[1] *= inverseLength;
+        vector[2] *= inverseLength;
     }
-    return len;
+    return length;
 }
 
-void Vec3_Cross(f32* a, f32* b, f32* out)
+void Vec3_Cross(f32* lhs, f32* rhs, f32* out)
 {
-    out[0] = a[1] * b[2] - a[2] * b[1];
-    out[1] = a[2] * b[0] - a[0] * b[2];
-    out[2] = a[0] * b[1] - a[1] * b[0];
+    out[0] = lhs[1] * rhs[2] - lhs[2] * rhs[1];
+    out[1] = lhs[2] * rhs[0] - lhs[0] * rhs[2];
+    out[2] = lhs[0] * rhs[1] - lhs[1] * rhs[0];
 }
 
-f32 Vec3_Length(f32* v)
+f32 Vec3_Length(const f32* vector)
 {
-    return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    return sqrtf(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
 }

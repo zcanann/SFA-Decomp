@@ -186,13 +186,13 @@ static inline void Music_FreeChannel(MusicChannel* ch)
 {
     sndSeqStop(ch->seqHandle);
     mm_free(ch->bankData);
-    ch->field_0 = -1;
+    ch->trackId = -1;
     ch->seqHandle = -1;
     ch->bankData = NULL;
     ch->voiceId = 0xff;
     ch->status = 0;
-    ch->field_12 = 0;
-    ch->field_20 = lbl_803DE560;
+    ch->priority = 0;
+    ch->fadeTimer = lbl_803DE560;
 }
 
 static inline int Music_IsTriggerExcluded(int id)
@@ -259,7 +259,7 @@ static inline MusicChannel* Music_FindActiveChannelForTrack(int track)
     MusicChannel* ch = (MusicChannel*)(int)gMusicChannels;
     for (i = 15; i >= 0; i--)
     {
-        if ((int)ch->field_0 == track)
+        if (ch->trackId == track)
         {
             if (ch->status == 0)
             {
@@ -942,7 +942,7 @@ void streamFn_8000a380(int mask, int mode, int time)
     int i = 15;
     do
     {
-        if (ch->status != 0 && ((ch->pad11 + 1) & mask) != 0)
+        if (ch->status != 0 && ((ch->priorityGroup + 1) & mask) != 0)
         {
             switch (mode)
             {
@@ -1028,12 +1028,12 @@ void Music_Trigger(int id, int arg)
         {
             return;
         }
-        sndSeqVolume((u8) * (u16*)&channel->pad14[0], *(u16*)trigger->pad, channel->seqHandle, 0);
+        sndSeqVolume((u8)channel->volume, trigger->fadeTime, channel->seqHandle, 0);
     }
     else if (channel != NULL)
     {
         int st;
-        i = *(u16*)trigger->pad;
+        i = trigger->fadeTime;
         st = channel->status;
         if (st == 2)
         {
@@ -1091,21 +1091,21 @@ void Music_Update(void)
         case 1:
         case 3:
         case 4:
-            if (!Music_IsTriggerExcluded((*(MusicTrigger**)&ch->pad14[8])->id))
+            if (!Music_IsTriggerExcluded(ch->trigger->id))
             {
-                if (ch->pad11 != 0)
+                if (ch->priorityGroup != 0)
                 {
-                    gMusicActivePriority = ch->field_12 < gMusicActivePriority ? ch->field_12 : gMusicActivePriority;
+                    gMusicActivePriority = ch->priority < gMusicActivePriority ? ch->priority : gMusicActivePriority;
                 }
                 else
                 {
-                    lowPriority = ch->field_12 < lowPriority ? ch->field_12 : lowPriority;
+                    lowPriority = ch->priority < lowPriority ? ch->priority : lowPriority;
                 }
             }
             break;
         case 2:
-            ch->field_20 += timeDelta / gAudioFramesPerSecond;
-            if (ch->field_20 > lbl_803DE568)
+            ch->fadeTimer += timeDelta / gAudioFramesPerSecond;
+            if (ch->fadeTimer > lbl_803DE568)
             {
                 if (ch->status == 4 || ch->status == 5)
                 {
@@ -1129,22 +1129,22 @@ void Music_Update(void)
         case 1:
         case 3:
         case 4:
-            if (!Music_IsTriggerExcluded((*(MusicTrigger**)&ch->pad14[8])->id))
+            if (!Music_IsTriggerExcluded(ch->trigger->id))
             {
-                if (ch->pad11 != 0)
+                if (ch->priorityGroup != 0)
                 {
-                    if (ch->field_12 == gMusicActivePriority && *(u32*)&ch->pad14[4] > bestActive18)
+                    if (ch->priority == gMusicActivePriority && ch->order > bestActive18)
                     {
-                        bestActive18 = *(u32*)&ch->pad14[4];
-                        activeVol = *(u16*)(*(MusicTrigger**)&ch->pad14[8])->pad;
+                        bestActive18 = ch->order;
+                        activeVol = ch->trigger->fadeTime;
                     }
                 }
                 else
                 {
-                    if (ch->field_12 == lowPriority && *(u32*)&ch->pad14[4] > bestLow18)
+                    if (ch->priority == lowPriority && ch->order > bestLow18)
                     {
-                        bestLow18 = *(u32*)&ch->pad14[4];
-                        lowVol = *(u16*)(*(MusicTrigger**)&ch->pad14[8])->pad;
+                        bestLow18 = ch->order;
+                        lowVol = ch->trigger->fadeTime;
                         if (ch->status != 3)
                         {
                             found20 = 1;
@@ -1154,17 +1154,17 @@ void Music_Update(void)
             }
             break;
         case 2:
-            if (ch->pad11 != 0)
+            if (ch->priorityGroup != 0)
             {
-                s2VolA = s2VolA > *(u16*)(*(MusicTrigger**)&ch->pad14[8])->pad
+                s2VolA = s2VolA > ch->trigger->fadeTime
                              ? s2VolA
-                             : *(u16*)(*(MusicTrigger**)&ch->pad14[8])->pad;
+                             : ch->trigger->fadeTime;
             }
             else
             {
-                s2VolB = s2VolB > *(u16*)(*(MusicTrigger**)&ch->pad14[8])->pad
+                s2VolB = s2VolB > ch->trigger->fadeTime
                              ? s2VolB
-                             : *(u16*)(*(MusicTrigger**)&ch->pad14[8])->pad;
+                             : ch->trigger->fadeTime;
                 found19 = 1;
             }
             break;
@@ -1197,9 +1197,9 @@ void Music_Update(void)
         {
         case 1:
         case 3:
-            if (ch->pad11 != 0)
+            if (ch->priorityGroup != 0)
             {
-                if (ch->field_12 == gMusicActivePriority && *(u32*)&ch->pad14[4] < bestActive18)
+                if (ch->priority == gMusicActivePriority && ch->order < bestActive18)
                 {
                     if (ch->status != 2)
                     {
@@ -1215,13 +1215,13 @@ void Music_Update(void)
                         }
                     }
                 }
-                else if (ch->field_12 > gMusicActivePriority || ch->field_12 > lowPriority || (int)fadeB != 0)
+                else if (ch->priority > gMusicActivePriority || ch->priority > lowPriority || (int)fadeB != 0)
                 {
                     if (ch->status != 3)
                     {
                         sndSeqVolume(
                             0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol), ch->seqHandle,
-                            (u8)(ch->pad11 != 0 ? 0 : 2));
+                            (u8)(ch->priorityGroup != 0 ? 0 : 2));
                         ch->status = 3;
                     }
                 }
@@ -1232,7 +1232,7 @@ void Music_Update(void)
                         sndSeqMute(ch->seqHandle, -1, -1);
                         sndSeqContinue(ch->seqHandle);
                         sndSeqVolume(
-                            (u8) * (u16*)&ch->pad14[0], (u16)(s2VolA < 0x1f4 ? 0x1f4 : s2VolA),
+                            (u8)ch->volume, (u16)(s2VolA < 0x1f4 ? 0x1f4 : s2VolA),
                             ch->seqHandle, 0);
                         ch->status = 1;
                     }
@@ -1240,7 +1240,7 @@ void Music_Update(void)
             }
             else
             {
-                if (ch->field_12 == lowPriority && *(u32*)&ch->pad14[4] < bestLow18)
+                if (ch->priority == lowPriority && ch->order < bestLow18)
                 {
                     if (ch->status != 2)
                     {
@@ -1256,13 +1256,13 @@ void Music_Update(void)
                         }
                     }
                 }
-                else if (ch->field_12 > lowPriority || ch->field_12 > gMusicActivePriority || (int)fadeA != 0)
+                else if (ch->priority > lowPriority || ch->priority > gMusicActivePriority || (int)fadeA != 0)
                 {
                     if (ch->status != 3)
                     {
                         sndSeqVolume(
                             0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol), ch->seqHandle,
-                            (u8)(ch->pad11 != 0 ? 0 : 2));
+                            (u8)(ch->priorityGroup != 0 ? 0 : 2));
                         ch->status = 3;
                     }
                 }
@@ -1273,7 +1273,7 @@ void Music_Update(void)
                         sndSeqMute(ch->seqHandle, -1, -1);
                         sndSeqContinue(ch->seqHandle);
                         sndSeqVolume(
-                            (u8) * (u16*)&ch->pad14[0], (u16)(s2VolB < 0x1f4 ? 0x1f4 : s2VolB),
+                            (u8)ch->volume, (u16)(s2VolB < 0x1f4 ? 0x1f4 : s2VolB),
                             ch->seqHandle, 0);
                         ch->status = 1;
                     }
@@ -1307,13 +1307,13 @@ u8 musicInitMidiWad(void)
         ch = gMusicChannels;
         for (i = 16; i != 0; i--)
         {
-            ch->field_0 = -1;
+            ch->trackId = -1;
             ch->seqHandle = -1;
             ch->bankData = NULL;
             ch->voiceId = 0xff;
             ch->status = 0;
-            ch->field_12 = 0;
-            *(int*)&ch->pad14[4] = 0;
+            ch->priority = 0;
+            ch->order = 0;
             ch++;
         }
         gMusicChannelCounterA = 1;
@@ -1377,14 +1377,14 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
     int counter;
     int track;
 
-    if (((u32)trigger->pad[0xb] >> 5) & 1)
+    if (((u32)trigger->flags >> 5) & 1)
     {
         if ((int)audioFlagFn_8000a188(2) != 0)
         {
             return;
         }
     }
-    if (!(((u32)trigger->pad[0xb] >> 5) & 1))
+    if (!(((u32)trigger->flags >> 5) & 1))
     {
         if ((int)audioFlagFn_8000a188(1) != 0)
         {
@@ -1402,12 +1402,12 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
     {
         return;
     }
-    channel->field_0 = trigger->track;
-    *(u16*)&channel->pad14[0] = trigger->pad[8];
-    channel->pad11 = (trigger->pad[0xb] >> 5) & 1;
+    channel->trackId = trigger->track;
+    channel->volume = trigger->volume;
+    channel->priorityGroup = (trigger->flags >> 5) & 1;
     channel->status = 4;
-    channel->field_12 = trigger->pad[9];
-    if (channel->pad11)
+    channel->priority = trigger->priority;
+    if (channel->priorityGroup)
     {
         counter = gMusicChannelCounterA;
         gMusicChannelCounterA = counter + 1;
@@ -1417,9 +1417,9 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
         counter = gMusicChannelCounterB;
         gMusicChannelCounterB = counter + 1;
     }
-    *(int*)&channel->pad14[4] = counter;
-    *(MusicTrigger**)&channel->pad14[8] = trigger;
-    channel->field_20 = lbl_803DE560;
+    channel->order = counter;
+    channel->trigger = trigger;
+    channel->fadeTimer = lbl_803DE560;
     audioAllocFn_80008df4((void*)slot->offset, slot->size, &channel->bankData, Music_ChannelLoadedCallback, slot,
                           channel, trigger);
 }
@@ -1433,26 +1433,26 @@ void Music_ChannelLoadedCallback(MusicTrackSlot* slot, MusicChannel* channel, Mu
         if (channel->status == 5)
         {
             mm_free(channel->bankData);
-            channel->field_0 = -1;
+            channel->trackId = -1;
             channel->seqHandle = -1;
             channel->bankData = NULL;
             channel->voiceId = 0xff;
             channel->status = 0;
-            channel->field_12 = 0;
-            channel->field_20 = lbl_803DE560;
+            channel->priority = 0;
+            channel->fadeTimer = lbl_803DE560;
         }
         else
         {
             int seqHandle;
             u8 voice;
-            if (*(u16*)&trigger->pad[2] != -1)
+            if (trigger->speed != -1)
             {
-                params.speed = *(u16*)&trigger->pad[2];
+                params.speed = trigger->speed;
                 params.flags |= 2;
             }
-            if (trigger->pad[8] != -1)
+            if (trigger->volume != -1)
             {
-                voice = trigger->pad[8];
+                voice = trigger->volume;
             }
             else
             {
