@@ -24,13 +24,20 @@ typedef struct MmshWaterspikeObjectDef
     u8 pad25[0x28 - 0x25];
 } MmshWaterspikeObjectDef;
 
+STATIC_ASSERT(offsetof(MmshWaterspikePlacement, maxHeight) == 0x0C);
+STATIC_ASSERT(offsetof(MmshWaterspikePlacement, xyzAnimId) == 0x14);
+STATIC_ASSERT(sizeof(MmshWaterspikePlacement) == 0x18);
+STATIC_ASSERT(offsetof(MmshWaterspikeObjectDef, xyzAnimIdLow) == 0x1A);
+STATIC_ASSERT(offsetof(MmshWaterspikeObjectDef, xyzAnimIdHigh) == 0x1C);
+STATIC_ASSERT(sizeof(MmshWaterspikeObjectDef) == 0x28);
+
 int mmsh_waterspike_getExtraSize(void);
 int mmsh_waterspike_getObjectTypeId(void);
-void mmsh_waterspike_free(void);
-void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void mmsh_waterspike_free(GameObject* obj);
+void mmsh_waterspike_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void mmsh_waterspike_hitDetect(void);
-void mmsh_waterspike_update(int obj);
-void mmsh_waterspike_init(GameObject* obj, s16* def);
+void mmsh_waterspike_update(GameObject* obj);
+void mmsh_waterspike_init(GameObject* obj, MmshWaterspikeObjectDef* def);
 void mmsh_waterspike_release(void);
 void mmsh_waterspike_initialise(void);
 
