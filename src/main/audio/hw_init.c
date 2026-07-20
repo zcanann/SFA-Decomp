@@ -39,7 +39,7 @@ void snd_handle_irq(void)
 
     for (voiceIndex = 0; voiceIndex < salNumVoices; voiceIndex++)
     {
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < DSP_VOICE_UPDATE_COUNT; i++)
         {
             dspVoice[voiceIndex].changed[i] = 0;
         }
@@ -47,7 +47,7 @@ void snd_handle_irq(void)
 
     hwIRQLeaveCritical();
 
-    for (timeOffset = 0; (u8)timeOffset < 5; timeOffset++)
+    for (timeOffset = 0; (u8)timeOffset < DSP_VOICE_UPDATE_COUNT; timeOffset++)
     {
         hwIRQEnterCritical();
         hwSetTimeOffset(timeOffset);
@@ -108,14 +108,7 @@ u8 hwGetTimeOffset(void)
 
 u32 hwIsActive(u32 voiceIndex)
 {
-    u8* entry;
-    int active;
-
-    voiceIndex *= sizeof(DSPvoice);
-    entry = (u8*)dspVoice;
-    entry += voiceIndex;
-    active = ((DSPvoice*)entry)->state;
-    return active != 0;
+    return dspVoice[voiceIndex].state != 0;
 }
 
 void hwSetMesgCallback(SndMessageCallback callback)
@@ -125,28 +118,23 @@ void hwSetMesgCallback(SndMessageCallback callback)
 
 void hwSetPriority(int voiceIndex, u32 priority)
 {
-    u8* entry;
-
-    voiceIndex *= sizeof(DSPvoice);
-    entry = (u8*)dspVoice;
-    entry += voiceIndex;
-    ((DSPvoice*)entry)->prio = priority;
+    dspVoice[voiceIndex].prio = priority;
 }
 
 void hwInitSamplePlayback(u32 voiceIndex, u16 sampleId, SAMPLE_INFO* sampleInfo, u32 resetAdsr, u32 priority,
                           u32 callbackUserValue, u32 resetSrc, u32 itdMode)
 {
     u8 timeOffset;
-    u32 changedFlags;
+    u32 breakFlags;
 
-    changedFlags = 0;
+    breakFlags = 0;
     for (timeOffset = 0; timeOffset <= salTimeOffset; timeOffset++)
     {
-        changedFlags |= dspVoice[voiceIndex].changed[timeOffset] & 0x20;
+        breakFlags |= dspVoice[voiceIndex].changed[timeOffset] & DSP_VOICE_CHANGE_BREAK;
         dspVoice[voiceIndex].changed[timeOffset] = 0;
     }
 
-    dspVoice[voiceIndex].changed[0] = changedFlags;
+    dspVoice[voiceIndex].changed[0] = breakFlags;
     dspVoice[voiceIndex].prio = priority;
     dspVoice[voiceIndex].mesgCallBackUserValue = callbackUserValue;
     dspVoice[voiceIndex].flags = 0;

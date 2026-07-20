@@ -1,7 +1,7 @@
 /*
  * ccsharpclawpad - Crystal Caves SharpClaw "pressure pad" object (DLL
- * 0x0189). A disguise-gated switch pad. Its placement gameBit (at
- * placementData+0x1A) records whether it has been activated: once set it
+ * 0x0189). A disguise-gated switch pad. Its placement activationGameBit
+ * records whether it has been activated: once set it
  * stays lit (active hitbox bit 8 on) and emits the lit particle burst.
  * While unset it shows help text (gated by an ObjTrigger and a hold timer)
  * and watches for a disguised player to step close - that plays a stomp sfx,
@@ -22,23 +22,20 @@
 #include "main/vecmath_distance_api.h"
 #include "main/object_descriptor.h"
 
-#define CCSHARPCLAWPAD_OBJFLAG_HIDDEN 0x4000
-
-
 int CCSharpclawPad_getExtraSize(void)
 {
-    return 0x4;
+    return sizeof(SharpClawPadState);
 }
 
 void CCSharpclawPad_update(GameObject* obj)
 {
     SharpClawPadParticleArgs particleArgs;
-    f32* state;
+    SharpClawPadState* state;
     GameObject* player;
 
-    if (mainGetBit(*(s16*)(*(int*)&(obj)->anim.placementData + 0x1a)) != 0)
+    if (mainGetBit(((SharpClawPadSetup*)obj->anim.placement)->activationGameBit) != 0)
     {
-        *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         particleArgs.offset[0] = -5.0f;
         particleArgs.offset[1] = 5.0f;
         particleArgs.offset[2] = 0.0f;
@@ -48,30 +45,30 @@ void CCSharpclawPad_update(GameObject* obj)
     }
     else
     {
-        *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         if (mainGetBit(GAMEBIT_STAFF_ABILITY_SHARPCLAW_DISGUISE) == 0)
         {
-            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
+            obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
         else
         {
-            *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+            obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
-        state = (obj)->extra;
+        state = obj->extra;
         if (ObjTrigger_IsSet((int)obj) != 0 && isAreaNameTextActive() == 0)
         {
-            *state = 600.0f;
+            state->helpTimer = 600.0f;
         }
-        if (*state > 0.0f)
+        if (state->helpTimer > 0.0f)
         {
-            if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
+            if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) == 0)
             {
-                *state = 0.0f;
+                state->helpTimer = 0.0f;
             }
             else
             {
-                *state -= timeDelta;
-                showHelpText((obj)->anim.modelInstance->helpTextIds[0]);
+                state->helpTimer -= timeDelta;
+                showHelpText(obj->anim.modelInstance->helpTextIds[0]);
             }
         }
         player = Obj_GetPlayerObject();
@@ -79,8 +76,8 @@ void CCSharpclawPad_update(GameObject* obj)
             playerIsDisguised(player) != 0)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_menuups16k);
-            mainSetBits(*(s16*)(*(int*)&(obj)->anim.placementData + 0x1a), 1);
-            *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+            mainSetBits(((SharpClawPadSetup*)obj->anim.placement)->activationGameBit, 1);
+            obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         }
         particleArgs.offset[0] = -5.0f;
         particleArgs.offset[1] = 5.0f;
@@ -91,10 +88,10 @@ void CCSharpclawPad_update(GameObject* obj)
     }
 }
 
-void CCSharpclawPad_init(int* obj, int* placement)
+void CCSharpclawPad_init(GameObject* obj, SharpClawPadSetup* setup)
 {
-    ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)placement + 24) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCSHARPCLAWPAD_OBJFLAG_HIDDEN);
+    obj->anim.rotX = (s16)((u32)setup->rotX << 8);
+    obj->objectFlags = (u16)(obj->objectFlags | OBJECT_OBJFLAG_HIDDEN);
 }
 
 ObjectDescriptor gCCSharpclawPadObjDescriptor = {

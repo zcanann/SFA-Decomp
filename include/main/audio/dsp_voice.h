@@ -27,6 +27,9 @@ typedef struct VSampleInfo {
     u8 inLoopBuffer;      /* 0x08 */
 } VSampleInfo;
 
+#define DSP_VOICE_UPDATE_COUNT       5
+#define DSP_VOICE_CHANGE_BREAK       0x20
+
 typedef struct DSPvoice {
     struct _PB *pb;             /* 0x00 */
     void *patchData;            /* 0x04 */
@@ -37,8 +40,8 @@ typedef struct DSPvoice {
     u32 mesgCallBackUserValue;  /* 0x18 */
     u32 prio;                   /* 0x1c */
     u32 currentAddr;            /* 0x20 */
-    u32 changed[5];             /* 0x24 */
-    u32 pitch[5];               /* 0x38 */
+    u32 changed[DSP_VOICE_UPDATE_COUNT]; /* 0x24 */
+    u32 pitch[DSP_VOICE_UPDATE_COUNT];   /* 0x38 */
     u16 volL;                   /* 0x4c */
     u16 volR;                   /* 0x4e */
     u16 volS;                   /* 0x50 */
