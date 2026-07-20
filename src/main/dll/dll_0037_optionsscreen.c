@@ -6,8 +6,7 @@
  * 1 = audio, 2 = gameplay (widescreen / rumble), 3 = misc (subtitles +
  * cheat toggles). _run() reads the highlighted item, dispatches to the
  * matching optionsMenu_* handler, and mirrors the chosen settings into
- * the save-file struct (lbl_803DD708) byte fields: [2]=subtitles,
- * [6]=widescreen, [8]=rumble, [9..12]=audio. _render() fades the panel
+ * the save-file struct (lbl_803DD708). _render() fades the panel
  * text in/out against the screen-transition progress; _initialise()
  * loads the text directory and the active panel's item list. Selecting
  * Exit (panel 3, item 0) starts the transition out and reloads UI DLL 4.
@@ -30,7 +29,6 @@
 #include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/dll_4D.h"
 #include "main/dll/FRONT/title_menu.h"
-#include "main/dll/savedata_struct.h"
 #include "main/dll/debug/prof.h"
 #include "main/dll/dll_0037_optionsscreen.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
@@ -63,7 +61,6 @@ extern f32 lbl_803E1DE0;
 extern f32 lbl_803E1DE4;
 extern s8 lbl_803DD706;  /* render-stale countdown */
 extern s8 lbl_803DD70C;  /* last top-level item index (read by other DLL) */
-extern u8* lbl_803DD708; /* save-file struct base */
 extern s8 lbl_803DD705;  /* exit-in-progress flag */
 extern u8 lbl_803DD6F9;
 extern u8 lbl_803DD6F8;  /* initial panel selector */
@@ -265,20 +262,20 @@ int OptionsScreen_frameStart(void)
         optionsMenu_applyGameplaySetting(selection, item);
         if (selection == 0)
         {
-            lbl_803DD708[6] = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[0]);
-            lbl_803DD708[8] = !gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[1]);
-            setWidescreen(lbl_803DD708[6]);
-            setRumbleEnabled(lbl_803DD708[8]);
+            lbl_803DD708->widescreenEnabled = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[0]);
+            lbl_803DD708->rumbleEnabled = !gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[1]);
+            setWidescreen(lbl_803DD708->widescreenEnabled);
+            setRumbleEnabled(lbl_803DD708->rumbleEnabled);
         }
         break;
     case OPTIONSSCREEN_PANEL_AUDIO:
         optionsMenu_applyAudioSetting(selection, item);
         if (selection == 0)
         {
-            lbl_803DD708[9] = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[0]);
-            lbl_803DD708[10] = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[1]);
-            lbl_803DD708[11] = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[2]);
-            lbl_803DD708[12] = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[3]);
+            lbl_803DD708->soundMode = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[0]);
+            lbl_803DD708->musicVolume = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[1]);
+            lbl_803DD708->sfxVolume = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[2]);
+            lbl_803DD708->speechVolume = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[3]);
         }
         break;
     case OPTIONSSCREEN_PANEL_MISC:
@@ -294,8 +291,8 @@ int OptionsScreen_frameStart(void)
             switch (item)
             {
             case 0:
-                lbl_803DD708[2] = !gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[0]);
-                setSubtitlesEnabled(lbl_803DD708[2]);
+                lbl_803DD708->subtitlesEnabled = !gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[0]);
+                setSubtitlesEnabled(lbl_803DD708->subtitlesEnabled);
                 break;
             default:
                 saveFileStruct_setCheatActive(CHEAT_DINO_LANGUAGE,

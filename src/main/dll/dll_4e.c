@@ -11,7 +11,7 @@
  * the screen transition into the next menu state.
  *
  * - applyAudioSetting: sound mode, music/sfx/voice volume, reset to
- *   defaults (reloads the saved volumes from lbl_803DD708[10..12]).
+ *   defaults (reloads the saved volumes from lbl_803DD708).
  * - applyGameplaySetting: widescreen, rumble, roll credits, colour
  *   filter.
  * - openSelectedSubmenu: general / audio / language panels.
@@ -25,6 +25,7 @@
 #include "main/dll/dll_02C0_front.h"
 #include "main/dll/debug/prof.h"
 #include "main/dll/dll_0015_save_settings.h"
+#include "main/dll/dll_0037_optionsscreen.h"
 #include "main/lightmap_api.h"
 #include "main/pad.h"
 #include "main/screen_transition.h"
@@ -64,7 +65,6 @@
 extern int lbl_803DD6FC;
 extern s8 lbl_803DD704;  /* transition fade counter */
 extern s8 lbl_803DD705;  /* transition pending flag */
-extern u8* lbl_803DD708; /* saved volumes at [10..12] */
 extern f32 lbl_803E1DD0; /* rumble strength */
 extern s8 lbl_803DBA28;
 
@@ -114,9 +114,11 @@ void optionsMenu_applyAudioSetting(int action, int option)
     else if ((action == OPTIONS_MENU_ACTION_SELECT) && (option == AUDIO_OPTION_RESET_DEFAULTS))
     {
         saveFileStruct_resetVolumes();
-        gTitleMenuItemInterface->vtable->setValue(lbl_803A87D0[AUDIO_OPTION_MUSIC_VOLUME], lbl_803DD708[10]);
-        gTitleMenuItemInterface->vtable->setValue(lbl_803A87D0[AUDIO_OPTION_SFX_VOLUME], lbl_803DD708[11]);
-        gTitleMenuItemInterface->vtable->setValue(lbl_803A87D0[AUDIO_OPTION_VOICE_VOLUME], lbl_803DD708[12]);
+        gTitleMenuItemInterface->vtable->setValue(lbl_803A87D0[AUDIO_OPTION_MUSIC_VOLUME],
+                                                   lbl_803DD708->musicVolume);
+        gTitleMenuItemInterface->vtable->setValue(lbl_803A87D0[AUDIO_OPTION_SFX_VOLUME], lbl_803DD708->sfxVolume);
+        gTitleMenuItemInterface->vtable->setValue(lbl_803A87D0[AUDIO_OPTION_VOICE_VOLUME],
+                                                   lbl_803DD708->speechVolume);
         value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[AUDIO_OPTION_MUSIC_VOLUME]);
         audioSetVolumes((u8)value, OPTIONS_MENU_VOLUME_STEP, 0, 1, 0);
         value = gTitleMenuItemInterface->vtable->getValue(lbl_803A87D0[AUDIO_OPTION_SFX_VOLUME]);

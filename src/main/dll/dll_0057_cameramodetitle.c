@@ -7,7 +7,7 @@
  * (gCamTitleStartPose) to the target pose over titleScreenCamProgress, applying an
  * ease curve and shortest-arc angle interpolation on each of yaw/pitch/roll.
  * Entering or leaving pose 4 cross-fades the title music tracks and the movie
- * volume against the saved-file music-volume byte (save[10]).
+ * volume against the saved-file music-volume setting.
  *
  */
 #include "main/dll/cameramodetitlepose_struct.h"
@@ -78,9 +78,9 @@ void CameraModeTitle_moveCam(u8 newCam)
     {
         if (1.0f != titleScreenCamProgress)
         {
-            u8* save = getSaveFileStruct();
+            SaveData* save = getSaveFileStruct();
             Movie_SetVolumeFade(0, 1000);
-            audioSetVolumes(save[10], 1000, 1, 0, 0);
+            audioSetVolumes(save->musicVolume, 1000, 1, 0, 0);
         }
         else
         {
@@ -96,8 +96,8 @@ void CameraModeTitle_moveCam(u8 newCam)
 
 void CameraModeTitle_loadVolumes(void)
 {
-    u8* save = getSaveFileStruct();
-    audioSetVolumes(save[10], 1000, 1, 0, 0);
+    SaveData* save = getSaveFileStruct();
+    audioSetVolumes(save->musicVolume, 1000, 1, 0, 0);
 }
 
 void CameraModeTitle_update(CameraObject* camera)
@@ -114,7 +114,7 @@ void CameraModeTitle_update(CameraObject* camera)
     }
     if (gCamTitleCurPose != gCamTitlePrevPose)
     {
-        u8* save = getSaveFileStruct();
+        SaveData* save = getSaveFileStruct();
         f32 ease;
 
         titleScreenCamProgress += 0.01f;
@@ -130,7 +130,7 @@ void CameraModeTitle_update(CameraObject* camera)
             else if (gCamTitlePrevPose == TITLE_CAM_REST_POSE)
             {
                 Movie_SetVolumeFade(0, 1);
-                audioSetVolumes(save[10], 10, 1, 0, 0);
+                audioSetVolumes(save->musicVolume, 10, 1, 0, 0);
             }
             titleScreenCamProgress = 1.0f;
             gCamTitlePrevPose = gCamTitleCurPose;
@@ -140,12 +140,13 @@ void CameraModeTitle_update(CameraObject* camera)
             if (gCamTitleCurPose == TITLE_CAM_REST_POSE)
             {
                 Movie_SetVolumeFade((s32)(100.0f * titleScreenCamProgress), 1);
-                audioSetVolumes((s32)((f32)(u32)save[10] * (1.0f - titleScreenCamProgress)), 10, 1, 0, 0);
+                audioSetVolumes((s32)((f32)(u32)save->musicVolume * (1.0f - titleScreenCamProgress)), 10, 1, 0,
+                                0);
             }
             else if (gCamTitlePrevPose == TITLE_CAM_REST_POSE)
             {
                 Movie_SetVolumeFade((s32)(100.0f * (1.0f - titleScreenCamProgress)), 1);
-                audioSetVolumes((s32)((f32)(u32)save[10] * titleScreenCamProgress), 10, 1, 0, 0);
+                audioSetVolumes((s32)((f32)(u32)save->musicVolume * titleScreenCamProgress), 10, 1, 0, 0);
             }
         }
 

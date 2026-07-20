@@ -16,15 +16,14 @@
 #include "main/dll/debug/prof.h"
 #include "main/audio/audio_control_api.h"
 #include "main/dll/dll_0015_save_settings.h"
+#include "main/dll/dll_0037_optionsscreen.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
-#include "main/dll/savedata_struct.h"
 #include "dolphin/os/OSRtc.h"
 #include "main/rcp_dolphin_state_api.h"
 #include "main/gameloop_api.h"
 #include "main/dll/dll_003C_tumbleweedbush.h"
 extern s8 lbl_803DBA28;
 extern u8 lbl_803DD706;
-extern u8* lbl_803DD708;
 
 typedef struct OptionsMenuPanels
 {
@@ -72,7 +71,7 @@ void optionsMenu_openAudioPanel(void)
 
     if (OSGetSoundMode() == 1)
     {
-        item = gTitleMenuItemInterface->vtable->createWithWindow(0x36c, 0x22, 0, 3, lbl_803DD708[9]);
+        item = gTitleMenuItemInterface->vtable->createWithWindow(0x36c, 0x22, 0, 3, lbl_803DD708->soundMode);
     }
     else
     {
@@ -80,11 +79,11 @@ void optionsMenu_openAudioPanel(void)
     }
     lbl_803A87D0[0] = item;
     lbl_803A87D0[1] =
-        gTitleMenuItemInterface->vtable->createWithText(0x124, 0xb2, 0, 0x7f, lbl_803DD708[10], 0x3e);
+        gTitleMenuItemInterface->vtable->createWithText(0x124, 0xb2, 0, 0x7f, lbl_803DD708->musicVolume, 0x3e);
     lbl_803A87D0[2] =
-        gTitleMenuItemInterface->vtable->createWithText(0x124, 0xcc, 0, 0x7f, lbl_803DD708[11], 0x3e);
+        gTitleMenuItemInterface->vtable->createWithText(0x124, 0xcc, 0, 0x7f, lbl_803DD708->sfxVolume, 0x3e);
     lbl_803A87D0[3] =
-        gTitleMenuItemInterface->vtable->createWithText(0x124, 0xe6, 0, 0x7f, lbl_803DD708[12], 0x3e);
+        gTitleMenuItemInterface->vtable->createWithText(0x124, 0xe6, 0, 0x7f, lbl_803DD708->speechVolume, 0x3e);
     lbl_803A87D0[3]->flags = (u8)(lbl_803A87D0[3]->flags | 0x40);
     lbl_803A87D0[4] = NULL;
     lbl_803A87D0[5] = NULL;
@@ -156,9 +155,11 @@ void optionsMenu_openGeneralPanel(void)
     gTitleMenuLinkInterface->vtable->setup(panels->optionEntries, panels->optionCount, 0, NULL, 0, 0, 0x14, 0xc8, 0xff,
                                            0xff, 0xff, 0xff);
 
-    lbl_803A87D0[0] = gTitleMenuItemInterface->vtable->createWithWindow(0x366, 0x22, 0, 1, lbl_803DD708[6]);
+    lbl_803A87D0[0] =
+        gTitleMenuItemInterface->vtable->createWithWindow(0x366, 0x22, 0, 1, lbl_803DD708->widescreenEnabled);
     lbl_803A87D0[1] =
-        gTitleMenuItemInterface->vtable->createWithWindow(0x36b, 0x23, 0, 1, (s16)(lbl_803DD708[8] == 0));
+        gTitleMenuItemInterface->vtable->createWithWindow(0x36b, 0x23, 0, 1,
+                                                          (s16)(lbl_803DD708->rumbleEnabled == 0));
     slot[0] = lbl_803A87D0;
 
     cheatId = 0;

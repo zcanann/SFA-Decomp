@@ -12,8 +12,8 @@
  * render-stale countdown (lbl_803DD706) is reset so the new layout draws.
  */
 #include "main/dll/dll_4D.h"
-#include "main/dll/savedata_struct.h"
 #include "main/dll/dll_0015_save_settings.h"
+#include "main/dll/dll_0037_optionsscreen.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
 #include "main/textrender_api.h"
 
@@ -31,7 +31,6 @@
 extern MenuPanelGroup lbl_8031ACB8;
 extern s8 lbl_803DBA28;
 extern u8 lbl_803DD706;
-extern u8* lbl_803DD708;    /* save-file struct; [2] = subtitles enabled */
 
 void languageMenuInit(void)
 {
@@ -45,7 +44,8 @@ void languageMenuInit(void)
 
     panel = &lbl_8031ACB8;
     lbl_803A87D0[0] =
-        gTitleMenuItemInterface->vtable->createWithWindow(0x36b, 0x22, 0, 1, (s16)(lbl_803DD708[2] == 0));
+        gTitleMenuItemInterface->vtable->createWithWindow(0x36b, 0x22, 0, 1,
+                                                          (s16)(lbl_803DD708->subtitlesEnabled == 0));
 
     if (isCheatUnlocked(LANGUAGE_MENU_CHEAT_ID) != 0 && lbl_803DC968 == 0)
     {
