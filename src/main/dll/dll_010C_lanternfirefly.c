@@ -72,9 +72,9 @@ extern f32 lbl_803E3AE0;
 
 /* LanternFireFly_modelMtxFn: receives (obj, anchorX, anchorY, anchorZ) and
  * stores the three floats into obj->extra at +0x54/+0x58/+0x5c. */
-void LanternFireFly_modelMtxFn(u8* obj, f32 anchorX, f32 anchorY, f32 anchorZ)
+void LanternFireFly_modelMtxFn(GameObject* obj, f32 anchorX, f32 anchorY, f32 anchorZ)
 {
-    LanternFireFlyState* state = ((GameObject*)obj)->extra;
+    LanternFireFlyState* state = obj->extra;
     state->anchorX = anchorX;
     state->anchorY = anchorY;
     state->anchorZ = anchorZ;
@@ -82,10 +82,6 @@ void LanternFireFly_modelMtxFn(u8* obj, f32 anchorX, f32 anchorY, f32 anchorZ)
 
 void LanternFireFly_func0B(GameObject* obj)
 {
-    typedef struct
-    {
-        u8 mode : 2;
-    } LFFlags;
     LanternFireFlyState* state;
     int setup;
     int player;
@@ -129,16 +125,16 @@ void LanternFireFly_func0B(GameObject* obj)
     LanternFireFly_advanceControlRing(obj);
     LanternFireFly_advanceControlRing(obj);
     LanternFireFly_advanceControlRing(obj);
-    ((LFFlags*)&state->modeFlags)->mode = 1;
+    ((LanternFireFlyModeBits*)&state->modeFlags)->mode = 1;
     state->timer = ((LanternFireFlyPlacement*)setup)->timer;
     gameBitIncrement(0x698);
 }
 
 /* LanternFireFly_setScale: subtract sub->_54..5c from vec[0..2] (overwriting
  * vec), copy the result to sub->_34..3c, set sub->_6c = 4. */
-void LanternFireFly_setScale(u8* obj, f32* vec)
+void LanternFireFly_setScale(GameObject* obj, f32* vec)
 {
-    LanternFireFlyState* sub = ((GameObject*)obj)->extra;
+    LanternFireFlyState* sub = obj->extra;
     vec[0] = vec[0] - sub->anchorX;
     vec[1] = vec[1] - sub->anchorY;
     vec[2] = vec[2] - sub->anchorZ;
@@ -191,10 +187,6 @@ void LanternFireFly_pickDriftOffset(GameObject* obj)
 
 void LanternFireFly_advanceControlRing(GameObject* obj)
 {
-    typedef struct
-    {
-        u8 mode : 2;
-    } LFF2;
     LanternFireFlyState* state;
 
     state = obj->extra;
@@ -207,7 +199,7 @@ void LanternFireFly_advanceControlRing(GameObject* obj)
     state->controlX[2] = state->controlX[3];
     state->controlY[2] = state->controlY[3];
     state->controlZ[2] = state->controlZ[3];
-    if (((LFF2*)&state->modeFlags)->mode == 1)
+    if (((LanternFireFlyModeBits*)&state->modeFlags)->mode == 1)
     {
         int player = (int)Obj_GetPlayerObject();
         state->speed =
@@ -238,9 +230,9 @@ int LanternFireFly_getObjectTypeId(void)
  * aren't 1) reset lbl_803DDAD8 to 0; finally ObjGroup_RemoveObject(obj, LANTERNFIREFLY_OBJGROUP)
  * and dispatch vtable[6] of *gExpgfxInterface. */
 
-void LanternFireFly_free(u8* obj, int flag)
+void LanternFireFly_free(GameObject* obj, int flag)
 {
-    LanternFireFlyState* sub = ((GameObject*)obj)->extra;
+    LanternFireFlyState* sub = obj->extra;
     if (sub->light != NULL)
     {
         ModelLightStruct_free(sub->light);

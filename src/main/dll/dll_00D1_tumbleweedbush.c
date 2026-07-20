@@ -10,13 +10,13 @@
  * update polls a priority hit; on a hit (other than seqId 0x4ba) it spawns
  * a hit emitter, plays SFXsc_gethit04 and triggers each live piece's vtable
  * +0x28 callback. When the player comes within triggerRadius it repeatedly
- * calls fn_801631C8 to spawn sibling objects, and it prunes pieces whose
+ * calls tumbleweedbush_spawnSibling to spawn sibling objects, and it prunes pieces whose
  * vtable +0x20 query reports >1.
  *
- * fn_801631C8 picks a sibling seqId from the bush seqId (0x28d->0x39d sun-
+ * tumbleweedbush_spawnSibling picks a sibling seqId from the bush seqId (0x28d->0x39d sun-
  * gated, 0x3fd->0x3fb, 0x4b9->0x4ba, 0x4be->0x4c1), finds a free piece
  * slot, caps the live sibling count at 7, and allocates/positions a new
- * sibling. fn_80163990 (called by tumbleweed) advances a detached piece's
+ * sibling. tumbleweedbush_updateDetachedPiece (called by tumbleweed) advances a detached piece's
  * gravity/spin. findNearestActive/setScale are shared piece helpers used
  * by sibling DLLs.
  */
@@ -82,7 +82,7 @@ extern u8 gTumbleweedBushPieceOffsetTable[];
 u8 gTumbleweedBushHitCooldownState;
 
 
-s8 fn_801631C8(int* obj)
+s8 tumbleweedbush_spawnSibling(int* obj)
 {
     u8* state;
     u8* p4c;
@@ -280,7 +280,7 @@ void TumbleWeedBush_update(int* obj)
     d = sqrtf(dx * dx + dy * dy);
     if ((u16)(s32)d < state->triggerRadius)
     {
-        while ((s8)fn_801631C8(obj) != -1)
+        while ((s8)tumbleweedbush_spawnSibling(obj) != -1)
         {
         }
     }
@@ -394,13 +394,13 @@ GameObject* tumbleweedbush_findNearestActive(f32* p_pos)
     return bestObj;
 }
 
-void fn_80163980(GameObject* obj)
+void tumbleweedbush_activatePiece(GameObject* obj)
 {
     u8 v = 0x7;
     *((u8*)(int*)obj->extra + 0x278) = v;
 }
 
-void fn_80163990(GameObject* piece, BackpackState* state)
+void tumbleweedbush_updateDetachedPiece(GameObject* piece, BackpackState* state)
 {
     f32 gh;
 
