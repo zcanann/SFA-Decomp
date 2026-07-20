@@ -41,7 +41,7 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 /* glow-texture ramp table */
 u8 lbl_8031FF80[] = {0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0};
 
-void fn_8015F5B0(short* obj)
+void fn_8015F5B0(GameObject* obj)
 {
     ChukChukState* sub;
     int setup;
@@ -49,13 +49,13 @@ void fn_8015F5B0(short* obj)
     GameObject* pl;
     f32 sc;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = obj->extra;
     if (Obj_IsLoadingLocked() != 0)
     {
         setup = (int)Obj_AllocObjectSetup(36, CHUKCHUK_CHILD_OBJ_ICEBALL);
-        ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((ObjPlacement*)setup)->posY = 5.0f + ((GameObject*)obj)->anim.localPosY;
-        ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
+        ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
+        ((ObjPlacement*)setup)->posY = 5.0f + obj->anim.localPosY;
+        ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
         ((ObjPlacement*)setup)->color[0] = 1;
         ((ObjPlacement*)setup)->color[1] = 4;
         ((ObjPlacement*)setup)->color[3] = 0xff;
@@ -64,22 +64,22 @@ void fn_8015F5B0(short* obj)
         {
             pl = Obj_GetPlayerObject();
             ((GameObject*)o)->anim.velocityX =
-                (pl->anim.localPosX - ((GameObject*)obj)->anim.localPosX) / (sc = 42.0f);
+                (pl->anim.localPosX - obj->anim.localPosX) / (sc = 42.0f);
             ((GameObject*)o)->anim.velocityY =
-                (pl->anim.localPosY + (f32)(u32)sub->aimHeightY - ((GameObject*)obj)->anim.localPosY) /
+                (pl->anim.localPosY + (f32)(u32)sub->aimHeightY - obj->anim.localPosY) /
                 sc;
             ((GameObject*)o)->anim.velocityZ =
-                (pl->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ) / sc;
+                (pl->anim.localPosZ - obj->anim.localPosZ) / sc;
         }
     }
 }
 
-void ChukChuk_setScale(int obj, int message)
+void ChukChuk_setScale(GameObject* obj, int message)
 {
     switch ((u8)message)
     {
     case 0x80:
-        Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite_26b);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_bite_26b);
         break;
     }
 }
@@ -97,18 +97,18 @@ void ChukChuk_free(void)
 {
 }
 
-void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void ChukChuk_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void ChukChuk_hitDetect(void)
 {
 }
 
-void ChukChuk_update(short* obj)
+void ChukChuk_update(GameObject* obj)
 {
 
     ChukChukState* v;
@@ -129,11 +129,11 @@ void ChukChuk_update(short* obj)
         f32 toPlayer[3];
     } hit;
 
-    v = ((GameObject*)obj)->extra;
+    v = obj->extra;
     if (v->steamTimer)
     {
         v->steamTimer -= timeDelta;
-        objParticleFn_80099d84((GameObject*)obj, 1.0f, 1, v->steamTimer / 60.0f, 0);
+        objParticleFn_80099d84(obj, 1.0f, 1, v->steamTimer / 60.0f, 0);
         if (v->steamTimer <= 0.0f)
         {
             v->steamTimer = 0.0f;
@@ -141,7 +141,7 @@ void ChukChuk_update(short* obj)
     }
     if ((v->flags & CHUKCHUK_FLAG_DEAD) == 0)
     {
-        tex = objFindTexture((GameObject*)obj, 0, 0);
+        tex = objFindTexture(obj, 0, 0);
         if (v->glowPhase < 16.0f)
         {
             if ((int)v->glowPhase == 10)
@@ -169,8 +169,8 @@ void ChukChuk_update(short* obj)
             tex->textureId = 0;
         }
         pl = Obj_GetPlayerObject();
-        dx = pl->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-        dz = pl->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+        dx = pl->anim.localPosX - obj->anim.localPosX;
+        dz = pl->anim.localPosZ - obj->anim.localPosZ;
         di = sqrtf(dx * dx + dz * dz);
         if (di < v->triggerDistance)
         {
@@ -181,11 +181,11 @@ void ChukChuk_update(short* obj)
             }
             if ((v->flags & (CHUKCHUK_FLAG_PRIMED | CHUKCHUK_FLAG_FORCED_ATTACK)) != 0)
             {
-                hit.toPlayer[0] = pl->anim.worldPosX - ((GameObject*)obj)->anim.worldPosX;
-                hit.toPlayer[1] = pl->anim.worldPosY - ((GameObject*)obj)->anim.worldPosY;
-                hit.toPlayer[2] = pl->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
+                hit.toPlayer[0] = pl->anim.worldPosX - obj->anim.worldPosX;
+                hit.toPlayer[1] = pl->anim.worldPosY - obj->anim.worldPosY;
+                hit.toPlayer[2] = pl->anim.worldPosZ - obj->anim.worldPosZ;
                 ang = getAngle(hit.toPlayer[0], hit.toPlayer[2]) & 0xffff;
-                ang -= ((GameObject*)obj)->anim.rotX & 0xffff;
+                ang -= obj->anim.rotX & 0xffff;
                 if (ang > 0x8000)
                 {
                     ang -= 0xffff;
@@ -200,53 +200,53 @@ void ChukChuk_update(short* obj)
                     roll = randomGetRange(0, 99);
                     if (roll < v->attackChance || (v->flags & CHUKCHUK_FLAG_FORCED_ATTACK) != 0)
                     {
-                        Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_lash_268);
+                        Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_zyck_lash_268);
                         fn_8015F5B0(obj);
                     }
                     else
                     {
-                        Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_call02);
+                        Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_zyck_call02);
                     }
                 }
                 else
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_call02);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_zyck_call02);
                 }
             }
         }
         else if ((v->flags & CHUKCHUK_FLAG_PRIMED) != 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_call02);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_zyck_call02);
         }
         v->prevDistance = di;
-        if (ObjHits_GetPriorityHit((GameObject*)(obj), &hit.hitObject, &hit.sphereIndex, (u32*)&hit.hitVolume) == 14)
+        if (ObjHits_GetPriorityHit(obj, &hit.hitObject, &hit.sphereIndex, (u32*)&hit.hitVolume) == 14)
         {
             v->hitsLeft -= 1;
             if (v->hitsLeft < 1)
             {
-                ObjHits_DisableObject((GameObject*)obj);
-                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                ObjHits_DisableObject(obj);
+                obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 v->flags |= CHUKCHUK_FLAG_DEAD;
-                Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311_26a);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_mn_lummy311_26a);
                 mainSetBits(v->gameBit, 1);
                 v->steamTimer = 60.0f;
-                Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_lash);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_zyck_lash);
             }
         }
         v->flags &= ~(CHUKCHUK_FLAG_PRIMED | CHUKCHUK_FLAG_FORCED_ATTACK);
     }
 }
 
-void ChukChuk_init(u8* obj, u8* params)
+void ChukChuk_init(GameObject* obj, u8* params)
 {
-    ChukChukState* sub = ((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-        (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+    ChukChukState* sub = obj->extra;
+    *(u8*)&obj->anim.resetHitboxMode =
+        (u8)(*(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     sub->gameBit = *(s16*)(params + 0x18);
     if (sub->gameBit != -1 && mainGetBit(sub->gameBit) != 0)
     {
-        ObjHits_DisableObject((GameObject*)obj);
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+        ObjHits_DisableObject(obj);
+        obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
         sub->flags = (u8)(sub->flags | CHUKCHUK_FLAG_DEAD);
     }
     else
@@ -257,7 +257,7 @@ void ChukChuk_init(u8* obj, u8* params)
         sub->arcHalfAngle = (u16)((s8)params[0x28] * 0xb6);
         sub->attackChance = params[0x2f];
         sub->aimHeightY = params[0x27];
-        ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x2a] << 8);
+        obj->anim.rotX = (s16)((s8)params[0x2a] << 8);
     }
 }
 

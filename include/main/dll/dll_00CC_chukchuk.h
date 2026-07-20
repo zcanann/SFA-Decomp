@@ -2,8 +2,9 @@
 #define MAIN_DLL_DLL_00CC_CHUKCHUK_H_
 
 #include "main/object_descriptor.h"
+#include "main/game_object.h"
 
-void fn_8015F5B0(short* obj);
+void fn_8015F5B0(GameObject* obj);
 extern ObjectDescriptor11WithPadding gChukChukObjDescriptor;
 
 #endif
