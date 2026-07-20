@@ -22,9 +22,6 @@
 #define VFPLADDERS_TRIGGER_SEQID 0x548
 #define VFPLADDERS_DROP_DELAY    0x5a /* frames between trigger and drop */
 
-#define VFPLADDERS_OBJFLAG_HIDDEN             0x4000
-#define VFPLADDERS_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 enum
 {
     VFPLADDERS_PHASE_WAIT = 0,
@@ -32,14 +29,14 @@ enum
     VFPLADDERS_PHASE_SETTLED = 2
 };
 
-int vfpladders_SeqFn(void)
+int vfpladders_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     return 0x0;
 }
 
 int VFP_Ladders_getExtraSize(void)
 {
-    return 0x8;
+    return sizeof(VfpLaddersState);
 }
 
 int VFP_Ladders_getObjectTypeId(void)
@@ -47,16 +44,16 @@ int VFP_Ladders_getObjectTypeId(void)
     return 0x0;
 }
 
-void VFP_Ladders_free(int obj)
+void VFP_Ladders_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void VFP_Ladders_render(void)
+void VFP_Ladders_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
 }
 
-void VFP_Ladders_hitDetect(void)
+void VFP_Ladders_hitDetect(GameObject* obj)
 {
 }
 
@@ -103,12 +100,12 @@ void VFP_Ladders_update(GameObject* obj)
             {
                 state->delayTimer = VFPLADDERS_DROP_DELAY;
             }
-            if (state->phase == VFPLADDERS_PHASE_DROPPING && (obj)->anim.localPosY > setup->baseY - 150.0f)
+            if (state->phase == VFPLADDERS_PHASE_DROPPING && obj->anim.localPosY > setup->base.posY - 150.0f)
             {
-                (obj)->anim.localPosY = (obj)->anim.localPosY - 2.0f * timeDelta;
-                if ((obj)->anim.localPosY < setup->baseY - 150.0f)
+                obj->anim.localPosY = obj->anim.localPosY - 2.0f * timeDelta;
+                if (obj->anim.localPosY < setup->base.posY - 150.0f)
                 {
-                    (obj)->anim.localPosY = setup->baseY - 150.0f;
+                    obj->anim.localPosY = setup->base.posY - 150.0f;
                     state->phase = VFPLADDERS_PHASE_SETTLED;
                 }
             }
@@ -116,15 +113,14 @@ void VFP_Ladders_update(GameObject* obj)
     }
 }
 
-void VFP_Ladders_init(int* obj, u8* init)
+void VFP_Ladders_init(GameObject* obj, VfpLaddersSetup* setup)
 {
-    VfpLaddersState* state = ((GameObject*)obj)->extra;
-    VfpLaddersSetup* setup = (VfpLaddersSetup*)init;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
+    VfpLaddersState* state = obj->extra;
+    obj->anim.rotX = (s16)(setup->rotX << 8);
     state->triggerGameBit = setup->triggerGameBit;
     state->baseGameBit = setup->baseGameBit;
-    ((GameObject*)obj)->objectFlags |= (VFPLADDERS_OBJFLAG_HIDDEN | VFPLADDERS_OBJFLAG_HITDETECT_DISABLED);
-    ((GameObject*)obj)->animEventCallback = vfpladders_SeqFn;
+    obj->objectFlags |= (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    obj->animEventCallback = vfpladders_SeqFn;
 }
 
 void VFP_Ladders_release(void)

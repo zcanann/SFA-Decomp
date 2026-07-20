@@ -1,9 +1,10 @@
 #ifndef MAIN_DLL_VF_DLL_021C_VFPLADDERS_H_
 #define MAIN_DLL_VF_DLL_021C_VFPLADDERS_H_
 
-#include "ghidra_import.h"
 #include "main/game_object.h"
-#include "global.h"
+#include "main/obj_placement.h"
+#include "main/objanim_update.h"
+#include "main/object_descriptor.h"
 
 typedef struct VfpLaddersState
 {
@@ -15,9 +16,9 @@ typedef struct VfpLaddersState
 
 typedef struct VfpLaddersSetup
 {
-    u8 pad00[0x0C];
-    f32 baseY; /* 0x0C: placed height */
-    u8 pad10[0x1E - 0x10];
+    ObjPlacement base;
+    s8 rotX;
+    u8 pad19[0x1E - 0x19];
     s16 baseGameBit;    /* 0x1E */
     s16 triggerGameBit; /* 0x20 */
 } VfpLaddersSetup;
@@ -27,19 +28,22 @@ STATIC_ASSERT(offsetof(VfpLaddersState, baseGameBit) == 0x00);
 STATIC_ASSERT(offsetof(VfpLaddersState, triggerGameBit) == 0x02);
 STATIC_ASSERT(offsetof(VfpLaddersState, phase) == 0x04);
 STATIC_ASSERT(offsetof(VfpLaddersState, delayTimer) == 0x06);
-STATIC_ASSERT(offsetof(VfpLaddersSetup, baseY) == 0x0C);
+STATIC_ASSERT(offsetof(VfpLaddersSetup, base.posY) == 0x0C);
+STATIC_ASSERT(offsetof(VfpLaddersSetup, rotX) == 0x18);
 STATIC_ASSERT(offsetof(VfpLaddersSetup, baseGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(VfpLaddersSetup, triggerGameBit) == 0x20);
 
-int vfpladders_SeqFn(void);
+int vfpladders_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int VFP_Ladders_getExtraSize(void);
 int VFP_Ladders_getObjectTypeId(void);
-void VFP_Ladders_free(int obj);
-void VFP_Ladders_render(void);
-void VFP_Ladders_hitDetect(void);
+void VFP_Ladders_free(GameObject* obj);
+void VFP_Ladders_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void VFP_Ladders_hitDetect(GameObject* obj);
 void VFP_Ladders_update(GameObject* obj);
-void VFP_Ladders_init(int* obj, u8* init);
+void VFP_Ladders_init(GameObject* obj, VfpLaddersSetup* setup);
 void VFP_Ladders_release(void);
 void VFP_Ladders_initialise(void);
+
+extern ObjectDescriptor gVFP_LaddersObjDescriptor;
 
 #endif /* MAIN_DLL_VF_DLL_021C_VFPLADDERS_H_ */
