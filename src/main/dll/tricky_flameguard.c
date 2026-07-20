@@ -200,15 +200,15 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         trickyDebugPrint(strBase + 0x674);
         if (trickyFn_8013b368((GameObject*)obj, lbl_803E2488, (TrickyState*)trickyState) == 0)
         {
-            if (lbl_803E23DC == *(f32*)((int)trickyState + 0x2ac))
+            if (lbl_803E23DC == ((TrickyState*)trickyState)->waterLevel)
             {
                 found = 0;
             }
-            else if (lbl_803E2410 == *(f32*)((int)trickyState + 0x2b0))
+            else if (lbl_803E2410 == ((TrickyState*)trickyState)->eventTime)
             {
                 found = 1;
             }
-            else if ((*(f32*)((int)trickyState + 0x2b4) - *(f32*)((int)trickyState + 0x2b0)) > lbl_803E2414)
+            else if ((((TrickyState*)trickyState)->currentTime - ((TrickyState*)trickyState)->eventTime) > lbl_803E2414)
             {
                 found = 1;
             }
@@ -219,8 +219,8 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
             if (found != 0)
             {
                 objAnimFn_8013a3f0((int)obj, 0x8, lbl_803E243C, 0);
-                *(f32*)((int)trickyState + 0x79c) = lbl_803E2440;
-                *(f32*)((int)trickyState + 0x838) = lbl_803E23DC;
+                ((TrickyState*)trickyState)->cooldownC = lbl_803E2440;
+                ((TrickyState*)trickyState)->particleTimer = lbl_803E23DC;
                 trickyDebugPrint(strBase + 0x184);
             }
             else
@@ -319,9 +319,9 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         }
         else if (trickyGuardIsBaddieTargetValid(trickyState) != 0)
         {
-            int targ = (int)((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
+            f32* targ = ((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
             trickyTurnTowardYaw((u8*)obj,
-                                getAngle(-(*(f32*)targ - obj->worldPosX), -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
+                                getAngle(-(targ[0] - obj->worldPosX), -(targ[2] - obj->worldPosZ)));
         }
         break;
     case 6:
@@ -346,9 +346,9 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         }
         else if (trickyGuardIsBaddieTargetValid(trickyState) != 0)
         {
-            int targ = (int)((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
+            f32* targ = ((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
             trickyTurnTowardYaw((u8*)obj,
-                                getAngle(-(*(f32*)targ - obj->worldPosX), -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
+                                getAngle(-(targ[0] - obj->worldPosX), -(targ[2] - obj->worldPosZ)));
         }
         break;
     case 7:
@@ -378,9 +378,9 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         }
         else
         {
-            int targ = (int)((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
+            f32* targ = ((TrickyRuntime*)((GameObject*)obj)->extra)->targetPosition;
             trickyTurnTowardYaw((u8*)obj,
-                                getAngle(-(*(f32*)targ - obj->worldPosX), -(*(f32*)(targ + 0x8) - obj->worldPosZ)));
+                                getAngle(-(targ[0] - obj->worldPosX), -(targ[2] - obj->worldPosZ)));
         }
         break;
     case 8:
@@ -529,7 +529,7 @@ void trickyFlame(GameObject* obj, int trickyState)
         }
         objAnimFn_8013a3f0((int)obj, 0x1a, lbl_803E23E4, 0x4000000);
         ((TrickyRuntime*)trickyState)->guardState = 7;
-        (*(u8*)*(int*)trickyState) -= 4;
+        (*((TrickyRuntime*)trickyState)->helperSpawnCount) -= 4;
         /* fall through */
     case 7:
         trickyDebugPrint(strBase + 0x744);
@@ -646,7 +646,7 @@ void trickyFlame(GameObject* obj, int trickyState)
         {
             objAnimFn_8013a3f0((int)obj, 0x1a, lbl_803E23E4, 0x4000000);
             ((TrickyRuntime*)trickyState)->guardState = 6;
-            (*(u8*)*(int*)trickyState) -= 4;
+            (*((TrickyRuntime*)trickyState)->helperSpawnCount) -= 4;
         }
         break;
     case 6:

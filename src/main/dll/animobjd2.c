@@ -151,7 +151,7 @@ typedef struct
 
 #define TRICKY_BARK(obj, snd, p4)                                                                                      \
     {                                                                                                                  \
-        u8* cfg = *(u8**)((char*)(obj) + 0xb8);                                                                        \
+        u8* cfg = *(u8**)&((GameObject*)(obj))->extra;                                                                 \
         if (!((TrickyCfgBits*)(cfg + 0x58))->b)                                                                        \
         {                                                                                                              \
             s16 a0 = ((GameObject*)(obj))->anim.currentMove;                                                           \
@@ -599,13 +599,13 @@ void* trickyFindCirclingTarget(GameObject* obj, void* state)
     int i;
     f32 d1, d2, d3;
 
-    target = *(void**)((u8*)state + 0x24);
+    target = ((TrickyState*)state)->followObj;
     if (((GameObject*)target)->anim.seqId == ANIMOBJD2_CIRCLE_TARGET_SEQID)
     {
         return target;
     }
 
-    target = (void*)fn_80296118((GameObject*)(*(int*)((u8*)state + 0x4)));
+    target = (void*)fn_80296118((GameObject*)((TrickyState*)state)->playerObj);
     if (target != NULL)
     {
         list = (void**)ObjGroup_GetObjects(3, &count);
@@ -614,9 +614,9 @@ void* trickyFindCirclingTarget(GameObject* obj, void* state)
             if (*list == target)
             {
                 d1 = Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)target)->anim.worldPosX);
-                d2 = Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
+                d2 = Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX);
                 d3 = Vec_xzDistance(&((GameObject*)target)->anim.worldPosX,
-                                    &((GameObject*)*(void**)((u8*)state + 0x4))->anim.worldPosX);
+                                    &((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX);
                 if ((d1 + d2) < lbl_803E23F8 * d3)
                 {
                     return target;

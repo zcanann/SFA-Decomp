@@ -162,10 +162,10 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
     f32 point2[3];
     f32 localPoint[3];
 
-    if (((void**)((char*)gKTRexState + 0x17c))[slot] != NULL)
+    if (gKTRexState->lightning[slot] != NULL)
     {
-        mm_free(((void**)((char*)gKTRexState + 0x17c))[slot]);
-        ((void**)((char*)gKTRexState + 0x17c))[slot] = NULL;
+        mm_free(gKTRexState->lightning[slot]);
+        gKTRexState->lightning[slot] = NULL;
     }
     model = (int*)Obj_GetActiveModel((GameObject*)obj);
     localPoint[0] = 0.0f;
@@ -183,7 +183,7 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
     point2[0] = point2[0] + playerMapOffsetX;
     point2[2] = point2[2] + playerMapOffsetZ;
 
-    ((void**)((char*)gKTRexState + 0x17c))[slot] =
+    gKTRexState->lightning[slot] =
         lightningCreate((const Vec3f*)point1, (const Vec3f*)point2, kKTRexSmallDelta[0], 0.3f, angle, 96,
                                    0);
 }
@@ -204,34 +204,34 @@ int ktrex_stateHandlerA11(GameObject* obj, KTRexRuntime* runtime)
     gKTRexState->timerFA ^= 1;
     if ((gKTRexState->timerFA & 1) != 0)
     {
-        gKTRexState->rowAX = (char*)gKTRexState + 0x70;
-        gKTRexState->rowAY = (char*)gKTRexState + 0x80;
-        gKTRexState->rowAZ = (char*)gKTRexState + 0x90;
-        gKTRexState->rowBX = (char*)gKTRexState + 0xa0;
-        gKTRexState->rowBY = (char*)gKTRexState + 0xb0;
-        gKTRexState->rowBZ = (char*)gKTRexState + 0xc0;
+        gKTRexState->rowAX = gKTRexState->laneCX;
+        gKTRexState->rowAY = gKTRexState->laneCY;
+        gKTRexState->rowAZ = gKTRexState->laneCZ;
+        gKTRexState->rowBX = gKTRexState->laneDX;
+        gKTRexState->rowBY = gKTRexState->laneDY;
+        gKTRexState->rowBZ = gKTRexState->laneDZ;
     }
     else
     {
-        gKTRexState->rowAX = (char*)gKTRexState + 0x10;
-        gKTRexState->rowAY = (char*)gKTRexState + 0x20;
-        gKTRexState->rowAZ = (char*)gKTRexState + 0x30;
-        gKTRexState->rowBX = (char*)gKTRexState + 0x40;
-        gKTRexState->rowBY = (char*)gKTRexState + 0x50;
-        gKTRexState->rowBZ = (char*)gKTRexState + 0x60;
+        gKTRexState->rowAX = gKTRexState->laneAX;
+        gKTRexState->rowAY = gKTRexState->laneAY;
+        gKTRexState->rowAZ = gKTRexState->laneAZ;
+        gKTRexState->rowBX = gKTRexState->laneBX;
+        gKTRexState->rowBY = gKTRexState->laneBY;
+        gKTRexState->rowBZ = gKTRexState->laneBZ;
     }
     phase = (gKTRexState->timerFA >> 1) & 3;
-    f5 = ((f32*)*(int*)&gKTRexState->rowBX)[phase] -
-         ((f32*)*(int*)&gKTRexState->rowAX)[phase];
-    f4 = ((f32*)*(int*)&gKTRexState->rowBZ)[phase] -
-         ((f32*)*(int*)&gKTRexState->rowAZ)[phase];
+    f5 = ((f32*)gKTRexState->rowBX)[phase] -
+         ((f32*)gKTRexState->rowAX)[phase];
+    f4 = ((f32*)gKTRexState->rowBZ)[phase] -
+         ((f32*)gKTRexState->rowAZ)[phase];
     if (__fabs(f5) > __fabs(f4))
     {
-        f4 = (obj->anim.localPosX - ((f32*)*(int*)&gKTRexState->rowAX)[phase]) / f5;
+        f4 = (obj->anim.localPosX - ((f32*)gKTRexState->rowAX)[phase]) / f5;
     }
     else
     {
-        f4 = (obj->anim.localPosZ - ((f32*)*(int*)&gKTRexState->rowAZ)[phase]) / f4;
+        f4 = (obj->anim.localPosZ - ((f32*)gKTRexState->rowAZ)[phase]) / f4;
     }
     gKTRexState->laneLerpT = f4;
     gKTRexState->timerFA |= 0x40;
@@ -561,18 +561,18 @@ int ktrex_stateHandlerA03(GameObject* obj, KTRexRuntime* runtime)
     else if ((s8)runtime->moveDone != 0)
     {
         phase = (gKTRexState->timerFA >> 1) & 3;
-        f5 = ((f32*)*(int*)&gKTRexState->rowBX)[phase] -
-             ((f32*)*(int*)&gKTRexState->rowAX)[phase];
-        f4 = ((f32*)*(int*)&gKTRexState->rowBZ)[phase] -
-             ((f32*)*(int*)&gKTRexState->rowAZ)[phase];
+        f5 = ((f32*)gKTRexState->rowBX)[phase] -
+             ((f32*)gKTRexState->rowAX)[phase];
+        f4 = ((f32*)gKTRexState->rowBZ)[phase] -
+             ((f32*)gKTRexState->rowAZ)[phase];
         if (__fabs(f5) > __fabs(f4))
         {
-            f4 = (((GameObject*)obj)->anim.localPosX - ((f32*)*(int*)&gKTRexState->rowAX)[phase]) /
+            f4 = (((GameObject*)obj)->anim.localPosX - ((f32*)gKTRexState->rowAX)[phase]) /
                  f5;
         }
         else
         {
-            f4 = (((GameObject*)obj)->anim.localPosZ - ((f32*)*(int*)&gKTRexState->rowAZ)[phase]) /
+            f4 = (((GameObject*)obj)->anim.localPosZ - ((f32*)gKTRexState->rowAZ)[phase]) /
                  f4;
         }
         gKTRexState->laneLerpT = f4;
@@ -1381,17 +1381,17 @@ int ktrex_updateArenaPathProgress(KTRexRuntime* runtime)
         changed = 1;
     }
     gKTRexState->posX =
-        gKTRexState->laneLerpT * (((f32*)*(int*)&gKTRexState->rowBX)[phase] -
-                                                      ((f32*)*(int*)&gKTRexState->rowAX)[phase]) +
-        ((f32*)*(int*)&gKTRexState->rowAX)[phase];
+        gKTRexState->laneLerpT * (((f32*)gKTRexState->rowBX)[phase] -
+                                                      ((f32*)gKTRexState->rowAX)[phase]) +
+        ((f32*)gKTRexState->rowAX)[phase];
     gKTRexState->posY =
-        gKTRexState->laneLerpT * (((f32*)*(int*)&gKTRexState->rowBY)[phase] -
-                                                      ((f32*)*(int*)&gKTRexState->rowAY)[phase]) +
-        ((f32*)*(int*)&gKTRexState->rowAY)[phase];
+        gKTRexState->laneLerpT * (((f32*)gKTRexState->rowBY)[phase] -
+                                                      ((f32*)gKTRexState->rowAY)[phase]) +
+        ((f32*)gKTRexState->rowAY)[phase];
     gKTRexState->posZ =
-        gKTRexState->laneLerpT * (((f32*)*(int*)&gKTRexState->rowBZ)[phase] -
-                                                      ((f32*)*(int*)&gKTRexState->rowAZ)[phase]) +
-        ((f32*)*(int*)&gKTRexState->rowAZ)[phase];
+        gKTRexState->laneLerpT * (((f32*)gKTRexState->rowBZ)[phase] -
+                                                      ((f32*)gKTRexState->rowAZ)[phase]) +
+        ((f32*)gKTRexState->rowAZ)[phase];
     return changed;
 }
 
@@ -1458,7 +1458,7 @@ void ktrex_free(GameObject* obj)
     gKTRexRuntime = obj->extra;
     ObjGroup_RemoveObject((int)obj, KTREX_OBJGROUP);
     (*(void (**)(void*, void*, int))((char*)*gBaddieControlInterface + 0x40))(obj, gKTRexRuntime, 0);
-    Stack_Free(*(void**)gKTRexState);
+    Stack_Free(gKTRexState->stack);
     if (gKTRexResource != NULL)
     {
         Resource_Release(gKTRexResource);
@@ -1516,7 +1516,7 @@ void ktrex_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
                 *(u16*)((char*)gKTRexState->lightning[i] + 0x22))
             {
                 mm_free(gKTRexState->lightning[i]);
-                *(int*)&gKTRexState->lightning[i] = 0;
+                gKTRexState->lightning[i] = NULL;
             }
         }
     }
@@ -1609,15 +1609,15 @@ void ktrex_update(int obj)
     {
         KTRexArenaState* st = (KTRexArenaState*)gKTRexState;
         phase = (st->timerFA >> 1) & 3;
-        dz = ((f32*)*(int*)&st->rowBX)[phase] - ((f32*)*(int*)&st->rowAX)[phase];
-        dx = ((f32*)*(int*)&st->rowBZ)[phase] - ((f32*)*(int*)&st->rowAZ)[phase];
+        dz = ((f32*)st->rowBX)[phase] - ((f32*)st->rowAX)[phase];
+        dx = ((f32*)st->rowBZ)[phase] - ((f32*)st->rowAZ)[phase];
         if (__fabs(dz) > __fabs(dx))
         {
-            frac = (((GameObject*)player)->anim.localPosX - ((f32*)*(int*)&st->rowAX)[phase]) / dz;
+            frac = (((GameObject*)player)->anim.localPosX - ((f32*)st->rowAX)[phase]) / dz;
         }
         else
         {
-            frac = (((GameObject*)player)->anim.localPosZ - ((f32*)*(int*)&st->rowAZ)[phase]) / dx;
+            frac = (((GameObject*)player)->anim.localPosZ - ((f32*)st->rowAZ)[phase]) / dx;
         }
     }
     gKTRexState->laneFrac = frac;
@@ -1723,12 +1723,12 @@ void ktrex_init(GameObject* obj, char* arg, int flag)
         pC++;
         base++;
     }
-    gKTRexState->rowAX = (char*)gKTRexState + 0x10;
-    gKTRexState->rowAY = (char*)gKTRexState + 0x20;
-    gKTRexState->rowAZ = (char*)gKTRexState + 0x30;
-    gKTRexState->rowBX = (char*)gKTRexState + 0x40;
-    gKTRexState->rowBY = (char*)gKTRexState + 0x50;
-    gKTRexState->rowBZ = (char*)gKTRexState + 0x60;
+    gKTRexState->rowAX = gKTRexState->laneAX;
+    gKTRexState->rowAY = gKTRexState->laneAY;
+    gKTRexState->rowAZ = gKTRexState->laneAZ;
+    gKTRexState->rowBX = gKTRexState->laneBX;
+    gKTRexState->rowBY = gKTRexState->laneBY;
+    gKTRexState->rowBZ = gKTRexState->laneBZ;
     gKTRexState->phaseCountdown = 4;
     rt->hitCountdown = 3;
     gKTRexResource = Resource_Acquire(0x5a, 1);
