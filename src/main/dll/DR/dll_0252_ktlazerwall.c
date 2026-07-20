@@ -31,10 +31,6 @@ const union KtlazerwallConstF32 lbl_803E6898 = {0.0f};
 const union KtlazerwallConstF32 lbl_803E689C = {0.5f};
 const union KtlazerwallConstF32 lbl_803E68A0 = {0.1f};
 const union KtlazerwallConstF32 lbl_803E68A4 = {0.3f};
-const union KtlazerwallConstF32 lbl_803E68B0 = {120.0f};
-const union KtlazerwallConstF32 lbl_803E68B4 = {0.25f};
-const union KtlazerwallConstF32 lbl_803E68B8 = {230.0f};
-const union KtlazerwallConstF32 lbl_803E68BC = {0.01f};
 
 void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
 {
@@ -64,6 +60,11 @@ void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
     runtime->boltObj = lightningCreate((const Vec3f*)pos, (const Vec3f*)dir, lbl_803E68A0.f, lbl_803E68A4.f,
                                                   angle, 96, 0);
 }
+
+const union KtlazerwallConstF32 lbl_803E68B0 = {120.0f};
+const union KtlazerwallConstF32 lbl_803E68B4 = {0.25f};
+const union KtlazerwallConstF32 lbl_803E68B8 = {230.0f};
+const union KtlazerwallConstF32 lbl_803E68BC = {0.01f};
 
 int KT_Lazerwall_getExtraSize(void)
 {

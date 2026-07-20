@@ -93,8 +93,13 @@ void dim2icicle_update(GameObject *obj)
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_sbalhis6);
         break;
     case DIM2ICICLE_MODE_WOBBLE:
+    {
+        f32 wobble;
+
         (obj)->anim.rotY = ((Dim2IcicleState*)sub)->wobbleRotY;
-        ((Dim2IcicleState*)sub)->wobbleRotY = (f32)((Dim2IcicleState*)sub)->wobbleRotY * 0.333f;
+        wobble = (f32)((Dim2IcicleState*)sub)->wobbleRotY;
+        wobble *= 0.333f;
+        ((Dim2IcicleState*)sub)->wobbleRotY = wobble;
         if ((obj)->anim.rotY >= 10)
         {
             break;
@@ -103,6 +108,7 @@ void dim2icicle_update(GameObject *obj)
         ((Dim2IcicleState*)sub)->mode = DIM2ICICLE_MODE_DROP;
         ((Dim2IcicleState*)sub)->timer = 0x3c;
         break;
+    }
     case DIM2ICICLE_MODE_DROP:
         if (((Dim2IcicleState*)sub)->dropTargetFound == 0)
         {
