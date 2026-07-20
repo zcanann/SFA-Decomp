@@ -273,7 +273,7 @@ void MagicPlant_spawnChild(GameObject* obj, int objectId)
 }
 
 
-int MagicPlant_SeqFn(u8* obj)
+int MagicPlant_SeqFn(GameObject* obj)
 {
     (*gCameraInterface)->setTargetReticleOverride((int)obj);
     return 0;
@@ -310,7 +310,7 @@ void MagicPlant_free(GameObject* obj, int freeChildren)
     }
 }
 
-void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void MagicPlant_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     MagicPlantObject* plant;
     MagicPlantState* state;
@@ -320,13 +320,13 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     state = plant->state;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E3858);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3858);
         child = state->childObject;
         if (child != NULL)
         {
             if (child->ownerObj != NULL)
             {
-                ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &child->anim.localPosX, &child->anim.localPosY,
+                ObjPath_GetPointWorldPosition(obj, 0, &child->anim.localPosX, &child->anim.localPosY,
                                               &child->anim.localPosZ, 0);
             }
         }
