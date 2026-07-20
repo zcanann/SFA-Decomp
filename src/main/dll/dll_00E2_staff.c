@@ -1268,17 +1268,14 @@ void staff_update(int* obj)
         StaffQuakeSpellState* q = (StaffQuakeSpellState*)gStaffQuakeSpellState;
         if (q->active != 0)
         {
-            f32 sc = q->scale + 5.5f;
             f32 fade;
-            q->scale = sc;
-            ObjHitbox_SetSphereRadius((ObjAnimComponent*)q->object, sc);
+            q->scale += 5.5f;
+            ObjHitbox_SetSphereRadius((ObjAnimComponent*)q->object, q->scale);
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)q->object, STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
-            fade = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade + -4.0f;
-            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade = fade;
-            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius =
-                ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius * 0.97f;
-            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale =
-                ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale * 1.01f;
+            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade += -4.0f;
+            fade = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade;
+            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius *= 0.97f;
+            ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale *= 1.01f;
             ((GameObject*)q->object)->anim.alpha = fade;
             ((GameObject*)q->object)->anim.rootMotionScale += 0.07f;
             if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade < 1.0f)
