@@ -652,10 +652,10 @@ void resetLotsOfRenderVars(void)
 
 void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) */
 {
-    f32 step;
+    f32 x0;
     f32 y;
     f32 ySq;
-    f32 x0;
+    f32 step;
     f32 half;
     f32 x1;
     f32 span;
