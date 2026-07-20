@@ -1444,7 +1444,7 @@ void init(void)
     gCarryableInterface = Resource_Acquire(0x2f, 0xc);
     gTitleMenuItemInterface = Resource_Acquire(0x3d, 0xa);
     initFn_800534f8();
-    titleScreenDrawFn_80093db4();
+    initSkyStars();
     testAndSet_onlyUseHeap3(0);
     loadAssetFileById(&gGameBitTable, MLDF_FILEID_BITTABLE_BIN);
     gGameBitCount = (s16)(getDataFileSize(MLDF_FILEID_BITTABLE_BIN) >> 1);

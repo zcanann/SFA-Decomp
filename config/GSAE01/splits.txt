@@ -1316,6 +1316,7 @@ main/dll/dll_0041_warpstoneui.c:
 	.bss        start:0x803A9DD0 end:0x803A9F50
 	.sdata      start:0x803DBBF8 end:0x803DBC08
 	.sbss       start:0x803DD978 end:0x803DD990
+	.sdata2     start:0x803E22D0 end:0x803E22D8
 
 main/dll/dll_02C0_front.c:
 	.text       start:0x80134870 end:0x80136A40

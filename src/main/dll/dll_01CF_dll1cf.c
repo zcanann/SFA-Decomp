@@ -1,8 +1,8 @@
 /*
  * dll_1CF (dll1cf) - a placement-driven static object. On init it reads its
- * placement def (Dll1CFObjectDef): a gate game bit at +0x1E arms the rotY
- * setup (scaled from the +0x1A raw), rotX comes from the +0x18 byte, and the
- * object flags get the 0xE000 bits.
+ * placement: a gate game bit arms its degree-based rotY setup, rotX comes
+ * from a byte angle, and the object starts hidden with updates and hit
+ * detection disabled.
  */
 
 #include "main/dll/dimmagicbridge_state.h"
@@ -15,21 +15,11 @@
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
+#include "main/dll/dll_01CF_dll1cf.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/object_descriptor.h"
 #include "main/object_render.h"
-
-typedef struct Dll1CFObjectDef
-{
-    u8 pad0[0x14 - 0x0];
-    s32 mapId;   /* 0x14: ObjPlacement mapId, not read by this DLL */
-    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
-    u8 pad19[0x1A - 0x19];
-    s16 rotYRaw;     /* 0x1A: scaled into rotY when the gate bit is set */
-    s16 unk1C;       /* 0x1C: not read */
-    s16 gateGameBit; /* 0x1E: game bit that enables the rotY setup */
-} Dll1CFObjectDef;
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
@@ -51,10 +41,6 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 /* DIM2PathGenerator_getExtraSize == 0x9a8 (incl. three 200-entry curve
  * tables filled by the RomCurve interface). */
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
-
-/* objectFlags bits set in dll_1CF_init. */
-#define DLL1CF_OBJECT_FLAGS 0xe000
-
 
 /* The entry points compile with both passes OFF; the surrounding TU state is
  * the default, so no reset pair is needed. */
@@ -86,14 +72,15 @@ void dll_1CF_update(void)
 {
 }
 
-void dll_1CF_init(GameObject* obj, Dll1CFObjectDef* def)
+void dll_1CF_init(GameObject* obj, Dll1CFPlacement* placement)
 {
-    if ((u32)mainGetBit(def->gateGameBit) != 0u)
+    if ((u32)mainGetBit(placement->gateGameBit) != 0u)
     {
-        obj->anim.rotY = (s16)(((s32)def->rotYRaw << 13) / 45);
+        obj->anim.rotY = (s16)(((s32)placement->rotYDegrees << 13) / 45);
     }
-    obj->anim.rotX = (s16)((s32)def->rotXByte << 8);
-    obj->objectFlags = (u16)(obj->objectFlags | DLL1CF_OBJECT_FLAGS);
+    obj->anim.rotX = (s16)((s32)placement->rotX << 8);
+    obj->objectFlags = (u16)(obj->objectFlags | (OBJECT_OBJFLAG_HITDETECT_DISABLED | OBJECT_OBJFLAG_HIDDEN |
+                                                OBJECT_OBJFLAG_UPDATE_DISABLED));
 }
 
 void dll_1CF_release(void)

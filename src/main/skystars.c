@@ -16,7 +16,7 @@
 #include "dolphin/os/OSCache.h"
 #include "main/sky_state.h"
 #include "dolphin/gx/GXLegacy.h"
-#include "dolphin/mtx/mtx_legacy.h"
+#include "dolphin/mtx.h"
 #include "main/lightmap_api.h"
 #include "main/render_mode_api.h"
 #include "main/vecmath.h"
@@ -24,10 +24,42 @@
 #include "stdlib.h"
 
 u8 gNewCloudStarsInitialized;
-char* gNewCloudStarTextureB;
-char* gNewCloudStarTextureA;
+Texture* gNewCloudStarTextureB;
+Texture* gNewCloudStarTextureA;
 
-u8 gNewCloudStarAlphaRanges[8] = {0xA0, 0xAA, 0x82, 0x8C, 0x64, 0x6E, 0x50, 0x5A};
+typedef struct SkyStarAlphaRange
+{
+    u8 min;
+    u8 max;
+} SkyStarAlphaRange;
+
+typedef struct SkyStarColorRange
+{
+    u8 minRed;
+    u8 maxRed;
+    u8 minGreen;
+    u8 maxGreen;
+    u8 minBlue;
+    u8 maxBlue;
+} SkyStarColorRange;
+
+STATIC_ASSERT(sizeof(SkyStarAlphaRange) == 2);
+STATIC_ASSERT(sizeof(SkyStarColorRange) == 6);
+
+enum
+{
+    SKY_STAR_COLOR_RANGE_COUNT = 4,
+    SKY_STAR_DISPLAY_LIST_COUNT = 0x5C,
+    SKY_STAR_SMALL_DISPLAY_LIST_COUNT = 0x4C,
+    SKY_STAR_TEXTURE_B_LIST_INDEX = 0x54,
+    SKY_STAR_CONSTELLATION_POINT_COUNT = 0x64,
+    SKY_STAR_POINTS_PER_DISPLAY_LIST = 0x32,
+    SKY_STAR_DISPLAY_LIST_BUFFER_SIZE = 0x220
+};
+
+SkyStarAlphaRange gNewCloudStarAlphaRanges[SKY_STAR_COLOR_RANGE_COUNT] = {
+    {0xA0, 0xAA}, {0x82, 0x8C}, {0x64, 0x6E}, {0x50, 0x5A}
+};
 FogColor gNewCloudStarFogColor = {0};
 
 static inline void starFifoPosition3s16(s16 x, s16 y, s16 z)
@@ -37,12 +69,14 @@ static inline void starFifoPosition3s16(s16 x, s16 y, s16 z)
     (*(PPCWGPipe2*)&GXWGFifo).s16 = z;
 }
 
-u8 gNewCloudStarColorRanges[24] = {
-    0xD0, 0xFF, 0x80, 0xA0, 0x80, 0xA0, 0x80, 0xA0, 0x80, 0xA0, 0xD0, 0xFF,
-    0xD0, 0xFF, 0xA0, 0xD0, 0x80, 0xA0, 0xD0, 0xFF, 0x80, 0xA0, 0xD0, 0xFF,
+SkyStarColorRange gNewCloudStarColorRanges[SKY_STAR_COLOR_RANGE_COUNT] = {
+    {0xD0, 0xFF, 0x80, 0xA0, 0x80, 0xA0},
+    {0x80, 0xA0, 0x80, 0xA0, 0xD0, 0xFF},
+    {0xD0, 0xFF, 0xA0, 0xD0, 0x80, 0xA0},
+    {0xD0, 0xFF, 0x80, 0xA0, 0xD0, 0xFF},
 };
-u16 gNewCloudStarDisplayListSizes[0x5C];
-void* gNewCloudStarDisplayLists[0x5C];
+u16 gNewCloudStarDisplayListSizes[SKY_STAR_DISPLAY_LIST_COUNT];
+void* gNewCloudStarDisplayLists[SKY_STAR_DISPLAY_LIST_COUNT];
 
 #define NEWCLOUD_TEXTURE_STAR_A 0xc21 /* gNewCloudStarTextureA */
 #define NEWCLOUD_TEXTURE_STAR_B 0xc22 /* gNewCloudStarTextureB */
@@ -50,48 +84,49 @@ void* gNewCloudStarDisplayLists[0x5C];
 void drawSkyStars(void)
 {
     int timeOk;
-    int start;
+    int firstDisplayList;
     int i;
     int alpha;
-    int div;
+    int pointSizeDivisor;
     int red;
     int green;
     int blue;
-    int a;
-    u8* colRange;
+    int starAlpha;
+    SkyStarColorRange* colorRange;
+    SkyStarAlphaRange* alphaRange;
     FogColor color;
-    f32 t;
+    f32 sunTransitionTime;
 
-    timeOk = (*gSkyInterface)->getSunPosition(&t);
+    timeOk = (*gSkyInterface)->getSunPosition(&sunTransitionTime);
     if (isOvercast() != 0)
     {
         if (timeOk != 0)
         {
-            if (t > 4000.0f)
+            if (sunTransitionTime > 4000.0f)
             {
                 alpha = 0xff;
             }
             else
             {
-                alpha = (255.0f * (t / 4000.0f));
+                alpha = (255.0f * (sunTransitionTime / 4000.0f));
             }
         }
         else
         {
-            if (t > 12000.0f || 0.0f == t)
+            if (sunTransitionTime > 12000.0f || 0.0f == sunTransitionTime)
             {
                 return;
             }
-            alpha = (255.0f - 255.0f * (t / 12000.0f));
+            alpha = (255.0f - 255.0f * (sunTransitionTime / 12000.0f));
         }
-        start = 0x4c;
-        div = 2;
+        firstDisplayList = SKY_STAR_SMALL_DISPLAY_LIST_COUNT;
+        pointSizeDivisor = 2;
     }
     else
     {
-        start = 0;
+        firstDisplayList = 0;
         alpha = 0xff;
-        div = 1;
+        pointSizeDivisor = 1;
     }
     GXSetCullMode(GX_CULL_NONE);
     Camera_RebuildProjectionMatrix();
@@ -107,122 +142,125 @@ void drawSkyStars(void)
     Camera_UpdateViewMatrices();
     GXLoadPosMtxImm(Camera_GetViewRotationMatrix(), GX_PNMTX0);
     GXSetCurrentMtx(GX_PNMTX0);
-    for (i = start; i < 0x5c; i++)
+    for (i = firstDisplayList; i < SKY_STAR_DISPLAY_LIST_COUNT; i++)
     {
-        colRange = &gNewCloudStarColorRanges[(i & 3) * 6];
-        red = randomGetRange(colRange[0], colRange[1]);
-        green = randomGetRange(colRange[2], colRange[3]);
-        blue = randomGetRange(colRange[4], colRange[5]);
-        if (i < 0x4c)
+        colorRange = &gNewCloudStarColorRanges[i & 3];
+        red = randomGetRange(colorRange->minRed, colorRange->maxRed);
+        green = randomGetRange(colorRange->minGreen, colorRange->maxGreen);
+        blue = randomGetRange(colorRange->minBlue, colorRange->maxBlue);
+        if (i < SKY_STAR_SMALL_DISPLAY_LIST_COUNT)
         {
-            colRange = &gNewCloudStarAlphaRanges[((i & 0xc) >> 2) * 2];
-            a = (alpha * randomGetRange(colRange[0], colRange[1])) >> 8;
+            alphaRange = &gNewCloudStarAlphaRanges[(i & 0xc) >> 2];
+            starAlpha = (alpha * randomGetRange(alphaRange->min, alphaRange->max)) >> 8;
         }
         else
         {
-            a = alpha;
+            starAlpha = alpha;
         }
-        _gxSetTevColor2((u8)red, (u8)green, (u8)blue, (u8)a);
-        if (i == 0x4c)
+        _gxSetTevColor2((u8)red, (u8)green, (u8)blue, (u8)starAlpha);
+        if (i == SKY_STAR_SMALL_DISPLAY_LIST_COUNT)
         {
-            selectTexture((Texture*)gNewCloudStarTextureA, 0);
+            selectTexture(gNewCloudStarTextureA, 0);
             textureSetupFn_800799c0();
             textRenderSetupFn_800795e8();
             textRenderSetupFn_80079804();
         }
-        else if (i == 0x54)
+        else if (i == SKY_STAR_TEXTURE_B_LIST_INDEX)
         {
-            selectTexture((Texture*)gNewCloudStarTextureB, 0);
+            selectTexture(gNewCloudStarTextureB, 0);
         }
-        if (i < 0x4c)
+        if (i < SKY_STAR_SMALL_DISPLAY_LIST_COUNT)
         {
             GXSetPointSize((u8)randomGetRange(0xc, 0xc), GX_TO_ONE);
         }
         else if (i & 4)
         {
-            GXSetPointSize((u8)(randomGetRange(0x30, 0x3c) / div), GX_TO_ONE);
+            GXSetPointSize((u8)(randomGetRange(0x30, 0x3c) / pointSizeDivisor), GX_TO_ONE);
         }
         else
         {
-            GXSetPointSize((u8)(randomGetRange(0x48, 0x60) / div), GX_TO_ONE);
+            GXSetPointSize((u8)(randomGetRange(0x48, 0x60) / pointSizeDivisor), GX_TO_ONE);
         }
         GXCallDisplayList(gNewCloudStarDisplayLists[i], gNewCloudStarDisplayListSizes[i]);
     }
 }
 
-void titleScreenDrawFn_80093db4(void)
+void initSkyStars(void)
 {
-    int k;
-    int j;
-    f32* constellation;
-    f32* cp;
-    int i;
-    int idx;
-    f32 v[3];
-    f32 mtx1[12];
-    f32 mtx2[12];
+    int displayListIndex;
+    int pointIndex;
+    Vec3f* constellation;
+    Vec3f* constellationPoint;
+    int constellationPointIndex;
+    int constellationIndex;
+    Vec3f starPosition;
+    Mtx rotationA;
+    Mtx rotationB;
 
     GXSetMisc(1, 0);
     testAndSet_onlyUseHeap3(0);
     constellation = mmAlloc(0x4b0, 0x7f7f7fff, 0);
     testAndSet_onlyUseHeap3(1);
-    for (i = 0, cp = constellation; i < 0x64; i++)
+    for (constellationPointIndex = 0, constellationPoint = constellation;
+         constellationPointIndex < SKY_STAR_CONSTELLATION_POINT_COUNT;
+         constellationPointIndex++)
     {
         do
         {
-            v[0] = (int)
+            starPosition.x = (int)
             randomGetRange(-5000, 5000);
-            v[1] = (int)
+            starPosition.y = (int)
             randomGetRange(-5000, 5000);
-            v[2] = (int)
+            starPosition.z = (int)
             randomGetRange(-5000, 5000);
         }
-        while (0.0f == v[0] && 0.0f == v[1] && 0.0f == v[2]);
-        PSVECNormalize(v, v);
-        PSVECScale(v, v, 5000.0f);
-        cp[0] = v[0];
-        cp[1] = v[1];
-        cp[2] = v[2];
-        cp += 3;
+        while (0.0f == starPosition.x && 0.0f == starPosition.y && 0.0f == starPosition.z);
+        PSVECNormalize(&starPosition, &starPosition);
+        PSVECScale(&starPosition, &starPosition, 5000.0f);
+        constellationPoint->x = starPosition.x;
+        constellationPoint->y = starPosition.y;
+        constellationPoint->z = starPosition.z;
+        constellationPoint++;
     }
     gNewCloudStarsInitialized = 1;
     gNewCloudStarTextureA = textureLoadAsset(NEWCLOUD_TEXTURE_STAR_A);
     gNewCloudStarTextureB = textureLoadAsset(NEWCLOUD_TEXTURE_STAR_B);
-    for (k = 0; k < 0x5c; k++)
+    for (displayListIndex = 0; displayListIndex < SKY_STAR_DISPLAY_LIST_COUNT; displayListIndex++)
     {
-        gNewCloudStarDisplayLists[k] = mmAlloc(0x220, 0x7f7f7fff, 0);
-        DCInvalidateRange(gNewCloudStarDisplayLists[k], 0x220);
-        GXBeginDisplayList(gNewCloudStarDisplayLists[k], 0x220);
+        gNewCloudStarDisplayLists[displayListIndex] =
+            mmAlloc(SKY_STAR_DISPLAY_LIST_BUFFER_SIZE, 0x7f7f7fff, 0);
+        DCInvalidateRange(gNewCloudStarDisplayLists[displayListIndex], SKY_STAR_DISPLAY_LIST_BUFFER_SIZE);
+        GXBeginDisplayList(gNewCloudStarDisplayLists[displayListIndex], SKY_STAR_DISPLAY_LIST_BUFFER_SIZE);
         GXResetWriteGatherPipe();
-        GXBegin(GX_POINTS, GX_VTXFMT0, 0x32);
-        for (j = 0; j < 0x32; j++)
+        GXBegin(GX_POINTS, GX_VTXFMT0, SKY_STAR_POINTS_PER_DISPLAY_LIST);
+        for (pointIndex = 0; pointIndex < SKY_STAR_POINTS_PER_DISPLAY_LIST; pointIndex++)
         {
             if (randomGetRange(0, 9) < 5)
             {
                 do
                 {
-                    v[0] = (int)
+                    starPosition.x = (int)
                     randomGetRange(-5000, 5000);
-                    v[1] = (int)
+                    starPosition.y = (int)
                     randomGetRange(-5000, 5000);
-                    v[2] = (int)
+                    starPosition.z = (int)
                     randomGetRange(-5000, 5000);
                 }
-                while (0.0f == v[0] && 0.0f == v[1] && 0.0f == v[2]);
-                PSVECNormalize(v, v);
-                PSVECScale(v, v, 5000.0f);
+                while (0.0f == starPosition.x && 0.0f == starPosition.y && 0.0f == starPosition.z);
+                PSVECNormalize(&starPosition, &starPosition);
+                PSVECScale(&starPosition, &starPosition, 5000.0f);
             }
             else
             {
                 f64 ax;
-                idx = randomGetRange(0, 0x63);
-                v[0] = constellation[idx * 3];
-                v[1] = constellation[idx * 3 + 1];
-                v[2] = constellation[idx * 3 + 2];
-                ax = __fabs(v[0]);
+                constellationIndex = randomGetRange(0, SKY_STAR_CONSTELLATION_POINT_COUNT - 1);
+                starPosition.x = constellation[constellationIndex].x;
+                starPosition.y = constellation[constellationIndex].y;
+                starPosition.z = constellation[constellationIndex].z;
+                ax = __fabs(starPosition.x);
                 if (ax > 3750.0f)
                 {
-                    PSMTXRotRad(mtx1, 0x79,
+                    PSMTXRotRad(rotationA, 0x79,
                                 (0.015f *
                                     (2.0f *
                                         (3.142f *
@@ -233,7 +271,7 @@ void titleScreenDrawFn_80093db4(void)
                     32768.0f
                     )
                     ;
-                    PSMTXRotRad(mtx2, 0x7a,
+                    PSMTXRotRad(rotationB, 0x7a,
                                 (0.015f *
                                     (2.0f *
                                         (3.142f *
@@ -247,10 +285,10 @@ void titleScreenDrawFn_80093db4(void)
                 }
                 else
                 {
-                    f64 ay = __fabs(v[1]);
+                    f64 ay = __fabs(starPosition.y);
                     if (ay > 3750.0f)
                     {
-                        PSMTXRotRad(mtx1, 0x78,
+                        PSMTXRotRad(rotationA, 0x78,
                                     (0.015f *
                                         (2.0f *
                                             (3.142f *
@@ -261,7 +299,7 @@ void titleScreenDrawFn_80093db4(void)
                         32768.0f
                         )
                         ;
-                        PSMTXRotRad(mtx2, 0x7a,
+                        PSMTXRotRad(rotationB, 0x7a,
                                     (0.015f *
                                         (2.0f *
                                             (3.142f *
@@ -275,7 +313,7 @@ void titleScreenDrawFn_80093db4(void)
                     }
                     else
                     {
-                        PSMTXRotRad(mtx1, 0x78,
+                        PSMTXRotRad(rotationA, 0x78,
                                     (0.015f *
                                         (2.0f *
                                             (3.142f *
@@ -286,7 +324,7 @@ void titleScreenDrawFn_80093db4(void)
                         32768.0f
                         )
                         ;
-                        PSMTXRotRad(mtx2, 0x79,
+                        PSMTXRotRad(rotationB, 0x79,
                                     (0.015f *
                                         (2.0f *
                                             (3.142f *
@@ -299,14 +337,14 @@ void titleScreenDrawFn_80093db4(void)
                         ;
                     }
                 }
-                PSMTXConcat((void*)mtx2, (void*)mtx1, (void*)mtx1);
-                PSMTXMultVecSR(mtx1, v, v);
+                PSMTXConcat(rotationB, rotationA, rotationA);
+                PSMTXMultVecSR(rotationA, &starPosition, &starPosition);
             }
-            starFifoPosition3s16(v[0], v[1], v[2]);
+            starFifoPosition3s16(starPosition.x, starPosition.y, starPosition.z);
             GXWGFifo.s16 = 0;
             GXWGFifo.s16 = 0;
         }
-        gNewCloudStarDisplayListSizes[k] = GXEndDisplayList();
+        gNewCloudStarDisplayListSizes[displayListIndex] = GXEndDisplayList();
     }
     mm_free(constellation);
     GXSetMisc(1, 8);

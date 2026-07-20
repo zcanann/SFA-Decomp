@@ -45,7 +45,7 @@ void mm_free_(void* ptr);
 LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, u16 lifetime,
                                  u8 width, u8 flags);
 void lightningRender(LightningEffect* effect);
-void titleScreenDrawFn_80093db4(void);
+void initSkyStars(void);
 void drawSkyStars(void);
 void cloudClearOverridePosition(void);
 void cloudSetOverridePosition(f32 x, f32 y, f32 z);
