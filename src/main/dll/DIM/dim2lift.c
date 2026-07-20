@@ -342,7 +342,7 @@ int DIMbossHitDetect_lungeAttack(GameObject* obj, int runtime, f32 hitAmount)
         ((BaddieState*)runtime)->animSpeedB = animSpeed;
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 1, lbl_80325AA0);
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))((int)obj, runtime, hitAmount, 0xf0);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)runtime, hitAmount, 0xf0);
     return 0;
 }
 
@@ -373,7 +373,7 @@ int DIMbossHitDetect_breathBurst(GameObject* obj, int runtime, f32 arg)
         gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_BREATH_BURST;
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 5, lbl_80325AA0);
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))((int)obj, runtime, arg, 0xf0);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)runtime, arg, 0xf0);
     return 0;
 }
 
@@ -408,7 +408,7 @@ int DIMbossHitDetect_blueWhiteCapture(GameObject* obj, int runtime, f32 arg)
         gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_CAPTURE_BLUE_WHITE_VELOCITY;
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 3, lbl_80325AA0);
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))((int)obj, runtime, arg, 0xf0);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)runtime, arg, 0xf0);
     return 0;
 }
 
@@ -444,7 +444,7 @@ int DIMbossHitDetect_blueWhiteEventCapture(GameObject* obj, int runtime, f32 arg
         *(int*)&((BaddieState*)runtime)->eventFlags &= ~BADDIE_EVENT_LANDING;
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 3, lbl_80325AA0);
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))((int)obj, runtime, arg, 0xf0);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)runtime, arg, 0xf0);
     return 0;
 }
 
@@ -486,7 +486,7 @@ int DIMbossHitDetect_randomSwipe(GameObject* obj, int runtime, f32 arg)
     }
     (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, randomGetRange(0, 1),
                                                                              lbl_80325AA0);
-    (*(int (**)(int, int, f32, int))(*(int*)gPlayerInterface + 0x30))((int)obj, runtime, arg, 0xf0);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)runtime, arg, 0xf0);
     return 0;
 }
 

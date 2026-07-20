@@ -458,8 +458,7 @@ void kaldachom_update(GameObject* obj)
                 *(u32*)&((GroundBaddieState*)state)->baddie.targetObj = player;
                 if (((CampfireState*)state)->controlMode != 6)
                 {
-                    (*(void (**)(void*, int, double, int))(*(int*)gPlayerInterface + 0x30))(obj, state, (double)timeDelta,
-                                                                                          5);
+                    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, timeDelta, 5);
                 }
                 ref = (int)(*(void* (**)(void*, int, double, int))(*(int*)gBaddieControlInterface + 0x48))(
                     obj, state, (f64)(f32)(u32)((CampfireState*)state)->aggroRange, 0x8000);
@@ -487,8 +486,7 @@ void kaldachom_update(GameObject* obj)
                     obj, state, (double)lbl_803E3060.f, 0xffffffff);
                 if (((CampfireState*)state)->controlMode != 6)
                 {
-                    (*(void (**)(void*, int, double, int))(*(int*)gPlayerInterface + 0x30))(obj, state, (double)timeDelta,
-                                                                                          5);
+                    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, timeDelta, 5);
                 }
                 ((GroundBaddieState*)state)->savedObjC0 = *(int*)&obj->pendingParentObj;
                 *(u32*)&obj->pendingParentObj = 0;

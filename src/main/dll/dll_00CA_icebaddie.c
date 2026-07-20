@@ -426,7 +426,7 @@ int iceBaddie_checkTargetState(int obj, int state)
 
         if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveDone != 0)
         {
-            (**(void (**)(int, int, f32, int))((char*)(*gPlayerInterface) + 0x30))(obj, state, timeDelta, 4);
+            (*gPlayerInterface)->rotateTowardTarget((void*)obj, (void*)state, timeDelta, 4);
             if (((u8)(**(int (**)(int, int, f32))((char*)(*gBaddieControlInterface) + 0x18))(obj, state, 75.0f) &
                  1) == 0)
             {
@@ -900,7 +900,7 @@ int iceBaddie_updateOpenState(GameObject* obj, int state)
     {
         control->effectFlags |= ICEBADDIE_FX_PUFF;
     }
-    (*(int (**)(int, int, f32, int))((char*)*gPlayerInterface + 0x30))((int)obj, state, timeDelta, 4);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, timeDelta, 4);
     return 0;
 }
 
@@ -946,7 +946,7 @@ int iceBaddie_updateOpenHitState(GameObject* obj, int state)
     {
         control->effectFlags |= ICEBADDIE_FX_PUFF;
     }
-    (*(int (**)(int, int, f32, int))((char*)*gPlayerInterface + 0x30))((int)obj, state, timeDelta, 4);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, timeDelta, 4);
     return 0;
 }
 
@@ -1159,7 +1159,7 @@ void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
 
     if (acquired != 0)
     {
-        (**(void (**)(int, int, f32, int))((char*)(*gPlayerInterface) + 0x30))(obj, state, timeDelta, 4);
+        (*gPlayerInterface)->rotateTowardTarget((void*)obj, (void*)state, timeDelta, 4);
         if (((u8)(**(int (**)(int, int, f32))((char*)(*gBaddieControlInterface) + 0x18))(obj, state, 75.0f) &
              1) == 0)
         {

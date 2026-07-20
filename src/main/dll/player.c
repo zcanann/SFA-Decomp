@@ -1950,7 +1950,7 @@ int playerState3D(int obj, int state, f32 fv)
     {
         return r;
     }
-    (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x30)))(obj, state, fv, 0x10);
+    (*gPlayerInterface)->rotateTowardTarget((void*)obj, (void*)state, fv, 0x10);
     hdr = *(s16*)obj;
     inner->yaw = hdr;
     inner->targetYaw = hdr;
@@ -2023,7 +2023,7 @@ int playerState3C(GameObject* obj, int state, f32 fv)
     {
         return r;
     }
-    (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x30)))((int)obj, state, fv, 0x10);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, fv, 0x10);
     hdr = *(s16*)obj;
     inner->yaw = hdr;
     inner->targetYaw = hdr;
@@ -2091,7 +2091,7 @@ int playerState3B(GameObject* obj, int state, f32 fv)
     {
         return r;
     }
-    (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x30)))((int)obj, state, fv, 1);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, fv, 1);
     hdr = *(s16*)obj;
     inner->yaw = hdr;
     inner->targetYaw = hdr;
@@ -2159,7 +2159,7 @@ int playerState3A(GameObject* obj, int state, f32 fv)
     {
         return r;
     }
-    (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x30)))((int)obj, state, fv, 1);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, fv, 1);
     hdr = *(s16*)obj;
     inner->yaw = hdr;
     inner->targetYaw = hdr;
@@ -2226,7 +2226,7 @@ int playerState39(GameObject* obj, int state, f32 fv)
     {
         return r;
     }
-    (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x30)))((int)obj, state, fv, 1);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, fv, 1);
     hdr = *(s16*)obj;
     inner->yaw = hdr;
     inner->targetYaw = hdr;
@@ -2293,7 +2293,7 @@ int playerState38(GameObject* obj, int state, f32 fv)
         return r;
     }
 
-    (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x30)))((int)obj, state, fv, 1);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, fv, 1);
     inner->targetYaw = inner->yaw = *(s16*)((char*)obj);
     (*gPlayerInterface)->updateAnimRootMotion(obj, (void*)state, fv, 2);
 
@@ -4408,11 +4408,11 @@ int playerStateAttack(GameObject* obj, int state, f32 fv)
         {
             if (inner->moveSlotIndex >= 5 && inner->moveSlotIndex <= 9)
             {
-                (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x30)))((int)obj, state, fv, 1);
+                (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, fv, 1);
             }
             else
             {
-                (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x30)))((int)obj, state, fv, 2);
+                (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, fv, 2);
             }
             {
                 s16 v = obj->anim.rotX;
@@ -4569,7 +4569,7 @@ int playerStateAttack(GameObject* obj, int state, f32 fv)
             {
                 Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
                 inner->activeHitWindow = -1;
-                (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x30)))((int)obj, state, fv, 2);
+                (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, fv, 2);
                 {
                     s16 v = obj->anim.rotX;
                     inner->yaw = v;

@@ -875,7 +875,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
                 hit[8] = 0;
                 (*(void (**)(void*, int, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, (int)sub,
                                                                                             0.0f, -1);
-                (*(void (**)(void*, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, (int)sub, timeDelta, 4);
+                (*gPlayerInterface)->rotateTowardTarget(obj, sub, timeDelta, 4);
                 sub->savedObjC0 = *(int*)&obj->pendingParentObj;
                 *(int*)&obj->pendingParentObj = 0;
                 (*(void (**)(void*, int, f32, f32, void*, void*))(*(int*)gPlayerInterface + 8))(
