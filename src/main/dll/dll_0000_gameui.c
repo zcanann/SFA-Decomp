@@ -1416,8 +1416,8 @@ void pauseMenuSetHoloTransform(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16
 }
 static inline void gameUiFreeHudAnims(GameObject** anims)
 {
-    int index;
     GameObject** anim;
+    int index;
 
     for (index = 0, anim = anims; index < 4; anim++, index++)
     {
