@@ -47,12 +47,6 @@ typedef struct CameraModeStaffAnimSettings
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder (action) */
 #define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
-const f32 gCamStaffAnimCurveMin[1] = {-100000.0f};
-const f32 gCamStaffAnimCurveMax[1] = {100000.0f};
-const f32 gCamStaffAnimPi[1] = {3.1415927f};
-const f32 gCamStaffAnimHalfCircleBams[1] = {32768.0f};
-const f32 gCamStaffAnimDegToBams[1] = {182.04445f};
-
 void camcontrol_releasePathState(void)
 {
     mm_free(gCamcontrolPathState);
@@ -111,8 +105,8 @@ void camclimb_update(CameraObject* cam)
         Obj_TransformLocalPointToWorld(cam->anim.localPosX, cam->anim.localPosY, cam->anim.localPosZ,
                                        &cam->anim.worldPosX, &cam->anim.worldPosY, &cam->anim.worldPosZ,
                                        *(int*)&cam->anim.parent);
-        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x1c))(cam, target, (double)gCamStaffAnimCurveMin[0],
-                                                             (double)gCamStaffAnimCurveMax[0]);
+        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x1c))(cam, target, (double)-100000.0f,
+                                                             (double)100000.0f);
         (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x24))(cam, 1, 3, &gCamcontrolPathState->curveMin,
                                                              &gCamcontrolPathState->curveMax);
         if ((cam->anim.currentMove != 0) || (cam->cameraCollisionActive != 0))
@@ -196,7 +190,7 @@ void CameraModeStaffAnim_copyToCurrent(void)
 
 static inline f32 CameraModeStaffAnim_angleToRadians(int angle)
 {
-    return (gCamStaffAnimPi[0] * angle) / gCamStaffAnimHalfCircleBams[0];
+    return (3.1415927f * angle) / 32768.0f;
 }
 
 void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
@@ -273,7 +267,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
         approachAngle = -approachAngle;
     }
 
-    threshold = (s16)(gCamStaffAnimDegToBams[0] * (f32)cfg->approachThresholdDegrees);
+    threshold = (s16)(182.04445f * (f32)cfg->approachThresholdDegrees);
     if (approachAngle < threshold)
     {
         gCamcontrolPathState->active = 1;
@@ -392,8 +386,8 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
             ->initialise(pathScale, &gCamcontrolPathState->initialiseCurve[0], 20.0f, 0.5f, 1.0f,
                          -10.0f);
 
-        gCamcontrolPathState->curveMin = gCamStaffAnimCurveMin[0];
-        gCamcontrolPathState->curveMax = gCamStaffAnimCurveMax[0];
+        gCamcontrolPathState->curveMin = -100000.0f;
+        gCamcontrolPathState->curveMax = 100000.0f;
     }
 }
 

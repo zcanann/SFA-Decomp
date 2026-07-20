@@ -328,8 +328,6 @@ void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, 
     } while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
 }
 
-static const f32 SHTHORNTAIL_TAIL_SWING_GRAVITY[1] = { 0.17f };
-
 void SHthorntail_update(int obj)
 {
     u8* stateTables;
@@ -512,7 +510,7 @@ void SHthorntail_update(int obj)
         if (activeConfigToken == SHTHORNTAIL_CONFIG_TOKEN_NONE)
         {
             gSHthorntailActiveConfigToken = ((SHthorntailObject*)obj)->config->configToken;
-            ((SHthorntailObject*)obj)->velocityY = -(SHTHORNTAIL_TAIL_SWING_GRAVITY[0] * timeDelta - ((SHthorntailObject*)obj)->velocityY);
+            ((SHthorntailObject*)obj)->velocityY = -(0.17f * timeDelta - ((SHthorntailObject*)obj)->velocityY);
             (*gPathControlInterface)->update((void*)obj, runtime->moveScratch, timeDelta);
             (*gPathControlInterface)->apply((void*)obj, runtime->moveScratch);
             (*gPathControlInterface)->advance((void*)obj, runtime->moveScratch, timeDelta);
@@ -527,7 +525,7 @@ void SHthorntail_update(int obj)
             }
             if (('\x02' <= runtime->behaviorState) && (runtime->behaviorState <= '\x06'))
             {
-                ((SHthorntailObject*)obj)->velocityY = -(SHTHORNTAIL_TAIL_SWING_GRAVITY[0] * timeDelta - ((SHthorntailObject*)obj)->velocityY);
+                ((SHthorntailObject*)obj)->velocityY = -(0.17f * timeDelta - ((SHthorntailObject*)obj)->velocityY);
                 (*gPathControlInterface)->update((void*)obj, runtime->moveScratch, timeDelta);
                 (*gPathControlInterface)->apply((void*)obj, runtime->moveScratch);
                 (*gPathControlInterface)->advance((void*)obj, runtime->moveScratch, timeDelta);

@@ -35,9 +35,6 @@ int lbl_803DBCB8[2] = {2, 3};
 u8 gMagicPlantSeqEntryTable[8] = {1, 1, 3, 2, 0, 0, 0, 0};
 int lbl_803DBCC8[2] = {2, 3};
 
-static const f32 gVambatTimerReset[1] = {0.0f};
-static const f32 gVambatHeartbeatPeriod[1] = {6e+01f};
-
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
 
 /* Spit projectile spawned by kooshy_spawnProjectile; retail OBJECTS.bin name
@@ -124,19 +121,19 @@ void vambat_updateIdle(GameObject* obj, int state)
         if (*(f32*)(state + 0x324) > 3.6e+02f)
         {
             *(u32*)&bs->unk2E4 = *(u32*)&bs->unk2E4 & ~(u64)0x10000;
-            *(f32*)(state + 0x324) = gVambatTimerReset[0];
+            *(f32*)(state + 0x324) = 0.0f;
         }
     }
 
     fn_8014CD1C(obj, (void*)state, 0xf, 1e+01f, 1.0f, 0);
 
     *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
-    if (*(f32*)(state + 0x328) <= gVambatTimerReset[0])
+    if (*(f32*)(state + 0x328) <= 0.0f)
     {
-        *(f32*)(state + 0x328) = gVambatHeartbeatPeriod[0];
+        *(f32*)(state + 0x328) = 60.0f;
         Sfx_PlayFromObject((int)obj, SFXTRIG_mn_heart1_c);
     }
-    *(f32*)(state + 0x32c) = gVambatTimerReset[0];
+    *(f32*)(state + 0x32c) = 0.0f;
 }
 
 void vambat_updateEngaged(GameObject* obj, int state)
@@ -184,8 +181,8 @@ void vambat_updateEngaged(GameObject* obj, int state)
     if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > 3.6e+02f)
     {
         *(u32*)&bs->unk2E4 = *(u32*)&bs->unk2E4 | 0x10000LL;
-        *(f32*)(state + 0x324) = gVambatTimerReset[0];
-        *(f32*)(state + 0x32c) = gVambatTimerReset[0];
+        *(f32*)(state + 0x324) = 0.0f;
+        *(f32*)(state + 0x32c) = 0.0f;
     }
     else
     {
@@ -205,8 +202,8 @@ void vambat_updateEngaged(GameObject* obj, int state)
             if (voxmaps_traceLine((VoxPos*)gridB, (VoxPos*)gridA, NULL, &hitOut, 0) == 0)
             {
                 *(u32*)&bs->unk2E4 = *(u32*)&bs->unk2E4 | 0x10000LL;
-                *(f32*)(state + 0x324) = gVambatTimerReset[0];
-                *(f32*)(state + 0x32c) = gVambatTimerReset[0];
+                *(f32*)(state + 0x324) = 0.0f;
+                *(f32*)(state + 0x32c) = 0.0f;
             }
         }
     }
@@ -233,9 +230,9 @@ void vambat_init(GameObject* obj, int state)
     bs->unk318 = pathStepInit;
     bs->unk322 = 0;
     bs->unk31C = initSpeed;
-    *(f32*)(state + 0x324) = gVambatTimerReset[0];
-    *(f32*)(state + 0x328) = gVambatTimerReset[0];
-    *(f32*)(state + 0x32c) = gVambatTimerReset[0];
+    *(f32*)(state + 0x324) = 0.0f;
+    *(f32*)(state + 0x328) = 0.0f;
+    *(f32*)(state + 0x32c) = 0.0f;
     bs->pathStep = pathStepInit;
     switch (obj->anim.seqId)
     {

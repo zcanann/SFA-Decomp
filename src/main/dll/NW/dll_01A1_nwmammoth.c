@@ -70,7 +70,6 @@ enum NwMammothRuntimeFlag
     NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
 };
 
-
 int fn_801CE078(int* obj, u8* state);
 void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData);
 
@@ -231,17 +230,6 @@ int fn_801CE078(int* obj, u8* st)
     return 1;
 }
 
-const f32 gNwMammothSfxInterval[1] = {900.0f};
-const f32 gNwMammothTumbleweedDistSqThreshold[1] = {250000.0f};
-const f32 gNwMammothCaptureDist[1] = {6.25f};
-const f32 gNwMammothAirMeterFull[1] = {200.0f};
-const f32 gNwMammothAirMeterPerSegment[1] = {66.666664f};
-const f32 gNwMammothPathAccel[1] = {0.01f};
-const f32 gNwMammothPathSpeedMin[1] = {0.05f};
-const f32 gNwMammothPlayerNearDistSq[1] = {6400.0f};
-const f32 gNwMammothPathDecel[1] = {0.02f};
-const f32 gNwMammothPathSpeedMax[1] = {0.5f};
-
 void fn_801CE2BC(int* obj, u8* st, short* objDef)
 {
     NwMammothState* state = (NwMammothState*)st;
@@ -252,10 +240,10 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     {
     case 9:
         state->sfxTimer += timeDelta;
-        if (state->sfxTimer > gNwMammothSfxInterval[0])
+        if (state->sfxTimer > 900.0f)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_skeep_mumb);
-            state->sfxTimer -= gNwMammothSfxInterval[0];
+            state->sfxTimer -= 900.0f;
         }
         if (state->playerDistanceSq < (f32)(s32)(objDef[0xc] * objDef[0xc]))
         {
@@ -270,10 +258,10 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         break;
     case 0xb:
         state->sfxTimer += timeDelta;
-        if (state->sfxTimer > gNwMammothSfxInterval[0])
+        if (state->sfxTimer > 900.0f)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_skeep_mumb);
-            state->sfxTimer -= gNwMammothSfxInterval[0];
+            state->sfxTimer -= 900.0f;
         }
         if (ObjTrigger_IsSet((int)obj) != 0)
         {
@@ -318,10 +306,10 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                     {
                         tw = tumbleweedbush_findNearestActive(&((GameObject*)o2)->anim.worldPosX);
                         if (tw == NULL || vec3f_distanceSquared(&tw->anim.worldPosX, (f32*)&o2[6]) >=
-                                              gNwMammothTumbleweedDistSqThreshold[0])
+                                              250000.0f)
                         {
                             if (vec3f_distanceSquared(&((GameObject*)state->playerObject)->anim.worldPosX,
-                                                      (f32*)&o2[6]) >= gNwMammothTumbleweedDistSqThreshold[0])
+                                                      (f32*)&o2[6]) >= 250000.0f)
                             {
                                 enemy_setTrackedObj((GameObject*)o2, (GameObject*)obj);
                             }
@@ -380,7 +368,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     }
     case 0xe:
         if (getXZDistance(&state->spawnPosX, &state->trackedObject->anim.worldPosX) <
-            gNwMammothCaptureDist[0])
+            6.25f)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_mammoth_annoyed);
             fn_80163980(state->trackedObject);
@@ -418,7 +406,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         break;
     case 0x11:
         if (!(((GameObject*)state->playerObject)->objectFlags & NWMAMMOTH_OBJFLAG_PARENT_SLACK) &&
-            state->airMeterValue >= gNwMammothAirMeterFull[0])
+            state->airMeterValue >= 200.0f)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_menuups16k);
             (*gScreenTransitionInterface)->start(0x14, 1);
@@ -459,11 +447,11 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     }
     if (state->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE)
     {
-        if (state->airMeterValue < gNwMammothAirMeterPerSegment[0] * state->uiMessageCount)
+        if (state->airMeterValue < 66.666664f * state->uiMessageCount)
         {
             state->airMeterValue += timeDelta;
         }
-        if (state->airMeterValue >= gNwMammothAirMeterFull[0])
+        if (state->airMeterValue >= 200.0f)
         {
             (*gGameUIInterface)->runAirMeter(0xc8);
         }
@@ -480,27 +468,27 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
     switch (fn_801CE078((int*)obj, st))
     {
     case -1:
-        state->pathSpeed -= gNwMammothPathAccel[0] * timeDelta;
-        if (state->pathSpeed < gNwMammothPathSpeedMin[0])
+        state->pathSpeed -= 0.01f * timeDelta;
+        if (state->pathSpeed < 0.05f)
         {
             state->pathSpeed = 0.0f;
         }
         break;
     case 0:
-        if ((((NwMammothObject*)obj)->hitboxFlags & 4) || state->playerDistanceSq < gNwMammothPlayerNearDistSq[0])
+        if ((((NwMammothObject*)obj)->hitboxFlags & 4) || state->playerDistanceSq < 6400.0f)
         {
-            state->pathSpeed -= gNwMammothPathDecel[0] * timeDelta;
-            if (state->pathSpeed < gNwMammothPathSpeedMin[0])
+            state->pathSpeed -= 0.02f * timeDelta;
+            if (state->pathSpeed < 0.05f)
             {
                 state->pathSpeed = 0.0f;
             }
         }
         else
         {
-            state->pathSpeed += gNwMammothPathAccel[0] * timeDelta;
-            if (state->pathSpeed > gNwMammothPathSpeedMax[0])
+            state->pathSpeed += 0.01f * timeDelta;
+            if (state->pathSpeed > 0.5f)
             {
-                state->pathSpeed = gNwMammothPathSpeedMax[0];
+                state->pathSpeed = 0.5f;
             }
         }
         break;
@@ -851,9 +839,6 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
     }
 }
 
-const f32 kNwMammothPathCurveLength[1] = { 1000.0f };
-const f32 gNwMammothDefaultAnimStepScale[1] = { 0.005f };
-
 void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isReload)
 {
     u32 pathParam;
@@ -861,14 +846,14 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     int curveParam;
 
     state = obj->state;
-    pathParam = kNwMammothPathParamDefault[0];
+    pathParam = 0x01010101;
     obj->rotX = (s16)(mapData->modelIndex << 8);
     obj->seqCallback = nw_mammoth_SeqFn;
     if (isReload != 0)
     {
         return;
     }
-    state->animStepScale = gNwMammothDefaultAnimStepScale[0];
+    state->animStepScale = 0.005f;
     switch (mapData->behaviorMode)
     {
     case 0:
@@ -893,12 +878,12 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     case 3:
         curveParam = NW_MAMMOTH_CURVE_PARAM;
         state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_PATH_CONTROL);
-        if ((u8)(*gRomCurveInterface)->initCurve(&state->curveState, obj, kNwMammothPathCurveLength[0], &curveParam, -1) == 0)
+        if ((u8)(*gRomCurveInterface)->initCurve(&state->curveState, obj, 1000.0f, &curveParam, -1) == 0)
         {
             obj->localPosX = state->curveState.pointX;
             obj->localPosZ = state->curveState.pointZ;
             state->stateIndex = 8;
-            state->pathSpeed = gNwMammothPathSpeedMax[0];
+            state->pathSpeed = 0.5f;
         }
         break;
     case 4:

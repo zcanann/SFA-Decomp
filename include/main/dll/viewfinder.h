@@ -4,7 +4,7 @@
 #include "types.h"
 
 extern f32 gExpgfxNearFadeDepth;
-extern const f32 lbl_803DF34C[1];
+extern const f32 lbl_803DF34C;
 
 void viewFinderSetZoom(f32 zoom);
 void viewFinderSetZoomTo50(void);

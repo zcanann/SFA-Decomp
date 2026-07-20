@@ -150,9 +150,6 @@ void drawSkyStars(void)
     }
 }
 
-static const f32 gNewCloudStarRadius[1] = {5000.0f};
-static const f32 gNewCloudStarAxisThreshold[1] = {3750.0f};
-
 void titleScreenDrawFn_80093db4(void)
 {
     int k;
@@ -182,7 +179,7 @@ void titleScreenDrawFn_80093db4(void)
         }
         while (0.0f == v[0] && 0.0f == v[1] && 0.0f == v[2]);
         PSVECNormalize(v, v);
-        PSVECScale(v, v, gNewCloudStarRadius[0]);
+        PSVECScale(v, v, 5000.0f);
         cp[0] = v[0];
         cp[1] = v[1];
         cp[2] = v[2];
@@ -213,7 +210,7 @@ void titleScreenDrawFn_80093db4(void)
                 }
                 while (0.0f == v[0] && 0.0f == v[1] && 0.0f == v[2]);
                 PSVECNormalize(v, v);
-                PSVECScale(v, v, gNewCloudStarRadius[0]);
+                PSVECScale(v, v, 5000.0f);
             }
             else
             {
@@ -223,7 +220,7 @@ void titleScreenDrawFn_80093db4(void)
                 v[1] = constellation[idx * 3 + 1];
                 v[2] = constellation[idx * 3 + 2];
                 ax = __fabs(v[0]);
-                if (ax > gNewCloudStarAxisThreshold[0])
+                if (ax > 3750.0f)
                 {
                     PSMTXRotRad(mtx1, 0x79,
                                 (0.015f *
@@ -251,7 +248,7 @@ void titleScreenDrawFn_80093db4(void)
                 else
                 {
                     f64 ay = __fabs(v[1]);
-                    if (ay > gNewCloudStarAxisThreshold[0])
+                    if (ay > 3750.0f)
                     {
                         PSMTXRotRad(mtx1, 0x78,
                                     (0.015f *

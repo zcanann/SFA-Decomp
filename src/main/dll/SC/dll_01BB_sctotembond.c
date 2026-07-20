@@ -84,17 +84,13 @@ STATIC_ASSERT(sizeof(TotemBondOrbPlacement) == 0x38);
 extern u16 gTotemBondRingGameBits[];
 extern u16 gTotemBondOrbGameBits[];
 
-
-const f32 gTotemBondOrbSpawnRadius[1] = { -130.0f };
-const f32 gTotemBondOrbHeightOffset[1] = { 30.0f };
-
 static inline void sc_totembond_beginOrbGame(ScTotemBondObject* obj, ScTotemBondState* state)
 {
     state->active = 1;
     obj->yaw = 0x3fff;
     state->ringIndex = (s16)(u16)((s32)obj->yaw / SC_TOTEMBOND_ORB_ANGLE_STEP);
     ObjHits_DisableObject((GameObject*)obj);
-    sc_totembond_spawnGameBitOrbs(obj, state, gTotemBondOrbSpawnRadius[0]);
+    sc_totembond_spawnGameBitOrbs(obj, state, -130.0f);
     mainSetBits(gTotemBondRingGameBits[state->ringIndex], 1);
     obj->mapAlpha = 0;
     state->eventFlags &= ~SC_TOTEMBOND_EVENT_START_ORBS;
@@ -102,7 +98,7 @@ static inline void sc_totembond_beginOrbGame(ScTotemBondObject* obj, ScTotemBond
     (*gGameUIInterface)->setShowWorldMapHud(1);
     hudFn_8011f38c(1);
     (*gScreenTransitionInterface)->step(0x1e, 1);
-    state->spawnTimer = gTotemBondOrbHeightOffset[0];
+    state->spawnTimer = 30.0f;
     Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 1);
 }
 
@@ -340,7 +336,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
 
         fn_80296124((GameObject*)player, (Vec3f*)&obj->x, (Vec3s*)&obj->yaw, 0);
         state->x = obj->x;
-        state->y = gTotemBondOrbHeightOffset[0] + obj->y;
+        state->y = 30.0f + obj->y;
         state->z = obj->z;
         state->yaw = (s16)(0x8000 - obj->yaw);
         state->pitch = obj->pitch;
@@ -410,7 +406,6 @@ int fn_801DE320(u16* gameBitIds, u16 newValue)
     }
     return changed;
 }
-
 
 u16 gTotemBondRingGameBits[] = {
     0x064D, 0x064E, 0x064F, 0x0650, 0x0A4C, 0x0A4D, 0x0A4E, 0x0A4F,

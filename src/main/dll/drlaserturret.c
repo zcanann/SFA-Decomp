@@ -105,10 +105,6 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     return 0;
 }
 
-const f32 gDrLaserTurretTrackingAnimSpeed[1] = { 0.99f };
-const f32 gDrLaserTurretTrackingAnimStepScale[1] = { -0.0125f };
-const f32 gDrLaserTurretAimBlendRate[1] = { 0.02f };
-
 int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimState* animState)
 {
     void* playerObj;
@@ -167,8 +163,8 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         Sfx_PlayFromObject((int)obj, DR_LASERTURRET_SFX_ACTION);
         if (obj->currentMove == DR_LASERTURRET_ANIM_ALERT)
         {
-            ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_TRACKING, gDrLaserTurretTrackingAnimSpeed[0], 0);
-            animState->animStepScale = gDrLaserTurretTrackingAnimStepScale[0];
+            ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_TRACKING, 0.99f, 0);
+            animState->animStepScale = -0.0125f;
         }
         else
         {
@@ -189,7 +185,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         return DR_LASERTURRET_STATE_CONTINUE;
     }
     t = shopKeeperRotateFn_801e7c4c((s16*)obj, playerObj, 0);
-    rate = gDrLaserTurretAimBlendRate[0];
+    rate = 0.02f;
     if (t > 80.0f)
     {
         target = -0.9f;

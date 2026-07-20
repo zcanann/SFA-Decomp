@@ -45,8 +45,6 @@
 #include "main/objprint_character_api.h"
 #include "main/dll/dll_00C9_enemy.h"
 
-static const u32 sDIMSnowHorn1PathFlags[1] = {0x01010101};
-
 f32 gDIMSnowHorn1ModelMtx[16];
 int gDIMSnowHorn1StateHandlers[12];
 
@@ -63,8 +61,6 @@ int gDIMSnowHorn1StateHandlers[12];
 #define SNOWHORN1_FLAG_RIDING        0x2  /* GAMEBIT_SNOWHORN_RIDING active (set cross-DLL) */
 #define SNOWHORN1_FLAG_HITVOL_PRIO   0x8  /* suppress hit-volume priority this frame */
 #define SNOWHORN1_FLAG_SEQ_TRIGGERED 0x20 /* interaction sequence armed */
-
-
 
 void DIMSnowHorn1_func23(void)
 {
@@ -1232,9 +1228,6 @@ static inline s16 DIMSnowHorn1_angleTo(GameObject* obj, char* found)
     return angleDelta;
 }
 
-static const f32 gDIMSnowHorn1OverrideOffsetY[1] = {-3e+01f};
-static const f32 gDIMSnowHorn1OverrideOffsetZ[1] = {-2e+01f};
-
 static inline void DIMSnowHorn1_updateOverridePos(GameObject* obj)
 {
     MatrixTransform v;
@@ -1248,7 +1241,7 @@ static inline void DIMSnowHorn1_updateOverridePos(GameObject* obj)
     v.rotZ = (obj)->anim.rotZ;
     v.scale = 1.0f;
     setMatrixFromObjectPos(matrix, &v);
-    Matrix_TransformPoint(matrix, 0.0f, gDIMSnowHorn1OverrideOffsetY[0], gDIMSnowHorn1OverrideOffsetZ[0], &(obj)->anim.modelState->overrideWorldPosX,
+    Matrix_TransformPoint(matrix, 0.0f, -30.0f, -20.0f, &(obj)->anim.modelState->overrideWorldPosX,
                           &(obj)->anim.modelState->overrideWorldPosY, &(obj)->anim.modelState->overrideWorldPosZ);
 }
 
@@ -1443,7 +1436,7 @@ void DIMSnowHorn1_update(GameObject* obj)
 void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
 {
     u8* base = gDIMSnowHorn1ConfigTable;
-    int stk = sDIMSnowHorn1PathFlags[0];
+    int stk = 0x01010101;
     DIMSnowHorn1State* inner;
     u8* pathState;
     s8 idx;
@@ -1569,7 +1562,6 @@ void DIMSnowHorn1_initialise(void)
         dst[i] = (void*)textureLoad(src[i], 0);
     }
 }
-
 
 u8 gDIMSnowHorn1ConfigTable[] = {
     0xC5, 0xE0, 0xD0, 0x00, 0xC4, 0x9E, 0xA0, 0x00, 0x46, 0x49, 0xC4, 0x00, 0x81, 0x10, 0x00, 0x00, 0xC5, 0xFD,

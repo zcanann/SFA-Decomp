@@ -29,7 +29,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_00F7_dllf7.h"
 
-
 #define DLLF7_OBJGROUP        0x3e
 #define DLLF7_TARGET_OBJGROUP 0x4
 
@@ -37,9 +36,6 @@
 
 /* child object id spawned via DllF7GasSetup buffer (gas cloud) */
 #define DLLF7_CHILD_OBJ_GAS 0xb
-
-
-
 
 typedef struct DllF7Placement
 {
@@ -120,15 +116,13 @@ void dll_F7_free(int obj)
     ObjGroup_RemoveObject(obj, DLLF7_OBJGROUP);
 }
 
-static const f32 gDllF7BounceRest[1] = {0.0f};
-
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DllF7State* state = ((GameObject*)obj)->extra;
     if (state->byte9 == 0 && visible != 0)
     {
         f32 v = state->bounceOffset;
-        if (v != gDllF7BounceRest[0])
+        if (v != 0.0f)
         {
             fn_8003B5E0(0xc8, 0, 0, v);
         }
@@ -229,12 +223,12 @@ void dll_F7_update(int* obj)
         }
         (*gDllF7Resource5B)->spawn(obj, 1, NULL, 2, -1, NULL);
     }
-    if (state->bounceOffset > gDllF7BounceRest[0])
+    if (state->bounceOffset > 0.0f)
     {
         state->bounceOffset = timeDelta * state->bounceVelocity + state->bounceOffset;
-        if (state->bounceOffset < gDllF7BounceRest[0])
+        if (state->bounceOffset < 0.0f)
         {
-            state->bounceOffset = gDllF7BounceRest[0];
+            state->bounceOffset = 0.0f;
         }
         else if (state->bounceOffset > 120.0f)
         {

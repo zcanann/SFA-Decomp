@@ -54,7 +54,6 @@ typedef struct Dim2iciclePlacement
     s16 impactGameBit;
 } Dim2iciclePlacement;
 
-
 int dim2icicle_getExtraSize(void) { return 0xc; }
 
 int dim2icicle_getObjectTypeId(void) { return 0x0; }
@@ -68,8 +67,6 @@ void dim2icicle_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visib
     s32 v = visible;
     if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
-
-static const f32 sDim2IcicleWobbleDecay[1] = {0.333f};
 
 void dim2icicle_hitDetect(void)
 {
@@ -97,7 +94,7 @@ void dim2icicle_update(GameObject *obj)
         break;
     case DIM2ICICLE_MODE_WOBBLE:
         (obj)->anim.rotY = ((Dim2IcicleState*)sub)->wobbleRotY;
-        ((Dim2IcicleState*)sub)->wobbleRotY = (f32)((Dim2IcicleState*)sub)->wobbleRotY * sDim2IcicleWobbleDecay[0];
+        ((Dim2IcicleState*)sub)->wobbleRotY = (f32)((Dim2IcicleState*)sub)->wobbleRotY * 0.333f;
         if ((obj)->anim.rotY >= 10)
         {
             break;

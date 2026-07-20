@@ -3,8 +3,8 @@
  *
  * Maintains the shared zoom scalar gExpgfxNearFadeDepth, derived by scaling a
  * base reference value by the inverse of the current
- * camera FOV. viewFinderSetZoomTo50 snaps it to a fixed preset
- * (lbl_803DF34C). The result is consumed elsewhere (dll_000A_expgfx)
+ * camera FOV. viewFinderSetZoomTo50 snaps it to a fixed preset.
+ * The result is consumed elsewhere (dll_000A_expgfx)
  * as a view-projection W threshold gating effect rendering.
  *
  * Driven from the player viewfinder/camera-mode code (player.c,
@@ -17,9 +17,9 @@ void viewFinderSetZoom(f32 zoom)
     gExpgfxNearFadeDepth = -3000.0f / zoom;
 }
 
-const f32 lbl_803DF34C[1] = {50.0f};
+const f32 lbl_803DF34C = 50.0f;
 
 void viewFinderSetZoomTo50(void)
 {
-    gExpgfxNearFadeDepth = lbl_803DF34C[0];
+    gExpgfxNearFadeDepth = lbl_803DF34C;
 }

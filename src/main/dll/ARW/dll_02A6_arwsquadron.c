@@ -55,12 +55,6 @@
 
 #define ARWSQUADRON_CHILD_OBJ_PROJECTILE 0x6ae
 
-
-
-static const int kArwSquadronDefaultCurveMode[1] = {40};
-static const f32 kArwSquadronPlayerRangeMinZ[1] = { -100.0f };
-
-
 static inline int arwsquadron_isPlayerWithinRangeZ(GameObject* obj, f32 range)
 {
     GameObject* craft = (GameObject*)getArwing();
@@ -68,7 +62,7 @@ static inline int arwsquadron_isPlayerWithinRangeZ(GameObject* obj, f32 range)
     if (craft == NULL)
         craft = Obj_GetPlayerObject();
     distZ = obj->anim.localPosZ - craft->anim.localPosZ;
-    return distZ < range && distZ > kArwSquadronPlayerRangeMinZ[0];
+    return distZ < range && distZ > -100.0f;
 }
 
 void arwsquadron_emitEffects(GameObject* obj, ArwSquadronState* state)
@@ -406,7 +400,6 @@ void ARWSquadron_free(void)
 {
 }
 
-
 ObjectDescriptor gARWSquadronObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, 0, 0, 0,
     (ObjectDescriptorCallback)ARWSquadron_init, (ObjectDescriptorCallback)ARWSquadron_update,
@@ -559,7 +552,7 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
     f32 fxScale;
     f32 pathSpeedScale = 0.25f;
 
-    curveMode = kArwSquadronDefaultCurveMode[0];
+    curveMode = 40;
     state = (ArwSquadronState*)obj->extra;
     setupData = setup;
     flags = &state->flags.init;

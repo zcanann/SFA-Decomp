@@ -41,7 +41,6 @@
 
 extern u8 gBombPlantStateTable[];
 
-
 /* Bombplant per-tick sequencer: on the armed
  * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps
  * the loop sfx alive, jitters the fuse, and fires the spark particle. */
@@ -91,14 +90,12 @@ int bombplant_SeqFn(int* obj)
     return 0;
 }
 
-static const f32 gBombPlantTriggerDistSq[1] = {6.4e+03f};
-
 static inline void bombplant_tryBeginGrow(void* obj, void* state)
 {
     void* plr = Obj_GetPlayerObject();
     f32 dist = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)plr + 0x18));
 
-    if (dist > gBombPlantTriggerDistSq[0])
+    if (dist > 6400.0f)
     {
         ((BombPlantState*)state)->stateIndex = 2;
         ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;

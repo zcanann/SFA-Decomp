@@ -102,8 +102,6 @@ f32* fn_801CDE70(GameObject* obj)
     return (f32*)((u8*)obj->extra + 0xc);
 }
 
-const u32 kNwMammothPathParamDefault[1] = { 0x01010101 };
-
 int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     u8* state;
