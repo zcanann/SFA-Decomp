@@ -624,7 +624,7 @@ int dbstealerworm_stateHandlerA0D(GameObject* obj, int baddie)
         pos[0] = obj->anim.localPosX;
         pos[1] = obj->anim.localPosY;
         pos[2] = obj->anim.localPosZ;
-        pos[1] = pos[1] + 20.0f;
+        pos[1] += 20.0f;
         pos[0] = ((GameObject*)bs->targetObj)->anim.localPosX - pos[0];
         pos[1] = ((GameObject*)bs->targetObj)->anim.localPosY - pos[1];
         pos[2] = ((GameObject*)bs->targetObj)->anim.localPosZ - pos[2];
