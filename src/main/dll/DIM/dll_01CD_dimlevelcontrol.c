@@ -4,6 +4,7 @@
  * fx for the lava area, an NPC dialogue trigger (game bits 0x3E2/0x3E3), and
  * initial level unlock. */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/dll/DIM/dll_01CD_dimlevelcontrol.h"
 #include "main/dll/dll_0011_screens.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/gametext_show_api.h"

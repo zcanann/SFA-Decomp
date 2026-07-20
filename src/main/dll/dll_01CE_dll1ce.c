@@ -10,6 +10,7 @@
  * declarations and the descriptor that combines them live in this object's DLL.
  */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/dll/DIM/dll_01CD_dimlevelcontrol.h"
 #include "main/dll/dimmagicbridge_api.h"
 #include "main/dll/dll1ceplacement_struct.h"
 #include "main/dll/dimwooddoor2state_struct.h"
@@ -96,12 +97,6 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 #define DLL1CE_CONTENTS_SUBTYPE 0x246 /* retail "DIMBridgeCo..." (DLL 0xED) */
 
 void* lbl_803DDB78;
-
-extern void dim_levelcontrol_free(GameObject* obj);
-extern int dim_levelcontrol_getExtraSize(void);
-extern void dim_levelcontrol_init(GameObject* obj);
-extern void dim_levelcontrol_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void dim_levelcontrol_update(GameObject* obj);
 
 int dll_1CE_getExtraSize(void)
 {
