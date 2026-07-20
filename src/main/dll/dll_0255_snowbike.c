@@ -795,7 +795,7 @@ void SnowBike_update(GameObject* obj)
             {
                 fn_801EBD60(obj, (int)state);
                 fn_801EC7A0((int)obj, (int)state);
-                if (((SnowBikeState*)state)->collisionFxTimer != 0.0f)
+                if (((SnowBikeState*)state)->collisionFxTimer)
                 {
                     PSVECScale((f32*)(state + 0x464), (f32*)(state + 0x47c),
                                ((SnowBikeState*)state)->collisionFxDamping);
@@ -876,7 +876,7 @@ void SnowBike_update(GameObject* obj)
             ((SnowBikeState*)state)->stickX = clamped;
             fn_801EBD60(obj, (int)state);
             fn_801EC7A0((int)obj, (int)state);
-            if (((SnowBikeState*)state)->collisionFxTimer != 0.0f)
+            if (((SnowBikeState*)state)->collisionFxTimer)
             {
                 PSVECScale((f32*)(state + 0x464), (f32*)(state + 0x47c), ((SnowBikeState*)state)->collisionFxDamping);
                 PSVECScale((f32*)(state + 0x494), (f32*)(state + 0x494), ((SnowBikeState*)state)->collisionFxDamping);
