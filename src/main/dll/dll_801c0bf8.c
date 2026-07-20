@@ -21,24 +21,24 @@ extern f32 lbl_803E4DE8; /* 32768.0f - half-turn in binary-angle (BAMS) units   
 
 void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, LightmapVertex* out)
 {
-    int startX;
-    int startY;
-    int startZ;
-    int endX;
-    int endY;
-    int endZ;
+    s16 startX;
+    s16 startY;
+    s16 startZ;
+    s16 endX;
+    s16 endY;
+    s16 endZ;
     LightmapVertex* vertex;
     int i;
     float angleRadians;
     f32 vertexX;
 
     /* Scale the node world positions into the mesh's fixed-point vertex space. */
-    startX = (int)(lbl_803E4DE0 * startNode[0]);
-    startY = (int)(lbl_803E4DE0 * startNode[1]);
-    startZ = (int)(lbl_803E4DE0 * startNode[2]);
-    endX = (int)(lbl_803E4DE0 * endNode[0]);
-    endY = (int)(lbl_803E4DE0 * endNode[1]);
-    endZ = (int)(lbl_803E4DE0 * endNode[2]);
+    startX = lbl_803E4DE0 * startNode[0];
+    startY = lbl_803E4DE0 * startNode[1];
+    startZ = lbl_803E4DE0 * startNode[2];
+    endX = lbl_803E4DE0 * endNode[0];
+    endY = lbl_803E4DE0 * endNode[1];
+    endZ = lbl_803E4DE0 * endNode[2];
     memcpy(out, templateData, 0x60);
 
     /* BAMS -> radians: angle * PI / 32768. */
@@ -49,8 +49,8 @@ void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode
     {
         /* Rotate each vertex about Y: x' = x*cos, z' = -x*sin. */
         vertexX = (float)(int)vertex->x;
-        vertex->x = (int)(vertexX * mathCosf(angleRadians));
-        vertex->z = (int)(-vertexX * mathSinf(angleRadians));
+        vertex->x = vertexX * mathCosf(angleRadians);
+        vertex->z = -vertexX * mathSinf(angleRadians);
         vertex++;
     }
 

@@ -957,6 +957,26 @@ int ObjSeq_func0F(void)
     return 1;
 }
 
+static inline u8* objSeqFindLinkedObject(u8* seqObj, u8* candidate)
+{
+    u8* slotBase;
+    u8* entry;
+    int j;
+
+    j = 0;
+    slotBase = lbl_80396918 + (s8)seqObj[0x57] * 0x80;
+    entry = slotBase;
+    for (; j < 16; j++)
+    {
+        if (*(u8**)entry == candidate)
+        {
+            return *(u8**)(slotBase + j * 8 + 4);
+        }
+        entry += 8;
+    }
+    return NULL;
+}
+
 int ObjSeq_resolveTargetObject(u8* obj)
 {
     int objectCount;
@@ -965,9 +985,6 @@ int ObjSeq_resolveTargetObject(u8* obj)
     u8* seqObj;
     ObjSeqPlacement* model;
     u8* found;
-    int j;
-    u8* entry;
-    u8* slotBase;
     u8* candidate;
     int objType;
     int i;
@@ -1027,19 +1044,7 @@ int ObjSeq_resolveTargetObject(u8* obj)
             for (i = 0; i < objectCount; i++)
             {
                 candidate = objects[i];
-                j = 0;
-                slotBase = lbl_80396918 + (s8)seqObj[0x57] * 0x80;
-                entry = slotBase;
-                linked = NULL;
-                for (; j < 16; j++)
-                {
-                    if (*(u8**)entry == candidate)
-                    {
-                        linked = *(u8**)(slotBase + j * 8 + 4);
-                        break;
-                    }
-                    entry += 8;
-                }
+                linked = objSeqFindLinkedObject(seqObj, candidate);
                 if (linked == obj)
                 {
                     ((ObjSeqState*)seqObj)->targetObj = candidate;
