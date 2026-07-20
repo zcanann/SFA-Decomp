@@ -1673,7 +1673,8 @@ void doPendingMapLoads(void)
     int slot;
     MapLoadRec* rowCursor;
     int layer;
-    int zb[2];
+    int cellIdx;
+    int colIdx;
     int i;
     MapLoadRec* recsCursor;
     MapLoadRec* cellCursor;
@@ -1757,20 +1758,20 @@ void doPendingMapLoads(void)
                         MapCellEnt* ent = (MapCellEnt*)*bp2;
                         char* grid = (char*)*ap2;
                         gMapLayerCellStates = (s8*)*cp2;
-                        zb[0] = 0;
+                        cellIdx = 0;
                         row = 0;
                         rowCursor = recsCursor;
                         g2 = grid;
                         for (; row < 16; row++)
                         {
-                            zb[1] = 0;
+                            colIdx = 0;
                             cellCursor = rowCursor;
                             for (k8 = 0; k8 < 8; k8++)
                             {
                                 c = g2[0];
                                 if (c > -1)
                                 {
-                                    cellCursor->x = gMapBlockOriginX + zb[1];
+                                    cellCursor->x = gMapBlockOriginX + colIdx;
                                     cellCursor->z = gMapBlockOriginZ + row;
                                     cellCursor->layer = layer;
                                     cellCursor->blockId = c;
@@ -1780,17 +1781,17 @@ void doPendingMapLoads(void)
                                     cnt++;
                                 }
                                 g2[0] = -2;
-                                gMapLayerCellStates[zb[0]] = -1;
+                                gMapLayerCellStates[cellIdx] = -1;
                                 ent[0].state = -3;
                                 ent[0].x = -1;
                                 ent[0].y = -1;
                                 ent[0].z = -1;
-                                zb[0] = zb[0] + 1;
-                                zb[1] = zb[1] + 1;
+                                cellIdx = cellIdx + 1;
+                                colIdx = colIdx + 1;
                                 c = g2[1];
                                 if (c > -1)
                                 {
-                                    cellCursor->x = gMapBlockOriginX + zb[1];
+                                    cellCursor->x = gMapBlockOriginX + colIdx;
                                     cellCursor->z = gMapBlockOriginZ + row;
                                     cellCursor->layer = layer;
                                     cellCursor->blockId = c;
@@ -1800,15 +1801,15 @@ void doPendingMapLoads(void)
                                     cnt++;
                                 }
                                 g2[1] = -2;
-                                gMapLayerCellStates[zb[0]] = -1;
+                                gMapLayerCellStates[cellIdx] = -1;
                                 ent[1].state = -3;
                                 ent[1].x = -1;
                                 ent[1].y = -1;
                                 ent[1].z = -1;
                                 ent += 2;
-                                zb[0] = zb[0] + 1;
+                                cellIdx = cellIdx + 1;
                                 g2 += 2;
-                                zb[1] = zb[1] + 1;
+                                colIdx = colIdx + 1;
                             }
                         }
                         bp2++;
@@ -1911,17 +1912,23 @@ void doPendingMapLoads(void)
                             }
                         }
                         gMapBlockIndexCount = gMapBlockIndexCount - 1;
-                        /* Vestigial grid walk (no observable effect; present in retail:
-                           the retail asm keeps the dead g2/t2 updates inside the mtctr-2
-                           loop; no known pragma/idiom reproduces that under our flags). */
+                        /* Vestigial grid walk over each layer's cell table: writes only dead
+                           locals, but retail emits it. MWCC collapses the two innermost levels
+                           into the closed-form pointer and row bumps of the mtctr-2 loop. */
                         for (i = 0; i < 5; i++)
                         {
                             g2 = (char*)*eBase;
-                            t2 = 0;
+                            row = 0;
                             for (k2 = 0; k2 < 2; k2++)
                             {
-                                g2 += 0x540;
-                                t2 += 7;
+                                for (col = 0; col < 7; col++)
+                                {
+                                    for (t2 = 0; t2 < 16; t2++)
+                                    {
+                                        g2 += 12;
+                                    }
+                                    row++;
+                                }
                             }
                             eBase++;
                         }
