@@ -75,7 +75,7 @@ void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
             angleMag = -angleMag;
         }
         angleScale = (f32)(s32)angleMag;
-        angleScale = angleScale * 0.25f;
+        angleScale *= 0.25f;
         if (angleScale > 1.0f)
         {
             curve->f10 = curve->f10 / angleScale;
