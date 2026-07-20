@@ -23,6 +23,7 @@
  * it owns no game objects of its own.
  */
 #define OBJFSA_PATCH_EXIT_U16
+#define TRACK_BBOX_FLAGS_S8
 #include "dolphin/os/OSReport.h"
 #include "main/dll/objfsa_romcurve.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
