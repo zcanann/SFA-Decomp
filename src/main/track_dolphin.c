@@ -2877,7 +2877,7 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
         }
         if (hit == 0)
             continue;
-        if (slot != 0xff)
+        if ((u8)slot != 0xff)
         {
             char* fl;
             k = 0;
@@ -2885,7 +2885,7 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
             do
             {
                 if (*(u8*)(fl + 0x14) != 0 && *(u32*)fl == (u32)self && *(u32*)(fl + 4) == (u32)o &&
-                    *(u8*)(fl + 0x15) == slot)
+                    *(u8*)(fl + 0x15) == (u8)slot)
                 {
                     *(u8*)(fl + 0x14) = 0;
                     e = (int*)fl;
@@ -2910,7 +2910,7 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
         Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &t14[0], &t14[1], &t14[2], (u32)o);
         if (doLotsOfMath(t20, t14, f, p5, out, o, p8, p9, arg8, (int)self) != 0)
             Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], (u32)o);
-        if (slot != 0xff)
+        if ((u8)slot != 0xff)
         {
             k = 0;
             e = (int*)gMapDynamicSlots;
