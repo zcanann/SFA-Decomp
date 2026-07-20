@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/mcmd_exec.h"
-#include "main/audio/inp_ctrl.h"
+#include "main/audio/snd_service.h"
 #include "main/audio/voice_conv.h"
 #include "main/audio/data_tables.h"
 #include "main/audio/hw_init.h"

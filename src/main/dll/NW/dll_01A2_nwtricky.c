@@ -123,7 +123,7 @@ void NW_tricky_update(int* obj)
                 if (timer >= lbl_803E5264.f)
                 {
                     ((NwTrickyState*)state)->timer = timer - lbl_803E5264.f;
-                    fn_80138920((GameObject*)tricky, 0x152, 0x1000);
+                    trickyTryPlaySound((GameObject*)tricky, 0x152, 0x1000);
                 }
             }
 

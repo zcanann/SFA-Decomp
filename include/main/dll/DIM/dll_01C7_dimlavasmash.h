@@ -15,7 +15,7 @@ typedef struct DimlavasmashPlacement
 
 typedef struct DimlavasmashState
 {
-    s8 unk0;           /* 0x0 init source: def.unk1C */
+    s8 seqSlot;        /* 0x0 init source: def.unk1C */
     u8 surfaceLayerId; /* surface material/layer index passed to setBlockSurfaceFlags */
     u8 state;
     u8 pad3[0x7 - 0x3];
@@ -33,7 +33,7 @@ typedef struct DimlavasmashObjectDef
     s16 rotByte;        /* 0x18 rotation byte (read raw as def[0x18] into anim.rotX) */
     s16 surfaceLayerId; /* 0x1A def source for state.surfaceLayerId */
     s16 unk1C;
-    s16 gameBit;
+    s16 triggerGameBit;
 } DimlavasmashObjectDef;
 
 void dimlavasmash_free(void);

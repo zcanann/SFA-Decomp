@@ -2,12 +2,13 @@
 #define MAIN_DLL_SB_DLL_01F1_SBSEQDOOR_H_
 
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objanim_update.h"
 
 /* Placement record: heading byte + a nonzero->bankIndex selector. */
 typedef struct SBSeqDoorPlacement
 {
-    u8 pad0[0x18];
+    ObjPlacement head; /* 0x00 */
     s8 rotXByte;   /* 0x18: heading, scaled to anim.rotX (<<8) */
     s8 bankSelect; /* 0x19: nonzero picks bank index 1 */
     u8 unk1A;

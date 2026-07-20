@@ -93,7 +93,7 @@ void SB_FireBall_hitDetect(int* obj)
 void SB_FireBall_update(GameObject* obj)
 {
     SBFireBallState* state;
-    f32 particleArgs[7];
+    PartFxSpawnParams particleArgs;
 #define hits (*(ObjHitsPriorityState**)((char*)obj + 0x54))
 
     state = obj->extra;
@@ -125,10 +125,10 @@ void SB_FireBall_update(GameObject* obj)
         obj->anim.localPosY += state->velY * timeDelta;
         obj->anim.localPosZ += state->velZ * timeDelta;
 
-        particleArgs[2] = 3.0f;
+        particleArgs.scale = 3.0f;
         objfx_spawnFlaggedTrailBurst(obj, 0.8f, SB_FIREBALL_SETUP_SIZE, SB_FIREBALL_SETUP_MODEL_ID,
                                      SB_FIREBALL_SETUP_PARAM, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, SB_FIREBALL_TRAIL_PARTICLE_ID, particleArgs, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, SB_FIREBALL_TRAIL_PARTICLE_ID, &particleArgs, 1, -1, NULL);
 
         if (state->age > SB_FIREBALL_HITBOX_ENABLE_DELAY)
         {

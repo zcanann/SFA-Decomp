@@ -28,9 +28,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/hint_text_api.h"
-#define PAUSE_MENU_DIRECT_INT_SETUP_TITLE_CALL
 #include "main/pause_menu_api.h"
-#undef PAUSE_MENU_DIRECT_INT_SETUP_TITLE_CALL
 
 u8 gWorldPlanetHintFlagTable[8] = {1, 1, 0, 1, 1, 0, 0, 0};
 u8 gWorldPlanetDefaultSelectOrder[8] = {2, 4, 1, 0, 3, 0, 0, 0};
@@ -51,7 +49,6 @@ u8 gWorldPlanetAmbientTo[8] = {0x13, 0x23, 0x36, 0, 0, 0, 0, 0};
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
-extern f32 lbl_803E6618;
 /* unlock gamebit per WorldPlanetSlot: [0] Walled City, [1] CloudRunner,
  * [2] Dinosaur Planet (== WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, always set),
  * [3] Dragon Rock, [4] DarkIce Mines. */
@@ -61,7 +58,6 @@ extern u8 gWorldPlanetExitWarpTimer;
 extern s16 gWorldPlanetInputLockTimer;
 extern int gWorldPlanetLoadedMapId;
 extern f32 gWorldPlanetPathProgress;
-extern f32 lbl_803E65F8;
 
 extern f32 lbl_803DDD00;
 extern s16 gWorldPlanetReselectDelayTimer;
@@ -102,7 +98,7 @@ void worldplanet_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
     draw = visible;
     if (draw != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6618);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
     return;
 }
@@ -280,7 +276,7 @@ void worldplanet_update(GameObject* obj)
                     (*gCameraInterface)->releaseAction(&objId, 1);
                     Sfx_PlayFromObject(0, SFXTRIG_crf_babyambi3);
                 }
-                gWorldPlanetPathProgress = lbl_803E65F8;
+                gWorldPlanetPathProgress = 0.0f;
                 {
                     GameObject* planetObj =
                         ObjList_FindObjectById(tbl[0][gWorldPlanetSelectionToIndex[prevPlanet]]);
@@ -294,7 +290,7 @@ void worldplanet_update(GameObject* obj)
         gWorldPlanetPathProgress = gWorldPlanetPathProgress + gWorldPlanetPathProgressStep;
         if (gWorldPlanetPathProgress >= gWorldPlanetPathProgressMax)
         {
-            gWorldPlanetPathProgress = lbl_803E65F8;
+            gWorldPlanetPathProgress = 0.0f;
         }
         for (i = 0; i < WORLDPLANET_PLANET_COUNT; i++)
         {
@@ -354,7 +350,7 @@ void worldplanet_update(GameObject* obj)
                     {
                         arwing->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                     }
-                    *(s16*)&arwing->anim.rotX = (frac * dyaw + yaw);
+                    arwing->anim.rotX = (frac * dyaw + yaw);
                     arwing->anim.localPosX = frac * (x1 - x0) + x0;
                     arwing->anim.localPosY = frac * (y1 - y0) + y0;
                     arwing->anim.localPosZ = frac * (z1 - z0) + z0;
@@ -406,7 +402,7 @@ void worldplanet_update(GameObject* obj)
                             gWorldPlanetLoadMapIndices[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
                         lockLevel(gWorldPlanetLoadedMapId, 1);
                         loadModelAndAnimTabs();
-                        lbl_803DDD00 = lbl_803E65F8;
+                        lbl_803DDD00 = 0.0f;
                         gWorldPlanetSavedSelection = state->selectedPlanet;
                     }
                 }
@@ -414,11 +410,11 @@ void worldplanet_update(GameObject* obj)
             case 1:
                 Pause_ResetMenuFrameCounter();
                 {
-                    int neq = lbl_803DDD00 != lbl_803E65F8;
+                    int neq = lbl_803DDD00 != 0.0f;
                     neq = !neq;
                     if (neq)
                     {
-                        lbl_803DDD00 = lbl_803E6618;
+                        lbl_803DDD00 = 1.0f;
                     }
                 }
                 if ((buttons & PAD_BUTTON_B) != 0)
@@ -621,7 +617,7 @@ void worldplanet_init(GameObject* obj)
     setDrawLights(0);
     audioStopByMask(0xf);
     Music_Trigger(WORLDPLANET_BOOT_MUSIC_TRIGGER, 1);
-    gWorldPlanetPathProgress = lbl_803E65F8;
+    gWorldPlanetPathProgress = 0.0f;
     setShowWorldMapHud(1);
     gWorldPlanetLoadedMapId = -1;
     unlockLevel(0, 0, 1);

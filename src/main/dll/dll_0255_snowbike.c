@@ -31,7 +31,7 @@
 #include "main/dll/dll_801e991c.h"
 #include "string.h"
 #include "main/lightmap.h"
-#include "main/object_ext.h"
+#include "main/object.h"
 
 f32 lbl_803DC0B8 = 15.0f;
 int lbl_803DC0BC = -1;
@@ -384,7 +384,7 @@ void SnowBike_resetToRomListPosition(GameObject* obj)
         ((SnowBikeMountState*)state)->velocityX = zero;
         ((SnowBikeMountState*)state)->velocityY = zero;
         ((SnowBikeMountState*)state)->velocityZ = zero;
-        (*gPathControlInterface)->attachObject((void*)obj, (void*)(state + 0x178));
+        (*gPathControlInterface)->attachObject((void*)obj, (void*)&((ShackleSwingState*)state)->attachment);
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosX = obj->anim.localPosX;
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosY = obj->anim.localPosY;
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosZ = obj->anim.localPosZ;
@@ -547,13 +547,13 @@ void SnowBike_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visib
     fn_801E991C((int)obj, (char*)path);
     if (visible == -1)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);
         ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)((char*)path + 0x3e8),
                                       (f32*)((char*)path + 0x3ec), (f32*)((char*)path + 0x3f0), 0);
     }
     else
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);
         ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)((char*)path + 0x3e8),
                                       (f32*)((char*)path + 0x3ec), (f32*)((char*)path + 0x3f0), 0);
     }
@@ -756,7 +756,7 @@ void SnowBike_update(GameObject* obj)
         }
         if (mainGetBit(GAMEBIT_SnowBikeRelated01FB) != 0)
         {
-            Obj_SetModelSlotIndex((u8*)obj, 0x13);
+            Obj_SetModelSlotIndex(obj, 0x13);
         }
     }
     *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
@@ -844,7 +844,7 @@ void SnowBike_update(GameObject* obj)
                                       ((SnowBikeState*)state)->localVelY, ((SnowBikeState*)state)->distanceScale,
                                       &obj->anim.velocityX, &obj->anim.velocityY,
                                       &obj->anim.velocityZ);
-                objApplyVelocity((u8*)obj);
+                objApplyVelocity(obj);
             }
         }
         else
@@ -923,7 +923,7 @@ void SnowBike_update(GameObject* obj)
                                   ((SnowBikeState*)state)->localVelY, ((SnowBikeState*)state)->distanceScale,
                                   &obj->anim.velocityX, &obj->anim.velocityY,
                                   &obj->anim.velocityZ);
-            objApplyVelocity((u8*)obj);
+            objApplyVelocity(obj);
         }
         fn_801EB0D4((int)obj, (int)state);
         drcloudcage_updateEngineFx(obj, state, ((SnowBikeState*)state)->distanceScale,
@@ -958,7 +958,7 @@ void SnowBike_init(int obj, SnowBikePlacement* params, int flag)
         memcpy(alloc, params, 36);
         *(u8**)&((GameObject*)obj)->anim.placementData = alloc;
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_OWNS_PLACEMENT_DATA;
-        Obj_ClearModelSlotIndex((u8*)obj);
+        Obj_ClearModelSlotIndex((GameObject*)obj);
     }
     rot = params->yawByte << 8;
     ((SnowBikeState*)state)->yawCurrent = rot;

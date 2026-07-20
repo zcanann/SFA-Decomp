@@ -10,9 +10,8 @@
  * from the yaw delta between the object and its anchor, clamps it, and
  * decides the return direction.
  *
- * `state` is a raw byte base; field offsets are spelled via the
- * DRSHACKLE_*_OFFSET macros. Several `lbl_803E5Bxx` are plain float
- * constants (see the inline value comments).
+ * Several `lbl_803E5Bxx` are plain float constants (see the inline value
+ * comments).
  */
 #include "main/dll/DR/DRshackle.h"
 #include "main/track_dolphin_api.h"
@@ -41,14 +40,6 @@ STATIC_ASSERT(offsetof(ShackleSwingState, swingReturn) == 0x458);
 STATIC_ASSERT(offsetof(ShackleSwingState, swingBlend) == 0x45C);
 STATIC_ASSERT(offsetof(ShackleSwingState, unk494) == 0x494);
 STATIC_ASSERT(offsetof(ShackleSwingState, lastPitch) == 0x49C);
-
-#define DRSHACKLE_MODEL_OFFSET 0x54
-
-/* advanceRoute takes a trailing (always-zero) arg not reflected in the shared
- * interface header; cast the slot locally to emit the extra r7=0. */
-#define DRSHACKLE_ADVANCE_ROUTE(iface, out, route, dist, mode, flag)                                                   \
-    ((s32 (*)(u8*, CheckpointRouteState*, f32, s32, u8, int))(iface)->advanceRoute)((out), (route), (dist), (mode),    \
-                                                                                    (flag), 0)
 
 #define DRSHACKLE_ANGLE_STEP         0xb6
 #define DRSHACKLE_SWING_BLEND_LIMIT  0x41
@@ -91,7 +82,7 @@ int drshackle_updateSwingBlend(GameObject* obj, int state)
         fade = *(f32*)&lbl_803E5AE8;
     }
 
-    hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider, fade, s->colliderMode, 1);
+    hitResult = (*gCheckpointInterface)->advanceRoute((u8*)state, &s->collider, fade, s->colliderMode, 1, 0);
 
     (*gCheckpointInterface)->getRouteHeading((GameObject*)obj, &s->collider);
 
@@ -172,8 +163,8 @@ int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state)
                 s->unk498 = zero;
             }
             s->lastPitch = -fn_801EA678(obj, (int)state);
-            hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider,
-                                                -s->lastPitch * timeDelta, s->colliderMode, 1);
+            hitResult = (*gCheckpointInterface)
+                            ->advanceRoute((u8*)state, &s->collider, -s->lastPitch * timeDelta, s->colliderMode, 1, 0);
             (*gCheckpointInterface)->getRouteHeading(obj, &s->collider);
             (*gCheckpointInterface)->queueRouteRankItem((CheckpointRankItem*)&s->collider);
             if (hitResult != 0)
@@ -191,12 +182,12 @@ int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state)
             obj->anim.localPosY = s->anchorY;
             obj->anim.localPosZ = s->anchorZ;
             (*gPathControlInterface)->attachObject((void*)obj, (void*)s->attachment);
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x10) = obj->anim.localPosX;
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x14) = obj->anim.localPosY;
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x18) = obj->anim.localPosZ;
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x1c) = obj->anim.worldPosX;
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x20) = obj->anim.worldPosY;
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x24) = obj->anim.worldPosZ;
+            *(f32*)((int)obj->anim.hitReactState + 0x10) = obj->anim.localPosX;
+            *(f32*)((int)obj->anim.hitReactState + 0x14) = obj->anim.localPosY;
+            *(f32*)((int)obj->anim.hitReactState + 0x18) = obj->anim.localPosZ;
+            *(f32*)((int)obj->anim.hitReactState + 0x1c) = obj->anim.worldPosX;
+            *(f32*)((int)obj->anim.hitReactState + 0x20) = obj->anim.worldPosY;
+            *(f32*)((int)obj->anim.hitReactState + 0x24) = obj->anim.worldPosZ;
 
             if (s->floorAdjustFlag == 0)
             {
@@ -211,8 +202,9 @@ int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state)
         return drshackle_updateSwingBlend(obj, (int)state) != 0;
     }
 
-    hitResult = DRSHACKLE_ADVANCE_ROUTE((*gCheckpointInterface), (u8*)state, &s->collider,
-                                        timeDelta * fn_801EA678(obj, (int)state), s->colliderMode, 1);
+    hitResult = (*gCheckpointInterface)
+                    ->advanceRoute((u8*)state, &s->collider, timeDelta * fn_801EA678(obj, (int)state), s->colliderMode,
+                                   1, 0);
     (*gCheckpointInterface)->getRouteHeading(obj, &s->collider);
     (*gCheckpointInterface)->queueRouteRankItem((CheckpointRankItem*)&s->collider);
     if (hitResult != 0)
@@ -226,12 +218,12 @@ int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state)
     obj->anim.localPosY = s->anchorY;
     obj->anim.localPosZ = s->anchorZ;
     (*gPathControlInterface)->attachObject((void*)obj, (void*)s->attachment);
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x10) = obj->anim.localPosX;
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x14) = obj->anim.localPosY;
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x18) = obj->anim.localPosZ;
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x1c) = obj->anim.worldPosX;
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x20) = obj->anim.worldPosY;
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x24) = obj->anim.worldPosZ;
+    *(f32*)((int)obj->anim.hitReactState + 0x10) = obj->anim.localPosX;
+    *(f32*)((int)obj->anim.hitReactState + 0x14) = obj->anim.localPosY;
+    *(f32*)((int)obj->anim.hitReactState + 0x18) = obj->anim.localPosZ;
+    *(f32*)((int)obj->anim.hitReactState + 0x1c) = obj->anim.worldPosX;
+    *(f32*)((int)obj->anim.hitReactState + 0x20) = obj->anim.worldPosY;
+    *(f32*)((int)obj->anim.hitReactState + 0x24) = obj->anim.worldPosZ;
     flags->positionAnchored = 0;
     return 0;
 }

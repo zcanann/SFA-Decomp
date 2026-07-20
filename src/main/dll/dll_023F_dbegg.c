@@ -9,8 +9,8 @@
  *   8  respawn wait            9  curve-follow path
  *   0xa curve init             0xb held (velocity from message +0x10c..)
  *   0xc gated respawn          0xd homing-to-target reposition
- * Surface probing (water tri type 0xe vs ground) is fn_801FE560; sibling-egg
- * flocking repulsion is fn_801FE774. Buoyancy/clamp/turn constants live in
+ * Surface probing (water tri type 0xe vs ground) is dbegg_probeSurface; sibling-egg
+ * flocking repulsion is dbegg_computeFlocking. Buoyancy/clamp/turn constants live in
  * the lbl_803E61xx/.. pool. dbegg_setupFromDef seeds mode from the placement
  * config's primary/ready condition game bits; behaviorMode selects variant
  * flags119 bits (held, curve, model-1, group-32).
@@ -71,7 +71,7 @@
 #define DBEGG_PARTFX_RESPAWN_WAIT 0x3be
 /* speed-scaled trail spawned while homing to the target in DBEGG_MODE_HOMING */
 #define DBEGG_PARTFX_HOMING_TRAIL 0x345
-int fn_801FE560(GameObject* obj, f32* out, f32 a, f32 b, int p3);
+int dbegg_probeSurface(GameObject* obj, f32* out, f32 a, f32 b, int p3);
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
@@ -238,7 +238,7 @@ void dbegg_setupFromDef(GameObject* obj, u8* state)
     state[0x118] = (u8)(mainGetBit(config->primaryConditionId) != 0 ? 3 : 1);
     if (state[0x118] == 1)
     {
-        if (fn_801FE560(obj, &surfaceProbeOut, 0.0f, 0.0f, 1) == 0)
+        if (dbegg_probeSurface(obj, &surfaceProbeOut, 0.0f, 0.0f, 1) == 0)
         {
             state[0x118] = 2;
         }
@@ -284,7 +284,7 @@ void dbegg_setupFromDef(GameObject* obj, u8* state)
     }
 }
 
-int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
+int dbegg_probeSurface(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
 {
     f32 water;
     f32 ground;
@@ -410,7 +410,7 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
     return 0;
 }
 
-void fn_801FE774(int obj, f32* vel)
+void dbegg_computeFlocking(int obj, f32* vel)
 {
     f32 limit;
     f32 force;
@@ -428,11 +428,11 @@ void fn_801FE774(int obj, f32* vel)
     {
         f32 dy;
         sibling = (u8*)*objCursor;
-        dy = ((GameObject*)sibling)->anim.localPosY - *(f32*)(obj + 0x10);
+        dy = ((GameObject*)sibling)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
         if (dy <= limit && dy >= -7.0f)
         {
-            f32 dx = ((GameObject*)sibling)->anim.localPosX - *(f32*)(obj + 0xc);
-            f32 dz = ((GameObject*)sibling)->anim.localPosZ - *(f32*)(obj + 0x14);
+            f32 dx = ((GameObject*)sibling)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
+            f32 dz = ((GameObject*)sibling)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
             f32 dist = sqrtf(dx * dx + dz * dz);
             f32 radius = 1.5f * (f32)(u32) * (u8*)(*(int*)(sibling + 0x4c) + 0x19);
             if (dist < radius)
@@ -578,7 +578,7 @@ void dbegg_update(GameObject* obj)
             {
                 hitState->flags |= 1;
             }
-            if (fn_801FE560(obj, &surfaceHeight, 0.0f, 0.0f, 1) == 0)
+            if (dbegg_probeSurface(obj, &surfaceHeight, 0.0f, 0.0f, 1) == 0)
             {
                 egg->mode = DBEGG_MODE_DRIFTING;
                 break;
@@ -649,16 +649,16 @@ void dbegg_update(GameObject* obj)
             flockVel[0] = 0.0f;
             flockVel[1] = fz;
             flockVel[2] = fz;
-            fn_801FE774((int)obj, flockVel);
+            dbegg_computeFlocking((int)obj, flockVel);
             (obj)->anim.velocityX = (obj)->anim.velocityX + flockVel[0];
             (obj)->anim.velocityY = (obj)->anim.velocityY + flockVel[1];
             (obj)->anim.velocityZ = (obj)->anim.velocityZ + flockVel[2];
-            if (fn_801FE560(obj, &surfaceHeight, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityZ * timeDelta,
+            if (dbegg_probeSurface(obj, &surfaceHeight, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityZ * timeDelta,
                             1) != 0)
             {
                 (obj)->anim.velocityX = -0.95f * (obj)->anim.velocityX;
                 (obj)->anim.velocityZ = -0.95f * (obj)->anim.velocityZ;
-                fn_801FE560(obj, &surfaceHeight, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityZ * timeDelta,
+                dbegg_probeSurface(obj, &surfaceHeight, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityZ * timeDelta,
                             1);
             }
             surfaceHeight = surfaceHeight + egg->waterOffset;
@@ -744,7 +744,7 @@ void dbegg_update(GameObject* obj)
             *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             return;
         case DBEGG_MODE_SINKING:
-            fn_801FE560(obj, &surfaceHeight, 0.0f, 0.0f, 0);
+            dbegg_probeSurface(obj, &surfaceHeight, 0.0f, 0.0f, 0);
             v = surfaceHeight;
             v = v >= 0.0f ? v : -v;
             if (v < 0.09f)

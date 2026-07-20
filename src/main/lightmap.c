@@ -44,10 +44,9 @@
 #include "main/sky.h"
 #include "track/intersect_api.h"
 #include "track/intersect_render_setup_api.h"
-#include "main/dll/cloudaction_ext.h"
-#include "main/track_dolphin_ext.h"
-#include "main/trig_ext.h"
-#include "main/tex_dolphin_ext.h"
+#include "main/dll/cloudaction.h"
+#include "main/trig.h"
+#include "main/tex_dolphin.h"
 #include "main/acosf_api.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXTransform.h"
@@ -496,14 +495,14 @@ void getVisibleObjects(s8* opacity)
                     {
                         Camera_ProjectWorldPoint(((GameObject*)o)->anim.worldPosX, ((GameObject*)o)->anim.worldPosY,
                                                  ((GameObject*)o)->anim.worldPosZ, &a, &b, &depth,
-                                                 (f32*)(o + 0xa4));
+                                                 (f32*)&((GameObject*)o)->anim.targetObj);
                     }
                     else
                     {
                         Camera_ProjectWorldPoint(((GameObject*)o)->anim.localPosX - playerMapOffsetX,
                                                  ((GameObject*)o)->anim.localPosY,
                                                  ((GameObject*)o)->anim.localPosZ - playerMapOffsetZ, &a, &b,
-                                                 &depth, (f32*)(o + 0xa4));
+                                                 &depth, (f32*)&((GameObject*)o)->anim.targetObj);
                     }
                     depthInt = (int)(lbl_803DEC0C * (lbl_803DEBDC + depth));
                 }
@@ -525,7 +524,7 @@ void getVisibleObjects(s8* opacity)
                 {
                     key = 0;
                     model = (int*)Obj_GetActiveModel((GameObject*)o);
-                    if (*(u8*)(o + 0x37) == 0xff && (((GameObject*)o)->anim.flags & 0x80) == 0 &&
+                    if (((GameObject*)o)->anim.renderAlpha == 0xff && (((GameObject*)o)->anim.flags & 0x80) == 0 &&
                         ((tf = ((ObjAnimComponent*)o)->modelInstance->flags) & 0x40000) == 0 &&
                         *(void**)(model + 0x16) == NULL)
                     {
@@ -906,7 +905,7 @@ void sceneDraw(void)
         for (; i < ((GameObject*)player)->childCount; i++)
         {
             u8* m = *(u8**)(cursor + 200);
-            if (*(s16*)(m + 0x44) == 45)
+            if (((GameObject*)m)->anim.classId == 45)
             {
                 (*(void (***)(void))*(int*)(m + 0x68))[11]();
             }
@@ -1470,8 +1469,8 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     int i;
     u8* s0;
 
-    countShifted = (int)*(u16*)((char*)obj + 0x84) << 3;
-    modelRenderInstrsState_init((ModelRenderInstrsState*)state, *(void**)((char*)obj + 0x78), countShifted,
+    countShifted = (int)((MapBlockData*)obj)->nRenderInstrsMain << 3;
+    modelRenderInstrsState_init((ModelRenderInstrsState*)state, ((MapBlockData*)obj)->renderInstrsMain, countShifted,
                                 countShifted);
     modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, (int)*(u16*)((char*)p1 + 0x14));
     state[4] += 4;
@@ -1514,7 +1513,7 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     PSMTXConcat((f32*)lbl_80396820, p3, m);
     GXLoadTexMtxImm((const f32 (*)[4])m, GX_TEXMTX1, GX_MTX3x4);
     gxTextureSetupFn_8007cf7c();
-    countShifted = (int)*(u16*)((char*)obj + 0x88) << 3;
+    countShifted = (int)((MapBlockData*)obj)->nRenderInstrsWater << 3;
     modelRenderInstrsState_init((ModelRenderInstrsState*)state,
                                 *(void**)&((GameObject *)obj)->anim.previousLocalPosX, countShifted, countShifted);
     modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, (int)*(u16*)((char*)p1 + 0x14));
@@ -1552,7 +1551,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     u8* s0;
 
     fn_8000F8F8();
-    countShifted = (int)*(u16*)((char*)obj + 0x86) << 3;
+    countShifted = (int)((MapBlockData*)obj)->nRenderInstrsTransp << 3;
     modelRenderInstrsState_init((ModelRenderInstrsState*)state, *(void**)&((GameObject *)obj)->anim.banks,
                                 countShifted, countShifted);
     modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, (int)*(u16*)((char*)p1 + 0x14));
@@ -1601,7 +1600,7 @@ void objDrawFn_8005da48(GameObject* obj)
         }
         else if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH)
         {
-            objDrawFn_80061654((int)obj, (int)model);
+            objDrawFn_80061654(obj, (ObjModel*)model);
         }
         Camera_ApplyFullViewport();
     }
@@ -1653,7 +1652,7 @@ void sceneDrawTransparentPolys(void)
             break;
         case 3:
             fn_8000F9B4();
-            objDrawFn_80061654((int)e[i][0], (int)Obj_GetActiveModel((GameObject*)e[i][0]));
+            objDrawFn_80061654((GameObject*)e[i][0], Obj_GetActiveModel((GameObject*)e[i][0]));
             Camera_ApplyFullViewport();
             break;
         case 4:

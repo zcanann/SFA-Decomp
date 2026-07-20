@@ -48,7 +48,7 @@ int drakormissile_setScale(GameObject* obj);
 void drakormissile_abortStraightFlight(GameObject* obj);
 void drakormissile_modelMtxFn(GameObject* obj);
 void drakormissile_free(GameObject* obj);
-void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible);
+void drakormissile_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void drakormissile_init(GameObject* obj, DrakorMissileSetup* setup);
 
 extern f32 lbl_803DC2B0;

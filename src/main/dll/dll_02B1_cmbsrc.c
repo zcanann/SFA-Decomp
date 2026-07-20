@@ -154,7 +154,7 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     CameraViewSlot* viewSlot;
     f32 dist;
     f32 vec[3];
-    f32 param[6];
+    PartFxSpawnParams param;
 
     viewSlot = Camera_GetCurrentViewSlot();
     if (sourceState->active == 0)
@@ -289,8 +289,8 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
         {
             if (cmbsrc->objectFlags & CMBSRC_OBJFLAG_RENDERED)
             {
-                param[2] = sourceState->radius;
-                (*gPartfxInterface)->spawnObject(cmbsrc, CMBSRC_PARTICLE_EFFECT_ID, param, 2, -1, NULL);
+                param.scale = sourceState->radius;
+                (*gPartfxInterface)->spawnObject(cmbsrc, CMBSRC_PARTICLE_EFFECT_ID, &param, 2, -1, NULL);
             }
             sourceState->particleTimer += 5.0f;
         }

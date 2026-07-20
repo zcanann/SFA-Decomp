@@ -15,6 +15,7 @@
  *   explosion_initialise   - precompute the expf falloff scales
  */
 #include "main/object_descriptor.h"
+#include "main/model.h"
 #include "main/dll/partfx_interface.h"
 #include "main/track_dolphin_api.h"
 #include "main/texture.h"
@@ -44,11 +45,11 @@
 #include "main/dll/DIM/dll_01CA_dimexplosion.h"
 
 typedef void (*ExplosionSpawnFlameSpdFirst)(int obj, f32 spd, int gen, f32 x, f32 y, f32 z);
-typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p3);
 
 typedef struct ExplosionPlacement
 {
-    u8 pad00[0x1a];
+    u8 pad00[0x19];
+    s8 sfxKind;
     s16 scaleParam;
     s16 configFlags;
 } ExplosionPlacement;
@@ -145,7 +146,7 @@ void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z)
     }
     if (flames[idx].generation < 1)
     {
-        s8 c = *(s8*)((char*)placement + 0x19);
+        s8 c = ((ExplosionPlacement*)placement)->sfxKind;
         if (c != 0)
         {
             if (c == 2)
@@ -254,7 +255,7 @@ int explosion_getObjectTypeId(GameObject* obj)
 
 void explosion_free(GameObject* obj)
 {
-    ModelLightStruct* light = *(ModelLightStruct**)(*(int*)&obj->extra + 0xa40);
+    ModelLightStruct* light = ((ExplosionState*)obj->extra)->light;
     if (light != NULL)
     {
         ModelLightStruct_free(light);
@@ -364,7 +365,7 @@ void explosion_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
                 objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, visible);
                 if (i < ((ExplosionState*)state)->rayMode - 1)
                 {
-                    *(u16*)((char*)model + 0x18) &= ~8;
+                    ((ObjModel*)model)->bufferFlags &= ~8;
                 }
             }
         }
@@ -600,7 +601,7 @@ void explosion_update(GameObject* obj)
                 ang[0] = r0v;
                 ang[1] = r0v;
                 ang[2] = r0v;
-                ang[3] = *(int*)((char*)state + 0x14);
+                ang[3] = ((ExplosionDebris*)state)->lifetime;
                 k = 0;
                 while ((f32)(int)k < ((ExplosionState*)state)->scale)
                 {
@@ -649,9 +650,8 @@ void explosion_init(GameObject* obj, int def)
         ((ExplosionState*)state)->driftYSpeed = lbl_803E4960;
     }
     ((ExplosionState*)state)->nearGround = 0;
-    if (((HitDetectFloatsFirst)hitDetectFn_800658a4)((int)obj, obj->anim.localPosX,
-                                                     lbl_803E49B0 + obj->anim.localPosY, obj->anim.localPosZ,
-                                                     state + 0x960, 0) == 0)
+    if (hitDetectFn_800658a4(obj, obj->anim.localPosX, lbl_803E49B0 + obj->anim.localPosY,
+                            obj->anim.localPosZ, (f32*)(state + 0x960), 0) == 0)
     {
         if (((ExplosionState*)state)->groundY < lbl_803E49B4)
         {

@@ -82,10 +82,6 @@ STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 #define OBJ_F32(obj, offset) (*(f32*)((u8*)(obj) + (offset)))
 #define OBJ_PTR(obj, offset) (*(void**)((u8*)(obj) + (offset)))
 
-#define MAP_EVENT_TEST(mapId, eventId)            (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
-#define MAP_EVENT_SET(mapId, eventId, value)      (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
-#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
-
 void* lbl_803DDC74;
 extern u32* lbl_803DCA94;
 s8 lbl_803DDC70;
@@ -246,32 +242,33 @@ void WM_Galleon_update(int* obj)
 
     if (mainGetBit(WM_GALLEON_GAMEBIT_CUTSCENE_DONE) != 0)
     {
-        if ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 2) != 0)
+        if ((u8)(*gMapEventInterface)->getObjGroupStatus(OBJ_U8(obj, 0x34), 2) != 0)
         {
-            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 0);
-            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 0);
+            (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 1, 0);
+            (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 2, 0);
         }
     }
-    else if ((mainGetBit(GAMEBIT_WM_GalleonRelated00D0) == 0) && ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 2) == 0))
+    else if ((mainGetBit(GAMEBIT_WM_GalleonRelated00D0) == 0) &&
+             ((u8)(*gMapEventInterface)->getObjGroupStatus(OBJ_U8(obj, 0x34), 2) == 0))
     {
-        MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 1);
-        MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 1);
+        (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 1, 1);
+        (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 2, 1);
     }
 
     if (mainGetBit(GAMEBIT_WM_GalleonRelated00D0) == 0)
     {
         if ((state->mapEventsLatched == 0) && (mainGetBit(WM_GALLEON_GAMEBIT_CUTSCENE_DONE) == 0))
         {
-            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 1);
-            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 1);
+            (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 1, 1);
+            (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 2, 1);
             state->mapEventsLatched = 1;
         }
     }
     else
     {
-        if ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 4) == 0)
+        if ((u8)(*gMapEventInterface)->getObjGroupStatus(OBJ_U8(obj, 0x34), 4) == 0)
         {
-            MAP_EVENT_SET(OBJ_U8(obj, 0x34), 4, 1);
+            (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), 4, 1);
         }
         if (state->mapEventsLatched != 0)
         {
@@ -299,7 +296,7 @@ void WM_Galleon_update(int* obj)
         ((GameObject*)obj)->anim.localPosY = state->savedY;
         ((GameObject*)obj)->anim.localPosZ = state->savedZ;
         OBJ_S16(obj, 0) = state->savedYaw;
-        OBJECT_TRIGGER_REFRESH(0, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         OBJ_S32(obj, 0xf8) = 2;
     }
 }
@@ -329,7 +326,7 @@ void WM_Galleon_init(int* obj, WMGalleonSetup* setup)
     fn_80065574(0, (GameObject*)(obj), 0);
     for (i = 0; i < 5; i++)
     {
-        MAP_EVENT_SET(OBJ_U8(obj, 0x34), i, 0);
+        (*gMapEventInterface)->setObjGroupStatus(OBJ_U8(obj, 0x34), i, 0);
     }
     mainSetBits(GAMEBIT_WM_GalleonRelated00A4, 1);
 }

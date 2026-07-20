@@ -2,11 +2,12 @@
 #define MAIN_DLL_DLL_0140_FOGCONTROL_H_
 
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "global.h"
 
 typedef struct FogcontrolPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s16 enableGameBit;
     s16 flags;
     s16 fogTop;

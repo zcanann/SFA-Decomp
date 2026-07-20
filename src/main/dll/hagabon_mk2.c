@@ -47,6 +47,7 @@
 #include "main/pad_api.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/dll/hagabon_mk2.h"
+#include "main/dll/baddie_frozen.h"
 
 extern int lbl_803DBCF8[2];
 
@@ -203,11 +204,11 @@ typedef struct
 } CrawlerSfxParams;
 
 
-void crawler_rotateVectorYaw(int unused1, int unused2, f32* vec, f32 f1, int p5, u32 int_deg)
+void crawler_rotateVectorYaw(int unused1, int* unused2, f32* vec, int unused3, int nodeIndex, f32 phase)
 {
     f32 mtx[12];
     f32 a;
-    a = lbl_803E2C20 * f1 - lbl_803E2C24 * (f32)(s32)int_deg;
+    a = lbl_803E2C20 * phase - lbl_803E2C24 * (f32)nodeIndex;
     a = mathCosfHighPrecision(a);
     a = lbl_803E2C1C * a;
     PSMTXRotRad(mtx, 0x79, a);
@@ -219,7 +220,7 @@ void hagabonMK2_stopLoopSfx(int obj, u8* state)
     Sfx_StopFromObject(obj, SFXTRIG_baddie_rach_death);
 }
 
-void hagabonMK2_updateWhileFrozen(int obj, int* st, int unused, int cmd, int wpad0, int wpad1, void* wpad2, int wpad3)
+void hagabonMK2_updateWhileFrozen(int obj, u8* st, int unused, int cmd, int wpad0, int wpad1, Vec* wpad2, int wpad3)
 {
     int objI = (int)obj;
     if (cmd == 0x11)
@@ -339,7 +340,8 @@ void hagabonMK2_updateB(s16* obj, u8* state)
     {
         CrawlerSeq12* sq = (CrawlerSeq12*)gCrawlerSeqTable;
         i = ((BaddieState*)state)->userData1 * 0xc;
-        Baddie_SetMove((int*)obj, state, *(u8*)(gCrawlerSeqTable + i + 8), *(f32*)((int)gCrawlerSeqTable + i), 0, 0);
+        fn_8014D08C((GameObject*)obj, (int)state, *(u8*)(gCrawlerSeqTable + i + 8),
+                    *(f32*)((int)gCrawlerSeqTable + i), 0, 0);
         ((BaddieState*)state)->userData1 = sq[((BaddieState*)state)->userData1].next;
     }
 
@@ -489,7 +491,8 @@ void hagabonMK2_update(s16* obj, u8* state)
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         i = ((BaddieState*)state)->userData1 * 0xc;
-        Baddie_SetMove((int*)obj, state, *(u8*)(gCrawlerSeqTable + i + 8), *(f32*)((int)gCrawlerSeqTable + i), 0, 0);
+        fn_8014D08C((GameObject*)obj, (int)state, *(u8*)(gCrawlerSeqTable + i + 8),
+                    *(f32*)((int)gCrawlerSeqTable + i), 0, 0);
         {
             CrawlerSeq12* sq = (CrawlerSeq12*)gCrawlerSeqTable;
             ((BaddieState*)state)->userData1 = sq[((BaddieState*)state)->userData1].next;
@@ -564,7 +567,7 @@ void hagabonMK2_init(int* obj, int* st)
         u8* bbase = gCrawlerSeqTable;
         u32 idx = ((BaddieState*)st)->userData1;
         u32 off = idx * 0xc;
-        Baddie_SetMove(obj, st, bbase[off + 8], *(f32*)((char*)fbase + off), 0, 0);
+        fn_8014D08C((GameObject*)obj, (int)st, bbase[off + 8], *(f32*)((char*)fbase + off), 0, 0);
     }
     ((FCVars*)st)->emergeTimer = lbl_803E2C58;
     ObjHits_SetHitVolumeMasks((ObjAnimComponent*)obj, 0xe, 1, 0xfff);

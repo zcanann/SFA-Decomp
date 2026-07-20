@@ -15,8 +15,8 @@ GameObject* fn_80138F84(GameObject* tricky);
 int fn_80138F90(GameObject* tricky);
 int trickyFn_80138f14(GameObject* tricky);
 void trickyImpress(GameObject* obj);
-void fn_80138908(GameObject* obj, int value);
-int fn_80138920(GameObject* obj, u16 sfxId, int volume);
+void trickySetSoundSuppressed(GameObject* obj, int value);
+int trickyTryPlaySound(GameObject* obj, u16 sfxId, int volume);
 void debugPrintInit(void);
 void debugPrintReset(void);
 void debugPrintfxy(int x, int y, char* fmt, ...);
@@ -28,5 +28,9 @@ void reportAllocFail(int region0SizeKb, int region0FreeKb, int region1SizeKb, in
 void debugPrintDraw(int ctx);
 void objAnimFreeChildren(int a, int b, GameObject** c);
 GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes);
+void Tricky_updateBlendChannelWeight(int obj, u8* state);
+void Tricky_emitQueuedPathParticles(u8* obj, u8* state);
+int trickySelectQueuedCommandTarget(u8* state, int commandType);
+void fn_80138D7C(int obj, int state);
 
 #endif

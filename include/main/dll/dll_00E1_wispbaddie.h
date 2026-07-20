@@ -48,6 +48,7 @@ void wispbaddie_release(void);
 void wispbaddie_initialise(void);
 
 extern ObjectDescriptor gWispBaddieObjDescriptor;
+extern u32 lbl_8031F280[4];
 
 /* extern-cleanup: defining-file public prototypes */
 void wispbaddie_init(GameObject* obj, int setup, int initialised);

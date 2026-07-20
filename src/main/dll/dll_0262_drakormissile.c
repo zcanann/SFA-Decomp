@@ -12,6 +12,7 @@
  * drawn as DRAKORMISSILE_RENDER_TRAIL_COUNT spun copies plus the body,
  * with an attached point light and glow.
  */
+#include "main/model.h"
 #include "main/dll/dll_0262_drakormissile.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
@@ -217,7 +218,7 @@ void drakormissile_free(GameObject* obj)
     ObjGroup_RemoveObject((int)obj, DRAKORMISSILE_GROUP_ID);
 }
 
-void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
+void drakormissile_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     f32 one = 1.0f;
     s16 savedRotZ;
@@ -242,14 +243,14 @@ void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 vi
             state->trailPitch[i] += state->trailPitchStep[i];
             (obj)->anim.rotZ = state->trailYaw[i];
             (obj)->anim.rotY = state->trailPitch[i];
-            *(u16*)((char*)model + 0x18) &= ~8;
-            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)one);
+            ((ObjModel*)model)->bufferFlags &= ~8;
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, one);
         }
         (obj)->anim.rotZ = savedRotZ;
         (obj)->anim.rotY = savedRotY;
         (obj)->anim.rootMotionScale = savedScale;
         objAnim->bankIndex = 0;
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)one);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, one);
         if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
         {
             queueGlowRender(state->light);

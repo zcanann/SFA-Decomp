@@ -25,22 +25,22 @@ typedef struct Dimbossgut2State
 struct Dimbossgut2Curve
 {
     f32 f0;
-    f32 f4;
-    f32 f8;
-    f32 fC;
-    f32 f10;
-    s16 s14;
-    u16 timer16;
+    f32 leanAngle;
+    f32 turnWobble;
+    f32 lavaSurfaceY;
+    f32 pathSpeed;
+    s16 randomPhase;
+    u16 breathFxTimer;
     ModelLightStruct* light;
 };
 
 STATIC_ASSERT(offsetof(Dimbossgut2Curve, f0) == 0x0);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, f4) == 0x4);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, f8) == 0x8);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, fC) == 0xC);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, f10) == 0x10);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, s14) == 0x14);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, timer16) == 0x16);
+STATIC_ASSERT(offsetof(Dimbossgut2Curve, leanAngle) == 0x4);
+STATIC_ASSERT(offsetof(Dimbossgut2Curve, turnWobble) == 0x8);
+STATIC_ASSERT(offsetof(Dimbossgut2Curve, lavaSurfaceY) == 0xC);
+STATIC_ASSERT(offsetof(Dimbossgut2Curve, pathSpeed) == 0x10);
+STATIC_ASSERT(offsetof(Dimbossgut2Curve, randomPhase) == 0x14);
+STATIC_ASSERT(offsetof(Dimbossgut2Curve, breathFxTimer) == 0x16);
 STATIC_ASSERT(offsetof(Dimbossgut2Curve, light) == 0x18);
 
 void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state);

@@ -29,13 +29,13 @@ u8 lbl_803DB8D8[8] = {0, 0, 0, 2, 0, 4, 0, 6};
 
 extern u8 gDll79EffectModelBlock[];
 
-int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
+s16 dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     ModgfxPointerSpawnPacket buf;
     u8* base = (u8*)(int)gDll79EffectModelBlock;
     GfxCmd* e;
     GfxCmd* entries;
-    int ret;
+    s16 ret;
     ret = 0;
     entries = buf.entries;
     e = entries;

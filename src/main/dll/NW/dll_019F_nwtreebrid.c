@@ -18,6 +18,7 @@
 #include "main/obj_group.h"
 #include "main/obj_path.h"
 #include "main/object_render.h"
+#include "main/obj_placement.h"
 
 typedef struct TreeBirdState
 {
@@ -31,7 +32,7 @@ typedef struct TreeBirdState
 
 typedef struct NwTreeBirdMapData
 {
-    u8 pad00[0x18];
+    ObjPlacement head;
     s8 rotXByte;       /* 0x18: rotX in 1/256 turns */
     s8 triggerVariant; /* 0x19: selects particle / trigger variant */
     s16 rotY;          /* 0x1A */
@@ -40,8 +41,6 @@ typedef struct NwTreeBirdMapData
 } NwTreeBirdMapData;
 
 #define NWTREEBRID_TARGET_OBJGROUP 4
-
-#define TREEBIRD_SPAWN_PARTICLE(obj, id) (*gPartfxInterface)->spawnObject((void*)(obj), (id), 0, 1, -1, 0)
 
 int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -61,7 +60,7 @@ int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             j = 200;
             do
             {
-                TREEBIRD_SPAWN_PARTICLE(obj, 0xcc);
+                (*gPartfxInterface)->spawnObject(obj, 0xcc, 0, 1, -1, 0);
                 j--;
             } while (j != 0);
             break;
@@ -71,7 +70,7 @@ int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 do
                 {
-                    TREEBIRD_SPAWN_PARTICLE(obj, 0xd3);
+                    (*gPartfxInterface)->spawnObject(obj, 0xd3, 0, 1, -1, 0);
                     j--;
                 } while (j != 0);
             }
@@ -79,7 +78,7 @@ int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 do
                 {
-                    TREEBIRD_SPAWN_PARTICLE(obj, 0xcd);
+                    (*gPartfxInterface)->spawnObject(obj, 0xcd, 0, 1, -1, 0);
                     j--;
                 } while (j != 0);
             }
@@ -87,7 +86,7 @@ int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 do
                 {
-                    TREEBIRD_SPAWN_PARTICLE(obj, 0xcf);
+                    (*gPartfxInterface)->spawnObject(obj, 0xcf, 0, 1, -1, 0);
                     j--;
                 } while (j != 0);
             }
@@ -98,7 +97,7 @@ int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 do
                 {
-                    TREEBIRD_SPAWN_PARTICLE(obj, 0xd4);
+                    (*gPartfxInterface)->spawnObject(obj, 0xd4, 0, 1, -1, 0);
                     j--;
                 } while (j != 0);
             }
@@ -106,7 +105,7 @@ int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 do
                 {
-                    TREEBIRD_SPAWN_PARTICLE(obj, 0xce);
+                    (*gPartfxInterface)->spawnObject(obj, 0xce, 0, 1, -1, 0);
                     j--;
                 } while (j != 0);
             }
@@ -114,7 +113,7 @@ int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             {
                 do
                 {
-                    TREEBIRD_SPAWN_PARTICLE(obj, 0xd0);
+                    (*gPartfxInterface)->spawnObject(obj, 0xd0, 0, 1, -1, 0);
                     j--;
                 } while (j != 0);
             }

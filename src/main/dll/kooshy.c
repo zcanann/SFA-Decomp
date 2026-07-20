@@ -17,7 +17,8 @@
 #include "main/frame_timing.h"
 #include "main/voxmaps.h"
 #include "main/dll/kooshy.h"
-#include "main/dll/magicplant_ext.h"
+#include "main/dll/magicPlant.h"
+#include "main/dll/baddie_frozen.h"
 
 
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
@@ -71,7 +72,8 @@ void kooshy_spawnProjectile(GameObject* obj, int state)
     }
 }
 
-void kooshy_updateWhileFrozen(GameObject* obj, int state, int attacker, int msgFlag, int hitId, int damage, void* wpad0, int wpad1)
+void kooshy_updateWhileFrozen(GameObject* obj, u8* state, int attacker, int msgFlag, int hitId, int damage, Vec* wpad0,
+                              int wpad1)
 {
     if ((obj)->anim.currentMove == 1)
     {
@@ -156,7 +158,7 @@ void kooshy_updateIdle(GameObject* obj, int state)
     if ((flagByte & 0x40) == 0)
     {
         Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_baddie_blooplaugh3, 2);
-        Baddie_SetMove(obj, state, 2, lbl_803E290C, 0, 0);
+        fn_8014D08C(obj, state, 2, lbl_803E290C, 0, 0);
         ((BaddieState*)state)->userData2 = (u8)((((BaddieState*)state)->userData2) | 0x40);
         ((BaddieState*)state)->userData1 = 0;
     }
@@ -198,7 +200,7 @@ void kooshy_updateIdle(GameObject* obj, int state)
                 Sfx_PlayFromObject((int)obj, SFXTRIG_newtricky_01j);
             }
         }
-        Baddie_SetMove(obj, state, mode, lbl_803E2910, 0, 0);
+        fn_8014D08C(obj, state, mode, lbl_803E2910, 0, 0);
     }
     if ((obj)->anim.currentMove == 5 && (double)(obj)->anim.currentMoveProgress >= lbl_803E2918 &&
         (double)(obj)->anim.currentMoveProgress < lbl_803E2918 + ((BaddieState*)state)->unk308 * timeDelta)
@@ -224,7 +226,7 @@ void kooshy_updateEngaged(GameObject* obj, int state)
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 && (obj)->anim.currentMove != 1)
     {
         Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
-        Baddie_SetMove(obj, state, 1, lbl_803E290C, 0, 0);
+        fn_8014D08C(obj, state, 1, lbl_803E290C, 0, 0);
     }
     fn_8015355C(obj, state);
 }

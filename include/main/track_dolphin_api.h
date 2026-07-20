@@ -31,6 +31,7 @@ typedef struct TrackQueryBounds
 STATIC_ASSERT(sizeof(TrackQueryBounds) == 0x18);
 
 struct MapShader;
+typedef struct ObjModel ObjModel;
 
 int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameCount);
 int fn_80065640(void);
@@ -43,7 +44,7 @@ void hitDetect_calcSweptSphereBounds(TrackQueryBounds* boundsOut, f32* startPoin
                                      int pointCount);
 void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* bounds, u32 mask, int flags);
 void fn_80065574(int matchValue, GameObject* obj, int flag);
-void doNothing_80062A50();
+void doNothing_80062A50(GameObject* obj, f32 x, f32 y, f32 z);
 void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode);
 void playerShadowFn_80062a30(GameObject* obj);
 void setShadowFlag_803db658(s32 value);
@@ -66,6 +67,9 @@ void renderMapBlock(int* block, u8 type);
 void fn_80062894(void);
 void fn_80062808(void);
 void fn_80063368(GameObject* target);
+void objDrawFn_80061654(GameObject* obj, ObjModel* model);
+int findSurfaceInYRange(GameObject* obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
+                        GameObject** outSurfaceObj);
 void renderGlows(void);
 void MapBlock_init(GameObject* obj);
 void MapBlock_initHits(GameObject* obj, int index);

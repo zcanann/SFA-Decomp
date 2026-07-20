@@ -2,7 +2,6 @@
  * LanternFireFly (DLL 0x10C). TU = 0x80186704..0x801871C8.
  */
 #include "main/dll/partfx_interface.h"
-#include "main/dll/CF/CFcrystal.h"
 #include "main/object_render.h"
 #include "main/vecmath.h"
 #include "main/dll/windlift107state_struct.h"
@@ -10,6 +9,7 @@
 #include "main/dll/scarabstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/track_dolphin_api.h"
 #include "main/model_light.h"
 #include "main/object.h"
@@ -28,7 +28,7 @@ f32 lbl_803DBDD8 = 60.0f;
 
 typedef struct LanternFireFlyPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 wanderRange;
     u8 stateId;
     s16 timer;
@@ -123,12 +123,12 @@ void LanternFireFly_func0B(GameObject* obj)
         st->offZ = vec[2];
         st->animFrame = 4;
     }
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
-    fn_801869DC(obj);
+    LanternFireFly_advanceControlRing(obj);
+    LanternFireFly_advanceControlRing(obj);
+    LanternFireFly_advanceControlRing(obj);
+    LanternFireFly_advanceControlRing(obj);
+    LanternFireFly_advanceControlRing(obj);
+    LanternFireFly_advanceControlRing(obj);
     ((LFFlags*)&state->modeFlags)->mode = 1;
     state->timer = ((LanternFireFlyPlacement*)setup)->timer;
     gameBitIncrement(0x698);
@@ -148,7 +148,7 @@ void LanternFireFly_setScale(u8* obj, f32* vec)
     sub->animFrame = 4;
 }
 
-void fn_801868D0(GameObject* obj)
+void LanternFireFly_pickDriftOffset(GameObject* obj)
 {
     typedef struct
     {
@@ -189,7 +189,7 @@ void fn_801868D0(GameObject* obj)
     vecRotateZXY(&rot.ang, &state->offX);
 }
 
-void fn_801869DC(GameObject* obj)
+void LanternFireFly_advanceControlRing(GameObject* obj)
 {
     typedef struct
     {
@@ -267,8 +267,6 @@ void LanternFireFly_hitDetect(void)
 {
 }
 
-#define LANTERN_SPAWN_FX(obj, id, a, b, c, d) (*gPartfxInterface)->spawnObject((void*)obj, id, a, b, c, d)
-
 #define LANTERN_FIREFLY_MODE(state)      (((u32)(state)->modeFlags >> 6) & 3)
 #define LANTERN_FIREFLY_IS_ACTIVE(state) (LANTERN_FIREFLY_MODE(state) == 1u)
 
@@ -305,14 +303,14 @@ void LanternFireFly_update(GameObject* obj)
         }
         else
         {
-            fn_801868D0(obj);
+            LanternFireFly_pickDriftOffset(obj);
         }
-        fn_801869DC(obj);
+        LanternFireFly_advanceControlRing(obj);
     }
 
-    (obj)->anim.localPosX = state->anchorX + Curve_EvalBSplineValuesFirst(state->controlX, state->splineT, 0);
-    (obj)->anim.localPosY = state->anchorY + Curve_EvalBSplineValuesFirst(state->controlY, state->splineT, 0);
-    (obj)->anim.localPosZ = state->anchorZ + Curve_EvalBSplineValuesFirst(state->controlZ, state->splineT, 0);
+    (obj)->anim.localPosX = state->anchorX + Curve_EvalBSpline(state->controlX, state->splineT, 0);
+    (obj)->anim.localPosY = state->anchorY + Curve_EvalBSpline(state->controlY, state->splineT, 0);
+    (obj)->anim.localPosZ = state->anchorZ + Curve_EvalBSpline(state->controlZ, state->splineT, 0);
 
     if (LANTERN_FIREFLY_IS_ACTIVE(state))
     {
@@ -367,12 +365,12 @@ void LanternFireFly_update(GameObject* obj)
         {
             if (state->stateId == 1 || state->stateId == 4)
             {
-                LANTERN_SPAWN_FX(obj, 0x19f, 0, 1, -1, 0);
-                LANTERN_SPAWN_FX(obj, 0x1a0, 0, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x19f, 0, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x1a0, 0, 1, -1, 0);
             }
             else
             {
-                LANTERN_SPAWN_FX(obj, 0x1bd, 0, 1, -1, 0);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x1bd, 0, 1, -1, 0);
             }
         }
         if ((state->timer -= framesThisStep) < 0)
@@ -405,12 +403,11 @@ void LanternFireFly_update(GameObject* obj)
     }
     else
     {
-        LANTERN_SPAWN_FX(obj, 0x19f, 0, 1, -1, 0);
-        LANTERN_SPAWN_FX(obj, 0x1a0, 0, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject((void*)obj, 0x19f, 0, 1, -1, 0);
+        (*gPartfxInterface)->spawnObject((void*)obj, 0x1a0, 0, 1, -1, 0);
     }
 }
 
-#undef LANTERN_SPAWN_FX
 #undef LANTERN_FIREFLY_IS_ACTIVE
 #undef LANTERN_FIREFLY_MODE
 

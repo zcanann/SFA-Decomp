@@ -1,14 +1,13 @@
 #include "main/game_object.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_hud_api.h"
-#define INTERSECT_SCREEN_DIRECT_SIGNED_WIDTH_CALL
 #include "track/intersect_screen_api.h"
-#undef INTERSECT_SCREEN_DIRECT_SIGNED_WIDTH_CALL
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/objprint_render_api.h"
 #include "main/newshadows_audio_api.h"
+#include "main/newshadows.h"
 #include "main/texture.h"
 #include "main/newshadows_shadow_api.h"
 #include "main/rcp_dolphin_api.h"
@@ -30,8 +29,8 @@
 #include "main/shader_api.h"
 #include "main/sky_api.h"
 #include "main/track_dolphin.h"
-#include "main/objprint_ext.h"
-#include "main/pi_dolphin_fileload_api.h"
+#include "main/objprint_render_api.h"
+#include "main/shader_dolphin.h"
 #include "main/dll/modgfx.h"
 #include "dolphin/gx/GXFrameBuffer.h"
 #include "string.h"
@@ -778,7 +777,7 @@ void sortShadowEntriesDescending(ShadowSortEntry* arr, int count);
 void renderShadows(int unused0, int unused1, int unused2)
 {
     NewShadowCaster* casterPtr;
-    f32 *mc54p, *vAp2, *vAp1;
+    f32 *mc54p;
     f32 dirY, dirZ, vAy, dirX, sCamX, sCamY;
     int savedRotY;
     s16 savedRotX, savedRotZ;
@@ -821,8 +820,6 @@ void renderShadows(int unused0, int unused1, int unused2)
     casterIdx = 0;
     casterPtr = shadowData->casters;
     mc54p = &mc54[0];
-    vAp2 = &vA[2];
-    vAp1 = &vA[1];
     for (; casterIdx < gNewShadowCasterCount && casterIdx < NEW_SHADOW_MAX_CASTERS; casterPtr++, casterIdx++)
     {
         GameObject* obj = casterPtr->obj;
@@ -871,7 +868,7 @@ void renderShadows(int unused0, int unused1, int unused2)
                 w = obj->anim.modelState->shadowTexture->width;
                 screenW = w;
             }
-            fn_8008923C(obj, vA, vAp1, vAp2);
+            fn_8008923C(obj, vA, &vA[1], &vA[2]);
             dot24[0] = -modelState->shadowOffsetX;
             dot24[1] = -modelState->shadowOffsetY;
             dot24[2] = -modelState->shadowOffsetZ;
@@ -1697,13 +1694,13 @@ void allocLotsOfTextures(void)
             j = 0;
             fi = i - lbl_803DEDF8;
             fi2 = (f32)(i + 1) - lbl_803DEDF8;
-            rc = fi * lbl_803DEDFC;
-            rc2 = fi2 * lbl_803DEDFC;
             for (; j < 0x40; j++)
             {
                 f32 cc = (f32)j - lbl_803DEDF8;
                 f32 d1, d2, cc2, d3, n1, a, b;
                 f64 n2, n3;
+                rc = fi * lbl_803DEDFC;
+                rc2 = fi2 * lbl_803DEDFC;
                 cc = cc * lbl_803DEDFC;
                 cc = cc * cc;
                 d1 = sqrtf(rc * rc + cc);
@@ -1734,14 +1731,14 @@ void allocLotsOfTextures(void)
                 lowoff = (j & 3) * 2;
                 fj = j - lbl_803DEDF8;
                 fj2 = (f32)(j + 1) - lbl_803DEDF8;
-                rc = fj * lbl_803DEDFC;
-                rc2 = fj2 * lbl_803DEDFC;
                 for (; i < 0x40; i++)
                 {
                     int dst = gNewShadowBumpTexture + lowoff;
                     f32 cc, d1, d2, cc2, d3, n1, n2, n3, a, b;
                     f32 c;
                     int bi, ci, ai;
+                    rc = fj * lbl_803DEDFC;
+                    rc2 = fj2 * lbl_803DEDFC;
                     dst += rowoff;
                     dst += (i & 3) * 8;
                     dst += (i >> 2) * 0x200;

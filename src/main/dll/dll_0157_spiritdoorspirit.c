@@ -89,7 +89,7 @@ void spiritdoorspirit_init(GameObject* obj)
 {
     SpiritDoorSpiritState* state = obj->extra;
     state->active = 0;
-    *(s8*)&obj->anim.alpha = 0;
+    obj->anim.alpha = 0;
 }
 
 

@@ -39,7 +39,6 @@
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "main/dll/tricky_api.h"
-#include "main/object_ext.h"
 #define SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SIDEKICKBALL_OBJFLAG_PARENT_SLACK       0x1000
 #define SIDEKICKBALL_MSG_PLAYER_GRAB            0x100010 /* tells player to grab/hold the ball */
@@ -358,7 +357,7 @@ typedef struct TrickyBallState
 u8 trickyBallMove(GameObject* obj)
 {
 
-    TrickyBallState* state;
+    int hasCollisionNormal;
     f32 collisionNormal[3];
     f32 dx;
     f32 dy;
@@ -370,7 +369,7 @@ u8 trickyBallMove(GameObject* obj)
     f32 reflectedZ;
     f32 dot;
     f32 restitution;
-    int hasCollisionNormal;
+    TrickyBallState* state;
     int movedFromCache;
     int hasFloorDepth;
 
@@ -501,7 +500,7 @@ u8 trickyBallMove(GameObject* obj)
         obj->anim.velocityY -= 0.05f * timeDelta;
     }
 
-    fn_8002A5DC((u8*)obj);
+    fn_8002A5DC(obj);
     state->prevPos[0] = obj->anim.localPosX;
     state->prevPos[1] = obj->anim.localPosY;
     state->prevPos[2] = obj->anim.localPosZ;

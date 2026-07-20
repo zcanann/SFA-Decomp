@@ -11,7 +11,7 @@
  *
  * The dfropenode_getAngle..func13 accessors read/write the DFropenodeExtra
  * state (angle, hidden flag with its linked-object mirror, ground minY,
- * linked object). fn_801C1698 projects a point onto the start->end segment
+ * linked object). DFRope_projectPointOntoSegment projects a point onto the start->end segment
  * (clamped to the endpoints) and returns the projection parameter t.
  */
 #include "main/game_object.h"
@@ -185,7 +185,7 @@ void dfropenode_clearLinkedObj(int obj)
     ((DFropenodeObject*)obj)->extra->linkedObj = 0;
 }
 
-f32 fn_801C1698(f32* x, f32* y, f32* z, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ)
+f32 DFRope_projectPointOntoSegment(f32* x, f32* y, f32* z, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ)
 {
     f32 dx;
     f32 dy;

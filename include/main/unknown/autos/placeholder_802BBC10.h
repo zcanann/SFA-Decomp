@@ -83,9 +83,9 @@ void FUN_802bb82c(u64 param_1,u64 param_2,double param_3,u64 param_4,
 int DR_EarthWarrior_render2(void);
 int DR_EarthWarrior_setScale(void);
 int DR_EarthWarrior_getExtraSize(void);
-int DR_EarthWarrior_func16(void);
+int DR_EarthWarrior_getRiderMode(void);
 int DR_EarthWarrior_func20(void);
-void DR_EarthWarrior_func21(void);
+void DR_EarthWarrior_resetToRomListPosition(void);
 int DR_CloudRunner_render2(void);
 int DR_CloudRunner_setScale(void);
 int DR_CloudRunner_getExtraSize(void);

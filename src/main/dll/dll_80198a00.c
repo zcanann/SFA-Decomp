@@ -52,12 +52,12 @@ void fn_80198A00(u8* obj, GameObject* seqObj)
 
     queryType = 0x17;
     state = (MmpTriggerPlaneState*)((GameObject*)obj)->extra;
-    curveHit = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+    curveHit = (*gRomCurveInterface)->find(
         state->ptB[0], state->ptB[1], state->ptB[2], &queryType, 1,
         *(s16*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x38));
-    frontBlocked = ((int (*)(int, f32, f32, f32, f32*))(*gRomCurveInterface)->slot4C)(
+    frontBlocked = (*gRomCurveInterface)->isPointInsideLoop(
         curveHit, state->ptB[0], state->ptB[1], state->ptB[2], &hitDistance);
-    rearBlocked = ((int (*)(int, f32, f32, f32, f32*))(*gRomCurveInterface)->slot4C)(
+    rearBlocked = (*gRomCurveInterface)->isPointInsideLoop(
         curveHit, state->ptA[0], state->ptA[1], state->ptA[2], &hitDistance);
 
     if (frontBlocked != 0)

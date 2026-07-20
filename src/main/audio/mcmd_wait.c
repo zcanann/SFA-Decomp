@@ -3,7 +3,7 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/hw_init.h"
-#include "main/audio/inp_ctrl.h"
+#include "main/audio/snd_service.h"
 #include "main/audio/mcmd_wait.h"
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
@@ -13,7 +13,6 @@
 #define MAC_WAIT(sv)       (*(u64*)&(sv)->wakeTimeHi)
 #define MAC_START_TIME(sv) (*(u64*)&(sv)->startTimeHi)
 #define MAC_WAIT_TIME(sv)  (*(u64*)&(sv)->activeTimeHi)
-#define MAC_REALTIME       macRealTime
 
 extern u64 macRealTime;
 /*
@@ -81,7 +80,7 @@ int mcmdWait(McmdVoiceState* svoice, McmdCommandArgs* cstep)
                 }
                 else
                 {
-                    MAC_WAIT(svoice) = MAC_REALTIME + ms;
+                    MAC_WAIT(svoice) = macRealTime + ms;
                 }
             }
             else
@@ -96,7 +95,7 @@ int mcmdWait(McmdVoiceState* svoice, McmdCommandArgs* cstep)
                 }
             }
 
-            if (!(MAC_WAIT(svoice) > MAC_REALTIME))
+            if (!(MAC_WAIT(svoice) > macRealTime))
             {
                 MAC_WAIT_TIME(svoice) = MAC_WAIT(svoice);
                 MAC_WAIT(svoice) = 0;

@@ -10,7 +10,6 @@
  * skips render).
  */
 #include "main/dll/partfx_interface.h"
-#include "main/dll/LGT/LGTprojectedlight.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_render.h"

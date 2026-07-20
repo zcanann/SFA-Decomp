@@ -27,7 +27,7 @@ STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 #define MMPTRENCHFX_PARTFX_EMIT 0x71F
 #define MMPTRENCHFX_PARTFX_TICK 0x720
 
-char lbl_803AC930[0x18];
+PartFxSpawnParams lbl_803AC930;
 
 int mmp_trenchfx_getExtraSize(void)
 {
@@ -77,15 +77,15 @@ void mmp_trenchfx_update(GameObject* obj)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_EMIT, &state->fxUnk10, 0x200001, -1, NULL);
         }
-        *(f32*)(lbl_803AC930 + 8) = 1.0f;
-        *(f32*)(lbl_803AC930 + 0xC) = (f32)(int)randomGetRange(-state->extentX, state->extentX);
-        *(f32*)(lbl_803AC930 + 0x10) = (f32)(int)randomGetRange(-state->extentY, state->extentY);
-        *(f32*)(lbl_803AC930 + 0x14) = (f32)(int)randomGetRange(-state->extentZ, state->extentZ);
-        vecRotateZXY((void*)state->emitAngles, (void*)(lbl_803AC930 + 0xC));
-        *(f32*)(lbl_803AC930 + 0xC) += obj->anim.localPosX;
-        *(f32*)(lbl_803AC930 + 0x10) += obj->anim.localPosY;
-        *(f32*)(lbl_803AC930 + 0x14) += obj->anim.localPosZ;
-        (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_TICK, lbl_803AC930, 0x200001, -1, NULL);
+        lbl_803AC930.scale = 1.0f;
+        lbl_803AC930.posX = (f32)(int)randomGetRange(-state->extentX, state->extentX);
+        lbl_803AC930.posY = (f32)(int)randomGetRange(-state->extentY, state->extentY);
+        lbl_803AC930.posZ = (f32)(int)randomGetRange(-state->extentZ, state->extentZ);
+        vecRotateZXY((void*)state->emitAngles, &lbl_803AC930.posX);
+        lbl_803AC930.posX += obj->anim.localPosX;
+        lbl_803AC930.posY += obj->anim.localPosY;
+        lbl_803AC930.posZ += obj->anim.localPosZ;
+        (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_TICK, &lbl_803AC930, 0x200001, -1, NULL);
     }
 }
 

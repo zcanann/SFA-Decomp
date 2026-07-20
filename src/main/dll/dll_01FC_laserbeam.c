@@ -39,6 +39,7 @@
 #include "main/dll/wmseqobjectsetup_struct.h"
 #include "main/dll/wmgalleonstate_struct.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/foodbag.h"
 
 #define OBJ_PTR(obj, offset) (*(void**)((u8*)(obj) + (offset)))
 
@@ -100,7 +101,7 @@ void LaserBeam_hitDetect(void)
 
 typedef struct LaserBeamPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 spawnYaw;    /* 0x18: seeded into the object header (obj[0] = spawnYaw << 8) */
     u8 beamKind;    /* 0x19: laser variant (2/3/30) */
     s16 beamLength; /* 0x1A: beam reach - added to beamZ for the endpoint and squared for the hit radius */
@@ -121,7 +122,7 @@ STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 static const f32 gLaserBeamObjPi = 3.1415927f;
 static const f32 gLaserBeamObjAngleToRadScale = 32768.0f;
 
-extern int* gLaserBeamObjModgfxResource;
+extern Dll81Interface** gLaserBeamObjModgfxResource;
 
 void LaserBeam_update(int obj2)
 {
@@ -186,14 +187,12 @@ void LaserBeam_update(int obj2)
                 {
                     if (gLaserBeamObjModgfxResource != NULL)
                     {
-                        (*(s16(**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(obj2, 2, 0,
-                                                                                                     0x10004, -1, 0);
+                        (*gLaserBeamObjModgfxResource)->spawn(obj2, 2, NULL, 0x10004, -1, 0);
                     }
                 }
                 else if (beamKind != 30 && beamKind != 0)
                 {
-                    (*(s16(**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(obj2, 0, 0, 0x10004,
-                                                                                                 -1, 0);
+                    (*gLaserBeamObjModgfxResource)->spawn(obj2, 0, NULL, 0x10004, -1, 0);
                 }
             }
             if (b->fireTimer < 0x28)
@@ -213,24 +212,22 @@ void LaserBeam_update(int obj2)
                     {
                         if (gLaserBeamObjModgfxResource != NULL)
                         {
-                            (*(s16(**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
-                                obj2, 3, 0, 0x10004, -1, 0);
+                            (*gLaserBeamObjModgfxResource)->spawn(obj2, 3, NULL, 0x10004, -1, 0);
                         }
                     }
                     else if (beamKind == 30)
                     {
                         if (gLaserBeamObjModgfxResource != NULL)
                         {
-                            b->emitterSlot = (*(s16(**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource +
-                                                                                       4))(obj2, 30, 0, 0x10004, -1, 0);
+                            b->emitterSlot =
+                                (*gLaserBeamObjModgfxResource)->spawn(obj2, 30, NULL, 0x10004, -1, 0);
                         }
                     }
                     else if (beamKind != 0)
                     {
                         if (gLaserBeamObjModgfxResource != NULL)
                         {
-                            (*(s16(**)(int, int, int, int, int, int))(*gLaserBeamObjModgfxResource + 4))(
-                                obj2, 1, 0, 0x10004, -1, 0);
+                            (*gLaserBeamObjModgfxResource)->spawn(obj2, 1, NULL, 0x10004, -1, 0);
                         }
                     }
                     else
@@ -243,8 +240,8 @@ void LaserBeam_update(int obj2)
                             }
                             if (gLaserBeamObjModgfxResource != NULL)
                             {
-                                b->emitterSlot = (*(s16(**)(int, int, int, int, int, int))(
-                                    *gLaserBeamObjModgfxResource + 4))(obj2, 0, 0, 0x10004, -1, 0);
+                                b->emitterSlot =
+                                    (*gLaserBeamObjModgfxResource)->spawn(obj2, 0, NULL, 0x10004, -1, 0);
                             }
                         }
                     }
@@ -387,7 +384,7 @@ void LaserBeam_update(int obj2)
                         {
                             ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_BURST, (char*)b + 0x34, 0);
                         }
-                        *(u8*)&b->fireCooldown = 2;
+                        b->fireCooldown = 2;
                     }
                 }
             }

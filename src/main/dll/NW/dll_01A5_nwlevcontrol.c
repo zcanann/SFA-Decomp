@@ -26,7 +26,6 @@
 #include "main/obj_trigger.h"
 #include "main/mapEvent.h"
 #include "main/model_engine.h"
-#include "main/dll/flybaddie1D7.h"
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"

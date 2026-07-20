@@ -147,8 +147,8 @@ int grimble_stateHandlerB00(int obj, GroundBaddieState* p)
     {
         if ((f32)p->baddie.stateTimer > 4.0f * timeDelta)
         {
-            ((void (*)(int, int, int, u16*, u16*, u16*))((void**)*gBaddieControlInterface)[5])(
-                obj, *(int*)&p->baddie.targetObj, 16, &a, &b, &c);
+            (*gBaddieControlInterface)
+                ->getTargetGeometry((GameObject*)obj, (GameObject*)p->baddie.targetObj, 16, &a, &b, &c);
             if (a < 4 || a > 11)
             {
                 return 3;
@@ -204,7 +204,7 @@ int grimble_stateHandlerA08(int* obj, GroundBaddieState* state)
     {
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_iceywindlp16_233);
         state->baddie.eventFlags &= ~BADDIE_EVENT_LANDING;
-        ((void (*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, sub->triggerId, -1, 1);
+        (*gBaddieControlInterface)->spawnChild((GameObject*)obj, sub->triggerId, -1, 1);
     }
     return 0;
 }
@@ -284,7 +284,7 @@ int grimble_stateHandlerA06(GameObject* obj, GroundBaddieState* p, f32 spd)
         p->baddie.moveDone = 0;
     }
     p->baddie.moveSpeed = 0.03f;
-    ((void (*)(short*, u8*, f32, int))((void**)*gPlayerInterface)[8])((short*)obj, (u8*)p, spd, 1);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, p, spd, 1);
     /* advance pathProgress along the path (pathObj vtable +0x28) by
      * animSpeedA, sign-flipped when the path is walked reversed */
     (*(void (**)(void*, void*, f32))(**(int**)(ctrl->pathObj + 0x68) + 0x28))(

@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/audio/aram.h"
+#include "main/audio/aram_queue.h"
 #include "main/audio/sal_dsp.h"
+#include "main/audio/snd_reverb.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/ar.h"
 

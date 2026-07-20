@@ -17,6 +17,7 @@
  * constants in the DLL's shared .sdata2 pool.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/objfx.h"
 #include "main/dll_000A_expgfx.h"
@@ -27,7 +28,7 @@
 #include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/expgfx_resource_api.h"
 #include "main/frame_timing.h"
-#include "main/trig_ext.h"
+#include "main/trig.h"
 #include "main/object.h"
 #include "main/model_light.h"
 #include "main/object_api.h"
@@ -268,9 +269,9 @@ void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, f32 mult
 
 void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d)
 {
-    int emitterArgs[4];
+    StaffCollisionColorArgs emitterArgs;
     ObjFxParticleEmitter emitter;
-    int* partfxIface;
+    StaffCollisionInterface** partfxIface;
     emitter.scale = lbl_803DF354;
     emitter.rotZ = 0;
     emitter.rotY = 0;
@@ -279,11 +280,11 @@ void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d)
     emitter.y = pos[1];
     emitter.z = pos[2];
     partfxIface = Resource_Acquire(0x5a, 1);
-    emitterArgs[0] = a;
-    emitterArgs[1] = b;
-    emitterArgs[2] = c;
-    emitterArgs[3] = d;
-    (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)partfxIface + 4)))(0, 1, &emitter, 0x401, -1, emitterArgs);
+    emitterArgs.count = a;
+    emitterArgs.red = b;
+    emitterArgs.green = c;
+    emitterArgs.blue = d;
+    (*partfxIface)->spawn(NULL, 1, (PartFxSpawnParams*)&emitter, 0x401, -1, &emitterArgs);
 }
 
 void hitDetectFn_80097070(void* obj, f32 scale, int idSel, int paramSel, int count, GameObject* origin)
@@ -1613,8 +1614,8 @@ void DIMexplosionFn_8009a96c(u8* src, f32 x, f32 y, f32 z, f32 scale, u8 kind, u
     if (Obj_IsLoadingLocked() != 0)
     {
         setup = (ExplosionSetup*)Obj_AllocObjectSetup(0x24, OBJFX_CHILD_OBJ_EXPLOSION);
-        ((ObjPlacement*)setup)->color[0] = 2;
-        ((ObjPlacement*)setup)->color[1] = 1;
+        setup->head.color[0] = 2;
+        setup->head.color[1] = 1;
         ((GameObject*)setup)->anim.rootMotionScale = x;
         ((GameObject*)setup)->anim.localPosX = y;
         ((GameObject*)setup)->anim.localPosY = z;
@@ -1664,8 +1665,8 @@ void spawnExplosion(GameObject* src, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 
     if (Obj_IsLoadingLocked() != 0)
     {
         setup = (ExplosionSetup*)Obj_AllocObjectSetup(0x24, OBJFX_CHILD_OBJ_EXPLOSION);
-        ((ObjPlacement*)setup)->color[0] = 2;
-        ((ObjPlacement*)setup)->color[1] = 1;
+        setup->head.color[0] = 2;
+        setup->head.color[1] = 1;
         ((GameObject*)setup)->anim.rootMotionScale = src->anim.worldPosX;
         ((GameObject*)setup)->anim.localPosX = src->anim.worldPosY;
         ((GameObject*)setup)->anim.localPosY = src->anim.worldPosZ;

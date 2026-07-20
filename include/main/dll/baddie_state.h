@@ -198,7 +198,7 @@ typedef struct GroundBaddieState {
     u8 unk3E4[4];
     f32 glowAlpha; /* 0x3e8: alpha of the red glow tint RGBA(200,0,0,glowAlpha), passed to fn_8003B5E0 + objParticleFn alpha arg in baddie render */
     u8 unk3EC[4];
-    s16 triggerId; /* config-sourced id (loaded from config+0x22) handed to gBaddieControlInterface[19]/+0x4C when a move/landing event fires */
+    s16 triggerId; /* config-sourced id (loaded from config+0x22) handed to BaddieControlInterface.spawnChild when a move/landing event fires */
     s16 gameBitA; /* set 1 on trigger */
     s16 gameBitB; /* set 1 / cleared 0; also passed to interface[10] */
     s16 gameBitC; /* gate; checked != -1 + mainGetBit */
@@ -216,7 +216,7 @@ typedef struct GroundBaddieState {
     u16 flags400; /* bit flags 2/8/0x100; &flags400 also passed as a buffer base */
     s16 targetState; /* 0 = no target; tryAcquireTarget vs updateTargetMotion */
     u8 configFlags; /* bits 1/2/0x10 */
-    u8 subMode; /* sub-state-machine index 0/1/2 (switch/==-tested; &subMode handed to gBaddieControlInterface[10] as the route-phase out-param) */
+    u8 subMode; /* sub-state-machine index 0/1/2 (switch/==-tested; &subMode handed to BaddieControlInterface.processMessages as the route-phase out-param) */
     u8 aggression; /* percent-ish; randomGetRange(0, x), > 50 compares */
     u8 unk407[0x40C - 0x407];
     void *control; /* per-family control/extra record (engine-allocated; treasurechest casts its slot to LandedArwingState*) */

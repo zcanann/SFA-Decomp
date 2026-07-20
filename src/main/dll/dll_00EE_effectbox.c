@@ -21,7 +21,6 @@
 #include "main/object_api.h"
 #include "main/object_render.h"
 #include "main/dll/dll_00EE_effectbox.h"
-#include "main/object_ext.h"
 
 /* EffectboxPlacement.targetMode values */
 #define EFFECTBOX_TARGET_PLAYER   0 /* Obj_GetPlayerObject */
@@ -171,7 +170,7 @@ void EffectBox_init(GameObject* obj, EffectboxPlacement* def)
     u32 flags;
     if ((obj)->userData1 == 0)
     {
-        fn_8002B860((void*)obj);
+        fn_8002B860(obj);
     }
     (obj)->userData1 = 1;
     gameBit = def->gameBitIndex;

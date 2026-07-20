@@ -32,7 +32,8 @@ extern f32 lbl_803E0A44;
 extern f32 lbl_803E0A48;
 extern f32 lbl_803E0A4C;
 
-void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32 flags)
+s16 dll_6A_func03(void* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags, int modelId,
+                  void* extraArg)
 {
     ModgfxPointerSpawnPacket buf;
     u8* tab = (u8*)(int)lbl_803138A0;
@@ -108,7 +109,7 @@ void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32
     e[9].y = lbl_803E0A28;
     e[9].z = lbl_803E0A28;
     buf.v58 = 0;
-    buf.ctx = sourceObj;
+    buf.ctx = (u8*)sourceObj;
     buf.v44 = variant;
     buf.pos[0] = lbl_803E0A28;
     buf.pos[1] = lbl_803E0A28;
@@ -132,7 +133,7 @@ void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32
     buf.hw[5] = *(s16*)&tab[362];
     buf.hw[6] = *(s16*)&tab[364];
     buf.cmds = buf.entries;
-    buf.flags |= flags;
+    buf.flags |= spawnFlags;
     if ((buf.flags & 1) != 0)
     {
         if (sourceObj != 0)
@@ -143,12 +144,12 @@ void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32
         }
         else
         {
-            buf.pos[0] = lbl_803E0A28 + posSource->posX;
-            buf.pos[1] = lbl_803E0A28 + posSource->posY;
-            buf.pos[2] = lbl_803E0A28 + posSource->posZ;
+            buf.pos[0] = lbl_803E0A28 + spawnParams->posX;
+            buf.pos[1] = lbl_803E0A28 + spawnParams->posY;
+            buf.pos[2] = lbl_803E0A28 + spawnParams->posZ;
         }
     }
-    (*gModgfxInterface)
+    return (*gModgfxInterface)
         ->spawnEffect(&buf, 0, 0x12, (u8*)(int)lbl_803138A0, 0x10, &((u8*)(int)lbl_803138A0)[180], DLL6A_EFFECT_ID, 0);
 }
 

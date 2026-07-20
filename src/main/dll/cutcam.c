@@ -7,13 +7,13 @@
  * line of sight is clear. camcontrol_traceFromTarget and
  * camcontrol_getTargetPosition build the trace endpoints from a target
  * object's world position (using cameraGetPrevPos2 for class 1 = the
- * player) plus the active CamcontrolModeSettings (cameraMtxVar57) and
+ * player) plus the active CamcontrolModeSettings (gCamcontrolModeSettings) and
  * return the desired camera position / yaw.
  *
- * cameraFn_80103b40 and camMoveFn_80104040 sweep candidate camera
+ * cameraFn_80103b40 and camcontrol_updateWallAvoidance sweep candidate camera
  * positions in fan steps around the target to slide the camera around
  * walls, writing the resulting yaw nudge into
- * cameraMtxVar57->avoidanceYawOffset.
+ * gCamcontrolModeSettings->avoidanceYawOffset.
  *
  * camcontrol_updateTargetAction polls the pad and switches camera modes
  * (modes 0x43/0x44/0x49) on lock-on / button input.
@@ -35,7 +35,7 @@
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
 
-CamcontrolModeSettings* cameraMtxVar57;
+CamcontrolModeSettings* gCamcontrolModeSettings;
 f32 lbl_803DD52C;
 u8 gCutCamBboxBlocked;
 
@@ -128,7 +128,7 @@ u8 camcontrol_traceFromTarget(float* fromPos, GameObject* target, float* outPos,
     else
     {
         targetPos[0] = target->anim.worldPosX;
-        targetPos[1] = target->anim.worldPosY + cameraMtxVar57->targetHeight;
+        targetPos[1] = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
         targetPos[2] = target->anim.worldPosZ;
     }
     camcontrol_traceMove(targetPos, fromPos, outPos, traceRec, 3, '\x01', '\x01', (double)lbl_803E1688);
@@ -151,15 +151,15 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
 
     cosv = mathSinf((lbl_803E168C * targetAnim->rotX) / lbl_803E1690);
     sinv = mathCosf((lbl_803E168C * targetAnim->rotX) / lbl_803E1690);
-    d2 = cameraMtxVar57->maxDistance * cameraMtxVar57->maxDistance -
-         cameraMtxVar57->lowerHeightOffset * cameraMtxVar57->lowerHeightOffset;
+    d2 = gCamcontrolModeSettings->maxDistance * gCamcontrolModeSettings->maxDistance -
+         gCamcontrolModeSettings->lowerHeightOffset * gCamcontrolModeSettings->lowerHeightOffset;
     if (d2 < lbl_803E1694)
     {
         d2 = *(f32*)&lbl_803E1694;
     }
     d2 = sqrtf(d2);
     pos[0] = cosv * d2 + targetAnim->worldPosX;
-    pos[1] = cameraMtxVar57->lowerHeightOffset + (targetAnim->worldPosY + cameraMtxVar57->targetHeight);
+    pos[1] = gCamcontrolModeSettings->lowerHeightOffset + (targetAnim->worldPosY + gCamcontrolModeSettings->targetHeight);
     pos[2] = sinv * d2 + targetAnim->worldPosZ;
     if (targetAnim->classId == 1)
     {
@@ -168,12 +168,12 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
     else
     {
         prev[0] = targetAnim->worldPosX;
-        prev[1] = targetAnim->worldPosY + cameraMtxVar57->targetHeight;
+        prev[1] = targetAnim->worldPosY + gCamcontrolModeSettings->targetHeight;
         prev[2] = targetAnim->worldPosZ;
     }
     camcontrol_traceMove(prev, pos, outPos, box, 3, '\x01', '\x01', lbl_803E1688);
-    (*gCameraInterface)->getRelativePosition(camera, &a, &b, &c, &d2, cameraMtxVar57->targetHeight, 0);
-    b = camera->anim.worldPosY - (targetAnim->worldPosY + cameraMtxVar57->targetHeight);
+    (*gCameraInterface)->getRelativePosition(camera, &a, &b, &c, &d2, gCamcontrolModeSettings->targetHeight, 0);
+    b = camera->anim.worldPosY - (targetAnim->worldPosY + gCamcontrolModeSettings->targetHeight);
     ang = getAngle(b, d2);
     d = ang & 0xffff;
     d -= (u16)camera->anim.rotY;
@@ -215,9 +215,9 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
         else if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
                  (cond = objFn_802962b4((GameObject*)target), cond != 0))
         {
-            action44Payload.distance = cameraMtxVar57->minDistance;
-            action44Payload.yOffset = cameraMtxVar57->lowerHeightOffset;
-            action44Payload.height = cameraMtxVar57->targetHeight;
+            action44Payload.distance = gCamcontrolModeSettings->minDistance;
+            action44Payload.yOffset = gCamcontrolModeSettings->lowerHeightOffset;
+            action44Payload.height = gCamcontrolModeSettings->targetHeight;
             cameraSetInterpMode(0);
             (*gCameraInterface)->setMode(CAMMODE_VIEWFINDER, 1, 0, 0xc, &action44Payload, 0xf, 0xfe);
         }
@@ -272,7 +272,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
 
     OSGetTick(); /* timing probe; return value intentionally unused */
     result = 0;
-    (*gCameraInterface)->getRelativePosition(cam, &spinB, &spinC, &spinD, &spinA, cameraMtxVar57->targetHeight, 0);
+    (*gCameraInterface)->getRelativePosition(cam, &spinB, &spinC, &spinD, &spinA, gCamcontrolModeSettings->targetHeight, 0);
     tgt0 = *(int*)&((CameraObject*)cam)->anim.targetObj;
     *(int*)&probe[35] = tgt0;
     probe[1] = ((CameraObject*)cam)->anim.worldPosY;
@@ -289,7 +289,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
     else
     {
         prev[0] = ((GameObject*)tgt0)->anim.worldPosX;
-        prev[1] = ((GameObject*)tgt0)->anim.worldPosY + cameraMtxVar57->targetHeight;
+        prev[1] = ((GameObject*)tgt0)->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
         prev[2] = ((GameObject*)tgt0)->anim.worldPosZ;
     }
     s = 0xf;
@@ -437,7 +437,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
         {
             g = -g;
         }
-        g = g * lbl_803DD52C + cameraMtxVar57->avoidanceYawOffset;
+        g = g * lbl_803DD52C + gCamcontrolModeSettings->avoidanceYawOffset;
         if (g > lbl_803E16BC)
         {
             g = lbl_803E16BC;
@@ -446,7 +446,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
         {
             g = lbl_803E16C0;
         }
-        cameraMtxVar57->avoidanceYawOffset = g;
+        gCamcontrolModeSettings->avoidanceYawOffset = g;
         result = 1;
     }
     return result;
@@ -462,7 +462,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
  * the camera around the target and decays the offset by 0.9 per frame
  * (snapping to zero inside +/-0.5).
  */
-void camMoveFn_80104040(CameraObject* camera, GameObject* target)
+void camcontrol_updateWallAvoidance(CameraObject* camera, GameObject* target)
 {
     float path[39];
     float endPts[13][3];
@@ -498,7 +498,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     else
     {
         prev[0] = target->anim.worldPosX;
-        prev[1] = target->anim.worldPosY + cameraMtxVar57->targetHeight;
+        prev[1] = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
         prev[2] = target->anim.worldPosZ;
     }
     path[0] = camera->anim.worldPosX;
@@ -549,18 +549,18 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
         blocked = 1;
     }
     trace = blocked; /* reused u8 temp: narrowed copy of the blocked flag */
-    cameraMtxVar57->collisionBlocked = trace;
+    gCamcontrolModeSettings->collisionBlocked = trace;
     if (trace != 0)
     {
-        cameraMtxVar57->wallAvoidanceFlags.b7 = 0;
+        gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
         if (cameraFn_80103b40((short*)camera, outA, outB, target->anim.rotX) == 0)
         {
-            cameraMtxVar57->avoidanceYawOffset = lbl_803E16AC;
+            gCamcontrolModeSettings->avoidanceYawOffset = lbl_803E16AC;
         }
     }
-    if (lbl_803E16AC != cameraMtxVar57->avoidanceYawOffset)
+    if (lbl_803E16AC != gCamcontrolModeSettings->avoidanceYawOffset)
     {
-        spin = (s16)(int)cameraMtxVar57->avoidanceYawOffset;
+        spin = (s16)(int)gCamcontrolModeSettings->avoidanceYawOffset;
         if ((spin < -0x1e) || (0x1e < spin))
         {
             rad = (lbl_803E168C * spin) / lbl_803E1690;
@@ -571,10 +571,10 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
             z = t * cosv + dz * sinv;
             camera->anim.worldPosZ = z + target->anim.worldPosZ;
         }
-        cameraMtxVar57->avoidanceYawOffset = cameraMtxVar57->avoidanceYawOffset * lbl_803E16C4;
-        if ((cameraMtxVar57->avoidanceYawOffset < lbl_803E16C8) && (cameraMtxVar57->avoidanceYawOffset > lbl_803E16CC))
+        gCamcontrolModeSettings->avoidanceYawOffset = gCamcontrolModeSettings->avoidanceYawOffset * lbl_803E16C4;
+        if ((gCamcontrolModeSettings->avoidanceYawOffset < lbl_803E16C8) && (gCamcontrolModeSettings->avoidanceYawOffset > lbl_803E16CC))
         {
-            cameraMtxVar57->avoidanceYawOffset = lbl_803E16AC;
+            gCamcontrolModeSettings->avoidanceYawOffset = lbl_803E16AC;
         }
     }
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
@@ -588,46 +588,46 @@ void camcontrol_updateModeSettings(int camera)
     f32 ratio;
     float curve[4];
 
-    if (cameraMtxVar57->transitionTimer != 0)
+    if (gCamcontrolModeSettings->transitionTimer != 0)
     {
-        cameraMtxVar57->transitionTimer -= framesThisStep;
-        if (cameraMtxVar57->transitionTimer < 0)
+        gCamcontrolModeSettings->transitionTimer -= framesThisStep;
+        if (gCamcontrolModeSettings->transitionTimer < 0)
         {
-            cameraMtxVar57->transitionTimer = 0;
+            gCamcontrolModeSettings->transitionTimer = 0;
         }
-        ratio = (f32)(cameraMtxVar57->transitionDuration - cameraMtxVar57->transitionTimer) /
-                (f32)(s32)cameraMtxVar57->transitionDuration;
+        ratio = (f32)(gCamcontrolModeSettings->transitionDuration - gCamcontrolModeSettings->transitionTimer) /
+                (f32)(s32)gCamcontrolModeSettings->transitionDuration;
         curve[0] = lbl_803E16AC;
         curve[1] = lbl_803E16A4;
         curve[2] = lbl_803E16AC;
         curve[3] = lbl_803E16AC;
-        blend = Curve_EvalHermite(ratio, curve, NULL);
-        cameraMtxVar57->targetHeight =
-            blend * (cameraMtxVar57->targetTargetHeight - cameraMtxVar57->savedTargetHeight) +
-            cameraMtxVar57->savedTargetHeight;
-        cameraMtxVar57->minDistance = blend * (cameraMtxVar57->targetMinDistance - cameraMtxVar57->savedMinDistance) +
-                                      cameraMtxVar57->savedMinDistance;
-        cameraMtxVar57->maxDistance = blend * (cameraMtxVar57->targetMaxDistance - cameraMtxVar57->savedMaxDistance) +
-                                      cameraMtxVar57->savedMaxDistance;
-        cameraMtxVar57->lowerHeightOffset =
-            blend * (cameraMtxVar57->targetLowerHeightOffset - cameraMtxVar57->savedLowerHeightOffset) +
-            cameraMtxVar57->savedLowerHeightOffset;
-        cameraMtxVar57->upperHeightOffset =
-            blend * (cameraMtxVar57->targetUpperHeightOffset - cameraMtxVar57->savedUpperHeightOffset) +
-            cameraMtxVar57->savedUpperHeightOffset;
-        cameraMtxVar57->distanceAdjustRate =
-            blend * (cameraMtxVar57->targetDistanceAdjustRate - cameraMtxVar57->savedDistanceAdjustRate) +
-            cameraMtxVar57->savedDistanceAdjustRate;
-        cameraMtxVar57->heightAdjustRate =
-            blend * (cameraMtxVar57->targetHeightAdjustRate - cameraMtxVar57->savedHeightAdjustRate) +
-            cameraMtxVar57->savedHeightAdjustRate;
-        cameraMtxVar57->slideRightAmount =
-            blend * (cameraMtxVar57->targetSlideRightAmount - cameraMtxVar57->savedSlideRightAmount) +
-            cameraMtxVar57->savedSlideRightAmount;
-        cameraMtxVar57->slideLeftAmount =
-            blend * (cameraMtxVar57->targetSlideLeftAmount - cameraMtxVar57->savedSlideLeftAmount) +
-            cameraMtxVar57->savedSlideLeftAmount;
+        blend = Curve_EvalHermite(curve, ratio, NULL);
+        gCamcontrolModeSettings->targetHeight =
+            blend * (gCamcontrolModeSettings->targetTargetHeight - gCamcontrolModeSettings->savedTargetHeight) +
+            gCamcontrolModeSettings->savedTargetHeight;
+        gCamcontrolModeSettings->minDistance = blend * (gCamcontrolModeSettings->targetMinDistance - gCamcontrolModeSettings->savedMinDistance) +
+                                      gCamcontrolModeSettings->savedMinDistance;
+        gCamcontrolModeSettings->maxDistance = blend * (gCamcontrolModeSettings->targetMaxDistance - gCamcontrolModeSettings->savedMaxDistance) +
+                                      gCamcontrolModeSettings->savedMaxDistance;
+        gCamcontrolModeSettings->lowerHeightOffset =
+            blend * (gCamcontrolModeSettings->targetLowerHeightOffset - gCamcontrolModeSettings->savedLowerHeightOffset) +
+            gCamcontrolModeSettings->savedLowerHeightOffset;
+        gCamcontrolModeSettings->upperHeightOffset =
+            blend * (gCamcontrolModeSettings->targetUpperHeightOffset - gCamcontrolModeSettings->savedUpperHeightOffset) +
+            gCamcontrolModeSettings->savedUpperHeightOffset;
+        gCamcontrolModeSettings->distanceAdjustRate =
+            blend * (gCamcontrolModeSettings->targetDistanceAdjustRate - gCamcontrolModeSettings->savedDistanceAdjustRate) +
+            gCamcontrolModeSettings->savedDistanceAdjustRate;
+        gCamcontrolModeSettings->heightAdjustRate =
+            blend * (gCamcontrolModeSettings->targetHeightAdjustRate - gCamcontrolModeSettings->savedHeightAdjustRate) +
+            gCamcontrolModeSettings->savedHeightAdjustRate;
+        gCamcontrolModeSettings->slideRightAmount =
+            blend * (gCamcontrolModeSettings->targetSlideRightAmount - gCamcontrolModeSettings->savedSlideRightAmount) +
+            gCamcontrolModeSettings->savedSlideRightAmount;
+        gCamcontrolModeSettings->slideLeftAmount =
+            blend * (gCamcontrolModeSettings->targetSlideLeftAmount - gCamcontrolModeSettings->savedSlideLeftAmount) +
+            gCamcontrolModeSettings->savedSlideLeftAmount;
         ((CameraObject*)camera)->fov =
-            blend * (cameraMtxVar57->fov - cameraMtxVar57->savedFov) + cameraMtxVar57->savedFov;
+            blend * (gCamcontrolModeSettings->fov - gCamcontrolModeSettings->savedFov) + gCamcontrolModeSettings->savedFov;
     }
 }

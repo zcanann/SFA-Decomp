@@ -36,7 +36,7 @@
 #define WCPUSHBLOCK_GAMEBIT_B_FADE   0x809
 #define WCPUSHBLOCK_GAMEBIT_B_COUNT  0x811
 
-void fn_802251B4(GameObject* obj, WcLevelControlState* state)
+void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
 {
     f32 sunTime;
 
@@ -107,7 +107,7 @@ void fn_802251B4(GameObject* obj, WcLevelControlState* state)
             if (state->tileAResetTimer <= lbl_803E6DA8)
             {
                 mainSetBits(WCPUSHBLOCK_GAMEBIT_A_COUNT, 0);
-                memcpy(lbl_803AD2D8, lbl_8032B008.g, 0x40);
+                memcpy(gWcTileGridA, gWcTileGridAInitial.g, 0x40);
                 state->tileAResetTimer = gWcPushBlockTileResetTime;
             }
         }
@@ -132,7 +132,7 @@ void fn_802251B4(GameObject* obj, WcLevelControlState* state)
             if (state->tileBResetTimer <= lbl_803E6DA8)
             {
                 mainSetBits(WCPUSHBLOCK_GAMEBIT_B_COUNT, 0);
-                memcpy(lbl_803AD298, lbl_8032B088.g, 0x40);
+                memcpy(gWcTileGridB, gWcTileGridBInitial.g, 0x40);
                 state->tileBResetTimer = gWcPushBlockTileResetTime;
             }
         }
@@ -195,7 +195,7 @@ void fn_802251B4(GameObject* obj, WcLevelControlState* state)
     }
 }
 
-void wcpushblock_updateLevelControlState(GameObject* obj, WcLevelControlState* state)
+void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state)
 {
     if (state->completionFlags & WCLEVELCTL_FLAG_EVENT_ACTIVE)
         return;
@@ -387,9 +387,9 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
         }
         for (i = a; i != limit; i -= dx)
         {
-            if (lbl_803AD298[i][b] != 0)
+            if (gWcTileGridB[i][b] != 0)
             {
-                if (lbl_803AD298[i][b] <= 4)
+                if (gWcTileGridB[i][b] <= 4)
                 {
                     f32 pz, px;
                     i += dx;
@@ -429,9 +429,9 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
         }
         for (i = b; i != limit; i -= dy)
         {
-            if (lbl_803AD298[a][i] != 0)
+            if (gWcTileGridB[a][i] != 0)
             {
-                if (lbl_803AD298[a][i] <= 4)
+                if (gWcTileGridB[a][i] <= 4)
                 {
                     f32 pz, px;
                     i += dy;
@@ -459,7 +459,7 @@ void wclevelcont_getSolvedTileXYB(s16 value, s16* outRow, s16* outCol)
     {
         for (j = 0; j < 8; j++)
         {
-            if (value == lbl_8032B0C8.g[i][j])
+            if (value == gWcTileGridBSolved.g[i][j])
             {
                 *outRow = i;
                 *outCol = j;
@@ -477,7 +477,7 @@ void wclevelcont_getInitialTileXYB(s16 value, s16* outRow, s16* outCol)
     {
         for (j = 0; j < 8; j++)
         {
-            if (value == lbl_8032B088.g[i][j])
+            if (value == gWcTileGridBInitial.g[i][j])
             {
                 *outRow = i;
                 *outCol = j;
@@ -493,7 +493,7 @@ int wclevelcont_getTileB(s16 i, s16 j)
     {
         return 0;
     }
-    return lbl_803AD298[i][j];
+    return gWcTileGridB[i][j];
 }
 
 void wclevelcont_setTileB(int value, s16 i, s16 j)
@@ -502,7 +502,7 @@ void wclevelcont_setTileB(int value, s16 i, s16 j)
     {
         return;
     }
-    lbl_803AD298[i][j] = value;
+    gWcTileGridB[i][j] = value;
 }
 
 void wclevelcont_worldPosToTileB(GameObject* obj, f32 px, f32 pz, s16* outRow, s16* outCol)
@@ -562,9 +562,9 @@ int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
         }
         for (i = a; i != limit; i -= dx)
         {
-            if (lbl_803AD2D8[i][b] != 0)
+            if (gWcTileGridA[i][b] != 0)
             {
-                if (lbl_803AD2D8[i][b] <= 4)
+                if (gWcTileGridA[i][b] <= 4)
                 {
                     f32 pz, px;
                     i += dx;
@@ -616,9 +616,9 @@ int wclevelcont_traceMoveA(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
         }
         for (i = b; i != limit; i -= dy)
         {
-            if (lbl_803AD2D8[a][i] != 0)
+            if (gWcTileGridA[a][i] != 0)
             {
-                if (lbl_803AD2D8[a][i] <= 4)
+                if (gWcTileGridA[a][i] <= 4)
                 {
                     f32 pz, px;
                     i += dy;
@@ -648,7 +648,7 @@ void wclevelcont_getSolvedTileXYA(s16 value, s16* outRow, s16* outCol)
     {
         for (j = 0; j < 8; j++)
         {
-            if (value == lbl_8032B048.g[i][j])
+            if (value == gWcTileGridASolved.g[i][j])
             {
                 *outRow = i;
                 *outCol = j;
@@ -666,7 +666,7 @@ void wclevelcont_getInitialTileXYA(s16 value, s16* outRow, s16* outCol)
     {
         for (j = 0; j < 8; j++)
         {
-            if (value == lbl_8032B008.g[i][j])
+            if (value == gWcTileGridAInitial.g[i][j])
             {
                 *outRow = i;
                 *outCol = j;
@@ -682,7 +682,7 @@ int wclevelcont_getTileA(s16 i, s16 j)
     {
         return 0;
     }
-    return lbl_803AD2D8[i][j];
+    return gWcTileGridA[i][j];
 }
 
 void wclevelcont_setTileA(int value, s16 i, s16 j)
@@ -691,7 +691,7 @@ void wclevelcont_setTileA(int value, s16 i, s16 j)
     {
         return;
     }
-    lbl_803AD2D8[i][j] = value;
+    gWcTileGridA[i][j] = value;
 }
 
 void wclevelcont_worldPosToTileA(GameObject* obj, f32 px, f32 pz, s16* outRow, s16* outCol)
@@ -827,10 +827,10 @@ void wclevelcont_update(GameObject* obj)
     {
     case 1:
     default:
-        wcpushblock_updateLevelControlState(obj, state);
+        wclevelcont_updateAct1State(obj, state);
         break;
     case 2:
-        fn_802251B4(obj, state);
+        wclevelcont_updateAct2State(obj, state);
         break;
     }
     wclevelcont_syncProgressBits(state);
@@ -853,9 +853,9 @@ void wclevelcont_init(GameObject* obj)
 
     obj->animEventCallback = wclevelcont_seqFn;
     mainSetBits(0x810, 0);
-    memcpy(lbl_803AD2D8, lbl_8032B008.g, 0x40);
+    memcpy(gWcTileGridA, gWcTileGridAInitial.g, 0x40);
     mainSetBits(0x811, 0);
-    memcpy(lbl_803AD298, lbl_8032B088.g, 0x40);
+    memcpy(gWcTileGridB, gWcTileGridBInitial.g, 0x40);
     if ((u32)mainGetBit(0x7fa) != 0)
         state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_B;
     if ((u32)mainGetBit(0x7f9) != 0)

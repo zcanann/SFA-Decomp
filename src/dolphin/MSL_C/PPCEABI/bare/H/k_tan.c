@@ -1,4 +1,5 @@
-#include "main/trig_ext.h"
+#include "main/fsin16_approx_api.h"
+#include "main/trig.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 

@@ -3,9 +3,6 @@
 
 #include "types.h"
 
-void Sfx_SetObjectSfxVolume(u32 obj, u16 sfxId, u8 volume, f32 volumeScale);
-
-#define Sfx_SetObjectSfxVolumeIntLegacy(obj, sfxId, volume, scale)                                        \
-    ((void (*)(int, int, int, f32))Sfx_SetObjectSfxVolume)((obj), (sfxId), (volume), (scale))
+void Sfx_SetObjectSfxVolume(int obj, u16 sfxId, u8 volume, f32 volumeScale);
 
 #endif /* MAIN_AUDIO_SFX_OBJECT_VOLUME_API_H_ */

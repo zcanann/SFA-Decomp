@@ -39,8 +39,6 @@
 #define SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND 1
 #define SYNTH_VIRTUAL_SAMPLE_CLAIM_CALLBACK_KIND 0
 
-typedef void (*SynthVirtualSampleCallback)(int kind, void *data);
-
 typedef struct SynthVirtualSampleCallbackData {
     u16 sampleId;
     u16 generation;
@@ -49,6 +47,8 @@ typedef struct SynthVirtualSampleCallbackData {
     u32 wrapA;
     u32 wrapB;
 } SynthVirtualSampleCallbackData;
+
+typedef u32 (*SynthVirtualSampleCallback)(int kind, SynthVirtualSampleCallbackData* data);
 
 typedef struct SynthVirtualSampleEntry {
     u8 mode;

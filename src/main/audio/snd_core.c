@@ -7,8 +7,6 @@
 #include "dolphin/fake_tgmath.h"
 
 
-extern u8 gSynthInitialized;
-
 void sndQuit(void)
 {
     hwExit();
@@ -44,4 +42,3 @@ f32 salNormalizeVector(f32* v)
     v[2] /= len;
     return len;
 }
-

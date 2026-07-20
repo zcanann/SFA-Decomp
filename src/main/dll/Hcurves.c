@@ -792,7 +792,7 @@ int Objfsa_GetNearestPatchExit(f32* point, f32* outVec, u16 id)
 int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGroupIndex)
 {
     ObjfsaPatch* lp;
-    u8* lwg;
+    ObjfsaWalkGroup* lwg;
     ObjfsaWalkGroup* wg;
     u32 lpidx;
     u32 clz;
@@ -872,9 +872,9 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
         {
             lidx = (u8)pgid;
         }
-        for (k2 = 0, lwg = (u8*)gObjfsaWalkGroups + (lidx & 0xffff) * OBJFSA_PATCHGROUP_STRIDE; k2 < 4; k2++)
+        for (k2 = 0, lwg = &gObjfsaWalkGroups[lidx & 0xffff]; k2 < 4; k2++)
         {
-            lpidx = lwg[k2 + 0x24];
+            lpidx = lwg->patchIndices[k2];
             if (lpidx == 0)
             {
                 continue;
@@ -1736,7 +1736,8 @@ void doNothing_onTrickyInit(void)
 {
 }
 
-int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
+int RomCurve_func2C(RomCurveWalker* state, GameObject* unusedObj, int startCurveId,
+                    RomCurveInterface* unusedInterface)
 {
     char* stateBytes;
     u32 currentCurve;
@@ -2213,14 +2214,14 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
 fail:
     return 1;
 }
-int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode)
+int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, int bboxMode)
 {
     f32 bestDistance;
     f32 bestActionDistance;
+    int curveIndex;
     ObjfsaRomCurveDef* curve;
     ObjfsaRomCurveDef* bestCurve;
     ObjfsaRomCurveDef* bestActionCurve;
-    int curveIndex;
     f32 dx;
     f32 dy;
     f32 dz;
@@ -2989,7 +2990,7 @@ int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef
     return 0;
 }
 
-int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
+int curves_isPointInsideLoop(int curveId, f32 x, f32 y, f32 z, f32* outDistance)
 {
     RomCurveDef* curve;
     RomCurveDef* nextCurve;
@@ -4176,7 +4177,7 @@ RomCurveDef* RomCurve_getById(u32 curveId)
     return 0;
 }
 
-int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action)
+int RomCurve_find(f32 x, f32 y, f32 z, int* types, int typeCount, int action)
 {
     int curveIndex;
     int typeIndex;

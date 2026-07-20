@@ -70,10 +70,10 @@ void dll_FD_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_FD_hitDetect(GameObject *obj)
 {
-    if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
-        (((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL))
+    if (((obj->anim.modelInstance->flags & 1) != 0) &&
+        (obj->anim.hitVolumeTransforms != NULL))
     {
-        ((void (*)(void))objRenderFn_80041018)();
+        objRenderFn_80041018(obj);
     }
     return;
 }
@@ -120,15 +120,15 @@ void dll_FD_update(u16* obj)
     ((GameObject*)obj)->anim.localPosX = ((GameObject*)state->anchorObj)->anim.localPosX;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)state->anchorObj)->anim.localPosY;
     ((GameObject*)obj)->anim.localPosZ = ((GameObject*)state->anchorObj)->anim.localPosZ;
-    ((GameObject*)obj)->anim.rotX = *(s16*)state->anchorObj;
-    ((GameObject*)obj)->anim.rotZ = *(s16*)(state->anchorObj + 4);
-    ((GameObject*)obj)->anim.rotY = *(s16*)(state->anchorObj + 2);
+    ((GameObject*)obj)->anim.rotX = ((GameObject*)state->anchorObj)->anim.rotX;
+    ((GameObject*)obj)->anim.rotZ = ((GameObject*)state->anchorObj)->anim.rotZ;
+    ((GameObject*)obj)->anim.rotY = ((GameObject*)state->anchorObj)->anim.rotY;
     mode = state->mode;
     switch (mode)
     {
     case 1:
-        *(u8*)(state->anchorObj + 0xaf) &= ~0x20;
-        *(u8*)((int)obj + 0xaf) |= 8;
+        ((GameObject*)state->anchorObj)->anim.resetHitboxFlags &= ~0x20;
+        ((GameObject*)obj)->anim.resetHitboxFlags |= 8;
         (*gObjectTriggerInterface)->preempt((int)obj, placement->preemptSeq);
         (*gObjectTriggerInterface)->runSequence(placement->runSeqId, obj,
                                                 placement->runSeqArg);
@@ -137,18 +137,18 @@ void dll_FD_update(u16* obj)
     case 2:
         if ((state->gateOpen != 0) && ((placement->flags & 1) == 0))
         {
-            *(u8*)(state->anchorObj + 0xaf) &= ~0x20;
-            *(u8*)((int)obj + 0xaf) |= 8;
+            ((GameObject*)state->anchorObj)->anim.resetHitboxFlags &= ~0x20;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= 8;
             state->mode = 4;
         }
         else if ((placement->enableBit != -1) &&
             (bitVal = mainGetBit(placement->enableBit), bitVal == 0))
         {
-            *(u8*)(state->anchorObj + 0xaf) &= ~0x20;
-            *(u8*)((int)obj + 0xaf) |= 8;
+            ((GameObject*)state->anchorObj)->anim.resetHitboxFlags &= ~0x20;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= 8;
             state->mode = 3;
         }
-        else if (((*(u8*)((int)obj + 0xaf) & 1) != 0) &&
+        else if (((((GameObject*)obj)->anim.resetHitboxFlags & 1) != 0) &&
             ((placement->eventId == -1) ||
                 (eventReady = (*gGameUIInterface)->isEventReady(placement->eventId),
                     eventReady != 0)))
@@ -161,15 +161,15 @@ void dll_FD_update(u16* obj)
             {
                 mainSetBits(placement->stateBit, 1);
             }
-            *(u8*)((int)obj + 0xaf) |= 8;
+            ((GameObject*)obj)->anim.resetHitboxFlags |= 8;
             state->gateOpen = 1;
             (*gObjectTriggerInterface)->runSequence(placement->runSeqId, obj,
                                                     0xffffffff);
         }
         else
         {
-            *(u8*)(state->anchorObj + 0xaf) |= 0x20;
-            *(u8*)((int)obj + 0xaf) &= ~8;
+            ((GameObject*)state->anchorObj)->anim.resetHitboxFlags |= 0x20;
+            ((GameObject*)obj)->anim.resetHitboxFlags &= ~8;
         }
         break;
     case 3:

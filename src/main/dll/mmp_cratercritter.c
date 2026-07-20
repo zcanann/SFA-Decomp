@@ -5,7 +5,7 @@
 #include "main/obj_group.h"
 #include "main/vecmath.h"
 #include "main/dll/mmp_cratercritter.h"
-#include "main/dll/dll_00C4_tricky_api.h"
+#include "main/dll/dll_00C4_tricky.h"
 #include "main/dll/skeetla_anim_api.h"
 
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */

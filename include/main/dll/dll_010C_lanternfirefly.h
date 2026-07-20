@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_010C_LANTERNFIREFLY_H_
 
 #include "main/game_object.h"
+#include "main/dll/CF/lanternfirefly_state.h"
 
 int LanternFireFly_getExtraSize(void);
 int LanternFireFly_getObjectTypeId(void);

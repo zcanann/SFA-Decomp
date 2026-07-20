@@ -38,7 +38,7 @@ void dll_4F_update(int* obj)
     pts[1] = 1.0f;
     pts[2] = 0.0f;
     pts[3] = 0.0f;
-    fz = Curve_EvalHermiteValuesFirst(pts, gCameraMode4FState->blendProgress, NULL);
+    fz = Curve_EvalHermite(pts, gCameraMode4FState->blendProgress, NULL);
     angle = (s16)(0x8000 - ((GameObject*)camera->anim.targetObj)->anim.rotX);
     angle += (s32)(14560.0f * fz);
     target = (GameObject*)camera->anim.targetObj;

@@ -7,10 +7,6 @@
 
 struct WmColumnPlacement;
 
-void dll_115_update(GameObject* obj);
-void dll_115_init(short* obj, int mapData);
-void dll_115_release_nop(void);
-void dll_115_initialise_nop(void);
 int WM_Column_getExtraSize(void);
 int WM_Column_getObjectTypeId(void);
 void WM_Column_free(int obj);

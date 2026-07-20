@@ -3,10 +3,10 @@
 
 #include "ghidra_import.h"
 #include "main/game_object.h"
-#include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/dll/curve_walker.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor gAreaFXEmitObjDescriptor;
 extern ObjectDescriptor12 gLFXEmitterObjDescriptor;
@@ -224,7 +224,6 @@ STATIC_ASSERT(offsetof(LfxEmitterState, flags) == 0x120);
 STATIC_ASSERT(offsetof(LfxEmitterObject, objAnim) == 0x00);
 STATIC_ASSERT(offsetof(LfxEmitterObject, state) == 0xB8);
 
-void FxEmit_init(FxEmitObject* obj, FxEmitPlacement* setup);
 void areafxemit_emitBurst(AreaFxEmitObject* obj, int count);
 void areafxemit_emitEffect(AreaFxEmitObject* obj);
 void fn_8018FF48(u16* src, u16* dst);

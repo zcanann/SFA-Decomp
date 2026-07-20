@@ -1,5 +1,6 @@
 /* DLL 0x13F - TexFrameAnimator [801948C0-80195008) */
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/debug.h"
 #include "main/lightmap_api.h"
 #include "main/map_block.h"
@@ -8,12 +9,12 @@
 #include "main/object_render.h"
 #include "main/dll/dll_0140_fogcontrol.h"
 #include "main/object_descriptor.h"
-#include "main/shader_ext.h"
-#include "main/shader_maptex_api.h"
+#include "main/shader_api.h"
+#include "main/shader_map_api.h"
 
 typedef struct TexframeanimatorPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 wrapFrame;   /* 0x18 */
     s8 textureSlot; /* 0x19 */
     s16 endFrame;   /* 0x1A */
@@ -129,7 +130,7 @@ void TexFrameAnimator_update(int* obj)
     TexFrameAnimatorState* state;
     u8* params;
     MapBlockData* block;
-    int* textureHit;
+    s16* textureHit;
     int* textureEntry;
 
     state = ((GameObject*)obj)->extra;
@@ -150,10 +151,10 @@ void TexFrameAnimator_update(int* obj)
         {
             return;
         }
-        textureHit = return0_80056694((int*)block, state->textureSlot);
+        textureHit = return0_80056694(block, state->textureSlot);
         if (textureHit != NULL)
         {
-            textureEntry = mapTextureOverrideGetEntry(*(s16*)textureHit);
+            textureEntry = mapTextureOverrideGetEntry(*textureHit);
             state->frame += state->speed * framesThisStep;
             logPrintf(sTexFrameAnimDebugFormat, state->frame);
             if (state->frame < 0)

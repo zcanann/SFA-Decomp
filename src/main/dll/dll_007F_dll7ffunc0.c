@@ -29,6 +29,8 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
     u8* base = lbl_80315328;
     FbCmd* p;
     FbCmd* e = buf.entries;
+    GameObject* obj = (GameObject*)sourceObj;
+    PartFxSpawnParams* params = (PartFxSpawnParams*)posSource;
     f32 originOffset = 0.0f;
 
     e[0].layer = 0;
@@ -196,15 +198,15 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] += ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] += ((GameObject*)(sourceObj))->anim.worldPosZ;
+            buf.pos[0] += obj->anim.worldPosX;
+            buf.pos[1] += obj->anim.worldPosY;
+            buf.pos[2] += obj->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] += params->posX;
+            buf.pos[1] += params->posY;
+            buf.pos[2] += params->posZ;
         }
     }
     if (variant == 0)

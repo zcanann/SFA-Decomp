@@ -101,7 +101,7 @@ void CloudPrisonControl_update(GameObject* obj)
     data = 0;
     if (lbl_803DBE08 != 0)
     {
-        lbl_803DDB0C = ((int (*)(int))(*gRomCurveInterface)->slot40)(8);
+        lbl_803DDB0C = (*gRomCurveInterface)->findByAction(8);
         lbl_803DBE08 = 0;
     }
     lbl_803DDB08 = 0;

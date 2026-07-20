@@ -6,7 +6,6 @@
 #include "main/vec_types.h"
 #include "main/vecmath.h"
 
-typedef struct _GXRenderModeObj GXRenderModeObj;
 typedef struct GameObject GameObject;
 
 typedef struct CameraViewSlot {
@@ -47,7 +46,6 @@ typedef struct CameraViewSlot {
 } CameraViewSlot;
 
 extern CameraViewSlot gCameraShakeSlots[];
-extern GXRenderModeObj* gRenderModeObj;
 extern f32 gCameraDefaultModelMatrix[16];
 extern f32 lbl_80338090[64];
 extern f32 lbl_803DE5F0;

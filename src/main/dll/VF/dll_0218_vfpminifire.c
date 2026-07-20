@@ -33,10 +33,6 @@
 #define VFPMINIFIRE_EFFECT_FLAGS   0x80001
 #define VFPMINIFIRE_BURST_COUNT    10
 
-#define VFPMINIFIRE_SPAWN(obj, id, args, flags)                                                                        \
-    (*gPartfxInterface)->spawnObject((void*)(obj), (id), (args), (flags), -1, NULL)
-
-
 int VFP_MiniFire_getExtraSize(void)
 {
     return 0xc;
@@ -101,7 +97,8 @@ void VFP_MiniFire_update(GameObject* obj)
     args.rx = 0;
     if ((int)randomGetRange(0, 4) == 0)
     {
-        VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS);
+        (*gPartfxInterface)
+            ->spawnObject((void*)obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS, -1, NULL);
     }
 
     {
@@ -114,7 +111,8 @@ void VFP_MiniFire_update(GameObject* obj)
     }
     if ((int)randomGetRange(0, 4) == 0)
     {
-        VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS);
+        (*gPartfxInterface)
+            ->spawnObject((void*)obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS, -1, NULL);
     }
 
     args.x *= 2.0f;
@@ -122,11 +120,12 @@ void VFP_MiniFire_update(GameObject* obj)
     args.z *= 2.0f;
     if ((int)randomGetRange(0, 4) == 0)
     {
-        VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS);
+        (*gPartfxInterface)
+            ->spawnObject((void*)obj, VFPMINIFIRE_SMOKE_EFFECT, &args, VFPMINIFIRE_EFFECT_FLAGS, -1, NULL);
     }
     if ((int)randomGetRange(0, 2) == 0)
     {
-        VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SPARK_EFFECT, &args, 1);
+        (*gPartfxInterface)->spawnObject((void*)obj, VFPMINIFIRE_SPARK_EFFECT, &args, 1, -1, NULL);
     }
 
     linkedGfx = *(int*)&(obj)->anim.hitReactState;
@@ -145,7 +144,7 @@ void VFP_MiniFire_update(GameObject* obj)
         Sfx_StopObjectChannel((int)obj, 0x7f);
         for (; i != 0; i--)
         {
-            VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_BURST_EFFECT, &args, 1);
+            (*gPartfxInterface)->spawnObject((void*)obj, VFPMINIFIRE_BURST_EFFECT, &args, 1, -1, NULL);
         }
     }
 

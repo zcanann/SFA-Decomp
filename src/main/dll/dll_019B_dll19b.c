@@ -24,6 +24,8 @@
 #include "main/gamebit_ids.h"
 #include "main/shader_api.h"
 #include "main/dll/dll_0004_dummy04.h"
+#include "main/dll/dll_006A_dll6afunc0.h"
+#include "main/dll/foodbag.h"
 
 #define DLL19B_TARGET_OBJGROUP 0xe
 
@@ -300,14 +302,14 @@ void dll_19B_update(int obj)
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 {
-                    void* handle = Resource_Acquire(0x83, 1);
-                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 1, 0, 1, -1, 0);
-                    Resource_Release(handle);
+                    Dll83Interface** res = Resource_Acquire(0x83, 1);
+                    (*res)->spawn((void*)obj, 1, NULL, 1, -1, NULL);
+                    Resource_Release(res);
                 }
                 {
-                    void* handle = Resource_Acquire(0x84, 1);
-                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 0, 0, 1, -1, 0);
-                    Resource_Release(handle);
+                    Dll84Interface** res = Resource_Acquire(0x84, 1);
+                    (*res)->spawn((void*)obj, 0, NULL, 1, -1, NULL);
+                    Resource_Release(res);
                 }
                 mainSetBits(0x126, 0);
                 (*gModgfxInterface)->releaseHandle(&st->gfxHandle);
@@ -386,8 +388,8 @@ void dll_19B_update(int obj)
             mainSetBits(0x126, 1);
             mainSetBits(0x127, 1);
             {
-                void* handle = Resource_Acquire(0x6a, 1);
-                st->gfxHandle = (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 2, 0, 0x402, -1, 0);
+                Dll6AInterface** handle = Resource_Acquire(0x6a, 1);
+                st->gfxHandle = (*handle)->spawn((void*)obj, 2, NULL, 0x402, -1, NULL);
                 Resource_Release(handle);
             }
             mainSetBits(0x1d8, 0);
@@ -402,7 +404,7 @@ void dll_19B_update(int obj)
 void dll_19B_init(GameObject* obj, u8* params)
 {
     register Dll19BState* sub;
-    void* res;
+    Dll6AInterface** res;
 
     sub = obj->extra;
     obj->anim.rotX = 0;
@@ -435,7 +437,7 @@ void dll_19B_init(GameObject* obj, u8* params)
     sub->unk10 = 0xc8;
     sub->countdown = 0xfa0;
     res = Resource_Acquire(0x6a, 1);
-    sub->gfxHandle = ((s16(*)(GameObject*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
+    sub->gfxHandle = (*res)->spawn(obj, 1, NULL, 0x402, -1, NULL);
     Resource_Release(res);
     obj->anim.worldPosX = obj->anim.localPosX;
     obj->anim.worldPosY = obj->anim.localPosY;

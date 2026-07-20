@@ -20,14 +20,18 @@
 #include "main/audio/adsr_lowprec.h"
 #include "main/audio/data_tables.h"
 #include "main/audio/sal_dsp.h"
+#include "main/audio/snd_reverb.h"
 #include "main/audio/synth_delay.h"
+#include "main/audio/synth_virtual_sample.h"
 #include "main/audio/vid_init.h"
 #include "main/audio/inp_ctrl.h"
+#include "main/audio/snd_service.h"
 #include "main/audio/hw_keyoff.h"
 #include "main/audio/inp_midi.h"
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/voice_conv.h"
 #include "main/audio/voice_manage.h"
+#include "main/audio/snd_core.h"
 #include "string.h"
 
 
@@ -77,8 +81,6 @@ STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo1) == 0x30);
 #define SYNTH_VOICE_SLOT_SIZE                0x404
 
 extern u8 gSynthDelayBucketCursor;
-extern u8 gSynthInitialized;
-
 extern u32 synthMasterFaderPauseActiveFlags;
 extern u32 synthMasterFaderActiveFlags;
 extern u8 synthAuxBMIDISet[8];
@@ -86,25 +88,6 @@ extern u8 synthAuxBMIDI[8];
 extern u8 synthAuxAMIDISet[8];
 extern u8 synthAuxAMIDI[8];
 extern u64 synthRealTime;
-
-typedef struct SynthAuxInfo
-{
-    union
-    {
-        struct
-        {
-            s32* left;
-            s32* right;
-            s32* surround;
-        } bufferUpdate;
-        struct
-        {
-            u16 para[4];
-        } parameterUpdate;
-    } data;
-} SynthAuxInfo;
-
-typedef void (*SynthAuxCallback)(u8 reason, SynthAuxInfo* info, void* user);
 
 typedef struct SynthVoiceLfo
 {

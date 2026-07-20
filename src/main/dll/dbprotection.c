@@ -43,6 +43,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DB/DBstealerworm.h"
+#include "main/dll/SB/dll_01E8_sbgalleon.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 #include "main/dll/ship_battle_api.h"
 
@@ -61,17 +62,6 @@
 /* seqId of the "tricky" target object the galleon flight driver locks onto (docblock: "locates the tricky target object (seqId 0x8C)") */
 #define DBPROTECTION_TRICKY_TARGET_SEQID 0x8C
 #define DBPROTECTION_GAMEBIT_DIVE_ACTIVE 0xF1E
-
-#define SCREEN_TRANSITION_FADE(kind, value)       (*gScreenTransitionInterface)->start((kind), (value))
-#define SCREEN_TRANSITION_START(kind, value)      (*gScreenTransitionInterface)->step((kind), (value))
-#define SCREEN_TRANSITION_READY()                 (*gScreenTransitionInterface)->isFinished()
-#define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
-#define CLOUD_ACTION_SET(a, b)                    (*gCloudActionInterface)->func12Nop((a), (b))
-#define CLOUD_ACTION_ENABLE(flag)                 (*gCloudActionInterface)->func10Nop((flag))
-#define DBPROT_CAMERA_SHAKE(amount, arg)          (*gCameraInterface)->releaseAction((amount), (arg))
-#define DBPROT_MAP_EVENT(layer, a, b)             (*gMapEventInterface)->setObjGroupStatus((layer), (a), (b))
-#define DBPROT_CLOUD_SET_A(flag)                  (*gCloudActionInterface)->func10Nop((flag))
-#define DBPROT_CLOUD_SET_B(flag)                  (*gCloudActionInterface)->func11Nop((flag))
 
 extern s8 lbl_803DDC2C;
 extern f32 lbl_803E56CC;
@@ -308,7 +298,7 @@ void fn_801DFA28(GameObject* obj)
     case 0:
         camShake = lbl_803E56C8;
         Sfx_StopObjectChannel((int)obj, 1);
-        DBPROT_CAMERA_SHAKE(&camShake, 0);
+        (*gCameraInterface)->releaseAction(&camShake, 0);
         ((GameObject*)obj)->userData1 = 1;
         tx = ((SBGalleonState*)state)->homeX - lbl_803E56DC;
         tz = lbl_803E56E0 * mathCosf((gDBprotPi * (f32)((SBGalleonState*)state)->bobPhase) / gDBprotAngleUnit) +
@@ -421,7 +411,7 @@ void fn_801DFA28(GameObject* obj)
     case 1:
         ((GameObject*)obj)->userData1 = 2;
         camShake = lbl_803E56C8;
-        DBPROT_CAMERA_SHAKE(&camShake, 0);
+        (*gCameraInterface)->releaseAction(&camShake, 0);
         if (((SBGalleonState*)state)->headingLatch != 0)
         {
             ((SBGalleonState*)state)->headingLatch -= 1;
@@ -608,7 +598,7 @@ void fn_801DFA28(GameObject* obj)
     case 8:
         camShake = lbl_803E56C8;
         Sfx_StopObjectChannel((int)obj, 2);
-        DBPROT_CAMERA_SHAKE(&camShake, 0);
+        (*gCameraInterface)->releaseAction(&camShake, 0);
         ((GameObject*)obj)->userData1 = 3;
         if (((SBGalleonState*)state)->headingLatch != 0)
         {
@@ -786,16 +776,16 @@ void fn_801DFA28(GameObject* obj)
             if (((SBGalleonState*)state)->fadeTimer == 0)
             {
                 ObjHits_DisableObject(obj);
-                SCREEN_TRANSITION_FADE(0x41, 1);
+                (*gScreenTransitionInterface)->start(0x41, 1);
             }
             ((SBGalleonState*)state)->fadeTimer += framesThisStep;
             if (((SBGalleonState*)state)->fadeTimer > 0x41)
             {
                 ((GameObject*)obj)->anim.rotX = 0;
                 ((SBGalleonState*)state)->phase = 6;
-                DBPROT_CLOUD_SET_A(0);
-                DBPROT_CLOUD_SET_B(0);
-                CLOUD_ACTION_SET(lbl_803E56CC, lbl_803E5760);
+                (*gCloudActionInterface)->func10Nop(0);
+                (*gCloudActionInterface)->func11Nop(0);
+                (*gCloudActionInterface)->func12Nop(lbl_803E56CC, lbl_803E5760);
                 if (((SBGalleonState*)state)->musicLatch == 0)
                 {
                     ((SBGalleonState*)state)->musicLatch = 1;
@@ -805,8 +795,8 @@ void fn_801DFA28(GameObject* obj)
                 ((GameObject*)obj)->anim.localPosY = lbl_803E57AC;
                 ((GameObject*)obj)->anim.localPosZ = spawnData->posZ;
                 Sfx_StopObjectChannel((int)obj, 1);
-                DBPROT_MAP_EVENT(obj->anim.pad34, 2, 1);
-                OBJECT_TRIGGER_REFRESH(0, obj, -1);
+                (*gMapEventInterface)->setObjGroupStatus(obj->anim.pad34, 2, 1);
+                (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 return;
             }
         }
@@ -949,21 +939,21 @@ void DBprotection_updateShield(GameObject* obj)
     {
         lbl_803DDC2C = 1;
         mainSetBits(DBPROTECTION_GAMEBIT_TRANSITION_USED, 1);
-        SCREEN_TRANSITION_FADE(0xa, 1);
+        (*gScreenTransitionInterface)->start(0xa, 1);
     }
 
     DBprotection_updateEnvfxGameBits((u8*)state);
 
-    if (lbl_803DDC2C != 0 && SCREEN_TRANSITION_READY() != 0)
+    if (lbl_803DDC2C != 0 && (*gScreenTransitionInterface)->isFinished() != 0)
     {
-        SCREEN_TRANSITION_START(0x50, 1);
-        OBJECT_TRIGGER_REFRESH(1, obj, -1);
+        (*gScreenTransitionInterface)->step(0x50, 1);
+        (*gObjectTriggerInterface)->runSequence(1, obj, -1);
         state->cameraState = 3;
         lbl_803DDC2C = 0;
     }
 
-    CLOUD_ACTION_SET(lbl_803E57C8, lbl_803E56CC);
-    CLOUD_ACTION_ENABLE(0);
+    (*gCloudActionInterface)->func12Nop(lbl_803E57C8, lbl_803E56CC);
+    (*gCloudActionInterface)->func10Nop(0);
 
     angleCos = mathSinf((gDBprotPi * state->shieldAngle) / gDBprotAngleUnit);
     if (state->shieldSfxLatch == 0)

@@ -32,7 +32,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/newseqobj_baddie.h"
-#include "main/dll/dll_00C9_enemy_ext.h"
 #include "main/dll/baddie_frozen.h"
 #include "main/dll/wispbaddieseq_ext.h"
 
@@ -92,13 +91,13 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
     u8* trig;
     u8 ret;
 
-    animRows = lbl_8031F16C[state[0x33b]].tbl10;
-    rowsC = lbl_8031F16C[state[0x33b]].tbl24;
-    rowsB = lbl_8031F16C[state[0x33b]].tbl1c;
-    trig = lbl_8031F16C[state[0x33b]].tbl20;
+    animRows = lbl_8031F16C[((BaddieState*)state)->userData2].tbl10;
+    rowsC = lbl_8031F16C[((BaddieState*)state)->userData2].tbl24;
+    rowsB = lbl_8031F16C[((BaddieState*)state)->userData2].tbl1c;
+    trig = lbl_8031F16C[((BaddieState*)state)->userData2].tbl20;
     ret = 0;
 
-    if (state[0x33b] == 5)
+    if (((BaddieState*)state)->userData2 == 5)
     {
         ((BaddieState*)state)->reactionFlags |= 0x10;
         return 0;
@@ -261,11 +260,11 @@ void sharpClawUpdateIdle(int* obj, u8* state)
     u8* tbl1c;
     u32 flags;
 
-    tbl4 = lbl_8031F16C[state[0x33b]].tbl4;
-    tbl0 = lbl_8031F16C[state[0x33b]].tbl0;
-    tbl1c = lbl_8031F16C[state[0x33b]].tbl1c;
+    tbl4 = lbl_8031F16C[((BaddieState*)state)->userData2].tbl4;
+    tbl0 = lbl_8031F16C[((BaddieState*)state)->userData2].tbl0;
+    tbl1c = lbl_8031F16C[((BaddieState*)state)->userData2].tbl1c;
 
-    if (state[0x33b] == 5 && (((BaddieState*)state)->controlFlags & 0x800000))
+    if (((BaddieState*)state)->userData2 == 5 && (((BaddieState*)state)->controlFlags & 0x800000))
     {
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
@@ -284,7 +283,7 @@ void sharpClawUpdateIdle(int* obj, u8* state)
             }
         }
     }
-    if ((u8)((u32(*)(GameObject*, void*, int))fn_8014FFB4)((GameObject*)(obj), state, 0) != 0)
+    if ((u8)fn_8014FFB4((GameObject*)obj, state, 0) != 0)
     {
         return;
     }
@@ -483,7 +482,7 @@ void sharpClawUpdateApproach(GameObject* obj, void* state)
         }
     }
 
-    if ((u8)((u32(*)(GameObject*, void*, int))fn_8014FFB4)(obj, state, 0) != 0)
+    if ((u8)fn_8014FFB4(obj, state, 0) != 0)
     {
         return;
     }

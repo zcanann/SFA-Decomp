@@ -53,7 +53,6 @@ extern f32 lbl_803E1928;
 extern f32 lbl_803E192C;
 extern f32 lbl_803E1930;
 extern f32 lbl_803E1940;
-#include "main/blur_filter_api.h"
 typedef struct {
     u8 b0 : 1;
     u8 b1 : 1;

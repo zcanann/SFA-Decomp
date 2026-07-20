@@ -89,9 +89,9 @@ void dll_2A3_update(GameObject* obj)
     }
     obj->anim.alpha = alpha;
 
-    obj->anim.rotX = (s16)((f32)state->rotXSpeed * timeDelta + (f32)obj->anim.rotX);
-    obj->anim.rotY = (s16)((f32)state->rotYSpeed * timeDelta + (f32)obj->anim.rotY);
-    obj->anim.rotZ = (s16)((f32)state->rotZSpeed * timeDelta + (f32)obj->anim.rotZ);
+    obj->anim.rotX = (s16)((f32)state->spinRateX * timeDelta + (f32)obj->anim.rotX);
+    obj->anim.rotY = (s16)((f32)state->spinRateY * timeDelta + (f32)obj->anim.rotY);
+    obj->anim.rotZ = (s16)((f32)state->spinRateZ * timeDelta + (f32)obj->anim.rotZ);
 
     objMove((GameObject*)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
             obj->anim.velocityZ * timeDelta);
@@ -110,9 +110,9 @@ void dll_2A3_init(GameObject* obj)
     obj->anim.rotX = randomGetRange(0, 0xffff);
     obj->anim.rotY = randomGetRange(0, 0xffff);
     obj->anim.rotZ = randomGetRange(0, 0xffff);
-    state->rotXSpeed = randomGetRange(-0x32, 0x32);
-    state->rotYSpeed = randomGetRange(-0x32, 0x32);
-    state->rotZSpeed = randomGetRange(-0x32, 0x32);
+    state->spinRateX = randomGetRange(-0x32, 0x32);
+    state->spinRateY = randomGetRange(-0x32, 0x32);
+    state->spinRateZ = randomGetRange(-0x32, 0x32);
     lbl_803DDD90 = lbl_803DDD90 + 1;
 }
 

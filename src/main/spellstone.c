@@ -65,7 +65,7 @@ void spellstone_render(SpellStoneObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, ch
     state = obj->state;
     if ((visible != 0) && (state->state != SPELLSTONE_STATE_HIDDEN))
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6754);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, (double)lbl_803E6754);
     }
     return;
 }

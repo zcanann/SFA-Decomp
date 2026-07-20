@@ -25,21 +25,19 @@
 #include "main/dll/baddie_control_interface.h"
 
 /* obj+0xB8 overlay used only by TriggerLaunchTarget; the named fields line
-   up with GroundBaddieState (triggerId/gameBitA at 0x3F0/0x3F2, unk405). */
+   up with GroundBaddieState (triggerId/gameBitA/subMode at 0x3F0/0x3F2/0x405). */
 typedef struct LandedArwingTriggerLaunchTargetState
 {
     u8 pad0[0x3F0 - 0x0];
     s16 launchMoveId;   /* 0x3F0 */
     s16 triggerGameBit; /* 0x3F2 */
     u8 pad3F4[0x405 - 0x3F4];
-    u8 unk405;
+    u8 subMode;         /* 0x405 */
     u8 pad406[0x408 - 0x406];
 } LandedArwingTriggerLaunchTargetState;
 
 /* BaddieState+0x27A (moveJustStartedA): just-collided / move-just-started one-shot */
 #define LANDED_ARWING_JUST_COLLIDED 0x27A
-/* BaddieState+0x34D (stateTag): state index written each tick */
-#define LANDED_ARWING_STATE_INDEX 0x34D
 /* surfaceMode value for script/free flight */
 #define LANDED_ARWING_SCRIPT_MODE 6
 /* part of LANDED_ARWING_FLAG_LAUNCHING (0x02004000): mark launch active */
@@ -67,11 +65,11 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target)
     int* aux = ((GameObject*)obj)->extra;
     if (*(s8*)(target + LANDED_ARWING_JUST_COLLIDED) != 0)
     {
-        (*(int (**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))(
-            obj, (int)((LandedArwingTriggerLaunchTargetState*)aux)->launchMoveId, -1, 0);
+        (*gBaddieControlInterface)
+            ->spawnChild((GameObject*)obj, (int)((LandedArwingTriggerLaunchTargetState*)aux)->launchMoveId, -1, 0);
         (*gPlayerInterface)->spawnPartfx((void*)obj, (void*)target, 0x3c, 0xa, 0);
         mainSetBits((int)((LandedArwingTriggerLaunchTargetState*)aux)->triggerGameBit, 1);
-        ((LandedArwingTriggerLaunchTargetState*)aux)->unk405 = 0;
+        ((LandedArwingTriggerLaunchTargetState*)aux)->subMode = 0;
     }
     return 0;
 }
@@ -83,7 +81,7 @@ int LandedArwing_UpdateBounceFade(int obj, u32* stateWord)
     ObjHitsPriorityState* hitState;
 
     state = (LandedArwingState*)((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
-    *(u8*)((int)stateWord + LANDED_ARWING_STATE_INDEX) = 3;
+    ((BaddieState*)stateWord)->stateTag = 3;
     if (*(s8*)((int)stateWord + LANDED_ARWING_JUST_COLLIDED) != 0)
     {
         ObjHits_DisableObject((GameObject*)obj);
@@ -159,7 +157,7 @@ int LandedArwing_UpdateRetreatChase(GameObject* obj, int stateWord)
     state = (LandedArwingState*)((GroundBaddieState*)*(int*)&(obj)->extra)->control;
     player = (int)Obj_GetPlayerObject();
     playerObj = (GameObject*)player;
-    *(u8*)(stateWord + LANDED_ARWING_STATE_INDEX) = 1;
+    ((BaddieState*)stateWord)->stateTag = 1;
     if (*(s8*)(stateWord + LANDED_ARWING_JUST_COLLIDED) != 0)
     {
         state->scriptTimer = 0x3c;

@@ -107,7 +107,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
             (obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight -
                                     (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
             curveBits = mainGetBit(GAMEBIT_DR_KTrexPhaseCounter) >> 1;
-            curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+            curveId = (*gRomCurveInterface)->find(
                 ((KtrexfloorswitchPlacement*)*(int*)&(obj)->anim.placementData)->curveX,
                 ((KtrexfloorswitchPlacement*)*(int*)&(obj)->anim.placementData)->baseHeight,
                 ((KtrexfloorswitchPlacement*)*(int*)&(obj)->anim.placementData)->curveZ,
@@ -142,7 +142,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
             (obj)->anim.localPosY = ((KtrexfloorswitchPlacement*)placement)->baseHeight -
                                     (f32)(u32)((KtrexfloorswitchPlacement*)placement)->sinkDepth;
             curveBits = mainGetBit(GAMEBIT_DR_KTrexPhaseCounter) >> 1;
-            curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+            curveId = (*gRomCurveInterface)->find(
                 ((KtrexfloorswitchPlacement*)*(int*)&(obj)->anim.placementData)->curveX,
                 ((KtrexfloorswitchPlacement*)*(int*)&(obj)->anim.placementData)->baseHeight,
                 ((KtrexfloorswitchPlacement*)*(int*)&(obj)->anim.placementData)->curveZ,
@@ -401,7 +401,7 @@ void KT_RexFloorSwitch_init(GameObject* obj, char* placement)
     obj->userData2 = 1;
     {
         KtrexfloorswitchPlacement* pl = (KtrexfloorswitchPlacement*)*(int*)&obj->anim.placementData;
-        curve = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+        curve = (*gRomCurveInterface)->find(
             pl->curveX, pl->baseHeight, pl->curveZ, &gKTrexFloorSwitchCurveFindResult, 1, 0);
     }
     if (curve != -1)

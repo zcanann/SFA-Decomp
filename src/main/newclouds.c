@@ -20,7 +20,7 @@
 #include "dolphin/gx/GXDispList.h"
 #include "dolphin/gx/GXEnum.h"
 #include "dolphin/os/OSCache.h"
-#include "main/sky_state.h"
+#include "main/sky.h"
 #include "dolphin/gx/GXLegacy.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/camera.h"
@@ -88,8 +88,6 @@ extern int gNewCloudLightningFogColor;
 extern const f32 lbl_803DF1D4;
 extern void* gNewClouds[8];
 
-typedef void (*LightningDrawBoltU8WidthFn)(f32* start, f32* end, u8 width, f32 segScale, f32 d,
-                                           int* seed, int depth, int flags);
 extern const f32 lbl_803DF1FC;
 extern const f32 lbl_803DF214;
 #define NC_CLOUD ((u8 *)gNewClouds[*(u16 *)(params + 0x26)])
@@ -126,8 +124,6 @@ extern const f32 lbl_803DF1C0;
 extern const f32 lbl_803DF1C4;
 extern const f32 lbl_803DF1C8;
 extern const f32 lbl_803DF1CC;
-
-void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int* seed, int depth, int flags);
 
 f32 lightningGetRemainingFraction(void)
 {
@@ -413,8 +409,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
                 PSVECScale(scaled, branchEnd, bfrac * len);
                 PSVECAdd(start, branchEnd, branchEnd);
                 PSVECAdd(branchEnd, offset, branchEnd);
-                ((LightningDrawBoltU8WidthFn)lightningDrawBolt)(
-                    next, branchEnd, halfWidth, segScale, d, seed, depth + 1, flags);
+                lightningDrawBolt(next, branchEnd, halfWidth, segScale, d, seed, depth + 1, flags);
             }
         }
         else
@@ -1583,8 +1578,6 @@ int dll_07_func08(void)
     return gNewCloudBlizzardActive;
 }
 
-void lightningDrawBolt(f32* start, f32* end, int width, f32 c, f32 d, int* seed, int e, int f);
-
 void dll_07_func07(int arg)
 {
     int i;
@@ -1670,7 +1663,7 @@ void dll_07_func06(void)
         pp = (u8**)((u8*)pp + 16);
         p = *pp;
         if (p != NULL &&
-            (*(u8**)p == NULL || (*(u16*)(*(u8**)p + 0xb0) & OBJECT_OBJFLAG_FREED)))
+            (*(u8**)p == NULL || (((GameObject*)*(u8**)p)->objectFlags & OBJECT_OBJFLAG_FREED)))
         {
             snowFreeSnowCloud(((NewCloud*)p)->cloudId);
             i++;
@@ -1816,9 +1809,9 @@ void dll_07_func06(void)
             snowReposSnowCloud(((NewCloud*)D7_CLOUD)->cloudId);
             if (((NewCloud*)D7_CLOUD)->activeFlakes > lbl_803DF1A0)
             {
-                d[0] = ((NewCloud*)D7_CLOUD)->worldPosX - *(f32*)((u8*)cam + 0xc);
-                d[1] = ((NewCloud*)D7_CLOUD)->worldPosY - *(f32*)((u8*)cam + 0x10);
-                d[2] = ((NewCloud*)D7_CLOUD)->worldPosZ - *(f32*)((u8*)cam + 0x14);
+                d[0] = ((NewCloud*)D7_CLOUD)->worldPosX - cam->x;
+                d[1] = ((NewCloud*)D7_CLOUD)->worldPosY - cam->y;
+                d[2] = ((NewCloud*)D7_CLOUD)->worldPosZ - cam->z;
                 mag = PSVECMag(d);
                 if (mag < nearest)
                 {

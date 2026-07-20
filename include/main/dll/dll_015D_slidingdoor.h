@@ -2,11 +2,12 @@
 #define MAIN_DLL_DLL_015D_SLIDINGDOOR_H_
 
 #include "global.h"
+#include "main/obj_placement.h"
 #include "main/objanim_update.h"
 
 typedef struct SlidingdoorPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00: pos/color/mapId */
     s16 openGameBit;      /* 0x18: door opens while this bit is set (gated by gateGameBit) */
     s16 openedGameBit;    /* 0x1A: set to 1 once the door opens */
     s16 preemptEvent;     /* 0x1C: event preempted by SlidingDoor_update if already moving */

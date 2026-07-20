@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags);
+s16 dll_96_func03(int sourceObj, int variant, int posSource, u32 flags);
 void dll_96_func01_nop(void);
 void dll_96_func00_nop(void);
 

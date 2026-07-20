@@ -32,7 +32,7 @@
 #include "main/textrender_api.h"
 #include "main/dll/dll_0038_weirdunusedmenu.h"
 #include "main/dll/savegame.h"
-#include "main/dll/dll_003C_tumbleweedbush_api.h"
+#include "main/dll/dll_003C_tumbleweedbush.h"
 
 /* set on both menu widgets while the save dialog is up */
 #define WIDGET_FLAG_SAVING 0x1000

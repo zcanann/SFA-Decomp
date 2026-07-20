@@ -62,7 +62,6 @@ STATIC_ASSERT(offsetof(DfpPowerSlObject, hitCallback) == 0xBC);
 
 extern ObjectDescriptor gDfppowerslObjDescriptor;
 
-int dfppowersl_spawnSeqObjectsOnHit(DfpPowerSlObject *obj);
 int dfppowersl_getExtraSize(void);
 void dfppowersl_free(DfpPowerSlObject *obj);
 void dfppowersl_render(DfpPowerSlObject *obj);

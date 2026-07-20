@@ -1,9 +1,9 @@
 /* DLL 0x00FA (invisiblehitswitch) - Invisible hit switch object [0x8017A8EC-0x8017AC2C). */
-#include "main/dll/tFrameAnimator.h"
 #include "main/frame_timing.h"
 
 
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/gamebits.h"
 #include "main/object_descriptor.h"
 
@@ -22,7 +22,7 @@
 
 typedef struct InvisibleHitSwitchPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s16 gameBitId;
     s16 cooldownFrames;
     u8 pad1C[0x1E - 0x1C];

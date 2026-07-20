@@ -4,7 +4,7 @@
  * Implements the per-frame logic for the "normal"/follow camera and a
  * handful of related modes (slide, first-person, path/cutscene). Each
  * routine reads and mutates the shared CamcontrolModeSettings block held
- * in cameraMtxVar57:
+ * in gCamcontrolModeSettings:
  *   - camcontrol_updateVerticalBounds: collision-probes around the camera
  *     and derives upper/lower world-Y bounds from the hit results.
  *   - camslide_update: lateral slide + height tracking that follows the
@@ -18,7 +18,7 @@
  *     plus wall-avoidance and collision-probe timers.
  *   - CameraModeNormal_func0A / _free and the mode-settings alloc/free.
  *
- * cameraMtxVar57 is the live CamcontrolModeSettings; classId 1 marks the
+ * gCamcontrolModeSettings is the live CamcontrolModeSettings; classId 1 marks the
  * player target throughout.
  */
 #include "main/dll/CAM/camcontrol_mode_settings.h"
@@ -37,8 +37,6 @@
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0042_unk.h"
-
-#define gCamcontrolModeSettings cameraMtxVar57
 
 typedef struct CameraModeNormalInitData
 {
@@ -229,40 +227,40 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
     CamSlideObjectState* state;
     f32 minHeight;
     u32 angle;
-    int cur;
-    f32 high;
-    f32 low;
-    f32 range;
-    f32 slide;
+    int slideAngleCur;
+    f32 upperY;
+    f32 lowerY;
+    f32 minDistSpan;
+    f32 slideOffset;
     f64 approach;
     f32 mtx[16];
     CamSlideRot rot;
-    f32 velX;
+    f32 relX;
     f32 step;
-    f32 velZ;
-    f32 speed;
+    f32 relZ;
+    f32 dist;
     f32 outX;
     f32 outY;
     f32 outZ;
 
     (*gCameraInterface)
-        ->getRelativePosition(camera, &velX, &step, &velZ, &speed, gCamcontrolModeSettings->targetHeight, 0);
-    speed = velZ * velZ + (velX * velX + step * step);
-    if (speed > *(f32*)&lbl_803E16AC)
+        ->getRelativePosition(camera, &relX, &step, &relZ, &dist, gCamcontrolModeSettings->targetHeight, 0);
+    dist = relZ * relZ + (relX * relX + step * step);
+    if (dist > *(f32*)&lbl_803E16AC)
     {
-        speed = sqrtf(speed);
+        dist = sqrtf(dist);
     }
-    if (speed < *(f32*)&lbl_803E1694)
+    if (dist < *(f32*)&lbl_803E1694)
     {
-        speed = lbl_803E1694;
+        dist = lbl_803E1694;
     }
-    high =
+    upperY =
         gCamcontrolModeSettings->upperHeightOffset + (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight);
-    low = gCamcontrolModeSettings->lowerHeightOffset + (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight);
+    lowerY = gCamcontrolModeSettings->lowerHeightOffset + (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight);
     if (target->anim.classId == 1)
     {
         state = (CamSlideObjectState*)target->extra;
-        angle = getAngle((f64)velX, velZ);
+        angle = getAngle((f64)relX, relZ);
         rot.angles[0] = (s16)(0x8000 - angle);
         rot.angles[1] = 0;
         rot.angles[2] = 0;
@@ -280,25 +278,25 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
     {
         gCamcontrolModeSettings->slideAngle -= (int)(gCamcontrolModeSettings->slideAngle * framesThisStep) >> 5;
     }
-    cur = gCamcontrolModeSettings->slideAngle;
-    if (cur < 0)
+    slideAngleCur = gCamcontrolModeSettings->slideAngle;
+    if (slideAngleCur < 0)
     {
-        slide = gCamcontrolModeSettings->slideLeftAmount * mathSinf((lbl_803E168C * cur) / lbl_803E1690);
+        slideOffset = gCamcontrolModeSettings->slideLeftAmount * mathSinf((lbl_803E168C * slideAngleCur) / lbl_803E1690);
     }
-    else if (cur > 0)
+    else if (slideAngleCur > 0)
     {
-        slide = gCamcontrolModeSettings->slideRightAmount * mathSinf((lbl_803E168C * cur) / lbl_803E1690);
+        slideOffset = gCamcontrolModeSettings->slideRightAmount * mathSinf((lbl_803E168C * slideAngleCur) / lbl_803E1690);
     }
     else
     {
-        slide = lbl_803E16AC;
+        slideOffset = lbl_803E16AC;
     }
-    low += slide;
-    high += slide;
-    range = gCamcontrolModeSettings->minDistance - lbl_803E16D8;
-    if (range < lbl_803E16DC)
+    lowerY += slideOffset;
+    upperY += slideOffset;
+    minDistSpan = gCamcontrolModeSettings->minDistance - lbl_803E16D8;
+    if (minDistSpan < lbl_803E16DC)
     {
-        range = lbl_803E16DC;
+        minDistSpan = lbl_803E16DC;
     }
     if (target->anim.classId == 1)
     {
@@ -359,47 +357,47 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
             {
                 gCamcontrolModeSettings->upperHeightOffset = gCamcontrolModeSettings->baseUpperHeightOffset;
             }
-            if (speed > lbl_803E16DC)
+            if (dist > lbl_803E16DC)
             {
-                if (speed <= range)
+                if (dist <= minDistSpan)
                 {
-                    f32 d = range - lbl_803E16DC;
+                    f32 d = minDistSpan - lbl_803E16DC;
                     if (d > lbl_803E16AC)
                     {
-                        speed = (speed - lbl_803E16DC) / d;
+                        dist = (dist - lbl_803E16DC) / d;
                     }
-                    if (speed < *(f32*)&lbl_803E16AC)
+                    if (dist < *(f32*)&lbl_803E16AC)
                     {
-                        speed = lbl_803E16AC;
+                        dist = lbl_803E16AC;
                     }
-                    else if (speed > lbl_803E16A4)
+                    else if (dist > lbl_803E16A4)
                     {
-                        speed = lbl_803E16A4;
+                        dist = lbl_803E16A4;
                     }
-                    low =
-                        speed * ((gCamcontrolModeSettings->targetHeight + gCamcontrolModeSettings->lowerHeightOffset) -
+                    lowerY =
+                        dist * ((gCamcontrolModeSettings->targetHeight + gCamcontrolModeSettings->lowerHeightOffset) -
                                  lbl_803E16F0) +
                         (*(f32*)&lbl_803E16F0 + target->anim.worldPosY);
-                    high =
-                        speed * ((gCamcontrolModeSettings->targetHeight + gCamcontrolModeSettings->upperHeightOffset) -
+                    upperY =
+                        dist * ((gCamcontrolModeSettings->targetHeight + gCamcontrolModeSettings->upperHeightOffset) -
                                  (minHeight = lbl_803E16F0)) +
                         (*(f32*)&lbl_803E16F0 + target->anim.worldPosY);
                 }
             }
             else
             {
-                high = lbl_803E16E0 * (lbl_803E16DC - speed) + (lbl_803E16F0 + target->anim.worldPosY);
-                low = high;
+                upperY = lbl_803E16E0 * (lbl_803E16DC - dist) + (lbl_803E16F0 + target->anim.worldPosY);
+                lowerY = upperY;
             }
         }
     }
-    if (camera->anim.worldPosY < low)
+    if (camera->anim.worldPosY < lowerY)
     {
-        step = low - camera->anim.worldPosY;
+        step = lowerY - camera->anim.worldPosY;
     }
-    else if (camera->anim.worldPosY > high)
+    else if (camera->anim.worldPosY > upperY)
     {
-        step = high - camera->anim.worldPosY;
+        step = upperY - camera->anim.worldPosY;
     }
     else
     {
@@ -411,9 +409,9 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
         step = lbl_803E16AC;
     }
     camera->anim.worldPosY = camera->anim.worldPosY + step;
-    if (camera->anim.worldPosY > lbl_803E16B8 + high)
+    if (camera->anim.worldPosY > lbl_803E16B8 + upperY)
     {
-        camera->anim.worldPosY = lbl_803E16B8 + high;
+        camera->anim.worldPosY = lbl_803E16B8 + upperY;
     }
     if (gCamcontrolModeSettings->upperHeightOffset > gCamcontrolModeSettings->baseUpperHeightOffset)
     {
@@ -711,7 +709,7 @@ void CameraModeNormal_update(u8* obj)
     }
     camera->unk13E = 0;
     camcontrol_updateModeSettings((int)camera);
-    camMoveFn_80104040(camera, target[0]);
+    camcontrol_updateWallAvoidance(camera, target[0]);
     CameraModeNormal_follow(camera, &target[0]->anim);
     Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                    &camera->anim.worldPosX, &camera->anim.worldPosY, &camera->anim.worldPosZ,

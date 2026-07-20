@@ -17,8 +17,6 @@
 
 #define DEPTHOFFIELDPOINT_OBJFLAG_HIDDEN 0x4000
 
-#include "main/blur_filter_api.h"
-
 typedef struct DofState
 {
     u8 enabled : 1; /* 0x00 & 0x01: blur filter currently active */

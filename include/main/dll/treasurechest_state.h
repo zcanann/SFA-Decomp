@@ -12,9 +12,9 @@
 typedef struct TreasureChestState {
     int unk0;
     u8 unk4[0x25F - 0x4];
-    u8 unk25F;
+    u8 physicsActive;
     u8 unk260[0x270 - 0x260];
-    s16 unk270;
+    s16 substate;
     u8 unk272[0x274 - 0x272];
     s16 controlMode;
     u8 unk276[0x2C0 - 0x276];
@@ -22,7 +22,7 @@ typedef struct TreasureChestState {
     u8 unk2C4[0x2D0 - 0x2C4];
     int targetObj;
     u8 unk2D4[0x349 - 0x2D4];
-    u8 unk349;
+    u8 hasTarget;
     u8 unk34A[0x354 - 0x34A];
     s8 hitPoints;
     u8 unk355[0x3E0 - 0x355];
@@ -34,7 +34,7 @@ typedef struct TreasureChestState {
     u8 unk400[0x402 - 0x400];
     s16 targetState;
     u8 unk404[0x405 - 0x404];
-    u8 unk405;
+    u8 subMode;
     u8 unk406[0x40C - 0x406];
 } TreasureChestState;
 

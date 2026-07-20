@@ -9,7 +9,7 @@
 #include "main/dll/infopoint.h"
 #include "main/dll/trickycurve_object.h"
 #include "main/object_api.h"
-#include "main/dll/player_ext.h"
+#include "main/dll/player_api.h"
 
 typedef struct TrickyCurveState
 {

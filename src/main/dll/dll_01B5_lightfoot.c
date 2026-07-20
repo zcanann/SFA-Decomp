@@ -49,7 +49,7 @@ typedef struct LightfootSub
     u8 pad18[0x24 - 0x18];
     u16 unk24;
     s16 unk26;
-    s16 unk28;
+    s16 weaponDefNo; /* weapon def id (LIGHTFOOT_WEAPON_T1/T2); -1 = unarmed */
     u16 unk2A;
     u8 pad2C[0x30 - 0x2C];
 } LightfootSub;
@@ -112,7 +112,7 @@ void lightfoot_free(GameObject* obj, int flag)
             }
         }
     }
-    (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))((int)obj, inner, 0x20);
+    (*gBaddieControlInterface)->releaseState(obj, (void*)inner, 0x20);
 }
 
 void lightfoot_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -317,15 +317,15 @@ void lightfoot_init(GameObject* obj, int def, int flag)
     {
         flags |= 1;
     }
-    (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
-        (int)obj, def, inner, 5, 3, 0x108, flags, lbl_803E8228);
+    (*gBaddieControlInterface)
+        ->initGroundBaddie(obj, (u8*)def, (u8*)inner, 5, 3, 0x108, flags, lbl_803E8228);
     (obj)->animEventCallback = Lightfoot_SeqFn;
     ((GroundBaddieState*)inner)->baddie.controlMode = 0;
     ((GroundBaddieState*)inner)->baddie.substate = 0;
     (obj)->objectFlags = (u16)((obj)->objectFlags | LIGHTFOOT_OBJFLAG_HITDETECT_DISABLED);
     sub = ((LightfootState*)inner)->subObj;
     ((LightfootSub*)sub)->unk26 = -1;
-    ((LightfootSub*)sub)->unk28 = ((LightfootSub*)sub)->unk26;
+    ((LightfootSub*)sub)->weaponDefNo = ((LightfootSub*)sub)->unk26;
     (obj)->objectFlags = (u16)((obj)->objectFlags | (*(s8*)((char*)def + 0x28) & 0x7));
     if (*(s16*)((char*)def + 0x1a) == 0x64c)
     {
@@ -333,7 +333,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
         ((GroundBaddieState*)inner)->baddie.substate = 1;
         ObjHits_DisableObject(obj);
         ((LightfootSub*)sub)->unk24 = randomGetRange(0, 3);
-        ((LightfootSub*)sub)->unk28 = LIGHTFOOT_WEAPON_T1;
+        ((LightfootSub*)sub)->weaponDefNo = LIGHTFOOT_WEAPON_T1;
         ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6F0;
         ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC6F4;
         *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
@@ -353,14 +353,14 @@ void lightfoot_init(GameObject* obj, int def, int flag)
         case 0x33e3c:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6F0;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC6F4;
-            ((LightfootSub*)sub)->unk28 = LIGHTFOOT_WEAPON_T1;
+            ((LightfootSub*)sub)->weaponDefNo = LIGHTFOOT_WEAPON_T1;
             *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x33e34:
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6FC;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC700;
-            ((LightfootSub*)sub)->unk28 = LIGHTFOOT_WEAPON_T1;
+            ((LightfootSub*)sub)->weaponDefNo = LIGHTFOOT_WEAPON_T1;
             *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
@@ -368,7 +368,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
             ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC708;
             ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC70C;
             ObjHits_DisableObject(obj);
-            ((LightfootSub*)sub)->unk28 = LIGHTFOOT_WEAPON_T2;
+            ((LightfootSub*)sub)->weaponDefNo = LIGHTFOOT_WEAPON_T2;
             *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             (obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;

@@ -90,7 +90,7 @@ void ProximityMine_render(ProximityMineObject* obj, u32 p2, u32 p3, u32 p4, u32 
     {
         queueGlowRender(effect);
     }
-    objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6778);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, (double)lbl_803E6778);
     return;
 }
 

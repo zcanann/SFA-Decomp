@@ -1692,7 +1692,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
     *(int*)stateB = objA;
     if (animA->parent != NULL)
     {
-        Obj_TransformWorldVectorToLocal(x, y, z, &localAx, &localAy, &localAz, *(int*)&animA->parent);
+        Obj_TransformWorldVectorToLocal(x, y, z, &localAx, &localAy, &localAz, (int)animA->parent);
     }
     else
     {
@@ -1702,7 +1702,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
     }
     if (animB->parent != NULL)
     {
-        Obj_TransformWorldVectorToLocal(x, y, z, &localBx, &localBy, &localBz, *(int*)&animB->parent);
+        Obj_TransformWorldVectorToLocal(x, y, z, &localBx, &localBy, &localBz, (int)animB->parent);
     }
     else
     {
@@ -1725,7 +1725,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
         else
         {
             Obj_TransformLocalPointToWorld(animA->localPosX, animA->localPosY, animA->localPosZ, &animA->worldPosX,
-                                           &animA->worldPosY, &animA->worldPosZ, *(int*)&animA->parent);
+                                           &animA->worldPosY, &animA->worldPosZ, (int)animA->parent);
         }
     }
     else if ((animB->classId == 1) && (stateB->lateralResponseWeight != 0) &&
@@ -1743,7 +1743,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
         else
         {
             Obj_TransformLocalPointToWorld(animB->localPosX, animB->localPosY, animB->localPosZ, &animB->worldPosX,
-                                           &animB->worldPosY, &animB->worldPosZ, *(int*)&animB->parent);
+                                           &animB->worldPosY, &animB->worldPosZ, (int)animB->parent);
         }
     }
     else if (stateB->lateralResponseWeight == 0)
@@ -1762,7 +1762,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
             else
             {
                 Obj_TransformLocalPointToWorld(animA->localPosX, animA->localPosY, animA->localPosZ, &animA->worldPosX,
-                                               &animA->worldPosY, &animA->worldPosZ, *(int*)&animA->parent);
+                                               &animA->worldPosY, &animA->worldPosZ, (int)animA->parent);
             }
         }
     }
@@ -1782,7 +1782,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
             else
             {
                 Obj_TransformLocalPointToWorld(animB->localPosX, animB->localPosY, animB->localPosZ, &animB->worldPosX,
-                                               &animB->worldPosY, &animB->worldPosZ, *(int*)&animB->parent);
+                                               &animB->worldPosY, &animB->worldPosZ, (int)animB->parent);
             }
         }
     }
@@ -1834,13 +1834,13 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
         animA->localPosY = animA->localPosY - localAy * blend;
         animA->localPosZ = animA->localPosZ - localAz * blend;
         Obj_TransformLocalPointToWorld(animA->localPosX, animA->localPosY, animA->localPosZ, &animA->worldPosX,
-                                       &animA->worldPosY, &animA->worldPosZ, *(int*)&animA->parent);
+                                       &animA->worldPosY, &animA->worldPosZ, (int)animA->parent);
         invBlend = gObjHitsScalarOne - blend;
         animB->localPosX = localBx * invBlend + animB->localPosX;
         animB->localPosY = localBy * invBlend + animB->localPosY;
         animB->localPosZ = localBz * invBlend + animB->localPosZ;
         Obj_TransformLocalPointToWorld(animB->localPosX, animB->localPosY, animB->localPosZ, &animB->worldPosX,
-                                       &animB->worldPosY, &animB->worldPosZ, *(int*)&animB->parent);
+                                       &animB->worldPosY, &animB->worldPosZ, (int)animB->parent);
     }
 }
 
@@ -2365,15 +2365,15 @@ void ObjHits_Update(int objectCount)
                 }
                 objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
                 objState->contactFlags = 0;
-                *(s8*)&objState->contactHitVolume = -1;
+                objState->contactHitVolume = -1;
                 *(int*)objState = 0;
-                attachedObj = *(u32*)&((GameObject*)obj)->childObjs[0];
+                attachedObj = (u32)((GameObject*)obj)->childObjs[0];
                 if ((attachedObj != 0) && (((GameObject*)attachedObj)->anim.classId == 0x2d))
                 {
                     objState = ObjAnim_GetPriorityHitState((ObjAnimComponent*)attachedObj);
                     objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
                     objState->contactFlags = 0;
-                    *(s8*)&objState->contactHitVolume = -1;
+                    objState->contactHitVolume = -1;
                     *(int*)objState = 0;
                 }
             }
@@ -2389,7 +2389,7 @@ void ObjHits_Update(int objectCount)
         entry = *entrySlot;
         obj = entry->obj;
         objState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        attachedObj = *(u32*)&((GameObject*)obj)->childObjs[0];
+        attachedObj = (u32)((GameObject*)obj)->childObjs[0];
         if ((attachedObj != 0) && ((ObjAnim_GetPriorityHitState((ObjAnimComponent*)attachedObj) == NULL) ||
                                    ((ObjAnim_GetPriorityHitState((ObjAnimComponent*)attachedObj)->flags &
                                      OBJHITS_PRIORITY_STATE_ENABLED) == 0)))

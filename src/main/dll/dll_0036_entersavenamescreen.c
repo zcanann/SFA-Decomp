@@ -15,7 +15,9 @@
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-#include "main/dll/dll_003C_tumbleweedbush_api.h"
+#include "main/gameloop_api.h"
+#include "main/dll/dll_003C_tumbleweedbush.h"
+#include "main/dll/dll_0035_saveselectscreen.h"
 
 extern u16 gEnterSaveNameColorAnimTime;
 extern u32 lbl_803DD6DC;
@@ -34,7 +36,6 @@ extern f32 lbl_803E1D9C;
 
 s32 gEnterSaveNameCharWidths[40];
 s32 gEnterSaveNameCharOffsets[40];
-extern s8 saveFileSelect_currentSlotIndex;
 extern f32 lbl_803DD6D0;
 extern f32 gEnterSaveNameTargetScrollVel;
 extern u8 gEnterSaveNameAutoScrolling;

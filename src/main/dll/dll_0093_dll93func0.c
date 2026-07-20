@@ -100,15 +100,17 @@ void dll_93_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] += ((GameObject*)sourceObj)->anim.localPosX;
-            buf.pos[1] += ((GameObject*)sourceObj)->anim.localPosY;
-            buf.pos[2] += ((GameObject*)sourceObj)->anim.localPosZ;
+            GameObject* obj = (GameObject*)sourceObj;
+            buf.pos[0] += obj->anim.localPosX;
+            buf.pos[1] += obj->anim.localPosY;
+            buf.pos[2] += obj->anim.localPosZ;
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
+            PartFxSpawnParams* params = (PartFxSpawnParams*)posSource;
+            buf.pos[0] += params->posX;
+            buf.pos[1] += params->posY;
+            buf.pos[2] += params->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80317260, 0x18, base + 0xd4, DLL93_EFFECT_ID, 0);

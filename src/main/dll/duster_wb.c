@@ -25,6 +25,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/player_api.h"
 #include "main/dll/duster_wb.h"
+#include "main/dll/baddie_frozen.h"
 
 typedef struct DusterState
 {
@@ -69,7 +70,7 @@ extern const f32 lbl_803E2B0C;
 extern const f32 lbl_803E2B10;
 extern const f32 lbl_803E2B14;
 
-void wbUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
+void wbUpdateWhileFrozen(int obj, u8* state, int unused, int eventKind, int wpad0, int wpad1, Vec* wpad2, int wpad3)
 {
     if (eventKind != 0x11)
     {
@@ -299,7 +300,7 @@ void wbInit(u32 unused, int state)
     u32 ua;
 
     ((BaddieState*)state)->speedScale = lbl_803E2AE8;
-    *(u32*)&((BaddieState*)state)->unk2E4 = 0x2002b029;
+    ((BaddieState*)state)->unk2E4 = 0x2002b029;
     ((BaddieState*)state)->unk308 = lbl_803E2ACC;
     ((BaddieState*)state)->animDeltaScale = lbl_803E2AEC;
     ((BaddieState*)state)->unk304 = lbl_803E2AF0;
@@ -367,7 +368,8 @@ void mutatedEbaPlayMoveSfx(u32 obj, int state)
     return;
 }
 
-void mutatedEbaUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
+void mutatedEbaUpdateWhileFrozen(int obj, u8* state, int unused, int eventKind, int wpad0, int wpad1, Vec* wpad2,
+                                 int wpad3)
 {
     int move;
 
@@ -386,7 +388,7 @@ void mutatedEbaUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, 
             }
             else
             {
-                Baddie_SetMove(obj, state, 4, lbl_803E2B04, 0, 0);
+                fn_8014D08C((GameObject*)obj, (int)state, 4, lbl_803E2B04, 0, 0);
                 ((BaddieState*)state)->userData1 = 0;
                 Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_call);
                 ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
@@ -418,12 +420,14 @@ void mutatedEbaUpdateEngaged(u32 obj, int state)
         if (*(u16*)(state + 0x2a0) < 4)
         {
             tblOff = (u32)((BaddieState*)state)->userData1 * 0xc;
-            Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 8], *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
+            fn_8014D08C((GameObject*)obj, state, gDusterEbaMoveTable[tblOff + 8],
+                        *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
         }
         else
         {
             tblOff = (u32)((BaddieState*)state)->userData1 * 0xc;
-            Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 9], *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
+            fn_8014D08C((GameObject*)obj, state, gDusterEbaMoveTable[tblOff + 9],
+                        *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
         }
     }
     mutatedEbaPlayMoveSfx(obj, state);
@@ -447,7 +451,8 @@ void mutatedEbaUpdateIdle(u32 obj, int state)
             ((BaddieState*)state)->userData1 = 0;
         }
         tblOff = (u32)((BaddieState*)state)->userData1 * 0xc;
-        Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 8], *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
+        fn_8014D08C((GameObject*)obj, state, gDusterEbaMoveTable[tblOff + 8],
+                    *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
     }
     mutatedEbaPlayMoveSfx(obj, state);
     return;
@@ -458,7 +463,7 @@ void mutatedEbaInit(u32 unused, int state)
     float fa;
 
     ((BaddieState*)state)->speedScale = lbl_803E2B08;
-    *(u32*)&((BaddieState*)state)->unk2E4 = 0x46001;
+    ((BaddieState*)state)->unk2E4 = 0x46001;
     ((BaddieState*)state)->unk308 = lbl_803E2B0C;
     ((BaddieState*)state)->animDeltaScale = lbl_803E2B10;
     ((BaddieState*)state)->unk304 = lbl_803E2B14;

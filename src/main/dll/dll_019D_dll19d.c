@@ -66,25 +66,25 @@ void dll_19D_hitDetect(GameObject* obj)
     register int state;
     register int self = (int)obj;
     int state2;
-    float vec[6];
+    PartFxSpawnParams spawnParams;
     int linkObj;
     void* linkSubObj;
 
     state = *(int*)&((GameObject*)self)->extra;
     state2 = *(int*)&((GameObject*)self)->anim.placementData;
-    vec[3] = 0.0f;
-    vec[4] = 0.0f;
-    vec[5] = 0.0f;
-    vec[2] = (float)(int)(s8)((Dll19DPlacement*)state2)->variant;
+    spawnParams.posX = 0.0f;
+    spawnParams.posY = 0.0f;
+    spawnParams.posZ = 0.0f;
+    spawnParams.scale = (float)(int)(s8)((Dll19DPlacement*)state2)->variant;
 
     linkObj = *(int*)&((GameObject*)self)->anim.hitReactState;
     linkSubObj = *(void**)&((ObjHitsPriorityState*)linkObj)->lastHitObject;
     if (linkSubObj == 0) return;
     if (*(short*)((u8*)linkSubObj + 0x46) == 0x248) return;
 
-    (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
-    (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, &spawnParams, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, &spawnParams, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, &spawnParams, 1, -1, NULL);
     ((Dll19DState*)state)->despawnTimer = 0x32;
 }
 
@@ -94,7 +94,7 @@ void dll_19D_update(GameObject* obj)
     register int self = (int)obj;
     int def;
     int linkObj;
-    float vec[6];
+    PartFxSpawnParams spawnParams;
     int lifetime;
     s16 timer;
     u32 frames;
@@ -102,10 +102,10 @@ void dll_19D_update(GameObject* obj)
 
     state = *(int*)&((GameObject*)self)->extra;
     def = *(int*)&((GameObject*)self)->anim.placementData;
-    vec[3] = 0.0f;
-    vec[4] = 0.0f;
-    vec[5] = 0.0f;
-    vec[2] = (float)(int)(s8)((Dll19DPlacement*)def)->variant;
+    spawnParams.posX = 0.0f;
+    spawnParams.posY = 0.0f;
+    spawnParams.posZ = 0.0f;
+    spawnParams.scale = (float)(int)(s8)((Dll19DPlacement*)def)->variant;
 
     if ((((Dll19DState*)state)->flags & 1) == 0)
     {
@@ -116,12 +116,12 @@ void dll_19D_update(GameObject* obj)
     }
 
     linkObj = *(int*)&((GameObject*)self)->anim.hitReactState;
-    if (*(s8*)(linkObj + 0xad) != 0)
+    if (((ObjHitsPriorityState*)linkObj)->contactFlags != 0)
     {
         Sfx_PlayFromObject(self, SFXTRIG_npu_216);
-        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, vec, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, &spawnParams, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, &spawnParams, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_IMPACT, &spawnParams, 1, -1, NULL);
         ((Dll19DState*)state)->despawnTimer = 0x32;
     }
 
@@ -151,13 +151,13 @@ void dll_19D_update(GameObject* obj)
 
         ((GameObject*)self)->anim.rotX = (s16)(((GameObject*)self)->anim.rotX + ((Dll19DState*)state)->rotVelX * framesThisStep);
         ((GameObject*)self)->anim.rotZ = (s16)(((GameObject*)self)->anim.rotZ + ((Dll19DState*)state)->rotVelZ * framesThisStep);
-        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_TRAIL, vec, 4, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)self, DLL19D_PARTFX_TRAIL, &spawnParams, 4, -1, NULL);
 
         if ((((Dll19DState*)state)->effectTimer -= framesThisStep) <= 0)
         {
-            (*gPartfxInterface)->spawnObject((void*)self, 0x29e, vec, 4, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)self, 0x29f, vec, 4, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)self, 0x2a1, vec, 4, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)self, 0x29e, &spawnParams, 4, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)self, 0x29f, &spawnParams, 4, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)self, 0x2a1, &spawnParams, 4, -1, NULL);
             ((Dll19DState*)state)->effectTimer = 0x32;
         }
 

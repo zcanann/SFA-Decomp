@@ -13,7 +13,6 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object.h"
-#include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
@@ -56,11 +55,6 @@ STATIC_ASSERT(offsetof(CfccratePlacement, param1C) == 0x1C);
 STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
 
 #define CFCRATE_HIT_VOLUME_SLOT 0x13
-
-#define PARTFX_SPAWN(obj, fxId, a, b, c, d)                                                                            \
-    (*gPartfxInterface)->spawnObject((void*)(obj), (fxId), (void*)(a), (b), (c), (void*)(d))
-
-
 
 int CFCrate_getExtraSize(void)
 {
@@ -127,7 +121,7 @@ int CFCrate_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         {
             if (animUpdate->eventIds[i] == 1)
             {
-                PARTFX_SPAWN(obj, 0x44, 0, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x44, NULL, 2, -1, NULL);
             }
             animUpdate->eventIds[i] = 0;
         }

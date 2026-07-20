@@ -6,6 +6,7 @@
  * object in the engine (objectFlags |= BARRELPAD_OBJFLAG_HITDETECT_DISABLED).
  */
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objfx.h"
 #include "main/object_render.h"
 #include "main/dll/dll_012F_barrelpad.h"
@@ -19,7 +20,7 @@
 
 typedef struct BarrelPadPlacement
 {
-    u8 pad00[0x18];
+    ObjPlacement head; /* 0x00 */
     u8 rotZByte;  /* 0x18 */
     u8 rotYByte;  /* 0x19 */
     u8 rotXByte;  /* 0x1a */

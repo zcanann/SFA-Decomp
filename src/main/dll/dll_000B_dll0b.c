@@ -40,6 +40,7 @@
 #include "main/obj_list.h"
 #include "dolphin/gx/GXEnum.h"
 #include "main/render_mode_api.h"
+#include "main/sky.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "track/intersect_api.h"
 
@@ -374,15 +375,15 @@ void fn_800A0524(void* state, void* p, int mode)
         f32 tb = ((ModgfxVertexGroupCmd*)p)->valueZ;
         if (((ModgfxState*)state)->blendFrameCount != 0)
         {
-            ((ModgfxState*)state)->blendColorR = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xc];
-            ((ModgfxState*)state)->blendColorG = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xd];
-            ((ModgfxState*)state)->blendColorB = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xe];
+            ((ModgfxState*)state)->blendColorR = (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xc];
+            ((ModgfxState*)state)->blendColorG = (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xd];
+            ((ModgfxState*)state)->blendColorB = (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xe];
             ((ModgfxState*)state)->blendColorStepR =
-                (tr - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xc]) / (f32) * (s16*)((char*)state + 0xfe);
+                (tr - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xc]) / (f32) ((ModgfxState*)state)->blendFrameCount;
             ((ModgfxState*)state)->blendColorStepG =
-                (tg - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xd]) / (f32) * (s16*)((char*)state + 0xfe);
+                (tg - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xd]) / (f32) ((ModgfxState*)state)->blendFrameCount;
             ((ModgfxState*)state)->blendColorStepB =
-                (tb - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xe]) / (f32) * (s16*)((char*)state + 0xfe);
+                (tb - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xe]) / (f32) ((ModgfxState*)state)->blendFrameCount;
         }
         else
         {
@@ -426,9 +427,9 @@ void fn_800A0524(void* state, void* p, int mode)
     }
     for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
     {
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xc] = (int)((ModgfxState*)state)->blendColorR;
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xd] = (int)((ModgfxState*)state)->blendColorG;
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xe] = (int)((ModgfxState*)state)->blendColorB;
+        buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xc] = (int)((ModgfxState*)state)->blendColorR;
+        buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xd] = (int)((ModgfxState*)state)->blendColorG;
+        buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xe] = (int)((ModgfxState*)state)->blendColorB;
     }
 }
 
@@ -522,7 +523,7 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
     int k = idx * 2;
     char* slots = (char*)state + 0x78;
     u8* bufB = *(u8**)(slots + ((ModgfxState*)state)->activeVertexBufferIndex * 4);
-    u8* bufA = *(u8**)((char*)state + 0x80);
+    u8* bufA = (u8*)((ModgfxState*)state)->baseVertexData;
     int j;
 
     if (mode == 1)
@@ -532,15 +533,15 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
         if (frames != 0)
         {
             ((f32*)((char*)state + 0xac))[k] =
-                (target - (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf]) / frames;
-            ((f32*)((char*)state + 0xb0))[k] = (f32)(u32)bufA[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xf];
+                (target - (f32)(u32)bufA[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xf]) / frames;
+            ((f32*)((char*)state + 0xb0))[k] = (f32)(u32)bufA[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xf];
         }
         else
         {
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
             {
-                bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = target;
-                bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
+                bufA[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf] = target;
+                bufB[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf] = bufA[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf];
             }
             return;
         }
@@ -563,8 +564,8 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
     {
         for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
         {
-            bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = *(f32*)((char*)state + off);
-            bufA[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf] = bufB[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xf];
+            bufB[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf] = *(f32*)((char*)state + off);
+            bufA[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf] = bufB[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xf];
         }
     }
 }
@@ -793,7 +794,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     n131 = 0;
     if (a4 != NULL)
     {
-        getAmbientColor(*(u8*)((char*)a4 + 0xf2), &ar, &ag, &ab);
+        getAmbientColor(((GameObject*)a4)->lightColorSlot, &ar, &ag, &ab);
     }
     else
     {
@@ -856,9 +857,9 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
             {
                 if (((PartfxEffectState*)p[slot])->sourceObject != NULL)
                 {
-                    xf.rotX = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
-                    xf.rotY = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
-                    xf.rotZ = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
+                    xf.rotX = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotX;
+                    xf.rotY = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotY;
+                    xf.rotZ = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotZ;
                     vecRotateZXY(&xf.rotX, &pos[0]);
                 }
             }
@@ -870,9 +871,9 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         {
             if (((PartfxEffectState*)p[slot])->sourceObject != NULL)
             {
-                rot[0] = *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x18);
-                rot[1] = *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x1c);
-                rot[2] = *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x20);
+                rot[0] = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.worldPosX;
+                rot[1] = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.worldPosY;
+                rot[2] = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.worldPosZ;
             }
             else
             {
@@ -909,18 +910,18 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         }
         if ((int)((PartfxEffectState*)p[slot])->flags & 0x80000)
         {
-            xf.rotZ = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
-            xf.rotY = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
-            xf.rotX = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
+            xf.rotZ = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotZ;
+            xf.rotY = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotY;
+            xf.rotX = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotX;
         }
         else if (aligned && ((PartfxEffectState*)p[slot])->sourceObject != NULL)
         {
             xf.rotZ = ((PartfxEffectState*)p[slot])->rotOffsetZ +
-                        *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
+                        ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotZ;
             xf.rotY = ((PartfxEffectState*)p[slot])->rotOffsetY +
-                        *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
-            xf.rotX =
-                ((PartfxEffectState*)p[slot])->rotOffsetX + *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
+                        ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotY;
+            xf.rotX = ((PartfxEffectState*)p[slot])->rotOffsetX +
+                        ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotX;
         }
         else if (aligned)
         {
@@ -938,9 +939,9 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         {
             if (((PartfxEffectState*)p[slot])->sourceObject != NULL)
             {
-                dirX = view->worldX - *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x18);
+                dirX = view->worldX - ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.worldPosX;
                 dirZ = view->worldZ -
-                       *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x20);
+                       ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.worldPosZ;
                 dscale = sqrtf(dirX * dirX + dirZ * dirZ);
                 if (dscale != lbl_803DF430)
                 {
@@ -960,7 +961,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         tex = ((PartfxEffectState*)p[slot])->textureResource;
         if (tex != NULL)
         {
-            texCount = (u8)(*(u16*)((char*)tex + 0x10) >> 8);
+            texCount = (u8)(((Texture*)tex)->animationFrameCount >> 8);
         }
         if (tex != NULL && ((PartfxEffectState*)p[slot])->textureFrameTimer != 0)
         {

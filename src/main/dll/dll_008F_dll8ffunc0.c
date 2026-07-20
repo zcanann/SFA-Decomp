@@ -127,15 +127,17 @@ void dll_8F_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] += ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] += ((GameObject*)(sourceObj))->anim.worldPosZ;
+            GameObject* obj = (GameObject*)sourceObj;
+            buf.pos[0] += obj->anim.worldPosX;
+            buf.pos[1] += obj->anim.worldPosY;
+            buf.pos[2] += obj->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
+            PartFxSpawnParams* params = (PartFxSpawnParams*)posSource;
+            buf.pos[0] += params->posX;
+            buf.pos[1] += params->posY;
+            buf.pos[2] += params->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 18, (u8*)(int)lbl_80316C90, 16, base + 0xb4, DLL8F_EFFECT_ID, 0);

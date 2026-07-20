@@ -20,8 +20,8 @@
 #include "main/object_descriptor.h"
 #include "main/shader_api.h"
 #include "main/dll/dll_0004_dummy04.h"
-
-typedef GameObject* (*Dll199FindNearestObjectFn)(int group, GameObject* from, f32* distance);
+#include "main/dll/dll_006A_dll6afunc0.h"
+#include "main/dll/foodbag.h"
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -285,7 +285,7 @@ void dll_199_update(GameObject* obj)
     }
     else
     {
-        found = ((Dll199FindNearestObjectFn)ObjGroup_FindNearestObject)(DLL199_TARGET_OBJGROUP_1, player, &dist);
+        found = (GameObject*)ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_1, player, &dist);
         if ((found != 0) && (dist < 300.0f) && (dist > 100.0f))
         {
             dz = found->anim.localPosZ - player->anim.localPosZ;
@@ -327,13 +327,13 @@ void dll_199_update(GameObject* obj)
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, obj, 0xffffffff);
                 {
-                    int* res = Resource_Acquire(0x83, 1);
-                    (**(void (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 1, 0xffffffff, 0);
+                    Dll83Interface** res = Resource_Acquire(0x83, 1);
+                    (*res)->spawn(obj, 0, NULL, 1, -1, NULL);
                     Resource_Release(res);
                 }
                 {
-                    int* res = Resource_Acquire(0x84, 1);
-                    (**(void (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 1, 0xffffffff, 0);
+                    Dll84Interface** res = Resource_Acquire(0x84, 1);
+                    (*res)->spawn(obj, 0, NULL, 1, -1, NULL);
                     Resource_Release(res);
                 }
                 mainSetBits(0x126, 0);
@@ -379,7 +379,7 @@ void dll_199_update(GameObject* obj)
             state[5] = 1;
             (*gObjectTriggerInterface)->runSequence(2, obj, 0xffffffff);
             dist = 10000.0f;
-            found = ((Dll199FindNearestObjectFn)ObjGroup_FindNearestObject)(DLL199_TARGET_OBJGROUP_2, obj, &dist);
+            found = (GameObject*)ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_2, obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);
@@ -392,9 +392,8 @@ void dll_199_update(GameObject* obj)
             mainSetBits(0x5b2, 0);
             mainSetBits(0x5b9, 1);
             {
-                int* res = Resource_Acquire(0x6a, 1);
-                state[6] =
-                    (**(short (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 0x402, 0xffffffff, 0);
+                Dll6AInterface** res = Resource_Acquire(0x6a, 1);
+                state[6] = (*res)->spawn(obj, 0, NULL, 0x402, -1, NULL);
                 Resource_Release(res);
             }
             mainSetBits(0x1cd, 0);
@@ -403,7 +402,7 @@ void dll_199_update(GameObject* obj)
             break;
         case 3:
             dist = 10000.0f;
-            found = ((Dll199FindNearestObjectFn)ObjGroup_FindNearestObject)(DLL199_TARGET_OBJGROUP_2, obj, &dist);
+            found = (GameObject*)ObjGroup_FindNearestObject(DLL199_TARGET_OBJGROUP_2, obj, &dist);
             if (found != 0)
             {
                 Obj_FreeObject(found);
@@ -443,7 +442,7 @@ void dll_199_update(GameObject* obj)
 void dll_199_init(GameObject* obj, int def)
 {
     short* state;
-    int* res;
+    Dll6AInterface** res;
     short id;
 
     state = (obj)->extra;
@@ -473,7 +472,7 @@ void dll_199_init(GameObject* obj, int def)
     state[5] = 0;
     ((Dll199State*)state)->triggered = 0;
     res = Resource_Acquire(0x6a, 1);
-    id = (**(short (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 0x402, 0xffffffff, 0);
+    id = (*res)->spawn(obj, 0, NULL, 0x402, -1, NULL);
     state[6] = id;
     Resource_Release(res);
 }

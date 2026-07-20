@@ -54,8 +54,10 @@ STATIC_ASSERT(offsetof(ModelRenderOpTextureRefs, unk08) == 0x08);
 typedef struct ModelFileHeader {
     u8 refCount;
     u8 unk01;
-    u16 flags; /* 0x10 = dynamic vertex buffers, 0x40 = vertex anim area */
-    u8 unk04[8];
+    u16 flags; /* 0x8 = single-pass anim-eval path, 0x10 = dynamic vertex buffers, 0x40 = vertex anim area */
+    u16 modelId; /* 0x04: MODELS.TAB index; ids 1/3 (player models) bypass the
+                    loaded-file-flag 0x100000 anim-cache suppression */
+    u8 unk06[6];
     s32 dataSize; /* anim data appended at header + dataSize */
     u8 unk10[8];
     u8 *unk18;
@@ -72,7 +74,7 @@ typedef struct ModelFileHeader {
     u8 *jointBlendData; /* 0x40: per-joint blend/pivot table (stride joff); [+0..8]=pivot XYZ (PSMTXTrans to/from origin for scale-fuzz), [+0xc]=scale divisor; passed to ObjModel_BlendVertexStream; offset->ptr relocated on load */
     u8 unk44[0x10];
     u8 *unk54;
-    u8 *hitVolumes;
+    u8 *hitVolumes; /* 0x58: 0x18-byte ModelHitSphereDef records, hitSphereCount entries */
     u8 *collisionTriangles; /* 0x5c: 8-byte triangle vertex-index records (hit-detect mesh) */
     u8 *collisionBlocks;    /* 0x60: 0x14-byte spatial blocks (AABB + triangle range), count at +0xf0 */
     u8 *animationModelPtrs;
@@ -134,14 +136,68 @@ typedef struct ModelFileHeader {
 /* ModelFileHeader.shaderFlags bit: set = use object color override (gObjOverrideColor) */
 #define MODEL_SHADERFLAGS_USE_OBJ_COLOR 0x2
 
-/* ObjModel.bufferFlags bit */
+/* ObjModel.bufferFlags bits */
+#define OBJMODEL_BUFFER_FLAG_HITSPHERE_SELECT 0x4 /* selects hitSphereBuf0/1 for objUpdateHitSpheres */
 #define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED 0x40
 
+STATIC_ASSERT(offsetof(ModelFileHeader, modelId) == 0x04);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
 STATIC_ASSERT(offsetof(ModelFileHeader, blendAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);
 STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetCount) == 0xF9);
 STATIC_ASSERT(offsetof(ModelFileHeader, texMtxCount) == 0xFA);
+
+/* ModelFileHeader.hitVolumes entry: joint-space sphere transformed by the
+ * joint matrix each update (objUpdateHitSpheres). */
+typedef struct ModelHitSphereDef {
+    s16 jointIdx;
+    u8 pad02[2];
+    f32 radius;    /* scaled by anim.rootMotionScale at update */
+    f32 center[3]; /* joint-space center */
+    u8 pad14[4];
+} ModelHitSphereDef; /* 0x18 */
+
+STATIC_ASSERT(sizeof(ModelHitSphereDef) == 0x18);
+
+/* Runtime double-buffered hit-sphere record (ObjModel.hitSphereBuf0/1). */
+typedef struct ObjModelHitSphere {
+    f32 radius;
+    f32 pos[3];
+} ObjModelHitSphere; /* 0x10 */
+
+STATIC_ASSERT(sizeof(ObjModelHitSphere) == 0x10);
+
+/* Vertex-anim job header + chunk records consumed by ObjModel_Blend{Vertex,
+ * Normal}Stream (the raw .c spells chunkCount as ((ModelFileHeader*)hdr)->flags;
+ * the stride 0x74 matches ModelFileHeader.vertexAnimEntries). */
+typedef struct ModelVtxAnimJob {
+    u8 unk00[2];
+    u16 chunkCount; /* 0x02 */
+    u8 unk04[2];
+    u8 quantShift;  /* 0x06: GQR6/7 scale for the s16/s8 streams */
+    u8 unk07[5];
+    struct ModelVtxAnimChunk *chunks; /* 0x0C */
+} ModelVtxAnimJob;
+
+typedef struct ModelVtxAnimChunk {
+    u8 unk00[0x60];
+    s32 srcDataOffset; /* 0x60: into the anim data */
+    u8 *weightStream;  /* 0x64 */
+    u8 unk68[4];
+    u8 mtxIdxA;      /* 0x6C: * 0x30 into the reordered matrix array */
+    u8 mtxIdxB;      /* 0x6D */
+    u8 unk6E;
+    u8 weightWords;  /* 0x6F */
+    u16 vtxCount;    /* 0x70 */
+    u8 dstByteOffset; /* 0x72 */
+    u8 vtxWords;     /* 0x73 */
+} ModelVtxAnimChunk; /* 0x74 */
+
+STATIC_ASSERT(sizeof(ModelVtxAnimChunk) == 0x74);
+STATIC_ASSERT(offsetof(ModelVtxAnimJob, chunkCount) == 0x02);
+STATIC_ASSERT(offsetof(ModelVtxAnimJob, chunks) == 0x0C);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, srcDataOffset) == 0x60);
+STATIC_ASSERT(offsetof(ModelVtxAnimChunk, vtxCount) == 0x70);
 
 /* ModelFileHeader.jointData entry (wiki: Bone). tail is the inverse bind-pose
  * translation, negated into PSMTXTrans every frame by modelInitBoneMtxs. */
@@ -216,7 +272,7 @@ typedef struct ObjModel {
     u8 *unk54;
     void *renderAttachment;
     u8 *curMtxBuf;
-    u8 unk60;
+    u8 vtxBufDirty; /* 0x60: set when the active vertex buffer needs re-layout; cleared at layout */
     u8 unk61[3];
 } ObjModel;
 
@@ -235,37 +291,55 @@ ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int r
 
 STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);
-STATIC_ASSERT(offsetof(ObjModel, unk60) == 0x60);
+STATIC_ASSERT(offsetof(ObjModel, vtxBufDirty) == 0x60);
+
+/* Verlet-style bone-chain node (player tail etc.), simulated by the
+ * fn_80025F38 / fn_80026308 / fn_80026928 / modelAnimFn_80026790 cluster. */
+typedef struct ObjModelChainNode {
+    f32 pos[3];         /* 0x00: current world position */
+    f32 posDelta[3];    /* 0x0C: per-frame momentum (damped + jittered) */
+    f32 localOffset[3]; /* 0x18: rest offset from the parent node */
+    f32 mtx[3][4];      /* 0x24: node world matrix */
+} ObjModelChainNode; /* 0x54 */
+
+typedef struct ObjModelChainDesc {
+    s32 *jointIndices; /* per-node model joint index */
+    s32 nodeCount;
+} ObjModelChainDesc;
 
 typedef struct ObjModelChainEntry {
-    void *frameBuffer;
-    void *model;
-    s32 frameCount;
+    ObjModelChainNode *nodes; /* nodeCount+1 records */
+    ObjModelChainDesc *desc;
+    s32 nodeCount;
 } ObjModelChainEntry;
 
 typedef struct ObjModelChain {
     ObjModelChainEntry *entries;
     s32 count;
-    f32 originX;
-    f32 originY;
-    f32 originZ;
+    f32 stiffness; /* 0x08: dot-product lerp stiffness toward the target orientation */
+    f32 damping;   /* 0x0C: per-frame momentum damping multiplier */
+    f32 gravityY;  /* 0x10: additive Y gravity applied to momentum */
     f32 phase;
-    u8 updateFlag;
+    u8 updatedThisFrame; /* 0x18: set during update, cleared by AdvancePhase */
     u8 firstUpdateDone;
     u8 enabled;
 } ObjModelChain;
 
+typedef void (*ObjModelChainUpdateCallback)(int animState, int* model, f32* vector, int callbackArg, int nodeIndex,
+                                            f32 phase);
+
+STATIC_ASSERT(sizeof(ObjModelChainNode) == 0x54);
 STATIC_ASSERT(sizeof(ObjModelChainEntry) == 0x0C);
-STATIC_ASSERT(offsetof(ObjModelChainEntry, frameBuffer) == 0x00);
-STATIC_ASSERT(offsetof(ObjModelChainEntry, model) == 0x04);
-STATIC_ASSERT(offsetof(ObjModelChainEntry, frameCount) == 0x08);
+STATIC_ASSERT(offsetof(ObjModelChainEntry, nodes) == 0x00);
+STATIC_ASSERT(offsetof(ObjModelChainEntry, desc) == 0x04);
+STATIC_ASSERT(offsetof(ObjModelChainEntry, nodeCount) == 0x08);
 STATIC_ASSERT(offsetof(ObjModelChain, entries) == 0x00);
 STATIC_ASSERT(offsetof(ObjModelChain, count) == 0x04);
-STATIC_ASSERT(offsetof(ObjModelChain, originX) == 0x08);
-STATIC_ASSERT(offsetof(ObjModelChain, originY) == 0x0C);
-STATIC_ASSERT(offsetof(ObjModelChain, originZ) == 0x10);
+STATIC_ASSERT(offsetof(ObjModelChain, stiffness) == 0x08);
+STATIC_ASSERT(offsetof(ObjModelChain, damping) == 0x0C);
+STATIC_ASSERT(offsetof(ObjModelChain, gravityY) == 0x10);
 STATIC_ASSERT(offsetof(ObjModelChain, phase) == 0x14);
-STATIC_ASSERT(offsetof(ObjModelChain, updateFlag) == 0x18);
+STATIC_ASSERT(offsetof(ObjModelChain, updatedThisFrame) == 0x18);
 STATIC_ASSERT(offsetof(ObjModelChain, firstUpdateDone) == 0x19);
 STATIC_ASSERT(offsetof(ObjModelChain, enabled) == 0x1A);
 
@@ -304,7 +378,7 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 
 int loadModelAndAnimTabs(void);
 void postRenderSetAlphaBlendState(void);
-void playerTailFn_80026b3c();
+void playerTailFn_80026b3c(int* model, int animState, ObjModelChain* chain, ObjModelChainUpdateCallback callback);
 void __set_debug_bba(u8* p);
 
 #endif

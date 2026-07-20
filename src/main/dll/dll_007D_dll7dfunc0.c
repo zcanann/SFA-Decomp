@@ -22,9 +22,9 @@
 extern u8 lbl_80315030[];
 int lbl_803DD4B0;
 
-int dll_7D_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5, f32* scaleOverride)
+s16 dll_7D_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5, f32* scaleOverride)
 {
-    int ret;
+    s16 ret;
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80315030;
     f32 scale = 1.0f;

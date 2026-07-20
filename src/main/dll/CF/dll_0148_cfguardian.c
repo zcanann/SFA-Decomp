@@ -419,7 +419,7 @@ int* findRomCurvePointNearObject(int* obj, int curveGroup, int* outVec, int mode
         findParams[1] = 21;
     }
 
-    found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+    found = (*gRomCurveInterface)->find(
         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
         findParams, 2, curveGroup);
 
@@ -889,7 +889,7 @@ int cfguardian_updateMain(GameObject* obj)
         objAudioFn_800393f8(obj, &sub->soundState, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);
     }
     objAnimFn_80038f38(obj, (char*)&sub->soundState);
-    characterDoEyeAnimsState(obj, sub->eyeBlock);
+    characterDoEyeAnims(obj, sub->eyeBlock);
     if (sub->questState != mainGetBit(GAMEBIT_GUARDIAN_QUEST_STATE))
     {
         mainSetBits(GAMEBIT_GUARDIAN_QUEST_STATE, sub->questState);

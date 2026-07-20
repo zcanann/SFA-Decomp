@@ -287,7 +287,7 @@ int Carryable_updateHeld(GameObject* obj, void* state)
         if (((CarryableUpdateHeldState*)held)->carryState == CARRY_STATE_PUTDOWN && ((GameObject*)obj)->userData2 == 0)
         {
             u8* h2 = ((GameObject*)obj)->extra;
-            *(u8*)&((CarryableUpdateHeldState*)h2)->carryState = CARRY_STATE_RESTING;
+            ((CarryableUpdateHeldState*)h2)->carryState = CARRY_STATE_RESTING;
             ((CarryableUpdateHeldState*)h2)->isHeld = 0;
             if ((((CarryableUpdateHeldState*)h2)->flags & CARRYABLE_FLAG_SUPPRESS_POS_SAVE) == 0)
             {

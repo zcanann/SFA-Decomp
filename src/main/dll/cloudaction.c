@@ -52,10 +52,10 @@
 CloudActionRuntime lbl_8039AB28;
 
 GameObject* lbl_803DD1F0[2];
-u8 cloudOverridePosition;
-f32 lbl_803DD1E8;
-f32 lbl_803DD1E4;
-f32 lbl_803DD1E0;
+u8 gCloudOverridePositionValid;
+f32 gCloudOverridePositionX;
+f32 gCloudOverridePositionY;
+f32 gCloudOverridePositionZ;
 
 f32 gCloudActionGlareQuadSize[2] = {8000.0f, 0.0f};
 

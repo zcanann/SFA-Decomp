@@ -7,5 +7,10 @@
 #include "main/dll/DB/DBstealerworm.h"
 
 u32 sbGetPropeller(void);
+int SB_Propeller_getExtraSize(void);
+void SB_Propeller_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void SB_Propeller_hitDetect(GameObject* obj);
+void SB_Propeller_update(GameObject* obj);
+void SB_Propeller_init(GameObject* obj, int placement);
 
 #endif

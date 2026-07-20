@@ -6,6 +6,7 @@
 #include "track/intersect_depth_read_api.h"
 #include "main/frame_timing.h"
 #include "main/pi_dolphin_api.h"
+#include "main/pi_dolphin.h"
 #include "main/dll/player_api.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
@@ -636,8 +637,8 @@ extern const f32 lbl_803E2060;
 extern const f32 lbl_803E2064;
 extern const f32 lbl_803E2068;
 #include "main/fsin16_approx_api.h"
-#include "main/dll/dll_8011d918_ext.h"
-#include "main/trig_api.h"
+#include "main/dll/dll_8011d918.h"
+#include "main/trig.h"
 #include "main/dll/dll_0017_savegame_api.h"
 #include "main/dll/dll_0011_screens_api.h"
 #include "string.h"
@@ -1235,10 +1236,10 @@ void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, 
     pauseMenuMapFn_8011de20(this, p5, p4, 0);
     f1 = lbl_803E1E80 * f1;
     f2 = lbl_803E1E80 * f2;
-    u0 = (f32)(u32)p8 / *(u16*)((char*)this + 0xa);
-    v0 = (f32)(u32)p9 / *(u16*)((char*)this + 0xc);
-    u1 = (f32)(u32)(p6 + p8) / *(u16*)((char*)this + 0xa);
-    v1 = (f32)(u32)(p7 + p9) / *(u16*)((char*)this + 0xc);
+    u0 = (f32)(u32)p8 / ((Texture*)this)->width;
+    v0 = (f32)(u32)p9 / ((Texture*)this)->height;
+    u1 = (f32)(u32)(p6 + p8) / ((Texture*)this)->width;
+    v1 = (f32)(u32)(p7 + p9) / ((Texture*)this)->height;
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
     GXWGFifo.s16 = f1;
     GXWGFifo.s16 = f2;
@@ -1273,8 +1274,8 @@ void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, 
     dy = ((u32)(p8 << 2) * (u16)p6) >> 8;
     f1 = lbl_803E1E80 * f1;
     f2 = lbl_803E1E80 * f2;
-    tu = (f32)(u32)p7 / (f32)(u32) * (u16*)((char*)this + 0xa);
-    tv = (f32)(u32)p8 / (f32)(u32) * (u16*)((char*)this + 0xc);
+    tu = (f32)(u32)p7 / (f32)(u32)((Texture*)this)->width;
+    tv = (f32)(u32)p8 / (f32)(u32)((Texture*)this)->height;
     if (flags & 1)
     {
         ua = tu;
@@ -1324,8 +1325,8 @@ void pauseMenuDrawElement(void* element, f32 fx, f32 fy, int depthZ, u8 paletteI
     int dx, dy;
     f32 c0, c1;
     pauseMenuMapFn_8011de20(element, paletteIndex, depthZ, drawFlags);
-    dx = (*(u16*)((char*)element + 0xa) << 2) * (u16)scalePercent / 256;
-    dy = (*(u16*)((char*)element + 0xc) << 2) * (u16)scalePercent / 256;
+    dx = (((Texture*)element)->width << 2) * (u16)scalePercent / 256;
+    dy = (((Texture*)element)->height << 2) * (u16)scalePercent / 256;
     fx = 4.0f * fx;
     fy = 4.0f * fy;
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
@@ -2361,12 +2362,6 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
 char lbl_803A87F0[0x40];
 void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
 {
-    typedef void (*HudDrawMagicBarElementFn)(void* texture, f32 x, f32 y, int depth, int palette, int scale,
-                                             int flags);
-    typedef void (*HudDrawMagicBarScaledFn)(void* texture, f32 x, f32 y, int depth, int palette, int scale, int width,
-                                            int height, int mode);
-    typedef void (*HudDrawMagicBarPartialFn)(void* texture, f32 x, f32 y, int depth, int palette, int width, int height,
-                                             int offset, int mode);
     int total = lbl_803A9364[8];
     int t13 = total - 0xd;
     int current = lbl_803A9364[2];
@@ -2410,7 +2405,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
     tex = hudTextures[0x27];
     if (flags)
     {
-        ((HudDrawMagicBarElementFn)pauseMenuDrawElement)(tex, lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha, 0x100, 0);
+        pauseMenuDrawElement(tex, lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha, 0x100, 0);
     }
     else
     {
@@ -2421,8 +2416,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x28];
         if (flags)
         {
-            ((HudDrawMagicBarScaledFn)drawFn_8011eb3c)(tex, (f32)(lbl_803DBAD0 + 0x1c), lbl_803DBAD4, elemAlpha, alpha,
-                                                      0x100, seg1, 0x12, 0);
+            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x1c), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg1, 0x12, 0);
         }
         else
         {
@@ -2434,8 +2428,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x29];
         if (flags)
         {
-            ((HudDrawMagicBarPartialFn)drawFn_8011e8d8)(tex, (f32)(seg1 + 0x1c + lbl_803DBAD0), lbl_803DBAD4,
-                                                        elemAlpha, alpha, rem1, 0x12, seg1, 0);
+            drawFn_8011e8d8(tex, (f32)(seg1 + 0x1c + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, rem1, 0x12, seg1, 0);
         }
         else
         {
@@ -2448,8 +2441,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x2A];
         if (flags)
         {
-            ((HudDrawMagicBarScaledFn)drawFn_8011eb3c)(tex, (f32)(lbl_803DBAD0 + 0x24), lbl_803DBAD4, elemAlpha, alpha,
-                                                      0x100, seg2, 0x12, 0);
+            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x24), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg2, 0x12, 0);
         }
         else
         {
@@ -2461,8 +2453,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x2B];
         if (flags)
         {
-            ((HudDrawMagicBarScaledFn)drawFn_8011eb3c)(tex, (f32)(seg2 + 0x24 + lbl_803DBAD0), lbl_803DBAD4,
-                                                      elemAlpha, alpha, 0x100, seg3, 0x12, 0);
+            drawFn_8011eb3c(tex, (f32)(seg2 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg3, 0x12, 0);
         }
         else
         {
@@ -2474,8 +2465,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x2C];
         if (flags)
         {
-            ((HudDrawMagicBarScaledFn)drawFn_8011eb3c)(tex, (f32)(t13 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha,
-                                                      alpha, 0x100, seg4, 0x12, 0);
+            drawFn_8011eb3c(tex, (f32)(t13 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg4, 0x12, 0);
         }
         else
         {
@@ -2487,8 +2477,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x2D];
         if (flags)
         {
-            ((HudDrawMagicBarPartialFn)drawFn_8011e8d8)(tex, (f32)(t13 + lbl_803DBAD0 + (seg4 + 0x24)), lbl_803DBAD4,
-                                                        elemAlpha, alpha, rem4, 0x12, seg4, 0);
+            drawFn_8011e8d8(tex, (f32)(t13 + lbl_803DBAD0 + (seg4 + 0x24)), lbl_803DBAD4, elemAlpha, alpha, rem4, 0x12,
+                            seg4, 0);
         }
         else
         {
@@ -2530,8 +2520,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x31];
         if (flags)
         {
-            ((HudDrawMagicBarPartialFn)drawFn_8011e8d8)(tex, (f32)(w8 + 0x1c + lbl_803DBAD0), lbl_803DBAD4, elemAlpha,
-                                                        alpha, seg1, 0x12, w8, 0);
+            drawFn_8011e8d8(tex, (f32)(w8 + 0x1c + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, seg1, 0x12, w8, 0);
         }
         else
         {
@@ -2543,8 +2532,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x32];
         if (flags)
         {
-            ((HudDrawMagicBarScaledFn)drawFn_8011eb3c)(tex, (f32)(rem1 + 0x24 + lbl_803DBAD0), lbl_803DBAD4,
-                                                      elemAlpha, alpha, 0x100, seg2, 0x12, 0);
+            drawFn_8011eb3c(tex, (f32)(rem1 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg2, 0x12, 0);
         }
         else
         {
@@ -2556,8 +2544,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x33];
         if (flags)
         {
-            ((HudDrawMagicBarScaledFn)drawFn_8011eb3c)(tex, (f32)(t13 + lbl_803DBAD0 + (previousCurrent + 0x24)),
-                                                      lbl_803DBAD4, elemAlpha, alpha, 0x100, seg4, 0x12, 0);
+            drawFn_8011eb3c(tex, (f32)(t13 + lbl_803DBAD0 + (previousCurrent + 0x24)), lbl_803DBAD4, elemAlpha, alpha,
+                            0x100, seg4, 0x12, 0);
         }
         else
         {
@@ -5661,7 +5649,7 @@ void timeListDraw(int unused1, int unused2, int unused3)
         int a, b;
         gTimeListPulseAngle += gTimeListPulseAngleStep;
         ang = gTimeListPulseAngle;
-        pulse = (int)(gTimeListPulseAmplitude * fsin16Precise(ang) + gTimeListPulseBias);
+        pulse = (int)(gTimeListPulseAmplitude * fsin16Precise((u16)ang) + gTimeListPulseBias);
         if (lbl_803DD75B == 1)
         {
             a = pulse;
@@ -5722,7 +5710,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
     char buf[0x20];
 
     gHighScorePulseAngle += gHighScorePulseAngleStep;
-    pulse = (int)(gHighScorePulseAmplitude * fsin16Precise(gHighScorePulseAngle) + gHighScorePulseBias);
+    pulse = (int)(gHighScorePulseAmplitude * fsin16Precise((u16)gHighScorePulseAngle) + gHighScorePulseBias);
     h = (s16)box->f0a;
     w = (s16)box->f08;
     y = box->f16;
@@ -5871,11 +5859,8 @@ void pauseMenuDoSave(void)
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    {
-        u16* obj = (u16*)gRenderModeObj;
-        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4], lbl_803E1E3C,
-                      lbl_803E1E68);
-    }
+    GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32)gRenderModeObj->fbWidth,
+                  gRenderModeObj->xfbHeight, lbl_803E1E3C, lbl_803E1E68);
     for (i = 1; i < 6; i++)
     {
         if (lbl_803A9410[i] == NULL)
@@ -5960,11 +5945,8 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    {
-        u16* obj = (u16*)gRenderModeObj;
-        GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4],
-                      lbl_803E1E3C, lbl_803E1E68);
-    }
+    GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024, (f32)gRenderModeObj->fbWidth,
+                  gRenderModeObj->xfbHeight, lbl_803E1E3C, lbl_803E1E68);
 }
 
 /* Conditional render setup gated on
@@ -5990,11 +5972,8 @@ void perspectiveFn_80129db4(void)
     Camera_SetFovY(lbl_803E2044);
     Camera_RebuildProjectionMatrix();
     Camera_UpdateViewMatrices();
-    {
-        u16* obj = (u16*)gRenderModeObj;
-        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4], lbl_803E1E3C,
-                      lbl_803E1E68);
-    }
+    GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32)gRenderModeObj->fbWidth,
+                  gRenderModeObj->xfbHeight, lbl_803E1E3C, lbl_803E1E68);
     shadowRenderFn_8006b558((int*)((void**)lbl_803A9410)[lbl_803DBA64]);
     {
         void* slot = ((void**)lbl_803A9410)[lbl_803DBA64];
@@ -8596,8 +8575,8 @@ void GameUI_hudDraw(int a, int b, int c)
                 textureAnimFn_80053f2c(gGameUiBlinkTexture, &lbl_803DD82C, &lbl_803DD828);
                 tex = gGameUiBlinkTexture;
                 scale = lbl_803E1E70;
-                x = sx - scale * (f32)(u32) * (u16*)((char*)tex + 0xa);
-                y = sy - scale * (f32)(u32) * (u16*)((char*)tex + 0xc);
+                x = sx - scale * (f32)(u32) ((Texture*)tex)->width;
+                y = sy - scale * (f32)(u32) ((Texture*)tex)->height;
                 drawTexture(tex, x, y, 0x96, 0x100);
             }
             hudDrawFn_80121440(a, b, c);

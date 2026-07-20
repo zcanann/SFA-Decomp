@@ -46,7 +46,6 @@
 #define DIMBOSS_OBJGROUP 3
 
 extern f32 gDIMbossRenderMtx[12];
-extern MoveLibState gDIMbossAnimController;
 
 typedef int (*DIMbossGetActiveModelFn)(int obj);
 
@@ -55,7 +54,6 @@ typedef int (*DIMbossGetActiveModelFn)(int obj);
 #define DIMBOSS_ENVFX_B 0xdc
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
-extern u32 lbl_802C2338[];
 extern void* gDIMbossHitEffectResource;
 extern u8 lbl_803DDB84;
 extern f32 lbl_803E4BD8;
@@ -105,17 +103,17 @@ typedef struct DIMbossInitVec
 typedef struct DIMbossBaddieControlInterface
 {
     u8 pad00[0x28];
-    void (*startMove)(DIMbossObject* obj, DIMbossRuntime* runtime, void* moveScratch, int moveId,
-                      u8* hitReactMode, int p6, int p7, int p8, int p9);
-    void (*applyHitReact)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 amount, int flag);
-    int (*updateState)(DIMbossObject* obj, DIMbossRuntime* runtime, int flags);
+    void (*startMove)(DIMbossObject* obj, DIMbossRuntime* runtime, void* moveScratch, s16 moveId,
+                      u8* hitReactMode, s16 p6, s16 p7, int p8, s8 p9);
+    void (*applyHitReact)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 amount, s8 flag);
+    int (*updateState)(DIMbossObject* obj, DIMbossRuntime* runtime, u8 checkDead);
     int (*updateHitDetect)(DIMbossObject* obj, ObjAnimUpdateState* animUpdate,
                            DIMbossRuntime* runtime,
                            DIMbossHitDetectAnimHandlerTable* hitDetectAnimTable,
                            DIMbossAnimHandlerTable* animTable,
                            int flags);
     u8 pad38[0x40 - 0x38];
-    void (*releaseState)(DIMbossObject* obj, DIMbossRuntime* runtime, int flags);
+    void (*releaseState)(DIMbossObject* obj, DIMbossRuntime* runtime, u8 flags);
     u8 pad44[0x58 - 0x44];
     DIMbossAnimSetupFn setupAnim;
 } DIMbossBaddieControlInterface;
@@ -599,7 +597,7 @@ void DIMboss_init(DIMbossObject* obj, u32 params, int isAltVariant)
 
     runtime = obj->runtime;
     *(DIMbossInitVec*)localVec = *(DIMbossInitVec*)lbl_802C2338;
-    *(u16*)(localVec + 3) = *(u16*)(lbl_802C2338 + 3);
+    *(u16*)(localVec + 3) = ((const u16*)lbl_802C2338)[6];
     setDrawCloudsAndLights(0);
     obj->updateMode = 2;
     animFlags = 6;

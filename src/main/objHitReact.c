@@ -7,6 +7,7 @@
 #include "main/objanim_internal.h"
 #include "main/objfx.h"
 #include "main/objHitReact_types.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/objhits.h"
 #include "main/obj_list.h"
 #include "main/resource.h"
@@ -16,7 +17,7 @@ f32 lbl_803DB450 = 0.4f;
 char sObjHitReactResetString[7] = "reset\n";
 
 
-const ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs = {8, 0xB4, 0xF0, 0xFF};
+const StaffCollisionColorArgs gObjHitReactEffectColorArgs = {8, 0xB4, 0xF0, 0xFF};
 
 u32 ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount, u32 reactionState,
                       float* reactionStepScale)
@@ -26,11 +27,10 @@ u32 ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
     int moveEnded;
     int hitType;
     ObjHitReactEntry* reactionEntry;
-    ObjHitReactEffectHandle* effectHandle;
+    StaffCollisionInterface** effectResource;
     bool sfxActive;
-    f32 hitPos[3];
-    ObjHitReactEffectPos effectPos;
-    ObjHitReactEffectColorArgs effectColorArgs;
+    PartFxSpawnParams effectParams;
+    StaffCollisionColorArgs effectColorArgs;
     int hitSphereIndex;
 
     objAnim = (ObjAnimComponent*)obj;
@@ -46,17 +46,17 @@ u32 ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
             reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
         }
     }
-    hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), 0, &hitSphereIndex, 0, &hitPos[0], &hitPos[1],
-                                                 &hitPos[2]);
+    hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), 0, &hitSphereIndex, 0, &effectParams.posX,
+                                                 &effectParams.posY, &effectParams.posZ);
     if (hitType != 0)
     {
         ObjAnimBank* bank = ObjAnim_GetActiveBank(objAnim);
-        hitPos[0] = hitPos[0] + playerMapOffsetX;
-        hitPos[2] = hitPos[2] + playerMapOffsetZ;
-        effectPos.scale = gObjHitsScalarOne;
-        effectPos.z = 0;
-        effectPos.y = 0;
-        effectPos.x = 0;
+        effectParams.posX = effectParams.posX + playerMapOffsetX;
+        effectParams.posZ = effectParams.posZ + playerMapOffsetZ;
+        effectParams.scale = gObjHitsScalarOne;
+        effectParams.rotZ = 0;
+        effectParams.rotY = 0;
+        effectParams.rotX = 0;
         animDef = bank->animDef;
         hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef, hitSphereIndex);
         if (hitSphereIndex >= (int)(reactionEntryCount & OBJHITREACT_ENTRY_COUNT_MASK))
@@ -79,19 +79,18 @@ u32 ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reacti
             }
             if (reactionEntry->hitEffectMode == OBJHITREACT_HIT_FX_MODE_EFFECT)
             {
-                effectHandle = (ObjHitReactEffectHandle*)Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,
-                                                                          OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
-                effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &effectPos,
-                                            OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE,
-                                            &effectColorArgs);
-                if (effectHandle != (ObjHitReactEffectHandle*)0x0)
+                effectResource = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID, OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
+                (*effectResource)
+                    ->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &effectParams,
+                            OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE, &effectColorArgs);
+                if (effectResource != NULL)
                 {
-                    Resource_Release(effectHandle);
+                    Resource_Release(effectResource);
                 }
             }
             else
             {
-                objLightFn_8009a1dc((void*)obj, gObjHitReactAltEffectScale, &effectPos, OBJHITREACT_ALT_EFFECT_COUNT,
+                objLightFn_8009a1dc((void*)obj, gObjHitReactAltEffectScale, &effectParams, OBJHITREACT_ALT_EFFECT_COUNT,
                                     NULL);
             }
         }

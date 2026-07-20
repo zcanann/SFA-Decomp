@@ -15,7 +15,7 @@
 
 s16 gModgfxFxHwTuning[8] = {0, 155, 200, 155, 0, 0, 0, 0};
 
-void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
+s16 dll_75_func03(GameObject* sourceObj, int variant, PartFxSpawnParams* posSource, u32 flags, int owner, void* unused)
 {
     ModgfxSpawnPacket buf;
     int fl;
@@ -178,18 +178,18 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     {
         if (sourceObj != 0)
         {
-            buf.pos[0] = originOffset + ((GameObject*)sourceObj)->anim.worldPosX;
-            buf.pos[1] = originOffset + ((GameObject*)sourceObj)->anim.worldPosY;
-            buf.pos[2] = originOffset + ((GameObject*)sourceObj)->anim.worldPosZ;
+            buf.pos[0] = originOffset + sourceObj->anim.worldPosX;
+            buf.pos[1] = originOffset + sourceObj->anim.worldPosY;
+            buf.pos[2] = originOffset + sourceObj->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = originOffset + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = originOffset + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = originOffset + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] = originOffset + posSource->posX;
+            buf.pos[1] = originOffset + posSource->posY;
+            buf.pos[2] = originOffset + posSource->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
+    return (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
 }
 
 void dll_75_func01_nop(void)

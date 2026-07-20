@@ -15,7 +15,6 @@ struct ObjfsaWalkGroupPatchInfo
     u16 patchGroupIds[OBJFSA_PATCHGROUP_PATCH_COUNT];
 };
 
-void player_advanceMove(short *moveState, u32 *obj, f32 dt, int flags);
 void FUN_800d9878(u64 param_1,u64 param_2,u32 param_3,u32 param_4,
                  int param_5,int param_6);
 void FUN_800d98fc(u64 param_1,u64 param_2,double param_3,u64 param_4,
@@ -60,7 +59,7 @@ FUN_800de998(double param_1,u64 param_2,double param_3,u64 param_4,u64 param_5,
             u64 param_6,u64 param_7,u64 param_8,float *param_9,int param_10,
             u32 param_11,int param_12,u32 param_13,u32 param_14,
             u32 param_15,u32 param_16);
-int curves_findNearObj(int obj,int *curveTypes,int typeCount,int action,char bboxMode);
+int curves_findNearObj(int obj,int *curveTypes,int typeCount,int action,int bboxMode);
 f32 curves_getPathLength(u32 a, u32 b, f32 *posA, f32 *posB, f32 t1, f32 t2);
 void curves_getPos(int curve,float *outX,float *outY,float *outZ,f32 phase);
 int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, f32* outPhase);

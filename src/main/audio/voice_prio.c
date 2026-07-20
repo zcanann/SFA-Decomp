@@ -4,6 +4,8 @@
 #include "main/audio/vidlisttables.h"
 #include "main/audio/voice_id.h"
 #include "main/audio/voice_prio.h"
+#include "main/audio/vid_init.h"
+#include "main/audio/voice_manage.h"
 
 
 typedef struct VoicePrioPrev
@@ -16,9 +18,6 @@ typedef struct VoicePrioPrev
 #define VB_PRIO_LINK(vb, i)      ((SynthVoiceListNode*)((u8*)&(vb)->priorityLinks[0] + (i) * 4))
 #define VB_PRIO_SORT_NEXT(vb, p) (((SynthRootListNode*)&(vb)->prioritySortLinks[0])[p].next)
 #define VB_PRIO_SORT_PREV(vb, p) (((VoicePrioPrev*)((u8*)&(vb)->prioritySortLinks[0] + 2))[p].prev)
-
-extern u8 vidListNodes[];
-extern u16 voicePrioSortedRoot;
 
 /*
  * Insert the voice into the new priority group's list and keep the global

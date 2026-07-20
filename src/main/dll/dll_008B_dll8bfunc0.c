@@ -35,6 +35,8 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     f32 scale = 1.0f;
     FbCmd* entries;
     FbCmd* cmd;
+    GameObject* obj = (GameObject*)sourceObj;
+    PartFxSpawnParams* params = (PartFxSpawnParams*)posSource;
     int pass;
     if (scalePtr != NULL)
     {
@@ -224,15 +226,15 @@ void dll_8B_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
         {
             if ((u32)sourceObj != 0)
             {
-                buf.pos[0] = zero + ((GameObject*)sourceObj)->anim.worldPosX;
-                buf.pos[1] = zero + ((GameObject*)sourceObj)->anim.worldPosY;
-                buf.pos[2] = zero + ((GameObject*)sourceObj)->anim.worldPosZ;
+                buf.pos[0] = zero + obj->anim.worldPosX;
+                buf.pos[1] = zero + obj->anim.worldPosY;
+                buf.pos[2] = zero + obj->anim.worldPosZ;
             }
             else
             {
-                buf.pos[0] = zero + ((PartFxSpawnParams*)posSource)->posX;
-                buf.pos[1] = zero + ((PartFxSpawnParams*)posSource)->posY;
-                buf.pos[2] = zero + ((PartFxSpawnParams*)posSource)->posZ;
+                buf.pos[0] = zero + params->posX;
+                buf.pos[1] = zero + params->posY;
+                buf.pos[2] = zero + params->posZ;
             }
         }
         (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, model, 0x18, base + 0xd4, DLL8B_EFFECT_ID, 0);

@@ -51,7 +51,7 @@
 /* object group this object belongs to */
 #define DLLCE_OBJGROUP 3
 
-/* child object id spawned in fn_8015EA48 (role un-pinnable per gate: generic locals, no cache field/spawn-fn/docstring) */
+/* child object id spawned in chukChuk_spawnIceBall (role un-pinnable per gate: generic locals, no cache field/spawn-fn/docstring) */
 #define DLLCE_CHILD_OBJ 778
 
 /* dust burst spawned once when the baddie-control fx flag bit 2 is set */
@@ -100,7 +100,7 @@ ObjectDescriptor12 dll_CE = {
     (ObjectDescriptorCallback)dll_CE_func0B,
 };
 
-void fn_8015DAE8(void)
+void iceBaddie_installStateHandlers(void)
 {
 
     gIceBaddieStateHandlersA[0] = iceBaddie_updateOpenHitState;
@@ -126,7 +126,7 @@ void fn_8015DAE8(void)
     gIceBaddieStateHandlersB[6] = iceBaddie_stateHandlerB06;
     gIceBaddieStateHandlersB[7] = iceBaddie_stateHandlerB07;
 }
-int fn_8015DC04(int obj, GroundBaddieState* state)
+int chukChuk_checkChooseAttackState(int obj, GroundBaddieState* state)
 {
 
     int count;
@@ -143,8 +143,8 @@ int fn_8015DC04(int obj, GroundBaddieState* state)
     if (*(char*)&state->baddie.moveDone != '\0' || *(char*)&state->baddie.moveJustStartedB != '\0')
     {
         hit = *(u8**)&sub->control;
-        result = (*(int (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x44))(obj, (u8*)state,
-                                                                                          (f32)(u32)sub->aggroRange, 1);
+        result = (*gBaddieControlInterface)
+                     ->shouldDropTarget((GameObject*)obj, state, (f32)(u32)sub->aggroRange, 1);
         if (result != 0)
         {
             hit[9] &= ~2;
@@ -176,38 +176,38 @@ int fn_8015DC04(int obj, GroundBaddieState* state)
             {
                 hit[9] |= 1;
             }
-            (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)state, 4);
+            (*gPlayerInterface)->setState((void*)obj, state, 4);
         }
         else if (rnd > 32)
         {
             if (four > 1)
             {
-                (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)state, 2);
+                (*gPlayerInterface)->setState((void*)obj, state, 2);
             }
             else
             {
-                (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)state, 4);
+                (*gPlayerInterface)->setState((void*)obj, state, 4);
             }
         }
         else if (rnd > 16)
         {
-            (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)state, 2);
+            (*gPlayerInterface)->setState((void*)obj, state, 2);
         }
         else
         {
-            (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))(obj, (u8*)state, 3);
+            (*gPlayerInterface)->setState((void*)obj, state, 3);
         }
     }
     return 0;
 }
 
-int fn_8015DE50(int* obj, GroundBaddieState* state)
+int chukChuk_checkSubmergeState(int* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
     if ((s8)state->baddie.moveJustStartedB != 0)
     {
         f32 fz;
-        ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 1);
+        (*gPlayerInterface)->setState(obj, state, 1);
         {
             f32* p = *(f32**)&sub->control;
             fz = 0.0f;
@@ -218,7 +218,7 @@ int fn_8015DE50(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015DEB4(int* obj, GroundBaddieState* state)
+int chukChuk_checkYieldState(int* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub;
     if ((s8)state->baddie.moveJustStartedB != 0)
@@ -237,7 +237,7 @@ int fn_8015DEB4(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
+int chukChuk_checkDeathState(GameObject* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub = obj->extra;
     f32 z;
@@ -249,7 +249,7 @@ int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
         z = 0.0f;
         v[0] = z;
         v[1] = z;
-        (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))((int)obj, (u8*)state, 6);
+        (*gPlayerInterface)->setState(obj, state, 6);
         *(int*)&state->baddie.targetObj = 0;
         *(s8*)&state->baddie.physicsActive = 0;
         *(s8*)&state->baddie.hasTarget = 0;
@@ -269,7 +269,7 @@ int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E00C(int obj, u8* state)
+int chukChuk_checkHealthState(int obj, u8* state)
 {
     if ((s8)((GroundBaddieState*)state)->baddie.hitPoints < 1)
         return 3;
@@ -278,7 +278,7 @@ int fn_8015E00C(int obj, u8* state)
     return 0;
 }
 
-int fn_8015E044(int* obj, GroundBaddieState* state)
+int chukChuk_checkTargetState(int* obj, GroundBaddieState* state)
 {
     if (*(int**)&state->baddie.targetObj != NULL)
     {
@@ -287,7 +287,7 @@ int fn_8015E044(int* obj, GroundBaddieState* state)
             f32 fz = 0.0f;
             state->baddie.animSpeedB = fz;
             state->baddie.animSpeedA = fz;
-            ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 0);
+            (*gPlayerInterface)->setState(obj, state, 0);
         }
         if ((s8)state->baddie.moveDone != 0)
         {
@@ -297,7 +297,7 @@ int fn_8015E044(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E0C8(GameObject* obj, GroundBaddieState* state)
+int chukChuk_updateWindupState(GameObject* obj, GroundBaddieState* state)
 {
             GroundBaddieState* sub;
     f32 spd;
@@ -331,12 +331,12 @@ int fn_8015E0C8(GameObject* obj, GroundBaddieState* state)
     {
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_iceywindlp16_233);
         state->baddie.moveEventFlags |= 2;
-        (*(void (**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))((int)obj, sub->triggerId, -1, 0);
+        (*gBaddieControlInterface)->spawnChild(obj, sub->triggerId, -1, 0);
     }
     return 0;
 }
 
-int fn_8015E210(int* obj, GroundBaddieState* state)
+int chukChuk_updateAlertState(int* obj, GroundBaddieState* state)
 {
 
         int* objs;
@@ -362,7 +362,7 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
                 (*(void (**)(void*, int, int))(**(int**)&((GameObject*)o)->anim.dll + 0x24))(o, 129, 0);
             }
         }
-        playerChild = *(int**)((char*)Obj_GetPlayerObject() + 0xc8);
+        playerChild = (int*)((GameObject*)Obj_GetPlayerObject())->childObjs[0];
         player = Obj_GetPlayerObject();
         result = (**(int (**)(int*))(*(int*)(*(int*)&((GameObject*)playerChild)->anim.dll) + 0x44))(playerChild);
         if (result != 0)
@@ -395,14 +395,14 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E3A0(GameObject* obj, int state)
+int chukChuk_updateSpitState(GameObject* obj, int state)
 {
 
         GroundBaddieState* sub = (obj)->extra;
     int count;
     int idx;
 
-    if ((s32)(s8) * (u8*)(state + 0x27a) != 0)
+    if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         ObjHits_EnableObject(obj);
     }
@@ -411,7 +411,7 @@ int fn_8015E3A0(GameObject* obj, int state)
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
 
-    if ((s32)(s8) * (u8*)(state + 0x27a) != 0)
+    if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         int* objs = ObjList_GetObjects(&idx, &count);
         while (idx < count)
@@ -427,7 +427,7 @@ int fn_8015E3A0(GameObject* obj, int state)
 
     ((GroundBaddieState*)state)->baddie.moveSpeed = 0.01f;
 
-    if ((s32)(s8) * (u8*)(state + 0x27a) != 0)
+    if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 10, 0.0f, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
@@ -445,7 +445,7 @@ int fn_8015E3A0(GameObject* obj, int state)
     return 0;
 }
 
-int fn_8015E520(int* obj, GroundBaddieState* state)
+int chukChuk_updateState3(int* obj, GroundBaddieState* state)
 {
     if ((s8)state->baddie.moveJustStartedA != 0)
     {
@@ -465,7 +465,7 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E5DC(short* obj, GroundBaddieState* state)
+int chukChuk_updateAttackState(short* obj, GroundBaddieState* state)
 {
 
             int count;
@@ -516,7 +516,7 @@ int fn_8015E5DC(short* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E798(GameObject* obj, GroundBaddieState* state)
+int chukChuk_updateSubmergeState(GameObject* obj, GroundBaddieState* state)
 {
 
             GroundBaddieState* sub;
@@ -555,7 +555,7 @@ int fn_8015E798(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-int fn_8015E8BC(GameObject* obj, GroundBaddieState* state)
+int chukChuk_updateEmergeState(GameObject* obj, GroundBaddieState* state)
 {
 
                 GroundBaddieState* sub;
@@ -603,9 +603,9 @@ int fn_8015E8BC(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
-void fn_8015EA48(GameObject* obj, GroundBaddieState* state);
+void chukChuk_spawnIceBall(GameObject* obj, GroundBaddieState* state);
 
-void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
+void chukChuk_spawnIceBall(GameObject* obj, GroundBaddieState* state)
 {
                 f32 dur;
     f32 t;
@@ -639,19 +639,20 @@ void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
     }
 }
 
-void fn_8015EB6C(GameObject* obj, int state, int target)
+void chukChuk_acquireTarget(GameObject* obj, int state, int target)
 {
             int sub = *(int*)&((GroundBaddieState*)state)->control;
-    char* r;
+    GameObject* r;
 
-    r = (char*)(**(int (**)(void*, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
-        obj, target, (f32)(u32)((GroundBaddieState*)state)->aggroRange, 0x8000);
+    r = (*gBaddieControlInterface)
+            ->findAggroTarget(obj, (void*)target, (f32)(u32)((GroundBaddieState*)state)->aggroRange, 0x8000);
 
     if (r != NULL && (((GroundBaddieState*)state)->configFlags & 0x4) == 0)
     {
         int v = -1;
-        (**(void (**)(void*, int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x28))(
-            obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8, v);
+        (*gBaddieControlInterface)
+            ->startHitReaction(obj, (void*)target, (char*)state + 0x35c,
+                               ((GroundBaddieState*)state)->gameBitB, NULL, 0, 0, 8, v);
         *(int*)&((GroundBaddieState*)target)->baddie.targetObj = (int)r;
         ((GroundBaddieState*)target)->baddie.hasTarget = 0;
         ((GroundBaddieState*)state)->targetState = 1;
@@ -688,7 +689,7 @@ void fn_8015EB6C(GameObject* obj, int state, int target)
     }
 }
 
-void fn_8015ED1C(int obj, int state, int target)
+void chukChuk_updateTargeting(int obj, int state, int target)
 {
     void* player;
     char* targetObj;
@@ -711,17 +712,19 @@ void fn_8015ED1C(int obj, int state, int target)
 
     if ((((GroundBaddieState*)state)->configFlags & 0x20) == 0)
     {
-        (**(void (**)(int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x3c))(
-            obj, target, state + 0x400, 2, 3, (s32)((GroundBaddieState*)state)->soundIdA,
-            (s32)((GroundBaddieState*)state)->soundIdB);
+        (*gBaddieControlInterface)
+            ->pollCameraTarget((GameObject*)obj, (void*)target, &((GroundBaddieState*)state)->flags400, 2, 3,
+                               ((GroundBaddieState*)state)->soundIdA, ((GroundBaddieState*)state)->soundIdB);
     }
 
-    (**(void (**)(int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x54))(
-        obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8);
+    (*gBaddieControlInterface)
+        ->processMessages((GameObject*)obj, (void*)target, (void*)(state + 0x35c),
+                          ((GroundBaddieState*)state)->gameBitB, NULL, 0, 0, 8);
 
-    result = (int)(**(int (**)(int, int, int, int, u8*, u8*, int, u8*))((char*)(*gBaddieControlInterface) + 0x50))(
-        obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, lbl_8031FEA8, lbl_8031FF20, 1,
-        lbl_803AC580);
+    result = (*gBaddieControlInterface)
+                 ->updateHitReaction((GameObject*)obj, (void*)target, (char*)state + 0x35c,
+                                     ((GroundBaddieState*)state)->gameBitB, (int*)lbl_8031FEA8, lbl_8031FF20, 1,
+                                     lbl_803AC580);
 
     if (result != 0)
     {
@@ -777,7 +780,7 @@ void dll_CE_free(int* obj)
             ((GameObject*)obj)->childObjs[0] = NULL;
         }
     }
-    ((void (*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int*)state, 32);
+    (*gBaddieControlInterface)->releaseState((GameObject*)obj, state, 32);
 }
 
 void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -817,8 +820,8 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
         if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
             (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) != 0)
         {
-            (*(void (**)(void*, int, int, int, int, int, int, f32))(*(int*)gBaddieControlInterface + 0x58))(
-                obj, setup, (int)sub, 7, 6, 0x102, 0x26, 20.0f);
+            (*gBaddieControlInterface)
+                ->initGroundBaddie(obj, (u8*)setup, (u8*)sub, 7, 6, 0x102, 0x26, 20.0f);
             sub->targetState = 0;
             Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_seal4_c_263);
             ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
@@ -837,7 +840,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
     }
     else
     {
-        if ((*(int (**)(void*, int, int))(*(int*)gBaddieControlInterface + 0x30))(obj, (int)sub, 0) == 0)
+        if ((*gBaddieControlInterface)->isObjectValid(obj, sub, 0) == 0)
         {
             sub->targetState = 0;
         }
@@ -847,17 +850,17 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
         }
         else
         {
-            fn_8015ED1C((int)obj, (int)sub, (int)sub);
+            chukChuk_updateTargeting((int)obj, (int)sub, (int)sub);
             if (sub->targetState == 0)
             {
-                fn_8015EB6C(obj, (int)sub, (int)sub);
+                chukChuk_acquireTarget(obj, (int)sub, (int)sub);
             }
             else
             {
                 hit = *(u8**)&sub->control;
                 if ((hit[8] & 1) != 0)
                 {
-                    fn_8015EA48(obj, sub);
+                    chukChuk_spawnIceBall(obj, sub);
                 }
                 if ((hit[8] & 2) != 0)
                 {
@@ -873,13 +876,12 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
                     } while (spawnCount < 10);
                 }
                 hit[8] = 0;
-                (*(void (**)(void*, int, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, (int)sub,
-                                                                                            0.0f, -1);
-                (*(void (**)(void*, int, f32, int))(*(int*)gPlayerInterface + 0x30))(obj, (int)sub, timeDelta, 4);
+                (*gBaddieControlInterface)->updateGravity(obj, sub, 0.0f, -1);
+                (*gPlayerInterface)->rotateTowardTarget(obj, sub, timeDelta, 4);
                 sub->savedObjC0 = *(int*)&obj->pendingParentObj;
                 *(int*)&obj->pendingParentObj = 0;
-                (*(void (**)(void*, int, f32, f32, void*, void*))(*(int*)gPlayerInterface + 8))(
-                    obj, (int)sub, timeDelta, timeDelta, gChukChukMoveHandlers, gChukChukCheckHandlers);
+                (*gPlayerInterface)->update(obj, sub, timeDelta, timeDelta, gChukChukMoveHandlers,
+                                            gChukChukCheckHandlers);
                 *(int*)&obj->pendingParentObj = sub->savedObjC0;
             }
             obj->anim.localPosY = ((ObjPlacement*)setup)->posY - 2.0f;
@@ -903,14 +905,14 @@ void dll_CE_init(GameObject* obj, u8* def, int flags)
     {
         mode |= 8;
     }
-    (*(void (**)(int, u8*, int, int, int, int, u8, f32))(*(int*)gBaddieControlInterface + 0x58))(
-        (int)obj, def, (int)sub, 7, 6, 0x102, mode, 20.0f);
+    (*gBaddieControlInterface)
+        ->initGroundBaddie(obj, def, (u8*)sub, 7, 6, 0x102, mode, 20.0f);
     (obj)->animEventCallback = NULL;
     v = *(f32**)&sub->control;
     *v = (f32)(int)randomGetRange(10, 300);
     ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, 0);
     *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    (*(void (**)(int, int, int))(*(int*)gPlayerInterface + 0x14))((int)obj, (int)sub, 0);
+    (*gPlayerInterface)->setState(obj, sub, 0);
     sub->baddie.substate = 0;
     *(s8*)&sub->baddie.physicsActive = 0;
     ObjHits_DisableObject(obj);
@@ -922,17 +924,17 @@ void dll_CE_release_nop(void)
 
 void dll_CE_initialise(void)
 {
-    gChukChukMoveHandlers[0] = fn_8015E8BC;
-    gChukChukMoveHandlers[1] = fn_8015E798;
-    gChukChukMoveHandlers[2] = fn_8015E5DC;
-    gChukChukMoveHandlers[3] = fn_8015E520;
-    gChukChukMoveHandlers[4] = fn_8015E3A0;
-    gChukChukMoveHandlers[5] = fn_8015E210;
-    gChukChukMoveHandlers[6] = fn_8015E0C8;
-    gChukChukCheckHandlers[0] = fn_8015E044;
-    gChukChukCheckHandlers[1] = fn_8015E00C;
-    gChukChukCheckHandlers[2] = fn_8015DF20;
-    gChukChukCheckHandlers[3] = fn_8015DEB4;
-    gChukChukCheckHandlers[4] = fn_8015DE50;
-    gChukChukCheckHandlers[5] = fn_8015DC04;
+    gChukChukMoveHandlers[0] = chukChuk_updateEmergeState;
+    gChukChukMoveHandlers[1] = chukChuk_updateSubmergeState;
+    gChukChukMoveHandlers[2] = chukChuk_updateAttackState;
+    gChukChukMoveHandlers[3] = chukChuk_updateState3;
+    gChukChukMoveHandlers[4] = chukChuk_updateSpitState;
+    gChukChukMoveHandlers[5] = chukChuk_updateAlertState;
+    gChukChukMoveHandlers[6] = chukChuk_updateWindupState;
+    gChukChukCheckHandlers[0] = chukChuk_checkTargetState;
+    gChukChukCheckHandlers[1] = chukChuk_checkHealthState;
+    gChukChukCheckHandlers[2] = chukChuk_checkDeathState;
+    gChukChukCheckHandlers[3] = chukChuk_checkYieldState;
+    gChukChukCheckHandlers[4] = chukChuk_checkSubmergeState;
+    gChukChukCheckHandlers[5] = chukChuk_checkChooseAttackState;
 }

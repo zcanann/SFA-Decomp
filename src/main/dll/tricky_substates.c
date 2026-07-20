@@ -40,7 +40,6 @@
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
 #include "main/objprint_api.h"
-#include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/skeetla.h"
 #include "main/dll/objfsa.h"
@@ -736,10 +735,10 @@ int tricky_substateApproachThorntail(int obj, int state)
     }
     else if ((u8)trickyFn_8013b368((GameObject*)obj, lbl_803E24C8, (TrickyState*)state) != 1)
     {
-        ((FlagByte728*)(state + 0x728))->bf5 = 1;
+        ((FlagByte728*)&((TrickyState*)state)->stateFlags728)->bf5 = 1;
         sfxId = randomGetRange(862, 863);
         tex = *(int*)&((GameObject*)obj)->extra;
-        if ((((u32) * (u8*)(tex + 0x58) >> 6) & 1) == 0)
+        if ((((u32)((TrickyState*)tex)->statusFlags >> 6) & 1) == 0)
         {
             move = ((GameObject*)obj)->anim.currentMove;
             if (move >= 48 || move < 41)
@@ -878,14 +877,7 @@ int tricky_substateDigForFood(GameObject* obj, int state)
 {
     short move;
     int b;
-    struct
-    {
-        u8 head[8];
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } spawnBuf;
+    PartFxSpawnParams spawnBuf;
 
     if (tricky_handleFeedOrTalk(obj, (int*)state) != 0)
     {
@@ -910,9 +902,9 @@ int tricky_substateDigForFood(GameObject* obj, int state)
         {
             objAnimFn_8013a3f0((int)obj, 47, lbl_803E23EC, 0);
         }
-        spawnBuf.x = (obj)->anim.worldPosX;
-        spawnBuf.y = (obj)->anim.worldPosY;
-        spawnBuf.z = (obj)->anim.worldPosZ;
+        spawnBuf.posX = (obj)->anim.worldPosX;
+        spawnBuf.posY = (obj)->anim.worldPosY;
+        spawnBuf.posZ = (obj)->anim.worldPosZ;
         spawnBuf.scale = lbl_803E23F0;
         (*gPartfxInterface)->spawnObject((void*)obj, 2022, &spawnBuf, 0x200001, -1, NULL);
         break;
@@ -1108,7 +1100,7 @@ int tricky_substateHowlCall(GameObject* obj, int* trickyState)
     float fval;
     int b[1];
     int val;
-    u8 fxBuf[24];
+    PartFxSpawnParams fxBuf;
     int ia;
     float fa;
     int ib;
@@ -1141,7 +1133,7 @@ int tricky_substateHowlCall(GameObject* obj, int* trickyState)
                 if (val == 0)
                 {
                     objAnimFn_8013a3f0((int)obj, 0x2c, lbl_803E251C, 0);
-                    *(u8*)((int)trickyState + 10) = 9;
+                    ((TrickyState*)trickyState)->substate = 9;
                 }
             }
         }
@@ -1158,18 +1150,18 @@ int tricky_substateHowlCall(GameObject* obj, int* trickyState)
                 objAudioFn_800393f8(obj, (ObjSoundState*)(trickyState + 0xea), 0x391, 0x100, -1, 0);
             }
         }
-        fval = *(float*)(trickyState + 0x1d1) - timeDelta;
-        *(float*)(trickyState + 0x1d1) = fval;
+        fval = ((TrickyState*)trickyState)->sparkleFxTimer - timeDelta;
+        ((TrickyState*)trickyState)->sparkleFxTimer = fval;
         if (fval <= lbl_803E23DC)
         {
             if (((obj)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0)
             {
-                *(f32*)&fxBuf[12] = ((TrickyState*)trickyState)->renderPosX;
-                *(f32*)&fxBuf[16] = lbl_803E23F8 + ((TrickyState*)trickyState)->renderPosY;
-                *(f32*)&fxBuf[20] = ((TrickyState*)trickyState)->renderPosZ;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7f0, fxBuf, 0x200001, -1, NULL);
+                fxBuf.posX = ((TrickyState*)trickyState)->renderPosX;
+                fxBuf.posY = lbl_803E23F8 + ((TrickyState*)trickyState)->renderPosY;
+                fxBuf.posZ = ((TrickyState*)trickyState)->renderPosZ;
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x7f0, &fxBuf, 0x200001, -1, NULL);
             }
-            *(float*)(trickyState + 0x1d1) = lbl_803E24C8;
+            ((TrickyState*)trickyState)->sparkleFxTimer = lbl_803E24C8;
         }
         break;
     case 0x2b:
@@ -1205,11 +1197,11 @@ int tricky_substateHowlCall(GameObject* obj, int* trickyState)
             }
             {
                 u32 m;
-                u32 f2 = *(u32*)&trickyState[0x15];
+                u32 f2 = ((TrickyState*)trickyState)->stateFlags;
                 m = ~0x10;
-                *(u32*)&trickyState[0x15] = f2 & m;
+                ((TrickyState*)trickyState)->stateFlags = f2 & m;
             }
-            *(u8*)((int)trickyState + 10) = 0;
+            ((TrickyState*)trickyState)->substate = 0;
         }
         break;
     }
@@ -1435,7 +1427,7 @@ int tricky_substateFollowIdle(GameObject* obj, int state)
         }
         return tricky_updateIdleBehavior((int)obj, (int*)state);
     }
-    ((FlagByte728*)(state + 0x728))->bf7 = 1;
+    ((FlagByte728*)&((TrickyState*)state)->stateFlags728)->bf7 = 1;
     return 1;
 }
 
@@ -1459,19 +1451,19 @@ u32 tricky_updateIdleBehavior(int obj, int* trickyState)
     }
     if ((((TrickyState*)trickyState)->stateFlags728 >> 7 & 1) != 0U)
     {
-        *(f32*)((int)trickyState + 0x724) = lbl_803E2524;
-        ((FlagByte728*)((int)trickyState + 0x728))->bf7 = 0;
-        ((FlagByte728*)((int)trickyState + 0x728))->bf6 = 1;
+        *(f32*)&((TrickyState*)trickyState)->unk724 = lbl_803E2524;
+        ((FlagByte728*)&((TrickyState*)trickyState)->stateFlags728)->bf7 = 0;
+        ((FlagByte728*)&((TrickyState*)trickyState)->stateFlags728)->bf6 = 1;
     }
     if ((((TrickyState*)trickyState)->stateFlags728 >> 6 & 1) != 0U)
     {
-        *(f32*)((int)trickyState + 0x724) = *(f32*)((int)trickyState + 0x724) - timeDelta;
-        if (*(f32*)((int)trickyState + 0x724) <= lbl_803E23DC)
+        *(f32*)&((TrickyState*)trickyState)->unk724 = *(f32*)&((TrickyState*)trickyState)->unk724 - timeDelta;
+        if (*(f32*)&((TrickyState*)trickyState)->unk724 <= lbl_803E23DC)
         {
             ((TrickyState*)trickyState)->cooldownA = lbl_803E2438;
             bitVal = randomGetRange(200, 500);
-            *(f32*)((int)trickyState + 0x724) = (f32)(s32)(bitVal);
-            ((FlagByte728*)((int)trickyState + 0x728))->bf6 = 0;
+            *(f32*)&((TrickyState*)trickyState)->unk724 = (f32)(s32)(bitVal);
+            ((FlagByte728*)&((TrickyState*)trickyState)->stateFlags728)->bf6 = 0;
             ((TrickyState*)trickyState)->substate = 1;
         }
         return 0;
@@ -1505,11 +1497,11 @@ u32 tricky_updateIdleBehavior(int obj, int* trickyState)
         ((TrickyState*)trickyState)->sfxRepeatTimer = lbl_803E2440;
         return 1;
     }
-    *(f32*)((int)trickyState + 0x724) = *(f32*)((int)trickyState + 0x724) - timeDelta;
-    if (*(f32*)((int)trickyState + 0x724) <= lbl_803E23DC)
+    *(f32*)&((TrickyState*)trickyState)->unk724 = *(f32*)&((TrickyState*)trickyState)->unk724 - timeDelta;
+    if (*(f32*)&((TrickyState*)trickyState)->unk724 <= lbl_803E23DC)
     {
         bitVal = randomGetRange(200, 500);
-        *(f32*)((int)trickyState + 0x724) = (f32)(s32)(bitVal);
+        *(f32*)&((TrickyState*)trickyState)->unk724 = (f32)(s32)(bitVal);
         if (*(u8*)*trickyState <= 7)
         {
             objAnimFn_8013a3f0(obj, 0x14, lbl_803E2444, 0);
@@ -1596,7 +1588,7 @@ void tricky_pickAmbientActivity(u8* obj, u8* state)
             }
             ((TrickyState*)state)->linkedWalkGroup = 0;
         }
-        ((FlagByte728*)(state + 0x728))->bf5 = 0;
+        ((FlagByte728*)&((TrickyState*)state)->stateFlags728)->bf5 = 0;
         state[0xa] = 0xc;
         break;
     case 1:

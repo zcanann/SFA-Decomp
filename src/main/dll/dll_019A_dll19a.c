@@ -10,6 +10,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/foodbag.h"
 
 typedef struct Dll19APlacement
 {
@@ -89,7 +90,7 @@ void dll_19A_update(int obj)
 {
     Dll19APlacement* setup;
     short* state;
-    int* res;
+    Dll82Interface** res;
     Dll19ASpawnSetup* newObj;
     GameObject* r;
 
@@ -109,8 +110,8 @@ void dll_19A_update(int obj)
             (mainGetBit(((Dll19APlacement*)setup)->gateBitIndex + GAMEBIT_DLL19A_GATE_BASE) != 0))
         {
             res = Resource_Acquire(0x82, 1);
-            (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
-            (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 1, 0, 1, 0xffffffff, 0);
+            (*res)->spawn((GameObject*)obj, 0, NULL, 1, -1, NULL);
+            (*res)->spawn((GameObject*)obj, 1, NULL, 1, -1, NULL);
             Sfx_PlayFromObject(obj, SFXTRIG_hitpos_6);
             Resource_Release(res);
             state[1] = 1;

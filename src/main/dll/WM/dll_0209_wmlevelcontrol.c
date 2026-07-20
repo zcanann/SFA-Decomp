@@ -93,9 +93,9 @@ typedef struct
 
 typedef struct
 {
-    LightVec3 light;
-    LightVec3 color;
-    LightVec3 fog;
+    LightVec3 toDir;
+    LightVec3 fromDir;
+    LightVec3 auxDir;
 } LightVecSet;
 
 typedef struct
@@ -123,16 +123,16 @@ f32 gWmLevelControlBlendFactor;            /* current blend factor */
 f32 gWmLevelControlBlendHold;              /* restore-blend hold flag */
 void fn_801F3F18(GameObject* obj)
 {
-    LightVecSet L;
-    f32 decay;
-    const LightVec3* vecs;
+    LightVecSet dirs;
+    f32 newBlend;
+    const LightVec3* dirTable;
     u8* fromColor;
     u8* toColor;
 
-    vecs = gWmLevelControlSkyVecTable.vecs;
-    L.fog = vecs[1];
-    L.color = vecs[2];
-    L.light = vecs[3];
+    dirTable = gWmLevelControlSkyVecTable.vecs;
+    dirs.auxDir = dirTable[1];
+    dirs.fromDir = dirTable[2];
+    dirs.toDir = dirTable[3];
 
     if ((u8)(*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == 7)
     {
@@ -167,9 +167,9 @@ void fn_801F3F18(GameObject* obj)
         gWmLevelControlBlendHold = 1.0f;
         gWmLevelControlBlendFactor = 1.0f;
     }
-    decay = -(0.02f * timeDelta - gWmLevelControlBlendFactor);
-    gWmLevelControlBlendFactor = decay;
-    if (decay < 0.0f)
+    newBlend = -(0.02f * timeDelta - gWmLevelControlBlendFactor);
+    gWmLevelControlBlendFactor = newBlend;
+    if (newBlend < 0.0f)
     {
         gWmLevelControlBlendFactor = 0.0f;
     }
@@ -211,11 +211,11 @@ void fn_801F3F18(GameObject* obj)
     gWmLevelControlBlendedLightIntensity =
         gWmLevelControlBlendFactor * 128.0f + 32.0f;
     skySetOverrideLightDirectionEnabled(1);
-    skySetOverrideLightDirection(gWmLevelControlBlendFactor * (L.light.x - L.color.x) + L.color.x,
-                                 gWmLevelControlBlendFactor * (L.light.y - L.color.y) + L.color.y,
-                                 gWmLevelControlBlendFactor * (L.light.z - L.color.z) + L.color.z,
+    skySetOverrideLightDirection(gWmLevelControlBlendFactor * (dirs.toDir.x - dirs.fromDir.x) + dirs.fromDir.x,
+                                 gWmLevelControlBlendFactor * (dirs.toDir.y - dirs.fromDir.y) + dirs.fromDir.y,
+                                 gWmLevelControlBlendFactor * (dirs.toDir.z - dirs.fromDir.z) + dirs.fromDir.z,
                                  100.0f);
-    skyFn_800894a8(1, L.fog.x, L.fog.y, L.fog.z);
+    skyFn_800894a8(1, dirs.auxDir.x, dirs.auxDir.y, dirs.auxDir.z);
 }
 
 int WM_LevelControl_getExtraSize(void)

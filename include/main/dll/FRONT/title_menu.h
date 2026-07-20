@@ -2,7 +2,8 @@
 #define MAIN_DLL_FRONT_TITLE_MENU_H_
 
 #include "ghidra_import.h"
-#include "main/dll/dll_003C_tumbleweedbush_api.h"
+#include "main/gameloop_api.h"
+#include "main/dll/dll_003C_tumbleweedbush.h"
 
 typedef struct TitleMenuTextEntry {
   u16 textId;

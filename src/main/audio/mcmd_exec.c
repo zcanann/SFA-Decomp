@@ -3,6 +3,7 @@
 #include "main/audio/voice_prio.h"
 #include "main/audio/mcmd_volume.h"
 #include "main/audio/inp_ctrl.h"
+#include "main/audio/snd_service.h"
 #include "main/audio/data_tables.h"
 #include "main/audio/snd_synth_api.h"
 #include "main/audio/voice_alloc.h"
@@ -236,8 +237,6 @@ static inline u32 mcmdVarGet32Legacy(McmdVoiceState* state, u32 useExCtrl, u32 i
     return SYNTH_GLOBAL_REG(index);
 }
 
-#define varGet32Legacy(state, useExCtrl, index) mcmdVarGet32Legacy((state), (useExCtrl), (index))
-
 void varSet32(McmdVoiceState* state, u32 useExCtrl, u8 index, s32 value);
 
 static inline void varSet(McmdVoiceState* state, u8 useExCtrl, u8 index, s16 value)
@@ -355,7 +354,7 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
     McmdVoiceState* voiceState;
     u32 targetVoice;
 
-    value = varGet32Legacy(state, 0, (args->value >> 8) & 0xff);
+    value = mcmdVarGet32Legacy(state, 0, (args->value >> 8) & 0xff);
 
     if (((args->flags >> 8) & 0xff) == 0)
     {
@@ -381,7 +380,7 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
     }
     else
     {
-        macPostMessage(varGet32Legacy(state, 0, args->value), value);
+        macPostMessage(mcmdVarGet32Legacy(state, 0, args->value), value);
     }
 }
 

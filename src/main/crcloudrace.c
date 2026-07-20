@@ -14,8 +14,6 @@
 #include "main/game_object.h"
 #include "main/obj_group.h"
 
-typedef void (*CrCloudRaceRenderScaleFn)(double scale);
-
 extern f32 lbl_803E6748;
 extern f32 lbl_803E6740;
 extern f32 lbl_803E6744;
@@ -181,7 +179,7 @@ void crcloudrace_render(u32 obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     draw = visible;
     if (draw != 0)
     {
-        ((CrCloudRaceRenderScaleFn)objRenderModelAndHitVolumes)((double)lbl_803E6748);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E6748);
     }
     return;
 }

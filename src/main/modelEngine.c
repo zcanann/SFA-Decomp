@@ -762,7 +762,7 @@ void curUiDllDraw(int a, int b, int c, int d)
     if (gModelEngineCurUiDllRes != NULL)
     {
         callbacks = *gModelEngineCurUiDllRes;
-        ((void (*)(int, int, int))callbacks->draw)(a, b, c);
+        callbacks->draw(a, b, c);
     }
 }
 

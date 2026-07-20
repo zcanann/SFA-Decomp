@@ -254,15 +254,17 @@ void dll_7C_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)buf.ctx != 0)
         {
-            buf.pos[0] += ((GameObject*)buf.ctx)->anim.worldPosX;
-            buf.pos[1] += ((GameObject*)buf.ctx)->anim.worldPosY;
-            buf.pos[2] += ((GameObject*)buf.ctx)->anim.worldPosZ;
+            GameObject* obj = (GameObject*)buf.ctx;
+            buf.pos[0] += obj->anim.worldPosX;
+            buf.pos[1] += obj->anim.worldPosY;
+            buf.pos[2] += obj->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
+            PartFxSpawnParams* params = (PartFxSpawnParams*)posSource;
+            buf.pos[0] += params->posX;
+            buf.pos[1] += params->posY;
+            buf.pos[2] += params->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, base + 0xd4, DLL7C_EFFECT_ID, 0);

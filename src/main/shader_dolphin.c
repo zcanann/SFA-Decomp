@@ -11,7 +11,6 @@
 #include "main/object_api.h"
 #include "dolphin/gx/GXMisc.h"
 #include "main/pi_dolphin.h"
-#include "main/pi_dolphin_ext.h"
 #include "main/newshadows.h"
 #include "main/mm.h"
 #include "main/model.h"
@@ -25,7 +24,7 @@
 #include "main/pi_data_file_api.h"
 #include "main/pi_flush_api.h"
 #include "main/pi_dolphin_texture_api.h"
-#include "main/pi_dolphin_fileload_api.h"
+#include "main/shader_dolphin.h"
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/os/OSResetSW.h"
 #include "dolphin/gx/GXCull.h"
@@ -412,9 +411,9 @@ void textureFn_8004c330(void* p1, void* mtx)
         if (p1 != 0)
         {
             void* obj = (char*)p1 + 0x20;
-            if (*(u8*)((char*)p1 + 0x48) != 0)
+            if (((Texture*)p1)->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)p1 + 0x40), id);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, (GXTexRegion*)((Texture*)p1)->tmemAddr, id);
             }
             else
             {
@@ -785,9 +784,9 @@ void fn_8004D6D8(void)
     if (tex != NULL)
     {
         void* obj = (char*)tex + 0x20;
-        if (*(u8*)((char*)tex + 0x48) != 0)
+        if (((Texture*)tex)->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)tex + 0x40), id);
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, (GXTexRegion*)((Texture*)tex)->tmemAddr, id);
         }
         else
         {
@@ -1723,9 +1722,9 @@ void textureFn_8004ff20(void* p1, f32* wpad0, void* wpad1, int wpad2)
             if (p1 != 0)
             {
                 char* tex = (char*)p1 + 0x20;
-                if (*(u8*)((char*)p1 + 0x48) != 0)
+                if (((Texture*)p1)->preloaded != 0)
                 {
-                    GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), id);
+                    GXLoadTexObjPreLoaded((GXTexObj*)tex, (GXTexRegion*)((Texture*)p1)->tmemAddr, id);
                 }
                 else
                 {
@@ -2000,7 +1999,7 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
         u32 div;
         int p2v = (p3 & 0xf) * 4 + 1;
         texptr = textureIdxToPtr(p4);
-        div = (u32) * (u16*)((char*)texptr + 0xa) / (u32)(*(u16*)((char*)p1 + 0xa) * p2v);
+        div = (u32) ((Texture*)texptr)->width / (u32)(*(u16*)((char*)p1 + 0xa) * p2v);
         if (div != 0)
         {
             GXSetIndTexCoordScale(lbl_803DCD7C, lbl_8030CEE0[div - 1], lbl_8030CEE0[div - 1]);
@@ -2031,9 +2030,9 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
     if (p1 != 0)
     {
         char* tex = (char*)p1 + 0x20;
-        if (*(u8*)((char*)p1 + 0x48) != 0)
+        if (((Texture*)p1)->preloaded != 0)
         {
-            GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
+            GXLoadTexObjPreLoaded((GXTexObj*)tex, (GXTexRegion*)((Texture*)p1)->tmemAddr, texmap);
         }
         else
         {
@@ -2164,9 +2163,9 @@ void fn_800510F0(void* p1, u8 flag2, u8 flag3)
     if (p1 != 0)
     {
         char* tex = (char*)p1 + 0x20;
-        if (*(u8*)((char*)p1 + 0x48) != 0)
+        if (((Texture*)p1)->preloaded != 0)
         {
-        GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
+        GXLoadTexObjPreLoaded((GXTexObj*)tex, (GXTexRegion*)((Texture*)p1)->tmemAddr, texmap);
         }
         else
         {
@@ -2215,9 +2214,9 @@ void textureFn_80051348(void* p1, u8 p2)
     if (p1 != 0)
     {
         char* tex = (char*)p1 + 0x20;
-        if (*(u8*)((char*)p1 + 0x48) != 0)
+        if (((Texture*)p1)->preloaded != 0)
         {
-        GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
+        GXLoadTexObjPreLoaded((GXTexObj*)tex, (GXTexRegion*)((Texture*)p1)->tmemAddr, texmap);
         }
         else
         {
@@ -2279,9 +2278,9 @@ void fn_80051528(void* p1, void* mtx)
         if (p1 != 0)
         {
             void* obj = (char*)p1 + 0x20;
-            if (*(u8*)((char*)p1 + 0x48) != 0)
+            if (((Texture*)p1)->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)p1 + 0x40), id);
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, (GXTexRegion*)((Texture*)p1)->tmemAddr, id);
             }
             else
             {

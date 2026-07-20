@@ -15,9 +15,10 @@
  * variant solved/fade/count game bits drive the puzzle; reaching
  * WCPUSHBLOCK_REQUIRED_LOCK_COUNT latches the solved bit.
  *
- * wcpushblock_updateLevelControlState / fn_802251B4 are the WC level
- * controller's own mode machine (timers, save points, map gating, music),
- * co-located in this TU. Offsets/bit values inferred from code.
+ * The WC level controller's own act-1/act-2 mode machines (timers, save
+ * points, map gating, music) live in dll_028D_wclevelcont.c
+ * (wclevelcont_updateAct1State / wclevelcont_updateAct2State), not here.
+ * Offsets/bit values inferred from code.
  */
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
@@ -173,9 +174,9 @@ void wcpushblock_update(GameObject* obj)
     WCPushBlockRuntimeState* state = obj->extra;
     GameObject* player = (GameObject*)Obj_GetPlayerObject();
     f32 range = gWcPushBlockControllerSearchRange;
-    f32 dist;
+    f32 sfxVolume;
     ObjTextureRuntimeSlot* tex;
-    int moved;
+    int reachedTarget;
 
     if ((void*)WCPUSHBLOCK_CONTROLLER(state) == 0)
     {
@@ -228,8 +229,8 @@ void wcpushblock_update(GameObject* obj)
     }
 
     {
-        u32 ph = WCPUSHBLOCK_FLAGS(state).phase;
-        if (ph != WCPUSHBLOCK_PHASE_FADE_OUT && ph != WCPUSHBLOCK_PHASE_FADE_IN)
+        u32 phase = WCPUSHBLOCK_FLAGS(state).phase;
+        if (phase != WCPUSHBLOCK_PHASE_FADE_OUT && phase != WCPUSHBLOCK_PHASE_FADE_IN)
         {
             if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
             {
@@ -358,19 +359,19 @@ void wcpushblock_update(GameObject* obj)
             {
                 speed = lbl_803E6D64;
             }
-            dist = lbl_803E6D54 + lbl_803E6D6C * speed / lbl_803E6D70;
-            if (dist > gWcPushBlockSlideSfxMaxVolume)
+            sfxVolume = lbl_803E6D54 + lbl_803E6D6C * speed / lbl_803E6D70;
+            if (sfxVolume > gWcPushBlockSlideSfxMaxVolume)
             {
-                dist = gWcPushBlockSlideSfxMaxVolume;
+                sfxVolume = gWcPushBlockSlideSfxMaxVolume;
             }
             Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXTRIG_en_treedrum16_c8);
-            Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_en_treedrum16_c8, dist, lbl_803E6D78);
+            Sfx_SetObjectSfxVolume((u32)obj, SFXTRIG_en_treedrum16_c8, sfxVolume, lbl_803E6D78);
             WCPUSHBLOCK_FLAGS(state).sfxActive = 1;
         }
     }
         dt = timeDelta;
         objMove((GameObject*)obj, obj->anim.velocityX * dt, lbl_803E6D64, obj->anim.velocityZ * dt);
-        moved = 0;
+        reachedTarget = 0;
         {
             if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X)
             {
@@ -384,7 +385,7 @@ void wcpushblock_update(GameObject* obj)
                     if (obj->anim.localPosX >= (tx = WCPUSHBLOCK_TARGET_X(state)))
                     {
                         obj->anim.localPosX = tx;
-                        moved = 1;
+                        reachedTarget = 1;
                     }
                 }
             }
@@ -400,7 +401,7 @@ void wcpushblock_update(GameObject* obj)
                     if (obj->anim.localPosX <= (tx = WCPUSHBLOCK_TARGET_X(state)))
                     {
                         obj->anim.localPosX = tx;
-                        moved = 1;
+                        reachedTarget = 1;
                     }
                 }
             }
@@ -416,7 +417,7 @@ void wcpushblock_update(GameObject* obj)
                     if (obj->anim.localPosZ >= (tz = WCPUSHBLOCK_TARGET_Z(state)))
                     {
                         obj->anim.localPosZ = tz;
-                        moved = 1;
+                        reachedTarget = 1;
                     }
                 }
             }
@@ -432,7 +433,7 @@ void wcpushblock_update(GameObject* obj)
                     if (obj->anim.localPosZ <= (tz = WCPUSHBLOCK_TARGET_Z(state)))
                     {
                         obj->anim.localPosZ = tz;
-                        moved = 1;
+                        reachedTarget = 1;
                     }
                 }
             }
@@ -453,7 +454,7 @@ void wcpushblock_update(GameObject* obj)
         {
             obj->anim.velocityZ = gWcPushBlockMinSlideSpeed;
         }
-        if (moved == 0)
+        if (reachedTarget == 0)
         {
             break;
         }
@@ -463,8 +464,8 @@ void wcpushblock_update(GameObject* obj)
             obj->anim.velocityZ = zero;
         }
         {
-            u32 r = WCPUSHBLOCK_MOVE_RESULT(state);
-            if (r == WCPUSHBLOCK_MOVE_RESULT_LOCKED)
+            u32 moveResult = WCPUSHBLOCK_MOVE_RESULT(state);
+            if (moveResult == WCPUSHBLOCK_MOVE_RESULT_LOCKED)
             {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_LOCKED;
                 if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
@@ -482,7 +483,7 @@ void wcpushblock_update(GameObject* obj)
                     }
                 }
             }
-            else if (r == WCPUSHBLOCK_MOVE_RESULT_CONTINUE)
+            else if (moveResult == WCPUSHBLOCK_MOVE_RESULT_CONTINUE)
             {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_IDLE;
                 if (WCPUSHBLOCK_FLAGS(state).sfxActive != 0)
@@ -631,7 +632,7 @@ void wcpushblock_initialise(void)
 
 #undef WCPUSHBLOCK_IFACE
 
-WcTileGrid lbl_8032B008 = {{
+WcTileGrid gWcTileGridAInitial = {{
     {0, 0, 0, 0, 0, 0, 8, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 4, 0, 0, 0},
@@ -641,7 +642,7 @@ WcTileGrid lbl_8032B008 = {{
     {0, 0, 0, 0, 6, 0, 0, 0},
     {0, 5, 0, 0, 1, 0, 0, 0},
 }};
-WcTileGrid lbl_8032B048 = {{
+WcTileGrid gWcTileGridASolved = {{
     {0, 0, 0, 0, 0, 0, 4, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
@@ -651,7 +652,7 @@ WcTileGrid lbl_8032B048 = {{
     {0, 0, 0, 0, 2, 0, 0, 0},
     {0, 1, 0, 0, 0, 0, 0, 0},
 }};
-WcTileGrid lbl_8032B088 = {{
+WcTileGrid gWcTileGridBInitial = {{
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 1, 5, 0, 0, 2, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 3},
@@ -661,7 +662,7 @@ WcTileGrid lbl_8032B088 = {{
     {0, 8, 0, 0, 4, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
 }};
-WcTileGrid lbl_8032B0C8 = {{
+WcTileGrid gWcTileGridBSolved = {{
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 1, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},

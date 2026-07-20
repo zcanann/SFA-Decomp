@@ -109,6 +109,6 @@ STATIC_ASSERT(offsetof(CamcontrolModeSettings, yawResponseFrames) == 0xC2);
 STATIC_ASSERT(offsetof(CamcontrolModeSettings, wallAvoidanceFlags) == 0xC6);
 STATIC_ASSERT(offsetof(CamcontrolModeSettings, clampFlags) == 0xC8);
 
-extern CamcontrolModeSettings *cameraMtxVar57;
+extern CamcontrolModeSettings *gCamcontrolModeSettings;
 
 #endif /* MAIN_DLL_CAM_CAMCONTROL_MODE_SETTINGS_H_ */

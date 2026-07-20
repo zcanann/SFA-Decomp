@@ -1102,8 +1102,7 @@ void DR_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
         if (vis == -1)
         {
             objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E83A8);
-            ObjPath_GetPointWorldPosition(obj, 3, (f32*)((char*)inner + 0xae8), (f32*)((char*)inner + 0xaec),
-                                          (f32*)((char*)inner + 0xaf0), 0);
+            ObjPath_GetPointWorldPosition(obj, 3, &inner->spawnPosX, &inner->spawnPosY, &inner->spawnPosZ, 0);
         }
         if (inner->flightState != CLOUDRUNNER_FLIGHT_MOUNTED && vis != 0)
         {
@@ -1146,7 +1145,7 @@ void DR_CloudRunner_hitDetect(GameObject* obj)
             (*gGameUIInterface)->airMeterSetShutdown();
             (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
             inner->airTimeRemaining = 1;
-            (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, (int)inner, 7);
+            (*gPlayerInterface)->setState(obj, inner, 7);
         }
         Sfx_PlayFromObject((int)obj, SFXTRIG_gscsc);
     }
@@ -1197,8 +1196,8 @@ void fn_802C11BC(GameObject* obj, f32 f, int triggerFrame)
     {
         *(int*)&inner->baddie &= ~0x400000;
     }
-    (*(void (*)(int, int, f32, f32, int, void*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
-        (int)obj, (int)inner, f, timeDelta, (int)gDRCloudRunnerStateHandlers, &gDRCloudRunnerDefaultStateHandler);
+    (*gPlayerInterface)->update(obj, inner, f, timeDelta, gDRCloudRunnerStateHandlers,
+                                &gDRCloudRunnerDefaultStateHandler);
     if ((*(int*)&inner->baddie.eventFlags & 1) != 0)
     {
         fn_802BF4D8(obj);
@@ -1250,7 +1249,7 @@ void DR_CloudRunner_update(GameObject* obj)
     dll_2E_func03(obj, (MoveLibState*)((char*)inner + 0x4c4));
     objAnimFn_80038f38(obj, (char*)((int)inner + 0x494));
     fn_8003B500(obj, (s16*)((char*)inner + 0x464), lbl_803E83A4);
-    characterDoEyeAnimsState(obj, (int)inner + 0x464);
+    characterDoEyeAnims(obj, (void*)((int)inner + 0x464));
     if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         if (inner->flightState == CLOUDRUNNER_FLIGHT_GROUNDED)
@@ -1270,7 +1269,7 @@ void DR_CloudRunner_update(GameObject* obj)
                 inner->unkB04 = 0;
                 inner->flagsBB6 |= 4;
                 inner->moveFlags |= 1;
-                (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, (int)inner, 4);
+                (*gPlayerInterface)->setState(obj, inner, 4);
             }
             else
             {
@@ -1314,7 +1313,7 @@ void DR_CloudRunner_init(GameObject* obj, int def)
         (obj)->anim.localPosZ = target.z;
         (obj)->anim.rotX = target.angle;
     }
-    (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))((int)obj, inner, 8, 1);
+    (*gPlayerInterface)->init(obj, (void*)inner, 8, 1);
     ((CloudRunnerState*)inner)->baddie.gravity = lbl_803E8424;
     fn_802BF0C8(obj, (CloudRunnerState*)inner, ((ByteFlags*)((char*)inner + 0xbc0))->b20);
     dll_2E_func05(obj, (MoveLibState*)((char*)inner + 0x4c4), -0x11c7, 0x1555, 1);

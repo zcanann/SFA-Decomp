@@ -7,19 +7,19 @@
 
 typedef struct SquadFlags
 {
-    u8 b80 : 1;
-    u8 b40 : 1;
-    u8 b20 : 1;
-    u8 b10 : 1;
+    u8 attackWindowOpen : 1;
+    u8 followingCurve : 1;
+    u8 volleyInProgress : 1;
+    u8 acceptsDamage : 1;
 } SquadFlags;
 
 typedef struct SquadCmdFlags
 {
-    u8 f80 : 1;
-    u8 f40 : 1;
-    u8 f20 : 1;
-    u8 f10 : 1;
-    u8 f08 : 1;
+    u8 attackWindowOpen : 1;
+    u8 followingCurve : 1;
+    u8 volleyInProgress : 1;
+    u8 acceptsDamage : 1;
+    u8 rollCmdActive : 1;
     u8 : 3;
 } SquadCmdFlags;
 
@@ -73,9 +73,9 @@ typedef struct ArwSquadronProjectileSetup
     f32 posY;
     f32 posZ;
     u8 pad14[4];
-    u8 rotX;
-    u8 rotY;
     u8 rotZ;
+    u8 rotY;
+    u8 rotX;
 } ArwSquadronProjectileSetup;
 
 STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, field04) == 0x04);
@@ -83,9 +83,9 @@ STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, field05) == 0x05);
 STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, posX) == 0x08);
 STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, posY) == 0x0c);
 STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, posZ) == 0x10);
-STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotX) == 0x18);
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotZ) == 0x18);
 STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotY) == 0x19);
-STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotZ) == 0x1a);
+STATIC_ASSERT(offsetof(ArwSquadronProjectileSetup, rotX) == 0x1a);
 
 typedef struct ArwSquadronPathCommand
 {

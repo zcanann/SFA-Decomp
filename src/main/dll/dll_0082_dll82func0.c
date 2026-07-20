@@ -14,7 +14,8 @@
 
 extern u8 lbl_80315770[];
 
-void dll_82_func03(int sourceObj, int variant, int posSource, u32 flags)
+void dll_82_func03(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags, int modelId,
+                   void* extraArg)
 {
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80315770;
@@ -128,7 +129,7 @@ void dll_82_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[13].y = originOffset;
     e[13].z = originOffset;
     buf.v58 = 0;
-    buf.ctx = sourceObj;
+    buf.ctx = (int)sourceObj;
     buf.v44 = variant;
     buf.pos[0] = originOffset;
     buf.pos[1] = originOffset;
@@ -152,20 +153,20 @@ void dll_82_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.hw[6] = *(s16*)(base + 0x204);
     buf.cmds = e;
     buf.flags = 0xc010480;
-    buf.flags |= flags;
+    buf.flags |= spawnFlags;
     if ((buf.flags & 1) != 0)
     {
-        if ((u32)sourceObj != 0)
+        if (sourceObj != NULL)
         {
-            buf.pos[0] = originOffset + ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] = originOffset + ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] = originOffset + ((GameObject*)(sourceObj))->anim.worldPosZ;
+            buf.pos[0] = originOffset + sourceObj->anim.worldPosX;
+            buf.pos[1] = originOffset + sourceObj->anim.worldPosY;
+            buf.pos[2] = originOffset + sourceObj->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = originOffset + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = originOffset + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = originOffset + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] = originOffset + spawnParams->posX;
+            buf.pos[1] = originOffset + spawnParams->posY;
+            buf.pos[2] = originOffset + spawnParams->posZ;
         }
     }
     if (variant == 3 || variant == 4)

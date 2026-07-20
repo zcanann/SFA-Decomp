@@ -188,10 +188,10 @@ void tricky_updateBallRoll(int obj, int ball)
         {
             curve = (int)ts->scratch700.ptr;
 
-            nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(curve, 0);
+            nextNode = (*gRomCurveInterface)->getRandomUnblockedLink((RomCurveDef*)curve, 0);
             fromNode = (int)(*gRomCurveInterface)->getById(nextNode);
 
-            nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot60)(curve, 0);
+            nextNode = (*gRomCurveInterface)->getRandomBlockedLink((RomCurveDef*)curve, 0);
             toNode = (int)(*gRomCurveInterface)->getById(nextNode);
 
             bestDistance = getXZDistance((float*)(ts->playerObj + 0x18), (float*)(fromNode + 8));
@@ -200,14 +200,14 @@ void tricky_updateBallRoll(int obj, int ball)
             curveArg = (void*)curve;
             if (bestDistance > distance)
             {
-                nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(fromNode, 0);
+                nextNode = (*gRomCurveInterface)->getRandomUnblockedLink((RomCurveDef*)fromNode, 0);
                 targetNode = (int)(*gRomCurveInterface)->getById(nextNode);
                 ts->route.reverse = 0;
             }
             else
             {
                 fromNode = toNode;
-                nextNode = ((int (*)(int, int))(*gRomCurveInterface)->slot60)(toNode, 0);
+                nextNode = (*gRomCurveInterface)->getRandomBlockedLink((RomCurveDef*)toNode, 0);
                 targetNode = (int)(*gRomCurveInterface)->getById(nextNode);
                 ts->route.reverse = 1;
             }

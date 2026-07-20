@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags);
+s16 dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags);
 void dll_8D_func01_nop(void);
 void dll_8D_func00_nop(void);
 

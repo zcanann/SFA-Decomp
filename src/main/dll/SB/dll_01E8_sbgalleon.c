@@ -247,8 +247,8 @@ void fn_801E1588(GameObject* obj, SBGalleonState* state)
 
 int SB_Galleon_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    SBGalleonState* state = obj->extra;
     int i;
+    SBGalleonState* state = obj->extra;
 
     obj->anim.mapEventSlot = -1;
     fn_801E1588(obj, state);
@@ -307,7 +307,7 @@ int SB_Galleon_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
             Sfx_PlayFromObject((u32)obj, SBGALLEON_SFX_SPLASH);
             break;
         case SBGALLEON_SEQEV_SFX_OFF:
-            Sfx_StopFromObject((u32)obj, SBGALLEON_SFX_SPLASH);
+            ((void (*)(u32, u16))Sfx_StopFromObject)((u32)obj, SBGALLEON_SFX_SPLASH);
             break;
         case SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_8:
             if (state->damagePhase == 8)

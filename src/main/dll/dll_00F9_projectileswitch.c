@@ -1,6 +1,6 @@
 /* DLL 0x00F9 (projectileswitch) - Projectile switch object [0x8017A350-0x8017A8EC). */
-#include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objhits.h"
 #include "main/objprint_api.h"
 #include "main/audio/sfx_ids.h"
@@ -52,7 +52,7 @@ void ProjectileSwitch_free(void)
 
 typedef struct ProjectileSwitchPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s16 gameBitId;
     s16 autoResetDelayTenths;
     u8 rotYByte;

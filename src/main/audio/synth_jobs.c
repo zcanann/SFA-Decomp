@@ -13,10 +13,6 @@
 #include "main/audio/hw_voice_params.h"
 #include "main/audio/synth_jobs.h"
 
-
-typedef u32 (*SynthStreamUpdateFn)(u8* buffer, u32 length, u8* buffer2, u32 length2, u32 user);
-
-extern SynthJob streamInfo[];
 extern u32 synthFlags;
 extern f32 lbl_803E77D8;
 extern u8 streamCallCnt;
@@ -89,8 +85,8 @@ void streamHandle(void)
                     switch (si->format)
                     {
                     case 0:
-                        if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2, cpos - si->last, 0, 0,
-                                                                       si->callbackUser)) != 0 &&
+                        if ((len = si->callback(si->buffer + si->last * 2, cpos - si->last, 0, 0, si->callbackUser)) !=
+                                0 &&
                             si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;
@@ -112,8 +108,7 @@ void streamHandle(void)
                     case 1:
                     {
                         u32 off = (si->last / 14) * 8;
-                        if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off, cpos - si->last, 0, 0,
-                                                                       si->callbackUser)) != 0 &&
+                        if ((len = si->callback(si->buffer + off, cpos - si->last, 0, 0, si->callbackUser)) != 0 &&
                             si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;
@@ -139,8 +134,8 @@ void streamHandle(void)
                     switch (si->format)
                     {
                     case 0:
-                        if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2, si->size - si->last,
-                                                                       0, 0, si->callbackUser)) != 0 &&
+                        if ((len = si->callback(si->buffer + si->last * 2, si->size - si->last, 0, 0,
+                                                si->callbackUser)) != 0 &&
                             si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;
@@ -162,8 +157,7 @@ void streamHandle(void)
                     case 1:
                     {
                         u32 off = (si->last / 14) * 8;
-                        if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off, si->size - si->last, 0, 0,
-                                                                       si->callbackUser)) != 0 &&
+                        if ((len = si->callback(si->buffer + off, si->size - si->last, 0, 0, si->callbackUser)) != 0 &&
                             si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;
@@ -189,8 +183,8 @@ void streamHandle(void)
                     switch (si->format)
                     {
                     case 0:
-                        if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2, si->size - si->last,
-                                                                       si->buffer, cpos, si->callbackUser)) != 0 &&
+                        if ((len = si->callback(si->buffer + si->last * 2, si->size - si->last, si->buffer, cpos,
+                                                si->callbackUser)) != 0 &&
                             si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;
@@ -218,8 +212,8 @@ void streamHandle(void)
                     case 1:
                     {
                         u32 off = (si->last / 14) * 8;
-                        if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off, si->size - si->last,
-                                                                       si->buffer, cpos, si->callbackUser)) != 0 &&
+                        if ((len = si->callback(si->buffer + off, si->size - si->last, si->buffer, cpos,
+                                                si->callbackUser)) != 0 &&
                             si->state == SYNTH_JOB_STATE_PLAYING)
                         {
                             cpos = (si->last + len) % si->size;

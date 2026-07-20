@@ -10,6 +10,7 @@
 #include "main/audio/snd_reverb.h"
 #include "main/audio/snd_synth_api.h"
 #include "main/audio_internal.h"
+#include "main/audio/snd_groups.h"
 #include "main/attract_movie_api.h"
 #include "main/camera.h"
 #include "main/fileio.h"
@@ -154,24 +155,8 @@ typedef struct AudioMemHookPair
     s32 free;
 } AudioMemHookPair;
 
-extern char sSampleBufferSLoadedCallbackLoadError[];
-extern char sSampleDirectorySLoadedCallbackLoadError[];
-extern char sProjectDataSLoadedCallbackLoadError[];
-extern char sPoolDataSLoadedCallbackLoadError[];
-extern char sSampleBufferMLoadedCallbackLoadError[];
-extern char sSampleDirectoryMLoadedCallbackLoadError[];
-extern char sProjectDataMLoadedCallbackLoadError[];
-extern char sPoolDataMLoadedCallbackLoadError[];
-extern char sStreamsLoadedCallbackLoadError[];
-extern char sSfxTriggersLoadedCallbackLoadError[];
-extern char sMusicTriggersLoadedCallbackLoadError[];
-extern char sMidiWadLoadedCallbackLoadError[];
-extern char sMidiWadPath[];
-extern u8 gSfxLoopedObjectSoundFlags[0x80];
-extern u16 gSfxLoopedObjectSoundIds[0x80];
-extern u32 gSfxLoopedObjectSoundObjects[0x80];
-
-void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3)
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, AudioArqRequestCallback callback,
+                          MusicTrackSlot* callbackArg1, MusicChannel* callbackArg2, MusicTrigger* callbackArg3)
 {
     int idx;
     void* buf;
@@ -189,82 +174,14 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cb
     }
     buf = mmAlloc(size, 0, 0);
     *outBuf = buf;
-    entry->callback = (void (*)(int, int, int))cb;
-    entry->callbackArg1 = cbArg1;
-    entry->callbackArg2 = cbArg2;
-    entry->callbackArg3 = cbArg3;
+    entry->callback = callback;
+    entry->callbackArg1 = callbackArg1;
+    entry->callbackArg2 = callbackArg2;
+    entry->callbackArg3 = callbackArg3;
     DCFlushRange(buf, size);
     gAudioArqRequestDone = 0;
     ARQPostRequest(&entry->request, 0x64, 1, 1, (u32)source, (u32)buf, size, fn_80008EDC);
 }
-void fn_80008EDC(u32 request);
-void fn_80009008(u32 request);
-void sampleBufferSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void sampleDirectorySLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void projectDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void poolDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void sampleBufferMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void sampleDirectoryMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void projectDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void audioSetSoundMode(int mode, u8 forceFlag);
-void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag);
-void sndMasterVolume(int volume, int time, u8 musicFlag, u8 fxFlag);
-void AudioStream_SetVolume();
-void AudioStream_SetDefaultVolume();
-void audioStopByMask(int mask);
-void audioReset(void);
-int audioIsResetting(void);
-void audioStopAll(void);
-void audioUpdate(void);
-int audioInit(void);
-void audioLoadTriggerData(void);
-void audioFree(void* ptr);
-void* _audioAlloc(u32 size);
-void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo);
-void Music_PlayTrackByIndex(int index);
-int return0x64_8000A378(void);
-void streamFn_8000a380(int mask, int mode, int time);
-void Music_Trigger(int id, int arg);
-void Music_Update(void);
-s32 Music_GetActivePriority(void);
-void Music_LoadChannelForTrigger(MusicTrigger* trigger);
-void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger);
-u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit);
-int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-void audioFn_8000b694(u32 value);
-void Sfx_SetObjectSoundsPaused(s32 paused);
-void Sfx_StopObjectChannel(int obj, int channel);
-void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
-void Sfx_SetObjectSfxVolume(u32 obj, u16 sfxId, u8 volume, f32 volumeScale);
-void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
-void Sfx_UpdateObjectSounds(void);
-void Sfx_InitObjectChannels(void);
-void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId);
-int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
-int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f32* outF6, f32* outF7, f32* outF8, int* outI9, int* outI10, int* outI11);
-SfxTrigger* Sfx_FindTrigger(u16 id);
-SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan,
-                                         int globalCtrlDisabled);
-void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
-void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* v);
-f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta);
-void doNothing_8000CF54(int unused);
-void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block);
-void fn_8000D0B4(s32 result, DVDCommandBlock* block);
-void AudioStream_UpdateFadeTimer(void);
-void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo);
-void AudioStream_PlayAddrCallback(u32 result);
-void Sfx_ClearLoopedObjectSounds(void);
-void Sfx_UpdateLoopedObjectSounds(void);
-void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
-void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
-void Sfx_RemoveLoopedObjectSound(u32 obj, u16 sfxId);
-void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
-
 static inline void Music_FreeChannel(MusicChannel* ch)
 {
     sndSeqStop(ch->seqHandle);
@@ -583,9 +500,6 @@ static inline SfxObjectChannel* Sfx_FindFreeObjectChannel(void)
     return NULL;
 }
 
-SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan,
-                                         int globalCtrlDisabled);
-
 void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
@@ -753,7 +667,7 @@ void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int stream
 {
     if (musicFlag != 0 || fxFlag != 0)
     {
-        sndMasterVolume(volume, time, musicFlag, fxFlag);
+        ((void (*)(int, int, u8, u8))sndMasterVolume)(volume, time, musicFlag, fxFlag);
     }
     if (streamFlag != 0)
     {
@@ -1405,10 +1319,10 @@ u8 musicInitMidiWad(void)
         gMusicChannelCounterA = 1;
         gMusicChannelCounterB = 1;
         gAudioPendingLoadFlags |= AUDIO_LOAD_MIDI_WAD;
-        saved = testAndSetOnlyUseHeap3_u8(0);
+        saved = testAndSet_onlyUseHeap3(0) & 0xff;
         gMidiWadFileData =
             loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0, MIDIWADLoadedCallback);
-        testAndSetOnlyUseHeap3_u8(saved);
+        testAndSet_onlyUseHeap3(saved);
     }
     if (gAudioCompletedLoadFlags & AUDIO_LOAD_MIDI_WAD)
     {
@@ -1506,11 +1420,11 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
     *(int*)&channel->pad14[4] = counter;
     *(MusicTrigger**)&channel->pad14[8] = trigger;
     channel->field_20 = lbl_803DE560;
-    audioAllocFn_80008df4((void*)slot->offset, slot->size, &channel->bankData, (u32)Music_ChannelLoadedCallback,
-                          (u32)slot, (u32)channel, (u32)trigger);
+    audioAllocFn_80008df4((void*)slot->offset, slot->size, &channel->bankData, Music_ChannelLoadedCallback, slot,
+                          channel, trigger);
 }
 
-void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger)
+void Music_ChannelLoadedCallback(MusicTrackSlot* slot, MusicChannel* channel, MusicTrigger* trigger)
 {
     MusicSeqStartParams params = gMusicSeqStartParamsDefault;
 
@@ -1531,14 +1445,14 @@ void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTr
         {
             int seqHandle;
             u8 voice;
-            if (trigger->field_6 != -1)
+            if (*(u16*)&trigger->pad[2] != -1)
             {
-                params.speed = trigger->field_6;
+                params.speed = *(u16*)&trigger->pad[2];
                 params.flags |= 2;
             }
-            if (trigger->field_c != -1)
+            if (trigger->pad[8] != -1)
             {
-                voice = trigger->field_c;
+                voice = trigger->pad[8];
             }
             else
             {
@@ -1547,7 +1461,7 @@ void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTr
             params.volume.target = 0;
             params.volume.time = 0;
             params.flags |= 4;
-            seqHandle = sndSeqPlayEx(bank->field_2, trigger->field_2, channel->bankData, &params, 0);
+            seqHandle = sndSeqPlayEx(slot->unk2, trigger->track, channel->bankData, &params, 0);
             sndSeqVolume(voice, 0x1f4, seqHandle, 0);
             channel->status = 1;
             channel->seqHandle = seqHandle;
@@ -1591,7 +1505,7 @@ int Sfx_IsPlayingFromObjectChannel(int obj, int channel)
     return 0;
 }
 
-s32 Sfx_IsPlayingFromObject(u32 obj, u16 sfxId)
+s32 Sfx_IsPlayingFromObject(int obj, u16 sfxId)
 {
     SfxObjectChannel* objectChannel;
 
@@ -1695,7 +1609,7 @@ void Sfx_StopObjectChannel(int obj, int channel)
     }
 }
 
-void Sfx_StopFromObject(u32 obj, u16 sfxId)
+void Sfx_StopFromObject(int obj, u16 sfxId)
 {
     SfxObjectChannel* objectChannel;
 
@@ -1772,7 +1686,7 @@ void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale
     }
 }
 
-void Sfx_SetObjectSfxVolume(u32 obj, u16 sfxId, u8 volume, f32 volumeScale)
+void Sfx_SetObjectSfxVolume(int obj, u16 sfxId, u8 volume, f32 volumeScale)
 {
     u8 volumeByte;
     SfxObjectChannel* objectChannel;

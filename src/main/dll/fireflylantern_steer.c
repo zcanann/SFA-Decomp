@@ -53,15 +53,17 @@ u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 max
     int delta;
     int angleStep;
     u32 angle;
+    GameObject* o = (GameObject*)obj;
+    FireflyState* fs = (FireflyState*)state;
 
-    vecA[0] = ((FireflyState*)state)->planeAnchorX;
-    vecA[1] = ((FireflyState*)state)->planeAnchorY;
-    vecA[2] = ((FireflyState*)state)->planeAnchorZ;
+    vecA[0] = fs->planeAnchorX;
+    vecA[1] = fs->planeAnchorY;
+    vecA[2] = fs->planeAnchorZ;
     PSVECSubtract(vecA, (f32*)(obj + 6), tmpA);
     d = PSVECDotProduct(tmpA, (f32*)(state + 0x344));
-    vecA[0] = *(f32*)(state + 0x344) * d + ((GameObject*)obj)->anim.localPosX;
-    vecA[1] = *(f32*)(state + 0x348) * d + (objY = ((GameObject*)obj)->anim.localPosY);
-    vecA[2] = *(f32*)(state + 0x34c) * d + ((GameObject*)obj)->anim.localPosZ;
+    vecA[0] = *(f32*)(state + 0x344) * d + o->anim.localPosX;
+    vecA[1] = *(f32*)(state + 0x348) * d + (objY = o->anim.localPosY);
+    vecA[2] = *(f32*)(state + 0x34c) * d + o->anim.localPosZ;
     axisA[0] = lbl_803E2A00;
     axisA[1] = lbl_803E2A04;
     axisA[2] = lbl_803E2A00;
@@ -69,19 +71,19 @@ u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 max
     PSVECNormalize(crossA, crossA);
     if (lbl_803E2A00 != crossA[0])
     {
-        dxA = (((GameObject*)obj)->anim.localPosX - ((FireflyState*)state)->planeAnchorX) / crossA[0];
+        dxA = (o->anim.localPosX - fs->planeAnchorX) / crossA[0];
     }
     else
     {
-        dxA = (((GameObject*)obj)->anim.localPosZ - ((FireflyState*)state)->planeAnchorZ) / crossA[2];
+        dxA = (o->anim.localPosZ - fs->planeAnchorZ) / crossA[2];
     }
     targetObj = *(int*)&((BaddieState*)state)->trackedObj;
     targetPos[0] = ((GameObject*)targetObj)->anim.localPosX;
     targetPos[1] = lbl_803E2A08 + ((GameObject*)targetObj)->anim.localPosY;
     targetPos[2] = ((GameObject*)targetObj)->anim.localPosZ;
-    vecB[0] = ((FireflyState*)state)->planeAnchorX;
-    vecB[1] = ((FireflyState*)state)->planeAnchorY;
-    vecB[2] = ((FireflyState*)state)->planeAnchorZ;
+    vecB[0] = fs->planeAnchorX;
+    vecB[1] = fs->planeAnchorY;
+    vecB[2] = fs->planeAnchorZ;
     PSVECSubtract(vecB, targetPos, tmpB);
     d = PSVECDotProduct(tmpB, (f32*)(state + 0x344));
     vecB[0] = *(f32*)(state + 0x344) * d + targetPos[0];
@@ -94,16 +96,16 @@ u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 max
     PSVECNormalize(crossB, crossB);
     if (lbl_803E2A00 != crossB[0])
     {
-        d = (targetPos[0] - ((FireflyState*)state)->planeAnchorX) / crossB[0];
+        d = (targetPos[0] - fs->planeAnchorX) / crossB[0];
     }
     else
     {
-        d = (targetPos[2] - ((FireflyState*)state)->planeAnchorZ) / crossB[2];
+        d = (targetPos[2] - fs->planeAnchorZ) / crossB[2];
     }
     dxDiff = dxA - d;
     dy = objY - targetY;
     angle = getAngle(-dy, dxDiff) & 0xffff;
-    rot = ((GameObject*)obj)->anim.rotY;
+    rot = o->anim.rotY;
     delta = angle - (rot & 0xffff);
     if (delta > 0x8000)
     {
@@ -120,8 +122,8 @@ u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 max
     }
     angleStep = (int)((f32)delta * turnStep);
     *obj = (s16)(rot + angleStep);
-    ((GameObject*)obj)->anim.rotZ = 0x4000;
-    ((GameObject*)obj)->anim.rotY = *obj;
+    o->anim.rotZ = 0x4000;
+    o->anim.rotY = *obj;
     *obj = getAngle(*(f32*)(state + 0x34c), -*(f32*)(state + 0x344));
     turnStep = sqrtf(dxDiff * dxDiff + dy * dy);
     if (turnStep > maxDistance)
@@ -136,9 +138,9 @@ u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 max
     PSVECSubtract(moveTarget, (f32*)(obj + 6), moveDelta);
     objMove((GameObject*)obj, moveDelta[0], moveDelta[1], moveDelta[2]);
     turnStep = lbl_803E2A00;
-    ((GameObject*)obj)->anim.velocityX = turnStep;
-    ((GameObject*)obj)->anim.velocityY = turnStep;
-    ((GameObject*)obj)->anim.velocityZ = turnStep;
+    o->anim.velocityX = turnStep;
+    o->anim.velocityY = turnStep;
+    o->anim.velocityZ = turnStep;
     if (angleStep < 0)
     {
         angleStep = -angleStep;

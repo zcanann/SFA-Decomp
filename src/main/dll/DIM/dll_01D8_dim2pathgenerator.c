@@ -18,6 +18,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/objseq.h"
+#include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
@@ -49,8 +50,7 @@ FbWGPipe GXWGFifo : (0xCC008000);
 
 typedef struct Dim2pathgeneratorObjectDef
 {
-    u8 pad0[0x14 - 0x0];
-    s32 mapId; /* 0x14: ObjPlacement-head map id (matches sibling Dim2pathgeneratorPlacement.mapId) */
+    ObjPlacement head; /* 0x00..0x17 (mapId at 0x14) */
     s16 spawnPeriod;
     s16 unk1A;
     s16 unk1C;
@@ -81,7 +81,7 @@ typedef struct Dim2SpawnSetup
     f32 posY;
     f32 posZ;
     s32 mapId;
-    s8 unk18;
+    s8 initRotationByte; /* 0x18: spawn heading, read by the child as anim.rotX (<<8) */
     u8 pad19;
     s16 childRot; /* 0x1A rotation region of spawned child placement */
     s16 unk1C;
@@ -177,17 +177,18 @@ void DIM2PathGenerator_update(int* obj)
         {
             int found;
             curveGroup = CURVE_GROUP_SNOWBALL_PATH;
-            found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+            found = (*gRomCurveInterface)->find(
                 ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                 ((GameObject*)obj)->anim.localPosZ, &curveGroup, 1, 10);
             if (found != -1)
             {
                 int* cv = (int*)(*gRomCurveInterface)->getById(found);
-                ((void (*)(int))(*gRomCurveInterface)->slot74)((int)cv);
+                (*gRomCurveInterface)->countRandomPoints((RomCurveDef*)cv);
                 ((Dim2PathGeneratorState*)extra)->curveValid =
-                    ((int (*)(int*, void*, void*, void*, void*))(*gRomCurveInterface)->slot78)(
-                        cv, (char*)extra + 0xc, (char*)extra + 0x32c, (char*)extra + 0x64c,
-                        (char*)extra + 0x96c);
+                    (*gRomCurveInterface)->buildRandomPoints((RomCurvePlacementDef*)cv, (f32*)((char*)extra + 0xc),
+                                                            (f32*)((char*)extra + 0x32c),
+                                                            (f32*)((char*)extra + 0x64c),
+                                                            (s8*)((char*)extra + 0x96c));
                 ((Dim2PathGeneratorState*)extra)->flags |= 2;
                 ((Dim2PathGeneratorState*)extra)->originX = ((Dim2RomCurveDef*)cv)->originX;
                 ((Dim2PathGeneratorState*)extra)->originY = ((Dim2RomCurveDef*)cv)->originY;
@@ -243,7 +244,7 @@ void DIM2PathGenerator_update(int* obj)
         np->colorA = ((Dim2pathgeneratorPlacement*)def)->colorA;
         np->colorA = 255;
         np->unk3 = ((Dim2pathgeneratorPlacement*)def)->unk3;
-        np->unk18 = (s8) * (u8*)((char*)def + 0x1c);
+        np->initRotationByte = (s8) * (u8*)((char*)def + 0x1c);
         np->childRot = *(u8*)((char*)def + 0x1a);
         np->unk1C = *(u8*)((char*)def + 0x1b);
         np->mapId = ((Dim2pathgeneratorPlacement*)def)->mapId;

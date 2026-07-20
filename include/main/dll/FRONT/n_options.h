@@ -13,4 +13,6 @@ void fn_80118240(void);
 BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 int ProperTimingForGettingNextFrame(void);
 
+extern char gPicMenuDvdReadBuffer[0x40];
+
 #endif /* MAIN_DLL_FRONT_N_OPTIONS_H_ */

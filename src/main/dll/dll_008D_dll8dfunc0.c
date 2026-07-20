@@ -50,13 +50,13 @@ extern u8 gDll8DEffectParamBlock[];
 #define DLL8D_VARIANT0_EFFECT_RANGE     400.0f
 #define DLL8D_ALT_EFFECT_RANGE          800.0f
 
-int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
+s16 dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
     u8* base = (u8*)(int)gDll8DEffectParamBlock;
     FbCmd* p;
     FbCmd* entries;
-    int ret = 0;
+    s16 ret = 0;
     f32 jitter;
 
     entries = buf.entries;

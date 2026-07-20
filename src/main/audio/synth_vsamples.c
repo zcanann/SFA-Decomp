@@ -2,7 +2,6 @@
 #include "main/audio/hw_sample.h"
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/aram.h"
-#include "main/audio/vsample_update.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_stream.h"
 
@@ -184,8 +183,7 @@ void synthAdvanceVirtualSampleEntry(void* entry, u32 elapsed)
             sample->callbackData.size = elapsed - sample->position;
             sample->callbackData.wrapA = 0;
             sample->callbackData.wrapB = 0;
-            if ((d.len = ((int (*)(int, void*))state->callback)(SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
-                                                                &sample->callbackData)) != 0)
+            if ((d.len = state->callback(SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND, &sample->callbackData)) != 0)
             {
                 d.off = sample->position + d.len;
                 sample->position = d.off % state->loopSize;
@@ -206,8 +204,7 @@ void synthAdvanceVirtualSampleEntry(void* entry, u32 elapsed)
             sample->callbackData.size = *loopSizePtr - sample->position;
             sample->callbackData.wrapA = 0;
             sample->callbackData.wrapB = 0;
-            if ((d.len = ((int (*)(int, void*))state->callback)(SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
-                                                                &sample->callbackData)) != 0)
+            if ((d.len = state->callback(SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND, &sample->callbackData)) != 0)
             {
                 d.off = sample->position + d.len;
                 sample->position = d.off % *loopSizePtr;
@@ -228,8 +225,7 @@ void synthAdvanceVirtualSampleEntry(void* entry, u32 elapsed)
             sample->callbackData.size = *loopSizePtr - sample->position;
             sample->callbackData.wrapA = 0;
             sample->callbackData.wrapB = elapsed;
-            if ((d.len = ((int (*)(int, void*))state->callback)(SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND,
-                                                                &sample->callbackData)) != 0)
+            if ((d.len = state->callback(SYNTH_VIRTUAL_SAMPLE_STREAM_CALLBACK_KIND, &sample->callbackData)) != 0)
             {
                 d.off = sample->position + d.len;
                 sample->position = d.off % *loopSizePtr;

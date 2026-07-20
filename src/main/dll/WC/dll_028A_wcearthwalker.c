@@ -66,7 +66,7 @@ int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int s
     int i;
 
     ewState->flags &= ~1;
-    characterDoEyeAnimsState((GameObject*)obj, ewState->eyeAnimState);
+    characterDoEyeAnims((GameObject*)obj, ewState->eyeAnimState);
     if (dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)ewState, 0, 0) != 0)
     {
         return 0;
@@ -80,10 +80,10 @@ int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int s
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            getEnvfxActImmediatelyVoid(obj, obj, 509, 0);
+            getEnvfxActImmediately((void*)obj, (void*)obj, 509, 0);
             break;
         case 2:
-            getEnvfxActImmediatelyVoid(obj, obj, 512, 0);
+            getEnvfxActImmediately((void*)obj, (void*)obj, 512, 0);
             break;
         }
     }
@@ -180,7 +180,7 @@ void earthwalker_update(int obj)
         Sfx_PlayFromObject(obj, SFXTRIG_mammoth);
     }
 
-    characterDoEyeAnimsState((GameObject*)obj, ewState->eyeAnimState);
+    characterDoEyeAnims((GameObject*)obj, ewState->eyeAnimState);
     if (ewState->flags & 1)
     {
         return;
@@ -498,7 +498,7 @@ int dll_28B_substateHandler3(int obj, int ai)
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         state->flagsAC0 &= ~1;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, ai, 3);
+        (*gPlayerInterface)->setState((void*)obj, (void*)ai, 3);
     }
     else if (*(s8*)&((BaddieState*)ai)->moveDone != 0)
     {
@@ -515,7 +515,7 @@ int dll_28B_substateHandler2(int obj, int ai)
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         state->flagsAC0 |= 1;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, ai, 1);
+        (*gPlayerInterface)->setState((void*)obj, (void*)ai, 1);
     }
     state->randomTimer -= timeDelta;
     dist = state->playerDistance;
@@ -542,7 +542,7 @@ int dll_28B_substateHandler1(int obj, int ai)
     if (*(s8*)&((BaddieState*)ai)->moveJustStartedB != 0)
     {
         state->flagsAC0 &= ~1;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, ai, 2);
+        (*gPlayerInterface)->setState((void*)obj, (void*)ai, 2);
     }
     if (Curve_AdvanceAlongPath(&route->curve, gWcEarthWalkerCurveAdvanceStep) != 0 || route->atSegmentEnd != 0)
     {

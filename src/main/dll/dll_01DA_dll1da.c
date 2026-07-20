@@ -116,7 +116,7 @@ void dll_1DA_update(int obj)
     }
     objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, 0.0f,
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
-    hitCount = objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), 6.5f, 1,
+    hitCount = objBboxFn_800640cc(&((GameObject*)obj)->anim.previousLocalPosX, (f32*)(obj + 0xc), 6.5f, 1,
                                   (TrackBBoxHit*)out.hit, (GameObject*)obj, 8, -1, 0xff, 0);
     if (hitCount != 0)
     {

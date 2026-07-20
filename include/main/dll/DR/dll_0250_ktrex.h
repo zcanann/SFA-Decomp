@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DLL_0250_KTREX_H_
 
 #include "global.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/game_object.h"
 #include "main/model_engine.h"
 #include "main/model_light.h"
@@ -106,9 +107,9 @@ typedef struct KTRexLaneTuning
 typedef struct KTRexRuntime
 {
     u8 pad000[0x25f];
-    u8 unk25F;
+    u8 physicsActive; /* 0x25F: BaddieState free-fall physics enable (gBaddieControlInterface) */
     u8 pad260[0x10];
-    s16 unk270;
+    s16 substate; /* 0x270: BaddieState control substate (consumed by gPlayerInterface->setState) */
     u8 pad272[8];
     u8 moveJustStartedA;
     u8 moveJustStartedB;
@@ -128,7 +129,7 @@ typedef struct KTRexRuntime
     u8 pad318[0x2e];
     u8 moveDone;
     u8 pad347[2];
-    u8 unk349;
+    u8 hasTarget; /* 0x349: BaddieState target-acquired flag (cleared on death/reset) */
     u8 pad34A[2];
     s8 unk34C;
     u8 pad34D[2];
@@ -158,7 +159,7 @@ extern void* gKTRexStateHandlersB[];
 extern f32 gKTRexLaneSpeedMin[];
 extern KTRexLaneTuning gKTRexLaneTuning;
 extern MapRomList* gKTRexMapBlock;
-extern void* gKTRexResource;
+extern StaffCollisionInterface** gKTRexResource;
 extern const KtrexMsgBlob gKTRexMsgTemplate;
 extern int gKTRexContactEffectCooldown;
 extern KTRexWork gKTRexEffectSpawnWork;

@@ -1,3 +1,4 @@
+#define OBJHITS_SETTERS_S16
 #include "dolphin/os/OSReport.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/objpathtransform_struct.h"
@@ -24,7 +25,6 @@
 #include "main/obj_query.h"
 #include "main/obj_trigger.h"
 #include "main/player_eye_anim.h"
-#define OBJHITS_IMPLEMENTATION
 #include "main/objhits.h"
 #include "main/resource.h"
 #include "main/vecmath.h"
@@ -32,7 +32,8 @@
 #include "main/frame_timing.h"
 #include "main/pad_api.h"
 #include "main/audio/sfx_play_api.h"
-#include "main/rcp_dolphin_ext.h"
+#include "main/rcp_dolphin_render_api.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
@@ -275,25 +276,28 @@ void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, s16 radius, s16 verticalM
     float absMin;
     float absMax;
     s32 absVal;
+    s16 r16 = radius;
+    s16 vmin = verticalMin;
+    s16 vmax = verticalMax;
 
     hitState = (ObjHitsPriorityState*)obj->hitReactState;
     if (hitState != 0)
     {
         if ((hitState->shapeFlags & OBJHITS_SHAPE_CAPSULE) != 0)
         {
-            hitState->primaryCapsuleOffsetA = verticalMin;
-            hitState->primaryCapsuleOffsetB = verticalMax;
-            hitState->primaryRadius = radius;
+            hitState->primaryCapsuleOffsetA = vmin;
+            hitState->primaryCapsuleOffsetB = vmax;
+            hitState->primaryRadius = r16;
             hitState->primaryRadiusSquared = (float)(s32)hitState->primaryRadius * (float)(s32)hitState->primaryRadius;
             hitState->capsuleScale = OBJHITBOX_DEFAULT_CAPSULE_SCALE;
             hitState->primaryRadiusY = obj->hitboxScale * obj->rootMotionScale;
-            absVal = verticalMin;
+            absVal = vmin;
             if (absVal < 0)
             {
                 absVal = -absVal;
             }
             absMin = (float)absVal;
-            absVal = verticalMax;
+            absVal = vmax;
             if (absVal < 0)
             {
                 absVal = -absVal;
@@ -315,17 +319,17 @@ void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, s16 radius, s16 verticalM
         }
         if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) != 0)
         {
-            hitState->secondaryCapsuleOffsetA = verticalMin;
-            hitState->secondaryCapsuleOffsetB = verticalMax;
-            hitState->secondaryRadius = radius;
+            hitState->secondaryCapsuleOffsetA = vmin;
+            hitState->secondaryCapsuleOffsetB = vmax;
+            hitState->secondaryRadius = r16;
             hitState->secondaryRadiusY = obj->hitboxScale * obj->rootMotionScale;
-            absVal = verticalMin;
+            absVal = vmin;
             if (absVal < 0)
             {
                 absVal = -absVal;
             }
             absMin = (float)absVal;
-            absVal = verticalMax;
+            absVal = vmax;
             if (absVal < 0)
             {
                 absVal = -absVal;
@@ -1250,7 +1254,7 @@ void ObjGroup_ClearAll(void)
     return;
 }
 
-u32 ObjMsg_Peek(void* obj, u32* outMessage, u32* outSender, u32* outParam)
+int ObjMsg_Peek(void* obj, u32* outMessage, u32* outSender, u32* outParam)
 {
     ObjMsgQueue* queue;
 
@@ -1544,35 +1548,34 @@ int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u3
                                               u16 sfxId, float* cooldown)
 {
     int collisionType;
-    ObjHitReactEffectHandle* effectHandle;
-    float hitPos[3];
-    ObjHitReactEffectPos effectPos;
-    ObjHitReactEffectColorArgs effectArgs;
+    StaffCollisionInterface** effectResource;
+    PartFxSpawnParams effectParams;
+    StaffCollisionColorArgs effectArgs;
     u32 hitObject;
 
     *cooldown = *cooldown - timeDelta;
     collisionType =
-        ObjHits_GetPriorityHitWithPosition(obj, (int*)&hitObject, 0x0, 0x0, &hitPos[0], &hitPos[1], &hitPos[2]);
+        ObjHits_GetPriorityHitWithPosition(obj, (int*)&hitObject, 0x0, 0x0, &effectParams.posX, &effectParams.posY,
+                                           &effectParams.posZ);
     if ((*cooldown <= lbl_803DE970) && (collisionType != 0))
     {
         *cooldown = lbl_803DE978;
         if ((collisionType != 0x1a) && (collisionType != 5))
         {
-            hitPos[0] = hitPos[0] + playerMapOffsetX;
-            hitPos[2] = hitPos[2] + playerMapOffsetZ;
-            effectPos.scale = OBJLIB_UNIT_SCALE;
-            effectPos.z = 0;
-            effectPos.y = 0;
-            effectPos.x = 0;
-            effectHandle = (ObjHitReactEffectHandle*)Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,
-                                                                      OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
-            effectArgs.hitFxMode = hitFxMode & 0xff;
-            effectArgs.colorR = colorR & 0xff;
-            effectArgs.colorG = colorG & 0xff;
-            effectArgs.colorB = colorB & 0xff;
-            effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &effectPos,
-                                        OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE,
-                                        &effectArgs);
+            effectParams.posX = effectParams.posX + playerMapOffsetX;
+            effectParams.posZ = effectParams.posZ + playerMapOffsetZ;
+            effectParams.scale = OBJLIB_UNIT_SCALE;
+            effectParams.rotZ = 0;
+            effectParams.rotY = 0;
+            effectParams.rotX = 0;
+            effectResource = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID, OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
+            effectArgs.count = hitFxMode & 0xff;
+            effectArgs.red = colorR & 0xff;
+            effectArgs.green = colorG & 0xff;
+            effectArgs.blue = colorB & 0xff;
+            (*effectResource)
+                ->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &effectParams,
+                        OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE, &effectArgs);
             if (((sfxId != 0) && (hitObject != 0)) && (((GameObject*)hitObject)->anim.seqId == OBJLIB_HITOBJ_SEQID_STAFF))
             {
                 Sfx_PlayFromObject((u32)obj, sfxId);
@@ -2140,7 +2143,7 @@ static inline int playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag)
     return joint;
 }
 
-void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
+void playerEyeAnimFn_80038988(int obj, int blinkState, u16 flags)
 {
 
     PlayerBlinkState* bs = (PlayerBlinkState*)blinkState;

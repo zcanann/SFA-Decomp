@@ -30,8 +30,6 @@
 #include "main/object_render.h"
 #include "main/objseq.h"
 
-typedef int (*DoorF4ObjMsgFn)(int obj, int* message, int* param, int* flags);
-
 #include "main/gamebits.h"
 #include "main/camera.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -161,7 +159,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         gb = mainGetBit(sub->gameBitA);
     }
-    if (((DoorF4ObjMsgFn)ObjMsg_Peek)(obj, &msg, 0, 0) != 0)
+    if (ObjMsg_Peek((void*)obj, (u32*)&msg, 0, 0) != 0)
     {
         switch (msg)
         {
@@ -287,7 +285,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             if (active != 0)
             {
-                if (((DoorF4ObjMsgFn)ObjMsg_Pop)(obj, &msg, 0, 0) != 0)
+                if (ObjMsg_Pop((void*)obj, (u32*)&msg, 0, 0) != 0)
                 {
                     switch (msg)
                     {
@@ -360,7 +358,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_B;
     }
-    while (((DoorF4ObjMsgFn)ObjMsg_Pop)(obj, &msg, 0, 0) != 0)
+    while (ObjMsg_Pop((void*)obj, (u32*)&msg, 0, 0) != 0)
     {
     }
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -424,9 +422,9 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 break;
             case 4:
-                if (sub->sfxOpen != 0 && Sfx_IsPlayingFromObjectIntLegacy(obj, sub->sfxOpen) != 0)
+                if (sub->sfxOpen != 0 && Sfx_IsPlayingFromObject(obj, sub->sfxOpen) != 0)
                 {
-                    Sfx_StopFromObjectIntLegacy(obj, sub->sfxOpen);
+                    Sfx_StopFromObject(obj, sub->sfxOpen);
                 }
                 break;
             case 5:
@@ -507,9 +505,9 @@ void DoorF4_free(int obj)
     DoorF4State* state = ((GameObject*)obj)->extra;
     if (state->sfxOpen != 0)
     {
-        if (Sfx_IsPlayingFromObjectIntLegacy(obj, state->sfxOpen) != 0)
+        if (Sfx_IsPlayingFromObject(obj, state->sfxOpen) != 0)
         {
-            Sfx_StopFromObjectIntLegacy(obj, state->sfxOpen);
+            Sfx_StopFromObject(obj, state->sfxOpen);
         }
     }
     ObjGroup_RemoveObject(obj, DOORF4_OBJ_GROUP);
@@ -594,8 +592,8 @@ void DoorF4_init(int* obj, int* params)
         break;
     case 318:
     case 890:
-        *(s16*)&state->sfxOpen = 830;
-        *(s16*)&state->sfxClose = 831;
+        state->sfxOpen = 830;
+        state->sfxClose = 831;
         break;
     case 200:
         state->openRange = lbl_803E3684;

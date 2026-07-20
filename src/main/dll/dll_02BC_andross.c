@@ -91,7 +91,7 @@ typedef struct AndrossChildSetup
     s16 flags;
 } AndrossChildSetup;
 
-void fn_80239DD8(GameObject* obj, AndrossState* state)
+void andross_spawnBombCollector(GameObject* obj, AndrossState* state)
 {
     f32 maxDist;
     GameObject* nearObj;
@@ -120,7 +120,7 @@ void fn_80239DD8(GameObject* obj, AndrossState* state)
     }
 }
 
-void fn_80239EAC(GameObject* obj, AndrossState* state)
+void andross_steerAsteroids(GameObject* obj, AndrossState* state)
 {
     f32 dx, dy, dz;
     int* objs;
@@ -149,7 +149,7 @@ void fn_80239EAC(GameObject* obj, AndrossState* state)
     }
 }
 
-void fn_80239FCC(GameObject* obj, AndrossState* state)
+void andross_spawnSuckAsteroid(GameObject* obj, AndrossState* state)
 {
     f32 ang;
     int rndDur;
@@ -184,7 +184,7 @@ void fn_80239FCC(GameObject* obj, AndrossState* state)
     }
 }
 
-void fn_8023A168(GameObject* obj, AndrossState* state)
+void andross_spawnAsteroid(GameObject* obj, AndrossState* state)
 {
     int proj;
     int yawRnd;
@@ -214,7 +214,7 @@ void fn_8023A168(GameObject* obj, AndrossState* state)
     }
 }
 
-void fn_8023A268(GameObject* obj, AndrossState* state, int p3)
+void andross_spawnAimedRing(GameObject* obj, AndrossState* state, int p3)
 {
     f32 dx, dz, dist;
     int yaw;
@@ -245,7 +245,7 @@ void fn_8023A268(GameObject* obj, AndrossState* state, int p3)
     }
 }
 
-void fn_8023A3E4(GameObject* obj, AndrossState* stateData)
+void andross_processPartHits(GameObject* obj, AndrossState* stateData)
 {
     u32 hitVol;
     int hitType;
@@ -358,7 +358,7 @@ void andross_setPartSignal(GameObject* obj, u8 signal)
     state = (AndrossState*)obj->extra;
     state->signalFlags |= signal;
 }
-int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
+int andross_trackArwingVelocity(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
 {
     f32 mag, ang;
     f32 dx, dy, dz, dist;
@@ -387,7 +387,7 @@ int fn_8023A6A4(AndrossState* state, f32 clampRange, f32 scale, f32 zVel)
 #define ANDROSS_ALPHA_255 255.0f
 #define ANDROSS_DISTORT_PHASE_WRAP 6.28318f
 
-void fn_8023A87C(GameObject* obj, AndrossState* andross)
+void andross_updateBombCollector(GameObject* obj, AndrossState* andross)
 {
     GameObject* spawned;
 
@@ -411,7 +411,7 @@ void fn_8023A87C(GameObject* obj, AndrossState* andross)
         {
             andross->spawnCooldown = cooldown - timeDelta;
             if (andross->spawnCooldown < zero)
-                fn_80239DD8(obj, andross);
+                andross_spawnBombCollector(obj, andross);
         }
         else if ((u32)mainGetBit(GAMEBIT_AndrossRelated0012) != 0)
         {
@@ -939,7 +939,7 @@ void andross_update(int obj)
         state->actionTimer -= framesThisStep;
         if (state->actionTimer < 0)
         {
-            fn_8023A268((GameObject*)obj, state, 0);
+            andross_spawnAimedRing((GameObject*)obj, state, 0);
             state->actionTimer = gAndrossRingSpawnInterval;
         }
         state->durationTimer -= timeDelta;
@@ -1368,7 +1368,7 @@ void andross_update(int obj)
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
         state->targetPosY = (10.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
-        fn_8023A6A4(state, gAndrossMissileClampRange, gAndrossMissileVelocityScale, gAndrossMissileForwardVelocity);
+        andross_trackArwingVelocity(state, gAndrossMissileClampRange, gAndrossMissileVelocityScale, gAndrossMissileForwardVelocity);
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_and_missileloop);
         if ((state->actionTimer != 0) && (state->actionTimer -= framesThisStep, state->actionTimer <= 0))
         {
@@ -1378,10 +1378,10 @@ void andross_update(int obj)
         state->durationTimer -= timeDelta;
         if (state->durationTimer < gAndrossZero)
         {
-            fn_80239FCC((GameObject*)obj, state);
+            andross_spawnSuckAsteroid((GameObject*)obj, state);
             state->durationTimer += gAndrossMissileSpawnInterval;
         }
-        fn_80239EAC((GameObject*)obj, state);
+        andross_steerAsteroids((GameObject*)obj, state);
         if (mainGetBit(0x10) != 0)
         {
             mainSetBits(0x10, 0);
@@ -1463,7 +1463,7 @@ void andross_update(int obj)
         fc = mathSinf(((3.1415927f * gAndrossSwayPhaseY) / 32768.0f));
         state->targetPosY = (10.0f * fc + (state->homePosY + fb));
         state->targetPosZ = state->homePosZ;
-        bval = fn_8023A6A4(state, gAndrossCentralMissileClampRange, gAndrossCentralMissileVelocityScale, gAndrossCentralMissileForwardVelocity);
+        bval = andross_trackArwingVelocity(state, gAndrossCentralMissileClampRange, gAndrossCentralMissileVelocityScale, gAndrossCentralMissileForwardVelocity);
         if (bval != 0)
         {
             state->actionState = 0xf;
@@ -1480,10 +1480,10 @@ void andross_update(int obj)
         state->durationTimer -= timeDelta;
         if (state->durationTimer < gAndrossZero)
         {
-            fn_80239FCC((GameObject*)obj, state);
+            andross_spawnSuckAsteroid((GameObject*)obj, state);
             state->durationTimer += gAndrossCentralMissileSpawnInterval;
         }
-        fn_80239EAC((GameObject*)obj, state);
+        andross_steerAsteroids((GameObject*)obj, state);
         if (state->hitReactionFlag != 0)
         {
             if (state->fightPhase == 5)
@@ -1795,7 +1795,7 @@ void andross_update(int obj)
         }
         if (state->actionTimer < 0)
         {
-            fn_8023A168((GameObject*)obj, state);
+            andross_spawnAsteroid((GameObject*)obj, state);
             state->actionTimer = gAndrossAsteroidSpawnInterval;
         }
         if (state->durationTimer < gAndrossZero)
@@ -2250,7 +2250,7 @@ void andross_update(int obj)
     {
         if (state->arwingFlightActive != 0)
         {
-            fn_8023A6A4(state, gAndrossArwingFlightClampRange, gAndrossArwingFlightVelocityScale, gAndrossZero);
+            andross_trackArwingVelocity(state, gAndrossArwingFlightClampRange, gAndrossArwingFlightVelocityScale, gAndrossZero);
         }
         else
         {
@@ -2281,8 +2281,8 @@ void andross_update(int obj)
     boss->anim.rotY += state->rotYSpeed;
 
     ObjAnim_AdvanceCurrentMove(obj, state->animSpeed, timeDelta, 0);
-    fn_8023A3E4((GameObject*)obj, state);
-    fn_8023A87C(boss, state);
+    andross_processPartHits((GameObject*)obj, state);
+    andross_updateBombCollector(boss, state);
     if (state->spawnedObj != NULL)
     {
         state->spawnedObj->anim.localPosZ -= 3.0f;

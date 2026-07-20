@@ -33,12 +33,10 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
     return (u8*)objAnim->banks[objAnim->bankIndex];
 }
 
-int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, int modelId, s16* countRange)
+s16 modgfx_func03(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, int modelId,
+                  ModgfxSpawnCountRange* countRange)
 {
-    struct
-    {
-        s16 lo, hi;
-    } r;
+    ModgfxSpawnCountRange r;
     struct
     {
         s16 rotX, rotY, seqId;
@@ -53,16 +51,16 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
     GfxCmd* cmdList;
     int emitCount;
     void* texture;
-    int result;
+    s16 result;
     u8* activeModel;
     base[0] = lbl_80311E30;
     result = 0;
     model = Gameplay_GetActiveModel(sourceObj);
-    *(u32*)&r = lbl_803E0730.w;
+    r.packed = lbl_803E0730.w;
     if (countRange != NULL)
     {
-        r.lo = countRange[0];
-        r.hi = countRange[1];
+        r.min = countRange->min;
+        r.max = countRange->max;
     }
     if (sourceObj == 0)
     {
@@ -75,7 +73,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
     m.scale = 1.0f;
     m.seqId = 0;
     activeModel = *(u8**)model;
-    if (*(u8*)(activeModel + 0xf2) == 0)
+    if (((GameObject*)activeModel)->lightColorSlot == 0)
     {
         return -1;
     }
@@ -101,7 +99,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
     buf.hw[4] = *(s16*)&base[0][0x48];
     buf.hw[5] = *(s16*)&base[0][0x4a];
     buf.hw[6] = *(s16*)&base[0][0x4c];
-    emitCount = randomGetRange(r.lo, r.hi);
+    emitCount = randomGetRange(r.min, r.max);
     if (effectId == 0xc)
     {
         emitCount = randomGetRange(2, 6);

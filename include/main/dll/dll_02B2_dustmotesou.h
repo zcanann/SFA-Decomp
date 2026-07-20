@@ -4,6 +4,7 @@
 #include "global.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_internal.h"
+#include "main/obj_placement.h"
 
 #define DUSTMOTESOU_DLL_ID 0x02B2
 #define DUSTMOTESOU_CLASS_ID 0x007E
@@ -22,7 +23,7 @@
 #define DUSTMOTESOU_BURST_ARCED 1
 
 typedef struct DustMoteSouMapData {
-  u8 pad00[0x18];
+  ObjPlacement head;
   u8 rotZ;
   u8 rotY;
   u8 rotX;

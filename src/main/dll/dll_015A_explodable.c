@@ -88,7 +88,7 @@ int explodable_spawnFragmentObject(GameObject* obj, int objType, int chunkSrc, i
     s->vel2Y = f1 * c->vel2Y;
     s->vel2Z = f1 * c->vel2Z;
     s->fragmentIndex = fragmentIndex;
-    s->scale = (s8)(int)(20.0f * (obj->anim.rootMotionScale / *(f32*)(*(int*)&obj->anim.modelInstance + 4)));
+    s->scale = (s8)(int)(20.0f * (obj->anim.rootMotionScale / obj->anim.modelInstance->rootMotionScaleBase));
     s->launchDelayBase = c->launchDelayBase;
     s->height = (int)c->height;
     return (int)Obj_SetupObject((ObjPlacement*)s, 5, obj->anim.mapEventSlot, -1, NULL);
@@ -153,7 +153,7 @@ void explodable_buildFragments(GameObject* obj, int def, int skipCentroid, int s
             explodable_computeFragmentLaunch(obj, (int)c, def);
             c->unk6B = 0xff;
             c->gameBitMode = (u32)mainGetBit(((ExplodablePlacement*)def)->doneGameBit) != 0 ? 2 : 0;
-            *(int*)(i8 + 0x690) = explodable_spawnFragmentObject(obj, objType, (int)c, i13);
+            ((DrExplodableState*)i8)->children[0] = (GameObject*)explodable_spawnFragmentObject(obj, objType, (int)c, i13);
             c++;
             i14 += 4;
             i8 += 4;
@@ -316,7 +316,7 @@ void explodable_update(GameObject* obj)
             slotPtr = state;
             do
             {
-                fragObj = *(int*)(slotPtr + 0x690);
+                fragObj = (int)((DrExplodableState*)slotPtr)->children[0];
                 if ((void*)fragObj != NULL)
                 {
                     status = (*(VtableFn*)(*(int*)*(int*)(fragObj + 0x68) + FRAGMENT_VTABLE_STATUS))(fragObj);
@@ -324,8 +324,8 @@ void explodable_update(GameObject* obj)
                     {
                     case 2:
                         mainSetBits(((ExplodablePlacement*)def)->doneGameBit, 1);
-                        Obj_FreeObject(*(GameObject**)(slotPtr + 0x690));
-                        *(int*)(slotPtr + 0x690) = 0;
+                        Obj_FreeObject(((DrExplodableState*)slotPtr)->children[0]);
+                        ((DrExplodableState*)slotPtr)->children[0] = NULL;
                         break;
                     case 0:
                         mainSetBits(((ExplodablePlacement*)def)->doneGameBit, 1);

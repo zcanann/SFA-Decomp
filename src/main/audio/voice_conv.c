@@ -2,9 +2,6 @@
 #include "main/audio/synth_config.h"
 #include "main/audio/voice_conv.h"
 
-extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
-extern u8 voiceDirectSlots[];
-
 /*
  * Mark all entries of the MIDI voice-id table and direct voice-id table
  * as free. The asm has the inner stb's unrolled to two MIDI rows per

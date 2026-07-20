@@ -46,20 +46,19 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
                                          DIMbosstonsilState* updateState)
 {
     f32 timer;
-    u8* vt;
 
     timer = lbl_803E4C90;
 
-    (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags |= DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
+    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
 
     updateState->effectActive = 1;
 
-    (*(void (**)(u8*, DIMbosstonsilState*, double, int))(*(int*)gBaddieControlInterface + 0x2C))(obj, updateState,
-                                                                                                 (double)timer, 1);
+    (*gBaddieControlInterface)
+        ->updateGravity((GameObject*)obj, updateState, timer, 1);
 
-    vt = (u8*)*(int*)gBaddieControlInterface;
-    ((void (*)(u8*, DIMbosstonsilState*, u8*, s16, u8*, int, int, int)) *
-     (void**)(vt + 0x54))(obj, updateState, state->animPoints, state->animFrame, &state->hitReactMode, 0, 0, 0);
+    (*gBaddieControlInterface)
+        ->processMessages((GameObject*)obj, updateState, state->animPoints, state->animFrame,
+                          &state->hitReactMode, 0, 0, 0);
 
     if (lbl_803E4C90 != lbl_803DDBA4)
     {
@@ -69,7 +68,7 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
         {
             lbl_803DDBA4 = lbl_803E4C90;
             updateState->animFinished = 0;
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
                 (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
             mainSetBits(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
@@ -109,7 +108,7 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
         {
             lbl_803DDB98 = lbl_803E4C90;
             updateState->animFinished = 0;
-            (*(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
+            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
                 (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
             mainSetBits(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);

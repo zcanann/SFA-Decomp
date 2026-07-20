@@ -119,7 +119,7 @@ void cfforcefield_update(u8* obj)
     f32 strength;
     f32 zero;
     f32 mtx[3][4];
-    f32 world[6];
+    PartFxSpawnParams world;
     f32 local[3];
 
     data = (CfForceFieldMapData*)((GameObject*)obj)->anim.placement;
@@ -168,12 +168,12 @@ void cfforcefield_update(u8* obj)
                     PSMTXMultVecSR((f32*)mtx, local, local);
                     /* burst target = ring point in world space; the burst
                        inherits the field's velocity (obj + 0x24) */
-                    world[3] = local[0] + ((GameObject*)obj)->anim.localPosX;
-                    world[4] = local[1] + ((GameObject*)obj)->anim.localPosY;
-                    world[5] = local[2] + ((GameObject*)obj)->anim.localPosZ;
-                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, world, 0x200001, -1, obj + 0x24);
-                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, world, 0x200001, -1, obj + 0x24);
-                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, world, 0x200001, -1, obj + 0x24);
+                    world.posX = local[0] + ((GameObject*)obj)->anim.localPosX;
+                    world.posY = local[1] + ((GameObject*)obj)->anim.localPosY;
+                    world.posZ = local[2] + ((GameObject*)obj)->anim.localPosZ;
+                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, &world, 0x200001, -1, obj + 0x24);
+                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, &world, 0x200001, -1, obj + 0x24);
+                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, &world, 0x200001, -1, obj + 0x24);
                 }
             }
 

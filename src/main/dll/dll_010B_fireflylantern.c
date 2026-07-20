@@ -1,7 +1,7 @@
 /*
  * FireFlyLantern (DLL 0x10B). TU = 0x801871C8..0x80187640.
  */
-#include "main/dll/CF/CFcrystal.h"
+#include "main/dll/dll_010B_fireflylantern.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object.h"

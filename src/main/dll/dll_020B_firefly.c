@@ -83,7 +83,7 @@ STATIC_ASSERT(sizeof(FireFlyState) == FIREFLY_EXTRA_SIZE);
    new segment and re-targeting while pathAge < 4), spawn the trail fx,
    ease the proximity glow, and detect the player touch. Runs as the
    anim-event callback via the sibling TU's firefly_animEventCallback wrapper. */
-void FireFlyFn_801f4f88(GameObject* obj)
+void firefly_activeTick(GameObject* obj)
 {
     FireFlyState* state = (obj)->extra;
     ObjAnimComponent* objAnim = &(obj)->anim;
@@ -120,9 +120,9 @@ void FireFlyFn_801f4f88(GameObject* obj)
         state->splineY[3] = state->targetY;
         state->splineZ[3] = state->targetZ;
     }
-    (obj)->anim.localPosX = Curve_EvalBSplineValuesFirst(state->splineX, state->splineT, 0);
-    (obj)->anim.localPosY = Curve_EvalBSplineValuesFirst(state->splineY, state->splineT, 0);
-    (obj)->anim.localPosZ = Curve_EvalBSplineValuesFirst(state->splineZ, state->splineT, 0);
+    (obj)->anim.localPosX = Curve_EvalBSpline(state->splineX, state->splineT, 0);
+    (obj)->anim.localPosY = Curve_EvalBSpline(state->splineY, state->splineT, 0);
+    (obj)->anim.localPosZ = Curve_EvalBSpline(state->splineZ, state->splineT, 0);
     state->splineT = state->splineSpeed * timeDelta + state->splineT;
     (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
                                 (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);
@@ -300,7 +300,7 @@ void firefly_update(GameObject* obj)
         }
         else
         {
-            FireFlyFn_801f4f88(obj);
+            firefly_activeTick(obj);
         }
     }
 }

@@ -62,11 +62,7 @@
 #define DBSH_SHRINE_ENVFX_C  0x222
 #define DBSH_SHRINE_IDLE_SFX 0x343
 
-#define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) (*gObjectTriggerInterface)->runSequence((triggerId), (obj), (arg))
-#define MAP_EVENT_GET_ANIM(mapId, eventId)          (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
-#define MAP_EVENT_SET_ANIM(mapId, eventId, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
-
-void fn_801C8B68(int obj)
+void dbsh_shrine_updateSpirit(int obj)
 {
     register int self = obj;
     register int state2 = *(int*)&((GameObject*)self)->anim.placementData;
@@ -264,7 +260,7 @@ void dbsh_shrine_update(DbshShrineObject* obj)
         }
     }
 
-    fn_801C8B68((int)obj);
+    dbsh_shrine_updateSpirit((int)obj);
     SCGameBitLatch_Update(&runtime->latch, 2, -1, -1, DBSH_SHRINE_GB_APPROACH, 0xe);
     SCGameBitLatch_UpdateInverted(&runtime->latch, 1, -1, -1, DBSH_SHRINE_GB_SCENE_BLOCK, 8);
     SCGameBitLatch_Update(&runtime->latch, 4, -1, -1, DBSH_SHRINE_GB_SCENE_BLOCK, 0xc4);
@@ -284,15 +280,15 @@ void dbsh_shrine_update(DbshShrineObject* obj)
         }
         if ((obj->mapFlags & DBSH_SHRINE_MAP_FLAG_TRIGGERED) != 0)
         {
-            active = MAP_EVENT_GET_ANIM(obj->mapId, 1);
+            active = (*gMapEventInterface)->getObjGroupStatus(obj->mapId, 1);
             if (active != 0)
             {
-                MAP_EVENT_SET_ANIM(obj->mapId, 1, 0);
+                (*gMapEventInterface)->setObjGroupStatus(obj->mapId, 1, 0);
             }
             runtime->state = DBSH_SHRINE_STATE_RISING;
             mainSetBits(DBSH_SHRINE_GB_APPROACH, 1);
             obj->triggerRadius = 0x7fff;
-            OBJECT_TRIGGER_REFRESH(0, obj, -1);
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
             Music_Trigger(MUSICTRIG_DIM_Snow, 1);
         }
         break;
@@ -320,7 +316,7 @@ void dbsh_shrine_update(DbshShrineObject* obj)
     case DBSH_SHRINE_STATE_CLOSING:
         runtime->state = DBSH_SHRINE_STATE_RESET;
         audioStopByMask(3);
-        OBJECT_TRIGGER_REFRESH(1, obj, -1);
+        (*gObjectTriggerInterface)->runSequence(1, obj, -1);
         mainSetBits(DBSH_SHRINE_GB_APPROACH, 0);
         break;
     case DBSH_SHRINE_STATE_RESET:
@@ -352,9 +348,9 @@ void dbsh_shrine_init(DbshShrineObject* obj)
     ObjMsg_AllocQueue(obj, 4);
     mainSetBits(DBSH_SHRINE_GB_FIRST_RISE, 0);
 
-    if ((u8)MAP_EVENT_GET_ANIM(obj->mapId, 1) == 0)
+    if ((u8)(*gMapEventInterface)->getObjGroupStatus(obj->mapId, 1) == 0)
     {
-        MAP_EVENT_SET_ANIM(obj->mapId, 1, 1);
+        (*gMapEventInterface)->setObjGroupStatus(obj->mapId, 1, 1);
     }
 
     obj->startX = obj->x;

@@ -3,11 +3,12 @@
 
 #include "ghidra_import.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "global.h"
 
 typedef struct SpdrapeObjectDef
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 facingByte; /* 0x18: rotX in 1/256 turns */
     u8 pad19[0x1A - 0x19];
     s16 motionScaleNum; /* 0x1A: root-motion scale numerator (0 = leave default) */

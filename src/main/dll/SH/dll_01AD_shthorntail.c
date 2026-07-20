@@ -19,8 +19,6 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/SH/shthorntail_ai.h"
-#include "main/dll/SC/dll_01B0_shswapston.h"
-#include "main/dll/SC/SCanimobj.h"
 #include "main/dll/SH/dll_01B0_shswapston.h"
 #include "main/newshadows_audio_api.h"
 #include "main/dll/path_control_interface.h"
@@ -286,7 +284,7 @@ u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjA
             return 0;
         }
         animUpdate->hitVolumePair &= ~SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG;
-        characterDoEyeAnimsState((GameObject*)obj, runtime->collisionShapeState);
+        characterDoEyeAnims((GameObject*)obj, runtime->collisionShapeState);
     }
     runtime->activeMoveValid = 0;
     objAudioFn_8006ef38((GameObject*)obj, &animUpdate->animEvents, 8, runtime->renderPathPoints,
@@ -347,8 +345,8 @@ void SHthorntail_update(int obj)
     int ref;
     s32 activeConfigToken;
     f32 facingAngleRadians;
-    f32 facingCos;
-    f32 facingSin;
+    f32 negSinFacing;
+    f32 negCosFacing;
     f32 leashDistance;
     ObjAnimEventList animEvents;
     SHthorntailTailSwingEffectScratch effectScratch;
@@ -446,13 +444,13 @@ void SHthorntail_update(int obj)
                 runtime->storedFacingAngle = ((SHthorntailObject*)obj)->facingAngle;
             }
             facingAngleRadians = (3.1415927f * (f32)(s32)runtime->storedFacingAngle) / 32768.0f;
-            facingCos = -mathSinf(facingAngleRadians);
+            negSinFacing = -mathSinf(facingAngleRadians);
             facingAngleRadians = (3.1415927f * (f32)(s32)runtime->storedFacingAngle) / 32768.0f;
-            facingSin = -mathCosf(facingAngleRadians);
-            ((SHthorntailObject*)obj)->modelPos.x = facingCos * -animEvents.rootDeltaZ + ((SHthorntailObject*)obj)->modelPos.x;
-            ((SHthorntailObject*)obj)->modelPos.z = facingSin * -animEvents.rootDeltaZ + ((SHthorntailObject*)obj)->modelPos.z;
-            ((SHthorntailObject*)obj)->modelPos.x = facingSin * -animEvents.rootDeltaX + ((SHthorntailObject*)obj)->modelPos.x;
-            ((SHthorntailObject*)obj)->modelPos.z = facingCos * animEvents.rootDeltaX + ((SHthorntailObject*)obj)->modelPos.z;
+            negCosFacing = -mathCosf(facingAngleRadians);
+            ((SHthorntailObject*)obj)->modelPos.x = negSinFacing * -animEvents.rootDeltaZ + ((SHthorntailObject*)obj)->modelPos.x;
+            ((SHthorntailObject*)obj)->modelPos.z = negCosFacing * -animEvents.rootDeltaZ + ((SHthorntailObject*)obj)->modelPos.z;
+            ((SHthorntailObject*)obj)->modelPos.x = negCosFacing * -animEvents.rootDeltaX + ((SHthorntailObject*)obj)->modelPos.x;
+            ((SHthorntailObject*)obj)->modelPos.z = negSinFacing * animEvents.rootDeltaX + ((SHthorntailObject*)obj)->modelPos.z;
             ((SHthorntailObject*)obj)->facingAngle += animEvents.rootPitch;
         }
         for (i = 0, eventId = (s8*)&animEvents; i < animEvents.triggerCount; i = i + 1)
@@ -490,7 +488,7 @@ void SHthorntail_update(int obj)
         }
         else
         {
-            characterDoEyeAnimsState((GameObject*)obj, runtime->collisionShapeState);
+            characterDoEyeAnims((GameObject*)obj, runtime->collisionShapeState);
         }
         runtime->behaviorFlags = runtime->behaviorFlags & ~2;
         if (((runtime->behaviorFlags & 4) == 0) && (val = ObjTrigger_IsSet(obj), val != 0))

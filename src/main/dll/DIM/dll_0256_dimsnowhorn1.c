@@ -77,12 +77,12 @@ int DIMSnowHorn1_defaultStateHandler(void)
 
 int DIMSnowHorn1_stateHandler0B(GameObject* obj, int state)
 {
-    int sub;
+    ObjHitsPriorityState* sub;
     DIMSnowHorn1State* inner;
     f32 k;
 
     inner = (obj)->extra;
-    sub = *(int*)&(obj)->anim.hitReactState;
+    sub = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     *(u32*)((char*)state) |= 0x200000;
     k = 0.0f;
     ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
@@ -95,27 +95,27 @@ int DIMSnowHorn1_stateHandler0B(GameObject* obj, int state)
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         inner->flags &= ~SNOWHORN1_FLAG_HITVOL_PRIO;
-        ((ObjHitsPriorityState*)sub)->flags |= OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
+        sub->flags |= OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
         ObjAnim_SetCurrentMove((int)obj, 0x204, k, 0);
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = 0.013f;
         Sfx_PlayFromObject((int)obj, SFXTRIG_thorntail_chew2);
     }
-    if ((((ObjHitsPriorityState*)sub)->flags & OBJHITS_PRIORITY_STATE_TRACK_CONTACT) &&
-        (((ObjHitsPriorityState*)sub)->contactFlags & OBJHITS_CONTACT_FLAG_KIND_NONZERO))
+    if ((sub->flags & OBJHITS_PRIORITY_STATE_TRACK_CONTACT) &&
+        (sub->contactFlags & OBJHITS_CONTACT_FLAG_KIND_NONZERO))
     {
         inner->flags |= SNOWHORN1_FLAG_HITVOL_PRIO;
     }
     if (inner->flags & SNOWHORN1_FLAG_HITVOL_PRIO)
     {
-        *(u8*)&((ObjHitsPriorityState*)sub)->hitVolumePriority = 0;
-        *(u8*)&((ObjHitsPriorityState*)sub)->hitVolumeId = 0;
-        ((ObjHitsPriorityState*)sub)->flags &= ~OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
+        *(u8*)&sub->hitVolumePriority = 0;
+        *(u8*)&sub->hitVolumeId = 0;
+        sub->flags &= ~OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
     }
     else
     {
-        *(u8*)&((ObjHitsPriorityState*)sub)->hitVolumePriority = 0xb;
-        *(u8*)&((ObjHitsPriorityState*)sub)->hitVolumeId = 1;
-        ((ObjHitsPriorityState*)sub)->flags |= OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
+        *(u8*)&sub->hitVolumePriority = 0xb;
+        *(u8*)&sub->hitVolumeId = 1;
+        sub->flags |= OBJHITS_PRIORITY_STATE_TRACK_CONTACT;
     }
     if ((obj)->anim.currentMoveProgress > 0.9f)
     {
@@ -305,7 +305,7 @@ int DIMSnowHorn1_stateHandler09(GameObject* obj, int state, f32 fv)
         }
     }
     ((DIMSnowHorn1State*)state)->baddie.moveSpeed = 0.012f;
-    (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x20)))((int)obj, state, fv, 8);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, (void*)state, fv, 8);
 
     if (*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & PAD_BUTTON_A)
     {
@@ -844,15 +844,15 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* anim
                 state->flags |= SNOWHORN1_FLAG_SEQ_TRIGGERED;
             }
         }
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 1);
+        (*gPlayerInterface)->setState((void*)obj, state, 1);
         break;
     case 5:
         animUpdate->sequenceEventActive = 0;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 2);
+        (*gPlayerInterface)->setState((void*)obj, state, 2);
         break;
     case 4:
         animUpdate->sequenceEventActive = 0;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 7);
+        (*gPlayerInterface)->setState((void*)obj, state, 7);
         break;
     case 1:
         animUpdate->sequenceEventActive = 0;
@@ -876,12 +876,12 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* anim
         {
             animState = 7;
         }
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, animState);
+        (*gPlayerInterface)->setState((void*)obj, state, animState);
         break;
     case 3:
         animUpdate->sequenceEventActive = 0;
         state->baddie.moveJustStartedA = 1;
-        (*(void (**)(int, int, int))((char*)*gPlayerInterface + 0x14))(obj, (int)state, 7);
+        (*gPlayerInterface)->setState((void*)obj, state, 7);
         break;
     default:
         break;
@@ -1213,8 +1213,8 @@ void fn_802BB4B4(GameObject* obj, int frameStep, int slot)
         (obj)->anim.velocityY = (cur < -4.0f) ? -4.0f : ((cur > 0.0f) ? 0.0f : cur);
     }
 
-    (*(void (**)(int, int, f32, f32, int*, f32*))(*(int*)gPlayerInterface + 0x8))(
-        (int)obj, (int)state, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers, &gDIMSnowHorn1DefaultStateHandler);
+    (*gPlayerInterface)->update(obj, (void*)state, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers,
+                                &gDIMSnowHorn1DefaultStateHandler);
     fn_802BB998((int)obj, state, state);
 }
 
@@ -1290,7 +1290,7 @@ void DIMSnowHorn1_update(GameObject* obj)
         if (((DIMSnowHorn1State*)data)->hitReactState != 0)
         {
             fn_8003A168(obj, (void*)(data + 0x980));
-            characterDoEyeAnimsState(obj, data + 0x980);
+            characterDoEyeAnims(obj, (void*)(data + 0x980));
             return;
         }
     }
@@ -1406,8 +1406,7 @@ void DIMSnowHorn1_update(GameObject* obj)
                         SnowHornEntry* tbl = (SnowHornEntry*)base;
                         int bit2;
                         int cc;
-                        mainSetBits(tbl[modeIndex].h1e,
-                                    *(s16*)(*(int*)&((GameObject*)found)->anim.placementData + 0x1a));
+                        mainSetBits(tbl[modeIndex].h1e, ((GameObject*)found)->anim.placementData[0xd]);
                         bit2 = tbl[modeIndex].h20;
                         cc = modeIndex;
                         flip = 0;
@@ -1437,7 +1436,7 @@ void DIMSnowHorn1_update(GameObject* obj)
         }
         break;
     }
-    characterDoEyeAnimsState(obj, data + 0x980);
+    characterDoEyeAnims(obj, (void*)(data + 0x980));
     DIMSnowHorn1_updateOverridePos(obj);
 }
 
@@ -1464,7 +1463,7 @@ void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
         ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         hitState->trackContactMask = 9;
     }
-    (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))((int)obj, (int)inner, 0xc, 1);
+    (*gPlayerInterface)->init(obj, inner, 0xc, 1);
     inner->baddie.gravity = 0.17f;
     pathState = (u8*)&inner->baddie + 4;
     pathState[0x25b] = 0;

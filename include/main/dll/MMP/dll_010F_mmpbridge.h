@@ -2,10 +2,11 @@
 #define MAIN_DLL_MMP_DLL_010F_MMPBRIDGE_H_
 
 #include "global.h"
+#include "main/obj_placement.h"
 
 typedef struct MmpBridgePlacement
 {
-    u8 pad0[0x18];
+    ObjPlacement head;
     s8 rotXByte; /* 0x18: rotX in 1/256 turns */
     u8 pad19[0x1E - 0x19];
     s16 enableBit; /* 0x1E: gamebit that deploys the bridge */

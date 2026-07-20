@@ -75,8 +75,7 @@ void dll_28B_update(GameObject* obj)
     state->playerDistance = Vec_xzDistance(&obj->anim.worldPosX, &player->anim.worldPosX);
     state->objectFlagsMirror |= OBJFLAG_BIT_2000000;
     dt = timeDelta;
-    (*(void (**)(int, int, f32, f32, void*, void*))((char*)*gPlayerInterface + 0x8))(
-        (int)obj, (int)state, dt, dt, gDll28BStateHandlers, gDll28BSubstateHandlers);
+    (*gPlayerInterface)->update(obj, state, dt, dt, gDll28BStateHandlers, gDll28BSubstateHandlers);
     if ((state->flagsAC0 & 1) != 0)
     {
         state->moveLib.modeBits &= ~1;
@@ -86,7 +85,7 @@ void dll_28B_update(GameObject* obj)
         state->moveLib.modeBits |= 1;
     }
     dll_2E_func03(obj, &state->moveLib);
-    characterDoEyeAnimsState(obj, state->eyeAnim);
+    characterDoEyeAnims(obj, state->eyeAnim);
     xform.x = obj->anim.localPosX;
     xform.y = obj->anim.localPosY;
     xform.z = obj->anim.localPosZ;
@@ -97,7 +96,7 @@ void dll_28B_update(GameObject* obj)
     setMatrixFromObjectPos(mtx, &xform);
     Matrix_TransformPoint(mtx, gWcEarthWalkerIdleTimerThreshold, gWcEarthWalkerIdleTimerThreshold,
                           gWcEarthWalkerIdleTimerThreshold, &ox, &oy, &oz);
-    doNothing_80062A50((int)obj, ox, oy, oz);
+    doNothing_80062A50(obj, ox, oy, oz);
 }
 
 void dll_28B_init(GameObject* obj)
@@ -114,7 +113,7 @@ void dll_28B_init(GameObject* obj)
     dll_2E_func09(&state->moveLib, &blockB, &blockA, 8);
     state->moveLib.modeBits |= 0x22;
     (*gRomCurveInterface)->initCurve(&state->route, obj, gDll28BCurveInitParam, &curveParam, -1);
-    (*(void (**)(int, int, int, int))((char*)*gPlayerInterface + 0x4))((int)obj, (int)state, 4, 4);
+    (*gPlayerInterface)->init(obj, state, 4, 4);
     ObjGroup_AddObject((int)obj, DLL28B_OBJ_GROUP);
 }
 

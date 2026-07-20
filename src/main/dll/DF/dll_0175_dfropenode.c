@@ -10,10 +10,9 @@
 #include "main/dll/dfbarrelanim.h"
 #include "main/obj_group.h"
 #include "main/obj_list.h"
-#include "main/dll/DF/DFcradle.h"
-#include "main/dll/DF/dll_196.h"
+#include "main/dll/dll_801c0bf8.h"
 #include "main/gamebits.h"
-#include "main/sky_state.h"
+#include "main/sky.h"
 #include "main/texture.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -129,7 +128,7 @@ int dfropenode_findNearestRopePoint(GameObject* obj, f32 worldX, f32 worldY, f32
             y = localY;
             z = localZ;
             node = (DFRopeNode*)((int)extra->rope->nodes + offset);
-            phase = fn_801C1698(&x, &y, &z, node->pos[0], node->pos[1], node->pos[2], node[1].pos[0], node[1].pos[1],
+            phase = DFRope_projectPointOntoSegment(&x, &y, &z, node->pos[0], node->pos[1], node->pos[2], node[1].pos[0], node[1].pos[1],
                                 node[1].pos[2]);
             if (phase >= best && phase < lbl_803E4E18)
             {

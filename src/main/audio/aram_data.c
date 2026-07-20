@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/aram.h"
+#include "main/audio/aram_queue.h"
 
 typedef struct AramStreamBufferEntry
 {

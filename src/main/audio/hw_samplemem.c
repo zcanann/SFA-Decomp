@@ -1,5 +1,7 @@
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/dsp_voice_state.h"
+#include "main/audio/aram.h"
+#include "main/audio/aram_queue.h"
 
 
 extern u32 dspHRTFOn;

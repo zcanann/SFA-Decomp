@@ -1,6 +1,8 @@
 #include "main/audio/voice_id.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_unregister.h"
+#include "main/audio/vid_init.h"
+#include "main/audio/voice_manage.h"
 
 
 typedef struct VoicePrioVoiceRec
@@ -24,13 +26,7 @@ typedef struct VoicePrioBlockRec
     VoicePrioRootRec prioRootList[256]; /* 0xAC0 */
 } VoicePrioBlockRec;
 
-#define voicePriorityLinks (vidListNodes + 0x8c0)
-
-extern u8 vidListNodes[];
-extern u32 vidCurrentId;
-extern void* vidRoot;
-extern void* vidFree;
-extern u16 voicePrioSortedRoot;
+#define voicePriorityLinks ((u8*)vidListNodes + 0x8c0)
 
 /*
  * Remove a voice from the vid id list, recycling any allocated id-list nodes.
@@ -51,7 +47,7 @@ extern u16 voicePrioSortedRoot;
     s->field->next = vidFree;                                                                                          \
     if (vidFree != 0)                                                                                                  \
     {                                                                                                                  \
-        ((McmdVidListNode*)vidFree)->prev = s->field;                                                                  \
+        vidFree->prev = s->field;                                                                                      \
     }                                                                                                                  \
     s->field->prev = 0;                                                                                                \
     vidFree = s->field
@@ -121,10 +117,10 @@ u32 vidMakeNew(McmdVoiceState* state, int returnNewId)
 {
     McmdVoiceState* s = state;
     u32 nextId;
-    int** cursor;
-    int** node;
-    int** prev;
-    int** freeNode;
+    McmdVidListNode* cursor;
+    McmdVidListNode* node;
+    McmdVidListNode* prev;
+    McmdVidListNode* freeNode;
 
     do
     {
@@ -136,11 +132,11 @@ u32 vidMakeNew(McmdVoiceState* state, int returnNewId)
     prev = 0;
     while ((node = cursor) != 0)
     {
-        if ((u32)node[2] > nextId)
+        if (node->id > nextId)
         {
             break;
         }
-        if ((u32)node[2] == nextId)
+        if (node->id == nextId)
         {
             do
             {
@@ -149,16 +145,16 @@ u32 vidMakeNew(McmdVoiceState* state, int returnNewId)
             } while (nextId == 0xffffffffU);
         }
         prev = node;
-        cursor = (int**)*node;
+        cursor = node->next;
     }
 
     if ((freeNode = vidFree) == 0)
     {
         return 0xffffffffU;
     }
-    if ((vidFree = *(void**)vidFree) != 0)
+    if ((vidFree = vidFree->next) != 0)
     {
-        *(u32*)((u8*)vidFree + 4) = 0;
+        vidFree->prev = NULL;
     }
     if (prev == 0)
     {
@@ -166,18 +162,18 @@ u32 vidMakeNew(McmdVoiceState* state, int returnNewId)
     }
     else
     {
-        *prev = (int*)freeNode;
+        prev->next = freeNode;
     }
-    freeNode[1] = (int*)prev;
-    *freeNode = (int*)node;
+    freeNode->prev = prev;
+    freeNode->next = node;
     if (node != 0)
     {
-        node[1] = (int*)freeNode;
+        node->prev = freeNode;
     }
-    freeNode[2] = (int*)nextId;
-    freeNode[3] = (int*)s->voiceHandle;
-    s->vidMasterListNode = (McmdVidListNode*)(((u32)returnNewId != 0) ? freeNode : 0);
-    s->vidListNode = (McmdVidListNode*)freeNode;
+    freeNode->id = nextId;
+    freeNode->internalId = s->voiceHandle;
+    s->vidMasterListNode = ((u32)returnNewId != 0) ? freeNode : NULL;
+    s->vidListNode = freeNode;
     if ((u32)returnNewId != 0)
     {
         return nextId;
@@ -189,30 +185,30 @@ u32 vidMakeNew(McmdVoiceState* state, int returnNewId)
  * Look up a voice handle's slot via the sorted linked list.
  * Returns -1 for the sentinel id 0xFFFFFFFF or if not found.
  */
-static inline int* get_vidlist(u32 id)
+static inline McmdVidListNode* get_vidlist(u32 id)
 {
-    int* node;
+    McmdVidListNode* node;
     node = vidRoot;
     while (node != NULL)
     {
-        if (*(u32*)(node + 2) == id)
+        if (node->id == id)
             return node;
-        if (*(u32*)(node + 2) > id)
+        if (node->id > id)
             break;
-        node = *(int**)node;
+        node = node->next;
     }
     return NULL;
 }
 
 int vidGetInternalId(u32 id)
 {
-    int* node;
+    McmdVidListNode* node;
 
     if (id != 0xffffffffU)
     {
         if ((node = get_vidlist(id)) != NULL)
         {
-            return *(int*)(node + 3);
+            return node->internalId;
         }
     }
     return -1;

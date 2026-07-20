@@ -3,7 +3,7 @@
 
 #include "dolphin/dvd.h"
 
-void mergeTableFiles(void* buf, int id, int idx, int count_);
+int mergeTableFiles(void* table, int id, int idx, int count);
 void animCurvReadCb(s32 result, DVDFileInfo* fileInfo);
 void animCurvTabReadCb(s32 result, DVDFileInfo* fileInfo);
 void voxMapReadCb(s32 result, DVDFileInfo* fileInfo);

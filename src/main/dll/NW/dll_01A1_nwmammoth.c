@@ -54,8 +54,6 @@ u8 lbl_803DBFB4[4] = {1, 0, 0, 0};
 u8 lbl_803DBFB8[4] = {1, 1, 0, 0};
 u8 lbl_803DBFBC[4] = {1, 2, 0, 0};
 
-typedef u32 (*NwMammothFindNearestObjectFn)(int group, int* obj, f32* distance);
-
 #define NWMAMMOTH_PARTFX               0x7f0
 #define NWMAMMOTH_OBJFLAG_PARENT_SLACK 0x1000
 #define NWMAMMOTH_OBJFLAG_RENDERED     0x800
@@ -143,7 +141,7 @@ void fn_801CDF94(GameObject* obj, int state, int flag)
     else
     {
         fn_8003A230(obj, (CharacterEyeAnimState*)(state + 0x40c), 0.0f);
-        characterDoEyeAnimsState(obj, state + 0x40c);
+        characterDoEyeAnims(obj, (void*)(state + 0x40c));
     }
 }
 
@@ -249,7 +247,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     NwMammothState* state = (NwMammothState*)st;
     GameObject* tw2;
     GameObject* tw;
-    int nearestObj = ((NwMammothFindNearestObjectFn)ObjGroup_FindNearestObject)(NWMAMMOTH_TARGET_OBJGROUP, obj, 0);
+    int nearestObj = ObjGroup_FindNearestObject(NWMAMMOTH_TARGET_OBJGROUP, (GameObject*)obj, 0);
     switch (state->stateIndex)
     {
     case 9:
@@ -707,8 +705,8 @@ void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vis
                                       (f32*)((char*)node + i * 0xc + 0x460),
                                       (f32*)((char*)node + i * 0xc + 0x464), 0);
     }
-    ObjPath_GetPointWorldPosition(obj, 4, (f32*)((char*)node + 0xc), (f32*)((char*)node + 0x10),
-                                  (f32*)((char*)node + 0x14), 0);
+    ObjPath_GetPointWorldPosition(obj, 4, &((NwMammothState*)node)->spawnPosX, &((NwMammothState*)node)->spawnPosY,
+                                  &((NwMammothState*)node)->spawnPosZ, 0);
 }
 
 enum NwMammothStateFlag
@@ -773,7 +771,7 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
         if (state->hitReactState != 0)
         {
             fn_8003A168((GameObject*)obj, state->eyeAnimState);
-            characterDoEyeAnimsState((GameObject*)obj, state->eyeAnimState);
+            characterDoEyeAnims((GameObject*)obj, state->eyeAnimState);
             return;
         }
     }

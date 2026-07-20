@@ -16,6 +16,7 @@
 #include "main/audio/voice_manage.h"
 #include "main/audio/synth_config.h"
 #include "main/audio/synth_handle.h"
+#include "main/audio/synth_queue.h"
 
 #define SYNTH_VOICE_DIRTY_FLAGS_OFFSET        0x114
 
@@ -24,11 +25,6 @@
 #define SND_OUTPUTMODE_STEREO   1 /* plain stereo */
 #define SND_OUTPUTMODE_SURROUND 2 /* Dolby Pro Logic surround */
 
-extern u8 gSynthVoiceNotes[];
-extern void* synthAuxAUser[8];
-extern void* synthAuxACallback[8];
-extern void* synthAuxBUser[8];
-extern void* synthAuxBCallback[8];
 extern u8 synthITDDefault[8][2];
 extern u8 synthAuxBMIDISet[8];
 extern u8 synthAuxBMIDI[8];
@@ -51,7 +47,7 @@ void sndSeqVolume(u8 volume, u16 time, u32 seqId, u8 mode)
  */
 u16 seqGetMIDIPriority(u8 slot, u8 event)
 {
-    return *(u16*)(gSynthVoiceNotes + slot * 32 + event * 2);
+    return gSynthVoiceNotes[slot][event];
 }
 
 /*
@@ -188,8 +184,9 @@ void sndOutputMode(int mode)
  * Configure studio AUX A/B processing callbacks and cache the callback
  * routing indices used by synth voice updates.
  */
-void sndSetAuxProcessingCallbacks(u8 studio, void* auxACallback, void* auxAUser, u8 auxAIndex, void* auxAData,
-                                  void* auxBCallback, void* auxBUser, u8 auxBIndex, void* auxBData)
+void sndSetAuxProcessingCallbacks(u8 studio, SynthAuxCallback auxACallback, void* auxAUser, u8 auxAIndex,
+                                  void* auxAData, SynthAuxCallback auxBCallback, void* auxBUser, u8 auxBIndex,
+                                  void* auxBData)
 {
     sndBegin();
     if (auxACallback != 0)

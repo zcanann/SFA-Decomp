@@ -20,6 +20,7 @@
 #include "main/shader_init_api.h"
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/rcp_dolphin_render_api.h"
 #include "main/camera.h"
 #include "main/loaded_file_flags.h"
@@ -46,10 +47,7 @@
 #include "dolphin/gx/GXTexture.h"
 #include "dolphin/gx/GXTransform.h"
 #include "main/dll/modgfx.h"
-#include "main/pi_dolphin_ext.h"
-#include "main/mm_ext.h"
-#include "main/newshadows_ext.h"
-#include "main/pi_dolphin_load_api.h"
+#include "main/newshadows.h"
 #include "main/pi_dolphin_texture_api.h"
 #include "main/gx_scissor_api.h"
 #include "string.h"
@@ -1756,8 +1754,8 @@ void* textureLoad(int texId, u8 flagIn)
         }
         if (frameOut == -1)
         {
-            buf = (u8*)loadAndDecompressDataFile(file, 0, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel],
-                                                 frameSize, 0, id16, 0);
+            buf = loadAndDecompressDataFile(file, 0, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel], frameSize,
+                                            0, id16, 0);
             buf[0x49] = 1;
             if (flag != 0)
             {
@@ -1767,8 +1765,8 @@ void* textureLoad(int texId, u8 flagIn)
         }
         else
         {
-            loadAndDecompressDataFile(file, (int)buf, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel], frameSize,
-                                      0, id16, 0);
+            loadAndDecompressDataFile(file, buf, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel], frameSize, 0,
+                                      id16, 0);
         }
         if (frameOut != -1)
         {
@@ -2036,12 +2034,12 @@ extern f32 blurFilterArea;
 extern u8 bBlurFilterUseArea;
 extern u8 bBiggerBlurFilter;
 
-void turnOnBlurFilter(u8 useArea, u8 bigger, f32 a, f32 b, f32 area)
+void turnOnBlurFilter(f32 x, f32 y, f32 z, u8 useArea, u8 bigger)
 {
     bEnableBlurFilter = 1;
-    lbl_803DCE50 = a;
-    lbl_803DCE4C = b;
-    blurFilterArea = area;
+    lbl_803DCE50 = x;
+    lbl_803DCE4C = y;
+    blurFilterArea = z;
     bBlurFilterUseArea = useArea;
     bBiggerBlurFilter = bigger;
 }
@@ -2340,7 +2338,7 @@ void mapInstantiateObjects(MapRomListPage* page, int mapId, int index, GameObjec
             {
                 flag = 0;
             }
-            else if (v >= 9 && ((*(u8*)(obj + 5) >> (0x10 - v)) & 1))
+            else if ((*(u8*)(obj + 5) >> (0x10 - v)) & 1)
             {
                 flag = 0;
             }
@@ -2412,7 +2410,7 @@ int objShouldUnload(GameObject* obj)
     {
         keep = 0;
     }
-    else if (m >= 9 && ((def[5] >> (0x10 - m)) & 1))
+    else if ((def[5] >> (0x10 - m)) & 1)
     {
         keep = 0;
     }

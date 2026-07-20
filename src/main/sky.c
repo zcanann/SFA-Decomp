@@ -40,7 +40,7 @@
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTev.h"
 #include "dolphin/mtx/mtx_legacy.h"
-#include "main/lightmap_ext.h"
+#include "main/lightmap.h"
 #include "main/track_dolphin_sky_api.h"
 #include "main/track_dolphin_shadow_api.h"
 #include "string.h"
@@ -1270,13 +1270,13 @@ void skyFn_8008a04c(void)
             }
             else
             {
-                blendAlpha = (int)Curve_EvalLinearValuesFirst(blendAlphaCurve, frac, 0);
-                ambientIntensity = Curve_EvalLinearValuesFirst(ambientIntensityCurve, frac, 0);
-                lightIntensity = Curve_EvalLinearValuesFirst(lightIntensityCurve, frac, 0);
+                blendAlpha = (int)Curve_EvalLinear(blendAlphaCurve, frac, 0);
+                ambientIntensity = Curve_EvalLinear(ambientIntensityCurve, frac, 0);
+                lightIntensity = Curve_EvalLinear(lightIntensityCurve, frac, 0);
             }
-            rawR = Curve_EvalCatmullRomValuesFirst(gSkyState + i * 0xa4 + part4 + 0x20, frac, 0);
-            rawG = Curve_EvalCatmullRomValuesFirst(gSkyState + i * 0xa4 + greenCurveOffset + 0x20, frac, 0);
-            blue = Curve_EvalCatmullRomValuesFirst(gSkyState + i * 0xa4 + blueCurveOffset + 0x20, frac, 0);
+            rawR = Curve_EvalCatmullRom(gSkyState + i * 0xa4 + part4 + 0x20, frac, 0);
+            rawG = Curve_EvalCatmullRom(gSkyState + i * 0xa4 + greenCurveOffset + 0x20, frac, 0);
+            blue = Curve_EvalCatmullRom(gSkyState + i * 0xa4 + blueCurveOffset + 0x20, frac, 0);
             slot = (SkyColorBlendView*)(gSkyState + i * 0xa4);
             blend = slot->factor;
             if (blend != zero)
@@ -1612,7 +1612,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             if (vis == 0 && (u8)visible != 0)
             {
                 model = (u8*)Obj_GetActiveModel((GameObject*)gSkySunObject);
-                *(u16*)(model + 0x18) &= ~8;
+                ((ObjModel*)model)->bufferFlags &= ~8;
                 objRender(a, b, c, d, (GameObject*)gSkySunObject, 1);
             }
         }
@@ -1629,7 +1629,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
             if (vis == 0 && (u8)visible != 0)
             {
                 model = (u8*)Obj_GetActiveModel(gSkyMoonObject);
-                *(u16*)(model + 0x18) &= ~8;
+                ((ObjModel*)model)->bufferFlags &= ~8;
                 objRender(a, b, c, d, (GameObject*)gSkyMoonObject, 1);
             }
         }
@@ -2868,7 +2868,7 @@ void sky2_run(void)
     q.y = zv;
     q.z = zv;
     q.w = lbl_803DF114;
-    *(s16*)&q.rx = -cam->yaw;
+    q.rx = -cam->yaw;
     q.rz = 0;
     q.ry = 0;
     vecRotateZXY(&q.rx, vec);
@@ -2885,23 +2885,23 @@ void sky2_run(void)
                 if ((*(u16*)&((GameObject*)p)->anim.rotZ & 1) == 0)
                 {
                     spd = 255.0f;
-                    *(f32*)(p + 0x310) = spd * *(f32*)(p + 0x30c);
-                    if (*(f32*)(*pp + 0x310) > spd)
+                    ((SkySlotAnim*)p)->blend = spd * ((SkySlotAnim*)p)->prevT;
+                    if (((SkySlotAnim*)*pp)->blend > spd)
                     {
-                        *(f32*)(*pp + 0x310) = spd;
+                        ((SkySlotAnim*)*pp)->blend = spd;
                     }
                 }
             }
             else if (*(int*)(p + 0x44) != 0)
             {
-                *(f32*)(p + 0x30c) = *(f32*)(p + 0x310) / 255.0f;
+                ((SkySlotAnim*)p)->prevT = ((SkySlotAnim*)p)->blend / 255.0f;
                 p = *pp;
                 if ((*(u16*)&((GameObject*)p)->anim.rotZ & 1) == 0)
                 {
-                    *(f32*)(p + 0x310) = -(timeDelta * *(f32*)(p + 0x58) - *(f32*)(p + 0x310));
-                    if (*(f32*)(*pp + 0x310) < (frzero = lbl_803DF108))
+                    ((SkySlotAnim*)p)->blend = -(timeDelta * *(f32*)(p + 0x58) - ((SkySlotAnim*)p)->blend);
+                    if (((SkySlotAnim*)*pp)->blend < (frzero = lbl_803DF108))
                     {
-                        *(f32*)(*pp + 0x310) = frzero;
+                        ((SkySlotAnim*)*pp)->blend = frzero;
                     }
                 }
             }
@@ -2915,8 +2915,8 @@ void sky2_run(void)
                 r = *(f32*)&((GameObject*)p)->anim.textureSlots;
                 g = ((GameObject*)p)->anim.activeMoveProgress;
                 b = *(f32*)&((GameObject*)p)->childObjs[0];
-                sa = *(f32*)(p + 0x1fc);
-                sb = *(f32*)(p + 0x228);
+                sa = ((SkySlotAnim*)p)->cur2[0];
+                sb = ((SkySlotAnim*)p)->cur2[0xb];
             }
             else if ((*(u16*)&((GameObject*)p)->anim.flags & 0x20) != 0)
             {
@@ -2970,11 +2970,11 @@ void sky2_run(void)
                     u = (t - lbl_803DF174) / step;
                     k = 7;
                 }
-                r = Curve_EvalCatmullRomValuesFirst(*pp + (off1 = k * 4) + 0x70, u, 0);
-                g = Curve_EvalCatmullRomValuesFirst(*pp + (off2 = (k + 0xb) * 4) + 0x70, u, 0);
-                b = Curve_EvalCatmullRomValuesFirst(*pp + (k + 0x16) * 4 + 0x70, u, 0);
-                sa = Curve_EvalCatmullRomValuesFirst(*pp + off1 + 0x1fc, u, 0);
-                sb = Curve_EvalCatmullRomValuesFirst(*pp + off2 + 0x1fc, u, 0);
+                r = Curve_EvalCatmullRom(*pp + (off1 = k * 4) + 0x70, u, 0);
+                g = Curve_EvalCatmullRom(*pp + (off2 = (k + 0xb) * 4) + 0x70, u, 0);
+                b = Curve_EvalCatmullRom(*pp + (k + 0x16) * 4 + 0x70, u, 0);
+                sa = Curve_EvalCatmullRom(*pp + off1 + 0x1fc, u, 0);
+                sb = Curve_EvalCatmullRom(*pp + off2 + 0x1fc, u, 0);
             }
             else
             {
@@ -3019,7 +3019,7 @@ void sky2_run(void)
                     g = ((GameObject*)p)->anim.activeMoveProgress * best.x + g;
                     b = *(f32*)&((GameObject*)p)->childObjs[0] * best.x + b;
                     sa = *(f32*)(*pp + off1 + 0x1fc) * best.x + sa;
-                    sb = *(f32*)(p + 0x228) * best.x + sb;
+                    sb = ((SkySlotAnim*)p)->cur2[0xb] * best.x + sb;
                 }
                 if (best.y > z2)
                 {
@@ -3028,7 +3028,7 @@ void sky2_run(void)
                     g = ((GameObject*)p)->anim.activeMoveProgress * best.y + g;
                     b = *(f32*)&((GameObject*)p)->childObjs[0] * best.y + b;
                     sa = *(f32*)(*pp + off2 + 0x1fc) * best.y + sa;
-                    sb = *(f32*)(p + 0x228) * best.y + sb;
+                    sb = ((SkySlotAnim*)p)->cur2[0xb] * best.y + sb;
                 }
             }
             if (r > 255.0f)
@@ -3059,16 +3059,16 @@ void sky2_run(void)
             p = *pp;
             if ((*(u16*)&((GameObject*)p)->anim.flags & 0x40) != 0)
             {
-                if (*(s8*)(p + 0x314) == -1)
+                if (((SkySlotAnim*)p)->b314 == -1)
                 {
-                    *(u8*)(p + 0x314) = 1;
+                    ((SkySlotAnim*)p)->b314 = 1;
                     frzero = lbl_803DF108;
                     *(f32*)(*pp + 0x6c) = frzero;
                     diff = sb - sa;
                     *(f32*)(*pp + 0x68) = randomGetRange((int)(-diff * lbl_803DF168), (int)(diff * lbl_803DF168));
                     *(f32*)(*pp + 0x64) = lbl_803DF17C * randomGetRange(1, 10);
                 }
-                else if (*(s8*)(p + 0x314) == 1)
+                else if (((SkySlotAnim*)p)->b314 == 1)
                 {
                     hv = *(f32*)&((GameObject*)p)->anim.jointPoseData;
                     sa = sa + hv;
@@ -3076,7 +3076,7 @@ void sky2_run(void)
                     p = *pp;
                     if (*(f32*)&((GameObject*)p)->anim.jointPoseData > *(f32*)&((GameObject*)p)->anim.dll)
                     {
-                        *(s8*)(p + 0x314) = (s8)(1 - *(s8*)(p + 0x314));
+                        ((SkySlotAnim*)p)->b314 = (s8)(1 - ((SkySlotAnim*)p)->b314);
                     }
                 }
                 else
@@ -3087,7 +3087,7 @@ void sky2_run(void)
                     p = *pp;
                     if (*(f32*)&((GameObject*)p)->anim.jointPoseData < (frzero = lbl_803DF108))
                     {
-                        *(s8*)(p + 0x314) = (s8)(1 - *(s8*)(p + 0x314));
+                        ((SkySlotAnim*)p)->b314 = (s8)(1 - ((SkySlotAnim*)p)->b314);
                         *(f32*)(*pp + 0x6c) = frzero;
                         amp = (s16)(int)(sb - sa);
                         *(f32*)(*pp + 0x68) = randomGetRange(-amp / 2, amp / 2);

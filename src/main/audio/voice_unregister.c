@@ -2,9 +2,6 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_unregister.h"
 
-extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
-extern u8 voiceDirectSlots[];
-
 void voiceUnregister(McmdVoiceState* voice)
 {
     u32 voiceId;

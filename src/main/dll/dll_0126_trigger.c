@@ -61,7 +61,7 @@
 #include "main/audio/sfx.h"
 #include "main/sky.h"
 #include "main/dll/dll_80198a00.h"
-#include "main/gameloop_ext.h"
+#include "main/gameloop_api.h"
 #include "track/intersect_api.h"
 
 #define TIMER_OBJGROUP                  0x4c /* DLL 0x2B5 timer */

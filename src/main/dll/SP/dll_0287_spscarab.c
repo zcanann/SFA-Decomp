@@ -122,7 +122,7 @@ void SPScarab_update(int obj)
         ((GameObject*)obj)->anim.velocityY = 0.0f;
     }
 
-    if (objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), 3.0f, 0,
+    if (objBboxFn_800640cc(&((GameObject*)obj)->anim.previousLocalPosX, (f32*)(obj + 0xc), 3.0f, 0,
                            (TrackBBoxHit*)&hit_buf[0], (GameObject*)obj, 8, -1, 0xff, 0xa) != 0)
     {
         Vec3_ReflectAgainstNormal((f32*)&hit_buf[7], (f32*)(obj + 0x24), outV);

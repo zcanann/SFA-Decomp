@@ -768,7 +768,7 @@ void fn_8006FC00(int enable)
         b[i * 0x80 + 0x7E] = 0;
     }
     gWaterQuadWriteIdx = 0;
-    *(u8*)&gWaterRippleWriteIdx = 0;
+    gWaterRippleWriteIdx = 0;
 }
 
 void mapInitFn_8006fccc(void)
@@ -5201,7 +5201,7 @@ void fn_8007BD8C(int handle1, int handle2)
     GXColor k2;
     GXColor tev1;
     GXColor tev2;
-    u8* indBase = (u8*)lbl_8030EA10;
+    f32 (*indBase)[2][3] = lbl_8030EA10;
 
     selectReflectionTexture(0);
     selectTexture((Texture*)handle1, 1);
@@ -5253,9 +5253,9 @@ void fn_8007BD8C(int handle1, int handle2)
 
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(0, 0, 0);
-    GXSetIndTexMtx(1, (f32(*)[3])indBase, -1);
-    GXSetIndTexMtx(2, (f32(*)[3])(indBase + 0x18), -1);
-    GXSetIndTexMtx(3, (f32(*)[3])(indBase + 0x30), -1);
+    GXSetIndTexMtx(1, indBase[0], -1);
+    GXSetIndTexMtx(2, indBase[1], -1);
+    GXSetIndTexMtx(3, indBase[2], -1);
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
     GXSetTevIndirect(1, 0, 0, 7, 2, 0, 0, 0, 0, 1);
     GXSetTevIndirect(2, 0, 0, 7, 3, 0, 0, 0, 0, 0);
@@ -5907,14 +5907,14 @@ int cardDeleteFn_8007d99c(void)
     return 0;
 }
 
-int _saveGame(int a, int b, int c)
+int _saveGame(int slot, void* save, void* data)
 {
     int ret;
     gSaveCardRetry = 0;
     cardShowLoadingMsg(1);
     do
     {
-        ret = saveGame_prepareAndWrite(0, a, 0, b, c, (SaveGameCallback)cardCb_8007e6d4);
+        ret = saveGame_prepareAndWrite(0, slot, 0, save, data, (SaveGameCallback)cardCb_8007e6d4);
         showMemCardError(0);
         if (gSaveCardRetry != 0)
         {
@@ -5924,14 +5924,14 @@ int _saveGame(int a, int b, int c)
     return ret;
 }
 
-int maybeTryLoadSave(int a)
+int maybeTryLoadSave(void* data)
 {
     int ret;
     gSaveCardRetry = 0;
     cardShowLoadingMsg(0);
     do
     {
-        ret = saveGame_prepareAndWrite(1, 0, 0, a, 0, (SaveGameCallback)saveCb_8007e748);
+        ret = saveGame_prepareAndWrite(1, 0, 0, data, NULL, (SaveGameCallback)saveCb_8007e748);
         showMemCardError(1);
         if (gSaveCardRetry != 0)
         {
@@ -5941,14 +5941,14 @@ int maybeTryLoadSave(int a)
     return ret;
 }
 
-int loadSaveGame(int a, int b)
+int loadSaveGame(int slot, void* save)
 {
     int ret;
     gSaveCardRetry = 0;
     cardShowLoadingMsg(0);
     do
     {
-        ret = saveGame_prepareAndWrite(1, a, 0, b, 0, (SaveGameCallback)saveCb_8007e77c);
+        ret = saveGame_prepareAndWrite(1, slot, 0, save, NULL, (SaveGameCallback)saveCb_8007e77c);
         showMemCardError(0);
         if (gSaveCardRetry != 0)
         {
@@ -5983,7 +5983,7 @@ int memCardFn_8007dd04(u8 retry)
             lbl_803DB700 = 13;
             if (ret == 2)
             {
-                ret = saveGame_prepareAndWrite(0, 0, 0, 0, 0, NULL);
+                ret = saveGame_prepareAndWrite(0, 0, 0, NULL, NULL, NULL);
             }
         }
         if (retry != 0)
@@ -6342,7 +6342,7 @@ void cardShowLoadingMsg(u8 kind)
             drawRect(rectAlpha, rectAlpha, 0x280, 0x1E0);
             for (j = 0; j < count; j++)
             {
-                objRenderModelAndHitVolumesFwdLegacy(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
+                objRenderModelAndHitVolumes((GameObject*)buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
             }
             curUiDllDraw(0, 0, 0, 0);
         }

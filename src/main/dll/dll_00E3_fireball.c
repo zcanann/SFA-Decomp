@@ -11,6 +11,7 @@
  * stateFlags: bit0 = launch position latched, bit1 = (unused here),
  * bit3 = disabled/no-update, bit4 = affected by gravity+ground snap.
  */
+#include "main/model.h"
 #include "main/object_render.h"
 #include "main/track_dolphin_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -269,7 +270,7 @@ void Fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     ((ObjAnimComponent*)obj)->bankIndex = 1;
     model = (int*)Obj_GetActiveModel((GameObject*)obj);
-    *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = gFireballColorIndexTable[((FireballState*)state)->colorIndex];
+    ((ObjModel*)model)->textureRefs->unk08 = gFireballColorIndexTable[((FireballState*)state)->colorIndex];
     savedRot4 = ((GameObject*)obj)->anim.rotZ;
     savedRot2 = ((GameObject*)obj)->anim.rotY;
     savedF8 = ((GameObject*)obj)->anim.rootMotionScale;
@@ -281,7 +282,7 @@ void Fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         fs->rotYBase[0] += fs->rotYDelta[0];
         ((GameObject*)obj)->anim.rotZ = (s16)fs->rotZBase[0];
         ((GameObject*)obj)->anim.rotY = (s16)fs->rotYBase[0];
-        *(u16*)((char*)model + 0x18) &= ~0x8;
+        ((ObjModel*)model)->bufferFlags &= ~0x8;
         objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
     ((GameObject*)obj)->anim.rotZ = savedRot4;
@@ -289,7 +290,7 @@ void Fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     ((GameObject*)obj)->anim.rootMotionScale = savedF8;
     ((ObjAnimComponent*)obj)->bankIndex = 0;
     model = (int*)Obj_GetActiveModel((GameObject*)obj);
-    *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = gFireballColorIndexTable[((FireballState*)state)->colorIndex];
+    ((ObjModel*)model)->textureRefs->unk08 = gFireballColorIndexTable[((FireballState*)state)->colorIndex];
     objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     if (((FireballState*)state)->light != NULL)
     {

@@ -26,6 +26,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_0191_ecshcreator.h"
 #include "main/object_descriptor.h"
+#include "main/dll/foodbag.h"
 
 #define ECSH_SHRINE_RESOURCE 0x82 /* setup resource (Resource_Acquire id) */
 #define ECSH_SHARPCLAW_OBJ 0x11 /* defNo of the spawned child: "sharpclawGr" (DLL 0xC9) */
@@ -80,7 +81,7 @@ void ecsh_creator_update(GameObject* obj)
 {
     u8* def;
     EcshCreatorState* state;
-    void* res;
+    Dll82Interface** res;
     EcshSharpClawSpawnSetup* p;
     int ret;
 
@@ -89,8 +90,8 @@ void ecsh_creator_update(GameObject* obj)
     if (obj->userData2 == 0 && (u32)mainGetBit(state->gameBit) != 0)
     {
         res = Resource_Acquire(ECSH_SHRINE_RESOURCE, 1);
-        (*(EcshSetupFn*)(*(int*)res + 4))((s16*)obj, 0, 0, 1, -1, 0);
-        (*(EcshSetupFn*)(*(int*)res + 4))((s16*)obj, 1, 0, 1, -1, 0);
+        (*res)->spawn(obj, 0, NULL, 1, -1, NULL);
+        (*res)->spawn(obj, 1, NULL, 1, -1, NULL);
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_hitpos_6);
         Resource_Release(res);
         state->active = 1;

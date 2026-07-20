@@ -66,7 +66,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
     int animOk;
 
     state = (obj)->extra;
-    config = *(DIMbosstonsilConfig**)&(obj)->anim.placementData;
+    config = (DIMbosstonsilConfig*)(obj)->anim.placementData;
 
     if (gDIMbosstonsilLight != NULL)
     {
@@ -141,7 +141,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
 
     if ((obj)->seqIndex != -1)
     {
-        animOk = (*(int (**)(void*, DIMbosstonsilState*, int))(*(int*)gBaddieControlInterface + 0x30))(obj, state, 1);
+        animOk = (*gBaddieControlInterface)->isObjectValid((GameObject*)obj, state, 1);
         if (animOk == 0)
         {
             return 1;
@@ -167,13 +167,13 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
             }
             break;
         case 1:
-            animOk = (*(int (**)(void*, ObjAnimUpdateState*, DIMbosstonsilState*, DIMbosstonsilStateHandlerTable*,
-                                 DIMbosstonsilSubstateHandlerTable*, int))(
-                *(int*)gBaddieControlInterface + 0x34))(obj, animUpdate, state, &lbl_803DDBB0, &lbl_803DDBA8, 0);
+            animOk = (*gBaddieControlInterface)
+                         ->updateSequenceMovement((GameObject*)obj, (ObjSeqState*)animUpdate, (char*)state,
+                                                  &lbl_803DDBB0, &lbl_803DDBA8, 0);
             if (animOk != 0)
             {
-                (*(void (**)(void*, DIMbosstonsilState*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(
-                    obj, state, lbl_803E4C90, 1);
+                (*gBaddieControlInterface)
+                    ->updateGravity((GameObject*)obj, state, lbl_803E4C90, 1);
             }
             break;
         case 0:
@@ -199,7 +199,7 @@ void DIMbosstonsil_func0B(void)
 
 int DIMbosstonsil_setScale(GameObject* obj)
 {
-    return (*(DIMbosstonsilState**)&obj->extra)->scale;
+    return ((DIMbosstonsilState*)obj->extra)->scale;
 }
 
 int DIMbosstonsil_getExtraSize(void)
@@ -218,7 +218,7 @@ void DIMbosstonsil_free(GameObject* obj)
 
     state = (obj)->extra;
     ObjGroup_RemoveObject((int)obj, DIMBOSSTONSIL_OBJGROUP);
-    (*(void (**)(void*, DIMbosstonsilState*, int))(*(int*)gBaddieControlInterface + 0x40))(obj, state, 1);
+    (*gBaddieControlInterface)->releaseState((GameObject*)obj, state, 1);
     if (gDIMbosstonsilLight != NULL)
     {
         ModelLightStruct_free(gDIMbosstonsilLight);
@@ -242,7 +242,7 @@ void DIMbosstonsil_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char 
         {
         case 0:
         {
-            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
             ObjPath_GetPointWorldPosition(obj, 1, (pp = &pathPoint.x), &pathPoint.y, &pathPoint.z, 0);
             (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_PARTFX, partfxArgs, 0x200001, -1, NULL);
@@ -273,7 +273,7 @@ void DIMbosstonsil_update(GameObject* obj)
     u8 red, green, blue, alpha;
 
     state = (obj)->extra;
-    config = *(DIMbosstonsilConfig**)&(obj)->anim.placementData;
+    config = (DIMbosstonsilConfig*)(obj)->anim.placementData;
 
     if ((obj)->userData1 != 0)
         return;
@@ -291,12 +291,12 @@ void DIMbosstonsil_update(GameObject* obj)
     if ((state->stateFlags & DIMBOSSTONSIL_STATE_FLAG_START_MOVE) != 0)
     {
         lbl_803DDBA4 = lbl_803E4CC8;
-        (*(void (***)(void*, DIMbosstonsilState*, u8*, int, u8*, int, int, int, int))gBaddieControlInterface)[0xa](
-            obj, state, state->animPoints, state->animFrame, &state->hitReactMode, 0, 0, 0, 1);
+        (*gBaddieControlInterface)
+            ->startHitReaction(obj, state, state->animPoints, state->animFrame, &state->hitReactMode, 0, 0, 0, 1);
         state->stateFlags &= ~DIMBOSSTONSIL_STATE_FLAG_START_MOVE;
     }
 
-    if ((*(int (***)(void*, DIMbosstonsilState*, int))gBaddieControlInterface)[0xc](obj, state, 1) == 0)
+    if ((*gBaddieControlInterface)->isObjectValid(obj, state, 1) == 0)
         return;
 
     state->targetObject = Obj_GetPlayerObject();
@@ -348,8 +348,8 @@ void DIMbosstonsil_init(int obj, u32 def, int isAltVariant)
     {
         variant = variant | 1;
     }
-    (*(void (**)(int, u32, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, def, state, 2, 2, 0x102,
-                                                                                           variant, lbl_803E4CCC);
+    (*gBaddieControlInterface)
+        ->initGroundBaddie((GameObject*)obj, (u8*)def, (u8*)state, 2, 2, 0x102, variant, lbl_803E4CCC);
     ((GameObject*)obj)->animEventCallback = DIMbosstonsil_SeqFn;
     (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
     ((BaddieState*)state)->substate = 0;

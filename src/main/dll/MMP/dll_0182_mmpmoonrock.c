@@ -4,12 +4,12 @@
  * A gCarryableInterface-backed object the player picks up and places on
  * pedestals. State tracks a "kind" gamebit (0..6) and a flag word driving
  * pickup/placement, throw physics, and a sink-and-respawn cycle when the
- * rock lands in lava (fn_801A7B10 integrates the throw + lava probe via
- * fn_801A78C8; fn_801A79E0 handles the impact/respawn). fn_801A7CC4
- * launches the rock from the player; fn_801A7D74 reconciles the
- * pedestal/inventory gamebit counts (0x88C / 0x894) when the rock is
- * placed or removed. update floats placed rocks with a sine wobble and
- * spawns ambient particles.
+ * rock lands in lava (mmp_moonrock_updateThrow integrates the throw + lava
+ * probe via mmp_moonrock_probeFloor; mmp_moonrock_handleImpact handles the
+ * impact/respawn). mmp_moonrock_throwFromPlayer launches the rock from the
+ * player; mmp_moonrock_reconcilePlacement reconciles the pedestal/inventory
+ * gamebit counts (0x88C / 0x894) when the rock is placed or removed. update
+ * floats placed rocks with a sine wobble and spawns ambient particles.
  */
 
 #include "main/dll/partfx_interface.h"
@@ -75,7 +75,7 @@ typedef struct MmpMoonrockPlacement
     u8 pad22[0x28 - 0x22];
 } MmpMoonrockPlacement;
 
-int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2)
+int mmp_moonrock_probeFloor(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2)
 {
     TrackGroundHit** results;
     f32* e;
@@ -98,7 +98,7 @@ int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* ou
     return 0;
 }
 
-void fn_801A79E0(GameObject* obj)
+void mmp_moonrock_handleImpact(GameObject* obj)
 {
     TrackBBoxHit hitScratch;
     int hitObjOut;
@@ -126,7 +126,7 @@ void fn_801A79E0(GameObject* obj)
         saveGame_saveObjectPos((GameObject*)obj);
     }
 }
-void fn_801A7B10(GameObject* obj)
+void mmp_moonrock_updateThrow(GameObject* obj)
 {
     MmpMoonrockState* state = obj->extra;
     int hitTypeOut[1];
@@ -194,7 +194,7 @@ void fn_801A7B10(GameObject* obj)
     objMove((GameObject*)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta, obj->anim.velocityZ * timeDelta);
     state->flags &= ~MOONROCK_FLAG_PROBE;
     posY = obj->anim.localPosY;
-    probeResult = fn_801A78C8(obj, obj->anim.localPosX, posY, obj->anim.localPosZ, 20.0f + posY, &floorYOut,
+    probeResult = mmp_moonrock_probeFloor(obj, obj->anim.localPosX, posY, obj->anim.localPosZ, 20.0f + posY, &floorYOut,
                               hitTypeOut);
     if (probeResult == 0)
         return;
@@ -219,9 +219,9 @@ void fn_801A7B10(GameObject* obj)
     }
 }
 
-void fn_801A7CC4(GameObject* obj);
+void mmp_moonrock_throwFromPlayer(GameObject* obj);
 
-void fn_801A7CC4(GameObject* obj)
+void mmp_moonrock_throwFromPlayer(GameObject* obj)
 {
     MmpMoonrockState* state = obj->extra;
     struct
@@ -252,7 +252,7 @@ void fn_801A7CC4(GameObject* obj)
     state->flags |= MOONROCK_FLAG_THROWN;
 }
 
-void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
+void mmp_moonrock_reconcilePlacement(GameObject* obj, u8 place, u8 mode)
 {
     int i;
     int count;
@@ -379,7 +379,7 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
     }
 }
 
-void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z)
+void mmp_moonrock_setPosition(GameObject* obj, f32 x, f32 y, f32 z)
 {
     (obj)->anim.localPosX = x;
     (obj)->anim.localPosY = y;
@@ -387,7 +387,7 @@ void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z)
     saveGame_saveObjectPos((GameObject*)obj);
 }
 
-void fn_801A80F0(GameObject* obj, u8 flag)
+void mmp_moonrock_setFrozen(GameObject* obj, u8 flag)
 {
     MmpMoonrockState* state = obj->extra;
     if (flag != 0)
@@ -459,7 +459,7 @@ void mmp_moonrock_update(GameObject* obj)
                 state->flags = 0;
                 obj->anim.alpha = 0xFF;
                 ObjHits_DisableObject(obj);
-                fn_801A7D74(obj, 1, 1);
+                mmp_moonrock_reconcilePlacement(obj, 1, 1);
             }
             else
             {
@@ -477,8 +477,8 @@ void mmp_moonrock_update(GameObject* obj)
     objfx_spawnDirectionalBurst(obj, 5, 1.0f, 5, 1, 0x14, 8.0f, NULL, 0);
     if ((state->flags & MOONROCK_FLAG_THROWN) != 0)
     {
-        fn_801A7B10(obj);
-        fn_801A79E0(obj);
+        mmp_moonrock_updateThrow(obj);
+        mmp_moonrock_handleImpact(obj);
         return;
     }
     grabbed = 0;
@@ -545,7 +545,7 @@ void mmp_moonrock_update(GameObject* obj)
         }
         if ((state->flags & MOONROCK_FLAG_ARMED) != 0)
         {
-            fn_801A7D74(obj, 0, 0);
+            mmp_moonrock_reconcilePlacement(obj, 0, 0);
             state->flags &= ~MOONROCK_FLAG_ARMED;
         }
         return;
@@ -556,11 +556,11 @@ void mmp_moonrock_update(GameObject* obj)
         {
             if ((flags & MOONROCK_FLAG_ICON_THROW) != 0)
             {
-                fn_801A7CC4(obj);
+                mmp_moonrock_throwFromPlayer(obj);
             }
             else
             {
-                fn_801A7D74(obj, 1, 0);
+                mmp_moonrock_reconcilePlacement(obj, 1, 0);
             }
             state->flags &= ~MOONROCK_FLAG_PICKUP_PENDING;
         }
@@ -649,7 +649,7 @@ void mmp_moonrock_init(GameObject* obj, int param2)
     state->homeY = (obj)->anim.localPosY;
     state->homeZ = (obj)->anim.localPosZ;
     ObjHits_DisableObject(obj);
-    fn_801A7D74(obj, 1, 2);
+    mmp_moonrock_reconcilePlacement(obj, 1, 2);
 }
 
 void mmp_moonrock_release(void)

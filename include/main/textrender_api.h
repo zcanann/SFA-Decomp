@@ -3,6 +3,9 @@
 
 #include "types.h"
 
+struct GameTextDef;
+struct GameTextBox;
+
 typedef struct GameTextSlot {
     int opcode;
     int arg0;
@@ -28,11 +31,7 @@ int setSubtitlesEnabled(int enabled);
 void* gameTextGetPhrase(int textId, int phraseIndex);
 void* gameTextGetStr(int textId);
 void gameTextResetCursor(int flags);
-#ifdef TEXTRENDER_DIRECT_INT_CURSOR_CALL
-void gameTextSetCursor(int x, int y, int flags);
-#else
 void gameTextSetCursor(u16 x, u16 y, int flags);
-#endif
 void gameTextSetDrawFunc(void* drawFunc);
 void gameTextSetWindow(u8* textBox);
 f32 gameTextFn_80019c00(void);
@@ -52,6 +51,8 @@ void gameTextInitFn_8001c794(void);
 void gameTextLoadGraphicsFn_8001a918(void);
 void fn_8001BDD4(int mode);
 void fn_8001BE2C(int mode);
+void gameTextDrawBox(struct GameTextDef* def, int box, struct GameTextBox* slot);
+void textRenderStr(char* str, struct GameTextBox* slot, f32 x, f32 y, f32 lineH, int mode);
 
 void gameTextSetWindowStrPos(int idx, int x, int y);
 

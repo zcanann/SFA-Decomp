@@ -8,6 +8,8 @@
  * object.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/dll_0063_dll63func0.h"
+#include "main/dll/dll_0069_dll69func0.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
@@ -21,12 +23,9 @@
 #include "main/dll/WM/dll_0204_wmtorch.h"
 #include "main/object_descriptor.h"
 
-/* slot 1 of the acquired effect resource's vtable: attach the flame */
-typedef void (*WmTorchAttachFlameFn)(u8* obj, int variant, f32* params, int flags, int p5, int p6);
-
 #define WMTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 lbl_803E5DEC; /* 90.0: unk04 default */
+extern f32 lbl_803E5DEC; /* 90.0: motionRate default */
 extern f32 lbl_803E5DF0; /* flame param */
 extern f32 lbl_803E5DF4; /* model scale factor */
 extern f32 lbl_803E5DF8; /* model scale factor */
@@ -86,21 +85,21 @@ void wmtorch_init(u8* obj, u8* params)
     f32 flameParams[5]; /* flame params; only [4] is set, the rest raw on purpose */
 
     state = ((GameObject*)obj)->extra;
-    if (((WmTorchPlacement*)params)->unk1A != 0)
+    if (((WmTorchPlacement*)params)->motionRate != 0)
     {
-        state->unk04 = (f32)(s32)((WmTorchPlacement*)params)->unk1A;
+        state->motionRate = (f32)(s32)((WmTorchPlacement*)params)->motionRate;
     }
     else
     {
-        state->unk04 = lbl_803E5DEC;
+        state->motionRate = lbl_803E5DEC;
     }
-    if (((WmTorchPlacement*)params)->unk1C != 0)
+    if (((WmTorchPlacement*)params)->colorIdx != 0)
     {
-        state->unk0A = ((WmTorchPlacement*)params)->unk1C;
+        state->colorIdx = ((WmTorchPlacement*)params)->colorIdx;
     }
     else
     {
-        state->unk0A = 0x8c;
+        state->colorIdx = 0x8c;
     }
     state->torchType = ((WmTorchPlacement*)params)->torchType;
     flameParams[4] = lbl_803E5DF0;
@@ -108,19 +107,19 @@ void wmtorch_init(u8* obj, u8* params)
     {
         res = Resource_Acquire(0x69, 1);
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 1, flameParams, 0x10004, -1, 0);
+        (*(Dll69Interface**)res)->spawn((GameObject*)obj, 1, flameParams, 0x10004, -1, NULL);
     }
     else if (state->torchType == 0x7f)
     {
         res = Resource_Acquire(0x69, 1);
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 2, flameParams, 0x10004, -1, 0);
+        (*(Dll69Interface**)res)->spawn((GameObject*)obj, 2, flameParams, 0x10004, -1, NULL);
     }
     else
     {
         res = Resource_Acquire(0x63, 1);
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 2, flameParams, 0x10004, -1, 0);
+        (*(Dll63Interface**)res)->spawn((GameObject*)obj, 2, flameParams, 0x10004, -1, NULL);
     }
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF8;
     Resource_Release(res);

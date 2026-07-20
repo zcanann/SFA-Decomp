@@ -6,6 +6,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll/dfptorchstate_struct.h"
 #include "main/dll/DF/dll_022B_dfptorch.h"
+#include "main/dll/dll_0069_dll69func0.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
@@ -36,18 +37,8 @@ STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 #define DFPTORCH_PARTFX_FLICKER 0x1f7
 #define DFPTORCH_PARTFX_IGNITE  0x1a3
 
-typedef struct DfpTorchEffectParams
-{
-    int m0;
-    int m1;
-    int m2;
-    int m3;
-} DfpTorchEffectParams;
-
-STATIC_ASSERT(sizeof(DfpTorchEffectParams) == 0x10);
-
 u8 gDfpTorchSequenceState;
-const DfpTorchEffectParams gDfpTorchEffectParams = {0x3E7, 0x8C, 0x8D, 0x28};
+const Dll69EffectParams gDfpTorchEffectParams = {0x3E7, 0x8C, 0x8D, 0x28};
 
 int DFP_Torch_getExtraSize(void)
 {
@@ -159,10 +150,10 @@ void DFP_Torch_hitDetect(void)
 void DFP_Torch_update(int obj)
 {
     DfpTorchState* state = ((GameObject*)obj)->extra;
-    void* res;
+    Dll69Interface** res;
     int i;
     f32 buf[5];
-    DfpTorchEffectParams prm;
+    Dll69EffectParams prm;
 
     prm = gDfpTorchEffectParams;
     Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
@@ -204,9 +195,9 @@ void DFP_Torch_update(int obj)
             if (state->lit != 0)
             {
                 res = Resource_Acquire(0x69, 1);
-                prm.m1 = state->colorIdx * 2 + 0x19d;
-                prm.m2 = state->colorIdx * 2 + 0x19e;
-                (*(void (*)(int, int, f32*, int, int, void*))(*(int*)(*(int*)res + 4)))(obj, 1, buf, 0x10004, -1, &prm);
+                prm.param1 = state->colorIdx * 2 + 0x19d;
+                prm.param2 = state->colorIdx * 2 + 0x19e;
+                (*res)->spawn((GameObject*)obj, 1, buf, 0x10004, -1, &prm);
                 Resource_Release(res);
                 for (i = 0; i < 0x64; i++)
                 {
@@ -262,7 +253,7 @@ void DFP_Torch_init(int obj, int def)
 {
     DfpTorchState* state = ((GameObject*)obj)->extra;
     DfpTorchPlacement* place = (DfpTorchPlacement*)def;
-    void* res;
+    Dll69Interface** res;
     struct
     {
         u8 pad[16];
@@ -289,7 +280,7 @@ void DFP_Torch_init(int obj, int def)
         res = Resource_Acquire(0x69, 1);
         if (place->colorIdx == 0)
         {
-            (*(void (*)(int, int, void*, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, &spawnArg, 0x10004, -1, 0);
+            (*res)->spawn((GameObject*)obj, 0, &spawnArg, 0x10004, -1, NULL);
         }
         break;
     }

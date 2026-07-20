@@ -8,7 +8,7 @@
 #include "dolphin/gx/GXEnum.h"
 #include "main/dll/shwgpipe_struct.h"
 #include "main/camera.h"
-#include "main/sky_state.h"
+#include "main/sky.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXTev.h"
 #include "dolphin/gx/GXPixel.h"

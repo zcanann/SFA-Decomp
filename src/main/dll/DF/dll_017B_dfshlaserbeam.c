@@ -25,11 +25,13 @@
 #include "main/obj_message.h"
 #include "main/gamebit_ids.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 #include "main/dll/dll_017B_dfshlaserbeam.h"
+#include "main/dll/foodbag.h"
 
 typedef struct DFSHLaserBeamConfig
 {
-    u8 pad00[0x18];
+    ObjPlacement head;
     s8 yawByte;
     u8 proximityMode;
     s16 rangeAngle;
@@ -114,14 +116,7 @@ typedef struct DFSHLaserBeamObject
 #define DFSH_LASER_FLAGS(runtime)            (*(s32*)((u8*)(runtime) + 0x18))
 #define DFSH_MSG_PLAYER_HIT                  0x60003 /* message the player on a laser hit */
 
-#define MODGFX_DETACH(obj) (*gModgfxInterface)->detachSource(obj)
-#define PARTFX_SPAWN(obj, id, a, b, c, d)                                                                              \
-    (*gPartfxInterface)->spawnObject((obj), (id), (void*)(a), (b), (c), (void*)(d))
-#define RESOURCE_SPAWN(obj, id, a, flags, owner, unk)                                                                  \
-    ((void (*)(void*, int, int, int, int, int))(*(int*)((u8*)*(int*)gLaserBeamEffectResource + 0x4)))(                 \
-        obj, id, a, flags, owner, unk)
-
-void* gLaserBeamEffectResource;
+Dll81Interface** gLaserBeamEffectResource;
 
 int DFSH_LaserBeam_getExtraSize(void)
 {
@@ -135,15 +130,15 @@ int DFSH_LaserBeam_getObjectTypeId(void)
 
 void DFSH_LaserBeam_free(int* obj)
 {
-    int* state = ((GameObject*)obj)->extra;
+    DFSHLaserBeamRuntime* runtime = ((GameObject*)obj)->extra;
     (*gModgfxInterface)->detachSource(obj);
     Resource_Release(gLaserBeamEffectResource);
     gLaserBeamEffectResource = NULL;
-    if (*(void**)state != NULL)
+    if (runtime->beamTexture != NULL)
     {
-        textureFree((Texture*)(*(void**)state));
+        textureFree((Texture*)runtime->beamTexture);
     }
-    *(void**)state = NULL;
+    runtime->beamTexture = NULL;
 }
 
 void DFSH_LaserBeam_render(void)
@@ -206,7 +201,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                 DFSH_LASER_BLAST_PHASE(runtime) = 1;
                 if (gLaserBeamEffectResource != NULL)
                 {
-                    RESOURCE_SPAWN(obj, 10, 0, 0x10004, -1, 0);
+                    (*gLaserBeamEffectResource)->spawn((int)obj, 10, NULL, 0x10004, -1, 0);
                 }
             }
             if (DFSH_LASER_CYCLE_TIMER(runtime) < 0x28)
@@ -224,7 +219,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                     DFSH_LASER_BLAST_PHASE(runtime) = 2;
                     if (gLaserBeamEffectResource != NULL)
                     {
-                        RESOURCE_SPAWN(obj, 0xB, 0, 0x10004, -1, 0);
+                        (*gLaserBeamEffectResource)->spawn((int)obj, 0xB, NULL, 0x10004, -1, 0);
                     }
                 }
             }
@@ -317,7 +312,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                 DFSH_LASER_HIT_STRENGTH(runtime) = (s16)(int)((2.0f) * lateralAbs);
                 if (DFSH_LASER_MODGFX_ATTACHED(runtime) == 1)
                 {
-                    MODGFX_DETACH(obj);
+                    (*gModgfxInterface)->detachSource(obj);
                     DFSH_LASER_MODGFX_ATTACHED(runtime) = 0;
                 }
                 if ((damageDistance < heightThreshold) && (damageDistance > -heightThreshold))
@@ -333,7 +328,8 @@ void DFSH_LaserBeam_update(u32 objAddr)
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_espk2_c);
                         for (i = 0; i < 4; i++)
                         {
-                            PARTFX_SPAWN(Obj_GetPlayerObject(), 0x28B, 0, 4, -1, 0);
+                            (*gPartfxInterface)->spawnObject(Obj_GetPlayerObject(), 0x28B, (void*)0, 4, -1,
+                                                             (void*)0);
                         }
                         DFSH_LASER_HIT_X(runtime) = yawSin * pushDistance + ((GameObject*)playerObj)->anim.localPosX;
                         DFSH_LASER_HIT_Z(runtime) = yawCos * pushDistance + ((GameObject*)playerObj)->anim.localPosZ;
@@ -354,7 +350,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
 
     if ((DFSH_LASER_ACTIVE(runtime) == 0) && (DFSH_LASER_MODGFX_ATTACHED(runtime) == 1))
     {
-        MODGFX_DETACH(obj);
+        (*gModgfxInterface)->detachSource(obj);
         DFSH_LASER_MODGFX_ATTACHED(runtime) = 0;
     }
 
@@ -387,10 +383,10 @@ void DFSH_LaserBeam_init(void* objArg, void* configArg)
     obj->yaw = (s16)((s32)config->yawByte << 8);
     timer = randomGetRange(-0x50, 0x50);
     runtime->lockTimer = (s16)(timer + 0x190);
-    *(u8*)((u8*)runtime + 0x49) = 0;
+    DFSH_LASER_BLAST_PHASE(runtime) = 0;
     gLaserBeamEffectResource = Resource_Acquire(DFSHLASERBEAM_EFFECT_RESOURCE_ID, 1);
     runtime->beamVolumeScale = (0.0f);
-    *(u8*)((u8*)runtime + 0x4A) = config->proximityMode;
+    DFSH_LASER_PROXIMITY_MODE(runtime) = config->proximityMode;
     runtime->cycleTimer = 0x118;
     if (runtime->beamTexture == NULL)
     {

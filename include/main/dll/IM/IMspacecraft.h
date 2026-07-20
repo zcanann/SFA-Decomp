@@ -4,7 +4,6 @@
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/modellight_api.h"
-#include "main/objanim_update.h"
 #include "main/dll/curve_walker.h"
 
 #define SPIRITDOORLOCK_EXTRA_SIZE 0x14
@@ -116,11 +115,4 @@ void RollingBarrel_update(GameObject* obj);
 void RollingBarrel_init(GameObject* obj, RollingBarrelMapData* params);
 void RollingBarrel_release(void);
 void RollingBarrel_initialise(void);
-int MMP_LevelControl_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
-int MMP_levelcontrol_getExtraSize(void);
-int MMP_levelcontrol_getObjectTypeId(void);
-void MMP_levelcontrol_free(int obj);
-void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void MMP_levelcontrol_hitDetect(void);
-
 #endif /* MAIN_DLL_IM_IMSPACECRAFT_H_ */

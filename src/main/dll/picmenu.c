@@ -29,7 +29,7 @@
 #include "string.h"
 #include "main/fileio.h"
 #include "main/dll/FRONT/picmenu.h"
-#include "main/dll/n_options_api.h"
+#include "main/dll/FRONT/n_options.h"
 
 char sPicMenuThpMagic[] = "THP";
 

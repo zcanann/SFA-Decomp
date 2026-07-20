@@ -129,8 +129,6 @@ void TrickyWarp_free(GameObject* obj);
 void TrickyWarp_update(GameObject* obj);
 int fn_8017FFD0(GameObject* obj, TrickyWarpState* state);
 void TrickyWarp_init(s16* obj, u8* param_2);
-void TrickyGuard_update();
-void TrickyGuard_init(s16* obj, u8* param_2);
 void StayPoint_update(int obj);
 void StayPoint_init(u16* obj);
 int duster_getExtraSize(void);
@@ -145,8 +143,6 @@ void FUN_80181b50(u64 param_1, double param_2, double param_3, u64 param_4, u64 
 int CurveFish_getExtraSize(void);
 void CurveFish_update(int obj);
 void CurveFish_init(GameObject* obj, u8* param_2);
-void fn_801814D0(int obj, int param_2, u8* state);
-
 extern ObjectDescriptor gMagicPlantObjDescriptor;
 extern ObjectDescriptor gTrickyWarpObjDescriptor;
 extern ObjectDescriptor gTrickyGuardObjDescriptor;

@@ -2,7 +2,6 @@
 
 #include "main/audio/synth_channel_scale.h"
 #include "main/audio/synth_job_init.h"
-#include "main/audio/vsample_alloc.h"
 #include "main/audio/synth_virtual_sample.h"
 #include "main/audio/synth_control.h"
 #include "main/audio/snd_synth_api.h"
@@ -10,6 +9,7 @@
 #include "main/audio/synth_config.h"
 #include "main/audio/synth_delay.h"
 #include "main/audio/data_tables.h"
+#include "main/audio/snd_core.h"
 
 #define S3D_UNLINK_EMITTER(emitter)                                                                                    \
     do                                                                                                                 \
@@ -28,8 +28,6 @@
         }                                                                                                              \
     } while (0)
 
-extern u8 gSynthInitialized;
-extern u8 synthIdleWaitActive;
 extern u8 s3dCallCnt;
 extern Snd3DEmitter* s3dEmitterRoot;
 extern SndSpatialListener* s3dListenerRoot;

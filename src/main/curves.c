@@ -8,8 +8,6 @@ int gCurveCachedSampleCount = -1;
 
 f32 gCurveForwardDiffStep;
 
-typedef f32 (*CurveEvalPtrFirst)(f32* values, f32 t, f32* outTangent);
-
 void Curve_BuildSegmentLengthTable(Curve* curve, int count)
 {
     f32 outX[21];
@@ -178,18 +176,15 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                 {
                     if (curve->px != NULL)
                     {
-                        curve->sample[0] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, 1.0f, &curve->tangent[0]);
+                        curve->sample[0] = curve->eval(curve->px + savedIdx, 1.0f, &curve->tangent[0]);
                     }
                     if (curve->py != NULL)
                     {
-                        curve->sample[1] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, 1.0f, &curve->tangent[1]);
+                        curve->sample[1] = curve->eval(curve->py + savedIdx, 1.0f, &curve->tangent[1]);
                     }
                     if (curve->pz != NULL)
                     {
-                        curve->sample[2] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, 1.0f, &curve->tangent[2]);
+                        curve->sample[2] = curve->eval(curve->pz + savedIdx, 1.0f, &curve->tangent[2]);
                     }
                     curve->t = 1.0f;
                     curve->segmentDistance = 0.0f;
@@ -207,15 +202,15 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
         t = frac * ((f32)(seg + 1) / 20.0f - base) + base;
         if (curve->px != NULL)
         {
-            curve->sample[0] = ((CurveEvalPtrFirst)curve->eval)(curve->px + curve->idx, t, &curve->tangent[0]);
+            curve->sample[0] = curve->eval(curve->px + curve->idx, t, &curve->tangent[0]);
         }
         if (curve->py != NULL)
         {
-            curve->sample[1] = ((CurveEvalPtrFirst)curve->eval)(curve->py + curve->idx, t, &curve->tangent[1]);
+            curve->sample[1] = curve->eval(curve->py + curve->idx, t, &curve->tangent[1]);
         }
         if (curve->pz != NULL)
         {
-            curve->sample[2] = ((CurveEvalPtrFirst)curve->eval)(curve->pz + curve->idx, t, &curve->tangent[2]);
+            curve->sample[2] = curve->eval(curve->pz + curve->idx, t, &curve->tangent[2]);
         }
         curve->t = t;
         curve->segmentDistance = step;
@@ -255,18 +250,15 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                 {
                     if (curve->px != NULL)
                     {
-                        curve->sample[0] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, 0.0f, &curve->tangent[0]);
+                        curve->sample[0] = curve->eval(curve->px + savedIdx, 0.0f, &curve->tangent[0]);
                     }
                     if (curve->py != NULL)
                     {
-                        curve->sample[1] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, 0.0f, &curve->tangent[1]);
+                        curve->sample[1] = curve->eval(curve->py + savedIdx, 0.0f, &curve->tangent[1]);
                     }
                     if (curve->pz != NULL)
                     {
-                        curve->sample[2] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, 0.0f, &curve->tangent[2]);
+                        curve->sample[2] = curve->eval(curve->pz + savedIdx, 0.0f, &curve->tangent[2]);
                     }
                     curve->t = 0.0f;
                     curve->segmentDistance = -lengths[1];
@@ -283,15 +275,15 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
         t = frac * ((f32)(seg + 1) / 20.0f - base) + base;
         if (curve->px != NULL)
         {
-            curve->sample[0] = ((CurveEvalPtrFirst)curve->eval)(curve->px + curve->idx, t, &curve->tangent[0]);
+            curve->sample[0] = curve->eval(curve->px + curve->idx, t, &curve->tangent[0]);
         }
         if (curve->py != NULL)
         {
-            curve->sample[1] = ((CurveEvalPtrFirst)curve->eval)(curve->py + curve->idx, t, &curve->tangent[1]);
+            curve->sample[1] = curve->eval(curve->py + curve->idx, t, &curve->tangent[1]);
         }
         if (curve->pz != NULL)
         {
-            curve->sample[2] = ((CurveEvalPtrFirst)curve->eval)(curve->pz + curve->idx, t, &curve->tangent[2]);
+            curve->sample[2] = curve->eval(curve->pz + curve->idx, t, &curve->tangent[2]);
         }
         curve->t = t;
         curve->segmentDistance = step - lengths[seg + 1];
@@ -399,25 +391,26 @@ void curvesMove(Curve* curve)
 
     if (curve->px != NULL)
     {
-        curve->sample[0] = curve->eval(curve->t, curve->px, &curve->tangent[0]);
+        curve->sample[0] = curve->eval(curve->px, curve->t, &curve->tangent[0]);
     }
     if (curve->py != NULL)
     {
-        curve->sample[1] = curve->eval(curve->t, curve->py, &curve->tangent[1]);
+        curve->sample[1] = curve->eval(curve->py, curve->t, &curve->tangent[1]);
     }
     if (curve->pz != NULL)
     {
-        curve->sample[2] = curve->eval(curve->t, curve->pz, &curve->tangent[2]);
+        curve->sample[2] = curve->eval(curve->pz, curve->t, &curve->tangent[2]);
     }
 }
 
-f32 Curve_EvalLinear(f32 t, f32* values)
+f32 Curve_EvalLinear(f32* values, f32 t, f32* unused)
 {
     return t * (values[1] - values[0]) + values[0];
 }
 
-f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent)
+f32 Curve_EvalCatmullRom(void* valuesArg, f32 t, f32* outTangent)
 {
+    f32* values = valuesArg;
     f32 cubic;
     f32 p0;
     f32 p1;
@@ -442,7 +435,7 @@ f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent)
     return 0.5f * (t * (t * (cubic * t + quadratic) + linear) + constant);
 }
 
-f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent)
+f32 Curve_EvalBezier(f32* values, f32 t, f32* outTangent)
 {
     f32 k668;
     f32 k664;
@@ -476,7 +469,7 @@ void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients)
     coefficients[3] = values[0];
 }
 
-f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent)
+f32 Curve_EvalHermite(f32* values, f32 t, f32* outTangent)
 {
     f32 cubic;
     f32 p1;
@@ -510,7 +503,7 @@ void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients)
     coefficients[3] *= 0.16666667f;
 }
 
-f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent)
+f32 Curve_EvalBSpline(f32* values, f32 t, f32* outTangent)
 {
     f32 cubic;
     f32 quadratic;

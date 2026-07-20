@@ -2,6 +2,7 @@
 #include "main/objseq.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objfx.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
@@ -36,7 +37,7 @@
 
 typedef struct MagiccavetopPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     u8 rangeOuter;
     u8 rangeInner;
     u8 objGroup;
@@ -53,7 +54,8 @@ typedef struct MagiccavetopPlacement
 
 typedef struct MagiccavetopObjectDef
 {
-    u8 pad0[0x1C - 0x0];
+    ObjPlacement head; /* 0x00 */
+    u8 pad18[0x1C - 0x18];
     s16 visibleGameBit;
     u8 pad1E[0x23 - 0x1E];
     u8 rotByte;

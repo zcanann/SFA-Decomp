@@ -3,6 +3,6 @@
 
 #include "main/game_object.h"
 
-void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags);
+void playerEyeAnimFn_80038988(int obj, int blinkState, u16 flags);
 
 #endif /* MAIN_PLAYER_EYE_ANIM_H_ */

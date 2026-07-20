@@ -20,7 +20,7 @@
 #include "main/lightmap_api.h"
 #include "main/lightmap_render_queue_api.h"
 #include "main/mm.h"
-#include "main/sky_state.h"
+#include "main/sky.h"
 #include "main/tex_dolphin.h"
 #include "main/texture.h"
 #include "main/dll/objfx_api.h"
@@ -629,16 +629,12 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     ambientScaled[0] = (f32)ambB8 * ambientScale;
 
     activeCountScan = runtime->poolActiveCounts;
-    for (nextActivePool = 0; nextActivePool < EXPGFX_POOL_COUNT; nextActivePool++)
+    for (nextActivePool = 0; nextActivePool < EXPGFX_POOL_COUNT || (nextActivePool = -1, 0); nextActivePool++)
     {
         if (activeCountScan[nextActivePool] != 0)
         {
             break;
         }
-    }
-    if (nextActivePool == EXPGFX_POOL_COUNT)
-    {
-        nextActivePool = -1;
     }
     pool = nextActivePool;
     if (pool != -1)
@@ -680,17 +676,13 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
             nextActivePool = pool + 1;
             curPoolBuf = (u8*)runtime + nextActivePool;
             activeCountScan = (s8*)(curPoolBuf + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
-            for (; nextActivePool < EXPGFX_POOL_COUNT; nextActivePool++)
+            for (; nextActivePool < EXPGFX_POOL_COUNT || (nextActivePool = -1, 0); nextActivePool++)
             {
                 if (*activeCountScan != 0)
                 {
                     break;
                 }
                 activeCountScan++;
-            }
-            if (nextActivePool == EXPGFX_POOL_COUNT)
-            {
-                nextActivePool = -1;
             }
             slot = (ExpgfxSlot*)curCacheBuf;
             if (nextActivePool > -1)
@@ -2735,9 +2727,8 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         }
 
         {
-            int poolIdx = poolIndex;
             sourceModeValue = (config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0 ? 1 : 0;
-            poolSourceModesByte = (u8*)runtime + poolIdx;
+            poolSourceModesByte = (u8*)runtime + poolIndex;
             poolSourceModesByte += EXPGFX_POOL_SOURCE_MODES_OFFSET;
             *poolSourceModesByte = sourceModeValue;
             if (*poolSourceModesByte != 0 &&
@@ -2745,7 +2736,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             {
                 (*poolSourceModesByte)++;
             }
-            runtime->poolBoundsTemplateIds[poolIdx] = (u8)boundsTemplateId;
+            runtime->poolBoundsTemplateIds[poolIndex] = (u8)boundsTemplateId;
         }
 
         DCFlushRange(slot, EXPGFX_SLOT_SIZE);

@@ -217,7 +217,7 @@ int saveGame_doWrite(int slot)
 /* Saves the game: verifies the existing save slots' checksums, rewrites
  * stale slots and card images, then runs the caller's callback and maps the
  * result to a status code. */
-int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD, SaveGameCallback cb)
+int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, void* cbC, void* cbD, SaveGameCallback cb)
 {
     u64 chk;
     u64 chk2;
@@ -1049,7 +1049,8 @@ void objModelResetVecFn_80080548(GameObject* obj)
 /* Object-sequence turn-to-face-player step: starts (mode 4) or advances
  * (mode 5) a smooth turn of the object toward the player, blending the model
  * vector and animation as it goes. */
-int ObjSeq_func20(GameObject* obj, int state, s16 turnDegrees, s16 yawThreshold, s16 maxAngle, s16 animRight, s16 animLeft)
+int ObjSeq_func20(GameObject* obj, ObjAnimUpdateState* state, s16 turnDegrees, s16 yawThreshold, s16 maxAngle,
+                  s16 animRight, s16 animLeft)
 {
     int player;
     s16* modelVec;
@@ -1091,7 +1092,7 @@ int ObjSeq_func20(GameObject* obj, int state, s16 turnDegrees, s16 yawThreshold,
         ((ObjSeqTurnState*)state)->turnAmount = turn;
         {
             f32* dp = d;
-            f32* ovr = *(f32**)((int)obj + 0x74);
+            ObjHitVolumeRuntimeTransform* ovr = obj->anim.hitVolumeTransforms;
             if (ovr == NULL)
             {
                 dp[0] = ((GameObject*)player)->anim.localPosX - obj->anim.localPosX;
@@ -1100,9 +1101,9 @@ int ObjSeq_func20(GameObject* obj, int state, s16 turnDegrees, s16 yawThreshold,
             }
             else
             {
-                dp[0] = ((GameObject*)player)->anim.localPosX - ovr[0];
-                dp[1] = ((GameObject*)player)->anim.localPosY - ovr[1];
-                dp[2] = ((GameObject*)player)->anim.localPosZ - ovr[2];
+                dp[0] = ((GameObject*)player)->anim.localPosX - ovr->jointX;
+                dp[1] = ((GameObject*)player)->anim.localPosY - ovr->jointY;
+                dp[2] = ((GameObject*)player)->anim.localPosZ - ovr->jointZ;
             }
             dp[1] += 30.0f;
             dist = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
@@ -1133,14 +1134,14 @@ int ObjSeq_func20(GameObject* obj, int state, s16 turnDegrees, s16 yawThreshold,
                 {
                     if (animLeft != -1)
                     {
-                        ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, animLeft, 0.0f, 0);
+                        ObjAnim_SetCurrentMove((int)obj, animLeft, 0.0f, 0);
                     }
                 }
                 else
                 {
                     if (animRight != -1)
                     {
-                        ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, animRight, 0.0f, 0);
+                        ObjAnim_SetCurrentMove((int)obj, animRight, 0.0f, 0);
                     }
                 }
             }
@@ -1276,7 +1277,7 @@ void endObjSequence(int seq)
         }
         if (((GameObject*)obj)->anim.classId == 0x10)
         {
-            ObjSeqTurnState* st = (ObjSeqTurnState*)*(int*)&((GameObject*)obj)->extra;
+            ObjSeqTurnState* st = (ObjSeqTurnState*)((GameObject*)obj)->extra;
             if ((s8)st->seqId == seq)
             {
                 if ((void*)obj == lbl_803DD0B8)

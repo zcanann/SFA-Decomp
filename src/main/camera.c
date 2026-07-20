@@ -1,4 +1,5 @@
 #include "main/camera.h"
+#include "main/pi_dolphin.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/pause_menu_api.h"
@@ -118,7 +119,7 @@ s32 Angle_SubWrappedS16(s32 angle, s16* delta)
     return angle + 0xFFFF;
 }
 
-void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj)
+void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj)
 {
     f32 vec[3];
     s32 matrixIndex;
@@ -148,11 +149,11 @@ void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, 
     *outZ = vec[2];
 }
 
-void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj)
+void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj)
 {
     s32 matrixIndex;
 
-    if (obj != 0)
+    if ((u32)obj != 0)
     {
         matrixIndex = ((GameObject*)obj)->anim.transformMatrixIndex << 4;
         Matrix_TransformPoint((f32*)((u8*)gObjInverseYawTransformMatrices + (matrixIndex << 2)), x, y, z, outX, outY,
@@ -166,11 +167,11 @@ void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f
     }
 }
 
-void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj)
+void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj)
 {
     s32 matrixIndex;
 
-    if (obj != 0)
+    if ((u32)obj != 0)
     {
         matrixIndex = ((GameObject*)obj)->anim.transformMatrixIndex << 4;
         Matrix_TransformPoint((f32*)((u8*)gObjYawTransformMatrices + (matrixIndex << 2)), x, y, z, outX, outY, outZ);

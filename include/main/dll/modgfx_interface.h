@@ -11,7 +11,7 @@ typedef void (*ModgfxFreeSourceEffectsFn)(void* sourceObject);
 typedef int (*ModgfxRenderEffectsFn)(void* drawContext, int arg1, int arg2,
                                      u8 sourceOnly, void* sourceObject);
 typedef void (*ModgfxMarkSourceFrameUpdatedFn)(void* unused);
-typedef int (*ModgfxSpawnEffectFn)(void* spawnContext, int flags, int vertexCount,
+typedef s16 (*ModgfxSpawnEffectFn)(void* spawnContext, int flags, int vertexCount,
                                    void* vertices, int colorCount, void* colors,
                                    int textureAssetId, void* textureResource);
 typedef void (*ModgfxReleaseHandleFn)(s16* handle);

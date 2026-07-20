@@ -3,9 +3,10 @@
 
 #include "main/object_descriptor.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 typedef struct DfpobjcreatorObjectDef
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s16 gameBit;
     u8 pad1A[0x1C - 0x1A];
     s16 spawnPeriod;

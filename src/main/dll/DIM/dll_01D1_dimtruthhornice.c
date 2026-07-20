@@ -129,7 +129,7 @@ void dimtruthhornice_update(int* obj)
         break;
     case TRUTHHORNICE_PHASE_SHATTERING:
         {
-            f32 desc[6];
+            PartFxSpawnParams desc;
             extra->timer = extra->timer + timeDelta;
             if (extra->timer > 20.0f)
             {
@@ -139,25 +139,25 @@ void dimtruthhornice_update(int* obj)
                 Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_bounce1);
                 for (i = 30; i != 0; i--)
                 {
-                    desc[3] = 0.1f * (f32)(int)
+                    desc.posX = 0.1f * (f32)(int)
                     randomGetRange(-100, 100);
-                    desc[4] = 0.1f * (f32)(int)
+                    desc.posY = 0.1f * (f32)(int)
                     randomGetRange(0, 350);
-                    desc[5] = 0.1f * (f32)(int)
+                    desc.posZ = 0.1f * (f32)(int)
                     randomGetRange(-100, 100);
-                    desc[2] = 1.0f;
-                    (*gPartfxInterface)->spawnObject(obj, 2043, desc, 2, -1, NULL);
-                    (*gPartfxInterface)->spawnObject(obj, 2044, desc, 2, -1, NULL);
+                    desc.scale = 1.0f;
+                    (*gPartfxInterface)->spawnObject(obj, 2043, &desc, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, 2044, &desc, 2, -1, NULL);
                 }
             }
-            desc[3] = 0.1f * (f32)(int)
+            desc.posX = 0.1f * (f32)(int)
             randomGetRange(-100, 100);
-            desc[4] = 0.1f * (f32)(int)
+            desc.posY = 0.1f * (f32)(int)
             randomGetRange(0, 350);
-            desc[5] = 0.1f * (f32)(int)
+            desc.posZ = 0.1f * (f32)(int)
             randomGetRange(-100, 100);
-            desc[2] = 1.0f;
-            (*gPartfxInterface)->spawnObject(obj, 2044, desc, 2, -1, NULL);
+            desc.scale = 1.0f;
+            (*gPartfxInterface)->spawnObject(obj, 2044, &desc, 2, -1, NULL);
             break;
         }
     case TRUTHHORNICE_PHASE_SHATTERED:

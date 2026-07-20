@@ -31,7 +31,7 @@ void dimlavasmash_setBlockSurfaceFlags(MapBlockData* map, int disable, int surfa
     int j;
     int* block;
     int got;
-    for (j = 0; j < (int)*(u16*)((char*)map + 0x9a); j++)
+    for (j = 0; j < (int)((MapBlockData*)map)->polyGroupCount; j++)
     {
         block = mapBlockFn_800606ec(map, j);
         got = mapBlockFn_80060678(block);
@@ -49,7 +49,7 @@ void dimlavasmash_setBlockSurfaceFlags(MapBlockData* map, int disable, int surfa
             }
         }
     }
-    for (i = 0, clearMask = ~2; i < (int)*(u8*)((char*)map + 0xa2); i++)
+    for (i = 0, clearMask = ~2; i < (int)((MapBlockData*)map)->layerCount; i++)
     {
         block = (int*)fn_8006070C(map, i);
         if (surfaceType == (int)*((u8*)Shader_getLayer(block, 0) + 5))
@@ -172,8 +172,8 @@ void dimlavasmash_init(s16* obj, s8* def)
     ((GameObject*)obj)->animEventCallback = dimlavasmash_SeqFn;
     inner = ((GameObject*)obj)->extra;
     inner->surfaceLayerId = (u8)((DimlavasmashObjectDef*)def)->surfaceLayerId;
-    inner->unk0 = (s8)((DimlavasmashObjectDef*)def)->unk1C;
-    inner->state = mainGetBit(((DimlavasmashObjectDef*)def)->gameBit);
+    inner->seqSlot = (s8)((DimlavasmashObjectDef*)def)->unk1C;
+    inner->state = mainGetBit(((DimlavasmashObjectDef*)def)->triggerGameBit);
     if (inner->state == 1)
     {
         block = mapGetBlock(objPosToMapBlockIdx(((GameObject*)obj)->anim.localPosX,

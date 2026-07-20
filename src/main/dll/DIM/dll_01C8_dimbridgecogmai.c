@@ -6,6 +6,7 @@
  */
 #include "main/dll/DIM/dll_01C8_dimbridgecogmai.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 #include "main/obj_group.h"
 #include "main/objseq.h"
@@ -28,7 +29,7 @@
 
 typedef struct DimbridgecogmaiObjectDef
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s16 watchGameBit;
     u8 pad1A[0x1C - 0x1A];
     u8 rotationAngle;
@@ -37,7 +38,7 @@ typedef struct DimbridgecogmaiObjectDef
 
 typedef struct DimbridgecogmaiPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s16 doneGameBit;
     s16 watchGameBit;
     s16 groupId;

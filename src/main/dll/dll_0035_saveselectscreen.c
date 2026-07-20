@@ -227,32 +227,29 @@ void saveFileSelect_init(int sel, int slot)
 void saveSelectSetupMenuItems(SaveSelectPanel* p)
 {
     int i;
-    char* base;
 
     for (i = 0; i < p->count; i++)
     {
-        base = (char*)saveFileSelect_saveSlotsBase;
-        saveFileSelect_saveSlots = (FrontendSaveSlot*)base;
-        if (*(u8*)(base + i * 0x24 + 0x20) == 0)
+        saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
+        if (saveFileSelect_saveSlots[i].isOccupied == 0)
         {
-            *(u16*)((char*)p->entries + i * 0x3c) = 0x39d;
-            *(u16*)((char*)p->entries + i * 0x3c + 0x16) = (u16)(*(u16*)((char*)p->entries + i * 0x3c + 0x16) & ~0x1);
-            *(u16*)((char*)p->entries + i * 0x3c + 0x16) = (u16)(*(u16*)((char*)p->entries + i * 0x3c + 0x16) | 0x2);
-            *(int*)((char*)p->entries + i * 0x3c + 0x10) = -1;
+            p->entries[i].textId = 0x39d;
+            p->entries[i].flags = (u16)(p->entries[i].flags & ~0x1);
+            p->entries[i].flags = (u16)(p->entries[i].flags | 0x2);
+            p->entries[i].actionParam = -1;
         }
         else
         {
-            *(u16*)((char*)p->entries + i * 0x3c) = i;
-            *(u16*)((char*)p->entries + i * 0x3c + 0x16) = (u16)(*(u16*)((char*)p->entries + i * 0x3c + 0x16) & ~0x2);
-            *(u16*)((char*)p->entries + i * 0x3c + 0x16) = (u16)(*(u16*)((char*)p->entries + i * 0x3c + 0x16) | 0x1);
-            *(int*)((char*)p->entries + i * 0x3c + 0x10) = -1;
+            p->entries[i].textId = i;
+            p->entries[i].flags = (u16)(p->entries[i].flags & ~0x2);
+            p->entries[i].flags = (u16)(p->entries[i].flags | 0x1);
+            p->entries[i].actionParam = -1;
         }
     }
 }
 
 void saveSelectGoToChapterSelect(void)
 {
-    int off;
     int i;
     SaveSelectPanel* panel;
 
@@ -264,25 +261,24 @@ void saveSelectGoToChapterSelect(void)
     {
         gSaveSelectPanelIndex = SAVE_SELECT_PANEL_CHAPTER_SELECT;
         panel = &gSaveSelectPanels[SAVE_SELECT_PANEL_CHAPTER_SELECT];
-        for (i = 0, off = 0; i < 6; i++)
+        for (i = 0; i < 6; i++)
         {
             if (i > saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].cheatFlag)
             {
-                *(u16*)((char*)panel->entries + off + 22) |= TITLE_MENU_TEXT_ENTRY_HIDDEN;
+                panel->entries[i].flags |= TITLE_MENU_TEXT_ENTRY_HIDDEN;
             }
             else
             {
-                *(u16*)((char*)panel->entries + off + 22) &= ~TITLE_MENU_TEXT_ENTRY_HIDDEN;
+                panel->entries[i].flags &= ~TITLE_MENU_TEXT_ENTRY_HIDDEN;
             }
             if (i <= saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].cheatFlag + -1 && i < 5)
             {
-                *(s8*)((char*)panel->entries + off + 27) = (s8)(i + 1);
+                panel->entries[i].pad18[3] = (s8)(i + 1);
             }
             else
             {
-                *(s8*)((char*)panel->entries + off + 27) = -1;
+                panel->entries[i].pad18[3] = -1;
             }
-            off += 60;
         }
         gTitleMenuLinkInterface->vtable->setup(panel->entries, panel->count, 0, lbl_8031A7F8, 5, 4, 0, 0, 0, 0, 0,
                                                0);
@@ -315,25 +311,14 @@ void saveSelectFn_8011a70c(void)
             gSaveSelectInfoStartSlot[0] = 3;
         }
     }
+    for (i = gSaveSelectInfoStartSlot[0]; i < 3; i++)
     {
-        struct SaveSlotRec
-        {
-            char name[4];
-            u8 f4, f5, f6, pad7;
-            int f8;
-            u8 padc[0x15];
-            u8 f21;
-            u8 pad22[2];
-        };
-        for (i = gSaveSelectInfoStartSlot[0]; i < 3; i++)
-        {
-            sprintf(((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].name, sFrontendStringFormat, lbl_803DBA20);
-            ((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].f5 = 0;
-            ((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].f6 = 0;
-            ((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].f4 = 0;
-            ((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].f8 = 0;
-            ((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].f21 = 0;
-        }
+        sprintf(saveFileSelect_saveSlots[i].name, sFrontendStringFormat, lbl_803DBA20);
+        saveFileSelect_saveSlots[i].magicCount = 0;
+        saveFileSelect_saveSlots[i].lifeCount = 0;
+        saveFileSelect_saveSlots[i].completionPercent = 0;
+        saveFileSelect_saveSlots[i].playTimeSeconds = 0;
+        saveFileSelect_saveSlots[i].cheatFlag = 0;
     }
 }
 
@@ -797,10 +782,10 @@ SaveSelectPanel gSaveSelectPanels[] = {
 
 u8 lbl_8031A7F8[12] = {0, 0, 5, 213, 0, 0, 5, 214, 0, 0, 5, 212};
 void* lbl_8031A804[4] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000};
-u8 saveFileSelect_debugCheatSequence[12] = {64, 0, 128, 0, 64, 0, 128, 0, 0, 4, 0, 0};
+u16 saveFileSelect_debugCheatSequence[6] = {0x4000, 0x8000, 0x4000, 0x8000, 4, 0};
 u16 saveFileSelect_slotCheatSequence[6] = {0x400, 0x800, 0x8000, 0x8000, 2, 0};
 void* lbl_8031A82C[10] = {(void*)0x00000000,      (void*)0x00000000,           (void*)0x00000000,
                           (void*)0x00050000,      SaveSelectScreen_initialise, SaveSelectScreen_release,
                           (void*)0x00000000,      SaveSelectScreen_run,        SaveSelectScreen_frameEnd_nop,
                           SaveSelectScreen_render};
-u8 sFrontendTimeFormat[14] = {37, 51, 100, 58, 37, 48, 50, 100, 58, 37, 48, 50, 100, 0};
+char sFrontendTimeFormat[14] = "%3d:%02d:%02d";

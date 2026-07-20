@@ -23,7 +23,7 @@ typedef struct GpshObjcreatorState
 
 typedef struct GpshObjcreatorObjectDef
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 unk18;
     u8 pad19[0x1A - 0x19];
     s16 objTypeIndex;

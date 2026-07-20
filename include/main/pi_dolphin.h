@@ -2,6 +2,7 @@
 #define MAIN_PI_DOLPHIN_H_
 
 #include "ghidra_import.h"
+#include "dolphin/gx/GXStruct.h"
 #include "main/pi_dolphin_api.h"
 
 void FUN_800443fc(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
@@ -50,10 +51,19 @@ void initViewport(void);
 void tvInit(void);
 void pathSearchExpandNode(int* q, int* elem, int idx);
 void pathSearchEnqueuePoint(int* q, int* elem, int idx, u32 d, char* obj);
+void loadModelsBin(int fileOffset, int* animCount, int* headerSize, int* amapFlag, int* dataLen, int id);
+void* fileLoad(int id, int heap);
+void videoInit(void* rmode, int arg);
+int fileLoadToBuffer(int id, void* buffer);
+u8 initLoadFiles(void);
+void viFn_8004a56c(int val);
+void checkLoadBlock(int a, int* compressedSize, int* decompressedSize);
+
+extern void** lbl_803DCC8C;
+extern GXRenderModeObj* gRenderModeObj;
+extern s32 gObjLevelLockSlots[2];
 
 
 #include "main/mldf_fileid.h"
-
-double SeekTwiceBeforeRead();
 
 #endif /* MAIN_PI_DOLPHIN_H_ */

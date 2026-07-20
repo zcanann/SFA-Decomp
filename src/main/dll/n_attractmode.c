@@ -7,11 +7,10 @@
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/mm.h"
-#include "main/mm_ext.h"
 #include "main/dll/dll_3e_api.h"
+#include "main/pi_dolphin.h"
 
 extern s32 gAttractMovieIdleFrameCount;
-extern u16* gRenderModeObj;
 extern char sNAttractModeStringBlock[];
 
 
@@ -98,8 +97,8 @@ void n_attractmode_prepareMovie(void)
         else
         {
             THPPlayerGetVideoInfo(&gAttractMovieDims);
-            gAttractMovieOffsetX = ((u32)gRenderModeObj[2] - gAttractMovieDims.width) >> 1;
-            gAttractMovieOffsetY = ((u32)gRenderModeObj[3] - gAttractMovieDims.height) >> 1;
+            gAttractMovieOffsetX = ((u32)gRenderModeObj->fbWidth - gAttractMovieDims.width) >> 1;
+            gAttractMovieOffsetY = ((u32)gRenderModeObj->efbHeight - gAttractMovieDims.height) >> 1;
             AttractMovie_GetBufferSizes(movieBuffer0Size, &movieBuffer1Size, &movieBuffer2Size, &movieBuffer3Size,
                                         &optionalBufferSize, &workBufferSize);
             gAttractMovieBuffer0 = mmAlloc(movieBuffer0Size[0], NATTRACTMODE_MOVIE_HEAP, 0);

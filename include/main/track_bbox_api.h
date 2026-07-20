@@ -38,10 +38,7 @@ typedef struct TrackBBoxHit
 
 STATIC_ASSERT(sizeof(TrackBBoxHit) == 0x54);
 
-/* Callers pass the final arguments at ABI int width; the owner narrows them to bytes in its definition. */
-#ifndef TRACK_BBOX_IMPLEMENTATION
 int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, TrackBBoxHit* hit, GameObject* self, int flags,
                        int mask, int slot, int arg10);
-#endif
 
 #endif /* MAIN_TRACK_BBOX_API_H_ */

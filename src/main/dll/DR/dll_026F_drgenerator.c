@@ -64,7 +64,7 @@ void drgenerator_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6B58);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6B58);
     }
 }
 
@@ -78,7 +78,7 @@ void drgenerator_hitDetect(GameObject* obj)
     u32 hitVolume;
     int hitObject;
     void* found;
-    if (((BitFlags8*)(state + 0x19b))->b0 || ((BitFlags8*)(state + 0x19b))->b3)
+    if (((BitFlags8*)&((DrgeneratorState*)state)->flags)->b0 || ((BitFlags8*)&((DrgeneratorState*)state)->flags)->b3)
     {
         return;
     }
@@ -86,7 +86,7 @@ void drgenerator_hitDetect(GameObject* obj)
     {
         return;
     }
-    state[0x19a] = *(u8*)(state + 0x19a) - hitVolume;
+    state[0x19a] = ((DrgeneratorState*)state)->hitsRemaining - hitVolume;
     Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&hitPosX, lbl_803E6B5C);
     fn_8009A8C8(obj, lbl_803E6B60);
     if (state[0x19a] > 0)
@@ -101,7 +101,7 @@ void drgenerator_hitDetect(GameObject* obj)
             tex->textureId = 0x100;
         }
     }
-    ((BitFlags8*)(state + 0x19b))->b0 = 1;
+    ((BitFlags8*)&((DrgeneratorState*)state)->flags)->b0 = 1;
     mainSetBits(((DrgeneratorPlacement*)placement)->completionGameBit, 1);
     if ((obj)->anim.seqId == DRGENERATOR_OBJ &&
         (found = (void*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, NULL)) != NULL)

@@ -4,6 +4,7 @@
 #include "main/audio/synth_jobs.h"
 #include "main/audio/synth_config.h"
 #include "main/audio/vid_get.h"
+#include "main/audio/snd_core.h"
 
 
 typedef struct VoiceListNode
@@ -14,15 +15,6 @@ typedef struct VoiceListNode
 } VoiceListNode;
 
 #define SYNTH_VOICE_STATE(voice) (&synthVoice[voice])
-
-extern u8 gSynthInitialized;
-extern u8 voiceDirectSlots[];
-extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
-extern u16 voicePrioSortedRoot;
-extern u8 voiceMusicRunning;
-extern u8 voiceFxRunning;
-extern u8 voiceFreeListTail;
-extern u8 voiceFreeListRoot;
 
 static u8 vidListNodes[0x800];
 static u8 midiKeySlots[0x80];

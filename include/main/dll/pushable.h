@@ -3,6 +3,8 @@
 
 #include "global.h"
 
+struct GameObject;
+
 typedef struct PushablePoint {
   f32 x;
   f32 y;
@@ -17,8 +19,8 @@ typedef struct PushableFlags114 {
 
 /*
  * Per-object extra state for the pushable (push/pull block) family
- * (pushable_getExtraSize == 0x148). Shared by transporter.c,
- * lightning.c (fn_80174438/fn_80174668) and the dll_138.c helpers.
+ * (pushable_getExtraSize == 0x148). Owned by dll_00EF_pushable.c
+ * (pushable_updateCurtain/pushable_updateMagicGem and helpers).
  */
 typedef struct PushableState {
   u8 unk00[0x0C];
@@ -36,9 +38,9 @@ typedef struct PushableState {
   u8 padB5[3];
   int msgSenderObj;
   void *nearestObj;
-  f32 unk_C0;
-  f32 unk_C4;
-  f32 unk_C8;
+  f32 knockbackVelX;
+  f32 knockbackVelY;
+  f32 knockbackVelZ;
   f32 eyeOpenSpeed;
   f32 eyeDriftSpeedX;
   f32 eyeDriftSpeedY;
@@ -105,5 +107,7 @@ STATIC_ASSERT(offsetof(PushableState, posHistZ) == 0x12C);
 STATIC_ASSERT(offsetof(PushableState, yaw) == 0x140);
 STATIC_ASSERT(offsetof(PushableState, requiredHitId) == 0x144);
 STATIC_ASSERT(offsetof(PushableState, savePosEnabled) == 0x146);
+
+void pushable_resolveCollisions(struct GameObject* obj, PushableState* state);
 
 #endif /* MAIN_DLL_PUSHABLE_H_ */

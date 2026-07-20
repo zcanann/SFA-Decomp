@@ -2,11 +2,12 @@
 #define MAIN_DLL_DLL_01F5_SHIPBATTLE_H_
 
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "global.h"
 
 typedef struct ShipBattleObjectDef
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head;
     s16 segmentIndex; /* chain index of this segment (-1 = head) */
     s16 unk1A;
     u8 pad1C[0x24 - 0x1C];

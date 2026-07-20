@@ -20,7 +20,8 @@
 #include "main/dll/savedata_struct.h"
 #include "dolphin/os/OSRtc.h"
 #include "main/rcp_dolphin_state_api.h"
-#include "main/dll/dll_003C_tumbleweedbush_api.h"
+#include "main/gameloop_api.h"
+#include "main/dll/dll_003C_tumbleweedbush.h"
 extern s8 lbl_803DBA28;
 extern s8 lbl_803DD706;
 extern u8* lbl_803DD708;

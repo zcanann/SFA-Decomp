@@ -21,10 +21,15 @@ typedef struct DfpFloorbarState
     int* linkedObject;
 } DfpFloorbarState;
 
-void DFP_Floorbar_update(GameObject* param_1);
 int dfpfloorbar_SeqFn(void);
-void DFP_Floorbar_release(void);
+int DFP_Floorbar_getExtraSize(void);
+int DFP_Floorbar_getObjectTypeId(void);
+void DFP_Floorbar_free(int* obj);
+void DFP_Floorbar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void DFP_Floorbar_hitDetect(int* obj);
+void DFP_Floorbar_update(GameObject* obj);
 void DFP_Floorbar_init(GameObject* obj, int params);
+void DFP_Floorbar_release(void);
 void DFP_Floorbar_initialise(void);
 extern u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE];
 extern ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor;

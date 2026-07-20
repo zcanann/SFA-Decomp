@@ -72,8 +72,9 @@ int kaldachom_stateHandlerB05(int obj, int baddieState)
     if ((s8)((GroundBaddieState*)baddieState)->baddie.moveDone != 0 ||
         (s8)((GroundBaddieState*)baddieState)->baddie.moveJustStartedB != 0)
     {
-        if (((int (*)(int, int, f32, int))((void**)*(int*)gBaddieControlInterface)[0x11])(
-                obj, baddieState, (f32)(u32)((CfDoorlightState*)state)->aggroRange, 1) != 0)
+        if ((*gBaddieControlInterface)
+                ->shouldDropTarget((GameObject*)obj, (void*)baddieState,
+                                   (f32)(u32)((CfDoorlightState*)state)->aggroRange, 1) != 0)
         {
             return 5;
         }
@@ -123,7 +124,7 @@ int kaldachom_stateHandlerB02(GameObject* obj, GroundBaddieState* state)
         ObjHits_DisableObject(obj);
         *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         ((CfDoorlightState*)sub)->flags400 = (u16)(((CfDoorlightState*)sub)->flags400 | 0x20);
-        ((CfDoorlightState*)sub)->unk3E8 = lbl_803E3078;
+        ((CfDoorlightState*)sub)->glowAlpha = lbl_803E3078;
         ((CfDoorlightState*)sub)->unk3EC = lbl_803E307C;
     }
     else if ((s32)(s8)state->baddie.moveDone != 0)
@@ -197,7 +198,7 @@ int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
     KaldaChomControl* control;
 
     state = *(int*)&(obj)->extra;
-    *(u8*)&((GroundBaddieState*)baddieState)->baddie.stateTag = 3;
+    ((GroundBaddieState*)baddieState)->baddie.stateTag = 3;
     ((GroundBaddieState*)baddieState)->baddie.moveSpeed = lbl_803E3084;
     {
         f32 fz = lbl_803E3060.f;
@@ -206,7 +207,7 @@ int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
         if (*(char*)&((GroundBaddieState*)baddieState)->baddie.moveJustStartedA != '\0')
         {
             ObjAnim_SetCurrentMove((int)obj, 5, fz, 0);
-            *(s8*)&((GroundBaddieState*)baddieState)->baddie.moveDone = 0;
+            ((GroundBaddieState*)baddieState)->baddie.moveDone = 0;
         }
     }
     {
@@ -225,11 +226,10 @@ int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_rfall5_c);
         control->soundFlags |= SOUNDFLAG_PULLUP_BURST;
         {
-            char* linkedObj;
+            GameObject* linkedObj;
             if (((CfDoorlightState*)state)->spawnsLinkedObj != 0)
             {
-                linkedObj =
-                    ((char* (*)(int, int, int, int))((void**)*gBaddieControlInterface)[0x13])((int)obj, 6, -1, 0);
+                linkedObj = (*gBaddieControlInterface)->spawnChild(obj, 6, -1, 0);
             }
             else
             {
@@ -238,8 +238,8 @@ int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
             if (linkedObj != NULL)
             {
                 f32 fz = lbl_803E3060.f;
-                (**(void (**)(char*, f32, f32, f32))(*(int*)(*(int*)(linkedObj + 0x68)) + 0x2c))(linkedObj, fz,
-                                                                                                 lbl_803E3078, fz);
+                (**(void (**)(GameObject*, f32, f32, f32))(
+                    *(int*)(*(int*)((char*)linkedObj + 0x68)) + 0x2c))(linkedObj, fz, lbl_803E3078, fz);
             }
         }
     }

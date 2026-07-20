@@ -11,6 +11,7 @@
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/dll/player_state.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
@@ -431,7 +432,7 @@ void dll_107_update(GameObject* obj)
 
 typedef struct WindLift107Placement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 rotXParam;    /* 0x18: <<8 -> anim.rotX seed */
     s8 radiusParam;  /* 0x19: * gWindLift107RadiusScale -> radius */
     u8 pad1a[0x1c - 0x1a];
@@ -449,7 +450,7 @@ void dll_107_init(int obj, int pArg)
 
     sub = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = 0;
-    p54 = *(int*)(obj + 0x54);
+    p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
     *(int*)&((ObjHitsPriorityState*)p54)->skeletonHitMask = 16;
     p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
     *(int*)&((ObjHitsPriorityState*)p54)->objectHitMask = 16;

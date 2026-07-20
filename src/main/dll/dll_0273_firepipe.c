@@ -44,7 +44,6 @@
 #include "main/gamebits.h"
 #include "main/mm.h"
 #include "main/model_light.h"
-#include "main/object_ext.h"
 
 f32 lbl_803DC340 = -0.01f;
 f32 lbl_803DC344 = 0.3f;
@@ -464,7 +463,7 @@ void firepipe_render(FirePipeObject* obj, int p1, int p2, int p3, int p4, char v
     }
     if (visible != 0 && (u32)((extra->flags >> 1) & 1) != 0)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p1, p2, p3, p4, (double)lbl_803E6B78);
+        objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, (double)lbl_803E6B78);
     }
 }
 

@@ -15,6 +15,7 @@
 #include "main/carryable_interface.h"
 #include "main/object_render.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/dll/tricky_api.h"
@@ -35,7 +36,7 @@
 
 typedef struct WmColumnPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     u8 rotXByte;   /* 0x18: rotX in 1/256 turns */
     u8 modelIndex; /* 0x19: bank index; the column variant's seqId is
                        500 + modelIndex (500 = retail type 'GPSHpickobj',

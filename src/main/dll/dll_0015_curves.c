@@ -251,7 +251,7 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision)
     }
 }
 
-void fn_800E56A4(GameObject* obj, CurvesCollisionState* collision)
+void curves_resolveSingleTrace(GameObject* obj, CurvesCollisionState* collision)
 {
     RomCurvePoint* point;
     RomCurvePoint* points;
@@ -329,7 +329,7 @@ void fn_800E56A4(GameObject* obj, CurvesCollisionState* collision)
     }
 }
 
-void fn_800E58FC(GameObject* obj, CurvesCollisionState* collision)
+void curves_resolveAveragedSegments(GameObject* obj, CurvesCollisionState* collision)
 {
     f32 sumY;
     MatrixTransform transform;
@@ -422,8 +422,8 @@ void fn_800E58FC(GameObject* obj, CurvesCollisionState* collision)
             }
             if ((s32)(collision->flags & 0x8000) != 0)
             {
-                angle = (u16)getAngle((localX[0] + localX[idx1]) - (localX[idx3] + localX[idx2]),
-                                      (localZ[0] + localZ[idx1]) - (localZ[idx2] + localZ[idx3]));
+                secondArg = (localX[0] + localX[idx1]) - (localX[idx3] + localX[idx2]);
+                angle = (u16)getAngle(secondArg, (localZ[0] + localZ[idx1]) - (localZ[idx3] + localZ[idx2]));
                 obj->anim.rotX += (s16)(u16)(angle + 0x8000) >> 2;
             }
             if ((s32)(collision->flags & 0x200) != 0)
@@ -462,7 +462,7 @@ void fn_800E58FC(GameObject* obj, CurvesCollisionState* collision)
     }
 }
 
-void fn_800E5CBC(short* obj, int state)
+void curves_updateSurfaceTilt(short* obj, int state)
 {
     CurvesCollisionState* collision;
     f32 normalZ;
@@ -513,7 +513,7 @@ void fn_800E5CBC(short* obj, int state)
     }
 }
 
-void fn_800E5E38(GameObject* obj, CurvesCollisionState* collision)
+void curves_snapToNearestSurface(GameObject* obj, CurvesCollisionState* collision)
 {
     u32 hitCount;
     int hitIndex;
@@ -544,10 +544,10 @@ void fn_800E5E38(GameObject* obj, CurvesCollisionState* collision)
     }
 }
 
-void fn_800E5CBC(short* obj, int state);
-void fn_800E5E38(GameObject* obj, CurvesCollisionState* collision);
+void curves_updateSurfaceTilt(short* obj, int state);
+void curves_snapToNearestSurface(GameObject* obj, CurvesCollisionState* collision);
 
-void fn_800E5F1C(GameObject* obj, CurvesCollisionState* collision)
+void curves_resolveWaterFloorCeiling(GameObject* obj, CurvesCollisionState* collision)
 {
     int seg;
     int hitCount;
@@ -1177,7 +1177,7 @@ void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, f32 step)
             switch (collision->updateMode)
             {
             case 1:
-                fn_800E56A4(curveObj, collision);
+                curves_resolveSingleTrace(curveObj, collision);
                 break;
             case 3:
                 curves_countRandomPoints(curveObj, collision);
@@ -1194,20 +1194,20 @@ void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, f32 step)
                 }
                 break;
             default:
-                fn_800E58FC(curveObj, collision);
+                curves_resolveAveragedSegments(curveObj, collision);
                 break;
             }
             if ((s32)(state->flags & 0x100) != 0)
             {
-                fn_800E5E38(curveObj, collision);
+                curves_snapToNearestSurface(curveObj, collision);
             }
             if ((s32)(state->flags & 0x80) != 0)
             {
-                fn_800E5CBC((short*)curveObj, (int)state);
+                curves_updateSurfaceTilt((short*)curveObj, (int)state);
             }
             if ((s32)(state->flags & 1) != 0)
             {
-                fn_800E5F1C(curveObj, collision);
+                curves_resolveWaterFloorCeiling(curveObj, collision);
             }
             memcpy(collision->traceStart, collision->points,
                    ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT) * 0xc);
@@ -1336,7 +1336,7 @@ void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, f32 step)
                    ((int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT) * 0xc);
             if ((s32)(state->flags & 1) != 0)
             {
-                fn_800E5F1C(curveObj, collision);
+                curves_resolveWaterFloorCeiling(curveObj, collision);
             }
         }
     }

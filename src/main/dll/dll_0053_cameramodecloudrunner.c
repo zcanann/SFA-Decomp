@@ -49,7 +49,7 @@ void CameraModeCloudRunner_update(u8* obj)
 
     CameraObject* camera = (CameraObject*)obj;
     GameObject* target = (GameObject*)camera->anim.targetObj;
-    u8* curve;
+    GameObject* focus;
     s16 tgtYaw;
     s16 tgtPitch;
     f32 baseX, baseY, baseZ;
@@ -60,17 +60,17 @@ void CameraModeCloudRunner_update(u8* obj)
     f32 matrix[16];
 
     Player_GetAimAngles((int)target, &tgtYaw, &tgtPitch);
-    curve = (u8*)playerGetFocusObject(target);
-    if (curve != NULL)
+    focus = playerGetFocusObject(target);
+    if (focus != NULL)
     {
-        if (*(s16*)(curve + 70) == CLOUDRUNNER_CURVE_TAG)
+        if (focus->anim.seqId == CLOUDRUNNER_CURVE_TAG)
         {
-            mxin.x = *(f32*)(curve + 24);
-            mxin.y = *(f32*)(curve + 28);
-            mxin.z = *(f32*)(curve + 32);
-            mxin.rotX = *(s16*)(curve + 0);
-            mxin.rotY = *(s16*)(curve + 2);
-            mxin.rotZ = *(s16*)(curve + 4);
+            mxin.x = focus->anim.worldPosX;
+            mxin.y = focus->anim.worldPosY;
+            mxin.z = focus->anim.worldPosZ;
+            mxin.rotX = focus->anim.rotX;
+            mxin.rotY = focus->anim.rotY;
+            mxin.rotZ = focus->anim.rotZ;
             mxin.scale = 1.0f;
             setMatrixFromObjectPos(matrix, &mxin);
             Matrix_TransformPoint(matrix, 0.0f, 65.0f, -10.0f, &baseX, &baseY, &baseZ);
@@ -133,7 +133,7 @@ void CameraModeCloudRunner_update(u8* obj)
 
 void CameraModeCloudRunner_init(int* camera, int radius, f32* focus)
 {
-    int* targetObj = ((int**)camera)[0xA4 / 4];
+    int* targetObj = (int*)((GameObject*)camera)->anim.targetObj;
     if (lbl_803DD5B8 == NULL)
     {
         lbl_803DD5B8 = (CameraModeCloudRunnerState*)mmAlloc(sizeof(CameraModeCloudRunnerState), 15, 0);
@@ -159,7 +159,7 @@ void CameraModeCloudRunner_init(int* camera, int radius, f32* focus)
     getAngle(((GameObject*)camera)->anim.worldPosX - lbl_803DD5B8->focusX,
              ((GameObject*)camera)->anim.worldPosZ - lbl_803DD5B8->focusZ);
     {
-        int* target = ((int**)camera)[0xA4 / 4];
+        int* target = (int*)((GameObject*)camera)->anim.targetObj;
         f32* state = (f32*)lbl_803DD5B8;
         getAngle(((GameObject*)target)->anim.worldPosX - state[0], ((GameObject*)target)->anim.worldPosZ - state[2]);
     }

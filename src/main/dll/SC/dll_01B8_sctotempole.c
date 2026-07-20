@@ -51,7 +51,9 @@ typedef struct SCTotemPoleState
 
 /* Insert newTime into the three sorted record-time GameBits (ascending,
    zero = empty slot); returns whether the order changed. */
-int sc_totempole_sortCompletionGameBits(u16* recordBits, u16 newTime)
+int sc_totempole_sortCompletionGameBits(recordBits, newTime)
+u16* recordBits;
+u16 newTime;
 {
     u16 times[4];
     u8 i, j;
@@ -140,8 +142,8 @@ void sc_totempole_update(int obj)
                         break;
                     }
                 }
-                ((int (*)(u16*, int))sc_totempole_sortCompletionGameBits)(
-                    (u16*)&lbl_803DC068, (s32)(fn_8001461C() / 10.0f));
+                sc_totempole_sortCompletionGameBits((u16*)&lbl_803DC068,
+                                                     (s32)(fn_8001461C() / 10.0f));
             }
             if (!playedFanfare)
             {

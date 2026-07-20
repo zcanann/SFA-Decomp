@@ -1,6 +1,7 @@
 /* DLL 0x19E - DIM Tricky companion object: sparkle effect, hit-detect toggle,
  * line-of-sight voxmap trace, and Tricky egg-interact sequence trigger. */
 #include "main/dll/partfx_interface.h"
+#include "main/dll/dll_0069_dll69func0.h"
 #include "main/dll/dll_019E_dim_tricky.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
@@ -26,14 +27,7 @@
 #define DIM_TRICKY_SCALE_TIMER_DIVISOR 8192.0f
 s8 gDimTrickyEggSequenceStage;
 
-typedef struct Dll19EResArgs
-{
-    u32 w[4];
-} Dll19EResArgs;
-
-STATIC_ASSERT(sizeof(Dll19EResArgs) == 0x10);
-
-const Dll19EResArgs gDimTrickyEggResArgsTemplate = {{0x3E7, 0x8C, 0x8D, 0x28}};
+const Dll69EffectParams gDimTrickyEggResArgsTemplate = {0x3E7, 0x8C, 0x8D, 0x28};
 
 /* Partfx: idle sparkle emitted in render while the object is visible (losVisible);
  * the egg-activation burst emitted 100x in update when the egg turns active. */
@@ -191,13 +185,13 @@ void dll_19E_update(void* obj)
 {
 
     Dll19EState* state;
-    void* resource;
+    Dll69Interface** resource;
     struct
     {
         u8 args[16];
         f32 scale;
     } effectBuf;
-    Dll19EResArgs resourceArgs;
+    Dll69EffectParams resourceArgs;
     int i;
 
     state = ((GameObject*)obj)->extra;
@@ -255,10 +249,9 @@ void dll_19E_update(void* obj)
             if (state->active != 0)
             {
                 resource = Resource_Acquire(TRICKY_EGG_EFFECT_RESOURCE_ID, 1);
-                resourceArgs.w[1] = state->sequenceIndex * 2 + 0x19d;
-                resourceArgs.w[2] = state->sequenceIndex * 2 + 0x19e;
-                (*(void (*)(void*, int, u8*, int, int, u32*))(*(int*)(*(int*)resource + 4)))(
-                    obj, 1, effectBuf.args, 0x10004, -1, resourceArgs.w);
+                resourceArgs.param1 = state->sequenceIndex * 2 + 0x19d;
+                resourceArgs.param2 = state->sequenceIndex * 2 + 0x19e;
+                (*resource)->spawn(obj, 1, effectBuf.args, 0x10004, -1, &resourceArgs);
                 Resource_Release(resource);
 
                 i = 0;
@@ -323,7 +316,7 @@ void dll_19E_update(void* obj)
 void dll_19E_init(u8* obj, Dll19ESetup* setup)
 {
     Dll19EState* state;
-    void* resource;
+    Dll69Interface** resource;
     struct
     {
         u8 args[16];
@@ -354,8 +347,7 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
         resource = Resource_Acquire(TRICKY_EGG_EFFECT_RESOURCE_ID, 1);
         if (setup->sequenceIndex == 0)
         {
-            (*(void (**)(u8*, int, u8*, int, int, int))(*(int*)resource + 4))(
-                obj, 0, stackArg.args, 0x10004, -1, 0);
+            (*resource)->spawn((GameObject*)obj, 0, stackArg.args, 0x10004, -1, NULL);
         }
         break;
     case DIM_TRICKY_MODE_EGG_INTERACT:

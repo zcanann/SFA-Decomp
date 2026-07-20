@@ -113,12 +113,12 @@ typedef union WcTileGrid
     u64 align8;
 } WcTileGrid;
 
-extern WcTileGrid lbl_8032B0C8;
-extern WcTileGrid lbl_8032B088;
-extern WcTileGrid lbl_8032B048;
-extern WcTileGrid lbl_8032B008;
-extern u8 lbl_803AD298[][8];
-extern u8 lbl_803AD2D8[][8];
+extern WcTileGrid gWcTileGridBSolved;
+extern WcTileGrid gWcTileGridBInitial;
+extern WcTileGrid gWcTileGridASolved;
+extern WcTileGrid gWcTileGridAInitial;
+extern u8 gWcTileGridB[][8];
+extern u8 gWcTileGridA[][8];
 extern f32 gWcPushBlockTileResetTime;
 extern f32 lbl_803E6DD0;
 extern f32 lbl_803E6DD4;
@@ -143,9 +143,9 @@ void wclevelcont_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 void wclevelcont_hitDetect(void);
 void wclevelcont_syncProgressBits(WcLevelControlState* state);
 void wclevelcont_update(GameObject* obj);
-void fn_802251B4(GameObject* obj, WcLevelControlState* state);
+void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state);
 int wclevelcont_traceMoveA(GameObject* obj, s16 x, s16 y, f32* outX, f32* outZ, int dx, int dy);
-void wcpushblock_updateLevelControlState(GameObject* obj, WcLevelControlState* state);
+void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state);
 int wclevelcont_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int wclevelcont_traceMoveB(GameObject* obj, s16 x, s16 y, f32* outX, f32* outZ, int dx, int dy);
 void wclevelcont_init(GameObject* obj);

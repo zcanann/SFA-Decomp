@@ -26,5 +26,6 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val);
 void cloudaction_release(void);
 void cloudaction_initialise(void);
 void renderClouds(int a, int b, int c, int d);
+void* cloudGetLayerTextureSize(f32* outWidth, f32* outHeight);
 
 #endif /* MAIN_DLL_CLOUDACTION_H_ */

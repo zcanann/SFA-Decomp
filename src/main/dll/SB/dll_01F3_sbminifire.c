@@ -27,6 +27,7 @@
 #include "main/resource.h"
 #include "main/vecmath.h"
 #include "main/object_descriptor.h"
+#include "main/dll/dll_0075_dll75func0.h"
 
 int gSbMiniFireResourceVariant = 1;
 
@@ -137,7 +138,7 @@ void SB_MiniFire_update(GameObject* obj)
 
 void SB_MiniFire_init(GameObject* obj)
 {
-    void* resource;
+    Dll75Interface** resource;
 
     obj->userData1 = 180;
     obj->anim.velocityX = -(0.01f * (f32)(s32)randomGetRange(20, 40) + 0.8f);
@@ -146,8 +147,7 @@ void SB_MiniFire_init(GameObject* obj)
     obj->anim.rootMotionScale *= 0.8f;
 
     resource = Resource_Acquire(117, 1);
-    (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))((int)obj, gSbMiniFireResourceVariant, 0, 0x10002,
-                                                                      -1, 0);
+    (*resource)->spawn(obj, gSbMiniFireResourceVariant, NULL, 0x10002, -1, NULL);
     gSbMiniFireResourceVariant++;
     if (gSbMiniFireResourceVariant > 3)
     {

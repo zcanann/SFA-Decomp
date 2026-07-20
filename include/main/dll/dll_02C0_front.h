@@ -22,5 +22,6 @@ void TitleScreen_update(u8* obj);
 void TitleScreen_init(u8* obj, u8* def);
 
 void creditsStart(void);
+void titleScreenFn_801368c4(s8 selection);
 
 #endif

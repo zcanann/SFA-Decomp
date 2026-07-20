@@ -26,7 +26,7 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/modgfx.h"
-#include "main/sky_state.h"
+#include "main/sky.h"
 #include "main/model_light.h"
 #include "main/dll/dll_0150_gcrobotlightbea.h"
 #include "main/object_descriptor.h"
@@ -133,13 +133,13 @@ void gcrobotlightbea_update(int* obj)
     vec[2] = lbl_80322C38[2];
     Obj_TransformLocalVectorByWorldMatrix(obj, lbl_80322C38, vec);
     voxmaps_traceScaledVectorEnd(vec2, obj + 3, vec, lbl_803DBE5C);
-    PSVECScale(lbl_80322C38, vec2, PSVECDistance((f32*)((char*)obj + 0xc), vec2));
+    PSVECScale(lbl_80322C38, vec2, PSVECDistance(&((GameObject*)obj)->anim.localPosX, vec2));
     getAmbientColor(0, &r_byte, &g_byte, &b_byte);
     if (sub->light != NULL)
     {
-        ((void (*)(ModelLightStruct*, int, int, int, int))modelLightStruct_setDiffuseColor)(
-            sub->light, (s32)(0.7f * (f32)(u32)r_byte), (s32)(0.7f * (f32)(u32)g_byte),
-            (s32)(0.7f * (f32)(u32)b_byte), 0xff);
+        modelLightStruct_setDiffuseColor(sub->light, (s32)(0.7f * (f32)(u32)r_byte),
+                                         (s32)(0.7f * (f32)(u32)g_byte),
+                                         (s32)(0.7f * (f32)(u32)b_byte), 0xff);
         modelLightStruct_setPosition(sub->light, vec2[0], vec2[1], vec2[2]);
     }
 }

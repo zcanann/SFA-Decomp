@@ -4,7 +4,7 @@
 #include "main/game_object.h"
 #include "types.h"
 
-int sc_totempole_sortCompletionGameBits(u16* recordBits, u16 newTime);
+int sc_totempole_sortCompletionGameBits(u16* recordBits, int newTime);
 int sc_totempole_getExtraSize(void);
 int sc_totempole_getObjectTypeId(void);
 void sc_totempole_free(void);

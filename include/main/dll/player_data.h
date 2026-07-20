@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_PLAYER_DATA_H_
 #define MAIN_DLL_PLAYER_DATA_H_
 
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/game_object.h"
 #include "main/lightmap_api.h"
 
@@ -13,7 +14,7 @@ typedef struct PlayerModelChainEntry
 extern void* gPlayerPathObject;
 extern u8 gPlayerSubState;
 extern void* gPlayerSpawnedObjects[];
-extern void* gPlayerResource;
+extern StaffCollisionInterface** gPlayerResource;
 extern int gPlayerPendingHealth;
 extern f32 gPlayerDegToBinAngle;
 extern GameObject* gPlayerStaffObject;
@@ -146,7 +147,7 @@ extern s16 lbl_80332F48[];
 extern s16 lbl_80332F78[];
 extern s16 lbl_80332F88[];
 extern s16 lbl_80333110[];
-extern f32 lbl_80333250[24];
+extern f32 gPlayerDefaultMoveParams[24];
 typedef struct PlayerMotionTuning
 {
     s16 moveSequences[4][12];
@@ -168,9 +169,9 @@ extern PlayerMotionTuning lbl_803332B0;
 extern s16 lbl_8033366C[];
 extern f32 lbl_8033369C[];
 extern f32 lbl_803DAF88[];
-extern f32 lbl_803DC670;
-extern f32 lbl_803DC674;
-extern f32 lbl_803DC678;
+extern f32 gPlayerModelChainOriginX;
+extern f32 gPlayerModelChainOriginY;
+extern f32 gPlayerModelChainOriginZ;
 extern f32 lbl_803DC67C;
 extern f32 lbl_803DC680;
 extern f32 lbl_803DC684;
@@ -194,17 +195,17 @@ extern f32 lbl_803DE43C;
 extern f32 lbl_803DE440;
 extern u8 lbl_803DE458;
 extern u8 lbl_803DE459;
-extern f32 lbl_803DE45C;
+extern f32 gPlayerFireLaserCountdown;
 extern f32 lbl_803DE460;
 extern f32 lbl_803DE464;
 extern f32 lbl_803DE468;
 extern s8 lbl_803DE46C;
-extern f32 lbl_803DE478;
-extern f32 lbl_803DE488;
+extern f32 gPlayerTeleportAnimRearm;
+extern f32 gPlayerLiftRockPullAccum;
 extern u8 lbl_803DE48C;
 extern u8 lbl_803DE48D;
-extern f32 lbl_803DE490;
-extern f32 lbl_803DE494;
+extern f32 gPlayerStaffBoostTargetY;
+extern f32 gPlayerStaffBoostStartY;
 extern f32 lbl_803DE498;
 extern s16 lbl_803DE4B0;
 

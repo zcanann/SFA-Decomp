@@ -23,6 +23,7 @@
 #include "main/game_object.h"
 #include "main/frame_timing.h"
 #include "main/audio/audio_control_api.h"
+#include "main/dll/dll_0017_savegame_api.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/dll/player_api.h"
 #include "main/model_engine.h"
@@ -221,8 +222,9 @@ typedef struct SaveGameMapState
 
 #define gSaveGameMapState (*(SaveGameMapState*)gTransientMapBits)
 
-int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
+int saveGame_restoreObjectPosToRomList(void* objectData)
 {
+    SaveGameRomListPosition* object = objectData;
     u8* walker;
     u8* slot;
     int i;
@@ -257,7 +259,7 @@ void saveGame_unsaveObjectPos(GameObject* obj)
 
     for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
     {
-        objectId = *(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14);
+        objectId = ((SaveGameRomListPosition*)((GameObject*)obj)->anim.placementData)->objectId;
         if (objectId == ((SaveGameImage*)gSaveGameData)->positions[i].objectId)
         {
             break;
@@ -296,20 +298,20 @@ void saveGame_saveObjectPos(GameObject* obj)
         objectId = ((SaveGameImage*)gSaveGameData)->positions[i].objectId;
         if (objectId == 0)
             break;
-        if (*(u32*)(*(u8**)&obj->anim.placementData + 0x14) == objectId)
+        if (((SaveGameRomListPosition*)obj->anim.placementData)->objectId == objectId)
             break;
     }
     if (i == SAVEGAME_OBJECT_POSITION_COUNT)
         return;
     *(u32*)((int)gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET + (i << 4)) =
-        *(u32*)(*(u8**)&obj->anim.placementData + 0x14);
+        ((SaveGameRomListPosition*)obj->anim.placementData)->objectId;
     *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 4) + (i << 4)) = obj->anim.localPosX;
     *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 8) + (i << 4)) = obj->anim.localPosY;
     *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 12) + (i << 4)) =
         obj->anim.localPosZ;
-    *(f32*)(*(int*)&obj->anim.placementData + 8) = obj->anim.localPosX;
-    ((GameObject*)obj->anim.placementData)->anim.localPosX = obj->anim.localPosY;
-    ((GameObject*)obj->anim.placementData)->anim.localPosY = obj->anim.localPosZ;
+    ((SaveGameRomListPosition*)obj->anim.placementData)->x = obj->anim.localPosX;
+    ((SaveGameRomListPosition*)obj->anim.placementData)->y = obj->anim.localPosY;
+    ((SaveGameRomListPosition*)obj->anim.placementData)->z = obj->anim.localPosZ;
 }
 
 void SaveGame_setCamActionNo(s16 actionNo)
@@ -330,7 +332,7 @@ int saveFn_800e8508(void)
 {
     int loadResult;
 
-    loadResult = maybeTryLoadSaveBuffer(saveData);
+    loadResult = maybeTryLoadSave(saveData);
     if ((loadResult == 0) || (saveData[0] == '\0'))
     {
         memset(saveData, 0, 0xE4);
@@ -369,7 +371,7 @@ void gplaySaveGame(int param)
     {
         lbl_803DD498[0xc] = 1;
     }
-    saveGameBuffers((u8)gSaveGameCurrentSlot, lbl_803DD498, saveData);
+    _saveGame((u8)gSaveGameCurrentSlot, lbl_803DD498, saveData);
 }
 
 void titleDoLoadSave(void)
@@ -402,7 +404,7 @@ void saveGame_save(void)
     {
         lbl_803DD498[0xc] = 1;
     }
-    saveGameBuffers((u8)gSaveGameCurrentSlot, lbl_803DD498, saveData);
+    _saveGame((u8)gSaveGameCurrentSlot, lbl_803DD498, saveData);
 }
 
 void clearSaveGameLoadingFlag(void)
@@ -436,7 +438,7 @@ int trySaveGame(int slot)
         memset(lbl_803DD498, 0, SAVEGAME_ACTIVE_SIZE);
     }
 
-    loaded = loadSaveGameBuffer((u8)gSaveGameCurrentSlot, lbl_803DD498);
+    loaded = loadSaveGame((u8)gSaveGameCurrentSlot, lbl_803DD498);
     if (loaded != 0)
     {
         if (lbl_803DD498[0x21] == 0)
@@ -606,7 +608,7 @@ s8 slot;
         gSaveGameCurrentSlot = slot;
         if (name != NULL)
         {
-            return saveGameBuffers((u8)slot, lbl_803DD498, saveData);
+            return _saveGame((u8)slot, lbl_803DD498, saveData);
         }
     }
     return 0;
@@ -625,7 +627,7 @@ int saveSelect_getInfo(void* outPtr)
     do
     {
         info = (SaveSelectInfo*)outPtr + slot;
-        if (loadSaveGameBuffer((u8)slot, save) != 0)
+        if (loadSaveGame((u8)slot, save) != 0)
         {
             newFileFlag = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
             info->valid = newFileFlag;

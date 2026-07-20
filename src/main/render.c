@@ -566,7 +566,7 @@ s16 renderModeSetOrGet(int mode)
     return gRenderMode;
 }
 
-int return0xFFFF_80008B6C(void)
+int return0xFFFF_80008B6C(int unused0, int unused1, int unused2, int unused3, int unused4, int unused5, int unused6)
 {
     return -0x1;
 }

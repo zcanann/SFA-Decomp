@@ -13,8 +13,8 @@
  * The HUD is suppressed (and faded out) when the camera is in mode
  * 0x44, the viewport is letterboxed, the player model is hidden, or the
  * pause menu is up. Minimap_initialise()/Minimap_release() own the
- * texture buffers (minimapTexture, the compass at lbl_803DD940) and the
- * 2-slot live-objects table at lbl_803DBBC8.
+ * texture buffers (minimapTexture, the compass at gMinimapCompassTexture) and the
+ * 2-slot live-objects table at gMinimapBlipObjects.
  */
 #include "main/texture.h"
 #include "track/intersect_hud_api.h"
@@ -29,6 +29,7 @@
 #include "main/dll/player_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/model.h"
 #include "main/objprint_render_api.h"
 #include "main/gamebits.h"
 #include "dolphin/gx/GXCull.h"
@@ -43,9 +44,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_0031_minimap.h"
 #include "main/minimap_api.h"
-#define TEXTRENDER_DIRECT_INT_CURSOR_CALL
 #include "main/textrender_api.h"
-#undef TEXTRENDER_DIRECT_INT_CURSOR_CALL
 #include "main/pause_menu_api.h"
 #include "main/dll/dll_003F_dll3f.h"
 
@@ -56,7 +55,7 @@ f32 gMinimapMinZoom = 0.3f;
 f32 gMinimapMaxZoom = 2.0f;
 int gMinimapBoxWidth = 120;
 int gMinimapBoxHeight = 100;
-GameObject* lbl_803DBBC8[2] = {0};
+GameObject* gMinimapBlipObjects[2] = {0};
 s16 gMinimapRegionMinX = 0x7FFF;
 s16 gMinimapRegionMinZ = 0x7FFF;
 f32 gMinimapZoomInRate = 0.995f;
@@ -74,10 +73,10 @@ f32 gMinimapWorldToTexScale = 0.08f;
 
 #define MINIMAP_OBJFLAG_PARENT_SLACK 0x1000
 
-/* compass texture asset (loaded into lbl_803DD940; see file header). */
+/* compass texture asset (loaded into gMinimapCompassTexture; see file header). */
 #define MINIMAP_TEXTURE_COMPASS 0xBE5
 
-/* base of the 2-object run spawned into lbl_803DBBC8; both 0x7DA and 0x7DB are
+/* base of the 2-object run spawned into gMinimapBlipObjects; both 0x7DA and 0x7DB are
    "CommandMenu" in the retail OBJECTS.bin, so only the run base is named here. */
 #define MINIMAP_COMMAND_MENU_OBJ_BASE 2010
 
@@ -142,7 +141,7 @@ MinimapMapEntry gMinimapCellTable[25] = {
 
 void Minimap_drawCompassBlip(void);
 void Minimap_setupCompassBlip(void);
-void fn_8013351C(void);
+void Minimap_drawCompassNeedle(void);
 
 extern u8 lbl_803DD7BA;
 extern s16 lbl_803DD7A2;
@@ -158,13 +157,13 @@ u8 gMinimapTexV;
 u8 gMinimapTexU;
 u8 gMinimapZoomSfxActive;
 s8 gMinimapViewMode;
-void* lbl_803DD940;
+void* gMinimapCompassTexture;
 void* minimapTexture;
-u32 lbl_803DD938;
-int lbl_803DD934;
+u32 gMinimapBoxY;
+int gMinimapRadarTarget;
 s16 gMinimapContentAlpha;
 s16 gMinimapFadeAlpha;
-void* lbl_803DD92C;
+void* gMinimapLoadedMapId;
 u8 gMinimapBlipPulse;
 u8 gMinimapRadarInited;
 u8 gMinimapAreaNameDelay;
@@ -209,11 +208,11 @@ extern f32 gMinimapBlipVeryNearDist;
 
 int Minimap_update(void)
 {
-    u32 vv, u;
-    int marker;
+    u32 mapTileV, mapTileU;
+    int mapTextureId;
     u8 found;
     u8 cell;
-    int yi;
+    int playerWorldY;
     u8 k;
     u8 i;
     MinimapRow* row;
@@ -222,9 +221,9 @@ int Minimap_update(void)
     int v;
     u8 j;
     int n;
-    int w;
+    int boxTargetWidth;
     u16* box;
-    int cs;
+    int savedCharset;
     int boxW;
     int boxH;
     int xc;
@@ -233,7 +232,7 @@ int Minimap_update(void)
     s16 m;
     int sv;
     u32 texW, texH;
-    f32 s2, fz, panx, yrel, xrel, pany, ox, oy, t, e, a, b, uq, cx, cy, frac, fx;
+    f32 s2, fz, panx, yrel, xrel, pany, ox, oy, t, e, a, b, tileCoord, cx, cy, frac, fx;
     u8* player;
     f32 c2, s1, c1, c3, s3, fv;
     u32 col;
@@ -245,7 +244,7 @@ int Minimap_update(void)
     u32 cwM;
     u32 cwB;
 
-    marker = 0;
+    mapTextureId = 0;
     i = 0;
     k = 0;
     found = 0;
@@ -288,20 +287,20 @@ int Minimap_update(void)
                 fz = ((GameObject*)player)->anim.worldPosZ;
                 gMinimapAxisSwap = 0;
             }
-            yi = (int)((GameObject*)player)->anim.worldPosY;
+            playerWorldY = (int)((GameObject*)player)->anim.worldPosY;
             for (; k < gMinimapCellTable[i].count; k++)
             {
                 row = &rows[k];
-                if (fx >= row->x0 && fx < row->x1 && fz >= row->z0 && fz < row->z1 && (s16)yi >= row->y0 &&
-                    (s16)yi < row->y1 && mainGetBit(row->gameBit) != 0)
+                if (fx >= row->x0 && fx < row->x1 && fz >= row->z0 && fz < row->z1 && (s16)playerWorldY >= row->y0 &&
+                    (s16)playerWorldY < row->y1 && mainGetBit(row->gameBit) != 0)
                 {
                     j = 0;
                     v = rows[k].mapId;
                     if (v != 0)
                     {
-                        marker = v;
+                        mapTextureId = v;
                     }
-                    if ((int)lbl_803DD92C == v)
+                    if ((int)gMinimapLoadedMapId == v)
                     {
                         gMinimapRegionMaxX = -0x8000;
                         gMinimapRegionMaxZ = -0x8000;
@@ -309,7 +308,7 @@ int Minimap_update(void)
                         gMinimapRegionMinZ = 0x7fff;
                         for (; j < gMinimapCellTable[i].count; j++)
                         {
-                            if (marker == rows[j].mapId)
+                            if (mapTextureId == rows[j].mapId)
                             {
                                 gMinimapRegionMinX =
                                     (rows[j].x0 < gMinimapRegionMinX) ? rows[j].x0 : gMinimapRegionMinX;
@@ -330,14 +329,14 @@ int Minimap_update(void)
         }
         if ((gMinimapEnabled == 0 && lbl_803DD7BA == 0) || mainGetBit(GAMEBIT_NoMapData) != 0)
         {
-            marker = 0;
+            mapTextureId = 0;
         }
         if ((*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER || (gMinimapEnabled == 0 && lbl_803DD7BA == 0) ||
             Camera_GetViewportYOffset() != 0 ||
             (((GameObject*)player)->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
             objIsCurModelNotZero(player) == 0 || pauseMenuState != 0 || lbl_803DD75B != 0)
         {
-            marker = 0;
+            mapTextureId = 0;
             gMinimapFadeAlpha -= 0x20;
             n = gMinimapFadeAlpha;
             if (n < 0)
@@ -377,7 +376,7 @@ int Minimap_update(void)
                 n = 0xff;
             gMinimapFadeAlpha = n;
         }
-        if ((int)lbl_803DD92C == marker)
+        if ((int)gMinimapLoadedMapId == mapTextureId)
         {
             gMinimapContentAlpha += 0x20;
             gMinimapContentAlpha = (s16)((gMinimapContentAlpha < 0) ? 0
@@ -395,12 +394,12 @@ int Minimap_update(void)
                 {
                     textureFree((Texture*)(minimapTexture));
                     minimapTexture = NULL;
-                    lbl_803DD92C = NULL;
+                    gMinimapLoadedMapId = NULL;
                 }
-                if (marker != 0)
+                if (mapTextureId != 0)
                 {
-                    minimapTexture = textureLoadAsset(marker);
-                    lbl_803DD92C = (void*)marker;
+                    minimapTexture = textureLoadAsset(mapTextureId);
+                    gMinimapLoadedMapId = (void*)mapTextureId;
                 }
             }
         }
@@ -409,27 +408,27 @@ int Minimap_update(void)
             box = gameTextGetBox(0x83);
             if (gMinimapViewMode == MINIMAP_VIEW_MODE_AREA_NAME && lbl_803DD7A2 != 0 && lbl_803DBA6E > -1)
             {
-                w = 200;
+                boxTargetWidth = 200;
             }
             else
             {
-                w = 0x78;
+                boxTargetWidth = 0x78;
             }
-            if (gMinimapBoxWidth < w)
+            if (gMinimapBoxWidth < boxTargetWidth)
             {
                 gMinimapBoxWidth += framesThisStep * 8;
-                gMinimapBoxWidth = (gMinimapBoxWidth < w) ? gMinimapBoxWidth : w;
+                gMinimapBoxWidth = (gMinimapBoxWidth < boxTargetWidth) ? gMinimapBoxWidth : boxTargetWidth;
             }
             else
             {
                 gMinimapBoxWidth -= framesThisStep * 8;
-                gMinimapBoxWidth = (gMinimapBoxWidth > w) ? gMinimapBoxWidth : w;
+                gMinimapBoxWidth = (gMinimapBoxWidth > boxTargetWidth) ? gMinimapBoxWidth : boxTargetWidth;
             }
             box[4] = (u16)(gMinimapBoxWidth - 8);
-            lbl_803DD938 = 0x1b8 - gMinimapBoxHeight;
-            ((s16*)box)[0xb] = lbl_803DD938;
-            drawHudBox(0x32, lbl_803DD938, gMinimapBoxWidth, gMinimapBoxHeight, gMinimapFadeAlpha & 0xff, 1);
-            GXSetScissor(0x32, lbl_803DD938, gMinimapBoxWidth, gMinimapBoxHeight);
+            gMinimapBoxY = 0x1b8 - gMinimapBoxHeight;
+            ((s16*)box)[0xb] = gMinimapBoxY;
+            drawHudBox(0x32, gMinimapBoxY, gMinimapBoxWidth, gMinimapBoxHeight, gMinimapFadeAlpha & 0xff, 1);
+            GXSetScissor(0x32, gMinimapBoxY, gMinimapBoxWidth, gMinimapBoxHeight);
             switch (gMinimapViewMode)
             {
             case MINIMAP_VIEW_MODE_MAP:
@@ -481,23 +480,23 @@ int Minimap_update(void)
                         t = (t < (b = texH * gMinimapZoom - boxH)) ? t : b;
                         oy = t;
                     }
-                    uq = ox / gMinimapZoom;
-                    u = uq;
-                    frac = gMinimapZoom * (uq - (f32)u);
-                    uq = oy / gMinimapZoom;
-                    vv = uq;
-                    fv = gMinimapZoom * (uq - vv);
+                    tileCoord = ox / gMinimapZoom;
+                    mapTileU = tileCoord;
+                    frac = gMinimapZoom * (tileCoord - (f32)mapTileU);
+                    tileCoord = oy / gMinimapZoom;
+                    mapTileV = tileCoord;
+                    fv = gMinimapZoom * (tileCoord - mapTileV);
                     ((u8*)&col)[3] = gMinimapContentAlpha;
                     ((u8*)&col)[0] = 0x20;
                     ((u8*)&col)[1] = 0x4d;
                     ((u8*)&col)[2] = 0x84;
-                    hudDrawRect(0x32, lbl_803DD938, boxW + 0x32, lbl_803DD938 + boxH, *(GXColor*)&col);
+                    hudDrawRect(0x32, gMinimapBoxY, boxW + 0x32, gMinimapBoxY + boxH, *(GXColor*)&col);
                     drawPartialTexture(minimapTexture, (gMinimapF50 - panx) - frac,
-                                       ((f32)(int)lbl_803DD938 - pany) - fv, gMinimapContentAlpha & 0xff,
-                                       (int)(gMinimapF256 * *(f32*)&gMinimapZoom), texW - u, texH - vv, u, vv);
+                                       ((f32)(int)gMinimapBoxY - pany) - fv, gMinimapContentAlpha & 0xff,
+                                       (int)(gMinimapF256 * *(f32*)&gMinimapZoom), texW - mapTileU, texH - mapTileV, mapTileU, mapTileV);
                     cx = 0.5f + ((gMinimapZoom * (xrel * gMinimapWorldToTexScale) + gMinimapF50) - ox - panx);
                     cy =
-                        0.5f + ((gMinimapZoom * (yrel * gMinimapWorldToTexScale) + (f32)(int)lbl_803DD938) - oy - pany);
+                        0.5f + ((gMinimapZoom * (yrel * gMinimapWorldToTexScale) + (f32)(int)gMinimapBoxY) - oy - pany);
                     ((u8*)&col)[3] = gMinimapContentAlpha;
                     ((u8*)&col)[0] = 0;
                     ((u8*)&col)[1] = 0;
@@ -548,18 +547,18 @@ int Minimap_update(void)
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
                     gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
-                    cs = gameTextGetCharset();
+                    savedCharset = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
                     gameTextShow(0x458);
-                    gameTextSetCharset(cs, 3);
+                    gameTextSetCharset(savedCharset, 3);
                     gameTextResetCursor(2);
                 }
                 break;
             case MINIMAP_VIEW_MODE_RADAR:
                 Minimap_drawCompassBlip();
-                if ((u32)lbl_803DD934 == 0)
+                if ((u32)gMinimapRadarTarget == 0)
                 {
-                    fn_8013351C();
+                    Minimap_drawCompassNeedle();
                     gameTextSetCursor(box[1], box[5], 1);
                     gameTextResetCursor(1);
                     n = gMinimapBoxWidth;
@@ -569,10 +568,10 @@ int Minimap_update(void)
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
                     gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
-                    cs = gameTextGetCharset();
+                    savedCharset = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
                     gameTextShow(0x459);
-                    gameTextSetCharset(cs, 3);
+                    gameTextSetCharset(savedCharset, 3);
                     gameTextResetCursor(2);
                 }
                 break;
@@ -593,7 +592,7 @@ int Minimap_update(void)
                 }
                 else if (gMinimapEnabled != 0)
                 {
-                    fn_8013351C();
+                    Minimap_drawCompassNeedle();
                     gameTextSetCursor(box[1], box[5], 1);
                     gameTextResetCursor(1);
                     n = gMinimapBoxWidth;
@@ -603,23 +602,23 @@ int Minimap_update(void)
                     box[5] = (u16)((n > 2) ? n : 2);
                     gameTextSetCursor(box[0], box[5], 2);
                     gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
-                    cs = gameTextGetCharset();
+                    savedCharset = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
                     gameTextShow(0x45a);
-                    gameTextSetCharset(cs, 3);
+                    gameTextSetCharset(savedCharset, 3);
                     gameTextResetCursor(2);
                 }
                 break;
             }
             GXSetScissor(0, 0, 0x280, 0x1e0);
-            drawTexture(lbl_803DD940, gMinimapF32, (f32)(int)(lbl_803DD938 - 0x14), gMinimapFadeAlpha & 0xff, 0x100);
+            drawTexture(gMinimapCompassTexture, gMinimapF32, (f32)(int)(gMinimapBoxY - 0x14), gMinimapFadeAlpha & 0xff, 0x100);
             if (gMinimapFadeAlpha != 0)
             {
                 ((u8*)&col2)[3] = gMinimapContentAlpha;
                 ((u8*)&col2)[0] = 0xff;
                 ((u8*)&col2)[1] = 0xff;
                 ((u8*)&col2)[2] = 0;
-                xc = (s16)(lbl_803DD938 - 4);
+                xc = (s16)(gMinimapBoxY - 4);
                 if (gMinimapViewMode == MINIMAP_VIEW_MODE_MAP && minimapTexture != NULL)
                 {
                     if (gMinimapZoom < gMinimapMaxZoom)
@@ -650,7 +649,7 @@ int Minimap_update(void)
 
 u16 getMinimapY(void)
 {
-    return lbl_803DD938;
+    return gMinimapBoxY;
 }
 
 u8 isAreaNameTextActive(void)
@@ -670,7 +669,7 @@ u8 isAreaNameTextActive(void)
 
 PPCWGPipe GXWGFifo : (0xCC008000);
 
-void fn_8013351C(void)
+void Minimap_drawCompassNeedle(void)
 {
     u32 col;
     u32 c2;
@@ -695,7 +694,7 @@ void fn_8013351C(void)
     s1 = gMinimapTwo * mathCosf((gMinimapPi * (gMinimapCompassPhase + gMinimapF24576)) / gMinimapF32768);
     cc2 = gMinimapTwo * mathSinf((gMinimapPi * (gMinimapCompassPhase + gMinimapFNeg24576)) / gMinimapF32768);
     s2 = gMinimapTwo * mathCosf((gMinimapPi * (gMinimapCompassPhase + gMinimapFNeg24576)) / gMinimapF32768);
-    y = lbl_803DD938 + 0x32;
+    y = gMinimapBoxY + 0x32;
     c2 = col;
     hudDrawTriangle(gMinimapF110 - c0, y - s0, gMinimapF110 - c1, y - s1, gMinimapF110 - cc2, y - s2, &c2);
 }
@@ -705,29 +704,29 @@ void Minimap_drawCompassBlip(void)
     u8 count;
     u8 i;
     int pulseOn;
-    int* model;
+    ObjModel* model;
 
     count = 2;
     viewFn_80129cbc(gMinimapF43, gMinimapF110, gMinimapF390);
     pulseOn = (gMinimapBlipPulse >> 3) & 1;
     if (pulseOn != 0)
     {
-        if ((s8) * (u8*)((char*)lbl_803DBBC8[1] + 173) == 0)
+        if (gMinimapBlipObjects[1]->anim.bankIndex == 0)
         {
             Sfx_PlayFromObject(0, SFXTRIG_and_suck_lp);
         }
     }
-    *(s8*)((char*)lbl_803DBBC8[1] + 173) = pulseOn;
-    if ((u32)lbl_803DD934 == 0)
+    gMinimapBlipObjects[1]->anim.bankIndex = pulseOn;
+    if ((u32)gMinimapRadarTarget == 0)
     {
         count = 1;
     }
     for (i = 0; i < count; i++)
     {
-        objRender(0, 0, 0, 0, lbl_803DBBC8[i], 1);
-        model = (int*)Obj_GetActiveModel((GameObject*)lbl_803DBBC8[i]);
-        *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
-        *(u8*)((char*)lbl_803DBBC8[i] + 55) = 255;
+        objRender(0, 0, 0, 0, gMinimapBlipObjects[i], 1);
+        model = Obj_GetActiveModel((GameObject*)gMinimapBlipObjects[i]);
+        model->bufferFlags = (u16)(model->bufferFlags & ~0x8);
+        gMinimapBlipObjects[i]->anim.renderAlpha = 255;
     }
     viewFn_80129c74();
 }
@@ -749,15 +748,15 @@ void Minimap_setupCompassBlip(void)
     scale = gMinimapF0_05;
     for (; i < 2; i++)
     {
-        lbl_803DBBC8[i] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(32, MINIMAP_COMMAND_MENU_OBJ_BASE + i), 4, -1, -1, 0);
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = posX;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = posY;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = center;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = center;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosZ = posZ;
-        ((GameObject*)lbl_803DBBC8[i])->anim.rotX = 2000;
-        ((GameObject*)lbl_803DBBC8[i])->anim.rotY = 0;
-        ((GameObject*)lbl_803DBBC8[i])->anim.rootMotionScale = scale;
+        gMinimapBlipObjects[i] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(32, MINIMAP_COMMAND_MENU_OBJ_BASE + i), 4, -1, -1, 0);
+        ((GameObject*)gMinimapBlipObjects[i])->anim.localPosX = posX;
+        ((GameObject*)gMinimapBlipObjects[i])->anim.localPosY = posY;
+        ((GameObject*)gMinimapBlipObjects[i])->anim.localPosX = center;
+        ((GameObject*)gMinimapBlipObjects[i])->anim.localPosY = center;
+        ((GameObject*)gMinimapBlipObjects[i])->anim.localPosZ = posZ;
+        ((GameObject*)gMinimapBlipObjects[i])->anim.rotX = 2000;
+        ((GameObject*)gMinimapBlipObjects[i])->anim.rotY = 0;
+        ((GameObject*)gMinimapBlipObjects[i])->anim.rootMotionScale = scale;
     }
 }
 
@@ -785,7 +784,7 @@ void fn_80133934(void)
     {
         textureFree((Texture*)(minimapTexture));
         minimapTexture = NULL;
-        lbl_803DD92C = NULL;
+        gMinimapLoadedMapId = NULL;
     }
 }
 
@@ -941,8 +940,8 @@ void Minimap_frameStart(void)
                     Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
                     gMinimapZoomSfxActive = 0;
                 }
-                lbl_803DD934 = ObjGroup_FindNearestObject(FUELCELL_OBJGROUP, (GameObject*)player, &dist);
-                if ((void*)lbl_803DD934 != NULL)
+                gMinimapRadarTarget = ObjGroup_FindNearestObject(FUELCELL_OBJGROUP, (GameObject*)player, &dist);
+                if ((void*)gMinimapRadarTarget != NULL)
                 {
                     if (dist < gMinimapBlipNearDist)
                     {
@@ -958,10 +957,10 @@ void Minimap_frameStart(void)
                     }
                     slot = Camera_GetCurrentViewSlot();
                     targetAngle =
-                        getAngle(((GameObject*)lbl_803DD934)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
-                                 ((GameObject*)lbl_803DD934)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
+                        getAngle(((GameObject*)gMinimapRadarTarget)->anim.localPosX - ((GameObject*)player)->anim.localPosX,
+                                 ((GameObject*)gMinimapRadarTarget)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ);
                     targetAngle = slot->yaw + targetAngle;
-                    angleDelta = targetAngle - (u16)((GameObject*)lbl_803DBBC8[1])->anim.rotZ;
+                    angleDelta = targetAngle - (u16)((GameObject*)gMinimapBlipObjects[1])->anim.rotZ;
                     if (angleDelta > 0x8000)
                     {
                         angleDelta = (angleDelta - 0x10000) + 1;
@@ -970,7 +969,7 @@ void Minimap_frameStart(void)
                     {
                         angleDelta += 0xffff;
                     }
-                    *(s16*)((char*)lbl_803DBBC8[1] + 4) = *(s16*)(int)((char*)lbl_803DBBC8[1] + 4) + angleDelta / 5;
+                    gMinimapBlipObjects[1]->anim.rotZ = gMinimapBlipObjects[1]->anim.rotZ + angleDelta / 5;
                 }
                 break;
             case MINIMAP_VIEW_MODE_AREA_NAME:
@@ -1007,16 +1006,16 @@ void Minimap_release(void)
 {
     if (minimapTexture != NULL)
         textureFree((Texture*)(minimapTexture));
-    textureFree((Texture*)(lbl_803DD940));
-    Minimap_freeObjectSlots(lbl_803DBBC8, 2);
+    textureFree((Texture*)(gMinimapCompassTexture));
+    Minimap_freeObjectSlots(gMinimapBlipObjects, 2);
     minimapTexture = NULL;
-    lbl_803DD940 = NULL;
+    gMinimapCompassTexture = NULL;
 }
 
 void Minimap_initialise(void)
 {
-    lbl_803DD940 = textureLoadAsset(MINIMAP_TEXTURE_COMPASS);
-    lbl_803DD938 = 340;
+    gMinimapCompassTexture = textureLoadAsset(MINIMAP_TEXTURE_COMPASS);
+    gMinimapBoxY = 340;
 }
 
 u32 lbl_8031C5D0[10] = {0x00000000,

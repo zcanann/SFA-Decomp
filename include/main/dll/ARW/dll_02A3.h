@@ -7,9 +7,9 @@
 typedef struct Dll2A3State
 {
     f32 lifetime;
-    s16 rotXSpeed;
-    s16 rotYSpeed;
-    s16 rotZSpeed;
+    s16 spinRateX;
+    s16 spinRateY;
+    s16 spinRateZ;
     u8 pad0A[2];
 } Dll2A3State;
 
@@ -21,9 +21,9 @@ typedef struct Dll2A3Velocity
 } Dll2A3Velocity;
 
 STATIC_ASSERT(sizeof(Dll2A3State) == 0x0c);
-STATIC_ASSERT(offsetof(Dll2A3State, rotXSpeed) == 0x04);
-STATIC_ASSERT(offsetof(Dll2A3State, rotYSpeed) == 0x06);
-STATIC_ASSERT(offsetof(Dll2A3State, rotZSpeed) == 0x08);
+STATIC_ASSERT(offsetof(Dll2A3State, spinRateX) == 0x04);
+STATIC_ASSERT(offsetof(Dll2A3State, spinRateY) == 0x06);
+STATIC_ASSERT(offsetof(Dll2A3State, spinRateZ) == 0x08);
 
 extern int lbl_803DDD90;
 extern int lbl_803DDD94;

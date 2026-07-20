@@ -40,7 +40,7 @@
 #include "main/vecmath.h"
 #include "main/track_dolphin_api.h"
 #include "main/object_render.h"
-#include "main/trig_api.h"
+#include "main/trig.h"
 #define STAFFACTION_HIT_VOLUME_SLOT 9
 
 /* object group this object belongs to */
@@ -80,9 +80,9 @@ u32 fn_801659B8(s16* obj, u32* params)
     {
         state->speed = lbl_803E3004;
         ObjHits_EnableObject((GameObject*)obj);
-        ((GameObject*)obj)->anim.velocityX = -(state->speed) * fsin16Precise(((GameObject*)obj)->anim.rotX);
+        ((GameObject*)obj)->anim.velocityX = -(state->speed) * fsin16Precise(((GameObject*)obj)->anim.rotX & 0xffff);
         ((GameObject*)obj)->anim.velocityY = lbl_803E2FDC;
-        ((GameObject*)obj)->anim.velocityZ = -(state->speed) * fcos16Precise(((GameObject*)obj)->anim.rotX);
+        ((GameObject*)obj)->anim.velocityZ = -(state->speed) * fcos16Precise(((GameObject*)obj)->anim.rotX & 0xffff);
         *params |= 0x2004000;
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2FDC, 0);
         state->animSpeed = lbl_803E2FDC;
@@ -758,7 +758,7 @@ void dll_D3_free(int obj)
         Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
         *(int*)&((GameObject*)obj)->childObjs[0] = 0;
     }
-    (*(void (*)(int, int*, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
+    (*gBaddieControlInterface)->releaseState((GameObject*)obj, inner, 0);
 }
 
 void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -850,8 +850,6 @@ typedef struct DllD3Placement
     u8 pad2F[0x30 - 0x2F];
 } DllD3Placement;
 
-extern int lbl_803202E8[];
-extern int lbl_80320360[];
 void* gLandedArwingStateHandlers[6];
 int gStaffActionHitLightParams[6];
 void* gLandedArwingDefaultStateHandler;
@@ -906,7 +904,7 @@ void dll_D3_update(int* obj)
         return;
     }
 
-    rc = ((int (*)(int*, int*, int))((void**)*(int*)gBaddieControlInterface)[0x30 / 4])(obj, state, 0);
+    rc = (*gBaddieControlInterface)->isObjectValid((GameObject*)obj, state, 0);
     if (rc == 0)
         return;
 
@@ -922,17 +920,18 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetState != 1)
     {
-        rc = ((int (*)(int*, int*, f32, int))((void**)*(int*)gBaddieControlInterface)[0x48 / 4])(
-            obj, state, (f32)(u32)((TreasureChestState*)state)->aggroRange, 0x8000);
+        rc = (int)(*gBaddieControlInterface)
+                 ->findAggroTarget((GameObject*)obj, state,
+                                   (f32)(u32)((TreasureChestState*)state)->aggroRange, 0x8000);
         if (rc != 0u)
         {
-            ((void (*)(int*, int*, int, int, int, int, int, int, int))(
-                (void**)*(int*)gBaddieControlInterface)[0x28 / 4])(
-                obj, state, (int)((char*)state + 0x35c), (int)((TreasureChestState*)state)->gameBitB, 0, 0, 1, 0, -1);
+            (*gBaddieControlInterface)
+                ->startHitReaction((GameObject*)obj, state, (char*)state + 0x35c,
+                                   ((TreasureChestState*)state)->gameBitB, NULL, 0, 1, 0, -1);
             ((TreasureChestState*)state)->targetObj = rc;
-            ((TreasureChestState*)state)->unk349 = 0;
+            ((TreasureChestState*)state)->hasTarget = 0;
             ((TreasureChestState*)state)->targetState = 1;
-            ((TreasureChestState*)state)->unk405 = 2;
+            ((TreasureChestState*)state)->subMode = 2;
         }
 
         if ((u32)((TreasureChestState*)state)->targetObj != 0 && ((TreasureChestState*)state)->targetState == 2)
@@ -955,15 +954,17 @@ void dll_D3_update(int* obj)
         ((TreasureChestState*)state)->targetDistance = sqrtf(dz * dz + (dx * dx + dy * dy));
     }
 
-    ((void (*)(int*, int*, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x54 / 4])(
-        obj, state, (int)((char*)state + 0x35c), (int)((TreasureChestState*)state)->gameBitB, 0, 0, 0, 0);
+    (*gBaddieControlInterface)
+        ->processMessages((GameObject*)obj, state, (char*)state + 0x35c,
+                          ((TreasureChestState*)state)->gameBitB, NULL, 0, 0, 0);
 
     hits = (int)((TreasureChestState*)state)->hitPoints;
     if (hits > 0)
     {
-        ((void (*)(int*, int*, int, int, int*, int*, int, int*))((void**)*(int*)gBaddieControlInterface)[0x50 / 4])(
-            obj, state, (int)state + 0x35c, (int)((TreasureChestState*)state)->gameBitB, lbl_803202E8,
-            lbl_80320360, 0, gStaffActionHitLightParams);
+        (*gBaddieControlInterface)
+            ->updateHitReaction((GameObject*)obj, state, (void*)((int)state + 0x35c),
+                                ((TreasureChestState*)state)->gameBitB, lbl_803202E8, lbl_80320360, 0,
+                                gStaffActionHitLightParams);
         if ((int)((TreasureChestState*)state)->hitPoints < hits)
         {
             (*(void (**)(int))(*(int**)*(int**)(*(int*)&((GameObject*)player)->childObjs[0] + 0x68) + 0x50 / 4))(
@@ -975,20 +976,20 @@ void dll_D3_update(int* obj)
         }
     }
 
-    ((void (*)(int*, int*, f32, int))((void**)*(int*)gBaddieControlInterface)[0x2c / 4])(obj, state, lbl_803E2FDC, -1);
+    (*gBaddieControlInterface)
+        ->updateGravity((GameObject*)obj, state, lbl_803E2FDC, -1);
 
     ((TreasureChestState*)state)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
 
-    (*(void (**)(double, int*, int*, double, void**, void*))(*(int*)gPlayerInterface + 8))(
-        (double)timeDelta, obj, state, (double)timeDelta, gLandedArwingStateHandlers,
-        &gLandedArwingDefaultStateHandler);
+    (*gPlayerInterface)->update(obj, state, timeDelta, timeDelta, gLandedArwingStateHandlers,
+                                &gLandedArwingDefaultStateHandler);
 
     *(int*)&((GameObject*)obj)->pendingParentObj = ((TreasureChestState*)state)->savedObjC0;
 
     if (((StaffBits*)&extra->flags92)->b0 == 0u && extra->surfaceMode == 6)
     {
-        hitCount = objBboxFn_800640cc((f32*)((char*)obj + 0x80), &((GameObject*)obj)->anim.localPosX,
+        hitCount = objBboxFn_800640cc(&((GameObject*)obj)->anim.previousLocalPosX, &((GameObject*)obj)->anim.localPosX,
                                       6.0f, 0, (TrackBBoxHit*)hitResult, (GameObject*)obj, -0x7c, -1, 0xff,
                                       0);
         if (hitCount != 0 && *(s8*)((char*)hitResult + 0x50) == 13)
@@ -1017,8 +1018,8 @@ void dll_D3_init(GameObject* obj, int def, int flag)
     {
         setupFlags |= 1;
     }
-    ((void (*)(int, int, int, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(
-        (int)obj, def, state, 5, 1, 0x108, setupFlags, 20.0f);
+    (*gBaddieControlInterface)
+        ->initGroundBaddie(obj, (u8*)def, (u8*)state, 5, 1, 0x108, setupFlags, 20.0f);
     (obj)->animEventCallback = NULL;
 
     extra = (LandedArwingState*)((GroundBaddieState*)state)->control;
@@ -1044,10 +1045,10 @@ void dll_D3_init(GameObject* obj, int def, int flag)
         ftag = 1;
     }
     ((TreasureChestState*)state)->controlMode = ftag;
-    ((TreasureChestState*)state)->unk270 = 0;
+    ((TreasureChestState*)state)->substate = 0;
     ((TreasureChestState*)state)->targetState = 0;
-    ((TreasureChestState*)state)->unk405 = 0;
-    ((TreasureChestState*)state)->unk25F = 0;
+    ((TreasureChestState*)state)->subMode = 0;
+    ((TreasureChestState*)state)->physicsActive = 0;
     ObjHits_DisableObject(obj);
 
     fz = lbl_803E2FF4;
@@ -1060,7 +1061,7 @@ void dll_D3_init(GameObject* obj, int def, int flag)
 void fn_80167550(GameObject* obj, GameObject* otherObj)
 {
     int* state = obj->extra;
-    ((void (*)(int*, int*, int))((void**)*gPlayerInterface)[5])((int*)obj, state, 2);
+    (*gPlayerInterface)->setState(obj, state, 2);
 }
 
 void dll_D3_release_nop(void)

@@ -17,11 +17,11 @@ typedef struct ObjLocalTransform
 } ObjLocalTransform;
 
 void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
-                                     u32 obj);
-void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj);
+                                     int obj);
+void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int obj);
 void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
                                      u32 obj);
-void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj);
+void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int obj);
 void Obj_GetWorldPosition(u32 obj, f32 *outX, f32 *outY, f32 *outZ);
 void Obj_TransformLocalPointByWorldMatrix(u8* obj, f32* src, f32* dst, u8 flag);
 void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);

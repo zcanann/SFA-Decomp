@@ -11,7 +11,6 @@
 #include "main/object_api.h"
 #include "dolphin/gx/GXMisc.h"
 #include "main/pi_dolphin.h"
-#include "main/pi_dolphin_ext.h"
 #include "main/newshadows.h"
 #include "main/mm.h"
 #include "main/model.h"
@@ -25,7 +24,6 @@
 #include "main/pi_data_file_api.h"
 #include "main/pi_flush_api.h"
 #include "main/pi_dolphin_texture_api.h"
-#include "main/pi_dolphin_fileload_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/os/OSResetSW.h"
 #include "dolphin/gx/GXCull.h"
@@ -163,7 +161,6 @@ extern volatile int lbl_803DCC80;
 #include "main/objprint_load_api.h"
 #include "dolphin/os/OSAlloc.h"
 #include "main/objmodel.h"
-#include "main/mm_ext.h"
 #include "main/newshadows_texture_api.h"
 #include "main/rcp_dolphin_render_api.h"
 #include "dolphin/gx/GXBump.h"
@@ -2263,8 +2260,8 @@ u32 mapLoadDataFile(int mapId, int fileId)
 char sAssetHaltFormat[] = "HALT\t%s\n";
 char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
 
-int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
-                              u32 flagBits)
+void* loadAndDecompressDataFile(int fileId, void* destBuf, int offsetFlags, u32 length, int* sizeOut, int entryIndex,
+                                u32 flagBits)
 {
     struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
     u32 tab0 = 0; /* TAB ptr of the primary slot of the pair, 0 = not ready */
@@ -3359,7 +3356,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             fileBuf = qptr + entryIndex;
             if (strncmp(sDirBlockTag, (char*)fileBuf, 3) == 0)
             {
-                return MLDF_QPTR + (entryIndex + 0x20);
+                return (void*)(MLDF_QPTR + (entryIndex + 0x20));
             }
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {
@@ -3375,7 +3372,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             fileBuf = qptr + entryIndex;
             if (strncmp(sDirBlockTag, (char*)fileBuf, 3) == 0)
             {
-                return MLDF_QPTR + (entryIndex + 0x20);
+                return (void*)(MLDF_QPTR + (entryIndex + 0x20));
             }
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {

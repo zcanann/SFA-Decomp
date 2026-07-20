@@ -14,6 +14,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/dll/dll197state_struct.h"
+#include "main/obj_placement.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_play_api.h"
@@ -33,13 +34,7 @@
 #include "main/object_descriptor.h"
 #include "main/voxmaps.h"
 #include "main/dll/dll_0198_nwshlevcon.h"
-
-typedef struct ResourceParamBlob
-{
-    int w[4];
-} ResourceParamBlob;
-
-STATIC_ASSERT(sizeof(ResourceParamBlob) == 0x10);
+#include "main/dll/dll_0069_dll69func0.h"
 
 typedef struct Cup197State
 {
@@ -62,12 +57,12 @@ typedef struct Cup197State
 
 #define CUP_STAGE_COMPLETE_BIT 0x472
 
-const ResourceParamBlob gDll197ResourceParamTemplate = {{0x3E7, 0x8C, 0x8D, 0x28}};
+const Dll69EffectParams gDll197ResourceParamTemplate = {0x3E7, 0x8C, 0x8D, 0x28};
 s8 lbl_803DDBD0; /* shared 0..3 progression latch */
 
 typedef struct Dll197Placement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     u8 rotXParam;  /* 0x18: low 6 bits -> anim.rotX seed */
     u8 kind;       /* 0x19: object sub-type selector */
     s16 scale;     /* 0x1a: rootMotionScale numerator */
@@ -183,11 +178,11 @@ void dll_197_hitDetect(void)
 void dll_197_update(int obj)
 {
     Cup197State* state = ((GameObject*)obj)->extra;
-    ResourceParamBlob resourceParams;
+    Dll69EffectParams resourceParams;
     u8 callbackData[0x14];
     int player;
     f32 distance;
-    void* resource;
+    Dll69Interface** resource;
     int effect;
     int stageEffectBase;
 
@@ -270,10 +265,9 @@ void dll_197_update(int obj)
     {
         resource = Resource_Acquire(0x69, 1);
         stageEffectBase = state->stage * 2;
-        resourceParams.w[1] = stageEffectBase + 0x19d;
-        resourceParams.w[2] = stageEffectBase + 0x19e;
-        (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)resource + 4)))(obj, 1, callbackData, 0x10004, -1,
-                                                                                      resourceParams.w);
+        resourceParams.param1 = stageEffectBase + 0x19d;
+        resourceParams.param2 = stageEffectBase + 0x19e;
+        (*resource)->spawn((GameObject*)obj, 1, callbackData, 0x10004, -1, &resourceParams);
         Resource_Release(resource);
 
         for (effect = 0; effect < 200; effect++)
@@ -330,7 +324,7 @@ void dll_197_init(int obj, int dataArg)
 {
     Dll197Placement* data = (Dll197Placement*)dataArg;
     u8* st;
-    void* res;
+    Dll69Interface** res;
     struct
     {
         u8 buf[16];
@@ -359,7 +353,7 @@ void dll_197_init(int obj, int dataArg)
         res = Resource_Acquire(0x69, 1);
         if (data->menuState == 0)
         {
-            (*(void (**)(int, int, void*, int, int, int))(*(int*)res + 4))(obj, 0, stk.buf, 0x10004, -1, 0);
+            (*res)->spawn((GameObject*)obj, 0, stk.buf, 0x10004, -1, NULL);
         }
         break;
     case 1:

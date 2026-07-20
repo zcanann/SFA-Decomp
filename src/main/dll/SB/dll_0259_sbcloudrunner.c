@@ -45,7 +45,7 @@
 #include "main/object_descriptor.h"
 #include "main/dll/ship_battle_api.h"
 
-typedef struct SBCloudRunnerState
+struct SBCloudRunnerState
 {
     u8 pad0[0x10 - 0x0];
     GameObject* targetObj;  /* 0x10: laser-locked target (object type 0x8E) */
@@ -74,7 +74,7 @@ typedef struct SBCloudRunnerState
     f32 steerZ;         /* 0x7C */
     u8 aButtonHeld : 1; /* 0x80 & 1: A held last frame */
     u8 pad80 : 7;
-} SBCloudRunnerState;
+};
 
 /* Overlay for the A-held bit at state+0x80. Load-bearing: accessing it
  * through this separate typed pointer (not SBCloudRunnerState.aButtonHeld)
@@ -313,7 +313,7 @@ int SB_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
  * if the hit type is HIT_TYPE_BURST emit 3 hit-flash partfx followed by a
  * 10-shot debris burst. */
 
-void SB_CloudRunner_HandlePriorityHit(GameObject* obj, u8* state)
+void SB_CloudRunner_HandlePriorityHit(GameObject* obj, SBCloudRunnerState* state)
 {
     int hitObj;
     f32 pos[3];
@@ -334,7 +334,7 @@ void SB_CloudRunner_HandlePriorityHit(GameObject* obj, u8* state)
                     Sfx_PlayFromObject((int)obj, SFX_CLOUDRUNNER_HIT);
                 }
                 (obj)->anim.rotY = COLORFADE_RUMBLE_PRESET;
-                ((SBCloudRunnerState*)state)->rideSubState = RIDE_SUBSTATE_TILT;
+                state->rideSubState = RIDE_SUBSTATE_TILT;
                 args.scale = lbl_803E5C74;
                 args.v[0] = 0;
                 args.v[1] = 0;
@@ -374,29 +374,29 @@ void fn_801EED5C(GameObject* obj, f32* x, f32* y, f32* z)
     *z = state->spawnPosZ;
 }
 
-void fn_801EED7C(void)
+void SB_CloudRunner_func23(void)
 {
 }
 
 
-void fn_801EED80(void* obj)
+void SB_CloudRunner_setGroundMarkerMatrix(void* obj)
 {
     objSetMtxFn_800412d4(ObjPath_GetPointModelMtx(obj, 3));
 }
 
 
-void fn_801EEDA8(void)
+void SB_CloudRunner_func21(void)
 {
 }
 
 
-int fn_801EEDAC(void)
+int SB_CloudRunner_func20(void)
 {
     return 0x0;
 }
 
 
-f32 fn_801EEDB4(int unused, f32* p)
+f32 SB_CloudRunner_func19(int unused, f32* p)
 {
     f32 v = lbl_803E5C70;
     *p = v;
@@ -404,42 +404,42 @@ f32 fn_801EEDB4(int unused, f32* p)
 }
 
 
-void fn_801EEDC0(int obj, f32* out, int* outInt)
+void SB_CloudRunner_func18(int obj, f32* out, int* outInt)
 {
     *out = lbl_803E5C70;
     *outInt = 0;
 }
 
 
-void fn_801EEDD4(void)
+void SB_CloudRunner_func17(void)
 {
 }
 
-int fn_801EEDD8(void)
+int SB_CloudRunner_func16(void)
 {
     return 0x2;
 }
 
 
-void fn_801EEDE0(GameObject* src, f32* out_x, f32* out_y, f32* out_z)
+void SB_CloudRunner_func15(GameObject* src, f32* out_x, f32* out_y, f32* out_z)
 {
     *out_x = src->anim.localPosX;
     *out_y = src->anim.localPosY;
     *out_z = src->anim.localPosZ;
 }
 
-int fn_801EEDFC(void)
+int SB_CloudRunner_func14(void)
 {
     return 0x0;
 }
 
-int fn_801EEE04(void)
+int SB_CloudRunner_render2(void)
 {
     return 0x0;
 }
 
 
-void fn_801EEE0C(int* obj, f32* x, f32* y, f32* z)
+void SB_CloudRunner_modelMtxFn(int* obj, f32* x, f32* y, f32* z)
 {
     f32* p = ((GameObject*)obj)->extra;
     *x = p[0];
@@ -447,12 +447,12 @@ void fn_801EEE0C(int* obj, f32* x, f32* y, f32* z)
     *z = p[2];
 }
 
-int fn_801EEE2C(void)
+int SB_CloudRunner_func11(void)
 {
     return 0x0;
 }
 
-int fn_801EEE34(void)
+int SB_CloudRunner_setScale(void)
 {
     return 0x0;
 }
@@ -569,7 +569,7 @@ void SB_CloudRunner_update(GameObject* obj)
     {
     case RIDE_SUBSTATE_STEER:
         SB_CloudRunner_UpdateSteer((s16*)obj, (u8*)state);
-        ((void (*)(int, int))SB_CloudRunner_HandlePriorityHit)((int)obj, (int)state);
+        SB_CloudRunner_HandlePriorityHit(obj, state);
         break;
     case RIDE_SUBSTATE_TILT:
         WCPushBlock_UpdateRideTilt((WCPushBlockObject*)obj, (WCPushBlockState*)state);
@@ -591,7 +591,7 @@ void SB_CloudRunner_update(GameObject* obj)
     {
         state->rideFrames = 0;
     }
-    ((void (*)(int, int))WCPushBlock_UpdateCloudAction)((int)obj, (int)state);
+    WCPushBlock_UpdateCloudAction((int)obj, (WCPushBlockState*)state);
 }
 
 
@@ -636,18 +636,18 @@ ObjectDescriptor24 gSB_CloudRunnerObjDescriptor = {
     (ObjectDescriptorCallback)SB_CloudRunner_free,
     (ObjectDescriptorCallback)SB_CloudRunner_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)SB_CloudRunner_getExtraSize,
-    (ObjectDescriptorCallback)fn_801EEE34,
-    (ObjectDescriptorCallback)fn_801EEE2C,
-    (ObjectDescriptorCallback)fn_801EEE0C,
-    (ObjectDescriptorCallback)fn_801EEE04,
-    (ObjectDescriptorCallback)fn_801EEDFC,
-    (ObjectDescriptorCallback)fn_801EEDE0,
-    (ObjectDescriptorCallback)fn_801EEDD8,
-    (ObjectDescriptorCallback)fn_801EEDD4,
-    (ObjectDescriptorCallback)fn_801EEDC0,
-    (ObjectDescriptorCallback)fn_801EEDB4,
-    (ObjectDescriptorCallback)fn_801EEDAC,
-    (ObjectDescriptorCallback)fn_801EEDA8,
-    (ObjectDescriptorCallback)fn_801EED80,
-    (ObjectDescriptorCallback)fn_801EED7C,
+    (ObjectDescriptorCallback)SB_CloudRunner_setScale,
+    (ObjectDescriptorCallback)SB_CloudRunner_func11,
+    (ObjectDescriptorCallback)SB_CloudRunner_modelMtxFn,
+    (ObjectDescriptorCallback)SB_CloudRunner_render2,
+    (ObjectDescriptorCallback)SB_CloudRunner_func14,
+    (ObjectDescriptorCallback)SB_CloudRunner_func15,
+    (ObjectDescriptorCallback)SB_CloudRunner_func16,
+    (ObjectDescriptorCallback)SB_CloudRunner_func17,
+    (ObjectDescriptorCallback)SB_CloudRunner_func18,
+    (ObjectDescriptorCallback)SB_CloudRunner_func19,
+    (ObjectDescriptorCallback)SB_CloudRunner_func20,
+    (ObjectDescriptorCallback)SB_CloudRunner_func21,
+    (ObjectDescriptorCallback)SB_CloudRunner_setGroundMarkerMatrix,
+    (ObjectDescriptorCallback)SB_CloudRunner_func23,
 };

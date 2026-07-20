@@ -9,40 +9,12 @@ typedef struct ObjAnimBank ObjAnimBank;
 typedef struct ObjAnimComponent ObjAnimComponent;
 typedef struct ObjHitbox ObjHitbox;
 
-typedef struct ObjHitReactEffectPos {
-  s16 x;
-  s16 y;
-  s16 z;
-  u8 pad06[2];
-  f32 scale;
-} ObjHitReactEffectPos;
-
-typedef struct ObjHitReactEffectColorArgs {
-  u32 hitFxMode;
-  u32 colorR;
-  u32 colorG;
-  u32 colorB;
-} ObjHitReactEffectColorArgs;
-
-typedef void (*ObjHitReactEffectSpawnFn)(int parent,int mode,ObjHitReactEffectPos *pos,
-                                         u32 flags,int sequenceId,void *args);
-
-typedef struct ObjHitReactEffectVTable {
-  void *pad00;
-  ObjHitReactEffectSpawnFn spawn;
-} ObjHitReactEffectVTable;
-
-typedef struct ObjHitReactEffectHandle {
-  ObjHitReactEffectVTable *vtable;
-} ObjHitReactEffectHandle;
-
 typedef struct ObjHitReactMoveEntry {
   s16 moveId;
   s16 firstEntryByteOffset;
   s16 entryByteCount;
 } ObjHitReactMoveEntry;
 
-extern const ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs;
 extern char sObjHitReactHitstateFrameString[];
 extern char sObjHitReactSphereOverflowString[];
 extern char sObjHitReactResetString[7];
@@ -101,16 +73,6 @@ struct ObjHitReactEntry {
   f32 reactionStepScale;
   u8 pad10[4];
 };
-
-STATIC_ASSERT(sizeof(ObjHitReactEffectPos) == 0x0C);
-STATIC_ASSERT(offsetof(ObjHitReactEffectPos, x) == 0x00);
-STATIC_ASSERT(offsetof(ObjHitReactEffectPos, y) == 0x02);
-STATIC_ASSERT(offsetof(ObjHitReactEffectPos, z) == 0x04);
-STATIC_ASSERT(offsetof(ObjHitReactEffectPos, scale) == 0x08);
-
-STATIC_ASSERT(sizeof(ObjHitReactEffectColorArgs) == 0x10);
-STATIC_ASSERT(offsetof(ObjHitReactEffectVTable, spawn) == 0x04);
-STATIC_ASSERT(offsetof(ObjHitReactEffectHandle, vtable) == 0x00);
 
 STATIC_ASSERT(sizeof(ObjHitReactMoveEntry) == 0x06);
 STATIC_ASSERT(offsetof(ObjHitReactMoveEntry, moveId) == 0x00);

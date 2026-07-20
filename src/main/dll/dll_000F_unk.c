@@ -429,7 +429,7 @@ void player_updateCurve(int* obj, int* state, f32 t)
 
 void player_findCurve(int* obj, int* state, int curveId)
 {
-    *(int*)((char*)state + 0x33c) = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+    *(int*)((char*)state + 0x33c) = (*gRomCurveInterface)->find(
         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
         &curveId, 1, *(s8*)((char*)state + 0x344));
 }
@@ -678,7 +678,7 @@ void fn_800D915C(int gameObj, int* obj, f32 fval, void* fnTable)
     }
 }
 
-void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
+void playerRunStateMachine(char* pos, char* state, float dt, void* stateFns)
 {
     int iterations;
     s16 currentState;
@@ -707,13 +707,13 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
         {
             ((BaddieState*)state)->prevControlMode = ((BaddieState*)state)->controlMode;
             ((BaddieState*)state)->controlMode = (s16)(result - 1);
-            exitFn = *(void (**)(char*, char*))(state + 0x304);
+            exitFn = *(void (**)(char*, char*))&((BaddieState*)state)->unk304;
             if (exitFn != NULL)
             {
                 exitFn(pos, state);
-                *(void**)(state + 0x304) = 0;
+                *(void**)&((BaddieState*)state)->unk304 = 0;
             }
-            *(void**)(state + 0x304) = *(void**)(state + 0x308);
+            *(void**)&((BaddieState*)state)->unk304 = *(void**)&((BaddieState*)state)->unk308;
             ((BaddieState*)state)->moveJustStartedA = 1;
             *(s16*)(state + 0x338) = 0;
             ((BaddieState*)state)->stateTag = 0;
@@ -732,13 +732,13 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
             if (result != currentState)
             {
                 ((BaddieState*)state)->prevControlMode = (s16)(int)currentState;
-                exitFn = *(void (**)(char*, char*))(state + 0x304);
+                exitFn = *(void (**)(char*, char*))&((BaddieState*)state)->unk304;
                 if (exitFn != NULL)
                 {
                     exitFn(pos, state);
-                    *(void**)(state + 0x304) = 0;
+                    *(void**)&((BaddieState*)state)->unk304 = 0;
                 }
-                *(void**)(state + 0x304) = *(void**)(state + 0x308);
+                *(void**)&((BaddieState*)state)->unk304 = *(void**)&((BaddieState*)state)->unk308;
                 ((BaddieState*)state)->moveJustStartedA = 1;
                 *(s16*)(state + 0x338) = 0;
                 ((BaddieState*)state)->stateTag = 0;
@@ -806,7 +806,7 @@ void player_setState(void* ctx, void* p, int new_state)
         ((BaddieState*)p)->prevControlMode = ((BaddieState*)p)->controlMode;
         ((BaddieState*)p)->controlMode = new_state;
         {
-            void (*fn)(void) = *(void (**)(void))((char*)p + 0x304);
+            void (*fn)(void) = *(void (**)(void))&((BaddieState*)p)->unk304;
             if (fn != 0)
             {
                 fn();
@@ -831,7 +831,7 @@ void player_setOverride(u32 x)
     playerOverride = x;
 }
 
-void player_updateVel(char* p, char* obj, int unused)
+void player_updateVel(char* p, char* obj, void* stateFns)
 {
     float fcos, fsin;
     f32 vx;
@@ -864,11 +864,11 @@ void player_updateVel(char* p, char* obj, int unused)
         gPlayerMoveVelHandled = 1;
         lbl_803DD44F = 0;
         lbl_803DD44E = 1;
-        playerRunStateMachine(p, obj, timeDelta, unused);
+        playerRunStateMachine(p, obj, timeDelta, stateFns);
     }
 }
 
-void player_update(char* pos, char* state, float dt, float pathDt, int stateFns, int auxStateFns)
+void player_update(char* pos, char* state, float dt, float pathDt, void* stateFns, void* auxStateFns)
 {
     MatrixTransform localTransform;
     f32 matrix[16];
@@ -902,7 +902,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     pathObj = ((GameObject*)pos)->pendingParentObj;
     if ((*(int*)state & 0x8000) != 0 && pathObj == NULL)
     {
-        fn_800D915C((int)pos, (int*)state, dt, (void*)auxStateFns);
+        fn_800D915C((int)pos, (int*)state, dt, auxStateFns);
         ((BaddieState*)state)->stateTimer = (s16)((f32)((BaddieState*)state)->stateTimer + dt);
         if ((f32)((BaddieState*)state)->stateTimer > lbl_803E05C4)
         {
@@ -1039,7 +1039,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
 
 
-void player_init(int unused, void* obj, int a, int b)
+void player_init(void* unused, void* obj, int a, int b)
 {
     memset(obj, 0, 0x35c);
     *(s16*)((char*)obj + 0x26c) = a;

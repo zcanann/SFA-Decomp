@@ -12,6 +12,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/foodbag.h"
 
 typedef struct Dll19CPlacement
 {
@@ -52,7 +53,7 @@ void dll_19C_update(int* obj)
 
     u8* def;
     u8* sub;
-    void* res;
+    Dll82Interface** res;
     ObjPlacement* setup;
 
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
@@ -69,8 +70,8 @@ void dll_19C_update(int* obj)
         if (mainGetBit(GAMEBIT_WM_KrazTest1TorchesActive) != 0)
         {
             res = Resource_Acquire(0x82, 1);
-            ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 0, 0, 1, -1, 0);
-            ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 1, -1, 0);
+            (*res)->spawn((GameObject*)obj, 0, NULL, 1, -1, NULL);
+            (*res)->spawn((GameObject*)obj, 1, NULL, 1, -1, NULL);
             Sfx_PlayFromObject(0, SFXTRIG_hitpos_6);
             Resource_Release(res);
             ((Dll19CState*)sub)->active = 1;

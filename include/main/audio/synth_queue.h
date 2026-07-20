@@ -3,6 +3,9 @@
 
 #include "ghidra_import.h"
 
+#define SYNTH_MAX_VOICES       8
+#define SYNTH_VOICE_NOTE_COUNT 0x10
+
 typedef struct SynthPage
 {
     u16 macro;
@@ -67,5 +70,7 @@ u32 seqStartPlay(SynthPage* normalPage, SynthPage* drumPage, SynthMidiSetup* mid
 void seqHandleMasterTrack(u8 sectionIndex);
 void synthQueueHandle(u32 handle);
 void synthFreeHandle(u32 handle);
+
+extern u16 gSynthVoiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
 
 #endif /* MAIN_AUDIO_SYNTH_QUEUE_H_ */

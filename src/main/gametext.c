@@ -818,6 +818,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     int i;
     int charLen2;
     u32 ch;
+    char* mp;
     lineCount = 0;
     lineOff = 0;
     cursor = 0;
@@ -969,11 +970,11 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     {
         return 0;
     }
-    dst = (char*)buffer;
+    mp = (char*)buffer;
     i = charLen;
     while (i-- != 0)
     {
-        *dst++ = 0;
+        *mp++ = 0;
     }
 
     buffer[0] = (char*)buffer + lineOff;

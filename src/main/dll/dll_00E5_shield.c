@@ -37,7 +37,7 @@
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
-#include "main/trig_ext.h"
+#include "main/trig.h"
 
 s16 lbl_803DBD70[4] = {-1024, -512, 512, 1024};
 s16 lbl_803DBD78[4] = {-500, 50, 50, 200};
@@ -536,9 +536,9 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                         ((GameObject*)obj)->anim.rootMotionScale =
                             ((ShieldState*)state)->segAlpha[k] * savedF8 *
                             (((ShieldState*)state)->fadeValue / *(f32*)&((ShieldState*)state)->fadeMax);
-                        *(u8*)((char*)obj + 0x37) = ((ShieldState*)state)->segScale[k] * savedB36;
+                        ((GameObject*)obj)->anim.renderAlpha = ((ShieldState*)state)->segScale[k] * savedB36;
                     }
-                    *(u16*)((char*)model + 0x18) &= ~0x8;
+                    ((ObjModel*)model)->bufferFlags &= ~0x8;
                     objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
                 }
             }
@@ -555,9 +555,9 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                     ((ShieldState*)state)->segRotX[k] = dt * lbl_803DBD70[k] + (f32)((ShieldState*)state)->segRotX[k];
                     {
                         ((GameObject*)obj)->anim.rootMotionScale = ((ShieldState*)state)->segAlpha[k] * savedF8;
-                        *(u8*)((char*)obj + 0x37) = ((ShieldState*)state)->segScale[k] * savedB36;
+                        ((GameObject*)obj)->anim.renderAlpha = ((ShieldState*)state)->segScale[k] * savedB36;
                     }
-                    *(u16*)((char*)model + 0x18) &= ~0x8;
+                    ((ObjModel*)model)->bufferFlags &= ~0x8;
                     objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
                     if (hud == 0)
                     {

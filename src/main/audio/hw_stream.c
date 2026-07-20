@@ -3,6 +3,7 @@
 #include "main/audio/dsp_voice_state.h"
 #include "main/audio/hw_dspctrl.h"
 #include "main/audio/aram.h"
+#include "main/audio/aram_queue.h"
 #include "dolphin/os/OSCache.h"
 
 extern DSPstudioinfo dspStudio[8];

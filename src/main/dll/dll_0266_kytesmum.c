@@ -301,7 +301,7 @@ void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible)
     f32 scale = 1.0f;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, scale);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, scale);
     }
 }
 
@@ -370,7 +370,7 @@ void kytesmum_update(GameObject* obj)
         runtime->animSpeed = (moveIdx == 0) ? 0.01f : 0.005f;
     }
     kytesmum_playAnimationEventSfx((u32)obj, runtime->animEvents, runtime->eventSfxTable);
-    characterDoEyeAnimsState(obj, runtime->eyeAnimState);
+    characterDoEyeAnims(obj, runtime->eyeAnimState);
     objAnimFn_80038f38(obj, (char*)&runtime->modelSoundState);
     nearest = ObjGroup_FindNearestObject(KYTESMUM_TARGET_OBJGROUP, obj, &nearDist);
     if ((void*)nearest != NULL)

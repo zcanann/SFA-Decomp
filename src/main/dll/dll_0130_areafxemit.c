@@ -53,9 +53,6 @@ enum
         (pos)[2] = (f32)(s32)randomGetRange(-range, range);                                                            \
     } while (0)
 
-#define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, extraArgs)                                        \
-    (*gPartfxInterface)->spawnObject((void*)(obj), (effectId), (args), (flags), (modelId), (void*)(extraArgs))
-
 #define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args, rot)                                                            \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -81,11 +78,7 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
 {
     AreaFxEmitState* state;
     s16 i;
-    struct
-    {
-        s16 hw[6];
-        f32 vec[3];
-    } args;
+    PartFxSpawnParams args;
 
     state = obj->state;
     if (count > 0)
@@ -94,24 +87,24 @@ void areafxemit_emitBurst(AreaFxEmitObject* obj, int count)
         {
             {
                 u16 sx = state->extentX;
-                args.vec[0] = (f32)(s32)randomGetRange(-sx, sx);
+                args.posX = (f32)(s32)randomGetRange(-sx, sx);
             }
             {
                 u16 sy = state->extentY;
-                args.vec[1] = (f32)(s32)randomGetRange(-sy, sy);
+                args.posY = (f32)(s32)randomGetRange(-sy, sy);
             }
             {
                 u16 sz = state->extentZ;
-                args.vec[2] = (f32)(s32)randomGetRange(-sz, sz);
+                args.posZ = (f32)(s32)randomGetRange(-sz, sz);
             }
-            vecRotateZXY(state->emitAngles, args.vec);
+            vecRotateZXY(state->emitAngles, &args.posX);
             {
                 u8 type = state->emitType;
                 if (type == 4 || type == 6)
                 {
-                    args.vec[0] += obj->objAnim.localPosX;
-                    args.vec[1] += obj->objAnim.localPosY;
-                    args.vec[2] += obj->objAnim.localPosZ;
+                    args.posX += obj->objAnim.localPosX;
+                    args.posY += obj->objAnim.localPosY;
+                    args.posZ += obj->objAnim.localPosZ;
                     (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 0x200001, -1, NULL);
                 }
                 else
@@ -145,7 +138,7 @@ void areafxemit_emitEffect(AreaFxEmitObject* obj)
                 CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
                 CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args, rot);
                 CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
-                CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 0x200001, -1, NULL);
             }
         }
         else
@@ -153,7 +146,7 @@ void areafxemit_emitEffect(AreaFxEmitObject* obj)
             CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
             CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args, rot);
             CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
-            CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 0x200001, -1, NULL);
         }
     }
     else if (type == AREAFXEMIT_SPAWN_OBJECT_RESOURCE)
@@ -198,14 +191,14 @@ void areafxemit_emitEffect(AreaFxEmitObject* obj)
             {
                 CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
                 CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args, rot);
-                CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 2, -1, NULL);
             }
         }
         else
         {
             CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
             CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, &args, rot);
-            CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
+            (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 2, -1, NULL);
         }
     }
     else if (type >= 6)
@@ -219,11 +212,11 @@ void areafxemit_emitEffect(AreaFxEmitObject* obj)
                 if (state->emitType == 6)
                 {
                     CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
-                    CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
+                    (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 0x200001, -1, NULL);
                 }
                 else
                 {
-                    CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
+                    (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 2, -1, NULL);
                 }
             }
         }
@@ -234,11 +227,11 @@ void areafxemit_emitEffect(AreaFxEmitObject* obj)
             if (state->emitType == 6)
             {
                 CF_EMITTER_ADD_OBJECT_POSITION(obj, &args);
-                CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 0x200001, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 0x200001, -1, NULL);
             }
             else
             {
-                CF_EMITTER_SPAWN_PARTFX(obj, state->effectId, &args, 2, -1, 0);
+                (*gPartfxInterface)->spawnObject(obj, state->effectId, &args, 2, -1, NULL);
             }
         }
     }

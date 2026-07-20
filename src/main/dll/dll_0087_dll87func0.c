@@ -131,15 +131,17 @@ void dll_87_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = originOffset + ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] = originOffset + ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] = originOffset + ((GameObject*)(sourceObj))->anim.worldPosZ;
+            GameObject* obj = (GameObject*)sourceObj;
+            buf.pos[0] = originOffset + obj->anim.worldPosX;
+            buf.pos[1] = originOffset + obj->anim.worldPosY;
+            buf.pos[2] = originOffset + obj->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = originOffset + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = originOffset + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = originOffset + ((PartFxSpawnParams*)posSource)->posZ;
+            PartFxSpawnParams* params = (PartFxSpawnParams*)posSource;
+            buf.pos[0] = originOffset + params->posX;
+            buf.pos[1] = originOffset + params->posY;
+            buf.pos[2] = originOffset + params->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 10, (u8*)(int)lbl_80316050, 8, base + 0x168, DLL87_EFFECT_ID, 0);

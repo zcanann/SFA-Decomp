@@ -358,7 +358,7 @@ void sh_queenearthwalker_update(GameObject* obj)
     }
     else
     {
-        characterDoEyeAnimsState(obj, (u8*)state + 0x8);
+        characterDoEyeAnims(obj, (u8*)state + 0x8);
     }
 
     currentMove = (obj)->anim.currentMove;

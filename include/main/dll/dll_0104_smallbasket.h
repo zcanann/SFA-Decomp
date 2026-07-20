@@ -32,6 +32,7 @@ STATIC_ASSERT(offsetof(CfperchState, hiddenTimer) == 0x14);
 
 int SmallBasket_getExtraSize(void);
 void objThrowFn_80182504(GameObject* obj);
+int smallbasket_spawnContents(GameObject* obj, GameObject* player, void* state);
 
 extern ObjectDescriptor gSmallBasketObjDescriptor;
 

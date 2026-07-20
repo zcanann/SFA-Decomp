@@ -432,8 +432,8 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
         state->flagsC40 |= HIGHTOP_FLAG_CURVE_FOLLOW;
         state->flagsC40 |= HIGHTOP_FLAG_CURVE_ARMED;
         state->flagsC49.b1 = 0;
-        ((void (*)(void*, int, int, void*))curve->slotA8)((char*)state + 0xa10, obj, 0x3463a,
-                                                          (curve = *gRomCurveInterface));
+        curve->initFromCurveId((RomCurveWalker*)((char*)state + 0xa10), (GameObject*)obj, 0x3463a,
+                               (curve = *gRomCurveInterface));
         state2 = ((GameObject*)obj)->extra;
         state2->flagsC49.b7 = 1;
         (*gGameUIInterface)->initAirMeter(gHighTopAirMeterInitValue, HIGHTOP_AIRMETER_BGTEXTURE);
@@ -971,7 +971,7 @@ void HighTop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
         int count;
         int** list;
         int i;
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, scale);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, scale);
         ObjPath_GetPointWorldPosition((GameObject*)obj, 2, &runtime->pathPoint2X, &runtime->pathPoint2Y, &runtime->pathPoint2Z,
                                       0);
         ObjPath_GetPointWorldPositionArray((GameObject*)obj, 3, 4, runtime->pathPointWorldPositions);
@@ -1108,10 +1108,10 @@ void HighTop_update(GameObject* obj)
     *(int*)&runtime->baddie.unk318 = 0;
     runtime->baddie.cameraYaw = 0;
     *(int*)state &= ~0x400000;
-    (*(void (**)(int, char*, f32, f32, void**, void*))((char*)*gPlayerInterface + 0x8))(
-        self, state, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);
+    (*gPlayerInterface)->update((void*)self, state, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers,
+                                &gHighTopDefaultStateHandler);
     hightop_playMovementSfx((GameObject*)self, runtime, runtime);
-    characterDoEyeAnimsState((GameObject*)self, state + 0x38c);
+    characterDoEyeAnims((GameObject*)self, state + 0x38c);
     objAnimFn_80038f38((GameObject*)(self), (char*)(state + 0x3bc));
     dll_2E_func03((GameObject*)self, (MoveLibState*)(state + 0x3ec));
     if (ObjTrigger_IsSet(self) != 0)
@@ -1173,7 +1173,7 @@ void HighTop_init(GameObject* obj, HighTopPlacement* placement)
     }
     ObjGroup_AddObject((int)obj, ARWARWING_OBJGROUP);
     ObjGroup_AddObject((int)obj, HIGHTOP_OBJGROUP);
-    (*(void (**)(void*, char*, int, int))((char*)*gPlayerInterface + 4))(obj, (char*)runtime, 11, 1);
+    (*gPlayerInterface)->init(obj, runtime, 11, 1);
     runtime->baddie.gravity = 0.17f;
     pathState = (u8*)&runtime->baddie + 4;
     pathState[0x25b] = 1;

@@ -30,7 +30,6 @@
 #include "main/frame_timing.h"
 #include "main/objhits.h"
 #include "main/object_descriptor.h"
-#include "main/track_dolphin_ext.h"
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
@@ -232,8 +231,8 @@ void crrockfall_update(int* obj)
             }
             *(int*)&hitState->objectHitMask = 16;
             *(int*)&hitState->skeletonHitMask = 16;
-            *(u8*)&hitState->hitVolumeId = 1;
-            *(u8*)&hitState->hitVolumePriority = 13;
+            hitState->hitVolumeId = 1;
+            hitState->hitVolumePriority = 13;
             ((GameObject*)obj)->anim.velocityY = -0.15f * timeDelta + ((GameObject*)obj)->anim.velocityY;
             ((GameObject*)obj)->anim.localPosY =
                 ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
@@ -251,8 +250,8 @@ void crrockfall_update(int* obj)
         case zcEn3_ROCKFALL_MODE_RESTING:
             *(int*)&hitState->objectHitMask = 16;
             *(int*)&hitState->skeletonHitMask = 16;
-            *(u8*)&hitState->hitVolumeId = 1;
-            *(u8*)&hitState->hitVolumePriority = 13;
+            hitState->hitVolumeId = 1;
+            hitState->hitVolumePriority = 13;
             break;
         case zcEn3_ROCKFALL_MODE_SHATTERED:
             break;

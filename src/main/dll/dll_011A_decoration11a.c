@@ -22,7 +22,7 @@
 #include "main/dll/dll_011A_decoration11a.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/object_render.h"
-#include "main/object_ext.h"
+#include "main/object_transform.h"
 
 /* model/seq ids of the three variants that carry a collision volume */
 enum

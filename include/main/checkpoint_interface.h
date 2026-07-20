@@ -19,7 +19,7 @@ typedef struct CheckpointInterface {
     void (*removeRouteEntry)(CheckpointRouteEntry *entry);
     void (*findRouteForObject)(GameObject *obj, CheckpointRouteState *state, int filter);
     s32 (*getRouteHeading)(GameObject *obj, CheckpointRouteState *state);
-    s32 (*advanceRoute)(u8 *out, CheckpointRouteState *state, f32 distance, s32 mode, u8 flag);
+    s32 (*advanceRoute)(u8 *out, CheckpointRouteState *state, f32 distance, s32 mode, u8 flag, int unused);
     int (*alwaysOne)(void);
     void (*getRandomLinkedVector)(s32 key, f32 *outVec, u8 *reverseFlag);
     CheckpointRouteEntry *(*find)(s32 key, s32 *idxOut);

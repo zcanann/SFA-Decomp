@@ -1035,8 +1035,8 @@ blocked units will surface more when carved.
 | 0x1A1 | main/dll/dll_01A1_nwmammoth.c | include/main/dll/dll_01A1_nwmammoth.h |
 | 0x1A8 | main/dll/dll_01A8_shkillermushroom.c | include/main/dll/dll_01A8_shkillermushroom.h |
 | 0x1AC | main/dll/dll_01AC_shqueenearthwalker.c | include/main/dll/SH/dll_01AC_shqueenearthwalker.h |
-| 0x1AE | main/dll/dll_01AE_shlevelcontrol.c | include/main/dll/IM/dll_01AE_shlevelcontrol.h |
-| 0x1B0 | main/dll/dll_01B0_shswapston.c | include/main/dll/SC/dll_01B0_shswapston.h |
+| 0x1AE | main/dll/dll_01AE_shlevelcontrol.c | include/main/dll/SH/dll_01AE_shlevelcontrol.h |
+| 0x1B0 | main/dll/dll_01B0_shswapston.c | include/main/dll/SH/dll_01B0_shswapston.h |
 | 0x1E0 | main/dll/dll_01E0_dimboss.c | include/main/dll/DIM/dll_01E0_dimboss.h |
 | 0x1E1 | main/dll/dll_01E1_dimbossgut.c | include/main/dll/DIM/dll_01E1_dimbossgut.h |
 | 0x1E2 | main/dll/dll_01E2_dimbosstonsil.c | include/main/dll/dll_01E2_dimbosstonsil.h |

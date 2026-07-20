@@ -51,24 +51,24 @@ void waveanimator_buildSharedTables(int* cfgArg);
 
 void waveanimator_modelMtxFn(GameObject* obj, int a, int b, int c)
 {
-    int* state = obj->extra;
+    WaveanimatorModelMtxCtx* state = (WaveanimatorModelMtxCtx*)obj->extra;
     u32 v;
-    v = (u32)((WaveanimatorModelMtxCtx*)state)->flags | 4;
-    ((WaveanimatorModelMtxCtx*)state)->flags = v;
-    ((WaveanimatorModelMtxCtx*)state)->arg0 = a;
-    ((WaveanimatorModelMtxCtx*)state)->arg1 = b;
-    ((WaveanimatorModelMtxCtx*)state)->arg2 = c;
+    v = (u32)state->flags | 4;
+    state->flags = v;
+    state->arg0 = a;
+    state->arg1 = b;
+    state->arg2 = c;
 }
 
 void waveanimator_func0B(int* obj)
 {
-    WaveAnimatorState* state = (WaveAnimatorState*)(int*)((GameObject*)obj)->extra;
+    WaveAnimatorState* state = (WaveAnimatorState*)((GameObject*)obj)->extra;
     state->flags |= 2;
 }
 
 void waveanimator_setScale(int* obj, f32 fval)
 {
-    WaveAnimatorState* state = (WaveAnimatorState*)(int*)((GameObject*)obj)->extra;
+    WaveAnimatorState* state = (WaveAnimatorState*)((GameObject*)obj)->extra;
     state->flags |= 1;
     state->scaleB = fval;
 }
@@ -244,7 +244,7 @@ void waveanimator_update(void)
 
 void waveanimator_init(int* obj, int* desc)
 {
-    WaveAnimatorState* state = (WaveAnimatorState*)(int*)((GameObject*)obj)->extra;
+    WaveAnimatorState* state = (WaveAnimatorState*)((GameObject*)obj)->extra;
     f32 scale;
     state->sinkDepthScale = ((WaveanimatorObjectDef*)desc)->sinkDepthScale;
     state->originX = ((WaveanimatorObjectDef*)desc)->originX;

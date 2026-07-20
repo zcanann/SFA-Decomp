@@ -90,31 +90,32 @@ const IdPair lbl_803E1C20 = {0x000B000B, 0x000B000B};
 int dll_19_func1B(GameObject* obj);
 f32 dll_19_func1A(GameObject* obj);
 void dll_19_func19(u8* cam, u8* ctx);
-void dll_19_func12(int* obj, int* state, u8 flag);
-void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags, f32 fparam,
-                   int initFlags);
-void dll_19_func11(void);
-int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
+void dll_19_func12(GameObject* obj, void* state, u8 flag);
+void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags,
+                   u8 initFlags, f32 pathRadius);
+void dll_19_func11(GameObject* obj, void* state, u16* flags, int modeA, int modeB, s16 soundIdA, s16 soundIdB);
+int dll_19_func17(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
                   s16 substateActive, s16 moveMode);
-int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* tableA, u8* tableB, s16 substate,
-                  u8* hitPosOut);
-int dll_19_func15(u8* obj, int spawnType, int unused, int alt);
-void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
+int dll_19_func16(GameObject* obj, void* baddieState, void* hitbox, s16 gameBit, int* tableA, u8* tableB,
+                  s16 substate, void* hitPosOut);
+GameObject* dll_19_func15(GameObject* obj, int spawnType, int unused, int alt);
+void dll_19_func0C(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
                    int animMove, s8 field25f);
-int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle);
-int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar);
-int dll_19_func0E(GameObject* obj, int state, u8 checkDead);
-void dll_19_func0D(GameObject* obj, int state, f32 gravity, s8 field25f);
+GameObject* dll_19_func14(GameObject* self, void* state, f32 frange, int halfAngle);
+int dll_19_func13(GameObject* obj, void* state, f32 distThreshold, int requireFar);
+int dll_19_func0E(GameObject* obj, void* state, u8 checkDead);
+void dll_19_func0D(GameObject* obj, void* state, f32 gravity, s8 field25f);
 int dll_19_func10(GameObject* obj, u8* state, int moveArg0, int moveArg1, s16 controlMode, f32* destX, f32* destZ,
                   int* reachedOut);
-int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int moveArg0, int moveArg1, s16 controlMode);
+int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, void* moveHandlers, void* stateHandlers,
+                  s16 controlMode);
 f32 dll_19_func0B(int* obj);
 u16 dll_19_func0A(GameObject* obj);
-void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed);
+void dll_19_func06(GameObject* obj, void* state, void* unusedState, f32 cap, f32 speed);
 f32 dll_19_func05(GameObject* obj, f32 px, f32 pz, f32 range, char* st);
-void dll_19_func07(GameObject* obj, int target, int div, u16* outYaw, u16* outDelta, u16* outDist);
+void dll_19_func07(GameObject* obj, GameObject* target, int div, u16* outYaw, u16* outDelta, u16* outDist);
 int dll_19_func09_ret_0(void);
-u8 dll_19_func08(GameObject* obj, char* st, f32 dist);
+u8 dll_19_func08(GameObject* obj, void* state, f32 dist);
 void dll_19_func04_nop(void);
 void dll_19_func03_nop(void);
 
@@ -208,7 +209,7 @@ void dll_19_func19(u8* cam, u8* ctx)
     }
 }
 
-void dll_19_func12(int* obj, int* state, u8 flag)
+void dll_19_func12(GameObject* obj, void* state, u8 flag)
 {
     Sfx_StopObjectChannel((int)obj, 127);
     if ((((GroundBaddieState*)state)->configFlags & flag) == 0)
@@ -233,8 +234,8 @@ void dll_19_func12(int* obj, int* state, u8 flag)
     }
 }
 
-void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags, f32 fparam,
-                   int initFlags)
+void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags,
+                   u8 initFlags, f32 pathRadius)
 {
     u8 flags;
     int b1;
@@ -254,7 +255,7 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
         ObjGroup_AddObject((int)obj, DLL19_OBJGROUP);
         ObjMsg_AllocQueue(obj, 4);
     }
-    (*(void (**)(int, u8*, int, int))(*(int*)gPlayerInterface + 4))((int)obj, state, moveArg0, moveArg1);
+    (*gPlayerInterface)->init(obj, state, moveArg0, moveArg1);
     *(int*)(state + 0) = 0;
     ((BaddieState*)state)->hasTarget = 0;
     ((BaddieState*)state)->animSpeedA = 0.0f;
@@ -308,7 +309,7 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
     ((GroundBaddieState*)state)->flags400 = 0;
     ((GroundBaddieState*)state)->aggroRange = (u16)(config[41] << 3);
     ((GroundBaddieState*)state)->subMode = 0;
-    *(f32*)(state + 996) = fparam;
+    *(f32*)(state + 996) = pathRadius;
     obj->anim.rotX = (s16)((s8)config[42] << 8);
     obj->anim.alpha = 255;
     obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
@@ -377,12 +378,12 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
     }
 }
 
-void dll_19_func11(void)
+void dll_19_func11(GameObject* obj, void* state, u16* flags, int modeA, int modeB, s16 soundIdA, s16 soundIdB)
 {
     (void)(*gCameraInterface)->getOverrideTarget();
 }
 
-int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
+int dll_19_func17(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
                   s16 substateActive, s16 moveMode)
 {
     u32 msgData;
@@ -406,7 +407,7 @@ int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagO
             }
             break;
         case 11:
-            *(s8*)(state + 846) = extra;
+            *(s8*)((u8*)state + 846) = extra;
             break;
         case 1:
         case 0xA0001:
@@ -433,10 +434,10 @@ int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagO
     return 0;
 }
 
-int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* tableA, u8* tableB, s16 substate,
-                  u8* hitPosOut)
+int dll_19_func16(GameObject* obj, void* baddieState, void* hitbox, s16 gameBit, int* tableA, u8* tableB,
+                  s16 substate, void* hitPosOut)
 {
-    u8* state = *(u8**)(obj + 184);
+    u8* state = obj->extra;
     int player = (int)Obj_GetPlayerObject();
     int hit;
     int v28;
@@ -492,15 +493,15 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
     {
         return 0;
     }
-    hit = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitId, &v28, (u32*)&v24, &posX, &posY, &posZ);
+    hit = ObjHits_GetPriorityHitWithPosition(obj, &hitId, &v28, (u32*)&v24, &posX, &posY, &posZ);
     *(s8*)(state + 1034) = v28;
     if (hit != 0)
     {
         if (hitPosOut != NULL)
         {
-            *(f32*)(hitPosOut + 12) = posX + playerMapOffsetX;
-            *(f32*)(hitPosOut + 16) = posY;
-            *(f32*)(hitPosOut + 20) = posZ + playerMapOffsetZ;
+            *(f32*)((u8*)hitPosOut + 12) = posX + playerMapOffsetX;
+            *(f32*)((u8*)hitPosOut + 16) = posY;
+            *(f32*)((u8*)hitPosOut + 20) = posZ + playerMapOffsetZ;
         }
         if (tableB != NULL)
         {
@@ -541,11 +542,11 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
                 {
                     if (tableA[hit - 2] != -1)
                     {
-                        (*(void (**)(u8*, u8*, int))(*(int*)gPlayerInterface + 20))(obj, baddieState, tableA[hit - 2]);
+                        (*gPlayerInterface)->setState(obj, baddieState, tableA[hit - 2]);
                         ((BaddieState*)baddieState)->substate = substate;
                     }
                 }
-                *(s8*)(baddieState + 847) = hit;
+                *(s8*)((u8*)baddieState + 847) = hit;
             }
         }
         Sfx_StopObjectChannel((int)obj, 16);
@@ -555,10 +556,10 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
 }
 
 
-int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
+GameObject* dll_19_func15(GameObject* obj, int spawnType, int unused, int alt)
 {
-    GameObject* source = (GameObject*)obj;
-    u8* state = *(u8**)&((GameObject*)obj)->anim.placementData;
+    GameObject* source = obj;
+    u8* state = (u8*)obj->anim.placementData;
     ObjPlacement* setup;
     u16 ids1[4];
     u16 ids2[4];
@@ -623,7 +624,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
             savedY = source->anim.worldPosY;
             savedZ = source->anim.worldPosZ;
             {
-                ObjPlacement* pl = *(ObjPlacement**)&source->anim.placementData;
+                ObjPlacement* pl = source->anim.placement;
                 if (pl != NULL)
                 {
                     source->anim.worldPosX = pl->posX;
@@ -649,7 +650,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
                 gDll19NearestObj->anim.worldPosZ = zz;
                 gDll19NearestObj->anim.localPosZ = zz;
             }
-            return (int)gDll19NearestObj;
+            return gDll19NearestObj;
         case 6:
             setup = Obj_AllocObjectSetup(48, DLL19_CHILD_OBJ_MOON_SEED);
             *(u8*)((u8*)setup + 27) = 0;
@@ -681,28 +682,28 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
     setup->color[1] = state[5];
     setup->color[3] = state[7];
     gDll19NearestObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, source->anim.parent);
-    return (int)gDll19NearestObj;
+    return gDll19NearestObj;
 }
 
 /* dont_inline: keeps func0C out-of-line so func17's call site matches retail */
-void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
+void dll_19_func0C(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
                    int animMove, s8 field25f)
 {
     if (hitbox != NULL)
     {
-        hitbox[0x24] = 0;
-        hitbox[0x25] = 0;
-        hitbox[0x26] = 4;
-        hitbox[0x27] = 20;
+        ((u8*)hitbox)[0x24] = 0;
+        ((u8*)hitbox)[0x25] = 0;
+        ((u8*)hitbox)[0x26] = 4;
+        ((u8*)hitbox)[0x27] = 20;
     }
     if (substate != -1)
     {
         ((BaddieState*)state)->substate = substate;
-        state[0x27b] = 1;
+        ((BaddieState*)state)->moveJustStartedB = 1;
     }
     if (moveMode != -1)
     {
-        (*(void (**)(int, u8*, int))(*(int*)gPlayerInterface + 0x14))((int)obj, state, moveMode);
+        (*gPlayerInterface)->setState(obj, state, moveMode);
     }
     if (flagOut != NULL)
     {
@@ -712,7 +713,7 @@ void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flag
     {
         ObjAnim_SetCurrentMove((int)obj, animMove, 0.0f, 0);
     }
-    (*gPathControlInterface)->attachObject((void*)obj, state + 4);
+    (*gPathControlInterface)->attachObject((void*)obj, (u8*)state + 4);
     if (field25f != -1)
     {
         ((BaddieState*)state)->physicsActive = field25f;
@@ -725,7 +726,7 @@ void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flag
 
 /* opt_loop_invariants off: retail recomputes the loop-invariant self-position
  * reads inside the scan loop; hoisting them changes the schedule */
-int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
+GameObject* dll_19_func14(GameObject* self, void* state, f32 frange, int halfAngle)
 {
     f32 bboxOut[20];
     int objs[3];
@@ -762,9 +763,9 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                     found = 1;
                 }
                 delta = getAngle(-dp[0], -dp[2]) & 0xffff;
-                if (*(void**)(self + 0x30) != NULL)
+                if (((GameObject*)self)->anim.parent != NULL)
                 {
-                    delta -= (*(s16*)self + *(s16*)(*(int*)&((GameObject*)self)->anim.parent)) & 0xffff;
+                    delta -= (((GameObject*)self)->anim.rotX + *(s16*)(*(int*)&((GameObject*)self)->anim.parent)) & 0xffff;
                     if (delta > 0x8000)
                     {
                         delta -= 0xffff;
@@ -776,7 +777,7 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                 }
                 else
                 {
-                    delta -= *(s16*)self & 0xffff;
+                    delta -= ((GameObject*)self)->anim.rotX & 0xffff;
                     if (delta > 0x8000)
                     {
                         delta -= 0xffff;
@@ -811,8 +812,8 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                     traced = voxmaps_traceLine((VoxPos*)gridB, (VoxPos*)gridA, NULL, &losOut, 0);
                     if (losOut == 1 || traced != 0)
                     {
-                        if (objBboxFn_800640cc((f32*)(self + 12), gridIn, 1.0f, 0, (TrackBBoxHit*)bboxOut,
-                                               (GameObject*)self, 4, -1, 0, 0) != 0)
+                        if (objBboxFn_800640cc(&self->anim.localPosX, gridIn, 1.0f, 0, (TrackBBoxHit*)bboxOut,
+                                               self, 4, -1, 0, 0) != 0)
                         {
                             found = 0;
                         }
@@ -826,10 +827,10 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
         }
         list++;
     }
-    return obj;
+    return (GameObject*)obj;
 }
 
-int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar)
+int dll_19_func13(GameObject* obj, void* state, f32 distThreshold, int requireFar)
 {
     int player = (int)Obj_GetPlayerObject();
     int result = 0;
@@ -857,7 +858,7 @@ int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar)
                 pos[0] = ((GameObject*)player)->anim.localPosX;
                 pos[1] = 10.0f + ((GameObject*)player)->anim.localPosY;
                 pos[2] = ((GameObject*)player)->anim.localPosZ;
-                if (objBboxFn_800640cc((f32*)((int)obj + 0xc), pos, 1.0f, 0, (TrackBBoxHit*)out,
+                if (objBboxFn_800640cc(&obj->anim.localPosX, pos, 1.0f, 0, (TrackBBoxHit*)out,
                                        (GameObject*)obj, 4, -1, 0, 0) != 0)
                 {
                     result = 1;
@@ -872,13 +873,13 @@ int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar)
     return result;
 }
 
-int dll_19_func0E(GameObject* obj, int state, u8 checkDead)
+int dll_19_func0E(GameObject* obj, void* state, u8 checkDead)
 {
     if (checkDead != 0 && (s8)((BaddieState*)state)->hitPoints <= 0 && (obj)->anim.alpha == 0)
     {
         return 0;
     }
-    if (*(void**)&(obj)->anim.parent == NULL)
+    if (obj->anim.parent == NULL)
     {
         if (objPosToMapBlockIdx((double)(obj)->anim.localPosX, (double)(obj)->anim.localPosY,
                                 (double)(obj)->anim.localPosZ) < 0)
@@ -889,12 +890,12 @@ int dll_19_func0E(GameObject* obj, int state, u8 checkDead)
     return 1;
 }
 
-void dll_19_func0D(GameObject* obj, int state, f32 gravity, s8 field25f)
+void dll_19_func0D(GameObject* obj, void* state, f32 gravity, s8 field25f)
 {
     f32 fz;
     *(u32*)state |= 0x8000;
     ((BaddieState*)state)->cameraYaw = 0;
-    if (*(void**)((char*)obj + 0x54) != NULL)
+    if (obj->anim.hitReactState != NULL)
     {
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, -1);
     }
@@ -940,8 +941,7 @@ int dll_19_func10(GameObject* obj, u8* state, int moveArg0, int moveArg1, s16 co
             ((BaddieState*)state)->moveInputZ = 50.0f * dz;
             (obj)->anim.localPosX += dist * dx;
             (obj)->anim.localPosZ += dist * dz;
-            (*(void (**)(int, u8*, f32, f32, int, int))(*(int*)gPlayerInterface + 8))((int)obj, state, timeDelta,
-                                                                                      timeDelta, moveArg0, moveArg1);
+            (*gPlayerInterface)->update(obj, state, timeDelta, timeDelta, (void*)moveArg0, (void*)moveArg1);
         }
         if (*reachedOut == 0)
         {
@@ -956,7 +956,8 @@ int dll_19_func10(GameObject* obj, u8* state, int moveArg0, int moveArg1, s16 co
     return 0;
 }
 
-int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int moveArg0, int moveArg1, s16 controlMode)
+int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, void* moveHandlers, void* stateHandlers,
+                  s16 controlMode)
 {
     f32 dist;
     f32 nx;
@@ -1013,7 +1014,7 @@ int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int moveArg0, int
         if (dist >= total || gDll19SeqStallCount > 9)
         {
             char* t2 = *(char**)&((BaddieState*)st)->targetObj;
-            int delta = (obj)->anim.rotX - (u16) * (s16*)t2;
+            int delta = (obj)->anim.rotX - (u16)((GameObject*)t2)->anim.rotX;
             if (delta > 0x8000)
             {
                 delta -= 0xffff;
@@ -1043,8 +1044,7 @@ int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int moveArg0, int
             else
             {
                 td = timeDelta;
-                (*(void (**)(int, char*, f32, f32, int, int))((char*)*gPlayerInterface + 0x8))((int)obj, st, td, td,
-                                                                                               moveArg0, moveArg1);
+                (*gPlayerInterface)->update(obj, st, td, td, moveHandlers, stateHandlers);
             }
         }
         else
@@ -1056,8 +1056,7 @@ int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int moveArg0, int
             (obj)->anim.localPosX = dist * nx + seq->posOffsetX;
             (obj)->anim.localPosZ = dist * nz + seq->posOffsetZ;
             td = timeDelta;
-            (*(void (**)(int, char*, f32, f32, int, int))((char*)*gPlayerInterface + 0x8))((int)obj, st, td, td,
-                                                                                           moveArg0, moveArg1);
+            (*gPlayerInterface)->update(obj, st, td, td, moveHandlers, stateHandlers);
         }
     }
     gDll19SeqMinDist = dist;
@@ -1089,32 +1088,30 @@ u16 dll_19_func0A(GameObject* obj)
 
 /* Steps the movement blend factors toward the current target and turns the
  * yaw by the buffered turn rate. */
-void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed)
+void dll_19_func06(GameObject* obj, void* state, void* unusedState, f32 cap, f32 speed)
 {
-    if (((BaddieState*)st)->inputMagnitude < 0.005f)
+    BaddieState* st = state;
+
+    if (st->inputMagnitude < 0.005f)
     {
         f32 rest;
-        *(s16*)(st + 0x334) = 0;
-        ((BaddieState*)st)->turnRate = 0;
+        *(s16*)((char*)st + 0x334) = 0;
+        st->turnRate = 0;
         rest = 0.0f;
-        ((BaddieState*)st)->inputMagnitude = rest;
-        ((BaddieState*)st)->animSpeedA = rest;
+        st->inputMagnitude = rest;
+        st->animSpeedA = rest;
     }
-    ((BaddieState*)st)->animSpeedB = 0.0f;
-    *yaw = 182.0f * ((f32)((BaddieState*)st)->turnRate * timeDelta / speed) + (f32)*yaw;
-    ((BaddieState*)st)->animSpeedC +=
-        timeDelta *
-        ((((BaddieState*)st)->inputMagnitude - ((BaddieState*)st)->animSpeedC) / ((BaddieState*)st)->velSmoothTime);
-    ((BaddieState*)st)->animSpeedA +=
-        timeDelta *
-        ((((BaddieState*)st)->inputMagnitude - ((BaddieState*)st)->animSpeedA) / ((BaddieState*)st)->velSmoothTime);
-    if (((BaddieState*)st)->animSpeedC > cap)
+    st->animSpeedB = 0.0f;
+    obj->anim.rotX = 182.0f * ((f32)st->turnRate * timeDelta / speed) + (f32)obj->anim.rotX;
+    st->animSpeedC += timeDelta * ((st->inputMagnitude - st->animSpeedC) / st->velSmoothTime);
+    st->animSpeedA += timeDelta * ((st->inputMagnitude - st->animSpeedA) / st->velSmoothTime);
+    if (st->animSpeedC > cap)
     {
-        ((BaddieState*)st)->animSpeedC = cap;
+        st->animSpeedC = cap;
     }
-    if (((BaddieState*)st)->animSpeedA > cap)
+    if (st->animSpeedA > cap)
     {
-        ((BaddieState*)st)->animSpeedA = cap;
+        st->animSpeedA = cap;
     }
 }
 
@@ -1170,9 +1167,9 @@ f32 dll_19_func05(GameObject* obj, f32 px, f32 pz, f32 range, char* st)
     return -(-((obj)->anim.localPosX * c + (obj)->anim.localPosZ * s) + (c * fx + s * fz));
 }
 
-/* Computes the yaw step, signed yaw delta and distance from an object to its
+/* Computes the yaw step, wrapped yaw delta and distance from an object to its
  * target, updating the wide-turn flag. */
-void dll_19_func07(GameObject* obj, int target, int div, u16* outYaw, u16* outDelta, u16* outDist)
+void dll_19_func07(GameObject* obj, GameObject* target, int div, u16* outYaw, u16* outDelta, u16* outDist)
 {
     char* st = (obj)->extra;
     f32 d[3];
@@ -1182,7 +1179,7 @@ void dll_19_func07(GameObject* obj, int target, int div, u16* outYaw, u16* outDe
     int cur;
     int delta;
 
-    if ((void*)obj == NULL || (void*)target == NULL)
+    if ((void*)obj == NULL || target == NULL)
     {
         *outYaw = 0;
         *outDelta = 0;
@@ -1190,9 +1187,9 @@ void dll_19_func07(GameObject* obj, int target, int div, u16* outYaw, u16* outDe
     }
     else
     {
-        dp[0] = ((GameObject*)target)->anim.worldPosX - (obj)->anim.worldPosX;
-        dp[1] = ((GameObject*)target)->anim.worldPosY - (obj)->anim.worldPosY;
-        dp[2] = ((GameObject*)target)->anim.worldPosZ - (obj)->anim.worldPosZ;
+        dp[0] = target->anim.worldPosX - (obj)->anim.worldPosX;
+        dp[1] = target->anim.worldPosY - (obj)->anim.worldPosY;
+        dp[2] = target->anim.worldPosZ - (obj)->anim.worldPosZ;
         ang = getAngle(-dp[0], -dp[2]);
         ovr = *(s16**)&(obj)->anim.parent;
         if (ovr != NULL)
@@ -1233,7 +1230,7 @@ int dll_19_func09_ret_0(void)
 
 /* Probes the four compass directions around the object for walkable space,
  * returning a bitmask of clear directions. */
-u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
+u8 dll_19_func08(GameObject* obj, void* state, f32 dist)
 {
     u16 i;
     u8 mask;
@@ -1283,7 +1280,7 @@ u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
         if (ok != 0)
         {
             if (objBboxFn_800640cc(&obj->anim.localPosX, world, 1.0f, 0, (TrackBBoxHit*)bboxOut,
-                                   (GameObject*)obj, *(u8*)(st + 0x261), -1, 0, 0) != 0)
+                                   (GameObject*)obj, *(u8*)((u8*)state + 0x261), -1, 0, 0) != 0)
             {
                 ok = 0;
             }

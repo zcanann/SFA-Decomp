@@ -73,8 +73,6 @@ typedef struct WaterFallSprayPartfxArgs
     f32 zOffset;
 } WaterFallSprayPartfxArgs;
 
-#define WATERFALLSPRAY_SPAWN_PARTICLE(obj, id, args) (*gPartfxInterface)->spawnObject((obj), (id), (args), 4, -1, 0)
-
 void WaterFallSpray_update(int* objParam)
 {
     WaterFallSprayState* state;
@@ -128,19 +126,19 @@ void WaterFallSpray_update(int* objParam)
                         partfxArgs.zOffset = (f32)(s32)randomGetRange(-data[0]->randZ, data[0]->randZ);
                         if ((data[0]->flags & 1) != 0)
                         {
-                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x320, &partfxArgs);
+                            (*gPartfxInterface)->spawnObject(obj, 0x320, &partfxArgs, 4, -1, 0);
                         }
                         if ((data[0]->flags & 2) != 0)
                         {
-                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x321, &partfxArgs);
+                            (*gPartfxInterface)->spawnObject(obj, 0x321, &partfxArgs, 4, -1, 0);
                         }
                         if ((data[0]->flags & 4) != 0)
                         {
-                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x322, &partfxArgs);
+                            (*gPartfxInterface)->spawnObject(obj, 0x322, &partfxArgs, 4, -1, 0);
                         }
                         if ((data[0]->flags & 8) != 0)
                         {
-                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x351, &partfxArgs);
+                            (*gPartfxInterface)->spawnObject(obj, 0x351, &partfxArgs, 4, -1, 0);
                         }
                     }
                 }

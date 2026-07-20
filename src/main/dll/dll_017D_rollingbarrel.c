@@ -5,7 +5,6 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
-#define OBJFX_SPAWN_EXPLOSION_REORDERED_LEGACY
 #include "main/objfx.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -40,12 +39,12 @@ void fn_801A5D88(GameObject* obj, int explosionVariant)
     if (gRollingBarrelExplodingCount > 1)
     {
         debrisType = randomGetRange(0, 1) & 0xff;
-        spawnExplosion((int)obj, 1, 1, 0, debrisType, 0, 0, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, debrisType, 0, 0, 0);
     }
     else
     {
         debrisType = randomGetRange(0, 1) & 0xff;
-        spawnExplosion((int)obj, 1, 1, 0, debrisType, 0, 1, 0, (f32)(int)randomGetRange(0x32, 0x3c));
+        spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, debrisType, 0, 1, 0);
     }
     state->state = ROLLINGBARREL_STATE_EXPLODED_WAIT;
     state->timer = 0.0f;

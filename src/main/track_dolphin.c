@@ -38,9 +38,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/track_dolphin_shadow_api.h"
 #include "main/newshadows_shadow_api.h"
-#define TRACK_BBOX_IMPLEMENTATION
 #include "main/track_bbox_api.h"
-#undef TRACK_BBOX_IMPLEMENTATION
 #include "main/dll/player_api.h"
 #include "main/pause_menu_api.h"
 #include "main/pi_dolphin.h"
@@ -49,13 +47,11 @@
 #include "track/intersect_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/objmodel.h"
-#include "main/newshadows_ext.h"
-#include "main/sky_ext.h"
-#include "main/pi_dolphin_fileload_api.h"
+#include "main/newshadows.h"
+#include "main/sky.h"
 #include "main/newshadows_texture_api.h"
 #include "main/atan2f_api.h"
-#include "main/sky_texture_api.h"
-#include "main/tex_dolphin_ext.h"
+#include "main/tex_dolphin.h"
 #include "string.h"
 
 u32 gTrackTriangleBufferEnd;
@@ -419,10 +415,10 @@ void setupToRenderMapBlock(int* block, void* posMtx)
     GXLoadNrmMtxImm((const f32 (*)[4])tmp, GX_PNMTX0);
     PSMTXConcat((f32*)lbl_803967F0, (f32*)posMtx, out);
     GXLoadTexMtxImm((const f32 (*)[4])out, GX_TEXMTX2, GX_MTX3x4);
-    GXSetArray(GX_VA_POS, *(void**)((char*)block + 0x58), 6);
+    GXSetArray(GX_VA_POS, ((MapBlockData*)block)->vertices, 6);
     GXSetArray(GX_VA_CLR0, *(void**)((char*)block + 0x5C), 2);
-    GXSetArray(GX_VA_TEX0, *(void**)((char*)block + 0x60), 4);
-    GXSetArray(GX_VA_TEX1, *(void**)((char*)block + 0x60), 4);
+    GXSetArray(GX_VA_TEX0, ((MapBlockData*)block)->vertexTexCoords, 4);
+    GXSetArray(GX_VA_TEX1, ((MapBlockData*)block)->vertexTexCoords, 4);
 }
 
 void renderMapBlock(int* o, u8 type)
@@ -440,17 +436,17 @@ void renderMapBlock(int* o, u8 type)
     if (type == 1)
     {
         ptr = *(int*)&((GameObject*)o)->anim.banks;
-        count = *(u16*)((char*)o + 0x86);
+        count = ((MapBlockData*)o)->nRenderInstrsTransp;
     }
     else if (type == 2)
     {
         ptr = *(int*)&((GameObject*)o)->anim.previousLocalPosX;
-        count = *(u16*)((char*)o + 0x88);
+        count = ((MapBlockData*)o)->nRenderInstrsWater;
     }
     else
     {
         ptr = *(int*)&((GameObject*)o)->anim.hitVolumeBounds;
-        count = *(u16*)((char*)o + 0x84);
+        count = ((MapBlockData*)o)->nRenderInstrsMain;
         flag = 1;
     }
     if ((u16)count == 0)
@@ -840,7 +836,7 @@ int fn_80060688(GameObject* obj, int type)
     int count;
     total = 0;
     offset = 0;
-    count = *(u16*)((char*)obj + 0x9a);
+    count = ((MapBlockData*)obj)->polyGroupCount;
     for (i = 0; i < count; i++)
     {
         entry = *(int*)&obj->anim.modelInstance + offset;
@@ -934,7 +930,7 @@ void MapBlock_init(GameObject* obj)
     *(int*)&obj->anim.dll = (int)obj + *(int*)&obj->anim.dll;
     if (*(u32*)&obj->anim.modelState != 0)
         *(int*)&obj->anim.modelState = (int)obj + *(int*)&obj->anim.modelState;
-    for (i = 0, off = 0; i < *(u8*)((char*)obj + 0xa1); i++)
+    for (i = 0, off = 0; i < ((MapBlockData*)obj)->edgeCount; i++)
     {
         *(int*)(*(int*)&obj->anim.dll + off) = (int)obj + *(int*)(*(int*)&obj->anim.dll + off);
         off += 0x1c;
@@ -951,11 +947,11 @@ void MapBlock_initHits(GameObject* obj, int index)
     s16 v;
     if (size > 0)
     {
-        *(void**)((char*)obj + 0x70) = mmAlloc(size, 5, 0);
-        fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, *(void**)((char*)obj + 0x70), fileOff, size);
+        ((MapBlockData*)obj)->hits = mmAlloc(size, 5, 0);
+        fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, ((MapBlockData*)obj)->hits, fileOff, size);
     }
-    *(u16*)((char*)obj + 0x9c) = (u32)size / 20;
-    for (i = 0; i < *(u16*)((char*)obj + 0x9c); i++)
+    ((MapBlockData*)obj)->hitCount = (u32)size / 20;
+    for (i = 0; i < ((MapBlockData*)obj)->hitCount; i++)
     {
         entry = *(int*)&obj->anim.textureSlots + i * 20;
         if (*(s16*)(entry + 0) < 0 || (v = *(s16*)(entry + 2)) < 0 || *(s16*)(entry + 0) > 0x280 ||
@@ -1059,9 +1055,9 @@ void fn_80060BB0(void)
         blk = *(int**)((char*)gMapBlocks + i * 4);
         if (blk != NULL)
         {
-            for (j = 0; j < (int)*(u8*)((char*)blk + 0xa1); j++)
+            for (j = 0; j < (int)((MapBlockData*)blk)->edgeCount; j++)
             {
-                arr = *(char**)((char*)blk + 0x68);
+                arr = (char*)((MapBlockData*)blk)->displayLists;
                 arr[j * 0x1c + 0x12] = 0;
             }
         }
@@ -1315,7 +1311,7 @@ void fn_8006135C(s16* out, GameObject* obj)
     }
 }
 
-void objDrawFn_80061654(int obj, int placementObj)
+void objDrawFn_80061654(GameObject* obj, ObjModel* model)
 {
     s16* shadowVerts;
     u8 alpha;
@@ -1324,19 +1320,19 @@ void objDrawFn_80061654(int obj, int placementObj)
     f32 mtx[16];
     f32 outMtx[16];
 
-    shadowVerts = *(s16**)(placementObj + 0x54);
+    shadowVerts = (s16*)model->unk54;
     if (*(u8*)((u8*)shadowVerts + 0x18) == 0)
     {
-        fn_8006135C(shadowVerts, (GameObject*)obj);
+        fn_8006135C(shadowVerts, obj);
     }
     if (*(u8*)((u8*)shadowVerts + 0x18) != 0xff)
     {
-        alpha = (u8)objShadowFn_80062378((GameObject*)obj, 0x96);
+        alpha = (u8)objShadowFn_80062378(obj, 0x96);
         kColor.a = alpha;
         if (alpha != 0)
         {
             viewMtx = Camera_GetViewMatrix();
-            Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
+            Obj_BuildWorldTransformMatrix(obj, mtx, 0);
             mtx[0] = lbl_803DEC68;
             mtx[1] = lbl_803DEC58;
             mtx[2] = lbl_803DEC58;
@@ -1944,7 +1940,7 @@ void playerShadowFn_80062a30(GameObject* obj)
     p->flags &= ~0x2020;
 }
 
-void doNothing_80062A50(void)
+void doNothing_80062A50(GameObject* obj, f32 x, f32 y, f32 z)
 {
 }
 
@@ -2062,7 +2058,8 @@ void initTextures(void)
     allocLotsOfTextures();
 }
 
-int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY, int* outSurfaceId)
+int findSurfaceInYRange(GameObject* obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
+                        GameObject** outSurfaceObj)
 {
     TrackGroundHit** arr;
     int n;
@@ -2074,9 +2071,9 @@ int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
         hi = lo;
         lo = t;
     }
-    n = hitDetectFn_80065e50((GameObject*)obj, x, lo, z, &arr, 0, 1);
+    n = hitDetectFn_80065e50(obj, x, lo, z, &arr, 0, 1);
     *outSurfaceY = lo;
-    *outSurfaceId = 0;
+    *outSurfaceObj = NULL;
     for (i = 0; i < n; i++)
     {
         TrackGroundHit* elem = arr[i];
@@ -2086,7 +2083,7 @@ int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
         }
         if (lo < elem->height && hi > elem->height)
         {
-            *outSurfaceId = (int)arr[i]->object;
+            *outSurfaceObj = arr[i]->object;
             *outSurfaceY = arr[i]->height;
             return (arr[i]->normalY < lbl_803DECB0) + 1;
         }
@@ -2807,7 +2804,7 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 }
 
 int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameObject* self, int p8, int p9,
-                      u8 slot, u8 arg8)
+                      int slot, int arg8)
 {
     f32 w0[3];
     f32 w1[3];
@@ -3503,10 +3500,10 @@ int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
             *outDepth = best;
             return 1;
         }
-        *outDepth = 0.0f;
+        *outDepth = lbl_803DECB4;
         return 0;
     }
-    *outDepth = 0.0f;
+    *outDepth = lbl_803DECB4;
     return 0;
 }
 

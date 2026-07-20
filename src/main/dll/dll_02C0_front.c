@@ -28,7 +28,7 @@
 #include "main/textrender_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
-#include "main/audio/sfx_play_api.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "track/intersect_hud_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/object_render.h"
@@ -816,7 +816,7 @@ void TitleScreen_update(u8* obj)
         }
         else if (t >= FRONT_SEQID_FOX && t < FRONT_SEQID_PILOTS)
         {
-            characterDoEyeAnimsState((GameObject*)obj, state);
+            characterDoEyeAnims((GameObject*)obj, state);
         }
         model = Obj_GetActiveModel((GameObject*)obj);
         if (model->file->morphTargetCount != 0 && ObjModel_HasActiveBlendChannels(model) == 0 &&

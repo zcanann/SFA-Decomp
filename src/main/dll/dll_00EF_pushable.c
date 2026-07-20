@@ -1,11 +1,12 @@
 /* DLL 0xEF - pushable object [80174A80-801755CC) */
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx_play_api.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_api.h"
 #include "main/camera.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
+#include "main/dll/dll_005B_modgfxfunc03.h"
 #include "main/track_bbox_api.h"
 #include "main/object.h"
 #include "main/object_render.h"
@@ -35,7 +36,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/resource.h"
 #include "main/maketex.h"
-#include "main/camera_ext.h"
+#include "main/object_transform.h"
 #include "string.h"
 
 typedef struct PushablePlacement
@@ -157,7 +158,6 @@ void pushable_free(int* obj);
 void pushable_update(int* obj);
 void pushable_init(s16* obj, char* def);
 void pushable_handleMsgs();
-void fn_80174BFC(GameObject* obj, PushableState* ext);
 
 ObjectDescriptor14 gPushableObjDescriptor = {
     0,
@@ -191,7 +191,7 @@ static void pushableClampToZero(f32* value)
     }
 }
 
-int fn_80174438(int obj, PushableState* state)
+int pushable_updateCurtain(int obj, PushableState* state)
 {
     int def;
     GameObject* player;
@@ -207,7 +207,7 @@ int fn_80174438(int obj, PushableState* state)
     state->flags |= 2;
     if ((state->flags & 4) == 0)
     {
-        fn_80174BFC((GameObject*)obj, state);
+        pushable_resolveCollisions((GameObject*)obj, state);
     }
     if (((GameObject*)obj)->anim.localPosX <= CURTAIN_TRIGGER_X_OFFSET + ((ObjPlacement*)def)->posX)
     {
@@ -227,11 +227,11 @@ int fn_80174438(int obj, PushableState* state)
     return 0;
 }
 
-void fn_80174588(GameObject* obj, PushableState* state)
+void pushable_initWcPushBlock(GameObject* obj, PushableState* state)
 {
     int data = *(int*)&obj->anim.placementData;
 
-    switch (*(int*)(data + 0x14))
+    switch (((ObjPlacement*)data)->mapId)
     {
     case 0x49B2C:
         state->requiredHitId = 10;
@@ -246,7 +246,7 @@ void fn_80174588(GameObject* obj, PushableState* state)
         break;
     }
 
-    if (mainGetBit(*(s16*)(data + 0x18)) != 0)
+    if (mainGetBit(((PushablePlacement*)data)->gameBit) != 0)
     {
         ObjTextureRuntimeSlot* tex;
         state->flags = (u16)(state->flags | 0x80);
@@ -258,8 +258,9 @@ void fn_80174588(GameObject* obj, PushableState* state)
     }
 }
 
-int fn_80174668(GameObject* obj, PushableState* state)
+int pushable_updateMagicGem(GameObject* obj, PushableState* state)
 {
+    ModgfxFunc03Interface** effectResource;
     u8 flag;
     ObjTextureRuntimeSlot* tex;
     f32 cur;
@@ -348,10 +349,10 @@ int fn_80174668(GameObject* obj, PushableState* state)
             {
                 mainSetBits(0x1c9, 0);
             }
-            tex = (ObjTextureRuntimeSlot*)Resource_Acquire(0x5b, 1);
-            ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
-            ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
-            Resource_Release(tex);
+            effectResource = Resource_Acquire(0x5b, 1);
+            (*effectResource)->spawn(obj, 0x14, NULL, 2, -1, NULL);
+            (*effectResource)->spawn(obj, 0x14, NULL, 2, -1, NULL);
+            Resource_Release(effectResource);
             Sfx_PlayFromObject((u32)obj, SFXTRIG_espar5_c);
         }
         else
@@ -384,7 +385,7 @@ int fn_80174668(GameObject* obj, PushableState* state)
     return 0;
 }
 
-void fn_80174A80(GameObject* obj, PushableState* ext)
+void pushable_initMagicGem(GameObject* obj, PushableState* ext)
 {
     int def;
     ObjTextureRuntimeSlot* tex;
@@ -437,7 +438,7 @@ void fn_80174A80(GameObject* obj, PushableState* ext)
     tex->colorB = 10;
 }
 
-void fn_80174BFC(GameObject* obj, PushableState* ext)
+void pushable_resolveCollisions(GameObject* obj, PushableState* ext)
 {
     int def;
     int i;
@@ -675,9 +676,9 @@ u32 pushable_SeqFn(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
                 dz = dz / len;
             }
             k = PUSHABLE_KNOCKBACK_SPEED;
-            state->unk_C0 = k * dx;
-            state->unk_C4 = PUSHABLE_ZERO;
-            state->unk_C8 = k * dz;
+            state->knockbackVelX = k * dx;
+            state->knockbackVelY = PUSHABLE_ZERO;
+            state->knockbackVelZ = k * dz;
             return 4;
         }
     }
@@ -722,7 +723,7 @@ void pushable_handleMsgs(GameObject* obj)
 
 int pushable_render2(GameObject* obj)
 {
-    return (*(PushableState**)&obj->extra)->flags & 1;
+    return ((PushableState*)obj->extra)->flags & 1;
 }
 
 void pushable_modelMtxFn(GameObject* obj, int modelNo)
@@ -932,7 +933,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         }
         if ((state->flags & 4) == 0)
         {
-            fn_80174BFC((GameObject*)obj, state);
+            pushable_resolveCollisions((GameObject*)obj, state);
         }
         Obj_BuildTransformMatrices((GameObject*)obj);
         if (PUSHABLE_ZERO != state->pushAmountX || PUSHABLE_ZERO != state->pushAmountZ)
@@ -1176,7 +1177,7 @@ void pushable_hitDetect(GameObject* obj)
             objMove(obj, obj->anim.velocityX, PUSHABLE_ZERO, obj->anim.velocityZ);
             if ((state->flags & 4) == 0)
             {
-                fn_80174BFC(obj, state);
+                pushable_resolveCollisions(obj, state);
             }
             state->flags |= PUSHABLE_FLAG_MOVING_Y;
         }
@@ -1357,11 +1358,11 @@ void pushable_update(int* obj)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x21e:
-        if (fn_80174668((GameObject*)(obj), state) == 0)
+        if (pushable_updateMagicGem((GameObject*)(obj), state) == 0)
             break;
         return;
     case 0x411:
-        if (fn_80174668((GameObject*)(obj), state) == 0)
+        if (pushable_updateMagicGem((GameObject*)(obj), state) == 0)
             break;
         return;
     case PUSHABLE_SEQID_VFP_BLOCK2:
@@ -1371,7 +1372,7 @@ void pushable_update(int* obj)
             ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
             ((GameObject*)obj)->anim.localPosZ = (f32)(PUSHABLE_CURTAIN_Z_OFFSET + (f64)((ObjPlacement*)def)->posZ);
         }
-        fn_80174438((int)obj, state);
+        pushable_updateCurtain((int)obj, state);
         break;
     case PUSHABLE_SEQID_DIM2_ICE_BLOCK:
         if (PUSHABLE_ZERO == state->prevWaterDepth && state->waterDepth > PUSHABLE_ZERO)
@@ -1553,13 +1554,13 @@ void pushable_init(s16* obj, char* def)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x21e:
-        fn_80174A80((GameObject*)(obj), state);
+        pushable_initMagicGem((GameObject*)(obj), state);
         break;
     case 0x411:
-        fn_80174A80((GameObject*)(obj), state);
+        pushable_initMagicGem((GameObject*)(obj), state);
         break;
     case PUSHABLE_SEQID_WC_PUSH_BLOCK:
-        fn_80174588((GameObject*)(obj), state);
+        pushable_initWcPushBlock((GameObject*)(obj), state);
         break;
     case PUSHABLE_SEQID_DIM_PUSH_BLOCK:
         if (((PushableObjectDef*)def)->gameBit > -1 && mainGetBit(((PushableObjectDef*)def)->gameBit) != 0)

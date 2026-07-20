@@ -16,6 +16,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/object_descriptor.h"
+#include "main/dll/foodbag.h"
 
 /* Obj_AllocObjectSetup(0x38,...) buffer composed in DFSH_ObjCreator_update.
  * Head is the common ObjPlacement; tail (0x18..0x37) is file-local. */
@@ -93,7 +94,7 @@ void DFSH_ObjCreator_update(GameObject* obj)
 
     u8* setup = *(u8**)&(obj)->anim.placementData;
     DfshObjCreatorState* state = (obj)->extra;
-    void* resource;
+    Dll82Interface** resource;
     DfshObjCreatorSetup* spawnSetup;
 
     if (mainGetBit(0x589) != 0)
@@ -105,8 +106,8 @@ void DFSH_ObjCreator_update(GameObject* obj)
     if ((obj)->userData2 == 0 && mainGetBit((s8)setup[0x1f] + 0xf6) != 0)
     {
         resource = Resource_Acquire(0x82, 1);
-        (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))((int)obj, 0, 0, 1, -1, 0);
-        (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))((int)obj, 1, 0, 1, -1, 0);
+        (*resource)->spawn(obj, 0, NULL, 1, -1, NULL);
+        (*resource)->spawn(obj, 1, NULL, 1, -1, NULL);
         Sfx_PlayFromObject((int)obj, SFXTRIG_hitpos_6);
         Resource_Release(resource);
         state->spawnTimerStep = 1;

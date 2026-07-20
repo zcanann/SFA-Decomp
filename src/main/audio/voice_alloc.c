@@ -6,6 +6,8 @@
 #include "main/audio/synth_config.h"
 #include "main/audio/voice_alloc.h"
 #include "main/audio/voice_id.h"
+#include "main/audio/vid_init.h"
+#include "main/audio/snd_core.h"
 
 
 #define VOICE_CFLAGS(i) (*(u64*)&synthVoice[i].inputFlags)
@@ -17,14 +19,6 @@
 #define AV_FXFLAG(i)             (synthVoice[i].streamKind)
 
 SynthVoiceListNode voiceFreeListSlots[64];
-extern u8 synthIdleWaitActive;
-extern u16 voicePrioSortedRoot;
-extern u8 voiceMusicRunning;
-extern u8 voiceFxRunning;
-extern u8 voiceFreeListTail;
-extern u8 voiceFreeListRoot;
-extern u8 vidListNodes[];
-
 /*
  * Allocate a voice id, preferring a free slot but stealing the lowest-priority
  * compatible active voice when limits are exceeded. (musyx synthvoice.c
@@ -235,7 +229,7 @@ void voiceFree(McmdVoiceState* voice)
 {
     macMakeInactive(voice, 2);
     voiceRemovePriority(voice);
-    *(u32*)&voice->macroBase = 0;
+    voice->macroBase = NULL;
     voice->priorityGroup = 0;
     {
         u32 voiceId = voice->voiceHandle;

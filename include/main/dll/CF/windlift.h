@@ -5,7 +5,6 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
-void Scarab_update(GameObject* obj);
 void FUN_80184a54(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8);
 void fn_80185868(GameObject* obj, f32 arg);
@@ -44,7 +43,7 @@ void PortalSpellDoor_initialise(void);
 void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c);
 void LanternFireFly_func0B(GameObject* obj);
 void LanternFireFly_setScale(u8* obj, f32* vec);
-void fn_801868D0(GameObject* obj);
-void fn_801869DC(GameObject* obj);
+void LanternFireFly_pickDriftOffset(GameObject* obj);
+void LanternFireFly_advanceControlRing(GameObject* obj);
 
 #endif /* MAIN_DLL_CF_WINDLIFT_H_ */
