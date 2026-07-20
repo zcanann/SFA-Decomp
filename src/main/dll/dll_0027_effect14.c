@@ -39,7 +39,7 @@ ObjectDescriptor6 lbl_80310DE8 = {
     (ObjectDescriptorCallback)Effect14_func05_nop,
 };
 
-int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByte, u16* extraArgs)
+int Effect14_func04(GameObject* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByte, u16* extraArgs)
 {
     EffectSrcParams rotCtx;
     EffectSpawnParams p;
@@ -68,7 +68,7 @@ int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
     p.flagsA = 0;
     p.flagsB = 0;
     p.idByte = id;
-    p.model = obj;
+    p.attachedSource = obj;
     p.posX = 0.0f;
     p.posY = 0.0f;
     p.posZ = 0.0f;
@@ -400,9 +400,9 @@ int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         rotCtx.y = 0.0f;
         rotCtx.z = 0.0f;
         rotCtx.w = 1.0f;
-        rotCtx.rot2 = ((GameObject*)obj)->anim.rotZ;
-        rotCtx.rot1 = ((GameObject*)obj)->anim.rotY;
-        rotCtx.rot0 = ((GameObject*)obj)->anim.rotX;
+        rotCtx.rot2 = obj->anim.rotZ;
+        rotCtx.rot1 = obj->anim.rotY;
+        rotCtx.rot0 = obj->anim.rotX;
         vecRotateZXY(&rotCtx.rotation.x, &p.velX);
         p.flagsA = 0x3000000;
         p.flagsB = 0x200000;
@@ -421,9 +421,9 @@ int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.srcY = 0.0f;
         p.srcZ = 0.0f;
         p.srcW = 1.0f;
-        p.rot2 = ((GameObject*)obj)->anim.rotZ;
-        p.rot1 = ((GameObject*)obj)->anim.rotY;
-        p.rot0 = ((GameObject*)obj)->anim.rotX;
+        p.rot2 = obj->anim.rotZ;
+        p.rot1 = obj->anim.rotY;
+        p.rot0 = obj->anim.rotX;
         break;
     case 0x4c7:
         p.alpha = 0x40;
@@ -435,9 +435,9 @@ int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
         p.srcY = 0.0f;
         p.srcZ = 0.0f;
         p.srcW = 1.0f;
-        p.rot2 = ((GameObject*)obj)->anim.rotZ;
-        p.rot1 = ((GameObject*)obj)->anim.rotY;
-        p.rot0 = ((GameObject*)obj)->anim.rotX;
+        p.rot2 = obj->anim.rotZ;
+        p.rot1 = obj->anim.rotY;
+        p.rot0 = obj->anim.rotX;
         break;
     case 0x4c8:
         p.posX = 0.9f * (f32)(int)randomGetRange(-10, 10);
@@ -540,11 +540,11 @@ int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByt
             p.posY = p.posY + p.srcY;
             p.posZ = p.posZ + p.srcZ;
         }
-        else if (p.model != NULL)
+        else if (p.attachedSource != NULL)
         {
-            p.posX = p.posX + ((GameObject*)p.model)->anim.worldPosX;
-            p.posY = p.posY + ((GameObject*)p.model)->anim.worldPosY;
-            p.posZ = p.posZ + ((GameObject*)p.model)->anim.worldPosZ;
+            p.posX = p.posX + ((GameObject*)p.attachedSource)->anim.worldPosX;
+            p.posY = p.posY + ((GameObject*)p.attachedSource)->anim.worldPosY;
+            p.posZ = p.posZ + ((GameObject*)p.attachedSource)->anim.worldPosZ;
         }
     }
     return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
