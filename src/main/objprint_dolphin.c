@@ -623,8 +623,7 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
             {
                 u32 w;
                 int pos = bs->pos;
-                int off = pos >> 3;
-                u8* p = (u8*)(off + bs->data);
+                u8* p = (u8*)((pos >> 3) + (int)bs->data);
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
@@ -1675,12 +1674,9 @@ void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
         {
             int idx;
             {
-                int off;
                 u32 w;
                 int pos = bs->pos;
-                u8* p;
-                off = pos >> 3;
-                p = (u8*)(off + bs->data);
+                u8* p = (u8*)((pos >> 3) + (int)bs->data);
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
