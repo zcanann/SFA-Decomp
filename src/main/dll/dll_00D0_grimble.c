@@ -432,8 +432,8 @@ void grimble_update(GameObject* obj)
             else
             {
                 ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~1;
-                target = (*(void* (**)(void*, char*, f32, int))(*(int*)gBaddieControlInterface + 0x48))(
-                    obj, state, (f32)((GroundBaddieState*)state)->aggroRange, 0x8000);
+                target = ((BaddieControlInterface*)*gBaddieControlInterface)
+                             ->findAggroTarget(obj, state, (f32)((GroundBaddieState*)state)->aggroRange, 0x8000);
                 if (target != NULL)
                 {
                     ((GroundBaddieState*)state)->baddie.targetObj = target;

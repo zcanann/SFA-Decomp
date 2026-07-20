@@ -102,7 +102,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
 GameObject* dll_19_func15(GameObject* obj, int spawnType, int unused, int alt);
 void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
                    int animMove, s8 field25f);
-int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle);
+GameObject* dll_19_func14(GameObject* self, void* state, f32 frange, int halfAngle);
 int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar);
 int dll_19_func0E(GameObject* obj, int state, u8 checkDead);
 void dll_19_func0D(GameObject* obj, int state, f32 gravity, s8 field25f);
@@ -730,7 +730,7 @@ void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flag
 
 /* opt_loop_invariants off: retail recomputes the loop-invariant self-position
  * reads inside the scan loop; hoisting them changes the schedule */
-int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
+GameObject* dll_19_func14(GameObject* self, void* state, f32 frange, int halfAngle)
 {
     f32 bboxOut[20];
     int objs[3];
@@ -816,8 +816,8 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                     traced = voxmaps_traceLine((VoxPos*)gridB, (VoxPos*)gridA, NULL, &losOut, 0);
                     if (losOut == 1 || traced != 0)
                     {
-                        if (objBboxFn_800640cc((f32*)(self + 12), gridIn, 1.0f, 0, (TrackBBoxHit*)bboxOut,
-                                               (GameObject*)self, 4, -1, 0, 0) != 0)
+                        if (objBboxFn_800640cc(&self->anim.localPosX, gridIn, 1.0f, 0, (TrackBBoxHit*)bboxOut,
+                                               self, 4, -1, 0, 0) != 0)
                         {
                             found = 0;
                         }
@@ -831,7 +831,7 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
         }
         list++;
     }
-    return obj;
+    return (GameObject*)obj;
 }
 
 int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar)

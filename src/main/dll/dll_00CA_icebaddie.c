@@ -1137,24 +1137,26 @@ void iceBaddie_updateEffectAnchors(GameObject* obj, int state)
 
 void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
 {
-    u32 acquired;
+    GameObject* acquired;
 
     ObjHits_DisableObject((GameObject*)obj);
 
     if ((((GroundBaddieState*)sub)->configFlags & 0x4) != 0)
     {
-        acquired = (**(u32(**)(int, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(obj, state, 55.0f,
-                                                                                               0x8000);
+        acquired = ((BaddieControlInterface*)*gBaddieControlInterface)
+                       ->findAggroTarget((GameObject*)obj, (void*)state, 55.0f, 0x8000);
     }
     else if ((((GroundBaddieState*)sub)->configFlags & 0x8) != 0)
     {
-        acquired = (**(u32(**)(int, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
-            obj, state, 0.5f * (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 0x8000);
+        acquired = ((BaddieControlInterface*)*gBaddieControlInterface)
+                       ->findAggroTarget((GameObject*)obj, (void*)state,
+                                         0.5f * (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 0x8000);
     }
     else
     {
-        acquired = (**(u32(**)(int, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
-            obj, state, (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 0x8000);
+        acquired = ((BaddieControlInterface*)*gBaddieControlInterface)
+                       ->findAggroTarget((GameObject*)obj, (void*)state,
+                                         (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 0x8000);
     }
 
     if (acquired != 0)
@@ -1172,7 +1174,7 @@ void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
         int v = -1;
         (**(void (**)(int, int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x28))(
             obj, state, sub + 0x35c, (s32)((GroundBaddieState*)sub)->gameBitB, 0, 0, 0, 8, v);
-        *(int*)&((BaddieState*)state)->targetObj = acquired;
+        *(int*)&((BaddieState*)state)->targetObj = (int)acquired;
         ((BaddieState*)state)->hasTarget = 0;
         ((GroundBaddieState*)sub)->targetState = 1;
     }

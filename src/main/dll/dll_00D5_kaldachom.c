@@ -460,8 +460,8 @@ void kaldachom_update(GameObject* obj)
                 {
                     (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, timeDelta, 5);
                 }
-                ref = (int)(*(void* (**)(void*, int, double, int))(*(int*)gBaddieControlInterface + 0x48))(
-                    obj, state, (f64)(f32)(u32)((CampfireState*)state)->aggroRange, 0x8000);
+                ref = (int)((BaddieControlInterface*)*gBaddieControlInterface)
+                          ->findAggroTarget(obj, (void*)state, (f32)(u32)((CampfireState*)state)->aggroRange, 0x8000);
                 if ((void*)ref != NULL)
                 {
                     (*(void (**)(void*, int, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x28))(

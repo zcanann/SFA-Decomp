@@ -642,10 +642,10 @@ void chukChuk_spawnIceBall(GameObject* obj, GroundBaddieState* state)
 void chukChuk_acquireTarget(GameObject* obj, int state, int target)
 {
             int sub = *(int*)&((GroundBaddieState*)state)->control;
-    char* r;
+    GameObject* r;
 
-    r = (char*)(**(int (**)(void*, int, f32, int))((char*)(*gBaddieControlInterface) + 0x48))(
-        obj, target, (f32)(u32)((GroundBaddieState*)state)->aggroRange, 0x8000);
+    r = ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->findAggroTarget(obj, (void*)target, (f32)(u32)((GroundBaddieState*)state)->aggroRange, 0x8000);
 
     if (r != NULL && (((GroundBaddieState*)state)->configFlags & 0x4) == 0)
     {

@@ -2122,7 +2122,7 @@ void dbstealerworm_acquireTarget(GameObject* obj, int groundState, int baddie)
 {
 
     GroundBaddieState* st = (GroundBaddieState*)groundState;
-    u32 near;
+    GameObject* near;
     int data;
     DbStealerwormControl* sub = (DbStealerwormControl*)st->control;
     char* player;
@@ -2134,22 +2134,22 @@ void dbstealerworm_acquireTarget(GameObject* obj, int groundState, int baddie)
     } stk;
     stk.range = 100.0f;
     data = *(int*)&obj->anim.placementData;
-    near = (**(u32(**)(int, int, f32, int))((char*)*gBaddieControlInterface + 0x48))((int)obj, baddie, st->aggroRange,
-                                                                                     0x8000);
+    near = ((BaddieControlInterface*)*gBaddieControlInterface)
+               ->findAggroTarget(obj, (void*)baddie, st->aggroRange, 0x8000);
     if (near == 0 && (st->configFlags & 0x10) != 0)
     {
-        near = ObjGroup_FindNearestObject(DBEGG_OBJGROUP, obj, &stk.range);
+        near = (GameObject*)ObjGroup_FindNearestObject(DBEGG_OBJGROUP, obj, &stk.range);
     }
     if (near == 0 && (st->configFlags & 0x10) != 0 && (st->configFlags & 2) == 0 &&
         (((DbstealerwormPlacement*)data)->configFlags & 2) != 0)
     {
-        near = ObjGroup_FindNearestObject(DBEGG_OBJGROUP, obj, 0);
+        near = (GameObject*)ObjGroup_FindNearestObject(DBEGG_OBJGROUP, obj, 0);
     }
     if (near != 0 && (st->configFlags & 2) == 0)
     {
         (**(void (**)(int, int, int, int, int, int, int, int, int))((char*)*gBaddieControlInterface + 0x28))(
             (int)obj, baddie, groundState + 0x35c, st->gameBitB, 0, 0, 0, 8, -1);
-        *(int*)&((BaddieState*)baddie)->targetObj = near;
+        *(int*)&((BaddieState*)baddie)->targetObj = (int)near;
         ((BaddieState*)baddie)->hasTarget = 0;
         ObjGroup_AddObject((int)obj, DBSTEALERWORM_OBJGROUP);
         st->targetState = 1;
