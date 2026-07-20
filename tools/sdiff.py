@@ -9,6 +9,18 @@ Running both diffs together makes the distinction immediate: dll_0B_func04 is 62
 instructions with 17 register-blind divergences against 366 raw -- i.e. permutation, not
 structure. A function with real structural work shows a REGBLIND count near its RAW count.
 
+That heuristic is only valid because REGBLIND also canonicalizes POOL RELOCATION NAMES.
+It did not, until it had already misdispatched a lane: Effect3_func04 read 188 RAW / 174
+REGBLIND -- "real structural work", the highest-ranked open target -- when every one of
+the 188 was an anonymous @N on our side against a compiler-named lbl_/jumptable_ on
+retail's. Byte-level truth was 14 register-field bits in an otherwise byte-perfect stream.
+With pool names folded it reads 188 / 4.
+
+A RELOC line that still differs under REGBLIND is therefore a genuine symbol disagreement
+and worth reading -- but note the converse is NOT a defect to fix: retail naming a .sdata2
+float that we emit anonymously is the documented phantom (CLAUDE.md), and is almost always
+already byte-identical. Confirm against the section bytes before believing it.
+
 Usage:  python3 tools/sdiff.py <unit> <symbol>
         unit accepts either form: "main/shader.c" or "main/main/shader"
 """
@@ -51,7 +63,16 @@ def insns(s, blind):
                 t = re.sub(r'\bf\d+\b', 'F', t)
             out.append(t)
         elif 'R_PPC' in l:
-            out.append('RELOC ' + l.split()[-1])
+            sym = l.split()[-1]
+            # A pool constant is an anonymous @N on our side and a compiler-named
+            # lbl_/jumptable_ on retail's. That is a NAMING difference, not a
+            # structural one, and it survived register-blindness -- making a
+            # function whose 188 diffs were ALL pool names read as "real
+            # structural work" and misdispatching a whole lane at it.
+            if blind:
+                sym = re.sub(r'^(@\d+|lbl_[0-9A-Fa-f]{6,}|jumptable_[0-9A-Fa-f]{6,})$',
+                             'POOL', sym)
+            out.append('RELOC ' + sym)
     return out
 
 
