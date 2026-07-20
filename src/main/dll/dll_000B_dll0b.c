@@ -5,7 +5,7 @@
  * Responsibilities:
  *   - the partfx pending-spawn queue (dll_0B_func10..func18) and the
  *     0x32-slot active-particle table (dll_0B_func04 allocate,
- *     dll_0B_func05 update, dll_0B_func09 render, fn_800A1040 free).
+ *     dll_0B_func05 update, dll_0B_func09 render, partfx_freeEffectsBySequence free).
  *   - modgfx_stepS16VectorLerp: per-frame s16 vector interpolation helper.
  *
  * A block of modgfx vertex-animation / expgfx pool / projgfx preset-spawn
@@ -139,7 +139,7 @@ STATIC_ASSERT(offsetof(PartfxEffectState, textureIsBorrowed) == 0x13F);
 
 u8 gModgfxSpawnContextStorage[0x60];
 ModgfxPendingSpawn gModgfxPendingSpawnQueue[0x300 / sizeof(ModgfxPendingSpawn)];
-void fn_800A1040(s16 a, int b);
+void partfx_freeEffectsBySequence(s16 a, int b);
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
 
@@ -259,7 +259,7 @@ void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
 
 /* Per-bone particle vertex update + draw. */
 
-void fn_800A02DC(ModgfxState* state, f32* in)
+void modgfx_scrollTexCoords(ModgfxState* state, f32* in)
 {
     int i;
     s32 dy, dx;
@@ -326,7 +326,7 @@ void fn_800A02DC(ModgfxState* state, f32* in)
 
 void* gPartfxActiveEffects[0x32];
 
-void fn_800A0478(ModgfxState* state)
+void modgfx_captureFrameBaseVertices(ModgfxState* state)
 {
     int i;
     ModgfxVertexData* dst;
@@ -363,12 +363,12 @@ void fn_800A0478(ModgfxState* state)
     state->scaleChannels[1].step[2] = f0;
 }
 
-void fn_800A0524(void* state, void* p, int mode)
+void modgfx_stepVertexColor(void* state, void* p, int reinit)
 {
     u8* buf = ((u8**)((char*)state + 0x78))[((ModgfxState*)state)->activeVertexBufferIndex];
     int j;
 
-    if (mode == 1)
+    if (reinit == 1)
     {
         f32 tr = ((ModgfxVertexGroupCmd*)p)->valueX;
         f32 tg = ((ModgfxVertexGroupCmd*)p)->valueY;
@@ -433,10 +433,10 @@ void fn_800A0524(void* state, void* p, int mode)
     }
 }
 
-void fn_800A081C(int state, int cmd, int mode)
+void modgfx_stepPosition(int state, int cmd, int reinit)
 {
 
-    if (mode == 1)
+    if (reinit == 1)
     {
         s16* cf = ((ModgfxState*)state)->channelFrames;
         if (cf[((ModgfxState*)state)->activeChannel] == 0)
@@ -486,11 +486,11 @@ void fn_800A081C(int state, int cmd, int mode)
     }
 }
 
-/* Integer-vector lerp setup. On mode 1, snap or step-interpolate the rotation offset triple
+/* Integer-vector lerp setup. On the reinit step, snap or step-interpolate the rotation offset triple
  * toward the rounded params, then advance it by the per-step delta. */
-void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
+void modgfx_stepS16VectorLerp(int* obj, f32* params, int reinit)
 {
-    if (mode == 1)
+    if (reinit == 1)
     {
         s16 tx = params[1];
         s16 ty = params[2];
@@ -518,7 +518,7 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
     ((ModgfxState*)obj)->rotOffsetY += ((ModgfxState*)obj)->rotStepY;
     ((ModgfxState*)obj)->rotOffsetX += ((ModgfxState*)obj)->rotStepX;
 }
-void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
+void modgfx_stepVertexAlpha(void* state, void* p, int reinit, u8 idx)
 {
     int k = idx * 2;
     char* slots = (char*)state + 0x78;
@@ -526,7 +526,7 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
     u8* bufA = (u8*)((ModgfxState*)state)->baseVertexData;
     int j;
 
-    if (mode == 1)
+    if (reinit == 1)
     {
         f32 target = ((ModgfxVertexGroupCmd*)p)->valueX;
         s16 frames = ((ModgfxState*)state)->blendFrameCount;
@@ -571,13 +571,13 @@ void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 }
 }
 
-void fn_800A0C78(void* state, void* p, int mode, u8 idx)
+void modgfx_stepVertexScale(void* state, void* p, int reinit, u8 idx)
 {
     int idx2 = idx * 2;
 #define base ((char*)state + idx2 * 0xc)
     int j;
 
-    if (mode == 1)
+    if (reinit == 1)
     {
         f32 tx = ((ModgfxVertexGroupCmd*)p)->valueX;
         f32 ty = ((ModgfxVertexGroupCmd*)p)->valueY;
@@ -647,7 +647,7 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 #undef base
 }
 
-void fn_800A0FD0(ModgfxState* state)
+void modgfx_restoreBaseVertices(ModgfxState* state)
 {
     int i;
     ModgfxVertexData* src;
@@ -667,7 +667,7 @@ void fn_800A0FD0(ModgfxState* state)
     }
 }
 
-void fn_800A1040(s16 sequenceId, int forceAll)
+void partfx_freeEffectsBySequence(s16 sequenceId, int forceAll)
 {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
@@ -1116,7 +1116,7 @@ void dll_0B_func08(void* param)
         {
             if ((int)arr[i]->flags & 0x10000)
             {
-                fn_800A1040(arr[i]->sequenceId, 0);
+                partfx_freeEffectsBySequence(arr[i]->sequenceId, 0);
             }
             else
             {
@@ -1187,7 +1187,7 @@ static inline int modgfx_findFreeEffectSlot(void** p, int found, int i)
 
 void dll_0B_func06(void)
 {
-    fn_800A1040(0, 1);
+    partfx_freeEffectsBySequence(0, 1);
 }
 
 typedef void (*ExpFn2)(void*, int);
@@ -1242,13 +1242,13 @@ void dll_0B_func05(void)
                 ((ModgfxEffectSlot*)eff)->frameIndex += 1;
                 if (((ModgfxEffectSlot*)eff)->frameIndex > 6)
                 {
-                    fn_800A1040(((ModgfxEffectSlot*)eff)->animSlotId, 0);
+                    partfx_freeEffectsBySequence(((ModgfxEffectSlot*)eff)->animSlotId, 0);
                     break;
                 }
                 ((ModgfxEffectSlot*)eff)->frameDuration =
                     ((ModgfxEffectSlot*)eff)->frameTimings[((ModgfxEffectSlot*)eff)->frameIndex];
                 active = 1;
-                ((ExpFn2)fn_800A0478)(eff, 0);
+                ((ExpFn2)modgfx_captureFrameBaseVertices)(eff, 0);
             }
             else if (((ModgfxEffectSlot*)eff)->pendingFrameIdx != 0)
             {
@@ -1256,17 +1256,17 @@ void dll_0B_func05(void)
                 ((ModgfxEffectSlot*)eff)->pendingFrameIdx = 0;
                 if (((ModgfxEffectSlot*)eff)->frameIndex > 6)
                 {
-                    fn_800A1040(((ModgfxEffectSlot*)eff)->animSlotId, 0);
+                    partfx_freeEffectsBySequence(((ModgfxEffectSlot*)eff)->animSlotId, 0);
                     break;
                 }
                 ((ModgfxEffectSlot*)eff)->frameDuration =
                     ((ModgfxEffectSlot*)eff)->frameTimings[((ModgfxEffectSlot*)eff)->frameIndex];
                 active = 1;
-                ((ExpFn2)fn_800A0478)(eff, 0);
+                ((ExpFn2)modgfx_captureFrameBaseVertices)(eff, 0);
             }
             cntC = 0;
             cntA = 0;
-            ((ExpFn3)fn_800A0FD0)(eff, PENDING_SPAWNS + emIdx * 0x18, active);
+            ((ExpFn3)modgfx_restoreBaseVertices)(eff, PENDING_SPAWNS + emIdx * 0x18, active);
             feFlag = 0;
             emIdx = 0;
             emOff = 0;
@@ -1398,17 +1398,17 @@ void dll_0B_func05(void)
                 ObjList_GetObjects(&objIdx, &objCount);
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x2)
                 {
-                    fn_800A0C78(eff, PENDING_SPAWNS + emOff, active, cntC);
+                    modgfx_stepVertexScale(eff, PENDING_SPAWNS + emOff, active, cntC);
                     cntC++;
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x4)
                 {
-                    fn_800A0AB4(eff, PENDING_SPAWNS + emOff, active, cntA);
+                    modgfx_stepVertexAlpha(eff, PENDING_SPAWNS + emOff, active, cntA);
                     cntA++;
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x8)
                 {
-                    ((ExpFn4)fn_800A0524)(eff, PENDING_SPAWNS + emOff, active, 0);
+                    ((ExpFn4)modgfx_stepVertexColor)(eff, PENDING_SPAWNS + emOff, active, 0);
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x100)
                 {
@@ -1428,7 +1428,7 @@ void dll_0B_func05(void)
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x4000)
                 {
-                    ((ExpFn4)fn_800A02DC)(eff, PENDING_SPAWNS + emOff, active, 0);
+                    ((ExpFn4)modgfx_scrollTexCoords)(eff, PENDING_SPAWNS + emOff, active, 0);
                 }
                 if ((((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x10000) && active != 0)
                 {
@@ -1478,7 +1478,7 @@ void dll_0B_func05(void)
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x400000)
                 {
-                    ((ExpFn4)fn_800A081C)(eff, PENDING_SPAWNS + emOff, active, 0);
+                    ((ExpFn4)modgfx_stepPosition)(eff, PENDING_SPAWNS + emOff, active, 0);
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x80000000)
                 {
@@ -1658,7 +1658,7 @@ s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16*
         (PartfxEffectState*)mmAlloc(base0 + 0x240 + spawnCount * 0x18 + total * 2, 0x15, 0);
     if (((PartfxEffectState**)gPartfxActiveEffects)[slot] == NULL)
     {
-        fn_800A1040(0, 0);
+        partfx_freeEffectsBySequence(0, 0);
         return -1;
     }
 
@@ -1941,7 +1941,7 @@ void dll_0B_onMapSetup(void)
 {
     int i;
 
-    fn_800A1040(0, 1);
+    partfx_freeEffectsBySequence(0, 1);
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
     {
         gPartfxActiveEffects[i] = NULL;
@@ -1950,7 +1950,7 @@ void dll_0B_onMapSetup(void)
 
 void dll_0B_release(void)
 {
-    fn_800A1040(0, 1);
+    partfx_freeEffectsBySequence(0, 1);
 }
 
 void dll_0B_initialise(void)
