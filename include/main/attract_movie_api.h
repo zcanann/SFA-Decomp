@@ -4,8 +4,10 @@
 #include "types.h"
 
 extern s32 gAttractMovieState;
+extern s32 gAttractMovieIdleFrameCount;
 extern u8 gAttractMoviePreparePending;
 extern u8 gAttractMovieRetraceCountdown;
+extern u8 gAttractMovieLoopCompleted;
 extern void* gAttractMovieBuffer0;
 extern void* gAttractMovieBuffer1;
 extern void* gAttractMovieBuffer2;

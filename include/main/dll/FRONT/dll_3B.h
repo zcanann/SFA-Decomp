@@ -5,6 +5,8 @@
 #include "main/dll/FRONT/attract_movie.h"
 #include "main/dll/FRONT/title_menu.h"
 
+extern s32 gAttractMovieAudioThreadActive;
+
 void TitleMenu_initialise(void);
 void *PopDecodedAudioBuffer(int flags);
 void PushFreeAudioBuffer(void *message);

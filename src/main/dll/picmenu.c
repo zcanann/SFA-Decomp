@@ -28,6 +28,7 @@
 #include "dolphin/thp/THPDecode.h"
 #include "string.h"
 #include "main/fileio.h"
+#include "main/attract_movie_api.h"
 #include "main/dll/FRONT/picmenu.h"
 #include "main/dll/FRONT/n_options.h"
 
@@ -53,7 +54,6 @@ extern u32 lbl_803DD678;
 extern s32 gPicMenuReadThreadCreated; /* sbss slot is 8 bytes; upper word unreferenced */
 extern s32 gPicMenuVideoDecodeThreadCreated;
 extern s32 gPicMenuVideoDecodePrepareReady;
-extern s32 gAttractMovieIdleFrameCount; /* sbss slot is 8 bytes; upper word unreferenced */
 
 char gPicMenuReadThreadArea[0x1000];
 OSThread gPicMenuReadThread;

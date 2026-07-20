@@ -30,8 +30,6 @@
  */
 #define THP_FRAME_HEADER_SIZE 8
 
-extern int gAttractMovieAudioThreadActive;
-
 typedef struct AttractMovieFreeQueueAndStack
 {
     OSMessageQueue queue;      /* free-buffer queue */

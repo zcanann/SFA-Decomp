@@ -10,7 +10,6 @@
 #include "main/dll/dll_3e_api.h"
 #include "main/pi_dolphin.h"
 
-extern s32 gAttractMovieIdleFrameCount;
 extern char sNAttractModeStringBlock[];
 
 
