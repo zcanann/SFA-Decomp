@@ -163,10 +163,10 @@ void ObjSeq_onMapSetup(void)
     }
 
     {
-        marks = base + i;
+        u8* p = base + i;
         modes = (s16*)(base + 0x3a98) + i;
         handles = (int*)(base + 0x33e4) + i;
-        marks += 0x338c;
+        marks = p + 0x338c;
         for (; i < 85; i++)
         {
             frames = (f32*)(handles + 300);
