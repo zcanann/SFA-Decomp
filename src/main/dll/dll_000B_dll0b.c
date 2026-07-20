@@ -1831,7 +1831,7 @@ s16 dll_0B_func04(ModgfxSpawnContext* st, int unused, int c, s16* b, int e, s16*
                                                            off))
                                  ->param10 +
                             k * 2) =
-                        *(s16*)(*(u8**)&((ModgfxPendingSpawn*)((u8*)st->pendingSpawns + off))->param10 + k * 2);
+                        *(s16*)(*(u8**)((u8*)&((ModgfxPendingSpawn*)st->pendingSpawns)->param10 + off) + k * 2);
                 }
             }
             ((ModgfxPendingSpawn*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCommands + off))
