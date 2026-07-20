@@ -92,6 +92,7 @@ main/gameloop.c:
 	.bss        start:0x8033BF88 end:0x8033C7A0
 	.sdata      start:0x803DB410 end:0x803DB430
 	.sbss       start:0x803DCA38 end:0x803DCB08
+	.sdata2     start:0x803DE7A8 end:0x803DE7BC
 
 main/vecmath.c:
 	.text       start:0x80021370 end:0x80022948
