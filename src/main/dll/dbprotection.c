@@ -43,6 +43,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DB/DBstealerworm.h"
+#include "main/dll/SB/dll_01E8_sbgalleon.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 #include "main/dll/ship_battle_api.h"
 
