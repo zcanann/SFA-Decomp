@@ -2063,9 +2063,8 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                                                    : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
                                                outAxial, response);
             }
-            responseX = response[0];
             response[0] =
-                (responseX < *(f32*)&gObjHitsResponseClampMin)
+                ((responseX = response[0]) < *(f32*)&gObjHitsResponseClampMin)
                     ? *(f32*)&gObjHitsResponseClampMin
                     : ((responseX > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseX);
             responseY = response[1];
@@ -2110,9 +2109,8 @@ void ObjHits_CheckSkeletonPair(int objA, int objB, void* hits, void* scratchB, v
                                                    : ((ratio > gObjHitsScalarOne) ? gObjHitsScalarOne : ratio),
                                                outAxial, response);
             }
-            responseX = response[0];
             response[0] =
-                (responseX < *(f32*)&gObjHitsResponseClampMin)
+                ((responseX = response[0]) < *(f32*)&gObjHitsResponseClampMin)
                     ? *(f32*)&gObjHitsResponseClampMin
                     : ((responseX > *(f32*)&gObjHitsResponseClampMax) ? *(f32*)&gObjHitsResponseClampMax : responseX);
             responseY = response[1];
