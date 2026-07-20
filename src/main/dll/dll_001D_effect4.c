@@ -947,12 +947,12 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.velocityZ = (0.0065f) * (f32)(s32)randomGetRange(0xc8, 0x320);
         if ((int)randomGetRange(0, 1) != 0)
         {
-            cfg.velocityZ = cfg.velocityZ * (-1.0f);
+            cfg.velocityZ *= (-1.0f);
         }
         cfg.velocityY = (0.0065f) * (f32)(s32)randomGetRange(0xc8, 0x320);
         if ((int)randomGetRange(0, 1) != 0)
         {
-            cfg.velocityY = cfg.velocityY * (-1.0f);
+            cfg.velocityY *= (-1.0f);
         }
         cfg.scale = (0.008f);
         cfg.lifetimeFrames = randomGetRange(0, 0x1e) + 0x14;
