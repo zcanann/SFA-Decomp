@@ -785,31 +785,31 @@ void Scarab_update(GameObject* obj)
 void Scarab_init(int* obj, u8* def)
 {
     ScarabState* state = ((GameObject*)obj)->extra;
-    int* model;
+    ObjModel* model;
     state->phase = 0;
     state->mode = ((ScarabPlacement*)def)->mode;
     state->yawSpeed = randomGetRange(0x3e8, 0xfa0);
     state->riseLimit = randomGetRange(0x32, 0x64);
     state->baseY = ((ObjPlacement*)def)->posY;
-    model = (int*)Obj_GetActiveModel((GameObject*)obj);
+    model = Obj_GetActiveModel((GameObject*)obj);
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x3d3:
-        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (gScarabColorVariantsA)[randomGetRange(0, 2)];
+        model->textureRefs->unk08 = (gScarabColorVariantsA)[randomGetRange(0, 2)];
         state->pickupSfx = 0x41;
         state->particleId = 4;
         state->burstModel = 2;
         state->moneyKind = 0;
         break;
     case 0x3d4:
-        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (gScarabColorVariantsB)[randomGetRange(0, 1)];
+        model->textureRefs->unk08 = (gScarabColorVariantsB)[randomGetRange(0, 1)];
         state->pickupSfx = 0x42;
         state->particleId = 1;
         state->burstModel = 5;
         state->moneyKind = 1;
         break;
     case 0x3d5:
-        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (gScarabColorVariantsC)[randomGetRange(0, 3)];
+        model->textureRefs->unk08 = (gScarabColorVariantsC)[randomGetRange(0, 3)];
         state->pickupSfx = 0x43;
         state->particleId = 2;
         state->burstModel = 4;
@@ -817,7 +817,7 @@ void Scarab_init(int* obj, u8* def)
         break;
     case 0x3d6:
     default:
-        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = 5;
+        model->textureRefs->unk08 = 5;
         state->pickupSfx = 0x44;
         state->particleId = 6;
         state->burstModel = 1;
