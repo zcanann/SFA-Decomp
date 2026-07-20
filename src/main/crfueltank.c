@@ -60,15 +60,15 @@ void crfueltank_hitDetect(CrFuelTankObject* obj)
         {
             ObjHits_DisableObject((GameObject*)obj);
             Sfx_PlayFromObject((u32)Obj_GetPlayerObject(), SFXTRIG_ar_barrel16);
-            obj->fadeTimer = 0xfa;
+            obj->alpha = 0xfa;
             obj->triggered = 1;
             if (def->hitEvent != -1)
             {
                 mainSetBits(def->hitEvent, 1);
             }
-            obj->posX = hitObj->posX;
-            obj->posY = lbl_803E6760 + hitObj->posY;
-            obj->posZ = hitObj->posZ;
+            obj->velocityX = hitObj->velocityX;
+            obj->velocityY = lbl_803E6760 + hitObj->velocityY;
+            obj->velocityZ = hitObj->velocityZ;
         }
     }
     return;
@@ -86,15 +86,15 @@ void crfueltank_update(CrFuelTankObject* obj)
         if (timerCountDown(&state->timer) != 0)
         {
             ObjHits_EnableObject((GameObject*)obj);
-            obj->flags = (s16)(obj->flags & ~CRFUELTANK_OBJFLAG_HIDDEN);
-            obj->fadeTimer = 0xff;
+            obj->animFlags = (s16)(obj->animFlags & ~CRFUELTANK_OBJFLAG_HIDDEN);
+            obj->alpha = 0xff;
         }
     }
     else
     {
-        if (obj->fadeTimer < 0xff)
+        if (obj->alpha < 0xff)
         {
-            obj->flags = (s16)(obj->flags | CRFUELTANK_OBJFLAG_HIDDEN);
+            obj->animFlags = (s16)(obj->animFlags | CRFUELTANK_OBJFLAG_HIDDEN);
             s16toFloat(&state->timer, 0x708);
         }
         else
@@ -117,8 +117,8 @@ void crfueltank_init(CrFuelTankObject* obj, CrFuelTankDef* def)
     {
         s16toFloat(&state->timer, 0x708);
         ObjHits_DisableObject((GameObject*)obj);
-        obj->flags = (s16)(obj->flags | CRFUELTANK_OBJFLAG_HIDDEN);
-        obj->fadeTimer = 0;
+        obj->animFlags = (s16)(obj->animFlags | CRFUELTANK_OBJFLAG_HIDDEN);
+        obj->alpha = 0;
     }
     return;
 }

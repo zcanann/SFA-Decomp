@@ -4955,14 +4955,14 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
                 TextSlot* textBox;
                 lbl_803DBA8C = lbl_803E1E64;
                 textBox = gameTextGetBox(0x7f);
-                gameTextFn_8001628c(0x3cd, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
+                gameTextMeasureById(0x3cd, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
                 textHeight = boundsRight - boundsLeft;
                 lbl_803DD824[0].trailX = textHeight;
                 lbl_803DD824[0].x =
                     lbl_803DBA8C * (f32)(s32)(textBox->f14 + textBox->f08 - (textHeight >> 1) - 0x140) + lbl_803E1F34;
 
                 textBox = gameTextGetBox(0x80);
-                gameTextFn_8001628c(0x3cc, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
+                gameTextMeasureById(0x3cc, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
                 textHeight = boundsRight - boundsLeft;
                 lbl_803DD824[1].trailX = textHeight;
                 x = textBox->f14 + (textHeight >> 1) - 0x140;
@@ -5025,7 +5025,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
             s32 textX;
             s16* taskTextIds;
             gameTextFn_80016810(0x440, 0, 0x78);
-            gameTextFn_8001628c(0x440, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextMeasureById(0x440, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             textX = (tokenBottom - tokenTop) + 5;
             {
                 u8* thresholds = &statusTable->tokens[0].thresh;
@@ -5039,11 +5039,11 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
             }
             textX += 5;
             gameTextFn_80016810(0x441, 0, textX + 0x78);
-            gameTextFn_8001628c(0x441, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextMeasureById(0x441, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             textX += tokenBottom - tokenTop;
             taskTextIds = &statusTable->tokens[0].alt;
             gameTextFn_80016810(taskTextIds[lbl_803DD756 * 4], 0, textX + 0x78);
-            gameTextFn_8001628c(taskTextIds[lbl_803DD756 * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
+            gameTextMeasureById(taskTextIds[lbl_803DD756 * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
                                 &tokenBottom);
             {
                 s32 textWidth = tokenBottom - tokenTop;
@@ -5051,7 +5051,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
             }
             textX += 0xa;
             gameTextFn_80016810(0x442, 0, textX + 0x78);
-            gameTextFn_8001628c(0x442, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextMeasureById(0x442, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             textX += tokenBottom - tokenTop;
             gameTextFn_80016810(0x43a, 0, textX + 0x82);
             break;
@@ -5061,11 +5061,11 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
             s16* taskTextIds;
             s32 textX;
             gameTextFn_80016810(0x443, 0, 0xa0);
-            gameTextFn_8001628c(0x443, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            gameTextMeasureById(0x443, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             textX = (tokenBottom - tokenTop) + 5;
             taskTextIds = &statusTable->tokens[0].alt;
             gameTextFn_80016810(taskTextIds[lbl_803DD756 * 4], 0, textX + 0xa0);
-            gameTextFn_8001628c(taskTextIds[lbl_803DD756 * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
+            gameTextMeasureById(taskTextIds[lbl_803DD756 * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
                                 &tokenBottom);
             textX += tokenBottom - tokenTop;
             gameTextFn_80016810(0x444, 0, textX + 0xaa);
@@ -5484,7 +5484,7 @@ void pauseMenuDrawGrid(int alpha)
         if (lbl_803DD824 == lbl_8031B818.entries)
         {
             int o1, o2, o3, o4;
-            gameTextFn_8001628c(lbl_803DD824[lbl_803DD7D8].f14, 0, 0, &o1, &o2, &o3, &o4);
+            gameTextMeasureById(lbl_803DD824[lbl_803DD7D8].f14, 0, 0, &o1, &o2, &o3, &o4);
             tx = (s16)(0xdc - (o4 - o3) / 2);
         }
         else

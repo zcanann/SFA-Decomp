@@ -334,7 +334,7 @@ void gameTextShowTimeStr(char* str)
     e->arg0 = (int)buf;
 }
 
-void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
+void gameTextMeasureById(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
 {
     GlyphEntry* e;
     GameTextFont* fonts;
@@ -515,7 +515,7 @@ void gameTextFn_8001658c(int a, int b, int c)
         {
             int maxX, maxY, minX, minY;
             int v;
-            gameTextFn_8001628c(a, b, c, &maxX, &maxY, &minX, &minY);
+            gameTextMeasureById(a, b, c, &maxX, &maxY, &minX, &minY);
             v = slot->f0a - (minY - minX);
             if (mode == 2)
             {
