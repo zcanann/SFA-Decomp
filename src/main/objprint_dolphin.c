@@ -276,9 +276,9 @@ void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e)
         }
         else
         {
-            blk.rotX = ((s16*)obj)[0];
-            blk.rotY = ((s16*)obj)[1];
-            blk.rotZ = ((s16*)obj)[2];
+            blk.rotX = ((GameObject*)obj)->anim.rotX;
+            blk.rotY = ((GameObject*)obj)->anim.rotY;
+            blk.rotZ = ((GameObject*)obj)->anim.rotZ;
         }
         blk.scale = lbl_803DEA1C;
         setMatrixFromObjectPos(m, &blk);
@@ -408,7 +408,7 @@ void objFn_8003dc50(u8* obj, u8* model)
 
     count = 0;
     lbl_803DCC5C = 0;
-    b = obj[0x24];
+    b = ((ModelFileHeader*)obj)->flags24;
     t2 = b & 2;
     if (t2)
     {
@@ -455,11 +455,11 @@ void objFn_8003dc50(u8* obj, u8* model)
             {
                 int l;
                 mode = 6;
-                l = (*(u8**)(model + 0x50))[0x8d];
+                l = OBJPRINT_MODEL_DEF(model)->modelLightMaskIndex;
                 if (l == 0)
                 {
-                    modelTextureFn_80089970(model[0xf2]);
-                    textureColorFn_8008991c(model[0xf2], &c.r, &c.g, &c.b);
+                    modelTextureFn_80089970(((GameObject*)model)->lightColorSlot);
+                    textureColorFn_8008991c(((GameObject*)model)->lightColorSlot, &c.r, &c.g, &c.b);
                 }
                 else
                 {
@@ -507,7 +507,7 @@ void objFn_8003dc50(u8* obj, u8* model)
             }
         }
         {
-            u32 nf = obj[0xfa];
+            u32 nf = ((ModelFileHeader*)obj)->texMtxCount;
             if (nf != 0)
             {
                 modelLightStruct_selectObjectLights((GameObject*)model, &lbl_803DCC64, nf, &lbl_803DCC5C, 8);
@@ -874,7 +874,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                     gxTextureFn_80050e28(hasBaseTexture);
                     return 1;
                 }
-                alpha = ((obj[0x37] + 1) * shader[0xc]) >> 8;
+                alpha = ((((GameObject*)obj)->anim.renderAlpha + 1) * shader[0xc]) >> 8;
                 if (*(u32*)layer != 0)
                 {
                     f32 (*mtxp)[4];
@@ -1074,7 +1074,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     if (refs[0] != 0)
     {
-        textureFn_80051348((void*)refs[0], obj[0xf1]);
+        textureFn_80051348((void*)refs[0], ((GameObject*)obj)->unkF1);
     }
     if (refs[1] != 0)
     {
@@ -1251,10 +1251,10 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         u8 e5 = ((GameObject*)obj)->colorFadeFlags;
         if ((e5 & OBJ_COLOR_FADE_FLAG_ACTIVE) || (e5 & OBJ_COLOR_FADE_FLAG_OVERRIDE))
         {
-            color[0] = obj[0xec];
-            color[1] = obj[0xed];
-            color[2] = obj[0xee];
-            color[3] = obj[0xef];
+            color[0] = ((GameObject*)obj)->colorFadeRed;
+            color[1] = ((GameObject*)obj)->colorFadeGreen;
+            color[2] = ((GameObject*)obj)->colorFadeBlue;
+            color[3] = ((GameObject*)obj)->colorFadeAlpha;
             gxTextureFn_80052638((GXColor*)color);
         }
     }
@@ -1272,7 +1272,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         else
         {
             u8 zon = 1;
-            if (obj[0x37] < 0xff || (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_FORCE_BLEND) || shad)
+            if (((GameObject*)obj)->anim.renderAlpha < 0xff || (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_FORCE_BLEND) || shad)
             {
                 u16 f2;
                 GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
@@ -1346,7 +1346,7 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
     u32 alpha;
     u8 cull;
     u32 sf;
-    if (obj[0x37] < 0xff || ((sf = ((ObjModelRenderOp*)shader)->flags) & SHADER_FLAG_FORCE_BLEND))
+    if (((GameObject*)obj)->anim.renderAlpha < 0xff || ((sf = ((ObjModelRenderOp*)shader)->flags) & SHADER_FLAG_FORCE_BLEND))
     {
         blend = 1;
         if (((ModelFileHeader*)m)->flags & 0x400)
@@ -2679,11 +2679,12 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
             ((GameObject*)child)->anim.localPosY = ((GameObject*)child)->anim.worldPosY;
             ((GameObject*)child)->anim.localPosZ = ((GameObject*)child)->anim.worldPosZ;
         }
-        objRotateFn_8003bce8(m2, (s16*)child, (s16*)child + 1, (s16*)child + 2);
+        objRotateFn_8003bce8(m2, &((GameObject*)child)->anim.rotX, &((GameObject*)child)->anim.rotY,
+                             &((GameObject*)child)->anim.rotZ);
     }
     ((GameObject*)child)->anim.renderAlpha =
         ((((GameObject*)child)->anim.alpha + 1) * ((GameObject*)parent)->anim.renderAlpha) >> 8;
-    *(u8*)((char*)child + 0xf1) = *(u8*)((char*)parent + 0xf1);
+    ((GameObject*)child)->unkF1 = ((GameObject*)parent)->unkF1;
     if (!(((GameObject*)child)->anim.flags & OBJANIM_FLAG_HIDDEN))
     {
         curObjMtx = (u32)m2;
@@ -2709,7 +2710,7 @@ void objRenderShadow(void* obj)
     }
     {
         int* m = *(int**)Obj_GetActiveModel((GameObject*)obj);
-        if (*(u8*)((char*)m + 246) != 0)
+        if (((ModelFileHeader*)m)->shadowDisplayListCount != 0)
         {
             objRenderShadow2(obj, obj, (u8*)m, 1);
         }
@@ -2725,7 +2726,7 @@ void objRenderShadow(void* obj)
         iter = (u8*)obj;
         for (; i < ((GameObject*)obj)->childCount; i++)
         {
-            int* child = *(int**)(iter + 200);
+            int* child = *(int**)&((GameObject*)iter)->childObjs[0];
             if (child != NULL)
             {
                 objRenderChild(child, obj, 1);
@@ -2770,7 +2771,7 @@ void objRenderModel(GameObject* obj)
     }
     {
         int m0 = *model;
-        if (*(u16*)(m0 + 2) & 0x8000)
+        if (((ModelFileHeader*)m0)->flags & 0x8000)
         {
             modelDoAltRenderInstrs((int*)obj, obj->ownerObj ? (int*)obj->ownerObj : (int*)obj, (u8*)m0, 0);
         }
