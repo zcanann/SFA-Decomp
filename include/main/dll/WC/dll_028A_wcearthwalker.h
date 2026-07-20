@@ -97,13 +97,15 @@ void earthwalker_update(int obj);
 int earthwalker_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate, int shouldAdvanceMove);
 void earthwalker_init(GameObject* obj, int setup);
 
+struct BaddieState;
+
 int dll_28B_substateHandler0(void);
 int dll_28B_stateHandler0(void);
-int dll_28B_substateHandler3(int obj, int ai);
-int dll_28B_substateHandler2(int obj, int ai);
-int dll_28B_substateHandler1(int obj, int ai);
-int dll_28B_stateHandler3(GameObject* obj, int ai);
-int dll_28B_stateHandler2(GameObject* obj, int ai);
-int dll_28B_stateHandler1(int obj, int ai);
+int dll_28B_substateHandler3(GameObject* obj, struct BaddieState* ai);
+int dll_28B_substateHandler2(GameObject* obj, struct BaddieState* ai);
+int dll_28B_substateHandler1(GameObject* obj, struct BaddieState* ai);
+int dll_28B_stateHandler3(GameObject* obj, struct BaddieState* ai);
+int dll_28B_stateHandler2(GameObject* obj, struct BaddieState* ai);
+int dll_28B_stateHandler1(GameObject* obj, struct BaddieState* ai);
 
 #endif
