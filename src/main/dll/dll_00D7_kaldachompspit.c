@@ -86,9 +86,9 @@ int KaldaChompSpit_getObjectTypeId(void)
     return 0x0;
 }
 
-void KaldaChompSpit_free(int* obj)
+void KaldaChompSpit_free(GameObject* obj)
 {
-    KaldaChompSpitState* state = ((GameObject*)obj)->extra;
+    KaldaChompSpitState* state = obj->extra;
     ModelLightStruct* light = state->light;
     if (light != NULL)
     {
@@ -114,7 +114,7 @@ void KaldaChompSpit_hitDetect(void)
 {
 }
 
-void KaldaChompSpit_update(int obj)
+void KaldaChompSpit_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim;
     KaldaChompSpitState* state;
@@ -126,70 +126,70 @@ void KaldaChompSpit_update(int obj)
     s16 color;
     f32 alphaDecay;
 
-    objAnim = &((GameObject*)obj)->anim;
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->userData1 = (int)((f32)((GameObject*)obj)->userData1 - timeDelta);
-    if (((GameObject*)obj)->userData1 < 0)
+    objAnim = &obj->anim;
+    state = obj->extra;
+    obj->userData1 = (int)((f32)obj->userData1 - timeDelta);
+    if (obj->userData1 < 0)
     {
-        Sfx_StopObjectChannel(obj, 0x7f);
-        Obj_FreeObject((GameObject*)obj);
+        Sfx_StopObjectChannel((int)obj, 0x7f);
+        Obj_FreeObject(obj);
     }
     else if (objAnim->alpha != 0)
     {
-        if (((GameObject*)obj)->userData1 < 0x11b)
+        if (obj->userData1 < 0x11b)
         {
-            ((GameObject*)obj)->anim.velocityY = -(0.07f * timeDelta - ((GameObject*)obj)->anim.velocityY);
+            obj->anim.velocityY = -(0.07f * timeDelta - obj->anim.velocityY);
             if ((f32)(u32)objAnim->alpha - (alphaDecay = 4.0f * timeDelta) > 0.0f)
             {
                 objAnim->alpha = (f32)(u32)objAnim->alpha - alphaDecay;
             }
             else
             {
-                Sfx_StopObjectChannel(obj, 0x7f);
+                Sfx_StopObjectChannel((int)obj, 0x7f);
                 objAnim->alpha = 0;
             }
-            Sfx_SetObjectChannelVolume(obj, 0x40, (u8)(objAnim->alpha >> 1), 0.5f);
+            Sfx_SetObjectChannelVolume((u32)obj, 0x40, (u8)(objAnim->alpha >> 1), 0.5f);
         }
-        vx = ((GameObject*)obj)->anim.velocityX * timeDelta;
-        vy = ((GameObject*)obj)->anim.velocityY * timeDelta;
-        vz = ((GameObject*)obj)->anim.velocityZ * timeDelta;
-        objMove((GameObject*)obj, vx, vy, vz);
-        if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
+        vx = obj->anim.velocityX * timeDelta;
+        vy = obj->anim.velocityY * timeDelta;
+        vz = obj->anim.velocityZ * timeDelta;
+        objMove(obj, vx, vy, vz);
+        if (obj->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
         {
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, KALDACHOMPSPIT_HIT_VOLUME_SLOT_EXPLOSIVE, 1, 0);
-            ((GameObject*)obj)->anim.rotX += 0x100;
-            ((GameObject*)obj)->anim.rotY += 0x800;
+            obj->anim.rotX += 0x100;
+            obj->anim.rotY += 0x800;
         }
         else
         {
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, KALDACHOMPSPIT_HIT_VOLUME_SLOT_DEFAULT, 1, 0);
-            ((GameObject*)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;
-            ((GameObject*)obj)->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
+            obj->anim.rotX = getAngle(vx, vz) - 0x8000;
+            obj->anim.rotY = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
         }
-        ObjHits_EnableObject((GameObject*)obj);
-        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
+        ObjHits_EnableObject(obj);
+        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject != 0)
         {
-            if (((GameObject*)obj)->userData1 < 0x17c)
+            if (obj->userData1 < 0x17c)
             {
-                kaldachompspit_burst((GameObject*)(obj));
+                kaldachompspit_burst(obj);
                 return;
             }
-            if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+            if ((((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject ==
                  (int)Obj_GetPlayerObject()) ||
-                (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+                (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject ==
                  (u32)getTrickyObject()))
             {
-                kaldachompspit_burst((GameObject*)(obj));
+                kaldachompspit_burst(obj);
                 return;
             }
         }
-        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
+        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->contactFlags != 0)
         {
-            kaldachompspit_burst((GameObject*)(obj));
+            kaldachompspit_burst(obj);
         }
         else
         {
-            if (((GameObject*)obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
+            if (obj->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
             {
                 fn_80098B18((void*)obj, 1.0f, 1, 0, 0, NULL);
             }
