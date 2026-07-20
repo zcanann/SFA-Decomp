@@ -353,11 +353,8 @@ extern u32 gSynthNextHandle;
 #define SYNTH_VOICE_RUNTIME() ((SynthVoiceRuntime*)(void*)gSynthCallbacks)
 #define SYNTH_VOICE_SLOT_FLAGS64(slot) (*(u64*)&(slot)->inputFlags)
 
-extern const f32 lbl_803E8430;
-extern const f32 sSynthFadeUnit;
 extern const f32 sSynthFadeTimeScale;
 
-#define sSynthFadeScale lbl_803E8430
 void synthSetStudioChannelScale(int value, u8 studioIndex, u8 channelIndex);
 int synthGetVoiceSlotChannelScale(McmdVoiceState *slot);
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel);
