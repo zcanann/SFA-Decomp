@@ -139,7 +139,7 @@ extern int lbl_803DB720;
 extern int lbl_803DD064;
 extern u64 lbl_803DD050;
 extern u32 lbl_803DD054;
-extern int gSaveCardImageBuffer;
+extern u8* gSaveCardImageBuffer;
 extern u64 lbl_803DD048;
 extern u8 lbl_803DD059;
 extern int lbl_803DB728;
@@ -291,7 +291,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, void* cbC, void*
     }
     if (result == 0)
     {
-        m = (void*)(gSaveCardImageBuffer = (int)mmAlloc(0x4000, -1, 0));
+        m = gSaveCardImageBuffer = mmAlloc(0x4000, -1, 0);
         if (m == NULL)
         {
             if (lbl_803DD05A != 0)
@@ -320,9 +320,9 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, void* cbC, void*
                 }
                 else
                 {
-                    memset((void*)gSaveCardImageBuffer, 0, 0x4000);
+                    memset(gSaveCardImageBuffer, 0, 0x4000);
                     loadMemCardImages();
-                    result = CARDWrite(&lbl_80396900.fileInfo, (void*)gSaveCardImageBuffer, 0x2000, 0);
+                    result = CARDWrite(&lbl_80396900.fileInfo, gSaveCardImageBuffer, 0x2000, 0);
                     if (result == CARD_RESULT_IOERROR)
                     {
                         CARDDelete(0, sMemoryCardFileName);
@@ -345,7 +345,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, void* cbC, void*
                 }
             }
         }
-        mm_free((void*)gSaveCardImageBuffer);
+        mm_free(gSaveCardImageBuffer);
     }
     if (result == 0 && cb != NULL)
     {
@@ -394,38 +394,38 @@ void loadMemCardImages(void)
     a[0] = 0;
     if (lbl_803DC968 != 0)
     {
-        *(u8*)(gSaveCardImageBuffer + 0x00) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x01) = 0x58;
-        *(u8*)(gSaveCardImageBuffer + 0x02) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x03) = 0x5e;
-        *(u8*)(gSaveCardImageBuffer + 0x04) = 0x81;
-        *(u8*)(gSaveCardImageBuffer + 0x05) = 0x5b;
-        *(u8*)(gSaveCardImageBuffer + 0x06) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x07) = 0x74;
-        *(u8*)(gSaveCardImageBuffer + 0x08) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x09) = 0x48;
-        *(u8*)(gSaveCardImageBuffer + 0x0a) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x0b) = 0x62;
-        *(u8*)(gSaveCardImageBuffer + 0x0c) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x0d) = 0x4e;
-        *(u8*)(gSaveCardImageBuffer + 0x0e) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x0f) = 0x58;
-        *(u8*)(gSaveCardImageBuffer + 0x10) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x11) = 0x41;
-        *(u8*)(gSaveCardImageBuffer + 0x12) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x13) = 0x68;
-        *(u8*)(gSaveCardImageBuffer + 0x14) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x15) = 0x78;
-        *(u8*)(gSaveCardImageBuffer + 0x16) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x17) = 0x93;
-        *(u8*)(gSaveCardImageBuffer + 0x18) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x19) = 0x60;
-        *(u8*)(gSaveCardImageBuffer + 0x1a) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x1b) = 0x83;
-        *(u8*)(gSaveCardImageBuffer + 0x1c) = 0x81;
-        *(u8*)(gSaveCardImageBuffer + 0x1d) = 0x5b;
-        *(u8*)(gSaveCardImageBuffer + 0x1e) = 0x00;
-        *(u8*)(gSaveCardImageBuffer + 0x1f) = 0x00;
+        gSaveCardImageBuffer[0x00] = 0x83;
+        gSaveCardImageBuffer[0x01] = 0x58;
+        gSaveCardImageBuffer[0x02] = 0x83;
+        gSaveCardImageBuffer[0x03] = 0x5e;
+        gSaveCardImageBuffer[0x04] = 0x81;
+        gSaveCardImageBuffer[0x05] = 0x5b;
+        gSaveCardImageBuffer[0x06] = 0x83;
+        gSaveCardImageBuffer[0x07] = 0x74;
+        gSaveCardImageBuffer[0x08] = 0x83;
+        gSaveCardImageBuffer[0x09] = 0x48;
+        gSaveCardImageBuffer[0x0a] = 0x83;
+        gSaveCardImageBuffer[0x0b] = 0x62;
+        gSaveCardImageBuffer[0x0c] = 0x83;
+        gSaveCardImageBuffer[0x0d] = 0x4e;
+        gSaveCardImageBuffer[0x0e] = 0x83;
+        gSaveCardImageBuffer[0x0f] = 0x58;
+        gSaveCardImageBuffer[0x10] = 0x83;
+        gSaveCardImageBuffer[0x11] = 0x41;
+        gSaveCardImageBuffer[0x12] = 0x83;
+        gSaveCardImageBuffer[0x13] = 0x68;
+        gSaveCardImageBuffer[0x14] = 0x83;
+        gSaveCardImageBuffer[0x15] = 0x78;
+        gSaveCardImageBuffer[0x16] = 0x83;
+        gSaveCardImageBuffer[0x17] = 0x93;
+        gSaveCardImageBuffer[0x18] = 0x83;
+        gSaveCardImageBuffer[0x19] = 0x60;
+        gSaveCardImageBuffer[0x1a] = 0x83;
+        gSaveCardImageBuffer[0x1b] = 0x83;
+        gSaveCardImageBuffer[0x1c] = 0x81;
+        gSaveCardImageBuffer[0x1d] = 0x5b;
+        gSaveCardImageBuffer[0x1e] = 0x00;
+        gSaveCardImageBuffer[0x1f] = 0x00;
         sprintf((char*)(gSaveCardImageBuffer + 0x20), names + 0xa0);
     }
     else
@@ -435,32 +435,32 @@ void loadMemCardImages(void)
     }
     if (DVDOpen(names + 0xc4, &fi))
     {
-        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x40), 0x1800, 0x20);
+        DVDRead(&fi, gSaveCardImageBuffer + 0x40, 0x1800, 0x20);
         DVDClose(&fi);
     }
     if (DVDOpen(names + 0xd0, &fi))
     {
-        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x1840), 0x400, 0);
+        DVDRead(&fi, gSaveCardImageBuffer + 0x1840, 0x400, 0);
         DVDClose(&fi);
     }
     if (DVDOpen(names + 0xe8, &fi))
     {
-        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x1c40), 0x400, 0);
+        DVDRead(&fi, gSaveCardImageBuffer + 0x1c40, 0x400, 0);
         DVDClose(&fi);
     }
     if (DVDOpen(names + 0x100, &fi))
     {
-        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x2040), 0x400, 0);
+        DVDRead(&fi, gSaveCardImageBuffer + 0x2040, 0x400, 0);
         DVDClose(&fi);
     }
     if (DVDOpen(names + 0x118, &fi))
     {
-        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x2440), 0x400, 0);
+        DVDRead(&fi, gSaveCardImageBuffer + 0x2440, 0x400, 0);
         DVDClose(&fi);
     }
     if (DVDOpen(names + 0x130, &fi))
     {
-        DVDRead(&fi, (void*)(gSaveCardImageBuffer + 0x2840), 0x200, 0);
+        DVDRead(&fi, gSaveCardImageBuffer + 0x2840, 0x200, 0);
         DVDClose(&fi);
     }
     p = (u64*)gSaveCardImageBuffer;
@@ -486,7 +486,7 @@ void loadMemCardImages(void)
     chk = x2[0] ^ (a2[0] + 13);
     ((u32*)q)[0xfff] = (u32)chk;
     ((u32*)q)[0xffe] = (u32)(chk >> 32);
-    DCFlushRange((void*)gSaveCardImageBuffer, 0x4000);
+    DCFlushRange(gSaveCardImageBuffer, 0x4000);
 }
 
 #define CARD_RESULT_UNLOCKED 1
@@ -605,7 +605,7 @@ int saveGame(int writeImages)
     if (fresh != 0)
     {
         m = mmAlloc(0x4000, -1, 0);
-        gSaveCardImageBuffer = (int)m;
+        gSaveCardImageBuffer = m;
         if (m != NULL)
         {
             memset(m, 0, 0x4000);
@@ -628,10 +628,10 @@ int saveGame(int writeImages)
     {
         if (result == CARD_RESULT_READY)
         {
-            result = CARDWrite(&lbl_80396900.fileInfo, (void*)gSaveCardImageBuffer, 0x4000, 0);
+            result = CARDWrite(&lbl_80396900.fileInfo, gSaveCardImageBuffer, 0x4000, 0);
             if (result == CARD_RESULT_READY)
             {
-                result = CARDWrite(&lbl_80396900.fileInfo, (void*)(gSaveCardImageBuffer + 0x2000), 0x2000, 0x4000);
+                result = CARDWrite(&lbl_80396900.fileInfo, gSaveCardImageBuffer + 0x2000, 0x2000, 0x4000);
             }
             if (result == CARD_RESULT_IOERROR)
             {
@@ -663,7 +663,7 @@ int saveGame(int writeImages)
                 }
             }
         }
-        mm_free((void*)gSaveCardImageBuffer);
+        mm_free(gSaveCardImageBuffer);
     }
     switch (result)
     {
