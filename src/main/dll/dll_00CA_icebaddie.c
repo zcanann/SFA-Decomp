@@ -479,7 +479,7 @@ int iceBaddie_updateLandingState(GameObject* obj, int state)
     {
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_iceywindlp16_233);
         ((GroundBaddieState*)state)->baddie.moveEventFlags |= 2;
-        ((void (*)(int, int, int, int))((void**)*gBaddieControlInterface)[19])((int)obj, sub->triggerId, -1, 0);
+        ((BaddieControlInterface*)*gBaddieControlInterface)->spawnChild(obj, sub->triggerId, -1, 0);
     }
     return 0;
 }

@@ -204,7 +204,7 @@ int grimble_stateHandlerA08(int* obj, GroundBaddieState* state)
     {
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_iceywindlp16_233);
         state->baddie.eventFlags &= ~BADDIE_EVENT_LANDING;
-        ((void (*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, sub->triggerId, -1, 1);
+        ((BaddieControlInterface*)*gBaddieControlInterface)->spawnChild((GameObject*)obj, sub->triggerId, -1, 1);
     }
     return 0;
 }

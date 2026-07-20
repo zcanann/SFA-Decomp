@@ -146,7 +146,7 @@ int dll_CB_stateHandler3(int* obj, u8* obj2)
     GroundBaddieState* x = ((GameObject*)obj)->extra;
     if ((s8)obj2[0x27b] != 0)
     {
-        (*(VtableFn*)((char*)(*gBaddieControlInterface) + 0x4c))(obj, x->triggerId, -1, 0);
+        ((BaddieControlInterface*)*gBaddieControlInterface)->spawnChild((GameObject*)obj, x->triggerId, -1, 0);
     }
     return 0;
 }

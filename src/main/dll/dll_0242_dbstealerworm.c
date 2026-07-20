@@ -377,7 +377,8 @@ int dbstealerworm_stateHandlerB03(int obj, int baddie)
     GroundBaddieState* state = ((GameObject*)obj)->extra;
     if ((s8)((BaddieState*)baddie)->moveJustStartedB != 0)
     {
-        (*(void (**)(int, s16, int, int))((char*)*gBaddieControlInterface + 0x4c))(obj, state->triggerId, -1, 0);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->spawnChild((GameObject*)obj, state->triggerId, -1, 0);
     }
     return 0;
 }

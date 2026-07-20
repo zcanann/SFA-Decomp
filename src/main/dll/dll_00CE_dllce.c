@@ -331,7 +331,7 @@ int chukChuk_updateWindupState(GameObject* obj, GroundBaddieState* state)
     {
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_iceywindlp16_233);
         state->baddie.moveEventFlags |= 2;
-        (*(void (**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))((int)obj, sub->triggerId, -1, 0);
+        ((BaddieControlInterface*)*gBaddieControlInterface)->spawnChild(obj, sub->triggerId, -1, 0);
     }
     return 0;
 }

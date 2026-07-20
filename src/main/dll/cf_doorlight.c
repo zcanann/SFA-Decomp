@@ -225,11 +225,10 @@ int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_rfall5_c);
         control->soundFlags |= SOUNDFLAG_PULLUP_BURST;
         {
-            char* linkedObj;
+            GameObject* linkedObj;
             if (((CfDoorlightState*)state)->spawnsLinkedObj != 0)
             {
-                linkedObj =
-                    ((char* (*)(int, int, int, int))((void**)*gBaddieControlInterface)[0x13])((int)obj, 6, -1, 0);
+                linkedObj = ((BaddieControlInterface*)*gBaddieControlInterface)->spawnChild(obj, 6, -1, 0);
             }
             else
             {
@@ -238,8 +237,8 @@ int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
             if (linkedObj != NULL)
             {
                 f32 fz = lbl_803E3060.f;
-                (**(void (**)(char*, f32, f32, f32))(*(int*)(*(int*)(linkedObj + 0x68)) + 0x2c))(linkedObj, fz,
-                                                                                                 lbl_803E3078, fz);
+                (**(void (**)(GameObject*, f32, f32, f32))(
+                    *(int*)(*(int*)((char*)linkedObj + 0x68)) + 0x2c))(linkedObj, fz, lbl_803E3078, fz);
             }
         }
     }

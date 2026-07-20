@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+typedef struct GameObject GameObject;
+
 /* Function-pointer table exported by the baddie-control DLL (0x19); slot K
  * here is the DLL's exported func(K - 4) (releaseState = dll_19_func12,
  * findAggroTarget = dll_19_func14, updateHitReaction = dll_19_func16,
@@ -19,7 +21,7 @@ typedef struct BaddieControlInterface
     void (*releaseState)(int* obj, u8* state, int mode);                     /* 0x40 */
     u8 pad44[0x48 - 0x44];
     u32 (*findAggroTarget)(int obj, int state, f32 aggroRange, int angleRange); /* 0x48 */
-    void (*runTrigger)(int obj, s16 triggerId, int a3, int a4);              /* 0x4C */
+    GameObject* (*spawnChild)(GameObject* obj, int spawnType, int unused, int alt); /* 0x4C */
     int (*updateHitReaction)(int obj, int state, int hitReactState, int gameBit, char* sfxTblA, char* sfxTblB,
                              int mode, char* aux);                           /* 0x50 */
     u8 pad54[4];

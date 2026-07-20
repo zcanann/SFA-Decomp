@@ -99,7 +99,7 @@ int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagO
                   s16 substateActive, s16 moveMode);
 int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* tableA, u8* tableB, s16 substate,
                   u8* hitPosOut);
-int dll_19_func15(u8* obj, int spawnType, int unused, int alt);
+GameObject* dll_19_func15(GameObject* obj, int spawnType, int unused, int alt);
 void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
                    int animMove, s8 field25f);
 int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle);
@@ -560,10 +560,10 @@ const f32 lbl_803E1C58 = 750.0f;
 const f32 lbl_803E1C5C = 15.0f;
 const f32 lbl_803E1C60 = 25.0f;
 
-int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
+GameObject* dll_19_func15(GameObject* obj, int spawnType, int unused, int alt)
 {
-    GameObject* source = (GameObject*)obj;
-    u8* state = (u8*)((GameObject*)obj)->anim.placementData;
+    GameObject* source = obj;
+    u8* state = (u8*)obj->anim.placementData;
     ObjPlacement* setup;
     u16 ids1[4];
     u16 ids2[4];
@@ -654,7 +654,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
                 gDll19NearestObj->anim.worldPosZ = zz;
                 gDll19NearestObj->anim.localPosZ = zz;
             }
-            return (int)gDll19NearestObj;
+            return gDll19NearestObj;
         case 6:
             setup = Obj_AllocObjectSetup(48, DLL19_CHILD_OBJ_MOON_SEED);
             *(u8*)((u8*)setup + 27) = 0;
@@ -686,7 +686,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
     setup->color[1] = state[5];
     setup->color[3] = state[7];
     gDll19NearestObj = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, source->anim.parent);
-    return (int)gDll19NearestObj;
+    return gDll19NearestObj;
 }
 
 /* dont_inline: keeps func0C out-of-line so func17's call site matches retail */
