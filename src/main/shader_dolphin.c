@@ -125,6 +125,7 @@ extern f32 lbl_803DEAFC;
 extern f32 lbl_803DEB00;
 extern int lbl_803DCD84;
 extern f32 lbl_803DEAC8;
+extern f32 lbl_803DEACC;
 extern int lbl_803DCD88;
 extern int lbl_803DCD8C;
 extern int lbl_803DCD90;
@@ -913,7 +914,7 @@ void fn_8004DA54(char* p1)
         if (b != 0xff)
         {
             mapTextureScrollGetOffset(b, &tsx, &tsy);
-            PSMTXTrans(mtx64, tsx, tsy, 0.0f);
+            PSMTXTrans(mtx64, tsx, tsy, lbl_803DEACC);
         }
         else
         {

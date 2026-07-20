@@ -7,7 +7,8 @@ void mcmdLoop(McmdVoiceState* state, McmdCommandArgs* params)
 {
     u16 counter;
 
-    if (state->loopCounter == 0)
+    counter = state->loopCounter;
+    if (counter == 0)
     {
         if (((params->flags >> 16) & 1) != 0)
         {
@@ -17,18 +18,14 @@ void mcmdLoop(McmdVoiceState* state, McmdCommandArgs* params)
         {
             state->loopCounter = (u16)(params->value >> 16);
         }
-        if (state->loopCounter != MCMD_LOOP_COUNTER_FOREVER)
+        counter = state->loopCounter;
+        if (counter != MCMD_LOOP_COUNTER_FOREVER)
         {
             state->loopCounter = state->loopCounter + 1;
-            counter = state->loopCounter - 1;
-            state->loopCounter = counter;
-            if (counter == 0)
-            {
-                return;
-            }
         }
     }
-    else if (state->loopCounter != MCMD_LOOP_COUNTER_FOREVER)
+
+    if (counter != MCMD_LOOP_COUNTER_FOREVER)
     {
         counter = state->loopCounter - 1;
         state->loopCounter = counter;
