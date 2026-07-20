@@ -630,7 +630,7 @@ void worldobj_init(GameObject* obj, int arg)
         if (state->light != NULL)
         {
             modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
-            modelLightStruct_setPosition(state->light, lbl_803E665C, lbl_803E665C, lbl_803E665C);
+            modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 0.0f);
             modelLightStruct_setDiffuseColor(state->light, 0xff, 0xff, 0xff, 0);
             modelLightStruct_setDistanceAttenuation(state->light, lbl_803E66AC, lbl_803E66D0);
             modelLightStruct_setupGlow(state->light, 0, 0xff, 0xff, 0xff, 0x82, lbl_803E66D4 * state->scale);
