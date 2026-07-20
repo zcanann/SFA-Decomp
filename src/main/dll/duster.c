@@ -270,7 +270,7 @@ void rachnopUpdateIdle(int* obj, int state)
         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_id_253);
-            Baddie_SetMove((int)obj, state, 2, lbl_803E2A04, 0, 0);
+            fn_8014D08C((GameObject*)obj, state, 2, lbl_803E2A04, 0, 0);
         }
     }
     return;
@@ -290,7 +290,7 @@ void rachnopUpdateApproach(int* obj, int state)
         fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)(0.5f));
         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
-            Baddie_SetMove((int)obj, state, 0, (0.5f), 0, 0);
+            fn_8014D08C((GameObject*)obj, state, 0, (0.5f), 0, 0);
             Sfx_PlayFromObject((u32)obj, SFXTRIG_id_252);
         }
     }
@@ -332,11 +332,11 @@ void rachnopUpdateAttack(int* obj, int state)
             if (outIds[0] < 0x5dc)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_251);
-                Baddie_SetMove((int)obj, state, 1, lbl_803E2A30, 0, 0);
+                fn_8014D08C((GameObject*)obj, state, 1, lbl_803E2A30, 0, 0);
             }
             else
             {
-                Baddie_SetMove((int)obj, state, 3, lbl_803E2A30, 0, 0);
+                fn_8014D08C((GameObject*)obj, state, 3, lbl_803E2A30, 0, 0);
             }
         }
     }
@@ -460,13 +460,13 @@ void spittingEbaUpdateTimeOfDay(int obj, int state)
     {
         ((BaddieState*)state)->userData1 = 1;
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-        Baddie_SetMove(obj, state, 1, lbl_803E2A78, 0, 0);
+        fn_8014D08C((GameObject*)obj, state, 1, lbl_803E2A78, 0, 0);
     }
     else if ((isDaytime == 0) && (((BaddieState*)state)->userData1 == 2))
     {
         ((BaddieState*)state)->userData1 = 1;
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-        Baddie_SetMove(obj, state, 3, lbl_803E2A78, 0, 0);
+        fn_8014D08C((GameObject*)obj, state, 3, lbl_803E2A78, 0, 0);
     }
     return;
 }
@@ -482,7 +482,7 @@ void spittingEbaUpdateWhileFrozen(int obj, u8* state, int unused1, int eventKind
     {
         if ((((BaddieState*)state)->userData1 == 2) && (((GameObject*)obj)->anim.currentMove != 5))
         {
-            Baddie_SetMove(obj, state, 5, lbl_803E2A7C, 0, 0);
+            fn_8014D08C((GameObject*)obj, (int)state, 5, lbl_803E2A7C, 0, 0);
         }
     }
     else if ((((GameObject*)obj)->anim.currentMove == 5) || (((GameObject*)obj)->anim.currentMove == 4))
@@ -525,12 +525,12 @@ void spittingEbaUpdateIdle(GameObject* obj, int state)
             {
                 ((BaddieState*)state)->userData1 = 0;
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-                Baddie_SetMove(obj, state, 0, (1.0f), 0, 0);
+                fn_8014D08C(obj, state, 0, (1.0f), 0, 0);
             }
         }
         else if ((((BaddieState*)state)->userData1 == 2) && ((obj)->anim.currentMove != 2))
         {
-            Baddie_SetMove(obj, state, 2, (1.0f), 0, 0);
+            fn_8014D08C(obj, state, 2, (1.0f), 0, 0);
         }
     }
     spittingEbaUpdateTimeOfDay((int)obj, state);
@@ -554,22 +554,22 @@ void spittingEbaUpdateEngaged(u32 obj, int state)
         {
             spittingEbaSpawnPollen(obj, state);
             ((DusterState*)state)->phaseTimer = lbl_803E2A80;
-            Baddie_SetMove(obj, state, 5, (1.0f), 0, 0);
+            fn_8014D08C((GameObject*)obj, state, 5, (1.0f), 0, 0);
         }
         else if ((((GameObject*)obj)->anim.currentMove == 5) && (timerExpired))
         {
-            Baddie_SetMove(obj, state, 6, (1.0f), 0, 0);
+            fn_8014D08C((GameObject*)obj, state, 6, (1.0f), 0, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
         }
         else if (((GameObject*)obj)->anim.currentMove == 6)
         {
-            Baddie_SetMove(obj, state, 2, (1.0f), 0, 0);
+            fn_8014D08C((GameObject*)obj, state, 2, (1.0f), 0, 0);
             ((DusterState*)state)->phaseTimer = lbl_803E2A80;
         }
         else if ((((GameObject*)obj)->anim.currentMove == 2) && (timerExpired) &&
                  ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
         {
-            Baddie_SetMove(obj, state, 4, (1.0f), 0, 0);
+            fn_8014D08C((GameObject*)obj, state, 4, (1.0f), 0, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
         }
     }
