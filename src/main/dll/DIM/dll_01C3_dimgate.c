@@ -1,32 +1,16 @@
 /*
  * dimgate (DLL 0x1C3) - mission gate object for Dinosaur Island.
- * Opens (hitbox state 0->2) once a type-399 object appears in the trigger
+ * Opens (hitbox state 0->2) once sequence object 399 appears in the trigger
  * list, latching a gamebit so the gate stays open on reload.
  */
-#include "main/game_object.h"
-#include "main/object_descriptor.h"
+#include "main/dll/DIM/dll_01C3_dimgate.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/object_render.h"
 
-#define DIMGATE_TRIGGER_OBJ_TYPE 399
-#define DIMGATE_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define DIMGATE_OBJFLAG_HIDDEN 0x4000
+#define DIMGATE_TRIGGER_SEQ_ID 399
 
-enum DimgateState
-{
-    DIMGATE_STATE_CLOSED = 0,
-    DIMGATE_STATE_OPENING = 1,
-    DIMGATE_STATE_OPEN = 2,
-};
-
-typedef struct DimgatePlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 gateGameBit;
-} DimgatePlacement;
-
-int dimgate_SeqFn(void) { return 0x0; }
+int dimgate_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate) { return 0x0; }
 int dimgate_getExtraSize(void) { return 0x1; }
 int dimgate_getObjectTypeId(void) { return 0x0; }
 
@@ -45,25 +29,25 @@ void dimgate_hitDetect(void)
 }
 
 
-void dimgate_update(int obj)
+void dimgate_update(GameObject* obj)
 {
-    int* extra = ((GameObject*)obj)->extra;
-    int* def = *(int**)&((GameObject*)obj)->anim.placementData;
-    switch (*(s8*)extra)
+    DimgateState* state = obj->extra;
+    DimgateSetup* setup = (DimgateSetup*)obj->anim.placementData;
+    switch (state->mode)
     {
-    case DIMGATE_STATE_CLOSED:
+    case DIMGATE_MODE_CLOSED:
         {
             int found;
             int i;
-            if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != DIMGATE_STATE_OPENING)
+            if (*(s8*)&((ObjHitsPriorityState*)obj->anim.hitReactState)->stateIndex != DIMGATE_MODE_OPENING)
             {
-                ObjHitbox_SetStateIndex((GameObject*)obj, ((GameObject*)obj)->anim.hitReactState,
-                                        DIMGATE_STATE_OPENING);
+                ObjHitbox_SetStateIndex(obj, obj->anim.hitReactState, DIMGATE_MODE_OPENING);
             }
             found = 0;
-            for (i = 0; i < (int)*(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
+            for (i = 0; i < obj->anim.proximityList->count; i++)
             {
-                if (*(s16*)(*(int*)(*(int*)(obj + 0x58) + i * 4 + 0x100) + 0x46) == DIMGATE_TRIGGER_OBJ_TYPE)
+                GameObject* other = obj->anim.proximityList->objects[i];
+                if (other->anim.seqId == DIMGATE_TRIGGER_SEQ_ID)
                 {
                     found = 1;
                     break;
@@ -71,48 +55,46 @@ void dimgate_update(int obj)
             }
             if (found)
             {
-                mainSetBits(((DimgatePlacement*)def)->gateGameBit, 1);
-                if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != DIMGATE_STATE_OPEN)
+                mainSetBits(setup->gateGameBit, 1);
+                if (*(s8*)&((ObjHitsPriorityState*)obj->anim.hitReactState)->stateIndex != DIMGATE_MODE_OPEN)
                 {
-                    ObjHitbox_SetStateIndex((GameObject*)obj, ((GameObject*)obj)->anim.hitReactState,
-                                            DIMGATE_STATE_OPEN);
+                    ObjHitbox_SetStateIndex(obj, obj->anim.hitReactState, DIMGATE_MODE_OPEN);
                 }
-                *(s8*)extra = DIMGATE_STATE_OPEN;
+                state->mode = DIMGATE_MODE_OPEN;
             }
             break;
         }
-    case DIMGATE_STATE_OPENING:
+    case DIMGATE_MODE_OPENING:
         break;
-    case DIMGATE_STATE_OPEN:
+    case DIMGATE_MODE_OPEN:
         {
-            if (*(s8*)&((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->stateIndex != DIMGATE_STATE_OPEN)
+            if (*(s8*)&((ObjHitsPriorityState*)obj->anim.hitReactState)->stateIndex != DIMGATE_MODE_OPEN)
             {
-                ObjHitbox_SetStateIndex((GameObject*)obj, ((GameObject*)obj)->anim.hitReactState,
-                                        DIMGATE_STATE_OPEN);
+                ObjHitbox_SetStateIndex(obj, obj->anim.hitReactState, DIMGATE_MODE_OPEN);
             }
             break;
         }
     }
 }
 
-void dimgate_init(GameObject *obj, s8* p_unused_passthrough)
+void dimgate_init(GameObject *obj, DimgateSetup* unusedSetup)
 {
-    char* inner;
-    char* param;
-    param = *(char**)&(obj)->anim.placementData;
-    inner = (obj)->extra;
-    if (mainGetBit(((DimgatePlacement*)param)->gateGameBit) != 0)
+    DimgateState* state;
+    DimgateSetup* setup;
+    setup = (DimgateSetup*)obj->anim.placementData;
+    state = obj->extra;
+    if (mainGetBit(setup->gateGameBit) != 0)
     {
-        inner[0] = DIMGATE_STATE_OPEN;
-        (obj)->anim.currentMoveProgress = 1.0f;
+        state->mode = DIMGATE_MODE_OPEN;
+        obj->anim.currentMoveProgress = 1.0f;
     }
     else
     {
-        inner[0] = DIMGATE_STATE_CLOSED;
+        state->mode = DIMGATE_MODE_CLOSED;
     }
-    (obj)->animEventCallback = dimgate_SeqFn;
-    (obj)->anim.rotX = (s16)((s8) * (u8*)(param + 0x18) << 8);
-    (obj)->objectFlags |= (DIMGATE_OBJFLAG_HIDDEN | DIMGATE_OBJFLAG_HITDETECT_DISABLED);
+    obj->animEventCallback = dimgate_SeqFn;
+    obj->anim.rotX = (s16)(setup->rotX << 8);
+    obj->objectFlags |= (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
 }
 
 

@@ -27,4 +27,12 @@ typedef struct VidListTables
     SynthVoiceListNode freeList[0x40];
 } VidListTables;
 
+#ifdef STATIC_ASSERT
+STATIC_ASSERT(offsetof(VidListTables, priorityLinks) == 0x8C0);
+STATIC_ASSERT(offsetof(VidListTables, priorityGroupHeads) == 0x9C0);
+STATIC_ASSERT(offsetof(VidListTables, prioritySortLinks) == 0xAC0);
+STATIC_ASSERT(offsetof(VidListTables, freeList) == 0xEC0);
+STATIC_ASSERT(sizeof(VidListTables) == 0xFC0);
+#endif
+
 #endif /* MAIN_AUDIO_VIDLISTTABLES_H_ */
