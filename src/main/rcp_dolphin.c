@@ -134,7 +134,6 @@ typedef struct F32Pair
     f32 hi;
 } F32Pair;
 extern F32Pair lbl_803DEB58;
-extern f32 lbl_803DEB5C;
 extern const f32 lbl_803DEB64;
 void textureFn_80053d58(void* obj);
 extern GXTexObj lbl_803779A0;
@@ -672,7 +671,7 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
         GXBeginDisplayList(gRcpWarpDistortDisplayList, 0x6640);
         i = 0;
         span = lbl_803DEB58.lo;
-        half = lbl_803DEB5C;
+        half = 1.0f;
         step = lbl_803DEB54;
         for (; i < 0x10; i++)
         {
@@ -756,8 +755,8 @@ int textureFn_80052bb4(int model, f32* params)
     modelLightStruct_setAngularAttenuation(lb, 0.5f, 0.0f, 0.0f);
     modelLightStruct_loadChannelLight(3, lb, (GameObject*)model);
     modelLightChannels_applyGXControls();
-    modelLightStruct_setAngularAttenuation(la, lbl_803DEB5C, 0.0f, 0.0f);
-    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB5C, 0.0f, 0.0f);
+    modelLightStruct_setAngularAttenuation(la, 1.0f, 0.0f, 0.0f);
+    modelLightStruct_setAngularAttenuation(lb, 1.0f, 0.0f, 0.0f);
     return 0;
 }
 void gxFn_80052dc0(void)
@@ -765,12 +764,12 @@ void gxFn_80052dc0(void)
     f32 omtx[4][4];
     f32 pmtx[3][4];
     GXSetViewport(0.0f, 0.0f, 32.0f,
-                  32.0f, 0.0f, lbl_803DEB5C);
+                  32.0f, 0.0f, 1.0f);
     GXSetScissor(0, 0, 32, 32);
     GXSetDispCopySrc(0, 0, 32, 32);
     GXSetDispCopyDst(32, 32);
     GXSetTexCopySrc(0, 0, 32, 32);
-    C_MTXOrtho(omtx, lbl_803DEB5C, -1.0f, lbl_803DEB5C, -1.0f, lbl_803DEB5C, lbl_803DEB58.lo);
+    C_MTXOrtho(omtx, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, lbl_803DEB58.lo);
     GXSetProjection(omtx, 1);
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
     gxSetZMode_(0, GX_EQUAL, 0);
@@ -884,7 +883,7 @@ void gxTextureFn_80052efc(void)
         }
     }
     GXSetViewport(0.0f, 0.0f, gRcpScreenWidth, gRcpScreenHeight,
-                  0.0f, lbl_803DEB5C);
+                  0.0f, 1.0f);
     GXSetScissor(0, 0, 0x280, 0x1e0);
     GXSetDispCopySrc(0, 0, 0x280, 0x1e0);
     GXSetDispCopyDst(0x280, 0x1e0);
