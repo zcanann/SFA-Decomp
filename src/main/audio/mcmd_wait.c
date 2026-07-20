@@ -3,7 +3,7 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/hw_init.h"
-#include "main/audio/inp_ctrl.h"
+#include "main/audio/snd_service.h"
 #include "main/audio/mcmd_wait.h"
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */

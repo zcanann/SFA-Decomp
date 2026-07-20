@@ -1,5 +1,4 @@
-#include "ghidra_import.h"
-#include "main/audio/mcmd.h"
+#include "main/audio/snd_service.h"
 #include "main/audio/synth_scale.h"
 
 
@@ -106,7 +105,7 @@ s16 sndSin(u32 packed)
 /*
  * Binary search over fixed-stride sorted table entries.
  */
-void* sndBSearch(void* key, void* base, int count, u32 stride, int (*cmp)(void*, void*))
+void* sndBSearch(void* key, void* base, int count, u32 stride, s32 (*cmp)(void*, void*))
 {
     long low;
     long high;

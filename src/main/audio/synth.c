@@ -23,6 +23,7 @@
 #include "main/audio/synth_delay.h"
 #include "main/audio/vid_init.h"
 #include "main/audio/inp_ctrl.h"
+#include "main/audio/snd_service.h"
 #include "main/audio/hw_keyoff.h"
 #include "main/audio/inp_midi.h"
 #include "main/audio/mcmd_exec.h"

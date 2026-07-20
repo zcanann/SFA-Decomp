@@ -3,6 +3,7 @@
 #include "main/audio/voice_prio.h"
 #include "main/audio/mcmd_volume.h"
 #include "main/audio/inp_ctrl.h"
+#include "main/audio/snd_service.h"
 #include "main/audio/data_tables.h"
 #include "main/audio/snd_synth_api.h"
 #include "main/audio/voice_alloc.h"

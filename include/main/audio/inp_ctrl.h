@@ -21,11 +21,4 @@ void inpInit(u32 state);
 u8 inpTranslateExCtrl(u8 ctrl);
 u16 inpGetExCtrl(McmdVoiceState *state, u8 ctrl);
 void inpSetExCtrl(McmdVoiceState *state, u8 ctrl, s16 value);
-u16 sndRand(void);
-s16 sndSin(u32 packed);
-void *sndBSearch(void *key, void *base, int count, u32 stride, int (*cmp)(void *, void *));
-void sndConvertMs(u32 *p);
-void sndConvertTicks(u32 *p, McmdVoiceState *state);
-u32 sndConvert2Ms(u32 x);
-
 #endif /* MAIN_AUDIO_INP_CTRL_H_ */

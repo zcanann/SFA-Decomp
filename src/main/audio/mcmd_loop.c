@@ -1,7 +1,7 @@
 #include "main/audio/mcmd_loop.h"
 
 #include "main/audio/hw_init.h"
-#include "main/audio/inp_ctrl.h"
+#include "main/audio/snd_service.h"
 
 void mcmdLoop(McmdVoiceState* state, McmdCommandArgs* params)
 {

@@ -10,6 +10,7 @@
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/data_tables.h"
+#include "main/audio/snd_service.h"
 
 
 #define dataLayerTab           (((SynthDataTables*)dataSmpSDirs)->layer)
