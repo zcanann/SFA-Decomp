@@ -780,9 +780,6 @@ int snowPrintSnowCloud(int arg, int cloudId)
     u8 hudHidden;
     int texIdx;
     int ct;
-    u8 cr;
-    u8 cg;
-    u8 cb;
     f32 scale;
     f32 driftX;
     f32 driftZ;
@@ -797,13 +794,21 @@ int snowPrintSnowCloud(int arg, int cloudId)
     f32 vx[3];
     f32 vy[3];
     f32 vz[3];
-    SnowFlakeUVs uvs;
+    struct
+    {
+        u8 cb;
+        u8 cg;
+        u8 cr;
+        SnowFlakeUVs uvs;
+    } attr;
+    s16 us;
+    s16 ut;
     f32* qx;
     f32* qy;
     f32* qz;
     s16* puv;
 
-    uvs = kSnowFlakeUVs;
+    attr.uvs = kSnowFlakeUVs;
     qx = (f32*)vx;
     qy = (f32*)vy;
     qz = (f32*)vz;
@@ -888,8 +893,8 @@ int snowPrintSnowCloud(int arg, int cloudId)
     }
     else if (((NewCloud*)p)->cloudType == 0)
     {
-        getAmbientColor(0, &cr, &cg, &cb);
-        setTextColor((void*)arg, cr, cg, cb, 0xff);
+        getAmbientColor(0, &attr.cr, &attr.cg, &attr.cb);
+        setTextColor((void*)arg, attr.cr, attr.cg, attr.cb, 0xff);
     }
     gxBlendFn_80078b4c();
     GXClearVtxDesc();
@@ -969,21 +974,27 @@ int snowPrintSnowCloud(int arg, int cloudId)
         vx[2] = ((f32*)p)[part->quadIndex * 11 + 1028] * size + part->x;
         vy[2] = ((f32*)p)[part->quadIndex * 11 + 1031] * size + yb;
         vz[2] = ((f32*)p)[part->quadIndex * 11 + 1034] * size + part->z;
-        puv = uvs.uv;
+        puv = attr.uvs.uv;
         GXWGFifo.f32 = (f64)qx[0];
         GXWGFifo.f32 = (f64)qy[0];
         GXWGFifo.f32 = (f64)qz[0];
-        snowFifoTexCoord2s16(puv[0], puv[1]);
+        ut = puv[1];
+        us = puv[0];
+        snowFifoTexCoord2s16(us, ut);
         puv += 2;
         GXWGFifo.f32 = (f64)qx[1];
         GXWGFifo.f32 = (f64)qy[1];
         GXWGFifo.f32 = (f64)qz[1];
-        snowFifoTexCoord2s16(puv[0], puv[1]);
+        ut = puv[1];
+        us = puv[0];
+        snowFifoTexCoord2s16(us, ut);
         puv += 2;
         GXWGFifo.f32 = (f64)qx[2];
         GXWGFifo.f32 = (f64)qy[2];
         GXWGFifo.f32 = (f64)qz[2];
-        snowFifoTexCoord2s16(puv[0], puv[1]);
+        ut = puv[1];
+        us = puv[0];
+        snowFifoTexCoord2s16(us, ut);
         part += 1;
     }
     return 0;
