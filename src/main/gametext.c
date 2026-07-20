@@ -865,10 +865,10 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         if (ch >= 0xe000 && ch <= 0xf8ff)
         {
             SpecialGlyph* sp = lbl_802C86F0;
-            int n = 0;
-            int k = 46;
+            int n;
+            int k;
             int sel;
-            while (k--)
+            for (k = 46; k-- != 0 || (n = 0, 0);)
             {
                 if (sp->key == ch)
                 {
@@ -908,8 +908,8 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         else
         {
             MeasGlyph* g = (MeasGlyph*)gameTextFonts->glyphs;
-            int cnt = gameTextFonts->glyphCount;
-            while (cnt-- != 0)
+            int cnt;
+            for (cnt = gameTextFonts->glyphCount; cnt-- != 0 || (g = NULL, 0);)
             {
                 if (g->key == ch && g->lang == langIdx)
                 {
@@ -917,7 +917,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
                 }
                 g++;
             }
-            if (cnt != -1)
+            if (g != NULL)
             {
                 int advance = (g->fC + g->f8) + g->f9;
                 penX += height * (f32)(int)advance;
