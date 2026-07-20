@@ -54,8 +54,8 @@ void spiritdoorspirit_hitDetect(void)
 
 void spiritdoorspirit_update(GameObject* obj)
 {
-    SpiritdoorspiritPlacement* def = *(SpiritdoorspiritPlacement**)&obj->anim.placementData;
     SpiritDoorSpiritState* state = obj->extra;
+    SpiritdoorspiritPlacement* def = *(SpiritdoorspiritPlacement**)&obj->anim.placementData;
     u8 active;
 
     if (state->active == 0)
