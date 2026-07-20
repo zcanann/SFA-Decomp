@@ -598,19 +598,45 @@ void debugPrintReset(void)
 /* Lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
  * the passes when the log produced any extent. */
+static inline void debugDrawLogRect(void)
+{
+    u32 y0;
+    u32 y;
+    u32 x0;
+    u32 x2;
+    u32 y1;
+    f32 sc;
+    GXColor col;
+
+    x2 = debugPrintXpos + 0xa;
+    y = debugPrintYpos;
+    x0 = gDebugRectStartX;
+    y0 = gDebugRectStartY;
+    if ((((y - y0) == 0) | ((x2 - x0) == 0)) == 0)
+    {
+        if (y0 >= 2)
+        {
+            y0 -= 2;
+        }
+        y1 = y + 2;
+        y0 = y0 * (sc = gDebugScaleX + gDebugScaleBiasX);
+        y1 = y1 * sc;
+        x0 = x0 * (sc = gDebugScaleY + gDebugScaleBiasY);
+        x2 = x2 * sc;
+        col.r = gDebugTextColorR;
+        col.g = gDebugTextColorG;
+        col.b = gDebugTextColorB;
+        col.a = gDebugTextColorA;
+        hudDrawRect(y0, x0, y1, x2, col);
+    }
+}
 void debugPrintDraw(int ctx)
 {
-    u32 yv;
-    u32 xs;
-    GXColor colb;
     u8* p;
     u16 tx, ty;
-    u32 x1;
-    f32 scale;
     int pass;
     u32 res;
     u32 sw;
-    u32 ys;
     u32 sh;
 
     res = getScreenResolution();
@@ -641,8 +667,10 @@ void debugPrintDraw(int ctx)
     }
     gxDebugTextureFn_80078c1c();
     p = debugLogBuffer;
-    debugPrintYpos = ty = gDebugPrintOriginY;
-    debugPrintXpos = tx = gDebugPrintOriginX;
+    ty = gDebugPrintOriginY;
+    debugPrintYpos = ty;
+    tx = gDebugPrintOriginX;
+    debugPrintXpos = tx;
     gDebugCurrentFontSet = 0xffffffff;
     pass = 0;
     gDebugFixedWidthMode = pass;
@@ -653,27 +681,7 @@ void debugPrintDraw(int ctx)
         gDebugDrawPass = pass;
         p += debugPrintDrawRecord(ctx, p);
     }
-    x1 = debugPrintXpos + 0xa;
-    yv = debugPrintYpos;
-    xs = gDebugRectStartX;
-    ys = gDebugRectStartY;
-    if ((((yv - ys) == 0) | ((x1 - xs) == 0)) == 0)
-    {
-        if (ys >= 2)
-        {
-            ys -= 2;
-        }
-        yv += 2;
-        ys = (u32)((f32)ys * (scale = gDebugScaleX + gDebugScaleBiasX));
-        yv = (u32)((f32)yv * scale);
-        xs = (u32)((f32)xs * (scale = gDebugScaleY + gDebugScaleBiasY));
-        x1 = (u32)((f32)x1 * scale);
-        colb.r = gDebugTextColorR;
-        colb.g = gDebugTextColorG;
-        colb.b = gDebugTextColorB;
-        colb.a = gDebugTextColorA;
-        hudDrawRect(ys, xs, yv, x1, colb);
-    }
+    debugDrawLogRect();
     p = debugLogBuffer;
     debugPrintYpos = gDebugPrintOriginY;
     debugPrintXpos = gDebugPrintOriginX;
