@@ -1596,8 +1596,8 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         ((GameObject*)gSkyMoonObject)->anim.rootMotionScale = gSkySunMoonScale * scale;
         *(s16*)gSkyMoonObject = 0x10000 - cam->yaw;
         ((GameObject*)gSkyMoonObject)->anim.rotY = cam->pitch;
-        ((GameObject*)gSkyMoonObject)->anim.rotZ = 0;
         vis = 0;
+        ((GameObject*)gSkyMoonObject)->anim.rotZ = 0;
         ((u8*)gSkyMoonObject)[0x37] = *(s16*)&gSkyMoonAlpha;
         if (gSkySunObject[0x37] != 0)
         {
@@ -2778,12 +2778,11 @@ void sky2_run(void)
     u8* p;
     f32* dst;
     f32 cmax;
-    int a1;
     int k;
     int d;
     int off1;
     int off2;
-    f32* dirp;
+    u16 a1;
     int amp;
     int ri;
     int gi;
@@ -2798,6 +2797,7 @@ void sky2_run(void)
     f32 t;
     f32 u;
     f32 att;
+    f32 z2;
     f32 c158;
     f32 c154;
     f32 c150;
@@ -2806,7 +2806,6 @@ void sky2_run(void)
     f32 zv;
     f32 spd;
     f32 frzero;
-    f32 z2;
     f32 hv;
     f32 diff;
     f32 scale;
@@ -2975,10 +2974,9 @@ void sky2_run(void)
             else
             {
                 k = 0;
-                dirp = lbl_8039A7B8;
                 do
                 {
-                    a1 = (u16)getAngle(dirp[0], dirp[2]);
+                    a1 = getAngle(lbl_8039A7B8[k * 3], lbl_8039A7B8[k * 3 + 2]);
                     d = a1 - (u16)getAngle(vec[0], vec[2]);
                     if (d < 0)
                     {
@@ -2988,7 +2986,9 @@ void sky2_run(void)
                     {
                         d = 0xffff - d;
                     }
-                    att = ((lbl_803DF178 - d) / lbl_803DF178 - lbl_803DF170) / lbl_803DF144;
+                    att = (lbl_803DF178 - d) / lbl_803DF178;
+                    att -= lbl_803DF170;
+                    att /= lbl_803DF144;
                     if (att > best.x)
                     {
                         if (best.x > best.y)
@@ -3004,7 +3004,6 @@ void sky2_run(void)
                         best.y = att;
                         idx.second = k;
                     }
-                    dirp += 3;
                     k++;
                 } while (k < 8);
                 z2 = lbl_803DF108;
