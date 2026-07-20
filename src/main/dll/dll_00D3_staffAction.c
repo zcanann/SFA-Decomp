@@ -906,7 +906,7 @@ void dll_D3_update(int* obj)
         return;
     }
 
-    rc = ((int (*)(int*, int*, int))((void**)*(int*)gBaddieControlInterface)[0x30 / 4])(obj, state, 0);
+    rc = ((BaddieControlInterface*)*gBaddieControlInterface)->isObjectValid((GameObject*)obj, state, 0);
     if (rc == 0)
         return;
 

@@ -16,7 +16,7 @@ typedef struct BaddieControlInterface
     void (*startHitReaction)(int obj, int state, int hitReactState, int gameBit, int a5, int a6, int a7, int mode,
                              int slot);                                      /* 0x28 */
     void (*updateGravity)(int obj, int state, f32 gravityScale, int slot);   /* 0x2C */
-    int (*checkAwake)(int obj, int state, int mode);                         /* 0x30 */
+    int (*isObjectValid)(GameObject* obj, void* state, u8 checkDead);        /* 0x30 */
     u8 pad34[0x40 - 0x34];
     void (*releaseState)(GameObject* obj, void* state, u8 flags);            /* 0x40 */
     u8 pad44[0x48 - 0x44];

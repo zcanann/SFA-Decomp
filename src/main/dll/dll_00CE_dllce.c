@@ -837,7 +837,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
     }
     else
     {
-        if ((*(int (**)(void*, int, int))(*(int*)gBaddieControlInterface + 0x30))(obj, (int)sub, 0) == 0)
+        if (((BaddieControlInterface*)*gBaddieControlInterface)->isObjectValid(obj, sub, 0) == 0)
         {
             sub->targetState = 0;
         }

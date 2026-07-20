@@ -141,7 +141,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
 
     if ((obj)->seqIndex != -1)
     {
-        animOk = (*(int (**)(void*, DIMbosstonsilState*, int))(*(int*)gBaddieControlInterface + 0x30))(obj, state, 1);
+        animOk = ((BaddieControlInterface*)*gBaddieControlInterface)->isObjectValid((GameObject*)obj, state, 1);
         if (animOk == 0)
         {
             return 1;

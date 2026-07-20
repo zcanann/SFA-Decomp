@@ -437,7 +437,7 @@ void kaldachom_update(GameObject* obj)
     }
     else
     {
-        ref = (*(int (**)(void*, int, int))(*(int*)gBaddieControlInterface + 0x30))(obj, state, 0);
+        ref = ((BaddieControlInterface*)*gBaddieControlInterface)->isObjectValid(obj, (void*)state, 0);
         if (ref == 0)
         {
             *(u16*)&((GroundBaddieState*)state)->targetState = 0;

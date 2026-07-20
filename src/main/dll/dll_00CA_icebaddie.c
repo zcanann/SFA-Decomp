@@ -1362,7 +1362,7 @@ void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
     }
     else
     {
-        if ((*(int (**)(int, int, int))(*(int*)gBaddieControlInterface + 0x30))((int)obj, (int)sub, 0) == 0)
+        if (((BaddieControlInterface*)*gBaddieControlInterface)->isObjectValid(obj, sub, 0) == 0)
         {
             sub->targetState = 0;
         }

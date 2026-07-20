@@ -2365,7 +2365,8 @@ void dbstealerworm_update(u8* objp)
         }
         else
         {
-            if (((int (*)(int, int, int))((void**)*gBaddieControlInterface)[12])(obj, blob, 0) == 0)
+            if (((BaddieControlInterface*)*gBaddieControlInterface)
+                    ->isObjectValid((GameObject*)obj, (void*)blob, 0) == 0)
             {
                 ((GroundBaddieState*)blob)->targetState = 0;
             }

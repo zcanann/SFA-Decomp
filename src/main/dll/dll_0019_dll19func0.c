@@ -104,7 +104,7 @@ void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flag
                    int animMove, s8 field25f);
 GameObject* dll_19_func14(GameObject* self, void* state, f32 frange, int halfAngle);
 int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar);
-int dll_19_func0E(GameObject* obj, int state, u8 checkDead);
+int dll_19_func0E(GameObject* obj, void* state, u8 checkDead);
 void dll_19_func0D(GameObject* obj, int state, f32 gravity, s8 field25f);
 int dll_19_func10(GameObject* obj, u8* state, int moveArg0, int moveArg1, s16 controlMode, f32* destX, f32* destZ,
                   int* reachedOut);
@@ -877,7 +877,7 @@ int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar)
     return result;
 }
 
-int dll_19_func0E(GameObject* obj, int state, u8 checkDead)
+int dll_19_func0E(GameObject* obj, void* state, u8 checkDead)
 {
     if (checkDead != 0 && (s8)((BaddieState*)state)->hitPoints <= 0 && (obj)->anim.alpha == 0)
     {

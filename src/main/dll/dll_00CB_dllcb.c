@@ -339,7 +339,8 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
     }
     if (((GameObject*)obj)->seqIndex != -1)
     {
-        if ((*(int (**)(short*, int, int))(*(int*)gBaddieControlInterface + 0x30))(obj, sub, 1) == 0)
+        if (((BaddieControlInterface*)*gBaddieControlInterface)
+                ->isObjectValid((GameObject*)obj, (void*)sub, 1) == 0)
         {
             return 1;
         }
@@ -480,7 +481,7 @@ void dll_CB_update(int* obj)
             obj, (u8*)sub, (u8*)&sub->routeNav, sub->gameBitB, &sub->subMode, 0, 0, 0, 1);
         sub->flags400 = (u16)(sub->flags400 & ~2);
     }
-    if (((int (*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, (u8*)sub, 1) == 0)
+    if (((BaddieControlInterface*)*gBaddieControlInterface)->isObjectValid((GameObject*)obj, sub, 1) == 0)
         return;
     dll_CB_advanceAI(obj, sub, sub);
     path = (RomCurveWalker*)sub->path;
