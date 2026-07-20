@@ -21,6 +21,7 @@
 #include "main/shader_api.h"
 #include "main/dll/dll_0004_dummy04.h"
 #include "main/dll/dll_006A_dll6afunc0.h"
+#include "main/dll/foodbag.h"
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -326,13 +327,13 @@ void dll_199_update(GameObject* obj)
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, obj, 0xffffffff);
                 {
-                    int* res = Resource_Acquire(0x83, 1);
-                    (**(void (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 1, 0xffffffff, 0);
+                    Dll83Interface** res = Resource_Acquire(0x83, 1);
+                    (*res)->spawn(obj, 0, NULL, 1, -1, NULL);
                     Resource_Release(res);
                 }
                 {
-                    int* res = Resource_Acquire(0x84, 1);
-                    (**(void (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 1, 0xffffffff, 0);
+                    Dll84Interface** res = Resource_Acquire(0x84, 1);
+                    (*res)->spawn(obj, 0, NULL, 1, -1, NULL);
                     Resource_Release(res);
                 }
                 mainSetBits(0x126, 0);

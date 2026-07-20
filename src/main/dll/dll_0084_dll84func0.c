@@ -20,7 +20,7 @@
 
 extern u8 gFoodbagFxTextureData[];
 
-void dll_84_func03(int sourceObj, int variant, int posSource, u32 flags)
+s16 dll_84_func03(void* sourceObj, int variant, PartFxSpawnParams* posSource, u32 flags, int owner, void* unused)
 {
     FbBuf buf;
     u8* base = (u8*)(int)gFoodbagFxTextureData;
@@ -167,7 +167,7 @@ void dll_84_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[19].y = 1.0f;
     e[19].z = 2.0f;
     buf.v58 = 0;
-    buf.ctx = sourceObj;
+    buf.ctx = (int)sourceObj;
     buf.v44 = variant;
     buf.pos[0] = 0.0f;
     buf.pos[1] = 0.0f;
@@ -194,7 +194,7 @@ void dll_84_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
     {
-        if ((u32)sourceObj != 0)
+        if (sourceObj != NULL)
         {
             buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
             buf.pos[1] += ((GameObject*)(sourceObj))->anim.worldPosY;
@@ -202,12 +202,12 @@ void dll_84_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] += posSource->posX;
+            buf.pos[1] += posSource->posY;
+            buf.pos[2] += posSource->posZ;
         }
     }
-    (*gModgfxInterface)
+    return (*gModgfxInterface)
         ->spawnEffect(&buf, 0, 0x24, (u8*)(int)gFoodbagFxTextureData, 0x10, base + 0x168, DLL84_EFFECT_ID, 0);
 }
 

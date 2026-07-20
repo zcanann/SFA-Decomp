@@ -25,6 +25,7 @@
 #include "main/shader_api.h"
 #include "main/dll/dll_0004_dummy04.h"
 #include "main/dll/dll_006A_dll6afunc0.h"
+#include "main/dll/foodbag.h"
 
 #define DLL19B_TARGET_OBJGROUP 0xe
 
@@ -301,14 +302,14 @@ void dll_19B_update(int obj)
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 {
-                    void* handle = Resource_Acquire(0x83, 1);
-                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 1, 0, 1, -1, 0);
-                    Resource_Release(handle);
+                    Dll83Interface** res = Resource_Acquire(0x83, 1);
+                    (*res)->spawn((void*)obj, 1, NULL, 1, -1, NULL);
+                    Resource_Release(res);
                 }
                 {
-                    void* handle = Resource_Acquire(0x84, 1);
-                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 0, 0, 1, -1, 0);
-                    Resource_Release(handle);
+                    Dll84Interface** res = Resource_Acquire(0x84, 1);
+                    (*res)->spawn((void*)obj, 0, NULL, 1, -1, NULL);
+                    Resource_Release(res);
                 }
                 mainSetBits(0x126, 0);
                 (*gModgfxInterface)->releaseHandle(&st->gfxHandle);
