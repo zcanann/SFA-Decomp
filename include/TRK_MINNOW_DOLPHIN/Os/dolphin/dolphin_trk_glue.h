@@ -11,6 +11,8 @@ extern "C" {
 
 void EnableEXI2Interrupts(void);
 void TRKUARTInterruptHandler();
+UARTError WriteUART1(s8 byte);
+UARTError WriteUARTFlush(void);
 
 #ifdef __cplusplus
 }

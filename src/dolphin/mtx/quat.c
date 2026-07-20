@@ -2,11 +2,6 @@
 #include "dolphin/mtx.h"
 #include "ffcc/symbols_shared.h"
 
-float acosf(float x);
-
-float sinf(float x);
-float cosf(float x);
-
 void C_QUATAdd(const Quaternion *p, const Quaternion *q, Qtrn *r)
 {
     r->x = p->x + q->x;

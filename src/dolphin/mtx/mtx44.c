@@ -1,4 +1,5 @@
 #include <dolphin.h>
+#include "dolphin/math.h"
 
 const f32 lbl_803E7630 = 1.0f;
 const f32 lbl_803E7634 = 2.0f;
@@ -6,8 +7,6 @@ const f32 lbl_803E7638 = 0.0f;
 const f32 lbl_803E763C = -1.0f;
 const f32 lbl_803E7640 = 0.5f;
 const f32 lbl_803E7644 = 0.017453292f;
-
-extern f32 tanf(f32);
 
 extern const f32 lbl_803E7630;
 extern const f32 lbl_803E7634;

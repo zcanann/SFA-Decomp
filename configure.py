@@ -1325,7 +1325,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/n_options.c", cflags=cflags_dll_noopt),
             Object(Matching, "main/dll/n_pausemenu.c"),
             Object(
-                NonMatching, "main/dll/dll_3e.c", cflags=cflags_dll_noopt,
+                MatchingFor("GSAE01"), "main/dll/dll_3e.c", cflags=cflags_dll_noopt,
                 section_alignments={".sbss": 4},
             ),
             Object(Matching, "main/dll/dll_40.c"),

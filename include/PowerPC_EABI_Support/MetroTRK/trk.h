@@ -114,7 +114,6 @@ void ReserveEXI2Port(void);
 DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 p1, u32 p2, int p3);
 
 DSError TRK_main(void);
-UARTError InitializeUART(UARTBaudRate baudRate);
 DSError TRKInitializeIntDrivenUART(u32, u32, u32, void*);
 int TRKPollUART(void);
 UARTError TRKReadUARTPoll(s8*);

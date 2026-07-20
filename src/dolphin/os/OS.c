@@ -3,8 +3,6 @@
 #include <dolphin/db.h>
 #include <dolphin/os.h>
 
-extern OSTime __OSGetSystemTime();
-
 #define OS_BI2_DEBUG_ADDRESS 0x800000F4
 #define DEBUGFLAG_ADDR 0x800030E8
 #define OS_DEBUG_ADDRESS_2 0x800030E9
@@ -45,7 +43,6 @@ extern u32 __PADSpec;
 #define DB_EXCEPTIONRET_OFFSET 0xC
 #define DB_EXCEPTIONDEST_OFFSET 0x8
 
-extern BOOL __DBIsExceptionMarked(__OSException);
 static void OSExceptionInit(void);
 
 asm void __OSFPRInit(void)

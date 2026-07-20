@@ -135,7 +135,7 @@ UARTError WriteUARTFlush(void)
     return error;
 }
 
-UARTError WriteUART1(u8 byte)
+UARTError WriteUART1(s8 byte)
 {
     gWriteBuf[gWritePos++] = byte;
     return UART_NoError;
