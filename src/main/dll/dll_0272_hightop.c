@@ -75,7 +75,6 @@ const HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF,
 #define HIGHTOP_OBJGROUP       0xa
 #define ARWARWING_OBJGROUP     0x26
 
-static const u32 sHighTopPathParam[1] = {0x01010101};
 
 int hightop_stateHandler10(GameObject* obj, HighTopRuntime* stateArg)
 {
@@ -1159,7 +1158,7 @@ void HighTop_init(GameObject* obj, HighTopPlacement* placement)
     HtInitData local1;
     HtInitData local2;
     u32 pathParam;
-    pathParam = sHighTopPathParam[0];
+    pathParam = 0x01010101;
     local1 = gHighTopLookInitData1;
     local2 = gHighTopLookInitData2;
     (obj)->anim.rotX = (s16)(placement->rotByte << 8);

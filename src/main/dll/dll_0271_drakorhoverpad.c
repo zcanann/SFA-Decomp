@@ -290,15 +290,13 @@ void drakorhoverpad_func0F(int obj, f32* ox, f32* oy, f32* oz)
     Matrix_TransformPoint(mtx, 0.0f, lbl_803DC300, lbl_803DC304, ox, oy, oz);
 }
 
-static const f32 gDrakorHoverpadPathCurveLength[1] = { 300.0f };
-static const f32 gDrakorHoverpadPathCurveStart[1] = { 0.01f };
 
 static inline void drakorhoverpad_initPathCurve(GameObject* obj, u8* p)
 {
     int curveArg = 0x2a;
 
-    (*gRomCurveInterface)->initCurve(&((DrakorHoverpadState*)p)->curve, (void*)obj, gDrakorHoverpadPathCurveLength[0], &curveArg, -1);
-    Curve_AdvanceAlongPath((Curve*)(p + 4), gDrakorHoverpadPathCurveStart[0]);
+    (*gRomCurveInterface)->initCurve(&((DrakorHoverpadState*)p)->curve, (void*)obj, 300.0f, &curveArg, -1);
+    Curve_AdvanceAlongPath((Curve*)(p + 4), 0.01f);
 }
 
 static inline f32 drakorhoverpad_nodeWobbleSin(DrakorCurveNode** slot, int angle)

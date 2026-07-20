@@ -46,7 +46,6 @@
 #define COLLECTIBLE_TRUTHHORN_OBJ   0x156
 #define COLLECTIBLE_MOONSEED_OBJ    1702
 
-static const u32 sCollectiblePathWord[1] = {0x40400000};
 static const u8 sCollectiblePathByte[4] = {5, 0, 0, 0};
 static u8 sCollectiblePathData[12] = {0};
 
@@ -715,7 +714,7 @@ void collectible_init(GameObject *obj, int setup)
 
     objAnim = (ObjAnimComponent*)obj;
     state = (obj)->extra;
-    pathWord = sCollectiblePathWord[0];
+    pathWord = 0x40400000;
     pathByte = sCollectiblePathByte[0];
     ObjGroup_AddObject((int)obj, COLLECTIBLE_OBJGROUP);
     ObjMsg_AllocQueue(obj, 2);
