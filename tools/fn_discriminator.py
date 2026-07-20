@@ -150,6 +150,7 @@ def strip_regs(s: str) -> str:
 
 
 BANDTOK_RE = re.compile(r"\b([rf])(\d{1,2})\b")
+MR_COPY_RE = re.compile(r"^r(\d+),r(\d+)$")
 
 
 def perm_band(tgt, cur) -> str:
@@ -175,11 +176,26 @@ def perm_band(tgt, cur) -> str:
                 continue
             for s in (x, y):
                 regs.update((c, int(n)) for c, n in BANDTOK_RE.findall(s))
-    scratch = any((c == "r" and n <= 12) or (c == "f" and n <= 13) for c, n in regs)
-    saved = any(n >= 14 for c, n in regs)
-    if scratch and saved:
-        return "MIXED"
-    return "SAVED" if saved else "SCRATCH"
+    moved_saved = {n for c, n in regs if c == "r" and n >= 14}
+    if not moved_saved:
+        # nothing in the saved band moved: propagation artifact, per-TU flag.
+        return "SCRATCH/flag"
+
+    # Which of OUR saved registers are COPY class?  A `mr rN,r3..r10` in the
+    # body is a parameter (or call-return) copy.  Copy class keys on
+    # DEFINITION order, and a parameter's definition order is fixed by the
+    # ABI -- so if a copy-class register is in the permuted set, no
+    # declaration permutation can move it.  Measured: 50 fns / 424 wB land
+    # here, and both probed members (pi_dolphin::mapLoadDataFile 101/101,
+    # dll_0B_func04 50/50) are inert under a full decl sweep, as predicted.
+    copycls = set()
+    for _, m, o, _ in cur:
+        mm = MR_COPY_RE.match(o)
+        if m == "mr" and mm and 3 <= int(mm.group(2)) <= 10 and int(mm.group(1)) >= 14:
+            copycls.add(int(mm.group(1)))
+    if moved_saved & copycls:
+        return "SAVED/copy-UNREACHABLE"
+    return "SAVED/load-REACHABLE"
 
 
 def streams(insns):
