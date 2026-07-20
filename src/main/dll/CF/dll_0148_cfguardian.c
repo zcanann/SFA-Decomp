@@ -36,6 +36,7 @@
 #include "main/obj_message.h"
 #include "main/obj_trigger.h"
 #include "main/object_descriptor.h"
+#include "main/dll/cloudprisoncontrol.h"
 #include "main/dll/CF/dll_0148_cfguardian.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
@@ -140,22 +141,6 @@ const GuardianMsg gCfGuardianHeadingTemplate = {7, 8, 7, 8}; /* active/idle head
  * matching per-event sfx. sfxIds is a 3-entry table: [0] the move sfx,
  * [1] the alt (event 7) sfx, [2] the "selection" sfx played once if any
  * 1..4 marker event fired. Returns the last 1..4 marker seen. */
-extern u8 lbl_80322798[];
-extern u8 lbl_803227A4[];
-extern u8 lbl_803227B0[];
-extern u8 lbl_803227BC[];
-extern u8 lbl_803227C8[];
-extern u8 lbl_803227D4[];
-extern u8 lbl_803227E0[];
-extern u8 lbl_803227EC[];
-extern u8 lbl_803227F8[];
-extern u8 lbl_80322804[];
-extern u8 lbl_80322810[];
-extern u8 lbl_8032281C[];
-extern u8 lbl_80322828[];
-extern u8 lbl_80322834[];
-extern u8 lbl_80322840[];
-
 int gCfGuardianSeqStreamTable[33][2] = {
     {0, (int)&lbl_80322798},
     {1, (int)&lbl_803227A4},

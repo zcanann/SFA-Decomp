@@ -17,6 +17,7 @@
  */
 #include "main/game_object.h"
 #include "main/obj_message.h"
+#include "main/dll/cloudprisoncontrol.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/object_render.h"
 
@@ -215,18 +216,18 @@ u32 gCloudPrisonControlObjDescriptor[30] = {0x00000000,
                                             0x41b80000,
                                             0x41a00000,
                                             0x41800000};
-u32 lbl_80322798[3] = {0x00000001, 0x00000006, 0x0000000d};
-u32 lbl_803227A4[3] = {0x0000000f, 0x00000006, 0xffffffff};
-u32 lbl_803227B0[3] = {0x00000005, 0xffffffff, 0xffffffff};
-u32 lbl_803227BC[3] = {0x00000002, 0xffffffff, 0xffffffff};
-u32 lbl_803227C8[3] = {0x00000008, 0x00000006, 0xffffffff};
-u32 lbl_803227D4[3] = {0x0000000c, 0xffffffff, 0xffffffff};
-u32 lbl_803227E0[3] = {0x0000000e, 0xffffffff, 0xffffffff};
-u32 lbl_803227EC[3] = {0x0000000e, 0x00000006, 0xffffffff};
-u32 lbl_803227F8[3] = {0x0000000e, 0x00000006, 0xffffffff};
-u32 lbl_80322804[3] = {0x00000009, 0x00000006, 0xffffffff};
-u32 lbl_80322810[3] = {0x00000005, 0xffffffff, 0xffffffff};
-u32 lbl_8032281C[3] = {0x0000000b, 0xffffffff, 0xffffffff};
-u32 lbl_80322828[3] = {0x0000000a, 0xffffffff, 0xffffffff};
-u32 lbl_80322834[3] = {0x0000000e, 0x00000006, 0x00000010};
-u32 lbl_80322840[3] = {0xffffffff, 0xffffffff, 0xffffffff};
+s32 lbl_80322798[3] = {1, 6, 13};
+s32 lbl_803227A4[3] = {15, 6, -1};
+s32 lbl_803227B0[3] = {5, -1, -1};
+s32 lbl_803227BC[3] = {2, -1, -1};
+s32 lbl_803227C8[3] = {8, 6, -1};
+s32 lbl_803227D4[3] = {12, -1, -1};
+s32 lbl_803227E0[3] = {14, -1, -1};
+s32 lbl_803227EC[3] = {14, 6, -1};
+s32 lbl_803227F8[3] = {14, 6, -1};
+s32 lbl_80322804[3] = {9, 6, -1};
+s32 lbl_80322810[3] = {5, -1, -1};
+s32 lbl_8032281C[3] = {11, -1, -1};
+s32 lbl_80322828[3] = {10, -1, -1};
+s32 lbl_80322834[3] = {14, 6, 16};
+s32 lbl_80322840[3] = {-1, -1, -1};
