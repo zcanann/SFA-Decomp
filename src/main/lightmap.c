@@ -1604,12 +1604,12 @@ void objDrawFn_8005da48(GameObject* obj)
 
 void sceneDrawTransparentPolys(void)
 {
-    int (*e)[4];
+    GXColor c5;
     int i;
     int* block;
     GameObject* player;
     GXColor c4;
-    GXColor c5;
+    int (*e)[4];
     GXColor c6;
     f32 m[16];
 
