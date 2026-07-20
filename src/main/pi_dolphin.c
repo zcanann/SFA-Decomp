@@ -4639,7 +4639,8 @@ void waitNextFrame(void)
     u32 frames;
 
     OSStopStopwatch(&lbl_8035F680);
-    lbl_803DCCC0 = OSCheckStopwatch(&lbl_8035F680) / (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
+    lbl_803DCCC0 =
+        (u64)OSCheckStopwatch(&lbl_8035F680) / (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
     OSResetStopwatch(&lbl_8035F680);
     OSStartStopwatch(&lbl_8035F680);
     timeDelta = physicsTimeScale * (lbl_803DEAA0 * lbl_803DCCC0);
