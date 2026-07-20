@@ -49,14 +49,14 @@ void crfueltank_hitDetect(CrFuelTankObject* obj)
 {
     CrFuelTankDef* def;
     CrFuelTankCollider* collider;
-    CrFuelTankHitObj* hitObj;
+    GameObject* hitObj;
 
     collider = obj->collider;
     def = obj->def;
     if ((collider != NULL) && (collider->hitObj != NULL))
     {
         hitObj = collider->hitObj;
-        if (hitObj->objType == CRFUELTANK_TRIGGER_OBJ)
+        if (hitObj->anim.seqId == CRFUELTANK_TRIGGER_OBJ)
         {
             ObjHits_DisableObject((GameObject*)obj);
             Sfx_PlayFromObject((u32)Obj_GetPlayerObject(), SFXTRIG_ar_barrel16);
@@ -66,9 +66,9 @@ void crfueltank_hitDetect(CrFuelTankObject* obj)
             {
                 mainSetBits(def->hitEvent, 1);
             }
-            obj->velocityX = hitObj->velocityX;
-            obj->velocityY = lbl_803E6760 + hitObj->velocityY;
-            obj->velocityZ = hitObj->velocityZ;
+            obj->velocityX = hitObj->anim.velocityX;
+            obj->velocityY = lbl_803E6760 + hitObj->anim.velocityY;
+            obj->velocityZ = hitObj->anim.velocityZ;
         }
     }
     return;

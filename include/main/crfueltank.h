@@ -2,6 +2,7 @@
 #define MAIN_CRFUELTANK_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/object_descriptor.h"
 
 typedef struct CrFuelTankState {
@@ -18,17 +19,8 @@ typedef struct CrFuelTankDef {
 
 typedef struct CrFuelTankCollider {
   u8 unk0[0x50];
-  void *hitObj;
+  GameObject *hitObj;
 } CrFuelTankCollider;
-
-typedef struct CrFuelTankHitObj {
-  u8 unk0[0x24];
-  f32 velocityX;
-  f32 velocityY;
-  f32 velocityZ;
-  u8 unk30[0x16];
-  s16 objType;
-} CrFuelTankHitObj;
 
 typedef struct CrFuelTankObject {
   u8 unk0[6];
@@ -49,7 +41,6 @@ typedef struct CrFuelTankObject {
   int triggered;
 } CrFuelTankObject;
 
-STATIC_ASSERT(offsetof(CrFuelTankHitObj, velocityX) == 0x24);
 STATIC_ASSERT(offsetof(CrFuelTankObject, animFlags) == 0x06);
 STATIC_ASSERT(offsetof(CrFuelTankObject, velocityX) == 0x24);
 STATIC_ASSERT(offsetof(CrFuelTankObject, alpha) == 0x36);
