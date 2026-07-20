@@ -6,8 +6,6 @@
 
 #define MMP_LIGHTNING_OBJGROUP 0x48
 
-extern ObjectDescriptor gLightningObjDescriptor;
-
 int lightning_getExtraSize(void);
 void lightning_free(u8 *obj, int p2);
 void lightning_render(u8 *obj);

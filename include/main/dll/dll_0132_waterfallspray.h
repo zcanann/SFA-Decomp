@@ -11,8 +11,6 @@
 #define WATERFALLSPRAY_ALT_SFX_A 0x489
 #define WATERFALLSPRAY_ALT_SFX_B 0x48A
 
-extern ObjectDescriptor gWaterFallSprayObjDescriptor;
-
 void WaterFallSpray_free(u8 *obj);
 void WaterFallSpray_init(u8 *obj, u8 *data);
 void WaterFallSpray_render(void);

@@ -7,7 +7,10 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/object_render.h"
+#include "main/dll/dll_0132_waterfallspray.h"
+#include "main/dll/dll_0133_sfxplayer.h"
 #include "main/dll/dll_0140_fogcontrol.h"
+#include "main/dll/dll_0141_lightning.h"
 #include "main/object_descriptor.h"
 #include "main/shader_api.h"
 #include "main/shader_map_api.h"
@@ -55,22 +58,6 @@ typedef union ObjDescriptorTable
 
 #define TEXFRAMEANIMATOR_OBJFLAG_HIDDEN             0x4000
 #define TEXFRAMEANIMATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-extern void WaterFallSpray_free(u8* obj);
-extern int WaterFallSpray_getExtraSize(void);
-extern void WaterFallSpray_init(u8* obj, u8* dataRaw);
-extern void WaterFallSpray_render(void);
-extern void WaterFallSpray_update(int* objParam);
-extern void lightning_free(u8* obj, int p2);
-extern int lightning_getExtraSize(void);
-extern void lightning_init(u8* obj, u8* data);
-extern void lightning_render(u8* obj);
-extern void lightning_update(u8* obj);
-extern void sfxplayerObj_free(u8* obj);
-extern int sfxplayerObj_getExtraSize(void);
-extern void sfxplayerObj_init(u8* obj, u8* dataBytes);
-extern void sfxplayerObj_update(u8* obj);
-
 
 int TexFrameAnimator_getExtraSize(void);
 int TexFrameAnimator_getObjectTypeId(void);

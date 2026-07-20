@@ -10,8 +10,6 @@
 #define SFXPLAYER_MODE_RANDOM_DELAY 2
 #define SFXPLAYER_RUNTIME_ACTIVE_FLAG 0x01
 
-extern ObjectDescriptor gSfxPlayerObjDescriptor;
-
 void sfxplayerObj_init(u8 *obj, u8 *data);
 void sfxplayerObj_free(u8 *obj);
 void sfxplayerObj_update(u8 *obj);
