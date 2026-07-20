@@ -14,7 +14,6 @@
 #include "main/track_bbox_api.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
-#include "main/dll/fruit.h"
 #include "main/mapEvent.h"
 #include "main/model.h"
 #include "main/dll/path_control_interface.h"
@@ -95,7 +94,7 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetB
 
 int dfptargetblock_getExtraSize(void)
 {
-    return 0x6c;
+    return sizeof(DfpTargetBlockState);
 }
 
 int dfptargetblock_getObjectTypeId(void)
@@ -103,24 +102,24 @@ int dfptargetblock_getObjectTypeId(void)
     return 0;
 }
 
-void dfptargetblock_free(void)
+void dfptargetblock_free(DfpTargetBlockObject* obj)
 {
 }
 
-void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dfptargetblock_render(DfpTargetBlockObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    DfpTargetBlockAudioState* state;
+    DfpTargetBlockState* state;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->state;
     if (state->completionSfxReady != 0)
         return;
-    if (state->stateSfxReady == 0 || state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED)
+    if (state->stateSfxReady == 0 || state->mode == DFPTARGETBLOCK_MODE_SETTLED)
         return;
     objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTargetBlockHome* home,
-                                              DfpTargetBlockAudioState* state)
+                                              DfpTargetBlockState* state)
 {
     f32 zero;
 
@@ -129,11 +128,11 @@ static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTarg
     zero = 0.0f;
     obj->velX = zero;
     obj->velZ = zero;
-    state->mode = DFPTARGETBLOCK_AUDIO_MODE_RESETTING;
+    state->mode = DFPTARGETBLOCK_MODE_RESETTING;
     obj->y = home->y - (80.0f);
     Sfx_PlayFromObject((u32)obj, DFPTARGETBLOCK_RESET_SFX);
 }
-static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTargetBlockAudioState* state,
+static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTargetBlockState* state,
                                                f32 threshold)
 {
     f32 dx;
@@ -145,19 +144,19 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTar
     {
         if (sqrtf(dx * dx + dz * dz) < threshold)
         {
-            state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
+            state->mode = DFPTARGETBLOCK_MODE_LOWERING;
         }
     }
     else
     {
-        state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
+        state->mode = DFPTARGETBLOCK_MODE_LOWERING;
     }
 }
 
 void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 {
     int i;
-    DfpTargetBlockAudioState* state;
+    DfpTargetBlockState* state;
     DfpTargetBlockHome* home;
     DfpTargetBlockObject* hitObj;
     DfpTargetBlockPartfxArgs effect;
@@ -181,7 +180,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     }
 
     if ((state->completionSfxReady != 0) || (state->stateSfxReady == 0) ||
-        (state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED) || (state->mode == DFPTARGETBLOCK_AUDIO_MODE_LOWERING))
+        (state->mode == DFPTARGETBLOCK_MODE_SETTLED) || (state->mode == DFPTARGETBLOCK_MODE_LOWERING))
     {
         return;
     }
@@ -305,9 +304,9 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
     u8 bitVal;
     DfpTargetBlockState* state;
     DfpTargetBlockHome* home;
-    float buf[6];
+    f32 buf[6];
 
-    state = (DfpTargetBlockState*)obj->state;
+    state = obj->state;
     home = obj->home;
     if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
     {
@@ -374,7 +373,7 @@ static inline int* ZBomb_GetActiveModel(DfpTargetBlockObject* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
+void dfptargetblock_init(DfpTargetBlockObject* obj, DfpTargetBlockPlacement* placement)
 {
     int j;
     bool found;
@@ -385,9 +384,9 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
     f32 fconv;
     DfpTargetBlockPoint point;
 
-    state = (DfpTargetBlockState*)obj->state;
+    state = obj->state;
     model = (ModelFileHeader*)*ZBomb_GetActiveModel(obj);
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DFPTARGETBLOCK_OBJFLAG_HIDDEN;
+    obj->objectFlags = obj->objectFlags | DFPTARGETBLOCK_OBJFLAG_HIDDEN;
     if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
     {
         gTargetBlockHomePos[0] = obj->x;
@@ -430,8 +429,8 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
         }
         state->mode = DFPTARGETBLOCK_MODE_RAISING;
         obj->y = obj->y - (80.0f);
-        state->completionSfxId = ((DfpTargetBlockPlacement*)placementData)->completionSfxId;
-        state->stateSfxId = ((DfpTargetBlockPlacement*)placementData)->stateSfxId;
+        state->completionSfxId = placement->completionSfxId;
+        state->stateSfxId = placement->stateSfxId;
         bitVal = mainGetBit((int)state->completionSfxId);
         state->completionSfxReady = bitVal;
         bitVal = mainGetBit((int)state->stateSfxId);

@@ -1,10 +1,9 @@
 #ifndef MAIN_DLL_DOOR_H_
 #define MAIN_DLL_DOOR_H_
 
-#include "ghidra_import.h"
 #include "main/objanim_internal.h"
 
-typedef struct DfpTargetBlockAudioState DfpTargetBlockAudioState;
+typedef struct DfpTargetBlockState DfpTargetBlockState;
 
 typedef struct DfpTargetBlockHome {
   u8 pad00[0x08];
@@ -35,10 +34,12 @@ typedef struct DfpTargetBlockObject {
       f32 prevZ;
       u8 pad8C[0xAC - 0x8C];
       s8 mapId;
-      u8 padAD[0xB8 - 0xAD];
+      u8 padAD[0xB0 - 0xAD];
+      u16 objectFlags;
+      u8 padB2[0xB8 - 0xB2];
     };
   };
-  DfpTargetBlockAudioState *state;
+  DfpTargetBlockState *state;
 } DfpTargetBlockObject;
 
 typedef struct DfpTargetBlockCollisionPoints {
@@ -54,13 +55,7 @@ STATIC_ASSERT(offsetof(DfpTargetBlockObject, objectType) == offsetof(ObjAnimComp
 STATIC_ASSERT(offsetof(DfpTargetBlockObject, home) == offsetof(ObjAnimComponent, placementData));
 STATIC_ASSERT(offsetof(DfpTargetBlockObject, prevX) == offsetof(ObjAnimComponent, previousLocalPosX));
 STATIC_ASSERT(offsetof(DfpTargetBlockObject, mapId) == offsetof(ObjAnimComponent, mapEventSlot));
+STATIC_ASSERT(offsetof(DfpTargetBlockObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(DfpTargetBlockObject, state) == 0xB8);
-
-void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
-                                           DfpTargetBlockCollisionPoints *collisionPoints);
-int dfptargetblock_getExtraSize(void);
-int dfptargetblock_getObjectTypeId(void);
-void dfptargetblock_free(void);
-void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 
 #endif /* MAIN_DLL_DOOR_H_ */

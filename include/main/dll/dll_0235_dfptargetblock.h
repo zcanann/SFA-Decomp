@@ -1,7 +1,6 @@
-#ifndef MAIN_DLL_ZBOMB_H_
-#define MAIN_DLL_ZBOMB_H_
+#ifndef MAIN_DLL_DLL_0235_DFPTARGETBLOCK_H_
+#define MAIN_DLL_DLL_0235_DFPTARGETBLOCK_H_
 
-#include "ghidra_import.h"
 #include "main/dll/door.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
@@ -27,7 +26,7 @@ typedef struct DfpTargetBlockPlacement {
 STATIC_ASSERT(offsetof(DfpTargetBlockPlacement, completionSfxId) == 0x1E);
 STATIC_ASSERT(offsetof(DfpTargetBlockPlacement, stateSfxId) == 0x20);
 
-typedef struct DfpTargetBlockState {
+struct DfpTargetBlockState {
   void *pathState;
   DfpTargetBlockPoint floorPoints[8];
   s16 stateSfxId;
@@ -36,7 +35,7 @@ typedef struct DfpTargetBlockState {
   u8 mode;
   u8 stateSfxReady;
   u8 completionSfxReady;
-} DfpTargetBlockState;
+};
 
 typedef enum DfpTargetBlockMode {
   DFPTARGETBLOCK_MODE_RAISING = 0,
@@ -46,10 +45,33 @@ typedef enum DfpTargetBlockMode {
   DFPTARGETBLOCK_MODE_SETTLED = 4,
 } DfpTargetBlockMode;
 
+#define DFPTARGETBLOCK_HOME_OBJECT_TYPE     0x04E0
+#define DFPTARGETBLOCK_HIT_TYPE_PUSH        0x0E
+#define DFPTARGETBLOCK_IMPACT_SFX           0x044D
+#define DFPTARGETBLOCK_LOOP_SFX             0x03BD
+#define DFPTARGETBLOCK_RESET_SFX            0x01D3
+#define DFPTARGETBLOCK_RESET_PARTICLE_ID    0x05F5
+#define DFPTARGETBLOCK_RESET_PARTICLE_MODE  0x200001
+#define DFPTARGETBLOCK_RESET_PARTICLE_COUNT 0x14
+
+STATIC_ASSERT(offsetof(DfpTargetBlockState, floorPoints) == 0x04);
+STATIC_ASSERT(offsetof(DfpTargetBlockState, stateSfxId) == 0x64);
+STATIC_ASSERT(offsetof(DfpTargetBlockState, completionSfxId) == 0x66);
+STATIC_ASSERT(offsetof(DfpTargetBlockState, floorPointCount) == 0x68);
+STATIC_ASSERT(offsetof(DfpTargetBlockState, mode) == 0x69);
+STATIC_ASSERT(sizeof(DfpTargetBlockState) == 0x6C);
+
 void dfptargetblock_update(DfpTargetBlockObject *obj);
-void dfptargetblock_init(DfpTargetBlockObject *obj,int params);
+void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj,
+                                           DfpTargetBlockCollisionPoints* collisionPoints);
+void dfptargetblock_init(DfpTargetBlockObject *obj, DfpTargetBlockPlacement* placement);
+int dfptargetblock_getExtraSize(void);
+int dfptargetblock_getObjectTypeId(void);
+void dfptargetblock_free(DfpTargetBlockObject* obj);
+void dfptargetblock_render(DfpTargetBlockObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void dfptargetblock_hitDetect(DfpTargetBlockObject* obj);
 void dfptargetblock_release(void);
 void dfptargetblock_initialise(void);
 extern ObjectDescriptor10WithPadding gDfptargetblockObjDescriptor;
 
-#endif /* MAIN_DLL_ZBOMB_H_ */
+#endif /* MAIN_DLL_DLL_0235_DFPTARGETBLOCK_H_ */
