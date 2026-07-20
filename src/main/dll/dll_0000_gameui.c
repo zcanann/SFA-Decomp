@@ -1390,7 +1390,7 @@ void pauseMenuSetHoloTransform(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16
     Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
-    for (i = 0; i < 2; i++)
+    for (i = 0; i < 2; i += 2)
     {
         lbl_803DD860[i]->anim.localPosX = gTrickyHudIconPosX;
         lbl_803DD860[i]->anim.localPosY = gTrickyHudIconPosY;
@@ -1402,6 +1402,16 @@ void pauseMenuSetHoloTransform(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16
         lbl_803DD860[i]->anim.rotZ = a;
         lbl_803DD860[i]->anim.rotY = b;
         lbl_803DD860[i]->anim.rotX = c;
+        lbl_803DD860[i + 1]->anim.localPosX = gTrickyHudIconPosX;
+        lbl_803DD860[i + 1]->anim.localPosY = gTrickyHudIconPosY;
+        lbl_803DD860[i + 1]->anim.localPosZ = gTrickyHudIconPosZ;
+        lbl_803DD860[i + 1]->anim.worldPosX = gTrickyHudIconPosX;
+        lbl_803DD860[i + 1]->anim.worldPosY = gTrickyHudIconPosY;
+        lbl_803DD860[i + 1]->anim.worldPosZ = gTrickyHudIconPosZ;
+        lbl_803DD860[i + 1]->anim.rootMotionScale = f4;
+        lbl_803DD860[i + 1]->anim.rotZ = a;
+        lbl_803DD860[i + 1]->anim.rotY = b;
+        lbl_803DD860[i + 1]->anim.rotX = c;
     }
 }
 static inline void gameUiFreeHudAnims(GameObject** anims)
