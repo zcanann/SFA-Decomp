@@ -307,7 +307,6 @@ extern f32 lbl_803DEC30, lbl_803DEC34, lbl_803DEC38;
 extern f32 lbl_803DEC3C, lbl_803DEC40;
 extern const f32 lbl_803DECF0;
 extern const f32 lbl_803DECF4;
-extern const f32 lbl_803DECF8;
 extern const f32 lbl_803DECCC;
 extern const f32 lbl_803DECD0;
 extern const f32 lbl_803DECD4;
@@ -4700,9 +4699,9 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
                 }
                 else
                 {
-                    fx = v[0] * scale * lbl_803DECF8;
-                    fy = v[1] * scale * lbl_803DECF8;
-                    fz = v[2] * scale * lbl_803DECF8;
+                    fx = v[0] * scale / 256.0f;
+                    fy = v[1] * scale / 256.0f;
+                    fz = v[2] * scale / 256.0f;
                 }
                 if (fx > tMaxX)
                     tMaxX = fx;
