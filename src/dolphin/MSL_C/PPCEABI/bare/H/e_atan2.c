@@ -15,9 +15,6 @@ extern float lbl_803E7BC8;
 extern float lbl_803E7BF4;
 extern float lbl_803E7BF8;
 
-void Vec_scale(void* v_in, void* v_out, float s);
-float Vec_lengthSquared(void* v);
-
 #pragma optimization_level 0
 #pragma optimize_for_size on
 float powfBitEstimate(float x, float y) {

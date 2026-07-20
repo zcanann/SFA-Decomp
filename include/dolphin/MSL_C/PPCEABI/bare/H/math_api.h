@@ -16,6 +16,8 @@ float expf(float x);
 float fabsf(float x);
 float powfBitEstimate(float x, float y);
 void Vec_normalize(void* v_in, void* v_out);
+void Vec_scale(void* v_in, void* v_out, float scale);
+float Vec_lengthSquared(void* v);
 float trigReduceQuadrant(u16* quadrant, float x);
 float fn_80291FF4(float x);
 float fn_80292194(float x);
