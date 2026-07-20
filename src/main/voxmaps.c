@@ -18,6 +18,18 @@
 
 #define VOXMAP_SLOT_COUNT           6
 #define VOXMAPS_ROUTE_NODE_CAPACITY 200
+#define VOXMAPS_PATH_POINT_CAPACITY 10
+
+typedef struct VoxRouteWork {
+    RouteNode nodes[VOXMAPS_ROUTE_NODE_CAPACITY];
+    CurveHeapNode queue[VOXMAPS_ROUTE_NODE_CAPACITY];
+    f32 pathPoints[VOXMAPS_PATH_POINT_CAPACITY][3];
+} VoxRouteWork;
+
+STATIC_ASSERT(sizeof(RouteNode) == 0xe);
+STATIC_ASSERT(offsetof(VoxRouteWork, queue) == 0xaf0);
+STATIC_ASSERT(offsetof(VoxRouteWork, pathPoints) == 0xe10);
+STATIC_ASSERT(sizeof(VoxRouteWork) == 0xe88);
 
 int* gVoxMapsMapList;
 void* gVoxMapsScratchBuffer;
@@ -902,9 +914,9 @@ void voxmaps_freeRouteWork(RouteState* state)
 
 void voxmaps_allocRouteWork(RouteState* state)
 {
-    state->nodes = mmAlloc(0xe88, 0x10, 0);
-    state->queue = (CurveHeapNode*)((u8*)state->nodes + 0xaf0);
-    state->pathPoints = (f32*)((u8*)state->queue + 0x320);
+    state->nodes = mmAlloc(sizeof(VoxRouteWork), 0x10, 0);
+    state->queue = ((VoxRouteWork*)state->nodes)->queue;
+    state->pathPoints = (f32*)((u8*)state->queue + sizeof(((VoxRouteWork*)0)->queue));
 }
 
 int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, u8 skipFirst)

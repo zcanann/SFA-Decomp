@@ -222,7 +222,7 @@ enum ObjShadowType {
  * table loading; the rest of the object/model layout is still being mapped.
  */
 typedef struct ObjDef {
-  u8 pad00[4];
+  f32 shadowScaleBase;
   f32 rootMotionScaleBase;
   s32 *modelFileIds; /* 0x08: table of per-model file ids (negated -> ObjModel_Load), modelCount entries */
   ObjTextureSlotDef *textureSlotDefs;
@@ -524,6 +524,7 @@ STATIC_ASSERT(sizeof(ObjTextureSlotDef) == 0x02);
 STATIC_ASSERT(sizeof(ObjTextureRuntimeSlot) == 0x10);
 
 STATIC_ASSERT(sizeof(ObjDef) == 0x94);
+STATIC_ASSERT(offsetof(ObjDef, shadowScaleBase) == 0x00);
 STATIC_ASSERT(offsetof(ObjDef, rootMotionScaleBase) == 0x04);
 STATIC_ASSERT(offsetof(ObjDef, modelFileIds) == 0x08);
 STATIC_ASSERT(offsetof(ObjDef, textureSlotDefs) == 0x0C);

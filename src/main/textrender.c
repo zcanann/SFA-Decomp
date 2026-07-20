@@ -175,6 +175,12 @@ typedef struct
     u8 active;
     u8 sourceId;
 } GameTextLoadSlot;
+STATIC_ASSERT(sizeof(GameTextLoadSlot) == 0x4c);
+STATIC_ASSERT(offsetof(GameTextLoadSlot, loadHandle) == 0x3c);
+STATIC_ASSERT(offsetof(GameTextLoadSlot, loadedSize) == 0x40);
+STATIC_ASSERT(offsetof(GameTextLoadSlot, state) == 0x44);
+STATIC_ASSERT(offsetof(GameTextLoadSlot, dirId) == 0x48);
+STATIC_ASSERT(offsetof(GameTextLoadSlot, sourceId) == 0x4b);
 
 typedef struct
 {
@@ -348,7 +354,7 @@ extern u32 lbl_80339C40[];
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
 void translateToDinoLanguage(u8* str);
 void gameTextSetWindow(u8* textBox);
-void setLanguageFn_8001ad64(void* slot);
+void setLanguageFn_8001ad64(GameTextLoadSlot* slot);
 void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box);
 int GameText_CountPrintableChars(u8* str);
 int GameText_FindControlCodeArgs(u8* str, u32 target, int* out);
@@ -2359,9 +2365,8 @@ void gameTextLoadGraphicsFn_8001a918(void)
     charset->mode = 2;
 }
 
-void setLanguageFn_8001ad64(void* reqp)
+void setLanguageFn_8001ad64(GameTextLoadSlot* req)
 {
-    u8* req = reqp;
     int** slot;
     u16* p;
     u32 bpp;
@@ -2387,27 +2392,27 @@ void setLanguageFn_8001ad64(void* reqp)
     int* strs2;
     GameTextCharset* cs;
 
-    DCStoreRange(*(void**)(req + 0x3c), *(u32*)(req + 0x40));
-    if (req[0x4b] == 1)
+    DCStoreRange(req->loadHandle, req->loadedSize);
+    if (req->sourceId == 1)
     {
         cs = (GameTextCharset*)&gGameTextCharsets[1];
     }
-    else if (req[0x4b] == 3)
+    else if (req->sourceId == 3)
     {
         cs = (GameTextCharset*)&gGameTextCharsets[3];
     }
     else
     {
         cs = (GameTextCharset*)&gGameTextCharsets[0];
-        curGameTextDir = (void*)req[0x48];
-        curLanguage = req[0x49];
+        curGameTextDir = (void*)req->dirId;
+        curLanguage = req->languageId;
     }
-    data = *(int**)(req + 0x3c);
+    data = req->loadHandle;
     cs->headerCount = data[0];
     if (cs->headerCount == 0)
     {
         cs->status = 3;
-        *(int*)(req + 0x44) = 6;
+        req->state = 6;
         return;
     }
     cs->strings = (u8*)(data + 1);
@@ -2494,13 +2499,13 @@ void setLanguageFn_8001ad64(void* reqp)
         }
         slot = slot + 1;
     }
-    size = (u32)((u8*)texStart - *(u8**)(req + 0x3c));
+    size = (u32)((u8*)texStart - (u8*)req->loadHandle);
     newBuf = mmAlloc(size, 0x1a, 0);
     n = size >> 1;
     {
         u16* d = newBuf;
         u16* s;
-        old = *(u16**)(req + 0x3c);
+        old = req->loadHandle;
         s = old;
         delta = (int)newBuf - (int)old;
         while (n--)
@@ -2521,66 +2526,64 @@ void setLanguageFn_8001ad64(void* reqp)
         strs2[i] += delta;
     }
     mmSetFreeDelay(0);
-    mm_free(*(void**)(req + 0x3c));
-    *(int*)(req + 0x3c) = 0;
+    mm_free(req->loadHandle);
+    req->loadHandle = NULL;
     mmSetFreeDelay(2);
-    *(u16**)(req + 0x3c) = newBuf;
+    req->loadHandle = newBuf;
     cs->status = 2;
-    *(int*)(req + 0x44) = 3;
+    req->state = 3;
 }
 
-extern u8 curGameTexts[0x260];
+extern GameTextLoadSlot curGameTexts[GAMETEXT_LOAD_SLOT_COUNT];
 
 void dvdCancelCallback_8001b39c(s32 result, DVDCommandBlock* block)
 {
     int i;
-    u8* match = (u8*)block;
-    u8* p = curGameTexts;
+    GameTextLoadSlot* slot = curGameTexts;
     (void)result;
     for (i = 8; i != 0; i--)
     {
-        if (match == p)
+        if (block == &slot->fileInfo.cb)
         {
-            *(int*)(p + 0x44) = 5;
+            slot->state = 5;
             return;
         }
-        p += 0x4c;
+        slot++;
     }
 }
 
 void gameTextOpenCallback_8001b3d0(s32 status, DVDFileInfo* fileInfo)
 {
-    u8* match = (u8*)fileInfo;
     int i;
-    u8* p = curGameTexts;
+    GameTextLoadSlot* slot = curGameTexts;
     if (status != -1 && status != -3)
     {
         for (i = 8; i != 0; i--)
         {
-            if (match == p)
+            if (fileInfo == &slot->fileInfo)
             {
-                *(int*)(p + 0x44) = 2;
+                slot->state = 2;
                 return;
             }
-            p += 0x4c;
+            slot++;
         }
     }
     else
     {
-        p = curGameTexts;
+        slot = curGameTexts;
         for (i = 8; i != 0; i--)
         {
-            if (match == p)
+            if (fileInfo == &slot->fileInfo)
             {
-                *(int*)(p + 0x44) = 5;
+                slot->state = 5;
                 return;
             }
-            p += 0x4c;
+            slot++;
         }
     }
 }
 
-u8 curGameTexts[0x260];
+GameTextLoadSlot curGameTexts[GAMETEXT_LOAD_SLOT_COUNT];
 void gameTextSetDrawFunc(void* fn)
 {
     gameTextDrawFunc = fn;

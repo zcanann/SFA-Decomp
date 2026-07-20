@@ -17,18 +17,6 @@
 #include "main/object_descriptor.h"
 #include "main/dll/dll_0127_dll127.h"
 
-typedef struct Dll127Placement
-{
-    ObjPlacement head;
-    u8 bankIndex; /* 0x18 */
-    u8 swayMag;   /* 0x19 */
-    u8 yawBits;   /* 0x1a */
-} Dll127Placement;
-
-STATIC_ASSERT(offsetof(Dll127Placement, bankIndex) == 0x18);
-STATIC_ASSERT(offsetof(Dll127Placement, swayMag) == 0x19);
-STATIC_ASSERT(offsetof(Dll127Placement, yawBits) == 0x1a);
-
 int dll_127_getExtraSize_ret_0(void)
 {
     return 0x0;
@@ -42,57 +30,55 @@ void dll_127_free_nop(void)
 {
 }
 
-void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_127_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
     if (isVisible != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_127_hitDetect_nop(void)
 {
 }
 
-void dll_127_update(int obj)
+void dll_127_update(GameObject* obj)
 {
     int pairResponseApplied;
     ObjHitsPriorityState* hitState;
 
-    if (((GameObject*)obj)->anim.hitReactState == 0)
+    if (obj->anim.hitReactState == 0)
     {
         return;
     }
-    if (*(short*)(obj + 0xf8) > 0)
+    if (*(s16*)&obj->userData2 > 0)
     {
-        *(short*)(obj + 0xf8) -= framesThisStep;
+        *(s16*)&obj->userData2 -= framesThisStep;
     }
-    hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     pairResponseApplied = hitState->flags & OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
     if (pairResponseApplied == 0)
     {
         return;
     }
-    if (*(short*)(obj + 0xf8) > 0)
+    if (*(s16*)&obj->userData2 > 0)
     {
         return;
     }
-    *(short*)(obj + 0xf8) = 100;
+    *(s16*)&obj->userData2 = 100;
 }
 
-void dll_127_init(short* obj, int def)
+void dll_127_init(GameObject* obj, Dll127Setup* setup)
 {
-    Dll127Placement* placement;
     ObjAnimComponent* objAnim;
-    float scale;
+    f32 scale;
     u32 yawBits;
-    u8 swayMag;
+    u8 swayMagnitude;
 
-    placement = (Dll127Placement*)def;
-    objAnim = (ObjAnimComponent*)obj;
+    objAnim = &obj->anim;
     objAnim->flags |= 2;
-    swayMag = placement->swayMag;
-    scale = (f32)(int)swayMag;
-    if ((f32)(int)swayMag < 10.0f)
+    swayMagnitude = setup->swayMagnitude;
+    scale = (f32)(int)swayMagnitude;
+    if ((f32)(int)swayMagnitude < 10.0f)
     {
         scale = 10.0f;
     }
@@ -100,17 +86,17 @@ void dll_127_init(short* obj, int def)
     objAnim->rootMotionScale = objAnim->modelInstance->rootMotionScaleBase * scale;
     if (objAnim->modelState != NULL)
     {
-        *(float*)objAnim->modelState = *(float*)objAnim->modelInstance * scale;
+        objAnim->modelState->shadowScale = objAnim->modelInstance->shadowScaleBase * scale;
     }
-    objAnim->bankIndex = placement->bankIndex;
-    yawBits = placement->yawBits & 0x3f;
-    objAnim->rotX = (short)(yawBits << 10);
+    objAnim->bankIndex = setup->bankIndex;
+    yawBits = setup->yawBits & 0x3f;
+    objAnim->rotX = (s16)(yawBits << 10);
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
-    ((GameObject*)obj)->userData1 = 0;
-    ((GameObject*)obj)->userData2 = 0;
+    obj->userData1 = 0;
+    obj->userData2 = 0;
 }
 
 void dll_127_release_nop(void)
