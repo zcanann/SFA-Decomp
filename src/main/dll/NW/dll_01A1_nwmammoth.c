@@ -371,7 +371,7 @@ void NW_mammoth_updateGatekeeper(int* obj, u8* st, short* objDef)
             6.25f)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_mammoth_annoyed);
-            fn_80163980(state->trackedObject);
+            tumbleweedbush_activatePiece(state->trackedObject);
             state->stateIndex = 0xf;
         }
         break;

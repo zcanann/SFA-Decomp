@@ -388,7 +388,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                     }
                 }
             }
-            fn_80163990(obj, (BackpackState*)aux);
+            tumbleweedbush_updateDetachedPiece(obj, (BackpackState*)aux);
             (*gPathControlInterface)->advance((void*)obj, (void*)aux, timeDelta);
         }
         else if (state == 4)
