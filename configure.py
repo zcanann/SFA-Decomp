@@ -407,6 +407,12 @@ cflags_dll_noopt_noloopinv_nolifetimes = [
     "-opt", "nopeephole,noschedule,noloopinvariants,nolifetimes",
 ]
 
+# ...plus dead-code elimination off (opt_dead_code off).
+cflags_dll_noopt_noloopinv_nolifetimes_nodead = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,noloopinvariants,nolifetimes,nodead",
+]
+
 cflags_dll_noopt_noloopinv_nolifetimes_zerodata = [
     *cflags_dll_noopt_noloopinv_nolifetimes,
     '-pragma "explicit_zero_data on"',
@@ -1618,7 +1624,7 @@ config.libs = [
             ),
             Object(MatchingFor("GSAE01"), "main/dll/SH/dll_01A6_shtricky.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_801d0828.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_01A7_ediblemushroom.c", cflags=cflags_dll_noopt_noloopinv_nolifetimes),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_01A7_ediblemushroom.c", cflags=cflags_dll_noopt_noloopinv_nolifetimes_nodead),
             Object(Matching, "main/dll/dll_1dc.c"),
             Object(MatchingFor("GSAE01"), "main/dll/DIM/dim_boss.c"),
             Object(MatchingFor("GSAE01"), "main/dll/SH/dll_01A8_shkillermushroom.c", cflags=cflags_dll_noopt_nocse_noinline),
