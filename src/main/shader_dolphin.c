@@ -121,14 +121,10 @@ extern int lbl_803DCD80;
 extern u8 lbl_803DCD69;
 extern f32 lbl_803DEADC;
 extern int lbl_803DCD78;
-extern f32 lbl_803DEAE4;
 extern u8 lbl_803DCD6B;
 extern f32 lbl_803DEAFC;
 extern f32 lbl_803DEB00;
 extern int lbl_803DCD84;
-extern f32 lbl_803DEAE8;
-extern f32 lbl_803DEAEC;
-extern f32 lbl_803DEAF0;
 extern f32 lbl_803DEAC8;
 extern int lbl_803DCD88;
 extern int lbl_803DCD8C;
@@ -549,13 +545,13 @@ void fn_8004CE0C(void* viewMtx)
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     lbl_803DCD30 = 1;
-    mtx40[0][0] = lbl_803DEAE4;
+    mtx40[0][0] = 0.1f;
     mtx40[0][1] = 0.0f;
     mtx40[0][2] = 0.0f;
     mtx40[0][3] = 0.0f;
     mtx40[1][0] = 0.0f;
     mtx40[1][1] = 0.0f;
-    mtx40[1][2] = lbl_803DEAE4;
+    mtx40[1][2] = 0.1f;
     mtx40[1][3] = 0.0f;
     GXLoadTexMtxImm(mtx40, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
@@ -573,9 +569,9 @@ void fn_8004CE0C(void* viewMtx)
         }
     }
     newshadows_getReflectionScrollOffsets(&sx, &sy);
-    PSMTXTrans(mtx70, lbl_803DEAE0 * sx, lbl_803DEAE0 * sy, 0.0f);
-    mtx70[0][0] = lbl_803DEAE8;
-    mtx70[1][1] = lbl_803DEAE8;
+    PSMTXTrans(mtx70, 0.25f * sx, 0.25f * sy, 0.0f);
+    mtx70[0][0] = 0.0125f;
+    mtx70[1][1] = 0.0125f;
     GXLoadTexMtxImm(mtx70, GX_TEXMTX1, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD2, GX_TEXMAP2);
@@ -603,8 +599,8 @@ void fn_8004CE0C(void* viewMtx)
     }
     mtx40[0][0] = 0.0f;
     mtx40[0][1] = 0.0f;
-    mtx40[0][2] = lbl_803DEAEC;
-    mtx40[0][3] = lbl_803DEAF0;
+    mtx40[0][2] = 0.033333335f;
+    mtx40[0][3] = 8.333333f;
     mtx40[1][0] = 0.0f;
     mtx40[1][1] = 0.0f;
     mtx40[1][2] = 0.0f;
