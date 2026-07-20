@@ -5395,9 +5395,8 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
     }
     if (doXform != 0)
     {
-        ((void (*)(f32, f32, f32, void*, f32*, void*, int))Obj_TransformLocalPointToWorld)(
-            inner->contactPointX, inner->contactPointY, inner->contactPointZ, (void*)(obj + 0xc), &yOut,
-            (void*)(obj + 0x14), sub);
+        Obj_TransformLocalPointToWorld(inner->contactPointX, inner->contactPointY, inner->contactPointZ,
+                                       (f32*)(obj + 0xc), &yOut, (f32*)(obj + 0x14), sub);
         {
             f32 k = lbl_803E7FB8;
             self->anim.localPosX = k * inner->surfaceNormalX + self->anim.localPosX;
@@ -11014,9 +11013,8 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                     z2 = *(f32*)(verts + j8);
                     if (parent != NULL)
                     {
-                        ((void (*)(f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(&x1, &y1, &z1, parent);
-                        ((void (*)(f32, f32, f32, f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(
-                            x2, y2, z2, px2, py2, pz2, parent);
+                        Obj_TransformLocalPointToWorld(x1, y1, z1, &x1, &y1, &z1, (int)parent);
+                        Obj_TransformLocalPointToWorld(x2, y2, z2, px2, py2, pz2, (int)parent);
                     }
                     {
                         f32 dz = z2 - z1;
@@ -11067,8 +11065,8 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         probe.x = out[0x14];
         probe.y = out[1];
         probe.z = out[0x16];
-        ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(&probe.x, &probe.y, &probe.z,
-                                                                          *(int*)&obj->anim.parent);
+        Obj_TransformLocalPointToWorld(probe.x, probe.y, probe.z, &probe.x, &probe.y, &probe.z,
+                                       *(int*)&obj->anim.parent);
         {
             int cnt = hitDetectFn_80065e50(obj, probe.x, probe.y, probe.z, &list, 0, 0x201);
             if (cnt != 0)
@@ -11107,8 +11105,8 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         probe.x = out[0x11];
         probe.y = out[1];
         probe.z = out[0x13];
-        ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(&probe.x, &probe.y, &probe.z,
-                                                                          *(int*)&obj->anim.parent);
+        Obj_TransformLocalPointToWorld(probe.x, probe.y, probe.z, &probe.x, &probe.y, &probe.z,
+                                       *(int*)&obj->anim.parent);
         if (((int (*)(int, f32, f32, f32, f32*, int))hitDetectFn_800658a4)((int)obj, probe.x, probe.y, probe.z, out + 0x12,
                                                                            0x205) == 0)
         {
@@ -11124,14 +11122,12 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         *(u8*)((char*)out + 0x60) = *(u8*)((char*)cam + 0x53);
         if (obj->anim.parent != NULL)
         {
-            ((void (*)(f32, f32, f32, f32*, f32*, f32*))Obj_TransformLocalPointToWorld)(
-                out[0xb], out[0xc], out[0xd], out + 0xb, out + 0xc, out + 0xd);
-            ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
-                out[0x11], out[0x12], out[0x13], out + 0x11, out + 0x12, out + 0x13,
-                *(int*)&obj->anim.parent);
-            ((void (*)(f32, f32, f32, f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(
-                out[0x14], out[0x15], out[0x16], out + 0x14, out + 0x15, out + 0x16,
-                *(int*)&obj->anim.parent);
+            Obj_TransformLocalPointToWorld(out[0xb], out[0xc], out[0xd], out + 0xb, out + 0xc, out + 0xd,
+                                           *(int*)&obj->anim.parent);
+            Obj_TransformLocalPointToWorld(out[0x11], out[0x12], out[0x13], out + 0x11, out + 0x12,
+                                           out + 0x13, *(int*)&obj->anim.parent);
+            Obj_TransformLocalPointToWorld(out[0x14], out[0x15], out[0x16], out + 0x14, out + 0x15,
+                                           out + 0x16, *(int*)&obj->anim.parent);
             ((PlayerState*)inner)->leapTargetY =
                 ((PlayerState*)inner)->leapTargetY + *(f32*)(*(int*)&obj->anim.parent + 0x10);
             ((PlayerState*)inner)->leapBaseY =
@@ -11233,10 +11229,8 @@ int fn_802A8EE4(int a, int b, void* c, int d, f32* e, f32 distance)
                 bz = *(f32*)(tbl2 + k);
                 if (hit != NULL)
                 {
-                    ((void (*)(f32, f32, f32, f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(ax, ay, az, &ax,
-                                                                                                       &ay, &az, hit);
-                    ((void (*)(f32, f32, f32, f32*, f32*, f32*, void*))Obj_TransformLocalPointToWorld)(bx, by, bz, pbx,
-                                                                                                       pby, pbz, hit);
+                    Obj_TransformLocalPointToWorld(ax, ay, az, &ax, &ay, &az, (int)hit);
+                    Obj_TransformLocalPointToWorld(bx, by, bz, pbx, pby, pbz, (int)hit);
                 }
                 {
                     f32 dz = bz - az;
