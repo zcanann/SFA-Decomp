@@ -406,6 +406,7 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
     int move = -1;
     int count;
     int* player;
+    f32 dy;
     if ((s8)stateArg->baddie.moveJustStartedA != 0)
     {
         state->flagsC49.b1 = 1;
@@ -484,25 +485,27 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
         ObjAnim_SetCurrentMove(obj, move, 0.0f, 0);
     }
     player = (int*)Obj_GetPlayerObject();
-    if (player != 0)
+    if (player != 0 &&
+        (((dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) >= 0.0f
+              ? dy
+              : -dy) < 30.0f ||
+         (dy >= 0.0f ? dy : -dy) > 300.0f))
     {
-        f32 dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-        if ((dy >= 0.0f ? dy : -dy) < 30.0f || (dy >= 0.0f ? dy : -dy) > 300.0f)
+        state->flags |= 1;
+        if ((int)randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
         {
-            state->flags |= 1;
-            if ((int)randomGetRange(0, 0x64) == 0 && ((GameObject*)obj)->anim.currentMove != 9)
+            f32 deltaY = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+            f32 ac = deltaY >= 0.0f ? deltaY : -deltaY;
+            if (ac < 30.0f)
             {
-                f32 deltaY = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-                f32 ac = deltaY >= 0.0f ? deltaY : -deltaY;
-                if (ac < 30.0f)
-                {
-                    (*gObjectTriggerInterface)->runSequence(9, (void*)obj, -1);
-                }
+                (*gObjectTriggerInterface)->runSequence(9, (void*)obj, -1);
             }
-            return 0;
         }
     }
-    state->flags &= ~1;
+    else
+    {
+        state->flags &= ~1;
+    }
     return 0;
 }
 int gHighTopIdleSequenceIds[3] = {0x4, 0x5, 0x6};
