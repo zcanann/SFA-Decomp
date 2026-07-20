@@ -26,6 +26,7 @@ SynthVoiceListNode voiceFreeListSlots[64];
  */
 u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 {
+    u32 mustSteal;
     s32 i;
     s32 num;
     s32 voice;
@@ -43,18 +44,17 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             type_alloc = (voiceFxRunning >= SYNTH_CONFIGURATION->fxVoiceCount &&
                           SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->fxVoiceCount);
 
-            if (SYNTH_CONFIGURATION->fxVoiceCount <= maxVoices)
-                goto steal;
+            mustSteal = SYNTH_CONFIGURATION->fxVoiceCount <= maxVoices;
         }
         else
         {
             type_alloc = (voiceMusicRunning >= SYNTH_CONFIGURATION->musicVoiceCount &&
                           SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->musicVoiceCount);
 
-            if (SYNTH_CONFIGURATION->musicVoiceCount <= maxVoices)
-                goto steal;
+            mustSteal = SYNTH_CONFIGURATION->musicVoiceCount <= maxVoices;
         }
 
+        if (!mustSteal)
         {
             num = 0;
             voice = -1;
@@ -88,31 +88,33 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                 prioNode = VB_PRIO_SORT_NEXT(vb, pn1);
             }
 
-            if (num >= maxVoices)
-                goto have_voice;
-
-            while (prioNode != 0xffff && num < maxVoices)
+            if (num < maxVoices)
             {
-                u32 pn = prioNode;
-                i = VB_PRIO_HEAD(vb, pn);
-                while (i != 0xff)
+                while (prioNode != 0xffff && num < maxVoices)
                 {
-                    if (allocId == synthVoice[i].baseSample)
+                    u32 pn = prioNode;
+                    i = VB_PRIO_HEAD(vb, pn);
+                    while (i != 0xff)
                     {
-                        num++;
+                        if (allocId == synthVoice[i].baseSample)
+                        {
+                            num++;
+                        }
+
+                        i = VB_PRIO_LINK_NEXT(vb, i);
                     }
 
-                    i = VB_PRIO_LINK_NEXT(vb, i);
+                    prioNode = VB_PRIO_SORT_NEXT(vb, pn);
                 }
 
-                prioNode = VB_PRIO_SORT_NEXT(vb, pn);
+                if (num < maxVoices)
+                {
+                    mustSteal = 1;
+                }
             }
-
-            if (num >= maxVoices)
-                goto have_voice;
         }
 
-    steal:
+        if (mustSteal)
         {
             voice = -1;
             if (voiceFreeListRoot != 0xff && type_alloc == 0)
@@ -160,14 +162,13 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 
             if (AV_PRIO(voice) > priority)
             {
-                goto ret_neg1;
+                return -1;
             }
         }
 
-    have_voice:
         if (voice == -1)
         {
-            goto ret_neg1;
+            return -1;
         }
 
         fl = (SynthVoiceListNode*)((u8*)vb + voice * 4);
@@ -217,7 +218,6 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
         return voice;
     }
 
-ret_neg1:
     return -1;
 }
 

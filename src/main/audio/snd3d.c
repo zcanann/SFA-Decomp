@@ -47,6 +47,7 @@ void s3dHandle(void)
     Snd3DEmitter* next;
     SndSpatialEntry* entry;
     u32 flags;
+    u32 started;
     f32 distance;
     f32 azimuth;
     f32 pitch;
@@ -115,6 +116,7 @@ void s3dHandle(void)
                 else
                 {
                     entry = emitter->entry;
+                    started = 0;
                     if ((entry == (SndSpatialEntry*)0x0) || (entry->assignedVoice != 0xff))
                     {
                         if ((emitter->handle =
@@ -122,15 +124,18 @@ void s3dHandle(void)
                                               entry != (SndSpatialEntry*)0x0 ? entry->assignedVoice : emitter->studio,
                                               (flags & S3D_EMITTER_FLAG_USE_AUX_STUDIO) != 0)) != S3D_INVALID_FX_HANDLE)
                         {
-                            goto update_voice;
+                            started = 1;
                         }
                     }
-                    if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) != 0)
+                    if (started == 0)
                     {
-                        continue;
+                        if ((emitter->flags & S3D_EMITTER_FLAG_RESTART_ON_STOP) != 0)
+                        {
+                            continue;
+                        }
+                        emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
+                        emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
                     }
-                    emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
-                    emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
                 }
             }
             else
@@ -148,7 +153,6 @@ void s3dHandle(void)
                 }
             }
 
-        update_voice:
             if (emitter->handle != S3D_INVALID_FX_HANDLE)
             {
                 if ((emitter->flags & S3D_EMITTER_FLAG_POSITIONAL) != 0)

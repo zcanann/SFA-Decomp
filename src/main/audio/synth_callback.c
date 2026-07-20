@@ -120,8 +120,8 @@ s32 synthUpdateCallbacks(void)
     {
         if ((callback = gSynthCurrentVoice->callbackLists[listIndex]) != 0)
         {
-            goto checkThreshold;
-            while (1)
+            while (callback->triggerValue <=
+                   (s32)gSynthCurrentVoice->section[callback->controllerIndex].time[listIndex].high)
             {
                 synthSendKeyOff(callback->callbackId);
                 next = callback->next;
@@ -139,12 +139,6 @@ s32 synthUpdateCallbacks(void)
                 }
                 gSynthCurrentVoice->callbackLists[SYNTH_CALLBACK_COMPLETED_LIST_INDEX] = callback;
                 if ((callback = gSynthCurrentVoice->callbackLists[listIndex]) == 0)
-                {
-                    break;
-                }
-            checkThreshold:
-                if (callback->triggerValue >
-                    (s32)gSynthCurrentVoice->section[callback->controllerIndex].time[listIndex].high)
                 {
                     break;
                 }

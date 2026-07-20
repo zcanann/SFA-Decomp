@@ -473,6 +473,7 @@ extern u64 synthRealTime;
 u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot, u8 midiKey)
 {
     u32 sign;
+    int isSigned;
     u32 i;
     u32 value;
     u8 ctrl;
@@ -484,31 +485,39 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot
         if (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG)
         {
             tmp = (statePtr != NULL ? varGet(statePtr, 0, slotPtr->entries[i].controller) : 0);
-            goto block_18;
+            isSigned = 1;
         }
-        ctrl = slotPtr->entries[i].controller;
-        if (ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_MODULATION || ctrl == MCMD_CTRL_PANNING ||
-            ctrl == MCMD_CTRL_EX_A0 || ctrl == MCMD_CTRL_EX_A1 || ctrl == MCMD_CTRL_SUR_PANNING)
+        else
         {
-            switch (ctrl)
+            ctrl = slotPtr->entries[i].controller;
+            isSigned = (ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_MODULATION ||
+                        ctrl == MCMD_CTRL_PANNING || ctrl == MCMD_CTRL_EX_A0 ||
+                        ctrl == MCMD_CTRL_EX_A1 || ctrl == MCMD_CTRL_SUR_PANNING);
+            if (isSigned)
             {
-            case MCMD_CTRL_EX_A0:
-            case MCMD_CTRL_EX_A1:
-                if (statePtr != NULL)
+                switch (ctrl)
                 {
-                    tmp = statePtr->exCtrls[ctrl - MCMD_CTRL_EX_A0].value << 1;
-                    statePtr->exCtrlDirty[ctrl - MCMD_CTRL_EX_A0] = 1;
+                case MCMD_CTRL_EX_A0:
+                case MCMD_CTRL_EX_A1:
+                    if (statePtr != NULL)
+                    {
+                        tmp = statePtr->exCtrls[ctrl - MCMD_CTRL_EX_A0].value << 1;
+                        statePtr->exCtrlDirty[ctrl - MCMD_CTRL_EX_A0] = 1;
+                    }
+                    else
+                    {
+                        tmp = 0;
+                    }
+                    break;
+                default:
+                    tmp = (inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff) - 0x2000;
+                    break;
                 }
-                else
-                {
-                    tmp = 0;
-                }
-                break;
-            default:
-                tmp = (inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff) - 0x2000;
-                break;
             }
-        block_18:
+        }
+
+        if (isSigned)
+        {
             tmp = (tmp * (slotPtr->entries[i].scale >> 1)) >> 15;
             if (tmp < -0x2000)
             {

@@ -145,6 +145,15 @@ void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* 
 /*
  * Configure the portamento controller ramp trigger for the current voice.
  */
+static inline void mcmdEnablePortamento(McmdVoiceState* state)
+{
+    if (!(MAC_CFLAGS(state) & MAC_FLAG64(0, 0x400)))
+    {
+        fn_8026F5B8(state);
+    }
+    state->outputFlags |= 0x400;
+}
+
 void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
 {
     u32 time;
@@ -176,18 +185,13 @@ void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
         {
             inpSetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent, 0x7f);
         }
-    enable_portamento:
-        if (!(MAC_CFLAGS(state) & MAC_FLAG64(0, 0x400)))
-        {
-            fn_8026F5B8(state);
-        }
-        state->outputFlags |= 0x400;
+        mcmdEnablePortamento(state);
         break;
     case 2:
         if (state->midiSlot != 0xff &&
             (u16)inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent) > 0x1f80)
         {
-            goto enable_portamento;
+            mcmdEnablePortamento(state);
         }
         break;
     }
