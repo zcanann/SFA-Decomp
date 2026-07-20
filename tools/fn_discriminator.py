@@ -136,8 +136,22 @@ def ops_equal(a: str, b: str) -> bool:
     return ("<EXTCALL>" in a and "<REL:" in b) or ("<EXTCALL>" in b and "<REL:" in a)
 
 
-def classify(tgt, cur) -> tuple[str, int, int]:
-    """-> (class, mnemonic_delta, operand_delta)"""
+UNALIGN_RATIO = 0.5
+
+
+def classify(tgt, cur) -> tuple[str, int, int, int, float]:
+    """-> (class, mnemonic_delta, operand_delta, operand_delta_after_canon, align)
+
+    `align` is matched_mnemonics / max(len(target), len(ours)).  A low ratio
+    means the two bodies barely correspond at all -- that is a LARGE structural
+    gap and the highest-value signal this tool can emit, so it gets its own
+    class (UNALIGN) instead of being pooled with a two-instruction STRUCT miss.
+
+    `odelta_canon` is the operand delta that SURVIVES register canonicalization.
+    It is computed for every class, not just for mdelta==0 functions, so a
+    STRUCT row whose residual is pure register permutation is visible as
+    oΔ>0 with oΔc==0 rather than being invisible behind the mnemonic gap.
+    """
     tm, to = streams(tgt)
     cm, co = streams(cur)
 
@@ -145,6 +159,7 @@ def classify(tgt, cur) -> tuple[str, int, int]:
     blocks = sm.get_matching_blocks()
     matched = sum(b.size for b in blocks)
     mdelta = (len(tm) - matched) + (len(cm) - matched)
+    align = matched / max(len(tm), len(cm), 1)
 
     # operands compared ONLY inside equal-mnemonic runs
     to_eq, co_eq = [], []
@@ -153,15 +168,17 @@ def classify(tgt, cur) -> tuple[str, int, int]:
             to_eq.append(to[b.a + k])
             co_eq.append(co[b.b + k])
     odelta = sum(1 for a, b in zip(to_eq, co_eq) if not ops_equal(a, b))
+    ct, cc = canon_regs(to_eq), canon_regs(co_eq)
+    ocanon = sum(1 for a, b in zip(ct, cc) if not ops_equal(a, b))
 
     if mdelta:
-        return "STRUCT", mdelta, odelta
+        cls = "UNALIGN" if align < UNALIGN_RATIO else "STRUCT"
+        return cls, mdelta, odelta, ocanon, align
     if odelta == 0:
-        return "NOISE", 0, 0
-    ct, cc = canon_regs(to_eq), canon_regs(co_eq)
-    if all(ops_equal(a, b) for a, b in zip(ct, cc)):
-        return "PERM", 0, odelta
-    return "OPS", 0, odelta
+        return "NOISE", 0, 0, 0, align
+    if ocanon == 0:
+        return "PERM", 0, odelta, 0, align
+    return "OPS", 0, odelta, ocanon, align
 
 
 def poolswap(tgt, cur):
@@ -232,6 +249,119 @@ def show(tgt, cur) -> None:
                 print("  + %-4d %-9s %s" % (k, cm[k], co[k]))
 
 
+def _insns(spec):
+    """[(mnemonic, operands), ...] -> the tuple form parse_functions emits."""
+    return [(0x100 + 4 * i, m, o, None) for i, (m, o) in enumerate(spec)]
+
+
+def selftest() -> None:
+    """Fault-inject every code path and assert it fires.
+
+    A screen that has never been seen to FAIL has not been shown to work.
+    Each case below BREAKS one thing on purpose (misalign the streams, rename
+    a register, perturb an immediate, delete an object, unpair a symbol) and
+    asserts the tool reports the corresponding class or drop reason.
+    """
+    ok = True
+
+    def expect(label, got, want):
+        nonlocal ok
+        good = got == want
+        ok = ok and good
+        print("  [%s] %-42s got %-8s want %s"
+              % ("PASS" if good else "FAIL", label, got, want))
+
+    base = [("stw", "r31,8(r1)"), ("lwz", "r3,4(r4)"), ("addi", "r3,r3,1"),
+            ("mulli", "r5,r3,12"), ("stw", "r3,0(r4)"), ("blr", "")]
+
+    # NOISE: nothing broken.
+    expect("identical streams -> NOISE",
+           classify(_insns(base), _insns(base))[0], "NOISE")
+
+    # PERM: break register ALLOCATION only, consistently.
+    perm = [(m, o.replace("r3", "r6")) for m, o in base]
+    expect("consistent register rename -> PERM",
+           classify(_insns(base), _insns(perm))[0], "PERM")
+
+    # OPS: break a non-register operand.
+    ops = [(m, o.replace("r3,12", "r3,20")) for m, o in base]
+    expect("immediate 12->20 -> OPS",
+           classify(_insns(base), _insns(ops))[0], "OPS")
+
+    # STRUCT: break the instruction COUNT, leaving most of the body aligned.
+    struct = base[:2] + [("ori", "r3,r3,1")] + base[2:]
+    expect("one inserted instruction -> STRUCT",
+           classify(_insns(base), _insns(struct))[0], "STRUCT")
+
+    # UNALIGN: break the alignment itself.
+    un = [("fmuls", "f1,f2,f3")] * 5 + [("blr", "")]
+    cls, _, _, _, al = classify(_insns(base), _insns(un))
+    expect("wholly different body -> UNALIGN", cls, "UNALIGN")
+    expect("...and align ratio below threshold", al < UNALIGN_RATIO, True)
+
+    # A STRUCT whose operand residual is PURE permutation must show oΔc == 0:
+    # this is the signal that was previously invisible behind the mnemonic gap.
+    sp = [(m, o.replace("r3", "r6")) for m, o in base[:2]] \
+        + [("ori", "r6,r6,1")] \
+        + [(m, o.replace("r3", "r6")) for m, o in base[2:]]
+    cls, md, od, oc, _ = classify(_insns(base), _insns(sp))
+    expect("STRUCT + pure-perm residual -> oD>0, oDc==0",
+           (cls, od > 0, oc), ("STRUCT", True, 0))
+
+    # ---- drop paths: break the JOIN between report.json and the objects ----
+    class A:
+        show = unit = cls = poolswap = extra = absent = None
+        control = False
+        min_size = 0
+        limit = 5
+
+    def fake_report(**meta):
+        return {"units": [{
+            "name": "u", "measures": {"fuzzy_match_percent": 50.0},
+            "metadata": meta,
+            "functions": [{"name": "fn", "size": "100",
+                           "fuzzy_match_percent": 50.0}]}]}
+
+    def reasons(report, build, objdump_impl=None):
+        real = globals()["objdump"]
+        if objdump_impl:
+            globals()["objdump"] = objdump_impl
+        try:
+            _, _, dropped, considered = scan(report, Path(build), A())
+        finally:
+            globals()["objdump"] = real
+        return sorted(dropped), considered
+
+    r, n = reasons(fake_report(), "/nonexistent")
+    expect("missing source_path -> reported", (r, n), (["no source_path"], 1))
+
+    r, n = reasons(fake_report(source_path="src/x.c"), "/nonexistent")
+    expect("absent object -> reported", (r, n), (["object missing"], 1))
+
+    # Use REAL objects for the last two so only the injected fault differs.
+    build = REPO / "build" / "GSAE01"
+    real_src = None
+    for p in (build / "src").rglob("*.o"):
+        rel = p.relative_to(build / "src")
+        if (build / "obj" / rel).is_file():
+            real_src = "src/" + str(rel)[:-2] + ".c"
+            break
+    if real_src is None:
+        print("  [SKIP] no built object pair available")
+    else:
+        def boom(obj):
+            raise subprocess.CalledProcessError(1, "objdump")
+        r, n = reasons(fake_report(source_path=real_src), build, boom)
+        expect("objdump failure -> reported", (r, n), (["objdump failed"], 1))
+
+        r, n = reasons(fake_report(source_path=real_src), build)
+        expect("symbol in neither object -> reported",
+               (r, n), (["unpaired symbol (in neither only)"], 1))
+
+    print("SELFTEST %s" % ("PASS" if ok else "FAIL"))
+    sys.exit(0 if ok else 1)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("-v", "--version", default="GSAE01")
@@ -254,37 +384,84 @@ def main() -> None:
     ap.add_argument("--absent", metavar="MNEM",
                     help="report fns where the TARGET emits this mnemonic and "
                          "ours does not (deficit-instruction screen)")
+    ap.add_argument("--selftest", action="store_true",
+                    help="fault-inject every classification and every drop "
+                         "path and assert each one fires")
     args = ap.parse_args()
+
+    if args.selftest:
+        selftest()
+        return
 
     build = REPO / "build" / args.version
     report = json.load(open(build / "report.json"))
+    rows, control_bad, dropped, considered = scan(report, build, args)
 
+    if args.control:
+        total = sum(1 for u in report["units"]
+                    if u["measures"]["fuzzy_match_percent"] < 100.0
+                    for f in u.get("functions", []) if f.get("fuzzy_match_percent", 0) >= 100.0)
+        print("CONTROL: %d fuzzy-100 fns in sub-100 units, %d misclassified" % (total, len(control_bad)))
+        for r in control_bad[:40]:
+            print("  ", r)
+        return
+
+    render(rows, dropped, considered, args)
+
+
+def scan(report, build, args):
     rows = []
     control_bad = []
+    # EVERY function that reaches this tool is accounted for in exactly one
+    # bucket.  A silent drop is what let a prior wave read this tool's
+    # `--limit` as its coverage; coverage is now always printed.
+    dropped: dict[str, list] = {}
+
+    def drop(reason, unit, fn):
+        dropped.setdefault(reason, []).append(
+            (unit["name"], fn["name"], int(fn["size"]),
+             fn.get("fuzzy_match_percent", 0.0)))
+
+    considered = 0
     for unit in report["units"]:
         if unit["measures"]["fuzzy_match_percent"] >= 100.0:
             continue
         if args.unit and args.unit not in unit["name"]:
             continue
+        want100 = args.control
+        mine = [f for f in unit.get("functions", [])
+                if (f.get("fuzzy_match_percent", 0.0) >= 100.0) == want100
+                and int(f["size"]) >= args.min_size]
+        considered += len(mine)
+        mine_ids = {id(f) for f in mine}
         src = unit["metadata"].get("source_path")
         if not src:
+            for f in mine:
+                drop("no source_path", unit, f)
             continue
         rel = src[len("src/"):] if src.startswith("src/") else src
         tgt_obj = build / "obj" / (rel[:-2] + ".o")
         cur_obj = build / "src" / (rel[:-2] + ".o")
         if not tgt_obj.is_file() or not cur_obj.is_file():
+            for f in mine:
+                drop("object missing", unit, f)
             continue
         try:
             tf = parse_functions(objdump(tgt_obj))
             cf = parse_functions(objdump(cur_obj))
         except subprocess.CalledProcessError:
+            for f in mine:
+                drop("objdump failed", unit, f)
             continue
         for fn in unit.get("functions", []):
             pct = fn.get("fuzzy_match_percent", 0.0)
             name, size = fn["name"], int(fn["size"])
             if name not in tf or name not in cf:
+                if id(fn) in mine_ids:
+                    drop("unpaired symbol (in %s only)"
+                         % ("target" if name in tf else
+                            "ours" if name in cf else "neither"), unit, fn)
                 continue
-            want100 = args.control
             if args.show:
                 pass
             elif want100 != (pct >= 100.0):
@@ -296,56 +473,75 @@ def main() -> None:
                     continue
                 print("%s :: %s  size=%d fuzzy=%.6f" % (unit["name"], name, size, pct))
                 show(tf[name], cf[name])
-                return
+                sys.exit(0)
             if args.poolswap:
                 n = poolswap(tf[name], cf[name])
                 if n is not None and n > 0:
-                    rows.append((unit["name"], name, size, pct, "SWAP:%d" % n, 0, 0))
+                    rows.append((unit["name"], name, size, pct,
+                                 "SWAP:%d" % n, 0, 0, 0, 1.0))
                 continue
             if args.extra:
                 n = surplus(tf[name], cf[name], args.extra)
                 if n:
-                    rows.append((unit["name"], name, size, pct, "EXTRA:%d" % n, 0, 0))
+                    rows.append((unit["name"], name, size, pct,
+                                 "EXTRA:%d" % n, 0, 0, 0, 1.0))
                 continue
             if args.absent:
                 n = surplus(cf[name], tf[name], args.absent)
                 if n:
-                    rows.append((unit["name"], name, size, pct, "ABSENT:%d" % n, 0, 0))
+                    rows.append((unit["name"], name, size, pct,
+                                 "ABSENT:%d" % n, 0, 0, 0, 1.0))
                 continue
-            cls, md, od = classify(tf[name], cf[name])
+            cls, md, od, oc, al = classify(tf[name], cf[name])
             if args.control:
                 if cls != "NOISE":
                     control_bad.append((unit["name"], name, cls, md, od))
                 continue
-            rows.append((unit["name"], name, size, pct, cls, md, od))
+            rows.append((unit["name"], name, size, pct, cls, md, od, oc, al))
 
-    if args.control:
-        total = sum(1 for u in report["units"]
-                    if u["measures"]["fuzzy_match_percent"] < 100.0
-                    for f in u.get("functions", []) if f.get("fuzzy_match_percent", 0) >= 100.0)
-        print("CONTROL: %d fuzzy-100 fns in sub-100 units, %d misclassified" % (total, len(control_bad)))
-        for r in control_bad[:40]:
-            print("  ", r)
-        return
+    return rows, control_bad, dropped, considered
+
+
+def render(rows, dropped, considered, args):
+    def wb(size, pct):
+        return (100.0 - pct) / 100.0 * size
+
+    ndropped = sum(len(v) for v in dropped.values())
+    print("COVERAGE: %d considered / %d classified / %d unclassifiable"
+          % (considered, len(rows), ndropped))
+    for reason, items in sorted(dropped.items(),
+                                key=lambda kv: -sum(wb(i[2], i[3]) for i in kv[1])):
+        items.sort(key=lambda i: -wb(i[2], i[3]))
+        print("  DROP %-34s %3d fns  %7d wB" %
+              (reason, len(items), sum(wb(i[2], i[3]) for i in items)))
+        for u, f, s, p in items[:args.limit]:
+            print("       %-30s %-38s %6d %10.4f %7d" % (u, f, s, p, wb(s, p)))
+    print()
 
     if args.cls:
         rows = [r for r in rows if r[4] == args.cls]
     # weight = fuzzy shortfall in bytes
-    rows.sort(key=lambda r: -((100.0 - r[3]) / 100.0 * r[2]))
+    rows.sort(key=lambda r: -wb(r[2], r[3]))
     counts: dict[str, list[int]] = {}
     for r in rows:
         c = counts.setdefault(r[4], [0, 0])
         c[0] += 1
-        c[1] += int((100.0 - r[3]) / 100.0 * r[2])
+        c[1] += int(wb(r[2], r[3]))
     print("total sub-100 fns: %d" % len(rows))
     for k, (n, w) in sorted(counts.items(), key=lambda kv: -kv[1][1]):
         print("  %-7s %4d fns  %7d wB" % (k, n, w))
+    # oΔc==0 with oΔ>0 means the surviving operand divergence is PURE register
+    # permutation.  Reported across every class, not just mdelta==0 PERM.
+    perm_only = [r for r in rows if r[6] > 0 and r[7] == 0]
+    print("  (of which pure-permutation operand residual: %d fns  %d wB)"
+          % (len(perm_only), int(sum(wb(r[2], r[3]) for r in perm_only))))
     print()
-    print("%-34s %-38s %6s %10s %-7s %4s %4s %7s" %
-          ("unit", "function", "size", "fuzzy", "class", "mΔ", "oΔ", "wB"))
-    for u, f, s, p, c, md, od in rows[:args.limit]:
-        print("%-34s %-38s %6d %10.4f %-7s %4d %4d %7d" %
-              (u, f, s, p, c, md, od, (100.0 - p) / 100.0 * s))
+    print("%-34s %-38s %6s %10s %-7s %4s %4s %4s %5s %7s" %
+          ("unit", "function", "size", "fuzzy", "class",
+           "mΔ", "oΔ", "oΔc", "align", "wB"))
+    for u, f, s, p, c, md, od, oc, al in rows[:args.limit]:
+        print("%-34s %-38s %6d %10.4f %-7s %4d %4d %4d %5.2f %7d" %
+              (u, f, s, p, c, md, od, oc, al, wb(s, p)))
 
 
 if __name__ == "__main__":
