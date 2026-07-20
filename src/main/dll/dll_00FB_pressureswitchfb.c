@@ -51,10 +51,6 @@
 #define PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET        0x7c
 #define PRESSURESWITCHFB_EXTRA_SIZE                       0x88
 
-#define PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET     0x08
-#define PRESSURESWITCHFB_CONFIG_RESET_COORD_OFFSET    0x10
-#define PRESSURESWITCHFB_CONFIG_RAISED_GAMEBIT_OFFSET 0x1a
-
 #define PRESSURESWITCHFB_STATE_MODE_OFFSET 0x80
 #define PRESSURESWITCHFB_REMOVE_GROUP_ID   0x53
 #define PRESSURESWITCHFB_TARGET_OBJGROUP   5
@@ -77,7 +73,7 @@ extern f32 lbl_803E3778;
 int PressureSwitchFB_SeqFn(GameObject* obj, int unused, int stateParam)
 {
     s16 objType;
-    int config;
+    PressureswitchfbPlacement* config;
     u32 handle;
     u32 offset;
     int runtime;
@@ -85,7 +81,7 @@ int PressureSwitchFB_SeqFn(GameObject* obj, int unused, int stateParam)
     u8 i;
 
     runtime = *(int*)&obj->extra;
-    config = *(int*)&obj->anim.placementData;
+    config = (PressureswitchfbPlacement*)obj->anim.placementData;
     if (*(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) == PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS)
     {
         for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; i++)
@@ -112,10 +108,10 @@ int PressureSwitchFB_SeqFn(GameObject* obj, int unused, int stateParam)
             *(int*)(trackedObjectSlot + 0xc) = 0;
             *(int*)(trackedObjectSlot + 0x10) = 0;
         }
-        obj->anim.localPosZ = *(f32*)(config + PRESSURESWITCHFB_CONFIG_BASE_COORD_OFFSET);
+        obj->anim.localPosZ = config->base.posX;
         obj->anim.localPosY = *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET);
-        obj->anim.localPosZ = *(f32*)(config + PRESSURESWITCHFB_CONFIG_RESET_COORD_OFFSET);
-        mainSetBits(*(s16*)(config + PRESSURESWITCHFB_CONFIG_RAISED_GAMEBIT_OFFSET), 0);
+        obj->anim.localPosZ = config->base.posZ;
+        mainSetBits(config->pressedGameBit, 0);
         *(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) = PRESSURESWITCHFB_STATE_IDLE;
     }
     objType = obj->anim.seqId;
@@ -178,7 +174,6 @@ static inline int pfb_scanTrackedSlots(int slots2, u8 j2, int found, int zid)
 void PressureSwitchFB_update(GameObject* obj)
 {
     int found;
-    int off;
     u32 other;
     PressureswitchfbPlacement* def;
     PressureSwitchFbState* state;
@@ -229,11 +224,11 @@ void PressureSwitchFB_update(GameObject* obj)
         {
             state->contactTimer = 5;
         }
-        if (*(s8*)(*(int*)((u8*)obj + 0x58) + 0x10f) > 0)
+        if (obj->anim.proximityList->count > 0)
         {
-            for (i = 0, off = 0; i < *(s8*)(*(int*)((u8*)obj + 0x58) + 0x10f); i++)
+            for (i = 0; i < obj->anim.proximityList->count; i++)
             {
-                other = *(u32*)(*(int*)((u8*)obj + 0x58) + off + 0x100);
+                other = (u32)obj->anim.proximityList->objects[i];
                 if ((((GameObject*)other)->anim.classId == 1) || (((GameObject*)other)->anim.classId == 2) ||
                     (((GameObject*)other)->anim.seqId == PRESSURESWITCHFB_TRACKED_SEQID_A) ||
                     (((GameObject*)other)->anim.seqId == PRESSURESWITCHFB_TRACKED_SEQID_B))
@@ -269,7 +264,6 @@ void PressureSwitchFB_update(GameObject* obj)
                     skip_insert:;
                     }
                 }
-                off += 4;
             }
         }
         slots2 = *(volatile int*)&obj->extra;
