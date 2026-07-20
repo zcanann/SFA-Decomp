@@ -3,15 +3,11 @@
 #include "dolphin/os.h"
 #include "dolphin/os/OSReset.h"
 #include "dolphin/os/OSCache.h"
+#include "dolphin/os/__ppc_eabi_init.h"
+#include "main/gameloop_api.h"
+#include "PowerPC_EABI_Support/MetroTRK/trk.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/abort_exit.h"
-
-typedef unsigned int size_t;
-
-extern asm void InitMetroTRK();
-extern void __init_user(void);
-extern int main(int argc, char** argv);
-
-extern void* memset(void* dst, int val, size_t n);
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.h"
 
 __declspec(section ".init") static void __init_registers(void);
 __declspec(section ".init") void __init_data(void);

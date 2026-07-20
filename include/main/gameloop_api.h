@@ -9,6 +9,7 @@ extern u8 lbl_803DB424;
 struct LinkInterface;
 extern struct LinkInterface* gTitleMenuLinkInterface;
 
+int main(int argc, char** argv);
 int getGameState(void);
 int getScreenBlankFrameCount(void);
 int return1_800202BC(void);

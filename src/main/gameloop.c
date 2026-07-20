@@ -1471,7 +1471,7 @@ void init(void)
 }
 
 
-void main(void)
+int main(int argc, char** argv)
 {
     gameState = GAMELOOP_STATE_BOOTING;
     gGameLoopInitComplete = 0;

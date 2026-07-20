@@ -1,15 +1,12 @@
 /* TODO: restore stripped imported address metadata if needed. */
 
+#include "PowerPC_EABI_Support/MetroTRK/trk.h"
 #include <dolphin.h>
 #include "global.h"
 #include "__ppc_eabi_linker.h"
-
-extern void InitMetroTRK();
-extern void exit(int);
-extern int main(int argc, char* argv[]);
-extern void __init_user(void);
-extern void InitMetroTRK_BBA(void);
-extern void DBInit();
+#include "dolphin/os/__ppc_eabi_init.h"
+#include "main/gameloop_api.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/abort_exit.h"
 
 SECTION_INIT extern void __check_pad3(void);
 SECTION_INIT extern void __set_debug_bba(void);
