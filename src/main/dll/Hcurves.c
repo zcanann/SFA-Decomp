@@ -1738,7 +1738,8 @@ void doNothing_onTrickyInit(void)
 {
 }
 
-int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
+int RomCurve_func2C(RomCurveWalker* state, GameObject* unusedObj, int startCurveId,
+                    RomCurveInterface* unusedInterface)
 {
     char* stateBytes;
     u32 currentCurve;

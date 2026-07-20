@@ -433,8 +433,8 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
         state->flagsC40 |= HIGHTOP_FLAG_CURVE_FOLLOW;
         state->flagsC40 |= HIGHTOP_FLAG_CURVE_ARMED;
         state->flagsC49.b1 = 0;
-        ((void (*)(void*, int, int, void*))curve->slotA8)((char*)state + 0xa10, obj, 0x3463a,
-                                                          (curve = *gRomCurveInterface));
+        curve->initFromCurveId((RomCurveWalker*)((char*)state + 0xa10), (GameObject*)obj, 0x3463a,
+                               (curve = *gRomCurveInterface));
         state2 = ((GameObject*)obj)->extra;
         state2->flagsC49.b7 = 1;
         (*gGameUIInterface)->initAirMeter(gHighTopAirMeterInitValue, HIGHTOP_AIRMETER_BGTEXTURE);

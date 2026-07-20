@@ -6,6 +6,7 @@
 typedef struct RomCurveDef RomCurveDef;
 typedef struct RomCurvePlacementDef RomCurvePlacementDef;
 typedef struct RomCurveWalker RomCurveWalker;
+typedef struct RomCurveInterface RomCurveInterface;
 struct GameObject;
 
 #define ROM_CURVE_PATH_LINK_COUNT 5
@@ -50,12 +51,14 @@ typedef int (*RomCurveGetLinkedCurveFn)(RomCurveDef *curve,int excludeLinkId);
 typedef int (*RomCurveIsPointInsideLoopFn)(int curveId,f32 x,f32 y,f32 z,f32 *outDistance);
 typedef int (*RomCurveCountRandomPointsFn)(RomCurveDef *curve);
 typedef int (*RomCurveBuildRandomPointsFn)(RomCurvePlacementDef *curve,f32 *outX,f32 *outY,f32 *outZ,s8 *outTypes);
+typedef int (*RomCurveInitFromCurveIdFn)(RomCurveWalker *walker,struct GameObject *obj,int startCurveId,
+                                         RomCurveInterface *interface);
 typedef u8 (*RomCurveInitWalkerFn)(void *walker,void *obj,f32 scale,int *curveParam,int arg);
 typedef u8 (*RomCurveGoNextPointFn)(void *walker);
 typedef int (*RomCurveSetClosedFn)(void *walker,int closed);
 typedef u8 (*RomCurveGoNextPointIndexedFn)(void *walker,int pickIdx);
 
-typedef struct RomCurveInterface {
+struct RomCurveInterface {
   RomCurveVoidFn release;
   RomCurveVoidFn initialise;
   void (*remove)(RomCurveDef *curve);
@@ -98,8 +101,8 @@ typedef struct RomCurveInterface {
   RomCurveGoNextPointIndexedFn goNextPointIndexed;
   void *slotA0;
   void *slotA4;
-  void *slotA8;
-} RomCurveInterface;
+  RomCurveInitFromCurveIdFn initFromCurveId;
+};
 
 extern RomCurveInterface **gRomCurveInterface;
 
@@ -110,6 +113,6 @@ STATIC_ASSERT(offsetof(RomCurveInterface, initCurve) == 0x8C);
 STATIC_ASSERT(offsetof(RomCurveInterface, goNextPoint) == 0x90);
 STATIC_ASSERT(offsetof(RomCurveInterface, setClosed) == 0x94);
 STATIC_ASSERT(offsetof(RomCurveInterface, goNextPointIndexed) == 0x9C);
-STATIC_ASSERT(offsetof(RomCurveInterface, slotA8) == 0xA8);
+STATIC_ASSERT(offsetof(RomCurveInterface, initFromCurveId) == 0xA8);
 
 #endif /* MAIN_DLL_ROM_CURVE_INTERFACE_H_ */
