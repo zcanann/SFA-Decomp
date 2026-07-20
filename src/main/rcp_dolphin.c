@@ -133,21 +133,15 @@ typedef struct F32Pair
     f32 lo;
     f32 hi;
 } F32Pair;
-extern f32 lbl_803DEB78;
 extern F32Pair lbl_803DEB58;
 extern f32 lbl_803DEB5C;
-extern f32 lbl_803DEB7C;
+extern const f32 lbl_803DEB64;
 void textureFn_80053d58(void* obj);
-extern f32 lbl_803DEB98;
-extern f32 lbl_803DEB9C;
 extern GXTexObj lbl_803779A0;
 extern u8 gRcpWarpDistortListBuilt;
 extern u32 gRcpWarpDistortListSize;
 extern F32Pair lbl_803DEB50;
 extern f32 lbl_803DEB54;
-extern const f32 lbl_803DEB64;
-extern f32 lbl_803DEB70;
-extern f32 lbl_803DEB74;
 typedef struct RcpDistortSlot
 {
     u8* texture;   // 0x00
@@ -168,7 +162,6 @@ extern void* gRcpDistortTexture;
 extern u16* gRcpTexIdRemap;
 extern void* gRcpTexHeaderBuffer;
 extern u8 gRcpDistortGroup;
-extern f32 lbl_803DEB80;
 extern f32 gRcpScreenWidth;
 extern f32 gRcpScreenHeight;
 extern u8 gRcpTexAllocFailed;
@@ -750,7 +743,7 @@ int textureFn_80052bb4(int model, f32* params)
     modelLightStruct_setSpecularAttenuation(la, params[1], 0.0f);
     modelLightStruct_setSpecularColor(la, 0, 0, 0xff, 0xff);
     modelLightStruct_loadChannelLight(0, la, (GameObject*)model);
-    modelLightStruct_setAngularAttenuation(la, lbl_803DEB70, 0.0f, 0.0f);
+    modelLightStruct_setAngularAttenuation(la, 1.5f, 0.0f, 0.0f);
     modelLightStruct_loadChannelLight(2, la, (GameObject*)model);
     modelLightChannel_configure(1, 1, 0);
     modelLightChannel_configure(3, 0, 0);
@@ -760,7 +753,7 @@ int textureFn_80052bb4(int model, f32* params)
     modelLightStruct_setSpecularAttenuation(lb, params[1], 0.0f);
     modelLightStruct_setSpecularColor(lb, 0, 0, 0xff, 0xff);
     modelLightStruct_loadChannelLight(1, lb, (GameObject*)model);
-    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB74, 0.0f, 0.0f);
+    modelLightStruct_setAngularAttenuation(lb, 0.5f, 0.0f, 0.0f);
     modelLightStruct_loadChannelLight(3, lb, (GameObject*)model);
     modelLightChannels_applyGXControls();
     modelLightStruct_setAngularAttenuation(la, lbl_803DEB5C, 0.0f, 0.0f);
@@ -771,13 +764,13 @@ void gxFn_80052dc0(void)
 {
     f32 omtx[4][4];
     f32 pmtx[3][4];
-    GXSetViewport(0.0f, 0.0f, lbl_803DEB78,
-                  lbl_803DEB78, 0.0f, lbl_803DEB5C);
+    GXSetViewport(0.0f, 0.0f, 32.0f,
+                  32.0f, 0.0f, lbl_803DEB5C);
     GXSetScissor(0, 0, 32, 32);
     GXSetDispCopySrc(0, 0, 32, 32);
     GXSetDispCopyDst(32, 32);
     GXSetTexCopySrc(0, 0, 32, 32);
-    C_MTXOrtho(omtx, lbl_803DEB5C, lbl_803DEB7C, lbl_803DEB5C, lbl_803DEB7C, lbl_803DEB5C, lbl_803DEB58.lo);
+    C_MTXOrtho(omtx, lbl_803DEB5C, -1.0f, lbl_803DEB5C, -1.0f, lbl_803DEB5C, lbl_803DEB58.lo);
     GXSetProjection(omtx, 1);
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
     gxSetZMode_(0, GX_EQUAL, 0);
@@ -815,9 +808,9 @@ void gxTextureFn_80052efc(void)
     u8* tex;
 
     gxFn_80052dc0();
-    PSMTXScale(mtx, lbl_803DEB74, lbl_803DEB80, lbl_803DEB74);
-    mtx[0][3] = lbl_803DEB74;
-    mtx[1][3] = lbl_803DEB74;
+    PSMTXScale(mtx, 0.5f, -0.5f, 0.5f);
+    mtx[0][3] = 0.5f;
+    mtx[1][3] = 0.5f;
     GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
     GXSetChanAmbColor(GX_COLOR0A0, gRcpDistortAmbColor);
     GXSetChanAmbColor(GX_COLOR1A1, gRcpDistortAmbColor);
@@ -1212,7 +1205,7 @@ void fn_80053C40(Texture* tex, GXTexObj* obj)
     if (mipmap != 0)
     {
         GXInitTexObjLOD(obj, tex->minFilter, tex->magFilter, (f32)(u32)tex->minLod,
-                        (f32)(s32)tex->maxLod, lbl_803DEB98, 0, 0, 0);
+                        (f32)(s32)tex->maxLod, -2.0f, 0, 0, 0);
     }
     else
     {
@@ -1236,12 +1229,12 @@ void textureFn_80053d58(void* vobj)
     {
         GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter, (f32)(u32)obj[28],
                         (f32)(s32)obj[29], /* minLod/maxLod */
-                        lbl_803DEB98, 0, 0, 0);
+                        -2.0f, 0, 0, 0);
     }
     else
     {
-        GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter, lbl_803DEB9C, lbl_803DEB9C,
-                        lbl_803DEB9C, 0, 0, 0);
+        GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter, 0.0f, 0.0f,
+                        0.0f, 0, 0, 0);
     }
     GXInitTexObjUserData(texObj, obj);
     {
