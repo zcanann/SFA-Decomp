@@ -601,8 +601,6 @@ void debugPrintReset(void)
 void debugPrintDraw(int ctx)
 {
     u32 yv;
-    u32 y2;
-    u32 xa, xb, ya, yb;
     u32 xs;
     GXColor colb;
     u8* p;
@@ -665,16 +663,16 @@ void debugPrintDraw(int ctx)
         {
             ys -= 2;
         }
-        y2 = yv + 2;
-        xa = (u32)((f32)ys * (scale = gDebugScaleX + gDebugScaleBiasX));
-        xb = (u32)((f32)y2 * scale);
-        ya = (u32)((f32)xs * (scale = gDebugScaleY + gDebugScaleBiasY));
-        yb = (u32)((f32)x1 * scale);
+        yv += 2;
+        ys = (u32)((f32)ys * (scale = gDebugScaleX + gDebugScaleBiasX));
+        yv = (u32)((f32)yv * scale);
+        xs = (u32)((f32)xs * (scale = gDebugScaleY + gDebugScaleBiasY));
+        x1 = (u32)((f32)x1 * scale);
         colb.r = gDebugTextColorR;
         colb.g = gDebugTextColorG;
         colb.b = gDebugTextColorB;
         colb.a = gDebugTextColorA;
-        hudDrawRect(xa, ya, xb, yb, colb);
+        hudDrawRect(ys, xs, yv, x1, colb);
     }
     p = debugLogBuffer;
     debugPrintYpos = gDebugPrintOriginY;
