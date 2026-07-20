@@ -158,8 +158,8 @@ typedef struct SeqPointPlacement
 typedef struct VfpDragHeadPlacement
 {
     u8 pad00[0x18];
-    s8 rotXByte;   /* 0x18 */
-    s8 scaleFlag;  /* 0x19 */
+    s8 rotXByte;  /* 0x18 */
+    s8 variant;   /* 0x19: selects ambient/breath behavior; variant 1 also scales the model */
     s16 headIndex; /* 0x1a */
     u8 pad1C[2];
     s16 gameBitA;  /* 0x1e */
@@ -980,7 +980,7 @@ void VFPDragHead_init(GameObject* obj, int data)
     state->gameBitB = def->gameBitB;
     state->unk_04 = 0x64;
     state->headIndex = def->headIndex;
-    if (def->scaleFlag == 1)
+    if (def->variant == 1)
     {
         (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase * lbl_803E6138;
     }

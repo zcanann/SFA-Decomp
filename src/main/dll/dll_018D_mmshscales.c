@@ -40,12 +40,12 @@ int MMSH_Scales_getObjectTypeId(void)
     return 0xb;
 }
 
-void MMSH_Scales_free(int obj, int keepChild)
+void MMSH_Scales_free(GameObject* obj, int keepChild)
 {
     GameObject* child;
-    (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
+    (*gObjectTriggerInterface)->freeState(obj->extra);
     gTitleMenuControlInterfaceCopy->vtable->func05((void*)obj, 0xffff, 0, 0, 0);
-    child = ((GameObject*)obj)->childObjs[0];
+    child = obj->childObjs[0];
     if ((child != NULL) && (keepChild == 0))
     {
         Obj_FreeObject(child);
@@ -63,87 +63,87 @@ void MMSH_Scales_hitDetect(void)
 {
 }
 
-void MMSH_Scales_update(int objArg)
+void MMSH_Scales_update(GameObject* obj)
 {
     int seqTag;
-    int* list;
-    int other;
-    int match;
+    GameObject** list;
+    GameObject* other;
+    GameObject* match;
     int groupTag;
     int siblingCount;
     int i;
     int count;
 
-    if ((((GameObject*)objArg)->anim.placementData != NULL) &&
-        (*(short*)(*(int*)&((GameObject*)objArg)->anim.placementData + 0x18) != -1))
+    if ((obj->anim.placementData != NULL) &&
+        (((MmshScalesPlacement*)obj->anim.placementData)->animationBank != -1))
     {
-        i = (*gObjectTriggerInterface)->update((u8*)objArg, (f32)(u32)lbl_803DB411);
-        if ((i != 0) && (((GameObject*)objArg)->seqIndex == -2))
+        i = (*gObjectTriggerInterface)->update((u8*)obj, (f32)(u32)lbl_803DB411);
+        if ((i != 0) && (obj->seqIndex == -2))
         {
-            seqTag = *(s8*)(*(int*)&((GameObject*)objArg)->extra + 0x57);
-            match = 0;
-            list = ObjList_GetObjects(&i, &count);
+            seqTag = ((MmshScalesState*)obj->extra)->groupTag;
+            match = NULL;
+            list = (GameObject**)ObjList_GetObjects(&i, &count);
             siblingCount = 0;
             for (i = 0, groupTag = (int)(s8)seqTag; i < count; i++)
             {
                 other = *list;
-                if (((GameObject*)other)->seqIndex == seqTag)
+                if (other->seqIndex == seqTag)
                 {
                     match = other;
                 }
-                if (((((GameObject*)other)->seqIndex == -2) && (((GameObject*)other)->anim.classId == 0x10)) &&
-                    (groupTag == *(s8*)(*(int*)&((GameObject*)other)->extra + 0x57)))
+                if (((other->seqIndex == -2) && (other->anim.classId == 0x10)) &&
+                    (groupTag == ((MmshScalesState*)other->extra)->groupTag))
                 {
                     siblingCount++;
                 }
                 list = list + 1;
             }
-            if (((siblingCount <= 1) && ((u32)match != 0)) && (*(short*)(match + 0xb4) != -1))
+            if (((siblingCount <= 1) && ((u32)match != 0)) && (match->seqIndex != -1))
             {
-                ((GameObject*)match)->seqIndex = -1;
+                match->seqIndex = -1;
                 (*gObjectTriggerInterface)->endSequence(groupTag);
             }
-            ((GameObject*)objArg)->seqIndex = -1;
-            Obj_FreeObject((GameObject*)objArg);
+            obj->seqIndex = -1;
+            Obj_FreeObject(obj);
         }
     }
 }
 
-void MMSH_Scales_init(int* obj, s16* def)
+void MMSH_Scales_init(GameObject* obj, MmshScalesPlacement* placement)
 {
-    u8* state = ((GameObject*)obj)->extra;
+    MmshScalesState* state = obj->extra;
     MmshScalesSpawnSetup* setup;
     int loadedBank;
-    ((MmshScalesState*)state)->unk6A = def[13];
-    ((MmshScalesState*)state)->unk6E = -1;
-    ((MmshScalesState*)state)->dampingFactor = 1.0f / (1.0f + (f32)(u32)((u8*)def)[36]);
-    ((MmshScalesState*)state)->unk28 = -1;
-    loadedBank = ((GameObject*)obj)->userData1;
-    if (loadedBank == 0 && def[12] != 1)
+    state->unk6A = placement->sequenceTag;
+    state->unk6E = -1;
+    state->dampingFactor = 1.0f / (1.0f + (f32)(u32)placement->damping);
+    state->unk28 = -1;
+    loadedBank = obj->userData1;
+    if (loadedBank == 0 && placement->animationBank != 1)
     {
-        (*gObjectTriggerInterface)->loadAnimData(state, (u8*)def);
-        ((GameObject*)obj)->userData1 = def[12] + 1;
+        (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)placement);
+        obj->userData1 = placement->animationBank + 1;
     }
-    else if (loadedBank != 0 && def[12] != loadedBank - 1)
+    else if (loadedBank != 0 && placement->animationBank != loadedBank - 1)
     {
-        (*gObjectTriggerInterface)->freeState(state);
-        if (def[12] != -1)
+        (*gObjectTriggerInterface)->freeState((u8*)state);
+        if (placement->animationBank != -1)
         {
-            (*gObjectTriggerInterface)->loadAnimData(state, (u8*)def);
+            (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)placement);
         }
-        ((GameObject*)obj)->userData1 = def[12] + 1;
+        obj->userData1 = placement->animationBank + 1;
     }
     if (Obj_IsLoadingLocked() == 0)
         return;
     setup = (MmshScalesSpawnSetup*)Obj_AllocObjectSetup(0x24, MMSHSCALES_CHILD_OBJ_SWORD);
-    setup->posX = ((GameObject*)obj)->anim.localPosX;
-    setup->posY = ((GameObject*)obj)->anim.localPosY;
-    setup->posZ = ((GameObject*)obj)->anim.localPosZ;
-    setup->color[0] = 32;
-    setup->color[1] = 4;
-    setup->color[3] = 0xff;
-    ((GameObject*)obj)->childObjs[0] = Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, NULL);
-    *(f32*)(*(u8**)&((GameObject*)obj)->childObjs[0] + 8) *= 2.0f;
+    setup->base.posX = obj->anim.localPosX;
+    setup->base.posY = obj->anim.localPosY;
+    setup->base.posZ = obj->anim.localPosZ;
+    setup->base.color[0] = 32;
+    setup->base.color[1] = 4;
+    setup->base.color[3] = 0xff;
+    obj->childObjs[0] = Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, NULL);
+    ((GameObject*)obj->childObjs[0])->anim.rootMotionScale *= 2.0f;
 }
 
 void MMSH_Scales_release(void)

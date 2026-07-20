@@ -6,13 +6,15 @@
 
 extern ObjectDescriptor gKaldaChompMeObjDescriptor;
 
+typedef struct KaldaChompMePlacement KaldaChompMePlacement;
+
 int KaldaChompMe_getExtraSize(void);
 int KaldaChompMe_getObjectTypeId(void);
 void KaldaChompMe_free(void);
-void KaldaChompMe_render(int p1, int p2, int p3, int p4, int p5, s8 renderFlag);
+void KaldaChompMe_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderFlag);
 void KaldaChompMe_hitDetect(void);
 void KaldaChompMe_update(GameObject* obj);
-void KaldaChompMe_init(GameObject* obj, int params);
+void KaldaChompMe_init(GameObject* obj, KaldaChompMePlacement* placement);
 void KaldaChompMe_release(void);
 void KaldaChompMe_initialise(void);
 void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode);

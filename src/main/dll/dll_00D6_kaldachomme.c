@@ -29,14 +29,20 @@ typedef struct KaldaChompMeState
 typedef struct KaldaChompMePlacement
 {
     ObjPlacement head;
-    u8 yawBits;   /* 0x18 */
-    u8 pitchBits; /* 0x19 */
-    u8 rollBits;  /* 0x1a */
+    u8 rotZByte; /* 0x18 */
+    u8 rotYByte; /* 0x19 */
+    u8 rotXByte; /* 0x1a */
 } KaldaChompMePlacement;
 
-STATIC_ASSERT(offsetof(KaldaChompMePlacement, yawBits) == 0x18);
-STATIC_ASSERT(offsetof(KaldaChompMePlacement, pitchBits) == 0x19);
-STATIC_ASSERT(offsetof(KaldaChompMePlacement, rollBits) == 0x1a);
+STATIC_ASSERT(offsetof(KaldaChompMeState, progress) == 0x0);
+STATIC_ASSERT(offsetof(KaldaChompMeState, step) == 0x4);
+STATIC_ASSERT(offsetof(KaldaChompMeState, targetProgress) == 0x8);
+STATIC_ASSERT(offsetof(KaldaChompMeState, moveId) == 0xC);
+STATIC_ASSERT(sizeof(KaldaChompMeState) == 0x10);
+STATIC_ASSERT(offsetof(KaldaChompMePlacement, rotZByte) == 0x18);
+STATIC_ASSERT(offsetof(KaldaChompMePlacement, rotYByte) == 0x19);
+STATIC_ASSERT(offsetof(KaldaChompMePlacement, rotXByte) == 0x1A);
+STATIC_ASSERT(sizeof(KaldaChompMePlacement) == 0x1C);
 
 #define KALDACHOMME_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -132,11 +138,11 @@ void KaldaChompMe_free(void)
 {
 }
 
-void KaldaChompMe_render(int p1, int p2, int p3, int p4, int p5, s8 renderFlag)
+void KaldaChompMe_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderFlag)
 {
     if (renderFlag != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E30D0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E30D0);
     }
 }
 
@@ -183,13 +189,11 @@ void KaldaChompMe_update(GameObject* obj)
     ObjAnim_SetCurrentMove((int)obj, extra->moveId, extra->progress, 0);
 }
 
-void KaldaChompMe_init(GameObject* obj, int params)
+void KaldaChompMe_init(GameObject* obj, KaldaChompMePlacement* placement)
 {
-    KaldaChompMePlacement* placement = (KaldaChompMePlacement*)params;
-
-    (obj)->anim.rotZ = (s16)(placement->yawBits << 8);
-    (obj)->anim.rotY = (s16)(placement->pitchBits << 8);
-    (obj)->anim.rotX = (s16)(placement->rollBits << 8);
+    (obj)->anim.rotZ = (s16)(placement->rotZByte << 8);
+    (obj)->anim.rotY = (s16)(placement->rotYByte << 8);
+    (obj)->anim.rotX = (s16)(placement->rotXByte << 8);
     (obj)->objectFlags = (u16)((obj)->objectFlags | KALDACHOMME_OBJFLAG_HITDETECT_DISABLED);
     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E30D4, 0);
 }
