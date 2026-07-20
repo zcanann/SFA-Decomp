@@ -4,6 +4,7 @@
 #include "main/obj_placement.h"
 #include "main/objanim_internal.h"
 #include "main/object_descriptor.h"
+#include "main/game_object.h"
 
 #define TRICKY_GUARD_SPOT_DLL_ID             0x0120
 #define TRICKY_GUARD_SPOT_CLASS_ID           0x0030
@@ -14,10 +15,7 @@
 #define TRICKY_GUARD_SPOT_GROUP              0x1E
 #define TRICKY_GUARD_SPOT_ACTION             1
 #define TRICKY_GUARD_SPOT_ACTION_PARAM       3
-#define TRICKY_GUARD_SPOT_VISIBLE_HITBOX_FLAG 0x04
-#define TRICKY_GUARD_SPOT_ACTIVE_HITBOX_FLAG  0x08
-
-typedef struct TrickyGuardSpotObject TrickyGuardSpotObject;
+typedef GameObject TrickyGuardSpotObject;
 
 typedef struct TrickyGuardSpotInterfaceVTable
 {
@@ -57,20 +55,11 @@ typedef struct TrickyGuardSpotState
     u8 pad05[3];
 } TrickyGuardSpotState;
 
-struct TrickyGuardSpotObject
-{
-    ObjAnimComponent objAnim;
-    u16 objectFlags;
-    u8 padB2[6];
-    TrickyGuardSpotState* state;
-};
-
 STATIC_ASSERT(sizeof(TrickyGuardSpotPlacement) == TRICKY_GUARD_SPOT_PLACEMENT_BYTES);
 STATIC_ASSERT(offsetof(TrickyGuardSpotPlacement, initialYaw) == 0x18);
 STATIC_ASSERT(offsetof(TrickyGuardSpotPlacement, triggerRadius) == 0x1A);
 STATIC_ASSERT(offsetof(TrickyGuardSpotPlacement, rangeGameBit) == 0x1E);
 STATIC_ASSERT(sizeof(TrickyGuardSpotState) == TRICKY_GUARD_SPOT_EXTRA_STATE_BYTES);
-STATIC_ASSERT(offsetof(TrickyGuardSpotObject, state) == 0xB8);
 
 extern ObjectDescriptor gTrickyGuardSpotObjDescriptor;
 

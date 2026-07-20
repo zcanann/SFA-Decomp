@@ -10,7 +10,7 @@
 #include "main/obj_group.h"
 #include "main/object_descriptor.h"
 
-int TrickyGuardSpot_getExtraSize(void) { return 0x8; }
+int TrickyGuardSpot_getExtraSize(void) { return sizeof(TrickyGuardSpotState); }
 
 void TrickyGuardSpot_free(TrickyGuardSpotObject* obj) { ObjGroup_RemoveObject((int)obj, TRICKY_GUARD_SPOT_GROUP); }
 
@@ -19,64 +19,64 @@ void TrickyGuardSpot_render(void)
 }
 
 #define TRICKY_GUARD_SPOT_VTABLE(tricky) \
-    (*(TrickyGuardSpotInterfaceVTable **)((tricky)->dll))
+    (*(TrickyGuardSpotInterfaceVTable**)((tricky)->anim.dll))
 
 void TrickyGuardSpot_update(TrickyGuardSpotObject* obj)
 {
 
-    u8* state;
-    u8* placement;
-    ObjAnimComponent* tricky;
+    TrickyGuardSpotState* state;
+    TrickyGuardSpotPlacement* placement;
+    GameObject* tricky;
     TrickyGuardSpotStateFlags* flags;
 
-    state = ((GameObject*)obj)->extra;
-    placement = *(u8**)&((GameObject*)obj)->anim.placementData;
-    tricky = (ObjAnimComponent*)getTrickyObject();
-    flags = (TrickyGuardSpotStateFlags*)(state + 4);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-        (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | TRICKY_GUARD_SPOT_ACTIVE_HITBOX_FLAG);
+    state = obj->extra;
+    placement = (TrickyGuardSpotPlacement*)obj->anim.placementData;
+    tricky = getTrickyObject();
+    flags = &state->flags;
+    obj->anim.resetHitboxFlags =
+        (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
     flags->trickyInRange = 0;
     if (tricky != NULL)
     {
-        if ((u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) != 0)
+        if ((u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(&tricky->anim) != 0)
         {
-            if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
-                               (f32*)((char*)tricky + 0x18)) < (f32)(s32)((TrickyGuardSpotPlacement*)placement)->triggerRadius)
+            if (Vec_xzDistance(&obj->anim.worldPosX, &tricky->anim.worldPosX) <
+                (f32)(s32)placement->triggerRadius)
             {
-                *(int*)state = *(int*)state - framesThisStep;
+                state->resetTimer = state->resetTimer - framesThisStep;
                 flags->trickyInRange = 1;
             }
         }
     }
-    if (*(u32*)state != 0)
+    if (state->resetTimer != 0)
     {
-        if (tricky != NULL && (u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) == 0)
+        if (tricky != NULL &&
+            (u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(&tricky->anim) == 0)
         {
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & TRICKY_GUARD_SPOT_VISIBLE_HITBOX_FLAG) != 0)
+            if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
             {
                 TRICKY_GUARD_SPOT_VTABLE(tricky)->setGuardSpotAction(
-                    tricky, obj, TRICKY_GUARD_SPOT_ACTION, TRICKY_GUARD_SPOT_ACTION_PARAM);
+                    &tricky->anim, obj, TRICKY_GUARD_SPOT_ACTION, TRICKY_GUARD_SPOT_ACTION_PARAM);
             }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~TRICKY_GUARD_SPOT_ACTIVE_HITBOX_FLAG);
-            objRenderFn_80041018((GameObject*)obj);
+            obj->anim.resetHitboxFlags =
+                (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
+            objRenderFn_80041018(obj);
         }
     }
     else if (tricky != NULL)
     {
-        TRICKY_GUARD_SPOT_VTABLE(tricky)->resetGuardSpotAction(tricky);
-        *(int*)state = placement[0x19] * 0x3c;
+        TRICKY_GUARD_SPOT_VTABLE(tricky)->resetGuardSpotAction(&tricky->anim);
+        state->resetTimer = placement->resetSeconds * 0x3c;
     }
-    mainSetBits(((TrickyGuardSpotPlacement*)placement)->rangeGameBit, flags->trickyInRange);
+    mainSetBits(placement->rangeGameBit, flags->trickyInRange);
 }
 
 void TrickyGuardSpot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* def)
 {
-    TrickyGuardSpotState* state = obj->state;
+    TrickyGuardSpotState* state = obj->extra;
     ObjGroup_AddObject((int)obj, TRICKY_GUARD_SPOT_GROUP);
     state->resetTimer = def->resetSeconds * 60;
-    obj->objAnim.rotX = (s16)(s32)
-    def->initialYaw;
+    obj->anim.rotX = (s16)(s32)def->initialYaw;
 }
 
 ObjectDescriptor gTrickyGuardSpotObjDescriptor = {

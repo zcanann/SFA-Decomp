@@ -18,6 +18,39 @@ extern void* lbl_803DD0D4;
 extern s8 gObjSeqBgCmdCount;
 extern void* lbl_803DD0B8;
 
+#define OBJSEQ_SLOT_COUNT 85
+
+typedef struct ObjSeqRuntimeStorage {
+    u8 _reserved0000[0x338c];
+    u8 marks[0x58];
+    int handles[OBJSEQ_SLOT_COUNT];
+    u8 _reserved3538[0x58];
+    u8 counts[0x58];
+    u8 _reserved35e8[0x158];
+    f32 distances[OBJSEQ_SLOT_COUNT];
+    f32 frames[OBJSEQ_SLOT_COUNT];
+    u8 pending[0x58];
+    u8 states[0x58];
+    s16 modes[0x56];
+    u8 flagsA[0x58];
+    u8 flagsB[0x58];
+    u8 results[0x58];
+    u8 actions[0x58];
+} ObjSeqRuntimeStorage;
+
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, marks) == 0x338c);
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, handles) == 0x33e4);
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, counts) == 0x3590);
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, distances) == 0x3740);
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, frames) == 0x3894);
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, pending) == 0x39e8);
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, states) == 0x3a40);
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, modes) == 0x3a98);
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, flagsA) == 0x3b44);
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, flagsB) == 0x3b9c);
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, results) == 0x3bf4);
+STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, actions) == 0x3c4c);
+
 void ObjSeq_onMapSetup(void)
 {
     u8* base = lbl_80396918;
@@ -35,18 +68,18 @@ void ObjSeq_onMapSetup(void)
     u8* marks;
     int i = 0;
 
-    flagsB = base + 0x3b9c;
-    flagsA = base + 0x3b44;
-    modes = (s16*)(base + 0x3a98);
-    actions = base + 0x3c4c;
-    results = base + 0x3bf4;
-    states = base + 0x3a40;
-    pending = base + 0x39e8;
-    frames = (f32*)(base + 0x3894);
-    dists = (f32*)(base + 0x3740);
-    counts = base + 0x3590;
-    handles = (int*)(base + 0x33e4);
-    marks = base + 0x338c;
+    flagsB = base + offsetof(ObjSeqRuntimeStorage, flagsB);
+    flagsA = base + offsetof(ObjSeqRuntimeStorage, flagsA);
+    modes = (s16*)(base + offsetof(ObjSeqRuntimeStorage, modes));
+    actions = base + offsetof(ObjSeqRuntimeStorage, actions);
+    results = base + offsetof(ObjSeqRuntimeStorage, results);
+    states = base + offsetof(ObjSeqRuntimeStorage, states);
+    pending = base + offsetof(ObjSeqRuntimeStorage, pending);
+    frames = (f32*)(base + offsetof(ObjSeqRuntimeStorage, frames));
+    dists = (f32*)(base + offsetof(ObjSeqRuntimeStorage, distances));
+    counts = base + offsetof(ObjSeqRuntimeStorage, counts);
+    handles = (int*)(base + offsetof(ObjSeqRuntimeStorage, handles));
+    marks = base + offsetof(ObjSeqRuntimeStorage, marks);
 
     {
         for (; i < 0x50; i += 8)
@@ -164,9 +197,9 @@ void ObjSeq_onMapSetup(void)
 
     {
         u8* p = base + i;
-        modes = (s16*)(base + 0x3a98) + i;
-        handles = (int*)(base + 0x33e4) + i;
-        marks = p + 0x338c;
+        modes = (s16*)(base + offsetof(ObjSeqRuntimeStorage, modes)) + i;
+        handles = (int*)(base + offsetof(ObjSeqRuntimeStorage, handles)) + i;
+        marks = p + offsetof(ObjSeqRuntimeStorage, marks);
         for (; i < 85; i++)
         {
             frames = (f32*)(handles + 300);

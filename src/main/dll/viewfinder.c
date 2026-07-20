@@ -21,5 +21,6 @@ const f32 lbl_803DF34C = 50.0f;
 
 void viewFinderSetZoomTo50(void)
 {
-    gExpgfxNearFadeDepth = lbl_803DF34C;
+    const f32* zoom = &lbl_803DF34C;
+    gExpgfxNearFadeDepth = *zoom;
 }
