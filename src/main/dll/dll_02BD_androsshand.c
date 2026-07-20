@@ -138,6 +138,8 @@ void androsshand_handleDamage(GameObject* obj, AndrossHandState* state)
     }
 }
 
+const f32 gAndrossHandZero = 0.0f;
+
 void androsshand_setState(GameObject* obj, AndrossHandStateId newState, u8 force)
 {
     AndrossHandState* state;
