@@ -873,7 +873,7 @@ void GameUI_release(void);
 
 void GameUI_airMeterShutdown(void);
 void gameUiResetMenuState(void);
-void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags);
+void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags);
 int cMenuRingModelRenderFn(int obj, int block, int idx);
 int cMenuRingIconRenderFn(int obj, int block, int idx);
 void pauseMenuDrawStatus_801274A0(GameObject* arg1);
@@ -2256,7 +2256,7 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
     }
     if ((u8)alpha != 0 && objIsCurModelNotZero(player) != 0 && mainGetBit(GAMEBIT_ITEM_Magic_Got) != 0)
     {
-        hudDrawMagicBar(alpha, 0x100, 0);
+        ((void (*)(int, int, u8))hudDrawMagicBar)(alpha, 0x100, 0);
     }
     magicId = 0;
     if (playerHasKrazoaSpirit(1, 0) != 0)
@@ -2359,17 +2359,17 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
 }
 
 char lbl_803A87F0[0x40];
-void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
+void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
 {
     int total = lbl_803A9364[8];
     int t13 = total - 0xd;
     int current = lbl_803A9364[2];
+    int seg4;
     int seg1;
     int seg3;
     int seg2;
-    int rem1;
-    int seg4;
     int rem4;
+    int rem1;
     int w8;
     int seg4Raw;
     int previousCurrent;
@@ -2408,7 +2408,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
     }
     else
     {
-        drawTexture(tex, gHudMagicBarX, gHudMagicBarY, alpha, 0x100);
+        ((void (*)(void*, f32, f32, u8, int))drawTexture)(tex, gHudMagicBarX, gHudMagicBarY, alpha, 0x100);
     }
     if (seg1 != 0)
     {
@@ -2419,7 +2419,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         }
         else
         {
-            drawScaledTexture(tex, (f32)(gHudMagicBarX + 0x1c), gHudMagicBarY, alpha, 0x100, seg1, 0x12, 0);
+            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
+                tex, (f32)(gHudMagicBarX + 0x1c), gHudMagicBarY, alpha, 0x100, seg1, 0x12, 0);
         }
     }
     if (rem1 != 0)
@@ -2431,7 +2432,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         }
         else
         {
-            drawPartialTexture(tex, (f32)(seg1 + 0x1c + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, rem1, 0x12, seg1,
+            ((void (*)(void*, f32, f32, u8, int, int, int, int, int))drawPartialTexture)(
+                tex, (f32)(seg1 + 0x1c + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, rem1, 0x12, seg1,
                                0);
         }
     }
@@ -2444,7 +2446,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         }
         else
         {
-            drawScaledTexture(tex, (f32)(gHudMagicBarX + 0x24), gHudMagicBarY, alpha, 0x100, seg2, 0x12, 0);
+            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
+                tex, (f32)(gHudMagicBarX + 0x24), gHudMagicBarY, alpha, 0x100, seg2, 0x12, 0);
         }
     }
     if (seg3 != 0)
@@ -2456,7 +2459,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         }
         else
         {
-            drawScaledTexture(tex, (f32)(seg2 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg3, 0x12, 0);
+            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
+                tex, (f32)(seg2 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg3, 0x12, 0);
         }
     }
     if (seg4 != 0)
@@ -2468,7 +2472,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         }
         else
         {
-            drawScaledTexture(tex, (f32)(t13 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg4, 0x12, 0);
+            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
+                tex, (f32)(t13 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg4, 0x12, 0);
         }
     }
     if (rem4 != 0)
@@ -2476,12 +2481,13 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x2D];
         if (flags)
         {
-            drawFn_8011e8d8(tex, (f32)(t13 + lbl_803DBAD0 + (seg4 + 0x24)), lbl_803DBAD4, elemAlpha, alpha, rem4, 0x12,
+            drawFn_8011e8d8(tex, (f32)(t13 + (seg4 + 0x24) + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, rem4, 0x12,
                             seg4, 0);
         }
         else
         {
-            drawPartialTexture(tex, (f32)(t13 + gHudMagicBarX + (seg4 + 0x24)), gHudMagicBarY, alpha, 0x100, rem4, 0x12,
+            ((void (*)(void*, f32, f32, u8, int, int, int, int, int))drawPartialTexture)(
+                tex, (f32)(t13 + (seg4 + 0x24) + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, rem4, 0x12,
                                seg4, 0);
         }
     }
@@ -2523,7 +2529,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         }
         else
         {
-            drawPartialTexture(tex, (f32)(w8 + 0x1c + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg1, 0x12, w8, 0);
+            ((void (*)(void*, f32, f32, u8, int, int, int, int, int))drawPartialTexture)(
+                tex, (f32)(w8 + 0x1c + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg1, 0x12, w8, 0);
         }
     }
     if (seg2 != 0)
@@ -2535,7 +2542,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         }
         else
         {
-            drawScaledTexture(tex, (f32)(rem1 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg2, 0x12, 0);
+            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
+                tex, (f32)(rem1 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg2, 0x12, 0);
         }
     }
     if (seg4 != 0)
@@ -2543,12 +2551,13 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x33];
         if (flags)
         {
-            drawFn_8011eb3c(tex, (f32)(t13 + lbl_803DBAD0 + (previousCurrent + 0x24)), lbl_803DBAD4, elemAlpha, alpha,
+            drawFn_8011eb3c(tex, (f32)(t13 + (previousCurrent + 0x24) + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha,
                             0x100, seg4, 0x12, 0);
         }
         else
         {
-            drawScaledTexture(tex, (f32)(t13 + gHudMagicBarX + (previousCurrent + 0x24)), gHudMagicBarY, alpha, 0x100,
+            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
+                tex, (f32)(t13 + (previousCurrent + 0x24) + gHudMagicBarX), gHudMagicBarY, alpha, 0x100,
                               seg4, 0x12, 0);
         }
     }

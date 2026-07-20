@@ -18,7 +18,6 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/dll/dll_02C0_front.h"
-#define FRONT_GAMETEXTBOX_NARROW
 #include "main/dll/front_game_text_box_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/texture.h"
@@ -385,7 +384,7 @@ void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
 /* Free the main buffer at gTitleScreenMainTex and walk the 19-slot table at
  * gTitleScreenTextures releasing each non-null entry, then clear the busy
  * byte at gTitleScreenSetupDone. */
-void gameTextBoxFn_80134d40(u8 alpha, int hideHighlight, u32 showArrows)
+void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
 {
     int i;
     Texture* tex;
@@ -414,7 +413,6 @@ void gameTextBoxFn_80134d40(u8 alpha, int hideHighlight, u32 showArrows)
         int xb;
         int yb;
         int y;
-        int w;
         xb = (int)m2[0][3] - 0x32;
         yb = (int)m2[1][3];
         texs = (Texture**)gTitleScreenTextures;
@@ -426,9 +424,8 @@ void gameTextBoxFn_80134d40(u8 alpha, int hideHighlight, u32 showArrows)
         drawScaledTexture(tex, (f32)(int)(xb + 0x5a), (f32)(y = yb - 0x10), 0xff, 0x100, tex->width,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
         tex = texs2[6];
-        w = tex->width;
-        drawScaledTexture(tex, (f32)(int)(xb + texs[4]->width + w + 0x57), (f32)(y = yb - 0x10), 0xff, 0x100, w,
-                          (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 1);
+        drawScaledTexture(tex, (f32)(int)(xb + 0x57 + texs[4]->width + tex->width), (f32)(y = yb - 0x10), 0xff, 0x100,
+                          tex->width, (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 1);
         tex = (Texture*)gTitleScreenTextures[0];
         drawScaledTexture(tex, (f32)(int)(xb + 0x23), (f32)(y = yb - 0x10), 0xff, 0x100, tex->width,
                           (u32)(lbl_803E2300 * gTitleScreenCursorY) + 0x10, 0);
