@@ -70,8 +70,8 @@ enum NwMammothRuntimeFlag
     NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
 };
 
-int fn_801CE078(int* obj, u8* state);
-void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData);
+int NW_mammoth_updateSleepCycle(int* obj, u8* state);
+void NW_mammoth_updateArtifactQuest(int obj, int baddie, NwMammothMapData* mapData);
 
 int NW_mammoth_getExtraSize(void);
 void NW_mammoth_free(GameObject* obj);
@@ -115,7 +115,7 @@ typedef struct
     f32 pos[3];
 } WoPartfxBlock;
 
-void fn_801CDF94(GameObject* obj, int state, int flag)
+void NW_mammoth_updateEyeTracking(GameObject* obj, int state, int flag)
 {
     if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL &&
         ((NwMammothState*)state)->playerDistanceSq < 40000.0f)
@@ -144,7 +144,7 @@ void fn_801CDF94(GameObject* obj, int state, int flag)
     }
 }
 
-int fn_801CE078(int* obj, u8* st)
+int NW_mammoth_updateSleepCycle(int* obj, u8* st)
 {
     u8 night;
     int animCue;
@@ -230,7 +230,7 @@ int fn_801CE078(int* obj, u8* st)
     return 1;
 }
 
-void fn_801CE2BC(int* obj, u8* st, short* objDef)
+void NW_mammoth_updateGatekeeper(int* obj, u8* st, short* objDef)
 {
     NwMammothState* state = (NwMammothState*)st;
     GameObject* tw2;
@@ -442,7 +442,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             }
             state->triggerList = lbl_803DBFAC;
         }
-        fn_801CE078(obj, st);
+        NW_mammoth_updateSleepCycle(obj, st);
         break;
     }
     if (state->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE)
@@ -462,10 +462,10 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
     }
 }
 
-void fn_801CEA14(short* obj, u8* st, u8* mapData)
+void NW_mammoth_updatePatrol(short* obj, u8* st, u8* mapData)
 {
     NwMammothState* state = (NwMammothState*)st;
-    switch (fn_801CE078((int*)obj, st))
+    switch (NW_mammoth_updateSleepCycle((int*)obj, st))
     {
     case -1:
         state->pathSpeed -= 0.01f * timeDelta;
@@ -575,7 +575,7 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
     }
 }
 
-void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
+void NW_mammoth_updateArtifactQuest(int obj, int baddie, NwMammothMapData* mapData)
 {
     NwMammothState* state = (NwMammothState*)baddie;
 
@@ -607,12 +607,12 @@ void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
     }
 }
 
-void fn_801CEE0C(int obj, int baddie, NwMammothMapData* mapData)
+void NW_mammoth_updateFeedQuest(int obj, int baddie, NwMammothMapData* mapData)
 {
     NwMammothState* state = (NwMammothState*)baddie;
 
     (void)mapData;
-    if (fn_801CE078((int*)obj, (u8*)baddie) != 0)
+    if (NW_mammoth_updateSleepCycle((int*)obj, (u8*)baddie) != 0)
         return;
 
     switch (state->stateIndex)
@@ -768,17 +768,17 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
     switch (mapData->behaviorMode)
     {
     case 0:
-        fn_801CEE0C((int)obj, (int)state, mapData);
+        NW_mammoth_updateFeedQuest((int)obj, (int)state, mapData);
         break;
     case 2:
-        fn_801CED2C((int)obj, (int)state, mapData);
+        NW_mammoth_updateArtifactQuest((int)obj, (int)state, mapData);
         break;
     case 1:
     case 3:
-        fn_801CEA14((short*)obj, (u8*)state, (u8*)mapData);
+        NW_mammoth_updatePatrol((short*)obj, (u8*)state, (u8*)mapData);
         break;
     case 4:
-        fn_801CE2BC((int*)obj, (u8*)state, (short*)mapData);
+        NW_mammoth_updateGatekeeper((int*)obj, (u8*)state, (short*)mapData);
         break;
     }
     if ((table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_PATH_CONTROL) != 0)
@@ -823,7 +823,7 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
     }
     objAudioFn_8006ef38((GameObject*)obj, &state->animEvents, 8, state->pathPoints, state->pathState, 1.0f,
                         1.0f);
-    fn_801CDF94((GameObject*)obj, (int)state, table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
+    NW_mammoth_updateEyeTracking((GameObject*)obj, (int)state, table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
     state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
     if (((state->runtimeFlags & NW_MAMMOTH_RUNTIME_MENU_LOCK) == 0) && (ObjTrigger_IsSet((int)obj) != 0))
     {

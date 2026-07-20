@@ -9,7 +9,7 @@
  *
  * This TU also hosts two helpers shared with the SnowHorn mammoth (DLL
  * 0x1A1): nw_mammoth_SeqFn (nw_mammoth_SeqFn), which drives the mammoth's
- * looped audio / path state, and fn_801CDF94, which feeds the mammoth's
+ * looped audio / path state, and NW_mammoth_updateEyeTracking, which feeds the mammoth's
  * look-at target into the character eye-animation update.
  */
 #include "main/mapEvent.h"
@@ -122,7 +122,7 @@ int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
         ((NwMammothState*)state)->playerDistanceSq = 0.0f;
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~8);
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~0x40);
-        fn_801CDF94(obj, (int)state, 1);
+        NW_mammoth_updateEyeTracking(obj, (int)state, 1);
     }
     audioEvents = state + 0x440;
     audioPoints = state + 0x45c;
