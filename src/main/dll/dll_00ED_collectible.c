@@ -705,16 +705,14 @@ void collectible_update(int obj)
 void collectible_init(GameObject *obj, int setup)
 {
     ObjAnimComponent* objAnim;
-    u8* state;
+    u8* state = (obj)->extra;
     int setupObj;
     int setupModelIndex;
     u8* data;
-    u32 pathWord;
+    u8 pathWord[4] = {0x40, 0x40, 0, 0};
     u8 pathByte;
 
     objAnim = (ObjAnimComponent*)obj;
-    state = (obj)->extra;
-    pathWord = 0x40400000;
     pathByte = sCollectiblePathByte[0];
     ObjGroup_AddObject((int)obj, COLLECTIBLE_OBJGROUP);
     ObjMsg_AllocQueue(obj, 2);
@@ -795,7 +793,7 @@ void collectible_init(GameObject *obj, int setup)
             break;
         }
         (*gPathControlInterface)->init(state + 0x50, 0, 0x40006, 1);
-        (*gPathControlInterface)->setup(state + 0x50, 1, sCollectiblePathData, &pathWord, &pathByte);
+        (*gPathControlInterface)->setup(state + 0x50, 1, sCollectiblePathData, pathWord, &pathByte);
         (*gPathControlInterface)->attachObject((void*)obj, state + 0x50);
     }
 }
