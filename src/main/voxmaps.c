@@ -37,8 +37,8 @@ void* gVoxMapsScratchBufferPtr;
 u8 gVoxMapsSlotInUse[8];
 u32 gVoxMapsTransformObj;
 int gVoxMapsMaxMapIndex;
-void* gVoxMapsLargeTextures[2];
-void* gVoxMapsSmallTextures[2];
+Texture* gVoxMapsLargeTextures[2];
+Texture* gVoxMapsSmallTextures[2];
 
 static inline void heapSiftUp(CurveHeapNode* q, int i)
 {

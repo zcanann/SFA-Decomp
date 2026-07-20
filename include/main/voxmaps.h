@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 
 struct CurveHeapNode;
+typedef struct Texture Texture;
 
 typedef struct VoxMapSlotOrigin {
     u16 gridX;
@@ -124,8 +125,8 @@ extern int* gVoxMapsMapList;
 extern int gVoxMapsMaxMapIndex;
 extern void* gVoxMapsScratchBuffer;
 extern void* gVoxMapsScratchBufferPtr;
-extern void* gVoxMapsLargeTextures[2];
-extern void* gVoxMapsSmallTextures[2];
+extern Texture* gVoxMapsLargeTextures[2];
+extern Texture* gVoxMapsSmallTextures[2];
 extern int gMapBlockOriginWorldX;
 extern int gMapBlockOriginWorldZ;
 extern f32 gVoxMapsBlockWorldSize;
