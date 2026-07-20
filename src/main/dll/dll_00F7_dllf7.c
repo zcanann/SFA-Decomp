@@ -122,7 +122,7 @@ void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     if (state->byte9 == 0 && visible != 0)
     {
         f32 v = state->bounceOffset;
-        if (v != 0.0f)
+        if (v)
         {
             fn_8003B5E0(0xc8, 0, 0, v);
         }
