@@ -107,13 +107,13 @@ void wmtorch_init(u8* obj, u8* params)
     {
         res = Resource_Acquire(0x69, 1);
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        (*(Dll69Interface**)res)->spawn(obj, 1, flameParams, 0x10004, -1, NULL);
+        (*(Dll69Interface**)res)->spawn((GameObject*)obj, 1, flameParams, 0x10004, -1, NULL);
     }
     else if (state->torchType == 0x7f)
     {
         res = Resource_Acquire(0x69, 1);
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        (*(Dll69Interface**)res)->spawn(obj, 2, flameParams, 0x10004, -1, NULL);
+        (*(Dll69Interface**)res)->spawn((GameObject*)obj, 2, flameParams, 0x10004, -1, NULL);
     }
     else
     {

@@ -267,7 +267,7 @@ void dll_197_update(int obj)
         stageEffectBase = state->stage * 2;
         resourceParams.param1 = stageEffectBase + 0x19d;
         resourceParams.param2 = stageEffectBase + 0x19e;
-        (*resource)->spawn((u8*)obj, 1, callbackData, 0x10004, -1, &resourceParams);
+        (*resource)->spawn((GameObject*)obj, 1, callbackData, 0x10004, -1, &resourceParams);
         Resource_Release(resource);
 
         for (effect = 0; effect < 200; effect++)
@@ -353,7 +353,7 @@ void dll_197_init(int obj, int dataArg)
         res = Resource_Acquire(0x69, 1);
         if (data->menuState == 0)
         {
-            (*res)->spawn((u8*)obj, 0, stk.buf, 0x10004, -1, NULL);
+            (*res)->spawn((GameObject*)obj, 0, stk.buf, 0x10004, -1, NULL);
         }
         break;
     case 1:

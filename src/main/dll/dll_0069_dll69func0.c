@@ -26,8 +26,8 @@
 extern u8 lbl_803137F8[];
 extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
 
-void dll_69_func03(u8* sourceObj, int variant, void* posSource, u32 flags, int unused,
-                   Dll69EffectParams* overrideParams)
+s16 dll_69_func03(GameObject* sourceObj, int variant, void* posSource, u32 flags, int unused,
+                  Dll69EffectParams* overrideParams)
 {
     ModgfxPointerSpawnPacket buf;
     GfxCmd* e;
@@ -58,9 +58,9 @@ void dll_69_func03(u8* sourceObj, int variant, void* posSource, u32 flags, int u
     entries[1].mode = 2;
     if (sourceObj != NULL)
     {
-        entries[1].x = lbl_803E0A04 * ((GameObject*)sourceObj)->anim.rootMotionScale;
-        entries[1].y = lbl_803E0A08 * ((GameObject*)sourceObj)->anim.rootMotionScale;
-        entries[1].z = lbl_803E0A04 * ((GameObject*)sourceObj)->anim.rootMotionScale;
+        entries[1].x = lbl_803E0A04 * sourceObj->anim.rootMotionScale;
+        entries[1].y = lbl_803E0A08 * sourceObj->anim.rootMotionScale;
+        entries[1].z = lbl_803E0A04 * sourceObj->anim.rootMotionScale;
     }
     else
     {
@@ -137,7 +137,7 @@ void dll_69_func03(u8* sourceObj, int variant, void* posSource, u32 flags, int u
     e[3].y = b;
     e[3].z = c;
     buf.v58 = variant;
-    buf.ctx = sourceObj;
+    buf.ctx = (u8*)sourceObj;
     buf.v44 = variant;
     buf.pos[0] = lbl_803E0A00;
     if (posSource != NULL)
@@ -194,7 +194,7 @@ void dll_69_func03(u8* sourceObj, int variant, void* posSource, u32 flags, int u
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)
+    return (*gModgfxInterface)
         ->spawnEffect(&buf, 0, 8, (u8*)(int)lbl_803137F8, 4, &base[0x50],
                       variant == 2 ? DLL69_EFFECT_ID_VARIANT2 : DLL69_EFFECT_ID_DEFAULT, 0);
 }

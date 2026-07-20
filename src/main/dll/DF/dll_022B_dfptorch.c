@@ -197,7 +197,7 @@ void DFP_Torch_update(int obj)
                 res = Resource_Acquire(0x69, 1);
                 prm.param1 = state->colorIdx * 2 + 0x19d;
                 prm.param2 = state->colorIdx * 2 + 0x19e;
-                (*res)->spawn((u8*)obj, 1, buf, 0x10004, -1, &prm);
+                (*res)->spawn((GameObject*)obj, 1, buf, 0x10004, -1, &prm);
                 Resource_Release(res);
                 for (i = 0; i < 0x64; i++)
                 {
@@ -280,7 +280,7 @@ void DFP_Torch_init(int obj, int def)
         res = Resource_Acquire(0x69, 1);
         if (place->colorIdx == 0)
         {
-            (*res)->spawn((u8*)obj, 0, &spawnArg, 0x10004, -1, NULL);
+            (*res)->spawn((GameObject*)obj, 0, &spawnArg, 0x10004, -1, NULL);
         }
         break;
     }
