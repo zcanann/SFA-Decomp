@@ -405,7 +405,7 @@ int ktrex_stateHandlerA08(GameObject* obj, KTRexRuntime* runtime)
             gKTRexState->stateTimer = timer;
             if (!(timer <= 0.0f))
             {
-                goto done;
+                return 0;
             }
         }
         if ((gKTRexState->timerFA & 8) != 0)
@@ -421,7 +421,6 @@ int ktrex_stateHandlerA08(GameObject* obj, KTRexRuntime* runtime)
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         return 10;
     }
-done:
     return 0;
 }
 

@@ -119,35 +119,32 @@ void objSeqMoveFn_80199188(GameObject* obj, GameObject* seqObj)
     distSqB = state->reachBZ - (obj)->anim.worldPosZ;
     distSqB = t * t + distSqB * distSqB;
     t = state->nearRadiusSq;
-    if (distSqB < t)
+    if ((distSqB < t) && (((dyB < 0.0f) ? -dyB : dyB) < speed))
     {
-        dyB = (dyB < 0.0f) ? -dyB : dyB;
-        if (dyB < speed)
+        nearEnd = false;
+        if (distSqA < t)
         {
-            nearEnd = false;
-            if (distSqA < t)
+            dyA = (dyA < 0.0f) ? -dyA : dyA;
+            if (dyA < speed)
             {
-                dyA = (dyA < 0.0f) ? -dyA : dyA;
-                if (dyA < speed)
-                {
-                    nearEnd = true;
-                }
+                nearEnd = true;
             }
-            leg = nearEnd ? 2 : 1;
-            goto end;
         }
+        leg = nearEnd ? 2 : 1;
     }
-    nearEnd = false;
-    if (distSqA < t)
+    else
     {
-        dyA = (dyA < 0.0f) ? -dyA : dyA;
-        if (dyA < speed)
+        nearEnd = false;
+        if (distSqA < t)
         {
-            nearEnd = true;
+            dyA = (dyA < 0.0f) ? -dyA : dyA;
+            if (dyA < speed)
+            {
+                nearEnd = true;
+            }
         }
+        leg = nearEnd ? -1 : -2;
     }
-    leg = nearEnd ? -1 : -2;
-end:
     objInterpretSeq(obj, seqObj, leg, distSqB);
 }
 

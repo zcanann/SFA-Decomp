@@ -991,9 +991,16 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
             for (;;)
             {
                 int k = 6;
-            retry:
-                ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
-                if (k == charLen2)
+                do
+                {
+                    ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
+                    if (k == charLen2)
+                    {
+                        break;
+                    }
+                    k--;
+                } while (k > 0);
+                if (k > 0)
                 {
                     if (isSpace(ch))
                     {
@@ -1010,14 +1017,6 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
                         dst = q + 1;
                         *(char**)((char*)buffer + ((lineIdx + 1) << 2)) = dst++;
                         break;
-                    }
-                }
-                else
-                {
-                    k--;
-                    if (k > 0)
-                    {
-                        goto retry;
                     }
                 }
             }

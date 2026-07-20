@@ -748,42 +748,48 @@ void fn_80060490(int* outX, int* outY, int* outWidth, int* outHeight)
     *outHeight = gSunFlareScissorHeight;
 }
 
-void queueGlowRender(ModelLightStruct* light)
+static inline int isGlowInFrustum(ModelLightStruct* light)
 {
     u8 i;
-    int visible;
-    u8 idx;
+    FrustumPlane* plane;
     f32 offsetZ;
     f32 offsetX;
-
-    if (lbl_803DCE06 >= 100)
-        return;
 
     i = 0;
     offsetZ = playerMapOffsetZ;
     offsetX = playerMapOffsetX;
     for (; i < 5; i++)
     {
-        FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
-        f32 dot = light->worldY * plane->normalY + plane->normalX * (light->worldX - offsetX) +
+        f32 dot;
+        plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
+        dot = light->worldY * plane->normalY + plane->normalX * (light->worldX - offsetX) +
                   plane->normalZ * (light->worldZ - offsetZ) + plane->distance + lbl_803DEBCC;
         if (dot < lbl_803DEBCC)
         {
-            visible = 0;
-            goto check;
+            return 0;
         }
     }
-    visible = 1;
-check:
-{
-    u8 vis = visible;
-    if (vis == 0 && light->glowAlpha == 0)
-        return;
-    if (vis == 0)
-    {
-        light->glowAlphaStep = -0x10;
-    }
+    return 1;
 }
+
+void queueGlowRender(ModelLightStruct* light)
+{
+    int visible;
+    u8 idx;
+
+    if (lbl_803DCE06 >= 100)
+        return;
+
+    visible = isGlowInFrustum(light);
+    {
+        u8 vis = visible;
+        if (vis == 0 && light->glowAlpha == 0)
+            return;
+        if (vis == 0)
+        {
+            light->glowAlphaStep = -0x10;
+        }
+    }
     idx = lbl_803DCE06++;
     gGlowLightList[idx] = (int)light;
 }
@@ -978,30 +984,30 @@ void* MapBlock_loadFromFile(int blockId)
     int blockOff = 0;
     int* table;
     int tableEntry;
-    if (blockId > gMapBlockIndexCount)
+    if (blockId <= gMapBlockIndexCount)
     {
-        goto ret0a;
-    }
-    table = (int*)gMapBlockIndexList;
-    if (table != 0)
-    {
-        tableEntry = table[blockId];
-        if (tableEntry != -1)
+        table = (int*)gMapBlockIndexList;
+        if (table != 0)
         {
-            if (tableEntry == 0 && table[blockId + 1] == 0)
+            tableEntry = table[blockId];
+            if (tableEntry != -1)
             {
-                goto ret0b;
+                if (tableEntry != 0 || table[blockId + 1] != 0)
+                {
+                    blockOff = tableEntry;
+                    checkLoadBlock(tableEntry, &compressedLen, &decompressedSize);
+                }
+                else
+                {
+                    return 0;
+                }
             }
-            blockOff = tableEntry;
-            checkLoadBlock(tableEntry, &compressedLen, &decompressedSize);
         }
     }
-    goto cont;
-ret0b:
-    return 0;
-ret0a:
-    return 0;
-cont:
+    else
+    {
+        return 0;
+    }
     if (compressedLen <= 0)
     {
         return 0;
@@ -2802,6 +2808,51 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
     return gIntersectPointCount - 1;
 }
 
+static inline int* trackFindDynamicSlot(GameObject* self, int* o, int slot)
+{
+    s16 k;
+    char* fl;
+
+    k = 0;
+    fl = (char*)gMapDynamicSlots;
+    do
+    {
+        if (*(u8*)(fl + 0x14) != 0 && *(u32*)fl == (u32)self && *(u32*)(fl + 4) == (u32)o &&
+            *(u8*)(fl + 0x15) == (u8)slot)
+        {
+            *(u8*)(fl + 0x14) = 0;
+            return (int*)fl;
+        }
+        fl += 0x18;
+        k++;
+    } while (k < 0x40);
+    return NULL;
+}
+
+static inline int* trackAllocDynamicSlot(GameObject* self, int* o, int slot)
+{
+    s16 k;
+    int* e;
+
+    k = 0;
+    e = (int*)gMapDynamicSlots;
+    do
+    {
+        if (*(u8*)((char*)e + 0x14) == 0)
+        {
+            *(int*)e = (int)self;
+            *(int*)((char*)e + 4) = (int)o;
+            *(u8*)((char*)e + 0x15) = slot;
+            *(u8*)((char*)e + 0x14) = 2;
+            return e;
+        }
+        e = (int*)((char*)e + 0x18);
+        k++;
+    } while (k < 0x40);
+    debugPrintf(sTrackNoFreeLastLineError);
+    return NULL;
+}
+
 int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameObject* self, int p8, int p9,
                       int slot, u8 arg8)
 {
@@ -2879,24 +2930,12 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
             continue;
         if ((u8)slot != 0xff)
         {
-            char* fl;
-            k = 0;
-            fl = (char*)gMapDynamicSlots;
-            do
-            {
-                if (*(u8*)(fl + 0x14) != 0 && *(u32*)fl == (u32)self && *(u32*)(fl + 4) == (u32)o &&
-                    *(u8*)(fl + 0x15) == (u8)slot)
-                {
-                    *(u8*)(fl + 0x14) = 0;
-                    e = (int*)fl;
-                    goto haveEntry;
-                }
-                fl += 0x18;
-                k++;
-            } while (k < 0x40);
+            e = trackFindDynamicSlot(self, o, slot);
         }
-        e = NULL;
-    haveEntry:
+        else
+        {
+            e = NULL;
+        }
         if (e != NULL)
         {
             t20[0] = ((ModelLightStruct*)e)->localY;
@@ -2912,24 +2951,7 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
             Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], (u32)o);
         if ((u8)slot != 0xff)
         {
-            k = 0;
-            e = (int*)gMapDynamicSlots;
-            do
-            {
-                if (*(u8*)((char*)e + 0x14) == 0)
-                {
-                    *(int*)e = (int)self;
-                    *(int*)((char*)e + 4) = (int)o;
-                    *(u8*)((char*)e + 0x15) = slot;
-                    *(u8*)((char*)e + 0x14) = 2;
-                    goto stored;
-                }
-                e = (int*)((char*)e + 0x18);
-                k++;
-            } while (k < 0x40);
-            debugPrintf(sTrackNoFreeLastLineError);
-            e = NULL;
-        stored:
+            e = trackAllocDynamicSlot(self, o, slot);
             if (e != NULL)
             {
                 ((ModelLightStruct*)e)->localY = t14[0];
@@ -3860,7 +3882,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
                 b[0] = t * p[0] + b[0];
                 b[1] = t * p[1] + b[1];
                 b[2] = t * p[2] + b[2];
-                goto done;
+                return 1;
             }
             case 9:
             case 0xa:
@@ -3881,7 +3903,6 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
             }
         }
     }
-done:
     return 1;
 }
 

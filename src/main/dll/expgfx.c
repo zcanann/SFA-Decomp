@@ -357,11 +357,14 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
             {
                 foundPoolIndex = searchIndex;
                 found = 1;
-                goto poolSearchDone;
+                break;
             }
         }
+        if (found)
+        {
+            break;
+        }
     }
-poolSearchDone:
 
     if (found)
     {

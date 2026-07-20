@@ -246,22 +246,17 @@ void PressureSwitchFB_update(GameObject* obj)
                     {
                         tmp = *(int*)&obj->extra;
                         j = 0;
-                        if (state->flags.update.playerOnly != 0)
+                        if ((state->flags.update.playerOnly == 0) ||
+                            (other == (u32)Obj_GetPlayerObject()))
                         {
-                            if (other == (u32)Obj_GetPlayerObject())
-                                goto do_insert;
-                            else
-                                goto skip_insert;
+                            while ((*(u32*)(tmp + j * 4 + 4) != 0) && (j != 9))
+                            {
+                                j++;
+                            }
+                            *(u32*)(tmp + j * 4 + 4) = other;
+                            *(f32*)((base = tmp + j * 8) + 0x2c) = ((GameObject*)other)->anim.localPosX;
+                            *(f32*)(base + 0x30) = ((GameObject*)other)->anim.localPosZ;
                         }
-                    do_insert:
-                        while ((*(u32*)(tmp + j * 4 + 4) != 0) && (j != 9))
-                        {
-                            j++;
-                        }
-                        *(u32*)(tmp + j * 4 + 4) = other;
-                        *(f32*)((base = tmp + j * 8) + 0x2c) = ((GameObject*)other)->anim.localPosX;
-                        *(f32*)(base + 0x30) = ((GameObject*)other)->anim.localPosZ;
-                    skip_insert:;
                     }
                 }
             }
