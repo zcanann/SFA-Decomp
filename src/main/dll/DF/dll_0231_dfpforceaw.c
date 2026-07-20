@@ -9,6 +9,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/obj_placement.h"
 #include "main/obj_message.h"
 #include "main/dll/trickycurve_state.h"
 #include "main/dll/TrickyCurve.h"
@@ -22,7 +23,7 @@
 
 typedef struct TrickyCurveObjectDef
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 rangeYRaw; /* 0x18 << 2 -> state.rangeY */
     u8 pad19[0x1A - 0x19];
     s16 rangeX;         /* 0x1A -> state.rangeX (X-axis half-extent) */
