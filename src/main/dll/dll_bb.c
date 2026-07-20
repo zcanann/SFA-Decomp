@@ -19,6 +19,7 @@
 #include "dolphin/os/OSReport.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/dll_BB.h"
+#include "main/dll/dll_B7.h"
 #include "main/camera.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"

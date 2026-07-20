@@ -35,7 +35,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/resource.h"
 #include "main/maketex.h"
-#include "main/camera_ext.h"
+#include "main/object_transform.h"
 #include "string.h"
 
 typedef struct PushablePlacement

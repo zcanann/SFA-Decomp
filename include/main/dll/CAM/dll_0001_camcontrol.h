@@ -269,12 +269,6 @@ void camcontrol_updateTargetFeedback(void);
 void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int unused2,
                                     u32 arg3, u32 arg4, u32 arg5,
                                     u32 arg6);
-CamcontrolTargetObject *camcontrol_findBestTarget(CamcontrolCameraState *cameraState,
-                                                  ObjAnimComponent *focus);
-void camcontrol_updateMoveAverage(CamcontrolCameraState *cameraState, ObjAnimComponent *focus);
-void camcontrol_applyState(CamcontrolCameraState *cameraState);
-void camcontrol_applyQueuedAction(void);
-void camcontrol_activateHandler(u16 actionId, void *actionData);
 void camcontrol_getRelativePosition(void *targetObj, float *outX, float *outY, float *outZ,
                                     float *outDistanceXZ, f32 heightOffset, int useLocalPosition);
 void camcontrol_initialise(f32 numerator, float *dst, f32 denominator, f32 minValue, f32 y, f32 z);

@@ -29,6 +29,8 @@
 #include "dolphin/os.h"
 #include "main/asset_load.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
+#include "main/dll/dll_B6.h"
+#include "main/dll/dll_BB.h"
 #include "main/dll/CAM/dll_0043_unk.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
 #include "main/dll/CAM/dll_0047_cameramodeteststrength.h"
