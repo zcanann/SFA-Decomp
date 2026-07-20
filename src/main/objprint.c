@@ -1215,7 +1215,6 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
             int negA;
             char* p;
             s16* ap;
-            int i;
             f32 prodB;
             int prodBi;
 
@@ -1241,7 +1240,6 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
             prodBi = (s32)prodB;
             minB = -(s16)prodBi;
             negA = -a;
-            i = 2;
             do
             {
                 int v;
@@ -1272,7 +1270,7 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
                 }
                 p += 0x30;
                 ap++;
-            } while (--i != 0);
+            } while (ap != ang + 2);
             found[0][1] = *(s16*)((u8*)p3 + 0x14);
             found[0][0] = *(s16*)((u8*)p3 + 0x44);
         }
