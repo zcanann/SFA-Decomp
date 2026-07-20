@@ -698,25 +698,24 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
 
     if ((region == 2 && size > 0x3000) || region == 3 || region == 1)
     {
-        HeapItem* b0;
-        HeapItem* b1;
+        HeapItem* b;
         HeapItem* w;
         OSReport(msg + 0x54c, tag, region, type, size);
-        b0 = (HeapItem*)gMmRegionTable[0].start;
-        w = b0;
+        b = (HeapItem*)gMmRegionTable[0].start;
+        w = b;
         while (w->next != -1)
         {
-            w = &b0[w->next];
+            w = &b[w->next];
             if (w->size > largestFree0 && w->type == 0)
             {
                 largestFree0 = w->size;
             }
         }
-        b1 = (HeapItem*)gMmRegionTable[1].start;
-        w = b1;
+        b = (HeapItem*)gMmRegionTable[1].start;
+        w = b;
         while (w->next != -1)
         {
-            w = &b1[w->next];
+            w = &b[w->next];
             if (w->size > largestFree1 && w->type == 0)
             {
                 largestFree1 = w->size;
