@@ -390,12 +390,12 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     lbl_803DD560->transitionComplete = 1;
     tags[0] = 9;
     tags[1] = 0x1b;
-    lbl_803DD560->nextNodeId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+    lbl_803DD560->nextNodeId = (*gRomCurveInterface)->find(
         ((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
         tags, 2, lbl_803DD560->pathTag);
     tags[0] = 8;
     tags[1] = 0x1a;
-    lbl_803DD560->prevNodeId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+    lbl_803DD560->prevNodeId = (*gRomCurveInterface)->find(
         ((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
         tags, 2, lbl_803DD560->pathTag);
     fn_8010A104(&lbl_803DD560->nextNodeId, &lbl_803DD560->prevNodeId, ((GameObject*)obj)->anim.worldPosX,

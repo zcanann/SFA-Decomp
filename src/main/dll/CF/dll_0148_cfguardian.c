@@ -419,7 +419,7 @@ int* findRomCurvePointNearObject(int* obj, int curveGroup, int* outVec, int mode
         findParams[1] = 21;
     }
 
-    found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+    found = (*gRomCurveInterface)->find(
         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
         findParams, 2, curveGroup);
 

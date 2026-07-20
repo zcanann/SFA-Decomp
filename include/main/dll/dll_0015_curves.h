@@ -249,7 +249,7 @@ int RomCurve_getRandomBlockedLink(RomCurveDef* curve, int excludeLinkId);
 int RomCurve_getLinkIds(RomCurveDef* curve, int excludeLinkId, int* outIds);
 int RomCurve_getRandomUnblockedLink(RomCurveDef* curve, int excludeLinkId);
 RomCurveDef* RomCurve_getById(u32 curveId);
-int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action);
+int RomCurve_find(f32 x, f32 y, f32 z, int* types, int typeCount, int action);
 void RomCurve_remove(RomCurveDef* curve);
 void RomCurve_add(RomCurveDef* curve);
 void curves_initialise(void);

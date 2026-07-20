@@ -68,8 +68,7 @@ int TREX_Lazerwall_popQueuedState(int obj, int animState)
     {
         if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState*)state)->stack) != 0)
         {
-            int (*findFn)(f32 x, f32 y, f32 z, int* types, int typeCount, int action) =
-                (int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find;
+            RomCurveFindFn findFn = (*gRomCurveInterface)->find;
             int found = findFn(((GameObject*)playerObj)->anim.localPosX, ((GameObject*)playerObj)->anim.localPosY,
                                ((GameObject*)playerObj)->anim.localPosZ, (int*)head, 2, -1);
 

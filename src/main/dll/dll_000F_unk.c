@@ -429,7 +429,7 @@ void player_updateCurve(int* obj, int* state, f32 t)
 
 void player_findCurve(int* obj, int* state, int curveId)
 {
-    *(int*)((char*)state + 0x33c) = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+    *(int*)((char*)state + 0x33c) = (*gRomCurveInterface)->find(
         ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
         &curveId, 1, *(s8*)((char*)state + 0x344));
 }

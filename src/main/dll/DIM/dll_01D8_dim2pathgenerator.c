@@ -177,7 +177,7 @@ void DIM2PathGenerator_update(int* obj)
         {
             int found;
             curveGroup = CURVE_GROUP_SNOWBALL_PATH;
-            found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+            found = (*gRomCurveInterface)->find(
                 ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                 ((GameObject*)obj)->anim.localPosZ, &curveGroup, 1, 10);
             if (found != -1)

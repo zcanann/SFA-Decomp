@@ -1854,7 +1854,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         pair[1] = 0x15;
         if (((ObjSeqState*)seq)->curveId < 0)
         {
-            ((ObjSeqState*)seq)->curveId = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+            ((ObjSeqState*)seq)->curveId = (*gRomCurveInterface)->find(
                 ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                 ((GameObject*)obj)->anim.localPosZ, pair, 2, cmdArg);
             if (((ObjSeqState*)seq)->curveId > -1)

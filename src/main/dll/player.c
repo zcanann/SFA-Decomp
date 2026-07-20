@@ -5620,7 +5620,7 @@ int playerState1B(GameObject* obj, int state, f32 fv)
     {
         int found;
         curveId = 0x1f;
-        found = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+        found = (*gRomCurveInterface)->find(
             obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
             &curveId, 1, 0);
         if (found != -1)
