@@ -5469,9 +5469,6 @@ void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
     u32 w;
     u32 h;
     u32 wA;
-    int rowDataOffset;
-    int tileColumnOffset;
-    int pixelColumnOffset;
     int pixelA;
     int pixelB;
     u32 wB;
@@ -5513,8 +5510,11 @@ void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
             int i, j;
             for (i = 0; i < (int)src1->height; i++)
             {
-                u8 *pa, *pb, *pc;
+                u8 *pa, *pb;
                 u32 wd;
+                int rowDataOffset;
+                int tileColumnOffset;
+                int pixelColumnOffset;
                 j = 0;
                 w = i & 0xfffffffc;
                 h = (i & 3) * 8;
@@ -5547,8 +5547,8 @@ void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                            0xfc)
                           << 3;
                     outputPixel = blue | (red | green);
-                    pc = (u8*)dst + pixelColumnOffset + tileColumnOffset + h + rowDataOffset;
-                    *(u16*)(pc + 0x60) = outputPixel;
+                    *(u16*)((u8*)dst + pixelColumnOffset + tileColumnOffset + h + rowDataOffset + 0x60) =
+                        outputPixel;
                 }
             }
         }
