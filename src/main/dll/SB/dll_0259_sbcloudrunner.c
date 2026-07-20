@@ -569,7 +569,7 @@ void SB_CloudRunner_update(GameObject* obj)
     {
     case RIDE_SUBSTATE_STEER:
         SB_CloudRunner_UpdateSteer((s16*)obj, (u8*)state);
-        ((void (*)(GameObject*, SBCloudRunnerState*))SB_CloudRunner_HandlePriorityHit)(obj, state);
+        SB_CloudRunner_HandlePriorityHit(obj, state);
         break;
     case RIDE_SUBSTATE_TILT:
         WCPushBlock_UpdateRideTilt((WCPushBlockObject*)obj, (WCPushBlockState*)state);
@@ -591,7 +591,7 @@ void SB_CloudRunner_update(GameObject* obj)
     {
         state->rideFrames = 0;
     }
-    ((void (*)(int, WCPushBlockState*))WCPushBlock_UpdateCloudAction)((int)obj, (WCPushBlockState*)state);
+    WCPushBlock_UpdateCloudAction((int)obj, (WCPushBlockState*)state);
 }
 
 
