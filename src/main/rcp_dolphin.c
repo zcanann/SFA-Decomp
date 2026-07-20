@@ -2412,7 +2412,7 @@ int objShouldUnload(GameObject* obj)
     {
         keep = 0;
     }
-    else if (m >= 9 && ((def[5] >> (0x10 - m)) & 1))
+    else if ((def[5] >> (0x10 - m)) & 1)
     {
         keep = 0;
     }
