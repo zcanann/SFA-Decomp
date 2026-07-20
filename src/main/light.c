@@ -235,10 +235,10 @@ void VFP_Block1_initialise(void)
 {
 }
 
-void fn_801FBAC8(int obj)
+void fn_801FBAC8(GameObject* obj)
 {
-    int params = *(int*)&((GameObject*)obj)->anim.placementData;
-    VfpPlatformState* state = ((GameObject*)obj)->extra;
+    ObjPlacement* placement = (ObjPlacement*)obj->anim.placementData;
+    VfpPlatformState* state = obj->extra;
     if (mainGetBit(state->gameBitId) != 0)
     {
         state->state = 6;
@@ -246,20 +246,20 @@ void fn_801FBAC8(int obj)
     switch (state->state)
     {
     case 6:
-        if (((GameObject*)obj)->anim.localPosZ < ((ObjPlacement*)params)->posZ)
+        if (obj->anim.localPosZ < placement->posZ)
         {
-            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + timeDelta;
-            if (((GameObject*)obj)->anim.localPosZ >= ((ObjPlacement*)params)->posZ)
+            obj->anim.localPosZ = obj->anim.localPosZ + timeDelta;
+            if (obj->anim.localPosZ >= placement->posZ)
             {
-                ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)params)->posZ;
+                obj->anim.localPosZ = placement->posZ;
             }
         }
-        else if (((GameObject*)obj)->anim.localPosZ > ((ObjPlacement*)params)->posZ)
+        else if (obj->anim.localPosZ > placement->posZ)
         {
-            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ - timeDelta;
-            if (((GameObject*)obj)->anim.localPosZ <= ((ObjPlacement*)params)->posZ)
+            obj->anim.localPosZ = obj->anim.localPosZ - timeDelta;
+            if (obj->anim.localPosZ <= placement->posZ)
             {
-                ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)params)->posZ;
+                obj->anim.localPosZ = placement->posZ;
             }
         }
         else
@@ -289,22 +289,22 @@ void fn_801FBAC8(int obj)
         }
         else if (state->axisMode == 0)
         {
-            if (((GameObject*)obj)->anim.localPosZ == ((ObjPlacement*)params)->posZ - lbl_803E6108)
+            if (obj->anim.localPosZ == placement->posZ - lbl_803E6108)
             {
                 state->state = 2;
             }
-            if (((GameObject*)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement*)params)->posZ)
+            if (obj->anim.localPosZ == lbl_803E6108 + placement->posZ)
             {
                 state->state = 3;
             }
         }
         else
         {
-            if (((GameObject*)obj)->anim.localPosZ == ((ObjPlacement*)params)->posZ - lbl_803E6108)
+            if (obj->anim.localPosZ == placement->posZ - lbl_803E6108)
             {
                 state->state = 4;
             }
-            if (((GameObject*)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement*)params)->posZ)
+            if (obj->anim.localPosZ == lbl_803E6108 + placement->posZ)
             {
                 state->state = 5;
             }
@@ -314,13 +314,13 @@ void fn_801FBAC8(int obj)
     case 2:
     {
         f32 thr;
-        f32 z = ((GameObject*)obj)->anim.localPosZ;
-        if (z < (thr = lbl_803E6108, thr + ((ObjPlacement*)params)->posZ))
+        f32 z = obj->anim.localPosZ;
+        if (z < (thr = lbl_803E6108, thr + placement->posZ))
         {
-            ((GameObject*)obj)->anim.localPosZ = z + timeDelta;
-            if (((GameObject*)obj)->anim.localPosZ >= thr + ((ObjPlacement*)params)->posZ)
+            obj->anim.localPosZ = z + timeDelta;
+            if (obj->anim.localPosZ >= thr + placement->posZ)
             {
-                ((GameObject*)obj)->anim.localPosZ = thr + ((ObjPlacement*)params)->posZ;
+                obj->anim.localPosZ = thr + placement->posZ;
                 state->state = 1;
                 state->timer = 20;
             }
@@ -330,12 +330,12 @@ void fn_801FBAC8(int obj)
     case 3:
     {
         f32 thr;
-        if (((GameObject*)obj)->anim.localPosZ > ((ObjPlacement*)params)->posZ - (thr = lbl_803E6108))
+        if (obj->anim.localPosZ > placement->posZ - (thr = lbl_803E6108))
         {
-            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ - timeDelta;
-            if (((GameObject*)obj)->anim.localPosZ <= ((ObjPlacement*)params)->posZ - thr)
+            obj->anim.localPosZ = obj->anim.localPosZ - timeDelta;
+            if (obj->anim.localPosZ <= placement->posZ - thr)
             {
-                ((GameObject*)obj)->anim.localPosZ = ((ObjPlacement*)params)->posZ - thr;
+                obj->anim.localPosZ = placement->posZ - thr;
                 state->state = 1;
                 state->timer = 20;
             }
@@ -400,7 +400,7 @@ void VFP_Platform_update(GameObject* obj)
         {
             if ((obj)->anim.seqId == VFP_PLATFORM_LAVABLOCK_OBJ)
             {
-                fn_801FBAC8((int)obj);
+                fn_801FBAC8(obj);
             }
             else
             {
