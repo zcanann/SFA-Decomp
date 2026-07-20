@@ -1889,7 +1889,7 @@ void drawViewFinderHud(void)
                     ? lbl_803E1E3C
                     : ((fadeLevel > lbl_803E1E68) ? lbl_803E1E68 : fadeLevel);
     gViewFinderFadeLevel = fadeLevel;
-    if (fadeLevel == 0.0f)
+    if (!fadeLevel)
         return;
     gViewFinderBaseY = (f32)(lbl_803E1EB0 - lbl_803E1EB8 * fadeLevel);
     gViewFinderCamAngle = -view->yaw;
