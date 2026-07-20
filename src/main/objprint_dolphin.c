@@ -819,6 +819,25 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         }
     }
 }
+static inline void texSlotGetScroll(u8* obj, u32 jid, f32* txp, f32* typ)
+{
+    ObjTextureRuntimeSlot* slots = ((GameObject*)obj)->anim.textureSlots;
+    ObjDef* modelDef = ((GameObject*)obj)->anim.modelInstance;
+    ObjTextureSlotDef* q = modelDef->textureSlotDefs;
+    int n = modelDef->textureSlotCount;
+    int k;
+    for (k = 0; k < n; k++)
+    {
+        if ((int)jid == q->materialIndex)
+        {
+            *txp = lbl_803DEA48 * slots[k].offsetS;
+            *typ = lbl_803DEA48 * slots[k].offsetT;
+            return;
+        }
+        q++;
+    }
+    *typ = *txp = lbl_803DEA04;
+}
 u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6)
 {
     u16 alpha;
@@ -899,23 +918,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                             {
                                 f32 tx;
                                 f32 ty;
-                                u32 jid2 = layer[5];
-                                ObjTextureRuntimeSlot* slots2 = ((GameObject*)obj)->anim.textureSlots;
-                                ObjDef* modelDef2 = ((GameObject*)obj)->anim.modelInstance;
-                                ObjTextureSlotDef* q2 = modelDef2->textureSlotDefs;
-                                int n2 = modelDef2->textureSlotCount;
-                                int k2;
-                                ty = tx = lbl_803DEA04;
-                                for (k2 = 0; k2 < n2; k2++)
-                                {
-                                    if ((int)jid2 == q2->materialIndex)
-                                    {
-                                        tx = lbl_803DEA48 * slots2[k2].offsetS;
-                                        ty = lbl_803DEA48 * slots2[k2].offsetT;
-                                        break;
-                                    }
-                                    q2++;
-                                }
+                                texSlotGetScroll(obj, layer[5], &tx, &ty);
                                 PSMTXTrans(m, tx, ty, lbl_803DEA04);
                                 mtxp = (f32 (*)[4])m;
                             }
@@ -1202,23 +1205,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             {
                 f32 tx;
                 f32 ty;
-                u32 jid = l1[5];
-                ObjTextureRuntimeSlot* slots = ((GameObject*)obj)->anim.textureSlots;
-                ObjDef* modelDef = ((GameObject*)obj)->anim.modelInstance;
-                ObjTextureSlotDef* q = modelDef->textureSlotDefs;
-                int n = modelDef->textureSlotCount;
-                int k;
-                ty = tx = lbl_803DEA04;
-                for (k = 0; k < n; k++)
-                {
-                    if ((int)jid == q->materialIndex)
-                    {
-                        tx = lbl_803DEA48 * slots[k].offsetS;
-                        ty = lbl_803DEA48 * slots[k].offsetT;
-                        break;
-                    }
-                    q++;
-                }
+                texSlotGetScroll(obj, l1[5], &tx, &ty);
                 PSMTXTrans(m2, tx, ty, lbl_803DEA04);
             }
             textureFn_8004c330(textureIdxToPtr(*(u32*)l1), m2);

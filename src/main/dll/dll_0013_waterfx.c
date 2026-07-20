@@ -8,12 +8,12 @@
  * drops thrown by each burst (WaterDrop, gWaterfxDropPool, up to 30). Counts of
  * live entries are tracked in the lbl_803DD2xx counters.
  *
- * waterfx_func04 is the per-frame entry from a water surface: for each set
- * bit in the limb mask it spawns a ripple (and, when the surface is shallow
- * and the speed is high enough, a splash burst) and records a pending impact
- * position that waterfx_consumePendingImpactNearPoint can query. waterfx_run
- * advances all pools each tick; waterfx_func05 renders them. Drops that fall
- * below their parent particle's surface spawn a fresh ripple.
+ * waterfx_spawnImpactSurface is the per-frame entry from a water surface: for
+ * each set bit in the limb mask it spawns a ripple (and, when the surface is
+ * shallow and the speed is high enough, a splash burst) and records a pending
+ * impact position that waterfx_consumePendingImpactNearPoint can query.
+ * waterfx_run advances all pools each tick; waterfx_render draws them. Drops
+ * that fall below their parent particle's surface spawn a fresh ripple.
  *
  * Tunables live in the lbl_803DF2xx/lbl_803DF3xx config block; the splash
  * point-sprite render state is built in waterfx_setupSplashDropPointRender.
@@ -166,7 +166,7 @@ void waterfx_setupSplashDropPointRender(void)
  * The completed geometry is drawn twice (front then back cull) via the shared
  * display list.
  */
-void fn_80095164(WaterParticle* s)
+void waterfx_drawSplashBurst(WaterParticle* s)
 {
     f32 mtxD[12];
     f32 scale[12];
@@ -225,7 +225,7 @@ void fn_80095164(WaterParticle* s)
     GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
 }
 
-void waterfx_drawFn_800953fc(void)
+void waterfx_buildSplashDisplayList(void)
 {
     int m;
     f32* pos;
@@ -378,7 +378,7 @@ void waterfx_setRippleScale(int flag, f32 val)
     gWaterfxRippleScale = val;
 }
 
-void waterfx_func08(f32 x, f32 y, f32 z, s16 id, f32 w)
+void waterfx_spawnSimpleRipple(f32 x, f32 y, f32 z, s16 id, f32 w)
 {
     int i = 0;
     WaterEntry* p = gWaterfxWakePool;
@@ -516,7 +516,7 @@ int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v)
     return count;
 }
 
-void waterfx_func05(int obj, int renderParam)
+void waterfx_render(int obj, int renderParam)
 {
     int poolOffset;
     int descriptorOffset;
@@ -576,7 +576,7 @@ void waterfx_func05(int obj, int renderParam)
             s = (WaterParticle*)((char*)gWaterfxSplashPool + poolOffset);
             if (s->life < thr)
             {
-                fn_80095164(s);
+                waterfx_drawSplashBurst(s);
             }
         }
         if (gWaterfxDropCount != 0)
@@ -698,7 +698,17 @@ void waterfx_run(int frames)
     }
 }
 
-void waterfx_func04(u8* objHeader, u16 limbMask, f32* impactPositions, u8* surface, f32 speed)
+/*
+ * Per-frame water-impact entry from a limb-bearing object. For every set bit
+ * in limbMask it spawns a ripple at the corresponding impact position (and, in
+ * shallow water when the object is moving fast enough, a splash burst), then
+ * records that impact for waterfx_consumePendingImpactNearPoint to query.
+ *
+ * objHeader+0x00 holds the s16 heading used as the ripple rotation; objHeader
+ * +0x10 is the object's Y (water plane) height. surface+0x1b4 is the local
+ * water-surface height at the impact. impactPositions is one vec3 per limb.
+ */
+void waterfx_spawnImpactSurface(u8* objHeader, u16 limbMask, f32* impactPositions, u8* surface, f32 speed)
 {
     u8* surf = surface;
     f32* pos = impactPositions;
@@ -729,16 +739,6 @@ void waterfx_func04(u8* objHeader, u16 limbMask, f32* impactPositions, u8* surfa
     }
 }
 
-/*
- * Per-frame water-impact entry from a limb-bearing object. For every set bit
- * in limbMask it spawns a ripple at the corresponding impact position (and, in
- * shallow water when the object is moving fast enough, a splash burst), then
- * records that impact for waterfx_consumePendingImpactNearPoint to query.
- *
- * objHeader+0x00 holds the s16 heading used as the ripple rotation; objHeader
- * +0x10 is the object's Y (water plane) height. surface+0x1b4 is the local
- * water-surface height at the impact. impactPositions is one vec3 per limb.
- */
 void waterfx_onMapSetup(void)
 {
     int i;
@@ -896,7 +896,7 @@ void waterfx_initialise(void)
     gWaterfxSplashTexture1 = textureLoadAsset(WATERFX_TEXTURE_SPLASH1);
     gWaterfxWakeTexture = textureLoadAsset(WATERFX_TEXTURE_WAKE);
     waterfx_onMapSetup();
-    waterfx_drawFn_800953fc();
+    waterfx_buildSplashDisplayList();
 }
 
 char sWaterfxDllAllocFailed[] = "Could not allocate memory for waterfx dll\n";
