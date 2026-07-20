@@ -4523,6 +4523,42 @@ void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq)
     Obj_GetWorldPosition((u32)seqObj, &((GameObject*)seqObj)->anim.worldPosX, &((GameObject*)seqObj)->anim.worldPosY,
                          &((GameObject*)seqObj)->anim.worldPosZ);
 }
+static inline int ObjSeq_CheckConditionOpcode(ObjSeqState* state, u8* obj, u8 conditionOpcode)
+{
+    ObjAnimSequenceConditionCallback cb;
+
+    switch (conditionOpcode)
+    {
+    case 0x12:
+        if (getButtonsJustPressed(0) & PAD_BUTTON_A)
+        {
+            return 1;
+        }
+        break;
+    case 0x13:
+        if (getButtonsJustPressed(0) & PAD_BUTTON_B)
+        {
+            return 1;
+        }
+        break;
+    case 0x14:
+    case 0x15:
+    case 0x16:
+    case 0x17:
+    case 0x18:
+    case 0x19:
+        cb = state->conditionCallback;
+        if (cb != NULL)
+        {
+            return cb(state->callbackContext, obj);
+        }
+        break;
+    case 0x1a:
+        return isTalkingToNpc() == 0;
+    }
+    return 0;
+}
+
 int ObjSeq_update(u8* obj, f32 t)
 {
     u8* base = lbl_80396918;
@@ -4893,39 +4929,7 @@ int ObjSeq_update(u8* obj, f32 t)
             {
                 continue;
             }
-            pressed = 0;
-            switch (conditionOpcode)
-            {
-            case 0x12:
-                if (getButtonsJustPressed(0) & PAD_BUTTON_A)
-                {
-                    pressed = 1;
-                }
-                break;
-            case 0x13:
-                if (getButtonsJustPressed(0) & PAD_BUTTON_B)
-                {
-                    pressed = 1;
-                }
-                break;
-            case 0x14:
-            case 0x15:
-            case 0x16:
-            case 0x17:
-            case 0x18:
-            case 0x19:
-                cb = state->conditionCallback;
-                if (cb != NULL)
-                {
-                    pressed = cb(state->callbackContext, obj);
-                }
-                break;
-            case 0x1a:
-                pressed = isTalkingToNpc() == 0;
-                break;
-            default:
-                break;
-            }
+            pressed = ObjSeq_CheckConditionOpcode(state, obj, conditionOpcode);
             if (pressed != 0)
             {
                 ((u8*)(base + 0x3cf4))[state->slot] = 1;
