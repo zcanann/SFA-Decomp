@@ -78,7 +78,7 @@ void drgenerator_hitDetect(GameObject* obj)
     u32 hitVolume;
     int hitObject;
     void* found;
-    if (((BitFlags8*)(state + 0x19b))->b0 || ((BitFlags8*)(state + 0x19b))->b3)
+    if (((BitFlags8*)&((DrgeneratorState*)state)->flags)->b0 || ((BitFlags8*)&((DrgeneratorState*)state)->flags)->b3)
     {
         return;
     }
@@ -101,7 +101,7 @@ void drgenerator_hitDetect(GameObject* obj)
             tex->textureId = 0x100;
         }
     }
-    ((BitFlags8*)(state + 0x19b))->b0 = 1;
+    ((BitFlags8*)&((DrgeneratorState*)state)->flags)->b0 = 1;
     mainSetBits(((DrgeneratorPlacement*)placement)->completionGameBit, 1);
     if ((obj)->anim.seqId == DRGENERATOR_OBJ &&
         (found = (void*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, NULL)) != NULL)
