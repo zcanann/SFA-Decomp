@@ -3,8 +3,6 @@
 
 CARDControl __CARDBlock[2];
 
-u32 __CARDEncode;
-
 DVDDiskID __CARDDiskNone;
 
 // prototypes

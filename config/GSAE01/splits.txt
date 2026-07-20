@@ -4098,6 +4098,7 @@ dolphin/gx/GXAttr.c:
 
 dolphin/gx/GXMisc.c:
 	.text       start:0x80258228 end:0x802587FC
+	.sbss       start:0x803DE0D8 end:0x803DE0F0
 
 dolphin/gx/GXGeometry.c:
 	.text       start:0x802587FC end:0x80258BDC
@@ -4146,6 +4147,7 @@ dolphin/gx/GXStubs.c:
 dolphin/gx/GXDisplayList.c:
 	.text       start:0x8025CD3C end:0x8025CF48
 	.bss        start:0x803AECC0 end:0x803AF1E0
+	.sbss       start:0x803DE0F0 end:0x803DE0F8
 
 dolphin/gx/GXTransform.c:
 	.text       start:0x8025CF48 end:0x8025D514
@@ -4159,7 +4161,6 @@ dolphin/card/CARDBios.c:
 	.text       start:0x8025DE80 end:0x8025EFCC
 	.data       start:0x8032EBC0 end:0x8032EBE0
 	.bss        start:0x803AF1E0 end:0x803AF420
-	.sbss       start:0x803DE0D8 end:0x803DE0DC
 
 dolphin/card/CARDUnlock.c:
 	.text       start:0x8025EFCC end:0x8026022C
