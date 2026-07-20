@@ -50,10 +50,10 @@ void EffectBox_free(GameObject* obj)
     fn_8002B758(obj);
 }
 
-void EffectBox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void EffectBox_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, EFFECTBOX_RENDER_SCALE);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, EFFECTBOX_RENDER_SCALE);
 }
 
 void EffectBox_hitDetect(void)

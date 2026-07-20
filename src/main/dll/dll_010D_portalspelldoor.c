@@ -127,21 +127,21 @@ void PortalSpellDoor_update(GameObject* obj)
     }
 }
 
-void PortalSpellDoor_init(u8* obj, u8* data)
+void PortalSpellDoor_init(GameObject* obj, u8* data)
 {
-    PortalSpellDoorState* sub = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)(s8)data[0x18] << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)((s32) * (s16*)(data + 0x1c) << 8);
-    ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3A8C;
+    PortalSpellDoorState* sub = obj->extra;
+    obj->anim.rotX = (s16)((s32)(s8)data[0x18] << 8);
+    obj->anim.rotY = (s16)((s32) * (s16*)(data + 0x1c) << 8);
+    obj->anim.rootMotionScale = lbl_803E3A8C;
     {
-        f32 _ab = ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
+        f32 _ab = obj->anim.hitboxScale * obj->anim.rootMotionScale;
         sub->openAmount = _ab * lbl_803E3A90;
     }
     if (mainGetBit(*(s16*)(data + 0x1e)) != 0)
     {
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->objectFlags =
-            (u16)(((GameObject*)obj)->objectFlags |
+        obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
+        obj->objectFlags =
+            (u16)(obj->objectFlags |
                   (PORTALSPELLDOOR_OBJFLAG_UPDATE_DISABLED | PORTALSPELLDOOR_OBJFLAG_HIDDEN |
                    PORTALSPELLDOOR_OBJFLAG_HITDETECT_DISABLED));
     }

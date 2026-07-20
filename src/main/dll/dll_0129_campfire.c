@@ -57,17 +57,17 @@ void CampFire_free(GameObject* obj)
     }
 }
 
-void CampFire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void CampFire_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     CampfireExtra* state;
     ModelLightStruct* light;
     s32 isVisible;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     isVisible = visible;
     if (isVisible != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         light = state->light;
         if (((light != NULL) && (light->glowType != 0)) && (light->enabled != 0))
         {
@@ -174,7 +174,7 @@ typedef struct CampFirePlacement
     u8 unk1b;     /* 0x1b */
 } CampFirePlacement;
 
-void CampFire_init(int obj, int defArg)
+void CampFire_init(GameObject* obj, int defArg)
 {
     CampFirePlacement* def = (CampFirePlacement*)defArg;
     CampfireExtra* state;
@@ -182,11 +182,11 @@ void CampFire_init(int obj, int defArg)
     u32 size;
     s16 bit;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     size = def->sizeParam;
     if (size != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = 0.01f * size;
+        obj->anim.rootMotionScale = 0.01f * size;
     }
     if (mainGetBit(0x8c) != 0)
     {
@@ -201,8 +201,8 @@ void CampFire_init(int obj, int defArg)
     state->unk10 = def->unk1b;
     {
         f32 scale =
-            ((GameObject*)obj)->anim.rootMotionScale / ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-        int hitState = *(int*)&((GameObject*)obj)->anim.hitReactState;
+            obj->anim.rootMotionScale / obj->anim.modelInstance->rootMotionScaleBase;
+        int hitState = *(int*)&obj->anim.hitReactState;
         ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj,
                                    (int)((f32)((ObjHitsPriorityState*)hitState)->primaryRadius * scale),
                                    (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetA * scale),
@@ -212,7 +212,7 @@ void CampFire_init(int obj, int defArg)
     state->nightTimer = 1.0f;
     if (state->light == NULL)
     {
-        state->light = objCreateLight((GameObject*)obj, 1);
+        state->light = objCreateLight(obj, 1);
     }
     if (state->light != NULL)
     {
@@ -220,7 +220,7 @@ void CampFire_init(int obj, int defArg)
         modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(state->light, 0xff, 0x7f, 0, 0xff);
         modelLightStruct_setSpecularColor(state->light, 0xff, 0x7f, 0, 0xff);
-        atten = (int)(20.0f * ((GameObject*)obj)->anim.rootMotionScale);
+        atten = (int)(20.0f * obj->anim.rootMotionScale);
         modelLightStruct_setDistanceAttenuation(state->light, atten, 30.0f + atten);
         if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
@@ -234,7 +234,7 @@ void CampFire_init(int obj, int defArg)
         modelLightStruct_startColorFade(state->light, 1, 3);
         modelLightStruct_setDiffuseTargetColor(state->light, 0xff, 0x5c, 0, 0xff);
         modelLightStruct_setupGlow(state->light, 0, 0xff, 0x7f, 0, 0x87,
-                                   40.0f * ((GameObject*)obj)->anim.rootMotionScale);
+                                   40.0f * obj->anim.rootMotionScale);
         modelLightStruct_setGlowProjectionRadius(state->light, 30.0f);
     }
 }

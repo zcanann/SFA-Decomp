@@ -30,7 +30,7 @@ extern ObjectDescriptor gDoorLockObjDescriptor;
 int Lock_DoorLock_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int Lock_DoorLock_getExtraSize(void);
 void Lock_DoorLock_free(int obj);
-void Lock_DoorLock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void Lock_DoorLock_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void Lock_DoorLock_update(GameObject* obj);
 void Lock_DoorLock_init(short* obj, DoorLockPlacement* config);
 

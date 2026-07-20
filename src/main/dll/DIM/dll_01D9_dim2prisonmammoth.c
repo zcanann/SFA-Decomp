@@ -116,9 +116,9 @@ int dim2prisonmammoth_stateHandler01(GameObject* obj, int state)
     return 0;
 }
 
-int dim2prisonmammoth_stateHandler00(int* obj)
+int dim2prisonmammoth_stateHandler00(GameObject* obj)
 {
-    int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
+    int* sub = *(int**)&obj->anim.placementData;
     switch ((s8)((Dim2prisonmammothPlacement*)sub)->spawnVariant)
     {
     case 0:
@@ -134,7 +134,7 @@ int dim2prisonmammoth_stateHandler00(int* obj)
     }
 }
 
-int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState* animUpdate)
+int dim2prisonmammoth_SeqFn(GameObject* obj, int state, ObjAnimUpdateState* animUpdate)
 {
     MatrixTransform v;
     f32 matrix[16];
@@ -142,21 +142,21 @@ int dim2prisonmammoth_SeqFn(int obj, int state, ObjAnimUpdateState* animUpdate)
 
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
-    inner = *(int*)&((GameObject*)obj)->extra;
+    inner = *(int*)&obj->extra;
     (*gPlayerInterface)->setState((void*)obj, (void*)inner, 2);
 
-    v.x = ((GameObject*)obj)->anim.localPosX;
-    v.y = ((GameObject*)obj)->anim.localPosY;
-    v.z = ((GameObject*)obj)->anim.localPosZ;
-    v.rotX = ((GameObject*)obj)->anim.rotX;
-    v.rotY = ((GameObject*)obj)->anim.rotY;
-    v.rotZ = ((GameObject*)obj)->anim.rotZ;
-    v.scale = ((GameObject*)obj)->anim.rootMotionScale;
+    v.x = obj->anim.localPosX;
+    v.y = obj->anim.localPosY;
+    v.z = obj->anim.localPosZ;
+    v.rotX = obj->anim.rotX;
+    v.rotY = obj->anim.rotY;
+    v.rotZ = obj->anim.rotZ;
+    v.scale = obj->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, &v);
 
-    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f, &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
-                          &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
-                          &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
+    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f, &obj->anim.modelState->overrideWorldPosX,
+                          &obj->anim.modelState->overrideWorldPosY,
+                          &obj->anim.modelState->overrideWorldPosZ);
     return 0;
 }
 
@@ -174,11 +174,11 @@ void dim2prisonmammoth_free(void)
 {
 }
 
-void dim2prisonmammoth_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dim2prisonmammoth_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -186,36 +186,36 @@ void dim2prisonmammoth_hitDetect(void)
 {
 }
 
-void dim2prisonmammoth_update(int obj)
+void dim2prisonmammoth_update(GameObject* obj)
 {
     MatrixTransform v;
     f32 matrix[16];
-    int inner = *(int*)&((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+    int inner = *(int*)&obj->extra;
+    *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if ((gPrisonMammothStateFlagsTable[((Dim2prisonmammothState*)inner)->stateIndex] & 8) == 0)
     {
         ((Dim2prisonmammothState*)inner)->hitReactState =
-            ObjHitReact_Update(obj, gPrisonMammothHitReactEntry, 1, ((Dim2prisonmammothState*)inner)->hitReactState,
+            ObjHitReact_Update((int)obj, gPrisonMammothHitReactEntry, 1, ((Dim2prisonmammothState*)inner)->hitReactState,
                                (f32*)(inner + 0x390));
         if (((Dim2prisonmammothState*)inner)->hitReactState != 0)
         {
-            fn_8003A168((GameObject*)(obj), (void*)(inner + 0x35c));
-            characterDoEyeAnims((GameObject*)obj, (void*)(inner + 0x35c));
+            fn_8003A168(obj, (void*)(inner + 0x35c));
+            characterDoEyeAnims(obj, (void*)(inner + 0x35c));
             return;
         }
     }
-    characterDoEyeAnims((GameObject*)obj, (void*)(inner + 0x35c));
-    v.x = ((GameObject*)obj)->anim.localPosX;
-    v.y = ((GameObject*)obj)->anim.localPosY;
-    v.z = ((GameObject*)obj)->anim.localPosZ;
-    v.rotX = ((GameObject*)obj)->anim.rotX;
-    v.rotY = ((GameObject*)obj)->anim.rotY;
-    v.rotZ = ((GameObject*)obj)->anim.rotZ;
-    v.scale = ((GameObject*)obj)->anim.rootMotionScale;
+    characterDoEyeAnims(obj, (void*)(inner + 0x35c));
+    v.x = obj->anim.localPosX;
+    v.y = obj->anim.localPosY;
+    v.z = obj->anim.localPosZ;
+    v.rotX = obj->anim.rotX;
+    v.rotY = obj->anim.rotY;
+    v.rotZ = obj->anim.rotZ;
+    v.scale = obj->anim.rootMotionScale;
     setMatrixFromObjectPos(matrix, &v);
-    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f, &((GameObject*)obj)->anim.modelState->overrideWorldPosX,
-                          &((GameObject*)obj)->anim.modelState->overrideWorldPosY,
-                          &((GameObject*)obj)->anim.modelState->overrideWorldPosZ);
+    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 0.0f, &obj->anim.modelState->overrideWorldPosX,
+                          &obj->anim.modelState->overrideWorldPosY,
+                          &obj->anim.modelState->overrideWorldPosZ);
     ((Dim2prisonmammothState*)inner)->unk354 = 0;
     ((Dim2prisonmammothState*)inner)->flags &= ~0x8000;
     {
@@ -229,23 +229,23 @@ void dim2prisonmammoth_update(int obj)
     ((Dim2prisonmammothState*)inner)->flags |= 0x400000;
     (*gPlayerInterface)->update((void*)obj, (void*)inner, timeDelta, timeDelta, gDim2PrisonMammothStateHandlers,
                                 &gDim2PrisonMammothDefaultStateHandler);
-    saveGame_saveObjectPos((GameObject*)obj);
+    saveGame_saveObjectPos(obj);
 }
 
-void dim2prisonmammoth_init(int obj, int params)
+void dim2prisonmammoth_init(GameObject* obj, int params)
 {
     int inner;
-    ((GameObject*)obj)->anim.rotX = (s16)(((Dim2prisonmammothPlacement*)params)->rotByte << 8);
-    ((GameObject*)obj)->animEventCallback = dim2prisonmammoth_SeqFn;
-    inner = *(int*)&((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.modelState != NULL)
+    obj->anim.rotX = (s16)(((Dim2prisonmammothPlacement*)params)->rotByte << 8);
+    obj->animEventCallback = dim2prisonmammoth_SeqFn;
+    inner = *(int*)&obj->extra;
+    if (obj->anim.modelState != NULL)
     {
-        ((GameObject*)obj)->anim.modelState->flags |= 0xa10;
-        ((GameObject*)obj)->anim.modelState->flags |= 0x8020LL;
+        obj->anim.modelState->flags |= 0xa10;
+        obj->anim.modelState->flags |= 0x8020LL;
     }
     (*gPlayerInterface)->init((void*)obj, (void*)inner, 4, 1);
     ((Dim2prisonmammothState*)inner)->unk25F = 0;
-    ((GameObject*)obj)->objectFlags |= DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED;
+    obj->objectFlags |= DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dim2prisonmammoth_release(void)

@@ -379,9 +379,9 @@ GameObject* getSbGalleon(void)
     return gSbGalleon;
 }
 
-int SB_Galleon_func0E(int* obj)
+int SB_Galleon_func0E(GameObject* obj)
 {
-    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
+    SBGalleonState* state = (SBGalleonState*)obj->extra;
     if ((s8)(u8)state->phase == 1)
     {
         int wrapped;
@@ -394,15 +394,15 @@ int SB_Galleon_func0E(int* obj)
     return 0x640;
 }
 
-u8 SB_Galleon_getDamagePhase(int* obj)
+u8 SB_Galleon_getDamagePhase(GameObject* obj)
 {
-    return ((SBGalleonState*)((GameObject*)obj)->extra)->damagePhase;
+    return ((SBGalleonState*)obj->extra)->damagePhase;
 }
 
-int SB_Galleon_getPhase(int* obj)
+int SB_Galleon_getPhase(GameObject* obj)
 {
     int phase;
-    SBGalleonState* state = (SBGalleonState*)((GameObject*)obj)->extra;
+    SBGalleonState* state = (SBGalleonState*)obj->extra;
     int pattern;
     phase = (u8)state->phase;
     if ((s8)phase == 0)
@@ -418,9 +418,9 @@ int SB_Galleon_getPhase(int* obj)
     return (s8)phase;
 }
 
-s32 SB_Galleon_getStage(int* obj)
+s32 SB_Galleon_getStage(GameObject* obj)
 {
-    return ((SBGalleonState*)((GameObject*)obj)->extra)->stage;
+    return ((SBGalleonState*)obj->extra)->stage;
 }
 
 /*
@@ -593,9 +593,9 @@ void SB_Galleon_init(GameObject* obj)
 {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     ObjHitsPriorityState* hitState;
-    gSbGalleon = (GameObject*)obj;
+    gSbGalleon = obj;
     ObjGroup_AddObject((u32)obj, SBGALLEON_OBJGROUP);
-    objSetSlot((GameObject*)obj, 0x5a);
+    objSetSlot(obj, 0x5a);
     obj->animEventCallback = SB_Galleon_SeqFn;
     state->posX = obj->anim.localPosX;
     state->posY = obj->anim.localPosY;

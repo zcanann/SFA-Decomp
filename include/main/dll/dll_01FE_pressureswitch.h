@@ -11,7 +11,7 @@ void PressureSwitch_free(void);
 void PressureSwitch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void PressureSwitch_hitDetect(void);
 void PressureSwitch_update(int obj);
-void PressureSwitch_init(int* obj, u8* init);
+void PressureSwitch_init(GameObject* obj, u8* init);
 void PressureSwitch_release(void);
 void PressureSwitch_initialise(void);
 

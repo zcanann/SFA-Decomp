@@ -35,15 +35,15 @@ void DIMDismountPoint_func0B(GameObject *obj, int flag)
 
 int DIMDismountPoint_setScale(GameObject *obj)
 {
-    int* player = (int*)Obj_GetPlayerObject();
-    int* state = (obj)->extra;
+    GameObject* player = Obj_GetPlayerObject();
+    DimdismountpointState* state = obj->extra;
     f32 result;
     int side;
 
-    result = ((DimdismountpointState*)state)->planeD +
-    (((DimdismountpointState*)state)->planeNZ * ((GameObject*)player)->anim.localPosZ +
-        (((DimdismountpointState*)state)->planeNX * ((GameObject*)player)->anim.localPosX +
-            ((DimdismountpointState*)state)->planeNY * ((GameObject*)player)->anim.localPosY));
+    result = state->planeD +
+    (state->planeNZ * player->anim.localPosZ +
+        (state->planeNX * player->anim.localPosX +
+            state->planeNY * player->anim.localPosY));
 
     if (result >= 0.0f)
     {
@@ -69,7 +69,7 @@ void DIMDismountPoint_render(GameObject *obj, int p1, int p2, int p3, int p4, s8
     {
         if ((obj)->userData2 != 0)
         {
-            objRenderFn_80041018((GameObject*)obj);
+            objRenderFn_80041018(obj);
         }
     }
     else
@@ -82,55 +82,55 @@ void DIMDismountPoint_hitDetect(void)
 {
 }
 
-void DIMDismountPoint_update(int* obj)
+void DIMDismountPoint_update(GameObject* obj)
 {
     int* nearest;
     f32 dist;
 
     dist = 500.0f;
-    nearest = (int*)ObjGroup_FindNearestObject(DIMCONVEYOR_GROUP, (GameObject*)obj, &dist);
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+    nearest = (int*)ObjGroup_FindNearestObject(DIMCONVEYOR_GROUP, obj, &dist);
+    *(u8*)&obj->anim.resetHitboxMode = (u8)(*(u8*)&obj->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
     if (mainGetBit(DIMDISMOUNT_GAMEBIT_DONE) != 0)
     {
-        ((GameObject*)obj)->hitVolumeIndex = 1;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+        obj->hitVolumeIndex = 1;
+        *(u8*)&obj->anim.resetHitboxMode = (u8)(*(u8*)&obj->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
     else
     {
-        ((GameObject*)obj)->hitVolumeIndex = 0;
+        obj->hitVolumeIndex = 0;
         if (nearest != NULL &&
-            ((int (*)(int*, int*))(*(int*)(*(int*)*(int**)&((GameObject*)nearest)->anim.dll + 0x20)))(nearest, obj) !=
+            ((int (*)(int*, int*))(*(int*)(*(int*)*(int**)&((GameObject*)nearest)->anim.dll + 0x20)))(nearest, (int*)obj) !=
             0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+            *(u8*)&obj->anim.resetHitboxMode = (u8)(
+                *(u8*)&obj->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
+            *(u8*)&obj->anim.resetHitboxMode = (u8)(
+                *(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
         }
     }
-    if ((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0 &&
-        ((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL)
+    if ((obj->anim.modelInstance->flags & 1) != 0 &&
+        obj->anim.hitVolumeTransforms != NULL)
     {
-        objRenderFn_80041018((GameObject*)obj);
+        objRenderFn_80041018(obj);
     }
 }
 
-void DIMDismountPoint_init(u8* obj, u8* params)
+void DIMDismountPoint_init(GameObject* obj, u8* params)
 {
-    f32* sub;
+    DimdismountpointState* sub;
 
     ObjGroup_AddObject((u32)obj, DIMDISMOUNT_GROUP);
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
-    sub = ((GameObject*)obj)->extra;
-    sub[0] = mathSinf(3.1415927f * (f32)(s32) * (s16*)obj / 32768.0f); /* planeNX */
-    sub[1] = 0.0f;                                                     /* planeNY */
-    sub[2] = mathCosf(3.1415927f * (f32)(s32) * (s16*)obj / 32768.0f); /* planeNZ */
-    sub[3] = -(sub[0] * ((GameObject*)obj)->anim.localPosX + sub[1] * ((GameObject*)obj)->anim.localPosY + sub[2] * ((
-        GameObject*)obj)->anim.localPosZ); /* planeD */
-    ((GameObject*)obj)->userData2 = 1;
+    obj->anim.rotX = (s16)((s8)params[0x18] << 8);
+    sub = obj->extra;
+    sub->planeNX = mathSinf(3.1415927f * (f32)(s32) * (s16*)obj / 32768.0f);
+    sub->planeNY = 0.0f;
+    sub->planeNZ = mathCosf(3.1415927f * (f32)(s32) * (s16*)obj / 32768.0f);
+    sub->planeD = -(sub->planeNX * obj->anim.localPosX + sub->planeNY * obj->anim.localPosY +
+        sub->planeNZ * obj->anim.localPosZ);
+    obj->userData2 = 1;
 }
 
 void DIMDismountPoint_release(void)

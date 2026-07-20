@@ -245,9 +245,9 @@ int cfguardianPlayEventSfx(u32 obj, ObjAnimEventList* evList, s16* sfxIds)
 
 /* cfguardian_setScale: true when the guardian is not mid path-flight
  * (queried by the render path to decide whether to apply scale). */
-int cfguardian_setScale(int* obj)
+int cfguardian_setScale(GameObject* obj)
 {
-    CfGuardianState* sub = ((GameObject*)obj)->extra;
+    CfGuardianState* sub = obj->extra;
     return (sub->flagsA9B & GUARDIAN_FLAG_PATH_FLYING) == 0;
 }
 
@@ -277,7 +277,7 @@ int cfguardianFlyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 t, int p
     if (obj->userData1 == 0)
     {
         sel = pointId;
-        pt = (int)findRomCurvePointNearObject((int*)obj, sel, 0, 2);
+        pt = (int)findRomCurvePointNearObject(obj, sel, 0, 2);
         tgt.x = ((RomCurvePlacementDef*)pt)->base.x;
         tgt.y = ((RomCurvePlacementDef*)pt)->base.y;
         tgt.z = ((RomCurvePlacementDef*)pt)->base.z;
@@ -387,7 +387,7 @@ int cfguardianSteerToward(GameObject* obj, MoveLibTarget* target, f32 speed, f32
     return 0;
 }
 
-int* findRomCurvePointNearObject(int* obj, int curveGroup, int* outVec, int mode)
+int* findRomCurvePointNearObject(GameObject* obj, int curveGroup, int* outVec, int mode)
 {
     int* result = NULL;
     int findParams[2];
@@ -405,7 +405,7 @@ int* findRomCurvePointNearObject(int* obj, int curveGroup, int* outVec, int mode
     }
 
     found = (*gRomCurveInterface)->find(
-        ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
+        obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
         findParams, 2, curveGroup);
 
     if (found > -1)
@@ -543,7 +543,7 @@ int cfguardian_updateMain(GameObject* obj)
                     ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
                     {
                         RomCurvePlacementDef* pt =
-                            (RomCurvePlacementDef*)findRomCurvePointNearObject((int*)obj, 0, 0, 2);
+                            (RomCurvePlacementDef*)findRomCurvePointNearObject(obj, 0, 0, 2);
                         f32 homeDistY;
                         sub->home.x = pt->base.x;
                         sub->home.y = pt->base.y;
@@ -811,7 +811,7 @@ int cfguardian_updateMain(GameObject* obj)
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~1;
         break;
     }
-    dll_2E_func03((GameObject*)obj, (MoveLibState*)sub);
+    dll_2E_func03(obj, (MoveLibState*)sub);
     if (ObjTrigger_IsSet((int)obj) != 0)
     {
         buttonDisable(0, PAD_BUTTON_A);
@@ -887,15 +887,15 @@ int cfguardian_updateMain(GameObject* obj)
  * heading pair and routes a move request; on the magic-grant cue
  * (triggerCommand 2) it refills the player's magic. Returns 1 if the move
  * was consumed. */
-int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int cfguardian_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int* sel;
     GuardianMsg stk;
-    CfGuardianState* sub = ((GameObject*)obj)->extra;
+    CfGuardianState* sub = obj->extra;
     stk = gCfGuardianHeadingTemplate;
-    if (((GameObject*)obj)->seqIndex < 0)
+    if (obj->seqIndex < 0)
     {
-        saveGame_saveObjectPos((GameObject*)obj);
+        saveGame_saveObjectPos(obj);
         return 0;
     }
     if (sub->questState != CFGUARDIAN_LANDING)
@@ -908,7 +908,7 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (animatedObjGetSeqId(animUpdate) != 0x283)
     {
-        if (dll_2E_func07((GameObject*)obj, (ObjSeqState*)animUpdate, (MoveLibState*)sub, sel[0], sel[1]) != 0)
+        if (dll_2E_func07(obj, (ObjSeqState*)animUpdate, (MoveLibState*)sub, sel[0], sel[1]) != 0)
         {
             return 1;
         }
@@ -930,9 +930,9 @@ int cfguardian_getObjectTypeId(void)
     return 0x41;
 }
 
-void cfguardian_free(int* obj, int keep)
+void cfguardian_free(GameObject* obj, int keep)
 {
-    char* extra = ((GameObject*)obj)->extra;
+    char* extra = obj->extra;
     if (keep == 0)
     {
         char* state;
@@ -949,21 +949,21 @@ void cfguardian_free(int* obj, int keep)
     }
 }
 
-void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void cfguardian_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int* sub = ((GameObject*)obj)->extra;
+    int* sub = obj->extra;
     if ((s32)visible != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
-        dll_2E_func06((GameObject*)obj, (MoveLibState*)sub, 0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+        dll_2E_func06(obj, (MoveLibState*)sub, 0);
     }
 }
 
-void cfguardian_hitDetect(int* obj)
+void cfguardian_hitDetect(GameObject* obj)
 {
-    ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.localPosZ;
+    obj->anim.previousLocalPosX = obj->anim.localPosX;
+    obj->anim.previousLocalPosY = obj->anim.localPosY;
+    obj->anim.previousLocalPosZ = obj->anim.localPosZ;
 }
 
 void cfguardian_update(GameObject* obj)
@@ -971,22 +971,22 @@ void cfguardian_update(GameObject* obj)
     cfguardian_updateMain(obj);
 }
 
-void cfguardian_init(int* obj, u8* params)
+void cfguardian_init(GameObject* obj, u8* params)
 {
     CfGuardianState* sub;
     GuardianVec stk1;
     GuardianVec stk2;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = obj->extra;
     stk1 = gCfGuardianHitboxTemplateA;
     stk2 = gCfGuardianHitboxTemplateB;
     if (sub == NULL)
         return;
     ObjMsg_AllocQueue((void*)obj, 4);
     sub->questState = mainGetBit(GAMEBIT_GUARDIAN_QUEST_STATE);
-    ((GameObject*)obj)->userData1 = 1;
-    ((GameObject*)obj)->animEventCallback = cfguardian_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)(((CfGuardianMapData*)params)->rotXByte << 8);
+    obj->userData1 = 1;
+    obj->animEventCallback = cfguardian_SeqFn;
+    obj->anim.rotX = (s16)(((CfGuardianMapData*)params)->rotXByte << 8);
     sub->landingPhase = 0;
     sub->moveSpeed = 0.0f;
     sub->unkA90 = 6;
@@ -1000,8 +1000,8 @@ void cfguardian_init(int* obj, u8* params)
         sub->questState = CFGUARDIAN_ROOST;
         if (((CfGuardianMapData*)params)->variant == 0)
         {
-            ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-            Obj_RemoveFromUpdateList((GameObject*)obj);
+            obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
+            Obj_RemoveFromUpdateList(obj);
         }
     }
     else if (mainGetBit(GAMEBIT_GUARDIAN_RELEASED) != 0 && ((CfGuardianMapData*)params)->variant == 0)
@@ -1009,8 +1009,8 @@ void cfguardian_init(int* obj, u8* params)
         sub->questState = CFGUARDIAN_ROOST;
         dll_2E_func0A(8, (MoveLibTarget*)obj);
     }
-    ObjHits_EnableObject((GameObject*)obj);
-    dll_2E_func05((GameObject*)obj, &sub->moveLib, -0x2000, 0x2800, 4);
+    ObjHits_EnableObject(obj);
+    dll_2E_func05(obj, &sub->moveLib, -0x2000, 0x2800, 4);
     dll_2E_func08(&sub->moveLib, 0x12c, 0x64);
     dll_2E_func09(&sub->moveLib, &stk2, &stk1, 4);
     objSeqInitFn_80080078(gCfGuardianSeqStreamTable, 0xf);

@@ -33,9 +33,9 @@ void checkpoint4_free(void)
 {
 }
 
-void checkpoint4_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void checkpoint4_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void checkpoint4_hitDetect(void)

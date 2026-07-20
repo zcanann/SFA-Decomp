@@ -94,9 +94,9 @@ void TreasureChest_free(void)
     Resource_Release(lbl_803DDAE0);
 }
 
-void TreasureChest_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void TreasureChest_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void TreasureChest_hitDetect(GameObject* obj)
@@ -104,8 +104,8 @@ void TreasureChest_hitDetect(GameObject* obj)
     u8* state;
     TreasureChestSetup* setup;
 
-    setup = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
+    setup = (TreasureChestSetup*)obj->anim.placementData;
+    state = obj->extra;
     if (((u32)state[0] >> 5 & 1) != 0)
     {
         hitDetectFn_80097070(obj, 0.6f, 2, (u8)(setup->hitboxKind + 6), 4, NULL);
@@ -126,21 +126,21 @@ void TreasureChest_update(GameObject* obj)
     int hitPriority;
     int hitObject;
 
-    flags = ((GameObject*)obj)->extra;
-    setup = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
+    flags = obj->extra;
+    setup = (TreasureChestSetup*)obj->anim.placementData;
     nearestDist = 20.0f;
     if (flags->trigger != 0 && flags->open != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
+        *(u8*)&obj->anim.resetHitboxMode =
+            *(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
         ObjAnim_SetCurrentMove((int)obj, 0, 0.99f, 0);
     }
     if (flags->open == 0)
     {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+        if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
+            *(u8*)&obj->anim.resetHitboxMode =
+                *(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
             playerPullOutStaff((GameObject*)(Obj_GetPlayerObject()), 1);
             nearestObject = ObjGroup_FindNearestObject(TREASURECHEST_TARGET_OBJGROUP, obj, &nearestDist);
             if (nearestObject != 0)
@@ -184,13 +184,13 @@ void TreasureChest_update(GameObject* obj)
     return;
 }
 
-void TreasureChest_init(int* obj)
+void TreasureChest_init(GameObject* obj)
 {
-    register ChestFlags* state = ((GameObject*)obj)->extra;
-    register TreasureChestSetup* cfg = (TreasureChestSetup*)((GameObject*)obj)->anim.placementData;
+    register ChestFlags* state = obj->extra;
+    register TreasureChestSetup* cfg = (TreasureChestSetup*)obj->anim.placementData;
 
-    ((GameObject*)obj)->animEventCallback = TreasureChest_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)cfg->type << 8);
+    obj->animEventCallback = TreasureChest_SeqFn;
+    obj->anim.rotX = (s16)((s32)cfg->type << 8);
 
     if (cfg->openGameBit != -1)
     {
@@ -202,8 +202,8 @@ void TreasureChest_init(int* obj)
     }
     if (state->open != 0)
     {
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ObjHits_DisableObject((GameObject*)obj);
+        obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
+        ObjHits_DisableObject(obj);
     }
     lbl_803DDAE0 = Resource_Acquire(90, 1);
     state->trigger = 1;

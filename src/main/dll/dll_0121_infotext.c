@@ -41,9 +41,9 @@ void infotext_update(int obj)
             showHelpText((objReg)->anim.modelInstance->helpTextIds[(*(u8**)&(objReg)->anim.placementData)[0x19]]);
         }
     }
-    if ((((ObjAnimComponent*)objReg)->modelInstance->flags & 1) != 0)
+    if ((objReg->anim.modelInstance->flags & 1) != 0)
     {
-        objRenderFn_80041018((GameObject*)objReg);
+        objRenderFn_80041018(objReg);
     }
 }
 

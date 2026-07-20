@@ -70,18 +70,18 @@ STATIC_ASSERT(offsetof(CfGuardianState, landingPhase) == 0xa94);
 STATIC_ASSERT(offsetof(CfGuardianState, flagsA9B) == 0xa9b);
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 
-int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
+int* findRomCurvePointNearObject(GameObject* obj, int p2, int* outVec, int p4);
 int cfguardianFlyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 speed, int pointId, f32* outPhase);
 int cfguardianSteerToward(GameObject* obj, MoveLibTarget* target, f32 speed, f32* outPhase);
-int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
-int cfguardian_setScale(int* obj);
+int cfguardian_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+int cfguardian_setScale(GameObject* obj);
 int cfguardian_getExtraSize(void);
 int cfguardian_getObjectTypeId(void);
-void cfguardian_free(int* obj, int keep);
-void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-void cfguardian_hitDetect(int* obj);
+void cfguardian_free(GameObject* obj, int keep);
+void cfguardian_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void cfguardian_hitDetect(GameObject* obj);
 void cfguardian_update(GameObject* obj);
-void cfguardian_init(int* obj, u8* params);
+void cfguardian_init(GameObject* obj, u8* params);
 void cfguardian_release(void);
 void cfguardian_initialise(void);
 

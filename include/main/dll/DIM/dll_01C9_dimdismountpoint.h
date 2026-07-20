@@ -13,8 +13,8 @@ int DIMDismountPoint_getObjectTypeId(void);
 void DIMDismountPoint_free(int obj);
 void DIMDismountPoint_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible);
 void DIMDismountPoint_hitDetect(void);
-void DIMDismountPoint_update(int* obj);
-void DIMDismountPoint_init(u8* obj, u8* params);
+void DIMDismountPoint_update(GameObject* obj);
+void DIMDismountPoint_init(GameObject* obj, u8* params);
 void DIMDismountPoint_release(void);
 void DIMDismountPoint_initialise(void);
 
