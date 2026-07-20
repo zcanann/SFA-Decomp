@@ -565,9 +565,7 @@ static inline void fillDiskTexture(void)
             int off;
             f32 dx, dz, d2;
             base = (u8*)gNewShadowDiskTexture;
-            off = lowoff + (j & 3) * 8;
-            off += (j >> 2) * 0x80;
-            off += 0x60;
+            off = lowoff + (j & 3) * 8 + (j >> 2) * 0x80 + 0x60;
             dx = cy * lbl_803DEDD0;
             dz = (f32)j - lbl_803DEDEC;
             dz = dz * lbl_803DEDD0;
@@ -598,9 +596,7 @@ static inline void fillSmallDiskTexture(void)
             int off;
             f32 dx, dz, d2;
             base = (u8*)gNewShadowSmallDiskTexture;
-            off = lowoff + (j & 3) * 8;
-            off += (j >> 2) * 0x40;
-            off += 0x60;
+            off = lowoff + (j & 3) * 8 + (j >> 2) * 0x40 + 0x60;
             dx = cy * lbl_803DED40;
             dz = (f32)j - lbl_803DED10;
             dz = dz * lbl_803DED40;
