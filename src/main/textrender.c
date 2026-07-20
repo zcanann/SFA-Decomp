@@ -2658,7 +2658,7 @@ void subtitleUpdateAndDraw(int a)
     }
 }
 
-void gameTextSetColor(int r, int g, int b, int a)
+void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
 {
     if (gameTextDrawFunc != NULL)
     {
@@ -2674,10 +2674,10 @@ void gameTextSetColor(int r, int g, int b, int a)
         gGameTextCommandCount = i + 1;
         s = &gGameTextCommandSlots[i];
         s->opcode = 3;
-        s->arg0 = (u8)r;
-        s->arg1 = (u8)g;
-        s->arg2 = (u8)b;
-        s->arg3 = (u8)a;
+        s->arg0 = r;
+        s->arg1 = g;
+        s->arg2 = b;
+        s->arg3 = a;
     }
 }
 

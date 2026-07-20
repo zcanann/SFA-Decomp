@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-void gameTextSetColor(int r, int g, int b, int a);
+void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 
 #endif /* MAIN_GAMETEXT_COLOR_API_H_ */
