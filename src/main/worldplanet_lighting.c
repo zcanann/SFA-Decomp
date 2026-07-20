@@ -32,20 +32,20 @@ void worldplanet_updateMapLighting(int a)
     gWorldPlanetCurSky[0] = WORLDPLANET_LERP_BYTE(gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 0, lbl_803E65F8);
     gWorldPlanetCurSky[1] = WORLDPLANET_LERP_BYTE(gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 1, lbl_803E65F8);
     gWorldPlanetCurSky[2] = WORLDPLANET_LERP_BYTE(gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 2, lbl_803E65F8);
-    skyFn_800895e0(7, ((u8*)gWorldPlanetCurSky)[0], ((u8*)gWorldPlanetCurSky)[1],
-                   ((u8*)gWorldPlanetCurSky)[2], 0x40, 0x40);
+    skyFn_800895e0(7, gWorldPlanetCurSky[0], gWorldPlanetCurSky[1],
+                   gWorldPlanetCurSky[2], 0x40, 0x40);
 
     gWorldPlanetCurLight[0] = WORLDPLANET_LERP_BYTE(gWorldPlanetLightFrom, gWorldPlanetLightTo, 0, gWorldPlanetLightingLerpT);
     gWorldPlanetCurLight[1] = WORLDPLANET_LERP_BYTE(gWorldPlanetLightFrom, gWorldPlanetLightTo, 1, gWorldPlanetLightingLerpT);
     gWorldPlanetCurLight[2] = WORLDPLANET_LERP_BYTE(gWorldPlanetLightFrom, gWorldPlanetLightTo, 2, gWorldPlanetLightingLerpT);
-    fn_80089510(7, ((u8*)gWorldPlanetCurLight)[0], ((u8*)gWorldPlanetCurLight)[1],
-                ((u8*)gWorldPlanetCurLight)[2]);
+    fn_80089510(7, gWorldPlanetCurLight[0], gWorldPlanetCurLight[1],
+                gWorldPlanetCurLight[2]);
 
     gWorldPlanetCurAmbient[0] = WORLDPLANET_LERP_BYTE(gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 0, gWorldPlanetLightingLerpT);
     gWorldPlanetCurAmbient[1] = WORLDPLANET_LERP_BYTE(gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 1, gWorldPlanetLightingLerpT);
     gWorldPlanetCurAmbient[2] = WORLDPLANET_LERP_BYTE(gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 2, gWorldPlanetLightingLerpT);
-    fn_80089578(7, ((u8*)gWorldPlanetCurAmbient)[0], ((u8*)gWorldPlanetCurAmbient)[1],
-                ((u8*)gWorldPlanetCurAmbient)[2]);
+    fn_80089578(7, gWorldPlanetCurAmbient[0], gWorldPlanetCurAmbient[1],
+                gWorldPlanetCurAmbient[2]);
 
     gWorldPlanetCurIntensity = (u8)(s32)(gWorldPlanetLightingLerpT * lbl_803E6600 + lbl_803E65FC);
     skyFn_800894a8(7, gWorldPlanetLightingSkyDirX, lbl_803E65F8, gWorldPlanetLightingSkyDirZ);
