@@ -47,13 +47,6 @@ f32 lbl_803DBDD0 = 1.0f;
 
 f32 gScarabSweptHitInfo[4];
 
-typedef struct ScarabPlacement
-{
-    ObjPlacement head;
-    u8 pad18[0x1a - 0x18];
-    s16 mode; /* 0x1a: ScarabState.mode selector */
-} ScarabPlacement;
-
 typedef struct ScarabVec3
 {
     f32 x;
@@ -106,7 +99,7 @@ int scarab_sweptCollide(GameObject* obj)
         u32 solidFlags[4];
     } HitDetectResults;
 
-    u8* state;
+    ObjHitsPriorityState* hitState;
     TrackQueryBounds sweptBounds;
     f32 endPoints[12];
     f32 startPoints[12];
@@ -114,8 +107,8 @@ int scarab_sweptCollide(GameObject* obj)
     int idx;
     u8 hit;
 
-    state = *(u8**)&(obj)->anim.hitReactState;
-    if (state != 0)
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+    if (hitState != NULL)
     {
         endPoints[0] = (obj)->anim.localPosX;
         endPoints[1] = (obj)->anim.localPosY;
@@ -133,7 +126,7 @@ int scarab_sweptCollide(GameObject* obj)
     }
 
     hitDetect_calcSweptSphereBounds(&sweptBounds, startPoints, endPoints, results.radii, 1);
-    hitDetectFn_800691c0(obj, &sweptBounds, ((ObjHitsPriorityState*)state)->trackContactMask, 1);
+    hitDetectFn_800691c0(obj, &sweptBounds, hitState->trackContactMask, 1);
     hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &results, 0);
     if (hit != 0)
     {
@@ -154,10 +147,10 @@ int scarab_sweptCollide(GameObject* obj)
             idx = 3;
         }
 
-        *(u8*)&((ObjHitsPriorityState*)state)->contactHitVolume = results.axisTable[idx];
-        ((ObjHitsPriorityState*)state)->contactPosX = endPoints[idx * 3];
-        ((ObjHitsPriorityState*)state)->contactPosY = endPoints[idx * 3 + 1];
-        ((ObjHitsPriorityState*)state)->contactPosZ = endPoints[idx * 3 + 2];
+        *(u8*)&hitState->contactHitVolume = results.axisTable[idx];
+        hitState->contactPosX = endPoints[idx * 3];
+        hitState->contactPosY = endPoints[idx * 3 + 1];
+        hitState->contactPosZ = endPoints[idx * 3 + 2];
         gScarabSweptHitInfo[0] = results.hitInfo[idx][0];
         gScarabSweptHitInfo[1] = results.hitInfo[idx][1];
         gScarabSweptHitInfo[2] = results.hitInfo[idx][2];
@@ -165,24 +158,22 @@ int scarab_sweptCollide(GameObject* obj)
 
         if (results.solidFlags[idx] != 0)
         {
-            ((ObjHitsPriorityState*)state)->contactFlags =
-                *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND_NONZERO;
-            (obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
-            (obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
-            (obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
-            ((ObjHitsPriorityState*)state)->localPosX = (obj)->anim.previousLocalPosX;
-            ((ObjHitsPriorityState*)state)->localPosY = (obj)->anim.previousLocalPosY;
-            ((ObjHitsPriorityState*)state)->localPosZ = (obj)->anim.previousLocalPosZ;
+            hitState->contactFlags = *(u8*)&hitState->contactFlags | OBJHITS_CONTACT_FLAG_KIND_NONZERO;
+            (obj)->anim.localPosX = hitState->contactPosX;
+            (obj)->anim.localPosY = hitState->contactPosY;
+            (obj)->anim.localPosZ = hitState->contactPosZ;
+            hitState->localPosX = (obj)->anim.previousLocalPosX;
+            hitState->localPosY = (obj)->anim.previousLocalPosY;
+            hitState->localPosZ = (obj)->anim.previousLocalPosZ;
             return 1;
         }
-        ((ObjHitsPriorityState*)state)->contactFlags =
-            *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND0;
-        (obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
-        (obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
-        (obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
-        ((ObjHitsPriorityState*)state)->localPosX = (obj)->anim.previousLocalPosX;
-        ((ObjHitsPriorityState*)state)->localPosY = (obj)->anim.previousLocalPosY;
-        ((ObjHitsPriorityState*)state)->localPosZ = (obj)->anim.previousLocalPosZ;
+        hitState->contactFlags = *(u8*)&hitState->contactFlags | OBJHITS_CONTACT_FLAG_KIND0;
+        (obj)->anim.localPosX = hitState->contactPosX;
+        (obj)->anim.localPosY = hitState->contactPosY;
+        (obj)->anim.localPosZ = hitState->contactPosZ;
+        hitState->localPosX = (obj)->anim.previousLocalPosX;
+        hitState->localPosY = (obj)->anim.previousLocalPosY;
+        hitState->localPosZ = (obj)->anim.previousLocalPosZ;
         return 1;
     }
     return 0;
@@ -270,12 +261,12 @@ void Scarab_free(void)
 
 void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int state;
+    ScarabState* state;
     ObjModel* model;
     u8* shellColors;
     int i;
 
-    state = *(int*)&obj->extra;
+    state = obj->extra;
     model = Obj_GetActiveModel(obj);
     if (obj->anim.seqId == SCARAB_OBJ_RAIN)
     {
@@ -297,7 +288,7 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 
-    if (((ScarabState*)state)->despawnTimer == 0)
+    if (state->despawnTimer == 0)
     {
         if (obj->userData2 != 0)
         {
@@ -314,7 +305,7 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, gScarabScaleOne);
         if ((visible != 0) && (obj->anim.alpha != 0))
         {
-            objfx_spawnDirectionalBurst(obj, 5, gScarabScaleOne, ((ScarabState*)state)->burstModel, 1, 0x14,
+            objfx_spawnDirectionalBurst(obj, 5, gScarabScaleOne, state->burstModel, 1, 0x14,
                                         gScarabBurstScale, 0, 0);
         }
     }
@@ -396,7 +387,7 @@ void Scarab_update(GameObject* obj)
                 money1.packed = gScarabMoneyValues;
                 playerAddMoney(player, money1.values[state->moneyKind]);
                 state->despawnTimer = 0x50;
-                state->mode = 0;
+                state->activeTimer = 0;
                 state->flags28 &= ~1;
                 break;
             }
@@ -407,7 +398,7 @@ void Scarab_update(GameObject* obj)
         }
     }
     Sfx_KeepAliveLoopedObjectSoundLimited((u32)obj, SFXTRIG_scarab_runloop, 3);
-    mode = state->mode;
+    mode = state->activeTimer;
     if (mode == 0)
     {
         state->despawnTimer -= framesThisStep;
@@ -622,17 +613,17 @@ void Scarab_update(GameObject* obj)
                 rot.b = 0;
                 rot.ang = obj->anim.rotX - state->spawnYaw;
                 vecRotateZXY(&rot.ang, &obj->anim.velocityX);
-                state->mode -= framesThisStep;
-                if (state->mode <= 0)
+                state->activeTimer -= framesThisStep;
+                if (state->activeTimer <= 0)
                 {
                     if (ViewFrustum_IsSphereVisible(&obj->anim.localPosX,
                                                     obj->anim.hitboxScale * obj->anim.rootMotionScale) == 0)
                     {
-                        state->mode = 0;
+                        state->activeTimer = 0;
                     }
                     else
                     {
-                        state->mode = 1;
+                        state->activeTimer = 1;
                     }
                 }
                 if (flag != 0)
@@ -732,7 +723,7 @@ void Scarab_update(GameObject* obj)
                         money2.packed = gScarabMoneyValues;
                         playerAddMoney(player, money2.values[state->moneyKind]);
                         state->despawnTimer = 0x50;
-                        state->mode = 0;
+                        state->activeTimer = 0;
                     }
                     if (obj->anim.hitReactState != NULL)
                     {
@@ -775,23 +766,23 @@ void Scarab_update(GameObject* obj)
                 money3.packed = gScarabMoneyValues;
                 playerAddMoney(player, money3.values[state->moneyKind]);
                 state->despawnTimer = 0x50;
-                state->mode = 0;
+                state->activeTimer = 0;
             }
         }
     }
 }
 
-void Scarab_init(int* obj, u8* def)
+void Scarab_init(GameObject* obj, ScarabPlacement* placement)
 {
-    ScarabState* state = ((GameObject*)obj)->extra;
+    ScarabState* state = obj->extra;
     ObjModel* model;
     state->phase = 0;
-    state->mode = ((ScarabPlacement*)def)->mode;
+    state->activeTimer = placement->activeTimer;
     state->yawSpeed = randomGetRange(0x3e8, 0xfa0);
     state->riseLimit = randomGetRange(0x32, 0x64);
-    state->baseY = ((ObjPlacement*)def)->posY;
-    model = Obj_GetActiveModel((GameObject*)obj);
-    switch (((GameObject*)obj)->anim.seqId)
+    state->baseY = placement->base.posY;
+    model = Obj_GetActiveModel(obj);
+    switch (obj->anim.seqId)
     {
     case 0x3d3:
         model->textureRefs->unk08 = (gScarabColorVariantsA)[randomGetRange(0, 2)];

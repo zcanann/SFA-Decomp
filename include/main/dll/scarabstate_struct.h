@@ -11,7 +11,7 @@ typedef struct ScarabState
     f32 baseY; /* 0x0c: def spawn height */
     s16 despawnTimer; /* 0x10 */
     u8 pad12[2];
-    s16 mode; /* 0x14 */
+    s16 activeTimer; /* 0x14: active lifetime; zero begins despawn */
     s16 yawSpeed; /* 0x16 */
     s16 spawnYaw; /* 0x18 */
     s16 fleeTimer; /* 0x1a */
@@ -28,5 +28,10 @@ typedef struct ScarabState
     s16 msgParamB; /* 0x2e */
     f32 msgParamC; /* 0x30 */
 } ScarabState;
+
+STATIC_ASSERT(offsetof(ScarabState, activeTimer) == 0x14);
+STATIC_ASSERT(offsetof(ScarabState, phase) == 0x24);
+STATIC_ASSERT(offsetof(ScarabState, msgParamA) == 0x2C);
+STATIC_ASSERT(sizeof(ScarabState) == 0x34);
 
 #endif

@@ -24,62 +24,67 @@ extern float lbl_803E7C64;
 extern float lbl_803E7C68;
 extern float lbl_803E7C6C;
 
-float fn_80292DEC(float x) {
-    float estimate;
+float fn_80292DEC(float value) {
+    float reciprocal;
 
-    estimate = __fres(x);
-    estimate *= lbl_803E7C18 - x * estimate;
-    estimate *= lbl_803E7C18 - x * estimate;
+    reciprocal = __fres(value);
+    reciprocal *= lbl_803E7C18 - value * reciprocal;
+    reciprocal *= lbl_803E7C18 - value * reciprocal;
 
-    return estimate;
+    return reciprocal;
 }
 
-#define STORE_SINCOS(q, sin_value, cos_value, sin_out, cos_out) \
-    switch ((((u16)(q)) + 0x2000) & 0xC000) {                  \
-        case 0x0000:                                           \
-            *(sin_out) = (sin_value);                          \
-            *(cos_out) = (cos_value);                          \
-            break;                                             \
-        case 0x4000:                                           \
-            *(sin_out) = (cos_value);                          \
-            *(cos_out) = -(sin_value);                         \
-            break;                                             \
-        case 0x8000:                                           \
-            *(sin_out) = -(sin_value);                         \
-            *(cos_out) = -(cos_value);                         \
-            break;                                             \
-        default:                                               \
-            *(sin_out) = -(cos_value);                         \
-            *(cos_out) = (sin_value);                          \
-            break;                                             \
+#define STORE_SINCOS(angle, sine, cosine, sinOut, cosOut) \
+    switch ((((u16)(angle)) + 0x2000) & 0xC000) {         \
+        case 0x0000:                                      \
+            *(sinOut) = (sine);                           \
+            *(cosOut) = (cosine);                         \
+            break;                                        \
+        case 0x4000:                                      \
+            *(sinOut) = (cosine);                         \
+            *(cosOut) = -(sine);                          \
+            break;                                        \
+        case 0x8000:                                      \
+            *(sinOut) = -(sine);                          \
+            *(cosOut) = -(cosine);                        \
+            break;                                        \
+        default:                                          \
+            *(sinOut) = -(cosine);                        \
+            *(cosOut) = (sine);                           \
+            break;                                        \
     }
 
-void fn_80292E20(int q, float* sin_out, float* cos_out) {
-    s16 angle = (u16)q << 1 << 1;
-    float x = fastCastS16ToFloat(&angle);
-    float x2 = x * x;
-    float sin_value = x * (lbl_803E7C24 * x2 + lbl_803E7C20);
-    float cos_value = x2 * (lbl_803E7C30 * x2 + lbl_803E7C2C) + lbl_803E7C28;
+void fn_80292E20(int angle, float* sinOut, float* cosOut) {
+    s16 scaledAngleBits = (u16)angle << 1 << 1;
+    float scaledAngle = fastCastS16ToFloat(&scaledAngleBits);
+    float angleSquared = scaledAngle * scaledAngle;
+    float sine = scaledAngle * (lbl_803E7C24 * angleSquared + lbl_803E7C20);
+    float cosine = angleSquared * (lbl_803E7C30 * angleSquared + lbl_803E7C2C) + lbl_803E7C28;
 
-    STORE_SINCOS(q, sin_value, cos_value, sin_out, cos_out);
+    STORE_SINCOS(angle, sine, cosine, sinOut, cosOut);
 }
 
-void angleToVec2(int q, float* sin_out, float* cos_out) {
-    s16 angle = (u16)q << 1 << 1;
-    float x = fastCastS16ToFloat(&angle);
-    float x2 = x * x;
-    float sin_value = x * ((lbl_803E7C3C * x2 + lbl_803E7C38) * x2 + lbl_803E7C34);
-    float cos_value = ((lbl_803E7C4C * x2 + lbl_803E7C48) * x2 + lbl_803E7C44) * x2 + lbl_803E7C40;
+void angleToVec2(int angle, float* sinOut, float* cosOut) {
+    s16 scaledAngleBits = (u16)angle << 1 << 1;
+    float scaledAngle = fastCastS16ToFloat(&scaledAngleBits);
+    float angleSquared = scaledAngle * scaledAngle;
+    float sine = scaledAngle * ((lbl_803E7C3C * angleSquared + lbl_803E7C38) * angleSquared + lbl_803E7C34);
+    float cosine = ((lbl_803E7C4C * angleSquared + lbl_803E7C48) * angleSquared + lbl_803E7C44) * angleSquared + lbl_803E7C40;
 
-    STORE_SINCOS(q, sin_value, cos_value, sin_out, cos_out);
+    STORE_SINCOS(angle, sine, cosine, sinOut, cosOut);
 }
 
-void fn_80293018(int q, float* sin_out, float* cos_out) {
-    s16 angle = (u16)q << 1 << 1;
-    float x = fastCastS16ToFloat(&angle);
-    float x2 = x * x;
-    float sin_value = x * (((lbl_803E7C5C * x2 + lbl_803E7C58) * x2 + lbl_803E7C54) * x2 + lbl_803E7C50);
-    float cos_value = (lbl_803E7C60 + ((lbl_803E7C6C * x2 + lbl_803E7C68) * x2 + lbl_803E7C64) * x2) * x2 + lbl_803E7C40;
+void fn_80293018(int angle, float* sinOut, float* cosOut) {
+    s16 scaledAngleBits = (u16)angle << 1 << 1;
+    float scaledAngle = fastCastS16ToFloat(&scaledAngleBits);
+    float angleSquared = scaledAngle * scaledAngle;
+    float sine = scaledAngle *
+                 (((lbl_803E7C5C * angleSquared + lbl_803E7C58) * angleSquared + lbl_803E7C54) * angleSquared +
+                  lbl_803E7C50);
+    float cosine =
+        (lbl_803E7C60 + ((lbl_803E7C6C * angleSquared + lbl_803E7C68) * angleSquared + lbl_803E7C64) * angleSquared) *
+            angleSquared +
+        lbl_803E7C40;
 
-    STORE_SINCOS(q, sin_value, cos_value, sin_out, cos_out);
+    STORE_SINCOS(angle, sine, cosine, sinOut, cosOut);
 }

@@ -1928,7 +1928,7 @@ void drawViewFinderHud(void)
                               8.0f + reticleY, lbl_803E1E3C,
                               (8.0f + reticleY) - reticleY, lbl_803E1F18,
                               hudElementOpacity * gViewFinderFadeLevel);
-        viewScale = lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
+        viewScale = lbl_803E1F20 / mathTanf((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
         sprintf(buf, sTrickyDebugXCoordFormat, viewScale);
         gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);

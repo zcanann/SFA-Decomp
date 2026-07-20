@@ -25,67 +25,67 @@ extern float lbl_803E7DA4;
 extern float lbl_803E7DA8;
 extern float lbl_803E7DAC;
 
-float fn_80293DA4(float x) {
-    u16 n;
-    float y;
-    float y2;
+float fn_80293DA4(float angle) {
+    u16 quadrant;
+    float reducedAngle;
+    float reducedSquared;
 
-    y = trigReduceQuadrant(&n, x);
-    n += (*(u32*)&x & 0x80000000) >> 29;
-    y2 = y * y;
+    reducedAngle = trigReduceQuadrant(&quadrant, angle);
+    quadrant += (*(u32*)&angle & 0x80000000) >> 29;
+    reducedSquared = reducedAngle * reducedAngle;
 
-    switch (n & 6) {
+    switch (quadrant & 6) {
         case 0:
-            return y * (lbl_803E7D64 * y2 + lbl_803E7D60);
+            return reducedAngle * (lbl_803E7D64 * reducedSquared + lbl_803E7D60);
         case 2:
-            return (lbl_803E7D70 * y2 + lbl_803E7D6C) * y2 + lbl_803E7D68;
+            return (lbl_803E7D70 * reducedSquared + lbl_803E7D6C) * reducedSquared + lbl_803E7D68;
         case 4:
-            return -(y * (lbl_803E7D64 * y2 + lbl_803E7D60));
+            return -(reducedAngle * (lbl_803E7D64 * reducedSquared + lbl_803E7D60));
         default:
-            return -(y2 * (lbl_803E7D70 * y2 + lbl_803E7D6C) + lbl_803E7D68);
+            return -(reducedSquared * (lbl_803E7D70 * reducedSquared + lbl_803E7D6C) + lbl_803E7D68);
     }
 }
 
-float mathSinf(float x) {
-    u16 n;
-    float y;
-    float y2;
+float mathSinf(float angle) {
+    u16 quadrant;
+    float reducedAngle;
+    float reducedSquared;
 
-    y = trigReduceQuadrant(&n, x);
-    n += (*(u32*)&x & 0x80000000) >> 29;
-    y2 = y * y;
+    reducedAngle = trigReduceQuadrant(&quadrant, angle);
+    quadrant += (*(u32*)&angle & 0x80000000) >> 29;
+    reducedSquared = reducedAngle * reducedAngle;
 
-    switch (n & 6) {
+    switch (quadrant & 6) {
         case 0:
-            return y * ((lbl_803E7D7C * y2 + lbl_803E7D78) * y2 + lbl_803E7D74);
+            return reducedAngle * ((lbl_803E7D7C * reducedSquared + lbl_803E7D78) * reducedSquared + lbl_803E7D74);
         case 2:
-            return ((lbl_803E7D8C * y2 + lbl_803E7D88) * y2 + lbl_803E7D84) * y2 + lbl_803E7D80;
+            return ((lbl_803E7D8C * reducedSquared + lbl_803E7D88) * reducedSquared + lbl_803E7D84) * reducedSquared + lbl_803E7D80;
         case 4:
-            return -(y * ((lbl_803E7D7C * y2 + lbl_803E7D78) * y2 + lbl_803E7D74));
+            return -(reducedAngle * ((lbl_803E7D7C * reducedSquared + lbl_803E7D78) * reducedSquared + lbl_803E7D74));
         default:
-            return -(y2 * ((lbl_803E7D8C * y2 + lbl_803E7D88) * y2 + lbl_803E7D84) + lbl_803E7D80);
+            return -(reducedSquared * ((lbl_803E7D8C * reducedSquared + lbl_803E7D88) * reducedSquared + lbl_803E7D84) + lbl_803E7D80);
     }
 }
 
-float fn_80293F7C(float x) {
-    u16 n;
-    float y;
-    float y2;
+float fn_80293F7C(float angle) {
+    u16 quadrant;
+    float reducedAngle;
+    float reducedSquared;
 
-    y = trigReduceQuadrant(&n, x);
-    n += (*(u32*)&x & 0x80000000) >> 29;
-    y2 = y * y;
+    reducedAngle = trigReduceQuadrant(&quadrant, angle);
+    quadrant += (*(u32*)&angle & 0x80000000) >> 29;
+    reducedSquared = reducedAngle * reducedAngle;
 
-    switch (n & 6) {
+    switch (quadrant & 6) {
         case 0:
-            return y * (((lbl_803E7D9C * y2 + lbl_803E7D98) * y2 + lbl_803E7D94) * y2 + lbl_803E7D90);
+            return reducedAngle * (((lbl_803E7D9C * reducedSquared + lbl_803E7D98) * reducedSquared + lbl_803E7D94) * reducedSquared + lbl_803E7D90);
         case 2:
-            return (((lbl_803E7DAC * y2 + lbl_803E7DA8) * y2 + lbl_803E7DA4) * y2 + lbl_803E7DA0) * y2
+            return (((lbl_803E7DAC * reducedSquared + lbl_803E7DA8) * reducedSquared + lbl_803E7DA4) * reducedSquared + lbl_803E7DA0) * reducedSquared
                    + lbl_803E7D80;
         case 4:
-            return -(y * (((lbl_803E7D9C * y2 + lbl_803E7D98) * y2 + lbl_803E7D94) * y2 + lbl_803E7D90));
+            return -(reducedAngle * (((lbl_803E7D9C * reducedSquared + lbl_803E7D98) * reducedSquared + lbl_803E7D94) * reducedSquared + lbl_803E7D90));
         default:
-            return -(y2 * (((lbl_803E7DAC * y2 + lbl_803E7DA8) * y2 + lbl_803E7DA4) * y2 + lbl_803E7DA0)
+            return -(reducedSquared * (((lbl_803E7DAC * reducedSquared + lbl_803E7DA8) * reducedSquared + lbl_803E7DA4) * reducedSquared + lbl_803E7DA0)
                      + lbl_803E7D80);
     }
 }

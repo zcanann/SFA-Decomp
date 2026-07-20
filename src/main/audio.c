@@ -2970,8 +2970,7 @@ void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 
     if (sameSfxCount <= limit)
     {
-        found = 0;
-        for (j = 0; j < count; j++)
+        for (j = 0; j < count || (found = 0, 0); j++)
         {
             if ((*objects == obj) && (sfxId == *ids))
             {
@@ -3078,8 +3077,7 @@ void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
     objectIt = table->objects;
     idIt = table->ids;
     count = gSfxLoopedObjectSoundCount;
-    found = 0;
-    for (; i < count; i++)
+    for (; i < count || (found = 0, 0); i++)
     {
         if ((*objectIt == obj) && (sfxId == *idIt))
         {

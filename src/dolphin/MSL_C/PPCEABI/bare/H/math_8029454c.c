@@ -9,34 +9,37 @@ extern const float lbl_803E7E24;
 extern const float lbl_803E7E28;
 extern const float lbl_803E7E2C;
 
-float fn_8029454C(float x) {
-    u16 n;
-    float y = trigReduceQuadrant(&n, x);
-    float y2 = y * y;
-    float result = y * (((lbl_803E7E2C * y2 + lbl_803E7E28) * y2 + lbl_803E7E24) * y2 + lbl_803E7E20);
+float mathTanf(float angle) {
+    u16 quadrant;
+    float reducedAngle = trigReduceQuadrant(&quadrant, angle);
+    float reducedSquared = reducedAngle * reducedAngle;
+    float tangent = reducedAngle *
+                    (((lbl_803E7E2C * reducedSquared + lbl_803E7E28) * reducedSquared + lbl_803E7E24) *
+                         reducedSquared +
+                     lbl_803E7E20);
 
-    if (n & 2) {
-        result = lbl_803E7E18 / result;
+    if (quadrant & 2) {
+        tangent = lbl_803E7E18 / tangent;
     }
 
-    if (x >= lbl_803E7E1C) {
-        return result;
+    if (angle >= lbl_803E7E1C) {
+        return tangent;
     }
-    return -result;
+    return -tangent;
 }
 
-float fn_802945E0(float x) {
-    u32 bits;
-    float mantissa;
-    float tail;
+float fn_802945E0(float value) {
+    u32 rawBits;
+    float normalizedMantissa;
+    float exponentAsFloat;
     s16 exponent;
 
-    bits = *(u32*)&x;
-    exponent = (s16)(((bits >> 23) & 0xFF) - 128);
-    *(u32*)&mantissa = (bits & 0x7FFFFF) | 0x3F800000;
+    rawBits = *(u32*)&value;
+    exponent = (s16)(((rawBits >> 23) & 0xFF) - 128);
+    *(u32*)&normalizedMantissa = (rawBits & 0x7FFFFF) | 0x3F800000;
 
-    tail = fastCastS16ToFloat(&exponent);
-    return mantissa + tail;
+    exponentAsFloat = fastCastS16ToFloat(&exponent);
+    return normalizedMantissa + exponentAsFloat;
 }
 
 const float lbl_803E7E18 = -1.0f;
