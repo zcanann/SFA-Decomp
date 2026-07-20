@@ -88,6 +88,8 @@ extern int gNewCloudLightningFogColor;
 extern const f32 lbl_803DF1D4;
 extern void* gNewClouds[8];
 
+typedef void (*LightningDrawBoltU8WidthFn)(f32* start, f32* end, u8 width, f32 segScale, f32 d,
+                                           int* seed, int depth, int flags);
 extern const f32 lbl_803DF1FC;
 extern const f32 lbl_803DF214;
 #define NC_CLOUD ((u8 *)gNewClouds[*(u16 *)(params + 0x26)])
@@ -409,7 +411,8 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
                 PSVECScale(scaled, branchEnd, bfrac * len);
                 PSVECAdd(start, branchEnd, branchEnd);
                 PSVECAdd(branchEnd, offset, branchEnd);
-                lightningDrawBolt(next, branchEnd, halfWidth, segScale, d, seed, depth + 1, flags);
+                ((LightningDrawBoltU8WidthFn)lightningDrawBolt)(
+                    next, branchEnd, halfWidth, segScale, d, seed, depth + 1, flags);
             }
         }
         else
