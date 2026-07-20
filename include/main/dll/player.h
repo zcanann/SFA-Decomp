@@ -45,7 +45,7 @@ void fn_802AFB0C(int obj, int inner, int state);
 void playerDoHitDetection(int obj);
 int fn_802AC7DC(int obj, int state, int inner, f32 fv);
 
-s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 fv, u32 mask);
+int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 fv, u32 mask);
 int playerStateMoving(int obj, int state, f32 fv);
 int playerStateOnLadder(int obj, int state);
 int playerStateClimbWall(GameObject* obj, int state);

@@ -293,7 +293,7 @@ typedef struct
     int b;
 } IntPair2;
 
-s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 fv, u32 mask);
+int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 fv, u32 mask);
 int fn_802AD2F4(GameObject* obj, int inner, int state);
 int fn_802AC7DC(int obj, int state, int inner, f32 fv);
 
@@ -8526,11 +8526,11 @@ int playerState08(GameObject* obj, int state, f32 fv)
     {
         if (((PlayerState*)inner)->heldObj != NULL)
         {
-            c = ((s8 (*)(int, int, int, void*, int))playerCheckIfClimbingOntoWall)((int)obj, (int)inner, state, buf, 0x22);
+            c = (s8)playerCheckIfClimbingOntoWall((int)obj, (int)inner, state, buf, fv, 0x22);
         }
         else
         {
-            c = ((s8 (*)(int, int, int, void*, int))playerCheckIfClimbingOntoWall)((int)obj, (int)inner, state, buf, -0x141);
+            c = (s8)playerCheckIfClimbingOntoWall((int)obj, (int)inner, state, buf, fv, (u32)-0x141);
         }
         if ((s8)c == -1)
         {
@@ -10199,7 +10199,7 @@ s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
     return blend;
 }
 
-s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 fv, u32 mask)
+int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 fv, u32 mask)
 {
     f32* dir;
     int objCount;
@@ -12966,8 +12966,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
         }
         if (((ByteFlags*)((char*)inner + 0x3f0))->b08 || ((ByteFlags*)((char*)inner + 0x3f0))->b04)
         {
-            r = ((int (*)(int, int, int, void*, f32, u32))playerCheckIfClimbingOntoWall)(obj, inner, state, buf, fv,
-                                                                                         0x14);
+            r = playerCheckIfClimbingOntoWall(obj, inner, state, buf, fv, 0x14);
             if (r == 0xc)
             {
                 *(int*)&((PlayerState*)state)->baddie.unk308 = 0;
@@ -12990,8 +12989,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
         }
         if (((ByteFlags*)((char*)inner + 0x3f0))->b20)
         {
-            r = ((int (*)(int, int, int, void*, f32, u32))playerCheckIfClimbingOntoWall)(obj, inner, state, buf,
-                                                                                         lbl_803E7EE0, 0x100);
+            r = playerCheckIfClimbingOntoWall(obj, inner, state, buf, lbl_803E7EE0, 0x100);
             if (r == 5)
             {
                 gPlayerCurrentMoveId = -1;
@@ -16880,7 +16878,7 @@ void playerAnimate(GameObject* obj, int state, f32 fv)
     *(u32*)&((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_NO_POS_VELOCITY;
     *(int*)state |= 0x1000000;
     fn_802B0EA4(obj, state, state);
-    if (playerCheckIfClimbingOntoWall((int)obj, state, state, buf, fv, 0x60) == 8)
+    if ((s8)playerCheckIfClimbingOntoWall((int)obj, state, state, buf, fv, 0x60) == 8)
     {
         *(int*)&((PlayerState*)state)->baddie.targetObj = 0;
         ((PlayerState*)state)->baddie.hasTarget = 0;
