@@ -10,7 +10,7 @@ typedef struct {
 } GXDisplayListBss;
 
 GXDisplayListBss lbl_803AECC0;
-extern volatile __GXFifoObj* OldCPUFifo;
+static volatile __GXFifoObj* OldCPUFifo;
 
 #define DisplayListFifo (lbl_803AECC0.DisplayListFifo)
 #define __savedGXdata (lbl_803AECC0.savedGXdata)

@@ -12,7 +12,7 @@ extern DSPStrings sDSPStrings;
 #define BUILD_DATE sDSPStrings.buildDate
 #define BUILD_TIME sDSPStrings.buildTime
 
-extern BOOL __DSP_init_flag;
+static BOOL __DSP_init_flag;
 
 u32 DSPCheckMailToDSP(void) {
     return (__DSPRegs[0] & (1 << 15)) >> 15;

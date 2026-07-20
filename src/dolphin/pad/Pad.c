@@ -2,18 +2,6 @@
 #include <dolphin/si.h>
 #include <global.h>
 
-
-extern u32 lbl_803DE088;
-
-#if !defined(VERSION_GCCP01)
-#if DEBUG
-static const char s___PADVersion[] = "<< Dolphin SDK - PAD\tdebug build: Apr  5 2004 03:56:05 (0x2301) >>";
-#else
-extern const char s___PADVersion[];
-#endif
-const char* __PADVersion = s___PADVersion;
-#endif
-
 #define PAD_ALL                                                                                                        \
     (                      \
         PAD_BUTTON_LEFT  | \
@@ -367,7 +355,7 @@ BOOL PADInit() {
 
     Initialized = TRUE;
 
-    if (lbl_803DE088 != 0) {
+    if (__PADFixBits != 0) {
         OSTime time = OSGetTime();
         __OSWirelessPadFixMode
             = (u16)((((time)&0xffff) + ((time >> 16) & 0xffff) + ((time >> 32) & 0xffff) + ((time >> 48) & 0xffff))
