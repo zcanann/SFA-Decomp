@@ -18290,8 +18290,6 @@ typedef struct LightfootChallengePlacement
 STATIC_ASSERT(offsetof(LightfootChallengePlacement, completionGameBit) == 0x1A);
 STATIC_ASSERT(offsetof(LightfootChallengePlacement, activeGameBit) == 0x30);
 
-typedef void (*LightfootPlayerUpdateFn)(GameObject* obj, int state, f32 timeDelta, int flags);
-
 int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
 {
     LightfootChallengePlacement* placement;
@@ -18390,7 +18388,7 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
         ObjAnim_SetCurrentMove((int)obj, controls->anims[challenge->animationIndex], lbl_803E8180, 0);
     }
     playerState->moveSpeed = controls->blends[challenge->animationIndex];
-    ((LightfootPlayerUpdateFn)(*gPlayerInterface)->updateAnimRootMotion)(obj, state, fv, 1);
+    (*gPlayerInterface)->updateAnimRootMotion(obj, (void*)state, fv, 1);
     return 0;
 }
 
