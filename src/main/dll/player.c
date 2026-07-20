@@ -14766,7 +14766,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             if (newAnim != -1 && ((PlayerState*)state)->baddie.controlMode != newAnim &&
                 **(s8**)&((PlayerState*)inner)->playerStatus > 0)
             {
-                (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, newAnim);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, newAnim);
                 *(int*)&((PlayerState*)state)->baddie.unk304 = ((PlayerState*)inner)->stateHandler;
             }
         }
@@ -15630,7 +15630,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                 ((GameObject*)obj)->anim.velocityZ = spd * dz;
                 ((GameObject*)obj)->anim.velocityY = spd;
             }
-            (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 0x21);
+            (*gPlayerInterface)->setState((void*)obj, (void*)state, 0x21);
             *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
             Player_ApplyStatusDamage((GameObject*)obj, param);
             ((PlayerState*)inner)->isHoldingObject = 0;
@@ -15670,7 +15670,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                 ((GameObject*)obj)->anim.velocityZ = spd * -dz;
                 ((GameObject*)obj)->anim.velocityY = spd;
             }
-            (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 0x21);
+            (*gPlayerInterface)->setState((void*)obj, (void*)state, 0x21);
             *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
             Player_ApplyStatusDamage((GameObject*)obj, param);
             ((PlayerState*)inner)->isHoldingObject = 0;
@@ -15712,7 +15712,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                 ((GameObject*)obj)->anim.velocityZ = spd * -dz;
                 ((GameObject*)obj)->anim.velocityY = spd;
             }
-            (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 0x21);
+            (*gPlayerInterface)->setState((void*)obj, (void*)state, 0x21);
             *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
             ObjAnim_SetCurrentMove(obj, 0x450, lbl_803E7EA4, 0);
             Player_ApplyStatusDamage((GameObject*)obj, param);
@@ -15811,7 +15811,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                     *(u8*)((char*)((PlayerState*)inner)->heldObj + 0xf2) = ((GameObject*)obj)->lightColorSlot;
                 }
                 ((PlayerState*)inner)->unk7FC = (f32)(param >> 0x10) / lbl_803E7ED8;
-                (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 5);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 5);
                 *(void (**)(GameObject*))&((PlayerState*)state)->baddie.unk304 = fn_802A4B4C;
                 if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
                 {
@@ -15832,7 +15832,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
                     *(u8*)((char*)((PlayerState*)inner)->heldObj + 0xf2) = ((GameObject*)obj)->lightColorSlot;
                 }
                 ((PlayerState*)inner)->unk7FC = (f32)(param >> 0x10);
-                (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 5);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 5);
                 *(void (**)(GameObject*))&((PlayerState*)state)->baddie.unk304 = fn_802A4B4C;
                 if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
                 {
@@ -16870,7 +16870,7 @@ void playerAnimate(GameObject* obj, int state, f32 fv)
             ((PlayerState*)state)->staffActionRequest = 1;
             ((ByteFlags*)((char*)state + 0x3f4))->b08 = 1;
         }
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, state, 0xa);
+        (*gPlayerInterface)->setState(obj, (void*)state, 0xa);
         *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
     }
     (*(void (*)(int, int, f32, f32, int*, int*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
@@ -17528,7 +17528,7 @@ void playerUpdate(GameObject* obj)
             ((PlayerState*)inner)->curAnimId = (*gCameraInterface)->getMode();
             if (((PlayerState*)inner)->curAnimId == 0x44 && ((PlayerState*)inner)->baddie.controlMode != 1)
             {
-                (*(void (*)(GameObject*, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, inner, 1);
+                (*gPlayerInterface)->setState(obj, (void*)inner, 1);
                 {
                     f32 z = lbl_803E7EA4;
                     ((PlayerState*)inner)->baddie.animSpeedC = z;
@@ -17983,13 +17983,13 @@ int Lightfoot_UpdateProximityInteractionState(int obj, int state)
             if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedB != 0 ||
                 *(s8*)&((PlayerState*)state)->baddie.moveDone != 0 || ((PlayerState*)state)->baddie.controlMode == 0)
             {
-                (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 4);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 4);
             }
         }
         else if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedB != 0 ||
                  *(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 0);
+            (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
         }
     }
     return 0;
@@ -18012,7 +18012,7 @@ int Lightfoot_UpdateCompletionInteraction(int obj, int state)
             if (((PlayerState*)state)->baddie.controlMode != 3)
             {
                 *(u8*)((char*)a4 + 0x2c) = 4;
-                (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 3);
+                (*gPlayerInterface)->setState((void*)obj, (void*)state, 3);
             }
             if (*(u8*)((char*)a4 + 0x2c) != 0)
             {
@@ -18034,7 +18034,7 @@ int Lightfoot_UpdateCompletionInteraction(int obj, int state)
             {
                 if (mainGetBit(*(s16*)((char*)data + 0x30)) != 0)
                 {
-                    (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 1);
+                    (*gPlayerInterface)->setState((void*)obj, (void*)state, 1);
                 }
             }
         }
@@ -18145,7 +18145,7 @@ int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
         if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedB != 0 ||
             *(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
-            (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 0);
+            (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
         }
     }
     return 0;
