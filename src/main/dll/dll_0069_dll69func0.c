@@ -26,7 +26,8 @@
 extern u8 lbl_803137F8[];
 extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
 
-void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unused, int* overrideParams)
+void dll_69_func03(u8* sourceObj, int variant, void* posSource, u32 flags, int unused,
+                   Dll69EffectParams* overrideParams)
 {
     ModgfxPointerSpawnPacket buf;
     GfxCmd* e;
@@ -39,10 +40,10 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unu
     entries = buf.entries;
     if (overrideParams != NULL)
     {
-        a = overrideParams[0];
-        b = overrideParams[1];
-        c = overrideParams[2];
-        d = overrideParams[3];
+        a = overrideParams->param0;
+        b = overrideParams->param1;
+        c = overrideParams->param2;
+        d = overrideParams->param3;
     }
     entries[0].layer = 0;
     entries[0].flags = 8;

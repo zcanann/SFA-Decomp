@@ -32,7 +32,7 @@ extern u8 lbl_80312BD8[];
 #define DLL63_EFFECT_Y 4.0f
 #define DLL63_FLAG_SCALE 0.1f
 
-void dll_63_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
+void dll_63_func03(u8* sourceObj, int variant, void* posSource, u32 flags, int unused, void* unusedParams)
 {
     ModgfxPointerSpawnPacket buf;
     u8* base = lbl_80312BD8;

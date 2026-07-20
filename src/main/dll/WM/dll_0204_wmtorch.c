@@ -8,6 +8,8 @@
  * object.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/dll_0063_dll63func0.h"
+#include "main/dll/dll_0069_dll69func0.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
@@ -20,9 +22,6 @@
 #include "main/vecmath.h"
 #include "main/dll/WM/dll_0204_wmtorch.h"
 #include "main/object_descriptor.h"
-
-/* slot 1 of the acquired effect resource's vtable: attach the flame */
-typedef void (*WmTorchAttachFlameFn)(u8* obj, int variant, f32* params, int flags, int p5, int p6);
 
 #define WMTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -108,19 +107,19 @@ void wmtorch_init(u8* obj, u8* params)
     {
         res = Resource_Acquire(0x69, 1);
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 1, flameParams, 0x10004, -1, 0);
+        (*(Dll69Interface**)res)->spawn(obj, 1, flameParams, 0x10004, -1, NULL);
     }
     else if (state->torchType == 0x7f)
     {
         res = Resource_Acquire(0x69, 1);
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 2, flameParams, 0x10004, -1, 0);
+        (*(Dll69Interface**)res)->spawn(obj, 2, flameParams, 0x10004, -1, NULL);
     }
     else
     {
         res = Resource_Acquire(0x63, 1);
         ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        ((WmTorchAttachFlameFn)((void**)*(int*)res)[1])(obj, 2, flameParams, 0x10004, -1, 0);
+        (*(Dll63Interface**)res)->spawn(obj, 2, flameParams, 0x10004, -1, NULL);
     }
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF8;
     Resource_Release(res);
