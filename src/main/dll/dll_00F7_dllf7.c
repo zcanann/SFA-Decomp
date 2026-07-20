@@ -37,11 +37,11 @@
 /* child object id spawned via DllF7GasSetup buffer (gas cloud) */
 #define DLLF7_CHILD_OBJ_GAS 0xb
 
-typedef struct DllF7Placement
+struct DllF7Placement
 {
-    u8 pad0[0x14 - 0x0];
-    s32 mapEventId;
-    s16 unk18;
+    ObjPlacement base;
+    s8 rotXByte;
+    u8 alternateMode;
     s16 unk1A;
     s16 unk1C;
     s16 completeGameBit;
@@ -49,7 +49,7 @@ typedef struct DllF7Placement
     u8 pad22[0x2C - 0x22];
     s16 unk2C;
     u8 pad2E[0x30 - 0x2E];
-} DllF7Placement;
+};
 
 /* Spawn-setup buffer seeded by dll_F7_update for the gas-cloud child (obj id
  * 0xb): position head plus the class-specific fields (see the target stb/sth). */
@@ -88,11 +88,22 @@ typedef struct DllF7State
 {
     f32 bounceOffset;
     f32 bounceVelocity;
-    u8 byte8;
-    s8 byte9;
+    u8 unk8;
+    s8 broken;
     s8 hitsRemaining;
-    s8 byteB;
+    s8 alternateMode;
 } DllF7State;
+
+STATIC_ASSERT(offsetof(DllF7Placement, base) == 0x0);
+STATIC_ASSERT(offsetof(DllF7Placement, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(DllF7Placement, alternateMode) == 0x19);
+STATIC_ASSERT(offsetof(DllF7Placement, completeGameBit) == 0x1E);
+STATIC_ASSERT(sizeof(DllF7Placement) == 0x30);
+STATIC_ASSERT(offsetof(DllF7State, bounceVelocity) == 0x4);
+STATIC_ASSERT(offsetof(DllF7State, broken) == 0x9);
+STATIC_ASSERT(offsetof(DllF7State, hitsRemaining) == 0xA);
+STATIC_ASSERT(offsetof(DllF7State, alternateMode) == 0xB);
+STATIC_ASSERT(sizeof(DllF7State) == 0xC);
 
 StaffCollisionInterface** gDllF7Resource5A;
 ModgfxFunc03Interface** gDllF7Resource5B;
@@ -106,27 +117,27 @@ int dll_F7_getObjectTypeId(void)
     return 0x2;
 }
 
-void dll_F7_free(int obj)
+void dll_F7_free(GameObject* obj)
 {
     (*gModgfxInterface)->detachSource((void*)obj);
     Resource_Release(gDllF7Resource5B);
     Resource_Release(gDllF7Resource5A);
     gDllF7Resource5B = NULL;
     gDllF7Resource5A = NULL;
-    ObjGroup_RemoveObject(obj, DLLF7_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DLLF7_OBJGROUP);
 }
 
-void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void dll_F7_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    DllF7State* state = ((GameObject*)obj)->extra;
-    if (state->byte9 == 0 && visible != 0)
+    DllF7State* state = obj->extra;
+    if (state->broken == 0 && visible != 0)
     {
         f32 v = state->bounceOffset;
         if (v)
         {
             fn_8003B5E0(0xc8, 0, 0, v);
         }
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -134,37 +145,37 @@ void dll_F7_hitDetect(void)
 {
 }
 
-void dll_F7_update(int* obj)
+void dll_F7_update(GameObject* obj)
 {
-    DllF7State* state = ((GameObject*)obj)->extra;
+    DllF7State* state = obj->extra;
     DllF7HitBlock blk;
     f32 radius;
     u32 hitVolume;
 
     blk.params = lbl_802C2260;
-    if (state->byte9 != 0)
+    if (state->broken != 0)
     {
-        int* params = *(int**)&((GameObject*)obj)->anim.placementData;
-        if (state->byteB == 0 && (*gMapEventInterface)->shouldNotSaveTime(((DllF7Placement*)params)->mapEventId) != 0)
+        DllF7Placement* placement = (DllF7Placement*)obj->anim.placementData;
+        if (state->alternateMode == 0 && (*gMapEventInterface)->shouldNotSaveTime(placement->base.mapId) != 0)
         {
-            state->byte9 = 0;
-            state->byte8 = 1;
+            state->broken = 0;
+            state->unk8 = 1;
             state->hitsRemaining = 2;
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags |= OBJHITS_PRIORITY_STATE_ENABLED;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |= OBJHITS_PRIORITY_STATE_ENABLED;
+            *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         }
         else
         {
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+            *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
         return;
     }
-    if (ObjHits_GetPriorityHitWithPosition((GameObject*)obj, 0, 0, &hitVolume, &blk.x, &blk.y, &blk.z) != 0)
+    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, &hitVolume, &blk.x, &blk.y, &blk.z) != 0)
     {
         if ((state->hitsRemaining -= hitVolume) > 0)
         {
             Sfx_PlayAtPositionFromObject((int)obj, blk.x, blk.y, blk.z, SFXTRIG_crtsmsh6);
-            Obj_SetActiveModelIndex((GameObject*)obj, 2 - state->hitsRemaining);
+            Obj_SetActiveModelIndex(obj, 2 - state->hitsRemaining);
             state->bounceOffset = 1.0f;
             state->bounceVelocity = 12.0f;
             blk.x += playerMapOffsetX;
@@ -179,46 +190,42 @@ void dll_F7_update(int* obj)
     }
     if (state->hitsRemaining <= 0)
     {
-        int* params = *(int**)&((GameObject*)obj)->anim.placementData;
-        if (state->byteB == 0)
+        DllF7Placement* placement = (DllF7Placement*)obj->anim.placementData;
+        if (state->alternateMode == 0)
         {
-            (*gMapEventInterface)->addTime(((DllF7Placement*)params)->mapEventId, 1200.0f);
+            (*gMapEventInterface)->addTime(placement->base.mapId, 1200.0f);
         }
-        state->byte9 = 1;
-        state->byte8 = 0;
+        state->broken = 1;
+        state->unk8 = 0;
         Sfx_PlayFromObject((u32)obj, SFXTRIG_dsmk2_c);
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
-        if ((int)((DllF7Placement*)params)->completeGameBit != -1)
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
+        if ((int)placement->completeGameBit != -1)
         {
-            mainSetBits((int)((DllF7Placement*)params)->completeGameBit, 1);
+            mainSetBits((int)placement->completeGameBit, 1);
         }
-        if (state->byteB == 0 && (u8)Obj_IsLoadingLocked() != 0)
+        if (state->alternateMode == 0 && (u8)Obj_IsLoadingLocked() != 0)
         {
             s16* alloc = (s16*)Obj_AllocObjectSetup(0x30, DLLF7_CHILD_OBJ_GAS);
             ((DllF7GasSetup*)alloc)->field1C = -1;
-            ((DllF7GasSetup*)alloc)->posX = ((GameObject*)obj)->anim.localPosX;
-            ((DllF7GasSetup*)alloc)->posY = 10.0f + ((GameObject*)obj)->anim.localPosY;
-            ((DllF7GasSetup*)alloc)->posZ = ((GameObject*)obj)->anim.localPosZ;
+            ((DllF7GasSetup*)alloc)->posX = obj->anim.localPosX;
+            ((DllF7GasSetup*)alloc)->posY = 10.0f + obj->anim.localPosY;
+            ((DllF7GasSetup*)alloc)->posZ = obj->anim.localPosZ;
             ((DllF7GasSetup*)alloc)->field1A = 3;
             ((DllF7GasSetup*)alloc)->field2C = -1;
             ((DllF7GasSetup*)alloc)->field24 = -1;
-            Obj_SetupObject((ObjPlacement*)alloc, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                            ((GameObject*)obj)->anim.parent);
+            Obj_SetupObject((ObjPlacement*)alloc, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
         }
         else
         {
-            int* near;
+            GameObject* near;
             radius = 50.0f;
-            near = (int*)ObjGroup_FindNearestObject(DLLF7_TARGET_OBJGROUP, (GameObject*)obj, &radius);
+            near = (GameObject*)ObjGroup_FindNearestObject(DLLF7_TARGET_OBJGROUP, obj, &radius);
             if (near != NULL)
             {
-                ((GameObject*)near)->anim.localPosX = ((GameObject*)near)->anim.worldPosX =
-                    ((GameObject*)obj)->anim.localPosX;
-                ((GameObject*)near)->anim.localPosY = ((GameObject*)near)->anim.worldPosY =
-                    10.0f + ((GameObject*)obj)->anim.localPosY;
-                ((GameObject*)near)->anim.localPosZ = ((GameObject*)near)->anim.worldPosZ =
-                    ((GameObject*)obj)->anim.localPosZ;
-                *(s16*)near = *(s16*)obj;
+                near->anim.localPosX = near->anim.worldPosX = obj->anim.localPosX;
+                near->anim.localPosY = near->anim.worldPosY = 10.0f + obj->anim.localPosY;
+                near->anim.localPosZ = near->anim.worldPosZ = obj->anim.localPosZ;
+                near->anim.rotX = obj->anim.rotX;
             }
         }
         (*gDllF7Resource5B)->spawn(obj, 1, NULL, 2, -1, NULL);
@@ -238,32 +245,32 @@ void dll_F7_update(int* obj)
     }
 }
 
-void dll_F7_init(int* obj, int* params)
+void dll_F7_init(GameObject* obj, DllF7Placement* placement)
 {
-    int* state = ((GameObject*)obj)->extra;
+    DllF7State* state = obj->extra;
     ObjGroup_AddObject((int)obj, DLLF7_OBJGROUP);
-    *(s16*)obj = (s16)((s8) * (s8*)((char*)params + 0x18) << 8);
-    ((GameObject*)obj)->objectFlags |= DLLF7_OBJFLAG_HITDETECT_DISABLED;
+    obj->anim.rotX = (s16)(placement->rotXByte << 8);
+    obj->objectFlags |= DLLF7_OBJFLAG_HITDETECT_DISABLED;
     gDllF7Resource5B = Resource_Acquire(0x5b, 1);
     gDllF7Resource5A = Resource_Acquire(0x5a, 1);
     {
-        ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
+        ObjModelState* modelState = obj->anim.modelState;
         if (modelState != NULL)
         {
             modelState->flags |= 0x810;
         }
     }
-    *(u8*)&((DllF7State*)state)->hitsRemaining = 2;
-    *(u8*)&((DllF7State*)state)->byteB = *(u8*)((char*)params + 0x19);
-    if (((DllF7State*)state)->byteB == 0)
+    *(u8*)&state->hitsRemaining = 2;
+    *(u8*)&state->alternateMode = placement->alternateMode;
+    if (state->alternateMode == 0)
     {
-        int r = (*gMapEventInterface)->shouldNotSaveTime(((DllF7Placement*)params)->mapEventId);
+        int r = (*gMapEventInterface)->shouldNotSaveTime(placement->base.mapId);
         if (r == 0)
         {
-            ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+            ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
             hitState->flags &= ~1;
-            *(u8*)&((DllF7State*)state)->byte9 = 1;
-            ((DllF7State*)state)->byte8 = 0;
+            *(u8*)&state->broken = 1;
+            state->unk8 = 0;
         }
     }
 }

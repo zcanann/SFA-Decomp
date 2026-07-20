@@ -20,6 +20,7 @@
 #include "main/model.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 
 #define FUELCELL_OBJGROUP 0x4f
 
@@ -39,35 +40,43 @@
 typedef struct
 {
     u16 msg; // 0x0
-    u8 pad[0x5a];
+    u8 pad02[6];
+    LightningEffect* lightning[10];
+    u8 pad30[4];
+    f32 lightningAge[10];
     u8 lit : 1; // 0x5c bit 7
     u8 grabbed : 1; // bit 6
     u8 unkBit5 : 1; // bit 5
     u8 resetPos : 1; // bit 4
+    u8 pad5D[3];
 } FuelcellState;
 
 typedef struct
 {
-    u8 pad[8];
-    f32 homeX; // 0x8
-    f32 homeY; // 0xc
-    f32 homeZ; // 0x10
-    u8 pad2[0xa];
+    ObjPlacement base;
+    u8 pad18[6];
     s16 offBit; // 0x1e
     s16 onBit; // 0x20
-} FuelcellSetup;
+} FuelcellPlacement;
 
-int FuelCell_SeqFn(int* obj)
+STATIC_ASSERT(offsetof(FuelcellState, lightning) == 0x8);
+STATIC_ASSERT(offsetof(FuelcellState, lightningAge) == 0x34);
+STATIC_ASSERT(sizeof(FuelcellState) == 0x60);
+STATIC_ASSERT(offsetof(FuelcellPlacement, offBit) == 0x1E);
+STATIC_ASSERT(offsetof(FuelcellPlacement, onBit) == 0x20);
+STATIC_ASSERT(sizeof(FuelcellPlacement) == 0x24);
+
+int FuelCell_SeqFn(GameObject* obj)
 {
-    FuelcellState* state = ((GameObject*)obj)->extra;
+    FuelcellState* state = obj->extra;
     state->unkBit5 = 1;
     state->resetPos = 1;
     return 0;
 }
 
-void fuelcell_modelMtxFn(u8* model)
+void fuelcell_modelMtxFn(GameObject* obj)
 {
-    if (model[0x37] == 0xff)
+    if (obj->anim.renderAlpha == 0xff)
     {
         GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
     }
@@ -84,35 +93,26 @@ int FuelCell_getExtraSize(void) { return 0x60; }
 
 void FuelCell_free(GameObject* obj)
 {
-    u8* state = obj->extra;
+    FuelcellState* state = obj->extra;
     u8 i;
 
     for (i = 0; i < 10; i++)
     {
-        void* slot = *(void**)(state + 8 + i * 4);
-        if (slot != NULL)
+        if (state->lightning[i] != NULL)
         {
-            mm_free_(slot);
+            mm_free_(state->lightning[i]);
         }
     }
 
-    if (((u32)state[0x5c] >> 7) & 1)
+    if (state->lit)
     {
         ObjGroup_RemoveObject((int)obj, FUELCELL_OBJGROUP);
     }
 }
 
-typedef struct
+void FuelCell_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
-    u8 pad0[0xc];
-    f32 pos[3]; // 0xc
-    f32 pos2[3]; // 0x18
-} GameObjPos;
-
-void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
-{
-    int** list;
-    u8* slot;
+    GameObject** list;
     FuelcellState* state;
     u8 mode;
     u8 i;
@@ -121,12 +121,12 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
     u8 spawned;
     f32 angle;
     f32 scale;
-    int* candidates[9];
+    GameObject* candidates[9];
     f32 pos[3];
     f32 dist;
     int objCount;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     angle = 4.0f;
     objCount = 0;
     mode = 0x40;
@@ -143,43 +143,42 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
             objfx_spawnDirectionalBurst(obj, 5, 1.0f, 1, 1, 0x14, 4.5f, NULL, 0);
         }
         {
-            ModelRenderOp* op = ObjModel_GetRenderOp(Obj_GetActiveModel((GameObject*)obj)->file, 0);
+            ModelRenderOp* op = ObjModel_GetRenderOp(Obj_GetActiveModel(obj)->file, 0);
             op->alphaOverride = 0x7f;
         }
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 
         for (i = 0; i < 10; i++)
         {
-            slot = (u8*)state + i * 4;
-            if (*(void**)(slot + 8) != NULL)
+            if (state->lightning[i] != NULL)
             {
-                lightningRender(*(LightningEffect**)(slot + 8));
+                lightningRender(state->lightning[i]);
                 if (getHudHiddenFrameCount() == 0)
                 {
-                    *(f32*)(slot + 0x34) += timeDelta;
-                    *(u16*)(*(char**)(slot + 8) + 0x20) = (int)(0.5f + *(f32*)(slot + 0x34));
-                    if (*(u16*)(*(char**)(slot + 8) + 0x20) > 0x14)
+                    state->lightningAge[i] += timeDelta;
+                    *(u16*)((char*)state->lightning[i] + 0x20) = (int)(0.5f + state->lightningAge[i]);
+                    if (*(u16*)((char*)state->lightning[i] + 0x20) > 0x14)
                     {
-                        mm_free_(*(void**)(slot + 8));
-                        *(void**)(slot + 8) = NULL;
+                        mm_free_(state->lightning[i]);
+                        state->lightning[i] = NULL;
                     }
                 }
             }
             else if (!spawned && getHudHiddenFrameCount() == 0)
             {
-                int* target;
+                GameObject* target;
                 if ((int)randomGetRange(0, 9) == 0 && !state->unkBit5)
                 {
-                    list = (int**)ObjGroup_GetObjects(FUELCELL_OBJGROUP, &objCount);
+                    list = (GameObject**)ObjGroup_GetObjects(FUELCELL_OBJGROUP, &objCount);
                     for (j = 0; j < objCount; j++)
                     {
                         int ofs = (int)(u16)j * 4;
-                        int* other = *(int**)((char*)list + ofs);
+                        GameObject* other = *(GameObject**)((char*)list + ofs);
                         u8 ok;
                         if (other != obj)
                         {
-                            if (((GameObject*)other)->extra != NULL &&
-                                ((FuelcellState*)((GameObject*)other)->extra)->unkBit5)
+                            if (other->extra != NULL &&
+                                ((FuelcellState*)other->extra)->unkBit5)
                             {
                                 ok = 0;
                             }
@@ -187,10 +186,10 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
                             {
                                 ok = 1;
                             }
-                            if (ok && vec3f_distanceSquared(((GameObjPos*)other)->pos2, ((GameObjPos*)obj)->pos2) <
+                            if (ok && vec3f_distanceSquared(&other->anim.worldPosX, &obj->anim.worldPosX) <
                                 10000.0f)
                             {
-                                candidates[pickCount++] = *(int**)((char*)list + ofs);
+                                candidates[pickCount++] = *(GameObject**)((char*)list + ofs);
                             }
                         }
                     }
@@ -199,8 +198,8 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
                 {
                     pickCount--;
                     pickCount = randomGetRange(0, pickCount);
-                    dist = Vec_distance(((GameObjPos*)candidates[pickCount])->pos2,
-                                     ((GameObjPos*)obj)->pos2) / 100.0f;
+                    dist = Vec_distance(&candidates[pickCount]->anim.worldPosX,
+                                     &obj->anim.worldPosX) / 100.0f;
                     angle = 0.1f - 0.07f * dist;
                     mode = 0xff;
                 }
@@ -209,9 +208,9 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
                     candidates[0] = obj;
                 }
                 target = candidates[pickCount];
-                pos[0] = ((GameObjPos*)target)->pos[0];
-                pos[1] = ((GameObjPos*)target)->pos[1];
-                pos[2] = ((GameObjPos*)target)->pos[2];
+                pos[0] = target->anim.localPosX;
+                pos[1] = target->anim.localPosY;
+                pos[2] = target->anim.localPosZ;
                 if (target == obj)
                 {
                     if (state->unkBit5)
@@ -226,9 +225,9 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
                     pos[1] = scale * (f32)((int)randomGetRange(0, 2000) - 1000) + pos[1];
                     pos[2] = scale * (f32)((int)randomGetRange(0, 2000) - 1000) + pos[2];
                 }
-                *(LightningEffect**)(slot + 8) = lightningCreate(
-                    (const Vec3f*)((GameObjPos*)obj)->pos, (const Vec3f*)pos, angle, 0.2f, 0x14, (u8)mode, 0);
-                *(f32*)(slot + 0x34) = 0.0f;
+                state->lightning[i] = lightningCreate(
+                    &obj->anim.localPos, (const Vec3f*)pos, angle, 0.2f, 0x14, (u8)mode, 0);
+                state->lightningAge[i] = 0.0f;
                 spawned = 1;
             }
         }
@@ -237,7 +236,7 @@ void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
 
 void FuelCell_update(GameObject* obj)
 {
-    FuelcellSetup* setup = *(FuelcellSetup**)&obj->anim.placementData;
+    FuelcellPlacement* placement = (FuelcellPlacement*)obj->anim.placementData;
     FuelcellState* state = obj->extra;
     GameObject* player;
     int msgId;
@@ -251,7 +250,7 @@ void FuelCell_update(GameObject* obj)
             if (msgId == FUELCELL_MSG_RELEASE)
             {
                 state->grabbed = 0;
-                mainSetBits(setup->offBit, 1);
+                mainSetBits(placement->offBit, 1);
                 gameBitIncrement(GAMEBIT_ITEM_FuelCell_Count);
                 mainSetBits(FUELCELL_GAMEBIT_CARRIED, 0);
             }
@@ -259,10 +258,10 @@ void FuelCell_update(GameObject* obj)
     }
     else
     {
-        int bit = setup->offBit;
+        int bit = placement->offBit;
         if (bit != -1 && mainGetBit(bit) == 0)
         {
-            bit = setup->onBit;
+            bit = placement->onBit;
             if (bit == -1 || mainGetBit(bit) != 0)
             {
                 f32 dy;
@@ -274,16 +273,16 @@ void FuelCell_update(GameObject* obj)
                 }
                 else if (state->resetPos)
                 {
-                    ((GameObject*)obj)->anim.localPosX = setup->homeX;
-                    ((GameObject*)obj)->anim.localPosY = setup->homeY;
-                    ((GameObject*)obj)->anim.localPosZ = setup->homeZ;
-                    ((GameObject*)obj)->anim.alpha = 0xff;
+                    obj->anim.localPosX = placement->base.posX;
+                    obj->anim.localPosY = placement->base.posY;
+                    obj->anim.localPosZ = placement->base.posZ;
+                    obj->anim.alpha = 0xff;
                     state->resetPos = 0;
                 }
-                dy = ((GameObject*)obj)->anim.localPosY - player->anim.localPosY;
+                dy = obj->anim.localPosY - player->anim.localPosY;
                 if (dy > -5.0f && dy < 40.0f
                     && mainGetBit(FUELCELL_GAMEBIT_CARRIED) == 0
-                    && getXZDistance(&((GameObject*)obj)->anim.worldPosX,
+                    && getXZDistance(&obj->anim.worldPosX,
                                      &player->anim.worldPosX) < 81.0f)
                 {
                     state->msg = 0xcbe;
