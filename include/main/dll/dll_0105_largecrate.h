@@ -2,8 +2,26 @@
 #define MAIN_DLL_DLL_0105_LARGECRATE_H_
 
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "ghidra_import.h"
 #include "global.h"
+
+/* Retail LargeCrate and LargeCrateL placements are both 9 words: the common
+   0x18-byte head followed by this 0x0C-byte crate parameter tail. */
+typedef struct LargeCratePlacement {
+    ObjPlacement base;      /* 0x00 */
+    s8 rotX;                /* 0x18 */
+    u8 dropType;            /* 0x19 variant remap index */
+    s16 unk1A;              /* 0x1A copied into state byte 0x12 */
+    s16 respawnMinutes;     /* 0x1C: 0 disabled, 0xFF permanent */
+    s16 brokenGameBit;      /* 0x1E persistent broken-state bit */
+    u8 unk20[4];
+} LargeCratePlacement;
+
+STATIC_ASSERT(offsetof(LargeCratePlacement, rotX) == 0x18);
+STATIC_ASSERT(offsetof(LargeCratePlacement, respawnMinutes) == 0x1C);
+STATIC_ASSERT(offsetof(LargeCratePlacement, brokenGameBit) == 0x1E);
+STATIC_ASSERT(sizeof(LargeCratePlacement) == 0x24);
 
 /* LargeCrateState.dropType selector values dispatched by
  * largecrate_spawnDropContents. Distinct from the LARGECRATE_DROP_* object ids
@@ -63,7 +81,6 @@ STATIC_ASSERT(sizeof(LargeCrateState) == 0x2C);
 #define LARGECRATE_RANDOM_DELAY_MAX        100
 #define LARGECRATE_RANDOM_DELAY_BASE       300
 #define LARGECRATE_DEFAULT_COUNTDOWN       0x190
-#define LARGECRATE_OBJECT_FLAGS            0x2000
 #define LARGECRATE_RANDOM_BOB_MAX          200
 
 /* Object ids spawned as drop contents, dispatched on LargeCrateState.dropType. */
@@ -82,7 +99,7 @@ STATIC_ASSERT(sizeof(LargeCrateState) == 0x2C);
 #define LARGECRATE_VARIANT_B_SFX_A 0x48
 #define LARGECRATE_VARIANT_B_SFX_B 0x4A
 
-int largecrate_spawnDropContents(GameObject* obj, int player, int state);
+int largecrate_spawnDropContents(GameObject* obj, GameObject* player, LargeCrateState* state);
 int LargeCrate_SeqFn(GameObject* obj);
 void largecrate_updateConveyorSlide(GameObject* obj, LargeCrateState* state);
 int largecrate_getExtraSize(void);
@@ -91,7 +108,7 @@ void largecrate_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 rende
 void largecrate_hitDetect(int obj);
 void largecrate_update(GameObject* obj);
 void largecrate_free(GameObject* obj);
-void largecrate_init(GameObject* obj, u8* initData);
+void largecrate_init(GameObject* obj, LargeCratePlacement* placement);
 void largecrate_release(void);
 void largecrate_initialise(void);
 
