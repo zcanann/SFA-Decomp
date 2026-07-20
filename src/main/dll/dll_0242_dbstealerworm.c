@@ -2411,7 +2411,8 @@ void dbstealerworm_update(u8* objp)
                 {
                     sub3 = *(int*)&((GroundBaddieState*)blob)->control;
                     dbstealerworm_processEffectFlags((GameObject*)(obj), blob);
-                    ((void (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[11])(obj, blob, 0.17f, -1);
+                    ((BaddieControlInterface*)*gBaddieControlInterface)
+                        ->updateGravity((GameObject*)obj, (void*)blob, 0.17f, -1);
                     if ((((DbStealerwormControl*)sub3)->flags15 & 4) == 0)
                     {
                         (*gPlayerInterface)->rotateTowardTarget((void*)obj, (void*)blob, timeDelta, 4);

@@ -105,7 +105,7 @@ void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flag
 GameObject* dll_19_func14(GameObject* self, void* state, f32 frange, int halfAngle);
 int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar);
 int dll_19_func0E(GameObject* obj, void* state, u8 checkDead);
-void dll_19_func0D(GameObject* obj, int state, f32 gravity, s8 field25f);
+void dll_19_func0D(GameObject* obj, void* state, f32 gravity, s8 field25f);
 int dll_19_func10(GameObject* obj, u8* state, int moveArg0, int moveArg1, s16 controlMode, f32* destX, f32* destZ,
                   int* reachedOut);
 int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int moveArg0, int moveArg1, s16 controlMode);
@@ -894,7 +894,7 @@ int dll_19_func0E(GameObject* obj, void* state, u8 checkDead)
     return 1;
 }
 
-void dll_19_func0D(GameObject* obj, int state, f32 gravity, s8 field25f)
+void dll_19_func0D(GameObject* obj, void* state, f32 gravity, s8 field25f)
 {
     f32 fz;
     *(u32*)state |= 0x8000;

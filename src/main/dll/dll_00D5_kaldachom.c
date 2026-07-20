@@ -482,8 +482,8 @@ void kaldachom_update(GameObject* obj)
                 player = (u32)Obj_GetPlayerObject();
                 *(u32*)&((GroundBaddieState*)state)->baddie.targetObj = player;
                 kaldachom_handleAnimEvents(obj, state, state);
-                (*(void (**)(void*, int, double, int))(*(int*)gBaddieControlInterface + 0x2c))(
-                    obj, state, (double)lbl_803E3060.f, 0xffffffff);
+                ((BaddieControlInterface*)*gBaddieControlInterface)
+                    ->updateGravity(obj, (void*)state, lbl_803E3060.f, -1);
                 if (((CampfireState*)state)->controlMode != 6)
                 {
                     (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, timeDelta, 5);

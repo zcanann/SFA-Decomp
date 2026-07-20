@@ -976,7 +976,8 @@ void dll_D3_update(int* obj)
         }
     }
 
-    ((void (*)(int*, int*, f32, int))((void**)*(int*)gBaddieControlInterface)[0x2c / 4])(obj, state, lbl_803E2FDC, -1);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->updateGravity((GameObject*)obj, state, lbl_803E2FDC, -1);
 
     ((TreasureChestState*)state)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;

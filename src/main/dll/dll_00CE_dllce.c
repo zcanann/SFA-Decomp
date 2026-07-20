@@ -873,8 +873,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
                     } while (spawnCount < 10);
                 }
                 hit[8] = 0;
-                (*(void (**)(void*, int, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, (int)sub,
-                                                                                            0.0f, -1);
+                ((BaddieControlInterface*)*gBaddieControlInterface)->updateGravity(obj, sub, 0.0f, -1);
                 (*gPlayerInterface)->rotateTowardTarget(obj, sub, timeDelta, 4);
                 sub->savedObjC0 = *(int*)&obj->pendingParentObj;
                 *(int*)&obj->pendingParentObj = 0;

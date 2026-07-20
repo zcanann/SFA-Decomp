@@ -18599,7 +18599,8 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
         v = *(int*)&((PlayerState*)sub)->baddie.posX;
         if (v >= 0x49942 || v < 0x4993f)
         {
-            (*(void (*)(int, int, f32, int))(*(int*)(*gBaddieControlInterface + 0x2c)))(obj, state, lbl_803E820C, 1);
+            ((BaddieControlInterface*)*gBaddieControlInterface)
+                ->updateGravity((GameObject*)obj, (void*)state, lbl_803E820C, 1);
         }
         ((PlayerState*)inner)->pendingParentObj = *(int*)&((GameObject*)obj)->pendingParentObj;
         *(int*)&((GameObject*)obj)->pendingParentObj = 0;

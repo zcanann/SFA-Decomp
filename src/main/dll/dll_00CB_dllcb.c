@@ -279,7 +279,7 @@ void dll_CB_seekAndUpdate(int obj, void* seq, int sub, GroundBaddieState* state)
             *(int*)&state->baddie.targetObj = 0;
         }
     }
-    (*(void (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, (u8*)state, 0.17f, 1);
+    ((BaddieControlInterface*)*gBaddieControlInterface)->updateGravity((GameObject*)obj, state, 0.17f, 1);
     ((GroundBaddieState*)sub)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
     (*gPlayerInterface)->update((void*)obj, state, timeDelta, timeDelta, gDllCBMoveHandlers, gDllCBStateHandlers);
@@ -368,7 +368,8 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             if ((*(int (**)(short*, u8*, int, void*, void*, int))(*(int*)gBaddieControlInterface + 0x34))(
                     obj, e, sub, gDllCBMoveHandlers, gDllCBStateHandlers, 0) != 0)
             {
-                (*(void (**)(short*, int, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(obj, sub, 0.17f, 1);
+                ((BaddieControlInterface*)*gBaddieControlInterface)
+                    ->updateGravity((GameObject*)obj, (void*)sub, 0.17f, 1);
             }
             break;
         case 0:

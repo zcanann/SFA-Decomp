@@ -1645,7 +1645,7 @@ void ktrex_update(int obj)
         (char*)gKTRexRuntime + 0x405, 2, 2, 0);
     ktrex_updateContactEffects((GameObject*)obj, runtime);
     ktrex_updateAttackEffects((GameObject*)(obj));
-    (*(void (**)(int, void*, f32, int))((char*)*gBaddieControlInterface + 0x2c))(obj, runtime, 0.0f, 0);
+    ((BaddieControlInterface*)*gBaddieControlInterface)->updateGravity((GameObject*)obj, runtime, 0.0f, 0);
     ObjHits_SetHitVolumeMasks((ObjAnimComponent*)obj, 24, 2, 0x1fffff);
     (*gPlayerInterface)->update((void*)obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB,
                                 gKTRexStateHandlersA);

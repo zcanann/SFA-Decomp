@@ -172,8 +172,8 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
                 *(int*)gBaddieControlInterface + 0x34))(obj, animUpdate, state, &lbl_803DDBB0, &lbl_803DDBA8, 0);
             if (animOk != 0)
             {
-                (*(void (**)(void*, DIMbosstonsilState*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(
-                    obj, state, lbl_803E4C90, 1);
+                ((BaddieControlInterface*)*gBaddieControlInterface)
+                    ->updateGravity((GameObject*)obj, state, lbl_803E4C90, 1);
             }
             break;
         case 0:

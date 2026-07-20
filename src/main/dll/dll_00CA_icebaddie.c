@@ -1196,11 +1196,11 @@ void iceBaddie_updateTargetMotion(GameObject* obj, int sub, int state)
     }
     if ((((GroundBaddieState*)sub)->configFlags & 2) != 0)
     {
-        ((void (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[11])((int)obj, state, 0.0f, -1);
+        ((BaddieControlInterface*)*gBaddieControlInterface)->updateGravity(obj, (void*)state, 0.0f, -1);
     }
     else
     {
-        ((void (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[11])((int)obj, state, 0.17f, -1);
+        ((BaddieControlInterface*)*gBaddieControlInterface)->updateGravity(obj, (void*)state, 0.17f, -1);
     }
     ((GroundBaddieState*)sub)->savedObjC0 = *(int*)&(obj)->pendingParentObj;
     *(int*)&(obj)->pendingParentObj = 0;

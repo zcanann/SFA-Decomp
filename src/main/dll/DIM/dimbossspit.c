@@ -54,8 +54,8 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
 
     updateState->effectActive = 1;
 
-    (*(void (**)(u8*, DIMbosstonsilState*, double, int))(*(int*)gBaddieControlInterface + 0x2C))(obj, updateState,
-                                                                                                 (double)timer, 1);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->updateGravity((GameObject*)obj, updateState, timer, 1);
 
     vt = (u8*)*(int*)gBaddieControlInterface;
     ((void (*)(u8*, DIMbosstonsilState*, u8*, s16, u8*, int, int, int)) *
