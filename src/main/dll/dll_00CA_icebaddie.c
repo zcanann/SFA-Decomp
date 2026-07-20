@@ -121,8 +121,8 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 u8 lbl_803DDA79;
 u8 lbl_803DDA78;
 
-extern u8 gIceBaddieStateHandlersA[];
-extern u8 gIceBaddieStateHandlersB[];
+extern void* gIceBaddieStateHandlersA[];
+extern void* gIceBaddieStateHandlersB[];
 extern u8 lbl_8031FDA0[];
 extern u8 lbl_8031FE18[];
 extern s16 gIceBaddieAttackMoves[];
