@@ -782,23 +782,9 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                         vidx = ibase + frac;
                         ((SwipeVertex*)vp)[0].life = vidx;
                         {
-                            f32 k = 255.0f;
-                            f32 t = flb - ((SwipeVertex*)vp)[0].life;
-                            f32 clamped;
-                            t = k * (t / 8.0f);
-                            if (t < 0.0f)
-                            {
-                                clamped = 0.0f;
-                            }
-                            else if (t > k)
-                            {
-                                clamped = k;
-                            }
-                            else
-                            {
-                                clamped = t;
-                            }
-                            ((SwipeVertex*)vp)[0].alpha = k - clamped;
+                            f32 t = 255.0f * ((flb - ((SwipeVertex*)vp)[0].life) / 8.0f);
+                            f32 clamped = (t < 0.0f) ? 0.0f : ((t > 255.0f) ? 255.0f : t);
+                            ((SwipeVertex*)vp)[0].alpha = 255.0f - clamped;
                         }
                         ((SwipeVertex*)vp)[1].x = Curve_EvalBSpline(ptAx, frac, NULL);
                         ((SwipeVertex*)vp)[1].y = Curve_EvalBSpline(ptAy, frac, NULL);
@@ -808,23 +794,9 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                         ((SwipeVertex*)vp)[1].z += ((StaffState*)swipe)->anchorZ + acc * (((GameObject*)obj)->anim.worldPosZ - ((StaffState*)swipe)->anchorZ);
                         ((SwipeVertex*)vp)[1].life = vidx;
                         {
-                            f32 k = 255.0f;
-                            f32 t = flb - ((SwipeVertex*)vp)[1].life;
-                            f32 clamped;
-                            t = k * (t / 8.0f);
-                            if (t < 0.0f)
-                            {
-                                clamped = 0.0f;
-                            }
-                            else if (t > k)
-                            {
-                                clamped = k;
-                            }
-                            else
-                            {
-                                clamped = t;
-                            }
-                            ((SwipeVertex*)vp)[1].alpha = k - clamped;
+                            f32 t = 255.0f * ((flb - ((SwipeVertex*)vp)[1].life) / 8.0f);
+                            f32 clamped = (t < 0.0f) ? 0.0f : ((t > 255.0f) ? 255.0f : t);
+                            ((SwipeVertex*)vp)[1].alpha = 255.0f - clamped;
                         }
                         ((StaffSwipeSlot*)slot)->vertexCount += 2;
                         *(u16*)(slot + 0xe) += 2;
@@ -1200,23 +1172,9 @@ void staff_update(int* obj)
             {
                 if ((u8*)swp == ((StaffState*)state)->activeSlot)
                 {
-                    f32 k = 255.0f;
-                    f32 t = 2.0f * ((StaffState*)state)->progress - vp[0].life;
-                    f32 clamped;
-                    t = k * (t / 8.0f);
-                    if (t < 0.0f)
-                    {
-                        clamped = 0.0f;
-                    }
-                    else if (t > k)
-                    {
-                        clamped = k;
-                    }
-                    else
-                    {
-                        clamped = t;
-                    }
-                    vp[0].alpha = k - clamped;
+                    f32 t = 255.0f * ((2.0f * ((StaffState*)state)->progress - vp[0].life) / 8.0f);
+                    f32 clamped = (t < 0.0f) ? 0.0f : ((t > 255.0f) ? 255.0f : t);
+                    vp[0].alpha = 255.0f - clamped;
                     vp[1].alpha = vp[0].alpha;
                 }
                 else
