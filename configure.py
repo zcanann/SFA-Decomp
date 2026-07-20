@@ -261,7 +261,7 @@ config.custom_build_rules = [
         "name": "prodg",
         "command": f"{prodg_shell}{prodg_wrapper}{prodg_dir / 'cpp.exe'} -Iinclude -P $in $basefile.i"
         f" && {prodg_wrapper}{prodg_dir / 'cc1.exe'} $basefile.i"
-        " -quiet -O1 -fno-common -frerun-loop-opt -o $basefile.s"
+        " -quiet -O1 -fno-common -frerun-loop-opt -frerun-cse-after-loop -o $basefile.s"
         f" && {prodg_as} -mgekko $basefile.s -o $out",
         "description": "PRODG $out",
     },
