@@ -576,13 +576,11 @@ int dbstealerworm_stateHandlerA0D(GameObject* obj, int baddie)
     int targetObj;
     f32 v;
     f32 d;
-    struct
-    {
-        int msgE[3];
-        int msg7[3];
-        int msg9[3];
-        f32 pos[3];
-    } stk;
+    f32 posBuf[3];
+    f32* pos = posBuf;
+    int msg9[3];
+    int msg7[3];
+    int msgE[3];
 
     sub->flags14 |= DBWORM_FLAG14_FX_DUST;
     sub->flags15 &= ~4;
@@ -601,45 +599,45 @@ int dbstealerworm_stateHandlerA0D(GameObject* obj, int baddie)
         ((GameObject*)bs->targetObj)->anim.localPosY - 5.0f <= obj->anim.localPosY)
     {
         obj = (GameObject*)sub->msgStack;
-        stk.msg9[0] = 9;
-        stk.msg9[1] = 0;
-        stk.msg9[2] = 0x24;
+        msg9[0] = 9;
+        msg9[1] = 0;
+        msg9[2] = 0x24;
         if (Stack_IsFull((RingBufferQueue*)obj) == 0)
         {
-            Stack_Push((RingBufferQueue*)obj, stk.msg9);
+            Stack_Push((RingBufferQueue*)obj, msg9);
         }
         sub->msgAdvance = 1;
         targetObj = *(int*)&bs->targetObj;
         obj = (GameObject*)sub->msgStack;
-        stk.msg7[0] = 7;
-        stk.msg7[1] = 1;
-        stk.msg7[2] = targetObj;
+        msg7[0] = 7;
+        msg7[1] = 1;
+        msg7[2] = targetObj;
         if (Stack_IsFull((RingBufferQueue*)obj) == 0)
         {
-            Stack_Push((RingBufferQueue*)obj, stk.msg7);
+            Stack_Push((RingBufferQueue*)obj, msg7);
         }
         sub->msgAdvance = 1;
         return 0;
     }
     else
     {
-        stk.pos[0] = obj->anim.localPosX;
-        stk.pos[1] = obj->anim.localPosY;
-        stk.pos[2] = obj->anim.localPosZ;
-        stk.pos[1] = stk.pos[1] + 20.0f;
-        stk.pos[0] = ((GameObject*)bs->targetObj)->anim.localPosX - stk.pos[0];
-        stk.pos[1] = ((GameObject*)bs->targetObj)->anim.localPosY - stk.pos[1];
-        stk.pos[2] = ((GameObject*)bs->targetObj)->anim.localPosZ - stk.pos[2];
-        if (sqrtf(stk.pos[2] * stk.pos[2] + (stk.pos[0] * stk.pos[0] + stk.pos[1] * stk.pos[1])) < 50.0f)
+        pos[0] = obj->anim.localPosX;
+        pos[1] = obj->anim.localPosY;
+        pos[2] = obj->anim.localPosZ;
+        pos[1] = pos[1] + 20.0f;
+        pos[0] = ((GameObject*)bs->targetObj)->anim.localPosX - pos[0];
+        pos[1] = ((GameObject*)bs->targetObj)->anim.localPosY - pos[1];
+        pos[2] = ((GameObject*)bs->targetObj)->anim.localPosZ - pos[2];
+        if (sqrtf(pos[2] * pos[2] + (pos[0] * pos[0] + pos[1] * pos[1])) < 50.0f)
         {
             targetObj = *(int*)&bs->targetObj;
             obj = (GameObject*)sub->msgStack;
-            stk.msgE[0] = 0xe;
-            stk.msgE[1] = 1;
-            stk.msgE[2] = targetObj;
+            msgE[0] = 0xe;
+            msgE[1] = 1;
+            msgE[2] = targetObj;
             if (Stack_IsFull((RingBufferQueue*)obj) == 0)
             {
-                Stack_Push((RingBufferQueue*)obj, stk.msgE);
+                Stack_Push((RingBufferQueue*)obj, msgE);
             }
             sub->msgAdvance = 1;
         }
