@@ -643,8 +643,7 @@ void fn_8004D230(void)
     f32 t;
 
     obj1 = (u8*)fn_8006C754();
-    C_MTXLightOrtho(mtx1, lbl_803DEAF4, lbl_803DEAF8, lbl_803DEAF8, lbl_803DEAF4, lbl_803DEADC, lbl_803DEADC,
-                    lbl_803DEADC, lbl_803DEADC);
+    C_MTXLightOrtho(mtx1, 25.0f, -25.0f, -25.0f, 25.0f, 0.5f, 0.5f, 0.5f, 0.5f);
     GXLoadTexMtxImm(mtx1, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
     GXSetTevDirect(lbl_803DCD90);
