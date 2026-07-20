@@ -291,12 +291,12 @@ void DIMbosstonsil_update(GameObject* obj)
     if ((state->stateFlags & DIMBOSSTONSIL_STATE_FLAG_START_MOVE) != 0)
     {
         lbl_803DDBA4 = lbl_803E4CC8;
-        (*(void (***)(void*, DIMbosstonsilState*, u8*, int, u8*, int, int, int, int))gBaddieControlInterface)[0xa](
-            obj, state, state->animPoints, state->animFrame, &state->hitReactMode, 0, 0, 0, 1);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->startHitReaction(obj, state, state->animPoints, state->animFrame, &state->hitReactMode, 0, 0, 0, 1);
         state->stateFlags &= ~DIMBOSSTONSIL_STATE_FLAG_START_MOVE;
     }
 
-    if ((*(int (***)(void*, DIMbosstonsilState*, int))gBaddieControlInterface)[0xc](obj, state, 1) == 0)
+    if (((BaddieControlInterface*)*gBaddieControlInterface)->isObjectValid(obj, state, 1) == 0)
         return;
 
     state->targetObject = Obj_GetPlayerObject();
