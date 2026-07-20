@@ -1,4 +1,5 @@
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
+#include "TRK_MINNOW_DOLPHIN/ppc/Generic/mpc_7xx_603e.h"
 
 asm void TRKSaveExtended1Block()
 {

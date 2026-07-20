@@ -1,6 +1,7 @@
 #include "PowerPC_EABI_Support/MetroTRK/memmap.h"
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk.h"
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
+#include "TRK_MINNOW_DOLPHIN/ppc/Generic/mpc_7xx_603e.h"
 
 typedef struct StopInfo_PPC {
 	u32 PC;
@@ -37,8 +38,6 @@ typedef struct DSCPUType {
 	u8 extended1TypeSize;
 	u8 extended2TypeSize;
 } DSCPUType;
-
-u8 TRKTargetCPUMinorType(void);
 
 static void TRKExceptionHandler(u16);
 void TRKInterruptHandlerEnableInterrupts();
