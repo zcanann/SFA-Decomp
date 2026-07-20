@@ -2,7 +2,7 @@
  * gcbaddieshield (DLL 0xDD) - the spinning shield effect object.
  *
  * A short-lived spinning, fading billboard: init seeds a lifetime counter
- * (state[0]) from the placement data, update spins it on rotX/rotZ each
+ * from the placement data, update spins it on rotX/rotZ each
  * frame scaled by timeDelta, fades alpha out over the final stretch, and
  * frees itself once the counter runs out; render draws the model while
  * obj->userData1 == 0.
@@ -15,7 +15,7 @@
 
 int GCbaddieShield_getExtraSize(void)
 {
-    return 0x8;
+    return sizeof(GCbaddieShieldState);
 }
 int GCbaddieShield_getObjectTypeId(void)
 {
@@ -26,15 +26,15 @@ void GCbaddieShield_free(void)
 {
 }
 
-void GCbaddieShield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void GCbaddieShield_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
     {
-        switch (((GameObject*)obj)->userData1)
+        switch (obj->userData1)
         {
         case 0:
-            objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
             break;
         default:
             break;
@@ -46,33 +46,33 @@ void GCbaddieShield_hitDetect(void)
 {
 }
 
-void GCbaddieShield_update(int* obj)
+void GCbaddieShield_update(GameObject* obj)
 {
-    f32* state = ((GameObject*)obj)->extra;
-    state[0] = state[0] - timeDelta;
-    if (state[0] <= 0.0f)
+    GCbaddieShieldState* state = obj->extra;
+    state->remainingLifetime = state->remainingLifetime - timeDelta;
+    if (state->remainingLifetime <= 0.0f)
     {
-        Obj_FreeObject((GameObject*)obj);
+        Obj_FreeObject(obj);
         return;
     }
-    ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (s32)(1800.0f * timeDelta));
-    ((GameObject*)obj)->anim.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + (s32)(200.0f * timeDelta));
-    if (state[0] <= 64.0f)
+    obj->anim.rotX = (s16)(obj->anim.rotX + (s32)(1800.0f * timeDelta));
+    obj->anim.rotZ = (s16)(obj->anim.rotZ + (s32)(200.0f * timeDelta));
+    if (state->remainingLifetime <= 64.0f)
     {
         f32 fadeScale = 0.015625f;
-        ((GameObject*)obj)->anim.alpha = (u8)(s32)(255.0f * (state[0] * fadeScale));
+        obj->anim.alpha = (u8)(s32)(255.0f * (state->remainingLifetime * fadeScale));
     }
     else
     {
-        ((GameObject*)obj)->anim.alpha = 0xff;
+        obj->anim.alpha = 0xff;
     }
 }
 
-void GCbaddieShield_init(int* obj, void* initData)
+void GCbaddieShield_init(GameObject* obj, GCbaddieShieldPlacement* placement)
 {
-    int lifetime = *(s16*)((char*)initData + 0x1a);
-    f32* state = ((GameObject*)obj)->extra;
-    state[0] = lifetime;
+    int lifetime = placement->lifetime;
+    GCbaddieShieldState* state = obj->extra;
+    state->remainingLifetime = lifetime;
 }
 
 void GCbaddieShield_release(void)

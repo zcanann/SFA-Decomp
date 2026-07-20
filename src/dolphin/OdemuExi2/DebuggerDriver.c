@@ -12,9 +12,7 @@ void (*DBGCallback)(u32, OSContext*);
 
 __OSInterruptHandler MTRCallback;
 
-u8 lbl_803DC630[8] = { 0x80 };
-
-#define SendCount lbl_803DC630[0]
+static u8 SendCount[8] = { 0x80 };
 
 #define ROUND_UP(x, align) (((x) + (align)-1) & (-(align)))
 
@@ -277,8 +275,8 @@ int DBWrite(const void* src, u32 size) {
         _DBGReadStatus(&busyFlag);
     } while (busyFlag & 2);
 
-    SendCount++;
-    v = ((SendCount & 1) ? 0x1000 : 0);
+    SendCount[0]++;
+    v = ((SendCount[0] & 1) ? 0x1000 : 0);
 
     while (!DBGWrite(v | 0x1c000, src, ROUND_UP(size, 4)))
         ;
@@ -287,7 +285,7 @@ int DBWrite(const void* src, u32 size) {
         _DBGReadStatus(&busyFlag);
     } while (busyFlag & 2);
 
-    v = SendCount;
+    v = SendCount[0];
     while (!DBGWriteMailbox((0x1f000000) | v << 0x10 | size))
         ;
 

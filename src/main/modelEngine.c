@@ -55,6 +55,7 @@
 #include "main/frame_timing.h"
 #include "main/game_timer_control_api.h"
 #include "main/gametext_box_api.h"
+#include "main/gametext_internal.h"
 #include "main/gametext_show_str_api.h"
 #include "main/textrender_api.h"
 #include "main/gametext_color_api.h"
@@ -586,7 +587,7 @@ void gameTimerRun(void* context)
 {
     f32 dt = timeDelta;
     u8 colorFlag = 0;
-    void* box = gameTextGetBox(0xD);
+    TextSlot* box = gameTextGetBox(0xD);
     int hours;
     int minutes;
     int hundredths;
@@ -667,7 +668,7 @@ void gameTimerRun(void* context)
 
         boxY = getMinimapY() - 0x28;
         drawHudBox(0x32, (s16)(boxY - 4), 0x78, 0x28, 0xFF, 1);
-        *(s16*)((char*)box + 0x16) = boxY;
+        box->f16 = boxY;
 
         if (colorFlag && hundredths < 0x32)
         {
