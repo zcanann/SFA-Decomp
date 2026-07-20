@@ -500,10 +500,10 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
     u8* base;
     SeqRunTables* st;
     u8* walk2;
-    u8* walk;
+    int i;
     int packed;
     u8* mon;
-    int i;
+    u8* walk;
     int idx;
     int count;
     int first;
@@ -4842,8 +4842,8 @@ int ObjSeq_update(u8* obj, f32 t)
                         {
                             rate = lbl_803DEFC8;
                         }
-                        val = lbl_803DEFC8 / rate;
-                        state->fade = state->fade - val;
+                        rate = 1.0f / rate;
+                        state->fade = state->fade - rate;
                         fval = state->fade;
                         if (fval < lbl_803DEFB0)
                         {
