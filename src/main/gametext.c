@@ -907,15 +907,16 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         }
         else
         {
-            MeasGlyph* g = (MeasGlyph*)gameTextFonts->glyphs;
+            MeasGlyph* p = (MeasGlyph*)gameTextFonts->glyphs;
+            MeasGlyph* g;
             int cnt;
-            for (cnt = gameTextFonts->glyphCount; cnt-- != 0 || (g = NULL, 0);)
+            for (cnt = gameTextFonts->glyphCount; cnt-- != 0 || (g = NULL, 0); p++)
             {
-                if (g->key == ch && g->lang == langIdx)
+                if (p->key == ch && p->lang == langIdx)
                 {
+                    g = p;
                     break;
                 }
-                g++;
             }
             if (g != NULL)
             {
