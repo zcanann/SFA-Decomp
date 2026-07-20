@@ -500,8 +500,7 @@ void MMSH_Shrine_render(GameObject* obj, u32 a2, u32 a3, u32 a4, u32 a5, char vi
             modelLightStruct_setEnabled(runtime->light, 1, 1.0f);
         }
         objRenderModelAndHitVolumes(obj, a2, a3, a4, a5, 1.0f);
-        objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f,
-                               (ModelLightStruct*)runtime->light);
+        objParticleFn_80099d84(obj, 1.0f, 7, 1.0f, runtime->light);
     }
 }
 

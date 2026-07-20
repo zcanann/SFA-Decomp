@@ -256,7 +256,7 @@ int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
                 state->hasTorchSignal = 1;
                 break;
             case 7:
-                objSetAnimStateFlags((GameObject*)player, 8, 1);
+                objSetAnimStateFlags(player, 8, 1);
                 mainSetBits(GAMEBIT_WM_Spirit1Related_0143, 1);
                 mainSetBits(GAMEBIT_K1_SPIRIT_COLLECTED, 1);
                 break;
@@ -354,9 +354,9 @@ int ecsh_shrine_getObjectTypeId(void)
     return 0;
 }
 
-void ecsh_shrine_free(int* obj)
+void ecsh_shrine_free(GameObject* obj)
 {
-    int* inner = ((GameObject*)obj)->extra;
+    int* inner = obj->extra;
     Music_Trigger(MUSICTRIG_DIM_Snow, 0);
     Music_Trigger(MUSICTRIG_CC_Visit1, 0);
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
@@ -388,7 +388,7 @@ void ecsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
         modelLightStruct_setEnabled((ModelLightStruct*)*inner, 1, 1.0f);
     }
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
-    objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f, (ModelLightStruct*)*inner);
+    objParticleFn_80099d84(obj, 1.0f, 7, 1.0f, (ModelLightStruct*)*inner);
 }
 
 void ecsh_shrine_hitDetect(void)

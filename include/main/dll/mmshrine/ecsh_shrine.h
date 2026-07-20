@@ -20,7 +20,7 @@ void ecsh_shrine_setScale(s16* out);
 /* Object-descriptor entry points. */
 int ecsh_shrine_getExtraSize(void);
 int ecsh_shrine_getObjectTypeId(void);
-void ecsh_shrine_free(int* obj);
+void ecsh_shrine_free(GameObject* obj);
 void ecsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void ecsh_shrine_hitDetect(void);
 void ecsh_shrine_update(s16* obj);

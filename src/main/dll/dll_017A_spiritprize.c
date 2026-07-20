@@ -108,11 +108,11 @@ void SpiritPrize_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
         if (state->useDetachedLight != 0)
         {
-            objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f, state->light);
+            objParticleFn_80099d84(obj, 1.0f, 7, 1.0f, state->light);
         }
         else
         {
-            objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f, NULL);
+            objParticleFn_80099d84(obj, 1.0f, 7, 1.0f, NULL);
         }
     }
 }
@@ -217,25 +217,25 @@ void SpiritPrize_update(GameObject* obj)
     }
 }
 
-void SpiritPrize_init(int* obj, u8* init)
+void SpiritPrize_init(GameObject* obj, u8* init)
 {
     SpiritPrizePlacement* placement;
     SpiritPrizeState* state;
     int triggerId;
 
     placement = (SpiritPrizePlacement*)init;
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     if (placement->mapId == SPIRITPRIZE_PLACEMENT_DISABLED)
         return;
     state->mapParam1A = placement->mapParam1A;
     state->targetObjectId = -1;
     state->spawnScale = 1.0f / (1.0f + (f32)(u32)placement->scaleParam);
     state->triggerHandle = -1;
-    triggerId = ((GameObject*)obj)->userData1;
+    triggerId = obj->userData1;
     if (triggerId == 0 && placement->triggerOrder != 1)
     {
         (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
-        ((GameObject*)obj)->userData1 = placement->triggerOrder + 1;
+        obj->userData1 = placement->triggerOrder + 1;
     }
     else if (triggerId != 0 && placement->triggerOrder != triggerId - 1)
     {
@@ -244,9 +244,9 @@ void SpiritPrize_init(int* obj, u8* init)
         {
             (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
         }
-        ((GameObject*)obj)->userData1 = placement->triggerOrder + 1;
+        obj->userData1 = placement->triggerOrder + 1;
     }
-    if (((GameObject*)obj)->anim.seqId != SPIRITPRIZE_SEQID_OBJECTBOUND_LIGHT)
+    if (obj->anim.seqId != SPIRITPRIZE_SEQID_OBJECTBOUND_LIGHT)
     {
         state->useDetachedLight = 1;
     }
@@ -260,8 +260,8 @@ void SpiritPrize_init(int* obj, u8* init)
             modelLightStruct_setDistanceAttenuation(state->light, 80.0f, 100.0f);
         }
     }
-    ((GameObject*)obj)->anim.alpha = 0;
-    ((GameObject*)obj)->anim.pad37[0] = 0;
+    obj->anim.alpha = 0;
+    obj->anim.pad37[0] = 0;
     state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
 }
 
