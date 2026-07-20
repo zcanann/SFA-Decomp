@@ -18,6 +18,7 @@
 #include "main/obj_group.h"
 #include "main/obj_path.h"
 #include "main/object_render.h"
+#include "main/obj_placement.h"
 
 typedef struct TreeBirdState
 {
@@ -31,7 +32,7 @@ typedef struct TreeBirdState
 
 typedef struct NwTreeBirdMapData
 {
-    u8 pad00[0x18];
+    ObjPlacement head;
     s8 rotXByte;       /* 0x18: rotX in 1/256 turns */
     s8 triggerVariant; /* 0x19: selects particle / trigger variant */
     s16 rotY;          /* 0x1A */

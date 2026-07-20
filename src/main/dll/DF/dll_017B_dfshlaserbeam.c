@@ -25,12 +25,13 @@
 #include "main/obj_message.h"
 #include "main/gamebit_ids.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 #include "main/dll/dll_017B_dfshlaserbeam.h"
 #include "main/dll/foodbag.h"
 
 typedef struct DFSHLaserBeamConfig
 {
-    u8 pad00[0x18];
+    ObjPlacement head;
     s8 yawByte;
     u8 proximityMode;
     s16 rangeAngle;

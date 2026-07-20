@@ -60,7 +60,7 @@ typedef struct TumbleweedBushState
 
 typedef struct TumbleweedBushPlacement
 {
-    u8 pad00[0x18];
+    ObjPlacement head;
     u8 rotZByte;   /* 0x18 */
     u8 rotYByte;   /* 0x19 */
     u8 rotXByte;   /* 0x1a */

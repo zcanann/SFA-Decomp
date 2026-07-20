@@ -18,6 +18,7 @@
 #include "main/objseq.h"
 #include "main/dll/dll_016B_magiclight.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
@@ -28,7 +29,7 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
 typedef struct MagicLightPlacement
 {
-    u8 pad00[0x18];
+    ObjPlacement head;
     s8 rotByte;       /* 0x18 */
     u8 pad19;         /* 0x19 */
     s16 subtypeParam; /* 0x1a */
