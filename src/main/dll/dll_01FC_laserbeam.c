@@ -15,6 +15,7 @@
  * WMGalleon*, WMSeqObjectSetup, LaserBeamPlacement, LightSourceState) document
  * the layouts of related objects shipped in the same DLL.
  */
+#include "main/dll/dll_01FC_laserbeam.h"
 #include "main/dll/modgfx_interface.h"
 #include "main/texture.h"
 #include "main/dll/partfx_interface.h"

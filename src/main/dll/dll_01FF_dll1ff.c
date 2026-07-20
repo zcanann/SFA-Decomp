@@ -10,6 +10,7 @@
  * releases and forwards the message via ObjMsg_SendToObject. Render
  * gates model-state shadow fade-out on the active trigger sequence.
  */
+#include "main/dll/dll_01FF_dll1ff.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/track_dolphin_api.h"

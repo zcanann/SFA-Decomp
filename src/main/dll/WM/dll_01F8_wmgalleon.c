@@ -18,6 +18,9 @@
 #include "main/dll/wmseqobjectsetup_struct.h"
 #include "main/dll/wmgalleonstate_struct.h"
 #include "main/dll/dll1fbstate_struct.h"
+#include "main/dll/dll_01FB_dll1fb.h"
+#include "main/dll/dll_01FC_laserbeam.h"
+#include "main/dll/dll_01FF_dll1ff.h"
 #include "main/dll/WM/dll_01FA_wmseqobject.h"
 #include "main/dll/WM/dll_01FD_wmlasertarget.h"
 #include "main/dll/player_api.h"
@@ -340,34 +343,6 @@ void WM_Galleon_initialise(void)
 }
 
 /* descriptor/ptr table auto 0x80328748-0x80328898 */
-extern void LaserBeam_init(s16* obj, char* arg);
-extern int LaserBeam_getExtraSize(void);
-extern int LaserBeam_getObjectTypeId(void);
-extern void LaserBeam_hitDetect(void);
-extern void LaserBeam_free(int* obj);
-extern void LaserBeam_initialise(void);
-extern void LaserBeam_release(void);
-extern void LaserBeam_render(void);
-extern void LaserBeam_update(int obj2);
-extern void dll_1FB_free_nop(void);
-extern int dll_1FB_getExtraSize_ret_12(void);
-extern int dll_1FB_getObjectTypeId(void);
-extern void dll_1FB_hitDetect_nop(void);
-extern void dll_1FB_init(int* obj, u8* def);
-extern void dll_1FB_initialise_nop(void);
-extern void dll_1FB_release_nop(void);
-extern void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void dll_1FB_update(int* obj);
-extern void dll_1FF_free_nop(void);
-extern int dll_1FF_getExtraSize_ret_8(void);
-extern int dll_1FF_getObjectTypeId(int* obj);
-extern void dll_1FF_hitDetect_nop(void);
-extern void dll_1FF_init(s16* a, s8* b);
-extern void dll_1FF_initialise_nop(void);
-extern void dll_1FF_release_nop(void);
-extern void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
-extern void dll_1FF_update(int obj);
-
 ObjectDescriptor gWM_seqobjectObjDescriptor = {
     0,
     0,
