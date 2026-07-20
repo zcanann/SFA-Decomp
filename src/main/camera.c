@@ -864,13 +864,11 @@ f32* Camera_GetInverseViewMatrix(void)
 }
 void Camera_UpdateViewMatrices(void)
 {
-    u8* base = (u8*)gObjInverseYawTransformMatrices;
     CameraViewSlot* slot;
     MatrixTransform transform;
     f32 rotationMatrix[16];
 
-    slot = (CameraViewSlot*)(base + gCameraCurrentViewIndex * 96);
-    slot = (CameraViewSlot*)((u8*)slot + 4416);
+    slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
     transform.x = -(slot->x - playerMapOffsetX);
     transform.y = -slot->y;
     transform.z = -(slot->z - playerMapOffsetZ);
@@ -890,7 +888,7 @@ void Camera_UpdateViewMatrices(void)
     }
 
     mtxRotateByVec3s(rotationMatrix, &transform);
-    mtx44Transpose(rotationMatrix, (f32*)(base + 5696));
+    mtx44Transpose(rotationMatrix, gCameraViewMatrix);
 
     transform.x = slot->x - playerMapOffsetX;
     transform.y = slot->y;
@@ -910,12 +908,13 @@ void Camera_UpdateViewMatrices(void)
         transform.z -= lbl_803DE60C;
     }
 
-    setMatrixFromObjectPos((f32*)(base + 4096), &transform);
-    mtx44Transpose((f32*)((int)base + 4096), (f32*)(base + 5760));
-    PSMTXCopy((f32*)(base + 5696), (f32*)(base + 5568));
-    *(f32*)(base + 5568 + 44) = *(f32*)(base + 5568 + 28) = *(f32*)(base + 5568 + 12) = lbl_803DE60C;
-    PSMTXCopy((f32*)(base + 5760), (f32*)(base + 5632));
-    *(f32*)(base + 5632 + 44) = *(f32*)(base + 5632 + 28) = *(f32*)(base + 5632 + 12) = lbl_803DE60C;
+    setMatrixFromObjectPos(lbl_80338090, &transform);
+    mtx44Transpose(lbl_80338090, gCameraInverseViewMatrix);
+    PSMTXCopy(gCameraViewMatrix, gCameraViewRotationMatrix);
+    gCameraViewRotationMatrix[11] = gCameraViewRotationMatrix[7] = gCameraViewRotationMatrix[3] = lbl_803DE60C;
+    PSMTXCopy(gCameraInverseViewMatrix, gCameraInverseViewRotationMatrix);
+    gCameraInverseViewRotationMatrix[11] = gCameraInverseViewRotationMatrix[7] =
+        gCameraInverseViewRotationMatrix[3] = lbl_803DE60C;
 }
 
 void Camera_ApplyFullViewport(void)
@@ -1110,13 +1109,13 @@ void Camera_InitState(void)
         slot->x = gCameraDefaultPosition;
         slot->y = gCameraDefaultPosition;
         slot->z = gCameraDefaultPosition;
-        *(f32*)((u8*)slot + 0x20) = lbl_803DE60C;
-        *(f32*)((u8*)slot + 0x24) = lbl_803DE60C;
-        *(f32*)((u8*)slot + 0x28) = lbl_803DE60C;
+        slot->unk20.x = lbl_803DE60C;
+        slot->unk20.y = lbl_803DE60C;
+        slot->unk20.z = lbl_803DE60C;
         slot->shakeMagnitude = lbl_803DE60C;
         slot->parentObject = NULL;
-        *(s16*)((u8*)slot + 0x5A) = 0;
-        *(f32*)((u8*)slot + 0x18) = lbl_803DE610;
+        slot->unk5A = 0;
+        slot->fovY = lbl_803DE610;
     }
 
     gCameraCurrentViewIndex = 0;

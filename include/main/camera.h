@@ -21,7 +21,9 @@ typedef struct CameraViewSlot {
         };
         Vec3f position;
     };
-    u8 pad18[0x14];
+    f32 fovY;
+    u8 pad1C[4];
+    Vec3f unk20;
     f32 shakeMagnitude;
     f32 shakeMagnitudeTarget;
     f32 shakeDuration;
@@ -39,11 +41,19 @@ typedef struct CameraViewSlot {
     s16 worldYaw;
     s16 worldPitch;
     s16 worldRoll;
-    u8 pad56[6];
+    u8 pad56[4];
+    s16 unk5A;
     s8 shakeFlipTimer;
     s8 shakeActive;
     u8 pad5E[2];
 } CameraViewSlot;
+
+STATIC_ASSERT(offsetof(CameraViewSlot, fovY) == 0x18);
+STATIC_ASSERT(offsetof(CameraViewSlot, unk20) == 0x20);
+STATIC_ASSERT(offsetof(CameraViewSlot, shakeMagnitude) == 0x2C);
+STATIC_ASSERT(offsetof(CameraViewSlot, parentObject) == 0x40);
+STATIC_ASSERT(offsetof(CameraViewSlot, unk5A) == 0x5A);
+STATIC_ASSERT(sizeof(CameraViewSlot) == 0x60);
 
 extern CameraViewSlot gCameraShakeSlots[];
 extern f32 gCameraDefaultModelMatrix[16];
