@@ -6,6 +6,7 @@
 #endif
 
 #include "main/audio/mcmd.h"
+#include "main/audio/snd_core.h"
 #include "main/audio/synth_queue.h"
 #include "main/dll/synthfade_struct.h"
 
@@ -327,7 +328,6 @@ typedef struct SynthVoiceRuntime
 #define SYNTH_VOICE_PENDING_START_ACTIVE(voice) (*(u8*)((u8*)(voice) + 0xEE0))
 
 extern SynthCallbackLink gSynthCallbacks[SYNTH_CALLBACK_COUNT];
-extern u8 gSynthInitialized;
 extern u8 gSynthDelayBucketCursor;
 extern SynthCallbackLink* gSynthFreeCallbacks;
 extern SynthVoice* gSynthCurrentVoice;

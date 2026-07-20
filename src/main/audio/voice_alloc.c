@@ -7,6 +7,7 @@
 #include "main/audio/voice_alloc.h"
 #include "main/audio/voice_id.h"
 #include "main/audio/vid_init.h"
+#include "main/audio/snd_core.h"
 
 
 #define VOICE_CFLAGS(i) (*(u64*)&synthVoice[i].inputFlags)
@@ -18,7 +19,6 @@
 #define AV_FXFLAG(i)             (synthVoice[i].streamKind)
 
 SynthVoiceListNode voiceFreeListSlots[64];
-extern u8 synthIdleWaitActive;
 /*
  * Allocate a voice id, preferring a free slot but stealing the lowest-priority
  * compatible active voice when limits are exceeded. (musyx synthvoice.c

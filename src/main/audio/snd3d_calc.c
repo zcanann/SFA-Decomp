@@ -1,4 +1,5 @@
 #include "main/audio/snd3d_calc.h"
+#include "main/audio/snd_core.h"
 #include "main/audio/synth_voice.h"
 #include "main/audio/synth_delay.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

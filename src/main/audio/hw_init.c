@@ -8,8 +8,8 @@
 #include "main/audio/synth_voice.h"
 #include "main/audio/synth_virtual_sample.h"
 #include "main/audio/synth_channel_scale.h"
+#include "main/audio/snd_core.h"
 
-extern u8 gSynthInitialized;
 extern u8 salTimeOffset;
 extern u8 salNumVoices;
 extern u8 salAuxFrame;

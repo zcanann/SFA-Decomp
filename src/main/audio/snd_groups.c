@@ -5,6 +5,7 @@
 #include "main/audio/data_tables.h"
 #include "main/audio/synth_jobs.h"
 #include "main/audio/synth_queue.h"
+#include "main/audio/snd_core.h"
 
 
 typedef struct GROUP_DATA
@@ -76,7 +77,6 @@ typedef struct FX_DATA
     FX_TAB fx[1];
 } FX_DATA;
 
-extern u8 gSynthInitialized;
 extern s16 synthLoadedGroupCount;
 GSTACK synthLoadedGroupTable[128];
 

@@ -31,6 +31,7 @@
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/voice_conv.h"
 #include "main/audio/voice_manage.h"
+#include "main/audio/snd_core.h"
 #include "string.h"
 
 
@@ -80,8 +81,6 @@ STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo1) == 0x30);
 #define SYNTH_VOICE_SLOT_SIZE                0x404
 
 extern u8 gSynthDelayBucketCursor;
-extern u8 gSynthInitialized;
-
 extern u32 synthMasterFaderPauseActiveFlags;
 extern u32 synthMasterFaderActiveFlags;
 extern u8 synthAuxBMIDISet[8];

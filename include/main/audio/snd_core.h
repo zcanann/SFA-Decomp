@@ -3,6 +3,9 @@
 
 #include "ghidra_import.h"
 
+extern u8 gSynthInitialized;
+extern u8 synthIdleWaitActive;
+
 void sndQuit(void);
 void sndSetMaxVoices(u8 valueA, u8 valueB);
 u32 sndIsInstalled(void);
