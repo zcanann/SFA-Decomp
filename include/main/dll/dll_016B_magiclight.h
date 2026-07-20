@@ -2,9 +2,16 @@
 #define MAIN_DLL_DLL_016B_MAGICLIGHT_H_
 
 #include "main/game_object.h"
-#include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/object_descriptor.h"
-#include "main/objanim_update.h"
+
+typedef struct MagicLightPlacement
+{
+    ObjPlacement base;
+    s8 initialRotX;
+    u8 pad19;
+    s16 subtype;
+} MagicLightPlacement;
 
 typedef struct MagicLightState
 {
@@ -20,6 +27,17 @@ typedef struct MagicLightState
     u8 pad12[2];
 } MagicLightState;
 
+STATIC_ASSERT(offsetof(MagicLightPlacement, initialRotX) == 0x18);
+STATIC_ASSERT(offsetof(MagicLightPlacement, subtype) == 0x1A);
+STATIC_ASSERT(sizeof(MagicLightPlacement) == 0x1C);
+STATIC_ASSERT(offsetof(MagicLightState, lifetime) == 0x04);
+STATIC_ASSERT(offsetof(MagicLightState, enterAction) == 0x06);
+STATIC_ASSERT(offsetof(MagicLightState, leaveAction) == 0x08);
+STATIC_ASSERT(offsetof(MagicLightState, inRange) == 0x0B);
+STATIC_ASSERT(offsetof(MagicLightState, subtype) == 0x0C);
+STATIC_ASSERT(offsetof(MagicLightState, unk10) == 0x10);
+STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
+
 extern ObjectDescriptor gMagicLightObjDescriptor;
 
 int MagicLight_getExtraSize(GameObject* obj);
@@ -28,7 +46,7 @@ void MagicLight_free(GameObject* obj);
 void MagicLight_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible);
 void MagicLight_hitDetect(void);
 void MagicLight_update(GameObject* obj);
-void MagicLight_init(GameObject* obj, u8* params);
+void MagicLight_init(GameObject* obj, MagicLightPlacement* placement);
 int MagicLight_SeqFn(GameObject* obj);
 void MagicLight_release(void);
 void MagicLight_initialise(void);

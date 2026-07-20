@@ -289,6 +289,7 @@ void gcRobotPatrol_init(GameObject* obj, int state)
     Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_tr_bcrek1_c);
 }
 
+const f32 gGcRobotPatrolZero = 0.0f;
 const f32 lbl_803E2868 = 0.0f;
 const f32 lbl_803E286C = 60.0f;
 
