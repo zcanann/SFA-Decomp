@@ -430,12 +430,11 @@ void mapLoadUnloadObjects(int flag)
                 }
                 if (obj->anim.seqId == SHADER_SNOWBIKE_OBJ)
                 {
-                    s8 mid = obj->anim.mapEventSlot;
                     s16 j3 = 0;
                     s16* w2 = list;
-                    for (j3 = 0; j3 < count; j3++)
+                    for (; j3 < count; j3++)
                     {
-                        if (mid == *w2)
+                        if (obj->anim.mapEventSlot == *w2)
                             break;
                         w2++;
                     }
