@@ -761,7 +761,7 @@ void sortShadowEntriesDescending(ShadowSortEntry* arr, int count);
 void renderShadows(int unused0, int unused1, int unused2)
 {
     NewShadowCaster* casterPtr;
-    f32 *mc54p, *vAp2, *vAp1;
+    f32 *mc54p;
     f32 dirY, dirZ, vAy, dirX, sCamX, sCamY;
     int savedRotY;
     s16 savedRotX, savedRotZ;
@@ -804,8 +804,6 @@ void renderShadows(int unused0, int unused1, int unused2)
     casterIdx = 0;
     casterPtr = shadowData->casters;
     mc54p = &mc54[0];
-    vAp2 = &vA[2];
-    vAp1 = &vA[1];
     for (; casterIdx < gNewShadowCasterCount && casterIdx < NEW_SHADOW_MAX_CASTERS; casterPtr++, casterIdx++)
     {
         GameObject* obj = casterPtr->obj;
@@ -854,7 +852,7 @@ void renderShadows(int unused0, int unused1, int unused2)
                 w = obj->anim.modelState->shadowTexture->width;
                 screenW = w;
             }
-            fn_8008923C(obj, vA, vAp1, vAp2);
+            fn_8008923C(obj, vA, &vA[1], &vA[2]);
             dot24[0] = -modelState->shadowOffsetX;
             dot24[1] = -modelState->shadowOffsetY;
             dot24[2] = -modelState->shadowOffsetZ;
