@@ -79,7 +79,7 @@ u8 gSbGalleonSkyColorA[4];
 u8 gSbGalleonSkyColorB[4];
 u8 gSbGalleonSkyColorC[4];
 u8 lbl_803DDC2D;
-u8 lbl_803DDC2C;
+s8 lbl_803DDC2C;
 f32 lbl_803DDC28;
 f32 lbl_803DDC24;
 GameObject* gSbGalleon;
