@@ -609,7 +609,7 @@ extern const f32 gNewCloudPi;
 extern const f32 lbl_803DF1F4;
 extern const f32 lbl_803DF1F8;
 
-void* gNewCloudLayerTextures[4];
+Texture* gNewCloudLayerTextures[4];
 
 void snowCloudInitFlakes(f32* buf, f32 a, f32 b, int cloudId)
 {
@@ -932,7 +932,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
         if (part->texLayer != (u8)texIdx)
         {
             texIdx = part->texLayer;
-            selectTexture((Texture*)gNewCloudLayerTextures[texIdx], 0);
+            selectTexture(gNewCloudLayerTextures[texIdx], 0);
             GXBegin(GX_TRIANGLES, GX_VTXFMT4, (((NewCloud*)p)->flakeCount * 3 / 4));
         }
         if (hudHidden == 0)
@@ -1648,7 +1648,7 @@ void dll_07_func06(void)
     } args;
     f32 mtx[12];
 
-    clouds = gNewCloudLayerTextures;
+    clouds = (void**)gNewCloudLayerTextures;
     i = 0;
     off = 0;
     cam = Camera_GetCurrentViewSlot();
@@ -2276,7 +2276,7 @@ void newclouds_release(void)
     {
         if (gNewCloudLayerTextures[i] != NULL)
         {
-            textureFree((Texture*)(gNewCloudLayerTextures[i]));
+            textureFree(gNewCloudLayerTextures[i]);
             gNewCloudLayerTextures[i] = NULL;
         }
     }
