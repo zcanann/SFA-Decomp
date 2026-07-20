@@ -1,5 +1,6 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dfppowersl.h"
+#include "main/dfplightni.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"

@@ -40,15 +40,9 @@ typedef struct CCriverflowObject
 #define CCRIVERFLOW_OBJECT_GROUP  0x14
 #define CCRIVERFLOW_DEFAULT_SPEED 0xFF
 
-void dimbossfire_update(GameObject* param_1);
-void dimbossfire_init(GameObject* obj, u32 param_2, int param_3);
-void dimbossfire_release(void);
-void dimbossfire_initialise(void);
 int ccriverflow_getExtraSize(void);
 void ccriverflow_free(CCriverflowObject* obj);
 void ccriverflow_render(void);
 void ccriverflow_update(CCriverflowObject* obj);
 void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params);
-void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, short* out);
-
 #endif /* MAIN_DLL_DF_DFCRADLE_H_ */
