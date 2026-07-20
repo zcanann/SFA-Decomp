@@ -31,8 +31,8 @@ typedef struct
     u8 byteC;
 } SpscarabPalette;
 
-u16 gSpScarabPaletteBytesA = 0x0213;
-u8 gSpScarabPaletteByteB = 0x16;
+const u16 gSpScarabPaletteBytesA = 0x0213;
+const u8 gSpScarabPaletteByteB = 0x16;
 STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
@@ -168,8 +168,12 @@ void SPScarab_init(GameObject* obj, int def)
 
     objAnim = (ObjAnimComponent*)obj;
     state = *(int*)&(obj)->extra;
-    paletteBytes.pairAB = gSpScarabPaletteBytesA;
-    paletteBytes.byteC = gSpScarabPaletteByteB;
+    {
+        const u16* palettePair = &gSpScarabPaletteBytesA;
+        const u8* paletteByte = &gSpScarabPaletteByteB;
+        paletteBytes.pairAB = *palettePair;
+        paletteBytes.byteC = *paletteByte;
+    }
 
     (obj)->objectFlags = (obj)->objectFlags | (SPSCARAB_OBJFLAG_HIDDEN | SPSCARAB_OBJFLAG_HITDETECT_DISABLED);
     (obj)->anim.rotX = (s16)((s32)(s8) * (u8*)(def + 0x18) << 8);

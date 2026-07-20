@@ -33,6 +33,7 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 int gTreasureChestHitEffectCooldown;
 const StaffCollisionColorArgs gTreasureChestHitEffectColors = {8, 0xFF, 0xFF, 0x78};
 StaffCollisionInterface** gTreasureChestStaffCollisionInterface;
+const f32 gTreasureChestZero = 0.0f;
 
 int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

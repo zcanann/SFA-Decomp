@@ -15,62 +15,60 @@
 #include "main/minimap_api.h"
 #include "main/dll/CC/dll_0122_cctestinfot.h"
 
-#define CCTESTINFOT_OBJFLAG_HIDDEN             0x4000
-#define CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define CCTESTINFOT_HOLD_TIME_RESET             600.0f
 #define CCTESTINFOT_HOLD_TIME_FLOOR             0.0f
 
 int CCTestInfot_getExtraSize(void)
 {
-    return sizeof(CctestinfotState);
+    return sizeof(CCTestInfotState);
 }
 
 void CCTestInfot_update(GameObject* obj)
 {
-    CctestinfotState* state = obj->extra;
+    CCTestInfotState* state = obj->extra;
     GameObject* player = Obj_GetPlayerObject();
-    if (state->disguised != 0)
+    if (state->isDisguised != 0)
     {
         if (playerIsDisguised(player) == 0)
         {
-            state->disguised = 0;
+            state->isDisguised = 0;
         }
     }
     else
     {
         if (playerIsDisguised(player) != 0)
         {
-            state->disguised = 1;
+            state->isDisguised = 1;
         }
     }
-    objSetHintTextIdx(obj, state->disguised);
-    Obj_SetActiveModelIndex(obj, state->disguised);
+    objSetHintTextIdx(obj, state->isDisguised);
+    Obj_SetActiveModelIndex(obj, state->isDisguised);
     if (ObjTrigger_IsSet((int)obj) != 0 && isAreaNameTextActive() == 0)
     {
         state->holdTimer = CCTESTINFOT_HOLD_TIME_RESET;
     }
     if (state->holdTimer > CCTESTINFOT_HOLD_TIME_FLOOR)
     {
-        if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
+        if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) == 0)
         {
             state->holdTimer = CCTESTINFOT_HOLD_TIME_FLOOR;
         }
         else
         {
             state->holdTimer = state->holdTimer - timeDelta;
-            showHelpText(obj->anim.modelInstance->helpTextIds[state->disguised]);
+            showHelpText(obj->anim.modelInstance->helpTextIds[state->isDisguised]);
         }
     }
 }
 
-void CCTestInfot_init(GameObject* obj, s8* def)
+void CCTestInfot_init(GameObject* obj, CCTestInfotSetup* setup)
 {
     u32 flags;
-    flags = (u32)obj->objectFlags | (CCTESTINFOT_OBJFLAG_HIDDEN | CCTESTINFOT_OBJFLAG_HITDETECT_DISABLED);
+    flags = (u32)obj->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
     obj->objectFlags = flags;
-    obj->anim.rotX = (s16)((s32)(u8)def[0x1A] << 8);
-    obj->anim.rotY = (s16)((s32)(u8)def[0x19] << 8);
-    obj->anim.rotZ = (s16)((s32)(u8)def[0x18] << 8);
+    obj->anim.rotX = (s16)((s32)(u8)setup->rotationX << 8);
+    obj->anim.rotY = (s16)((s32)(u8)setup->rotationY << 8);
+    obj->anim.rotZ = (s16)((s32)(u8)setup->rotationZ << 8);
 }
 
 ObjectDescriptor gCCTestInfotObjDescriptor = {

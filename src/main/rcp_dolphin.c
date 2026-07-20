@@ -102,7 +102,6 @@ extern u32 lbl_803DCDB4;
 extern u8 lbl_803DCD68;
 extern u8 lbl_803DCD69;
 extern u8 lbl_803DCD6A;
-extern u8 gRcpDistortSlots[];
 typedef struct LoadedTextureEntry
 {
     int key;
@@ -153,6 +152,12 @@ typedef struct RcpDistortSlot
     u8 group;      // 0x1a
     u8 mode;       // 0x1b
 } RcpDistortSlot;
+STATIC_ASSERT(sizeof(RcpDistortSlot) == 0x1c);
+STATIC_ASSERT(offsetof(RcpDistortSlot, params) == 0x10);
+STATIC_ASSERT(offsetof(RcpDistortSlot, group) == 0x1a);
+STATIC_ASSERT(offsetof(RcpDistortSlot, mode) == 0x1b);
+
+extern RcpDistortSlot gRcpDistortSlots[6];
 extern u8 gRcpDistortSlotIndex;
 extern void* gRcpDistortTexture;
 extern u16* gRcpTexIdRemap;
@@ -813,7 +818,7 @@ void gxTextureFn_80052efc(void)
     GXSetTexCopyDst(0x20, 0x20, GX_TF_RGBA8, GX_FALSE);
     modelTextureFn_80089970(2);
     i = 0;
-    slots[0] = gRcpDistortSlots;
+    slots[0] = (u8*)gRcpDistortSlots;
     for (; i < 6; i++)
     {
         tex = ((RcpDistortSlot*)slots[0])[i].texture;
@@ -846,7 +851,7 @@ void gxTextureFn_80052efc(void)
     GXSetChanMatColor(GX_COLOR0, gRcpDistortMatColor);
     clearSlot = 5;
     k = 5;
-    e = gRcpDistortSlots + 0x8c;
+    e = (u8*)gRcpDistortSlots + 0x8c;
     group = gRcpDistortGroup;
     for (; k >= 0; k--)
     {
@@ -894,17 +899,16 @@ void ShaderDef_free(int* def)
     void* p1 = (void*)def[0];
     int i;
     void* p2;
-    void* s2;
     int j;
 
     if (p1 != NULL)
     {
         for (i = 0; i < 6; i++)
         {
-            s = ((RcpDistortSlot*)gRcpDistortSlots)[i].texture;
+            s = gRcpDistortSlots[i].texture;
             if (((Texture*)s)->refCount != 0 && s == p1)
             {
-                (((Texture*)((RcpDistortSlot*)gRcpDistortSlots)[i].texture)->refCount)--;
+                (((Texture*)gRcpDistortSlots[i].texture)->refCount)--;
                 break;
             }
         }
@@ -914,39 +918,38 @@ void ShaderDef_free(int* def)
         return;
     for (j = 0; j < 6; j++)
     {
-        if (((Texture*)((RcpDistortSlot*)gRcpDistortSlots)[j].texture)->refCount != 0 &&
-            ((RcpDistortSlot*)gRcpDistortSlots)[j].texture == p2)
+        if (((Texture*)gRcpDistortSlots[j].texture)->refCount != 0 && gRcpDistortSlots[j].texture == p2)
         {
-            (((Texture*)((RcpDistortSlot*)gRcpDistortSlots)[j].texture)->refCount)--;
+            (((Texture*)gRcpDistortSlots[j].texture)->refCount)--;
             return;
         }
     }
 }
 
-void shaderInit(u8* def, ModelRenderOpTextureRefs* textures, GameObject* obj, int wpad0)
+void shaderInit(u8* def, ModelRenderOpTextureRefs* textures, GameObject* obj, int unused)
 {
-    void** slot;
+    RcpDistortSlot* slot;
     void* s;
 
     if (*(void**)(def + 0x8) != NULL)
     {
         if (obj != NULL)
-            slot = (void**)(gRcpDistortSlots + (6 - (obj->lightColorSlot + 1)) * 0x1C);
+            slot = &gRcpDistortSlots[6 - (obj->lightColorSlot + 1)];
         else
-            slot = (void**)(gRcpDistortSlots + 0x8C);
-        s = *slot;
+            slot = &gRcpDistortSlots[5];
+        s = slot->texture;
         (((Texture*)s)->refCount)++;
-        textures->texture0 = *slot;
+        textures->texture0 = slot->texture;
     }
     if (*(void**)(def + 0x14) == NULL)
         return;
     if (def[0x20] >= 6)
-        slot = (void**)gRcpDistortSlots;
+        slot = gRcpDistortSlots;
     else
-        slot = (void**)(gRcpDistortSlots + (def[0x20] >> 1) * 0x1C);
-    s = *slot;
+        slot = &gRcpDistortSlots[def[0x20] >> 1];
+    s = slot->texture;
     (((Texture*)s)->refCount)++;
-    textures->texture1 = *slot;
+    textures->texture1 = slot->texture;
 }
 
 extern s32 lbl_803DCE00;
@@ -974,7 +977,7 @@ void initFn_800534f8(void)
     f32 falloff;
 
     i = 0;
-    slots = (RcpDistortSlot*)gRcpDistortSlots;
+    slots = gRcpDistortSlots;
     for (; i < 6; i++)
     {
         slots[i].texture = (u8*)textureAlloc(0x20, 0x20, 6, 0, 0, 0, 0, 1, 1);
@@ -982,7 +985,7 @@ void initFn_800534f8(void)
     }
     gRcpDistortSlotIndex = i = 0;
     cfg = &lbl_8030D028[0].radius;
-    slots = (RcpDistortSlot*)gRcpDistortSlots;
+    slots = gRcpDistortSlots;
     radiusScale = gRcpDistortScaleA;
     strengthScale = 255.0f;
     do
@@ -1004,9 +1007,9 @@ void initFn_800534f8(void)
         i++;
     } while (i < 6);
     /* mode = 0 for the three remaining slots */
-    (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
-    (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
-    (gRcpDistortSlots + 0x1b)[gRcpDistortSlotIndex++ * 0x1c] = 0;
+    gRcpDistortSlots[gRcpDistortSlotIndex++].mode = 0;
+    gRcpDistortSlots[gRcpDistortSlotIndex++].mode = 0;
+    gRcpDistortSlots[gRcpDistortSlotIndex++].mode = 0;
     gRcpDistortTexture = textureLoadAsset(RCP_DISTORT_TEXTURE_ID);
 }
 void* textureIdxToPtr(int idx)
@@ -2150,7 +2153,7 @@ void Rcp_SetViewFinderHudEnabled(u8 x)
 }
 
 u8 gRcpWarpDistortDisplayList[0x6640];
-u8 gRcpDistortSlots[0xA8];
+RcpDistortSlot gRcpDistortSlots[6];
 
 void Rcp_SetSpiritVisionEnabled(u8 x)
 {
