@@ -8,41 +8,33 @@
 #include "main/obj_group.h"
 #include "main/newclouds.h"
 #include "main/objfx.h"
+#include "main/obj_placement.h"
 
 
 int lightning_getExtraSize(void) { return 0x28; }
 
-typedef struct LightningPlacement
+struct LightningPlacement
 {
-    u8 pad0[0x14 - 0x0];
-    u32 unk14;
-    u32 unk18;
-    u8 pad1C[0x22 - 0x1C];
-    u16 unk22;
+    ObjPlacement base;
+    u32 linkedMapId;
+    u8 radiusX;
+    u8 radiusY;
+    u8 delayBase;
+    u8 effectParam;
+    u8 flags;
+    u8 mode;
+    u8 initialDelay;
+    u8 repeatDelay;
     s16 enableGameBit;
     u8 pad26[0x28 - 0x26];
-} LightningPlacement;
+};
 
-void lightning_free(u8* obj, int p2)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    void* handle;
-    ObjGroup_RemoveObject((int)obj, MMP_LIGHTNING_OBJGROUP);
-    handle = *(void**)state;
-    if (handle != NULL)
-    {
-        mm_free(handle);
-    }
-}
-
-void lightning_render(u8* obj)
-{
-    LightningEffect* handle = *(LightningEffect**)(((GameObject*)obj)->extra);
-    if (handle != NULL)
-    {
-        lightningRender(handle);
-    }
-}
+STATIC_ASSERT(offsetof(LightningPlacement, linkedMapId) == 0x18);
+STATIC_ASSERT(offsetof(LightningPlacement, radiusX) == 0x1C);
+STATIC_ASSERT(offsetof(LightningPlacement, flags) == 0x20);
+STATIC_ASSERT(offsetof(LightningPlacement, initialDelay) == 0x22);
+STATIC_ASSERT(offsetof(LightningPlacement, enableGameBit) == 0x24);
+STATIC_ASSERT(sizeof(LightningPlacement) == 0x28);
 
 typedef struct LightningFlags
 {
@@ -90,7 +82,26 @@ STATIC_ASSERT(offsetof(LightningState, linkedHandle) == 0x20);
 STATIC_ASSERT(offsetof(LightningState, modeBits) == 0x24);
 STATIC_ASSERT(offsetof(LightningState, flags) == 0x25);
 
-void lightning_update(u8* obj)
+void lightning_free(GameObject* obj, int mode)
+{
+    LightningState* state = obj->extra;
+    ObjGroup_RemoveObject((int)obj, MMP_LIGHTNING_OBJGROUP);
+    if (state->handle != NULL)
+    {
+        mm_free(state->handle);
+    }
+}
+
+void lightning_render(GameObject* obj)
+{
+    LightningState* state = obj->extra;
+    if (state->handle != NULL)
+    {
+        lightningRender(state->handle);
+    }
+}
+
+void lightning_update(GameObject* obj)
 {
     LightningState* state;
     u8* data;
@@ -103,8 +114,8 @@ void lightning_update(u8* obj)
     u16 delay;
     float* start;
 
-    state = ((GameObject*)obj)->extra;
-    data = *(u8**)&((GameObject*)obj)->anim.placementData;
+    state = obj->extra;
+    data = *(u8**)&obj->anim.placementData;
     if (((LightningPlacement*)data)->enableGameBit != -1)
     {
         if (state->flags.enabled)
@@ -131,7 +142,7 @@ void lightning_update(u8* obj)
         state->countdown -= timeDelta;
         if (state->countdown <= 0.0f)
         {
-            state->countdown += (f32)(s32)((u32)data[0x23] * 0x3c);
+            state->countdown += (f32)(s32)((u32)((LightningPlacement*)data)->repeatDelay * 0x3c);
             spawnLightning = 1;
         }
         if (spawnLightning != 0)
@@ -154,7 +165,7 @@ void lightning_update(u8* obj)
             }
 
             delay = (u16)(state->delayBase + randomGetRange(-5, 5));
-            start = (float*)(obj + 0x0c);
+            start = (float*)((u8*)obj + 0x0c);
             slot = &objects[objectIndex];
             handle = lightningCreate((const Vec3f*)start, (const Vec3f*)(*slot + 0x0c), state->radiusX,
                                              state->radiusY, delay, state->param1D,
@@ -197,28 +208,28 @@ void lightning_update(u8* obj)
     }
 }
 
-void lightning_init(u8* obj, u8* data)
+void lightning_init(GameObject* obj, LightningPlacement* placement)
 {
     LightningState* state;
     f32 defaultScale;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     ObjGroup_AddObject((int)obj, MMP_LIGHTNING_OBJGROUP);
-    state->modeBits.mode = data[0x21];
+    state->modeBits.mode = placement->mode;
     defaultScale = 1.0f;
     state->hitRadius = defaultScale;
     state->burstRadius = defaultScale;
     state->radiusX = (f32)(u32)
-    data[0x1c];
+    placement->radiusX;
     state->radiusY = (f32)(u32)
-    data[0x1d];
-    state->delayBase = data[0x1e];
-    state->param1D = data[0x1f];
-    state->linkedHandle = *(u32*)(data + 0x18);
+    placement->radiusY;
+    state->delayBase = placement->delayBase;
+    state->param1D = placement->effectParam;
+    state->linkedHandle = placement->linkedMapId;
 
-    state->flags.enabled = (data[0x20] & 1) ? 1 : 0;
-    state->flags.style = (data[0x20] & 2) ? 1 : 0;
-    state->flags.noAge = (data[0x20] & 4) ? 1 : 0;
+    state->flags.enabled = (placement->flags & 1) ? 1 : 0;
+    state->flags.style = (placement->flags & 2) ? 1 : 0;
+    state->flags.noAge = (placement->flags & 4) ? 1 : 0;
 
-    state->countdown = (f32)(s32)((u32)data[0x22] * 0x3c);
+    state->countdown = (f32)(s32)((u32)placement->initialDelay * 0x3c);
 }
