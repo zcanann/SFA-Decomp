@@ -714,7 +714,7 @@ static inline void fillRingTexture(void)
     {
         int rowoff, lowoff;
         f32 cy2;
-        cy = ((f32)i - lbl_803DED1C) * lbl_803DEDE0;
+        cy = ((f32)i - 64.0f) * lbl_803DEDE0;
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
@@ -726,7 +726,7 @@ static inline void fillRingTexture(void)
             f32 cx, d2;
             base = (u8*)gNewShadowRingTexture;
             off = lowoff + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
-            cx = ((f32)j - lbl_803DED1C) * lbl_803DEDE0;
+            cx = ((f32)j - 64.0f) * lbl_803DEDE0;
             d2 = sqrtf(cx * cx + cy2);
             if (d2 < 0.25f || d2 > 0.75f)
             {
@@ -1636,8 +1636,8 @@ void initFn_8006d020(void)
             n1 = mathCosfHighPrecision(lbl_803DED38 * mathSinfHighPrecision(cv) + rv);
             n2 = mathCosfHighPrecision(cv);
             prod = n1 * n2;
-            prod = lbl_803DEDC0 * prod + lbl_803DEDC0;
-            fa = lbl_803DEDC0 * n1 + lbl_803DEDC0;
+            prod = 127.0f * prod + 127.0f;
+            fa = 127.0f * n1 + 127.0f;
             lo = fa;
             hi = prod;
             *(u16*)(dst + 0x60) = lo | ((hi & 0xffff) << 8);
