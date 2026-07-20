@@ -32,7 +32,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/newseqobj_baddie.h"
-#include "main/dll/dll_00C9_enemy_ext.h"
 #include "main/dll/baddie_frozen.h"
 #include "main/dll/wispbaddieseq_ext.h"
 

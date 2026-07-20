@@ -51,7 +51,6 @@
 #include "main/sky.h"
 #include "main/newshadows_texture_api.h"
 #include "main/atan2f_api.h"
-#include "main/sky_texture_api.h"
 #include "main/tex_dolphin.h"
 #include "string.h"
 
