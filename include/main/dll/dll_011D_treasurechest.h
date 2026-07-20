@@ -17,6 +17,16 @@ typedef struct TreasureChestSetup
     u8 pad20[0x24 - 0x20];
 } TreasureChestSetup;
 
+typedef struct TreasureChestState
+{
+    u8 open : 1;
+    u8 trigger : 1;
+    u8 hitEffectPending : 1;
+    u8 pad : 5;
+} TreasureChestState;
+
+STATIC_ASSERT(sizeof(TreasureChestState) == 1);
+
 int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int TreasureChest_getExtraSize(void);
 int TreasureChest_getObjectTypeId(void);

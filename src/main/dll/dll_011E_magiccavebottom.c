@@ -29,36 +29,34 @@
 
 int MagicCaveBottom_getExtraSize(void)
 {
-    return 1;
+    return sizeof(MagicCaveBottomState);
 }
 
-void MagicCaveBottom_free(GameObject *obj)
+void MagicCaveBottom_free(GameObject* obj)
 {
-
-
     (void)obj;
     mainSetBits(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 0);
     Music_Trigger(MUSICTRIG_PU3_Adventure, 0);
 }
 
-
-void MagicCaveBottom_update(int* obj)
+void MagicCaveBottom_update(GameObject* obj)
 {
+    MagicCaveBottomSetup* setup;
+    MagicCaveBottomState* state;
 
+    setup = (MagicCaveBottomSetup*)obj->anim.placementData;
+    state = obj->extra;
 
-    u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    u8* sub = ((GameObject*)obj)->extra;
-
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
-    switch (*sub)
+    obj->anim.rotX = (s16)((s32)setup->rotation << 8);
+    switch (state->phase)
     {
     case MAGICCAVEBOTTOM_STATE_SETUP:
         mainSetBits(MAGICCAVEBOTTOM_GAMEBIT_ACTIVE, 1);
         envFxActFn_800887f8(0);
         getEnvfxAct(obj, obj, MAGICCAVEBOTTOM_ENVFX_A, 0);
         getEnvfxAct(obj, obj, MAGICCAVEBOTTOM_ENVFX_B, 0);
-        *sub = MAGICCAVEBOTTOM_STATE_START_MUSIC;
-        if (def[0x1b] != 0)
+        state->phase = MAGICCAVEBOTTOM_STATE_START_MUSIC;
+        if (setup->sequenceBank != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
@@ -69,17 +67,17 @@ void MagicCaveBottom_update(int* obj)
         break;
     case MAGICCAVEBOTTOM_STATE_START_MUSIC:
         Music_Trigger(MUSICTRIG_PU3_Adventure, 1);
-        *sub = MAGICCAVEBOTTOM_STATE_IDLE;
+        state->phase = MAGICCAVEBOTTOM_STATE_IDLE;
         break;
     case MAGICCAVEBOTTOM_STATE_IDLE:
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
+        if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
         {
             setAButtonIcon(0x19);
         }
         if (ObjTrigger_IsSet((int)obj) != 0)
         {
-            *sub = MAGICCAVEBOTTOM_STATE_WARP;
-            if (def[0x1b] != 0)
+            state->phase = MAGICCAVEBOTTOM_STATE_WARP;
+            if (setup->sequenceBank != 0)
             {
                 (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             }
@@ -90,7 +88,7 @@ void MagicCaveBottom_update(int* obj)
         }
         else
         {
-            objRenderFn_80041018((GameObject*)obj);
+            objRenderFn_80041018(obj);
         }
         break;
     case MAGICCAVEBOTTOM_STATE_WARP:

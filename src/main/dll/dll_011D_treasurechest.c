@@ -1,7 +1,6 @@
 /* DLL 0x011D - treasurechest (treasure chest interactive object). TU: 0x8018A8BC-0x8018ADB4. */
 #include "main/dll/dll_011D_treasurechest.h"
 #include "main/shader_api.h"
-#include "main/dll/staffflags_struct.h"
 #include "main/dll/player_staff_api.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -16,13 +15,6 @@
 #include "main/object_render.h"
 #include "main/dll/dll_005A_staffcollisionfunc03.h"
 
-
-typedef struct ChestFlags
-{
-    u8 open : 1;
-    u8 trigger : 1;
-} ChestFlags;
-
 STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
 STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
 STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
@@ -34,19 +26,19 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 
 /* anim-sequence event opcodes consumed by TreasureChest_SeqFn */
 #define TREASURECHEST_SEQEV_DIALOGUE     1 /* show setup dialogue */
-#define TREASURECHEST_SEQEV_STAFFBIT_SET 2 /* set StaffFlags b5 */
-#define TREASURECHEST_SEQEV_STAFFBIT_CLR 3 /* clear StaffFlags b5 */
+#define TREASURECHEST_SEQEV_HITFX_SET     2 /* enable hit effects */
+#define TREASURECHEST_SEQEV_HITFX_CLEAR   3 /* disable hit effects */
 #define TREASURECHEST_SEQEV_OPENED       4 /* hide + disable the chest */
 
-int lbl_803DDAE4;
-const StaffCollisionColorArgs lbl_802C22B0 = {8, 0xFF, 0xFF, 0x78};
-StaffCollisionInterface** lbl_803DDAE0;
+int gTreasureChestHitEffectCooldown;
+const StaffCollisionColorArgs gTreasureChestHitEffectColors = {8, 0xFF, 0xFF, 0x78};
+StaffCollisionInterface** gTreasureChestStaffCollisionInterface;
 
 int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
     TreasureChestSetup* setup;
-    u8* state;
+    TreasureChestState* state;
     u8 eventId;
 
     setup = (TreasureChestSetup*)obj->anim.placementData;
@@ -63,11 +55,11 @@ int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
                 (*gGameUIInterface)->showNpcDialogue(setup->dialogueId, 0xc8, 0x8c, 0);
             }
             break;
-        case TREASURECHEST_SEQEV_STAFFBIT_SET:
-            ((StaffFlags*)state)->b5 = 1;
+        case TREASURECHEST_SEQEV_HITFX_SET:
+            state->hitEffectPending = 1;
             break;
-        case TREASURECHEST_SEQEV_STAFFBIT_CLR:
-            ((StaffFlags*)state)->b5 = 0;
+        case TREASURECHEST_SEQEV_HITFX_CLEAR:
+            state->hitEffectPending = 0;
             break;
         case TREASURECHEST_SEQEV_OPENED:
             obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
@@ -81,7 +73,7 @@ int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
 
 int TreasureChest_getExtraSize(void)
 {
-    return 1;
+    return sizeof(TreasureChestState);
 }
 
 int TreasureChest_getObjectTypeId(void)
@@ -91,7 +83,7 @@ int TreasureChest_getObjectTypeId(void)
 
 void TreasureChest_free(void)
 {
-    Resource_Release(lbl_803DDAE0);
+    Resource_Release(gTreasureChestStaffCollisionInterface);
 }
 
 void TreasureChest_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -101,12 +93,12 @@ void TreasureChest_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
 
 void TreasureChest_hitDetect(GameObject* obj)
 {
-    u8* state;
+    TreasureChestState* state;
     TreasureChestSetup* setup;
 
     setup = (TreasureChestSetup*)obj->anim.placementData;
     state = obj->extra;
-    if (((u32)state[0] >> 5 & 1) != 0)
+    if (state->hitEffectPending != 0)
     {
         objfx_spawnHitEffectBurst(obj, 0.6f, 2, (u8)(setup->hitboxKind + 6), 4, NULL);
     }
@@ -115,32 +107,30 @@ void TreasureChest_hitDetect(GameObject* obj)
 void TreasureChest_update(GameObject* obj)
 {
 
-    ChestFlags* flags;
+    TreasureChestState* state;
     TreasureChestSetup* setup;
     u32 nearestObject;
     int hitResult;
     PartFxSpawnParams spawnParams;
-    StaffCollisionColorArgs colors;
+    StaffCollisionColorArgs hitEffectColors;
     float nearestDist;
     u32 hitVolume;
     int hitPriority;
     int hitObject;
 
-    flags = obj->extra;
+    state = obj->extra;
     setup = (TreasureChestSetup*)obj->anim.placementData;
     nearestDist = 20.0f;
-    if (flags->trigger != 0 && flags->open != 0)
+    if (state->trigger != 0 && state->open != 0)
     {
-        *(u8*)&obj->anim.resetHitboxMode =
-            *(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
         ObjAnim_SetCurrentMove((int)obj, 0, 0.99f, 0);
     }
-    if (flags->open == 0)
+    if (state->open == 0)
     {
-        if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
+        if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
-            *(u8*)&obj->anim.resetHitboxMode =
-                *(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
+            obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
             playerPullOutStaff((GameObject*)(Obj_GetPlayerObject()), 1);
             nearestObject = ObjGroup_FindNearestObject(TREASURECHEST_TARGET_OBJGROUP, obj, &nearestDist);
             if (nearestObject != 0)
@@ -154,11 +144,11 @@ void TreasureChest_update(GameObject* obj)
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, 0xffffffff);
             }
             mainSetBits(setup->openGameBit, 1);
-            flags->open = 1;
+            state->open = 1;
             ObjHits_DisableObject(obj);
         }
-        flags->trigger = 0;
-        colors = lbl_802C22B0;
+        state->trigger = 0;
+        hitEffectColors = gTreasureChestHitEffectColors;
         hitPriority = 0xffffffff;
         hitResult = ObjHits_GetPriorityHitWithPosition((GameObject*)obj, &hitObject, &hitPriority, &hitVolume,
                                                        &spawnParams.posX, &spawnParams.posY, &spawnParams.posZ);
@@ -170,15 +160,16 @@ void TreasureChest_update(GameObject* obj)
             spawnParams.rotZ = 0;
             spawnParams.rotY = 0;
             spawnParams.rotX = 0;
-            if (lbl_803DDAE4 == 0)
+            if (gTreasureChestHitEffectCooldown == 0)
             {
-                (*lbl_803DDAE0)->spawn(NULL, 1, &spawnParams, 0x401, -1, &colors);
-                lbl_803DDAE4 = 0x3c;
+                (*gTreasureChestStaffCollisionInterface)->spawn(NULL, 1, &spawnParams, 0x401, -1,
+                                                                &hitEffectColors);
+                gTreasureChestHitEffectCooldown = 0x3c;
             }
         }
-        if (lbl_803DDAE4 != 0)
+        if (gTreasureChestHitEffectCooldown != 0)
         {
-            lbl_803DDAE4 = lbl_803DDAE4 + -1;
+            gTreasureChestHitEffectCooldown = gTreasureChestHitEffectCooldown + -1;
         }
     }
     return;
@@ -186,15 +177,15 @@ void TreasureChest_update(GameObject* obj)
 
 void TreasureChest_init(GameObject* obj)
 {
-    register ChestFlags* state = obj->extra;
-    register TreasureChestSetup* cfg = (TreasureChestSetup*)obj->anim.placementData;
+    register TreasureChestState* state = obj->extra;
+    register TreasureChestSetup* setup = (TreasureChestSetup*)obj->anim.placementData;
 
     obj->animEventCallback = TreasureChest_SeqFn;
-    obj->anim.rotX = (s16)((s32)cfg->type << 8);
+    obj->anim.rotX = (s16)((s32)setup->type << 8);
 
-    if (cfg->openGameBit != -1)
+    if (setup->openGameBit != -1)
     {
-        state->open = mainGetBit(cfg->openGameBit);
+        state->open = mainGetBit(setup->openGameBit);
     }
     else
     {
@@ -205,7 +196,7 @@ void TreasureChest_init(GameObject* obj)
         obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
         ObjHits_DisableObject(obj);
     }
-    lbl_803DDAE0 = Resource_Acquire(90, 1);
+    gTreasureChestStaffCollisionInterface = Resource_Acquire(90, 1);
     state->trigger = 1;
 }
 
