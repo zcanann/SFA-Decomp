@@ -1596,13 +1596,12 @@ void walkgroupFindExitPointFn_800dc398(void)
 
                             x3 = objfsaCorner(edgeCoords[0x36], scale, &linked->x);
                             z3 = objfsaCorner(edgeCoords[0x37], scale, &linked->z);
-                            np = &OBJFSA_NEWPATCH;
                             {
                                 f32 sm;
                                 sm = x2 + x3;
-                                np->exit1X = (s16)(sm * lbl_803E0608);
+                                OBJFSA_NEWPATCH.exit1X = (s16)(sm * lbl_803E0608);
                                 sm = z2 + z3;
-                                np->exit1Z = (s16)(sm * lbl_803E0608);
+                                OBJFSA_NEWPATCH.exit1Z = (s16)(sm * lbl_803E0608);
                             }
 
                             OBJFSA_SET_NEWPATCH_PLANE(2, z3 - z2, x2 - x3, x2, z2);
