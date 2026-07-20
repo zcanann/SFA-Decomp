@@ -248,6 +248,8 @@ int dll_CB_moveHandler0(short* out, u8* obj, f32 timeDelta)
     return 0;
 }
 
+const f32 gDllCbDefaultAnimSpeed = 0.1f;
+
 void dll_CB_seekAndUpdate(int obj, void* seq, int sub, GroundBaddieState* state);
 
 void dll_CB_advanceAI(int* obj, GroundBaddieState* sub, GroundBaddieState* state);
