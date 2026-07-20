@@ -7,11 +7,11 @@
 
 int TrickyCurve_getExtraSize(void);
 int TrickyCurve_getObjectTypeId(void);
-void TrickyCurve_free(int obj);
+void TrickyCurve_free(GameObject* obj);
 void TrickyCurve_render(void);
 void TrickyCurve_hitDetect(void);
-void TrickyCurve_update(int* obj);
-void TrickyCurve_init(int* obj, u8* def);
+void TrickyCurve_update(GameObject* obj);
+void TrickyCurve_init(GameObject* obj, u8* def);
 void TrickyCurve_release(void);
 void TrickyCurve_initialise(void);
 void TrickyCurve_updateBurstTrigger(GameObject* obj);
