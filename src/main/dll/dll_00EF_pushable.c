@@ -260,6 +260,7 @@ void pushable_initWcPushBlock(GameObject* obj, PushableState* state)
 
 int pushable_updateMagicGem(GameObject* obj, PushableState* state)
 {
+    ModgfxFunc03Interface** effectResource;
     u8 flag;
     ObjTextureRuntimeSlot* tex;
     f32 cur;
@@ -348,10 +349,10 @@ int pushable_updateMagicGem(GameObject* obj, PushableState* state)
             {
                 mainSetBits(0x1c9, 0);
             }
-            tex = (ObjTextureRuntimeSlot*)Resource_Acquire(0x5b, 1);
-            (*(ModgfxFunc03Interface**)tex)->spawn(obj, 0x14, NULL, 2, -1, NULL);
-            (*(ModgfxFunc03Interface**)tex)->spawn(obj, 0x14, NULL, 2, -1, NULL);
-            Resource_Release(tex);
+            effectResource = Resource_Acquire(0x5b, 1);
+            (*effectResource)->spawn(obj, 0x14, NULL, 2, -1, NULL);
+            (*effectResource)->spawn(obj, 0x14, NULL, 2, -1, NULL);
+            Resource_Release(effectResource);
             Sfx_PlayFromObject((u32)obj, SFXTRIG_espar5_c);
         }
         else
