@@ -146,18 +146,6 @@ u8 gObjfsaWalkGroupActive[0xB8];
     (P).planes[K].normalX = (s16)(32767.0f * dxn);                                                      \
     (P).planes[K].normalZ = (s16)(32767.0f * dzn);                                                      \
     (P).planeOffsets[K] = -((f32)(P).planes[K].normalX * (XA) + (f32)(P).planes[K].normalZ * (ZA))
-#define OBJFSA_EXIT_INSIDE(WGP, XF, ZF)                                                                                \
-    exitFz = (f32)(ZF);                                                                                                \
-    exitFx = (f32)(XF);                                                                                                \
-    for (normalIdx = (edge = 0); edge < 4; edge++, normalIdx += 2)                                                    \
-    {                                                                                                                  \
-        if ((WGP)->planeOffsets[edge] +                                                                                \
-                (exitFx * (f32)((s16*)(WGP))[normalIdx] + exitFz * (f32)((s16*)(WGP))[normalIdx + 1]) >                \
-            zero)                                                                                                      \
-        {                                                                                                              \
-            break;                                                                                                     \
-        }                                                                                                              \
-    }
 #define OBJFSA_NEWPATCH (patchBase[0][gObjfsaPatchCount])
 #define OBJFSA_SET_NEWPATCH_PLANE(K, DXE, DZE, XA, ZA)                                                                 \
     pl = &OBJFSA_NEWPATCH.planes[K];                                                                                   \
@@ -1369,6 +1357,29 @@ inline f32 objfsaCorner(s8 ofs, f32 scl, f32* base)
     return (f32)((f32)ofs * scl + *base);
 }
 
+inline int objfsaExitOutside(ObjfsaWalkGroup* g, s16 ex, s16 ez)
+{
+    f32 exitFx;
+    f32 exitFz;
+    f32 zero;
+    u8 normalIdx;
+    u8 edge;
+
+    zero = 0.0f;
+    exitFz = (f32)ez;
+    exitFx = (f32)ex;
+    for (normalIdx = (edge = 0); edge < 4; edge++, normalIdx += 2)
+    {
+        if (g->planeOffsets[edge] +
+                (exitFx * (f32)((s16*)g)[normalIdx] + exitFz * (f32)((s16*)g)[normalIdx + 1]) >
+            zero)
+        {
+            break;
+        }
+    }
+    return edge != 4;
+}
+
 void walkgroupFindExitPointFn_800dc398(void)
 {
     ObjfsaPatch* patchBase[1];
@@ -1471,7 +1482,8 @@ void walkgroupFindExitPointFn_800dc398(void)
         sp = patchBase[0];
         for (pi = 0; pi < 256; pi++)
         {
-            sp[pi].groupId = 0;
+            sp->groupId = 0;
+            sp++;
         }
 
         gObjfsaPatchCount = 1;
@@ -1632,7 +1644,6 @@ void walkgroupFindExitPointFn_800dc398(void)
 
         pi = 1;
         pp = &pairs[2];
-        zero = 0.0f;
         div = 20.0f;
         p = &patchBase[0][1];
         for (; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
@@ -1643,19 +1654,10 @@ void walkgroupFindExitPointFn_800dc398(void)
             fdz = p->exit1Z - p->exit0Z;
 
             iter = 0;
-            for (;;)
+            pB = pC = p;
+            while (objfsaExitOutside(wgT, sx = pC->exit0X, sz = pC->exit0Z) &&
+                   objfsaExitOutside(wgBT, sx, sz))
             {
-                OBJFSA_EXIT_INSIDE(wgT, (sx = (pC = p)->exit0X), (sz = p->exit0Z));
-                pB = pC;
-                if (edge == 4)
-                {
-                    break;
-                }
-                OBJFSA_EXIT_INSIDE(wgBT, sx, sz);
-                if (edge == 4)
-                {
-                    break;
-                }
                 p->exit0X = (s16)(p->exit0X + fdx / div);
                 p->exit0Z = (s16)(p->exit0Z + fdz / div);
                 if (iter++ == 100)
@@ -1666,18 +1668,9 @@ void walkgroupFindExitPointFn_800dc398(void)
             }
 
             iter = 0;
-            for (;;)
+            while (objfsaExitOutside(wgT, sx = pC->exit1X, sz = pC->exit1Z) &&
+                   objfsaExitOutside(wgBT, sx, sz))
             {
-                OBJFSA_EXIT_INSIDE(wgT, (sx = pC->exit1X), (sz = pC->exit1Z));
-                if (edge == 4)
-                {
-                    break;
-                }
-                OBJFSA_EXIT_INSIDE(wgBT, sx, sz);
-                if (edge == 4)
-                {
-                    break;
-                }
                 pC->exit1X = (s16)(pB->exit1X - fdx / div);
                 pC->exit1Z = (s16)(pC->exit1Z - fdz / div);
                 if (iter++ == 100)
