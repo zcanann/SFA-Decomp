@@ -5458,8 +5458,6 @@ void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
     int pixelColumnOffset;
     int pixelA;
     int pixelB;
-    int j;
-    int i;
     u32 wB;
     int redB;
     int redA;
@@ -5496,6 +5494,7 @@ void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
         wB = (0xff - wA) & 0xff;
         if (fmt == 4)
         {
+            int i, j;
             for (i = 0; i < (int)src1->height; i++)
             {
                 u8 *pa, *pb, *pc;
@@ -5539,6 +5538,7 @@ void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
         }
         else
         {
+            int i, j;
             for (i = 0; i < (int)src1->height; i++)
             {
                 int tileRowGroupOffset, tileRowOffset;
@@ -5573,10 +5573,9 @@ void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                     pixelB = *(u16*)(bd + 0x80);
                     bHi = (int)(pixelB & 0xff00) >> 8;
                     bHi = (u8)bHi;
-                    ct = (u8*)dst + pixelColumnOffset;
+                    ct = (u8*)dst + pixelColumnOffset + 0x60;
                     cd = ct + tileColumnOffset;
                     cd += tileRowOffset;
-                    cd += 0x60;
                     *(u16*)(cd + rowDataOffset) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
                     *(u16*)(cd + (int)src1->width * tileRowGroupOffset * 2 + 0x20) =
                         ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8) |
