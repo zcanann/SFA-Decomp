@@ -2,6 +2,7 @@
 #define _DOLPHIN_OS_INTERNAL_H_
 
 #include <dolphin/os.h>
+#include "dolphin/os/__ppc_eabi_init.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -103,8 +104,6 @@ OSTime __OSTimeToSystemTime(OSTime time);
 // ppc_eabi_init
 __declspec(section ".init") asm void __init_hardware(void);
 __declspec(section ".init") asm void __flush_cache(void* address, unsigned int size);
-void __init_user(void);
-void _ExitProcess(void);
 
 // start
 __declspec(weak) void InitMetroTRK_BBA();

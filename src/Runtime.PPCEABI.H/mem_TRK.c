@@ -1,6 +1,5 @@
 #include <stddef.h>
-
-extern void TRK_fill_mem(void* dest, int value, unsigned long length);
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/mem_TRK.h"
 
 __declspec(section ".init") void* TRK_memset(void* dest, int value, size_t length)
 {

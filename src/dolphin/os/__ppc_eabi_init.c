@@ -1,4 +1,6 @@
 
+#include "dolphin/os/__ppc_eabi_init.h"
+
 typedef void (*voidfunctionptr)(void);
 
 extern voidfunctionptr _ctors[];

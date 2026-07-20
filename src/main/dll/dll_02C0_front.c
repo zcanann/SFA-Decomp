@@ -18,6 +18,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/dll/dll_02C0_front.h"
+#define FRONT_GAMETEXTBOX_NARROW
 #include "main/dll/front_game_text_box_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/texture.h"
@@ -384,7 +385,7 @@ void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
 /* Free the main buffer at gTitleScreenMainTex and walk the 19-slot table at
  * gTitleScreenTextures releasing each non-null entry, then clear the busy
  * byte at gTitleScreenSetupDone. */
-void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
+void gameTextBoxFn_80134d40(u8 alpha, int hideHighlight, u32 showArrows)
 {
     int i;
     Texture* tex;
