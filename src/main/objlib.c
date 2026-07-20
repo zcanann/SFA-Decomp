@@ -1,3 +1,4 @@
+#define OBJHITS_SETTERS_S16
 #include "dolphin/os/OSReport.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/objpathtransform_struct.h"
@@ -223,7 +224,7 @@ void ObjHits_SetTargetMask(GameObject* obj, u8 targetMask)
     return;
 }
 
-void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, int radius)
+void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, s16 radius)
 {
     ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->hitReactState;
 
@@ -269,7 +270,7 @@ void ObjHitbox_SetSphereRadius(ObjAnimComponent* obj, int radius)
     return;
 }
 
-void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalMin, int verticalMax)
+void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, s16 radius, s16 verticalMin, s16 verticalMax)
 {
     ObjHitsPriorityState* hitState;
     float absMin;
