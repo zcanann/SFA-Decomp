@@ -4,6 +4,7 @@
 #include "global.h"
 
 typedef struct RomCurveDef RomCurveDef;
+typedef struct RomCurvePlacementDef RomCurvePlacementDef;
 typedef struct RomCurveWalker RomCurveWalker;
 struct GameObject;
 
@@ -42,9 +43,13 @@ typedef void (*RomCurveVoidFn)(void);
 typedef RomCurveDef **(*RomCurveGetCurvesFn)(int *outCount);
 typedef int (*RomCurveFindFn)(f32 x,f32 y,f32 z,int *types,int typeCount,int action);
 typedef RomCurveDef *(*RomCurveGetByIdFn)(int curveId);
+typedef f32 (*RomCurveFindPositionFn)(int type,int action,f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ);
 typedef f32 (*RomCurveDistanceToObjectFn)(struct GameObject *obj,u32 curveId);
 typedef int (*RomCurveFindByActionFn)(int action);
 typedef int (*RomCurveGetLinkedCurveFn)(RomCurveDef *curve,int excludeLinkId);
+typedef int (*RomCurveIsPointInsideLoopFn)(int curveId,f32 x,f32 y,f32 z,f32 *outDistance);
+typedef int (*RomCurveCountRandomPointsFn)(RomCurveDef *curve);
+typedef int (*RomCurveBuildRandomPointsFn)(RomCurvePlacementDef *curve,f32 *outX,f32 *outY,f32 *outZ,s8 *outTypes);
 typedef u8 (*RomCurveInitWalkerFn)(void *walker,void *obj,f32 scale,int *curveParam,int arg);
 typedef u8 (*RomCurveGoNextPointFn)(void *walker);
 typedef int (*RomCurveSetClosedFn)(void *walker,int closed);
@@ -59,7 +64,7 @@ typedef struct RomCurveInterface {
   RomCurveFindFn find;
   void *slot18;
   RomCurveGetByIdFn getById;
-  void *slot20;
+  RomCurveFindPositionFn findPosition;
   RomCurveDistanceToObjectFn distanceToObject;
   void *slot28;
   void *slot2C;
@@ -70,7 +75,7 @@ typedef struct RomCurveInterface {
   RomCurveFindByActionFn findByAction;
   void *slot44;
   void *slot48;
-  void *slot4C;
+  RomCurveIsPointInsideLoopFn isPointInsideLoop;
   void *slot50;
   RomCurveGetLinkedCurveFn getRandomUnblockedLink;
   void *slot58;
@@ -80,8 +85,8 @@ typedef struct RomCurveInterface {
   void *slot68;
   void *slot6C;
   void *slot70;
-  void *slot74;
-  void *slot78;
+  RomCurveCountRandomPointsFn countRandomPoints;
+  RomCurveBuildRandomPointsFn buildRandomPoints;
   void *slot7C;
   void *slot80;
   void *slot84;

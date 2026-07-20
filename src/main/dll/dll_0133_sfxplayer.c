@@ -194,18 +194,18 @@ void sfxplayerObj_update(u8* obj)
         if (getCurSeqNo() != 0)
         {
             focusObj = (*gCameraInterface)->getCamera();
-            ((void (*)(int, int, f32, f32, f32, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(
+            (*gRomCurveInterface)->findPosition(
                 7, data->romCurveChannel, ((GameObject*)focusObj)->anim.worldPosX,
-                ((GameObject*)focusObj)->anim.worldPosY, ((GameObject*)focusObj)->anim.worldPosZ, obj + 0x0c,
-                obj + 0x10, obj + 0x14);
+                ((GameObject*)focusObj)->anim.worldPosY, ((GameObject*)focusObj)->anim.worldPosZ, (f32*)(obj + 0x0c),
+                (f32*)(obj + 0x10), (f32*)(obj + 0x14));
         }
         else
         {
             focusObj = Obj_GetPlayerObject();
-            ((void (*)(int, int, f32, f32, f32, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(
+            (*gRomCurveInterface)->findPosition(
                 7, data->romCurveChannel, ((GameObject*)focusObj)->anim.worldPosX,
-                ((GameObject*)focusObj)->anim.worldPosY, ((GameObject*)focusObj)->anim.worldPosZ, obj + 0x0c,
-                obj + 0x10, obj + 0x14);
+                ((GameObject*)focusObj)->anim.worldPosY, ((GameObject*)focusObj)->anim.worldPosZ, (f32*)(obj + 0x0c),
+                (f32*)(obj + 0x10), (f32*)(obj + 0x14));
         }
     }
 

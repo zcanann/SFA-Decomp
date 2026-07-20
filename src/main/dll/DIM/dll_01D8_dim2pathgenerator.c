@@ -183,11 +183,12 @@ void DIM2PathGenerator_update(int* obj)
             if (found != -1)
             {
                 int* cv = (int*)(*gRomCurveInterface)->getById(found);
-                ((void (*)(int))(*gRomCurveInterface)->slot74)((int)cv);
+                (*gRomCurveInterface)->countRandomPoints((RomCurveDef*)cv);
                 ((Dim2PathGeneratorState*)extra)->curveValid =
-                    ((int (*)(int*, void*, void*, void*, void*))(*gRomCurveInterface)->slot78)(
-                        cv, (char*)extra + 0xc, (char*)extra + 0x32c, (char*)extra + 0x64c,
-                        (char*)extra + 0x96c);
+                    (*gRomCurveInterface)->buildRandomPoints((RomCurvePlacementDef*)cv, (f32*)((char*)extra + 0xc),
+                                                            (f32*)((char*)extra + 0x32c),
+                                                            (f32*)((char*)extra + 0x64c),
+                                                            (s8*)((char*)extra + 0x96c));
                 ((Dim2PathGeneratorState*)extra)->flags |= 2;
                 ((Dim2PathGeneratorState*)extra)->originX = ((Dim2RomCurveDef*)cv)->originX;
                 ((Dim2PathGeneratorState*)extra)->originY = ((Dim2RomCurveDef*)cv)->originY;

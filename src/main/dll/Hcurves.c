@@ -2991,7 +2991,7 @@ int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef
     return 0;
 }
 
-int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
+int curves_isPointInsideLoop(int curveId, f32 x, f32 y, f32 z, f32* outDistance)
 {
     RomCurveDef* curve;
     RomCurveDef* nextCurve;
