@@ -64,11 +64,11 @@ void InfoPoint_free(void)
 {
 }
 
-void InfoPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void InfoPoint_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void InfoPoint_hitDetect(void)
@@ -84,11 +84,11 @@ void InfoPoint_update(GameObject* obj)
     }
 }
 
-void InfoPoint_init(int* obj, u8* def)
+void InfoPoint_init(GameObject* obj, u8* def)
 {
-    InfopointState* state = ((GameObject*)obj)->extra;
+    InfopointState* state = obj->extra;
     int* txt;
-    ((GameObject*)obj)->animEventCallback = InfoPoint_SeqFn;
+    obj->animEventCallback = InfoPoint_SeqFn;
     if (*(void**)lbl_803219A0 == NULL)
     {
         *(int*)lbl_803219A0 = (int)textureLoadAsset(INFOPOINT_TEXTURE_FONT);
@@ -98,11 +98,11 @@ void InfoPoint_init(int* obj, u8* def)
     state->textValue = **(int**)((char*)txt + 8);
     state->timer = 100;
     state->text = (int)txt;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)((InfopointObjectDef*)def)->rotXByte << 8);
+    obj->anim.rotX = (s16)((s32)((InfopointObjectDef*)def)->rotXByte << 8);
     state->unk18 = 2;
     state->unk10 = ((InfopointObjectDef*)def)->unk1B;
     state->flag = 0;
-    ((GameObject*)obj)->objectFlags |= INFOPOINT_OBJFLAG_HITDETECT_DISABLED;
+    obj->objectFlags |= INFOPOINT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void InfoPoint_release(void)
