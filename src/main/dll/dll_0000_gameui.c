@@ -3910,19 +3910,18 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
         }
     }
     i = 0;
-    previousTextureId = previousTextureIdsBase;
     currentTextureId = textureIds;
     itemTextures = hud->itemTextures;
     itemTexture = itemTextures;
     do
     {
-        if (*previousTextureId > -1 && *previousTextureId != *currentTextureId && *itemTexture != NULL)
+        if (*previousTextureIdsBase > -1 && *previousTextureIdsBase != *currentTextureId && *itemTexture != NULL)
         {
             textureFree((Texture*)*itemTexture);
             *itemTexture = NULL;
         }
-        previousTextureId++;
         currentTextureId++;
+        previousTextureIdsBase++;
         itemTexture++;
         i++;
     } while (i < CMENU_ITEM_SLOT_COUNT);

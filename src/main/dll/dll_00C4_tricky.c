@@ -438,6 +438,11 @@ void tricky_attachToWalkGroup(GameObject* obj, int state)
     ((TrickyByteFlags*)&((TrickyState*)state)->statusFlags)->bit7 = 1;
 }
 
+static inline int trickyGetState(int obj)
+{
+    return *(int*)&((GameObject*)obj)->extra;
+}
+
 int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
@@ -449,7 +454,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     int setup;
     u8 blockFlags[120];
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = trickyGetState(obj);
     if ((((TrickyState*)state)->stateFlags & 0x200) == 0)
     {
         ObjHits_DisableObject((GameObject*)obj);

@@ -81,7 +81,7 @@ typedef struct AnimObjD2DripSetup
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];
 extern f32 lbl_803E23DC;
-extern f32 lbl_803E23F8;
+extern const f32 lbl_803E23F8;
 extern f32 lbl_803E2410;
 extern f32 lbl_803E2414;
 extern f32 lbl_803E2418;
@@ -151,7 +151,7 @@ typedef struct
 
 #define TRICKY_BARK(obj, snd, p4)                                                                                      \
     {                                                                                                                  \
-        u8* cfg = *(u8**)&((GameObject*)(obj))->extra;                                                                 \
+        cfg = *(u8**)&((GameObject*)(obj))->extra;                                                                     \
         if (!((TrickyCfgBits*)(cfg + 0x58))->b)                                                                        \
         {                                                                                                              \
             s16 a0 = ((GameObject*)(obj))->anim.currentMove;                                                           \
@@ -159,30 +159,29 @@ typedef struct
             {                                                                                                          \
                 if (Sfx_IsPlayingFromObjectChannel((int)(obj), 0x10) == 0)                                             \
                 {                                                                                                      \
-                    objAudioFn_800393f8((GameObject*)(obj), &((TrickyState*)cfg)->soundState, snd, p4, -1, 0);          \
+                    objAudioFn_800393f8((GameObject*)(obj), &((TrickyState*)cfg)->soundState, snd, p4, -1, 0);         \
                 }                                                                                                      \
             }                                                                                                          \
         }                                                                                                              \
     }
 
-void fn_8013E0D0(int* obj, TrickyState* t)
+void fn_8013E0D0(GameObject* gobj, TrickyState* t)
 {
-    GameObject* gobj = (GameObject*)obj;
     char* str = lbl_8031D2E8;
+    u8 ok;
+    int go;
     int* best = NULL;
     f32 bestd = lbl_803E23DC;
     int count;
+    u8* cfg;
 
     switch (t->substate)
     {
     case ANIMOBJD2_SUBSTATE_ACQUIRE:
     {
-        u8 ok;
-        int go;
         trickyDebugPrint(str + 0x5a0);
         ok = trickyFn_8013b368(gobj, lbl_803E24D4, t);
-        if ((t->followObj =
-                 (u8*)trickyFindNearestUsableBaddie((GameObject*)t->playerObj, lbl_803E24D8, 0)) != NULL)
+        if ((t->followObj = (u8*)trickyFindNearestUsableBaddie((GameObject*)t->playerObj, lbl_803E24D8, 0)) != NULL)
         {
             TRICKY_RETARGET((u8*)t, *(int*)&t->followObj);
             go = 1;
@@ -258,12 +257,9 @@ void fn_8013E0D0(int* obj, TrickyState* t)
     }
     case ANIMOBJD2_SUBSTATE_APPROACH:
     {
-        u8 ok;
-        int go;
         trickyDebugPrint(str + 0x5b4, **(u8**)&t->progressPtr, *(int*)&t->stateFlags728);
         ok = trickyFn_8013b368(gobj, lbl_803E24D4, t);
-        if ((t->followObj =
-                 (u8*)trickyFindNearestUsableBaddie((GameObject*)t->playerObj, lbl_803E24D8, 0)) != NULL)
+        if ((t->followObj = (u8*)trickyFindNearestUsableBaddie((GameObject*)t->playerObj, lbl_803E24D8, 0)) != NULL)
         {
             TRICKY_RETARGET((u8*)t, *(int*)&t->followObj);
             go = 1;
@@ -352,8 +348,7 @@ void fn_8013E0D0(int* obj, TrickyState* t)
                             ((TrickyPackedSlots*)((char*)t + 0x7bc))->zzzSlot = free_;
                             *(int*)&t->child =
                                 (int)Obj_SetupObject((ObjPlacement*)o, 4, -1, -1, (void*)*(int*)&gobj->anim.parent);
-                            ObjLink_AttachChild(gobj, t->child,
-                                                ((TrickyPackedSlots*)((char*)t + 0x7bc))->zzzSlot);
+                            ObjLink_AttachChild(gobj, t->child, ((TrickyPackedSlots*)((char*)t + 0x7bc))->zzzSlot);
                             {
                                 f32 z3 = lbl_803E23DC;
                                 t->childPhaseTimer0 = z3;
@@ -388,12 +383,9 @@ void fn_8013E0D0(int* obj, TrickyState* t)
     }
     case ANIMOBJD2_SUBSTATE_CHARGE:
     {
-        u8 ok;
-        int go;
         trickyDebugPrint(str + 0x5cc);
         ok = trickyFn_8013b368(gobj, lbl_803E24E4, t);
-        if ((t->followObj =
-                 (u8*)trickyFindNearestUsableBaddie((GameObject*)t->playerObj, lbl_803E24D8, 0)) != NULL)
+        if ((t->followObj = (u8*)trickyFindNearestUsableBaddie((GameObject*)t->playerObj, lbl_803E24D8, 0)) != NULL)
         {
             TRICKY_RETARGET((u8*)t, *(int*)&t->followObj);
             go = 1;
@@ -438,7 +430,7 @@ void fn_8013E0D0(int* obj, TrickyState* t)
                         p += 4;
                     }
                 }
-            Sfx_PlayFromObject((u32)gobj, SFXTRIG_en_cvdrip1c_3db);
+                Sfx_PlayFromObject((u32)gobj, SFXTRIG_en_cvdrip1c_3db);
                 Sfx_AddLoopedObjectSound((u32)gobj, SFXTRIG_trpopn_c);
             }
             **(u8**)&t->progressPtr -= 2;
@@ -498,17 +490,14 @@ void fn_8013E0D0(int* obj, TrickyState* t)
         {
             void** list = (void**)ObjGroup_GetObjects(TRICKYWARP_OBJ_GROUP, &count);
             int i = 0;
-            f32 ratio;
             p = list;
-            ratio = lbl_803E23F8;
             for (; i < count; i++)
             {
                 f32 d1 = Vec_xzDistance(&((GameObject*)p[0])->anim.worldPosX, &tgt->anim.worldPosX);
                 f32 d2 = Vec_xzDistance(&((GameObject*)p[0])->anim.worldPosX,
                                         &((GameObject*)*(void**)&t->playerObj)->anim.worldPosX);
-                f32 d3 = Vec_xzDistance(&tgt->anim.worldPosX,
-                                        &((GameObject*)*(void**)&t->playerObj)->anim.worldPosX);
-                if (d1 + d2 > ratio * d3)
+                f32 d3 = Vec_xzDistance(&tgt->anim.worldPosX, &((GameObject*)*(void**)&t->playerObj)->anim.worldPosX);
+                if (d1 + d2 > lbl_803E23F8 * d3)
                 {
                     f32 d4 = Vec_xzDistance(&((GameObject*)p[0])->anim.worldPosX, &gobj->anim.worldPosX);
                     if (d2 - d4 > bestd)
@@ -614,7 +603,8 @@ void* trickyFindCirclingTarget(GameObject* obj, void* state)
             if (*list == target)
             {
                 d1 = Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)target)->anim.worldPosX);
-                d2 = Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX);
+                d2 = Vec_xzDistance(&obj->anim.worldPosX,
+                                    &((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX);
                 d3 = Vec_xzDistance(&((GameObject*)target)->anim.worldPosX,
                                     &((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX);
                 if ((d1 + d2) < lbl_803E23F8 * d3)
@@ -671,10 +661,10 @@ void trickyUpdateCirclingTargetPosition(void* objPtr, void* state)
     }
 
     ((TrickyState*)state)->scratch708.f = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosX -
-                                            lbl_803E24D4 * fsin16Precise((u16)((TrickyState*)state)->scratch704.i);
+                                          lbl_803E24D4 * fsin16Precise((u16)((TrickyState*)state)->scratch704.i);
     ((TrickyState*)state)->scratch70C.f = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosY;
     ((TrickyState*)state)->scratch710.f = (*(GameObject**)&((TrickyState*)state)->followObj)->anim.worldPosZ -
-                                    lbl_803E24D4 * fcos16Precise((u16)((TrickyState*)state)->scratch704.i);
+                                          lbl_803E24D4 * fcos16Precise((u16)((TrickyState*)state)->scratch704.i);
 
     if (trickyFn_8013b368(objPtr, lbl_803E2488, state) == 0)
     {
