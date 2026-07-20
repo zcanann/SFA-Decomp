@@ -414,6 +414,13 @@ cflags_dll_noopt_noloopinv_noautoinline = [
     "-inline", "noauto",
 ]
 
+cflags_dll_noopt_noloopinv_noprop_nospecunroll_noautoinline = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,noloopinvariants,nopropagation",
+    "-inline", "noauto",
+    '-pragma "ppc_unroll_speculative off"',
+]
+
 cflags_dll_noopt_noloopinv_zerodata = [
     *cflags_dll_noopt_noloopinv,
     '-pragma "explicit_zero_data on"',
@@ -1005,6 +1012,10 @@ config.libs = [
             Object(NonMatching, "main/model.c", cflags=cflags_dll_noopt_noloopinv),
             Object(NonMatching, "main/object.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objseq.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
+            Object(
+                NonMatching, "main/objseqinit.c",
+                cflags=cflags_dll_noopt_noloopinv_noprop_nospecunroll_noautoinline,
+            ),
             Object(NonMatching, "main/sky.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/newclouds.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/skystars.c", cflags=cflags_dll_noopt),
