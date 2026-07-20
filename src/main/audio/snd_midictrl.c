@@ -489,11 +489,7 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot
             slotPtr->entries[i].controller == MCMD_CTRL_EX_A1 ||
             slotPtr->entries[i].controller == MCMD_CTRL_SUR_PANNING)
         {
-            if (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG)
-            {
-                tmp = (statePtr != NULL ? varGet(statePtr, 0, slotPtr->entries[i].controller) : 0);
-            }
-            else
+            if (!(slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG))
             {
                 ctrl = slotPtr->entries[i].controller;
                 switch (ctrl)
@@ -514,6 +510,10 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot
                     tmp = (inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff) - 0x2000;
                     break;
                 }
+            }
+            else
+            {
+                tmp = (statePtr != NULL ? varGet(statePtr, 0, slotPtr->entries[i].controller) : 0);
             }
             tmp = (tmp * (slotPtr->entries[i].scale >> 1)) >> 15;
             if (tmp < -0x2000)
