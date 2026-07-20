@@ -449,7 +449,8 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     speed = ((GameObject*)obj)->anim.currentMoveProgress;
     {
         s16* p;
-        for (idx = 0, p = (s16*)(base + 0x60); ((GameObject*)obj)->anim.currentMove != *p && idx < 6; idx++)
+        s16 curMove = ((GameObject*)obj)->anim.currentMove;
+        for (idx = 0, p = (s16*)(base + 0x60); curMove != *p && idx < 6; idx++)
         {
             p += 1;
         }
