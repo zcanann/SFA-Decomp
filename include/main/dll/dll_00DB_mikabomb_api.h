@@ -10,10 +10,10 @@ void MikaBomb_free(GameObject* obj, int mode);
 int MikaBomb_getExtraSize(void);
 int MikaBomb_getObjectTypeId(void);
 void MikaBomb_hitDetect(void);
-void MikaBomb_init(int* obj);
+void MikaBomb_init(GameObject* obj);
 void MikaBomb_initialise(void);
 void MikaBomb_release(void);
-void MikaBomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void MikaBomb_update(int* obj);
+void MikaBomb_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void MikaBomb_update(GameObject* obj);
 
 #endif /* MAIN_DLL_DLL_00DB_MIKABOMB_API_H_ */

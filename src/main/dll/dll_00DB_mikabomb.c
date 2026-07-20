@@ -86,21 +86,21 @@ void MikaBomb_free(GameObject* obj, int mode)
     (*gModgfxInterface)->detachSource((void*)obj);
 }
 
-void MikaBomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void MikaBomb_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E31C0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E31C0);
 }
 
 void MikaBomb_hitDetect(void)
 {
 }
 
-void MikaBomb_update(int* obj)
+void MikaBomb_update(GameObject* obj)
 {
-    int* state = ((GameObject*)obj)->extra;
-    u32 timer = ((GameObject*)obj)->anim.alpha;
+    int* state = obj->extra;
+    u32 timer = obj->anim.alpha;
 
     if (timer < 0xff)
     {
@@ -108,40 +108,40 @@ void MikaBomb_update(int* obj)
         f32 dec;
         if (t - (dec = lbl_803E31C4 * timeDelta) > lbl_803E31C8)
         {
-            ((GameObject*)obj)->anim.alpha = timer - dec;
+            obj->anim.alpha = timer - dec;
         }
         else
         {
             Sfx_StopObjectChannel((int)obj, 0x7f);
-            ((GameObject*)obj)->anim.alpha = 0;
-            Obj_FreeObject((GameObject*)obj);
+            obj->anim.alpha = 0;
+            Obj_FreeObject(obj);
             return;
         }
     }
     else
     {
-        ((GameObject*)obj)->anim.velocityY -= gMikaBombGravityAccel * timeDelta;
-        if (((GameObject*)obj)->anim.velocityY < *(f32*)&gMikaBombMinFallVelocity)
+        obj->anim.velocityY -= gMikaBombGravityAccel * timeDelta;
+        if (obj->anim.velocityY < *(f32*)&gMikaBombMinFallVelocity)
         {
-            ((GameObject*)obj)->anim.velocityY = gMikaBombMinFallVelocity;
+            obj->anim.velocityY = gMikaBombMinFallVelocity;
         }
-        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-                ((GameObject*)obj)->anim.velocityZ * timeDelta);
+        objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+                obj->anim.velocityZ * timeDelta);
     }
 
-    if (((GameObject*)obj)->anim.alpha == 0xff || ((MikabombState*)state)->exploded != 0)
+    if (obj->anim.alpha == 0xff || ((MikabombState*)state)->exploded != 0)
     {
         ModgfxSpawnCountRange localB;
         ModgfxSpawnCountRange localA;
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, MIKABOMB_HIT_VOLUME_SLOT, 1, 0);
-        ObjHits_EnableObject((GameObject*)obj);
-        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
-            ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+        ObjHits_EnableObject(obj);
+        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject != 0 &&
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject ==
                 (int)Obj_GetPlayerObject())
         {
-            if (((GameObject*)obj)->anim.alpha == 0xff)
+            if (obj->anim.alpha == 0xff)
             {
-                int* st = ((GameObject*)obj)->extra;
+                int* st = obj->extra;
                 u32 rnd;
                 localB.packed = lbl_803E31A0;
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_dsmk2_c);
@@ -149,21 +149,21 @@ void MikaBomb_update(int* obj)
                 (*((MikabombState*)st)->resource)->spawn(obj, rnd, NULL, 2, -1, &localB);
                 ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                           (s32)(gMikaBombHitSphereRadiusScale *
-                                                (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
+                                                (f32)(u32)obj->anim.modelInstance->primaryHitboxRadius));
                 CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration,
                                   gMikaBombCameraShakeFalloff);
-                ((GameObject*)obj)->anim.alpha = 0xfe;
+                obj->anim.alpha = 0xfe;
                 Obj_FreeObject((GameObject*)*st);
                 *st = 0;
             }
-            ObjHits_DisableObject((GameObject*)obj);
+            ObjHits_DisableObject(obj);
         }
         else
         {
-            if (((GameObject*)obj)->anim.localPosY <= ((MikabombState*)state)->groundY &&
-                ((GameObject*)obj)->anim.alpha == 0xff)
+            if (obj->anim.localPosY <= ((MikabombState*)state)->groundY &&
+                obj->anim.alpha == 0xff)
             {
-                int* st = ((GameObject*)obj)->extra;
+                int* st = obj->extra;
                 u32 rnd;
                 localA.packed = lbl_803E31A0;
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_dsmk2_c);
@@ -171,10 +171,10 @@ void MikaBomb_update(int* obj)
                 (*((MikabombState*)st)->resource)->spawn(obj, rnd, NULL, 2, -1, &localA);
                 ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                           (s32)(gMikaBombHitSphereRadiusScale *
-                                                (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
+                                                (f32)(u32)obj->anim.modelInstance->primaryHitboxRadius));
                 CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration,
                                   gMikaBombCameraShakeFalloff);
-                ((GameObject*)obj)->anim.alpha = 0xfe;
+                obj->anim.alpha = 0xfe;
                 Obj_FreeObject((GameObject*)*st);
                 *st = 0;
                 ((MikabombState*)state)->exploded = 1;
@@ -183,36 +183,36 @@ void MikaBomb_update(int* obj)
     }
 }
 
-void MikaBomb_init(int* obj)
+void MikaBomb_init(GameObject* obj)
 {
-    int* state = ((GameObject*)obj)->extra;
+    int* state = obj->extra;
     f32 out;
     ObjPlacement* alloc;
     f32 fz;
 
-    ObjHits_DisableObject((GameObject*)obj);
-    ((GameObject*)obj)->anim.alpha = 0xff;
+    ObjHits_DisableObject(obj);
+    obj->anim.alpha = 0xff;
     fz = lbl_803E31C8;
-    ((GameObject*)obj)->anim.velocityX = fz;
-    ((GameObject*)obj)->anim.velocityY = lbl_803E31D4;
-    ((GameObject*)obj)->anim.velocityZ = fz;
-    ((GameObject*)obj)->anim.rotY = -0x4000;
-    ((GameObject*)obj)->anim.rotX = 0;
-    ((GameObject*)obj)->anim.rotZ = 0;
-    fn_80065684((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                ((GameObject*)obj)->anim.localPosZ, &out, 0);
-    ((MikabombState*)state)->groundY = ((GameObject*)obj)->anim.localPosY - out;
+    obj->anim.velocityX = fz;
+    obj->anim.velocityY = lbl_803E31D4;
+    obj->anim.velocityZ = fz;
+    obj->anim.rotY = -0x4000;
+    obj->anim.rotX = 0;
+    obj->anim.rotZ = 0;
+    fn_80065684(obj, obj->anim.localPosX, obj->anim.localPosY,
+                obj->anim.localPosZ, &out, 0);
+    ((MikabombState*)state)->groundY = obj->anim.localPosY - out;
     if ((u8)Obj_IsLoadingLocked() != 0)
     {
         alloc = Obj_AllocObjectSetup(0x20, MIKABOMB_CHILD_OBJ_SHADOW);
-        alloc->posX = ((GameObject*)obj)->anim.localPosX;
-        alloc->posY = ((GameObject*)obj)->anim.localPosY;
-        alloc->posZ = ((GameObject*)obj)->anim.localPosZ;
+        alloc->posX = obj->anim.localPosX;
+        alloc->posY = obj->anim.localPosY;
+        alloc->posZ = obj->anim.localPosZ;
         alloc->color[0] = 1;
         alloc->color[1] = 1;
         alloc->color[2] = 0xff;
         alloc->color[3] = 0xff;
-        *state = (int)loadObjectAtObject((GameObject*)obj, alloc);
+        *state = (int)loadObjectAtObject(obj, alloc);
         ((GameObject*)*state)->ownerObj = obj;
     }
     else
