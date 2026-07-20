@@ -6392,11 +6392,11 @@ int playerStateClimbUpFromWall(GameObject* obj, int state)
 
 int playerStateClimbWall(GameObject* obj, int state)
 {
-    int mask;
+    int b7;
     ObjModel* jt;
     register int inner;
     int b6;
-    int b7;
+    int mask;
     int b8;
     int b9;
     int dir;
