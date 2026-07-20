@@ -1252,7 +1252,7 @@ void ObjGroup_ClearAll(void)
     return;
 }
 
-u32 ObjMsg_Peek(void* obj, u32* outMessage, u32* outSender, u32* outParam)
+int ObjMsg_Peek(void* obj, u32* outMessage, u32* outSender, u32* outParam)
 {
     ObjMsgQueue* queue;
 

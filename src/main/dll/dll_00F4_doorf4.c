@@ -30,8 +30,6 @@
 #include "main/object_render.h"
 #include "main/objseq.h"
 
-typedef int (*DoorF4ObjMsgFn)(int obj, int* message, int* param, int* flags);
-
 #include "main/gamebits.h"
 #include "main/camera.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -161,7 +159,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         gb = mainGetBit(sub->gameBitA);
     }
-    if (((DoorF4ObjMsgFn)ObjMsg_Peek)(obj, &msg, 0, 0) != 0)
+    if (ObjMsg_Peek((void*)obj, (u32*)&msg, 0, 0) != 0)
     {
         switch (msg)
         {
@@ -287,7 +285,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             }
             if (active != 0)
             {
-                if (((DoorF4ObjMsgFn)ObjMsg_Pop)(obj, &msg, 0, 0) != 0)
+                if (ObjMsg_Pop((void*)obj, (u32*)&msg, 0, 0) != 0)
                 {
                     switch (msg)
                     {
@@ -360,7 +358,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_B;
     }
-    while (((DoorF4ObjMsgFn)ObjMsg_Pop)(obj, &msg, 0, 0) != 0)
+    while (ObjMsg_Pop((void*)obj, (u32*)&msg, 0, 0) != 0)
     {
     }
     for (i = 0; i < animUpdate->eventCount; i++)
