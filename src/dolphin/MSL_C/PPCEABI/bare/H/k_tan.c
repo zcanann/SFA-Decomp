@@ -1,25 +1,10 @@
-#include "main/fsin16_approx_api.h"
 #include "main/trig_ext.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
-typedef signed short s16;
-
 extern float lbl_803E7C70;
 extern float lbl_803E7C74;
 extern float lbl_803E7C78;
-extern float lbl_803E7C80;
-extern float lbl_803E7C84;
-extern float lbl_803E7C88;
-extern float lbl_803E7C8C;
-extern float lbl_803E7C90;
-extern float lbl_803E7C94;
-extern float lbl_803E7C98;
-extern float lbl_803E7C9C;
-extern float lbl_803E7CA0;
-extern float lbl_803E7CA4;
-extern float lbl_803E7CA8;
-extern float lbl_803E7CAC;
 
 float sqrtf_8029312c(float x) {
     float guess;
@@ -59,44 +44,4 @@ float invSqrt(float x) {
     half = lbl_803E7C74 * x;
     guess = guess * (lbl_803E7C78 - guess * (half * guess));
     return guess;
-}
-
-float fsin16Approx(int angle) {
-    s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
-    float x = fastCastS16ToFloat(&reduced);
-    float x2 = x * x;
-
-    switch (angle & 0xE000) {
-        case 0x0000:
-        case 0xE000:
-            return x * (lbl_803E7C90 * x2 + lbl_803E7C8C);
-        case 0x2000:
-        case 0x4000:
-            return (lbl_803E7C88 * x2 + lbl_803E7C84) * x2 + lbl_803E7C80;
-        case 0x6000:
-        case 0x8000:
-            return -(x * (lbl_803E7C90 * x2 + lbl_803E7C8C));
-        default:
-            return -(x2 * (lbl_803E7C88 * x2 + lbl_803E7C84) + lbl_803E7C80);
-    }
-}
-
-float fcos16(u16 angle) {
-    s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
-    float x = fastCastS16ToFloat(&reduced);
-    float x2 = x * x;
-
-    switch (angle & 0xE000) {
-        case 0x0000:
-        case 0xE000:
-            return x * ((lbl_803E7C9C * x2 + lbl_803E7C98) * x2 + lbl_803E7C94);
-        case 0x2000:
-        case 0x4000:
-            return (((lbl_803E7CAC * x2 + lbl_803E7CA8) * x2 + lbl_803E7CA4) * x2 + lbl_803E7CA0);
-        case 0x6000:
-        case 0x8000:
-            return -(x * ((lbl_803E7C9C * x2 + lbl_803E7C98) * x2 + lbl_803E7C94));
-        default:
-            return -(x2 * ((lbl_803E7CAC * x2 + lbl_803E7CA8) * x2 + lbl_803E7CA4) + lbl_803E7CA0);
-    }
 }

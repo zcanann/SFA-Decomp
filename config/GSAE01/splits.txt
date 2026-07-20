@@ -4763,10 +4763,10 @@ dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.c:
 	.text       start:0x80292DEC end:0x8029312C
 
 dolphin/MSL_C/PPCEABI/bare/H/k_tan.c:
-	.text       start:0x8029312C end:0x80293464
+	.text       start:0x8029312C end:0x80293234
 
 main/trig.c:
-	.text       start:0x80293464 end:0x80294098
+	.text       start:0x80293234 end:0x80294098
 
 dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
 	.text       start:0x80294098 end:0x80294204

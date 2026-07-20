@@ -1906,7 +1906,7 @@ config.libs = [
                 progress_category="sdk",
             ),
             Object(
-                NonMatching,
+                MatchingFor("GSAE01"),
                 "dolphin/MSL_C/PPCEABI/bare/H/k_tan.c",
                 mw_version="GC/1.2.5n",
                 cflags=msl_math_o0_cflags,
