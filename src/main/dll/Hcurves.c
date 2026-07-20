@@ -1368,7 +1368,9 @@ inline int objfsaExitOutside(ObjfsaWalkGroup* g, s16 ex, s16 ez)
     zero = 0.0f;
     exitFz = (f32)ez;
     exitFx = (f32)ex;
-    for (normalIdx = (edge = 0); edge < 4; edge++, normalIdx += 2)
+    edge = 0;
+    normalIdx = edge;
+    for (; edge < 4; edge++, normalIdx += 2)
     {
         if (g->planeOffsets[edge] +
                 (exitFx * (f32)((s16*)g)[normalIdx] + exitFz * (f32)((s16*)g)[normalIdx + 1]) >
