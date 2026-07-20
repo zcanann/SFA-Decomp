@@ -54,7 +54,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject* obj)
     {
         if (runtime->dustEffectTimer < 120.0f)
         {
-            if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < runtime->dustEffectTimer * 0.5f)
+            if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < runtime->dustEffectTimer / 2.0f)
             {
                 (*gPartfxInterface)->spawnObject(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
             }
@@ -74,7 +74,7 @@ void SHthorntail_updateDustEffects(SHthorntailObject* obj)
         }
         else if (runtime->dustEffectTimer < 420.0f)
         {
-            if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < runtime->dustEffectTimer * 0.5f)
+            if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < runtime->dustEffectTimer / 2.0f)
             {
                 (*gPartfxInterface)->spawnObject(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
             }
