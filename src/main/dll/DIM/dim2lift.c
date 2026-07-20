@@ -208,6 +208,8 @@ int DIMbossHitDetect_tonsilSlam(GameObject* obj, int runtime)
     return 0;
 }
 
+const f32 gDim2LiftZero = 0.0f;
+
 int DIMbossHitDetect_liftSlam(GameObject* obj, int runtime)
 {
     int state = *(int*)&(obj)->extra;
