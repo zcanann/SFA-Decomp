@@ -155,21 +155,21 @@ int WM_GeneralScales_getObjectTypeId(void)
     return 0x9;
 }
 
-void WM_GeneralScales_free(int* obj)
+void WM_GeneralScales_free(GameObject* obj)
 {
-    int* p = (int*)obj[0xc8 / 4]; /* childObjs[0] */
+    int* p = (int*)obj->childObjs[0];
     if (p != NULL)
-        ObjLink_DetachChild((GameObject*)obj, (GameObject*)p);
+        ObjLink_DetachChild(obj, (GameObject*)p);
 }
 
-void WM_GeneralScales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void WM_GeneralScales_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    WmGeneralScalesState* state = ((GameObject*)obj)->extra;
+    WmGeneralScalesState* state = obj->extra;
     if (state->phase == WMGENERALSCALES_PHASE_HIDDEN)
         return;
     if (visible == 0)
         return;
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void WM_GeneralScales_hitDetect(void)
@@ -180,13 +180,13 @@ void WM_GeneralScales_update(void)
 {
 }
 
-void WM_GeneralScales_init(int* obj)
+void WM_GeneralScales_init(GameObject* obj)
 {
-    WmGeneralScalesState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = WM_GeneralScales_SeqFn;
+    WmGeneralScalesState* state = obj->extra;
+    obj->animEventCallback = WM_GeneralScales_SeqFn;
     state->unk00 = 0.0f;
     state->phase = WMGENERALSCALES_PHASE_HIDDEN;
-    *(int*)&((GameObject*)obj)->childObjs[0] = 0;
+    *(int*)&obj->childObjs[0] = 0;
 }
 
 void WM_GeneralScales_release(void)

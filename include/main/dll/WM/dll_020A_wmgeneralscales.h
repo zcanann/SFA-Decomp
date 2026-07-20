@@ -2,6 +2,7 @@
 #define MAIN_DLL_WM_DLL_020A_WMGENERALSCALES_H_
 
 #include "global.h"
+#include "main/game_object.h"
 #include "main/objanim_update.h"
 
 /* per-object extra state (getExtraSize == 0x8). unk00 is written here
@@ -19,11 +20,11 @@ STATIC_ASSERT(sizeof(WmGeneralScalesState) == 0x8);
 int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 int WM_GeneralScales_getExtraSize(void);
 int WM_GeneralScales_getObjectTypeId(void);
-void WM_GeneralScales_free(int* obj);
-void WM_GeneralScales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void WM_GeneralScales_free(GameObject* obj);
+void WM_GeneralScales_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void WM_GeneralScales_hitDetect(void);
 void WM_GeneralScales_update(void);
-void WM_GeneralScales_init(int* obj);
+void WM_GeneralScales_init(GameObject* obj);
 void WM_GeneralScales_release(void);
 void WM_GeneralScales_initialise(void);
 
