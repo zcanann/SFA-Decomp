@@ -10,6 +10,7 @@ import json
 import re
 import subprocess
 import sys
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -120,6 +121,20 @@ def main() -> None:
             tc = classify(tf[fn])
             cc = classify(cf[fn])
             if len(tc) != len(cc):
+                # Positional alignment is meaningless when the FP-op counts
+                # differ, but an A-slot swap still shows up as a per-op
+                # orientation imbalance with the total held constant.
+                tm = Counter((o, a, b) for o, a, b in tc if {a, b} == {"POOL", "VAR"})
+                cm = Counter((o, a, b) for o, a, b in cc if {a, b} == {"POOL", "VAR"})
+                swaps = []
+                for o in {x[0] for x in list(tm) + list(cm)}:
+                    tpv, tvp = tm[(o, "POOL", "VAR")], tm[(o, "VAR", "POOL")]
+                    cpv, cvp = cm[(o, "POOL", "VAR")], cm[(o, "VAR", "POOL")]
+                    if tpv + tvp == cpv + cvp and (tpv, tvp) != (cpv, cvp):
+                        swaps.append((-1, o, f"tgt(P,V)={tpv}/(V,P)={tvp}",
+                                      f"cur(P,V)={cpv}/(V,P)={cvp} [LENDIFF]"))
+                if swaps:
+                    hits.append(((100.0 - fz) / 100.0 * size, name, fn, fz, size, swaps))
                 continue
             swaps = []
             for i, (t, c) in enumerate(zip(tc, cc)):
