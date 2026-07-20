@@ -11701,7 +11701,7 @@ void fn_802AA014(GameObject* obj, int state, f32 aimInputZ, f32 zero)
             v[0] = ycomp / len;
             v[1] = xcomp / len;
             v[2] = lbl_803E7F5C / len;
-            Matrix_TransformVector(fn_8000E814(), v, v);
+            Matrix_TransformVector(Camera_GetWorldMatrix(), v, v);
             *(f32*)((char*)o + 0x24) = v[0] * (scale = lbl_803E80D8);
             *(f32*)((char*)o + 0x28) = v[1] * scale;
             *(f32*)((char*)o + 0x2c) = v[2] * scale;
@@ -11863,7 +11863,7 @@ void staffShootFireball(GameObject* obj, int state, f32 unused)
             vec[0] = fx / mag;
             vec[1] = cot / mag;
             vec[2] = 100.0f / mag;
-            Matrix_TransformVector(fn_8000E814(), vec, vec);
+            Matrix_TransformVector(Camera_GetWorldMatrix(), vec, vec);
             fb->anim.velocityX = -10.0f * vec[0];
             fb->anim.velocityY = -10.0f * vec[1];
             fb->anim.velocityZ = -10.0f * vec[2];

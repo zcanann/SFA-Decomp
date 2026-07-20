@@ -38,7 +38,7 @@ s16 gCameraFarPlaneTransitionFramesLeft;
 
 f32 gObjInverseYawTransformMatrices[0x1E][16];
 f32 gObjYawTransformMatrices[0x22][16];
-f32 lbl_80338090[64];
+f32 gCameraWorldMatrix[64];
 f32 gCameraDefaultModelMatrix[16];
 CameraViewSlot gCameraShakeSlots[0x480 / sizeof(CameraViewSlot)];
 f32 gCameraViewRotationMatrix[16];
@@ -459,9 +459,9 @@ void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude)
     }
 }
 
-f32* fn_8000E814(void)
+f32* Camera_GetWorldMatrix(void)
 {
-    return lbl_80338090;
+    return gCameraWorldMatrix;
 }
 
 void Camera_LoadModelViewMatrix(int unused0, int unused1, MatrixTransform* transform, f32 scale, f32 unused4,
@@ -908,8 +908,8 @@ void Camera_UpdateViewMatrices(void)
         transform.z -= lbl_803DE60C;
     }
 
-    setMatrixFromObjectPos(lbl_80338090, &transform);
-    mtx44Transpose(lbl_80338090, gCameraInverseViewMatrix);
+    setMatrixFromObjectPos(gCameraWorldMatrix, &transform);
+    mtx44Transpose(gCameraWorldMatrix, gCameraInverseViewMatrix);
     PSMTXCopy(gCameraViewMatrix, gCameraViewRotationMatrix);
     gCameraViewRotationMatrix[11] = gCameraViewRotationMatrix[7] = gCameraViewRotationMatrix[3] = lbl_803DE60C;
     PSMTXCopy(gCameraInverseViewMatrix, gCameraInverseViewRotationMatrix);

@@ -57,7 +57,7 @@ STATIC_ASSERT(sizeof(CameraViewSlot) == 0x60);
 
 extern CameraViewSlot gCameraShakeSlots[];
 extern f32 gCameraDefaultModelMatrix[16];
-extern f32 lbl_80338090[64];
+extern f32 gCameraWorldMatrix[64];
 extern f32 lbl_803DE5F0;
 extern f32 gCameraShakeMagnitudeDecay;
 extern f32 gCameraPi;
@@ -154,7 +154,7 @@ void Camera_SetAspectRatio(f32 aspectRatio);
 f32 Camera_GetFovY(void);
 void Camera_SetFovY(f32 fovY);
 void Camera_InitState(void);
-f32* fn_8000E814(void);
+f32* Camera_GetWorldMatrix(void);
 s32 Angle_AddWrappedS16(s32 angle, s16* delta);
 s32 Angle_SubWrappedS16(s32 angle, s16* delta);
 void screenFn_8000e944(void* viewportArg);
