@@ -23,14 +23,21 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_80136a40.h"
+#include "main/obj_placement.h"
 #include "main/vecmath_distance_api.h"
 
 typedef struct StayPointSetup
 {
-    u8 pad00[0x1e];
+    ObjPlacement base;
+    u8 pad18[0x1E - 0x18];
     s16 activeGameBit;   /* 0x1E: set while Tricky is staying here; -1 = none */
     s16 requiredGameBit; /* 0x20: gate; -1 = always active */
 } StayPointSetup;
+
+STATIC_ASSERT(offsetof(StayPointSetup, base) == 0x0);
+STATIC_ASSERT(offsetof(StayPointSetup, activeGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(StayPointSetup, requiredGameBit) == 0x20);
+STATIC_ASSERT(sizeof(StayPointSetup) == 0x24);
 
 /* StayPoint_init: object flag set on spawn. */
 #define STAYPOINT_OBJECT_FLAG 0x4000

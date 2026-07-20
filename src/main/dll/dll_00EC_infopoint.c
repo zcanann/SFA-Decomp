@@ -6,8 +6,8 @@
  * (InfoPoint_render). When the player triggers it (resetHitboxMode bit 0)
  * it disables the A-button and runs trigger sequence 0.
  *
- * InfoPoint_SeqFn handles the trigger sequence: events 1/2 toggle a s16
- * flag at extra+0x16; events 3/4 are no-ops.
+ * InfoPoint_SeqFn handles the trigger sequence: events 1/2 toggle the s16
+ * event state at extra+0x16; events 3/4 are no-ops.
  */
 #include "main/game_object.h"
 #include "main/pad_api.h"
@@ -15,10 +15,9 @@
 #include "main/objanim_update.h"
 #include "main/object_render.h"
 #include "main/dll/dll_00EC_infopoint.h"
+#include "main/gametext_internal.h"
 #include "main/textrender_api.h"
 #include "main/texture.h"
-
-#define INFOPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* shared font/texture asset loaded at init (see file header). */
 #define INFOPOINT_TEXTURE_FONT 616
@@ -30,17 +29,17 @@ extern int lbl_80321990[];
 
 int InfoPoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    InfopointState* state = obj->extra;
+    InfoPointState* state = obj->extra;
     int i;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            state->flag = 0xff;
+            state->eventState = 0xff;
             break;
         case 2:
-            state->flag = 0;
+            state->eventState = 0;
             break;
         case 3:
             break;
@@ -84,25 +83,25 @@ void InfoPoint_update(GameObject* obj)
     }
 }
 
-void InfoPoint_init(GameObject* obj, u8* def)
+void InfoPoint_init(GameObject* obj, InfoPointPlacement* placement)
 {
-    InfopointState* state = obj->extra;
-    int* txt;
+    InfoPointState* state = obj->extra;
+    GameTextDef* text;
     obj->animEventCallback = InfoPoint_SeqFn;
     if (*(void**)lbl_803219A0 == NULL)
     {
         *(int*)lbl_803219A0 = (int)textureLoadAsset(INFOPOINT_TEXTURE_FONT);
     }
-    state->unk08 = (int)lbl_80321990;
-    txt = gameTextGet(((InfopointObjectDef*)def)->textId);
-    state->textValue = **(int**)((char*)txt + 8);
+    state->renderData = lbl_80321990;
+    text = gameTextGet(placement->textId);
+    state->firstString = text->strings[0];
     state->timer = 100;
-    state->text = (int)txt;
-    obj->anim.rotX = (s16)((s32)((InfopointObjectDef*)def)->rotXByte << 8);
+    state->text = text;
+    obj->anim.rotX = (s16)((s32)placement->rotXByte << 8);
     state->unk18 = 2;
-    state->unk10 = ((InfopointObjectDef*)def)->unk1B;
-    state->flag = 0;
-    obj->objectFlags |= INFOPOINT_OBJFLAG_HITDETECT_DISABLED;
+    state->unk10 = placement->unk1B;
+    state->eventState = 0;
+    obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void InfoPoint_release(void)

@@ -37,7 +37,7 @@ int spellstone_setState(SpellStoneObject* obj, int state)
     extra->state = state;
     if (state == SPELLSTONE_STATE_ACTIVE)
     {
-        obj->posY += lbl_803E6750;
+        obj->anim.localPosY += lbl_803E6750;
     }
     return oldState != SPELLSTONE_STATE_IDLE;
 }
@@ -83,18 +83,18 @@ void spellstone_update(SpellStoneObject* obj)
     SpellStoneDef* def;
 
     state = obj->state;
-    def = obj->def;
+    def = (SpellStoneDef*)obj->anim.placementData;
     if (state->state == SPELLSTONE_STATE_ACTIVE)
     {
-        obj->rotY = 0;
-        obj->rotX += 0x100;
-        obj->rotZ = 0;
+        obj->anim.rotY = 0;
+        obj->anim.rotX += 0x100;
+        obj->anim.rotZ = 0;
     }
     eventActive = mainGetBit(def->completeEvent);
     if (eventActive != 0)
     {
         mainSetBits(*(lbl_803DC228 + def->eventIndex), 1);
-        obj->flags = (s16)(obj->flags | SPELLSTONE_OBJFLAG_HIDDEN);
+        obj->anim.flags = (s16)(obj->anim.flags | SPELLSTONE_OBJFLAG_HIDDEN);
         Obj_RemoveFromUpdateList((GameObject*)obj);
         (*gMapEventInterface)->setMapAct(0x1d, 2);
     }
@@ -103,13 +103,13 @@ void spellstone_update(SpellStoneObject* obj)
         eventActive = mainGetBit(def->activeEvent);
         if (eventActive != 0)
         {
-            obj->flags = (s16)(obj->flags | SPELLSTONE_OBJFLAG_HIDDEN);
+            obj->anim.flags = (s16)(obj->anim.flags | SPELLSTONE_OBJFLAG_HIDDEN);
             Obj_RemoveFromUpdateList((GameObject*)obj);
         }
         if (state->state == SPELLSTONE_STATE_ACTIVE)
         {
             playerObj = Obj_GetPlayerObject();
-            if (Vec_distance(&obj->worldPosX, &((GameObject*)playerObj)->anim.worldPosX) < lbl_803E6758)
+            if (Vec_distance(&obj->anim.worldPosX, &((GameObject*)playerObj)->anim.worldPosX) < lbl_803E6758)
             {
                 mainSetBits(def->completeEvent, 1);
             }
@@ -119,9 +119,9 @@ void spellstone_update(SpellStoneObject* obj)
             ObjHits_DisableObject((GameObject*)obj);
             if (obj->followTarget != NULL)
             {
-                obj->posX = ((GameObject*)obj->followTarget)->anim.localPosX;
-                obj->posY = ((GameObject*)obj->followTarget)->anim.localPosY;
-                obj->posZ = ((GameObject*)obj->followTarget)->anim.localPosZ;
+                obj->anim.localPosX = ((GameObject*)obj->followTarget)->anim.localPosX;
+                obj->anim.localPosY = ((GameObject*)obj->followTarget)->anim.localPosY;
+                obj->anim.localPosZ = ((GameObject*)obj->followTarget)->anim.localPosZ;
             }
         }
         else

@@ -63,7 +63,7 @@ void EffectBox_hitDetect(void)
 void EffectBox_update(GameObject* obj)
 {
     int* list;
-    int def;
+    EffectboxPlacement* placement;
     int single;
     int count;
     int i;
@@ -83,18 +83,18 @@ void EffectBox_update(GameObject* obj)
     f32 proj;
     int gb;
 
-    def = *(int*)&obj->anim.placementData;
+    placement = (EffectboxPlacement*)obj->anim.placementData;
     gb = obj->userData2;
-    if ((gb <= -1) || (((EffectboxPlacement*)def)->gameBitValue != mainGetBit(gb)))
+    if ((gb <= -1) || (placement->gameBitValue != mainGetBit(gb)))
     {
-        cosY = mathCosf((EFFECTBOX_PI * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / EFFECTBOX_ANGLE_SCALE);
-        sinY = mathSinf((EFFECTBOX_PI * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / EFFECTBOX_ANGLE_SCALE);
-        cosX = mathCosf((EFFECTBOX_PI * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / EFFECTBOX_ANGLE_SCALE);
-        sinX = mathSinf((EFFECTBOX_PI * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / EFFECTBOX_ANGLE_SCALE);
-        extX = (f32)((EffectboxPlacement*)def)->extentX;
-        extY = (f32)(((EffectboxPlacement*)def)->extentY << 1);
-        extZ = (f32)((EffectboxPlacement*)def)->extentZ;
-        switch (((EffectboxPlacement*)def)->targetMode)
+        cosY = mathCosf((EFFECTBOX_PI * (f32) - (placement->rotYaw << 8)) / EFFECTBOX_ANGLE_SCALE);
+        sinY = mathSinf((EFFECTBOX_PI * (f32) - (placement->rotYaw << 8)) / EFFECTBOX_ANGLE_SCALE);
+        cosX = mathCosf((EFFECTBOX_PI * (f32) - (placement->rotPitch << 8)) / EFFECTBOX_ANGLE_SCALE);
+        sinX = mathSinf((EFFECTBOX_PI * (f32) - (placement->rotPitch << 8)) / EFFECTBOX_ANGLE_SCALE);
+        extX = (f32)placement->extentX;
+        extY = (f32)(placement->extentY << 1);
+        extZ = (f32)placement->extentZ;
+        switch (placement->targetMode)
         {
         case EFFECTBOX_TARGET_PLAYER:
             single = (int)Obj_GetPlayerObject();
@@ -144,16 +144,16 @@ void EffectBox_update(GameObject* obj)
                     proj = dy * cosX + proj * sinX;
                     if ((proj >= EFFECTBOX_ZERO) && (proj < extY))
                     {
-                        switch (((EffectboxPlacement*)def)->targetMode)
+                        switch (placement->targetMode)
                         {
                         case EFFECTBOX_TARGET_TRICKY:
                             break;
                         case EFFECTBOX_TARGET_PLAYER:
-                            fn_80295918((GameObject*)other, 1, (f32)((EffectboxPlacement*)def)->actionArg);
+                            fn_80295918((GameObject*)other, 1, (f32)placement->actionArg);
                             break;
                         case EFFECTBOX_TARGET_GROUP:
                             (*(VtableFn*)(*(int*)(*(int*)&((GameObject*)other)->anim.dll) + 0x28))(
-                                other, ((EffectboxPlacement*)def)->actionArg);
+                                other, placement->actionArg);
                             break;
                         }
                     }

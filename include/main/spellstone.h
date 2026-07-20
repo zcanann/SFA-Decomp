@@ -2,6 +2,7 @@
 #define MAIN_SPELLSTONE_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/object_descriptor.h"
 
 /* SpellStoneState.state */
@@ -24,25 +25,18 @@ typedef struct SpellStoneDef {
 } SpellStoneDef;
 
 typedef struct SpellStoneObject {
-  s16 rotX;
-  s16 rotY;
-  s16 rotZ;
-  s16 flags;
-  u8 unk8[4];
-  f32 posX;
-  f32 posY;
-  f32 posZ;
-  f32 worldPosX; /* 0x18: world position, distance-checked against the player (Vec_distance vs playerObj+0x18) */
-  f32 worldPosY; /* 0x1c */
-  f32 worldPosZ; /* 0x20 */
-  u8 unk24[0x28];
-  SpellStoneDef *def;
-  u8 unk50[0x68];
+  ObjAnimComponent anim;
+  u8 padB0[8];
   SpellStoneState *state;
   int (*callback)(void);
   u8 unkC0[4];
   void *followTarget;
 } SpellStoneObject;
+
+STATIC_ASSERT(offsetof(SpellStoneObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(SpellStoneObject, state) == 0xB8);
+STATIC_ASSERT(offsetof(SpellStoneObject, callback) == 0xBC);
+STATIC_ASSERT(offsetof(SpellStoneObject, followTarget) == 0xC4);
 
 extern ObjectDescriptor12 gSpellStoneObjDescriptor;
 

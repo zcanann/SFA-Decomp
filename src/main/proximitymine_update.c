@@ -81,7 +81,7 @@ void ProximityMine_render(ProximityMineObject* obj, u32 p2, u32 p3, u32 p4, u32 
         obj->pendingTarget = NULL;
     }
     if (fn_80080150(&state->renderTimer) != 0 ||
-        (mapBlock = objPosToMapBlockIdx((double)obj->posX, (double)obj->posY, (double)obj->posZ)) == -1)
+        (mapBlock = objPosToMapBlockIdx((double)obj->localPosX, (double)obj->localPosY, (double)obj->localPosZ)) == -1)
     {
         return;
     }
@@ -152,27 +152,28 @@ void ProximityMine_update(ProximityMineObject* obj)
     }
     if (fn_80080150(&state->lifespanTimer) != 0)
     {
-        obj->height += state->verticalStep * timeDelta;
+        obj->rootMotionScale += state->verticalStep * timeDelta;
         if (state->targetObj != NULL)
         {
             if (objUpdateOpacity(state->targetObj) != 0)
             {
-                ObjPath_GetPointWorldPosition(state->targetObj, obj->pathIndex, &obj->posX, &obj->posY, &obj->posZ,
+                ObjPath_GetPointWorldPosition(state->targetObj, obj->pathIndex, &obj->localPosX, &obj->localPosY,
+                                               &obj->localPosZ,
                                                0);
             }
             else
             {
-                obj->posX = state->targetObj->anim.localPosX;
-                obj->posY = state->targetObj->anim.localPosY;
-                obj->posZ = state->targetObj->anim.localPosZ;
+                obj->localPosX = state->targetObj->anim.localPosX;
+                obj->localPosY = state->targetObj->anim.localPosY;
+                obj->localPosZ = state->targetObj->anim.localPosZ;
             }
         }
         if (timerCountDown(&state->lifespanTimer) != 0)
         {
             if (state->mode == PROXIMITYMINE_MODE_ARMED)
             {
-                hitDetectFn_800658a4((GameObject*)obj, obj->posX, obj->posY, obj->posZ, &groundY, 0);
-                obj->posY -= groundY;
+                hitDetectFn_800658a4((GameObject*)obj, obj->localPosX, obj->localPosY, obj->localPosZ, &groundY, 0);
+                obj->localPosY -= groundY;
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_id_2e6);
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_id_2e8);
             }
@@ -241,7 +242,7 @@ void ProximityMine_update(ProximityMineObject* obj)
 
             trigger = obj->def->parameter;
             player = Obj_GetPlayerObject();
-            if (Vec_distance(&obj->prevX, &player->anim.worldPosX) < trigger)
+            if (Vec_distance(&obj->worldPosX, &player->anim.worldPosX) < trigger)
             {
                 state->mode = PROXIMITYMINE_MODE_ARMED;
                 s16toFloat(&state->resetTimer, 0x78);
@@ -263,7 +264,7 @@ void ProximityMine_update(ProximityMineObject* obj)
             GameObject* player;
 
             player = Obj_GetPlayerObject();
-            dist = Vec_xzDistance(&obj->prevX, &player->anim.worldPosX);
+            dist = Vec_xzDistance(&obj->worldPosX, &player->anim.worldPosX);
             state->mode = PROXIMITYMINE_MODE_FLIGHT;
             obj->velocityX = lbl_803E6768;
             obj->velocityY = sqrtf(dist) / lbl_803DC244 + lbl_803E677C * lbl_803DC248;
@@ -275,7 +276,7 @@ void ProximityMine_update(ProximityMineObject* obj)
             params.scale = lbl_803E6778;
             params.rotZ = 0;
             params.rotY = 0;
-            params.rotX = obj->angle;
+            params.rotX = obj->rotX;
             vecRotateZXY(&params.rotX, &obj->velocityX);
             Sfx_PlayFromObject((u32)obj, SFXTRIG_id_f0);
         }
@@ -299,14 +300,14 @@ void ProximityMine_update(ProximityMineObject* obj)
             {
                 obj->velocityY += gProximityMineGravityAccel * timeDelta;
             }
-            obj->angle += framesThisStep << 10;
-            obj->angle2 += framesThisStep * 0x700;
-            obj->posX += obj->velocityX * timeDelta;
-            obj->posY += obj->velocityY * timeDelta;
-            obj->posZ += obj->velocityZ * timeDelta;
-            obj->prevX = obj->posX;
-            obj->prevY = obj->posY;
-            obj->prevZ = obj->posZ;
+            obj->rotX += framesThisStep << 10;
+            obj->rotY += framesThisStep * 0x700;
+            obj->localPosX += obj->velocityX * timeDelta;
+            obj->localPosY += obj->velocityY * timeDelta;
+            obj->localPosZ += obj->velocityZ * timeDelta;
+            obj->worldPosX = obj->localPosX;
+            obj->worldPosY = obj->localPosY;
+            obj->worldPosZ = obj->localPosZ;
         case PROXIMITYMINE_MODE_ARMED:
             (*gPartfxInterface)->spawnObject(obj, PROXIMITYMINE_PARTFX, NULL, 1, -1, NULL);
             if (timerCountDown(&state->bounceTimer) != 0)
@@ -330,7 +331,7 @@ void ProximityMine_update(ProximityMineObject* obj)
         }
         if (fn_80080150(&state->renderTimer) == 0)
         {
-            if (objPosToMapBlockIdx((double)obj->posX, (double)obj->posY, (double)obj->posZ) == -1)
+            if (objPosToMapBlockIdx((double)obj->localPosX, (double)obj->localPosY, (double)obj->localPosZ) == -1)
             {
                 f32 zero;
 
@@ -358,7 +359,7 @@ void ProximityMine_init(ProximityMineObject* obj, ProximityMineDef* def)
     {
         def->mode = PROXIMITYMINE_SPAWN_PROXIMITY;
     }
-    obj->angle = 0;
+    obj->rotX = 0;
     ObjHits_DisableObject((GameObject*)obj);
     state->mode = PROXIMITYMINE_MODE_EXPIRED;
     storeZeroToFloatParam(&state->renderTimer);
@@ -368,7 +369,7 @@ void ProximityMine_init(ProximityMineObject* obj, ProximityMineDef* def)
     storeZeroToFloatParam(&state->launchTimer);
     storeZeroToFloatParam(&state->initTimer);
     s16toFloat(&state->initTimer, 5);
-    obj->angle = def->angleSeed << 8;
+    obj->rotX = def->angleSeed << 8;
     storeZeroToFloatParam(&state->lifespanTimer);
     s16toFloat(&state->lifespanTimer, (s16)lbl_803DC230);
     state->flashMode = 0;
@@ -381,14 +382,14 @@ void ProximityMine_init(ProximityMineObject* obj, ProximityMineDef* def)
         s16toFloat(&state->resetTimer, def->parameter);
         state->mode = PROXIMITYMINE_MODE_ARMED;
         Obj_SetActiveModelIndex((GameObject*)obj, 1);
-        obj->height *= gProximityMineHeightScale;
+        obj->rootMotionScale *= gProximityMineHeightScale;
         break;
     case PROXIMITYMINE_SPAWN_LAUNCHED:
         s16toFloat(&state->launchTimer, 800);
         s16toFloat(&state->resetTimer, 800);
-        obj->angle = def->parameter;
+        obj->rotX = def->parameter;
         state->mode = PROXIMITYMINE_MODE_LAUNCHING;
-        obj->height *= gProximityMineHeightScale;
+        obj->rootMotionScale *= gProximityMineHeightScale;
         break;
     case PROXIMITYMINE_SPAWN_PROXIMITY:
         storeZeroToFloatParam(&state->lifespanTimer);
@@ -398,7 +399,7 @@ void ProximityMine_init(ProximityMineObject* obj, ProximityMineDef* def)
         storeZeroToFloatParam(&state->bounceTimer);
         break;
     }
-    state->verticalStep = (lbl_803E679C * obj->height) / lbl_803DC230;
+    state->verticalStep = (lbl_803E679C * obj->rootMotionScale) / lbl_803DC230;
     state->targetObj = NULL;
     state->effectHandle = NULL;
     return;

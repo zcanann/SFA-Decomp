@@ -60,23 +60,24 @@ void worldasteroids_update(WorldAsteroidsObject* obj)
 
     state = obj->state;
     anchor = (WorldAsteroidsObject*)ObjList_FindObjectById(WORLD_ASTEROIDS_CENTER_OBJECT_ID);
-    obj->rotX += state->rotStepX;
-    obj->rotY += state->rotStepY;
-    obj->rotZ += state->rotStepZ;
+    obj->anim.rotX += state->rotStepX;
+    obj->anim.rotY += state->rotStepY;
+    obj->anim.rotZ += state->rotStepZ;
     state->orbitAngle += WORLD_ASTEROIDS_ORBIT_STEP_SCALE / state->orbitRadius;
     orbitCos = fcos16Approx(WORLD_ASTEROIDS_ORBIT_TILT_ANGLE);
     orbitSin = fsin16Approx((u16)state->orbitAngle);
     radius = worldasteroids_s32AsFloat(state->orbitRadius);
     orbitScale = radius * orbitSin;
-    obj->posX = orbitScale * orbitCos + anchor->posX;
+    obj->anim.localPosX = orbitScale * orbitCos + anchor->anim.localPosX;
     orbitSin = fsin16Approx(WORLD_ASTEROIDS_ORBIT_TILT_ANGLE);
     orbitScale = fsin16Approx((u16)state->orbitAngle);
     radius = worldasteroids_s32AsFloat(state->orbitRadius);
     orbitProduct = radius * orbitScale;
-    obj->posY = orbitProduct * orbitSin + (anchor->posY + worldasteroids_s32AsFloat(state->heightOffset));
+    obj->anim.localPosY =
+        orbitProduct * orbitSin + (anchor->anim.localPosY + worldasteroids_s32AsFloat(state->heightOffset));
     orbitCos = fcos16Approx((u16)state->orbitAngle);
     radius = worldasteroids_s32AsFloat(state->orbitRadius);
-    obj->posZ = radius * orbitCos + anchor->posZ;
+    obj->anim.localPosZ = radius * orbitCos + anchor->anim.localPosZ;
     return;
 }
 

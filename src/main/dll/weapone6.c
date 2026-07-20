@@ -1,23 +1,23 @@
 /*
  * Tricky companion-AI substate handlers (TrickyState::substate machines).
  *
- * Each fn_* is one behavior tick dispatched off TrickyState->substate:
- *   fn_8013F100 - fetch/carry-stick behavior (grab a thrown stick via
- *                 fn_8017xxxx stick slots, swim or walk to it, return it).
- *   fn_8013F9E4 - idle/eat ambient state (random bark cues, eating anim).
- *   fn_8013FBE4 - track a TumbleweedBush target and steer Tricky toward it,
+ * Each entry point is one behavior tick dispatched off TrickyState->substate:
+ *   tricky_fetchBall - fetch/carry-ball behavior (grab a thrown ball via
+ *                      sidekickBall_* entry points, swim or walk to it, return it).
+ *   tricky_idleAndEat - idle/eat ambient state (random bark cues, eating anim).
+ *   tricky_trackTumbleweed - track a TumbleweedBush target and steer Tricky toward it,
  *                 gated by game bit 0x48b.
- *   fn_8013FEC0 - simple swim-or-walk move toward the follow target.
+ *   tricky_moveToFollowTarget - simple swim-or-walk move toward the follow target.
  *
  * Common to all: water is detected by comparing waterLevel / eventTime /
- * currentTime to pick a swim anim vs a ground anim. fn_8013F100 and fn_8013F9E4 play a
+ * currentTime to pick a swim anim vs a ground anim. tricky_fetchBall and tricky_idleAndEat play a
  * localized bark sfx unless one is already on object channel 16. Debug strings
  * are emitted via
  * trickyDebugPrint. tricky_state.h owns the TrickyState layout; the lbl_803E*
  * floats are pooled .sdata2 tuning constants shared with the sibling tricky_*
  * TUs (not ownable by this unit).
  *
- * fn_8013F100's case numbering/fallthrough (0 into 1, 4 into 5 via the label
+ * tricky_fetchBall's case numbering/fallthrough (0 into 1, 4 into 5 via the label
  * inside the if) is ground truth from the retail jump table at 0x8031D910 --
  * do not renumber or "un-nest" case 5.
  */
@@ -88,7 +88,7 @@ extern f32 lbl_803E24F4;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
-void fn_8013F100(GameObject* obj, register int state)
+void tricky_fetchBall(GameObject* obj, register int state)
 {
     int status;
     int extra;
@@ -107,7 +107,7 @@ void fn_8013F100(GameObject* obj, register int state)
         ((TrickyState*)state)->sfxIntervalTimer = (f32)(s32)randomGetRange(150, 300);
         /* fall through */
     case 1:
-        if (fn_80179650((GameObject*)((TrickyState*)state)->scratch700.i) != 0)
+        if (sidekickBall_isHeldOrMoving((GameObject*)((TrickyState*)state)->scratch700.i) != 0)
         {
             status = trickyFn_8013b368(obj, lbl_803E24F0, (TrickyState*)state);
             if (status == 0)
@@ -138,7 +138,7 @@ void fn_8013F100(GameObject* obj, register int state)
                 }
                 *(int*)&((TrickyState*)state)->stateFlags |= TRICKY_STATE_RESET_FLAG_10;
                 ((TrickyState*)state)->substate = 3;
-                fn_80179678((GameObject*)(((TrickyState*)state)->scratch700.i), obj);
+                sidekickBall_setIdle((GameObject*)(((TrickyState*)state)->scratch700.i), obj);
             }
             else if (status == 2)
             {
@@ -300,8 +300,9 @@ void fn_8013F100(GameObject* obj, register int state)
             status = ((TrickyState*)state)->scratch700.i;
             *(float*)(status + 0x10) += lbl_803E2488;
             bob = -mathCosf(lbl_803E2454 * (f32)(s32) * (short*)obj / lbl_803E2458);
-            fn_801796BC((GameObject*)((TrickyState*)state)->scratch700.i, obj,
-                        -mathSinf(lbl_803E2454 * (f32)(s32) * (short*)obj / lbl_803E2458), lbl_803E23E8, bob);
+            sidekickBall_launch((GameObject*)((TrickyState*)state)->scratch700.i, obj,
+                                -mathSinf(lbl_803E2454 * (f32)(s32) * (short*)obj / lbl_803E2458),
+                                lbl_803E23E8, bob);
             ((TrickyState*)state)->substate = 2;
         }
         break;
@@ -373,7 +374,7 @@ void fn_8013F100(GameObject* obj, register int state)
             }
             return;
         }
-        if (fn_801793A4((GameObject*)*(int*)&((TrickyState*)state)->followObj) != 0)
+        if (sidekickBall_isIdle((GameObject*)*(int*)&((TrickyState*)state)->followObj) != 0)
         {
             ((TrickyState*)state)->scratch704.f = lbl_803E24EC;
             ((TrickyState*)state)->substate = 1;
@@ -440,11 +441,11 @@ void fn_8013F100(GameObject* obj, register int state)
     }
     else
     {
-        fn_8017962C((GameObject*)((TrickyState*)state)->scratch700.i);
+        sidekickBall_keepAlive((GameObject*)((TrickyState*)state)->scratch700.i);
     }
 }
 
-void fn_8013F9E4(GameObject* obj, int state)
+void tricky_idleAndEat(GameObject* obj, int state)
 {
     int extra;
     int inWater;
@@ -516,7 +517,7 @@ void fn_8013F9E4(GameObject* obj, int state)
     }
 }
 
-void fn_8013FBE4(GameObject* obj, register int state)
+void tricky_trackTumbleweed(GameObject* obj, register int state)
 {
     int inWater;
     float dx;
@@ -617,7 +618,7 @@ void fn_8013FBE4(GameObject* obj, register int state)
     }
 }
 
-void fn_8013FEC0(int obj, int state)
+void tricky_moveToFollowTarget(int obj, int state)
 {
     int inWater;
     int result;
