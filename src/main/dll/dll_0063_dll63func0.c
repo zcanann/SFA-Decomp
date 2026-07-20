@@ -32,7 +32,7 @@ extern u8 lbl_80312BD8[];
 #define DLL63_EFFECT_Y 4.0f
 #define DLL63_FLAG_SCALE 0.1f
 
-void dll_63_func03(u8* sourceObj, int variant, void* posSource, u32 flags, int unused, void* unusedParams)
+s16 dll_63_func03(GameObject* sourceObj, int variant, void* posSource, u32 flags, int unused, void* unusedParams)
 {
     ModgfxPointerSpawnPacket buf;
     u8* base = lbl_80312BD8;
@@ -45,7 +45,7 @@ void dll_63_func03(u8* sourceObj, int variant, void* posSource, u32 flags, int u
     {
         *(s16*)&base[0x112] = 0;
     }
-    flag = *(u8*)(*(u8**)&((GameObject*)sourceObj)->anim.placementData + 0x1a);
+    flag = *(u8*)(*(u8**)&sourceObj->anim.placementData + 0x1a);
     if (variant == 2)
     {
         for (i = 0, rec = (s16*)base; i < 14; i++)
@@ -249,7 +249,7 @@ void dll_63_func03(u8* sourceObj, int variant, void* posSource, u32 flags, int u
     cmd[12].y = 0.0f;
     cmd[12].z = 0.0f;
     buf.v58 = 0;
-    buf.ctx = sourceObj;
+    buf.ctx = (u8*)sourceObj;
     buf.v44 = variant;
     buf.pos[0] = 0.0f;
     buf.pos[1] = DLL63_EFFECT_Y;
@@ -296,7 +296,7 @@ void dll_63_func03(u8* sourceObj, int variant, void* posSource, u32 flags, int u
             buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
-    (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], DLL63_EFFECT_ID, 0);
+    return (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], DLL63_EFFECT_ID, 0);
 }
 
 void dll_63_func01_nop(void)
