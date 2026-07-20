@@ -133,7 +133,6 @@ typedef struct F32Pair
     f32 lo;
     f32 hi;
 } F32Pair;
-extern f32 lbl_803DEB60;
 extern f32 lbl_803DEB78;
 extern F32Pair lbl_803DEB58;
 extern f32 lbl_803DEB5C;
@@ -701,7 +700,7 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
                 }
                 else
                 {
-                    bulge = lbl_803DEB60;
+                    bulge = 0.0f;
                 }
                 *(volatile f32*)0xCC008000 = x0;
                 *(volatile f32*)0xCC008000 = y;
@@ -716,7 +715,7 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
                 }
                 else
                 {
-                    bulge = lbl_803DEB60;
+                    bulge = 0.0f;
                 }
                 *(volatile f32*)0xCC008000 = x1;
                 *(volatile f32*)0xCC008000 = y;
@@ -745,35 +744,35 @@ int textureFn_80052bb4(int model, f32* params)
     modelLightChannels_reset(1);
     modelLightChannel_configure(0, 1, 0);
     modelLightChannel_configure(2, 0, 0);
-    modelLightStruct_setSpecularAttenuation(la, params[0], lbl_803DEB60);
+    modelLightStruct_setSpecularAttenuation(la, params[0], 0.0f);
     modelLightStruct_setSpecularColor(la, 0xff, 0, 0, 0xff);
     modelLightStruct_loadChannelLight(0, la, (GameObject*)model);
-    modelLightStruct_setSpecularAttenuation(la, params[1], lbl_803DEB60);
+    modelLightStruct_setSpecularAttenuation(la, params[1], 0.0f);
     modelLightStruct_setSpecularColor(la, 0, 0, 0xff, 0xff);
     modelLightStruct_loadChannelLight(0, la, (GameObject*)model);
-    modelLightStruct_setAngularAttenuation(la, lbl_803DEB70, lbl_803DEB60, lbl_803DEB60);
+    modelLightStruct_setAngularAttenuation(la, lbl_803DEB70, 0.0f, 0.0f);
     modelLightStruct_loadChannelLight(2, la, (GameObject*)model);
     modelLightChannel_configure(1, 1, 0);
     modelLightChannel_configure(3, 0, 0);
-    modelLightStruct_setSpecularAttenuation(lb, params[0], lbl_803DEB60);
+    modelLightStruct_setSpecularAttenuation(lb, params[0], 0.0f);
     modelLightStruct_setSpecularColor(lb, 0xff, 0, 0, 0xff);
     modelLightStruct_loadChannelLight(1, lb, (GameObject*)model);
-    modelLightStruct_setSpecularAttenuation(lb, params[1], lbl_803DEB60);
+    modelLightStruct_setSpecularAttenuation(lb, params[1], 0.0f);
     modelLightStruct_setSpecularColor(lb, 0, 0, 0xff, 0xff);
     modelLightStruct_loadChannelLight(1, lb, (GameObject*)model);
-    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB74, lbl_803DEB60, lbl_803DEB60);
+    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB74, 0.0f, 0.0f);
     modelLightStruct_loadChannelLight(3, lb, (GameObject*)model);
     modelLightChannels_applyGXControls();
-    modelLightStruct_setAngularAttenuation(la, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);
-    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB5C, lbl_803DEB60, lbl_803DEB60);
+    modelLightStruct_setAngularAttenuation(la, lbl_803DEB5C, 0.0f, 0.0f);
+    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB5C, 0.0f, 0.0f);
     return 0;
 }
 void gxFn_80052dc0(void)
 {
     f32 omtx[4][4];
     f32 pmtx[3][4];
-    GXSetViewport(lbl_803DEB60, lbl_803DEB60, lbl_803DEB78,
-                  lbl_803DEB78, lbl_803DEB60, lbl_803DEB5C);
+    GXSetViewport(0.0f, 0.0f, lbl_803DEB78,
+                  lbl_803DEB78, 0.0f, lbl_803DEB5C);
     GXSetScissor(0, 0, 32, 32);
     GXSetDispCopySrc(0, 0, 32, 32);
     GXSetDispCopyDst(32, 32);
@@ -842,7 +841,7 @@ void gxTextureFn_80052efc(void)
             resetLotsOfRenderVars();
             textureFn_8004ff20(gRcpDistortTexture, (f32*)mtx, &texColor, 0);
             textureFn_800528bc();
-            lightFn_80052974((f32)(i * 0x20), lbl_803DEB60);
+            lightFn_80052974((f32)(i * 0x20), 0.0f);
             GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + 0x60, 0);
             tex = ((RcpDistortSlot*)slots[0])[i].texture;
             if (((Texture*)tex)->preloaded != 0)
@@ -880,7 +879,7 @@ void gxTextureFn_80052efc(void)
             gxLoadObjectLights((GameObject*)model[0], lights);
             lightGetColor(0, &outColor.r, &outColor.g, &outColor.b);
             GXSetChanAmbColor(GX_COLOR0, outColor);
-            lightFn_80052974((f32)(i * 0x20), lbl_803DEB60);
+            lightFn_80052974((f32)(i * 0x20), 0.0f);
             GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + 0x60,
                       (i == clearSlot) ? GX_TRUE : GX_FALSE);
             tex = ((RcpDistortSlot*)slots[0])[i].texture;
@@ -891,8 +890,8 @@ void gxTextureFn_80052efc(void)
             }
         }
     }
-    GXSetViewport(lbl_803DEB60, lbl_803DEB60, gRcpScreenWidth, gRcpScreenHeight,
-                  lbl_803DEB60, lbl_803DEB5C);
+    GXSetViewport(0.0f, 0.0f, gRcpScreenWidth, gRcpScreenHeight,
+                  0.0f, lbl_803DEB5C);
     GXSetScissor(0, 0, 0x280, 0x1e0);
     GXSetDispCopySrc(0, 0, 0x280, 0x1e0);
     GXSetDispCopyDst(0x280, 0x1e0);
