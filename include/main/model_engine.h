@@ -36,7 +36,7 @@ typedef struct UiDllVTable {
     void* field0;
     int (*frameStart)(void);
     void (*frameEnd)(void);
-    void (*draw)(void);
+    void (*draw)(int arg0, int arg1, int arg2);
     void (*setState)(int state);
 } UiDllVTable;
 
