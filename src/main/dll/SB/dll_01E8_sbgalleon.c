@@ -247,8 +247,8 @@ void fn_801E1588(GameObject* obj, SBGalleonState* state)
 
 int SB_Galleon_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int i;
     SBGalleonState* state = obj->extra;
+    int i;
 
     obj->anim.mapEventSlot = -1;
     fn_801E1588(obj, state);
