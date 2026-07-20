@@ -60,9 +60,34 @@ def sym_sizes(paths):
     return out
 
 
+BRANCH_TARGET = re.compile(r"\b([0-9a-f]+) <")
+
+
+def branch_targets(lines):
+    """Addresses that are the destination of some branch in this object.
+
+    Tracking a symbol address is only sound inside a basic block: a register
+    bound on one path holds something else on another.  Collecting the branch
+    destinations lets the scan drop its bindings at every block entry.
+    """
+    out = set()
+    for ln in lines:
+        mi = INSN.match(ln)
+        if not mi:
+            continue
+        if not mi.group(2).startswith("b"):
+            continue
+        m = BRANCH_TARGET.search(mi.group(3))
+        if m:
+            out.add(int(m.group(1), 16))
+    return out
+
+
 def scan(obj, sizes):
     r = subprocess.run([OD, "-M", "gekko", "-drz", str(obj)],
                        capture_output=True, text=True)
+    lines = r.stdout.splitlines()
+    targets = branch_targets(lines)
     hits = []
     func = None
     track = {}          # reg -> (sym, addend)
@@ -70,7 +95,7 @@ def scan(obj, sizes):
     lastwrite = None    # register defined by the PRECEDING instruction; an
                         # objdump reloc line always follows its instruction
     lastop = None       # mnemonic of that preceding instruction
-    for ln in r.stdout.splitlines():
+    for ln in lines:
         h = HDR.match(ln.strip())
         if h:
             func = h.group(2)
@@ -101,9 +126,17 @@ def scan(obj, sizes):
         mi = INSN.match(ln)
         if not mi:
             continue
-        _, op, args = mi.groups()
+        addr, op, args = mi.groups()
         args = args.split("\t")[0].strip()
         base = op.rstrip(".")
+        # A binding is only valid within the basic block that created it.
+        # Entering a block from elsewhere, or leaving via a branch, invalidates
+        # every tracked register: the same register holds an unrelated value on
+        # the other path.  (A `bl` also clobbers r3-r12 by the ABI.)  Without
+        # this the scan carried a base across a branch and reported an object
+        # pointer's own fields as reads past the symbol.
+        if int(addr, 16) in targets:
+            track, pending = {}, None
         # Which register does this instruction define?  (first operand of the
         # ops we care about; loads define rD, stores define nothing.)
         lastwrite = None
@@ -132,6 +165,8 @@ def scan(obj, sizes):
         # every later MMIO displacement was reported as out of bounds.
         if lastwrite is not None:
             track.pop(lastwrite, None)
+        if base.startswith("b"):
+            track, pending = {}, None
     return hits
 
 
@@ -142,11 +177,23 @@ def main():
         # can be re-validated after any toolchain or parser change.
         import tempfile, os
         d = Path(tempfile.mkdtemp())
+        # crossblock() is the negative control for control-flow sensitivity:
+        # gSmall's address is bound on one arm, while the other arm reads a
+        # large displacement off an unrelated runtime pointer.  A linear scan
+        # carries the binding across the branch and reports p->far as
+        # gSmall+0x798 -- the screen's dominant false positive on retail code.
         (d / "ctl.c").write_text(
             "unsigned char gSmall[4];\n"
             "unsigned char gBig[256];\n"
+            "struct Obj { unsigned char pad[0x798]; unsigned char far; };\n"
+            "void use(unsigned char *);\n"
+            "void sink(int);\n"
             "int inbounds(void) { return gBig[8] + gSmall[2]; }\n"
-            "int oob(void)      { return gSmall[64]; }\n")
+            "int oob(void)      { return gSmall[64]; }\n"
+            "void crossblock(struct Obj *p, int c) {\n"
+            "  if (c) { use(gSmall); return; }\n"
+            "  sink(p->far);\n"
+            "}\n")
         cc = [str(REPO / "build/tools/wibo"),
               str(REPO / "build/compilers/GC/2.0/mwcceppc.exe"), "-c",
               "-nodefaults", "-proc", "gekko", "-align", "powerpc", "-O4,p",
@@ -158,7 +205,8 @@ def main():
         ok = (len(hits) == 1 and hits[0]["func"] == "oob"
               and hits[0]["sym"] == "gSmall" and hits[0]["off"] == 64)
         print("control: POSITIVE (gSmall[64] vs size 4) and NEGATIVE "
-              "(gBig[8], gSmall[2]) -> " + ("PASS" if ok else "FAIL"))
+              "(gBig[8], gSmall[2], crossblock p->far) -> "
+              + ("PASS" if ok else "FAIL"))
         for h in hits:
             print("  hit:", h["func"], h["sym"], hex(h["off"]), "size", h["size"])
         return
