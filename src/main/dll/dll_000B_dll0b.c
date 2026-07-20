@@ -960,7 +960,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         tex = ((PartfxEffectState*)p[slot])->textureResource;
         if (tex != NULL)
         {
-            texCount = (u8)(*(u16*)((char*)tex + 0x10) >> 8);
+            texCount = (u8)(((Texture*)tex)->animationFrameCount >> 8);
         }
         if (tex != NULL && ((PartfxEffectState*)p[slot])->textureFrameTimer != 0)
         {
