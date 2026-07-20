@@ -260,7 +260,7 @@ void fn_802AAF80(GameObject* obj, int inner, int a, int b, int c);
 int fn_802AB1D0(GameObject* obj);
 void playerCastSpell(int a, int b, int c);
 void fn_802AB5A4(GameObject* obj, int p2, int flags);
-void playerCalcWaterCurrent(f32* outX, f32* outZ, int player);
+void playerCalcWaterCurrent(f32* outX, f32* outZ, f32 p3, int player);
 int fn_802ABAE8(GameObject* obj, int state, int inner, f32 fv);
 void fn_802ABFBC(GameObject* obj, int state, PlayerState* inner);
 void fn_802AC32C(int p1, int p2, int p3);
@@ -12323,7 +12323,7 @@ void fn_802AB5A4(GameObject* obj, int p2, int flags)
     }
 }
 
-void playerCalcWaterCurrent(f32* outX, f32* outZ, int player)
+void playerCalcWaterCurrent(f32* outX, f32* outZ, f32 p3, int player)
 {
     int any;
     PlayerState* inner = ((GameObject*)player)->extra;
@@ -13458,7 +13458,7 @@ void fn_802ADE80(GameObject* obj, int inner, int state)
         vel = obj->anim.velocityY;
         obj->anim.velocityY = (vel < -4.0f) ? -4.0f : ((vel > 1.4f) ? 1.4f : vel);
     }
-    ((void (*)(f32*, f32*, f32, int))playerCalcWaterCurrent)(&waterX, &waterZ, lbl_803E7EE0, (int)obj);
+    playerCalcWaterCurrent(&waterX, &waterZ, lbl_803E7EE0, (int)obj);
     {
         cosv = mathSinf(gPlayerPi * (f32) ((PlayerState*)inner)->targetYaw / lbl_803E7F98);
         sinv = mathCosf(gPlayerPi * (f32) ((PlayerState*)inner)->targetYaw / lbl_803E7F98);
