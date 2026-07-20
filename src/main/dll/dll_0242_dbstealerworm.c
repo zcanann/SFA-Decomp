@@ -2147,8 +2147,8 @@ void dbstealerworm_acquireTarget(GameObject* obj, int groundState, int baddie)
     }
     if (near != 0 && (st->configFlags & 2) == 0)
     {
-        (**(void (**)(int, int, int, int, int, int, int, int, int))((char*)*gBaddieControlInterface + 0x28))(
-            (int)obj, baddie, groundState + 0x35c, st->gameBitB, 0, 0, 0, 8, -1);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->startHitReaction(obj, (void*)baddie, (char*)groundState + 0x35c, st->gameBitB, NULL, 0, 0, 8, -1);
         *(int*)&((BaddieState*)baddie)->targetObj = (int)near;
         ((BaddieState*)baddie)->hasTarget = 0;
         ObjGroup_AddObject((int)obj, DBSTEALERWORM_OBJGROUP);

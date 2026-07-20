@@ -1172,8 +1172,9 @@ void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
     if (acquired != 0)
     {
         int v = -1;
-        (**(void (**)(int, int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x28))(
-            obj, state, sub + 0x35c, (s32)((GroundBaddieState*)sub)->gameBitB, 0, 0, 0, 8, v);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->startHitReaction((GameObject*)obj, (void*)state, (char*)sub + 0x35c,
+                               ((GroundBaddieState*)sub)->gameBitB, NULL, 0, 0, 8, v);
         *(int*)&((BaddieState*)state)->targetObj = (int)acquired;
         ((BaddieState*)state)->hasTarget = 0;
         ((GroundBaddieState*)sub)->targetState = 1;

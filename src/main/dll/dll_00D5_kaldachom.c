@@ -464,8 +464,9 @@ void kaldachom_update(GameObject* obj)
                           ->findAggroTarget(obj, (void*)state, (f32)(u32)((CampfireState*)state)->aggroRange, 0x8000);
                 if ((void*)ref != NULL)
                 {
-                    (*(void (**)(void*, int, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x28))(
-                        obj, state, state + 0x35c, (int)((CampfireState*)state)->gameBitB, 0, 0, 0, 4, 0xffffffff);
+                    ((BaddieControlInterface*)*gBaddieControlInterface)
+                        ->startHitReaction(obj, (void*)state, (char*)state + 0x35c,
+                                           ((CampfireState*)state)->gameBitB, NULL, 0, 0, 4, -1);
                     *(u8*)&((GroundBaddieState*)state)->baddie.hasTarget = 0;
                     *(u16*)&((GroundBaddieState*)state)->targetState = 1;
                 }

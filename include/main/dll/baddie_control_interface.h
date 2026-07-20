@@ -13,8 +13,8 @@ typedef struct GameObject GameObject;
 typedef struct BaddieControlInterface
 {
     u8 pad00[0x28];
-    void (*startHitReaction)(int obj, int state, int hitReactState, int gameBit, int a5, int a6, int a7, int mode,
-                             int slot);                                      /* 0x28 */
+    void (*startHitReaction)(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut,
+                             s16 substate, s16 moveMode, int animMove, s8 physicsActive); /* 0x28 */
     void (*updateGravity)(GameObject* obj, void* state, f32 gravity, s8 physicsActive); /* 0x2C */
     int (*isObjectValid)(GameObject* obj, void* state, u8 checkDead);        /* 0x30 */
     u8 pad34[0x40 - 0x34];

@@ -100,7 +100,7 @@ int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagO
 int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* tableA, u8* tableB, s16 substate,
                   u8* hitPosOut);
 GameObject* dll_19_func15(GameObject* obj, int spawnType, int unused, int alt);
-void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
+void dll_19_func0C(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
                    int animMove, s8 field25f);
 GameObject* dll_19_func14(GameObject* self, void* state, f32 frange, int halfAngle);
 int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar);
@@ -690,15 +690,15 @@ GameObject* dll_19_func15(GameObject* obj, int spawnType, int unused, int alt)
 }
 
 /* dont_inline: keeps func0C out-of-line so func17's call site matches retail */
-void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
+void dll_19_func0C(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
                    int animMove, s8 field25f)
 {
     if (hitbox != NULL)
     {
-        hitbox[0x24] = 0;
-        hitbox[0x25] = 0;
-        hitbox[0x26] = 4;
-        hitbox[0x27] = 20;
+        ((u8*)hitbox)[0x24] = 0;
+        ((u8*)hitbox)[0x25] = 0;
+        ((u8*)hitbox)[0x26] = 4;
+        ((u8*)hitbox)[0x27] = 20;
     }
     if (substate != -1)
     {
@@ -717,7 +717,7 @@ void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flag
     {
         ObjAnim_SetCurrentMove((int)obj, animMove, 0.0f, 0);
     }
-    (*gPathControlInterface)->attachObject((void*)obj, state + 4);
+    (*gPathControlInterface)->attachObject((void*)obj, (u8*)state + 4);
     if (field25f != -1)
     {
         ((BaddieState*)state)->physicsActive = field25f;

@@ -650,8 +650,9 @@ void chukChuk_acquireTarget(GameObject* obj, int state, int target)
     if (r != NULL && (((GroundBaddieState*)state)->configFlags & 0x4) == 0)
     {
         int v = -1;
-        (**(void (**)(void*, int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x28))(
-            obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8, v);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->startHitReaction(obj, (void*)target, (char*)state + 0x35c,
+                               ((GroundBaddieState*)state)->gameBitB, NULL, 0, 0, 8, v);
         *(int*)&((GroundBaddieState*)target)->baddie.targetObj = (int)r;
         ((GroundBaddieState*)target)->baddie.hasTarget = 0;
         ((GroundBaddieState*)state)->targetState = 1;

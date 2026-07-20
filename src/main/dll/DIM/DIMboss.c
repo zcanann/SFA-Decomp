@@ -105,8 +105,8 @@ typedef struct DIMbossInitVec
 typedef struct DIMbossBaddieControlInterface
 {
     u8 pad00[0x28];
-    void (*startMove)(DIMbossObject* obj, DIMbossRuntime* runtime, void* moveScratch, int moveId,
-                      u8* hitReactMode, int p6, int p7, int p8, int p9);
+    void (*startMove)(DIMbossObject* obj, DIMbossRuntime* runtime, void* moveScratch, s16 moveId,
+                      u8* hitReactMode, s16 p6, s16 p7, int p8, s8 p9);
     void (*applyHitReact)(DIMbossObject* obj, DIMbossRuntime* runtime, f32 amount, s8 flag);
     int (*updateState)(DIMbossObject* obj, DIMbossRuntime* runtime, u8 checkDead);
     int (*updateHitDetect)(DIMbossObject* obj, ObjAnimUpdateState* animUpdate,

@@ -478,8 +478,8 @@ void dll_CB_update(int* obj)
     }
     if ((sub->flags400 & 2) != 0)
     {
-        ((void (*)(int*, u8*, u8*, s16, u8*, int, int, int, int))((int**)*(int**)gBaddieControlInterface)[10])(
-            obj, (u8*)sub, (u8*)&sub->routeNav, sub->gameBitB, &sub->subMode, 0, 0, 0, 1);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->startHitReaction((GameObject*)obj, sub, &sub->routeNav, sub->gameBitB, &sub->subMode, 0, 0, 0, 1);
         sub->flags400 = (u16)(sub->flags400 & ~2);
     }
     if (((BaddieControlInterface*)*gBaddieControlInterface)->isObjectValid((GameObject*)obj, sub, 1) == 0)

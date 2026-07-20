@@ -927,9 +927,9 @@ void dll_D3_update(int* obj)
                                    (f32)(u32)((TreasureChestState*)state)->aggroRange, 0x8000);
         if (rc != 0u)
         {
-            ((void (*)(int*, int*, int, int, int, int, int, int, int))(
-                (void**)*(int*)gBaddieControlInterface)[0x28 / 4])(
-                obj, state, (int)((char*)state + 0x35c), (int)((TreasureChestState*)state)->gameBitB, 0, 0, 1, 0, -1);
+            ((BaddieControlInterface*)*gBaddieControlInterface)
+                ->startHitReaction((GameObject*)obj, state, (char*)state + 0x35c,
+                                   ((TreasureChestState*)state)->gameBitB, NULL, 0, 1, 0, -1);
             ((TreasureChestState*)state)->targetObj = rc;
             ((TreasureChestState*)state)->hasTarget = 0;
             ((TreasureChestState*)state)->targetState = 1;
