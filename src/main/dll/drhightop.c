@@ -279,7 +279,7 @@ void SnowBike_onSeqFree(int* obj)
         state->distanceScale = lbl_803E5B9C;
         ((HightopFlags*)&state->flags428)->resetLatch = 0;
         state->impactShakeTimer = fz;
-        sv = *(s16*)obj;
+        sv = ((GameObject*)obj)->anim.rotX;
         state->yaw = sv;
         state->yawCurrent = sv;
         state->engineFxLevel = lbl_803E5B74;
@@ -311,13 +311,15 @@ int SnowBike_SeqFn(short* obj, int unused, ObjSeqState* seq)
     u8 triggerType;
     int i;
     int state;
+    SnowBikeState* st;
     f32 matrix[16];
     HightopMatrixSeed transform;
     f64 xSpeed;
     f64 ySpeed;
     f64 zSpeed;
 
-    state = *(int*)(obj + 0x5c);
+    state = *(int*)&((GameObject*)obj)->extra;
+    st = (SnowBikeState*)state;
     seq->freeCallback = (ObjAnimSequenceFreeCallback)SnowBike_onSeqFree;
     ObjHits_DisableObject((GameObject*)obj);
 
@@ -338,11 +340,11 @@ int SnowBike_SeqFn(short* obj, int unused, ObjSeqState* seq)
         }
     }
 
-    if (((SnowBikeState*)state)->riderMode == 2)
+    if (st->riderMode == 2)
     {
-        xSpeed = (double)(float)(oneOverTimeDelta * (*(float*)(obj + 6) - ((SnowBikeState*)state)->refPosX));
-        ySpeed = (double)(float)(oneOverTimeDelta * (*(float*)(obj + 8) - ((SnowBikeState*)state)->refPosY));
-        zSpeed = (double)(float)(oneOverTimeDelta * (*(float*)(obj + 10) - ((SnowBikeState*)state)->refPosZ));
+        xSpeed = (double)(float)(oneOverTimeDelta * (((GameObject*)obj)->anim.localPosX - st->refPosX));
+        ySpeed = (double)(float)(oneOverTimeDelta * (((GameObject*)obj)->anim.localPosY - st->refPosY));
+        zSpeed = (double)(float)(oneOverTimeDelta * (((GameObject*)obj)->anim.localPosZ - st->refPosZ));
 
         transform.x = lbl_803E5AE8;
         transform.y = lbl_803E5AE8;
@@ -355,17 +357,17 @@ int SnowBike_SeqFn(short* obj, int unused, ObjSeqState* seq)
         Matrix_TransformPoint(matrix, xSpeed, ySpeed, zSpeed, (float*)(state + 0x494), (float*)(state + 0x498),
                               (float*)(state + 0x49c));
 
-        ((SnowBikeState*)state)->stickY = ((SnowBikeState*)state)->stickY + (framesThisStep << 3);
-        if (((SnowBikeState*)state)->stickY > 0x46)
+        st->stickY = st->stickY + (framesThisStep << 3);
+        if (st->stickY > 0x46)
         {
-            ((SnowBikeState*)state)->stickY = 0x46;
+            st->stickY = 0x46;
         }
 
-        drcloudcage_updateEngineFx((GameObject*)obj, (void*)state, ((SnowBikeState*)state)->distanceScale,
-                                   (int)(lbl_803E5BA0 * -((SnowBikeState*)state)->engineFxLevel), (u8*)(state + 0x461), 4);
+        drcloudcage_updateEngineFx((GameObject*)obj, (void*)state, st->distanceScale,
+                                   (int)(lbl_803E5BA0 * -st->engineFxLevel), (u8*)(state + 0x461), 4);
     }
 
-    ((HightopFlags3*)&((SnowBikeState*)state)->flags428)->active = 0;
+    ((HightopFlags3*)&st->flags428)->active = 0;
     return 0;
 }
 
@@ -462,7 +464,7 @@ void fn_801EB940(short* obj, int stateRaw)
     (*gPathControlInterface)->apply(obj, pathState);
     (*gPathControlInterface)->advance(obj, pathState, timeDelta);
     ival = 2;
-    if (*(char*)(stateRaw + 0x3d9) == '\0')
+    if (st->unk3D9 == '\0')
     {
         st->impactShakeTimer = st->impactShakeTimer + timeDelta;
         fa = st->impactShakeTimer;

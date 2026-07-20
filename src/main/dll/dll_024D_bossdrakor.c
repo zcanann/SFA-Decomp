@@ -331,12 +331,12 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action)
                             spd = ((BossDrakorState*)state)->missileLeadFactor *
                                       PSVECDotProduct(&((GameObject*)player)->anim.velocityX, vecA) +
                                   ((BossDrakorState*)state)->missileBaseSpeed;
-                            PSVECScale(vecA, (f32*)((char*)missile + 0x24), spd);
-                            mstate = *(f32**)((char*)missile + 0xb8);
+                            PSVECScale(vecA, &((GameObject*)missile)->anim.velocityX, spd);
+                            mstate = (f32*)((GameObject*)missile)->extra;
                             PSVECScale(vecA, vecC, PSVECDotProduct(vecA, vecB));
                             PSVECSubtract(vecB, vecC, vecC);
                             PSVECNormalize(vecC, vecC);
-                            PSVECScale(vecC, (f32*)((char*)missile + 0x24),
+                            PSVECScale(vecC, &((GameObject*)missile)->anim.velocityX,
                                        ((BossDrakorState*)state)->missileBaseSpeed * lbl_803DC18C);
                             *mstate = spd;
                             drakormissile_startActiveLaunch((GameObject*)(missile));

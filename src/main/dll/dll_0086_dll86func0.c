@@ -68,7 +68,7 @@ void dll_86_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[1].y = 0.0f;
     e[1].z = (f32)(int)randomGetRange(-0x4b0, -0x320);
     rx = e[1].x;
-    ry = *(f32*)((int)e + 0x20);
+    ry = e[1].y;
     e[2].layer = 1;
     e[2].flags = 0;
     e[2].tex = NULL;
@@ -122,15 +122,17 @@ void dll_86_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)buf.ctx != 0)
         {
-            buf.pos[0] = rx + ((GameObject*)buf.ctx)->anim.worldPosX;
-            buf.pos[1] += ((GameObject*)buf.ctx)->anim.worldPosY;
-            buf.pos[2] += ((GameObject*)buf.ctx)->anim.worldPosZ;
+            GameObject* obj = (GameObject*)buf.ctx;
+            buf.pos[0] = rx + obj->anim.worldPosX;
+            buf.pos[1] += obj->anim.worldPosY;
+            buf.pos[2] += obj->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = rx + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
+            PartFxSpawnParams* src = (PartFxSpawnParams*)posSource;
+            buf.pos[0] = rx + src->posX;
+            buf.pos[1] += src->posY;
+            buf.pos[2] += src->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
