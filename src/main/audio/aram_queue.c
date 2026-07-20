@@ -2,8 +2,8 @@
 #include "main/audio/aram_queue.h"
 
 
-u8 lbl_803D3F60[0x284];
-extern u8 lbl_803D41E4[];
+AramTransferQueue lbl_803D3F60;
+extern AramTransferQueue lbl_803D41E4;
 
 /*
  * ARQ DMA completion callback dispatcher: walks the 16-slot ring
@@ -11,17 +11,19 @@ extern u8 lbl_803D41E4[];
  * and invokes any pending entry's callback whose request handle
  * matches `req`. Decrements the count when done.
  */
-void aramQueueCallback(void* req)
+void aramQueueCallback(u32 requestAddress)
 {
+    ARQRequest* request;
     AramTransferQueue* queue;
     u32 i;
 
-    queue = (*(u32*)((u8*)req + 0xc) == 1) ? (AramTransferQueue*)lbl_803D41E4 : (AramTransferQueue*)lbl_803D3F60;
+    request = (ARQRequest*)requestAddress;
+    queue = (request->priority == ARQ_PRIORITY_HIGH) ? &lbl_803D41E4 : &lbl_803D3F60;
     for (i = 0; i < 0x10; i++)
     {
-        if (req == &queue->slots[i] && queue->slots[i].callback != NULL)
+        if (request == &queue->slots[i].request && queue->slots[i].completionCallback != NULL)
         {
-            queue->slots[i].callback(queue->slots[i].callbackArg);
+            queue->slots[i].completionCallback(queue->slots[i].callbackArg);
         }
     }
     queue->count = queue->count - 1;
@@ -38,26 +40,26 @@ void aramUploadData(void* src, u32 dst, u32 size, u32 mode, void (*callback)(u32
     AramTransferQueue* queue;
     BOOL irq;
 
-    queue = (mode != 0) ? (AramTransferQueue*)lbl_803D41E4 : (AramTransferQueue*)lbl_803D3F60;
+    queue = (mode != 0) ? &lbl_803D41E4 : &lbl_803D3F60;
 
     while (1)
     {
         irq = OSDisableInterrupts();
         if (queue->count < 0x10)
         {
-            queue->slots[queue->head].owner = 0x2a;
-            queue->slots[queue->head].type = 0;
-            queue->slots[queue->head].priority = (mode != 0) ? 1 : 0;
-            queue->slots[queue->head].src = (u32)src;
-            queue->slots[queue->head].dst = dst;
-            queue->slots[queue->head].size = size;
-            queue->slots[queue->head].arqCallback = aramQueueCallback;
-            queue->slots[queue->head].callback = callback;
+            queue->slots[queue->head].request.owner = 0x2a;
+            queue->slots[queue->head].request.type = ARQ_TYPE_MRAM_TO_ARAM;
+            queue->slots[queue->head].request.priority = (mode != 0) ? ARQ_PRIORITY_HIGH : ARQ_PRIORITY_LOW;
+            queue->slots[queue->head].request.source = (u32)src;
+            queue->slots[queue->head].request.dest = dst;
+            queue->slots[queue->head].request.length = size;
+            queue->slots[queue->head].request.callback = aramQueueCallback;
+            queue->slots[queue->head].completionCallback = callback;
             queue->slots[queue->head].callbackArg = callbackArg;
-            ARQPostRequest(&queue->slots[queue->head], queue->slots[queue->head].owner, queue->slots[queue->head].type,
-                           queue->slots[queue->head].priority, queue->slots[queue->head].src,
-                           queue->slots[queue->head].dst, queue->slots[queue->head].size,
-                           queue->slots[queue->head].arqCallback);
+            ARQPostRequest(&queue->slots[queue->head].request, queue->slots[queue->head].request.owner,
+                           queue->slots[queue->head].request.type, queue->slots[queue->head].request.priority,
+                           queue->slots[queue->head].request.source, queue->slots[queue->head].request.dest,
+                           queue->slots[queue->head].request.length, queue->slots[queue->head].request.callback);
             queue->count += 1;
             queue->head = (queue->head + 1) % 0x10;
             OSRestoreInterrupts(irq);
@@ -72,7 +74,7 @@ void aramUploadData(void* src, u32 dst, u32 size, u32 mode, void (*callback)(u32
  */
 void aramSyncTransferQueue(void)
 {
-    while (((volatile u8*)lbl_803D3F60)[0x281] != 0)
+    while (lbl_803D3F60.count != 0)
     {
     }
 }

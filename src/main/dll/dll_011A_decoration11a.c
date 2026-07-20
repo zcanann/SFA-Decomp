@@ -5,15 +5,14 @@
  * init() seeds the object's rotation from the placement bytes and an
  * optional root-motion scale, then - for the three "bounded" model
  * variants (DECOR11A_MODEL_*) - walks every vertex of the model to
- * compute a local-space AABB (min/max stored in extra[0..2] / [3..5])
- * and caches the larger half-extent magnitude in extra[6].
+ * compute a local-space AABB and cache its larger half-extent magnitude.
  *
  * hitDetect() uses that bounds against group-2 objects: for each whose
  * centre is within the cached radius, it measures squared distance from
  * the object's local-space AABB and, on contact, records the hit on the
  * other object's ObjHitsPriorityState.
  *
- * The extra block is 0x1c bytes: f32 boundsMax[3], boundsMin[3], radius.
+ * The extra block is the 0x1c-byte Decoration11AState.
  */
 #include "main/game_object.h"
 #include "main/obj_group.h"
@@ -35,48 +34,48 @@ enum
 
 int decoration11a_getExtraSize(void)
 {
-    return 0x1c;
+    return sizeof(Decoration11AState);
 }
 
 void decoration11a_free(void)
 {
 }
 
-void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void decoration11a_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
-void decoration11a_hitDetect(int obj)
+void decoration11a_hitDetect(GameObject* obj)
 {
     s16 modelId;
-    f32* state;
+    Decoration11AState* state;
     int count;
-    int* objects;
+    u32* objects;
     f32 radius;
     f32 localPos[3];
     f32 sum;
     f32 delta;
     f32 term;
 
-    modelId = ((GameObject*)obj)->anim.seqId;
+    modelId = obj->anim.seqId;
     if (modelId != DECOR11A_MODEL_A && modelId != DECOR11A_MODEL_B && modelId != DECOR11A_MODEL_C)
     {
         return;
     }
 
-    state = ((GameObject*)obj)->extra;
-    objects = (int*)ObjGroup_GetObjects(2, &count);
+    state = obj->extra;
+    objects = ObjGroup_GetObjects(2, &count);
     while (count != 0)
     {
-        if (Vec_distance((f32*)(*objects + 0x18), (f32*)(obj + 0x18)) < state[6])
+        if (Vec_distance(&((GameObject*)*objects)->anim.worldPosX, &obj->anim.worldPosX) < state->radius)
         {
             if (((GameObject*)*objects)->anim.hitReactState != NULL)
             {
                 radius = (f32)((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->primaryRadius;
-                objWorldToLocalPos(localPos, (ObjLocalTransform*)obj, (f32*)(*objects + 0xc));
+                objWorldToLocalPos(localPos, (ObjLocalTransform*)obj, &((GameObject*)*objects)->anim.localPosX);
 
                 sum = 0.0f;
 
@@ -84,8 +83,8 @@ void decoration11a_hitDetect(int obj)
                     f32 bMax;
                     f32 bMin;
                     f32 px;
-                    bMin = state[3];
-                    bMax = state[0];
+                    bMin = state->boundsMin.x;
+                    bMax = state->boundsMax.x;
                     sum += ((px = localPos[0]) < bMin) ? (px - bMin) * (px - bMin)
                            : (px > bMax)               ? (px - bMax) * (px - bMax)
                                                        : 0.0f;
@@ -94,8 +93,8 @@ void decoration11a_hitDetect(int obj)
                 {
                     f32 bMax;
                     f32 bMin;
-                    bMin = state[4];
-                    bMax = state[1];
+                    bMin = state->boundsMin.y;
+                    bMax = state->boundsMax.y;
                     if (localPos[1] < bMin)
                     {
                         delta = localPos[1] - bMin;
@@ -116,8 +115,8 @@ void decoration11a_hitDetect(int obj)
                 {
                     f32 bMax;
                     f32 bMin;
-                    bMin = state[5];
-                    bMax = state[2];
+                    bMin = state->boundsMin.z;
+                    bMax = state->boundsMax.z;
                     if (localPos[2] < bMin)
                     {
                         delta = localPos[2] - bMin;
@@ -137,7 +136,7 @@ void decoration11a_hitDetect(int obj)
 
                 if (sum < radius * radius)
                 {
-                    ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->lastHitObject = obj;
+                    ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->lastHitObject = (u32)obj;
                     ((ObjHitsPriorityState*)((GameObject*)*objects)->anim.hitReactState)->contactFlags =
                         OBJHITS_CONTACT_FLAG_KIND0;
                 }
@@ -173,23 +172,22 @@ void decoration11a_expandBoundsWithVertex(f32* vertex, f32* maxOut, f32* minOut)
         minOut[2] = component;
 }
 
-void decoration11a_init(int* obj, u8* def)
+void decoration11a_init(GameObject* obj, Decoration11ASetup* setup)
 {
-    ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[24] << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)((s32)def[25] << 8);
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[26] << 8);
-    if (def[27] != 0)
+    obj->anim.rotZ = (s16)((s32)setup->rotZ << 8);
+    obj->anim.rotY = (s16)((s32)setup->rotY << 8);
+    obj->anim.rotX = (s16)((s32)setup->rotX << 8);
+    if (setup->scale != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)def[27] / 255.0f;
-        if (!((GameObject*)obj)->anim.rootMotionScale)
+        obj->anim.rootMotionScale = (f32)(u32)setup->scale / 255.0f;
+        if (!obj->anim.rootMotionScale)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = 1.0f;
+            obj->anim.rootMotionScale = 1.0f;
         }
-        ((GameObject*)obj)->anim.rootMotionScale =
-            ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+        obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
     }
     {
-        s16 model = ((GameObject*)obj)->anim.seqId;
+        s16 model = obj->anim.seqId;
         if (model != DECOR11A_MODEL_A && model != DECOR11A_MODEL_B && model != DECOR11A_MODEL_C)
         {
             return;
@@ -197,32 +195,32 @@ void decoration11a_init(int* obj, u8* def)
         {
             int i;
             ModelFileHeader* m;
-            f32* state;
+            Decoration11AState* state;
             f32 vertexPos[3];
             f32 magB;
             f32 maxMag;
 
-            state = ((GameObject*)obj)->extra;
-            m = (ModelFileHeader*)**(int***)(*(int*)&((GameObject*)obj)->anim.banks);
-            Model_GetVertexPosition(m, 0, state);
-            Model_GetVertexPosition(m, 0, state + 3);
+            state = obj->extra;
+            m = (ModelFileHeader*)**(int***)(*(int*)&obj->anim.banks);
+            Model_GetVertexPosition(m, 0, &state->boundsMax.x);
+            Model_GetVertexPosition(m, 0, &state->boundsMin.x);
             for (i = 1; i < m->vertexCount; i++)
             {
                 Model_GetVertexPosition(m, i, vertexPos);
-                decoration11a_expandBoundsWithVertex(vertexPos, state, state + 3);
+                decoration11a_expandBoundsWithVertex(vertexPos, &state->boundsMax.x, &state->boundsMin.x);
             }
-            PSVECScale(state, state, ((GameObject*)obj)->anim.rootMotionScale);
-            PSVECScale(state + 3, state + 3, ((GameObject*)obj)->anim.rootMotionScale);
-            magB = PSVECMag(state + 3);
-            if (PSVECMag(state) > magB)
+            PSVECScale(&state->boundsMax.x, &state->boundsMax.x, obj->anim.rootMotionScale);
+            PSVECScale(&state->boundsMin.x, &state->boundsMin.x, obj->anim.rootMotionScale);
+            magB = PSVECMag(&state->boundsMin.x);
+            if (PSVECMag(&state->boundsMax.x) > magB)
             {
-                maxMag = PSVECMag(state);
+                maxMag = PSVECMag(&state->boundsMax.x);
             }
             else
             {
-                maxMag = PSVECMag(state + 3);
+                maxMag = PSVECMag(&state->boundsMin.x);
             }
-            state[6] = maxMag;
+            state->radius = maxMag;
         }
     }
 }
