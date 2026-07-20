@@ -6,6 +6,7 @@ extern u8 lbl_80396918[];
 extern int gObjSeqStreamTableA[];
 extern u8 lbl_803DB748[4];
 extern f32 lbl_803DEFB0;
+extern f32 lbl_803DEFF0;
 extern u8 lbl_803DD124;
 extern u8 gObjSeqCameraActive;
 extern int gObjSeqCamMode;
@@ -58,7 +59,7 @@ void ObjSeq_onMapSetup(void)
             states[0] = 0;
             pending[0] = 0;
             frames[0] = lbl_803DEFB0;
-            dists[0] = -1.0f;
+            dists[0] = lbl_803DEFF0;
             counts[0] = 0;
             handles[0] = 0;
             marks[0] = 0;
@@ -70,7 +71,7 @@ void ObjSeq_onMapSetup(void)
             states[1] = 0;
             pending[1] = 0;
             frames[1] = lbl_803DEFB0;
-            dists[1] = -1.0f;
+            dists[1] = lbl_803DEFF0;
             counts[1] = 0;
             handles[1] = 0;
             marks[1] = 0;
@@ -82,7 +83,7 @@ void ObjSeq_onMapSetup(void)
             states[2] = 0;
             pending[2] = 0;
             frames[2] = lbl_803DEFB0;
-            dists[2] = -1.0f;
+            dists[2] = lbl_803DEFF0;
             counts[2] = 0;
             handles[2] = 0;
             marks[2] = 0;
@@ -94,7 +95,7 @@ void ObjSeq_onMapSetup(void)
             states[3] = 0;
             pending[3] = 0;
             frames[3] = lbl_803DEFB0;
-            dists[3] = -1.0f;
+            dists[3] = lbl_803DEFF0;
             counts[3] = 0;
             handles[3] = 0;
             marks[3] = 0;
@@ -106,7 +107,7 @@ void ObjSeq_onMapSetup(void)
             states[4] = 0;
             pending[4] = 0;
             frames[4] = lbl_803DEFB0;
-            dists[4] = -1.0f;
+            dists[4] = lbl_803DEFF0;
             counts[4] = 0;
             handles[4] = 0;
             marks[4] = 0;
@@ -118,7 +119,7 @@ void ObjSeq_onMapSetup(void)
             states[5] = 0;
             pending[5] = 0;
             frames[5] = lbl_803DEFB0;
-            dists[5] = -1.0f;
+            dists[5] = lbl_803DEFF0;
             counts[5] = 0;
             handles[5] = 0;
             marks[5] = 0;
@@ -130,7 +131,7 @@ void ObjSeq_onMapSetup(void)
             states[6] = 0;
             pending[6] = 0;
             frames[6] = lbl_803DEFB0;
-            dists[6] = -1.0f;
+            dists[6] = lbl_803DEFF0;
             counts[6] = 0;
             handles[6] = 0;
             marks[6] = 0;
@@ -142,7 +143,7 @@ void ObjSeq_onMapSetup(void)
             states[7] = 0;
             pending[7] = 0;
             frames[7] = lbl_803DEFB0;
-            dists[7] = -1.0f;
+            dists[7] = lbl_803DEFF0;
             counts[7] = 0;
             handles[7] = 0;
             marks[7] = 0;
@@ -162,9 +163,10 @@ void ObjSeq_onMapSetup(void)
     }
 
     {
+        marks = base + i;
         modes = (s16*)(base + 0x3a98) + i;
         handles = (int*)(base + 0x33e4) + i;
-        marks = base + 0x338c + i;
+        marks += 0x338c;
         for (; i < 85; i++)
         {
             frames = (f32*)(handles + 300);
@@ -184,7 +186,7 @@ void ObjSeq_onMapSetup(void)
             states[0] = 0;
             pending[0] = 0;
             frames[0] = lbl_803DEFB0;
-            dists[0] = -1.0f;
+            dists[0] = lbl_803DEFF0;
             counts[0] = 0;
             handles[0] = 0;
             marks[0] = 0;
