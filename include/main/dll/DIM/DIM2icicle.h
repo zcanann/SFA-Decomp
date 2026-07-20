@@ -8,6 +8,8 @@
 #include "ghidra_import.h"
 
 extern PartFxSpawnParams gDim2IcicleDustFxSource;
+extern int lbl_80325AA0[6];
+extern s16 gDim2LiftFarMoveChoices[30];
 
 void DIM2icicle_updateBossSequenceEffects(DIMbossObject *obj, DIMbossRuntime *runtime);
 void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject *obj, DIMbossRuntime *runtime);

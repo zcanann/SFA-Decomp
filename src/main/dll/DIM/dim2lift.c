@@ -38,7 +38,6 @@ s16 gDim2LiftFarFlankMoveChoices[4] = {3, 8, 0, 0};
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C24;
 extern f32 lbl_803E4C00;
-extern int lbl_80325AA0[6];
 extern int lbl_80325960[16];
 extern f32 gDim2LiftMoveSpeedByDir[16];
 extern f32 lbl_803E4C04;
@@ -66,7 +65,6 @@ extern f32 lbl_803E4BFC;
 extern f32 lbl_803E4C28;
 extern f32 lbl_803E4C2C;
 extern f32 lbl_803E4C30;
-extern s16 gDim2LiftFarMoveChoices[30];
 extern u8 gDIMbossAnimController[];
 
 typedef struct DIM2icicleBlueWhiteEffectPlacement
