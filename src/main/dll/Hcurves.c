@@ -1652,45 +1652,49 @@ void walkgroupFindExitPointFn_800dc398(void)
             fdz = p->exit1Z - p->exit0Z;
 
             iter = 0;
-            goto scan0;
-        update0:
-            p->exit0X = (s16)(p->exit0X + fdx / div);
-            p->exit0Z = (s16)(p->exit0Z + fdz / div);
-            if (iter++ == 100)
+            for (;;)
             {
-                OSReport(sObjfsaMissingPatchExitPoint0, p->groupId & 0xff, p->groupId >> 8);
-                goto exit0Done;
-            }
-        scan0:
-            OBJFSA_EXIT_INSIDE(wgT, (sx = (pC = p)->exit0X), (sz = p->exit0Z));
-            pB = pC;
-            if (edge != 4)
-            {
+                OBJFSA_EXIT_INSIDE(wgT, (sx = (pC = p)->exit0X), (sz = p->exit0Z));
+                pB = pC;
+                if (edge == 4)
+                {
+                    break;
+                }
                 OBJFSA_EXIT_INSIDE(wgBT, sx, sz);
-                if (edge != 4)
-                    goto update0;
+                if (edge == 4)
+                {
+                    break;
+                }
+                p->exit0X = (s16)(p->exit0X + fdx / div);
+                p->exit0Z = (s16)(p->exit0Z + fdz / div);
+                if (iter++ == 100)
+                {
+                    OSReport(sObjfsaMissingPatchExitPoint0, p->groupId & 0xff, p->groupId >> 8);
+                    break;
+                }
             }
 
-        exit0Done:
             iter = 0;
-            goto scan1;
-        update1:
-            pC->exit1X = (s16)(pB->exit1X - fdx / div);
-            pC->exit1Z = (s16)(pC->exit1Z - fdz / div);
-            if (iter++ == 100)
+            for (;;)
             {
-                OSReport(sObjfsaMissingPatchExitPoint1, pC->groupId & 0xff, pC->groupId >> 8);
-                goto exit1Done;
-            }
-        scan1:
-            OBJFSA_EXIT_INSIDE(wgT, (sx = pC->exit1X), (sz = pC->exit1Z));
-            if (edge != 4)
-            {
+                OBJFSA_EXIT_INSIDE(wgT, (sx = pC->exit1X), (sz = pC->exit1Z));
+                if (edge == 4)
+                {
+                    break;
+                }
                 OBJFSA_EXIT_INSIDE(wgBT, sx, sz);
-                if (edge != 4)
-                    goto update1;
+                if (edge == 4)
+                {
+                    break;
+                }
+                pC->exit1X = (s16)(pB->exit1X - fdx / div);
+                pC->exit1Z = (s16)(pC->exit1Z - fdz / div);
+                if (iter++ == 100)
+                {
+                    OSReport(sObjfsaMissingPatchExitPoint1, pC->groupId & 0xff, pC->groupId >> 8);
+                    break;
+                }
             }
-        exit1Done:;
         }
     }
 }
@@ -1715,67 +1719,64 @@ int RomCurve_func2C(RomCurveWalker* state, GameObject* unusedObj, int startCurve
     {
         return 1;
     }
-    if (startCurveId == -1)
+    if (startCurveId != -1)
     {
-        goto fail;
-    }
+        stateBytes = (char*)state;
+        if (state->reverse != 0)
+        {
+            *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(startCurveId);
+            nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+            if (nextId == -1)
+            {
+                return 1;
+            }
+            startCurveId = nextId;
+        }
 
-    stateBytes = (char*)state;
-    if (state->reverse != 0)
-    {
-        *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(startCurveId);
-        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+        currentCurve = Objfsa_FindRomCurveById(startCurveId);
+        *(s32*)&state->nodeA0 = currentCurve;
+        if (currentCurve == 0)
+        {
+            state->nodeA0 = NULL;
+            return 1;
+        }
+
+        if (state->reverse != 0)
+        {
+            nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
+        }
+        else
+        {
+            nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+        }
         if (nextId == -1)
         {
             return 1;
         }
-        startCurveId = nextId;
-    }
 
-    currentCurve = Objfsa_FindRomCurveById(startCurveId);
-    *(s32*)&state->nodeA0 = currentCurve;
-    if (currentCurve == 0)
-    {
-        state->nodeA0 = NULL;
-        return 1;
-    }
+        nextCurve = Objfsa_FindRomCurveById(nextId);
+        *(s32*)&state->nodeA4 = nextCurve;
+        if (nextCurve == 0)
+        {
+            state->nodeA4 = NULL;
+            return 1;
+        }
 
-    if (state->reverse != 0)
-    {
-        nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
-    }
-    else
-    {
-        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
-    }
-    if (nextId == -1)
-    {
-        return 1;
-    }
+        ROMCURVE_REFRESH_CONTROL(0xa4);
+        if (RomCurve_goNextPoint(state) != 0)
+        {
+            return 1;
+        }
 
-    nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32*)&state->nodeA4 = nextCurve;
-    if (nextCurve == 0)
-    {
-        state->nodeA4 = NULL;
-        return 1;
+        state->node94 = Curve_EvalHermite;
+        state->node98 = Curve_BuildHermiteCoeffs;
+        state->coeffX = state->hermX;
+        state->coeffY = state->hermY;
+        state->coeffZ = state->hermZ;
+        state->moveNetwork = 8;
+        curvesMove(&state->curve);
+        return 0;
     }
-
-    ROMCURVE_REFRESH_CONTROL(0xa4);
-    if (RomCurve_goNextPoint(state) != 0)
-    {
-        return 1;
-    }
-
-    state->node94 = Curve_EvalHermite;
-    state->node98 = Curve_BuildHermiteCoeffs;
-    state->coeffX = state->hermX;
-    state->coeffY = state->hermY;
-    state->coeffZ = state->hermZ;
-    state->moveNetwork = 8;
-    curvesMove(&state->curve);
-    return 0;
-fail:
     return 1;
 }
 
@@ -1870,46 +1871,41 @@ int RomCurve_func29(RomCurveWalker* state, int pickIdx)
         nextId = RomCurve_getUnblockedControlPointId(*(s32*)&state->nodeA0, -1, pickIdx);
     }
 
-    if (nextId == -1)
+    if (nextId != -1)
     {
-        goto failClear;
-    }
+        nextCurve = Objfsa_FindRomCurveById(nextId);
+        *(s32*)&state->nodeA4 = nextCurve;
+        if (state->nodeA4 != NULL)
+        {
+            if (state->reverse != 0)
+            {
+                ROMCURVE_REFRESH_CONTROL(0x9c);
+            }
+            else
+            {
+                ROMCURVE_REFRESH_CONTROL(0xa4);
+            }
 
-    nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32*)&state->nodeA4 = nextCurve;
-    if (state->nodeA4 == NULL)
-    {
-        goto fail;
-    }
+            if (state->moveNetwork != 0)
+            {
+                curvesSetupMoveNetworkCurve(&state->curve);
+            }
 
-    if (state->reverse != 0)
-    {
-        ROMCURVE_REFRESH_CONTROL(0x9c);
+            if (state->reverse != 0)
+            {
+                Curve_AdvanceAlongPath(&state->curve, gFloatNegOne);
+            }
+            else
+            {
+                Curve_AdvanceAlongPath(&state->curve, gFloatOne);
+            }
+            return 0;
+        }
     }
     else
     {
-        ROMCURVE_REFRESH_CONTROL(0xa4);
+        state->nodeA4 = NULL;
     }
-
-    if (state->moveNetwork != 0)
-    {
-        curvesSetupMoveNetworkCurve(&state->curve);
-    }
-
-    if (state->reverse != 0)
-    {
-        Curve_AdvanceAlongPath(&state->curve, gFloatNegOne);
-    }
-    else
-    {
-        Curve_AdvanceAlongPath(&state->curve, gFloatOne);
-    }
-
-    return 0;
-
-failClear:
-    state->nodeA4 = NULL;
-fail:
     return 1;
 }
 
@@ -2033,44 +2029,41 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
         neighborId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
     }
 
-    if (neighborId == -1)
+    if (neighborId != -1)
     {
-        goto clearAndReturn;
-    }
+        nextCurve = Objfsa_FindRomCurveById(neighborId);
 
-    nextCurve = Objfsa_FindRomCurveById(neighborId);
+        *(s32*)&state->nodeA4 = nextCurve;
+        if (state->nodeA4 != NULL)
+        {
+            if (state->reverse != 0)
+            {
+                ROMCURVE_REFRESH_CONTROL(0x9c);
+            }
+            else
+            {
+                ROMCURVE_REFRESH_CONTROL(0xa4);
+            }
 
-    *(s32*)&state->nodeA4 = nextCurve;
-    if (state->nodeA4 == NULL)
-    {
-        goto returnOne;
-    }
-
-    if (state->reverse != 0)
-    {
-        ROMCURVE_REFRESH_CONTROL(0x9c);
+            if (state->moveNetwork != 0)
+            {
+                curvesSetupMoveNetworkCurve(&state->curve);
+            }
+            if (state->reverse != 0)
+            {
+                Curve_AdvanceAlongPath(&state->curve, gFloatNegOne);
+            }
+            else
+            {
+                Curve_AdvanceAlongPath(&state->curve, gFloatOne);
+            }
+            return 0;
+        }
     }
     else
     {
-        ROMCURVE_REFRESH_CONTROL(0xa4);
+        state->nodeA4 = NULL;
     }
-
-    if (state->moveNetwork != 0)
-    {
-        curvesSetupMoveNetworkCurve(&state->curve);
-    }
-    if (state->reverse != 0)
-    {
-        Curve_AdvanceAlongPath(&state->curve, gFloatNegOne);
-    }
-    else
-    {
-        Curve_AdvanceAlongPath(&state->curve, gFloatOne);
-    }
-    return 0;
-clearAndReturn:
-    state->nodeA4 = NULL;
-returnOne:
     return 1;
 }
 
@@ -2095,89 +2088,86 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
 
     stateBytes = (char*)state;
     curveId = curves_findNearObj((int)obj, curveTypes, 1, curveType, 0xc);
-    if (curveId == -1)
+    if (curveId != -1)
     {
-        goto fail;
-    }
+        if (state->reverse != 0)
+        {
+            *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(curveId);
+            nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+            if (nextId == -1)
+            {
+                return 1;
+            }
+            curveId = nextId;
+        }
 
-    if (state->reverse != 0)
-    {
-        *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(curveId);
-        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+        currentCurve = Objfsa_FindRomCurveById(curveId);
+        *(s32*)&state->nodeA0 = currentCurve;
+        if (currentCurve == 0)
+        {
+            state->nodeA0 = NULL;
+            return 1;
+        }
+
+        if (state->reverse != 0)
+        {
+            nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
+        }
+        else
+        {
+            nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+        }
         if (nextId == -1)
         {
             return 1;
         }
-        curveId = nextId;
-    }
 
-    currentCurve = Objfsa_FindRomCurveById(curveId);
-    *(s32*)&state->nodeA0 = currentCurve;
-    if (currentCurve == 0)
-    {
-        state->nodeA0 = NULL;
-        return 1;
-    }
-
-    if (state->reverse != 0)
-    {
-        nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
-    }
-    else
-    {
-        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
-    }
-    if (nextId == -1)
-    {
-        return 1;
-    }
-
-    nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32*)&state->nodeA4 = nextCurve;
-    if (nextCurve == 0)
-    {
-        state->nodeA4 = NULL;
-        return 1;
-    }
-
-    if (maxDistance != gFloatZero)
-    {
-        if (state->reverse != 0)
+        nextCurve = Objfsa_FindRomCurveById(nextId);
+        *(s32*)&state->nodeA4 = nextCurve;
+        if (nextCurve == 0)
         {
-            distanceCurve = *(s32*)&state->nodeA4;
-            dx = ((RomCurveDef*)distanceCurve)->x - (obj)->anim.localPosX;
-            dy = ((RomCurveDef*)distanceCurve)->y - (obj)->anim.localPosY;
-            dz = ((RomCurveDef*)distanceCurve)->z - (obj)->anim.localPosZ;
+            state->nodeA4 = NULL;
+            return 1;
         }
-        else
+
+        if (maxDistance != gFloatZero)
         {
-            distanceCurve = *(s32*)&state->nodeA0;
-            dx = ((RomCurveDef*)distanceCurve)->x - (obj)->anim.localPosX;
-            dy = ((RomCurveDef*)distanceCurve)->y - (obj)->anim.localPosY;
-            dz = ((RomCurveDef*)distanceCurve)->z - (obj)->anim.localPosZ;
+            if (state->reverse != 0)
+            {
+                distanceCurve = *(s32*)&state->nodeA4;
+                dx = ((RomCurveDef*)distanceCurve)->x - (obj)->anim.localPosX;
+                dy = ((RomCurveDef*)distanceCurve)->y - (obj)->anim.localPosY;
+                dz = ((RomCurveDef*)distanceCurve)->z - (obj)->anim.localPosZ;
+            }
+            else
+            {
+                distanceCurve = *(s32*)&state->nodeA0;
+                dx = ((RomCurveDef*)distanceCurve)->x - (obj)->anim.localPosX;
+                dy = ((RomCurveDef*)distanceCurve)->y - (obj)->anim.localPosY;
+                dz = ((RomCurveDef*)distanceCurve)->z - (obj)->anim.localPosZ;
+            }
+            distance = sqrtf(dx * dx + dy * dy + dz * dz);
+            if (distance > maxDistance)
+            {
+                return 1;
+            }
         }
-        distance = sqrtf(dx * dx + dy * dy + dz * dz);
-        if (distance > maxDistance)
+
+        ROMCURVE_REFRESH_CONTROL(0xa4);
+        if (RomCurve_goNextPoint(state) != 0)
         {
             return 1;
         }
-    }
 
-    ROMCURVE_REFRESH_CONTROL(0xa4);
-    if (RomCurve_goNextPoint(state) != 0)
-    {
-        return 1;
+        state->node94 = Curve_EvalHermite;
+        state->node98 = Curve_BuildHermiteCoeffs;
+        state->coeffX = state->hermX;
+        state->coeffY = state->hermY;
+        state->coeffZ = state->hermZ;
+        state->moveNetwork = 8;
+        curvesMove(&state->curve);
+        return 0;
     }
-
-    state->node94 = Curve_EvalHermite;
-    state->node98 = Curve_BuildHermiteCoeffs;
-    state->coeffX = state->hermX;
-    state->coeffY = state->hermY;
-    state->coeffZ = state->hermZ;
-    state->moveNetwork = 8;
-    curvesMove(&state->curve);
-    return 0;
-fail:
     return 1;
 }
 int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, int bboxMode)
@@ -2605,102 +2595,102 @@ f32 curves_getPathLength(u32 startNode, u32 endNode, f32* posA, f32* posB, f32 t
         {
             total = -total;
         }
-        goto done_exit;
-    }
-
-    reachedForward = 0;
-    done = 0;
-    found = startNode;
-    while (done == 0)
-    {
-        blocked = Objfsa_RomCurveIsBlocked(found);
-        if (blocked != 0)
-        {
-            done = 1;
-            reachedForward = 0;
-        }
-        else
-        {
-            count = RomCurve_CollectUnblockedLinks((RomCurveDef*)found, cand1);
-            if (count != 0)
-            {
-                nextId = cand1[randomGetRange(0, count - 1)];
-            }
-            else
-            {
-                nextId = -1;
-            }
-            found = Objfsa_FindRomCurveById(nextId);
-            if (found == endNode)
-            {
-                done = 1;
-                reachedForward = 1;
-            }
-        }
-    }
-
-    if (reachedForward == 0)
-    {
-        cur = startNode;
-        startNode = endNode;
-        endNode = cur;
-        tmpPos = posA;
-        posA = posB;
-        posB = tmpPos;
-    }
-
-    count = RomCurve_CollectUnblockedLinks((RomCurveDef*)startNode, cand2);
-    if (count != 0)
-    {
-        nextId = cand2[randomGetRange(0, count - 1)];
     }
     else
     {
-        nextId = -1;
-    }
-    found = Objfsa_FindRomCurveById(nextId);
-    startNode = found;
-    dx = ((ObjfsaRomCurveDef*)found)->x - posA[0];
-    dy = ((ObjfsaRomCurveDef*)found)->y - posA[1];
-    dz = ((ObjfsaRomCurveDef*)found)->z - posA[2];
-    total = sqrtf(dx * dx + dy * dy + dz * dz);
-    done = 0;
-
-    while (done == 0)
-    {
-        if (startNode == endNode)
+        reachedForward = 0;
+        done = 0;
+        found = startNode;
+        while (done == 0)
         {
-            done = 1;
-            dx = posB[0] - ((ObjfsaRomCurveDef*)startNode)->x;
-            dy = posB[1] - ((ObjfsaRomCurveDef*)startNode)->y;
-            dz = posB[2] - ((ObjfsaRomCurveDef*)startNode)->z;
-            total = total + sqrtf(dx * dx + dy * dy + dz * dz);
-        }
-        else
-        {
-            count = RomCurve_CollectUnblockedLinks((RomCurveDef*)startNode, cand3);
-            if (count != 0)
+            blocked = Objfsa_RomCurveIsBlocked(found);
+            if (blocked != 0)
             {
-                nextId = cand3[randomGetRange(0, count - 1)];
+                done = 1;
+                reachedForward = 0;
             }
             else
             {
-                nextId = -1;
+                count = RomCurve_CollectUnblockedLinks((RomCurveDef*)found, cand1);
+                if (count != 0)
+                {
+                    nextId = cand1[randomGetRange(0, count - 1)];
+                }
+                else
+                {
+                    nextId = -1;
+                }
+                found = Objfsa_FindRomCurveById(nextId);
+                if (found == endNode)
+                {
+                    done = 1;
+                    reachedForward = 1;
+                }
             }
-            next = Objfsa_FindRomCurveById(nextId);
-            dx = ((ObjfsaRomCurveDef*)next)->x - ((ObjfsaRomCurveDef*)startNode)->x;
-            dy = ((ObjfsaRomCurveDef*)next)->y - ((ObjfsaRomCurveDef*)startNode)->y;
-            dz = ((ObjfsaRomCurveDef*)next)->z - ((ObjfsaRomCurveDef*)startNode)->z;
-            total = total + sqrtf(dx * dx + dy * dy + dz * dz);
-            startNode = next;
+        }
+
+        if (reachedForward == 0)
+        {
+            cur = startNode;
+            startNode = endNode;
+            endNode = cur;
+            tmpPos = posA;
+            posA = posB;
+            posB = tmpPos;
+        }
+
+        count = RomCurve_CollectUnblockedLinks((RomCurveDef*)startNode, cand2);
+        if (count != 0)
+        {
+            nextId = cand2[randomGetRange(0, count - 1)];
+        }
+        else
+        {
+            nextId = -1;
+        }
+        found = Objfsa_FindRomCurveById(nextId);
+        startNode = found;
+        dx = ((ObjfsaRomCurveDef*)found)->x - posA[0];
+        dy = ((ObjfsaRomCurveDef*)found)->y - posA[1];
+        dz = ((ObjfsaRomCurveDef*)found)->z - posA[2];
+        total = sqrtf(dx * dx + dy * dy + dz * dz);
+        done = 0;
+
+        while (done == 0)
+        {
+            if (startNode == endNode)
+            {
+                done = 1;
+                dx = posB[0] - ((ObjfsaRomCurveDef*)startNode)->x;
+                dy = posB[1] - ((ObjfsaRomCurveDef*)startNode)->y;
+                dz = posB[2] - ((ObjfsaRomCurveDef*)startNode)->z;
+                total = total + sqrtf(dx * dx + dy * dy + dz * dz);
+            }
+            else
+            {
+                count = RomCurve_CollectUnblockedLinks((RomCurveDef*)startNode, cand3);
+                if (count != 0)
+                {
+                    nextId = cand3[randomGetRange(0, count - 1)];
+                }
+                else
+                {
+                    nextId = -1;
+                }
+                next = Objfsa_FindRomCurveById(nextId);
+                dx = ((ObjfsaRomCurveDef*)next)->x - ((ObjfsaRomCurveDef*)startNode)->x;
+                dy = ((ObjfsaRomCurveDef*)next)->y - ((ObjfsaRomCurveDef*)startNode)->y;
+                dz = ((ObjfsaRomCurveDef*)next)->z - ((ObjfsaRomCurveDef*)startNode)->z;
+                total = total + sqrtf(dx * dx + dy * dy + dz * dz);
+                startNode = next;
+            }
+        }
+
+        if (reachedForward == 0)
+        {
+            total = -total;
         }
     }
-
-    if (reachedForward == 0)
-    {
-        total = -total;
-    }
-done_exit:
     return total;
 }
 
@@ -2744,6 +2734,21 @@ void curves_getPos(int curve, float* outX, float* outY, float* outZ, f32 phase)
 }
 
 
+static inline int RomCurve_hasNoOpenLink(int curve)
+{
+    int k;
+
+    for (k = 0; k < 4; k++)
+    {
+        if (((ObjfsaRomCurveDef*)curve)->linkIds[k] != -1 &&
+            ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & (1 << k)) == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, f32* outPhase)
 {
     int projected;
@@ -2758,8 +2763,7 @@ int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, f32* ou
     int n;
     int k;
 
-    goto loopTest;
-    do
+    while (RomCurve_hasNoOpenLink(curve) == 0)
     {
         RomCurve_getAdjacentWindow((RomCurveDef*)curve, adjacentWindow);
         projected = RomCurve_projectPointToAdjacentWindow(
@@ -2791,23 +2795,7 @@ int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, f32* ou
             linkId = -1;
         }
         curve = Objfsa_FindRomCurveById(linkId);
-    loopTest:
-        for (k = 0; k < 4; k++)
-        {
-            if (((ObjfsaRomCurveDef*)curve)->linkIds[k] != -1 &&
-                ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & (1 << k)) == 0)
-            {
-                k = 0;
-                goto checkLoop;
-            }
-        }
-        k = 1;
-    checkLoop:
-        if (k != 0)
-        {
-            break;
-        }
-    } while (1);
+    }
 
     *outPhase = gFloatZero;
     return curve;

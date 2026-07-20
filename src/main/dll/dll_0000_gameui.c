@@ -7415,17 +7415,21 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 i = 0;
                 hintCandidates = (u8*)&gGameUiTaskHintCandidates;
                 candidate = hintCandidates;
-                for (; i < GAMEUI_TASK_HINT_COUNT; i++)
+                for (;;)
                 {
                     if (mainGetBit(gTaskHintTable[*candidate].bit_id))
                     {
                         hintIndex = (s8)gGameUiTaskHintCandidates[i];
-                        goto haveFirstAvailableHint;
+                        break;
                     }
                     candidate++;
+                    i++;
+                    if (i >= GAMEUI_TASK_HINT_COUNT)
+                    {
+                        hintIndex = -1;
+                        break;
+                    }
                 }
-                hintIndex = -1;
-            haveFirstAvailableHint:
                 firstAvailableHint = (s8)hintIndex;
                 taskCount = mainGetBit(GAMEBIT_ITEM_SpellStone3_Got);
                 taskPartial = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
@@ -7717,17 +7721,21 @@ void drawWorldMapHud(void)
             i = 0;
             base = (u8*)(int)gGameUiTaskHintCandidates;
             p = base;
-            for (; i < GAMEUI_TASK_HINT_COUNT; i++)
+            for (;;)
             {
                 if (mainGetBit(gTaskHintTable[*p].bit_id))
                 {
                     fi = gGameUiTaskHintCandidates[i];
-                    goto haveHint;
+                    break;
                 }
                 p++;
+                i++;
+                if (i >= GAMEUI_TASK_HINT_COUNT)
+                {
+                    fi = -1;
+                    break;
+                }
             }
-            fi = -1;
-        haveHint:
             n = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) +
                 mainGetBit(GAMEBIT_ITEM_SpellStone2_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
             if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got))
@@ -8749,20 +8757,12 @@ void GameUI_update(void)
 
         if (allowCStickTarget != 0)
         {
-            int cxa, cya;
+            int cxa;
             if (padGetCX(0) < 0)
                 cxa = -padGetCX(0);
             else
                 cxa = padGetCX(0);
-            if (cxa <= 5)
-            {
-                if (padGetCY(0) < 0)
-                    cya = -padGetCY(0);
-                else
-                    cya = padGetCY(0);
-                if (cya <= 5)
-                    goto noCStickTarget;
-            }
+            if (cxa > 5 || (padGetCY(0) < 0 ? -padGetCY(0) : padGetCY(0)) > 5)
             {
                 int closed;
                 if (*(s8*)&cMenuOpen != 0)
@@ -8826,144 +8826,92 @@ void GameUI_update(void)
                     }
                 }
             }
-        noCStickTarget:;
         }
 
         flags = gCMenuButtons;
         {
-            int closed;
-
-            if ((flags & 0x20000) && tricky != NULL && (s8)cMenuState != 2)
+            if ((flags & 0x20000) && tricky != NULL && (s8)cMenuState != 2 &&
+                (*(s8*)&cMenuOpen != 0 ? 0 : (gCMenuOpenAnim != 0 ? 0 : 1)))
             {
-                if (*(s8*)&cMenuOpen != 0)
-                    closed = 0;
-                else if (gCMenuOpenAnim != 0)
-                    closed = 0;
-                else
-                    closed = 1;
-                if (closed)
-                {
-                    buttonDisable(0, 0x20000);
-                    lbl_803DD79C = 0;
-                    lbl_803DD79E = 0;
-                    shouldOpenCMenu = 2;
-                    lbl_803DD8B7 = 2;
-                    gCMenuCurSection = 2;
-                    cMenuSelectFirstEnabledItem(2, 1);
-                    goto cMenuInputDone;
-                }
+                buttonDisable(0, 0x20000);
+                lbl_803DD79C = 0;
+                lbl_803DD79E = 0;
+                shouldOpenCMenu = 2;
+                lbl_803DD8B7 = 2;
+                gCMenuCurSection = 2;
+                cMenuSelectFirstEnabledItem(2, 1);
             }
-            if ((flags & 0x80000) && (s8)cMenuState != 3)
+            else if ((flags & 0x80000) && (s8)cMenuState != 3 &&
+                     (*(s8*)&cMenuOpen != 0 ? 0 : (gCMenuOpenAnim != 0 ? 0 : 1)))
             {
-                if (*(s8*)&cMenuOpen != 0)
-                    closed = 0;
-                else if (gCMenuOpenAnim != 0)
-                    closed = 0;
-                else
-                    closed = 1;
-                if (closed)
-                {
-                    buttonDisable(0, 0x80000);
-                    lbl_803DD79C = -0x5556;
-                    lbl_803DD79E = -0x5556;
-                    shouldOpenCMenu = 3;
-                    lbl_803DD8B7 = 0;
-                    gCMenuCurSection = 0;
-                    cMenuSelectFirstEnabledItem(0, 0);
-                    if (trickyProximity != 0)
-                        cMenuSelectItemByTarget(0, 0xc1, 0);
-                    goto cMenuInputDone;
-                }
+                buttonDisable(0, 0x80000);
+                lbl_803DD79C = -0x5556;
+                lbl_803DD79E = -0x5556;
+                shouldOpenCMenu = 3;
+                lbl_803DD8B7 = 0;
+                gCMenuCurSection = 0;
+                cMenuSelectFirstEnabledItem(0, 0);
+                if (trickyProximity != 0)
+                    cMenuSelectItemByTarget(0, 0xc1, 0);
             }
-            if ((flags & 0x40000) && (s8)cMenuState != 4)
+            else if ((flags & 0x40000) && (s8)cMenuState != 4 &&
+                     (*(s8*)&cMenuOpen != 0 ? 0 : (gCMenuOpenAnim != 0 ? 0 : 1)))
             {
-                if (*(s8*)&cMenuOpen != 0)
-                    closed = 0;
-                else if (gCMenuOpenAnim != 0)
-                    closed = 0;
-                else
-                    closed = 1;
-                if (closed)
-                {
-                    buttonDisable(0, 0x40000);
-                    lbl_803DD79C = 0x5555;
-                    lbl_803DD79E = 0x5555;
-                    shouldOpenCMenu = 4;
-                    lbl_803DD8B7 = 1;
-                    gCMenuCurSection = 1;
-                    cMenuSelectFirstEnabledItem(1, 0);
-                    goto cMenuInputDone;
-                }
+                buttonDisable(0, 0x40000);
+                lbl_803DD79C = 0x5555;
+                lbl_803DD79E = 0x5555;
+                shouldOpenCMenu = 4;
+                lbl_803DD8B7 = 1;
+                gCMenuCurSection = 1;
+                cMenuSelectFirstEnabledItem(1, 0);
             }
-
-            {
-                int absCx = cx < 0 ? -cx : cx;
-                if (absCx < 0xf)
-                    goto checkCameraMode;
-            }
-            {
-                int absPrev = lbl_803DD78E < 0 ? -lbl_803DD78E : lbl_803DD78E;
-                if (absPrev >= 0xf)
-                    goto checkCameraMode;
-            }
-            if (gCMenuScrollTimer != 0)
-                goto checkCameraMode;
-
-            if (*(s8*)&cMenuOpen == 0)
-                closed = 0;
             else
-                closed = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
-            if (!closed)
-                goto checkCameraMode;
-
             {
-                int absAng = angDelta < 0 ? -angDelta : angDelta;
-                if (absAng >= 0x2710)
-                    goto checkCameraMode;
+                if ((cx < 0 ? -cx : cx) >= 0xf &&
+                    (lbl_803DD78E < 0 ? -lbl_803DD78E : lbl_803DD78E) < 0xf && gCMenuScrollTimer == 0 &&
+                    (*(s8*)&cMenuOpen == 0 ? 0 : (gCMenuOpenAnim != gCMenuOpenAnimMax ? 0 : 1)) &&
+                    (angDelta < 0 ? -angDelta : angDelta) < 0x2710)
+                {
+                    int dir = 1;
+                    u8 next = cMenuState;
+                    lbl_803DD79A = -1;
+                    if (cx < 0)
+                    {
+                        dir = -1;
+                        lbl_803DD79A = 1;
+                    }
+                    next += dir;
+                    if (next > 4)
+                        next = 2;
+                    if (next < 2)
+                        next = 4;
+                    switch (next)
+                    {
+                    case 4:
+                        lbl_803DD79E = 0x5555;
+                        sectionTarget = 1;
+                        break;
+                    case 3:
+                        lbl_803DD79E = -0x5556;
+                        sectionTarget = 0;
+                        break;
+                    case 2:
+                        lbl_803DD79E = 0;
+                        sectionTarget = 2;
+                        break;
+                    }
+                    if (next != (s8)cMenuState)
+                    {
+                        *(s8*)&shouldOpenCMenu = (s8)next;
+                        lbl_803DD8B7 = sectionTarget;
+                    }
+                }
+                else if ((*gCameraInterface)->getMode() == CAMMODE_WORLDMAP)
+                {
+                    cMenuOpen = 0;
+                }
             }
-            {
-                int dir = 1;
-                u8 next = cMenuState;
-                lbl_803DD79A = -1;
-                if (cx < 0)
-                {
-                    dir = -1;
-                    lbl_803DD79A = 1;
-                }
-                next += dir;
-                if (next > 4)
-                    next = 2;
-                if (next < 2)
-                    next = 4;
-                switch (next)
-                {
-                case 4:
-                    lbl_803DD79E = 0x5555;
-                    sectionTarget = 1;
-                    break;
-                case 3:
-                    lbl_803DD79E = -0x5556;
-                    sectionTarget = 0;
-                    break;
-                case 2:
-                    lbl_803DD79E = 0;
-                    sectionTarget = 2;
-                    break;
-                }
-                if (next != (s8)cMenuState)
-                {
-                    *(s8*)&shouldOpenCMenu = (s8)next;
-                    lbl_803DD8B7 = sectionTarget;
-                }
-                goto cMenuInputDone;
-            }
-
-        checkCameraMode:
-            if ((*gCameraInterface)->getMode() == CAMMODE_WORLDMAP)
-                cMenuOpen = 0;
         }
-
-    cMenuInputDone:
 
         if ((s8)shouldOpenCMenu != 0)
         {
