@@ -47,6 +47,34 @@ The fix is invisible to fuzzy in BOTH directions -- nine NonMatching units were
 fixed here for a total fuzzy delta of 0.00000 -- so the DOL sha and the .text
 size are the only instruments that see it.
 
+!!!! .o BYTES ARE NOT DOL BYTES (w90). THIS IS THE LAW THIS TOOL EXISTS TO
+ENFORCE. An unpaired symbol is nearly always an UNREFERENCED STATIC, and mwld
+DEAD-STRIPS it: it never reaches main.elf and costs ZERO bytes in the shipped
+binary. Ranking candidates by .o size -- as every earlier revision of this
+screen did -- manufactures work that cannot pay. Measured tree-wide: of 35
+ours-only symbols totalling 6,880 B, **34 (6,868 B) are deadstripped**. The one
+apparent survivor was a NAME COLLISION (below). The real recoverable total is
+ZERO. So this screen now classifies every candidate LIVE vs DEADSTRIPPED and
+ranks by LIVE bytes only; deadstripped symbols are quarantined in a separate
+zero-cost section and must never be read as recoverable.
+
+!!!! LIVENESS MUST BE DECIDED BY ADDRESS, NOT BY NAME. A bare name lookup in
+main.elf false-positives on generic static names. Concrete case: OSExec's local
+`Callback` (0xc) "appeared" live, but the ELF's `Callback` at 0x80244594 is
+OSReboot.o's own local of identical size, and 0x80244594 lies inside OSReboot's
+split range, not OSExec's. A symbol counts as LIVE only when an ELF address
+bearing that name falls INSIDE THE UNIT'S OWN .text split range.
+
+!!!! .text BYTE-IDENTITY AGAINST THE CARVED RETAIL .o IS *NOT* SUFFICIENT --
+a second, independent proof (w90). sal_volume's CalcBus/CalcBusDPL2 (836 B) were
+`static inline`d: .text went 0xadc -> 0x798 BYTE-IDENTICAL to the carve, and
+extab/extabindex went 0x18/0x24 -> exactly the claimed 0x8/0xC. Every structural
+instrument read perfect -- and the DOL still MOVED (a9a6b41a). Cause: the
+baseline .sdata2 was ALREADY byte-identical to retail (f0c07cc2) and inlining
+perturbed the pool to ff838f. The 836 B had been deadstripped all along, so the
+"fix" traded a correct pool for nothing. Reverted. Check EVERY section, and gate
+on the DOL.
+
 usage: python3 tools/unpaired_fn_check.py [unit-substring ...]
 """
 import json
@@ -57,6 +85,9 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OBJDUMP = os.path.join(ROOT, 'build/binutils/powerpc-eabi-objdump')
+NM = os.path.join(ROOT, 'build/binutils/powerpc-eabi-nm')
+ELF = os.path.join(ROOT, 'build/GSAE01/main.elf')
+SPLITS = os.path.join(ROOT, 'config/GSAE01/splits.txt')
 
 SYM_RE = re.compile(r'^([0-9a-f]{8}) (.{7}) (\S+)\s+([0-9a-f]{8}) (.+)$')
 
@@ -96,10 +127,105 @@ def reloc_targets(path):
     return out
 
 
+def elf_addrs():
+    """name -> set of addresses defined in the linked ELF.
+
+    A name may be defined more than once (distinct file-local statics), which is
+    exactly why callers must disambiguate by address.
+    """
+    r = subprocess.run([NM, ELF], capture_output=True)
+    if r.returncode != 0:
+        sys.exit('FATAL: nm failed on %s -- cannot screen liveness.' % ELF)
+    out = {}
+    for line in r.stdout.decode('utf8', 'replace').splitlines():
+        f = line.split()
+        if len(f) != 3:
+            continue
+        try:
+            addr = int(f[0], 16)
+        except ValueError:
+            continue
+        out.setdefault(f[2], set()).add(addr)
+    return out
+
+
+def split_text_ranges():
+    """source path (no extension) -> (start, end) of its .text claim."""
+    out, cur = {}, None
+    for line in open(SPLITS):
+        m = re.match(r'^(\S+\.(?:c|cpp)):\s*$', line)
+        if m:
+            cur = os.path.splitext(m.group(1))[0]
+            continue
+        m = re.match(r'^\s*\.text\s+start:(0x[0-9A-Fa-f]+)\s+end:(0x[0-9A-Fa-f]+)',
+                     line)
+        if m and cur:
+            out[cur] = (int(m.group(1), 16), int(m.group(2), 16))
+    return out
+
+
+def unit_key(base_path):
+    """objdiff base_path -> the splits.txt key, e.g. dolphin/os/OSExec."""
+    p = base_path.replace('\\', '/')
+    marker = 'build/GSAE01/src/'
+    if marker in p:
+        p = p.split(marker, 1)[1]
+    return os.path.splitext(p)[0]
+
+
+def is_live(name, rng, addrs):
+    """LIVE iff an ELF address bearing this name lies in the unit's own range.
+
+    Name-only matching is unsound -- see the OSExec/OSReboot `Callback`
+    collision in the module docstring.
+    """
+    if rng is None:
+        return False
+    lo, hi = rng
+    return any(lo <= a < hi for a in addrs.get(name, ()))
+
+
+def positive_control(examined, addrs, ranges):
+    """Fail loudly rather than reporting a vacuous zero.
+
+    Several screens in this project have reported confident zeros through silent
+    join bugs. These controls exercise the SAME lookup path the verdicts use, so
+    a broken join cannot masquerade as 'nothing recoverable'.
+    """
+    errs = []
+    if len(addrs) < 1000:
+        errs.append('ELF symbol table looks empty (%d names) -- is main.elf '
+                    'built?' % len(addrs))
+    if len(ranges) < 100:
+        errs.append('splits.txt .text ranges failed to parse (%d found).'
+                    % len(ranges))
+
+    # The load-bearing control: paired symbols of a unit that IS linked must
+    # resolve LIVE inside that unit's own range. If none do, the
+    # name->address->range join is broken and every DEADSTRIPPED verdict is junk.
+    live_pairs = sum(1 for nm_, rng in examined if is_live(nm_, rng, addrs))
+    if examined and live_pairs == 0:
+        errs.append('join control FAILED: 0 of %d known-linked paired symbols '
+                    'resolved LIVE in their own split range.' % len(examined))
+
+    # Regression control for the collision bug: OSExec's `Callback` shares a
+    # name with OSReboot's and must NOT be counted live.
+    if 'dolphin/os/OSExec' in ranges and 'Callback' in addrs:
+        if is_live('Callback', ranges['dolphin/os/OSExec'], addrs):
+            errs.append('collision control FAILED: OSExec `Callback` counted '
+                        'LIVE; address disambiguation is not working.')
+    if errs:
+        sys.exit('POSITIVE CONTROL FAILED -- results are NOT trustworthy:\n  '
+                 + '\n  '.join(errs))
+    return live_pairs
+
+
 def main():
     filters = sys.argv[1:]
     units = json.load(open(os.path.join(ROOT, 'objdiff.json')))['units']
-    hits = 0
+    addrs = elf_addrs()
+    ranges = split_text_ranges()
+    reports, control_syms, vacuous = [], [], []
     for u in units:
         name = u.get('name', '')
         if filters and not any(f in name for f in filters):
@@ -114,32 +240,90 @@ def main():
         rsyms, rsize = text_syms(rp)
         if osyms is None or rsyms is None or osize is None or rsize is None:
             continue
+        rng = ranges.get(unit_key(u['base_path']))
         extra = {k: v for k, v in osyms.items() if k not in rsyms}
         missing = {k: v for k, v in rsyms.items() if k not in osyms}
+        # Paired symbols feed the join control: these ARE in retail, so for any
+        # genuinely linked unit they must resolve LIVE in the unit's own range.
+        control_syms.extend((k, rng) for k in osyms if k in rsyms)
         if not extra and not missing:
             continue
         delta = osize - rsize
-        total = sum(extra.values())
         orel, rrel = reloc_targets(op), reloc_targets(rp)
-        verdict = 'EXACT' if total == delta else 'PARTIAL'
+        live = {k: v for k, v in extra.items() if is_live(k, rng, addrs)}
+        dead = {k: v for k, v in extra.items() if k not in live}
         if rsize == 0:
-            verdict = 'ZERO-CLAIM'
-        hits += 1
-        print('\n=== %s' % name)
-        print('  .text ours=0x%x retail=0x%x delta=0x%x  unpaired-sum=0x%x  [%s]'
-              % (osize, rsize, delta, total, verdict))
-        if rsize == 0:
-            print('    !! splits.txt claims a ZERO-LENGTH .text range for this '
-                  'unit, so objdiff pairs nothing and the unit scores 100.0 '
-                  'vacuously. Not an inlining defect.')
-        for k, v in sorted(extra.items(), key=lambda x: -x[1]):
+            vacuous.append(name)
+        reports.append(dict(
+            name=name, osize=osize, rsize=rsize, delta=delta, rng=rng,
+            live=live, dead=dead, missing=missing, orel=orel, rrel=rrel,
+            live_bytes=sum(live.values()), dead_bytes=sum(dead.values())))
+
+    positive_control(control_syms, addrs, ranges)
+
+    def emit(r, show_live):
+        pool = r['live'] if show_live else r['dead']
+        verdict = 'ZERO-CLAIM' if r['rsize'] == 0 else (
+            'EXACT' if sum(r['live'].values()) + sum(r['dead'].values())
+            == r['delta'] else 'PARTIAL')
+        print('\n=== %s' % r['name'])
+        print('  .text ours=0x%x retail=0x%x delta=0x%x  live=0x%x dead=0x%x  [%s]'
+              % (r['osize'], r['rsize'], r['delta'], r['live_bytes'],
+                 r['dead_bytes'], verdict))
+        if r['rsize'] == 0:
+            print('    !! VACUOUS-100 LANDMINE: splits.txt claims a ZERO-LENGTH '
+                  '.text range, so objdiff pairs nothing and the unit scores '
+                  '100.0 having verified NOTHING. Not an inlining defect.')
+        for k, v in sorted(pool.items(), key=lambda x: -x[1]):
             print('    OURS-ONLY   %-44s size=0x%-5x reloc ours=%s retail=%s'
-                  % (k, v, 'Y' if k in orel else 'n',
-                     'Y' if k in rrel else 'n'))
-        for k, v in sorted(missing.items(), key=lambda x: -x[1]):
+                  % (k, v, 'Y' if k in r['orel'] else 'n',
+                     'Y' if k in r['rrel'] else 'n'))
+        for k, v in sorted(r['missing'].items(), key=lambda x: -x[1]):
             print('    RETAIL-ONLY %-44s size=0x%-5x  (we emit nothing for it)'
                   % (k, v))
-    print('\nunits with unpaired .text symbols: %d' % hits)
+
+    live_r = sorted([r for r in reports if r['live']],
+                    key=lambda r: -r['live_bytes'])
+    dead_r = sorted([r for r in reports if r['dead']],
+                    key=lambda r: -r['dead_bytes'])
+
+    print('#' * 72)
+    print('# LIVE -- reach main.elf inside their own split range. REAL DOL bytes.')
+    print('# These are the ONLY candidates that can pay. Gate on the DOL sha.')
+    print('#' * 72)
+    for r in live_r:
+        emit(r, True)
+    if not live_r:
+        print('\n  (none -- no unpaired symbol reaches the linked binary)')
+
+    print('\n\n' + '#' * 72)
+    print('# DEADSTRIPPED -- ZERO DOL COST. NOT RECOVERABLE. DO NOT WORK THESE.')
+    print('# mwld drops these unreferenced statics; they cost nothing shipped.')
+    print('# Touching one can only LOSE (sal_volume traded a byte-correct')
+    print('# .sdata2 pool for 836 B that were never in the binary).')
+    print('#' * 72)
+    for r in dead_r:
+        emit(r, False)
+
+    if vacuous:
+        print('\n\n' + '#' * 72)
+        print('# VACUOUS-100 LANDMINES: zero-length .text claim, objdiff pairs')
+        print('# nothing, yet declared MatchingFor -- "100%" verifies NOTHING.')
+        print('# Reporting defects, not byte defects: retail has no code at')
+        print('# these addresses at all. A MatchingFor flip is NOT the fix --')
+        print('# with no retail object to link instead it risks breaking the')
+        print('# link for zero byte gain. Surfaced here deliberately.')
+        print('#' * 72)
+        for n in vacuous:
+            print('  %s' % n)
+
+    lb = sum(r['live_bytes'] for r in reports)
+    db = sum(r['dead_bytes'] for r in reports)
+    print('\n' + '-' * 72)
+    print('units with unpaired .text symbols: %d' % len(reports))
+    print('LIVE (real DOL bytes)   : %5d B in %d units' % (lb, len(live_r)))
+    print('DEADSTRIPPED (zero cost): %5d B in %d units' % (db, len(dead_r)))
+    print('.o BYTES ARE NOT DOL BYTES -- only the LIVE column can pay.')
 
 
 if __name__ == '__main__':
