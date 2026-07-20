@@ -115,7 +115,7 @@ void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed);
 f32 dll_19_func05(GameObject* obj, f32 px, f32 pz, f32 range, char* st);
 void dll_19_func07(GameObject* obj, int target, int div, u16* outYaw, u16* outDelta, u16* outDist);
 int dll_19_func09_ret_0(void);
-u8 dll_19_func08(GameObject* obj, char* st, f32 dist);
+u8 dll_19_func08(GameObject* obj, void* state, f32 dist);
 void dll_19_func04_nop(void);
 void dll_19_func03_nop(void);
 
@@ -1235,7 +1235,7 @@ int dll_19_func09_ret_0(void)
 
 /* Probes the four compass directions around the object for walkable space,
  * returning a bitmask of clear directions. */
-u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
+u8 dll_19_func08(GameObject* obj, void* state, f32 dist)
 {
     u16 i;
     u8 mask;
@@ -1285,7 +1285,7 @@ u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
         if (ok != 0)
         {
             if (objBboxFn_800640cc(&obj->anim.localPosX, world, 1.0f, 0, (TrackBBoxHit*)bboxOut,
-                                   (GameObject*)obj, *(u8*)(st + 0x261), -1, 0, 0) != 0)
+                                   (GameObject*)obj, *(u8*)((u8*)state + 0x261), -1, 0, 0) != 0)
             {
                 ok = 0;
             }

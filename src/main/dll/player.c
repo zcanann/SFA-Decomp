@@ -18175,7 +18175,8 @@ int Lightfoot_UpdateWanderSteering(GameObject* obj, int state, f32 fv)
         }
         else
         {
-            r = (*(u8 (*)(int, int, f32))(*(int*)(*gBaddieControlInterface + 0x18)))((int)obj, state, lbl_803E8190);
+            r = ((BaddieControlInterface*)*gBaddieControlInterface)
+                    ->getClearDirectionMask(obj, (void*)state, lbl_803E8190);
             if ((r & 1) == 0)
             {
                 if (r & 4)

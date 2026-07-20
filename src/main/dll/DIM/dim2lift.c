@@ -110,9 +110,9 @@ int DIMbossAnim_updatePlayerHitReaction(GameObject* obj, int runtime)
             if (dirSector == 0 || dirSector == 15)
             {
                 ((BaddieState*)runtime)->moveDone = 0;
-                if (distance > 240 && (((u8)(*(u8(**)(void*, int, f32))(*(int*)gBaddieControlInterface + 0x18))(
-                                           obj, runtime, lbl_803E4BBC)) &
-                                       1))
+                if (distance > 240 &&
+                    (((BaddieControlInterface*)*gBaddieControlInterface)
+                         ->getClearDirectionMask(obj, (void*)runtime, lbl_803E4BBC) & 1))
                 {
                     (*gPlayerInterface)->setState(obj, (void*)runtime,
                                                   gDim2LiftFarMoveChoices[randomGetRange(0, 5)]);

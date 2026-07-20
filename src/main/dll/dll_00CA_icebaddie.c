@@ -175,7 +175,8 @@ int iceBaddie_stateHandlerB07(int obj, int state)
     }
     else if ((s8)((GroundBaddieState*)state)->baddie.moveDone != 0)
     {
-        if ((((u8)((int (*)(int, int, f32))((void**)*gBaddieControlInterface)[6])(obj, state, 75.0f) & 1) == 0))
+        if ((((BaddieControlInterface*)*gBaddieControlInterface)
+                 ->getClearDirectionMask((GameObject*)obj, (void*)state, 75.0f) & 1) == 0)
         {
             return 5;
         }
@@ -245,7 +246,8 @@ int iceBaddie_stateHandlerB06(int obj, int state)
     f32 neutralBlend;
 
     if ((s8)((GroundBaddieState*)state)->baddie.moveDone != 0 &&
-        (((u8)((int (*)(int, int, f32))((void**)*gBaddieControlInterface)[6])(obj, state, 75.0f) & 1) == 0))
+        ((((BaddieControlInterface*)*gBaddieControlInterface)
+              ->getClearDirectionMask((GameObject*)obj, (void*)state, 75.0f) & 1) == 0))
     {
         return 5;
     }
@@ -429,8 +431,8 @@ int iceBaddie_checkTargetState(int obj, int state)
         if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveDone != 0)
         {
             (*gPlayerInterface)->rotateTowardTarget((void*)obj, (void*)state, timeDelta, 4);
-            if (((u8)(**(int (**)(int, int, f32))((char*)(*gBaddieControlInterface) + 0x18))(obj, state, 75.0f) &
-                 1) == 0)
+            if ((((BaddieControlInterface*)*gBaddieControlInterface)
+                     ->getClearDirectionMask((GameObject*)obj, (void*)state, 75.0f) & 1) == 0)
             {
                 return 5;
             }
@@ -1164,8 +1166,8 @@ void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
     if (acquired != 0)
     {
         (*gPlayerInterface)->rotateTowardTarget((void*)obj, (void*)state, timeDelta, 4);
-        if (((u8)(**(int (**)(int, int, f32))((char*)(*gBaddieControlInterface) + 0x18))(obj, state, 75.0f) &
-             1) == 0)
+        if ((((BaddieControlInterface*)*gBaddieControlInterface)
+                 ->getClearDirectionMask((GameObject*)obj, (void*)state, 75.0f) & 1) == 0)
         {
             acquired = 0;
         }
