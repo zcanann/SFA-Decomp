@@ -44,6 +44,7 @@ typedef int (*RomCurveFindFn)(f32 x,f32 y,f32 z,int *types,int typeCount,int act
 typedef RomCurveDef *(*RomCurveGetByIdFn)(int curveId);
 typedef f32 (*RomCurveDistanceToObjectFn)(struct GameObject *obj,u32 curveId);
 typedef int (*RomCurveFindByActionFn)(int action);
+typedef int (*RomCurveGetLinkedCurveFn)(RomCurveDef *curve,int excludeLinkId);
 typedef u8 (*RomCurveInitWalkerFn)(void *walker,void *obj,f32 scale,int *curveParam,int arg);
 typedef u8 (*RomCurveGoNextPointFn)(void *walker);
 typedef int (*RomCurveSetClosedFn)(void *walker,int closed);
@@ -71,10 +72,10 @@ typedef struct RomCurveInterface {
   void *slot48;
   void *slot4C;
   void *slot50;
-  void *slot54;
+  RomCurveGetLinkedCurveFn getRandomUnblockedLink;
   void *slot58;
   void *slot5C;
-  void *slot60;
+  RomCurveGetLinkedCurveFn getRandomBlockedLink;
   void *slot64;
   void *slot68;
   void *slot6C;

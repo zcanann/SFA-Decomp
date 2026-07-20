@@ -5637,10 +5637,10 @@ int playerState1B(GameObject* obj, int state, f32 fv)
             inner->yaw = inner->targetYaw;
             sqrtf(inner->hitNormalX * inner->hitNormalX + inner->hitNormalZ * inner->hitNormalZ);
             obj->anim.rotY = 0;
-            found = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(pt, -1);
+            found = (*gRomCurveInterface)->getRandomUnblockedLink((RomCurveDef*)pt, -1);
             if (found == -1)
             {
-                found = ((int (*)(int, int))(*gRomCurveInterface)->slot60)(pt, -1);
+                found = (*gRomCurveInterface)->getRandomBlockedLink((RomCurveDef*)pt, -1);
             }
             pt2 = (int)(*gRomCurveInterface)->getById(found);
             *(f32*)((int)inner + 0x628) = *(f32*)((char*)pt2 + 0x8);
