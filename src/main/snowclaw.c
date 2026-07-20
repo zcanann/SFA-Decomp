@@ -137,7 +137,7 @@ void snowclaw_release(void);
 void snowclaw_initialise(void);
 void snowclaw_free(GameObject* obj);
 void snowclaw_init(int* obj, s8* init);
-void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int userData1Value);
+void snowclaw_spawnDropBomb(GameObject* obj, GameObject* owner, int launchMode, int userData1Value);
 void snowclaw_updateMountAttack(GameObject* obj, GameObject* mount);
 void snowclaw_syncMountTransform(GameObject* obj, GameObject* mount, int p2, int p3, int p4, int p5, int opacity,
                                  int mountAlpha, int enabled);
@@ -164,28 +164,28 @@ ObjectDescriptor gSnowClawObjDescriptor = {
 };
 
 
-void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int userData1Value)
+void snowclaw_spawnDropBomb(GameObject* obj, GameObject* owner, int launchMode, int userData1Value)
 {
-    int player;
-    int obj2;
+    GameObject* player;
+    SnowClawBombSetup* setup;
     GameObject* spawned;
 
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() != 0)
     {
-        obj2 = (int)Obj_AllocObjectSetup(0x24, SNOWCLAW_CHILD_OBJ_DROP_BOMB);
-        ((ObjPlacement*)obj2)->objectId = SNOWCLAW_CHILD_OBJ_DROP_BOMB;
-        ((ObjPlacement*)obj2)->color[0] = 2;
-        ((ObjPlacement*)obj2)->color[2] = 0xff;
-        ((ObjPlacement*)obj2)->color[1] = 1;
-        ((ObjPlacement*)obj2)->color[3] = 0xff;
-        ((SnowClawBombSetup*)obj2)->launchMode = launchMode;
-        ((SnowClawBombSetup*)obj2)->head.posX = (obj)->anim.localPosX;
-        ((SnowClawBombSetup*)obj2)->head.posY = 4.0f + (obj)->anim.localPosY;
-        ((SnowClawBombSetup*)obj2)->head.posZ = (obj)->anim.localPosZ;
-        ((SnowClawBombSetup*)obj2)->aimYaw =
-            (s8)(u8)((((getAngle(((GameObject*)player)->anim.localPosX - (obj)->anim.localPosX,
-                                 ((GameObject*)player)->anim.localPosZ - (obj)->anim.localPosZ) &
+        setup = (SnowClawBombSetup*)Obj_AllocObjectSetup(0x24, SNOWCLAW_CHILD_OBJ_DROP_BOMB);
+        setup->head.objectId = SNOWCLAW_CHILD_OBJ_DROP_BOMB;
+        setup->head.color[0] = 2;
+        setup->head.color[2] = 0xff;
+        setup->head.color[1] = 1;
+        setup->head.color[3] = 0xff;
+        setup->launchMode = launchMode;
+        setup->head.posX = obj->anim.localPosX;
+        setup->head.posY = 4.0f + obj->anim.localPosY;
+        setup->head.posZ = obj->anim.localPosZ;
+        setup->aimYaw =
+            (s8)(u8)((((getAngle(player->anim.localPosX - obj->anim.localPosX,
+                                 player->anim.localPosZ - obj->anim.localPosZ) &
                         0xffff) >>
                        8) +
                       0x8000) >>
@@ -194,16 +194,16 @@ void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int us
         switch ((u8)launchMode)
         {
         case 0:
-            ((SnowClawBombSetup*)obj2)->launchAngle = gSnowClawDropBombAngle;
+            setup->launchAngle = gSnowClawDropBombAngle;
             break;
         case 1:
-            ((SnowClawBombSetup*)obj2)->launchAngle =
-                (s16)(getAngle(((GameObject*)player)->anim.localPosX - (obj)->anim.localPosX,
-                               ((GameObject*)player)->anim.localPosZ - (obj)->anim.localPosZ) +
+            setup->launchAngle =
+                (s16)(getAngle(player->anim.localPosX - obj->anim.localPosX,
+                               player->anim.localPosZ - obj->anim.localPosZ) +
                       0x8000);
             break;
         }
-        spawned = loadObjectAtObject(obj, (ObjPlacement*)obj2);
+        spawned = loadObjectAtObject(obj, &setup->head);
         if (spawned != NULL)
         {
             spawned->userData1 = (u8)userData1Value;
