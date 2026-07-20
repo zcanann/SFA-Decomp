@@ -58,7 +58,7 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
     tables = getTablesBinEntry(TEXSCROLL_TABLE_ID);
     if (tables == NULL)
         return;
-    tex = getLoadedTexture(-tables[(s32) * (s16*)((char*)placement + 0x18)]);
+    tex = getLoadedTexture(-tables[(s32) ((TexScrollPlacement*)placement)->textureTableIndex]);
     if (tex == NULL)
         return;
 
