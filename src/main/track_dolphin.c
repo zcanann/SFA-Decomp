@@ -2192,7 +2192,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 {
     f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, step_y, dot, nx, proj, vy4, vy5, disc, dy, ny, len2, lc;
 
-    if (lbl_803DECB4 == r)
+    if (0.0f == r)
         return 0;
 
     px = p4[0];
@@ -2204,7 +2204,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
         sum = sum + dyy;
     }
     cc = sum - r * r;
-    if (cc < lbl_803DECB4)
+    if (cc < 0.0f)
     {
         if (flag != 0)
         {
@@ -2217,12 +2217,12 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
     dx2 = p4[1] - px;
     dy2 = p5[1] - p5[0];
     len2 = dx2 * dx2 + dy2 * dy2;
-    if (len2 > lbl_803DECB4)
+    if (len2 > 0.0f)
     {
         B = 2.0f * (dx2 * dx + dy2 * dy);
         lc = lbl_803DECBC * len2;
         disc = B * B - lc * cc;
-        if (disc >= lbl_803DECB4)
+        if (disc >= 0.0f)
         {
             root = sqrtf(disc);
             nB = -B;
@@ -2230,14 +2230,14 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
             denom = 2.0f * len2;
             t1 = t1 / denom;
             t2 = (nB - root) / denom;
-            if (t1 < lbl_803DECB4)
+            if (t1 < 0.0f)
                 t1 = lbl_803DECC0;
-            if (t2 < lbl_803DECB4)
+            if (t2 < 0.0f)
                 t2 = lbl_803DECC0;
             if (t2 < t1)
                 t1 = t2;
             t = t1;
-            if (t >= *(f32*)(int)&lbl_803DECB4 && t <= lbl_803DECC4)
+            if (t >= 0.0f && t <= 1.0f)
             {
                 lbl_803DCF58 = t;
                 if (flag != 0)
@@ -3801,7 +3801,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
         if (fa != fb)
             scale = fa / (fa - fb);
         else
-            scale = lbl_803DECB4;
+            scale = 0.0f;
         d0[0] = b[0] - a[0];
         d0[1] = b[1] - a[1];
         d0[2] = b[2] - a[2];
@@ -3826,15 +3826,15 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
                 f32 dotL = b[1] * p[1];
                 f32 dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
                 y = y - dot;
-                if (y > lbl_803DECB4)
+                if (y > 0.0f)
                 {
                     f32 px = p[0] * p[0];
                     f32 pz = p[2] * p[2];
                     f32 d = mathCosfHighPrecision(fn_802925C4(p[1], sqrtf(px + pz)));
-                    if (lbl_803DECB4 != d)
+                    if (0.0f != d)
                         y = y / d;
                     d1[0] = p[0];
-                    d1[1] = lbl_803DECB4;
+                    d1[1] = 0.0f;
                     d1[2] = p[2];
                     Vec3_Normalize(d1);
                     b[0] = y * d1[0] + b[0];
@@ -3885,7 +3885,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
                 f32 dotL = b[1] * p[1];
                 f32 dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
                 y = y - dot;
-                if (y > lbl_803DECB4)
+                if (y > 0.0f)
                 {
                     f32 px = p[0] * p[0];
                     f32 pz = p[2] * p[2];
