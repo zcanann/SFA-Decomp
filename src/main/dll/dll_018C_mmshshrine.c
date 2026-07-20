@@ -333,7 +333,7 @@ int fn_801C49B8(void* objArg)
     }
 
     stickAccel = (f32)padGetStickX(0) / 72.0f;
-    stickAccel = stickAccel * 0.0010416667209938169f;
+    stickAccel *= 0.0010416667209938169f;
     runtime->swayVelocity += stickAccel * timeDelta;
 
     target = runtime->swayTarget;
