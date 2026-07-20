@@ -8,7 +8,7 @@
  * gated by GameBit 0x3A2 / seqId 883 and suppressed when GameBit 110 is set
  * unless GameBit 898 is also set. The sequence callback (dll_16C_SeqFn) spawns
  * /frees a child object from a small id table keyed by
- * subObjIndex, and forwards trigger commands (1/2/3) to the linked object's
+ * desiredChildObjectIndex, and forwards trigger commands (1/2/3) to the linked object's
  * vtable.
  */
 #include "main/frame_timing.h"
@@ -26,18 +26,10 @@
 #include "main/gamebit_ids.h"
 #include "main/object_descriptor.h"
 
-typedef struct Dll16CPlacement
-{
-    u8 pad00[0x27];
-    s8 subObjIndex;
-} Dll16CPlacement;
-
 /*
  * Per-object extra state for the dll_16C map-event boulder proxy
  * (dll_16C_getExtraSize == 0x24).
  */
-
-STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 
 /* seqId variant whose render is gated by GameBit 0x3A2 (docblock: "Render is gated by GameBit 0x3A2 / seqId 883") */
 #define DLL16C_RENDER_GATE_SEQID 883
@@ -72,7 +64,7 @@ void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, in
     {
         u8 saved = src->anim.renderAlpha;
         src->anim.renderAlpha = opacity;
-        (*(void (**)(GameObject*, int, int, int, int, int))(**(int**)&src->anim.dll + 0x10))(src, p1, p2, p3, p4, -1);
+        (*(Dll16CLinkedObjectInterfaceVTable**)src->anim.dll)->render(src, p1, p2, p3, p4, -1);
         src->anim.renderAlpha = saved;
     }
     dst->anim.previousWorldPosX = dst->anim.worldPosX;
@@ -83,7 +75,7 @@ void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, in
     dst->anim.previousLocalPosZ = dst->anim.localPosZ;
     {
         f32 x, y, z;
-        (*(void (**)(GameObject*, f32*, f32*, f32*))(**(int**)&src->anim.dll + 0x28))(src, &x, &y, &z);
+        (*(Dll16CLinkedObjectInterfaceVTable**)src->anim.dll)->getPosition(src, &x, &y, &z);
         dst->anim.localPosX = x;
         dst->anim.localPosY = y;
         dst->anim.localPosZ = z;
@@ -109,12 +101,12 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     linkedObj = extra->linkedObj;
     if (animUpdate->triggerCommand == 3)
     {
-        extra->subObjIndex = -1;
+        extra->desiredChildObjectIndex = -1;
         animUpdate->triggerCommand = 0;
     }
     childObjectIds = lbl_802C2308;
 
-    if (extra->subObjIndex != extra->subObjIndexApplied)
+    if (extra->desiredChildObjectIndex != extra->activeChildObjectIndex)
     {
         if (obj->childObjs[0] != NULL)
         {
@@ -124,18 +116,18 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         if (Obj_IsLoadingLocked())
         {
-            s8 idx = extra->subObjIndex;
+            s8 idx = extra->desiredChildObjectIndex;
             if (idx > 0)
             {
                 *(int*)&obj->childObjs[0] =
                     (int)Obj_SetupObject(Obj_AllocObjectSetup(24, childObjectIds.ids[idx - 1]), 4, -1, -1, obj->anim.parent);
                 obj->childCount = 1;
             }
-            extra->subObjIndexApplied = extra->subObjIndex;
+            extra->activeChildObjectIndex = extra->desiredChildObjectIndex;
         }
         else
         {
-            extra->subObjIndexApplied = 0;
+            extra->activeChildObjectIndex = 0;
         }
     }
 
@@ -147,7 +139,7 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         extra->snapX = extra->pathPointX;
         extra->snapY = extra->pathPointY;
         extra->snapZ = extra->pathPointZ;
-        (*(void (**)(GameObject*, int))(**(int**)&linkedObj->anim.dll + 0x3c))(linkedObj, 2);
+        (*(Dll16CLinkedObjectInterfaceVTable**)linkedObj->anim.dll)->setState(linkedObj, 2);
         ObjAnim_SetCurrentMove((int)obj, 0x100, (0.0f), 1);
         if (obj->anim.modelState != NULL)
         {
@@ -158,13 +150,13 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     else if (linkedObj != NULL && animUpdate->triggerCommand == 1)
     {
-        (*(void (**)(GameObject*, int))(**(int**)&linkedObj->anim.dll + 0x3c))(linkedObj, 0);
+        (*(Dll16CLinkedObjectInterfaceVTable**)linkedObj->anim.dll)->setState(linkedObj, 0);
         animUpdate->triggerCommand = 0;
     }
 
     if (linkedObj != NULL)
     {
-        if ((*(int (**)(GameObject*))(**(int**)&linkedObj->anim.dll + 0x38))(linkedObj) == 2)
+        if ((*(Dll16CLinkedObjectInterfaceVTable**)linkedObj->anim.dll)->getState(linkedObj) == 2)
         {
             animUpdate->hitVolumePair &= ~3;
         }
@@ -174,7 +166,7 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 int dll_16C_getExtraSize(void)
 {
-    return 0x24;
+    return sizeof(Dll16CState);
 }
 
 int dll_16C_getObjectTypeId(void)
@@ -207,7 +199,7 @@ void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
         hit = 0;
         if (linkedObj != NULL)
         {
-            if ((*(int (**)(GameObject*))(**(int**)&linkedObj->anim.dll + 0x38))(linkedObj) == 2)
+            if ((*(Dll16CLinkedObjectInterfaceVTable**)linkedObj->anim.dll)->getState(linkedObj) == 2)
             {
                 hit = 1;
             }
@@ -246,7 +238,7 @@ void dll_16C_hitDetect(GameObject* obj)
     GameObject* p = extra->linkedObj;
     if (p != NULL)
     {
-        if ((*(int (**)(void*))(**(int**)&p->anim.dll + 0x38))(p) == 2)
+        if ((*(Dll16CLinkedObjectInterfaceVTable**)p->anim.dll)->getState(p) == 2)
         {
             dll_16C_syncSubObjectTransform(obj, extra->linkedObj, 0, 0, 0, 0, 0, 0, 0);
         }
@@ -261,7 +253,7 @@ void dll_16C_update(GameObject* obj)
     Dll16CChildObjectIdTable childObjectIds;
 
     childObjectIds = lbl_802C2308;
-    if (extra->subObjIndex != extra->subObjIndexApplied)
+    if (extra->desiredChildObjectIndex != extra->activeChildObjectIndex)
     {
         if (obj->childObjs[0] != NULL)
         {
@@ -271,18 +263,18 @@ void dll_16C_update(GameObject* obj)
         }
         if (Obj_IsLoadingLocked())
         {
-            s8 idx = extra->subObjIndex;
+            s8 idx = extra->desiredChildObjectIndex;
             if (idx > 0)
             {
                 *(int*)&obj->childObjs[0] =
                     (int)Obj_SetupObject(Obj_AllocObjectSetup(24, childObjectIds.ids[idx - 1]), 4, -1, -1, obj->anim.parent);
                 obj->childCount = 1;
             }
-            extra->subObjIndexApplied = extra->subObjIndex;
+            extra->activeChildObjectIndex = extra->desiredChildObjectIndex;
         }
         else
         {
-            extra->subObjIndexApplied = 0;
+            extra->activeChildObjectIndex = 0;
         }
     }
 
@@ -324,9 +316,9 @@ void dll_16C_update(GameObject* obj)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x100, (0.0f), 0);
         }
-        (*(void (**)(GameObject*, f32*))(**(int**)&sub->anim.dll + 0x44))(sub, &blend);
+        (*(Dll16CLinkedObjectInterfaceVTable**)sub->anim.dll)->getBlendStep(sub, &blend);
         blend = (0.01f);
-        (*(void (**)(GameObject*, f32*, f32*))(**(int**)&sub->anim.dll + 0x40))(sub, &a, &b);
+        (*(Dll16CLinkedObjectInterfaceVTable**)sub->anim.dll)->getBlendRange(sub, &a, &b);
         ObjAnim_AdvanceCurrentMove((int)obj, blend, (f32)(u32)framesThisStep, NULL);
         if (extra->linkedObj != NULL)
         {
@@ -360,7 +352,7 @@ void dll_16C_update(GameObject* obj)
     }
 }
 
-void dll_16C_init(GameObject* obj, void* placement)
+void dll_16C_init(GameObject* obj, Dll16CPlacement* placement)
 {
     Dll16CState* extra;
     obj->animEventCallback = dll_16C_SeqFn;
@@ -372,7 +364,7 @@ void dll_16C_init(GameObject* obj, void* placement)
     }
     extra = obj->extra;
     extra->linkedObj = NULL;
-    extra->subObjIndex = ((Dll16CPlacement*)placement)->subObjIndex;
+    extra->desiredChildObjectIndex = placement->childObjectIndex;
     extra->opacity = 0xff;
 }
 
