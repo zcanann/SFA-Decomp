@@ -1301,7 +1301,7 @@ void doNothing_8005D14C(int arg0, int arg1)
 void renderShadowType3(u8* obj, u32 b, s32 offset)
 {
     f32 stk[3];
-    s32 t, v;
+    s32 t;
     if (lbl_803DCE30 == 1000)
     {
         sceneDrawTransparentPolys();
@@ -1321,9 +1321,9 @@ void renderShadowType3(u8* obj, u32 b, s32 offset)
     }
     PSMTXMultVec((f32*)Camera_GetViewMatrix(), stk, stk);
     t = (s32) - stk[2] + offset;
-    v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
+    t = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
     lbl_8037E0C0[lbl_803DCE30 * 4] = (u32)obj;
-    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = v | ((b & 0xff) << 27);
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = t | ((b & 0xff) << 27);
 }
 
 void lightmap_sortTransparentDrawQueue(void)
@@ -1704,17 +1704,17 @@ void sceneDrawTransparentPolys(void)
 
 void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32* p)
 {
-    s32 t, v;
+    s32 t;
     if (lbl_803DCE30 == 1000)
     {
         sceneDrawTransparentPolys();
         lbl_803DCE30 = 0;
     }
     t = (s32) - p[2];
-    v = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
+    t = t < 0 ? 0 : (t > 0x7ffffff ? 0x7ffffff : t);
     lbl_8037E0C0[lbl_803DCE30 * 4] = a;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 1] = b;
-    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = v | 0x38000000;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = t | 0x38000000;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 7;
     lbl_803DCE30++;
 }
