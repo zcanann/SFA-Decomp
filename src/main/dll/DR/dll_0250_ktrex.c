@@ -31,7 +31,7 @@ KTRexRuntime* gKTRexRuntime;
 KTRexArenaState* gKTRexState;
 MapRomList* gKTRexMapBlock;
 int gKTRexContactEffectCooldown;
-void* gKTRexResource;
+StaffCollisionInterface** gKTRexResource;
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/dll_0262_drakormissile.h"
 #include "main/dll/rom_curve_interface.h"
@@ -1084,8 +1084,9 @@ void ktrex_updateContactEffects(GameObject* obj, KTRexRuntime* runtime)
         gKTRexEffectSpawnWork.unk4 = 0;
         msg.w[1] += randomGetRange(0, 0x9b);
         msg.w[2] += randomGetRange(0, 0x9b);
-        (*(void (**)(void*, int, void*, int, int, int*))(*(int*)gKTRexResource + 0x4))(obj, 0, &gKTRexEffectSpawnWork, 1,
-                                                                                       -1, msg.w);
+        (*gKTRexResource)
+            ->spawn((u8*)obj, 0, (PartFxSpawnParams*)&gKTRexEffectSpawnWork, 1, -1,
+                    (StaffCollisionColorArgs*)msg.w);
         gKTRexContactEffectCooldown = 0x3c;
     }
     if ((s8)runtime->hitCountdown < 1)

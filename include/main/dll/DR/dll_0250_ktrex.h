@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DLL_0250_KTREX_H_
 
 #include "global.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/game_object.h"
 #include "main/model_engine.h"
 #include "main/model_light.h"
@@ -150,7 +151,7 @@ extern void* gKTRexStateHandlersB[];
 extern f32 gKTRexLaneSpeedMin[];
 extern f32 gKTRexLaneSpeedMax[];
 extern MapRomList* gKTRexMapBlock;
-extern void* gKTRexResource;
+extern StaffCollisionInterface** gKTRexResource;
 extern const KtrexMsgBlob gKTRexMsgTemplate;
 extern int gKTRexContactEffectCooldown;
 extern KTRexWork gKTRexEffectSpawnWork;

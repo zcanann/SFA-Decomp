@@ -27,7 +27,7 @@ extern StaffFxDesc lbl_80311DA8;
 extern const f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;
 
 void StaffCollision_func03(u8* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags, int modelId,
-                           int* colorArgs)
+                           StaffCollisionColorArgs* colorArgs)
 {
     struct
     {
@@ -64,10 +64,10 @@ void StaffCollision_func03(u8* sourceObj, int variant, PartFxSpawnParams* spawnP
     cnt = 1;
     if (colorArgs != NULL)
     {
-        cnt = colorArgs[0];
-        r = colorArgs[1];
-        g = colorArgs[2];
-        b = colorArgs[3];
+        cnt = colorArgs->count;
+        r = colorArgs->red;
+        g = colorArgs->green;
+        b = colorArgs->blue;
     }
     for (i = 0; i < cnt; i++)
     {

@@ -8,6 +8,7 @@
  * The trailing GXWGFifo swipe* helpers are inlined display-list writers.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_position_api.h"
@@ -71,19 +72,9 @@ typedef struct DllF7GasSetup
     s16 field2C; /* 0x2c */
 } DllF7GasSetup;
 
-typedef struct DllF7HitParams
-{
-    u32 type;
-    u32 effectA;
-    u32 effectB;
-    u32 alpha;
-} DllF7HitParams;
-
-STATIC_ASSERT(sizeof(DllF7HitParams) == 0x10);
-
 typedef struct DllF7HitBlock
 {
-    DllF7HitParams params;
+    StaffCollisionColorArgs params;
     s16 rotX;
     s16 rotY;
     s16 rotZ;
@@ -93,7 +84,7 @@ typedef struct DllF7HitBlock
     f32 z;
 } DllF7HitBlock;
 
-const DllF7HitParams lbl_802C2260 = {8, 0xFF, 0xFF, 0x78};
+const StaffCollisionColorArgs lbl_802C2260 = {8, 0xFF, 0xFF, 0x78};
 
 /* dll_F7 (bouncing prop) object extra-state */
 typedef struct DllF7State
@@ -106,7 +97,7 @@ typedef struct DllF7State
     s8 byteB;
 } DllF7State;
 
-void* gDllF7Resource5A;
+StaffCollisionInterface** gDllF7Resource5A;
 void* gDllF7Resource5B;
 
 int dll_F7_getExtraSize(void)
@@ -187,8 +178,8 @@ void dll_F7_update(int* obj)
             blk.rotZ = 0;
             blk.rotY = 0;
             blk.rotX = 0;
-            ((void (*)(int, int, s16*, int, int, DllF7HitParams*))((int*)*(int**)gDllF7Resource5A)[1])(
-                0, 1, (s16*)((int)&blk + 16), 1025, -1, &blk.params);
+            (*gDllF7Resource5A)
+                ->spawn(NULL, 1, (PartFxSpawnParams*)((int)&blk + 16), 1025, -1, &blk.params);
         }
     }
     if (state->hitsRemaining <= 0)

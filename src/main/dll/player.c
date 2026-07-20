@@ -501,11 +501,6 @@ typedef struct
 
 typedef struct
 {
-    int a, b, c, d;
-} ColQuad;
-
-typedef struct
-{
     u8 knock : 3;
     u8 low : 5;
 } KnockBits;
@@ -14369,12 +14364,12 @@ void fn_802AFB0C(int obj, int inner, int state)
     HitFxDesc desc;
     VecXYZ pos;
     u8 buf[12];
-    ColQuad col;
+    StaffCollisionColorArgs col;
     int surfIdx;
     int damage;
     char* hitObj;
 
-    col = *(ColQuad*)lbl_802C2C68;
+    col = *(StaffCollisionColorArgs*)lbl_802C2C68;
     knockKind = 0;
     if (*(f32*)(*(int*)&((GameObject*)obj)->extra + 0x838) > lbl_803E7ED8)
     {
@@ -14592,14 +14587,13 @@ void fn_802AFB0C(int obj, int inner, int state)
                 {
                     gPlayerResource = Resource_Acquire(0x5a, 1);
                 }
-                col.b += randomGetRange(0, 0x9b);
-                col.c += randomGetRange(0, 0x9b);
+                col.red += randomGetRange(0, 0x9b);
+                col.green += randomGetRange(0, 0x9b);
                 desc.scale = lbl_803E7EE0;
                 desc.rx = 0;
                 desc.ry = 0;
                 desc.rz = 0;
-                (**(void (**)(int, int, void*, int, int, ColQuad*))((char*)*(int**)gPlayerResource + 0x4))(
-                    obj, 0, &desc, 1, -1, &col);
+                (*gPlayerResource)->spawn((u8*)obj, 0, (PartFxSpawnParams*)&desc, 1, -1, &col);
                 if (gPlayerResource != NULL)
                 {
                     Resource_Release(gPlayerResource);

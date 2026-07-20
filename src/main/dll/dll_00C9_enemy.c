@@ -9,6 +9,7 @@
  */
 #include "main/camera_interface.h"
 #include "main/dll/objfx_api.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/object_render.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
@@ -157,7 +158,7 @@ extern f32 lbl_803E25F4;
 extern f32 lbl_803E25D8;
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25E8;
-extern void* lbl_803DDA50;
+extern StaffCollisionInterface** lbl_803DDA50;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
 

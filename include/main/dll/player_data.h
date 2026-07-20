@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_PLAYER_DATA_H_
 #define MAIN_DLL_PLAYER_DATA_H_
 
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/game_object.h"
 
 typedef struct PlayerModelChainEntry
@@ -12,7 +13,7 @@ typedef struct PlayerModelChainEntry
 extern void* gPlayerPathObject;
 extern u8 gPlayerSubState;
 extern void* gPlayerSpawnedObjects[];
-extern void* gPlayerResource;
+extern StaffCollisionInterface** gPlayerResource;
 extern int gPlayerPendingHealth;
 extern f32 gPlayerDegToBinAngle;
 extern GameObject* gPlayerStaffObject;

@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/objfx_api.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_limited_object_api.h"
 #include "main/audio/sfx_looped_object_api.h"
@@ -138,16 +139,6 @@ typedef struct
 
 typedef struct
 {
-    int c0;
-    int c1;
-    int c2;
-    int c3;
-} FrozenFxColors;
-
-STATIC_ASSERT(sizeof(FrozenFxColors) == 0x10);
-
-typedef struct
-{
     u8 fadeCounter : 5;
     u8 low : 3;
 } FrozenByte2F6;
@@ -216,7 +207,7 @@ extern char lbl_8031D478[];
 extern u32 lbl_803E23C8;
 extern char sSidekickCommandDebugTextBlock[];
 int gTrickyNearestObject;
-int* lbl_803DDA50;
+StaffCollisionInterface** lbl_803DDA50;
 int lbl_803DDA4C;
 u32 gTrickyHelperObject;
 extern u32 lbl_803DBC40;
@@ -251,7 +242,7 @@ extern f32 lbl_803E25C8;
 
 extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
-const FrozenFxColors gTrickyFrozenFxColors = {0x08, 0xFF, 0xFF, 0x78};
+const StaffCollisionColorArgs gTrickyFrozenFxColors = {0x08, 0xFF, 0xFF, 0x78};
 extern f32 lbl_803E2588;
 extern f32 lbl_803E258C;
 extern f32 lbl_803E2590;
@@ -2307,7 +2298,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
     FrozenFxParams params;
     Vec hitPos;
     f32 delta[3];
-    FrozenFxColors colors;
+    StaffCollisionColorArgs colors;
     int attacker;
     f32 fxA;
     f32 fxB;
@@ -2553,8 +2544,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                 params.rot[0] = 0;
                 if (lbl_803DDA50 != NULL)
                 {
-                    ((void (**)(int, int, void*, int, int, void*)) * (int*)lbl_803DDA50)[1](0, 1, &params, 0x401, -1,
-                                                                                            &colors);
+                    (*lbl_803DDA50)->spawn(NULL, 1, (PartFxSpawnParams*)&params, 0x401, -1, &colors);
                 }
                 ((TrickyState*)state)->freezeEffectTimer = lbl_803E25A0;
                 if (*(void**)&((TrickyState*)state)->light == NULL)
