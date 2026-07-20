@@ -26,7 +26,7 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/modgfx.h"
-#include "main/sky_state.h"
+#include "main/sky.h"
 #include "main/model_light.h"
 #include "main/dll/dll_0150_gcrobotlightbea.h"
 #include "main/object_descriptor.h"

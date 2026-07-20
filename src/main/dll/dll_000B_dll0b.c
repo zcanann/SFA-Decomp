@@ -40,6 +40,7 @@
 #include "main/obj_list.h"
 #include "dolphin/gx/GXEnum.h"
 #include "main/render_mode_api.h"
+#include "main/sky.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "track/intersect_api.h"
 

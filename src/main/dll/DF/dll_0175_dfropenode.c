@@ -12,7 +12,7 @@
 #include "main/obj_list.h"
 #include "main/dll/dll_801c0bf8.h"
 #include "main/gamebits.h"
-#include "main/sky_state.h"
+#include "main/sky.h"
 #include "main/texture.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"

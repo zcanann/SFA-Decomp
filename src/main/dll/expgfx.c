@@ -20,7 +20,7 @@
 #include "main/lightmap_api.h"
 #include "main/lightmap_render_queue_api.h"
 #include "main/mm.h"
-#include "main/sky_state.h"
+#include "main/sky.h"
 #include "main/tex_dolphin.h"
 #include "main/texture.h"
 #include "main/dll/objfx_api.h"

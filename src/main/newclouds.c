@@ -20,7 +20,7 @@
 #include "dolphin/gx/GXDispList.h"
 #include "dolphin/gx/GXEnum.h"
 #include "dolphin/os/OSCache.h"
-#include "main/sky_state.h"
+#include "main/sky.h"
 #include "dolphin/gx/GXLegacy.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/camera.h"
