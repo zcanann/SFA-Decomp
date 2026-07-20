@@ -25,7 +25,6 @@ typedef struct SBGalleonVtbl
 } SBGalleonVtbl;
 #define SB_GALLEON_VTBL(galleon) ((SBGalleonVtbl*)*((GameObject*)(galleon))->anim.dll)
 
-void fn_801E1588(GameObject* param_1, struct SBGalleonState* param_2);
 int SB_Galleon_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int SB_Galleon_func0E(int* obj);
 u8 SB_Galleon_getDamagePhase(int* obj);

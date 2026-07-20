@@ -51,14 +51,14 @@ int kaldachom_stateHandlerA06(GameObject* obj, int statePtr)
 
 int kaldachom_stateHandlerA05(GameObject* obj, int statePtr)
 {
-    extern char lbl_803203F8[]; /* char[] for pointer-arithmetic *(s16*) access */
+    extern s16 lbl_803203F8[];
     KaldaChomControl* control = ((GroundBaddieState*)(obj)->extra)->control;
 
     if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)
     {
         if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)
         {
-            ObjAnim_SetCurrentMove((int)obj, *(s16*)(lbl_803203F8 + 8), lbl_803E3060.f, 0);
+            ObjAnim_SetCurrentMove((int)obj, lbl_803203F8[4], lbl_803E3060.f, 0);
             ((GroundBaddieState*)statePtr)->baddie.moveDone = 0;
         }
         control->climbFxIndex = 4;
@@ -103,7 +103,7 @@ int kaldachom_stateHandlerA03(int obj, int statePtr)
 
 int kaldachom_stateHandlerA02(GameObject* obj, int statePtr)
 {
-    extern s16 lbl_803203F8[]; /* s16[] for direct index access */
+    extern s16 lbl_803203F8[];
     KaldaChomControl* control = ((GroundBaddieState*)(obj)->extra)->control;
 
     if ((s32)(s8)((GroundBaddieState*)statePtr)->baddie.moveJustStartedA != 0)

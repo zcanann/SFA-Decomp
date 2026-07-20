@@ -64,15 +64,16 @@ extern u8 lbl_802C8680[];
 #define PAD_ACCEPT_MASK  (PAD_BUTTON_A | PAD_BUTTON_START)
 
 
-typedef struct LinkMenuItemDB
+typedef struct LinkMenuItem
 {
     u16 textId;
-    u16 itemId;
+    u16 boxId;
     s16 rightX;
     s16 textLeft;
-    u8 pad8[4];
-    s16 iconLeft;
-    u8 padE[2];
+    s16 slotWidth;
+    s16 x;
+    s16 y;
+    u8 pad0E[2];
 
     union
     {
@@ -83,21 +84,30 @@ typedef struct LinkMenuItemDB
     u16 width;
     u16 flags;
     u8 pad18[2];
-    u8 iconCount;
-    u8 pad1B[3];
+    s8 upLink;
+    s8 downLink;
+    s8 leftLink;
+    s8 rightLink;
     s8 state;
     s8 slots[LINK_ITEM_SLOTS];
     s8 timer;
     u8 pad39[3];
-} LinkMenuItemDB;
+} LinkMenuItem;
+STATIC_ASSERT(sizeof(LinkMenuItem) == 0x3C);
+STATIC_ASSERT(offsetof(LinkMenuItem, rightX) == 0x04);
+STATIC_ASSERT(offsetof(LinkMenuItem, x) == 0x0A);
+STATIC_ASSERT(offsetof(LinkMenuItem, y) == 0x0C);
+STATIC_ASSERT(offsetof(LinkMenuItem, textureAssetId) == 0x10);
+STATIC_ASSERT(offsetof(LinkMenuItem, flags) == 0x16);
+STATIC_ASSERT(offsetof(LinkMenuItem, upLink) == 0x1A);
 #define LINK_FLAG_DRAW_SLOTS        0x0004
 
 u16 linkGetSelectedItemId(void)
 {
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
-    return gTumbleweedBushItems[linkSelected].itemId;
+    extern LinkMenuItem gTumbleweedBushItems[40];
+    return gTumbleweedBushItems[linkSelected].boxId;
 }
-void linkInitTextures(LinkMenuItemDB* item)
+void linkInitTextures(LinkMenuItem* item)
 {
     int budget;
     int i;
@@ -134,8 +144,8 @@ void linkInitTextures(LinkMenuItemDB* item)
 }
 void linkDrawFn_801302c0(void)
 {
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
-    LinkMenuItemDB* sel;
+    extern LinkMenuItem gTumbleweedBushItems[40];
+    LinkMenuItem* sel;
     int resetTimer;
     void* iconTex;
     int i;
@@ -159,7 +169,7 @@ void linkDrawFn_801302c0(void)
     if (iconTex != NULL)
     {
         iconWidth = ((Texture*)iconTex)->height;
-        selLeft = sel->iconLeft;
+        selLeft = sel->y;
     }
     else
     {
@@ -190,7 +200,7 @@ void linkDrawFn_801302c0(void)
             if (iconTex != NULL)
             {
                 iconWidth = ((Texture*)iconTex)->height;
-                itemLeft = gTumbleweedBushItems[i].iconLeft;
+                itemLeft = gTumbleweedBushItems[i].y;
             }
             else
             {
@@ -228,8 +238,8 @@ void setLinkIsRotated(void)
 
 void linkDrawFn_80130484(void)
 {
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
-    LinkMenuItemDB* item;
+    extern LinkMenuItem gTumbleweedBushItems[40];
+    LinkMenuItem* item;
     void* iconTex;
     int i;
     int minX;
@@ -255,7 +265,7 @@ void linkDrawFn_80130484(void)
         if (iconTex != NULL)
         {
             iconWidth = ((Texture*)iconTex)->height;
-            left = item->iconLeft;
+            left = item->y;
         }
         else
         {
@@ -282,7 +292,7 @@ void linkDrawFn_80130484(void)
 }
 void Link_func0F(void)
 {
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
+    extern LinkMenuItem gTumbleweedBushItems[40];
     int i;
 
     for (i = 0; i < gTumbleweedBushItemCount; i++)
@@ -292,18 +302,18 @@ void Link_func0F(void)
 }
 void Link_copy(u8* srcArg)
 {
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
-    LinkMenuItemDB* dst;
-    LinkMenuItemDB* src;
+    extern LinkMenuItem gTumbleweedBushItems[40];
+    LinkMenuItem* dst;
+    LinkMenuItem* src;
     int i;
 
     i = 0;
     for (; i < (s8)gTumbleweedBushItemCount; i++)
     {
         dst = &gTumbleweedBushItems[i];
-        src = &((LinkMenuItemDB*)srcArg)[i];
+        src = &((LinkMenuItem*)srcArg)[i];
         dst->flags = src->flags;
-        dst->iconCount = src->iconCount;
+        dst->upLink = src->upLink;
         dst->rightX = src->rightX;
         if (src->textureAssetId != -1)
         {
@@ -329,27 +339,27 @@ u8 Link_func0C(void)
 }
 void Link_func0B(u8* srcArg)
 {
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
-    LinkMenuItemDB* src;
+    extern LinkMenuItem gTumbleweedBushItems[40];
+    LinkMenuItem* src;
     int i;
 
-    src = (LinkMenuItemDB*)srcArg;
+    src = (LinkMenuItem*)srcArg;
     for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
         gTumbleweedBushItems[i].textId = src[i].textId;
-        gTumbleweedBushItems[i].itemId = src[i].itemId;
+        gTumbleweedBushItems[i].boxId = src[i].boxId;
         gTumbleweedBushItems[i].timer = 2;
     }
 }
 void Link_func0A(int idx, int v)
 {
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
+    extern LinkMenuItem gTumbleweedBushItems[40];
     gTumbleweedBushItems[idx].state = v;
 }
 
 s32 Link_func09(int idx)
 {
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
+    extern LinkMenuItem gTumbleweedBushItems[40];
     return gTumbleweedBushItems[idx].state;
 }
 void Link_setOpacity(u8 v)
@@ -365,28 +375,6 @@ typedef struct LinkTextureSlot
     u8 pad7;
 } LinkTextureSlot;
 
-typedef struct LinkMenuItemDA
-{
-    u16 textId;
-    u16 boxId;
-    s16 rightX;
-    s16 textLeft;
-    u8 pad08[2];
-    s16 x;
-    s16 y;
-    u8 pad0E[2];
-    void* texture;
-    u16 width;
-    u16 flags;
-    u8 pad18[2];
-    u8 iconCount;
-    u8 pad1B[3];
-    s8 state;
-    s8 slots[LINK_ITEM_SLOTS];
-    s8 timer;
-    u8 pad39[3];
-} LinkMenuItemDA;
-
 #define LINK_FLAG_DRAW_BLACK_SHADOW 0x0100
 #define LINK_FLAG_DIM_OPACITY       0x0800
 #define LINK_FLAG_FADE_TIMER_ONLY   0x1040
@@ -397,36 +385,6 @@ void Link_setSelected(int v)
 {
     linkSelected = v;
 }
-
-typedef struct LinkMenuItem
-{
-    u16 textId;
-    u16 boxId;
-    s16 rightX;
-    s16 textLeft;
-    s16 slotWidth;
-    s16 x;
-    s16 y;
-    u8 pad0E[2];
-
-    union
-    {
-        int textureAssetId;
-        void* texture;
-    };
-
-    u16 width;
-    u16 flags;
-    u8 pad18[2];
-    s8 upLink;
-    s8 downLink;
-    s8 leftLink;
-    s8 rightLink;
-    s8 state;
-    s8 slots[LINK_ITEM_SLOTS];
-    s8 timer;
-    u8 pad39[3];
-} LinkMenuItem;
 
 #define LINK_FLAG_DISABLE_NAV_TO 0x1000
 #define LINK_FLAG_NO_ACCEPT      0x0020
@@ -442,11 +400,11 @@ s32 Link_getSelected(void)
 
 void Link_render(void)
 {
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
-    LinkMenuItemDA* item;
+    extern LinkMenuItem gTumbleweedBushItems[40];
+    LinkMenuItem* item;
     int i;
     int slotIndex;
-    LinkMenuItemDA* drawItem;
+    LinkMenuItem* drawItem;
     int textureIndex;
     int opacity;
     int alpha;
@@ -460,7 +418,7 @@ void Link_render(void)
 
     for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
-        item = (LinkMenuItemDA*)&gTumbleweedBushItems[i];
+        item = (LinkMenuItem*)&gTumbleweedBushItems[i];
         drawItem = item;
 
         if ((item->flags & LINK_FLAG_HIDDEN) == 0)
@@ -477,7 +435,7 @@ void Link_render(void)
             {
                 if (item->state != -1)
                 {
-                    drawItem = (LinkMenuItemDA*)&gTumbleweedBushItems[item->state];
+                    drawItem = (LinkMenuItem*)&gTumbleweedBushItems[item->state];
                 }
 
                 if ((drawItem->flags & LINK_FLAG_DRAW_SLOTS) != 0)
@@ -820,7 +778,7 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 
             if ((item->flags & LINK_FLAG_DRAW_SLOTS) != 0)
             {
-                linkInitTextures((LinkMenuItemDB*)item);
+                linkInitTextures((LinkMenuItem*)item);
             }
 
             if ((item->leftLink != -1) && ((item->flags & LINK_FLAG_INHERIT_X) != 0))
@@ -879,7 +837,7 @@ void Link_initialise(void)
     linkFlag_803dd8f8 = 1;
 }
 
-LinkMenuItemDB gTumbleweedBushItems[40];
+LinkMenuItem gTumbleweedBushItems[40];
 
 u8 linkTextures[0x30] = {
     0x00, 0x00, 0x00, 0x00, 0x03, 0x14, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x15, 0x28, 0x00,
