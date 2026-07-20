@@ -425,8 +425,8 @@ void grimble_update(GameObject* obj)
                 *(s8*)&((GroundBaddieState*)state)->baddie.hitPoints == 0)
             {
                 ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |= 1;
-                if ((*(int (**)(void*, char*, f32, int))(*(int*)gBaddieControlInterface + 0x44))(
-                        obj, state, (f32)((GroundBaddieState*)state)->aggroRange, 1) != 0)
+                if (((BaddieControlInterface*)*gBaddieControlInterface)
+                        ->shouldDropTarget(obj, state, (f32)((GroundBaddieState*)state)->aggroRange, 1) != 0)
                 {
                     *(int*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
                 }

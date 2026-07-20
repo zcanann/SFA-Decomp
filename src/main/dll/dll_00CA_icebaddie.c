@@ -179,7 +179,8 @@ int iceBaddie_stateHandlerB07(int obj, int state)
         {
             return 5;
         }
-        if (((int (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[17])(obj, state, sub->aggroRange, 1) != 0)
+        if (((BaddieControlInterface*)*gBaddieControlInterface)
+                ->shouldDropTarget((GameObject*)obj, (void*)state, sub->aggroRange, 1) != 0)
         {
             return 5;
         }
@@ -294,7 +295,8 @@ int iceBaddie_stateHandlerB06(int obj, int state)
                                              *(f32*)(route + 0x20), 15.0f, 30.0f, 60.0f);
     }
     if (((GroundBaddieState*)state)->baddie.stateTimer > 0x78 &&
-        ((int (*)(int, int, f32, int))((void**)*gBaddieControlInterface)[17])(obj, state, sub->aggroRange, 1) != 0)
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+                ->shouldDropTarget((GameObject*)obj, (void*)state, sub->aggroRange, 1) != 0)
     {
         return 5;
     }

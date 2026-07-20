@@ -72,8 +72,9 @@ int kaldachom_stateHandlerB05(int obj, int baddieState)
     if ((s8)((GroundBaddieState*)baddieState)->baddie.moveDone != 0 ||
         (s8)((GroundBaddieState*)baddieState)->baddie.moveJustStartedB != 0)
     {
-        if (((int (*)(int, int, f32, int))((void**)*(int*)gBaddieControlInterface)[0x11])(
-                obj, baddieState, (f32)(u32)((CfDoorlightState*)state)->aggroRange, 1) != 0)
+        if (((BaddieControlInterface*)*gBaddieControlInterface)
+                ->shouldDropTarget((GameObject*)obj, (void*)baddieState,
+                                   (f32)(u32)((CfDoorlightState*)state)->aggroRange, 1) != 0)
         {
             return 5;
         }

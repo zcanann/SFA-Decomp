@@ -103,7 +103,7 @@ GameObject* dll_19_func15(GameObject* obj, int spawnType, int unused, int alt);
 void dll_19_func0C(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
                    int animMove, s8 field25f);
 GameObject* dll_19_func14(GameObject* self, void* state, f32 frange, int halfAngle);
-int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar);
+int dll_19_func13(GameObject* obj, void* state, f32 distThreshold, int requireFar);
 int dll_19_func0E(GameObject* obj, void* state, u8 checkDead);
 void dll_19_func0D(GameObject* obj, void* state, f32 gravity, s8 field25f);
 int dll_19_func10(GameObject* obj, u8* state, int moveArg0, int moveArg1, s16 controlMode, f32* destX, f32* destZ,
@@ -834,7 +834,7 @@ GameObject* dll_19_func14(GameObject* self, void* state, f32 frange, int halfAng
     return (GameObject*)obj;
 }
 
-int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar)
+int dll_19_func13(GameObject* obj, void* state, f32 distThreshold, int requireFar)
 {
     int player = (int)Obj_GetPlayerObject();
     int result = 0;

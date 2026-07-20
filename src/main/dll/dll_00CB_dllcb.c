@@ -261,8 +261,8 @@ void dll_CB_seekAndUpdate(int obj, void* seq, int sub, GroundBaddieState* state)
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
     state->baddie.moveDone = 1;
-    if ((*(int (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x44))(
-            obj, (u8*)state, (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 1) != 0)
+    if (((BaddieControlInterface*)*gBaddieControlInterface)
+            ->shouldDropTarget((GameObject*)obj, state, (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 1) != 0)
     {
         *(int*)&state->baddie.targetObj = ((GroundBaddieState*)sub)->savedObjC0;
         state->baddie.hasTarget = 0;

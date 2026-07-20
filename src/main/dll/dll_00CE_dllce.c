@@ -143,8 +143,8 @@ int chukChuk_checkChooseAttackState(int obj, GroundBaddieState* state)
     if (*(char*)&state->baddie.moveDone != '\0' || *(char*)&state->baddie.moveJustStartedB != '\0')
     {
         hit = *(u8**)&sub->control;
-        result = (*(int (**)(int, u8*, f32, int))(*(int*)gBaddieControlInterface + 0x44))(obj, (u8*)state,
-                                                                                          (f32)(u32)sub->aggroRange, 1);
+        result = ((BaddieControlInterface*)*gBaddieControlInterface)
+                     ->shouldDropTarget((GameObject*)obj, state, (f32)(u32)sub->aggroRange, 1);
         if (result != 0)
         {
             hit[9] &= ~2;
