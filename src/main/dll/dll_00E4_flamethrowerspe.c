@@ -77,19 +77,19 @@ void flamethrowerspe_modelMtxFn(void)
 {
 }
 
-void flamethrowerspe_func0B(int* obj)
+void flamethrowerspe_func0B(GameObject* obj)
 {
     s32 v = 0x1;
-    *(s32*)((char*)(int*)((GameObject*)obj)->extra + 0x10) = v;
+    *(s32*)((char*)(int*)obj->extra + 0x10) = v;
 }
 
-void flamethrowerspe_setScale(int* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3)
+void flamethrowerspe_setScale(GameObject* obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3)
 {
-    ((GameObject*)obj)->anim.localPosX = f1;
-    ((GameObject*)obj)->anim.localPosY = f2;
-    ((GameObject*)obj)->anim.localPosZ = f3;
-    ((GameObject*)obj)->anim.rotY = a;
-    ((GameObject*)obj)->anim.rotX = b;
+    obj->anim.localPosX = f1;
+    obj->anim.localPosY = f2;
+    obj->anim.localPosZ = f3;
+    obj->anim.rotY = a;
+    obj->anim.rotX = b;
 }
 
 int flamethrowerspe_getExtraSize(void)
@@ -115,18 +115,18 @@ void flamethrowerspe_hitDetect(void)
 {
 }
 
-void flamethrowerspe_update(int* obj)
+void flamethrowerspe_update(GameObject* obj)
 {
-    int* state = ((GameObject*)obj)->extra;
-    int* src = *(int**)&((GameObject*)obj)->anim.placementData;
+    int* state = obj->extra;
+    int* src = *(int**)&obj->anim.placementData;
     switch (((FlamethrowerspeState*)state)->phase)
     {
     case FLAMETHROWERSPE_PHASE_LAUNCH:
-        ((GameObject*)obj)->anim.velocityX = 0.0f;
-        ((GameObject*)obj)->anim.velocityZ =
+        obj->anim.velocityX = 0.0f;
+        obj->anim.velocityZ =
             lbl_803DBD68 * (0.10000000149011612f * (((FlamethrowerspeState*)state)->sizeScale *
                                             (0.11999999731779099f * (f32)(s32)randomGetRange(0x64, 0x96))));
-        vecRotateZXY(&((GameObject*)obj)->anim.rotX, &((GameObject*)obj)->anim.velocityX);
+        vecRotateZXY(&obj->anim.rotX, &obj->anim.velocityX);
         ((FlamethrowerspeState*)state)->sphereRadius = lbl_803DBD6C * ((FlamethrowerspeState*)state)->sizeScale;
         s16toFloat(&((FlamethrowerspeState*)state)->lifeTimer, lbl_803DBD64);
         ((FlamethrowerspeState*)state)->phase = FLAMETHROWERSPE_PHASE_ACTIVE;
@@ -134,16 +134,16 @@ void flamethrowerspe_update(int* obj)
     case FLAMETHROWERSPE_PHASE_ACTIVE:
         if (timerCountDown(&((FlamethrowerspeState*)state)->lifeTimer) != 0)
         {
-            ObjHits_DisableObject((GameObject*)obj);
-            firepipe_releaseEffectObject((GameObject*)obj);
+            ObjHits_DisableObject(obj);
+            firepipe_releaseEffectObject(obj);
             return;
         }
-        ObjHits_EnableObject((GameObject*)obj);
+        ObjHits_EnableObject(obj);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, lbl_803209C0[(s8) * (u8*)((char*)src + 0x19) * 3 + 2], 1, 0);
         {
             f32 dt = (f32)(f64)timeDelta;
-            objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
-                    ((GameObject*)obj)->anim.velocityZ * dt);
+            objMove(obj, obj->anim.velocityX * dt, obj->anim.velocityY * dt,
+                    obj->anim.velocityZ * dt);
         }
         ObjHitbox_SetSphereRadius(
             (ObjAnimComponent*)obj, (int)(((FlamethrowerspeState*)state)->sphereRadius *
@@ -152,18 +152,18 @@ void flamethrowerspe_update(int* obj)
     }
 }
 
-void flamethrowerspe_init(int* obj, int* params)
+void flamethrowerspe_init(GameObject* obj, int* params)
 {
-    int* state = ((GameObject*)obj)->extra;
+    int* state = obj->extra;
     storeZeroToFloatParam(&((FlamethrowerspeState*)state)->lifeTimer);
     {
         f32 r = (f32) * (s16*)((char*)params + 0x1a) / lbl_803E33A0;
         ((FlamethrowerspeState*)state)->sizeScale = r * lbl_803DBD60;
     }
-    ((GameObject*)obj)->anim.velocityY = 0.0f;
-    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    obj->anim.velocityY = 0.0f;
+    obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
     ((FlamethrowerspeState*)state)->phase = FLAMETHROWERSPE_PHASE_LAUNCH;
-    ObjHits_DisableObject((GameObject*)obj);
+    ObjHits_DisableObject(obj);
 }
 
 void flamethrowerspe_release(void)
