@@ -1217,6 +1217,7 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
             s16* ap;
             int i;
             f32 prodB;
+            int prodBi;
 
             ang[0] = (s16)getAngle(dx, dy) - (u16)(obj)->anim.rotX;
             if (ang[0] > 0x8000)
@@ -1237,7 +1238,8 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
             p = (char*)p3;
             ap = ang;
             prodB = gObjPrintDegToAngle * b;
-            minB = -(s16)(s32)prodB;
+            prodBi = (s32)prodB;
+            minB = -(s16)prodBi;
             negA = -a;
             i = 2;
             do
@@ -1252,9 +1254,9 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
                 }
                 else
                 {
-                    if (v > (s16)(s32)prodB)
+                    if (v > (s16)prodBi)
                     {
-                        v = (s32)prodB;
+                        v = prodBi;
                     }
                     w = (s16)v;
                 }
