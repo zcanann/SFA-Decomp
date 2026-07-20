@@ -850,8 +850,6 @@ typedef struct DllD3Placement
     u8 pad2F[0x30 - 0x2F];
 } DllD3Placement;
 
-extern int lbl_803202E8[];
-extern int lbl_80320360[];
 void* gLandedArwingStateHandlers[6];
 int gStaffActionHitLightParams[6];
 void* gLandedArwingDefaultStateHandler;
@@ -965,7 +963,7 @@ void dll_D3_update(int* obj)
     {
         (*gBaddieControlInterface)
             ->updateHitReaction((GameObject*)obj, state, (void*)((int)state + 0x35c),
-                                ((TreasureChestState*)state)->gameBitB, lbl_803202E8, (u8*)lbl_80320360, 0,
+                                ((TreasureChestState*)state)->gameBitB, lbl_803202E8, lbl_80320360, 0,
                                 gStaffActionHitLightParams);
         if ((int)((TreasureChestState*)state)->hitPoints < hits)
         {

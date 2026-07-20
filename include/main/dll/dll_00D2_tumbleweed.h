@@ -115,5 +115,7 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target);
 int LandedArwing_UpdateBounceFade(int obj, u32* stateWord);
 int LandedArwing_UpdateRetreatChase(GameObject* obj, int stateWord);
 extern ObjectDescriptor16WithPadding gTumbleweedObjDescriptor;
+extern int lbl_803202E8[30];
+extern u8 lbl_80320360[32];
 
 #endif /* MAIN_DLL_DLL_00D2_TUMBLEWEED_H_ */
