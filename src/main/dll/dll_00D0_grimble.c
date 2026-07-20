@@ -64,7 +64,7 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 arg)
     f32 r;
     char* sub;
 
-    sub = *(char**)(*(int*)&obj->extra + 0x40c);
+    sub = (char*)((GroundBaddieState*)obj->extra)->control;
     if (*(s8*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 3, 0.0f, 0);
@@ -136,7 +136,7 @@ int grimble_stateHandlerA01(GameObject* obj, char* state, f32 arg)
     f32 r;
     char* sub;
 
-    sub = *(char**)(*(int*)&(obj)->extra + 0x40c);
+    sub = (char*)((GroundBaddieState*)obj->extra)->control;
     if (*(s8*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
@@ -197,7 +197,7 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 arg)
     f32 r;
     char* sub;
 
-    sub = *(char**)(*(int*)&obj->extra + 0x40c);
+    sub = (char*)((GroundBaddieState*)obj->extra)->control;
     if (*(s8*)&((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
@@ -464,7 +464,7 @@ void grimble_init(int obj, int def, int flag)
     (*gPlayerInterface)->setState((void*)obj, state, 0);
     ((GroundBaddieState*)state)->baddie.substate = 0;
     ((GroundBaddieState*)state)->baddie.animSpeedA = 0.0f;
-    *(int*)((char*)((GroundBaddieState*)state)->control + 0x34) = 0;
+    ((GrimbleControl*)((GroundBaddieState*)state)->control)->candidatePathObj = 0;
 }
 
 void grimble_release(void)

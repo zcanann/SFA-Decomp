@@ -544,7 +544,7 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                         ((GameObject*)obj)->anim.rootMotionScale =
                             ((ShieldState*)state)->segAlpha[k] * savedF8 *
                             (((ShieldState*)state)->fadeValue / *(f32*)&((ShieldState*)state)->fadeMax);
-                        *(u8*)((char*)obj + 0x37) = ((ShieldState*)state)->segScale[k] * savedB36;
+                        ((GameObject*)obj)->anim.renderAlpha = ((ShieldState*)state)->segScale[k] * savedB36;
                     }
                     ((ObjModel*)model)->bufferFlags &= ~0x8;
                     objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E33C4);
@@ -563,7 +563,7 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                     ((ShieldState*)state)->segRotX[k] = dt * lbl_803DBD70[k] + (f32)((ShieldState*)state)->segRotX[k];
                     {
                         ((GameObject*)obj)->anim.rootMotionScale = ((ShieldState*)state)->segAlpha[k] * savedF8;
-                        *(u8*)((char*)obj + 0x37) = ((ShieldState*)state)->segScale[k] * savedB36;
+                        ((GameObject*)obj)->anim.renderAlpha = ((ShieldState*)state)->segScale[k] * savedB36;
                     }
                     ((ObjModel*)model)->bufferFlags &= ~0x8;
                     objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E33C4);

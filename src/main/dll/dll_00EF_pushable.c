@@ -231,7 +231,7 @@ void pushable_initWcPushBlock(GameObject* obj, PushableState* state)
 {
     int data = *(int*)&obj->anim.placementData;
 
-    switch (*(int*)(data + 0x14))
+    switch (((ObjPlacement*)data)->mapId)
     {
     case 0x49B2C:
         state->requiredHitId = 10;
@@ -246,7 +246,7 @@ void pushable_initWcPushBlock(GameObject* obj, PushableState* state)
         break;
     }
 
-    if (mainGetBit(*(s16*)(data + 0x18)) != 0)
+    if (mainGetBit(((PushablePlacement*)data)->gameBit) != 0)
     {
         ObjTextureRuntimeSlot* tex;
         state->flags = (u16)(state->flags | 0x80);
@@ -723,7 +723,7 @@ void pushable_handleMsgs(GameObject* obj)
 
 int pushable_render2(GameObject* obj)
 {
-    return (*(PushableState**)&obj->extra)->flags & 1;
+    return ((PushableState*)obj->extra)->flags & 1;
 }
 
 void pushable_modelMtxFn(GameObject* obj, int modelNo)

@@ -82,7 +82,7 @@ f32 gBoneParticleConfigTable[108] = {
 void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
 {
     BoneFxVtx vtx;
-    int* model;
+    ObjModel* model;
     s16 j;
     s16 k;
     int row;
@@ -115,12 +115,12 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
         gBoneParticleEffectTimer = 0xf;
         Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_281);
     }
-    model = (int*)((ObjAnimComponent*)gobj)->banks[((ObjAnimComponent*)gobj)->bankIndex];
+    model = (ObjModel*)((ObjAnimComponent*)gobj)->banks[((ObjAnimComponent*)gobj)->bankIndex];
     if (gBoneParticleStageIndex > 6)
     {
         gBoneParticleStageIndex = 0;
     }
-    if (lbl_803DD2B0 > *(u8*)(*model + 0xf3) - 1)
+    if (lbl_803DD2B0 > model->file->jointCount - 1)
     {
         lbl_803DD2B0 = 0;
     }
@@ -165,7 +165,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
                 vtx.sz = 0;
                 vtx.sy = 0;
                 vtx.sx = 0;
-                jb = (u8*)model[(*(u16*)((u8*)model + 0x18) & 1) + 3];
+                jb = model->jointMatrices[model->bufferFlags & 1];
                 mtx = (u8*)((BoneFxJRow*)jb
                             + ((id = (base + gBoneParticleStageIndex * 5)[j + 0x5b4]) << 4));
                 dx = *(f32*)(mtx + 0x30) + playerMapOffsetX;
@@ -383,7 +383,7 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
     PartFxSpawnParams data;
 
     model = Obj_GetActiveModel(obj);
-    for (i = 0; i < *(u8*)(*(int*)model + 0xf3); i++)
+    for (i = 0; i < ((ObjModel*)model)->file->jointCount; i++)
     {
         if ((int)randomGetRange(1, 0x64) <= prob)
         {
