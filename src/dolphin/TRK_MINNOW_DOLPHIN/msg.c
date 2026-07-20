@@ -1,7 +1,5 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msg.h"
-
-// Incorrect signature? Should be u8.
-UARTError WriteUART1(s8 arg0);
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
 
 DSError TRKMessageSend(TRK_Msg* msg)
 {

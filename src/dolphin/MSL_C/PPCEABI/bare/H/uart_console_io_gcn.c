@@ -1,8 +1,5 @@
 #include "dolphin.h"
 
-extern int InitializeUART(u32);
-extern int WriteUARTN(void* buf, u32 n);
-
 static s32 initialized;
 
 int __write_console(int handle, void* buf, u32* count, void* idle_fn) {
