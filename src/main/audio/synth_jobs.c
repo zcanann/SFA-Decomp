@@ -262,14 +262,17 @@ void streamKill(u32 voice)
 
     job = streamInfo + voice;
     state = job->state;
-    if (state < SYNTH_JOB_STATE_DONE && state >= SYNTH_JOB_STATE_PENDING)
+    switch (state)
     {
-        if ((u32)state == SYNTH_JOB_STATE_PLAYING)
-        {
-            voiceBreakAndFree(job->voice);
-        }
-        job->state = SYNTH_JOB_STATE_DONE;
-        job->callback(0, 0, 0, 0, job->callbackUser);
+        case SYNTH_JOB_STATE_PENDING:
+        case SYNTH_JOB_STATE_PLAYING:
+            if ((u32)state == SYNTH_JOB_STATE_PLAYING)
+            {
+                voiceBreakAndFree(job->voice);
+            }
+            job->state = SYNTH_JOB_STATE_DONE;
+            job->callback(0, 0, 0, 0, job->callbackUser);
+            break;
     }
 }
 
