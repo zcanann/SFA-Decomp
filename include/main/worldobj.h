@@ -19,6 +19,13 @@ typedef struct WorldObjSetup {
     u8 variant;
 } WorldObjSetup;
 
+typedef struct WorldObjPathSegmentWork {
+    u8 pad00[0x10];
+    Vec start;
+    u8 pad1C[0x0C];
+    Vec end;
+} WorldObjPathSegmentWork;
+
 typedef struct WorldObjState {
     ModelLightStruct* light;
     u8 pathPointWork[0x25C - 4];
@@ -50,6 +57,10 @@ STATIC_ASSERT(sizeof(WorldObjSetup) == 0x1C);
 STATIC_ASSERT(offsetof(WorldObjSetup, objectId) == 0x00);
 STATIC_ASSERT(offsetof(WorldObjSetup, variant) == 0x1B);
 
+STATIC_ASSERT(sizeof(WorldObjPathSegmentWork) == 0x34);
+STATIC_ASSERT(offsetof(WorldObjPathSegmentWork, start) == 0x10);
+STATIC_ASSERT(offsetof(WorldObjPathSegmentWork, end) == 0x28);
+
 STATIC_ASSERT(sizeof(WorldObjState) == 0x284);
 STATIC_ASSERT(offsetof(WorldObjState, light) == 0x00);
 STATIC_ASSERT(offsetof(WorldObjState, orbitRadiusZ) == 0x25C);
@@ -66,9 +77,9 @@ STATIC_ASSERT(offsetof(WorldObjState, spinZStep) == 0x27E);
 STATIC_ASSERT(offsetof(WorldObjState, spinYStep) == 0x27F);
 STATIC_ASSERT(offsetof(WorldObjState, spinXStep) == 0x280);
 
-static inline char *WorldObj_GetPathPointWork(WorldObjState *state, int index)
+static inline WorldObjPathSegmentWork *WorldObj_GetPathSegmentWork(WorldObjState *state, int index)
 {
-    return (char *)state + index * WORLDOBJ_PATH_POINT_STRIDE;
+    return (WorldObjPathSegmentWork *)((char *)state + index * WORLDOBJ_PATH_POINT_STRIDE);
 }
 
 #endif /* MAIN_WORLDOBJ_H_ */

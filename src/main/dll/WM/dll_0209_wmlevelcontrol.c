@@ -183,7 +183,7 @@ void fn_801F3F18(GameObject* obj)
         gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
     gWmLevelControlBlendedLightColor[2] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
-    skyFn_800895e0(1, gWmLevelControlBlendedLightColor[0], gWmLevelControlBlendedLightColor[1],
+    skySetBaseColor(1, gWmLevelControlBlendedLightColor[0], gWmLevelControlBlendedLightColor[1],
                    gWmLevelControlBlendedLightColor[2], 0x40, 0x40);
 
     fromColor = gWmLevelControlSkyColorFrom;
@@ -194,7 +194,7 @@ void fn_801F3F18(GameObject* obj)
         gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
     gWmLevelControlBlendedSkyColor[2] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
-    fn_80089510(1, gWmLevelControlBlendedSkyColor[0], gWmLevelControlBlendedSkyColor[1],
+    skySetLightColor(1, gWmLevelControlBlendedSkyColor[0], gWmLevelControlBlendedSkyColor[1],
                 gWmLevelControlBlendedSkyColor[2]);
 
     fromColor = gWmLevelControlFogColorFrom;
@@ -205,7 +205,7 @@ void fn_801F3F18(GameObject* obj)
         gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
     gWmLevelControlBlendedFogColor[2] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
-    fn_80089578(1, gWmLevelControlBlendedFogColor[0], gWmLevelControlBlendedFogColor[1],
+    skySetAmbientColor(1, gWmLevelControlBlendedFogColor[0], gWmLevelControlBlendedFogColor[1],
                 gWmLevelControlBlendedFogColor[2]);
 
     gWmLevelControlBlendedLightIntensity =
@@ -215,7 +215,7 @@ void fn_801F3F18(GameObject* obj)
                                  gWmLevelControlBlendFactor * (dirs.toDir.y - dirs.fromDir.y) + dirs.fromDir.y,
                                  gWmLevelControlBlendFactor * (dirs.toDir.z - dirs.fromDir.z) + dirs.fromDir.z,
                                  100.0f);
-    skyFn_800894a8(1, dirs.auxDir.x, dirs.auxDir.y, dirs.auxDir.z);
+    skySetLightDirection(1, dirs.auxDir.x, dirs.auxDir.y, dirs.auxDir.z);
 }
 
 int WM_LevelControl_getExtraSize(void)

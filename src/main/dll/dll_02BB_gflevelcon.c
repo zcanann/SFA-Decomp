@@ -139,8 +139,8 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_A:
             skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, -0.1f, -0.5f, -0.2f);
+            skySetBaseColor(7, 0x96, 0xc8, 0xf0, 0, 0);
+            skySetLightDirection(7, -0.1f, -0.5f, -0.2f);
             getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_START_PROMPT:
@@ -151,8 +151,8 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
             skyRed = 112.5f;
             skyGreen = 150.0f;
             skyBlue = 180.0f;
-            skyFn_800895e0(7, skyRed, skyGreen, skyBlue, 0, 0);
-            skyFn_800894a8(7, -0.5f, -1.0f, -0.5f);
+            skySetBaseColor(7, skyRed, skyGreen, skyBlue, 0, 0);
+            skySetLightDirection(7, -0.5f, -1.0f, -0.5f);
             getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_B, 0);
             break;
         case GFLEVELCON_SEQEV_LIGHT_ON:
@@ -171,8 +171,8 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_C:
             skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, 1.0f, -1.0f, -0.5f);
+            skySetBaseColor(7, 0x96, 0xc8, 0xf0, 0, 0);
+            skySetLightDirection(7, 1.0f, -1.0f, -0.5f);
             getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_C, 0);
             break;
         case GFLEVELCON_SEQEV_LOAD_MAP:
@@ -191,8 +191,8 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_D:
             skyFn_80089710(7, 1, 0);
-            skyFn_800895e0(7, 0x96, 0xc8, 0xf0, 0, 0);
-            skyFn_800894a8(7, 0.5f, -1.0f, -0.5f);
+            skySetBaseColor(7, 0x96, 0xc8, 0xf0, 0, 0);
+            skySetLightDirection(7, 0.5f, -1.0f, -0.5f);
             getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_A, 0);
             break;
         case GFLEVELCON_SEQEV_SKY_PRESET_E:
@@ -200,8 +200,8 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpda
             skyRed = 112.5f;
             skyGreen = 150.0f;
             skyBlue = 180.0f;
-            skyFn_800895e0(7, skyRed, skyGreen, skyBlue, 0, 0);
-            skyFn_800894a8(7, 0.5f, -1.0f, -0.5f);
+            skySetBaseColor(7, skyRed, skyGreen, skyBlue, 0, 0);
+            skySetLightDirection(7, 0.5f, -1.0f, -0.5f);
             getEnvfxAct(obj, obj, GFLEVELCON_ENVFX_B, 0);
             break;
         }

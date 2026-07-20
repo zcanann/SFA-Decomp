@@ -313,13 +313,13 @@ void worldplanet_update(GameObject* obj)
                     u32 fi = (int)gWorldPlanetPathProgress & 0xff;
                     u32 ni = (fi + 2) & 0xff;
                     f32 frac = gWorldPlanetPathProgress - fi;
-                    char* seg = WorldObj_GetPathPointWork(pstate, fi);
-                    f32 x0 = *(f32*)(seg + 0x10);
-                    f32 x1 = *(f32*)(seg + 0x28);
-                    f32 y0 = *(f32*)(seg + 0x14);
-                    f32 y1 = *(f32*)(seg + 0x2c);
-                    f32 z0 = *(f32*)(seg + 0x18);
-                    f32 z1 = *(f32*)(seg + 0x30);
+                    WorldObjPathSegmentWork* segment = WorldObj_GetPathSegmentWork(pstate, fi);
+                    f32 x0 = segment->start.x;
+                    f32 x1 = segment->end.x;
+                    f32 y0 = segment->start.y;
+                    f32 y1 = segment->end.y;
+                    f32 z0 = segment->start.z;
+                    f32 z1 = segment->end.z;
                     s16 yaw;
                     s16 dyaw;
                     pstate->effectState = 2;
@@ -330,8 +330,8 @@ void worldplanet_update(GameObject* obj)
                     }
                     else
                     {
-                        char* nseg = WorldObj_GetPathPointWork(pstate, ni);
-                        dyaw = getAngle(*(f32*)(nseg + 0x10) - x1, *(f32*)(nseg + 0x18) - z1);
+                        WorldObjPathSegmentWork* nextSegment = WorldObj_GetPathSegmentWork(pstate, ni);
+                        dyaw = getAngle(nextSegment->start.x - x1, nextSegment->start.z - z1);
                     }
                     dyaw = dyaw - (u16)yaw;
                     if (dyaw > 0x8000)

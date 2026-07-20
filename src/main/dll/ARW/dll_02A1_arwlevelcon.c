@@ -144,13 +144,13 @@ void arwlevelcon_update(GameObject* obj)
         skyFn_80089710(7, 1, 0);
         if (state->alternateRoute != 0)
         {
-            skyFn_800895e0(7, 0xaa, 0x78, 0xff, 0x69, 0x40);
+            skySetBaseColor(7, 0xaa, 0x78, 0xff, 0x69, 0x40);
         }
         else
         {
-            skyFn_800895e0(7, 0x96, 0x64, 0xf0, 0, 0);
+            skySetBaseColor(7, 0x96, 0x64, 0xf0, 0, 0);
         }
-        skyFn_800894a8(7, -1.0f, -1.0f, 1.0f);
+        skySetLightDirection(7, -1.0f, -1.0f, 1.0f);
         getEnvfxAct(0, 0, ARWLEVELCON_ENVFX_A, 0);
         getEnvfxAct(0, 0, ARWLEVELCON_ENVFX_B, 0);
         setIsOvercast(0);

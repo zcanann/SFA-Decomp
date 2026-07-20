@@ -292,8 +292,8 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject* obj, DIMbossRunt
         getEnvfxAct(0, 0, DIM2ICICLE_ENVFX_A, 0);
         getEnvfxAct(0, 0, DIM2ICICLE_ENVFX_B, 0);
         skyFn_80089710(7, 1, 0);
-        skyFn_800894a8(7, lbl_803E4C4C, lbl_803E4C50, lbl_803E4C54);
-        skyFn_800895e0(7, 0xa0, 0xa0, 0xff, 0x7f, 0x28);
+        skySetLightDirection(7, lbl_803E4C4C, lbl_803E4C50, lbl_803E4C54);
+        skySetBaseColor(7, 0xa0, 0xa0, 0xff, 0x7f, 0x28);
         ((IcicleWarpFlags*)&topState->steamFlags)->pending = 0;
     }
     if (runtime->sequenceTriggerFlags & DIMBOSS_SEQUENCE_FLAG_0004)

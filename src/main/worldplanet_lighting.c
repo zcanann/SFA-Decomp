@@ -35,21 +35,21 @@ void worldplanet_updateMapLighting(int a)
     WORLDPLANET_LERP_BYTE(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 0, lbl_803E65F8)
     WORLDPLANET_LERP_BYTE(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 1, lbl_803E65F8)
     WORLDPLANET_LERP_BYTE(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 2, lbl_803E65F8)
-    skyFn_800895e0(7, gWorldPlanetCurSky[0], gWorldPlanetCurSky[1],
+    skySetBaseColor(7, gWorldPlanetCurSky[0], gWorldPlanetCurSky[1],
                    gWorldPlanetCurSky[2], 0x40, 0x40);
 
     WORLDPLANET_LERP_BYTE(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, 0, gWorldPlanetLightingLerpT)
     WORLDPLANET_LERP_BYTE(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, 1, gWorldPlanetLightingLerpT)
     WORLDPLANET_LERP_BYTE(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, 2, gWorldPlanetLightingLerpT)
-    fn_80089510(7, gWorldPlanetCurLight[0], gWorldPlanetCurLight[1],
+    skySetLightColor(7, gWorldPlanetCurLight[0], gWorldPlanetCurLight[1],
                 gWorldPlanetCurLight[2]);
 
     WORLDPLANET_LERP_BYTE(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 0, gWorldPlanetLightingLerpT)
     WORLDPLANET_LERP_BYTE(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 1, gWorldPlanetLightingLerpT)
     WORLDPLANET_LERP_BYTE(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 2, gWorldPlanetLightingLerpT)
-    fn_80089578(7, gWorldPlanetCurAmbient[0], gWorldPlanetCurAmbient[1],
+    skySetAmbientColor(7, gWorldPlanetCurAmbient[0], gWorldPlanetCurAmbient[1],
                 gWorldPlanetCurAmbient[2]);
 
     gWorldPlanetCurIntensity = (u8)(s32)(gWorldPlanetLightingLerpT * lbl_803E6600 + lbl_803E65FC);
-    skyFn_800894a8(7, gWorldPlanetLightingSkyDirX, lbl_803E65F8, gWorldPlanetLightingSkyDirZ);
+    skySetLightDirection(7, gWorldPlanetLightingSkyDirX, lbl_803E65F8, gWorldPlanetLightingSkyDirZ);
 }

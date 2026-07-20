@@ -20,6 +20,11 @@ const f32 gMikaBombGravityAccel = 0.01f;
 const f32 gMikaBombMinFallVelocity = -2.5f;
 const f32 lbl_803E31D4 = -1.0f;
 
+typedef struct MikaBombShadowState
+{
+    f32 groundOffset;
+} MikaBombShadowState;
+
 int MikaBombShadow_getExtraSize(void)
 {
     return 0x4;
@@ -33,14 +38,14 @@ void MikaBombShadow_free(void)
 {
 }
 
-void MikaBombShadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void MikaBombShadow_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
     {
-        if (((GameObject*)obj)->anim.modelState->shadowCastSlot != NULL)
+        if (obj->anim.modelState->shadowCastSlot != NULL)
         {
-            objShadowFn_80062498((GameObject*)obj, 0, 0, framesThisStep);
+            objShadowFn_80062498(obj, 0, 0, framesThisStep);
         }
     }
 }
@@ -49,40 +54,40 @@ void MikaBombShadow_hitDetect(void)
 {
 }
 
-void MikaBombShadow_update(int* obj)
+void MikaBombShadow_update(GameObject* obj)
 {
-    int* owner;
+    GameObject* bomb;
+    MikaBombShadowState* state;
     f32 fz = 1.0f;
     f32 scaleFactor;
     f32 alpha;
 
-    owner = ((GameObject*)obj)->ownerObj;
-    scaleFactor = fz - (((GameObject*)owner)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) /
-                           *(f32*)((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.modelState->shadowScale = 14.0f * scaleFactor + fz;
+    bomb = obj->ownerObj;
+    state = obj->extra;
+    scaleFactor = fz - (bomb->anim.localPosY - obj->anim.localPosY) / state->groundOffset;
+    obj->anim.modelState->shadowScale = 14.0f * scaleFactor + fz;
     alpha = scaleFactor;
     alpha *= 1.5f;
     if (alpha > fz)
         alpha = fz;
-    ((GameObject*)obj)->anim.modelState->shadowAlphaStep = 16384.0f * alpha;
+    obj->anim.modelState->shadowAlphaStep = 16384.0f * alpha;
 }
 
-void MikaBombShadow_init(int* obj)
+void MikaBombShadow_init(GameObject* obj)
 {
-    int* state = ((GameObject*)obj)->extra;
+    MikaBombShadowState* state = obj->extra;
     f32 out;
-    fn_80065684((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                ((GameObject*)obj)->anim.localPosZ, &out, 0);
-    ObjHits_DisableObject((GameObject*)obj);
-    ((GameObject*)obj)->anim.alpha = 0xff;
-    ((GameObject*)obj)->anim.rotY = 0x4000;
-    ((GameObject*)obj)->anim.rotX = 0;
-    ((GameObject*)obj)->anim.rotZ = 0;
-    ((GameObject*)obj)->anim.modelState->flags |= (u64)OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD;
-    *(f32*)state = out;
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - out;
-    ((GameObject*)obj)->anim.modelState->shadowAlphaStep = 0;
-    ((GameObject*)obj)->anim.modelState->shadowScale = 1.0f;
+    fn_80065684(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &out, 0);
+    ObjHits_DisableObject(obj);
+    obj->anim.alpha = 0xff;
+    obj->anim.rotY = 0x4000;
+    obj->anim.rotX = 0;
+    obj->anim.rotZ = 0;
+    obj->anim.modelState->flags |= (u64)OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD;
+    state->groundOffset = out;
+    obj->anim.localPosY = obj->anim.localPosY - out;
+    obj->anim.modelState->shadowAlphaStep = 0;
+    obj->anim.modelState->shadowScale = 1.0f;
 }
 
 void MikaBombShadow_release(void)

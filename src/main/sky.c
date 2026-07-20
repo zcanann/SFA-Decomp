@@ -820,7 +820,7 @@ void fn_8008923C(GameObject* obj, f32* x, f32* y, f32* z)
     }
 }
 
-void skyFn_800894a8(int flags, f32 x, f32 y, f32 z)
+void skySetLightDirection(int flags, f32 x, f32 y, f32 z)
 {
     int bit;
 
@@ -832,14 +832,14 @@ void skyFn_800894a8(int flags, f32 x, f32 y, f32 z)
     {
         if ((flags & (1 << bit)) != 0)
         {
-            *(f32*)(gSkyState + bit * 0xa4 + 0xa8) = x;
-            *(f32*)(gSkyState + bit * 0xa4 + 0xac) = y;
-            *(f32*)(gSkyState + bit * 0xa4 + 0xb0) = z;
+            ((SkyLightSlotView*)(gSkyState + bit * 0xa4))->overrideDirectionX = x;
+            ((SkyLightSlotView*)(gSkyState + bit * 0xa4))->overrideDirectionY = y;
+            ((SkyLightSlotView*)(gSkyState + bit * 0xa4))->overrideDirectionZ = z;
         }
     }
 }
 
-void fn_80089510(int flags, u8 red, u8 green, u8 blue)
+void skySetLightColor(int flags, u8 red, u8 green, u8 blue)
 {
     int bit;
 
@@ -851,14 +851,14 @@ void fn_80089510(int flags, u8 red, u8 green, u8 blue)
     {
         if ((flags & (1 << bit)) != 0)
         {
-            gSkyState[bit * 0xa4 + 0x8c] = red;
-            gSkyState[bit * 0xa4 + 0x8d] = green;
-            gSkyState[bit * 0xa4 + 0x8e] = blue;
+            ((SkyLightSlotView*)(gSkyState + bit * 0xa4))->lightR = red;
+            ((SkyLightSlotView*)(gSkyState + bit * 0xa4))->lightG = green;
+            ((SkyLightSlotView*)(gSkyState + bit * 0xa4))->lightB = blue;
         }
     }
 }
 
-void fn_80089578(int flags, u8 red, u8 green, u8 blue)
+void skySetAmbientColor(int flags, u8 red, u8 green, u8 blue)
 {
     int bit;
 
@@ -870,14 +870,14 @@ void fn_80089578(int flags, u8 red, u8 green, u8 blue)
     {
         if ((flags & (1 << bit)) != 0)
         {
-            gSkyState[bit * 0xa4 + 0x84] = red;
-            gSkyState[bit * 0xa4 + 0x85] = green;
-            gSkyState[bit * 0xa4 + 0x86] = blue;
+            ((SkyLightSlotView*)(gSkyState + bit * 0xa4))->scaledAmbientR = red;
+            ((SkyLightSlotView*)(gSkyState + bit * 0xa4))->scaledAmbientG = green;
+            ((SkyLightSlotView*)(gSkyState + bit * 0xa4))->scaledAmbientB = blue;
         }
     }
 }
 
-void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2)
+void skySetBaseColor(int flags, u8 red, u8 green, u8 blue, u8 ambientScale, u8 lightScale)
 {
     int base;
     int r1, g1, b1, r2, g2, b2;
@@ -889,25 +889,25 @@ void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2)
     }
     bit = 0;
     base = 0;
-    r1 = red * m1 >> 8;
-    g1 = green * m1 >> 8;
-    b1 = blue * m1 >> 8;
-    r2 = red * m2 >> 8;
-    g2 = green * m2 >> 8;
-    b2 = blue * m2 >> 8;
+    r1 = red * ambientScale >> 8;
+    g1 = green * ambientScale >> 8;
+    b1 = blue * ambientScale >> 8;
+    r2 = red * lightScale >> 8;
+    g2 = green * lightScale >> 8;
+    b2 = blue * lightScale >> 8;
     for (; bit < 2; bit++)
     {
         if ((flags & (1 << bit)) != 0)
         {
-            gSkyState[base + 0x7c] = red;
-            gSkyState[base + 0x7d] = green;
-            gSkyState[base + 0x7e] = blue;
-            gSkyState[base + 0x84] = r1;
-            gSkyState[base + 0x85] = g1;
-            gSkyState[base + 0x86] = b1;
-            gSkyState[base + 0x8c] = r2;
-            gSkyState[base + 0x8d] = g2;
-            gSkyState[base + 0x8e] = b2;
+            ((SkyLightSlotView*)(gSkyState + base))->overrideAmbientR = red;
+            ((SkyLightSlotView*)(gSkyState + base))->overrideAmbientG = green;
+            ((SkyLightSlotView*)(gSkyState + base))->overrideAmbientB = blue;
+            ((SkyLightSlotView*)(gSkyState + base))->scaledAmbientR = r1;
+            ((SkyLightSlotView*)(gSkyState + base))->scaledAmbientG = g1;
+            ((SkyLightSlotView*)(gSkyState + base))->scaledAmbientB = b1;
+            ((SkyLightSlotView*)(gSkyState + base))->lightR = r2;
+            ((SkyLightSlotView*)(gSkyState + base))->lightG = g2;
+            ((SkyLightSlotView*)(gSkyState + base))->lightB = b2;
         }
         base += 0xa4;
     }

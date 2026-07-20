@@ -3280,15 +3280,13 @@ void trackIntersect(void)
         }
     }
 
-    i = 0;
-    lineOffset = i;
-    for (; i < gIntersectLineCount; lineOffset += sizeof(IntersectLine), i++)
+    for (i = 0; i < gIntersectLineCount; i++)
     {
         int pointIndex;
         s16* pointEdges;
         s16 adjacentLine;
 
-        line = (IntersectLine*)(lbl_803DCF34 + lineOffset);
+        line = (IntersectLine*)(lbl_803DCF34 + i * 16);
         pointIndex = line->pt[0] * 2;
         pointEdges = &edges[pointIndex];
         adjacentLine = pointEdges[0];
@@ -3331,9 +3329,9 @@ void trackIntersect(void)
 
     if (lbl_803DCF40 != 0)
     {
-        for (i = 0, lineOffset = i; i < gIntersectLineCount; i++, lineOffset += 2)
+        for (i = 0; i < gIntersectLineCount; i++)
         {
-            *(s16*)(lbl_803DCF40 + lineOffset) = i;
+            *(s16*)(lbl_803DCF40 + i * 2) = i;
         }
         sortComplete = 0;
         while (sortComplete == 0)
@@ -3348,8 +3346,7 @@ void trackIntersect(void)
                 sortOrder = (s16*)(lbl_803DCF40 + lineOffset);
                 firstLine = sortOrder[0];
                 firstType = (s8)lineBytes[firstLine * sizeof(IntersectLine) + 3] & 0x3f;
-                secondLine = sortOrder[1];
-                if (firstType < ((s8)lineBytes[secondLine * sizeof(IntersectLine) + 3] & 0x3f))
+                if (firstType < ((s8)lineBytes[(secondLine = sortOrder[1]) * sizeof(IntersectLine) + 3] & 0x3f))
                 {
                     sortOrder[0] = secondLine;
                     *(s16*)(lbl_803DCF40 + lineOffset + 2) = firstLine;
@@ -3364,9 +3361,9 @@ void trackIntersect(void)
         counts[i - 1] += counts[i];
     }
 
-    for (i = 0, lineOffset = i; i < gIntersectLineCount; lineOffset += sizeof(IntersectLine), i++)
+    for (i = 0; i < gIntersectLineCount; i++)
     {
-        int typeIndex = ((s8) * (u8*)(lbl_803DCF34 + lineOffset + 3) & 0x3f) + 1;
+        int typeIndex = ((s8) * (u8*)(lbl_803DCF34 + i * 16 + 3) & 0x3f) + 1;
         s16 typeOffset = counts[typeIndex]++;
         *(s16*)(gIntersectLineIndexTable + typeOffset * 2) = i;
     }

@@ -19,6 +19,6 @@ void grimble_release(void);
 void grimble_initialise(void);
 
 extern ObjectDescriptor gGrimbleObjDescriptor;
-extern void* gCannonClawObjDescriptor[14];
+extern ObjectDescriptor gCannonClawObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_00D0_GRIMBLE_H_ */
