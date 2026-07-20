@@ -2,6 +2,7 @@
 #define MAIN_DLL_SH_DLL_01B0_SHSWAPSTON_H_
 
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 
 int warpstone_testEvent(u32 obj, u32 unused, int option);
 void warpstone_loadBaseUi(void);
@@ -15,5 +16,9 @@ void warpstone_update(int obj);
 void warpstone_init(GameObject* obj, u8* setup);
 void warpstone_release(void);
 void warpstone_initialise(void);
+
+extern ObjectDescriptor gWarpStoneObjDescriptor;
+
+STATIC_ASSERT(sizeof(ObjectDescriptor) == 0x38);
 
 #endif /* MAIN_DLL_SH_DLL_01B0_SHSWAPSTON_H_ */

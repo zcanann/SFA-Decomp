@@ -20,6 +20,4 @@ extern s32 lbl_80322828[3];
 extern s32 lbl_80322834[3];
 extern s32 lbl_80322840[3];
 
-void InvisibleHitSwitch_init(GameObject* param_1, u8* param_2);
-
 #endif /* MAIN_DLL_DLL_145_H_ */
