@@ -38,9 +38,9 @@ void ARWSpeedStr_free(void)
 {
 }
 
-void ARWSpeedStr_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+void ARWSpeedStr_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void ARWSpeedStr_hitDetect(void)

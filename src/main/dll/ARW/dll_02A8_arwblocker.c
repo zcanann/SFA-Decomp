@@ -53,9 +53,9 @@ void ARWBlocker_free(void)
 {
 }
 
-void ARWBlocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+void ARWBlocker_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void ARWBlocker_hitDetect(void)
@@ -95,11 +95,11 @@ void ARWBlocker_update(GameObject* obj)
     }
 }
 
-void ARWBlocker_init(GameObject* obj, int setup)
+void ARWBlocker_init(GameObject* obj, ARWBlockerSetup* setup)
 {
     ObjAnimComponent* objAnim = &(obj)->anim;
     ARWBlockerState* state = (obj)->extra;
-    ARWBlockerSetup* mapData = (ARWBlockerSetup*)setup;
+    ARWBlockerSetup* mapData = setup;
 
     (obj)->anim.rotX = -0x8000;
     (obj)->anim.rotZ = (s16)(mapData->rotZ << 8);

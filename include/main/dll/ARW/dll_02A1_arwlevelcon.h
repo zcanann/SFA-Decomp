@@ -54,7 +54,7 @@ int arwlevelcon_SeqFn(GameObject* obj, int unused, ObjSeqState* seq);
 int arwlevelcon_getExtraSize(void);
 int arwlevelcon_getObjectTypeId(void);
 void arwlevelcon_free(void);
-void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5);
+void arwlevelcon_render(GameObject* obj, int p2, int p3, int p4, int p5);
 void arwlevelcon_hitDetect(void);
 void arwlevelcon_update(GameObject* obj);
 void arwlevelcon_init(GameObject* obj, ARWLevelConSetup* setup);

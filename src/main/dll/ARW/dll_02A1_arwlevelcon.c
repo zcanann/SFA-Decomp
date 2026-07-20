@@ -125,9 +125,9 @@ void arwlevelcon_free(void)
     setIsOvercast(1);
 }
 
-void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
+void arwlevelcon_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void arwlevelcon_hitDetect(void)

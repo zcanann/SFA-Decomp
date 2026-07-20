@@ -42,7 +42,7 @@ int ARWBombColl_getExtraSize(void);
 int ARWBombColl_getObjectTypeId(void);
 void ARWBombColl_free(void);
 void ARWBombColl_hitDetect(void);
-void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
+void ARWBombColl_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 void ARWBombColl_init(GameObject* obj, ARWBombCollSetup* setup);
 void ARWBombColl_release(void);
 void ARWBombColl_initialise(void);
