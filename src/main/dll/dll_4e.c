@@ -29,7 +29,8 @@
 #include "main/pad.h"
 #include "main/screen_transition.h"
 #include "main/rcp_dolphin_render_api.h"
-#include "main/dll/dll_003C_tumbleweedbush_api.h"
+#include "main/gameloop_api.h"
+#include "main/dll/dll_003C_tumbleweedbush.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
 #include "main/dll/dll_0004_dummy04.h"
 

@@ -75,7 +75,7 @@ int lbl_803DB42C = 0x16A;
 #include "main/dll/dll_0031_minimap.h"
 #include "main/dll/dll_000D_playershadow.h"
 #include "main/dll/dll_0004_dummy04.h"
-#include "main/dll/dll_003C_tumbleweedbush_api.h"
+#include "main/dll/dll_003C_tumbleweedbush.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
 #include "main/dll/path_control_interface.h"
 #include "main/voxmaps.h"

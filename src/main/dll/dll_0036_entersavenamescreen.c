@@ -15,7 +15,8 @@
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-#include "main/dll/dll_003C_tumbleweedbush_api.h"
+#include "main/gameloop_api.h"
+#include "main/dll/dll_003C_tumbleweedbush.h"
 
 extern u16 gEnterSaveNameColorAnimTime;
 extern u32 lbl_803DD6DC;

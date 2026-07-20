@@ -6,6 +6,8 @@
 #include "main/hud_visibility_api.h"
 
 extern u8 lbl_803DB424;
+struct LinkInterface;
+extern struct LinkInterface* gTitleMenuLinkInterface;
 
 int getGameState(void);
 int getScreenBlankFrameCount(void);

@@ -19,6 +19,7 @@
  */
 #include "dolphin/os/OSReport.h"
 #include "dolphin/TRK_MINNOW_DOLPHIN/MWTrace.h"
+#include "main/dll/dll_003C_tumbleweedbush.h"
 #include "track/intersect_hud_api.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_command_api.h"
