@@ -275,11 +275,11 @@ extern u32 gSunFlareScissorX;
 extern u32 gSunFlareScissorY;
 extern u32 gSunFlareScissorWidth;
 extern u32 gSunFlareScissorHeight;
-extern u8 gMapBlockLayerTables[];
+extern void* gMapBlockLayerTables[];
 extern void** gMapBlocks;
 extern u8 lbl_803DCE06;
-extern int gGlowLightList[];
-extern char gViewFrustumPlanes[];
+extern ModelLightStruct* gGlowLightList[];
+extern FrustumPlane gViewFrustumPlanes[];
 extern u8 lbl_803DCE98;
 extern const f32 lbl_803DEC20;
 extern int lbl_803DCE80;
@@ -676,7 +676,7 @@ void renderGlows(void)
         int i;
         for (i = 0; i < lbl_803DCE06; i++)
         {
-            ModelLightStruct* e = (ModelLightStruct*)gGlowLightList[i];
+            ModelLightStruct* e = gGlowLightList[i];
             int d;
             Camera_ProjectWorldPointWithOffset(e->worldX - playerMapOffsetX, e->worldY, e->worldZ - playerMapOffsetZ,
                                                e->glowProjectionRadius, &px, &py, &pz);
@@ -692,7 +692,7 @@ void renderGlows(void)
         gxBlendFn_800789ac();
         for (i = 0; i < lbl_803DCE06; i++)
         {
-            ModelLightStruct* e = (ModelLightStruct*)gGlowLightList[i];
+            ModelLightStruct* e = gGlowLightList[i];
             if (e->glowAlpha != 0)
             {
                 f32 f = e->activeIntensity;
@@ -761,7 +761,7 @@ static inline int isGlowInFrustum(ModelLightStruct* light)
     for (; i < 5; i++)
     {
         f32 dot;
-        plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
+        plane = &gViewFrustumPlanes[i];
         dot = light->worldY * plane->normalY + plane->normalX * (light->worldX - offsetX) +
                   plane->normalZ * (light->worldZ - offsetZ) + plane->distance + lbl_803DEBCC;
         if (dot < lbl_803DEBCC)
@@ -791,7 +791,7 @@ void queueGlowRender(ModelLightStruct* light)
         }
     }
     idx = lbl_803DCE06++;
-    gGlowLightList[idx] = (int)light;
+    gGlowLightList[idx] = light;
 }
 
 void fn_8006058C(short* out, float* vec)
