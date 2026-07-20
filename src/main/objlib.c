@@ -32,6 +32,7 @@
 #include "main/pad_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/rcp_dolphin_render_api.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
@@ -1546,35 +1547,34 @@ int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u3
                                               u16 sfxId, float* cooldown)
 {
     int collisionType;
-    ObjHitReactEffectHandle* effectHandle;
-    float hitPos[3];
-    ObjHitReactEffectPos effectPos;
-    ObjHitReactEffectColorArgs effectArgs;
+    StaffCollisionInterface** effectResource;
+    PartFxSpawnParams effectParams;
+    StaffCollisionColorArgs effectArgs;
     u32 hitObject;
 
     *cooldown = *cooldown - timeDelta;
     collisionType =
-        ObjHits_GetPriorityHitWithPosition(obj, (int*)&hitObject, 0x0, 0x0, &hitPos[0], &hitPos[1], &hitPos[2]);
+        ObjHits_GetPriorityHitWithPosition(obj, (int*)&hitObject, 0x0, 0x0, &effectParams.posX, &effectParams.posY,
+                                           &effectParams.posZ);
     if ((*cooldown <= lbl_803DE970) && (collisionType != 0))
     {
         *cooldown = lbl_803DE978;
         if ((collisionType != 0x1a) && (collisionType != 5))
         {
-            hitPos[0] = hitPos[0] + playerMapOffsetX;
-            hitPos[2] = hitPos[2] + playerMapOffsetZ;
-            effectPos.scale = OBJLIB_UNIT_SCALE;
-            effectPos.z = 0;
-            effectPos.y = 0;
-            effectPos.x = 0;
-            effectHandle = (ObjHitReactEffectHandle*)Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID,
-                                                                      OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
-            effectArgs.hitFxMode = hitFxMode & 0xff;
-            effectArgs.colorR = colorR & 0xff;
-            effectArgs.colorG = colorG & 0xff;
-            effectArgs.colorB = colorB & 0xff;
-            effectHandle->vtable->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &effectPos,
-                                        OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE,
-                                        &effectArgs);
+            effectParams.posX = effectParams.posX + playerMapOffsetX;
+            effectParams.posZ = effectParams.posZ + playerMapOffsetZ;
+            effectParams.scale = OBJLIB_UNIT_SCALE;
+            effectParams.rotZ = 0;
+            effectParams.rotY = 0;
+            effectParams.rotX = 0;
+            effectResource = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID, OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
+            effectArgs.count = hitFxMode & 0xff;
+            effectArgs.red = colorR & 0xff;
+            effectArgs.green = colorG & 0xff;
+            effectArgs.blue = colorB & 0xff;
+            (*effectResource)
+                ->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &effectParams,
+                        OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE, &effectArgs);
             if (((sfxId != 0) && (hitObject != 0)) && (((GameObject*)hitObject)->anim.seqId == OBJLIB_HITOBJ_SEQID_STAFF))
             {
                 Sfx_PlayFromObject((u32)obj, sfxId);

@@ -14,35 +14,14 @@
 #include "main/obj_group.h"
 #include "main/object_api.h"
 #include "main/object_render.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 
-
-typedef struct ChestHitParams
-{
-    u32 a;
-    u32 b;
-    u32 c;
-    u32 d;
-} ChestHitParams;
-
-STATIC_ASSERT(sizeof(ChestHitParams) == 0x10);
 
 typedef struct ChestFlags
 {
     u8 open : 1;
     u8 trigger : 1;
 } ChestFlags;
-
-typedef struct ChestHitBlock
-{
-    ChestHitParams params;
-    u16 a;
-    u16 b;
-    u16 c;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z[1];
-} ChestHitBlock;
 
 STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
 STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
@@ -60,8 +39,8 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 #define TREASURECHEST_SEQEV_OPENED       4 /* hide + disable the chest */
 
 int lbl_803DDAE4;
-const ChestHitParams lbl_802C22B0 = {8, 0xFF, 0xFF, 0x78};
-void* lbl_803DDAE0;
+const StaffCollisionColorArgs lbl_802C22B0 = {8, 0xFF, 0xFF, 0x78};
+StaffCollisionInterface** lbl_803DDAE0;
 
 int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -140,7 +119,8 @@ void TreasureChest_update(GameObject* obj)
     TreasureChestSetup* setup;
     u32 nearestObject;
     int hitResult;
-    ChestHitBlock blk;
+    PartFxSpawnParams spawnParams;
+    StaffCollisionColorArgs colors;
     float nearestDist;
     u32 hitVolume;
     int hitPriority;
@@ -178,22 +158,21 @@ void TreasureChest_update(GameObject* obj)
             ObjHits_DisableObject(obj);
         }
         flags->trigger = 0;
-        blk.params = lbl_802C22B0;
+        colors = lbl_802C22B0;
         hitPriority = 0xffffffff;
-        hitResult = ObjHits_GetPriorityHitWithPosition((GameObject*)obj, &hitObject, &hitPriority, &hitVolume, &blk.x,
-                                                       &blk.y, blk.z);
+        hitResult = ObjHits_GetPriorityHitWithPosition((GameObject*)obj, &hitObject, &hitPriority, &hitVolume,
+                                                       &spawnParams.posX, &spawnParams.posY, &spawnParams.posZ);
         if ((hitResult != 0) && (hitResult != 0xe))
         {
-            blk.x = blk.x + playerMapOffsetX;
-            blk.z[0] = blk.z[0] + playerMapOffsetZ;
-            blk.scale = 1.0f;
-            blk.c = 0;
-            blk.b = 0;
-            blk.a = 0;
+            spawnParams.posX = spawnParams.posX + playerMapOffsetX;
+            spawnParams.posZ = spawnParams.posZ + playerMapOffsetZ;
+            spawnParams.scale = 1.0f;
+            spawnParams.rotZ = 0;
+            spawnParams.rotY = 0;
+            spawnParams.rotX = 0;
             if (lbl_803DDAE4 == 0)
             {
-                (*(void (**)(int, int, u16*, int, int, ChestHitParams*))(*(int*)lbl_803DDAE0 + 4))(
-                    0, 1, (u16*)((int)&blk + 16), 0x401, 0xffffffff, &blk.params);
+                (*lbl_803DDAE0)->spawn(NULL, 1, &spawnParams, 0x401, -1, &colors);
                 lbl_803DDAE4 = 0x3c;
             }
         }

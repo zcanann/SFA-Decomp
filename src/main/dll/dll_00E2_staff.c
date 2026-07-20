@@ -48,6 +48,7 @@
 #include "string.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00C8_depthoffieldpoint_api.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
@@ -150,15 +151,9 @@ typedef struct StaffQuakeSpellState
     int* object;     /* 0x1C: spawned quake-spell object */
     u8 active;       /* 0x20: spell active flag */
 } StaffQuakeSpellState;
-typedef struct QuakePartVec
-{
-    u16 h0, h1, h2;
-    f32 scale;
-    f32 x, y, z;
-} QuakePartVec;
 typedef struct SwipeColorTable
 {
-    u32 w[16];
+    StaffCollisionColorArgs colors[4];
 } SwipeColorTable;
 typedef struct SwipeRecord
 {
@@ -500,16 +495,16 @@ void superQuakeFn_8016d9fc(f32* pos)
     player = (int*)Obj_GetPlayerObject();
     if (player != NULL && Obj_IsLoadingLocked() != 0)
     {
-        QuakePartVec v;
+        PartFxSpawnParams v;
         void* setup;
         ((StaffQuakeSpellState*)gStaffQuakeSpellState)->active = 1;
-        v.x = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posX;
-        v.y = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posY;
-        v.z = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posZ;
+        v.posX = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posX;
+        v.posY = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posY;
+        v.posZ = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posZ;
         v.scale = 1.0f;
-        v.h0 = 0;
-        v.h2 = 0;
-        v.h1 = 0;
+        v.rotX = 0;
+        v.rotZ = 0;
+        v.rotY = 0;
         (*gPartfxInterface)->spawnObject(player, STAFF_PARTFX_QUAKE, &v, 0x200000, -1, NULL);
         setup = (void*)Obj_AllocObjectSetup(36, STAFF_CHILD_OBJ_QUAKE);
         ((ObjPlacement*)setup)->color[0] = 1;
@@ -1018,10 +1013,13 @@ void staff_func0E(void)
 
 
 const SwipeColorTable gStaffSwipeColorTable = {{
-    0x08, 0xFF, 0xBE, 0x78, 0x08, 0xFF, 0xFF, 0x78,
-    0x08, 0xB4, 0xF0, 0xFF, 0x08, 0xAA, 0xFF, 0xAA}};
+    {0x08, 0xFF, 0xBE, 0x78},
+    {0x08, 0xFF, 0xFF, 0x78},
+    {0x08, 0xB4, 0xF0, 0xFF},
+    {0x08, 0xAA, 0xFF, 0xAA},
+}};
 
-extern void* gStaffSwipeResource;
+extern StaffCollisionInterface** gStaffSwipeResource;
 
 void staff_hitDetectGeometry(int* obj)
 {
@@ -1058,17 +1056,18 @@ void staff_hitDetectGeometry(int* obj)
         }
         else
         {
-            QuakePartVec v;
+            PartFxSpawnParams v;
             v.scale = 1.0f;
-            v.h2 = 0;
-            v.h1 = 0;
-            v.h0 = 0;
-            v.x = hitState->contactPosX;
-            v.y = hitState->contactPosY;
-            v.z = hitState->contactPosZ;
-            ((void (*)(int, int, void*, int, int, u8*))(*(int**)gStaffSwipeResource)[1])(
-                OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &v, OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,
-                OBJHITREACT_HIT_EFFECT_NO_SOURCE, (u8*)&tbl + (((u8*)lbl_803208E8)[idx] << 4));
+            v.rotZ = 0;
+            v.rotY = 0;
+            v.rotX = 0;
+            v.posX = hitState->contactPosX;
+            v.posY = hitState->contactPosY;
+            v.posZ = hitState->contactPosZ;
+            (*gStaffSwipeResource)
+                ->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &v,
+                        OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE,
+                        &tbl.colors[((u8*)lbl_803208E8)[idx]]);
             Sfx_PlayAtPositionFromObject((int)obj, hitState->contactPosX, hitState->contactPosY,
                                          hitState->contactPosZ, (u16)((s16*)lbl_803208A0)[idx]);
         }
@@ -1096,7 +1095,7 @@ void staff_func0B(void)
 
 void* gStaffSwipeTextures[2];
 s16* gStaffSwipeTextureIds;
-void* gStaffSwipeResource;
+StaffCollisionInterface** gStaffSwipeResource;
 
 void staff_setScale(void)
 {
