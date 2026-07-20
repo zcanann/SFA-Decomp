@@ -5161,11 +5161,11 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
             self->anim.rotX = ang;
         }
         ((ByteFlags*)((char*)inner + 0x3f2))->b01 = 1;
-        ObjAnim_SetCurrentMove(obj, 0x5f, lbl_803E7EA4, 0);
+        ObjAnim_SetCurrentMove(obj, 0x5f, 0.0f, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 8);
         state->baddie.moveSpeed = lbl_803E7EF8;
         {
-            f32 z = lbl_803E7EA4;
+            f32 z = 0.0f;
             inner->stickTargetX = z;
             inner->stickTargetY = z;
         }
@@ -5174,7 +5174,7 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
     }
     inner->aimInputZ = lbl_803E7F2C;
     {
-        f32 z = lbl_803E7EA4;
+        f32 z = 0.0f;
         inner->aimInputX = z;
         state->baddie.animSpeedA = z;
         state->baddie.animSpeedB = z;
@@ -5206,9 +5206,9 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
     }
     prev = inner->stickDirection;
     t = (f32)padGetStickX(0) / lbl_803E7FA8;
-    xc = (t < lbl_803E7ECC) ? lbl_803E7ECC : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
+    xc = (t < lbl_803E7ECC) ? lbl_803E7ECC : ((t > 1.0f) ? 1.0f : t);
     t2 = (f32)padGetStickY(0) / lbl_803E7FA8;
-    yc = (t2 < lbl_803E7ECC) ? lbl_803E7ECC : ((t2 > lbl_803E7EE0) ? lbl_803E7EE0 : t2);
+    yc = (t2 < lbl_803E7ECC) ? lbl_803E7ECC : ((t2 > 1.0f) ? 1.0f : t2);
     if (((ByteFlags*)((char*)inner + 0x3f3))->b80 == 0)
     {
         f32 component;
@@ -5219,24 +5219,24 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
         if (yc > lbl_803E7F14)
         {
             xT = -0.05f - lbl_803E7F48 * yc;
-            inner->stickTargetY = yT = lbl_803E7EA4;
+            inner->stickTargetY = yT = 0.0f;
             inner->stickDirection = 1;
         }
         else if (yc < -0.2f)
         {
             xT = lbl_803E7F6C - lbl_803E7F48 * yc;
-            inner->stickTargetY = yT = lbl_803E7EA4;
+            inner->stickTargetY = yT = 0.0f;
             inner->stickDirection = 2;
         }
         else if (xc > lbl_803E7F14)
         {
-            inner->stickTargetX = xT = lbl_803E7EA4;
+            inner->stickTargetX = xT = 0.0f;
             yT = lbl_803E7EAC * xc + lbl_803E7F6C;
             inner->stickDirection = 3;
         }
         else if (xc < -0.2f)
         {
-            inner->stickTargetX = xT = lbl_803E7EA4;
+            inner->stickTargetX = xT = 0.0f;
             yT = lbl_803E7EAC * xc + (-0.05f);
             inner->stickDirection = 4;
         }
@@ -5253,8 +5253,8 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
                     state->baddie.moveSpeed = lbl_803E7EF8;
                 }
             }
-            xT = lbl_803E7EA4;
-            yT = lbl_803E7EA4;
+            xT = 0.0f;
+            yT = 0.0f;
         }
         k = lbl_803E7EFC;
         inner->stickTargetX = k * (xT - inner->stickTargetX) + inner->stickTargetX;
@@ -5330,8 +5330,8 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
             f32 b;
             if (direction == 0)
             {
-                a = lbl_803E7EA4;
-                b = lbl_803E7EA4;
+                a = 0.0f;
+                b = 0.0f;
             }
             else
             {
@@ -5369,7 +5369,7 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
     if (nextMove != -1 && self->anim.currentMove != nextMove &&
         ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0)
     {
-        ObjAnim_SetCurrentMove(obj, nextMove, lbl_803E7EA4, 0);
+        ObjAnim_SetCurrentMove(obj, nextMove, 0.0f, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xa);
     }
     if (camCall != 0)
