@@ -251,7 +251,6 @@ void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2)
     }
 }
 
-extern f32 SaveEnd_803DEAD4;
 extern f32 lbl_803DEB04;
 extern f32 lbl_803DEB08;
 extern f32 lbl_803DEB0C;
@@ -936,7 +935,7 @@ void fn_8004DA54(char* p1)
             GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP1);
         }
     }
-    PSMTXScale(mtxf4, SaveEnd_803DEAD4, SaveEnd_803DEAD4, lbl_803DEAC8);
+    PSMTXScale(mtxf4, 0.9f, 0.9f, lbl_803DEAC8);
     mtxf4[1][3] = lbl_803DEB08 * ry;
     GXLoadTexMtxImm(mtxf4, GX_PTTEXMTX0, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX0);
