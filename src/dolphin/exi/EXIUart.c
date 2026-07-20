@@ -3,10 +3,10 @@
 #define EXI_TX 0x800400u
 #define EXI_MAGIC 0xA5FF005A
 
-extern s32 Chan;
-extern u32 Dev;
-extern u32 Enabled;
-extern u32 BarnacleEnabled;
+static s32 Chan;
+static u32 Dev;
+static u32 Enabled;
+static u32 BarnacleEnabled;
 
 u32 InitializeUART(u32 baudRate) {
     (void)baudRate;
