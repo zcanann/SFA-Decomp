@@ -2649,9 +2649,9 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             slot->posX.value = slot->velocityX * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posX.value;
             slot->posY.value = slot->velocityY * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posY.value;
             slot->posZ.value = slot->velocityZ * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posZ.value;
-            slot->velocityX = slot->velocityX * -1.0f;
-            slot->velocityY = slot->velocityY * -1.0f;
-            slot->velocityZ = slot->velocityZ * -1.0f;
+            slot->velocityX *= -1.0f;
+            slot->velocityY *= -1.0f;
+            slot->velocityZ *= -1.0f;
         }
 
         if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_ACTOR) != 0)
