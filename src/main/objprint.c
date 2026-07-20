@@ -528,7 +528,7 @@ int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
     }
 
     {
-        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
+        f32 rate = Curve_EvalHermite(buf, ratio, 0);
         if (curve[10] < curve[11])
         {
             rate = -rate;
@@ -576,7 +576,7 @@ int fn_800399C0(s16* curve, s16* state)
     }
 
     {
-        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
+        f32 rate = Curve_EvalHermite(buf, ratio, 0);
         if (curve[10] < curve[11])
         {
             rate = -rate;

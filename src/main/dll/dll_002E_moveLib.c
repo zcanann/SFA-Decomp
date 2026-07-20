@@ -175,21 +175,21 @@ f32 fn_80114224(const Vec* start, const Vec* end, const Vec* startTangent, const
         buf[1] = startTangent->x;
         buf[2] = end->x;
         buf[3] = endTangent->x;
-        cur_x = Curve_EvalHermiteValuesFirst(buf, t, 0);
+        cur_x = Curve_EvalHermite(buf, t, 0);
         dx = cur_x - prev_x;
 
         buf[0] = start->y;
         buf[1] = startTangent->y;
         buf[2] = end->y;
         buf[3] = endTangent->y;
-        cur_y = Curve_EvalHermiteValuesFirst(buf, t, 0);
+        cur_y = Curve_EvalHermite(buf, t, 0);
         dy = cur_y - prev_y;
 
         buf[0] = start->z;
         buf[1] = startTangent->z;
         buf[2] = end->z;
         buf[3] = endTangent->z;
-        cur_z = Curve_EvalHermiteValuesFirst(buf, t, 0);
+        cur_z = Curve_EvalHermite(buf, t, 0);
         dz = cur_z - prev_z;
 
         total += sqrtf(dx * dx + dy * dy + dz * dz);
@@ -242,17 +242,17 @@ int fn_80114408(GameObject* obj, const MoveLibWaypointDef* def, MoveLibHermiteSt
         buf[1] = state->startTangent.x;
         buf[2] = state->end.x;
         buf[3] = state->endTangent.x;
-        (obj)->anim.localPosX = Curve_EvalHermiteValuesFirst(buf, *phaseOut, 0);
+        (obj)->anim.localPosX = Curve_EvalHermite(buf, *phaseOut, 0);
         buf[0] = state->start.y;
         buf[1] = state->startTangent.y;
         buf[2] = state->end.y;
         buf[3] = state->endTangent.y;
-        (obj)->anim.localPosY = Curve_EvalHermiteValuesFirst(buf, *phaseOut, 0);
+        (obj)->anim.localPosY = Curve_EvalHermite(buf, *phaseOut, 0);
         buf[0] = state->start.z;
         buf[1] = state->startTangent.z;
         buf[2] = state->end.z;
         buf[3] = state->endTangent.z;
-        (obj)->anim.localPosZ = Curve_EvalHermiteValuesFirst(buf, *phaseOut, 0);
+        (obj)->anim.localPosZ = Curve_EvalHermite(buf, *phaseOut, 0);
     }
     return ret;
 }

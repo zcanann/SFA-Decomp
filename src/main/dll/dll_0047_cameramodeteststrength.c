@@ -60,7 +60,7 @@ u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
     {
         speed = lbl_803E188C;
     }
-    speed = Curve_EvalHermite(speed, lbl_803DD560->speedCurve, 0x0);
+    speed = Curve_EvalHermite(lbl_803DD560->speedCurve, speed, 0x0);
     if (speed < lbl_803E18AC)
     {
         speed = lbl_803E18AC;

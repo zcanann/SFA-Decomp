@@ -1813,7 +1813,7 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
         t = (f32)(frame - keys[keyIndex - 1].frame) / span;
         if (mode == 0)
         {
-            return Curve_EvalHermite(t, values, NULL);
+            return Curve_EvalHermite(values, t, NULL);
         }
         if (mode == 1)
         {
@@ -2705,12 +2705,12 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
         zPoints[3] = toScale * mathCosf(ROM_CURVE_NODE_ANGLE(to->yaw));
 
         {
-            outPos[0] = Curve_EvalHermiteValuesFirst(xPoints, segmentT, &xTangent);
+            outPos[0] = Curve_EvalHermite(xPoints, segmentT, &xTangent);
             if ((s8)ignoreY == 0)
             {
-                outPos[1] = Curve_EvalHermiteValuesFirst(yPoints, segmentT, &yTangent);
+                outPos[1] = Curve_EvalHermite(yPoints, segmentT, &yTangent);
             }
-            outPos[2] = Curve_EvalHermiteValuesFirst(zPoints, segmentT, &zTangent);
+            outPos[2] = Curve_EvalHermite(zPoints, segmentT, &zTangent);
         }
 
         length = sqrtf(xTangent * xTangent + zTangent * zTangent);

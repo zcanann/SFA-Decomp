@@ -360,9 +360,9 @@ s32 Checkpoint_func08(CheckpointCursor* out, CheckpointNavState* o, f32 dist, s3
             t = kMax;
             clamp = 1;
         }
-        x = Curve_EvalHermiteValuesFirst(v1, t, &outX);
-        y = Curve_EvalHermiteValuesFirst(v2, t, &outY);
-        z = Curve_EvalHermiteValuesFirst(v3, t, &outZ);
+        x = Curve_EvalHermite(v1, t, &outX);
+        y = Curve_EvalHermite(v2, t, &outY);
+        z = Curve_EvalHermite(v3, t, &outZ);
         ang1 = (u16)getAngle(outX, outZ) + 0x8000;
         if (flag != 0)
         {

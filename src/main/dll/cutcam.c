@@ -601,7 +601,7 @@ void camcontrol_updateModeSettings(int camera)
         curve[1] = lbl_803E16A4;
         curve[2] = lbl_803E16AC;
         curve[3] = lbl_803E16AC;
-        blend = Curve_EvalHermite(ratio, curve, NULL);
+        blend = Curve_EvalHermite(curve, ratio, NULL);
         gCamcontrolModeSettings->targetHeight =
             blend * (gCamcontrolModeSettings->targetTargetHeight - gCamcontrolModeSettings->savedTargetHeight) +
             gCamcontrolModeSettings->savedTargetHeight;
