@@ -515,7 +515,7 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
             ((DRCloudCageState*)state)->channel2Vol = lbl_803E5B30;
         }
         v = ((DRCloudCageState*)state)->channel2Vol;
-        Sfx_SetObjectChannelVolume((u32)obj, 2, v, v * lbl_803E5B38 + lbl_803E5B34);
+        ((void (*)(GameObject*, u32, u8, f32))Sfx_SetObjectChannelVolume)(obj, 2, v, v * lbl_803E5B38 + lbl_803E5B34);
         if (intensity > 5)
         {
             ((DRCloudCageState*)state)->channel4Vol = lbl_803E5B3C + intensity;
@@ -537,7 +537,7 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
             ((DRCloudCageState*)state)->channel4Vol = lbl_803E5B44;
         }
         v = ((DRCloudCageState*)state)->channel4Vol;
-        Sfx_SetObjectChannelVolume((u32)obj, 4, v, v / lbl_803E5B48);
+        ((void (*)(GameObject*, u32, u8, f32))Sfx_SetObjectChannelVolume)(obj, 4, v, v / lbl_803E5B48);
         pulse.unkC = lbl_803E5B4C;
         pulse.unk10 = lbl_803E5B50;
         pulse.unk14 = lbl_803E5B54;
