@@ -27,9 +27,9 @@ int StaticCamera_getObjectTypeId(void)
     return 0x0;
 }
 
-void StaticCamera_free(int obj)
+void StaticCamera_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, STATICCAMERA_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, STATICCAMERA_OBJGROUP);
 }
 
 void StaticCamera_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)

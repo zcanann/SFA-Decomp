@@ -295,17 +295,17 @@ void PressureSwitch_update(int obj)
     }
 }
 
-void PressureSwitch_init(int* obj, u8* init)
+void PressureSwitch_init(GameObject* obj, u8* init)
 {
     PressureSwitchState* state;
     u32 mapId;
 
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = PressureSwitch_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
+    state = obj->extra;
+    obj->animEventCallback = PressureSwitch_SeqFn;
+    obj->anim.rotX = (s16)((s8)init[0x18] << 8);
     state->retriggerTimer = (s16)(((PressureswitchPlacement*)init)->retriggerDelay * 0x3c);
     state->chimeLatch = 0;
-    mapId = *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14);
+    mapId = *(int*)(*(int*)&obj->anim.placementData + 0x14);
     if (mapId == 0x1f1a)
     {
         state->mapGameBit = 0xf45;
@@ -327,7 +327,7 @@ void PressureSwitch_init(int* obj, u8* init)
     }
     if (mainGetBit(((PressureswitchPlacement*)init)->triggerGameBit) != 0)
     {
-        ((GameObject*)obj)->anim.localPosY = ((PressureswitchPlacement*)init)->restPosY - 25.0f;
+        obj->anim.localPosY = ((PressureswitchPlacement*)init)->restPosY - 25.0f;
         state->holdTimer = 0x1e;
     }
 }
