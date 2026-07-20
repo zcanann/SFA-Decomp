@@ -95,7 +95,7 @@ void dll_19_func12(GameObject* obj, void* state, u8 flag);
 void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags, f32 fparam,
                    int initFlags);
 void dll_19_func11(void);
-int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
+int dll_19_func17(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
                   s16 substateActive, s16 moveMode);
 int dll_19_func16(GameObject* obj, void* baddieState, void* hitbox, s16 gameBit, int* tableA, u8* tableB,
                   s16 substate, void* hitPosOut);
@@ -383,7 +383,7 @@ void dll_19_func11(void)
     (void)(*gCameraInterface)->getOverrideTarget();
 }
 
-int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
+int dll_19_func17(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
                   s16 substateActive, s16 moveMode)
 {
     u32 msgData;
@@ -407,7 +407,7 @@ int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagO
             }
             break;
         case 11:
-            *(s8*)(state + 846) = extra;
+            *(s8*)((u8*)state + 846) = extra;
             break;
         case 1:
         case 0xA0001:

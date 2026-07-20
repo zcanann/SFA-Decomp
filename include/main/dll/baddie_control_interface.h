@@ -8,8 +8,8 @@ typedef struct GameObject GameObject;
 /* Function-pointer table exported by the baddie-control DLL (0x19); slot K
  * here is the DLL's exported func(K - 4) (releaseState = dll_19_func12,
  * findAggroTarget = dll_19_func14, updateHitReaction = dll_19_func16,
- * initGroundBaddie = dll_19_func18). Named slots are those with recovered
- * call sites; the pads are unrecovered slots. */
+ * processMessages = dll_19_func17, initGroundBaddie = dll_19_func18). Named
+ * slots are those with recovered call sites; the pads are unrecovered slots. */
 typedef struct BaddieControlInterface
 {
     u8 pad00[0x28];
@@ -24,7 +24,8 @@ typedef struct BaddieControlInterface
     GameObject* (*spawnChild)(GameObject* obj, int spawnType, int unused, int alt); /* 0x4C */
     int (*updateHitReaction)(GameObject* obj, void* state, void* hitbox, s16 gameBit, int* moveTable,
                              u8* damageTable, s16 substate, void* hitPosOut); /* 0x50 */
-    u8 pad54[4];
+    int (*processMessages)(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut,
+                           s16 substateIdle, s16 substateActive, s16 moveMode); /* 0x54 */
     void (*initGroundBaddie)(int* obj, u8* def, u8* state, int hp, int a5, int moveId, u8 mode,
                              f32 radius);                                    /* 0x58 */
 } BaddieControlInterface;

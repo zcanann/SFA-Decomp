@@ -717,8 +717,9 @@ void chukChuk_updateTargeting(int obj, int state, int target)
             (s32)((GroundBaddieState*)state)->soundIdB);
     }
 
-    (**(void (**)(int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x54))(
-        obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->processMessages((GameObject*)obj, (void*)target, (void*)(state + 0x35c),
+                          ((GroundBaddieState*)state)->gameBitB, NULL, 0, 0, 8);
 
     result = ((BaddieControlInterface*)*gBaddieControlInterface)
                  ->updateHitReaction((GameObject*)obj, (void*)target, (char*)state + 0x35c,

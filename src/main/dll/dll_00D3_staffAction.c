@@ -956,8 +956,9 @@ void dll_D3_update(int* obj)
         ((TreasureChestState*)state)->targetDistance = sqrtf(dz * dz + (dx * dx + dy * dy));
     }
 
-    ((void (*)(int*, int*, int, int, int, int, int, int))((void**)*(int*)gBaddieControlInterface)[0x54 / 4])(
-        obj, state, (int)((char*)state + 0x35c), (int)((TreasureChestState*)state)->gameBitB, 0, 0, 0, 0);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->processMessages((GameObject*)obj, state, (char*)state + 0x35c,
+                          ((TreasureChestState*)state)->gameBitB, NULL, 0, 0, 0);
 
     hits = (int)((TreasureChestState*)state)->hitPoints;
     if (hits > 0)

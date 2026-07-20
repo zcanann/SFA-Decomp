@@ -1640,9 +1640,9 @@ void ktrex_update(int obj)
         bitB++;
     }
     gKTRexState->laneMode = zm[0];
-    (*(void (**)(int, void*, void*, int, void*, int, int, int))((char*)*gBaddieControlInterface + 0x54))(
-        obj, runtime, (char*)gKTRexRuntime + 0x35c, gKTRexRuntime->unk3F4,
-        (char*)gKTRexRuntime + 0x405, 2, 2, 0);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->processMessages((GameObject*)obj, runtime, (char*)gKTRexRuntime + 0x35c, gKTRexRuntime->unk3F4,
+                          (u8*)gKTRexRuntime + 0x405, 2, 2, 0);
     ktrex_updateContactEffects((GameObject*)obj, runtime);
     ktrex_updateAttackEffects((GameObject*)(obj));
     ((BaddieControlInterface*)*gBaddieControlInterface)->updateGravity((GameObject*)obj, runtime, 0.0f, 0);

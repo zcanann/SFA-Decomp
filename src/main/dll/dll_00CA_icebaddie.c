@@ -1234,8 +1234,9 @@ void iceBaddie_updateTargetCollision(int obj, int sub, int state)
             obj, state, sub + 0x400, 2, 3, (s32)((GroundBaddieState*)sub)->soundIdB,
             (s32)((GroundBaddieState*)sub)->soundIdA);
     }
-    ((void (*)(int, int, int, int, int, int, int, int))((void**)*gBaddieControlInterface)[21])(
-        obj, state, sub + 0x35c, (s32)((GroundBaddieState*)sub)->gameBitB, 0, 0, 0, 8);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->processMessages((GameObject*)obj, (void*)state, (void*)(sub + 0x35c),
+                          ((GroundBaddieState*)sub)->gameBitB, NULL, 0, 0, 8);
     *(f32*)control += timeDelta;
     if (((GroundBaddieState*)state)->baddie.controlMode != 3 &&
         ((BaddieControlInterface*)*gBaddieControlInterface)

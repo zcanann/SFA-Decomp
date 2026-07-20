@@ -46,7 +46,6 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
                                          DIMbosstonsilState* updateState)
 {
     f32 timer;
-    u8* vt;
 
     timer = lbl_803E4C90;
 
@@ -57,9 +56,9 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
     ((BaddieControlInterface*)*gBaddieControlInterface)
         ->updateGravity((GameObject*)obj, updateState, timer, 1);
 
-    vt = (u8*)*(int*)gBaddieControlInterface;
-    ((void (*)(u8*, DIMbosstonsilState*, u8*, s16, u8*, int, int, int)) *
-     (void**)(vt + 0x54))(obj, updateState, state->animPoints, state->animFrame, &state->hitReactMode, 0, 0, 0);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->processMessages((GameObject*)obj, updateState, state->animPoints, state->animFrame,
+                          &state->hitReactMode, 0, 0, 0);
 
     if (lbl_803E4C90 != lbl_803DDBA4)
     {

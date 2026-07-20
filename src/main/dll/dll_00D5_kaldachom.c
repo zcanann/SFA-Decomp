@@ -259,8 +259,9 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
         st.dz = ((GameObject*)target)->anim.worldPosZ - obj->anim.worldPosZ;
         ((GroundBaddieState*)state)->baddie.targetDistance = sqrtf(st.dz * st.dz + (st.dx * st.dx + st.dy * st.dy));
     }
-    (*(void (**)(void*, int, int, int, int, int, int, int))(*(int*)gBaddieControlInterface + 0x54))(
-        obj, state, stateWithBaddieData + 0x35c, ((GroundBaddieState*)stateWithBaddieData)->gameBitB, 0, 0, 0, 4);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->processMessages(obj, (void*)state, (void*)(stateWithBaddieData + 0x35c),
+                          ((GroundBaddieState*)stateWithBaddieData)->gameBitB, NULL, 0, 0, 4);
     (*(void (**)(void*, GameObject*, int, u16*, u16*, u16*))(*(int*)gBaddieControlInterface + 0x14))(
         obj, playerObj, 4, &hitType, &hitAux1, &hitAux2);
     if ((hitType == 1) || (hitType == 2))
