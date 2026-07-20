@@ -473,7 +473,6 @@ extern u64 synthRealTime;
 u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot, u8 midiKey)
 {
     u32 sign;
-    int isSigned;
     u32 i;
     u32 value;
     u8 ctrl;
@@ -482,18 +481,17 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot
 
     for (value = 0, i = 0; i < slotPtr->entryCount; ++i)
     {
-        if (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG)
+        ctrl = slotPtr->entries[i].controller;
+        if ((slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG) ||
+            ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_MODULATION ||
+            ctrl == MCMD_CTRL_PANNING || ctrl == MCMD_CTRL_EX_A0 ||
+            ctrl == MCMD_CTRL_EX_A1 || ctrl == MCMD_CTRL_SUR_PANNING)
         {
-            tmp = (statePtr != NULL ? varGet(statePtr, 0, slotPtr->entries[i].controller) : 0);
-            isSigned = 1;
-        }
-        else
-        {
-            ctrl = slotPtr->entries[i].controller;
-            isSigned = (ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_MODULATION ||
-                        ctrl == MCMD_CTRL_PANNING || ctrl == MCMD_CTRL_EX_A0 ||
-                        ctrl == MCMD_CTRL_EX_A1 || ctrl == MCMD_CTRL_SUR_PANNING);
-            if (isSigned)
+            if (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG)
+            {
+                tmp = (statePtr != NULL ? varGet(statePtr, 0, slotPtr->entries[i].controller) : 0);
+            }
+            else
             {
                 switch (ctrl)
                 {
@@ -514,10 +512,6 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot
                     break;
                 }
             }
-        }
-
-        if (isSigned)
-        {
             tmp = (tmp * (slotPtr->entries[i].scale >> 1)) >> 15;
             if (tmp < -0x2000)
             {
