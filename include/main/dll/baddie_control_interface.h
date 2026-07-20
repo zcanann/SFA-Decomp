@@ -7,15 +7,18 @@ typedef struct GameObject GameObject;
 typedef struct ObjSeqState ObjSeqState;
 
 /* Function-pointer table exported by the baddie-control DLL (0x19); slot K
- * here is the DLL's exported func(K - 4) (releaseState = dll_19_func12,
+ * here is the DLL's exported func(K - 4) (updateMovementBlend = dll_19_func06,
  * getTargetGeometry = dll_19_func07, getClearDirectionMask = dll_19_func08,
+ * releaseState = dll_19_func12,
  * shouldDropTarget = dll_19_func13, findAggroTarget = dll_19_func14,
  * updateHitReaction = dll_19_func16, processMessages = dll_19_func17,
  * initGroundBaddie = dll_19_func18). Named slots are those with recovered call
  * sites; the pads are unrecovered slots. */
 typedef struct BaddieControlInterface
 {
-    u8 pad00[0x14];
+    u8 pad00[0x10];
+    void (*updateMovementBlend)(GameObject* obj, void* state, void* unusedState, f32 maxSpeed,
+                                f32 turnSpeed); /* 0x10 */
     void (*getTargetGeometry)(GameObject* obj, GameObject* target, int divisions, u16* sectorOut,
                               u16* yawDeltaOut, u16* distanceOut); /* 0x14 */
     u8 (*getClearDirectionMask)(GameObject* obj, void* state, f32 distance); /* 0x18 */

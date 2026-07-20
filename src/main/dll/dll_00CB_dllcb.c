@@ -232,8 +232,8 @@ int dll_CB_moveHandler1(int* obj, GroundBaddieState* def)
     def->baddie.physicsActive = 1;
     ((GameObject*)obj)->anim.rotZ = def->baddie.spawnRotZ;
     ((GameObject*)obj)->anim.rotY = def->baddie.spawnRotY;
-    ((void (*)(int*, u8*, int*, f32, f32))((void**)*gBaddieControlInterface)[4])(obj, (u8*)def, (int*)state,
-                                                                                 1.0f, 12.0f);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->updateMovementBlend((GameObject*)obj, def, state, 1.0f, 12.0f);
     def->baddie.moveSpeed = 0.075f * def->baddie.animSpeedA;
     return 0;
 }

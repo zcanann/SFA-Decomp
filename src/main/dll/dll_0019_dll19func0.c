@@ -112,7 +112,7 @@ int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, void* moveHandler
                   s16 controlMode);
 f32 dll_19_func0B(int* obj);
 u16 dll_19_func0A(GameObject* obj);
-void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed);
+void dll_19_func06(GameObject* obj, void* state, void* unusedState, f32 cap, f32 speed);
 f32 dll_19_func05(GameObject* obj, f32 px, f32 pz, f32 range, char* st);
 void dll_19_func07(GameObject* obj, GameObject* target, int div, u16* outYaw, u16* outDelta, u16* outDist);
 int dll_19_func09_ret_0(void);
@@ -1093,32 +1093,30 @@ u16 dll_19_func0A(GameObject* obj)
 
 /* Steps the movement blend factors toward the current target and turns the
  * yaw by the buffered turn rate. */
-void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed)
+void dll_19_func06(GameObject* obj, void* state, void* unusedState, f32 cap, f32 speed)
 {
-    if (((BaddieState*)st)->inputMagnitude < 0.005f)
+    BaddieState* st = state;
+
+    if (st->inputMagnitude < 0.005f)
     {
         f32 rest;
-        *(s16*)(st + 0x334) = 0;
-        ((BaddieState*)st)->turnRate = 0;
+        *(s16*)((char*)st + 0x334) = 0;
+        st->turnRate = 0;
         rest = 0.0f;
-        ((BaddieState*)st)->inputMagnitude = rest;
-        ((BaddieState*)st)->animSpeedA = rest;
+        st->inputMagnitude = rest;
+        st->animSpeedA = rest;
     }
-    ((BaddieState*)st)->animSpeedB = 0.0f;
-    *yaw = 182.0f * ((f32)((BaddieState*)st)->turnRate * timeDelta / speed) + (f32)*yaw;
-    ((BaddieState*)st)->animSpeedC +=
-        timeDelta *
-        ((((BaddieState*)st)->inputMagnitude - ((BaddieState*)st)->animSpeedC) / ((BaddieState*)st)->velSmoothTime);
-    ((BaddieState*)st)->animSpeedA +=
-        timeDelta *
-        ((((BaddieState*)st)->inputMagnitude - ((BaddieState*)st)->animSpeedA) / ((BaddieState*)st)->velSmoothTime);
-    if (((BaddieState*)st)->animSpeedC > cap)
+    st->animSpeedB = 0.0f;
+    obj->anim.rotX = 182.0f * ((f32)st->turnRate * timeDelta / speed) + (f32)obj->anim.rotX;
+    st->animSpeedC += timeDelta * ((st->inputMagnitude - st->animSpeedC) / st->velSmoothTime);
+    st->animSpeedA += timeDelta * ((st->inputMagnitude - st->animSpeedA) / st->velSmoothTime);
+    if (st->animSpeedC > cap)
     {
-        ((BaddieState*)st)->animSpeedC = cap;
+        st->animSpeedC = cap;
     }
-    if (((BaddieState*)st)->animSpeedA > cap)
+    if (st->animSpeedA > cap)
     {
-        ((BaddieState*)st)->animSpeedA = cap;
+        st->animSpeedA = cap;
     }
 }
 
