@@ -3501,23 +3501,23 @@ int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
         {
             cur = (*arrp)->height;
             cur = y - cur;
-            if (cur >= lbl_803DECB4)
+            if (cur >= 0.0f)
             {
-                if (best < lbl_803DECB4 || cur < best)
+                if (best < 0.0f || cur < best)
                 {
                     best = cur;
                 }
             }
         }
-        if (best >= lbl_803DECB4)
+        if (best >= 0.0f)
         {
             *outDepth = best;
             return 1;
         }
-        *outDepth = lbl_803DECB4;
+        *outDepth = 0.0f;
         return 0;
     }
-    *outDepth = lbl_803DECB4;
+    *outDepth = 0.0f;
     return 0;
 }
 
