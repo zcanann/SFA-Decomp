@@ -96,6 +96,13 @@ typedef struct DbstealerwormPlacement
 
 STATIC_ASSERT(sizeof(DbstealerwormPlacement) == 0x30);
 
+typedef struct
+{
+    int* msgs; /* 0x00 */
+    s16 count; /* 0x04 */
+    u8 pad06[0x08 - 0x06];
+} DbWormMsgGroup;
+
 typedef struct DbStealerwormFlags44
 {
     u8 flag80 : 1;
@@ -2306,7 +2313,7 @@ void dbstealerworm_update(u8* objp)
     int data;
     int sub;
     int obj;
-    char* entry;
+    DbWormMsgGroup* grp;
     int sub3;
     int n;
     int sub2;
@@ -2328,13 +2335,13 @@ void dbstealerworm_update(u8* objp)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     if ((u32)((DbStealerwormControl*)sub)->flags44 >> 4 & 1)
     {
-        entry = tbl + ((DbstealerwormPlacement*)data)->cfgTableIndex * 8;
-        entry = entry + 0x15c;
+        grp = (DbWormMsgGroup*)(tbl + ((DbstealerwormPlacement*)data)->cfgTableIndex * 8);
+        grp = (DbWormMsgGroup*)((char*)grp + 0x15c);
         ((DbStealerwormControl*)sub)->msgStack = allocModelStruct_800139e8(0x14, 0xc);
-        n = *(s16*)(entry + 4);
+        n = grp->count;
         for (; n != 0;)
         {
-            Stack_Push(((DbStealerwormControl*)sub)->msgStack, (int*)(*(int*)entry + --n * 12));
+            Stack_Push(((DbStealerwormControl*)sub)->msgStack, (int*)((int)grp->msgs + --n * 12));
         }
         ((DbStealerwormControl*)sub)->msgAdvance = 1;
         ((DbStealerwormFlags44*)&((DbStealerwormControl*)sub)->flags44)->flag10 = 0;
