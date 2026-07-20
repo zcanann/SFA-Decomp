@@ -184,7 +184,7 @@ void MagicDust_update(GameObject* obj)
                 obj->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
             }
             (*gPathControlInterface)->attachObject((void*)obj, (void*)state);
-            goto LAB_80173f80;
+            return;
         }
         ref = (int)obj->anim.modelState;
         if ((u32)ref != 0)
@@ -244,7 +244,7 @@ void MagicDust_update(GameObject* obj)
                 {
                     Obj_FreeObject(obj);
                 }
-                goto LAB_80173f80;
+                return;
             }
         }
         if ((state->flags27A & 3) == 0)
@@ -320,8 +320,6 @@ void MagicDust_update(GameObject* obj)
             }
         }
     }
-LAB_80173f80:
-    return;
 }
 
 void MagicDust_init(GameObject* obj, MagicgemObjectDef* placement)

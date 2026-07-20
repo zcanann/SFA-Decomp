@@ -245,6 +245,7 @@ void exploded_update(int* obj)
     ExplodedObjectState* state = o->state;
     u8 stateVal = state->explodePhase;
     int flag;
+
     switch (stateVal)
     {
     case EXPLODED_PHASE_IDLE:
@@ -270,7 +271,6 @@ void exploded_update(int* obj)
             o->alpha = 0;
             o->flags06 = (s16)(o->flags06 | 0x4000);
             flag = 1;
-            goto check;
         }
         else
         {
@@ -279,10 +279,14 @@ void exploded_update(int* obj)
             {
                 o->alpha = remainingFrames;
             }
+            flag = 0;
         }
     }
-    flag = 0;
-check:
+    else
+    {
+        flag = 0;
+    }
+
     if (flag != 0)
     {
         state->explodePhase = EXPLODED_PHASE_EXPIRED;

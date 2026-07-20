@@ -189,8 +189,7 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
         {
             if ((u32)st->linkedObject == 0)
             {
-                ret = 0;
-                goto done;
+                return 0;
             }
             wob1 = (f32)(st->currentTrackOffset + 0xb24) / -15288.0f;
             wob2 = 2.0f * wob1 + -1.0f;
@@ -239,8 +238,7 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
                 }
                 (*gScreenTransitionInterface)->step(0x14, 1);
                 gTotemStrengthDeactivateTimer = 2;
-                ret = 4;
-                goto done;
+                return 4;
             }
             if (st->currentTrackOffset > PLATFORM1_TRACK_EXIT_POS)
             {
@@ -265,8 +263,7 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
                 }
                 (*gScreenTransitionInterface)->step(0x14, 1);
                 gTotemStrengthDeactivateTimer = 2;
-                ret = 4;
-                goto done;
+                return 4;
             }
             if (st->loopSfxHandle > 0)
             {
@@ -336,7 +333,7 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
         Sfx_SetObjectSfxVolume((int)obj, PLATFORM1_LOOP_SFX_ID, vol & 0xff, 127.0f);
         ret = 0;
     }
-done:
+
     return ret;
 }
 

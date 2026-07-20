@@ -116,17 +116,22 @@ void GM_MazeWell_update(unsigned int obj)
 
     ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
 
-    for (i = 0, questBitPtr = questBits; (u32)i < QUEST_BIT_COUNT; i++)
+    for (i = 0, questBitPtr = questBits;;)
     {
         if (mainGetBit(*questBitPtr) != 0)
         {
             matchedBit = questBits[i];
-            goto checkValue;
+            break;
         }
         questBitPtr++;
+        i++;
+        if ((u32)i >= QUEST_BIT_COUNT)
+        {
+            matchedBit = 0;
+            break;
+        }
     }
-    matchedBit = 0;
-checkValue:
+
     if (matchedBit != 0)
     {
         ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
@@ -140,7 +145,7 @@ checkValue:
     if ((((GameObject*)objId)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
         int found;
-        for (i = 0, questBitPtr = questBits; (u32)i < QUEST_BIT_COUNT; i++)
+        for (i = 0, questBitPtr = questBits;;)
         {
             if ((*gGameUIInterface)->isEventReady(*questBitPtr) != 0)
             {
@@ -177,12 +182,17 @@ checkValue:
                     mainSetBits(questBits[i + QUEST_FOLLOWUP_BASE], 1);
                 }
                 found = 1;
-                goto checkFound;
+                break;
             }
             questBitPtr++;
+            i++;
+            if ((u32)i >= QUEST_BIT_COUNT)
+            {
+                found = 0;
+                break;
+            }
         }
-        found = 0;
-    checkFound:
+
         if (found != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);

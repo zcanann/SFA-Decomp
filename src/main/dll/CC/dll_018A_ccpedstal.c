@@ -55,16 +55,19 @@ void ccpedstal_updateGameBitGate(GameObject* obj, u8* state2)
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 gameBitDecrement(GAMEBIT_ITEM_FireGem_Count);
                 doMark = 1;
-                goto check;
+            }
+            else
+            {
+                doMark = 0;
             }
         }
         else
         {
             *(u8*)&(obj)->anim.resetHitboxMode =
                 (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
+            doMark = 0;
         }
-        doMark = 0;
-    check:
+
         if (doMark != 0)
         {
             state->markFlags = (u8)(state->markFlags | 1);
