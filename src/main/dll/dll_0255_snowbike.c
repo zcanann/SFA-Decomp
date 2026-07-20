@@ -385,7 +385,7 @@ void SnowBike_resetToRomListPosition(GameObject* obj)
         ((SnowBikeMountState*)state)->velocityX = zero;
         ((SnowBikeMountState*)state)->velocityY = zero;
         ((SnowBikeMountState*)state)->velocityZ = zero;
-        (*gPathControlInterface)->attachObject((void*)obj, (void*)(state + 0x178));
+        (*gPathControlInterface)->attachObject((void*)obj, (void*)&((ShackleSwingState*)state)->attachment);
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosX = obj->anim.localPosX;
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosY = obj->anim.localPosY;
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosZ = obj->anim.localPosZ;
