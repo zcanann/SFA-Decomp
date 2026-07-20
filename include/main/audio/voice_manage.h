@@ -24,6 +24,14 @@
 
 typedef struct McmdVoiceState McmdVoiceState;
 
+extern u8 voiceMidiKeySlots[SYNTH_VOICE_MIDI_CHANNEL_COUNT][SYNTH_VOICE_MIDI_KEY_COUNT];
+extern u8 voiceDirectSlots[SYNTH_VOICE_DIRECT_SLOT_COUNT];
+extern u16 voicePrioSortedRoot;
+extern u8 voiceMusicRunning;
+extern u8 voiceFxRunning;
+extern u8 voiceFreeListTail;
+extern u8 voiceFreeListRoot;
+
 void voiceInitPriorityTables(void);
 void voiceBreakAndFree(u32 voice);
 void voiceKill(u32 voice);

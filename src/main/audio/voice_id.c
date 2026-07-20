@@ -2,6 +2,7 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_unregister.h"
 #include "main/audio/vid_init.h"
+#include "main/audio/voice_manage.h"
 
 
 typedef struct VoicePrioVoiceRec
@@ -26,8 +27,6 @@ typedef struct VoicePrioBlockRec
 } VoicePrioBlockRec;
 
 #define voicePriorityLinks ((u8*)vidListNodes + 0x8c0)
-
-extern u16 voicePrioSortedRoot;
 
 /*
  * Remove a voice from the vid id list, recycling any allocated id-list nodes.

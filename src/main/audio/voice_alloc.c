@@ -19,11 +19,6 @@
 
 SynthVoiceListNode voiceFreeListSlots[64];
 extern u8 synthIdleWaitActive;
-extern u16 voicePrioSortedRoot;
-extern u8 voiceMusicRunning;
-extern u8 voiceFxRunning;
-extern u8 voiceFreeListTail;
-extern u8 voiceFreeListRoot;
 /*
  * Allocate a voice id, preferring a free slot but stealing the lowest-priority
  * compatible active voice when limits are exceeded. (musyx synthvoice.c
