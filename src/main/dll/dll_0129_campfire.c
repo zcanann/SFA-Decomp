@@ -1,4 +1,4 @@
-/* DLL 0x0129 - campfire area objects [8018CD64-8018CDAC) */
+/* Campfire area object. */
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/object_api.h"
@@ -15,28 +15,10 @@
 #include "main/object_descriptor.h"
 #include "main/dll/dll_0129_campfire.h"
 #define CAMPFIRE_HIT_VOLUME_SLOT 0x1f
-/* CampfireExtra - the per-class extra state block (GameObject.extra) for the
- * campfire object class; CampFire_getExtraSize() returns 0x14. Single-owner;
- * offsets mirror the observed deref widths in this unit. */
-typedef struct CampfireExtra
-{
-    ModelLightStruct* light;
-    f32 dayTimer;   /* 0x04 flicker/sound timer used in the daytime branch */
-    f32 nightTimer; /* 0x08 timer used in the night branch */
-    s16 gameBit;    /* 0x0C gamebit index (from spawn descriptor +0x18) */
-    u8 unk0E[2];
-    u8 unk10;      /* 0x10 (from spawn descriptor +0x1b) */
-    u8 flags;      /* 0x11 bit0 = gamebit 0x8c set, bit2 = gameBit set */
-    u8 sfxPlaying; /* 0x12 looped-sound active flag */
-    u8 unk13;
-} CampfireExtra;
-
-STATIC_ASSERT(offsetof(CampfireExtra, gameBit) == 0xC);
-STATIC_ASSERT(sizeof(CampfireExtra) == 0x14);
 
 int CampFire_getExtraSize(void)
 {
-    return 0x14;
+    return sizeof(CampFireState);
 }
 int CampFire_getObjectTypeId(void)
 {
@@ -45,7 +27,7 @@ int CampFire_getObjectTypeId(void)
 
 void CampFire_free(GameObject* obj)
 {
-    CampfireExtra* state;
+    CampFireState* state;
     ModelLightStruct* light;
 
     state = obj->extra;
@@ -59,7 +41,7 @@ void CampFire_free(GameObject* obj)
 
 void CampFire_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    CampfireExtra* state;
+    CampFireState* state;
     ModelLightStruct* light;
     s32 isVisible;
 
@@ -76,16 +58,16 @@ void CampFire_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
     }
 }
 
-void CampFire_update(int obj)
+void CampFire_update(GameObject* obj)
 {
-    CampfireExtra* state;
+    CampFireState* state;
     int type;
     int mode;
     int flag;
     f32 sunTime;
     f32 params[3];
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     Obj_GetPlayerObject();
     if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
     {
@@ -93,7 +75,7 @@ void CampFire_update(int obj)
         {
             modelLightStruct_setEnabled(state->light, 1, 1.0f);
         }
-        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, CAMPFIRE_HIT_VOLUME_SLOT, 1, 0);
+        ObjHits_SetHitVolumeSlot(&obj->anim, CAMPFIRE_HIT_VOLUME_SLOT, 1, 0);
         state->nightTimer -= timeDelta;
         if (state->nightTimer <= 0.0f)
         {
@@ -108,7 +90,7 @@ void CampFire_update(int obj)
         mode = 0;
         if (state->sfxPlaying == 0)
         {
-            Sfx_AddLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
+            Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_forcecryslp11);
             state->sfxPlaying = 1;
         }
     }
@@ -118,7 +100,7 @@ void CampFire_update(int obj)
         {
             modelLightStruct_setEnabled(state->light, 0, 1.0f);
         }
-        ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
+        ObjHits_ClearHitVolumes(&obj->anim);
         state->dayTimer -= timeDelta;
         if (state->dayTimer <= 0.0f)
         {
@@ -133,14 +115,14 @@ void CampFire_update(int obj)
         flag = 0;
         if (state->sfxPlaying != 0)
         {
-            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
+            Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_forcecryslp11);
             state->sfxPlaying = 0;
         }
     }
     params[0] = 0.0f;
     params[1] = 10.0f;
     params[2] = 0.0f;
-    fn_80098B18((void*)obj, 1.4f * ((GameObject*)obj)->anim.rootMotionScale, type, mode, flag, params);
+    fn_80098B18(obj, 1.4f * obj->anim.rootMotionScale, type, mode, flag, params);
     {
         ModelLightStruct* light = state->light;
         if (light != NULL && light->glowType != 0 && light->enabled != 0)
@@ -166,47 +148,37 @@ void CampFire_update(int obj)
     }
 }
 
-typedef struct CampFirePlacement
+void CampFire_init(GameObject* obj, CampFireSetup* setup)
 {
-    ObjPlacement head; /* 0x00 */
-    s16 gameBit;  /* 0x18: gate game bit */
-    u8 sizeParam; /* 0x1a: * 0.01 -> rootMotionScale */
-    u8 unk1b;     /* 0x1b */
-} CampFirePlacement;
-
-void CampFire_init(GameObject* obj, int defArg)
-{
-    CampFirePlacement* def = (CampFirePlacement*)defArg;
-    CampfireExtra* state;
+    CampFireState* state;
     f32 sunTime;
     u32 size;
     s16 bit;
 
     state = obj->extra;
-    size = def->sizeParam;
+    size = setup->scalePercent;
     if (size != 0)
     {
         obj->anim.rootMotionScale = 0.01f * size;
     }
     if (mainGetBit(0x8c) != 0)
     {
-        state->flags |= 1;
+        state->flags |= CAMPFIRE_STATE_GLOBAL_GAMEBIT_SET;
     }
-    state->gameBit = def->gameBit;
+    state->gameBit = setup->gameBit;
     bit = state->gameBit;
     if (bit != -1 && mainGetBit(bit) != 0)
     {
-        state->flags |= 4;
+        state->flags |= CAMPFIRE_STATE_PLACEMENT_GAMEBIT_SET;
     }
-    state->unk10 = def->unk1b;
+    state->unk10 = setup->unk1B;
     {
         f32 scale =
             obj->anim.rootMotionScale / obj->anim.modelInstance->rootMotionScaleBase;
-        int hitState = *(int*)&obj->anim.hitReactState;
-        ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj,
-                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryRadius * scale),
-                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetA * scale),
-                                   (int)((f32)((ObjHitsPriorityState*)hitState)->primaryCapsuleOffsetB * scale));
+        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+        ObjHitbox_SetCapsuleBounds(&obj->anim, (int)((f32)hitState->primaryRadius * scale),
+                                   (int)((f32)hitState->primaryCapsuleOffsetA * scale),
+                                   (int)((f32)hitState->primaryCapsuleOffsetB * scale));
     }
     state->dayTimer = 10.0f;
     state->nightTimer = 1.0f;

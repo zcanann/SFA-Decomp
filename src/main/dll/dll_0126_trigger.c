@@ -255,7 +255,7 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, int legCode, int distS
                         (*gPlayerShadowInterface)->setMode(p[3]);
                         break;
                     case 5:
-                        fn_8006FC00(p[3]);
+                        waterFxSetDisabled(p[3]);
                         break;
                     case 6:
                         if (p[3] != 0)

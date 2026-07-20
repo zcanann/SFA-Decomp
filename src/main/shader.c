@@ -1342,7 +1342,7 @@ void beginLoadingMap(void)
     (*gSky2Interface)->onMapSetup();
     (*gSkyInterface)->loadLights();
     (*gNewCloudsInterface)->onMapSetup();
-    mapInitFn_8006fccc();
+    waterFxInit();
     player = (char*)Obj_GetPlayerObject();
     if (lbl_803DCEB8 == -2 && player != 0 && (mapKind == 0 || mapKind == 1))
     {

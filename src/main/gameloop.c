@@ -1406,7 +1406,7 @@ void init(void)
     debugPrintInit();
     mapInitFn_80069990();
     initTextures();
-    mapInitFn_8006fccc();
+    waterFxInit();
     initGameTimer();
     ObjModel_InitRenderBuffers();
     _initCardAndDsp();

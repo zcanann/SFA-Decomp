@@ -1,3 +1,4 @@
+#include "global.h"
 #include "main/dll/partfx_interface.h"
 #include "dolphin/card.h"
 #include "main/hud_visibility_api.h"
@@ -249,10 +250,14 @@ typedef struct
 typedef struct
 {
     f32 scales[4];
-    u8 pad[0x10];
+    Texture* textures[4];
     RippleEntry ripples[0x100];
     SplashQuad quads[0x100];
 } WaterFxState;
+STATIC_ASSERT(offsetof(WaterFxState, textures) == 0x10);
+STATIC_ASSERT(offsetof(WaterFxState, ripples) == 0x20);
+STATIC_ASSERT(offsetof(WaterFxState, quads) == 0x1020);
+STATIC_ASSERT(sizeof(WaterFxState) == 0x4820);
 extern f32 gGxPi;
 extern f32 lbl_803DEE6C;
 extern f32 lbl_803DEE70;
@@ -737,94 +742,94 @@ void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
     }
 }
 
-void fn_8006FC00(int enable)
+void waterFxSetDisabled(int disabled)
 {
     int i;
-    u8* a;
-    u8* b;
+    SplashQuad* quads;
+    RippleEntry* ripples;
 
-    gWaterFxDisabled = enable;
-    if (enable != 0)
+    gWaterFxDisabled = disabled;
+    if (disabled != 0)
     {
         return;
     }
-    a = gWaterSplashQuads;
-    b = gWaterRipples;
+    quads = (SplashQuad*)gWaterSplashQuads;
+    ripples = (RippleEntry*)gWaterRipples;
     for (i = 0; i < 32; i++)
     {
-        a[i * 0x1C0 + 0x033] = 0;
-        b[i * 0x80 + 0x0E] = 0;
-        a[i * 0x1C0 + 0x06B] = 0;
-        b[i * 0x80 + 0x1E] = 0;
-        a[i * 0x1C0 + 0x0A3] = 0;
-        b[i * 0x80 + 0x2E] = 0;
-        a[i * 0x1C0 + 0x0DB] = 0;
-        b[i * 0x80 + 0x3E] = 0;
-        a[i * 0x1C0 + 0x113] = 0;
-        b[i * 0x80 + 0x4E] = 0;
-        a[i * 0x1C0 + 0x14B] = 0;
-        b[i * 0x80 + 0x5E] = 0;
-        a[i * 0x1C0 + 0x183] = 0;
-        b[i * 0x80 + 0x6E] = 0;
-        a[i * 0x1C0 + 0x1BB] = 0;
-        b[i * 0x80 + 0x7E] = 0;
+        quads[i * 8].alpha = 0;
+        ripples[i * 8].alpha = 0;
+        quads[i * 8 + 1].alpha = 0;
+        ripples[i * 8 + 1].alpha = 0;
+        quads[i * 8 + 2].alpha = 0;
+        ripples[i * 8 + 2].alpha = 0;
+        quads[i * 8 + 3].alpha = 0;
+        ripples[i * 8 + 3].alpha = 0;
+        quads[i * 8 + 4].alpha = 0;
+        ripples[i * 8 + 4].alpha = 0;
+        quads[i * 8 + 5].alpha = 0;
+        ripples[i * 8 + 5].alpha = 0;
+        quads[i * 8 + 6].alpha = 0;
+        ripples[i * 8 + 6].alpha = 0;
+        quads[i * 8 + 7].alpha = 0;
+        ripples[i * 8 + 7].alpha = 0;
     }
     gWaterQuadWriteIdx = 0;
     gWaterRippleWriteIdx = 0;
 }
 
-void mapInitFn_8006fccc(void)
+void waterFxInit(void)
 {
     int i;
-    u8* base = (u8*)gWaterFxState;
-    u8* a = base + 0x1020;
-    u8* b = base + 0x0020;
+    WaterFxState* waterFx = (WaterFxState*)gWaterFxState;
+    SplashQuad* quads = waterFx->quads;
+    RippleEntry* ripples = waterFx->ripples;
 
     for (i = 0; i < 16; i++)
     {
-        a[0x033] = 0;
-        b[0x0E] = 0;
-        a[0x06B] = 0;
-        b[0x1E] = 0;
-        a[0x0A3] = 0;
-        b[0x2E] = 0;
-        a[0x0DB] = 0;
-        b[0x3E] = 0;
-        a[0x113] = 0;
-        b[0x4E] = 0;
-        a[0x14B] = 0;
-        b[0x5E] = 0;
-        a[0x183] = 0;
-        b[0x6E] = 0;
-        a[0x1BB] = 0;
-        b[0x7E] = 0;
-        a[0x1F3] = 0;
-        b[0x8E] = 0;
-        a[0x22B] = 0;
-        b[0x9E] = 0;
-        a[0x263] = 0;
-        b[0xAE] = 0;
-        a[0x29B] = 0;
-        b[0xBE] = 0;
-        a[0x2D3] = 0;
-        b[0xCE] = 0;
-        a[0x30B] = 0;
-        b[0xDE] = 0;
-        a[0x343] = 0;
-        b[0xEE] = 0;
-        a[0x37B] = 0;
-        b[0xFE] = 0;
-        a += 0x380;
-        b += 0x100;
+        quads[0].alpha = 0;
+        ripples[0].alpha = 0;
+        quads[1].alpha = 0;
+        ripples[1].alpha = 0;
+        quads[2].alpha = 0;
+        ripples[2].alpha = 0;
+        quads[3].alpha = 0;
+        ripples[3].alpha = 0;
+        quads[4].alpha = 0;
+        ripples[4].alpha = 0;
+        quads[5].alpha = 0;
+        ripples[5].alpha = 0;
+        quads[6].alpha = 0;
+        ripples[6].alpha = 0;
+        quads[7].alpha = 0;
+        ripples[7].alpha = 0;
+        quads[8].alpha = 0;
+        ripples[8].alpha = 0;
+        quads[9].alpha = 0;
+        ripples[9].alpha = 0;
+        quads[10].alpha = 0;
+        ripples[10].alpha = 0;
+        quads[11].alpha = 0;
+        ripples[11].alpha = 0;
+        quads[12].alpha = 0;
+        ripples[12].alpha = 0;
+        quads[13].alpha = 0;
+        ripples[13].alpha = 0;
+        quads[14].alpha = 0;
+        ripples[14].alpha = 0;
+        quads[15].alpha = 0;
+        ripples[15].alpha = 0;
+        quads += 16;
+        ripples += 16;
     }
-    *(u32*)(base + 0x10) = (u32)textureLoadAsset(0x19);
-    *(u32*)(base + 0x14) = (u32)textureLoadAsset(0x18);
-    *(u32*)(base + 0x18) = (u32)textureLoadAsset(0x1A);
-    *(u32*)(base + 0x1C) = (u32)textureLoadAsset(0x646);
-    *(f32*)(base + 0x00) = lbl_803DEE5C;
-    *(f32*)(base + 0x04) = lbl_803DEE60;
-    *(f32*)(base + 0x08) = lbl_803DEE60;
-    *(f32*)(base + 0x0C) = lbl_803DEE64;
+    waterFx->textures[0] = textureLoadAsset(0x19);
+    waterFx->textures[1] = textureLoadAsset(0x18);
+    waterFx->textures[2] = textureLoadAsset(0x1A);
+    waterFx->textures[3] = textureLoadAsset(0x646);
+    waterFx->scales[0] = lbl_803DEE5C;
+    waterFx->scales[1] = lbl_803DEE60;
+    waterFx->scales[2] = lbl_803DEE60;
+    waterFx->scales[3] = lbl_803DEE64;
     gWaterFxDisabled = 0;
     gWaterQuadWriteIdx = 0;
     gWaterRippleWriteIdx = 0;

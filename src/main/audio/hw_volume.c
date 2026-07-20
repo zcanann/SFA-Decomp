@@ -21,7 +21,7 @@ void hwSetVolume(u32 voiceIndex, u8 volumeTable, f32 volume, u32 pan, u32 surrou
     u16 il;
     u16 ir;
     u16 is;
-    DSPvoice* voice = (DSPvoice*)((u8*)dspVoice + voiceIndex * 0xf4);
+    DSPvoice* voice = &dspVoice[voiceIndex];
 
     if (volume >= 1.0f)
         volume = 1.0f;
