@@ -393,8 +393,8 @@ void grimble_update(GameObject* obj)
     {
         if ((*gMapEventInterface)->shouldNotSaveTime(((GrimblePlacement*)def)->mapId) != 0)
         {
-            (*(void (**)(void*, int, char*, int, int, int, int, f32))(*(int*)gBaddieControlInterface + 0x58))(
-                obj, def, state, 0xa, 6, 0x10e, 0x36, 20.0f);
+            ((BaddieControlInterface*)*gBaddieControlInterface)
+                ->initGroundBaddie(obj, (u8*)def, (u8*)state, 0xa, 6, 0x10e, 0x36, 20.0f);
             ((GroundBaddieState*)state)->baddie.substate = 1;
             ((GroundBaddieState*)state)->baddie.moveJustStartedB = 1;
             obj->anim.alpha = 0;
@@ -459,8 +459,8 @@ void grimble_init(int obj, int def, int flag)
     {
         flags |= 1;
     }
-    (*(void (**)(int, int, char*, int, int, int, u8, f32))(*(int*)gBaddieControlInterface + 0x58))(
-        obj, def, state, 0, 0, 0, flags, 20.0f);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->initGroundBaddie((GameObject*)obj, (u8*)def, (u8*)state, 0, 0, 0, flags, 20.0f);
     ((GameObject*)obj)->animEventCallback = grimble_animEventCallback;
     (*gPlayerInterface)->setState((void*)obj, state, 0);
     ((GroundBaddieState*)state)->baddie.substate = 0;

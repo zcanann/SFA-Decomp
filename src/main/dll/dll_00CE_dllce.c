@@ -820,8 +820,8 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
         if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
             (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) != 0)
         {
-            (*(void (**)(void*, int, int, int, int, int, int, f32))(*(int*)gBaddieControlInterface + 0x58))(
-                obj, setup, (int)sub, 7, 6, 0x102, 0x26, 20.0f);
+            ((BaddieControlInterface*)*gBaddieControlInterface)
+                ->initGroundBaddie(obj, (u8*)setup, (u8*)sub, 7, 6, 0x102, 0x26, 20.0f);
             sub->targetState = 0;
             Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_seal4_c_263);
             ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
@@ -905,8 +905,8 @@ void dll_CE_init(GameObject* obj, u8* def, int flags)
     {
         mode |= 8;
     }
-    (*(void (**)(int, u8*, int, int, int, int, u8, f32))(*(int*)gBaddieControlInterface + 0x58))(
-        (int)obj, def, (int)sub, 7, 6, 0x102, mode, 20.0f);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->initGroundBaddie(obj, def, (u8*)sub, 7, 6, 0x102, mode, 20.0f);
     (obj)->animEventCallback = NULL;
     v = *(f32**)&sub->control;
     *v = (f32)(int)randomGetRange(10, 300);

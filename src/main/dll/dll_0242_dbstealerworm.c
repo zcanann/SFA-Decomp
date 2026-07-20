@@ -2345,8 +2345,8 @@ void dbstealerworm_update(u8* objp)
             if ((((GroundBaddieState*)blob)->configFlags & 4) == 0 &&
                 (*gMapEventInterface)->shouldNotSaveTime(*(int*)&((DbstealerwormPlacement*)data)->eventConfigId) != 0)
             {
-                ((void (*)(int, int, int, int, int, int, int, f32))((void**)*gBaddieControlInterface)[22])(
-                    obj, data, blob, 0x10, 7, 0x10a, 0x26, 20.0f);
+                ((BaddieControlInterface*)*gBaddieControlInterface)
+                    ->initGroundBaddie((GameObject*)obj, (u8*)data, (u8*)blob, 0x10, 7, 0x10a, 0x26, 20.0f);
                 ObjGroup_AddObject((int)obj, DBSTEALERWORM_OBJGROUP);
                 ((GroundBaddieState*)blob)->targetState = 0;
                 ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
@@ -2442,8 +2442,8 @@ void dbstealerworm_init(int* obj, u8* def, int flag)
     {
         mode |= 1;
     }
-    ((void (*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*gBaddieControlInterface)[22])(
-        obj, def, sub, 0x10, 7, 0x10a, mode, 20.0f);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->initGroundBaddie((GameObject*)obj, def, sub, 0x10, 7, 0x10a, mode, 20.0f);
     ObjGroup_AddObject((int)obj, DBSTEALERWORM_OBJGROUP);
     ((GameObject*)obj)->animEventCallback = NULL;
     p40c = *(int**)&((GroundBaddieState*)sub)->control;

@@ -26,8 +26,8 @@ typedef struct BaddieControlInterface
                              u8* damageTable, s16 substate, void* hitPosOut); /* 0x50 */
     int (*processMessages)(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut,
                            s16 substateIdle, s16 substateActive, s16 moveMode); /* 0x54 */
-    void (*initGroundBaddie)(int* obj, u8* def, u8* state, int hp, int a5, int moveId, u8 mode,
-                             f32 radius);                                    /* 0x58 */
+    void (*initGroundBaddie)(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1,
+                             int pathFlags, u8 initFlags, f32 pathRadius); /* 0x58 */
 } BaddieControlInterface;
 
 extern int* gBaddieControlInterface;

@@ -1670,8 +1670,8 @@ void ktrex_init(GameObject* obj, char* arg, int flag)
     {
         spawnFlags |= 1;
     }
-    (*(void (**)(int, char*, void*, int, int, int, u8, f32))((char*)*gBaddieControlInterface + 0x58))(
-        (int)obj, arg, gKTRexRuntime, 9, 0xc, 0x100, spawnFlags, 20.0f);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->initGroundBaddie(obj, (u8*)arg, (u8*)gKTRexRuntime, 9, 0xc, 0x100, spawnFlags, 20.0f);
     (obj)->animEventCallback = ktrex_animEventCallback;
     rt = (KTRexRuntime*)gKTRexRuntime;
     (*gPlayerInterface)->setState(obj, rt, 0);

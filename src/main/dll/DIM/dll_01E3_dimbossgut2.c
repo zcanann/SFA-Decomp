@@ -267,8 +267,8 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
     {
         flags |= 1;
     }
-    (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
-        (int)obj, def, (int)state, 0, 0, 0x102, flags, 20.0f);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->initGroundBaddie(obj, (u8*)def, (u8*)state, 0, 0, 0x102, flags, 20.0f);
     (obj)->animEventCallback = NULL;
     curve = state->curveData;
     z = 0.0f;

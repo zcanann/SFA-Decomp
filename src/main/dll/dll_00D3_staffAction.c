@@ -1020,8 +1020,8 @@ void dll_D3_init(GameObject* obj, int def, int flag)
     {
         setupFlags |= 1;
     }
-    ((void (*)(int, int, int, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(
-        (int)obj, def, state, 5, 1, 0x108, setupFlags, 20.0f);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->initGroundBaddie(obj, (u8*)def, (u8*)state, 5, 1, 0x108, setupFlags, 20.0f);
     (obj)->animEventCallback = NULL;
 
     extra = (LandedArwingState*)((GroundBaddieState*)state)->control;

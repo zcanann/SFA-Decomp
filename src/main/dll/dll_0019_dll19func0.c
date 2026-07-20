@@ -92,8 +92,8 @@ int dll_19_func1B(GameObject* obj);
 f32 dll_19_func1A(GameObject* obj);
 void dll_19_func19(u8* cam, u8* ctx);
 void dll_19_func12(GameObject* obj, void* state, u8 flag);
-void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags, f32 fparam,
-                   int initFlags);
+void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags,
+                   u8 initFlags, f32 pathRadius);
 void dll_19_func11(void);
 int dll_19_func17(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
                   s16 substateActive, s16 moveMode);
@@ -234,8 +234,8 @@ void dll_19_func12(GameObject* obj, void* state, u8 flag)
     }
 }
 
-void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags, f32 fparam,
-                   int initFlags)
+void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags,
+                   u8 initFlags, f32 pathRadius)
 {
     u8 flags;
     int b1;
@@ -309,7 +309,7 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
     ((GroundBaddieState*)state)->flags400 = 0;
     ((GroundBaddieState*)state)->aggroRange = (u16)(config[41] << 3);
     ((GroundBaddieState*)state)->subMode = 0;
-    *(f32*)(state + 996) = fparam;
+    *(f32*)(state + 996) = pathRadius;
     obj->anim.rotX = (s16)((s8)config[42] << 8);
     obj->anim.alpha = 255;
     obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;

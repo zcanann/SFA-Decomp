@@ -427,8 +427,8 @@ void kaldachom_update(GameObject* obj)
         if ((((CampfireState*)state)->substate != 3) &&
             (cond = (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)ref)->mapId), cond != 0))
         {
-            (*(void (**)(void*, int, int, int, int, int, int, double))(*(int*)gBaddieControlInterface + 0x58))(
-                obj, ref, state, 8, 6, 0, 0x26, (double)lbl_803E30C8);
+            ((BaddieControlInterface*)*gBaddieControlInterface)
+                ->initGroundBaddie(obj, (u8*)ref, (u8*)state, 8, 6, 0, 0x26, lbl_803E30C8);
             ((GroundBaddieState*)state)->targetState = 0;
             Sfx_PlayFromObject((int)obj, SFXTRIG_mn_lummy211);
             ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E3060.f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
@@ -515,8 +515,8 @@ void kaldachom_init(GameObject* obj, int data, int skip_alloc)
     {
         initMode |= 1;
     }
-    (*(void (**)(int, int, int, int, int, int, u8, double))(*(int*)gBaddieControlInterface + 0x58))(
-        (int)obj, data, state, 8, 6, 0, initMode, (double)lbl_803E30C8);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->initGroundBaddie(obj, (u8*)data, (u8*)state, 8, 6, 0, initMode, lbl_803E30C8);
     (obj)->animEventCallback = NULL;
     control = ((CampfireState*)state)->control;
     ObjAnim_SetCurrentMove((int)obj, 4, lbl_803E3060.f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);

@@ -348,8 +348,8 @@ void DIMbosstonsil_init(int obj, u32 def, int isAltVariant)
     {
         variant = variant | 1;
     }
-    (*(void (**)(int, u32, int, int, int, int, u8, f32))(*gBaddieControlInterface + 0x58))(obj, def, state, 2, 2, 0x102,
-                                                                                           variant, lbl_803E4CCC);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->initGroundBaddie((GameObject*)obj, (u8*)def, (u8*)state, 2, 2, 0x102, variant, lbl_803E4CCC);
     ((GameObject*)obj)->animEventCallback = DIMbosstonsil_SeqFn;
     (*gPlayerInterface)->setState((void*)obj, (void*)state, 0);
     ((BaddieState*)state)->substate = 0;

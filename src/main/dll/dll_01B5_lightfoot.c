@@ -317,8 +317,8 @@ void lightfoot_init(GameObject* obj, int def, int flag)
     {
         flags |= 1;
     }
-    (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int*)(*gBaddieControlInterface + 0x58)))(
-        (int)obj, def, inner, 5, 3, 0x108, flags, lbl_803E8228);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->initGroundBaddie(obj, (u8*)def, (u8*)inner, 5, 3, 0x108, flags, lbl_803E8228);
     (obj)->animEventCallback = Lightfoot_SeqFn;
     ((GroundBaddieState*)inner)->baddie.controlMode = 0;
     ((GroundBaddieState*)inner)->baddie.substate = 0;

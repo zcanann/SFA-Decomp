@@ -1345,8 +1345,8 @@ void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
         if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
             (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) != 0)
         {
-            (*(void (**)(int, int, int, int, int, int, int, f32))(*(int*)gBaddieControlInterface + 0x58))(
-                (int)obj, setup, (int)sub, 14, 8, 0x102, 0x26, 20.0f);
+            ((BaddieControlInterface*)*gBaddieControlInterface)
+                ->initGroundBaddie(obj, (u8*)setup, (u8*)sub, 14, 8, 0x102, 0x26, 20.0f);
             sub->targetState = 0;
             Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_seal4_c_263);
             ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
@@ -1404,8 +1404,8 @@ void iceBaddie_init(int obj, u8* params, int flags)
     {
         mode |= 8;
     }
-    (*(void (**)(int, u8*, int, int, int, int, u8, f32))(*(int*)gBaddieControlInterface + 0x58))(
-        obj, params, (int)sub, 14, 8, 0x102, mode, 20.0f);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->initGroundBaddie((GameObject*)obj, params, (u8*)sub, 14, 8, 0x102, mode, 20.0f);
     ((GameObject*)obj)->animEventCallback = NULL;
     if (0.5f * (f32)(u32)sub->aggroRange < 55.0f)
     {

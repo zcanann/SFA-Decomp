@@ -518,8 +518,8 @@ void dll_CB_init(int* obj, u8* params, int extra)
         flags |= 8;
     ((GameObject*)obj)->anim.rotY = (s16)((s8)params[0x28] << 8);
     ((GameObject*)obj)->anim.rotZ = (s16)((s8)params[0x27] << 8);
-    ((void (*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(
-        obj, params, (u8*)sub, 4, 6, 0x82, flags, 2e+01f);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->initGroundBaddie((GameObject*)obj, params, (u8*)sub, 4, 6, 0x82, flags, 2e+01f);
     ((GameObject*)obj)->animEventCallback = dll_CB_seqFn;
     (*gPlayerInterface)->setState(obj, sub, 0);
     sub->baddie.substate = 0;
