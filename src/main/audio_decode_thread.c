@@ -3,14 +3,18 @@
 
 typedef struct AttractMovieAudioDecodeContext
 {
-    OSMessage freeAudioBuffers[3];
     OSMessage decodedAudioBuffers[3];
-    OSMessageQueue freeQueue;
+    OSMessage freeAudioBuffers[3];
     OSMessageQueue decodedQueue;
+    OSMessageQueue freeQueue;
     u8 stack[0x1000];
     OSThread thread;
 } AttractMovieAudioDecodeContext;
 
+STATIC_ASSERT(offsetof(AttractMovieAudioDecodeContext, decodedAudioBuffers) == 0x0);
+STATIC_ASSERT(offsetof(AttractMovieAudioDecodeContext, freeAudioBuffers) == 0xc);
+STATIC_ASSERT(offsetof(AttractMovieAudioDecodeContext, decodedQueue) == 0x18);
+STATIC_ASSERT(offsetof(AttractMovieAudioDecodeContext, freeQueue) == 0x38);
 STATIC_ASSERT(offsetof(AttractMovieAudioDecodeContext, stack) == 0x58);
 STATIC_ASSERT(offsetof(AttractMovieAudioDecodeContext, thread) == 0x1058);
 
@@ -37,8 +41,8 @@ BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
             return 0;
         }
     }
-    OSInitMessageQueue(&context[0]->decodedQueue, context[0]->decodedAudioBuffers, 3);
     OSInitMessageQueue(&context[0]->freeQueue, context[0]->freeAudioBuffers, 3);
+    OSInitMessageQueue(&context[0]->decodedQueue, context[0]->decodedAudioBuffers, 3);
     gAttractMovieAudioThreadActive = 1;
     return 1;
 }
