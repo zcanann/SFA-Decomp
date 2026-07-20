@@ -173,14 +173,15 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, i
     hitState->activeEntryByteCount = 0;
     if (moveEntryTable != NULL)
     {
-        for (moveEntryWordIndex = 0, moveEntry = moveEntryTable; moveEntry[0] != OBJHITREACT_MOVE_ID_END;
+        for (moveEntryWordIndex = 0, moveEntry = moveEntryTable;
+             ((ObjHitReactMoveEntry*)moveEntry)->moveId != OBJHITREACT_MOVE_ID_END;
              moveEntry += OBJHITREACT_MOVE_ENTRY_SHORT_COUNT, moveEntryWordIndex += OBJHITREACT_MOVE_ENTRY_SHORT_COUNT)
         {
-            if (moveId == moveEntry[0])
+            if (moveId == ((ObjHitReactMoveEntry*)moveEntry)->moveId)
             {
                 moveEntry = &moveEntryTable[moveEntryWordIndex];
-                entryByteOffset = moveEntry[1];
-                hitState->activeEntryByteCount = moveEntry[2];
+                entryByteOffset = ((ObjHitReactMoveEntry*)moveEntry)->firstEntryByteOffset;
+                hitState->activeEntryByteCount = ((ObjHitReactMoveEntry*)moveEntry)->entryByteCount;
                 if (hitState->activeEntryByteCount > hitState->entryBufferByteCapacity)
                 {
                     hitState->activeEntryByteCount = hitState->entryBufferByteCapacity;
@@ -199,9 +200,6 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, i
     }
     return;
 }
-
-void ObjHitReact_LoadMoveEntries(ObjAnimComponent* objAnim, ObjAnimBank* bank, int objType, ObjHitReactState* hitState,
-                                 int moveId, int async);
 
 u32 ObjHitReact_InitState(int objType, ObjAnimBank* bank, ObjHitReactState* hitState, u32 entryArena,
                           ObjAnimComponent* objAnim)
