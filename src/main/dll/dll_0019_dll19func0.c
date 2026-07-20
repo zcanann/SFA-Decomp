@@ -437,7 +437,7 @@ int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagO
 int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* tableA, u8* tableB, s16 substate,
                   u8* hitPosOut)
 {
-    u8* state = *(u8**)(obj + 184);
+    u8* state = (u8*)((GameObject*)obj)->extra;
     int player = (int)Obj_GetPlayerObject();
     int hit;
     int v28;
@@ -563,7 +563,7 @@ const f32 lbl_803E1C60 = 25.0f;
 int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
 {
     GameObject* source = (GameObject*)obj;
-    u8* state = *(u8**)&((GameObject*)obj)->anim.placementData;
+    u8* state = (u8*)((GameObject*)obj)->anim.placementData;
     ObjPlacement* setup;
     u16 ids1[4];
     u16 ids2[4];
@@ -628,7 +628,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
             savedY = source->anim.worldPosY;
             savedZ = source->anim.worldPosZ;
             {
-                ObjPlacement* pl = *(ObjPlacement**)&source->anim.placementData;
+                ObjPlacement* pl = source->anim.placement;
                 if (pl != NULL)
                 {
                     source->anim.worldPosX = pl->posX;
@@ -703,7 +703,7 @@ void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flag
     if (substate != -1)
     {
         ((BaddieState*)state)->substate = substate;
-        state[0x27b] = 1;
+        ((BaddieState*)state)->moveJustStartedB = 1;
     }
     if (moveMode != -1)
     {
@@ -767,9 +767,9 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                     found = 1;
                 }
                 delta = getAngle(-dp[0], -dp[2]) & 0xffff;
-                if (*(void**)(self + 0x30) != NULL)
+                if (((GameObject*)self)->anim.parent != NULL)
                 {
-                    delta -= (*(s16*)self + *(s16*)(*(int*)&((GameObject*)self)->anim.parent)) & 0xffff;
+                    delta -= (((GameObject*)self)->anim.rotX + *(s16*)(*(int*)&((GameObject*)self)->anim.parent)) & 0xffff;
                     if (delta > 0x8000)
                     {
                         delta -= 0xffff;
@@ -781,7 +781,7 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                 }
                 else
                 {
-                    delta -= *(s16*)self & 0xffff;
+                    delta -= ((GameObject*)self)->anim.rotX & 0xffff;
                     if (delta > 0x8000)
                     {
                         delta -= 0xffff;
@@ -862,7 +862,7 @@ int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar)
                 pos[0] = ((GameObject*)player)->anim.localPosX;
                 pos[1] = 10.0f + ((GameObject*)player)->anim.localPosY;
                 pos[2] = ((GameObject*)player)->anim.localPosZ;
-                if (objBboxFn_800640cc((f32*)((int)obj + 0xc), pos, 1.0f, 0, (TrackBBoxHit*)out,
+                if (objBboxFn_800640cc(&obj->anim.localPosX, pos, 1.0f, 0, (TrackBBoxHit*)out,
                                        (GameObject*)obj, 4, -1, 0, 0) != 0)
                 {
                     result = 1;
@@ -883,7 +883,7 @@ int dll_19_func0E(GameObject* obj, int state, u8 checkDead)
     {
         return 0;
     }
-    if (*(void**)&(obj)->anim.parent == NULL)
+    if (obj->anim.parent == NULL)
     {
         if (objPosToMapBlockIdx((double)(obj)->anim.localPosX, (double)(obj)->anim.localPosY,
                                 (double)(obj)->anim.localPosZ) < 0)
@@ -899,7 +899,7 @@ void dll_19_func0D(GameObject* obj, int state, f32 gravity, s8 field25f)
     f32 fz;
     *(u32*)state |= 0x8000;
     ((BaddieState*)state)->cameraYaw = 0;
-    if (*(void**)((char*)obj + 0x54) != NULL)
+    if (obj->anim.hitReactState != NULL)
     {
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, -1);
     }
@@ -1018,7 +1018,7 @@ int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int moveArg0, int
         if (dist >= total || gDll19SeqStallCount > 9)
         {
             char* t2 = *(char**)&((BaddieState*)st)->targetObj;
-            int delta = (obj)->anim.rotX - (u16) * (s16*)t2;
+            int delta = (obj)->anim.rotX - (u16)((GameObject*)t2)->anim.rotX;
             if (delta > 0x8000)
             {
                 delta -= 0xffff;

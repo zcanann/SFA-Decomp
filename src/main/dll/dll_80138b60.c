@@ -172,14 +172,14 @@ void fn_80138D7C(int obj, int state)
 {
     u8 ratio = (u8)((s32) * (u8*)(*(int*)(state + 0) + 2) / 10);
 
-    if (*(u8*)(state + 0x82c) != ratio)
+    if (((TrickyState*)state)->modelVariant != ratio)
     {
         f32 t;
         if (mainGetBit(1005) == 0)
         {
             mainSetBits(1005, 1);
             (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
-            ((TrickyImpressState*)state)->flags54 |= 0x4000;
+            ((TrickyState*)state)->stateFlags |= 0x4000;
             *(f32*)(state + 0x828) = *(f32*)(state + 0x828) + lbl_803E2408;
         }
         *(f32*)(state + 0x828) = *(f32*)(state + 0x828) - timeDelta;
@@ -202,7 +202,7 @@ void fn_80138D7C(int obj, int state)
             }
             else
             {
-                *(u8*)(state + 0x82c) = ratio;
+                ((TrickyState*)state)->modelVariant = ratio;
                 Obj_SetModelColorOverrideRecursive((GameObject*)obj, 0, 0, 0, 0, 0);
             }
         }
@@ -376,7 +376,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
     bestFallbackDist = bestPriorityDist;
     bestFallbackTarget = NULL;
 
-    for (i = 0, entry = state; i < state[0x798]; i++)
+    for (i = 0, entry = state; i < ((TrickyState*)state)->commandCount; i++)
     {
         if (*(s8*)(entry + 0x74d) == commandType)
         {
@@ -414,7 +414,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
     }
 
     {
-        u8* targetPos = ((TrickyState*)state)->followObj + 0x18;
+        u8* targetPos = (u8*)&((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
         if (((TrickyState*)state)->targetPosPtr != targetPos)
         {
             ((TrickyState*)state)->targetPosPtr = targetPos;

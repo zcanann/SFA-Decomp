@@ -1614,8 +1614,8 @@ void DIMexplosionFn_8009a96c(u8* src, f32 x, f32 y, f32 z, f32 scale, u8 kind, u
     if (Obj_IsLoadingLocked() != 0)
     {
         setup = (ExplosionSetup*)Obj_AllocObjectSetup(0x24, OBJFX_CHILD_OBJ_EXPLOSION);
-        ((ObjPlacement*)setup)->color[0] = 2;
-        ((ObjPlacement*)setup)->color[1] = 1;
+        setup->head.color[0] = 2;
+        setup->head.color[1] = 1;
         ((GameObject*)setup)->anim.rootMotionScale = x;
         ((GameObject*)setup)->anim.localPosX = y;
         ((GameObject*)setup)->anim.localPosY = z;
@@ -1665,8 +1665,8 @@ void spawnExplosion(GameObject* src, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 
     if (Obj_IsLoadingLocked() != 0)
     {
         setup = (ExplosionSetup*)Obj_AllocObjectSetup(0x24, OBJFX_CHILD_OBJ_EXPLOSION);
-        ((ObjPlacement*)setup)->color[0] = 2;
-        ((ObjPlacement*)setup)->color[1] = 1;
+        setup->head.color[0] = 2;
+        setup->head.color[1] = 1;
         ((GameObject*)setup)->anim.rootMotionScale = src->anim.worldPosX;
         ((GameObject*)setup)->anim.localPosX = src->anim.worldPosY;
         ((GameObject*)setup)->anim.localPosY = src->anim.worldPosZ;
